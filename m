@@ -2,242 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AF4E64B01C
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Dec 2022 08:00:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86D1D64B1F1
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Dec 2022 10:13:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234623AbiLMHA0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Dec 2022 02:00:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41080 "EHLO
+        id S234570AbiLMJM7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Dec 2022 04:12:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234621AbiLMHAY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Dec 2022 02:00:24 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 193D414D17
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 23:00:22 -0800 (PST)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BD2L3LK004046;
-        Tue, 13 Dec 2022 07:00:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=ESdY2k5f9htXGjsK0dX8cP2OczKUQKA7myHWWIKnrUs=;
- b=qHoe5R54WZTBoD6M66L1uCfC03Y8hfnBcAMUzK9UdbbdZxijBxn/P59CGxuy39/2e1qq
- 9U+fWuyWMjtP80+sbzJGUApK5PgmoSM8/PhMjj+vNOX994+TYZ2sls5NJ2HRuyrSncv2
- Vle6tnmzZkcVvu7/o2W6PutDVtpTdwMNeu9Y+pFdMnDBDgZ4M4ky9ofhd/+r7qYuL0ei
- juOboaSGLgcFdmmNrBz1hNh9qbqNhoU3fOFvCTAxK9Q8+6UVSL4sYOq4Eb+/INg3XTJB
- bvrQcDOawLdc54F4w6YNzxnXE8kH/gMSNfxAQq8KkYMD7Dqd9Yr5pJ1oz+v39ykzUHB1 Nw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3mcgw2cng2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Dec 2022 07:00:15 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2BD6IxOw018569;
-        Tue, 13 Dec 2022 07:00:15 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2045.outbound.protection.outlook.com [104.47.51.45])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3mcgjbs216-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 13 Dec 2022 07:00:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nCi9psCpCVmQ5b/E2iRQzVvHrU9+cg+8Mfi8WZF7ZoW4uhutnmzYuaqObRbVHU+0w9vTJOUys1SyQnRZYUcvVcw1/dee2wJ26Zkhyf357vYYMQn26kr5YgpwJqwERFMS1x+3FOJ2+mXXr9yxiW0TNKnPjK9FOgYGsg+shHLt70DEukpO/iXNqeJQ4YCa3wiM9XlabKdDeAa8zaNyLuX7VzildBF1O68xw95o7vj46THBoRslfyrW/4BxSJu5HKuuSzYkc1fb2+vQCiFb8D0GaCXDDrk2kGiYAdE8RBVgubtNBJK8AbAZN2DHAciViP9Vf0f8cGHPR0mwxeeO6gmSWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ESdY2k5f9htXGjsK0dX8cP2OczKUQKA7myHWWIKnrUs=;
- b=L/sStDUqMAHGOY008BAx0JwQsqtTGUDUOmGd/5mEQzwA7J5cvmU3t4fk+dCaWjOeS2BnYdgnF2hOEtGmLydUfO3z7jKvlwSVGAkFXgajxqSBLRGe6UwHJBqUClyVRy3LI8056sBL4HOqiRLOXBYVhANWpNoKYxr7gMbTlcY5vHrGgFBtUAkUxEeoXarDnI2VLYgskjjaEhoMe/rjsgOpUEpt3MqOZG7XxQ8kS9iDlkb9S3DMTgFWqzHInzPQndb2Y8+YrKgGh7ck0dy7QogaIC0hNMEqX+3xLtsSbc9DhXCiQAVUIpOd4VcTYA0Jm1xnbQRPw3sPAy8eUQRX1gOvhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ESdY2k5f9htXGjsK0dX8cP2OczKUQKA7myHWWIKnrUs=;
- b=LEEn5nBaA2mlG7lCMq1nLvmQ2ssSyhlDfb+7ws7EfHYTdjQNtg7rUdPXmiYapthLgDARKdSivjL9/7JUzC/pfnL9kMirMPd90emz32K4GeOpTJG8SkFmnhCdzWVO6vLzMondb9CK7ZPIwdPKVg1pL8OxYIXjCHynGc38zV6h2Zs=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by CH0PR10MB4875.namprd10.prod.outlook.com (2603:10b6:610:de::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.19; Tue, 13 Dec
- 2022 07:00:13 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::193d:c337:4b9:3c77]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::193d:c337:4b9:3c77%9]) with mapi id 15.20.5880.019; Tue, 13 Dec 2022
- 07:00:12 +0000
-Message-ID: <bdb9f9f5-5c13-44c1-8979-89a7b77afc21@oracle.com>
-Date:   Mon, 12 Dec 2022 23:00:10 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.5.1
-Subject: Re: [PATCH v3 1/1] NFSD: fix use-after-free in __nfs42_ssc_open()
+        with ESMTP id S234722AbiLMJMg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Dec 2022 04:12:36 -0500
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E81BE50;
+        Tue, 13 Dec 2022 01:09:23 -0800 (PST)
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 5FA59320097E;
+        Tue, 13 Dec 2022 04:09:21 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Tue, 13 Dec 2022 04:09:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1670922560; x=
+        1671008960; bh=x6EvN9RCMMZUQL1h6HXvoOYLnZvU8WJ2nMis5bUscl4=; b=H
+        dl/8r/bqnayq2L2QpDq/yb8wV+sFSMd15m0tcmhyL1dGd9kJ3jaSIktL/AYws4yW
+        C7qVbkttNbALjLUxXnNwNnkKNYsYUDP7iEq4L0NIHzHrHAPDv4i+gEkZkd8E0FR3
+        ZfA2nVXE46b1Myiki31bqUPcpVsMA9LRjaobNyuimN7ho2gMfbwF6eQyLI5EnT72
+        Y/Z7e0jmzrLMw98NDlH4E8p0Cg6hg/bMmMMVKO4EtP90COUOoDuSwSbA0lIjG1fM
+        XBStvN/ohSM4Hghc2PTOqZTzknLfPNC5qUrIPCLLhJdu5hl1ojVuTUuDENBeXiNb
+        B5X15Xtxe5LCcCkRc2TrQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1670922560; x=
+        1671008960; bh=x6EvN9RCMMZUQL1h6HXvoOYLnZvU8WJ2nMis5bUscl4=; b=C
+        HktLlN4HvSSYumBT+hzJcR2FabLQPoDTQG9bBtXkADytI+qNT3iMbj47XzM7a1Ku
+        9riuKEB76Mdjv5RRUSmJIQXm9yEvTL1/eC/f1XjZ2FqKnvsNEsKkphmbLghI/3tv
+        rFrgrBCsE+HWk+c7ynsM2mZ7K8lnhQ2chFxVYoY9UU+JwjuPHygIr5ubqBez6ZZU
+        dqXqmjoxtmegtpavxpU8oTjsXUKnH1suepbVFGTXzJECHBq5w3gpm4Q3NxaPZ0Sc
+        /MXPg/GA5BAJIyXe8lmQN73yTBaI9ClySHn55LJ5gkagT3NiY4bnYIrSY2TRN7m5
+        Ra4AV1rXris/I8oWhkAxw==
+X-ME-Sender: <xms:P0GYY3TVtQNkawVHKO0UUDYKcrnScExv3-le4P2wx50Kmx6p8zU1QA>
+    <xme:P0GYY4w2GJnqG3vv_F5TE3kkgM-C88eKzV9MIFqhjD_keDsP6QuqjaTw1bqQfNzyG
+    J_BehbNsRux>
+X-ME-Received: <xmr:P0GYY81ZwZhCLJYlTj7LvZTyc3bZbcbn3wkzf-P3JbiFQK9Eturn272KGCdM2TCDYd4qZ3AFGS-rtoLIkdYuVuKDFCs842S9KpIve0mQPwJgI0qqLQK9>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedtucetufdoteggodetrfdotffvucfrrh
+    hofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgenuceurghi
+    lhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurh
+    epkfffgggfuffvvehfhfgjtgfgsehtjeertddtfeejnecuhfhrohhmpefkrghnucfmvghn
+    thcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnhepffekvd
+    fhgfelueehleeiuedtkefgfefghfehvdevhffhgfevgefggfdtkeevgfdtnecuffhomhgr
+    ihhnpehmrghrtgdrihhnfhhopdhkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiii
+    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnsehthhgvmhgrfidrnhgv
+    th
+X-ME-Proxy: <xmx:QEGYY3DW4JTpRuwQe2fWBvSs3AeaW2duDQ95armVpZs5r9NizGeK6Q>
+    <xmx:QEGYYwiy52-Ulngvs_4EZ-3JzKUdnUSHgHAx0qORBh5Q4kFUX3-png>
+    <xmx:QEGYY7qZ4F-LpQyp9K5V-bbts_ZPqhLYh0B41VUMdCIp-dLhqDAYNg>
+    <xmx:QEGYY_qOGMCCFkBzTQX2Gm2ZMF7pcf6v5XMiM_rlKlcGfwZ1lpGS_A>
+Feedback-ID: i31e841b0:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 13 Dec 2022 04:09:14 -0500 (EST)
+Message-ID: <8967d08f-712c-5b64-efdc-4426e2b9d63a@themaw.net>
+Date:   Tue, 13 Dec 2022 17:09:10 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH 0/3 v2] NFS: NFSD: Allow crossing mounts when re-exporting
+To:     Jeff Layton <jlayton@kernel.org>,
+        Richard Weinberger <richard@nod.at>, linux-nfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        chuck.lever@oracle.com, anna@kernel.org,
+        trond.myklebust@hammerspace.com, viro@zeniv.linux.org.uk,
+        chris.chilvers@appsbroker.com, david.young@appsbroker.com,
+        luis.turcitu@appsbroker.com, david@sigma-star.at,
+        benmaynard@google.com
+References: <20221207084309.8499-1-richard@nod.at>
+ <2de81c537335da895bafcd9f50a239c439fb0439.camel@kernel.org>
 Content-Language: en-US
-To:     Xingyuan Mo <hdthky0@gmail.com>
-Cc:     chuck.lever@oracle.com, jlayton@kernel.org, kolga@netapp.com,
-        linux-nfs@vger.kernel.org, security@kernel.org
-References: <1670885411-10060-1-git-send-email-dai.ngo@oracle.com>
- <CALV6CNPysKmTDmeZds61eKrtmA-yGbj1pQKvxOtfkpF3P5ankw@mail.gmail.com>
-From:   dai.ngo@oracle.com
-In-Reply-To: <CALV6CNPysKmTDmeZds61eKrtmA-yGbj1pQKvxOtfkpF3P5ankw@mail.gmail.com>
+From:   Ian Kent <raven@themaw.net>
+In-Reply-To: <2de81c537335da895bafcd9f50a239c439fb0439.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR05CA0090.namprd05.prod.outlook.com
- (2603:10b6:a03:e0::31) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|CH0PR10MB4875:EE_
-X-MS-Office365-Filtering-Correlation-Id: f861fb9a-8673-4e97-7ea2-08dadcd7ae34
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: W+u/x8UV0SiC92LOyViM4J7j2vmO8eBF7M6I1tvmtYE714SakLcQ+5Xamg0ZnY2rGL7hrENkUtRECL6zBiHoCVwXbAVerYII72b450FqmD1TLjtKFGG40NrSsbNwDJWFWXGVRRHlQw0TB4mItdveAc95oFSBIHvlo8spBpXsWmL4g7QFsYya0uJDGjDs/8cwMgMt1lDqTJatkGM8N79KECX8YtC2OT5xVhPN+mNgcuaXBLx594Ic3/QnKGS92aG5QFbTpcclQzwKey7QbZm/E/gtN0Bs+M10VmcnqT89YWNrYvaajhdtSZ+k1OYAYjflXZumqJqZSAZpgYQb/i5Hoy1nY8i3IznyPxpCk6H/FjJoKr15XHhA4dsUz8Jg7AcRjJJwLSfZ9WKSAgGp9ge44o+t1dcpI/WJOBOEVYZ3hptFteZDMrzu4MnNJmvGGiwLEcv97xbx/huUH04SwMZF8uZHZh78OjgH1QBSfSxmJr4iBY8M2T1FPTGljPWEq5aD0SQOPllmGMnlr9DfZra6qgwARlJhQ3Ou6ws8fM4JTcipVB5m7JG38uQ/ILY+W9r52eFv0njwEo8kv3iTXPsJ18CylFIA9fuGvoZSR/yn7de2wjhVa39fukKkNu6p6DeAnQmGrG51ZJBFFYU2TmDLGHyplaTwz6w5EIeix/jNxWUbaX2wrlf33+RS3mvFzMgE
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(346002)(136003)(39860400002)(366004)(376002)(451199015)(5660300002)(36756003)(2906002)(8936002)(6506007)(6512007)(6916009)(316002)(53546011)(41300700001)(86362001)(478600001)(26005)(31696002)(9686003)(38100700002)(186003)(6486002)(83380400001)(2616005)(31686004)(66556008)(4326008)(8676002)(66946007)(66476007)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZVZOM21uRjBoT0ZSLzJrYitqQTAvQ25NME5hbXdlc2wwU2dyZEswMG5mMkpK?=
- =?utf-8?B?SXF4VFhWaVFET1NnaGh5YkJmWkQ0ZG0yc3FxRGwzc1A3eStuOHdxaEZueTU0?=
- =?utf-8?B?eFFXZENJdE5JMlpJQ1dJM3pxSHFJQ2IydDh4REFTMjRhV3d4NU1WZzRRYkJW?=
- =?utf-8?B?QUF5b3FqZTM3MXB3MURFbFZES2F3Z0xySlE3YlZIdE9XVUNsZ256TUdZVnpr?=
- =?utf-8?B?K3NuZ1NaQVFBU2F6aXBMUEErc0hwRlJXbkkrUHZvSHV3bHByMWs4dE1XWkMr?=
- =?utf-8?B?SXA4Rzhvc0czUmUzSVAxZzZJWCtzK1FzUXZqcWMwK1lrS2RDNGNXS3FSbnUw?=
- =?utf-8?B?dlRNbFJuOXRqMHpzMGtUci82QTg5dnkyc2tHZ2EzMjBmTUd3Q25hTnhQV1ls?=
- =?utf-8?B?SmJvVE5ZWDVoS1FhUHlPNis0MXFXOVpGVnNYQWljN0FMTy9kZ2tSdVhPY1Yx?=
- =?utf-8?B?N2l6cDR0OVoyZW5VeDZ2SEdYcjBGOTM3SWMzREMzN3pKYXFVckp5MXpVL2Vz?=
- =?utf-8?B?MExPVWtRaGJWRnB6dXZWd0VLNExhZTJJV2hqdERrMU1keEdkeE1qQVFqSHUr?=
- =?utf-8?B?NTlJdVB0K3hnRUMwaFVjRTFzZlpnVmlvbFdhR3AzRGMyNlVjNnJPMm5BTVJF?=
- =?utf-8?B?MElJVjJ6bDV6eitzZC9iUTk1V09uQVg1VEtCOW51VlZlVGhBTE5Tc3JaNkNF?=
- =?utf-8?B?Z1pkUFJmWDlaTzE2N3VVR2Z6S2p4U3dWTjI1b0FrVW82SlI5VWpOWExyQ0t3?=
- =?utf-8?B?RjBxZXZlWWI2MjNsSnRUNlVRV0I5RUNBUXAzdi8xMThDa0Y1cmVWOVdMbnR0?=
- =?utf-8?B?U3AyenRYaXYxaGx1NWU4Nkxob3llcytCZ29rbitXalFUWHZ3UjRqemFmYjds?=
- =?utf-8?B?TWdncmk1QVhmczV4enpXdWd5ajJRMVVVU0kySkFiT1JyenRiNXdWbm5IcFFM?=
- =?utf-8?B?K0pqRXQ2THkzWEdlaGw5SFIwSTdxZTgyamxteTFKaXhzK3QyQUp4T2l2S1N4?=
- =?utf-8?B?RDN3Z2NRVFptSUkxd0toZzhycDRKc2hDOXZmcmRmMjBvN2tKbFhyOCtvQkpn?=
- =?utf-8?B?U0RKeEZoTDMwSXlEdFFDelN5NUlEVW9wQlJjVnFJdjloMmttaXZacjBJdHQx?=
- =?utf-8?B?RFc1NGd5bXJ2ay82aS84NHJXenFlZDREMFQ1R0M5NXJ6dkhWZnZNSlZDMmpP?=
- =?utf-8?B?NnBhYTkrdDFlN2lzOStpWU9OR0Zxc3ZnWXUvSWl4NVN6QVMxREE0cDByUG1I?=
- =?utf-8?B?Yk51NmFpQTFac2krZDFUS0RQQWlNR2o0NVNScGZidWlTTUlNWmJqekRlWDYx?=
- =?utf-8?B?RVo3WDJYRW9ZTHZZRE9rdmZ3UE90bmx1MEx2T3gyTWtHcHJqdVNVczJXbE02?=
- =?utf-8?B?L0QrZGNGMVV3M2N4c0JhQUgzSE1DeEQ5ZmZ3eFcyWXZFcjJqdlpzQmRJYzc2?=
- =?utf-8?B?T2FRQmxYRFpZNi9qSzROczZBa3lOMTlLOXhjNE1YWEsvSWxQaHk2SDJmZkxE?=
- =?utf-8?B?djdmaGpHNTdVUTdGaExhb0dvaDZpb1pXc1dsMWlxclUwcGdkY3A0U2k2N0s5?=
- =?utf-8?B?cFZ0SWtpUTlLRHl5V0dyOTBZTjBnNERHWEp3SGsyWS9VUFBndzRkbDJBNTNE?=
- =?utf-8?B?R01SSDUwTTkzNlJlVkhETUN2VFJpMS9CZ1ZrRXhZNlljUjhyeWxlMVIwUytC?=
- =?utf-8?B?RGRDQkp2a2RxTTM2ZDFBUmtWS0lCUzhNaExPK3hSd0p4cTl2b0ZlYTRQOE1G?=
- =?utf-8?B?MmZYSkJDcHppL0ZBYXFSd0tyQmxRMUJjMVR6RC9OQ3VLRmhZd3p3dlU5NUJv?=
- =?utf-8?B?bWhONmdOV1dMWnVKcS9PSE83ZTF4NEVmaVNsem1SRkl6WE1aRmRyRlg4T2ZT?=
- =?utf-8?B?bDR1a0Q1YTdsVnR3aDRuVUZtaEM0azlvKzN6S0ZuV0lrQnQvZFA0L1Vnc2Jy?=
- =?utf-8?B?YThUSW5SOGYwdCt2bTVrcGFOWU9tTmhIci9Ic0xpQlZPTWRscDZIMjJieWd4?=
- =?utf-8?B?bDNwNmJIS0ZnTC9lWHB3MFJVa1poZUN4cGJ3RnNMbDBOWkRaZmtFYWY2b21n?=
- =?utf-8?B?cW5SMGFmWGlZK0RiNnhmazBTQkt2eEpDOEwzb0h3bXV1NWJFR29vZnk3MjVL?=
- =?utf-8?Q?yURuwJG+mMI3xyvcXv3cLj0H+?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f861fb9a-8673-4e97-7ea2-08dadcd7ae34
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Dec 2022 07:00:12.6976
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ge0zu3BsuRs/IaMn/ZNp3dVcFnycVFHGupfykyhDBlh32MmQIVrnc2jF5n6GqPA9hSkDBzZwTtk/9uUnods/yQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4875
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-12-13_03,2022-12-12_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 mlxscore=0
- mlxlogscore=999 malwarescore=0 spamscore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2212130063
-X-Proofpoint-ORIG-GUID: Pl-XuP1V_dvyMKV9VBn8ViXis4k9aYrs
-X-Proofpoint-GUID: Pl-XuP1V_dvyMKV9VBn8ViXis4k9aYrs
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-On 12/12/22 7:38 PM, Xingyuan Mo wrote:
-> On Tue, Dec 13, 2022 at 6:50 AM Dai Ngo <dai.ngo@oracle.com> wrote:
->> Problem caused by source's vfsmount being unmounted but remains
->> on the delayed unmount list. This happens when nfs42_ssc_open()
->> return errors.
+On 13/12/22 01:06, Jeff Layton wrote:
+> On Wed, 2022-12-07 at 09:43 +0100, Richard Weinberger wrote:
+>> Currently when re-exporting a NFS share the NFS cross mount feature does
+>> not work [0].
+>> This patch series outlines an approach to address the problem.
 >>
->> Fixed by removing nfsd4_interssc_connect(), leave the vfsmount
->> for the laundromat to unmount when idle time expires.
+>> Crossing mounts does not work for two reasons:
 >>
->> We don't need to call nfs_do_sb_deactive when nfs42_ssc_open
->> return errors since the file was not opened so nfs_server->active
->> was not incremented. Same as in nfsd4_copy, if we fail to
->> launch nfsd4_do_async_copy thread then there's no need to
->> call nfs_do_sb_deactive
+>> 1. As soon the NFS client (on the re-exporting server) sees a different
+>> filesystem id, it installs an automount. That way the other filesystem
+>> will be mounted automatically when someone enters the directory.
+>> But the cross mount logic of KNFS does not know about automount.
+>> This patch series addresses the problem and teach both KNFSD
+>> and the exportfs logic of NFS to deal with automount.
 >>
->> Reported-by: Xingyuan Mo <hdthky0@gmail.com>
->> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->> ---
->>   fs/nfsd/nfs4proc.c | 20 +++++---------------
->>   1 file changed, 5 insertions(+), 15 deletions(-)
+>> 2. When KNFSD detects crossing of a mount point, it asks rpc.mountd to install
+>> a new export for the target mount point. Beside of authentication rpc.mountd
+>> also has to find a filesystem id for the new export. Is the to be exported
+>> filesystem a NFS share, rpc.mountd cannot derive a filesystem id from it and
+>> refuses to export. In the logs you'll see errors such as:
 >>
->> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
->> index 8beb2bc4c328..b79ee65ae016 100644
->> --- a/fs/nfsd/nfs4proc.c
->> +++ b/fs/nfsd/nfs4proc.c
->> @@ -1463,13 +1463,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
->>          return status;
->>   }
+>> mountd: Cannot export /srv/nfs/vol0, possibly unsupported filesystem or fsid= required
 >>
->> -static void
->> -nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
->> -{
->> -       nfs_do_sb_deactive(ss_mnt->mnt_sb);
->> -       mntput(ss_mnt);
->> -}
->> -
->>   /*
->>    * Verify COPY destination stateid.
->>    *
->> @@ -1572,11 +1565,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
->>   {
->>   }
+>> To deal with that I've changed rpc.mountd to use generate and store fsids [1].
+>> Since the kernel side of my changes did change for a long time I decided to
+>> try upstreaming it first.
+>> A 3rd iteration of my rpc.mountd will happen soon.
 >>
->> -static void
->> -nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
->> -{
->> -}
->> -
->>   static struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
->>                                     struct nfs_fh *src_fh,
->>                                     nfs4_stateid *stateid)
->> @@ -1771,7 +1759,7 @@ static int nfsd4_do_async_copy(void *data)
->>                          default:
->>                                  nfserr = nfserr_offload_denied;
->>                          }
->> -                       nfsd4_interssc_disconnect(copy->ss_mnt);
->> +                       /* ss_mnt will be unmounted by the laundromat */
->>                          goto do_callback;
->>                  }
->>                  nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
->> @@ -1852,8 +1840,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->>          if (async_copy)
->>                  cleanup_async_copy(async_copy);
->>          status = nfserrno(-ENOMEM);
->> -       if (nfsd4_ssc_is_inter(copy))
->> -               nfsd4_interssc_disconnect(copy->ss_mnt);
->> +       /*
->> +        * source's vfsmount of inter-copy will be unmounted
->> +        * by the laundromat
->> +        */
->>          goto out;
->>   }
+>> [0] https://marc.info/?l=linux-nfs&m=161653016627277&w=2
+>> [1] https://lore.kernel.org/linux-nfs/20220217131531.2890-1-richard@nod.at/
 >>
->> --
->> 2.9.5
+>> Changes since v1:
+>> https://lore.kernel.org/linux-nfs/20221117191151.14262-1-richard@nod.at/
 >>
-> My test results show that this patch can fix the problem.
-
-Thank you Xingyuan for testing the patch.
-
--Dai
-
+>> - Use LOOKUP_AUTOMOUNT only when NFSEXP_CROSSMOUNT is set (Jeff Layton)
+>>
+>> Richard Weinberger (3):
+>>    NFSD: Teach nfsd_mountpoint() auto mounts
+>>    fs: namei: Allow follow_down() to uncover auto mounts
+>>    NFS: nfs_encode_fh: Remove S_AUTOMOUNT check
+>>
+>>   fs/namei.c            | 6 +++---
+>>   fs/nfs/export.c       | 2 +-
+>>   fs/nfsd/vfs.c         | 8 ++++++--
+>>   include/linux/namei.h | 2 +-
+>>   4 files changed, 11 insertions(+), 7 deletions(-)
+>>
+> This set looks reasonable to me.
 >
-> Regards,
-> Xingyuan Mo
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+
+Right, looks ok to me too, at least from the POV of that follow_down()
+
+change.
+
+
+Reviewed-by: Ian Kent <raven@themaw.net>
+
+
+Ian
+
