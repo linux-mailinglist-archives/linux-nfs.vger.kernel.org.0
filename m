@@ -2,148 +2,167 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0652464AE51
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Dec 2022 04:39:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FFC764AE97
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Dec 2022 05:15:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234128AbiLMDjX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Dec 2022 22:39:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46074 "EHLO
+        id S230052AbiLMEPD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Dec 2022 23:15:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234217AbiLMDjM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Dec 2022 22:39:12 -0500
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABA31DF34
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 19:39:11 -0800 (PST)
-Received: by mail-pf1-x443.google.com with SMTP id a14so1342600pfa.1
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 19:39:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xwQXVE+nXDqH2Lx2FgAJSgMxuQHXalubs/iv+O2r5qE=;
-        b=OUtj1SDh2AqmtMqT/kRHGr8CTizBJNTPkRbxsiRoYlIa50nghGA5bP7n1eij8/nYAZ
-         616wt1En5cQTyxrwhIjNcTygddtpOxQYd316fV94TnRfwYiYzv+d3O40waY0YFoxWXyb
-         5PqpJkgOygQ3xJaxAVKtvgUH2mchDmkBBJ1cz6+OvPmIrhUh24ORjEFPfy4y+KTu89iU
-         SbkbPO/KyjhHXUumLilDsElaXPNYAyv7Ku3d7pGGvRnkQ+wEs/QzA/dr+dNq6DGBCdYL
-         +AwqJpLMVNx7FeZ7byctjGL42fJCm1ZUkTNiSV4peHkusaB+NKxPqeLnxmmP036X04QN
-         5Z7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xwQXVE+nXDqH2Lx2FgAJSgMxuQHXalubs/iv+O2r5qE=;
-        b=BWz1rJ5Zoj6W/SneW8c3FMF5YDtULoOBaq7GeektVrmsMC9D4jjdkjtENpYS+gRWlo
-         me9EvKWOTXP4wKpx2X61Cwrx+BAi6wEUPcPxnHT61YaUNdT+oSuL+gJ8k/DNiiMchMye
-         +bHPEc2n943h4IiQhhKf5l2ZoFZDHj8ZfHoBKf/sz/0HSciEwfMSOd9YhwEBcyOOAs0m
-         R9W+wzHie8D8DC7DcAC6qlHpYW3yjeplox4/Y1rlpO4Un6OLgqS1jmMXIM5npfOqy1HY
-         0iP3dVndW0D1AV0HrdvcSQ2XzUkj5uroetUI0KMW/2GgBG1ZNp41lWHops5bcRCr6Udp
-         Ybaw==
-X-Gm-Message-State: ANoB5pnJmdiTAuBKjHYrmzRgxU4QUvnYPpKq9cAzAa75xeepx24dEabf
-        4cu5M0Cgb5t1XRTbNo3PaSQ7+KYTxvsnYKPCN2Y=
-X-Google-Smtp-Source: AA0mqf7sEkqGjaZbwNh+rzmB4kSnwvfjc4QkKzOYuMYOq8K2advIxxwk08U89yCMMZrPAbcMdnIQqnn0H5owOitKvMQ=
-X-Received: by 2002:a05:6a02:10d:b0:477:931a:c811 with SMTP id
- bg13-20020a056a02010d00b00477931ac811mr69418429pgb.448.1670902750911; Mon, 12
- Dec 2022 19:39:10 -0800 (PST)
+        with ESMTP id S229611AbiLMEPC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Dec 2022 23:15:02 -0500
+Received: from mail.valinux.co.jp (mail.valinux.co.jp [210.128.90.3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38C01E3FE
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 20:15:00 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.valinux.co.jp (Postfix) with ESMTP id 16771A8F4E;
+        Tue, 13 Dec 2022 13:14:59 +0900 (JST)
+X-Virus-Scanned: Debian amavisd-new at valinux.co.jp
+Received: from mail.valinux.co.jp ([127.0.0.1])
+        by localhost (mail.valinux.co.jp [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id xF6b0Z9Uqsyl; Tue, 13 Dec 2022 13:14:59 +0900 (JST)
+Received: from brer.quest.tech.valinux.jp (vagw.valinux.co.jp [210.128.90.14])
+        by mail.valinux.co.jp (Postfix) with ESMTP id E5F00A8A47;
+        Tue, 13 Dec 2022 13:14:58 +0900 (JST)
+From:   minoura makoto <minoura@valinux.co.jp>
+To:     linux-nfs@vger.kernel.org
+Cc:     minoura makoto <minoura@valinux.co.jp>,
+        Hiroshi Shimamoto <h-shimamoto@nec.com>,
+        Trond Myklebust <trondmy@hammerspace.com>
+Subject: [PATCH v4] SUNRPC: ensure the matching upcall is in-flight upon downcall
+Date:   Tue, 13 Dec 2022 13:14:31 +0900
+Message-Id: <20221213041430.311141-1-minoura@valinux.co.jp>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <1670885411-10060-1-git-send-email-dai.ngo@oracle.com>
-In-Reply-To: <1670885411-10060-1-git-send-email-dai.ngo@oracle.com>
-From:   Xingyuan Mo <hdthky0@gmail.com>
-Date:   Tue, 13 Dec 2022 11:38:59 +0800
-Message-ID: <CALV6CNPysKmTDmeZds61eKrtmA-yGbj1pQKvxOtfkpF3P5ankw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/1] NFSD: fix use-after-free in __nfs42_ssc_open()
-To:     Dai Ngo <dai.ngo@oracle.com>
-Cc:     chuck.lever@oracle.com, jlayton@kernel.org, kolga@netapp.com,
-        linux-nfs@vger.kernel.org, security@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_SORBS_DUL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Dec 13, 2022 at 6:50 AM Dai Ngo <dai.ngo@oracle.com> wrote:
->
-> Problem caused by source's vfsmount being unmounted but remains
-> on the delayed unmount list. This happens when nfs42_ssc_open()
-> return errors.
->
-> Fixed by removing nfsd4_interssc_connect(), leave the vfsmount
-> for the laundromat to unmount when idle time expires.
->
-> We don't need to call nfs_do_sb_deactive when nfs42_ssc_open
-> return errors since the file was not opened so nfs_server->active
-> was not incremented. Same as in nfsd4_copy, if we fail to
-> launch nfsd4_do_async_copy thread then there's no need to
-> call nfs_do_sb_deactive
->
-> Reported-by: Xingyuan Mo <hdthky0@gmail.com>
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
->  fs/nfsd/nfs4proc.c | 20 +++++---------------
->  1 file changed, 5 insertions(+), 15 deletions(-)
->
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 8beb2bc4c328..b79ee65ae016 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1463,13 +1463,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
->         return status;
->  }
->
-> -static void
-> -nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
-> -{
-> -       nfs_do_sb_deactive(ss_mnt->mnt_sb);
-> -       mntput(ss_mnt);
-> -}
-> -
->  /*
->   * Verify COPY destination stateid.
->   *
-> @@ -1572,11 +1565,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
->  {
->  }
->
-> -static void
-> -nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
-> -{
-> -}
-> -
->  static struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
->                                    struct nfs_fh *src_fh,
->                                    nfs4_stateid *stateid)
-> @@ -1771,7 +1759,7 @@ static int nfsd4_do_async_copy(void *data)
->                         default:
->                                 nfserr = nfserr_offload_denied;
->                         }
-> -                       nfsd4_interssc_disconnect(copy->ss_mnt);
-> +                       /* ss_mnt will be unmounted by the laundromat */
->                         goto do_callback;
->                 }
->                 nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
-> @@ -1852,8 +1840,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->         if (async_copy)
->                 cleanup_async_copy(async_copy);
->         status = nfserrno(-ENOMEM);
-> -       if (nfsd4_ssc_is_inter(copy))
-> -               nfsd4_interssc_disconnect(copy->ss_mnt);
-> +       /*
-> +        * source's vfsmount of inter-copy will be unmounted
-> +        * by the laundromat
-> +        */
->         goto out;
->  }
->
-> --
-> 2.9.5
->
+Commit 9130b8dbc6ac ("SUNRPC: allow for upcalls for the same uid
+but different gss service") introduced `auth` argument to
+__gss_find_upcall(), but in gss_pipe_downcall() it was left as NULL
+since it (and auth->service) was not (yet) determined.
 
-My test results show that this patch can fix the problem.
+When multiple upcalls with the same uid and different service are
+ongoing, it could happen that __gss_find_upcall(), which returns the
+first match found in the pipe->in_downcall list, could not find the
+correct gss_msg corresponding to the downcall we are looking for.
+Moreover, it might return a msg which is not sent to rpc.gssd yet.
 
-Regards,
-Xingyuan Mo
+We could see mount.nfs process hung in D state with multiple mount.nfs
+are executed in parallel.  The call trace below is of CentOS 7.9
+kernel-3.10.0-1160.24.1.el7.x86_64 but we observed the same hang w/
+elrepo kernel-ml-6.0.7-1.el7.
+
+PID: 71258  TASK: ffff91ebd4be0000  CPU: 36  COMMAND: "mount.nfs"
+ #0 [ffff9203ca3234f8] __schedule at ffffffffa3b8899f
+ #1 [ffff9203ca323580] schedule at ffffffffa3b88eb9
+ #2 [ffff9203ca323590] gss_cred_init at ffffffffc0355818 [auth_rpcgss]
+ #3 [ffff9203ca323658] rpcauth_lookup_credcache at ffffffffc0421ebc
+[sunrpc]
+ #4 [ffff9203ca3236d8] gss_lookup_cred at ffffffffc0353633 [auth_rpcgss]
+ #5 [ffff9203ca3236e8] rpcauth_lookupcred at ffffffffc0421581 [sunrpc]
+ #6 [ffff9203ca323740] rpcauth_refreshcred at ffffffffc04223d3 [sunrpc]
+ #7 [ffff9203ca3237a0] call_refresh at ffffffffc04103dc [sunrpc]
+ #8 [ffff9203ca3237b8] __rpc_execute at ffffffffc041e1c9 [sunrpc]
+ #9 [ffff9203ca323820] rpc_execute at ffffffffc0420a48 [sunrpc]
+
+The scenario is like this. Let's say there are two upcalls for
+services A and B, A -> B in pipe->in_downcall, B -> A in pipe->pipe.
+
+When rpc.gssd reads pipe to get the upcall msg corresponding to
+service B from pipe->pipe and then writes the response, in
+gss_pipe_downcall the msg corresponding to service A will be picked
+because only uid is used to find the msg and it is before the one for
+B in pipe->in_downcall.  And the process waiting for the msg
+corresponding to service A will be woken up.
+
+Actual scheduing of that process might be after rpc.gssd processes the
+next msg.  In rpc_pipe_generic_upcall it clears msg->errno (for A).
+The process is scheduled to see gss_msg->ctx == NULL and
+gss_msg->msg.errno == 0, therefore it cannot break the loop in
+gss_create_upcall and is never woken up after that.
+
+This patch adds a simple check to ensure that a msg which is not
+sent to rpc.gssd yet is not chosen as the matching upcall upon
+receiving a downcall.
+
+Fixes: Commit 9130b8dbc6ac ("SUNRPC: allow for upcalls for the same uid
+but different gss service")
+Signed-off-by: minoura makoto <minoura@valinux.co.jp>
+Signed-off-by: Hiroshi Shimamoto <h-shimamoto@nec.com>
+Tested-by: Hiroshi Shimamoto <h-shimamoto@nec.com>
+Cc: Trond Myklebust <trondmy@hammerspace.com>
+---
+ include/linux/sunrpc/rpc_pipe_fs.h |  5 +++++
+ net/sunrpc/auth_gss/auth_gss.c     | 19 +++++++++++++++++--
+ 2 files changed, 22 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/sunrpc/rpc_pipe_fs.h b/include/linux/sunrpc/rpc_pipe_fs.h
+index cd188a527d16..3b35b6f6533a 100644
+--- a/include/linux/sunrpc/rpc_pipe_fs.h
++++ b/include/linux/sunrpc/rpc_pipe_fs.h
+@@ -92,6 +92,11 @@ extern ssize_t rpc_pipe_generic_upcall(struct file *, struct rpc_pipe_msg *,
+ 				       char __user *, size_t);
+ extern int rpc_queue_upcall(struct rpc_pipe *, struct rpc_pipe_msg *);
+ 
++/* returns true if the msg is in-flight, i.e., already eaten by the peer */
++static inline bool rpc_msg_is_inflight(const struct rpc_pipe_msg *msg) {
++	return (msg->copied != 0 && list_empty(&msg->list));
++}
++
+ struct rpc_clnt;
+ extern struct dentry *rpc_create_client_dir(struct dentry *, const char *, struct rpc_clnt *);
+ extern int rpc_remove_client_dir(struct rpc_clnt *);
+diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
+index 7bb247c51e2f..2d7b1e03110a 100644
+--- a/net/sunrpc/auth_gss/auth_gss.c
++++ b/net/sunrpc/auth_gss/auth_gss.c
+@@ -302,7 +302,7 @@ __gss_find_upcall(struct rpc_pipe *pipe, kuid_t uid, const struct gss_auth *auth
+ 	list_for_each_entry(pos, &pipe->in_downcall, list) {
+ 		if (!uid_eq(pos->uid, uid))
+ 			continue;
+-		if (auth && pos->auth->service != auth->service)
++		if (pos->auth->service != auth->service)
+ 			continue;
+ 		refcount_inc(&pos->count);
+ 		return pos;
+@@ -686,6 +686,21 @@ gss_create_upcall(struct gss_auth *gss_auth, struct gss_cred *gss_cred)
+ 	return err;
+ }
+ 
++static struct gss_upcall_msg *
++gss_find_downcall(struct rpc_pipe *pipe, kuid_t uid)
++{
++	struct gss_upcall_msg *pos;
++	list_for_each_entry(pos, &pipe->in_downcall, list) {
++		if (!uid_eq(pos->uid, uid))
++			continue;
++		if (!rpc_msg_is_inflight(&pos->msg))
++			continue;
++		refcount_inc(&pos->count);
++		return pos;
++	}
++	return NULL;
++}
++
+ #define MSG_BUF_MAXSIZE 1024
+ 
+ static ssize_t
+@@ -732,7 +747,7 @@ gss_pipe_downcall(struct file *filp, const char __user *src, size_t mlen)
+ 	err = -ENOENT;
+ 	/* Find a matching upcall */
+ 	spin_lock(&pipe->lock);
+-	gss_msg = __gss_find_upcall(pipe, uid, NULL);
++	gss_msg = gss_find_downcall(pipe, uid);
+ 	if (gss_msg == NULL) {
+ 		spin_unlock(&pipe->lock);
+ 		goto err_put_ctx;
+-- 
+2.25.1
+
