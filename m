@@ -2,44 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABA5F64AFBC
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Dec 2022 07:17:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 96A9064AFBE
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Dec 2022 07:19:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234376AbiLMGRo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Dec 2022 01:17:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
+        id S233635AbiLMGTR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Dec 2022 01:19:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234392AbiLMGRm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Dec 2022 01:17:42 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92171BDE
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 22:17:38 -0800 (PST)
+        with ESMTP id S229803AbiLMGTR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Dec 2022 01:19:17 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6CA61C138
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 22:19:15 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 152FCCE129A
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Dec 2022 06:17:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5861C433D2;
-        Tue, 13 Dec 2022 06:17:34 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A3044B80EA3
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Dec 2022 06:19:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCF23C433D2;
+        Tue, 13 Dec 2022 06:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1670912255;
-        bh=dI9FM7s8lpPHRmBaz4QphmdmpKfShpn5IHWSYlQY4/g=;
+        s=korg; t=1670912353;
+        bh=WJwzWyV+Ay6DXnMG6Bulehh50COINLX9jzWtDKqHP6g=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V5nEvdvC14VYaB3GT4IJEZwulxnO01xIpWhQT+2hA+fg+AW8WN7GCEUtZT9MBV0C3
-         vM3Gp+tj0FZ3XFTuPkXjiinLlPNYW+boIdT1afRYwfrvInlv6/jB6pYruwA700yMt2
-         /XiwZVqPqNiZmoRc6aGhugIrk6id71ZrUZnueSWg=
-Date:   Tue, 13 Dec 2022 07:17:32 +0100
+        b=hTNINr6j+fp1B7/yvXnlOQKiPACvxosCP2qQP15qZi7VuuNz+YcuejP14LVyYLRWZ
+         lkPsxeuot5x6LMNL4NxWAW3aJbW10XFSu7efYrisQTWStEittdyZDlBoLsQjg4Lz4W
+         JtKnP8dvBaYu5GpSEStzBGu+l8xSvdUSXcbK11tA=
+Date:   Tue, 13 Dec 2022 07:19:10 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
 To:     Dai Ngo <dai.ngo@oracle.com>
 Cc:     chuck.lever@oracle.com, jlayton@kernel.org, kolga@netapp.com,
         hdthky0@gmail.com, linux-nfs@vger.kernel.org, security@kernel.org
-Subject: Re: [PATCH v2 1/1] NFSD: fix use-after-free in __nfs42_ssc_open()
-Message-ID: <Y5gY/BHp2HGwUEhn@kroah.com>
-References: <1670857869-14618-1-git-send-email-dai.ngo@oracle.com>
+Subject: Re: [PATCH v3 1/1] NFSD: fix use-after-free in __nfs42_ssc_open()
+Message-ID: <Y5gZXoq9dABj8ehu@kroah.com>
+References: <1670885411-10060-1-git-send-email-dai.ngo@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1670857869-14618-1-git-send-email-dai.ngo@oracle.com>
+In-Reply-To: <1670885411-10060-1-git-send-email-dai.ngo@oracle.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -49,7 +49,7 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Dec 12, 2022 at 07:11:09AM -0800, Dai Ngo wrote:
+On Mon, Dec 12, 2022 at 02:50:11PM -0800, Dai Ngo wrote:
 > Problem caused by source's vfsmount being unmounted but remains
 > on the delayed unmount list. This happens when nfs42_ssc_open()
 > return errors.
@@ -57,17 +57,20 @@ On Mon, Dec 12, 2022 at 07:11:09AM -0800, Dai Ngo wrote:
 > Fixed by removing nfsd4_interssc_connect(), leave the vfsmount
 > for the laundromat to unmount when idle time expires.
 > 
-> Removed unneeded check for NULL nfsd_net and added pr_warn
-> if vfsmount not found on delayed unmount list.
+> We don't need to call nfs_do_sb_deactive when nfs42_ssc_open
+> return errors since the file was not opened so nfs_server->active
+> was not incremented. Same as in nfsd4_copy, if we fail to
+> launch nfsd4_do_async_copy thread then there's no need to
+> call nfs_do_sb_deactive
 > 
 > Reported-by: Xingyuan Mo <hdthky0@gmail.com>
 > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 > ---
->  fs/nfsd/nfs4proc.c | 32 ++++++++------------------------
->  1 file changed, 8 insertions(+), 24 deletions(-)
+>  fs/nfsd/nfs4proc.c | 20 +++++---------------
+>  1 file changed, 5 insertions(+), 15 deletions(-)
 > 
 > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 8beb2bc4c328..84646df60212 100644
+> index 8beb2bc4c328..b79ee65ae016 100644
 > --- a/fs/nfsd/nfs4proc.c
 > +++ b/fs/nfsd/nfs4proc.c
 > @@ -1463,13 +1463,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
@@ -84,31 +87,7 @@ On Mon, Dec 12, 2022 at 07:11:09AM -0800, Dai Ngo wrote:
 >  /*
 >   * Verify COPY destination stateid.
 >   *
-> @@ -1526,10 +1519,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
->  	nfsd_file_put(dst);
->  	fput(filp);
->  
-> -	if (!nn) {
-> -		mntput(ss_mnt);
-> -		return;
-> -	}
->  	spin_lock(&nn->nfsd_ssc_lock);
->  	timeout = msecs_to_jiffies(nfsd4_ssc_umount_timeout);
->  	list_for_each_entry_safe(ni, tmp, &nn->nfsd_ssc_mount_list, nsui_list) {
-> @@ -1548,10 +1537,8 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
->  		}
->  	}
->  	spin_unlock(&nn->nfsd_ssc_lock);
-> -	if (!found) {
-> -		mntput(ss_mnt);
-> -		return;
-> -	}
-> +	if (!found)
-> +		pr_warn("vfsmount not found on delayed unmount list\n");
->  }
->  
->  #else /* CONFIG_NFSD_V4_2_INTER_SSC */
-> @@ -1572,11 +1559,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
+> @@ -1572,11 +1565,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
 >  {
 >  }
 >  
@@ -120,16 +99,7 @@ On Mon, Dec 12, 2022 at 07:11:09AM -0800, Dai Ngo wrote:
 >  static struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
 >  				   struct nfs_fh *src_fh,
 >  				   nfs4_stateid *stateid)
-> @@ -1762,7 +1744,7 @@ static int nfsd4_do_async_copy(void *data)
->  		struct file *filp;
->  
->  		filp = nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
-> -				      &copy->stateid);
-> +					&copy->stateid);
->  		if (IS_ERR(filp)) {
->  			switch (PTR_ERR(filp)) {
->  			case -EBADF:
-> @@ -1771,7 +1753,7 @@ static int nfsd4_do_async_copy(void *data)
+> @@ -1771,7 +1759,7 @@ static int nfsd4_do_async_copy(void *data)
 >  			default:
 >  				nfserr = nfserr_offload_denied;
 >  			}
@@ -138,7 +108,7 @@ On Mon, Dec 12, 2022 at 07:11:09AM -0800, Dai Ngo wrote:
 >  			goto do_callback;
 >  		}
 >  		nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
-> @@ -1852,8 +1834,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+> @@ -1852,8 +1840,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
 >  	if (async_copy)
 >  		cleanup_async_copy(async_copy);
 >  	status = nfserrno(-ENOMEM);
