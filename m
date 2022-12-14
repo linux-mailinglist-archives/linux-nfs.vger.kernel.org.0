@@ -2,133 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77ABE64C16F
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Dec 2022 01:41:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16E1564C215
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Dec 2022 03:02:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236898AbiLNAlk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Dec 2022 19:41:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56936 "EHLO
+        id S229699AbiLNCCw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Dec 2022 21:02:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236626AbiLNAlN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Dec 2022 19:41:13 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B7E726AD1
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Dec 2022 16:39:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id D9AF5CE17D2
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Dec 2022 00:39:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51903C433D2;
-        Wed, 14 Dec 2022 00:39:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670978372;
-        bh=YsJbhfq77hTzpL4psBx5tw4aPeBl4nbJ2mOEXjFY+FE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=N44frqq710M5260erOX47e0bmhZpjPFFK7cOSk9rW8jPdapZG7Wnu+Tq8wlH8OwRF
-         6qlRKeybHlT33LnnWnH1EuehoSKY+JhHEbcjuxUY0zfsvlPl+HNdmlTQj9aM+Jn3Ne
-         Nu2mNd++p4yY8QP+6+IYuT21/C1VNUIPYDDku9HMJcbB38lFUMAo+0fHg5VH21lKhL
-         lSlnQcchlHKVlEbhf3t8nTbfxR0lZyIT0Y67OdX9Pt8aZfyIlAAkvYb3Tg/s8uStMi
-         bi0BR6WEjibl99Jo35sxihQhdl0kWsDTRX3SZS2A/4XXv0CtksJNrvZMWqqkBNaOpf
-         JTutUJMgYLBEA==
-Message-ID: <0d6deecbe0dff95ebbe061914ddb00ca04d1f3c1.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: fix handling of readdir in v4root vs. mount
- upcall timeout
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Ian Kent <raven@themaw.net>,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Steve Dickson <steved@redhat.com>,
-        JianHong Yin <yin-jianhong@163.com>,
-        Richard Weinberger <richard@nod.at>
-Date:   Tue, 13 Dec 2022 19:39:29 -0500
-In-Reply-To: <81f891ef-b498-24b0-12e3-4ddda8062dc0@themaw.net>
-References: <20221213180826.216690-1-jlayton@kernel.org>
-         <0918676C-124C-417F-B8DE-DA1946EE91CC@oracle.com>
-         <988799bd54c391259cfeff002660a4002adb96d2.camel@kernel.org>
-         <81f891ef-b498-24b0-12e3-4ddda8062dc0@themaw.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
+        with ESMTP id S236705AbiLNCCs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Dec 2022 21:02:48 -0500
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 457E915835
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Dec 2022 18:02:48 -0800 (PST)
+Received: by mail-pg1-x541.google.com with SMTP id f3so1085250pgc.2
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Dec 2022 18:02:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=cEUg1choN2VLPQjRx4iLadaOIPPlWAq7XP9eTBQe//I=;
+        b=AsrmmDy9qv6zvseEWARPMHibJH/73SEVcoL8RTm6+SHIV0O5kFHxwzvMp8APyY1ag+
+         mjz7sI7HmrigLIlvM7jaDjpXhMXyWN5/LAAUJfer/h1IvgNZEsdYcXS5iVCwGT+EVYRO
+         VpTKuTCHSUSNDFHROTguTr015jlPUaK8ryVM2EBIcnuJNtQKYitZfidSFvw/NI2huVl0
+         yYT+0xc55xJp/YE7cwiJ0OgLOFSrAlI4pv9wWp3yRCmtHGsdNVO/Hb4Gav40ypaGW/us
+         LLtO9dJccZtxoDQqW2HdXyC7rnDPBRJAY6aKHuwKtSvRbjOF5m40gloQTQ1kNQSr12i8
+         OCjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cEUg1choN2VLPQjRx4iLadaOIPPlWAq7XP9eTBQe//I=;
+        b=CAppJzXpEt9wDBiyVbDsxWU9975MMYMOgaqdlhrMR7ll5LJq6YECE1YCoyxq/GLSNt
+         gkKZRDleT8On8tKrb6ztIknnIUJ5F44vM9VNMa3o6/3EJ28KFfEIOV8MeqDuZVvYVohN
+         ay7CmOZc8Jqu6xNIWu+tjNh4ZS2Wyj+YG7+DpFJ8G+ETPiy+CFjtHJjy2nPPssC44GPm
+         fxaVxQ4ljMD24f7E92u+SfP0eQwAyZ1gpeJfi3AD01WIQqOW2f2qzYynVqmN4wg5KH+5
+         zMFSUJOQbae2cAZzzG+bQED7yySZntnzvi2fUNhOFNYg0aG9Vn3Jq7ivO3np+I83gysp
+         6dOw==
+X-Gm-Message-State: ANoB5pkPn9q97hJyhs6brd7It59aKdRQ2onXjXt12Nm6h3S34hurYxa+
+        pB0UrGtLmhlqP3CJcReN+jRnmyfqtf+E1BgCErk=
+X-Google-Smtp-Source: AA0mqf6tOmvAwiE4J8oX65FicHt2FCQYERLBkTg4NDn06W07EIaFS/pFT55OKnYT1H4vSyDQVWvX9fRp69ZvjDCScwo=
+X-Received: by 2002:a63:7cd:0:b0:479:eb5:a51 with SMTP id 196-20020a6307cd000000b004790eb50a51mr2971227pgh.209.1670983367797;
+ Tue, 13 Dec 2022 18:02:47 -0800 (PST)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <1670885411-10060-1-git-send-email-dai.ngo@oracle.com>
+ <CALV6CNPysKmTDmeZds61eKrtmA-yGbj1pQKvxOtfkpF3P5ankw@mail.gmail.com> <9CCA3C67-3A27-42BA-93D1-7665A051F485@oracle.com>
+In-Reply-To: <9CCA3C67-3A27-42BA-93D1-7665A051F485@oracle.com>
+From:   Xingyuan Mo <hdthky0@gmail.com>
+Date:   Wed, 14 Dec 2022 10:02:36 +0800
+Message-ID: <CALV6CNOp_pV_bscxsqMFGdPSRaL_aB0JkzRrNbr3Qa813kjPaQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] NFSD: fix use-after-free in __nfs42_ssc_open()
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Dai Ngo <dai.ngo@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "security@kernel.org" <security@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-12-14 at 07:14 +0800, Ian Kent wrote:
-> On 14/12/22 04:02, Jeff Layton wrote:
-> > On Tue, 2022-12-13 at 19:00 +0000, Chuck Lever III wrote:
-> > > > On Dec 13, 2022, at 1:08 PM, Jeff Layton <jlayton@kernel.org> wrote=
-:
-> > > >=20
-> > > > If v4 READDIR operation hits a mountpoint and gets back an error,
-> > > > then it will include that entry in the reply and set RDATTR_ERROR f=
-or it
-> > > > to the error.
-> > > >=20
-> > > > That's fine for "normal" exported filesystems, but on the v4root, w=
-e
-> > > > need to be more careful to only expose the existence of dentries th=
-at
-> > > > lead to exports.
-> > > >=20
-> > > > If the mountd upcall times out while checking to see whether a
-> > > > mountpoint on the v4root is exported, then we have no recourse othe=
-r
-> > > > than to fail the whole operation.
-> > > Thank you for chasing this down!
-> > >=20
-> > > Failing the whole READDIR when mountd times out might be a bad idea.
-> > > If the mountd upcall times out every time, the client can't make
-> > > any progress and will continue to emit the failing READDIR request.
-> > >=20
-> > > Would it be better to skip the unresolvable entry instead and let
-> > > the READDIR succeed without that entry?
-> > >=20
-> > Mounting doesn't usually require working READDIR. In that situation, a
-> > readdir() might hang (until the client kills), but a lookup of other
-> > dentries that aren't perpetually stalled should be ok in this situation=
-.
-> >=20
-> > If mountd is that hosed then I think it's unlikely that any progress
-> > will be possible anyway.
->=20
-> The READDIR shouldn't trigger a mount yes, but if it's a valid automount
->=20
-> point (basically a valid dentry in this case I think) it should be listed=
-.
->=20
-> It certainly shouldn't hold up the READDIR, passing into it is when a
->=20
-> mount should occur.
->=20
->=20
-> That's usually the behavior we want for automounts, we don't want mount
->=20
-> storms on directories full of automount points.
->=20
+On Tue, Dec 13, 2022 at 10:02 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+> May I add "Tested-by: Xingyuan Mo <hdthky0@gmail.com>" to Dai's patch ?
 
+Sure.
 
-We only want to display it if it's a valid _exported_ mountpoint.
-
-The idea here is to only reveal the parts of the namespace that are
-exported in the nfsv4 pseudoroot. The "normal" contents are not shown --
-only exported mountpoints and ancestor directories of those mountpoints.
-
-We don't want mountd triggering automounts, in general. If the
-underlying filesystem was exported, then it should also already be
-mounted, since nfsd doesn't currently trigger automounts in
-follow_down().
-
-There is also a separate patchset by Richard Weinberger to allow nfsd to
-trigger automounts if the parent filesystem is exported with -o
-crossmnt. That should be ok with this patch, since the automount will be
-triggered before the upcall to mountd. That should ensure that it's
-already mounted by the time we get to upcalling for its export.
---=20
-Jeff Layton <jlayton@kernel.org>
+Regards,
+Xingyuan Mo
