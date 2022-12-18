@@ -2,83 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63B6565043A
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Dec 2022 18:38:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9FB4650447
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Dec 2022 19:28:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231270AbiLRRh4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 18 Dec 2022 12:37:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55280 "EHLO
+        id S230400AbiLRS2w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 18 Dec 2022 13:28:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231267AbiLRRhd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Dec 2022 12:37:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F427DFD2
-        for <linux-nfs@vger.kernel.org>; Sun, 18 Dec 2022 08:42:04 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 48133B80B33
-        for <linux-nfs@vger.kernel.org>; Sun, 18 Dec 2022 16:42:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C22C433D2;
-        Sun, 18 Dec 2022 16:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671381722;
-        bh=7GgFbBkE8ILwFfNZ6sboUe+XLGJDPLsZ/tRpk7cJmp8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QCsQ4Yqp43blJtRFkBNkF9g51CovTEMgf+a4paEd0NNSWM0f3oDf7WIpLWuhQWph8
-         IOtDNzDfBktFQqOl3Cxx7t9wecXX5eO3N0anedMXSm/ZYBrTrv8OklKuV4NLmb9ILk
-         7PyctAZij7E4XFXRVmmR295xqNJP7HuB8GFX0RKMZfCs5hEThZa+DOj2b+tt7p6G2H
-         wYABlAUkoczntU6/MT47gR9zcaDXzwtrWvlTsTHeAcBq1m5BPzG7w/o2Y1tkKVTJXL
-         Cdzki+EO51xu670jHFAahGjcZpzS3piA7kkro7+U7kUy1BtFkpp6bnki08ROeGawes
-         4vhqSMc/XfT/w==
-Subject: [PATCH 6/6] nfsd(7): Correct misspelling of "an"
-From:   cel@kernel.org
-To:     SteveD@redhat.com
-Cc:     linux-nfs@vger.kernel.org, debian@helgefjell.de
-Date:   Sun, 18 Dec 2022 11:42:00 -0500
-Message-ID: <167138172084.1584402.1454583560429873779.stgit@morisot.1015granger.net>
-In-Reply-To: <167138168903.1584402.12231405451604036910.stgit@morisot.1015granger.net>
+        with ESMTP id S231149AbiLRS20 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Dec 2022 13:28:26 -0500
+Received: from static.213-239-213-133.clients.your-server.de (luckmann.name [213.239.213.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2261EB4B6
+        for <linux-nfs@vger.kernel.org>; Sun, 18 Dec 2022 09:38:46 -0800 (PST)
+Received: from localhost (localhost [127.0.0.1])
+  (uid 502)
+  by static.213-239-213-133.clients.your-server.de with local
+  id 0000000000E5E024.00000000639F5025.00007613; Sun, 18 Dec 2022 18:38:45 +0100
+Date:   Sun, 18 Dec 2022 18:38:45 +0100
+From:   Helge Kreutzmann <debian@helgefjell.de>
+To:     cel@kernel.org
+Cc:     SteveD@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 6/6] nfsd(7): Correct misspelling of "an"
+Message-ID: <20221218173845.GA30076@Debian-50-lenny-64-minimal>
 References: <167138168903.1584402.12231405451604036910.stgit@morisot.1015granger.net>
-User-Agent: StGit/1.5
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+ <167138172084.1584402.1454583560429873779.stgit@morisot.1015granger.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256; protocol="application/pgp-signature"; boundary="=_luckmann.name-30227-1671385125-0001-2"
+Content-Disposition: inline
+In-Reply-To: <167138172084.1584402.1454583560429873779.stgit@morisot.1015granger.net>
+X-Public-Key-URL: http://www.helgefjell.de/data/debian_neu.asc
+X-homepage: http://www.helgefjell.de/debian
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=0.3 required=5.0 tests=BAYES_00,CK_HELO_GENERIC,
+        HELO_DYNAMIC_IPADDR,SPF_HELO_NONE,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+This is a MIME-formatted message.  If you see this text it means that your
+E-mail software does not support MIME-formatted messages.
 
-Man page: nfsd.7
-Issue:    and end-of-file → an end-of-file
+--=_luckmann.name-30227-1671385125-0001-2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-"If the program uses select(2) or poll(2) to discover if it can read from the "
-"B<channel> then it will never see and end-of-file but when all requests have "
-"been answered, it will block until another request appears."
+Hello Chuck,
+wow, that was *fast*.
 
-Reported-by: Helge Kreutzmann <debian@helgefjell.de>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- utils/exportfs/nfsd.man |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for fixing!
 
-diff --git a/utils/exportfs/nfsd.man b/utils/exportfs/nfsd.man
-index 72fe5b1467eb..ba826af742c4 100644
---- a/utils/exportfs/nfsd.man
-+++ b/utils/exportfs/nfsd.man
-@@ -164,7 +164,7 @@ or
- .BR poll (2)
- to discover if it can read from the
- .B channel
--then it will never see and end-of-file but when all requests have been
-+then it will never see an end-of-file but when all requests have been
- answered, it will block until another request appears.
- 
- .PP
+Greetings
 
+         Helge
+--=20
+      Dr. Helge Kreutzmann                     debian@helgefjell.de
+           Dipl.-Phys.                   http://www.helgefjell.de/debian.php
+        64bit GNU powered                     gpg signed mail preferred
+           Help keep free software "libre": http://www.ffii.de/
 
+--=_luckmann.name-30227-1671385125-0001-2
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEbZZfteMW0gNUynuwQbqlJmgq5nAFAmOfUBoACgkQQbqlJmgq
+5nABFQ/+Lg61BSSBHIswK367EVNJoLpzT5NVCBsKIeqQdRKo/v6KkctUP56pKFR5
+m3pZuLgCFK8AneOdLyRdX14FVhVrSHwewkWg83fkNAX6Nw8aAW75fMiCxBRAhSAz
+LGuwlE4dP194EDix2Rab5zp+DjdKdv14OII3PmsjjbzGLjgVzfd330YUGeCSK/Uo
+hXE94hXlRhxWnLjGYeqwhT+5P7Dj3NALD4z6o0UYK6Q1Xh6ewgeXBNaN5FBB7zhJ
+D01/za8q1eDIE3H7a6j6PdhYNWzPdms1sQh8uByfDFtNOoziO6nJdtTh2umAUelB
+Gt14ptPMJokB+X/z/3Fw05+t9xNmJlD6VqUlJAQrHEK+JCVf9q1yldUCDfs6HWoU
+5qX8x0jrNn6uSPoJRPOX7f382iIWn4KD5vwFlLSEIO7psDsBX9PWPbmIJx7SL3XR
++J418N61mbCuW1/4+m9rY/P7RoL7m6825QQSAW2UaoR1bLEiAd5kGdpAotf0kjli
+5/U0EMDTo9i+6VNJ0/vYoCysut8cPH4h1AiCmeM+09U4QQcrrgo3NJZwjW4hzpUL
+ys/c36lAiiiK1zNVU+Z8C1IUT1gpH8T5giydxgv1saGeuCAmU3wwVSoiYsdmCM1X
+jQ9s5CIeGfZHuBedP+5kbq+S4dQrQwrsOJY/JEtpoF7/9aYklG4=
+=kJ9Y
+-----END PGP SIGNATURE-----
+
+--=_luckmann.name-30227-1671385125-0001-2--
