@@ -2,52 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E130A65019E
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Dec 2022 17:34:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EE48650435
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Dec 2022 18:37:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232292AbiLRQeb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 18 Dec 2022 11:34:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53834 "EHLO
+        id S230272AbiLRRhd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 18 Dec 2022 12:37:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232147AbiLRQdX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Dec 2022 11:33:23 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED637DF70;
-        Sun, 18 Dec 2022 08:12:21 -0800 (PST)
+        with ESMTP id S231289AbiLRRhL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Dec 2022 12:37:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD3927E2A8
+        for <linux-nfs@vger.kernel.org>; Sun, 18 Dec 2022 08:41:31 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 82CFE60DCF;
-        Sun, 18 Dec 2022 16:12:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 146CFC43396;
-        Sun, 18 Dec 2022 16:12:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DE6D2604AD
+        for <linux-nfs@vger.kernel.org>; Sun, 18 Dec 2022 16:41:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 106A2C433D2;
+        Sun, 18 Dec 2022 16:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671379940;
-        bh=wS2CJozuBVaCyuHPiu85yFQAGc/LKO2AOVr+rCZej9Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MggUNE67K8/ttM60EbXvl6gO2lUckJPsfSIKUR/VD7mYIws3zzW/pplKlmai5VrY1
-         1CleHS6ws6jOJ3vZmfcogVIrRKCWUoBx8dVwaDgQuM7DbkTD1bInBiDry/a2BiB3Ag
-         mF5OW7sZUT0zYSeyU2DOkxDV7Wnzi/M0rWqIOyOZhkjwpQya+bzmEgNU8S1lV4er6b
-         78wnjHab5kJ6Ndyuw/CXpwJOw8Z2Wmg/nkveQiUd1qdalOSPdhtwt3VySmQLinx2VT
-         YHQA4ipAs2vKsk4iVe1LtLN6VSKn5U+EHqwZ5JDw9fcv/Vg2vWyep6KLGNR7t2TXzq
-         pOaTXQg9QnkLg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hawkins Jiawei <yin31149@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, anna@kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 64/73] nfs: fix possible null-ptr-deref when parsing param
-Date:   Sun, 18 Dec 2022 11:07:32 -0500
-Message-Id: <20221218160741.927862-64-sashal@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221218160741.927862-1-sashal@kernel.org>
-References: <20221218160741.927862-1-sashal@kernel.org>
+        s=k20201202; t=1671381690;
+        bh=vt1rLS3aeIIQ4yiZza9OlSwNYWZVdWW0daNNoQRlcDA=;
+        h=Subject:From:To:Cc:Date:From;
+        b=YsMwHTxAxEbsSVG2vLcn/9GLrBcZm1jGTzx62kUQats7yHoXowKoaZxrMOmX5Ovad
+         I5nDnNs4wH5q2NelFAt7TGQQwbcTJhzgciFMHw31N5Dj2X3omZEzZp2EJQ/gMXWnnW
+         X6oItUZXzi8LymhskpfMzSd0sfzW8pIe1WWbNQGwteENRwKq+QTtoeEkpkNiIsOAaT
+         ybZ87Ejicmi1yIZfI49Gr0nBYR3q5tV3BrvI2kCNQ3eIIIHy1KTfl4coV5fNS9Q/tO
+         WcXCA9HOaLO1PGClmX/qqrnEENeibAt90SvYxqMjrcqVAanyXRgDW8flr/1VxRKtTx
+         zfj9y53v/v2kQ==
+Subject: [PATCH 1/6] nfsd(7): Use "backslash" consistently
+From:   cel@kernel.org
+To:     SteveD@redhat.com
+Cc:     linux-nfs@vger.kernel.org, debian@helgefjell.de
+Date:   Sun, 18 Dec 2022 11:41:29 -0500
+Message-ID: <167138168903.1584402.12231405451604036910.stgit@morisot.1015granger.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,60 +50,34 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Hawkins Jiawei <yin31149@gmail.com>
+From: Chuck Lever <chuck.lever@oracle.com>
 
-[ Upstream commit 5559405df652008e56eee88872126fe4c451da67 ]
+Man page: nfsd.7
+Issue:    back-slash vs. backslash, should be consistent
 
-According to commit "vfs: parse: deal with zero length string value",
-kernel will set the param->string to null pointer in vfs_parse_fs_string()
-if fs string has zero length.
+"Each line of the file contains a path name, a client name, and a number of "
+"options in parentheses.  Any space, tab, newline or back-slash character in "
+"the path name or client name will be replaced by a backslash followed by the "
+"octal ASCII code for that character."
 
-Yet the problem is that, nfs_fs_context_parse_param() will dereferences the
-param->string, without checking whether it is a null pointer, which may
-trigger a null-ptr-deref bug.
-
-This patch solves it by adding sanity check on param->string
-in nfs_fs_context_parse_param().
-
-Signed-off-by: Hawkins Jiawei <yin31149@gmail.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Helge Kreutzmann <debian@helgefjell.de>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/fs_context.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ utils/exportfs/nfsd.man |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 4da701fd1424..0c330bc13ef2 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -684,6 +684,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 			return ret;
- 		break;
- 	case Opt_vers:
-+		if (!param->string)
-+			goto out_invalid_value;
- 		trace_nfs_mount_assign(param->key, param->string);
- 		ret = nfs_parse_version_string(fc, param->string);
- 		if (ret < 0)
-@@ -696,6 +698,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		break;
+diff --git a/utils/exportfs/nfsd.man b/utils/exportfs/nfsd.man
+index 514153f024fa..2abb8933fb11 100644
+--- a/utils/exportfs/nfsd.man
++++ b/utils/exportfs/nfsd.man
+@@ -50,7 +50,7 @@ being treated identically.
  
- 	case Opt_proto:
-+		if (!param->string)
-+			goto out_invalid_value;
- 		trace_nfs_mount_assign(param->key, param->string);
- 		protofamily = AF_INET;
- 		switch (lookup_constant(nfs_xprt_protocol_tokens, param->string, -1)) {
-@@ -732,6 +736,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		break;
+ Each line of the file contains a path name, a client name, and a
+ number of options in parentheses.  Any space, tab, newline or
+-back-slash character in the path name or client name will be replaced
++backslash character in the path name or client name will be replaced
+ by a backslash followed by the octal ASCII code for that character.
  
- 	case Opt_mountproto:
-+		if (!param->string)
-+			goto out_invalid_value;
- 		trace_nfs_mount_assign(param->key, param->string);
- 		mountfamily = AF_INET;
- 		switch (lookup_constant(nfs_xprt_protocol_tokens, param->string, -1)) {
--- 
-2.35.1
+ .TP
+
 
