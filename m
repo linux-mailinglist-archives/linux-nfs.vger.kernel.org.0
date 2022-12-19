@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EBC8650498
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Dec 2022 21:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47D286505F7
+	for <lists+linux-nfs@lfdr.de>; Mon, 19 Dec 2022 01:56:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230272AbiLRUGg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 18 Dec 2022 15:06:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53582 "EHLO
+        id S230231AbiLSA4R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 18 Dec 2022 19:56:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbiLRUGe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Dec 2022 15:06:34 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5C526E0
-        for <linux-nfs@vger.kernel.org>; Sun, 18 Dec 2022 12:06:32 -0800 (PST)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BIH18it003840;
-        Sun, 18 Dec 2022 20:06:24 GMT
+        with ESMTP id S229730AbiLSA4Q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Dec 2022 19:56:16 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E25F261E
+        for <linux-nfs@vger.kernel.org>; Sun, 18 Dec 2022 16:56:15 -0800 (PST)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2BILoFcC019278;
+        Mon, 19 Dec 2022 00:56:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id; s=corp-2022-7-12;
- bh=vMVNoxvrJy+3POCgKsFexNV+5ozliquemtJfltXstFk=;
- b=MV6nExllqdZr5OaX0rvB2PwxeoaGJd2kF5sscazJAV2Tcei4e5f79PYJE0X/4Scm8byi
- nphBhz6+pvY5w6VWOI+viK/Xaq6aA9/aU2nHUGvx6EGH2tVrda92hHe962p+5mvhF0bf
- r77XZrMAyB0u/RkTDqwhJziKR4gPhrPWOdF6sRsJOX/HaIvHwzLe/A5iDzbi+yMXgxW3
- SVijFectqtdKVcmFy1lX495g9M9fs4ERmSl75V/wBJ0g2307Lx/aKnYFhR4AXQV/Qr0j
- 3syGDGOEMkQKlxWQdHS7tG27CfzWeQaenL4FETrAn95oaWv4ESdcJWTGW+ZANABjwpQk Nw== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3mh6tp1nxc-1
+ bh=juHSnFzLDDY3n3r/nyNYi1GSFKYJHKGcys7134Pel2o=;
+ b=KB5vFWeiPFmqsgEmUoIXCXfcyaTM8dmBzYz4nW+ceCXyKswK0DWXWn+o0bkIpFCspF7v
+ tqtYjGpXqN5bL+ujaSsvyJHNuun8V6vIYUpywPXL2YUka5Yx0KnguTMiaJVqsd7ezSQl
+ SgygL0iVADMdCLAqokkrDbvddGHMp52AWK+4y40ZnD5dAYonwRrUAh9JwN/O31MC8LPS
+ R7A3plXV2BHogEDO7gM8YTQXS4wM/fR7HEqj6/e3/tdxSt9KToCCi/scw/6B++KxEMgp
+ 2mhS6801MxjV5F/4qWSpg2aviro6DhSsOwlybsq59AKS7bhExmVNuLjObHIS08Uf2ROg jg== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3mh6tmsufu-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 18 Dec 2022 20:06:23 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2BIIq4RX012823;
-        Sun, 18 Dec 2022 20:06:23 GMT
+        Mon, 19 Dec 2022 00:56:05 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2BIKX8rv022514;
+        Mon, 19 Dec 2022 00:56:04 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3mh472q9gx-1
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3mh472ujwn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 18 Dec 2022 20:06:23 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2BIK6MoJ014704;
-        Sun, 18 Dec 2022 20:06:22 GMT
+        Mon, 19 Dec 2022 00:56:04 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2BJ0u35e025234;
+        Mon, 19 Dec 2022 00:56:03 GMT
 Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3mh472q9gv-1;
-        Sun, 18 Dec 2022 20:06:22 +0000
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3mh472ujwh-1;
+        Mon, 19 Dec 2022 00:56:03 +0000
 From:   Dai Ngo <dai.ngo@oracle.com>
 To:     chuck.lever@oracle.com, jlayton@kernel.org
 Cc:     kolga@netapp.com, linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSD: enhance inter-server copy cleanup
-Date:   Sun, 18 Dec 2022 12:06:09 -0800
-Message-Id: <1671393969-20900-1-git-send-email-dai.ngo@oracle.com>
+Subject: [PATCH v2 1/1] NFSD: enhance inter-server copy cleanup
+Date:   Sun, 18 Dec 2022 16:55:53 -0800
+Message-Id: <1671411353-31165-1-git-send-email-dai.ngo@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-12-18_02,2022-12-15_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 suspectscore=0
- adultscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2212180191
-X-Proofpoint-GUID: R8ZJnCH6fOv9FFpBE6vR-9iNsGisrbIA
-X-Proofpoint-ORIG-GUID: R8ZJnCH6fOv9FFpBE6vR-9iNsGisrbIA
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ spamscore=0 phishscore=0 adultscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2212190006
+X-Proofpoint-ORIG-GUID: 69nBFBrCxH6-TXNLEJv46KksTrCNHsud
+X-Proofpoint-GUID: 69nBFBrCxH6-TXNLEJv46KksTrCNHsud
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -87,12 +87,16 @@ the 'not found' case.
 
 Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 ---
- fs/nfsd/nfs4proc.c | 91 +++++++++++++++++++++---------------------------------
- fs/nfsd/xdr4.h     |  2 +-
- 2 files changed, 36 insertions(+), 57 deletions(-)
+V2: fix compile error when CONFIG_NFSD_V4_2_INTER_SSC not defined.
+    Reported by kernel test robot.
+
+ fs/nfsd/nfs4proc.c      | 94 +++++++++++++++++++------------------------------
+ fs/nfsd/xdr4.h          |  2 +-
+ include/linux/nfs_ssc.h |  2 +-
+ 3 files changed, 38 insertions(+), 60 deletions(-)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index b79ee65ae016..91408f72982b 100644
+index b79ee65ae016..6515b00520bc 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
 @@ -1295,15 +1295,15 @@ extern void nfs_sb_deactive(struct super_block *sb);
@@ -220,7 +224,7 @@ index b79ee65ae016..91408f72982b 100644
  	if (status)
  		goto out;
  
-@@ -1506,54 +1504,36 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
+@@ -1506,61 +1504,42 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
  }
  
  static void
@@ -285,9 +289,17 @@ index b79ee65ae016..91408f72982b 100644
 +			struct nfsd4_compound_state *cstate,
 +			struct nfsd4_copy *copy)
  {
- 	*mount = NULL;
+-	*mount = NULL;
  	return nfserr_inval;
-@@ -1700,7 +1680,7 @@ static void dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
+ }
+ 
+ static void
+-nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
++nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umount_item *ni, struct file *filp,
+ 			struct nfsd_file *dst)
+ {
+ }
+@@ -1700,7 +1679,7 @@ static void dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
  	memcpy(dst->cp_src, src->cp_src, sizeof(struct nl4_server));
  	memcpy(&dst->stateid, &src->stateid, sizeof(src->stateid));
  	memcpy(&dst->c_fh, &src->c_fh, sizeof(src->c_fh));
@@ -296,7 +308,7 @@ index b79ee65ae016..91408f72982b 100644
  }
  
  static void cleanup_async_copy(struct nfsd4_copy *copy)
-@@ -1749,8 +1729,8 @@ static int nfsd4_do_async_copy(void *data)
+@@ -1749,8 +1728,8 @@ static int nfsd4_do_async_copy(void *data)
  	if (nfsd4_ssc_is_inter(copy)) {
  		struct file *filp;
  
@@ -307,7 +319,7 @@ index b79ee65ae016..91408f72982b 100644
  		if (IS_ERR(filp)) {
  			switch (PTR_ERR(filp)) {
  			case -EBADF:
-@@ -1764,7 +1744,7 @@ static int nfsd4_do_async_copy(void *data)
+@@ -1764,7 +1743,7 @@ static int nfsd4_do_async_copy(void *data)
  		}
  		nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
  				       false);
@@ -316,7 +328,7 @@ index b79ee65ae016..91408f72982b 100644
  	} else {
  		nfserr = nfsd4_do_copy(copy, copy->nf_src->nf_file,
  				       copy->nf_dst->nf_file, false);
-@@ -1790,8 +1770,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+@@ -1790,8 +1769,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
  			status = nfserr_notsupp;
  			goto out;
  		}
@@ -339,6 +351,26 @@ index 0eb00105d845..36c3340c1d54 100644
  	struct nfs_fh		c_fh;
  	nfs4_stateid		stateid;
  };
+diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
+index 75843c00f326..22265b1ff080 100644
+--- a/include/linux/nfs_ssc.h
++++ b/include/linux/nfs_ssc.h
+@@ -53,6 +53,7 @@ static inline void nfs42_ssc_close(struct file *filep)
+ 	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
+ 		(*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
+ }
++#endif
+ 
+ struct nfsd4_ssc_umount_item {
+ 	struct list_head nsui_list;
+@@ -66,7 +67,6 @@ struct nfsd4_ssc_umount_item {
+ 	struct vfsmount *nsui_vfsmount;
+ 	char nsui_ipaddr[RPC_MAX_ADDRBUFLEN + 1];
+ };
+-#endif
+ 
+ /*
+  * NFS_FS
 -- 
 2.9.5
 
