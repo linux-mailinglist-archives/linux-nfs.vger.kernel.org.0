@@ -2,74 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B15A650E8B
-	for <lists+linux-nfs@lfdr.de>; Mon, 19 Dec 2022 16:22:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBEBB6521A6
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Dec 2022 14:44:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbiLSPWt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 19 Dec 2022 10:22:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48166 "EHLO
+        id S230117AbiLTNoE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 20 Dec 2022 08:44:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231931AbiLSPWs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 19 Dec 2022 10:22:48 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF67263EE;
-        Mon, 19 Dec 2022 07:22:47 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 825EDB80E7A;
-        Mon, 19 Dec 2022 15:22:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 308DDC433F0;
-        Mon, 19 Dec 2022 15:22:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671463365;
-        bh=jDxSJDMTWt13FePZzSNyAo9bsTVsnhQKvIKfDSGpKYA=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=g7P55TVlxO9/vnI7D61UYWRppYjrE7rM1dfJE1nr4qTMj2b7mXOYDzgdheZ04njTE
-         WPHLFD/9nS8if06YqwnR/TwPHNsTYSEaTJXNW9e7uXBAZjkkFHvT+1atlTIdVnlvWC
-         01IW7GQY85X2QtMW1XD0ZbeTeUdgOQq8+rq1asWws8OnWGt+2pJfiT6AKEU+h1lQXe
-         aJTMN7/O8y1mgihJO0PgfHbX7cs68/T9TFTUwGJbNHvaGccZ6fbA120C+9OwcfinT0
-         weR8kwArFugXpY/00IxxT7pjiOU/zsr0SBaPlQZLNez19mvlPSyFEz349TzFlEjWKe
-         +Qo0RPf9ZLkjg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 157CAE21EEE;
-        Mon, 19 Dec 2022 15:22:45 +0000 (UTC)
-Subject: Re: [GIT PULL] 2nd v6.2 PR for nfsd
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <B9418BA0-EBAC-4CE4-AA12-206083581C42@oracle.com>
-References: <B9418BA0-EBAC-4CE4-AA12-206083581C42@oracle.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <B9418BA0-EBAC-4CE4-AA12-206083581C42@oracle.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.2-1
-X-PR-Tracked-Commit-Id: 75333d48f92256a0dec91dbf07835e804fc411c0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: aeba12b26c79fc35e07e511f692a8907037d95da
-Message-Id: <167146336508.2518.10690228005733903437.pr-tracker-bot@kernel.org>
-Date:   Mon, 19 Dec 2022 15:22:45 +0000
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S233652AbiLTNoB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 20 Dec 2022 08:44:01 -0500
+Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36B6E1A073
+        for <linux-nfs@vger.kernel.org>; Tue, 20 Dec 2022 05:44:00 -0800 (PST)
+Received: by mail-wr1-x42a.google.com with SMTP id o5so11787460wrm.1
+        for <linux-nfs@vger.kernel.org>; Tue, 20 Dec 2022 05:44:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arrikto-com.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Qb8KUPS0oeSxFKMXM7QL9P9dPC93LY4lqMV3Xlc+Azs=;
+        b=6E209t0wFzuEl6XvR9yI9R4VH1OE2fluuYIwZqdv3Fz20aU7xVx2fqZKzLu1vKqpW4
+         XDm3gsAbELW1VrA3I0mj/wJsbKU/LQYgLvB0cg211IAwvoZfbRygq9ouACbVgZZvBqM9
+         6IlTre76Nq189wUDMDndcSehADdgo7MM7r6p5y6ApkqWNsidQF2CYTkO8QQu6EiTDYFE
+         KIRLWQ7O/RUo8BA/RS4IBVNfKZ+a7jZHnDeL15uFkae2H4u5LFrusREFtqrOrfYreHlB
+         YkIKT5R74qvbpDBliWkHOyA1mDluO57cstDNcJ2af1ObbKQ6RKE9BgBhTmBciIZ5XqLz
+         YK/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qb8KUPS0oeSxFKMXM7QL9P9dPC93LY4lqMV3Xlc+Azs=;
+        b=lURKdhBf4Rjy+1HJGMlclLemhIRXjphTX0kB57w4t16iVONcjYGibp86svHnVSL7jh
+         nXPYEhnfQyGI4eUvZFg54kDClxUUUwlGUp0pHMpSLZbQjJk7fHcqVHVeduZF8Bav6ojX
+         Q3IgZwfZUSnJZ43r9lj3Qdrh8YDt5/eAufncTKm+mdsIVwNTDd5f7QnM0dBJ7pz3vX3I
+         NFrnfsPV9pIqyKW6OW5XeWqYRKl1MWBlCGYXFQXsxBqGRV5eC9Pn4bhAORlG2R65Q/ej
+         zjyQn2jrJhljoQwJWgNkpwaKdccCKGi7OgxPm7B2rHULXMxt7HGYCCo2fkS+WktcFRF1
+         VVIw==
+X-Gm-Message-State: ANoB5pnR+5OH+Ra/ttbhuu2M/2rHXW5AvstHjWrBt54RMXTJIK3uorjm
+        Z98aJIlI0IdpL1dK7XdWOhN7oA==
+X-Google-Smtp-Source: AA0mqf6fKmmQj+6KNyXZQWS9Vh/hRwbFH/YN04tOEDfQiEu+JKRBUgm71a18IVw4nqFnv8sc+3d1Bg==
+X-Received: by 2002:adf:f0ca:0:b0:241:fd48:dccd with SMTP id x10-20020adff0ca000000b00241fd48dccdmr28895454wro.63.1671543838772;
+        Tue, 20 Dec 2022 05:43:58 -0800 (PST)
+Received: from [10.94.1.166] ([185.109.18.135])
+        by smtp.gmail.com with ESMTPSA id ck5-20020a5d5e85000000b00257795ffcc8sm12868345wrb.73.2022.12.20.05.43.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 20 Dec 2022 05:43:58 -0800 (PST)
+Message-ID: <936effe2-1268-42ab-886e-649b7c501828@arrikto.com>
+Date:   Tue, 20 Dec 2022 15:43:57 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH] nfsd: Ensure knfsd shuts down when the "nfsd" pseudofs is
+ unmounted
+Content-Language: en-US
+To:     trondmy@kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <20210313210847.569041-1-trondmy@kernel.org>
+From:   Nikos Tsironis <ntsironis@arrikto.com>
+In-Reply-To: <20210313210847.569041-1-trondmy@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Mon, 19 Dec 2022 14:19:51 +0000:
+On 3/13/21 23:08, trondmy@kernel.org wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> 
+> In order to ensure that knfsd threads don't linger once the nfsd
+> pseudofs is unmounted (e.g. when the container is killed) we let
+> nfsd_umount() shut down those threads and wait for them to exit.
+> 
+> This also should ensure that we don't need to do a kernel mount of
+> the pseudofs, since the thread lifetime is now limited by the
+> lifetime of the filesystem.
+> 
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.2-1
+Hello,
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/aeba12b26c79fc35e07e511f692a8907037d95da
+This patch was merged in kernel v5.13, but the issue exists in older
+kernels too.
 
-Thank you!
+Is there a reason that the patch was never backported to older stable
+kernels?
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+Nikos.
