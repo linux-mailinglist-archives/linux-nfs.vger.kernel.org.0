@@ -2,239 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF1EC654398
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Dec 2022 16:04:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69FD16543FB
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Dec 2022 16:11:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235446AbiLVPEb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Dec 2022 10:04:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50168 "EHLO
+        id S229763AbiLVPLm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Dec 2022 10:11:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235195AbiLVPEI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Dec 2022 10:04:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0145026AE6
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Dec 2022 07:02:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1671721357;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=75w1pfVKB1Ro0XqkbXmr8eWxoXfk22o+qXL/5b9cucw=;
-        b=RJyES0TDThBSqRZCVOF7bAIcfhChVykin+8LFDG/nSg7QFfCJzqgJHixS4F+544kpos2VV
-        VSfc4WoaIEqdTWwtO0Lv4vjmD39IcEjTAxUdr8i8P+dhHXDNQ3rDvxRujpUIwa6wMagsBF
-        7tPauQkMawlelG/lF/uWqAB0I7T0ouc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-290-HaKXfIxlMWuof_yakpjAKg-1; Thu, 22 Dec 2022 10:02:34 -0500
-X-MC-Unique: HaKXfIxlMWuof_yakpjAKg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S235855AbiLVPLS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Dec 2022 10:11:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEA5713FAC
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Dec 2022 07:10:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A1C872803D7E;
-        Thu, 22 Dec 2022 15:02:32 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4BBDC2166B29;
-        Thu, 22 Dec 2022 15:02:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH v5 3/3] mm: Make filemap_release_folio() better inform
- shrink_folio_list()
-From:   David Howells <dhowells@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Rohith Surabattula <rohiths.msft@gmail.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
-        linux-ext4@lists.ozlabs.org, linux-cachefs@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 22 Dec 2022 15:02:29 +0000
-Message-ID: <167172134962.2334525.570622889806603086.stgit@warthog.procyon.org.uk>
-In-Reply-To: <167172131368.2334525.8569808925687731937.stgit@warthog.procyon.org.uk>
-References: <167172131368.2334525.8569808925687731937.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/1.5
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7DC8361C27
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Dec 2022 15:10:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80BF8C433D2;
+        Thu, 22 Dec 2022 15:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1671721809;
+        bh=kFokKpYHK5p4eNpyBgxQhNpG5w8jDGT8Ujr9tyMaQxw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Lv6k8/Gsxbrb5RaJaA2OxSTTLM1JdT2zqCsFkrPGwKRN91ukrbc593atKN0bPVins
+         b/gQtga/uSfVRKlPb7Sy6mAO84KXS1nByXgOIFuprdxuAx0CtZGMA1w7D6FMJgVfs6
+         geUgYaycizHNwrG7b4hoo00Q0S4rhkNYtJCHury0UViX/U60L848TRrKjES61P8ldD
+         c+T0DstDISTheLMPqg97MOgjL8iuns4sbXL2YiGGxCNMJugI+ZKp1NPxGqTIymNVJD
+         v/neO8wipSda4LbRDO/ZKCGd5Y72Yy7KFNSK5OgNn5eQzv+KluwlFsWFiHiiYDS8ua
+         4RcLPPtSnXqvw==
+Message-ID: <46416c9d66e5c64feb3093d3f1f6b6248d49467b.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: shut down the NFSv4 state objects before the
+ filecache
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Wang Yugui <wangyugui@e16-tech.com>
+Date:   Thu, 22 Dec 2022 10:10:08 -0500
+In-Reply-To: <3858C5C1-342C-4599-A1B5-BF55953D0CBB@oracle.com>
+References: <20221222145130.162341-1-jlayton@kernel.org>
+         <3858C5C1-342C-4599-A1B5-BF55953D0CBB@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Make filemap_release_folio() return one of three values:
+On Thu, 2022-12-22 at 14:55 +0000, Chuck Lever III wrote:
+>=20
+> > On Dec 22, 2022, at 9:51 AM, Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > Currently, we shut down the filecache before trying to clean up the
+> > stateids that depend on it. This leads to the kernel trying to free an
+> > nfsd_file twice, and a refcount overput on the nf_mark.
+> >=20
+> > Change the shutdown procedure to tear down all of the stateids prior
+> > to shutting down the filecache.
+> >=20
+> > Reported-and-Tested-by: Wang Yugui <wangyugui@e16-tech.com>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > fs/nfsd/nfssvc.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > index 56fba1cba3af..325d3d3f1211 100644
+> > --- a/fs/nfsd/nfssvc.c
+> > +++ b/fs/nfsd/nfssvc.c
+> > @@ -453,8 +453,8 @@ static void nfsd_shutdown_net(struct net *net)
+> > {
+> > 	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> >=20
+> > -	nfsd_file_cache_shutdown_net(net);
+> > 	nfs4_state_shutdown_net(net);
+> > +	nfsd_file_cache_shutdown_net(net);
+> > 	if (nn->lockd_up) {
+> > 		lockd_down(net);
+> > 		nn->lockd_up =3D false;
+> > --=20
+> > 2.38.1
+> >=20
+>=20
+> Hi Jeff, seems sensible. May I add:
+>=20
+> Fixes: 5e113224c17e ("nfsd: nfsd_file cache entries should be per net nam=
+espace")
+>=20
 
- (0) FILEMAP_CANT_RELEASE_FOLIO
-
-     Couldn't release the folio's private data, so the folio can't itself
-     be released.
-
- (1) FILEMAP_RELEASED_FOLIO
-
-     The private data on the folio was released and the folio can be
-     released.
-
- (2) FILEMAP_FOLIO_HAD_NO_PRIVATE
-
-     There was no private data on the folio and the folio can be released.
-
-The first must be zero so that existing tests of !filemap_release_folio()
-continue to work as expected; similarly the other two must both be non-zero
-so that existing tests of filemap_release_folio() continue to work as
-expected.
-
-Using this, make shrink_folio_list() choose which of three cases to follow
-based on the return from filemap_release_folio() rather than testing the
-folio's private bit itself.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Steve French <sfrench@samba.org>
-cc: Shyam Prasad N <nspmangalore@gmail.com>
-cc: Rohith Surabattula <rohiths.msft@gmail.com>
-cc: Dave Wysochanski <dwysocha@redhat.com>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Ilya Dryomov <idryomov@gmail.com>
-cc: linux-cachefs@redhat.com
-cc: linux-cifs@vger.kernel.org
-cc: linux-afs@lists.infradead.org
-cc: v9fs-developer@lists.sourceforge.net
-cc: ceph-devel@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
-
-Link: https://lore.kernel.org/r/1459152.1669208550@warthog.procyon.org.uk/ # v3
-Link: https://lore.kernel.org/r/166924373637.1772793.2622483388224911574.stgit@warthog.procyon.org.uk/ # v4
----
-
- include/linux/pagemap.h |    7 ++++++-
- mm/filemap.c            |   20 ++++++++++++++------
- mm/vmscan.c             |   29 +++++++++++++++--------------
- 3 files changed, 35 insertions(+), 21 deletions(-)
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index a0d433e0addd..cd00fb3b524b 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -1121,7 +1121,12 @@ void __filemap_remove_folio(struct folio *folio, void *shadow);
- void replace_page_cache_folio(struct folio *old, struct folio *new);
- void delete_from_page_cache_batch(struct address_space *mapping,
- 				  struct folio_batch *fbatch);
--bool filemap_release_folio(struct folio *folio, gfp_t gfp);
-+enum filemap_released_folio {
-+	FILEMAP_CANT_RELEASE_FOLIO	= 0, /* (This must be 0) Release failed */
-+	FILEMAP_RELEASED_FOLIO		= 1, /* Folio's private data released */
-+	FILEMAP_FOLIO_HAD_NO_PRIVATE	= 2, /* Folio had no private data */
-+};
-+enum filemap_released_folio filemap_release_folio(struct folio *folio, gfp_t gfp);
- loff_t mapping_seek_hole_data(struct address_space *, loff_t start, loff_t end,
- 		int whence);
- 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 344146c170b0..217ca847773a 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -3953,20 +3953,28 @@ EXPORT_SYMBOL(generic_file_write_iter);
-  * this page (__GFP_IO), and whether the call may block
-  * (__GFP_RECLAIM & __GFP_FS).
-  *
-- * Return: %true if the release was successful, otherwise %false.
-+ * Return: %FILEMAP_RELEASED_FOLIO if the release was successful,
-+ * %FILEMAP_CANT_RELEASE_FOLIO if the private data couldn't be released and
-+ * %FILEMAP_FOLIO_HAD_NO_PRIVATE if there was no private data.
-  */
--bool filemap_release_folio(struct folio *folio, gfp_t gfp)
-+enum filemap_released_folio filemap_release_folio(struct folio *folio,
-+						  gfp_t gfp)
- {
- 	struct address_space * const mapping = folio->mapping;
-+	bool released;
- 
- 	BUG_ON(!folio_test_locked(folio));
- 	if (!folio_needs_release(folio))
--		return true;
-+		return FILEMAP_FOLIO_HAD_NO_PRIVATE;
- 	if (folio_test_writeback(folio))
--		return false;
-+		return FILEMAP_CANT_RELEASE_FOLIO;
- 
- 	if (mapping && mapping->a_ops->release_folio)
--		return mapping->a_ops->release_folio(folio, gfp);
--	return try_to_free_buffers(folio);
-+		released = mapping->a_ops->release_folio(folio, gfp);
-+	else
-+		released = try_to_free_buffers(folio);
-+
-+	return released ?
-+		FILEMAP_RELEASED_FOLIO : FILEMAP_CANT_RELEASE_FOLIO;
- }
- EXPORT_SYMBOL(filemap_release_folio);
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index bded71961143..b1e5ca348223 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1996,25 +1996,26 @@ static unsigned int shrink_folio_list(struct list_head *folio_list,
- 		 * (refcount == 1) it can be freed.  Otherwise, leave
- 		 * the folio on the LRU so it is swappable.
- 		 */
--		if (folio_needs_release(folio)) {
--			if (!filemap_release_folio(folio, sc->gfp_mask))
--				goto activate_locked;
-+		switch (filemap_release_folio(folio, sc->gfp_mask)) {
-+		case FILEMAP_CANT_RELEASE_FOLIO:
-+			goto activate_locked;
-+		case FILEMAP_RELEASED_FOLIO:
- 			if (!mapping && folio_ref_count(folio) == 1) {
- 				folio_unlock(folio);
- 				if (folio_put_testzero(folio))
- 					goto free_it;
--				else {
--					/*
--					 * rare race with speculative reference.
--					 * the speculative reference will free
--					 * this folio shortly, so we may
--					 * increment nr_reclaimed here (and
--					 * leave it off the LRU).
--					 */
--					nr_reclaimed += nr_pages;
--					continue;
--				}
-+				/*
-+				 * rare race with speculative reference.  the
-+				 * speculative reference will free this folio
-+				 * shortly, so we may increment nr_reclaimed
-+				 * here (and leave it off the LRU).
-+				 */
-+				nr_reclaimed += nr_pages;
-+				continue;
- 			}
-+			break;
-+		case FILEMAP_FOLIO_HAD_NO_PRIVATE:
-+			break;
- 		}
- 
- 		if (folio_test_anon(folio) && !folio_test_swapbacked(folio)) {
-
-
+Yes, thanks.
+--=20
+Jeff Layton <jlayton@kernel.org>
