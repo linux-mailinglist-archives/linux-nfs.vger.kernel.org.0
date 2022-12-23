@@ -2,105 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DBFA465520E
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Dec 2022 16:31:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7257465525C
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Dec 2022 16:41:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236479AbiLWPbg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Dec 2022 10:31:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50334 "EHLO
+        id S236511AbiLWPld (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Dec 2022 10:41:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236398AbiLWPbf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Dec 2022 10:31:35 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E485B2;
-        Fri, 23 Dec 2022 07:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YI+GETaE07zfIF6gTr93yZkoaqmkXGRyTSkPLa22IzA=; b=RkLgtlP2zs+0grtCP2XKKuFJes
-        6FHjSru80hSAyAYCWjR4giWwoV3DaU3XpMF7/3HZDUa+E/kozrd+x6VmAXg4TRMKJHW9b8wzSyfeD
-        VokI0tlui9x8PQhh88Z82EqORo/ZAaFcoi8Gbx6S9ZrNjmqThuHWTTIRq3+YEjgq3IX5yINDVvjt+
-        e0+/qxQDLcU/llLFjIUrhW0P/9m/nHcrhbkOptvrE3r4S9ZgmuFyMLR/rPv50gmRKgcXjautu9IC5
-        U8MyiLTneJokeOtEKvUEFCZUMIUmLTbzJVU1SPbmDcoK0FIf2BAPGpTW1uoenfctyu+YHc+9jx57b
-        guycEkxA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1p8k0x-009SnO-0o; Fri, 23 Dec 2022 15:31:15 +0000
-Date:   Fri, 23 Dec 2022 07:31:14 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Rohith Surabattula <rohiths.msft@gmail.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Jeff Layton <jlayton@kernel.org>,
-        linux-erofs@lists.ozlabs.org, linux-ext4@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/3] mm: Make filemap_release_folio() better inform
- shrink_folio_list()
-Message-ID: <Y6XJwvjKyTgRIiI3@infradead.org>
-References: <167172131368.2334525.8569808925687731937.stgit@warthog.procyon.org.uk>
- <167172134962.2334525.570622889806603086.stgit@warthog.procyon.org.uk>
+        with ESMTP id S236522AbiLWPlV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Dec 2022 10:41:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3314A1148;
+        Fri, 23 Dec 2022 07:41:20 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A9E326158B;
+        Fri, 23 Dec 2022 15:41:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F15C433D2;
+        Fri, 23 Dec 2022 15:41:15 +0000 (UTC)
+Date:   Fri, 23 Dec 2022 10:41:13 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Julia Lawall <Julia.Lawall@inria.fr>, linux-sh@vger.kernel.org,
+        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-acpi@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-bluetooth@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        brcm80211-dev-list.pdl@broadcom.com,
+        SHA-cyfmac-dev-list@infineon.com, linux-scsi@vger.kernel.org,
+        linux-staging@lists.linux.dev, linux-ext4@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, bridge@lists.linux-foundation.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        lvs-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, alsa-devel@alsa-project.org
+Subject: Re: [PATCH] treewide: Convert del_timer*() to timer_shutdown*()
+Message-ID: <20221223104113.0bc8d37f@gandalf.local.home>
+In-Reply-To: <20221220134519.3dd1318b@gandalf.local.home>
+References: <20221220134519.3dd1318b@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <167172134962.2334525.570622889806603086.stgit@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 22, 2022 at 03:02:29PM +0000, David Howells wrote:
-> Make filemap_release_folio() return one of three values:
+On Tue, 20 Dec 2022 13:45:19 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> [
+>   Linus,
 > 
->  (0) FILEMAP_CANT_RELEASE_FOLIO
+>     I ran the script against your latest master branch:
+>     commit b6bb9676f2165d518b35ba3bea5f1fcfc0d969bf
 > 
->      Couldn't release the folio's private data, so the folio can't itself
->      be released.
+>     As the timer_shutdown*() code is now in your tree, I figured
+>     we can start doing the conversions. At least add the trivial ones
+>     now as Thomas suggested that this gets applied at the end of the
+>     merge window, to avoid conflicts with linux-next during the
+>     development cycle. I can wait to Friday to run it again, and
+>     resubmit.
 > 
->  (1) FILEMAP_RELEASED_FOLIO
-> 
->      The private data on the folio was released and the folio can be
->      released.
-> 
->  (2) FILEMAP_FOLIO_HAD_NO_PRIVATE
+>     What is the best way to handle this?
+> ]
 
-These names read really odd, due to the different placementments
-of FOLIO, the present vs past tense and the fact that 2 also released
-the folio, and the reliance of callers that one value of an enum
-must be 0, while no unprecedented, is a bit ugly.
+Note, I just did a git remote update, checked out the latest, re-ran the
+script, and this patch hasn't changed.
 
-But do we even need them?  What abut just open coding
-filemap_release_folio (which is a mostly trivial function) in
-shrink_folio_list, which is the only place that cares?
-
-	if (folio_has_private(folio) && folio_needs_release(folio)) {
-		if (folio_test_writeback(folio))
-			goto activate_locked;
-
-		if (mapping && mapping->a_ops->release_folio) {
-			if (!mapping->a_ops->release_folio(folio, gfp))
-				goto activate_locked;
-		} else {
-			if (!try_to_free_buffers(folio))
-				goto activate_locked;
-		}
-
-		if (!mapping && folio_ref_count(folio) == 1) {
-			...
-
-alternatively just keep using filemap_release_folio and just add the
-folio_needs_release in the first branch.  That duplicates the test,
-but makes the change a one-liner.
+-- Steve
