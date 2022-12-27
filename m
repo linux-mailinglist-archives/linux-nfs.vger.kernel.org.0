@@ -2,87 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7257465525C
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Dec 2022 16:41:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 128A9656EBD
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Dec 2022 21:34:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236511AbiLWPld (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Dec 2022 10:41:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53234 "EHLO
+        id S229972AbiL0UeD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Dec 2022 15:34:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236522AbiLWPlV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Dec 2022 10:41:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3314A1148;
-        Fri, 23 Dec 2022 07:41:20 -0800 (PST)
+        with ESMTP id S231835AbiL0Udb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Dec 2022 15:33:31 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0F3DED4;
+        Tue, 27 Dec 2022 12:33:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A9E326158B;
-        Fri, 23 Dec 2022 15:41:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F15C433D2;
-        Fri, 23 Dec 2022 15:41:15 +0000 (UTC)
-Date:   Fri, 23 Dec 2022 10:41:13 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Julia Lawall <Julia.Lawall@inria.fr>, linux-sh@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        drbd-dev@lists.linbit.com, linux-bluetooth@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-media@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        SHA-cyfmac-dev-list@infineon.com, linux-scsi@vger.kernel.org,
-        linux-staging@lists.linux.dev, linux-ext4@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, bridge@lists.linux-foundation.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        lvs-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, alsa-devel@alsa-project.org
-Subject: Re: [PATCH] treewide: Convert del_timer*() to timer_shutdown*()
-Message-ID: <20221223104113.0bc8d37f@gandalf.local.home>
-In-Reply-To: <20221220134519.3dd1318b@gandalf.local.home>
-References: <20221220134519.3dd1318b@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 70ACF6123B;
+        Tue, 27 Dec 2022 20:33:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0304AC433F0;
+        Tue, 27 Dec 2022 20:33:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672173209;
+        bh=Nk3jaQ6ju/z4RcNdUSiRE2Pmybk1zYp+x8kUZcuNn3c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cmFZfxQa7nz8xqEZxT0BNYsdy3UoVZx5c3/Kn+ryxUwCkua/zvBQzitiX10KXeiCM
+         kv0IikwZ11a7NDdoV0NCWzlZasJ1u+s3HLbCmnrREhDN+mXib2mcEqZKEZ8SjpEVRF
+         sfA2wEWhM9+VEkIZOWMNEWv80jD/Xuqk7fWvQfDs4Vy1wWAxf9HHEFKYvTiGV8Xh1B
+         Y96B16L72b1fKPo4MwJZyGN1CG0PwRbChe2gMe1unQ9eZPHetu8iKq/MdxWftxUDfd
+         QSldCsoF+B76jhBqogLGcBnzOV/T8kjQlBl1ZfQvJjZdBw9LmEqLg7mARliuJ1wIyL
+         8CsKc63bV5vvQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dai Ngo <dai.ngo@oracle.com>, Xingyuan Mo <hdthky0@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, jlayton@kernel.org,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 24/28] NFSD: fix use-after-free in __nfs42_ssc_open()
+Date:   Tue, 27 Dec 2022 15:32:45 -0500
+Message-Id: <20221227203249.1213526-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20221227203249.1213526-1-sashal@kernel.org>
+References: <20221227203249.1213526-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 20 Dec 2022 13:45:19 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Dai Ngo <dai.ngo@oracle.com>
 
-> [
->   Linus,
-> 
->     I ran the script against your latest master branch:
->     commit b6bb9676f2165d518b35ba3bea5f1fcfc0d969bf
-> 
->     As the timer_shutdown*() code is now in your tree, I figured
->     we can start doing the conversions. At least add the trivial ones
->     now as Thomas suggested that this gets applied at the end of the
->     merge window, to avoid conflicts with linux-next during the
->     development cycle. I can wait to Friday to run it again, and
->     resubmit.
-> 
->     What is the best way to handle this?
-> ]
+[ Upstream commit 75333d48f92256a0dec91dbf07835e804fc411c0 ]
 
-Note, I just did a git remote update, checked out the latest, re-ran the
-script, and this patch hasn't changed.
+Problem caused by source's vfsmount being unmounted but remains
+on the delayed unmount list. This happens when nfs42_ssc_open()
+return errors.
 
--- Steve
+Fixed by removing nfsd4_interssc_connect(), leave the vfsmount
+for the laundromat to unmount when idle time expires.
+
+We don't need to call nfs_do_sb_deactive when nfs42_ssc_open
+return errors since the file was not opened so nfs_server->active
+was not incremented. Same as in nfsd4_copy, if we fail to
+launch nfsd4_do_async_copy thread then there's no need to
+call nfs_do_sb_deactive
+
+Reported-by: Xingyuan Mo <hdthky0@gmail.com>
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+Tested-by: Xingyuan Mo <hdthky0@gmail.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfsd/nfs4proc.c | 20 +++++---------------
+ 1 file changed, 5 insertions(+), 15 deletions(-)
+
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 8beb2bc4c328..b79ee65ae016 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1463,13 +1463,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+ 	return status;
+ }
+ 
+-static void
+-nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+-{
+-	nfs_do_sb_deactive(ss_mnt->mnt_sb);
+-	mntput(ss_mnt);
+-}
+-
+ /*
+  * Verify COPY destination stateid.
+  *
+@@ -1572,11 +1565,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
+ {
+ }
+ 
+-static void
+-nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+-{
+-}
+-
+ static struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+ 				   struct nfs_fh *src_fh,
+ 				   nfs4_stateid *stateid)
+@@ -1771,7 +1759,7 @@ static int nfsd4_do_async_copy(void *data)
+ 			default:
+ 				nfserr = nfserr_offload_denied;
+ 			}
+-			nfsd4_interssc_disconnect(copy->ss_mnt);
++			/* ss_mnt will be unmounted by the laundromat */
+ 			goto do_callback;
+ 		}
+ 		nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
+@@ -1852,8 +1840,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (async_copy)
+ 		cleanup_async_copy(async_copy);
+ 	status = nfserrno(-ENOMEM);
+-	if (nfsd4_ssc_is_inter(copy))
+-		nfsd4_interssc_disconnect(copy->ss_mnt);
++	/*
++	 * source's vfsmount of inter-copy will be unmounted
++	 * by the laundromat
++	 */
+ 	goto out;
+ }
+ 
+-- 
+2.35.1
+
