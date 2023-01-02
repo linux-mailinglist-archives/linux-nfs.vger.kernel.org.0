@@ -2,223 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D526A65AD8D
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jan 2023 07:57:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88AB365B57B
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jan 2023 18:05:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjABG5u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Jan 2023 01:57:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59444 "EHLO
+        id S236323AbjABRFb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Jan 2023 12:05:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbjABG5t (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Jan 2023 01:57:49 -0500
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9536710BD
-        for <linux-nfs@vger.kernel.org>; Sun,  1 Jan 2023 22:57:48 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 0D5CF5C0160;
-        Mon,  2 Jan 2023 01:57:48 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Mon, 02 Jan 2023 01:57:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm1; t=1672642668; x=
-        1672729068; bh=HChj3M5D7hFhezttfYi9PTpBXUU8QQVqULTPd4dneco=; b=1
-        f1RabKR1tCF4AIZPNa3yAIO85v2obKagly7Umh0+tbZCrSe1TwcLq76HRG1PsBr+
-        eX+FpfLDBL+DBzhQl7eKtTekulOFeElx7FLXZylgkL0T0BFXG7MZlADu0dfZrMGf
-        cj5EgsUVjJ/uhhgMMnXplKKaHq5S+VccVec/v+V9EjahfEIk/6UZqA6EFj2OavIZ
-        CTsU4i3OK6YMX+hIP9FCLkzk5LKTMDBA7A068Y05eBUO86yGXWIy3EPGkSiiX3QI
-        UQloouulBnEhuX7wakfmu4tLtP8894eEPQJRhO0r1W8HegmC1vXKmSKk+fkRaxkz
-        55ZDRsHtaKqQgUmzCYV+Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1672642668; x=
-        1672729068; bh=HChj3M5D7hFhezttfYi9PTpBXUU8QQVqULTPd4dneco=; b=A
-        mOrdJfNRWAiDRJc27qxXZOnySHJrXxtoJTAhypvkw5RZpTtBemE4Nrzr8I5A5MlR
-        lbixwJBub1dhHyMxaKciy7Q/RtyRA9uv+34+u/Tfap4/aIEiPWrXVNF+VmqIkvIA
-        bGEJs2M93xGlc7Jq98/iMi0j+Y1mop2QvXWs+EOEJroST8MU3KatGHMy75CUNATJ
-        sOAEbtqTfEBU7XKEHac+f9516xfCJvE/LyabV6qeJNZLhPobZmPHiTsJx5R3T0f0
-        6RpCchDmkyYyOPlShhE52DkY/pWqdLOGdm/s9fTVOVUXip+QjckrDojTgybh8kPg
-        mW17kBWfE2ajqrTFN+FVg==
-X-ME-Sender: <xms:a4CyY1yVtOIrjz18GjXjxISlFYURFbZNddIGMdOswbgMrtJDAbEgzg>
-    <xme:a4CyY1Rc2oXzb2EeOaSHqtbUW9fcsn24jM85xkWRpR7uBONVMnbCirUQHJJRRMCPe
-    Yi5SIJqw59c>
-X-ME-Received: <xmr:a4CyY_UfvRlC9kH1gJtaQVZRi6k4PQURAlTe9ufVv-6c3WKiMTcFXyswx6XmPilmWypmGY3BUN2A9xgZId4p4lsjfDMbZtrZpUYiMFTVKzojGKzKDqDA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrjedugddutdduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffhvfevfhgjtgfgsehtjeertddtfeejnecuhfhrohhmpefkrghn
-    ucfmvghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecuggftrfgrthhtvghrnh
-    epjeehvdetgeejteeuleeigeefieduudfgteelgefggeetvdefveethfdtjeevledtnecu
-    vehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnh
-    esthhhvghmrgifrdhnvght
-X-ME-Proxy: <xmx:a4CyY3gl_BARRDtGMEcmTvqAEKKt2Nd_J2LHFbV5rjCKloIPIdpnew>
-    <xmx:a4CyY3CI6ZtCivm5zJrg7Z5YDx-gHqxqRxV4qAVqbyFgufMCw05lCg>
-    <xmx:a4CyYwJUKpulOPEma1P55Ov5eHSIe_fim2ykG4e24iY_zjskAP6Xkg>
-    <xmx:bICyY-N3lJLo610c7KgZrMkXpU53-xGT61bCxZl6Z6rBqj3w9I4Qug>
-Feedback-ID: i31e841b0:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 2 Jan 2023 01:57:45 -0500 (EST)
-Message-ID: <e1d693e3-0627-7ec3-6f76-10c06075d278@themaw.net>
-Date:   Mon, 2 Jan 2023 14:57:43 +0800
+        with ESMTP id S236275AbjABRFa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Jan 2023 12:05:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04A0A45F
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 09:05:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1CC1E6105D
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:05:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A51C433EF
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:05:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672679125;
+        bh=5IlRDptMNGh66nkxvNlY4U17APxWIEPBOOx5knwVmzY=;
+        h=Subject:From:To:Date:From;
+        b=oNaYmziwemk+IvQJDJW3Sp06KaPTEchZzQX6cbRHrhRr5Sz3tBTOv9myQ7A5fF94e
+         7bkmXEv93xBNd5UGcs9J2n/5xKzf8Ee7nofk/FBl7IJUtUrI68Zi84J3YsIPG7f9Od
+         FNhO5V3bbsW7jGFolhHpV9U90xJBUCL1GhERegGdasVFYtoNzG++0qXkr0Tr/uQDFe
+         8qS8zgc9Mop9zOAJb94+Uxb9DTqyTWANVxNUOiOXqDu4w+5rrV4DpGtgwzBgi9Tkx4
+         42DpoEpF/97Lkh/U6pIFmHkbZRySOAy574uXZSnHL6l2YnTH7OjHLUT6YbWOqysd0a
+         Keo3DivY1HGaw==
+Subject: [PATCH v1 00/25] Server-side RPC call header parsing overhaul
+From:   Chuck Lever <cel@kernel.org>
+To:     linux-nfs@vger.kernel.org
+Date:   Mon, 02 Jan 2023 12:05:24 -0500
+Message-ID: <167267753484.112521.4826748148788735127.stgit@manet.1015granger.net>
+User-Agent: StGit/1.5.dev2+g9ce680a5
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] nfsd: fix handling of readdir in v4root vs. mount upcall
- timeout
-Content-Language: en-US
-From:   Ian Kent <raven@themaw.net>
-To:     Chuck Lever III <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Steve Dickson <steved@redhat.com>,
-        JianHong Yin <yin-jianhong@163.com>,
-        Richard Weinberger <richard@nod.at>
-References: <20221213180826.216690-1-jlayton@kernel.org>
- <0918676C-124C-417F-B8DE-DA1946EE91CC@oracle.com>
- <988799bd54c391259cfeff002660a4002adb96d2.camel@kernel.org>
- <81f891ef-b498-24b0-12e3-4ddda8062dc0@themaw.net>
- <0d6deecbe0dff95ebbe061914ddb00ca04d1f3c1.camel@kernel.org>
- <b2593a91-0957-5203-b556-f93bdd2dc0dd@themaw.net>
- <940934D4-7896-4C0D-93F1-26170C49CBE4@oracle.com>
- <77ed2f3a-0fbb-ddec-6c93-2a7ea44f5f9f@themaw.net>
-In-Reply-To: <77ed2f3a-0fbb-ddec-6c93-2a7ea44f5f9f@themaw.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Happy new year, campers.
 
-On 2/1/23 14:34, Ian Kent wrote:
->
-> On 2/1/23 02:09, Chuck Lever III wrote:
->>
->>> On Dec 14, 2022, at 12:37 AM, Ian Kent <raven@themaw.net> wrote:
->>>
->>> On 14/12/22 08:39, Jeff Layton wrote:
->>>> On Wed, 2022-12-14 at 07:14 +0800, Ian Kent wrote:
->>>>> On 14/12/22 04:02, Jeff Layton wrote:
->>>>>> On Tue, 2022-12-13 at 19:00 +0000, Chuck Lever III wrote:
->>>>>>>> On Dec 13, 2022, at 1:08 PM, Jeff Layton <jlayton@kernel.org> 
->>>>>>>> wrote:
->>>>>>>>
->>>>>>>> If v4 READDIR operation hits a mountpoint and gets back an error,
->>>>>>>> then it will include that entry in the reply and set 
->>>>>>>> RDATTR_ERROR for it
->>>>>>>> to the error.
->>>>>>>>
->>>>>>>> That's fine for "normal" exported filesystems, but on the 
->>>>>>>> v4root, we
->>>>>>>> need to be more careful to only expose the existence of 
->>>>>>>> dentries that
->>>>>>>> lead to exports.
->>>>>>>>
->>>>>>>> If the mountd upcall times out while checking to see whether a
->>>>>>>> mountpoint on the v4root is exported, then we have no recourse 
->>>>>>>> other
->>>>>>>> than to fail the whole operation.
->>>>>>> Thank you for chasing this down!
->>>>>>>
->>>>>>> Failing the whole READDIR when mountd times out might be a bad 
->>>>>>> idea.
->>>>>>> If the mountd upcall times out every time, the client can't make
->>>>>>> any progress and will continue to emit the failing READDIR request.
->>>>>>>
->>>>>>> Would it be better to skip the unresolvable entry instead and let
->>>>>>> the READDIR succeed without that entry?
->>>>>>>
->>>>>> Mounting doesn't usually require working READDIR. In that 
->>>>>> situation, a
->>>>>> readdir() might hang (until the client kills), but a lookup of other
->>>>>> dentries that aren't perpetually stalled should be ok in this 
->>>>>> situation.
->>>>>>
->>>>>> If mountd is that hosed then I think it's unlikely that any progress
->>>>>> will be possible anyway.
->>>>> The READDIR shouldn't trigger a mount yes, but if it's a valid 
->>>>> automount
->>>>>
->>>>> point (basically a valid dentry in this case I think) it should be 
->>>>> listed.
->>>>>
->>>>> It certainly shouldn't hold up the READDIR, passing into it is when a
->>>>>
->>>>> mount should occur.
->>>>>
->>>>>
->>>>> That's usually the behavior we want for automounts, we don't want 
->>>>> mount
->>>>>
->>>>> storms on directories full of automount points.
->>>>>
->>>> We only want to display it if it's a valid _exported_ mountpoint.
->>>>
->>>> The idea here is to only reveal the parts of the namespace that are
->>>> exported in the nfsv4 pseudoroot. The "normal" contents are not 
->>>> shown --
->>>> only exported mountpoints and ancestor directories of those 
->>>> mountpoints.
->>>>
->>>> We don't want mountd triggering automounts, in general. If the
->>>> underlying filesystem was exported, then it should also already be
->>>> mounted, since nfsd doesn't currently trigger automounts in
->>>> follow_down().
->>> Umm ... must they already be mounted?
->>>
->>>
->>> Can't it be a valid mount point either not yet mounted or timed out
->>>
->>> and umounted. In that case shouldn't it be listed, I know that's
->>>
->>> not the that good an outcome because its stat info will change when
->>>
->>> it gets walked into but it's usually the only sane choice.
->>>
->>>
->>>> There is also a separate patchset by Richard Weinberger to allow 
->>>> nfsd to
->>>> trigger automounts if the parent filesystem is exported with -o
->>>> crossmnt. That should be ok with this patch, since the automount 
->>>> will be
->>>> triggered before the upcall to mountd. That should ensure that it's
->>>> already mounted by the time we get to upcalling for its export.
->>> Yep, saw that, ;)
->> I'm not sure if there is consensus on this patch.
->>
->> It's been pushed to nfsd's for-rc branch for wider testing, but if
->> there's a strong objection I can pull it out before the next -rc PR.
->
->
-> I don't have any objections, my original comment about it breaking
->
-> existing behavior has been addressed.
+The following series has been percolating for quite a while, thanks
+to the extended 6.1-rc cycle. I'd like to get this work reviewed
+for possible inclusion in v6.3, so I'm starting early.
+
+The purpose of this series is to replace the svc_get* macros in the
+Linux kernel server's RPC call header parsing code with xdr_stream
+helpers. I've measured no change in CPU utilization after the
+overhaul; svc_recv() and friends remain the highest CPU consumers by
+an order of magnitude.
+
+Memory safety: Buffer bounds checking after decoding each XDR item
+is more memory-safe than the current decoding mechanism. Subsequent
+memory safety improvements to the xdr_stream helpers will benefit
+all who use them.
+
+Audit friendliness: The new code has lots of comments and other
+clean-up to help align it with the relevant RPC specifications. The
+use of common helpers also makes the decoders easier to audit.
+
+I've split the full series in half to make it easier to review. The
+patches posted here handle RPC call header decoding. Remaining
+patches, to be posted later, deal with RPC reply header encoding.
+
+Yes, there are a lot of patches, but they are each small, easily
+chewed mechanical changes.
+
+---
+
+Chuck Lever (25):
+      SUNRPC: Push svcxdr_init_decode() into svc_process_common()
+      SUNRPC: Move svcxdr_init_decode() into ->accept methods
+      SUNRPC: Add an XDR decoding helper for struct opaque_auth
+      SUNRPC: Convert svcauth_null_accept() to use xdr_stream
+      SUNRPC: Convert svcauth_unix_accept() to use xdr_stream
+      SUNRPC: Convert svcauth_tls_accept() to use xdr_stream
+      SUNRPC: Move the server-side GSS upcall to a noinline function
+      SUNRPC: Hoist common verifier decoding code into svcauth_gss_proc_init()
+      SUNRPC: Remove gss_read_common_verf()
+      SUNRPC: Remove gss_read_verf()
+      SUNRPC: Convert server-side GSS upcall helpers to use xdr_stream
+      SUNRPC: Replace read_u32_from_xdr_buf() with existing XDR helper
+      SUNRPC: Rename automatic variables in unwrap_integ_data()
+      SUNRPC: Convert unwrap_integ_data() to use xdr_stream
+      SUNRPC: Rename automatic variables in unwrap_priv_data()
+      SUNRPC: Convert unwrap_priv_data() to use xdr_stream
+      SUNRPC: Convert gss_verify_header() to use xdr_stream
+      SUNRPC: Clean up svcauth_gss_accept's NULL procedure check
+      SUNRPC: Convert the svcauth_gss_accept() pre-amble to use xdr_stream
+      SUNRPC: Hoist init_decode out of svc_authenticate()
+      SUNRPC: Re-order construction of the first reply fields
+      SUNRPC: Eliminate unneeded variable
+      SUNRPC: Decode most of RPC header with xdr_stream
+      SUNRPC: Remove svc_process_common's argv parameter
+      SUNRPC: Hoist svcxdr_init_decode() into svc_process()
 
 
-Actually I'm confused with the other patch series Jeff mentioned.
+ fs/lockd/svc.c                    |   1 -
+ fs/nfs/callback_xdr.c             |   1 -
+ fs/nfsd/nfssvc.c                  |   1 -
+ include/linux/sunrpc/msg_prot.h   |   5 +
+ include/linux/sunrpc/xdr.h        |   5 +-
+ net/sunrpc/auth_gss/svcauth_gss.c | 512 ++++++++++++++++--------------
+ net/sunrpc/svc.c                  |  69 ++--
+ net/sunrpc/svc_xprt.c             |   1 -
+ net/sunrpc/svcauth.c              |  13 +-
+ net/sunrpc/svcauth_unix.c         | 132 +++++---
+ net/sunrpc/xdr.c                  |  50 ++-
+ 11 files changed, 468 insertions(+), 322 deletions(-)
 
-I still don't have any objections, ;)
-
-
-I was a little curious about the error handling but that's
-
-because my memories of the jukebox error handling on the client
-
-side are different to what's being done but here it's the server
-
-so it makes sense to assume the client will do the work and retry
-
-or whatever.
-
-
-Ian
+--
+Chuck Lever
 
