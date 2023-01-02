@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83CD165B582
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jan 2023 18:06:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DF7665B583
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jan 2023 18:06:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236188AbjABRGI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Jan 2023 12:06:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53018 "EHLO
+        id S236242AbjABRGO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Jan 2023 12:06:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236182AbjABRGH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Jan 2023 12:06:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFBBD64DE
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 09:06:06 -0800 (PST)
+        with ESMTP id S236182AbjABRGM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Jan 2023 12:06:12 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD43064DB
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 09:06:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 91AABB80D0A
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:06:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B059C433D2
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:06:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 47A6F60F79
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:06:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C8F1C433D2
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672679164;
-        bh=deKo7xKBXd1+851snGqVAeCc1jQOGV7cZQKXoFMdifo=;
+        s=k20201202; t=1672679170;
+        bh=niqlqHAGjGFIF/ZW/+kgSfQh9MTnC1Lndk5Bo4wcpsE=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=vJ0V8cEOI2zAqpkxYE6kiBMWfFMTr3IQarkdfJiRUpC3PS+/MoTNqzRrYokdNqdFq
-         iItxAGRPiAltL10Bw7g7Pu0z9URlZO+qvp21fgyh3nCvCVwkn+OlUao+Nhwn5Q1m7U
-         f9javRkzOuA713F0Izy5g0DkUtQx/pLrbCdDa2gYNVDRe3v8LMN0RnjliVr1kiarhA
-         WA/ovtklbh9ZyBcf+Ea2nkc2vPIFA48iW8VomXlimK0Vjlsp7/FruG6L6DpbMkS4Vy
-         /7NxI1QBIvRKdU+Smdn09cMc07ReBBvtobQzda3Oo5vYg4Q38aU5ATratxxLiI1SCY
-         sMwKnUEeK0bWQ==
-Subject: [PATCH v1 06/25] SUNRPC: Convert svcauth_tls_accept() to use
- xdr_stream
+        b=A4N1chX4Vnw6YjFNAhZvWYacWgucjGH8fi0J3IQIHdGsYllPlNV9dkI2257Wh+mJj
+         uaptWqPJ6RayMiomQxA9V71EOGDWaqFrXNfaT4kTUWKDuxWO6yzADm+Nn0KpPJ63El
+         Ym1deiaaEv07SnVUI6XhwJViMuyHrRT5WMqVOF7YZPOrIhXvpgM6N65dX/tNgHM8PK
+         mjWBYq9ZZ/n5audX7xmxpXEA9O0baYuR+wkFfFp5+Sbe2PQQ+h2XwvNbYI7lOr0NEY
+         bd+UjZSdE3yJSD0yG03mMLwpvd3Rbzh/L/dbHHoBq9y2SaIjwMAnFp2WfQAHnLhx8r
+         6Sf+v3ruq0RfA==
+Subject: [PATCH v1 07/25] SUNRPC: Move the server-side GSS upcall to a
+ noinline function
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 02 Jan 2023 12:06:03 -0500
-Message-ID: <167267916310.112521.3610150780550171360.stgit@manet.1015granger.net>
+Date:   Mon, 02 Jan 2023 12:06:09 -0500
+Message-ID: <167267916945.112521.12682566743515878078.stgit@manet.1015granger.net>
 In-Reply-To: <167267753484.112521.4826748148788735127.stgit@manet.1015granger.net>
 References: <167267753484.112521.4826748148788735127.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -54,89 +54,44 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Done as part of hardening the server-side RPC header decoding path.
+Since upcalls are infrequent, ensure the compiler places the upcall
+mechanism out-of-line from the I/O path.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/svcauth_unix.c |   37 ++++++++++++++++++++++++++-----------
- 1 file changed, 26 insertions(+), 11 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index b6aef9c5113b..168e12137754 100644
---- a/net/sunrpc/svcauth_unix.c
-+++ b/net/sunrpc/svcauth_unix.c
-@@ -807,25 +807,41 @@ struct auth_ops svcauth_null = {
- };
- 
- 
-+/**
-+ * svcauth_tls_accept - Decode and validate incoming RPC_AUTH_TLS credential
-+ * @rqstp: RPC transaction
-+ *
-+ * Return values:
-+ *   %SVC_OK: Both credential and verifier are valid
-+ *   %SVC_DENIED: Credential or verifier is not valid
-+ *   %SVC_GARBAGE: Failed to decode credential or verifier
-+ *   %SVC_CLOSE: Temporary failure
-+ *
-+ * rqstp->rq_auth_stat is set as mandated by RFC 5531.
-+ */
- static int
- svcauth_tls_accept(struct svc_rqst *rqstp)
- {
-+	struct xdr_stream *xdr = &rqstp->rq_arg_stream;
- 	struct svc_cred	*cred = &rqstp->rq_cred;
--	struct kvec *argv = rqstp->rq_arg.head;
- 	struct kvec *resv = rqstp->rq_res.head;
-+	u32 flavor, len;
-+	void *body;
- 
--	if (argv->iov_len < XDR_UNIT * 3)
--		return SVC_GARBAGE;
-+	svcxdr_init_decode(rqstp);
- 
--	/* Call's cred length */
--	if (svc_getu32(argv) != xdr_zero) {
-+	/* Length of Call's credential body field: */
-+	if (xdr_stream_decode_u32(xdr, &len) < 0)
-+		return SVC_GARBAGE;
-+	if (len != 0) {
- 		rqstp->rq_auth_stat = rpc_autherr_badcred;
- 		return SVC_DENIED;
- 	}
- 
--	/* Call's verifier flavor and its length */
--	if (svc_getu32(argv) != rpc_auth_null ||
--	    svc_getu32(argv) != xdr_zero) {
-+	/* Call's verf field: */
-+	if (xdr_stream_decode_opaque_auth(xdr, &flavor, &body, &len) < 0)
-+		return SVC_GARBAGE;
-+	if (flavor != RPC_AUTH_NULL || len != 0) {
- 		rqstp->rq_auth_stat = rpc_autherr_badverf;
- 		return SVC_DENIED;
- 	}
-@@ -836,12 +852,12 @@ svcauth_tls_accept(struct svc_rqst *rqstp)
- 		return SVC_DENIED;
- 	}
- 
--	/* Mapping to nobody uid/gid is required */
-+	/* Signal that mapping to nobody uid/gid is required */
- 	cred->cr_uid = INVALID_UID;
- 	cred->cr_gid = INVALID_GID;
- 	cred->cr_group_info = groups_alloc(0);
- 	if (cred->cr_group_info == NULL)
--		return SVC_CLOSE; /* kmalloc failure - client must retry */
-+		return SVC_CLOSE;
- 
- 	/* Reply's verifier */
- 	svc_putnl(resv, RPC_AUTH_NULL);
-@@ -853,7 +869,6 @@ svcauth_tls_accept(struct svc_rqst *rqstp)
- 		svc_putnl(resv, 0);
- 
- 	rqstp->rq_cred.cr_flavor = RPC_AUTH_TLS;
--	svcxdr_init_decode(rqstp);
- 	return SVC_OK;
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 8ebc06bebbec..2a11721dd5c4 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1444,6 +1444,14 @@ static bool use_gss_proxy(struct net *net)
+ 	return sn->use_gss_proxy;
  }
  
++static noinline_for_stack int
++svcauth_gss_proc_init(struct svc_rqst *rqstp, struct rpc_gss_wire_cred *gc)
++{
++	if (!use_gss_proxy(SVC_NET(rqstp)))
++		return svcauth_gss_legacy_init(rqstp, gc);
++	return svcauth_gss_proxy_init(rqstp, gc);
++}
++
+ #ifdef CONFIG_PROC_FS
+ 
+ static ssize_t write_gssp(struct file *file, const char __user *buf,
+@@ -1600,10 +1608,7 @@ svcauth_gss_accept(struct svc_rqst *rqstp)
+ 	switch (gc->gc_proc) {
+ 	case RPC_GSS_PROC_INIT:
+ 	case RPC_GSS_PROC_CONTINUE_INIT:
+-		if (use_gss_proxy(SVC_NET(rqstp)))
+-			return svcauth_gss_proxy_init(rqstp, gc);
+-		else
+-			return svcauth_gss_legacy_init(rqstp, gc);
++		return svcauth_gss_proc_init(rqstp, gc);
+ 	case RPC_GSS_PROC_DATA:
+ 	case RPC_GSS_PROC_DESTROY:
+ 		/* Look up the context, and check the verifier: */
 
 
