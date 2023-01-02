@@ -2,40 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D07F865B594
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jan 2023 18:07:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 184EB65B595
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jan 2023 18:08:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236193AbjABRHz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Jan 2023 12:07:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53984 "EHLO
+        id S236147AbjABRID (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Jan 2023 12:08:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236372AbjABRHy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Jan 2023 12:07:54 -0500
+        with ESMTP id S236202AbjABRIC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Jan 2023 12:08:02 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57DEDB86B
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 09:07:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B399864DB
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 09:08:00 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E49C460F79
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:07:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 356FDC433D2
-        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:07:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5135B60F79
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:08:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B6F8C433D2
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Jan 2023 17:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672679273;
-        bh=v4egk5KKdX12WmYMlpz77pidUcJxH1jW+68P2KQV/Lo=;
+        s=k20201202; t=1672679279;
+        bh=uZoBRUQ42c5ysnALy31peiDJKRWwcagd71/KKJOgRAM=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=S9Gj3dTc/IQ+Vfc0OC4FsXH40GJ8mHnMVt/xairXGxDKIRg5F8zCS8ZCS5tvwzNeL
-         6ii5qfVOZy+C3RWls8cscSVi42DfSwqEP1PC8OQq3gqcgXx7pVyMnin8haj7OmpJvM
-         FICnHp/I9+9JRk9i+Ky4Jwt+JkNAb5lBA8/V1MsdzF3UymsOkJuBgeYFwOlGb4bi6q
-         yJkYjgvSTAfdk5PgGUpECuwsis9PzI4/fCnLobxYCc4j6Ktn/yILcqxfjvRFndM3JJ
-         3zrD6mFgMQDDPGNy0EqMPvmGaMc5Ch5VyM/sGWsfaZi2yVU5uvsgdt2QVxJLFwkejK
-         sODlYSXr5xveA==
-Subject: [PATCH v1 23/25] SUNRPC: Decode most of RPC header with xdr_stream
+        b=b0UmdEFAFWgAk4xubM3spVXPw7f97PPo30inSEnmv57MVZbDgKX9uLaXt0fgvMiku
+         gZEcFtxf06s4rx3jd34T0xerxFHxNtHSw/uuIjL3/ZwOEAb8l7Dh5yK2qpgdt1l+td
+         246ffH3H6hkYjQ6KPeAIa2kisgE8raqCbvMUIJ/xahgJQOKIpVsPHLkrAzKM5Ry9F6
+         toHgAmpU4wFdXNwTcBqJMmA2ruOKFtQw/TDaw03lxzHlmzJLn/LxuiF3L6JzmofLzQ
+         Es6+SBsSJurArPG1y2O7dMNUOudEE8yDlAO4t8MQfarFasHB+MFY7ivd63qEFKeKLx
+         ftAPgXP2EvJMw==
+Subject: [PATCH v1 24/25] SUNRPC: Remove svc_process_common's argv parameter
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 02 Jan 2023 12:07:52 -0500
-Message-ID: <167267927221.112521.10253110100876084263.stgit@manet.1015granger.net>
+Date:   Mon, 02 Jan 2023 12:07:58 -0500
+Message-ID: <167267927856.112521.12923547853480719674.stgit@manet.1015granger.net>
 In-Reply-To: <167267753484.112521.4826748148788735127.stgit@manet.1015granger.net>
 References: <167267753484.112521.4826748148788735127.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -53,67 +53,55 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Done as part of hardening the server-side RPC header decoding path.
+Clean up: With xdr_stream decoding, the @argv parameter is no longer
+used.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/svc.c |   20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ net/sunrpc/svc.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 3c1574f362fe..f292b898f200 100644
+index f292b898f200..571151a17e87 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -1231,17 +1231,13 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
+@@ -1225,7 +1225,7 @@ EXPORT_SYMBOL_GPL(svc_generic_init_request);
+  * Common routine for processing the RPC request.
+  */
+ static int
+-svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
++svc_process_common(struct svc_rqst *rqstp, struct kvec *resv)
+ {
+ 	struct svc_program	*progp;
  	const struct svc_procedure *procp = NULL;
- 	struct svc_serv		*serv = rqstp->rq_server;
- 	struct svc_process_info process;
--	__be32			*statp;
--	u32			vers;
-+	__be32			*p, *statp;
- 	__be32			rpc_stat;
- 	int			auth_res, rc;
- 	__be32			*reply_statp;
+@@ -1363,8 +1363,8 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
+ 	return 0;
  
- 	rpc_stat = rpc_success;
+ err_short_len:
+-	svc_printk(rqstp, "short len %zd, dropping request\n",
+-			argv->iov_len);
++	svc_printk(rqstp, "short len %u, dropping request\n",
++		   rqstp->rq_arg.len);
+ 	goto close_xprt;
  
--	if (argv->iov_len < 6*4)
--		goto err_short_len;
--
- 	/* Will be turned off by GSS integrity and privacy services */
- 	__set_bit(RQ_SPLICE_OK, &rqstp->rq_flags);
- 	/* Will be turned off only when NFSv4 Sessions are used */
-@@ -1253,15 +1249,18 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
- 	svc_putnl(resv, RPC_REPLY);
- 	reply_statp = resv->iov_base + resv->iov_len;
+ err_bad_rpc:
+@@ -1453,7 +1453,7 @@ svc_process(struct svc_rqst *rqstp)
+ 	dir = svc_getu32(argv);
+ 	if (dir != rpc_call)
+ 		goto out_baddir;
+-	if (!svc_process_common(rqstp, argv, resv))
++	if (!svc_process_common(rqstp, resv))
+ 		goto out_drop;
+ 	return svc_send(rqstp);
  
--	vers = svc_getnl(argv);
--	if (vers != 2)		/* RPC version number */
-+	svcxdr_init_decode(rqstp);
-+	p = xdr_inline_decode(&rqstp->rq_arg_stream, XDR_UNIT * 4);
-+	if (unlikely(!p))
-+		goto err_short_len;
-+	if (*p++ != cpu_to_be32(RPC_VERSION))
- 		goto err_bad_rpc;
+@@ -1519,7 +1519,7 @@ bc_svc_process(struct svc_serv *serv, struct rpc_rqst *req,
+ 	svc_getnl(argv);	/* CALLDIR */
  
- 	svc_putnl(resv, 0);		/* ACCEPT */
+ 	/* Parse and execute the bc call */
+-	proc_error = svc_process_common(rqstp, argv, resv);
++	proc_error = svc_process_common(rqstp, resv);
  
--	rqstp->rq_prog = svc_getnl(argv);	/* program number */
--	rqstp->rq_vers = svc_getnl(argv);	/* version number */
--	rqstp->rq_proc = svc_getnl(argv);	/* procedure number */
-+	rqstp->rq_prog = be32_to_cpup(p++);
-+	rqstp->rq_vers = be32_to_cpup(p++);
-+	rqstp->rq_proc = be32_to_cpup(p);
- 
- 	for (progp = serv->sv_program; progp; progp = progp->pg_next)
- 		if (rqstp->rq_prog == progp->pg_prog)
-@@ -1272,7 +1271,6 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
- 	 * We do this before anything else in order to get a decent
- 	 * auth verifier.
- 	 */
--	svcxdr_init_decode(rqstp);
- 	auth_res = svc_authenticate(rqstp);
- 	/* Also give the program a chance to reject this call: */
- 	if (auth_res == SVC_OK && progp)
+ 	atomic_dec(&req->rq_xprt->bc_slot_count);
+ 	if (!proc_error) {
 
 
