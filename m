@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCA2065AD78
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jan 2023 07:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B64B65AD83
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Jan 2023 07:41:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbjABGei (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Jan 2023 01:34:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56006 "EHLO
+        id S229453AbjABGl4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Jan 2023 01:41:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjABGeh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Jan 2023 01:34:37 -0500
+        with ESMTP id S229645AbjABGlz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Jan 2023 01:41:55 -0500
 Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59DDD42
-        for <linux-nfs@vger.kernel.org>; Sun,  1 Jan 2023 22:34:33 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 79FDF5C0115;
-        Mon,  2 Jan 2023 01:34:31 -0500 (EST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ADAAD79
+        for <linux-nfs@vger.kernel.org>; Sun,  1 Jan 2023 22:41:53 -0800 (PST)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id E70345C0124;
+        Mon,  2 Jan 2023 01:41:52 -0500 (EST)
 Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Mon, 02 Jan 2023 01:34:31 -0500
+  by compute4.internal (MEProxy); Mon, 02 Jan 2023 01:41:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
         :cc:content-transfer-encoding:content-type:date:date:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm1; t=1672641271; x=
-        1672727671; bh=U2qH7gJ2oF2yEUD2Wf4Pa7XzCkdZPzY6QV9Q8IaIqoQ=; b=B
-        XfX/Z1r3I6wbW3+0Z9gwb7SO813tMmHPxJBR7adFQpiM+KXdT2t3/AwsgNKgzIiz
-        2+ZF+fxgB4Lp32Wy9/sbbozRPFnfJ2NbZ3iAqikYZeOYQgJe0DfGW9L/DcDKdJDn
-        XpO+PJiBFjzhnIH8Yv7PsPCL61Wgg8mzjFGEGjLUz1VBbzPxXRKPyK0hRiMgkKKV
-        THIQY8SFYx4/fG5cp8TufqGQ518crSXRHPgGaJ9vkg6k95QxuqVUkjoEAPyR+ANA
-        TFcc2guxFQnxP8Xk6G4gCDj7pX77pYMcHtFHTE38tf+Xgczd3bpwgfB2HtDGLxSW
-        1A5IhyEIUoL9aeQ7uILSQ==
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1672641712; x=
+        1672728112; bh=2K/vdmP3tdzLm99zVd7TyRf64wKLxBJvBdRtnMOSevg=; b=L
+        7WLSs5ZM7G8LrUWENS72dWC87ZVdKMK8Dyz2vvAYX1WYWs+ef7H3dX4FkDz0Vh5M
+        q3iq2ZopUf9YAZLA+JvvxWEKtBDIC2Klx8WE7XHVA5pdnGxil6onPMS8YZTqxMdK
+        h1viLvE7vn6Y4XE2uy+C7/UbDCzZ4PPF8cpqOqg+4qPd5nS65KmywvAJz1xdRvlN
+        kGcl85xSHO+zU+lBI22PNQh6pL+47YTkPycrk/KMX4G1/dEFUvaBJheT4PsNtwp7
+        iAK9CWRzzv8jrQ6ziyazDmsBdozch1AqSoCbngAejk3Bpg7GuCCqfYPNTB9e2IBN
+        /7BgAychozM1g1UkjU2Jw==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:date:date:feedback-id:feedback-id:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
         :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1672641271; x=
-        1672727671; bh=U2qH7gJ2oF2yEUD2Wf4Pa7XzCkdZPzY6QV9Q8IaIqoQ=; b=n
-        FTQU9OZ6B6OM7lh38R56C1aj3dYw7xHEPS5NnOwaJPw0NIaNgfbXUHwoU84VS6Nt
-        eP/LwjwuPNbEz0LZy25a4oLv8vFtF+7SgnPiKb1bQbjiwPp3w6gU5keOUwzjtrGf
-        m9DmRdpJu6fLi7qF6pmtTUdAUaWhnLMQxgH/4Oii93j4y32M1pbjn39mFTLR3hus
-        anghhJqkzHkkv4Rr5RMQrng6IJgNb9X2dWWzxaRQ7Mqw4mUaoup9TovymPpOq67G
-        UaJ0U5EEEw3YE6oB0jvZmmyUmePUq9CrFxc0lyfI34ZRw7e7KbrKj8v/YQBkW2li
-        od9bhSrPy+H49mXxvpFLw==
-X-ME-Sender: <xms:9nqyYzc3aZP4nrJ66DGjh8cV8TnaOWliwZ30xmmcqXnjmwdlZXUpOQ>
-    <xme:9nqyY5MIEiy0OGgtNFoldzyp6P8nkKCIl7d14vfWhWvDrDKh2d4MvWJBwfZtRLKGi
-    pyWKNbbxVB8>
-X-ME-Received: <xmr:9nqyY8gQRlDzuc06PYfzjTho_hiunmHfccD0XCKyVRVmB1GzWlNyFuLjgyAjYjDar6EphnEktTwBXspOci1rj2h4_LyKz2tGWXNKdBibw2jHz_lLgmke>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrjedugdeliecutefuodetggdotefrodftvf
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1672641712; x=
+        1672728112; bh=2K/vdmP3tdzLm99zVd7TyRf64wKLxBJvBdRtnMOSevg=; b=W
+        MOKJ14Sj00FY0u62ztqH8d90MrdQNOem1yZNGAgKlb9IwZc1LHQ/50aW3hlHULDS
+        +Yg7sq2lrQ1rg33GeXI4AtB9l9BHRQbfRmGauwTs0gu+1gSGi7JpxXLWpdMI0cSz
+        a8vQXtO3ym9vAlOTP1rMGXNrCynXD8k54oeJTIJ06cjFPMmZ3SBuDejY+OAXP/CU
+        UdfdOtt72dKlJ3/mhhe8QKMM8fChBh71L3HBjaq/B5JsuUU24ic4ZarudSzlJjb4
+        Ck0z4nFc7G94cYt8X4ccKV2POZXOGMnrfKCJT+Nwi6TyWZ/1uy7CvMgX8EZIPGoz
+        a4HB5+qPVMwD5KwtnnRMw==
+X-ME-Sender: <xms:sHyyY9IWirE0uW9jqJMP3sODA2DRancRfR7l1BVCmdc0C-5I6ZwetA>
+    <xme:sHyyY5J_2hXB4Wu0KfF12LHqkmqMlT3cM-WJ23yXKA9ei4fNXdndUoXu8Ha_Cf7I2
+    ytrRIbujFXm>
+X-ME-Received: <xmr:sHyyY1vVncpHoDInEjwfPtoS_2F6u7MpucH-WErbniq7PszJ1JGhrpxaH3J6cTk8-yqpNXnW_sCxX47nCkSEpoeo5BqFfR6O69zdIcSufG-m2LamZzJW>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrjedugdelkecutefuodetggdotefrodftvf
     curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
     uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
     fjughrpefkffggfgfuvfevfhfhjggtgfesthejredttdefjeenucfhrhhomhepkfgrnhcu
@@ -55,22 +55,23 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrjedugdeliecutefuodetggdote
     euhfeuieeijeeuveekgfeitdethefguddtleffhfelfeelhfduuedvfefhgefhheenucev
     lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnse
     hthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:9nqyY09BLE4NwLZKkbbbTonk1yRJJCj43-SZTgr2_Tem3UkKFb5Xrg>
-    <xmx:9nqyY_uMnP5sx-2HzhBGGXcquSw0YrRonO_IcnSyO2f4peNiABUBAQ>
-    <xmx:9nqyYzElnDGePxtnHg2JoBkxmcg5YrKxJsbJUyp3FMxIco15yz9BZg>
-    <xmx:93qyY_Kf9xRckLDLiQh5fJUcq1WBiQ54ILA5JIFZeZCLQaBy0vMB7Q>
+X-ME-Proxy: <xmx:sHyyY-YFq_Fmp7ZjHeAYcIcm0WAT1qlFgcX3oaip0MhiK8Rt7qyrig>
+    <xmx:sHyyY0braa1iL4T561b-8ldJLKa__OTsnbPR7kDloirlysmlSJfI0A>
+    <xmx:sHyyYyCt6BjODFVMp-QlBXWAqqRsSrypdTeSUO2bikm5i4Lc8I6oVA>
+    <xmx:sHyyY8GWzYTw_VFjwtG71wpKMimLEva_0Ye51DEMkViSG3N3X9Vr7w>
 Feedback-ID: i31e841b0:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 2 Jan 2023 01:34:27 -0500 (EST)
-Message-ID: <77ed2f3a-0fbb-ddec-6c93-2a7ea44f5f9f@themaw.net>
-Date:   Mon, 2 Jan 2023 14:34:24 +0800
+ 2 Jan 2023 01:41:49 -0500 (EST)
+Message-ID: <d214d283-a9dc-092e-2be5-ad847ecaf871@themaw.net>
+Date:   Mon, 2 Jan 2023 14:41:47 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
 Subject: Re: [PATCH] nfsd: fix handling of readdir in v4root vs. mount upcall
  timeout
-To:     Chuck Lever III <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
+Content-Language: en-US
+To:     Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever III <chuck.lever@oracle.com>
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         Steve Dickson <steved@redhat.com>,
         JianHong Yin <yin-jianhong@163.com>,
@@ -81,10 +82,9 @@ References: <20221213180826.216690-1-jlayton@kernel.org>
  <81f891ef-b498-24b0-12e3-4ddda8062dc0@themaw.net>
  <0d6deecbe0dff95ebbe061914ddb00ca04d1f3c1.camel@kernel.org>
  <b2593a91-0957-5203-b556-f93bdd2dc0dd@themaw.net>
- <940934D4-7896-4C0D-93F1-26170C49CBE4@oracle.com>
-Content-Language: en-US
+ <4fbce57518a3870e82411b31e026ffdd8ea1c98d.camel@kernel.org>
 From:   Ian Kent <raven@themaw.net>
-In-Reply-To: <940934D4-7896-4C0D-93F1-26170C49CBE4@oracle.com>
+In-Reply-To: <4fbce57518a3870e82411b31e026ffdd8ea1c98d.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -98,10 +98,8 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-On 2/1/23 02:09, Chuck Lever III wrote:
->
->> On Dec 14, 2022, at 12:37 AM, Ian Kent <raven@themaw.net> wrote:
->>
+On 2/1/23 05:16, Jeff Layton wrote:
+> On Wed, 2022-12-14 at 13:37 +0800, Ian Kent wrote:
 >> On 14/12/22 08:39, Jeff Layton wrote:
 >>> On Wed, 2022-12-14 at 07:14 +0800, Ian Kent wrote:
 >>>> On 14/12/22 04:02, Jeff Layton wrote:
@@ -168,37 +166,33 @@ On 2/1/23 02:09, Chuck Lever III wrote:
 >>
 >> it gets walked into but it's usually the only sane choice.
 >>
->>
+> Yes, it does need to already be mounted.
+>
+> The proposed kernel patches from Richard only trigger an automount if
+> the parent mount is exported with -o crossmnt. I think this is necessary
+> to avoid nfs client activity triggering automounts of filesystems that
+> are not exported.
+
+I'll be interested to see how this goes.
+
+
+Over the years I've had a lot of difficulty with automount unwanted
+
+mounting ...
+
+
+Still nfsd exports are a bit like invisible dentry trees to the local
+
+system aren't they ... so this situation is very different to what
+
+I've worked on ...
+
+
+Ian
+
+>
 >>> There is also a separate patchset by Richard Weinberger to allow nfsd to
 >>> trigger automounts if the parent filesystem is exported with -o
 >>> crossmnt. That should be ok with this patch, since the automount will be
 >>> triggered before the upcall to mountd. That should ensure that it's
 >>> already mounted by the time we get to upcalling for its export.
->> Yep, saw that, ;)
-> I'm not sure if there is consensus on this patch.
->
-> It's been pushed to nfsd's for-rc branch for wider testing, but if
-> there's a strong objection I can pull it out before the next -rc PR.
-
-
-I don't have any objections, my original comment about it breaking
-
-existing behavior has been addressed.
-
-
-The only reason I've commented further is because of my time with
-
-automounting but, as Jeff kind-off points out nfsd is not quite the
-
-same as what I'm used to, specifically the way exports are implemented
-
-in nfsd.
-
-
-Still you never know, my comments may trigger a thought in someone along
-
-the way, ;)
-
-
-Ian
-
