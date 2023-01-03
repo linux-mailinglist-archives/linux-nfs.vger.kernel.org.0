@@ -2,145 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2148465C390
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Jan 2023 17:08:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F74465C3AA
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Jan 2023 17:16:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230166AbjACQIs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Jan 2023 11:08:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40684 "EHLO
+        id S233158AbjACQPj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Jan 2023 11:15:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231240AbjACQIr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Jan 2023 11:08:47 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38BC91133
-        for <linux-nfs@vger.kernel.org>; Tue,  3 Jan 2023 08:08:44 -0800 (PST)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 303G3Yr2005345;
-        Tue, 3 Jan 2023 16:08:40 GMT
+        with ESMTP id S230229AbjACQPh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Jan 2023 11:15:37 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF6681261E;
+        Tue,  3 Jan 2023 08:15:35 -0800 (PST)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 303G44mk007225;
+        Tue, 3 Jan 2023 16:15:07 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=wxeFu6p6Autp826Ye8dlqzgKZpKdTaREmkW4xzMRAQY=;
- b=p7y1uZhhUZ2yuKjiDU4ATVentxMZLVtugu+gFfCcUQs788Wz+Ktnbg3kWlSodUo/W6sK
- rZU0/XQAD+dpaDUpMgM22oKUwAb1Kml4bLRRosYtDe/5y77bi5OH51rIpglXb9W0hpBF
- EI3xarjAXPKwUbeAyuUU5dWZKkkpkH/WRjnEBVnfOOTa/fIGJ219E0uJW3MBjn8nLVAG
- l85fagvcx/rqySZ1yRDU5HH/NMW/tNY7lf9i/ddxeCNh8H++Y8UffwPYPAVu9UthLzFR
- tg2NTHEcJRnH0yZJDE658qO2w4eXfrqiimQ0dWw6BK8TPtIqEPEeEfSegfEbp0YFd+li Og== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3mtd4c4dd9-1
+ bh=r5ADQsZdlGskcFOh0RjpgxZ5qdwrmUpcwZYUsekUUdA=;
+ b=chtxt9xzY8QPD7eKVvIQhswdpfS0YdaR9k0Sa6w8jqSoJDBKmarWlQTesELhTSmJVX2Y
+ XXbHNxIZ6ncdKPCMX/IxZQrX2FM0PECKL2RFxG3Slbq1SgT6iZadaoyxpr54CrreMfdH
+ 4YiVTKhrUk+hBYD6MFv9M24PWdiwRntXe1cI7eE1W7qyrGz5i3vpJe5L2HauU+q98o+8
+ h+eFY7KZYVdLMyHfzasqp15rYd7IczrChE2SacRvWF/ZXzO8Opqt9O/AuQ9ef53jIWh5
+ yYgcou5u2zkC34X4Za8AGmHquQU/mjnfS/XrVg0v/12aSLgosXxuDJphq7Yf6WRmNuzw Ig== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3mtbp0vcr0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Jan 2023 16:08:40 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 303ExY9j008910;
-        Tue, 3 Jan 2023 16:08:39 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3mtbhbhk57-1
+        Tue, 03 Jan 2023 16:15:07 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 303ExXFo000466;
+        Tue, 3 Jan 2023 16:15:07 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3mtbrc8xew-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Jan 2023 16:08:39 +0000
+        Tue, 03 Jan 2023 16:15:07 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l3xDX0HmPNEqAN0xTvedi9uQuohImvCX4X5wHiKRwIzKi5RckNRVS7U7XZ2dDVjOFxnYMWJulji7uV/7pI1h221+1zNb6AZfcuBYO0MKs4lGf+LRs/P/yrDbBkxSAQjcf6zQotpE6VlddghPU2MtsjIIUbcl3yvlwT6hXjZbZ7dGcputJPLZLL5gF+KP6lzsfNtgSDiIaVGSFtoDKQCoq1SNSNUsn5JV9h4qZc8hMpC0DhWKhc+KrlC5ZGRmzavEoV0oJw23C8CIEN8sQfz7okA/+dWn1B/EBseY7DFzMe46IKjzi9DBB9sRBMvat0ctLfYLouATV9L3FlUrc5k5YA==
+ b=T0A0xpr8mn3gSBfEgoXnLGLvZZdy6FpEPReY0UV6E5D4Lyt0/+a4vaeFckGUlmT4NMy3uhRg7LL6JlcuWJxaBKyMkcM2CQsqyjy7VdX8Yp2PBTAz5OnuHpN+Be0bTPg1yofFwX/PaK1GKkr2g3MlmffWrZfTIHl/D2635A/ZFKR7g8ZDaa5RZjaIhPTlhqpjSpOxvttkKuRhyARgOM+N2vL682Hez3f7q5aH+tU7xWO+hDj2a9i5hQU4HP8Gk72vO7wPcJKaBWvNSVWYj7mqZccjPwmyeO+ihe4sMKsHWwKG7gEhxDTXPxLSIQpikaXU/D/AL6zN08iyL89iOQCJKQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wxeFu6p6Autp826Ye8dlqzgKZpKdTaREmkW4xzMRAQY=;
- b=Tt8vaK69P/rqnifZADQzGCv0RJCWIaZ08fhtiOqWHYZ47IfJYNzlJbHrOFKMPJhXy6aoVJXMafgWNBMIs1v4CuVdRiy+skPzmbzO047WiGpG6tj+qZ4DR0gGpRFF/PAjn2We7ZbVfNvSAppmwAEM+Cv0X531pYeJ9nMCbKVQEYgKnjDHTk6tO1f/a2dGag+FVOXjX68ERm8GxsZDuLCvXXCGWxuKWjIn7N0Vwk5U9WOpV3A/Hy9CPEzrli9TL2brez9AwMTo6VlI55mvKez63vCHomztSiN39lyeu9JGbWCtRDbdL6a80G+HtT3v237mUnPYZkAhQlf3mvr/9E9CDA==
+ bh=r5ADQsZdlGskcFOh0RjpgxZ5qdwrmUpcwZYUsekUUdA=;
+ b=fYCtJ3Ekio8EZuVn8G+GR6TYvQaZgqEoDdgNuZNdMcKQJzQ8ed98dUuAzsjmxkXEkeOsCge7cqu22lOFt0MShseXWJlUwWu2wfer3wOXvVa16ssmU/DWAJdH0INZCksQ3lbPGy9INm6pHP9xFJ25ltBAluTY4qKhEl4zWDHmM8HcaIBNOGVxWS+Mo9bmLGTQ8B1HpU0KpN6/EsP2+jhZaU4Uu7x15KXOz5PM7recI+W6gXtXCbrVaDkkN8OfOZMCXI+Z98cpqDr2ml02PMO9D+bBfVnqJTd/dwptBg6Y1ni00BnRU6LEs4RFNXXwHaXUAQTHnSAqo8/N/bBUyXU1LA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wxeFu6p6Autp826Ye8dlqzgKZpKdTaREmkW4xzMRAQY=;
- b=CdN9o590aUnsX92yvYgyJBgN0leoq2XsWCHQ4+o2awgVLCz/b5PRMwszCcm9Avreqo3KegC8L5C7ETG091+Ux5U4Bqh8rRtq7K0NzfH/iSpTHFevmOZ77bDCXtnHhPgUDzusp3rKnKMTFqc8ihwYXaAXYuHQPlkwTLctou97dyw=
+ bh=r5ADQsZdlGskcFOh0RjpgxZ5qdwrmUpcwZYUsekUUdA=;
+ b=JSia+2zo0D1KavJCkkQyVkjn/KDXd0b3dhRMpS0E/odiy0ddttYJMbSxAwfImAX6r39DtpcyUnmR+jF9wOFhUfBF97cpvREVawaFel6BuGG8ZhylHoJpq64KbTkhNMqbNp0QpApva7mRkl3DoLh7b+6I143vMQWsANkmw/ZYVww=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SA2PR10MB4780.namprd10.prod.outlook.com (2603:10b6:806:118::5) with
+ by IA1PR10MB6098.namprd10.prod.outlook.com (2603:10b6:208:3ad::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5944.19; Tue, 3 Jan
- 2023 16:08:37 +0000
+ 2023 16:15:04 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::d8a4:336a:21e:40d9]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::d8a4:336a:21e:40d9%4]) with mapi id 15.20.5944.019; Tue, 3 Jan 2023
- 16:08:34 +0000
+ 16:15:04 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Dai Ngo <dai.ngo@oracle.com>
-CC:     "jlayton@kernel.org" <jlayton@kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] NFSD: enhance inter-server copy cleanup
-Thread-Topic: [PATCH v2 1/1] NFSD: enhance inter-server copy cleanup
-Thread-Index: AQHZE0St34jtf1Ze5Ey5ptczv+ym966M9LkA
-Date:   Tue, 3 Jan 2023 16:08:34 +0000
-Message-ID: <28572446-B32A-461F-A9C1-E60F79B985D3@oracle.com>
-References: <1671411353-31165-1-git-send-email-dai.ngo@oracle.com>
-In-Reply-To: <1671411353-31165-1-git-send-email-dai.ngo@oracle.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Richard Weinberger <richard@nod.at>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Anna Schumaker <anna@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Ian Kent <raven@themaw.net>,
+        "chris.chilvers@appsbroker.com" <chris.chilvers@appsbroker.com>,
+        "david.young@appsbroker.com" <david.young@appsbroker.com>,
+        "luis.turcitu@appsbroker.com" <luis.turcitu@appsbroker.com>,
+        "david@sigma-star.at" <david@sigma-star.at>,
+        "benmaynard@google.com" <benmaynard@google.com>
+Subject: Re: [PATCH 2/3] namei: Allow follow_down() to uncover auto mounts
+Thread-Topic: [PATCH 2/3] namei: Allow follow_down() to uncover auto mounts
+Thread-Index: AQHZH46KYwHmQVZSuUOnI7kKQrlJBw==
+Date:   Tue, 3 Jan 2023 16:15:04 +0000
+Message-ID: <EAE9AF79-93B8-4366-8672-20D407694E7E@oracle.com>
+References: <20221207084309.8499-1-richard@nod.at>
+ <20221207084309.8499-3-richard@nod.at>
+In-Reply-To: <20221207084309.8499-3-richard@nod.at>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3696.120.41.1.1)
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SA2PR10MB4780:EE_
-x-ms-office365-filtering-correlation-id: e80e3972-d737-4682-c57e-08daeda4c424
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|IA1PR10MB6098:EE_
+x-ms-office365-filtering-correlation-id: 1b7e4a06-ae74-4a54-86db-08daeda5ac80
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X0qZxA5ClXscWif0AqJdnyxcPtKtpVE4wcxbpiG7EHtrM1/jxxR8w3bMicZsLAefj+r0AUuDICoCwtf2uFWG4v0HbdCsOy2nGrXalk7kuQFICdqr/DsBPw7cC7CsY5B2xXJZTjpWKoGi/1lr6J2yiPfLY4ERTfr5iKWEi9DeduQpEgURZt/3+/8EhKLeZ5aqmof0KtCWPxLPToFdLaIdnW+NlI4yE3jHolOITxSmkO9tX7Omb4IMd/FnXeqKMalym0amC11fPszl63tUk/DXMZdvKizcNa+zfEzofls17Xl00Kq0p29DdYf1FGtgdLZaKBcTClfosDAZlF4fkJnU4yTM4J55XlY++FEnEoJAaJ5PeL3OPwgwHW7x4czTkex+d+6Eb4I0evZYNLI+uJgOIgOyfeMTbwdLhM8rhqA1BCgEnyAkssE+fuJGObEipl/72M2BczzgNkXmIBp/w3CHeijlYYE60CwBl3jxEIjuvEeNUpHoacIx0AQAV9tqqTuqZxwB0F/6uKkl4AItDMvH80uBziiyseez3oumcyyiYXfI1M0Jr+f7MnTjPO+ykH7R+hAA7ktsx6XSD7NhScyqwhEmZtilZOIPEo0LYnOgTmfPZtqQTVpHiHXvLaZffhtQbwj26kWqGBLEQissf0DNuLKAZF1ArnWXSNBamGpkBlWWGY3GLV/5AV2Qmnp2L5G4aZ4qTsZKHD34wZQ2qpZHp+H3DWGhGeBhjB8ljQ7aZsunjIXwFYWSIfAEmrpnTg2T
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39860400002)(346002)(396003)(376002)(366004)(136003)(451199015)(83380400001)(5660300002)(38100700002)(86362001)(6862004)(8936002)(122000001)(38070700005)(41300700001)(2906002)(30864003)(6506007)(4326008)(6512007)(478600001)(53546011)(316002)(186003)(64756008)(66446008)(2616005)(8676002)(37006003)(26005)(91956017)(6486002)(66476007)(71200400001)(66556008)(54906003)(76116006)(6636002)(66946007)(36756003)(33656002)(22166006)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: 5etPrgRpdkUdvdq5wKweQRrKrGSav2DJkaB08ckzZPyyWdsMQLT/LwoLq2LB3tup10Xcx0YtPCbe3J6nO0kQsenmgu57EE+G3qhx9uhQss1KQiDpiSZ4jtvdYzzJMS0+JxzxvcyTKWeF5LxVGB/bcIJZiQk4PiSfazxutwYMS0/lB4vASjmcXKRKlm2CLq2sRGq2vo4m0pUlO6Yb/A9cREt9LuQFubA7Bhd5ZLHEc7ZguKgnMQfOQD71Lfj5qkzuNxJYeEnZrTKvHKJ2RJj6WOSHDPMk+b6JRRpfSwQ3uSBlC2/NemhG9oswDWkDWrxllJ6EW43YMt53LM/6GRJ8w0ZXrdIQ/56XKISwf0FRvlXAkQwJ8j27ZpSAPCANfjjndgHohe9qfIEYyVq+zNksxgvTvxof8IJXSmwpgvTxD54ZeVk47BiyTwhs9RFqicUgpZ9yfRp7g9qrnI2N5/JswGO4kl40Y35uJxpXc9CHHwxY9ZjZmYkeCBcCazu5Tj6t5qQlUYu7LFdECt1yPDHoCSBX9B1cLUYhFRRmrtKuxcZmXZPsyJ87Tdzf/EqI8xe1puXBQffPN9Li1Nh0aitBd32UvFXf1+yXN0/oqn4dpzcz8nIz4XBJAzAO9TT40emCJ8KckEVYPbjEzYxg5/xyiQMnRvaxTYLC9jFpv1yndnuvE1V9P0dEa4KCPf0dNNyy135K46jAdPdWOSyw5NuCOrIPZXppNivJc3hOothK96iGLY4UqB1HZhRDVC1TCGAV
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(39860400002)(366004)(376002)(396003)(136003)(451199015)(5660300002)(7416002)(83380400001)(33656002)(8936002)(2906002)(41300700001)(38070700005)(36756003)(122000001)(86362001)(91956017)(38100700002)(71200400001)(6916009)(26005)(186003)(316002)(54906003)(6512007)(6506007)(53546011)(6486002)(4326008)(66476007)(66556008)(66946007)(66446008)(64756008)(8676002)(76116006)(478600001)(2616005)(22166006)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?DWtbx9jLQb3ELyv104VK2G28V00ma7XB+52QvmAO+JMGnI5hIF493f6WYx4X?=
- =?us-ascii?Q?AzYRWirX2hcl9msTtweYuRgjhpAfflo+W/O7jvh+1g1l+hlG3gZqF6mEkVMC?=
- =?us-ascii?Q?tbjjrtGRXkJDrvJ04+ljX/3AD9hQZebAq3PuCZqGGlw9OJgHOUTduZQfgrCv?=
- =?us-ascii?Q?gbpvO10/pm2elZ93klLlUPZlrXv8TutG7wVc/POO+sP8IWTkoka0PE69y9er?=
- =?us-ascii?Q?rVpB9tJn8QkPzpLHP79KF16Sy1kr5/pLJdUKlc0FaXpw/amKP7y7yRSDpdnI?=
- =?us-ascii?Q?7ly8cBBf6Wpvgmbm4Tucu+xCDuPV0G8Ztq6MthnlPQZ51fXAQ3LwDj/YKCNm?=
- =?us-ascii?Q?SUit7d8eXVzB72MuZCMo12rxSwdURJaXmLAxH8w/HEyB4ZSlKSy+O7Z+7yPK?=
- =?us-ascii?Q?DFXidqIEdcMGha+R+y2JC0fBUrisdthC57lD++3nJj8Rrp5Rf6sCus//PTdb?=
- =?us-ascii?Q?gddKsBofj1oyvNl7WLjK49iM0HifcFmiYRyjtZIQuxCtk61+NHHrF33rtxAw?=
- =?us-ascii?Q?H250TIm5VMlu4/4Zxrz8NTbE1fkvUM9BpUF8hCphlgsrji4dZPFp5jC4FgbT?=
- =?us-ascii?Q?BNrd2x4telMIaWhNC00IFrunhGSW6sHfGZl7in3xBEPrZjE+BEF+MBcYvjlP?=
- =?us-ascii?Q?uaPijArA+C9OKh646P2aJTzkf2mn27IdIWJ7DKouGMrNB9dYc+RPP6Gn5cfi?=
- =?us-ascii?Q?0dgdvddM/96wfPZv4XUx2ihYhvt2j9GMEaGbHsCcHW16Ts5CpxxFYXZIDmgB?=
- =?us-ascii?Q?PUsbApt9QAWXH4UYlJCdT017Zlv+odBL2NZscsKmDJ28eoMQyPII/XScM2wy?=
- =?us-ascii?Q?lTHddPO7yxzWl5Z7DhuybbZF0nYBNcE3tMau0zJ1cO3wvys8EuiPHFN8mCVu?=
- =?us-ascii?Q?qJOVrYnrue+aQQV6Aq+ZhzJqhagxQwVn8+8rDx/7/i1V+gLfZTnSNNbpbPuD?=
- =?us-ascii?Q?gfveJAyh0/njc4+SIf8BlTwrYaAKTQGAf40LD51lvzpIwuEJv/quDRkH+4iF?=
- =?us-ascii?Q?uMVro5jRbq8kHMfkB92u94+tevMLkQ7LpV2m0JDvpxoFNCJzbkTF6hMoWNXa?=
- =?us-ascii?Q?wyxfYGBiPKGC8LsYOd5/D1bZD9DDwwqofO/9ZXmCosKhc0JGjCbQUSeW0BbO?=
- =?us-ascii?Q?BBQpOGufjFO0IkE4Isyw1bCLUFItKtQHFnCJqvLbPgDWFkgFCp4QdWVLZqRx?=
- =?us-ascii?Q?QAymUKnPxT4wPF8sZ9d506Qr3TVZxyZv69Q1U3eaitK4gmVYaGwxgc4ozir9?=
- =?us-ascii?Q?eVHOYMOCrtxLBc6XhM6dHFq7/bZGPWvFTh86+pt4fGVl7EKUYvmTpH9r361K?=
- =?us-ascii?Q?Rzgu/t5cX/VORff67ijbnJ0szBx994GTRFethcleVQ+/lcObLwtMKqsybL1x?=
- =?us-ascii?Q?vGXZA+HosBz00dbmXLvP+1kPJxhEO+Dt8uDXghWtinS7pLLje+dnR9REUx8/?=
- =?us-ascii?Q?JjW9ReyyS1+3poStqbOTs8UJBfUAd5ouMbOJ5pA6lAsUGvEza8QOY8uC/BxG?=
- =?us-ascii?Q?0kBkJZwYA8XEjsECxhOnyrm9jA0NacX90nwcZ8Ph6qLtSI1NjJRaJU61u93U?=
- =?us-ascii?Q?QISKSNBmcPVGihJHdpd21r7+xHf0s3jUMH4xXmjy3+RdULjOGV3ZvRTYOllu?=
- =?us-ascii?Q?fg=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?BsmZCzYy3puqtxlzgfom6J6hAbuhaX4PuOo1+LN/A2yI5S3eWqFY8j95pX7j?=
+ =?us-ascii?Q?c7dla6F8KABX1V/zpbFk+WGFCZm6e3XsNKymbk5lWQwy8Ypbo5JmeqLTz1mF?=
+ =?us-ascii?Q?HWoGfr0aA9kHd0EGBiKQHB5wkFf0mjuR20Ch4pB/T+97b7CeqTUKggHkf4b5?=
+ =?us-ascii?Q?geB3c/bnpkLZyNh4Vbvm6EE1d/D1oUKZiJpXVNxmU9Yxf6tDwpOm1Ew94ejL?=
+ =?us-ascii?Q?FLHusfrogru9HMzFin+7Ay/jpW+kzk6QkC7ua1c3d1IPhWveNviUrnhAh2Wa?=
+ =?us-ascii?Q?XQNIC5lhdrTRVtrKorz0L6AJPkl8ENl82cGBbMeqvfyyxS7qeMTEayrekR9N?=
+ =?us-ascii?Q?aSB6qa/Q4IUSAELlcCjLJXYmx4ISByHfHwn0yPzxicbWPokYDDAgcMXa/Qfs?=
+ =?us-ascii?Q?TMOFeOzw0x3WHpxuNZQSjYG4dBmRNlpkff0oJ91MQK9NLQDyeKiquVa/wKG/?=
+ =?us-ascii?Q?VigQDT7pJu0Xl4T7/WEmp+ScjE6mnB3I1J8eDO0lDvqpxa9gPuntsNaaRnax?=
+ =?us-ascii?Q?k6EDKZHo/riAn87QOpkBV5EM8R2UQQJmCYLM2+zam32OtCLrAeQw/SGvDI6A?=
+ =?us-ascii?Q?Js77CoD3g67TVuJlPYzGX9Ut5fLDuKMwyrxqaZyNP6NcINZfQATk6m5G+Ecn?=
+ =?us-ascii?Q?EdEhrQTMVcXBbTRWs0qdtoAY+Oyv/UWZGH5dwDO+8AHg0IBNcIMb9EdoOiEF?=
+ =?us-ascii?Q?KKl0EATRmpLk8P7C4IP06F9eZGbECtVShBbC+Ew7YJO/RyWjSyi0V3nK+vzK?=
+ =?us-ascii?Q?E5QPO2CMGRgasg0w/A9K9isn1HHWUciEnJfWeElz7ntAlnDFGVtOnT+JUaU3?=
+ =?us-ascii?Q?3/1bZyHapE2zhauWSmjtQpsNPQqcGidISFuXuewyPPmioEVjuRZ/yCvQyVcf?=
+ =?us-ascii?Q?XoAzfP7iEqbwQ5wYkF/wYGrA53ojgwmciMyoVVwvp9JUklpnZwcRkitggwzk?=
+ =?us-ascii?Q?2n/lOMYYFkI8erTtcwkcC76ZhQDmGOMha0921qn2oVpoi+DRoCDhmt6dB33i?=
+ =?us-ascii?Q?EaoJtm1dVa3jKzS7RougpUfaJujpbLUDwHd31zH/LalRclsvBhQZPvZPDXh6?=
+ =?us-ascii?Q?iBUnJ/2316BJsXMb92OGfFNoirKGS+NFGyklVryMzKamAW1n3BCTEtT/a2xn?=
+ =?us-ascii?Q?6sZtoX0DSjYuntmrAPENJeev/xyMWEogN8S/7VTuLGiHb/wu15a4ZWjBmbnL?=
+ =?us-ascii?Q?5zYpq+4NoHC/dRL75F2QWRsDKi+rYOFbdbgxe+kT9RfjunHdsNSRjZ97/IBd?=
+ =?us-ascii?Q?YtDZIRMPrtunB7ii7sDGotm5FWLlUc35Cz1eGSeoxR8bjT+mynrqO4oAOra3?=
+ =?us-ascii?Q?Kjnqqet8/zC5wKZnB8OByJdOyEN8KWaj4yxzENU937utJxbBsU5nUXD87G3h?=
+ =?us-ascii?Q?LcY5xud/0nYxP/dgxeI5eWDo9VbVpdRr+lk6z8LmfIoWo9ekHMpJjYpbwbfV?=
+ =?us-ascii?Q?cvEyuwCa7mfOL+z8+xrQyhyiHexQ7FJZIm7fvtKGxUGYAu4mlEwF9Hew8gU2?=
+ =?us-ascii?Q?NwllHLSX93PP5LkZA3h4ZxEUjxbvHF0QUfy6K4aAD5kZ3s8C+x694hX+3LUA?=
+ =?us-ascii?Q?J7/pMRV9fURbDI6ysZNIOuvS1ly/iuEDjBxiDkWOEjv56kSN2dc+ZYVWg9N8?=
+ =?us-ascii?Q?jg=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C98B7F936EA8984C97090FB7D598A0F6@namprd10.prod.outlook.com>
+Content-ID: <D73C89D0004DE24AAAEA34BEE0AAD936@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 54S5FEWH+oD6ERo1BlgaQOkp+nM0Ye01mR2eXpAjRReCtEVCE9Z7J8SeWAqQLKNdp7iX656PxXlcDnUt/e2joqCTdAehRCYT3iic5eqKP6pBbQ9YOvtQniPvaPT0l4P/RlF+JYy9QoP1R/OT0CR2sOb+BtrL8Svb9kp8C0mrtsvESN4yFXMBHRqHXZoSNQIg+jsRFkc64OgFf9Iy404rfjrkknK7rhfTRV/6Emz5II6xRoPdjDixhW9aldIJkJrDwU0yW5PsW+nyjOl1yxtsKkh6rrK/v0MiTCewmHS1yCroNUQvyzUX17NTRxeV8CF+Eqb0KAoYoeC8BtlZ3LrH+tnjqOxMHN2vbonipg35cHo+S4WEnXa+PtS1dUFiwC9NnBawvO36DGnCvVypbIZW5VtXCEmHuR/O8zE9aSLd8yEigDS6bhUOKjqOFlgY0j0QrS1QwEIZ1FfPei/kaj42yXuQTqto8Z+vDIG/70hFC3RsA2jj6/iTyWtDV+1QEoBWJpY6hP3d8+1FLAtaUEL00RW/A5768KK0B/sRnHZbk1ZnKfvsiKrWStDbPn8pZU8Y/7Fa28fTMJKqHsvkcOgQxZEf74oFBjLlUoy0FNdir11nW22S6VfSTrRjMioyfchVpFguuA6LQ3dq+TB6HjHWUxXJLPPtpk9pVUOzkwhj8BNkHd6CkREeLcGnfpDJAINUS4CpL4ruMIsQx6ntuToZR8wpVh+sWEXMEeyuDhwFWVoANZrechEDVSND3zPbsGJfYHo4utq4jhw0PsJxdYHJlLpXd3GK3A7hm9hUws7R8+AUVWTqn8KKK9qmgQ+6CyWZ
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?aLD5+lX+AoanqxgByryeVQMQku2DqVuZbGF50aagJhAZNXr1FkH2pw91aFYL?=
+ =?us-ascii?Q?c1nvkaRcrkIBv23sWthpSGr8fsvl+QBVcxIs5K1Fapw9nVm2/2VYe7swqLfo?=
+ =?us-ascii?Q?f3ZTNX9YoflBfOjDPyUcPdd8YeVkbgJvIhNpTFYlWROf/fxezCG3m5HcD6a5?=
+ =?us-ascii?Q?5OE226A8gDKBWeB4plGVSelMiOzxP4wR3Vs87qcHPRvDWt0gay6prjqIMwEy?=
+ =?us-ascii?Q?3MqxLwYutp7poydzRdE2TIfBliVIDfw2bGKnuNvTPU9Eh9zHK3iyO8pdPAfg?=
+ =?us-ascii?Q?dsd5qSHbA+DV+t+pN0iGBu6BrorJuNf5MU9UfXyy09Lb95TNDRfYKNWa+otX?=
+ =?us-ascii?Q?gxRl7nXJXIOK4AbWMNlSXQUFmpWGj06prnPOPnIS3G/o3+AHXvoRvrmx1Mnz?=
+ =?us-ascii?Q?sSIrqIPvObiYkCSufnzuSaNyKQFJjLm7e9Bc6AkJnFldgfq/zBLIw53ScwUr?=
+ =?us-ascii?Q?0xabvK6YBFlWcEBChztYaRAcOyn3jbIj0MrmCGs+dfRz1DZ7EmEQ1uwgdNUH?=
+ =?us-ascii?Q?gXsZbP+HPjjrBNA25NenkoEWyme3VELLE3j89AbOJV+WMWWdIzIPQTnGDrs9?=
+ =?us-ascii?Q?obfu7rdUNhdN62cBZg3UgCd3wQu+tv3Vn1vBk5DJ8x5QDpGNtoxE++DeCKDZ?=
+ =?us-ascii?Q?LVgYvt+tk+ZmTIcE1PeTx5LbByhGyWnxO9MvPqYe3OlI7S/wbRZEXLbcvZrY?=
+ =?us-ascii?Q?Ud9M+zyWlh7+14iiMEvjFy4rkWmjwMZ80C2T/jgyzHi6edc7DSrFJg0NtRQ3?=
+ =?us-ascii?Q?H0PhgvvxzTW3YsCZPe8IoJ6wBn/6/+Rxw+4CEzVkT1cVhmZNJkYOyahneHvK?=
+ =?us-ascii?Q?Zu/8JOcVbWH0E0Yoj+g5URiD3vI5LPYj92CWdB1gNAGIvMBMsp6HXCTx0ZbP?=
+ =?us-ascii?Q?ddS3g3hOe1YlRmdMAuQzumC0ImF2JCHOfKuqL+YRyGMBUBylwv+gQxp7MFL7?=
+ =?us-ascii?Q?tbWEfHIMiAZjFn+OJEx2NxyWwv6HtHgNPUOszXpOy9RaLQxL4q5ActJxDXOT?=
+ =?us-ascii?Q?2iZdrWrSLxxY/EJVY8tV2eNe1qTlRYwkPj+h72Q4kFk4mvI3SPxi6NeAbw/e?=
+ =?us-ascii?Q?HgaKuS/CRkrS/Z4N/Fa9K/3I65H3WnZGANGKcoXplCPocwpnbv5BLLDmtrDn?=
+ =?us-ascii?Q?xSWj7/nOzcEoFQdzagbQwSnKIT3BcJVykDqSipnsAkp/QMsb3kiM/59cFEEL?=
+ =?us-ascii?Q?h2NwLMSAiOPFF0NnN0sGVhMcBehSR1jQQf7NhcsWl6L8LyXDlknP/fCBT38?=
+ =?us-ascii?Q?=3D?=
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e80e3972-d737-4682-c57e-08daeda4c424
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2023 16:08:34.7041
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b7e4a06-ae74-4a54-86db-08daeda5ac80
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jan 2023 16:15:04.5681
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Ie7cRIM9KvBprXaAapoVkUtrnHWEr1hMKjaSbAeza5RDY6swxQQ23ALlpoqwCkyjWXmWjLYWmrrWLrdzlhMb7w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4780
+X-MS-Exchange-CrossTenant-userprincipalname: mgVJUcspcFEoANFW3xb0iRsqIgxOemE2ms6FkzKv5bJ8uJ0FP0unSgEJbI0OfSlyxUQVs8B2xc0aGHlKSU4XJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6098
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2023-01-03_05,2023-01-03_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- malwarescore=0 mlxlogscore=999 spamscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301030137
-X-Proofpoint-GUID: yPPC8z-b52GvTThOi0AFNPZ86x2QDUDG
-X-Proofpoint-ORIG-GUID: yPPC8z-b52GvTThOi0AFNPZ86x2QDUDG
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=988 phishscore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2301030138
+X-Proofpoint-GUID: ZzGk7an_mrEcKcaOD1IZMz6UUrKzHT96
+X-Proofpoint-ORIG-GUID: ZzGk7an_mrEcKcaOD1IZMz6UUrKzHT96
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -153,334 +185,91 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Dec 18, 2022, at 7:55 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+> On Dec 7, 2022, at 3:43 AM, Richard Weinberger <richard@nod.at> wrote:
 >=20
-> Currently nfsd4_setup_inter_ssc returns the vfsmount of the source
-> server's export when the mount completes. After the copy is done
-> nfsd4_cleanup_inter_ssc is called with the vfsmount of the source
-> server and it searches nfsd_ssc_mount_list for a matching entry
-> to do the clean up.
+> This function is only used by NFSD to cross mount points.
+> If a mount point is of type auto mount, follow_down() will
+> not uncover it. Add LOOKUP_AUTOMOUNT to the lookup flags
+> to have ->d_automount() called when NFSD walks down the
+> mount tree.
 >=20
-> The problems with this approach are (1) the need to search the
-> nfsd_ssc_mount_list and (2) the code has to handle the case where
-> the matching entry is not found which looks ugly.
->=20
-> The enhancement is instead of nfsd4_setup_inter_ssc returning the
-> vfsmount, it returns the nfsd4_ssc_umount_item which has the
-> vfsmount embedded in it. When nfsd4_cleanup_inter_ssc is called
-> it's passed with the nfsd4_ssc_umount_item directly to do the
-> clean up so no searching is needed and there is no need to handle
-> the 'not found' case.
->=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> Signed-off-by: Richard Weinberger <richard@nod.at>
+
+Hello Al, you are top of the maintainers listed for fs/namei.c.
+I'd like to take this series for v6.3 via the nfsd tree. Can
+I get your Acked-by: for this one?
+
+
 > ---
-> V2: fix compile error when CONFIG_NFSD_V4_2_INTER_SSC not defined.
->    Reported by kernel test robot.
-
-Hello Dai - I've looked at this, nothing to comment on so far. I
-plan to go over it again sometime this week.
-
-I'd like to hear from others before applying it.
-
-
-> fs/nfsd/nfs4proc.c      | 94 +++++++++++++++++++-------------------------=
------
-> fs/nfsd/xdr4.h          |  2 +-
-> include/linux/nfs_ssc.h |  2 +-
-> 3 files changed, 38 insertions(+), 60 deletions(-)
+> fs/namei.c            | 6 +++---
+> fs/nfsd/vfs.c         | 6 +++++-
+> include/linux/namei.h | 2 +-
+> 3 files changed, 9 insertions(+), 5 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index b79ee65ae016..6515b00520bc 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1295,15 +1295,15 @@ extern void nfs_sb_deactive(struct super_block *s=
-b);
->  * setup a work entry in the ssc delayed unmount list.
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 578c2110df02..a6bb6863bf0c 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -1458,11 +1458,11 @@ EXPORT_SYMBOL(follow_down_one);
+>  * point, the filesystem owning that dentry may be queried as to whether =
+the
+>  * caller is permitted to proceed or not.
 >  */
-> static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
-> -		struct nfsd4_ssc_umount_item **retwork, struct vfsmount **ss_mnt)
-> +		struct nfsd4_ssc_umount_item **nsui)
+> -int follow_down(struct path *path)
+> +int follow_down(struct path *path, unsigned int flags)
 > {
-> 	struct nfsd4_ssc_umount_item *ni =3D NULL;
-> 	struct nfsd4_ssc_umount_item *work =3D NULL;
-> 	struct nfsd4_ssc_umount_item *tmp;
-> 	DEFINE_WAIT(wait);
-> +	__be32 status =3D 0;
+> 	struct vfsmount *mnt =3D path->mnt;
+> 	bool jumped;
+> -	int ret =3D traverse_mounts(path, &jumped, NULL, 0);
+> +	int ret =3D traverse_mounts(path, &jumped, NULL, flags);
 >=20
-> -	*ss_mnt =3D NULL;
-> -	*retwork =3D NULL;
-> +	*nsui =3D NULL;
-> 	work =3D kzalloc(sizeof(*work), GFP_KERNEL);
-> try_again:
-> 	spin_lock(&nn->nfsd_ssc_lock);
-> @@ -1326,12 +1326,12 @@ static __be32 nfsd4_ssc_setup_dul(struct nfsd_net=
- *nn, char *ipaddr,
-> 			finish_wait(&nn->nfsd_ssc_waitq, &wait);
-> 			goto try_again;
-> 		}
-> -		*ss_mnt =3D ni->nsui_vfsmount;
-> +		*nsui =3D ni;
-> 		refcount_inc(&ni->nsui_refcnt);
-> 		spin_unlock(&nn->nfsd_ssc_lock);
-> 		kfree(work);
+> 	if (path->mnt !=3D mnt)
+> 		mntput(mnt);
+> @@ -2864,7 +2864,7 @@ int path_pts(struct path *path)
 >=20
-> -		/* return vfsmount in ss_mnt */
-> +		/* return vfsmount in (*nsui)->nsui_vfsmount */
-> 		return 0;
-> 	}
-> 	if (work) {
-> @@ -1339,10 +1339,11 @@ static __be32 nfsd4_ssc_setup_dul(struct nfsd_net=
- *nn, char *ipaddr,
-> 		refcount_set(&work->nsui_refcnt, 2);
-> 		work->nsui_busy =3D true;
-> 		list_add_tail(&work->nsui_list, &nn->nfsd_ssc_mount_list);
-> -		*retwork =3D work;
-> -	}
-> +		*nsui =3D work;
-> +	} else
-> +		status =3D nfserr_resource;
-> 	spin_unlock(&nn->nfsd_ssc_lock);
-> -	return 0;
-> +	return status;
+> 	path->dentry =3D child;
+> 	dput(parent);
+> -	follow_down(path);
+> +	follow_down(path, 0);
+> 	return 0;
 > }
+> #endif
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 157f0df0e93a..ced04fc2b947 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -63,9 +63,13 @@ nfsd_cross_mnt(struct svc_rqst *rqstp, struct dentry *=
+*dpp,
+> 	struct dentry *dentry =3D *dpp;
+> 	struct path path =3D {.mnt =3D mntget(exp->ex_path.mnt),
+> 			    .dentry =3D dget(dentry)};
+> +	unsigned int follow_flags =3D 0;
+> 	int err =3D 0;
 >=20
-> static void nfsd4_ssc_update_dul_work(struct nfsd_net *nn,
-> @@ -1371,7 +1372,7 @@ static void nfsd4_ssc_cancel_dul_work(struct nfsd_n=
-et *nn,
->  */
-> static __be32
-> nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
-> -		       struct vfsmount **mount)
-> +			struct nfsd4_ssc_umount_item **nsui)
-> {
-> 	struct file_system_type *type;
-> 	struct vfsmount *ss_mnt;
-> @@ -1382,7 +1383,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, stru=
-ct svc_rqst *rqstp,
-> 	char *ipaddr, *dev_name, *raw_data;
-> 	int len, raw_len;
-> 	__be32 status =3D nfserr_inval;
-> -	struct nfsd4_ssc_umount_item *work =3D NULL;
-> 	struct nfsd_net *nn =3D net_generic(SVC_NET(rqstp), nfsd_net_id);
->=20
-> 	naddr =3D &nss->u.nl4_addr;
-> @@ -1390,6 +1390,7 @@ nfsd4_interssc_connect(struct nl4_server *nss, stru=
-ct svc_rqst *rqstp,
-> 					 naddr->addr_len,
-> 					 (struct sockaddr *)&tmp_addr,
-> 					 sizeof(tmp_addr));
-> +	*nsui =3D NULL;
-> 	if (tmp_addrlen =3D=3D 0)
-> 		goto out_err;
->=20
-> @@ -1432,10 +1433,10 @@ nfsd4_interssc_connect(struct nl4_server *nss, st=
-ruct svc_rqst *rqstp,
-> 		goto out_free_rawdata;
-> 	snprintf(dev_name, len + 5, "%s%s%s:/", startsep, ipaddr, endsep);
->=20
-> -	status =3D nfsd4_ssc_setup_dul(nn, ipaddr, &work, &ss_mnt);
-> +	status =3D nfsd4_ssc_setup_dul(nn, ipaddr, nsui);
-> 	if (status)
-> 		goto out_free_devname;
-> -	if (ss_mnt)
-> +	if ((*nsui)->nsui_vfsmount)
-> 		goto out_done;
->=20
-> 	/* Use an 'internal' mount: SB_KERNMOUNT -> MNT_INTERNAL */
-> @@ -1443,15 +1444,12 @@ nfsd4_interssc_connect(struct nl4_server *nss, st=
-ruct svc_rqst *rqstp,
-> 	module_put(type->owner);
-> 	if (IS_ERR(ss_mnt)) {
-> 		status =3D nfserr_nodev;
-> -		if (work)
-> -			nfsd4_ssc_cancel_dul_work(nn, work);
-> +		nfsd4_ssc_cancel_dul_work(nn, *nsui);
-> 		goto out_free_devname;
-> 	}
-> -	if (work)
-> -		nfsd4_ssc_update_dul_work(nn, work, ss_mnt);
-> +	nfsd4_ssc_update_dul_work(nn, *nsui, ss_mnt);
-> out_done:
-> 	status =3D 0;
-> -	*mount =3D ss_mnt;
->=20
-> out_free_devname:
-> 	kfree(dev_name);
-> @@ -1474,8 +1472,7 @@ nfsd4_interssc_connect(struct nl4_server *nss, stru=
-ct svc_rqst *rqstp,
->  */
-> static __be32
-> nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
-> -		      struct nfsd4_compound_state *cstate,
-> -		      struct nfsd4_copy *copy, struct vfsmount **mount)
-> +		struct nfsd4_compound_state *cstate, struct nfsd4_copy *copy)
-> {
-> 	struct svc_fh *s_fh =3D NULL;
-> 	stateid_t *s_stid =3D &copy->cp_src_stateid;
-> @@ -1488,7 +1485,8 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
-> 	if (status)
+> -	err =3D follow_down(&path);
+> +	if (exp->ex_flags & NFSEXP_CROSSMOUNT)
+> +		follow_flags =3D LOOKUP_AUTOMOUNT;
+> +
+> +	err =3D follow_down(&path, follow_flags);
+> 	if (err < 0)
 > 		goto out;
+> 	if (path.mnt =3D=3D exp->ex_path.mnt && path.dentry =3D=3D dentry &&
+> diff --git a/include/linux/namei.h b/include/linux/namei.h
+> index 00fee52df842..6f96db73a70a 100644
+> --- a/include/linux/namei.h
+> +++ b/include/linux/namei.h
+> @@ -77,7 +77,7 @@ struct dentry *lookup_one_positive_unlocked(struct user=
+_namespace *mnt_userns,
+> 					    struct dentry *base, int len);
 >=20
-> -	status =3D nfsd4_interssc_connect(copy->cp_src, rqstp, mount);
-> +	status =3D nfsd4_interssc_connect(copy->cp_src, rqstp,
-> +				&copy->ss_nsui);
-> 	if (status)
-> 		goto out;
+> extern int follow_down_one(struct path *);
+> -extern int follow_down(struct path *);
+> +extern int follow_down(struct path *, unsigned int flags);
+> extern int follow_up(struct path *);
 >=20
-> @@ -1506,61 +1504,42 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
-> }
->=20
-> static void
-> -nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
-> +nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umount_item *ni, struct file *f=
-ilp,
-> 			struct nfsd_file *dst)
-> {
-> -	bool found =3D false;
-> 	long timeout;
-> -	struct nfsd4_ssc_umount_item *tmp;
-> -	struct nfsd4_ssc_umount_item *ni =3D NULL;
-> 	struct nfsd_net *nn =3D net_generic(dst->nf_net, nfsd_net_id);
->=20
-> 	nfs42_ssc_close(filp);
-> 	nfsd_file_put(dst);
-> 	fput(filp);
->=20
-> -	if (!nn) {
-> -		mntput(ss_mnt);
-> -		return;
-> -	}
-> 	spin_lock(&nn->nfsd_ssc_lock);
-> 	timeout =3D msecs_to_jiffies(nfsd4_ssc_umount_timeout);
-> -	list_for_each_entry_safe(ni, tmp, &nn->nfsd_ssc_mount_list, nsui_list) =
-{
-> -		if (ni->nsui_vfsmount->mnt_sb =3D=3D ss_mnt->mnt_sb) {
-> -			list_del(&ni->nsui_list);
-> -			/*
-> -			 * vfsmount can be shared by multiple exports,
-> -			 * decrement refcnt. If the count drops to 1 it
-> -			 * will be unmounted when nsui_expire expires.
-> -			 */
-> -			refcount_dec(&ni->nsui_refcnt);
-> -			ni->nsui_expire =3D jiffies + timeout;
-> -			list_add_tail(&ni->nsui_list, &nn->nfsd_ssc_mount_list);
-> -			found =3D true;
-> -			break;
-> -		}
-> -	}
-> +	list_del(&ni->nsui_list);
-> +	/*
-> +	 * vfsmount can be shared by multiple exports,
-> +	 * decrement refcnt. If the count drops to 1 it
-> +	 * will be unmounted when nsui_expire expires.
-> +	 */
-> +	refcount_dec(&ni->nsui_refcnt);
-> +	ni->nsui_expire =3D jiffies + timeout;
-> +	list_add_tail(&ni->nsui_list, &nn->nfsd_ssc_mount_list);
-> 	spin_unlock(&nn->nfsd_ssc_lock);
-> -	if (!found) {
-> -		mntput(ss_mnt);
-> -		return;
-> -	}
-> }
->=20
-> #else /* CONFIG_NFSD_V4_2_INTER_SSC */
->=20
-> static __be32
-> nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
-> -		      struct nfsd4_compound_state *cstate,
-> -		      struct nfsd4_copy *copy,
-> -		      struct vfsmount **mount)
-> +			struct nfsd4_compound_state *cstate,
-> +			struct nfsd4_copy *copy)
-> {
-> -	*mount =3D NULL;
-> 	return nfserr_inval;
-> }
->=20
-> static void
-> -nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
-> +nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umount_item *ni, struct file *f=
-ilp,
-> 			struct nfsd_file *dst)
-> {
-> }
-> @@ -1700,7 +1679,7 @@ static void dup_copy_fields(struct nfsd4_copy *src,=
- struct nfsd4_copy *dst)
-> 	memcpy(dst->cp_src, src->cp_src, sizeof(struct nl4_server));
-> 	memcpy(&dst->stateid, &src->stateid, sizeof(src->stateid));
-> 	memcpy(&dst->c_fh, &src->c_fh, sizeof(src->c_fh));
-> -	dst->ss_mnt =3D src->ss_mnt;
-> +	dst->ss_nsui =3D src->ss_nsui;
-> }
->=20
-> static void cleanup_async_copy(struct nfsd4_copy *copy)
-> @@ -1749,8 +1728,8 @@ static int nfsd4_do_async_copy(void *data)
-> 	if (nfsd4_ssc_is_inter(copy)) {
-> 		struct file *filp;
->=20
-> -		filp =3D nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
-> -				      &copy->stateid);
-> +		filp =3D nfs42_ssc_open(copy->ss_nsui->nsui_vfsmount,
-> +				&copy->c_fh, &copy->stateid);
-> 		if (IS_ERR(filp)) {
-> 			switch (PTR_ERR(filp)) {
-> 			case -EBADF:
-> @@ -1764,7 +1743,7 @@ static int nfsd4_do_async_copy(void *data)
-> 		}
-> 		nfserr =3D nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
-> 				       false);
-> -		nfsd4_cleanup_inter_ssc(copy->ss_mnt, filp, copy->nf_dst);
-> +		nfsd4_cleanup_inter_ssc(copy->ss_nsui, filp, copy->nf_dst);
-> 	} else {
-> 		nfserr =3D nfsd4_do_copy(copy, copy->nf_src->nf_file,
-> 				       copy->nf_dst->nf_file, false);
-> @@ -1790,8 +1769,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_com=
-pound_state *cstate,
-> 			status =3D nfserr_notsupp;
-> 			goto out;
-> 		}
-> -		status =3D nfsd4_setup_inter_ssc(rqstp, cstate, copy,
-> -				&copy->ss_mnt);
-> +		status =3D nfsd4_setup_inter_ssc(rqstp, cstate, copy);
-> 		if (status)
-> 			return nfserr_offload_denied;
-> 	} else {
-> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-> index 0eb00105d845..36c3340c1d54 100644
-> --- a/fs/nfsd/xdr4.h
-> +++ b/fs/nfsd/xdr4.h
-> @@ -571,7 +571,7 @@ struct nfsd4_copy {
-> 	struct task_struct	*copy_task;
-> 	refcount_t		refcount;
->=20
-> -	struct vfsmount		*ss_mnt;
-> +	struct nfsd4_ssc_umount_item *ss_nsui;
-> 	struct nfs_fh		c_fh;
-> 	nfs4_stateid		stateid;
-> };
-> diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
-> index 75843c00f326..22265b1ff080 100644
-> --- a/include/linux/nfs_ssc.h
-> +++ b/include/linux/nfs_ssc.h
-> @@ -53,6 +53,7 @@ static inline void nfs42_ssc_close(struct file *filep)
-> 	if (nfs_ssc_client_tbl.ssc_nfs4_ops)
-> 		(*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
-> }
-> +#endif
->=20
-> struct nfsd4_ssc_umount_item {
-> 	struct list_head nsui_list;
-> @@ -66,7 +67,6 @@ struct nfsd4_ssc_umount_item {
-> 	struct vfsmount *nsui_vfsmount;
-> 	char nsui_ipaddr[RPC_MAX_ADDRBUFLEN + 1];
-> };
-> -#endif
->=20
-> /*
->  * NFS_FS
+> extern struct dentry *lock_rename(struct dentry *, struct dentry *);
 > --=20
-> 2.9.5
+> 2.26.2
 >=20
 
 --
