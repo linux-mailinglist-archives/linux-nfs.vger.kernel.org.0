@@ -2,55 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CFCE65C0E1
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Jan 2023 14:32:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66D9465C24B
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Jan 2023 15:52:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237591AbjACNbl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Jan 2023 08:31:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
+        id S237290AbjACOwN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Jan 2023 09:52:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237586AbjACNbd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Jan 2023 08:31:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2AF12A2
-        for <linux-nfs@vger.kernel.org>; Tue,  3 Jan 2023 05:31:32 -0800 (PST)
+        with ESMTP id S238051AbjACOwG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Jan 2023 09:52:06 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FBEEE1E
+        for <linux-nfs@vger.kernel.org>; Tue,  3 Jan 2023 06:52:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5B19CB80EC3
-        for <linux-nfs@vger.kernel.org>; Tue,  3 Jan 2023 13:31:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6635AC433EF;
-        Tue,  3 Jan 2023 13:31:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 524A3B80F99
+        for <linux-nfs@vger.kernel.org>; Tue,  3 Jan 2023 14:52:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0CECC433EF;
+        Tue,  3 Jan 2023 14:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672752690;
-        bh=SpKCGMhhzBnSJnB7cHugi+CzSfWdfz6Ury/zuxHgNsc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ko5oSoKJmcEEgwbiN/+6b/C+Nknoz9r+0bkxmp2kmsIz/xx1xf0uksAy4/twlTcMR
-         y0xJnHVRNxskwlgS2nbpOYcylPIQk1SWYGLH/go9xLy6sFM8kDurH88Z8VASl/Deub
-         /PxiL7Cif1mra95WMQeAbb/D2CDPlpDFMowms4bJu7mrzVywvCOnBz50kdYX2+72g7
-         XxgdKN+Y30EOcMJZnhjXTtuiFmP1CwrRD3dTwywtU5pQ0FRFTROl0hc6GRjauu/xg5
-         Kfk9wLIeIgeggO+15aRJnPMltWIIeUWLDm9kFabA+HRsM8ECdGTrMT3UE/DmozEjcT
-         gxGMAC072smTg==
-Message-ID: <6f869549199e7c2a4a9aa239e0091cd9c7733ab7.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: fix handling of readdir in v4root vs. mount
- upcall timeout
+        s=k20201202; t=1672757523;
+        bh=/OpHo+Yq3vUKiy3k0OhVuXclnih6jCTXeAgRXXf3qYQ=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=B0fN9/jbok7qwmmuSCoslCsds9lMjziy8MtKwB/RJ/isBncuT4PVRzPgJc2J0FZlG
+         l/R4FkUx8vs6Cf7S8h1f/DLKuBOKDpN/B5G0SyQn4mCLQqMnT7Hl9cG0GiOeSqKHUD
+         NkTE+8MvLX49NsRcM55CNZrWQHmHUfuoICevtN0CqRt1MxbbmJlWObxEfZwp5JLm8+
+         /mwbGfyaep5PYcGKCHvAbwXrf82jSVF/ldQo4iAEQxoNL186wFenqhSgQctmNlS0Ub
+         oaMzMW7/oImaZlmMXLQN5BCFaY3VShhEbZ3Brkt6+PMPhaiPGureoLaWf3s7O0sc7Q
+         wyvQdO1/1VIug==
+Message-ID: <159dd1253c7b49b6654cb4373477f69cc7387b1e.camel@kernel.org>
+Subject: Re: [PATCH v1 00/25] Server-side RPC call header parsing overhaul
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>,
-        Ian Kent <raven@themaw.net>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Steve Dickson <steved@redhat.com>,
-        JianHong Yin <yin-jianhong@163.com>,
-        Richard Weinberger <richard@nod.at>
-Date:   Tue, 03 Jan 2023 08:31:28 -0500
-In-Reply-To: <5248B584-8A4A-47D2-A7D0-8EFDC2B97F63@oracle.com>
-References: <20221213180826.216690-1-jlayton@kernel.org>
-         <0918676C-124C-417F-B8DE-DA1946EE91CC@oracle.com>
-         <988799bd54c391259cfeff002660a4002adb96d2.camel@kernel.org>
-         <81f891ef-b498-24b0-12e3-4ddda8062dc0@themaw.net>
-         <0d6deecbe0dff95ebbe061914ddb00ca04d1f3c1.camel@kernel.org>
-         <b2593a91-0957-5203-b556-f93bdd2dc0dd@themaw.net>
-         <940934D4-7896-4C0D-93F1-26170C49CBE4@oracle.com>
-         <5248B584-8A4A-47D2-A7D0-8EFDC2B97F63@oracle.com>
+To:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
+Date:   Tue, 03 Jan 2023 09:52:01 -0500
+In-Reply-To: <167267753484.112521.4826748148788735127.stgit@manet.1015granger.net>
+References: <167267753484.112521.4826748148788735127.stgit@manet.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
@@ -64,125 +51,85 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, 2023-01-01 at 18:18 +0000, Chuck Lever III wrote:
+On Mon, 2023-01-02 at 12:05 -0500, Chuck Lever wrote:
+> Happy new year, campers.
 >=20
-> > On Jan 1, 2023, at 1:09 PM, Chuck Lever III <chuck.lever@oracle.com> wr=
-ote:
-> >=20
-> >=20
-> >=20
-> > > On Dec 14, 2022, at 12:37 AM, Ian Kent <raven@themaw.net> wrote:
-> > >=20
-> > > On 14/12/22 08:39, Jeff Layton wrote:
-> > > > On Wed, 2022-12-14 at 07:14 +0800, Ian Kent wrote:
-> > > > > On 14/12/22 04:02, Jeff Layton wrote:
-> > > > > > On Tue, 2022-12-13 at 19:00 +0000, Chuck Lever III wrote:
-> > > > > > > > On Dec 13, 2022, at 1:08 PM, Jeff Layton <jlayton@kernel.or=
-g> wrote:
-> > > > > > > >=20
-> > > > > > > > If v4 READDIR operation hits a mountpoint and gets back an =
-error,
-> > > > > > > > then it will include that entry in the reply and set RDATTR=
-_ERROR for it
-> > > > > > > > to the error.
-> > > > > > > >=20
-> > > > > > > > That's fine for "normal" exported filesystems, but on the v=
-4root, we
-> > > > > > > > need to be more careful to only expose the existence of den=
-tries that
-> > > > > > > > lead to exports.
-> > > > > > > >=20
-> > > > > > > > If the mountd upcall times out while checking to see whethe=
-r a
-> > > > > > > > mountpoint on the v4root is exported, then we have no recou=
-rse other
-> > > > > > > > than to fail the whole operation.
-> > > > > > > Thank you for chasing this down!
-> > > > > > >=20
-> > > > > > > Failing the whole READDIR when mountd times out might be a ba=
-d idea.
-> > > > > > > If the mountd upcall times out every time, the client can't m=
-ake
-> > > > > > > any progress and will continue to emit the failing READDIR re=
-quest.
-> > > > > > >=20
-> > > > > > > Would it be better to skip the unresolvable entry instead and=
- let
-> > > > > > > the READDIR succeed without that entry?
-> > > > > > >=20
-> > > > > > Mounting doesn't usually require working READDIR. In that situa=
-tion, a
-> > > > > > readdir() might hang (until the client kills), but a lookup of =
-other
-> > > > > > dentries that aren't perpetually stalled should be ok in this s=
-ituation.
-> > > > > >=20
-> > > > > > If mountd is that hosed then I think it's unlikely that any pro=
-gress
-> > > > > > will be possible anyway.
-> > > > > The READDIR shouldn't trigger a mount yes, but if it's a valid au=
-tomount
-> > > > >=20
-> > > > > point (basically a valid dentry in this case I think) it should b=
-e listed.
-> > > > >=20
-> > > > > It certainly shouldn't hold up the READDIR, passing into it is wh=
-en a
-> > > > >=20
-> > > > > mount should occur.
-> > > > >=20
-> > > > >=20
-> > > > > That's usually the behavior we want for automounts, we don't want=
- mount
-> > > > >=20
-> > > > > storms on directories full of automount points.
-> > > > >=20
-> > > >=20
-> > > > We only want to display it if it's a valid _exported_ mountpoint.
-> > > >=20
-> > > > The idea here is to only reveal the parts of the namespace that are
-> > > > exported in the nfsv4 pseudoroot. The "normal" contents are not sho=
-wn --
-> > > > only exported mountpoints and ancestor directories of those mountpo=
-ints.
-> > > >=20
-> > > > We don't want mountd triggering automounts, in general. If the
-> > > > underlying filesystem was exported, then it should also already be
-> > > > mounted, since nfsd doesn't currently trigger automounts in
-> > > > follow_down().
-> > >=20
-> > > Umm ... must they already be mounted?
-> > >=20
-> > >=20
-> > > Can't it be a valid mount point either not yet mounted or timed out
-> > >=20
-> > > and umounted. In that case shouldn't it be listed, I know that's
-> > >=20
-> > > not the that good an outcome because its stat info will change when
-> > >=20
-> > > it gets walked into but it's usually the only sane choice.
-> > >=20
-> > >=20
-> > > >=20
-> > > > There is also a separate patchset by Richard Weinberger to allow nf=
-sd to
-> > > > trigger automounts if the parent filesystem is exported with -o
-> > > > crossmnt. That should be ok with this patch, since the automount wi=
-ll be
-> > > > triggered before the upcall to mountd. That should ensure that it's
-> > > > already mounted by the time we get to upcalling for its export.
-> > >=20
-> > > Yep, saw that, ;)
-> >=20
-> > I'm not sure if there is consensus on this patch.
-> >=20
-> > It's been pushed to nfsd's for-rc branch for wider testing, but if
-> > there's a strong objection I can pull it out before the next -rc PR.
+> The following series has been percolating for quite a while, thanks
+> to the extended 6.1-rc cycle. I'd like to get this work reviewed
+> for possible inclusion in v6.3, so I'm starting early.
 >=20
-> Also, do we agree that it should get a "Cc: stable" tag?
+> The purpose of this series is to replace the svc_get* macros in the
+> Linux kernel server's RPC call header parsing code with xdr_stream
+> helpers. I've measured no change in CPU utilization after the
+> overhaul; svc_recv() and friends remain the highest CPU consumers by
+> an order of magnitude.
+>=20
+> Memory safety: Buffer bounds checking after decoding each XDR item
+> is more memory-safe than the current decoding mechanism. Subsequent
+> memory safety improvements to the xdr_stream helpers will benefit
+> all who use them.
+>=20
+> Audit friendliness: The new code has lots of comments and other
+> clean-up to help align it with the relevant RPC specifications. The
+> use of common helpers also makes the decoders easier to audit.
+>=20
+> I've split the full series in half to make it easier to review. The
+> patches posted here handle RPC call header decoding. Remaining
+> patches, to be posted later, deal with RPC reply header encoding.
+>=20
+> Yes, there are a lot of patches, but they are each small, easily
+> chewed mechanical changes.
+>=20
+> ---
+>=20
+> Chuck Lever (25):
+>       SUNRPC: Push svcxdr_init_decode() into svc_process_common()
+>       SUNRPC: Move svcxdr_init_decode() into ->accept methods
+>       SUNRPC: Add an XDR decoding helper for struct opaque_auth
+>       SUNRPC: Convert svcauth_null_accept() to use xdr_stream
+>       SUNRPC: Convert svcauth_unix_accept() to use xdr_stream
+>       SUNRPC: Convert svcauth_tls_accept() to use xdr_stream
+>       SUNRPC: Move the server-side GSS upcall to a noinline function
+>       SUNRPC: Hoist common verifier decoding code into svcauth_gss_proc_i=
+nit()
+>       SUNRPC: Remove gss_read_common_verf()
+>       SUNRPC: Remove gss_read_verf()
+>       SUNRPC: Convert server-side GSS upcall helpers to use xdr_stream
+>       SUNRPC: Replace read_u32_from_xdr_buf() with existing XDR helper
+>       SUNRPC: Rename automatic variables in unwrap_integ_data()
+>       SUNRPC: Convert unwrap_integ_data() to use xdr_stream
+>       SUNRPC: Rename automatic variables in unwrap_priv_data()
+>       SUNRPC: Convert unwrap_priv_data() to use xdr_stream
+>       SUNRPC: Convert gss_verify_header() to use xdr_stream
+>       SUNRPC: Clean up svcauth_gss_accept's NULL procedure check
+>       SUNRPC: Convert the svcauth_gss_accept() pre-amble to use xdr_strea=
+m
+>       SUNRPC: Hoist init_decode out of svc_authenticate()
+>       SUNRPC: Re-order construction of the first reply fields
+>       SUNRPC: Eliminate unneeded variable
+>       SUNRPC: Decode most of RPC header with xdr_stream
+>       SUNRPC: Remove svc_process_common's argv parameter
+>       SUNRPC: Hoist svcxdr_init_decode() into svc_process()
+>=20
+>=20
+>  fs/lockd/svc.c                    |   1 -
+>  fs/nfs/callback_xdr.c             |   1 -
+>  fs/nfsd/nfssvc.c                  |   1 -
+>  include/linux/sunrpc/msg_prot.h   |   5 +
+>  include/linux/sunrpc/xdr.h        |   5 +-
+>  net/sunrpc/auth_gss/svcauth_gss.c | 512 ++++++++++++++++--------------
+>  net/sunrpc/svc.c                  |  69 ++--
+>  net/sunrpc/svc_xprt.c             |   1 -
+>  net/sunrpc/svcauth.c              |  13 +-
+>  net/sunrpc/svcauth_unix.c         | 132 +++++---
+>  net/sunrpc/xdr.c                  |  50 ++-
+>  11 files changed, 468 insertions(+), 322 deletions(-)
+>=20
+> --
+> Chuck Lever
 >=20
 
-Yes, I think so. This potentially exposes some info to clients that they
-really shouldn't have.
---=20
-Jeff Layton <jlayton@kernel.org>
+I went through the whole set and it's all a mostly logical set of
+methodical changes. You can add:
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
