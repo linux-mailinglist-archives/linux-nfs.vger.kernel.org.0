@@ -2,86 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2006965D27A
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jan 2023 13:24:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B780865D377
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jan 2023 13:56:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbjADMYD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Jan 2023 07:24:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49840 "EHLO
+        id S239330AbjADMzm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Jan 2023 07:55:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230200AbjADMYC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Jan 2023 07:24:02 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 978F8DC
-        for <linux-nfs@vger.kernel.org>; Wed,  4 Jan 2023 04:24:01 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 323896142C
-        for <linux-nfs@vger.kernel.org>; Wed,  4 Jan 2023 12:24:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21E8CC433EF;
-        Wed,  4 Jan 2023 12:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672835040;
-        bh=cl8QEa+4LKO/Jvp4GMZ0+G8c9V8uH7Yl2lEg3tdTWa8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KoBaZp5qwNqtOZPQJ8q5FEEb0dORSKMLlXdhOranJu3k2EVwekLEVNO0wU3qLzYBF
-         SxsOJNHDIVLAYE2g/w28qwrodwsNuOjIRvoNqGEfpcYaPSTojCCMcuaUwQVV2k3Vib
-         RJDVQl7MVDnrktkpKFTKOKccNeOhTUNbQB9pyHNWSJOSOSOGf+RZ1n3uI51fbUkP0C
-         puNjTfEK3G4ZJwSTAVptVdeKYNfBB2orHBLkkTe2VCBy6oIX9R/S9SXtZjm17If6R2
-         9jTrViS5UTQvKtkM0kdCmeIIOdet0kWOk3AbXQY994sBM57nlbIaDzjKVeGhdzSJ62
-         PZ540DIjwnxlQ==
-Message-ID: <b81f1eb708b3d0fb60bde23ebd1dfd6fdb87aa3b.camel@kernel.org>
-Subject: Re: [nfs-utils PATCH] Don't allow junction tests to trigger
- automounts
-From:   Jeff Layton <jlayton@kernel.org>
-To:     steved@redhat.com
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        JianHong Yin <jiyin@redhat.com>
-Date:   Wed, 04 Jan 2023 07:23:58 -0500
-In-Reply-To: <20221213160104.198237-1-jlayton@kernel.org>
-References: <20221213160104.198237-1-jlayton@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
+        with ESMTP id S231202AbjADMzZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Jan 2023 07:55:25 -0500
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32697E0C7
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Jan 2023 04:54:54 -0800 (PST)
+Received: by mail-qk1-x732.google.com with SMTP id pa22so16206853qkn.9
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Jan 2023 04:54:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
+        b=BQfo1+41q2NZR57Q7BFlMODaOza2AgrRvUpAp3daCd4t1w84OEhFtXAM1g7CkVTr/y
+         mvXWkJvXCDM96Iy3cSf9E37Th3uZX5TzmwlIsHFzK3DAyLuSjJ8d3uR9drr/ahkzPGkt
+         iW+sw+gZOJCd7bumtfoM4UR2xOfXz6tdmGq2f+IJJhoSBazdofAm5Gs9PxuweXnk264c
+         knSGf1CtrqZScdeov1GoaGbl2sApMUXYjJGPCObPVA0UTlHx2t6+wdp4VOKHmsqLWM8X
+         lQt15zqigA6uJCG+q37n0r4mLK1MKtsniT1i9jhRA9qlN9E2Mf0sYN4W9Jd0n+39BoCK
+         yzWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g2m/uNsCm/OsAUZxAnJOSdXXDa9Gh4wg88n4VPL2lMU=;
+        b=bw1WvYa3NktFVPsslVahhKICGTpgM1EhXQxCpZ6ExJnSLNLafNKVFhjdZecWyiNFz5
+         leeUDWrkW5GqsCfPmEADzs4nhPkcABzOLwhA+qUKylkEqhFK7kr6hU5j+EVmkHErDKBz
+         vXmIkwXS6ej13RTNWQpS/pi6UYY/fsRpcw5hmDnmG2uUXOnu0q7cQznK0vz00tR3H4FV
+         dk4xo7oxPgR/JMBa3eFW4MkDpW78bGo9kuTvPo6YHzbNmk+0RMXE9jfDiyQrjUIHNWhz
+         f7CQw0vFCQ65Bpwy/xGH/VkrdJL9vOBUB4X9j34LJcBLbDU4MlibgHycWVEGsmLB25bJ
+         v7SA==
+X-Gm-Message-State: AFqh2kroQicej5sqyTOpAAbIBj8qPhQR2oHqjk5sFxMux0KUnNopAQHh
+        WeN7qxL8Q+4wSZV9dAw+IpdYMqApk8fORn5rTocwgzorr7o=
+X-Google-Smtp-Source: AMrXdXuKXTvNK0aSB9vnyjtdhrZfKmRzvU9Jw1W0zhcD7x19AMFVNgTh5oL+8ilZBOfTDf/bL64QVz1mYULxa/ftADs=
+X-Received: by 2002:ac8:568a:0:b0:3a9:688d:fad2 with SMTP id
+ h10-20020ac8568a000000b003a9688dfad2mr1976067qta.646.1672836882017; Wed, 04
+ Jan 2023 04:54:42 -0800 (PST)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6200:5d91:b0:4a5:78e9:2012 with HTTP; Wed, 4 Jan 2023
+ 04:54:41 -0800 (PST)
+Reply-To: Gregdenzell9@gmail.com
+From:   Greg Denzell <mzsophie@gmail.com>
+Date:   Wed, 4 Jan 2023 12:54:41 +0000
+Message-ID: <CAEoj5=ZpJ15GRz-U33Ocbu5-P3Va+3bNv3476+mmJJ52cwx7tA@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2022-12-13 at 11:01 -0500, Jeff Layton wrote:
-> JianHong reported some strange behavior with automounts on an nfs server
-> without an explicit pseudoroot. When clients issued a readdir in the
-> pseudoroot, automounted directories that were not yet mounted would show
-> up even if they weren't exported, though the clients wouldn't be able to
-> do anything with them.
->=20
-> The issue was that triggering the automount on a directory would cause
-> the mountd upcall to time out, which would cause nfsd to include the
-> automounted dentry in the readdir response. Eventually, the automount
-> would work and report that it wasn't exported and subsequent attempts to
-> access the dentry would (properly) fail.
->=20
-> We never want mountd to trigger an automount. The kernel should do that
-> if it wants to use it. Change the junction checks to do an O_PATH open
-> and use fstatat with AT_NO_AUTOMOUNT.
->=20
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=3D2148353
-> Reported-by: JianHong Yin <jiyin@redhat.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  support/junction/junction.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->=20
+Seasons Greetings!
 
-Ping? Steve, can you comment on (or merge) this patch?
-
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+This will remind you again that I have not yet received your reply to
+my last message to you.
