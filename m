@@ -2,279 +2,233 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 426B665D6E9
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jan 2023 16:10:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D280665D74A
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Jan 2023 16:33:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234778AbjADPKV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Jan 2023 10:10:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
+        id S229582AbjADPd2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Jan 2023 10:33:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230480AbjADPJr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Jan 2023 10:09:47 -0500
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F1E19286
-        for <linux-nfs@vger.kernel.org>; Wed,  4 Jan 2023 07:09:45 -0800 (PST)
-Received: by mail-pj1-x102d.google.com with SMTP id j8-20020a17090a3e0800b00225fdd5007fso24958413pjc.2
-        for <linux-nfs@vger.kernel.org>; Wed, 04 Jan 2023 07:09:45 -0800 (PST)
+        with ESMTP id S239536AbjADPdN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Jan 2023 10:33:13 -0500
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7515426FB
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Jan 2023 07:33:12 -0800 (PST)
+Received: by mail-pl1-x633.google.com with SMTP id c6so2994711pls.4
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Jan 2023 07:33:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
+        d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jc45tpDJBm+2+l4vJpn/o0K4ghanxRxN9DFZ2Tku2lw=;
-        b=kSDUSCAhmQXpwvle8Syk0fWjArrtuBueAWc2IvKFLeTMWyhuk0/wqvWuVtiF02VuF+
-         lBCPrqkXT/OR/HEATE+0FeFBI2qu3n+R4KskDZBJT/kg1DHIdzEqF/4+xYjEPe03uKB2
-         E2PX0z8sj4aTxkvKksPfEBaJZm45Gd/FMh+wBjIx8dGI68q7t8gE9NhtGDBBPBuCQlcT
-         xRge3S8kmlpot7Kpk3fDpWvsB3HywaclSA/OuENPfnIH8vZBu1EcS4q0peM01eXW+lpj
-         xxkQygtFgQBpyh5K/YqRHJv3lRZRojhpkTnTeRYGYKk5FSGT0A+uKlBmxiYE7MZkRAbv
-         6RAw==
+        bh=5jGIvBUGQQ0EvMGsYrD2swtfadElu4Mc8LHA5ZA3TF8=;
+        b=P2+0HGRY3CqhbZ2tXAyXroH2Cc1UR+Gu0xV4uWR81G/RUm/RnDahfENoFXBUW8QLV4
+         NULkEQPZJjJ3aKsAM4caq6DT281WwwwOSgWpwN0QqjMLVCZrDleNgU9EgN/AHo757SQ9
+         U8eK/UDHQRjiG6IydMKDbjLNgfEnmq9qhkEPwTn4Ca8mohphNoMJzDPLfwFGIVO7VT+X
+         4ql9cXbWyc72UZ5WvsuQ8VsVyvFLj1eKqnlSONL2R9kq/X8LAtWhEMsyBQx4Lfdo47dK
+         CaVO7CKG0+n1Q70ayfm7V8+tgXeXLZei0vXGGPVrRsAbpymShOzG6wtqmNwTQhCl+a+H
+         ca8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=jc45tpDJBm+2+l4vJpn/o0K4ghanxRxN9DFZ2Tku2lw=;
-        b=UAn2+GkP8NGoW7b3zG0iFIVvjgfmub5oVleR5/ocL2FjrV1EmmEadt8bIDvxq0dVP9
-         i6TZnX03rh7zHM/lcAMxyiZWYVSBrgEV/JGtDYYuLimOplhGfoKJhXYKA2yeqr5oLUHJ
-         i/KadV6zl89dMXfSIIobLnGo9/scsXxo619TeZrGvuWKmNDGNnmgw0I6oBh5fa5NWp/P
-         sQVCU59Wm/IlF7cIR9NKtot+POACt6Dc3fGDZJ2F1B+Lr1yPGgauJ4vr/B83Hu3AlaPw
-         1cmAJGvri9ZIfGfoaAp6w4PQBVmcQmAQ9dOpyb8NYsfEo1Ec6nvZX62bYxdFUobHyTfE
-         d+3w==
-X-Gm-Message-State: AFqh2kp7IkfoBJ0tH246EMoTsuwLSfuZYLw4TJ7OQBw6S+zxcEPk9w2G
-        rq2ts2vh/YDvCUnbKLMo124To7WujH5dhoQsNOs=
-X-Google-Smtp-Source: AMrXdXvbnEDoUngTEyRksjNjFRl6Y+LJAZAo8BJBLWLijAqRdK9r033NI1LM7uOkAdLn2uIDZs8t2/9SllG6ZAogIpo=
-X-Received: by 2002:a17:902:e34a:b0:192:58c5:afe5 with SMTP id
- p10-20020a170902e34a00b0019258c5afe5mr3110534plc.125.1672844984830; Wed, 04
- Jan 2023 07:09:44 -0800 (PST)
+        bh=5jGIvBUGQQ0EvMGsYrD2swtfadElu4Mc8LHA5ZA3TF8=;
+        b=n+eJeJDn/3ZwqDyaXixwc4luljL2I4Ugle5zrzTjhrBg5dGGyXApjxCENx1csZux7b
+         uZQo1gD2gYNOKpI1V6oKL4JbBw493/qQYKO/KoO6b8CyectfkF+yP6MV5JXYYR5D3/i6
+         7H1UPyw9a1fPZQqCZ9s8/26ytzddrlQtWrUbt9lGoTMGPh6xNk20E3Du50Haan7riTFB
+         WZzENOJpyEI8GvmtWfgcHQ3S3eB3woJxB7q0X1UiWaZElD1jKlC71G1XDCSk1i99Fim0
+         dDNyLyqQb8Vn9AGkaA4JbCdq4GtBRRQxnhll60md23EstpwxaN6kzIAD8ZETd/Le3KKd
+         8l4w==
+X-Gm-Message-State: AFqh2ko5EWqaaU7VKqEQ1mlpKGxPoadKQ9WY4AWi26/4sI832by7EW5R
+        piekjhbKgtRZzZ5bp00mxiu98FrS2/MQx65nuLeeswU=
+X-Google-Smtp-Source: AMrXdXvwhXVqnfJTVq66065PXceW849lBaNaGDUtt8ozVAYqrh7v9ImuqmQooG30xfrAWFmY37LRf5syoUcdYcOO/VY=
+X-Received: by 2002:a17:90b:3605:b0:225:dd78:f4db with SMTP id
+ ml5-20020a17090b360500b00225dd78f4dbmr2271486pjb.183.1672846391823; Wed, 04
+ Jan 2023 07:33:11 -0800 (PST)
 MIME-Version: 1.0
-References: <167279203612.13974.15063003557908413815@noble.neil.brown.name>
- <7a98c3e70bae70c44418ce8ac4b84f387b4ff850.camel@kernel.org>
- <CAN-5tyEBce3ZcXt9fxN9qPStRSSb=H-3v2ZFUovJRCs3CZXgXw@mail.gmail.com> <5bc72c828aac19cf2f01ff57014d0dcdb35dba2c.camel@kernel.org>
-In-Reply-To: <5bc72c828aac19cf2f01ff57014d0dcdb35dba2c.camel@kernel.org>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 4 Jan 2023 10:09:33 -0500
-Message-ID: <CAN-5tyENHTYFy-VG6sQpxmyL=Euwy_xvtJfQ2eL5+6CzGm3WBw@mail.gmail.com>
-Subject: Re: [PATCH] NFS: Handle missing attributes in OPEN reply
-To:     Trond Myklebust <trondmy@kernel.org>
-Cc:     NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
+References: <CAM5tNy6nfvuqM30DwUVjTFHfewL8tSEQcyEJsSBzyWMTvDkEQw@mail.gmail.com>
+ <e9fea39e926486146505c385dca50c116deb22f9.camel@kernel.org>
+ <CAM5tNy7GM-5m-O2GUBwXCY=psSN2LKiE4bPPFyK=ABhObMdFCg@mail.gmail.com>
+ <6ed7866da1e57a46da0108e9581242cd7f1ef2ce.camel@kernel.org> <FBAF6EA3-D78E-4F62-ACDB-8582973B4A93@oracle.com>
+In-Reply-To: <FBAF6EA3-D78E-4F62-ACDB-8582973B4A93@oracle.com>
+From:   Rick Macklem <rick.macklem@gmail.com>
+Date:   Wed, 4 Jan 2023 07:32:56 -0800
+Message-ID: <CAM5tNy5wjS-E2qgBfSkPhbCrpQVV19r7AJAz+q2LDEvfV9PPPg@mail.gmail.com>
+Subject: Re: RFC:Doing a NFSv4.1/4.2 Kerberized mount without a machine credential
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 3, 2023 at 9:17 PM Trond Myklebust <trondmy@kernel.org> wrote:
+On Wed, Jan 4, 2023 at 6:25 AM Chuck Lever III <chuck.lever@oracle.com> wrote:
 >
-> On Tue, 2023-01-03 at 21:02 -0500, Olga Kornievskaia wrote:
-> > On Tue, Jan 3, 2023 at 7:46 PM Trond Myklebust <trondmy@kernel.org>
-> > wrote:
-> > >
-> > > On Wed, 2023-01-04 at 11:27 +1100, NeilBrown wrote:
-> > > >
-> > > > If a NFSv4 OPEN reply reports that the file was successfully
-> > > > opened
-> > > > but
-> > > > the subsequent GETATTR fails, Linux-NFS will attempt a stand-
-> > > > alone
-> > > > GETATTR request.  If that also fails, handling of the reply is
-> > > > aborted
-> > > > with error -EAGAIN and the open is attempted again from the
-> > > > start.
-> > > >
-> > > > This leaves the server with an active state (because the OPEN
-> > > > operation
-> > > > succeeded) which the client doesn't know about.  If the open-
-> > > > owner
-> > > > (local user) did not have the file already open, this has minimal
-> > > > consequences for the client and only causes the server to spend
-> > > > resources on an open state that will never be used or explicitly
-> > > > closed.
-> > > >
-> > > > If the open-owner DID already have the file open, then it will
-> > > > hold a
-> > > > reference to the open-state for that file, but the seq-id in the
-> > > > state-id will now be out-of-sync with the server.  The server
-> > > > will
-> > > > have
-> > > > incremented the seq-id, but the client will not have noticed.  So
-> > > > when
-> > > > the client next attempts to access the file using that state
-> > > > (READ,
-> > > > WRITE, SETATTR), the attempt will fail with NFS4ERR_OLD_STATEID.
-> > > >
-> > > > The Linux-client assumes this error is due to a race and simply
-> > > > retries
-> > > > on the basis that the local state-id information should have been
-> > > > updated by another thread.  This basis is invalid in this case
-> > > > and
-> > > > the
-> > > > result is an infinite loop attempting IO and getting OLD_STATEID.
-> > > >
-> > > > This has been observed with a NetApp Filer as the server (ONTAP
-> > > > 9.8
-> > > > p5,
-> > > > using NFSv4.0).  The client is creating, writing, and unlinking a
-> > > > particular file from multiple clients (.bash_history).  If a new
-> > > > OPEN
-> > > > from one client races with a REMOVE from another client while the
-> > > > first
-> > > > client already has the file open, the Filer can report success
-> > > > for
-> > > > the
-> > > > OPEN op, but NFS4ERR_STALE for the ACCESS or GETATTR ops in the
-> > > > OPEN
-> > > > request.  This gets the seq-id out-of-sync and a subsequent write
-> > > > to
-> > > > the
-> > > > other open on the first client causes the infinite loop to occur.
-> > > >
-> > > > The reason that the client returns -EAGAIN is that it needs to
-> > > > find
-> > > > the
-> > > > inode so it can find the associated state to update the seq-id,
-> > > > but
-> > > > the
-> > > > inode lookup requires the file-id which is provided in the
-> > > > GETATTR
-> > > > reply.  Without the file-id normal inode lookup cannot be used.
-> > > >
-> > > > This patch changes the lookup so that when the file-id is not
-> > > > available
-> > > > the list of states owned by the open-owner is examined to find
-> > > > the
-> > > > state
-> > > > with the correct state-id (ignoring the seq-id part of the state-
-> > > > id).
-> > > > If this is found it is used just as when a normal inode lookup
-> > > > finds
-> > > > an
-> > > > inode.  If it isn't found, -EAGAIN is returned as before.
-> > > >
-> > > > This bug can be demonstrated by modifying the Linux NFS server as
-> > > > follows:
-> > > >
-> > > > 1/ The second time a file is opened, unlink it.  This simulates
-> > > >    a race with another client, without needing to have a race:
-> > > >
-> > > >     --- a/fs/nfsd/nfs4proc.c
-> > > >     +++ b/fs/nfsd/nfs4proc.c
-> > > >     @@ -594,6 +594,12 @@ nfsd4_open(struct svc_rqst *rqstp,
-> > > > struct
-> > > > nfsd4_compound_state *cstate,
-> > > >         if (reclaim && !status)
-> > > >                 nn->somebody_reclaimed = true;
-> > > >      out:
-> > > >     +   if (!status && open->op_stateid.si_generation > 1) {
-> > > >     +           printk("Opening gen %d\n", (int)open-
-> > > > > op_stateid.si_generation);
-> > > >     +           vfs_unlink(mnt_user_ns(resfh->fh_export-
-> > > > > ex_path.mnt),
-> > > >     +                      resfh->fh_dentry->d_parent->d_inode,
-> > > >     +                      resfh->fh_dentry, NULL);
-> > > >     +   }
-> > > >         if (open->op_filp) {
-> > > >                 fput(open->op_filp);
-> > > >                 open->op_filp = NULL;
-> > > >
-> > > > 2/ When a GETATTR op is attempted on an unlinked file, return
-> > > > ESTALE
-> > > >
-> > > >     @@ -852,6 +858,11 @@ nfsd4_getattr(struct svc_rqst *rqstp,
-> > > > struct
-> > > > nfsd4_compound_state *cstate,
-> > > >         if (status)
-> > > >                 return status;
-> > > >
-> > > >     +   if (cstate->current_fh.fh_dentry->d_inode->i_nlink == 0)
-> > > > {
-> > > >     +           printk("Return Estale for unlinked file\n");
-> > > >     +           return nfserr_stale;
-> > > >     +   }
-> > > >     +
-> > > >         if (getattr->ga_bmval[1] & NFSD_WRITEONLY_ATTRS_WORD1)
-> > > >                 return nfserr_inval;
-> > > >
-> > > > Then mount the filesystem and
-> > > >
-> > > >   Thread 1            Thread 2
-> > > >   open a file
-> > > >                       open the same file (will fail)
-> > > >   write to that file
-> > > >
-> > > > I use this shell fragment, using 'sleep' for synchronisation.
-> > > > The use of /bin/echo ensures the write is flushed when /bin/echo
-> > > > closes
-> > > > the fd on exit.
-> > > >
-> > > >     (
-> > > >         /bin/echo hello
-> > > >         sleep 3
-> > > >         /bin/echo there
-> > > >     ) > /import/A/afile &
-> > > >     sleep 3
-> > > >     cat /import/A/afile
-> > > >
-> > > > Probably when the OPEN succeeds, the GETATTR fails, and we don't
-> > > > already
-> > > > have the state open, we should explicitly close the state.
-> > > > Leaving
-> > > > it
-> > > > open could cause problems if, for example, the server revoked it
-> > > > and
-> > > > signalled the client that there was a revoked state.  The client
-> > > > would
-> > > > not be able to find the state that needed to be relinquished.  I
-> > > > haven't
-> > > > attempted to implement this.
-> > >
-> > >
-> > > If the server starts to reply NFS4ERR_STALE to GETATTR requests,
-> > > why do
-> > > we care about stateid values?
-> >
-> > It is acceptable for the server to return ESTALE to the GETATTR after
-> > the processing the open (due to a REMOVE that comes in) and that open
-> > generating a valid stateid which client should care about when there
-> > are pre-existing opens. The server will keep the state of an existing
-> > opens valid even if the file is removed. Which is what's happening,
-> > the previous open is being used for IO but the stateid is updated on
-> > the server but not on the client.
-> >
-> > > Just mark the inode as stale and drop it
-> > > on the floor.
-> >
-> > Why would that be correct? Any pre-existing opens should continue
-> > operating, thus the inode can't be marked stale. We don't do it now
-> > (silly rename allows preexisting IO to continue).
-> >
-> > > If the server tries to declare the state as revoked, then it is
-> > > clearly
-> > > borken, so let NetApp fix their own bug.
-> >
-> > The server does not declare the state revoked. The open succeeded and
-> > its state's seqid was updated but the client is using an old stateid.
-> > Server isn't at fault here.
 >
-> If the client can't send a GETATTR, then it can't revalidate
-> attributes, do I/O, and it can't even close the file. So we're not
-> going to waste time and effort trying to support this, whether or not
-> NetApp thinks it is a good idea.
+>
+> > On Jan 3, 2023, at 11:41 PM, Trond Myklebust <trondmy@kernel.org> wrote:
+> >
+> > On Tue, 2023-01-03 at 19:16 -0800, Rick Macklem wrote:
+> >> On Tue, Jan 3, 2023 at 6:12 PM Trond Myklebust <trondmy@kernel.org>
+> >> wrote:
+> >>>
+> >>> On Tue, 2023-01-03 at 17:28 -0800, Rick Macklem wrote:
+> >>>> I have recently implemented a NFSv4.1/4.2 client mount
+> >>>> on FreeBSD that uses AUTH_SYS for ExchangeID, CreateSession
+> >>>> (and the other state maintenance operations)
+> >>>> using SP4_NONE and then it defers an RPC that does:
+> >>>>    PutRootFH { Lookup, Lookup,... Lookup } GetFH
+> >>>> until a user process/thread attempts to use the mount.
+> >>>> Once an attempt succeeds, the file handle for the mount
+> >>>> point is filled in and the mount works normally.
+> >>>> This works for both a FreeBSD NFSv4 server and a Linux
+> >>>> 5.15 one.
+> >>>>
+> >>>> Why do this?
+> >>>>
+> >>>> It allows a sec=krb5 mount to work without any
+> >>>> machine credential on the client. (Both installing
+> >>>> a keytab entry for a host/nfs-client.domain in the
+> >>>> client or doing the mount based on a user principal's
+> >>>> TGT are bothersome.) The first user with a valid TGT
+> >>>> that attempts to access the mount completes the mount's
+> >>>> setup.
+> >>>>
+> >>>> I envision that this will be used along with RPC-with-TLS
+> >>>> (which can provide both on-the-wire encryption and
+> >>>> peer authentication).  The seems to be a reasonable
+> >>>> alternative to a machine credential and a requirement
+> >>>> for RPCSEC_GSS integrity or privacy.
+> >>>>
+> >>>> Why am I posting here?
+> >>>>
+> >>>> I am wondering if the Linux client implementors are
+> >>>> interested in doing the same thing?
+> >>>>
+> >>>> I think it is possible to extend NFSv4.2 with a new
+> >>>> enum state_protect_how4 value (SP4_PEER_AUTH?) that
+> >>>> would allow the client to specify what operations must
+> >>>> use RPC-with-TLS including peer authentication and which
+> >>>> must be allowed for this case (similar to SP4_MECH_CRED).
+> >>>> However, if the server forces the client to use RPC-with-TLS
+> >>>> plus peer authentication, that may be sufficient and does
+> >>>> not require any protocol extensions.
+> >>>>
+> >>>> Comments?
+> >>>>
+> >>>
+> >>> Are there really that many use cases for this? If you are using
+> >>> krb5
+> >>> authentication, then you pretty much have to support identity
+> >>> mapping.
+> >>> Unless you are talking about a hobby setup, then that usually means
+> >>> backing your Kerberos server with either LDAP or Active Directory
+> >>> to
+> >>> serve up account mappings, and it usually means protecting those
+> >>> databases with some form of strong authentication as well.
+> >>>
+> >>> IOW: for most setups, I would expect the machine credential
+> >>> requirement
+> >>> to be a non-negotiable part of the total AD/Krb5+LDAP security
+> >>> package
+> >>> that is implemented in userspace. Am I wrong?
+> >>>
+> >> For systems in machine rooms, you are probably correct, although I
+> >> think many of these environments would just use AUTH_SYS, since they
+> >> trust the clients.
+> >>
+> >> What about mounts from mobile devices that do not have a fixed
+> >> client IP host address?
+> >> (I suspect that, currently, they seldom if ever use NFS, but I think
+> >>  trying to support them could be useful.  A mobile client can use
+> >>  a X.509 certificate to do a reasonable job of verifying its identity
+> >>  if signed by a site local CA, although it cannot have a "wired-down"
+> >>  DNS name in the certificate.)
+> >
+> > Those aren't really likely to use krb5, though.
+>
+> My intuition is Rick's usage scenario would be common if we made
+> it possible. It's similar to how Windows/SMB works on laptops,
+> and is a common deployment scenario in campus environments.
+>
+Although I won't claim to have any idea how widely used this might
+be, I suppose a "shared desktop or laptop" such as you might find
+in a college campus is a better example.
 
-That makes sense but I think the server should fail PUTFHs in the
-compounds after the REMOVE was processed, not the other (GETATTR,
-WRITE) operations, right?
+Another possible case, which I hesitate to even mention because
+I have no understanding of it, is use in container like environments.
+In FreeBSD, there is something called a vnet prison. Each of these
+has their own password database, etc.  I had never thought that
+running an nfsd inside one of these made sense, but others indicated
+that this was desirable, so I have generated patches to do it.
+(An nfsd running in one of these vnet prisons is what I actually used
+ to test the NFSv4 client mount changes, although it certainly is not
+ specific to this case.)
+
+Similar to what Chuck notes below, when a mobile device is only used by one
+user, Kerberos is not needed. (See below.)
 
 >
+> > I've been thinking about how to use a public key infrastructure to
+> > provide stronger authentication of multiple individual users' RPC calls
+> > and multiplexing them across a shared TLS connection.
+> >
+> > Since the client trusts the server through the TLS connection
+> > authentication mechanism, and you have privacy guaranteed by that TLS
+> > connection, then  really all you want to do is for each RPC call from
+> > the client to be able to prove that the caller has a specific valid
+> > identity in the PKI chain of trust.
+> >
+> > So how about just defining a simple credential (AUTH_X509 ?) containing
+> > a timestamp, and a distinguished name, and have it be signed using the
+> > (trusted) private key of the user? Use the timestamp as the basis for a
+> > TTL for the credential so that the client+server don't have to keep
+> > signing a new cred for each and every RPC call for that user, and allow
+> > the client to reuse the cred for a while as a shared secret, once the
+> > signature has been verified by the server.
+All certainly doable, but to me it just sounds like you are re-inventing
+Kerberos, but using X.509 certificates instead of Kerberos tickets.
+(Isn't the main purpose of a KDC handling trusted private keys for users?)
+
+Having said the above "Maybe such a system would catch on where
+Kerberos has not?)
+
+To me, part of the problem with Kerberized NNFSv4 is that it (mis)uses
+Kerberos to create the machine credentials.
+
+>
+> A laptop typically has a single user. The flexibility of identity
+> multiplexing isn't necessary in this particular scenario.
+>
+Yes, Chuck, I (and others) had a discussion on nfsv4@ietf.org some
+time ago w.r.t. using the X.509 certificate presented during TLS handshake
+to identify a specific user and then use credentials for that user for all
+compound RPCs, ignoring the credentials in the RPC header.
+
+Chuck labelled this "TLS Identity squashing" (he's much better at
+naming things than I am).
+
+I think we agreed that the concept is useful. We disagreed on what
+would be the most appropriate way to implement it.
+- The FreeBSD server currently expects the "user" to be identified
+  right in the X.509 certificate, using the otherName component of
+  the SubjectAltName field.
+- Chuck preferred a database on the server keyed on <issuer, serial#>
+  of the certificate.
+However, these are implementation details and a NFSv4 server could
+easily support either or both of these techniques.
+
+rick
+
 > --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
+> Chuck Lever
+>
 >
 >
