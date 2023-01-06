@@ -2,246 +2,573 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA9E65FA7A
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jan 2023 04:48:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5C0E65FB25
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Jan 2023 07:00:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229514AbjAFDs4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Jan 2023 22:48:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47988 "EHLO
+        id S229694AbjAFGAk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Jan 2023 01:00:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231730AbjAFDsz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Jan 2023 22:48:55 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FDB16A0F4
-        for <linux-nfs@vger.kernel.org>; Thu,  5 Jan 2023 19:48:53 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id EFF7577083;
-        Fri,  6 Jan 2023 03:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1672976931; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L/h5ONn5kfeNXOcPz6IlUqS0OikNDflZib77sRoB5w4=;
-        b=htB06lsA02J8z+qBu3UPdbBbT2pVmpc/wEIclYVGJJ/vNyjuD/g9WQfshEPI8c9aHDO639
-        jyl0VydRFOZhg/ITUSxQTOLj6+4ISDyl1LamIqVfhyeb8nUkLqPA7pHX+I2Vh1PCC5EKSm
-        SARhdrU09zotKj89uddqGC97n4GJEgk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1672976931;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L/h5ONn5kfeNXOcPz6IlUqS0OikNDflZib77sRoB5w4=;
-        b=yLemHUtZcYY1SeZAFqUrtFdDU6T8dO1770ZzbO5gchgg2myv0kI5O6MxfEjX6rDbF/I9Ih
-        v7kJjLrVHHBZPTAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 364F8139D2;
-        Fri,  6 Jan 2023 03:48:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id A82oNyGat2PpXgAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 06 Jan 2023 03:48:49 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229732AbjAFGAi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Jan 2023 01:00:38 -0500
+Received: from out20-37.mail.aliyun.com (out20-37.mail.aliyun.com [115.124.20.37])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815A16C7EF
+        for <linux-nfs@vger.kernel.org>; Thu,  5 Jan 2023 22:00:35 -0800 (PST)
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04436261|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0371907-0.00105561-0.961754;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047201;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=4;RT=4;SR=0;TI=SMTPD_---.QljdPE1_1672984832;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.QljdPE1_1672984832)
+          by smtp.aliyun-inc.com;
+          Fri, 06 Jan 2023 14:00:33 +0800
+Date:   Fri, 06 Jan 2023 14:00:34 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     Chuck Lever <cel@kernel.org>
+Subject: Re: [PATCH RFC] NFSD: Convert filecache to rhltable
+Cc:     jlayton@redhat.com, neilb@suse.de, linux-nfs@vger.kernel.org
+In-Reply-To: <167293053710.2587608.15966496749656663379.stgit@manet.1015granger.net>
+References: <167293053710.2587608.15966496749656663379.stgit@manet.1015granger.net>
+Message-Id: <20230106140033.EE9D.409509F4@e16-tech.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Trond Myklebust" <trondmy@kernel.org>
-Cc:     "Trond Myklebust" <trondmy@hammerspace.com>,
-        "Anna Schumaker" <anna@kernel.org>,
-        "Olga Kornievskaia" <aglo@umich.edu>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] NFS: Handle missing attributes in OPEN reply
-In-reply-to: <46f047159da42dadaca576e0a87a622539609730.camel@kernel.org>
-References: <167279203612.13974.15063003557908413815@noble.neil.brown.name>,
- <7a98c3e70bae70c44418ce8ac4b84f387b4ff850.camel@kernel.org>,
- <167279409373.13974.16504090316814568327@noble.neil.brown.name>,
- <210f08ae5f0ba47c289293981f490fca848dd2ed.camel@kernel.org>,
- <167279837032.13974.12155714770736077636@noble.neil.brown.name>,
- <167295936597.13974.7568769884598065471@noble.neil.brown.name>,
- <46f047159da42dadaca576e0a87a622539609730.camel@kernel.org>
-Date:   Fri, 06 Jan 2023 14:48:46 +1100
-Message-id: <167297692611.13974.5805041718280562542@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.81.04 [en]
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 06 Jan 2023, Trond Myklebust wrote:
-> On Fri, 2023-01-06 at 09:56 +1100, NeilBrown wrote:
-> > On Wed, 04 Jan 2023, NeilBrown wrote:
-> > > On Wed, 04 Jan 2023, Trond Myklebust wrote:
-> > > > On Wed, 2023-01-04 at 12:01 +1100, NeilBrown wrote:
-> > > > > On Wed, 04 Jan 2023, Trond Myklebust wrote:
-> > > > > >=20
-> > > > > >=20
-> > > > > > If the server starts to reply NFS4ERR_STALE to GETATTR
-> > > > > > requests,
-> > > > > > why do
-> > > > > > we care about stateid values? Just mark the inode as stale
-> > > > > > and drop
-> > > > > > it
-> > > > > > on the floor.
-> > > > >=20
-> > > > > We have a valid state from the server - we really shouldn't
-> > > > > just
-> > > > > ignore
-> > > > > it.
-> > > > >=20
-> > > > > Maybe it would be OK to mark the inode stale.=C2=A0 I don't know if
-> > > > > various
-> > > > > retry loops abort properly when the inode is stale.
-> > > >=20
-> > > > Yes, they are all supposed to do that. Otherwise we would end up
-> > > > looping forever in close(), for instance, since the PUTFH,
-> > > > GETATTR and
-> > > > CLOSE can all return NFS4ERR_STALE as well.
-> > >=20
-> > > To mark the inode as STALE we still need to find the inode, and
-> > > that is
-> > > the key bit missing in the current code.=C2=A0 Once we find the inode,
-> > > we
-> > > could mark it stale, but maybe some other error resulted in the
-> > > missing
-> > > GETATTR...
-> > >=20
-> > > It might make sense to put the new code in _nfs4_proc_open() after
-> > > the
-> > > explicit nfs4_proc_getattr() fails.=C2=A0 We would need to find the
-> > > inode
-> > > given only the filehandle.=C2=A0 Is there any easy way to do that?
-> > >=20
-> > > Thanks,
-> > > NeilBrown
-> > >=20
-> >=20
-> > I couldn't see a consistent pattern to follow for when to mark an
-> > inode
-> > as stale.=C2=A0 Do this, on top of the previous patch, seem reasonable?
-> >=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> >=20
-> >=20
-> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > index b441b1d14a50..04497cb42154 100644
-> > --- a/fs/nfs/nfs4proc.c
-> > +++ b/fs/nfs/nfs4proc.c
-> > @@ -489,6 +489,8 @@ static int nfs4_do_handle_exception(struct
-> > nfs_server *server,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0case -ESTALE:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (i=
-node !=3D NULL && S_ISREG(inode->i_mode))
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pnfs_destroy_layout(NFS_I(inode)=
-);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (inode)
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_set_inode_stale(inode);
->=20
-> This is normally dealt with in the generic code inside
-> nfs_revalidate_inode(). There should be no need to duplicate it here.
->=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0break;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_DELEG_REVOKED:
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_ADMIN_REVOKED:
-> > @@ -2713,8 +2715,12 @@ static int _nfs4_proc_open(struct
-> > nfs4_opendata *data,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0retur=
-n status;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!(o_res->f_attr->vali=
-d & NFS_ATTR_FATTR)) {
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0struct inode *inode =3D nfs4_get_inode_by_stateid(
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0&data->o_re=
-s.stateid,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0data->owner=
-);
->=20
-> There shouldn't be a need to go looking for open descriptors here,
-> because they will hit ESTALE at some point later anyway.
+Hi,
 
-The problem is that they don't hit ESTALE later.  Unless we update our
-stored stateid with the result of the OPEN, we can use the old stateid,
-and get the corresponding error.
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> While we were converting the nfs4_file hashtable to use the kernel's
+> resizable hashtable data structure, Neil Brown observed that the
+> list variant (rhltable) would be better for managing nfsd_file items
+> as well. The nfsd_file hash table will contain multiple entries for
+> the same inode -- these should be kept together on a list. And, it
+> could be possible for exotic or malicious client behavior to cause
+> the hash table to resize itself on every insertion.
+> 
+> A nice simplification is that rhltable_lookup() can return a list
+> that contains only nfsd_file items that match a given inode, which
+> enables us to eliminate specialized hash table helper functions and
+> use the default functions provided by the rhashtable implementation).
+> 
+> Since we are now storing nfsd_file items for the same inode on a
+> single list, that effectively reduces the number of hash entries
+> that have to be tracked in the hash table. The mininum bucket count
+> is therefore lowered.
 
-The only way to avoid the infinite loop is to either mark the inode as
-stale, or update the state-id.  For either of those we need to find the
-inode.  We don't have fileid so we cannot use iget.  We do have file
-handle and state-id.
+some bench result such as fstests generic/531 maybe useful.
 
-Maybe you are saying this is a server bug that the client cannot be
-expect to cope with at all, and that an infinite loop is a valid client
-response to this particular server behaviour.  In that case, I guess no
-patch is needed.
+And this patch conflict with another patch:
+(v3) [PATCH] nfsd: fix handling of cached open files in nfsd4_open codepath
 
-NeilBrown
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2023/01/06
+
+> Suggested-by: Neil Brown <neilb@suse.de>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/filecache.c |  289 +++++++++++++++++++--------------------------------
+>  fs/nfsd/filecache.h |    9 +-
+>  2 files changed, 115 insertions(+), 183 deletions(-)
+> 
+> Just to note that this work is still in the wings. It would need to
+> be rebased on Jeff's recent fixes and clean-ups. I'm reluctant to
+> apply this until there is more evidence that the instability in v6.0
+> has been duly addressed.
+> 
+> 
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 45b2c9e3f636..f04e722bb6bc 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -74,70 +74,9 @@ static struct list_lru			nfsd_file_lru;
+>  static unsigned long			nfsd_file_flags;
+>  static struct fsnotify_group		*nfsd_file_fsnotify_group;
+>  static struct delayed_work		nfsd_filecache_laundrette;
+> -static struct rhashtable		nfsd_file_rhash_tbl
+> +static struct rhltable			nfsd_file_rhltable
+>  						____cacheline_aligned_in_smp;
+>  
+> -enum nfsd_file_lookup_type {
+> -	NFSD_FILE_KEY_INODE,
+> -	NFSD_FILE_KEY_FULL,
+> -};
+> -
+> -struct nfsd_file_lookup_key {
+> -	struct inode			*inode;
+> -	struct net			*net;
+> -	const struct cred		*cred;
+> -	unsigned char			need;
+> -	bool				gc;
+> -	enum nfsd_file_lookup_type	type;
+> -};
+> -
+> -/*
+> - * The returned hash value is based solely on the address of an in-code
+> - * inode, a pointer to a slab-allocated object. The entropy in such a
+> - * pointer is concentrated in its middle bits.
+> - */
+> -static u32 nfsd_file_inode_hash(const struct inode *inode, u32 seed)
+> -{
+> -	unsigned long ptr = (unsigned long)inode;
+> -	u32 k;
+> -
+> -	k = ptr >> L1_CACHE_SHIFT;
+> -	k &= 0x00ffffff;
+> -	return jhash2(&k, 1, seed);
+> -}
+> -
+> -/**
+> - * nfsd_file_key_hashfn - Compute the hash value of a lookup key
+> - * @data: key on which to compute the hash value
+> - * @len: rhash table's key_len parameter (unused)
+> - * @seed: rhash table's random seed of the day
+> - *
+> - * Return value:
+> - *   Computed 32-bit hash value
+> - */
+> -static u32 nfsd_file_key_hashfn(const void *data, u32 len, u32 seed)
+> -{
+> -	const struct nfsd_file_lookup_key *key = data;
+> -
+> -	return nfsd_file_inode_hash(key->inode, seed);
+> -}
+> -
+> -/**
+> - * nfsd_file_obj_hashfn - Compute the hash value of an nfsd_file
+> - * @data: object on which to compute the hash value
+> - * @len: rhash table's key_len parameter (unused)
+> - * @seed: rhash table's random seed of the day
+> - *
+> - * Return value:
+> - *   Computed 32-bit hash value
+> - */
+> -static u32 nfsd_file_obj_hashfn(const void *data, u32 len, u32 seed)
+> -{
+> -	const struct nfsd_file *nf = data;
+> -
+> -	return nfsd_file_inode_hash(nf->nf_inode, seed);
+> -}
+> -
+>  static bool
+>  nfsd_match_cred(const struct cred *c1, const struct cred *c2)
+>  {
+> @@ -158,53 +97,16 @@ nfsd_match_cred(const struct cred *c1, const struct cred *c2)
+>  	return true;
+>  }
+>  
+> -/**
+> - * nfsd_file_obj_cmpfn - Match a cache item against search criteria
+> - * @arg: search criteria
+> - * @ptr: cache item to check
+> - *
+> - * Return values:
+> - *   %0 - Item matches search criteria
+> - *   %1 - Item does not match search criteria
+> - */
+> -static int nfsd_file_obj_cmpfn(struct rhashtable_compare_arg *arg,
+> -			       const void *ptr)
+> -{
+> -	const struct nfsd_file_lookup_key *key = arg->key;
+> -	const struct nfsd_file *nf = ptr;
+> -
+> -	switch (key->type) {
+> -	case NFSD_FILE_KEY_INODE:
+> -		if (nf->nf_inode != key->inode)
+> -			return 1;
+> -		break;
+> -	case NFSD_FILE_KEY_FULL:
+> -		if (nf->nf_inode != key->inode)
+> -			return 1;
+> -		if (nf->nf_may != key->need)
+> -			return 1;
+> -		if (nf->nf_net != key->net)
+> -			return 1;
+> -		if (!nfsd_match_cred(nf->nf_cred, key->cred))
+> -			return 1;
+> -		if (!!test_bit(NFSD_FILE_GC, &nf->nf_flags) != key->gc)
+> -			return 1;
+> -		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) == 0)
+> -			return 1;
+> -		break;
+> -	}
+> -	return 0;
+> -}
+> -
+>  static const struct rhashtable_params nfsd_file_rhash_params = {
+>  	.key_len		= sizeof_field(struct nfsd_file, nf_inode),
+>  	.key_offset		= offsetof(struct nfsd_file, nf_inode),
+> -	.head_offset		= offsetof(struct nfsd_file, nf_rhash),
+> -	.hashfn			= nfsd_file_key_hashfn,
+> -	.obj_hashfn		= nfsd_file_obj_hashfn,
+> -	.obj_cmpfn		= nfsd_file_obj_cmpfn,
+> -	/* Reduce resizing churn on light workloads */
+> -	.min_size		= 512,		/* buckets */
+> +	.head_offset		= offsetof(struct nfsd_file, nf_rlist),
+> +
+> +	/*
+> +	 * Start with a single page hash table to reduce resizing churn
+> +	 * on light workloads.
+> +	 */
+> +	.min_size		= 256,
+>  	.automatic_shrinking	= true,
+>  };
+>  
+> @@ -307,27 +209,27 @@ nfsd_file_mark_find_or_create(struct nfsd_file *nf, struct inode *inode)
+>  }
+>  
+>  static struct nfsd_file *
+> -nfsd_file_alloc(struct nfsd_file_lookup_key *key, unsigned int may)
+> +nfsd_file_alloc(struct net *net, struct inode *inode, unsigned char need,
+> +		bool want_gc)
+>  {
+>  	struct nfsd_file *nf;
+>  
+>  	nf = kmem_cache_alloc(nfsd_file_slab, GFP_KERNEL);
+> -	if (nf) {
+> -		INIT_LIST_HEAD(&nf->nf_lru);
+> -		nf->nf_birthtime = ktime_get();
+> -		nf->nf_file = NULL;
+> -		nf->nf_cred = get_current_cred();
+> -		nf->nf_net = key->net;
+> -		nf->nf_flags = 0;
+> -		__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+> -		__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
+> -		if (key->gc)
+> -			__set_bit(NFSD_FILE_GC, &nf->nf_flags);
+> -		nf->nf_inode = key->inode;
+> -		refcount_set(&nf->nf_ref, 1);
+> -		nf->nf_may = key->need;
+> -		nf->nf_mark = NULL;
+> -	}
+> +	if (unlikely(!nf))
+> +		return NULL;
+> +
+> +	INIT_LIST_HEAD(&nf->nf_lru);
+> +	nf->nf_birthtime = ktime_get();
+> +	nf->nf_file = NULL;
+> +	nf->nf_cred = get_current_cred();
+> +	nf->nf_net = net;
+> +	nf->nf_flags = want_gc ?
+> +		BIT(NFSD_FILE_HASHED) | BIT(NFSD_FILE_PENDING) | BIT(NFSD_FILE_GC) :
+> +		BIT(NFSD_FILE_HASHED) | BIT(NFSD_FILE_PENDING);
+> +	nf->nf_inode = inode;
+> +	refcount_set(&nf->nf_ref, 1);
+> +	nf->nf_may = need;
+> +	nf->nf_mark = NULL;
+>  	return nf;
+>  }
+>  
+> @@ -362,8 +264,8 @@ nfsd_file_hash_remove(struct nfsd_file *nf)
+>  
+>  	if (nfsd_file_check_write_error(nf))
+>  		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
+> -	rhashtable_remove_fast(&nfsd_file_rhash_tbl, &nf->nf_rhash,
+> -			       nfsd_file_rhash_params);
+> +	rhltable_remove(&nfsd_file_rhltable, &nf->nf_rlist,
+> +			nfsd_file_rhash_params);
+>  }
+>  
+>  static bool
+> @@ -680,21 +582,19 @@ static struct shrinker	nfsd_file_shrinker = {
+>  static void
+>  nfsd_file_queue_for_close(struct inode *inode, struct list_head *dispose)
+>  {
+> -	struct nfsd_file_lookup_key key = {
+> -		.type	= NFSD_FILE_KEY_INODE,
+> -		.inode	= inode,
+> -	};
+> -	struct nfsd_file *nf;
+> -
+>  	rcu_read_lock();
+>  	do {
+> +		struct rhlist_head *list;
+> +		struct nfsd_file *nf;
+>  		int decrement = 1;
+>  
+> -		nf = rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
+> +		list = rhltable_lookup(&nfsd_file_rhltable, &inode,
+>  				       nfsd_file_rhash_params);
+> -		if (!nf)
+> +		if (!list)
+>  			break;
+>  
+> +		nf = container_of(list, struct nfsd_file, nf_rlist);
+> +
+>  		/* If we raced with someone else unhashing, ignore it */
+>  		if (!nfsd_file_unhash(nf))
+>  			continue;
+> @@ -836,7 +736,7 @@ nfsd_file_cache_init(void)
+>  	if (test_and_set_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) == 1)
+>  		return 0;
+>  
+> -	ret = rhashtable_init(&nfsd_file_rhash_tbl, &nfsd_file_rhash_params);
+> +	ret = rhltable_init(&nfsd_file_rhltable, &nfsd_file_rhash_params);
+>  	if (ret)
+>  		return ret;
+>  
+> @@ -904,7 +804,7 @@ nfsd_file_cache_init(void)
+>  	nfsd_file_mark_slab = NULL;
+>  	destroy_workqueue(nfsd_filecache_wq);
+>  	nfsd_filecache_wq = NULL;
+> -	rhashtable_destroy(&nfsd_file_rhash_tbl);
+> +	rhltable_destroy(&nfsd_file_rhltable);
+>  	goto out;
+>  }
+>  
+> @@ -922,7 +822,7 @@ __nfsd_file_cache_purge(struct net *net)
+>  	struct nfsd_file *nf;
+>  	LIST_HEAD(dispose);
+>  
+> -	rhashtable_walk_enter(&nfsd_file_rhash_tbl, &iter);
+> +	rhltable_walk_enter(&nfsd_file_rhltable, &iter);
+>  	do {
+>  		rhashtable_walk_start(&iter);
+>  
+> @@ -1031,7 +931,7 @@ nfsd_file_cache_shutdown(void)
+>  	nfsd_file_mark_slab = NULL;
+>  	destroy_workqueue(nfsd_filecache_wq);
+>  	nfsd_filecache_wq = NULL;
+> -	rhashtable_destroy(&nfsd_file_rhash_tbl);
+> +	rhltable_destroy(&nfsd_file_rhltable);
+>  
+>  	for_each_possible_cpu(i) {
+>  		per_cpu(nfsd_file_cache_hits, i) = 0;
+> @@ -1042,6 +942,36 @@ nfsd_file_cache_shutdown(void)
+>  	}
+>  }
+>  
+> +static struct nfsd_file *
+> +nfsd_file_lookup_locked(const struct net *net, const struct cred *cred,
+> +			struct inode *inode, unsigned char need,
+> +			bool want_gc)
+> +{
+> +	struct rhlist_head *tmp, *list;
+> +	struct nfsd_file *nf;
+> +
+> +	list = rhltable_lookup(&nfsd_file_rhltable, &inode,
+> +			       nfsd_file_rhash_params);
+> +	rhl_for_each_entry_rcu(nf, tmp, list, nf_rlist) {
+> +		if (nf->nf_may != need)
+> +			continue;
+> +		if (nf->nf_net != net)
+> +			continue;
+> +		if (!nfsd_match_cred(nf->nf_cred, cred))
+> +			continue;
+> +		if (!!test_bit(NFSD_FILE_GC, &nf->nf_flags) != want_gc)
+> +			continue;
+> +		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) == 0)
+> +			continue;
+> +
+> +		/* If it was on the LRU, reuse that reference. */
+> +		if (nfsd_file_lru_remove(nf))
+> +			WARN_ON_ONCE(refcount_dec_and_test(&nf->nf_ref));
+> +		return nf;
+> +	}
+> +	return NULL;
+> +}
+> +
+>  /**
+>   * nfsd_file_is_cached - are there any cached open files for this inode?
+>   * @inode: inode to check
+> @@ -1056,15 +986,12 @@ nfsd_file_cache_shutdown(void)
+>  bool
+>  nfsd_file_is_cached(struct inode *inode)
+>  {
+> -	struct nfsd_file_lookup_key key = {
+> -		.type	= NFSD_FILE_KEY_INODE,
+> -		.inode	= inode,
+> -	};
+> -	bool ret = false;
+> -
+> -	if (rhashtable_lookup_fast(&nfsd_file_rhash_tbl, &key,
+> -				   nfsd_file_rhash_params) != NULL)
+> -		ret = true;
+> +	bool ret;
+> +
+> +	rcu_read_lock();
+> +	ret = (rhltable_lookup(&nfsd_file_rhltable, &inode,
+> +			       nfsd_file_rhash_params) != NULL);
+> +	rcu_read_unlock();
+>  	trace_nfsd_file_is_cached(inode, (int)ret);
+>  	return ret;
+>  }
+> @@ -1074,14 +1001,12 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		     unsigned int may_flags, struct nfsd_file **pnf,
+>  		     bool open, bool want_gc)
+>  {
+> -	struct nfsd_file_lookup_key key = {
+> -		.type	= NFSD_FILE_KEY_FULL,
+> -		.need	= may_flags & NFSD_FILE_MAY_MASK,
+> -		.net	= SVC_NET(rqstp),
+> -		.gc	= want_gc,
+> -	};
+> +	unsigned char need = may_flags & NFSD_FILE_MAY_MASK;
+> +	struct net *net = SVC_NET(rqstp);
+> +	struct nfsd_file *new, *nf;
+> +	const struct cred *cred;
+>  	bool open_retry = true;
+> -	struct nfsd_file *nf;
+> +	struct inode *inode;
+>  	__be32 status;
+>  	int ret;
+>  
+> @@ -1089,32 +1014,38 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  				may_flags|NFSD_MAY_OWNER_OVERRIDE);
+>  	if (status != nfs_ok)
+>  		return status;
+> -	key.inode = d_inode(fhp->fh_dentry);
+> -	key.cred = get_current_cred();
+> +	inode = d_inode(fhp->fh_dentry);
+> +	cred = get_current_cred();
+>  
+>  retry:
+> -	rcu_read_lock();
+> -	nf = rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
+> -			       nfsd_file_rhash_params);
+> -	if (nf)
+> -		nf = nfsd_file_get(nf);
+> -	rcu_read_unlock();
+> -
+> -	if (nf) {
+> -		if (nfsd_file_lru_remove(nf))
+> -			WARN_ON_ONCE(refcount_dec_and_test(&nf->nf_ref));
+> -		goto wait_for_construction;
+> +	if (open) {
+> +		rcu_read_lock();
+> +		nf = nfsd_file_lookup_locked(net, cred, inode, need, want_gc);
+> +		rcu_read_unlock();
+> +		if (nf)
+> +			goto wait_for_construction;
+>  	}
+>  
+> -	nf = nfsd_file_alloc(&key, may_flags);
+> -	if (!nf) {
+> +	new = nfsd_file_alloc(net, inode, need, want_gc);
+> +	if (!new) {
+>  		status = nfserr_jukebox;
+>  		goto out_status;
+>  	}
+> +	rcu_read_lock();
+> +	spin_lock(&inode->i_lock);
+> +	nf = nfsd_file_lookup_locked(net, cred, inode, need, want_gc);
+> +	if (unlikely(nf)) {
+> +		spin_unlock(&inode->i_lock);
+> +		rcu_read_unlock();
+> +		nfsd_file_slab_free(&new->nf_rcu);
+> +		goto wait_for_construction;
+> +	}
+> +	nf = new;
+> +	ret = rhltable_insert(&nfsd_file_rhltable, &nf->nf_rlist,
+> +			      nfsd_file_rhash_params);
+> +	spin_unlock(&inode->i_lock);
+> +	rcu_read_unlock();
+>  
+> -	ret = rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
+> -					   &key, &nf->nf_rhash,
+> -					   nfsd_file_rhash_params);
+>  	if (likely(ret == 0))
+>  		goto open_file;
+>  
+> @@ -1122,7 +1053,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	nf = NULL;
+>  	if (ret == -EEXIST)
+>  		goto retry;
+> -	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, ret);
+> +	trace_nfsd_file_insert_err(rqstp, inode, may_flags, ret);
+>  	status = nfserr_jukebox;
+>  	goto out_status;
+>  
+> @@ -1131,7 +1062,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  
+>  	/* Did construction of this file fail? */
+>  	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+> -		trace_nfsd_file_cons_err(rqstp, key.inode, may_flags, nf);
+> +		trace_nfsd_file_cons_err(rqstp, inode, may_flags, nf);
+>  		if (!open_retry) {
+>  			status = nfserr_jukebox;
+>  			goto out;
+> @@ -1157,14 +1088,14 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	}
+>  
+>  out_status:
+> -	put_cred(key.cred);
+> +	put_cred(cred);
+>  	if (open)
+> -		trace_nfsd_file_acquire(rqstp, key.inode, may_flags, nf, status);
+> +		trace_nfsd_file_acquire(rqstp, inode, may_flags, nf, status);
+>  	return status;
+>  
+>  open_file:
+>  	trace_nfsd_file_alloc(nf);
+> -	nf->nf_mark = nfsd_file_mark_find_or_create(nf, key.inode);
+> +	nf->nf_mark = nfsd_file_mark_find_or_create(nf, inode);
+>  	if (nf->nf_mark) {
+>  		if (open) {
+>  			status = nfsd_open_verified(rqstp, fhp, may_flags,
+> @@ -1178,7 +1109,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  	 * If construction failed, or we raced with a call to unlink()
+>  	 * then unhash.
+>  	 */
+> -	if (status == nfs_ok && key.inode->i_nlink == 0)
+> +	if (status != nfs_ok || inode->i_nlink == 0)
+>  		status = nfserr_jukebox;
+>  	if (status != nfs_ok)
+>  		nfsd_file_unhash(nf);
+> @@ -1273,7 +1204,7 @@ int nfsd_file_cache_stats_show(struct seq_file *m, void *v)
+>  		lru = list_lru_count(&nfsd_file_lru);
+>  
+>  		rcu_read_lock();
+> -		ht = &nfsd_file_rhash_tbl;
+> +		ht = &nfsd_file_rhltable.ht;
+>  		count = atomic_read(&ht->nelems);
+>  		tbl = rht_dereference_rcu(ht->tbl, ht);
+>  		buckets = tbl->size;
+> @@ -1289,7 +1220,7 @@ int nfsd_file_cache_stats_show(struct seq_file *m, void *v)
+>  		evictions += per_cpu(nfsd_file_evictions, i);
+>  	}
+>  
+> -	seq_printf(m, "total entries: %u\n", count);
+> +	seq_printf(m, "total inodes: %u\n", count);
+>  	seq_printf(m, "hash buckets:  %u\n", buckets);
+>  	seq_printf(m, "lru entries:   %lu\n", lru);
+>  	seq_printf(m, "cache hits:    %lu\n", hits);
+> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+> index b7efb2c3ddb1..7d3b35771565 100644
+> --- a/fs/nfsd/filecache.h
+> +++ b/fs/nfsd/filecache.h
+> @@ -29,9 +29,8 @@ struct nfsd_file_mark {
+>   * never be dereferenced, only used for comparison.
+>   */
+>  struct nfsd_file {
+> -	struct rhash_head	nf_rhash;
+> -	struct list_head	nf_lru;
+> -	struct rcu_head		nf_rcu;
+> +	struct rhlist_head	nf_rlist;
+> +	void			*nf_inode;
+>  	struct file		*nf_file;
+>  	const struct cred	*nf_cred;
+>  	struct net		*nf_net;
+> @@ -40,10 +39,12 @@ struct nfsd_file {
+>  #define NFSD_FILE_REFERENCED	(2)
+>  #define NFSD_FILE_GC		(3)
+>  	unsigned long		nf_flags;
+> -	struct inode		*nf_inode;	/* don't deref */
+>  	refcount_t		nf_ref;
+>  	unsigned char		nf_may;
+> +
+>  	struct nfsd_file_mark	*nf_mark;
+> +	struct list_head	nf_lru;
+> +	struct rcu_head		nf_rcu;
+>  	ktime_t			nf_birthtime;
+>  };
+>  
+> 
 
 
->=20
-> If we're going to change anything, I'd rather see us return -EACCES and
-> -ESTALE from the decode_access() and decode_getfattr() calls in
-> nfs4_xdr_dec_open() (and only those errors from those two calls!) so
-> that we can skip the unnecessary getattr call here.
->=20
-> In fact, the only case that this extra getattr should be trying to
-> address is the one where the server returns NFS4ERR_DELAY to either the
-> decode_access() or the decode_getfattr() calls specifically, and where
-> we therefore don't want to replay the entire open call.
->=20
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0nfs4_sequence_free_slot(&o_res->seq_res);
-> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0nfs4_proc_getattr(server, &o_res->fh, o_res->f_attr,
-> > NULL);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0nfs4_proc_getattr(server, &o_res->fh, o_res->f_attr,
-> > inode);
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0iput(inode);
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
-> > =C2=A0}
-> > @@ -4335,6 +4341,7 @@ int nfs4_proc_getattr(struct nfs_server
-> > *server, struct nfs_fh *fhandle,
-> > =C2=A0{
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct nfs4_exception exc=
-eption =3D {
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0.interruptible =3D true,
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0.inode =3D inode,
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int err;
-> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0do {
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->=20
->=20
->=20
