@@ -2,125 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8299A6610A3
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Jan 2023 18:42:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B77C56610B5
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Jan 2023 19:09:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbjAGRmV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 7 Jan 2023 12:42:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44960 "EHLO
+        id S230350AbjAGSJY convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Sat, 7 Jan 2023 13:09:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232521AbjAGRmQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 7 Jan 2023 12:42:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 742AB1C929
-        for <linux-nfs@vger.kernel.org>; Sat,  7 Jan 2023 09:42:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 12E3D60B97
-        for <linux-nfs@vger.kernel.org>; Sat,  7 Jan 2023 17:42:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7BD0C433F1
-        for <linux-nfs@vger.kernel.org>; Sat,  7 Jan 2023 17:42:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673113334;
-        bh=lOYi+fIs9C+kQMkaiHsFvwyAeISg2h7hFDuK/Ga12qs=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=uFklzXxMihm9nWcSi1knQe6+WPsUlDAWTUPL6Hqs+V5dWy+9HzWg5zJLgAzHlgoWC
-         nYDs9PEbCMP2wbdAkDVIix+ui3MhU8DYsrNF1wid4hVG8CL7kwrDZl0oZ3s89Ma5tZ
-         TracbWeJn7sPbpers/qWU6IaBxLYAATdG6/gagUPgRRpPMmM/NKjuvuwMlkM6nJv5G
-         vURe4Cn3IrDtaIrh5VQI1eRLCA6E/yZkIu4UiXs77TFa1ymXGFz8YkGHg4mPVobzyY
-         BVoxQGqZMzqLkwbJv6rU9bSCLacLb2roPuxNXgaDY6JL0wCNykkv3IWPMN4gZV/XIz
-         S5wQ3DveYKHbw==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 17/17] NFS: Improve tracing of nfs_wb_folio()
-Date:   Sat,  7 Jan 2023 12:36:35 -0500
-Message-Id: <20230107173635.2025233-18-trondmy@kernel.org>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230107173635.2025233-17-trondmy@kernel.org>
-References: <20230107173635.2025233-1-trondmy@kernel.org>
- <20230107173635.2025233-2-trondmy@kernel.org>
- <20230107173635.2025233-3-trondmy@kernel.org>
- <20230107173635.2025233-4-trondmy@kernel.org>
- <20230107173635.2025233-5-trondmy@kernel.org>
- <20230107173635.2025233-6-trondmy@kernel.org>
- <20230107173635.2025233-7-trondmy@kernel.org>
- <20230107173635.2025233-8-trondmy@kernel.org>
- <20230107173635.2025233-9-trondmy@kernel.org>
- <20230107173635.2025233-10-trondmy@kernel.org>
- <20230107173635.2025233-11-trondmy@kernel.org>
- <20230107173635.2025233-12-trondmy@kernel.org>
- <20230107173635.2025233-13-trondmy@kernel.org>
- <20230107173635.2025233-14-trondmy@kernel.org>
- <20230107173635.2025233-15-trondmy@kernel.org>
- <20230107173635.2025233-16-trondmy@kernel.org>
- <20230107173635.2025233-17-trondmy@kernel.org>
+        with ESMTP id S229785AbjAGSJY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 7 Jan 2023 13:09:24 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C29173592C;
+        Sat,  7 Jan 2023 10:09:20 -0800 (PST)
+Received: by mail-qt1-f177.google.com with SMTP id a16so4693844qtw.10;
+        Sat, 07 Jan 2023 10:09:20 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:date:cc:to:from
+         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q8JdubVnfWVZT3REzrdZPER7Eknzu9xZpR/N3zlHFZY=;
+        b=rCSsG/piXkT0/CXvIv6MDPzv8kNQ0uNjmmXYB7QJWroLQ92QC7A+ISnljvxZ7mk+B1
+         vWEpmgGEao7jkm8tEB/mrZzaZZR5/MLny6tz5ivYpP9INxrb7c/2Y8wvL+dVlJlmf331
+         w4Belciqz2fwe9OTsnVj6/0OKhKndtcotu3ohrKBoJet1VYuRZlou2CPugQtkqesqymu
+         urNQCixZD0JFwXq/jYW52dRyW/ArrcWE0UvOgh/esqxgLl4nkqjsfJOoIlOf9prT/cir
+         qAa54ylQs1ck8dBsgiVe2hHDRSbqr8vRLlJJ2aQ/taEC+nxxopUj05psbIo9Z5S8L/c2
+         bNUg==
+X-Gm-Message-State: AFqh2kqJkZX/thrduVBfbWfErdCBCQx5pa7m6E3UIY8BmYHLNMB9SqFp
+        ZTRu68vQ1kyCqiGdZ7BL84s0iN9sWQ==
+X-Google-Smtp-Source: AMrXdXvyiJ3+HD+/WZvlaqYDFzdFIihPkiMqy6z2EuO1ePL8XVX8aAqZa0b9fuq321TNWHdcIfJPRQ==
+X-Received: by 2002:a05:622a:4810:b0:3a5:4e34:fafe with SMTP id fb16-20020a05622a481000b003a54e34fafemr94210668qtb.68.1673114959868;
+        Sat, 07 Jan 2023 10:09:19 -0800 (PST)
+Received: from [192.168.75.138] (c-68-32-72-208.hsd1.mi.comcast.net. [68.32.72.208])
+        by smtp.gmail.com with ESMTPSA id 7-20020a05620a040700b006fc8fc061f7sm2471973qkp.129.2023.01.07.10.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Jan 2023 10:09:19 -0800 (PST)
+Message-ID: <79e77f294451933c2264d8e149d45cc546e31066.camel@kernel.org>
+Subject: [GIT PULL] Please pull NFS client bugfixes
+From:   Trond Myklebust <trondmy@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Sat, 07 Jan 2023 13:09:18 -0500
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Hi Linus,
 
-Include info about which folio is being traced.
+The following changes since commit 7fd461c47c6cfab4ca4d003790ec276209e52978:
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/nfstrace.h | 5 +++--
- fs/nfs/write.c    | 4 ++--
- 2 files changed, 5 insertions(+), 4 deletions(-)
+  NFSv4.2: Change the default KConfig value for READ_PLUS (2022-12-10 13:24:59 -0500)
 
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index 988f2c9b607f..624333ac1325 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -152,8 +152,6 @@ DEFINE_NFS_INODE_EVENT(nfs_getattr_enter);
- DEFINE_NFS_INODE_EVENT_DONE(nfs_getattr_exit);
- DEFINE_NFS_INODE_EVENT(nfs_setattr_enter);
- DEFINE_NFS_INODE_EVENT_DONE(nfs_setattr_exit);
--DEFINE_NFS_INODE_EVENT(nfs_writeback_page_enter);
--DEFINE_NFS_INODE_EVENT_DONE(nfs_writeback_page_exit);
- DEFINE_NFS_INODE_EVENT(nfs_writeback_inode_enter);
- DEFINE_NFS_INODE_EVENT_DONE(nfs_writeback_inode_exit);
- DEFINE_NFS_INODE_EVENT(nfs_fsync_enter);
-@@ -1032,6 +1030,9 @@ DECLARE_EVENT_CLASS(nfs_folio_event_done,
- DEFINE_NFS_FOLIO_EVENT(nfs_aop_readpage);
- DEFINE_NFS_FOLIO_EVENT_DONE(nfs_aop_readpage_done);
- 
-+DEFINE_NFS_FOLIO_EVENT(nfs_writeback_folio);
-+DEFINE_NFS_FOLIO_EVENT_DONE(nfs_writeback_folio_done);
-+
- DEFINE_NFS_FOLIO_EVENT(nfs_invalidate_folio);
- DEFINE_NFS_FOLIO_EVENT_DONE(nfs_launder_folio_done);
- 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 666e18e2ec3f..d47247411877 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -2093,7 +2093,7 @@ int nfs_wb_folio(struct inode *inode, struct folio *folio)
- 	};
- 	int ret;
- 
--	trace_nfs_writeback_page_enter(inode);
-+	trace_nfs_writeback_folio(inode, folio);
- 
- 	for (;;) {
- 		folio_wait_writeback(folio);
-@@ -2111,7 +2111,7 @@ int nfs_wb_folio(struct inode *inode, struct folio *folio)
- 			goto out_error;
- 	}
- out_error:
--	trace_nfs_writeback_page_exit(inode, ret);
-+	trace_nfs_writeback_folio_done(inode, folio, ret);
- 	return ret;
- }
- 
+are available in the Git repository at:
+
+  git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.2-2
+
+for you to fetch changes up to 5e9a7b9c2ea18551759833146a181b14835bfe39:
+
+  NFS: Fix up a sparse warning (2023-01-01 20:17:26 -0500)
+
+Thanks!
+  Trond
+
+----------------------------------------------------------------
+NFS client fixes for Linux 6.2
+
+Highlights include:
+
+Bugfixes
+- Fix a race in the RPCSEC_GSS upcall code that causes hung RPC calls
+- Fix a broken coalescing test in the pNFS file layout driver
+- Ensure that the access cache rcu path also applies the login test
+- Fix up for a sparse warning
+
+----------------------------------------------------------------
+Chengen Du (1):
+      NFS: Judge the file access cache's timestamp in rcu path
+
+Olga Kornievskaia (1):
+      pNFS/filelayout: Fix coalescing test for single DS
+
+Trond Myklebust (1):
+      NFS: Fix up a sparse warning
+
+minoura makoto (1):
+      SUNRPC: ensure the matching upcall is in-flight upon downcall
+
+ fs/nfs/dir.c                       |  7 ++++++-
+ fs/nfs/filelayout/filelayout.c     |  8 ++++++++
+ include/linux/sunrpc/rpc_pipe_fs.h |  5 +++++
+ net/sunrpc/auth_gss/auth_gss.c     | 19 +++++++++++++++++--
+ 4 files changed, 36 insertions(+), 3 deletions(-)
+
 -- 
-2.39.0
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trond.myklebust@hammerspace.com
+
 
