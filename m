@@ -2,40 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A35D6616B8
-	for <lists+linux-nfs@lfdr.de>; Sun,  8 Jan 2023 17:32:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC35F6616BA
+	for <lists+linux-nfs@lfdr.de>; Sun,  8 Jan 2023 17:32:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232624AbjAHQcz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 8 Jan 2023 11:32:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60396 "EHLO
+        id S232950AbjAHQc4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 8 Jan 2023 11:32:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234019AbjAHQ23 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Jan 2023 11:28:29 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 336AF5FF3
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 08:28:28 -0800 (PST)
+        with ESMTP id S236150AbjAHQ2g (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Jan 2023 11:28:36 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3E4DEA7
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 08:28:35 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C26C7B801BB
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:28:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E11CC433D2
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:28:25 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 87B9FCE0B6A
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:28:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75314C433D2
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673195305;
-        bh=CJm/KRSSFn0HmKyWetudSHd9SMez/ZvnPSOW1/bCx7M=;
-        h=Subject:From:To:Date:From;
-        b=Tc55Dk671REokTRm//DyI4pz69KI+SqLEKqh/FTF2mFHlDNAjHnZJlzfbiOVY29BB
-         ytxw9NUnJZsLxdYON5nRJuGCaIohDpHIJViIDYtzIq5b/0tbB6DNvX0Sswdcko5/w4
-         4EqNjHObKdPlh9CKysRJfGOhxfqimmYuMuMxhBllePm2PTSvTHkZFLrwuv8MCAJGJ4
-         BHVFFUzlnNPsJaxNuMkwUzTQiR0+Pq5jDEB1b1LcOQXsej8sODlOZZPdxhZdU2OCG6
-         eorhrCelyo8r3ZSAL4YYo/oJdmDpjij3n9hNnRUMmC1xXFIWg6e0LVdw6NQF4ogY1m
-         Mz2WJelTLiieg==
-Subject: [PATCH v1 00/27] Server-side RPC reply header parsing overhaul
+        s=k20201202; t=1673195311;
+        bh=h3WbmLS7lqbzJy8Ex1BkBSAASCbOy3167ohrofAJb8o=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=kgzXmL95HVdkE/BR03mY7JFYCsITbm3K79MN+ELkTXGa9x1P5Qwk++BEIsu73tldc
+         6N+D4GglAV3kHix/sN3E5CN2piOKIVlBNQQISeE2yFvwm2y6Vzgyr+nLZyzocNMqZk
+         76imDDwnkwRf53e+T9CeicWrI/uV4DwBlYuvV+nESrS6FIM0Xp0em8Z8796mxoH1RF
+         m87q8NGD1oWi4LOdULQ3ELsVF9c9l8W/jebqkWSZ/sjLh8Z9RW5JYAUJ6TpOzVMxa8
+         xSIJb5mPnNHtjzvSc8o4hvZXXgLtReZaKwOfsjhUK610xcnb8pMzzD02b1mXILUgD+
+         IbpvEWD6EONEA==
+Subject: [PATCH v1 01/27] SUNRPC: Clean up svcauth_gss_release()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
-Date:   Sun, 08 Jan 2023 11:28:24 -0500
-Message-ID: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
+Date:   Sun, 08 Jan 2023 11:28:30 -0500
+Message-ID: <167319531054.7490.10405247832294580026.stgit@bazille.1015granger.net>
+In-Reply-To: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
+References: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -49,75 +51,75 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The purpose of this series is to replace the svc_put* macros in the
-Linux kernel server's RPC reply header construction code with
-xdr_stream helpers. I've measured no change in CPU utilization after
-the overhaul.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Memory safety: Buffer bounds checking after encoding each XDR item
-is more memory-safe than the current mechanism. Subsequent memory
-safety improvements to the common xdr_stream helpers will benefit
-all who use them.
+Now that upper layers use an xdr_stream to track the construction
+of each RPC Reply message, resbuf->len is kept up-to-date
+automatically. There's no need to recompute it in svc_gss_release().
 
-Audit friendliness: The new code has additional comments and other
-clean-up to help align it with the relevant RPC protocol
-specifications. The use of common helpers also makes the encoders
-easier to audit and maintain.
-
-I've split the full series in half to make it easier to review. The
-patches posted here are the second half, handling RPC reply header
-encoding.
-
-Note that another benefit of this work is that we are taking one or
-two more strides closer to greater commonality between the client
-and server implementations of RPCSEC GSS.
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ net/sunrpc/auth_gss/svcauth_gss.c |   30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
-Chuck Lever (27):
-      SUNRPC: Clean up svcauth_gss_release()
-      SUNRPC: Rename automatic variables in svcauth_gss_wrap_resp_integ()
-      SUNRPC: Record gss_get_mic() errors in svcauth_gss_wrap_integ()
-      SUNRPC: Replace checksum construction in svcauth_gss_wrap_integ()
-      SUNRPC: Convert svcauth_gss_wrap_integ() to use xdr_stream()
-      SUNRPC: Rename automatic variables in svcauth_gss_wrap_resp_priv()
-      SUNRPC: Record gss_wrap() errors in svcauth_gss_wrap_priv()
-      SUNRPC: Add @head and @tail variables in svcauth_gss_wrap_priv()
-      SUNRPC: Convert svcauth_gss_wrap_priv() to use xdr_stream()
-      SUNRPC: Check rq_auth_stat when preparing to wrap a response
-      SUNRPC: Remove the rpc_stat variable in svc_process_common()
-      SUNRPC: Add XDR encoding helper for opaque_auth
-      SUNRPC: Push svcxdr_init_encode() into svc_process_common()
-      SUNRPC: Move svcxdr_init_encode() into ->accept methods
-      SUNRPC: Use xdr_stream to encode Reply verifier in svcauth_null_accept()
-      SUNRPC: Use xdr_stream to encode Reply verifier in svcauth_unix_accept()
-      SUNRPC: Use xdr_stream to encode Reply verifier in svcauth_tls_accept()
-      SUNRPC: Convert unwrap data paths to use xdr_stream for replies
-      SUNRPC: Use xdr_stream to encode replies in server-side GSS upcall helpers
-      SUNRPC: Use xdr_stream for encoding GSS reply verifiers
-      SUNRPC: Hoist init_encode out of svc_authenticate()
-      SUNRPC: Convert RPC Reply header encoding to use xdr_stream
-      SUNRPC: Final clean-up of svc_process_common()
-      SUNRPC: Remove no-longer-used helper functions
-      SUNRPC: Refactor RPC server dispatch method
-      SUNRPC: Set rq_accept_statp inside ->accept methods
-      SUNRPC: Go back to using gsd->body_start
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 2e603358fae1..4a576ed7aa32 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -969,12 +969,6 @@ svcauth_gss_unwrap_integ(struct svc_rqst *rqstp, u32 seq, struct gss_ctx *ctx)
+ 	return -EINVAL;
+ }
+ 
+-static inline int
+-total_buf_len(struct xdr_buf *buf)
+-{
+-	return buf->head[0].iov_len + buf->page_len + buf->tail[0].iov_len;
+-}
+-
+ /*
+  * RFC 2203, Section 5.3.2.3
+  *
+@@ -1882,14 +1876,25 @@ svcauth_gss_wrap_resp_priv(struct svc_rqst *rqstp)
+ 	return 0;
+ }
+ 
++/**
++ * svcauth_gss_release - Wrap payload and release resources
++ * @rqstp: RPC transaction context
++ *
++ * Return values:
++ *    %0: the Reply is ready to be sent
++ *    %-ENOMEM: failed to allocate memory
++ *    %-EINVAL: encoding error
++ *
++ * XXX: These return values do not match the return values documented
++ *      for the auth_ops ->release method in linux/sunrpc/svcauth.h.
++ */
+ static int
+ svcauth_gss_release(struct svc_rqst *rqstp)
+ {
+-	struct gss_svc_data *gsd = (struct gss_svc_data *)rqstp->rq_auth_data;
+-	struct rpc_gss_wire_cred *gc;
+-	struct xdr_buf *resbuf = &rqstp->rq_res;
+-	int stat = -EINVAL;
+ 	struct sunrpc_net *sn = net_generic(SVC_NET(rqstp), sunrpc_net_id);
++	struct gss_svc_data *gsd = rqstp->rq_auth_data;
++	struct rpc_gss_wire_cred *gc;
++	int stat;
+ 
+ 	if (!gsd)
+ 		goto out;
+@@ -1899,10 +1904,7 @@ svcauth_gss_release(struct svc_rqst *rqstp)
+ 	/* Release can be called twice, but we only wrap once. */
+ 	if (gsd->verf_start == NULL)
+ 		goto out;
+-	/* normally not set till svc_send, but we need it here: */
+-	/* XXX: what for?  Do we mess it up the moment we call svc_putu32
+-	 * or whatever? */
+-	resbuf->len = total_buf_len(resbuf);
++
+ 	switch (gc->gc_svc) {
+ 	case RPC_GSS_SVC_NONE:
+ 		break;
 
-
- fs/lockd/svc.c                    |   5 +-
- fs/nfs/callback_xdr.c             |   6 +-
- fs/nfsd/nfscache.c                |   4 +-
- fs/nfsd/nfsd.h                    |   2 +-
- fs/nfsd/nfssvc.c                  |  10 +-
- include/linux/sunrpc/svc.h        | 116 +++----
- include/linux/sunrpc/xdr.h        |  23 ++
- include/trace/events/rpcgss.h     |  22 ++
- net/sunrpc/auth_gss/svcauth_gss.c | 505 +++++++++++++++---------------
- net/sunrpc/svc.c                  |  91 +++---
- net/sunrpc/svcauth_unix.c         |  40 ++-
- net/sunrpc/xdr.c                  |  29 ++
- 12 files changed, 451 insertions(+), 402 deletions(-)
-
---
-Chuck Lever
 
