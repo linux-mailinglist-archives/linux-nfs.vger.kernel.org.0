@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45EB566169D
-	for <lists+linux-nfs@lfdr.de>; Sun,  8 Jan 2023 17:29:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33CC666169E
+	for <lists+linux-nfs@lfdr.de>; Sun,  8 Jan 2023 17:29:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234911AbjAHQ3h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 8 Jan 2023 11:29:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35470 "EHLO
+        id S234916AbjAHQ3k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 8 Jan 2023 11:29:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236122AbjAHQ3c (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Jan 2023 11:29:32 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07570E0B3
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 08:29:29 -0800 (PST)
+        with ESMTP id S236098AbjAHQ3f (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Jan 2023 11:29:35 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 873E360CD
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 08:29:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A6DB2B801C1
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:29:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FC9C433F0
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:29:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2283360C8C
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:29:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FA0EC433D2
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673195367;
-        bh=EJf06XE3BIgFkfJUevBRppykrXg0S9c6ZdtJsFsdXys=;
+        s=k20201202; t=1673195373;
+        bh=+V1BJJF/5pa4hW5EKyheq6lEDttHVTrhXTIkOdLucdc=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=VQCJiNZZpHG0TYx2KeppbOqgms5rmmFB/qTQfvjADCo8jvXpRDPMaAJPFJM1Jk93V
-         449ubQ4utZdhVUZ33sOcRa3PvDLqFp3nVWyzah0y/lq8idWkVn4WDyGsEjhxARkmPv
-         T0swapudpKG341Kr0iH/oKPVS/3DRYXqiHHj+K2PkzWb60bjmueJJty4VdJjvW5OcG
-         RkVyHxI56ac2rDnhyBg9N5DPU2opOc9wCif57/QZaEs7QirsrHG1SxO6IRnPES4Ten
-         Mt1RtqqeigZ4pCi3ldaoxbFMDYqldjvlx/AjLRMQO4TLWZBkDpLCzp2tal7BmNSu4z
-         F1X64rpNsU3tQ==
-Subject: [PATCH v1 10/27] SUNRPC: Check rq_auth_stat when preparing to wrap a
- response
+        b=iNIleci4GrgMtudslV+cc2Uo2BFvLF6BwkFDHydBal1nCN1D1tMmhpe0EnxHqoy9R
+         depCGfQq9FBbTTImmuPX3Ivb/pf/uZ6t2NrN666raerzPmUzI3rMxA76vgwlzExf6t
+         fr1nmy9IXy3u2WBFq6MwxR+vQTXJrHJ+s0NK0lQpr57hUfpbc5OOa9/gbWAqVchTlm
+         Ny9H1whI1ZtTNltPf/wlAXQA+xWttoKalv6VsuAn/LiDQeLUXn2TErJqXjHvdg9Qrh
+         ROck351FnbCFv7hoews2ZheS1G8yEKJIk1AgFuqfQA3a1Diql2TfHYpV053iqN/r66
+         ZI0p7WRrR2giA==
+Subject: [PATCH v1 11/27] SUNRPC: Remove the rpc_stat variable in
+ svc_process_common()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
-Date:   Sun, 08 Jan 2023 11:29:26 -0500
-Message-ID: <167319536633.7490.17297229100823594696.stgit@bazille.1015granger.net>
+Date:   Sun, 08 Jan 2023 11:29:32 -0500
+Message-ID: <167319537254.7490.13683547890552781753.stgit@bazille.1015granger.net>
 In-Reply-To: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
 References: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -54,76 +54,77 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Commit 5b304bc5bfcc ("[PATCH] knfsd: svcrpc: gss: fix failure on
-SVC_DENIED in integrity case") added a check to prevent wrapping an
-RPC response if reply_stat == MSG_DENIED, assuming that the only way
-to get to svcauth_gss_release() with that reply_stat value was if
-the reject_stat was AUTH_ERROR (reject_stat == MISMATCH is handled
-earlier in svc_process_common()).
-
-The code there is somewhat confusing. For one thing, rpc_success is
-an accept_stat value, not a reply_stat value. The correct reply_stat
-value to look for is RPC_MSG_DENIED. It happens to be the same value
-as rpc_success, so it all works out, but it's not terribly readable.
-
-Since commit 438623a06bac ("SUNRPC: Add svc_rqst::rq_auth_stat"),
-the actual auth_stat value is stored in the svc_rqst, so that value
-is now available to svcauth_gss_prepare_to_wrap() to make its
-decision to wrap, based on direct information about the
-authentication status of the RPC caller.
-
-No behavior change is intended, this simply replaces some old code
-with something that should be more self-documenting.
+There's no RPC header field called rpc_stat; more precisely, the
+variable appears to be recording an accept_stat value. But it looks
+like we don't need to preserve this value at all, actually, so
+simply remove the variable.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/auth_gss/svcauth_gss.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ net/sunrpc/svc.c |   24 +++++++++++-------------
+ 1 file changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 6c49750c0f7a..71a147b0f90b 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1732,17 +1732,19 @@ svcauth_gss_accept(struct svc_rqst *rqstp)
- }
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 94f7efca60fc..489c5d1b67f9 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -1232,12 +1232,9 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *resv)
+ 	struct svc_serv		*serv = rqstp->rq_server;
+ 	struct svc_process_info process;
+ 	__be32			*p, *statp;
+-	__be32			rpc_stat;
+ 	int			auth_res, rc;
+ 	__be32			*reply_statp;
  
- static __be32 *
--svcauth_gss_prepare_to_wrap(struct xdr_buf *resbuf, struct gss_svc_data *gsd)
-+svcauth_gss_prepare_to_wrap(struct svc_rqst *rqstp, struct gss_svc_data *gsd)
- {
-+	struct xdr_buf *resbuf = &rqstp->rq_res;
- 	__be32 *p;
- 	u32 verf_len;
+-	rpc_stat = rpc_success;
+-
+ 	/* Will be turned off by GSS integrity and privacy services */
+ 	__set_bit(RQ_SPLICE_OK, &rqstp->rq_flags);
+ 	/* Will be turned off only when NFSv4 Sessions are used */
+@@ -1279,10 +1276,9 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *resv)
+ 	case SVC_OK:
+ 		break;
+ 	case SVC_GARBAGE:
+-		goto err_garbage;
++		goto err_garbage_args;
+ 	case SVC_SYSERR:
+-		rpc_stat = rpc_system_err;
+-		goto err_bad;
++		goto err_system_err;
+ 	case SVC_DENIED:
+ 		goto err_bad_auth;
+ 	case SVC_CLOSE:
+@@ -1296,8 +1292,7 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *resv)
+ 	if (progp == NULL)
+ 		goto err_bad_prog;
  
- 	p = gsd->verf_start;
- 	gsd->verf_start = NULL;
+-	rpc_stat = progp->pg_init_request(rqstp, progp, &process);
+-	switch (rpc_stat) {
++	switch (progp->pg_init_request(rqstp, progp, &process)) {
+ 	case rpc_success:
+ 		break;
+ 	case rpc_prog_unavail:
+@@ -1408,13 +1403,16 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *resv)
+ 	svc_putnl(resv, RPC_PROC_UNAVAIL);
+ 	goto sendit;
  
--	/* If the reply stat is nonzero, don't wrap: */
--	if (*(p-1) != rpc_success)
-+	/* AUTH_ERROR replies are not wrapped. */
-+	if (rqstp->rq_auth_stat != rpc_auth_ok)
- 		return NULL;
+-err_garbage:
+-	svc_printk(rqstp, "failed to decode args\n");
++err_garbage_args:
++	svc_printk(rqstp, "failed to decode RPC header\n");
 +
- 	/* Skip the verifier: */
- 	p += 1;
- 	verf_len = ntohl(*p++);
-@@ -1786,7 +1788,7 @@ static int svcauth_gss_wrap_integ(struct svc_rqst *rqstp)
- 	u32 offset, len, maj_stat;
- 	__be32 *p;
++	serv->sv_stats->rpcbadfmt++;
++	svc_putnl(resv, RPC_GARBAGE_ARGS);
++	goto sendit;
  
--	p = svcauth_gss_prepare_to_wrap(buf, gsd);
-+	p = svcauth_gss_prepare_to_wrap(rqstp, gsd);
- 	if (p == NULL)
- 		goto out;
- 
-@@ -1846,7 +1848,7 @@ static int svcauth_gss_wrap_priv(struct svc_rqst *rqstp)
- 	u32 offset, pad, maj_stat;
- 	__be32 *p, *lenp;
- 
--	p = svcauth_gss_prepare_to_wrap(buf, gsd);
-+	p = svcauth_gss_prepare_to_wrap(rqstp, gsd);
- 	if (p == NULL)
- 		return 0;
+-	rpc_stat = rpc_garbage_args;
+-err_bad:
++err_system_err:
+ 	serv->sv_stats->rpcbadfmt++;
+-	svc_putnl(resv, ntohl(rpc_stat));
++	svc_putnl(resv, RPC_SYSTEM_ERR);
+ 	goto sendit;
+ }
  
 
 
