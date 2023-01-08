@@ -2,40 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC35F6616BA
-	for <lists+linux-nfs@lfdr.de>; Sun,  8 Jan 2023 17:32:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 435E66616BB
+	for <lists+linux-nfs@lfdr.de>; Sun,  8 Jan 2023 17:32:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232950AbjAHQc4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S230323AbjAHQc4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Sun, 8 Jan 2023 11:32:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60416 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236150AbjAHQ2g (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Jan 2023 11:28:36 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B3E4DEA7
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 08:28:35 -0800 (PST)
+        with ESMTP id S236174AbjAHQ2n (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 8 Jan 2023 11:28:43 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D5BD2FC
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 08:28:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 87B9FCE0B6A
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:28:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75314C433D2
-        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:28:31 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 17C28B801C1
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:28:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A87ABC433D2
+        for <linux-nfs@vger.kernel.org>; Sun,  8 Jan 2023 16:28:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673195311;
-        bh=h3WbmLS7lqbzJy8Ex1BkBSAASCbOy3167ohrofAJb8o=;
+        s=k20201202; t=1673195317;
+        bh=QJuJWSyOSQRwAyRn2YOsINULzLUYJplZ8WlDYg5Qhrs=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=kgzXmL95HVdkE/BR03mY7JFYCsITbm3K79MN+ELkTXGa9x1P5Qwk++BEIsu73tldc
-         6N+D4GglAV3kHix/sN3E5CN2piOKIVlBNQQISeE2yFvwm2y6Vzgyr+nLZyzocNMqZk
-         76imDDwnkwRf53e+T9CeicWrI/uV4DwBlYuvV+nESrS6FIM0Xp0em8Z8796mxoH1RF
-         m87q8NGD1oWi4LOdULQ3ELsVF9c9l8W/jebqkWSZ/sjLh8Z9RW5JYAUJ6TpOzVMxa8
-         xSIJb5mPnNHtjzvSc8o4hvZXXgLtReZaKwOfsjhUK610xcnb8pMzzD02b1mXILUgD+
-         IbpvEWD6EONEA==
-Subject: [PATCH v1 01/27] SUNRPC: Clean up svcauth_gss_release()
+        b=OnnZGh/0pyCunuWghP5WnFk3E0Gez22Aa55OgzpA13MRTyxSTLB2BL2jFbWlUAzN1
+         LLsgBRb/8jD+o0gSl9X2hjrGmlptY1fEalqTRLHCShxtHiuKz4S/42TEQRJOXMghEh
+         gLrD36MjRlBkC9hDidoY1NxRsXKdDrjM3KskyAfvPYQ+YVFVkLV5gV/dV3FFZ14tXM
+         lP0ESMtZ2qV5P4IjX021NPkKM1C4fPLIxngtAOjn6z/YGDUfH86wUK5VEbr5rtN2b+
+         9PHNks9FHMYjpYRDe9rrWdXsLzoSmS5ninVYaBbg49OnOYcDckKCIl+p47Qa9/Brr1
+         WDogwvr14hC4A==
+Subject: [PATCH v1 02/27] SUNRPC: Rename automatic variables in
+ svcauth_gss_wrap_resp_integ()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
-Date:   Sun, 08 Jan 2023 11:28:30 -0500
-Message-ID: <167319531054.7490.10405247832294580026.stgit@bazille.1015granger.net>
+Date:   Sun, 08 Jan 2023 11:28:36 -0500
+Message-ID: <167319531676.7490.8981785713795990569.stgit@bazille.1015granger.net>
 In-Reply-To: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
 References: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -53,73 +54,122 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Now that upper layers use an xdr_stream to track the construction
-of each RPC Reply message, resbuf->len is kept up-to-date
-automatically. There's no need to recompute it in svc_gss_release().
+Clean up: To help orient readers, name the stack variables to match
+the XDR field names.
+
+Additionally, the explicit type cast on @gsd is unnecessary; and
+@resbuf is renamed to match the variable naming in the unwrap
+functions.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/auth_gss/svcauth_gss.c |   30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c |   70 +++++++++++++++++++++++--------------
+ 1 file changed, 43 insertions(+), 27 deletions(-)
 
 diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 2e603358fae1..4a576ed7aa32 100644
+index 4a576ed7aa32..fe0bd0ad8ace 100644
 --- a/net/sunrpc/auth_gss/svcauth_gss.c
 +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -969,12 +969,6 @@ svcauth_gss_unwrap_integ(struct svc_rqst *rqstp, u32 seq, struct gss_ctx *ctx)
- 	return -EINVAL;
+@@ -1758,49 +1758,65 @@ svcauth_gss_prepare_to_wrap(struct xdr_buf *resbuf, struct gss_svc_data *gsd)
+ 	return p;
  }
  
 -static inline int
--total_buf_len(struct xdr_buf *buf)
--{
--	return buf->head[0].iov_len + buf->page_len + buf->tail[0].iov_len;
--}
--
- /*
-  * RFC 2203, Section 5.3.2.3
-  *
-@@ -1882,14 +1876,25 @@ svcauth_gss_wrap_resp_priv(struct svc_rqst *rqstp)
- 	return 0;
- }
- 
-+/**
-+ * svcauth_gss_release - Wrap payload and release resources
-+ * @rqstp: RPC transaction context
+-svcauth_gss_wrap_resp_integ(struct svc_rqst *rqstp)
++/*
++ * RFC 2203, Section 5.3.2.2
 + *
-+ * Return values:
-+ *    %0: the Reply is ready to be sent
-+ *    %-ENOMEM: failed to allocate memory
-+ *    %-EINVAL: encoding error
++ *	struct rpc_gss_integ_data {
++ *		opaque databody_integ<>;
++ *		opaque checksum<>;
++ *	};
 + *
-+ * XXX: These return values do not match the return values documented
-+ *      for the auth_ops ->release method in linux/sunrpc/svcauth.h.
++ *	struct rpc_gss_data_t {
++ *		unsigned int seq_num;
++ *		proc_req_arg_t arg;
++ *	};
++ *
++ * The RPC Reply message has already been XDR-encoded. rq_res_stream
++ * is now positioned so that the checksum can be written just past
++ * the RPC Reply message.
 + */
- static int
- svcauth_gss_release(struct svc_rqst *rqstp)
++static int svcauth_gss_wrap_integ(struct svc_rqst *rqstp)
  {
 -	struct gss_svc_data *gsd = (struct gss_svc_data *)rqstp->rq_auth_data;
--	struct rpc_gss_wire_cred *gc;
--	struct xdr_buf *resbuf = &rqstp->rq_res;
--	int stat = -EINVAL;
- 	struct sunrpc_net *sn = net_generic(SVC_NET(rqstp), sunrpc_net_id);
 +	struct gss_svc_data *gsd = rqstp->rq_auth_data;
-+	struct rpc_gss_wire_cred *gc;
-+	int stat;
+ 	struct rpc_gss_wire_cred *gc = &gsd->clcred;
+-	struct xdr_buf *resbuf = &rqstp->rq_res;
+-	struct xdr_buf integ_buf;
+-	struct xdr_netobj mic;
++	struct xdr_buf *buf = &rqstp->rq_res;
++	struct xdr_buf databody_integ;
++	struct xdr_netobj checksum;
+ 	struct kvec *resv;
++	u32 offset, len;
+ 	__be32 *p;
+-	int integ_offset, integ_len;
+ 	int stat = -EINVAL;
  
- 	if (!gsd)
+-	p = svcauth_gss_prepare_to_wrap(resbuf, gsd);
++	p = svcauth_gss_prepare_to_wrap(buf, gsd);
+ 	if (p == NULL)
  		goto out;
-@@ -1899,10 +1904,7 @@ svcauth_gss_release(struct svc_rqst *rqstp)
- 	/* Release can be called twice, but we only wrap once. */
- 	if (gsd->verf_start == NULL)
+-	integ_offset = (u8 *)(p + 1) - (u8 *)resbuf->head[0].iov_base;
+-	integ_len = resbuf->len - integ_offset;
+-	if (integ_len & 3)
++	offset = (u8 *)(p + 1) - (u8 *)buf->head[0].iov_base;
++	len = buf->len - offset;
++	if (len & 3)
  		goto out;
--	/* normally not set till svc_send, but we need it here: */
--	/* XXX: what for?  Do we mess it up the moment we call svc_putu32
--	 * or whatever? */
--	resbuf->len = total_buf_len(resbuf);
-+
- 	switch (gc->gc_svc) {
+-	*p++ = htonl(integ_len);
++	*p++ = htonl(len);
+ 	*p++ = htonl(gc->gc_seq);
+-	if (xdr_buf_subsegment(resbuf, &integ_buf, integ_offset, integ_len)) {
++	if (xdr_buf_subsegment(buf, &databody_integ, offset, len)) {
+ 		WARN_ON_ONCE(1);
+ 		goto out_err;
+ 	}
+-	if (resbuf->tail[0].iov_base == NULL) {
+-		if (resbuf->head[0].iov_len + RPC_MAX_AUTH_SIZE > PAGE_SIZE)
++	if (!buf->tail[0].iov_base) {
++		if (buf->head[0].iov_len + RPC_MAX_AUTH_SIZE > PAGE_SIZE)
+ 			goto out_err;
+-		resbuf->tail[0].iov_base = resbuf->head[0].iov_base
+-						+ resbuf->head[0].iov_len;
+-		resbuf->tail[0].iov_len = 0;
++		buf->tail[0].iov_base = buf->head[0].iov_base
++						+ buf->head[0].iov_len;
++		buf->tail[0].iov_len = 0;
+ 	}
+-	resv = &resbuf->tail[0];
+-	mic.data = (u8 *)resv->iov_base + resv->iov_len + 4;
+-	if (gss_get_mic(gsd->rsci->mechctx, &integ_buf, &mic))
++	resv = &buf->tail[0];
++	checksum.data = (u8 *)resv->iov_base + resv->iov_len + 4;
++	if (gss_get_mic(gsd->rsci->mechctx, &databody_integ, &checksum))
+ 		goto out_err;
+-	svc_putnl(resv, mic.len);
+-	memset(mic.data + mic.len, 0,
+-			round_up_to_quad(mic.len) - mic.len);
+-	resv->iov_len += XDR_QUADLEN(mic.len) << 2;
++	svc_putnl(resv, checksum.len);
++	memset(checksum.data + checksum.len, 0,
++	       round_up_to_quad(checksum.len) - checksum.len);
++	resv->iov_len += XDR_QUADLEN(checksum.len) << 2;
+ 	/* not strictly required: */
+-	resbuf->len += XDR_QUADLEN(mic.len) << 2;
++	buf->len += XDR_QUADLEN(checksum.len) << 2;
+ 	if (resv->iov_len > PAGE_SIZE)
+ 		goto out_err;
+ out:
+@@ -1909,7 +1925,7 @@ svcauth_gss_release(struct svc_rqst *rqstp)
  	case RPC_GSS_SVC_NONE:
+ 		break;
+ 	case RPC_GSS_SVC_INTEGRITY:
+-		stat = svcauth_gss_wrap_resp_integ(rqstp);
++		stat = svcauth_gss_wrap_integ(rqstp);
+ 		if (stat)
+ 			goto out_err;
  		break;
 
 
