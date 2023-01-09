@@ -2,260 +2,551 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65DAA662A80
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jan 2023 16:49:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22E70662AB1
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jan 2023 17:00:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231232AbjAIPtJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Jan 2023 10:49:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32786 "EHLO
+        id S237392AbjAIQAG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Jan 2023 11:00:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234464AbjAIPrw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Jan 2023 10:47:52 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2132.outbound.protection.outlook.com [40.107.93.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 013A6C6
-        for <linux-nfs@vger.kernel.org>; Mon,  9 Jan 2023 07:47:44 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f62WF+zKkH3xAHNxA0PSiTtN7vtKQ9Y910q1gkijGXE6PAhpv4QQM5ZoRuLY38TWtAmGYinYkmi9pqboEomL9P1nCl1F5Jm7U/vENzpai98efsSspgWzu5ergHZZCKOk0RA3WvucE1TrnrINHWrjVsJirMhobb5VmBHreMAxMJN89lWwaV5vQAsTA/1kCNyri+uDhxqNRe5fkkmFurB8wcFigJhqgl2mtdoqk9h55+bHkHcLXpY/Id5bn7/3phE7i3MYbeXszu3OdDa644ezN3AT8lTm7VnPY0u3q7xGofwXpu8mLBD8GWS8adN/DCff92wIC8VHSsv2q2lEr3OfSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LAsvKh4DqWkofkBvSJPD1z3riquibxY8scPn7vO/zY0=;
- b=lYBiUOifomcDMhrvTrFb4n3W+1WYybWhlyhcKEkHNx2EmlJueRTKD/s17pgDm4k6Idhqa3manFch3SqFnED65lpAlk1KIz259LwZ497kL+a+Tq1qD9fcocS2yYRqEkbI0l9eGkNPuAaby3JtmvtWs6s+TKY1sFryrMxpXgU3bljh9E/FctqfOqmVoHcdDaU56YlIbQtVx7Tc6rPwRe8cOEI4lAMfq79nary/Yow9Rvy57uOmh7SxgTWs224XmDFvnBVP2k+UaTcrsiBw5TLbk2YP0BHgQxNO+vij+W6dZvyoaGxQSpIzg8NXxSnHYsXElIjW/Pta9AEuhnr68eeDKQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LAsvKh4DqWkofkBvSJPD1z3riquibxY8scPn7vO/zY0=;
- b=YFT1Hp2zovSY/0dDGoC5EBQL43aK6xviZX6M/bbOd8DDnlfxBQfoBBk9cR4AGCjxOfJYwSfPy+Z7gV4HZy/5Hc1ha2WMxv7rvVt+zW8bZK/UDU2m2+NsqHRQyeEnZNEkA+gkBvgAR3Jq18VHZQIirFX5pfvW8L+a4Szk4TU24dY=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by BL0PR13MB4417.namprd13.prod.outlook.com (2603:10b6:208:1c5::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.18; Mon, 9 Jan
- 2023 15:47:40 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::34dd:cd15:8325:3af0]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::34dd:cd15:8325:3af0%8]) with mapi id 15.20.5986.018; Mon, 9 Jan 2023
- 15:47:40 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-CC:     Neil Brown <neilb@suse.de>, Trond Myklebust <trondmy@kernel.org>,
-        Anna Schumaker <anna@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] NFS: Handle missing attributes in OPEN reply
-Thread-Topic: [PATCH] NFS: Handle missing attributes in OPEN reply
-Thread-Index: AQHZH9NUhloWZMaUakmHx9w8Uho3Qa6NbEuAgAAEOoCAAAPtAIAAD/4AgALtsYCAAExXgIAABW8AgAV8BgCAAAPIAA==
-Date:   Mon, 9 Jan 2023 15:47:40 +0000
-Message-ID: <F3FEC918-730E-415A-AE9B-A713B0718015@hammerspace.com>
-References: <167279203612.13974.15063003557908413815@noble.neil.brown.name>
- <7a98c3e70bae70c44418ce8ac4b84f387b4ff850.camel@kernel.org>
- <167279409373.13974.16504090316814568327@noble.neil.brown.name>
- <210f08ae5f0ba47c289293981f490fca848dd2ed.camel@kernel.org>
- <167279837032.13974.12155714770736077636@noble.neil.brown.name>
- <167295936597.13974.7568769884598065471@noble.neil.brown.name>
- <46f047159da42dadaca576e0a87a622539609730.camel@kernel.org>
- <167297692611.13974.5805041718280562542@noble.neil.brown.name>
- <CAN-5tyGRkKB-=9-HFXkDSu+--ghBNEfmfXO8yD7=2bo=aH4fhA@mail.gmail.com>
-In-Reply-To: <CAN-5tyGRkKB-=9-HFXkDSu+--ghBNEfmfXO8yD7=2bo=aH4fhA@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.300.101.1.3)
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|BL0PR13MB4417:EE_
-x-ms-office365-filtering-correlation-id: 861b6e64-4df9-4015-08c8-08daf258d731
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9Z52k4xMibmqFlblvZ820AG6X8of6x/6hn25wpjekCJlV+IoMPJVWJoNrom3zTRhsos4KvunKodHel2otK8ZGoCyIhoExdFOphMFxHui100tiAUNGIzFJjAU6bh+Q+WVIQA4VqdA8VpqTroZv3KhZJGX6doGGn9dIjImip5x/amBotnjseuYmaDb79oL74qkHGPwOdZD+agj/VH59QhQJh9LlREiZEZ4Juj1qE396YX8lYVUEiaqF7uZMpFBx3vdeMhSi+Y9YRUs37COHoclffxdW7iCxmrfOTwO8IOEnJRXNho6OdOF93uq7QjoDnbdJ+NOpiIlwTi9ewcrCX0jKOoMGPd7RNitIGsuQGT7OfS5iN29IUrbL+ASG137PTfAlaj+fvJjvr/PXH1JIE3W9q1K4f2rPw6mQRuW1RNdkuSzhhSPL2vTEg+a0YtieVkjmQLQmvqtDRE7ft8QwrlbHOz+Fn1cW1Nj1NE0SOI2qv0Y2HPwiVGmlVVSsiC4xgJYfl9dYz6hajDRjuCKCDrsaM7ICmTbj2pSrIHytjnsVkdUdVgOLY2n55+j6ukEYe1hRsRtHsAjwNs/4VizXN8sM2XpnYHKd0spxGTgHktzxDqCbaJrQ9rT++96ipS46zTWv+H4ToolJqYt1xMTE/TLgS/KMNR+/vbu1Ml6A7BDjuwAOzj4AXg0VLOLjwsXm2JKFXEt8SWAlLohbLygiWs28yceH7N10accfzHBgV+7pJL6Pgr4vf6NAG1wAB0FHrBaQ0RgN/Z7WavPb8eu0c0Dsf0AxNCJkWiWnYte1sV53pg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(136003)(376002)(346002)(39830400003)(396003)(451199015)(8676002)(33656002)(316002)(5660300002)(71200400001)(26005)(6512007)(6486002)(478600001)(186003)(2616005)(41300700001)(66946007)(4326008)(6916009)(64756008)(66556008)(76116006)(66476007)(54906003)(66446008)(8936002)(83380400001)(36756003)(38070700005)(86362001)(53546011)(6506007)(122000001)(38100700002)(66899015)(2906002)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?VbQyS2/XrCAuzXVmM0mAWRPj5ZDH8Kw8C6nryjVtmymYRZvnEj8zQrU6TdaJ?=
- =?us-ascii?Q?4riC/sh8eYeyUfAmj3yiojDkk99fLdBy35nuOPFIus+XDN0wGEvIn8x9aW7L?=
- =?us-ascii?Q?nGRfcD3eh3RuUrRbW6Gvp4TRXZAKBsbaieMTO+xmZ6jcdvwTSLLltNXhkIW/?=
- =?us-ascii?Q?HTEDNL2HhyidFqmlyJqaTPJk3OqBIcSDoAY+Vb3f0WYY9OS7JR34hQowBmJw?=
- =?us-ascii?Q?wcVMhrCe3UqEFo4SrnIACylkMZ5MLaVCYQNjOxQi+lbBHTA2wbPcNktPQTrV?=
- =?us-ascii?Q?nSJlQ8CNV5Tt77srIUiXBOYEwRlcOtv0TSjk9FWdAUdT7nVTfDfxZpPn/dhy?=
- =?us-ascii?Q?qNupF8z/NSPVvkN8h7B8RUTHdV/btUfIAfZJhzmLY2xx7uLJW6c6dG4rz1pW?=
- =?us-ascii?Q?KMifWTGkGsyossaubl0kgS1HeXEWnfgoF/pOneDOTiTfaVDKquxl3VwjjbPJ?=
- =?us-ascii?Q?6y6XAdzmmxkXhUoCCJVLXjRbnvRhq5AzKlaroEwVjCo+Y718SVMUdaAp5ey5?=
- =?us-ascii?Q?/JdvN7dAfkd6GAnn1y/34orNL6BatKqBnxLwplaZS4/VQ5kwc5zpjiG6lfBS?=
- =?us-ascii?Q?oOVlLCmouk0OO8SyhBPgKGif1+qHULeSj3Dg3zDgdsHeXRosx5/UsTMUaemK?=
- =?us-ascii?Q?8qYnL7ARo27A0bb09OauSgyuyFQGxyI6hLEvqemLC9DqcCFfDCwtu/f6Qfac?=
- =?us-ascii?Q?ZO5qyLi7RGI4ianC/pbYoYsix2Yk9WxHGLhUreFQ+ZneeeYOUzgK+IC/Pjxx?=
- =?us-ascii?Q?DgRN9txjTtrNwROSaicWu4J2uKiUDBMLavYlcc7Bkc3auhfYf2sZoEGVl3yE?=
- =?us-ascii?Q?QduAi30qVFU6avJR6wTwBahuqMUxiSHdGuYmdYim5vGiJio8/nou8G0SZnod?=
- =?us-ascii?Q?ldE6gvRPf7Tvm/AVLr8/kdX6y3sJZDY7Qv5/o9DHLUNiYfEJ/+tdBCkSixO1?=
- =?us-ascii?Q?no0tOxdihnsACER1TEoRR8yZ+VuP+zxUAODUMbYK7kMKRZ+RxovJwQOXp+I+?=
- =?us-ascii?Q?2Mt7WA4SppT3DZB9T7FYX9mPRtVUFedWjVk88gwFZjrD2KOGuSuiQ+a9rA0g?=
- =?us-ascii?Q?iflQbBYSrQdkIFj6FMz4uPdfNxhwpW+cM2jBZF/71Tbc/F+4n5/kPGolNwJ8?=
- =?us-ascii?Q?T7s0ZAiGCyZeSzNd+/ndXcN7r7WcXX1QDyrAIuFFi3QJFdVOot9Hq/0ZtO6E?=
- =?us-ascii?Q?SSqjpCl9S6/eUU70+cctoON/SOEJBLHHtAYWL0dRQAtjeufzLgb9XjbwnmZJ?=
- =?us-ascii?Q?6pGIbtrhUIzYM+Zqs8fl6IAsEe8Bpy2Z/TiDwvy+1G7Ya04nehUcJ8ckqY/T?=
- =?us-ascii?Q?NNNpwR+bg3gw6RbHf0qoIyg4yHG7T52hau1TxKXP82QckSfrEHsF16MWw4ZK?=
- =?us-ascii?Q?hTt2ArSrIeg1XAU+wi4SWcHi3OJY2uEv0Yh/XFCHST4G9M1nUC0/gCc79hBZ?=
- =?us-ascii?Q?oSPX5roDdw5uCX4HlGHwZBMqNkRVex/FzXfwwXQSi4slQrNznEO8U4oLFaLT?=
- =?us-ascii?Q?IsTlf8DAzCdOgt4kREZYokFXpiL7m6xVqrqD9cCAaU/LZFHFVHqgTEG+22AN?=
- =?us-ascii?Q?U6j3VMZ7yxWKxOnyb64Y+jYtK5YncloDgLDyEhE9bbcn5XEXF/quQV+d3O5l?=
- =?us-ascii?Q?/A=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <07636A7A17AE9C43BD716457814C8627@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S235188AbjAIP7p (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Jan 2023 10:59:45 -0500
+Received: from mail-pf1-x434.google.com (mail-pf1-x434.google.com [IPv6:2607:f8b0:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECBFF3C71F
+        for <linux-nfs@vger.kernel.org>; Mon,  9 Jan 2023 07:59:36 -0800 (PST)
+Received: by mail-pf1-x434.google.com with SMTP id h7so2260271pfq.4
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Jan 2023 07:59:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0WJHHuQRO+OwAj7tSo/0relzblKjlGwor8Jh56l5IO0=;
+        b=a7CqbDCLWGjwc/dJaZILaz16vcbOkmP4pQ5pF3z4Z4wj1GIRj04u1XkbVNpCLssUFo
+         Gaa7cb7FdUU9goOrriWkCzGaWm5NliXuRFWut41BgiZrRMojZKQcyl143QQNE9bz0O80
+         u3O7Bzo52iVCc7qYUcDeBy48MwmoNcOkZo37MDiLGz96YzxzshEv7QAYK45HTO3LUJs5
+         uCjcEftDfqgmD+pHmdoDuGrgdBaLJ5kBIQKPQO88skG/pciN+c6Qh2PTrHHwU57FOy7V
+         Zvp8QZ8fbUnL9LxSVY3g4x426e84pIbmRG4/xQEtRJ2oWqXoTuvaXZ8OJQ6VL8GhKP1/
+         i5hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0WJHHuQRO+OwAj7tSo/0relzblKjlGwor8Jh56l5IO0=;
+        b=PZ38T2WYU39WgxRA8IV63klISOLgLAVRdN2Fb6RRjrhjLQhc+A9pOj3b5t8+2nFDPc
+         Wqxf+Euer/pQ3YQ01iTQ1D5atZHFi6yxEtWUBn5CDnehsctK2Sa0UjH0peTrtMBrFRqn
+         OutwDLTg8SMfgUe4ogM0/1pvtLQNwFE4Lo5rRtt0VI5b+wwIm9GqGFv/41tMytVeLDct
+         fWPMBvD2tG1Xo1spwHabq77DVFS9NR2s5z1euzgPrlWO9GL4kvILxjZ82p0mOfV69tg1
+         tQ3CtJjcqRdpAYeDZbAYtk0OEU71Q8bzSOO2+/8WCFekQ+MyJn3+Xu0kBTAl72Yj81vK
+         TytQ==
+X-Gm-Message-State: AFqh2koFl/7REAbxhuuf34HjJObQtBJpS/ki6psPWBTYkqKtuec8Ra0U
+        qWTd2qXN68INv/NZzHbpkS2zKjGTtWXGYV6fHXE2l9GubHc=
+X-Google-Smtp-Source: AMrXdXta4Y7vJpod7tKi+fxHK1H9fiWlQAqrQ5TU3EFX+4LM8ljo8jsrEOBAe1dPobWHISleTaDstaOhD7qmZRwHtF4=
+X-Received: by 2002:a05:6a00:2c87:b0:583:1387:6f50 with SMTP id
+ ef7-20020a056a002c8700b0058313876f50mr1404465pfb.29.1673279976155; Mon, 09
+ Jan 2023 07:59:36 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 861b6e64-4df9-4015-08c8-08daf258d731
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Jan 2023 15:47:40.7080
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TV9muHluHSbqGBi34lYNMg61iHlfZMfO/lfRBiZZXqaM9+tsPLpaRKxupuNQYVDHZ12QkYsmZXiQrADRIWdf5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR13MB4417
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <1671411353-31165-1-git-send-email-dai.ngo@oracle.com>
+ <28572446-B32A-461F-A9C1-E60F79B985D3@oracle.com> <CAN-5tyEL1FvvCMgg=NWrHcAvLdXFKZQ_p1T8gRhH9hUoD3jPhA@mail.gmail.com>
+ <e46fdd1c-3a61-9849-e06a-f7df8dd78622@oracle.com> <CAN-5tyECjk5z8wsJ28GU_j0nL7eNwzv7Vt=dVc4UGvYgZqDYJg@mail.gmail.com>
+ <CAN-5tyGdbhvNHXKRqxX48X3nvpUDPgfrM4++a2SPcuxJunkxmQ@mail.gmail.com> <85c49a4e-632a-dd5e-f56b-af28312dbb8b@oracle.com>
+In-Reply-To: <85c49a4e-632a-dd5e-f56b-af28312dbb8b@oracle.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Mon, 9 Jan 2023 10:59:24 -0500
+Message-ID: <CAN-5tyEbbHVFGEBMN3o6UAqqimSL_KdtkGPfsotNW-WhXNj9XQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] NFSD: enhance inter-server copy cleanup
+To:     dai.ngo@oracle.com
+Cc:     "jlayton@kernel.org" <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Fri, Jan 6, 2023 at 4:23 PM <dai.ngo@oracle.com> wrote:
+>
+>
+> On 1/6/23 12:11 PM, Olga Kornievskaia wrote:
+> > On Thu, Jan 5, 2023 at 4:11 PM Olga Kornievskaia <aglo@umich.edu> wrote:
+> >> On Thu, Jan 5, 2023 at 3:00 PM <dai.ngo@oracle.com> wrote:
+> >>> Hi Olga,
+> >>>
+> >>> On 1/5/23 8:10 AM, Olga Kornievskaia wrote:
+> >>>> On Tue, Jan 3, 2023 at 11:14 AM Chuck Lever III <chuck.lever@oracle.com> wrote:
+> >>>>>
+> >>>>>> On Dec 18, 2022, at 7:55 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+> >>>>>>
+> >>>>>> Currently nfsd4_setup_inter_ssc returns the vfsmount of the source
+> >>>>>> server's export when the mount completes. After the copy is done
+> >>>>>> nfsd4_cleanup_inter_ssc is called with the vfsmount of the source
+> >>>>>> server and it searches nfsd_ssc_mount_list for a matching entry
+> >>>>>> to do the clean up.
+> >>>>>>
+> >>>>>> The problems with this approach are (1) the need to search the
+> >>>>>> nfsd_ssc_mount_list and (2) the code has to handle the case where
+> >>>>>> the matching entry is not found which looks ugly.
+> >>>>>>
+> >>>>>> The enhancement is instead of nfsd4_setup_inter_ssc returning the
+> >>>>>> vfsmount, it returns the nfsd4_ssc_umount_item which has the
+> >>>>>> vfsmount embedded in it. When nfsd4_cleanup_inter_ssc is called
+> >>>>>> it's passed with the nfsd4_ssc_umount_item directly to do the
+> >>>>>> clean up so no searching is needed and there is no need to handle
+> >>>>>> the 'not found' case.
+> >>>>>>
+> >>>>>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> >>>>>> ---
+> >>>>>> V2: fix compile error when CONFIG_NFSD_V4_2_INTER_SSC not defined.
+> >>>>>>      Reported by kernel test robot.
+> >>>>> Hello Dai - I've looked at this, nothing to comment on so far. I
+> >>>>> plan to go over it again sometime this week.
+> >>>>>
+> >>>>> I'd like to hear from others before applying it.
+> >>>> I have looked at it and logically it seems ok to me.
+> >>> Thank you for reviewing the patch.
+> >>>
+> >>>>    I have tested it
+> >>>> (sorta. i'm rarely able to finish). But I keep running into the other
+> >>>> problem (nfsd4_state_shrinker_count soft lockup that's been already
+> >>>> reported). I find it interesting that only my destination server hits
+> >>>> the problem (but not the source server). I don't believe this patch
+> >>>> has anything to do with this problem, but I found it interesting that
+> >>>> ssc testing seems to trigger it 100%.
+> >>> It's strange that you and Mike keep having this problem, I've been trying
+> >>> to reproduce the problem using Mike's procedure with no success.
+> >>>
+> >>>   From Mike's report it seems that the struct delayed_work, part of the
+> >>> nfsd_net, was freed when nfsd4_state_shrinker_count was called. I'm trying
+> >>> to see why this could happen. Currently we call unregister_shrinker from
+> >>> nfsd_exit_net. Perhaps there is another path that the nfsd_net can be
+> >>> freed?
+> >>>
+> >>> Can you share your test procedure so I can try?
+> >> I have nothing special. I have 3 RHEL8 VMs running upstream kernels. 2
+> >> servers and 1 client. I'm just running nfstest_ssc --runtest inter01.
+> >> Given that the trace says it's kswapd that has this trace, doesn't it
+> >> mean my VM is stressed for memory perhaps. So perhaps see if you can
+> >> reduce your VM memsize? My VM has 2G of memory.
+> >>
+> >> I have reverted a1049eb47f20 commit but that didn't help.
+> > Ops. I reverted the wrong commit(s). Reverted 44df6f439a17,
+> > 3959066b697b, and the tracepoint one for cb_recall_any. I can run
+> > clean thru the ssc tests with this new patch.
+>
+> Can you elaborate on the nfsd4_state_shrinker_count soft lockup
+> encountered when running the ssc tests with the above commits?
+> I'd like to make sure these are the same problems that Mike
+> reported.
+
+I do believe it's the same as Mike's:
+
+[ 3950.448053] watchdog: BUG: soft lockup - CPU#1 stuck for 26s! [khugepaged:36]
+[ 3950.452509] Modules linked in: nfsv4 dns_resolver nfs nfsd lockd
+grace fuse xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+ipt_REJECT nf_reject_ipv4 nft_compat nf_tables nfnetlink tun bridge
+stp llc bnep vmw_vsock_vmci_transport vsock intel_rapl_msr
+intel_rapl_common crct10dif_pclmul crc32_pclmul vmw_balloon
+ghash_clmulni_intel snd_seq_midi snd_seq_midi_event joydev pcspkr
+snd_ens1371 snd_ac97_codec ac97_bus snd_seq btusb btrtl btbcm btintel
+snd_pcm bluetooth rfkill snd_timer ecdh_generic snd_rawmidi ecc
+snd_seq_device snd soundcore vmw_vmci i2c_piix4 auth_rpcgss sunrpc
+ip_tables xfs libcrc32c sr_mod cdrom sg crc32c_intel nvme ata_generic
+vmwgfx drm_ttm_helper ttm serio_raw drm_kms_helper syscopyarea
+nvme_core t10_pi sysfillrect sysimgblt fb_sys_fops ahci crc64_rocksoft
+crc64 libahci ata_piix vmxnet3 libata drm
+[ 3950.467923] CPU: 1 PID: 36 Comm: khugepaged Tainted: G        W
+     6.1.0-rc7+ #107
+[ 3950.469642] Hardware name: VMware, Inc. VMware Virtual
+Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
+[ 3950.471890] RIP: 0010:try_to_grab_pending+0xf7/0x230
+[ 3950.472941] Code: 00 4d 3b 27 74 63 4c 89 e7 e8 65 f1 f2 00 e8 a0
+23 0b 00 48 89 ef e8 08 c9 3a 00 48 8b 45 00 f6 c4 02 74 01 fb be 08
+00 00 00 <48> 89 df e8 21 d5 3a 00 48 89 df e8 e9 c8 3a 00 48 8b 13 b8
+fe ff
+[ 3950.476751] RSP: 0018:ffff88805a6d71d8 EFLAGS: 00000202
+[ 3950.477839] RAX: 0000000000000296 RBX: ffff88801c701b58 RCX: ffffffff8a14d5b8
+[ 3950.479317] RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88805a6d7238
+[ 3950.480799] RBP: ffff88805a6d7238 R08: ffffed10038e036c R09: ffffed10038e036c
+[ 3950.482319] R10: ffff88801c701b5f R11: ffffed10038e036b R12: ffff888057c3f6c0
+[ 3950.483847] R13: 0000000000000296 R14: 0000000000000000 R15: ffff88801c701b58
+[ 3950.485345] FS:  0000000000000000(0000) GS:ffff888057c80000(0000)
+knlGS:0000000000000000
+[ 3950.487056] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3950.488265] CR2: 0000563b65c0bcd8 CR3: 0000000024df4005 CR4: 00000000001706e0
+[ 3950.489802] Call Trace:
+[ 3950.490320]  <TASK>
+[ 3950.490826]  mod_delayed_work_on+0x7c/0xf0
+[ 3950.491692]  ? queue_delayed_work_on+0x70/0x70
+[ 3950.492645]  ? __rcu_read_unlock+0x4e/0x250
+[ 3950.493603]  ? list_lru_count_one+0x73/0xc0
+[ 3950.494539]  nfsd4_state_shrinker_count+0x3f/0x70 [nfsd]
+[ 3950.496149]  do_shrink_slab+0x49/0x490
+[ 3950.496971]  ? _find_next_bit+0x7c/0xc0
+[ 3950.497802]  shrink_slab+0x113/0x400
+[ 3950.498692]  ? cgroup_rstat_flush_locked+0x64/0x560
+[ 3950.499766]  ? set_shrinker_bit+0xb0/0xb0
+[ 3950.500589]  ? _raw_spin_unlock_irqrestore+0x40/0x40
+[ 3950.501673]  ? mem_cgroup_iter+0x14e/0x2f0
+[ 3950.502580]  shrink_node+0x556/0xd10
+[ 3950.503373]  do_try_to_free_pages+0x203/0x8c0
+[ 3950.504324]  ? shrink_node+0xd10/0xd10
+[ 3950.505109]  ? __isolate_free_page+0x240/0x240
+[ 3950.506104]  ? try_to_compact_pages+0x225/0x460
+[ 3950.507069]  try_to_free_pages+0x166/0x320
+[ 3950.507932]  ? reclaim_pages+0x2c0/0x2c0
+[ 3950.508756]  ? find_busiest_group+0x25f/0x590
+[ 3950.509710]  __alloc_pages_slowpath.constprop.120+0x59d/0x1250
+[ 3950.511047]  ? __next_zones_zonelist+0x6e/0xa0
+[ 3950.511997]  ? warn_alloc+0x140/0x140
+[ 3950.512773]  ? __isolate_free_page+0x240/0x240
+[ 3950.513787]  ? find_busiest_group+0x590/0x590
+[ 3950.514735]  __alloc_pages+0x43f/0x460
+[ 3950.515519]  ? __alloc_pages_slowpath.constprop.120+0x1250/0x1250
+[ 3950.516817]  ? __rcu_read_unlock+0x4e/0x250
+[ 3950.517763]  alloc_charge_hpage+0x138/0x310
+[ 3950.518681]  collapse_huge_page+0xfc/0xec0
+[ 3950.519575]  ? dequeue_entity+0x1fe/0x760
+[ 3950.520440]  ? __collapse_huge_page_isolate.isra.65+0xb80/0xb80
+[ 3950.521747]  ? _raw_spin_lock_irqsave+0x8d/0xf0
+[ 3950.522740]  ? _raw_spin_unlock_irqrestore+0x40/0x40
+[ 3950.523794]  ? __schedule+0x575/0xf70
+[ 3950.524620]  ? lock_timer_base+0x9c/0xc0
+[ 3950.525527]  ? detach_if_pending+0x22/0x190
+[ 3950.526500]  ? preempt_count_sub+0x14/0xc0
+[ 3950.527406]  ? _raw_spin_unlock_irqrestore+0x1e/0x40
+[ 3950.528506]  ? vm_normal_page+0xd7/0x1b0
+[ 3950.529378]  hpage_collapse_scan_pmd+0x8c5/0xad0
+[ 3950.530339]  ? collapse_huge_page+0xec0/0xec0
+[ 3950.531288]  ? hugepage_vma_check+0x276/0x2a0
+[ 3950.532266]  khugepaged+0x653/0xaf0
+[ 3950.533039]  ? collapse_pte_mapped_thp+0x7c0/0x7c0
+[ 3950.534069]  ? set_next_entity+0xb1/0x2b0
+[ 3950.534894]  ? __list_add_valid+0x3f/0x80
+[ 3950.535790]  ? preempt_count_sub+0x14/0xc0
+[ 3950.536681]  ? _raw_spin_unlock+0x15/0x30
+[ 3950.537529]  ? finish_task_switch+0xe5/0x3e0
+[ 3950.538481]  ? __switch_to+0x2fa/0x680
+[ 3950.539374]  ? add_wait_queue+0x110/0x110
+[ 3950.540284]  ? _raw_spin_lock_irqsave+0x8d/0xf0
+[ 3950.541246]  ? blake2s_compress_generic+0x741/0x1310
+[ 3950.542295]  ? collapse_pte_mapped_thp+0x7c0/0x7c0
+[ 3950.543353]  kthread+0x160/0x190
+[ 3950.544036]  ? kthread_complete_and_exit+0x20/0x20
+[ 3950.545051]  ret_from_fork+0x1f/0x30
+[ 3950.545836]  </TASK>
 
 
-> On Jan 9, 2023, at 10:33, Olga Kornievskaia <aglo@umich.edu> wrote:
->=20
-> On Thu, Jan 5, 2023 at 10:48 PM NeilBrown <neilb@suse.de> wrote:
->>=20
->> On Fri, 06 Jan 2023, Trond Myklebust wrote:
->>> On Fri, 2023-01-06 at 09:56 +1100, NeilBrown wrote:
->>>> On Wed, 04 Jan 2023, NeilBrown wrote:
->>>>> On Wed, 04 Jan 2023, Trond Myklebust wrote:
->>>>>> On Wed, 2023-01-04 at 12:01 +1100, NeilBrown wrote:
->>>>>>> On Wed, 04 Jan 2023, Trond Myklebust wrote:
->>>>>>>>=20
->>>>>>>>=20
->>>>>>>> If the server starts to reply NFS4ERR_STALE to GETATTR
->>>>>>>> requests,
->>>>>>>> why do
->>>>>>>> we care about stateid values? Just mark the inode as stale
->>>>>>>> and drop
->>>>>>>> it
->>>>>>>> on the floor.
->>>>>>>=20
->>>>>>> We have a valid state from the server - we really shouldn't
->>>>>>> just
->>>>>>> ignore
->>>>>>> it.
->>>>>>>=20
->>>>>>> Maybe it would be OK to mark the inode stale.  I don't know if
->>>>>>> various
->>>>>>> retry loops abort properly when the inode is stale.
->>>>>>=20
->>>>>> Yes, they are all supposed to do that. Otherwise we would end up
->>>>>> looping forever in close(), for instance, since the PUTFH,
->>>>>> GETATTR and
->>>>>> CLOSE can all return NFS4ERR_STALE as well.
->>>>>=20
->>>>> To mark the inode as STALE we still need to find the inode, and
->>>>> that is
->>>>> the key bit missing in the current code.  Once we find the inode,
->>>>> we
->>>>> could mark it stale, but maybe some other error resulted in the
->>>>> missing
->>>>> GETATTR...
->>>>>=20
->>>>> It might make sense to put the new code in _nfs4_proc_open() after
->>>>> the
->>>>> explicit nfs4_proc_getattr() fails.  We would need to find the
->>>>> inode
->>>>> given only the filehandle.  Is there any easy way to do that?
->>>>>=20
->>>>> Thanks,
->>>>> NeilBrown
->>>>>=20
->>>>=20
->>>> I couldn't see a consistent pattern to follow for when to mark an
->>>> inode
->>>> as stale.  Do this, on top of the previous patch, seem reasonable?
->>>>=20
->>>> Thanks,
->>>> NeilBrown
->>>>=20
->>>>=20
->>>>=20
->>>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
->>>> index b441b1d14a50..04497cb42154 100644
->>>> --- a/fs/nfs/nfs4proc.c
->>>> +++ b/fs/nfs/nfs4proc.c
->>>> @@ -489,6 +489,8 @@ static int nfs4_do_handle_exception(struct
->>>> nfs_server *server,
->>>>                case -ESTALE:
->>>>                        if (inode !=3D NULL && S_ISREG(inode->i_mode))
->>>>                                pnfs_destroy_layout(NFS_I(inode));
->>>> +                       if (inode)
->>>> +                               nfs_set_inode_stale(inode);
->>>=20
->>> This is normally dealt with in the generic code inside
->>> nfs_revalidate_inode(). There should be no need to duplicate it here.
->>>=20
->>>>                        break;
->>>>                case -NFS4ERR_DELEG_REVOKED:
->>>>                case -NFS4ERR_ADMIN_REVOKED:
->>>> @@ -2713,8 +2715,12 @@ static int _nfs4_proc_open(struct
->>>> nfs4_opendata *data,
->>>>                        return status;
->>>>        }
->>>>        if (!(o_res->f_attr->valid & NFS_ATTR_FATTR)) {
->>>> +               struct inode *inode =3D nfs4_get_inode_by_stateid(
->>>> +                       &data->o_res.stateid,
->>>> +                       data->owner);
->>>=20
->>> There shouldn't be a need to go looking for open descriptors here,
->>> because they will hit ESTALE at some point later anyway.
->>=20
->> The problem is that they don't hit ESTALE later.  Unless we update our
->> stored stateid with the result of the OPEN, we can use the old stateid,
->> and get the corresponding error.
->>=20
->> The only way to avoid the infinite loop is to either mark the inode as
->> stale, or update the state-id.  For either of those we need to find the
->> inode.  We don't have fileid so we cannot use iget.  We do have file
->> handle and state-id.
->>=20
->> Maybe you are saying this is a server bug that the client cannot be
->> expect to cope with at all, and that an infinite loop is a valid client
->> response to this particular server behaviour.  In that case, I guess no
->> patch is needed.
->=20
-> I'm not arguing that the server should do something else. But I would
-> like to talk about it from the spec perspective. When PUTFH+WRITE is
-> sent to the server (with an incorrect stateid) and it's processing the
-> WRITE compound (as the spec doesn't require the server to validate a
-> filehandle on PUTFH. The spec says PUTFH is to "set" the correct
-> filehandle), the server is dealing with 2 errors that it can possibly
-> return to the client ERR_STALE and ERR_OLD_STATEID. There is nothing
-> in the spec that speaks to the orders of errors to be returned. Of
-> course I'd like to say that the server should prioritize ERR_STALE
-> over ERR_OLD_STATEID (simply because it's a MUST in the spec and
-> ERR_OLD_STATEIDs are written as "rules").
->=20
-
-I disagree for the reason already pointed to in the spec. There is nothing =
-in the spec that appears to allow the PUTFH to return anything other than N=
-FS4ERR_STALE after the file has been deleted (and yes, RFC5661, Section 15.=
-2 does list NFS4ERR_STALE as an error for PUTFH). PUTFH is definitely requi=
-red to validate the file handle, since it is the ONLY operation that can re=
-turn NFS4ERR_BADHANDLE.
-
-_________________________________
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trond.myklebust@hammerspace.com
-
+>
+> Thanks,
+> -Dai
+>
+>
+> >
+> >>
+> >>> Thanks,
+> >>> -Dai
+> >>>
+> >>>>
+> >>>>
+> >>>>
+> >>>>
+> >>>>
+> >>>>
+> >>>>
+> >>>>
+> >>>>
+> >>>>>> fs/nfsd/nfs4proc.c      | 94 +++++++++++++++++++------------------------------
+> >>>>>> fs/nfsd/xdr4.h          |  2 +-
+> >>>>>> include/linux/nfs_ssc.h |  2 +-
+> >>>>>> 3 files changed, 38 insertions(+), 60 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> >>>>>> index b79ee65ae016..6515b00520bc 100644
+> >>>>>> --- a/fs/nfsd/nfs4proc.c
+> >>>>>> +++ b/fs/nfsd/nfs4proc.c
+> >>>>>> @@ -1295,15 +1295,15 @@ extern void nfs_sb_deactive(struct super_block *sb);
+> >>>>>>    * setup a work entry in the ssc delayed unmount list.
+> >>>>>>    */
+> >>>>>> static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
+> >>>>>> -             struct nfsd4_ssc_umount_item **retwork, struct vfsmount **ss_mnt)
+> >>>>>> +             struct nfsd4_ssc_umount_item **nsui)
+> >>>>>> {
+> >>>>>>         struct nfsd4_ssc_umount_item *ni = NULL;
+> >>>>>>         struct nfsd4_ssc_umount_item *work = NULL;
+> >>>>>>         struct nfsd4_ssc_umount_item *tmp;
+> >>>>>>         DEFINE_WAIT(wait);
+> >>>>>> +     __be32 status = 0;
+> >>>>>>
+> >>>>>> -     *ss_mnt = NULL;
+> >>>>>> -     *retwork = NULL;
+> >>>>>> +     *nsui = NULL;
+> >>>>>>         work = kzalloc(sizeof(*work), GFP_KERNEL);
+> >>>>>> try_again:
+> >>>>>>         spin_lock(&nn->nfsd_ssc_lock);
+> >>>>>> @@ -1326,12 +1326,12 @@ static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
+> >>>>>>                         finish_wait(&nn->nfsd_ssc_waitq, &wait);
+> >>>>>>                         goto try_again;
+> >>>>>>                 }
+> >>>>>> -             *ss_mnt = ni->nsui_vfsmount;
+> >>>>>> +             *nsui = ni;
+> >>>>>>                 refcount_inc(&ni->nsui_refcnt);
+> >>>>>>                 spin_unlock(&nn->nfsd_ssc_lock);
+> >>>>>>                 kfree(work);
+> >>>>>>
+> >>>>>> -             /* return vfsmount in ss_mnt */
+> >>>>>> +             /* return vfsmount in (*nsui)->nsui_vfsmount */
+> >>>>>>                 return 0;
+> >>>>>>         }
+> >>>>>>         if (work) {
+> >>>>>> @@ -1339,10 +1339,11 @@ static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
+> >>>>>>                 refcount_set(&work->nsui_refcnt, 2);
+> >>>>>>                 work->nsui_busy = true;
+> >>>>>>                 list_add_tail(&work->nsui_list, &nn->nfsd_ssc_mount_list);
+> >>>>>> -             *retwork = work;
+> >>>>>> -     }
+> >>>>>> +             *nsui = work;
+> >>>>>> +     } else
+> >>>>>> +             status = nfserr_resource;
+> >>>>>>         spin_unlock(&nn->nfsd_ssc_lock);
+> >>>>>> -     return 0;
+> >>>>>> +     return status;
+> >>>>>> }
+> >>>>>>
+> >>>>>> static void nfsd4_ssc_update_dul_work(struct nfsd_net *nn,
+> >>>>>> @@ -1371,7 +1372,7 @@ static void nfsd4_ssc_cancel_dul_work(struct nfsd_net *nn,
+> >>>>>>    */
+> >>>>>> static __be32
+> >>>>>> nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+> >>>>>> -                    struct vfsmount **mount)
+> >>>>>> +                     struct nfsd4_ssc_umount_item **nsui)
+> >>>>>> {
+> >>>>>>         struct file_system_type *type;
+> >>>>>>         struct vfsmount *ss_mnt;
+> >>>>>> @@ -1382,7 +1383,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+> >>>>>>         char *ipaddr, *dev_name, *raw_data;
+> >>>>>>         int len, raw_len;
+> >>>>>>         __be32 status = nfserr_inval;
+> >>>>>> -     struct nfsd4_ssc_umount_item *work = NULL;
+> >>>>>>         struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+> >>>>>>
+> >>>>>>         naddr = &nss->u.nl4_addr;
+> >>>>>> @@ -1390,6 +1390,7 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+> >>>>>>                                          naddr->addr_len,
+> >>>>>>                                          (struct sockaddr *)&tmp_addr,
+> >>>>>>                                          sizeof(tmp_addr));
+> >>>>>> +     *nsui = NULL;
+> >>>>>>         if (tmp_addrlen == 0)
+> >>>>>>                 goto out_err;
+> >>>>>>
+> >>>>>> @@ -1432,10 +1433,10 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+> >>>>>>                 goto out_free_rawdata;
+> >>>>>>         snprintf(dev_name, len + 5, "%s%s%s:/", startsep, ipaddr, endsep);
+> >>>>>>
+> >>>>>> -     status = nfsd4_ssc_setup_dul(nn, ipaddr, &work, &ss_mnt);
+> >>>>>> +     status = nfsd4_ssc_setup_dul(nn, ipaddr, nsui);
+> >>>>>>         if (status)
+> >>>>>>                 goto out_free_devname;
+> >>>>>> -     if (ss_mnt)
+> >>>>>> +     if ((*nsui)->nsui_vfsmount)
+> >>>>>>                 goto out_done;
+> >>>>>>
+> >>>>>>         /* Use an 'internal' mount: SB_KERNMOUNT -> MNT_INTERNAL */
+> >>>>>> @@ -1443,15 +1444,12 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+> >>>>>>         module_put(type->owner);
+> >>>>>>         if (IS_ERR(ss_mnt)) {
+> >>>>>>                 status = nfserr_nodev;
+> >>>>>> -             if (work)
+> >>>>>> -                     nfsd4_ssc_cancel_dul_work(nn, work);
+> >>>>>> +             nfsd4_ssc_cancel_dul_work(nn, *nsui);
+> >>>>>>                 goto out_free_devname;
+> >>>>>>         }
+> >>>>>> -     if (work)
+> >>>>>> -             nfsd4_ssc_update_dul_work(nn, work, ss_mnt);
+> >>>>>> +     nfsd4_ssc_update_dul_work(nn, *nsui, ss_mnt);
+> >>>>>> out_done:
+> >>>>>>         status = 0;
+> >>>>>> -     *mount = ss_mnt;
+> >>>>>>
+> >>>>>> out_free_devname:
+> >>>>>>         kfree(dev_name);
+> >>>>>> @@ -1474,8 +1472,7 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+> >>>>>>    */
+> >>>>>> static __be32
+> >>>>>> nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
+> >>>>>> -                   struct nfsd4_compound_state *cstate,
+> >>>>>> -                   struct nfsd4_copy *copy, struct vfsmount **mount)
+> >>>>>> +             struct nfsd4_compound_state *cstate, struct nfsd4_copy *copy)
+> >>>>>> {
+> >>>>>>         struct svc_fh *s_fh = NULL;
+> >>>>>>         stateid_t *s_stid = &copy->cp_src_stateid;
+> >>>>>> @@ -1488,7 +1485,8 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
+> >>>>>>         if (status)
+> >>>>>>                 goto out;
+> >>>>>>
+> >>>>>> -     status = nfsd4_interssc_connect(copy->cp_src, rqstp, mount);
+> >>>>>> +     status = nfsd4_interssc_connect(copy->cp_src, rqstp,
+> >>>>>> +                             &copy->ss_nsui);
+> >>>>>>         if (status)
+> >>>>>>                 goto out;
+> >>>>>>
+> >>>>>> @@ -1506,61 +1504,42 @@ nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
+> >>>>>> }
+> >>>>>>
+> >>>>>> static void
+> >>>>>> -nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
+> >>>>>> +nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umount_item *ni, struct file *filp,
+> >>>>>>                         struct nfsd_file *dst)
+> >>>>>> {
+> >>>>>> -     bool found = false;
+> >>>>>>         long timeout;
+> >>>>>> -     struct nfsd4_ssc_umount_item *tmp;
+> >>>>>> -     struct nfsd4_ssc_umount_item *ni = NULL;
+> >>>>>>         struct nfsd_net *nn = net_generic(dst->nf_net, nfsd_net_id);
+> >>>>>>
+> >>>>>>         nfs42_ssc_close(filp);
+> >>>>>>         nfsd_file_put(dst);
+> >>>>>>         fput(filp);
+> >>>>>>
+> >>>>>> -     if (!nn) {
+> >>>>>> -             mntput(ss_mnt);
+> >>>>>> -             return;
+> >>>>>> -     }
+> >>>>>>         spin_lock(&nn->nfsd_ssc_lock);
+> >>>>>>         timeout = msecs_to_jiffies(nfsd4_ssc_umount_timeout);
+> >>>>>> -     list_for_each_entry_safe(ni, tmp, &nn->nfsd_ssc_mount_list, nsui_list) {
+> >>>>>> -             if (ni->nsui_vfsmount->mnt_sb == ss_mnt->mnt_sb) {
+> >>>>>> -                     list_del(&ni->nsui_list);
+> >>>>>> -                     /*
+> >>>>>> -                      * vfsmount can be shared by multiple exports,
+> >>>>>> -                      * decrement refcnt. If the count drops to 1 it
+> >>>>>> -                      * will be unmounted when nsui_expire expires.
+> >>>>>> -                      */
+> >>>>>> -                     refcount_dec(&ni->nsui_refcnt);
+> >>>>>> -                     ni->nsui_expire = jiffies + timeout;
+> >>>>>> -                     list_add_tail(&ni->nsui_list, &nn->nfsd_ssc_mount_list);
+> >>>>>> -                     found = true;
+> >>>>>> -                     break;
+> >>>>>> -             }
+> >>>>>> -     }
+> >>>>>> +     list_del(&ni->nsui_list);
+> >>>>>> +     /*
+> >>>>>> +      * vfsmount can be shared by multiple exports,
+> >>>>>> +      * decrement refcnt. If the count drops to 1 it
+> >>>>>> +      * will be unmounted when nsui_expire expires.
+> >>>>>> +      */
+> >>>>>> +     refcount_dec(&ni->nsui_refcnt);
+> >>>>>> +     ni->nsui_expire = jiffies + timeout;
+> >>>>>> +     list_add_tail(&ni->nsui_list, &nn->nfsd_ssc_mount_list);
+> >>>>>>         spin_unlock(&nn->nfsd_ssc_lock);
+> >>>>>> -     if (!found) {
+> >>>>>> -             mntput(ss_mnt);
+> >>>>>> -             return;
+> >>>>>> -     }
+> >>>>>> }
+> >>>>>>
+> >>>>>> #else /* CONFIG_NFSD_V4_2_INTER_SSC */
+> >>>>>>
+> >>>>>> static __be32
+> >>>>>> nfsd4_setup_inter_ssc(struct svc_rqst *rqstp,
+> >>>>>> -                   struct nfsd4_compound_state *cstate,
+> >>>>>> -                   struct nfsd4_copy *copy,
+> >>>>>> -                   struct vfsmount **mount)
+> >>>>>> +                     struct nfsd4_compound_state *cstate,
+> >>>>>> +                     struct nfsd4_copy *copy)
+> >>>>>> {
+> >>>>>> -     *mount = NULL;
+> >>>>>>         return nfserr_inval;
+> >>>>>> }
+> >>>>>>
+> >>>>>> static void
+> >>>>>> -nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
+> >>>>>> +nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umount_item *ni, struct file *filp,
+> >>>>>>                         struct nfsd_file *dst)
+> >>>>>> {
+> >>>>>> }
+> >>>>>> @@ -1700,7 +1679,7 @@ static void dup_copy_fields(struct nfsd4_copy *src, struct nfsd4_copy *dst)
+> >>>>>>         memcpy(dst->cp_src, src->cp_src, sizeof(struct nl4_server));
+> >>>>>>         memcpy(&dst->stateid, &src->stateid, sizeof(src->stateid));
+> >>>>>>         memcpy(&dst->c_fh, &src->c_fh, sizeof(src->c_fh));
+> >>>>>> -     dst->ss_mnt = src->ss_mnt;
+> >>>>>> +     dst->ss_nsui = src->ss_nsui;
+> >>>>>> }
+> >>>>>>
+> >>>>>> static void cleanup_async_copy(struct nfsd4_copy *copy)
+> >>>>>> @@ -1749,8 +1728,8 @@ static int nfsd4_do_async_copy(void *data)
+> >>>>>>         if (nfsd4_ssc_is_inter(copy)) {
+> >>>>>>                 struct file *filp;
+> >>>>>>
+> >>>>>> -             filp = nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
+> >>>>>> -                                   &copy->stateid);
+> >>>>>> +             filp = nfs42_ssc_open(copy->ss_nsui->nsui_vfsmount,
+> >>>>>> +                             &copy->c_fh, &copy->stateid);
+> >>>>>>                 if (IS_ERR(filp)) {
+> >>>>>>                         switch (PTR_ERR(filp)) {
+> >>>>>>                         case -EBADF:
+> >>>>>> @@ -1764,7 +1743,7 @@ static int nfsd4_do_async_copy(void *data)
+> >>>>>>                 }
+> >>>>>>                 nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
+> >>>>>>                                        false);
+> >>>>>> -             nfsd4_cleanup_inter_ssc(copy->ss_mnt, filp, copy->nf_dst);
+> >>>>>> +             nfsd4_cleanup_inter_ssc(copy->ss_nsui, filp, copy->nf_dst);
+> >>>>>>         } else {
+> >>>>>>                 nfserr = nfsd4_do_copy(copy, copy->nf_src->nf_file,
+> >>>>>>                                        copy->nf_dst->nf_file, false);
+> >>>>>> @@ -1790,8 +1769,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+> >>>>>>                         status = nfserr_notsupp;
+> >>>>>>                         goto out;
+> >>>>>>                 }
+> >>>>>> -             status = nfsd4_setup_inter_ssc(rqstp, cstate, copy,
+> >>>>>> -                             &copy->ss_mnt);
+> >>>>>> +             status = nfsd4_setup_inter_ssc(rqstp, cstate, copy);
+> >>>>>>                 if (status)
+> >>>>>>                         return nfserr_offload_denied;
+> >>>>>>         } else {
+> >>>>>> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> >>>>>> index 0eb00105d845..36c3340c1d54 100644
+> >>>>>> --- a/fs/nfsd/xdr4.h
+> >>>>>> +++ b/fs/nfsd/xdr4.h
+> >>>>>> @@ -571,7 +571,7 @@ struct nfsd4_copy {
+> >>>>>>         struct task_struct      *copy_task;
+> >>>>>>         refcount_t              refcount;
+> >>>>>>
+> >>>>>> -     struct vfsmount         *ss_mnt;
+> >>>>>> +     struct nfsd4_ssc_umount_item *ss_nsui;
+> >>>>>>         struct nfs_fh           c_fh;
+> >>>>>>         nfs4_stateid            stateid;
+> >>>>>> };
+> >>>>>> diff --git a/include/linux/nfs_ssc.h b/include/linux/nfs_ssc.h
+> >>>>>> index 75843c00f326..22265b1ff080 100644
+> >>>>>> --- a/include/linux/nfs_ssc.h
+> >>>>>> +++ b/include/linux/nfs_ssc.h
+> >>>>>> @@ -53,6 +53,7 @@ static inline void nfs42_ssc_close(struct file *filep)
+> >>>>>>         if (nfs_ssc_client_tbl.ssc_nfs4_ops)
+> >>>>>>                 (*nfs_ssc_client_tbl.ssc_nfs4_ops->sco_close)(filep);
+> >>>>>> }
+> >>>>>> +#endif
+> >>>>>>
+> >>>>>> struct nfsd4_ssc_umount_item {
+> >>>>>>         struct list_head nsui_list;
+> >>>>>> @@ -66,7 +67,6 @@ struct nfsd4_ssc_umount_item {
+> >>>>>>         struct vfsmount *nsui_vfsmount;
+> >>>>>>         char nsui_ipaddr[RPC_MAX_ADDRBUFLEN + 1];
+> >>>>>> };
+> >>>>>> -#endif
+> >>>>>>
+> >>>>>> /*
+> >>>>>>    * NFS_FS
+> >>>>>> --
+> >>>>>> 2.9.5
+> >>>>>>
+> >>>>> --
+> >>>>> Chuck Lever
+> >>>>>
+> >>>>>
+> >>>>>
