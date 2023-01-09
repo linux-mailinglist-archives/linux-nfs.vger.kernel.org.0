@@ -2,244 +2,231 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62ECC6629D8
-	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jan 2023 16:26:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 698EB662A28
+	for <lists+linux-nfs@lfdr.de>; Mon,  9 Jan 2023 16:38:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233321AbjAIP0v (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 9 Jan 2023 10:26:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42000 "EHLO
+        id S232222AbjAIPht (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 9 Jan 2023 10:37:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52988 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233393AbjAIP0r (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Jan 2023 10:26:47 -0500
-Received: from mail-qk1-x72b.google.com (mail-qk1-x72b.google.com [IPv6:2607:f8b0:4864:20::72b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5A1D1AD;
-        Mon,  9 Jan 2023 07:26:43 -0800 (PST)
-Received: by mail-qk1-x72b.google.com with SMTP id pe2so4323460qkn.1;
-        Mon, 09 Jan 2023 07:26:43 -0800 (PST)
+        with ESMTP id S235400AbjAIPhd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 9 Jan 2023 10:37:33 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D631F5688C
+        for <linux-nfs@vger.kernel.org>; Mon,  9 Jan 2023 07:34:11 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id fz16-20020a17090b025000b002269d6c2d83so11559104pjb.0
+        for <linux-nfs@vger.kernel.org>; Mon, 09 Jan 2023 07:34:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XqDQAkyb0cfxsVxbxG+ssknXnsv+HNvNoddjNPP1GZM=;
-        b=iB0na+NOKHUYQly/Ihu3hUZx0d9YaC/1aM7gYmSatbaEvcwMVimqNtM3/+vqT5OcPc
-         VLYfk9i+O/0q1LPvMOfIX2wwrsyEJTwp0E0g2tGMm4fdJI/FpoKpus/9t6rL1uJoDq9V
-         RZlthEuxzoKb6x7iWO4Gn++6qcxYg1xiWs6K51g6Z4S5pEl+5uzS8kS9QWiN+Fj5ji5E
-         X8Vfww1QUrxh5H8eLte9XymlZJJcfXS6Tm3HruohDrP1GWFFyVdS2/5w30qqWPaaI2+j
-         /JSIAdkDQxvsoEfz/kgM7cuZ+ao+sK0edpC3koL3ud6Ac2i42ylK/ko4Em4Bm+du3ZIG
-         KAmg==
+        d=umich.edu; s=google-2016-06-03;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=bbwbXqG5dMqZzDuRMtbnbs7dtkS0HbCKJyvmfu5GX+U=;
+        b=AZ9XGolvgPSC6b+ka2s5590d9oTDrEcJxhIu4VgIsN2/BWCfZTdDWxR3limiiPhzwG
+         UbhbYNeFjXC94whRFp4JGBrpsboIBQhu+7Nw1LBWQlIKAknp0oIx+LZCGpcRgv4DshOz
+         OKv7aZVX3qDVZibxc5z8OMNK5triMWlphYckBaLLmX3ZtTZ75Oqfp6xmdjLgCMlgoUUv
+         EUZqLp0H01UhY1Ve00lPs1WgwRLLE95RacsTcIOB9nUpJOEZeqYain2J4XF//wxZksiz
+         mkM5z2J5A05meHpfQLQeuw4ybD/w24Dfs7Zf0V9XG0yaIlJdRAgOGXDSVFxwv/7Ifwmj
+         +L1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XqDQAkyb0cfxsVxbxG+ssknXnsv+HNvNoddjNPP1GZM=;
-        b=p4Io9XdQ4HfmgtwXlVf5SmRi221ZhfAFdXqyqC/vj2YPSEUmHBnC9JdLOpCP5RQyaP
-         Qle8xtYQ6B13KN8a8A+zW9ULZ4vzsttL85pNR6D1OYO00Cre6imfkBaU92mDMYnhF82U
-         PllVP1UxmtGojqVgiorAuh+QnGdo1uGxV4kdjikSjgHxe/P+DwIe6pTavnpqz/ilb6eU
-         4qHOs70k8bZ14tsmXKdDZp7yIljL6LsXvok+yVtX2uSlSuIOLwDKZCbrnHvSlVDqt1Qq
-         LtVCAxdDm6m4uLN5/A29iz86ZCAEGl41koEJzASof/9R0MSh+jIScPgqbXm6EME5DSDr
-         tJgQ==
-X-Gm-Message-State: AFqh2koBPvbppB6/bmJaq7cOM3tuYBfqpRIAIP7UdALrQZ4xv03MdxzG
-        YuIHgnzNdXbl2m36bYoz0ps/A8lGzHI41WYQF8I=
-X-Google-Smtp-Source: AMrXdXu4KqvTRMzOELPslzjhyieOypL4oWEo1BZZ3SWNRLJT3xpr6t7+77xygaB9DnUv9O+3iioWaDNJJq61hDoord8=
-X-Received: by 2002:ae9:dc45:0:b0:6fe:c3d4:d9f4 with SMTP id
- q66-20020ae9dc45000000b006fec3d4d9f4mr3593809qkf.646.1673278002663; Mon, 09
- Jan 2023 07:26:42 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bbwbXqG5dMqZzDuRMtbnbs7dtkS0HbCKJyvmfu5GX+U=;
+        b=XJsCnYsnTv6+pEMg7u0Pp9XLxR6KWEMRJF+FJltFgtwH9bd+RIs+UOHubcCOn8LrvJ
+         mEgggSmJVXliwbleRuzml39s9X5XRfbPytUz4gTAUqpXmJ0Z/oIjMua0Ske6uuvYYrBS
+         0EzUr4/xv/QJ/LgMQyBOXCwqXxgK6b6FAqzF4pZr/pRpbJtRrmznXppJfpUap0G83aU0
+         sbi6Sl7wxqw0HHXwYIGf0SCEbh09voBOcqXiMKghqz7D8Bwh+jmqURmS0ZKuXzH9G6NG
+         wxdnpEjJcz2iyjx0osO190sdoRcZ/B7U/+y1Nayxa7MoAzGrUBika082mWwecWxyv6Jn
+         +WkQ==
+X-Gm-Message-State: AFqh2kre4Zo/yjnQjHHhVKI6TEHz3Q8bD+AoX8zu85pCpsfXTH5m4ene
+        Vj5fHse2Qu9bMzH8msDTZPnTz+pA+902Ln+IDbS4UEHZ
+X-Google-Smtp-Source: AMrXdXt4wUWkl7HlMRlvbCOOn+BBDaRERF/xU7Fo8aYZYC9w9OKAbgXAltcMfZd5f88RXnV1Zr63mEETCMrrPzzuTXE=
+X-Received: by 2002:a17:903:2445:b0:189:7f09:13ca with SMTP id
+ l5-20020a170903244500b001897f0913camr3494784pls.113.1673278449796; Mon, 09
+ Jan 2023 07:34:09 -0800 (PST)
 MIME-Version: 1.0
-References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
- <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org> <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
- <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org> <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
- <6F61B478-A0FF-4E28-A7DE-8DAA6E11B128@hammerspace.com> <DB31E56A-42D7-4B62-83CD-3D96AC4A4C20@oracle.com>
-In-Reply-To: <DB31E56A-42D7-4B62-83CD-3D96AC4A4C20@oracle.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Mon, 9 Jan 2023 10:26:26 -0500
-Message-ID: <CAFX2Jf=Q-vuFGAeGKQT7mxhvZTGSZBjDs6YWvWE6cwTFenW8Ow@mail.gmail.com>
-Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
- (commit 7fd461c47)
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <167279203612.13974.15063003557908413815@noble.neil.brown.name>
+ <7a98c3e70bae70c44418ce8ac4b84f387b4ff850.camel@kernel.org>
+ <167279409373.13974.16504090316814568327@noble.neil.brown.name>
+ <210f08ae5f0ba47c289293981f490fca848dd2ed.camel@kernel.org>
+ <167279837032.13974.12155714770736077636@noble.neil.brown.name>
+ <167295936597.13974.7568769884598065471@noble.neil.brown.name>
+ <46f047159da42dadaca576e0a87a622539609730.camel@kernel.org> <167297692611.13974.5805041718280562542@noble.neil.brown.name>
+In-Reply-To: <167297692611.13974.5805041718280562542@noble.neil.brown.name>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Mon, 9 Jan 2023 10:33:58 -0500
+Message-ID: <CAN-5tyGRkKB-=9-HFXkDSu+--ghBNEfmfXO8yD7=2bo=aH4fhA@mail.gmail.com>
+Subject: Re: [PATCH] NFS: Handle missing attributes in OPEN reply
+To:     NeilBrown <neilb@suse.de>
+Cc:     Trond Myklebust <trondmy@kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 10:12 AM Chuck Lever III <chuck.lever@oracle.com> wr=
-ote:
+On Thu, Jan 5, 2023 at 10:48 PM NeilBrown <neilb@suse.de> wrote:
 >
->
->
-> > On Jan 9, 2023, at 9:44 AM, Trond Myklebust <trondmy@hammerspace.com> w=
-rote:
+> On Fri, 06 Jan 2023, Trond Myklebust wrote:
+> > On Fri, 2023-01-06 at 09:56 +1100, NeilBrown wrote:
+> > > On Wed, 04 Jan 2023, NeilBrown wrote:
+> > > > On Wed, 04 Jan 2023, Trond Myklebust wrote:
+> > > > > On Wed, 2023-01-04 at 12:01 +1100, NeilBrown wrote:
+> > > > > > On Wed, 04 Jan 2023, Trond Myklebust wrote:
+> > > > > > >
+> > > > > > >
+> > > > > > > If the server starts to reply NFS4ERR_STALE to GETATTR
+> > > > > > > requests,
+> > > > > > > why do
+> > > > > > > we care about stateid values? Just mark the inode as stale
+> > > > > > > and drop
+> > > > > > > it
+> > > > > > > on the floor.
+> > > > > >
+> > > > > > We have a valid state from the server - we really shouldn't
+> > > > > > just
+> > > > > > ignore
+> > > > > > it.
+> > > > > >
+> > > > > > Maybe it would be OK to mark the inode stale.  I don't know if
+> > > > > > various
+> > > > > > retry loops abort properly when the inode is stale.
+> > > > >
+> > > > > Yes, they are all supposed to do that. Otherwise we would end up
+> > > > > looping forever in close(), for instance, since the PUTFH,
+> > > > > GETATTR and
+> > > > > CLOSE can all return NFS4ERR_STALE as well.
+> > > >
+> > > > To mark the inode as STALE we still need to find the inode, and
+> > > > that is
+> > > > the key bit missing in the current code.  Once we find the inode,
+> > > > we
+> > > > could mark it stale, but maybe some other error resulted in the
+> > > > missing
+> > > > GETATTR...
+> > > >
+> > > > It might make sense to put the new code in _nfs4_proc_open() after
+> > > > the
+> > > > explicit nfs4_proc_getattr() fails.  We would need to find the
+> > > > inode
+> > > > given only the filehandle.  Is there any easy way to do that?
+> > > >
+> > > > Thanks,
+> > > > NeilBrown
+> > > >
+> > >
+> > > I couldn't see a consistent pattern to follow for when to mark an
+> > > inode
+> > > as stale.  Do this, on top of the previous patch, seem reasonable?
+> > >
+> > > Thanks,
+> > > NeilBrown
+> > >
+> > >
+> > >
+> > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > > index b441b1d14a50..04497cb42154 100644
+> > > --- a/fs/nfs/nfs4proc.c
+> > > +++ b/fs/nfs/nfs4proc.c
+> > > @@ -489,6 +489,8 @@ static int nfs4_do_handle_exception(struct
+> > > nfs_server *server,
+> > >                 case -ESTALE:
+> > >                         if (inode != NULL && S_ISREG(inode->i_mode))
+> > >                                 pnfs_destroy_layout(NFS_I(inode));
+> > > +                       if (inode)
+> > > +                               nfs_set_inode_stale(inode);
 > >
+> > This is normally dealt with in the generic code inside
+> > nfs_revalidate_inode(). There should be no need to duplicate it here.
 > >
+> > >                         break;
+> > >                 case -NFS4ERR_DELEG_REVOKED:
+> > >                 case -NFS4ERR_ADMIN_REVOKED:
+> > > @@ -2713,8 +2715,12 @@ static int _nfs4_proc_open(struct
+> > > nfs4_opendata *data,
+> > >                         return status;
+> > >         }
+> > >         if (!(o_res->f_attr->valid & NFS_ATTR_FATTR)) {
+> > > +               struct inode *inode = nfs4_get_inode_by_stateid(
+> > > +                       &data->o_res.stateid,
+> > > +                       data->owner);
 > >
-> >> On Jan 9, 2023, at 03:42, Krzysztof Kozlowski <krzysztof.kozlowski@lin=
-aro.org> wrote:
-> >>
-> >> On 09/01/2023 09:14, Krzysztof Kozlowski wrote:
-> >>> On 08/01/2023 18:09, Trond Myklebust wrote:
-> >>>> Hi Krzysztof,
-> >>>>
-> >>>>> On Jan 8, 2023, at 08:25, Krzysztof Kozlowski <krzysztof.kozlowski@=
-linaro.org> wrote:
-> >>>>>
-> >>>>> [You don't often get email from krzysztof.kozlowski@linaro.org. Lea=
-rn why this is important at https://aka.ms/LearnAboutSenderIdentification]
-> >>>>>
-> >>>>> On 07/01/2023 16:44, Krzysztof Kozlowski wrote:
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> Bisect identified commit 7fd461c47c6c ("NFSv4.2: Change the defaul=
-t
-> >>>>>> KConfig value for READ_PLUS") as one leading to NULL pointer excep=
-tion
-> >>>>>> when mounting NFS root on NFSv4 client:
-> >>>>>>
-> >>>>>> [   25.739003] systemd[1]: Set hostname to <odroidhc1>.
-> >>>>>> [   25.771714] systemd[1]: Failed to bump fs.file-max, ignoring: I=
-nvalid
-> >>>>>> argument
-> >>>>>> [   26.199478] 8<--- cut here ---
-> >>>>>> [   26.201366] Unable to handle kernel NULL pointer dereference at
-> >>>>>> virtual address 00000004
-> >>>>>> ...
-> >>>>>> [   26.555522]  mmiocpy from xdr_inline_decode+0xec/0x16c
-> >>>>>> [   26.560628]  xdr_inline_decode from nfs4_xdr_dec_read_plus+0x17=
-8/0x358
-> >>>>>> [   26.567130]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x30=
-4
-> >>>>>>
-> >>>>>> Full OOPS attached. Full log available here:
-> >>>>>> https://krzk.eu/#/builders/21/builds/3901/steps/15/logs/serial0
-> >>>>>>
-> >>>>>> Disabling NFS_V4_2_READ_PLUS fixes the issue, so obviously the com=
-mit is
-> >>>>>> not the cause, but rather making it default caused the regression.
-> >>>>>>
-> >>>>>> I did not make the bisect yet which commit introduced it, if every
-> >>>>>> config includes NFS_V4_2_READ_PLUS.
-> >>>>>
-> >>>>> When every kernel is built with NFS_V4_2_READ_PLUS, bisect pointed =
-to:
-> >>>>> d3b00a802c84 ("NFS: Replace the READ_PLUS decoding code")
-> >>>>>
-> >>>>> commit d3b00a802c845a6021148ce2e669b5a0b5729959
-> >>>>> Author: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >>>>> Date:   Thu Jul 21 14:21:34 2022 -0400
-> >>>>>
-> >>>>>  NFS: Replace the READ_PLUS decoding code
-> >>>>>
-> >>>>>  We now take a 2-step process that allows us to place data and hole
-> >>>>>  segments directly at their final position in the xdr_stream withou=
-t
-> >>>>>  needing to do a bunch of redundant copies to expand holes. Due to =
-the
-> >>>>>  variable lengths of each segment, the xdr metadata might cross pag=
-e
-> >>>>>  boundaries which I account for by setting a small scratch buffer s=
-o
-> >>>>>  xdr_inline_decode() won't fail.
-> >>>>>
-> >>>>>  Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >>>>>  Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >>>>>
-> >>>>> With a trace:
-> >>>>> [   25.898462] systemd[1]: Set hostname to <odroidhc1>.
-> >>>>> [   25.933746] systemd[1]: Failed to bump fs.file-max, ignoring: In=
-valid
-> >>>>> argument
-> >>>>> [   25.986237] random: crng init done
-> >>>>> [   26.264564] 8<--- cut here ---
-> >>>>> [   26.266823] Unable to handle kernel NULL pointer dereference at
-> >>>>> virtual address 00000fe8
-> >>>>> ...
-> >>>>> [   26.597263]  nfs4_xdr_dec_read_plus from call_decode+0x204/0x304
-> >>>>> [   26.603222]  call_decode from __rpc_execute+0xd0/0x890
-> >>>>> [   26.608328]  __rpc_execute from rpc_async_schedule+0x1c/0x34
-> >>>>> [   26.613960]  rpc_async_schedule from process_one_work+0x294/0x79=
-0
-> >>>>> [   26.620030]  process_one_work from worker_thread+0x54/0x518
-> >>>>> [   26.625570]  worker_thread from kthread+0xf4/0x128
-> >>>>> [   26.630336]  kthread from ret_from_fork+0x14/0x2c
-> >>>>>
-> >>>>
-> >>>> Is this test being run against a 6.2-rc2 server, or is it an older s=
-erver platform? We know there were bugs in older server implementations, so=
- the question is whether this might be a problem with handling a bad/corrup=
-t RPC reply from the server, or whether it is happening against code that i=
-s supposed to have been fixed?
-> >>>
-> >>> I would say that buggy server should not cause NULL pointer dereferen=
-ces
-> >>> on the client. Otherwise this is a perfect recipe for a rogue server =
-in
-> >>> the network to start crashing clients and running exploits... Imagine=
- a
-> >>> compromised machine (through some other means) in a local company
-> >>> network running now a server with NFS share "HR salary data" or "HR
-> >>> planned layoffs", where unsuspected people in that network access it
-> >>> leading to exploit of NFS code on their side...
-> >>>
-> >>> Server is Raspberry Pi 3 kernel: 5.10.92-2-rpi-legacy-ARCH
-> >>>
-> >>> Which points that it is not latest stable, so anyway I need to update=
-.
-> >>
-> >> I updated the kernel to 5.15.84-3-rpi-ARCH which is pretty close to
-> >> latest stable and I can reproduce the issue. Therefore:
-> >> 1. It is visible on two stable (one new, one old) kernels on the serve=
-r,
-> >> 2. Buggy or rogue server should not cause NULL pointer on remote devic=
-es...
-> >>
-> >
-> > The nfsd READ_PLUS code is borked up and until 6.2-rc1. I thought we ha=
-d a server option to disable that code, but it seems as if that is not the =
-case.
-> > Chuck + Anna, can we please send a stable patch to rip out that code al=
-together from all the older versions? If we want to enable READ_PLUS by def=
-ault on the client, then we cannot do so if the majority of NFSv4.2 servers=
- out there are running a borked implementation.
-> >
-> > I do agree that we cannot allow buggy
+> > There shouldn't be a need to go looking for open descriptors here,
+> > because they will hit ESTALE at some point later anyway.
 >
-> or malicious, or non-Linux,
+> The problem is that they don't hit ESTALE later.  Unless we update our
+> stored stateid with the result of the OPEN, we can use the old stateid,
+> and get the corresponding error.
 >
+> The only way to avoid the infinite loop is to either mark the inode as
+> stale, or update the state-id.  For either of those we need to find the
+> inode.  We don't have fileid so we cannot use iget.  We do have file
+> handle and state-id.
 >
-> > servers to cause memory corruption in the client code, so I propose tha=
-t we revert the Kconfig default setting change again until both the client =
-code and the legacy servers have been fixed.
->
-> I stand ready to receive and apply server-side fixes, as you suggested.
->
-> However IMO it would be most responsible to go straight for a client code=
- fix. The Kconfig setting is a red herring (as delicious as that might soun=
-d). Any thoughts about how difficult that fix might be?
+> Maybe you are saying this is a server bug that the client cannot be
+> expect to cope with at all, and that an infinite loop is a valid client
+> response to this particular server behaviour.  In that case, I guess no
+> patch is needed.
 
-I'm wondering about how hard the fix might be as well, since it could
-be a legitimate bug or some error checking that I've overlooked. I've
-gotten as far as installing a 5.15 server in my testing setup, so
-we'll see if I'm able to reproduce the crash this morning.
-
-Anna
+I'm not arguing that the server should do something else. But I would
+like to talk about it from the spec perspective. When PUTFH+WRITE is
+sent to the server (with an incorrect stateid) and it's processing the
+WRITE compound (as the spec doesn't require the server to validate a
+filehandle on PUTFH. The spec says PUTFH is to "set" the correct
+filehandle), the server is dealing with 2 errors that it can possibly
+return to the client ERR_STALE and ERR_OLD_STATEID. There is nothing
+in the spec that speaks to the orders of errors to be returned. Of
+course I'd like to say that the server should prioritize ERR_STALE
+over ERR_OLD_STATEID (simply because it's a MUST in the spec and
+ERR_OLD_STATEIDs are written as "rules").
 
 >
->
-> --
-> Chuck Lever
+> NeilBrown
 >
 >
->
+> >
+> > If we're going to change anything, I'd rather see us return -EACCES and
+> > -ESTALE from the decode_access() and decode_getfattr() calls in
+> > nfs4_xdr_dec_open() (and only those errors from those two calls!) so
+> > that we can skip the unnecessary getattr call here.
+> >
+> > In fact, the only case that this extra getattr should be trying to
+> > address is the one where the server returns NFS4ERR_DELAY to either the
+> > decode_access() or the decode_getfattr() calls specifically, and where
+> > we therefore don't want to replay the entire open call.
+> >
+> > >                 nfs4_sequence_free_slot(&o_res->seq_res);
+> > > -               nfs4_proc_getattr(server, &o_res->fh, o_res->f_attr,
+> > > NULL);
+> > > +               nfs4_proc_getattr(server, &o_res->fh, o_res->f_attr,
+> > > inode);
+> > > +               iput(inode);
+> > >         }
+> > >         return 0;
+> > >  }
+> > > @@ -4335,6 +4341,7 @@ int nfs4_proc_getattr(struct nfs_server
+> > > *server, struct nfs_fh *fhandle,
+> > >  {
+> > >         struct nfs4_exception exception = {
+> > >                 .interruptible = true,
+> > > +               .inode = inode,
+> > >         };
+> > >         int err;
+> > >         do {
+> >
+> > --
+> > Trond Myklebust
+> > Linux NFS client maintainer, Hammerspace
+> > trond.myklebust@hammerspace.com
+> >
+> >
+> >
