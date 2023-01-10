@@ -2,49 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D59FE6642AA
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jan 2023 15:01:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CD586642AB
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jan 2023 15:02:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231532AbjAJOBy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Jan 2023 09:01:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54606 "EHLO
+        id S232395AbjAJOBz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Jan 2023 09:01:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232395AbjAJOBX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Jan 2023 09:01:23 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93FDD5015A
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 06:01:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F67161277
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 14:01:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4378DC433D2;
-        Tue, 10 Jan 2023 14:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673359281;
-        bh=TlJSruzTz9G3o5E6eqJdxRfSFEFgjfhyCdsLqNytZZ8=;
-        h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=MgpDoMYj3wY70b521rwsTxAlOYp5OtC2/2pBL96ejYUrKCdAFOMVpIDvFM0d/fYKD
-         SMf3/2Ljhx8hsAC/IDC95RadFMRMhCyLOBfg7w9l/EH92Ux4Rp/7MEGAelTnhYhNRr
-         UMoqUPEJJhEqQRJaRrH6Cw6L5ENLyPEp6wotSColm/EV6JHb1jFH87o/crkt+yFUNQ
-         qSObdzPdM3apwK31Se37bgzffllHqlA1qqI/SVX+0E4mdy/GjrRSNqgdXUsWhuVHgE
-         llTn3Cntrp+MGwOvccxzioyynrBhReNt4xxs7DX6Hkob8FtRihCh3uhstknr37+1ol
-         OmYg2MG9BikBg==
-Message-ID: <fd1a0ac033f46229fadf03613d0664c2e817b066.camel@kernel.org>
-Subject: Re: [PATCH v1 01/27] SUNRPC: Clean up svcauth_gss_release()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
-Date:   Tue, 10 Jan 2023 09:01:19 -0500
-In-Reply-To: <167319531054.7490.10405247832294580026.stgit@bazille.1015granger.net>
-References: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
-         <167319531054.7490.10405247832294580026.stgit@bazille.1015granger.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
+        with ESMTP id S238169AbjAJOBh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Jan 2023 09:01:37 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 313DE50F42
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 06:01:34 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id az20so9769154ejc.1
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 06:01:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=JzWWQcM/6ZK4mUtbCni76L3BUamHwnWcBEc3Z4yzaR4=;
+        b=FRC8bnT9PhVBffyy+z3WKt8/ww4XpWjC51YJaRZcWnyLJV70pKvDQ70pXmVsMbQsc7
+         micYKmt8Mgvu8oMdjrRIdn22wIQB++QjS8ve3LGme/DJdnP2cUyIcUrUAK7Yclp1REQx
+         DDPe4TGYRtu62URScyXs1TAXdzjZAfrQOOKdA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JzWWQcM/6ZK4mUtbCni76L3BUamHwnWcBEc3Z4yzaR4=;
+        b=5DzbJr45YH6dFZcDthuCqbeABnETOIp1VRaa+99rerIsqWQJWTNNIHYCIhD7LDf+5L
+         6s5ENkeVLhT40Dio3mk2u86a5+zj69FWe0wemtqZqbRtWltDkAZX4iEBqpTehH+sOwMB
+         PUq/qnRvBF/vRl9kV7miECc1//GMfFo0eN0ARoqZzQunxH5AVjK3smX852yfNRlAOr6Y
+         lSGc2mMVw81B+uTghlh02lPLKOLctcPr0Tq5K2qu5KXR0kB5mrj/24RJXHKlDFc3BC19
+         g+G+HteWX6XI6HRNQpS5ClhUQLhPJp9Uwi4aIt0iPKo8lTNWhyCpz4+3S5OXEqYerJKt
+         oc6w==
+X-Gm-Message-State: AFqh2kqr/3N1X8btSCvt/Frvq3W9Rgw8neuTsEZ2bi60iv7lOi0vEQYB
+        Q7C3yg70fAV/MKcPFgbhHaaelEWce+UrmgZKWMvroA==
+X-Google-Smtp-Source: AMrXdXvdCffT3vJCQc33/qFXRcG/AZF0bQwtBbIiDx0jNGAiZTGM6+sW92UGW3kfjGmzU+rVtbfHlb/BV3WCzZHRNX8=
+X-Received: by 2002:a17:907:a50b:b0:84d:114d:b9b with SMTP id
+ vr11-20020a170907a50b00b0084d114d0b9bmr1140926ejc.356.1673359292762; Tue, 10
+ Jan 2023 06:01:32 -0800 (PST)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+References: <20230110104501.11722-1-jlayton@kernel.org>
+In-Reply-To: <20230110104501.11722-1-jlayton@kernel.org>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 10 Jan 2023 15:01:21 +0100
+Message-ID: <CAJfpegsgufA-+KAShjCfAuyFaKmAGKVCto=fCYOMbPhu33MeVg@mail.gmail.com>
+Subject: Re: [PATCH] fs: remove locks_inode
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        linux-afs@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,97 +69,15 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, 2023-01-08 at 11:28 -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> Now that upper layers use an xdr_stream to track the construction
-> of each RPC Reply message, resbuf->len is kept up-to-date
-> automatically. There's no need to recompute it in svc_gss_release().
->=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/auth_gss/svcauth_gss.c |   30 ++++++++++++++++--------------
->  1 file changed, 16 insertions(+), 14 deletions(-)
->=20
-> diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svca=
-uth_gss.c
-> index 2e603358fae1..4a576ed7aa32 100644
-> --- a/net/sunrpc/auth_gss/svcauth_gss.c
-> +++ b/net/sunrpc/auth_gss/svcauth_gss.c
-> @@ -969,12 +969,6 @@ svcauth_gss_unwrap_integ(struct svc_rqst *rqstp, u32=
- seq, struct gss_ctx *ctx)
->  	return -EINVAL;
->  }
-> =20
-> -static inline int
-> -total_buf_len(struct xdr_buf *buf)
-> -{
-> -	return buf->head[0].iov_len + buf->page_len + buf->tail[0].iov_len;
-> -}
-> -
->  /*
->   * RFC 2203, Section 5.3.2.3
->   *
-> @@ -1882,14 +1876,25 @@ svcauth_gss_wrap_resp_priv(struct svc_rqst *rqstp=
-)
->  	return 0;
->  }
-> =20
-> +/**
-> + * svcauth_gss_release - Wrap payload and release resources
-> + * @rqstp: RPC transaction context
-> + *
-> + * Return values:
-> + *    %0: the Reply is ready to be sent
-> + *    %-ENOMEM: failed to allocate memory
-> + *    %-EINVAL: encoding error
-> + *
-> + * XXX: These return values do not match the return values documented
-> + *      for the auth_ops ->release method in linux/sunrpc/svcauth.h.
+On Tue, 10 Jan 2023 at 11:45, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> locks_inode was turned into a wrapper around file_inode in de2a4a501e71
+> (Partially revert "locks: fix file locking on overlayfs"). Finish
+> replacing locks_inode invocations everywhere with file_inode.
+>
+> Cc: Miklos Szeredi <mszeredi@redhat.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-As an aside...
+Makes sense.
 
-It looks like the only place ->release is called is in svc_authorise,
-and its callers either ignore the return, or just test whether it
-succeeded (returned 0). If it fails then it looks like the xprt is
-closed.
-
-The actual return code doesn't matter at all. We could make ->release a
-bool return to make that clear.
-
-That's not directly related to this set though.
-
-
->  static int
->  svcauth_gss_release(struct svc_rqst *rqstp)
->  {
-> -	struct gss_svc_data *gsd =3D (struct gss_svc_data *)rqstp->rq_auth_data=
-;
-> -	struct rpc_gss_wire_cred *gc;
-> -	struct xdr_buf *resbuf =3D &rqstp->rq_res;
-> -	int stat =3D -EINVAL;
->  	struct sunrpc_net *sn =3D net_generic(SVC_NET(rqstp), sunrpc_net_id);
-> +	struct gss_svc_data *gsd =3D rqstp->rq_auth_data;
-> +	struct rpc_gss_wire_cred *gc;
-> +	int stat;
-> =20
->  	if (!gsd)
->  		goto out;
-> @@ -1899,10 +1904,7 @@ svcauth_gss_release(struct svc_rqst *rqstp)
->  	/* Release can be called twice, but we only wrap once. */
->  	if (gsd->verf_start =3D=3D NULL)
->  		goto out;
-> -	/* normally not set till svc_send, but we need it here: */
-> -	/* XXX: what for?  Do we mess it up the moment we call svc_putu32
-> -	 * or whatever? */
-> -	resbuf->len =3D total_buf_len(resbuf);
-> +
->  	switch (gc->gc_svc) {
->  	case RPC_GSS_SVC_NONE:
->  		break;
->=20
->=20
-
-The patch itself looks fine.
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Acked-by: Miklos Szeredi <mszeredi@redhat.com>
