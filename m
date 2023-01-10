@@ -2,173 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3055E664B41
-	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jan 2023 19:40:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A09EA664BA8
+	for <lists+linux-nfs@lfdr.de>; Tue, 10 Jan 2023 19:53:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239343AbjAJSkh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Jan 2023 13:40:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54594 "EHLO
+        id S238417AbjAJSxA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Jan 2023 13:53:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239568AbjAJSkH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Jan 2023 13:40:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CBDCA703F
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 10:34:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 35184B81902
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 18:34:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 777DDC433F1;
-        Tue, 10 Jan 2023 18:34:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673375674;
-        bh=n7qLatYfoK7NcumjlFltWyeNBhy3pnV3riM26A/HbUc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=oHmM/7d++18XJZUx4XfOb6WTx9vQldGgT9gnByiYQHaQwAeR7iElMNfnlg9w5Q0PO
-         DbGtI7yg/xrqpvKkX2UNLmiYg2MoOhkrsa77ALCT4pwdTETKg1Aye4k+Xi2oj05mBV
-         vowrk0j63Q/NTVBB86bWI4D9IjWG8UW7SfkhXlP21ofB0zH7d6YHaOVxY7RvvdjOsS
-         /m9978V32vQg8n8jDk9ylTiUAf+BZFnulQzqm2/2tHiikuQpKm1Mb8Y04kj5zu4lF0
-         7UPgWGJRNFeTP7LhHJc6ckIBNCzn9AN7ZQH3FDG3k1wpQzg4/7xLAZHmDANOPgiruA
-         19AZAmGTbpb8Q==
-Message-ID: <5e34288720627d2a09ae53986780b2d293a54eea.camel@kernel.org>
-Subject: Re: [PATCH 1/1] NFSD: fix WARN_ON_ONCE in __queue_delayed_work
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>,
-        Dai Ngo <dai.ngo@oracle.com>
-Cc:     Mike Galbraith <efault@gmx.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Tue, 10 Jan 2023 13:34:33 -0500
-In-Reply-To: <8C3345FB-6EDF-411A-B942-5AFA03A89BA2@oracle.com>
-References: <1673333310-24837-1-git-send-email-dai.ngo@oracle.com>
-         <57dc06d57b4b643b4bf04daf28acca202c9f7a85.camel@kernel.org>
-         <71672c07-5e53-31e6-14b1-e067fd56df57@oracle.com>
-         <8C3345FB-6EDF-411A-B942-5AFA03A89BA2@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
+        with ESMTP id S239743AbjAJSwL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Jan 2023 13:52:11 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 977395564D
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 10:46:45 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id m6-20020a9d7e86000000b0066ec505ae93so7507132otp.9
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 10:46:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=DxCLd5eKTaBauVbpS1dHjWWTZQ+FKdga7/8xoNKcAGU=;
+        b=P/vF4FTTr3/WvPABBq7MV2Hqs08U7w+zE6E4jdHMGvkJM2wRq+XsqP5hsvSOB6HZ8n
+         6IYREVH/j5dtM0Mn/080bQrT2rfTZj0QPffwFMdDpMdLhspypdg00mA0dJrjOl7a8fNy
+         kHLoE5x3QBORsHzzSHPabDyTh1K+KP6M00fkgYpIoPEwQkfgEGK9aZdQbDJF3FHi4vDw
+         L1QlM1kv8vYaKZef8wJ2xWflZtRsIvNQ0WZ/cda6V7rQJ6L2+te04hm0Vm4Qx4rQe0LB
+         DzTgR35inD7PRwgDlRNWDq6Yz2LgD03+uyRsa+wLkO/6BUUWPFgPC0BmFaPImoPdts+U
+         zssQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DxCLd5eKTaBauVbpS1dHjWWTZQ+FKdga7/8xoNKcAGU=;
+        b=nvQWdf03svBhXFU6MTr4vo8+COiwGyAXQju3WfOGGwzFZBImyoCQZfbVRAdVNecq1r
+         E15MoV2fPS7FVhqInFkl7KZU/JBBBvgpFyWojwyEItMTHt6iis9Px3yuEJTdmjBfwtaV
+         lJlGXgaJhGVlxZoKE87N4ZMvqu5bXgpVFy+FNPN4gl3PHdhpjF2+BUGCx7or8ZviVB7N
+         dBSsd2eX+WX/CZiPCftgmSvSvn3DT0bacZl0NoqOBmEZyu3hXGyQ5afz2B1Z0RYHRVuS
+         /cFVCIzCTdNkcOUp/orH7456gOOT0yteM/D0vrY+clOkLekI2ZGe+9Ej9YidPLlApfFd
+         1qaQ==
+X-Gm-Message-State: AFqh2kqRQ/AB02BKLhbGcR1axtafRABN0vNGQEvQ/ARfcvDke8WgNzc/
+        L53dnu6koA9QmKRg3YWrA0glxOiEY0E=
+X-Google-Smtp-Source: AMrXdXssi0B8lXqOkCVy8sYOQBgDxoDFPwxy8p8AayKgFhrJzWwcNil8NSYmCO1cJLt9UWXAee7fbQ==
+X-Received: by 2002:a9d:7341:0:b0:66d:c9f6:5528 with SMTP id l1-20020a9d7341000000b0066dc9f65528mr34238992otk.24.1673376404399;
+        Tue, 10 Jan 2023 10:46:44 -0800 (PST)
+Received: from localhost.localdomain (cpe-24-28-172-218.elp.res.rr.com. [24.28.172.218])
+        by smtp.gmail.com with ESMTPSA id t11-20020a9d590b000000b00677714a440fsm6438775oth.81.2023.01.10.10.46.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jan 2023 10:46:43 -0800 (PST)
+From:   Jorge Mora <jmora1300@gmail.com>
+X-Google-Original-From: Jorge Mora <mora@netapp.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     trond.myklebust@hammerspace.com, Anna.Schumaker@netapp.com
+Subject: [PATCH v1 0/2] add support for IO_ADVISE
+Date:   Tue, 10 Jan 2023 11:46:39 -0700
+Message-Id: <20230110184641.13334-1-mora@netapp.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-01-10 at 18:17 +0000, Chuck Lever III wrote:
->=20
-> > On Jan 10, 2023, at 12:33 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
-> >=20
-> >=20
-> > On 1/10/23 2:30 AM, Jeff Layton wrote:
-> > > On Mon, 2023-01-09 at 22:48 -0800, Dai Ngo wrote:
-> > > > Currently nfsd4_state_shrinker_worker can be schduled multiple time=
-s
-> > > > from nfsd4_state_shrinker_count when memory is low. This causes
-> > > > the WARN_ON_ONCE in __queue_delayed_work to trigger.
-> > > >=20
-> > > > This patch allows only one instance of nfsd4_state_shrinker_worker
-> > > > at a time using the nfsd_shrinker_active flag, protected by the
-> > > > client_lock.
-> > > >=20
-> > > > Replace mod_delayed_work with queue_delayed_work since we
-> > > > don't expect to modify the delay of any pending work.
-> > > >=20
-> > > > Fixes: 44df6f439a17 ("NFSD: add delegation reaper to react to low m=
-emory condition")
-> > > > Reported-by: Mike Galbraith <efault@gmx.de>
-> > > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> > > > ---
-> > > >  fs/nfsd/netns.h     |  1 +
-> > > >  fs/nfsd/nfs4state.c | 16 ++++++++++++++--
-> > > >  2 files changed, 15 insertions(+), 2 deletions(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> > > > index 8c854ba3285b..801d70926442 100644
-> > > > --- a/fs/nfsd/netns.h
-> > > > +++ b/fs/nfsd/netns.h
-> > > > @@ -196,6 +196,7 @@ struct nfsd_net {
-> > > >  	atomic_t		nfsd_courtesy_clients;
-> > > >  	struct shrinker		nfsd_client_shrinker;
-> > > >  	struct delayed_work	nfsd_shrinker_work;
-> > > > +	bool			nfsd_shrinker_active;
-> > > >  };
-> > > >    /* Simple check to find out if a given net was properly initiali=
-zed */
-> > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > index ee56c9466304..e00551af6a11 100644
-> > > > --- a/fs/nfsd/nfs4state.c
-> > > > +++ b/fs/nfsd/nfs4state.c
-> > > > @@ -4407,11 +4407,20 @@ nfsd4_state_shrinker_count(struct shrinker =
-*shrink, struct shrink_control *sc)
-> > > >  	struct nfsd_net *nn =3D container_of(shrink,
-> > > >  			struct nfsd_net, nfsd_client_shrinker);
-> > > >  +	spin_lock(&nn->client_lock);
-> > > > +	if (nn->nfsd_shrinker_active) {
-> > > > +		spin_unlock(&nn->client_lock);
-> > > > +		return 0;
-> > > > +	}
-> > > Is this extra machinery really necessary? The bool and spinlock don't
-> > > seem to be needed. Typically there is no issue with calling
-> > > queued_delayed_work when the work is already queued. It just returns
-> > > false in that case without doing anything.
-> >=20
-> > When there are multiple calls to mod_delayed_work/queue_delayed_work
-> > we hit the WARN_ON_ONCE's in __queue_delayed_work and __queue_work if
-> > the work is queued but not execute yet.
->=20
-> The delay argument of zero is interesting. If it's set to a value
-> greater than zero, do you still see a problem?
->=20
+Adds support for using the NFS v4.2 operation IO_ADVISE to
+send client I/O access pattern hints to the server.
 
-It should be safe to call it with a delay of 0. If it's always queued
-with a delay of 0 though (and it seems to be), you could save a little
-space by using a struct work_struct instead.
+There is a one-to-one correspondence between the advice
+(POSIX_FADV_*) given in fadvise64() and the bitmap mask sent
+to the server. Any other advice given, results in just
+calling generic_fadvise().
 
-Also, I'm not sure if this is related, but where do you cancel the
-nfsd_shrinker_work before tearing down the struct nfsd_net? I'm not sure
-that would explains the problem Mike reported, but I think that needs to
-be addressed.
+The bitmap mask given by the server reply is just ignored
+since the fadvise64() returns 0 on success. If server
+replies with more than one bitmap word, only the first word
+is stored on the nfs42_io_advise_res struct and all other
+words are ignored.
 
->=20
-> > This problem was reported by Mike. I initially tried with only the
-> > bool but that was not enough that was why the spinlock was added.
-> > Mike verified that the patch fixed the problem.
-> >=20
-> > -Dai
-> >=20
-> > >=20
-> > > >  	count =3D atomic_read(&nn->nfsd_courtesy_clients);
-> > > >  	if (!count)
-> > > >  		count =3D atomic_long_read(&num_delegations);
-> > > > -	if (count)
-> > > > -		mod_delayed_work(laundry_wq, &nn->nfsd_shrinker_work, 0);
-> > > > +	if (count) {
-> > > > +		nn->nfsd_shrinker_active =3D true;
-> > > > +		spin_unlock(&nn->client_lock);
-> > > > +		queue_delayed_work(laundry_wq, &nn->nfsd_shrinker_work, 0);
-> > > > +	} else
-> > > > +		spin_unlock(&nn->client_lock);
-> > > >  	return (unsigned long)count;
-> > > >  }
-> > > >  @@ -6239,6 +6248,9 @@ nfsd4_state_shrinker_worker(struct work_stru=
-ct *work)
-> > > >    	courtesy_client_reaper(nn);
-> > > >  	deleg_reaper(nn);
-> > > > +	spin_lock(&nn->client_lock);
-> > > > +	nn->nfsd_shrinker_active =3D 0;
-> > > > +	spin_unlock(&nn->client_lock);
-> > > >  }
-> > > >    static inline __be32 nfs4_check_fh(struct svc_fh *fhp, struct nf=
-s4_stid *stp)
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
+Added trace point (nfs4_io_advise) for this operation:
+nfs4_io_advise: error=0 (OK) fileid=00:32:4217220 \
+  fhandle=0x4a271991 stateid=0:0x30b83748 offset=0 \
+  count=200 arg_hints=SEQUENTIAL res_hints=SEQUENTIAL
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Jorge Mora (2):
+  NFS: add IO_ADVISE operation
+  NFSv4.2 add tracepoint to IO_ADVISE
+
+ fs/nfs/nfs42.h            |  1 +
+ fs/nfs/nfs42proc.c        | 68 +++++++++++++++++++++++++++++++
+ fs/nfs/nfs42xdr.c         | 84 +++++++++++++++++++++++++++++++++++++++
+ fs/nfs/nfs4file.c         | 37 +++++++++++++++++
+ fs/nfs/nfs4proc.c         |  1 +
+ fs/nfs/nfs4trace.h        | 75 ++++++++++++++++++++++++++++++++++
+ fs/nfs/nfs4xdr.c          |  1 +
+ include/linux/nfs4.h      |  1 +
+ include/linux/nfs_fs_sb.h |  1 +
+ include/linux/nfs_xdr.h   | 28 +++++++++++++
+ 10 files changed, 297 insertions(+)
+
+-- 
+2.31.1
+
