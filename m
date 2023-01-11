@@ -2,58 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1258665D7F
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 15:17:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95504665E25
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 15:39:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238873AbjAKORe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Jan 2023 09:17:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
+        id S231436AbjAKOix (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Jan 2023 09:38:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239115AbjAKORI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 09:17:08 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D8B1CFE3
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 06:16:39 -0800 (PST)
+        with ESMTP id S229672AbjAKOiS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 09:38:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9574F373BE
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 06:34:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 6B2D6CE1B6F
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 14:16:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD32C433EF;
-        Wed, 11 Jan 2023 14:16:35 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C9328B81C01
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 14:34:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02B92C433D2;
+        Wed, 11 Jan 2023 14:34:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673446595;
-        bh=PERui+XD0jpYxYjddX0utV9jjcmZdCrLOjay0uZOE6w=;
+        s=k20201202; t=1673447662;
+        bh=JJ1AH3NyOUc993My1bfK4VE0j7GAlWIpZha51c/IZ2Q=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gAy1UK+m3wgTEfK9YsHBr6gxWL9ZdtRA559iw1ZUBFywtDhB4XGzCXysh4pGoxN+Q
-         C+4AOW1roK6ZlVw4ektlJdJtig5AuL6XTEA6ieSNmCLuIffbBjjnFDhbOJTFm6oLbW
-         lAcQqFqvEBpg5uenrhMJizFgXdlduPkDwq0azfYDR344/lQf1phg4VcwXGoqonkQu8
-         cImzQSiIKyAnqx9qxXCjiycJTvIIX/VkbCzw2+UUWP3q0cj6ZkwJnyZlNIuabrD27S
-         jer4vpvCHfWeXEUC8l9qKy2ENLIJ4KRHVEzFIuT4C8lviKu4QbfqHHJnzb89611FOf
-         Bx8wxfyReBzxQ==
-Message-ID: <499f102afcb4b018428a8d7ecce685ec564fcd18.camel@kernel.org>
-Subject: Re: [PATCH 1/1] NFSD: fix WARN_ON_ONCE in __queue_delayed_work
+        b=slRAftZ7o24wkvCv3bVhtXigDrIwCmF5GQIDUq+6ZnQyfIhY/PwYJxC0kPnqgOART
+         My+i+LdHyaf4JgUGrNAQdLBgOCPpXl+F3smUluAno/wpL77fePtzv4Jel+F8KM/xpX
+         kmxqHceS8sN1Hp6IRHAiyySZGCqN6u1nN61zqskeBuESJuaZEShLaDbK9TUn5Sei6c
+         fkWYHF+RJwAFW7eN8SsDcnGpfftIG0gy70hWE+NPbvMyHHaOeE/lJSm+BoAueL9U0x
+         G9qV5DYwshr+U7WRO/M7p/IzSLbU+iS0M2xhI9+DQl8oh2ohfF3iaT4aR1c7Msm2fN
+         OrsdELwkLSZaA==
+Message-ID: <23f1fda9f550a73182cafc140bb8dfb9af2ea874.camel@kernel.org>
+Subject: Re: [PATCH 1/1] NFSD: register/unregister of nfsd-client shrinker
+ at nfsd startup/shutdown time
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Mike Galbraith <efault@gmx.de>, dai.ngo@oracle.com,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Wed, 11 Jan 2023 09:16:33 -0500
-In-Reply-To: <69604dcf990ac19aa7c8d6b92d11c06fd1aae657.camel@kernel.org>
-References: <1673333310-24837-1-git-send-email-dai.ngo@oracle.com>
-         <57dc06d57b4b643b4bf04daf28acca202c9f7a85.camel@kernel.org>
-         <71672c07-5e53-31e6-14b1-e067fd56df57@oracle.com>
-         <8C3345FB-6EDF-411A-B942-5AFA03A89BA2@oracle.com>
-         <5e34288720627d2a09ae53986780b2d293a54eea.camel@kernel.org>
-         <42876697-ba42-c38f-219d-f760b94e5fed@oracle.com>
-         <f0f56b451287d17426defe77aee1b1240d2a1b31.camel@kernel.org>
-         <8e0cb925-9f73-720d-b402-a7204659ff7f@oracle.com>
-         <37c80eaf2f6d8a5d318e2b10e737a1c351b27427.camel@gmx.de>
-         <ce3724b88bb2987ac773057f523aa0ed2abacaed.camel@kernel.org>
-         <2067b4b4ce029ab5be982820b81241cd457ff475.camel@kernel.org>
-         <ec6593bce96f8a6a7928394f19419fb8a4725413.camel@gmx.de>
-         <fe19401301eac98927d6b4fc9fbf9c8430890751.camel@gmx.de>
-         <5f43a396afec99352bc1dd62a9119281e845c652.camel@kernel.org>
-         <69604dcf990ac19aa7c8d6b92d11c06fd1aae657.camel@kernel.org>
+To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
+        Mike Galbraith <efault@gmx.de>
+Cc:     linux-nfs@vger.kernel.org
+Date:   Wed, 11 Jan 2023 09:34:20 -0500
+In-Reply-To: <1673332991-24406-1-git-send-email-dai.ngo@oracle.com>
+References: <1673332991-24406-1-git-send-email-dai.ngo@oracle.com>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
@@ -67,341 +54,144 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-01-11 at 09:01 -0500, Jeff Layton wrote:
-> On Wed, 2023-01-11 at 07:33 -0500, Jeff Layton wrote:
-> > On Wed, 2023-01-11 at 13:15 +0100, Mike Galbraith wrote:
-> > > On Wed, 2023-01-11 at 12:19 +0100, Mike Galbraith wrote:
-> > > > On Wed, 2023-01-11 at 05:55 -0500, Jeff Layton wrote:
-> > > > > >=20
-> > > > > >=20
-> > > > > >=20
-> > > > > > It might be interesting to turn up KASAN if you're able.
-> > > >=20
-> > > > I can try that.
-> > >=20
-> > > KASAN did not squeak.
-> > >=20
-> > > > > If you still have this vmcore, it might be interesting to do the =
-pointer
-> > > > > math and find the nfsd_net structure that contains the above
-> > > > > delayed_work. Does the rest of it also seem to be corrupt?
-> > >=20
-> > > Virgin source with workqueue.c WARN_ON_ONCE() landmine.
-> > >=20
-> >=20
-> > Thanks. Mixed bag here...
-> >=20
-> >=20
-> > > crash> nfsd_net -x 0xFFFF8881114E9800
-> > > struct nfsd_net {
-> > >   cld_net =3D 0x0,
-> > >   svc_expkey_cache =3D 0xffff8881420f8a00,
-> > >   svc_export_cache =3D 0xffff8881420f8800,
-> > >   idtoname_cache =3D 0xffff8881420f9a00,
-> > >   nametoid_cache =3D 0xffff8881420f9c00,
-> > >   nfsd4_manager =3D {
-> > >     list =3D {
-> > >       next =3D 0x0,
-> > >       prev =3D 0x0
-> > >     },
-> > >     block_opens =3D 0x0
-> > >   },
-> > >   grace_ended =3D 0x0,
-> >=20
-> >=20
-> > >   boot_time =3D 0x0,
-> > >   nfsd_client_dir =3D 0x0,
-> > >   reclaim_str_hashtbl =3D 0x0,
-> > >   reclaim_str_hashtbl_size =3D 0x0,
-> > >   conf_id_hashtbl =3D 0x0,
-> > >   conf_name_tree =3D {
-> > >     rb_node =3D 0x0
-> > >   },
-> > >   unconf_id_hashtbl =3D 0x0,
-> > >   unconf_name_tree =3D {
-> > >     rb_node =3D 0x0
-> > >   },
-> > >   sessionid_hashtbl =3D 0x0,
-> > >   client_lru =3D {
-> > >     next =3D 0x0,
-> > >     prev =3D 0x0
-> > >   },
-> > >   close_lru =3D {
-> > >     next =3D 0x0,
-> > >     prev =3D 0x0
-> > >   },
-> > >   del_recall_lru =3D {
-> > >     next =3D 0x0,
-> > >     prev =3D 0x0
-> > >   },
-> > >   blocked_locks_lru =3D {
-> > >     next =3D 0x0,
-> > >     prev =3D 0x0
-> > >   },
-> >=20
-> > All of the above list_heads are zeroed out and they shouldn't be.
-> >=20
-> > >   laundromat_work =3D {
-> > >     work =3D {
-> > >       data =3D {
-> > >         counter =3D 0x0
-> > >       },
-> > >       entry =3D {
-> > >         next =3D 0x0,
-> > >         prev =3D 0x0
-> > >       },
-> > >       func =3D 0x0
-> > >     },
-> > >     timer =3D {
-> > >       entry =3D {
-> > >         next =3D 0x0,
-> > >         pprev =3D 0x0
-> > >       },
-> > >       expires =3D 0x0,
-> > >       function =3D 0x0,
-> > >       flags =3D 0x0
-> > >     },
-> > >     wq =3D 0x0,
-> > >     cpu =3D 0x0
-> > >   },
-> > >   client_lock =3D {
-> > >     {
-> > >       rlock =3D {
-> > >         raw_lock =3D {
-> > >           {
-> > >             val =3D {
-> > >               counter =3D 0x0
-> > >             },
-> > >             {
-> > >               locked =3D 0x0,
-> > >               pending =3D 0x0
-> > >             },
-> > >             {
-> > >               locked_pending =3D 0x0,
-> > >               tail =3D 0x0
-> > >             }
-> > >           }
-> > >         }
-> > >       }
-> > >     }
-> > >   },
-> > >   blocked_locks_lock =3D {
-> > >     {
-> > >       rlock =3D {
-> > >         raw_lock =3D {
-> > >           {
-> > >             val =3D {
-> > >               counter =3D 0x0
-> > >             },
-> > >             {
-> > >               locked =3D 0x0,
-> > >               pending =3D 0x0
-> > >             },
-> > >             {
-> > >               locked_pending =3D 0x0,
-> > >               tail =3D 0x0
-> > >             }
-> > >           }
-> > >         }
-> > >       }
-> > >     }
-> > >   },
-> > >   rec_file =3D 0x0,
-> > >   in_grace =3D 0x0,
-> > >   client_tracking_ops =3D 0x0,
-> > >   nfsd4_lease =3D 0x5a,
-> > >   nfsd4_grace =3D 0x5a,
-> >=20
-> > The grace and lease times look ok, oddly enough.
-> >=20
-> > >   somebody_reclaimed =3D 0x0,
-> > >   track_reclaim_completes =3D 0x0,
-> > >   nr_reclaim_complete =3D {
-> > >     counter =3D 0x0
-> > >   },
-> > >   nfsd_net_up =3D 0x0,
-> >=20
-> > nfsd_net_up is false, which means that this server isn't running (or
-> > that the memory here was scribbled over).
-> >=20
-> > >   lockd_up =3D 0x0,
-> > >   writeverf_lock =3D {
-> > >     seqcount =3D {
-> > >       seqcount =3D {
-> > >         sequence =3D 0x0
-> > >       }
-> > >     },
-> > >     lock =3D {
-> > >       {
-> > >         rlock =3D {
-> > >           raw_lock =3D {
-> > >             {
-> > >               val =3D {
-> > >                 counter =3D 0x0
-> > >               },
-> > >               {
-> > >                 locked =3D 0x0,
-> > >                 pending =3D 0x0
-> > >               },
-> > >               {
-> > >                 locked_pending =3D 0x0,
-> > >                 tail =3D 0x0
-> > >               }
-> > >             }
-> > >           }
-> > >         }
-> > >       }
-> > >     }
-> > >   },
-> > >   writeverf =3D "\000\000\000\000\000\000\000",
-> > >   max_connections =3D 0x0,
-> > >   clientid_base =3D 0x37b4ca7b,
-> > >   clientid_counter =3D 0x37b4ca7d,
-> > >   clverifier_counter =3D 0xa8ee910d,
-> > >   nfsd_serv =3D 0x0,
-> > >   keep_active =3D 0x0,
-> > >   s2s_cp_cl_id =3D 0x37b4ca7c,
-> > >   s2s_cp_stateids =3D {
-> > >     idr_rt =3D {
-> > >       xa_lock =3D {
-> > >         {
-> > >           rlock =3D {
-> > >             raw_lock =3D {
-> > >               {
-> > >                 val =3D {
-> > >                   counter =3D 0x0
-> > >                 },
-> > >                 {
-> > >                   locked =3D 0x0,
-> > >                   pending =3D 0x0
-> > >                 },
-> > >                 {
-> > >                   locked_pending =3D 0x0,
-> > >                   tail =3D 0x0
-> > >                 }
-> > >               }
-> > >             }
-> > >           }
-> > >         }
-> > >       },
-> > >       xa_flags =3D 0x0,
-> > >       xa_head =3D 0x0
-> > >     },
-> > >     idr_base =3D 0x0,
-> > >     idr_next =3D 0x0
-> > >   },
-> > >   s2s_cp_lock =3D {
-> > >     {
-> > >       rlock =3D {
-> > >         raw_lock =3D {
-> > >           {
-> > >             val =3D {
-> > >               counter =3D 0x0
-> > >             },
-> > >             {
-> > >               locked =3D 0x0,
-> > >               pending =3D 0x0
-> > >             },
-> > >             {
-> > >               locked_pending =3D 0x0,
-> > >               tail =3D 0x0
-> > >             }
-> > >           }
-> > >         }
-> > >       }
-> > >     }
-> > >   },
-> > >   nfsd_versions =3D 0x0,
-> > >   nfsd4_minorversions =3D 0x0,
-> > >   drc_hashtbl =3D 0xffff88810a2f0000,
-> > >   max_drc_entries =3D 0x14740,
-> > >   maskbits =3D 0xb,
-> > >   drc_hashsize =3D 0x800,
-> > >   num_drc_entries =3D {
-> > >     counter =3D 0x0
-> > >   },
-> > >   counter =3D {{
-> > >       lock =3D {
-> > >         raw_lock =3D {
-> > >           {
-> > >             val =3D {
-> > >               counter =3D 0x0
-> > >             },
-> > >             {
-> > >               locked =3D 0x0,
-> > >               pending =3D 0x0
-> > >             },
-> > >             {
-> > >               locked_pending =3D 0x0,
-> > >               tail =3D 0x0
-> > >             }
-> > >           }
-> > >         }
-> > >       },
-> > >       count =3D 0x0,
-> > >       list =3D {
-> > >         next =3D 0xffff888103f98dd0,
-> > >         prev =3D 0xffff8881114e9a18
-> > >       },
-> > >       counters =3D 0x607dc8402e10
-> > >     }, {
-> > >       lock =3D {
-> > >         raw_lock =3D {
-> > >           {
-> > >             val =3D {
-> > >               counter =3D 0x0
-> > >             },
-> > >             {
-> > >               locked =3D 0x0,
-> > >               pending =3D 0x0
-> > >             },
-> > >             {
-> > >               locked_pending =3D 0x0,
-> > >               tail =3D 0x0
-> > >             }
-> > >           }
-> > >         }
-> > >       },
-> > >       count =3D 0x0,
-> > >       list =3D {
-> > >         next =3D 0xffff8881114e99f0,
-> > >         prev =3D 0xffff88810b5743e0
-> > >       },
-> > >       counters =3D 0x607dc8402e14
-> > >     }},
-> > >   longest_chain =3D 0x0,
-> > >   longest_chain_cachesize =3D 0x0,
-> > >   nfsd_reply_cache_shrinker =3D {
-> > >     count_objects =3D 0xffffffffa0e4e9b0 <nfsd_reply_cache_count>,
-> > >     scan_objects =3D 0xffffffffa0e4f020 <nfsd_reply_cache_scan>,
-> >=20
-> > Shrinker pointers look ok, as does its list_head.
+On Mon, 2023-01-09 at 22:43 -0800, Dai Ngo wrote:
+> Currently the nfsd-client shrinker is registered and unregistered at
+> the time the nfsd module is loaded and unloaded. This means after the
+> nfsd service is shutdown, the nfsd-client shrinker is still registered
+> in the system. This causes the nfsd-client shrinker to be called when
+> memory is low even thought nfsd service is not running. This is also
+> true for the nfsd_reply_cache_shrinker.
 >=20
-> I think I might see what's going on here:
+> This patch moves the register/unregister of nfsd-client shrinker from
+> module load/unload time to nfsd startup/shutdown time.
 >=20
-> This struct is consistent with an nfsd_net structure that allocated and
-> had its ->init routine run on it, but that has not had nfsd started in
-> its namespace.
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 18 ++++++------------
+>  fs/nfsd/nfsctl.c    |  7 +------
+>  fs/nfsd/nfsd.h      |  6 ++----
+>  3 files changed, 9 insertions(+), 22 deletions(-)
 >=20
-> pernet structs are kzalloc'ed. The shrinker registrations and the
-> lease/grace times are set just after allocation in the ->init routine.
-> The rest of the fields are not set until nfsd is started (specifically
-> when /proc/fs/nfsd/threads is written to).
->=20
-> My guess is that Mike is doing some activity that creates new net
-> namespaces, and then once we start getting into OOM conditions the
-> shrinker ends up hitting uninitialized fields in the nfsd_net and
-> kaboom.
->=20
-> I haven't yet looked to see when this bug was introduced, but the riggith=
-t
-> fix is probably to ensure that everything important for this job is
-> initialized after the pernet ->init operation runs.
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 7b2ee535ade8..ee56c9466304 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -4421,7 +4421,7 @@ nfsd4_state_shrinker_scan(struct shrinker *shrink, =
+struct shrink_control *sc)
+>  	return SHRINK_STOP;
+>  }
+> =20
+> -int
+> +void
+>  nfsd4_init_leases_net(struct nfsd_net *nn)
+>  {
+>  	struct sysinfo si;
+> @@ -4443,16 +4443,6 @@ nfsd4_init_leases_net(struct nfsd_net *nn)
+>  	nn->nfs4_max_clients =3D max_t(int, max_clients, NFS4_CLIENTS_PER_GB);
+> =20
+>  	atomic_set(&nn->nfsd_courtesy_clients, 0);
+> -	nn->nfsd_client_shrinker.scan_objects =3D nfsd4_state_shrinker_scan;
+> -	nn->nfsd_client_shrinker.count_objects =3D nfsd4_state_shrinker_count;
+> -	nn->nfsd_client_shrinker.seeks =3D DEFAULT_SEEKS;
+> -	return register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
+> -}
+> -
+> -void
+> -nfsd4_leases_net_shutdown(struct nfsd_net *nn)
+> -{
+> -	unregister_shrinker(&nn->nfsd_client_shrinker);
+>  }
+> =20
+>  static void init_nfs4_replay(struct nfs4_replay *rp)
+> @@ -8077,7 +8067,10 @@ static int nfs4_state_create_net(struct net *net)
+>  	INIT_DELAYED_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker)=
+;
+>  	get_net(net);
+> =20
+> -	return 0;
+> +	nn->nfsd_client_shrinker.scan_objects =3D nfsd4_state_shrinker_scan;
+> +	nn->nfsd_client_shrinker.count_objects =3D nfsd4_state_shrinker_count;
+> +	nn->nfsd_client_shrinker.seeks =3D DEFAULT_SEEKS;
+> +	return register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
+> =20
+>  err_sessionid:
+>  	kfree(nn->unconf_id_hashtbl);
+> @@ -8171,6 +8164,7 @@ nfs4_state_shutdown_net(struct net *net)
+>  	struct list_head *pos, *next, reaplist;
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =20
+> +	unregister_shrinker(&nn->nfsd_client_shrinker);
+>  	cancel_delayed_work_sync(&nn->laundromat_work);
+>  	locks_end_grace(&nn->nfsd4_manager);
+> =20
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index d1e581a60480..c2577ee7ffb2 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1457,9 +1457,7 @@ static __net_init int nfsd_init_net(struct net *net=
+)
+>  		goto out_idmap_error;
+>  	nn->nfsd_versions =3D NULL;
+>  	nn->nfsd4_minorversions =3D NULL;
+> -	retval =3D nfsd4_init_leases_net(nn);
+> -	if (retval)
+> -		goto out_drc_error;
+> +	nfsd4_init_leases_net(nn);
+>  	retval =3D nfsd_reply_cache_init(nn);
+>  	if (retval)
+>  		goto out_cache_error;
+> @@ -1469,8 +1467,6 @@ static __net_init int nfsd_init_net(struct net *net=
+)
+>  	return 0;
+> =20
+>  out_cache_error:
+> -	nfsd4_leases_net_shutdown(nn);
+> -out_drc_error:
+>  	nfsd_idmap_shutdown(net);
+>  out_idmap_error:
+>  	nfsd_export_shutdown(net);
+> @@ -1486,7 +1482,6 @@ static __net_exit void nfsd_exit_net(struct net *ne=
+t)
+>  	nfsd_idmap_shutdown(net);
+>  	nfsd_export_shutdown(net);
+>  	nfsd_netns_free_versions(net_generic(net, nfsd_net_id));
+> -	nfsd4_leases_net_shutdown(nn);
+>  }
+> =20
+>  static struct pernet_operations nfsd_net_ops =3D {
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 93b42ef9ed91..fa0144a74267 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -504,8 +504,7 @@ extern void unregister_cld_notifier(void);
+>  extern void nfsd4_ssc_init_umount_work(struct nfsd_net *nn);
+>  #endif
+> =20
+> -extern int nfsd4_init_leases_net(struct nfsd_net *nn);
+> -extern void nfsd4_leases_net_shutdown(struct nfsd_net *nn);
+> +extern void nfsd4_init_leases_net(struct nfsd_net *nn);
+> =20
+>  #else /* CONFIG_NFSD_V4 */
+>  static inline int nfsd4_is_junction(struct dentry *dentry)
+> @@ -513,8 +512,7 @@ static inline int nfsd4_is_junction(struct dentry *de=
+ntry)
+>  	return 0;
+>  }
+> =20
+> -static inline int nfsd4_init_leases_net(struct nfsd_net *nn) { return 0;=
+ };
+> -static inline void nfsd4_leases_net_shutdown(struct nfsd_net *nn) {};
+> +static inline void nfsd4_init_leases_net(struct nfsd_net *nn) { };
+> =20
+>  #define register_cld_notifier() 0
+>  #define unregister_cld_notifier() do { } while(0)
 
-It might even be best to just move the shrinker registrations to occur
-when nfsd is started rather than doing it at nfsd_net initialization
-time. Obviously, if nfsd isn't running, then it'll have nothing to free,
-and it's a waste of time to register the shrinker at all.
+I suspect that this patch is probably enough to fix the problem that
+Mike is hitting. Perhaps we should mark this for stable after revising
+the changelog?
 
+Mike, would you be able to test this patch and see whether it fixes the
+shrinker oopses you've been hitting? It's also commit a77ce15ca9cb10 in
+Chuck's git tree.
 --=20
 Jeff Layton <jlayton@kernel.org>
