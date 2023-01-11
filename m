@@ -2,147 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 153E76659EB
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 12:21:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9ED96665A1E
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 12:31:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231730AbjAKLVK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Jan 2023 06:21:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
+        id S229746AbjAKLai (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Jan 2023 06:30:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232173AbjAKLU0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 06:20:26 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2566A17051
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 03:19:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
-        t=1673435984; bh=dubC0wQ7DS4idEJ+dnNiASsilSxcDXaXpxb6WdBF8dk=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
-        b=MBv4Mby+bpxfqOuFPaLwpCThKK9AKvCobIksHbTfrDRznbPCQie9EWfm2hBbBoglm
-         uMAdmHdX/U+HFyHJN7xdiBfPlzt2LNgmWSVzI0UE7efWLT8NRzNTACdA9pbitkGRWd
-         XC/qeFvzDww4ZoGz7u5R1i0EXSBk61isOGsGu5bDMGcgm5l3lAP2p81qvqefU0YRnM
-         yNfWZj1Bg5sxuAQ+DMgW4yzREHNS/T9pthD6KNamA2Xyb5DOylzY+PCAH1FTiJw30r
-         au27RxRf18OP+B9MwT+Rmop/cOcJb1sTWCDhcDBLW2mA12D7F93qH6yeXSoyFTNSb9
-         rKf0QvKOb3fEA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from homer.fritz.box ([185.146.48.212]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mirna-1oaic009MS-00ev7E; Wed, 11
- Jan 2023 12:19:44 +0100
-Message-ID: <ec6593bce96f8a6a7928394f19419fb8a4725413.camel@gmx.de>
-Subject: Re: [PATCH 1/1] NFSD: fix WARN_ON_ONCE in __queue_delayed_work
-From:   Mike Galbraith <efault@gmx.de>
-To:     Jeff Layton <jlayton@kernel.org>, dai.ngo@oracle.com,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Wed, 11 Jan 2023 12:19:43 +0100
-In-Reply-To: <2067b4b4ce029ab5be982820b81241cd457ff475.camel@kernel.org>
-References: <1673333310-24837-1-git-send-email-dai.ngo@oracle.com>
-         <57dc06d57b4b643b4bf04daf28acca202c9f7a85.camel@kernel.org>
-         <71672c07-5e53-31e6-14b1-e067fd56df57@oracle.com>
-         <8C3345FB-6EDF-411A-B942-5AFA03A89BA2@oracle.com>
-         <5e34288720627d2a09ae53986780b2d293a54eea.camel@kernel.org>
-         <42876697-ba42-c38f-219d-f760b94e5fed@oracle.com>
-         <f0f56b451287d17426defe77aee1b1240d2a1b31.camel@kernel.org>
-         <8e0cb925-9f73-720d-b402-a7204659ff7f@oracle.com>
-         <37c80eaf2f6d8a5d318e2b10e737a1c351b27427.camel@gmx.de>
-         <ce3724b88bb2987ac773057f523aa0ed2abacaed.camel@kernel.org>
-         <2067b4b4ce029ab5be982820b81241cd457ff475.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 
+        with ESMTP id S229913AbjAKLad (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 06:30:33 -0500
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE8F29585;
+        Wed, 11 Jan 2023 03:30:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/B/lUwSLDdy4TKNacqRrqVdQIO2bhHf2Dz5b7u6s8PE=; b=bcql4AlYVAJfMUZcdgk78k/Yny
+        q4YxTySo08vOzZJbXrcUsvwxHEdzxgb+Ii1pvB23J18DFaDaSxWwBDTwyZecKpMjpzQSj9cSdzwmB
+        E7FeOscjYnn+NHlMhzBHTcQyUCHILWDwxB3r/wjmCpMi1dOhxzWkdzfdVZaVaLtHEn2WfhcBSiMoJ
+        xaR4xsr0iH8jHbII4QbOQBd/z6Ffk95rwXeSJqAugvrLrUzd2S6So2J6l2wpGNMPAo+GmrZbGZYy2
+        3br39DqBSOcN8JgFwxhPiVl/2Ubg9nDcfM/BSKfMobkmQa8ifVIF5567jY8IZeuTcc+4AkuGErYD7
+        D1ThFcXw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:36052)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1pFZIf-00054b-0L; Wed, 11 Jan 2023 11:29:44 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1pFZIV-0001D1-VB; Wed, 11 Jan 2023 11:29:35 +0000
+Date:   Wed, 11 Jan 2023 11:29:35 +0000
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Steve French <stfrench@microsoft.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, cluster-devel@redhat.com,
+        linux-nfs@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        devel@lists.orangefs.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v2] filelock: move file locking definitions to separate
+ header file
+Message-ID: <Y76dnx07NGAS2jqG@shell.armlinux.org.uk>
+References: <20230105211937.1572384-1-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:cnbduTp1j/tX412NbVc8ObxHtN9HvfwsrOsj8SrLkrgldRwKYB3
- trULjkHy04Nu6uUyK/iNWsuP+BYVjzPzUb0+aIIlj56ZtFSM9omppMh8sFpXoRcJau9c2uy
- flZHuUCbXGCnY7iHHKZu1HgYObRP6ZbvRnxvEdTalsDOcnxJ4LvomIsCJWrBzrEN7/t1sNi
- Zzwlauey7vfXg3UcQ4+EA==
-UI-OutboundReport: notjunk:1;M01:P0:8p17egdBOlw=;HPn6JfCRaTM1TWuzvbu9/SJyezc
- +3ZkogOk93qFpmtEhMPIxi9h3yIHGVcr6bdUxL4IUcp2BtQvFNoUCRoST1to8BaB9ZPuAA7JW
- 58lOYSyWfB/ChUPvnLNSZNsjogKEorg7PZd9hYkfQIjduijgAmugk4QXiP5iAfdHJxv7E1Rt0
- 71K2iiyRW2cFjfxSHSerEynJGzHch8hAV24vbej9wuKrwBrakmRVyJgDoxO223SYwHlx4DeHe
- NoXejlwc6VAXL6NaCh+vOaGnnSrNzIphBEJeO1dGtsxSSvCfZr9zQt5DYqAnpjhao2G0Y1xpG
- qFbvf3Y7gU0HqtnMnT9hn1XAjHijzRAjWtOFs1T/bk9r/YSjyAtFCzm0BX1OoDOnmkadNnd4k
- I/DVPnCBriPbhafPVCC3wRIXh9lVUVwpA5NgO71I8+QjX4ndEIHBGPnAdUtDhZb+7RXq7tFEK
- /TzvAn3o7wTrudgBHw2tuZmmMd9evxhivbBQMWviR7W6EAzCxXWFuaBCVFsTdHrI1K0IwVb6R
- i0XUPdlJ46FMC+an1j2xmGnqO9d9pXje3svw81BmMZVi5XRo7C7ep8wJvmT5H0UQTNrlsRCtK
- edS1rAz5GuIvqc3QRLXF/ysq69b/ZITRo/XaiZScmkU+QTQ+bq7C277gCKB90lqwtJre8FHTc
- rPWa6n+6ov3rJZAS5GY3TYrfEDEqLf1ATo7t7NzoNjm4mPvfyCO6u47bRc4GeM7GcovHiev5D
- 9gS8mWAJTk1PHHZe9z8rP8i4gx4cPB/V0rEnamezN+kZEIomRJv+bjM7KMb5mWM6TAqI2Aqm/
- w8zfASc+1zUeFgljbxPM4iNK9BdHV9v7WLmtQIeVPEjTbNW9y7tB7TFheeIi+1V+/F5CwXLAs
- 2gOygSuz1h4HHzNmwCD9ZbPqgRHG+I82mHBo+M03vejsM+vNU5cSgdCRClQvL54XIK1lKdgzt
- UnChgNds2U8YwTOg5GHPgF3J7Z4=
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230105211937.1572384-1-jlayton@kernel.org>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-01-11 at 05:55 -0500, Jeff Layton wrote:
-> >
-> > > crash> delayed_work ffff8881601fab48
-> > > struct delayed_work {
-> > > =C2=A0 work =3D {
-> > > =C2=A0=C2=A0=C2=A0 data =3D {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 counter =3D 1
-> > > =C2=A0=C2=A0=C2=A0 },
-> > > =C2=A0=C2=A0=C2=A0 entry =3D {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 next =3D 0x0,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 prev =3D 0x0
-> > > =C2=A0=C2=A0=C2=A0 },
-> > > =C2=A0=C2=A0=C2=A0 func =3D 0x0
-> > > =C2=A0 },
-> > > =C2=A0 timer =3D {
-> > > =C2=A0=C2=A0=C2=A0 entry =3D {
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 next =3D 0x0,
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pprev =3D 0x0
-> > > =C2=A0=C2=A0=C2=A0 },
-> > > =C2=A0=C2=A0=C2=A0 expires =3D 0,
-> > > =C2=A0=C2=A0=C2=A0 function =3D 0x0,
-> > > =C2=A0=C2=A0=C2=A0 flags =3D 0
-> > > =C2=A0 },
-> > > =C2=A0 wq =3D 0x0,
-> > > =C2=A0 cpu =3D 0
-> > > }
-> >
-> > That looks more like a memory scribble or UAF. Merely having multiple
-> > tasks calling queue_work at the same time wouldn't be enough to trigge=
-r
-> > this, IMO. It's more likely that the extra locking is changing the
-> > timing of your reproducer somehow.
-> >
-> > It might be interesting to turn up KASAN if you're able.
+On Thu, Jan 05, 2023 at 04:19:29PM -0500, Jeff Layton wrote:
+> The file locking definitions have lived in fs.h since the dawn of time,
+> but they are only used by a small subset of the source files that
+> include it.
+> 
+> Move the file locking definitions to a new header file, and add the
+> appropriate #include directives to the source files that need them. By
+> doing this we trim down fs.h a bit and limit the amount of rebuilding
+> that has to be done when we make changes to the file locking APIs.
+> 
+> Reviewed-by: Xiubo Li <xiubli@redhat.com>
+> Reviewed-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: David Howells <dhowells@redhat.com>
+> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> Acked-by: Steve French <stfrench@microsoft.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  arch/arm/kernel/sys_oabi-compat.c |   1 +
 
-I can try that.
+For arm:
 
-> If you still have this vmcore, it might be interesting to do the pointer
-> math and find the nfsd_net structure that contains the above
-> delayed_work. Does the rest of it also seem to be corrupt? My guess is
-> that the corrupted structure extends beyond just the delayed_work above.
->
-> Also, it might be helpful to do this:
->
-> =C2=A0=C2=A0=C2=A0=C2=A0 kmem -s ffff8881601fab48
->
-> ...which should tell us whether and what part of the slab this object is
-> now a part of. That said, net-namespace object allocations are somewhat
-> weird, and I'm not 100% sure they come out of the slab.
+Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 
-I tossed the vmcore, but can generate another.  I had done kmem sans -s
-previously, still have that.
+Thanks.
 
-crash> kmem ffff8881601fab48
-CACHE             OBJSIZE  ALLOCATED     TOTAL  SLABS  SSIZE  NAME
-kmem: kmalloc-1k: partial list slab: ffffea0005b20c08 invalid page.inuse: =
--1
-ffff888100041840     1024       2329      2432     76    32k  kmalloc-1k
-  SLAB              MEMORY            NODE  TOTAL  ALLOCATED  FREE
-  ffffea0005807e00  ffff8881601f8000     0     32         32     0
-  FREE / [ALLOCATED]
-  [ffff8881601fa800]
-
-      PAGE        PHYSICAL      MAPPING       INDEX CNT FLAGS
-ffffea0005807e80 1601fa000 dead000000000400        0  0 200000000000000
-crash
-
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
