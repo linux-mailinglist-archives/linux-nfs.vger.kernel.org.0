@@ -2,147 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E507F665989
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 11:56:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 340CC66599D
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 12:02:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232762AbjAKK4H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Jan 2023 05:56:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39372 "EHLO
+        id S229931AbjAKLCF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Jan 2023 06:02:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233056AbjAKKzz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 05:55:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F89C2D
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 02:55:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 62DFB61C15
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 10:55:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558EFC433F2;
-        Wed, 11 Jan 2023 10:55:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673434551;
-        bh=2u3BjB2soUlHadXOaJY88wKFItJmU5+uvd6ISzSqUqs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=f0tkPsKHxbOqn2t4v+cwNpeNzqp956GHadahDPB/ntL3lBoLiHoDUK2GPWmOXCFTo
-         WbCXSQb08kHQE5fjJvFyz6jB8hqGU1nGo42KAi0Muq7BvTX9I6rZWwAo5xgHBrfM9g
-         yRCvJLH/UbxujAqbW+K0D0eFPJU6pkiRQY5wOBUdNdMP5lddG6pqF+4fWA6TRmRKPr
-         Q5GtpgF7Nn/59DfFtaBUyX/BeQ0vvsjpaWpfDdP9gDuyDPQvPRoFUaus/ROWAKahCw
-         O5Q1VVftxFsVg5sZuQZEl944Cyo3Dx9ZeK1YWpeWnRWi571yiLWvIOzcVWlLB33ygB
-         kUh2xeH6riCfA==
-Message-ID: <2067b4b4ce029ab5be982820b81241cd457ff475.camel@kernel.org>
-Subject: Re: [PATCH 1/1] NFSD: fix WARN_ON_ONCE in __queue_delayed_work
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Mike Galbraith <efault@gmx.de>, dai.ngo@oracle.com,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Wed, 11 Jan 2023 05:55:49 -0500
-In-Reply-To: <ce3724b88bb2987ac773057f523aa0ed2abacaed.camel@kernel.org>
-References: <1673333310-24837-1-git-send-email-dai.ngo@oracle.com>
-         <57dc06d57b4b643b4bf04daf28acca202c9f7a85.camel@kernel.org>
-         <71672c07-5e53-31e6-14b1-e067fd56df57@oracle.com>
-         <8C3345FB-6EDF-411A-B942-5AFA03A89BA2@oracle.com>
-         <5e34288720627d2a09ae53986780b2d293a54eea.camel@kernel.org>
-         <42876697-ba42-c38f-219d-f760b94e5fed@oracle.com>
-         <f0f56b451287d17426defe77aee1b1240d2a1b31.camel@kernel.org>
-         <8e0cb925-9f73-720d-b402-a7204659ff7f@oracle.com>
-         <37c80eaf2f6d8a5d318e2b10e737a1c351b27427.camel@gmx.de>
-         <ce3724b88bb2987ac773057f523aa0ed2abacaed.camel@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
+        with ESMTP id S236192AbjAKLBj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 06:01:39 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9B2A11A3C
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 03:01:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1673434887; bh=k723X7hlAsKfdDzjTtrJVN1asl4Habd9kDicsXvBpIs=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:Date:In-Reply-To:References;
+        b=nr9bIJM0T3HpQN3qIobSyDOtBjTr8OoFLSK/fOUdK+I4R0rmw6bYrU+mmTmjyi/BK
+         /TFBIDDOAh42iYLQUL5ixyB/O4WQfO8DxahaJ5ZW+yE2zj8SKA6TLyDp0JXVe1B7Xk
+         /T++GyFRT8YIp11JGyv2HuSQ0BglBWObrhMOHWaD1J3iD6vg1KDWWixK3PHYHhCLv3
+         TfVgVWMxYX+pDcSZI1x06Yv6uWb/xE2vAYoFNeG+I/92D2CeNgKIFlr2C7sXpU9Wzo
+         xVFPS5hn8UaS8y4fWj+9u/K8Y9DENLtSUpoeFQzpm7zKfVEtcgQzUgKD10qQcOqdgt
+         0q5wSJtIP17yQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from homer.fritz.box ([185.146.48.212]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmlT2-1oVnzE4570-00jn2f; Wed, 11
+ Jan 2023 12:01:27 +0100
+Message-ID: <a9a4dc18a478b133e3bbdb50827480ee98587da8.camel@gmx.de>
+Subject: Re: [PATCH v3 1/1] NFSD: fix WARN_ON_ONCE in __queue_delayed_work
+From:   Mike Galbraith <efault@gmx.de>
+To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
+        jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Date:   Wed, 11 Jan 2023 12:01:26 +0100
+In-Reply-To: <1673432658-4140-1-git-send-email-dai.ngo@oracle.com>
+References: <1673432658-4140-1-git-send-email-dai.ngo@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: base64
+X-Provags-ID: V03:K1:r2BQ3oZyTuRYE8Xda8Gn653P6aacU/XEQTPj84Lx6FliSNzGtS5
+ u4GgzBm1Qm+t3dg31QJl5GgLHwTiQrBIUq8+G00vnGwIltzxj82eN3tzFAwpUb9RFEEK6he
+ WiH14P6+l8nspVTJoiDDJnf3hrTtsmE1XfI4riXyxs3MeuO2cNnGRpuS+Pt7gsv7P0viLUN
+ PEj88KXt7jITN3wzyaQ0A==
+UI-OutboundReport: notjunk:1;M01:P0:QTv/vTKhajc=;HFj+JUArFzjMB3aklv1VMgD8bOM
+ 0as9orClpaFEqFsN0cNNbteUaw4kXNeLAhkDa5uy6fEMKKbxQqZrxNyjwhGTJK4oM3HdPu6gg
+ MzqgrXYf/2wA4h0Q45uVDEPHUupqNWzXB+BvUyVQ1fl95ry+qSALW0Rk3YRLKm+S2oOxLfD5T
+ v01aetRRKnfJkQV1XnXC/pohi01tAsYFdCGem8u42MdGbYUT6SMS0uIgtnce7/f8kkPpmgtQq
+ QTuqQORT5BuNyHR0aafeR1G+yIAS1tZv+qqPOgFcMx0GW7j5ahrQkU5UipW0KRgfSyNvYMtM1
+ +BeBMW8S2ESsM41L1B65TRKNt7N85Sez9ueTzi2K7+jn4MmdteHjyaysEun/25sh5UVUz2S9A
+ N91Brc90USxuKkGOOJ6MK+ZpKRGz++PKR4aTvTpEbpxrNF0sn7IqZ56FJ4d9T1C5rcS9R1FPo
+ cXexvI/2641smTn6X2Q79tA8ykQrSGBCXCjHM5CHLY9RZUIn/xoTtzVfc/iYotx0QtCVXnuw3
+ 1QzD0aMjXFtDdAi1mDup9i4ml22qXM0E7WSFJi+pZQIL51MWExxMz5Y1l5PlmUK4b8V05Axsx
+ i4PyH3auxE9qdDlHR4+WopXIEAsOvTwQfArdSGtbciINmXBayeQxg+kBOuwjkKZ8mIww0PGkZ
+ fZ7WKgy1sHL66wR5dYMgqIgjXd5uPeY0sopiiIvCAKzAcH7Qx7ezCYv2/p5C7Kyv/bMtde4pq
+ vCmrNWm+fTu+jQptlr0riQ0cWC63tkPxBSZhQjb0Ti0MZ+pCmoLjv2Rfm066NoNyA0h3vkGa0
+ YDu4PyDL5T0wyocKKJhO6fsjVQtJLxOH07m2u75cbUypxowvIocx28xbDwCBQl4YZCbYY3+px
+ +1amTUz+vt/FQ8m41KdpY6bQfQ0NUqXB2LbAOypw27nY1/4tqQDX49vKe3DjKDq9A02XqCBdM
+ oVmpj6duQvNvk72PlSfhTMmMgU8=
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-01-11 at 05:15 -0500, Jeff Layton wrote:
-> On Wed, 2023-01-11 at 03:34 +0100, Mike Galbraith wrote:
-> > On Tue, 2023-01-10 at 11:58 -0800, dai.ngo@oracle.com wrote:
-> > >=20
-> > > On 1/10/23 11:30 AM, Jeff Layton wrote:
-> > >=20
-> > > > >=20
-> > > > >=20
-> > > > Looking over the traces that Mike posted, I suspect this is the rea=
-l
-> > > > bug, particularly if the server is being restarted during this test=
-.
-> > >=20
-> > > Yes, I noticed the WARN_ON_ONCE(timer->function !=3D delayed_work_tim=
-er_fn)
-> > > too and this seems to indicate some kind of corruption. However, I'm =
-not
-> > > sure if Mike's test restarts the nfs-server service. This could be a =
-bug
-> > > in work queue module when it's under stress.
-> >=20
-> > My reproducer was to merely mount and traverse/md5sum, while that was
-> > going on, fire up LTP's min_free_kbytes testcase (memory hog from hell)
-> > on the server.  Systemthing may well be restarting the server service
-> > in response to oomkill.  In fact, the struct delayed_work in question
-> > at WARN_ON_ONCE() time didn't look the least bit ready for business.
-> >=20
-> > FWIW, I had noticed the missing cancel while eyeballing, and stuck one
-> > next to the existing one as a hail-mary, but that helped not at all.
-> >=20
->=20
-> Ok, thanks, that's good to know.
->=20
-> I still doubt that the problem is the race that Dai seems to think it
-> is. The workqueue infrastructure has been fairly stable for years. If
-> there were problems with concurrent tasks queueing the same work, the
-> kernel would be blowing up all over the place.
->=20
-> > crash> delayed_work ffff8881601fab48
-> > struct delayed_work {
-> >   work =3D {
-> >     data =3D {
-> >       counter =3D 1
-> >     },
-> >     entry =3D {
-> >       next =3D 0x0,
-> >       prev =3D 0x0
-> >     },
-> >     func =3D 0x0
-> >   },
-> >   timer =3D {
-> >     entry =3D {
-> >       next =3D 0x0,
-> >       pprev =3D 0x0
-> >     },
-> >     expires =3D 0,
-> >     function =3D 0x0,
-> >     flags =3D 0
-> >   },
-> >   wq =3D 0x0,
-> >   cpu =3D 0
-> > }
->=20
-> That looks more like a memory scribble or UAF. Merely having multiple
-> tasks calling queue_work at the same time wouldn't be enough to trigger
-> this, IMO. It's more likely that the extra locking is changing the
-> timing of your reproducer somehow.
->=20
-> It might be interesting to turn up KASAN if you're able.=20
-
-If you still have this vmcore, it might be interesting to do the pointer
-math and find the nfsd_net structure that contains the above
-delayed_work. Does the rest of it also seem to be corrupt? My guess is
-that the corrupted structure extends beyond just the delayed_work above.
-
-Also, it might be helpful to do this:
-
-     kmem -s ffff8881601fab48
-
-...which should tell us whether and what part of the slab this object is
-now a part of. That said, net-namespace object allocations are somewhat
-weird, and I'm not 100% sure they come out of the slab.
---=20
-Jeff Layton <jlayton@kernel.org>
+Tm8gY2hhbmdlOiBsYXN0IDIgaHVua3MgZG9uJ3QgYXBwbHkgdG8gdmlyZ2luIHNvdXJjZSwgd2Vk
+Z2luZyBwYXRjaCBpbg0KcmVzdWx0cyBpbiAxIGtlcm5lbC93b3JrcXVldWUuYzoxNDk5IHdhcm5p
+bmcuDQoNCk9uIFdlZCwgMjAyMy0wMS0xMSBhdCAwMjoyNCAtMDgwMCwgRGFpIE5nbyB3cm90ZToN
+Cj4gQ3VycmVudGx5IG5mc2Q0X3N0YXRlX3Nocmlua2VyX3dvcmtlciBjYW4gYmUgc2NoZHVsZWQg
+bXVsdGlwbGUgdGltZXMNCj4gZnJvbSBuZnNkNF9zdGF0ZV9zaHJpbmtlcl9jb3VudCB3aGVuIG1l
+bW9yeSBpcyBsb3cuIFRoaXMgY2F1c2VzDQo+IHRoZSBXQVJOX09OX09OQ0UgaW4gX19xdWV1ZV9k
+ZWxheWVkX3dvcmsgdG8gdHJpZ2dlci4NCj4gDQo+IFRoaXMgcGF0Y2ggYWxsb3dzIG9ubHkgb25l
+IGluc3RhbmNlIG9mIG5mc2Q0X3N0YXRlX3Nocmlua2VyX3dvcmtlcg0KPiBhdCBhIHRpbWUgdXNp
+bmcgdGhlIG5mc2Rfc2hyaW5rZXJfYWN0aXZlIGZsYWcsIHByb3RlY3RlZCBieSB0aGUNCj4gY2xp
+ZW50X2xvY2suDQo+IA0KPiBDaGFuZ2UgbmZzZF9zaHJpbmtlcl93b3JrIGZyb20gZGVsYXllZF93
+b3JrIHRvIHdvcmtfc3RydWN0IHNpbmNlIHdlDQo+IGRvbid0IHVzZSB0aGUgZGVsYXkuDQo+IA0K
+PiBSZXBsYWNlIG1vZF9kZWxheWVkX3dvcmsgaW4gbmZzZDRfc3RhdGVfc2hyaW5rZXJfY291bnQg
+d2l0aCBxdWV1ZV93b3JrLg0KPiANCj4gQ2FuY2VsIHdvcmtfc3RydWN0IG5mc2Rfc2hyaW5rZXJf
+d29yayBhZnRlciB1bnJlZ2lzdGVyaW5nIHNocmlua2VyDQo+IGluIG5mczRfc3RhdGVfc2h1dGRv
+d25fbmV0DQo+IA0KPiBGaXhlczogNDRkZjZmNDM5YTE3ICgiTkZTRDogYWRkIGRlbGVnYXRpb24g
+cmVhcGVyIHRvIHJlYWN0IHRvIGxvdyBtZW1vcnkgY29uZGl0aW9uIikNCj4gUmVwb3J0ZWQtYnk6
+IE1pa2UgR2FsYnJhaXRoIDxlZmF1bHRAZ214LmRlPg0KPiBTaWduZWQtb2ZmLWJ5OiBEYWkgTmdv
+IDxkYWkubmdvQG9yYWNsZS5jb20+DQo+IC0tLQ0KPiB2MjoNCj4gwqAgLiBDaGFuZ2UgbmZzZF9z
+aHJpbmtlcl93b3JrIGZyb20gZGVsYXllZF93b3JrIHRvIHdvcmtfc3RydWN0DQo+IMKgIC4gUmVw
+bGFjZSBtb2RfZGVsYXllZF93b3JrIGluIG5mc2Q0X3N0YXRlX3Nocmlua2VyX2NvdW50IHdpdGgg
+cXVldWVfd29yaw0KPiDCoCAuIENhbmNlbCB3b3JrX3N0cnVjdCBuZnNkX3Nocmlua2VyX3dvcmsg
+YWZ0ZXIgdW5yZWdpc3RlcmluZyBzaHJpbmtlcg0KPiB2MzoNCj4gwqAgLiBzZXQgbmZzZF9zaHJp
+bmtlcl9hY3RpdmUgZWFybGllciBpbiBuZnNkNF9zdGF0ZV9zaHJpbmtlcl9jb3VudA0KPiANCj4g
+wqBmcy9uZnNkL25ldG5zLmjCoMKgwqDCoCB8wqAgMyArKy0NCj4gwqBmcy9uZnNkL25mczRzdGF0
+ZS5jIHwgMjQgKysrKysrKysrKysrKysrKysrKy0tLS0tDQo+IMKgMiBmaWxlcyBjaGFuZ2VkLCAy
+MSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2ZzL25m
+c2QvbmV0bnMuaCBiL2ZzL25mc2QvbmV0bnMuaA0KPiBpbmRleCA4Yzg1NGJhMzI4NWIuLmIwYzdi
+NjU3MzI0YiAxMDA2NDQNCj4gLS0tIGEvZnMvbmZzZC9uZXRucy5oDQo+ICsrKyBiL2ZzL25mc2Qv
+bmV0bnMuaA0KPiBAQCAtMTk1LDcgKzE5NSw4IEBAIHN0cnVjdCBuZnNkX25ldCB7DQo+IMKgDQo+
+IMKgwqDCoMKgwqDCoMKgwqBhdG9taWNfdMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+bmZzZF9jb3VydGVzeV9jbGllbnRzOw0KPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IHNocmlua2Vy
+wqDCoMKgwqDCoMKgwqDCoMKgbmZzZF9jbGllbnRfc2hyaW5rZXI7DQo+IC3CoMKgwqDCoMKgwqDC
+oHN0cnVjdCBkZWxheWVkX3dvcmvCoMKgwqDCoMKgbmZzZF9zaHJpbmtlcl93b3JrOw0KPiArwqDC
+oMKgwqDCoMKgwqBzdHJ1Y3Qgd29ya19zdHJ1Y3TCoMKgwqDCoMKgwqBuZnNkX3Nocmlua2VyX3dv
+cms7DQo+ICvCoMKgwqDCoMKgwqDCoGJvb2zCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgbmZzZF9zaHJpbmtlcl9hY3RpdmU7DQo+IMKgfTsNCj4gwqANCj4gwqAvKiBTaW1w
+bGUgY2hlY2sgdG8gZmluZCBvdXQgaWYgYSBnaXZlbiBuZXQgd2FzIHByb3Blcmx5IGluaXRpYWxp
+emVkICovDQo+IGRpZmYgLS1naXQgYS9mcy9uZnNkL25mczRzdGF0ZS5jIGIvZnMvbmZzZC9uZnM0
+c3RhdGUuYw0KPiBpbmRleCBhN2NmZWZkN2MyMDUuLjM1ZWM0Y2JhODhiMyAxMDA2NDQNCj4gLS0t
+IGEvZnMvbmZzZC9uZnM0c3RhdGUuYw0KPiArKysgYi9mcy9uZnNkL25mczRzdGF0ZS5jDQo+IEBA
+IC00NDA3LDExICs0NDA3LDIyIEBAIG5mc2Q0X3N0YXRlX3Nocmlua2VyX2NvdW50KHN0cnVjdCBz
+aHJpbmtlciAqc2hyaW5rLCBzdHJ1Y3Qgc2hyaW5rX2NvbnRyb2wgKnNjKQ0KPiDCoMKgwqDCoMKg
+wqDCoMKgc3RydWN0IG5mc2RfbmV0ICpubiA9IGNvbnRhaW5lcl9vZihzaHJpbmssDQo+IMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBuZnNkX25l
+dCwgbmZzZF9jbGllbnRfc2hyaW5rZXIpOw0KPiDCoA0KPiArwqDCoMKgwqDCoMKgwqBzcGluX2xv
+Y2soJm5uLT5jbGllbnRfbG9jayk7DQo+ICvCoMKgwqDCoMKgwqDCoGlmIChubi0+bmZzZF9zaHJp
+bmtlcl9hY3RpdmUpIHsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNwaW5fdW5s
+b2NrKCZubi0+Y2xpZW50X2xvY2spOw0KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+cmV0dXJuIDA7DQo+ICvCoMKgwqDCoMKgwqDCoH0NCj4gK8KgwqDCoMKgwqDCoMKgbm4tPm5mc2Rf
+c2hyaW5rZXJfYWN0aXZlID0gdHJ1ZTsNCj4gwqDCoMKgwqDCoMKgwqDCoGNvdW50ID0gYXRvbWlj
+X3JlYWQoJm5uLT5uZnNkX2NvdXJ0ZXN5X2NsaWVudHMpOw0KPiDCoMKgwqDCoMKgwqDCoMKgaWYg
+KCFjb3VudCkNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb3VudCA9IGF0b21p
+Y19sb25nX3JlYWQoJm51bV9kZWxlZ2F0aW9ucyk7DQo+IC3CoMKgwqDCoMKgwqDCoGlmIChjb3Vu
+dCkNCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG1vZF9kZWxheWVkX3dvcmsobGF1
+bmRyeV93cSwgJm5uLT5uZnNkX3Nocmlua2VyX3dvcmssIDApOw0KPiArwqDCoMKgwqDCoMKgwqBp
+ZiAoY291bnQpIHsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNwaW5fdW5sb2Nr
+KCZubi0+Y2xpZW50X2xvY2spOw0KPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcXVl
+dWVfd29yayhsYXVuZHJ5X3dxLCAmbm4tPm5mc2Rfc2hyaW5rZXJfd29yayk7DQo+ICvCoMKgwqDC
+oMKgwqDCoH0gZWxzZSB7DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBubi0+bmZz
+ZF9zaHJpbmtlcl9hY3RpdmUgPSBmYWxzZTsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHNwaW5fdW5sb2NrKCZubi0+Y2xpZW50X2xvY2spOw0KPiArwqDCoMKgwqDCoMKgwqB9DQo+
+IMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gKHVuc2lnbmVkIGxvbmcpY291bnQ7DQo+IMKgfQ0KPiDC
+oA0KPiBAQCAtNjIzMywxMiArNjI0NCwxNCBAQCBkZWxlZ19yZWFwZXIoc3RydWN0IG5mc2RfbmV0
+ICpubikNCj4gwqBzdGF0aWMgdm9pZA0KPiDCoG5mc2Q0X3N0YXRlX3Nocmlua2VyX3dvcmtlcihz
+dHJ1Y3Qgd29ya19zdHJ1Y3QgKndvcmspDQo+IMKgew0KPiAtwqDCoMKgwqDCoMKgwqBzdHJ1Y3Qg
+ZGVsYXllZF93b3JrICpkd29yayA9IHRvX2RlbGF5ZWRfd29yayh3b3JrKTsNCj4gLcKgwqDCoMKg
+wqDCoMKgc3RydWN0IG5mc2RfbmV0ICpubiA9IGNvbnRhaW5lcl9vZihkd29yaywgc3RydWN0IG5m
+c2RfbmV0LA0KPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbmZzZF9uZXQgKm5uID0gY29udGFpbmVy
+X29mKHdvcmssIHN0cnVjdCBuZnNkX25ldCwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG5mc2Rfc2hyaW5rZXJfd29yayk7
+DQo+IMKgDQo+IMKgwqDCoMKgwqDCoMKgwqBjb3VydGVzeV9jbGllbnRfcmVhcGVyKG5uKTsNCj4g
+wqDCoMKgwqDCoMKgwqDCoGRlbGVnX3JlYXBlcihubik7DQo+ICvCoMKgwqDCoMKgwqDCoHNwaW5f
+bG9jaygmbm4tPmNsaWVudF9sb2NrKTsNCj4gK8KgwqDCoMKgwqDCoMKgbm4tPm5mc2Rfc2hyaW5r
+ZXJfYWN0aXZlID0gZmFsc2U7DQo+ICvCoMKgwqDCoMKgwqDCoHNwaW5fdW5sb2NrKCZubi0+Y2xp
+ZW50X2xvY2spOw0KPiDCoH0NCj4gwqANCj4gwqBzdGF0aWMgaW5saW5lIF9fYmUzMiBuZnM0X2No
+ZWNrX2ZoKHN0cnVjdCBzdmNfZmggKmZocCwgc3RydWN0IG5mczRfc3RpZCAqc3RwKQ0KPiBAQCAt
+ODA2NCw3ICs4MDc3LDcgQEAgc3RhdGljIGludCBuZnM0X3N0YXRlX2NyZWF0ZV9uZXQoc3RydWN0
+IG5ldCAqbmV0KQ0KPiDCoMKgwqDCoMKgwqDCoMKgSU5JVF9MSVNUX0hFQUQoJm5uLT5ibG9ja2Vk
+X2xvY2tzX2xydSk7DQo+IMKgDQo+IMKgwqDCoMKgwqDCoMKgwqBJTklUX0RFTEFZRURfV09SSygm
+bm4tPmxhdW5kcm9tYXRfd29yaywgbGF1bmRyb21hdF9tYWluKTsNCj4gLcKgwqDCoMKgwqDCoMKg
+SU5JVF9ERUxBWUVEX1dPUksoJm5uLT5uZnNkX3Nocmlua2VyX3dvcmssIG5mc2Q0X3N0YXRlX3No
+cmlua2VyX3dvcmtlcik7DQo+ICvCoMKgwqDCoMKgwqDCoElOSVRfV09SSygmbm4tPm5mc2Rfc2hy
+aW5rZXJfd29yaywgbmZzZDRfc3RhdGVfc2hyaW5rZXJfd29ya2VyKTsNCj4gwqDCoMKgwqDCoMKg
+wqDCoGdldF9uZXQobmV0KTsNCj4gwqANCj4gwqDCoMKgwqDCoMKgwqDCoG5uLT5uZnNkX2NsaWVu
+dF9zaHJpbmtlci5zY2FuX29iamVjdHMgPSBuZnNkNF9zdGF0ZV9zaHJpbmtlcl9zY2FuOw0KPiBA
+QCAtODE3MSw2ICs4MTg0LDcgQEAgbmZzNF9zdGF0ZV9zaHV0ZG93bl9uZXQoc3RydWN0IG5ldCAq
+bmV0KQ0KPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IG5mc2RfbmV0ICpubiA9IG5ldF9nZW5lcmlj
+KG5ldCwgbmZzZF9uZXRfaWQpOw0KPiDCoA0KPiDCoMKgwqDCoMKgwqDCoMKgdW5yZWdpc3Rlcl9z
+aHJpbmtlcigmbm4tPm5mc2RfY2xpZW50X3Nocmlua2VyKTsNCj4gK8KgwqDCoMKgwqDCoMKgY2Fu
+Y2VsX3dvcmsoJm5uLT5uZnNkX3Nocmlua2VyX3dvcmspOw0KPiDCoMKgwqDCoMKgwqDCoMKgY2Fu
+Y2VsX2RlbGF5ZWRfd29ya19zeW5jKCZubi0+bGF1bmRyb21hdF93b3JrKTsNCj4gwqDCoMKgwqDC
+oMKgwqDCoGxvY2tzX2VuZF9ncmFjZSgmbm4tPm5mc2Q0X21hbmFnZXIpOw0KPiDCoA0KDQo=
