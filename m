@@ -2,107 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82255665FD3
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 16:58:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11348666047
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 17:21:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232227AbjAKP6L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Jan 2023 10:58:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46258 "EHLO
+        id S232011AbjAKQVZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Jan 2023 11:21:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234250AbjAKP5w (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 10:57:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C8ABF42
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 07:57:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673452633;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R2Cq23rDT1H8ZaN0ny+x9sY5OPs6EZbKc/HB7v4IBg8=;
-        b=eE3Cfk5+5BJE6JxrdjtoLxyslyLJ+eHfLMT3vh/HnD9I2c8gquNHjNUZ9FiaptW3l7jx3T
-        DP7C4qKW4YX1ZP3An3MOnFv+3affxfBJ0fy21bm/oKsrWeWQISHqYbBzRoG8A7LA0lqSqV
-        ras+M03URDi7nL69fjfwA3SX8mLFtuw=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-629-0-duIei-MOiQMvShfxOJ7A-1; Wed, 11 Jan 2023 10:57:12 -0500
-X-MC-Unique: 0-duIei-MOiQMvShfxOJ7A-1
-Received: by mail-qt1-f200.google.com with SMTP id k7-20020ac84747000000b003a87ca26200so7335840qtp.6
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 07:57:12 -0800 (PST)
+        with ESMTP id S238847AbjAKQUg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 11:20:36 -0500
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B3C1DF2A
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 08:18:36 -0800 (PST)
+Received: by mail-qv1-xf33.google.com with SMTP id t7so10948169qvv.3
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 08:18:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QInJOM56A8ZzMOfRkZbdd/idmpwWnTWTT0b+KAP56V0=;
+        b=RyySAOCXSPzmfB65iJ052gJyMGP3418APKwg+TVyyKMInXp+wXX/9KPEVMSVRYwx35
+         7alGFSo98Mc95O133Pdrzs1mgTpQ/qkXgzE9jYhCkCIrRPT43gsTXGHbDQjf9OrOO+0I
+         RarJPGn0ZENeVce+3vWHeMCnwRKXmInYtwfuU+4YCV/qApMyGg1keeZPCoHEysgewMNZ
+         /bm05DSZNbk9kbvET47QHexyRMaeIuBdvQ+y0zhE4/Lehc1X9GezGvw0YWmnXtv089oc
+         MJGOOj5tyKXnn9V5KlTWBGOp4q0SsXqaO1R3q/mdkoHNpMAQ9ai6zT9RGYQkBAvzUTcy
+         bojQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=R2Cq23rDT1H8ZaN0ny+x9sY5OPs6EZbKc/HB7v4IBg8=;
-        b=cljH0dmTqgDXS6gwhMUeO1qbtkM7f8Ej7x51hgYtSu0RSK3RQVLNtmfXZTL4n+fulu
-         f2zUQ/fRkAAXjPndUwDTGonErpZZodY9ENnyk1jtEwKC1+8OVP6+2+PscTh4Wh19RL6I
-         NsDGiKeXGEppIi3quArD5S+/saAD+fBlaUyhHdHnYPeW5ceVIml1Iib3ZuHi87yTtVlt
-         Eughh6YK/4Y1D+FNPeV0M5YGsH0iS9V2C9Eyhtr8z/jdsRNLfF1/S8hBhBBf0XvP4Vjm
-         /npC8sXCF6g4GcCnSdHIiDDmiTNLwglykN89ZY5Tr0SqTu9fKuZfVbB16KOUBn4yi27h
-         kR8A==
-X-Gm-Message-State: AFqh2komRGMudJzZXQ741xLOgBhN2CXUHvVg6MvPA+NpnAvi5HPgIJNT
-        30AUlM9k4jKtLH6pl7xoEzEP5aUHFR1wQHcLyu1/7UMxKjYhLkpEh6RVOwE2NZD3ewYVd+t5mOZ
-        iF71XkpgVoOs/cLyPoJkUkvAm9ZbuWT+Hjb2JT9+QbIxy8HD01eJV9BZRuzBP6ZUJEFYINg==
-X-Received: by 2002:ac8:674e:0:b0:3a9:7c51:1944 with SMTP id n14-20020ac8674e000000b003a97c511944mr99419776qtp.42.1673452631770;
-        Wed, 11 Jan 2023 07:57:11 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuo2EM/zAqzpPbZ1t2wWoCuPP1UaxVi1hdGxvF2oFfbdtvzgy5Zoq1F4l5cRWl0ZXk/xIHpTQ==
-X-Received: by 2002:ac8:674e:0:b0:3a9:7c51:1944 with SMTP id n14-20020ac8674e000000b003a97c511944mr99419729qtp.42.1673452631293;
-        Wed, 11 Jan 2023 07:57:11 -0800 (PST)
-Received: from [172.31.1.6] ([70.109.130.165])
-        by smtp.gmail.com with ESMTPSA id h10-20020a05620a284a00b006feea093006sm9222330qkp.124.2023.01.11.07.57.10
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 07:57:10 -0800 (PST)
-Message-ID: <c137cbd6-2073-c217-927c-d95e0e891e7d@redhat.com>
-Date:   Wed, 11 Jan 2023 10:57:09 -0500
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QInJOM56A8ZzMOfRkZbdd/idmpwWnTWTT0b+KAP56V0=;
+        b=6k084k5yaBBcOC+MFYR9f8UN+fbIXpTeUJZ6Ki2P/806zlTWgviSJ8Ai6YBj+/2sBu
+         iqFinAB4zek9i4ZNJXXh6rZsfpPYi45vRJcq3g3sOMQ96dcwF/xPgbO12Y7poNFX17Fs
+         JrvSEokDQpHhow/blqt3E3td0VRt7fky7B2ESK7MI+FWFI/kgErWumI4CcGGLKuF+vRU
+         MuPOvM63stmyPefP0a0Bs7LEI7SN7o8ufagC34LEIzxuoDOSCwN8h+7MC19Hpsn+ln5i
+         q9SXWsY9iLXdCzACUZ7t7nbU0RULRmmmVz/CpFA07F3NWZG9Tc+zaDeHHj2qBtDIxHc4
+         lJvA==
+X-Gm-Message-State: AFqh2ko2h53EaFnpZNDo7w83SwC6pyErUmc7Fk72A3hpCMQKqN8F7scN
+        b4z4iuiT+Pc2MZOeiE2xUjj51NK/+8bCNCFbyd2O95jswns=
+X-Google-Smtp-Source: AMrXdXv7kw/sp4WcRVe3AaesaX1fDWJSfzgkRy/kBOx03Eh346bryvd0QHNxe9YK9VYngNIGU7BhCGZw4QA5BFb02+s=
+X-Received: by 2002:a0c:f691:0:b0:532:3011:ab07 with SMTP id
+ p17-20020a0cf691000000b005323011ab07mr596192qvn.30.1673453915315; Wed, 11 Jan
+ 2023 08:18:35 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH 2/2] Covscan Scan: Fixed a couple CLANG_WARNINGs
-Content-Language: en-US
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20230104170855.19822-1-steved@redhat.com>
- <20230104170855.19822-2-steved@redhat.com>
-In-Reply-To: <20230104170855.19822-2-steved@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230107173635.2025233-1-trondmy@kernel.org> <20230107173635.2025233-2-trondmy@kernel.org>
+ <20230107173635.2025233-3-trondmy@kernel.org> <20230107173635.2025233-4-trondmy@kernel.org>
+ <20230107173635.2025233-5-trondmy@kernel.org> <20230107173635.2025233-6-trondmy@kernel.org>
+ <20230107173635.2025233-7-trondmy@kernel.org> <20230107173635.2025233-8-trondmy@kernel.org>
+ <20230107173635.2025233-9-trondmy@kernel.org> <20230107173635.2025233-10-trondmy@kernel.org>
+In-Reply-To: <20230107173635.2025233-10-trondmy@kernel.org>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Wed, 11 Jan 2023 11:18:19 -0500
+Message-ID: <CAFX2Jf=HxgJmuE0CjUcFbw1pekcpYqm7aigeb_XY0rG5Gbje_Q@mail.gmail.com>
+Subject: Re: [PATCH 09/17] NFS: Convert the function nfs_wb_page() to use folios
+To:     trondmy@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Trond,
 
-
-On 1/4/23 12:08 PM, Steve Dickson wrote:
-> Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=2151971
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-Committed... (tag: nfs-utils-2-6-3-rc6)
-
-steved.
+On Sat, Jan 7, 2023 at 12:43 PM <trondmy@kernel.org> wrote:
+>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
->   tools/nfsrahead/main.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/nfsrahead/main.c b/tools/nfsrahead/main.c
-> index c83c6f7..8a11cf1 100644
-> --- a/tools/nfsrahead/main.c
-> +++ b/tools/nfsrahead/main.c
-> @@ -167,7 +167,7 @@ int main(int argc, char **argv)
->   		if ((ret = get_device_info(argv[optind], &device)) == 0)
->   			break;
->   
-> -	if (ret != 0) {
-> +	if (ret != 0 || device.fstype == NULL) {
->   		xlog(D_GENERAL, "unable to find device %s\n", argv[optind]);
->   		goto out;
->   	}
+>  fs/nfs/write.c | 35 ++++++++++++++++-------------------
+>  1 file changed, 16 insertions(+), 19 deletions(-)
+>
+> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> index 0fbb119022d9..14f98c452595 100644
+> --- a/fs/nfs/write.c
+> +++ b/fs/nfs/write.c
+> @@ -2069,13 +2069,18 @@ int nfs_wb_folio_cancel(struct inode *inode, struct folio *folio)
+>         return ret;
+>  }
+>
+> -/*
+> - * Write back all requests on one page - we do this before reading it.
+> +/**
+> + * nfs_wb_folio - Write back all requests on one page
+> + * @inode: pointer to page
+> + * @folio: pointer to folio
+> + *
+> + * Assumes that the folio has been locked by the caller, and will
+> + * not unlock it.
+>   */
+> -int nfs_wb_page(struct inode *inode, struct page *page)
+> +int nfs_wb_folio(struct inode *inode, struct folio *folio)
+>  {
+> -       loff_t range_start = page_file_offset(page);
+> -       loff_t range_end = range_start + (loff_t)(PAGE_SIZE - 1);
+> +       loff_t range_start = folio_file_pos(folio);
+> +       loff_t range_end = range_start + (loff_t)folio_size(folio) - 1;
+>         struct writeback_control wbc = {
+>                 .sync_mode = WB_SYNC_ALL,
+>                 .nr_to_write = 0,
+> @@ -2087,15 +2092,15 @@ int nfs_wb_page(struct inode *inode, struct page *page)
+>         trace_nfs_writeback_page_enter(inode);
+>
+>         for (;;) {
+> -               wait_on_page_writeback(page);
+> -               if (clear_page_dirty_for_io(page)) {
+> -                       ret = nfs_writepage_locked(page, &wbc);
+> +               folio_wait_writeback(folio);
+> +               if (folio_clear_dirty_for_io(folio)) {
+> +                       ret = nfs_writepage_locked(folio, &wbc);
 
+nfs_writepage_locked() still takes a "struct page *" until the next
+patch (NFS: Convert buffered writes to use folios), so I'm seeing this
+when I try to compile:
+
+fs/nfs/write.c:2097:31: error: incompatible pointer types passing
+'struct folio *' to parameter of type 'struct page *'
+[-Werror,-Wincompatible-pointer-types]
+                        ret = nfs_writepage_locked(folio, &wbc);
+                                                   ^~~~~
+fs/nfs/write.c:661:46: note: passing argument to parameter 'page' here
+static int nfs_writepage_locked(struct page *page,
+                                             ^
+1 error generated.
+make[3]: *** [scripts/Makefile.build:252: fs/nfs/write.o] Error 1
+make[2]: *** [scripts/Makefile.build:504: fs/nfs] Error 2
+make[1]: *** [scripts/Makefile.build:504: fs] Error 2
+make: *** [Makefile:2008: .] Error 2
+
+
+>                         if (ret < 0)
+>                                 goto out_error;
+>                         continue;
+>                 }
+>                 ret = 0;
+> -               if (!PagePrivate(page))
+> +               if (!folio_test_private(folio))
+>                         break;
+>                 ret = nfs_commit_inode(inode, FLUSH_SYNC);
+>                 if (ret < 0)
+> @@ -2106,17 +2111,9 @@ int nfs_wb_page(struct inode *inode, struct page *page)
+>         return ret;
+>  }
+>
+> -/**
+> - * nfs_wb_folio - Write back all requests on one page
+> - * @inode: pointer to page
+> - * @folio: pointer to folio
+> - *
+> - * Assumes that the folio has been locked by the caller, and will
+> - * not unlock it.
+> - */
+> -int nfs_wb_folio(struct inode *inode, struct folio *folio)
+> +int nfs_wb_page(struct inode *inode, struct page *page)
+>  {
+> -       return nfs_wb_page(inode, &folio->page);
+> +       return nfs_wb_folio(inode, page_folio(page));
+>  }
+>
+>  #ifdef CONFIG_MIGRATION
+> --
+> 2.39.0
+>
