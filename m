@@ -2,43 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6546E665950
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 11:48:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E507F665989
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 11:56:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237980AbjAKKsN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Jan 2023 05:48:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33212 "EHLO
+        id S232762AbjAKK4H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Jan 2023 05:56:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238088AbjAKKsK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 05:48:10 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 888E114038
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 02:47:56 -0800 (PST)
+        with ESMTP id S233056AbjAKKzz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 05:55:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8F89C2D
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 02:55:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 73B19B81B90
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 10:47:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A153BC433D2;
-        Wed, 11 Jan 2023 10:47:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 62DFB61C15
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 10:55:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 558EFC433F2;
+        Wed, 11 Jan 2023 10:55:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673434074;
-        bh=tnLyQYJdBOWlRHraKAwQLi7OkGpCUopLoF3vD0MnDxI=;
+        s=k20201202; t=1673434551;
+        bh=2u3BjB2soUlHadXOaJY88wKFItJmU5+uvd6ISzSqUqs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dsAGDEHlol20u4I3X+aN1g3wPD7qkhUUlsxgnroWJsheaHNFRmPPz5gIKa/FxunSu
-         DuKyEx4xUh6ZmU0V3Ra9NLmZpT3/sP7+yzs0j8XDDLv1clzLfXhyiyuqkoXQH0UXpk
-         iOpMRRb8tQ5yD2qImiojhYAqyfhQjUi30Stg8gQ6iGFXBlxxmuWKMa2CGsZ8+Rlsim
-         uaGCVXtYOOR63U2xbe+GttDXT+Nlj+zdVPGuoJgNU33Gj+p6pFH/Qx/uHMSUT7JON8
-         7ot83vSPCreIjFf3uXRKGiieWo9rUzjmJIBm7Bl2MnO560H33+WseRxnWqs/YhrSOD
-         mrPSugoEOBVgQ==
-Message-ID: <956fe608b456141b1b43f9dfe65581f168247cb8.camel@kernel.org>
-Subject: Re: [PATCH v3 1/1] NFSD: fix WARN_ON_ONCE in __queue_delayed_work
+        b=f0tkPsKHxbOqn2t4v+cwNpeNzqp956GHadahDPB/ntL3lBoLiHoDUK2GPWmOXCFTo
+         WbCXSQb08kHQE5fjJvFyz6jB8hqGU1nGo42KAi0Muq7BvTX9I6rZWwAo5xgHBrfM9g
+         yRCvJLH/UbxujAqbW+K0D0eFPJU6pkiRQY5wOBUdNdMP5lddG6pqF+4fWA6TRmRKPr
+         Q5GtpgF7Nn/59DfFtaBUyX/BeQ0vvsjpaWpfDdP9gDuyDPQvPRoFUaus/ROWAKahCw
+         O5Q1VVftxFsVg5sZuQZEl944Cyo3Dx9ZeK1YWpeWnRWi571yiLWvIOzcVWlLB33ygB
+         kUh2xeH6riCfA==
+Message-ID: <2067b4b4ce029ab5be982820b81241cd457ff475.camel@kernel.org>
+Subject: Re: [PATCH 1/1] NFSD: fix WARN_ON_ONCE in __queue_delayed_work
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
-Cc:     efault@gmx.de, linux-nfs@vger.kernel.org
-Date:   Wed, 11 Jan 2023 05:47:52 -0500
-In-Reply-To: <1673432658-4140-1-git-send-email-dai.ngo@oracle.com>
-References: <1673432658-4140-1-git-send-email-dai.ngo@oracle.com>
+To:     Mike Galbraith <efault@gmx.de>, dai.ngo@oracle.com,
+        Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Wed, 11 Jan 2023 05:55:49 -0500
+In-Reply-To: <ce3724b88bb2987ac773057f523aa0ed2abacaed.camel@kernel.org>
+References: <1673333310-24837-1-git-send-email-dai.ngo@oracle.com>
+         <57dc06d57b4b643b4bf04daf28acca202c9f7a85.camel@kernel.org>
+         <71672c07-5e53-31e6-14b1-e067fd56df57@oracle.com>
+         <8C3345FB-6EDF-411A-B942-5AFA03A89BA2@oracle.com>
+         <5e34288720627d2a09ae53986780b2d293a54eea.camel@kernel.org>
+         <42876697-ba42-c38f-219d-f760b94e5fed@oracle.com>
+         <f0f56b451287d17426defe77aee1b1240d2a1b31.camel@kernel.org>
+         <8e0cb925-9f73-720d-b402-a7204659ff7f@oracle.com>
+         <37c80eaf2f6d8a5d318e2b10e737a1c351b27427.camel@gmx.de>
+         <ce3724b88bb2987ac773057f523aa0ed2abacaed.camel@kernel.org>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
@@ -52,125 +62,87 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-01-11 at 02:24 -0800, Dai Ngo wrote:
-> Currently nfsd4_state_shrinker_worker can be schduled multiple times
-> from nfsd4_state_shrinker_count when memory is low. This causes
-> the WARN_ON_ONCE in __queue_delayed_work to trigger.
+On Wed, 2023-01-11 at 05:15 -0500, Jeff Layton wrote:
+> On Wed, 2023-01-11 at 03:34 +0100, Mike Galbraith wrote:
+> > On Tue, 2023-01-10 at 11:58 -0800, dai.ngo@oracle.com wrote:
+> > >=20
+> > > On 1/10/23 11:30 AM, Jeff Layton wrote:
+> > >=20
+> > > > >=20
+> > > > >=20
+> > > > Looking over the traces that Mike posted, I suspect this is the rea=
+l
+> > > > bug, particularly if the server is being restarted during this test=
+.
+> > >=20
+> > > Yes, I noticed the WARN_ON_ONCE(timer->function !=3D delayed_work_tim=
+er_fn)
+> > > too and this seems to indicate some kind of corruption. However, I'm =
+not
+> > > sure if Mike's test restarts the nfs-server service. This could be a =
+bug
+> > > in work queue module when it's under stress.
+> >=20
+> > My reproducer was to merely mount and traverse/md5sum, while that was
+> > going on, fire up LTP's min_free_kbytes testcase (memory hog from hell)
+> > on the server.  Systemthing may well be restarting the server service
+> > in response to oomkill.  In fact, the struct delayed_work in question
+> > at WARN_ON_ONCE() time didn't look the least bit ready for business.
+> >=20
+> > FWIW, I had noticed the missing cancel while eyeballing, and stuck one
+> > next to the existing one as a hail-mary, but that helped not at all.
+> >=20
 >=20
-> This patch allows only one instance of nfsd4_state_shrinker_worker
-> at a time using the nfsd_shrinker_active flag, protected by the
-> client_lock.
+> Ok, thanks, that's good to know.
 >=20
-> Change nfsd_shrinker_work from delayed_work to work_struct since we
-> don't use the delay.
+> I still doubt that the problem is the race that Dai seems to think it
+> is. The workqueue infrastructure has been fairly stable for years. If
+> there were problems with concurrent tasks queueing the same work, the
+> kernel would be blowing up all over the place.
 >=20
-> Replace mod_delayed_work in nfsd4_state_shrinker_count with queue_work.
+> > crash> delayed_work ffff8881601fab48
+> > struct delayed_work {
+> >   work =3D {
+> >     data =3D {
+> >       counter =3D 1
+> >     },
+> >     entry =3D {
+> >       next =3D 0x0,
+> >       prev =3D 0x0
+> >     },
+> >     func =3D 0x0
+> >   },
+> >   timer =3D {
+> >     entry =3D {
+> >       next =3D 0x0,
+> >       pprev =3D 0x0
+> >     },
+> >     expires =3D 0,
+> >     function =3D 0x0,
+> >     flags =3D 0
+> >   },
+> >   wq =3D 0x0,
+> >   cpu =3D 0
+> > }
 >=20
-> Cancel work_struct nfsd_shrinker_work after unregistering shrinker
-> in nfs4_state_shutdown_net
+> That looks more like a memory scribble or UAF. Merely having multiple
+> tasks calling queue_work at the same time wouldn't be enough to trigger
+> this, IMO. It's more likely that the extra locking is changing the
+> timing of your reproducer somehow.
 >=20
-> Fixes: 44df6f439a17 ("NFSD: add delegation reaper to react to low memory =
-condition")
-> Reported-by: Mike Galbraith <efault@gmx.de>
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
-> v2:
->   . Change nfsd_shrinker_work from delayed_work to work_struct
->   . Replace mod_delayed_work in nfsd4_state_shrinker_count with queue_wor=
-k
->   . Cancel work_struct nfsd_shrinker_work after unregistering shrinker
-> v3:
->   . set nfsd_shrinker_active earlier in nfsd4_state_shrinker_count
->=20
->  fs/nfsd/netns.h     |  3 ++-
->  fs/nfsd/nfs4state.c | 24 +++++++++++++++++++-----
->  2 files changed, 21 insertions(+), 6 deletions(-)
->=20
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index 8c854ba3285b..b0c7b657324b 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -195,7 +195,8 @@ struct nfsd_net {
-> =20
->  	atomic_t		nfsd_courtesy_clients;
->  	struct shrinker		nfsd_client_shrinker;
-> -	struct delayed_work	nfsd_shrinker_work;
-> +	struct work_struct	nfsd_shrinker_work;
-> +	bool			nfsd_shrinker_active;
->  };
-> =20
->  /* Simple check to find out if a given net was properly initialized */
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index a7cfefd7c205..35ec4cba88b3 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -4407,11 +4407,22 @@ nfsd4_state_shrinker_count(struct shrinker *shrin=
-k, struct shrink_control *sc)
->  	struct nfsd_net *nn =3D container_of(shrink,
->  			struct nfsd_net, nfsd_client_shrinker);
-> =20
-> +	spin_lock(&nn->client_lock);
-> +	if (nn->nfsd_shrinker_active) {
-> +		spin_unlock(&nn->client_lock);
-> +		return 0;
-> +	}
-> +	nn->nfsd_shrinker_active =3D true;
->  	count =3D atomic_read(&nn->nfsd_courtesy_clients);
->  	if (!count)
->  		count =3D atomic_long_read(&num_delegations);
-> -	if (count)
-> -		mod_delayed_work(laundry_wq, &nn->nfsd_shrinker_work, 0);
-> +	if (count) {
-> +		spin_unlock(&nn->client_lock);
-> +		queue_work(laundry_wq, &nn->nfsd_shrinker_work);
-> +	} else {
-> +		nn->nfsd_shrinker_active =3D false;
-> +		spin_unlock(&nn->client_lock);
-> +	}
+> It might be interesting to turn up KASAN if you're able.=20
 
-The change to normal work_struct is an improvement, but NAK on this
-patch. The spinlocking and flag are not needed here. I seriously doubt
-that we have a clear understanding of this problem.
+If you still have this vmcore, it might be interesting to do the pointer
+math and find the nfsd_net structure that contains the above
+delayed_work. Does the rest of it also seem to be corrupt? My guess is
+that the corrupted structure extends beyond just the delayed_work above.
 
->  	return (unsigned long)count;
->  }
-> =20
-> @@ -6233,12 +6244,14 @@ deleg_reaper(struct nfsd_net *nn)
->  static void
->  nfsd4_state_shrinker_worker(struct work_struct *work)
->  {
-> -	struct delayed_work *dwork =3D to_delayed_work(work);
-> -	struct nfsd_net *nn =3D container_of(dwork, struct nfsd_net,
-> +	struct nfsd_net *nn =3D container_of(work, struct nfsd_net,
->  				nfsd_shrinker_work);
-> =20
->  	courtesy_client_reaper(nn);
->  	deleg_reaper(nn);
-> +	spin_lock(&nn->client_lock);
-> +	nn->nfsd_shrinker_active =3D false;
-> +	spin_unlock(&nn->client_lock);
->  }
-> =20
->  static inline __be32 nfs4_check_fh(struct svc_fh *fhp, struct nfs4_stid =
-*stp)
-> @@ -8064,7 +8077,7 @@ static int nfs4_state_create_net(struct net *net)
->  	INIT_LIST_HEAD(&nn->blocked_locks_lru);
-> =20
->  	INIT_DELAYED_WORK(&nn->laundromat_work, laundromat_main);
-> -	INIT_DELAYED_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker)=
-;
-> +	INIT_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker);
->  	get_net(net);
-> =20
->  	nn->nfsd_client_shrinker.scan_objects =3D nfsd4_state_shrinker_scan;
-> @@ -8171,6 +8184,7 @@ nfs4_state_shutdown_net(struct net *net)
->  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> =20
->  	unregister_shrinker(&nn->nfsd_client_shrinker);
-> +	cancel_work(&nn->nfsd_shrinker_work);
->  	cancel_delayed_work_sync(&nn->laundromat_work);
->  	locks_end_grace(&nn->nfsd4_manager);
-> =20
+Also, it might be helpful to do this:
 
+     kmem -s ffff8881601fab48
+
+...which should tell us whether and what part of the slab this object is
+now a part of. That said, net-namespace object allocations are somewhat
+weird, and I'm not 100% sure they come out of the slab.
 --=20
 Jeff Layton <jlayton@kernel.org>
