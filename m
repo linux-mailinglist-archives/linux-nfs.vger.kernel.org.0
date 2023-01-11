@@ -2,62 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D439366566B
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 09:46:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60F7A6656A6
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 10:00:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232335AbjAKIp7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Jan 2023 03:45:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
+        id S229931AbjAKJAb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Jan 2023 04:00:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232336AbjAKIp5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 03:45:57 -0500
-Received: from mail.lokoho.com (mail.lokoho.com [217.61.105.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5BCE111C
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 00:45:55 -0800 (PST)
-Received: by mail.lokoho.com (Postfix, from userid 1001)
-        id 83EA8841D6; Wed, 11 Jan 2023 08:45:50 +0000 (GMT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lokoho.com; s=mail;
-        t=1673426754; bh=Z0N5VlX9/JlryGOL5I747Le9USomZJCRNNGRT3LbbKc=;
-        h=Date:From:To:Subject:From;
-        b=X0fNyIoRrAAknsnzm0Q86AmsL6LxRmtotDqGSaDX9a9YwIL5DpVnh8gxssjKY++f6
-         b2TvpvS+8ctPi5ixdmya941bYj+s/kPyHtwf9J9PeAGBq2wrNbFd48SX4xJRvGAI+G
-         RFlK7toGL7X5rvYaq0pp+37HtbVn8P0FdItOya63O//0prGwBM6yuQT75vyVjaa22A
-         /RvOAu2NV8FmESYGwMkRiwvXqL+C+ReyhbVUihZ8nO8vP1w0JJGl/SIx32ATEochaf
-         Jhz5ZrtCJrTDcuO8veqAqAOqTFDDuwN4fckv8saMQQd0owFbVcXmcD3/LQgbzjF1fU
-         2QZWAjN+/0Dcw==
-Received: by mail.lokoho.com for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 08:45:40 GMT
-Message-ID: <20230111074501-0.1.3c.m8x9.0.esq4pi0f5o@lokoho.com>
-Date:   Wed, 11 Jan 2023 08:45:40 GMT
-From:   "Adam Charachuta" <adam.charachuta@lokoho.com>
-To:     <linux-nfs@vger.kernel.org>
-Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania?=
-X-Mailer: mail.lokoho.com
+        with ESMTP id S232443AbjAKJAK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 04:00:10 -0500
+Received: from out20-86.mail.aliyun.com (out20-86.mail.aliyun.com [115.124.20.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7C3912AA5
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 01:00:08 -0800 (PST)
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04450481|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0696556-0.000238818-0.930106;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047206;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=1;RT=1;SR=0;TI=SMTPD_---.Qq2guDW_1673427585;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.Qq2guDW_1673427585)
+          by smtp.aliyun-inc.com;
+          Wed, 11 Jan 2023 16:59:46 +0800
+Date:   Wed, 11 Jan 2023 16:59:46 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     linux-nfs@vger.kernel.org
+Subject: a dead lock of 'umount.nfs4 /nfs/scratch -l'
+Message-Id: <20230111165945.7605.409509F4@e16-tech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
-        SPF_PASS,URIBL_CSS_A autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.81.04 [en]
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dzie=C5=84 dobry,
+Hi,
 
-zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
-=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
-o dalszych rozm=C3=B3w.=20
+We noticed a dead lock of 'umount.nfs4 /nfs/scratch -l'
 
-Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
-=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
-=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
-strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
+kernel: 6.1.5-rc1
 
-Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
+The dmesg output of 'sysrq w'
+
+[13493.955032] sysrq: Show Blocked State
+[13493.959997] task:umount.nfs4     state:D stack:0     pid:3542745 ppid:3542744 flags:0x00004000
+[13493.969628] Call Trace:
+[13493.973003]  <TASK>
+[13493.976018]  __schedule+0x2cb/0x880
+[13493.980426]  ? __bpf_trace_svc_stats_latency+0x10/0x10 [sunrpc]
+[13493.987342]  ? rpc_destroy_wait_queue+0x10/0x10 [sunrpc]
+[13493.993637]  schedule+0x50/0xc0
+[13493.997697]  rpc_wait_bit_killable+0xd/0x60 [sunrpc]
+[13494.003671]  __wait_on_bit+0x75/0x90
+[13494.008168]  out_of_line_wait_on_bit+0x91/0xb0
+[13494.013547]  ? sched_core_clone_cookie+0x90/0x90
+[13494.019101]  __rpc_execute+0x14b/0x490 [sunrpc]
+[13494.024603]  ? kmem_cache_alloc+0x41/0x530
+[13494.029610]  rpc_execute+0xc5/0x100 [sunrpc]
+[13494.034835]  rpc_run_task+0x14b/0x1b0 [sunrpc]
+[13494.040252]  rpc_call_sync+0x50/0xa0 [sunrpc]
+[13494.045566]  nfs4_proc_destroy_session+0x80/0x100 [nfsv4]
+[13494.051926]  nfs4_destroy_session+0x24/0x90 [nfsv4]
+[13494.057767]  nfs41_shutdown_client+0xfd/0x120 [nfsv4]
+[13494.063774]  nfs4_free_client+0x21/0xb0 [nfsv4]
+[13494.069240]  nfs_free_server+0x44/0xb0 [nfs]
+[13494.074418]  nfs_kill_super+0x2b/0x40 [nfs]
+[13494.079490]  deactivate_locked_super+0x2c/0x70
+[13494.084811]  cleanup_mnt+0xb8/0x140
+[13494.089147]  task_work_run+0x6a/0xb0
+[13494.093587]  exit_to_user_mode_prepare+0x1b9/0x1c0
+[13494.099232]  syscall_exit_to_user_mode+0x12/0x30
+[13494.104717]  do_syscall_64+0x67/0x80
+[13494.109125]  ? syscall_exit_to_user_mode+0x12/0x30
+[13494.114799]  ? do_syscall_64+0x67/0x80
+[13494.119426]  ? do_syscall_64+0x67/0x80
+[13494.124042]  ? do_syscall_64+0x67/0x80
+[13494.128649]  ? exc_page_fault+0x64/0x140
+[13494.133400]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+[13494.139306] RIP: 0033:0x7fc32f839e9b
+[13494.143726] RSP: 002b:00007ffe670f6018 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
+[13494.152183] RAX: 0000000000000000 RBX: 000055f4aad71920 RCX: 00007fc32f839e9b
+[13494.160218] RDX: 0000000000000003 RSI: 0000000000000002 RDI: 000055f4aad72600
+[13494.168237] RBP: 0000000000000002 R08: 0000000000000007 R09: 000055f4aad71010
+[13494.176277] R10: 00007fc32fbc0bc0 R11: 0000000000000202 R12: 000055f4aad72600
+[13494.184313] R13: 00007fc33025f244 R14: 000055f4aad71a30 R15: 000055f4aad71b50
+[13494.192334]  </TASK>
+
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2023/01/11
 
 
-Pozdrawiam
-Adam Charachuta
