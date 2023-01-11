@@ -2,176 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 936296652E8
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 05:44:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F57E6652FB
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 05:55:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229986AbjAKEoB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 10 Jan 2023 23:44:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42454 "EHLO
+        id S235224AbjAKEy5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 10 Jan 2023 23:54:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229819AbjAKEoA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Jan 2023 23:44:00 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49BBB6396
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 20:43:58 -0800 (PST)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30B31QWq017391;
-        Wed, 11 Jan 2023 04:43:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2022-7-12;
- bh=ilUc5kyQSkb2Oo0cvQtpqQ5xq6YCJs8EH6KQ/VjfV0U=;
- b=TKvC2TwLY9B4BZVMtRlSSEodIEM7/iHSbt+D3eTEOnNdqxHOucT0P1Kk0t/z9jj43Hq9
- 1oltPqA6d4/Ouz40Xhh2VZqsrjXIkuqdogj/VB7gBjVHV8838Rbfh/khJcIjoYsMOe43
- 2Jf4r7RY428oELRhLR9JFKTWSLAGKvVECO30Ou4a44ZdlIDYRJpA4763m2DQ2mkPyIih
- GvUdilwXX9VpQGU9wOvWncX0c3yDIfXGc6LGpGP6SVjtV+CMZMvkSX47TqXmpIBOWNHt
- jUyaa37nKT4GsmEtHv3tEmwiQjXTPGuRyOwYUASaU2bZvuMgzdbX0bfJUyngbt4UpQHU /A== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n173bj014-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Jan 2023 04:43:52 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30B41WXJ009269;
-        Wed, 11 Jan 2023 04:43:51 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3n1k4np2kh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Jan 2023 04:43:51 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 30B4hoIO023362;
-        Wed, 11 Jan 2023 04:43:50 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3n1k4np2k4-1;
-        Wed, 11 Jan 2023 04:43:50 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     efault@gmx.de, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] NFSD: fix WARN_ON_ONCE in __queue_delayed_work
-Date:   Tue, 10 Jan 2023 20:43:41 -0800
-Message-Id: <1673412221-8037-1-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-11_01,2023-01-10_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- adultscore=0 spamscore=0 mlxscore=0 mlxlogscore=999 phishscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301110035
-X-Proofpoint-GUID: D1g5d54zjtYTCIXq6t3-NkBSml4tJp_Y
-X-Proofpoint-ORIG-GUID: D1g5d54zjtYTCIXq6t3-NkBSml4tJp_Y
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231724AbjAKEyu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 10 Jan 2023 23:54:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34AC52AF2
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 20:54:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1673412849;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AwDGIIG2kEW7th9yR8DoIeZiikP/oVS4/IYm7KTM+N0=;
+        b=brBsQQCOn3YNpLDRSqJ0fzxkPgWTd4vbAn6G6HjRvF4ftTEjYNlIg2wBSn3tcP5h2zfNIk
+        jWqFpNqwVQdt3rHPjEQTY6pwwFqd6aMMsecCM9qO+H49BcBd/QzXarky/Q/461Wvi4a92Y
+        V+yqgBm2DJ/BldL60Ie7/m7IEX5QWqQ=
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
+ [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-417-uo4knvkYPWitk3b2tv_E5w-1; Tue, 10 Jan 2023 23:54:08 -0500
+X-MC-Unique: uo4knvkYPWitk3b2tv_E5w-1
+Received: by mail-pg1-f200.google.com with SMTP id a33-20020a630b61000000b00429d91cc649so6082546pgl.8
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Jan 2023 20:54:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AwDGIIG2kEW7th9yR8DoIeZiikP/oVS4/IYm7KTM+N0=;
+        b=xhjQskUoXkOTHsFF9BJw/UOlWGM5TkeVp98+bQqCVFSv6eRAF1DV795XIallpyYttu
+         DPNOZS6e05SFtztuyPy12qtZuDXp6lMoB0kQRBQh3T/IHiTUyby8TfC6/03UdeIXFgbN
+         bluIkEvgPNsaBtU6qdvvyM3RCGD9EiTLcUApFp4J+ZbXoPIUoEcc2D1K/wnem22dH9n9
+         zQdIxr6ls5oHCfL7HaxB1rAQcL5VK/SggIF1pJxWLJWQOCEs7dm513Rz5Cv2G36vcuPE
+         89+mVU6gbN9G5gQbPcsK7vKqOfw11VMqnuvFdlgiMLy5fXu5W4OXroA06/aWJ+2lKW5G
+         IE7A==
+X-Gm-Message-State: AFqh2kqwHXapEn53xktJCveP8pkPGMvAk+yKXWDZ1WVX20mQhk7ZlL1E
+        4XhUQrdW8LLvSkHTPF+TfQUS/O3TObCcMIoydSe3IfHXcEWDRaCUMVsFq7vuS8bMXAjYvQraoqV
+        /Bc3bDLVPCB2Iwv0p76WC
+X-Received: by 2002:a17:903:50e:b0:189:bda4:4a39 with SMTP id jn14-20020a170903050e00b00189bda44a39mr68317522plb.49.1673412846877;
+        Tue, 10 Jan 2023 20:54:06 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXs+9rrIRD+6pRvHkwnX14gh2BCpLNg+4mxFg/ySKLAFpFMrHGq/R+Lf/NnqdSw7vAx/2ZYhMg==
+X-Received: by 2002:a17:903:50e:b0:189:bda4:4a39 with SMTP id jn14-20020a170903050e00b00189bda44a39mr68317481plb.49.1673412846568;
+        Tue, 10 Jan 2023 20:54:06 -0800 (PST)
+Received: from [10.72.14.8] ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id d11-20020a170902654b00b001895d87225csm8944870pln.182.2023.01.10.20.53.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 10 Jan 2023 20:54:05 -0800 (PST)
+Message-ID: <330d1f1b-02b2-ceb1-5df5-ef6ce0061eb2@redhat.com>
+Date:   Wed, 11 Jan 2023 12:53:49 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2] filelock: move file locking definitions to separate
+ header file
+Content-Language: en-US
+To:     Jeff Layton <jlayton@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Steve French <stfrench@microsoft.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, cluster-devel@redhat.com,
+        linux-nfs@vger.kernel.org, ocfs2-devel@oss.oracle.com,
+        devel@lists.orangefs.org, linux-xfs@vger.kernel.org
+References: <20230105211937.1572384-1-jlayton@kernel.org>
+From:   Xiubo Li <xiubli@redhat.com>
+In-Reply-To: <20230105211937.1572384-1-jlayton@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently nfsd4_state_shrinker_worker can be schduled multiple times
-from nfsd4_state_shrinker_count when memory is low. This causes
-the WARN_ON_ONCE in __queue_delayed_work to trigger.
 
-This patch allows only one instance of nfsd4_state_shrinker_worker
-at a time using the nfsd_shrinker_active flag, protected by the
-client_lock.
+On 06/01/2023 05:19, Jeff Layton wrote:
+> The file locking definitions have lived in fs.h since the dawn of time,
+> but they are only used by a small subset of the source files that
+> include it.
+>
+> Move the file locking definitions to a new header file, and add the
+> appropriate #include directives to the source files that need them. By
+> doing this we trim down fs.h a bit and limit the amount of rebuilding
+> that has to be done when we make changes to the file locking APIs.
+>
+> Reviewed-by: Xiubo Li <xiubli@redhat.com>
+> Reviewed-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: David Howells <dhowells@redhat.com>
+> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> Acked-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+> Acked-by: Steve French <stfrench@microsoft.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>   arch/arm/kernel/sys_oabi-compat.c |   1 +
+>   fs/9p/vfs_file.c                  |   1 +
+>   fs/afs/internal.h                 |   1 +
+>   fs/attr.c                         |   1 +
+>   fs/ceph/locks.c                   |   1 +
 
-Replace mod_delayed_work in nfsd4_state_shrinker_count with queue_work.
+ceph part looks good to me.
 
-Change nfsd_shrinker_work from delayed_work to work_struct since we
-don't use the delay.
+Thanks
 
-Cancel work_struct nfsd_shrinker_work after unregistering shrinker
-in nfs4_state_shutdown_net
+- Xiubo
 
-Fixes: 44df6f439a17 ("NFSD: add delegation reaper to react to low memory condition")
-Reported-by: Mike Galbraith <efault@gmx.de>
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
-v2:
-  . Replace mod_delayed_work in nfsd4_state_shrinker_count with queue_work
-  . Change nfsd_shrinker_work from delayed_work to work_struct
-  . Cancel work_struct nfsd_shrinker_work after unregistering shrinker
-
- fs/nfsd/netns.h     |  3 ++-
- fs/nfsd/nfs4state.c | 22 +++++++++++++++++-----
- 2 files changed, 19 insertions(+), 6 deletions(-)
-
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 8c854ba3285b..b0c7b657324b 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -195,7 +195,8 @@ struct nfsd_net {
- 
- 	atomic_t		nfsd_courtesy_clients;
- 	struct shrinker		nfsd_client_shrinker;
--	struct delayed_work	nfsd_shrinker_work;
-+	struct work_struct	nfsd_shrinker_work;
-+	bool			nfsd_shrinker_active;
- };
- 
- /* Simple check to find out if a given net was properly initialized */
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a7cfefd7c205..6508f9c79315 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4407,11 +4407,20 @@ nfsd4_state_shrinker_count(struct shrinker *shrink, struct shrink_control *sc)
- 	struct nfsd_net *nn = container_of(shrink,
- 			struct nfsd_net, nfsd_client_shrinker);
- 
-+	spin_lock(&nn->client_lock);
-+	if (nn->nfsd_shrinker_active) {
-+		spin_unlock(&nn->client_lock);
-+		return 0;
-+	}
- 	count = atomic_read(&nn->nfsd_courtesy_clients);
- 	if (!count)
- 		count = atomic_long_read(&num_delegations);
--	if (count)
--		mod_delayed_work(laundry_wq, &nn->nfsd_shrinker_work, 0);
-+	if (count) {
-+		nn->nfsd_shrinker_active = true;
-+		spin_unlock(&nn->client_lock);
-+		queue_work(laundry_wq, &nn->nfsd_shrinker_work);
-+	} else
-+		spin_unlock(&nn->client_lock);
- 	return (unsigned long)count;
- }
- 
-@@ -6233,12 +6242,14 @@ deleg_reaper(struct nfsd_net *nn)
- static void
- nfsd4_state_shrinker_worker(struct work_struct *work)
- {
--	struct delayed_work *dwork = to_delayed_work(work);
--	struct nfsd_net *nn = container_of(dwork, struct nfsd_net,
-+	struct nfsd_net *nn = container_of(work, struct nfsd_net,
- 				nfsd_shrinker_work);
- 
- 	courtesy_client_reaper(nn);
- 	deleg_reaper(nn);
-+	spin_lock(&nn->client_lock);
-+	nn->nfsd_shrinker_active = 0;
-+	spin_unlock(&nn->client_lock);
- }
- 
- static inline __be32 nfs4_check_fh(struct svc_fh *fhp, struct nfs4_stid *stp)
-@@ -8064,7 +8075,7 @@ static int nfs4_state_create_net(struct net *net)
- 	INIT_LIST_HEAD(&nn->blocked_locks_lru);
- 
- 	INIT_DELAYED_WORK(&nn->laundromat_work, laundromat_main);
--	INIT_DELAYED_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker);
-+	INIT_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker);
- 	get_net(net);
- 
- 	nn->nfsd_client_shrinker.scan_objects = nfsd4_state_shrinker_scan;
-@@ -8171,6 +8182,7 @@ nfs4_state_shutdown_net(struct net *net)
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 
- 	unregister_shrinker(&nn->nfsd_client_shrinker);
-+	cancel_work(&nn->nfsd_shrinker_work);
- 	cancel_delayed_work_sync(&nn->laundromat_work);
- 	locks_end_grace(&nn->nfsd4_manager);
- 
--- 
-2.9.5
 
