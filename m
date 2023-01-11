@@ -2,70 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82180665FD1
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 16:57:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1524C665FD2
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 16:58:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230375AbjAKP5G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Jan 2023 10:57:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46030 "EHLO
+        id S233325AbjAKP6L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Jan 2023 10:58:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237663AbjAKP5A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 10:57:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB286BF42
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 07:56:14 -0800 (PST)
+        with ESMTP id S231602AbjAKP5h (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 10:57:37 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91BFDD2D7
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 07:56:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673452574;
+        s=mimecast20190719; t=1673452616;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NtBxmxD3RZNKKSmNnlZUoU2QTnz48ocgcqRD17r3rfc=;
-        b=dkInraSTv1GjzsWpIRJRPcUxAOqLO5ci6vkYUed33vvMlrF1enlMXh+CFiIJ5uCmQ+GpEI
-        QIWBS1Ab7YsaW2b0dfBlPgNAn12dSkLWP9B4INWCRNZuCN8WyJxuP0+31zRMr2+XFvXxil
-        jSZkoU6weRCJsmeMNUweBNjU+Dy/nbs=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=KSW8iHMLKKGVo1gy8o3fcpHr9XuMpdh8vLM/sJn8+MQ=;
+        b=gC6N0vkUihOq2/ab1OqG7WynCNimZtEV4jDrvHz/3IwvN34uqTbvjzo51IU/nKr+0URDFe
+        sjzhfwtVUSq/2uwgbYtZG7ft7/8rxmmNaFgpobHoGe/ernz0N3jfOYDHL5cA/s5UPdQt9L
+        cU7YXgrT1Z9BrqLAUkHoqDAaie4BcwU=
+Received: from mail-vs1-f70.google.com (mail-vs1-f70.google.com
+ [209.85.217.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-199-uhV4442JOwOdcz7SK5poNA-1; Wed, 11 Jan 2023 10:56:12 -0500
-X-MC-Unique: uhV4442JOwOdcz7SK5poNA-1
-Received: by mail-qt1-f198.google.com with SMTP id a13-20020ac8610d000000b003a8151cadebso7391992qtm.10
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 07:56:12 -0800 (PST)
+ us-mta-14-z_PWoKCYNlib-sudphndOw-1; Wed, 11 Jan 2023 10:56:55 -0500
+X-MC-Unique: z_PWoKCYNlib-sudphndOw-1
+Received: by mail-vs1-f70.google.com with SMTP id s62-20020a675e41000000b003cefb1730d9so3102521vsb.0
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 07:56:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:references:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NtBxmxD3RZNKKSmNnlZUoU2QTnz48ocgcqRD17r3rfc=;
-        b=GLWayfyw9Z2Id51Qh24EI590aI7jr0xpD74rKAliLf/RwdG3THHrEkHIM5GD2EeiFb
-         mJkXMXTHGS+rk4+ZapkeURxFYDrLxm+aqC/TKs9OO2zG4yWduUK/rjnbGoSORLSSTeBS
-         HzK1V0YB831N0GckuiSbBufz5HzH56rHMxc/x3NHXxmFssDYUG0lNhKVAXTUu3g2vRIW
-         PiTDRrrEFfzAyKbJ1roiaK9MniHwDb+blQGhtSzWuG0J0yOD80TGt9OFyOKWRr/Mu3af
-         MCzYQInDAnJqzOkV/aATolDDuifaNMpZu4zoxi5JrmkjqPUIg+ZZLFxeCnYEYGcnMIV/
-         H7QA==
-X-Gm-Message-State: AFqh2kqRgfJxCA6ynlBazbVtAPK0Dx0B5hJkkcG28a37hr5U4a3+vnOO
-        Llp3DBehn/OX9xily7LhqEzGffGet1JLjrg85o2sG2e9fJLI6cRSE19zwBdFnWSwYPSDhf+Wbu2
-        rIKKS1n9h+4z6BHmbPAjU
-X-Received: by 2002:ad4:57c5:0:b0:532:ae2:9059 with SMTP id y5-20020ad457c5000000b005320ae29059mr3541730qvx.33.1673452572219;
-        Wed, 11 Jan 2023 07:56:12 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXvZidPrqk9Z8J+Xi+ib3UHDsjKvDLbZ1llimxel5ZKP2sux2A47PmqfnMZMvaggfqrG9vlO4w==
-X-Received: by 2002:ad4:57c5:0:b0:532:ae2:9059 with SMTP id y5-20020ad457c5000000b005320ae29059mr3541702qvx.33.1673452571872;
-        Wed, 11 Jan 2023 07:56:11 -0800 (PST)
+        bh=KSW8iHMLKKGVo1gy8o3fcpHr9XuMpdh8vLM/sJn8+MQ=;
+        b=Mq6jmZ+c9SNJr8aqdnICaX686bwglle99/uQ5bVloImItnB0VOrUlkiYYtQjOrGMtR
+         cIeNGXtKD+WPY8HcvfKuSf1dDhD/GZKGXhLByHNembP5A9i/PHBO8NynhWizDTo902mF
+         Oij200C7fRuPKi0iBUt+JMXISO3kgLrcxKDW6vP7sA3ozzFkSvQgN+kPyINBQF+Alxfx
+         m6QVMLNABOISBojqx7LbRe9P763E7ATIzlUx67VnYGYxE5BkFMEEOK8bTzlj+4ElADyi
+         YPsfwROc4sF2OAPfGImzMi5kZPfy4Dyrq1U2cq4SPqQ0j8cgMnKK3ORaUmxe7c+sFDbz
+         k1xw==
+X-Gm-Message-State: AFqh2kqmFnbCSjQFPtTKAYQpRbUQYYV36DOwk/T+B7wqZ9+Pgby/Tkea
+        uoetEW6IMI7zZvZn88rdPf6VkxL05aYKOHBptI5KC+6rAMsundf3xZlUwdOfhbHs8eORvPqReOn
+        dS9hfNFbwBLzxdysQFsmiexIHK5h66B9emfLJubQisKiSYqnw5Ol5+p1FrOrLCx4ULQUQnw==
+X-Received: by 2002:a1f:1d50:0:b0:3d6:e0d4:2aa9 with SMTP id d77-20020a1f1d50000000b003d6e0d42aa9mr14553124vkd.1.1673452614724;
+        Wed, 11 Jan 2023 07:56:54 -0800 (PST)
+X-Google-Smtp-Source: AMrXdXsvpNbZuesoBF1X4sKgnES/OflbxfXq1pgzQbBr8MVTYtAHsrffJjiN1EayIACRL32OguuMrg==
+X-Received: by 2002:a1f:1d50:0:b0:3d6:e0d4:2aa9 with SMTP id d77-20020a1f1d50000000b003d6e0d42aa9mr14553097vkd.1.1673452614345;
+        Wed, 11 Jan 2023 07:56:54 -0800 (PST)
 Received: from [172.31.1.6] ([70.109.130.165])
-        by smtp.gmail.com with ESMTPSA id l22-20020a05620a28d600b0070531c5d655sm9387871qkp.90.2023.01.11.07.56.10
+        by smtp.gmail.com with ESMTPSA id u2-20020a05620a0c4200b006f9f3c0c63csm9295878qki.32.2023.01.11.07.56.53
+        for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 07:56:11 -0800 (PST)
-Message-ID: <2c88eb01-9df1-fb7d-96ad-5a5ba1bca160@redhat.com>
-Date:   Wed, 11 Jan 2023 10:56:10 -0500
+        Wed, 11 Jan 2023 07:56:53 -0800 (PST)
+Message-ID: <2f6880c4-26e2-c3cf-bd71-93e7b70a7b7a@redhat.com>
+Date:   Wed, 11 Jan 2023 10:56:53 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
-Subject: Re: [PATCH] Replace statfs64 with statfs
+Subject: Re: [PATCH 1/2] Covscan Scan: Wrong Check of Return Value
 Content-Language: en-US
-To:     Khem Raj <raj.khem@gmail.com>, linux-nfs@vger.kernel.org
-References: <20221215213605.4061853-1-raj.khem@gmail.com>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20221215213605.4061853-1-raj.khem@gmail.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20230104170855.19822-1-steved@redhat.com>
+In-Reply-To: <20230104170855.19822-1-steved@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -80,173 +81,28 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 12/15/22 4:36 PM, Khem Raj wrote:
-> autoconf AC_SYS_LARGEFILE is used by configure to add needed defines
-> when needed for enabling 64bit off_t, therefore replacing statfs64 with
-> statfs should be functionally same. Additionally this helps compiling
-> with latest musl where 64bit LFS functions like statfs64 and friends are
-> now moved under _LARGEFILE64_SOURCE feature test macro, this works on
-> glibc systems because _GNU_SOURCE macros also enables
-> _LARGEFILE64_SOURCE indirectly. This is not case with musl and this
-> latest issue is exposed.
-> 
-> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+On 1/4/23 12:08 PM, Steve Dickson wrote:
+> Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=2151966
+> Signed-off-by: Steve Dickson <steved@redhat.com>
 Committed... (tag: nfs-utils-2-6-3-rc6)
 
 steved.
 > ---
->   support/export/cache.c      | 14 +++++++-------
->   support/include/nfsd_path.h |  6 +++---
->   support/misc/nfsd_path.c    | 24 ++++++++++++------------
->   utils/exportfs/exportfs.c   |  4 ++--
->   4 files changed, 24 insertions(+), 24 deletions(-)
+>   support/export/client.c | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
-> diff --git a/support/export/cache.c b/support/export/cache.c
-> index a5823e9..2497d4f 100644
-> --- a/support/export/cache.c
-> +++ b/support/export/cache.c
-> @@ -346,27 +346,27 @@ static int uuid_by_path(char *path, int type, size_t uuidlen, char *uuid)
+> diff --git a/support/export/client.c b/support/export/client.c
+> index ea4f89d..79164fe 100644
+> --- a/support/export/client.c
+> +++ b/support/export/client.c
+> @@ -699,6 +699,9 @@ check_netgroup(const nfs_client *clp, const struct addrinfo *ai)
 >   
->   	/* Possible sources of uuid are
->   	 * - blkid uuid
-> -	 * - statfs64 uuid
-> +	 * - statfs uuid
->   	 *
-> -	 * On some filesystems (e.g. vfat) the statfs64 uuid is simply an
-> +	 * On some filesystems (e.g. vfat) the statfs uuid is simply an
->   	 * encoding of the device that the filesystem is mounted from, so
->   	 * it we be very bad to use that (as device numbers change).  blkid
->   	 * must be preferred.
-> -	 * On other filesystems (e.g. btrfs) the statfs64 uuid contains
-> +	 * On other filesystems (e.g. btrfs) the statfs uuid contains
->   	 * important info that the blkid uuid cannot contain:  This happens
->   	 * when multiple subvolumes are exported (they have the same
-> -	 * blkid uuid but different statfs64 uuids).
-> +	 * blkid uuid but different statfs uuids).
->   	 * We rely on get_uuid_blkdev *knowing* which is which and not returning
-> -	 * a uuid for filesystems where the statfs64 uuid is better.
-> +	 * a uuid for filesystems where the statfs uuid is better.
->   	 *
->   	 */
-> -	struct statfs64 st;
-> +	struct statfs st;
->   	char fsid_val[17];
->   	const char *blkid_val = NULL;
->   	const char *val;
->   	int rc;
->   
-> -	rc = nfsd_path_statfs64(path, &st);
-> +	rc = nfsd_path_statfs(path, &st);
->   
->   	if (type == 0 && rc == 0) {
->   		const unsigned long *bad;
-> diff --git a/support/include/nfsd_path.h b/support/include/nfsd_path.h
-> index 3b73aad..aa1e1dd 100644
-> --- a/support/include/nfsd_path.h
-> +++ b/support/include/nfsd_path.h
-> @@ -7,7 +7,7 @@
->   #include <sys/stat.h>
->   
->   struct file_handle;
-> -struct statfs64;
-> +struct statfs;
->   
->   void 		nfsd_path_init(void);
->   
-> @@ -18,8 +18,8 @@ char *		nfsd_path_prepend_dir(const char *dir, const char *pathname);
->   int 		nfsd_path_stat(const char *pathname, struct stat *statbuf);
->   int 		nfsd_path_lstat(const char *pathname, struct stat *statbuf);
->   
-> -int		nfsd_path_statfs64(const char *pathname,
-> -				   struct statfs64 *statbuf);
-> +int		nfsd_path_statfs(const char *pathname,
-> +				   struct statfs *statbuf);
->   
->   char *		nfsd_realpath(const char *path, char *resolved_path);
->   
-> diff --git a/support/misc/nfsd_path.c b/support/misc/nfsd_path.c
-> index 65e53c1..c3dea4f 100644
-> --- a/support/misc/nfsd_path.c
-> +++ b/support/misc/nfsd_path.c
-> @@ -184,46 +184,46 @@ nfsd_path_lstat(const char *pathname, struct stat *statbuf)
->   	return nfsd_run_stat(nfsd_wq, nfsd_lstatfunc, pathname, statbuf);
->   }
->   
-> -struct nfsd_statfs64_data {
-> +struct nfsd_statfs_data {
->   	const char *pathname;
-> -	struct statfs64 *statbuf;
-> +	struct statfs *statbuf;
->   	int ret;
->   	int err;
->   };
->   
->   static void
-> -nfsd_statfs64func(void *data)
-> +nfsd_statfsfunc(void *data)
->   {
-> -	struct nfsd_statfs64_data *d = data;
-> +	struct nfsd_statfs_data *d = data;
->   
-> -	d->ret = statfs64(d->pathname, d->statbuf);
-> +	d->ret = statfs(d->pathname, d->statbuf);
->   	if (d->ret < 0)
->   		d->err = errno;
->   }
->   
->   static int
-> -nfsd_run_statfs64(struct xthread_workqueue *wq,
-> +nfsd_run_statfs(struct xthread_workqueue *wq,
->   		  const char *pathname,
-> -		  struct statfs64 *statbuf)
-> +		  struct statfs *statbuf)
->   {
-> -	struct nfsd_statfs64_data data = {
-> +	struct nfsd_statfs_data data = {
->   		pathname,
->   		statbuf,
->   		0,
->   		0
->   	};
-> -	xthread_work_run_sync(wq, nfsd_statfs64func, &data);
-> +	xthread_work_run_sync(wq, nfsd_statfsfunc, &data);
->   	if (data.ret < 0)
->   		errno = data.err;
->   	return data.ret;
->   }
->   
->   int
-> -nfsd_path_statfs64(const char *pathname, struct statfs64 *statbuf)
-> +nfsd_path_statfs(const char *pathname, struct statfs *statbuf)
->   {
->   	if (!nfsd_wq)
-> -		return statfs64(pathname, statbuf);
-> -	return nfsd_run_statfs64(nfsd_wq, pathname, statbuf);
-> +		return statfs(pathname, statbuf);
-> +	return nfsd_run_statfs(nfsd_wq, pathname, statbuf);
->   }
->   
->   struct nfsd_realpath_data {
-> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-> index 0897b22..6d79a5b 100644
-> --- a/utils/exportfs/exportfs.c
-> +++ b/utils/exportfs/exportfs.c
-> @@ -513,7 +513,7 @@ validate_export(nfs_export *exp)
->   	 */
->   	struct stat stb;
->   	char *path = exportent_realpath(&exp->m_export);
-> -	struct statfs64 stf;
-> +	struct statfs stf;
->   	int fs_has_fsid = 0;
->   
->   	if (stat(path, &stb) < 0) {
-> @@ -528,7 +528,7 @@ validate_export(nfs_export *exp)
->   	if (!can_test())
->   		return;
->   
-> -	if (!statfs64(path, &stf) &&
-> +	if (!statfs(path, &stf) &&
->   	    (stf.f_fsid.__val[0] || stf.f_fsid.__val[1]))
->   		fs_has_fsid = 1;
->   
+>   	/* check whether the IP itself is in the netgroup */
+>   	ip = calloc(INET6_ADDRSTRLEN, 1);
+> +	if (ip == NULL)
+> +		goto out;
+> +
+>   	if (inet_ntop(ai->ai_family, &(((struct sockaddr_in *)ai->ai_addr)->sin_addr), ip, INET6_ADDRSTRLEN) == ip) {
+>   		if (innetgr(netgroup, ip, NULL, NULL)) {
+>   			free(hname);
 
