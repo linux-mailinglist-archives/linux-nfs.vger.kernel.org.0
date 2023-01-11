@@ -2,120 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A011A666062
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 17:26:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB17666606C
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Jan 2023 17:28:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234557AbjAKQ0E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Jan 2023 11:26:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36636 "EHLO
+        id S232424AbjAKQ2K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Jan 2023 11:28:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229737AbjAKQZk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 11:25:40 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4633726E
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 08:21:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673454087;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mtl9eXGbwOzPo68Erw/BrWcaAo83U4Q2meP2dkBuoBA=;
-        b=c+QMbtJryIHOhRAPSr7qc2shEL3hWnuZGr/eRNjnyx6cG1VdQPO+4/fumhyg0Gzlz+VidG
-        a42cG/4xqVun5l44/hokHSnB/OPTweLVL7nKPll1RuzeI4elCqiDBJfIyIBEeJ0JAHmgLC
-        SItSSv4NjNZQpkg0ZlqyBhymbx6VC1Q=
-Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
- [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-550-cQGsHgUOOyamVygBJNmAzQ-1; Wed, 11 Jan 2023 11:21:26 -0500
-X-MC-Unique: cQGsHgUOOyamVygBJNmAzQ-1
-Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-4bdeb1bbeafso165003257b3.4
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 08:21:26 -0800 (PST)
+        with ESMTP id S230084AbjAKQ1u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Jan 2023 11:27:50 -0500
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E947C3592E
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 08:25:39 -0800 (PST)
+Received: by mail-qt1-x844.google.com with SMTP id fd15so4222397qtb.9
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Jan 2023 08:25:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=UrSmCxbrguX9JK8DdpZDn5eJMz1dapG9KJ1fXWHJ83k=;
+        b=YDAtZSObXSHv4ZIVIG7ZjAIdc7UdjBwqyBaJHEn3dtzhcsCPjBGLSCD4er/95DdHjO
+         dajni2+TWnFCXJ41e0HwBZsWkxL5cWTWgis67ylD2WaZ3+Wlr4QixWsMHGgilUC7L+7q
+         s8qhHY38duArHVTNG0lMiWq5YHIAmQlIijwicitHvAXoiKYAYg10+OMEmNsx7DR0dfpW
+         WAzCSqr/hqEgrZ09TeXToY2J6QIgERT2MU87V/sCs8ebMNn1XcSRPakaUYPzWeHe6lT7
+         FoVzSUise0hX6Rf+39UerNCNRAk75EMctDZsDFFfF8Tzl9/JZPJnfpLKLrwGIt4Dqdn4
+         1nDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mtl9eXGbwOzPo68Erw/BrWcaAo83U4Q2meP2dkBuoBA=;
-        b=z8Al0N8mi2xdmXloy/iOrzePDTOuQ1A62UumtfRx4qOUJ5d5B+e3mYkRUxceJlRe/l
-         kLPghpAJdElkdKu0/BVrQ4uiAIsgfKB3vHokhLuqSu0ysxk/cvr9isz+fNdHRf9IeoaP
-         hsksgaC86N8WjDcKwFkG4zWiTt1eOORsl9qxA5tn+ng036F7K2+c/VCslI7VF2biVd9A
-         njtPwuIGUXKvw9brBbOdLaTYXdi1SxnL5EhRXltBvwzgfUW7JViEbK7NEi7ovGaMGS2r
-         Vm2umgXejGQL4h8A4aGc33bUYJK6acjxEvUnoT0zpgQRdcEzgXSPWU/Q3ITJscx6t2bJ
-         B/Ww==
-X-Gm-Message-State: AFqh2kqlY4c3iWBAa02BUYdAN6MtWx1KbgfGxK3AWaYn14BAX49LBnL8
-        Um9dB0jvboyKGOL4FzMDmvzuDtd3+xKCPFfCK0JVI9Vx7/kyUNMT8Ybv48FGq/dcpLUp20TIfyQ
-        M4iVhOFlW4jBm1EU++hdG
-X-Received: by 2002:a81:4c12:0:b0:4a4:d75d:770 with SMTP id z18-20020a814c12000000b004a4d75d0770mr31487722ywa.21.1673454085178;
-        Wed, 11 Jan 2023 08:21:25 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuyMMa6Tn38sgMXfLanQ49qQh6yYpBOJG1FmgzKLpRS/hMTzrU9951GBQn7G41T68u60byR3w==
-X-Received: by 2002:a81:4c12:0:b0:4a4:d75d:770 with SMTP id z18-20020a814c12000000b004a4d75d0770mr31487707ywa.21.1673454084878;
-        Wed, 11 Jan 2023 08:21:24 -0800 (PST)
-Received: from [172.31.1.6] ([70.109.130.165])
-        by smtp.gmail.com with ESMTPSA id y10-20020a05620a25ca00b006fa4cac54a5sm9206480qko.72.2023.01.11.08.21.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Jan 2023 08:21:24 -0800 (PST)
-Message-ID: <00f27d16-2c5e-10f0-047c-63e904b3237b@redhat.com>
-Date:   Wed, 11 Jan 2023 11:21:23 -0500
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UrSmCxbrguX9JK8DdpZDn5eJMz1dapG9KJ1fXWHJ83k=;
+        b=lRHe+VO8xsVDsCKxAbNneN6o1lzMfNmSq+4syQ1/rrBLl5UrfQs+JeamZoqj8U8TsF
+         eglBj8xuT3/u2DDkEwB2TM8Jkp7MX0RrLMrDvmQF+EXqzwYPIwYX5aJspvu8qurS24wd
+         NX7tbJPpVKRjVdmfJIB/yHuGLJtD2vEHeoSmS4omckVCA0vVd6rlnsouuAOQnWvNudd5
+         G8pkFZ0h2TjexqaEF/om+P40Y7RkYXO0nwF4LgSLDyc480X8FwKI+d8QJf+uhPcfX7GL
+         InIQ7m0n+GXd4SF0VBkKusv26qsVcc5vK+OQKN4rfnUTjRSpQHW8E6LyBHhqkplcyhnV
+         cn4Q==
+X-Gm-Message-State: AFqh2kpMBkU6T7Acgb9cV5XBwfQIktdVHN1cHCFDmETFa3H7TyGIyhO5
+        bckVcBaOz/ePq+ElaHw0vIY=
+X-Google-Smtp-Source: AMrXdXvNbTQzKJEkJOaC3VMda0UALd9sMG0aBU6Bnq1o3u04N6WcSdRzMNeeHGi2CKlEFqb/CVU15A==
+X-Received: by 2002:a05:622a:8c8:b0:3ad:fdb5:46c8 with SMTP id i8-20020a05622a08c800b003adfdb546c8mr15188998qte.10.1673454339105;
+        Wed, 11 Jan 2023 08:25:39 -0800 (PST)
+Received: from localhost (ec2-44-201-124-83.compute-1.amazonaws.com. [44.201.124.83])
+        by smtp.gmail.com with ESMTPSA id ay28-20020a05622a229c00b003a50d92f9b4sm7740741qtb.1.2023.01.11.08.25.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jan 2023 08:25:38 -0800 (PST)
+From:   Xingyuan Mo <hdthky0@gmail.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org, dai.ngo@oracle.com,
+        Xingyuan Mo <hdthky0@gmail.com>
+Subject: [PATCH] NFSD: fix use-after-free in nfsd4_ssc_setup_dul()
+Date:   Thu, 12 Jan 2023 00:24:53 +0800
+Message-Id: <20230111162453.8295-1-hdthky0@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] [nfs/nfs-utils/libtirpc] getnetconfigent: avoid potential
- DoS issue by removing unnecessary sleep
-Content-Language: en-US
-To:     Zhi Li <yieli@redhat.com>, linux-nfs@vger.kernel.org
-References: <20221216051132.2569403-1-yieli@redhat.com>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20221216051132.2569403-1-yieli@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+If signal_pending() returns true, schedule_timeout() will not be executed,
+causing the waiting task to remain in the wait queue.
+Fixed by adding a call to finish_wait(), which ensures that the waiting
+task will always be removed from the wait queue.
 
+Reported-by: Xingyuan Mo <hdthky0@gmail.com>
+Signed-off-by: Xingyuan Mo <hdthky0@gmail.com>
+---
+ fs/nfsd/nfs4proc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 12/16/22 12:11 AM, Zhi Li wrote:
-> Subject:
-> [PATCH] [nfs/nfs-utils/libtirpc] getnetconfigent: avoid potential DoS 
-> issue by removing unnecessary sleep
-> From:
-> Zhi Li <yieli@redhat.com>
-> Date:
-> 12/16/22, 12:11 AM
-> 
-> To:
-> linux-nfs@vger.kernel.org
-> CC:
-> steved@redhat.com, Zhi Li <yieli@redhat.com>
-> 
-> 
-> Signed-off-by: Zhi Li<yieli@redhat.com>
-Committed...
-
-steved.
-> ---
->   src/getnetconfig.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/src/getnetconfig.c b/src/getnetconfig.c
-> index cfd33c2..9acd8c7 100644
-> --- a/src/getnetconfig.c
-> +++ b/src/getnetconfig.c
-> @@ -439,7 +439,6 @@ getnetconfigent(netid)
->   	fprintf(stderr, "See UPDATING entry 20021216 for details.\n");
->   	fprintf(stderr, "Continuing in 10 seconds\n\n");
->   	fprintf(stderr, "This warning will be removed 20030301\n");
-> -	sleep(10);
->   
->       }
->   
-> -- 2.38.1
-> 
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index bd880d55f565..3fa819e29b3f 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1318,6 +1318,7 @@ static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
+ 			/* allow 20secs for mount/unmount for now - revisit */
+ 			if (signal_pending(current) ||
+ 					(schedule_timeout(20*HZ) == 0)) {
++				finish_wait(&nn->nfsd_ssc_waitq, &wait);
+ 				kfree(work);
+ 				return nfserr_eagain;
+ 			}
+-- 
+2.34.1
 
