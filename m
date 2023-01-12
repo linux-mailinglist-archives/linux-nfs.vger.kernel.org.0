@@ -2,124 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 983A6666E65
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jan 2023 10:39:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E291666F84
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jan 2023 11:26:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237398AbjALJjE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Jan 2023 04:39:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50852 "EHLO
+        id S239553AbjALK0a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Jan 2023 05:26:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240142AbjALJid (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Jan 2023 04:38:33 -0500
-Received: from out20-86.mail.aliyun.com (out20-86.mail.aliyun.com [115.124.20.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B44CD59D30
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Jan 2023 01:30:50 -0800 (PST)
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04437592|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.0524779-0.00024391-0.947278;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047187;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=1;RT=1;SR=0;TI=SMTPD_---.Qqx.XdP_1673515846;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.Qqx.XdP_1673515846)
-          by smtp.aliyun-inc.com;
-          Thu, 12 Jan 2023 17:30:47 +0800
-Date:   Thu, 12 Jan 2023 17:30:47 +0800
-From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     linux-nfs@vger.kernel.org
-Subject: Re: a dead lock of 'umount.nfs4 /nfs/scratch -l'
-In-Reply-To: <20230111173534.82A7.409509F4@e16-tech.com>
-References: <20230111165945.7605.409509F4@e16-tech.com> <20230111173534.82A7.409509F4@e16-tech.com>
-Message-Id: <20230112173046.82E4.409509F4@e16-tech.com>
+        with ESMTP id S229485AbjALKZx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Jan 2023 05:25:53 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A30FDC63
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Jan 2023 02:21:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 57FF2B81DD8
+        for <linux-nfs@vger.kernel.org>; Thu, 12 Jan 2023 10:21:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 900A5C433D2;
+        Thu, 12 Jan 2023 10:21:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673518893;
+        bh=AEtW0SmM45p0RWYKuV9dZCp04C018uAyZeyXRstHLsg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=V7f830NUfFZAn6ZEvDDCzV/OmZPWLtRMJFaQZZnXC7fa/0o6WHa+m0ilLBeXJxu6D
+         3wsHDgUnM8OJUqEooVew7qr9qn/QIoXyX8C703RJhsA/CkZfZ+93MYjvrHLeUlf2NJ
+         13EMURSDg2wTu4/dl3JGuNycTX6/g6BbnL7uvvcFFiwVutZJ87PTCh64kP4OH7sijT
+         msVoL1+mY+nf+2FkThT+0Qz1NAKJQaoNImtH0fTZgDBjObR9xgynZwo/r5XD+cPDNy
+         CqQk7+IOEUIyNJvggdSYbx2AqTRVcObbSxqTCRiP98cnkNOgxbvlaWwLSeKoKZNtto
+         FH7G3Yh0y4JkQ==
+Message-ID: <24989361df3b610f5cddad9bd9949c40ec1a9cc2.camel@kernel.org>
+Subject: Re: [PATCH 1/1] NFSD: replace delayed_work with work_struct for
+ nfsd_client_shrinker
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Thu, 12 Jan 2023 05:21:31 -0500
+In-Reply-To: <1673482011-27110-1-git-send-email-dai.ngo@oracle.com>
+References: <1673482011-27110-1-git-send-email-dai.ngo@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.81.04 [en]
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+On Wed, 2023-01-11 at 16:06 -0800, Dai Ngo wrote:
+> Since nfsd4_state_shrinker_count always calls mod_delayed_work with
+> 0 delay, we can replace delayed_work with work_struct to save some
+> space and overhead.
+>=20
+> Also add the call to cancel_work after unregister the shrinker
+> in nfs4_state_shutdown_net.
+>=20
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/netns.h     | 2 +-
+>  fs/nfsd/nfs4state.c | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 8c854ba3285b..51a4b7885cae 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -195,7 +195,7 @@ struct nfsd_net {
+> =20
+>  	atomic_t		nfsd_courtesy_clients;
+>  	struct shrinker		nfsd_client_shrinker;
+> -	struct delayed_work	nfsd_shrinker_work;
+> +	struct work_struct	nfsd_shrinker_work;
+>  };
+> =20
+>  /* Simple check to find out if a given net was properly initialized */
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index a7cfefd7c205..21bee33bc6dc 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -4411,7 +4411,7 @@ nfsd4_state_shrinker_count(struct shrinker *shrink,=
+ struct shrink_control *sc)
+>  	if (!count)
+>  		count =3D atomic_long_read(&num_delegations);
+>  	if (count)
+> -		mod_delayed_work(laundry_wq, &nn->nfsd_shrinker_work, 0);
+> +		queue_work(laundry_wq, &nn->nfsd_shrinker_work);
+>  	return (unsigned long)count;
+>  }
+> =20
+> @@ -6233,8 +6233,7 @@ deleg_reaper(struct nfsd_net *nn)
+>  static void
+>  nfsd4_state_shrinker_worker(struct work_struct *work)
+>  {
+> -	struct delayed_work *dwork =3D to_delayed_work(work);
+> -	struct nfsd_net *nn =3D container_of(dwork, struct nfsd_net,
+> +	struct nfsd_net *nn =3D container_of(work, struct nfsd_net,
+>  				nfsd_shrinker_work);
+> =20
+>  	courtesy_client_reaper(nn);
+> @@ -8064,7 +8063,7 @@ static int nfs4_state_create_net(struct net *net)
+>  	INIT_LIST_HEAD(&nn->blocked_locks_lru);
+> =20
+>  	INIT_DELAYED_WORK(&nn->laundromat_work, laundromat_main);
+> -	INIT_DELAYED_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker)=
+;
+> +	INIT_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker);
+>  	get_net(net);
+> =20
+>  	nn->nfsd_client_shrinker.scan_objects =3D nfsd4_state_shrinker_scan;
+> @@ -8171,6 +8170,7 @@ nfs4_state_shutdown_net(struct net *net)
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> =20
+>  	unregister_shrinker(&nn->nfsd_client_shrinker);
+> +	cancel_work(&nn->nfsd_shrinker_work);
+>  	cancel_delayed_work_sync(&nn->laundromat_work);
+>  	locks_end_grace(&nn->nfsd4_manager);
+> =20
 
-> Hi,
-> 
-> > Hi,
-> > 
-> > We noticed a dead lock of 'umount.nfs4 /nfs/scratch -l'
-> 
-> reproducer:
-> 
-> mount /dev/sda1 /mnt/test/
-> mount /dev/sda2 /mnt/scratch/
-> systemctl restart nfs-server.service
-> mount.nfs4 127.0.0.1:/mnt/test/ /nfs/test/
-> mount.nfs4 127.0.0.1:/mnt/scratch/ /nfs/scratch/
-> systemctl stop nfs-server.service
-> umount -l /nfs/scratch #OK
-> umount -l /nfs/test #dead lock
-> 
-> Best Regards
-> Wang Yugui (wangyugui@e16-tech.com)
-> 2023/01/11
-> 
-> > kernel: 6.1.5-rc1
-
-This problem happen on kernel 6.2.0-rc3+(upstream) too.
-
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2023/01/12
-
-> > 
-> > The dmesg output of 'sysrq w'
-> > 
-> > [13493.955032] sysrq: Show Blocked State
-> > [13493.959997] task:umount.nfs4     state:D stack:0     pid:3542745 ppid:3542744 flags:0x00004000
-> > [13493.969628] Call Trace:
-> > [13493.973003]  <TASK>
-> > [13493.976018]  __schedule+0x2cb/0x880
-> > [13493.980426]  ? __bpf_trace_svc_stats_latency+0x10/0x10 [sunrpc]
-> > [13493.987342]  ? rpc_destroy_wait_queue+0x10/0x10 [sunrpc]
-> > [13493.993637]  schedule+0x50/0xc0
-> > [13493.997697]  rpc_wait_bit_killable+0xd/0x60 [sunrpc]
-> > [13494.003671]  __wait_on_bit+0x75/0x90
-> > [13494.008168]  out_of_line_wait_on_bit+0x91/0xb0
-> > [13494.013547]  ? sched_core_clone_cookie+0x90/0x90
-> > [13494.019101]  __rpc_execute+0x14b/0x490 [sunrpc]
-> > [13494.024603]  ? kmem_cache_alloc+0x41/0x530
-> > [13494.029610]  rpc_execute+0xc5/0x100 [sunrpc]
-> > [13494.034835]  rpc_run_task+0x14b/0x1b0 [sunrpc]
-> > [13494.040252]  rpc_call_sync+0x50/0xa0 [sunrpc]
-> > [13494.045566]  nfs4_proc_destroy_session+0x80/0x100 [nfsv4]
-> > [13494.051926]  nfs4_destroy_session+0x24/0x90 [nfsv4]
-> > [13494.057767]  nfs41_shutdown_client+0xfd/0x120 [nfsv4]
-> > [13494.063774]  nfs4_free_client+0x21/0xb0 [nfsv4]
-> > [13494.069240]  nfs_free_server+0x44/0xb0 [nfs]
-> > [13494.074418]  nfs_kill_super+0x2b/0x40 [nfs]
-> > [13494.079490]  deactivate_locked_super+0x2c/0x70
-> > [13494.084811]  cleanup_mnt+0xb8/0x140
-> > [13494.089147]  task_work_run+0x6a/0xb0
-> > [13494.093587]  exit_to_user_mode_prepare+0x1b9/0x1c0
-> > [13494.099232]  syscall_exit_to_user_mode+0x12/0x30
-> > [13494.104717]  do_syscall_64+0x67/0x80
-> > [13494.109125]  ? syscall_exit_to_user_mode+0x12/0x30
-> > [13494.114799]  ? do_syscall_64+0x67/0x80
-> > [13494.119426]  ? do_syscall_64+0x67/0x80
-> > [13494.124042]  ? do_syscall_64+0x67/0x80
-> > [13494.128649]  ? exc_page_fault+0x64/0x140
-> > [13494.133400]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> > [13494.139306] RIP: 0033:0x7fc32f839e9b
-> > [13494.143726] RSP: 002b:00007ffe670f6018 EFLAGS: 00000202 ORIG_RAX: 00000000000000a6
-> > [13494.152183] RAX: 0000000000000000 RBX: 000055f4aad71920 RCX: 00007fc32f839e9b
-> > [13494.160218] RDX: 0000000000000003 RSI: 0000000000000002 RDI: 000055f4aad72600
-> > [13494.168237] RBP: 0000000000000002 R08: 0000000000000007 R09: 000055f4aad71010
-> > [13494.176277] R10: 00007fc32fbc0bc0 R11: 0000000000000202 R12: 000055f4aad72600
-> > [13494.184313] R13: 00007fc33025f244 R14: 000055f4aad71a30 R15: 000055f4aad71b50
-> > [13494.192334]  </TASK>
-> > 
-> > Best Regards
-> > Wang Yugui (wangyugui@e16-tech.com)
-> > 2023/01/11
-> > 
-> 
-
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
