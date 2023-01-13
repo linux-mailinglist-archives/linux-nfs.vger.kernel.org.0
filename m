@@ -2,42 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29B3A669C44
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:31:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46ED4669C46
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:31:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230132AbjAMPbB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Jan 2023 10:31:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46242 "EHLO
+        id S230187AbjAMPbC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Jan 2023 10:31:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230181AbjAMPab (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:30:31 -0500
+        with ESMTP id S229868AbjAMPac (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:30:32 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 849A86167
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:23:36 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C54385F49C
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:23:42 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 21229621BE
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:23:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52DDAC433D2;
-        Fri, 13 Jan 2023 15:23:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 614636212C
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:23:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 952E9C433F0;
+        Fri, 13 Jan 2023 15:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673623415;
-        bh=WipbJzCZIuJ5tqj4ebNKZl0nLcE07pSg4gXCfiaV+LE=;
+        s=k20201202; t=1673623421;
+        bh=EflpkU3JaHApkZEMJNADvDghLV7Vh/jHmqORPqgORvw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iWBQYt1zqJDMvaOb8lfDsAyEANnOn8rhzEyuy9Sb2kcNseuUUlGDFw8oZmucmqyvQ
-         rR+Njc4TS4oEntQkz4Tpqb6bxgyYKQ3w7wzOZz9jFTiqGOzNNF6+uYUyYDVF3CAXKt
-         BG25iSwkSPxIULRrvaKuyz6T3w25s4NM2InyLcSNMWW9bMNARESA/XVRnOby72Sfbo
-         SEWTGoOkXy8Y9dEeRAjK6T4LiZ0H4iNTUsQ7PaJ6NTfp92FH8PXvqFb4bo5D7MtJu4
-         6WBUkxgQNCppCGHNSoyLfD4D5U1DpPZiYqtCKxabTy90ur7IUVMXE3IGgXlBOpHUyS
-         rZ6lQhd9YHH/g==
-Subject: [PATCH v1 20/41] SUNRPC: Parametrize the key length passed to
- context_v2_alloc_cipher()
+        b=gFO9b2P6rKIa+cdbrT5Vc8qafJRM21qiAvzxZezxLMfBto0+C+rc/wSNz7VpcrIW4
+         8BiZSV02tnTQBeJWRKZ1aw3Ta6j4Nx4A0gwq76MSyyKs00g0PoZlJOtPlwa/rf44iz
+         /70gFI2VBgltfkxLo1y6v8JqpRUWV8s/QNkL/g2VPChg8EVeK1rH1MJmcvZ4cdLy1b
+         1AtqImsD3rcQ454wsyADUBMkN2dE/L0FJAvyngRtbEEbCpzLZn6yACdoX5O+TsHtNG
+         O45ekTC6cJZQnCmoReccu8mBiggziau5sGLHYC3gwY6D/x/obvFlZTKDPLCe8OXNMb
+         TyeX8MX2gysAw==
+Subject: [PATCH v1 21/41] SUNRPC: Add new subkey length fields
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     dhowells@redhat.com, simo@redhat.com
-Date:   Fri, 13 Jan 2023 10:23:34 -0500
-Message-ID: <167362341444.8960.13636393192226517391.stgit@bazille.1015granger.net>
+Date:   Fri, 13 Jan 2023 10:23:40 -0500
+Message-ID: <167362342075.8960.8739690579435009216.stgit@bazille.1015granger.net>
 In-Reply-To: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 References: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -55,140 +54,116 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Although the Kerberos specs have always listed separate subkey
-lengths, the Linux kernel's SunRPC GSS Kerberos enctype profiles
-assume the base key and the derived keys have identical lengths.
-
 The aes256-cts-hmac-sha384-192 enctype specifies the length of its
 checksum and integrity subkeys as 192 bits, but the length of its
-encryption subkey (Ke) as 256 bits.
-
-To support that enctype, parametrize context_v2_alloc_cipher() so
-that each of its call sites can pass in its desired key length. For
-now it will be the same length as before (gk5e->keylength), but a
-subsequent patch will change this.
+encryption subkey (Ke) as 256 bits. Add new fields to struct
+gss_krb5_enctype that specify the key lengths individually, and
+where needed, use the correct new field instead of ->keylength.
 
 Tested-by: Scott Mayhew <smayhew@redhat.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/auth_gss/gss_krb5_mech.c |   61 +++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 35 deletions(-)
+ include/linux/sunrpc/gss_krb5.h     |   14 ++++++++++++--
+ net/sunrpc/auth_gss/gss_krb5_mech.c |   20 ++++++++++++++------
+ 2 files changed, 26 insertions(+), 8 deletions(-)
 
+diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_krb5.h
+index 0c08f4f75b43..48e82397132b 100644
+--- a/include/linux/sunrpc/gss_krb5.h
++++ b/include/linux/sunrpc/gss_krb5.h
+@@ -44,10 +44,16 @@
+ #include <linux/sunrpc/gss_err.h>
+ #include <linux/sunrpc/gss_asn1.h>
+ 
++/*
++ * The RFCs often specify payload lengths in bits. This helper
++ * converts a specified bit-length to the number of octets/bytes.
++ */
++#define BITS2OCTETS(x)	((x) / 8)
++
+ /* Length of constant used in key derivation */
+ #define GSS_KRB5_K5CLENGTH (5)
+ 
+-/* Maximum key length (in bytes) for the supported crypto algorithms*/
++/* Maximum key length (in bytes) for the supported crypto algorithms */
+ #define GSS_KRB5_MAX_KEYLEN (32)
+ 
+ /* Maximum checksum function output for the supported crypto algorithms */
+@@ -70,7 +76,11 @@ struct gss_krb5_enctype {
+ 	const u32		cksumlength;	/* checksum length */
+ 	const u32		keyed_cksum;	/* is it a keyed cksum? */
+ 	const u32		keybytes;	/* raw key len, in bytes */
+-	const u32		keylength;	/* final key len, in bytes */
++	const u32		keylength;	/* protocol key length, in octets */
++	const u32		Kc_length;	/* checksum subkey length, in octets */
++	const u32		Ke_length;	/* encryption subkey length, in octets */
++	const u32		Ki_length;	/* integrity subkey length, in octets */
++
+ 	int (*import_ctx)(struct krb5_ctx *ctx, gfp_t gfp_mask);
+ 	int (*derive_key)(const struct gss_krb5_enctype *gk5e,
+ 			  const struct xdr_netobj *in,
 diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index 579ff755d535..b48a06769891 100644
+index b48a06769891..03725f2dd28f 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
 +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -341,26 +341,6 @@ gss_import_v1_context(const void *p, const void *end, struct krb5_ctx *ctx)
- 	return PTR_ERR(p);
- }
- 
--static inline struct crypto_sync_skcipher *
--context_v2_alloc_cipher(struct krb5_ctx *ctx, const char *cname, u8 *key)
--{
--	struct crypto_sync_skcipher *cp;
--
--	cp = crypto_alloc_sync_skcipher(cname, 0, 0);
--	if (IS_ERR(cp)) {
--		dprintk("gss_kerberos_mech: unable to initialize "
--			"crypto algorithm %s\n", cname);
--		return NULL;
--	}
--	if (crypto_sync_skcipher_setkey(cp, key, ctx->gk5e->keylength)) {
--		dprintk("gss_kerberos_mech: error setting key for "
--			"crypto algorithm %s\n", cname);
--		crypto_free_sync_skcipher(cp);
--		return NULL;
--	}
--	return cp;
--}
--
- #if defined(CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED)
- static int
- gss_krb5_import_ctx_des(struct krb5_ctx *ctx, gfp_t gfp_mask)
-@@ -403,6 +383,21 @@ gss_krb5_import_ctx_v1(struct krb5_ctx *ctx, gfp_t gfp_mask)
- 
- #if defined(CONFIG_RPCSEC_GSS_KRB5_CRYPTOSYSTEM)
- 
-+static struct crypto_sync_skcipher *
-+gss_krb5_alloc_cipher_v2(const char *cname, const struct xdr_netobj *key)
-+{
-+	struct crypto_sync_skcipher *tfm;
-+
-+	tfm = crypto_alloc_sync_skcipher(cname, 0, 0);
-+	if (IS_ERR(tfm))
-+		return NULL;
-+	if (crypto_sync_skcipher_setkey(tfm, key->data, key->len)) {
-+		crypto_free_sync_skcipher(tfm);
-+		return NULL;
-+	}
-+	return tfm;
-+}
-+
- static struct crypto_ahash *
- gss_krb5_alloc_hash_v2(struct krb5_ctx *kctx, const struct xdr_netobj *key)
- {
-@@ -427,27 +422,24 @@ gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask)
- 	};
+@@ -108,8 +108,11 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	  .signalg = -1,
+ 	  .sealalg = -1,
+ 	  .keybytes = 16,
+-	  .keylength = 16,
+-	  .cksumlength = 12,
++	  .keylength = BITS2OCTETS(128),
++	  .Kc_length = BITS2OCTETS(128),
++	  .Ke_length = BITS2OCTETS(128),
++	  .Ki_length = BITS2OCTETS(128),
++	  .cksumlength = BITS2OCTETS(96),
+ 	  .keyed_cksum = 1,
+ 	},
+ 	/*
+@@ -135,8 +138,11 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	  .signalg = -1,
+ 	  .sealalg = -1,
+ 	  .keybytes = 32,
+-	  .keylength = 32,
+-	  .cksumlength = 12,
++	  .keylength = BITS2OCTETS(256),
++	  .Kc_length = BITS2OCTETS(256),
++	  .Ke_length = BITS2OCTETS(256),
++	  .Ki_length = BITS2OCTETS(256),
++	  .cksumlength = BITS2OCTETS(96),
+ 	  .keyed_cksum = 1,
+ 	},
+ #endif
+@@ -423,12 +429,12 @@ gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask)
  	struct xdr_netobj keyout;
  	int ret = -EINVAL;
--	void *subkey;
  
--	subkey = kmalloc(ctx->gk5e->keylength, gfp_mask);
--	if (!subkey)
-+	keyout.data = kmalloc(ctx->gk5e->keylength, gfp_mask);
-+	if (!keyout.data)
+-	keyout.data = kmalloc(ctx->gk5e->keylength, gfp_mask);
++	keyout.data = kmalloc(GSS_KRB5_MAX_KEYLEN, gfp_mask);
+ 	if (!keyout.data)
  		return -ENOMEM;
- 	keyout.len = ctx->gk5e->keylength;
--	keyout.data = subkey;
+-	keyout.len = ctx->gk5e->keylength;
  
  	/* initiator seal encryption */
++	keyout.len = ctx->gk5e->Ke_length;
  	if (krb5_derive_key(ctx, &keyin, &keyout, KG_USAGE_INITIATOR_SEAL,
  			    KEY_USAGE_SEED_ENCRYPTION, gfp_mask))
  		goto out;
--	ctx->initiator_enc = context_v2_alloc_cipher(ctx,
--						     ctx->gk5e->encrypt_name,
--						     subkey);
-+	ctx->initiator_enc = gss_krb5_alloc_cipher_v2(ctx->gk5e->encrypt_name,
-+						      &keyout);
- 	if (ctx->initiator_enc == NULL)
- 		goto out;
- 	if (ctx->gk5e->aux_cipher) {
- 		ctx->initiator_enc_aux =
--			context_v2_alloc_cipher(ctx, ctx->gk5e->aux_cipher,
--						subkey);
-+			gss_krb5_alloc_cipher_v2(ctx->gk5e->aux_cipher,
-+						 &keyout);
- 		if (ctx->initiator_enc_aux == NULL)
- 			goto out_free;
+@@ -461,6 +467,7 @@ gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask)
  	}
-@@ -456,15 +448,14 @@ gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask)
- 	if (krb5_derive_key(ctx, &keyin, &keyout, KG_USAGE_ACCEPTOR_SEAL,
- 			    KEY_USAGE_SEED_ENCRYPTION, gfp_mask))
- 		goto out_free;
--	ctx->acceptor_enc = context_v2_alloc_cipher(ctx,
--						    ctx->gk5e->encrypt_name,
--						    subkey);
-+	ctx->acceptor_enc = gss_krb5_alloc_cipher_v2(ctx->gk5e->encrypt_name,
-+						     &keyout);
- 	if (ctx->acceptor_enc == NULL)
- 		goto out_free;
- 	if (ctx->gk5e->aux_cipher) {
- 		ctx->acceptor_enc_aux =
--			context_v2_alloc_cipher(ctx, ctx->gk5e->aux_cipher,
--						subkey);
-+			gss_krb5_alloc_cipher_v2(ctx->gk5e->aux_cipher,
-+						 &keyout);
- 		if (ctx->acceptor_enc_aux == NULL)
- 			goto out_free;
- 	}
-@@ -503,7 +494,7 @@ gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask)
  
- 	ret = 0;
- out:
--	kfree_sensitive(subkey);
-+	kfree_sensitive(keyout.data);
- 	return ret;
+ 	/* initiator sign checksum */
++	keyout.len = ctx->gk5e->Kc_length;
+ 	if (krb5_derive_key(ctx, &keyin, &keyout, KG_USAGE_INITIATOR_SIGN,
+ 			    KEY_USAGE_SEED_CHECKSUM, gfp_mask))
+ 		goto out_free;
+@@ -477,6 +484,7 @@ gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask)
+ 		goto out_free;
  
- out_free:
+ 	/* initiator seal integrity */
++	keyout.len = ctx->gk5e->Ki_length;
+ 	if (krb5_derive_key(ctx, &keyin, &keyout, KG_USAGE_INITIATOR_SEAL,
+ 			    KEY_USAGE_SEED_INTEGRITY, gfp_mask))
+ 		goto out_free;
 
 
