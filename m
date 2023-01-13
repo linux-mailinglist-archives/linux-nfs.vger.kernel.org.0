@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10258669C39
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:30:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B613B669C3B
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:30:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjAMPam (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Jan 2023 10:30:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48520 "EHLO
+        id S230262AbjAMPar (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Jan 2023 10:30:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230253AbjAMPaE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:30:04 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F37B7A90B
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:22:39 -0800 (PST)
+        with ESMTP id S230260AbjAMPaJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:30:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081C510EA
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:22:47 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B505620D6
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:22:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6323AC433EF;
-        Fri, 13 Jan 2023 15:22:38 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 55BC6B8217A
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:22:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A65C433F0;
+        Fri, 13 Jan 2023 15:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673623358;
-        bh=wOiKBrpJB3aPxP5V8CaNiybN7RFPAaTEoDSvVSkFKaA=;
+        s=k20201202; t=1673623364;
+        bh=AAKF2h49CkAzEC5hAJhxvkm51RZupkaiVZQfgHEyap8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=m2jcA6nlCuLA0PAQwseB9UXUY/amdjrI8W9MyTPbahqkmT8gJG8UUoYQ5fwuCqPvn
-         DhKPPhkxadvoqSzD5zW73JfC3pFNYVmOWvbAXrFAtTOQjyHEwJmwA1XDpYzAi0eq5z
-         EjqvT96TxySpuYW+4PYAKHkLN6kTAK6/fnYQrQ+fATZcwqbq+CJ498jGPN2EZBapt4
-         DVCx+Xz0fam3RNU3n7Nn4H3Kr0Rgi+bakzSUoQkqiqqe/kRzMKqEEud1gE6moaVPeS
-         O1jG0YWinUbkakF+fdMz1sUSnzWkRXbFK3J5ZK9REyg3gwcMbTTicP0kmiUDBbj8Ya
-         XfLvJxJFW5Diw==
-Subject: [PATCH v1 11/41] SUNRPC: Remove another switch on ctx->enctype
+        b=mkeHwQAEijJeXFhDpsMyFuEQzNYt1ULvCBepzXJ5fbDUp7qDPIfA5kdEoBFlxCO/L
+         Y6YGm9Yfthy5u9D4b/74YsFtG45ujpX0YnspPfM2MpWahu9Po+0E1MRnEiGFlcO0j3
+         2XSBH5DUCufP1uD5dnRW7lKo5pi0xTaoRphIg03tczhwxmpwey+sLEhRud0VBfmcse
+         mxTnoSWjXim6t2UT2ew0O6PDJZl/VzvuNn8K67lMUSUd5j2/zYvqkqnpa17Ts3tFLf
+         HcA5LRKD3n6W5bOB+S2pEK2Eg8X0ntoEflJSXWFeuxEwd2AGBbPSPUJL03xABM+6sy
+         7JgW3vbqA7THw==
+Subject: [PATCH v1 12/41] SUNRPC: Add /proc/net/rpc/gss_krb5_enctypes file
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     dhowells@redhat.com, simo@redhat.com
-Date:   Fri, 13 Jan 2023 10:22:37 -0500
-Message-ID: <167362335753.8960.11613211961341629098.stgit@bazille.1015granger.net>
+Date:   Fri, 13 Jan 2023 10:22:43 -0500
+Message-ID: <167362336382.8960.2076097967542181718.stgit@bazille.1015granger.net>
 In-Reply-To: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 References: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -54,117 +54,126 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Replace another switch on encryption type so that it does not have
-to be modified when adding or removing support for an enctype.
+I would like to replace the KRB5_SUPPORTED_ENCTYPES macro so that
+there is finer granularity about what enctype support is built in
+to the kernel and then advertised by it.
+
+The /proc/fs/nfsd/supported_krb5_enctypes file is a legacy API
+that advertises supported enctypes to rpc.svcgssd (I think?). It
+simply prints the value of the KRB5_SUPPORTED_ENCTYPES macro, so it
+will need to be replaced with something that can instead display
+exactly which enctypes are configured and built into the SunRPC
+layer.
+
+Completely decommissioning such APIs is hard. Instead, add a file
+that is managed by SunRPC's GSS Kerberos mechanism, which is
+authoritative about enctype support status. A subsequent patch will
+replace /proc/fs/nfsd/supported_krb5_enctypes with a symlink to this
+new file.
 
 Tested-by: Scott Mayhew <smayhew@redhat.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/gss_krb5.h     |    1 +
- net/sunrpc/auth_gss/gss_krb5_mech.c |   30 ++++++++++++++++++------------
- 2 files changed, 19 insertions(+), 12 deletions(-)
+ net/sunrpc/auth_gss/svcauth_gss.c |   65 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 65 insertions(+)
 
-diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_krb5.h
-index 81f4bea7888a..00305a967dee 100644
---- a/include/linux/sunrpc/gss_krb5.h
-+++ b/include/linux/sunrpc/gss_krb5.h
-@@ -77,6 +77,7 @@ struct gss_krb5_enctype {
- 	u32 (*decrypt) (struct crypto_sync_skcipher *tfm,
- 			void *iv, void *in, void *out,
- 			int length);		/* decryption function */
-+	int (*import_ctx)(struct krb5_ctx *ctx, gfp_t gfp_mask);
- 	u32 (*mk_key) (const struct gss_krb5_enctype *gk5e,
- 		       struct xdr_netobj *in,
- 		       struct xdr_netobj *out);	/* complete key generation */
-diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index 921f1a00fc9d..4986435e9b92 100644
---- a/net/sunrpc/auth_gss/gss_krb5_mech.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -28,7 +28,11 @@
- # define RPCDBG_FACILITY	RPCDBG_AUTH
- #endif
- 
--static struct gss_api_mech gss_kerberos_mech;	/* forward declaration */
-+static struct gss_api_mech gss_kerberos_mech;
-+
-+static int gss_krb5_import_ctx_des(struct krb5_ctx *ctx, gfp_t gfp_mask);
-+static int gss_krb5_import_ctx_v1(struct krb5_ctx *ctx, gfp_t gfp_mask);
-+static int gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask);
- 
- static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- #ifndef CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES
-@@ -43,6 +47,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .cksum_name = "md5",
- 	  .encrypt = krb5_encrypt,
- 	  .decrypt = krb5_decrypt,
-+	  .import_ctx = gss_krb5_import_ctx_des,
- 	  .mk_key = NULL,
- 	  .get_mic = gss_krb5_get_mic_v1,
- 	  .verify_mic = gss_krb5_verify_mic_v1,
-@@ -67,6 +72,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .cksum_name = "hmac(sha1)",
- 	  .encrypt = krb5_encrypt,
- 	  .decrypt = krb5_decrypt,
-+	  .import_ctx = gss_krb5_import_ctx_v1,
- 	  .mk_key = gss_krb5_des3_make_key,
- 	  .get_mic = gss_krb5_get_mic_v1,
- 	  .verify_mic = gss_krb5_verify_mic_v1,
-@@ -91,6 +97,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .cksum_name = "hmac(sha1)",
- 	  .encrypt = krb5_encrypt,
- 	  .decrypt = krb5_decrypt,
-+	  .import_ctx = gss_krb5_import_ctx_v2,
- 	  .mk_key = gss_krb5_aes_make_key,
- 	  .encrypt_v2 = gss_krb5_aes_encrypt,
- 	  .decrypt_v2 = gss_krb5_aes_decrypt,
-@@ -119,6 +126,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .cksum_name = "hmac(sha1)",
- 	  .encrypt = krb5_encrypt,
- 	  .decrypt = krb5_decrypt,
-+	  .import_ctx = gss_krb5_import_ctx_v2,
- 	  .mk_key = gss_krb5_aes_make_key,
- 	  .encrypt_v2 = gss_krb5_aes_encrypt,
- 	  .decrypt_v2 = gss_krb5_aes_decrypt,
-@@ -324,7 +332,13 @@ set_cdata(u8 cdata[GSS_KRB5_K5CLENGTH], u32 usage, u8 seed)
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 28e977c89a5a..19f0190a0b97 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1494,6 +1494,55 @@ static void destroy_use_gss_proxy_proc_entry(struct net *net)
+ 		clear_gssp_clnt(sn);
+ 	}
  }
- 
- static int
--context_derive_keys_des3(struct krb5_ctx *ctx, gfp_t gfp_mask)
-+gss_krb5_import_ctx_des(struct krb5_ctx *ctx, gfp_t gfp_mask)
++
++static ssize_t read_gss_krb5_enctypes(struct file *file, char __user *buf,
++				      size_t count, loff_t *ppos)
 +{
-+	return -EINVAL;
++	struct rpcsec_gss_oid oid = {
++		.len	= 9,
++		.data	= "\x2a\x86\x48\x86\xf7\x12\x01\x02\x02",
++	};
++	struct gss_api_mech *mech;
++	ssize_t ret;
++
++	mech = gss_mech_get_by_OID(&oid);
++	if (!mech)
++		return 0;
++	if (!mech->gm_upcall_enctypes) {
++		gss_mech_put(mech);
++		return 0;
++	}
++
++	ret = simple_read_from_buffer(buf, count, ppos,
++				      mech->gm_upcall_enctypes,
++				      strlen(mech->gm_upcall_enctypes));
++	gss_mech_put(mech);
++	return ret;
 +}
 +
-+static int
-+gss_krb5_import_ctx_v1(struct krb5_ctx *ctx, gfp_t gfp_mask)
++static const struct proc_ops gss_krb5_enctypes_proc_ops = {
++	.proc_open	= nonseekable_open,
++	.proc_read	= read_gss_krb5_enctypes,
++};
++
++static int create_krb5_enctypes_proc_entry(struct net *net)
++{
++	struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
++
++	if (!proc_create_data("gss_krb5_enctypes", S_IFREG | 0444,
++			      sn->proc_net_rpc,
++			      &gss_krb5_enctypes_proc_ops, net))
++		return -ENOMEM;
++	return 0;
++}
++
++static void destroy_krb5_enctypes_proc_entry(struct net *net)
++{
++	struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
++
++	remove_proc_entry("gss_krb5_enctypes", sn->proc_net_rpc);
++}
++
+ #else /* CONFIG_PROC_FS */
+ 
+ static int create_use_gss_proxy_proc_entry(struct net *net)
+@@ -1503,6 +1552,13 @@ static int create_use_gss_proxy_proc_entry(struct net *net)
+ 
+ static void destroy_use_gss_proxy_proc_entry(struct net *net) {}
+ 
++static int create_krb5_enctypes_proc_entry(struct net *net)
++{
++	return 0;
++}
++
++static void destroy_krb5_enctypes_proc_entry(struct net *net) {}
++
+ #endif /* CONFIG_PROC_FS */
+ 
+ /*
+@@ -2042,7 +2098,15 @@ gss_svc_init_net(struct net *net)
+ 	rv = create_use_gss_proxy_proc_entry(net);
+ 	if (rv)
+ 		goto out2;
++
++	rv = create_krb5_enctypes_proc_entry(net);
++	if (rv)
++		goto out3;
++
+ 	return 0;
++
++out3:
++	destroy_use_gss_proxy_proc_entry(net);
+ out2:
+ 	rsi_cache_destroy_net(net);
+ out1:
+@@ -2053,6 +2117,7 @@ gss_svc_init_net(struct net *net)
+ void
+ gss_svc_shutdown_net(struct net *net)
  {
- 	struct xdr_netobj c, keyin, keyout;
- 	u8 cdata[GSS_KRB5_K5CLENGTH];
-@@ -384,7 +398,7 @@ gss_krb5_alloc_hash_v2(struct krb5_ctx *kctx, const struct xdr_netobj *key)
- }
- 
- static int
--context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
-+gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask)
- {
- 	u8 cdata[GSS_KRB5_K5CLENGTH];
- 	struct xdr_netobj c = {
-@@ -563,15 +577,7 @@ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
- 	}
- 	ctx->mech_used.len = gss_kerberos_mech.gm_oid.len;
- 
--	switch (ctx->enctype) {
--	case ENCTYPE_DES3_CBC_RAW:
--		return context_derive_keys_des3(ctx, gfp_mask);
--	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
--	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
--		return context_derive_keys_new(ctx, gfp_mask);
--	default:
--		return -EINVAL;
--	}
-+	return ctx->gk5e->import_ctx(ctx, gfp_mask);
- 
- out_err:
- 	return PTR_ERR(p);
++	destroy_krb5_enctypes_proc_entry(net);
+ 	destroy_use_gss_proxy_proc_entry(net);
+ 	rsi_cache_destroy_net(net);
+ 	rsc_cache_destroy_net(net);
 
 
