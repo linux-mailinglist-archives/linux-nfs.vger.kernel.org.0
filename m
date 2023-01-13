@@ -2,89 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A600266725A
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Jan 2023 13:38:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9440668C18
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 07:06:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230112AbjALMiv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Jan 2023 07:38:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59844 "EHLO
+        id S239778AbjAMGGb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Jan 2023 01:06:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbjALMiq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Jan 2023 07:38:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C064A945
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Jan 2023 04:38:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673527081;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=3LEkF52kiLlcjnezdHsU+Xukogr/THMGUZeCGE39d4o=;
-        b=c9nZtpnIJRfRZNYTKEG0ZzDsC90EWF0suosydRtr3/r/3GEwhnKGbaz1FbjiE/Fy4qJGK1
-        XdKYjKzrAPo5eG+0lg6RuOzeq6gqlf0LZaYuEObYb/sQnuAiVGqFRf9jPHyRcNYRUAGvBg
-        U4jqCrn02p3aLJhkuXAomSVqgOFGlj4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-648-UhRvhWrpPY2udljUC0yJ0Q-1; Thu, 12 Jan 2023 07:37:58 -0500
-X-MC-Unique: UhRvhWrpPY2udljUC0yJ0Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S240140AbjAMGFz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 01:05:55 -0500
+X-Greylist: delayed 593 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 12 Jan 2023 22:01:46 PST
+Received: from mp-relay-02.fibernetics.ca (mp-relay-02.fibernetics.ca [208.85.217.137])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A43456E42E;
+        Thu, 12 Jan 2023 22:01:46 -0800 (PST)
+Received: from mailpool-fe-01.fibernetics.ca (mailpool-fe-01.fibernetics.ca [208.85.217.144])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 002FC811E9C;
-        Thu, 12 Jan 2023 12:37:58 +0000 (UTC)
-Received: from localhost (yoyang-vm.hosts.qa.psi.pek2.redhat.com [10.73.149.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 51AE239D92;
-        Thu, 12 Jan 2023 12:37:57 +0000 (UTC)
-From:   Yongcheng Yang <yongcheng.yang@gmail.com>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
-        Yongcheng Yang <yongcheng.yang@gmail.com>,
-        Tom O <tom.oloughlin@gmail.com>
-Subject: [PATCH nfs-utils] nfsmount.conf: Fix typo of the attribute name
-Date:   Thu, 12 Jan 2023 20:37:52 +0800
-Message-Id: <20230112123752.739704-1-yongcheng.yang@gmail.com>
+        by mp-relay-02.fibernetics.ca (Postfix) with ESMTPS id 1738270E5B;
+        Fri, 13 Jan 2023 05:46:00 +0000 (UTC)
+Received: from localhost (mailpool-mx-01.fibernetics.ca [208.85.217.140])
+        by mailpool-fe-01.fibernetics.ca (Postfix) with ESMTP id CFE0826892;
+        Fri, 13 Jan 2023 05:45:59 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at 
+X-Spam-Score: 3.651
+X-Spam-Level: ****
+X-Spam-Status: No, score=4.3 required=5.0 tests=BAYES_60,
+        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,SPF_HELO_NONE,
+        SPF_PASS,SUBJ_ALL_CAPS autolearn=no autolearn_force=no version=3.4.6
+Received: from mailpool-fe-01.fibernetics.ca ([208.85.217.144])
+        by localhost (mail-mx-01.fibernetics.ca [208.85.217.140]) (amavisd-new, port 10024)
+        with ESMTP id 5nKEStyxmCAA; Fri, 13 Jan 2023 05:45:59 +0000 (UTC)
+Received: from localhost (unknown [208.85.220.72])
+        by mail.ca.inter.net (Postfix) with ESMTP id 2C31E2688E;
+        Fri, 13 Jan 2023 05:45:58 +0000 (UTC)
+Received: from reverse.rain.network (reverse.rain.network [197.184.176.8])
+ by webmail.ca.inter.net (Horde Framework) with HTTP; Fri, 13 Jan 2023
+ 00:45:57 -0500
+Message-ID: <20230113004557.1776655zih3sj09h@webmail.ca.inter.net>
+Date:   Fri, 13 Jan 2023 00:45:57 -0500
+From:   INFO <boothg@istar.ca>
+Reply-to: s.g0392440821@gmail.com
+To:     undisclosed-recipients:;
+Subject: IST DIESE E-MAIL AKTIV?
 MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=ISO-8859-1;
+ DelSp="Yes";
+ format="flowed"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=0.2 required=5.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,FORGED_GMAIL_RCVD,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        NML_ADSP_CUSTOM_MED,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Internet Messaging Program (IMP) H3 (4.3.7)
+X-Originating-User-Info: boothg@istar.ca 208.85.219.96
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Signed-off-by: Tom O <tom.oloughlin@gmail.com>
-Signed-off-by: Yongcheng Yang <yongcheng.yang@gmail.com>
----
- utils/mount/nfsmount.conf | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/utils/mount/nfsmount.conf b/utils/mount/nfsmount.conf
-index 342063f7..cbdf8160 100644
---- a/utils/mount/nfsmount.conf
-+++ b/utils/mount/nfsmount.conf
-@@ -59,13 +59,13 @@
- # acregmin=30
- #
- # The Maximum time (in seconds) file attributes are cached
--# acregmin=60
-+# acregmax=60
- #
- # The minimum time (in seconds) directory attributes are cached
--# acregmin=30
-+# acdirmin=30
- #
- # The Maximum time (in seconds) directory attributes are cached
--# acregmin=60
-+# acdirmin=60
- #
- # Enable Access  Control  Lists
- # Acl=False
--- 
-2.31.1
+
+Sehr geehrter E-Mail-Begünstigter, Sie wurden für eine Spende in Höhe  
+von 3.500.000,00 ? ausgewählt. Wenden Sie sich an diese  
+E-Mail-Adresse: s.g0392440821@gmail.com, um weitere Informationen zum  
+Erhalt Ihrer Spende zu erhalten. Vielen Dank
 
