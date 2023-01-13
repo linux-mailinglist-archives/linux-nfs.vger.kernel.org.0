@@ -2,42 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0703D669C3F
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:30:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8669669C40
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:30:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbjAMPa4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Jan 2023 10:30:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51516 "EHLO
+        id S229702AbjAMPa5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Jan 2023 10:30:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbjAMPaN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:30:13 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A2BC2675
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:23:13 -0800 (PST)
+        with ESMTP id S229599AbjAMPaR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:30:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED477EC99
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:23:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B8FF8B8212E
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:23:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AF68C433EF;
-        Fri, 13 Jan 2023 15:23:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C0916216C
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:23:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B62C433EF;
+        Fri, 13 Jan 2023 15:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673623390;
-        bh=36vWIPJNnj+B9Dnq6gsR92VyfA0kahWEm014Wut8HTk=;
+        s=k20201202; t=1673623396;
+        bh=uVCOo0BKMwJB7HoR9Fj6fBsT/1Ukc4fKdT2dha23QFU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=tkxyYTwz4ufCEmtsgBp1ZWPjyQIP1nI+/rPHcMsNZarZq5mV78lnb+Y4SVjAlvOSR
-         oa8x47qVo/RF2zlvOksNZ0/ZvrZwS+bNuwMb3TIVGZkMbILrSHE6zwT50c6II/j4FM
-         DC+2DJaYGj+USuCaAmIUTTX64Y7IJtz8ol3vGgj+VerM2Owjg6KUd6OLJUWc6IEcsH
-         3buNfMTqtlZKcxHIsDPoeWpkT3HwQV2dAplpARNw5G01RZUePZx2W2JkAdZKRN1lk1
-         5KukQCzThxCV+ae+uAFwWSB204YRcR4oSEu/+S++FLE79bOQAokNVdYMgcXjzlSd8S
-         YrpDv2oZA4eDg==
-Subject: [PATCH v1 16/41] SUNRPC: Remove ->encrypt and ->decrypt methods from
- struct gss_krb5_enctype
+        b=eNX1TrgkhawCMvrzHT5aLg7pItGwy54OLPh93HsHjtwPHdOPid3O98RKAHvCPabyQ
+         sFi6rs6RegIKrHdRbJ8ibsXqOhCArgQHKA+cpilxaer+nH/yyuyLdhtvQC1fknoxzC
+         fDXL6j8R6pZPKMAQZp1xC6mBJ2m8Uyk+7cH3jiTRWQ5yXu7PqHuDQTnYELdTqvPhJ/
+         Xdpj6eUO6PKiW5k0FsjIeeuxO/m4Uo1jhP1fNXDSdXICcl/DMMw0A5SoSSuZxxyUJ5
+         z0x1voDfeH74z4By4JH0Z64mn2eAQfHR5BMCu7YkNNDnjKL73cNI8yFwkhR6y6IWRZ
+         nuzsjo+i4ByMw==
+Subject: [PATCH v1 17/41] SUNRPC: Rename .encrypt_v2 and .decrypt_v2 methods
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     dhowells@redhat.com, simo@redhat.com
-Date:   Fri, 13 Jan 2023 10:23:09 -0500
-Message-ID: <167362338910.8960.8731253086521215072.stgit@bazille.1015granger.net>
+Date:   Fri, 13 Jan 2023 10:23:15 -0500
+Message-ID: <167362339545.8960.4642624913840080009.stgit@bazille.1015granger.net>
 In-Reply-To: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 References: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -55,206 +54,138 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Clean up: ->encrypt is set to only one value. Replace the two
-remaining call sites with direct calls to krb5_encrypt().
-
-There have never been any call sites for the ->decrypt() method.
+Clean up: there is now only one encrypt and only one decrypt method,
+thus there is no longer a need for the v2-suffixed method names.
 
 Tested-by: Scott Mayhew <smayhew@redhat.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/gss_krb5.h         |   14 ------------
- net/sunrpc/auth_gss/gss_krb5_crypto.c   |   36 +++++++++++++++++++++++++++++--
- net/sunrpc/auth_gss/gss_krb5_internal.h |    6 +++++
- net/sunrpc/auth_gss/gss_krb5_keys.c     |    6 +++--
- net/sunrpc/auth_gss/gss_krb5_mech.c     |    8 -------
- net/sunrpc/auth_gss/gss_krb5_seqnum.c   |    2 ++
- 6 files changed, 46 insertions(+), 26 deletions(-)
+ include/linux/sunrpc/gss_krb5.h         |   20 ++++----------------
+ net/sunrpc/auth_gss/gss_krb5_internal.h |    6 ++++++
+ net/sunrpc/auth_gss/gss_krb5_mech.c     |    8 ++++----
+ net/sunrpc/auth_gss/gss_krb5_wrap.c     |   12 +++---------
+ 4 files changed, 17 insertions(+), 29 deletions(-)
 
 diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_krb5.h
-index 00305a967dee..3fb0e72fa656 100644
+index 3fb0e72fa656..9c9caa5712b3 100644
 --- a/include/linux/sunrpc/gss_krb5.h
 +++ b/include/linux/sunrpc/gss_krb5.h
-@@ -71,12 +71,6 @@ struct gss_krb5_enctype {
- 	const u32		keyed_cksum;	/* is it a keyed cksum? */
- 	const u32		keybytes;	/* raw key len, in bytes */
- 	const u32		keylength;	/* final key len, in bytes */
--	u32 (*encrypt) (struct crypto_sync_skcipher *tfm,
--			void *iv, void *in, void *out,
--			int length);		/* encryption function */
--	u32 (*decrypt) (struct crypto_sync_skcipher *tfm,
--			void *iv, void *in, void *out,
--			int length);		/* decryption function */
- 	int (*import_ctx)(struct krb5_ctx *ctx, gfp_t gfp_mask);
+@@ -75,12 +75,10 @@ struct gss_krb5_enctype {
  	u32 (*mk_key) (const struct gss_krb5_enctype *gk5e,
  		       struct xdr_netobj *in,
-@@ -247,14 +241,6 @@ make_checksum(struct krb5_ctx *kctx, char *header, int hdrlen,
- 		struct xdr_buf *body, int body_offset, u8 *cksumkey,
- 		unsigned int usage, struct xdr_netobj *cksumout);
+ 		       struct xdr_netobj *out);	/* complete key generation */
+-	u32 (*encrypt_v2) (struct krb5_ctx *kctx, u32 offset,
+-			   struct xdr_buf *buf,
+-			   struct page **pages); /* v2 encryption function */
+-	u32 (*decrypt_v2) (struct krb5_ctx *kctx, u32 offset, u32 len,
+-			   struct xdr_buf *buf, u32 *headskip,
+-			   u32 *tailskip);	/* v2 decryption function */
++	u32 (*encrypt)(struct krb5_ctx *kctx, u32 offset,
++			struct xdr_buf *buf, struct page **pages);
++	u32 (*decrypt)(struct krb5_ctx *kctx, u32 offset, u32 len,
++		       struct xdr_buf *buf, u32 *headskip, u32 *tailskip);
+ 	u32 (*get_mic)(struct krb5_ctx *kctx, struct xdr_buf *text,
+ 		       struct xdr_netobj *token);
+ 	u32 (*verify_mic)(struct krb5_ctx *kctx, struct xdr_buf *message_buffer,
+@@ -280,14 +278,4 @@ gss_krb5_aes_make_key(const struct gss_krb5_enctype *gk5e,
+ 		      struct xdr_netobj *randombits,
+ 		      struct xdr_netobj *key);
  
 -u32
--krb5_encrypt(struct crypto_sync_skcipher *key,
--	     void *iv, void *in, void *out, int length);
+-gss_krb5_aes_encrypt(struct krb5_ctx *kctx, u32 offset,
+-		     struct xdr_buf *buf,
+-		     struct page **pages);
 -
 -u32
--krb5_decrypt(struct crypto_sync_skcipher *key,
--	     void *iv, void *in, void *out, int length); 
+-gss_krb5_aes_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
+-		     struct xdr_buf *buf, u32 *plainoffset,
+-		     u32 *plainlen);
 -
- int
- gss_encrypt_xdr_buf(struct crypto_sync_skcipher *tfm, struct xdr_buf *outbuf,
- 		    int offset, struct page **pages);
-diff --git a/net/sunrpc/auth_gss/gss_krb5_crypto.c b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-index 3ffe66779fb7..9703881fbd1d 100644
---- a/net/sunrpc/auth_gss/gss_krb5_crypto.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-@@ -77,6 +77,22 @@ krb5_make_confounder(struct krb5_ctx *kctx, u8 *p, int conflen)
- 	}
- }
- 
-+/**
-+ * krb5_encrypt - simple encryption of an RPCSEC GSS payload
-+ * @tfm: initialized cipher transform
-+ * @iv: pointer to an IV
-+ * @in: plaintext to encrypt
-+ * @out: OUT: ciphertext
-+ * @length: length of input and output buffers, in bytes
-+ *
-+ * @iv may be NULL to force the use of an all-zero IV.
-+ * The buffer containing the IV must be as large as the
-+ * cipher's ivsize.
-+ *
-+ * Return values:
-+ *   %0: @in successfully encrypted into @out
-+ *   negative errno: @in not encrypted
-+ */
- u32
- krb5_encrypt(
- 	struct crypto_sync_skcipher *tfm,
-@@ -116,6 +132,22 @@ krb5_encrypt(
- 	return ret;
- }
- 
-+/**
-+ * krb5_decrypt - simple decryption of an RPCSEC GSS payload
-+ * @tfm: initialized cipher transform
-+ * @iv: pointer to an IV
-+ * @in: ciphertext to decrypt
-+ * @out: OUT: plaintext
-+ * @length: length of input and output buffers, in bytes
-+ *
-+ * @iv may be NULL to force the use of an all-zero IV.
-+ * The buffer containing the IV must be as large as the
-+ * cipher's ivsize.
-+ *
-+ * Return values:
-+ *   %0: @in successfully decrypted into @out
-+ *   negative errno: @in not decrypted
-+ */
- u32
- krb5_decrypt(
-      struct crypto_sync_skcipher *tfm,
-@@ -229,8 +261,8 @@ make_checksum(struct krb5_ctx *kctx, char *header, int hdrlen,
- 
- 	switch (kctx->gk5e->ctype) {
- 	case CKSUMTYPE_RSA_MD5:
--		err = kctx->gk5e->encrypt(kctx->seq, NULL, checksumdata,
--					  checksumdata, checksumlen);
-+		err = krb5_encrypt(kctx->seq, NULL, checksumdata,
-+				   checksumdata, checksumlen);
- 		if (err)
- 			goto out;
- 		memcpy(cksumout->data,
+ #endif /* _LINUX_SUNRPC_GSS_KRB5_H */
 diff --git a/net/sunrpc/auth_gss/gss_krb5_internal.h b/net/sunrpc/auth_gss/gss_krb5_internal.h
-index c6420f9a6c4e..f4dc0f075144 100644
+index f4dc0f075144..0003128e05e8 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_internal.h
 +++ b/net/sunrpc/auth_gss/gss_krb5_internal.h
-@@ -44,4 +44,10 @@ u32 gss_krb5_checksum(struct crypto_ahash *tfm, char *header, int hdrlen,
- 		      const struct xdr_buf *body, int body_offset,
- 		      struct xdr_netobj *cksumout);
+@@ -50,4 +50,10 @@ u32 krb5_encrypt(struct crypto_sync_skcipher *key, void *iv, void *in,
+ u32 krb5_decrypt(struct crypto_sync_skcipher *key, void *iv, void *in,
+ 		 void *out, int length);
  
-+u32 krb5_encrypt(struct crypto_sync_skcipher *key, void *iv, void *in,
-+		 void *out, int length);
++u32 gss_krb5_aes_encrypt(struct krb5_ctx *kctx, u32 offset,
++			 struct xdr_buf *buf, struct page **pages);
 +
-+u32 krb5_decrypt(struct crypto_sync_skcipher *key, void *iv, void *in,
-+		 void *out, int length);
++u32 gss_krb5_aes_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
++			 struct xdr_buf *buf, u32 *plainoffset, u32 *plainlen);
 +
  #endif /* _NET_SUNRPC_AUTH_GSS_KRB5_INTERNAL_H */
-diff --git a/net/sunrpc/auth_gss/gss_krb5_keys.c b/net/sunrpc/auth_gss/gss_krb5_keys.c
-index 554cfd23f288..a7c6866dad96 100644
---- a/net/sunrpc/auth_gss/gss_krb5_keys.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_keys.c
-@@ -61,6 +61,8 @@
- #include <linux/sunrpc/xdr.h>
- #include <linux/lcm.h>
- 
-+#include "gss_krb5_internal.h"
-+
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- # define RPCDBG_FACILITY        RPCDBG_AUTH
- #endif
-@@ -195,8 +197,8 @@ u32 krb5_derive_key(const struct gss_krb5_enctype *gk5e,
- 
- 	n = 0;
- 	while (n < keybytes) {
--		(*(gk5e->encrypt))(cipher, NULL, inblock.data,
--				   outblock.data, inblock.len);
-+		krb5_encrypt(cipher, NULL, inblock.data, outblock.data,
-+			     inblock.len);
- 
- 		if ((keybytes - n) <= outblock.len) {
- 			memcpy(rawkey + n, outblock.data, (keybytes - n));
 diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index a6f1904fc799..8780f80b5f66 100644
+index 8780f80b5f66..794bb6826dce 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
 +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -48,8 +48,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .name = "des-cbc-crc",
- 	  .encrypt_name = "cbc(des)",
- 	  .cksum_name = "md5",
--	  .encrypt = krb5_encrypt,
--	  .decrypt = krb5_decrypt,
- 	  .import_ctx = gss_krb5_import_ctx_des,
- 	  .mk_key = NULL,
- 	  .get_mic = gss_krb5_get_mic_v1,
-@@ -72,8 +70,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .name = "des3-hmac-sha1",
- 	  .encrypt_name = "cbc(des3_ede)",
+@@ -98,8 +98,8 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
  	  .cksum_name = "hmac(sha1)",
--	  .encrypt = krb5_encrypt,
--	  .decrypt = krb5_decrypt,
- 	  .import_ctx = gss_krb5_import_ctx_v1,
- 	  .mk_key = gss_krb5_des3_make_key,
- 	  .get_mic = gss_krb5_get_mic_v1,
-@@ -100,8 +96,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .encrypt_name = "cts(cbc(aes))",
- 	  .aux_cipher = "cbc(aes)",
- 	  .cksum_name = "hmac(sha1)",
--	  .encrypt = krb5_encrypt,
--	  .decrypt = krb5_decrypt,
  	  .import_ctx = gss_krb5_import_ctx_v2,
  	  .mk_key = gss_krb5_aes_make_key,
- 	  .encrypt_v2 = gss_krb5_aes_encrypt,
-@@ -129,8 +123,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .encrypt_name = "cts(cbc(aes))",
- 	  .aux_cipher = "cbc(aes)",
- 	  .cksum_name = "hmac(sha1)",
--	  .encrypt = krb5_encrypt,
--	  .decrypt = krb5_decrypt,
- 	  .import_ctx = gss_krb5_import_ctx_v2,
- 	  .mk_key = gss_krb5_aes_make_key,
- 	  .encrypt_v2 = gss_krb5_aes_encrypt,
-diff --git a/net/sunrpc/auth_gss/gss_krb5_seqnum.c b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-index 3200b971a814..1babc3474e10 100644
---- a/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_seqnum.c
-@@ -35,6 +35,8 @@
- #include <linux/types.h>
- #include <linux/sunrpc/gss_krb5.h>
+-	  .encrypt_v2 = gss_krb5_aes_encrypt,
+-	  .decrypt_v2 = gss_krb5_aes_decrypt,
++	  .encrypt = gss_krb5_aes_encrypt,
++	  .decrypt = gss_krb5_aes_decrypt,
  
-+#include "gss_krb5_internal.h"
-+
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- # define RPCDBG_FACILITY        RPCDBG_AUTH
- #endif
+ 	  .get_mic = gss_krb5_get_mic_v2,
+ 	  .verify_mic = gss_krb5_verify_mic_v2,
+@@ -125,8 +125,8 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	  .cksum_name = "hmac(sha1)",
+ 	  .import_ctx = gss_krb5_import_ctx_v2,
+ 	  .mk_key = gss_krb5_aes_make_key,
+-	  .encrypt_v2 = gss_krb5_aes_encrypt,
+-	  .decrypt_v2 = gss_krb5_aes_decrypt,
++	  .encrypt = gss_krb5_aes_encrypt,
++	  .decrypt = gss_krb5_aes_decrypt,
+ 
+ 	  .get_mic = gss_krb5_get_mic_v2,
+ 	  .verify_mic = gss_krb5_verify_mic_v2,
+diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+index 13e633bcbc2d..5491e083ee98 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
++++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+@@ -390,9 +390,6 @@ gss_krb5_wrap_v2(struct krb5_ctx *kctx, int offset,
+ 
+ 	dprintk("RPC:       %s\n", __func__);
+ 
+-	if (kctx->gk5e->encrypt_v2 == NULL)
+-		return GSS_S_FAILURE;
+-
+ 	/* make room for gss token header */
+ 	if (xdr_extend_head(buf, offset, GSS_KRB5_TOK_HDR_LEN))
+ 		return GSS_S_FAILURE;
+@@ -420,7 +417,7 @@ gss_krb5_wrap_v2(struct krb5_ctx *kctx, int offset,
+ 	be64ptr = (__be64 *)be16ptr;
+ 	*be64ptr = cpu_to_be64(atomic64_fetch_inc(&kctx->seq_send64));
+ 
+-	err = (*kctx->gk5e->encrypt_v2)(kctx, offset, buf, pages);
++	err = (*kctx->gk5e->encrypt)(kctx, offset, buf, pages);
+ 	if (err)
+ 		return err;
+ 
+@@ -445,9 +442,6 @@ gss_krb5_unwrap_v2(struct krb5_ctx *kctx, int offset, int len,
+ 
+ 	dprintk("RPC:       %s\n", __func__);
+ 
+-	if (kctx->gk5e->decrypt_v2 == NULL)
+-		return GSS_S_FAILURE;
+-
+ 	ptr = buf->head[0].iov_base + offset;
+ 
+ 	if (be16_to_cpu(*((__be16 *)ptr)) != KG2_TOK_WRAP)
+@@ -477,8 +471,8 @@ gss_krb5_unwrap_v2(struct krb5_ctx *kctx, int offset, int len,
+ 	if (rrc != 0)
+ 		rotate_left(offset + 16, buf, rrc);
+ 
+-	err = (*kctx->gk5e->decrypt_v2)(kctx, offset, len, buf,
+-					&headskip, &tailskip);
++	err = (*kctx->gk5e->decrypt)(kctx, offset, len, buf,
++				     &headskip, &tailskip);
+ 	if (err)
+ 		return GSS_S_FAILURE;
+ 
 
 
