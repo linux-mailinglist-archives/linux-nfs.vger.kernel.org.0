@@ -2,41 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E97C2669C3C
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:30:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA2BB669C3E
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbjAMPau (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Jan 2023 10:30:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46824 "EHLO
+        id S230034AbjAMPay (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Jan 2023 10:30:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229669AbjAMPaK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:30:10 -0500
+        with ESMTP id S230090AbjAMPaN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:30:13 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FDDB7EC93
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:23:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8AA7EC8F
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:23:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F36C4B82121
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:22:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57832C433D2;
-        Fri, 13 Jan 2023 15:22:57 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 453E3B820D3
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:23:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D44C433F0;
+        Fri, 13 Jan 2023 15:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673623377;
-        bh=v4JgldVMqv+TdODbHkrf0+pe07F9Njga7uDvxHurm+I=;
+        s=k20201202; t=1673623383;
+        bh=h8MSvlsAUnXP4u//askTJxUYSO6ysdaCANr7rOo5uSM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PtRSS/fkyRPxh7gUPWf2pWIIpqUPV8pG/VVTvX4N1rtlX2kHGyJBQFz7XhGeXSJNh
-         rHAsNmmIqOuMU7Yrat8LfCwPH1uZ/WolBEojVBqGj/1rn0V9cN8SToOGfc1Ggmz6q/
-         bZQEek2goAZIQ03Vvcl9pCV74sRzQhX3RvxNJ8jpib0ESUaS0y5rJKRj7WZcS2a1Bw
-         o7f53iXI3nb1NzeWo7OLdUBWpt/n7UIlvwOTjpwsM1NK8E/nLOxdDIOmLt2qPlSFKV
-         6gTw50BQAA+nYJIeafg207bG/qv3WZCXcG+kQUgFd8tEdKmEPT1KRxzeeBnoMicqqL
-         JECATMrJc092w==
-Subject: [PATCH v1 14/41] SUNRPC: Replace KRB5_SUPPORTED_ENCTYPES macro
+        b=OzFesgZeR+9Bg4OPgYi74T59GcRbF4sIGJT5UmEY9/cVmREObgvs/WSv2R+nGWEuM
+         xs3B6Vh+490sZtnP77Ox0v1Zp5FHSD1RJkmg58bDleYhZBXIplJOyqoNTO/HhTCGbU
+         pDW7fbPDRqtLdTL0YjzTifAd+Jgk3HlgJor3QoiD1mp4MZk9jqibHYtDARTe+flMbp
+         nv2ZiqRX0xEW7qHoK3PkjaFqyO9Bm1nceFf8pvRUMmAxBevy0aHGmqU9f/XiAIuZ4a
+         1YHNw/SVimh0qsdTMapIbu5B48DethfWOug9ekU3Hn+cK1jkmKfbVCWN+YXyaRDXCC
+         2xUsJZi8fRzdg==
+Subject: [PATCH v1 15/41] SUNRPC: Enable rpcsec_gss_krb5.ko to be built
+ without CRYPTO_DES
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     dhowells@redhat.com, simo@redhat.com
-Date:   Fri, 13 Jan 2023 10:22:56 -0500
-Message-ID: <167362337645.8960.2534116685918772760.stgit@bazille.1015granger.net>
+Date:   Fri, 13 Jan 2023 10:23:02 -0500
+Message-ID: <167362338278.8960.6221901521513665682.stgit@bazille.1015granger.net>
 In-Reply-To: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 References: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -54,136 +55,369 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Now that all consumers of the KRB5_SUPPORTED_ENCTYPES macro are
-within the SunRPC layer, the macro can be replaced with something
-private and more flexible.
+Because the DES block cipher has been deprecated by Internet
+standard, highly secure configurations might require that DES
+support be blacklisted or not installed. NFS Kerberos should still
+be able to work correctly with only the AES-based enctypes in that
+situation.
+
+Also note that MIT Kerberos has begun a deprecation process for DES
+encryption types. Their README for 1.19.3 states:
+
+> Beginning with the krb5-1.19 release, a warning will be issued
+> if initial credentials are acquired using the des3-cbc-sha1
+> encryption type.  In future releases, this encryption type will
+> be disabled by default and eventually removed.
+>
+> Beginning with the krb5-1.18 release, single-DES encryption
+> types have been removed.
+
+Aside from the CONFIG option name change, there are two important
+policy changes:
+
+1. The 'insecure enctype' group is now disabled by default.
+   Distributors have to take action to enable support for deprecated
+   enctypes. Implementation of these enctypes will be removed in a
+   future kernel release.
+
+2. des3-cbc-sha1 is now considered part of the 'insecure enctype'
+   group, having been deprecated by RFC 8429, and is thus disabled
+   by default
+
+After this patch is applied, SunRPC support can be built with
+Kerberos 5 support but without CRYPTO_DES enabled in the kernel.
+And, when these enctypes are disabled, the Linux kernel's SunRPC
+RPCSEC GSS implementation fully complies with BCP 179 / RFC 6649
+and BCP 218 / RFC 8429.
 
 Tested-by: Scott Mayhew <smayhew@redhat.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/gss_krb5_enctypes.h |   41 ------------------------------
- net/sunrpc/auth_gss/gss_krb5_mech.c      |   41 +++++++++++++++++++++++++++++-
- 2 files changed, 39 insertions(+), 43 deletions(-)
- delete mode 100644 include/linux/sunrpc/gss_krb5_enctypes.h
+ net/sunrpc/Kconfig                    |   54 +++++++++++++++++++++--------
+ net/sunrpc/auth_gss/gss_krb5_mech.c   |   27 +++++++++++---
+ net/sunrpc/auth_gss/gss_krb5_seal.c   |   62 ++++++++++++++++++---------------
+ net/sunrpc/auth_gss/gss_krb5_unseal.c |    3 +-
+ net/sunrpc/auth_gss/gss_krb5_wrap.c   |    4 ++
+ 5 files changed, 101 insertions(+), 49 deletions(-)
 
-diff --git a/include/linux/sunrpc/gss_krb5_enctypes.h b/include/linux/sunrpc/gss_krb5_enctypes.h
-deleted file mode 100644
-index 87eea679d750..000000000000
---- a/include/linux/sunrpc/gss_krb5_enctypes.h
-+++ /dev/null
-@@ -1,41 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * Define the string that exports the set of kernel-supported
-- * Kerberos enctypes. This list is sent via upcall to gssd, and
-- * is also exposed via the nfsd /proc API. The consumers generally
-- * treat this as an ordered list, where the first item in the list
-- * is the most preferred.
-- */
+diff --git a/net/sunrpc/Kconfig b/net/sunrpc/Kconfig
+index bbbb5af0af13..1135ff362132 100644
+--- a/net/sunrpc/Kconfig
++++ b/net/sunrpc/Kconfig
+@@ -19,10 +19,10 @@ config SUNRPC_SWAP
+ config RPCSEC_GSS_KRB5
+ 	tristate "Secure RPC: Kerberos V mechanism"
+ 	depends on SUNRPC && CRYPTO
+-	depends on CRYPTO_MD5 && CRYPTO_DES && CRYPTO_CBC && CRYPTO_CTS
+-	depends on CRYPTO_ECB && CRYPTO_HMAC && CRYPTO_SHA1 && CRYPTO_AES
+ 	default y
+ 	select SUNRPC_GSS
++	select CRYPTO_SKCIPHER
++	select CRYPTO_HASH
+ 	help
+ 	  Choose Y here to enable Secure RPC using the Kerberos version 5
+ 	  GSS-API mechanism (RFC 1964).
+@@ -34,21 +34,47 @@ config RPCSEC_GSS_KRB5
+ 
+ 	  If unsure, say Y.
+ 
+-config SUNRPC_DISABLE_INSECURE_ENCTYPES
+-	bool "Secure RPC: Disable insecure Kerberos encryption types"
++config RPCSEC_GSS_KRB5_SIMPLIFIED
++	bool
++	depends on RPCSEC_GSS_KRB5
++
++config RPCSEC_GSS_KRB5_CRYPTOSYSTEM
++	bool
++	depends on RPCSEC_GSS_KRB5
++
++config RPCSEC_GSS_KRB5_ENCTYPES_DES
++	bool "Enable Kerberos enctypes based on DES (deprecated)"
+ 	depends on RPCSEC_GSS_KRB5
++	depends on CRYPTO_CBC && CRYPTO_CTS && CRYPTO_ECB
++	depends on CRYPTO_HMAC && CRYPTO_MD5 && CRYPTO_SHA1
++	depends on CRYPTO_DES
+ 	default n
++	select RPCSEC_GSS_KRB5_SIMPLIFIED
++	help
++	  Choose Y to enable the use of deprecated Kerberos 5
++	  encryption types that utilize Data Encryption Standard
++	  (DES) based ciphers. These include des-cbc-md5,
++	  des-cbc-crc, and des-cbc-md4, which were deprecated by
++	  RFC 6649, and des3-cbc-sha1, which was deprecated by RFC
++	  8429.
++
++	  Support for these encryption types is available for
++	  compatibility with legacy NFS client and server
++	  implementations. The default is N which is more secure.
++
++config RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA1
++	bool "Enable Kerberos enctypes based on AES and SHA-1"
++	depends on RPCSEC_GSS_KRB5
++	depends on CRYPTO_CBC && CRYPTO_CTS
++	depends on CRYPTO_HMAC && CRYPTO_SHA1
++	depends on CRYPTO_AES
++	default y
++	select RPCSEC_GSS_KRB5_CRYPTOSYSTEM
+ 	help
+-	  Choose Y here to disable the use of deprecated encryption types
+-	  with the Kerberos version 5 GSS-API mechanism (RFC 1964). The
+-	  deprecated encryption types include DES-CBC-MD5, DES-CBC-CRC,
+-	  and DES-CBC-MD4. These types were deprecated by RFC 6649 because
+-	  they were found to be insecure.
 -
--#ifndef _LINUX_SUNRPC_GSS_KRB5_ENCTYPES_H
--#define _LINUX_SUNRPC_GSS_KRB5_ENCTYPES_H
--
--#ifdef CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES
--
--/*
-- * NB: This list includes DES3_CBC_SHA1, which was deprecated by RFC 8429.
-- *
-- * ENCTYPE_AES256_CTS_HMAC_SHA1_96
-- * ENCTYPE_AES128_CTS_HMAC_SHA1_96
-- * ENCTYPE_DES3_CBC_SHA1
-- */
--#define KRB5_SUPPORTED_ENCTYPES "18,17,16"
--
--#else	/* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
--
--/*
-- * NB: This list includes encryption types that were deprecated
-- * by RFC 8429 and RFC 6649.
-- *
-- * ENCTYPE_AES256_CTS_HMAC_SHA1_96
-- * ENCTYPE_AES128_CTS_HMAC_SHA1_96
-- * ENCTYPE_DES3_CBC_SHA1
-- * ENCTYPE_DES_CBC_MD5
-- * ENCTYPE_DES_CBC_CRC
-- * ENCTYPE_DES_CBC_MD4
-- */
--#define KRB5_SUPPORTED_ENCTYPES "18,17,16,3,1,2"
--
--#endif	/* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
--
--#endif	/* _LINUX_SUNRPC_GSS_KRB5_ENCTYPES_H */
+-	  N is the default because many sites have deployed KDCs and
+-	  keytabs that contain only these deprecated encryption types.
+-	  Choosing Y prevents the use of known-insecure encryption types
+-	  but might result in compatibility problems.
++	  Choose Y to enable the use of Kerberos 5 encryption types
++	  that utilize Advanced Encryption Standard (AES) ciphers and
++	  SHA-1 digests. These include aes128-cts-hmac-sha1-96 and
++	  aes256-cts-hmac-sha1-96.
+ 
+ config SUNRPC_DEBUG
+ 	bool "RPC: Enable dprintk debugging"
 diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index 4986435e9b92..a0c4e45888a4 100644
+index a0c4e45888a4..a6f1904fc799 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
 +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -19,7 +19,6 @@
- #include <linux/sunrpc/auth.h>
- #include <linux/sunrpc/gss_krb5.h>
- #include <linux/sunrpc/xdr.h>
--#include <linux/sunrpc/gss_krb5_enctypes.h>
+@@ -29,12 +29,16 @@
  
- #include "auth_gss_internal.h"
- #include "gss_krb5_internal.h"
-@@ -145,6 +144,43 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ static struct gss_api_mech gss_kerberos_mech;
+ 
++#if defined(CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED)
+ static int gss_krb5_import_ctx_des(struct krb5_ctx *ctx, gfp_t gfp_mask);
+ static int gss_krb5_import_ctx_v1(struct krb5_ctx *ctx, gfp_t gfp_mask);
++#endif
++#if defined(CONFIG_RPCSEC_GSS_KRB5_CRYPTOSYSTEM)
+ static int gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask);
++#endif
+ 
+ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+-#ifndef CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES
++#if defined(CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_DES)
+ 	/*
+ 	 * DES (All DES enctypes are mapped to the same gss functionality)
+ 	 */
+@@ -59,7 +63,6 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	  .cksumlength = 8,
+ 	  .keyed_cksum = 0,
  	},
+-#endif	/* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
+ 	/*
+ 	 * 3DES
+ 	 */
+@@ -84,8 +87,11 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	  .cksumlength = 20,
+ 	  .keyed_cksum = 1,
+ 	},
++#endif
++
++#if defined(CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA1)
+ 	/*
+-	 * AES128
++	 * AES-128 with SHA-1 (RFC 3962)
+ 	 */
+ 	{
+ 	  .etype = ENCTYPE_AES128_CTS_HMAC_SHA1_96,
+@@ -114,7 +120,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	  .keyed_cksum = 1,
+ 	},
+ 	/*
+-	 * AES256
++	 * AES-256 with SHA-1 (RFC 3962)
+ 	 */
+ 	{
+ 	  .etype = ENCTYPE_AES256_CTS_HMAC_SHA1_96,
+@@ -142,6 +148,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
+ 	  .cksumlength = 12,
+ 	  .keyed_cksum = 1,
+ 	},
++#endif
  };
  
-+/*
-+ * The list of advertised enctypes is specified in order of most
-+ * preferred to least.
-+ */
-+static char gss_krb5_enctype_priority_list[64];
-+
-+static void gss_krb5_prepare_enctype_priority_list(void)
-+{
-+	static const u32 gss_krb5_enctypes[] = {
-+		ENCTYPE_AES256_CTS_HMAC_SHA1_96,
-+		ENCTYPE_AES128_CTS_HMAC_SHA1_96,
-+		ENCTYPE_DES3_CBC_SHA1,
-+#ifndef CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES
-+		ENCTYPE_DES_CBC_MD5,
-+		ENCTYPE_DES_CBC_CRC,
-+		ENCTYPE_DES_CBC_MD4,
+ /*
+@@ -153,10 +160,12 @@ static char gss_krb5_enctype_priority_list[64];
+ static void gss_krb5_prepare_enctype_priority_list(void)
+ {
+ 	static const u32 gss_krb5_enctypes[] = {
++#if defined(CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA1)
+ 		ENCTYPE_AES256_CTS_HMAC_SHA1_96,
+ 		ENCTYPE_AES128_CTS_HMAC_SHA1_96,
 +#endif
-+	};
-+	size_t total, i;
-+	char buf[16];
-+	char *sep;
-+	int n;
++#if defined(CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_DES)
+ 		ENCTYPE_DES3_CBC_SHA1,
+-#ifndef CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES
+ 		ENCTYPE_DES_CBC_MD5,
+ 		ENCTYPE_DES_CBC_CRC,
+ 		ENCTYPE_DES_CBC_MD4,
+@@ -337,7 +346,7 @@ gss_import_v1_context(const void *p, const void *end, struct krb5_ctx *ctx)
+ 	return PTR_ERR(p);
+ }
+ 
+-static struct crypto_sync_skcipher *
++static inline struct crypto_sync_skcipher *
+ context_v2_alloc_cipher(struct krb5_ctx *ctx, const char *cname, u8 *key)
+ {
+ 	struct crypto_sync_skcipher *cp;
+@@ -367,6 +376,7 @@ set_cdata(u8 cdata[GSS_KRB5_K5CLENGTH], u32 usage, u8 seed)
+ 	cdata[4] = seed;
+ }
+ 
++#if defined(CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED)
+ static int
+ gss_krb5_import_ctx_des(struct krb5_ctx *ctx, gfp_t gfp_mask)
+ {
+@@ -417,6 +427,9 @@ gss_krb5_import_ctx_v1(struct krb5_ctx *ctx, gfp_t gfp_mask)
+ out_err:
+ 	return -EINVAL;
+ }
++#endif
 +
-+	sep = "";
-+	gss_krb5_enctype_priority_list[0] = '\0';
-+	for (total = 0, i = 0; i < ARRAY_SIZE(gss_krb5_enctypes); i++) {
-+		n = sprintf(buf, "%s%u", sep, gss_krb5_enctypes[i]);
-+		if (n < 0)
-+			break;
-+		if (total + n >= sizeof(gss_krb5_enctype_priority_list))
-+			break;
-+		strcat(gss_krb5_enctype_priority_list, buf);
-+		sep = ",";
-+		total += n;
-+	}
++#if defined(CONFIG_RPCSEC_GSS_KRB5_CRYPTOSYSTEM)
+ 
+ static struct crypto_ahash *
+ gss_krb5_alloc_hash_v2(struct krb5_ctx *kctx, const struct xdr_netobj *key)
+@@ -551,6 +564,8 @@ gss_krb5_import_ctx_v2(struct krb5_ctx *ctx, gfp_t gfp_mask)
+ 	goto out;
+ }
+ 
++#endif
++
+ static int
+ gss_import_v2_context(const void *p, const void *end, struct krb5_ctx *ctx,
+ 		gfp_t gfp_mask)
+diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gss_krb5_seal.c
+index f74125407588..146aa755f07d 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_seal.c
++++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
+@@ -71,6 +71,8 @@
+ # define RPCDBG_FACILITY        RPCDBG_AUTH
+ #endif
+ 
++#if defined(CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED)
++
+ static void *
+ setup_token(struct krb5_ctx *ctx, struct xdr_netobj *token)
+ {
+@@ -97,34 +99,6 @@ setup_token(struct krb5_ctx *ctx, struct xdr_netobj *token)
+ 	return krb5_hdr;
+ }
+ 
+-static void *
+-setup_token_v2(struct krb5_ctx *ctx, struct xdr_netobj *token)
+-{
+-	u16 *ptr;
+-	void *krb5_hdr;
+-	u8 *p, flags = 0x00;
+-
+-	if ((ctx->flags & KRB5_CTX_FLAG_INITIATOR) == 0)
+-		flags |= 0x01;
+-	if (ctx->flags & KRB5_CTX_FLAG_ACCEPTOR_SUBKEY)
+-		flags |= 0x04;
+-
+-	/* Per rfc 4121, sec 4.2.6.1, there is no header,
+-	 * just start the token */
+-	krb5_hdr = ptr = (u16 *)token->data;
+-
+-	*ptr++ = KG2_TOK_MIC;
+-	p = (u8 *)ptr;
+-	*p++ = flags;
+-	*p++ = 0xff;
+-	ptr = (u16 *)p;
+-	*ptr++ = 0xffff;
+-	*ptr = 0xffff;
+-
+-	token->len = GSS_KRB5_TOK_HDR_LEN + ctx->gk5e->cksumlength;
+-	return krb5_hdr;
+-}
+-
+ u32
+ gss_krb5_get_mic_v1(struct krb5_ctx *ctx, struct xdr_buf *text,
+ 		    struct xdr_netobj *token)
+@@ -164,6 +138,38 @@ gss_krb5_get_mic_v1(struct krb5_ctx *ctx, struct xdr_buf *text,
+ 	return (ctx->endtime < now) ? GSS_S_CONTEXT_EXPIRED : GSS_S_COMPLETE;
+ }
+ 
++#endif
++
++static void *
++setup_token_v2(struct krb5_ctx *ctx, struct xdr_netobj *token)
++{
++	u16 *ptr;
++	void *krb5_hdr;
++	u8 *p, flags = 0x00;
++
++	if ((ctx->flags & KRB5_CTX_FLAG_INITIATOR) == 0)
++		flags |= 0x01;
++	if (ctx->flags & KRB5_CTX_FLAG_ACCEPTOR_SUBKEY)
++		flags |= 0x04;
++
++	/* Per rfc 4121, sec 4.2.6.1, there is no header,
++	 * just start the token.
++	 */
++	krb5_hdr = (u16 *)token->data;
++	ptr = krb5_hdr;
++
++	*ptr++ = KG2_TOK_MIC;
++	p = (u8 *)ptr;
++	*p++ = flags;
++	*p++ = 0xff;
++	ptr = (u16 *)p;
++	*ptr++ = 0xffff;
++	*ptr = 0xffff;
++
++	token->len = GSS_KRB5_TOK_HDR_LEN + ctx->gk5e->cksumlength;
++	return krb5_hdr;
 +}
 +
- static const int num_supported_enctypes =
- 	ARRAY_SIZE(supported_gss_krb5_enctypes);
+ u32
+ gss_krb5_get_mic_v2(struct krb5_ctx *ctx, struct xdr_buf *text,
+ 		    struct xdr_netobj *token)
+diff --git a/net/sunrpc/auth_gss/gss_krb5_unseal.c b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+index 939d199eb7b7..7d6d4ae4a3c9 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_unseal.c
++++ b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+@@ -70,9 +70,9 @@
+ #endif
  
-@@ -763,13 +799,14 @@ static struct gss_api_mech gss_kerberos_mech = {
- 	.gm_ops		= &gss_kerberos_ops,
- 	.gm_pf_num	= ARRAY_SIZE(gss_kerberos_pfs),
- 	.gm_pfs		= gss_kerberos_pfs,
--	.gm_upcall_enctypes = KRB5_SUPPORTED_ENCTYPES,
-+	.gm_upcall_enctypes = gss_krb5_enctype_priority_list,
- };
  
- static int __init init_kerberos_module(void)
++#if defined(CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED)
+ /* read_token is a mic token, and message_buffer is the data that the mic was
+  * supposedly taken over. */
+-
+ u32
+ gss_krb5_verify_mic_v1(struct krb5_ctx *ctx, struct xdr_buf *message_buffer,
+ 		       struct xdr_netobj *read_token)
+@@ -144,6 +144,7 @@ gss_krb5_verify_mic_v1(struct krb5_ctx *ctx, struct xdr_buf *message_buffer,
+ 
+ 	return GSS_S_COMPLETE;
+ }
++#endif
+ 
+ u32
+ gss_krb5_verify_mic_v2(struct krb5_ctx *ctx, struct xdr_buf *message_buffer,
+diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+index 57085bdec053..13e633bcbc2d 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
++++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+@@ -40,6 +40,8 @@
+ # define RPCDBG_FACILITY	RPCDBG_AUTH
+ #endif
+ 
++#if defined(CONFIG_RPCSEC_GSS_KRB5_SIMPLIFIED)
++
+ static inline int
+ gss_krb5_padding(int blocksize, int length)
  {
- 	int status;
+@@ -323,6 +325,8 @@ gss_krb5_unwrap_v1(struct krb5_ctx *kctx, int offset, int len,
+ 	return GSS_S_COMPLETE;
+ }
  
-+	gss_krb5_prepare_enctype_priority_list();
- 	status = gss_mech_register(&gss_kerberos_mech);
- 	if (status)
- 		printk("Failed to register kerberos gss mechanism!\n");
++#endif
++
+ /*
+  * We can shift data by up to LOCAL_BUF_LEN bytes in a pass.  If we need
+  * to do more than that, we shift repeatedly.  Kevin Coffman reports
 
 
