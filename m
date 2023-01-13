@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22ECC669C29
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:29:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07EBC669C2E
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:29:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbjAMP3I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Jan 2023 10:29:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45872 "EHLO
+        id S229551AbjAMP3h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Jan 2023 10:29:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230125AbjAMP2Y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:28:24 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3382477AD6
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:22:10 -0800 (PST)
+        with ESMTP id S230193AbjAMP2Z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:28:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F57277D1B
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:22:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id A69ABCE20E5
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:22:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF4E6C433F0;
-        Fri, 13 Jan 2023 15:22:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DE60E6216C
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:22:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19046C433D2;
+        Fri, 13 Jan 2023 15:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673623326;
-        bh=PoOrxR1gudKQCxvesHKR5Bl7Gnm3yY4ayGL3PBHzDXE=;
+        s=k20201202; t=1673623333;
+        bh=LFjemD4TUP+Zd2j4WiYOgkDVgJttBm9I86HZmcTSXTw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KR8U2XDu07zm7cqjknyjlDXLB+LwxEYE4gcZdForCWCzgOh1bVKyMB4iS/H78WKdw
-         1qde8Crk5Li+BoU2cRRQ7QJzk0Qjx4go49OWgGH6eI31OEcdO1mhprj2tWPRHbAzGS
-         64R+usqeJqIZzj5iJ8oiYiJ051PhIyjTjFzuPM09zMPC2oMlo0TcoRnMhPTwZ28xoX
-         UCrw/0w3i8l4CbhyI8VqnJaxQAAzMg7pwo8cwi/bT7KsKyJOlUR/dW4WFVpRsj0yOH
-         mej9f8It4aku6VKbiKaIg0Z45ekOGopw1w3jhzOIwtCpISDZlgnDzPGXndm1DdpwEG
-         d2UX7yhM/CQvg==
-Subject: [PATCH v1 06/41] SUNRPC: Refactor set-up for aux_cipher
+        b=qqF9OeTtxv+K64krBjv9g6cF2lNtZqfNlRRxW3rotnvfOuA7/L/sbtdSHGH71tSyN
+         qw4L+9JgnH+w/3PdS1IFfZml1MTeUQexZMACrQoDKHfWD8W51JIcmc/mzsf0CxJX0m
+         q/6k8q6+YbXkcdSwu8GwooAsamM8WEqfY2UWtW4hB7DgPZ9JEvj7qIptrAAFLEJupI
+         Tmq7akCfm3pmqlpuizJNPPa/IdwxOLMiUicDQgrPHDWmrItfBQCw6cuRK2BdUjBcxT
+         zL+tsBE9F8f9x1KK/XhrqaLYscV3FL4rQkp+/WB+Mu6UIE1GcAa4vbgOQSkmcZE796
+         7l1771/8ik0YQ==
+Subject: [PATCH v1 07/41] SUNRPC: Obscure Kerberos encryption keys
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     dhowells@redhat.com, simo@redhat.com
-Date:   Fri, 13 Jan 2023 10:22:05 -0500
-Message-ID: <167362332582.8960.13295643540048029311.stgit@bazille.1015granger.net>
+Date:   Fri, 13 Jan 2023 10:22:12 -0500
+Message-ID: <167362333213.8960.4251999590261954481.stgit@bazille.1015granger.net>
 In-Reply-To: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 References: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -54,148 +54,132 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Hoist the name of the aux_cipher into struct gss_krb5_enctype to
-prepare for obscuring the encryption keys just after they are
-derived.
+The encryption subkeys are not used after the cipher transforms have
+been allocated and keyed. There is no need to retain them in struct
+krb5_ctx.
 
 Tested-by: Scott Mayhew <smayhew@redhat.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/gss_krb5.h     |    1 +
- net/sunrpc/auth_gss/gss_krb5_mech.c |   50 ++++++++++++++++++-----------------
- 2 files changed, 26 insertions(+), 25 deletions(-)
+ include/linux/sunrpc/gss_krb5.h     |    2 --
+ net/sunrpc/auth_gss/gss_krb5_mech.c |   43 +++++++++++++++++++++--------------
+ 2 files changed, 26 insertions(+), 19 deletions(-)
 
 diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_krb5.h
-index 192f5b37763f..77f6adf20f7f 100644
+index 77f6adf20f7f..806df140feae 100644
 --- a/include/linux/sunrpc/gss_krb5.h
 +++ b/include/linux/sunrpc/gss_krb5.h
-@@ -63,6 +63,7 @@ struct gss_krb5_enctype {
- 	const u32		ctype;		/* checksum type */
- 	const char		*name;		/* "friendly" name */
- 	const char		*encrypt_name;	/* crypto encrypt name */
-+	const char		*aux_cipher;	/* aux encrypt cipher name */
- 	const char		*cksum_name;	/* crypto checksum name */
- 	const u16		signalg;	/* signing algorithm */
- 	const u16		sealalg;	/* sealing algorithm */
+@@ -114,8 +114,6 @@ struct krb5_ctx {
+ 	struct xdr_netobj	mech_used;
+ 	u8			initiator_sign[GSS_KRB5_MAX_KEYLEN];
+ 	u8			acceptor_sign[GSS_KRB5_MAX_KEYLEN];
+-	u8			initiator_seal[GSS_KRB5_MAX_KEYLEN];
+-	u8			acceptor_seal[GSS_KRB5_MAX_KEYLEN];
+ 	u8			initiator_integ[GSS_KRB5_MAX_KEYLEN];
+ 	u8			acceptor_integ[GSS_KRB5_MAX_KEYLEN];
+ };
 diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gss_krb5_mech.c
-index 9b489f7f2720..3a464cb3f6e9 100644
+index 3a464cb3f6e9..ba3cfcb2c7c5 100644
 --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
 +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
-@@ -78,6 +78,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .ctype = CKSUMTYPE_HMAC_SHA1_96_AES128,
- 	  .name = "aes128-cts",
- 	  .encrypt_name = "cts(cbc(aes))",
-+	  .aux_cipher = "cbc(aes)",
- 	  .cksum_name = "hmac(sha1)",
- 	  .encrypt = krb5_encrypt,
- 	  .decrypt = krb5_decrypt,
-@@ -99,6 +100,7 @@ static const struct gss_krb5_enctype supported_gss_krb5_enctypes[] = {
- 	  .ctype = CKSUMTYPE_HMAC_SHA1_96_AES256,
- 	  .name = "aes256-cts",
- 	  .encrypt_name = "cts(cbc(aes))",
-+	  .aux_cipher = "cbc(aes)",
- 	  .cksum_name = "hmac(sha1)",
- 	  .encrypt = krb5_encrypt,
- 	  .decrypt = krb5_decrypt,
-@@ -373,6 +375,13 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
- 						     ctx->initiator_seal);
+@@ -350,42 +350,49 @@ context_derive_keys_des3(struct krb5_ctx *ctx, gfp_t gfp_mask)
+ static int
+ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
+ {
+-	struct xdr_netobj c, keyin, keyout;
+ 	u8 cdata[GSS_KRB5_K5CLENGTH];
++	struct xdr_netobj c = {
++		.len	= sizeof(cdata),
++		.data	= cdata,
++	};
++	struct xdr_netobj keyin = {
++		.len	= ctx->gk5e->keylength,
++		.data	= ctx->Ksess,
++	};
++	struct xdr_netobj keyout;
++	int ret = -EINVAL;
++	void *subkey;
+ 	u32 err;
+ 
+-	c.len = GSS_KRB5_K5CLENGTH;
+-	c.data = cdata;
+-
+-	keyin.data = ctx->Ksess;
+-	keyin.len = ctx->gk5e->keylength;
++	subkey = kmalloc(ctx->gk5e->keylength, gfp_mask);
++	if (!subkey)
++		return -ENOMEM;
+ 	keyout.len = ctx->gk5e->keylength;
++	keyout.data = subkey;
+ 
+ 	/* initiator seal encryption */
+ 	set_cdata(cdata, KG_USAGE_INITIATOR_SEAL, KEY_USAGE_SEED_ENCRYPTION);
+-	keyout.data = ctx->initiator_seal;
+ 	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
+ 	if (err) {
+ 		dprintk("%s: Error %d deriving initiator_seal key\n",
+ 			__func__, err);
+-		goto out_err;
++		goto out;
+ 	}
+ 	ctx->initiator_enc = context_v2_alloc_cipher(ctx,
+ 						     ctx->gk5e->encrypt_name,
+-						     ctx->initiator_seal);
++						     subkey);
  	if (ctx->initiator_enc == NULL)
- 		goto out_err;
-+	if (ctx->gk5e->aux_cipher) {
-+		ctx->initiator_enc_aux =
-+			context_v2_alloc_cipher(ctx, ctx->gk5e->aux_cipher,
-+						ctx->initiator_seal);
-+		if (ctx->initiator_enc_aux == NULL)
-+			goto out_free;
-+	}
+-		goto out_err;
++		goto out;
+ 	if (ctx->gk5e->aux_cipher) {
+ 		ctx->initiator_enc_aux =
+ 			context_v2_alloc_cipher(ctx, ctx->gk5e->aux_cipher,
+-						ctx->initiator_seal);
++						subkey);
+ 		if (ctx->initiator_enc_aux == NULL)
+ 			goto out_free;
+ 	}
  
  	/* acceptor seal encryption */
  	set_cdata(cdata, KG_USAGE_ACCEPTOR_SEAL, KEY_USAGE_SEED_ENCRYPTION);
-@@ -381,13 +390,20 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
+-	keyout.data = ctx->acceptor_seal;
+ 	err = krb5_derive_key(ctx->gk5e, &keyin, &keyout, &c, gfp_mask);
  	if (err) {
  		dprintk("%s: Error %d deriving acceptor_seal key\n",
- 			__func__, err);
--		goto out_free_initiator_enc;
-+		goto out_free;
+@@ -394,13 +401,13 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
  	}
  	ctx->acceptor_enc = context_v2_alloc_cipher(ctx,
  						    ctx->gk5e->encrypt_name,
- 						    ctx->acceptor_seal);
+-						    ctx->acceptor_seal);
++						    subkey);
  	if (ctx->acceptor_enc == NULL)
--		goto out_free_initiator_enc;
-+		goto out_free;
-+	if (ctx->gk5e->aux_cipher) {
-+		ctx->acceptor_enc_aux =
-+			context_v2_alloc_cipher(ctx, ctx->gk5e->aux_cipher,
-+						ctx->acceptor_seal);
-+		if (ctx->acceptor_enc_aux == NULL)
-+			goto out_free;
-+	}
- 
- 	/* initiator sign checksum */
- 	set_cdata(cdata, KG_USAGE_INITIATOR_SIGN, KEY_USAGE_SEED_CHECKSUM);
-@@ -396,7 +412,7 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
- 	if (err) {
- 		dprintk("%s: Error %d deriving initiator_sign key\n",
- 			__func__, err);
--		goto out_free_acceptor_enc;
-+		goto out_free;
- 	}
- 
- 	/* acceptor sign checksum */
-@@ -406,7 +422,7 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
- 	if (err) {
- 		dprintk("%s: Error %d deriving acceptor_sign key\n",
- 			__func__, err);
--		goto out_free_acceptor_enc;
-+		goto out_free;
- 	}
- 
- 	/* initiator seal integrity */
-@@ -416,7 +432,7 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
- 	if (err) {
- 		dprintk("%s: Error %d deriving initiator_integ key\n",
- 			__func__, err);
--		goto out_free_acceptor_enc;
-+		goto out_free;
- 	}
- 
- 	/* acceptor seal integrity */
-@@ -426,31 +442,15 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
- 	if (err) {
- 		dprintk("%s: Error %d deriving acceptor_integ key\n",
- 			__func__, err);
--		goto out_free_acceptor_enc;
--	}
--
--	switch (ctx->enctype) {
--	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
--	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
--		ctx->initiator_enc_aux =
--			context_v2_alloc_cipher(ctx, "cbc(aes)",
--						ctx->initiator_seal);
--		if (ctx->initiator_enc_aux == NULL)
--			goto out_free_acceptor_enc;
--		ctx->acceptor_enc_aux =
--			context_v2_alloc_cipher(ctx, "cbc(aes)",
+ 		goto out_free;
+ 	if (ctx->gk5e->aux_cipher) {
+ 		ctx->acceptor_enc_aux =
+ 			context_v2_alloc_cipher(ctx, ctx->gk5e->aux_cipher,
 -						ctx->acceptor_seal);
--		if (ctx->acceptor_enc_aux == NULL) {
--			crypto_free_sync_skcipher(ctx->initiator_enc_aux);
--			goto out_free_acceptor_enc;
--		}
-+		goto out_free;
++						subkey);
+ 		if (ctx->acceptor_enc_aux == NULL)
+ 			goto out_free;
+ 	}
+@@ -445,15 +452,17 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t gfp_mask)
+ 		goto out_free;
  	}
  
- 	return 0;
+-	return 0;
++	ret = 0;
++out:
++	kfree_sensitive(subkey);
++	return ret;
  
--out_free_acceptor_enc:
-+out_free:
-+	crypto_free_sync_skcipher(ctx->acceptor_enc_aux);
+ out_free:
+ 	crypto_free_sync_skcipher(ctx->acceptor_enc_aux);
  	crypto_free_sync_skcipher(ctx->acceptor_enc);
--out_free_initiator_enc:
-+	crypto_free_sync_skcipher(ctx->initiator_enc_aux);
+ 	crypto_free_sync_skcipher(ctx->initiator_enc_aux);
  	crypto_free_sync_skcipher(ctx->initiator_enc);
- out_err:
- 	return -EINVAL;
+-out_err:
+-	return -EINVAL;
++	goto out;
+ }
+ 
+ static int
 
 
