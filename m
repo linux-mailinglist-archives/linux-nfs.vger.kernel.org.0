@@ -2,41 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16D9E669C10
+	by mail.lfdr.de (Postfix) with ESMTP id C08CD669C12
 	for <lists+linux-nfs@lfdr.de>; Fri, 13 Jan 2023 16:28:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbjAMP2d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Jan 2023 10:28:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46708 "EHLO
+        id S229748AbjAMP2e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Jan 2023 10:28:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbjAMP2P (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:28:15 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0387BCCE
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:21:29 -0800 (PST)
+        with ESMTP id S230181AbjAMP2R (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Jan 2023 10:28:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E2087EC86
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 07:21:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5123B6216C
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:21:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 792B5C433EF;
-        Fri, 13 Jan 2023 15:21:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AEA2362171
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Jan 2023 15:21:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAAEFC433EF;
+        Fri, 13 Jan 2023 15:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673623288;
-        bh=GaZaw107gxwriZK+L4c6AgIgxci+B5Iy1+skH2T7jnQ=;
-        h=Subject:From:To:Cc:Date:From;
-        b=p6hCvcF6gXewOyCQf0kUiM7Si8r4RdWhcUTSH03Ak181MNLwnwBLvfBdWXFw83J9S
-         a2GsGiMRI1yxU5fH7WUF1iDytwXO7efV5PPwNcIcElWHH7OcNZMzEFK+cOcTs22UIk
-         fnfLPxBXTOuMip06IVjKzVJez7aicy5RV3uRCnYX0GzqYGr/0KNthlF0bLxvbjhbE1
-         FbmNc+4Ywl03x/1gB0DEaZoc2AkVyRIWmu5WlkbC7cibixFa9Gt+J5asj1M2X7aTVR
-         On7i9mN+1dRs6lEbE7Emf0V6DpeU5keGaH4+GBcGe8eQf2TddxzIELsM/jFwfgPxIR
-         gzXX4Am0/79AA==
-Subject: [PATCH v1 00/41] RPCSEC GSS krb5 enhancements
+        s=k20201202; t=1673623295;
+        bh=BafomN1WImkk2tnPEHLusmFBeE7srAMZgK56SVJzrng=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=SJ61s10MmDxvvQ6gMlCr/3vGD6btzdIuXh9GmKervwJqP5g3WfqHwdSvDnCHvHHny
+         SzizGMFe5gZpjKsm5C4fy/ufo0VVBRBWsX1ybenJaqvb5uNllsQ8KtTfRjtsHszIY+
+         XcS9yYOXllK05DMnpYSRE6vu/RGym/Dc7YIoFrLuXo9iSNkcjV8sJzQibqFKFC5Z5M
+         XQkw13p4fdzFdyoRWWYyd5UqAzlk+CVeZxcRwJNFVAPGx/Wv7ia2LqqAVro15PpURf
+         Hg137mg5XAhV9UhRyidwFAGU7sV87aWTx6tSU8eUn4cG2ACYUl1y0zBw+k9FMv5y/W
+         ynbnX1XJG9n9g==
+Subject: [PATCH v1 01/41] SUNRPC: Add header ifdefs to linux/sunrpc/gss_krb5.h
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     dhowells@redhat.com, simo@redhat.com
-Date:   Fri, 13 Jan 2023 10:21:26 -0500
-Message-ID: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
+Date:   Fri, 13 Jan 2023 10:21:33 -0500
+Message-ID: <167362329391.8960.2728300899554595366.stgit@bazille.1015granger.net>
+In-Reply-To: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
+References: <167362164696.8960.16701168753472560115.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -50,106 +52,43 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Some light reading for your three-day weekend!
+From: Chuck Lever <chuck.lever@oracle.com>
 
-The purpose of this series is to improve/harden the security
-provided by the Linux kernel's RPCSEC GSS Kerberos 5 mechanism.
-There are lots of clean-ups in this series, but the pertinent
-feature is the addition of a clean deprecation path for the DES-
-and SHA1-based encryption types in accordance with Internet BCPs.
+Standard convention: Ensure the contents of the header are included
+only once per source file.
 
-This series disables DES-based enctypes by default, provides a
-mechanism for disabling SHA1-based enctypes, and introduces two
-modern enctypes that do not use deprecated crypto algorithms.
-
-Not only does that improve security for Kerberos 5 users, but it
-also prepares SunRPC for eventually switching to a shared common
-kernel Kerberos 5 implementation, which surely will not implement
-any deprecated encryption types (in particular, DES-based ones).
-
-Today, MIT supports both of the newly-introduced enctypes, but
-Heimdal does not appear to. Thus distributions can enable and
-disable kernel support to match their user space enctype support.
-
-Scott has been kicking the tires -- we've found no regressions with
-the current SHA1-based enctypes, and the others are disabled by
-default until we have an opportunity for interop testing. The KUnit
-tests for the new enctypes pass and this implementation successfully
-interoperates with itself using those enctypes. Therefore I believe
-it to be ready to merge.
-
-When this series gets merged, the Linux NFS community should select
-and announce a date-certain for removal of DES-based enctype code.
-
+Tested-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ include/linux/sunrpc/gss_krb5.h |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Chuck Lever (41):
-      SUNRPC: Add header ifdefs to linux/sunrpc/gss_krb5.h
-      SUNRPC: Remove .blocksize field from struct gss_krb5_enctype
-      SUNRPC: Remove .conflen field from struct gss_krb5_enctype
-      SUNRPC: Improve Kerberos confounder generation
-      SUNRPC: Obscure Kerberos session key
-      SUNRPC: Refactor set-up for aux_cipher
-      SUNRPC: Obscure Kerberos encryption keys
-      SUNRPC: Obscure Kerberos signing keys
-      SUNRPC: Obscure Kerberos integrity keys
-      SUNRPC: Refactor the GSS-API Per Message calls in the Kerberos mechanism
-      SUNRPC: Remove another switch on ctx->enctype
-      SUNRPC: Add /proc/net/rpc/gss_krb5_enctypes file
-      NFSD: Replace /proc/fs/nfsd/supported_krb5_enctypes with a symlink
-      SUNRPC: Replace KRB5_SUPPORTED_ENCTYPES macro
-      SUNRPC: Enable rpcsec_gss_krb5.ko to be built without CRYPTO_DES
-      SUNRPC: Remove ->encrypt and ->decrypt methods from struct gss_krb5_enctype
-      SUNRPC: Rename .encrypt_v2 and .decrypt_v2 methods
-      SUNRPC: Hoist KDF into struct gss_krb5_enctype
-      SUNRPC: Clean up cipher set up for v1 encryption types
-      SUNRPC: Parametrize the key length passed to context_v2_alloc_cipher()
-      SUNRPC: Add new subkey length fields
-      SUNRPC: Refactor CBC with CTS into helpers
-      SUNRPC: Add gk5e definitions for RFC 8009 encryption types
-      SUNRPC: Add KDF-HMAC-SHA2
-      SUNRPC: Add RFC 8009 encryption and decryption functions
-      SUNRPC: Advertise support for RFC 8009 encryption types
-      SUNRPC: Support the Camellia enctypes
-      SUNRPC: Add KDF_FEEDBACK_CMAC
-      SUNRPC: Advertise support for the Camellia encryption types
-      SUNRPC: Move remaining internal definitions to gss_krb5_internal.h
-      SUNRPC: Add KUnit tests for rpcsec_krb5.ko
-      SUNRPC: Export get_gss_krb5_enctype()
-      SUNRPC: Add KUnit tests RFC 3961 Key Derivation
-      SUNRPC: Add Kunit tests for RFC 3962-defined encryption/decryption
-      SUNRPC: Add KDF KUnit tests for the RFC 6803 encryption types
-      SUNRPC: Add checksum KUnit tests for the RFC 6803 encryption types
-      SUNRPC: Add encryption KUnit tests for the RFC 6803 encryption types
-      SUNRPC: Add KDF-HMAC-SHA2 Kunit tests
-      SUNRPC: Add RFC 8009 checksum KUnit tests
-      SUNRPC: Add RFC 8009 encryption KUnit tests
-      SUNRPC: Add encryption self-tests
+diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_krb5.h
+index 91f43d86879d..0135139ddf20 100644
+--- a/include/linux/sunrpc/gss_krb5.h
++++ b/include/linux/sunrpc/gss_krb5.h
+@@ -1,6 +1,4 @@
+ /*
+- *  linux/include/linux/sunrpc/gss_krb5_types.h
+- *
+  *  Adapted from MIT Kerberos 5-1.2.1 lib/include/krb5.h,
+  *  lib/gssapi/krb5/gssapiP_krb5.h, and others
+  *
+@@ -36,6 +34,9 @@
+  *
+  */
+ 
++#ifndef _LINUX_SUNRPC_GSS_KRB5_H
++#define _LINUX_SUNRPC_GSS_KRB5_H
++
+ #include <crypto/skcipher.h>
+ #include <linux/sunrpc/auth_gss.h>
+ #include <linux/sunrpc/gss_err.h>
+@@ -316,3 +317,5 @@ gss_krb5_aes_decrypt(struct krb5_ctx *kctx, u32 offset, u32 len,
+ 
+ void
+ gss_krb5_make_confounder(char *p, u32 conflen);
++
++#endif /* _LINUX_SUNRPC_GSS_KRB5_H */
 
-
- fs/nfsd/nfsctl.c                         |   74 +-
- include/linux/sunrpc/gss_krb5.h          |  198 +--
- include/linux/sunrpc/gss_krb5_enctypes.h |   41 -
- net/sunrpc/.kunitconfig                  |   30 +
- net/sunrpc/Kconfig                       |   96 +-
- net/sunrpc/auth_gss/Makefile             |    2 +
- net/sunrpc/auth_gss/auth_gss.c           |   17 +
- net/sunrpc/auth_gss/gss_krb5_crypto.c    |  651 +++++--
- net/sunrpc/auth_gss/gss_krb5_internal.h  |  235 +++
- net/sunrpc/auth_gss/gss_krb5_keys.c      |  416 ++++-
- net/sunrpc/auth_gss/gss_krb5_mech.c      |  732 +++++---
- net/sunrpc/auth_gss/gss_krb5_seal.c      |  122 +-
- net/sunrpc/auth_gss/gss_krb5_seqnum.c    |    2 +
- net/sunrpc/auth_gss/gss_krb5_test.c      | 2040 ++++++++++++++++++++++
- net/sunrpc/auth_gss/gss_krb5_unseal.c    |   63 +-
- net/sunrpc/auth_gss/gss_krb5_wrap.c      |  124 +-
- net/sunrpc/auth_gss/svcauth_gss.c        |   65 +
- 17 files changed, 4003 insertions(+), 905 deletions(-)
- delete mode 100644 include/linux/sunrpc/gss_krb5_enctypes.h
- create mode 100644 net/sunrpc/.kunitconfig
- create mode 100644 net/sunrpc/auth_gss/gss_krb5_internal.h
- create mode 100644 net/sunrpc/auth_gss/gss_krb5_test.c
-
---
-Chuck Lever
 
