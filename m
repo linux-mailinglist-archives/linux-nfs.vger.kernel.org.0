@@ -2,153 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EB9D672488
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jan 2023 18:11:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE0DC6724A6
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jan 2023 18:17:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbjARRLs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Jan 2023 12:11:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43854 "EHLO
+        id S231213AbjARRRX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Jan 2023 12:17:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229776AbjARRLr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Jan 2023 12:11:47 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F1C166F7
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Jan 2023 09:11:45 -0800 (PST)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30IGDwLJ008342;
-        Wed, 18 Jan 2023 17:11:37 GMT
+        with ESMTP id S231199AbjARRRC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Jan 2023 12:17:02 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD4E582B8;
+        Wed, 18 Jan 2023 09:16:55 -0800 (PST)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30IGDrfh028723;
+        Wed, 18 Jan 2023 17:16:43 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=VuBhuBuF65bg27eM16PQPf2W6dLePVa3vVxPWAg7W1Y=;
- b=auck+Sfc9nAPlGqvSvY1m/Uyj5XgiCnakOt+vphiTvxzk269TUIsG+2uxdM2GEFW600U
- i55Dax6DvpFE/wtTWmgK1AqwSjf91pQHHJ2VSstEmO8dF0Ff0pw6p342EGcUDlEnlAfP
- kZepgcDE0mNSvFn/9CNFqO608IsMyFimYq8wFNk87W0qLZuXH3Bvxe5YN2QUSNoCryeR
- k+XtEAiFVXCdrhVUXOIpfMWfAd6vTzMa7R4g0GTrsxpaO5YQrLlv6MaAwYzZF2VQuajB
- GWQI6cMWaekRpR4Q3GnusrzqAFm4tNfMJwy/nj9M2gPSngBTxSl3hk8JPRYhnB8K7cCU OQ== 
+ bh=CC5qefIwyzDUUEzmJ81JxFbdXzD3po+kLJFYHpzYaTk=;
+ b=hOCamFmQKPgreKq7r478n6J6dtgqdAuuOGfcCsdgw5gh8oKdeyoFLSClmVcmh9CBkS37
+ WnZ5V+X/rG5L5dvwun9tf9qwSwesF9ELPy7WhRQSBytFgjwvaP4T4MaqFd3DKM++531j
+ LxSDktQ/VReJVxkJjWXjoz4cuQiglzEn+0KIDXHOk4dK6Me6xa6b6deNV/hWIQ9vR3Y3
+ 6t7ZExOCCg2mM/uEPGy8dx4NSGn9xEh/e5vs5HfZRvqSrJzILUeFezehBW66XeV7XmXT
+ G4yW0llu8QL31ywl2ufmDr1OHMAjsXfFTP+o9X+tXelG6vxO2HF7ITBqQtPC0D76oZxY kA== 
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n40mdfjgx-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n3k6c82k8-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Jan 2023 17:11:37 +0000
+        Wed, 18 Jan 2023 17:16:43 +0000
 Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30IGd2pC002066;
-        Wed, 18 Jan 2023 17:11:36 GMT
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2048.outbound.protection.outlook.com [104.47.74.48])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3n6mfqsfw1-1
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30IGd2uX002066;
+        Wed, 18 Jan 2023 17:16:42 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2176.outbound.protection.outlook.com [104.47.59.176])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3n6mfqsq1a-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Jan 2023 17:11:36 +0000
+        Wed, 18 Jan 2023 17:16:42 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=augPYMZ9ftsE0JNz0HJAP8oY/cqH0/bPNeEBBne59J5G1VWNc47EPDGI4Ux5K9bxGWOZHp5zT5GAo9F+Xcl9kct7apCjeUFnrLA2bzrpjLJUKeUjZcFmV8WWhBLzpBEv7Tdr1Gajl9wnHwRaZiWn/KAaJDHM8lOmfqWLxJIgIRCO03CWVGgLn6CjdOaTkDAGlRFhYMnzB4UYviNauJNnQ04OSQLadyNH7wBktVLU2o4k6jGsR8O3to1ziE1UAUMHQuOATvd2SpiKvbNnjZcgjFYsV0KsVy17abN73MD8hUiUIcGXbguDqY4+/Q4mQ8yLnvu1wJcW6J0NLFzIL79d2w==
+ b=cwMIfrS28R0njVanzPXdM4vbF6rxvAiLOGYtiBzaOdDaMZksnHLyYAn6uS+vO3s3UCEjxMmvIAOvxeBpw/nDwPqzd4nWQgsv4Iiaml578GMRpsD7YgUh0BdDRhpCxAreD7Qn8BRjK+r0zPK+bt/1T3ahBmaEgcQLCvBLDtRDKnRszqy0YPvtIGUS4xkJeO+GZ8aE9wxtf1JrPbEQfRylFK6NDNL7ko/OmwQKDFVXpg8nu+Vr06OafOuWBbZb9Mq2IdyP3Uf0DmIqBQoEUC8WpZg3LBMYqxY3GyD/RF3x6TLdCNXfslzPAGpUoqw3jszAYzhkB2XDszWsvxfTjW7jbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VuBhuBuF65bg27eM16PQPf2W6dLePVa3vVxPWAg7W1Y=;
- b=TgcjFSgAJM6Z0OPR63nXN0mLq9tajabBT98t403jAlV4KBEJ0bIHDnxAGatexFYfBfPWDlqYH/Kekdw9/8jO1NPTqd7yITsri9PAWJKc8slixYnZ/h53G4k9HeqYZkzINKkYjPSdaCELP5n/wjxjFNBPR1h46SgR0P7GFvyXvNvU22R1+Hk0BxCV/WuMmVQr/WAJ2JqSrzktBN8/mg01Ccaea2ROvQVETAyawAJ+Lo0RDWf/xK1lnDaMr86aLFL/THU8GM+aemslzyr1EK4OSkorfeHfAbONEE5yig9leCxtg+VD6gVuegw/Byht4GEuFWb/66JvAUUvfia8Vf7NPw==
+ bh=CC5qefIwyzDUUEzmJ81JxFbdXzD3po+kLJFYHpzYaTk=;
+ b=P2Kv3aD1Jrqc80Fd3WZEwEpCmYSsvG+nJIgTxiZkOP93zJIAka/RCi3kxfg0VEzCM69mJ9jbnMUp9bwruCkHJlT7g9CsZ3ojHlWCVfQNDB3zzl5JpPNfjE0cFA0ZiKqJqrbmuLZya20IXSLb/a00B51n4+cwdLAo7lK+EEJygyefGzWQeh5jmfUJEjwvkBmR4ekIoodL7bLqgF9GdgDLyoSB+ySHZJKZGSAahL+8doUl1n3xZoXAPCQyILi2Y0ssw/6JWwWvPH+htD3nvwN6d2MoTmX+V7wmB12HPshkFwc88pijSHqfgB4zPHbc+kWpY7U9NO5rywTvl7pVs5qxng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VuBhuBuF65bg27eM16PQPf2W6dLePVa3vVxPWAg7W1Y=;
- b=o5TCXw57jMIYtZdU04cYKHy8Sj2qNcEVonHWAzo4O041rOvTcOyN/dCRmtYzPXp7qZUBuCKDDD1nR+B6FucMKBWRu/vGYZBsAaDSHPkaNalhixaZ9X5BqbH/SAY4VPFR7+mKTx8PKdVm3rmnSkoDDYxUFtqmRWb6i26ii7faajg=
+ bh=CC5qefIwyzDUUEzmJ81JxFbdXzD3po+kLJFYHpzYaTk=;
+ b=c/zmHeRYJ+mlGk/dOgVT+CaQ8MwBoVchFU5QbS7LCBwSa5RfeNIp52L/1OqtuWTGTUxJduUH0s8iXdzubso/PRU411aLS6xTlx05mnrh04co+hdqrQOOOWcakEg6UcfhXi/of4gr2TiEg3hB8xubX6kzlvegP19h8ztNShx86oI=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SJ0PR10MB6303.namprd10.prod.outlook.com (2603:10b6:a03:477::5) with
+ by BN0PR10MB4821.namprd10.prod.outlook.com (2603:10b6:408:125::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.10; Wed, 18 Jan
- 2023 17:11:34 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.24; Wed, 18 Jan
+ 2023 17:16:40 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::d8a4:336a:21e:40d9]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::d8a4:336a:21e:40d9%5]) with mapi id 15.20.6002.013; Wed, 18 Jan 2023
- 17:11:34 +0000
+ 17:16:40 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@kernel.org>
-CC:     Olga Kornievskaia <aglo@umich.edu>,
+To:     Simo Sorce <simo@redhat.com>
+CC:     Chuck Lever <cel@kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Dai Ngo <dai.ngo@oracle.com>
-Subject: Re: [PATCH 2/2] nfsd: clean up potential nfsd_file refcount leaks in
- COPY codepath
-Thread-Topic: [PATCH 2/2] nfsd: clean up potential nfsd_file refcount leaks in
- COPY codepath
-Thread-Index: AQHZKqtMKSgqI33qoEK/JPELcgPtS66kQMuAgAAMmwCAABFIgIAAAtYAgAAHiACAAAFugA==
-Date:   Wed, 18 Jan 2023 17:11:33 +0000
-Message-ID: <DF04476E-D657-4CDA-A040-FF7FAA82ECE1@oracle.com>
-References: <20230117193831.75201-1-jlayton@kernel.org>
- <20230117193831.75201-3-jlayton@kernel.org>
- <CAN-5tyHA6JgqnEorEqz1b3CLdbXWhT6hNZKXzgfZy3Fr_TdW7Q@mail.gmail.com>
- <1fc9af5a2c2a79c5befa4510c714f97e26b13ed5.camel@kernel.org>
- <CAN-5tyHKS9o3KDV3zUmzjiOjSxyC1rNe77Tc8c7RHmoXE6s_RQ@mail.gmail.com>
- <12C5F3B3-6DB1-4483-8160-A691EB464464@oracle.com>
- <0fbcbdc37e7e3f070b491848a74be348843074c2.camel@kernel.org>
-In-Reply-To: <0fbcbdc37e7e3f070b491848a74be348843074c2.camel@kernel.org>
+        David Howells <dhowells@redhat.com>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH v2 00/41] RPCSEC GSS krb5 enhancements
+Thread-Topic: [PATCH v2 00/41] RPCSEC GSS krb5 enhancements
+Thread-Index: AQHZKQWoezbV6gQfMU2hAYqKspg87a6kWm6AgAAUyAA=
+Date:   Wed, 18 Jan 2023 17:16:40 +0000
+Message-ID: <2A8D4D96-E634-49F8-B67D-3CDB0D97C92E@oracle.com>
+References: <167380196429.10651.4103075913257868035.stgit@bazille.1015granger.net>
+ <0b96ee92145831afba9d099d948fdd0af1b3180c.camel@redhat.com>
+In-Reply-To: <0b96ee92145831afba9d099d948fdd0af1b3180c.camel@redhat.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3696.120.41.1.1)
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SJ0PR10MB6303:EE_
-x-ms-office365-filtering-correlation-id: 187d9674-d4e0-4e8f-211c-08daf9770ce8
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|BN0PR10MB4821:EE_
+x-ms-office365-filtering-correlation-id: 7b2178bb-6cc6-420b-5bbf-08daf977c3c6
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CeeURxQI71kUPuo7anHYObQQi2GUq05nS7Cgp+iDxIl/cMLWuSGcncJ/h4AWbuESlWdv7CnRlm1dE/EhGpi5PqwtuTTmE5AWdmVbZ/OcfWv90YvlV5BOgQ2W+tI0ricpB8CwE4cZ9cfma6+XIsaI1nvpKQyJ15xbmzEO3Rzh15VhHKtcRKxrLRyXwdja/e6wQWjpcv5mOhaoHEInSwpLKoK1z8jCAxeVaUzIDXLENSkXfGOawyCrKz8a3BNinBF2g9IbR3YtJhhGiqeMalvwCR8nuS89NB/BEXQ+o8bSUKq5mKqxQWevfN/0dtjhFyndrxUlKD32PqJIQYdY+5kRsCDMJUHRKE70RCEbg30/a1kd4saF9y/xrK7FEJhqlSVEWSmqBcxoFTQILuYuS6IhIa2THNvRdE8hcjP63YA7AJkb1WQ+6BkemVAmnqC7RY2G4dkhpA60tAplV83PFbXdG6n70p6lkvNWI4xbFy8Z0dkIDI6mYs2O6elCeox96Xx1y/llxw6Qtmad12p3kQ5P/hhvLRIWPqyXeoeR+D4cb56y/3XphvxDSbdCHp6PeVYvvLNSiiN82ABg6IJnSqnu/MVn1sVsy1TKNtv5T7l6wbAf52qr57e/94zIWzaON2LgAxjT+LS/oep9XGQwR3XRXtqa5HNH63FFwJ9guHwvtUBLQTflFLQ5nvwmU5Kf5ZJNMlLb0GgdFSdbqKFTdSTDh56ZZdjs5u1JzBBYmS1bhto=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(346002)(366004)(136003)(376002)(39860400002)(451199015)(66476007)(38100700002)(122000001)(86362001)(33656002)(8936002)(5660300002)(2906002)(91956017)(76116006)(66946007)(66556008)(66446008)(64756008)(4326008)(8676002)(6916009)(41300700001)(2616005)(6512007)(186003)(26005)(53546011)(71200400001)(316002)(107886003)(54906003)(6506007)(38070700005)(6486002)(478600001)(36756003)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: ExeFuDLrwbzEeSExNqQ6oXp+ao4U+nclA4gCoMF5jfYgwaK8955JJZUHUbACO2yugSIUD8VC8UpkZ63N9T2hMa6yQ0exQIKFM3SgDJBwkYEGbK7505Of3dOfoT0GA+Mbp/INHqLLYVIKVp/mSUi1GHHFFVNow6dREVGpFW7Xn9byP7FtkmT8Apmvf2cw6HLIZ0gS1loYyjbwlVJFWnI8m8IEwV7u0Tpz2CafMysGWCdt1Diid8oak43PgtIeo4cGIcb69lkBHebdlhZrrebnbNVxd3X3x6NBvF4cq07u8C45UkLu5/qs+2rb3yWITjImqiUnx4gUOEjfTxfJ2L8VCuuZvWVFGjie8jhgUExyQRJ2L94sZdJ+cVPjlmS73S8aO5iim76Aaa/JDlVMPUGBv77u73FqyhdKURxr0XqSJqC4KdrN2O6LxWpD2BqlguCn1xdbsaFyvpM4qMYvOMlq4gaqm2Hh/uZm7xdMWw649+ZiqyvmEaX2zlxUD8Geq9ufILXeu7ZzfLKfzsjvvOgdG2q3RDjf/Fom8Itl0b2uzFX13CRJTOFA+nEpOE9WWV/h26M8+kn1UkuYWYChSiNy+pyoFduB0KOEyTbV9gCfm8zY3WzXidYO+c9oi6ipGDp8JQyUcRAExfxqUbwNMzefz6aQG+cV9c6I8T8a/jDJCUJnEoXcVY6xTtyPKYsA9nJLsnOuI3MMYOKKSsyvATBlxtjPKmMRrK7hYMs7M2gM6tc=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(376002)(39860400002)(346002)(366004)(136003)(451199015)(38100700002)(122000001)(86362001)(33656002)(5660300002)(8936002)(76116006)(2906002)(66946007)(66556008)(91956017)(66476007)(66446008)(64756008)(4326008)(8676002)(6916009)(41300700001)(2616005)(186003)(26005)(6512007)(83380400001)(66574015)(53546011)(71200400001)(54906003)(316002)(6506007)(38070700005)(6486002)(478600001)(36756003)(66899015)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?u+ps7RwGQBcpDN/UJztYak5yTpmcIVNFUzqB66itQxMkeoR6spdnAT9Jh+xt?=
- =?us-ascii?Q?wnHx01RRm15qvd73BVqSKadlGeS510kg1+SisoOZm4UMYS7guTwZLHzZRv9G?=
- =?us-ascii?Q?y0mTC0CzyAoGkqMwxS6GYqU1C5jpxLxv1wMPQwuR5QJwDghi8WShL//advRR?=
- =?us-ascii?Q?RjNtH2dZNr7H5j6c+M6tkCjGF2kXKXlOoY0z+13Fhm6W5IUxQxd1MDBZqJZC?=
- =?us-ascii?Q?s+3al0D7LImsosO9RZdXRjUkAHNx7dOSN2jICdthPfn8xNmzKykLoKNitDyR?=
- =?us-ascii?Q?mDRDUZ8zSd4YR8l5IkAZeFRMkMiespNrm4ZqU2dC0e+Ygs+l2ibDLlAWBWhE?=
- =?us-ascii?Q?SDTJ+BRZ8fxV94ZUM1jYUjTHyMIfFm63QGY0hGjfUkCKeM8xDojUhS/4WTn/?=
- =?us-ascii?Q?X8WswN/dzBCNUx+41fxFOFPJFhn1PRuexmy/cV9zOQDDa2O0GNBTbNxacK/J?=
- =?us-ascii?Q?9BebqkH8NaRxruAb5Eu0m9QMFLxzMjk/R5NjRQtxikRibsLk7Sr1cdLYDXb5?=
- =?us-ascii?Q?uDqPF1dngjLEz64yJ6q/7m6Iay9PnjPW60gAvX8Umcn9Nnm0kKejx6eOp1Wo?=
- =?us-ascii?Q?bDvyR3zbODUd9OHeey58NcKHhVXsXSne+332hqgyoRBXMBWF+xfpuCqVB3JK?=
- =?us-ascii?Q?lMT7F2F+LIEN7SYyOVvko6TTit51AEa5hqrMq6XDEBO2d8C8x9y5WbLuGUr+?=
- =?us-ascii?Q?TBTBVHCWkz0h5++KyFys0LslxPE70JMiXIzWrAuktgaHf601pyQFvztjVbBJ?=
- =?us-ascii?Q?tuEbo2TmD8z3UKDRtUWKhOC/I/i10Bcroega4iXYS8j2sV5fzqqKieK7gISQ?=
- =?us-ascii?Q?dheqP4iWYa4htWKSwUYGavAdJ2/3X/y3A7vEqpi42OPB8SUbxDZnqluQjJyC?=
- =?us-ascii?Q?VFf5I4U49rB80QvnWEYP+x0asu+yb3bYLdZLo8lvKMu+8BFgH5ixItMdfVQx?=
- =?us-ascii?Q?DSeir7SzELkJc7pTtL3bsiUEHqET5432Jv5HLN+jN5eMdIM8Vu21v9kz0/j3?=
- =?us-ascii?Q?V0AUvRttfNQfyn2JWnDX19Y4SzeweXhtFdFa7cT4ozROCFeUBvoqhXwQ0lFV?=
- =?us-ascii?Q?R9lPWAbpjrTsolEcRLf0FNYR3By2cveX6mrByTXyb4SulP3Bn3jZlt0sLQ3I?=
- =?us-ascii?Q?zKC224N90FqQCPeguOgzcdKMnkN+YfFX5cT/wmc9E/VSDS3XS59KeiVsbwIp?=
- =?us-ascii?Q?A76W6q6uvWUyQyjQ2Dl9gE2MqR5VJ+dt+kbmNQZLG4XexbQp0RsBdnQemFXg?=
- =?us-ascii?Q?84GHihYcSf7JlmrZGSwd1yUJOpLd4CVCCUFsbGmpopxDOQfvDETE9vqVrMCl?=
- =?us-ascii?Q?gTJ2shKbTsV/GDTWb+dglhRfieho+UEugr9ScmcLkI8cpcj2R4JPor7YMMEN?=
- =?us-ascii?Q?3pP2K5sUkj78L8GtwFBARgmukMm9Z821w8Tunt9QY6qXlQ4anJa1EQ6Ozci9?=
- =?us-ascii?Q?epYgc5+ACHADVFzNzU/aGQYCF+1gsb3OLBl09cEq89a0Klqzdk51Lzun/aO8?=
- =?us-ascii?Q?DpTCf9PF5OdhY3QaPHT1HS7G1JofynDehAnwSt6iWCeQO4S6YEjatNBl9lEN?=
- =?us-ascii?Q?gn9lWSO9u3QZlFbTB+US6g3LDrb2Fmluu81QigxIsYQU3joFM/VRg6UR0W7J?=
- =?us-ascii?Q?4w=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?W6Ml+9V7Ya/Q5bBV7TSXSBN4ifVG3kZSfVVD1isuqL3NivgvsmrtrGzpVglw?=
+ =?us-ascii?Q?4FACKUeHRQw2Z2UD2qf2kcGYSdLl42Ss0Hzf814rssgB/1r8q3mHnmeAa+/Q?=
+ =?us-ascii?Q?SL4f7QHEjXOUUnQB+I8O60lTLHcJuGfalAQgIIKhnWFygG8i04S3h6oUwwhe?=
+ =?us-ascii?Q?LaoRcQFS4BcYEf30/JyHagc2OqcYMqynzU/EK540+VjKcxUAew9yG1/aAZJ3?=
+ =?us-ascii?Q?zABd7h6VYjgaquA/CaSzhhDMSeTeNMtfM2tbn0GsT5ZltgvZ+gV8ZCaqysjb?=
+ =?us-ascii?Q?ZTjTK+Q4yCUcg4KJiSOa7Q3tgNVdS2JLxS0C5kw/RHfy5uQjlDLL9eYdlBFq?=
+ =?us-ascii?Q?TaALGwtNwOHOKORkTadnXgTdRKiazPv7M44J5cFfPVwcpNUuK9GmUElKbZ/a?=
+ =?us-ascii?Q?nVzk+r3O60jMr2ftLFENOczUxcA68OSFCCJhuB1JeOkgE02Q8Mb0kMoCVhIf?=
+ =?us-ascii?Q?S5HD3AKpWtG1BgwBKioTuLByr153hYs9WTtRvFymUVwPHGgKDYPAHTeVcRkV?=
+ =?us-ascii?Q?2z2+ye1xjxc40tTip7zbugT3UEo4NouLfmesQbdIRILzq7wwX8CRP3hCF9q0?=
+ =?us-ascii?Q?OxkYgAOs2Zi8IkApOEZWGxVoPkXWMQnhHBn0l0qDHuuGUdXVh5r1iaCcs0le?=
+ =?us-ascii?Q?OI00iFCSsG8ZUuGLZi0d7yjQWFG9mJ2Gm+wmxpIxgq060OENSGMmFy9swTkJ?=
+ =?us-ascii?Q?YvKtvexUOQSbdKHLIOTr1o3M4UYgym40Qj9tmDM+dUi5CsJrAN8UixJTVpDX?=
+ =?us-ascii?Q?b1Oh67nczxD2R8R+9HSPpeNOWOVUkuDwCfflYthbPJyX3Kv1veRs5VUulHic?=
+ =?us-ascii?Q?hRDj5dKK7UmCPaSG7dpzxGy8MsEMNr10cjPrlw827AxdTzENuX/V9iupMAZ3?=
+ =?us-ascii?Q?0q0KLoKqC/3Jfl/Js1MiMBRsBlxx923bIgYYCuKmPsPFP6txgebC/GB+d51l?=
+ =?us-ascii?Q?OFsvoLfV44V4vqAxTXutwS6uEH6bIH9diEJRloPiVZLznTJ2SUc68EsN0Me9?=
+ =?us-ascii?Q?xKd+OZpTqGJqxqLl7ugKAQWa9iYXaTP9ukh/UvWP0xLy5VPau3hE8/tGTyiQ?=
+ =?us-ascii?Q?O9ftIKrpZcwdL3L53sCP/rowCVwttzgY2E3RZ2BONi9kcXq0ZOc1LzCfhWv6?=
+ =?us-ascii?Q?on50adRNw3UOJnQ2z8A5PbfrEEA7ifSQKrTsSwFNDHco9qanvFL6Do7adWG/?=
+ =?us-ascii?Q?dMhEdmOh7stwhcfaNUrWSTBsqJEPntC+9b7VBUxriApYzp5TuKBoKP+RB6/s?=
+ =?us-ascii?Q?cPRkogFQxt9oIImgway604fzqiyR4hf0DMaHsdJA15YFidp6NmvVxFsody2e?=
+ =?us-ascii?Q?wJBi9Puvkx370n4R1xeNQMMi4ryVsADCxPooc1oLUvcMdVhToI9f6Lb4Jv3e?=
+ =?us-ascii?Q?06NqaFD6E9tysWEuXAuy0lpDuNNgW+qA/rOpZbrIpxUTz1NBIEQmtON0Hapc?=
+ =?us-ascii?Q?OF8Sl2m4PCpLE/be5XV5M5/qiedzAD0zAObFvU5yza/fco9t7u92l0EOE9/a?=
+ =?us-ascii?Q?m/cDIFUYaAr3SFebW/HVAygd8Ijwc16ze6cV4AB7i4zV6IaggA+NGR7LLfZN?=
+ =?us-ascii?Q?Mf1uMVSzCfGbKGYWew1StmjiaGgIpdxnyGFqypZxxzWtVSaO6cpA+WNrfSXv?=
+ =?us-ascii?Q?ew=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2303EBAA8BE04641964E8DDBDA3F9CD9@namprd10.prod.outlook.com>
+Content-ID: <28D973EACD543845AD4B9631FF5D5145@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: H+sw6H9ckmeR4FvdXnoI6NNKx0Do/o7WN0/eucI2ovgjkDaN6qq+C760DrB0LHM1vxHJI/+/Ny/WIYjv2/kbWBQ8OAL7bwHfwMBPodB8yqP0EFyRkXFgFTtF0A4pCZk7ad0HRujBDCY57J/b4Jr2/ZSkNe+09b32amxX7EFaFunDQCU73YVPUTc9u2lDGXAS0BUgPxHDlVI0ddznIfKS6gl5u9rBLJTZ6HmgsZRrMFy8oOecG/zRzhtqDW/PDooQu+azdTsTNYnTGVHJ2axs9mBM8NLENs3E1nJ3eMqRB+RRpQcouBPzQtb4ZONIKxlUo/UjsntjGnoXb0744Ff5T8LRr/gTF4Gi/NOHCZDcXC1lDZb0SZwcIu/rXules9Zexdx5m3mwXJzPP95sV8jbMSYHgLjdsg0Wf2kx6Oy+82VRna0vGUE8SjP6IUFHk1x61yBrqclEV7zsfsykEjspSwF982YTzJuqa4HPhzPJomOrE3qQfB8R8FzBWlBZqfG5353V2+HGazlykSrPxKGnNuUf+mI0nMQeXmw20KxvrhDvg0t8JTDLw8PpC7HebNMer23S0O4iG31i9ivPyNNA5aNBr2jU17yjVtEVsj6Y3tEEWR0viMPA/KB3OBdGkBIxXZWclHfapidTx9Mrp4S3uIr1QoK4vJUcWCnW6Pb/wSRFDfhpoKkWs4+5qNQnwX/BpFgKaZSSOUkGnM8P9Ro85V79Uh4+p+ulkMQnHzS8mu6nc4446Lc9QNoZK3QJ3w657GyHkZ/Czp5lwN9pooY1Qv3QLn6OKnkAOOaWRE+WQXKqSZd7ZDRWK6Rn7UN91mpC
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: RdU7Ldk3GSt2/SHXsyKpS5LSAckUrCeQYeU8JVR93v+ADwc5xmDWel7U3/5/lYqUAziAwnDzLk8pBSdMj8J/BaB1OBmz7B9EBWrQZx50syzXHSuHbE2iP7dl51G8Xphbs5giSHGcoT+63AaighTdUQLN+teiq42WaFJd3/5S5C+5cqdaf/6n0JPdi4azuGmybShtt1C0mIvzwiqKll50TgmDbbT0xQkVMDneRfQFkk3UjmUC8QmdzFZqZ5TEchUgozEy7FqoFNMozFe+5UTs4Zauz8LcU7Czwm0/wbaN/VlHMrNUq07D93tgmAEmAzLy/nL53kQBx5YNhM1pA0zHugp0Dna369uhzs7dmya+TsB6L4Lm2GQZyGPodihTiTe/y9jvzi74KVJL+tShX6fadBXeLRNrf1xQ2EmPokR3AmjKZ/Wx0BRgBVeJ38SVARby6dcrVDthUc6B621KQlChuA+AOp4KvpVmk/K0mK3FPElE/YE7yFXTGm5weY2u31WXS1G6YagMAJMDolXatvdW01BBzY3eVCQiFPvecFVsYwbf7xF/nQ+NxlE/r0lJO2GGR2TJi0eD+XLts5a4GVDrAhBpK9XCkrZ6mrBWLIJh0A+4NVKAjNuIuTASzhVXOTZW98VIq49mpJEkwLGI/KK7i3w2UAudFzNit4pScaOv344gSJNsdD/yGmr7RExS8hRZRanCUj8j/r7gJrwEyKsh71zzE8H87zTA2gI4aBymgdPKCt20KdxZGPROdfGB55H9Fr33cXv9tE50bQnXHVLetZ0XC686el63S2naYYBAl1kYBC9op9Uhwf9XLqqz2CPh
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 187d9674-d4e0-4e8f-211c-08daf9770ce8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2023 17:11:33.8997
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7b2178bb-6cc6-420b-5bbf-08daf977c3c6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2023 17:16:40.6859
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6moR+62CTnZOQH1vSvpTGqEW4r1hQAnYj/CF8NnPacZXJmVv975ynlhHzTBoYePZG+8XlhulDVXqofxNRI59ZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB6303
+X-MS-Exchange-CrossTenant-userprincipalname: sXXIV5vgqQ45sA/y3YM8XIw+RJGtS+RHVzOPhdrWdVNBuv1nHiDxXJ+lCWbXI9toexZFgQ66xzbq5TGfX+rFmw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB4821
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
  definitions=2023-01-18_05,2023-01-18_01,2022-06-22_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
  bulkscore=0 malwarescore=0 mlxscore=0 adultscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2301180144
-X-Proofpoint-ORIG-GUID: ZurjhSB2ZSm5PYd9ZaWPELbewpfGEUXq
-X-Proofpoint-GUID: ZurjhSB2ZSm5PYd9ZaWPELbewpfGEUXq
+ definitions=main-2301180145
+X-Proofpoint-GUID: Qfxkkc6n1HyWVAfhrrlmRtYY3ZdYOiy9
+X-Proofpoint-ORIG-GUID: Qfxkkc6n1HyWVAfhrrlmRtYY3ZdYOiy9
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -161,117 +155,129 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Jan 18, 2023, at 12:06 PM, Jeff Layton <jlayton@kernel.org> wrote:
+> On Jan 18, 2023, at 11:02 AM, Simo Sorce <simo@redhat.com> wrote:
 >=20
-> On Wed, 2023-01-18 at 16:39 +0000, Chuck Lever III wrote:
+> On Sun, 2023-01-15 at 12:20 -0500, Chuck Lever wrote:
+>> The purpose of this series is to improve/harden the security
+>> provided by the Linux kernel's RPCSEC GSS Kerberos 5 mechanism.
+>> There are lots of clean-ups in this series, but the pertinent
+>> feature is the addition of a clean deprecation path for the DES-
+>> and SHA1-based encryption types in accordance with Internet BCPs.
 >>=20
->>> On Jan 18, 2023, at 11:29 AM, Olga Kornievskaia <aglo@umich.edu> wrote:
->>>=20
->>> On Wed, Jan 18, 2023 at 10:27 AM Jeff Layton <jlayton@kernel.org> wrote=
-:
->>>>=20
->>>> On Wed, 2023-01-18 at 09:42 -0500, Olga Kornievskaia wrote:
->>>>> On Tue, Jan 17, 2023 at 2:38 PM Jeff Layton <jlayton@kernel.org> wrot=
-e:
->>>>>>=20
->>>>>> There are two different flavors of the nfsd4_copy struct. One is
->>>>>> embedded in the compound and is used directly in synchronous copies.=
- The
->>>>>> other is dynamically allocated, refcounted and tracked in the client
->>>>>> struture. For the embedded one, the cleanup just involves releasing =
-any
->>>>>> nfsd_files held on its behalf. For the async one, the cleanup is a b=
-it
->>>>>> more involved, and we need to dequeue it from lists, unhash it, etc.
->>>>>>=20
->>>>>> There is at least one potential refcount leak in this code now. If t=
-he
->>>>>> kthread_create call fails, then both the src and dst nfsd_files in t=
-he
->>>>>> original nfsd4_copy object are leaked.
->>>>>=20
->>>>> I don't believe that's true. If kthread_create thread fails we call
->>>>> cleanup_async_copy() that does a put on the file descriptors.
->>>>>=20
->>>>=20
->>>> You mean this?
->>>>=20
->>>> out_err:
->>>>       if (async_copy)
->>>>               cleanup_async_copy(async_copy);
->>>>=20
->>>> That puts the references that were taken in dup_copy_fields, but the
->>>> original (embedded) nfsd4_copy also holds references and those are not
->>>> being put in this codepath.
->>>=20
->>> Can you please point out where do we take a reference on the original c=
-opy?
->>>=20
->>>>>> The cleanup in this codepath is also sort of weird. In the async cop=
-y
->>>>>> case, we'll have up to four nfsd_file references (src and dst for bo=
-th
->>>>>> flavors of copy structure).
->>>>>=20
->>>>> That's not true. There is a careful distinction between intra -- whic=
-h
->>>>> had 2 valid file pointers and does a get on both as they both point t=
-o
->>>>> something that's opened on this server--- but inter -- only does a ge=
-t
->>>>> on the dst file descriptor, the src doesn't exit. And yes I realize
->>>>> the code checks for nfs_src being null which it should be but it make=
+>> This series disables DES-based enctypes by default, provides a
+>> mechanism for disabling SHA1-based enctypes, and introduces two
+>> modern enctypes that do not use deprecated crypto algorithms.
+>>=20
+>> Not only does that improve security for Kerberos 5 users, but it
+>> also prepares SunRPC for eventually switching to a shared common
+>> kernel Kerberos 5 implementation, which surely will not implement
+>> any deprecated encryption types (in particular, DES-based ones).
+>>=20
+>> Today, MIT supports both of the newly-introduced enctypes, but
+>> Heimdal does not appear to. Thus distributions can enable and
+>> disable kernel enctype support to match the set of enctypes
+>> supported in their user space Kerberos libraries.
+>>=20
+>> Scott has been kicking the tires -- we've found no regressions with
+>> the current SHA1-based enctypes, while the new ones are disabled by
+>> default until we have an opportunity for interop testing. The KUnit
+>> tests for the new enctypes pass and this implementation successfully
+>> interoperates with itself using these enctypes. Therefore I believe
+>> it to be safe to merge.
+>>=20
+>> When this series gets merged, the Linux NFS community should select
+>> and announce a date-certain for removal of SunRPC's DES-based
+>> enctype code.
+>>=20
+>> ---
+>>=20
+>> Changes since v1:
+>> - Addressed Simo's NAK on "SUNRPC: Improve Kerberos confounder generatio=
+n"
+>> - Added Cc: linux-kselftest@ for review of the KUnit-related patches
+>>=20
+>>=20
+>> Chuck Lever (41):
+>>      SUNRPC: Add header ifdefs to linux/sunrpc/gss_krb5.h
+>>      SUNRPC: Remove .blocksize field from struct gss_krb5_enctype
+>>      SUNRPC: Remove .conflen field from struct gss_krb5_enctype
+>>      SUNRPC: Improve Kerberos confounder generation
+>>      SUNRPC: Obscure Kerberos session key
+>>      SUNRPC: Refactor set-up for aux_cipher
+>>      SUNRPC: Obscure Kerberos encryption keys
+>>      SUNRPC: Obscure Kerberos signing keys
+>>      SUNRPC: Obscure Kerberos integrity keys
+>>      SUNRPC: Refactor the GSS-API Per Message calls in the Kerberos mech=
+anism
+>>      SUNRPC: Remove another switch on ctx->enctype
+>>      SUNRPC: Add /proc/net/rpc/gss_krb5_enctypes file
+>>      NFSD: Replace /proc/fs/nfsd/supported_krb5_enctypes with a symlink
+>>      SUNRPC: Replace KRB5_SUPPORTED_ENCTYPES macro
+>>      SUNRPC: Enable rpcsec_gss_krb5.ko to be built without CRYPTO_DES
+>>      SUNRPC: Remove ->encrypt and ->decrypt methods from struct gss_krb5=
+_enctype
+>>      SUNRPC: Rename .encrypt_v2 and .decrypt_v2 methods
+>>      SUNRPC: Hoist KDF into struct gss_krb5_enctype
+>>      SUNRPC: Clean up cipher set up for v1 encryption types
+>>      SUNRPC: Parametrize the key length passed to context_v2_alloc_ciphe=
+r()
+>>      SUNRPC: Add new subkey length fields
+>>      SUNRPC: Refactor CBC with CTS into helpers
+>>      SUNRPC: Add gk5e definitions for RFC 8009 encryption types
+>>      SUNRPC: Add KDF-HMAC-SHA2
+>>      SUNRPC: Add RFC 8009 encryption and decryption functions
+>>      SUNRPC: Advertise support for RFC 8009 encryption types
+>>      SUNRPC: Support the Camellia enctypes
+>>      SUNRPC: Add KDF_FEEDBACK_CMAC
+>>      SUNRPC: Advertise support for the Camellia encryption types
+>>      SUNRPC: Move remaining internal definitions to gss_krb5_internal.h
+>>      SUNRPC: Add KUnit tests for rpcsec_krb5.ko
+>>      SUNRPC: Export get_gss_krb5_enctype()
+>>      SUNRPC: Add KUnit tests RFC 3961 Key Derivation
+>>      SUNRPC: Add Kunit tests for RFC 3962-defined encryption/decryption
+>>      SUNRPC: Add KDF KUnit tests for the RFC 6803 encryption types
+>>      SUNRPC: Add checksum KUnit tests for the RFC 6803 encryption types
+>>      SUNRPC: Add encryption KUnit tests for the RFC 6803 encryption type=
 s
->>>>> the code less clear and at some point somebody might want to decide t=
-o
->>>>> really do a put on it.
->>>>>=20
->>>>=20
->>>> This is part of the problem here. We have a nfsd4_copy structure, and
->>>> depending on what has been done to it, you need to call different
->>>> methods to clean it up. That seems like a real antipattern to me.
->>>=20
->>> But they call different methods because different things need to be
->>> done there and it makes it clear what needs to be for what type of
->>> copy.
+>>      SUNRPC: Add KDF-HMAC-SHA2 Kunit tests
+>>      SUNRPC: Add RFC 8009 checksum KUnit tests
+>>      SUNRPC: Add RFC 8009 encryption KUnit tests
+>>      SUNRPC: Add encryption self-tests
 >>=20
->> In cases like this, it makes sense to consider using types to
->> ensure the code can't do the wrong thing. So you might want to
->> have a struct nfs4_copy_A for the inter code to use, and a struct
->> nfs4_copy_B for the intra code to use. Sharing the same struct
->> for both use cases is probably what's confusing to human readers.
 >>=20
->> I've never been a stickler for removing every last ounce of code
->> duplication. Here, it might help to have a little duplication
->> just to make it easier to reason about the reference counting in
->> the two use cases.
+>> fs/nfsd/nfsctl.c                         |   74 +-
+>> include/linux/sunrpc/gss_krb5.h          |  196 +--
+>> include/linux/sunrpc/gss_krb5_enctypes.h |   41 -
+>> net/sunrpc/.kunitconfig                  |   30 +
+>> net/sunrpc/Kconfig                       |   96 +-
+>> net/sunrpc/auth_gss/Makefile             |    2 +
+>> net/sunrpc/auth_gss/auth_gss.c           |   17 +
+>> net/sunrpc/auth_gss/gss_krb5_crypto.c    |  656 +++++--
+>> net/sunrpc/auth_gss/gss_krb5_internal.h  |  232 +++
+>> net/sunrpc/auth_gss/gss_krb5_keys.c      |  416 ++++-
+>> net/sunrpc/auth_gss/gss_krb5_mech.c      |  730 +++++---
+>> net/sunrpc/auth_gss/gss_krb5_seal.c      |  122 +-
+>> net/sunrpc/auth_gss/gss_krb5_seqnum.c    |    2 +
+>> net/sunrpc/auth_gss/gss_krb5_test.c      | 2040 ++++++++++++++++++++++
+>> net/sunrpc/auth_gss/gss_krb5_unseal.c    |   63 +-
+>> net/sunrpc/auth_gss/gss_krb5_wrap.c      |  124 +-
+>> net/sunrpc/auth_gss/svcauth_gss.c        |   65 +
+>> 17 files changed, 4001 insertions(+), 905 deletions(-)
+>> delete mode 100644 include/linux/sunrpc/gss_krb5_enctypes.h
+>> create mode 100644 net/sunrpc/.kunitconfig
+>> create mode 100644 net/sunrpc/auth_gss/gss_krb5_internal.h
+>> create mode 100644 net/sunrpc/auth_gss/gss_krb5_test.c
 >>=20
->> That's my view from the mountain top, worth every penny you paid
->> for it.
->>=20
+>> --
+>> Chuck Lever
 >=20
-> +1
->=20
-> The nfsd4_copy structure has a lot of fields in it that only matter for
-> the async copy case. ISTM that nfsd4_copy (the function) should
-> dynamically allocate a struct nfsd4_async_copy that contains a
-> nfsd4_copy and whatever other fields are needed.
->=20
-> Then, we could trim down struct nfsd4_copy to just the info needed.
+> I reviewed the whole patchset (except the Camellia related commits):
+> Reviewed-by: Simo Sorce <simo@redhat.com>
 
-Yeah, some of those fields are actually quite large, like filehandles.
+Thank you!
 
-
-> For instance, the nf_src and nf_dst fields really don't need to be in
-> nfsd4_copy. For the synchronous copy case, we can just keep those
-> pointers on the stack, and for the async case they would be inside the
-> larger structure.
->=20
-> That would allow us to trim down the footprint of the compound union
-> too.
-
-That seems sensible. Do you feel like redriving this clean-up series
-with the changes you describe above?
+I've applied this series to nfsd-next. Comments and testing are
+still welcome.
 
 
 --
