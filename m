@@ -2,147 +2,149 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 451B1672770
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jan 2023 19:46:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8123A67277E
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jan 2023 19:53:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbjARSqf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Jan 2023 13:46:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33474 "EHLO
+        id S229512AbjARSx3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Jan 2023 13:53:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230498AbjARSqO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Jan 2023 13:46:14 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6CA5B583
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Jan 2023 10:45:51 -0800 (PST)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30II3wLX025082;
-        Wed, 18 Jan 2023 18:45:38 GMT
+        with ESMTP id S229650AbjARSx1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Jan 2023 13:53:27 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF60A59B5A
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Jan 2023 10:53:26 -0800 (PST)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30II4MUh004550;
+        Wed, 18 Jan 2023 18:53:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=IqFoTeMEesRrf2p8OakN1MTdcOPOzbpyPhQphdCBoog=;
- b=xeLuJx0G0G2xbAq59CBxVCU9owHnVAvRcPZj0+g0vTo+fkWXqAZy35jNuI/FjNU0gEii
- 5ZDMh//8e4/uu28nYx9fv7A8+urkYkRqXGAU/BtEakvKqJzfKCMfZeq0kQhzhgyB7uOa
- Gb3P8VuHhrGextlMnJQ5fllkeigPXCCiLADzfjIj0gwmr0C3T5NtwZM1eDR+lJ5OmuaX
- ldVc4ZpuytQHZ18Y4FLT21oC73AZDN9J1aPBRyou339/Rbx/bRtK7/SfvUJ9UZbqtyCk
- ab9sfH6fvft75ZAY5oMhXh5iWAnLCeBnDdAKFEREBw9N/qi6NpoKm0S1f5RbJJ35Y6XI QQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n3jtur94v-1
+ bh=rQ0sqSWqXiH+D2qGPyAzn97iHKWMASKKm9UpK+Joj/Y=;
+ b=q3JCmHx9fQC7UtQ2X5mytjV+XhNhR3FRIslO6vGmJt196GwFzJce/5ipvlmWMI4EnS+N
+ 7TmMVseFpLkHRfz2/hEJSpjRxiu77LkzSxkEN3TDlSFKgu3G8xCKBh9yujLHV2ab9/Ip
+ jzpYnjjoXmmBsbIHz1Wtqwz8OYf2J38fW6z1IQ1j6mv/LApimwrN9TvwKJym2vdvspuQ
+ rXlQSB73PB6foJiY1waB9iINpdY9jOwhvHg7ApafJTRLxDfCgPxh+YtA142tHbe3nLsD
+ kRCMLFhuMCMsaktt6kSAXX4j7W9xJBE7kSnvmOAuNLG1jPXv+qYEnN93LB8ORMFfgxP1 Ew== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n40mdftf5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Jan 2023 18:45:38 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30IIdaC1029776;
-        Wed, 18 Jan 2023 18:45:37 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2048.outbound.protection.outlook.com [104.47.57.48])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3n6p88874a-1
+        Wed, 18 Jan 2023 18:53:18 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30II8hHe020189;
+        Wed, 18 Jan 2023 18:53:18 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2042.outbound.protection.outlook.com [104.47.56.42])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3n6nst2084-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Jan 2023 18:45:37 +0000
+        Wed, 18 Jan 2023 18:53:18 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BBR16cLU5vLeJkOeSdoV8RvPbYUdf0HxlmDGNgBl4aQyAAcgPuUyNzN2NNPqMpf1Jed37J6uj9VfqwHU/9K/sHPVrVG9RBCSupMaAiMsjoA3Y6+ceThlb2DRF04s8VyH+FMWjD+Io+NPML3zsKvJZef2QIyT+P342qnTcg5W/Ph5oCuqKwfE14piOiMTaJryKYctqOyB9f17vkk9Kh4Hia9NMwUt9rVX+8LgwLcUa5+wxCVHw2gGwaDsyDgmdmp5PC8lcdSQAbvP9R8za5nDxurLpg6taq+nn+AmCcKn0dQyw7jCIn67gc3HDkWSuqV7+JPJmy/KVLOZZ2mnxK8dRg==
+ b=Z2ri/QBunbuXAUXvjVOnzv/8VLv/jq9e8Xnn8YDmP3Jfv+oG3Dx6fxyysNXWQzLYH/Km+ZW2M3H5kdbb57CrQyKyXyobGt/ZnTzFny9h/bMoa4QalHgSKFW2WXUSvm7tfXdraUdmt/8V60aSvv/NT5T4kbMVn8FK3OuEu6u0NxP4UntFgWeRbczJBnddjVa6exC9iUcdAhnA/DiCVM9MPEzaCZZH1HkL05hhzjNFRo3cpGNQrC0iTxgifzwgVjcerMtkcoehHbHSRuSbqabJtklkgpsp7G4AcWI5XM8IHyb99DDMmFRFF6Bnc0Sk2w1O23wwa8jAbizZMIuQoYGqrg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=IqFoTeMEesRrf2p8OakN1MTdcOPOzbpyPhQphdCBoog=;
- b=FxW6qnhlRimwJtJoh+5h6kO8s/7gDYk58XdD9skKzkmvmwaiKelulA++4tmZT/Km5Q2ZC8wyCQZE8jB1Vu+evrvw/JJewIgtk/Ih7d/d8CSVGaKMtDAc4MqhEwNxAI0XQFTtiW40jgRdtETA7q6iqBC8eGd7R3H4EMcHcAl1sXoTEmr5slI80TfpyNmYgnLZIbofetnNA5laojo+QfZ53JkorBMcwXgNrPYAj+3VjPAM3kugGF8ioD/zvIe7Lm6o43dwSQZ7V/C9iqggxRI9DmetuD9qOI1god5uOruo5TDKHX+5kZM5mNQ+WZ73sdnV+FSvA/0pV7ZPr7Vuf6FRig==
+ bh=rQ0sqSWqXiH+D2qGPyAzn97iHKWMASKKm9UpK+Joj/Y=;
+ b=PxATgNGjxxZTN6eBJ4cKWV/2/4mxNC7chHr6RQzh4XN+ycyWrhR6j8V6onSqA3t1IyWe4jbLpyLAzeGSJorKxRVgLJ7++zuwwHUycGTnr5I5WwuoPYdH2K8x7kiFPJqI39ada+DH0G9J6XJQgQCYhz3FHfI42MaK91nv7A/XnwvUh3OZe730wJH2sJg+NwDAbuNHEsHWaKxZz1wV/bFrTIpEI0YLVOeoZ7IEhwrjZJe3ZM2Vh+wM8A3ul+jy3Hizfq9jPxTb/WGgnXjVbJP5pOmAnRP3wNa1KC4DDRi65ZolqirwT70uNC7VexMQpiUjxnrjiNKxXN021iQ3Wofwsw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IqFoTeMEesRrf2p8OakN1MTdcOPOzbpyPhQphdCBoog=;
- b=CKTXsCDqfjUoKTSWfjyR3nLivMxhMWr1BBb1PxcKlJ+PUUMI9RFhIa45aV4pW81VDY7tKpfdMhbC0znCn8H734M5CL4/OvXRXWZTBsYtBu3/eCl6ocMB3tNiTr4HT4TM9fUXVK7z76bdDEYUcH8gVBeA+zmX3K2hKw99v8TMnOI=
+ bh=rQ0sqSWqXiH+D2qGPyAzn97iHKWMASKKm9UpK+Joj/Y=;
+ b=owQaxzmhOjRM7zt4fIZyDzHqi27RBZ2O0LIsSltrgCLTuG91vE5U9qEtM5UTf39mLWaRJ1exnuf2MnLd5/XQK3ZQ0ev2Rg4RglF+scaTNBbiGFxTqJnYxeeYNpO1+eYmYFoUUwR8uXNyoQvfOj79jGDrf+4uMTt27gB7vs/6r9I=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB5389.namprd10.prod.outlook.com (2603:10b6:5:3a7::21) with
+ by PH8PR10MB6525.namprd10.prod.outlook.com (2603:10b6:510:22b::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.13; Wed, 18 Jan
- 2023 18:45:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.12; Wed, 18 Jan
+ 2023 18:53:14 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::d8a4:336a:21e:40d9]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::d8a4:336a:21e:40d9%5]) with mapi id 15.20.6002.013; Wed, 18 Jan 2023
- 18:45:33 +0000
+ 18:53:14 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@kernel.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 3/4] nfsd: don't kill nfsd_files because of lease break
- error
-Thread-Topic: [PATCH 3/4] nfsd: don't kill nfsd_files because of lease break
- error
-Thread-Index: AQHZIP9hBg2CJmaIdUaleqmmf1lZx66kidwAgAAOOwA=
-Date:   Wed, 18 Jan 2023 18:45:32 +0000
-Message-ID: <219691FC-FB3A-4DE2-B43A-3000FF69E1C3@oracle.com>
-References: <20230105121512.21484-1-jlayton@kernel.org>
- <20230105121512.21484-4-jlayton@kernel.org>
- <951265d3954621086aa00d27c275e1d50d3e9586.camel@kernel.org>
-In-Reply-To: <951265d3954621086aa00d27c275e1d50d3e9586.camel@kernel.org>
+To:     Olga Kornievskaia <aglo@umich.edu>
+CC:     Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/6] nfsd: don't take nfsd4_copy ref for OP_OFFLOAD_STATUS
+Thread-Topic: [PATCH 1/6] nfsd: don't take nfsd4_copy ref for
+ OP_OFFLOAD_STATUS
+Thread-Index: AQHZK2K9IXbuXawJ8ECZcmttxfv1rK6kchaAgAABfICAAAWCAIAADGKA
+Date:   Wed, 18 Jan 2023 18:53:14 +0000
+Message-ID: <51D89D69-F23D-44CA-81B1-B7ECE34F9D34@oracle.com>
+References: <20230118173139.71846-1-jlayton@kernel.org>
+ <20230118173139.71846-2-jlayton@kernel.org>
+ <CAN-5tyHgYpGBaJYB932VAqyMGSMikexA=0uKTzROtP9nw=Nu-w@mail.gmail.com>
+ <944bf7f3e6956989933d07aabd4a632de2ec4667.camel@kernel.org>
+ <CAN-5tyHnhk9sV-jfnDvQ66brYtqY7NPvsq3D1-hWe7vYUxjgUQ@mail.gmail.com>
+In-Reply-To: <CAN-5tyHnhk9sV-jfnDvQ66brYtqY7NPvsq3D1-hWe7vYUxjgUQ@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3696.120.41.1.1)
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|DS7PR10MB5389:EE_
-x-ms-office365-filtering-correlation-id: b7c6216a-8b94-4d5d-b048-08daf9842e13
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|PH8PR10MB6525:EE_
+x-ms-office365-filtering-correlation-id: 2d1658a4-d356-4d65-a055-08daf985414c
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LNi83GbU+r7RgJNy7wejbcCZkTPQlJvBhG+XbwqZUwBjYyJcr8urqVUR3kL/XZ/nsbKUFpSg5AQ0kr4FlQZAY24fAkkP4cwTTHtFzGkaOMI2WvqiUIHN5FWCtBz1yWNqdUfaVQubKD+lc8CfK9XGOFy1gC3RAVWRdv20oQk3uZn/AADGg63vKUQWC58KdxUsGQiUWRdBo6Q6nBZSV7folBncZIo/PMmcJ07xu+gZFnQWO+nCKdyusuaDoVmtpVJt8DydzzPY7CI3eATuampFNT5K+saelBCP3Rj+Srr02REqSpzXr8iO6oUO569K78XzoWxMrGN//03b7WWDOU5dT2NJuz1zaAo9NF0Akkb7Zuc2s2+fUcKwapY4fHDlLKFVuZNixB7nb+Y4rdTPO1mKXAFOcvu/BLTYT3KtBS/TUFnk3wunSJ/458FB3byiPmboQOjOXDn9H7ILdjEShQWho/KZBOGKDvcXrZqrpzGQDWREbgerikgthypIaZXq23G/9E2xMIvRpJupPej6W2LYutngTIqIj0N+8CVTmNBXqA3H1A4uckwuKUkaLF1Z49UViN6jzI/2ggdTgQFppo0EE2ub94ZSlMLxk5MfnHAOYtwbk3EJjNX8H/ymCooHYy6eTi6zYJwRELXRWNc3FcfBsx8HkKoTt02dSuPBkEKSbxoTeTFe1QME9UkQ83ZY5ma1gsuox1et5lN6+fM50JM18s6Vga/8Xgi2Lc64tF8eCRs=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(346002)(366004)(396003)(376002)(39860400002)(451199015)(5660300002)(8936002)(83380400001)(41300700001)(38100700002)(122000001)(2906002)(36756003)(38070700005)(86362001)(91956017)(186003)(478600001)(71200400001)(26005)(6512007)(6916009)(6506007)(8676002)(6486002)(33656002)(64756008)(4326008)(316002)(66446008)(53546011)(66476007)(66556008)(2616005)(66946007)(76116006)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: rU06vhZD9CRqEpEi86kaFU9rwffsxqcRy/hABpYhYHm0JNci4RlNM/zmzU9oy2Ac5os3FEW3L9vSSHaqN2IPdYcX5Rx2S5t3I6tLhowcn930hYkzlbVUt3Bz+wPLMZ/NsvDS6F0PzgLQnSeFYiq/byyAT8GlLz5QLTuHW8B9PXmjNnfFdNc9VrOEvDpGwYIg9a2En2ObARO+ebvA2G8kSRqvKuI+iNuQ5Kp5iLesvNASq5OtK53yVP0lAwRVZFOJ5+kYF5wM7F2CWIh8SyKUy4xED+tS3FfYiMi1/IZWMVmIrphu/EDSjUytbOpCmYWeT1FSNQe3d+tP0DdwdBAN/Tbz8Eumq1KIeB3mbEZ9lfMcUpRnAFFECQ5BsEmTQBHGA9YAKOnqtgjE6rNV8ZxR1nWekRuU+EabwqDdQWjYX95U1A3Kbxz6Q1c1rTA6jMGWaqe/KHxsmSg8Z5opOFP9SaWk51wlmxGlHOHePhJM/RG5PzbNZrDMI6+zL+vhX3EY+H+l3Zpf72cT/RR/pv6r1hQw4zSGWl32t8CZvyL7QxiYu1An5F7376iVlAjD/Cq+us6y0hVQm4aUa4llxXnirhflJF6RNnbrUkwsa1ToR8cAo+Cm+POiJ65pp43cIcoE77tyaOovr8hkusEcZ41nyJUYvRlSycpNKFmC2BL+Y/VTwxDjW6fEILcP9HAoBAXpDxKoIVTASo0JFSkurvhmzFzwLWtRpPc3Qth63IFirlRlCkkwyXdkksPxiQ214MSyg34lI/R5YmNxLpCVtblOZw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(39860400002)(136003)(346002)(376002)(451199015)(66556008)(66446008)(8936002)(5660300002)(6916009)(54906003)(41300700001)(91956017)(76116006)(2906002)(66946007)(4326008)(8676002)(66476007)(316002)(6486002)(64756008)(478600001)(38100700002)(122000001)(26005)(6512007)(6506007)(36756003)(186003)(53546011)(33656002)(71200400001)(38070700005)(86362001)(2616005)(83380400001)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?NEvQU1ivBqF+IzETAja5me7BG3lv+W8g7N1zfsYQRA6xG/hPEolAyaOzRUxQ?=
- =?us-ascii?Q?JzjVMukQuqgVDBmQp4kkqpZu/JcRUfmI+mCxEZCdYJHz3r9OoE4GxrVkm/CV?=
- =?us-ascii?Q?bnYYTgHIF1ht6NWpH+pm86e3zbp4GuwSgDKo7CWtpyYTqZZZ+3aY/lc0bVUX?=
- =?us-ascii?Q?C8fVhEMAGMuyP9n6w/zntyr7uaD8ZgRhh4uTGfrOioaKD2Yf2qB8GFcF34wr?=
- =?us-ascii?Q?Krbj4yA64FWkwuaaBqdr9g73DLqkKC1HXsCEYgGURn0Gn1oU5jLjMKGcNQeP?=
- =?us-ascii?Q?6bbyqPjT6HKkaSInnD79qY9SXYeiQ4D6HxuVAwQx/B3aUYorF5Mh+IUvnc3p?=
- =?us-ascii?Q?J83WRUcFz0ZbzaG2tvSWgOtv3sY891ISCwPQo7GGW2dOLhYXzmRYeyVvb5Yd?=
- =?us-ascii?Q?xnAx5/0cQ3Q7AwLSOG/Kil7/r+83ZDS+PEMmklnmjcemoAxZuTllgjbHbejz?=
- =?us-ascii?Q?ffRI7cC4NpfNkYvm75bN7OPu6TVHRRMRy9w8jlry78SJ1WBqkQU5Qb8Qur9/?=
- =?us-ascii?Q?pNmVcdfTVGVyUgGm1FpLxRZ4QpxLEsEmAgZHEeJByWHBGXEI+VMS2ja9KIwF?=
- =?us-ascii?Q?W7YYcz9p0/d1enPzbyMgGKuxSZzXfZBp/F7zYDTiDawlbDshsqqi3s+XBJPQ?=
- =?us-ascii?Q?ZQN1q01eOs2H2Hhq6C211o9mSyFBdXLwZ1gB/2WW6Yy/sJpjgJrEUHTHFcG0?=
- =?us-ascii?Q?XuMsQUJ50ar1nBX6VYiwXV6T2Cmmn43MuD0H951qsYgEX+RuPQQHR8EGUypy?=
- =?us-ascii?Q?Afd9QXFVmA72mBRkb7ixrZmhoTS0bbw0d7xtVLu2EcJoorVcsD1br/VeLLFJ?=
- =?us-ascii?Q?d5hkMem1T+ELQxHdeyAEPkb8QvfUIqxsn1CoJvqmxklCa2kp2gVA9cHRFKPH?=
- =?us-ascii?Q?X9DcoOUJgDVbWwmeJf+qXzutsLK1HzRPQT/ZlkY2eSGJNYzO+kgY4oEg/GyK?=
- =?us-ascii?Q?e6FAyefF0Rq1kwYpzyL0clSX0UQRQ9WBJZ0Celt7iSgm/WsBP8fVdYkd4K7P?=
- =?us-ascii?Q?NqCOLBxw3CnufvFhnUX1AMA5r84X6nmcZ9D/Zto88EAYzSIrSheB2dDhHpXs?=
- =?us-ascii?Q?1Zg3eeof3WOR0bGois5hpgTPcer+l53goPnDhHaP6JJ6SRzAL5YNMxBKONlo?=
- =?us-ascii?Q?YvAHhiHBbvW18rw093NLK3uLzSTxJDrD6Kl9YizPw1GM7CK1iy21ehlCHe9y?=
- =?us-ascii?Q?IFq94LaS8CQ39qVGnIxnptJFlkpxmGqXRlYnPOwvXk+bRcP0UuGKUUmGWHyv?=
- =?us-ascii?Q?B/K7kSVYK9FTCc9gNnNjr0/0U+1GuNg7Oe77hNFSFMvzGm9M7yeSk3h3f3sG?=
- =?us-ascii?Q?emf+R6bsPQ1RMIxEylsf6/V8BadOUVfL5il3PNqS3qzUUpmnOQn4Mc8wASrF?=
- =?us-ascii?Q?luWyH1uT1jmoNkS4e1mR6HwJd9Wwbd06vp9lsuvLnIh53XxtUj+T1Z6/z+NP?=
- =?us-ascii?Q?HcfGb5i1HI9s+WQCPef9ftIZB4ZhVGU9X3onSe5vEtfnkqS9OhOO1MlNP8/X?=
- =?us-ascii?Q?uCOy45vVYq+i49C7ouSfdxb36/Pio0Mfc0bimZCvOo07QUmxlA4mN0xpYAhX?=
- =?us-ascii?Q?EhX5KuKtGszK/IJ9lithCgYsPdPAuxLsYj9wutQI4oQx03auuaU9wKpGbzSI?=
- =?us-ascii?Q?EQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Nhh/w10HP0+1+F2bPNnEnwnz35crN1EzMtJszkjLfYNN7zkn9JbPi4kvJvj8?=
+ =?us-ascii?Q?1HsAIEKXkk76gtr3hvmmMTnl0MdobxCd4KeY+M6lmC0yGxmA4VLvnxl7rGX0?=
+ =?us-ascii?Q?nLcdzRlT9gRtNFMiXxW4oH+j096aHmyYZkGJ4nvWaSuoPYpVq/dTNSt/JCSp?=
+ =?us-ascii?Q?IJWm0a4ypb9Nvi/9/wEC3DXnIlz06xWCcNjHKw7PVD+1lzjGH3HquZA8Ixws?=
+ =?us-ascii?Q?R+x9vsTuY+ATtTAbIJwqY2KFcBRU0mPBp+vsWCfozSFWrmWmNPJP04UIuS3W?=
+ =?us-ascii?Q?oBNVdgGKRC7XBO+SNSX0ShDb3O4wL2U53RRFYu4inkmXOBHPEb5VzKWq3/uS?=
+ =?us-ascii?Q?W6pczCv+4A3SB840H5i2+FStfbAjHLDk9TQC/EvNnxTmKEChT0IBxSS4dM61?=
+ =?us-ascii?Q?bkoK+Jl5bvItYBnB83JO6ElYIA9GEH4NYfdmu/HoKHzrloNG0ytZrFd93fET?=
+ =?us-ascii?Q?2E7uguTvEGsHC3kfLmVmRX1/MpafHwClSkutXuvHnJqcJhmhV0BzspvTgVbV?=
+ =?us-ascii?Q?kQt+0e/a2SRzXKVPsqJLrOS251yOJP2Z6Zcw1FAtz/yAmd85b1iQbK4KlvZu?=
+ =?us-ascii?Q?i8aT5I2IZWWN9LURRHOBnVx/8Sk6HPrBiewtr8hgEFxDi9k4gpIvaHhzrUV+?=
+ =?us-ascii?Q?m37SGUYqSaXvfEp8P5cCGa8Qtw07CNlYe/hAAbBWQp39VOSx3PyCJkKoA91V?=
+ =?us-ascii?Q?eAB9PcRJaRN6bxz9Jj4qwUPN0ljr/ycwWnA3nEj2UVKL3dosZ6J68JmpHcUi?=
+ =?us-ascii?Q?5mGThW6KQqBWJa9LH74Mgr2wWXZwMFwMMvC6Z/wY5vhNljVSd7cX+MPEZKyf?=
+ =?us-ascii?Q?opOy/dEI9ALaLeAMq80hXTRwe1O/kdahwT1ad/4nu6jtz2h8aPbAKG57n6EI?=
+ =?us-ascii?Q?IE4h/7QXYHzolXSrsIYcc6pQe1RPhdS6FMRzx1wxhQIldbof/HcktMVEq144?=
+ =?us-ascii?Q?42f9SQNIk+TXa67Bh63CgkIA8g260NHLK535nEfbxDhTb/38PpRogwJz5VPv?=
+ =?us-ascii?Q?IsUfVXA+6aRyPerYkztkxLVYUhvClxCOJ6jzFcDshATbSluxKnYUcS83PR2p?=
+ =?us-ascii?Q?z6U/iV5QfnWjcGmh0P4bfTna6ay6WIpfaglBopFz2HN3hxSFPg7vGTNDKNHJ?=
+ =?us-ascii?Q?NwK8L1qzGI3B5H6xiPQWGekcJZAqv0BgP1HXxaVWl6Q3EAPvsBCHdZLFw6kU?=
+ =?us-ascii?Q?zfbUaDoRqgrq3cTD3AAKdzmhGvDe2lbl+weuXeX4uTETNoEpoKdEr3Czs0zj?=
+ =?us-ascii?Q?xmypAuFUt1SUrhQ/1eqZQxk3VX7p/4wc6Mo5leu3vHvx/Szn5qMU9H876k+E?=
+ =?us-ascii?Q?S2tSEmSftWPnOYBfdK3isOTHpYVM9buTcXcAkLBmhkYmLLO7CR/WMFLhzBUb?=
+ =?us-ascii?Q?O5BILJoyMVmUAsEXy+PZOvtKAT4cblk5odOUreTagdBVb3U4abGrWcmOzaXz?=
+ =?us-ascii?Q?SoxaWsNfFscvwhLF8ysehH5zMBrlPUw65cb9LviSVI1ZGfBOOkcHzkppEUat?=
+ =?us-ascii?Q?9+zX0wscC/mGFrfV9ODWluQQcmEclDRhnINmT0ME3CU5gbM/ajqT1AjUgjJK?=
+ =?us-ascii?Q?Qe0UGRY78L86pTcS3NnbZbnH+VoSVusYdb3Y5XRCzYuNSMyUHooI1zUGa6jo?=
+ =?us-ascii?Q?pA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E1B0F785A4DC134C9D1915C240D57035@namprd10.prod.outlook.com>
+Content-ID: <0592AA3791AD3845AE68F35FE1100338@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: lasvdFWHEK5WBXYL+e44TX6VZdMmSMakznyObzTfP5xwPEzYYFYQjfGnGa00W3Emx6iKyuBpd7bzu2CAfmA/9WmSJ5AEhXobRtedAHH8NRcr3zmuy6ODubZFym2lSqUxgr1RjOWsUApP3Y6lx0X1mSEHHMZVddPgM39Nxqj9WO6CidT74ZDtTOKJFmLIdPvGBjPBcXeFn8yoqbVoXt/bGudCoHxO/kObLaHfV057N8dWteHF1ZB6wfIApDi1f/pT5L5zi55ymTVXnl5qDtSu8I5DJYigDQp4AX4melHMlZzHwuxRKfeO1JiLGshaKAq4JlvQtOvYs59jHTjPChXz7Wxv/1DwB7hZ8XuqEj6LEERg4JsxRcjIIq85mHfNUslu3/bb1ZJ1JipkxVeonX+SVXbNYSrkIhs+R9BbH2PdVDjaJcosPbsXPo9zLGO2Y1V/lv0XHwFZ65r4dpaNNx75eKEOPFkjhRBEw5C2DmvZYRf3+KQLHs6No+hzoRbde/3kY83avbKaKNpBYXDZbgR7zqzG4WDksstUS1xfEDYsVnllmlLYB/cc4NMm6hduBwuQ4K5yMPMaT6+XgjfNajG730HGjkVFqbN2fKFBAQ4DcP/VsYf7QlRnb/oWiuoXFriI2sd2i1iFgQdcK7FUxHZLy7tAOLUeryC4A+C5Jk/gApAdq6lAwsUxvzEewydFbFBG4G2nMp6fcvPV7bUpJNftrHLOaHWl19XD9Z099+RwBDZIr2isziMTDi0s1lXUdPJpaV2leLW79F0lJ8EfuXCN5SheB2YmMpS4wIcRL7dfxlU=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: z6yPbT9Z9y4xRWFH6gW5kRpuJA8n5j5kZXatDUf+s1regELWaFwp+V9UBRvpQFvNSR8RZN69f2Ez4kBKBl59u4zYjjUnxYEQQ+7NX3EK+BNbLhSZpC2rTLoCoKA21YsDcEzQ2NpCkAaJbgfXSZAjmr7IeD79tpDlp8Xqkrd9qFudsyR65GyHmTTiLF2d0bC3MZk22oEc+7CXAtuHQyeDtmLcMX6V0ddGok6QNMKz06k4QbpnnsM7RvuVgHr2Ml95dNFYVD4IpGHQSuECl0K6xkjMwBLkbbNXWVRYbUIODpirKWu2En1k532sSiN6eqmaETFfJBX6tHFN+xrJKThmjXi8l7kWcIPV/aUhddqgGmb6BXuCJjzhv7gjP3oA184xASl3VNz/Qp5s+rpZ5uoO/E2He7iBLcXelmcxmvYROMlj7IJepsnqX6Pkbk1YrA05S2cu7t0+GcgOix+oEoBaKHkt8nJBmHr11ETmUMMXPupJH4kE8uUBPZSdhlQuHvsEsXcMxPjdmEv20ZD4tYkmMmG8JehtU3QxPUd3f4KDBhJN+ZFplorMB/Kb4AO2faqhYCotBfBycyUWOojFKeCjbf9/Mi0+PwSn3HFmGd8DyacgVJw4iCj7EYLRou8B9moaP9QzWAkP7orI4CagSClj6z6cdAdKfRKCu/nrB5sUD0gNHrQqg/ttBlu5olywV7OgyS1SxCe+24gbQMmKCBcm5cr6b6Pv1cOAT/S8rnFhGxbdRsi14lubhab9vZ6xdSOwVLxmJ2K/+hiBq6vHUxthiHS/GgLbiKYy821Vczk2mFVD8lysMWiGdhOFoxc3CTyn
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b7c6216a-8b94-4d5d-b048-08daf9842e13
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2023 18:45:32.9763
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2d1658a4-d356-4d65-a055-08daf985414c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2023 18:53:14.7541
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +PBcHMC2U0KPaX4b5cEzsPw8msQkBsaSWmd2GR/fiKos0HHH4MbcFUz9fbLX63mTTLvU/jn5NSQtcEIjzGGN8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5389
+X-MS-Exchange-CrossTenant-userprincipalname: r3To8bIXVuDelM8Q19hiORTe+iBlNy9ueO28J9zT8gkawwZ4rH4Nzzhkubh559dROOGzl4BVXk9F4PqghYs6eA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6525
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
  definitions=2023-01-18_05,2023-01-18_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 adultscore=0
- spamscore=0 phishscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 phishscore=0 bulkscore=0 suspectscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
  definitions=main-2301180158
-X-Proofpoint-GUID: 3m8GAS8br3nPgC65anwTDdCdAyI7a5Sm
-X-Proofpoint-ORIG-GUID: 3m8GAS8br3nPgC65anwTDdCdAyI7a5Sm
+X-Proofpoint-ORIG-GUID: 3eWcXjH-edUpJcpiIqBq4e_JiP6z2iMy
+X-Proofpoint-GUID: 3eWcXjH-edUpJcpiIqBq4e_JiP6z2iMy
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -155,111 +157,145 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Jan 18, 2023, at 12:54 PM, Jeff Layton <jlayton@kernel.org> wrote:
+> On Jan 18, 2023, at 1:08 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
 >=20
-> On Thu, 2023-01-05 at 07:15 -0500, Jeff Layton wrote:
->> An error from break_lease is non-fatal, so we needn't destroy the
->> nfsd_file in that case. Just put the reference like we normally would
->> and return the error.
+> On Wed, Jan 18, 2023 at 12:49 PM Jeff Layton <jlayton@kernel.org> wrote:
 >>=20
->> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->> ---
->> fs/nfsd/filecache.c | 29 +++++++++++++++--------------
->> 1 file changed, 15 insertions(+), 14 deletions(-)
+>> On Wed, 2023-01-18 at 12:43 -0500, Olga Kornievskaia wrote:
+>>> On Wed, Jan 18, 2023 at 12:35 PM Jeff Layton <jlayton@kernel.org> wrote=
+:
+>>>>=20
+>>>> We're not doing any blocking operations for OP_OFFLOAD_STATUS, so taki=
+ng
+>>>> and putting a reference is a waste of effort. Take the client lock,
+>>>> search for the copy and fetch the wr_bytes_written field and return.
+>>>>=20
+>>>> Also, make find_async_copy a static function.
+>>>>=20
+>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>>> ---
+>>>> fs/nfsd/nfs4proc.c | 35 ++++++++++++++++++++++++-----------
+>>>> fs/nfsd/state.h    |  2 --
+>>>> 2 files changed, 24 insertions(+), 13 deletions(-)
+>>>>=20
+>>>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>>>> index 62b9d6c1b18b..731c2b22f163 100644
+>>>> --- a/fs/nfsd/nfs4proc.c
+>>>> +++ b/fs/nfsd/nfs4proc.c
+>>>> @@ -1823,23 +1823,34 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd=
+4_compound_state *cstate,
+>>>>        goto out;
+>>>> }
+>>>>=20
+>>>> -struct nfsd4_copy *
+>>>> -find_async_copy(struct nfs4_client *clp, stateid_t *stateid)
+>>>> +static struct nfsd4_copy *
+>>>> +find_async_copy_locked(struct nfs4_client *clp, stateid_t *stateid)
+>>>> {
+>>>>        struct nfsd4_copy *copy;
+>>>>=20
+>>>> -       spin_lock(&clp->async_lock);
+>>>> +       lockdep_assert_held(&clp->async_lock);
+>>>> +
+>>>>        list_for_each_entry(copy, &clp->async_copies, copies) {
+>>>>                if (memcmp(&copy->cp_stateid.cs_stid, stateid, NFS4_STA=
+TEID_SIZE))
+>>>>                        continue;
+>>>> -               refcount_inc(&copy->refcount);
+>>>=20
+>>> If we don't take a refcount on the copy, this copy could be removed
+>>> between the time we found it in the list of copies and when we then
+>>> look inside to check the amount written so far. This would lead to a
+>>> null (or bad) pointer dereference?
+>>>=20
 >>=20
->> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
->> index a67b22579c6e..f0ca9501edb2 100644
->> --- a/fs/nfsd/filecache.c
->> +++ b/fs/nfsd/filecache.c
->> @@ -1113,7 +1113,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
-t svc_fh *fhp,
->> 	nf =3D nfsd_file_alloc(&key, may_flags);
->> 	if (!nf) {
->> 		status =3D nfserr_jukebox;
->> -		goto out_status;
->> +		goto out;
->> 	}
->>=20
->> 	ret =3D rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
->> @@ -1122,13 +1122,11 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, str=
-uct svc_fh *fhp,
->> 	if (likely(ret =3D=3D 0))
->> 		goto open_file;
->>=20
->> -	nfsd_file_slab_free(&nf->nf_rcu);
->> -	nf =3D NULL;
->> 	if (ret =3D=3D -EEXIST)
->> 		goto retry;
->> 	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, ret);
->> 	status =3D nfserr_jukebox;
->> -	goto out_status;
->> +	goto construction_err;
->>=20
->> wait_for_construction:
->> 	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
->> @@ -1138,28 +1136,24 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, str=
-uct svc_fh *fhp,
->> 		trace_nfsd_file_cons_err(rqstp, key.inode, may_flags, nf);
->> 		if (!open_retry) {
->> 			status =3D nfserr_jukebox;
->> -			goto out;
->> +			goto construction_err;
->> 		}
->> 		open_retry =3D false;
->> -		if (refcount_dec_and_test(&nf->nf_ref))
->> -			nfsd_file_free(nf);
->> 		goto retry;
->> 	}
->> -
->> 	this_cpu_inc(nfsd_file_cache_hits);
->>=20
->> 	status =3D nfserrno(nfsd_open_break_lease(file_inode(nf->nf_file), may_=
-flags));
->> +	if (status !=3D nfs_ok) {
->> +		nfsd_file_put(nf);
->> +		nf =3D NULL;
->> +	}
->> +
->> out:
->> 	if (status =3D=3D nfs_ok) {
->> 		this_cpu_inc(nfsd_file_acquisitions);
->> 		*pnf =3D nf;
->> -	} else {
->> -		if (refcount_dec_and_test(&nf->nf_ref))
->> -			nfsd_file_free(nf);
->> -		nf =3D NULL;
->> 	}
->> -
->> -out_status:
->> 	put_cred(key.cred);
->> 	trace_nfsd_file_acquire(rqstp, key.inode, may_flags, nf, status);
->> 	return status;
->> @@ -1189,6 +1183,13 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
-ct svc_fh *fhp,
->> 	if (status !=3D nfs_ok)
->> 		nfsd_file_unhash(nf);
->> 	clear_and_wake_up_bit(NFSD_FILE_PENDING, &nf->nf_flags);
->> +	if (status =3D=3D nfs_ok)
->> +		goto out;
->> +
->> +construction_err:
->> +	if (refcount_dec_and_test(&nf->nf_ref))
->> +		nfsd_file_free(nf);
->> +	nf =3D NULL;
->> 	goto out;
->> }
->>=20
+>> No. The existing code finds this object, takes a reference to it,
+>> fetches a single integer out of it and then puts the reference. This
+>> patch just has it avoid the reference altogether and fetch the value
+>> while we still hold the spinlock. This should be completely safe
+>> (assuming the locking around the existing list handling is correct,
+>> which it does seem to be).
 >=20
-> Chuck, ping?
->=20
-> You never responded to this patch and I don't see it in your tree. Any
-> thoughts?
+> Thank you for the explanation. I see it now.
 
-It's been in nfsd-next for a bit, but I had to drop a bunch of patches
-from nfsd-next until yesterday's -rc PR was applied upstream because
-they depended on one of Dai's crasher fixes.
+May I add Reviewed-by: Olga Kornievskaia <kolga@netapp.com> ?
 
-That's been sorted, and I've restored these to nfsd-next.
+
+>>>> -               spin_unlock(&clp->async_lock);
+>>>>                return copy;
+>>>>        }
+>>>> -       spin_unlock(&clp->async_lock);
+>>>>        return NULL;
+>>>> }
+>>>>=20
+>>>> +static struct nfsd4_copy *
+>>>> +find_async_copy(struct nfs4_client *clp, stateid_t *stateid)
+>>>> +{
+>>>> +       struct nfsd4_copy *copy;
+>>>> +
+>>>> +       spin_lock(&clp->async_lock);
+>>>> +       copy =3D find_async_copy_locked(clp, stateid);
+>>>> +       if (copy)
+>>>> +               refcount_inc(&copy->refcount);
+>>>> +       spin_unlock(&clp->async_lock);
+>>>> +       return copy;
+>>>> +}
+>>>> +
+>>>> static __be32
+>>>> nfsd4_offload_cancel(struct svc_rqst *rqstp,
+>>>>                     struct nfsd4_compound_state *cstate,
+>>>> @@ -1924,22 +1935,24 @@ nfsd4_fallocate(struct svc_rqst *rqstp, struct=
+ nfsd4_compound_state *cstate,
+>>>>        nfsd_file_put(nf);
+>>>>        return status;
+>>>> }
+>>>> +
+>>>> static __be32
+>>>> nfsd4_offload_status(struct svc_rqst *rqstp,
+>>>>                     struct nfsd4_compound_state *cstate,
+>>>>                     union nfsd4_op_u *u)
+>>>> {
+>>>>        struct nfsd4_offload_status *os =3D &u->offload_status;
+>>>> -       __be32 status =3D 0;
+>>>> +       __be32 status =3D nfs_ok;
+>>>>        struct nfsd4_copy *copy;
+>>>>        struct nfs4_client *clp =3D cstate->clp;
+>>>>=20
+>>>> -       copy =3D find_async_copy(clp, &os->stateid);
+>>>> -       if (copy) {
+>>>> +       spin_lock(&clp->async_lock);
+>>>> +       copy =3D find_async_copy_locked(clp, &os->stateid);
+>>>> +       if (copy)
+>>>>                os->count =3D copy->cp_res.wr_bytes_written;
+>>>> -               nfs4_put_copy(copy);
+>>>> -       } else
+>>>> +       else
+>>>>                status =3D nfserr_bad_stateid;
+>>>> +       spin_unlock(&clp->async_lock);
+>>>>=20
+>>>>        return status;
+>>>> }
+>>>> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+>>>> index e94634d30591..d49d3060ed4f 100644
+>>>> --- a/fs/nfsd/state.h
+>>>> +++ b/fs/nfsd/state.h
+>>>> @@ -705,8 +705,6 @@ extern struct nfs4_client_reclaim *nfs4_client_to_=
+reclaim(struct xdr_netobj name
+>>>> extern bool nfs4_has_reclaimed_state(struct xdr_netobj name, struct nf=
+sd_net *nn);
+>>>>=20
+>>>> void put_nfs4_file(struct nfs4_file *fi);
+>>>> -extern struct nfsd4_copy *
+>>>> -find_async_copy(struct nfs4_client *clp, stateid_t *staetid);
+>>>> extern void nfs4_put_cpntf_state(struct nfsd_net *nn,
+>>>>                                 struct nfs4_cpntf_state *cps);
+>>>> extern __be32 manage_cpntf_state(struct nfsd_net *nn, stateid_t *st,
+>>>> --
+>>>> 2.39.0
+>>>>=20
+>>=20
+>> --
+>> Jeff Layton <jlayton@kernel.org>
 
 --
 Chuck Lever
