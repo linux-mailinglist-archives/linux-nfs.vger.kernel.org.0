@@ -2,222 +2,270 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C773E6723F8
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jan 2023 17:48:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 637F467244D
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Jan 2023 17:57:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229537AbjARQsP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Jan 2023 11:48:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53570 "EHLO
+        id S230184AbjARQ5j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Jan 2023 11:57:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbjARQsO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Jan 2023 11:48:14 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2060a.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe5b::60a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA092ED60
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Jan 2023 08:48:11 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cLmnntS+InL04Koq2vFPdRyv/d5qO3n8yIJ2WXVlpyEEuxTtx9JphG+BPsIyOp1iXRERMA864RmMWBHPGxQtOcMgzMn3sOrQ6RM6ek+xOPqfW3KkVYWDrfnJBtQdbqLWjsiWUoFU9mqnxlEuKscNctVjieVlhWuOr3bNOCxNeheQW6J1yq+uts7ZUOXNov8fW0vsikOZI5eNKJBGPzhxzpciP6Y4HEQ6nwACAx+mYiyattHJhTBNo+bLgTQeTfCjFuacd8HdZg50ToHI2hTJQ2cYXd0UZTVVxZ+x0WjxXVadDi+UHxJvuznoav4Wi8104w7d8AB978Lz9SR02l1Ldw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LzTUtGspfQRXXJ/pgfYedi1W9LXe3owSk4DGhvqFxsk=;
- b=BGrfmE2ei8dDPhuMab1s7RnfodwfxB30z8rGUQPeh5I6d+XOETUjE4W58/VkRDM72ooGH4JmAF4zcXbJAqDjhvbwHMKcEGLlqpwAlZ1lTlFTicYxN+l9fUcJ4KjzRTLE4MqrTLxc6dXZCdBGVgbmzHD17vASy0vIT1VJ2rD9ohtRqa1VlKV1BnugNoToCQy+he2fWE5918Nxo2pxAtBSw5s4TmoY1VJe4MRvP0PAe23MWm6LQDgNkIowsd7Txe03aO/qWSyZHXHy7F6iZ9mxsoN3FarYmLSAQOZ3RAWSKNQbvjZEYq2CXOjblhGbFNh0Ghxqc7N+55knBTxUpSf0dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LzTUtGspfQRXXJ/pgfYedi1W9LXe3owSk4DGhvqFxsk=;
- b=hECxPW+YAkX6xNLLr79kBKnaMOCH+OS5nqClWNiMYIoW4TvEAqh/9hFPPWfUO+u9OI67S/u4bRRgB7PiQJj4aIjvgOkVFoU/P9kiHlS8SbJoQGXGIUQsuwouaFxNcCmiSLTSb/BlwIzIEyc63zCflb97Q/kV88z6Pf9CcYsMH0GUyZzhlqrlTpyt/xbTWB85ziQag1UUjEo5Ywm/KxW5ddilan7VN6WUJYRVKCsgo2JXK9NkmTzcfSSFNuHfra/O0VehW17ga0f/Mhd4cVj5w5mZhCzIBTaIO6Ni1Ft3z2EM1gnS3SBAC7L3IcsQbHXzpe5g9yXzsQq6UufFj5kikQ==
-Received: from MN2PR12MB4486.namprd12.prod.outlook.com (2603:10b6:208:263::23)
- by DM4PR12MB5182.namprd12.prod.outlook.com (2603:10b6:5:395::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.24; Wed, 18 Jan
- 2023 16:48:08 +0000
-Received: from MN2PR12MB4486.namprd12.prod.outlook.com
- ([fe80::70b:9b93:5fd9:96d5]) by MN2PR12MB4486.namprd12.prod.outlook.com
- ([fe80::70b:9b93:5fd9:96d5%9]) with mapi id 15.20.6002.024; Wed, 18 Jan 2023
- 16:48:08 +0000
-From:   Shachar Kagan <skagan@nvidia.com>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Jason Gunthorpe <jgg@nvidia.com>
-CC:     Yishai Hadas <yishaih@nvidia.com>,
-        Itay Aveksis <itayav@nvidia.com>, Neil Brown <neilb@suse.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: RE: [PATCH v5 3/5] nfsd: rework refcounting in filecache
-Thread-Topic: [PATCH v5 3/5] nfsd: rework refcounting in filecache
-Thread-Index: AQHZKoa/iCT8k9gV+0SOhwKcCAmVcq6iugcAgAAKJwCAAZwgAA==
-Date:   Wed, 18 Jan 2023 16:48:07 +0000
-Message-ID: <MN2PR12MB4486E3A2E31CC6E8674E7059B9C79@MN2PR12MB4486.namprd12.prod.outlook.com>
-References: <20221101144647.136696-1-jlayton@kernel.org>
-         <20221101144647.136696-4-jlayton@kernel.org> <Y8a766ypSbKbevTJ@nvidia.com>
-         <9CAD601F-C323-405F-840A-9CBAF520948B@oracle.com>
- <d69c0c643c23c56408640c4b7d4fc2acac4bc66f.camel@kernel.org>
-In-Reply-To: <d69c0c643c23c56408640c4b7d4fc2acac4bc66f.camel@kernel.org>
-Accept-Language: he-IL, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN2PR12MB4486:EE_|DM4PR12MB5182:EE_
-x-ms-office365-filtering-correlation-id: ee8c4c59-80cd-42f2-362f-08daf973c6eb
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pOGztyUpDWZwV0IoA6NqZYo/jMxL+n0ROONJ2mpLCZmRWeg/+v9BmFlG15e0ZjHguA6JeQoUhMP0RHcXXbNhr0J5BRsUiMp0sfVuCMMTRU+y+KLHEv7+SpVo3N97nz7CqT4+QUfougQ/7T758hp5ijCXbuRtyoHFMbIq7CMqUKRy4tBNhQRupJkzLogkd0nBMPjsF91mzvgkAtQRGxvk1sdT5rLekp2oheX0t5yTrM/kfkFx1X+sQ9yy/SZ/hmy/UOXKZtHsdFvZVVXI08QlzzO7eo7eL05+Oza7CbkfybGjwV1JZPRO8a3cWQgmRJKAFmjn72w6EgGEzfvlZR9OrUB7mLK9BpMfRgwBe91RSKfgcbflWdhnXp7Y3T6ZzSTsUPhH3UgvJ3g7XvDFx1DdKOpJh0m3A/VnLD/Ep2gwxBbVKEphbdUtA/HrTAC0S1d9Srpy4urgMPZNvQfNzkzXxkfJJkyUF4ooBs8xlvxKG9KUtvKrZrdluMrsTCtyNCP3/fKNRQde0eFCvKJb9eB08Kx78Gm3N0LZvYM72JrSHYqvm8GFDXP5kyQNb5lmiu3hnggsRyIL0uX3B6uIJsn8ip0vKz9U0ZtRAnkwgd9Vy65d0EjuWHPxqikOv9FStOVosw0iypQgVAa4AW0iig+NNfaJy6TicVsxvYcGmpQ9Y5JAyXVTo/2Yzl3D+iGAXjCRFLvs3mKR80+e7/XSZCMoew==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4486.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(136003)(376002)(346002)(366004)(396003)(39860400002)(451199015)(2906002)(478600001)(71200400001)(7696005)(41300700001)(8936002)(52536014)(5660300002)(66556008)(66946007)(8676002)(64756008)(66476007)(86362001)(66446008)(4326008)(33656002)(76116006)(83380400001)(38100700002)(122000001)(66899015)(55016003)(6506007)(38070700005)(53546011)(9686003)(186003)(26005)(6636002)(316002)(54906003)(110136005)(45080400002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RERpdHNNZ3M4V0ViYnlZRXhCZVV6UjlZbWxIa3JhV2NCQ29xcEhndlc3TDY0?=
- =?utf-8?B?bUFuQmxkelluTWs1TzhyT3psdHRScmwxMzFyY0Vqb3ZuV2hQZUl1ZDFxRnZU?=
- =?utf-8?B?NDZhWUowb3NYZ2hrQ0RENW5aY2pXR1RWZW15WERFbTI5MkdaaUQxZWxGcVI2?=
- =?utf-8?B?TUt6MVZEL3dmTGFhSlZRemxYUWR3MGRNUTZCQjdFdnliNnNDUWNnRVNkOVVQ?=
- =?utf-8?B?dm1sQVArOWNDQzdxdjdSQ3lWbE1DWVFJOWtoZDNrcHJ0VFRhY3R0WDVYNHlL?=
- =?utf-8?B?MUdzQlVaRFFtejdWdTduMjd5Q3JHTjNSdFJLK2RTUW1tczRQcXVXdkxiMGRU?=
- =?utf-8?B?TGY4OGsrNmc0SkxnYjZrNlZBVS9ETTFZWUJUNGwydjF5V255YkNiSTRkZmdv?=
- =?utf-8?B?Nm5aRXZaazArUFJUZGNGUzZiVjhqVFUzYjM4STVlREhOZjk0Z2trajRCU3Ri?=
- =?utf-8?B?elFsdmFyNE54MGVidFZBZjc3WUJmWXZ4bDBpcTV2NWVXbE42a2J6SHZmbVcy?=
- =?utf-8?B?QUxCdXU0U3ppNEdFUkdzRTE0bkVmejRIUHZXKzVPTmZJdVgyOUhUV3Jaaisr?=
- =?utf-8?B?MHFoY29GR1JNMzdSUG5kUU42VVlLQWhpbW5JZlJNcnFUQjRTdnMzNG5IZVhG?=
- =?utf-8?B?OHU5akJwQmdOR2sycjF4Q3VwcmpVRGx2RnAvbVZxZUNYTHprdWRseXNmWGV2?=
- =?utf-8?B?ME5TeDVPSU5SRjVDenZtL25NQk9TUkNuOHY2OHBYV3NMQTkxYXN3UHR3cUs2?=
- =?utf-8?B?K29yV0lvbWZTbTkyZ0VFL3BkdmhtRm9LdXJTQVp6QXg5VnFvOE9TNmlIeC9R?=
- =?utf-8?B?bHZKbVlTQTBuci9NQmhIQjN2NHkzTGVFU0NDRDBaTWhucU9UcDFRTXNqbWRH?=
- =?utf-8?B?c2pLWGZ4SWxsMVdRNVliOXYvMVJGYTJrQ1JtSm85MUh4NndQSzVScVYxbjFj?=
- =?utf-8?B?bktkRXBaQkJPZ2NmSDNCcDZIY21WaHJsSWJwYVNzVE9JQnZBUWFFNEpjMkxt?=
- =?utf-8?B?OThKczRSU2ZrL3VzMFBUeEFlNFBZVFl2ZTN1L3ZtaXk3S3cvcG9OdFE3cDRC?=
- =?utf-8?B?UjlxQWpPRlFCWHJCQzh1NnkrZG9weldZendFUFQxemE5YVFuRjhxVWV5WG9y?=
- =?utf-8?B?VzAzK2kzb0ZqOGkweTdHd09jN1RZN1crWUgzcFJyUlpBUGpncW1lLzJNditt?=
- =?utf-8?B?UTU4N3dBV0J0SmNvWHF3azFoeUJYT1ZtR3pEQjFUU0lrOHlJTTI2UEdxNklp?=
- =?utf-8?B?K2JpVkl3SWFWekVBN2NKd0crU0JxekNjVHdaU0I4UEo0NDRFTWJCN0cwbGZP?=
- =?utf-8?B?dHF6dmJFd1F0N3JKVjU4MnFUTVhNbW1wVUdkbkFjZzEyMDVxU21ITGdldDB3?=
- =?utf-8?B?VEJEakUwNEQ0Q2NidkJucHRMTDd5dmtJcTVRczY1ZE5DZzZTcFFLenpEbEJ3?=
- =?utf-8?B?OXNpM0cwVWVBYUVxWkpSUCtCaWxZMHV1aDFaa1lGejdkSyt6MHdrZVhMSmxs?=
- =?utf-8?B?SndrUUR6RkRjMzRiM3lKZ2FleEVXUzFUV0RobmhIM09pUjVUcHNZU1JQdzZu?=
- =?utf-8?B?SVpxdHFRalZmZjg3OE5JdlcrdXdwYnppQS8zdTJhY3J0QTRxRWtOWnY1ZkQ4?=
- =?utf-8?B?ZTRxeUNTdy92OFlGRFpNTzJNYnpOeXIxc0xuTzFnUlExdk84ZGxJRklDQWNu?=
- =?utf-8?B?SzYxMzhSVkpwNnRITFVSb3pOY0RhaVRKZllQajU4SFpxN0tvOGUxeUYzdDZw?=
- =?utf-8?B?SFlKZDBmR3U4czRzcWExby9RUGxSelFCdVdWSSsvSDZZWnFoUWtJL2dwdDlW?=
- =?utf-8?B?RHZVdC8xSkt2M0xQMGVwWU1YRHpWRTFvRnZxTXJEb1FPd251cDdGbEJHY2t0?=
- =?utf-8?B?RXNmN2JjY053eXZKdHRzMm5rQ1E0YlpVdVdaY1FWT1pXcEVWeHlWMFVEZHZL?=
- =?utf-8?B?TDg0dHhvNCtYRnl5ZW42SU9KZmRHaTVIdUM5aTlJMDd1U3VnWm9aUDJFeUxv?=
- =?utf-8?B?S3RBK2xRTXcybDEwUEtGLzA5MkRoVFVTT0hRYmJEMExMOElvUzNvYko2aElh?=
- =?utf-8?B?dWExNGN4MmRsT3JRcVcydlNmS1dQVVFCelNXdlhaNVZtamNtOHcrcHpKOXUw?=
- =?utf-8?Q?7uxBu8QpRuBqIygvbDgshlOQg?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        with ESMTP id S230329AbjARQ5i (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Jan 2023 11:57:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B012458A6
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Jan 2023 08:57:37 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D8AC3B81D81
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Jan 2023 16:57:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2664FC433EF;
+        Wed, 18 Jan 2023 16:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674061054;
+        bh=40EVwOpf1lPtZgppdLEBRIiDeq/rMc8QUBBph29nVeU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=RxgEvsmrVMqhNZCRAQ5dA4c+rxeEzw3slL8hiOjO2tvGzLPvboNZeXqUACOwTN7PI
+         4HGjO6ahxbn5Zy9eKDrdghIj1hUKpnYedhF4YkHBQR5lhCanWRatS7Sb8R7lHX/3yX
+         h7uOrBD590BZy0Mz73e0kew8xveKuFHmfw1JG9T/jAeqTMRIMtnXiy+cNLVSPp558J
+         s4laZSUL1nlGPHqM3UBhPKYeDfApDVowRZ8rHpgF1emAWIglQvchpVlhOE7dvB+8Mm
+         R2Ss4aNfVz1wANjXhaZfZl6oX+MIO40UGrkEaT4TUjqZQjmY2HWBgOdqaFA1fFI73h
+         gaXvK85YOrCyg==
+Message-ID: <cb4b8c379a07d9ecccd202b2a85e80ba6d5e5a26.camel@kernel.org>
+Subject: Re: [PATCH 2/2] nfsd: clean up potential nfsd_file refcount leaks
+ in COPY codepath
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        dai.ngo@oracle.com
+Date:   Wed, 18 Jan 2023 11:57:32 -0500
+In-Reply-To: <CAN-5tyHKS9o3KDV3zUmzjiOjSxyC1rNe77Tc8c7RHmoXE6s_RQ@mail.gmail.com>
+References: <20230117193831.75201-1-jlayton@kernel.org>
+         <20230117193831.75201-3-jlayton@kernel.org>
+         <CAN-5tyHA6JgqnEorEqz1b3CLdbXWhT6hNZKXzgfZy3Fr_TdW7Q@mail.gmail.com>
+         <1fc9af5a2c2a79c5befa4510c714f97e26b13ed5.camel@kernel.org>
+         <CAN-5tyHKS9o3KDV3zUmzjiOjSxyC1rNe77Tc8c7RHmoXE6s_RQ@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4486.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee8c4c59-80cd-42f2-362f-08daf973c6eb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jan 2023 16:48:07.9737
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 28s1UQZuH2J9iE9dhD7b/5SggAOVg+aXLADr8dCVKUgSEEh31zvRR3EDsEeEnQK4+gEysbKlhU/BMezpTaZTHQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5182
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VuZCwgMjAyMy0wMS0xOCBhdCAxODo0NSArMDAwMCwgQ2h1Y2sgTGV2ZXIgSUlJIHdyb3Rl
-Og0KDQo+IE9uIFR1ZSwgMjAyMy0wMS0xNyBhdCAxNToyMiArMDAwMCwgQ2h1Y2sgTGV2ZXIgSUlJ
-IHdyb3RlOg0KPj4NCj4+ID4gT24gSmFuIDE3LCAyMDIzLCBhdCAxMDoxNiBBTSwgSmFzb24gR3Vu
-dGhvcnBlIDxqZ2dAbnZpZGlhLmNvbT4gd3JvdGU6DQo+PiA+DQo+PiA+IE9uIFR1ZSwgTm92IDAx
-LCAyMDIyIGF0IDEwOjQ2OjQ1QU0gLTA0MDAsIEplZmYgTGF5dG9uIHdyb3RlOg0KPj4gPiA+IFRo
-ZSBmaWxlY2FjaGUgcmVmY291bnRpbmcgaXMgYSBiaXQgbm9uLXN0YW5kYXJkIGZvciBzb21ldGhp
-bmcgDQo+PiA+ID4gc2VhcmNoYWJsZSBieSBSQ1UsIGluIHRoYXQgd2UgbWFpbnRhaW4gYSBzZW50
-aW5lbCByZWZlcmVuY2Ugd2hpbGUgDQo+PiA+ID4gaXQncyBoYXNoZWQuIFRoaXMgaW4gdHVybiBy
-ZXF1aXJlcyB0aGF0IHdlIGhhdmUgdG8gZG8gdGhpbmdzIGRpZmZlcmVudGx5IGluIHRoZSAicHV0
-Ig0KPj4gPiA+IGRlcGVuZGluZyBvbiB3aGV0aGVyIGl0cyBoYXNoZWQsIHdoaWNoIHdlIGJlbGll
-dmUgdG8gaGF2ZSBsZWQgdG8gcmFjZXMuDQo+PiA+ID4NCj4+ID4gPiBUaGVyZSBhcmUgb3RoZXIg
-cHJvYmxlbXMgaW4gaGVyZSB0b28uIG5mc2RfZmlsZV9jbG9zZV9pbm9kZV9zeW5jIA0KPj4gPiA+
-IGNhbiBlbmQgdXAgZnJlZWluZyBhbiBuZnNkX2ZpbGUgd2hpbGUgdGhlcmUgYXJlIHN0aWxsIG91
-dHN0YW5kaW5nIA0KPj4gPiA+IHJlZmVyZW5jZXMgdG8gaXQsIGFuZCB0aGVyZSBhcmUgYSBudW1i
-ZXIgb2Ygc3VidGxlIFRvQy9Ub1UgcmFjZXMuDQo+PiA+ID4NCj4+ID4gPiBSZXdvcmsgdGhlIGNv
-ZGUgc28gdGhhdCB0aGUgcmVmY291bnQgaXMgd2hhdCBkcml2ZXMgdGhlIGxpZmVjeWNsZS4gDQo+
-PiA+ID4gV2hlbiB0aGUgcmVmY291bnQgZ29lcyB0byB6ZXJvLCB0aGVuIHVuaGFzaCBhbmQgcmN1
-IGZyZWUgdGhlIG9iamVjdC4NCj4+ID4gPg0KPj4gPiA+IFdpdGggdGhpcyBjaGFuZ2UsIHRoZSBM
-UlUgY2FycmllcyBhIHJlZmVyZW5jZS4gVGFrZSBzcGVjaWFsIGNhcmUgDQo+PiA+ID4gdG8gZGVh
-bCB3aXRoIGl0IHdoZW4gcmVtb3ZpbmcgYW4gZW50cnkgZnJvbSB0aGUgbGlzdC4NCj4+ID4gPg0K
-Pj4gPiA+IFNpZ25lZC1vZmYtYnk6IEplZmYgTGF5dG9uIDxqbGF5dG9uQGtlcm5lbC5vcmc+DQo+
-PiA+DQo+PiA+IE91ciB0ZXN0IHRlYW0gaXMgZ2V0dGluZyBjcmFzaGVzIHRoYXQgYmlzZWN0aW9u
-IHBvaW50ZWQgYXQgdGhpcyANCj4+ID4gcGF0Y2guIEl0IHNlZW1zIGxpa2UgdGhlcmUgYXJlIG11
-bHRpcGxlIHBhcmFsbGVsIGNyYXNoIHJlcG9ydHMgc28gDQo+PiA+IHRoZSB3aG9sZSB0aGluZyBp
-cyBhIG1lc3MgdG8gcmVhZDoNCj4+ID4NCj4+ID4gWyAgODc1LjU0ODk2NV0gQlVHOiBrZXJuZWwg
-TlVMTCBwb2ludGVyIGRlcmVmZXJlbmNlLCBhZGRyZXNzOiANCj4+ID4gMDAwMDAwMDAwMDAwMDBk
-MCBbICA4NzUuNTQ4OTY4XSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0gDQo+
-PiA+IFsgIDg3NS41NDg5NzJdIHJlZmNvdW50X3Q6IHVuZGVyZmxvdzsgdXNlLWFmdGVyLWZyZWUu
-DQo+PiA+IFsgIDg3NS41NDg5OTJdIFdBUk5JTkc6IENQVTogNCBQSUQ6IDEyMTQ1IGF0IGxpYi9y
-ZWZjb3VudC5jOjI4IA0KPj4gPiByZWZjb3VudF93YXJuX3NhdHVyYXRlKzB4ZDgvMHhlMCBbICA4
-NzUuNTQ5ODUxXSAjUEY6IHN1cGVydmlzb3IgcmVhZCANCj4+ID4gYWNjZXNzIGluIGtlcm5lbCBt
-b2RlIFsgIDg3NS41NTAxNThdIE1vZHVsZXMgbGlua2VkIGluOg0KPj4gPiBbICA4NzUuNTUwNzUy
-XSAjUEY6IGVycm9yX2NvZGUoMHgwMDAwKSAtIG5vdC1wcmVzZW50IHBhZ2UgWyAgDQo+PiA+IDg3
-NS41NTEyNjldICBuZnNkIFsgIDg3NS41NTE4NzhdIFBHRCAwIFsgIDg3NS41NTIwNjldICBpcHRh
-YmxlX3JhdyBbICANCj4+ID4gODc1LjU1MjY3N10gUDREIDAgWyAgODc1LjU1MjgyNF0gIGJvbmRp
-bmcgbWx4NV92ZmlvX3BjaSBbICANCj4+ID4gODc1LjU1MzA5NV0gWyAgODc1LjU1MzI1NV0gIHJk
-bWFfdWNtIGlwaXAgWyAgODc1LjU1MzUyNV0gT29wczogMDAwMCANCj4+ID4gWyMxXSBTTVAgWyAg
-ODc1LjU1MzczM10gIHR1bm5lbDQgWyAgODc1LjU1Mzk0MV0gQ1BVOiAwIFBJRDogMTIxNDcgDQo+
-PiA+IENvbW06IG5mc2QgTm90IHRhaW50ZWQgNi4xLjAtcmM3X2FjM2EyNTg1ZjAxOCAjMSBbICA4
-NzUuNTU0MTA5XSAgDQo+PiA+IGlwX2dyZSBpYl91bWFkIFsgIDg3NS41NTQ1MTddIEhhcmR3YXJl
-IG5hbWU6IFFFTVUgU3RhbmRhcmQgUEMgKFEzNSArIA0KPj4gPiBJQ0g5LCAyMDA5KSwgQklPUyBy
-ZWwtMS4xMy4wLTAtZ2YyMWI1YTRhZWIwMi1wcmVidWlsdC5xZW11Lm9yZyANCj4+ID4gMDQvMDEv
-MjAxNCBbICA4NzUuNTU0NjU2XSAgbmZfdGFibGVzIHZmaW9fcGNpIFsgIDg3NS41NTU1MDhdIFJJ
-UDogDQo+PiA+IDAwMTA6dmZzX3NldGxlYXNlKzB4MjcvMHg3MCBbICA4NzUuNTU1Njk1XSAgdmZp
-b19wY2lfY29yZSANCj4+ID4gdmZpb192aXJxZmQgWyAgODc1LjU1NzAxNV0gQ29kZTogZmYgZmYg
-OTAgMGYgMWYgNDQgMDAgMDAgNDEgNTQgNDkgODkgDQo+PiA+IGQ0IDU1IDQ4IDg5IGZkIDQ4IDgz
-IGVjIDEwIDQ4IDg1IGQyIDc0IDA2IDQ4IDgzIGZlIDAyIDc1IDFmIDQ4IDhiIDQ1IA0KPj4gPiAy
-OCA0YyA4OSBlMiA0OCA4OSBlZiA8NDg+IDhiIDgwIGQwIDAwIDAwIDAwIDQ4IDg1IGMwIDc0IDJj
-IDQ4IDgzIGM0IA0KPj4gPiAxMCA1ZCA0MSA1YyBmZiBlMCA0OCBbICA4NzUuNTU3MjA5XSAgdmZp
-b19pb21tdV90eXBlMSBbICA4NzUuNTU3NDA2XSANCj4+ID4gUlNQOiAwMDE4OmZmZmY4ODgxMDM3
-OGJkYjAgRUZMQUdTOiAwMDAxMDI0NiBbICA4NzUuNTU3NjM0XSAgbWx4NV9pYiANCj4+ID4gWyAg
-ODc1LjU1ODQ0Nl0gWyAgODc1LjU1ODYyOF0gIHZmaW8gWyAgODc1LjU1ODg2Ml0gUkFYOiANCj4+
-ID4gMDAwMDAwMDAwMDAwMDAwMCBSQlg6IGZmZmY4ODgyNDg2NmMwMDAgUkNYOiBmZmZmODg4MTAz
-NzhiZGQ4IFsgIA0KPj4gPiA4NzUuNTU5MDA2XSAgaWJfdXZlcmJzIFsgIDg3NS41NTkwOTJdIFJE
-WDogMDAwMDAwMDAwMDAwMDAwMCBSU0k6IA0KPj4gPiAwMDAwMDAwMDAwMDAwMDAyIFJESTogZmZm
-Zjg4ODEyNTYwYTIwMCBbICA4NzUuNTU5MjE4XSAgaWJfaXBvaWIgWyAgDQo+PiA+IDg3NS41NTk1
-NTddIFJCUDogZmZmZjg4ODEyNTYwYTIwMCBSMDg6IGZmZmY4ODgxZGE1ZWNmMDAgUjA5OiANCj4+
-ID4gZmZmZmZmZmY4MjQwNjRlMCBbICA4NzUuNTU5NzA0XSAgbWx4NV9jb3JlIFsgIDg3NS41NjAw
-MjFdIFIxMDogDQo+PiA+IDAwMDAwMDAwMDAwMDAwMDAgUjExOiAwMDAwMDAwMDAwMDAwMDAwIFIx
-MjogMDAwMDAwMDAwMDAwMDAwMCBbICANCj4+ID4gODc1LjU2MDE2NV0gIGlwNl9ncmUgWyAgODc1
-LjU2MDQ4OF0gUjEzOiBmZmZmODg4MWRhNWVjZjAwIFIxNDogDQo+PiA+IGZmZmY4ODgxMTBlNjIw
-MjggUjE1OiBmZmZmODg4MTEwZTYyMWEwIFsgIDg3NS41NjA2MzRdICBncmUgWyAgDQo+PiA+IDg3
-NS41NjA5NTldIEZTOiAgMDAwMDAwMDAwMDAwMDAwMCgwMDAwKSBHUzpmZmZmODg4NTJjODAwMDAw
-KDAwMDApIA0KPj4gPiBrbmxHUzowMDAwMDAwMDAwMDAwMDAwIFsgIDg3NS41NjExMDhdICBpcDZf
-dHVubmVsIFsgIDg3NS41NjE0MzJdIENTOiAgDQo+PiA+IDAwMTAgRFM6IDAwMDAgRVM6IDAwMDAg
-Q1IwOiAwMDAwMDAwMDgwMDUwMDMzIFsgIDg3NS41NjE1NTRdICB0dW5uZWw2IA0KPj4gPiBbICA4
-NzUuNTYxOTI4XSBDUjI6IDAwMDAwMDAwMDAwMDAwZDAgQ1IzOiAwMDAwMDAwMWNhMjdkMDAxIENS
-NDogDQo+PiA+IDAwMDAwMDAwMDAzNzJlYjAgWyAgODc1LjU2MjA4NF0gIGdlbmV2ZSBbICA4NzUu
-NTYyMzQ5XSBEUjA6IA0KPj4gPiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAw
-MCBEUjI6IDAwMDAwMDAwMDAwMDAwMDAgWyAgDQo+PiA+IDg3NS41NjI0OTNdICBuZm5ldGxpbmtf
-Y3R0aW1lb3V0IFsgIDg3NS41NjI4MjJdIERSMzogDQo+PiA+IDAwMDAwMDAwMDAwMDAwMDAgRFI2
-OiAwMDAwMDAwMGZmZmUwZmYwIERSNzogMDAwMDAwMDAwMDAwMDQwMCBbICANCj4+ID4gODc1LjU2
-Mjk2Ml0gIG9wZW52c3dpdGNoIFsgIDg3NS41NjMyOTJdIENhbGwgVHJhY2U6DQo+PiA+IFsgIDg3
-NS41NjMyOThdICA8VEFTSz4NCj4+ID4gWyAgODc1LjU2MzUwM10gIG5zaA0KPj4gPiBbICA4NzUu
-NTYzODM5XSAgZGVzdHJveV91bmhhc2hlZF9kZWxlZysweDU4LzB4YzAgW25mc2RdDQo+Pg0KPj4g
-V2UgYXJlIGF3YXJlIG9mIHRoaXMgZmFpbHVyZSBtb2RlLiBBY3R1YWxseSB0aGlzIHN0YXJ0ZWQg
-d2VsbCBiZWZvcmUgDQo+PiB0aGF0IHBhcnRpY3VsYXIgY29tbWl0Lg0KPj4NCj4+IE91ciBwcm9i
-bGVtIGhhcyBiZWVuIHRoYXQgbm8gb25lIGhhcyBiZWVuIGFibGUgdG8gcHJvdmlkZSBhIHJlbGlh
-YmxlIA0KPj4gcmVwcm9kdWNlciwgc28gd2UgY2FuJ3QgZmlndXJlIG91dCB3aHkgaXQncyBoYXBw
-ZW5pbmcuIElmIHlvdSBoYXZlIGEgDQo+PiB3YXkgdG8gcmVwcm9kdWNlIHRoaXMgZmFpbHVyZSBy
-ZWxpYWJseSwgY2FuIHlvdSBjYXB0dXJlIGEgdm1jb3JlIG9yIA0KPj4gZW5hYmxlIEtBU0FOIGFu
-ZCBnZXQgYSBsaXR0bGUgbW9yZSBpbmZvcm1hdGlvbj8NCj4+DQo+DQo+IEl0J3MgcG9zc2libGUg
-dGhhdCB0aGlzIGNyYXNoIG1heSBiZSByZWxhdGVkIHRvIHRoZSBwcm9ibGVtIHRoYXQgd2FzIGZp
-eGVkIGhlcmU6DQo+DQo+ICAgIGNvbW1pdCAwYjNhNTUxZmE1OGI0ZGE5NDFlZmViMjA5YjM3NzA4
-NjhlMmVkZGQ3DQo+ICAgIEF1dGhvcjogSmVmZiBMYXl0b24gPGpsYXl0b25Aa2VybmVsLm9yZz4N
-Cj4gICAgRGF0ZTogICBUaHUgSmFuIDUgMTQ6NTU6NTYgMjAyMyAtMDUwMA0KPg0KPiAgICAgICAg
-bmZzZDogZml4IGhhbmRsaW5nIG9mIGNhY2hlZCBvcGVuIGZpbGVzIGluIG5mc2Q0X29wZW4gY29k
-ZXBhdGgNCj4NCj4gVW5mb3J0dW5hdGVseSwgdGhhdCBoYXNuJ3QgdHJpY2tsZWQgaW50byB2Ni4x
-IGtlcm5lbHMgc28gZmFyLg0KDQpUaGlzIGNvbW1pdCBpcyBpbiBteSB3b3JraW5nIHRyZWUsIGJ1
-dCB0aGlzIGNvbW1pdCBkb2Vzbid0IGZpeCB0aGUgaXNzdWUgc2luY2UgSSBzdGlsbCBmYWNlIHRo
-ZSBjcmFzaC4NCldlIGFyZSB3b3JraW5nIG9uIHY2LjItcmMzDQotLQ0KPiBKZWZmIExheXRvbiA8
-amxheXRvbkBrZXJuZWwub3JnPg0K
+On Wed, 2023-01-18 at 11:29 -0500, Olga Kornievskaia wrote:
+> On Wed, Jan 18, 2023 at 10:27 AM Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > On Wed, 2023-01-18 at 09:42 -0500, Olga Kornievskaia wrote:
+> > > On Tue, Jan 17, 2023 at 2:38 PM Jeff Layton <jlayton@kernel.org> wrot=
+e:
+> > > >=20
+> > > > There are two different flavors of the nfsd4_copy struct. One is
+> > > > embedded in the compound and is used directly in synchronous copies=
+. The
+> > > > other is dynamically allocated, refcounted and tracked in the clien=
+t
+> > > > struture. For the embedded one, the cleanup just involves releasing=
+ any
+> > > > nfsd_files held on its behalf. For the async one, the cleanup is a =
+bit
+> > > > more involved, and we need to dequeue it from lists, unhash it, etc=
+.
+> > > >=20
+> > > > There is at least one potential refcount leak in this code now. If =
+the
+> > > > kthread_create call fails, then both the src and dst nfsd_files in =
+the
+> > > > original nfsd4_copy object are leaked.
+> > >=20
+> > > I don't believe that's true. If kthread_create thread fails we call
+> > > cleanup_async_copy() that does a put on the file descriptors.
+> > >=20
+> >=20
+> > You mean this?
+> >=20
+> > out_err:
+> >         if (async_copy)
+> >                 cleanup_async_copy(async_copy);
+> >=20
+> > That puts the references that were taken in dup_copy_fields, but the
+> > original (embedded) nfsd4_copy also holds references and those are not
+> > being put in this codepath.
+>=20
+> Can you please point out where do we take a reference on the original cop=
+y?
+>=20
+
+In the case of an inter-server copy, nf_dst is set in
+nfsd4_setup_inter_ssc. For intraserver copy, both pointers are set via
+the call to nfsd4_verify_copy. Both functions call
+nfs4_preprocess_stateid_op, which returns a reference to the nfsd_file
+in the second to last arg.
+
+> > > > The cleanup in this codepath is also sort of weird. In the async co=
+py
+> > > > case, we'll have up to four nfsd_file references (src and dst for b=
+oth
+> > > > flavors of copy structure).
+> > >=20
+> > > That's not true. There is a careful distinction between intra -- whic=
+h
+> > > had 2 valid file pointers and does a get on both as they both point t=
+o
+> > > something that's opened on this server--- but inter -- only does a ge=
+t
+> > > on the dst file descriptor, the src doesn't exit. And yes I realize
+> > > the code checks for nfs_src being null which it should be but it make=
+s
+> > > the code less clear and at some point somebody might want to decide t=
+o
+> > > really do a put on it.
+> > >=20
+> >=20
+> > This is part of the problem here. We have a nfsd4_copy structure, and
+> > depending on what has been done to it, you need to call different
+> > methods to clean it up. That seems like a real antipattern to me.
+>=20
+> But they call different methods because different things need to be
+> done there and it makes it clear what needs to be for what type of
+> copy.
+>=20
+
+
+I sure as hell had a hard time dissecting how all of that was supposed
+to work. There is clear bug here, and I think this patch makes the
+result clearer and more robust in the face of changes.
+
+There are actually 4 different cases here: sync vs. async, alongside
+intra vs. interserver copy. These are all overloaded onto a nfsd4_copy
+structure, seemingly for no good reason.
+
+The cleanup, in particular seems quite fragile to me, and there is a
+dearth of defensive coding measures. If you subtly call the "wrong"
+cleanup function at the wrong point in time, then things may go awry.
+
+I'll leave it up to Chuck to make the final determination, but I see
+this patch as an improvement.
+
+> > > > They are both put at the end of
+> > > > nfsd4_do_async_copy, even though the ones held on behalf of the emb=
+edded
+> > > > one outlive that structure.
+> > > >=20
+> > > > Change it so that we always clean up the nfsd_file refs held by the
+> > > > embedded copy structure before nfsd4_copy returns. Rework
+> > > > cleanup_async_copy to handle both inter and intra copies. Eliminate
+> > > > nfsd4_cleanup_intra_ssc since it now becomes a no-op.
+> > >=20
+> > > I feel by combining the cleanup for both it obscures a very important
+> > > destication that src filehandle doesn't exist for inter.
+> >=20
+> > If the src filehandle doesn't exist, then the pointer to it will be
+> > NULL. I don't see what we gain by keeping these two distinct, other tha=
+n
+> > avoiding a NULL pointer check.
+>=20
+> My reason would be for code clarity because different things are
+> supposed to happen for intra and inter. Difference of opinion it
+> seems.
+>=20
+> >=20
+> > >=20
+> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > ---
+> > > >  fs/nfsd/nfs4proc.c | 23 ++++++++++-------------
+> > > >  1 file changed, 10 insertions(+), 13 deletions(-)
+> > > >=20
+> > > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > > > index 37a9cc8ae7ae..62b9d6c1b18b 100644
+> > > > --- a/fs/nfsd/nfs4proc.c
+> > > > +++ b/fs/nfsd/nfs4proc.c
+> > > > @@ -1512,7 +1512,6 @@ nfsd4_cleanup_inter_ssc(struct nfsd4_ssc_umou=
+nt_item *nsui, struct file *filp,
+> > > >         long timeout =3D msecs_to_jiffies(nfsd4_ssc_umount_timeout)=
+;
+> > > >=20
+> > > >         nfs42_ssc_close(filp);
+> > > > -       nfsd_file_put(dst);
+> > > >         fput(filp);
+> > > >=20
+> > > >         spin_lock(&nn->nfsd_ssc_lock);
+> > > > @@ -1562,13 +1561,6 @@ nfsd4_setup_intra_ssc(struct svc_rqst *rqstp=
+,
+> > > >                                  &copy->nf_dst);
+> > > >  }
+> > > >=20
+> > > > -static void
+> > > > -nfsd4_cleanup_intra_ssc(struct nfsd_file *src, struct nfsd_file *d=
+st)
+> > > > -{
+> > > > -       nfsd_file_put(src);
+> > > > -       nfsd_file_put(dst);
+> > > > -}
+> > > > -
+> > > >  static void nfsd4_cb_offload_release(struct nfsd4_callback *cb)
+> > > >  {
+> > > >         struct nfsd4_cb_offload *cbo =3D
+> > > > @@ -1683,12 +1675,18 @@ static void dup_copy_fields(struct nfsd4_co=
+py *src, struct nfsd4_copy *dst)
+> > > >         dst->ss_nsui =3D src->ss_nsui;
+> > > >  }
+> > > >=20
+> > > > +static void release_copy_files(struct nfsd4_copy *copy)
+> > > > +{
+> > > > +       if (copy->nf_src)
+> > > > +               nfsd_file_put(copy->nf_src);
+> > > > +       if (copy->nf_dst)
+> > > > +               nfsd_file_put(copy->nf_dst);
+> > > > +}
+> > > > +
+> > > >  static void cleanup_async_copy(struct nfsd4_copy *copy)
+> > > >  {
+> > > >         nfs4_free_copy_state(copy);
+> > > > -       nfsd_file_put(copy->nf_dst);
+> > > > -       if (!nfsd4_ssc_is_inter(copy))
+> > > > -               nfsd_file_put(copy->nf_src);
+> > > > +       release_copy_files(copy);
+> > > >         spin_lock(&copy->cp_clp->async_lock);
+> > > >         list_del(&copy->copies);
+> > > >         spin_unlock(&copy->cp_clp->async_lock);
+> > > > @@ -1748,7 +1746,6 @@ static int nfsd4_do_async_copy(void *data)
+> > > >         } else {
+> > > >                 nfserr =3D nfsd4_do_copy(copy, copy->nf_src->nf_fil=
+e,
+> > > >                                        copy->nf_dst->nf_file, false=
+);
+> > > > -               nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst)=
+;
+> > > >         }
+> > > >=20
+> > > >  do_callback:
+> > > > @@ -1811,9 +1808,9 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfs=
+d4_compound_state *cstate,
+> > > >         } else {
+> > > >                 status =3D nfsd4_do_copy(copy, copy->nf_src->nf_fil=
+e,
+> > > >                                        copy->nf_dst->nf_file, true)=
+;
+> > > > -               nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst)=
+;
+> > > >         }
+> > > >  out:
+> > > > +       release_copy_files(copy);
+> > > >         return status;
+> > > >  out_err:
+> > > >         if (async_copy)
+> > > > --
+> > > > 2.39.0
+> > > >=20
+> >=20
+> > --
+> > Jeff Layton <jlayton@kernel.org>
+
+--=20
+Jeff Layton <jlayton@kernel.org>
