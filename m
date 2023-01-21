@@ -2,218 +2,132 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CE89675F24
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Jan 2023 21:54:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 616D96766A6
+	for <lists+linux-nfs@lfdr.de>; Sat, 21 Jan 2023 15:09:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229509AbjATUyh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Jan 2023 15:54:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51292 "EHLO
+        id S229493AbjAUOJc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 21 Jan 2023 09:09:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjATUyg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Jan 2023 15:54:36 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0C54AA7F;
-        Fri, 20 Jan 2023 12:54:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C372A62060;
-        Fri, 20 Jan 2023 20:54:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88308C433EF;
-        Fri, 20 Jan 2023 20:54:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674248074;
-        bh=/vxzMc3pnw1lKVTUfCrVCZGqQ7pAoScnbYrmonrrXA8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KOQe+DgGwqbWKW3XmouWcQ8VZVGACK5qEwmd1CtwaqUUf9TOoSKIaaeQYfdfkL1v3
-         B8mvi8/EdipeyXnOLx3d0dMgSQTmBKdqSEPaink6Q3OR0XbvuMesYXhUgb8Jnd24hA
-         q+Lv/N96PyKRt3ACGF7KNBhDxnypTkAD4fpH5FaEHrIVM/vViVrMdo6LstPzPuLYW8
-         ZGGs2f1MnFcy4Qj2Od9TBmiOqRbHbjjpU/I/olqXgFsq+RKz637+kI2/BNr3rnNtt5
-         iR/itkAejyrck6pE8nw2Mh0nGOkEx1cqTzV9GtcD3QAYuSznVE9KJ7/P7pm+u987sV
-         kZ6ef7BodNG+Q==
-Message-ID: <d5dc64435fb82f17e79ae20a370e90914a291ea9.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: don't free files unconditionally in
- __nfsd_file_cache_purge
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Ruben Vestergaard <rubenv@drcmr.dk>,
-        Torkil Svensgaard <torkil@drcmr.dk>,
-        Shachar Kagan <skagan@nvidia.com>,
+        with ESMTP id S229450AbjAUOJb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 21 Jan 2023 09:09:31 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5690837F03
+        for <linux-nfs@vger.kernel.org>; Sat, 21 Jan 2023 06:09:29 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id v30so9782396edb.9
+        for <linux-nfs@vger.kernel.org>; Sat, 21 Jan 2023 06:09:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N0EKxn460Zy+TwaNm8ZPBjie5Uw/jdXAOry4i9qo28M=;
+        b=pC+fSxxAICcunbO3sTrBp190T8RFyUAOekkdfGtog7Zh3dBSjeD9A1Su085IHVadkR
+         UANWKbqHcvplbkWgAz6LPpL3fO7FKpWlJ09SHWvG9Q3lIzprWSpRorrW/m1ENio7gZ5U
+         Ur6PgByP6jZE6MoQOAVf3pzC3Re7h5vkZshH/O6iUjpa4eXTwxpIyugh8hpH+b+u7Edg
+         AzwaD/oje5s2gEkxb0/82qXDwUjyDar/9NnuwAgqR9JoC/F9ti0FZ4pAucJtvbPLk0HA
+         idPHBytBA1Cr5NPD5Lum1Hzc2UNdqKIsphu0kcsWSZUU3H538LmqoNVu8W+045NYbca0
+         VgCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N0EKxn460Zy+TwaNm8ZPBjie5Uw/jdXAOry4i9qo28M=;
+        b=zFZ3UhRbhjd7Lmk5FCP622ewnm+EgxQjQSuxPVcaU+cQw+RBjDboUwaPghLABhltI5
+         sR7VKh2V+kO2eAa98h/kwRtrxznw1flPypdNqt1JvkctxKrngrb0+i6zEdjujaKSX0RO
+         YSKOh7Fy/HjFXI2eeJFXY+LHBZHCjVtx9e//fPcw93RPGF/tmzafaIl/H3KSyWftD7L5
+         aiWczdR3uwWt8k6a42hLNYol6XeNnmesJ4rZgj3HzZte2gP/0gznERSRmd4T3tqlvCvb
+         NqV0bktBvJReHWk/D3z9U1YlgSWbiRSidgY7LRtZIgDySiYq1VNgXOmDA+qmrnTJieSo
+         h4RA==
+X-Gm-Message-State: AFqh2kp/enKAm/wbw+n3IFFPOSfwMejPe+7cKvn74UcQ0ZQ0axn3CaMY
+        7Gq6BCguI6KThccRpyMh/2c=
+X-Google-Smtp-Source: AMrXdXudKTN/1NywY4DsAo938x5Wrsew/BgYboL+bd+KEvzvAFTsJCc/sJKysnmwxHQYJ3tF0ek+Gw==
+X-Received: by 2002:a50:cddb:0:b0:49e:f591:d8c1 with SMTP id h27-20020a50cddb000000b0049ef591d8c1mr4416564edj.28.1674310167789;
+        Sat, 21 Jan 2023 06:09:27 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id el14-20020a056402360e00b00458b41d9460sm18096834edb.92.2023.01.21.06.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Jan 2023 06:09:27 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
+Received: by eldamar.lan (Postfix, from userid 1000)
+        id 4C155BE2EE8; Sat, 21 Jan 2023 15:09:26 +0100 (CET)
+Date:   Sat, 21 Jan 2023 15:09:26 +0100
+From:   Salvatore Bonaccorso <carnil@debian.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>, nfbrown@suse.com
+Cc:     yangerkun <yangerkun@huawei.com>, Jeff Layton <jlayton@kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Date:   Fri, 20 Jan 2023 15:54:32 -0500
-In-Reply-To: <C04F7C2C-848A-47C5-9C4E-9B9E5E82BAFF@oracle.com>
-References: <20230120195215.42243-1-jlayton@kernel.org>
-         <C04F7C2C-848A-47C5-9C4E-9B9E5E82BAFF@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
+        "yi.zhang@huawei.com" <yi.zhang@huawei.com>
+Subject: Re: Question about CVE-2022-43945
+Message-ID: <Y8vyFuQ0UdiiEJRw@eldamar.lan>
+References: <48b858aa-028b-1f56-3740-e59eb7a5fca2@huawei.com>
+ <265166ff-cd0b-ea5f-ad28-fed756dfd4ff@huawei.com>
+ <B00F6DD5-8215-457B-A681-39D7A64B7668@oracle.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <B00F6DD5-8215-457B-A681-39D7A64B7668@oracle.com>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-01-20 at 20:21 +0000, Chuck Lever III wrote:
->=20
-> > On Jan 20, 2023, at 2:52 PM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > nfsd_file_cache_purge is called when the server is shutting down, in
-> > which case, tearing things down is generally fine, but it also gets
-> > called when the exports cache is flushed.
->=20
-> Yeah... cache flush is probably the case we've been missing.
->=20
->=20
-> > Instead of walking the cache and freeing everything unconditionally,
-> > handle it the same as when we have a notification of conflicting access=
-.
-> >=20
-> > Fixes: ac3a2585f018 ("nfsd: rework refcounting in filecache")
-> > Reported-by: Ruben Vestergaard <rubenv@drcmr.dk>
-> > Reported-by: Torkil Svensgaard <torkil@drcmr.dk>
-> > Reported-by: Shachar Kagan <skagan@nvidia.com>
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > fs/nfsd/filecache.c | 61 +++++++++++++++++++++++++++------------------
-> > 1 file changed, 37 insertions(+), 24 deletions(-)
-> >=20
-> > v2: use the same method to purge entries from the cache as we do when
-> >    there is a notification of conflicting access.
-> >=20
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index 58ac93e7e680..397ae212b98d 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -661,6 +661,40 @@ static struct shrinker	nfsd_file_shrinker =3D {
-> > 	.seeks =3D 1,
-> > };
-> >=20
-> > +/**
-> > + * maybe_queue_nfsd_file - try to unhash and queue a nfsd_file to be f=
-reed
-> > + * @nf: nfsd_file to attempt to queue
-> > + * @dispose: private list to queue successfully-put objects
-> > + *
-> > + * Unhash an nfsd_file, try to get a reference to it, and then put tha=
-t
-> > + * reference. If it's the last reference, queue it to the dispose list=
-.
-> > + *
-> > + * The caller MUST hold the rcu_read_lock() !
->=20
-> __nfsd_file_cache_purge() isn't holding rcu_read_lock(), it's
-> holding the nfsd_mutex. Is this comment incorrect, or is it just
-> too specific? Or did I miss something obvious?
->=20
+Hi Chuck, 
 
-It's implicitly taken by rhashtable_walk_start and released by
-rhashtable_walk_stop.
+On Sat, Nov 12, 2022 at 04:11:47PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Nov 12, 2022, at 4:04 AM, yangerkun <yangerkun@huawei.com> wrote:
+> > 
+> > On 2022/11/12 13:01, yangerkun wrote:
+> >> Hi, Chuck Lever,
+> >> CVE-2022-43945(https://nvd.nist.gov/vuln/detail/CVE-2022-43945) describe that a normal request header ended with garbage data can trigger the nfsd overflow since nfsd share the request and response with the same pages array.
+> >> It seems that the patchset(https://lore.kernel.org/linux-nfs/166204973526.1435.6068003336048840051.stgit@manet.1015granger.net/T/#t) has solved NFSv2/NFSv3, but leave NFSv4 still vulnerably?
+> 
+> I asked the folks who reported this issue to check NFSv4 as well.
+> They were not able to exploit NFSv4 in the same way. For now we
+> believe this vulnerability does not impact the NFSv4 code paths.
+> 
+> 
+> >> Another question, for stable branch like lts-5.10, since NFSv2/NFSv3 did not switch to xdr_stream, the nfs_request_too_big in nfsd_dispatch will reject the request like READ/READDIR with too large request. So it seems branch without that "switch" seems ok for NFSv2/NFSv3, but NFSv3 still vulnerably. right?
+> >> Looking forward to your reply!
+> > 
+> > Sorry, notice that 76ce4dcec0dc ("NFSD: Cap rsize_bop result based on send buffer size") fix same problem for NFSv4.
+> 
+> 76ce4dcec0dc is a defensive fix. But, as I stated above, we haven't
+> yet found that NFSD's NFSv4 implementation is vulnerable to this
+> issue.
+> 
+> 
+> > So, for the stable branch like lts-5.10 which NFSv2/NFSv3 do not switch to xdr_stream, it seems we only need 76ce4dcec0dc"NFSD: Cap rsize_bop result based on send buffer size"). Right?
+> 
+> At this time we don't believe 76ce4dcec0dc is required. But if
+> you want it applied to v5.10 (or any LTS kernel) please first
+> test that it does not result in a regression, and then make a
+> request to the usual stable maintainers.
 
-FWIW, it'd be nice if there were a lockdep_assert_held equivalent for
-the rcu_read_lock() here, but I didn't see one of those. There is a
-rcu_read_lock_held(), but I didn't see a good way to get that to compile
-out when lockdep was disabled.
+I was reviewing open CVEs for Debian, based on the 5.10.y stable
+series, and noticed CVE-2022-43945 is yet unfixed in 5.10.162. I see
+SUSE did some backporting, with Neil Brown, according to
+https://bugzilla.suse.com/show_bug.cgi?id=1205128#c4 . From the set of
+fixes the first two of 
 
->=20
-> > + */
-> > +static void
-> > +maybe_queue_nfsd_file(struct nfsd_file *nf, struct list_head *dispose)
->=20
-> I prefer the name nfsd_file_try_to_queue() or nfsd_file_try_to_dispose().
-> nfsd_file_ should be the prefix where possible. Unless you're
-> redriving, I can fix that.
->=20
->=20
+Commit 90bfc37b5ab9 ("SUNRPC: Fix svcxdr_init_decode's end-of-buffer calculation")
+Commit 1242a87da0d8 ("SUNRPC: Fix svcxdr_init_encode's buflen calculation")
+Commit 00b4492686e0 ("NFSD: Protect against send buffer overflow in NFSv2 READDIR")
+Commit 640f87c190e0 ("NFSD: Protect against send buffer overflow in NFSv3 READDIR")
+Commit 401bc1f90874 ("NFSD: Protect against send buffer overflow in NFSv2 READ")
+Commit fa6be9cc6e80 ("NFSD: Protect against send buffer overflow in NFSv3 READ")
+Commit 76ce4dcec0dc ("NFSD: Cap rsize_bop result based on send buffer size")
 
-Rename at will.
+would not be needed, but still the others, though won't apply cleanly
+as thei need substantial changes. Neil, would it be possible to have
+the fixes backported to the 5.10.y series as well?
 
-> > +{
-> > +	int decrement =3D 1;
-> > +
-> > +	/* If we raced with someone else unhashing, ignore it */
-> > +	if (!nfsd_file_unhash(nf))
-> > +		return;
-> > +
-> > +	/* If we can't get a reference, ignore it */
-> > +	if (!nfsd_file_get(nf))
-> > +		return;
-> > +
-> > +	/* Extra decrement if we remove from the LRU */
-> > +	if (nfsd_file_lru_remove(nf))
-> > +		++decrement;
-> > +
-> > +	/* If refcount goes to 0, then put on the dispose list */
-> > +	if (refcount_sub_and_test(decrement, &nf->nf_ref)) {
-> > +		list_add(&nf->nf_lru, dispose);
-> > +		trace_nfsd_file_closing(nf);
-> > +	}
-> > +}
-> > +
-> > /**
-> >  * nfsd_file_queue_for_close: try to close out any open nfsd_files for =
-an inode
-> >  * @inode:   inode on which to close out nfsd_files
-> > @@ -688,30 +722,12 @@ nfsd_file_queue_for_close(struct inode *inode, st=
-ruct list_head *dispose)
-> >=20
-> > 	rcu_read_lock();
-> > 	do {
-> > -		int decrement =3D 1;
-> > -
-> > 		nf =3D rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
-> > 				       nfsd_file_rhash_params);
-> > 		if (!nf)
-> > 			break;
-> >=20
-> > -		/* If we raced with someone else unhashing, ignore it */
-> > -		if (!nfsd_file_unhash(nf))
-> > -			continue;
-> > -
-> > -		/* If we can't get a reference, ignore it */
-> > -		if (!nfsd_file_get(nf))
-> > -			continue;
-> > -
-> > -		/* Extra decrement if we remove from the LRU */
-> > -		if (nfsd_file_lru_remove(nf))
-> > -			++decrement;
-> > -
-> > -		/* If refcount goes to 0, then put on the dispose list */
-> > -		if (refcount_sub_and_test(decrement, &nf->nf_ref)) {
-> > -			list_add(&nf->nf_lru, dispose);
-> > -			trace_nfsd_file_closing(nf);
-> > -		}
-> > +		maybe_queue_nfsd_file(nf, dispose);
-> > 	} while (1);
-> > 	rcu_read_unlock();
-> > }
-> > @@ -928,11 +944,8 @@ __nfsd_file_cache_purge(struct net *net)
-> >=20
-> > 		nf =3D rhashtable_walk_next(&iter);
-> > 		while (!IS_ERR_OR_NULL(nf)) {
-> > -			if (!net || nf->nf_net =3D=3D net) {
-> > -				nfsd_file_unhash(nf);
-> > -				nfsd_file_lru_remove(nf);
-> > -				list_add(&nf->nf_lru, &dispose);
-> > -			}
-> > +			if (!net || nf->nf_net =3D=3D net)
-> > +				maybe_queue_nfsd_file(nf, &dispose);
-> > 			nf =3D rhashtable_walk_next(&iter);
-> > 		}
-> >=20
-> > --=20
-> > 2.39.0
-> >=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Regards,
+Salvatore
