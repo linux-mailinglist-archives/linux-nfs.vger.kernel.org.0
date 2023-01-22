@@ -2,264 +2,442 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4304676DE7
-	for <lists+linux-nfs@lfdr.de>; Sun, 22 Jan 2023 15:58:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D22F6770B2
+	for <lists+linux-nfs@lfdr.de>; Sun, 22 Jan 2023 17:46:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229942AbjAVO6z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 22 Jan 2023 09:58:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56598 "EHLO
+        id S230002AbjAVQqP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 22 Jan 2023 11:46:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjAVO6y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Jan 2023 09:58:54 -0500
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2051.outbound.protection.outlook.com [40.107.95.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3662D5C;
-        Sun, 22 Jan 2023 06:58:35 -0800 (PST)
+        with ESMTP id S229934AbjAVQqM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Jan 2023 11:46:12 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54DF31D924
+        for <linux-nfs@vger.kernel.org>; Sun, 22 Jan 2023 08:46:10 -0800 (PST)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30MDkS2h020596;
+        Sun, 22 Jan 2023 16:45:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=ELUmdEVjmNAPWN5DX0PT8FwmDT7/4hvHcnmAkkmJthc=;
+ b=nrQ0oQG6Mh8EhqvPqOVINMeEGMwfU77A75/5IMtuDcZbTRgkgXpR7qMk2HrfIgL2+cEx
+ SPmotYUyW3CpqciRdLJhPlJaIZK7OjMrbGYwIvKvgfEYyBg3ON8hwsB5jyNhIdC+jHSo
+ PSHdsAOcssm7GTZJdLkAZf3NHv42wdyUxikVjSt1ujyLOPxEqYXOFLiVexajsRNeNc+g
+ LuhFhAOB8kh2XQrhfxFjMUjbszhdNj88gl8U8kMvY5jRIi4vGWYWOX4eOq5lImwgMlbA
+ 9/bQOT+bsi6UXTWe7Vw4vfE3lZb/trvUHn6ngaC3NoA/nIi1/ETHkCLw3/LDdmdBauJx pg== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n86n0shjg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 22 Jan 2023 16:45:59 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30MEUVcM021160;
+        Sun, 22 Jan 2023 16:45:58 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2046.outbound.protection.outlook.com [104.47.56.46])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3n86g2p2f6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 22 Jan 2023 16:45:58 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bfI1foBlhZ+cbBwhOUGZmPMRfhy/6a7hkvRJ0MZzoWqoY2aDw0aNcE6jWie+g1FjI0dJ7+oFuuXr+LiH6u+3Gc+WTC0MPGcl8rI/Ej85ncIi5RmygXRmW91mmi+ZpJ/LgIgkDDd/oCL1uVMnZXsupskRwQBwnGWK3dh2cPOTrJ3GVkXnq/W4BQJOsD1ier/rYwVtO+MuGMq+i3cM1kizEIYlh5AK3N6dG6HHIa2Nc78swETUAwpyF0b2l9jePMNWT1aPeN7TLwdgkyL6f1za95nVNVVm9QUKTBSnvRHyW3ARPQDF5JXI9/9BZ0q3HXYbL2TFDQXGMMEW+fpl5gDJzg==
+ b=eNYAGcv1Ofgfs+WwfP600LV3zOifY68plT3mFpnNqjdIThLb+2nynJvQI/yKPL9UJ2w81oLsNnwFYMCy2CCiOj/LszDSAlYh+e54FGq+tJ6hG/NE0kOP3Lx1PcTXQBshTgmLerfTnuTM9PiKN2W5AG1e3EliXYOyHcYcX1fKzQi03DAnJxigBuarFIKsvC8vPeY8MJ2tl8zOShOsJ+SA4nirglXFHRDjFF/MZ2P1uWTNRUTM5IkL50e4/B6Y4+vXQiYzaJV8sS/tZtrH2rXFDf0w31Ue2NQnqE+F1vGMysvCQVA7jrb3/EFZiFPgOUeoAtOr3Np5BHORDi4VscD9Zg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yxpOnVNyQwHK/aFKju5Qt6SJ6EtqFLTsOpMMCV498U8=;
- b=XQfgXlgUqsNkIH8XcjW/GQhH0o0wE03zCEF44cRVCBFxqMDPxeUU8PrmrmXmEh3qcY7DCa0H4jeFJc7lIodzZYKO3k7GWbbTrDL6dFiTX34UuvvM+Fj4nOSBFnvkwMZst8E6SQpQFvucA/dRmVW5BQYgI7OZ8lAzZi/HUD3J30iMw7GFhShtP2GvZdEem4C8waDQS7XgxkjH/eFZDNJMqe1yBByqwfNPw/3Fp9muezwcvEmZWwo+W+RAey97iISRON6iLdAPmgSh9QoLAWc0AVcMvRwwF/Xt0QN2qiK+E/PsRaeEfSkJJQO1++h62+K3lYOfl7DezBykgsRuVhRPNQ==
+ bh=ELUmdEVjmNAPWN5DX0PT8FwmDT7/4hvHcnmAkkmJthc=;
+ b=Rax3hzhdOwmTWv7zTrmT9sXn1bbFOZzBr8eHJV2CYDAUiKlb89GwSjNcta4Jr5xzPS/oTcHHb+QC3jaNzf03gse7HWB7NFHoTiyGh90EmYjiCNERFdA6jwdfcyGKE7Ca5xnyguTSqc/Lp8iYtGAjxc4cSxi568Ef1AWPv0fxe1XCH+JcemUCI7ZvKiSsUq2koGQe5Hmgdby8ga+/1ic0xenUVV6wblcCjqcpMewBT60DLh3Y/FX06z4FwvwM/Zrr/xkgiyEdITH7qxEXV4m++yWrUoqncZNrp+kVP/OWQLJ2U9kbhtRBggVCQ/GZcwfwG4ifdix8dBXTSPXf4UNQWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yxpOnVNyQwHK/aFKju5Qt6SJ6EtqFLTsOpMMCV498U8=;
- b=CkB+3+cKOFEoPdiQ8bjAmGy83t21/CqUpTdEzR3FKU7IVgfgXI6S1CizbpfquqqRWii50YYrlJM0iS4QzzPhlufiRcjRo6RMf6GecK1edK66Xha7Y4geUJDwt+vZhSBaK9g4+hb9k290SAlj6g+qguHa0XM5hELGHt7mLejkU7IO8mnHmNgGYA8uSwfI/W6bk7EYXpjhSdU5jTlAJT7LgIu4J6wuU5wLIrNIdSH6c811BmxsPg2uDQsjXln01DQtaQLp6zk0pw4vluSVud0NUiXV0ml5SuYMDvcO6xaEhcuRs2Eyirg8kbGPNp53O9CJ8yGrzMaRDFX4qluFP3V5Ig==
-Received: from MN2PR12MB4486.namprd12.prod.outlook.com (2603:10b6:208:263::23)
- by MN2PR12MB4062.namprd12.prod.outlook.com (2603:10b6:208:1d0::15) with
+ bh=ELUmdEVjmNAPWN5DX0PT8FwmDT7/4hvHcnmAkkmJthc=;
+ b=AuH4t4Oxjw0DJRuRpnMzJD8m5tL1ekR7nHmAC8CkHC80fY3oaNcxgx3ypvCxx2A0mGW01F2hwP9rca0YhEgdf24OKlKe3TN6It6DaybFj5j9OusGEwK7mPJwXK4cXtFgTLim01LkbdNR35Olg4klVXWJ5/i8UZvAJKjhAp6rOSQ=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SN7PR10MB7048.namprd10.prod.outlook.com (2603:10b6:806:347::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.28; Sun, 22 Jan
- 2023 14:58:32 +0000
-Received: from MN2PR12MB4486.namprd12.prod.outlook.com
- ([fe80::70b:9b93:5fd9:96d5]) by MN2PR12MB4486.namprd12.prod.outlook.com
- ([fe80::70b:9b93:5fd9:96d5%9]) with mapi id 15.20.6002.028; Sun, 22 Jan 2023
- 14:58:32 +0000
-From:   Shachar Kagan <skagan@nvidia.com>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever III <chuck.lever@oracle.com>
-CC:     Ruben Vestergaard <rubenv@drcmr.dk>,
-        Torkil Svensgaard <torkil@drcmr.dk>,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.7; Sun, 22 Jan
+ 2023 16:45:54 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::d8a4:336a:21e:40d9]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::d8a4:336a:21e:40d9%5]) with mapi id 15.20.6043.014; Sun, 22 Jan 2023
+ 16:45:54 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Dai Ngo <dai.ngo@oracle.com>
+CC:     Jeff Layton <jlayton@kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] nfsd: don't free files unconditionally in
- __nfsd_file_cache_purge
-Thread-Topic: [PATCH] nfsd: don't free files unconditionally in
- __nfsd_file_cache_purge
-Thread-Index: AQHZLQi1Ys7+/1QvvU6pGCpXcVFjk66nv28AgAAJSgCAAVH1AIAABJoAgAFp8iA=
-Date:   Sun, 22 Jan 2023 14:58:31 +0000
-Message-ID: <MN2PR12MB4486882D01C0068FFAF9C841B9CB9@MN2PR12MB4486.namprd12.prod.outlook.com>
-References: <20230120195215.42243-1-jlayton@kernel.org>
-         <C04F7C2C-848A-47C5-9C4E-9B9E5E82BAFF@oracle.com>
-         <d5dc64435fb82f17e79ae20a370e90914a291ea9.camel@kernel.org>
-         <3BB57727-27FC-4294-A5F8-FBD8E900D94D@oracle.com>
- <539c19a01e7f6d582d7ae2804977ef779b29d44b.camel@kernel.org>
-In-Reply-To: <539c19a01e7f6d582d7ae2804977ef779b29d44b.camel@kernel.org>
-Accept-Language: he-IL, en-US
+        Olga Kornievskaia <aglo@umich.edu>
+Subject: Re: [PATCH 2/2] nfsd: clean up potential nfsd_file refcount leaks in
+ COPY codepath
+Thread-Topic: [PATCH 2/2] nfsd: clean up potential nfsd_file refcount leaks in
+ COPY codepath
+Thread-Index: AQHZKqtMKSgqI33qoEK/JPELcgPtS66lMfqAgABiFoCAAIEkAIABHkYAgAILXICAAA8igIAABC4AgAABxoCAABVtAIABQ0wA
+Date:   Sun, 22 Jan 2023 16:45:54 +0000
+Message-ID: <71DC929D-D10B-4721-8327-301A7E65312F@oracle.com>
+References: <20230117193831.75201-1-jlayton@kernel.org>
+ <20230117193831.75201-3-jlayton@kernel.org>
+ <9bff17d4-c305-1918-5079-d2e9cf291bc7@oracle.com>
+ <eb5a9fa65a8c2bcc257101c96f7fbbe18a3b74ff.camel@kernel.org>
+ <3ff5458c-88ab-18ab-ebfe-98ba8050fd84@oracle.com>
+ <3a910faf64ab6442fd089f17a0f7834dbf24cd41.camel@kernel.org>
+ <68e2bff9-bf02-4b19-3707-be88b77d8072@oracle.com>
+ <4577f120-9191-c138-299f-eeddc3652e8b@oracle.com>
+ <80fd3e68dd5ed457bf38f4ff0a6086d568cc3cee.camel@kernel.org>
+ <D14F7839-3E42-4592-BF11-4A19905D5AA4@oracle.com>
+ <f52f1cbf-aed4-b0f3-2066-9aa67e2a6003@oracle.com>
+In-Reply-To: <f52f1cbf-aed4-b0f3-2066-9aa67e2a6003@oracle.com>
+Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-mailer: Apple Mail (2.3696.120.41.1.1)
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MN2PR12MB4486:EE_|MN2PR12MB4062:EE_
-x-ms-office365-filtering-correlation-id: e0c85e42-3c88-44e6-b2ba-08dafc8920e6
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SN7PR10MB7048:EE_
+x-ms-office365-filtering-correlation-id: da924a1d-0865-490d-28ed-08dafc98212b
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: U66l0Q59DiGGhOveijRbieg4codHAx2FFcPgAMk3N22ir4lGJLDxydnbB7muIv89EyqOSttistKj5DtZyod2MNPuIEH1vn5jouQTXvUnxISlSzjb5JDouSyCSexlZmZrDEvhG1WTw3qsw2OPWjIsL8BQ5iEV4hkyVG6Z4YUOqBqKy9jwuaEAWyTe3tsng6elIQWwe99NYd8TdoCyeghNVgttEkTp/7KHP6R2eY2uS2xk28cbGaaY83HINxQwxIzDNHNOA2IHY1qyBQeFaPEE/Xv+0R73hY1KFFYkw6TRecNPCCLdTABTN3l+cvm9XDxFoFqFuyQchHondeGkTufTAg6E4kmJr8jW7FHi9YAxrm1ThJVtJkihkNqo0ZubiQFry/jRSEeeO+y8wKmnOS7xL/198JYTP2yXKrPYAvLnZTPceydYSIroXsotnUY8D8Z0Lc0hGZXrhEIEGwABNraHzKveSIe06DJ2n2jHtHUOzb7Gcjym4Cndl+1iX5Q9l/72SuWeKWLYQb30SL1ERH6soL3H+1S98NqIk2JEHousuUNkUILtpS1jkSW5RyJzbf7q4yriP8dHe/qvBuVUOnjjAc0dAvtjvYsE7OsmNUseJl7h6eVfg1ZcH+s4VEUbIZBpQ+3qrC0K0U3XZLxjkpElqdK66GEZbnLzBavLOc/rvsh+lLR1rOa/KrFs7ZjteGZUbNp9xVtQ0SWHdTJrZw6NKw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4486.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(376002)(396003)(366004)(39860400002)(136003)(346002)(451199015)(8936002)(5660300002)(41300700001)(2906002)(66946007)(76116006)(66446008)(66476007)(71200400001)(66556008)(316002)(4326008)(64756008)(8676002)(54906003)(110136005)(7696005)(478600001)(6506007)(53546011)(186003)(26005)(9686003)(55016003)(86362001)(38070700005)(83380400001)(122000001)(38100700002)(52536014)(33656002);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: wxOtX5Ggk3tMK0B8oUL3BKdwPCbWO1SyIE0BPc+Q4dxdwNVwizDZvsExWZXQA+UrEQ4Od6wR/EzmKWq0jXHg/svDFnyUr9Hbx34OtN7A93DBsk1N1zah1PsrlCugAItmHOOEsb0iSil4Guz1uCKUPUsKvvaS6YiNj1jTQjGnhgvuHQE4K6wQv3+k3yMbY/6CuuBAFf9WbQ1t8a8mdz0ybr1h4HdM/eh1sIbvlYzrd2/TLJwEzGgnWyx8QkGrSG33gdlvInNyK1SL/p3oVaJuqQnVYseMNAihb9IJQew5aC79z9pvNNaayWkI+7DyJ5YWJ6NNmRoGrxlHl05QPsWHPQgs5JY3jkjs3GcoIekRTviNR3u4Nvjx7aiPM4sIba9bQmfY7oATxTlD47lazCR9RO8oiyUtNoH7FOBjZsHfu1rC6Cf786IvC5NrPKYBYsi3ANZeR8zesT6S5UtmR/19yYhGe7W7euVHfsZxgaKB0LqUUMRF+XPOgWcOAFwftSuYG6BlXMkEeVl3HOVfWW0JMItKN/g+TvTttgdplpmiGMvrmNjq5YYF8z0msnos0tTtbiW4/xkUIbsfT83yL0GPR5Mr9/S11Y6fi9P3towK30VQe7VnDf4++9RCz/T2hTwEmMPuvsa4pA/neFocCr9/vdxOT0sLem13ZGnFTTO47bc1o9sUbAGjtSCb8n8h4VkJJuAVBheuViRz9lw6rsYSCUv2hL2j2TqQbDN0zOYvKsXt9W7VS8DgQ5k33j5bTLomruCX/037aEXc7cQvJR532w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(396003)(39860400002)(136003)(366004)(376002)(451199015)(36756003)(53546011)(2906002)(6506007)(26005)(6512007)(71200400001)(54906003)(6636002)(478600001)(966005)(86362001)(186003)(2616005)(38100700002)(122000001)(33656002)(41300700001)(38070700005)(83380400001)(6486002)(66946007)(66556008)(8676002)(76116006)(66476007)(66446008)(64756008)(4326008)(5660300002)(6862004)(8936002)(37006003)(91956017)(316002)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?aEJtS2d0NVpDUUV4c0MxMkp3eSsra1JYY2l5Y3hmaFcvWThuRUowdHp5VGpy?=
- =?utf-8?B?bStrMEVtOERrazNjdmNNSTY4VE1xR2xDYUUyaFpMem5iU01QNnJUeWJjVlVk?=
- =?utf-8?B?VGpoZmMxWVphUEl6Zm5Ibkx4T1IycThvWHNDclhLdVBxcUo4eWZhaWlMUEMy?=
- =?utf-8?B?b0l2NFVTT01RVlRpZ1ZJQ3hBUEJmWFBLWXVwd3R0M2dZQXZ3WEptMnljNjFj?=
- =?utf-8?B?Tk5xcWoyQ3cxMVBiYlgzbXFGclZNMWxBbHIyYUJNN1Q5WFR2NWUvZTFPK2xV?=
- =?utf-8?B?R0szaW9Hc3FqTWQ3QmdZRk9XNlpkb3UyMzNaYWhhUGFDU2xOL0p5TVlJeXV1?=
- =?utf-8?B?T3hnNVRCcm1UZyttZ0hxd2xQM1VwOGkvZWYzL3FsMDJ0TCtobVl3V3JGNE9M?=
- =?utf-8?B?ZSsvekZXaE1PQzZiTTVSN2VzT1Btdk15SWxQZlNHU3JpajJyYlZlejJmemxm?=
- =?utf-8?B?ZnVwVHU5NjREandjUkxlZXdQS0JQbUV3Tzc2eDE2S3gyMHpQQVpsSURJSlVH?=
- =?utf-8?B?UHcrR0ZsR25DakxrSGFSYlVDemYzZDd1d3pQbzdKRmVSQUY4d0dFTC9idFM4?=
- =?utf-8?B?OENMVnltU3NKQWtGc0o1dThxZHlUVHZsM1NGd1dOYUFkM3FraHoxSThEVHZP?=
- =?utf-8?B?Rys4Lyt3cHhHbjdBVDhnV05YMVBsVGFTMldhbGJ0NGJNZXMyV0U0NTdRRU9Y?=
- =?utf-8?B?aXRKN2t0eTdHZmF4MGQ3VEVYZDc3ODlZRmFKUkZOeFQyalF5dUtPQ3UybzBa?=
- =?utf-8?B?cGZsOWhYTUhOc3ZBcG40QjhXUjFLUjNBK2xvb0J6NEpBd2NEazB2RGlvRWlj?=
- =?utf-8?B?blRtSGhPVGZMODFjVGc2b1ZoaS9rYTJjUkxNSlpkN3crT09NYmUrNmEzbHRk?=
- =?utf-8?B?cXMxeVlFdktIci9OV2FSSmdQVWozVEJiMnFyK0ZqcmFrQW5TYW91OFFscFlP?=
- =?utf-8?B?RG1BdWdGSDVsZ054bkg1Z1ZsQ29WWFBkRjg3UU9SbEFWVXVhOVk2Zy9VN1NY?=
- =?utf-8?B?dm9NTWtTT1JrYmxHaTBPR3hGNGRmbEdENXNwTzJEazlWUXBJLzhaQ2tLQXpZ?=
- =?utf-8?B?Vyt5Ni9PMEpFZnh4WlJ5clQ3WG80cis5VXRUNTM4dTViVHFIWjBQanpvaE1D?=
- =?utf-8?B?dzRjcFdBYjBRSmQ4QUhvb0F4Z2pEOFBFbXZaajlSSUJYaWhzRmx5THQwQlE2?=
- =?utf-8?B?STNjaE02SWZyZlF5YURUSUh1RWxjUW9GbVVoN3BCR1pUL2M1MXZHOGxqWkR1?=
- =?utf-8?B?RThJNGtwVjNUWkNwTlEzY200LzQvTWIrYzJvMHRVR2VqdEtEUzM1OW93dEtX?=
- =?utf-8?B?czZVc0s2ZEFLOU16Q01ubEkzby9IU2dTcGZyUTF5Wm1zM1dNaEJaQ3daaFM2?=
- =?utf-8?B?dHFwcVRORi9jM3pQVmVBRVh4bU1TYlBVNXFmQTd6U0JxVkJycnFpbThSZ3ZG?=
- =?utf-8?B?bHlHWlFjZElFOENNN2FESy9COVZPSlViZTVRYXV6cXhLNStpd3YzZHRzUlFj?=
- =?utf-8?B?dXRPZVpnMGlMUFU4WDVyMFNvSXJlWFBJMmo1Z2NRWVFQd3RoL2RxTGNJdFEv?=
- =?utf-8?B?WExMSDNodFJ1ZzRLcWQ1eHJTN1dXSG8yc0JpUmVhRVNQU1BNZ0pacS8xRTg2?=
- =?utf-8?B?NnFZUW9UUUhtR1Fha3ZKRU1Wd3JoVzBUS1pqVFdsV3dxd3BlbjdqQzNMS01I?=
- =?utf-8?B?MkVscElFWk9zZ2VzVHJGbnN4YmtiOE5EeWFMY0MxL2c3VDVZcE1JT1pKNEZw?=
- =?utf-8?B?K3pWQnUybitTYmFVU1dKTXkxempXSWg4MU4rMTM2R3F1OU96NlFTeFdsblNV?=
- =?utf-8?B?MHQ1ZkxvL3JFNmQ1SVdzdHlmWWpFRmdHOWFtM3U2SVhBdUx2UnVITXJyeHh6?=
- =?utf-8?B?cW1QMHBETkQ1cENWK1A0UElleVdPeVl0bHNkYm1qb1FoSFl1Y3pEaVV0Q1Zu?=
- =?utf-8?B?TVhXbzh5ZEtuM0ZDWi9FTldzZFBGb0lnNVljUk9KcU1oUzA0cWtWcnI0VWRS?=
- =?utf-8?B?Z2R1U0xPY2ZtckxzKzVmL3hlbDdHSmRCMmJkQnlaNmFwSVpDTlpxWkRlRlp4?=
- =?utf-8?B?RFplWEZHM3Iwa1JMRDhISHE5NGJXb2lPcjY2S2VaL1g3WWxNdlN6c09meFdp?=
- =?utf-8?Q?b0TL8CP2Q7HSoF8gEk9/+9gsQ?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?FyRmsX67DwdRuncxRDaniXTrwgqIjIucKq6vHcPCq5qi08EdUH2w/lmnu4zh?=
+ =?us-ascii?Q?8pN29zVHpKNeQ0MZ65ueaY+KoW+fCpxL/PHsHb+TboEhsj39sw+OX3lk3xIX?=
+ =?us-ascii?Q?BjPj+SGeZ8y0cJE7r5oJQ8uHN45uoy8rq+5mPSzV+KZE115iU99r96kU+v2q?=
+ =?us-ascii?Q?k075PIkRq9jGRNOse0EaGVoFIUWPz0gYRfEgg+kWYn4Bbgrwv21eEMudOskw?=
+ =?us-ascii?Q?e4RIUMyR35XZkEuNGHb6/43KdaA06a1XsI2vNTB3fbh7ZpmwzZ7zYOTiH8gq?=
+ =?us-ascii?Q?p7SumOdgJhMuqsPSb8gLQoPUqhPt2Uxsbv1vrzLnv77wZlFy53s1D6D1gq2L?=
+ =?us-ascii?Q?mPDwGGXFJeBau3FS+gTWnNfDE4DfGkb+1+AWft+z+K6A+bI2oSLy2xmrEtkH?=
+ =?us-ascii?Q?P0vqy+bUQBcOY3OD9DEWADIqlxzIXkwqvzJIazfhP6b9D/v+i1wYVmohXKIw?=
+ =?us-ascii?Q?XExyYCVbceANs3GNFzl+S2kHhA2iJwMqtSpvElHugHU8+Y02mambGgu5H4Qy?=
+ =?us-ascii?Q?GvMXZMRoMKPenAU3ZYFnrxjXCjat1gESWHcjCxxq94sAGosKQQWQ49oV2uGf?=
+ =?us-ascii?Q?czfHBxoG7mrjc4SVaGQS6C/6KqEt/3YrBTDLx72dxuN/vz51mRXbBhArh67v?=
+ =?us-ascii?Q?edaaxTQ2tAUItOZ8kSY/A9oVeoqWE0AZxhw04f+yaogbeFtasPMPQomP6alR?=
+ =?us-ascii?Q?vOcV2+Z55Q3Om8r8qoxI7InzjbururgKi/yq03KUNRTxpYVBiHT9IW6u8UYU?=
+ =?us-ascii?Q?oua+rLI/0B68eAOCKX6pKtNTKIxjSbZ9zyUGmFAAUHPsW2bJQ5omDjDNAnFl?=
+ =?us-ascii?Q?Rk8XvaMYfFUhC7WTqe4waj3EmyPKUA1iHa7Ngr0roxxNvhuK0S3ZmY2a7w86?=
+ =?us-ascii?Q?mY9KH9/pl3JhftPly94QlKVcA7d/s+Mlfty1ZRf4z0kjBQiSTk3gr0D4qm56?=
+ =?us-ascii?Q?TTOzZrUEG4bAxjGY+mCeUBt90ysLy5DPnndQIZe77EAvSqK9WcEJKz0Rdqzq?=
+ =?us-ascii?Q?BCabyH0ylpZL5pJJmkKkLI0BxvQIUlgUIndh32Au7IpM1fHLmRWt3djjcyNY?=
+ =?us-ascii?Q?8Gc+TWQb7dZSh3MAEidCe92SXIcWtutA/HQjEUnuvFGh6LoIUauBYPbIflpU?=
+ =?us-ascii?Q?jnZOKM2HbvJqnzpUeQ0gWIH/N6K8SlOQrSzaolDVbjs+G7a3b+YsYz1UdiwQ?=
+ =?us-ascii?Q?UMLPJM7XiPmBIzpZViXIRr4DB//Z5rfdz6lxTeWFRc4YbGvF3SdGrTdUveS5?=
+ =?us-ascii?Q?Ls54j0tOoDxe3CbuQ7TS8BA5uOS9BgUM3gimdMqaR/qQSINYHyBNuZG5CJhn?=
+ =?us-ascii?Q?B7HSWN+j4n/Ti7mugShKyCmIJmjpKGwimo/aEtvBY5hQFE9tGmifsM2NtKiF?=
+ =?us-ascii?Q?auYSomZBCz1V/H40FJknkqQ94S+xAb6E2BzK6ZUYh0wDNm1Q2HfGqx22Y/88?=
+ =?us-ascii?Q?vXF+Yef87BVcla+1bgfc9UXqJGBR55zvrnPVO6Vq9N6AS9Kid/mgbDDiFbiS?=
+ =?us-ascii?Q?MmrKNODaFQel+vH7zl2L25PSawXVEwAETlixSbNbS+L+RO1Tg3g4uT2Dz4Hn?=
+ =?us-ascii?Q?pifuKNs4ovCw4g67QDGyTAZcy36GiBAZ4ZDQIqbQB6dv5rmmjEAldgYXa/rj?=
+ =?us-ascii?Q?qQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E537AE2CCDAFC646A6C8E3EF4CC81268@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: YQR/yH+H5DS05dd7W/pfkItVmYxE5EPD++hYHZGN4xFs/TLwX9SWdzB1WoLvyYh9DIAK8xmOttT503MfU9lwS3RwdB0ABnQj6AJLp/arY+33bnjGh48oPKnQVFdnr2smQjvgkh+f90IrCJ+zuaRMkqkxgZzWnSxhZYwGNL/RoE8MfFY7lZYXQ2VVzR2E160prTZzCy+8GdfBCqJIAYyG11zL3tMwlQ3PAeNIu2gfzt4JQbiouNl1pGKGl4fCVHSl/hDVn3EmP+gNq1j3j495/UwIDw2mgpqNaUx8g6uReZ5B4D8acZNR7cujHpZEt2i2OUhmZHEGBMIYil4+bVEFw41roetue79adwvnufySUVgxIshUgG230LirNKLV8vhUXqY2djNMWj9jsdbgW/0Sckkic6alIB01c/SOGuv/5/251E5807wyVsv+2BYmt7zFYW+Cs0OFP0oLPrn9iPW0UXZ1g1gq6k/eof2++mcv6gx9G9A4+800rMGpHVU/OOIaqi+a8aL2jOG9KpQ/1l4rnwmRV0xwi+kM2D1MvZAxpFeV1ReZGupml0G+/YkWZJZVoAfpQ9l+X7UclUAqvjZJLyr+35RxikY4BlWZecTKtJSDfWU3V6WxYHWHpJMvymgP/CzbhqDuJm4M8iSpCgKT706MlJx+eHeOSRcFGT6KzDI287DrpRikX4JNpLZMrDpxeFP68rPXgNwv3GNTFoWY3kwJwgkmtWoygyuz4v97SxGiesiaXxFf6TlT+AA6M3G1Pf/U3F+oNoRU+6+w8Ni1YXYejuX8rR61XEpTWMqbzmG8TYj9TUIhCuJ4KCsuEnGT
+X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4486.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0c85e42-3c88-44e6-b2ba-08dafc8920e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2023 14:58:31.8899
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da924a1d-0865-490d-28ed-08dafc98212b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Jan 2023 16:45:54.7426
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: soCNJIy0dHrRvBiKRErID8E6BtIdths4ONN72+OPof+AiPbkn1bQb2RDot8P012JdsYn0H3Xuu5yFIhIDClpaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4062
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-userprincipalname: n/edduNDGMykRSc5R1ZYu0WvS0yNsC1RbBTeU3Ij2RpnS9yNBD1+n6Cxmo3PSB2FqAcj2ytF8a44JU+fxNBmqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB7048
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-22_13,2023-01-20_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301220162
+X-Proofpoint-GUID: p6_dor-Cba_yjwapbUYCUepzf5J0hfUN
+X-Proofpoint-ORIG-GUID: p6_dor-Cba_yjwapbUYCUepzf5J0hfUN
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQpPbiBTdW4sIDIwMjMtMDEtMjIgYXQgMTY6NTggKzAwMDAsIFNoYWNoYXIgS2FnYW4gd3JvdGU6
-DQoNCj4gT24gU2F0LCAyMDIzLTAxLTIxIGF0IDE3OjA0ICswMDAwLCBDaHVjayBMZXZlciBJSUkg
-d3JvdGU6DQo+ID4NCj4gPiA+IE9uIEphbiAyMCwgMjAyMywgYXQgMzo1NCBQTSwgSmVmZiBMYXl0
-b24gPGpsYXl0b25Aa2VybmVsLm9yZz4gd3JvdGU6DQo+ID4gPg0KPiA+ID4gT24gRnJpLCAyMDIz
-LTAxLTIwIGF0IDIwOjIxICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6DQo+ID4gPiA+DQo+
-ID4gPiA+ID4gT24gSmFuIDIwLCAyMDIzLCBhdCAyOjUyIFBNLCBKZWZmIExheXRvbiA8amxheXRv
-bkBrZXJuZWwub3JnPiB3cm90ZToNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IG5mc2RfZmlsZV9jYWNo
-ZV9wdXJnZSBpcyBjYWxsZWQgd2hlbiB0aGUgc2VydmVyIGlzIHNodXR0aW5nIA0KPiA+ID4gPiA+
-IGRvd24sIGluIHdoaWNoIGNhc2UsIHRlYXJpbmcgdGhpbmdzIGRvd24gaXMgZ2VuZXJhbGx5IGZp
-bmUsIGJ1dCANCj4gPiA+ID4gPiBpdCBhbHNvIGdldHMgY2FsbGVkIHdoZW4gdGhlIGV4cG9ydHMg
-Y2FjaGUgaXMgZmx1c2hlZC4NCj4gPiA+ID4NCj4gPiA+ID4gWWVhaC4uLiBjYWNoZSBmbHVzaCBp
-cyBwcm9iYWJseSB0aGUgY2FzZSB3ZSd2ZSBiZWVuIG1pc3NpbmcuDQo+ID4gPiA+DQo+ID4gPiA+
-DQo+ID4gPiA+ID4gSW5zdGVhZCBvZiB3YWxraW5nIHRoZSBjYWNoZSBhbmQgZnJlZWluZyBldmVy
-eXRoaW5nIA0KPiA+ID4gPiA+IHVuY29uZGl0aW9uYWxseSwgaGFuZGxlIGl0IHRoZSBzYW1lIGFz
-IHdoZW4gd2UgaGF2ZSBhIG5vdGlmaWNhdGlvbiBvZiBjb25mbGljdGluZyBhY2Nlc3MuDQo+ID4g
-PiA+ID4NCj4gPiA+ID4gPiBGaXhlczogYWMzYTI1ODVmMDE4ICgibmZzZDogcmV3b3JrIHJlZmNv
-dW50aW5nIGluIGZpbGVjYWNoZSIpDQo+ID4gPiA+ID4gUmVwb3J0ZWQtYnk6IFJ1YmVuIFZlc3Rl
-cmdhYXJkIDxydWJlbnZAZHJjbXIuZGs+DQo+ID4gPiA+ID4gUmVwb3J0ZWQtYnk6IFRvcmtpbCBT
-dmVuc2dhYXJkIDx0b3JraWxAZHJjbXIuZGs+DQo+ID4gPiA+ID4gUmVwb3J0ZWQtYnk6IFNoYWNo
-YXIgS2FnYW4gPHNrYWdhbkBudmlkaWEuY29tPg0KPiA+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEpl
-ZmYgTGF5dG9uIDxqbGF5dG9uQGtlcm5lbC5vcmc+DQoNCkkgcmFuIG91ciB0ZXN0cyB3aXRoIHRo
-ZSBjb21taXQsIHRoZSBpc3N1ZSBkaWRuJ3Qgb2NjdXIuDQpUaGFua3MgZm9yIHRoZSBxdWljayBy
-ZXNwb25zZS4NCg0KPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+IGZzL25mc2QvZmlsZWNhY2hlLmMg
-fCA2MSANCj4gPiA+ID4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0t
-LS0tLS0NCj4gPiA+ID4gPiAxIGZpbGUgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKSwgMjQgZGVs
-ZXRpb25zKC0pDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiB2MjogdXNlIHRoZSBzYW1lIG1ldGhvZCB0
-byBwdXJnZSBlbnRyaWVzIGZyb20gdGhlIGNhY2hlIGFzIHdlIGRvIHdoZW4NCj4gPiA+ID4gPiAg
-IHRoZXJlIGlzIGEgbm90aWZpY2F0aW9uIG9mIGNvbmZsaWN0aW5nIGFjY2Vzcy4NCj4gPiA+ID4g
-Pg0KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9mcy9uZnNkL2ZpbGVjYWNoZS5jIGIvZnMvbmZzZC9m
-aWxlY2FjaGUuYyBpbmRleCANCj4gPiA+ID4gPiA1OGFjOTNlN2U2ODAuLjM5N2FlMjEyYjk4ZCAx
-MDA2NDQNCj4gPiA+ID4gPiAtLS0gYS9mcy9uZnNkL2ZpbGVjYWNoZS5jDQo+ID4gPiA+ID4gKysr
-IGIvZnMvbmZzZC9maWxlY2FjaGUuYw0KPiA+ID4gPiA+IEBAIC02NjEsNiArNjYxLDQwIEBAIHN0
-YXRpYyBzdHJ1Y3Qgc2hyaW5rZXIgICAgIG5mc2RfZmlsZV9zaHJpbmtlciA9IHsNCj4gPiA+ID4g
-PiAgICAgICAgIC5zZWVrcyA9IDEsDQo+ID4gPiA+ID4gfTsNCj4gPiA+ID4gPg0KPiA+ID4gPiA+
-ICsvKioNCj4gPiA+ID4gPiArICogbWF5YmVfcXVldWVfbmZzZF9maWxlIC0gdHJ5IHRvIHVuaGFz
-aCBhbmQgcXVldWUgYSBuZnNkX2ZpbGUgDQo+ID4gPiA+ID4gK3RvIGJlIGZyZWVkDQo+ID4gPiA+
-ID4gKyAqIEBuZjogbmZzZF9maWxlIHRvIGF0dGVtcHQgdG8gcXVldWUNCj4gPiA+ID4gPiArICog
-QGRpc3Bvc2U6IHByaXZhdGUgbGlzdCB0byBxdWV1ZSBzdWNjZXNzZnVsbHktcHV0IG9iamVjdHMN
-Cj4gPiA+ID4gPiArICoNCj4gPiA+ID4gPiArICogVW5oYXNoIGFuIG5mc2RfZmlsZSwgdHJ5IHRv
-IGdldCBhIHJlZmVyZW5jZSB0byBpdCwgYW5kIHRoZW4gDQo+ID4gPiA+ID4gK3B1dCB0aGF0DQo+
-ID4gPiA+ID4gKyAqIHJlZmVyZW5jZS4gSWYgaXQncyB0aGUgbGFzdCByZWZlcmVuY2UsIHF1ZXVl
-IGl0IHRvIHRoZSBkaXNwb3NlIGxpc3QuDQo+ID4gPiA+ID4gKyAqDQo+ID4gPiA+ID4gKyAqIFRo
-ZSBjYWxsZXIgTVVTVCBob2xkIHRoZSByY3VfcmVhZF9sb2NrKCkgIQ0KPiA+ID4gPg0KPiA+ID4g
-PiBfX25mc2RfZmlsZV9jYWNoZV9wdXJnZSgpIGlzbid0IGhvbGRpbmcgcmN1X3JlYWRfbG9jaygp
-LCBpdCdzIA0KPiA+ID4gPiBob2xkaW5nIHRoZSBuZnNkX211dGV4LiBJcyB0aGlzIGNvbW1lbnQg
-aW5jb3JyZWN0LCBvciBpcyBpdCBqdXN0IA0KPiA+ID4gPiB0b28gc3BlY2lmaWM/IE9yIGRpZCBJ
-IG1pc3Mgc29tZXRoaW5nIG9idmlvdXM/DQo+ID4gPiA+DQo+ID4gPg0KPiA+ID4gSXQncyBpbXBs
-aWNpdGx5IHRha2VuIGJ5IHJoYXNodGFibGVfd2Fsa19zdGFydCBhbmQgcmVsZWFzZWQgYnkgDQo+
-ID4gPiByaGFzaHRhYmxlX3dhbGtfc3RvcC4NCj4gPiA+DQo+ID4gPiBGV0lXLCBpdCdkIGJlIG5p
-Y2UgaWYgdGhlcmUgd2VyZSBhIGxvY2tkZXBfYXNzZXJ0X2hlbGQgZXF1aXZhbGVudCANCj4gPiA+
-IGZvciB0aGUgcmN1X3JlYWRfbG9jaygpIGhlcmUsIGJ1dCBJIGRpZG4ndCBzZWUgb25lIG9mIHRo
-b3NlLg0KPiA+DQo+ID4gV291bGQNCj4gPg0KPiA+IHN0YXRpYyB2b2lkDQo+ID4gbmZzZF9maWxl
-X2NvbmRfcXVldWUoc3RydWN0IG5mc2RfZmlsZSAqbmYsIHN0cnVjdCBsaXN0X2hlYWQgKmRpc3Bv
-c2UpDQo+ID4gICAgICAgX19tdXN0X2hvbGQoUkNVKQ0KPiA+IHsNCj4gPg0KPiA+IGRvIHRoZSB0
-cmljaz8NCj4gPg0KPiANCj4gU2VlbXMgbGlrZSBhIHJlYXNvbmFibGUgdGhpbmcgdG8gYWRkLg0K
-PiANCj4gPg0KPiA+ID4gVGhlcmUgaXMgYQ0KPiA+ID4gcmN1X3JlYWRfbG9ja19oZWxkKCksIGJ1
-dCBJIGRpZG4ndCBzZWUgYSBnb29kIHdheSB0byBnZXQgdGhhdCB0byANCj4gPiA+IGNvbXBpbGUg
-b3V0IHdoZW4gbG9ja2RlcCB3YXMgZGlzYWJsZWQuDQo+ID4gPg0KPiA+ID4gPiA+ICsgKi8NCj4g
-PiA+ID4gPiArc3RhdGljIHZvaWQNCj4gPiA+ID4gPiArbWF5YmVfcXVldWVfbmZzZF9maWxlKHN0
-cnVjdCBuZnNkX2ZpbGUgKm5mLCBzdHJ1Y3QgbGlzdF9oZWFkIA0KPiA+ID4gPiA+ICsqZGlzcG9z
-ZSkNCj4gPiA+ID4NCj4gPiA+ID4gSSBwcmVmZXIgdGhlIG5hbWUgbmZzZF9maWxlX3RyeV90b19x
-dWV1ZSgpIG9yIG5mc2RfZmlsZV90cnlfdG9fZGlzcG9zZSgpLg0KPiA+ID4gPiBuZnNkX2ZpbGVf
-IHNob3VsZCBiZSB0aGUgcHJlZml4IHdoZXJlIHBvc3NpYmxlLiBVbmxlc3MgeW91J3JlIA0KPiA+
-ID4gPiByZWRyaXZpbmcsIEkgY2FuIGZpeCB0aGF0Lg0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+ID4N
-Cj4gPiA+IFJlbmFtZSBhdCB3aWxsLg0KPiA+DQo+ID4gRG9uZSBhbmQgYXBwbGllZCB0byBuZnNk
-LWZpeGVzLCByZXBsYWNpbmcgdjEgb2YgdGhpcyBwYXRjaC4NCj4gPg0KPiANCj4gTEdUTS4gVGhh
-bmtzIQ0KPiANCj4gPg0KPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gKyAgICAgICBpbnQgZGVjcmVt
-ZW50ID0gMTsNCj4gPiA+ID4gPiArDQo+ID4gPiA+ID4gKyAgICAgICAvKiBJZiB3ZSByYWNlZCB3
-aXRoIHNvbWVvbmUgZWxzZSB1bmhhc2hpbmcsIGlnbm9yZSBpdCAqLw0KPiA+ID4gPiA+ICsgICAg
-ICAgaWYgKCFuZnNkX2ZpbGVfdW5oYXNoKG5mKSkNCj4gPiA+ID4gPiArICAgICAgICAgICAgICAg
-cmV0dXJuOw0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiArICAgICAgIC8qIElmIHdlIGNhbid0IGdl
-dCBhIHJlZmVyZW5jZSwgaWdub3JlIGl0ICovDQo+ID4gPiA+ID4gKyAgICAgICBpZiAoIW5mc2Rf
-ZmlsZV9nZXQobmYpKQ0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm47DQo+ID4gPiA+
-ID4gKw0KPiA+ID4gPiA+ICsgICAgICAgLyogRXh0cmEgZGVjcmVtZW50IGlmIHdlIHJlbW92ZSBm
-cm9tIHRoZSBMUlUgKi8NCj4gPiA+ID4gPiArICAgICAgIGlmIChuZnNkX2ZpbGVfbHJ1X3JlbW92
-ZShuZikpDQo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICsrZGVjcmVtZW50Ow0KPiA+ID4gPiA+
-ICsNCj4gPiA+ID4gPiArICAgICAgIC8qIElmIHJlZmNvdW50IGdvZXMgdG8gMCwgdGhlbiBwdXQg
-b24gdGhlIGRpc3Bvc2UgbGlzdCAqLw0KPiA+ID4gPiA+ICsgICAgICAgaWYgKHJlZmNvdW50X3N1
-Yl9hbmRfdGVzdChkZWNyZW1lbnQsICZuZi0+bmZfcmVmKSkgew0KPiA+ID4gPiA+ICsgICAgICAg
-ICAgICAgICBsaXN0X2FkZCgmbmYtPm5mX2xydSwgZGlzcG9zZSk7DQo+ID4gPiA+ID4gKyAgICAg
-ICAgICAgICAgIHRyYWNlX25mc2RfZmlsZV9jbG9zaW5nKG5mKTsNCj4gPiA+ID4gPiArICAgICAg
-IH0NCj4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+ICsNCj4gPiA+ID4gPiAvKioNCj4gPiA+ID4gPiAq
-IG5mc2RfZmlsZV9xdWV1ZV9mb3JfY2xvc2U6IHRyeSB0byBjbG9zZSBvdXQgYW55IG9wZW4gbmZz
-ZF9maWxlcyBmb3IgYW4gaW5vZGUNCj4gPiA+ID4gPiAqIEBpbm9kZTogICBpbm9kZSBvbiB3aGlj
-aCB0byBjbG9zZSBvdXQgbmZzZF9maWxlcw0KPiA+ID4gPiA+IEBAIC02ODgsMzAgKzcyMiwxMiBA
-QCBuZnNkX2ZpbGVfcXVldWVfZm9yX2Nsb3NlKHN0cnVjdCBpbm9kZSANCj4gPiA+ID4gPiAqaW5v
-ZGUsIHN0cnVjdCBsaXN0X2hlYWQgKmRpc3Bvc2UpDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAgICAg
-ICAgIHJjdV9yZWFkX2xvY2soKTsNCj4gPiA+ID4gPiAgICAgICAgIGRvIHsNCj4gPiA+ID4gPiAt
-ICAgICAgICAgICAgICAgaW50IGRlY3JlbWVudCA9IDE7DQo+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+
-ICAgICAgICAgICAgICAgICBuZiA9IHJoYXNodGFibGVfbG9va3VwKCZuZnNkX2ZpbGVfcmhhc2hf
-dGJsLCAma2V5LA0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIG5mc2RfZmlsZV9yaGFzaF9wYXJhbXMpOw0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICBp
-ZiAoIW5mKQ0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGJyZWFrOw0KPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgIC8qIElmIHdlIHJhY2VkIHdpdGggc29tZW9u
-ZSBlbHNlIHVuaGFzaGluZywgaWdub3JlIGl0ICovDQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAg
-IGlmICghbmZzZF9maWxlX3VuaGFzaChuZikpDQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAg
-ICAgICAgY29udGludWU7DQo+ID4gPiA+ID4gLQ0KPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAv
-KiBJZiB3ZSBjYW4ndCBnZXQgYSByZWZlcmVuY2UsIGlnbm9yZSBpdCAqLw0KPiA+ID4gPiA+IC0g
-ICAgICAgICAgICAgICBpZiAoIW5mc2RfZmlsZV9nZXQobmYpKQ0KPiA+ID4gPiA+IC0gICAgICAg
-ICAgICAgICAgICAgICAgIGNvbnRpbnVlOw0KPiA+ID4gPiA+IC0NCj4gPiA+ID4gPiAtICAgICAg
-ICAgICAgICAgLyogRXh0cmEgZGVjcmVtZW50IGlmIHdlIHJlbW92ZSBmcm9tIHRoZSBMUlUgKi8N
-Cj4gPiA+ID4gPiAtICAgICAgICAgICAgICAgaWYgKG5mc2RfZmlsZV9scnVfcmVtb3ZlKG5mKSkN
-Cj4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICArK2RlY3JlbWVudDsNCj4gPiA+ID4g
-PiAtDQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgIC8qIElmIHJlZmNvdW50IGdvZXMgdG8gMCwg
-dGhlbiBwdXQgb24gdGhlIGRpc3Bvc2UgbGlzdCAqLw0KPiA+ID4gPiA+IC0gICAgICAgICAgICAg
-ICBpZiAocmVmY291bnRfc3ViX2FuZF90ZXN0KGRlY3JlbWVudCwgJm5mLT5uZl9yZWYpKSB7DQo+
-ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgbGlzdF9hZGQoJm5mLT5uZl9scnUsIGRp
-c3Bvc2UpOw0KPiA+ID4gPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIHRyYWNlX25mc2RfZmls
-ZV9jbG9zaW5nKG5mKTsNCj4gPiA+ID4gPiAtICAgICAgICAgICAgICAgfQ0KPiA+ID4gPiA+ICsg
-ICAgICAgICAgICAgICBtYXliZV9xdWV1ZV9uZnNkX2ZpbGUobmYsIGRpc3Bvc2UpOw0KPiA+ID4g
-PiA+ICAgICAgICAgfSB3aGlsZSAoMSk7DQo+ID4gPiA+ID4gICAgICAgICByY3VfcmVhZF91bmxv
-Y2soKTsNCj4gPiA+ID4gPiB9DQo+ID4gPiA+ID4gQEAgLTkyOCwxMSArOTQ0LDggQEAgX19uZnNk
-X2ZpbGVfY2FjaGVfcHVyZ2Uoc3RydWN0IG5ldCAqbmV0KQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4g
-ICAgICAgICAgICAgICAgIG5mID0gcmhhc2h0YWJsZV93YWxrX25leHQoJml0ZXIpOw0KPiA+ID4g
-PiA+ICAgICAgICAgICAgICAgICB3aGlsZSAoIUlTX0VSUl9PUl9OVUxMKG5mKSkgew0KPiA+ID4g
-PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGlmICghbmV0IHx8IG5mLT5uZl9uZXQgPT0gbmV0
-KSB7DQo+ID4gPiA+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBuZnNkX2ZpbGVf
-dW5oYXNoKG5mKTsNCj4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG5m
-c2RfZmlsZV9scnVfcmVtb3ZlKG5mKTsNCj4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIGxpc3RfYWRkKCZuZi0+bmZfbHJ1LCAmZGlzcG9zZSk7DQo+ID4gPiA+ID4gLSAg
-ICAgICAgICAgICAgICAgICAgICAgfQ0KPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-IGlmICghbmV0IHx8IG5mLT5uZl9uZXQgPT0gbmV0KQ0KPiA+ID4gPiA+ICsgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgbWF5YmVfcXVldWVfbmZzZF9maWxlKG5mLCANCj4gPiA+ID4gPiAr
-ICZkaXNwb3NlKTsNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICBuZiA9IHJoYXNo
-dGFibGVfd2Fsa19uZXh0KCZpdGVyKTsNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgfQ0KPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gLS0NCj4gPiA+ID4gPiAyLjM5LjANCj4gPiA+ID4gPg0KPiA+ID4g
-Pg0KPiA+ID4gPiAtLQ0KPiA+ID4gPiBDaHVjayBMZXZlcg0KPiA+ID4gPg0KPiA+ID4gPg0KPiA+
-ID4gPg0KPiA+ID4NCj4gPiA+IC0tDQo+ID4gPiBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwu
-b3JnPg0KPiA+DQo+ID4gLS0NCj4gPiBDaHVjayBMZXZlcg0KPiA+DQo+ID4NCj4gPg0KPiANCj4g
-LS0NCj4gSmVmZiBMYXl0b24gPGpsYXl0b25Aa2VybmVsLm9yZz4NCg0K
+
+
+> On Jan 21, 2023, at 4:28 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+>=20
+>=20
+> On 1/21/23 12:12 PM, Chuck Lever III wrote:
+>>=20
+>>> On Jan 21, 2023, at 3:05 PM, Jeff Layton <jlayton@kernel.org> wrote:
+>>>=20
+>>> On Sat, 2023-01-21 at 11:50 -0800, dai.ngo@oracle.com wrote:
+>>>> On 1/21/23 10:56 AM, dai.ngo@oracle.com wrote:
+>>>>> On 1/20/23 3:43 AM, Jeff Layton wrote:
+>>>>>> On Thu, 2023-01-19 at 10:38 -0800, dai.ngo@oracle.com wrote:
+>>>>>>> On 1/19/23 2:56 AM, Jeff Layton wrote:
+>>>>>>>> On Wed, 2023-01-18 at 21:05 -0800, dai.ngo@oracle.com wrote:
+>>>>>>>>> On 1/17/23 11:38 AM, Jeff Layton wrote:
+>>>>>>>>>> There are two different flavors of the nfsd4_copy struct. One is
+>>>>>>>>>> embedded in the compound and is used directly in synchronous
+>>>>>>>>>> copies. The
+>>>>>>>>>> other is dynamically allocated, refcounted and tracked in the cl=
+ient
+>>>>>>>>>> struture. For the embedded one, the cleanup just involves
+>>>>>>>>>> releasing any
+>>>>>>>>>> nfsd_files held on its behalf. For the async one, the cleanup is
+>>>>>>>>>> a bit
+>>>>>>>>>> more involved, and we need to dequeue it from lists, unhash it, =
+etc.
+>>>>>>>>>>=20
+>>>>>>>>>> There is at least one potential refcount leak in this code now.
+>>>>>>>>>> If the
+>>>>>>>>>> kthread_create call fails, then both the src and dst nfsd_files
+>>>>>>>>>> in the
+>>>>>>>>>> original nfsd4_copy object are leaked.
+>>>>>>>>>>=20
+>>>>>>>>>> The cleanup in this codepath is also sort of weird. In the async
+>>>>>>>>>> copy
+>>>>>>>>>> case, we'll have up to four nfsd_file references (src and dst fo=
+r
+>>>>>>>>>> both
+>>>>>>>>>> flavors of copy structure). They are both put at the end of
+>>>>>>>>>> nfsd4_do_async_copy, even though the ones held on behalf of the
+>>>>>>>>>> embedded
+>>>>>>>>>> one outlive that structure.
+>>>>>>>>>>=20
+>>>>>>>>>> Change it so that we always clean up the nfsd_file refs held by =
+the
+>>>>>>>>>> embedded copy structure before nfsd4_copy returns. Rework
+>>>>>>>>>> cleanup_async_copy to handle both inter and intra copies. Elimin=
+ate
+>>>>>>>>>> nfsd4_cleanup_intra_ssc since it now becomes a no-op.
+>>>>>>>>>>=20
+>>>>>>>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>>>>>>>>> ---
+>>>>>>>>>>     fs/nfsd/nfs4proc.c | 23 ++++++++++-------------
+>>>>>>>>>>     1 file changed, 10 insertions(+), 13 deletions(-)
+>>>>>>>>>>=20
+>>>>>>>>>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>>>>>>>>>> index 37a9cc8ae7ae..62b9d6c1b18b 100644
+>>>>>>>>>> --- a/fs/nfsd/nfs4proc.c
+>>>>>>>>>> +++ b/fs/nfsd/nfs4proc.c
+>>>>>>>>>> @@ -1512,7 +1512,6 @@ nfsd4_cleanup_inter_ssc(struct
+>>>>>>>>>> nfsd4_ssc_umount_item *nsui, struct file *filp,
+>>>>>>>>>>         long timeout =3D msecs_to_jiffies(nfsd4_ssc_umount_timeo=
+ut);
+>>>>>>>>>>             nfs42_ssc_close(filp);
+>>>>>>>>>> -    nfsd_file_put(dst);
+>>>>>>>>> I think we still need this, in addition to release_copy_files cal=
+led
+>>>>>>>>> from cleanup_async_copy. For async inter-copy, there are 2 refere=
+nce
+>>>>>>>>> count added to the destination file, one from nfsd4_setup_inter_s=
+sc
+>>>>>>>>> and the other one from dup_copy_fields. The above nfsd_file_put i=
+s
+>>>>>>>>> for
+>>>>>>>>> the count added by dup_copy_fields.
+>>>>>>>>>=20
+>>>>>>>> With this patch, the references held by the original copy structur=
+e
+>>>>>>>> are
+>>>>>>>> put by the call to release_copy_files at the end of nfsd4_copy. Th=
+at
+>>>>>>>> means that the kthread task is only responsible for putting the
+>>>>>>>> references held by the (kmalloc'ed) async_copy structure. So, I th=
+ink
+>>>>>>>> this gets the nfsd_file refcounting right.
+>>>>>>> Yes, I see. One refcount is decremented by release_copy_files at en=
+d
+>>>>>>> of nfsd4_copy and another is decremented by release_copy_files in
+>>>>>>> cleanup_async_copy.
+>>>>>>>=20
+>>>>>>>>>>         fput(filp);
+>>>>>>>>>>             spin_lock(&nn->nfsd_ssc_lock);
+>>>>>>>>>> @@ -1562,13 +1561,6 @@ nfsd4_setup_intra_ssc(struct svc_rqst *rq=
+stp,
+>>>>>>>>>>                      &copy->nf_dst);
+>>>>>>>>>>     }
+>>>>>>>>>>     -static void
+>>>>>>>>>> -nfsd4_cleanup_intra_ssc(struct nfsd_file *src, struct nfsd_file
+>>>>>>>>>> *dst)
+>>>>>>>>>> -{
+>>>>>>>>>> -    nfsd_file_put(src);
+>>>>>>>>>> -    nfsd_file_put(dst);
+>>>>>>>>>> -}
+>>>>>>>>>> -
+>>>>>>>>>>     static void nfsd4_cb_offload_release(struct nfsd4_callback *=
+cb)
+>>>>>>>>>>     {
+>>>>>>>>>>         struct nfsd4_cb_offload *cbo =3D
+>>>>>>>>>> @@ -1683,12 +1675,18 @@ static void dup_copy_fields(struct
+>>>>>>>>>> nfsd4_copy *src, struct nfsd4_copy *dst)
+>>>>>>>>>>         dst->ss_nsui =3D src->ss_nsui;
+>>>>>>>>>>     }
+>>>>>>>>>>     +static void release_copy_files(struct nfsd4_copy *copy)
+>>>>>>>>>> +{
+>>>>>>>>>> +    if (copy->nf_src)
+>>>>>>>>>> +        nfsd_file_put(copy->nf_src);
+>>>>>>>>>> +    if (copy->nf_dst)
+>>>>>>>>>> +        nfsd_file_put(copy->nf_dst);
+>>>>>>>>>> +}
+>>>>>>>>>> +
+>>>>>>>>>>     static void cleanup_async_copy(struct nfsd4_copy *copy)
+>>>>>>>>>>     {
+>>>>>>>>>>         nfs4_free_copy_state(copy);
+>>>>>>>>>> -    nfsd_file_put(copy->nf_dst);
+>>>>>>>>>> -    if (!nfsd4_ssc_is_inter(copy))
+>>>>>>>>>> -        nfsd_file_put(copy->nf_src);
+>>>>>>>>>> +    release_copy_files(copy);
+>>>>>>>>>>         spin_lock(&copy->cp_clp->async_lock);
+>>>>>>>>>>         list_del(&copy->copies);
+>>>>>>>>>> spin_unlock(&copy->cp_clp->async_lock);
+>>>>>>>>>> @@ -1748,7 +1746,6 @@ static int nfsd4_do_async_copy(void *data)
+>>>>>>>>>>         } else {
+>>>>>>>>>>             nfserr =3D nfsd4_do_copy(copy, copy->nf_src->nf_file=
+,
+>>>>>>>>>>                            copy->nf_dst->nf_file, false);
+>>>>>>>>>> -        nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst);
+>>>>>>>>>>         }
+>>>>>>>>>>         do_callback:
+>>>>>>>>>> @@ -1811,9 +1808,9 @@ nfsd4_copy(struct svc_rqst *rqstp, struct
+>>>>>>>>>> nfsd4_compound_state *cstate,
+>>>>>>>>>>         } else {
+>>>>>>>>>>             status =3D nfsd4_do_copy(copy, copy->nf_src->nf_file=
+,
+>>>>>>>>>>                            copy->nf_dst->nf_file, true);
+>>>>>>>>>> -        nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst);
+>>>>>>>>>>         }
+>>>>>>>>>>     out:
+>>>>>>>>>> +    release_copy_files(copy);
+>>>>>>>>>>         return status;
+>>>>>>>>>>     out_err:
+>>>>>>>>> This is unrelated to the reference count issue.
+>>>>>>>>>=20
+>>>>>>>>> Here if this is an inter-copy then we need to decrement the refer=
+ence
+>>>>>>>>> count of the nfsd4_ssc_umount_item so that the vfsmount can be
+>>>>>>>>> unmounted
+>>>>>>>>> later.
+>>>>>>>>>=20
+>>>>>>>> Oh, I think I see what you mean. Maybe something like the (unteste=
+d)
+>>>>>>>> patch below on top of the original patch would fix that?
+>>>>>>>>=20
+>>>>>>>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>>>>>>>> index c9057462b973..7475c593553c 100644
+>>>>>>>> --- a/fs/nfsd/nfs4proc.c
+>>>>>>>> +++ b/fs/nfsd/nfs4proc.c
+>>>>>>>> @@ -1511,8 +1511,10 @@ nfsd4_cleanup_inter_ssc(struct
+>>>>>>>> nfsd4_ssc_umount_item *nsui, struct file *filp,
+>>>>>>>>           struct nfsd_net *nn =3D net_generic(dst->nf_net, nfsd_ne=
+t_id);
+>>>>>>>>           long timeout =3D msecs_to_jiffies(nfsd4_ssc_umount_timeo=
+ut);
+>>>>>>>>    -       nfs42_ssc_close(filp);
+>>>>>>>> -       fput(filp);
+>>>>>>>> +       if (filp) {
+>>>>>>>> +               nfs42_ssc_close(filp);
+>>>>>>>> +               fput(filp);
+>>>>>>>> +       }
+>>>>>>>>              spin_lock(&nn->nfsd_ssc_lo
+>>>>>>>>           list_del(&nsui->nsui_list);
+>>>>>>>> @@ -1813,8 +1815,13 @@ nfsd4_copy(struct svc_rqst *rqstp, struct
+>>>>>>>> nfsd4_compound_state *cstate,
+>>>>>>>>           release_copy_files(copy);
+>>>>>>>>           return status;
+>>>>>>>>    out_err:
+>>>>>>>> -       if (async_copy)
+>>>>>>>> +       if (async_copy) {
+>>>>>>>>                   cleanup_async_copy(async_copy);
+>>>>>>>> +               if (nfsd4_ssc_is_inter(async_copy))
+>>>>>>> We don't need to call nfsd4_cleanup_inter_ssc since the thread
+>>>>>>> nfsd4_do_async_copy has not started yet so the file is not opened.
+>>>>>>> We just need to do refcount_dec(&copy->ss_nsui->nsui_refcnt), unles=
+s
+>>>>>>> you want to change nfsd4_cleanup_inter_ssc to detect this error
+>>>>>>> condition and only decrement the reference count.
+>>>>>>>=20
+>>>>>> Oh yeah, and this would break anyway since the nsui_list head is not
+>>>>>> being initialized. Dai, would you mind spinning up a patch for this
+>>>>>> since you're more familiar with the cleanup here?
+>>>>> Will do. My patch will only fix the unmount issue. Your patch does
+>>>>> the clean up potential nfsd_file refcount leaks in COPY codepath.
+>>>> Or do you want me to merge your patch and mine into one?
+>>>>=20
+>>> It probably is best to merge them, since backporters will probably want
+>>> both patches anyway.
+>> Unless these two changes are somehow interdependent, I'd like to keep
+>> them separate. They address two separate issues, yes?
+>=20
+> Yes.
+>=20
+>>=20
+>> And -- narrow fixes need to go to nfsd-fixes, but clean-ups can wait
+>> for nfsd-next. I'd rather not mix the two types of change.
+>=20
+> Ok. Can we do this:
+>=20
+> 1. Jeff's patch goes to nfsd-fixes since it has the fix for missing
+> reference count.
+
+To make sure I haven't lost track of anything:
+
+The patch you refer to here is this one:
+
+https://lore.kernel.org/linux-nfs/20230117193831.75201-3-jlayton@kernel.org=
+/
+
+Correct?
+
+(I was waiting for Jeff and Olga to come to consensus, and I think
+they have, so I can apply it to nfsd-fixes now).
+
+
+> 2. My fix for the cleanup of allocated memory goes to nfsd-fixes.
+
+And this one hasn't been posted yet, right? Or did I miss it?
+
+
+> 3. I will do the optimization Jeff proposed about list_head and
+> nfsd4_compound in a separate patch that goes into nfsd-next.
+
+That should be fine.
+
+
+> -Dai
+>=20
+>>> Just make yourself the patch author and keep my S-o-b line.
+>>>=20
+>>>> I think we need a bit more cleanup in addition to your patch. When
+>>>> kmalloc(sizeof(*async_copy->cp_src), ..) or nfs4_init_copy_state
+>>>> fails, the async_copy is not initialized yet so calling cleanup_async_=
+copy
+>>>> can be a problem.
+>>>>=20
+>>> Yeah.
+>>>=20
+>>> It may even be best to ensure that the list_head and such are fully
+>>> initialized for both allocated and embedded struct nfsd4_copy's. You
+>>> might shave off a few cpu cycles by not doing that, but it makes things
+>>> more fragile.
+>>>=20
+>>> Even better, we really ought to split a lot of the fields in nfsd4_copy
+>>> into a different structure (maybe nfsd4_async_copy). Trimming down
+>>> struct nfsd4_copy would cut down the size of nfsd4_compound as well
+>>> since it has a union that contains it. I was planning on doing that
+>>> eventually, but if you want to take that on, then that would be fine
+>>> too.
+>>>=20
+>>> --=20
+>>> Jeff Layton <jlayton@kernel.org>
+>> --
+>> Chuck Lever
+
+--
+Chuck Lever
+
+
+
