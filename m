@@ -2,264 +2,420 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6311677FBB
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jan 2023 16:28:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1599A677FCE
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jan 2023 16:32:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232012AbjAWP2n (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Jan 2023 10:28:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34636 "EHLO
+        id S229848AbjAWPcu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Jan 2023 10:32:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232168AbjAWP2m (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Jan 2023 10:28:42 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D46629E38
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Jan 2023 07:28:31 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id qx13so31371582ejb.13
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Jan 2023 07:28:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arrikto-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WLLzIZMG8rGAzz1UctD7Vp4EvQHTycS7tZMKakHdtjU=;
-        b=olGyPzcz9vE2FcveWwyP4UTWADRXrEBTfZcW1HQMMNu73FkK1zN+Ltn8fTwawXQ6Wv
-         HSLxSETw1DLXbZFaHeZY2No7cfjx5dHLzErJxwToW5MCIF+u8Q4U53Jlr/NIoeLo7dwU
-         wXDpxKPn/uyl743m6lNUfST3OZc0FiUbLMQvGEP7vdeDcWmHFOqji20LfAUqyEOs6OVJ
-         HfwCStSbhSsj6dcxC4l+MidH8k8GH9SO0ilECzp7WrRaqKRpizD4dsXZnY9SZQdTv8K9
-         9oE+mimYZxHjMEjmAtrNGcpU3QBjPCcYtWqMbwmlS2ykjA3RYFTSmPAIVf1TIrH9m70A
-         jMEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WLLzIZMG8rGAzz1UctD7Vp4EvQHTycS7tZMKakHdtjU=;
-        b=FqQjBkxk9SdBOxlIQzrGNxp4Wm+MZhXOuo+QyBtZTO8JMwY8ugk7flYODxL5IXtgXQ
-         x5c1UU6fHYHwnj6QchT9DM1sh5Rv5pF2og7D6XhHxPzHhMCWf97F6qKjEk1aYkDn5AMe
-         ibSWIjlKfoagZLk0nR34ihN5nYd2yyjDLZeDs/0EXLAUfpWk5laVlyb4M0KH8/qOpt3M
-         B0e3cv+kl16B3aH/jgVrb62C8MdljbsIQXgcW5NqMwkS5nZ02SiHp2kUm8y1m5aO+sN1
-         v8s9OjBack7mLEZpcgvlUDc1PwW3s10n1H4AVH9OUfvVbwCFIJKRZ2TyQjdsOsctMpeM
-         F4bg==
-X-Gm-Message-State: AFqh2kphpDDvqfIY3N3LF3sbp0I2NUL9K7L+eQA27AitVmXSVLL8uQfS
-        SPp285ISOyC+AsgB9rUgRvmjHg==
-X-Google-Smtp-Source: AMrXdXtzyETs5J/O0KoXzsamMUEg/ibG0CfZbPrZ9Vu3kQwDFJSVL65iOU40WMMH740uvVkhe6Y1cg==
-X-Received: by 2002:a17:907:8b08:b0:860:c12c:14fd with SMTP id sz8-20020a1709078b0800b00860c12c14fdmr29377384ejc.76.1674487709867;
-        Mon, 23 Jan 2023 07:28:29 -0800 (PST)
-Received: from marvin.internal.lan (193.92.101.37.dsl.dyn.forthnet.gr. [193.92.101.37])
-        by smtp.gmail.com with ESMTPSA id 21-20020a170906301500b007c0985aa6b0sm22274876ejz.191.2023.01.23.07.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jan 2023 07:28:29 -0800 (PST)
-From:   Nikos Tsironis <ntsironis@arrikto.com>
-To:     stable@vger.kernel.org
-Cc:     bfields@fieldses.org, chuck.lever@oracle.com,
-        ntsironis@arrikto.com, linux-nfs@vger.kernel.org,
-        trond.myklebust@hammerspace.com
-Subject: [PATCH 5.4 1/1] nfsd: Ensure knfsd shuts down when the "nfsd" pseudofs is unmounted
-Date:   Mon, 23 Jan 2023 17:28:22 +0200
-Message-Id: <20230123152822.868326-2-ntsironis@arrikto.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230123152822.868326-1-ntsironis@arrikto.com>
-References: <20230123152822.868326-1-ntsironis@arrikto.com>
+        with ESMTP id S231537AbjAWPct (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Jan 2023 10:32:49 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC5C146B3
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Jan 2023 07:32:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4118EB80CA9
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Jan 2023 15:32:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C3CC433D2;
+        Mon, 23 Jan 2023 15:32:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674487961;
+        bh=n0ctPfFi7WKDOOpf1r18nyCHSvbSU9vHGsN6cpMOrYE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ugqKWEYGFmjFi9oz6M18NGoFR/FjvnMoSue0XvPI9q8oTLRp7W0/ZgOBgHrDCV0KD
+         6banRRyhCbVpQUaH06peRQ5c33zjju8rqWbSA8DQSBuu/95QpEdcHkZS4bri1KWwM6
+         HWJGuij3Cihcxy6GujFgeXNX7+jKNRaTVnIWu7Xtpb8Rb3jBjWOxS6ZKf7TCbeB5uU
+         TB9olQdGd3tKPMObkpTLgLT4cnRV1NVfbUwYYp+9e8x7rrhW3QtclrxGutcDHjKR5e
+         OPd0Ey6ybRH5k4CAtAJAA+7i+qHW6+Z/x21Gz0c6b15PUxdHrYD2MYJ0d4O0Q4jXDX
+         qHElF5XRhA7oQ==
+Message-ID: <0d93f859badc3e6afe48b153d458f51481b533a6.camel@kernel.org>
+Subject: Re: [PATCH 2/2] nfsd: clean up potential nfsd_file refcount leaks
+ in COPY codepath
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Olga Kornievskaia <aglo@umich.edu>,
+        Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Dai Ngo <dai.ngo@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Mon, 23 Jan 2023 10:32:40 -0500
+In-Reply-To: <CAN-5tyGOF4eg4WpMzh2kWa=UszC9oQGbKXNeKWOU3hpS5KSHNw@mail.gmail.com>
+References: <20230117193831.75201-1-jlayton@kernel.org>
+         <20230117193831.75201-3-jlayton@kernel.org>
+         <9bff17d4-c305-1918-5079-d2e9cf291bc7@oracle.com>
+         <eb5a9fa65a8c2bcc257101c96f7fbbe18a3b74ff.camel@kernel.org>
+         <3ff5458c-88ab-18ab-ebfe-98ba8050fd84@oracle.com>
+         <3a910faf64ab6442fd089f17a0f7834dbf24cd41.camel@kernel.org>
+         <68e2bff9-bf02-4b19-3707-be88b77d8072@oracle.com>
+         <4577f120-9191-c138-299f-eeddc3652e8b@oracle.com>
+         <80fd3e68dd5ed457bf38f4ff0a6086d568cc3cee.camel@kernel.org>
+         <D14F7839-3E42-4592-BF11-4A19905D5AA4@oracle.com>
+         <f52f1cbf-aed4-b0f3-2066-9aa67e2a6003@oracle.com>
+         <71DC929D-D10B-4721-8327-301A7E65312F@oracle.com>
+         <CAN-5tyGOF4eg4WpMzh2kWa=UszC9oQGbKXNeKWOU3hpS5KSHNw@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Mon, 2023-01-23 at 10:22 -0500, Olga Kornievskaia wrote:
+> On Sun, Jan 22, 2023 at 11:46 AM Chuck Lever III <chuck.lever@oracle.com>=
+ wrote:
+> >=20
+> >=20
+> >=20
+> > > On Jan 21, 2023, at 4:28 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+> > >=20
+> > >=20
+> > > On 1/21/23 12:12 PM, Chuck Lever III wrote:
+> > > >=20
+> > > > > On Jan 21, 2023, at 3:05 PM, Jeff Layton <jlayton@kernel.org> wro=
+te:
+> > > > >=20
+> > > > > On Sat, 2023-01-21 at 11:50 -0800, dai.ngo@oracle.com wrote:
+> > > > > > On 1/21/23 10:56 AM, dai.ngo@oracle.com wrote:
+> > > > > > > On 1/20/23 3:43 AM, Jeff Layton wrote:
+> > > > > > > > On Thu, 2023-01-19 at 10:38 -0800, dai.ngo@oracle.com wrote=
+:
+> > > > > > > > > On 1/19/23 2:56 AM, Jeff Layton wrote:
+> > > > > > > > > > On Wed, 2023-01-18 at 21:05 -0800, dai.ngo@oracle.com w=
+rote:
+> > > > > > > > > > > On 1/17/23 11:38 AM, Jeff Layton wrote:
+> > > > > > > > > > > > There are two different flavors of the nfsd4_copy s=
+truct. One is
+> > > > > > > > > > > > embedded in the compound and is used directly in sy=
+nchronous
+> > > > > > > > > > > > copies. The
+> > > > > > > > > > > > other is dynamically allocated, refcounted and trac=
+ked in the client
+> > > > > > > > > > > > struture. For the embedded one, the cleanup just in=
+volves
+> > > > > > > > > > > > releasing any
+> > > > > > > > > > > > nfsd_files held on its behalf. For the async one, t=
+he cleanup is
+> > > > > > > > > > > > a bit
+> > > > > > > > > > > > more involved, and we need to dequeue it from lists=
+, unhash it, etc.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > There is at least one potential refcount leak in th=
+is code now.
+> > > > > > > > > > > > If the
+> > > > > > > > > > > > kthread_create call fails, then both the src and ds=
+t nfsd_files
+> > > > > > > > > > > > in the
+> > > > > > > > > > > > original nfsd4_copy object are leaked.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > The cleanup in this codepath is also sort of weird.=
+ In the async
+> > > > > > > > > > > > copy
+> > > > > > > > > > > > case, we'll have up to four nfsd_file references (s=
+rc and dst for
+> > > > > > > > > > > > both
+> > > > > > > > > > > > flavors of copy structure). They are both put at th=
+e end of
+> > > > > > > > > > > > nfsd4_do_async_copy, even though the ones held on b=
+ehalf of the
+> > > > > > > > > > > > embedded
+> > > > > > > > > > > > one outlive that structure.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > Change it so that we always clean up the nfsd_file =
+refs held by the
+> > > > > > > > > > > > embedded copy structure before nfsd4_copy returns. =
+Rework
+> > > > > > > > > > > > cleanup_async_copy to handle both inter and intra c=
+opies. Eliminate
+> > > > > > > > > > > > nfsd4_cleanup_intra_ssc since it now becomes a no-o=
+p.
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > > > > > > > > ---
+> > > > > > > > > > > >     fs/nfsd/nfs4proc.c | 23 ++++++++++-------------
+> > > > > > > > > > > >     1 file changed, 10 insertions(+), 13 deletions(=
+-)
+> > > > > > > > > > > >=20
+> > > > > > > > > > > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.=
+c
+> > > > > > > > > > > > index 37a9cc8ae7ae..62b9d6c1b18b 100644
+> > > > > > > > > > > > --- a/fs/nfsd/nfs4proc.c
+> > > > > > > > > > > > +++ b/fs/nfsd/nfs4proc.c
+> > > > > > > > > > > > @@ -1512,7 +1512,6 @@ nfsd4_cleanup_inter_ssc(struc=
+t
+> > > > > > > > > > > > nfsd4_ssc_umount_item *nsui, struct file *filp,
+> > > > > > > > > > > >         long timeout =3D msecs_to_jiffies(nfsd4_ssc=
+_umount_timeout);
+> > > > > > > > > > > >             nfs42_ssc_close(filp);
+> > > > > > > > > > > > -    nfsd_file_put(dst);
+> > > > > > > > > > > I think we still need this, in addition to release_co=
+py_files called
+> > > > > > > > > > > from cleanup_async_copy. For async inter-copy, there =
+are 2 reference
+> > > > > > > > > > > count added to the destination file, one from nfsd4_s=
+etup_inter_ssc
+> > > > > > > > > > > and the other one from dup_copy_fields. The above nfs=
+d_file_put is
+> > > > > > > > > > > for
+> > > > > > > > > > > the count added by dup_copy_fields.
+> > > > > > > > > > >=20
+> > > > > > > > > > With this patch, the references held by the original co=
+py structure
+> > > > > > > > > > are
+> > > > > > > > > > put by the call to release_copy_files at the end of nfs=
+d4_copy. That
+> > > > > > > > > > means that the kthread task is only responsible for put=
+ting the
+> > > > > > > > > > references held by the (kmalloc'ed) async_copy structur=
+e. So, I think
+> > > > > > > > > > this gets the nfsd_file refcounting right.
+> > > > > > > > > Yes, I see. One refcount is decremented by release_copy_f=
+iles at end
+> > > > > > > > > of nfsd4_copy and another is decremented by release_copy_=
+files in
+> > > > > > > > > cleanup_async_copy.
+> > > > > > > > >=20
+> > > > > > > > > > > >         fput(filp);
+> > > > > > > > > > > >             spin_lock(&nn->nfsd_ssc_lock);
+> > > > > > > > > > > > @@ -1562,13 +1561,6 @@ nfsd4_setup_intra_ssc(struct=
+ svc_rqst *rqstp,
+> > > > > > > > > > > >                      &copy->nf_dst);
+> > > > > > > > > > > >     }
+> > > > > > > > > > > >     -static void
+> > > > > > > > > > > > -nfsd4_cleanup_intra_ssc(struct nfsd_file *src, str=
+uct nfsd_file
+> > > > > > > > > > > > *dst)
+> > > > > > > > > > > > -{
+> > > > > > > > > > > > -    nfsd_file_put(src);
+> > > > > > > > > > > > -    nfsd_file_put(dst);
+> > > > > > > > > > > > -}
+> > > > > > > > > > > > -
+> > > > > > > > > > > >     static void nfsd4_cb_offload_release(struct nfs=
+d4_callback *cb)
+> > > > > > > > > > > >     {
+> > > > > > > > > > > >         struct nfsd4_cb_offload *cbo =3D
+> > > > > > > > > > > > @@ -1683,12 +1675,18 @@ static void dup_copy_fields=
+(struct
+> > > > > > > > > > > > nfsd4_copy *src, struct nfsd4_copy *dst)
+> > > > > > > > > > > >         dst->ss_nsui =3D src->ss_nsui;
+> > > > > > > > > > > >     }
+> > > > > > > > > > > >     +static void release_copy_files(struct nfsd4_co=
+py *copy)
+> > > > > > > > > > > > +{
+> > > > > > > > > > > > +    if (copy->nf_src)
+> > > > > > > > > > > > +        nfsd_file_put(copy->nf_src);
+> > > > > > > > > > > > +    if (copy->nf_dst)
+> > > > > > > > > > > > +        nfsd_file_put(copy->nf_dst);
+> > > > > > > > > > > > +}
+> > > > > > > > > > > > +
+> > > > > > > > > > > >     static void cleanup_async_copy(struct nfsd4_cop=
+y *copy)
+> > > > > > > > > > > >     {
+> > > > > > > > > > > >         nfs4_free_copy_state(copy);
+> > > > > > > > > > > > -    nfsd_file_put(copy->nf_dst);
+> > > > > > > > > > > > -    if (!nfsd4_ssc_is_inter(copy))
+> > > > > > > > > > > > -        nfsd_file_put(copy->nf_src);
+> > > > > > > > > > > > +    release_copy_files(copy);
+> > > > > > > > > > > >         spin_lock(&copy->cp_clp->async_lock);
+> > > > > > > > > > > >         list_del(&copy->copies);
+> > > > > > > > > > > > spin_unlock(&copy->cp_clp->async_lock);
+> > > > > > > > > > > > @@ -1748,7 +1746,6 @@ static int nfsd4_do_async_cop=
+y(void *data)
+> > > > > > > > > > > >         } else {
+> > > > > > > > > > > >             nfserr =3D nfsd4_do_copy(copy, copy->nf=
+_src->nf_file,
+> > > > > > > > > > > >                            copy->nf_dst->nf_file, f=
+alse);
+> > > > > > > > > > > > -        nfsd4_cleanup_intra_ssc(copy->nf_src, copy=
+->nf_dst);
+> > > > > > > > > > > >         }
+> > > > > > > > > > > >         do_callback:
+> > > > > > > > > > > > @@ -1811,9 +1808,9 @@ nfsd4_copy(struct svc_rqst *r=
+qstp, struct
+> > > > > > > > > > > > nfsd4_compound_state *cstate,
+> > > > > > > > > > > >         } else {
+> > > > > > > > > > > >             status =3D nfsd4_do_copy(copy, copy->nf=
+_src->nf_file,
+> > > > > > > > > > > >                            copy->nf_dst->nf_file, t=
+rue);
+> > > > > > > > > > > > -        nfsd4_cleanup_intra_ssc(copy->nf_src, copy=
+->nf_dst);
+> > > > > > > > > > > >         }
+> > > > > > > > > > > >     out:
+> > > > > > > > > > > > +    release_copy_files(copy);
+> > > > > > > > > > > >         return status;
+> > > > > > > > > > > >     out_err:
+> > > > > > > > > > > This is unrelated to the reference count issue.
+> > > > > > > > > > >=20
+> > > > > > > > > > > Here if this is an inter-copy then we need to decreme=
+nt the reference
+> > > > > > > > > > > count of the nfsd4_ssc_umount_item so that the vfsmou=
+nt can be
+> > > > > > > > > > > unmounted
+> > > > > > > > > > > later.
+> > > > > > > > > > >=20
+> > > > > > > > > > Oh, I think I see what you mean. Maybe something like t=
+he (untested)
+> > > > > > > > > > patch below on top of the original patch would fix that=
+?
+> > > > > > > > > >=20
+> > > > > > > > > > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > > > > > > > > > index c9057462b973..7475c593553c 100644
+> > > > > > > > > > --- a/fs/nfsd/nfs4proc.c
+> > > > > > > > > > +++ b/fs/nfsd/nfs4proc.c
+> > > > > > > > > > @@ -1511,8 +1511,10 @@ nfsd4_cleanup_inter_ssc(struct
+> > > > > > > > > > nfsd4_ssc_umount_item *nsui, struct file *filp,
+> > > > > > > > > >           struct nfsd_net *nn =3D net_generic(dst->nf_n=
+et, nfsd_net_id);
+> > > > > > > > > >           long timeout =3D msecs_to_jiffies(nfsd4_ssc_u=
+mount_timeout);
+> > > > > > > > > >    -       nfs42_ssc_close(filp);
+> > > > > > > > > > -       fput(filp);
+> > > > > > > > > > +       if (filp) {
+> > > > > > > > > > +               nfs42_ssc_close(filp);
+> > > > > > > > > > +               fput(filp);
+> > > > > > > > > > +       }
+> > > > > > > > > >              spin_lock(&nn->nfsd_ssc_lo
+> > > > > > > > > >           list_del(&nsui->nsui_list);
+> > > > > > > > > > @@ -1813,8 +1815,13 @@ nfsd4_copy(struct svc_rqst *rqst=
+p, struct
+> > > > > > > > > > nfsd4_compound_state *cstate,
+> > > > > > > > > >           release_copy_files(copy);
+> > > > > > > > > >           return status;
+> > > > > > > > > >    out_err:
+> > > > > > > > > > -       if (async_copy)
+> > > > > > > > > > +       if (async_copy) {
+> > > > > > > > > >                   cleanup_async_copy(async_copy);
+> > > > > > > > > > +               if (nfsd4_ssc_is_inter(async_copy))
+> > > > > > > > > We don't need to call nfsd4_cleanup_inter_ssc since the t=
+hread
+> > > > > > > > > nfsd4_do_async_copy has not started yet so the file is no=
+t opened.
+> > > > > > > > > We just need to do refcount_dec(&copy->ss_nsui->nsui_refc=
+nt), unless
+> > > > > > > > > you want to change nfsd4_cleanup_inter_ssc to detect this=
+ error
+> > > > > > > > > condition and only decrement the reference count.
+> > > > > > > > >=20
+> > > > > > > > Oh yeah, and this would break anyway since the nsui_list he=
+ad is not
+> > > > > > > > being initialized. Dai, would you mind spinning up a patch =
+for this
+> > > > > > > > since you're more familiar with the cleanup here?
+> > > > > > > Will do. My patch will only fix the unmount issue. Your patch=
+ does
+> > > > > > > the clean up potential nfsd_file refcount leaks in COPY codep=
+ath.
+> > > > > > Or do you want me to merge your patch and mine into one?
+> > > > > >=20
+> > > > > It probably is best to merge them, since backporters will probabl=
+y want
+> > > > > both patches anyway.
+> > > > Unless these two changes are somehow interdependent, I'd like to ke=
+ep
+> > > > them separate. They address two separate issues, yes?
+> > >=20
+> > > Yes.
+> > >=20
+> > > >=20
+> > > > And -- narrow fixes need to go to nfsd-fixes, but clean-ups can wai=
+t
+> > > > for nfsd-next. I'd rather not mix the two types of change.
+> > >=20
+> > > Ok. Can we do this:
+> > >=20
+> > > 1. Jeff's patch goes to nfsd-fixes since it has the fix for missing
+> > > reference count.
+> >=20
+> > To make sure I haven't lost track of anything:
+> >=20
+> > The patch you refer to here is this one:
+> >=20
+> > https://lore.kernel.org/linux-nfs/20230117193831.75201-3-jlayton@kernel=
+.org/
+> >=20
+> > Correct?
+> >=20
+> > (I was waiting for Jeff and Olga to come to consensus, and I think
+> > they have, so I can apply it to nfsd-fixes now).
+>=20
+> Sorry folks but I got a bit lost in the thread. I thought Dai pointed
+> out that we can't remove the put from the nfsd4_cleanup_inter_ssc()
+> because that's the put for the copied structure and not the original
+> file references which is what Jeff's patch is trying to address.
+>=20
 
-commit c6c7f2a84da459bcc3714044e74a9cb66de31039 upstream.
+...and then I replied:
 
-In order to ensure that knfsd threads don't linger once the nfsd
-pseudofs is unmounted (e.g. when the container is killed) we let
-nfsd_umount() shut down those threads and wait for them to exit.
+With this patch, the references held by the original copy structure are
+put by the call to release_copy_files at the end of nfsd4_copy. That
+means that the kthread task is only responsible for putting the
+references held by the (kmalloc'ed) async_copy structure. So, I think
+this gets the nfsd_file refcounting right.
 
-This also should ensure that we don't need to do a kernel mount of
-the pseudofs, since the thread lifetime is now limited by the
-lifetime of the filesystem.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: Nikos Tsironis <ntsironis@arrikto.com>
----
- fs/nfsd/netns.h     |  6 +++---
- fs/nfsd/nfs4state.c |  8 +-------
- fs/nfsd/nfsctl.c    | 14 ++------------
- fs/nfsd/nfsd.h      |  3 +--
- fs/nfsd/nfssvc.c    | 35 ++++++++++++++++++++++++++++++++++-
- 5 files changed, 41 insertions(+), 25 deletions(-)
+>=20
+> > > 2. My fix for the cleanup of allocated memory goes to nfsd-fixes.
+> >=20
+> > And this one hasn't been posted yet, right? Or did I miss it?
+> >=20
+> >=20
+> > > 3. I will do the optimization Jeff proposed about list_head and
+> > > nfsd4_compound in a separate patch that goes into nfsd-next.
+> >=20
+> > That should be fine.
+> >=20
+> >=20
+> > > -Dai
+> > >=20
+> > > > > Just make yourself the patch author and keep my S-o-b line.
+> > > > >=20
+> > > > > > I think we need a bit more cleanup in addition to your patch. W=
+hen
+> > > > > > kmalloc(sizeof(*async_copy->cp_src), ..) or nfs4_init_copy_stat=
+e
+> > > > > > fails, the async_copy is not initialized yet so calling cleanup=
+_async_copy
+> > > > > > can be a problem.
+> > > > > >=20
+> > > > > Yeah.
+> > > > >=20
+> > > > > It may even be best to ensure that the list_head and such are ful=
+ly
+> > > > > initialized for both allocated and embedded struct nfsd4_copy's. =
+You
+> > > > > might shave off a few cpu cycles by not doing that, but it makes =
+things
+> > > > > more fragile.
+> > > > >=20
+> > > > > Even better, we really ought to split a lot of the fields in nfsd=
+4_copy
+> > > > > into a different structure (maybe nfsd4_async_copy). Trimming dow=
+n
+> > > > > struct nfsd4_copy would cut down the size of nfsd4_compound as we=
+ll
+> > > > > since it has a union that contains it. I was planning on doing th=
+at
+> > > > > eventually, but if you want to take that on, then that would be f=
+ine
+> > > > > too.
+> > > > >=20
+> > > > > --
+> > > > > Jeff Layton <jlayton@kernel.org>
+> > > > --
+> > > > Chuck Lever
+> >=20
+> > --
+> > Chuck Lever
+> >=20
+> >=20
+> >=20
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index ed53e206a299..82329b5102c6 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -42,9 +42,6 @@ struct nfsd_net {
- 	bool grace_ended;
- 	time_t boot_time;
- 
--	/* internal mount of the "nfsd" pseudofilesystem: */
--	struct vfsmount *nfsd_mnt;
--
- 	struct dentry *nfsd_client_dir;
- 
- 	/*
-@@ -121,6 +118,9 @@ struct nfsd_net {
- 	wait_queue_head_t ntf_wq;
- 	atomic_t ntf_refcnt;
- 
-+	/* Allow umount to wait for nfsd state cleanup */
-+	struct completion nfsd_shutdown_complete;
-+
- 	/*
- 	 * clientid and stateid data for construction of net unique COPY
- 	 * stateids.
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index de2c3809d15a..5922eceb0176 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7754,14 +7754,9 @@ nfs4_state_start_net(struct net *net)
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	int ret;
- 
--	ret = get_nfsdfs(net);
--	if (ret)
--		return ret;
- 	ret = nfs4_state_create_net(net);
--	if (ret) {
--		mntput(nn->nfsd_mnt);
-+	if (ret)
- 		return ret;
--	}
- 	locks_start_grace(net, &nn->nfsd4_manager);
- 	nfsd4_client_tracking_init(net);
- 	if (nn->track_reclaim_completes && nn->reclaim_str_hashtbl_size == 0)
-@@ -7830,7 +7825,6 @@ nfs4_state_shutdown_net(struct net *net)
- 
- 	nfsd4_client_tracking_exit(net);
- 	nfs4_state_destroy_net(net);
--	mntput(nn->nfsd_mnt);
- }
- 
- void
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 055cc0458f27..a2454739b1cf 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1417,6 +1417,8 @@ static void nfsd_umount(struct super_block *sb)
- {
- 	struct net *net = sb->s_fs_info;
- 
-+	nfsd_shutdown_threads(net);
-+
- 	kill_litter_super(sb);
- 	put_net(net);
- }
-@@ -1429,18 +1431,6 @@ static struct file_system_type nfsd_fs_type = {
- };
- MODULE_ALIAS_FS("nfsd");
- 
--int get_nfsdfs(struct net *net)
--{
--	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
--	struct vfsmount *mnt;
--
--	mnt =  vfs_kern_mount(&nfsd_fs_type, SB_KERNMOUNT, "nfsd", NULL);
--	if (IS_ERR(mnt))
--		return PTR_ERR(mnt);
--	nn->nfsd_mnt = mnt;
--	return 0;
--}
--
- #ifdef CONFIG_PROC_FS
- static int create_proc_exports_entry(void)
- {
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 4ff0c5318a02..3ae9811c0bb9 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -84,11 +84,10 @@ int		nfsd_get_nrthreads(int n, int *, struct net *);
- int		nfsd_set_nrthreads(int n, int *, struct net *);
- int		nfsd_pool_stats_open(struct inode *, struct file *);
- int		nfsd_pool_stats_release(struct inode *, struct file *);
-+void		nfsd_shutdown_threads(struct net *net);
- 
- void		nfsd_destroy(struct net *net);
- 
--int get_nfsdfs(struct net *);
--
- struct nfsdfs_client {
- 	struct kref cl_ref;
- 	void (*cl_release)(struct kref *kref);
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 70684c7ae94b..969a227186fa 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -594,6 +594,37 @@ static const struct svc_serv_ops nfsd_thread_sv_ops = {
- 	.svo_module		= THIS_MODULE,
- };
- 
-+static void nfsd_complete_shutdown(struct net *net)
-+{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+
-+	WARN_ON(!mutex_is_locked(&nfsd_mutex));
-+
-+	nn->nfsd_serv = NULL;
-+	complete(&nn->nfsd_shutdown_complete);
-+}
-+
-+void nfsd_shutdown_threads(struct net *net)
-+{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv;
-+
-+	mutex_lock(&nfsd_mutex);
-+	serv = nn->nfsd_serv;
-+	if (serv == NULL) {
-+		mutex_unlock(&nfsd_mutex);
-+		return;
-+	}
-+
-+	svc_get(serv);
-+	/* Kill outstanding nfsd threads */
-+	serv->sv_ops->svo_setup(serv, NULL, 0);
-+	nfsd_destroy(net);
-+	mutex_unlock(&nfsd_mutex);
-+	/* Wait for shutdown of nfsd_serv to complete */
-+	wait_for_completion(&nn->nfsd_shutdown_complete);
-+}
-+
- int nfsd_create_serv(struct net *net)
- {
- 	int error;
-@@ -611,11 +642,13 @@ int nfsd_create_serv(struct net *net)
- 						&nfsd_thread_sv_ops);
- 	if (nn->nfsd_serv == NULL)
- 		return -ENOMEM;
-+	init_completion(&nn->nfsd_shutdown_complete);
- 
- 	nn->nfsd_serv->sv_maxconn = nn->max_connections;
- 	error = svc_bind(nn->nfsd_serv, net);
- 	if (error < 0) {
- 		svc_destroy(nn->nfsd_serv);
-+		nfsd_complete_shutdown(net);
- 		return error;
- 	}
- 
-@@ -664,7 +697,7 @@ void nfsd_destroy(struct net *net)
- 		svc_shutdown_net(nn->nfsd_serv, net);
- 	svc_destroy(nn->nfsd_serv);
- 	if (destroy)
--		nn->nfsd_serv = NULL;
-+		nfsd_complete_shutdown(net);
- }
- 
- int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
--- 
-2.30.2
-
+--=20
+Jeff Layton <jlayton@kernel.org>
