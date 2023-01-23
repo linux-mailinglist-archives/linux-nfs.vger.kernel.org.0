@@ -2,73 +2,165 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9A1F67875B
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jan 2023 21:16:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DDF76787CF
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Jan 2023 21:32:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232223AbjAWUQV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Jan 2023 15:16:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46378 "EHLO
+        id S232046AbjAWUcy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Jan 2023 15:32:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229842AbjAWUQU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Jan 2023 15:16:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76A5B30297
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Jan 2023 12:15:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674504932;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8FHDhrm7z1CXN/62eDKeyNqEi5s1WjMn66MZ8KY/Cyg=;
-        b=Wm4ZZ7wx2mN+ovZdU1Di924GOwwseSMuWXEOPQ5bTK9MSCvRrJU9I96aVMOrsVLrr4Cx1i
-        JQzRmt8r2qpaef2S4Hor7gcBHJn3cvhLtZakck5Nn748v+LxqUab2mf7796ZVqqbSZb97V
-        YhJlhuqtOGBUyEMaJOBxuho8wtboEAM=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-527-5nxJe6o5Na61OgxNFm2mkg-1; Mon, 23 Jan 2023 15:15:30 -0500
-X-MC-Unique: 5nxJe6o5Na61OgxNFm2mkg-1
-Received: by mail-qv1-f69.google.com with SMTP id k15-20020a0cd68f000000b00535261af1b1so6492961qvi.13
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Jan 2023 12:15:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8FHDhrm7z1CXN/62eDKeyNqEi5s1WjMn66MZ8KY/Cyg=;
-        b=gCnCIgzhR1oxB8/c2L45Z4YrlPC6cgQMjrCT50lo3vPErb5Z/vkm8ujg7tuTWzXaWI
-         v5JEuzXgdqNFxCHq6ruZdyp6h0M+ItfeGDn91CClGGtZU7CmK8bT8yeOWPIrFMMI/s+i
-         KvgDAIrniMwzeKZbi6nhU0o07xl/PCO9SpkgNEzshN0i532ovhsml2Yw+sp0Cf9Gxpn/
-         A0i79UwYPqQnT5X7qYYwFdhUbdSKL8wT92yT3Torfdt9iwEgG+CSH219EqiRjMndbzBc
-         LSTZy7MNwNiLUPqI7oDJ5XOTreS0JPAL20VFpekQiCd4RqFlDQS/D5t4YuXpVkBx0QG+
-         fC6w==
-X-Gm-Message-State: AFqh2krSmYi6CLGOW4wvFXHTwYFU0dsJNQW2WYxFLgOdnnSOo4j4odwp
-        JRx8LT4Vvj+Ck+xFekO2z/FauDHXfdFcOiTJ13cevS66B/lBAa8sAUFH9bYu2WBf8Oq2RiRRPgJ
-        p3qWehj6w4b90Jw6/f6un
-X-Received: by 2002:ac8:66cf:0:b0:3b6:37b2:e9e1 with SMTP id m15-20020ac866cf000000b003b637b2e9e1mr33338063qtp.29.1674504930023;
-        Mon, 23 Jan 2023 12:15:30 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXucDEvZn9qDnAKFk045y7MsQLSKw7BVNLJQ8XaaEWoEboX8LcBfGfhr6qwln0f+YUTEGlHfGA==
-X-Received: by 2002:ac8:66cf:0:b0:3b6:37b2:e9e1 with SMTP id m15-20020ac866cf000000b003b637b2e9e1mr33338036qtp.29.1674504929661;
-        Mon, 23 Jan 2023 12:15:29 -0800 (PST)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id c8-20020ac80548000000b003972790deb9sm25199372qth.84.2023.01.23.12.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jan 2023 12:15:29 -0800 (PST)
-Message-ID: <d65c6afc3f1dfd29e7cc46e1bd00b458c3f0d2f8.camel@redhat.com>
-Subject: Re: [PATCH RFC] NFSD: Convert filecache to rhltable
-From:   Jeff Layton <jlayton@redhat.com>
-To:     Chuck Lever <cel@kernel.org>, neilb@suse.de
-Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 23 Jan 2023 15:15:28 -0500
-In-Reply-To: <167293053710.2587608.15966496749656663379.stgit@manet.1015granger.net>
-References: <167293053710.2587608.15966496749656663379.stgit@manet.1015granger.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
+        with ESMTP id S231663AbjAWUcx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Jan 2023 15:32:53 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30282526F
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Jan 2023 12:32:50 -0800 (PST)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30NKEGn7024162;
+        Mon, 23 Jan 2023 20:32:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=QBfefzQNvOTeIXhtExd5S+nM6RZrQijCn4oCbjxp8+g=;
+ b=SlNh7hJLv5Ot0eWpW4XWUINv25XGt098gfWWmxDn3zbn/XovacmGybsYyk+bdi3iljLv
+ 4ThHtQqYevgBAxt+M/QSjTk+KR0Uk9+e6QtiTFwPdTnbnFkfmKwEDjVtgNNnlWrlCdmi
+ dBwKF1VOrmRL+y9qqZH57VMo/N9ScWJjVEyGhJE6CuRCOgA+h3oLPJt0UXI5VdeP1ZKk
+ OmTNTMdrP2pWUV7TOFCk7uLDROlIS+8X4F0ft7MnuHBftlk1rux/P7/VegcnfkVk12uo
+ ui3CctojqwCZrCWTSf3gQdDH2D9HM/mSr2Penu83b6Y6TaAyWQLVAsbOhOLgZOZkwQbT uQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n86ybbv16-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Jan 2023 20:32:40 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30NKSlwZ023151;
+        Mon, 23 Jan 2023 20:32:39 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2044.outbound.protection.outlook.com [104.47.66.44])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3n86g426tk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Jan 2023 20:32:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=dXvhiCtwVi6l92EMixqFFCha4TQ2HucKd3A7s3WsL+CgcCrU3zXAOo840zbDWIVsSAbvYLxKRlOOizw0XH5xtIRbEGTa1VjMbHi1OqxYDT68/OU01EPU66O01gJVdqbHJ+VOu9oIY+Ybgdi29cf4AbP0xn1rbrDrH3ZjH6CgPQ3NtH93NAaojyXc1nYoFq7NMfHiR/QeEgpxpIHp7hPoQbQsNGmSHn0ZqqF63ToIU2gGIEKuOuqmHzoLoDokFeX5bN/CFIZ5UjThMyrCNMq8NDt4LjuTXxZnz5U2ZKyCiQfbANDWYdFj1oRoTZAs9hMFwmhQ7aZ34W6RVrQmWIllwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QBfefzQNvOTeIXhtExd5S+nM6RZrQijCn4oCbjxp8+g=;
+ b=OTf032ab4csZDF14UCMETfpEqhkC3Jx+r9FSjwk2rhkFdh+T2Ro5nXGhmtOdxh1YJa4gM++mMdLjOSwU21nOg4p7+2cSfiLjVeYsjWB3v1wWw738X7r+9XgzCq5LvNBGA1+7Dgh2MZ0QiN8FkBo1/JfXy5pi4HC19iO0hXhyHDk3XCZClFz6mVkPptG5A3RGKcx8p8kLmaPR1+Uo1kRyP8LNWDOQdSqUacKLxjtwVF7JzJFWKHaSIiOtkVhs8bQ/Q33BN4Bqqg+Yi2IqNMJ+9cbu1jyH1OncZMi1xGhlkpcyRX7glc/PCHYzJ7CZLKrDj8N72k9LSvX++v/HZ8b9ew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QBfefzQNvOTeIXhtExd5S+nM6RZrQijCn4oCbjxp8+g=;
+ b=FIkKRz+uU7OSFF9gRZutcItMgf0uLwjg0/hMefS6KI63syTBADn42Z7yGvL/pGWMOestF7lzlRQ7A8iAG6fjdfwJABq7lG3dwhiVwPP6+JGcDHThT+y2StiaPv7ISmDRNp4GLccpzmqoEwM0O8LvkuRGGALqoueyiMt0i3N93Ic=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by PH0PR10MB7028.namprd10.prod.outlook.com (2603:10b6:510:281::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.13; Mon, 23 Jan
+ 2023 20:32:37 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::940c:19a:12c5:e152]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::940c:19a:12c5:e152%6]) with mapi id 15.20.6043.016; Mon, 23 Jan 2023
+ 20:32:37 +0000
+Message-ID: <eb1f4a5b-ec4b-94dd-9e91-58350e2d143a@oracle.com>
+Date:   Mon, 23 Jan 2023 12:32:34 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [PATCH 2/2] nfsd: clean up potential nfsd_file refcount leaks in
+ COPY codepath
+Content-Language: en-US
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Olga Kornievskaia <aglo@umich.edu>
+References: <20230117193831.75201-1-jlayton@kernel.org>
+ <20230117193831.75201-3-jlayton@kernel.org>
+ <9bff17d4-c305-1918-5079-d2e9cf291bc7@oracle.com>
+ <eb5a9fa65a8c2bcc257101c96f7fbbe18a3b74ff.camel@kernel.org>
+ <3ff5458c-88ab-18ab-ebfe-98ba8050fd84@oracle.com>
+ <3a910faf64ab6442fd089f17a0f7834dbf24cd41.camel@kernel.org>
+ <68e2bff9-bf02-4b19-3707-be88b77d8072@oracle.com>
+ <4577f120-9191-c138-299f-eeddc3652e8b@oracle.com>
+ <80fd3e68dd5ed457bf38f4ff0a6086d568cc3cee.camel@kernel.org>
+ <D14F7839-3E42-4592-BF11-4A19905D5AA4@oracle.com>
+ <f52f1cbf-aed4-b0f3-2066-9aa67e2a6003@oracle.com>
+ <71DC929D-D10B-4721-8327-301A7E65312F@oracle.com>
+From:   dai.ngo@oracle.com
+In-Reply-To: <71DC929D-D10B-4721-8327-301A7E65312F@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SA9PR13CA0105.namprd13.prod.outlook.com
+ (2603:10b6:806:24::20) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|PH0PR10MB7028:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1dd8fe85-a5de-4c39-c04e-08dafd80f75a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /jdybZovCIdr37uiZceG2Gdxkm48IawKXFUOLK2WbqPbkzIGwfZV4nmzsEx5F0XWF9wBQPSoEvrTUoNcWaruFzn46tFDMO5u/1ijx450ArtZcLdj8K0aWtaoyMuhA72CRR0FHujvgZpZiNEangzKOSPG/+o+Vnvr/2BodDjU9z1csqnDSV7HbHZCmkK/JTgwWRyLq2OgYZP8dBF4USIomenScm1A0UKv9/KIceQGhwDtRCztQqy0EM2DM0dz/ZUzWNDr4/Q/5X5iSoENvfG0ebMf2kAiMVUl+yI55rsaEMUKi/CKER7JtCxPp6XjL3M+ETr0yL6If5soqXArt/W1ivrzQb8TMFHk7NpQGNA22EOa9arOw58SzVjZsHVAeKh6k/7F+oevidYYBE7XaoQgo68PbhRCdSJXiKWXz61UmMk6eEUqdNsydBeQ9eo8qtndbtLGi3aVPelZTv6/G60taZkHsdZKZKAsCWSncqm3V1vPXt/UHTlJiiYHz8CjJdjBhETrXXrrCaFMhnf9iQetnZNeLsLIxeWs5ugEo08Y8LBC7CobEBRtMRP44jUOSyQGlB7g4RoxB68Azdts953A2A4ShRhnhETbkg1hnvOmN34KSVKn1NzaWj0eQh36xAWIjp7azv5ZJWsTTBxBafS2ZDSfOBZyD0JQRKaXcp5lIHWYGgkRIvWj/rBzlKSpAF7hx3B3rMxOLoIm63guPvNmIwWLxSpzEcrjG5P0057bu3M=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(346002)(39860400002)(366004)(396003)(136003)(451199015)(2616005)(83380400001)(6666004)(6512007)(9686003)(6506007)(26005)(53546011)(86362001)(186003)(31696002)(36756003)(38100700002)(31686004)(41300700001)(2906002)(5660300002)(6862004)(30864003)(8936002)(478600001)(6486002)(966005)(316002)(4326008)(66556008)(66946007)(37006003)(8676002)(66476007)(54906003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y29TVVh4WUZQd3loRGVUaXd2RUJhU1RyS3dOOG1DZWJ6RUZsMGlUK0tnMVBF?=
+ =?utf-8?B?VTdzVy8rNUh5ZmlHQ2lzZXkrQzBqQ0NobmU0cXJJbHRzbG01bEpwNGpsbTFB?=
+ =?utf-8?B?QlcrYjBuNXpjd1dhUFR1Qk9HM05EQjF1SXgrUTc4U1crWW1lS2FpdnI5NXIw?=
+ =?utf-8?B?eU9LQ0ZIQkR6MUVFYXZlSTNreTVFQVBpWUJzc0VqVWJiVTFkWGZERVR2NVR1?=
+ =?utf-8?B?cm9vN3l3ZWQ3c21nSE1UY1BUaUxPQlNiRG5WM3d0YWdvd0hXLzI4dEl2Tm9Q?=
+ =?utf-8?B?MFhWR0p0Y1ZWUTdjS1NTTU1vVCtFVnhJVkZZdjJ3RWFrM1VISzBwQmZPVUFp?=
+ =?utf-8?B?cnhGeFQrM29jeUxsUkJYSnNpdzJRYUdkWXFTTTVlcGNCM1hKUHBOZzdvYVd5?=
+ =?utf-8?B?OXBWV0QxVjRKcjNVWTlZOXhybjR6U1pkYVM1alhESHlGRCttV1BjN3lkN3RY?=
+ =?utf-8?B?V3IwdWZlSUFOVnh4a1FqTHR1WFZUamhxVHMxdVNCbEs4a1RWcks2a09qVnZH?=
+ =?utf-8?B?cStlZWZoMGFXNnViOG5RYlFObDRCVGQybWJueDBCNXdBQk50VWc2d21ydCty?=
+ =?utf-8?B?VTNqNjhEcmxHUTJ6VmpUU0MvRFpoUTZZM25US3UzVGJJNFMxdHY3TUFEVDJG?=
+ =?utf-8?B?TGxOSEVwQThUZHducjJ1N0xzVHY4ZWRUcUFEeGNKYzlLY3gyODhTYzZ5TUN3?=
+ =?utf-8?B?QURYeGpBOTFnaFBnaFlFUW9SMnplN2FwWHd4QlYzWTJTUmxsYzRueXpDcCtL?=
+ =?utf-8?B?SVlvZlE1QzlHbG8vWUh5NDZRR2J0b2lHNnNBVjZBQ2QyMzRJMzduYUR3bGl6?=
+ =?utf-8?B?Q1RmSndXQWhISU5BUmJXQ3NQY3FPYnRrUHJyNGZvcHNwbEU0aDNtYnR4QXFx?=
+ =?utf-8?B?aFZaOGxwUzFBUU0zRThFZ1RiM0RIRkN2SC9JdzZDQ2xsTWZKS1oyNENsZE1l?=
+ =?utf-8?B?bllYL3kzYnBZOCsya3hYOTRkSVM1T3BNQS9rb2hCQktKVXBIWFBMUmIzU2p5?=
+ =?utf-8?B?TDdxeWJDYXIvTjRtc1VxcGxMQjhFY1kySVB5L3hYQTRxTk5nek9SZlFtSUpI?=
+ =?utf-8?B?RlhkU1h5SE9JL2ozVmFZMmQwMDI3WHRlc1pTdW1FWDg1WXJWbUxLUzJMaTA3?=
+ =?utf-8?B?Y3BBR1lCSXI5ZnY3SW9lT0x1amxmWjBZZXlkUm9GYlloM1hIcUV0dHJnQ3JZ?=
+ =?utf-8?B?NTFSbHJjNG1lLzh1WnF3V3JhY2wvZXJVenNtV1BSbmJQSkdDUjBBZCtWYXEr?=
+ =?utf-8?B?N2s0MHh0TERjL2VJQU5raC9BbGVRSzROTFJ1NWNET0Z6RlNwVzZFak5IejZj?=
+ =?utf-8?B?MVlZY1lZS1lWQ3J4RHByeGVoNGFKMDhia2h2T0dtdTlWTjd6VmRLbTFkOExF?=
+ =?utf-8?B?V0VGQkVTSFZrUFM1TDQzZWxOV2hsWE40cXpuMFdWdnNLai9naStoemhjclVU?=
+ =?utf-8?B?OE5XbnlPbU9Fai9DODhvVEtYSEYyVlg0M01WZTBzS0RVMWhMU2hkNGdLdWpB?=
+ =?utf-8?B?QVlYTUsveXBEOUtoYXZVenprV0ZObWtXKzVyNS9YRkFScjkzcmFIR0dvT3lt?=
+ =?utf-8?B?cHRDWGxYeVVDZWphOCs1d2pEY3RocmhsQkZNSFZOemlxWEh2WGtXSkw2djRu?=
+ =?utf-8?B?USs0MkVtUDZvSkdtMVVKSmxBTVlBM05jdVZKL0M4NWpsMWZuK3BXSyt4bkx3?=
+ =?utf-8?B?OERFR3gxR0Z4b0JqcGJoTStPdnlXTzZGZDU5TUM5VXBhcHJ5cmRkVERrME9p?=
+ =?utf-8?B?Sy9RNmViVkF3QUg2bks1Qkplc205cm9nNitvN0FUdHNFTmVvUlk5UW9zWGlQ?=
+ =?utf-8?B?aFdaRFdsdWloOHdQUzU3Yk4vMDVjeUFBVDd3dGk5cDlMQUtVMVY2NHRJVGN4?=
+ =?utf-8?B?cExMb2VnWXJSMkh6SjAzazkwcnY3M3IraFM3M0c2anVueXNlZ2Nwd2FnUmgx?=
+ =?utf-8?B?a00rRkt5dUFrWk9Ydk16WTV0eGYrV1E3UlVNa2t1TjROcXA3bFdqVEhUT2lv?=
+ =?utf-8?B?d3RTemhFdHZ0dlZtY3dwcllxQ0JuTlFnWjBYVWlTeEdRdktOUk9Kb1hnQmdS?=
+ =?utf-8?B?WDRPdms3QjFEak5YbE9zSGF4bXBzcXdmVVhIK0QzTGgzeCtDTDJxSVNLQTFw?=
+ =?utf-8?Q?trbhwYdNjd5OossMp9J8QByoZ?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: cmoUKJt6RRWW4tt1ivJjfwH0gBjNVn1llnzOHda4qE8HSzaTQsBs33aSqmCGCDxbxVNz4ssus32Ay95tYul5fV0IiCppM30PFkw+qs2IW8OwLvS2Q/uiyw+A8eAdtVFrjCMCuqTJnwRERXnwdKPixUXZ/v0fFVH2hOM59pwiIQt8zP7AyVhezmjHzrftfrUY+axZsRub0vQTFBgjLV720dXCGTt6KTG8A5XK4Z1bZsEYNVYWFDBgvEjfcmkMYkHVHhAJNHGOS2ukBTfPMACyMnMUc8AuY8rNCVj4hkceLa1sHqXTxjkCNjQ3Arizb7uEbPX5W8VX/XxVjzmoROHEuErMiGF9gF6yDCqiyuEGTleM/cZGL9jQUM4QlJ+IPmHm5QiN/mvqSdC4JlqHB88OWRgb16eZnvnvWVIjIuFRc8mygShM4w1qesFQ44bpnpTd1SYUtauDI2Si0rLsEMX2Ydh/N+vbXZLsrPcpXCxNlpLyvaN8MBLUrz29afvQLbxFmcVuCf6usnJ0QxCldnbV6BNTg0U0CUWQkG2FIdLJtL4X7Rd3o7aDFLgszqFRp7C5R8JFuzWx3NhEKv5n548G5AJtAyqPw/OcE3rWeWWQ9gZdr9/ILJUDsAPOjRosRYautHUn4pCGGyYtx05ikAFx2a6oSanKOEnt0QwSWay7lfUHR9WuEwgIinEWTULEeLAMmk+kCQw+64LZ/DJkERZVMzxGKnpM/gmX4+s58WYmt0g+P+zqqN+YLvNIk2jRRi/4QADPZfRpIAmnpO7NXvI5b3gXoDRkUrtpGp25pxyRvtdNSIGPLzr1W9L+9j2J7LLf
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1dd8fe85-a5de-4c39-c04e-08dafd80f75a
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2023 20:32:37.5938
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YDmkIfZS9teWat7V8ZDhFnaxy54qeszI7mhdJcL6Oub0i//w/2ckePee0HOA6ndp8Pv/vPkz7LRYycO7iqqd6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB7028
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-23_12,2023-01-23_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 adultscore=0 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301230195
+X-Proofpoint-GUID: TYmx0hVk9w-YvOLYh5WO88hFay7LcsXv
+X-Proofpoint-ORIG-GUID: TYmx0hVk9w-YvOLYh5WO88hFay7LcsXv
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,547 +169,256 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2023-01-05 at 09:58 -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> While we were converting the nfs4_file hashtable to use the kernel's
-> resizable hashtable data structure, Neil Brown observed that the
-> list variant (rhltable) would be better for managing nfsd_file items
-> as well. The nfsd_file hash table will contain multiple entries for
-> the same inode -- these should be kept together on a list. And, it
-> could be possible for exotic or malicious client behavior to cause
-> the hash table to resize itself on every insertion.
->=20
-> A nice simplification is that rhltable_lookup() can return a list
-> that contains only nfsd_file items that match a given inode, which
-> enables us to eliminate specialized hash table helper functions and
-> use the default functions provided by the rhashtable implementation).
->=20
-> Since we are now storing nfsd_file items for the same inode on a
-> single list, that effectively reduces the number of hash entries
-> that have to be tracked in the hash table. The mininum bucket count
-> is therefore lowered.
->=20
-> Suggested-by: Neil Brown <neilb@suse.de>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/filecache.c |  289 +++++++++++++++++++--------------------------=
-------
->  fs/nfsd/filecache.h |    9 +-
->  2 files changed, 115 insertions(+), 183 deletions(-)
->=20
-> Just to note that this work is still in the wings. It would need to
-> be rebased on Jeff's recent fixes and clean-ups. I'm reluctant to
-> apply this until there is more evidence that the instability in v6.0
-> has been duly addressed.
->=20
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 45b2c9e3f636..f04e722bb6bc 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -74,70 +74,9 @@ static struct list_lru			nfsd_file_lru;
->  static unsigned long			nfsd_file_flags;
->  static struct fsnotify_group		*nfsd_file_fsnotify_group;
->  static struct delayed_work		nfsd_filecache_laundrette;
-> -static struct rhashtable		nfsd_file_rhash_tbl
-> +static struct rhltable			nfsd_file_rhltable
->  						____cacheline_aligned_in_smp;
-> =20
-> -enum nfsd_file_lookup_type {
-> -	NFSD_FILE_KEY_INODE,
-> -	NFSD_FILE_KEY_FULL,
-> -};
-> -
-> -struct nfsd_file_lookup_key {
-> -	struct inode			*inode;
-> -	struct net			*net;
-> -	const struct cred		*cred;
-> -	unsigned char			need;
-> -	bool				gc;
-> -	enum nfsd_file_lookup_type	type;
-> -};
-> -
-> -/*
-> - * The returned hash value is based solely on the address of an in-code
-> - * inode, a pointer to a slab-allocated object. The entropy in such a
-> - * pointer is concentrated in its middle bits.
-> - */
-> -static u32 nfsd_file_inode_hash(const struct inode *inode, u32 seed)
-> -{
-> -	unsigned long ptr =3D (unsigned long)inode;
-> -	u32 k;
-> -
-> -	k =3D ptr >> L1_CACHE_SHIFT;
-> -	k &=3D 0x00ffffff;
-> -	return jhash2(&k, 1, seed);
-> -}
-> -
-> -/**
-> - * nfsd_file_key_hashfn - Compute the hash value of a lookup key
-> - * @data: key on which to compute the hash value
-> - * @len: rhash table's key_len parameter (unused)
-> - * @seed: rhash table's random seed of the day
-> - *
-> - * Return value:
-> - *   Computed 32-bit hash value
-> - */
-> -static u32 nfsd_file_key_hashfn(const void *data, u32 len, u32 seed)
-> -{
-> -	const struct nfsd_file_lookup_key *key =3D data;
-> -
-> -	return nfsd_file_inode_hash(key->inode, seed);
-> -}
-> -
-> -/**
-> - * nfsd_file_obj_hashfn - Compute the hash value of an nfsd_file
-> - * @data: object on which to compute the hash value
-> - * @len: rhash table's key_len parameter (unused)
-> - * @seed: rhash table's random seed of the day
-> - *
-> - * Return value:
-> - *   Computed 32-bit hash value
-> - */
-> -static u32 nfsd_file_obj_hashfn(const void *data, u32 len, u32 seed)
-> -{
-> -	const struct nfsd_file *nf =3D data;
-> -
-> -	return nfsd_file_inode_hash(nf->nf_inode, seed);
-> -}
-> -
->  static bool
->  nfsd_match_cred(const struct cred *c1, const struct cred *c2)
->  {
-> @@ -158,53 +97,16 @@ nfsd_match_cred(const struct cred *c1, const struct =
-cred *c2)
->  	return true;
->  }
-> =20
-> -/**
-> - * nfsd_file_obj_cmpfn - Match a cache item against search criteria
-> - * @arg: search criteria
-> - * @ptr: cache item to check
-> - *
-> - * Return values:
-> - *   %0 - Item matches search criteria
-> - *   %1 - Item does not match search criteria
-> - */
-> -static int nfsd_file_obj_cmpfn(struct rhashtable_compare_arg *arg,
-> -			       const void *ptr)
-> -{
-> -	const struct nfsd_file_lookup_key *key =3D arg->key;
-> -	const struct nfsd_file *nf =3D ptr;
-> -
-> -	switch (key->type) {
-> -	case NFSD_FILE_KEY_INODE:
-> -		if (nf->nf_inode !=3D key->inode)
-> -			return 1;
-> -		break;
-> -	case NFSD_FILE_KEY_FULL:
-> -		if (nf->nf_inode !=3D key->inode)
-> -			return 1;
-> -		if (nf->nf_may !=3D key->need)
-> -			return 1;
-> -		if (nf->nf_net !=3D key->net)
-> -			return 1;
-> -		if (!nfsd_match_cred(nf->nf_cred, key->cred))
-> -			return 1;
-> -		if (!!test_bit(NFSD_FILE_GC, &nf->nf_flags) !=3D key->gc)
-> -			return 1;
-> -		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0)
-> -			return 1;
-> -		break;
-> -	}
-> -	return 0;
-> -}
-> -
->  static const struct rhashtable_params nfsd_file_rhash_params =3D {
->  	.key_len		=3D sizeof_field(struct nfsd_file, nf_inode),
->  	.key_offset		=3D offsetof(struct nfsd_file, nf_inode),
-> -	.head_offset		=3D offsetof(struct nfsd_file, nf_rhash),
-> -	.hashfn			=3D nfsd_file_key_hashfn,
-> -	.obj_hashfn		=3D nfsd_file_obj_hashfn,
-> -	.obj_cmpfn		=3D nfsd_file_obj_cmpfn,
-> -	/* Reduce resizing churn on light workloads */
-> -	.min_size		=3D 512,		/* buckets */
-> +	.head_offset		=3D offsetof(struct nfsd_file, nf_rlist),
-> +
-> +	/*
-> +	 * Start with a single page hash table to reduce resizing churn
-> +	 * on light workloads.
-> +	 */
-> +	.min_size		=3D 256,
->  	.automatic_shrinking	=3D true,
->  };
-> =20
-> @@ -307,27 +209,27 @@ nfsd_file_mark_find_or_create(struct nfsd_file *nf,=
- struct inode *inode)
->  }
-> =20
->  static struct nfsd_file *
-> -nfsd_file_alloc(struct nfsd_file_lookup_key *key, unsigned int may)
-> +nfsd_file_alloc(struct net *net, struct inode *inode, unsigned char need=
-,
-> +		bool want_gc)
->  {
->  	struct nfsd_file *nf;
-> =20
->  	nf =3D kmem_cache_alloc(nfsd_file_slab, GFP_KERNEL);
-> -	if (nf) {
-> -		INIT_LIST_HEAD(&nf->nf_lru);
-> -		nf->nf_birthtime =3D ktime_get();
-> -		nf->nf_file =3D NULL;
-> -		nf->nf_cred =3D get_current_cred();
-> -		nf->nf_net =3D key->net;
-> -		nf->nf_flags =3D 0;
-> -		__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
-> -		__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
-> -		if (key->gc)
-> -			__set_bit(NFSD_FILE_GC, &nf->nf_flags);
-> -		nf->nf_inode =3D key->inode;
-> -		refcount_set(&nf->nf_ref, 1);
-> -		nf->nf_may =3D key->need;
-> -		nf->nf_mark =3D NULL;
-> -	}
-> +	if (unlikely(!nf))
-> +		return NULL;
-> +
-> +	INIT_LIST_HEAD(&nf->nf_lru);
-> +	nf->nf_birthtime =3D ktime_get();
-> +	nf->nf_file =3D NULL;
-> +	nf->nf_cred =3D get_current_cred();
-> +	nf->nf_net =3D net;
-> +	nf->nf_flags =3D want_gc ?
-> +		BIT(NFSD_FILE_HASHED) | BIT(NFSD_FILE_PENDING) | BIT(NFSD_FILE_GC) :
-> +		BIT(NFSD_FILE_HASHED) | BIT(NFSD_FILE_PENDING);
-> +	nf->nf_inode =3D inode;
-> +	refcount_set(&nf->nf_ref, 1);
-> +	nf->nf_may =3D need;
-> +	nf->nf_mark =3D NULL;
->  	return nf;
->  }
-> =20
-> @@ -362,8 +264,8 @@ nfsd_file_hash_remove(struct nfsd_file *nf)
-> =20
->  	if (nfsd_file_check_write_error(nf))
->  		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
-> -	rhashtable_remove_fast(&nfsd_file_rhash_tbl, &nf->nf_rhash,
-> -			       nfsd_file_rhash_params);
-> +	rhltable_remove(&nfsd_file_rhltable, &nf->nf_rlist,
-> +			nfsd_file_rhash_params);
->  }
-> =20
->  static bool
-> @@ -680,21 +582,19 @@ static struct shrinker	nfsd_file_shrinker =3D {
->  static void
->  nfsd_file_queue_for_close(struct inode *inode, struct list_head *dispose=
-)
->  {
-> -	struct nfsd_file_lookup_key key =3D {
-> -		.type	=3D NFSD_FILE_KEY_INODE,
-> -		.inode	=3D inode,
-> -	};
-> -	struct nfsd_file *nf;
-> -
->  	rcu_read_lock();
->  	do {
-> +		struct rhlist_head *list;
-> +		struct nfsd_file *nf;
->  		int decrement =3D 1;
-> =20
-> -		nf =3D rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
-> +		list =3D rhltable_lookup(&nfsd_file_rhltable, &inode,
->  				       nfsd_file_rhash_params);
-> -		if (!nf)
-> +		if (!list)
->  			break;
-> =20
 
-Rather than redriving the lookup multiple times in the loop, would it be
-better to just search once and then walk the resulting list with
-rhl_for_each_entry_rcu, all while holding the rcu_read_lock?
+On 1/22/23 8:45 AM, Chuck Lever III wrote:
+>
+>> On Jan 21, 2023, at 4:28 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+>>
+>>
+>> On 1/21/23 12:12 PM, Chuck Lever III wrote:
+>>>> On Jan 21, 2023, at 3:05 PM, Jeff Layton <jlayton@kernel.org> wrote:
+>>>>
+>>>> On Sat, 2023-01-21 at 11:50 -0800, dai.ngo@oracle.com wrote:
+>>>>> On 1/21/23 10:56 AM, dai.ngo@oracle.com wrote:
+>>>>>> On 1/20/23 3:43 AM, Jeff Layton wrote:
+>>>>>>> On Thu, 2023-01-19 at 10:38 -0800, dai.ngo@oracle.com wrote:
+>>>>>>>> On 1/19/23 2:56 AM, Jeff Layton wrote:
+>>>>>>>>> On Wed, 2023-01-18 at 21:05 -0800, dai.ngo@oracle.com wrote:
+>>>>>>>>>> On 1/17/23 11:38 AM, Jeff Layton wrote:
+>>>>>>>>>>> There are two different flavors of the nfsd4_copy struct. One is
+>>>>>>>>>>> embedded in the compound and is used directly in synchronous
+>>>>>>>>>>> copies. The
+>>>>>>>>>>> other is dynamically allocated, refcounted and tracked in the client
+>>>>>>>>>>> struture. For the embedded one, the cleanup just involves
+>>>>>>>>>>> releasing any
+>>>>>>>>>>> nfsd_files held on its behalf. For the async one, the cleanup is
+>>>>>>>>>>> a bit
+>>>>>>>>>>> more involved, and we need to dequeue it from lists, unhash it, etc.
+>>>>>>>>>>>
+>>>>>>>>>>> There is at least one potential refcount leak in this code now.
+>>>>>>>>>>> If the
+>>>>>>>>>>> kthread_create call fails, then both the src and dst nfsd_files
+>>>>>>>>>>> in the
+>>>>>>>>>>> original nfsd4_copy object are leaked.
+>>>>>>>>>>>
+>>>>>>>>>>> The cleanup in this codepath is also sort of weird. In the async
+>>>>>>>>>>> copy
+>>>>>>>>>>> case, we'll have up to four nfsd_file references (src and dst for
+>>>>>>>>>>> both
+>>>>>>>>>>> flavors of copy structure). They are both put at the end of
+>>>>>>>>>>> nfsd4_do_async_copy, even though the ones held on behalf of the
+>>>>>>>>>>> embedded
+>>>>>>>>>>> one outlive that structure.
+>>>>>>>>>>>
+>>>>>>>>>>> Change it so that we always clean up the nfsd_file refs held by the
+>>>>>>>>>>> embedded copy structure before nfsd4_copy returns. Rework
+>>>>>>>>>>> cleanup_async_copy to handle both inter and intra copies. Eliminate
+>>>>>>>>>>> nfsd4_cleanup_intra_ssc since it now becomes a no-op.
+>>>>>>>>>>>
+>>>>>>>>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>>>>>>>>>> ---
+>>>>>>>>>>>      fs/nfsd/nfs4proc.c | 23 ++++++++++-------------
+>>>>>>>>>>>      1 file changed, 10 insertions(+), 13 deletions(-)
+>>>>>>>>>>>
+>>>>>>>>>>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>>>>>>>>>>> index 37a9cc8ae7ae..62b9d6c1b18b 100644
+>>>>>>>>>>> --- a/fs/nfsd/nfs4proc.c
+>>>>>>>>>>> +++ b/fs/nfsd/nfs4proc.c
+>>>>>>>>>>> @@ -1512,7 +1512,6 @@ nfsd4_cleanup_inter_ssc(struct
+>>>>>>>>>>> nfsd4_ssc_umount_item *nsui, struct file *filp,
+>>>>>>>>>>>          long timeout = msecs_to_jiffies(nfsd4_ssc_umount_timeout);
+>>>>>>>>>>>              nfs42_ssc_close(filp);
+>>>>>>>>>>> -    nfsd_file_put(dst);
+>>>>>>>>>> I think we still need this, in addition to release_copy_files called
+>>>>>>>>>> from cleanup_async_copy. For async inter-copy, there are 2 reference
+>>>>>>>>>> count added to the destination file, one from nfsd4_setup_inter_ssc
+>>>>>>>>>> and the other one from dup_copy_fields. The above nfsd_file_put is
+>>>>>>>>>> for
+>>>>>>>>>> the count added by dup_copy_fields.
+>>>>>>>>>>
+>>>>>>>>> With this patch, the references held by the original copy structure
+>>>>>>>>> are
+>>>>>>>>> put by the call to release_copy_files at the end of nfsd4_copy. That
+>>>>>>>>> means that the kthread task is only responsible for putting the
+>>>>>>>>> references held by the (kmalloc'ed) async_copy structure. So, I think
+>>>>>>>>> this gets the nfsd_file refcounting right.
+>>>>>>>> Yes, I see. One refcount is decremented by release_copy_files at end
+>>>>>>>> of nfsd4_copy and another is decremented by release_copy_files in
+>>>>>>>> cleanup_async_copy.
+>>>>>>>>
+>>>>>>>>>>>          fput(filp);
+>>>>>>>>>>>              spin_lock(&nn->nfsd_ssc_lock);
+>>>>>>>>>>> @@ -1562,13 +1561,6 @@ nfsd4_setup_intra_ssc(struct svc_rqst *rqstp,
+>>>>>>>>>>>                       &copy->nf_dst);
+>>>>>>>>>>>      }
+>>>>>>>>>>>      -static void
+>>>>>>>>>>> -nfsd4_cleanup_intra_ssc(struct nfsd_file *src, struct nfsd_file
+>>>>>>>>>>> *dst)
+>>>>>>>>>>> -{
+>>>>>>>>>>> -    nfsd_file_put(src);
+>>>>>>>>>>> -    nfsd_file_put(dst);
+>>>>>>>>>>> -}
+>>>>>>>>>>> -
+>>>>>>>>>>>      static void nfsd4_cb_offload_release(struct nfsd4_callback *cb)
+>>>>>>>>>>>      {
+>>>>>>>>>>>          struct nfsd4_cb_offload *cbo =
+>>>>>>>>>>> @@ -1683,12 +1675,18 @@ static void dup_copy_fields(struct
+>>>>>>>>>>> nfsd4_copy *src, struct nfsd4_copy *dst)
+>>>>>>>>>>>          dst->ss_nsui = src->ss_nsui;
+>>>>>>>>>>>      }
+>>>>>>>>>>>      +static void release_copy_files(struct nfsd4_copy *copy)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +    if (copy->nf_src)
+>>>>>>>>>>> +        nfsd_file_put(copy->nf_src);
+>>>>>>>>>>> +    if (copy->nf_dst)
+>>>>>>>>>>> +        nfsd_file_put(copy->nf_dst);
+>>>>>>>>>>> +}
+>>>>>>>>>>> +
+>>>>>>>>>>>      static void cleanup_async_copy(struct nfsd4_copy *copy)
+>>>>>>>>>>>      {
+>>>>>>>>>>>          nfs4_free_copy_state(copy);
+>>>>>>>>>>> -    nfsd_file_put(copy->nf_dst);
+>>>>>>>>>>> -    if (!nfsd4_ssc_is_inter(copy))
+>>>>>>>>>>> -        nfsd_file_put(copy->nf_src);
+>>>>>>>>>>> +    release_copy_files(copy);
+>>>>>>>>>>>          spin_lock(&copy->cp_clp->async_lock);
+>>>>>>>>>>>          list_del(&copy->copies);
+>>>>>>>>>>> spin_unlock(&copy->cp_clp->async_lock);
+>>>>>>>>>>> @@ -1748,7 +1746,6 @@ static int nfsd4_do_async_copy(void *data)
+>>>>>>>>>>>          } else {
+>>>>>>>>>>>              nfserr = nfsd4_do_copy(copy, copy->nf_src->nf_file,
+>>>>>>>>>>>                             copy->nf_dst->nf_file, false);
+>>>>>>>>>>> -        nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst);
+>>>>>>>>>>>          }
+>>>>>>>>>>>          do_callback:
+>>>>>>>>>>> @@ -1811,9 +1808,9 @@ nfsd4_copy(struct svc_rqst *rqstp, struct
+>>>>>>>>>>> nfsd4_compound_state *cstate,
+>>>>>>>>>>>          } else {
+>>>>>>>>>>>              status = nfsd4_do_copy(copy, copy->nf_src->nf_file,
+>>>>>>>>>>>                             copy->nf_dst->nf_file, true);
+>>>>>>>>>>> -        nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst);
+>>>>>>>>>>>          }
+>>>>>>>>>>>      out:
+>>>>>>>>>>> +    release_copy_files(copy);
+>>>>>>>>>>>          return status;
+>>>>>>>>>>>      out_err:
+>>>>>>>>>> This is unrelated to the reference count issue.
+>>>>>>>>>>
+>>>>>>>>>> Here if this is an inter-copy then we need to decrement the reference
+>>>>>>>>>> count of the nfsd4_ssc_umount_item so that the vfsmount can be
+>>>>>>>>>> unmounted
+>>>>>>>>>> later.
+>>>>>>>>>>
+>>>>>>>>> Oh, I think I see what you mean. Maybe something like the (untested)
+>>>>>>>>> patch below on top of the original patch would fix that?
+>>>>>>>>>
+>>>>>>>>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+>>>>>>>>> index c9057462b973..7475c593553c 100644
+>>>>>>>>> --- a/fs/nfsd/nfs4proc.c
+>>>>>>>>> +++ b/fs/nfsd/nfs4proc.c
+>>>>>>>>> @@ -1511,8 +1511,10 @@ nfsd4_cleanup_inter_ssc(struct
+>>>>>>>>> nfsd4_ssc_umount_item *nsui, struct file *filp,
+>>>>>>>>>            struct nfsd_net *nn = net_generic(dst->nf_net, nfsd_net_id);
+>>>>>>>>>            long timeout = msecs_to_jiffies(nfsd4_ssc_umount_timeout);
+>>>>>>>>>     -       nfs42_ssc_close(filp);
+>>>>>>>>> -       fput(filp);
+>>>>>>>>> +       if (filp) {
+>>>>>>>>> +               nfs42_ssc_close(filp);
+>>>>>>>>> +               fput(filp);
+>>>>>>>>> +       }
+>>>>>>>>>               spin_lock(&nn->nfsd_ssc_lo
+>>>>>>>>>            list_del(&nsui->nsui_list);
+>>>>>>>>> @@ -1813,8 +1815,13 @@ nfsd4_copy(struct svc_rqst *rqstp, struct
+>>>>>>>>> nfsd4_compound_state *cstate,
+>>>>>>>>>            release_copy_files(copy);
+>>>>>>>>>            return status;
+>>>>>>>>>     out_err:
+>>>>>>>>> -       if (async_copy)
+>>>>>>>>> +       if (async_copy) {
+>>>>>>>>>                    cleanup_async_copy(async_copy);
+>>>>>>>>> +               if (nfsd4_ssc_is_inter(async_copy))
+>>>>>>>> We don't need to call nfsd4_cleanup_inter_ssc since the thread
+>>>>>>>> nfsd4_do_async_copy has not started yet so the file is not opened.
+>>>>>>>> We just need to do refcount_dec(&copy->ss_nsui->nsui_refcnt), unless
+>>>>>>>> you want to change nfsd4_cleanup_inter_ssc to detect this error
+>>>>>>>> condition and only decrement the reference count.
+>>>>>>>>
+>>>>>>> Oh yeah, and this would break anyway since the nsui_list head is not
+>>>>>>> being initialized. Dai, would you mind spinning up a patch for this
+>>>>>>> since you're more familiar with the cleanup here?
+>>>>>> Will do. My patch will only fix the unmount issue. Your patch does
+>>>>>> the clean up potential nfsd_file refcount leaks in COPY codepath.
+>>>>> Or do you want me to merge your patch and mine into one?
+>>>>>
+>>>> It probably is best to merge them, since backporters will probably want
+>>>> both patches anyway.
+>>> Unless these two changes are somehow interdependent, I'd like to keep
+>>> them separate. They address two separate issues, yes?
+>> Yes.
+>>
+>>> And -- narrow fixes need to go to nfsd-fixes, but clean-ups can wait
+>>> for nfsd-next. I'd rather not mix the two types of change.
+>> Ok. Can we do this:
+>>
+>> 1. Jeff's patch goes to nfsd-fixes since it has the fix for missing
+>> reference count.
+> To make sure I haven't lost track of anything:
+>
+> The patch you refer to here is this one:
+>
+> https://lore.kernel.org/linux-nfs/20230117193831.75201-3-jlayton@kernel.org/
+>
+> Correct?
+>
+> (I was waiting for Jeff and Olga to come to consensus, and I think
+> they have, so I can apply it to nfsd-fixes now).
+>
+>
+>> 2. My fix for the cleanup of allocated memory goes to nfsd-fixes.
+> And this one hasn't been posted yet, right? Or did I miss it?
 
-> +		nf =3D container_of(list, struct nfsd_file, nf_rlist);
-> +
->  		/* If we raced with someone else unhashing, ignore it */
->  		if (!nfsd_file_unhash(nf))
->  			continue;
-> @@ -836,7 +736,7 @@ nfsd_file_cache_init(void)
->  	if (test_and_set_bit(NFSD_FILE_CACHE_UP, &nfsd_file_flags) =3D=3D 1)
->  		return 0;
-> =20
-> -	ret =3D rhashtable_init(&nfsd_file_rhash_tbl, &nfsd_file_rhash_params);
-> +	ret =3D rhltable_init(&nfsd_file_rhltable, &nfsd_file_rhash_params);
->  	if (ret)
->  		return ret;
-> =20
-> @@ -904,7 +804,7 @@ nfsd_file_cache_init(void)
->  	nfsd_file_mark_slab =3D NULL;
->  	destroy_workqueue(nfsd_filecache_wq);
->  	nfsd_filecache_wq =3D NULL;
-> -	rhashtable_destroy(&nfsd_file_rhash_tbl);
-> +	rhltable_destroy(&nfsd_file_rhltable);
->  	goto out;
->  }
-> =20
-> @@ -922,7 +822,7 @@ __nfsd_file_cache_purge(struct net *net)
->  	struct nfsd_file *nf;
->  	LIST_HEAD(dispose);
-> =20
-> -	rhashtable_walk_enter(&nfsd_file_rhash_tbl, &iter);
-> +	rhltable_walk_enter(&nfsd_file_rhltable, &iter);
->  	do {
->  		rhashtable_walk_start(&iter);
-> =20
-> @@ -1031,7 +931,7 @@ nfsd_file_cache_shutdown(void)
->  	nfsd_file_mark_slab =3D NULL;
->  	destroy_workqueue(nfsd_filecache_wq);
->  	nfsd_filecache_wq =3D NULL;
-> -	rhashtable_destroy(&nfsd_file_rhash_tbl);
-> +	rhltable_destroy(&nfsd_file_rhltable);
-> =20
->  	for_each_possible_cpu(i) {
->  		per_cpu(nfsd_file_cache_hits, i) =3D 0;
-> @@ -1042,6 +942,36 @@ nfsd_file_cache_shutdown(void)
->  	}
->  }
-> =20
-> +static struct nfsd_file *
-> +nfsd_file_lookup_locked(const struct net *net, const struct cred *cred,
-> +			struct inode *inode, unsigned char need,
-> +			bool want_gc)
-> +{
-> +	struct rhlist_head *tmp, *list;
-> +	struct nfsd_file *nf;
-> +
-> +	list =3D rhltable_lookup(&nfsd_file_rhltable, &inode,
-> +			       nfsd_file_rhash_params);
-> +	rhl_for_each_entry_rcu(nf, tmp, list, nf_rlist) {
-> +		if (nf->nf_may !=3D need)
-> +			continue;
-> +		if (nf->nf_net !=3D net)
-> +			continue;
-> +		if (!nfsd_match_cred(nf->nf_cred, cred))
-> +			continue;
-> +		if (!!test_bit(NFSD_FILE_GC, &nf->nf_flags) !=3D want_gc)
-> +			continue;
-> +		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0)
-> +			continue;
-> +
-> +		/* If it was on the LRU, reuse that reference. */
-> +		if (nfsd_file_lru_remove(nf))
-> +			WARN_ON_ONCE(refcount_dec_and_test(&nf->nf_ref));
-> +		return nf;
-> +	}
-> +	return NULL;
-> +}
-> +
->  /**
->   * nfsd_file_is_cached - are there any cached open files for this inode?
->   * @inode: inode to check
-> @@ -1056,15 +986,12 @@ nfsd_file_cache_shutdown(void)
->  bool
->  nfsd_file_is_cached(struct inode *inode)
->  {
-> -	struct nfsd_file_lookup_key key =3D {
-> -		.type	=3D NFSD_FILE_KEY_INODE,
-> -		.inode	=3D inode,
-> -	};
-> -	bool ret =3D false;
-> -
-> -	if (rhashtable_lookup_fast(&nfsd_file_rhash_tbl, &key,
-> -				   nfsd_file_rhash_params) !=3D NULL)
-> -		ret =3D true;
-> +	bool ret;
-> +
-> +	rcu_read_lock();
-> +	ret =3D (rhltable_lookup(&nfsd_file_rhltable, &inode,
-> +			       nfsd_file_rhash_params) !=3D NULL);
-> +	rcu_read_unlock();
->  	trace_nfsd_file_is_cached(inode, (int)ret);
->  	return ret;
->  }
-> @@ -1074,14 +1001,12 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
-ct svc_fh *fhp,
->  		     unsigned int may_flags, struct nfsd_file **pnf,
->  		     bool open, bool want_gc)
->  {
-> -	struct nfsd_file_lookup_key key =3D {
-> -		.type	=3D NFSD_FILE_KEY_FULL,
-> -		.need	=3D may_flags & NFSD_FILE_MAY_MASK,
-> -		.net	=3D SVC_NET(rqstp),
-> -		.gc	=3D want_gc,
-> -	};
-> +	unsigned char need =3D may_flags & NFSD_FILE_MAY_MASK;
-> +	struct net *net =3D SVC_NET(rqstp);
-> +	struct nfsd_file *new, *nf;
-> +	const struct cred *cred;
->  	bool open_retry =3D true;
-> -	struct nfsd_file *nf;
-> +	struct inode *inode;
->  	__be32 status;
->  	int ret;
-> =20
-> @@ -1089,32 +1014,38 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
-ct svc_fh *fhp,
->  				may_flags|NFSD_MAY_OWNER_OVERRIDE);
->  	if (status !=3D nfs_ok)
->  		return status;
-> -	key.inode =3D d_inode(fhp->fh_dentry);
-> -	key.cred =3D get_current_cred();
-> +	inode =3D d_inode(fhp->fh_dentry);
-> +	cred =3D get_current_cred();
-> =20
->  retry:
-> -	rcu_read_lock();
-> -	nf =3D rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
-> -			       nfsd_file_rhash_params);
-> -	if (nf)
-> -		nf =3D nfsd_file_get(nf);
-> -	rcu_read_unlock();
-> -
-> -	if (nf) {
-> -		if (nfsd_file_lru_remove(nf))
-> -			WARN_ON_ONCE(refcount_dec_and_test(&nf->nf_ref));
-> -		goto wait_for_construction;
-> +	if (open) {
-> +		rcu_read_lock();
-> +		nf =3D nfsd_file_lookup_locked(net, cred, inode, need, want_gc);
-> +		rcu_read_unlock();
-> +		if (nf)
-> +			goto wait_for_construction;
->  	}
-> =20
-> -	nf =3D nfsd_file_alloc(&key, may_flags);
-> -	if (!nf) {
-> +	new =3D nfsd_file_alloc(net, inode, need, want_gc);
-> +	if (!new) {
->  		status =3D nfserr_jukebox;
->  		goto out_status;
->  	}
-> +	rcu_read_lock();
-> +	spin_lock(&inode->i_lock);
-> +	nf =3D nfsd_file_lookup_locked(net, cred, inode, need, want_gc);
-> +	if (unlikely(nf)) {
-> +		spin_unlock(&inode->i_lock);
-> +		rcu_read_unlock();
-> +		nfsd_file_slab_free(&new->nf_rcu);
-> +		goto wait_for_construction;
-> +	}
-> +	nf =3D new;
-> +	ret =3D rhltable_insert(&nfsd_file_rhltable, &nf->nf_rlist,
-> +			      nfsd_file_rhash_params);
-> +	spin_unlock(&inode->i_lock);
-> +	rcu_read_unlock();
-> =20
-> -	ret =3D rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
-> -					   &key, &nf->nf_rhash,
-> -					   nfsd_file_rhash_params);
->  	if (likely(ret =3D=3D 0))
->  		goto open_file;
-> =20
-> @@ -1122,7 +1053,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
- svc_fh *fhp,
->  	nf =3D NULL;
->  	if (ret =3D=3D -EEXIST)
->  		goto retry;
-> -	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, ret);
-> +	trace_nfsd_file_insert_err(rqstp, inode, may_flags, ret);
->  	status =3D nfserr_jukebox;
->  	goto out_status;
-> =20
-> @@ -1131,7 +1062,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
- svc_fh *fhp,
-> =20
->  	/* Did construction of this file fail? */
->  	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
-> -		trace_nfsd_file_cons_err(rqstp, key.inode, may_flags, nf);
-> +		trace_nfsd_file_cons_err(rqstp, inode, may_flags, nf);
->  		if (!open_retry) {
->  			status =3D nfserr_jukebox;
->  			goto out;
-> @@ -1157,14 +1088,14 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
-ct svc_fh *fhp,
->  	}
-> =20
->  out_status:
-> -	put_cred(key.cred);
-> +	put_cred(cred);
->  	if (open)
-> -		trace_nfsd_file_acquire(rqstp, key.inode, may_flags, nf, status);
-> +		trace_nfsd_file_acquire(rqstp, inode, may_flags, nf, status);
->  	return status;
-> =20
->  open_file:
->  	trace_nfsd_file_alloc(nf);
-> -	nf->nf_mark =3D nfsd_file_mark_find_or_create(nf, key.inode);
-> +	nf->nf_mark =3D nfsd_file_mark_find_or_create(nf, inode);
->  	if (nf->nf_mark) {
->  		if (open) {
->  			status =3D nfsd_open_verified(rqstp, fhp, may_flags,
-> @@ -1178,7 +1109,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
- svc_fh *fhp,
->  	 * If construction failed, or we raced with a call to unlink()
->  	 * then unhash.
->  	 */
-> -	if (status =3D=3D nfs_ok && key.inode->i_nlink =3D=3D 0)
-> +	if (status !=3D nfs_ok || inode->i_nlink =3D=3D 0)
->  		status =3D nfserr_jukebox;
->  	if (status !=3D nfs_ok)
->  		nfsd_file_unhash(nf);
-> @@ -1273,7 +1204,7 @@ int nfsd_file_cache_stats_show(struct seq_file *m, =
-void *v)
->  		lru =3D list_lru_count(&nfsd_file_lru);
-> =20
->  		rcu_read_lock();
-> -		ht =3D &nfsd_file_rhash_tbl;
-> +		ht =3D &nfsd_file_rhltable.ht;
->  		count =3D atomic_read(&ht->nelems);
->  		tbl =3D rht_dereference_rcu(ht->tbl, ht);
->  		buckets =3D tbl->size;
-> @@ -1289,7 +1220,7 @@ int nfsd_file_cache_stats_show(struct seq_file *m, =
-void *v)
->  		evictions +=3D per_cpu(nfsd_file_evictions, i);
->  	}
-> =20
-> -	seq_printf(m, "total entries: %u\n", count);
-> +	seq_printf(m, "total inodes: %u\n", count);
->  	seq_printf(m, "hash buckets:  %u\n", buckets);
->  	seq_printf(m, "lru entries:   %lu\n", lru);
->  	seq_printf(m, "cache hits:    %lu\n", hits);
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index b7efb2c3ddb1..7d3b35771565 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -29,9 +29,8 @@ struct nfsd_file_mark {
->   * never be dereferenced, only used for comparison.
->   */
->  struct nfsd_file {
-> -	struct rhash_head	nf_rhash;
-> -	struct list_head	nf_lru;
-> -	struct rcu_head		nf_rcu;
-> +	struct rhlist_head	nf_rlist;
-> +	void			*nf_inode;
->  	struct file		*nf_file;
->  	const struct cred	*nf_cred;
->  	struct net		*nf_net;
-> @@ -40,10 +39,12 @@ struct nfsd_file {
->  #define NFSD_FILE_REFERENCED	(2)
->  #define NFSD_FILE_GC		(3)
->  	unsigned long		nf_flags;
-> -	struct inode		*nf_inode;	/* don't deref */
->  	refcount_t		nf_ref;
->  	unsigned char		nf_may;
-> +
->  	struct nfsd_file_mark	*nf_mark;
-> +	struct list_head	nf_lru;
-> +	struct rcu_head		nf_rcu;
->  	ktime_t			nf_birthtime;
->  };
-> =20
->=20
->=20
+I will post this patch soon.
 
---=20
-Jeff Layton <jlayton@redhat.com>
+>
+>
+>> 3. I will do the optimization Jeff proposed about list_head and
+>> nfsd4_compound in a separate patch that goes into nfsd-next.
+> That should be fine.
 
+Thanks,
+-Dai
+
+>
+>
+>> -Dai
+>>
+>>>> Just make yourself the patch author and keep my S-o-b line.
+>>>>
+>>>>> I think we need a bit more cleanup in addition to your patch. When
+>>>>> kmalloc(sizeof(*async_copy->cp_src), ..) or nfs4_init_copy_state
+>>>>> fails, the async_copy is not initialized yet so calling cleanup_async_copy
+>>>>> can be a problem.
+>>>>>
+>>>> Yeah.
+>>>>
+>>>> It may even be best to ensure that the list_head and such are fully
+>>>> initialized for both allocated and embedded struct nfsd4_copy's. You
+>>>> might shave off a few cpu cycles by not doing that, but it makes things
+>>>> more fragile.
+>>>>
+>>>> Even better, we really ought to split a lot of the fields in nfsd4_copy
+>>>> into a different structure (maybe nfsd4_async_copy). Trimming down
+>>>> struct nfsd4_copy would cut down the size of nfsd4_compound as well
+>>>> since it has a union that contains it. I was planning on doing that
+>>>> eventually, but if you want to take that on, then that would be fine
+>>>> too.
+>>>>
+>>>> -- 
+>>>> Jeff Layton <jlayton@kernel.org>
+>>> --
+>>> Chuck Lever
+> --
+> Chuck Lever
+>
+>
+>
