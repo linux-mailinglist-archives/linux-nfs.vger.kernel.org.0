@@ -2,457 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81A9A67D685
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Jan 2023 21:36:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A5EA67D7C4
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Jan 2023 22:32:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229486AbjAZUg6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Jan 2023 15:36:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45066 "EHLO
+        id S233015AbjAZVcv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Jan 2023 16:32:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232176AbjAZUg4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Jan 2023 15:36:56 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB874728E5
-        for <linux-nfs@vger.kernel.org>; Thu, 26 Jan 2023 12:36:50 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 3A0CC2001F;
-        Thu, 26 Jan 2023 20:36:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1674765409; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CpmG2hokCZTHLBaVXWXG+/hz+JzpFTO1uFR56DSyjns=;
-        b=HjT8VaMr9CbxWMRVyZde9R6e9LnUUVbMRLLaAA6apTTQ1b3FIv2UXSiHKO0VpH8lSqJ/Po
-        0gaQL3Pj1dT/A+hikz5uDQHulqLbF1ChEcQhzzs0vnBc6waruykLu8pCHAptxtXw9Qx7nE
-        O/baaipnK+IKDf1Yotp+MMYhL6jlym0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1674765409;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=CpmG2hokCZTHLBaVXWXG+/hz+JzpFTO1uFR56DSyjns=;
-        b=LKp+C9ERmdp2a8LMpROzHDKYxJa/ejTju6MJ9tLk0/W+PlXbNsax7Xf3tRvjzE5V9L5NTr
-        xJa0tEbzLNSh0BAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5EFEC13A09;
-        Thu, 26 Jan 2023 20:36:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id VIpjAV/k0mOBPgAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 26 Jan 2023 20:36:47 +0000
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S233006AbjAZVcq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Jan 2023 16:32:46 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF62974C13
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Jan 2023 13:32:41 -0800 (PST)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30QIT2qN024202;
+        Thu, 26 Jan 2023 21:32:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=W+oQGFGX3wo+g/a94uAUWauPGpoMpWKWepQdydGlsnI=;
+ b=d5hZCNkVRiyAJUCEGfnILPXENF2R4s/HLgQuKF2pn69NfsHQfg/uOPByrVENjDHHx2Em
+ BSa28Hz2FFedUg06+DCJys6z7XlS8QEaoYoBTToz7N9RMlGQlI6BnG8CSwj+ESzgl/8h
+ hAh3aioKIt0JfjCL63Gm0bJkNlBJP7erA57ZcIJZu2GKZGAUnCNt691tHQcNK0oI2/mr
+ geF0aLwGM08IPepBMDn6bjrL358zmh1bfbNNcN8Ggt7dTdWSsiQV7dQk+2HyPfs+aU6K
+ XLxkK6CnjbnDznfFVrlA7b+obVTooRzcKy2nruH+amYPgalKLxYvuN2cfg0AcHsU2aIa 0w== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n87ntbgnq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Jan 2023 21:32:30 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30QLFdVV037298;
+        Thu, 26 Jan 2023 21:32:29 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3n86g7xd1g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Jan 2023 21:32:29 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jRS/P22U3aMxr9THgadNo/KVNd/1x4Sf5ZfgHcF8ZKJpQ2B81MMMTKu4G2H8e3NBxwH2g/kFvttMheZciHNBcgM91+Gi0ZrGv2zOHRMqE7RtEL8nrH3NWO6yzMkuUEZtVQ6rP6mVeTbyaBslBKZoknDvvjgRWsdBLkGtD7CikMLd0j392GLLmiMfIeGawrZVOpYy4E/T1AKwVlUDo90/5fxj8tVD3cigrOhrk0wsF0fnPdtFtb/8TeMGjJ9J4oyxRPCeT1NUkJ5L7CcIROOlEliL69HNAV3UOxAvDHcKqjw9AGwGABZAQm0YiYujFpGy34UePpy9Skj1BWaZHXIekQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W+oQGFGX3wo+g/a94uAUWauPGpoMpWKWepQdydGlsnI=;
+ b=YkTroGLF62MN1mTz0YhF1ywMrXpKIUSllpRCUFYB6EcW/yhBZp31kbZSzAxd8jMUj8bOR8feCayjUFMLPhEPL9H27fqAYkN2bXuTNfpUw2wNiu5reZi+mtlwe4hCJzodibFfK8Edsee8EQW6nC1AtjhsBfey1y/QvIQvtnGzbKbHvJtbIiwn8PfcRKDRHEn/p8UNr1s0vum8jVd3q9NRWnE3lQ4gp/jIPEXYCdOmNrT3F9c97liia+buldTBmEVBT70Q7iKUSoe2CJIvEStmCbo/Fm/Fn5nZiZy15/wlbUSrjyHPNz5eX3FY7RwKMe6pMIPax29ZQAuyClToOI22Bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=W+oQGFGX3wo+g/a94uAUWauPGpoMpWKWepQdydGlsnI=;
+ b=S4L9iKa9zMqoFEuXW6elB0KrHPgUbOvHpDFJXJUGWHTgQfbAEO/qpxryL0ppi39L+9AwCRG+p/y4SVutEyWwwiCSK846WZL45oSSDOarbJ+pQGHEDJ9L6dfC50yF0PoOnZ8tBV8VPbpQEu7DRSazcNywWIQdgQuZLrlatqi07qY=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SN7PR10MB6306.namprd10.prod.outlook.com (2603:10b6:806:272::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.20; Thu, 26 Jan
+ 2023 21:32:27 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::96a2:2d53:eb8c:b5ed]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::96a2:2d53:eb8c:b5ed%5]) with mapi id 15.20.6043.022; Thu, 26 Jan 2023
+ 21:32:27 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Jeff Layton <jlayton@kernel.org>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] nfsd: update comment over __nfsd_file_cache_purge
+Thread-Topic: [PATCH] nfsd: update comment over __nfsd_file_cache_purge
+Thread-Index: AQHZMaqd+g0lqDJ3/Ui8X0ffJBLTb66xOAgA
+Date:   Thu, 26 Jan 2023 21:32:27 +0000
+Message-ID: <BBBAF186-1825-476C-B457-549410E8FC5E@oracle.com>
+References: <20230126172116.198443-1-jlayton@kernel.org>
+In-Reply-To: <20230126172116.198443-1-jlayton@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.1)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SN7PR10MB6306:EE_
+x-ms-office365-filtering-correlation-id: ca88e64a-9d4f-4360-753a-08daffe4d2ab
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: DBJ044VpQkzsHrcT6Y5mwdmV0yklxC+4JmCcjaHuE4cb84YW5W/jNa7qnhy7HIzmFmbhFlrvwhPPxVfWdgZ4Sv5Ouwcuo1alllStFoBFITyanErIGInOFgcd6NLmY23kpFdkTW0q2bUr4U/UYyd1rhxI5LFfpDWwclH1917FakDYMihmzqt5QmXPmbyWTlqIx5GahstdMTY022oIgnQ8TIz7ljbHCqxQ2N5Pf+iV1gCQitV9d/FYdfhEOl6/6jw6v1beGv0GL5mExxwfQPGBRdxR8IvnXYTpvbt/nCZwaN92CHQj5bV2/d33DFTx7l0d7G3FgNDLCRbOhxRhUrX7CjhJXU8Z1PvsnVEbtWbsNt8hom3NCscRjaK7a1U3kfVg7cglCbiEiiUwaEINYN3Uk1N3xmM1QCALm8i37MG+l61k6DkdYmgpzOMlkZge73D/nSAtEsmeyiUaBgheDKq6tiBuG7OQyU3L/lsXcM7CeFjmP62RavWkGa/cqBMdiKQ79mYS1/M8CSZIPOPl9aHSiohU7qikyV27k1Y4xx81/tiag9gGFPMxRjPlBPW05QKmKWOBhHa5Yz+r33dLJzKAQ7TdKNywczf3HbPoKupLJm80/TkhAJ8YcQQiGnVMrtpvB5sNmNDvfAcBW2du+8FD0EIDA52PWGdyzIz084uSTYqN/EQqX+dsUrzIiCR4y3xtRkMg9Dkkghqt78X8W7YxJTNmzJ1ilPdXaA5I+bOUTiI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(39860400002)(376002)(136003)(346002)(396003)(451199018)(478600001)(71200400001)(53546011)(26005)(6486002)(91956017)(66946007)(186003)(6512007)(76116006)(316002)(64756008)(41300700001)(6916009)(4326008)(8676002)(2616005)(8936002)(4744005)(6506007)(5660300002)(2906002)(66556008)(83380400001)(66476007)(66446008)(122000001)(38070700005)(36756003)(33656002)(86362001)(38100700002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?KvT5fEzi9pC4mEFNgJWEZKI5xphUVcVeyEAiv0B3JRuhMhlX9okZQnGJTF9I?=
+ =?us-ascii?Q?Mp5+7LwhhAQwVnC15L4sFA58E99oVf6DkdZlWJg2c0yoPRN1nBNi5gL0Mqlq?=
+ =?us-ascii?Q?9KHOcZq4zvw2L79metboqkORmQzsWQ33bMK5m5zFq3MemrV/IhRLp7INRJgF?=
+ =?us-ascii?Q?Z02Gy8Fav9XU8DQvD7P73oIygMRki3Wdt9htswZR4opL45MeDddpixhZV15y?=
+ =?us-ascii?Q?N2EZWbgSnKOfuUOi9VAgA598SGHzlWVoA03Mw5Y13fvPQ4IdG8aIL9jIZ8eR?=
+ =?us-ascii?Q?0N8Hn6p8lvJRFPCxY7KdpIWRyJ3daFjNNfEMUxDyHht+szYc60XT4lvjzLbL?=
+ =?us-ascii?Q?+eJArcPJX05atMOiLIW7HnGMGHJHb9P0utkPHrwnpBQWtoWxtUqirJyqvzQe?=
+ =?us-ascii?Q?cJQjIL1ZI5uiWCPqRqucTH7pMg2CatL+7UxHYooxwpGbWtkLIO8uxUURzmNF?=
+ =?us-ascii?Q?ATTFvv0g/6F86md6f5XFgDEi7DJt8scb3Tih++1gU5coefzx3DD2vdwA59bp?=
+ =?us-ascii?Q?a171Wz5wJvAHTim8ygZCO4p/4esPUoW/pZjpiUbeyyNXC59KNcO6iBdAykAJ?=
+ =?us-ascii?Q?+BYgyMqXTBXKdUYw/4WfHqJvy7Nd4c91djOunwBlxbBHYfGAwB2hYAnPZZ54?=
+ =?us-ascii?Q?SaPfc1pMYuDJs7GI1y/9rnhnepBG1C9rAV06Ukl6yPAFSsYZIaT0nYZ4d4yP?=
+ =?us-ascii?Q?uL7lnT6ZU5REvXST0ybdv1UMW01n3/1pFgaPOgfBZd5+K+ZiOzL9sczmN68v?=
+ =?us-ascii?Q?N1DFomDkiyIclU8l7vmf5htZU17zY82oB23Mh8FS/DXfmn6SSKas0k82tF+d?=
+ =?us-ascii?Q?Q4AvDKEqHR1sSJoteQvCgqMuaCcQtpauApyQo+SHLtqi7NErive0tHnZ3kAe?=
+ =?us-ascii?Q?6dVtroSJtNjL3Ra4ATFYWElCHvJcyqS7GmqhJl01fmYL/a/sgo7hgdpedmMx?=
+ =?us-ascii?Q?DIa2ZVhQucmJKyW5QAy3flIlkXbeteYSxNmRkr+Yt0fTgfYfJCSzBi1K3RvF?=
+ =?us-ascii?Q?WQAV9vZmb9x9DdPsDuCelP0KLB5tBqYly9t9n0msbyOnp4Hfh0TUK1m8544a?=
+ =?us-ascii?Q?U8/gUmY9wdw3PfQioOsJV+s2sImmWV5QL8zW6K93aqHZ3BpC52OF8VZ/YQec?=
+ =?us-ascii?Q?EzLc6E/Psj/Y0mA/4I6vmyJcPMlqw0JKOefF+2CR2zoA0o6bAl2a3iKunCZn?=
+ =?us-ascii?Q?l40qWksAH2iAlWfJkcVsTFwHzSiT+2Dbz+nyrLDOAQfJlOuXQiwGMnT2/Y79?=
+ =?us-ascii?Q?oCPPEOoimwPRKVl2ysPfXSETKYE+DWGb/49a+OwetBL0JJXO+xba+5bvjOuN?=
+ =?us-ascii?Q?wfHlWPwOQ8ZyHjHbfsb7JwfrlwG0fvD0D6+2hyOWVBL2ZZ+ZfYXNfLLKPZmp?=
+ =?us-ascii?Q?SuNu5w9a+bzg4Dt8nyZ/Q/7G9BdZlHw/XR2s7a6bxbyGY5hXf1JVSYxrqvND?=
+ =?us-ascii?Q?50ckrgczLewsyqYtSDT+MKRBcowgFylx3nM57HQgg8ToeYL8Lm0GesdzU6fj?=
+ =?us-ascii?Q?ee5ycHop8Bdgzcji+09kpjcEvQhRWPnVjklDI7lTQ5sbavgfDcFvRss0Lh6c?=
+ =?us-ascii?Q?mCM4RUOzUWZ73JhZdaHCl++Pnqxpfz6ENnd6ds/oS7rC2UEcJz2GmYKM97Ph?=
+ =?us-ascii?Q?7A=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <567390E1C5865F4F9DF9E3531DFAF3E8@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     "Trond Myklebust" <trondmy@kernel.org>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH/RFC] NFSv3 handle out-of-order write replies
-In-reply-to: <bc265a2756ca172bc62b68f5214213700f59a28c.camel@kernel.org>
-References: <167461221711.23017.1840413589310764555@noble.neil.brown.name>,
- <bc265a2756ca172bc62b68f5214213700f59a28c.camel@kernel.org>
-Date:   Fri, 27 Jan 2023 07:36:41 +1100
-Message-id: <167476540120.23017.11089540386030477339@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: to2gx2apz0z830fTRAXJasqI3Raba/Xjz0bqE0qZmBKbQqtsSUQjZ4XqNfvwNyLEnVmTie5/ugNJy9arXWCRg73EzdvKOKGI5iV3Y/AM43o03VAqYptqMxMlwdIdFAMrXp6GnYXJ7CQ3K0mBhLFfiiSciUJJWxbIvyihEXkA/1VwQxBmtS6QuVUemunn8otdrIluE87nNWGLmRvfxjNfMb3H6iIAZKunhdbdiJa9K8mrWYdky7LLinoiB1L95/TL+jPZJqOozpO9ahAcGaW1gZP2RGrjq39P03+lCJpKqTcjxbDdQDaNb4zt9SzPvCaNInoOvnelGTcqKITkNKSaecg+t+iMDUvDXr1vByYAtx9TOKz3mZnp4m7UnChepay3kYlb+173EnyWW4vsXvqDbXAuWSrfb07k6HP8VfKH9/L0XuFLgcOSUVPdwErKZodg/C8dYs5AYxnkWGRb4sQVyBQvXXKhqRNRTLozGVAnQ8l3LsOEACb/01jtaCG4bpI4MQ3J0fjRP7vnItH77L5o+i5zYqKOf57DJK9Yb004Rp8vzGx20u+Yr0SRbYFQwsKRjaQ6JaZ9GC3kW2fTpxc/ue0O12fFi1eaLxTbF/RSYT9GB/hlRAZupJhe7Az4XF36xZLJ84EAvA1Qkt96dIjgC/8SiY1pmqxyolRvDI4ka1+5Pn7iE1zDzxQcJWOhneR7ypFQP3izVzG3KYhZGvtXOp2Xbs1h93Cxv9qxnQjxrOr/Uwnr8i1vJlV9yUyYRyJU63DVJd+4tXuqHPaA0ipraoa727cwvz6xVG/o3JvFfTI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ca88e64a-9d4f-4360-753a-08daffe4d2ab
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jan 2023 21:32:27.8268
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: MtxQbQaLwp3qu17GYciCNXbw7UT/kfPf2XPdRELrKC7LI0mFVIMgnZ6nYZWupro3I6HWg6aiPqYubx98j3MoQw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB6306
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-26_09,2023-01-26_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999
+ malwarescore=0 mlxscore=0 bulkscore=0 adultscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301260201
+X-Proofpoint-ORIG-GUID: peYU-iS0IoCY9ZylIEsnq4AGgljGcPHn
+X-Proofpoint-GUID: peYU-iS0IoCY9ZylIEsnq4AGgljGcPHn
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 26 Jan 2023, Jeff Layton wrote:
-> On Wed, 2023-01-25 at 13:03 +1100, NeilBrown wrote:
-> > NFSv3 includes pre/post wcc attributes which allow the client to
-> > determine if all changes to the file have been made by itself, or any
-> > might have been made by some other client.  IF there are gaps in the
-> > pre/post ctime sequence it must be assumed that some other client caused
-> > that change in that gap and the local cache must be suspect.  The next
-> > time the file is opened, the cache should be invalidated.
-> >=20
-> > Since Commit 1c341b777501 ("NFS: Add deferred cache invalidation for
-> > close-to-open consistency violations") (I think) in linux 5.3 the Linux
-> > client has been triggering this invalidation.  The chunk in
-> > nfs_update_inode() in particularly triggers.
-> >=20
-> > Unfortunately Linux NFS assumes that all replies will be processed in
-> > the order sent, and will arrive in the order processed.  This is not
-> > true in general.  Linux might ignore the wcc info in a WRITE reply -
-> > even though the pre-ctime might match the current iversion - because the
-> > reply is for a request that was sent before some other request for which
-> > a reply has already been seen.  This is detected by Linux using the
-> > gencount tests in nfs_inode_attr_cmp().
-> >=20
-> > Also, when the gencount tests pass it is still possible that the
-> > requests were processed on the service in a different order, and a gap
-> > in the ctime sequence might be filled in by a subsequent reply.  Linux
-> > NFS does not try to detect this.
-> >=20
-> > The net result is that writing to a server and then reading the file
-> > back can result in going to the server for the read rather than serving
-> > it from cache - all because a couple of replies arrived out-of-order.
-> > This is a performance regression over kernels before 5.3 (though that
-> > change is a correctness improvement).
-> >=20
-> > This has been seen with Linux writing to a Netapp server which can
-> > occasionally re-order requests.  I have also demonstrated it with a
-> > modified Linux server which adds pre/post attributes to V3 write
-> > replies, and occasionally adds a delay to  force reply reordering.
-> >=20
-> > This patch attempts to address the problem by replacing the
-> > NFS_INO_DATA_INVAL_DEFER flag with a small array of segments in the
-> > ctime sequence which have not yet been seen in replies.  Rather than
-> > setting the flag, we add the missing segment to the array.  Rather
-> > than testing the flag, we check if the array is empty.
-> >=20
-> > The array contains A,B pairs when the local iversion is advanced from A
-> > to B, and B,A pairs when a reply tells us that the ctime (aka the
-> > change-id) has advanced from A to B on the server.
-> > Overlapping segments are merged and inverted segments cancel (which
-> > effectively comes to the same thing).  Empty segments are removed.
-> >=20
-> > An expected reply (probably the common case) will have the server say
-> > that ctime went from A to B, and Linux will update the iversion from A
-> > to B.  Rather than adding A,B and the B,A which will cancel out, we
-> > simply don't bother.
-> >=20
+
+
+> On Jan 26, 2023, at 12:21 PM, Jeff Layton <jlayton@kernel.org> wrote:
 >=20
-> So your cache remains intact as long as you're not checking validity
-> before all of the replies come in.
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-Exactly - and we primarily check validity at 'open' (or lock).
+Applied and pushed to topic-filecache-cleanups. Thanks!
 
+That branch now includes nfsd_file_cond_queue(). Can you check
+to see that I merged it appropriately?
+
+
+> ---
+> fs/nfsd/filecache.c | 3 ++-
+> 1 file changed, 2 insertions(+), 1 deletion(-)
 >=20
-> Clever! I like this idea.=20
-
-Thanks :-)
-
->=20
-> > One difficulty in this is that in some circumstances,
-> > NFS_ATTR_FATTR_PRECHANGE is cleared.  This causes the gap tracking to
-> > fail because we can only add pre/post attributes to the table if bother
-> > NFS_ATTR_FATTR_PRECHANGE and NFS_ATTR_FATTR_CHANGE are set.  If one is
-> > cleared, we have a problem.
-> >=20
-> > This patch works around that by introducing a new
-> > NFS_ATTR_FATTR_PRECHANGE_RAW whcih is set when the normal PRECHANGE is
-> > cleared.  If either PRECHANGE or PRECHANGE_RAW a set then we can use the
-> > prechange value.  Obviously this is a hack.  I would be keen to
-> > understand why PRECHANGE is being cleared so I can find a better
-> > resolution.
-> >=20
-> > I haven't given much thought to directories.  A number of places call
-> > 	nfs_set_cache_invalid(inode, NFS_INO_INVALID_DATA);
-> >=20
-> > only on directories and I don't understand why.  As directories still
-> > have pre/post attributes even in NFSv4 it would be good to understand
-> > how to get this right.
-> >=20
-> > Any help would be most appreciated.
-> >=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> >=20
-> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > index f594dac436a7..8535372861e9 100644
-> > --- a/fs/nfs/dir.c
-> > +++ b/fs/nfs/dir.c
-> > @@ -84,7 +84,7 @@ alloc_nfs_open_dir_context(struct inode *dir)
-> >  		ctx->dtsize =3D NFS_INIT_DTSIZE;
-> >  		spin_lock(&dir->i_lock);
-> >  		if (list_empty(&nfsi->open_files) &&
-> > -		    (nfsi->cache_validity & NFS_INO_DATA_INVAL_DEFER))
-> > +		    nfs_ooo_test(nfsi))
-> >  			nfs_set_cache_invalid(dir,
-> >  					      NFS_INO_INVALID_DATA |
-> >  						      NFS_INO_REVAL_FORCED);
-> > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> > index 6b2cfa59a1a2..4c9ad2e6586e 100644
-> > --- a/fs/nfs/inode.c
-> > +++ b/fs/nfs/inode.c
-> > @@ -208,11 +208,12 @@ void nfs_set_cache_invalid(struct inode *inode, uns=
-igned long flags)
-> > =20
-> >  	nfsi->cache_validity |=3D flags;
-> > =20
-> > -	if (inode->i_mapping->nrpages =3D=3D 0)
-> > -		nfsi->cache_validity &=3D ~(NFS_INO_INVALID_DATA |
-> > -					  NFS_INO_DATA_INVAL_DEFER);
-> > -	else if (nfsi->cache_validity & NFS_INO_INVALID_DATA)
-> > -		nfsi->cache_validity &=3D ~NFS_INO_DATA_INVAL_DEFER;
-> > +	if (inode->i_mapping->nrpages =3D=3D 0) {
-> > +		nfsi->cache_validity &=3D ~NFS_INO_INVALID_DATA;
-> > +		nfs_ooo_clear(nfsi);
-> > +	} else if (nfsi->cache_validity & NFS_INO_INVALID_DATA) {
-> > +		nfs_ooo_clear(nfsi);
-> > +	}
-> >  	trace_nfs_set_cache_invalid(inode, 0);
-> >  }
-> >  EXPORT_SYMBOL_GPL(nfs_set_cache_invalid);
-> > @@ -677,9 +678,10 @@ static int nfs_vmtruncate(struct inode * inode, loff=
-_t offset)
-> >  	trace_nfs_size_truncate(inode, offset);
-> >  	i_size_write(inode, offset);
-> >  	/* Optimisation */
-> > -	if (offset =3D=3D 0)
-> > -		NFS_I(inode)->cache_validity &=3D ~(NFS_INO_INVALID_DATA |
-> > -				NFS_INO_DATA_INVAL_DEFER);
-> > +	if (offset =3D=3D 0) {
-> > +		NFS_I(inode)->cache_validity &=3D ~NFS_INO_INVALID_DATA;
-> > +		nfs_ooo_clear(NFS_I(inode));
-> > +	}
-> >  	NFS_I(inode)->cache_validity &=3D ~NFS_INO_INVALID_SIZE;
-> > =20
-> >  	spin_unlock(&inode->i_lock);
-> > @@ -1101,7 +1103,7 @@ void nfs_inode_attach_open_context(struct nfs_open_=
-context *ctx)
-> > =20
-> >  	spin_lock(&inode->i_lock);
-> >  	if (list_empty(&nfsi->open_files) &&
-> > -	    (nfsi->cache_validity & NFS_INO_DATA_INVAL_DEFER))
-> > +	    nfs_ooo_test(nfsi))
-> >  		nfs_set_cache_invalid(inode, NFS_INO_INVALID_DATA |
-> >  						     NFS_INO_REVAL_FORCED);
-> >  	list_add_tail_rcu(&ctx->list, &nfsi->open_files);
-> > @@ -1344,8 +1346,8 @@ int nfs_clear_invalid_mapping(struct address_space =
-*mapping)
-> > =20
-> >  	set_bit(NFS_INO_INVALIDATING, bitlock);
-> >  	smp_wmb();
-> > -	nfsi->cache_validity &=3D
-> > -		~(NFS_INO_INVALID_DATA | NFS_INO_DATA_INVAL_DEFER);
-> > +	nfsi->cache_validity &=3D ~NFS_INO_INVALID_DATA;
-> > +	nfs_ooo_clear(nfsi);
-> >  	spin_unlock(&inode->i_lock);
-> >  	trace_nfs_invalidate_mapping_enter(inode);
-> >  	ret =3D nfs_invalidate_mapping(inode, mapping);
-> > @@ -1807,6 +1809,38 @@ static int nfs_inode_finish_partial_attr_update(co=
-nst struct nfs_fattr *fattr,
-> >  	return 0;
-> >  }
-> > =20
-> > +static void nfs_ooo_merge(struct nfs_inode *nfsi,
-> > +			  u64 start, u64 end)
-> > +{
-> > +	int i, cnt;
-> > +
-> > +	/* add this range, merging if possible */
-> > +	cnt =3D nfsi->ooo_cnt;
-> > +	for (i =3D 0; i < cnt; i++) {
-> > +		if (end =3D=3D nfsi->ooo[i][0])
-> > +			end =3D nfsi->ooo[i][1];
-> > +		else if (start =3D=3D nfsi->ooo[i][1])
-> > +			start =3D nfsi->ooo[i][0];
-> > +		else
-> > +			continue;
-> > +		/* Remove 'i' from table and loop to insert the new range */
-> > +		cnt -=3D 1;
-> > +		nfsi->ooo[i][0] =3D nfsi->ooo[cnt][0];
-> > +		nfsi->ooo[i][1] =3D nfsi->ooo[cnt][1];
-> > +		i =3D -1;
-> > +	}
-> > +	if (start !=3D end && cnt < ARRAY_SIZE(nfsi->ooo)) {
-> > +		nfsi->ooo[cnt][0] =3D start;
-> > +		nfsi->ooo[cnt][1] =3D end;
-> > +		cnt +=3D 1;
-> > +	}
-> > +	if (cnt > nfsi->ooo_max) {
-> > +		printk("ooo_max -> %d\n", cnt);
-> > +		nfsi->ooo_max =3D cnt;
-> > +	}
-> > +	nfsi->ooo_cnt =3D cnt;
-> > +}
-> > +
-> >  static int nfs_refresh_inode_locked(struct inode *inode,
-> >  				    struct nfs_fattr *fattr)
-> >  {
-> > @@ -1817,8 +1851,17 @@ static int nfs_refresh_inode_locked(struct inode *=
-inode,
-> > =20
-> >  	if (attr_cmp > 0 || nfs_inode_finish_partial_attr_update(fattr, inode))
-> >  		ret =3D nfs_update_inode(inode, fattr);
-> > -	else if (attr_cmp =3D=3D 0)
-> > -		ret =3D nfs_check_inode_attributes(inode, fattr);
-> > +	else {
-> > +		if ((fattr->valid & NFS_ATTR_FATTR_CHANGE) &&
-> > +		    (fattr->valid & (NFS_ATTR_FATTR_PRECHANGE |
-> > +				     NFS_ATTR_FATTR_PRECHANGE_RAW)))
-> > +			nfs_ooo_merge(NFS_I(inode),
-> > +				      fattr->change_attr,
-> > +				      fattr->pre_change_attr);
-> > +
-> > +		if (attr_cmp =3D=3D 0)
-> > +			ret =3D nfs_check_inode_attributes(inode, fattr);
-> > +	}
-> > =20
-> >  	trace_nfs_refresh_inode_exit(inode, ret);
-> >  	return ret;
-> > @@ -1909,6 +1952,8 @@ int nfs_post_op_update_inode_force_wcc_locked(struc=
-t inode *inode, struct nfs_fa
-> >  	if (attr_cmp < 0)
-> >  		return 0;
-> >  	if ((fattr->valid & NFS_ATTR_FATTR) =3D=3D 0 || !attr_cmp) {
-> > +		if (fattr->valid & NFS_ATTR_FATTR_PRECHANGE)
-> > +			fattr->valid |=3D NFS_ATTR_FATTR_PRECHANGE_RAW;
-> >  		fattr->valid &=3D ~(NFS_ATTR_FATTR_PRECHANGE
-> >  				| NFS_ATTR_FATTR_PRESIZE
-> >  				| NFS_ATTR_FATTR_PREMTIME
-> > @@ -2084,8 +2129,13 @@ static int nfs_update_inode(struct inode *inode, s=
-truct nfs_fattr *fattr)
-> >  				dprintk("NFS: change_attr change on server for file %s/%ld\n",
-> >  						inode->i_sb->s_id,
-> >  						inode->i_ino);
-> > -			} else if (!have_delegation)
-> > -				nfsi->cache_validity |=3D NFS_INO_DATA_INVAL_DEFER;
-> > +			} else if (!have_delegation) {
-> > +				if (fattr->valid & NFS_ATTR_FATTR_PRECHANGE)
-> > +					nfs_ooo_merge(nfsi, fattr->change_attr,
-> > +						      fattr->pre_change_attr);
-> > +				nfs_ooo_merge(nfsi, inode_peek_iversion_raw(inode),
-> > +					      fattr->change_attr);
-> > +			}
-> >  			inode_set_iversion_raw(inode, fattr->change_attr);
-> >  		}
-> >  	} else {
-> > @@ -2239,6 +2289,8 @@ struct inode *nfs_alloc_inode(struct super_block *s=
-b)
-> >  		return NULL;
-> >  	nfsi->flags =3D 0UL;
-> >  	nfsi->cache_validity =3D 0UL;
-> > +	nfsi->ooo_cnt =3D 0;
-> > +	nfsi->ooo_max =3D 0;
-> >  #if IS_ENABLED(CONFIG_NFS_V4)
-> >  	nfsi->nfs4_acl =3D NULL;
-> >  #endif /* CONFIG_NFS_V4 */
-> > diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-> > index 8c6cc58679ff..cdf77f49ef8f 100644
-> > --- a/fs/nfs/nfstrace.h
-> > +++ b/fs/nfs/nfstrace.h
-> > @@ -28,7 +28,6 @@
-> >  			{ NFS_INO_INVALID_MTIME, "INVALID_MTIME" }, \
-> >  			{ NFS_INO_INVALID_SIZE, "INVALID_SIZE" }, \
-> >  			{ NFS_INO_INVALID_OTHER, "INVALID_OTHER" }, \
-> > -			{ NFS_INO_DATA_INVAL_DEFER, "DATA_INVAL_DEFER" }, \
-> >  			{ NFS_INO_INVALID_BLOCKS, "INVALID_BLOCKS" }, \
-> >  			{ NFS_INO_INVALID_XATTR, "INVALID_XATTR" }, \
-> >  			{ NFS_INO_INVALID_NLINK, "INVALID_NLINK" }, \
-> > diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> > index 7931fa472561..8a83d6d204ed 100644
-> > --- a/include/linux/nfs_fs.h
-> > +++ b/include/linux/nfs_fs.h
-> > @@ -190,6 +190,33 @@ struct nfs_inode {
-> >  	/* Open contexts for shared mmap writes */
-> >  	struct list_head	open_files;
-> > =20
-> > +	/* Keep track of out-of-order replies.
-> > +	 * The ooo array contains start/end pairs of
-> > +	 * number from the changeid sequence when
-> > +	 * the inodes iversion has been updated.
-> > +	 * It also contains end/start pair (i.e. reverse order)
-> > +	 * of sections of the changeid sequence that have
-> > +	 * been seen in replies from the server.
-> > +	 * Normally these should match and when both
-> > +	 * A:B and B:A are found in ooo, they are both removed.
-> > +	 * And if a reply with A:B causes an iversion update
-> > +	 * of A:B, then neither are added.
-> > +	 * When a reply has pre_change that doesn't match
-> > +	 * iversion, then the changeid pair, and any consequent
-> > +	 * change in iversion ARE added.  Later replies
-> > +	 * might fill in the gaps, or possibly a gap is caused
-> > +	 * by a change from another client.
-> > +	 * When a file or directory is opened, if the ooo table
-> > +	 * is not empty, then we assume the gaps were due to
-> > +	 * another client and we invalidate the cached data.
-> > +	 *
-> > +	 * We can only track a limited number of concurrent gaps.
-> > +	 * Currently that limit is 16.
-> > +	 */
-> > +	int ooo_cnt;
-> > +	int ooo_max; // TRACING
-> > +	unsigned long ooo[16][2];
->=20
-> Why unsigned longs here? Shouldn't these be u64?
-
-Yes, they should be u64.  Thanks.
-
->=20
-> I guess you could argue that when we have 32-bit longs that the most
-> significant bits don't matter, but that's also the case with 64-bit
-> longs, and 32 bits would halve the space requirements.
->=20
-> Also, this grows each inode by 2k on a 64-bit arch! Maybe we should
-> dynamically allocate these things instead? If the allocation fails, then
-> we could just go back to marking the cache invalid and move on.
-
-2K? 8*16*2+4*2 =3D=3D 264, not 2048.
-
-But I agree that allocating on demand would make sense.  16 is probably
-more than needed.  I don't have proper testing results from the customer
-yet, but I wouldn't be surprised if a smaller number would suffice.  But
-if we are allocating only on demand, it wouldn't hurt to allocate 16.
-
-Thanks,
-NeilBrown
-
->=20
-> > +
-> >  #if IS_ENABLED(CONFIG_NFS_V4)
-> >  	struct nfs4_cached_acl	*nfs4_acl;
-> >          /* NFSv4 state */
-> > @@ -253,8 +280,6 @@ struct nfs4_copy_state {
-> >  #define NFS_INO_INVALID_MTIME	BIT(10)		/* cached mtime is invalid */
-> >  #define NFS_INO_INVALID_SIZE	BIT(11)		/* cached size is invalid */
-> >  #define NFS_INO_INVALID_OTHER	BIT(12)		/* other attrs are invalid */
-> > -#define NFS_INO_DATA_INVAL_DEFER	\
-> > -				BIT(13)		/* Deferred cache invalidation */
-> >  #define NFS_INO_INVALID_BLOCKS	BIT(14)         /* cached blocks are inva=
-lid */
-> >  #define NFS_INO_INVALID_XATTR	BIT(15)		/* xattrs are invalid */
-> >  #define NFS_INO_INVALID_NLINK	BIT(16)		/* cached nlinks is invalid */
-> > @@ -615,6 +640,19 @@ nfs_fileid_to_ino_t(u64 fileid)
-> >  	return ino;
-> >  }
-> > =20
-> > +static inline void nfs_ooo_clear(struct nfs_inode *nfsi)
-> > +{
-> > +	nfsi->ooo_cnt =3D 0;
-> > +}
-> > +
-> > +static inline bool nfs_ooo_test(struct nfs_inode *nfsi)
-> > +{
-> > +	if (nfsi->ooo_cnt =3D=3D 0)
-> > +		return false;
-> > +	printk("nfs_ooo_test_and_clear() found %d\n", nfsi->ooo_cnt);
-> > +	return true;
-> > +}
-> > +
-> >  #define NFS_JUKEBOX_RETRY_TIME (5 * HZ)
-> > =20
-> >  /* We need to block new opens while a file is being unlinked.
-> > diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> > index e86cf6642d21..b18a877b16eb 100644
-> > --- a/include/linux/nfs_xdr.h
-> > +++ b/include/linux/nfs_xdr.h
-> > @@ -106,6 +106,7 @@ struct nfs_fattr {
-> >  #define NFS_ATTR_FATTR_OWNER_NAME	(1U << 23)
-> >  #define NFS_ATTR_FATTR_GROUP_NAME	(1U << 24)
-> >  #define NFS_ATTR_FATTR_V4_SECURITY_LABEL (1U << 25)
-> > +#define NFS_ATTR_FATTR_PRECHANGE_RAW	(1U << 26)
-> > =20
-> >  #define NFS_ATTR_FATTR (NFS_ATTR_FATTR_TYPE \
-> >  		| NFS_ATTR_FATTR_MODE \
-> >=20
->=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 348ef543c4dc..e232937fea8e 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -808,7 +808,8 @@ nfsd_file_cache_init(void)
+>  * @net: net-namespace to shut down the cache (may be NULL)
+>  *
+>  * Walk the nfsd_file cache and close out any that match @net. If @net is=
+ NULL,
+> - * then close out everything. Called when an nfsd instance is being shut=
+ down.
+> + * then close out everything. Called when an nfsd instance is being shut=
+ down,
+> + * and when the exports table is flushed.
+>  */
+> static void
+> __nfsd_file_cache_purge(struct net *net)
 > --=20
-> Jeff Layton <jlayton@kernel.org>
+> 2.39.1
 >=20
+
+--
+Chuck Lever
+
+
+
