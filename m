@@ -2,250 +2,132 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D853C67E2DC
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Jan 2023 12:14:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5942467E4DE
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Jan 2023 13:14:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232971AbjA0LOY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Jan 2023 06:14:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53320 "EHLO
+        id S229711AbjA0MOx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Jan 2023 07:14:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232361AbjA0LOX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Jan 2023 06:14:23 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE9F4B446
-        for <linux-nfs@vger.kernel.org>; Fri, 27 Jan 2023 03:13:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1674818018;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1T3l0J0UinmjdVIL92SoZoP9qVR5G6gLjIHVlY/tDsY=;
-        b=PfKpNEXdN+0OyU0jzv3YfxnQkhUSK00ME83T6xzzEnDQ3pHs+I7MmP5iOou830uxmQUUXJ
-        d5VMNjrwjWfJQ8kuPD9OqBJnOw+Y6CnqeP9fbOT2HWBrubfZgdwEP0yth8xty3wIBs6Dbj
-        pZMVDY7zRf+QSSSFXehTQBM4soqblxM=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-606-IOzWfkj0OO67gkyXimkU4g-1; Fri, 27 Jan 2023 06:13:37 -0500
-X-MC-Unique: IOzWfkj0OO67gkyXimkU4g-1
-Received: by mail-qv1-f72.google.com with SMTP id x6-20020a0cc506000000b005349c8b39d6so2616516qvi.2
-        for <linux-nfs@vger.kernel.org>; Fri, 27 Jan 2023 03:13:36 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=1T3l0J0UinmjdVIL92SoZoP9qVR5G6gLjIHVlY/tDsY=;
-        b=c8mpt7AnGjo+eCpIbyY5XwhRZGhn2RBiBz/c7p/rZt2M1O1PoTcPNRtOMaiTs8x+kB
-         bohg5xL+Ih3hWXa+uzhFNBIxrd0Wbd1N83Mm/XfHcXf1cDsQ4cwzmKWnmtiyn4WN2kMf
-         c7yH8ABWvtNXIzN+eiRi+Mwur2Vnjpx/L2EnLOEkzXzxiq9uaWRiAexOqyhPUGSCUvWq
-         OZ0eL9E/0Dq+x1dYyCe82MZU7k8WyjV6zNSpfMfkWLy+6meNJLWmxv/H3aUKRYxTemkp
-         UAZoKlK85VwRkObjExW/Ptb76dJFjCfQRsAK7KyOZgVHmMR7BQIdsvUXmhhTuS/MMQLV
-         hTFQ==
-X-Gm-Message-State: AFqh2kodv4fVY8X7jvgSdpBW2cU9pxdJBp2mgt/AD0vmMZg7jPoKANni
-        ZUNeUsPCbeI5U+KRlzSZ/J4btbcD95dlH01daYbdqM+fVRUQSwi8NXMDDqxCl2IGteD6U/m6dHR
-        aTHI3Sin30chzhiPE9QT3
-X-Received: by 2002:a05:6214:3c88:b0:535:54ab:16a3 with SMTP id ok8-20020a0562143c8800b0053554ab16a3mr51822487qvb.45.1674818016537;
-        Fri, 27 Jan 2023 03:13:36 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXuXFIWEponDCw/N8IxhQ8sfn+0efm/HOuhAWzS7r2hIRFsXIlF4IzozvtJcCyEtL8KlXxK4Pw==
-X-Received: by 2002:a05:6214:3c88:b0:535:54ab:16a3 with SMTP id ok8-20020a0562143c8800b0053554ab16a3mr51822457qvb.45.1674818016219;
-        Fri, 27 Jan 2023 03:13:36 -0800 (PST)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id pj4-20020a05620a1d8400b0070648cf78bdsm2659198qkn.54.2023.01.27.03.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 03:13:35 -0800 (PST)
-Message-ID: <148c5edccd0f26851d9fe7883e9025383f4399eb.camel@redhat.com>
-Subject: Re: [PATCH] vfs: parse sloppy mount option in correct order
-From:   Jeff Layton <jlayton@redhat.com>
-To:     Ian Kent <raven@themaw.net>, Al Viro <viro@ZenIV.linux.org.uk>
-Cc:     Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Steve French <smfrench@gmail.com>, linux-cifs@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        linux-nfs-list <linux-nfs@vger.kernel.org>,
-        David Wysochanski <dwysocha@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>
-Date:   Fri, 27 Jan 2023 06:13:34 -0500
-In-Reply-To: <166432738753.7008.13932358518650344215.stgit@donald.themaw.net>
-References: <166432738753.7008.13932358518650344215.stgit@donald.themaw.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
+        with ESMTP id S232279AbjA0MOc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Jan 2023 07:14:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5396E84195
+        for <linux-nfs@vger.kernel.org>; Fri, 27 Jan 2023 04:09:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0FE4FB820BC
+        for <linux-nfs@vger.kernel.org>; Fri, 27 Jan 2023 12:09:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AC8AC433EF;
+        Fri, 27 Jan 2023 12:09:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674821375;
+        bh=rWvNdCb8M9M/Ismtnd4J+QmPNpFMDkcXzEkPnJvPOJw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gkx9eoGHd+zelmYCPHj2583HDOg7jN2CRifpXuky73qs6DTT0q/C2XdVvb5ZwZE03
+         EAU7H0dsVNPQ4WI20bVmZ52CLMzTWHcEssDjxxUvFSuPJth2g1Idr3cOj/lqB67+xt
+         YfVvoZRC22X1aRJw3wNDsDy0ulp6ccw9CpUd6ZR1mfA6uYP2VbvaBFNYp4oYyYpOF9
+         V8FLJLZ3n08WOWM8nXa6k3KA3Z5ZmGImRHlJDh3mjsUO9B8wDH53DY965AshLzAg2x
+         Y+KQR9Wstqgrnj2NGAov6r3egsdFKo7o3YssZ6GY2xa0AfSm6DZSp/cVxijn1PPqVi
+         4yl6NCzzpBmhg==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org, Boyang Xue <bxue@redhat.com>
+Subject: [PATCH] nfsd: don't hand out delegation on setuid files being opened for write
+Date:   Fri, 27 Jan 2023 07:09:33 -0500
+Message-Id: <20230127120933.7056-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-09-28 at 09:09 +0800, Ian Kent wrote:
-> From: Roberto Bergantinos Corpas <rbergant@redhat.com>
->=20
-> With addition of fs_context support, options string is parsed
-> sequentially, if 'sloppy' option is not leftmost one, we may
-> return ENOPARAM to userland if a non-valid option preceeds sloopy
-> and mount will fail :
->=20
-> host# mount -o quota,sloppy 172.23.1.225:/share /mnt
-> mount.nfs: an incorrect mount option was specified
-> host# mount -o sloppy,quota 172.23.1.225:/share /mnt
-> host#
->=20
-> This patch correct that behaviour so that sloppy takes precedence
-> if specified anywhere on the string
->=20
-> changes since v1:
-> - add a boolean to fs context and postpone error reporting until
->   parsing is done.
->=20
-> Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-> ---
->  fs/cifs/fs_context.c       |    4 ++--
->  fs/cifs/fs_context.h       |    1 -
->  fs/fs_context.c            |   14 ++++++++++++--
->  fs/nfs/fs_context.c        |    5 +++--
->  fs/nfs/internal.h          |    1 -
->  include/linux/fs_context.h |    2 ++
->  6 files changed, 19 insertions(+), 8 deletions(-)
->=20
-> diff --git a/fs/cifs/fs_context.c b/fs/cifs/fs_context.c
-> index 0e13dec86b25..32c3fdd7d27a 100644
-> --- a/fs/cifs/fs_context.c
-> +++ b/fs/cifs/fs_context.c
-> @@ -864,7 +864,7 @@ static int smb3_fs_context_parse_param(struct fs_cont=
-ext *fc,
->  	if (!skip_parsing) {
->  		opt =3D fs_parse(fc, smb3_fs_parameters, param, &result);
->  		if (opt < 0)
-> -			return ctx->sloppy ? 1 : opt;
-> +			return fc->sloppy ? 1 : opt;
->  	}
-> =20
->  	switch (opt) {
-> @@ -1420,7 +1420,7 @@ static int smb3_fs_context_parse_param(struct fs_co=
-ntext *fc,
->  		ctx->multiuser =3D true;
->  		break;
->  	case Opt_sloppy:
-> -		ctx->sloppy =3D true;
-> +		fc->sloppy =3D true;
->  		break;
->  	case Opt_nosharesock:
->  		ctx->nosharesock =3D true;
-> diff --git a/fs/cifs/fs_context.h b/fs/cifs/fs_context.h
-> index bbaee4c2281f..75e4c41466fa 100644
-> --- a/fs/cifs/fs_context.h
-> +++ b/fs/cifs/fs_context.h
-> @@ -157,7 +157,6 @@ struct smb3_fs_context {
->  	bool uid_specified;
->  	bool cruid_specified;
->  	bool gid_specified;
-> -	bool sloppy;
->  	bool got_ip;
->  	bool got_version;
->  	bool got_rsize;
-> diff --git a/fs/fs_context.c b/fs/fs_context.c
-> index df04e5fc6d66..911a36bf2226 100644
-> --- a/fs/fs_context.c
-> +++ b/fs/fs_context.c
-> @@ -157,8 +157,15 @@ int vfs_parse_fs_param(struct fs_context *fc, struct=
- fs_parameter *param)
->  	if (ret !=3D -ENOPARAM)
->  		return ret;
-> =20
-> -	return invalf(fc, "%s: Unknown parameter '%s'",
-> -		      fc->fs_type->name, param->key);
-> +	/* We got an invalid parameter, but sloppy may have been specified
-> +	 * later on param string.
-> +	 * Let's wait to process whole params to return EINVAL.
-> +	 */
-> +
-> +	fc->param_inval =3D true;
-> +	errorf(fc, "%s: Unknown parameter '%s'", fc->fs_type->name, param->key)=
-;
+We had a bug report that xfstest generic/355 was failing on NFSv4.0.
+This test sets various combinations of setuid/setgid modes and tests
+whether DIO writes will cause them to be stripped.
 
-Is it correct to store an error message when we don't know whether
-"sloppy" has been specified yet?
+What I found was that the server did properly strip those bits, but
+the client didn't notice because it held a delegation that was not
+recalled. The recall didn't occur because the client itself was the
+one generating the activity and we avoid recalls in that case.
 
-> +
-> +	return 0;
->  }
->  EXPORT_SYMBOL(vfs_parse_fs_param);
-> =20
-> @@ -234,6 +241,9 @@ int generic_parse_monolithic(struct fs_context *fc, v=
-oid *data)
->  		}
->  	}
-> =20
-> +	if (!fc->sloppy && fc->param_inval)
-> +		ret =3D -EINVAL;
-> +
->  	return ret;
->  }
->  EXPORT_SYMBOL(generic_parse_monolithic);
-> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> index 4da701fd1424..09da63cc84f7 100644
-> --- a/fs/nfs/fs_context.c
-> +++ b/fs/nfs/fs_context.c
-> @@ -485,7 +485,7 @@ static int nfs_fs_context_parse_param(struct fs_conte=
-xt *fc,
-> =20
->  	opt =3D fs_parse(fc, nfs_fs_parameters, param, &result);
->  	if (opt < 0)
-> -		return (opt =3D=3D -ENOPARAM && ctx->sloppy) ? 1 : opt;
-> +		return (opt =3D=3D -ENOPARAM && fc->sloppy) ? 1 : opt;
-> =20
->  	if (fc->security)
->  		ctx->has_sec_mnt_opts =3D 1;
-> @@ -853,7 +853,8 @@ static int nfs_fs_context_parse_param(struct fs_conte=
-xt *fc,
->  		 * Special options
->  		 */
->  	case Opt_sloppy:
-> -		ctx->sloppy =3D true;
-> +		fc->sloppy =3D true;
-> +		dfprintk(MOUNT, "NFS:   relaxing parsing rules\n");
->  		break;
->  	}
-> =20
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index 898dd95bc7a7..83552def96f1 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -90,7 +90,6 @@ struct nfs_fs_context {
->  	bool			internal;
->  	bool			skip_reconfig_option_check;
->  	bool			need_mount;
-> -	bool			sloppy;
->  	unsigned int		flags;		/* NFS{,4}_MOUNT_* flags */
->  	unsigned int		rsize, wsize;
->  	unsigned int		timeo, retrans;
-> diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
-> index ff1375a16c8c..d91d42bc06ce 100644
-> --- a/include/linux/fs_context.h
-> +++ b/include/linux/fs_context.h
-> @@ -111,6 +111,8 @@ struct fs_context {
->  	bool			need_free:1;	/* Need to call ops->free() */
->  	bool			global:1;	/* Goes into &init_user_ns */
->  	bool			oldapi:1;	/* Coming from mount(2) */
-> +	bool                    sloppy:1;       /* If fs support it and was spe=
-cified */
-> +	bool                    param_inval:1;  /* If set, check sloppy value *=
-/
->  };
-> =20
->  struct fs_context_operations {
->=20
->=20
+Clearing setuid bits is an "implicit" activity. The client didn't
+specifically request that we do that, so we need the server to issue a
+CB_RECALL, or avoid the situation entirely by not issuing a delegation.
 
-Overall, the patch looks reasonable though.
---=20
-Jeff Layton <jlayton@redhat.com>
+The easiest fix here is to simply not give out a delegation if the file
+is being opened for write, and the mode has the setuid and/or setgid bit
+set. Note that there is a potential race between the mode and lease
+being set, so we test for this condition both before and after setting
+the lease.
+
+This patch fixes generic/355, generic/683 and generic/684 for me.
+
+Reported-by: Boyang Xue <bxue@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfsd/nfs4state.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index e61b878a4b45..ace02fd0d590 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -5421,6 +5421,23 @@ nfsd4_verify_deleg_dentry(struct nfsd4_open *open, struct nfs4_file *fp,
+ 	return 0;
+ }
+ 
++/*
++ * We avoid breaking delegations held by a client due to its own activity, but
++ * clearing setuid/setgid bits on a write is an implicit activity and the client
++ * may not notice and continue using the old mode. Avoid giving out a delegation
++ * on setuid/setgid files when the client is requesting an open for write.
++ */
++static int
++nfsd4_verify_setuid_write(struct nfsd4_open *open, struct nfsd_file *nf)
++{
++	struct inode *inode = file_inode(nf->nf_file);
++
++	if ((open->op_share_access & NFS4_SHARE_ACCESS_WRITE) &&
++	    (inode->i_mode & (S_ISUID|S_ISGID)))
++		return -EAGAIN;
++	return 0;
++}
++
+ static struct nfs4_delegation *
+ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 		    struct svc_fh *parent)
+@@ -5454,6 +5471,8 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 	spin_lock(&fp->fi_lock);
+ 	if (nfs4_delegation_exists(clp, fp))
+ 		status = -EAGAIN;
++	else if (nfsd4_verify_setuid_write(open, nf))
++		status = -EAGAIN;
+ 	else if (!fp->fi_deleg_file) {
+ 		fp->fi_deleg_file = nf;
+ 		/* increment early to prevent fi_deleg_file from being
+@@ -5494,6 +5513,14 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 	if (status)
+ 		goto out_unlock;
+ 
++	/*
++	 * Now that the deleg is set, check again to ensure that nothing
++	 * raced in and changed the mode while we weren't lookng.
++	 */
++	status = nfsd4_verify_setuid_write(open, fp->fi_deleg_file);
++	if (status)
++		goto out_unlock;
++
+ 	spin_lock(&state_lock);
+ 	spin_lock(&fp->fi_lock);
+ 	if (fp->fi_had_conflict)
+-- 
+2.39.1
 
