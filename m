@@ -2,68 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE72C6805E0
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 07:09:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA4C68086E
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 10:23:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235578AbjA3GJU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Jan 2023 01:09:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44578 "EHLO
+        id S236183AbjA3JXe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Jan 2023 04:23:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231324AbjA3GJT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 01:09:19 -0500
-Received: from formenos.hmeau.com (helcar.hmeau.com [216.24.177.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030769009;
-        Sun, 29 Jan 2023 22:09:17 -0800 (PST)
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
-        id 1pMNLr-005Tuy-1Z; Mon, 30 Jan 2023 14:09:12 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 30 Jan 2023 14:09:11 +0800
-Date:   Mon, 30 Jan 2023 14:09:11 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Thomas Graf <tgraf@suug.ch>, netdev <netdev@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: Fwd: [PATCH RFC] NFSD: Convert filecache to rhltable
-Message-ID: <Y9dfB322nu5d3fB1@gondor.apana.org.au>
-References: <15afb0215ec76ffb54854eda8916efa4b5b3f6c3.camel@redhat.com>
- <7456FF95-0C16-45C7-8CD9-B4436BE80B71@oracle.com>
+        with ESMTP id S234878AbjA3JXc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 04:23:32 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23D701024A;
+        Mon, 30 Jan 2023 01:23:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=lCuBrdiApHtnAzdlL9jd8/orKVtuLY/i0Sero01PH48=; b=gUt9fXuq6v7ElJkjGIu4Bt2k6I
+        aie9JrU1FF7iS8hNoPZplHZMIg/mjCy9+CuXAh/U/DNgLjS6V1ufgxJp2NQMex5tHZQGfnrKiKRKo
+        caqpxM1HRuxRxX61XnnyxOSlZ2/Jq47eap8gN/lH6+L4ZPbDi3w4YLBF5OHjyJWW13xcFRDWCqAUZ
+        NKpMf5yhHzm/uS9x384Srna47NYmLZm+gDq7sZpO/NDG+BHvojVyEMNCK01EInd7TUHZ7+Fo+Bd26
+        ywRu7rwlcWBFPjfGdWJeRjwhamdKyIPJEjKoaPO4rYQ0QXObm0HMjgFoMXTg096Bm2LCYjvYSlGAx
+        FW6FwsxA==;
+Received: from [2001:4bb8:19a:272a:732e:e417:47d7:2f4a] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pMQMS-002nyI-W6; Mon, 30 Jan 2023 09:22:01 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Xiubo Li <xiubli@redhat.com>, Steve French <sfrench@samba.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        devel@lists.orangefs.org, io-uring@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: add bvec initialization helpers
+Date:   Mon, 30 Jan 2023 10:21:34 +0100
+Message-Id: <20230130092157.1759539-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7456FF95-0C16-45C7-8CD9-B4436BE80B71@oracle.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,T_SPF_TEMPERROR autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 02:57:35PM +0000, Chuck Lever III wrote:
->
-> > I could be wrong, but it looks like you're safe to traverse the list
-> > even in the case of removals, assuming the objects themselves are
-> > rcu-freed. AFAICT, the object's ->next pointer is not changed when it's
-> > removed from the table. After all, we're not holding a "real" lock here
-> > so the object could be removed by another task at any time.
-> > 
-> > It would be nice if this were documented though.
+Hi all,
 
-Yes this is correct.  As long as rcu_read_lock is still held,
-the list will continue to be valid for walking even if you remove
-entries from it.
+this series adds the helpers to initalize a bvec.  These remove open coding of
+bvec internals and help with experimenting with other representations like
+a phys_addr_t instead of page + offset.
 
-> Is there a preferred approach for this with rhltable? Can we just
-> hold rcu_read_lock and call rhltable_remove repeatedly without getting
-> a fresh copy of the list these items reside on?
-
-Yes you can walk the whole returned list while removing the nodes
-one by one, assuming that you hold the RCU read lock throughout.
-The unhashed nodes are only freed after the RCU grace period so the
-list remains valid after removal.
-
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Diffstat:
+ block/bio-integrity.c             |    7 ------
+ block/bio.c                       |   12 +----------
+ drivers/block/rbd.c               |    7 ++----
+ drivers/block/virtio_blk.c        |    4 ---
+ drivers/block/zram/zram_drv.c     |   15 +++-----------
+ drivers/nvme/host/core.c          |    4 ---
+ drivers/nvme/target/io-cmd-file.c |   10 +--------
+ drivers/nvme/target/tcp.c         |    5 +---
+ drivers/scsi/sd.c                 |   36 ++++++++++++++++------------------
+ drivers/target/target_core_file.c |   18 +++++------------
+ drivers/vhost/vringh.c            |    5 +---
+ fs/afs/write.c                    |    8 ++-----
+ fs/ceph/file.c                    |   10 ++++-----
+ fs/cifs/connect.c                 |    5 ++--
+ fs/cifs/fscache.c                 |   16 +++++----------
+ fs/cifs/misc.c                    |    5 +---
+ fs/cifs/smb2ops.c                 |    6 ++---
+ fs/coredump.c                     |    7 +-----
+ fs/nfs/fscache.c                  |   16 +++++----------
+ fs/orangefs/inode.c               |   22 ++++++--------------
+ fs/splice.c                       |    5 +---
+ include/linux/bvec.h              |   40 ++++++++++++++++++++++++++++++++++++++
+ io_uring/rsrc.c                   |    4 ---
+ mm/page_io.c                      |    8 +------
+ net/ceph/messenger_v1.c           |    7 +-----
+ net/ceph/messenger_v2.c           |   28 ++++++++++----------------
+ net/rxrpc/rxperf.c                |    8 ++-----
+ net/sunrpc/svcsock.c              |    7 +-----
+ net/sunrpc/xdr.c                  |    5 +---
+ 29 files changed, 143 insertions(+), 187 deletions(-)
