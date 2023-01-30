@@ -2,88 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01C0268035A
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 01:46:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 219466803C3
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 03:16:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231654AbjA3AqH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 29 Jan 2023 19:46:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43534 "EHLO
+        id S229835AbjA3CQA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 29 Jan 2023 21:16:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjA3AqG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 Jan 2023 19:46:06 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D744D18B38;
-        Sun, 29 Jan 2023 16:46:00 -0800 (PST)
+        with ESMTP id S229644AbjA3CQA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 Jan 2023 21:16:00 -0500
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9382B12593;
+        Sun, 29 Jan 2023 18:15:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=E0dI9WJbm3E3fwl13sasNvX+4Pysw9wMqt9GlJqOFU0=; b=a3xkCMyPLYE+IVud3xNXU0BaP8
-        P23nG4IrmemJyqGFY5buUCa9b4cXSXOwBCumy1GB4KKreoZf9lV1dXuC70YoEdFJFFjFx+Rp3dOiS
-        MnMHypx1+fRcQAgTref2TIU7sbWq2EURD/wOOkIpIhoXQtc631uu7+dqta7QRtDhOSbum+bN+o5UH
-        tuFvGG/KpL39PUncGWs3kDSnIC/F1ZQWMwtoQRIOQCF8hfukeGz6dhFbGi9YOZ2zf421d2OhOwTGz
-        ySGY1mHr24PQywAa0Lh+5mPLeMGBrft1IYTnmk+gH+usFRRY2tikY9H7yKD8sMUPPouvEZVE0SLPB
-        jjp4Z2NA==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pMIIw-0025l3-I5; Mon, 30 Jan 2023 00:45:51 +0000
-Date:   Sun, 29 Jan 2023 16:45:50 -0800
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     "Fabio M. De Francesco" <fmdefrancesco@gmail.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Russ Weight <russell.h.weight@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH] fs/nfs: Replace kmap_atomic() with kmap_local_page() in
- dir.c
-Message-ID: <Y9cTPu4PAbtjaeaR@bombadil.infradead.org>
-References: <20230127215452.6399-1-fmdefrancesco@gmail.com>
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
+        bh=VUKkxOPVexeiOjL1SwDi/VTAaFCwLQcis/ITIft8mAs=; b=WQ5VRDYbPPNR7mazbzXFURKCqb
+        /oiZgBvOVBXp93JfiQTmVQeKhU2wPMr4KdRjWA94RzfnrZDQEommDZK84jRLJtHGiDJ5epM/fHWpy
+        Z+C9XXXo2NHvSQ2khZwuJd0xfN/I+sQkFlAQOujROHspzZTHpWfEfT1+OpMCAQOgqAdn5yok7r15q
+        7JE1OV+bKIj+ie6wkgsLT9OU7g4rbO8T7sZ5F9UHyUPN4jm8nrnqHNTHNInAgyfRMz0DEV+YMbguo
+        GkXjDnDGkmp9PQdJx95HXXMTG/S7TpGgmy9caco9WLOC48eRP0544FopgHtAqlwpDb6MTMSmMtaVR
+        T4d7D5Ug==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1pMJi4-004w5f-24;
+        Mon, 30 Jan 2023 02:15:52 +0000
+Date:   Mon, 30 Jan 2023 02:15:52 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     chuck lever <chuck.lever@oracle.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>, anna <anna@kernel.org>,
+        trond myklebust <trond.myklebust@hammerspace.com>,
+        raven <raven@themaw.net>,
+        chris chilvers <chris.chilvers@appsbroker.com>,
+        david young <david.young@appsbroker.com>,
+        luis turcitu <luis.turcitu@appsbroker.com>,
+        david <david@sigma-star.at>, benmaynard <benmaynard@google.com>
+Subject: Re: [PATCH 2/3] namei: Allow follow_down() to uncover auto mounts
+Message-ID: <Y9coWGadefHY6ZEJ@ZenIV>
+References: <20221207084309.8499-1-richard@nod.at>
+ <20221207084309.8499-3-richard@nod.at>
+ <EAE9AF79-93B8-4366-8672-20D407694E7E@oracle.com>
+ <68008696.79813.1675006959005.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230127215452.6399-1-fmdefrancesco@gmail.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <68008696.79813.1675006959005.JavaMail.zimbra@nod.at>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,URIBL_ABUSE_SURBL
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jan 27, 2023 at 10:54:52PM +0100, Fabio M. De Francesco wrote:
-> kmap_atomic() is deprecated in favor of kmap_local_page().
+On Sun, Jan 29, 2023 at 04:42:39PM +0100, Richard Weinberger wrote:
+> ----- Ursprüngliche Mail -----
+> > Von: "chuck lever" <chuck.lever@oracle.com>
+> >> On Dec 7, 2022, at 3:43 AM, Richard Weinberger <richard@nod.at> wrote:
+> >> 
+> >> This function is only used by NFSD to cross mount points.
+> >> If a mount point is of type auto mount, follow_down() will
+> >> not uncover it. Add LOOKUP_AUTOMOUNT to the lookup flags
+> >> to have ->d_automount() called when NFSD walks down the
+> >> mount tree.
+> >> 
+> >> Signed-off-by: Richard Weinberger <richard@nod.at>
+> > 
+> > Hello Al, you are top of the maintainers listed for fs/namei.c.
+> > I'd like to take this series for v6.3 via the nfsd tree. Can
+> > I get your Acked-by: for this one?
 > 
-> With kmap_local_page() the mappings are per thread, CPU local, can take
-> page-faults, and can be called from any context (including interrupts).
-> Furthermore, the tasks can be preempted and, when they are scheduled to
-> run again, the kernel virtual addresses are restored and still valid.
-> 
-> kmap_atomic() is implemented like a kmap_local_page() which also disables
-> page-faults and preemption (the latter only for !PREEMPT_RT kernels,
-> otherwise it only disables migration).
-> 
-> The code within the mappings/un-mappings in the functions of dir.c don't
-> depend on the above-mentioned side effects of kmap_atomic(), so that mere
-> replacements of the old API with the new one is all that is required
-> (i.e., there is no need to explicitly add calls to pagefault_disable()
-> and/or preempt_disable()).
-> 
-> Therefore, replace kmap_atomic() with kmap_local_page() in fs/nfs/dir.c.
-> 
-> Tested in a QEMU/KVM x86_32 VM, 6GB RAM, booting a kernel with
-> HIGHMEM64GB enabled.
-> 
-> Suggested-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Fabio M. De Francesco <fmdefrancesco@gmail.com>
+> ping?
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+modulo clumsy wording ("mount point is of type auto mount")
 
-  Luis
+Acked-by: Al Viro <viro@zeniv.linux.org.uk>
+
+Commit message sounds as if it refered to autofs, rather than NFS referrals
+et.al. and AFAICS those are the cases it's really about...
