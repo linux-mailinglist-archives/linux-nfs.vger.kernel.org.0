@@ -2,393 +2,490 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 378F0681A8C
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 20:33:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9E19681AE6
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 20:55:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236690AbjA3Tdg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Jan 2023 14:33:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
+        id S230403AbjA3Tzr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Jan 2023 14:55:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237479AbjA3Tdf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 14:33:35 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2090.outbound.protection.outlook.com [40.107.243.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D9F13CE33
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Jan 2023 11:33:30 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=di6+2v0HVlSEMOnsoc7VZxUr2LO1VYvpDcKBQQd0UHpPX9tCC1OgpSaCuKgRYyD9UjZp78yoJIsZxqYlKtX+11Cc9OkcUWqqqYxGqWaMI3AHJwa3Eiek0C3UQ299iCYvqSn1UfjNvxaMePlPqDVXA7Q2ZA46723o0M/vjku3kDTgv1rWLQ7SAZSsioH2NbaPnI9vXo3x0z4Z487Y4d5wh43eQKQadRA6hcB0RS3Fu8LpcNeUqsq/WB+gUjt+3zkUwjOlxbuOv1dJfTVJsB3VFDyYbADjTUfmY1knOcwW48ZK843ltOW6tSb4g0KJ4d6v7EQmR6DPLM+8LykMPhEpjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3lE7L1kCEtBHwn/J+GEewqEZIkxMF+jwpoizgTQZdro=;
- b=bLMO5LdYRSI/wkri6TAeIcSGx7CihBvGdiZixE7Iw7p57DuIrCzeqmNjnWYCIk9TGtJMneHDJVqaHl+8HPIM0ENWjh7J4+uumtvhXWVClWHZVfe+6zlzBwDPaxbwTvDE/ejGvw2fPaJQWnpKEQYSn5jEYW5Ju11pm9tHdmSn46P3IfNPu6pP82CNDWOdOxBqKdSOUgSZwucf6xaEBj8QwBJu5KrDErErClPkpZ8aLPvqPBGC3XkiHmCQaZNUuH6Nv+pyE3SU9h3noIMsW4X7+W4Ov7N386R/sbHXltJ269ZnEhjopUdKzXdMIS177QBoTzQd+EDBEvbUz+HBKyCwow==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=boatrocker.com; dmarc=pass action=none
- header.from=boatrocker.com; dkim=pass header.d=boatrocker.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=boatrocker.onmicrosoft.com; s=selector2-boatrocker-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3lE7L1kCEtBHwn/J+GEewqEZIkxMF+jwpoizgTQZdro=;
- b=zNSBsZOrzr9XceFcXprkOYyJidKYAe3OHn+2pkfI3XIrDRy+QLpsReZNrUIbCvSR6Jhx2MIw4OBK2sSnQcctvw8MCXmr3syPiY9i0mNp4BWJ0BWgMRZEfbA1oLom43PqHMU+PCfKnfL5nsRhs9l4VeTPxaGSx9Lry55dXYSqXq0=
-Received: from YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:69::7)
- by YQXPR01MB5884.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:3d::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
- 2023 19:33:28 +0000
-Received: from YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::7303:f215:657e:1643]) by YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::7303:f215:657e:1643%4]) with mapi id 15.20.6043.036; Mon, 30 Jan 2023
- 19:33:28 +0000
-From:   Andrew Klaassen <andrew.klaassen@boatrocker.com>
-To:     Jeff Layton <jlayton@kernel.org>,
+        with ESMTP id S230062AbjA3Tzq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 14:55:46 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B2524ED3
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Jan 2023 11:55:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DF72FB815E0
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Jan 2023 19:55:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40DA0C433D2;
+        Mon, 30 Jan 2023 19:55:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675108541;
+        bh=AWteIIy2g/5a0dMekre1BTJyZBpg52Vyakr+clcqThk=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=EmvJ4/GPOM/Dqhyeko9+YUJTOIp7vMYEaN/hrlpssembKm+oGD4ckV9aPCoBK+JQr
+         t9KVYAY7dWtZEfZR+Vom+AXgjC7sD6qWk5VqSGHK+5p6AWc7WhIMAdSLKa0OvEOKnN
+         HNB9vwXDqgIKZhI4H9xWQ3SBdSM4p6k2VfXYsescYXvXlxfkUqJIKz75cX+mW8qHg3
+         bvZdrrWK6t9jSGSILqh7qpJ8hEWKs8fIH2OTnDvXyjWIoaMkJ2NzuO3jS7UMEkSoCp
+         FxCe1NTfxgSCT30K/je9FBlImG745lCyTLBG+pP/x3Jn39qvc+p/q5jH85s+mIcl5F
+         Ki2OlgO0I7jjQ==
+Message-ID: <3c02bd2df703a68093db057c51086bbf767ffeb1.camel@kernel.org>
+Subject: Re: Trying to reduce NFSv4 timeouts to a few seconds on an
+ established connection
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Andrew Klaassen <andrew.klaassen@boatrocker.com>,
         "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: RE: Trying to reduce NFSv4 timeouts to a few seconds on an
- established connection
-Thread-Topic: Trying to reduce NFSv4 timeouts to a few seconds on an
- established connection
-Thread-Index: AdkvR33g3mzLGSb7R/abGwkCKolj9QCUyz5AAA3zOxAAIFt1AACi9rVA
-Date:   Mon, 30 Jan 2023 19:33:28 +0000
-Message-ID: <YQBPR01MB10724B36E378F493B9DED3C7E86D39@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+Date:   Mon, 30 Jan 2023 14:55:39 -0500
+In-Reply-To: <YQBPR01MB10724B36E378F493B9DED3C7E86D39@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
 References: <YQBPR01MB10724B629B69F7969AC6BDF9586C89@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
          <YQBPR01MB10724AEE306F99C844101EED086CF9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
          <YQBPR01MB10724F79460F3C02361279E8686CF9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
- <654e3b7d15992d191b2b2338483f29aec8b10ee1.camel@kernel.org>
-In-Reply-To: <654e3b7d15992d191b2b2338483f29aec8b10ee1.camel@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=boatrocker.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: YQBPR01MB10724:EE_|YQXPR01MB5884:EE_
-x-ms-office365-filtering-correlation-id: 084f7923-6ec4-427d-956d-08db02f8dcea
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230025)(376002)(346002)(39850400004)(366004)(396003)(136003)(451199018)(8936002)(41300700001)(44832011)(30864003)(52536014)(66446008)(5660300002)(66556008)(33656002)(55016003)(83380400001)(55236004)(122000001)(38100700002)(86362001)(38070700005)(66946007)(7696005)(64756008)(66476007)(71200400001)(8676002)(76116006)(316002)(110136005)(478600001)(186003)(26005)(9686003)(6506007)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wzCfUuHPZmqm6clJsSvFlDkd0RCIcu1BqCky9ELgHgU04z96eD2zyNO86kOTLne2eS58EpX/6JANxym3o7PkdfrUd24LUrjkPsVIlThyZISF0OVu6Iym5z0pF8gVJiuEifIqai65ZhkZF0OaIroJ36uk3GCfi1b62KeMZeKPceJBQ4zEZGrwGmw+QKE8qnE+TOBLE6zBhdUip+DLHRGZZN8b2YSxbpS+SLyXWYlJcXs7P8N5Rz87if0NhuwzbzBAeGoohgD5nPMnu157uax8W9vvXjivQat5u+V49/qI2PjpI6ZfRPtWH6IitNzH3MsztU+RlGh/+QAm/KpDpwW3+GZemFKRlwdWeVxXCFMf4LcF2bSP6G8GFYV7Nq4bFD7qES+Lg4n2sup485Ce1HO24Vl9T6LvAe4Mb80T+7ymf653rHO7fcjEmCj6w/c5kvneiPGSNxYy9ol1075pMgAQQvUhqmdfLWHXOqGXG4iaefqY5bOUtoBWyhmVEketI2KFSG9NDnkI+gLneFOc1tqeKOBarDiZFKgXV7VnDfhC7Sk55hWtQehuLK6+MxnjrHWKaen8xCYI01rUB0559kvBtRNw3vXnIEOZ8GH7IgpgMXX8k0VfRsnUs265TeDnu7xX1jVw09nFMWYc7+ht/0BVQ00rQqgo061r+zcclU221NZUV7YrSLlU5IPiIiss5ZTrite6/rDyBDxzJ6c/ThkgHg==
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?cUt5d2ludVdJcTdSUEdzMkZYRWJKd3FsVkJtbkdsYnFRaFMvR1FyYUpGSXZY?=
- =?utf-8?B?ZEMvUEJyN25nN1NSUFIzQVVVK1dzNjdIMldMemF4TCtlbmZGRlBUNVhuMnp2?=
- =?utf-8?B?SFlOTnNxRWNnQ2hSQnk1bTdLRElTalByYVRjTlB4aGF3RFRRL3lMN0hvV0NL?=
- =?utf-8?B?UUhqWVNnQzVyVE5BZnhMd25XYlpiL1Bqc3AzTkt5ZkVKV25OLytTNkdWUGQy?=
- =?utf-8?B?UkJyQkIwV3lRQWxIT0lHdnczSFNSODBxQ2IvcEx0NXN1THE4SXZUb1VlSEk0?=
- =?utf-8?B?Vm9TZDM0VTNzdFZDKzM3aVVCZ0hZV08xNzNCWHpobmcwSjk3UXZEaFlKeTJJ?=
- =?utf-8?B?TjFMU0cweTFhdk9aZmVpT1Uwb2pJSjhIMzJqME5CM0J1b1U0NVAvSnZNZE8r?=
- =?utf-8?B?YmhrL2N4dGZOdFZvdjJ4YW0wc2EwdlRxQjBaekJvOXBQQXFQS3ZLOGFBMFVy?=
- =?utf-8?B?TXc5c0I5VTdrY215bWsyVEszZ3c3dTI4amZ1bXN4RmVNM0xIdkJWMkV0WldD?=
- =?utf-8?B?N04zSUV5aGNXQStUNis3ZENJWURBdmZYcm1OaXRiajBGcHZlQXE4K3ZyTjBV?=
- =?utf-8?B?NnQ2bmlTc1o1dnRRLytvUHFJOEJZeVlLNGlUOVN3VkVrc05NcmtsdEZWeW5x?=
- =?utf-8?B?WlBvb1RpT21Pdy9veFBXbGFualJMcis1VGE5bFo5U2x1cTU0ZzNqcXEvb0lv?=
- =?utf-8?B?UU5lbUlWMjdaa2M0MmhkQUdRSGs3RnhFeitya08yUjNQc1BQaC8ycVVxWjk0?=
- =?utf-8?B?ZkMvZVNoM3RUN2dFTEg5QzZ6TXlFcUUyS2x1L3hDU2FWdkM5RDNPODYwL1pp?=
- =?utf-8?B?VDFIK1g2amhpV3NYWE9kOTVJdm9wMHpZMWQ1YWdMU3dyOFdWancrVkhMUjQy?=
- =?utf-8?B?aURjL1FLbDRmY1BoK3JHdWhEUXBQbVgxbUp3YnR2UjFoRUVZZHlWR29reVNp?=
- =?utf-8?B?QjlUb3VjMmU1SXlHa1BTWkpxSmJlSkRQQWlIVWRUTkRQODIyZXJHeWljQnk1?=
- =?utf-8?B?STVVU25UM2pZVTJFZ1RUd0dyMm1RRUtmeXQxTnV0RTN5YUplT0tsWitUVzRP?=
- =?utf-8?B?bGRVbS9aR04xdjYwalpqZmswZHFQbkttZEJSdE1RMENIVDlDZkJodllsaXdt?=
- =?utf-8?B?Nzc3Z0IvYVhNNGhMYTgrbklIU2YwL2M0Q2xHLy9oaXE0cG5CbVUzSnJzcitt?=
- =?utf-8?B?KzBFdUZsNHRlK0lDbmtFazRnQzlTVkZkRWxOVS8vV3pCbmdpcWZycWgyRTda?=
- =?utf-8?B?S1YxUG94ZTBzaTk1MjJkR01QV1VsalZOMDVtc2VKUm9VRGVQYTk3Syszckly?=
- =?utf-8?B?elJvYVRyaWN5OElXUEVCQm40N0dVQjFuUTRvSEs4dFN3VGRPZFBWTEFHK2VV?=
- =?utf-8?B?Rk0vSTUrWXIwYU5YKzI4b2ZLUHY5N2lqSjFpaXFQU21Ua1h5VkFjZ0FTeGVk?=
- =?utf-8?B?bFl2UzVqQkpFWnN1MklFdUtQdm8xUEJhZUtqWEQ3ODh2eEtpVXZMb2V3TzJs?=
- =?utf-8?B?a00xcVBtNWFFQVNIV1I1andtNDUzb2ErWTRJQ25IV1RxTUY0cWs5bkw1UHU5?=
- =?utf-8?B?QUhuRGlwNHNYR2VDeFNIMm9NdnJ3ZjZVYUNnbm8vd2wyejdhOTdUc0FpQjNE?=
- =?utf-8?B?YXFFRlI2d2ZYaXNmY05Qa0FLSDlNQmRjeXliRjdib0lHbjVKSEg4NEJvaHln?=
- =?utf-8?B?Zm8rTG4rUDNXbVFvN3BqTWVNeVJiUGVyUVlvOFNhVDArOVUwcnhiZlRMazVk?=
- =?utf-8?B?bWovWkZyR3RrUGFsbGxZRzBkMHVyeTFsbDFIU2dxbmJnQWoxWklHWWNreTNS?=
- =?utf-8?B?V0ZXc0lpZThHaUExa2hhUVZNYkQwb2hwRFVaaWQ1S1VJOFZGSmlQQk9xSnJ5?=
- =?utf-8?B?ZUY3dDQ1K1FvOXF1clpWcENpZG9nazRGdENhdUNYeEFyM1k1bkRDSVQ5dEtT?=
- =?utf-8?B?dWo2aW1Kb3ViUjFoeXVnd0FxT0s3ZUhJd25jT1QyblJpM2Nrb2pQTnowaGQv?=
- =?utf-8?B?ekRacHhrOFllU0tVc25aWTNFSTdwZmhrVDRFK3RiM1JLWlhvcEZOS0szWFdJ?=
- =?utf-8?B?eHloQkFQZExTSGdMR3RKelMvaFVka1RnaG1jMkpEbWtJLzh0RmYwMVlDbGFJ?=
- =?utf-8?B?YWIvd0phQjR1YzVOa2ozQzU3TEl5emlEVDRHUncrQUw5by9wZXlMR256QUVh?=
- =?utf-8?B?cVE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+         <654e3b7d15992d191b2b2338483f29aec8b10ee1.camel@kernel.org>
+         <YQBPR01MB10724B36E378F493B9DED3C7E86D39@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
 MIME-Version: 1.0
-X-OriginatorOrg: boatrocker.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 084f7923-6ec4-427d-956d-08db02f8dcea
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2023 19:33:28.4094
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: fd92a966-cd05-4664-965e-b69e7529781a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XhmgMfViVdoPwDZFXG5gyC0e+7zNvsdrnla7ptSCDcAiQ/D9aR4FQfgvJnIXNuMfKUYH0eqrRGXxxTnv4hWdGNQPihyRnjRLoWqw4siwoy4=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQXPR01MB5884
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,FORGED_SPF_HELO,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-PiBGcm9tOiBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPg0KPiBTZW50OiBGcmlkYXks
-IEphbnVhcnkgMjcsIDIwMjMgODozMyBBTQ0KPiANCj4gT24gVGh1LCAyMDIzLTAxLTI2IGF0IDIy
-OjA4ICswMDAwLCBBbmRyZXcgS2xhYXNzZW4gd3JvdGU6DQo+ID4gPiBGcm9tOiBBbmRyZXcgS2xh
-YXNzZW4gPGFuZHJldy5rbGFhc3NlbkBib2F0cm9ja2VyLmNvbT4NCj4gPiA+IFNlbnQ6IFRodXJz
-ZGF5LCBKYW51YXJ5IDI2LCAyMDIzIDEwOjMyIEFNDQo+ID4gPg0KPiA+ID4gPiBGcm9tOiBBbmRy
-ZXcgS2xhYXNzZW4gPGFuZHJldy5rbGFhc3NlbkBib2F0cm9ja2VyLmNvbT4NCj4gPiA+ID4gU2Vu
-dDogTW9uZGF5LCBKYW51YXJ5IDIzLCAyMDIzIDExOjMxIEFNDQo+ID4gPiA+DQo+ID4gPiA+IEhl
-bGxvLA0KPiA+ID4gPg0KPiA+ID4gPiBUaGVyZSdzIGEgc3BlY2lmaWMgTkZTdjQgbW91bnQgb24g
-YSBzcGVjaWZpYyBtYWNoaW5lIHdoaWNoIHdlJ2QNCj4gPiA+ID4gbGlrZSB0byB0aW1lb3V0IGFu
-ZCByZXR1cm4gYW4gZXJyb3IgYWZ0ZXIgYSBmZXcgc2Vjb25kcyBpZiB0aGUNCj4gPiA+ID4gc2Vy
-dmVyIGdvZXMgYXdheS4NCj4gPiA+ID4NCj4gPiA+ID4gSSd2ZSBjb25maXJtZWQgdGhlIGZvbGxv
-d2luZyBvbiB0d28gZGlmZmVyZW50IGtlcm5lbHMsIDQuMTguMC0NCj4gPiA+ID4gMzQ4LjEyLjIu
-ZWw4XzUueDg2XzY0IGFuZCA2LjEuNy0yMDAuZmMzNy54ODZfNjQuDQo+ID4gPiA+DQo+ID4gPiA+
-IEkndmUgYmVlbiBhYmxlIHRvIGdldCBib3RoIGF1dG9mcyBhbmQgdGhlIG1vdW50IGNvbW1hbmQg
-dG8NCj4gPiA+ID4gY29vcGVyYXRlLCBzbyB0aGF0IHRoZSBtb3VudCBhdHRlbXB0IGZhaWxzIGFm
-dGVyIGFuIGFyYml0cmFyeQ0KPiA+ID4gPiBudW1iZXIgb2Ygc2Vjb25kcy4NCj4gPiA+ID4gVGhp
-cyBtb3VudCBjb21tYW5kLCBmb3IgZXhhbXBsZSwgd2lsbCBmYWlsIGFmdGVyIDYgc2Vjb25kcywg
-YXMNCj4gPiA+ID4gZXhwZWN0ZWQgYmFzZWQgb24gdGhlIHRpbWVvPTIwLHJldHJhbnM9MixyZXRy
-eT0wIG9wdGlvbnM6DQo+ID4gPiA+DQo+ID4gPiA+ICQgdGltZSBzdWRvIG1vdW50IC10IG5mczQg
-LW8NCj4gPiA+ID4gcncscmVsYXRpbWUsc3luYyx2ZXJzPTQuMixyc2l6ZT0xMzEwNzIsd3NpemU9
-MTMxMDcyLG5hbWxlbj0yNTUsYWNyDQo+ID4gPiA+IGVnbWkNCj4gPiA+ID4gbg0KPiA+ID4gPg0K
-PiA+ID4gPTAsYWNyZWdtYXg9MCxhY2Rpcm1pbj0wLGFjZGlybWF4PTAsc29mdCxub2FjLHByb3Rv
-PXRjcCx0aW1lbz0yMCxyZXQNCj4gPiA+IHJhDQo+ID4gPiA+IG4gcz0yLHJldHJ5PTAsc2VjPXN5
-cyB0aG9yMDQ6L21udC90aG9yZnMwNCAgL21udC90aG9yMDQNCj4gPiA+ID4gbW91bnQubmZzNDog
-Q29ubmVjdGlvbiB0aW1lZCBvdXQNCj4gPiA+ID4NCj4gPiA+ID4gcmVhbCAgICAwbTYuMDg0cw0K
-PiA+ID4gPiB1c2VyICAgIDBtMC4wMDdzDQo+ID4gPiA+IHN5cyAgICAgMG0wLjAxNXMNCj4gPiA+
-ID4NCj4gPiA+ID4gSG93ZXZlciwgaWYgdGhlIHNoYXJlIGlzIGFscmVhZHkgbW91bnRlZCBhbmQg
-dGhlIHNlcnZlciBnb2VzIGF3YXksDQo+ID4gPiA+IHRoZSB0aW1lb3V0IGlzIGFsd2F5cyAyIG1p
-bnV0ZXMgcGx1cyB0aGUgdGltZSBJIGV4cGVjdCBiYXNlZCBvbg0KPiA+ID4gPiB0aW1lbyBhbmQg
-cmV0cmFucy4gIEluIHRoaXMgY2FzZSwgMiBtaW51dGVzIGFuZCA2IHNlY29uZHM6DQo+ID4gPiA+
-DQo+ID4gPiA+ICQgdGltZSBscyAvbW50L3Rob3IwNA0KPiA+ID4gPiBsczogY2Fubm90IGFjY2Vz
-cyAnL21udC90aG9yMDQnOiBDb25uZWN0aW9uIHRpbWVkIG91dA0KPiA+ID4gPg0KPiA+ID4gPiBy
-ZWFsICAgIDJtNi4wMjVzDQo+ID4gPiA+IHVzZXIgICAgMG0wLjAwM3MNCj4gPiA+ID4gc3lzICAg
-ICAwbTAuMDAwcw0KPiA+ID4gPg0KPiA+ID4gPiBXYXRjaGluZyB0aGUgb3V0Z29pbmcgcGFja2V0
-cyBpbiB0aGUgc2Vjb25kIGNhc2UsIHRoZSBwYXR0ZXJuIGlzDQo+ID4gPiA+IGFsd2F5cyB0aGUN
-Cj4gPiA+ID4gc2FtZToNCj4gPiA+ID4gIC0gMC4yIHNlY29uZHMgYmV0d2VlbiB0aGUgZmlyc3Qg
-dHdvLCB0aGVuIGRvdWJsaW5nIGVhY2ggdGltZQ0KPiA+ID4gPiB1bnRpbCB0aGUgdHdvIG1pbnV0
-ZSBtYXJrIGlzIGV4Y2VlZGVkIChzbyB0aGUgbGFzdCBORlMgcGFja2V0LA0KPiA+ID4gPiB3aGlj
-aCBpcyBhbHdheXMgdGhlIDExdGggcGFja2V0LCBpcyBzZW50IGFyb3VuZCAxOjQ1IGFmdGVyIHRo
-ZQ0KPiA+ID4gPiBmaXJzdCkuDQo+ID4gPiA+ICAtIFRoZW4gc29tZSBnZW5lcmljIHBhY2tldHMg
-dGhhdCBzdGFydCBleGFjdGx5LWlzaCBvbiB0aGUgdHdvDQo+ID4gPiA+IG1pbnV0ZSBtYXJrLCAx
-IHNlY29uZCBiZXR3ZWVuIHRoZSBmaXJzdCB0d28sIHRoZW4gZG91YmxpbmcgZWFjaA0KPiA+ID4g
-PiB0aW1lLg0KPiA+ID4gPiAoQnkNCj4gPiA+ID4gdGhpcyB0aW1lIHRoZSBORlMgY29tbWFuZCBo
-YXMgZ2l2ZW4gdXAuKQ0KPiA+ID4gPg0KPiA+ID4gPiAxMToxMDoyMS44OTgzMDUgSVAgMTAuMzAu
-MTMuMi45MTYgPiAxMC4zMS4zLjEzLjIwNDk6IEZsYWdzIFtQLl0sDQo+ID4gPiA+IHNlcSAxNDQ1
-MjoxNDY1MiwgYWNrIDE4NTYxLCB3aW4gNTAxLCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbA0KPiA+
-ID4gPiA4MzQ4ODk0ODMgZWNyIDE1ODk3NjkyMDNdLCBsZW5ndGggMjAwOiBORlMgcmVxdWVzdCB4
-aWQgMzYxNDkwNDI1Ng0KPiA+ID4gPiAxOTYgZ2V0YXR0ciBmaA0KPiA+ID4gPiAwLDIvNTMNCj4g
-PiA+ID4gMTE6MTA6MjIuMTA1MTg5IElQIDEwLjMwLjEzLjIuOTE2ID4gMTAuMzEuMy4xMy4yMDQ5
-OiBGbGFncyBbUC5dLA0KPiA+ID4gPiBzZXEgMTQ0NTI6MTQ2NTIsIGFjayAxODU2MSwgd2luIDUw
-MSwgb3B0aW9ucyBbbm9wLG5vcCxUUyB2YWwNCj4gPiA+ID4gODM0ODg5NjkwIGVjciAxNTg5NzY5
-MjAzXSwgbGVuZ3RoIDIwMDogTkZTIHJlcXVlc3QgeGlkIDM2MTQ5MDQyNTYNCj4gPiA+ID4gMTk2
-IGdldGF0dHIgZmgNCj4gPiA+ID4gMCwyLzUzDQo+ID4gPiA+IDExOjEwOjIyLjMxMzI5MCBJUCAx
-MC4zMC4xMy4yLjkxNiA+IDEwLjMxLjMuMTMuMjA0OTogRmxhZ3MgW1AuXSwNCj4gPiA+ID4gc2Vx
-IDE0NDUyOjE0NjUyLCBhY2sgMTg1NjEsIHdpbiA1MDEsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFs
-DQo+ID4gPiA+IDgzNDg4OTg5OCBlY3IgMTU4OTc2OTIwM10sIGxlbmd0aCAyMDA6IE5GUyByZXF1
-ZXN0IHhpZCAzNjE0OTA0MjU2DQo+ID4gPiA+IDE5NiBnZXRhdHRyIGZoDQo+ID4gPiA+IDAsMi81
-Mw0KPiA+ID4gPiAxMToxMDoyMi43MjEyNjkgSVAgMTAuMzAuMTMuMi45MTYgPiAxMC4zMS4zLjEz
-LjIwNDk6IEZsYWdzIFtQLl0sDQo+ID4gPiA+IHNlcSAxNDQ1MjoxNDY1MiwgYWNrIDE4NTYxLCB3
-aW4gNTAxLCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbA0KPiA+ID4gPiA4MzQ4OTAzMDYgZWNyIDE1
-ODk3NjkyMDNdLCBsZW5ndGggMjAwOiBORlMgcmVxdWVzdCB4aWQgMzYxNDkwNDI1Ng0KPiA+ID4g
-PiAxOTYgZ2V0YXR0ciBmaA0KPiA+ID4gPiAwLDIvNTMNCj4gPiA+ID4gMTE6MTA6MjMuNTY5MTky
-IElQIDEwLjMwLjEzLjIuOTE2ID4gMTAuMzEuMy4xMy4yMDQ5OiBGbGFncyBbUC5dLA0KPiA+ID4g
-PiBzZXEgMTQ0NTI6MTQ2NTIsIGFjayAxODU2MSwgd2luIDUwMSwgb3B0aW9ucyBbbm9wLG5vcCxU
-UyB2YWwNCj4gPiA+ID4gODM0ODkxMTU0IGVjciAxNTg5NzY5MjAzXSwgbGVuZ3RoIDIwMDogTkZT
-IHJlcXVlc3QgeGlkIDM2MTQ5MDQyNTYNCj4gPiA+ID4gMTk2IGdldGF0dHIgZmgNCj4gPiA+ID4g
-MCwyLzUzDQo+ID4gPiA+IDExOjEwOjI1LjIzMzIxMiBJUCAxMC4zMC4xMy4yLjkxNiA+IDEwLjMx
-LjMuMTMuMjA0OTogRmxhZ3MgW1AuXSwNCj4gPiA+ID4gc2VxIDE0NDUyOjE0NjUyLCBhY2sgMTg1
-NjEsIHdpbiA1MDEsIG9wdGlvbnMgW25vcCxub3AsVFMgdmFsDQo+ID4gPiA+IDgzNDg5MjgxOCBl
-Y3IgMTU4OTc2OTIwM10sIGxlbmd0aCAyMDA6IE5GUyByZXF1ZXN0IHhpZCAzNjE0OTA0MjU2DQo+
-ID4gPiA+IDE5NiBnZXRhdHRyIGZoDQo+ID4gPiA+IDAsMi81Mw0KPiA+ID4gPiAxMToxMDoyOC40
-OTcyODIgSVAgMTAuMzAuMTMuMi45MTYgPiAxMC4zMS4zLjEzLjIwNDk6IEZsYWdzIFtQLl0sDQo+
-ID4gPiA+IHNlcSAxNDQ1MjoxNDY1MiwgYWNrIDE4NTYxLCB3aW4gNTAxLCBvcHRpb25zIFtub3As
-bm9wLFRTIHZhbA0KPiA+ID4gPiA4MzQ4OTYwODIgZWNyIDE1ODk3NjkyMDNdLCBsZW5ndGggMjAw
-OiBORlMgcmVxdWVzdCB4aWQgMzYxNDkwNDI1Ng0KPiA+ID4gPiAxOTYgZ2V0YXR0ciBmaA0KPiA+
-ID4gPiAwLDIvNTMNCj4gPiA+ID4gMTE6MTA6MzUuMDI1MjE5IElQIDEwLjMwLjEzLjIuOTE2ID4g
-MTAuMzEuMy4xMy4yMDQ5OiBGbGFncyBbUC5dLA0KPiA+ID4gPiBzZXEgMTQ0NTI6MTQ2NTIsIGFj
-ayAxODU2MSwgd2luIDUwMSwgb3B0aW9ucyBbbm9wLG5vcCxUUyB2YWwNCj4gPiA+ID4gODM0OTAy
-NjEwIGVjciAxNTg5NzY5MjAzXSwgbGVuZ3RoIDIwMDogTkZTIHJlcXVlc3QgeGlkIDM2MTQ5MDQy
-NTYNCj4gPiA+ID4gMTk2IGdldGF0dHIgZmgNCj4gPiA+ID4gMCwyLzUzDQo+ID4gPiA+IDExOjEw
-OjQ4LjMzNzIwMSBJUCAxMC4zMC4xMy4yLjkxNiA+IDEwLjMxLjMuMTMuMjA0OTogRmxhZ3MgW1Au
-XSwNCj4gPiA+ID4gc2VxIDE0NDUyOjE0NjUyLCBhY2sgMTg1NjEsIHdpbiA1MDEsIG9wdGlvbnMg
-W25vcCxub3AsVFMgdmFsDQo+ID4gPiA+IDgzNDkxNTkyMiBlY3IgMTU4OTc2OTIwM10sIGxlbmd0
-aCAyMDA6IE5GUyByZXF1ZXN0IHhpZCAzNjE0OTA0MjU2DQo+ID4gPiA+IDE5NiBnZXRhdHRyIGZo
-DQo+ID4gPiA+IDAsMi81Mw0KPiA+ID4gPiAxMToxMToxNC40NDkzMDMgSVAgMTAuMzAuMTMuMi45
-MTYgPiAxMC4zMS4zLjEzLjIwNDk6IEZsYWdzIFtQLl0sDQo+ID4gPiA+IHNlcSAxNDQ1MjoxNDY1
-MiwgYWNrIDE4NTYxLCB3aW4gNTAxLCBvcHRpb25zIFtub3Asbm9wLFRTIHZhbA0KPiA+ID4gPiA4
-MzQ5NDIwMzQgZWNyIDE1ODk3NjkyMDNdLCBsZW5ndGggMjAwOiBORlMgcmVxdWVzdCB4aWQgMzYx
-NDkwNDI1Ng0KPiA+ID4gPiAxOTYgZ2V0YXR0ciBmaA0KPiA+ID4gPiAwLDIvNTMNCj4gPiA+ID4g
-MTE6MTI6MDguNzIxMjUxIElQIDEwLjMwLjEzLjIuOTE2ID4gMTAuMzEuMy4xMy4yMDQ5OiBGbGFn
-cyBbUC5dLA0KPiA+ID4gPiBzZXEgMTQ0NTI6MTQ2NTIsIGFjayAxODU2MSwgd2luIDUwMSwgb3B0
-aW9ucyBbbm9wLG5vcCxUUyB2YWwNCj4gPiA+ID4gODM0OTk2MzA2IGVjciAxNTg5NzY5MjAzXSwg
-bGVuZ3RoIDIwMDogTkZTIHJlcXVlc3QgeGlkIDM2MTQ5MDQyNTYNCj4gPiA+ID4gMTk2IGdldGF0
-dHIgZmgNCj4gPiA+ID4gMCwyLzUzDQo+ID4gPiA+IDExOjEyOjIyLjU0NTM5NCBJUCAxMC4zMC4x
-My4yLjk0MiA+IDEwLjMxLjMuMTMuMjA0OTogRmxhZ3MgW1NdLA0KPiA+ID4gPiBzZXEgMTM3NTI1
-Njk1MSwgd2luIDY0MjQwLCBvcHRpb25zIFttc3MgMTQ2MCxzYWNrT0ssVFMgdmFsDQo+ID4gPiA+
-IDgzNTAxMDEzMCBlY3IgMCxub3Asd3NjYWxlIDddLCBsZW5ndGggMA0KPiA+ID4gPiAxMToxMjoy
-My41NzAxOTkgSVAgMTAuMzAuMTMuMi45NDIgPiAxMC4zMS4zLjEzLjIwNDk6IEZsYWdzIFtTXSwN
-Cj4gPiA+ID4gc2VxIDEzNzUyNTY5NTEsIHdpbiA2NDI0MCwgb3B0aW9ucyBbbXNzIDE0NjAsc2Fj
-a09LLFRTIHZhbA0KPiA+ID4gPiA4MzUwMTExNTUgZWNyIDAsbm9wLHdzY2FsZSA3XSwgbGVuZ3Ro
-IDANCj4gPiA+ID4gMTE6MTI6MjUuNjE3Mjg0IElQIDEwLjMwLjEzLjIuOTQyID4gMTAuMzEuMy4x
-My4yMDQ5OiBGbGFncyBbU10sDQo+ID4gPiA+IHNlcSAxMzc1MjU2OTUxLCB3aW4gNjQyNDAsIG9w
-dGlvbnMgW21zcyAxNDYwLHNhY2tPSyxUUyB2YWwNCj4gPiA+ID4gODM1MDEzMjAyIGVjciAwLG5v
-cCx3c2NhbGUgN10sIGxlbmd0aCAwDQo+ID4gPiA+IDExOjEyOjI5LjY0OTIxOSBJUCAxMC4zMC4x
-My4yLjk0MiA+IDEwLjMxLjMuMTMuMjA0OTogRmxhZ3MgW1NdLA0KPiA+ID4gPiBzZXEgMTM3NTI1
-Njk1MSwgd2luIDY0MjQwLCBvcHRpb25zIFttc3MgMTQ2MCxzYWNrT0ssVFMgdmFsDQo+ID4gPiA+
-IDgzNTAxNzIzNCBlY3IgMCxub3Asd3NjYWxlIDddLCBsZW5ndGggMA0KPiA+ID4gPiAxMToxMjoz
-Ny45MDUyNzQgSVAgMTAuMzAuMTMuMi45NDIgPiAxMC4zMS4zLjEzLjIwNDk6IEZsYWdzIFtTXSwN
-Cj4gPiA+ID4gc2VxIDEzNzUyNTY5NTEsIHdpbiA2NDI0MCwgb3B0aW9ucyBbbXNzIDE0NjAsc2Fj
-a09LLFRTIHZhbA0KPiA+ID4gPiA4MzUwMjU0OTAgZWNyIDAsbm9wLHdzY2FsZSA3XSwgbGVuZ3Ro
-IDANCj4gPiA+ID4gMTE6MTI6NTQuMjg5MjEyIElQIDEwLjMwLjEzLjIuOTQyID4gMTAuMzEuMy4x
-My4yMDQ5OiBGbGFncyBbU10sDQo+ID4gPiA+IHNlcSAxMzc1MjU2OTUxLCB3aW4gNjQyNDAsIG9w
-dGlvbnMgW21zcyAxNDYwLHNhY2tPSyxUUyB2YWwNCj4gPiA+ID4gODM1MDQxODc0IGVjciAwLG5v
-cCx3c2NhbGUgN10sIGxlbmd0aCAwDQo+ID4gPiA+IDExOjEzOjI2LjU0NTMwNCBJUCAxMC4zMC4x
-My4yLjk0MiA+IDEwLjMxLjMuMTMuMjA0OTogRmxhZ3MgW1NdLA0KPiA+ID4gPiBzZXEgMTM3NTI1
-Njk1MSwgd2luIDY0MjQwLCBvcHRpb25zIFttc3MgMTQ2MCxzYWNrT0ssVFMgdmFsDQo+ID4gPiA+
-IDgzNTA3NDEzMCBlY3IgMCxub3Asd3NjYWxlIDddLCBsZW5ndGggMA0KPiA+ID4gPg0KPiA+ID4g
-PiBJIHRyaWVkIGNoYW5naW5nIHRjcF9yZXRyaWVzMiBhcyBzdWdnZXN0ZWQgaW4gYW5vdGhlciB0
-aHJlYWQgZnJvbQ0KPiA+ID4gPiB0aGlzIGxpc3Q6DQo+ID4gPiA+DQo+ID4gPiA+ICMgZWNobyAz
-ID4gL3Byb2Mvc3lzL25ldC9pcHY0L3RjcF9yZXRyaWVzMg0KPiA+ID4gPg0KPiA+ID4gPiAuLi5i
-dXQgaXQgbWFkZSBubyBkaWZmZXJlbmNlIG9uIGVpdGhlciBrZXJuZWwuICBUaGUgMiBtaW51dGUN
-Cj4gPiA+ID4gdGltZW91dCBhbHNvIGRvZXNuJ3Qgc2VlbSB0byBtYXRjaCB3aXRoIHdoYXQgSSdk
-IGNhbGN1bGF0ZSBmcm9tDQo+ID4gPiA+IHRoZSBpbml0aWFsIHZhbHVlIG9mIHRjcF9yZXRyaWVz
-Miwgd2hpY2ggc2hvdWxkIGdpdmUgYSBtdWNoIGhpZ2hlcg0KPiA+ID4gPiB0aW1lb3V0Lg0KPiA+
-ID4gPg0KPiA+ID4gPiBUaGUgb25seSBjbHVlIEkndmUgYmVlbiBhYmxlIHRvIGZpbmQgaXMgaW4g
-dGhlIHJldHJ5PW4gZW50cnkgaW4NCj4gPiA+ID4gdGhlIE5GUw0KPiA+ID4gPiBtYW5wYWdlOg0K
-PiA+ID4gPg0KPiA+ID4gPiAiIEZvciBUQ1AgdGhlIGRlZmF1bHQgaXMgMyBtaW51dGVzLCBidXQg
-c3lzdGVtIFRDUCBjb25uZWN0aW9uDQo+ID4gPiA+IHRpbWVvdXRzIHdpbGwgc29tZXRpbWVzIGxp
-bWl0IHRoZSB0aW1lb3V0IG9mIGVhY2ggcmV0cmFuc21pc3Npb24NCj4gPiA+ID4gdG8gYXJvdW5k
-DQo+ID4gPiA+IDINCj4gPiA+IG1pbnV0ZXMuIg0KPiA+ID4gPg0KPiA+ID4gPiBXaGF0IEknbSBu
-b3QgYWJsZSB0byBtYWtlIHNlbnNlIG9mOg0KPiA+ID4gPiAgLSBUaGUgcmV0cnkgb3B0aW9uIHNh
-eXMgdGhhdCBpdCBhcHBsaWVzIHRvIG1vdW50IG9wZXJhdGlvbnMsIG5vdA0KPiA+ID4gPiByZWFk
-L3dyaXRlIG9wZXJhdGlvbnMuICBIb3dldmVyLCBpbiB0aGlzIGNhc2UgSSdtIHNlZWluZyB0aGUg
-Mg0KPiA+ID4gPiBtaW51dGUgZGVsYXkgb24gcmVhZC93cml0ZSBvcGVyYXRpb25zIGJ1dCAqbm90
-KiBtb3VudCBvcGVyYXRpb25zLg0KPiA+ID4gPiAgLSBBIGNvdXBsZSBvZiBob3VycyBvZiBzZWFy
-Y2hpbmcgZGlkbid0IGxlYWQgbWUgdG8gYW55IGtlcm5lbA0KPiA+ID4gPiBzZXR0aW5ncyB0aGF0
-IHdvdWxkIHJlc3VsdCBpbiBhIDIgbWludXRlIHRpbWVvdXQuDQo+ID4gPiA+DQo+ID4gPiA+IERv
-ZXMgYW55b25lIGhhdmUgYW55IGNsdWVzIGFib3V0IGEpIHdoYXQncyBoYXBwZW5pbmcgYW5kIGIp
-IGhvdyB0bw0KPiA+ID4gPiBnZXQgb3VyIGRlc2lyZWQgYmVoYXZpb3VyIG9mIGJlaW5nIGFibGUg
-dG8gY29udHJvbCBib3RoIG1vdW50IGFuZA0KPiA+ID4gPiByZWFkL3dyaXRlIHRpbWVvdXRzIGRv
-d24gdG8gYSBmZXcgc2Vjb25kcz8NCj4gPiA+ID4NCj4gPiA+ID4gVGhhbmtzLg0KPiA+ID4NCj4g
-PiA+IEkgdGhvdWdodCB0aGF0IGNoYW5naW5nIFRDUF9SVE9fTUFYIGluIGluY2x1ZGUvbmV0L3Rj
-cC5oIGZyb20gMTIwIHRvDQo+ID4gPiBzb21ldGhpbmcgc21hbGxlciBhbmQgcmVjb21waWxpbmcg
-dGhlIGtlcm5lbCB3b3VsZCBjaGFuZ2UgdGhlIDINCj4gPiA+IG1pbnV0ZSB0aW1lb3V0LCBidXQg
-aXQgaGFkIG5vIGVmZmVjdC4gIEknbSBnb2luZyB0byBrZWVwIHBva2luZw0KPiA+ID4gdGhyb3Vn
-aCB0aGUga2VybmVsIGNvZGUgdG8gc2VlIGlmIHRoZXJlJ3MgYSBrbm9iIEkgY2FuIHR1cm4gdG8N
-Cj4gPiA+IGNoYW5nZSB0aGUgMiBtaW51dGUgdGltZW91dCwgc28gdGhhdCBJIGNhbiBhdCBsZWFz
-dCB1bmRlcnN0YW5kIHdoZXJlDQo+ID4gPiBpdCdzIGNvbWluZyBmcm9tLg0KPiA+ID4NCj4gPiA+
-IEFueSBoaW50cyBhcyB0byB3aGVyZSBJIHNob3VsZCBiZSBsb29raW5nPw0KPiA+DQo+ID4gSSBi
-ZWxpZXZlIEkndmUgbWFkZSBzb21lIHByb2dyZXNzIHdpdGggdGhpcyB0b2RheToNCj4gPg0KPiA+
-ICAtIENhbGxzIHRvIHJwY19jcmVhdGUoKSBmcm9tIGZzL25mcy9jbGllbnQuYyBhcmUgc2VuZGlu
-ZyBhbg0KPiA+IHJwY190aW1lb3V0IHN0cnVjdCB3aXRoIHRoZWlyIGFyZ3MuDQo+ID4gIC0gcnBj
-X2NyZWF0ZSgpIGRvZXMgKm5vdCogcGFzcyB0aGUgdGltZW91dCBvbiB0bw0KPiA+IHhwcnRfY3Jl
-YXRlX3RyYW5zcG9ydCgpLCB3aGljaCB0aGVuIGNhbid0IHBhc3MgaXQgb24gdG8NCj4gPiB4c19z
-ZXR1cF90Y3AoKS4NCj4gPiAgLSB4c19zZXR1cF90Y3AoKSwgaGF2aW5nIG5vIHRpbWVvdXQgcGFz
-c2VkIHRvIGl0LCB1c2VzDQo+ID4geHNfdGNwX2RlZmF1bHRfdGltZW91dCBpbnN0ZWFkLg0KPiA+
-ICAtIGNoYW5naW5nIHhzX3RjcF9kZWZhdWx0X3RpbWVvdXQgY2hhbmdlcyB0aGUgImxzIiB0aW1l
-b3V0IGJlaGF2aW91cg0KPiA+IEkgZGVzY3JpYmVkIGFib3ZlLg0KPiA+DQo+ID4gSW4gdGhlb3J5
-IGFsbCBvZiB0aGlzIG1lYW5zIHRoYXQgdGhlIHRpbWVvdXQgc2ltcGx5IG5lZWRzIHRvIGJlIHBh
-c3NlZA0KPiA+IHRocm91Z2ggYW5kIHVzZWQgaW5zdGVhZCBvZiB4c190Y3BfZGVmYXVsdF90aW1l
-b3V0LiAgSSdtIGdvaW5nIHRvIGdpdmUNCj4gPiB0aGlzIGEgdHJ5IHRvbW9ycm93Lg0KPiA+DQo+
-IA0KPiBUaGF0J3MgYSBncmVhdCByb290LWNhdXNlIGFuYWx5c2lzLiBUaGUgaW50ZXJsb2NraW5n
-IHRpbWVvdXRzIGludm9sdmVkIHdpdGgNCj4gTkZTIGFuZCBpdHMgc29ja2V0cyBjYW4gYmUgcmVh
-bGx5IGRpZmZpY3VsdCB0byB1bndpbmQuDQo+IA0KPiBJcyB0aGVyZSBhIHdheSB0byBhdXRvbWF0
-ZSB0aGlzIHRlc3RjYXNlPyBUaGF0IG1pZ2h0IGJlIG5pY2UgdG8gaGF2ZSBpbg0KPiB4ZnN0ZXN0
-cyBvciB0aGUgbmZzdGVzdCBzdWl0ZS4NCj4gDQo+ID4gSGVyZSdzIHdoYXQgSSdtIGdvaW5nIHRv
-IHRyeSBmaXJzdDsgSSdtIG5vIEMgcHJvZ3JhbW1lciwgdGhvdWdoLCBzbw0KPiA+IGFueSBhZHZp
-Y2Ugb3IgY29ycmVjdGlvbnMgeW91IG1pZ2h0IGhhdmUgd291bGQgYmUgYXBwcmVjaWF0ZWQuDQo+
-ID4NCj4gPiBUaGFua3MuDQo+ID4NCj4gPiBBbmRyZXcNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9u
-ZXQvc3VucnBjL2NsbnQuYyBiL25ldC9zdW5ycGMvY2xudC5jIGluZGV4DQo+ID4gMGIwYjlmMWVl
-ZDQ2Li4xMzUwYzFmNDg5ZjcgMTAwNjQ0DQo+ID4gLS0tIGEvbmV0L3N1bnJwYy9jbG50LmMNCj4g
-PiArKysgYi9uZXQvc3VucnBjL2NsbnQuYw0KPiA+IEBAIC01MzIsNiArNTMyLDcgQEAgc3RydWN0
-IHJwY19jbG50ICpycGNfY3JlYXRlKHN0cnVjdCBycGNfY3JlYXRlX2FyZ3MNCj4gPiAqYXJncykN
-Cj4gPiAgICAgICAgICAgICAgICAgLmFkZHJsZW4gPSBhcmdzLT5hZGRyc2l6ZSwNCj4gPiAgICAg
-ICAgICAgICAgICAgLnNlcnZlcm5hbWUgPSBhcmdzLT5zZXJ2ZXJuYW1lLA0KPiA+ICAgICAgICAg
-ICAgICAgICAuYmNfeHBydCA9IGFyZ3MtPmJjX3hwcnQsDQo+ID4gKyAgICAgICAgICAgICAgIC50
-aW1lb3V0ID0gYXJncy0+dGltZW91dCwNCj4gPiAgICAgICAgIH07DQo+ID4gICAgICAgICBjaGFy
-IHNlcnZlcm5hbWVbNDhdOw0KPiA+ICAgICAgICAgc3RydWN0IHJwY19jbG50ICpjbG50Ow0KPiA+
-IGRpZmYgLS1naXQgYS9uZXQvc3VucnBjL3hwcnRzb2NrLmMgYi9uZXQvc3VucnBjL3hwcnRzb2Nr
-LmMgaW5kZXgNCj4gPiBhYWE1YjI3NDFiNzkuLmFkYzc5ZDk0YjU5ZSAxMDA2NDQNCj4gPiAtLS0g
-YS9uZXQvc3VucnBjL3hwcnRzb2NrLmMNCj4gPiArKysgYi9uZXQvc3VucnBjL3hwcnRzb2NrLmMN
-Cj4gPiBAQCAtMzAwMyw3ICszMDAzLDcgQEAgc3RhdGljIHN0cnVjdCBycGNfeHBydCAqeHNfc2V0
-dXBfdGNwKHN0cnVjdA0KPiA+IHhwcnRfY3JlYXRlICphcmdzKQ0KPiA+ICAgICAgICAgeHBydC0+
-aWRsZV90aW1lb3V0ID0gWFNfSURMRV9ESVNDX1RPOw0KPiA+DQo+ID4gICAgICAgICB4cHJ0LT5v
-cHMgPSAmeHNfdGNwX29wczsNCj4gPiAtICAgICAgIHhwcnQtPnRpbWVvdXQgPSAmeHNfdGNwX2Rl
-ZmF1bHRfdGltZW91dDsNCj4gPiArICAgICAgIHhwcnQtPnRpbWVvdXQgPSBhcmdzLT50aW1lb3V0
-Ow0KPiA+DQo+ID4gICAgICAgICB4cHJ0LT5tYXhfcmVjb25uZWN0X3RpbWVvdXQgPSB4cHJ0LT50
-aW1lb3V0LT50b19tYXh2YWw7DQo+ID4gICAgICAgICB4cHJ0LT5jb25uZWN0X3RpbWVvdXQgPSB4
-cHJ0LT50aW1lb3V0LT50b19pbml0dmFsICoNCj4gPg0KPiANCj4gTG9va3MgbGlrZSB5b3UncmUg
-cHJvYmFibHkgb24gdGhlIHJpZ2h0IHRyYWNrLiBZb3UncmUgbWlzc2luZyBhIGZldw0KPiB0aGlu
-Z3M6DQo+IA0KPiBZb3UnbGwgbmVlZCB0byBhZGQgYSAidGltZW91dCIgZmllbGQgdG8gc3RydWN0
-IHhwcnRfY3JlYXRlIGluDQo+IGluY2x1ZGUvbGludXgvc3VucnBjL3hwcnQuaCwgYW5kIHRoZXJl
-IG1heSBiZSBzb21lIG90aGVyIHBsYWNlcyB0aGF0IGVpdGhlcg0KPiBuZWVkIHRvIHNldCB0aGUg
-dGltZW91dCBpbiB0aGF0IHN0cnVjdHVyZSwgb3IgZG8gc29tZXRoaW5nIHdpdGggdGhhdCBmaWVs
-ZA0KPiB3aGVuIGl0J3Mgc2V0Lg0KPiANCj4gT25jZSB5b3UgaGF2ZSBzb21ldGhpbmcgdGhhdCBm
-aXhlcyB5b3VyIHJlcHJvZHVjZXIsIGdvIGFoZWFkIGFuZCBwb3N0IGl0DQo+IGFuZCB3ZSBjYW4g
-aGVscCB5b3Ugd29yayB0aHJvdWdoIHdoYXRldmVyIGNoYW5nZXMgbmVlZCB0byBtZSBtYWRlIHRv
-DQo+IG1ha2UgaXQgd29yay4NCj4gDQo+IE5pY2Ugd29yayENCg0KVGhhbmtzIGZvciB0aGUgdGlw
-LCB0aGF0IHdhcyBoZWxwZnVsLg0KDQpDdXJyZW50bHkgSSdtIGZpZ2h0aW5nIHdpdGgga2VybmVs
-IHJlY29tcGlsYXRpb24uICBJIGRlY2lkZWQgdG8gbWFrZSBpdCBxdWlja2VyIGJ5IHNsaW1taW5n
-IGRvd24gdGhlIGNvbmZpZywgYnV0IGFwcGFyZW50bHkgSSd2ZSBhY2hpZXZlZCBzb21ldGhpbmcg
-d2hpY2ggR29vZ2xlIGNsYWltcyBubyBvbmUgZWxzZSBoYXMgYWNoaWV2ZWQ6DQoNCkVycm9ycyBv
-biBrZXJuZWwgbWFrZSBtb2R1bGVzX2luc3RhbGw6DQoNCiAgREVQTU9EICAvbGliL21vZHVsZXMv
-Ni4yLjAtcmM1LXN1bnJwY3RpbWVvKw0KZGVwbW9kOiBXQVJOSU5HOiAvbGliL21vZHVsZXMvNi4y
-LjAtcmM1LXN1bnJwY3RpbWVvKy9rZXJuZWwvZnMvbmZzL25mc3Y0LmtvIG5lZWRzIHVua25vd24g
-c3ltYm9sIG5mczRfZGlzYWJsZV9pZG1hcHBpbmcNCmRlcG1vZDogV0FSTklORzogL2xpYi9tb2R1
-bGVzLzYuMi4wLXJjNS1zdW5ycGN0aW1lbysva2VybmVsL2ZzL25mcy9uZnN2NC5rbyBuZWVkcyB1
-bmtub3duIHN5bWJvbCBuZnM0X2xhYmVsX2FsbG9jDQpkZXBtb2Q6IFdBUk5JTkc6IC9saWIvbW9k
-dWxlcy82LjIuMC1yYzUtc3VucnBjdGltZW8rL2tlcm5lbC9mcy9uZnMvbmZzdjQua28gbmVlZHMg
-dW5rbm93biBzeW1ib2wgc2VuZF9pbXBsZW1lbnRhdGlvbl9pZA0KZGVwbW9kOiBXQVJOSU5HOiAv
-bGliL21vZHVsZXMvNi4yLjAtcmM1LXN1bnJwY3RpbWVvKy9rZXJuZWwvZnMvbmZzL25mc3Y0Lmtv
-IG5lZWRzIHVua25vd24gc3ltYm9sIG5mc19hdG9taWNfb3Blbg0KZGVwbW9kOiBXQVJOSU5HOiAv
-bGliL21vZHVsZXMvNi4yLjAtcmM1LXN1bnJwY3RpbWVvKy9rZXJuZWwvZnMvbmZzL25mc3Y0Lmtv
-IG5lZWRzIHVua25vd24gc3ltYm9sIG5mc19jbGVhcl92ZXJpZmllcl9kZWxlZ2F0ZWQNCmRlcG1v
-ZDogV0FSTklORzogL2xpYi9tb2R1bGVzLzYuMi4wLXJjNS1zdW5ycGN0aW1lbysva2VybmVsL2Zz
-L25mcy9uZnN2NC5rbyBuZWVkcyB1bmtub3duIHN5bWJvbCBuZnM0X2NsaWVudF9pZF91bmlxdWlm
-aWVyDQpkZXBtb2Q6IFdBUk5JTkc6IC9saWIvbW9kdWxlcy82LjIuMC1yYzUtc3VucnBjdGltZW8r
-L2tlcm5lbC9mcy9uZnMvbmZzdjQua28gbmVlZHMgdW5rbm93biBzeW1ib2wgbmZzNF9kZW50cnlf
-b3BlcmF0aW9ucw0KZGVwbW9kOiBXQVJOSU5HOiAvbGliL21vZHVsZXMvNi4yLjAtcmM1LXN1bnJw
-Y3RpbWVvKy9rZXJuZWwvZnMvbmZzL25mc3Y0LmtvIG5lZWRzIHVua25vd24gc3ltYm9sIG5mc19m
-c2NhY2hlX29wZW5fZmlsZQ0KZGVwbW9kOiBXQVJOSU5HOiAvbGliL21vZHVsZXMvNi4yLjAtcmM1
-LXN1bnJwY3RpbWVvKy9rZXJuZWwvZnMvbmZzL25mc3Y0LmtvIG5lZWRzIHVua25vd24gc3ltYm9s
-IG5mczRfZnNfdHlwZQ0KZGVwbW9kOiBXQVJOSU5HOiAvbGliL21vZHVsZXMvNi4yLjAtcmM1LXN1
-bnJwY3RpbWVvKy9rZXJuZWwvZnMvbmZzL25mc3Y0LmtvIG5lZWRzIHVua25vd24gc3ltYm9sIHJl
-Y292ZXJfbG9zdF9sb2Nrcw0KZGVwbW9kOiBXQVJOSU5HOiAvbGliL21vZHVsZXMvNi4yLjAtcmM1
-LXN1bnJwY3RpbWVvKy9rZXJuZWwvZnMvbmZzL25mc3Y0LmtvIG5lZWRzIHVua25vd24gc3ltYm9s
-IG5mc19jYWxsYmFja19ucl90aHJlYWRzDQpkZXBtb2Q6IFdBUk5JTkc6IC9saWIvbW9kdWxlcy82
-LjIuMC1yYzUtc3VucnBjdGltZW8rL2tlcm5lbC9mcy9uZnMvbmZzdjQua28gbmVlZHMgdW5rbm93
-biBzeW1ib2wgbWF4X3Nlc3Npb25fY2Jfc2xvdHMNCmRlcG1vZDogV0FSTklORzogL2xpYi9tb2R1
-bGVzLzYuMi4wLXJjNS1zdW5ycGN0aW1lbysva2VybmVsL2ZzL25mcy9uZnN2NC5rbyBuZWVkcyB1
-bmtub3duIHN5bWJvbCBtYXhfc2Vzc2lvbl9zbG90cw0KZGVwbW9kOiBXQVJOSU5HOiAvbGliL21v
-ZHVsZXMvNi4yLjAtcmM1LXN1bnJwY3RpbWVvKy9rZXJuZWwvZnMvbmZzL25mc3Y0LmtvIG5lZWRz
-IHVua25vd24gc3ltYm9sIG5mc19pZG1hcF9jYWNoZV90aW1lb3V0DQpkZXBtb2Q6IFdBUk5JTkc6
-IC9saWIvbW9kdWxlcy82LjIuMC1yYzUtc3VucnBjdGltZW8rL2tlcm5lbC9mcy9uZnMvbmZzdjQu
-a28gbmVlZHMgdW5rbm93biBzeW1ib2wgbmZzX2NhbGxiYWNrX3NldF90Y3Bwb3J0DQoNCkVycm9y
-cyBvbiBtb2R1bGUgbG9hZDoNCg0KWyAgIDk0LjAwODI3MV0gbmZzdjQ6IFVua25vd24gc3ltYm9s
-IG5mczRfZGlzYWJsZV9pZG1hcHBpbmcgKGVyciAtMikNClsgICA5NC4wMDgzMjFdIG5mc3Y0OiBV
-bmtub3duIHN5bWJvbCBuZnM0X2xhYmVsX2FsbG9jIChlcnIgLTIpDQpbICAgOTQuMDA4NDM0XSBu
-ZnN2NDogVW5rbm93biBzeW1ib2wgc2VuZF9pbXBsZW1lbnRhdGlvbl9pZCAoZXJyIC0yKQ0KWyAg
-IDk0LjAwODQ0Nl0gbmZzdjQ6IFVua25vd24gc3ltYm9sIG5mc19hdG9taWNfb3BlbiAoZXJyIC0y
-KQ0KWyAgIDk0LjAwODQ2OF0gbmZzdjQ6IFVua25vd24gc3ltYm9sIG5mc19jbGVhcl92ZXJpZmll
-cl9kZWxlZ2F0ZWQgKGVyciAtMikNClsgICA5NC4wMDg0NzVdIG5mc3Y0OiBVbmtub3duIHN5bWJv
-bCBuZnM0X2NsaWVudF9pZF91bmlxdWlmaWVyIChlcnIgLTIpDQpbICAgOTQuMDA4NTAxXSBuZnN2
-NDogVW5rbm93biBzeW1ib2wgbmZzNF9kZW50cnlfb3BlcmF0aW9ucyAoZXJyIC0yKQ0KWyAgIDk0
-LjAwODUyMV0gbmZzdjQ6IFVua25vd24gc3ltYm9sIG5mc19mc2NhY2hlX29wZW5fZmlsZSAoZXJy
-IC0yKQ0KWyAgIDk0LjAwODU2Nl0gbmZzdjQ6IFVua25vd24gc3ltYm9sIG5mczRfZnNfdHlwZSAo
-ZXJyIC0yKQ0KWyAgIDk0LjAwODU5NV0gbmZzdjQ6IFVua25vd24gc3ltYm9sIHJlY292ZXJfbG9z
-dF9sb2NrcyAoZXJyIC0yKQ0KWyAgIDk0LjAwODYzOV0gbmZzdjQ6IFVua25vd24gc3ltYm9sIG5m
-c19jYWxsYmFja19ucl90aHJlYWRzIChlcnIgLTIpDQpbICAgOTQuMDA4NjU0XSBuZnN2NDogVW5r
-bm93biBzeW1ib2wgbWF4X3Nlc3Npb25fY2Jfc2xvdHMgKGVyciAtMikNClsgICA5NC4wMDg2Nzhd
-IG5mc3Y0OiBVbmtub3duIHN5bWJvbCBtYXhfc2Vzc2lvbl9zbG90cyAoZXJyIC0yKQ0KWyAgIDk0
-LjAwODY5NF0gbmZzdjQ6IFVua25vd24gc3ltYm9sIG5mc19pZG1hcF9jYWNoZV90aW1lb3V0IChl
-cnIgLTIpDQpbICAgOTQuMDA4NzA5XSBuZnN2NDogVW5rbm93biBzeW1ib2wgbmZzX2NhbGxiYWNr
-X3NldF90Y3Bwb3J0IChlcnIgLTIpDQoNCkkgc3VzcGVjdCBJJ3ZlIHR1cm5lZCBzb21ldGhpbmcg
-b2ZmIGluIHRoZSBjb25maWcgdGhhdCBJIHNob3VsZG4ndCBoYXZlLCBidXQgSSdtIG5vdCBzdXJl
-IHdoYXQuICBJIHNlZSB0aGF0IG9uZSBvZiB0aGUgc3ltYm9scyAobmZzX2NsZWFyX3ZlcmlmaWVy
-X2RlbGVnYXRlZCkgaXMgaW4gaW5jbHVkZS9saW51eC9uZnNfZnMuaCwgYW5kIHRoZSBvdGhlcnMg
-YXJlIGRlZmluZWQgaW4gZnMvbmZzL25mczRfZnMuaCwgZnMvbmZzL3N1cGVyLmMsIGZzL25mcy9k
-aXIuYywgZnMvbmZzL2lub2RlLmMsIGZzL25mcy9mc2NhY2hlLmMsIGFuZCBmcy9uZnMvZnNfY29u
-dGV4dC5jLiAgSSdtIGNoYW5naW5nIGNvbmZpZyBvcHRpb25zIGFuZCByZWNvbXBpbGluZyB0byB0
-cnkgdG8gZmlndXJlIG91dCB3aGF0IEknbSBtaXNzaW5nLCBidXQgYXQgYSBjb3VwbGUgb2YgaG91
-cnMgcGVyIGNvbXBpbGUgYW5kIG9ubHkgYSBjb3VwbGUgb2YgZGF5cyBhIHdlZWsgdG8gd29yayBv
-biB0aGlzIGl0J3Mgc2xvdyBnb2luZy4gIEFueSBoaW50cyBhcyB0byB3aGF0IEkgbWlnaHQgYmUg
-ZG9pbmcgd3Jvbmcgd291bGQgYmUgYXBwcmVjaWF0ZWQuICDwn5iKDQoNCkFuZHJldw0KDQoNCg0K
+On Mon, 2023-01-30 at 19:33 +0000, Andrew Klaassen wrote:
+> > From: Jeff Layton <jlayton@kernel.org>
+> > Sent: Friday, January 27, 2023 8:33 AM
+> >=20
+> > On Thu, 2023-01-26 at 22:08 +0000, Andrew Klaassen wrote:
+> > > > From: Andrew Klaassen <andrew.klaassen@boatrocker.com>
+> > > > Sent: Thursday, January 26, 2023 10:32 AM
+> > > >=20
+> > > > > From: Andrew Klaassen <andrew.klaassen@boatrocker.com>
+> > > > > Sent: Monday, January 23, 2023 11:31 AM
+> > > > >=20
+> > > > > Hello,
+> > > > >=20
+> > > > > There's a specific NFSv4 mount on a specific machine which
+> > > > > we'd
+> > > > > like to timeout and return an error after a few seconds if the
+> > > > > server goes away.
+> > > > >=20
+> > > > > I've confirmed the following on two different kernels, 4.18.0-
+> > > > > 348.12.2.el8_5.x86_64 and 6.1.7-200.fc37.x86_64.
+> > > > >=20
+> > > > > I've been able to get both autofs and the mount command to
+> > > > > cooperate, so that the mount attempt fails after an arbitrary
+> > > > > number of seconds.
+> > > > > This mount command, for example, will fail after 6 seconds, as
+> > > > > expected based on the timeo=3D20,retrans=3D2,retry=3D0 options:
+> > > > >=20
+> > > > > $ time sudo mount -t nfs4 -o
+> > > > > rw,relatime,sync,vers=3D4.2,rsize=3D131072,wsize=3D131072,namlen=
+=3D255
+> > > > > ,acr
+> > > > > egmi
+> > > > > n
+> > > > >=20
+> > > > =3D0,acregmax=3D0,acdirmin=3D0,acdirmax=3D0,soft,noac,proto=3Dtcp,t=
+imeo=3D20
+> > > > ,ret
+> > > > ra
+> > > > > n s=3D2,retry=3D0,sec=3Dsys thor04:/mnt/thorfs04  /mnt/thor04
+> > > > > mount.nfs4: Connection timed out
+> > > > >=20
+> > > > > real    0m6.084s
+> > > > > user    0m0.007s
+> > > > > sys     0m0.015s
+> > > > >=20
+> > > > > However, if the share is already mounted and the server goes
+> > > > > away,
+> > > > > the timeout is always 2 minutes plus the time I expect based
+> > > > > on
+> > > > > timeo and retrans.  In this case, 2 minutes and 6 seconds:
+> > > > >=20
+> > > > > $ time ls /mnt/thor04
+> > > > > ls: cannot access '/mnt/thor04': Connection timed out
+> > > > >=20
+> > > > > real    2m6.025s
+> > > > > user    0m0.003s
+> > > > > sys     0m0.000s
+> > > > >=20
+> > > > > Watching the outgoing packets in the second case, the pattern
+> > > > > is
+> > > > > always the
+> > > > > same:
+> > > > > =C2=A0- 0.2 seconds between the first two, then doubling each tim=
+e
+> > > > > until the two minute mark is exceeded (so the last NFS packet,
+> > > > > which is always the 11th packet, is sent around 1:45 after the
+> > > > > first).
+> > > > > =C2=A0- Then some generic packets that start exactly-ish on the t=
+wo
+> > > > > minute mark, 1 second between the first two, then doubling
+> > > > > each
+> > > > > time.
+> > > > > (By
+> > > > > this time the NFS command has given up.)
+> > > > >=20
+> > > > > 11:10:21.898305 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834889483 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:10:22.105189 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834889690 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:10:22.313290 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834889898 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:10:22.721269 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834890306 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:10:23.569192 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834891154 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:10:25.233212 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834892818 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:10:28.497282 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834896082 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:10:35.025219 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834902610 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:10:48.337201 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834915922 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:11:14.449303 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834942034 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:12:08.721251 IP 10.30.13.2.916 > 10.31.3.13.2049: Flags
+> > > > > [P.],
+> > > > > seq 14452:14652, ack 18561, win 501, options [nop,nop,TS val
+> > > > > 834996306 ecr 1589769203], length 200: NFS request xid
+> > > > > 3614904256
+> > > > > 196 getattr fh
+> > > > > 0,2/53
+> > > > > 11:12:22.545394 IP 10.30.13.2.942 > 10.31.3.13.2049: Flags
+> > > > > [S],
+> > > > > seq 1375256951, win 64240, options [mss 1460,sackOK,TS val
+> > > > > 835010130 ecr 0,nop,wscale 7], length 0
+> > > > > 11:12:23.570199 IP 10.30.13.2.942 > 10.31.3.13.2049: Flags
+> > > > > [S],
+> > > > > seq 1375256951, win 64240, options [mss 1460,sackOK,TS val
+> > > > > 835011155 ecr 0,nop,wscale 7], length 0
+> > > > > 11:12:25.617284 IP 10.30.13.2.942 > 10.31.3.13.2049: Flags
+> > > > > [S],
+> > > > > seq 1375256951, win 64240, options [mss 1460,sackOK,TS val
+> > > > > 835013202 ecr 0,nop,wscale 7], length 0
+> > > > > 11:12:29.649219 IP 10.30.13.2.942 > 10.31.3.13.2049: Flags
+> > > > > [S],
+> > > > > seq 1375256951, win 64240, options [mss 1460,sackOK,TS val
+> > > > > 835017234 ecr 0,nop,wscale 7], length 0
+> > > > > 11:12:37.905274 IP 10.30.13.2.942 > 10.31.3.13.2049: Flags
+> > > > > [S],
+> > > > > seq 1375256951, win 64240, options [mss 1460,sackOK,TS val
+> > > > > 835025490 ecr 0,nop,wscale 7], length 0
+> > > > > 11:12:54.289212 IP 10.30.13.2.942 > 10.31.3.13.2049: Flags
+> > > > > [S],
+> > > > > seq 1375256951, win 64240, options [mss 1460,sackOK,TS val
+> > > > > 835041874 ecr 0,nop,wscale 7], length 0
+> > > > > 11:13:26.545304 IP 10.30.13.2.942 > 10.31.3.13.2049: Flags
+> > > > > [S],
+> > > > > seq 1375256951, win 64240, options [mss 1460,sackOK,TS val
+> > > > > 835074130 ecr 0,nop,wscale 7], length 0
+> > > > >=20
+> > > > > I tried changing tcp_retries2 as suggested in another thread
+> > > > > from
+> > > > > this list:
+> > > > >=20
+> > > > > # echo 3 > /proc/sys/net/ipv4/tcp_retries2
+> > > > >=20
+> > > > > ...but it made no difference on either kernel.  The 2 minute
+> > > > > timeout also doesn't seem to match with what I'd calculate
+> > > > > from
+> > > > > the initial value of tcp_retries2, which should give a much
+> > > > > higher
+> > > > > timeout.
+> > > > >=20
+> > > > > The only clue I've been able to find is in the retry=3Dn entry
+> > > > > in
+> > > > > the NFS
+> > > > > manpage:
+> > > > >=20
+> > > > > " For TCP the default is 3 minutes, but system TCP connection
+> > > > > timeouts will sometimes limit the timeout of each
+> > > > > retransmission
+> > > > > to around
+> > > > > 2
+> > > > minutes."
+> > > > >=20
+> > > > > What I'm not able to make sense of:
+> > > > > =C2=A0- The retry option says that it applies to mount operations=
+,
+> > > > > not
+> > > > > read/write operations.  However, in this case I'm seeing the 2
+> > > > > minute delay on read/write operations but *not* mount
+> > > > > operations.
+> > > > > =C2=A0- A couple of hours of searching didn't lead me to any kern=
+el
+> > > > > settings that would result in a 2 minute timeout.
+> > > > >=20
+> > > > > Does anyone have any clues about a) what's happening and b)
+> > > > > how to
+> > > > > get our desired behaviour of being able to control both mount
+> > > > > and
+> > > > > read/write timeouts down to a few seconds?
+> > > > >=20
+> > > > > Thanks.
+> > > >=20
+> > > > I thought that changing TCP_RTO_MAX in include/net/tcp.h from
+> > > > 120 to
+> > > > something smaller and recompiling the kernel would change the 2
+> > > > minute timeout, but it had no effect.  I'm going to keep poking
+> > > > through the kernel code to see if there's a knob I can turn to
+> > > > change the 2 minute timeout, so that I can at least understand
+> > > > where
+> > > > it's coming from.
+> > > >=20
+> > > > Any hints as to where I should be looking?
+> > >=20
+> > > I believe I've made some progress with this today:
+> > >=20
+> > > =C2=A0- Calls to rpc_create() from fs/nfs/client.c are sending an
+> > > rpc_timeout struct with their args.
+> > > =C2=A0- rpc_create() does *not* pass the timeout on to
+> > > xprt_create_transport(), which then can't pass it on to
+> > > xs_setup_tcp().
+> > > =C2=A0- xs_setup_tcp(), having no timeout passed to it, uses
+> > > xs_tcp_default_timeout instead.
+> > > =C2=A0- changing xs_tcp_default_timeout changes the "ls" timeout
+> > > behaviour
+> > > I described above.
+> > >=20
+> > > In theory all of this means that the timeout simply needs to be
+> > > passed
+> > > through and used instead of xs_tcp_default_timeout.  I'm going to
+> > > give
+> > > this a try tomorrow.
+> > >=20
+> >=20
+> > That's a great root-cause analysis. The interlocking timeouts
+> > involved with
+> > NFS and its sockets can be really difficult to unwind.
+> >=20
+> > Is there a way to automate this testcase? That might be nice to have
+> > in
+> > xfstests or the nfstest suite.
+> >=20
+> > > Here's what I'm going to try first; I'm no C programmer, though,
+> > > so
+> > > any advice or corrections you might have would be appreciated.
+> > >=20
+> > > Thanks.
+> > >=20
+> > > Andrew
+> > >=20
+> > > diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c index
+> > > 0b0b9f1eed46..1350c1f489f7 100644
+> > > --- a/net/sunrpc/clnt.c
+> > > +++ b/net/sunrpc/clnt.c
+> > > @@ -532,6 +532,7 @@ struct rpc_clnt *rpc_create(struct
+> > > rpc_create_args
+> > > *args)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0.addrlen =3D args->addrsize,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0.servername =3D args->servername,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0.bc_xprt =3D args->bc_xprt,
+> > > +               .timeout =3D args->timeout,
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0char servername[48];
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct rpc_clnt *clnt=
+;
+> > > diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c index
+> > > aaa5b2741b79..adc79d94b59e 100644
+> > > --- a/net/sunrpc/xprtsock.c
+> > > +++ b/net/sunrpc/xprtsock.c
+> > > @@ -3003,7 +3003,7 @@ static struct rpc_xprt *xs_setup_tcp(struct
+> > > xprt_create *args)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xprt->idle_timeout =
+=3D XS_IDLE_DISC_TO;
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xprt->ops =3D &xs_tcp=
+_ops;
+> > > -       xprt->timeout =3D &xs_tcp_default_timeout;
+> > > +       xprt->timeout =3D args->timeout;
+> > >=20
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xprt->max_reconnect_t=
+imeout =3D xprt->timeout->to_maxval;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0xprt->connect_timeout=
+ =3D xprt->timeout->to_initval *
+> > >=20
+> >=20
+> > Looks like you're probably on the right track. You're missing a few
+> > things:
+> >=20
+> > You'll need to add a "timeout" field to struct xprt_create in
+> > include/linux/sunrpc/xprt.h, and there may be some other places that
+> > either
+> > need to set the timeout in that structure, or do something with that
+> > field
+> > when it's set.
+> >=20
+> > Once you have something that fixes your reproducer, go ahead and
+> > post it
+> > and we can help you work through whatever changes need to me made to
+> > make it work.
+> >=20
+> > Nice work!
+>=20
+> Thanks for the tip, that was helpful.
+>=20
+> Currently I'm fighting with kernel recompilation.  I decided to make
+> it quicker by slimming down the config, but apparently I've achieved
+> something which Google claims no one else has achieved:
+>=20
+> Errors on kernel make modules_install:
+>=20
+> =C2=A0=C2=A0DEPMOD  /lib/modules/6.2.0-rc5-sunrpctimeo+
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs4_disable_idmapping
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs4_label_alloc
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> send_implementation_id
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs_atomic_open
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs_clear_verifier_delegated
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs4_client_id_uniquifier
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs4_dentry_operations
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs_fscache_open_file
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol nfs4_fs_type
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> recover_lost_locks
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs_callback_nr_threads
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> max_session_cb_slots
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> max_session_slots
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs_idmap_cache_timeout
+> depmod: WARNING: /lib/modules/6.2.0-rc5-
+> sunrpctimeo+/kernel/fs/nfs/nfsv4.ko needs unknown symbol
+> nfs_callback_set_tcpport
+>=20
+> Errors on module load:
+>=20
+> [   94.008271] nfsv4: Unknown symbol nfs4_disable_idmapping (err -2)
+> [   94.008321] nfsv4: Unknown symbol nfs4_label_alloc (err -2)
+> [   94.008434] nfsv4: Unknown symbol send_implementation_id (err -2)
+> [   94.008446] nfsv4: Unknown symbol nfs_atomic_open (err -2)
+> [   94.008468] nfsv4: Unknown symbol nfs_clear_verifier_delegated (err
+> -2)
+> [   94.008475] nfsv4: Unknown symbol nfs4_client_id_uniquifier (err -
+> 2)
+> [   94.008501] nfsv4: Unknown symbol nfs4_dentry_operations (err -2)
+> [   94.008521] nfsv4: Unknown symbol nfs_fscache_open_file (err -2)
+> [   94.008566] nfsv4: Unknown symbol nfs4_fs_type (err -2)
+> [   94.008595] nfsv4: Unknown symbol recover_lost_locks (err -2)
+> [   94.008639] nfsv4: Unknown symbol nfs_callback_nr_threads (err -2)
+> [   94.008654] nfsv4: Unknown symbol max_session_cb_slots (err -2)
+> [   94.008678] nfsv4: Unknown symbol max_session_slots (err -2)
+> [   94.008694] nfsv4: Unknown symbol nfs_idmap_cache_timeout (err -2)
+> [   94.008709] nfsv4: Unknown symbol nfs_callback_set_tcpport (err -2)
+>=20
+> I suspect I've turned something off in the config that I shouldn't
+> have, but I'm not sure what.  I see that one of the symbols
+> (nfs_clear_verifier_delegated) is in include/linux/nfs_fs.h, and the
+> others are defined in fs/nfs/nfs4_fs.h, fs/nfs/super.c, fs/nfs/dir.c,
+> fs/nfs/inode.c, fs/nfs/fscache.c, and fs/nfs/fs_context.c.  I'm
+> changing config options and recompiling to try to figure out what I'm
+> missing, but at a couple of hours per compile and only a couple of
+> days a week to work on this it's slow going.  Any hints as to what I
+> might be doing wrong would be appreciated.  =F0=9F=98=8A
+>=20
+
+Looks like the ABI got broken when you turned off some options.
+
+Generally, if you just want to build a single module, then you want the
+.config to be _exactly_ the one that you used to build the kernel you're
+going to plug it into. Then to build the modules under fs/nfs you can
+do:
+
+    make modules_prepare
+    make M=3Dfs/nfs
+
+...and then drop the resulting .ko objects into the right place in
+/lib/modules.
+
+That said, it may be simpler to just build and work with a whole kernel
+for testing purposes. Working with an individual kmod can be a bit
+tricky unless you know what you're doing.
+
+Once you do the first, subsequent builds should be reasonably fast.
+--=20
+Jeff Layton <jlayton@kernel.org>
