@@ -2,88 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 219466803C3
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 03:16:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE72C6805E0
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 07:09:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229835AbjA3CQA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 29 Jan 2023 21:16:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40778 "EHLO
+        id S235578AbjA3GJU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Jan 2023 01:09:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbjA3CQA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 Jan 2023 21:16:00 -0500
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9382B12593;
-        Sun, 29 Jan 2023 18:15:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description;
-        bh=VUKkxOPVexeiOjL1SwDi/VTAaFCwLQcis/ITIft8mAs=; b=WQ5VRDYbPPNR7mazbzXFURKCqb
-        /oiZgBvOVBXp93JfiQTmVQeKhU2wPMr4KdRjWA94RzfnrZDQEommDZK84jRLJtHGiDJ5epM/fHWpy
-        Z+C9XXXo2NHvSQ2khZwuJd0xfN/I+sQkFlAQOujROHspzZTHpWfEfT1+OpMCAQOgqAdn5yok7r15q
-        7JE1OV+bKIj+ie6wkgsLT9OU7g4rbO8T7sZ5F9UHyUPN4jm8nrnqHNTHNInAgyfRMz0DEV+YMbguo
-        GkXjDnDGkmp9PQdJx95HXXMTG/S7TpGgmy9caco9WLOC48eRP0544FopgHtAqlwpDb6MTMSmMtaVR
-        T4d7D5Ug==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1pMJi4-004w5f-24;
-        Mon, 30 Jan 2023 02:15:52 +0000
-Date:   Mon, 30 Jan 2023 02:15:52 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     chuck lever <chuck.lever@oracle.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>, anna <anna@kernel.org>,
-        trond myklebust <trond.myklebust@hammerspace.com>,
-        raven <raven@themaw.net>,
-        chris chilvers <chris.chilvers@appsbroker.com>,
-        david young <david.young@appsbroker.com>,
-        luis turcitu <luis.turcitu@appsbroker.com>,
-        david <david@sigma-star.at>, benmaynard <benmaynard@google.com>
-Subject: Re: [PATCH 2/3] namei: Allow follow_down() to uncover auto mounts
-Message-ID: <Y9coWGadefHY6ZEJ@ZenIV>
-References: <20221207084309.8499-1-richard@nod.at>
- <20221207084309.8499-3-richard@nod.at>
- <EAE9AF79-93B8-4366-8672-20D407694E7E@oracle.com>
- <68008696.79813.1675006959005.JavaMail.zimbra@nod.at>
+        with ESMTP id S231324AbjA3GJT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 01:09:19 -0500
+Received: from formenos.hmeau.com (helcar.hmeau.com [216.24.177.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 030769009;
+        Sun, 29 Jan 2023 22:09:17 -0800 (PST)
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+        by formenos.hmeau.com with smtp (Exim 4.94.2 #2 (Debian))
+        id 1pMNLr-005Tuy-1Z; Mon, 30 Jan 2023 14:09:12 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Mon, 30 Jan 2023 14:09:11 +0800
+Date:   Mon, 30 Jan 2023 14:09:11 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Thomas Graf <tgraf@suug.ch>, netdev <netdev@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: Fwd: [PATCH RFC] NFSD: Convert filecache to rhltable
+Message-ID: <Y9dfB322nu5d3fB1@gondor.apana.org.au>
+References: <15afb0215ec76ffb54854eda8916efa4b5b3f6c3.camel@redhat.com>
+ <7456FF95-0C16-45C7-8CD9-B4436BE80B71@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <68008696.79813.1675006959005.JavaMail.zimbra@nod.at>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,URIBL_ABUSE_SURBL
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <7456FF95-0C16-45C7-8CD9-B4436BE80B71@oracle.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Jan 29, 2023 at 04:42:39PM +0100, Richard Weinberger wrote:
-> ----- Ursprüngliche Mail -----
-> > Von: "chuck lever" <chuck.lever@oracle.com>
-> >> On Dec 7, 2022, at 3:43 AM, Richard Weinberger <richard@nod.at> wrote:
-> >> 
-> >> This function is only used by NFSD to cross mount points.
-> >> If a mount point is of type auto mount, follow_down() will
-> >> not uncover it. Add LOOKUP_AUTOMOUNT to the lookup flags
-> >> to have ->d_automount() called when NFSD walks down the
-> >> mount tree.
-> >> 
-> >> Signed-off-by: Richard Weinberger <richard@nod.at>
+On Tue, Jan 24, 2023 at 02:57:35PM +0000, Chuck Lever III wrote:
+>
+> > I could be wrong, but it looks like you're safe to traverse the list
+> > even in the case of removals, assuming the objects themselves are
+> > rcu-freed. AFAICT, the object's ->next pointer is not changed when it's
+> > removed from the table. After all, we're not holding a "real" lock here
+> > so the object could be removed by another task at any time.
 > > 
-> > Hello Al, you are top of the maintainers listed for fs/namei.c.
-> > I'd like to take this series for v6.3 via the nfsd tree. Can
-> > I get your Acked-by: for this one?
-> 
-> ping?
+> > It would be nice if this were documented though.
 
-modulo clumsy wording ("mount point is of type auto mount")
+Yes this is correct.  As long as rcu_read_lock is still held,
+the list will continue to be valid for walking even if you remove
+entries from it.
 
-Acked-by: Al Viro <viro@zeniv.linux.org.uk>
+> Is there a preferred approach for this with rhltable? Can we just
+> hold rcu_read_lock and call rhltable_remove repeatedly without getting
+> a fresh copy of the list these items reside on?
 
-Commit message sounds as if it refered to autofs, rather than NFS referrals
-et.al. and AFAICS those are the cases it's really about...
+Yes you can walk the whole returned list while removing the nodes
+one by one, assuming that you hold the RCU read lock throughout.
+The unhashed nodes are only freed after the RCU grace period so the
+list remains valid after removal.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
