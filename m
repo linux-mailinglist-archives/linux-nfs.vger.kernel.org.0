@@ -2,50 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3949D6815C9
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 17:00:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85B74681749
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Jan 2023 18:09:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236079AbjA3QAZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Jan 2023 11:00:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
+        id S236973AbjA3RJb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Jan 2023 12:09:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236037AbjA3QAY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 11:00:24 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F8E916ACC
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Jan 2023 07:59:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675094367;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fl/jnHLwbhnLse2jT7+4Lzwh9labRex05wjKl7Xvb60=;
-        b=gUxjsG1G1D7HfolJB+eshOMQ1MvubymiPheM9BvW5imzV6qudFS3pgub5cgZBDbO1fdNCm
-        oIqu1YgBP80LZ7Mc/B2jiA4OpioYnDCObAaBmiWWahKZxQrUKi9QrjSXfoMfTcsnM8yYaU
-        dAl8uvyQlRESNySblXX6q8ljwgLpPEA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-441-0OMBsTb3NwqemUKDMrnO3w-1; Mon, 30 Jan 2023 10:59:24 -0500
-X-MC-Unique: 0OMBsTb3NwqemUKDMrnO3w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2E1F5858F09;
-        Mon, 30 Jan 2023 15:59:22 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 310581121314;
-        Mon, 30 Jan 2023 15:59:20 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20230130092157.1759539-12-hch@lst.de>
-References: <20230130092157.1759539-12-hch@lst.de> <20230130092157.1759539-1-hch@lst.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dhowells@redhat.com
-Cc:     Marc Dionne <marc.dionne@auristor.com>,
+        with ESMTP id S229578AbjA3RJa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 12:09:30 -0500
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C9B03FF2B;
+        Mon, 30 Jan 2023 09:09:29 -0800 (PST)
+Received: by mail-pl1-f181.google.com with SMTP id be8so12290652plb.7;
+        Mon, 30 Jan 2023 09:09:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VcAkkG+7EQ87q1yuQfzrNQ/CVfL1BPFACyrSB5AzC9E=;
+        b=w+5Cau5Utuz+gsMlY/4IbiIdWNbKBkgQ4TrPVBcGE+SToUp0g/A05HkGbJ0FTYbWrP
+         7HMVfgUXpIW+u5zTse9SWNWDyRgonY9hrNypvej9fDylpcs9wAb9JVkG2HsklLrXdaj9
+         cl6J0eDzdmsWCJVz8RhP2TnkRWKmyRxEbZAOwrxGy/5HNpnGlLmc4IMKZg+C9KjWiF2r
+         mJ3HvAjE/Gp/1Ltkk0W7/TNlWDF36YVeMBsfa2cl6snKDRnPCJax248GlvbcFB6ygEOG
+         QZ98lgO/W1rfYmFeagoSmehxPYnKYZ2X+/DSnxrijZv46tR1n3VPe5fmZpnO6snY7Jng
+         fthg==
+X-Gm-Message-State: AFqh2kpwH6xITHx+G85I2f/DjV4Sj43aFIVFcyohQIef5YtYDf32z/pi
+        KoR4et2qMeAMRJlHNdQXWa4=
+X-Google-Smtp-Source: AMrXdXsoThEeXwb5X9zNdrMM/dBzAwAKgsQUh4DVjXEWAVyR5f6ZoR++CGV0u6k+ufH+Ks5WBdnq6g==
+X-Received: by 2002:a17:902:f646:b0:194:46e0:1b61 with SMTP id m6-20020a170902f64600b0019446e01b61mr52496709plg.63.1675098568615;
+        Mon, 30 Jan 2023 09:09:28 -0800 (PST)
+Received: from ?IPV6:2620:15c:211:201:5016:3bcd:59fe:334b? ([2620:15c:211:201:5016:3bcd:59fe:334b])
+        by smtp.gmail.com with ESMTPSA id y16-20020a170902b49000b0019602263feesm8042186plr.90.2023.01.30.09.09.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Jan 2023 09:09:27 -0800 (PST)
+Message-ID: <2bab7050-dec7-3af8-b643-31b414b8c4b4@acm.org>
+Date:   Mon, 30 Jan 2023 09:09:23 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH 01/23] block: factor out a bvec_set_page helper
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Xiubo Li <xiubli@redhat.com>, Steve French <sfrench@samba.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
         linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
@@ -55,27 +75,51 @@ Cc:     Marc Dionne <marc.dionne@auristor.com>,
         linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
         devel@lists.orangefs.org, io-uring@vger.kernel.org,
         linux-mm@kvack.org
-Subject: Re: [PATCH 11/23] afs: use bvec_set_folio to initialize a bvec
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3499903.1675094359.1@warthog.procyon.org.uk>
-Date:   Mon, 30 Jan 2023 15:59:19 +0000
-Message-ID: <3499904.1675094359@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+References: <20230130092157.1759539-1-hch@lst.de>
+ <20230130092157.1759539-2-hch@lst.de>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20230130092157.1759539-2-hch@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> wrote:
+On 1/30/23 01:21, Christoph Hellwig wrote:
+> Add a helper to initialize a bvec based of a page pointer.  This will help
+> removing various open code bvec initializations.
 
-> Use the bvec_set_folio helper to initialize a bvec.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Why do you want to remove the open-coded bvec initializations? What is 
+wrong with open-coding bvec initialization? This patch series modifies a 
+lot of code but does not improve code readability. Anyone who encounters 
+code that uses the new function bvec_set_page() has to look up the 
+definition of that function to figure out what it does.
 
-Acked-by: David Howells <dhowells@redhat.com>
+> -	iv = bip->bip_vec + bip->bip_vcnt;
+> -
+>   	if (bip->bip_vcnt &&
+>   	    bvec_gap_to_prev(&bdev_get_queue(bio->bi_bdev)->limits,
+>   			     &bip->bip_vec[bip->bip_vcnt - 1], offset))
+>   		return 0;
+>   
+> -	iv->bv_page = page;
+> -	iv->bv_len = len;
+> -	iv->bv_offset = offset;
+> +	bvec_set_page(&bip->bip_vec[bip->bip_vcnt], page, len, offset);
+>   	bip->bip_vcnt++;
 
+Has it been considered to use structure assignment instead of 
+introducing bvec_set_page(), e.g. as follows?
+
+bip->bip_vec[bip->bip_vcnt] = (struct bio_vec) {
+       .bv_page = page, .bv_len = len, .bv_offset = offset };
+
+Thanks,
+
+Bart.
