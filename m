@@ -2,50 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2528768364A
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Jan 2023 20:20:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 926FD683697
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Jan 2023 20:31:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231728AbjAaTUJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Jan 2023 14:20:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35934 "EHLO
+        id S231190AbjAaTbl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Jan 2023 14:31:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231644AbjAaTUH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Jan 2023 14:20:07 -0500
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C925B15C87
-        for <linux-nfs@vger.kernel.org>; Tue, 31 Jan 2023 11:20:05 -0800 (PST)
-Received: by mail-pf1-x42c.google.com with SMTP id w20so2020414pfn.4
-        for <linux-nfs@vger.kernel.org>; Tue, 31 Jan 2023 11:20:05 -0800 (PST)
+        with ESMTP id S229944AbjAaTbk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Jan 2023 14:31:40 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D99E5246
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Jan 2023 11:31:39 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id nm12-20020a17090b19cc00b0022c2155cc0bso15458679pjb.4
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Jan 2023 11:31:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umich.edu; s=google-2016-06-03;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H2sLS0K+ZhIkqbMsTGQaISH1ooey58GccURrwarDdyE=;
-        b=G6STF4sC1IpYH+no6DBmCAcH7Dl9pIblHzbIvAB2w5vJ94fHRUn6x38dBcHVyNU/wC
-         0AFLl2R04cIjjYq2wylvT71L2CKS8QjR0Q1qDuW8bSU82PNNly8kyVSQWJpgBMxb8dMB
-         VL4X75iZiKpz/14U2Z8VDjvd1NOMbDvrGy3/EYnSVQL4rmyDjIT6PWL6rj63EEyw6KY6
-         aZtODo26wNngBm5CNzUsBlMyvczZp+tCRasts0Uj8yqS4ixbvEMbAH39UvKwQG+Gfiog
-         qypDYb+bWf0idYVxupi6T9AuxMGBEdPzmg5/W8kASuLXasdoAYAIC2UsQKhnOkfA8G3n
-         y3Jg==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=LhkeQ038JEhzEGjCdk18TZmevfaflM8a7jzCoC6THBk=;
+        b=NJj6jokcwLvJwuRNwgTjQpeix7UWJ9i+E4qLeLiG2yqgWOo7ROG4YH/tYu7/b6mT8p
+         4N/NNMHJuN/Q0wNoF2GkQPmhSF+bQ/OqDuPk323Ij8EB4kawhjTzkZG0VkeipbxqLdPL
+         r3qoNNaQSmnGiPAWR6aXNKLa7IT9z5P0HtomnxuMTx9WfGr9YU0fJfefOCsTGpLEb8tA
+         1Xq1f37MQtkmrJdR7stSsLkUVtdEv/qL3apvOtiL5Na/o/2P4ndLngz//yiCPAM38Yn4
+         LaDzdfuF7XrtLBxxgl4GGSo0Lg4hmzINJQigkEonvxGUKSvlYve8W0H8HiUj+it/iXqI
+         x4Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H2sLS0K+ZhIkqbMsTGQaISH1ooey58GccURrwarDdyE=;
-        b=jN/IfvmQgIWH5B15Tdifzk5sADc4E1I3LbmFmMaNpXfcr7vcJTuXyJWfmlkjK7q3jJ
-         yCaHJD4PnxqvnJmEOIf48sk6LvNSXS36Z5JqkSOD0RKLXy6cOvok6ofXL4jCAw1SPy8w
-         oQrUIIOd40x346YdAAK08wvoN5fVR2N4jLPTMoI1/+j1qPCdxhSFTH5lcRC4w1Hlfbxj
-         +lUonw27KJPIfxG6hnPTbBj88Pc9oBdz6P6xMJVSTV6k5cYkHnhWmYJU9HWRVaF9azu6
-         YnD45/zRTJ+EfWBv8zg3g6/aUWx1ZScsLEZL9XATcMEN9UOkDmRNpP+eOVVS2YHmt8bu
-         Gbqw==
-X-Gm-Message-State: AO0yUKUoFPCP8vfxLSfapfbpt3Vwv45ExBAGpPDYxl+oOKlvplMFEWbB
-        fbvm9YEZvSgMU3ZY44bn8pq0m28E3HjL8EChYlWotF6q
-X-Google-Smtp-Source: AK7set920vXvpidHAVHmr9Qpsf4vmpEbKsj23IyrDmBvifq27nHDYxuUxPed4dYVyLnv+51QdmaJziz/aU9R7E+ppEE=
-X-Received: by 2002:a05:6a00:3498:b0:592:5885:862f with SMTP id
- cp24-20020a056a00349800b005925885862fmr3266989pfb.18.1675192805194; Tue, 31
- Jan 2023 11:20:05 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LhkeQ038JEhzEGjCdk18TZmevfaflM8a7jzCoC6THBk=;
+        b=lkJoOn79mwTWa+5CghGRzvyWNYAn7mkEqg2JqdjevyFGEoUlMLINHfrC8YUWFKhRrp
+         PrOLAnqmyYr+JsYVbBZqA9tEHTBIitdyhTfhf6ep4PjRu2tMMZldiiDOR3Rcv+wVNNWG
+         CXWRDiyyoLLVF6bxe2s5+eMVlFCqVjhSTZ6DzDw0fkutULfs1TBnVlj3LeGqU5o5BroU
+         MB1mimnfmVparotORLkA0JxXccdARMHQLMA/Wnhrn1TjKzgnKGvDlrtY+7+KHmtg6iu9
+         1Ruzk3yzHckI1N0TVrrqDGucgapfICFUIXlvNx84F/iABNMBHTX8RXhTlIBSoZ/SWiz7
+         N9Vw==
+X-Gm-Message-State: AO0yUKVNBOQ21ip1KXn0Y3aAGsHmpwiokTkaAaiLwEbOCUaIipIgY44B
+        gQW1jMCpWk+Gb9pMxCUEaLC2vuIqzMTT/OUGAto=
+X-Google-Smtp-Source: AK7set8tYkOZu8QV7N4A8YDiZ+Kp4FmEB1hC6BI+/ip7FMrG/hV1CS9lubUbDvgN2aQj1lNlwj/jKpL2eNwUn8K0fCc=
+X-Received: by 2002:a17:90a:ebd1:b0:22c:445b:d81 with SMTP id
+ cf17-20020a17090aebd100b0022c445b0d81mr2825016pjb.104.1675193498815; Tue, 31
+ Jan 2023 11:31:38 -0800 (PST)
 MIME-Version: 1.0
 References: <YQBPR01MB10724B629B69F7969AC6BDF9586C89@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
  <YQBPR01MB10724AEE306F99C844101EED086CF9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
@@ -56,16 +55,19 @@ References: <YQBPR01MB10724B629B69F7969AC6BDF9586C89@YQBPR01MB10724.CANPRD01.PRO
  <YQBPR01MB1072428BC706EE8C5CC34341186D39@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
  <936efa478e786be19cb9715eba1941ebc4f94a1b.camel@kernel.org>
  <SA1PR09MB75521717AA00DCAD6CAB5118A7D39@SA1PR09MB7552.namprd09.prod.outlook.com>
- <CAN-5tyFro=naMgub9uAZ0wa20WhZwV2Rh6xv_meNice1EG+Dug@mail.gmail.com> <046e01d935a0$7b3a2d30$71ae8790$@mindspring.com>
-In-Reply-To: <046e01d935a0$7b3a2d30$71ae8790$@mindspring.com>
+ <2bc328a4a292eb02681f8fc6ea626e83f7a3ae85.camel@kernel.org>
+ <SA1PR09MB75528A7E45898F6A02EDF82EA7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
+ <0BBE155A-CE56-40F7-A729-85D67A9C0CC3@oracle.com> <SA1PR09MB755212AB7E5C5481C45028A8A7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
+In-Reply-To: <SA1PR09MB755212AB7E5C5481C45028A8A7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
 From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Tue, 31 Jan 2023 14:19:54 -0500
-Message-ID: <CAN-5tyE+wKVtHWr+DF67DLN0pvO332dDajvBbeGyCFu1fyqdRQ@mail.gmail.com>
+Date:   Tue, 31 Jan 2023 14:31:27 -0500
+Message-ID: <CAN-5tyHOJ=qXUU73VsZC9Ezs7_-eZ46VDtiE_DWB3bdyr768gA@mail.gmail.com>
 Subject: Re: Zombie / Orphan open files
-To:     Frank Filz <ffilzlnx@mindspring.com>
-Cc:     "Andrew J. Romero" <romero@fnal.gov>, linux-nfs@vger.kernel.org
+To:     "Andrew J. Romero" <romero@fnal.gov>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
@@ -76,66 +78,62 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 1:19 PM Frank Filz <ffilzlnx@mindspring.com> wrote:
+On Tue, Jan 31, 2023 at 12:12 PM Andrew J. Romero <romero@fnal.gov> wrote:
 >
-> > On Mon, Jan 30, 2023 at 5:44 PM Andrew J. Romero <romero@fnal.gov> wrot=
-e:
-> > >
-> > > Hi
-> > >
-> > > This is a quick general NFS server question.
-> > >
-> > > Does the NFSv4x  specification require or recommend that:   the NFS s=
-erver,
-> > after some reasonable time,
-> > > should / must close orphan / zombie open files ?
-> >
-> > Why should the server be responsible for a badly behaving client? It se=
-ems like
-> > you are advocating for the world where a problem is hidden rather than =
-solved.
-> > But because bugs do occur and some customers want a quick solution, som=
-e
-> > storage providers do have ways of dealing with releasing resources (lik=
-e open
-> > state) that the client will never ask for again.
-> >
-> > Why should we excuse bad user behaviour? For things like long running j=
-obs
-> > users have to be educated that their credentials must stay valid for th=
-e duration
-> > of their usage.
-> >
-> > Why should we excuse poor application behaviour that doesn't close file=
-s? But in
-> > a way we do, the OS will make sure that the file is closed when the app=
-lication
-> > exists without explicitly closing the file. So I'm curious how do you g=
-et in a state
-> > with zombie?
 >
-> Don't automatically assume this is bad application behavior, though it ma=
-y be behavior we don't all like, sometimes it may be for a reason. Applicat=
-ions may be keeping a file open to protect the file (works best when share =
-deny modes are available, i.e. most likely a Windows client). Also, won't a=
-n executable be kept open for the lifetime of the process, especially if th=
-e executable is large enough that it will be paged in/out from the file? Th=
-is assures the same executable is available for the lifetime of the process=
- even if deleted and replaced with a new version.
+>
+> > -----Original Message-----
+> > From: Chuck Lever III <chuck.lever@oracle.com>
+> >
+> > > On Jan 31, 2023, at 9:42 AM, Andrew J. Romero <romero@fnal.gov> wrote:
+> > >
+> > > In a large campus environment, usage of the relevant memory pool will eventually get so
+> > > high that a server-side reboot will be needed.
+> >
+> > The above is sticking with me a bit.
+> >
+> > Rebooting the server should force clients to re-establish state.
+> >
+> > Are they not re-establishing open file state for users whose
+> > ticket has expired?
+>
+>
+> > I would think each client would re-establish
+> > state for those open files anyway, and the server would be in the
+> > same overcommitted state it was in before it rebooted.
+>
+>
+> When the number of opens gets close to the limit which would result in
+> a disruptive  NFSv4 service interruption ( currently 128K open files is the limit),
+> I do the reboot ( actually I transfer the affected NFS serving resource
+> from one NAS cluster-node to the other NAS cluster node ... this based on experience
+> is like a 99.9% "non-disruptive reboot" of the affected NFS serving resource )
+>
+> Before the resource transfer there will be ~126K open files
+> ( from the NAS perspective )
+> 0.1 seconds after the resource transfer there will be
+> close to zero files open. Within a few seconds there will
+> be ~2000 and within a few minutes there will be ~2100.
+> During the rest of the day I only see a slow rise in the average number
+> of opens to maybe 2200. ( my take is ~2100 files were "active opens" before and after
+>   the resource transfer ,  the rest of the 126K opens were zombies
+> that the clients were no longer using ).  In 4-6 months
+> the number of opens from the NAS perspective will slowly
+> creep back up to the limit.
 
-Aren't you describing is a long running job (a file that needs to be
-kept opened -- and not closed -- for a long period of time)? And it's
-a user's responsibility to have creds that are long enough (or a
-system of renewal) that covers the duration of the job. To be clear
-you are talking about a long running process that keeps a file opened.
-You are not talking about a process that starts, opens a file and the
-process exits without closing a file.  That's poor application
-behaviour I was referring too. Regardless in that situation OS cleans
-up. So I'm very curious how these zombie/orphan files are being
-created, how does it happens that the OS doesn't clean up.
+What you are describing sounds like a bug in a system (be it client or
+server). There is state that the client thought it closed but the
+server still keeping that state.
 
-> Now whether this kind of activity is desirable via NFS may be another que=
-stion...
 >
-> Frank
+>
+>
+> >
+> > We might not have an accurate root cause analysis yet, or I could
+> > be missing something.
+> >
+> > --
+> > Chuck Lever
+> >
+> >
 >
