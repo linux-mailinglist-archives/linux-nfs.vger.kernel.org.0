@@ -2,66 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86A596822C1
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Jan 2023 04:24:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 525DC682384
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Jan 2023 05:48:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbjAaDYC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Jan 2023 22:24:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47010 "EHLO
+        id S229659AbjAaEsI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Jan 2023 23:48:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229927AbjAaDYB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 22:24:01 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE6505BBC
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Jan 2023 19:23:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675135389;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ltkBGnwECMJmhbD7vrl7YLMiwdLoKe7LIr5e2nHG3PQ=;
-        b=KhZq0uYC8Ppm4gJTv4Jas/sWK08ib5A9dZoWLOmqqAw6+w2qgE0I2bzPfs3EX5ZenJ0H9V
-        7EDlvAMy25DyLrvtsEFoCrUX4VhZg80vZLzx5GPZZtnvxrkYzOZewc/bL5sZIuSvTeZqv8
-        F6xA1CDzNYYrgv2pbYv4DnoOjf4Mj60=
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com
- [209.85.167.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-592-pcjqIufdPhaeJk_B_RW-Rg-1; Mon, 30 Jan 2023 22:23:08 -0500
-X-MC-Unique: pcjqIufdPhaeJk_B_RW-Rg-1
-Received: by mail-oi1-f199.google.com with SMTP id k2-20020a056808068200b00360fc885001so5870356oig.1
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Jan 2023 19:23:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ltkBGnwECMJmhbD7vrl7YLMiwdLoKe7LIr5e2nHG3PQ=;
-        b=Nx7+M95xXJSVXJ1CmQn3inCn/xdTho4XbNASzcg7KfjxgXQXadOuJl+OoNeMn33m+U
-         XhqOEUmOOikyT1GxFD/sPPAVScenJ3SBcEfr85lZSaCBLJ7FfNBWcpt/u0AF7M47GWLw
-         u5BHwzO59nGqBB137bji9+xzEsdAjribzCMzOP5d1JEYhmV98jwhnWuMp7t5f6H6mdJ+
-         JRWr7mrIb666qkMxq+b2fmUQ4Eb8wyTQ0P1YmUz63Loxz8ctl6EU7JKJoC8wuZG9Mkts
-         0WnVW8x+FhNI61tdKTUbiQa1VmwbuYUZuc2WgEwSaKCXIv5ezIz9J0N85m0MnEFROfbZ
-         M+2A==
-X-Gm-Message-State: AO0yUKWBHesqWuN5KAUcWP7d/v2J+Ml0ab0BM9vWNxjvnd3U5y0pgis3
-        r/73YEpeuXKe46ILmVVh3m3+cY+gWkq1srh1esQkPT5poHAM2Q8h4PDAb/1jereREHTW7XXFHle
-        ESSa0Wlynf2zfkbYnR2AYlDmRlQ3myLsmzU8G
-X-Received: by 2002:a05:6870:959e:b0:163:9cea:eea7 with SMTP id k30-20020a056870959e00b001639ceaeea7mr567816oao.35.1675135387498;
-        Mon, 30 Jan 2023 19:23:07 -0800 (PST)
-X-Google-Smtp-Source: AK7set9Hu2HFEDPiDGXCaNnCjpBr1M/3mkKYHDHH6RsQ5EtesD62XsOTK7GEj1aXmBl8gjJeRQSyQJytKuQEUWxkdJU=
-X-Received: by 2002:a05:6870:959e:b0:163:9cea:eea7 with SMTP id
- k30-20020a056870959e00b001639ceaeea7mr567795oao.35.1675135387309; Mon, 30 Jan
- 2023 19:23:07 -0800 (PST)
-MIME-Version: 1.0
-References: <20230130092157.1759539-1-hch@lst.de> <20230130092157.1759539-10-hch@lst.de>
- <20230130101747-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20230130101747-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Date:   Tue, 31 Jan 2023 11:22:56 +0800
-Message-ID: <CACGkMEuoqJP4S+jz8Tt5K72i-w5qBhuheTiCWaRLxUBfYS_jQg@mail.gmail.com>
-Subject: Re: [PATCH 09/23] virtio_blk: use bvec_set_virt to initialize special_vec
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        with ESMTP id S229468AbjAaEsF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Jan 2023 23:48:05 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3250C975E;
+        Mon, 30 Jan 2023 20:48:04 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DA54DB81986;
+        Tue, 31 Jan 2023 04:48:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0504C433D2;
+        Tue, 31 Jan 2023 04:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675140481;
+        bh=CWgleLhFsY7fdAWz2/GYSNCWb5dkQP977u3wpy/hMGw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dARP7ELm0JDZUtfdf/aZ8jH1JD0CLl7hoXoH78TsDhjc1mmn8JFRG1IigOhyzOTIR
+         8LpgawDRtBw86IFXj6i1YkeRts+SWuJNykJYmlH/aIgncIrOZjAf+V+/CmtP/KRDAr
+         VQCKDZAbOX7gqYp11J79NeVN8tSKvri14UKFB/PyE8wFl5jc+kE8t46/tFsmTWzcUR
+         7y905w/ePF+771Ea1UzytT2Miv5ypO2Q07DAhG9UQz+0Eikry/PkH6GHvO2153a1Tl
+         gFsQ/iFj+f+SWMdPgkH2tVoOS0Nrv5jbsqd1Sdse8+GqnLYQ5xf/0l8xGGH0jIGlb6
+         ELagiuszQyNWQ==
+Date:   Mon, 30 Jan 2023 20:47:58 -0800
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ilya Dryomov <idryomov@gmail.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
         Minchan Kim <minchan@kernel.org>,
         Sergey Senozhatsky <senozhatsky@chromium.org>,
         Keith Busch <kbusch@kernel.org>,
@@ -77,7 +52,6 @@ Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
         Chuck Lever <chuck.lever@oracle.com>,
         linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
@@ -89,52 +63,48 @@ Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
         devel@lists.orangefs.org, io-uring@vger.kernel.org,
         linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Subject: Re: [PATCH 01/23] block: factor out a bvec_set_page helper
+Message-ID: <20230130204758.38f4c6b9@kernel.org>
+In-Reply-To: <20230130092157.1759539-2-hch@lst.de>
+References: <20230130092157.1759539-1-hch@lst.de>
+        <20230130092157.1759539-2-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 11:18 PM Michael S. Tsirkin <mst@redhat.com> wrote:
->
-> On Mon, Jan 30, 2023 at 10:21:43AM +0100, Christoph Hellwig wrote:
-> > Use the bvec_set_virt helper to initialize the special_vec.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
->
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+On Mon, 30 Jan 2023 10:21:35 +0100 Christoph Hellwig wrote:
+> diff --git a/include/linux/bvec.h b/include/linux/bvec.h
+> index 35c25dff651a5e..9e3dac51eb26b6 100644
+> --- a/include/linux/bvec.h
+> +++ b/include/linux/bvec.h
+> @@ -35,6 +35,21 @@ struct bio_vec {
+>  	unsigned int	bv_offset;
+>  };
+>  
+> +/**
+> + * bvec_set_page - initialize a bvec based off a struct page
+> + * @bv:		bvec to initialize
+> + * @page:	page the bvec should point to
+> + * @len:	length of the bvec
+> + * @offset:	offset into the page
+> + */
+> +static inline void bvec_set_page(struct bio_vec *bv, struct page *page,
+> +		unsigned int len, unsigned int offset)
+> +{
+> +	bv->bv_page = page;
+> +	bv->bv_len = len;
+> +	bv->bv_offset = offset;
+> +}
 
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-Thanks
-
->
->
-> > ---
-> >  drivers/block/virtio_blk.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-> > index 6a77fa91742880..dc6e9b989910b0 100644
-> > --- a/drivers/block/virtio_blk.c
-> > +++ b/drivers/block/virtio_blk.c
-> > @@ -170,9 +170,7 @@ static int virtblk_setup_discard_write_zeroes_erase(struct request *req, bool un
-> >
-> >       WARN_ON_ONCE(n != segments);
-> >
-> > -     req->special_vec.bv_page = virt_to_page(range);
-> > -     req->special_vec.bv_offset = offset_in_page(range);
-> > -     req->special_vec.bv_len = sizeof(*range) * segments;
-> > +     bvec_set_virt(&req->special_vec, range, sizeof(*range) * segments);
-> >       req->rq_flags |= RQF_SPECIAL_PAYLOAD;
-> >
-> >       return 0;
-> > --
-> > 2.39.0
->
-
+kinda random thought but since we're touching this area - could we
+perhaps move the definition of struct bio_vec and trivial helpers 
+like this into a new header? bvec.h pulls in mm.h which is a right
+behemoth :S
