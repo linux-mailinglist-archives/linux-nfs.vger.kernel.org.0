@@ -2,224 +2,164 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A13B7686806
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Feb 2023 15:11:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 24038686845
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Feb 2023 15:28:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231131AbjBAOLX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Feb 2023 09:11:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33732 "EHLO
+        id S231709AbjBAO2q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Feb 2023 09:28:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjBAOLX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Feb 2023 09:11:23 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A0025925D
-        for <linux-nfs@vger.kernel.org>; Wed,  1 Feb 2023 06:10:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675260637;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/KApPw7TMUlKDalc3A2OFcWnmWXJTqmSZlULjYuDgfE=;
-        b=Fzwg7NR2yJyTyuXe1cRB/3l03Bz/QyRQKilfmS8q+N/K8VMfk8VguYCuOwu5i/E9GT8ixE
-        V+D4QPmMXDDRhKhLnXj8rJdCNU785zpQH9G59RDCJhN4PRTGAz7YKPPPkx8Ct/aDf7EcRw
-        LZm+mPh5sYEKnSHiy5xtpiq4/xdUt5I=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-115-JoE9opv2MCydsk94vJ5gQQ-1; Wed, 01 Feb 2023 09:10:34 -0500
-X-MC-Unique: JoE9opv2MCydsk94vJ5gQQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 07D0429AA388;
-        Wed,  1 Feb 2023 14:10:34 +0000 (UTC)
-Received: from [172.16.176.1] (unknown [10.22.50.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 902392026D4B;
-        Wed,  1 Feb 2023 14:10:33 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: git regression failures with v6.2-rc NFS client
-Date:   Wed, 01 Feb 2023 09:10:31 -0500
-Message-ID: <5FF4061F-108C-4555-A32D-DDBFA80EE4E7@redhat.com>
-In-Reply-To: <D0404F55-2692-4DB6-8DD6-CAC004331AC1@redhat.com>
-References: <9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com>
- <D0404F55-2692-4DB6-8DD6-CAC004331AC1@redhat.com>
+        with ESMTP id S232178AbjBAO2f (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Feb 2023 09:28:35 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D969311179
+        for <linux-nfs@vger.kernel.org>; Wed,  1 Feb 2023 06:28:23 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id be8so18601621plb.7
+        for <linux-nfs@vger.kernel.org>; Wed, 01 Feb 2023 06:28:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=shVBrDEa9IQP8/AEQcPRcvGr54IRcKjNo0iworGc8ks=;
+        b=AeIULjGxaPXDjHR65oyMvwx1ONBSKxCeUWr35mmCF5hOCdX7kIHChn3XeoK29mHyPk
+         DUOBKCQ/JkkCVgRB4NooqU+/xOn19XnazhjmQnApRqqL5H6Q0Q8us3/pp5wSJMtbjuhF
+         sE65yvDcpqkGzUIGsEJ1mEG3Z7ajSUa2UhElhyxy5gXYRUSdS1Ssdo3EtLVdW6zDVY1d
+         D2dnQ12ExjS8lsBiKuVqT9RmZOP19tns1qDU0+TYpIEDRcZFQV+ZVO3Cv2D309RZZ1Xf
+         /U/uDeXZryENcdo7xk13IV3DBqNR5i8RHNon0NhIiHkyPYqyas4sLIRUH/GqC4BtMQC9
+         GHfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=shVBrDEa9IQP8/AEQcPRcvGr54IRcKjNo0iworGc8ks=;
+        b=xt92HKnjDGleE4pz82YlzSJUbqtxdxS3zpsKun2nx5ggZG0lh2DEATzRj22dN+MbY+
+         nlIJcv8m797RmZdDJKvLstephy3HQZ9ZHQWjkn68w4fLbp0QTlYZoj3WmZ6ddJY1tkAC
+         RSjHKxMWbAStyhyq0oIr4DPKWb/DAg7wCY0phjbrHFtTPslgAYhwmWhdYc0sJHzWrXdw
+         JbmJtWtg8CvUWomKGuTDjW6Q4jA1mrrdv1HfawNXarS2R5wI+rZHC5gaZVo9ONbQyTqO
+         x9TmccMTiAxgOa+UERrht/m6HuU/9qy9heu1Z9yZ4tjVSRuNxI2w1hXtjrkcLGXbCbY4
+         48ew==
+X-Gm-Message-State: AO0yUKVS0vZtaQJ6CxnjDKweUfn53bZKOfPfXjOXJMi9UgZ7E9QEh770
+        pfWzJ1k3HeBZKqZO2cpmopapf8w/RAXEg5kbBorXLXehBas=
+X-Google-Smtp-Source: AK7set+693La+C4GitIYQP47RpUSMY4u5UZzx04VpNjG5k4ojHequhpcTXRyS5BbmeEHb2IFKFxeQLZTBJB+zjw1YZo=
+X-Received: by 2002:a17:90a:7a8e:b0:230:2889:ec8b with SMTP id
+ q14-20020a17090a7a8e00b002302889ec8bmr444077pjf.121.1675261703269; Wed, 01
+ Feb 2023 06:28:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <YQBPR01MB10724B629B69F7969AC6BDF9586C89@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+ <YQBPR01MB10724AEE306F99C844101EED086CF9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+ <YQBPR01MB10724F79460F3C02361279E8686CF9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+ <654e3b7d15992d191b2b2338483f29aec8b10ee1.camel@kernel.org>
+ <YQBPR01MB10724B36E378F493B9DED3C7E86D39@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+ <3c02bd2df703a68093db057c51086bbf767ffeb1.camel@kernel.org>
+ <YQBPR01MB1072428BC706EE8C5CC34341186D39@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+ <936efa478e786be19cb9715eba1941ebc4f94a1b.camel@kernel.org>
+ <SA1PR09MB75521717AA00DCAD6CAB5118A7D39@SA1PR09MB7552.namprd09.prod.outlook.com>
+ <2bc328a4a292eb02681f8fc6ea626e83f7a3ae85.camel@kernel.org>
+ <SA1PR09MB75528A7E45898F6A02EDF82EA7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
+ <0BBE155A-CE56-40F7-A729-85D67A9C0CC3@oracle.com> <SA1PR09MB755212AB7E5C5481C45028A8A7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
+ <CAN-5tyHOJ=qXUU73VsZC9Ezs7_-eZ46VDtiE_DWB3bdyr768gA@mail.gmail.com>
+ <SA1PR09MB7552C7543CE6E9D263C070D4A7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
+ <CAN-5tyGdaL_pYgqgS0TDwqCzVu=0rgLau8TDZMTe+hmC395UtQ@mail.gmail.com>
+ <SA1PR09MB7552674B97042D59646F6EF1A7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
+ <CAN-5tyGQrW-DDa8E+jzwdJuJa1swtq31kd6u_0nPoZXwpJPu=g@mail.gmail.com> <SA1PR09MB7552AB9D248410D0DE9866B2A7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
+In-Reply-To: <SA1PR09MB7552AB9D248410D0DE9866B2A7D09@SA1PR09MB7552.namprd09.prod.outlook.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 1 Feb 2023 09:28:11 -0500
+Message-ID: <CAN-5tyHnrFe5sZvd7MZ3NgdLhv8AyGUxu7ioJ3zb4ouj0Lq5Mw@mail.gmail.com>
+Subject: Re: Zombie / Orphan open files
+To:     "Andrew J. Romero" <romero@fnal.gov>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 31 Jan 2023, at 17:02, Benjamin Coddington wrote:
+Hi Jeff,
 
-> On 31 Jan 2023, at 16:15, Chuck Lever III wrote:
+There doesn't need to be anything done by the administrators (not for
+the linux implementation). The negotiation is specified in the spec.
+In the EXCHANGE_ID the client has a eia_state_protection field which
+it sets to SP4_MACH_CREDS and provides 2 lists must_enforce and
+must_allow (here's the spec):
+
+"The second list is spo_must_allow and consists of those operations
+the client wants to have the option of sending with the machine
+credential or the SSV-based credential, even if the object the
+operations are performed on is not owned by the machine or SSV
+credential.
+
+The corresponding result, also called spo_must_allow, consists of the
+operations the server will allow the client to use SP4_SSV or
+SP4_MACH_CRED credentials with. Normally, the server's result equals
+the client's argument, but the result MAY be different.
+
+The purpose of spo_must_allow is to allow clients to solve the
+following conundrum. Suppose the client ID is confirmed with
+EXCHGID4_FLAG_BIND_PRINC_STATEID, and it calls OPEN with the
+RPCSEC_GSS credentials of a normal user. Now suppose the user's
+credentials expire, and cannot be renewed (e.g., a Kerberos ticket
+granting ticket expires, and the user has logged off and will not be
+acquiring a new ticket granting ticket). The client will be unable to
+send CLOSE without the user's credentials, which is to say the client
+has to either leave the state on the server or re-send EXCHANGE_ID
+with a new verifier to clear all state, that is, unless the client
+includes CLOSE on the list of operations in spo_must_allow and the
+server agrees."
+
+It's possible that the NAS storage didn't allow for the CLOSE to be
+done with the machine creds and thus without user creds the state
+would be left open on the server. I suggest you capture a network
+trace during a mount and check the content of the reply.
+
+On Tue, Jan 31, 2023 at 6:08 PM Andrew J. Romero <romero@fnal.gov> wrote:
 >
->> Hi-
->>
->> I upgraded my test client's kernel to v6.2-rc5 and now I get
->> failures during the git regression suite on all NFS versions.
->> I bisected to:
->>
->> 85aa8ddc3818 ("NFS: Trigger the "ls -l" readdir heuristic sooner")
->>
->> The failure looks like:
->>
->> not ok 6 - git am --skip succeeds despite D/F conflict
->> #
->> #               test_when_finished "git -C df_plus_edit_edit clean -f"=
- &&
->> #               test_when_finished "git -C df_plus_edit_edit reset --h=
-ard" &&
->> #               (
->> #                       cd df_plus_edit_edit &&
->> #
->> #                       git checkout f-edit^0 &&
->> #                       git format-patch -1 d-edit &&
->> #                       test_must_fail git am -3 0001*.patch &&
->> #
->> #                       git am --skip &&
->> #                       test_path_is_missing .git/rebase-apply &&
->> #                       git ls-files -u >conflicts &&
->> #                       test_must_be_empty conflicts
->> #               )
->> #
->> # failed 1 among 6 test(s)
->> 1..6
->> make[2]: *** [Makefile:60: t1015-read-index-unmerged.sh] Error 1
->> make[2]: *** Waiting for unfinished jobs....
->>
->> The regression suite is run like this:
->>
->> RESULTS=3D some random directory under /tmp
->> RELEASE=3D"git-2.37.1"
->>
->> rm -f ${RELEASE}.tar.gz
->> curl --no-progress-meter -O https://mirrors.edge.kernel.org/pub/softwa=
-re/scm/git/${RELEASE}.tar.gz
->> /usr/bin/time tar zxf ${RELEASE}.tar.gz >> ${RESULTS}/git 2>&1
->>
->> cd ${RELEASE}
->> make clean >> ${RESULTS}/git 2>&1
->> /usr/bin/time make -j${THREADS} all doc >> ${RESULTS}/git 2>&1
->>
->> /usr/bin/time make -j${THREADS} test >> ${RESULTS}/git 2>&1
->>
->> On this client, THREADS=3D12. A single-thread run doesn't seem to
->> trigger a problem. So unfortunately the specific data I have is
->> going to be noisy.
+> Hi Olga
 >
-> I'll attempt to reproduce this and see what's up.  This is an export of=
-
-> tmpfs?  If so, I suspect you might be running into tmpfs' unstable cook=
-ie
-> problem when two processes race through nfs_do_filldir().. and if so, t=
-he
-> cached listing of the directory on the client won't match a listing on =
-the
-> server.
-
-It doesn't reproduce on ext4, but I can see it on an export of tmpfs.
-
-Unsurprisingly the pattern is getdents() returning 19 entries (17 for the=
-
-first emit and "." and ".."), then unlinking those and the next getdents(=
-)
-returning 0.
-
-Here's a reproducer which fails on tmpfs but works properly on exports of=
-
-ext4 and xfs:
-
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sched.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/syscall.h>
-#include <string.h>
-
-#define NFSDIR "/mnt/tmpfs/dirtest"
-#define BUF_SIZE 4096
-#define COUNT 18
-
-int main(int argc, char **argv)
-{
-    int i, dir_fd, bpos, total =3D 0;
-    size_t nread;
-    struct linux_dirent {
-        long           d_ino;
-        off_t          d_off;
-        unsigned short d_reclen;
-        char           d_name[];
-    };
-    struct linux_dirent *d;
-    char buf[BUF_SIZE];
-
-    /* create files */
-    for (i =3D 0; i < COUNT; i++) {
-        sprintf(buf, NFSDIR "/file_%03d", i);
-        close(open(buf, O_CREAT, 666));
-	total++;
-    }
-    printf("created %d total dirents\n", total);
-
-    dir_fd =3D open(NFSDIR, O_RDONLY|O_NONBLOCK|O_DIRECTORY|O_CLOEXEC);
-    if (dir_fd < 0) {
-        perror("cannot open dir");
-        return 1;
-    }
-
-    /* drop the first page */
-    posix_fadvise(dir_fd, 0, 4096, POSIX_FADV_DONTNEED);
-    total =3D 0;
-
-    while (1) {
-        nread =3D syscall(SYS_getdents, dir_fd, buf, BUF_SIZE);
-        if (nread =3D=3D 0 || nread =3D=3D -1)
-            break;
-        for (bpos =3D 0; bpos < nread;) {
-            d =3D (struct linux_dirent *) (buf + bpos);
-
-	    if (d->d_name[0] !=3D '.') {
-		    printf("%s\n", d->d_name);
-		    unlinkat(dir_fd, d->d_name, 0);
-		    total++;
-	    }
-            bpos +=3D d->d_reclen;
-        }
-    }
-    printf("found and deleted %d dirents\n", total);
-    close(dir_fd);
-
-    printf("rmdir returns %d\n", rmdir(NFSDIR));
-    return 0;
-}
-
-The client is doing uncached_readdir looking for cookie 19, but tmpfs has=
-
-re-ordered the last file into cookie 3 on the second READDIR.
-
-I think this is a different case of the problems discussed about unstable=
-
-readdir cookies on the last round of directory cache improvements, but si=
-nce
-we're now returning after 17 entries the problem is exposed on a director=
-y
-containing 18 files, rather than 128.
-
-Working on a fix..
-
-Ben
-
+> Based on Jeff's post
+>
+> Are there some NFS-client side flags that need to be set by
+> the sys-admins to have the state-operations performed
+> by the machine credential ?
+>
+> Are there any server-side requirements that must be fulfilled
+> so that the correct behavior is negotiated between client and server ?
+>
+> What versions of the client ( RHEL-7 , 8 ..) support this behavior
+> ( state-ops performed by machine credential )
+>
+> What versions of NFS ( 4.0, 4.1 .... ) support / mandate this behavior
+>
+> Thanks Again
+>
+> If any of you plan on visiting Illinois soon,  I owe you lunch !
+>
+> Andy
+>
+>
+> >
+> > Here's the paragraph of the spec stating that things like CLOSE must be allowed:
+> >
+> > In cases where the server's security policies on a portion of its
+> > namespace require RPCSEC_GSS authentication, a client may have to use
+> > an RPCSEC_GSS credential to remove per-file state (e.g., LOCKU, CLOSE,
+> > etc.). The server may require that the principal that removes the
+> > state match certain criteria (e.g., the principal might have to be the
+> > same as the one that acquired the state). However, the client might
+> > not have an RPCSEC_GSS context for such a principal, and might not be
+> > able to create such a context (perhaps because the user has logged
+> > off). When the client establishes SP4_MACH_CRED or SP4_SSV protection,
+> > it can specify a list of operations that the server MUST allow using
+> > the machine credential (if SP4_MACH_CRED is used) or the SSV
+> > credential (if SP4_SSV is used).
+> >
+> > If the NAS vendor is disallowing it then they are in the wrong.
+> >
