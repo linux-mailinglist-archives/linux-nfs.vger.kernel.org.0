@@ -2,130 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FCC6688F8E
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Feb 2023 07:14:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9764868979C
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Feb 2023 12:19:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230003AbjBCGOl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 Feb 2023 01:14:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57080 "EHLO
+        id S231277AbjBCLRo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 Feb 2023 06:17:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231430AbjBCGOk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Feb 2023 01:14:40 -0500
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83555255
-        for <linux-nfs@vger.kernel.org>; Thu,  2 Feb 2023 22:14:38 -0800 (PST)
-Received: by mail-il1-f200.google.com with SMTP id i23-20020a056e021d1700b003111192e89aso2738472ila.10
-        for <linux-nfs@vger.kernel.org>; Thu, 02 Feb 2023 22:14:38 -0800 (PST)
+        with ESMTP id S232408AbjBCLRn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Feb 2023 06:17:43 -0500
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9C4E93E25
+        for <linux-nfs@vger.kernel.org>; Fri,  3 Feb 2023 03:17:41 -0800 (PST)
+Received: by mail-ej1-x62b.google.com with SMTP id ml19so14561985ejb.0
+        for <linux-nfs@vger.kernel.org>; Fri, 03 Feb 2023 03:17:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=RXMIxGWTHt172JDXaJQxeWSafemTvTg0DTfBUUEyCwA=;
+        b=f9sPKJapzCkgkei38N4h204jJNSEz0UvFcbJS8c5GMCyZOmDKxsiMujUyXhal4RRp8
+         d/F7XxCfZdpRL4nEfQCJymd0OxRWc1DyT2XiM+eWZIJ6qdUR2sCZPdeRSkIqK9PBnoJt
+         aZXvwGi1opC1cjkUXGqxvtFX/CfkzII2BtnuB2z9hktU4QYatMu2VC8RaVbC78FrwWyd
+         956matQ3N5yECjaTICPRmNzm8EEXB58DP23W0+Hg03HyzVf6i0kfAu1v9Wy4N3mJTZUh
+         5R1eBPtbwLzkiQXsit8CjIO3Gdw/yptnM19LEdlv/m1p23j+Buoy42LqaojHq2rci8Cj
+         ESCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=q6qhhkxI0Fa2ecVa0opy5OWG8irJHSvv8/tIDhKgCEg=;
-        b=PIJwV4KmoRIl7tc7L0vly5mWgmWAghUW+3hsT2X3rVqpOHbrKU2lrzwj3SQirj+KXZ
-         QG9JCShE/9sV+2OvCFczHlgIPudCN1CQuXUoZ4xmm4t6E7/oUNXooBzJLo82gyq7poFf
-         oxapXfsWC7oKLEg5A8Wogh9YzY5r9W2CE2fg7373TWmhhBeC/Mcld1L3+s81Lc+tVss/
-         MBncYAakaGZAH/H0Vf/1Y1ovwQv1gLNvPo4Lm6V/fQbymbsWutnNtMxgEqojxh0nuem7
-         wi+L3g5uVzRN239R60NF+49C1k8gGUv5nQ0t/h+QGWC65h03Pxjqbdr7YLSzrsYaT/EO
-         kK4A==
-X-Gm-Message-State: AO0yUKV6+obcLmQ4Bjaknt/ZPPABkQDQUWkkz+8pqAmYRhAFdoR5+vKI
-        sbyoh+JZ5YvFSHFpBn8b/qMg85VpccKkSlmzZNtOQ0kqWnmB
-X-Google-Smtp-Source: AK7set/MqiiYgGSwQFGjuXKFYV7jvHbXG/cBEyam1SmM1Q9gjwcgZ1PqHiaAHtQAhzTkZDy6SVVeDSwkZAMHMf190iSHpY+gI+SE
+        bh=RXMIxGWTHt172JDXaJQxeWSafemTvTg0DTfBUUEyCwA=;
+        b=tJiCad4UmqKUdXga7/L/dGHE4VCHgLv6ifFLcTjbWRCZIXOhfXuFs6oZEWx9fhCOwZ
+         /eFMVQOlVPeLME+ueoYfsOMfhRYCZmKRgTUhNn4wuUYT1xQ8spTWjW6KVqO2W9iNkko1
+         RVSJnHJuXUto/sIA/KcQfH+LJhxj6kZarZ2Po8Bp5lNj5ELcIew9j667K4Zpa5etDwVN
+         Ar8Tvr9vZc3ZUhDh6HPrrLjxIX1fimNZROEMvgx6aawbdy3vfV30HzqTIMTdWLmUlHSu
+         IVyuhGTHKu6jD1ErdKcheFRZDKejVvVPTZSxuuW9iP4ni1LNn9dLxPS5hUHk3FxMafpU
+         hPaA==
+X-Gm-Message-State: AO0yUKUyH3aX4VN5E9WIyLEfD3v7+svmJ7f1CccN4khMZwnxJMgwAI8z
+        OXEq1vD1VLrKTaaLD94UvpBaAXtF+bB0G6GL9de7RFV9ZL8=
+X-Google-Smtp-Source: AK7set84Kytl/a2P+O8yDDRZvotwv8O3vOIyHe3YdFXDdsyrL5jCMIUI17OvPT48+SlzDsIWaL0tRdoxzcLVgl9II1s=
+X-Received: by 2002:a17:906:22d4:b0:878:6643:9754 with SMTP id
+ q20-20020a17090622d400b0087866439754mr2916996eja.46.1675423060132; Fri, 03
+ Feb 2023 03:17:40 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:c07:b0:30f:49fd:f547 with SMTP id
- d7-20020a056e020c0700b0030f49fdf547mr1774052ile.119.1675404877951; Thu, 02
- Feb 2023 22:14:37 -0800 (PST)
-Date:   Thu, 02 Feb 2023 22:14:37 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000009afa3c05f3c5988a@google.com>
-Subject: [syzbot] WARNING in remove_proc_entry (5)
-From:   syzbot <syzbot+04a8437497bcfb4afa95@syzkaller.appspotmail.com>
-To:     anna@kernel.org, chuck.lever@oracle.com, davem@davemloft.net,
-        edumazet@google.com, jlayton@kernel.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, pabeni@redhat.com,
-        syzkaller-bugs@googlegroups.com, trond.myklebust@hammerspace.com
+From:   Chris Chilvers <chilversc@gmail.com>
+Date:   Fri, 3 Feb 2023 11:17:28 +0000
+Message-ID: <CAAmbk-cQNY3Sd9iQ7vghqw_=sk9JsG-_Mf-OM_iRuw+h8j2E_w@mail.gmail.com>
+Subject: decant_cull_table intermittently aborting cachefilesd
+To:     linux-cachefs@redhat.com, linux-nfs@vger.kernel.org,
+        benmaynard@google.com, brennandoyle@google.com, tom@gunpowder.tech,
+        daire@dneg.com, Chris Chilvers <chris.chilvers@appsbroker.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_00,FROM_LOCAL_HEX,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,LOTS_OF_MONEY,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+I have been having an issue where cachefilesd will randomly crash causing the
+cache to be withdrawn. The crash is intermittent and can sometimes happen
+within minutes, other times it can take hours, or never.
 
-syzbot found the following issue on:
+Fortunately it has produced a crash dump so I've been able to analyse what
+happened.
 
-HEAD commit:    80bd9028feca Add linux-next specific files for 20230131
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10a0f7ae480000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=904dc2f450eaad4a
-dashboard link: https://syzkaller.appspot.com/bug?extid=04a8437497bcfb4afa95
-compiler:       gcc (Debian 10.2.1-6) 10.2.1 20210110, GNU ld (GNU Binutils for Debian) 2.35.2
+From the stack trace (and debug logging) the last operation it was running is
+the decant_cull_table. The code fails in the check block at the end of the
+function when it calls abort().
 
-Unfortunately, I don't have any reproducer for this issue yet.
+    (gdb) bt
+    #0  __pthread_kill_implementation (no_tid=0, signo=6,
+threadid=140614334650176) at ./nptl/pthread_kill.c:44
+    #1  __pthread_kill_internal (signo=6, threadid=140614334650176) at
+./nptl/pthread_kill.c:78
+    #2  __GI___pthread_kill (threadid=140614334650176,
+signo=signo@entry=6) at ./nptl/pthread_kill.c:89
+    #3  0x00007fe353442476 in __GI_raise (sig=sig@entry=6) at
+../sysdeps/posix/raise.c:26
+    #4  0x00007fe3534287f3 in __GI_abort () at ./stdlib/abort.c:79
+    #5  0x0000556d6c9f0965 in decant_cull_table () at cachefilesd.c:1571
+    #6  cachefilesd () at cachefilesd.c:780
+    #7  0x0000556d6c9f140b in main (argc=<optimized out>,
+argv=<optimized out>) at cachefilesd.c:581
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/924618188238/disk-80bd9028.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7a03cf86e545/vmlinux-80bd9028.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/568e80043a41/bzImage-80bd9028.xz
+For reference the code at frame 5 from the decant_cull_table function is:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+04a8437497bcfb4afa95@syzkaller.appspotmail.com
+    check:
+        for (loop = 0; loop < nr_in_ready_table; loop++)
+            if (((long)cullready[loop] & 0xf0000000) == 0x60000000)
+                abort();
 
-------------[ cut here ]------------
-name 'gss_krb5_enctypes'
-WARNING: CPU: 0 PID: 6187 at fs/proc/generic.c:712 remove_proc_entry+0x38d/0x460 fs/proc/generic.c:712
-Modules linked in:
-CPU: 0 PID: 6187 Comm: syz-executor.4 Not tainted 6.2.0-rc6-next-20230131-syzkaller-09515-g80bd9028feca #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/12/2023
-RIP: 0010:remove_proc_entry+0x38d/0x460 fs/proc/generic.c:712
-Code: e9 6d fe ff ff e8 63 f1 7c ff 48 c7 c7 e0 6d 98 8c e8 47 ba 0b 08 e8 52 f1 7c ff 4c 89 e6 48 c7 c7 c0 85 5e 8a e8 53 8c 44 ff <0f> 0b e9 a4 fe ff ff e8 37 f1 7c ff 48 8d bd d8 00 00 00 48 b8 00
-RSP: 0018:ffffc90015dcf8c8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 1ffff92002bb9f1b RCX: ffffc9000c579000
-RDX: 0000000000040000 RSI: ffffffff81692aec RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000080000000 R11: 0000000000000000 R12: ffffffff8b75c440
-R13: dffffc0000000000 R14: dffffc0000000000 R15: fffffbfff1c6d918
-FS:  00007fe943910700(0000) GS:ffff8880b9800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f2d14a16984 CR3: 0000000029c4e000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- destroy_krb5_enctypes_proc_entry net/sunrpc/auth_gss/svcauth_gss.c:1543 [inline]
- gss_svc_shutdown_net+0x7d/0x2b0 net/sunrpc/auth_gss/svcauth_gss.c:2120
- ops_exit_list+0xb0/0x170 net/core/net_namespace.c:169
- setup_net+0x9bd/0xe60 net/core/net_namespace.c:356
- copy_net_ns+0x320/0x6b0 net/core/net_namespace.c:483
- create_new_namespaces+0x3f6/0xb20 kernel/nsproxy.c:110
- copy_namespaces+0x410/0x500 kernel/nsproxy.c:179
- copy_process+0x311d/0x76b0 kernel/fork.c:2272
- kernel_clone+0xeb/0x9a0 kernel/fork.c:2684
- __do_sys_clone+0xba/0x100 kernel/fork.c:2825
- do_syscall_x64 arch/x86/entry/common.c:50 [inline]
- do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
- entry_SYSCALL_64_after_hwframe+0x63/0xcd
-RIP: 0033:0x7fe942c8c0c9
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 f1 19 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fe943910118 EFLAGS: 00000206 ORIG_RAX: 0000000000000038
-RAX: ffffffffffffffda RBX: 00007fe942dabf80 RCX: 00007fe942c8c0c9
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000071801000
-RBP: 00007fe942ce7ae9 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000206 R12: 0000000000000000
-R13: 00007ffe8ccafb1f R14: 00007fe943910300 R15: 0000000000022000
- </TASK>
+Checking the cull table, the first object in the cull table appears to be
+valid.
 
+    (gdb) p nr_in_ready_table
+    $1 = 242
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+    (gdb) p cullready[0]
+    $2 = (struct object *) 0x556d6d7382a0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+    (gdb) p -pretty -- *cullready[0]
+    $3 = {
+        parent = 0x556d6d7352b0,
+        children = 0x0,
+        next = 0x0,
+        prev = 0x0,
+        dir = 0x0,
+        ino = 13631753,
+        usage = 1,
+        empty = false,
+        new = false,
+        cullable = true,
+        type = OBJTYPE_DATA,
+        atime = 1675349423,
+        name = "E"
+    }
+
+The inode number from the struct matches a file in the fscache.
+
+    $ sudo find /var/cache/fscache -inum 13631753
+    /var/cache/fscache/cache/Infs,3.0,2,,300000a,e5e9b1269df2b0d,,,d0,100000,100000,249f0,249f0,249f0,249f0,1/@00/E210w114Hg92Az0HAMYCClFMVmkMY050002w1qO200
+
+However, the memory address of the struct matches (fails) the check.
+
+    (gdb) p (((long)cullready[0] & 0xf0000000) == 0x60000000)
+    $4 = 1
+
+      0000 556d 6d73 82a0
+    & 0000 0000 f000 0000
+    = 0000 0000 6000 0000
+
+    $ file /sbin/cachefilesd
+    /sbin/cachefilesd: ELF 64-bit LSB pie executable, x86-64
+
+Looking at the code, I suspect that this magic 0x60000000 number is supposed
+to be some kind of sentinel value that's used as a bug check for errors such
+as use after free? This would make sense when the application was 32 bit, as
+address pattern 0110 in the highest nibble either cannot occur, or lies within
+the kernel address space. However, when compiled as 64 bit this assumption is
+no longer true and the bit pattern can appear in perfectly valid addresses.
+
+This would also explain the random nature of the crashes, as the cachefilesd
+is at the whims of the OS and calloc function.
+
+--
+Chris
