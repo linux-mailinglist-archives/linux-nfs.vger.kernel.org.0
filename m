@@ -2,75 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 530EE689DD9
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Feb 2023 16:17:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38E0B689DFE
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Feb 2023 16:21:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234368AbjBCPKj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 Feb 2023 10:10:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51822 "EHLO
+        id S233831AbjBCPSH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 Feb 2023 10:18:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234113AbjBCPJq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Feb 2023 10:09:46 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5867A7ED8;
-        Fri,  3 Feb 2023 07:08:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=hrqLS9VRJdwWgQKPMrZrcg15ZPJuMvt1hsLhaUGAnIc=; b=BFKATpqtVunXubdNNkJ5PWdGdR
-        w5eGqcr1X3knNS9rr6k9oWENyIENlbi6OonNovYL8ZHpJJjUDwpcHhHTonjJY90oiMj+zCg0GCLCT
-        ZgNdYtwQXm0LQxe0W+f7iZTRogn9U/K+/3e+BH4ejOUB6/fIsWrQ9/00S1gnU4+Kd1mny+mtvIcKf
-        JBQbwIHCn96cgHxD69nkGyasiOfbHuKn0hnE8rzKpZB3qBEEW9iNbSwkEF+umPMiYEN99kqyv25Ra
-        OyRlO6fWHiMfP1LpyRoEaKpRG1PL6hAcJNC4/vgMJdlJJBo2kCaI7cWoF5XwWHzsLSZZ3Jn/itg0Q
-        3+X6SEYg==;
-Received: from [2001:4bb8:19a:272a:910:bb67:7287:f956] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pNxfT-002bcT-3j; Fri, 03 Feb 2023 15:07:59 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Ilya Dryomov <idryomov@gmail.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Xiubo Li <xiubli@redhat.com>, Steve French <sfrench@samba.org>,
+        with ESMTP id S233868AbjBCPRA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Feb 2023 10:17:00 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18D9C2594F
+        for <linux-nfs@vger.kernel.org>; Fri,  3 Feb 2023 07:14:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1675437191;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=x360pnd4Kw30rMO/NoxmH0c6n9srul/TO9o/LEP2+A8=;
+        b=Xyrtq+x4zZ93DxeQ0H1W0jGk12HmdRGEe/i+sxu1Hu15EdY2y7+b66A8361NIX2lPJkrjV
+        W+FbSVQBxbH+SEuKa1htiQhmSh3CPWjU7N0CpgcyynXmHPcac7LZUReko7O0FHO111svHL
+        W809kHRmoAdHCEJvRgaR28NeSkGzwZc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-359-zLcUkMdcOVCU3jKihokClA-1; Fri, 03 Feb 2023 10:13:08 -0500
+X-MC-Unique: zLcUkMdcOVCU3jKihokClA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E123A181B7D3;
+        Fri,  3 Feb 2023 15:13:06 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.50.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2E19D112132C;
+        Fri,  3 Feb 2023 15:13:06 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        devel@lists.orangefs.org, io-uring@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 23/23] libceph: use bvec_set_page to initialize bvecs
-Date:   Fri,  3 Feb 2023 16:06:34 +0100
-Message-Id: <20230203150634.3199647-24-hch@lst.de>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230203150634.3199647-1-hch@lst.de>
-References: <20230203150634.3199647-1-hch@lst.de>
+        Anna Schumaker <anna@kernel.org>
+Subject: Re: git regression failures with v6.2-rc NFS client
+Date:   Fri, 03 Feb 2023 10:13:04 -0500
+Message-ID: <44CB1E86-60E0-4CF0-9FD4-BB7E446542B7@redhat.com>
+In-Reply-To: <B90C62F2-1D3A-40E0-8E33-8C349C6FFD3D@oracle.com>
+References: <9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com>
+ <D0404F55-2692-4DB6-8DD6-CAC004331AC1@redhat.com>
+ <5FF4061F-108C-4555-A32D-DDBFA80EE4E7@redhat.com>
+ <F1833EA0-263F-46DF-8001-747A871E5757@redhat.com>
+ <B90C62F2-1D3A-40E0-8E33-8C349C6FFD3D@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,104 +65,95 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Use the bvec_set_page helper to initialize bvecs.
+On 3 Feb 2023, at 9:38, Chuck Lever III wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
----
- net/ceph/messenger_v1.c |  7 ++-----
- net/ceph/messenger_v2.c | 28 +++++++++++-----------------
- 2 files changed, 13 insertions(+), 22 deletions(-)
+>> On Feb 1, 2023, at 10:53 AM, Benjamin Coddington <bcodding@redhat.com>=
+ wrote:
+>>
+>> On 1 Feb 2023, at 9:10, Benjamin Coddington wrote:
+>>>
+>>> Working on a fix..
+>>
+>> .. actually, I have no idea how to fix this - if tmpfs is going to mod=
+ify
+>> the position of its dentries, I can't think of a way for the client to=
+ loop
+>> through getdents() and remove every file reliably.
+>>
+>> The patch you bisected into just makes this happen on directories with=
+ 18
+>> entries instead of 127 which can be verified by changing COUNT in the
+>> reproducer.
+>>
+>> As Trond pointed out in:
+>> https://lore.kernel.org/all/eb2a551096bb3537a9de7091d203e0cbff8dc6be.c=
+amel@hammerspace.com/
+>>
+>>    POSIX states very explicitly that if you're making changes to the
+>>    directory after the call to opendir() or rewinddir(), then the
+>>    behaviour w.r.t. whether that file appears in the readdir() call is=
 
-diff --git a/net/ceph/messenger_v1.c b/net/ceph/messenger_v1.c
-index d1787d7d33ef9a..d664cb1593a777 100644
---- a/net/ceph/messenger_v1.c
-+++ b/net/ceph/messenger_v1.c
-@@ -40,15 +40,12 @@ static int ceph_tcp_recvmsg(struct socket *sock, void *buf, size_t len)
- static int ceph_tcp_recvpage(struct socket *sock, struct page *page,
- 		     int page_offset, size_t length)
- {
--	struct bio_vec bvec = {
--		.bv_page = page,
--		.bv_offset = page_offset,
--		.bv_len = length
--	};
-+	struct bio_vec bvec;
- 	struct msghdr msg = { .msg_flags = MSG_DONTWAIT | MSG_NOSIGNAL };
- 	int r;
- 
- 	BUG_ON(page_offset + length > PAGE_SIZE);
-+	bvec_set_page(&bvec, page, length, page_offset);
- 	iov_iter_bvec(&msg.msg_iter, ITER_DEST, &bvec, 1, length);
- 	r = sock_recvmsg(sock, &msg, msg.msg_flags);
- 	if (r == -EAGAIN)
-diff --git a/net/ceph/messenger_v2.c b/net/ceph/messenger_v2.c
-index 3009028c4fa28f..301a991dc6a68e 100644
---- a/net/ceph/messenger_v2.c
-+++ b/net/ceph/messenger_v2.c
-@@ -149,10 +149,10 @@ static int do_try_sendpage(struct socket *sock, struct iov_iter *it)
- 
- 	while (iov_iter_count(it)) {
- 		/* iov_iter_iovec() for ITER_BVEC */
--		bv.bv_page = it->bvec->bv_page;
--		bv.bv_offset = it->bvec->bv_offset + it->iov_offset;
--		bv.bv_len = min(iov_iter_count(it),
--				it->bvec->bv_len - it->iov_offset);
-+		bvec_set_page(&bv, it->bvec->bv_page,
-+			      min(iov_iter_count(it),
-+				  it->bvec->bv_len - it->iov_offset),
-+			      it->bvec->bv_offset + it->iov_offset);
- 
- 		/*
- 		 * sendpage cannot properly handle pages with
-@@ -286,9 +286,8 @@ static void set_out_bvec_zero(struct ceph_connection *con)
- 	WARN_ON(iov_iter_count(&con->v2.out_iter));
- 	WARN_ON(!con->v2.out_zero);
- 
--	con->v2.out_bvec.bv_page = ceph_zero_page;
--	con->v2.out_bvec.bv_offset = 0;
--	con->v2.out_bvec.bv_len = min(con->v2.out_zero, (int)PAGE_SIZE);
-+	bvec_set_page(&con->v2.out_bvec, ceph_zero_page,
-+		      min(con->v2.out_zero, (int)PAGE_SIZE), 0);
- 	con->v2.out_iter_sendpage = true;
- 	iov_iter_bvec(&con->v2.out_iter, ITER_SOURCE, &con->v2.out_bvec, 1,
- 		      con->v2.out_bvec.bv_len);
-@@ -863,10 +862,7 @@ static void get_bvec_at(struct ceph_msg_data_cursor *cursor,
- 
- 	/* get a piece of data, cursor isn't advanced */
- 	page = ceph_msg_data_next(cursor, &off, &len);
+>>    unspecified. See
+>>    https://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.=
+html
+>>
+>> The issue here is not quite the same though, we unlink the first batch=
+ of
+>> entries, then do a second getdents(), which returns zero entries even =
+though
+>> some still exist.  I don't think POSIX talks about this case directly.=
+
+>>
+>> I guess the question now is if we need to drop the "ls -l" improvement=
+
+>> because after it we are going to see this behavior on directories with=
+ >17
+>> entiries instead of >127 entries.
+>
+> I don't have any suggestions about how to fix your optimization.
+
+I wasn't trying to fix it.  I was trying to fix your testing setup.
+
+> Technically I think this counts as a regression; Thorsten seems
+> to agree with that opinion. It's late in the cycle, so it is
+> appropriate to consider reverting 85aa8ddc3818 and trying again
+> in v6.3 or v6.4.
+
+Thorsten's bot is just scraping your regression report email, I doubt
+they've carefully read this thread.
+
+>> It should be possible to make tmpfs (and friends) generate reliable co=
+okies
+>> by doing something like hashing out the cursor->d_child into the cooki=
+e
+>> space.. (waving hands)
+>
+> Sure, but what if there are non-Linux NFS-exported filesystems
+> that behave this way?
+
+Then they would display this same behavior, and claiming it is a server b=
+ug
+might be defensible position.
+
+The reality as I understand it is that if the server is going to change t=
+he
+cookie or offset of the dentries in between calls to READDIR, you're neve=
+r
+going to reliably be able to list the directory completely.  Or maybe we
+can, but at least I can't think of any way it can be done.
+
+You can ask Trond/Anna to revert this, but that's only going to fix your
+test setup.  The behavior you're claiming is a regression is still there =
 -
--	bv->bv_page = page;
--	bv->bv_offset = off;
--	bv->bv_len = len;
-+	bvec_set_page(bv, page, len, off);
- }
- 
- static int calc_sg_cnt(void *buf, int buf_len)
-@@ -1855,9 +1851,8 @@ static void prepare_read_enc_page(struct ceph_connection *con)
- 	     con->v2.in_enc_resid);
- 	WARN_ON(!con->v2.in_enc_resid);
- 
--	bv.bv_page = con->v2.in_enc_pages[con->v2.in_enc_i];
--	bv.bv_offset = 0;
--	bv.bv_len = min(con->v2.in_enc_resid, (int)PAGE_SIZE);
-+	bvec_set_page(&bv, con->v2.in_enc_pages[con->v2.in_enc_i],
-+		      min(con->v2.in_enc_resid, (int)PAGE_SIZE), 0);
- 
- 	set_in_bvec(con, &bv);
- 	con->v2.in_enc_i++;
-@@ -2998,9 +2993,8 @@ static void queue_enc_page(struct ceph_connection *con)
- 	     con->v2.out_enc_resid);
- 	WARN_ON(!con->v2.out_enc_resid);
- 
--	bv.bv_page = con->v2.out_enc_pages[con->v2.out_enc_i];
--	bv.bv_offset = 0;
--	bv.bv_len = min(con->v2.out_enc_resid, (int)PAGE_SIZE);
-+	bvec_set_page(&bv, con->v2.out_enc_pages[con->v2.out_enc_i],
-+		      min(con->v2.out_enc_resid, (int)PAGE_SIZE), 0);
- 
- 	set_out_bvec(con, &bv, false);
- 	con->v2.out_enc_i++;
--- 
-2.39.0
+just at a later offset.
+
+Or we can modify the server to make tmpfs and friends generate stable
+cookies/offsets.
+
+Or we can patch git so that it doesn't assume it can walk a directory
+completely while simultaneously modifying it.
+
+What do you think?
+
+Ben
 
