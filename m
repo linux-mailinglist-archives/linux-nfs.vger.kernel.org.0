@@ -2,98 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C47968B0DD
-	for <lists+linux-nfs@lfdr.de>; Sun,  5 Feb 2023 17:12:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 588EB68B10A
+	for <lists+linux-nfs@lfdr.de>; Sun,  5 Feb 2023 17:58:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbjBEQMA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 5 Feb 2023 11:12:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53500 "EHLO
+        id S229554AbjBEQ6t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 5 Feb 2023 11:58:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229519AbjBEQL7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Feb 2023 11:11:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50A7513DFD
-        for <linux-nfs@vger.kernel.org>; Sun,  5 Feb 2023 08:11:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675613472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ObU9haac15/5ndYLncPOcflnXZb09Zw6shZT8Mhn0eI=;
-        b=h3AGrh7PWthcPFf+DJQq1bZgsV7npw2w4ZT59mZCzVqpsKOS6MOVEXoYhoz1RjiEnBgmHx
-        p8nS+q87nHKcCfq2SoM1D6XOu5kQz/BWFhoR1poYR0SM6Tqnf+XzjYHDe0Z2MqqoPjyO4b
-        Ve1gvTeWisALjs92q2i5IdBeepLaX6Y=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-50-c6LIMRUfP_CjoR0g_E4NXw-1; Sun, 05 Feb 2023 11:11:10 -0500
-X-MC-Unique: c6LIMRUfP_CjoR0g_E4NXw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S229475AbjBEQ6s (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 5 Feb 2023 11:58:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C234418A8B
+        for <linux-nfs@vger.kernel.org>; Sun,  5 Feb 2023 08:58:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 01B9E3C025B8;
-        Sun,  5 Feb 2023 16:11:10 +0000 (UTC)
-Received: from [172.16.176.1] (unknown [10.22.50.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E46D0140EBF4;
-        Sun,  5 Feb 2023 16:11:07 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Hugh Dickins <hughd@google.com>,
-        Charles Edward Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <anna@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-Subject: Re: git regression failures with v6.2-rc NFS client
-Date:   Sun, 05 Feb 2023 11:11:06 -0500
-Message-ID: <3AD5F198-42A1-49F3-85CA-D245775F87DF@redhat.com>
-In-Reply-To: <8f122cb0304632b391759788fe1f72ea1bab1ba0.camel@kernel.org>
-References: <9A4A5673-691D-47EC-BC44-C43BE7E50A48@oracle.com>
- <D0404F55-2692-4DB6-8DD6-CAC004331AC1@redhat.com>
- <5FF4061F-108C-4555-A32D-DDBFA80EE4E7@redhat.com>
- <F1833EA0-263F-46DF-8001-747A871E5757@redhat.com>
- <B90C62F2-1D3A-40E0-8E33-8C349C6FFD3D@oracle.com>
- <44CB1E86-60E0-4CF0-9FD4-BB7E446542B7@redhat.com>
- <1AAC6854-2591-4B21-952A-BC58180B4091@oracle.com>
- <41813D21-95C8-44E3-BB97-1E9C03CE7FE5@redhat.com>
- <79261B77-35D0-4E36-AA29-C7BF9FB734CC@oracle.com>
- <104B6879-5223-485F-B099-767F741EB15B@redhat.com>
- <966AEC32-A7C9-4B97-A4F7-098AF6EF0067@oracle.com>
- <545B5AB7-93A6-496E-924E-AE882BF57B72@hammerspace.com>
- <FA8392E6-DAFC-4462-BDAE-893955F9E1A4@oracle.com>
- <4dd32d-9ea3-4330-454a-36f1189d599@google.com>
- <0D7A0393-EE80-4785-9A83-44CF8269758B@hammerspace.com>
- <ab632691-7e4c-ccbf-99a0-397f1f7d30ec@google.com>
- <8B4F6A20-D7A4-4A22-914C-59F5EA79D252@hammerspace.com>
- <c5259e81-631e-7877-d3b0-5a5a56d35b42@leemhuis.info>
- <15679CC0-6B56-4F6D-9857-21DCF1EFFF79@redhat.com>
- <031C52C0-144A-4051-9B4C-0E1E3164951E@hammerspace.com>
- <05BEEF62-46DF-4FAC-99D4-4589C294F93A@redhat.com>
- <8f122cb0304632b391759788fe1f72ea1bab1ba0.camel@kernel.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3399560BAA
+        for <linux-nfs@vger.kernel.org>; Sun,  5 Feb 2023 16:58:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E6F5C433D2
+        for <linux-nfs@vger.kernel.org>; Sun,  5 Feb 2023 16:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675616325;
+        bh=/NXXuHm13ASan+IZxOj9DNwijRpAhvGXys+IJrHi/nc=;
+        h=Subject:From:To:Date:From;
+        b=bXw42lCsHnCJh2+GsqiNTX+vbRzisKELYHfvZAEVuP523aAYXoWGJUg7UopeyqvDX
+         Eqfv8EFstDD+9d2yKJoUFL82Wwj8XydpvJwma8gMsF+llePECjIaWjVpMUUL25KPjs
+         41JRN6YU1Ftdiym6tKLuRL+FglC9FGvvzRFdBSvPHMHssl//PvsUrQCruThpuWHWk2
+         3/lNE4OfBgwFfB1HRraJVgGXeeWG1WqXtLlNNA7C35kkgHzzWjwZybDK1PBiazGewC
+         zdVcJJV9jVLWb7CgJlvyXLUcavW3BZMDzqtCoTsMFerstdR2QruW4/IAQVy5slvxoS
+         Mh9024KomRWjA==
+Subject: [PATCH] SUNRPC: Fix occasional warning when destroying
+ gss_krb5_enctypes
+From:   Chuck Lever <cel@kernel.org>
+To:     linux-nfs@vger.kernel.org
+Date:   Sun, 05 Feb 2023 11:58:44 -0500
+Message-ID: <167561632453.5062.10189976782458528125.stgit@bazille.1015granger.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 5 Feb 2023, at 6:24, Jeff Layton wrote:
-> I may be missing something, but would it be possible to move to a more
-> stable scheme for readdir cookies for tmpfs?
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Yes, totally possible but it was pointed out earlier that's not going to
-land in 6.2, so this thread's been focused on trying to reason if
-85aa8ddc3818 counts as a regression.
+I'm guessing that the warning fired because there's some code path
+that is called on module unload where the gss_krb5_enctypes file
+was never set up.
 
-Ben
+name 'gss_krb5_enctypes'
+WARNING: CPU: 0 PID: 6187 at fs/proc/generic.c:712 remove_proc_entry+0x38d/0x460 fs/proc/generic.c:712
+
+destroy_krb5_enctypes_proc_entry net/sunrpc/auth_gss/svcauth_gss.c:1543 [inline]
+gss_svc_shutdown_net+0x7d/0x2b0 net/sunrpc/auth_gss/svcauth_gss.c:2120
+ops_exit_list+0xb0/0x170 net/core/net_namespace.c:169
+setup_net+0x9bd/0xe60 net/core/net_namespace.c:356
+copy_net_ns+0x320/0x6b0 net/core/net_namespace.c:483
+create_new_namespaces+0x3f6/0xb20 kernel/nsproxy.c:110
+copy_namespaces+0x410/0x500 kernel/nsproxy.c:179
+copy_process+0x311d/0x76b0 kernel/fork.c:2272
+kernel_clone+0xeb/0x9a0 kernel/fork.c:2684
+__do_sys_clone+0xba/0x100 kernel/fork.c:2825
+do_syscall_x64 arch/x86/entry/common.c:50 [inline]
+do_syscall_64+0x39/0xb0 arch/x86/entry/common.c:80
+entry_SYSCALL_64_after_hwframe+0x63/0xcd
+
+Reported-by: syzbot+04a8437497bcfb4afa95@syzkaller.appspotmail.com
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/auth_gss/svcauth_gss.c |   13 +++++++------
+ net/sunrpc/netns.h                |    1 +
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
+index 19f0190a0b97..9c843974bb48 100644
+--- a/net/sunrpc/auth_gss/svcauth_gss.c
++++ b/net/sunrpc/auth_gss/svcauth_gss.c
+@@ -1529,18 +1529,19 @@ static int create_krb5_enctypes_proc_entry(struct net *net)
+ {
+ 	struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
+ 
+-	if (!proc_create_data("gss_krb5_enctypes", S_IFREG | 0444,
+-			      sn->proc_net_rpc,
+-			      &gss_krb5_enctypes_proc_ops, net))
+-		return -ENOMEM;
+-	return 0;
++	sn->gss_krb5_enctypes =
++		proc_create_data("gss_krb5_enctypes", S_IFREG | 0444,
++				 sn->proc_net_rpc, &gss_krb5_enctypes_proc_ops,
++				 net);
++	return sn->gss_krb5_enctypes ? 0 : -ENOMEM;
+ }
+ 
+ static void destroy_krb5_enctypes_proc_entry(struct net *net)
+ {
+ 	struct sunrpc_net *sn = net_generic(net, sunrpc_net_id);
+ 
+-	remove_proc_entry("gss_krb5_enctypes", sn->proc_net_rpc);
++	if (sn->gss_krb5_enctypes)
++		remove_proc_entry("gss_krb5_enctypes", sn->proc_net_rpc);
+ }
+ 
+ #else /* CONFIG_PROC_FS */
+diff --git a/net/sunrpc/netns.h b/net/sunrpc/netns.h
+index 7ec10b92bea1..4efb5f28d881 100644
+--- a/net/sunrpc/netns.h
++++ b/net/sunrpc/netns.h
+@@ -33,6 +33,7 @@ struct sunrpc_net {
+ 	int pipe_version;
+ 	atomic_t pipe_users;
+ 	struct proc_dir_entry *use_gssp_proc;
++	struct proc_dir_entry *gss_krb5_enctypes;
+ };
+ 
+ extern unsigned int sunrpc_net_id;
+
 
