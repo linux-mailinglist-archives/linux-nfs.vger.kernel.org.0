@@ -2,86 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB5B268DF72
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Feb 2023 18:54:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 162AE68E739
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Feb 2023 05:45:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232220AbjBGRyF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Feb 2023 12:54:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
+        id S229892AbjBHEpu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Feb 2023 23:45:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232181AbjBGRyD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Feb 2023 12:54:03 -0500
-X-Greylist: delayed 433 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 07 Feb 2023 09:53:57 PST
-Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F12C6
-        for <linux-nfs@vger.kernel.org>; Tue,  7 Feb 2023 09:53:57 -0800 (PST)
-Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
-        by smtp-o-2.desy.de (Postfix) with ESMTP id B6F2F1610D9
-        for <linux-nfs@vger.kernel.org>; Tue,  7 Feb 2023 18:46:40 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de B6F2F1610D9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1675792000; bh=eePQpZI6P9LnzN/JZTOx8/SYciN1D3C63B7zosi3VSI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=TrKr3Mx0nHu6rBTrPjotPzN82htp3/O6/B/ktOX1nGkUp3HxdqOEBACAU+3dLGx2o
-         hbQ2XOENXlzT7k6yejN+IPFncn066q4v1g3xtroG8Mepj3a3ijhwItSBHtkUWgAhoZ
-         AT7SQxQy0wn0U0Mu8ywSWWz5B9hLqXefxWbzbiNw=
-Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [IPv6:2001:638:700:1038::1:82])
-        by smtp-buf-2.desy.de (Postfix) with ESMTP id ABEF41A00F5;
-        Tue,  7 Feb 2023 18:46:40 +0100 (CET)
-Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [IPv6:2001:638:700:1038::1:53])
-        by smtp-m-2.desy.de (Postfix) with ESMTP id A5D73120131;
-        Tue,  7 Feb 2023 18:46:40 +0100 (CET)
-Received: from nairi.fritz.box (VPN0164.desy.de [131.169.253.163])
-        by smtp-intra-2.desy.de (Postfix) with ESMTP id 64F94100077;
-        Tue,  7 Feb 2023 18:46:40 +0100 (CET)
-From:   Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-To:     linux-nfs@vger.kernel.org
-Cc:     anna@kernel.org, trond.myklebust@hammerspace.com,
-        Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
-Subject: [PATCH] nfs42: do not fail with EIO if ssc returns NFS4ERR_OFFLOAD_DENIED
-Date:   Tue,  7 Feb 2023 18:46:35 +0100
-Message-Id: <20230207174635.348527-1-tigran.mkrtchyan@desy.de>
-X-Mailer: git-send-email 2.39.1
+        with ESMTP id S229739AbjBHEps (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Feb 2023 23:45:48 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B57E019F2E
+        for <linux-nfs@vger.kernel.org>; Tue,  7 Feb 2023 20:45:47 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 2EAB733AC8;
+        Wed,  8 Feb 2023 04:45:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1675831546; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=peRkUXH0MGv/3Raj16TdEvg6YueqodYfWKEv2Td74s0=;
+        b=BdKrTvbH8hFeoka3gW2zLlmXtZ2bdo4wOaeccQxonk1Svxn7gUTr3f9qWra2mrJdqdo8eZ
+        fzmLmIL1/TlxkSQHEVID40/3oSYFcMC6VAgpRkn4YNwUcUJT1K1WtO+38BSkpijcuLcDX8
+        l2ph3vK4AT39ntezH0yXOqQboqaAXIc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1675831546;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=peRkUXH0MGv/3Raj16TdEvg6YueqodYfWKEv2Td74s0=;
+        b=m5TieGlav9kBL54eHRK9K8n+Fm2rxvpcguJLCWQREYvVjfCtXW/zbHT1pcZmo2RaJDGE7l
+        nycojjXbb3DU75Aw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 33F7613A1F;
+        Wed,  8 Feb 2023 04:45:43 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id SHLBMPco42MvNQAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 08 Feb 2023 04:45:43 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_ENVFROM,
-        HK_RANDOM_FROM,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     Trond Myklebust <trondmy@kernel.org>,
+        Anna Schumaker <anna@kernel.org>
+Cc:     Olga Kornievskaia <aglo@umich.edu>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: [PATCH] NFS: fix disabling of swap
+Date:   Wed, 08 Feb 2023 15:45:38 +1100
+Message-id: <167583153834.1616.15276280761550553611@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The NFSv4.2 server even if supports intra-SSC might prefer that for
-a particular file a classic copy is performed. As returning ENOTSUPP
-will clear the SSC capability of the server by the client, server
-might return NFS4ERR_OFFLOAD_DENIED (well, spec talks about remote
-servers there).
 
-Update nfs42_proc_copy to handle NFS4ERR_OFFLOAD_DENIED as ENOTSUPP,
-but without clearing NFS_CAP_COPY bit.
+When swap is activated to a file on an NFSv4 mount we arrange that the
+state manager thread is always present as starting a new thread requires
+memory allocations that might block waiting for swap.
 
-Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Unfortunately the code for allowing the state manager thread to exit when
+swap is disabled was not tested properly and does not work.
+This can be seen by examining /proc/fs/nfsfs/servers after disabling swap
+and unmounting the filesystem.  The servers file will still list one
+entry.  Also a "ps" listing will show the state manager thread is still
+present.
+
+There are two problems.
+ 1/ rpc_clnt_swap_deactivate() doesn't walk up the ->cl_parent list to
+    find the primary client on which the state manager runs.
+
+ 2/ The thread is not woken up properly and it immediately goes back to
+    sleep without checking whether it is really needed.  Using
+    nfs4_schedule_state_manager() ensures a proper wake-up.
+
+Reported-by: Olga Kornievskaia <aglo@umich.edu>
+Fixes: 4dc73c679114 ("NFSv4: keep state manager thread active if swap is enab=
+led")
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/nfs42proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c | 4 +++-
+ net/sunrpc/clnt.c | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index ecb428512fe1..93e306bf4430 100644
---- a/fs/nfs/nfs42proc.c
-+++ b/fs/nfs/nfs42proc.c
-@@ -460,7 +460,8 @@ ssize_t nfs42_proc_copy(struct file *src, loff_t pos_src,
- 
- 		if (err >= 0)
- 			break;
--		if (err == -ENOTSUPP &&
-+		if ((err == -ENOTSUPP ||
-+				err == -NFS4ERR_OFFLOAD_DENIED) &&
- 				nfs42_files_from_same_server(src, dst)) {
- 			err = -EOPNOTSUPP;
- 			break;
--- 
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 86ed5c0142c3..22b88fdf1660 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10597,7 +10597,9 @@ static void nfs4_disable_swap(struct inode *inode)
+ 	/* The state manager thread will now exit once it is
+ 	 * woken.
+ 	 */
+-	wake_up_var(&NFS_SERVER(inode)->nfs_client->cl_state);
++	struct nfs_client *clp =3D NFS_SERVER(inode)->nfs_client;
++
++	nfs4_schedule_state_manager(clp);
+ }
+=20
+ static const struct inode_operations nfs4_dir_inode_operations =3D {
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 993acf38af87..229af546a9e1 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -3350,6 +3350,8 @@ rpc_clnt_swap_deactivate_callback(struct rpc_clnt *clnt,
+ void
+ rpc_clnt_swap_deactivate(struct rpc_clnt *clnt)
+ {
++	while (clnt !=3D clnt->cl_parent)
++		clnt =3D clnt->cl_parent;
+ 	if (atomic_dec_if_positive(&clnt->cl_swapper) =3D=3D 0)
+ 		rpc_clnt_iterate_for_each_xprt(clnt,
+ 				rpc_clnt_swap_deactivate_callback, NULL);
+--=20
 2.39.1
 
