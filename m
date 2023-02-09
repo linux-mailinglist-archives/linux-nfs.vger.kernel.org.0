@@ -2,127 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 162AE68E739
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Feb 2023 05:45:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8DD168FDEA
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Feb 2023 04:25:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229892AbjBHEpu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Feb 2023 23:45:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42102 "EHLO
+        id S232709AbjBIDZh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Feb 2023 22:25:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbjBHEps (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Feb 2023 23:45:48 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B57E019F2E
-        for <linux-nfs@vger.kernel.org>; Tue,  7 Feb 2023 20:45:47 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 2EAB733AC8;
-        Wed,  8 Feb 2023 04:45:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1675831546; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=peRkUXH0MGv/3Raj16TdEvg6YueqodYfWKEv2Td74s0=;
-        b=BdKrTvbH8hFeoka3gW2zLlmXtZ2bdo4wOaeccQxonk1Svxn7gUTr3f9qWra2mrJdqdo8eZ
-        fzmLmIL1/TlxkSQHEVID40/3oSYFcMC6VAgpRkn4YNwUcUJT1K1WtO+38BSkpijcuLcDX8
-        l2ph3vK4AT39ntezH0yXOqQboqaAXIc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1675831546;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=peRkUXH0MGv/3Raj16TdEvg6YueqodYfWKEv2Td74s0=;
-        b=m5TieGlav9kBL54eHRK9K8n+Fm2rxvpcguJLCWQREYvVjfCtXW/zbHT1pcZmo2RaJDGE7l
-        nycojjXbb3DU75Aw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 33F7613A1F;
-        Wed,  8 Feb 2023 04:45:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id SHLBMPco42MvNQAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 08 Feb 2023 04:45:43 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S232713AbjBIDZF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Feb 2023 22:25:05 -0500
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57291527A;
+        Wed,  8 Feb 2023 19:24:43 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R651e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=jiapeng.chong@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VbEHOSS_1675913074;
+Received: from localhost(mailfrom:jiapeng.chong@linux.alibaba.com fp:SMTPD_---0VbEHOSS_1675913074)
+          by smtp.aliyun-inc.com;
+          Thu, 09 Feb 2023 11:24:40 +0800
+From:   Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
+To:     trond.myklebust@hammerspace.com
+Cc:     anna@kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jiapeng Chong <jiapeng.chong@linux.alibaba.com>,
+        Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH] NFS: Remove duplicate include
+Date:   Thu,  9 Feb 2023 11:24:32 +0800
+Message-Id: <20230209032432.48440-1-jiapeng.chong@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Trond Myklebust <trondmy@kernel.org>,
-        Anna Schumaker <anna@kernel.org>
-Cc:     Olga Kornievskaia <aglo@umich.edu>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: [PATCH] NFS: fix disabling of swap
-Date:   Wed, 08 Feb 2023 15:45:38 +1100
-Message-id: <167583153834.1616.15276280761550553611@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+./fs/nfs/dns_resolve.c: linux/module.h is included more than once.
 
-When swap is activated to a file on an NFSv4 mount we arrange that the
-state manager thread is always present as starting a new thread requires
-memory allocations that might block waiting for swap.
-
-Unfortunately the code for allowing the state manager thread to exit when
-swap is disabled was not tested properly and does not work.
-This can be seen by examining /proc/fs/nfsfs/servers after disabling swap
-and unmounting the filesystem.  The servers file will still list one
-entry.  Also a "ps" listing will show the state manager thread is still
-present.
-
-There are two problems.
- 1/ rpc_clnt_swap_deactivate() doesn't walk up the ->cl_parent list to
-    find the primary client on which the state manager runs.
-
- 2/ The thread is not woken up properly and it immediately goes back to
-    sleep without checking whether it is really needed.  Using
-    nfs4_schedule_state_manager() ensures a proper wake-up.
-
-Reported-by: Olga Kornievskaia <aglo@umich.edu>
-Fixes: 4dc73c679114 ("NFSv4: keep state manager thread active if swap is enab=
-led")
-Signed-off-by: NeilBrown <neilb@suse.de>
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=4009
+Signed-off-by: Jiapeng Chong <jiapeng.chong@linux.alibaba.com>
 ---
- fs/nfs/nfs4proc.c | 4 +++-
- net/sunrpc/clnt.c | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ fs/nfs/dns_resolve.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 86ed5c0142c3..22b88fdf1660 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10597,7 +10597,9 @@ static void nfs4_disable_swap(struct inode *inode)
- 	/* The state manager thread will now exit once it is
- 	 * woken.
- 	 */
--	wake_up_var(&NFS_SERVER(inode)->nfs_client->cl_state);
-+	struct nfs_client *clp =3D NFS_SERVER(inode)->nfs_client;
+diff --git a/fs/nfs/dns_resolve.c b/fs/nfs/dns_resolve.c
+index 6603b5cee029..320441f10c01 100644
+--- a/fs/nfs/dns_resolve.c
++++ b/fs/nfs/dns_resolve.c
+@@ -7,9 +7,10 @@
+  * Resolves DNS hostnames into valid ip addresses
+  */
+ 
++#include <linux/module.h>
 +
-+	nfs4_schedule_state_manager(clp);
- }
-=20
- static const struct inode_operations nfs4_dir_inode_operations =3D {
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 993acf38af87..229af546a9e1 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -3350,6 +3350,8 @@ rpc_clnt_swap_deactivate_callback(struct rpc_clnt *clnt,
- void
- rpc_clnt_swap_deactivate(struct rpc_clnt *clnt)
- {
-+	while (clnt !=3D clnt->cl_parent)
-+		clnt =3D clnt->cl_parent;
- 	if (atomic_dec_if_positive(&clnt->cl_swapper) =3D=3D 0)
- 		rpc_clnt_iterate_for_each_xprt(clnt,
- 				rpc_clnt_swap_deactivate_callback, NULL);
---=20
-2.39.1
+ #ifdef CONFIG_NFS_USE_KERNEL_DNS
+ 
+-#include <linux/module.h>
+ #include <linux/sunrpc/clnt.h>
+ #include <linux/sunrpc/addr.h>
+ #include <linux/dns_resolver.h>
+@@ -35,7 +36,6 @@ ssize_t nfs_dns_resolve_name(struct net *net, char *name, size_t namelen,
+ 
+ #else
+ 
+-#include <linux/module.h>
+ #include <linux/hash.h>
+ #include <linux/string.h>
+ #include <linux/kmod.h>
+-- 
+2.20.1.7.g153144c
 
