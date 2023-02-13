@@ -2,129 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAD02694B52
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Feb 2023 16:38:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67E2A694BDA
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Feb 2023 16:57:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229573AbjBMPi1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Feb 2023 10:38:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51970 "EHLO
+        id S231285AbjBMP5b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Feb 2023 10:57:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbjBMPi0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Feb 2023 10:38:26 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2100.outbound.protection.outlook.com [40.107.243.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D93E3BD
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Feb 2023 07:38:24 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=clmtVnce74dSXWto2ce4u6a+KGoyhYcmfDtIncLrsOGyeBBaAXYkiUNt8ZaphXvG8o/tyII/kHMTzsd1ZSHJ5O+wyGrglKohKW4uzpisF/poAkpB6BTM8/PQq021yvHJdfZj9wU5Cw1f2dUvXELThTHyJZRiwR1BwNVRHMisqe+CauIDcjMIEG7MbFRJa1+dbdEzlZaK+Xjq802VhoQaAJ75mzoaYg1GZ7c7aH35sv1jnfHX+a3JONjAq/S+9x9X9IkTXe1VyYjyR1pF6S+iSQSs+dediNa0BySRq5RJdORDvM8FjdnlrMQF6SvjYo8plLNuLaoPWBNl57NnjYzY0A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YlclAKFSKc31EbfodRz9tS/H1WWsoJtSubb+mdEQaK8=;
- b=ii5ZHinh1EpLp0r2vKc9tx8Qq9M/OKjwP3TTVmxmj+DtNRiAHCE9IJcXnfsnKm34kdveeLjY21DQjAFcfBFho0PPEXaksdf0Yjjulk3JtaRSK2TuiAYsrs10Dd+LJX2gMCAj5+91bRW3n0TsCAXOlMUSjfbSjl+Uc1ANoK2jsIREZkiKZtHAJ6uwqzUkfmACovDvJCJy0tLqL77Xk7BKlRj6rOOGMlhc/tWzYBhWLFqJI/TqmzwBK+yIyesRc79MHfqAOcMqtMnsSmA8XlVzUYXb/oHMi1Jxj9eevINHQbQ5bDvAj5PY8Cf1X3s+wNwhFI4Pnh/HO7PI15KcsLyzKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YlclAKFSKc31EbfodRz9tS/H1WWsoJtSubb+mdEQaK8=;
- b=dMcETyyEeRn8F/YrUYeY2HeqPWRFefTGpM4Oe4JYcpzjDZj4peaY1ZIA/92kDTsStlY5XYOF1sbMBMSbRdTmwPEuzTVymMRknKFilopcg4rAvgYW3ts+/tLdMRwpqDhM8+O+aHtu2IgRdibIEDu64wYTI9H3Xv3qu2L914G3OjM=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by BLAPR13MB4561.namprd13.prod.outlook.com (2603:10b6:208:331::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Mon, 13 Feb
- 2023 15:38:20 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::7007:3376:4f4e:b87b]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::7007:3376:4f4e:b87b%5]) with mapi id 15.20.6086.023; Mon, 13 Feb 2023
- 15:38:20 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-CC:     Charles Edward Lever <chuck.lever@oracle.com>,
-        Wang Yugui <wangyugui@e16-tech.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>
-Subject: Re: question about the performance impact of sec=krb5
-Thread-Topic: question about the performance impact of sec=krb5
-Thread-Index: AQHZPqeIc1D065FmHkKyiuzVHqYKv67LlteAgAFiJ4CAAAwLgA==
-Date:   Mon, 13 Feb 2023 15:38:20 +0000
-Message-ID: <8EBEDCF0-BB9E-4F18-9D67-F5CC47F51A96@hammerspace.com>
-References: <20230212140148.4F0D.409509F4@e16-tech.com>
- <A2C070C8-3B50-4B11-B07B-99FE93F9BA16@oracle.com>
- <CAN-5tyE-DfbJOZCLzpgfEt+2u=UogLKn_gKs6mDbYpRUq+WXsA@mail.gmail.com>
-In-Reply-To: <CAN-5tyE-DfbJOZCLzpgfEt+2u=UogLKn_gKs6mDbYpRUq+WXsA@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.400.51.1.1)
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|BLAPR13MB4561:EE_
-x-ms-office365-filtering-correlation-id: 5f3f12fe-71bb-45fc-3f52-08db0dd85575
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: sxoPW9ELM53QRElHqHl20rNYDSRWhIIMHGl/Oe8E19SNCYiGASY5YBOTOv4sLVhCfZONwT9FyITjF3TL0fe1thvdRl5kLVGNyiQcpAJWvZJZMWozVmDgWUifT+bG3hehWp4oKpNvu5KeFsb9+b3ftaAb8R14m8p8Ao5ZvRndOcug+oY6lcczqFe2uiVi1oImkppLl7v+vU0lTE8FtzmUhy8msl/B5HnS+eEMEyFH1siMFGGi/DKtlPG87tn6n6Lkr76L1w0P2cnL9h123ekrch9zh+2FcBLv7z4VuwkmH41QPKf10iTkzYs5SyeGPNcRlAGuGoKXT/5gS1AJXGJwc7XvkMpiY4O0LFkiYii7isfrQuIiGvm2ffTkzV7PcswuLgY6AEzgvy1zAVnHmG9/g+oJ3+rjkMYlVCO8e3KO4AOqVNdPF/IcGYDcQxtlKZQDeV+dOzj5c+CiWooCAiUR786ay0tOnxCD162hcGWb4yoMCWmYMdkoSMMVBrkBEJS91hjyIOdTSQXaQAqb15XYvSbpU/nMifiW90eihkH6qLD7xMzhx6OzQdhINJqhIXsZeEnyTQ4pXHHnGMkNfuqDD7MhsHsE6+pqP/U6sZTy8owFVb5ZRUGJyOhFqnzAP8kFZgNy9+7a38fiWVI1F6yoAn97kWh+NKEzSsQEM0sHDRrcT+ojtWrwMm1dllSz6pKnWUA5FeawCAN0GOe6uWYLxjkYDkXKUHVgfzeZGYMbGPCDKhwwi1didfvC4BWy0xO+2zKgpvn7V1RjCGIR3rxLIdBiN6acA5v4YKC6Ps+u4qK1vq5wnyT+egrYkh0GeiQk
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(136003)(346002)(376002)(39830400003)(396003)(451199018)(66899018)(186003)(6512007)(66946007)(76116006)(8676002)(4326008)(71200400001)(966005)(122000001)(54906003)(316002)(86362001)(36756003)(33656002)(53546011)(2616005)(6506007)(38100700002)(38070700005)(66556008)(83380400001)(6916009)(41300700001)(66476007)(478600001)(6486002)(2906002)(64756008)(8936002)(66446008)(5660300002)(45980500001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?TEtTMlFYaFJubWxLc1hmbmlJWkp0R3pHQ2lrRGNreEVHVi9hVithOWE1U1dS?=
- =?utf-8?B?NUppNUlWMmhaSFJXUDdTK0Y3NTU0c01tSDlZRVp6aVpUb2lTTVpZYXlkQ0Jp?=
- =?utf-8?B?R1Y3RlNvOHkxYUFJT2FVMU9hT2pJdklSUjJ2ZE12MUdTSXhrcSt4YnZiU0xr?=
- =?utf-8?B?QjZIOExRd3d4aHZzRG5KZEc2bW45ZUhiWFFPcnl4SUpEVFN5K3RjMWF0anFD?=
- =?utf-8?B?VThxdlFwZ1JDbkJ5THNMQzl1SjBRQXd6alJyVFJVanpIdDlVZkRkM2YrdGJV?=
- =?utf-8?B?Rkl1ZjJDKzlDOE1MZG1hNDhFVXpSRTZtdlFJYzYwRG1mZUI3QjZCSWdpOEhK?=
- =?utf-8?B?QVVuOTBrUnVsRTd2WHVEckE3N2tIN1piNTB3cE0wSmo3RnhiV3k5M3BBU1Rn?=
- =?utf-8?B?ckhvZzkrbVdGWllLTmp2ck9hODM3S0ZDaFkrSWwrb2I0RTYxcEtpdnJmbWxk?=
- =?utf-8?B?WWZvM1FCRG15WmdvUmxtaUlNVlZONlJIWnBDUUVVRWFWVDFwVG5UMFdyMElK?=
- =?utf-8?B?YzBoZnlvQlRQTnNxNjBDcmZnNUdkc09yblZCQ3dmdkVkK3grbitVbmtLT252?=
- =?utf-8?B?TEh3TmR4SHJPWmljUGdZUVJ4a3NmM2FZTTZoSFR2RmcxbjRxYmlsRnI4MG1I?=
- =?utf-8?B?Y3lvMTlFQmtwZzNxa1ExSW9mYWRxUC9XZXA3dHBzMEErWnpCd0VKTm9Bekc0?=
- =?utf-8?B?cmtWeWE4MWdZVTZIc2pRWDhuTXU2dGJVOGNOV1VZRFJXeTFMdlpmeEVkbDBE?=
- =?utf-8?B?ZTQrVjA3NXgyMkIzTWUva2ZRNk9EZGErTDBMTlhhSzZyM0plb3F4YVR1UmV0?=
- =?utf-8?B?cEtqWmpiSUJFNm9idXJSNWdKcms5Qi93d1FZVWJFK2FyS0lVNXFtSkV5cnJN?=
- =?utf-8?B?aGtjTHZyQWhFOC85NCtXa0ZSR2pwVGFlcWhhRG9LaHNwdzBKdTFDeG9OaXEw?=
- =?utf-8?B?aGhoeHh0UTJEdThjclNSWnVFVUxBdU9mQWdPbmdFY2hBd2xrN0FKSlRjdWxj?=
- =?utf-8?B?bmtxT1l5S3VZSDB4QmZJQXlqL3gydE9BSkxjVVFTMk0zZ1FXWUJMYXI3dXo4?=
- =?utf-8?B?SDVFU1pBbVRiSHBpbVlSVlp3ZTcrY2lYN0gwVGpSdU5kQ2J3TzZWY1M3UDRR?=
- =?utf-8?B?Qkx6MlJ5WUZ1eGs0eDd4ZThDNWlWNjVtUXZPdUtUV0FqNmFMS3RMTFZvNGVF?=
- =?utf-8?B?TmVSTHkrSGd2TjhpMHNJMXprS3dlaFlxVDVYRndtTm8zbk5uenU5b2xxbWpv?=
- =?utf-8?B?UjVxVHlzQ3lxeWZFOVk5ZlFOcnNYMzVHUmVSd3lLZTZ5clE3THNhS0xiZmZz?=
- =?utf-8?B?Wm5ucWlnMHprdnFTWWhjZDVteUZYNVRHYXMzSjFxcHV1aHpGMEF1L2JTdVZp?=
- =?utf-8?B?eUVMQWZsbGF3eURnZUxnQVZnL2U0ckZDU0ZTS3Vod05WQkVuY0RVL3VQVjRU?=
- =?utf-8?B?Mjg4c3c2WWFXeWNTcEVUTFp1alZWbjZOdCt0aVdkZXVvM2M1MEVYclNLZDVt?=
- =?utf-8?B?eXgzL3dEWjFERStKNW16NHNQMlpNd1Qwam9tcjN1cytsaE1SbHp2WkIwRmFq?=
- =?utf-8?B?dlBrcUppazR0WFJiSGNQWVVRU1pHREx5R2E2MythUWFaV2lLSENjSXNGOUY3?=
- =?utf-8?B?cHgvWjg3S0VPcG5xMTlSL2Q5NHJVTzhhR1U1UjZEUlFMZGVpQi9MTnFNOUR5?=
- =?utf-8?B?MndNUnJUcDFXLzVpR09DQUFKTjRtd1BNbWRPbVFlR1NOLzNsLzlXM3Flb3lh?=
- =?utf-8?B?NGdiTXdPa2tNR0YvQmVxQS8vcUV0UGtIc2NJaUc5MTRiWlJXRlF6WmRCQW12?=
- =?utf-8?B?ZUFwUmVUR1lDWllmdDBhTDVsVFVpSWtnbCtlU2hqRE96dlFqZS9MUU92Nk83?=
- =?utf-8?B?MWZONDRaOUNCNjV0aTJuOHpRMFN4eS9nSVBLY3lWUkIvQ0NVYk9zZExGSkxW?=
- =?utf-8?B?UktvV1lyL3BscjAvNzJ1dmp4ZDlZeXRKRXZPS1VjZ25vWUtFZGlzRVBmY1VR?=
- =?utf-8?B?TDkrY2RhcnNTZ2d1L2xGR0xRUXo1ZVcxZ1ZTSDBuM0ZXbFRaMGxYNnZDMlZv?=
- =?utf-8?B?YVhLbWU1UWk4aERET1dWKzBrc0FDWWQ1WWg0YUtRMEJmOE9QMTVLWUtUL1ND?=
- =?utf-8?B?aWhBdDlnZE1FUG9jbE4xcmE1dXFvRHZiRWZ5OHpwK1RhOE1xV3c2dWQrNW5R?=
- =?utf-8?B?c2R5WFJOWVl0eVc0bTNtYVZXemFuZFZ4OGNaenhWWXk4Rk1zQXBjbmFONkhC?=
- =?utf-8?B?YlhBOCs4MnJ3K1U2RUExQzBSaWF3PT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <A7533C6944396941A96CD388817490C2@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S231216AbjBMP53 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Feb 2023 10:57:29 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68CED30CF
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Feb 2023 07:56:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676303792;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=krLGrAAJWyY0U0dpUHbgBoCjScVTRFXv4FSYFVlMqVY=;
+        b=KY75FFAq67gPu64+k8eT1przllcbpoZ/XSjgLt0jfaSMN8slCEISe0rs8lm8EpE8sk35ig
+        pgzMJkx+TT9oMkg8jWJdWhv58WYgWNJUxxUNr+QegOguQauoBCCiyDjswxDTSBX8Mj3A60
+        MhZHKvo6SJbIHIbLR0QMszmCqEOHLn8=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-292-XjISJvNwPKCa_Bix_XM0-w-1; Mon, 13 Feb 2023 10:56:31 -0500
+X-MC-Unique: XjISJvNwPKCa_Bix_XM0-w-1
+Received: by mail-pj1-f70.google.com with SMTP id t22-20020a17090a5d9600b002341faeb0bbso265085pji.4
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Feb 2023 07:56:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=krLGrAAJWyY0U0dpUHbgBoCjScVTRFXv4FSYFVlMqVY=;
+        b=LtJwhg1ehWIkzMTTzc+7XOMtLoKblQO7QVcWMLxSJtmMViERCZxcO/fgNfQrAOVAXy
+         Pek4slWWx4uPfWBRI02YRIcDK8KfH07NvyeediSwXgNqbHnXQZkLqQybmmjMol4hZFuR
+         k2oIpIdqnffmCyQb66aKSLHTU3AuaZj5U7Yytyfen891Y3Bs1EGTugvLzCz6RG4R1eTS
+         lLd1z5vICiomO0XPBRiQ3nAO30UyAT3oeLUY3k/TfaQ+nSSsRSJic4bQqp1/TGGJFdIk
+         5XNgdb/DHfg2Qz4C+GYcApQSH2+dErdVQMDkqlS5h3vBapkzNR3L0AML9p9Dm8JQX/wx
+         VdMA==
+X-Gm-Message-State: AO0yUKXfwj3aXxqM5W+vJDK6kHZgvR0aZftAOPHuQlUF0GJz3YEaZWXw
+        UOYp3zi0hAGNFxsv0m3PJOu4XhBRRB9O/5MZwMPQftp+ClnOVJgufe+aaFPKuJVmzoi1kEBsZC/
+        Sgu08Wb3xR7qJ20VVdCErd3MXbNY3NJJyvARr
+X-Received: by 2002:a17:90a:2983:b0:233:a922:a64b with SMTP id h3-20020a17090a298300b00233a922a64bmr2624903pjd.3.1676303789859;
+        Mon, 13 Feb 2023 07:56:29 -0800 (PST)
+X-Google-Smtp-Source: AK7set/7srQxwYYlnor9XQbaPPG6Y00z14czMt3uwRyNUJv2/VfXvbXF70YuVhfEblRm6UcWMUcdyev8Q86/ZZVvCqI=
+X-Received: by 2002:a17:90a:2983:b0:233:a922:a64b with SMTP id
+ h3-20020a17090a298300b00233a922a64bmr2624893pjd.3.1676303789474; Mon, 13 Feb
+ 2023 07:56:29 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5f3f12fe-71bb-45fc-3f52-08db0dd85575
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Feb 2023 15:38:20.0744
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +sYNSJlnMeWrjhkPgdyHGKHnralytr1YaD3L7T6UIOW3UQs1/QYidEilRFZnhM+te5vLCgwSqDuwNU/OzyLsrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR13MB4561
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+References: <20221103161637.1725471-1-dwysocha@redhat.com> <CALF+zOk7ryO7GV7LYWjRa1b+C6fA5J=-=zshd+vE-FxewBNg=A@mail.gmail.com>
+ <4d60636f62df4f5c200666ed2d1a5f2414c18e1f.camel@kernel.org>
+In-Reply-To: <4d60636f62df4f5c200666ed2d1a5f2414c18e1f.camel@kernel.org>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Mon, 13 Feb 2023 10:55:53 -0500
+Message-ID: <CALF+zOk3=fs_UQBaFnDQ-Wm0O0UYUP4RYc=woXbviRmSPwjC3w@mail.gmail.com>
+Subject: Re: [Linux-cachefs] [PATCH v10 0/6] Convert NFS with fscache to the
+ netfs API
+To:     Trond Myklebust <trondmy@kernel.org>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-cachefs@redhat.com, Benjamin Maynard <benmaynard@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -132,69 +76,351 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQoNCj4gT24gRmViIDEzLCAyMDIzLCBhdCAwOTo1NSwgT2xnYSBLb3JuaWV2c2thaWEgPGFnbG9A
-dW1pY2guZWR1PiB3cm90ZToNCj4gDQo+IE9uIFN1biwgRmViIDEyLCAyMDIzIGF0IDE6MDggUE0g
-Q2h1Y2sgTGV2ZXIgSUlJIDxjaHVjay5sZXZlckBvcmFjbGUuY29tPiB3cm90ZToNCj4+IA0KPj4g
-DQo+PiANCj4+PiBPbiBGZWIgMTIsIDIwMjMsIGF0IDE6MDEgQU0sIFdhbmcgWXVndWkgPHdhbmd5
-dWd1aUBlMTYtdGVjaC5jb20+IHdyb3RlOg0KPj4+IA0KPj4+IEhpLA0KPj4+IA0KPj4+IHF1ZXN0
-aW9uIGFib3V0IHRoZSBwZXJmb3JtYW5jZSBvZiBzZWM9a3JiNS4NCj4+PiANCj4+PiBodHRwczov
-L2xlYXJuLm1pY3Jvc29mdC5jb20vZW4tdXMvYXp1cmUvYXp1cmUtbmV0YXBwLWZpbGVzL3BlcmZv
-cm1hbmNlLWltcGFjdC1rZXJiZXJvcw0KPj4+IFBlcmZvcm1hbmNlIGltcGFjdCBvZiBrcmI1Og0K
-Pj4+ICAgICAgQXZlcmFnZSBJT1BTIGRlY3JlYXNlZCBieSA1MyUNCj4+PiAgICAgIEF2ZXJhZ2Ug
-dGhyb3VnaHB1dCBkZWNyZWFzZWQgYnkgNTMlDQo+Pj4gICAgICBBdmVyYWdlIGxhdGVuY3kgaW5j
-cmVhc2VkIGJ5IDMuMiBtcw0KPj4gDQo+PiBMb29raW5nIGF0IHRoZSBudW1iZXJzIGluIHRoaXMg
-YXJ0aWNsZS4uLiB0aGV5IGRvbid0DQo+PiBzZWVtIHF1aXRlIHJpZ2h0LiBIZXJlIGFyZSB0aGUg
-b3RoZXJzOg0KPj4gDQo+Pj4gUGVyZm9ybWFuY2UgaW1wYWN0IG9mIGtyYjVpOg0KPj4+ICAgICAg
-4oCiIEF2ZXJhZ2UgSU9QUyBkZWNyZWFzZWQgYnkgNTUlDQo+Pj4gICAgICDigKIgQXZlcmFnZSB0
-aHJvdWdocHV0IGRlY3JlYXNlZCBieSA1NSUNCj4+PiAgICAgIOKAoiBBdmVyYWdlIGxhdGVuY3kg
-aW5jcmVhc2VkIGJ5IDAuNiBtcw0KPj4+IFBlcmZvcm1hbmNlIGltcGFjdCBvZiBrcmI1cDoNCj4+
-PiAgICAgIOKAoiBBdmVyYWdlIElPUFMgZGVjcmVhc2VkIGJ5IDc3JQ0KPj4+ICAgICAg4oCiIEF2
-ZXJhZ2UgdGhyb3VnaHB1dCBkZWNyZWFzZWQgYnkgNzclDQo+Pj4gICAgICDigKIgQXZlcmFnZSBs
-YXRlbmN5IGluY3JlYXNlZCBieSAxLjYgbXMNCj4+IA0KPj4gSSB3b3VsZCBleHBlY3Qga3JiNXAg
-dG8gYmUgdGhlIHdvcnN0IGluIHRlcm1zIG9mDQo+PiBsYXRlbmN5LiBBbmQgSSB3b3VsZCBsaWtl
-IHRvIHNlZSByb3VuZC10cmlwIG51bWJlcnMNCj4+IHJlcG9ydGVkOiB3aGF0IHBhcnQgb2YgdGhl
-IGluY3JlYXNlIGluIGxhdGVuY3kgaXMNCj4+IGR1ZSB0byBzZXJ2ZXIgdmVyc3VzIGNsaWVudCBw
-cm9jZXNzaW5nPw0KPj4gDQo+PiBUaGlzIGlzIGFsc28gcmVtYXJrYWJsZToNCj4+IA0KPj4+IFdo
-ZW4gbmNvbm5lY3QgaXMgdXNlZCBpbiBMaW51eCwgdGhlIEdTUyBzZWN1cml0eSBjb250ZXh0IGlz
-IHNoYXJlZCBiZXR3ZWVuIGFsbCB0aGUgbmNvbm5lY3QgY29ubmVjdGlvbnMgdG8gYSBwYXJ0aWN1
-bGFyIHNlcnZlci4gVENQIGlzIGEgcmVsaWFibGUgdHJhbnNwb3J0IHRoYXQgc3VwcG9ydHMgb3V0
-LW9mLW9yZGVyIHBhY2tldCBkZWxpdmVyeSB0byBkZWFsIHdpdGggb3V0LW9mLW9yZGVyIHBhY2tl
-dHMgaW4gYSBHU1Mgc3RyZWFtLCB1c2luZyBhIHNsaWRpbmcgd2luZG93IG9mIHNlcXVlbmNlIG51
-bWJlcnMu4oCvV2hlbiBwYWNrZXRzIG5vdCBpbiB0aGUgc2VxdWVuY2Ugd2luZG93IGFyZSByZWNl
-aXZlZCwgdGhlIHNlY3VyaXR5IGNvbnRleHQgaXMgZGlzY2FyZGVkLCBhbmTigK9hIG5ldyBzZWN1
-cml0eSBjb250ZXh0IGlzIG5lZ290aWF0ZWQuIEFsbCBtZXNzYWdlcyBzZW50IHdpdGggaW4gdGhl
-IG5vdy1kaXNjYXJkZWQgY29udGV4dCBhcmUgbm8gbG9uZ2VyIHZhbGlkLCB0aHVzIHJlcXVpcmlu
-ZyB0aGUgbWVzc2FnZXMgdG8gYmUgc2VudCBhZ2Fpbi4gTGFyZ2VyIG51bWJlciBvZiBwYWNrZXRz
-IGluIGFuIG5jb25uZWN0IHNldHVwIGNhdXNlIGZyZXF1ZW50IG91dC1vZi13aW5kb3cgcGFja2V0
-cywgdHJpZ2dlcmluZyB0aGUgZGVzY3JpYmVkIGJlaGF2aW9yLiBObyBzcGVjaWZpYyBkZWdyYWRh
-dGlvbiBwZXJjZW50YWdlcyBjYW4gYmUgc3RhdGVkIHdpdGggdGhpcyBiZWhhdmlvci4NCj4+IA0K
-Pj4gDQo+PiBTbywgZG9lcyB0aGlzIG1lYW4gdGhhdCBuY29ubmVjdCBtYWtlcyB0aGUgR1NTIHNl
-cXVlbmNlDQo+PiB3aW5kb3cgcHJvYmxlbSB3b3JzZSwgb3IgdGhhdCB3aGVuIGEgd2luZG93IHVu
-ZGVycnVuDQo+PiBvY2N1cnMgaXQgaGFzIGJyb2FkZXIgaW1wYWN0IGJlY2F1c2UgbXVsdGlwbGUg
-Y29ubmVjdGlvbnMNCj4+IGFyZSBhZmZlY3RlZD8NCj4gDQo+IFllcyBuY29ubmVjdCBtYWtlcyB0
-aGUgR1NTIHNlcXVlbmNlIHdpbmRvdyBwcm9ibGVtIHdvcnNlICh2ZXJ5IHR5cGljYWwNCj4gdG8g
-Z2VuZXJhdGUgbW9yZSB0aGFuIGdzcyB3aW5kb3cgc2l6ZSBudW1iZXIgb2YgcnBjcyBhbmQgaGF2
-ZSBubw0KPiBhYmlsaXR5IHRvIGNvbnRyb2wgaW4gd2hhdCBvcmRlciB0aGV5IHdvdWxkIGJlIHNl
-bnQpIGFuZCB5ZXMgYWxsDQo+IGNvbm5lY3Rpb25zIGFyZSBhZmZlY3RlZC4gT05UQVAgYXMgbGlu
-dXggdXNlcyAxMjggZ3NzIHdpbmRvdyBzaXplIGJ1dA0KPiB3ZSd2ZSBleHBlcmltZW50ZWQgd2l0
-aCBpbmNyZWFzaW5nIGl0IHRvIGxhcmdlciB2YWx1ZXMgYW5kIGl0IHdvdWxkDQo+IHN0aWxsIGNh
-dXNlIGlzc3Vlcy4NCj4gDQo+PiBTZWVtcyBsaWtlIG1heWJlIG5jb25uZWN0IHNob3VsZCBzZXQg
-dXAgYSB1bmlxdWUgR1NTDQo+PiBjb250ZXh0IGZvciBlYWNoIHhwcnQuIEl0IHdvdWxkIGJlIGhl
-bHBmdWwgdG8gZmlsZSBhIGJ1Zy4NCj4gDQo+IEF0IHRoZSB0aW1lIHdoZW4gSSBzYXcgdGhlIGlz
-c3VlIGFuZCBhc2tlZCBhYm91dCBpdCAodGhvdWdoIGNhbid0IGZpbmQNCj4gYSByZWZlcmVuY2Ug
-bm93KSBJIGdvdCB0aGUgaW1wcmVzc2lvbiB0aGF0IGhhdmluZyBtdWx0aXBsZSBjb250ZXh0cw0K
-PiBmb3IgdGhlIHNhbWUgcnBjIGNsaWVudCB3YXMgbm90IGdvaW5nIHRvIGJlIGFjY2VwdGFibGUu
-DQo+IA0KDQpXZSBoYXZlIGRpc2N1c3NlZCB0aGlzIGVhcmxpZXIgb24gdGhpcyBtYWlsaW5nIGxp
-c3QuIFRvIG1lLCB0aGUgdHdvIGlzc3VlcyBhcmUgc2VwYXJhdGUuDQotIEl0IHdvdWxkIGJlIG5p
-Y2UgdG8gZW5mb3JjZSB0aGUgR1NTIHdpbmRvdyBvbiB0aGUgY2xpZW50LCBhbmQgdG8gdGhyb3R0
-bGUgZnVydGhlciBSUEMgY2FsbHMgZnJvbSB1c2luZyBhIGNvbnRleHQgb25jZSB0aGUgd2luZG93
-IGlzIGZ1bGwuDQotIEl0IG1pZ2h0IGFsc28gYmUgbmljZSB0byBhbGxvdyBmb3IgbXVsdGlwbGUg
-Y29udGV4dHMgb24gdGhlIGNsaWVudCBhbmQgdG8gaGF2ZSB0aGVtIGFzc2lnbmVkIG9uIGEgcGVy
-LXhwcnQgYmFzaXMgc28gdGhhdCB0aGUgbnVtYmVyIG9mIHNsb3RzIHNjYWxlcyB3aXRoIHRoZSBu
-dW1iZXIgb2YgY29ubmVjdGlvbnMuDQoNCk5vdGUgdGhvdWdoLCB0aGF0IHdpbmRvdyBpc3N1ZXMg
-ZG8gdGVuZCB0byBiZSBtaXRpZ2F0ZWQgYnkgdGhlIE5GU3Y0LnggKHg+MCkgc2Vzc2lvbnMuIEl0
-IHdvdWxkIG1ha2Ugc2Vuc2UgZm9yIHNlcnZlciB2ZW5kb3JzIHRvIGVuc3VyZSB0aGF0IHRoZXkg
-bWF0Y2ggdGhlIEdTUyB3aW5kb3cgc2l6ZSB0byB0aGUgbWF4IG51bWJlciBvZiBzZXNzaW9uIHNs
-b3RzLg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NClRyb25kIE15a2xlYnVz
-dA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVi
-dXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQo=
+On Thu, Feb 9, 2023 at 12:41 PM Trond Myklebust <trondmy@kernel.org> wrote:
+>
+> On Thu, 2023-02-09 at 09:57 -0500, David Wysochanski wrote:
+> > On Thu, Nov 3, 2022 at 12:16 PM Dave Wysochanski
+> > <dwysocha@redhat.com> wrote:
+> > >
+> > > This v10 patchset addresses at least some of Trond's latest
+> > > concerns.
+> > > Some of the feedback like the unlock_page() wrapper function in
+> > > nfs_read_completion() I don't know how to address without an
+> > > ifdef.  Other feedback I'm not quite sure about splitting out
+> > > netfs bits or what you would like to see.  Trond I do not want to
+> > > in any way ignore or miss any of your feedback so please elaborate
+> > > as needed.
+> > >
+> > > This patchset converts NFS with fscache non-direct READ IO paths to
+> > > use the netfs API with a non-invasive approach.  The existing NFS
+> > > pgio
+> > > layer does not need extensive changes, and is the best way so far
+> > > I've
+> > > found to address Trond's concerns about modifying the IO path [1]
+> > > as
+> > > well as only enabling netfs when fscache is configured and enabled
+> > > [2].
+> > > I have not attempted performance comparisions to address Chuck
+> > > Lever's concern [3] because we are not converting the non-fscache
+> > > enabled NFS IO paths to netfs.
+> > >
+> > > The patchset is based on 6.1-rc3 and has been pushed to github at:
+> > > https://github.com/DaveWysochanskiRH/kernel/commits/nfs-fscache-netfs
+> > > https://github.com/DaveWysochanskiRH/kernel/commit/bff09aa979010f38a11a6f92451e85d04d850715
+> > >
+> > > Changes since v9 [7]
+> > > ====================
+> > > PATCH1: Rename nfs_pageio_add_page to nfs_read_add_page (Trond)
+> > > PATCH3: Remove a few #ifdef's and replace with wrappers (Trond) [8]
+> > > PATCH6: RFC patch to reduce increase in nfs_inode memory footprint
+> > > when netfs is configured but not enabled (Trond) [9]
+> > >
+> > > Testing
+> > > =======
+> > > I did not do much testing on this as the changes to patches 1 and 3
+> > > are cosmetic.  Patch #6 is RFC patch and may change, so if that is
+> > > added it may need more testing.
+> > >
+> > > Known issues
+> > > ============
+> > > 1. Unit test setting rsize < readahead does not properly read from
+> > > fscache but re-reads data from the NFS server
+> > > * This will be fixed with another linux-cachefs [4] patch to
+> > > resolve
+> > > "Stop read optimisation when folio removed from pagecache"
+> > > * Daire Byrne also verified the patch fixes his issue as well
+> > >
+> > > 2. "Cache volume key already in use" after xfstest runs
+> > > * xfstests (hammerspace with vers=4.2,fsc) shows the following on
+> > > the
+> > > console after some tests:
+> > > "NFS: Cache volume key already in use
+> > > (nfs,4.1,2,c50,cfe0100a,3,,,8000,100000,100000,bb8,ea60,7530,ea60,1
+> > > )"
+> > > * This may be fixed with another patch [5] that is in progress
+> > >
+> > > 3. Daire Byrne reported a NULL pointer oops at
+> > > cachefiles_prepare_write+0x28/0x90
+> > > * harder to reproduce/debug but under investigation [6]
+> > > * only reproduced on RHEL7.9 based NFS re-export server using
+> > > fscache with upstream kernel plus
+> > > the previous patches
+> > > * Debug in progress, first pass at where the problem is indicates a
+> > > race
+> > > between fscache cookie LRU and use_cookie; looking at cookie state
+> > > machine [10]
+> > >
+> > > [58710.346376] BUG: kernel NULL pointer dereference, address:
+> > > 0000000000000008
+> > > [58710.371212] CPU: 12 PID: 9134 Comm: kworker/u129:0 Tainted: G
+> > > E      6.0.0-2.dneg.x86_64 #1
+> > > ...
+> > > [58710.389995] Workqueue: events_unbound
+> > > netfs_rreq_write_to_cache_work [netfs]
+> > > [58710.397188] RIP: 0010:cachefiles_prepare_write+0x28/0x90
+> > > [cachefiles]
+> > > ...
+> > > [58710.500316] Call Trace:
+> > > [58710.502894]  <TASK>
+> > > [58710.505126]  netfs_rreq_write_to_cache_work+0x11c/0x320 [netfs]
+> > > [58710.511201]  process_one_work+0x217/0x3e0
+> > > [58710.515358]  worker_thread+0x4a/0x3b0
+> > > [58710.519152]  ? process_one_work+0x3e0/0x3e0
+> > > [58710.523467]  kthread+0xd6/0x100
+> > > [58710.526740]  ? kthread_complete_and_exit+0x20/0x20
+> > > [58710.531659]  ret_from_fork+0x1f/0x30
+> > >
+> > >
+> > >
+> > > References
+> > > ==========
+> > > [1]
+> > > https://lore.kernel.org/linux-nfs/9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com/
+> > > [2]
+> > > https://lore.kernel.org/linux-nfs/da9200f1bded9b8b078a7aef227fd6b92eb028fb.camel@hammerspace.com/
+> > > [3] https://marc.info/?l=linux-nfs&m=160597917525083&w=4
+> > > [4]
+> > > https://www.mail-archive.com/linux-cachefs@redhat.com/msg03043.html
+> > > [5] https://marc.info/?l=linux-nfs&m=165962662200679&w=4
+> > > [6]
+> > > https://listman.redhat.com/archives/linux-cachefs/2022-September/007183.html
+> > > [7] https://marc.info/?l=linux-nfs&m=166600357429305&w=4
+> > > [8] https://marc.info/?l=linux-nfs&m=166697599503342&w=4
+> > > [9] https://marc.info/?l=linux-nfs&m=166717208305834&w=4
+> > > [10]
+> > > https://listman.redhat.com/archives/linux-cachefs/2022-October/007259.html
+> > >
+> > > Dave Wysochanski (5):
+> > >   NFS: Rename readpage_async_filler to nfs_pageio_add_page
+> > >   NFS: Configure support for netfs when NFS fscache is configured
+> > >   NFS: Convert buffered read paths to use netfs when fscache is
+> > > enabled
+> > >   NFS: Remove all NFSIOS_FSCACHE counters due to conversion to
+> > > netfs API
+> > >   NFS: Remove fscache specific trace points and NFS_INO_FSCACHE bit
+> > >
+> > >  fs/nfs/Kconfig             |   1 +
+> > >  fs/nfs/delegation.c        |   2 +-
+> > >  fs/nfs/dir.c               |   2 +-
+> > >  fs/nfs/fscache.c           | 242 ++++++++++++++++++++++-----------
+> > > ----
+> > >  fs/nfs/fscache.h           | 111 +++++++++++------
+> > >  fs/nfs/inode.c             |   8 +-
+> > >  fs/nfs/internal.h          |  11 +-
+> > >  fs/nfs/iostat.h            |  17 ---
+> > >  fs/nfs/nfstrace.h          |  91 --------------
+> > >  fs/nfs/pagelist.c          |  12 ++
+> > >  fs/nfs/pnfs.c              |  12 +-
+> > >  fs/nfs/read.c              | 110 +++++++++--------
+> > >  fs/nfs/super.c             |  11 --
+> > >  fs/nfs/write.c             |   2 +-
+> > >  include/linux/nfs_fs.h     |  35 ++++--
+> > >  include/linux/nfs_iostat.h |  12 --
+> > >  include/linux/nfs_page.h   |   3 +
+> > >  include/linux/nfs_xdr.h    |   3 +
+> > >  18 files changed, 335 insertions(+), 350 deletions(-)
+> > >
+> > > --
+> > > 2.31.1
+> > >
+> > > *** BLURB HERE ***
+> > >
+> > > Dave Wysochanski (6):
+> > >   NFS: Rename readpage_async_filler to nfs_read_add_page
+> > >   NFS: Configure support for netfs when NFS fscache is configured
+> > >   NFS: Convert buffered read paths to use netfs when fscache is
+> > > enabled
+> > >   NFS: Remove all NFSIOS_FSCACHE counters due to conversion to
+> > > netfs API
+> > >   NFS: Remove fscache specific trace points and NFS_INO_FSCACHE bit
+> > >   netfs: Change netfs_inode_init to allocate memory to allow opt-in
+> > >
+> > >  fs/9p/cache.c              |   2 +-
+> > >  fs/9p/vfs_inode.c          |  17 ++-
+> > >  fs/afs/dynroot.c           |   7 +-
+> > >  fs/afs/inode.c             |  14 +--
+> > >  fs/afs/internal.h          |   2 +-
+> > >  fs/afs/super.c             |   7 ++
+> > >  fs/afs/write.c             |   2 +-
+> > >  fs/ceph/inode.c            |   6 +-
+> > >  fs/netfs/buffered_read.c   |  16 +--
+> > >  fs/netfs/internal.h        |   2 +-
+> > >  fs/netfs/objects.c         |   2 +-
+> > >  fs/nfs/Kconfig             |   1 +
+> > >  fs/nfs/delegation.c        |   2 +-
+> > >  fs/nfs/dir.c               |   2 +-
+> > >  fs/nfs/fscache.c           | 242 ++++++++++++++++++++++-----------
+> > > ----
+> > >  fs/nfs/fscache.h           | 136 +++++++++++++++------
+> > >  fs/nfs/inode.c             |  15 ++-
+> > >  fs/nfs/internal.h          |  11 +-
+> > >  fs/nfs/iostat.h            |  17 ---
+> > >  fs/nfs/nfstrace.h          |  91 --------------
+> > >  fs/nfs/pagelist.c          |   4 +
+> > >  fs/nfs/pnfs.c              |  12 +-
+> > >  fs/nfs/read.c              | 110 +++++++++--------
+> > >  fs/nfs/super.c             |  11 --
+> > >  fs/nfs/write.c             |   2 +-
+> > >  include/linux/netfs.h      |  41 +++++--
+> > >  include/linux/nfs_fs.h     |  35 ++++--
+> > >  include/linux/nfs_iostat.h |  12 --
+> > >  include/linux/nfs_page.h   |   3 +
+> > >  include/linux/nfs_xdr.h    |   3 +
+> > >  30 files changed, 428 insertions(+), 399 deletions(-)
+> > >
+> > > --
+> > > 2.31.1
+> > >
+> > > --
+> > > Linux-cachefs mailing list
+> > > Linux-cachefs@redhat.com
+> > > https://listman.redhat.com/mailman/listinfo/linux-cachefs
+> > >
+> >
+> > Trond, David H, Ben, Daire, others,
+> >
+> > I am not sure about the next steps.
+> >
+> > I did not see any responses to this v10 posting, other than dhowells
+> > did not like the overhead that patch 6 added to other filesystems
+> > using netfs.  I'm not sure if that's a full NACK on that patch but it
+> > sounded like it to me.
+> > Trond is it ok if I drop patch 6?
+> >
+>
+> If you drop patch 6, then we need another way to get rid of the
+> ugliness introduced by netfs_inode. I don't want to add those wrappers
+> in order to access the inode in 'struct nfs_inode'.
+>
+> One solution might be an anonymous union. i.e.
+> struct nfs_inode {
+> ....
+>         union {
+>                 struct inode vfs_inode;
+> #ifdef CONFIG_NFS_FSCACHE
+>                 struct netfs_inode netfs_inode;
+> #endif
+>         };
+> };
+>
+>
+> ...and then move the wretched xattr_cache field to reside above that
+> union.
+>
+
+Yes I definitely can do this.  Making this change reduces the churn
+in patch #2, significantly (see below).
+
+Do you want me to rebase, test, and re-post a v11 of this series
+through patch #5 or do you want more time to comment on patches
+3-5?
+
+
+$ git show --stat
+commit a8b2617550ea85f40a546430f3199670beccec1d (HEAD ->
+nfs-fscache-netfs, origin/nfs-fscache-netfs)
+Author: Dave Wysochanski <dwysocha@redhat.com>
+Date:   Wed May 4 10:12:47 2022 -0400
+
+    NFS: Configure support for netfs when NFS fscache is configured
+
+    As first steps for support of the netfs library when NFS_FSCACHE is
+    configured, add NETFS_SUPPORT to Kconfig and add the required netfs_inode
+    into struct nfs_inode.
+
+    Using netfs requires we move the VFS inode structure to be stored
+    inside struct netfs_inode, along with the fscache_cookie.
+    Thus, if NFS_FSCACHE is configured, place netfs_inode inside an
+    anonymous union so the vfs_inode memory is the same and we do
+    not need to modify other non-fscache areas of NFS.
+    In addition, inside the NFS fscache code, use the new helpers,
+    netfs_inode() and netfs_i_cookie() helpers, and remove our own
+    helper, nfs_i_fscache().
+
+    Later patches will convert NFS fscache to fully use netfs.
+
+    Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+
+ fs/nfs/Kconfig         |  1 +
+ fs/nfs/fscache.c       | 20 +++++++++-----------
+ fs/nfs/fscache.h       | 15 ++++++---------
+ include/linux/nfs_fs.h | 24 ++++++++++--------------
+ 4 files changed, 26 insertions(+), 34 deletions(-)
+[dwysocha@dwysocha kernel]$ git show include/linux/nfs_fs.h
+commit a8b2617550ea85f40a546430f3199670beccec1d (HEAD ->
+nfs-fscache-netfs, origin/nfs-fscache-netfs)
+Author: Dave Wysochanski <dwysocha@redhat.com>
+Date:   Wed May 4 10:12:47 2022 -0400
+
+    NFS: Configure support for netfs when NFS fscache is configured
+
+    As first steps for support of the netfs library when NFS_FSCACHE is
+    configured, add NETFS_SUPPORT to Kconfig and add the required netfs_inode
+    into struct nfs_inode.
+
+    Using netfs requires we move the VFS inode structure to be stored
+    inside struct netfs_inode, along with the fscache_cookie.
+    Thus, if NFS_FSCACHE is configured, place netfs_inode inside an
+    anonymous union so the vfs_inode memory is the same and we do
+    not need to modify other non-fscache areas of NFS.
+    In addition, inside the NFS fscache code, use the new helpers,
+    netfs_inode() and netfs_i_cookie() helpers, and remove our own
+    helper, nfs_i_fscache().
+
+    Later patches will convert NFS fscache to fully use netfs.
+
+    Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 45c44211e50e..580847c70fec 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -31,6 +31,10 @@
+ #include <linux/sunrpc/auth.h>
+ #include <linux/sunrpc/clnt.h>
+
++#ifdef CONFIG_NFS_FSCACHE
++#include <linux/netfs.h>
++#endif
++
+ #include <linux/nfs.h>
+ #include <linux/nfs2.h>
+ #include <linux/nfs3.h>
+@@ -204,14 +208,15 @@ struct nfs_inode {
+        /* how many bytes have been written/read and how many bytes queued up */
+        __u64 write_io;
+        __u64 read_io;
+-#ifdef CONFIG_NFS_FSCACHE
+-       struct fscache_cookie   *fscache;
+-#endif
+-       struct inode            vfs_inode;
+-
+ #ifdef CONFIG_NFS_V4_2
+        struct nfs4_xattr_cache *xattr_cache;
+ #endif
++       union {
++               struct inode            vfs_inode;
++#ifdef CONFIG_NFS_FSCACHE
++               struct netfs_inode      netfs; /* netfs context and VFS inode */
++#endif
++       };
+ };
+
+ struct nfs4_copy_state {
+@@ -329,15 +334,6 @@ static inline int NFS_STALE(const struct inode *inode)
+        return test_bit(NFS_INO_STALE, &NFS_I(inode)->flags);
+ }
+
+-static inline struct fscache_cookie *nfs_i_fscache(struct inode *inode)
+-{
+-#ifdef CONFIG_NFS_FSCACHE
+-       return NFS_I(inode)->fscache;
+-#else
+-       return NULL;
+-#endif
+-}
+-
+ static inline __u64 NFS_FILEID(const struct inode *inode)
+ {
+        return NFS_I(inode)->fileid;
+
