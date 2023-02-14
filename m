@@ -2,183 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D21C26967C2
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Feb 2023 16:16:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A68F46967C4
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Feb 2023 16:16:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233147AbjBNPQS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Feb 2023 10:16:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36774 "EHLO
+        id S233231AbjBNPQg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Feb 2023 10:16:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229622AbjBNPQR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Feb 2023 10:16:17 -0500
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84FD118147;
-        Tue, 14 Feb 2023 07:16:16 -0800 (PST)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31EETRrM003456;
-        Tue, 14 Feb 2023 15:16:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=/NkDIbfkNfJQMB8+dXtvCq93eCNCA5QXbt/hVzVLuuY=;
- b=QxpPHee5x5fP5OVkawkZFMXok/MU5WrEQLVkWGjH94jDxdHtNkQA9KrXJ1M5fAk6VMUS
- DvwxO/GtD/W1flPim/TwN64Tk3Y1vd2MfiEXhtkSMIqbOvvWcqTawPaKTc/GWfZhfTNc
- 7G57K9KTcFPcxktj/1FrWZ3PMXmaEonaGxV1IjrwS5o8XYvoIAzjBD6ydpuFGsfVGTKX
- U1KTkj1yjhmW6xRbZg8jBu4HC6vb7gP1ODiDTCli4cDdxh9velorTyfGOiXXJITpYHsl
- rYZhoTxz93ZO61K/KuBmAWdQZ1GcSV1zPq8zzP6m29unFuBvrVlfXNlDaiTJw9uru3zS RQ== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3np1m0wqk9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Feb 2023 15:16:13 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 31EELegP013540;
-        Tue, 14 Feb 2023 15:16:12 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2103.outbound.protection.outlook.com [104.47.58.103])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3np1f5q2mx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Feb 2023 15:16:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GZsIOqg946yO7kuqU45vFJ/MhfvWv5Tau35hSiX88Q1zIseOkpriVR09Gizc2QqMLyixDCDUBs4T0+azd1thD64m+gbSvs95Q5vS6Uriaa9fy9q+frPQSP2y0AFDhtQ9hlXN+E5dEYvu4wmptniAnfBa+j64sYwHhJMgMZMCTJpKv+dgWUactegRUgrL4VjJjo4xTCu5CRH3UkzFCH0m1ThzdgR9K5IYjCXilPvyvwiO+zeJYN9oPgLaD6RmDrwwLTZM9XIsNPZoDNVdSUcGoBB8xEXLzfQz0zN0tHysqzPUX/Pigb63tG5aHH7N6CIBa1MIrozk0qk7Yn6R2egodQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/NkDIbfkNfJQMB8+dXtvCq93eCNCA5QXbt/hVzVLuuY=;
- b=ejvlRNfolfkGulb7jN0ecyOi4LTKWwHDAJ5adggbF34R4Smw/IYFQNqdOvLwl/zBwMHekWgRXjO46ZRLvGoGcOBTzkeJayHA3F0UJDLNdAeISwR6kMK8WsDX9Kyqc+nz49y5RBfNurAeRg2ePhGOJxtHkJ372PpfazFD+oO3XMHc+zfXZiIjsaZiYk4lHK0rs8EbydbtXAa9iZkIjaHpPJX1+9A1lMASpQursWBMjJJb4C3icYtrtbnFYQ3SAdBwAvkJqkIAjU0CgqS+zIvXTFx4BYmJ5M6bayqi81R4B6cJZrwP4s+w93ah7H8p17gUlBkYhqv/pXTtJnNbEB4RPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/NkDIbfkNfJQMB8+dXtvCq93eCNCA5QXbt/hVzVLuuY=;
- b=m/gBJxC7zkl2Pm83EHirqfovo9VMUYDyeNE/JuH1nbZvuXiINNEw2F0AKiTN6IsADRpbi1I71lfp5hEyRn2xl29PL/09kYmJ7o9vWJgDQrHpYAgyWf0mLLs5S9Pgd76589uG0LIFSf0WhREr9x8FG0hRdBlW7wHHFCIbeSzfC/k=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BN0PR10MB5175.namprd10.prod.outlook.com (2603:10b6:408:115::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.10; Tue, 14 Feb
- 2023 15:16:10 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5c2f:5e81:b6c4:a127]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5c2f:5e81:b6c4:a127%7]) with mapi id 15.20.6111.010; Tue, 14 Feb 2023
- 15:16:10 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Dan Carpenter <error27@gmail.com>,
-        Colin Ian King <colin.i.king@gmail.com>
-CC:     Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] nfsd: remove redundant assignment to pointer dentry
-Thread-Topic: [PATCH][next] nfsd: remove redundant assignment to pointer
- dentry
-Thread-Index: AQHZQH6rVnUd5+nphU2O0AMSQaxqqq7Oh8uAgAAFv4A=
-Date:   Tue, 14 Feb 2023 15:16:10 +0000
-Message-ID: <A0A239FB-249E-4C50-8276-D6DED71D8C3A@oracle.com>
-References: <20230214141428.301121-1-colin.i.king@gmail.com>
- <Y+ug53kWXe5tqZbw@kadam>
-In-Reply-To: <Y+ug53kWXe5tqZbw@kadam>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.2)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|BN0PR10MB5175:EE_
-x-ms-office365-filtering-correlation-id: ba4a8bd0-1082-4639-11ab-08db0e9e6747
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fk4RwCa7FW5SarXAuHgLkMikv1vhPb8gLZeb4ZJ3o7uBcZxnGjPdAru0EtyzD72CN3Bp0hJ/cQzY4WcW214AeYwZ/HuaNxoAYLrEdA0aLr0B/uDhP31HVV9AKBndZG1tmH4LV6j1FR1nyUznUnusjtSd8HI3GifR8c9RZT8HKQ6cWWw6gDnXiU8wmkoKVPt1JmQkgtcxRn08Rm5U7coQ4AV3EKbnzCsVudIHGHZ4E9YJcfT0UANB5QDXoDyNLP+5ZGQlIPl75Dcv6r33P61iDvCjLt6Q8EjoHRXf03aGD+JGreUaWYTKY3HQgb8NizO4zjmHr9Q1lDVKIL72/i2aA41gb3N1/fSyIXKUPTqyQiwH47ZmSREHSbdFgTyD2CbRk7opecvMdQ8hz+s+gIBxIseEXSMsQSwTq60kPm5JyuX/501uPQuIQJEeIIJLPO6HL7nHp0j21at4gfEjOB5NPBDNdL95DbEPrWoXhEFg+GkBj0z+43poXc+ZPxeXk+Tk6lZEvwq3wle/G+LQnaS0WrcEfhV8QrBuO6ylO5ZBAJNs8Zk6pzyrWxckErQZ4B4yHmsPz0s8p3nR/Udb581cWlbc83Uvw05/vH/XtFQ7zXKFWY7YaKnIZNouSZYpcUzCTO0Qyt3kQiieuqLZb/bfK1W+m9hDwRWr0QpMmit1fzX0u5jPkwuKmjdmUXQls1KYmppLscO2R37TYbSLHXQEYmH1xETbT5aCIGNU4lDw8WI=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(346002)(136003)(396003)(39860400002)(376002)(451199018)(66946007)(36756003)(33656002)(2616005)(83380400001)(122000001)(66476007)(38100700002)(38070700005)(2906002)(41300700001)(4744005)(71200400001)(8676002)(54906003)(5660300002)(8936002)(53546011)(6506007)(186003)(6512007)(110136005)(6486002)(76116006)(86362001)(26005)(66556008)(66446008)(91956017)(64756008)(4326008)(478600001)(316002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?l7lujFxSABhOVl2uVhtyito7AAb8WCldiCbGXOkjTN0hZ6FDxsQ50u1/iM+q?=
- =?us-ascii?Q?+Fh/Gp59C7VxSf3KccIvV/aUUZXC6Cocto2Qia4qrsXEwYryypMgLPkg26BV?=
- =?us-ascii?Q?0EqDeccZMFn45o80WY/CUOQIybwVBOx9YimgEH8k1mr8asvYu+p8CMfCISi3?=
- =?us-ascii?Q?AqE1RjDf8DalwxLL/9pBuvqcMO5aVuI0fgDGM5+ESWFa3HJHkfh7Plo1yStM?=
- =?us-ascii?Q?8za1x3QQMNsz7CXUTQAKvBuXqlFr4mrV57Bej54T76uQwnbesNPnppRoxfO4?=
- =?us-ascii?Q?KTSIPnLihYg0f7TQiW9PY4YgQeV8ZJFq2PCrfOnYUeGtBxaIczijc9/7v9JQ?=
- =?us-ascii?Q?v/l4snosDe4wfKS4qYt+/qwD5tyLLKCB0qpmHtnSVVYF3gdaxIU7VR2jtLmO?=
- =?us-ascii?Q?MqQGshxrkYc9CbyTkF4V9Ia16em92VH7jLlv5czagvfgMkKjJDY+9kYKChUy?=
- =?us-ascii?Q?9vrO044Qg2t7wpqSkG5YNxfSc13c8Yj1KzgS/ykAl2mfEceeWZCSbk3Fyu0I?=
- =?us-ascii?Q?fd08z/E5VVKbXs2wEOd0aqLJfM0YCHQk4n/h7kmYrOaEg2vvwmmjfC4Wd7YA?=
- =?us-ascii?Q?zczOjIuL2IMiwePLjJAWIiMGAz5jLEuSba55VUNHEb0Tg5N5L/nFXN9DB9E8?=
- =?us-ascii?Q?9+DNFVRrlc8Ww8zUvoLjG3lUbwHbMb7XjbM8F7clZAKwK3YMHYAoIcm6IawO?=
- =?us-ascii?Q?2jB43W8M0EsIgh3mdVeWSTXy4kGUzmr7+6/u2RS77tAnJfz232F6+VIPzi3O?=
- =?us-ascii?Q?Fmnt9bO2CyfcXMbvHYazZLBjAZv+JcvhnpKGqWrhZ/DjRuczcxNVoa6UyRRV?=
- =?us-ascii?Q?zYnhF3rDe91h6aKv0KbxOlLYg41s7fuNxDLLhLdRorOOGSXZsTlIfKZol2rf?=
- =?us-ascii?Q?Z2vHKRFDZSlb/i0V0GP+a4nd1DbIZMEYFIvGyf+/Xqlh7w0sXTz5q3S0N0N1?=
- =?us-ascii?Q?WBra93zptwX3d3pSAXzh/sHLWi2xZqTv6mAAsg4U8TeltTJHrNcz80nCqWSp?=
- =?us-ascii?Q?N3tJVV8x/2lG4BoeuWb/QRowLZ5pVxIXd/b48AH2iV6x9qf2SJQ2JoZFQIoG?=
- =?us-ascii?Q?c+TwsHfzNpkNVSuxRGk2NFIR+JWTU0GgES81nXR15ocHRYCz9VvveH8ITtUV?=
- =?us-ascii?Q?b7HKPn/xn6zS884ovWleePECpEZIS9LhMx8+83kyipYksXGSbHwaEtdGWVVM?=
- =?us-ascii?Q?MdPQM5I9CKuCYN8dC05Dw8pSszEh5rFgrkDu7rsPn6CUS+cHU2mOBTqQIvm4?=
- =?us-ascii?Q?olEC4Npn4IcCIOO3lpWtYkYplHxEmz8Ysl8J7SM9focTiAE8RJj6jhlMKg/n?=
- =?us-ascii?Q?sHzgZSfx6/LX7sB1N0gSe14h4+YY/xjMf+veBxfnEmOnXZ6VuXreHGAooyCn?=
- =?us-ascii?Q?5vNoYY+Jpihe+JnT667vb8sQ7Iw3s09iAnHfIAtonDfGvwEdjbeWlyGaUFCU?=
- =?us-ascii?Q?vlAz/PC7qeA0IBRgqw61ROW2w5RnrWqIH5SC0bk6T4curntwZbHZcfLdcawE?=
- =?us-ascii?Q?DQFPrd1YbluKSQii0WprvQU+4p8KnzyStAaXjHiLUBlHP7k4oUBEv3otAyMc?=
- =?us-ascii?Q?IywSZscW9eUE1YwcFAGVKl22o5NHWWW0WeW9RD8xWL6Wl7SPFSG00JWS5J5k?=
- =?us-ascii?Q?dw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <615A10DD7EF97B4F8FF91A5D7BC7E93E@namprd10.prod.outlook.com>
+        with ESMTP id S229622AbjBNPQf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Feb 2023 10:16:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E3931A4AF
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Feb 2023 07:16:31 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2F65FB81DDC
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Feb 2023 15:16:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 735A9C433D2;
+        Tue, 14 Feb 2023 15:16:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676387788;
+        bh=RLckFPuIZK4vAV1z8WJi4N8GmiFMqq79ZLoo687y9Iw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=noudX3p7cewxLMxllMhgivoZgxQ64zMIAI6xtf9UJriO7chy0Vu4R3CkX0PoS2ebc
+         sWpm3foiM6a/uKQsatAwfnsRq1Jr/zRIsVc1qiFMNbdmaWA2OQ++x0nyheFtpfDtin
+         j2tDkEnL1yCX0oUJWvfQEc0DVXNWBjWMSauApFg1iMXAYQOaf7+z4PjmNUZoofGyHX
+         X4IsnIWpcZdO+IrmPz/ihBEve0XFSE6bMV2h64CYPE+u2dmO8xz+d0l73D+BY9yu+P
+         /DeNE3UEZuIgBd/tVA7Om3rHT+vdHC5EKCVDFXI+Z+IYTjI2Hxtn69EQbgh4ZWc+67
+         JJKDDiEkadosg==
+Message-ID: <e8f5b07200f197a2972beb0628df55ec92b627b5.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: allow reaping files that are still under writeback
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Trond Myklebust <trondmy@kernel.org>,
+        Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Tue, 14 Feb 2023 10:16:27 -0500
+In-Reply-To: <d7eea987852cffb5fc719310ed01f771390d60d2.camel@kernel.org>
+References: <20230213202346.291008-1-jlayton@kernel.org>
+         <E1A055FD-45C3-47A0-A6CB-296C84985D43@oracle.com>
+         <d7eea987852cffb5fc719310ed01f771390d60d2.camel@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.3 (3.46.3-1.fc37) 
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: J9DZF/BIQ1AxLeboX7PJbHmiNLRC5voGrcTRpEfFnZtVq/4AWyqikfGVvPOm4Wq9CxPHXdVBC7HHL72ZD+IOsJ0Ggb2uDp3ymXnoaeTzSvEX2crx2Tji1zE8IqJZgZzjFYrg6KTPgT6RS3zv7fqCkaVjmW7AvzXxyzmLWoLPcnnFNC6HXnvfHqDyHX1MpxvSt7+x3xeS+DHtVTvaprhGFTW6/7UH+CtVfjq46bmZgndzfZbwnBAr8Fuk3luYaVlya3N0qXEJQc2JNunzs39EcxnknpXND9fCJxaSze2kyLb/8hTHSyZ0TMN0tkuUkBBDxS9ij26/U+A0b8MSHqKooN75AqyiBUOOr4qoXpvmALDuCDPchvZaAm6em3NgrVLSX04R8aN1In4XU+79zBxmd3s/ofe46BvXTO21c0jbmGGvglqZN0knMfUgE4KdpwGP/3hUN5ZNivYyXR/a5psglICdlk88m9bJeEdX47+5QgyAfiq6wyy+lNRndGqFGP2tlOzKExnXuNwmy8wXe/920vn4lpdLovYlnXG8iqmvOdgiwV/Snn+MmOdqaL1UWBHFs+B0yH7BnsJiXgTp7zsZcW+wZWE5zOa9FFd5ny5A9NIxBZBDd5bwrkO1Qj7oWWpUCXKxTRjTgvbMOwa1chISxz8dz8E+5pqReBKmucgLJG69+0M2kPQhjQAtiB472LUGykSbIr+t1ejn08xcoT/Bk5Mak4z77slKebHTvm1mKvsYjTsF+Y/zo0hlaEoaQOGuZb+Vxzb0Vr8IONMUmp1yyoPsZmh7j31BnYqDuQHAh0p3bo1iUsMkt6SFs1uTtdc8
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba4a8bd0-1082-4639-11ab-08db0e9e6747
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2023 15:16:10.3077
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4BYNoX64td3poYnaGKbWoM/LdYCTdLEHBsXOq8te1zvUMUil96PYl3vScr+0LV1yenHalGvNH41N2ojNuu5A0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5175
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-14_10,2023-02-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 mlxscore=0
- bulkscore=0 malwarescore=0 phishscore=0 mlxlogscore=732 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302140131
-X-Proofpoint-GUID: ec6yX5V8dipmM2gk0ZAXA4BPfLQwfyYV
-X-Proofpoint-ORIG-GUID: ec6yX5V8dipmM2gk0ZAXA4BPfLQwfyYV
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Feb 14, 2023, at 9:55 AM, Dan Carpenter <error27@gmail.com> wrote:
+On Tue, 2023-02-14 at 10:00 -0500, Trond Myklebust wrote:
+> On Tue, 2023-02-14 at 14:48 +0000, Chuck Lever III wrote:
+> >=20
+> >=20
+> > > On Feb 13, 2023, at 3:23 PM, Jeff Layton <jlayton@kernel.org>
+> > > wrote:
+> > >=20
+> > > There's no reason to delay reaping an nfsd_file just because its
+> > > underlying inode is still under writeback. nfsd just relies on
+> > > client
+> > > activity or the local flusher threads to do writeback.
+> > >=20
+> > > Holding the file open does nothing to facilitate that, nor does it
+> > > help
+> > > with tracking errors. Just allow it to close and let the kernel do
+> > > writeback as it normally would.
+> > >=20
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> >=20
+> > Thanks! Applied to topic-filecache-cleanups.
+> >=20
+> >=20
+> > > ---
+> > > fs/nfsd/filecache.c | 22 ----------------------
+> > > 1 file changed, 22 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > > index e6617431df7c..3b9a10378c83 100644
+> > > --- a/fs/nfsd/filecache.c
+> > > +++ b/fs/nfsd/filecache.c
+> > > @@ -296,19 +296,6 @@ nfsd_file_free(struct nfsd_file *nf)
+> > > =A0=A0=A0=A0=A0=A0=A0=A0call_rcu(&nf->nf_rcu, nfsd_file_slab_free);
+> > > }
+> > >=20
+> > > -static bool
+> > > -nfsd_file_check_writeback(struct nfsd_file *nf)
+> > > -{
+> > > -=A0=A0=A0=A0=A0=A0=A0struct file *file =3D nf->nf_file;
+> > > -=A0=A0=A0=A0=A0=A0=A0struct address_space *mapping;
+> > > -
+> > > -=A0=A0=A0=A0=A0=A0=A0if (!file || !(file->f_mode & FMODE_WRITE))
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return false;
+> > > -=A0=A0=A0=A0=A0=A0=A0mapping =3D file->f_mapping;
+> > > -=A0=A0=A0=A0=A0=A0=A0return mapping_tagged(mapping, PAGECACHE_TAG_DI=
+RTY) ||
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0mapping_tagged(mapping,=
+ PAGECACHE_TAG_WRITEBACK);
+> > > -}
+> > > -
+> > > static bool nfsd_file_lru_add(struct nfsd_file *nf)
+> > > {
+> > > =A0=A0=A0=A0=A0=A0=A0=A0set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+> > > @@ -438,15 +425,6 @@ nfsd_file_lru_cb(struct list_head *item,
+> > > struct list_lru_one *lru,
+> > > =A0=A0=A0=A0=A0=A0=A0=A0/* We should only be dealing with GC entries =
+here */
+> > > =A0=A0=A0=A0=A0=A0=A0=A0WARN_ON_ONCE(!test_bit(NFSD_FILE_GC, &nf->nf_=
+flags));
+> > >=20
+> > > -=A0=A0=A0=A0=A0=A0=A0/*
+> > > -=A0=A0=A0=A0=A0=A0=A0 * Don't throw out files that are still undergo=
+ing I/O or
+> > > -=A0=A0=A0=A0=A0=A0=A0 * that have uncleared errors pending.
+> > > -=A0=A0=A0=A0=A0=A0=A0 */
+> > > -=A0=A0=A0=A0=A0=A0=A0if (nfsd_file_check_writeback(nf)) {
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0trace_nfsd_file_gc_writ=
+eback(nf);
+> > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return LRU_SKIP;
+> > > -=A0=A0=A0=A0=A0=A0=A0}
+> > > -
+> > > =A0=A0=A0=A0=A0=A0=A0=A0/* If it was recently added to the list, skip=
+ it */
+> > > =A0=A0=A0=A0=A0=A0=A0=A0if (test_and_clear_bit(NFSD_FILE_REFERENCED, =
+&nf-
+> > > > nf_flags)) {
+> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0trace_nfsd_file_gc_re=
+ferenced(nf);
+> > > --=20
+> > > 2.39.1
+> > >=20
+> >=20
+> > --
+> > Chuck Lever
+> >=20
+> >=20
+> >=20
 >=20
-> On Tue, Feb 14, 2023 at 02:14:28PM +0000, Colin Ian King wrote:
->> The pointer dentry is assigned a value that is never read, the
->> assignment is redundant and can be removed.
->>=20
->> Cleans up clang-scan warning:
->> fs/nfsd/nfsctl.c:1231:2: warning: Value stored to 'dentry' is
->> never read [deadcode.DeadStores]
->>        dentry =3D ERR_PTR(ret);
->>=20
->> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> Wait... There is a good reason for wanting to do this in the case of
+> NFS re-exports, since close() is a very expensive operation if the file
+> has dirty data.
 >=20
-> No need to initalized "int ret =3D -ENOMEM;" either.
 
-Thanks for the report.
-
-Both came in when I copied nfsd_mkdir. I'll clean them up.
-
-
---
-Chuck Lever
-
-
-
+Fair enough. What if we added a new EXPORT_OP_FLUSH_ON_CLOSE flag that
+filesystems could set in the export_operations? Then we could make this
+behavior conditional on that being set?
+--=20
+Jeff Layton <jlayton@kernel.org>
