@@ -2,131 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C03B6987C2
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Feb 2023 23:23:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 225B3698822
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Feb 2023 23:57:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229668AbjBOWXH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Feb 2023 17:23:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57526 "EHLO
+        id S229731AbjBOW50 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Feb 2023 17:57:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbjBOWXE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Feb 2023 17:23:04 -0500
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A3D443935
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 14:23:03 -0800 (PST)
-Received: by mail-pg1-x52b.google.com with SMTP id 7so88799pga.1
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 14:23:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1676499782;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=9G5vl3Y9jdPWD98mqfxeMO54mJhLhMeKkOPVrCY2Z28=;
-        b=h+YrteV4nzYBjjMB0BerUhzA7L2JD/qxMPlVv6rls5rmukftozNnDwN2uMf4OaG4fA
-         YX9fyYzdkFeTPv7FsQJL0SNjOXjvbpEWQik6jd7cLzQzHdsyAYUzhvpDO3bAJ2cvL1MQ
-         pGHSrwXXlp385V/QZhWAQGw8LtLbAmKGlVAzdW/Q3U5FxAJFgPIoB9N2xAoARNm942g+
-         CXHXTIMc1qCK3Xc49mkXa7aEHfIqrZY4hH1N1kL+ZVP0p7F20gZn/vnwgRHPYo7YILL2
-         cLRmjb9ohuDG8FXTPa6C+9E/0dAZ+vle/p2QCyhPU1JSxeMMOpOPzdR+1hh9GIhUj7Ef
-         202w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1676499782;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9G5vl3Y9jdPWD98mqfxeMO54mJhLhMeKkOPVrCY2Z28=;
-        b=GtDnT/o8azo7VAeHXuy18LPDlicOMYyVrvLOuy3bHfBZ3uaj25/Tv/UXFF5jpgW1xW
-         rwpe8Ji7iEG8S2fSkubvqM7VU5QCOf73IGdBfMoVNXpV+fz/7t0+7qCYSA4CuytVVmvB
-         1kjDbrZ/UN+hYgGkKcDyN2rJbkg/YMHEjH4IDz4LnOPOjbTrcRiHU9DcnKfx71uFfrE3
-         bbVVoehRQhyVIPZJuMCmHReHJ9o6brfyImVqJgbmvSVAMJXwkxbgjlhIu8lKRATVVG32
-         k8cUo6JubDTZ4RZkA6ibuZUO4r+F2zPBJWVdw938OefZ1EJ88QyDt/Zn+1R6wKCu8eJQ
-         0zsA==
-X-Gm-Message-State: AO0yUKVx/wsu83PFMZMhNxg4DMQ9sV4n9mb5vYXuRH3o8J4QPaszB8jo
-        HR9TPjWAAC3QYV7YVisigAjALSCmEIFqVDWwf9Yv69Dc6WI8
-X-Google-Smtp-Source: AK7set+uKYQwEs+fnLTwrSPrhl60CbZz/wQYX+TtYaNdhLiyELg8Bj34FkXkO7kjpdjTvidnpfVtlrwkxw/qJCw8Jtg=
-X-Received: by 2002:aa7:979b:0:b0:5a8:a9f1:48f with SMTP id
- o27-20020aa7979b000000b005a8a9f1048fmr605854pfp.21.1676499782617; Wed, 15 Feb
- 2023 14:23:02 -0800 (PST)
-MIME-Version: 1.0
-References: <398eee20-8e08-6ccc-0b2f-4596fc996fd6@redhat.com>
-In-Reply-To: <398eee20-8e08-6ccc-0b2f-4596fc996fd6@redhat.com>
-From:   Rick Macklem <rick.macklem@gmail.com>
-Date:   Wed, 15 Feb 2023 14:22:48 -0800
-Message-ID: <CAM5tNy4Z0Es0iZJSTEarm6MrEjKyC93px51PmkUXiq4Tfpfbxw@mail.gmail.com>
-Subject: Re: Spring Virtual Bakeathon
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
-        NFSv4 <nfsv4@ietf.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229585AbjBOW5Z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Feb 2023 17:57:25 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF237442D7;
+        Wed, 15 Feb 2023 14:57:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2CD2761DE7;
+        Wed, 15 Feb 2023 22:57:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 913E2C4339C;
+        Wed, 15 Feb 2023 22:57:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676501842;
+        bh=PzhbWHFJ107yZMkDYyhP34SidCinmAAXsIbFdxdm9kg=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=N3FDjZY/sV2M8FAEMGAFBTeP/TmSgtKqx9FYDp9jRZFgdfUqR833vq/4Z0iAV+tzq
+         sYbgwFSM4+lKSm8iDh9LL4ICKnQ38ALy4Hx+zeXLdnMAA2YTRgqsNl1TRnuGsCN6lK
+         loxWZ7bZ0udG8axWdgrbWKAt+LnviGiJxkS7PA8pL8CovzJ+UfHsX9ZCgIl1T4k1fF
+         MJm4SaTm7TvVzlOVvL++r7kjN8mkQZTTFmU+GU3r+B8inFOLvgwkA6SfJuclOgRSDv
+         CFtn2hzLFb5pj5rzWGtG50LfYuC7sx3/M8fwpVfv2a9NWNhRwQqjHEhQcwrd/iRUWV
+         mf7JMDsdyZDtA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 72D99C4166F;
+        Wed, 15 Feb 2023 22:57:22 +0000 (UTC)
+Subject: Re: [GIT PULL] fifth v6.2-rc request for nfsd
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <A1496B44-86CE-4F63-8A84-DF0C04F6A6BC@oracle.com>
+References: <A1496B44-86CE-4F63-8A84-DF0C04F6A6BC@oracle.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <A1496B44-86CE-4F63-8A84-DF0C04F6A6BC@oracle.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.2-6
+X-PR-Tracked-Commit-Id: 4102db175b5d884d133270fdbd0e59111ce688fc
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 3402351a5a8f3bcb1488877f85072a0141c97939
+Message-Id: <167650184246.1740.18294257652450629378.pr-tracker-bot@kernel.org>
+Date:   Wed, 15 Feb 2023 22:57:22 +0000
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 8:50 AM Steve Dickson <steved@redhat.com> wrote:
->
-> CAUTION: This email originated from outside of the University of Guelph. Do not click links or open attachments unless you recognize the sender and know the content is safe. If in doubt, forward suspicious emails to IThelp@uoguelph.ca
->
->
-> Hello All,
->
-> Red Hat is considering hosting a spring bakeathon,
-> virtually (since a lot of us don't have travel budgets,
-> including Red Hat).
->
-> But before we build the network, I wanted to take the
-> pulse of the community.... Do people still find these
-> events useful? Is it worth people's time? I say YES
-> to both those questions... but that is just me :-)
->
-I say yes as well.  I actually have code that does the
-NFSv4.1/4.2 mount using SP4_NONE/AUTH_SYS for
-machine credentials, but the users provide Kerberos
-credential for user authentication.  (I mentioned this
-in an email thread on nfsv4@ietf.org.)
-Anyhow, I would like to be able to test it against other
-NFSv4.1/4.2 servers than Linux and FreeBSD.
+The pull request you sent on Wed, 15 Feb 2023 14:30:40 +0000:
 
-> I would also like to attract new participants,
-> hopefully some cloud vendors would be good,
-> but any type of new attendance would be good too!
-> We'll be more that willing to tailor the event
-> to help make that happen.
->
-Definitely agree. Unfortunately I don't have any contacts,
-but a few candidates might be...
-- Amazon's EFS server
-- Microsoft's client in Windows server
-- VMware's ESXi client
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.2-6
 
-> So if anybody has contacts in those areas and are
-> willing to share, please let me know... I will do
-> the leg work.
->
-> We were thinking the last week in March (27 -31).
-> But being virtual... that is an open date.
->
-These dates sound fine to me, although I am
-pretty wide open for any other dates as well.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/3402351a5a8f3bcb1488877f85072a0141c97939
 
-> So please let me know, on list or off list.
->
-Thanks for doing this, rick
+Thank you!
 
-> Again just tying to see if is  still a pulse for
-> these types of events.. I hope so  because
-> Red Hat is more that willing to host them!!
->
-> Also any likely new participants... please
-> send them my way.
->
-> steved.
->
-> --
-> You received this message because you are subscribed to the Google Groups "winter-2021-bakeathon" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to winter-2021-bakeathon+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/winter-2021-bakeathon/398eee20-8e08-6ccc-0b2f-4596fc996fd6%40redhat.com.
-> For more options, visit https://groups.google.com/d/optout.
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
