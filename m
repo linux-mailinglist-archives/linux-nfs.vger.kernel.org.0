@@ -2,60 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC81F6988D5
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Feb 2023 00:41:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 960806988D6
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Feb 2023 00:42:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229504AbjBOXl3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Feb 2023 18:41:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43782 "EHLO
+        id S229714AbjBOXmW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Feb 2023 18:42:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjBOXl2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Feb 2023 18:41:28 -0500
-Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A042E80D
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 15:41:26 -0800 (PST)
-Received: by mail-pj1-x1034.google.com with SMTP id fu4-20020a17090ad18400b002341fadc370so4038163pjb.1
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 15:41:26 -0800 (PST)
+        with ESMTP id S229485AbjBOXmT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Feb 2023 18:42:19 -0500
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE3743908
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 15:42:18 -0800 (PST)
+Received: by mail-pl1-x62a.google.com with SMTP id jk14so312715plb.8
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 15:42:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=to:cc:date:message-id:subject:mime-version:from:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=yQF3GmSSJFMo2OM4DlITMPHntm/OY5GcT0jPmSl5uqA=;
-        b=KlO9g70L6V7elXVWln4RfP7l51J5fzKRmMP9BKv7meub2jtSA4W77gg3YY9KEq4fno
-         w9iOQ9J4eCrDY143uBw7fNoFO7dSEaGnBXYspEtScsKL1kOxw6EivUcj+CSd3PGGQKPL
-         DZ4tHE8F86CohWof6FY0vwBhtqHqGPZOeL6Xfblq2kmmyUC8p35E6QFZ/U8OCvyI8GjI
-         DdlNZBTm1MMGn/ml90SdB3zCp9Zoy3KuEvvQL8XHZ/5k4yFC9/8ksLwzeSGFMKKCVFO/
-         YF2zQMi1zr3VwMK036XnGunjPSGDE3i8BiJh0PZeMAW4r3VPVvQxvE7CKihVtRXd/Yt8
-         miGw==
+        bh=DBXI3A4VMn/UByfny6Ly7FxaSmt72ZlI3k/lVTMPgq8=;
+        b=qV624G81IyXTKWmRSgt1T5g7/fUxu7uKghc4rQJwHyp3mkv8Sy34YwdIML8VR1xH0E
+         FoetztXFGp2HuHnJuSvDRLauDhNS6XH8z9nsC5VXibCu7TwgrmfGhuHHk4zFi25o9jAq
+         7ltxIb4XaFGT9gDyZtkYMcb8vyHS8YJ7MbRgZ5xOCi/JHnRgnztDqEAw25BQq64y+y8x
+         ieJZIs79II71I04zPWNxBFI1W5cUtCsP5DEn0N0Lpiur7wRZwxe1FbTtmZuB7YQZOLy1
+         wHhL7KlkbFBm7YgpNPaL+rr6a73huxiKpb6t/bjqg9JFkUapJacFSU+kWkljmCu3n804
+         q6GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=to:cc:date:message-id:subject:mime-version:from:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=yQF3GmSSJFMo2OM4DlITMPHntm/OY5GcT0jPmSl5uqA=;
-        b=HGKQ3YHChg3zqwntUb3KF6iaTbLBZv4EKJvi8KFyKUTBL5TIA19MjeX+KZGcMEXdKh
-         9jO1uF9UwY3iovRcy6NCSG6V9EdsEpGIfoACpcVJY2frEwOBfnl5d2ByQW2/czSx0h/4
-         8D+FEdYM5gMet9FCR8C5vgIYOYqAlSQT3ibD4PX9Pxa3ry3j+qVi+aTnopjt/DYjZR94
-         Den/xZzwSxHzvgqqunKksh5dYI8ITrmeVo2CI32zXBpKpy9/TwCu9aEQ0wo7KeNq74FT
-         xND6qKPm+sItV4MF2Z5Nkd09c8DcdMbW64A7vh3dR30cG8y9+dq9YY9uXFcB7em2bLIN
-         rCjw==
-X-Gm-Message-State: AO0yUKVUAJ0zxn63Qfjyiwgzc5c8jTNh3mssPbMr5+BeRWseILTv2+c0
-        9b0M1rbimr+3NSjftZtW3fzFWGGFpMnKOA==
-X-Google-Smtp-Source: AK7set8x21WUKSngJ3VSJ2ga6QK2dBz1OUxZOAlfayfT7ik4/GkBdAMaONDszXf8eJmqWx7L0evHXg==
-X-Received: by 2002:a17:903:1106:b0:19a:8811:5dee with SMTP id n6-20020a170903110600b0019a88115deemr4256730plh.35.1676504485822;
-        Wed, 15 Feb 2023 15:41:25 -0800 (PST)
+        bh=DBXI3A4VMn/UByfny6Ly7FxaSmt72ZlI3k/lVTMPgq8=;
+        b=ceQ1+0NCXyudfhK242J/8mE6r3lQC8sHOih0+VAfXj4TlmwqhWz20CaOpYIoMf1X4H
+         eZUHZ7jo8DGQuD5zKgOtErHc1p4DoaJvmWVFTaUuMyB8yRgNw4Ehtz8+mfVGtGBKxtzY
+         8NkQV8hQ9JvxZ3wIIR21n5+3S7AjgfG51Q3iVdhyc7pL4ThMBK8YoSkC+7vJaGAhLKzN
+         Ur+Olpzfhn906p3TIcKJLxcVzsSfDEBx6KYuyWzkdZpWxQPvRhe6+dTndnQwPHNWyQd/
+         fo28K4YYbG8FI5I3CH3mMULgvGN9/5eZJYsD4BWf3I3Z0MTYzxeDA4PFmvSBsXy15YD7
+         dvhg==
+X-Gm-Message-State: AO0yUKXCMBmug+K8L0H3DPJRuV80YNE1gu1626Q+sOWCfcJWDYzSIS5q
+        Or1/4MftJrw8170gVNCP+hY=
+X-Google-Smtp-Source: AK7set8AXc8sqMF35RSwmbJkLNqKL4Pa54OwjQ3fSjWOh8G3/4QDi7EJOfZdQCZfjbQO56SNLpEI2g==
+X-Received: by 2002:a17:903:234a:b0:19a:bbd0:c5ca with SMTP id c10-20020a170903234a00b0019abbd0c5camr5162139plh.48.1676504538337;
+        Wed, 15 Feb 2023 15:42:18 -0800 (PST)
 Received: from smtpclient.apple (c-73-19-52-228.hsd1.wa.comcast.net. [73.19.52.228])
-        by smtp.gmail.com with ESMTPSA id iz11-20020a170902ef8b00b0019a6cce2060sm10210859plb.57.2023.02.15.15.41.24
+        by smtp.gmail.com with ESMTPSA id iz11-20020a170902ef8b00b0019a6cce2060sm10210859plb.57.2023.02.15.15.42.17
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 15 Feb 2023 15:41:25 -0800 (PST)
+        Wed, 15 Feb 2023 15:42:17 -0800 (PST)
 From:   Enji Cooper <yaneurabeya@gmail.com>
 Content-Type: multipart/signed;
-        boundary="Apple-Mail=_17331FF5-EC40-4ED4-8388-EF3023FAE58B";
+        boundary="Apple-Mail=_6FB3B8A1-7C3A-4129-AC7B-707530D31CA6";
         protocol="application/pgp-signature";
         micalg=pgp-sha256
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
-Subject: [PATCH 16/17] Capture build/install errors from subdirs
-Message-Id: <2CEC0B19-F230-4E04-99D7-615E49C579DB@gmail.com>
-Date:   Wed, 15 Feb 2023 15:41:13 -0800
+Subject: Require ply to build/install pynfs
+Message-Id: <344E9D63-9EEB-4D7F-9282-D091A2E7650F@gmail.com>
+Date:   Wed, 15 Feb 2023 15:42:07 -0800
 Cc:     linux-nfs@vger.kernel.org
 To:     bfields@fieldses.org
 X-Mailer: Apple Mail (2.3731.300.101.1.3)
@@ -70,59 +70,67 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
---Apple-Mail=_17331FF5-EC40-4ED4-8388-EF3023FAE58B
+--Apple-Mail=_6FB3B8A1-7C3A-4129-AC7B-707530D31CA6
 Content-Type: multipart/mixed;
-	boundary="Apple-Mail=_F9CA0CF6-37B6-481E-946A-0541F8D3A1AA"
+	boundary="Apple-Mail=_EC37B852-39C5-4F7D-8468-B0235DA704D2"
 
 
---Apple-Mail=_F9CA0CF6-37B6-481E-946A-0541F8D3A1AA
+--Apple-Mail=_EC37B852-39C5-4F7D-8468-B0235DA704D2
 Content-Disposition: attachment;
-	filename=0001-Capture-build-install-errors-from-subdirs.patch
+	filename=0002-Require-ply-to-build-install-pynfs.patch
 Content-Type: application/octet-stream;
-	name=0001-Capture-build-install-errors-from-subdirs.patch;
+	name=0002-Require-ply-to-build-install-pynfs.patch;
 	x-unix-mode=0644
 Content-Transfer-Encoding: quoted-printable
 
-=46rom=202c67a51c7735b7fa190a5a4e969561638fefe6ae=20Mon=20Sep=2017=20=
+=46rom=20a2ebd5b08a659c0a3367fbed7d62cad8ee9d273c=20Mon=20Sep=2017=20=
 00:00:00=202001=0AFrom:=20Enji=20Cooper=20<yaneurabeya@gmail.com>=0A=
-Date:=20Wed,=2015=20Feb=202023=2016:03:54=20-0800=0ASubject:=20[PATCH=20=
-16/17]=20Capture=20build/install=20errors=20from=20subdirs=0A=0APrior=20=
-to=20this=20change=20the=20code=20would=20silently=20fail=20if=20one=20=
-of=20the=20subdir=0Abuild/install=20operations=20failed.=20Capture=20all=20=
-non-clean=20target=20related=0Afailures=20and=20percolate=20them=20up=20=
-the=20stack.=0A=0ASponsored=20by:=20Dell=20EMC=20Isilon=0ASigned-off-by:=20=
-Enji=20Cooper=20<yaneurabeya@gmail.com>=0A---=0A=20setup.py=20|=2013=20=
-++++++-------=0A=201=20file=20changed,=206=20insertions(+),=207=20=
-deletions(-)=0A=0Adiff=20--git=20a/setup.py=20b/setup.py=0Aindex=20=
-83dc6b5..4ec5d92=20100755=0A---=20a/setup.py=0A+++=20b/setup.py=0A@@=20=
--2,11=20+2,9=20@@=0A=20=0A=20from=20__future__=20import=20print_function=0A=
-=20=0A-from=20distutils.core=20import=20setup=0A-=0A-import=20sys=0A=20=
-import=20os=0A-from=20os.path=20import=20join=0A+import=20subprocess=0A=
-+import=20sys=0A=20=0A=20DESCRIPTION=20=3D=20"""=0A=20pynfs=0A@@=20=
--19,11=20+17,12=20@@=20DIRS=20=3D=20["xdr",=20"rpc",=20"nfs4.1",=20=
-"nfs4.0"]=20#=20Order=20is=20important=0A=20=0A=20def=20setup(*args,=20=
-**kwargs):=0A=20=20=20=20=20cwd=20=3D=20os.getcwd()=0A-=20=20=20=20=
-command=20=3D=20"=20".join(sys.argv)=0A=20=20=20=20=20for=20dir=20in=20=
-DIRS:=0A=20=20=20=20=20=20=20=20=20print("\n\nMoving=20to=20%s"=20%=20=
-dir=20)=0A-=20=20=20=20=20=20=20=20os.chdir(join(cwd,=20dir))=0A-=20=20=20=
-=20=20=20=20=20os.system("python%s=20%s"=20%=20(sys.version[0],=20=
-command))=0A+=20=20=20=20=20=20=20=20os.chdir(os.path.join(cwd,=20dir))=0A=
-+=20=20=20=20=20=20=20=20rc=20=3D=20subprocess.call([sys.executable]=20+=20=
-sys.argv)=0A+=20=20=20=20=20=20=20=20if=20"clean"=20not=20in=20sys.argv=20=
-and=20rc:=0A+=20=20=20=20=20=20=20=20=20=20=20=20sys.exit(rc)=0A=20=20=20=
-=20=20os.chdir(cwd)=0A=20=0A=20setup(name=20=3D=20"pynfs",=0A--=20=0A=
-2.39.0=0A=0A=
+Date:=20Wed,=2015=20Feb=202023=2016:21:29=20-0800=0ASubject:=20[PATCH=20=
+17/17]=20Require=20ply=20to=20build/install=20pynfs=0A=0AThis=20=
+particular=20change=20enforces=20the=20build/install=20check=20at=20two=20=
+different=0Alevels=20to=20ensure=20that=20the=20subdirectory's=20=
+dependencies=20are=20explicitly=0Acalled=20out,=20and=20the=20overall=20=
+build/install=20will=20halt=20if=20ply=20isn't=20present.=0A=0ASponsored=20=
+by:=20Dell=20EMC=20Isilon=0ASigned-off-by:=20Enji=20Cooper=20=
+<yaneurabeya@gmail.com>=0A---=0A=20setup.py=20=20=20=20=20|=20=207=20=
++++++++=0A=20xdr/setup.py=20|=2010=20+++++++---=0A=202=20files=20=
+changed,=2014=20insertions(+),=203=20deletions(-)=0A=0Adiff=20--git=20=
+a/setup.py=20b/setup.py=0Aindex=204ec5d92..99155bd=20100755=0A---=20=
+a/setup.py=0A+++=20b/setup.py=0A@@=20-6,6=20+6,13=20@@=20import=20os=0A=20=
+import=20subprocess=0A=20import=20sys=0A=20=0A+try:=0A+=20=20=20=20=
+import=20ply=0A+except=20ImportError:=0A+=20=20=20=20#=20Avoid=20=
+confusing=20cascading=20failures=20due=20to=20how=20xdrgen=20is=20=
+imported=20via=0A+=20=20=20=20#=20setup.py=20files=20in=20subdirs.=0A+=20=
+=20=20=20sys.exit("You=20must=20install=20ply=20first.")=0A+=0A=20=
+DESCRIPTION=20=3D=20"""=0A=20pynfs=0A=20=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=0Adiff=20--git=20a/xdr/setup.py=20b/xdr/setup.py=0Aindex=20=
+3acb8a2..b5007c0=20100644=0A---=20a/xdr/setup.py=0A+++=20b/xdr/setup.py=0A=
+@@=20-1,6=20+1,6=20@@=0A=20#!/usr/bin/env=20python3=0A=20=0A-from=20=
+distutils.core=20import=20setup=0A+from=20setuptools=20import=20setup=0A=20=
+=0A=20DESCRIPTION=20=3D=20"""=0A=20xdrgen=0A@@=20-16,8=20+16,12=20@@=20=
+setup(name=20=3D=20"xdrgen",=0A=20=20=20=20=20=20=20scripts=20=3D=20=
+["xdrgen.py"],=20#=20FIXME=20-=20make=20small=20script=20that=20calls=20=
+module=0A=20=20=20=20=20=20=20description=20=3D=20"Generate=20python=20=
+code=20from=20.x=20files",=0A=20=20=20=20=20=20=20long_description=20=3D=20=
+DESCRIPTION,=0A-=20=20=20=20=20=20#requires=20=3D=20"ply=20(>=3D2.0)",=0A=
+-=0A+=20=20=20=20=20=20install_requires=3D[=0A+=20=20=20=20=20=20=20=20=20=
+=20"ply=20>=3D=202.0",=0A+=20=20=20=20=20=20],=0A+=20=20=20=20=20=20=
+setup_requires=3D[=0A+=20=20=20=20=20=20=20=20=20=20"ply=20>=3D=202.0",=0A=
++=20=20=20=20=20=20],=0A=20=20=20=20=20=20=20#=20These=20will=20be=20the=20=
+same=0A=20=20=20=20=20=20=20author=20=3D=20"Fred=20Isaman",=0A=20=20=20=20=
+=20=20=20author_email=20=3D=20"iisaman@citi.umich.edu",=0A--=20=0A2.39.0=0A=
+=0A=
 
---Apple-Mail=_F9CA0CF6-37B6-481E-946A-0541F8D3A1AA
+--Apple-Mail=_EC37B852-39C5-4F7D-8468-B0235DA704D2
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain;
 	charset=us-ascii
 
 
 
---Apple-Mail=_F9CA0CF6-37B6-481E-946A-0541F8D3A1AA--
+--Apple-Mail=_EC37B852-39C5-4F7D-8468-B0235DA704D2--
 
---Apple-Mail=_17331FF5-EC40-4ED4-8388-EF3023FAE58B
+--Apple-Mail=_6FB3B8A1-7C3A-4129-AC7B-707530D31CA6
 Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment;
 	filename=signature.asc
@@ -132,19 +140,19 @@ Content-Description: Message signed with OpenPGP
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEtvtxN6kOllEF3nmX5JFNMZeDGN4FAmPtbZkACgkQ5JFNMZeD
-GN4TqA//cvzauMGmvZ9sZ2eSil7vQVpz+WgYUiA3o0pKTrLWRbEDg50X8Lbylu1q
-ijW3WadIzSwbBo9Xnf5AxDkAOCf5+IWI7MSnCVVy6NtEDEHnBtlxO5WcAPArITKG
-hV0ljC3AY0ewpS5WSMfV6RRQRMNVTxLLhGuKqBI6QEaAc8GZaCLXTYIjbTJmrngq
-5WKmtdAmPiysJYDwXq1jJFwQGoCxUNE8zJPP5aV/+NqsaHIgc8Md3Fi2522pNkLb
-tszsqoISl1yrwFUJxJFseWX984EhMPaq6xUpiVzsX1kpHJVoY2g7SWbo6Zz7fTwL
-2LPL4QNIszxSNU3wd2OtoAHMlNJ90YdnKupaUB0uIchGe2z9GYtNy1/S6VcWozZs
-srEIUyaGgqEz+mGeEwZFeItM1tyqHe63IAox4FUZ2vuJLheMMo31cl6kniro2JKp
-WSBsnwZ8TaMBurDIN6uDiY1x30RwBMg988c7Lt+TMuKqLUgfJ/N8XfgWgY6bKXFz
-kVS/vLi4MW/bLcan3F7s4VJ0ubn6rL4o0Iyf2oIGaL/GsDz+6BFoNOnX6FL4FPIk
-OErZH9bpekNUs893mUiGtHZ4mqDBlqdL36xWB1Ga5qQ91M+PHAnR8IV9eNzjciWU
-YvdxES9dgv+FXeG3xaC8Xw8/Mt4BdZjxhPzdhmkTxMhfC9r/wFQ=
-=tUUR
+iQIzBAEBCAAdFiEEtvtxN6kOllEF3nmX5JFNMZeDGN4FAmPtbc8ACgkQ5JFNMZeD
+GN56CBAAjp+AmMPBS/Tl4Gvu6I5gpsFADpTUZBQvXZpsCm/RFDUK4hXFvy/n4L+h
+WXJgjdFkR5aiWGL4wDgztPM+zc2aJCXM8W/NxoTbOBX6t3QXgjjL0RqMhqFO0e7T
+gGmIln+IG6yI/unO4oSgI/DWkGDWbX1DgjzO4Gfloq9rzC2jm/s9zVAOaJY1U8AP
+/jLq8boXUsGJXnzysaDgC5DNMOvq/o/iWivtfi/BKY1v0Yj++Gf1CW5QzOaXRZar
+IsO9tPAMe+51TjaoD0ZYFVQDrA64icpGrXhgBXz2STkv1yb9dAzwFONsRshi9ftp
+233hIPkT7zTosmyh5Caf6Ya/DyDEVdB6VP3itREkt8bCS7+BInJcLwGEFIM9C9ZM
+uzL9gF0hoS9kK7eMDCw09BFsaU4nOTd4j5BU4urSdYE4qrC5zrbddgzAEblp1IDX
+0Jung95zMNFfwJmAsq+9iPHyDJUTGbw62jCXpOuiF3sZes3h4t5G9XSzhyztGYD+
+tHvpmXIHnbAAPJsFf4Lb+SjpKblqA+8k4R8ZugB/kAUBOwYBVn49Ok1zfBqQF6cz
+sTu28Gd28extNdcLFvIb46u54XjxSpKe4bc3SXpWA70sDndJEMbTrUPV5JDC94jz
+iJ+wYTFYIMK1yre6p589r8lx7lZ1czB2+T3BWZ6OqMi7052q934=
+=vZit
 -----END PGP SIGNATURE-----
 
---Apple-Mail=_17331FF5-EC40-4ED4-8388-EF3023FAE58B--
+--Apple-Mail=_6FB3B8A1-7C3A-4129-AC7B-707530D31CA6--
