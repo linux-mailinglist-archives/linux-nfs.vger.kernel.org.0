@@ -2,154 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39518698891
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Feb 2023 00:05:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC81F6988D5
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Feb 2023 00:41:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbjBOXFZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Feb 2023 18:05:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59002 "EHLO
+        id S229504AbjBOXl3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Feb 2023 18:41:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229804AbjBOXFY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Feb 2023 18:05:24 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0607E0
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 15:05:22 -0800 (PST)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31FMx7Rb021263;
-        Wed, 15 Feb 2023 23:05:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=ntW4luF47Ycm+4yJa7CWJxxhkum78MSo755btb0fgYM=;
- b=lW1WIYsz/eXZoHGxlxsOFqcR5JzLaj/zzAgWOGriLgCyYkTM6NSesDvPlwJlHQ/viwnc
- D4XLFfF1aFiyFU3Hg6Z8EbdtLvKKdXzJksZf3d7cJzzoU1N7Ry3gz+WDuBIM8U3dwEuW
- RklNzV4axkLvBldOiE9wvDMz9ZGNEqBrb56mKzpRKqnOLLnzwCLjVWrkvMmKJ4ZLEmIN
- PmLRRjjVkwHKOqSDKFxPH7MXUwo04C/2TEzfTmGdGHaWwpr649I5X6x93qr0xfImt+yR
- dhbcVlMO2IltvDzQrukcDzp3rJj4fC7NSk7tq0FTIOZpeXSiG2YH54Vgifcc6lSwyJRB jg== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3np32chreg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Feb 2023 23:05:15 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 31FLpTg7013584;
-        Wed, 15 Feb 2023 23:05:15 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3np1f7gskw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Feb 2023 23:05:14 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Eshwk6pwwiFIqJ9e+v08IEGaldeA7ATBXEytm7mU9COpqV/qa/dfvmg5kuPvqauIS7RihS9OIwlkzZ14TS+Am4Yd/DqhrYeYwP4hsDS/pdf/POiac5vMtqDont0E8Pk/QWwqvVmKb+xgLaMp24pf5QUpQMnspOwam5eTFQAfAunxdAKyv0xnJL3FKEXcCGcpk8/JcBPzIK41yNEelM4lLfFiNHnCV98X5+sFOaFBjJ2LzMkPXDovCUCYDGwAI7mhVzHCJnXnAK8VTAAFtnNxOS5wuw8sRgyYZtovVOPVb705iTaJEiFfQkzNQmSrn727Xe/j12pzeGXenPKE3LGrKw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ntW4luF47Ycm+4yJa7CWJxxhkum78MSo755btb0fgYM=;
- b=TDkZ5k1bpd3clWRbFAsn3OWzb8hwttsrXGqqSM5y/MreyOscVojEf3+Fob3MAHbcq+aIaas1Au/KeVJdHDD0tsZSEwIoR++kgNGs3cO8ZgET+JT0hMeCRP0TFydaDcatCEHP7KJeADFIPUTRNGkuSGJ/8GHANFJfdX4/kVpdNUCl4GqGVoSDZ31Rsdr44u+SCzcESuen1Ohf9xtnEDfDBHfxwnl2L8wbIbyNcEGyRR+gcIixIq3k0QZgCUhfPptDLOXFreRk0FMGwEYuX5BTLVaRH2yjjL8zbFPJ6/uSFQhpv4GmRED5wvDAzFPFeMQATEvY8GT2vbeyyDdDBbRCIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        with ESMTP id S229485AbjBOXl2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Feb 2023 18:41:28 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A042E80D
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 15:41:26 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id fu4-20020a17090ad18400b002341fadc370so4038163pjb.1
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Feb 2023 15:41:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ntW4luF47Ycm+4yJa7CWJxxhkum78MSo755btb0fgYM=;
- b=NTqnA4cACl51Ph5NF73YGFuiJ4oCO3IHgo4i9RxlHboNbrOQnufbdHFT/MP44nAxQcBAFwjSGHmPCioHT6sDaPR1sEqtdiX5hi1QQzCG4DUfEpETzfO9j3ly7temVD3XcPBtOtT6D6Q4NcNGiFrGNVTOiGTHnOy5GrfBXiKTsA8=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by SA1PR10MB6342.namprd10.prod.outlook.com (2603:10b6:806:255::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.12; Wed, 15 Feb
- 2023 23:05:12 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::2280:b9da:9056:c68b]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::2280:b9da:9056:c68b%4]) with mapi id 15.20.6111.012; Wed, 15 Feb 2023
- 23:05:12 +0000
-Message-ID: <dab0d056-d2c8-a594-2a8f-c8dc2cefaa14@oracle.com>
-Date:   Wed, 15 Feb 2023 15:05:09 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.7.2
-Subject: Re: [PATCH] nfsd: fix courtesy client with deny mode handling in
- nfs4_upgrade_open
-Content-Language: en-US
-To:     Jeff Layton <jlayton@kernel.org>, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org,
-        =?UTF-8?B?5by15pm66Ku6?= <cc85nod@gmail.com>
-References: <20230203181834.58634-1-jlayton@kernel.org>
-From:   dai.ngo@oracle.com
-In-Reply-To: <20230203181834.58634-1-jlayton@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA1PR05CA0020.namprd05.prod.outlook.com
- (2603:10b6:806:2d2::22) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|SA1PR10MB6342:EE_
-X-MS-Office365-Filtering-Correlation-Id: 91dc37d2-3b6f-4ee6-f3e2-08db0fa91798
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 4W+rUfhFDTpBc5J0cL1k6QcDZre648qnzLdCon6/J44f8nth9HHu5ubLewk8Lg4alcR8h65AKOzohylfoEwC8VdnAHfMTPj5ZBkkIm21Im5kzermO2i31GXu2yRb4jS6S7gsoDy8Eoj8NZ013PxtEduUt4BqkG53sa3Ryk3Omo8prQB5l/63WjoViPZGnbYBNQQBgWVq/aNA2lrHKe8GQDk117xMRRSlK94YEXGy1NzPyd2EFXrUxQmZylQDZi/WCWBJLxe5+eui7heUBajjsMWtaO5HKfLkT6ZzixaCCFGznFP/IkPbePyntxKw22FjKgBoeGXh8AFoZijIJFxfktSoeNpvotj1OYfyROtLbLt7NSHynypQSQHYuXiBhHnf+MvuaJJtqQduAbBfqGE4DL5PDIxrEvVfjog6WPqImB304M3vvNpbXo+BQIMw8D9DOI98wYlEVWuJCbUZVU/LjyyETTtyP2Lck+JJ8ou4gHSNwhVPwFuWNWKf/YLBXNP3HEaVuWahtbhW2M5y80TNlJebOf4GUPs59bM5WHQ5h7Ru98zf1d/daTbfSnnY2eC6sU15INBaP7wEVsrLp5QVzO2ysgo70UsPXKjChCJRp00f4Dd+G34FwZOg2gDmXbrgC3QoMCJqMFVMYsOF/UEtGBRewXbGbb58yPTocm0XYC0vZmWdWvF8Far2OQOOKl2zC5lH+RdhVEP2yyeI2UxU1g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(346002)(39860400002)(376002)(136003)(396003)(451199018)(9686003)(6512007)(2616005)(6666004)(6506007)(83380400001)(53546011)(478600001)(38100700002)(66476007)(8676002)(66556008)(66946007)(41300700001)(4326008)(6486002)(316002)(36756003)(186003)(31686004)(26005)(8936002)(5660300002)(31696002)(86362001)(2906002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UWtab0ZkOTBhQWRvRGJ1ejNIUUsvb3llY0ZEeVJjYjNCUXdGL3Q2K3d6YlAy?=
- =?utf-8?B?SVQ5Y0l4R2hDYy9TWnFxZTl0T3dsbjN4S0x5YndSUlZyNjZwVW5rNFFnakhP?=
- =?utf-8?B?OE43RnUrUUY0aFRENnJGNlUxM1F4L1pqNFVxZUV6NzF2clUvVlFuQUJUKzU5?=
- =?utf-8?B?THpmdmZ0cDZxN2phelQzOGVXUFA2QXFjQXVoSWRpNC9YVk5penRKUVd2OWtL?=
- =?utf-8?B?eWFlVnhqK2RIZGRIOEZoK1cyNFpmd3lRWWNjV1lKWUY2YUkrc3ByKzRUUTFX?=
- =?utf-8?B?MmgvKy92bFN6Z2E5OHVCVWZicnlwdXg2ZmRCc1AyWmdZaUwyclJNTUhscSsv?=
- =?utf-8?B?WlBmS0VSdWdyYzk2WS9jZzNGMlNQQnRWTnJ6RlNPWDE1WXR2eXJ6QU9SMHJM?=
- =?utf-8?B?b2w4bTZ3MXFyVnBjMmZVVS9ZM1hpQ0EwVUE4RG9PMTJQQ3EvelBJUHozTStQ?=
- =?utf-8?B?TkxrRGNuOUdrVkU0NzVjY3U2di83U1F1Zk9udnI3cHFtTmZQMmh4VFNvamlu?=
- =?utf-8?B?azFDK0IvK0I2N1E3MzZVYmlBb1g5SGRka1p1SjBDcTFvSmdKM3kvQU9ZaU9D?=
- =?utf-8?B?YVkxU2hkRmZDdkZCUkhweVJISzdFbitoZ3NGQWhnbWtCVmUrZEljUW5UVkQr?=
- =?utf-8?B?L1NtRTJBa3ptK3lWUEZXOVc1R3haNGNtWkZ5aGozQ3QvTnFJcnRWL01QMzlo?=
- =?utf-8?B?WGswT21ZQjJlZnNCUDl4NjV4emt6aWVUamFPSW02Zm53c1c1MXRrR2VTRzc2?=
- =?utf-8?B?cnVKWG13Q0dleDNDaGRhTjhGTjZGV1NndGwrVFZnRWZqNUlBeHB4NUQ4VUxS?=
- =?utf-8?B?aCtOMFF6UU1LTWZQSGZqOVdMbnB0RERjL2lJeU1IblhVbll6V084aXJXQVhP?=
- =?utf-8?B?Ni9mVkF5NHRPaHhDMG5IK2sya3pKem9QR0pwUDZnUm5TUlo5WDNoYVlnaVpO?=
- =?utf-8?B?Ui9pNWd3T1gwcWJNa3p1ZzAzMEZ3L1FYdnBXV0oxdU1tSkF6YURzNFEvNUg5?=
- =?utf-8?B?TDF1L0tmWEROeUZQbHVtTFFTMGhGMU9TNnRLaHVlcFVvM2FxcTFiWlVHeTV6?=
- =?utf-8?B?V1BKOExLM2R4QVpBNWRKc21BKzF0Ujh5OW9pUldPTHFsM2NiUGkrdWw1blE2?=
- =?utf-8?B?L1lPWlVNRlFFS0NMNzRwZnhoKzVHdjlCR2lib0JwREJEOVFSY2pEN1htYzJa?=
- =?utf-8?B?SGpiQ1VqSGVMdDZFMnk4amdUMGFjNi9oZUtrMFRLMkhLdE9pVEoyYVpqQ1J3?=
- =?utf-8?B?ZzNDQXc0Mys4Nit4OUZKQXJMQ25RUlNXaXBNYVFGcjc3eDFuNzZSWnQ4alBy?=
- =?utf-8?B?T3F2eVpNQ0hqYXY3b2Q4MGIvZGU2cERyajIxZGxrMS9rWWRpSk5VSlRPRkwy?=
- =?utf-8?B?TkFvMnd2WjEzQ2N2VlMwTzRXZFkzQkp0V1haRkk4ejR4eE5nM2tjWXBWazZs?=
- =?utf-8?B?Q25Vc0hiakM5TmRwWU1QeHRkYjUvaW1nWGMvT1c3MlpFRjgyS0VDU3B2VDdz?=
- =?utf-8?B?NGkxaW5hSVZlRTJhL2NDZThOcncvOWZxU1FIVzNMczkzRHVRa1pNcHprSzEy?=
- =?utf-8?B?RW51ajRhelZxeU5vTDBnTXl4MUJuU1haVjY3dHVjZXFZSUdxdVQxdDhydnk2?=
- =?utf-8?B?STlhVEJ0bS8vNllIcUlvQWFIVitGanRZQnIycDN5SGNtdFFKQnBZNjNkM2FF?=
- =?utf-8?B?OG5zWXZuUzB4UERMSmFJd3krS0taOVBSa1dyTldnNnJwQVFGTHpaOVFUOTM0?=
- =?utf-8?B?RnZwWFcwd3dnNWlISDdXazJBWW9maTJUNlo3NlFFVmZlZEZKSGhhZTA3ZTR0?=
- =?utf-8?B?V2V6MDdaRXlhc2w2Tlc0YWpWdk9wZ1ZVMDBDYVd4S25MVklzaEx6ZlZjMFNG?=
- =?utf-8?B?SjQzSytOZ0w2dC9EYTRZQWs4em94MkxPZ2xyNE10WlRlcURyN0t2UjJvUE9s?=
- =?utf-8?B?U1JxMlhoeDVZUjBEUXBCNmorUUtoeWdYcjBlTFoxWndiSzJ4OXJwdjljS2x1?=
- =?utf-8?B?YzVhUnY2dGpobDdremdyWWkyY3A1OC9QT3hCK2M5SDRNWjVtWkRxaHo0T3ZS?=
- =?utf-8?B?WkpLV3RKYWlNTnhPdlVDeDNyU2dyazl0elhFcDVaZGRxWjhmM0x5cVppcy96?=
- =?utf-8?Q?Pj7Rvx4a5Krv0B/WMxBW38G8w?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: EVhLauYxBgiwm/taAIVXnVMIHmCHAQhI0UpybnUAI914/gHLafTvY9U67rTRYG8IZuVyHOFevQ7ljstW8lG4bw4OWdozPX6TbEb8zlkfP5TvgC2W/yoFrTf1YiCPtK+71ZPlaG/f57+Y1Givee6StaHI7u1Kk3aAhSAUGgjn0BWnHy30HgtwtmnyErhT1BPPR0wvOt0TXjeCZ2lIGgriivzKBHBm748vvOoXtKp0beJjd1bdUtpRQdXtN7XyFfPKqaW5laa48p8TujAijFGDvrdoep6wPdUkMaX8GtyEsoRhE5AqFRHHd3VlzS7Lhs8GkFIzuySQ3Zn2dodSM6wN+OWVLQQQtswqu5qrdsSfi3AUW/guFqhpRsg8xAJvCqZY1eI1ozMUPDib7E4FuQtWoTkeByyJHEeAjZOxftjfZ5/lC2P8SmJLPjOdCbKv2e0K+CzWTkJmGFxRgx8gibQ+pzGbExqpiaF9ERfSyioS/5CBnObZqnkkJn57R+E3Zs69Ocf2ioxIIp5yvfDQhaq9BOppD1Tqn0LykMyc+jj7d6g4T3LLJfegi0kdH/9Q37NN9eiAptfiiTgXnorMAIngRqdjHMWpwVsI5oNG4oTLzlRIFKRBecVsW7dwNs5wo/3q3MQMscRpAa/T9EseEfAidgiWgnk+cxuQn4LGl8KsMA2IBh4uzN19/bXar5ezcQE7TYoocHhznQWIhdE3kBhT5u6S9PqHWAeMDywwP6Jn4L3o3h0xQwm9/ptQcdnnsZ6t9/FxjIO70GMiTgLKdMvw4v9iIj544euk0bNNodfGdhmuX49EfqaFaPyMEn9mz4Hm
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91dc37d2-3b6f-4ee6-f3e2-08db0fa91798
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2023 23:05:12.5971
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: U3IMpWcL22aA6OIz0qqg7P30lRuNw7mEmEmFHgS7WkOtB37guvugro/KqqycsMvo/vOeW+ylPIrn8aMExgZssA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6342
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-15_13,2023-02-15_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302150197
-X-Proofpoint-GUID: MKVfYh_u6FkNMXYdFcOgZVVMbNa_oYeG
-X-Proofpoint-ORIG-GUID: MKVfYh_u6FkNMXYdFcOgZVVMbNa_oYeG
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        d=gmail.com; s=20210112;
+        h=to:cc:date:message-id:subject:mime-version:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=yQF3GmSSJFMo2OM4DlITMPHntm/OY5GcT0jPmSl5uqA=;
+        b=KlO9g70L6V7elXVWln4RfP7l51J5fzKRmMP9BKv7meub2jtSA4W77gg3YY9KEq4fno
+         w9iOQ9J4eCrDY143uBw7fNoFO7dSEaGnBXYspEtScsKL1kOxw6EivUcj+CSd3PGGQKPL
+         DZ4tHE8F86CohWof6FY0vwBhtqHqGPZOeL6Xfblq2kmmyUC8p35E6QFZ/U8OCvyI8GjI
+         DdlNZBTm1MMGn/ml90SdB3zCp9Zoy3KuEvvQL8XHZ/5k4yFC9/8ksLwzeSGFMKKCVFO/
+         YF2zQMi1zr3VwMK036XnGunjPSGDE3i8BiJh0PZeMAW4r3VPVvQxvE7CKihVtRXd/Yt8
+         miGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:cc:date:message-id:subject:mime-version:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yQF3GmSSJFMo2OM4DlITMPHntm/OY5GcT0jPmSl5uqA=;
+        b=HGKQ3YHChg3zqwntUb3KF6iaTbLBZv4EKJvi8KFyKUTBL5TIA19MjeX+KZGcMEXdKh
+         9jO1uF9UwY3iovRcy6NCSG6V9EdsEpGIfoACpcVJY2frEwOBfnl5d2ByQW2/czSx0h/4
+         8D+FEdYM5gMet9FCR8C5vgIYOYqAlSQT3ibD4PX9Pxa3ry3j+qVi+aTnopjt/DYjZR94
+         Den/xZzwSxHzvgqqunKksh5dYI8ITrmeVo2CI32zXBpKpy9/TwCu9aEQ0wo7KeNq74FT
+         xND6qKPm+sItV4MF2Z5Nkd09c8DcdMbW64A7vh3dR30cG8y9+dq9YY9uXFcB7em2bLIN
+         rCjw==
+X-Gm-Message-State: AO0yUKVUAJ0zxn63Qfjyiwgzc5c8jTNh3mssPbMr5+BeRWseILTv2+c0
+        9b0M1rbimr+3NSjftZtW3fzFWGGFpMnKOA==
+X-Google-Smtp-Source: AK7set8x21WUKSngJ3VSJ2ga6QK2dBz1OUxZOAlfayfT7ik4/GkBdAMaONDszXf8eJmqWx7L0evHXg==
+X-Received: by 2002:a17:903:1106:b0:19a:8811:5dee with SMTP id n6-20020a170903110600b0019a88115deemr4256730plh.35.1676504485822;
+        Wed, 15 Feb 2023 15:41:25 -0800 (PST)
+Received: from smtpclient.apple (c-73-19-52-228.hsd1.wa.comcast.net. [73.19.52.228])
+        by smtp.gmail.com with ESMTPSA id iz11-20020a170902ef8b00b0019a6cce2060sm10210859plb.57.2023.02.15.15.41.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 15 Feb 2023 15:41:25 -0800 (PST)
+From:   Enji Cooper <yaneurabeya@gmail.com>
+Content-Type: multipart/signed;
+        boundary="Apple-Mail=_17331FF5-EC40-4ED4-8388-EF3023FAE58B";
+        protocol="application/pgp-signature";
+        micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.300.101.1.3\))
+Subject: [PATCH 16/17] Capture build/install errors from subdirs
+Message-Id: <2CEC0B19-F230-4E04-99D7-615E49C579DB@gmail.com>
+Date:   Wed, 15 Feb 2023 15:41:13 -0800
+Cc:     linux-nfs@vger.kernel.org
+To:     bfields@fieldses.org
+X-Mailer: Apple Mail (2.3731.300.101.1.3)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -157,58 +69,82 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Jeff, Chuck,
 
-On 2/3/23 10:18 AM, Jeff Layton wrote:
-> The nested if statements here make no sense, as you can never reach
-> "else" branch in the nested statement. Fix the error handling for
-> when there is a courtesy client that holds a conflicting deny mode.
->
-> Fixes: 3d69427151806 (NFSD: add support for share reservation conflict to courteous server)
-> Reported-by: 張智諺 <cc85nod@gmail.com>
-> Cc: Dai Ngo <dai.ngo@oracle.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->   fs/nfsd/nfs4state.c | 21 +++++++++++----------
->   1 file changed, 11 insertions(+), 10 deletions(-)
->
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index c39e43742dd6..af22dfdc6fcc 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -5282,16 +5282,17 @@ nfs4_upgrade_open(struct svc_rqst *rqstp, struct nfs4_file *fp,
->   	/* test and set deny mode */
->   	spin_lock(&fp->fi_lock);
->   	status = nfs4_file_check_deny(fp, open->op_share_deny);
-> -	if (status == nfs_ok) {
-> -		if (status != nfserr_share_denied) {
-> -			set_deny(open->op_share_deny, stp);
-> -			fp->fi_share_deny |=
-> -				(open->op_share_deny & NFS4_SHARE_DENY_BOTH);
-> -		} else {
-> -			if (nfs4_resolve_deny_conflicts_locked(fp, false,
-> -					stp, open->op_share_deny, false))
-> -				status = nfserr_jukebox;
-> -		}
-> +	switch (status) {
-> +	case nfs_ok:
-> +		set_deny(open->op_share_deny, stp);
-> +		fp->fi_share_deny |=
-> +			(open->op_share_deny & NFS4_SHARE_DENY_BOTH);
-> +		break;
-> +	case nfserr_share_denied:
-> +		if (nfs4_resolve_deny_conflicts_locked(fp, false,
-> +				stp, open->op_share_deny, false))
+--Apple-Mail=_17331FF5-EC40-4ED4-8388-EF3023FAE58B
+Content-Type: multipart/mixed;
+	boundary="Apple-Mail=_F9CA0CF6-37B6-481E-946A-0541F8D3A1AA"
 
-While trying to write a pynfs test case to exercise this code path,
-I realize that we don't need to call nfs4_resolve_deny_conflicts_locked
-here since this is an open upgrade so it must comes from the same client
-hence there is no conflict to resolve. Same behavior as OPEN_DOWNGRADE.
 
--Dai
+--Apple-Mail=_F9CA0CF6-37B6-481E-946A-0541F8D3A1AA
+Content-Disposition: attachment;
+	filename=0001-Capture-build-install-errors-from-subdirs.patch
+Content-Type: application/octet-stream;
+	name=0001-Capture-build-install-errors-from-subdirs.patch;
+	x-unix-mode=0644
+Content-Transfer-Encoding: quoted-printable
 
-> +			status = nfserr_jukebox;
-> +		break;
->   	}
->   	spin_unlock(&fp->fi_lock);
->   
+=46rom=202c67a51c7735b7fa190a5a4e969561638fefe6ae=20Mon=20Sep=2017=20=
+00:00:00=202001=0AFrom:=20Enji=20Cooper=20<yaneurabeya@gmail.com>=0A=
+Date:=20Wed,=2015=20Feb=202023=2016:03:54=20-0800=0ASubject:=20[PATCH=20=
+16/17]=20Capture=20build/install=20errors=20from=20subdirs=0A=0APrior=20=
+to=20this=20change=20the=20code=20would=20silently=20fail=20if=20one=20=
+of=20the=20subdir=0Abuild/install=20operations=20failed.=20Capture=20all=20=
+non-clean=20target=20related=0Afailures=20and=20percolate=20them=20up=20=
+the=20stack.=0A=0ASponsored=20by:=20Dell=20EMC=20Isilon=0ASigned-off-by:=20=
+Enji=20Cooper=20<yaneurabeya@gmail.com>=0A---=0A=20setup.py=20|=2013=20=
+++++++-------=0A=201=20file=20changed,=206=20insertions(+),=207=20=
+deletions(-)=0A=0Adiff=20--git=20a/setup.py=20b/setup.py=0Aindex=20=
+83dc6b5..4ec5d92=20100755=0A---=20a/setup.py=0A+++=20b/setup.py=0A@@=20=
+-2,11=20+2,9=20@@=0A=20=0A=20from=20__future__=20import=20print_function=0A=
+=20=0A-from=20distutils.core=20import=20setup=0A-=0A-import=20sys=0A=20=
+import=20os=0A-from=20os.path=20import=20join=0A+import=20subprocess=0A=
++import=20sys=0A=20=0A=20DESCRIPTION=20=3D=20"""=0A=20pynfs=0A@@=20=
+-19,11=20+17,12=20@@=20DIRS=20=3D=20["xdr",=20"rpc",=20"nfs4.1",=20=
+"nfs4.0"]=20#=20Order=20is=20important=0A=20=0A=20def=20setup(*args,=20=
+**kwargs):=0A=20=20=20=20=20cwd=20=3D=20os.getcwd()=0A-=20=20=20=20=
+command=20=3D=20"=20".join(sys.argv)=0A=20=20=20=20=20for=20dir=20in=20=
+DIRS:=0A=20=20=20=20=20=20=20=20=20print("\n\nMoving=20to=20%s"=20%=20=
+dir=20)=0A-=20=20=20=20=20=20=20=20os.chdir(join(cwd,=20dir))=0A-=20=20=20=
+=20=20=20=20=20os.system("python%s=20%s"=20%=20(sys.version[0],=20=
+command))=0A+=20=20=20=20=20=20=20=20os.chdir(os.path.join(cwd,=20dir))=0A=
++=20=20=20=20=20=20=20=20rc=20=3D=20subprocess.call([sys.executable]=20+=20=
+sys.argv)=0A+=20=20=20=20=20=20=20=20if=20"clean"=20not=20in=20sys.argv=20=
+and=20rc:=0A+=20=20=20=20=20=20=20=20=20=20=20=20sys.exit(rc)=0A=20=20=20=
+=20=20os.chdir(cwd)=0A=20=0A=20setup(name=20=3D=20"pynfs",=0A--=20=0A=
+2.39.0=0A=0A=
+
+--Apple-Mail=_F9CA0CF6-37B6-481E-946A-0541F8D3A1AA
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
+
+
+
+--Apple-Mail=_F9CA0CF6-37B6-481E-946A-0541F8D3A1AA--
+
+--Apple-Mail=_17331FF5-EC40-4ED4-8388-EF3023FAE58B
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEtvtxN6kOllEF3nmX5JFNMZeDGN4FAmPtbZkACgkQ5JFNMZeD
+GN4TqA//cvzauMGmvZ9sZ2eSil7vQVpz+WgYUiA3o0pKTrLWRbEDg50X8Lbylu1q
+ijW3WadIzSwbBo9Xnf5AxDkAOCf5+IWI7MSnCVVy6NtEDEHnBtlxO5WcAPArITKG
+hV0ljC3AY0ewpS5WSMfV6RRQRMNVTxLLhGuKqBI6QEaAc8GZaCLXTYIjbTJmrngq
+5WKmtdAmPiysJYDwXq1jJFwQGoCxUNE8zJPP5aV/+NqsaHIgc8Md3Fi2522pNkLb
+tszsqoISl1yrwFUJxJFseWX984EhMPaq6xUpiVzsX1kpHJVoY2g7SWbo6Zz7fTwL
+2LPL4QNIszxSNU3wd2OtoAHMlNJ90YdnKupaUB0uIchGe2z9GYtNy1/S6VcWozZs
+srEIUyaGgqEz+mGeEwZFeItM1tyqHe63IAox4FUZ2vuJLheMMo31cl6kniro2JKp
+WSBsnwZ8TaMBurDIN6uDiY1x30RwBMg988c7Lt+TMuKqLUgfJ/N8XfgWgY6bKXFz
+kVS/vLi4MW/bLcan3F7s4VJ0ubn6rL4o0Iyf2oIGaL/GsDz+6BFoNOnX6FL4FPIk
+OErZH9bpekNUs893mUiGtHZ4mqDBlqdL36xWB1Ga5qQ91M+PHAnR8IV9eNzjciWU
+YvdxES9dgv+FXeG3xaC8Xw8/Mt4BdZjxhPzdhmkTxMhfC9r/wFQ=
+=tUUR
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_17331FF5-EC40-4ED4-8388-EF3023FAE58B--
