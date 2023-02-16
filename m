@@ -2,274 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DADB699866
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Feb 2023 16:08:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 033D8699B66
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Feb 2023 18:40:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229436AbjBPPIq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Feb 2023 10:08:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43130 "EHLO
+        id S229512AbjBPRka (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Feb 2023 12:40:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbjBPPIo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Feb 2023 10:08:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A835B3B219
-        for <linux-nfs@vger.kernel.org>; Thu, 16 Feb 2023 07:07:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676560039;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dEvVR7mNrJtJrzwBvJMyNMWCqmrGhsk9d3FtHweO8aQ=;
-        b=HlsbL4OyxLqB124e9FCZ+1BdP2U3FpGrOto2rm6uyx59zgWLq9qxecbDJdfFTuwyRBCZnS
-        Me9Yk7ypGFMYoY9xvOjkFPGMC62mcuzwbxdUD49+SJVSHBQpV73m9kqoagJwVlujx8TdgA
-        VjgB9pm6//3+J3lD3Cc7le/sQzp/iT0=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-518-h1RdFIDIPg6lnrRYr2xXyw-1; Thu, 16 Feb 2023 10:07:16 -0500
-X-MC-Unique: h1RdFIDIPg6lnrRYr2xXyw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CFC4B3C1486A;
-        Thu, 16 Feb 2023 15:07:13 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A3572026D4B;
-        Thu, 16 Feb 2023 15:07:11 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rohith Surabattula <rohiths.msft@gmail.com>,
-        Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Ilya Dryomov <idryomov@gmail.com>, linux-mm@kvack.org
-Subject: [PATCH v6 2/2] mm, netfs, fscache: Stop read optimisation when folio removed from pagecache
-Date:   Thu, 16 Feb 2023 15:07:01 +0000
-Message-Id: <20230216150701.3654894-3-dhowells@redhat.com>
-In-Reply-To: <20230216150701.3654894-1-dhowells@redhat.com>
-References: <20230216150701.3654894-1-dhowells@redhat.com>
+        with ESMTP id S229506AbjBPRk3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Feb 2023 12:40:29 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 674FE3B855;
+        Thu, 16 Feb 2023 09:40:28 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id v6-20020a17090ad58600b00229eec90a7fso6652557pju.0;
+        Thu, 16 Feb 2023 09:40:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=V+KTxKIHjRmWBf0QETpjuOdM8DYig3OAwkvnEuzaxSU=;
+        b=K09IVJNC7CR6Vj9s+Sa4FSd5pt3rF8aeDkMbwTg0mXZfk8aJ8m+ZEFc/4sH8acTAcF
+         JrsEgtMgVVTwR9xiuoDm2UndcobmlgfCa0UkuviWbd7NsLFCKMkU7rLl3hWzJB2cfhcA
+         AnsM3VaqEybR+ccR9p3UjHOUNmaRYBqIr0RYtDIRK+/FpBFWl02Sp+azJVv9Hql0PXS8
+         3n1IKSLP/+V/AL+rKUgUK/NU5cDjhjGqAdpvebYjh7BLgzQkwMQ/Z2by7pzYuA3Wn5B4
+         YBvZZ8q4QDdtD41fF123Bc0ItfG0a3Lz6Vvld1BIGUveu3jN/frShp/F6+j/c/weTi5W
+         w4cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V+KTxKIHjRmWBf0QETpjuOdM8DYig3OAwkvnEuzaxSU=;
+        b=Povemtm//zcReHKAXDos0QsO1c2AJZGHpRil7Xnx2rPZfGv0fKxfyTuE5+LNF6E1kM
+         El/ok6n8W/G2n4+Fmg+M/4w2Xh2o8h/P9i3OCdOquYeKUUSaN1n+dvCuaVS14KQYA6Ho
+         i1kHuAe6Q8Riu2oSJj3pXt8PAtHSwRyMd8v9sSXxZuuICiL3OeHNnF2dBXfGrvNLN4Vg
+         ea+tES7uitBlwrhfL7MvR8vX/lL6BOdCrgp0aPGadX7GNt1Buo5IrjIicrKV8Lq/tIjB
+         Op0zXOc12KgS79v9uEcrPYHVoQ7KfyJPAz6thq2QpuN1A4ePYoGiLFwpe/jaIa4V8TWi
+         Q8xA==
+X-Gm-Message-State: AO0yUKUvpnsVBNo5eop0VavmCN2xwTEKzgFZyq1kDtyt5OthKCl0+9Wo
+        +rO1Am2crdNxOW6R7P5I+GfvSNw0RpDFDSwnqzc=
+X-Google-Smtp-Source: AK7set/vWx1/1G+jCPRA4Yilt8YKORdc3vNIfM+JZrKCrXM/T3QMA7eVNW1h0Ylwq1MI1m/Ngdkg1zKNCq8ayGJdDTA=
+X-Received: by 2002:a17:90b:390b:b0:233:e236:d54e with SMTP id
+ ob11-20020a17090b390b00b00233e236d54emr751381pjb.123.1676569227665; Thu, 16
+ Feb 2023 09:40:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
+ <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org> <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
+ <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org> <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
+ <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
+ <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org> <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
+ <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org> <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
+ <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
+ <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org> <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
+ <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org>
+In-Reply-To: <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Thu, 16 Feb 2023 12:40:16 -0500
+Message-ID: <CAN-5tyEPP-mcDv7f-=BTZdGWMuFh16R9QnsU6THdp3U0QgbeVA@mail.gmail.com>
+Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
+ (commit 7fd461c47)
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Anna Schumaker <schumaker.anna@gmail.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fscache has an optimisation by which reads from the cache are skipped until
-we know that (a) there's data there to be read and (b) that data isn't
-entirely covered by pages resident in the netfs pagecache.  This is done
-with two flags manipulated by fscache_note_page_release():
+On Tue, Feb 14, 2023 at 6:08 AM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 12/02/2023 15:05, Anna Schumaker wrote:
+> >>> From ac2d6c501dbcdb306480edaee625b5496f1fb4f5 Mon Sep 17 00:00:00 2001
+> >>> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >>> Date: Fri, 10 Feb 2023 15:50:22 -0500
+> >>> Subject: [PATCH] NFSv4.2: Rework scratch handling for READ_PLUS
+> >>>
+> >>
+> >> Patch is corrupted - maybe mail program reformatted it when sending:
+> >>
+> >> Applying: NFSv4.2: Rework scratch handling for READ_PLUS
+> >> error: corrupt patch at line 12
+> >> Patch failed at 0001 NFSv4.2: Rework scratch handling for READ_PLUS
+> >
+> > That's weird. I wasn't expecting gmail to reformat the patch but I
+> > guess it did. I've added it as an attachment so that shouldn't happen
+> > again.
+>
+> Still null ptr (built on 420b2d4 with your patch):
+>
+> [  144.690844] mmiocpy from xdr_inline_decode (net/sunrpc/xdr.c:1419 net/sunrpc/xdr.c:1454)
+> [  144.695950] xdr_inline_decode from nfs4_xdr_dec_read_plus (fs/nfs/nfs42xdr.c:1063 fs/nfs/nfs42xdr.c:1147 fs/nfs/nfs42xdr.c:1360 fs/nfs/nfs42xdr.c:1341)
+> [  144.702452] nfs4_xdr_dec_read_plus from call_decode (net/sunrpc/clnt.c:2595)
+> [  144.708429] call_decode from __rpc_execute (include/asm-generic/bitops/generic-non-atomic.h:128 net/sunrpc/sched.c:954)
+> [  144.713538] __rpc_execute from rpc_async_schedule (include/linux/sched/mm.h:336 net/sunrpc/sched.c:1035)
+> [  144.719170] rpc_async_schedule from process_one_work (include/linux/jump_label.h:260 include/linux/jump_label.h:270 include/trace/events/workqueue.h:108 kernel/workqueue.c:2294)
+> [  144.725238] process_one_work from worker_thread (include/linux/list.h:292 kernel/workqueue.c:2437)
+> [  144.730782] worker_thread from kthread (kernel/kthread.c:378)
+> [  144.735547] kthread from ret_from_fork (arch/arm/kernel/entry-common.S:149)
 
-	if (...
-	    test_bit(FSCACHE_COOKIE_HAVE_DATA, &cookie->flags) &&
-	    test_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags))
-		clear_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags);
+My 2cents...
 
-where the NO_DATA_TO_READ flag causes cachefiles_prepare_read() to indicate
-that netfslib should download from the server or clear the page instead.
+From what I can tell read_plus only calls xdr_inline_decode() for
+"numbers" (eof, #segs, type, offset, length) and we always expect that
+__xdr_inline_decode() would return a a non-null "p". But if
+__xdr_inline_decode() returned null, the code would call
+xdr_copy_to_scratch() which would ultimately call the memcpy().
+xdr_copy_to_scrach() expects the scratch buffer to be setup. However,
+as I said, for the decode of numbers we don't set up the scratch
+space. Which then leads to this oops. How, the reason the
+__xdr_inline_decode() would return a null pointer if it ran out it's
+provided xdr space which was provided #decode_read_plus_maxsz.
 
-The fscache_note_page_release() function is intended to be called from
-->releasepage() - but that only gets called if PG_private or PG_private_2
-is set - and currently the former is at the discretion of the network
-filesystem and the latter is only set whilst a page is being written to the
-cache, so sometimes we miss clearing the optimisation.
+#define NFS42_READ_PLUS_DATA_SEGMENT_SIZE \
+                                        (1 /* data_content4 */ + \
+                                         2 /* data_info4.di_offset */ + \
+                                         1 /* data_info4.di_length */)
+#define decode_read_plus_maxsz          (op_decode_hdr_maxsz + \
+                                         1 /* rpr_eof */ + \
+                                         1 /* rpr_contents count */ + \
+                                         NFS42_READ_PLUS_DATA_SEGMENT_SIZE)
 
-Fix this by following Willy's suggestion[1] and adding an address_space
-flag, AS_RELEASE_ALWAYS, that causes filemap_release_folio() to always call
-->release_folio() if it's set, even if PG_private or PG_private_2 aren't
-set.
+while a data segment needs (2) + (1), a hole segment needs to be (2) +
+(2) (as both offset and lengths are longs.
 
-Note that this would require folio_test_private() and page_has_private() to
-become more complicated.  To avoid that, in the places[*] where these are
-used to conditionalise calls to filemap_release_folio() and
-try_to_release_page(), the tests are removed the those functions just
-jumped to unconditionally and the test is performed there.
+while a "correct" maxsz is important for page alignment for reads, it
+might means we are not providing enough space for when there are hole
+segments? It seems weird that for the spec we have hole length and
+data length of different types (long and int).
 
-[*] There are some exceptions in vmscan.c where the check guards more than
-just a call to the releaser.  I've added a function, folio_needs_release()
-to wrap all the checks for that.
-
-AS_RELEASE_ALWAYS should be set if a non-NULL cookie is obtained from
-fscache and cleared in ->evict_inode() before truncate_inode_pages_final()
-is called.
-
-Additionally, the FSCACHE_COOKIE_NO_DATA_TO_READ flag needs to be cleared
-and the optimisation cancelled if a cachefiles object already contains data
-when we open it.
-
-Reported-by: Rohith Surabattula <rohiths.msft@gmail.com>
-Suggested-by: Matthew Wilcox <willy@infradead.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: Linus Torvalds <torvalds@linux-foundation.org>
-cc: Steve French <sfrench@samba.org>
-cc: Shyam Prasad N <nspmangalore@gmail.com>
-cc: Rohith Surabattula <rohiths.msft@gmail.com>
-cc: Dave Wysochanski <dwysocha@redhat.com>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Ilya Dryomov <idryomov@gmail.com>
-cc: linux-cachefs@redhat.com
-cc: linux-cifs@vger.kernel.org
-cc: linux-afs@lists.infradead.org
-cc: v9fs-developer@lists.sourceforge.net
-cc: ceph-devel@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
----
-
-Notes:
-    ver #4)
-     - Split out merging of folio_has_private()/filemap_release_folio() call
-       pairs into a preceding patch.
-     - Don't need to clear AS_RELEASE_ALWAYS in ->evict_inode().
-    
-    ver #3)
-     - Fixed mapping_clear_release_always() to use clear_bit() not set_bit().
-     - Moved a '&&' to the correct line.
-    
-    ver #2)
-     - Rewrote entirely according to Willy's suggestion[1].
-
- fs/9p/cache.c           |  2 ++
- fs/afs/internal.h       |  2 ++
- fs/cachefiles/namei.c   |  2 ++
- fs/ceph/cache.c         |  2 ++
- fs/cifs/fscache.c       |  2 ++
- include/linux/pagemap.h | 16 ++++++++++++++++
- mm/internal.h           |  5 ++++-
- 7 files changed, 30 insertions(+), 1 deletion(-)
-
-diff --git a/fs/9p/cache.c b/fs/9p/cache.c
-index cebba4eaa0b5..12c0ae29f185 100644
---- a/fs/9p/cache.c
-+++ b/fs/9p/cache.c
-@@ -68,6 +68,8 @@ void v9fs_cache_inode_get_cookie(struct inode *inode)
- 				       &path, sizeof(path),
- 				       &version, sizeof(version),
- 				       i_size_read(&v9inode->netfs.inode));
-+	if (v9inode->netfs.cache)
-+		mapping_set_release_always(inode->i_mapping);
- 
- 	p9_debug(P9_DEBUG_FSC, "inode %p get cookie %p\n",
- 		 inode, v9fs_inode_cookie(v9inode));
-diff --git a/fs/afs/internal.h b/fs/afs/internal.h
-index fd8567b98e2b..2d7e06fcb77f 100644
---- a/fs/afs/internal.h
-+++ b/fs/afs/internal.h
-@@ -680,6 +680,8 @@ static inline void afs_vnode_set_cache(struct afs_vnode *vnode,
- {
- #ifdef CONFIG_AFS_FSCACHE
- 	vnode->netfs.cache = cookie;
-+	if (cookie)
-+		mapping_set_release_always(vnode->netfs.inode.i_mapping);
- #endif
- }
- 
-diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
-index 03ca8f2f657a..50b2ee163af6 100644
---- a/fs/cachefiles/namei.c
-+++ b/fs/cachefiles/namei.c
-@@ -584,6 +584,8 @@ static bool cachefiles_open_file(struct cachefiles_object *object,
- 	if (ret < 0)
- 		goto check_failed;
- 
-+	clear_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &object->cookie->flags);
-+
- 	object->file = file;
- 
- 	/* Always update the atime on an object we've just looked up (this is
-diff --git a/fs/ceph/cache.c b/fs/ceph/cache.c
-index 177d8e8d73fe..de1dee46d3df 100644
---- a/fs/ceph/cache.c
-+++ b/fs/ceph/cache.c
-@@ -36,6 +36,8 @@ void ceph_fscache_register_inode_cookie(struct inode *inode)
- 				       &ci->i_vino, sizeof(ci->i_vino),
- 				       &ci->i_version, sizeof(ci->i_version),
- 				       i_size_read(inode));
-+	if (ci->netfs.cache)
-+		mapping_set_release_always(inode->i_mapping);
- }
- 
- void ceph_fscache_unregister_inode_cookie(struct ceph_inode_info *ci)
-diff --git a/fs/cifs/fscache.c b/fs/cifs/fscache.c
-index f6f3a6b75601..79e9665dfc90 100644
---- a/fs/cifs/fscache.c
-+++ b/fs/cifs/fscache.c
-@@ -108,6 +108,8 @@ void cifs_fscache_get_inode_cookie(struct inode *inode)
- 				       &cifsi->uniqueid, sizeof(cifsi->uniqueid),
- 				       &cd, sizeof(cd),
- 				       i_size_read(&cifsi->netfs.inode));
-+	if (cifsi->netfs.cache)
-+		mapping_set_release_always(inode->i_mapping);
- }
- 
- void cifs_fscache_unuse_inode_cookie(struct inode *inode, bool update)
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 29e1f9e76eb6..a0d433e0addd 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -199,6 +199,7 @@ enum mapping_flags {
- 	/* writeback related tags are not used */
- 	AS_NO_WRITEBACK_TAGS = 5,
- 	AS_LARGE_FOLIO_SUPPORT = 6,
-+	AS_RELEASE_ALWAYS,	/* Call ->release_folio(), even if no private data */
- };
- 
- /**
-@@ -269,6 +270,21 @@ static inline int mapping_use_writeback_tags(struct address_space *mapping)
- 	return !test_bit(AS_NO_WRITEBACK_TAGS, &mapping->flags);
- }
- 
-+static inline bool mapping_release_always(const struct address_space *mapping)
-+{
-+	return test_bit(AS_RELEASE_ALWAYS, &mapping->flags);
-+}
-+
-+static inline void mapping_set_release_always(struct address_space *mapping)
-+{
-+	set_bit(AS_RELEASE_ALWAYS, &mapping->flags);
-+}
-+
-+static inline void mapping_clear_release_always(struct address_space *mapping)
-+{
-+	clear_bit(AS_RELEASE_ALWAYS, &mapping->flags);
-+}
-+
- static inline gfp_t mapping_gfp_mask(struct address_space * mapping)
- {
- 	return mapping->gfp_mask;
-diff --git a/mm/internal.h b/mm/internal.h
-index c4c8e58e1d12..5421ce8661fa 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -168,7 +168,10 @@ static inline void set_page_refcounted(struct page *page)
-  */
- static inline bool folio_needs_release(struct folio *folio)
- {
--	return folio_has_private(folio);
-+	struct address_space *mapping = folio->mapping;
-+
-+	return folio_has_private(folio) ||
-+		(mapping && mapping_release_always(mapping));
- }
- 
- extern unsigned long highest_memmap_pfn;
-
+>
+>
+>
+> Best regards,
+> Krzysztof
+>
