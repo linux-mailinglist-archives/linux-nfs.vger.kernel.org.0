@@ -2,79 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66A5D69AFEC
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Feb 2023 16:55:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6739B69B008
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Feb 2023 16:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230480AbjBQPzm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Feb 2023 10:55:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49720 "EHLO
+        id S229970AbjBQP7e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Feb 2023 10:59:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230071AbjBQPzh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Feb 2023 10:55:37 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EDC366046
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Feb 2023 07:54:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676649280;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hyIefwQxn53gkgfzMkUJYWSazKozSa8ZWmEorQPyXhw=;
-        b=AyTvukMu1oQhyegoKuiuUy+SYCBtV4RSNq7Gw9GIMmvBYz7Oj3f/VcQgn3r/kArnWga8M0
-        X1slh+8Kd/V3gXDS4suu5GJN1Vi9TPMMcJU+t0dRhOpGYQepI32SL2rG8Xg0lttf6A7aLR
-        CtIopLuKRyp2kzYfBSvCyWomkSCEVvc=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-1-Gg0UXhNYN02uuVDS4rwrog-1; Fri, 17 Feb 2023 10:54:39 -0500
-X-MC-Unique: Gg0UXhNYN02uuVDS4rwrog-1
-Received: by mail-pl1-f199.google.com with SMTP id kq15-20020a170903284f00b0019abcf45d75so530681plb.8
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Feb 2023 07:54:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hyIefwQxn53gkgfzMkUJYWSazKozSa8ZWmEorQPyXhw=;
-        b=7d1cCuy6e0TqiXAgjga5Ar5cQabriTZGL9BaXTafn/ci3h7BklSa4z/a3FP4ijqdNm
-         pFUILWtFsV406UiJ0FIMJq5NnP9YokB4rUyNCKkK6rIn42AjAnAcrx/DGmaNA/axN4Lh
-         EIhZkPiZKvrVyKOKnPHjFb1Pl6lepX+GWhBragCL49mIppHVCDo/NGDU1mNTw2bp4Nug
-         2UO2r9GwuoHivGIl7g0f/6i12mAXSzYeL6+C/0SqMMeh3qi5mtNQNm45Gg0YC/eVNV1C
-         OJmfHG4Mz5/hb+tC8JFwjcfZq4COonv6/uduDP5om6gn/YREhEbLtjy73SLy0pJtPzEW
-         SGNw==
-X-Gm-Message-State: AO0yUKUagPwFIV4dXPLq23jlNxVNtptekzzFjtB8kBG6sz00YKOyCOGE
-        LX4LLBurhdIEEQjxYyKVl2ttV2g7zV8AJ0O6rJ/zFClXYGAci1lj6A1dK0FYbLlNB9vJ2u6kNuS
-        imXMGXNEV2UER+voQzgimCE2HJr1OdI3fUgd0
-X-Received: by 2002:a17:903:446:b0:19a:8cbe:1306 with SMTP id iw6-20020a170903044600b0019a8cbe1306mr221875plb.2.1676649278016;
-        Fri, 17 Feb 2023 07:54:38 -0800 (PST)
-X-Google-Smtp-Source: AK7set/mAcNsEdtUcLn6BzWMfv8iywnH00f9JHCI0AqEOEVtlshVVHRlJjSgIcolkVzMUgdDNeet9Jr0xmxf/KlHx5o=
-X-Received: by 2002:a17:903:446:b0:19a:8cbe:1306 with SMTP id
- iw6-20020a170903044600b0019a8cbe1306mr221869plb.2.1676649277651; Fri, 17 Feb
- 2023 07:54:37 -0800 (PST)
-MIME-Version: 1.0
+        with ESMTP id S229488AbjBQP7e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Feb 2023 10:59:34 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 766516E648
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Feb 2023 07:59:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZzpghLQGzUYKbLwSkhJz9Ki/jZAlqAynY4knQMGIw7Q=; b=R+MGrkd+mWvcRx6B0DgDPjOgrG
+        +/1sKd81mSoDl+C+nPuLUw6LFsX129xhKpBjIpm+kfr1j2qS+rRuWry3uMhmtCyt5tTiL2pR6+Fu/
+        iDMDyYm07H80rDoKrvNE0mveYX5F4i77p7gJn3uEzah0r2jOSuysVy9Eg8Pk2/nOEwgszGWvYcPs6
+        ZLA/Q5ZlHlTRzS1UDUQrl5gG5ENHyEFYSjanCMjvwGKv/qMGIMOqp3ceapEdYRPkGxsxfiQz2kOXT
+        PcK18fdHJf5gLwR8eoySjMIwbuMjuHnbPp3SROz7On6yKAuXsCgLLuGS94KRzoYIw6BPTnxAz/8vK
+        9VtEx5/w==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pT38j-009R98-1R; Fri, 17 Feb 2023 15:59:13 +0000
+Date:   Fri, 17 Feb 2023 15:59:12 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Wysochanski <dwysocha@redhat.com>
+Cc:     Daire Byrne <daire@dneg.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>
+Subject: Re: /proc/PID/io/read_bytes accounting regression?
+Message-ID: <Y++kUMY93plkyP6f@casper.infradead.org>
 References: <CAPt2mGNEYUk5u8V4abe=5MM5msZqmvzCVrtCP4Qw1n=gCHCnww@mail.gmail.com>
  <CALF+zO=e+d3sdLA4MZ_-SZh3epWBKF=hY=8FB+aB8+H4rxe4KA@mail.gmail.com>
- <Y++RA7YXtymaQJ05@casper.infradead.org> <CALF+zOnVJ5+Pb_mq1KcD_jdVsP8Dkg9KPGGiRS8KDJzK7+mT6Q@mail.gmail.com>
+ <Y++RA7YXtymaQJ05@casper.infradead.org>
+ <CALF+zOnVJ5+Pb_mq1KcD_jdVsP8Dkg9KPGGiRS8KDJzK7+mT6Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <CALF+zOnVJ5+Pb_mq1KcD_jdVsP8Dkg9KPGGiRS8KDJzK7+mT6Q@mail.gmail.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Fri, 17 Feb 2023 10:54:01 -0500
-Message-ID: <CALF+zOkpRc_tchxghYqavw4p_j=AKBPGR10Dr7JVsnLN0nim4g@mail.gmail.com>
-Subject: Re: /proc/PID/io/read_bytes accounting regression?
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Daire Byrne <daire@dneg.com>, linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Feb 17, 2023 at 10:47 AM David Wysochanski <dwysocha@redhat.com> wrote:
->
+On Fri, Feb 17, 2023 at 10:47:01AM -0500, David Wysochanski wrote:
 > On Fri, Feb 17, 2023 at 9:36 AM Matthew Wilcox <willy@infradead.org> wrote:
 > >
 > > On Fri, Feb 17, 2023 at 09:08:27AM -0500, David Wysochanski wrote:
@@ -108,7 +85,11 @@ On Fri, Feb 17, 2023 at 10:47 AM David Wysochanski <dwysocha@redhat.com> wrote:
 > netfs_rreq_unlock_folios().
 > Both seems to be _after_ data has been received, but I'm not sure that's
 > correct.
->
+
+It's probably correct, just different from the block layer.  I don't
+have any special insight here, just an inclination to be as similar
+as possible.
+
 > > The block layer does it as part of the BIO submission path (and also
 > > counts PGPGIN and PGPGOUT, which no network filesystems seem to do?)
 > > You're more familiar with the NFS code than I am, so you probably
@@ -119,7 +100,7 @@ On Fri, Feb 17, 2023 at 10:47 AM David Wysochanski <dwysocha@redhat.com> wrote:
 > but at first glance it looks like these numbers may sometimes be
 > incremented when actual data is received and others are incremented
 > when the submission happens.
->
+> 
 > As to the right location in NFS, the function you mention isn't a bad
 > idea, but maybe not the right location.  Looking in nfs_file_direct_read()
 > we have the accounting at IO submission time, appears to be the
@@ -128,22 +109,7 @@ On Fri, Feb 17, 2023 at 10:47 AM David Wysochanski <dwysocha@redhat.com> wrote:
 > if fscache is enabled.  So the right place is looking like somewhere
 > in nfs_read_folio() and nfs_readahead().
 
-I should have read the kernel docs.  From
-Documentation/filesystems/proc.rst
-
-1744 read_bytes
-1745 ^^^^^^^^^^
-1746
-1747 I/O counter: bytes read
-1748 Attempt to count the number of bytes which this process really did cause to
-1749 be fetched from the storage layer. Done at the submit_bio() level, so it is
-1750 accurate for block-backed filesystems. <please add status regarding NFS and
-1751 CIFS at a later time>
-
-
-So it looks like NFS directIO (and non-direct, prior to v5,18) did the
-same thing
-as the block layer and is consistent with the definition.
-Fix would be just add a call to task_io_account_read() inside nfs_read_folio()
-and nfs_readahead().
-
+Yes, we don't want to double-count either fscache or direct I/O.
+I'm Maybe Dave as opinions about where we should be accounting it --
+I'm not sure that netfs is the right place to do it.  Maybe it should
+be in each network filesystem instead of in netfs?
