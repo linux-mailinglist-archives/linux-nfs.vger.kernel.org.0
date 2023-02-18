@@ -2,72 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 563E569B614
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Feb 2023 00:00:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A28AC69B811
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Feb 2023 05:42:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbjBQXAc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Feb 2023 18:00:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49502 "EHLO
+        id S229498AbjBREmo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Feb 2023 23:42:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbjBQXAb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Feb 2023 18:00:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEE0E0;
-        Fri, 17 Feb 2023 15:00:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 633E162086;
-        Fri, 17 Feb 2023 23:00:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C8EA3C433D2;
-        Fri, 17 Feb 2023 23:00:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676674829;
-        bh=SHtEUkVWvx6Pxd5m50gDrkVPdNQ2N7PHLv2MUB25rUU=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=llceEM7W4jg2r1EbnuyKcY7MtqWhlgLouvBHTyEXUpWqOC4HluCKgk4vM43cm88TV
-         QxVufTsQYqK5U1lUZ/M97Jy6PdU56yfN96d4o2YthhNUrzalyXkgwtv1h0Z+go6jys
-         LOZn20oer+pc4woKDGBd/1ArfI2tg8Qdhal94YHFUozgpYb2UigyLyIh9i0fkwwXVO
-         JvxGbcC4cJsw9y/pewZE/WZJZweZe/chCz2J2ZetwsnrzT6AFzYLg5XMyZoe4SUbnY
-         pry/y8SpRD/gOkhco1+azq1v28XuuXsh1ifxfO19vhvqKVuw90u58yMRK5Usn21lnt
-         zsUAS79Fu7H3A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AD2DAC1614B;
-        Fri, 17 Feb 2023 23:00:29 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull another NFS client change for 6.2
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <c2181ba919c59ffde5c9b9fc615608f92a146413.camel@kernel.org>
-References: <c2181ba919c59ffde5c9b9fc615608f92a146413.camel@kernel.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <c2181ba919c59ffde5c9b9fc615608f92a146413.camel@kernel.org>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.2-3
-X-PR-Tracked-Commit-Id: 896e090eefedeb8a715ea19938a2791c32679cc9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 75cc9c4716a7a398139805e62ccc3e0d14d00540
-Message-Id: <167667482970.20587.6365505201861217855.pr-tracker-bot@kernel.org>
-Date:   Fri, 17 Feb 2023 23:00:29 +0000
-To:     Trond Myklebust <trondmy@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229436AbjBREmm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Feb 2023 23:42:42 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6CD2CFD1;
+        Fri, 17 Feb 2023 20:42:39 -0800 (PST)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pTF3V-0000Ic-4F; Sat, 18 Feb 2023 05:42:37 +0100
+Message-ID: <5150343c-e13d-ed15-e59a-bc14f0db89da@leemhuis.info>
+Date:   Sat, 18 Feb 2023 05:42:36 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
+ (commit 7fd461c47)
+Content-Language: en-US, de-DE
+From:   "Linux regression tracking #update (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     linux-nfs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Reply-To: Thorsten Leemhuis <regressions@leemhuis.info>,
+          Linux regressions mailing list 
+          <regressions@lists.linux.dev>
+References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
+ <65ae10cd-a086-47c6-c881-d1385d7fcf42@leemhuis.info>
+In-Reply-To: <65ae10cd-a086-47c6-c881-d1385d7fcf42@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676695359;47596984;
+X-HE-SMSGID: 1pTF3V-0000Ic-4F
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Fri, 17 Feb 2023 09:16:29 -0500:
+[TLDR: This mail in primarily relevant for Linux regression tracking. A
+change or fix related to the regression discussed in this thread was
+posted or applied, but it did not use a Link: tag to point to the
+report, as Linus and the documentation call for. Things happen, no
+worries -- but now the regression tracking bot needs to be told manually
+about the fix. See link in footer if these mails annoy you.]
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.2-3
+On 08.01.23 09:52, Linux kernel regression tracking (#adding) wrote:
+> On 07.01.23 16:44, Krzysztof Kozlowski wrote:
+>>
+>> Bisect identified commit 7fd461c47c6c ("NFSv4.2: Change the default
+>> KConfig value for READ_PLUS") as one leading to NULL pointer exception
+>> when mounting NFS root on NFSv4 client:
+> [...]
+> Thanks for the report. To be sure the issue doesn't fall through the
+> cracks unnoticed, I'm adding it to regzbot, the Linux kernel regression
+> tracking bot:
+> 
+> #regzbot ^introduced 7fd461c47
+> #regzbot title nfs: NULL pointer dereference since NFS_V4_2_READ_PLUS is
+> enabled by default
+> #regzbot ignore-activity
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/75cc9c4716a7a398139805e62ccc3e0d14d00540
+#regzbot fix: 896e090eefedeb8a715ea19938a2791c32679
 
-Thank you!
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+#regzbot ignore-activity
