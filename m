@@ -2,59 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F2B369CCE1
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Feb 2023 14:44:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C04F569E15F
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Feb 2023 14:34:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232243AbjBTNoL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Feb 2023 08:44:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53960 "EHLO
+        id S232992AbjBUNeN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 Feb 2023 08:34:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232235AbjBTNoH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Feb 2023 08:44:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5BC1ADE8
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Feb 2023 05:43:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676900592;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RBugVf10c9MjPQYLpdSEXbCGaHl2WL0p/2X6fdbtjXM=;
-        b=IvY32adMeetdTEkaYshyHr0YntKjCCj4lKT1mPug/Ox0b5HcCgY3F2yqAuQYwGvYUzeHQa
-        vOI7jasiY6s8Kzii+e2O8mCzrsof2shUT408wZmq96wdEiCCHS+8vQzQ5RYGFIvEEAwRhG
-        wBZX7I4NGlQsp+i+GXQN5FjMGeJHEkA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-606-QywOI7FsOTu-yje4y7iT0Q-1; Mon, 20 Feb 2023 08:43:11 -0500
-X-MC-Unique: QywOI7FsOTu-yje4y7iT0Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4B1463815EE5;
-        Mon, 20 Feb 2023 13:43:11 +0000 (UTC)
-Received: from dwysocha.rdu.csb (unknown [10.22.8.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 06067404CD84;
-        Mon, 20 Feb 2023 13:43:10 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        David Howells <dhowells@redhat.com>,
-        Benjamin Maynard <benmaynard@google.com>,
-        Daire Byrne <daire.byrne@gmail.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com
-Subject: [PATCH v11 5/5] NFS: Remove fscache specific trace points and NFS_INO_FSCACHE bit
-Date:   Mon, 20 Feb 2023 08:43:08 -0500
-Message-Id: <20230220134308.1193219-6-dwysocha@redhat.com>
-In-Reply-To: <20230220134308.1193219-1-dwysocha@redhat.com>
-References: <20230220134308.1193219-1-dwysocha@redhat.com>
+        with ESMTP id S233206AbjBUNeM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Feb 2023 08:34:12 -0500
+Received: from mailrelay.rz.uni-wuerzburg.de (wrz3035.rz.uni-wuerzburg.de [132.187.3.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E2F424482
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Feb 2023 05:33:41 -0800 (PST)
+Received: from virusscan-slb.rz.uni-wuerzburg.de (localhost [127.0.0.1])
+        by mailrelay-slb.rz.uni-wuerzburg.de (Postfix) with ESMTP id 34EE1EF6B;
+        Tue, 21 Feb 2023 14:33:33 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by virusscan-slb.rz.uni-wuerzburg.de (Postfix) with ESMTP id 335FFEDE2;
+        Tue, 21 Feb 2023 14:33:33 +0100 (CET)
+X-Virus-Scanned: amavisd-new at uni-wuerzburg.de
+Received: from mailmaster.uni-wuerzburg.de ([127.0.0.1])
+        by localhost (vmail001.slb.uni-wuerzburg.de [127.0.0.1]) (amavisd-new, port 10225)
+        with ESMTP id JF0yqZnuVniK; Tue, 21 Feb 2023 14:33:33 +0100 (CET)
+Received: from [132.187.207.113] (wma7113.mathematik.uni-wuerzburg.de [132.187.207.113])
+        by mailmaster.uni-wuerzburg.de (Postfix) with ESMTPSA id D03A5EB73;
+        Tue, 21 Feb 2023 14:33:32 +0100 (CET)
+Content-Type: multipart/mixed; boundary="------------nJWtO5qC2pACou522eEA0Pzh"
+Message-ID: <3b6c9b8e-2795-74e8-aefa-d4f1ac007c3c@mathematik.uni-wuerzburg.de>
+Date:   Tue, 21 Feb 2023 14:33:32 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: Reoccurring 5 second delays during NFS calls
+Content-Language: en-US-large
+To:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Cc:     Andreas Seeg <andreas.seeg@mathematik.uni-wuerzburg.de>
+References: <59682160-a246-395a-9486-9bbf11686740@mathematik.uni-wuerzburg.de>
+ <8a02c86882bc47c1c1387dba8c7d756237cb3f3f.camel@kernel.org>
+From:   =?UTF-8?Q?Florian_M=c3=b6ller?= 
+        <fmoeller@mathematik.uni-wuerzburg.de>
+In-Reply-To: <8a02c86882bc47c1c1387dba8c7d756237cb3f3f.camel@kernel.org>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,137 +51,506 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The NFS specific trace points are no longer needed as tracing is well
-covered by netfs and fscache.
+This is a multi-part message in MIME format.
+--------------nJWtO5qC2pACou522eEA0Pzh
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfs/nfstrace.h      | 91 ------------------------------------------
- include/linux/nfs_fs.h |  1 -
- 2 files changed, 92 deletions(-)
+Hi all,
 
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index a778713343df..4e90ca531176 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -39,7 +39,6 @@
- 			{ BIT(NFS_INO_STALE), "STALE" }, \
- 			{ BIT(NFS_INO_ACL_LRU_SET), "ACL_LRU_SET" }, \
- 			{ BIT(NFS_INO_INVALIDATING), "INVALIDATING" }, \
--			{ BIT(NFS_INO_FSCACHE), "FSCACHE" }, \
- 			{ BIT(NFS_INO_LAYOUTCOMMIT), "NEED_LAYOUTCOMMIT" }, \
- 			{ BIT(NFS_INO_LAYOUTCOMMITTING), "LAYOUTCOMMIT" }, \
- 			{ BIT(NFS_INO_LAYOUTSTATS), "LAYOUTSTATS" }, \
-@@ -1243,96 +1242,6 @@ TRACE_EVENT(nfs_readpage_short,
- 		)
- );
- 
--DECLARE_EVENT_CLASS(nfs_fscache_page_event,
--		TP_PROTO(
--			const struct inode *inode,
--			struct page *page
--		),
--
--		TP_ARGS(inode, page),
--
--		TP_STRUCT__entry(
--			__field(dev_t, dev)
--			__field(u32, fhandle)
--			__field(u64, fileid)
--			__field(loff_t, offset)
--		),
--
--		TP_fast_assign(
--			const struct nfs_inode *nfsi = NFS_I(inode);
--			const struct nfs_fh *fh = &nfsi->fh;
--
--			__entry->offset = page_index(page) << PAGE_SHIFT;
--			__entry->dev = inode->i_sb->s_dev;
--			__entry->fileid = nfsi->fileid;
--			__entry->fhandle = nfs_fhandle_hash(fh);
--		),
--
--		TP_printk(
--			"fileid=%02x:%02x:%llu fhandle=0x%08x "
--			"offset=%lld",
--			MAJOR(__entry->dev), MINOR(__entry->dev),
--			(unsigned long long)__entry->fileid,
--			__entry->fhandle,
--			(long long)__entry->offset
--		)
--);
--DECLARE_EVENT_CLASS(nfs_fscache_page_event_done,
--		TP_PROTO(
--			const struct inode *inode,
--			struct page *page,
--			int error
--		),
--
--		TP_ARGS(inode, page, error),
--
--		TP_STRUCT__entry(
--			__field(int, error)
--			__field(dev_t, dev)
--			__field(u32, fhandle)
--			__field(u64, fileid)
--			__field(loff_t, offset)
--		),
--
--		TP_fast_assign(
--			const struct nfs_inode *nfsi = NFS_I(inode);
--			const struct nfs_fh *fh = &nfsi->fh;
--
--			__entry->offset = page_index(page) << PAGE_SHIFT;
--			__entry->dev = inode->i_sb->s_dev;
--			__entry->fileid = nfsi->fileid;
--			__entry->fhandle = nfs_fhandle_hash(fh);
--			__entry->error = error;
--		),
--
--		TP_printk(
--			"fileid=%02x:%02x:%llu fhandle=0x%08x "
--			"offset=%lld error=%d",
--			MAJOR(__entry->dev), MINOR(__entry->dev),
--			(unsigned long long)__entry->fileid,
--			__entry->fhandle,
--			(long long)__entry->offset, __entry->error
--		)
--);
--#define DEFINE_NFS_FSCACHE_PAGE_EVENT(name) \
--	DEFINE_EVENT(nfs_fscache_page_event, name, \
--			TP_PROTO( \
--				const struct inode *inode, \
--				struct page *page \
--			), \
--			TP_ARGS(inode, page))
--#define DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(name) \
--	DEFINE_EVENT(nfs_fscache_page_event_done, name, \
--			TP_PROTO( \
--				const struct inode *inode, \
--				struct page *page, \
--				int error \
--			), \
--			TP_ARGS(inode, page, error))
--DEFINE_NFS_FSCACHE_PAGE_EVENT(nfs_fscache_read_page);
--DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(nfs_fscache_read_page_exit);
--DEFINE_NFS_FSCACHE_PAGE_EVENT(nfs_fscache_write_page);
--DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(nfs_fscache_write_page_exit);
- 
- TRACE_EVENT(nfs_pgio_error,
- 	TP_PROTO(
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 580847c70fec..137d296e6002 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -281,7 +281,6 @@ struct nfs4_copy_state {
- #define NFS_INO_ACL_LRU_SET	(2)		/* Inode is on the LRU list */
- #define NFS_INO_INVALIDATING	(3)		/* inode is being invalidated */
- #define NFS_INO_PRESERVE_UNLINKED (4)		/* preserve file if removed while open */
--#define NFS_INO_FSCACHE		(5)		/* inode can be cached by FS-Cache */
- #define NFS_INO_LAYOUTCOMMIT	(9)		/* layoutcommit required */
- #define NFS_INO_LAYOUTCOMMITTING (10)		/* layoutcommit inflight */
- #define NFS_INO_LAYOUTSTATS	(11)		/* layoutstats inflight */
+unfortunately the patch did not help, neither using -o async nor using -o sync. 
+We did some more tests (which is the reason for the delay of this reply):
+
+We used a qemu image housing both the NFS server and the client and did some 
+kernel debugging.
+OS: Ubuntu 22.04.1
+Kernel: 5.15.78
+Mount line: rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,
+	namlen=255,hard,proto=tcp,timeo=600,retrans=2,
+	sec=krb5p,clientaddr=10.0.0.1,
+	local_lock=none,addr=10.0.0.1
+
+We touched a file and then touched the file again. This triggers the delay reliably.
+
+We set breakpoints on all functions starting with nfs4 and on 
+"update_open_stateid". The attached file "1sttouch.log" contains a gdb log of 
+the first touch.
+"2ndtouch.log" shows the gdb output of the second touch. The delay occurs in 
+line 116 in update_open_stateid.
+
+We then deleted all breakpoints and set a sole breakpoint on 
+update_open_stateid. We touched the file again and used only the "next" command 
+of gdb. The gdb output is in "2ndtouch-next.log", the delay occurs in line 8.
+
+Please let us know if you need more information or if you want us to perform 
+further tests.
+
+Best regards,
+Florian Möller
+
+Am 07.02.23 um 16:21 schrieb Jeff Layton:
+> On Tue, 2023-02-07 at 11:58 +0100, Florian Möller wrote:
+>> Hi all,
+>>
+>> we are currently in the process of migrating our file server infrastructure to
+>> NFS. In our test environments, the following problem has now occurred several
+>> times in certain situations:
+>>
+>> A previously very fast NFS file operation suddenly takes 5 seconds longer - per
+>> file. This leads to applications running very slowly and severely delayed file
+>> operations.
+>>
+>> Here are the details:
+>>
+>> NFS server:
+>> OS: Ubuntu 22.04.1, all patches installed
+>> Kernel: Ubuntu Mainline, Versions
+>> 	6.1.7-060107-generic_6.1.7-060107.202301181200
+>>           6.1.8-060108_6.1.8-060108.202301240742
+>>           6.1.9-060109_6.1.9-060109.202302010835
+>> Security options: all Kerberos security options are affected
+>>    (The bug does not seem to occur without Kerberos security.)
+>> Output of exportfs -v:
+>> /export
+>> gss/krb5p(async,wdelay,hide,crossmnt,no_subtree_check,fsid=0,sec=sys,rw,secure,root_squash,no_all_squash)
+>> /export
+>> gss/krb5(async,wdelay,hide,crossmnt,no_subtree_check,fsid=0,sec=sys,rw,secure,root_squash,no_all_squash)
+>>
+> 
+> 
+> I see you're using the -o async export option. Note that you may end up
+> with corrupt data on a server reboot (see exports(5) manpage).
+> 
+> Assuming you're aware of this and want to keep that anyway, then the
+> patch I just posted to the mailing list may help you, if the stalls are
+> coming during CLOSE operations:
+> 
+> https://lore.kernel.org/linux-nfs/9137413986ba9c2e83c030513fa9ae3358f30a85.camel@kernel.org/T/#mcb88f091263d07d8b9c13e6cc5ce0a0413d3f761
+> 
+>>
+>> Client 1:
+>> OS: Arch Linux, all patches installed
+>> Kernel: 6.1.9-arch1-2, 6.1.9-arch1-1
+>> Mount-Line: servername:/ on /nfs type nfs4
+>> (rw,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=krb5p,clientaddr=XX.XX.XX.XX,local_lock=none,addr=YY.YY.YY.YY,_netdev)
+>> krb5: 1.20.1-1
+>> libevent: 2.1.12-4
+>> nfs-utils: 2.6.2-1
+>> util-linux: 2.38.1-1
+>>
+>>
+>> Client 2:
+>> OS: openSuSE 15.4, all patches installed
+>> Kernel: 5.14.21-150400.24.41-default
+>> Mount-Line: servername:/ on /nfs type nfs4
+>> (rw,relatime,sync,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,acregmin=0,acregmax=0,acdirmin=0,acdirmax=0,softerr,softreval,noac,noresvport,proto=tcp,timeo=1,retrans=2,sec=krb5,clientaddr=XX.XX.XX.XX,lookupcache=none,local_lock=none,addr=YY.YY.YY.YY)
+>>
+>> libgssapi3: 7.8.0-bp154.2.4.1
+>> libevent: 2.1.8-2.23
+>> nfs-client: 2.1.1-150100.10.27.1
+>> util-linux: 2.37.2-140400.8.14.1
+>>
+>>
+>> The error occurs for example if a file is touched twice:
+>>
+>> touch testfile && echo "done" && touch testfile && echo "and again"
+>>
+>> However, touching a large number of files (about 10000) with (pairwise)
+>> different filenames works fast.
+>>
+>>
+>> Here is another example that triggers the error:
+>>
+>> 1st step: create many files (shell code in Z-shell syntax):
+>>
+>> for i in {1..10000}; do
+>> echo "test" > $i.txt
+>> done
+>>
+>> This is fast.
+>>
+>> 2nd step:
+>>
+>> for i in {1..10000}; do
+>> echo $i
+>> cat $i.txt
+>> done
+>>
+>> This takes 5 seconds per cat(1) call.
+>> After unmounting and mounting, the 2nd step also runs quickly at first. But
+>> after executing the 2nd step several times in a row, the error occurs again
+>> (quite soon, after the 2nd or 3rd execution).
+>>
+>> We were not able to reproduce the error without a Kerberos security type set.
+>>
+>>
+>> Attached are a log from the server and from the client. In both cases
+>>
+>> rpcdebug -m nfs -s all
+>> rpcdebug -m nfsd -s all
+>> rpcdebug -m rpc -s all
+>>
+>> was set.
+>>
+>>
+>> Best regards,
+>> Florian Möller
+>>
+>>
+>>
+> 
+
 -- 
-2.31.1
+Dr. Florian Möller
+Universität Würzburg
+Institut für Mathematik
+Emil-Fischer-Straße 30
+97074 Würzburg, Germany
+Tel. +49 931 3185596
 
+--------------nJWtO5qC2pACou522eEA0Pzh
+Content-Type: text/x-log; charset=UTF-8; name="1sttouch.log"
+Content-Disposition: attachment; filename="1sttouch.log"
+Content-Transfer-Encoding: base64
+
+QnJlYWtwb2ludCAxODEsIDB4ZmZmZmZmZmZjMDk3OTk3MCBpbiBuZnM0X2F0b21pY19vcGVu
+ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDE4MCwgMHhmZmZmZmZmZmMwOTc4YzgwIGlu
+IG5mczRfZG9fb3BlbiAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAzNzEsIDB4ZmZmZmZm
+ZmZjMDk4Yzk5MCBpbiBuZnM0X2dldF9zdGF0ZV9vd25lciAoKQpDb250aW51aW5nLgoKQnJl
+YWtwb2ludCAzOTYsIDB4ZmZmZmZmZmZjMDk4ZjU2MCBpbiBuZnM0X2NsaWVudF9yZWNvdmVy
+X2V4cGlyZWRfbGVhc2UgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzk1LCAweGZmZmZm
+ZmZmYzA5OGY0YjAgaW4gbmZzNF93YWl0X2NsbnRfcmVjb3ZlciAoKQpDb250aW51aW5nLgoK
+QnJlYWtwb2ludCA2MiwgMHhmZmZmZmZmZmMwOTZkMzAwIGluIG5mczRfb3BlbmRhdGFfYWxs
+b2MgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNjc1LCAweGZmZmZmZmZmYzA5MTMwZjAg
+aW4gbmZzNF9sYWJlbF9hbGxvYyAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA2NzUsIDB4
+ZmZmZmZmZmZjMDkxMzBmMCBpbiBuZnM0X2xhYmVsX2FsbG9jICgpCkNvbnRpbnVpbmcuCgpC
+cmVha3BvaW50IDY4LCAweGZmZmZmZmZmYzA5NmUyZjAgaW4gbmZzNF9ydW5fb3Blbl90YXNr
+ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDEyMCwgMHhmZmZmZmZmZmMwOTcyYTQwIGlu
+IG5mczRfb3Blbl9wcmVwYXJlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDEwNCwgMHhm
+ZmZmZmZmZmMwOTcyNGEwIGluIG5mczRfc2V0dXBfc2VxdWVuY2UgKCkKQ29udGludWluZy4K
+CkJyZWFrcG9pbnQgNDgwLCAweGZmZmZmZmZmYzA5OWE0MzAgaW4gbmZzNF9hbGxvY19zbG90
+ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ3MSwgMHhmZmZmZmZmZmMwOTk5ZTYwIGlu
+IG5mczRfZmluZF9vcl9jcmVhdGVfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAz
+MjUsIDB4ZmZmZmZmZmZjMDk4OGU5MCBpbiBuZnM0X3hkcl9lbmNfb3BlbiAoKQpDb250aW51
+aW5nLgoKQnJlYWtwb2ludCA2NzgsIDB4ZmZmZmZmZmZjMDU4MGVkMCBpbiBuZnM0c3ZjX2Rl
+Y29kZV9jb21wb3VuZGFyZ3MgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNjk0LCAweGZm
+ZmZmZmZmYzA1ODU3NzAgaW4gbmZzNF9hbGxvY19zdGlkICgpCkNvbnRpbnVpbmcuCgpCcmVh
+a3BvaW50IDY5MiwgMHhmZmZmZmZmZmMwNTg0YWQwIGluIG5mczRfZ2V0X3Zmc19maWxlICgp
+CkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDY5OSwgMHhmZmZmZmZmZmMwNTg2MzcwIGluIG5m
+czRfaW5jX2FuZF9jb3B5X3N0YXRlaWQgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNjk4
+LCAweGZmZmZmZmZmYzA1ODU5YzAgaW4gbmZzNF9wdXRfc3RpZCAoKQpDb250aW51aW5nLgoK
+QnJlYWtwb2ludCA2ODgsIDB4ZmZmZmZmZmZjMDU4MzVhMCBpbiBuZnM0X3B1dF9zdGF0ZW93
+bmVyICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDY3OSwgMHhmZmZmZmZmZmMwNTgxMzEw
+IGluIG5mczRzdmNfZW5jb2RlX2NvbXBvdW5kcmVzICgpCkNvbnRpbnVpbmcuCgpCcmVha3Bv
+aW50IDMzOCwgMHhmZmZmZmZmZmMwOThhZTUwIGluIG5mczRfeGRyX2RlY19vcGVuICgpCkNv
+bnRpbnVpbmcuCgpCcmVha3BvaW50IDEwMCwgMHhmZmZmZmZmZmMwOTcxMmYwIGluIG5mczRf
+b3Blbl9kb25lICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDc2LCAweGZmZmZmZmZmYzA5
+NmYzNDAgaW4gbmZzNDFfc2VxdWVuY2VfcHJvY2VzcyAoKQpDb250aW51aW5nLgoKQnJlYWtw
+b2ludCA0MDAsIDB4ZmZmZmZmZmZjMDk4ZmFmMCBpbiBuZnM0MV9oYW5kbGVfc2VxdWVuY2Vf
+ZmxhZ19lcnJvcnMgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDg2LCAweGZmZmZmZmZm
+YzA5OWE3NDAgaW4gbmZzNDFfdXBkYXRlX3RhcmdldF9zbG90aWQgKCkKQ29udGludWluZy4K
+CkJyZWFrcG9pbnQgNDgwLCAweGZmZmZmZmZmYzA5OWE0MzAgaW4gbmZzNF9hbGxvY19zbG90
+ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ3MSwgMHhmZmZmZmZmZmMwOTk5ZTYwIGlu
+IG5mczRfZmluZF9vcl9jcmVhdGVfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0
+NzYsIDB4ZmZmZmZmZmZjMDk5YTIwMCBpbiBuZnM0X2ZyZWVfc2xvdCAoKQpDb250aW51aW5n
+LgoKQnJlYWtwb2ludCAxNzgsIDB4ZmZmZmZmZmZjMDk3OGIyMCBpbiBuZnM0X29wZW5fcmVs
+ZWFzZSAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAyNCwgMHhmZmZmZmZmZmMwOTY5MWMw
+IGluIG5mczRfdXBkYXRlX2NoYW5nZWF0dHJfbG9ja2VkICgpCkNvbnRpbnVpbmcuCgpCcmVh
+a3BvaW50IDM3NiwgMHhmZmZmZmZmZmMwOThkMGIwIGluIG5mczRfZ2V0X29wZW5fc3RhdGUg
+KCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNzM3LCAweGZmZmZmZmZmYzA5NzcyODAgaW4g
+dXBkYXRlX29wZW5fc3RhdGVpZCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0MTgsIDB4
+ZmZmZmZmZmZjMDk5MWQyMCBpbiBuZnM0X2dldF92YWxpZF9kZWxlZ2F0aW9uICgpCkNvbnRp
+bnVpbmcuCgpCcmVha3BvaW50IDM3NSwgMHhmZmZmZmZmZmMwOThkMDQwIGluIG5mczRfc3Rh
+dGVfc2V0X21vZGVfbG9ja2VkICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDg3LCAweGZm
+ZmZmZmZmYzA5NzAyMzAgaW4gbmZzNF9zZXF1ZW5jZV9mcmVlX3Nsb3QgKCkKQ29udGludWlu
+Zy4KCkJyZWFrcG9pbnQgNzMsIDB4ZmZmZmZmZmZjMDk2ZWZlMCBpbiBuZnM0MV9yZWxlYXNl
+X3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDgzLCAweGZmZmZmZmZmYzA5OWE1
+ZTAgaW4gbmZzNDFfd2FrZV9hbmRfYXNzaWduX3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFr
+cG9pbnQgNDc2LCAweGZmZmZmZmZmYzA5OWEyMDAgaW4gbmZzNF9mcmVlX3Nsb3QgKCkKQ29u
+dGludWluZy4KCkJyZWFrcG9pbnQgOTMsIDB4ZmZmZmZmZmZjMDk3MDZkMCBpbiBuZnM0X29w
+ZW5kYXRhX2ZyZWUgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDkzLCAweGZmZmZmZmZm
+YzA5YTk4MDAgaW4gbmZzNF9sZ29wZW5fcmVsZWFzZSAoKQpDb250aW51aW5nLgoKQnJlYWtw
+b2ludCAzNzIsIDB4ZmZmZmZmZmZjMDk4Y2U1MCBpbiBuZnM0X3B1dF9zdGF0ZV9vd25lciAo
+KQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAzNzIsIDB4ZmZmZmZmZmZjMDk4Y2U1MCBpbiBu
+ZnM0X3B1dF9zdGF0ZV9vd25lciAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0MTIsIDB4
+ZmZmZmZmZmZjMDk5MDg0MCBpbiBuZnM0X2ZpbGVfZmx1c2ggKCkKQ29udGludWluZy4KCkJy
+ZWFrcG9pbnQgNDI2LCAweGZmZmZmZmZmYzA5OTJmYzAgaW4gbmZzNF9kZWxlZ2F0aW9uX2Zs
+dXNoX29uX2Nsb3NlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDE0MCwgMHhmZmZmZmZm
+ZmMwOTc0YjkwIGluIG5mczRfcHJvY19zZXRhdHRyICgpCkNvbnRpbnVpbmcuCgpCcmVha3Bv
+aW50IDY3NSwgMHhmZmZmZmZmZmMwOTEzMGYwIGluIG5mczRfbGFiZWxfYWxsb2MgKCkKQ29u
+dGludWluZy4KCkJyZWFrcG9pbnQgMTM5LCAweGZmZmZmZmZmYzA5NzQ2YzAgaW4gbmZzNF9k
+b19zZXRhdHRyICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDI3LCAweGZmZmZmZmZmYzA5
+Njk1MjAgaW4gbmZzNF9iaXRtYXBfY29weV9hZGp1c3QgKCkKQ29udGludWluZy4KCkJyZWFr
+cG9pbnQgNDIzLCAweGZmZmZmZmZmYzA5OTI2MTAgaW4gbmZzNF9pbm9kZV9tYWtlX3dyaXRl
+YWJsZSAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA1MywgMHhmZmZmZmZmZmMwOTZiMDYw
+IGluIG5mczRfY2FsbF9zeW5jX3NlcXVlbmNlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50
+IDExMSwgMHhmZmZmZmZmZmMwOTcyN2MwIGluIG5mczQxX2NhbGxfc3luY19wcmVwYXJlICgp
+CkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDEwNCwgMHhmZmZmZmZmZmMwOTcyNGEwIGluIG5m
+czRfc2V0dXBfc2VxdWVuY2UgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDgwLCAweGZm
+ZmZmZmZmYzA5OWE0MzAgaW4gbmZzNF9hbGxvY19zbG90ICgpCkNvbnRpbnVpbmcuCgpCcmVh
+a3BvaW50IDQ3MSwgMHhmZmZmZmZmZmMwOTk5ZTYwIGluIG5mczRfZmluZF9vcl9jcmVhdGVf
+c2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAyOTYsIDB4ZmZmZmZmZmZjMDk4NGI1
+MCBpbiBuZnM0X3hkcl9lbmNfc2V0YXR0ciAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA2
+NzgsIDB4ZmZmZmZmZmZjMDU4MGVkMCBpbiBuZnM0c3ZjX2RlY29kZV9jb21wb3VuZGFyZ3Mg
+KCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNjc5LCAweGZmZmZmZmZmYzA1ODEzMTAgaW4g
+bmZzNHN2Y19lbmNvZGVfY29tcG91bmRyZXMgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQg
+MzMwLCAweGZmZmZmZmZmYzA5OGE3NDAgaW4gbmZzNF94ZHJfZGVjX3NldGF0dHIgKCkKQ29u
+dGludWluZy4KCkJyZWFrcG9pbnQgNzksIDB4ZmZmZmZmZmZjMDk2ZjcwMCBpbiBuZnM0MV9j
+YWxsX3N5bmNfZG9uZSAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA3NiwgMHhmZmZmZmZm
+ZmMwOTZmMzQwIGluIG5mczQxX3NlcXVlbmNlX3Byb2Nlc3MgKCkKQ29udGludWluZy4KCkJy
+ZWFrcG9pbnQgNDAwLCAweGZmZmZmZmZmYzA5OGZhZjAgaW4gbmZzNDFfaGFuZGxlX3NlcXVl
+bmNlX2ZsYWdfZXJyb3JzICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ4NiwgMHhmZmZm
+ZmZmZmMwOTlhNzQwIGluIG5mczQxX3VwZGF0ZV90YXJnZXRfc2xvdGlkICgpCkNvbnRpbnVp
+bmcuCgpCcmVha3BvaW50IDQ4MCwgMHhmZmZmZmZmZmMwOTlhNDMwIGluIG5mczRfYWxsb2Nf
+c2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0NzEsIDB4ZmZmZmZmZmZjMDk5OWU2
+MCBpbiBuZnM0X2ZpbmRfb3JfY3JlYXRlX3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9p
+bnQgNDc2LCAweGZmZmZmZmZmYzA5OWEyMDAgaW4gbmZzNF9mcmVlX3Nsb3QgKCkKQ29udGlu
+dWluZy4KCkJyZWFrcG9pbnQgNzMsIDB4ZmZmZmZmZmZjMDk2ZWZlMCBpbiBuZnM0MV9yZWxl
+YXNlX3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDgzLCAweGZmZmZmZmZmYzA5
+OWE1ZTAgaW4gbmZzNDFfd2FrZV9hbmRfYXNzaWduX3Nsb3QgKCkKQ29udGludWluZy4KCkJy
+ZWFrcG9pbnQgNDc2LCAweGZmZmZmZmZmYzA5OWEyMDAgaW4gbmZzNF9mcmVlX3Nsb3QgKCkK
+Q29udGludWluZy4KCkJyZWFrcG9pbnQgMTI2LCAweGZmZmZmZmZmYzA5NzM5NTAgaW4gbmZz
+NF9oYW5kbGVfZXhjZXB0aW9uICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ0LCAweGZm
+ZmZmZmZmYzA5NmEwNjAgaW4gbmZzNF9kb19oYW5kbGVfZXhjZXB0aW9uICgpCkNvbnRpbnVp
+bmcuCgpCcmVha3BvaW50IDQxMiwgMHhmZmZmZmZmZmMwOTkwODQwIGluIG5mczRfZmlsZV9m
+bHVzaCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0MjYsIDB4ZmZmZmZmZmZjMDk5MmZj
+MCBpbiBuZnM0X2RlbGVnYXRpb25fZmx1c2hfb25fY2xvc2UgKCkKQ29udGludWluZy4KCkJy
+ZWFrcG9pbnQgMzYsIDB4ZmZmZmZmZmZjMDk2OTk4MCBpbiBuZnM0X2Nsb3NlX2NvbnRleHQg
+KCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzgxLCAweGZmZmZmZmZmYzA5OGU3OTAgaW4g
+bmZzNF9jbG9zZV9zeW5jICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDM3NSwgMHhmZmZm
+ZmZmZmMwOThkMDQwIGluIG5mczRfc3RhdGVfc2V0X21vZGVfbG9ja2VkICgpCkNvbnRpbnVp
+bmcuCgpCcmVha3BvaW50IDE4NCwgMHhmZmZmZmZmZmMwOTc5ZGQwIGluIG5mczRfZG9fY2xv
+c2UgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzg1LCAweGZmZmZmZmZmYzA5OGVhNzAg
+aW4gbmZzNF9jb3B5X29wZW5fc3RhdGVpZCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAx
+MjEsIDB4ZmZmZmZmZmZjMDk3MmM0MCBpbiBuZnM0X2Nsb3NlX3ByZXBhcmUgKCkKQ29udGlu
+dWluZy4KCkJyZWFrcG9pbnQgNDUsIDB4ZmZmZmZmZmZjMDk2YTY1MCBpbiBuZnM0X2JpdG1h
+c2tfc2V0LmNvbnN0cHJvcCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAxMDQsIDB4ZmZm
+ZmZmZmZjMDk3MjRhMCBpbiBuZnM0X3NldHVwX3NlcXVlbmNlICgpCkNvbnRpbnVpbmcuCgpC
+cmVha3BvaW50IDQ4MCwgMHhmZmZmZmZmZmMwOTlhNDMwIGluIG5mczRfYWxsb2Nfc2xvdCAo
+KQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0NzEsIDB4ZmZmZmZmZmZjMDk5OWU2MCBpbiBu
+ZnM0X2ZpbmRfb3JfY3JlYXRlX3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzE2
+LCAweGZmZmZmZmZmYzA5ODZmNzAgaW4gbmZzNF94ZHJfZW5jX2Nsb3NlICgpCkNvbnRpbnVp
+bmcuCgpCcmVha3BvaW50IDY3OCwgMHhmZmZmZmZmZmMwNTgwZWQwIGluIG5mczRzdmNfZGVj
+b2RlX2NvbXBvdW5kYXJncyAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA2NzksIDB4ZmZm
+ZmZmZmZjMDU4MTMxMCBpbiBuZnM0c3ZjX2VuY29kZV9jb21wb3VuZHJlcyAoKQpDb250aW51
+aW5nLgoKQnJlYWtwb2ludCAzMjcsIDB4ZmZmZmZmZmZjMDk4YTQ5MCBpbiBuZnM0X3hkcl9k
+ZWNfY2xvc2UgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzI2LCAweGZmZmZmZmZmYzA5
+OGEzNzAgaW4gbmZzNF94ZHJfZGVjX2Nsb3NlLnBhcnQgKCkKQ29udGludWluZy4KCkJyZWFr
+cG9pbnQgMTI1LCAweGZmZmZmZmZmYzA5NzMyYTAgaW4gbmZzNF9jbG9zZV9kb25lICgpCkNv
+bnRpbnVpbmcuCgpCcmVha3BvaW50IDg5LCAweGZmZmZmZmZmYzA5NzA1MTAgaW4gbmZzNF9z
+ZXF1ZW5jZV9kb25lICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDc2LCAweGZmZmZmZmZm
+YzA5NmYzNDAgaW4gbmZzNDFfc2VxdWVuY2VfcHJvY2VzcyAoKQpDb250aW51aW5nLgoKQnJl
+YWtwb2ludCA0MDAsIDB4ZmZmZmZmZmZjMDk4ZmFmMCBpbiBuZnM0MV9oYW5kbGVfc2VxdWVu
+Y2VfZmxhZ19lcnJvcnMgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDg2LCAweGZmZmZm
+ZmZmYzA5OWE3NDAgaW4gbmZzNDFfdXBkYXRlX3RhcmdldF9zbG90aWQgKCkKQ29udGludWlu
+Zy4KCkJyZWFrcG9pbnQgNDgwLCAweGZmZmZmZmZmYzA5OWE0MzAgaW4gbmZzNF9hbGxvY19z
+bG90ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ3MSwgMHhmZmZmZmZmZmMwOTk5ZTYw
+IGluIG5mczRfZmluZF9vcl9jcmVhdGVfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2lu
+dCA0NzYsIDB4ZmZmZmZmZmZjMDk5YTIwMCBpbiBuZnM0X2ZyZWVfc2xvdCAoKQpDb250aW51
+aW5nLgoKQnJlYWtwb2ludCA3MywgMHhmZmZmZmZmZmMwOTZlZmUwIGluIG5mczQxX3JlbGVh
+c2Vfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0ODMsIDB4ZmZmZmZmZmZjMDk5
+YTVlMCBpbiBuZnM0MV93YWtlX2FuZF9hc3NpZ25fc2xvdCAoKQpDb250aW51aW5nLgoKQnJl
+YWtwb2ludCA0NzYsIDB4ZmZmZmZmZmZjMDk5YTIwMCBpbiBuZnM0X2ZyZWVfc2xvdCAoKQpD
+b250aW51aW5nLgoKQnJlYWtwb2ludCA1MCwgMHhmZmZmZmZmZmMwOTZhYTMwIGluIG5mczRf
+YXN5bmNfaGFuZGxlX2V4Y2VwdGlvbiAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0NCwg
+MHhmZmZmZmZmZmMwOTZhMDYwIGluIG5mczRfZG9faGFuZGxlX2V4Y2VwdGlvbiAoKQpDb250
+aW51aW5nLgoKQnJlYWtwb2ludCA0MCwgMHhmZmZmZmZmZmMwOTY5YzgwIGluIG5mczRfZnJl
+ZV9jbG9zZWRhdGEgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzc3LCAweGZmZmZmZmZm
+YzA5OGQyNTAgaW4gbmZzNF9wdXRfb3Blbl9zdGF0ZSAoKQpDb250aW51aW5nLgoKQnJlYWtw
+b2ludCA0MjIsIDB4ZmZmZmZmZmZjMDk5MjUxMCBpbiBuZnM0X2lub2RlX3JldHVybl9kZWxl
+Z2F0aW9uX29uX2Nsb3NlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDM3MiwgMHhmZmZm
+ZmZmZmMwOThjZTUwIGluIG5mczRfcHV0X3N0YXRlX293bmVyICgpCkNvbnRpbnVpbmcuCg==
+
+--------------nJWtO5qC2pACou522eEA0Pzh
+Content-Type: text/x-log; charset=UTF-8; name="2ndtouch.log"
+Content-Disposition: attachment; filename="2ndtouch.log"
+Content-Transfer-Encoding: base64
+
+QnJlYWtwb2ludCA2NzMsIDB4ZmZmZmZmZmZjMDkxMDIwMCBpbiBuZnM0X2xvb2t1cF9yZXZh
+bGlkYXRlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDY3MiwgMHhmZmZmZmZmZmMwOTEw
+MTMwIGluIG5mczRfZG9fbG9va3VwX3JldmFsaWRhdGUgKCkKQ29udGludWluZy4KCkJyZWFr
+cG9pbnQgNDE0LCAweGZmZmZmZmZmYzA5OTBiYjAgaW4gbmZzNF9maWxlX29wZW4gKCkKQ29u
+dGludWluZy4KCkJyZWFrcG9pbnQgMTgxLCAweGZmZmZmZmZmYzA5Nzk5NzAgaW4gbmZzNF9h
+dG9taWNfb3BlbiAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAxODAsIDB4ZmZmZmZmZmZj
+MDk3OGM4MCBpbiBuZnM0X2RvX29wZW4gKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzcx
+LCAweGZmZmZmZmZmYzA5OGM5OTAgaW4gbmZzNF9nZXRfc3RhdGVfb3duZXIgKCkKQ29udGlu
+dWluZy4KCkJyZWFrcG9pbnQgMzk2LCAweGZmZmZmZmZmYzA5OGY1NjAgaW4gbmZzNF9jbGll
+bnRfcmVjb3Zlcl9leHBpcmVkX2xlYXNlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDM5
+NSwgMHhmZmZmZmZmZmMwOThmNGIwIGluIG5mczRfd2FpdF9jbG50X3JlY292ZXIgKCkKQ29u
+dGludWluZy4KCkJyZWFrcG9pbnQgNDE4LCAweGZmZmZmZmZmYzA5OTFkMjAgaW4gbmZzNF9n
+ZXRfdmFsaWRfZGVsZWdhdGlvbiAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA2MiwgMHhm
+ZmZmZmZmZmMwOTZkMzAwIGluIG5mczRfb3BlbmRhdGFfYWxsb2MgKCkKQ29udGludWluZy4K
+CkJyZWFrcG9pbnQgNjc1LCAweGZmZmZmZmZmYzA5MTMwZjAgaW4gbmZzNF9sYWJlbF9hbGxv
+YyAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA2NzUsIDB4ZmZmZmZmZmZjMDkxMzBmMCBp
+biBuZnM0X2xhYmVsX2FsbG9jICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDM3NiwgMHhm
+ZmZmZmZmZmMwOThkMGIwIGluIG5mczRfZ2V0X29wZW5fc3RhdGUgKCkKQ29udGludWluZy4K
+CkJyZWFrcG9pbnQgNjgsIDB4ZmZmZmZmZmZjMDk2ZTJmMCBpbiBuZnM0X3J1bl9vcGVuX3Rh
+c2sgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMTIwLCAweGZmZmZmZmZmYzA5NzJhNDAg
+aW4gbmZzNF9vcGVuX3ByZXBhcmUgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDE4LCAw
+eGZmZmZmZmZmYzA5OTFkMjAgaW4gbmZzNF9nZXRfdmFsaWRfZGVsZWdhdGlvbiAoKQpDb250
+aW51aW5nLgoKQnJlYWtwb2ludCAxMDQsIDB4ZmZmZmZmZmZjMDk3MjRhMCBpbiBuZnM0X3Nl
+dHVwX3NlcXVlbmNlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ4MCwgMHhmZmZmZmZm
+ZmMwOTlhNDMwIGluIG5mczRfYWxsb2Nfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2lu
+dCA0NzEsIDB4ZmZmZmZmZmZjMDk5OWU2MCBpbiBuZnM0X2ZpbmRfb3JfY3JlYXRlX3Nsb3Qg
+KCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzI0LCAweGZmZmZmZmZmYzA5ODhkMDAgaW4g
+bmZzNF94ZHJfZW5jX29wZW5fbm9hdHRyICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDY3
+OCwgMHhmZmZmZmZmZmMwNTgwZWQwIGluIG5mczRzdmNfZGVjb2RlX2NvbXBvdW5kYXJncyAo
+KQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA2OTQsIDB4ZmZmZmZmZmZjMDU4NTc3MCBpbiBu
+ZnM0X2FsbG9jX3N0aWQgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNjk5LCAweGZmZmZm
+ZmZmYzA1ODYzNzAgaW4gbmZzNF9pbmNfYW5kX2NvcHlfc3RhdGVpZCAoKQpDb250aW51aW5n
+LgoKQnJlYWtwb2ludCA2OTgsIDB4ZmZmZmZmZmZjMDU4NTljMCBpbiBuZnM0X3B1dF9zdGlk
+ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDY4OCwgMHhmZmZmZmZmZmMwNTgzNWEwIGlu
+IG5mczRfcHV0X3N0YXRlb3duZXIgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNjk4LCAw
+eGZmZmZmZmZmYzA1ODU5YzAgaW4gbmZzNF9wdXRfc3RpZCAoKQpDb250aW51aW5nLgoKQnJl
+YWtwb2ludCA2ODYsIDB4ZmZmZmZmZmZjMDU4MmQ1MCBpbiBuZnM0X2ZyZWVfY3BudGZfc3Rh
+dGVsaXN0ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDY5MSwgMHhmZmZmZmZmZmMwNTg0
+YTYwIGluIG5mczRfZnJlZV9vbF9zdGF0ZWlkICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50
+IDY3OSwgMHhmZmZmZmZmZmMwNTgxMzEwIGluIG5mczRzdmNfZW5jb2RlX2NvbXBvdW5kcmVz
+ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDM0MCwgMHhmZmZmZmZmZmMwOThiMGQwIGlu
+IG5mczRfeGRyX2RlY19vcGVuX25vYXR0ciAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAx
+MDAsIDB4ZmZmZmZmZmZjMDk3MTJmMCBpbiBuZnM0X29wZW5fZG9uZSAoKQpDb250aW51aW5n
+LgoKQnJlYWtwb2ludCA3NiwgMHhmZmZmZmZmZmMwOTZmMzQwIGluIG5mczQxX3NlcXVlbmNl
+X3Byb2Nlc3MgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDAwLCAweGZmZmZmZmZmYzA5
+OGZhZjAgaW4gbmZzNDFfaGFuZGxlX3NlcXVlbmNlX2ZsYWdfZXJyb3JzICgpCkNvbnRpbnVp
+bmcuCgpCcmVha3BvaW50IDQ4NiwgMHhmZmZmZmZmZmMwOTlhNzQwIGluIG5mczQxX3VwZGF0
+ZV90YXJnZXRfc2xvdGlkICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ4MCwgMHhmZmZm
+ZmZmZmMwOTlhNDMwIGluIG5mczRfYWxsb2Nfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtw
+b2ludCA0NzEsIDB4ZmZmZmZmZmZjMDk5OWU2MCBpbiBuZnM0X2ZpbmRfb3JfY3JlYXRlX3Ns
+b3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDc2LCAweGZmZmZmZmZmYzA5OWEyMDAg
+aW4gbmZzNF9mcmVlX3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMTc4LCAweGZm
+ZmZmZmZmYzA5NzhiMjAgaW4gbmZzNF9vcGVuX3JlbGVhc2UgKCkKQ29udGludWluZy4KCkJy
+ZWFrcG9pbnQgNzM3LCAweGZmZmZmZmZmYzA5NzcyODAgaW4gdXBkYXRlX29wZW5fc3RhdGVp
+ZCAoKQpDb250aW51aW5nLiA8LS0gZGVsYXkgb2NjdXJzIGhlcmUKCkJyZWFrcG9pbnQgNDE4
+LCAweGZmZmZmZmZmYzA5OTFkMjAgaW4gbmZzNF9nZXRfdmFsaWRfZGVsZWdhdGlvbiAoKQpD
+b250aW51aW5nLgoKQnJlYWtwb2ludCAzNzUsIDB4ZmZmZmZmZmZjMDk4ZDA0MCBpbiBuZnM0
+X3N0YXRlX3NldF9tb2RlX2xvY2tlZCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA4Nywg
+MHhmZmZmZmZmZmMwOTcwMjMwIGluIG5mczRfc2VxdWVuY2VfZnJlZV9zbG90ICgpCkNvbnRp
+bnVpbmcuCgpCcmVha3BvaW50IDczLCAweGZmZmZmZmZmYzA5NmVmZTAgaW4gbmZzNDFfcmVs
+ZWFzZV9zbG90ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ4MywgMHhmZmZmZmZmZmMw
+OTlhNWUwIGluIG5mczQxX3dha2VfYW5kX2Fzc2lnbl9zbG90ICgpCkNvbnRpbnVpbmcuCgpC
+cmVha3BvaW50IDQ3NiwgMHhmZmZmZmZmZmMwOTlhMjAwIGluIG5mczRfZnJlZV9zbG90ICgp
+CkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDkzLCAweGZmZmZmZmZmYzA5NzA2ZDAgaW4gbmZz
+NF9vcGVuZGF0YV9mcmVlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ5MywgMHhmZmZm
+ZmZmZmMwOWE5ODAwIGluIG5mczRfbGdvcGVuX3JlbGVhc2UgKCkKQ29udGludWluZy4KCkJy
+ZWFrcG9pbnQgMzc3LCAweGZmZmZmZmZmYzA5OGQyNTAgaW4gbmZzNF9wdXRfb3Blbl9zdGF0
+ZSAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAzNzIsIDB4ZmZmZmZmZmZjMDk4Y2U1MCBp
+biBuZnM0X3B1dF9zdGF0ZV9vd25lciAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAzNzIs
+IDB4ZmZmZmZmZmZjMDk4Y2U1MCBpbiBuZnM0X3B1dF9zdGF0ZV9vd25lciAoKQpDb250aW51
+aW5nLgoKQnJlYWtwb2ludCA0MTIsIDB4ZmZmZmZmZmZjMDk5MDg0MCBpbiBuZnM0X2ZpbGVf
+Zmx1c2ggKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDI2LCAweGZmZmZmZmZmYzA5OTJm
+YzAgaW4gbmZzNF9kZWxlZ2F0aW9uX2ZsdXNoX29uX2Nsb3NlICgpCkNvbnRpbnVpbmcuCgpC
+cmVha3BvaW50IDE0MCwgMHhmZmZmZmZmZmMwOTc0YjkwIGluIG5mczRfcHJvY19zZXRhdHRy
+ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDY3NSwgMHhmZmZmZmZmZmMwOTEzMGYwIGlu
+IG5mczRfbGFiZWxfYWxsb2MgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMTM5LCAweGZm
+ZmZmZmZmYzA5NzQ2YzAgaW4gbmZzNF9kb19zZXRhdHRyICgpCkNvbnRpbnVpbmcuCgpCcmVh
+a3BvaW50IDI3LCAweGZmZmZmZmZmYzA5Njk1MjAgaW4gbmZzNF9iaXRtYXBfY29weV9hZGp1
+c3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDIzLCAweGZmZmZmZmZmYzA5OTI2MTAg
+aW4gbmZzNF9pbm9kZV9tYWtlX3dyaXRlYWJsZSAoKQpDb250aW51aW5nLgoKQnJlYWtwb2lu
+dCA1MywgMHhmZmZmZmZmZmMwOTZiMDYwIGluIG5mczRfY2FsbF9zeW5jX3NlcXVlbmNlICgp
+CkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDExMSwgMHhmZmZmZmZmZmMwOTcyN2MwIGluIG5m
+czQxX2NhbGxfc3luY19wcmVwYXJlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDEwNCwg
+MHhmZmZmZmZmZmMwOTcyNGEwIGluIG5mczRfc2V0dXBfc2VxdWVuY2UgKCkKQ29udGludWlu
+Zy4KCkJyZWFrcG9pbnQgNDgwLCAweGZmZmZmZmZmYzA5OWE0MzAgaW4gbmZzNF9hbGxvY19z
+bG90ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ3MSwgMHhmZmZmZmZmZmMwOTk5ZTYw
+IGluIG5mczRfZmluZF9vcl9jcmVhdGVfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2lu
+dCAyOTYsIDB4ZmZmZmZmZmZjMDk4NGI1MCBpbiBuZnM0X3hkcl9lbmNfc2V0YXR0ciAoKQpD
+b250aW51aW5nLgoKQnJlYWtwb2ludCA2NzgsIDB4ZmZmZmZmZmZjMDU4MGVkMCBpbiBuZnM0
+c3ZjX2RlY29kZV9jb21wb3VuZGFyZ3MgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNjc5
+LCAweGZmZmZmZmZmYzA1ODEzMTAgaW4gbmZzNHN2Y19lbmNvZGVfY29tcG91bmRyZXMgKCkK
+Q29udGludWluZy4KCkJyZWFrcG9pbnQgMzMwLCAweGZmZmZmZmZmYzA5OGE3NDAgaW4gbmZz
+NF94ZHJfZGVjX3NldGF0dHIgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNzksIDB4ZmZm
+ZmZmZmZjMDk2ZjcwMCBpbiBuZnM0MV9jYWxsX3N5bmNfZG9uZSAoKQpDb250aW51aW5nLgoK
+QnJlYWtwb2ludCA3NiwgMHhmZmZmZmZmZmMwOTZmMzQwIGluIG5mczQxX3NlcXVlbmNlX3By
+b2Nlc3MgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDAwLCAweGZmZmZmZmZmYzA5OGZh
+ZjAgaW4gbmZzNDFfaGFuZGxlX3NlcXVlbmNlX2ZsYWdfZXJyb3JzICgpCkNvbnRpbnVpbmcu
+CgpCcmVha3BvaW50IDQ4NiwgMHhmZmZmZmZmZmMwOTlhNzQwIGluIG5mczQxX3VwZGF0ZV90
+YXJnZXRfc2xvdGlkICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ4MCwgMHhmZmZmZmZm
+ZmMwOTlhNDMwIGluIG5mczRfYWxsb2Nfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2lu
+dCA0NzEsIDB4ZmZmZmZmZmZjMDk5OWU2MCBpbiBuZnM0X2ZpbmRfb3JfY3JlYXRlX3Nsb3Qg
+KCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDc2LCAweGZmZmZmZmZmYzA5OWEyMDAgaW4g
+bmZzNF9mcmVlX3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNzMsIDB4ZmZmZmZm
+ZmZjMDk2ZWZlMCBpbiBuZnM0MV9yZWxlYXNlX3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFr
+cG9pbnQgNDgzLCAweGZmZmZmZmZmYzA5OWE1ZTAgaW4gbmZzNDFfd2FrZV9hbmRfYXNzaWdu
+X3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDc2LCAweGZmZmZmZmZmYzA5OWEy
+MDAgaW4gbmZzNF9mcmVlX3Nsb3QgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMTI2LCAw
+eGZmZmZmZmZmYzA5NzM5NTAgaW4gbmZzNF9oYW5kbGVfZXhjZXB0aW9uICgpCkNvbnRpbnVp
+bmcuCgpCcmVha3BvaW50IDQ0LCAweGZmZmZmZmZmYzA5NmEwNjAgaW4gbmZzNF9kb19oYW5k
+bGVfZXhjZXB0aW9uICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQxMiwgMHhmZmZmZmZm
+ZmMwOTkwODQwIGluIG5mczRfZmlsZV9mbHVzaCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2lu
+dCA0MjYsIDB4ZmZmZmZmZmZjMDk5MmZjMCBpbiBuZnM0X2RlbGVnYXRpb25fZmx1c2hfb25f
+Y2xvc2UgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzYsIDB4ZmZmZmZmZmZjMDk2OTk4
+MCBpbiBuZnM0X2Nsb3NlX2NvbnRleHQgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMzgx
+LCAweGZmZmZmZmZmYzA5OGU3OTAgaW4gbmZzNF9jbG9zZV9zeW5jICgpCkNvbnRpbnVpbmcu
+CgpCcmVha3BvaW50IDM3NSwgMHhmZmZmZmZmZmMwOThkMDQwIGluIG5mczRfc3RhdGVfc2V0
+X21vZGVfbG9ja2VkICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDE4NCwgMHhmZmZmZmZm
+ZmMwOTc5ZGQwIGluIG5mczRfZG9fY2xvc2UgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQg
+Mzg1LCAweGZmZmZmZmZmYzA5OGVhNzAgaW4gbmZzNF9jb3B5X29wZW5fc3RhdGVpZCAoKQpD
+b250aW51aW5nLgoKQnJlYWtwb2ludCAxMjEsIDB4ZmZmZmZmZmZjMDk3MmM0MCBpbiBuZnM0
+X2Nsb3NlX3ByZXBhcmUgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDUsIDB4ZmZmZmZm
+ZmZjMDk2YTY1MCBpbiBuZnM0X2JpdG1hc2tfc2V0LmNvbnN0cHJvcCAoKQpDb250aW51aW5n
+LgoKQnJlYWtwb2ludCAxMDQsIDB4ZmZmZmZmZmZjMDk3MjRhMCBpbiBuZnM0X3NldHVwX3Nl
+cXVlbmNlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDQ4MCwgMHhmZmZmZmZmZmMwOTlh
+NDMwIGluIG5mczRfYWxsb2Nfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0NzEs
+IDB4ZmZmZmZmZmZjMDk5OWU2MCBpbiBuZnM0X2ZpbmRfb3JfY3JlYXRlX3Nsb3QgKCkKQ29u
+dGludWluZy4KCkJyZWFrcG9pbnQgMzE2LCAweGZmZmZmZmZmYzA5ODZmNzAgaW4gbmZzNF94
+ZHJfZW5jX2Nsb3NlICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDY3OCwgMHhmZmZmZmZm
+ZmMwNTgwZWQwIGluIG5mczRzdmNfZGVjb2RlX2NvbXBvdW5kYXJncyAoKQpDb250aW51aW5n
+LgoKQnJlYWtwb2ludCA2NzksIDB4ZmZmZmZmZmZjMDU4MTMxMCBpbiBuZnM0c3ZjX2VuY29k
+ZV9jb21wb3VuZHJlcyAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCAzMjcsIDB4ZmZmZmZm
+ZmZjMDk4YTQ5MCBpbiBuZnM0X3hkcl9kZWNfY2xvc2UgKCkKQ29udGludWluZy4KCkJyZWFr
+cG9pbnQgMzI2LCAweGZmZmZmZmZmYzA5OGEzNzAgaW4gbmZzNF94ZHJfZGVjX2Nsb3NlLnBh
+cnQgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgMTI1LCAweGZmZmZmZmZmYzA5NzMyYTAg
+aW4gbmZzNF9jbG9zZV9kb25lICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50IDg5LCAweGZm
+ZmZmZmZmYzA5NzA1MTAgaW4gbmZzNF9zZXF1ZW5jZV9kb25lICgpCkNvbnRpbnVpbmcuCgpC
+cmVha3BvaW50IDc2LCAweGZmZmZmZmZmYzA5NmYzNDAgaW4gbmZzNDFfc2VxdWVuY2VfcHJv
+Y2VzcyAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0MDAsIDB4ZmZmZmZmZmZjMDk4ZmFm
+MCBpbiBuZnM0MV9oYW5kbGVfc2VxdWVuY2VfZmxhZ19lcnJvcnMgKCkKQ29udGludWluZy4K
+CkJyZWFrcG9pbnQgNDg2LCAweGZmZmZmZmZmYzA5OWE3NDAgaW4gbmZzNDFfdXBkYXRlX3Rh
+cmdldF9zbG90aWQgKCkKQ29udGludWluZy4KCkJyZWFrcG9pbnQgNDgwLCAweGZmZmZmZmZm
+YzA5OWE0MzAgaW4gbmZzNF9hbGxvY19zbG90ICgpCkNvbnRpbnVpbmcuCgpCcmVha3BvaW50
+IDQ3MSwgMHhmZmZmZmZmZmMwOTk5ZTYwIGluIG5mczRfZmluZF9vcl9jcmVhdGVfc2xvdCAo
+KQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0NzYsIDB4ZmZmZmZmZmZjMDk5YTIwMCBpbiBu
+ZnM0X2ZyZWVfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA3MywgMHhmZmZmZmZm
+ZmMwOTZlZmUwIGluIG5mczQxX3JlbGVhc2Vfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtw
+b2ludCA0ODMsIDB4ZmZmZmZmZmZjMDk5YTVlMCBpbiBuZnM0MV93YWtlX2FuZF9hc3NpZ25f
+c2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0NzYsIDB4ZmZmZmZmZmZjMDk5YTIw
+MCBpbiBuZnM0X2ZyZWVfc2xvdCAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA1MCwgMHhm
+ZmZmZmZmZmMwOTZhYTMwIGluIG5mczRfYXN5bmNfaGFuZGxlX2V4Y2VwdGlvbiAoKQpDb250
+aW51aW5nLgoKQnJlYWtwb2ludCA0NCwgMHhmZmZmZmZmZmMwOTZhMDYwIGluIG5mczRfZG9f
+aGFuZGxlX2V4Y2VwdGlvbiAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0MCwgMHhmZmZm
+ZmZmZmMwOTY5YzgwIGluIG5mczRfZnJlZV9jbG9zZWRhdGEgKCkKQ29udGludWluZy4KCkJy
+ZWFrcG9pbnQgMzc3LCAweGZmZmZmZmZmYzA5OGQyNTAgaW4gbmZzNF9wdXRfb3Blbl9zdGF0
+ZSAoKQpDb250aW51aW5nLgoKQnJlYWtwb2ludCA0MjIsIDB4ZmZmZmZmZmZjMDk5MjUxMCBp
+biBuZnM0X2lub2RlX3JldHVybl9kZWxlZ2F0aW9uX29uX2Nsb3NlICgpCkNvbnRpbnVpbmcu
+CgpCcmVha3BvaW50IDM3MiwgMHhmZmZmZmZmZmMwOThjZTUwIGluIG5mczRfcHV0X3N0YXRl
+X293bmVyICgpCkNvbnRpbnVpbmcuCg==
+--------------nJWtO5qC2pACou522eEA0Pzh
+Content-Type: text/x-log; charset=UTF-8; name="2ndtouch-next.log"
+Content-Disposition: attachment; filename="2ndtouch-next.log"
+Content-Transfer-Encoding: base64
+
+QnJlYWtwb2ludCAxLCAweGZmZmZmZmZmYzA5ODcyODAgaW4gdXBkYXRlX29wZW5fc3RhdGVp
+ZCAoKQpTaW5nbGUgc3RlcHBpbmcgdW50aWwgZXhpdCBmcm9tIGZ1bmN0aW9uIHVwZGF0ZV9v
+cGVuX3N0YXRlaWQsCndoaWNoIGhhcyBubyBsaW5lIG51bWJlciBpbmZvcm1hdGlvbi4KX3Jh
+d19zcGluX2xvY2sgKGxvY2s9MHhmZmZmODg4MTE3YWIxNDQwKSBhdCBrZXJuZWwvbG9ja2lu
+Zy9zcGlubG9jay5jOjE1MwoxNTMJewoxNTQJCV9fcmF3X3NwaW5fbG9jayhsb2NrKTsKMHhm
+ZmZmZmZmZmMwOTg3MmZiIGluIHVwZGF0ZV9vcGVuX3N0YXRlaWQgKCkKU2luZ2xlIHN0ZXBw
+aW5nIHVudGlsIGV4aXQgZnJvbSBmdW5jdGlvbiB1cGRhdGVfb3Blbl9zdGF0ZWlkLCAgPC0t
+LSBkZWxheSBvY2N1cnMgaGVyZQp3aGljaCBoYXMgbm8gbGluZSBudW1iZXIgaW5mb3JtYXRp
+b24uCjB4ZmZmZmZmZmZjMDk4NzkzNiBpbiBfbmZzNF9vcGVuZGF0YV90b19uZnM0X3N0YXRl
+ICgpClNpbmdsZSBzdGVwcGluZyB1bnRpbCBleGl0IGZyb20gZnVuY3Rpb24gX25mczRfb3Bl
+bmRhdGFfdG9fbmZzNF9zdGF0ZSwKd2hpY2ggaGFzIG5vIGxpbmUgbnVtYmVyIGluZm9ybWF0
+aW9uLgoweGZmZmZmZmZmYzA5ODkyNjIgaW4gbmZzNF9kb19vcGVuICgpClNpbmdsZSBzdGVw
+cGluZyB1bnRpbCBleGl0IGZyb20gZnVuY3Rpb24gbmZzNF9kb19vcGVuLAp3aGljaCBoYXMg
+bm8gbGluZSBudW1iZXIgaW5mb3JtYXRpb24uCjB4ZmZmZmZmZmZjMDk4OWE3MSBpbiBuZnM0
+X2F0b21pY19vcGVuICgpClNpbmdsZSBzdGVwcGluZyB1bnRpbCBleGl0IGZyb20gZnVuY3Rp
+b24gbmZzNF9hdG9taWNfb3BlbiwKd2hpY2ggaGFzIG5vIGxpbmUgbnVtYmVyIGluZm9ybWF0
+aW9uLgoweGZmZmZmZmZmYzA5YTBjYzEgaW4gbmZzNF9maWxlX29wZW4gKCkKU2luZ2xlIHN0
+ZXBwaW5nIHVudGlsIGV4aXQgZnJvbSBmdW5jdGlvbiBuZnM0X2ZpbGVfb3BlbiwKd2hpY2gg
+aGFzIG5vIGxpbmUgbnVtYmVyIGluZm9ybWF0aW9uLgpkb19kZW50cnlfb3BlbiAoZj1mQGVu
+dHJ5PTB4ZmZmZjg4ODEwMzA1YjYwMCwgaW5vZGU9MHhmZmZmODg4MTA1MTM2MzcwLCBvcGVu
+PTB4ZmZmZmZmZmZjMDlhMGJiMCA8bmZzNF9maWxlX29wZW4+LCBvcGVuQGVudHJ5PTB4MCA8
+Zml4ZWRfcGVyY3B1X2RhdGE+KSBhdCBmcy9vcGVuLmM6ODI4CjgyOAkJCWlmIChlcnJvcikK
+Q29udGludWluZy4K
+
+--------------nJWtO5qC2pACou522eEA0Pzh--
