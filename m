@@ -2,187 +2,190 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8C4E69F4D7
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Feb 2023 13:48:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9477C69F4E5
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Feb 2023 13:51:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231356AbjBVMsR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Feb 2023 07:48:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44392 "EHLO
+        id S231234AbjBVMvC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Feb 2023 07:51:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjBVMsQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Feb 2023 07:48:16 -0500
-Received: from mailrelay.rz.uni-wuerzburg.de (wrz3035.rz.uni-wuerzburg.de [132.187.3.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7F151F5D5
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Feb 2023 04:48:13 -0800 (PST)
-Received: from virusscan-slb.rz.uni-wuerzburg.de (localhost [127.0.0.1])
-        by mailrelay-slb.rz.uni-wuerzburg.de (Postfix) with ESMTP id 1DCFCF56B;
-        Wed, 22 Feb 2023 13:48:12 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by virusscan-slb.rz.uni-wuerzburg.de (Postfix) with ESMTP id 1C859F565;
-        Wed, 22 Feb 2023 13:48:12 +0100 (CET)
-X-Virus-Scanned: amavisd-new at uni-wuerzburg.de
-Received: from mailmaster.uni-wuerzburg.de ([127.0.0.1])
-        by localhost (vmail001.slb.uni-wuerzburg.de [127.0.0.1]) (amavisd-new, port 10225)
-        with ESMTP id Rb4IyB7sfsj8; Wed, 22 Feb 2023 13:48:12 +0100 (CET)
-Received: from [132.187.207.113] (wma7113.mathematik.uni-wuerzburg.de [132.187.207.113])
-        by mailmaster.uni-wuerzburg.de (Postfix) with ESMTPSA id CD7CCF540;
-        Wed, 22 Feb 2023 13:48:11 +0100 (CET)
-Message-ID: <550d9137-8d59-5be1-23be-34c6e1dff99a@mathematik.uni-wuerzburg.de>
-Date:   Wed, 22 Feb 2023 13:48:11 +0100
+        with ESMTP id S231299AbjBVMvB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Feb 2023 07:51:01 -0500
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10E2334C33
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Feb 2023 04:50:58 -0800 (PST)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-536bbe5f888so106695817b3.8
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Feb 2023 04:50:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=o3t7Rt04i7XjbMD2yTMybuLLZVzkPSOgsOSK2i45Wl8=;
+        b=nRQDwkTgAzoQG/c9D2MQfg3UpxbiKWP7bp24HSITIKpjgqKbyGdzW7/hmBc5JKltgP
+         0FG1LfppSkC8P/k/MaQcTVkFGTGwmKHRZD7UN7qvE2YizEF9hY2BOKxaWqMcU9IiwKM/
+         nytRxYmFxN5hf3717RHWbGnBJJC3xh9n66BVPM0zsIslFqrwg8wBll9+XJhn3AbUoFeD
+         FiPF+kLhvPo8tjz65CtxbcyQN9eSSSEEKCaf1opdUoFI0RlAeSqSxNwZ3DBviqbwqvr3
+         PMl+oq3XeNvpR8CXUQzqRMs/5HtovPNu5eGg0HyWv5IokaRpfS5UsvZWJu70pnC+bIRz
+         qe8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o3t7Rt04i7XjbMD2yTMybuLLZVzkPSOgsOSK2i45Wl8=;
+        b=pdt+uCYPn0yk+1DQm3j7r9zSTWJHDEZkeHeoTloCcLBWkCPGoW/nRgu0gkyPmNbnLv
+         Tx831s0K2zEsS4s8B+EkiSbTrMZrnJTAssUqFO3fyYu++yqQlFERA7BT7TMwg9QK8Ssa
+         D2HTGhggZLy+BylrNMmqv3JiBNj2GzjeHa8UzJI8p/tUoONmP4sH/Dqpe8BvllLha2kC
+         I9ZY7sAHHeHbKJ94suTFtL66+z5jgQd8IkaUcJRhSi6FKY1QZohImqmve1+UV+kMlpmC
+         2H464NwAf4kr3rh1IJcRvGWcNXXeiThQDBxOJPMFhfvLactYubfZa8LFpDXiAhVgBZDg
+         j6kg==
+X-Gm-Message-State: AO0yUKU81hZIKbLlzSUSsX8jf3sE0ntlcdHYtL6gAWJnZa6ZQ/40b3R9
+        QNh/1+siNyZighVvVO9tr0DRIDa+wJU8rb/KcJprwQ==
+X-Google-Smtp-Source: AK7set/K0mr1OI6e2W+8TiTVlV/XL6ZE/Gu91zivMl/D6VD2nnmwrcU+GtEBRgyQ2QN/4buNm5JAxk1+RvBqSV9ZUgc=
+X-Received: by 2002:a81:ad0f:0:b0:52e:cea7:f6e0 with SMTP id
+ l15-20020a81ad0f000000b0052ecea7f6e0mr794697ywh.7.1677070257101; Wed, 22 Feb
+ 2023 04:50:57 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: Reoccurring 5 second delays during NFS calls
-Content-Language: de-DE
-To:     Jeff Layton <jlayton@kernel.org>,
-        Benjamin Coddington <bcodding@redhat.com>
-Cc:     linux-nfs@vger.kernel.org,
-        Andreas Seeg <andreas.seeg@mathematik.uni-wuerzburg.de>
-References: <59682160-a246-395a-9486-9bbf11686740@mathematik.uni-wuerzburg.de>
- <8a02c86882bc47c1c1387dba8c7d756237cb3f3f.camel@kernel.org>
- <3b6c9b8e-2795-74e8-aefa-d4f1ac007c3c@mathematik.uni-wuerzburg.de>
- <785052D6-E39F-40D3-8BA3-72D3940EDD84@redhat.com>
- <7c7de5f1-fb6a-e970-99a2-4880583d8f6d@mathematik.uni-wuerzburg.de>
- <1B586C15-908C-4B00-9739-9AD118F88BD4@redhat.com>
- <4f70c2f5-dfdb-c37c-8663-5f2a108e229e@mathematik.uni-wuerzburg.de>
- <5AB8B0FE-5D7E-4ED4-9537-979341C6371A@redhat.com>
- <90861fe9716ab35f52b136f533ac693eb3d86279.camel@kernel.org>
-From:   =?UTF-8?Q?Florian_M=c3=b6ller?= 
-        <fmoeller@mathematik.uni-wuerzburg.de>
-In-Reply-To: <90861fe9716ab35f52b136f533ac693eb3d86279.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230220134308.1193219-1-dwysocha@redhat.com>
+In-Reply-To: <20230220134308.1193219-1-dwysocha@redhat.com>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Wed, 22 Feb 2023 12:50:21 +0000
+Message-ID: <CAPt2mGPJxPWfFGtEacBw-AN5nMZfP_pvL6=wEM+QbrPf1brAFg@mail.gmail.com>
+Subject: Re: [PATCH v11 0/5] Convert NFS with fscache to the netfs API
+To:     Dave Wysochanski <dwysocha@redhat.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        David Howells <dhowells@redhat.com>,
+        Benjamin Maynard <benmaynard@google.com>,
+        Daire Byrne <daire.byrne@gmail.com>, linux-nfs@vger.kernel.org,
+        linux-cachefs@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Am 22.02.23 um 13:22 schrieb Jeff Layton:
-> On Wed, 2023-02-22 at 06:54 -0500, Benjamin Coddington wrote:
->> On 22 Feb 2023, at 3:19, Florian Möller wrote:
->>
->>> Am 21.02.23 um 19:58 schrieb Benjamin Coddington:
->>>> On 21 Feb 2023, at 11:52, Florian Möller wrote:
->>>>
->>>>> Hi Benjamin,
->>>>>
->>>>> here are the trace and a listing of the corresponding network packages. If the listing is not detailed enough, I can send you a full package dump tomorrow.
->>>>>
->>>>> The command I used was
->>>>>
->>>>> touch test.txt && sleep 2 && touch test.txt
->>>>>
->>>>> test.txt did not exist previously. So you have an example of a touch without and with delay.
->>>>
->>>> Thanks!  These are great - I can see from them that the client is indeed
->>>> waiting in the stateid update mechanism because the server has returned
->>>> NFS4ERR_STALE to the client's first CLOSE.
->>>>
->>>> That is unusual.  The server is signaling that the open file's stateid is old,
->>>> so I am interested to see if the first CLOSE is sent with the stateid's
->>>> sequence that was returned from the server.  I could probably see this if I
->>>> had the server-side tracepoint data.
->>>
->>> Hi Benjamin,
->>>
->>> the server-side tracepoints
->>>
->>> nfsd:nfsd_preprocess
->>> sunrpc:svc_process
->>>
->>> were enabled. It seems they did not produce any output.
->>>
->>> What I did now was:
->>> - enable all nfsd tracepoints,
->>> - enable all nfs4 tracepoints,
->>> - enable all sunrpc tracepoints.
->>>
->>> The command I used was
->>>
->>> touch somefile && sleep 2 && touch somefile.
->>>
->>> Then I unmounted the NFS share - this also causes a delay.
->>>
->>> I changed the security type to krb5 and captured trace and network output for a version 4.0 and a version 4.2 mount. The delay does not occur when using version 4.0.
->>
->>
->> In frame 9 of nfs-v4.2-krb5.pcap, the server responds to PUTFH with
->> NFS4ERR_STALE, so nothing to do with the open stateid sequencing.  I also
->> see:
->>
->> nfsd-1693    [000] .....  1951.353889: nfsd_exp_find_key: fsid=1::{0x0,0xe5fcf0,0xffffc900,0x811e87a3,0xffffffff,0xe5fd00} domain=gss/krb5i status=-2
->> nfsd-1693    [000] .....  1951.353889: nfsd_set_fh_dentry_badexport: xid=0xe1511810 fh_hash=0x3f9e713a status=-2
->> nfsd-1693    [000] .....  1951.353890: nfsd_compound_status: op=2/4 OP_PUTFH status=70
->>
-> 
-> This just means that the kernel called into the "cache" infrastructure
-> to find an export entry, and there wasn't one.
-> 
-> 
-> Looking back at the original email here, I'd say this is expected since
-> the export wasn't set up for krb5i.
-> 
-> Output of exportfs -v:
-> /export
-> gss/krb5p(async,wdelay,hide,crossmnt,no_subtree_check,fsid=0,sec=sys,rw,secure,root_squash,no_all_squash)
-> /export
-> gss/krb5(async,wdelay,hide,crossmnt,no_subtree_check,fsid=0,sec=sys,rw,secure,root_squash,no_all_squash)
+Dave,
 
-I changed the export definitions to
+Thanks for this! I have been testing it with our production (render
+farm) loads for the last couple of days and have not run into any
+issues so far. It seems to be performing on par with your previous
+version of the patchset (based on v6.0).
 
-/export 
-gss/krb5(async,wdelay,hide,crossmnt,no_subtree_check,fsid=0,sec=sys,rw,secure,root_squash,no_all_squash)
-/export 
-gss/krb5i(async,wdelay,hide,crossmnt,no_subtree_check,fsid=0,sec=sys,rw,secure,root_squash,no_all_squash)
-/export 
-gss/krb5p(async,wdelay,hide,crossmnt,no_subtree_check,fsid=0,sec=sys,rw,secure,root_squash,no_all_squash)
+I am also running with both the "known issues" dhowells patches [8] &
+[9] mentioned in your email (as I was with your previous version).
 
-such that all three kerberos security types are exported. With this setup the 
-delay is gone. Without the krb5i export the delay occurs again.
-Mounting the NFS share with different kerberos security types does not change 
-this behaviour - without the krb5i export there is a delay.
-
-Best,
-Florian
+Tested-by: Daire Byrne <daire@dneg.com>
 
 
 
-> 
-> 
->>
->> .. so nfsd's exp_find_key() is having trouble and returns -ENOENT.  Does
->> this look familiar to anyone?
->>
->> I am not as familiar with how the server operates here, so my next step
->> would be to start inserting trace_printk's into the kernel source to figure
->> out what's going wrong in there.  However, we can also use the function
->> graph tracer to see where the kernel is going.  That would look like:
->>
->>   echo exp_find_key > /sys/kernel/tracing/set_graph_function
->>   echo 7 > /sys/kernel/debug/tracing/max_graph_depth
->>   echo function_graph > /sys/kernel/debug/tracing/current_tracer
->>> /sys/kernel/debug/tracing/trace
->>
->>   .. reproduce
->>
->>   cat /sys/kernel/debut/tracing/trace
->>
->> Hopefully someone with more knfsd/sunrpc experience recognizes this.. but it
->> makes a lot more sense now that krb5 is part of the problem.
->>
->> Ben
->>
-> 
-
--- 
-Dr. Florian Möller
-Universität Würzburg
-Institut für Mathematik
-Emil-Fischer-Straße 30
-97074 Würzburg, Germany
-Tel. +49 931 3185596
-
+On Mon, 20 Feb 2023 at 13:44, Dave Wysochanski <dwysocha@redhat.com> wrote:
+>
+> Trond, this v11 patchset addresses your latest feedback on patch #2,
+> and I did a little bit of cleanup to patch 3 (see Changes notes below).
+> I'm not sure of further changes to patch #3 without a more in-depth
+> review with specifics, if you feel the current approach is unacceptable [1].
+>
+> Ben and Daire, if you could test this set and provide you feedback
+> and a Tested-By: that would be appreciated.  This set addresses
+> the existing NFS + fscache performance concerns seen by a few
+> users [5], which is due to utilization use of the deprecated
+> single-page function, fscache_fallback_read_page().  However,
+> until "known issue #1" below is also resolved, even with these
+> patches, performance of NFS+fscache will still be a problem
+> in some scenarios.
+>
+> This patchset converts NFS with fscache buffered read IO paths to
+> use the netfs API with a non-invasive approach.  The existing NFS pgio
+> layer does not need extensive changes, and is the best way so far I've
+> found to address Trond's previous concerns about modifying the IO
+> path [2] as well as only enabling netfs when fscache is configured
+> and enabled [3].  I have not attempted performance comparisions to
+> address Chuck Lever's concern [4] because we are not converting the
+> non-fscache enabled NFS IO paths to netfs.
+>
+> The patchset is based on Trond's latest 'testing' branch which includes
+> his folio patchset, and is based on 6.2-rc5.  It has been pushed to
+> github at:
+> https://github.com/DaveWysochanskiRH/kernel/commits/nfs-fscache-netfs
+> https://github.com/DaveWysochanskiRH/kernel/commit/6424e4f139652b7552eff26eb5da1f2282d35616
+>
+> Changes since v10 [6]
+> =====================
+> PATCH6: Dropped
+> PATCH1: Rename nfs_pageio_add_page to nfs_read_add_folio
+> PATCH2: Use anonymous union to add struct netfs_inode to nfs_inode (Trond) [7]
+> PATCH3: Change nfs_netfs_readpage_release() to nfs_netfs_folio_unlock()
+>
+> Testing
+> =======
+> I did a full round of testing on this because it was rebased on top of
+> Trond's testing branch which included his folio series.
+> All of my unit tests pass except the one with the known issue #1 below.
+> Multiple runs of xfstests generic tests (applicable to NFS) were run with
+> with various servers, both with and without fscache enabled, and
+> compared to baseline (Trond's testing branch).  No new failures were
+> observed with these patches, and in some xfstest instances, this
+> patchset improves the results (some tests that were failing now pass).
+> - hammerspace(pNFS flexfiles): NFS4.1, NFS4.2
+> - NetApp(pNFS filelayout): NFS4.1, NFS4.0, NFS3
+> - RHEL9: NFS4.2, NFS4.1, NFS4.0, NFS3
+>
+> Known issues
+> ============
+> 1. Unit test setting rsize < readahead does not properly read from
+> fscache but re-reads data from the NFS server
+> * This will be fixed with another dhowells patch [8]:
+>   "[PATCH v6 2/2] mm, netfs, fscache: Stop read optimisation when folio removed from pagecache"
+> * Daire Byrne verified the patch fixes his issue as well
+>
+> 2. "Cache volume key already in use" after xfstest runs involving multiple mounts
+> * Simple reproducer requires just two mounts as follows:
+>  mount -overs=4.1,fsc,nosharecache -o context=system_u:object_r:root_t:s0  nfs-server:/exp1 /mnt1
+>  mount -overs=4.1,fsc,nosharecache -o context=system_u:object_r:root_t:s0  nfs-server:/exp2 /mnt2
+> * This should be fixed with dhowells patch [9]:
+>   "[PATCH v5] vfs, security: Fix automount superblock LSM init problem, preventing NFS sb sharing"
+>
+>
+> References
+> ==========
+> [1] https://lore.kernel.org/linux-nfs/0676ecb2bb708e6fc29dbbe6b44551d6a0d021dc.camel@kernel.org/
+> [2] https://lore.kernel.org/linux-nfs/9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com/
+> [3] https://lore.kernel.org/linux-nfs/da9200f1bded9b8b078a7aef227fd6b92eb028fb.camel@hammerspace.com/
+> [4] https://lore.kernel.org/linux-nfs/0A640C47-5F51-47E8-864D-E0E980F8B310@oracle.com/
+> [5] https://lore.kernel.org/linux-nfs/CA+QRt4tPqH87NVkoETLjxieGjZ_f7XxRj+xS3NVxcJ+b8AAKQg@mail.gmail.com/
+> [6] https://lore.kernel.org/linux-nfs/20221103161637.1725471-1-dwysocha@redhat.com/
+> [7] https://lore.kernel.org/linux-nfs/4d60636f62df4f5c200666ed2d1a5f2414c18e1f.camel@kernel.org/
+> [8] https://lore.kernel.org/linux-nfs/20230216150701.3654894-1-dhowells@redhat.com/T/#mf3807fa68fb6d495b87dde0d76b5237833a0cc81
+> [9] https://lore.kernel.org/linux-kernel/217595.1662033775@warthog.procyon.org.uk/
+>
+> Dave Wysochanski (5):
+>   NFS: Rename readpage_async_filler to nfs_read_add_folio
+>   NFS: Configure support for netfs when NFS fscache is configured
+>   NFS: Convert buffered read paths to use netfs when fscache is enabled
+>   NFS: Remove all NFSIOS_FSCACHE counters due to conversion to netfs API
+>   NFS: Remove fscache specific trace points and NFS_INO_FSCACHE bit
+>
+>  fs/nfs/Kconfig             |   1 +
+>  fs/nfs/fscache.c           | 242 ++++++++++++++++++++++---------------
+>  fs/nfs/fscache.h           | 131 ++++++++++++++------
+>  fs/nfs/inode.c             |   2 +
+>  fs/nfs/internal.h          |   9 ++
+>  fs/nfs/iostat.h            |  17 ---
+>  fs/nfs/nfstrace.h          |  91 --------------
+>  fs/nfs/pagelist.c          |   4 +
+>  fs/nfs/read.c              | 105 ++++++++--------
+>  fs/nfs/super.c             |  11 --
+>  include/linux/nfs_fs.h     |  25 ++--
+>  include/linux/nfs_iostat.h |  12 --
+>  include/linux/nfs_page.h   |   3 +
+>  include/linux/nfs_xdr.h    |   3 +
+>  14 files changed, 317 insertions(+), 339 deletions(-)
+>
+> --
+> 2.31.1
+>
