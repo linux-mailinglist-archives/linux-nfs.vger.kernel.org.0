@@ -2,156 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AE776A1097
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Feb 2023 20:33:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60E616A10A2
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Feb 2023 20:38:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbjBWTdO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Feb 2023 14:33:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56492 "EHLO
+        id S229448AbjBWTiI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Feb 2023 14:38:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbjBWTdM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Feb 2023 14:33:12 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E813B66B;
-        Thu, 23 Feb 2023 11:33:09 -0800 (PST)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31NGwd7C011867;
-        Thu, 23 Feb 2023 19:32:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=dEd73jarNPH1D5wgdAj9njvZsgzFCFSzy/iL8NTOok8=;
- b=gcbCd5JcdOy5OHN+HzI4s0qFf6ikvxjnM9PKA4Zt6ZIaBzx1wDym25iW5+wtwF6MUdAv
- rZ5Bkimt1xolg8bdaq/B/lH4HoAsye0hNPFK4Gb6I7WxerFUzXkG8zvoHJp0vSOcXCuk
- VnsWVtlxAYWieSjzu0kBEgJ26/IouzPXEpEZzcrn3hjN5IpCxHXyD8JzQ6ocxQYhg6TK
- vFGh/PPHcmmIFWIw5GHB/X6GYt8q2tZPBdS+FfjdpsajK+WiK/xceIvSeShYpZ5LZxqL
- YNi5TsLI6nbCOzA5dfAahMt4hjLXzp2ACWnGTysRWJqOlGLYFcHA3z5l9AxU0pGIQ2I3 Rg== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ntp9tuj8x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Feb 2023 19:32:57 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 31NIE4XR030219;
-        Thu, 23 Feb 2023 19:32:56 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2101.outbound.protection.outlook.com [104.47.70.101])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ntn48gcjx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Feb 2023 19:32:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b1RYWDDbmvKymurK5w3guLV1DfimhR7W8c7OI6kSjbn0mMVI5PGrXOvfFMnEkmhZcnKjwXMfpT9VVXI5BsSS6t4Lnr7AaaY+F+3TEIkuIrAsy6Rw6L1PddQk98mMVXPcf1eHxPCoQf+aC6TC9g7/Znj2hfNo3Q2XtLdyeCwwisbJ/XGCwcCLJ1uRcFwaUGQWFZS1IXQ8z3wEeLRCwjfrf7H7+htmeflBa27Ds+4yE0rzvmPwjoCdI3S5zZHg6/S5Blmpag2P+HhHYn1nJvbZ8R/h1uFrDbUBxsT2V/XYoCpoAmRD0fVnmcqOMHF6jCP3u93Q86okD6VMluiV2Y25Zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dEd73jarNPH1D5wgdAj9njvZsgzFCFSzy/iL8NTOok8=;
- b=djIvYCzje3iQE8XMe4T/T1NFzklkR/yBA59sXSzn43ydk2OvjFeYTVsqls5lckNRGLZ0GqLcewFJaFILStJnDoY96NUaK/0exUfLpohg/5DuMReQsuyZccJJoqWcY4sfrkN2E538Wgo7uryGrSmd/T3vEPQt9y0boLt1Ao/sh/FFs+u3SEIObF2W6QsQvPDNLlsam1/A/a55ybpyTFCsIiVyFRiPlZRImPUHdXVc80N7EhRDo7ZzfvQaojdLOQwfKD+JH3lUfjZupGlzTX7HTHh1h0o9K0BqvGTSqJZdly3FJD00h9J9o5WkyMC0OvWQFoCnpKaOblisnYShBb43uA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dEd73jarNPH1D5wgdAj9njvZsgzFCFSzy/iL8NTOok8=;
- b=GgMSyMGAvhcySVxE3trpzH4kUAULdQeWu9IBOKC1+/JzDNlww+ak8tpQPyG61Ygl6NgSGhqh4zaS7lpR1SCUufPgspMnujxuy8/mjm/o1hwHihoHJ2GMFnbOFaCIjZoaVDi9B8NrQ65dxrj10yuvtL+a+nkLv3ljUJgpJhxlhKk=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH7PR10MB6354.namprd10.prod.outlook.com (2603:10b6:510:1b5::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.16; Thu, 23 Feb
- 2023 19:32:48 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5c2f:5e81:b6c4:a127]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5c2f:5e81:b6c4:a127%7]) with mapi id 15.20.6134.019; Thu, 23 Feb 2023
- 19:32:48 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Chuck Lever <cel@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "simo@redhat.com" <simo@redhat.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>
-Subject: Re: [PATCH v2 00/41] RPCSEC GSS krb5 enhancements
-Thread-Topic: [PATCH v2 00/41] RPCSEC GSS krb5 enhancements
-Thread-Index: AQHZKQWoezbV6gQfMU2hAYqKspg87a7cvOEAgAAPVQCAABV4gIAAEUWAgAAJZACAACzWAA==
-Date:   Thu, 23 Feb 2023 19:32:48 +0000
-Message-ID: <59A88FB1-10D8-47FA-BF17-AFCE4B5915B3@oracle.com>
-References: <167380196429.10651.4103075913257868035.stgit@bazille.1015granger.net>
- <b3e0b5e6-1d0-cdb2-186c-6b4f50e0a3aa@linux-m68k.org>
- <D5221DC2-2A9C-43DC-AC21-FA96E7F76E5B@oracle.com>
- <CAMuHMdVtsZ-jU5foR7V_4XeXT_0f3Nx5vfoJo5pH2jMga0SpWA@mail.gmail.com>
- <58CCF033-58C3-4AF0-B958-BE1AAF1695F3@oracle.com>
- <CAMuHMdUG5cthYp3u6GeYqTqMaNgW0Ernq_ce0AZ22rgFQ5J24A@mail.gmail.com>
-In-Reply-To: <CAMuHMdUG5cthYp3u6GeYqTqMaNgW0Ernq_ce0AZ22rgFQ5J24A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.2)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|PH7PR10MB6354:EE_
-x-ms-office365-filtering-correlation-id: fa7b3ac1-a6eb-4803-6668-08db15d4bf3b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +IfQspjn7Wg8/sfBkMBAxXxmnJjOWmnLutjaV2URAi9qSamfnDmxtooFITqyoWzkWprFzZWJgNKhBfigwqnPQS+An6kMqthPcGgDw0i3TrYg3GO2SCCZB6qxxsIQybnvdAEB/nk1jEi8xxZ+n0pXur6FzHjQM5oSaDQB/p5noKNm+TV1xLLdYIc/AnUx9wLLmM8K8hroE0SqU3rHStDgRQC/6rgLr9jBju1+QbmWTrZ/er5142DhcfxUQk9LTiqSnwfM1607H6S3EtrEV2Hlht9UqKec1TpDtCPG/AxSitzEdPeRAQgKOA/AQPcnvfB+PGHsrQgxrcc85xkwX7PYZ6OGRiSM2Yzr/aS0yVM7QfjXRD9mPfJALfx4Dek0XWSS0w+ddWZecIhAh33wfjqTq64Gbpknq5TAQ5SMYz6tnF4v9Rm8tJU4PriycTx1P8IOVQIUQwg9XrtqW7azLDRZlehq6onnAW5rutIKwllhLbc+/AZT6hFqrsfjWb4DxEOnAKsjHIHplsed1KOFGpNeVC05kZWoNldHs7iAOjaDnEeEYqqXKlBqJSzH7x+egLp5+Lu0PbG/1fnlsNncWcbeIj5M6RzF7G8w+SLAWBujJZTOYQUxhECAxQuEstQ37idyHCpIAIMZO1jekcpmIBc0JI9TYaAR00yoBhuMfdMdqUWGU90dXDMZQiny1HxE+Q6qt83c9YMe1j07B1+naJvIytNSe9RhMxhjClNzYbvVB/g=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(366004)(136003)(346002)(396003)(39860400002)(451199018)(8676002)(66946007)(64756008)(76116006)(6916009)(122000001)(66476007)(316002)(66556008)(66446008)(41300700001)(5660300002)(4326008)(2616005)(33656002)(86362001)(66574015)(83380400001)(91956017)(6506007)(54906003)(6512007)(186003)(26005)(6486002)(71200400001)(38100700002)(36756003)(38070700005)(478600001)(53546011)(2906002)(8936002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?T5lajBFPiZNEJk845XH4jYMDkPtGygjuzKmEWzV8fJ7HZYMK5UWVselfZcZ+?=
- =?us-ascii?Q?L9f5WJFZ0yY3oUOmXyuUvTVnT5LGqDBfz3ih9QyLuB9d8N0maCoohETlwDRt?=
- =?us-ascii?Q?GDXIv9X6rhHLkdqVuTHHmA2djyIItj/jAHvI+r0cRF+dY2OHGMowqTHM7yE7?=
- =?us-ascii?Q?63vwuA8ek3y1WcejkkZ/jbFaksNE1VUTwlnkn2cR7vWLSSUSZpEp3FFwUJQC?=
- =?us-ascii?Q?QRSMrCuKeFevpJ967JskZGegLsFV8n4wzCsKEKeS0sFOiB9KIKX+xHMACCrT?=
- =?us-ascii?Q?n4p+Zq0dFJLm1K5Saoy4Hnlv4kZ3FacV/cKK0Pm5WFjyMLwBsPMQd1J8YU6q?=
- =?us-ascii?Q?GZHxQhrSjUh7Wz6MZYF3gYuZ4oEh/TaaEazySJgc6hrlXPy5ywDhcOODZzYf?=
- =?us-ascii?Q?DKx3einy9lUQX1hCsc06ZaRFN+lm8EWr5zV3127oTMIQUQEFzrifwXMkCuAI?=
- =?us-ascii?Q?/VZGB0of7ForweUM2qA2dqCN1tfz14Y8NQcGjPypYF7JJtM2Vwecz0zPnxdZ?=
- =?us-ascii?Q?a9kAX1M7O15E84EYxIY/p1QIfxsrOe9974Zh+n5RsdWPekU364H5Pad4P+GF?=
- =?us-ascii?Q?ZaqaBgrvB+d+Hz3oDKBs8iGy42ddSe+l9oXNt88PTgZDp0H7+dxeo3iVL42I?=
- =?us-ascii?Q?0CFOSV05kQ/19IpvRI12qThYJOHTZ4Wy7+258y7c2x8kKVlpVpma3EdrW8Hg?=
- =?us-ascii?Q?yDMF4uEoujWjwtu1UyM2LSXEjR2hJxvYNFzxVimBO1VBX//rCgYKc/WPpZCG?=
- =?us-ascii?Q?X3/vLUSL0QCLrtMae9BEc0ohMhMWeZ/yMBxil/MzUfGE7JJmWyXAGYGqy0mh?=
- =?us-ascii?Q?B7e35vXSSJm/cbcc1anJN5fBgK93CnVyMMjDksy8W8BkSZEd+Ql0ipFHGlHQ?=
- =?us-ascii?Q?QKvIgH3eKGUgb9KcRavKT75tRRu6AS3nhMoW7eyA2Am91cdjQR85rqFH6bht?=
- =?us-ascii?Q?QQHbOmw1U1hsAF12XipkWF4XGikKX1cYwYjE41r9Whv1UxNJ5V/eJk8TJfF9?=
- =?us-ascii?Q?im0eZzTp5Ao9TuuQyMEnGFisz9lhcNjXPuJKHiYSTYeVJLrQ5RA52sdR3mEx?=
- =?us-ascii?Q?4cpIgq9aF/Sy87WyxmP4dzsdtNWOrHD5XgHvk/gXCEgCKYzgLR+2XZZAH+IX?=
- =?us-ascii?Q?g/n+liBVPuR8I6vB2SAlltE1lTeOXBiKWhKdKrAr0WSfyLb/S8+R/uU66D/I?=
- =?us-ascii?Q?fABEfmw2yseUUIMJqT4ZnmTpP247ZFSZvYiguw052sv3et2FEJC+/zcQMt6y?=
- =?us-ascii?Q?6L/wkFZbFvWW5X5R/mWvJcjGk4tZKEOJNmFF/ATqkaQP1rCZmyZZoiCHfBvj?=
- =?us-ascii?Q?Gxt8K2+zPx3R/9uXEOMLg6U1y6AI0VozQ9ejvlV/pM0/B6ScNmBhlwJMWJc9?=
- =?us-ascii?Q?rZOvVfWb1YA9KyhQkw+YvBeJrmNUrzhkhCZnOCRc2oozb+wxsK42YJGYuCaM?=
- =?us-ascii?Q?fJsf/JC/mvhGvOr2+/DNHBoZxRgSFhEM2bXpf3cUrTn8vG0sLHe63efKb86K?=
- =?us-ascii?Q?erl9ohfM6wloQ8uzqhNLrO177sH0qsrvrm6ApsG8RpG/6ILt3a7AczzzT7SJ?=
- =?us-ascii?Q?IQyjPMJWBUDJtfrI1q2YBpNExxkmDY0yR4UwRtlYZxuOLFJYIx5duXJQI2L7?=
- =?us-ascii?Q?Qw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <97268AC2CA3F7C4F931E6B98C57FD732@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231777AbjBWTiG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Feb 2023 14:38:06 -0500
+X-Greylist: delayed 5940 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Feb 2023 11:38:04 PST
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [IPv6:2001:638:700:1038::1:9b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A506126FE
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Feb 2023 11:38:04 -0800 (PST)
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
+        by smtp-o-2.desy.de (Postfix) with ESMTP id D5E8716110B
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Feb 2023 20:38:02 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de D5E8716110B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1677181082; bh=GOoXZUKDLkGNXXEP46udne3shP5sMwM2TjGZOY2hexw=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=2DFBp4vr27eI1715HRJx8WPdaS+V8GwXUtzoJb0u1KeBnyphC0y1pIkGjyXeJm7j2
+         8Rnb9erOAajrQB3eUM+C9eVK5g7au3BWDIyyIaTMVPqx9CnmCfop7vt8HEcy6hJt94
+         8j1p6WMl0gmx7UkyrsdRRcz+YZH8uxwFL/ZAVFxA=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [131.169.56.130])
+        by smtp-buf-2.desy.de (Postfix) with ESMTP id C365E1A0092;
+        Thu, 23 Feb 2023 20:38:02 +0100 (CET)
+Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [IPv6:2001:638:700:1038::1:53])
+        by smtp-m-2.desy.de (Postfix) with ESMTP id BBD961200C0;
+        Thu, 23 Feb 2023 20:38:02 +0100 (CET)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-2.desy.de (Postfix) with ESMTP id B6705100077;
+        Thu, 23 Feb 2023 20:38:02 +0100 (CET)
+Date:   Thu, 23 Feb 2023 20:38:02 +0100 (CET)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Frank Filz <ffilzlnx@mindspring.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Dai Ngo <dai.ngo@oracle.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1292079534.40950670.1677181082600.JavaMail.zimbra@desy.de>
+In-Reply-To: <bc8ab54d427e62f17f46022980bfcaf392e0a0c3.camel@kernel.org>
+References: <20230222134952.32851-1-jlayton@kernel.org> <029901d947a3$0dd00c00$29702400$@mindspring.com> <bc8ab54d427e62f17f46022980bfcaf392e0a0c3.camel@kernel.org>
+Subject: Re: [pynfs RFC PATCH] nfs4.0/testserver.py: don't return an error
+ when tests fail
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: yucyaKx7uQKWACm1XAeK93gOaT0Cy5XGMY/OhEgyNL2F4cW5Y90/wnRtRuT5YOrSkFbfUKN+3iNzLBlIcxAc659v6ADpxpUGK4jgxtyyi8tYqUrfYJBS3ImpDOESKY+d/WiyRFIerluCKdgTc5Q0gDVE0e8fsu7WLZmxh9B2hlZsg5CNq6ugdvVpd2C3llmKTM5qjax5Rd/7kmJWGvLOoRUgIfo69Uekhs6sZxcXuXI2KS5Uwz/biBxAf69X1U2EM2ddCSfr20K5NpWJiLDN4iVJZDgHDQ6lgWgLQAWXt8XzIJycUqOhNMmOEb41Wy5Anbv9Bk6nVYUmN1wrUQnOIwrjv8SQGeACUdc+koHyd8P8ZcgNoqlZd10Y+pEQ0wWQwOp5iSTGNv/fAmADazuJ2i80qCBI10ELE2GAIikobLqNYZsUhbl9L2lE0Q0V/71YX8fT2P0LT6TO63br3N02LlkTA0TZc6VH5RrIgF6Q8Byq2UNVITiwBH0qI1kCpvaW4kWANuolV/TVx4aZtBKQHuP1hb2sTfx+vSfLR32GwL2bh44DtqeVcvRKU0uIk+DQmFqyO9Nl+F3w03VZoVSgNrhwJ/ecd/gMR1Y6JvhTzZuyL9vl8QlT4ZkJpx0rt+75PVIIS9/d7fT65ODaPRWHDU7lSMarsFoka8r9tTP/MZlPiuvHXngdg3dLc5c73CPUGstWxyWRcPGvk7iHXOTRNV4if+tmUQH3E74ZmUfkpP+rLeDhHorICALo3P3r5hIwFeMr5DEQIJIPVn78Trji0LR8v6YH1OG7OtEI/zFka5mixakwHVUufLGQmgOutueZWLUMjTjs55Xp1R0/RZTtVrH7L4OnFfeKQUIEiJeQ8ORrgQlBoE2rwpf8pR35DFpmCCOPhJt+nemdyJNmXqlERQKRYapy7O9eW0setLzxq/I=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fa7b3ac1-a6eb-4803-6668-08db15d4bf3b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Feb 2023 19:32:48.8179
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MvWpnPnw+8U9FKAv48E6hpPZF7MhjPRf4/IPypAs29coa05daG5fhHBE0s2nAyaDAo7qxUgUSLm2TRBwKY1shw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6354
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-23_13,2023-02-23_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
- suspectscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302230161
-X-Proofpoint-GUID: RY7u9L-utksj8WfJI1elb5dXMTFL8ntQ
-X-Proofpoint-ORIG-GUID: RY7u9L-utksj8WfJI1elb5dXMTFL8ntQ
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+        boundary="----=_Part_40950671_156846307.1677181082702"
+X-Mailer: Zimbra 9.0.0_GA_4485 (ZimbraWebClient - FF110 (Linux)/9.0.0_GA_4478)
+Thread-Topic: nfs4.0/testserver.py: don't return an error when tests fail
+Thread-Index: mUDYtHeEyXIGDOoXB7gCQ24ScNy1pw==
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -159,201 +62,201 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+------=_Part_40950671_156846307.1677181082702
+Date: Thu, 23 Feb 2023 20:38:02 +0100 (CET)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Frank Filz <ffilzlnx@mindspring.com>, 
+	"J. Bruce Fields" <bfields@fieldses.org>, 
+	Dai Ngo <dai.ngo@oracle.com>, linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1292079534.40950670.1677181082600.JavaMail.zimbra@desy.de>
+In-Reply-To: <bc8ab54d427e62f17f46022980bfcaf392e0a0c3.camel@kernel.org>
+References: <20230222134952.32851-1-jlayton@kernel.org> <029901d947a3$0dd00c00$29702400$@mindspring.com> <bc8ab54d427e62f17f46022980bfcaf392e0a0c3.camel@kernel.org>
+Subject: Re: [pynfs RFC PATCH] nfs4.0/testserver.py: don't return an error
+ when tests fail
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 9.0.0_GA_4485 (ZimbraWebClient - FF110 (Linux)/9.0.0_GA_4478)
+Thread-Topic: nfs4.0/testserver.py: don't return an error when tests fail
+Thread-Index: mUDYtHeEyXIGDOoXB7gCQ24ScNy1pw==
 
 
-> On Feb 23, 2023, at 11:52 AM, Geert Uytterhoeven <geert@linux-m68k.org> w=
-rote:
->=20
-> Hi Chuck,
->=20
-> On Thu, Feb 23, 2023 at 5:19 PM Chuck Lever III <chuck.lever@oracle.com> =
-wrote:
->>> On Feb 23, 2023, at 10:16 AM, Geert Uytterhoeven <geert@linux-m68k.org>=
- wrote:
->>> On Thu, Feb 23, 2023 at 3:00 PM Chuck Lever III <chuck.lever@oracle.com=
-> wrote:
->>>>> On Feb 23, 2023, at 8:05 AM, Geert Uytterhoeven <geert@linux-m68k.org=
-> wrote:
->>>>> On Sun, 15 Jan 2023, Chuck Lever wrote:
->>>>>> The purpose of this series is to improve/harden the security
->>>>>> provided by the Linux kernel's RPCSEC GSS Kerberos 5 mechanism.
->>>>>> There are lots of clean-ups in this series, but the pertinent
->>>>>> feature is the addition of a clean deprecation path for the DES-
->>>>>> and SHA1-based encryption types in accordance with Internet BCPs.
->>>>>>=20
->>>>>> This series disables DES-based enctypes by default, provides a
->>>>>> mechanism for disabling SHA1-based enctypes, and introduces two
->>>>>> modern enctypes that do not use deprecated crypto algorithms.
->>>>>>=20
->>>>>> Not only does that improve security for Kerberos 5 users, but it
->>>>>> also prepares SunRPC for eventually switching to a shared common
->>>>>> kernel Kerberos 5 implementation, which surely will not implement
->>>>>> any deprecated encryption types (in particular, DES-based ones).
->>>>>>=20
->>>>>> Today, MIT supports both of the newly-introduced enctypes, but
->>>>>> Heimdal does not appear to. Thus distributions can enable and
->>>>>> disable kernel enctype support to match the set of enctypes
->>>>>> supported in their user space Kerberos libraries.
->>>>>>=20
->>>>>> Scott has been kicking the tires -- we've found no regressions with
->>>>>> the current SHA1-based enctypes, while the new ones are disabled by
->>>>>> default until we have an opportunity for interop testing. The KUnit
->>>>>> tests for the new enctypes pass and this implementation successfully
->>>>>> interoperates with itself using these enctypes. Therefore I believe
->>>>>> it to be safe to merge.
->>>>>>=20
->>>>>> When this series gets merged, the Linux NFS community should select
->>>>>> and announce a date-certain for removal of SunRPC's DES-based
->>>>>> enctype code.
->>>>>=20
->>>>> As this is now upstream, I gave it a try on m68k (on the ARAnyM
->>>>> emulator), using a config based on atari_defconfig:
->>>>>=20
->>>>>  KTAP version 1
->>>>>  # Subtest: RFC 3961 tests
->>>>>  1..3
->>>>>      KTAP version 1
->>>>>      # Subtest: RFC 3961 n-fold
->>>>>      ok 1 64-fold("012345")
->>>>>      ok 2 56-fold("password")
->>>>>      ok 3 64-fold("Rough Consensus, and Running Code")
->>>>>      ok 4 168-fold("password")
->>>>>      ok 5 192-fold("MASSACHVSETTS INSTITVTE OF TECHNOLOGY")
->>>>>      ok 6 168-fold("Q")
->>>>>      ok 7 168-fold("ba")
->>>>>      ok 8 64-fold("kerberos")
->>>>>      ok 9 128-fold("kerberos")
->>>>>      ok 10 168-fold("kerberos")
->>>>>      ok 11 256-fold("kerberos")
->>>>>  # RFC 3961 n-fold: pass:11 fail:0 skip:0 total:11
->>>>>  ok 1 RFC 3961 n-fold
->>>>>      KTAP version 1
->>>>>      # Subtest: RFC 3961 key derivation
->>>>>  # RFC 3961 key derivation: ASSERTION FAILED at net/sunrpc/auth_gss/g=
-ss_krb5_test.c:52
->>>>>  Expected gk5e !=3D ((void *)0), but
->>>>>      gk5e =3D=3D 00000000
->>>>>      ((void *)0) =3D=3D 00000000
->>>>>      not ok 1 des3-hmac-sha1 key derivation case 1
->>>>=20
->>>> Geert, thanks for testing GSS on m68k.
->>>>=20
->>>> This assertion failure means that support for the encryption types
->>>> specified in RFC 3961 is not built into your kernel.
->>>>=20
->>>> The new Kunit tests don't work unless everything is built in --
->>>>=20
->>>> there's a net/sunrpc/.kunitconfig that provides the supported
->>>> build configuration for running them. I typically use a command
->>>> line similar to this:
->>>>=20
->>>> ./tools/testing/kunit/kunit.py run --raw_output=3Dall --kunitconfig ./=
-net/sunrpc/.kunitconfig
->>>=20
->>> Aren't modular crypto algorithms auto-loaded when needed?
+
+----- Original Message -----
+> From: "Jeff Layton" <jlayton@kernel.org>
+> To: "Frank Filz" <ffilzlnx@mindspring.com>, "J. Bruce Fields" <bfields@fi=
+eldses.org>, "Dai Ngo" <dai.ngo@oracle.com>
+> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
+> Sent: Thursday, 23 February, 2023 18:08:19
+> Subject: Re: [pynfs RFC PATCH] nfs4.0/testserver.py: don't return an erro=
+r when tests fail
+
+> On Thu, 2023-02-23 at 08:22 -0800, Frank Filz wrote:
+>> > From: Jeff Layton [mailto:jlayton@kernel.org]
+>> =C2=A0
+>> > This script was originally changed in eb3ba0b60055 ("Have
+>> > testserver.py
+>> have
+>> > non-zero exit code if any tests fail"), but the same change wasn't
+>> > made to
+>> the
+>> > 4.1 testserver.py script.
+>> >=20
+>> > There also wasn't much explanation for it, and it makes it difficult
+>> > to
+>> tell
+>> > whether the test harness itself failed, or whether there was a
+>> > failure in
+>> a
+>> > requested test.
+>> >=20
+>> > Stop the 4.0 testserver.py from exiting with an error code when a
+>> > test
+>> fails, so
+>> > that a successful return means only that the test harness itself
+>> > worked,
+>> not that
+>> > every requested test passed.
+>> >=20
+>> > Cc: Frank Filz <ffilzlnx@mindspring.com>
+>> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>> > ---
+>> > =C2=A0nfs4.0/testserver.py | 2 --
+>> > =C2=A01 file changed, 2 deletions(-)
+>> >=20
+>> > I'm not sure about this one. I've worked around this in kdevops for
+>> > now,
+>> but it
+>> > would really be preferable if it worked this way, imo. If this isn't
+>> acceptable,
+>> > maybe we can add a new option that enables this behavior?
+>> >=20
+>> > Frank, what was the original rationale for eb3ba0b60055 ?
 >>=20
->> The ciphers and digests are handled via the kernel's crypto
->> manager. They will indeed get auto-loaded by SunRPC's GSS on
->> demand, but of course, the set of algorithms used by GSS
->> has to be enabled by Kconfig options first.
+>> We needed a way for CI to easily detect failure of pynfs. I'm not sure
+>> how
+>> helpful it is since Ganesha does fail some tests...
 >>=20
->> SunRPC GSS has a set of Kerberos encryption types that make
->> use of individual ciphers and digests. Those have never been
->> modularized, and they are each enabled by Kconfig options,
->> as explained below.
+>> It might be helpful to have some helpers for CI to use, or an option
+>> that
+>> causes pynfs to report in a way that's much easier for CI to determine
+>> if
+>> pynfs succeeded or not.
 >>=20
->>=20
->>> In general, it's a good idea to make the tests test only functionality
->>> that is available, either through "depends on" in Kconfig, or "#if
->>> IS_ENABLED(...)".
->>=20
->> An earlier version of this patch set did just that. It became
->> quite a mess. That's why I chose the .kunitconfig approach.
->>=20
->>=20
->>> Of course that does not preclude providing a
->>> .kunitconfig to enable and test everything.
->>=20
->> The suite should test every Kerberos encryption type that
->> SunRPC GSS has support for. There's no reason to disable a
->> particular encryption type when running the unit tests...
->> unless I'm missing something?
 >=20
-> That depends: do you want to test everything, or do you want to test
-> (only) the functionality you enabled for your product?
-
-Each Kunit test is supposed to test one thing in particular.
-These tests each test a feature of the GSS Kerberos
-encryption type implementation.
-
-So... they are really not for the purpose of configuration or
-integration testing. I didn't have distributors in mind for
-running these tests. They are instead targeted to kernel
-developers and platform maintainers.
-
-
-> I tend to enable all modular tests, so I can use insmod to run any
-> relevant test when needed.  If a test suddenly needs something that
-> is not enabled, you can not run the test without enabling extra
-> functionality (which you may not want to enable).
-
-I wouldn't expect these tests to be run as part of a product
-CI suite. They are most valuable when making changes to the
-SunRPC GSS code, or crypto code that GSS depends on.
-
-"Did I just break this code?"
+> That's exactly the issue I had when working with this for kdevops. It
+> runs testserver.py via ansible, and when it gets a non-zero exit code,
+> the run aborts without doing anything further. I have it ignoring the
+> return code from testserver.py for now, but that's not ideal since I
+> can't catch actual problems with the test harness.
+>=20
+> I have testserver.py output the result to JSON, and then analyze that to
+> see if anything failed. That also gives us what you were asking for in
+> your other email -- the ability to filter out known failures. Here's
+> what I have so far, but I'd like to expand it to highlight other
+> behavior changes:
+>=20
+> https://github.com/linux-kdevops/kdevops/blob/master/scripts/workflows/py=
+nfs/check_pynfs_results.py
+>=20
+> It may make sense to move that script into pynfs itself.
+>=20
+> If there is CI that depends on this behavior, then I'd be interested to
+> hear how they are dealing with failed tests. Do they just not run the
+> tests that always fail?
 
 
->>> Note that net/sunrpc/.kunitconfig has
->>>=20
->>>   CONFIG_RPCSEC_GSS_KRB5_KUNIT_TEST=3Dy
->>>=20
->>> which needs KUNIT_ALL_TESTS=3Dy, else it will still be modular.
->>>=20
->>> First, I tried getting my modular setup working.
->>> After enabling:
->>>   CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_DES=3Dy
+Same here... The test generates for us xunit report, thus error code is in =
+the
+reporting and we always have to run it as:
+
+```
+./testserver.py -v --noinit --xml=3D"${WORKSPACE}/xunit-report-v41.xml" ${S=
+UT}:${TEST_PATH} all $NFS41_INCLUDES $NFS41_EXCLUDES_OPTION || true
+```
+
+>=20
+>> Hmm, one thing that would help is to be able to flag a set of tests
+>> that
+>> should not constitute a CI failure (known errors) but we want to keep
+>> running them because of what they exercise, or to more readily detect
+>> that
+>> they have been fixed.
+
+yeah, an option might do the job.
+
+Tigran.
+
 >>=20
->> And CONFIG_RPCSEC_GSS_KRB5_ENCTYPES_AES_SHA1=3Dy ??
 >=20
-> Sure, I had that enabled, thanks to "default y".
+> The right way to do that is the same way that xfstests works. You test
+> for the conditions being favorable for a test and then just skip it if
+> they aren't.
 >=20
->>> Third, with net/sunrpc/.kunitconfig, and
->>> CONFIG_RPCSEC_GSS_KRB5_KUNIT_TEST=3Dy:
->=20
-> [...]
->=20
->>> Unable to handle kernel access at virtual address af06da84
->=20
->>> I.e. a slightly different crash.
->>> As the difference between the two crashes is modular vs. builtin,
->>> this looks like an out-of-bound access in the test.
+>> > diff --git a/nfs4.0/testserver.py b/nfs4.0/testserver.py index
+>> > f2c41568e5c7..4f4286daa657 100755
+>> > --- a/nfs4.0/testserver.py
+>> > +++ b/nfs4.0/testserver.py
+>> > @@ -387,8 +387,6 @@ def main():
+>> >=20
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if nfail < 0:
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0sys.exit(3)
+>> > -    if nfail > 0:
+>> > -        sys.exit(2)
+>> >=20
+>> > =C2=A0if __name__ =3D=3D "__main__":
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0main()
+>> > --
+>> > 2.39.2
 >>=20
->> Why not run the test suite just as I suggested?
 >=20
-> I don't think I can use tools/testing/kunit/kunit.py to run the tests
-> when cross-compiling my kernel?
+> --
+> Jeff Layton <jlayton@kernel.org>
 
-You should be able to... that tool runs under UML and
-compiles what it needs to run the tests.
+------=_Part_40950671_156846307.1677181082702
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-
-> My third case (adding options from net/sunrpc/.kunitconfig, and
-> setting CONFIG_RPCSEC_GSS_KRB5_KUNIT_TEST=3Dy) should be equivalent to
-> that, right?
->=20
->> Since I cannot reproduce this crash and do not have an m68k
->> platform available to me, I will need you to continue to
->> pursue the issue. I'll help as much as I can.
->>=20
->> I would very much like to see successful test results on
->> non-x86 platforms.
->=20
-> Thanks, I'll give it a try on some other platforms, later...
-
-
---
-Chuck Lever
-
-
-
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIF
+vzCCBKegAwIBAgIMJENPm+MXSsxZAQzUMA0GCSqGSIb3DQEBCwUAMIGNMQswCQYDVQQGEwJERTFF
+MEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVpbmVzIERldXRzY2hlbiBGb3JzY2h1bmdz
+bmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUwIwYDVQQDDBxERk4tVmVyZWluIEdsb2Jh
+bCBJc3N1aW5nIENBMB4XDTIxMDIxMDEyMzEwOVoXDTI0MDIxMDEyMzEwOVowWDELMAkGA1UEBhMC
+REUxLjAsBgNVBAoMJURldXRzY2hlcyBFbGVrdHJvbmVuLVN5bmNocm90cm9uIERFU1kxGTAXBgNV
+BAMMEFRpZ3JhbiBNa3J0Y2h5YW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQClVKHU
+er1OiIaoo2MFDgCSzcqRCB8qVjjLJyJwzHWkhKniE6dwY8xHciG0HZFpSQqiRsoakD+BzqINXsqI
+CkVck5n7cUJ6cHBOM1r4pzEBcuuozPrT2tAfnHkFFGTZffOXgjmEITfSh6SD+DYeZH4Dt8kPZmnD
+mzWMDFDyB67WWcWApVC1nPh29yGgJk18UZ+Ut9a+woaovMZlutMbuvLVt/x5rpycMw0z+J1qeK7J
+8F3bKb0o2gg+Mnz9LzpLtJp7E9qJUKOTkZGDua9w9xrlo4XGX9Vn72K5wodu6woahdgNG+sXRcJM
+RH3aWgfdznoi1ORLJCfTbdfjSBpclvt/AgMBAAGjggJRMIICTTA+BgNVHSAENzA1MA8GDSsGAQQB
+ga0hgiwBAQQwEAYOKwYBBAGBrSGCLAEBBAgwEAYOKwYBBAGBrSGCLAIBBAgwCQYDVR0TBAIwADAO
+BgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBQG
+1+t/IHSjHSbbu11uU5Iw7JW92zAfBgNVHSMEGDAWgBRrOpiL+fJTidrgrbIyHgkf6Ko7dDAjBgNV
+HREEHDAagRh0aWdyYW4ubWtydGNoeWFuQGRlc3kuZGUwgY0GA1UdHwSBhTCBgjA/oD2gO4Y5aHR0
+cDovL2NkcDEucGNhLmRmbi5kZS9kZm4tY2EtZ2xvYmFsLWcyL3B1Yi9jcmwvY2FjcmwuY3JsMD+g
+PaA7hjlodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2Rmbi1jYS1nbG9iYWwtZzIvcHViL2NybC9jYWNy
+bC5jcmwwgdsGCCsGAQUFBwEBBIHOMIHLMDMGCCsGAQUFBzABhidodHRwOi8vb2NzcC5wY2EuZGZu
+LmRlL09DU1AtU2VydmVyL09DU1AwSQYIKwYBBQUHMAKGPWh0dHA6Ly9jZHAxLnBjYS5kZm4uZGUv
+ZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwSQYIKwYBBQUHMAKGPWh0dHA6
+Ly9jZHAyLnBjYS5kZm4uZGUvZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQw
+DQYJKoZIhvcNAQELBQADggEBADaFbcKsjBPbw6aRf5vxlJdehkafMy4JIdduMEGB+IjpBRZGmu0Z
+R2FRWNyq0lNRz03holZ8Rew0Ldx58REJmvAEzbwox4LT1wG8gRLEehyasSROajZBFrIHadDja0y4
+1JrfqP2umZFE2XWap8pDFpQk4sZOXW1mEamLzFtlgXtCfalmYmbnrq5DnSVKX8LOt5BZvDWin3r4
+m5v313d5/l0Qz2IrN6v7qNIyqT4peW90DUJHB1MGN60W2qe+VimWIuLJkQXMOpaUQJUlhkHOnhw8
+82g+jWG6kpKBMzIQMMGP0urFlPAia2Iuu2VtCkT7Wr43xyhiVzkZcT6uzR23PLsAADGCApswggKX
+AgEBMIGeMIGNMQswCQYDVQQGEwJERTFFMEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVp
+bmVzIERldXRzY2hlbiBGb3JzY2h1bmdzbmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUw
+IwYDVQQDDBxERk4tVmVyZWluIEdsb2JhbCBJc3N1aW5nIENBAgwkQ0+b4xdKzFkBDNQwDQYJYIZI
+AWUDBAIBBQCggc4wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMw
+MjIzMTkzODAyWjAtBgkqhkiG9w0BCTQxIDAeMA0GCWCGSAFlAwQCAQUAoQ0GCSqGSIb3DQEBCwUA
+MC8GCSqGSIb3DQEJBDEiBCA/MwfdWdJ0qTMJ10eIwQpr6WqoEvz5jfB6J8Adb0J4gzA0BgkqhkiG
+9w0BCQ8xJzAlMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAHBgUrDgMCBzANBgkqhkiG9w0B
+AQsFAASCAQCd5Df1+eWFM6gr7g4wgWzkYuB8XW2C5mRgjbrCdC5TM7FbwiII6go/QK03tBUumtL7
+iQu+Xfi6c1IUPFxaDYvJ+xnJZDjpYA4vEGnIa9/Z0L38h8Wn54GH1z4wElNwpvnDXg65qz05XaYr
+ebxFW9TbhQvTxj0ZLBh5ydWsqQi51UjmyAfYDWLD8PxgrRvGZ05cZnCZ44lWGUPib8NngERxjvyk
+3P3GcxHOYV3yLSBd08VKUK5SvfnIxYj2yYEU776oGtoX9f1J9MwVdUfqvTYeQE4l6Uady9bvXVm8
+Kt0z6R8ZGbO9LduAvOcmGpPIhpU4Vr8O9FvYbaMp+6/oRaFsAAAAAAAA
+------=_Part_40950671_156846307.1677181082702--
