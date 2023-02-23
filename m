@@ -2,40 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69FDE6A0A68
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Feb 2023 14:23:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38B2D6A0AD4
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Feb 2023 14:43:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233932AbjBWNXD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Feb 2023 08:23:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54578 "EHLO
+        id S234029AbjBWNns (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Feb 2023 08:43:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232420AbjBWNXC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Feb 2023 08:23:02 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EFD51CF7E
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Feb 2023 05:23:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9f0p+svq0NN2yn3y6m7ZCtSUTEBvll1v/PBnDcyty54=; b=mZS8hr06Wy0SxXYoAsUwbad7bs
-        L6ffOsTuxnao7+6vXw3EVu3meWLrtcq03TXXfOAPN3IjeA+aanQubGciJzsFLiMjrdJlbWrZ7Lfsf
-        g1z9WJaYvv6ZiJb4+5AT4zSNsnP3BxmItCkRNzbrSYM+LDthEm/GhCMvy5Zoiyv0Jh7OWPXewIdkZ
-        mhFGlY7OesXK9kcRHWYOmh/bLChty1LxjyUQS52tJBZT9nqmhgoN8hZCP07HvKsc5/QI2GLDwkO0i
-        dILc7/sd4vRpgqANt7N9dYOTlCYeuQHKW5bJBWvLhJo/DvglFpcsSivTcne/tisLiMY7/ZPvIbHNa
-        hUo8IV+g==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pVBYk-00EONT-QO; Thu, 23 Feb 2023 13:22:54 +0000
-Date:   Thu, 23 Feb 2023 13:22:54 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     trondmy@kernel.org
-Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, error27@gmail.com
+        with ESMTP id S234026AbjBWNns (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Feb 2023 08:43:48 -0500
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DA514D63B
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Feb 2023 05:43:47 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id p8so10847879wrt.12
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Feb 2023 05:43:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3NEVkhq382iJoTGqp5+ypgi30+HVgIdIqYCgE6Pid48=;
+        b=LzvjxxxomV9iU0jiWSidtPrJ16UKG8b2lCw02ga7PQyr+o4bCWG/Jvd/AwkRvUHAMt
+         Y+ELdPzbAPnTyQeHdEwbXlY8dMRX+PBwmMEak93Yqdnn/NwuIpKOXpGIlzM3q02VYPeV
+         855DTPc8B8oEmnl9VJ2t0213rFLwSWLTZV/yMqwyF3kV9LtbowWsjX1+L0wafrQHtE2L
+         DXrb0ft1JzUGRGPQuyXdM+R+APLyVPZbaWJu6vv9ZVBGeQUznrQsJjSPpOfMjVcDTcp9
+         1GsthsEmnFiTkQwPWyNFSGZNRTMIsajFLp/L6oDDf6BrJqs5JeAXP33nsMPXEBSCyNFw
+         PT0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3NEVkhq382iJoTGqp5+ypgi30+HVgIdIqYCgE6Pid48=;
+        b=cyHfCO5csVJlodjaQjcPtUF/OPXcwwTNITrXhf+q2pCI0IxWuj9xnm5KPdlhSpf/NK
+         F05yxhPuLwiEiEt78Bgoh0wWgca4gjDcs4rfth2A3jFgG/RNEQcZB6v+Cfbq016If4Y5
+         r2bRYcfnz3kQo7/MI8cWv0qJ2Enceyv/nRTK64nByBEnL6y4I7jx3BZrRmpwOsm1kLq8
+         glnxAPvM6NB9GO4YYQGSiT0H23lb25CqKDDB/81wJ2F8Gol05kQLGC60yDIjxHEDyV1z
+         MRAQBBzegz1+FrN5FZnT3vCn4Rn+Uf57Dih0LbhyIUSjH63RFueeijGz2drLSqnKWACo
+         UX4g==
+X-Gm-Message-State: AO0yUKXivU3YW+0HtZ9lxCCsdKRUgx6TufXIy2d9BDN+9MMC/Uh+zY45
+        DKBJCHwSu16FJCCBz/qegQzYZ27UITlARQ==
+X-Google-Smtp-Source: AK7set8PiBXOD47/5nEre13ZtoX/h8v7vGWAYeq750TAi/6qhGnNZXh+LrWol/TpMpudi/3y6QXu3g==
+X-Received: by 2002:a5d:4e09:0:b0:2c5:789d:804f with SMTP id p9-20020a5d4e09000000b002c5789d804fmr10794317wrt.55.1677159825512;
+        Thu, 23 Feb 2023 05:43:45 -0800 (PST)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id p11-20020a5d458b000000b002c707b336c9sm6097180wrq.36.2023.02.23.05.43.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Feb 2023 05:43:44 -0800 (PST)
+Date:   Thu, 23 Feb 2023 16:43:39 +0300
+From:   Dan Carpenter <error27@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     trondmy@kernel.org, Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
 Subject: Re: [PATCH v2 18/18] NFS: Remove unnecessary check in
  nfs_read_folio()
-Message-ID: <Y/dorq8Elh4Mxg2g@casper.infradead.org>
-References: <20230119213351.443388-10-trondmy@kernel.org>
- <20230119213351.443388-11-trondmy@kernel.org>
+Message-ID: <Y/dti5+1vp55tMZX@kadam>
+References: <20230119213351.443388-11-trondmy@kernel.org>
  <20230119213351.443388-12-trondmy@kernel.org>
  <20230119213351.443388-13-trondmy@kernel.org>
  <20230119213351.443388-14-trondmy@kernel.org>
@@ -44,66 +65,42 @@ References: <20230119213351.443388-10-trondmy@kernel.org>
  <20230119213351.443388-17-trondmy@kernel.org>
  <20230119213351.443388-18-trondmy@kernel.org>
  <20230119213351.443388-19-trondmy@kernel.org>
+ <Y/dorq8Elh4Mxg2g@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230119213351.443388-19-trondmy@kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Y/dorq8Elh4Mxg2g@casper.infradead.org>
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 19, 2023 at 04:33:51PM -0500, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> 
-> All the callers are expected to supply a valid struct file argument, so
-> there is no need for the NULL check.
+On Thu, Feb 23, 2023 at 01:22:54PM +0000, Matthew Wilcox wrote:
+> But I'm suspicious of static match tools claiming it can't ever happen,
+> and I'd like more details please.  I can't find the original report.
 
-Ummm.  Not sure that's true.  Look at this path:
+I would never write a warning like that...  However at the time when
+I reported the bug then Smatch did say that all the callers passed a
+non-NULL file pointer.  I've reviewed my logs and that was true when I
+said it but it's not true now.  :(  Now Smatch says there are three
+callers and nfs_write_begin() passes a valid pointer, read_pages()
+passes either a valid pointer or a NULL and filemap_read_folio() passes
+an unknown pointer.
 
-mapping_read_folio_gfp(mapping, index, gfp)
-do_read_cache_folio(mapping, index, NULL, NULL, gfp)
-filemap_read_folio(NULL, mapping->a_ops->read_folio, folio)
+https://lore.kernel.org/all/Y77+n9MyHgx%2FalA4@kadam/
 
-It could well be that nobody does this to an NFS file!  The places where
-I see this called tend to be filesystems doing it to block devices,
-or filesystems doing it to their own files (eg reading a journal file
-or quota file)
+The issue here is that the pointer was already derefernced on the lines
+before the check for NULL.
 
-But I'm suspicious of static match tools claiming it can't ever happen,
-and I'd like more details please.  I can't find the original report.
-Also, it would have been nice to be cc'd on the folio conversion patches.
+	struct inode *inode = file_inode(file);
 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <error27@gmail.com>
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/read.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
-> 
-> diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-> index bf4154f9b48c..c380cff4108e 100644
-> --- a/fs/nfs/read.c
-> +++ b/fs/nfs/read.c
-> @@ -355,13 +355,7 @@ int nfs_read_folio(struct file *file, struct folio *folio)
->  	if (NFS_STALE(inode))
->  		goto out_unlock;
->  
-> -	if (file == NULL) {
-> -		ret = -EBADF;
-> -		desc.ctx = nfs_find_open_context(inode, NULL, FMODE_READ);
-> -		if (desc.ctx == NULL)
-> -			goto out_unlock;
-> -	} else
-> -		desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
-> +	desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
->  
->  	xchg(&desc.ctx->error, 0);
->  	nfs_pageio_init_read(&desc.pgio, inode, false,
-> -- 
-> 2.39.0
-> 
+So either the dereference or the check was wrong.
+
+regards,
+dan carpenter
+
