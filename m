@@ -2,170 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B34C6A0E61
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Feb 2023 18:10:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4EA06A0F00
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Feb 2023 19:04:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbjBWRK5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Feb 2023 12:10:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59694 "EHLO
+        id S230364AbjBWSEZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Feb 2023 13:04:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjBWRK5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Feb 2023 12:10:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852D73B841
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Feb 2023 09:10:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229543AbjBWSEY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Feb 2023 13:04:24 -0500
+X-Greylist: delayed 380 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Feb 2023 10:04:21 PST
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED16555078;
+        Thu, 23 Feb 2023 10:04:21 -0800 (PST)
+Received: from frontend03.mail.m-online.net (unknown [192.168.6.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 4PN12v2tLjz1r15j;
+        Thu, 23 Feb 2023 18:57:59 +0100 (CET)
+Received: from localhost (dynscan3.mnet-online.de [192.168.6.84])
+        by mail.m-online.net (Postfix) with ESMTP id 4PN12v1P5vz1qqlR;
+        Thu, 23 Feb 2023 18:57:59 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan3.mail.m-online.net [192.168.6.84]) (amavisd-new, port 10024)
+        with ESMTP id swIsH1ONtk6g; Thu, 23 Feb 2023 18:57:58 +0100 (CET)
+X-Auth-Info: 1HGqSa/xXAv0pLUXFyDppgnfnh819edct4rbXVxL1P4Kkf6OeDFZTxemhhugNskc
+Received: from igel.home (aftr-82-135-86-224.dynamic.mnet-online.de [82.135.86.224])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 33DC9B8198C
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Feb 2023 17:10:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B60C433D2;
-        Thu, 23 Feb 2023 17:10:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677172249;
-        bh=SoJaSBcKbVogoZATjmjkhnWm8zZDk4z4SRUE3K5MpC8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=OKwIgtMycnjwL6adZJ2t8AUu3qRuyZrO5cy/PJSS6RPJSCKRDC4GdOG3pwxmWeo1M
-         zy8rMLlzn7q3Fh3+ya9vXZBIhz+ZXAimkfrPWdhA3gx6hAig0YrEEsoIYb4Lb1f23N
-         Os+vTJFuFLOq+D/7JQ7jn1vJyCRpfoqISXypxBdJg6s8XDYM8pmfe4syPbR81DZ8tp
-         xiBfYfnFwtqfc/+LMruzhnTK3pMUvJzdBz7oJQFPIsX+m3yqHpGLfIlXRom4QSgAYs
-         CTqGr8Ke7zUOM+fcosAg/H0+34xbVHXRpMZ0YsnusO/2OdVIXcyMlXeizyopQtnyH+
-         F9F4rOoKpsFuQ==
-Message-ID: <fabf62538a93fda344c05b1a07c1298e7f3199bb.camel@kernel.org>
-Subject: Re: [pynfs RFC PATCH] testserver.py: special-case the "all" flag
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Frank Filz <ffilzlnx@mindspring.com>,
-        'Chuck Lever III' <chuck.lever@oracle.com>,
-        'Bruce Fields' <bfields@fieldses.org>
-Cc:     'Dai Ngo' <dai.ngo@oracle.com>,
-        'Linux NFS Mailing List' <linux-nfs@vger.kernel.org>,
-        'Calum Mackay' <calum.mackay@oracle.com>
-Date:   Thu, 23 Feb 2023 12:10:47 -0500
-In-Reply-To: <029a01d947a3$a51b4750$ef51d5f0$@mindspring.com>
-References: <20230222182043.155712-1-jlayton@kernel.org>
-         <20230223151959.GC10456@fieldses.org>
-         <3B034712-F376-4D71-8A72-703B030140F9@oracle.com>
-         <029a01d947a3$a51b4750$ef51d5f0$@mindspring.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Thu, 23 Feb 2023 18:57:58 +0100 (CET)
+Received: by igel.home (Postfix, from userid 1000)
+        id EC43C2C154C; Thu, 23 Feb 2023 18:57:57 +0100 (CET)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Chuck Lever <cel@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        "simo@redhat.com" <simo@redhat.com>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>
+Subject: Re: [PATCH v2 00/41] RPCSEC GSS krb5 enhancements
+References: <167380196429.10651.4103075913257868035.stgit@bazille.1015granger.net>
+        <b3e0b5e6-1d0-cdb2-186c-6b4f50e0a3aa@linux-m68k.org>
+        <D5221DC2-2A9C-43DC-AC21-FA96E7F76E5B@oracle.com>
+        <CAMuHMdVtsZ-jU5foR7V_4XeXT_0f3Nx5vfoJo5pH2jMga0SpWA@mail.gmail.com>
+        <58CCF033-58C3-4AF0-B958-BE1AAF1695F3@oracle.com>
+X-Yow:  BEEP-BEEP!!  I'm a '49 STUDEBAKER!!
+Date:   Thu, 23 Feb 2023 18:57:57 +0100
+In-Reply-To: <58CCF033-58C3-4AF0-B958-BE1AAF1695F3@oracle.com> (Chuck Lever,
+        III's message of "Thu, 23 Feb 2023 16:18:44 +0000")
+Message-ID: <87mt54e02i.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.2 (gnu/linux)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=1.0 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2023-02-23 at 08:26 -0800, Frank Filz wrote:
->=20
-> > -----Original Message-----
-> > From: Chuck Lever III [mailto:chuck.lever@oracle.com]
-> > Sent: Thursday, February 23, 2023 8:22 AM
-> > To: Bruce Fields <bfields@fieldses.org>
-> > Cc: Jeff Layton <jlayton@kernel.org>; Dai Ngo <dai.ngo@oracle.com>; Lin=
-ux
-> > NFS Mailing List <linux-nfs@vger.kernel.org>; Calum Mackay
-> > <calum.mackay@oracle.com>; Frank Filz <ffilzlnx@mindspring.com>
-> > Subject: Re: [pynfs RFC PATCH] testserver.py: special-case the "all" fl=
-ag
-> >=20
-> >=20
-> >=20
-> > > On Feb 23, 2023, at 10:19 AM, J. Bruce Fields <bfields@fieldses.org>
-> wrote:
-> > >=20
-> > > On Wed, Feb 22, 2023 at 01:20:43PM -0500, Jeff Layton wrote:
-> > > > The READMEs for v4.0 and v4.1 are inconsistent here. For v4.0, the
-> "all"
-> > > > flag is supposed to run all of the "standard" tests. For v4.1 "all"
-> > > > is documented to run all of the tests, but it actually doesn't sinc=
-e
-> > > > not every tests has "all" in its FLAGS: field.
-> > > >=20
-> > > > I move that we change this. If I say that I want to run "all", then=
- I
-> > > > really do want to run _all_ of the tests. Ensure that every test ha=
-s
-> > > > the "all" flag set.
-> > >=20
-> > > In some (all?) cases where the "all" flag was left off, it was
-> > > intentional.
-> > >=20
-> > > We try not to flag spec-compliant servers as failing, because people
-> > > are sometimes a little careless about "fixing" failures that in their
-> > > particular case really shouldn't be fixed.  But sometimes it's still
-> > > useful to have a test that goes somewhat beyond the spec.
-> > >=20
-> > > There might be other ways to handle that kind of test, but it would
-> > > need some more thought.
-> >=20
-> > We could use a different name for "all" since it doesn't actually run
-> /all/ tests.
-> > Jeff suggested "standard", which seems sensible.
->=20
-> The challenge with changing this is all the CI scripts and other testing
-> scripts out there that use all. If all suddenly changed, server maintaine=
-rs
-> might get a deluge of bug reports for failing odd test cases no one
-> necessarily expected to work...
->=20
+On Feb 23 2023, Chuck Lever III wrote:
 
-Are those CI systems pulling down the upstream tree to run? How do they
-contend with new tests that might suddenly show up as part of "all"?
+> Assuming that "PC:" on m68k is the same as "RIP:" on x86...
+> this does not make sense. rfc6803_suite is not a function.
 
-> > Also, we could add test categories specifically for particular server
-> > implementations, if that's interesting to folks.
->=20
-> I have already done so with a ganesha tag...
->=20
-> Literally all anyone has to do is start using a new tag so it's a trivial
-> thing for developers to add.
->=20
+That can mean that something has overwritten the return PC.
 
-The problem is that you have to add the tag to hundreds of tests. It's
-scriptable, sure, but if you want to be at all selective, it's not
-trivial.
-
-That said, I'm open to doing something different here. Maybe we could
-declare a new "everything" special case instead? It's confusing naming,
-but that would at least preserve the existing behavior for those CI
-systems.
-
-> >=20
-> > > --b.
-> > >=20
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > > nfs4.1/testmod.py | 2 ++
-> > > > 1 file changed, 2 insertions(+)
-> > > >=20
-> > > > If this is unacceptable, then an alternative could be to add a new
-> > > > (similarly special-cased) "everything" flag.
-> > > >=20
-> > > > diff --git a/nfs4.1/testmod.py b/nfs4.1/testmod.py index
-> > > > 11e759d673fd..7b3bac543084 100644
-> > > > --- a/nfs4.1/testmod.py
-> > > > +++ b/nfs4.1/testmod.py
-> > > > @@ -386,6 +386,8 @@ def createtests(testdir):
-> > > >     for t in tests:
-> > > > ##         if not t.flags_list:
-> > > > ##             raise RuntimeError("%s has no flags" % t.fullname)
-> > > > +        if "all" not in t.flags_list:
-> > > > +            t.flags_list.append("all")
-> > > >         for f in t.flags_list:
-> > > >             if f not in flag_dict:
-> > > >                 flag_dict[f] =3D bit
-> > > > --
-> > > > 2.39.2
-> >=20
-> > --
-> > Chuck Lever
-> >=20
->=20
->=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
