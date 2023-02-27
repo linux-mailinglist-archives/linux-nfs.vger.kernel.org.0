@@ -2,235 +2,241 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC01E6A3E9B
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Feb 2023 10:51:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88E966A451A
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Feb 2023 15:48:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbjB0Jvo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Feb 2023 04:51:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60274 "EHLO
+        id S229740AbjB0OsV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Feb 2023 09:48:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229690AbjB0Jvm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Feb 2023 04:51:42 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6B41A961;
-        Mon, 27 Feb 2023 01:51:40 -0800 (PST)
-Received: by mail-qt1-f179.google.com with SMTP id s12so5861389qtq.11;
-        Mon, 27 Feb 2023 01:51:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gj9gKpiseh+D/fSOLAEPwn6YG59IzTCb5Bzhksu4Pdw=;
-        b=K9ghXytqn13+448dARz2zhFHJRJwATS5/RrOqAKSoTsXnEznTdTql3RUZxU3dEUsa3
-         R0TdeC1ndoQQBjragrnTFFJMUu2wiz5bZiktc+0DUSQGhuxxB34CfFoqKABxCl+GN+qX
-         Xl92PIjo58y9ScGSkOWpK7DjELcz7JWdan9zm1jR98ir/blDxa9uHjaAquSRL4tdWppO
-         9ZW+aH09Lil31iXFsn4Dg1jKMgXE4EcyDgYTl2NcerniUrLu82lcoHJbRMm6peKVi336
-         orrzBTSNkkaDYc3RQIM0MnE24ZlCRduvfmrqFdffEMz8AgdXSRLJibBda1IRnaqZb+Na
-         +SSg==
-X-Gm-Message-State: AO0yUKX8cYcmOzN2x0VqgDJQcwfd3Wvpo8VlqjZEslwjPu2PUxfv7F+M
-        5NkHbGqJQTNOBP7yIF0C/aNCeIaaiBiKvw==
-X-Google-Smtp-Source: AK7set84FIOhhFE04RwRxqXmcaWyY6JHmsS2EU0/a33jWAr5U9UMSq4UY3xg6fKBIVi6i8NJ0HnfnA==
-X-Received: by 2002:a05:622a:591:b0:3bf:ce27:e1fc with SMTP id c17-20020a05622a059100b003bfce27e1fcmr10259642qtb.7.1677491499391;
-        Mon, 27 Feb 2023 01:51:39 -0800 (PST)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
-        by smtp.gmail.com with ESMTPSA id c3-20020ac86603000000b003b9bc00c2f1sm4275630qtp.94.2023.02.27.01.51.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Feb 2023 01:51:39 -0800 (PST)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-536b7ffdd34so159591157b3.6;
-        Mon, 27 Feb 2023 01:51:38 -0800 (PST)
-X-Received: by 2002:a25:9c85:0:b0:90d:af77:9ca6 with SMTP id
- y5-20020a259c85000000b0090daf779ca6mr9186019ybo.7.1677491498294; Mon, 27 Feb
- 2023 01:51:38 -0800 (PST)
+        with ESMTP id S229731AbjB0OsQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Feb 2023 09:48:16 -0500
+Received: from CAN01-YQB-obe.outbound.protection.outlook.com (mail-yqbcan01on2094.outbound.protection.outlook.com [40.107.116.94])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B61F11178
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Feb 2023 06:48:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jYCnViJguygB9c7oswviq8L93rqyFLrHaACVqUuQ+CIKMGUFTPpiAIpWXc9ygnlgtgveXPIsBdnmC6seqA2XNtOcbqfNhMKrA/IXCdKsS9cBx1+0r+6A8CeJ9WwPzp4q5fZ3eAF0X6lL68XeIZi/ifs2WFsFKhAqLoL6M4Oskd6VYjZOi2HkDpaoGOTAE08IqyU9EwUwPUmhbdbKqvxkO1VvGeQtJEaQndWhUF4yaVUyXlpSzF+tfjjx3qvrVy6nVE0oDvdEFq2svLqXI6A+Qg+Zed+/VjdlF1AdEgzA1fFr//WeESD/Xux7ZurcihJFc6RoHvXP3xKDhO2QNSip4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7hBKu2r7XuivonIgeA46HejebjBsmb/iexZWSYrzjTQ=;
+ b=B06IZisGLxa4/EBW5OyQMwf7pJOgQ8gBJQb1uV7ptfGzABvu25ZzAs5P5cTCKiaOVH7dL7Zzl+IhgiFPME5bFgbL/suYPJhmJtkkGqLS4yeaXYkJhQnmvkE57II8YtyjtbF4AvxVQQRG6cg8Rq4JD7e86jHxL3YgB3KMYHuX7AdXwvHGSmpwh4VnODudH4tTt17K0kw6j/EowAkL5utq01qy1jCViCJaHNlN66KvMW0pn4hV08kBTuE4wjWFlE7L88NOOqyqIkuJoloPb6/HCvCaVo6GgWKj6IB+OIr25rOLYtLY4A5+YY8FQ+42CV1aS/+OVlRFOYhyOcMWyZdmcQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=boatrocker.com; dmarc=pass action=none
+ header.from=boatrocker.com; dkim=pass header.d=boatrocker.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=boatrocker.onmicrosoft.com; s=selector2-boatrocker-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7hBKu2r7XuivonIgeA46HejebjBsmb/iexZWSYrzjTQ=;
+ b=to7C+Pa7CeIelNo9FQNjjUeCD3gbaBMhw8gpffBK0gqWOWTxzaYUbocEklf+pXnBnQWY8qYgd2olkljMTZFvuoTm+qxv4eTrNA8Li6FNb+/LkCWPcOrnFiSE8yrkb4PxhnnYCkJLca1DOA+r1YmQ3Hhp59zGvrLeEI8yWRcX1RE=
+Received: from YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:69::7)
+ by YT3PR01MB9217.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:7f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.29; Mon, 27 Feb
+ 2023 14:48:12 +0000
+Received: from YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::7303:f215:657e:1643]) by YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM
+ ([fe80::7303:f215:657e:1643%5]) with mapi id 15.20.6134.027; Mon, 27 Feb 2023
+ 14:48:12 +0000
+From:   Andrew Klaassen <andrew.klaassen@boatrocker.com>
+To:     Jeff Layton <jlayton@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: RE: Trying to reduce NFSv4 timeouts to a few seconds on an
+ established connection
+Thread-Topic: Trying to reduce NFSv4 timeouts to a few seconds on an
+ established connection
+Thread-Index: AdkvR33g3mzLGSb7R/abGwkCKolj9QCUyz5AAA3zOxAAIFt1AACi9rVAAAFExoAAAB8OIAABI44AAJGeUGAAwz0wEAAEYlXABBrHNWA=
+Date:   Mon, 27 Feb 2023 14:48:12 +0000
+Message-ID: <YQBPR01MB10724998CA29C5AFF7E6B391E86AF9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+References: <YQBPR01MB10724B629B69F7969AC6BDF9586C89@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+         <YQBPR01MB10724AEE306F99C844101EED086CF9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+         <YQBPR01MB10724F79460F3C02361279E8686CF9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+         <654e3b7d15992d191b2b2338483f29aec8b10ee1.camel@kernel.org>
+         <YQBPR01MB10724B36E378F493B9DED3C7E86D39@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+         <3c02bd2df703a68093db057c51086bbf767ffeb1.camel@kernel.org>
+         <YQBPR01MB1072428BC706EE8C5CC34341186D39@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+ <936efa478e786be19cb9715eba1941ebc4f94a1b.camel@kernel.org>
+ <YQBPR01MB107243906854065876378D57B86D69@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+ <YQBPR01MB10724969B61BA7156DB71A82686DA9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+ <YQBPR01MB1072471CD751CDDEE7C0AD5BB86DA9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+In-Reply-To: <YQBPR01MB1072471CD751CDDEE7C0AD5BB86DA9@YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=boatrocker.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: YQBPR01MB10724:EE_|YT3PR01MB9217:EE_
+x-ms-office365-filtering-correlation-id: 5cb0c494-3d3f-49e5-df20-08db18d1a69f
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230025)(39850400004)(346002)(396003)(376002)(136003)(366004)(451199018)(110136005)(122000001)(52536014)(8936002)(316002)(38070700005)(9686003)(8676002)(186003)(26005)(478600001)(55236004)(53546011)(44832011)(7696005)(33656002)(71200400001)(86362001)(6506007)(2906002)(55016003)(5660300002)(38100700002)(76116006)(66946007)(64756008)(66446008)(66476007)(66556008)(83380400001)(41300700001);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 3MqEoNTD0trewsyRW9GLey4LSL0iQnyFRFyT5t+knb55+msvhyH5CrnjFY/+esPieEKoNygQO12koS2/nnADKXzTl92uJDXFkvNJ//4xVR9BwArCRQxOiLFQuIgqjMiw8wLOsMQs6nr8h8utAAyE95Q6DAzILvcjQWs7ncRUVAtrTvMayP1F6XVR0hYTVh4JorsVRGVpcCkx4dJvqqPJcBlOLgWuY5e7EtFurTvtuBuUa0f8AvtQ6q7+H0NDZxf+poRMAnKNMAB1zJyDvwg2uc4vCJ28UxFGypJMxynyxrt4Hfa+TvWZjb/H7nifjJ/eh+3W7Z1jh5FNPFuoEJZLTvH5v7kDFiKzz2ew/bAqRtEnpBEYeOUEiFtsljAGq6L1WiXjxHcxzj9/mASDoJIIaTDFIapS/3LSPgDZTIiUWNrlt1/NuH8wyByvkbnrhMrtNxmWt+QtPu6x/0MB4F0+oyo5C2QvMj09FUJO19FstFzGjexhkUWLQCgV1xQBoHv74N4Qfm9gla+NAVyumMxs1h0T0ZarFItOgJKUmENVV3h4R37FgkwTR7rc57oKD3cPF4QvpCb8n2lEU3UVN6vXw2spStFhgmZwg2d5EL+UuAX7tZqX2l+ikbygsVlaJFZniaehKPslvLW13xgT9cS+DJ3yYEtyzA3qQJRPUk1np2gnYWPlVZb8hn1jWYlxCD/U1uqKc3//G5804QgFMyYtWA==
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RGdubTlRSHFFV3FYajJkMnZZTUF4WjA2Q3JnMlJHbnNYOUYwRU5lb0lCMkN2?=
+ =?utf-8?B?SkpmWnVIWTEvdEZ5TjUyWVNhZzJ3aUxuZ3BicUVyNkhHVmZHVDdoV1dLVFd0?=
+ =?utf-8?B?SzRWSWdwYnlvS0lVaHM0U0I0Sk0rOTBkSXZERENMblVMRGVRalRHVGhXUG81?=
+ =?utf-8?B?RE5VZ09CK3U5RUtqRVlueGllWHF1RHpENkRKL3ZUSnhrUkUvTnZ1TXhQbG1Q?=
+ =?utf-8?B?YzZ3cEFIL1IvbHRFcmhKdzkrWjA5S1c0MzMzWmpRaGZ2Kzk1cW1rbUZDQ2tV?=
+ =?utf-8?B?SHdSV0NEc3F1Z3FWMS80ZzdpVVZ3UlMvclVqbzh6M3lvRVQ4RHZSRlVHS0tF?=
+ =?utf-8?B?VVZIbkhmcis0dmxURWJtV0did2prMURjKy90Q1NMd0o3S2lVV3RCbnkyYWVp?=
+ =?utf-8?B?bzJFUFcvTTRLTVQ4QkFnN2pYd2VBRWhHODhZc0F0ZHRsSm50VFlUK2hGK0Zi?=
+ =?utf-8?B?dVJ2U2NKbE9NRVRPaDZiTkVkdFZKVjczYitvS2U4Rk9PeDJQcjVJanpwRWlH?=
+ =?utf-8?B?amMyc0dyaTVmVEljWTJ2K0FRdDdvblVZcjM3K2JKVnMwdFlPaWFjV3V6RU03?=
+ =?utf-8?B?eUFZVWZrb1F3ZW5aUjByTGdVRTgwanBwQ3JvVzZWQzUvdVlNRytDMVRpaGox?=
+ =?utf-8?B?MEQ3UExNSUNwaXBQTU15bmFOU1VkMnRqSGVSY25NYnR2a1VRYks0VzZrcW9J?=
+ =?utf-8?B?YjI3ZnZxQWF1dWJ3RERXNVZBaXcvQjFwRHk5UWhBNnpWVi9HVWxHL1ZpZjNl?=
+ =?utf-8?B?bWFuNGZmM09NZEVSeDhlUzFpbzZjOUp3eU5WQXkxbmRrbXd6QlpMYUJBNDF1?=
+ =?utf-8?B?RkgzUjFLN0Y2bjFWRURUSlByY21HTFhoR2pWVE5kY3F1VTlVbTFwRHpUb1JR?=
+ =?utf-8?B?Wi9oS0JlSXhkQVBIa21uOGpGSUtCMmFtT0RWanF6S0FlVlBrY21OclJZYnBs?=
+ =?utf-8?B?UjNvWHZmUG5PZHdmS0lXcXlOejJlSjZ4OTFCL0p2N2VVZVpTVGJ2T0xObnNp?=
+ =?utf-8?B?NHFXQ0ZpaFNOb2ZoSnJrQThrK3l4QlJaOERNN3B3YXFOaU9OdG9WWFJrMU40?=
+ =?utf-8?B?ZDFJeUhqTFQ1YVFUMDVET0RkWDJyRGg0TUJ6V2c4WkZkZ1BYVVFXQUJYMWtZ?=
+ =?utf-8?B?UWc1K1NFQmQrdFdVTWxLcmM1RlJCN3lhdGhBRnZKUmdOSWx1ZnlkVjd0UFVh?=
+ =?utf-8?B?aHJxV1ZUd2pjT0YveU4xbFJENjRkaDVUMDhLRkgxTGVpUGZSK2t2dnpXb0hC?=
+ =?utf-8?B?QzBKbXJ5KzJHQjNhV0VybStXQlV2YXJsYlIrK3IzN2k1MEY3ckt2aHVDTFo5?=
+ =?utf-8?B?Vk1ISTk4N0txUFRYb2pLZHdyMHI1Zkh6Mkgybk1nS0lueE40QUpMbS9zZW5L?=
+ =?utf-8?B?QlVCQ0ZXRWhMc0ZBTXJJYVJXMmNSN0VHSzRWRkx3ZytIQzA4NnF0VjdRUWtu?=
+ =?utf-8?B?eUczSG80YkI2ZWJyRDJwWldoRFpvdEs2bEwwdUdRTGNNa0tzQUxVTXErb3pi?=
+ =?utf-8?B?QzMwVFoxVzdxcENGcnpET2ljMkpiMWwwVExnZHJpbG1iajluR3dFSTB3bGJQ?=
+ =?utf-8?B?eGFadHFmc2t1Wm9kVnlIZXFTdDh6MVNHUFRJR2RWSlNUWVhUUlY3ZGJwWW9o?=
+ =?utf-8?B?NU9iblFiT3ZraXdRam1LaFhmdVN6Zm90Y2tNRHNxMC9haHZtM1FSQ0o0SG1L?=
+ =?utf-8?B?MmlhbmFuNlVPRm5pb0dMRHlWN3plZTgxbS9WLysxc09vVHVaK0p6dnZkV2w4?=
+ =?utf-8?B?bTFaa3dwbEVOSVhuZnRmRCtoRlM5cUFaOHF5TkE1SWRZY0ZzbjNsWTJJNmVY?=
+ =?utf-8?B?a3hVdWhPUkpIcit4dHZZeHpuZStXZzF6VldOaU9GbVlqSXdjbVZxZXhRWk5x?=
+ =?utf-8?B?ZnFhQ0V1QUlSMjdjVUEyS1R1a0tIa1lERFc0TktmSnhlTTQvRnlxNEFqVXlp?=
+ =?utf-8?B?b3RUMXh4Q2dyL0hMR25zT2xKOUE0WkJPdVNLWE5PcDdhYXl1L1BjQkQ2UXEv?=
+ =?utf-8?B?TDRac1FHMzRRZnFHTTd1Z3pid29OMzBXdE5zY3lMRjlaVjVyUktWa2s2K00z?=
+ =?utf-8?B?S21QaVpwc2VtY21CT1ovVnZNUnpJSWtMUjY1ZFBZRXFtRzkrMEpkWDRGaS9B?=
+ =?utf-8?B?UTVpckg1czdYa0xuOURqemhLWDNCUlZ2SWNBZUpIVEVOaG9HVGRXQkZySUVw?=
+ =?utf-8?B?aXc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <167380196429.10651.4103075913257868035.stgit@bazille.1015granger.net>
- <b3e0b5e6-1d0-cdb2-186c-6b4f50e0a3aa@linux-m68k.org> <D5221DC2-2A9C-43DC-AC21-FA96E7F76E5B@oracle.com>
- <CAMuHMdVtsZ-jU5foR7V_4XeXT_0f3Nx5vfoJo5pH2jMga0SpWA@mail.gmail.com>
- <58CCF033-58C3-4AF0-B958-BE1AAF1695F3@oracle.com> <CAMuHMdUG5cthYp3u6GeYqTqMaNgW0Ernq_ce0AZ22rgFQ5J24A@mail.gmail.com>
-In-Reply-To: <CAMuHMdUG5cthYp3u6GeYqTqMaNgW0Ernq_ce0AZ22rgFQ5J24A@mail.gmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Feb 2023 10:51:22 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXYXO+D==BrN4h57cmuNyOG2Jd3_NwOWNgpjaoBdWQvOg@mail.gmail.com>
-Message-ID: <CAMuHMdXYXO+D==BrN4h57cmuNyOG2Jd3_NwOWNgpjaoBdWQvOg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/41] RPCSEC GSS krb5 enhancements
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Chuck Lever <cel@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        "simo@redhat.com" <simo@redhat.com>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-OriginatorOrg: boatrocker.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: YQBPR01MB10724.CANPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cb0c494-3d3f-49e5-df20-08db18d1a69f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2023 14:48:12.5158
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: fd92a966-cd05-4664-965e-b69e7529781a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Gs/cH3ZKi9HmnzRqRDeO7L3iET29rBYkosJBZP4uzUHk0pzWtK9gchzSy5sUfKsGIn8CDWMVsm7CkQqBrZN6O8cnyyJwOuiY77cVuSVPay4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT3PR01MB9217
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,FORGED_SPF_HELO,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Chuck,
-
-On Thu, Feb 23, 2023 at 5:52 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> On Thu, Feb 23, 2023 at 5:19 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
-> > > On Feb 23, 2023, at 10:16 AM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
- > > Unable to handle kernel access at virtual address af06da84
->
-> > > I.e. a slightly different crash.
-> > > As the difference between the two crashes is modular vs. builtin,
-> > > this looks like an out-of-bound access in the test.
-
-Just ran it on physical arm32 and arm64 (Renesas APE6EVM and
-Salvator-XS), and the test crashes there, too.
-
-> > Why not run the test suite just as I suggested?
-
-kunit_kernel.ConfigError: m68k is not a valid arch, options are
-['alpha', 'arm', 'arm64', 'i386', 'powerpc', 'riscv', 's390', 'sparc',
-'x86_64']
-
-Will look into adding m68k support ;-)
-
-But the issue can easily be reproduced using
-".../tools/testing/kunit/kunit.py run --arch=arm
---cross_compile=arm-linux-gnueabihf- --raw_output=all --kunitconfig
-./net/sunrpc/.kunitconfig" on current upstream[1]:
-
-KTAP version 1
-1..5
-    KTAP version 1
-    # Subtest: RFC 3961 tests
-    1..2
-        KTAP version 1
-        # Subtest: RFC 3961 n-fold
-        ok 1 64-fold("012345")
-        ok 2 56-fold("password")
-        ok 3 64-fold("Rough Consensus, and Running Code")
-        ok 4 168-fold("password")
-        ok 5 192-fold("MASSACHVSETTS INSTITVTE OF TECHNOLOGY")
-        ok 6 168-fold("Q")
-        ok 7 168-fold("ba")
-        ok 8 64-fold("kerberos")
-        ok 9 128-fold("kerberos")
-        ok 10 168-fold("kerberos")
-        ok 11 256-fold("kerberos")
-    # RFC 3961 n-fold: pass:11 fail:0 skip:0 total:11
-    ok 1 RFC 3961 n-fold
-        KTAP version 1
-        # Subtest: RFC 3961 key derivation
-        ok 1 des3-hmac-sha1 key derivation case 1
-        ok 2 des3-hmac-sha1 key derivation case 2
-        ok 3 des3-hmac-sha1 key derivation case 3
-        ok 4 des3-hmac-sha1 key derivation case 4
-        ok 5 des3-hmac-sha1 key derivation case 5
-        ok 6 des3-hmac-sha1 key derivation case 6
-        ok 7 des3-hmac-sha1 key derivation case 7
-        ok 8 des3-hmac-sha1 key derivation case 8
-        ok 9 des3-hmac-sha1 key derivation case 9
-    # RFC 3961 key derivation: pass:9 fail:0 skip:0 total:9
-    ok 2 RFC 3961 key derivation
-# RFC 3961 tests: pass:2 fail:0 skip:0 total:2
-# Totals: pass:20 fail:0 skip:0 total:20
-ok 1 RFC 3961 tests
-    KTAP version 1
-    # Subtest: RFC 3962 suite
-    1..2
-        KTAP version 1
-        # Subtest: RFC 3962 encryption
-        ok 1 Encrypt with aes128-cts-hmac-sha1-96 case 1
-        ok 2 Encrypt with aes128-cts-hmac-sha1-96 case 2
-        ok 3 Encrypt with aes128-cts-hmac-sha1-96 case 3
-        ok 4 Encrypt with aes128-cts-hmac-sha1-96 case 4
-        ok 5 Encrypt with aes128-cts-hmac-sha1-96 case 5
-        ok 6 Encrypt with aes128-cts-hmac-sha1-96 case 6
-    # RFC 3962 encryption: pass:6 fail:0 skip:0 total:6
-    ok 1 RFC 3962 encryption
-8<--- cut here ---
-Unable to handle kernel paging request at virtual address 73657420 when execute
-[73657420] *pgd=00000000
-Internal error: Oops: 80000005 [#1] ARM
-CPU: 0 PID: 1 Comm: swapper Tainted: G                 N
-6.2.0-12486-g85f341272fa9 #1
-Hardware name: Generic DT based system
-PC is at 0x73657420
-LR is at kunit_run_tests+0x3cc/0x5e8
-pc : [<73657420>]    lr : [<c02d0e54>]    psr: 20000053
-sp : f0809cc8  ip : f0809e54  fp : 00000006
-r10: c069dc30  r9 : c069dd84  r8 : f0809e54
-r7 : 00000000  r6 : 00000006  r5 : c08a8504  r4 : c08a82d0
-r3 : 73657420  r2 : 00000002  r1 : f0809e54  r0 : 00000000
-Flags: nzCv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment none
-Control: 10c53c7d  Table: 40004059  DAC: 00000051
-Register r0 information: NULL pointer
-Register r1 information: 2-page vmalloc region starting at 0xf0808000
-allocated at kernel_clone+0x94/0x2fc
-Register r2 information: non-paged memory
-Register r3 information: non-paged memory
-Register r4 information: non-slab/vmalloc memory
-Register r5 information: non-slab/vmalloc memory
-Register r6 information: non-paged memory
-Register r7 information: NULL pointer
-Register r8 information: 2-page vmalloc region starting at 0xf0808000
-allocated at kernel_clone+0x94/0x2fc
-Register r9 information: non-slab/vmalloc memory
-Register r10 information: non-slab/vmalloc memory
-Register r11 information: non-paged memory
-Register r12 information: 2-page vmalloc region starting at 0xf0808000
-allocated at kernel_clone+0x94/0x2fc
-Process swapper (pid: 1, stack limit = 0x(ptrval))
-Stack: (0xf0809cc8 to 0xf080a000)
-9cc0:                   c06b6154 f0809d54 00000006 c01443d8 00000000 00000000
-9ce0: 00000000 00000000 c088a8c0 c069dd1c c069dd38 c0698d6c 00000000 00000001
-9d00: 00000000 00000000 00000001 00000000 00000000 00000000 00000000 00000000
-9d20: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9d40: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9d60: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9d80: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9da0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9dc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9de0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9e00: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9e20: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9e40: 00000000 00000000 00000000 00000000 00000000 72636e00 20747079 68746977
-9e60: 73656120 2d383231 2d737463 63616d68 6168732d 36392d31 73616320 00362065
-9e80: 2259474f 00000029 800000d3 3ffff049 0000000c 00313601 0000004a 00000000
-9ea0: c0894480 ff7583a2 00000004 ffffffff 00000000 c069e520 00000000 c072185c
-9ec0: c072183c c0141eac f0809f1c c031fd5c 0251f4a2 ff7583a2 c0727f10 c08d932c
-9ee0: c0727f14 00000002 00000005 c0804205 00000000 c072183c c0700510 c02d1160
-9f00: c0cf534e c050f460 f0809f1c 00000005 c0727f10 c0cf5340 00000000 00000001
-9f20: c072185c c02d2e94 c0c01100 c0727f24 c0727f10 c08d9318 c072185c c0806cd0
-9f40: c0728750 c0cf5340 c06b9808 c06b73e0 c072185c c072183c c0700510 c07015f4
-9f60: 00000007 00000007 00000000 c0700510 00000002 0000005d c0c5c000 c0804200
-9f80: c0515dd8 00000000 00000000 00000000 00000000 00000000 00000000 c0515df0
-9fa0: 00000000 c0515dd8 00000000 c0100148 00000000 00000000 00000000 00000000
-9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9fe0: 00000000 00000000 00000000 00000000 00000013 00000000 00000000 00000000
- kunit_run_tests from __kunit_test_suites_init+0xc0/0x1a8
- __kunit_test_suites_init from kunit_run_all_tests+0x24c/0x41c
- kunit_run_all_tests from kernel_init_freeable+0x20c/0x258
- kernel_init_freeable from kernel_init+0x18/0x144
- kernel_init from ret_from_fork+0x14/0x2c
-Exception stack(0xf0809fb0 to 0xf0809ff8)
-9fa0:                                     00000000 00000000 00000000 00000000
-9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-Code: bad PC value
----[ end trace 0000000000000000 ]---
-Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
-
-[1] 85f341272fa9 = f3a2439f20d91893 ("Merge tag 'rproc-v6.3' of
-    git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux") +
-    a cherry-pick of a fix for a regression on my arm64 platforms)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+PiBGcm9tOiBBbmRyZXcgS2xhYXNzZW4gPGFuZHJldy5rbGFhc3NlbkBib2F0cm9ja2VyLmNvbT4N
+Cj4gU2VudDogTW9uZGF5LCBGZWJydWFyeSA2LCAyMDIzIDEyOjE5IFBNDQo+IA0KPiA+IEZyb206
+IEFuZHJldyBLbGFhc3NlbiA8YW5kcmV3LmtsYWFzc2VuQGJvYXRyb2NrZXIuY29tPg0KPiA+IFNl
+bnQ6IE1vbmRheSwgRmVicnVhcnkgNiwgMjAyMyAxMDoyOCBBTQ0KPiA+DQo+IA0KPiA+IFtzbmlw
+cGluZyBmb3IgcmVhZGFiaWxpdHk7IGhvcGUgdGhhdCdzIG9rYXldDQo+ID4NCj4gPiAgLSBJJ20g
+YWxsb2NhdGluZyBtZW1vcnkuICBJIGFzc3VtZSB0aGF0IG1lYW5zIEkgc2hvdWxkIGZyZWUgaXQg
+c29tZXdoZXJlLg0KPiA+IEJ1dCB3aGVyZT8gIEluIHhwcnRfZGVzdHJveSgpLCB3aGljaCBhcHBl
+YXJzIHRvIGRvIGNsZWFudXA/ICBPciBpbg0KPiA+IHhwcnRfZGVzdHJveV9jYigpLCB3aGljaCBp
+cyBjYWxsZWQgZnJvbSB4cHJ0X2Rlc3Ryb3koKSBhbmQgd2hpY2ggZnJlZXMNCj4gPiB4cHJ0LQ0K
+PiA+ID5zZXJ2ZXJuYW1lPyAgT3Igc29tZXdoZXJlIGVsc2UgY29tcGxldGVseT8NCj4gPiAgLSBJ
+ZiBJIGZyZWUgdGhlIGFsbG9jYXRlZCBtZW1vcnksIHdpbGwgdGhhdCBjYXVzZSBhbnkgcHJvYmxl
+bXMgaW4gdGhlDQo+ID4gY2FzZXMgd2hlcmUgbm8gdGltZW91dCBpcyBwYXNzZWQgaW4gdmlhIHRo
+ZSBhcmdzIGFuZCB0aGUgc3RhdGljIGNvbnN0DQo+ID4gc3RydWN0IHhzX3RjcF9kZWZhdWx0X3Rp
+bWVvdXQgaXMgYXNzaWduZWQgdG8geHBydC0+dGltZW91dD8NCj4gPiAgLSBJZiBmcmVlaW5nIHRo
+ZSBzdGF0aWMgY29uc3Qgc3RydWN0IGRlZmF1bHQgd2lsbCBjYXVzZSBhIHByb2JsZW0sDQo+ID4g
+d2hhdCBzaG91bGQgSSBkbyBpbnN0ZWFkPyAgQWxsb2NhdGUgYW5kIG1lbWNweSBldmVuIHdoZW4g
+YXNzaWduaW5nIHRoZQ0KPiA+IGRlZmF1bHQ/ICBBbmQgd291bGQgdGhhdCBtZWFuIGRvaW5nIHRo
+ZSBzYW1lIHRoaW5nIGZvciBhbGwgdGhlIG90aGVyDQo+ID4gdHJhbnNwb3J0cyB0aGF0IGFyZSBz
+ZXR0aW5nIHRpbWVvdXRzIChsb2NhbCwgdWRwLCB0Y3AsIGFuZCBiY190Y3ApPw0KPg0KPiBbc25p
+cHBpbmcgbW9yZV0NCg0KSGVyZSdzIHRoZSBwYXRjaCBpbiB3aGF0IEkgaG9wZSBpcyBpdHMgZmlu
+YWwgZm9ybS4gIEknbSBwbGFubmluZyB0byB0ZXN0IGl0IG9uIGEgY291cGxlIG9mIGh1bmRyZWQg
+bm9kZXMgb3ZlciB0aGUgbmV4dCBtb250aCBvciB0d28uDQoNClNpbmNlIEknbSBjb21wbGV0ZWx5
+IG5ldyB0byB0aGlzLCB3aGF0IHdvdWxkIGJlIHRoZSBjaGFuY2VzIG9mIGFjdHVhbGx5IGdldHRp
+bmcgdGhpcyBwYXRjaCBpbiB0aGUga2VybmVsPw0KDQpUaGFua3MuDQoNCkFuZHJldw0KDQpGcm9t
+IGNhYTMzMDhhM2JjZjM5ZWI5NWQ5YjU5ZTYzYmQ5NjM2MWU5ODMwNWUgTW9uIFNlcCAxNyAwMDow
+MDowMCAyMDAxDQpGcm9tOiBBbmRyZXcgS2xhYXNzZW4gPGFuZHJldy5rbGFhc3NlbkBib2F0cm9j
+a2VyLmNvbT4NCkRhdGU6IEZyaSwgMTAgRmViIDIwMjMgMTA6Mzc6NTcgLTA1MDANClN1YmplY3Q6
+IFtQQVRDSF0gU3VuIFJQQzogVXNlIHBhc3NlZC1pbiB0aW1lb3V0cyBpZiBhdmFpbGFibGUgaW5z
+dGVhZCBvZg0KIGFsd2F5cyB1c2luZyBkZWZhdWx0cy4NCg0KLS0tDQogaW5jbHVkZS9saW51eC9z
+dW5ycGMveHBydC5oIHwgIDMgKysrDQogbmV0L3N1bnJwYy9jbG50LmMgICAgICAgICAgIHwgIDEg
+Kw0KIG5ldC9zdW5ycGMveHBydC5jICAgICAgICAgICB8IDIxICsrKysrKysrKysrKysrKysrKysr
+Kw0KIG5ldC9zdW5ycGMveHBydHNvY2suYyAgICAgICB8IDIyICsrKysrKysrKysrKysrKysrKyst
+LS0NCiA0IGZpbGVzIGNoYW5nZWQsIDQ0IGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pDQoN
+CmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0LmggYi9pbmNsdWRlL2xpbnV4
+L3N1bnJwYy94cHJ0LmgNCmluZGV4IGI5ZjU5YWFiZWU1My4uY2E3YmUwOTBjZjgzIDEwMDY0NA0K
+LS0tIGEvaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oDQorKysgYi9pbmNsdWRlL2xpbnV4L3N1
+bnJwYy94cHJ0LmgNCkBAIC0zMzMsNiArMzMzLDcgQEAgc3RydWN0IHhwcnRfY3JlYXRlIHsNCiAJ
+c3RydWN0IHN2Y194cHJ0CQkqYmNfeHBydDsJLyogTkZTdjQuMSBiYWNrY2hhbm5lbCAqLw0KIAlz
+dHJ1Y3QgcnBjX3hwcnRfc3dpdGNoCSpiY194cHM7DQogCXVuc2lnbmVkIGludAkJZmxhZ3M7DQor
+CWNvbnN0IHN0cnVjdCBycGNfdGltZW91dCAqdGltZW91dDsJLyogdGltZW91dCBwYXJtcyAqLw0K
+IH07DQogDQogc3RydWN0IHhwcnRfY2xhc3Mgew0KQEAgLTM3Myw2ICszNzQsOCBAQCB2b2lkCQkJ
+eHBydF9yZWxlYXNlX3hwcnRfY29uZyhzdHJ1Y3QgcnBjX3hwcnQgKnhwcnQsIHN0cnVjdCBycGNf
+dGFzayAqdGFzayk7DQogdm9pZAkJCXhwcnRfcmVsZWFzZShzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2sp
+Ow0KIHN0cnVjdCBycGNfeHBydCAqCXhwcnRfZ2V0KHN0cnVjdCBycGNfeHBydCAqeHBydCk7DQog
+dm9pZAkJCXhwcnRfcHV0KHN0cnVjdCBycGNfeHBydCAqeHBydCk7DQorc3RydWN0IHJwY190aW1l
+b3V0CSp4cHJ0X2FsbG9jX3RpbWVvdXQoY29uc3Qgc3RydWN0IHJwY190aW1lb3V0ICp0aW1lbywN
+CisJCQkJY29uc3Qgc3RydWN0IHJwY190aW1lb3V0ICpkZWZhdWx0X3RpbWVvKTsNCiBzdHJ1Y3Qg
+cnBjX3hwcnQgKgl4cHJ0X2FsbG9jKHN0cnVjdCBuZXQgKm5ldCwgc2l6ZV90IHNpemUsDQogCQkJ
+CXVuc2lnbmVkIGludCBudW1fcHJlYWxsb2MsDQogCQkJCXVuc2lnbmVkIGludCBtYXhfcmVxKTsN
+CmRpZmYgLS1naXQgYS9uZXQvc3VucnBjL2NsbnQuYyBiL25ldC9zdW5ycGMvY2xudC5jDQppbmRl
+eCAwYjBiOWYxZWVkNDYuLjEzNTBjMWY0ODlmNyAxMDA2NDQNCi0tLSBhL25ldC9zdW5ycGMvY2xu
+dC5jDQorKysgYi9uZXQvc3VucnBjL2NsbnQuYw0KQEAgLTUzMiw2ICs1MzIsNyBAQCBzdHJ1Y3Qg
+cnBjX2NsbnQgKnJwY19jcmVhdGUoc3RydWN0IHJwY19jcmVhdGVfYXJncyAqYXJncykNCiAJCS5h
+ZGRybGVuID0gYXJncy0+YWRkcnNpemUsDQogCQkuc2VydmVybmFtZSA9IGFyZ3MtPnNlcnZlcm5h
+bWUsDQogCQkuYmNfeHBydCA9IGFyZ3MtPmJjX3hwcnQsDQorCQkudGltZW91dCA9IGFyZ3MtPnRp
+bWVvdXQsDQogCX07DQogCWNoYXIgc2VydmVybmFtZVs0OF07DQogCXN0cnVjdCBycGNfY2xudCAq
+Y2xudDsNCmRpZmYgLS1naXQgYS9uZXQvc3VucnBjL3hwcnQuYyBiL25ldC9zdW5ycGMveHBydC5j
+DQppbmRleCBhYjQ1M2VkZTU0ZjAuLjBiYjgwMGM5MDk3NiAxMDA2NDQNCi0tLSBhL25ldC9zdW5y
+cGMveHBydC5jDQorKysgYi9uZXQvc3VucnBjL3hwcnQuYw0KQEAgLTE4MDEsNiArMTgwMSwyNiBA
+QCBzdGF0aWMgdm9pZCB4cHJ0X2ZyZWVfaWQoc3RydWN0IHJwY194cHJ0ICp4cHJ0KQ0KIAlpZGFf
+ZnJlZSgmcnBjX3hwcnRfaWRzLCB4cHJ0LT5pZCk7DQogfQ0KIA0KK3N0cnVjdCBycGNfdGltZW91
+dCAqeHBydF9hbGxvY190aW1lb3V0KGNvbnN0IHN0cnVjdCBycGNfdGltZW91dCAqdGltZW8sDQor
+CQkJCSAgICAgICBjb25zdCBzdHJ1Y3QgcnBjX3RpbWVvdXQgKmRlZmF1bHRfdGltZW8pDQorew0K
+KwlzdHJ1Y3QgcnBjX3RpbWVvdXQgKnRpbWVvdXQ7DQorDQorCXRpbWVvdXQgPSBremFsbG9jKHNp
+emVvZigqdGltZW91dCksIEdGUF9LRVJORUwpOw0KKwlpZiAoIXRpbWVvdXQpDQorCQlyZXR1cm4g
+RVJSX1BUUigtRU5PTUVNKTsNCisJaWYgKHRpbWVvKQ0KKwkJbWVtY3B5KHRpbWVvdXQsIHRpbWVv
+LCBzaXplb2Yoc3RydWN0IHJwY190aW1lb3V0KSk7DQorCWVsc2UNCisJCW1lbWNweSh0aW1lb3V0
+LCBkZWZhdWx0X3RpbWVvLCBzaXplb2Yoc3RydWN0IHJwY190aW1lb3V0KSk7DQorCXJldHVybiB0
+aW1lb3V0Ow0KK30NCisNCitzdGF0aWMgdm9pZCB4cHJ0X2ZyZWVfdGltZW91dChzdHJ1Y3QgcnBj
+X3hwcnQgKnhwcnQpDQorew0KKwlrZnJlZSh4cHJ0LT50aW1lb3V0KTsNCit9DQorDQogc3RydWN0
+IHJwY194cHJ0ICp4cHJ0X2FsbG9jKHN0cnVjdCBuZXQgKm5ldCwgc2l6ZV90IHNpemUsDQogCQl1
+bnNpZ25lZCBpbnQgbnVtX3ByZWFsbG9jLA0KIAkJdW5zaWduZWQgaW50IG1heF9hbGxvYykNCkBA
+IC0xODM3LDYgKzE4NTcsNyBAQCBFWFBPUlRfU1lNQk9MX0dQTCh4cHJ0X2FsbG9jKTsNCiANCiB2
+b2lkIHhwcnRfZnJlZShzdHJ1Y3QgcnBjX3hwcnQgKnhwcnQpDQogew0KKwl4cHJ0X2ZyZWVfdGlt
+ZW91dCh4cHJ0KTsNCiAJcHV0X25ldF90cmFjayh4cHJ0LT54cHJ0X25ldCwgJnhwcnQtPm5zX3Ry
+YWNrZXIpOw0KIAl4cHJ0X2ZyZWVfYWxsX3Nsb3RzKHhwcnQpOw0KIAl4cHJ0X2ZyZWVfaWQoeHBy
+dCk7DQpkaWZmIC0tZ2l0IGEvbmV0L3N1bnJwYy94cHJ0c29jay5jIGIvbmV0L3N1bnJwYy94cHJ0
+c29jay5jDQppbmRleCBhYWE1YjI3NDFiNzkuLjEzNzAzZjhlMGVmMSAxMDA2NDQNCi0tLSBhL25l
+dC9zdW5ycGMveHBydHNvY2suYw0KKysrIGIvbmV0L3N1bnJwYy94cHJ0c29jay5jDQpAQCAtMjky
+NCw3ICsyOTI0LDEyIEBAIHN0YXRpYyBzdHJ1Y3QgcnBjX3hwcnQgKnhzX3NldHVwX3VkcChzdHJ1
+Y3QgeHBydF9jcmVhdGUgKmFyZ3MpDQogDQogCXhwcnQtPm9wcyA9ICZ4c191ZHBfb3BzOw0KIA0K
+LQl4cHJ0LT50aW1lb3V0ID0gJnhzX3VkcF9kZWZhdWx0X3RpbWVvdXQ7DQorCXhwcnQtPnRpbWVv
+dXQgPSB4cHJ0X2FsbG9jX3RpbWVvdXQoYXJncy0+dGltZW91dCwgJnhzX3VkcF9kZWZhdWx0X3Rp
+bWVvdXQpOw0KKwlpZiAoSVNfRVJSKHhwcnQtPnRpbWVvdXQpKQ0KKwl7DQorCQlyZXQgPSBFUlJf
+Q0FTVCh4cHJ0LT50aW1lb3V0KTsNCisJCWdvdG8gb3V0X2VycjsNCisJfQ0KIA0KIAlJTklUX1dP
+UksoJnRyYW5zcG9ydC0+cmVjdl93b3JrZXIsIHhzX3VkcF9kYXRhX3JlY2VpdmVfd29ya2ZuKTsN
+CiAJSU5JVF9XT1JLKCZ0cmFuc3BvcnQtPmVycm9yX3dvcmtlciwgeHNfZXJyb3JfaGFuZGxlKTsN
+CkBAIC0zMDAzLDcgKzMwMDgsMTMgQEAgc3RhdGljIHN0cnVjdCBycGNfeHBydCAqeHNfc2V0dXBf
+dGNwKHN0cnVjdCB4cHJ0X2NyZWF0ZSAqYXJncykNCiAJeHBydC0+aWRsZV90aW1lb3V0ID0gWFNf
+SURMRV9ESVNDX1RPOw0KIA0KIAl4cHJ0LT5vcHMgPSAmeHNfdGNwX29wczsNCi0JeHBydC0+dGlt
+ZW91dCA9ICZ4c190Y3BfZGVmYXVsdF90aW1lb3V0Ow0KKw0KKwl4cHJ0LT50aW1lb3V0ID0geHBy
+dF9hbGxvY190aW1lb3V0KGFyZ3MtPnRpbWVvdXQsICZ4c190Y3BfZGVmYXVsdF90aW1lb3V0KTsN
+CisJaWYgKElTX0VSUih4cHJ0LT50aW1lb3V0KSkNCisJew0KKwkJcmV0ID0gRVJSX0NBU1QoeHBy
+dC0+dGltZW91dCk7DQorCQlnb3RvIG91dF9lcnI7DQorCX0NCiANCiAJeHBydC0+bWF4X3JlY29u
+bmVjdF90aW1lb3V0ID0geHBydC0+dGltZW91dC0+dG9fbWF4dmFsOw0KIAl4cHJ0LT5jb25uZWN0
+X3RpbWVvdXQgPSB4cHJ0LT50aW1lb3V0LT50b19pbml0dmFsICoNCkBAIC0zMDcxLDcgKzMwODIs
+MTIgQEAgc3RhdGljIHN0cnVjdCBycGNfeHBydCAqeHNfc2V0dXBfYmNfdGNwKHN0cnVjdCB4cHJ0
+X2NyZWF0ZSAqYXJncykNCiAJeHBydC0+cHJvdCA9IElQUFJPVE9fVENQOw0KIAl4cHJ0LT54cHJ0
+X2NsYXNzID0gJnhzX2JjX3RjcF90cmFuc3BvcnQ7DQogCXhwcnQtPm1heF9wYXlsb2FkID0gUlBD
+X01BWF9GUkFHTUVOVF9TSVpFOw0KLQl4cHJ0LT50aW1lb3V0ID0gJnhzX3RjcF9kZWZhdWx0X3Rp
+bWVvdXQ7DQorCXhwcnQtPnRpbWVvdXQgPSB4cHJ0X2FsbG9jX3RpbWVvdXQoYXJncy0+dGltZW91
+dCwgJnhzX3RjcF9kZWZhdWx0X3RpbWVvdXQpOw0KKwlpZiAoSVNfRVJSKHhwcnQtPnRpbWVvdXQp
+KQ0KKwl7DQorCQlyZXQgPSBFUlJfQ0FTVCh4cHJ0LT50aW1lb3V0KTsNCisJCWdvdG8gb3V0X2Vy
+cjsNCisJfQ0KIA0KIAkvKiBiYWNrY2hhbm5lbCAqLw0KIAl4cHJ0X3NldF9ib3VuZCh4cHJ0KTsN
+Ci0tIA0KMi4zOS4xDQoNCg==
