@@ -2,46 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B93A6A37F2
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Feb 2023 03:13:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 654576A382D
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Feb 2023 03:16:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230525AbjB0CNa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 26 Feb 2023 21:13:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40760 "EHLO
+        id S231153AbjB0CQW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 26 Feb 2023 21:16:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbjB0CNF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 26 Feb 2023 21:13:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639F51CF73;
-        Sun, 26 Feb 2023 18:11:20 -0800 (PST)
+        with ESMTP id S231366AbjB0CO4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 26 Feb 2023 21:14:56 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ACE71DBBB;
+        Sun, 26 Feb 2023 18:12:21 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 81B9DB80C9C;
-        Mon, 27 Feb 2023 02:09:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DDAC4339C;
-        Mon, 27 Feb 2023 02:09:52 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E39E860DCA;
+        Mon, 27 Feb 2023 02:10:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9F33C4339E;
+        Mon, 27 Feb 2023 02:10:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677463793;
-        bh=+bxx3jEIZaB25ey2yCSE+5XWptEuxuO9JkP7EjHpLSg=;
+        s=k20201202; t=1677463834;
+        bh=w7nW1mn3Q4teusHdP0rzbD8SYR307ctOuhTJgpe/Rho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l1HsF12ImcmRlzn1A/F+an8evdG/fjLl0i7H26txQJGMJZQv9JTW4pwtF6JZnLbRh
-         9TQUVxrykDgp4FFuBGbFwVzeqfSjrks2aPQ/yCR8G6+DpptyLnumF0yAZwUbbhZn8O
-         2aCWEt6y1CvIEIh+T3btfRiIDfr4zkd8cgzV/5VM3v014WOT8Pel6Wcd6d568yLBU8
-         Vi5INhZonI4+RfK2n7b2+bDjV4yUYVavjLNvyj/vv9x8HWVXzWsOvTYpd1GOYiBpVD
-         9khHOQYwurz/XAI3B+wmAH2ChLuRv+J8/GgebwT0FhVIfTTjxxF7NjmjmNbUm9l7z/
-         hc2ViFDfeQ5VA==
+        b=ZSdhtPqaDvUI7WOqLTyT+7hswuw0UOqRM6fDYRJi7cf/qskGKem7qtxnomTDN4FBC
+         9e5/65qtthUyUzgKsTRlJpnHh9VzroB7AU6Nvqsy28Vzgm7e2mkOVA7o/vNVF/869k
+         x6gf3rQCuR9SLnIGT8AERWO2lzMbaI8Ey8t6EhSUQGIAGBNZSjNtTifqtVr3GS1vdZ
+         +pscOG2nfHk3PaNPvPBSrZoAHO4jHIUPmCNx8Q31Xww7hV38p367ujVXypaHVf6Gil
+         utpiyhnynI+SKfOv4ZTovZ0kj6TKr1AVSd6OH67zDb1wZlCb6ooBPKAqZYp1GazYVq
+         n7z3+53YuPwSg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jeff Layton <jlayton@kernel.org>,
         Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 25/25] nfsd: zero out pointers after putting nfsd_files on COPY setup error
-Date:   Sun, 26 Feb 2023 21:08:48 -0500
-Message-Id: <20230227020855.1051605-25-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 19/19] nfsd: zero out pointers after putting nfsd_files on COPY setup error
+Date:   Sun, 26 Feb 2023 21:09:54 -0500
+Message-Id: <20230227020957.1052252-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230227020855.1051605-1-sashal@kernel.org>
-References: <20230227020855.1051605-1-sashal@kernel.org>
+In-Reply-To: <20230227020957.1052252-1-sashal@kernel.org>
+References: <20230227020957.1052252-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -75,10 +75,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 0a900b9e39eac..57af9c30eb48d 100644
+index 735ee8a798705..f82cfe843b99b 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -1088,8 +1088,10 @@ nfsd4_verify_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+@@ -1075,8 +1075,10 @@ nfsd4_verify_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
  	return status;
  out_put_dst:
  	nfsd_file_put(*dst);
