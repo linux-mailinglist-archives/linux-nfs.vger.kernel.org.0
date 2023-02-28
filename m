@@ -2,108 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FC976A4B5C
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Feb 2023 20:43:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B35B26A547E
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Feb 2023 09:36:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjB0Tnl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Feb 2023 14:43:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53314 "EHLO
+        id S229565AbjB1Igh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Feb 2023 03:36:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbjB0Tnk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Feb 2023 14:43:40 -0500
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57D8C23C70;
-        Mon, 27 Feb 2023 11:43:38 -0800 (PST)
-Received: by mail-qv1-f51.google.com with SMTP id ev13so5238385qvb.10;
-        Mon, 27 Feb 2023 11:43:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yKY+VbY0FCl1BqoxDKxydDXKFwBbKHMwhMyu/F0WRtQ=;
-        b=UTQFCucOBd2JrvE8P1M7K0WBL2Tuf8YRyKZwGZl7ReNmqgHVLL+hmitCniE8SvtLLy
-         czCb5+JJvRCF47nWOHjvf4lEXbvIbWI3BO4/MMeyri04xLr8x7A0JglrlWiaM61NQQ4M
-         kvfja83M+gBc3T7RdAGx1JI6iUwTfcLeOA2YvsKsjtSkhUkcSqCgrDFgOPJnwiA9KOVe
-         1twI8SgN0kZSZLlmpxOJD4N8PZysV1Eyj8kfquAc3+jssuJxL7DjkUOf836O37veYXZQ
-         +UjMgACMIKktroPSTrB6WZVI4y3Ya9dNxaj29+uQlU8kvCwkMsqH0Tv5+sPw0f9EwIMO
-         YHug==
-X-Gm-Message-State: AO0yUKU70MF2pAAWOtJMHrGabJm59sr7dJINwOgiS8PQLyQXscPKjBYL
-        C5WdpVYhXxA5itwzPxP+hFjbwIoHa3+rzA==
-X-Google-Smtp-Source: AK7set/mZgNy3RcEHjGRvdXejRBRSSW1YDYM93ryIFUo4mcucJwkYAqz4z/TtSATtwrdkeySiorUDA==
-X-Received: by 2002:a05:6214:262d:b0:572:2aa2:6dfa with SMTP id gv13-20020a056214262d00b005722aa26dfamr1254056qvb.28.1677527017090;
-        Mon, 27 Feb 2023 11:43:37 -0800 (PST)
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
-        by smtp.gmail.com with ESMTPSA id 135-20020a37068d000000b006ff8a122a1asm5503601qkg.78.2023.02.27.11.43.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Feb 2023 11:43:36 -0800 (PST)
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-536af432ee5so208705497b3.0;
-        Mon, 27 Feb 2023 11:43:36 -0800 (PST)
-X-Received: by 2002:a81:b603:0:b0:533:99bb:c296 with SMTP id
- u3-20020a81b603000000b0053399bbc296mr10724897ywh.5.1677527016482; Mon, 27 Feb
- 2023 11:43:36 -0800 (PST)
+        with ESMTP id S229511AbjB1Ige (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Feb 2023 03:36:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6FC19F25
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Feb 2023 00:35:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1677573349;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=QAk5HDXijc1Zn+294xz/ng/XWRjBpvunH6owKK8lW6I=;
+        b=GqI7qzNmKdPQmFccbBK9Bt4eDEyyKtcuuxxg4n5gcXpmRiL3kZqL7kz96wXanFFnnftSQQ
+        /1Xbd7PNV6wud0Vjwri3lAZlGdTr72ny3in46cjU1LRhAe/nK1NkHo+2QR0tQyQ+r5tOhp
+        jUGwd6VQnVP2k5MZ2rxaiXsvBLUMD8Y=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-516-K2PCY8YfNAiBKsOH-gmx3Q-1; Tue, 28 Feb 2023 03:35:48 -0500
+X-MC-Unique: K2PCY8YfNAiBKsOH-gmx3Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E6B938432AF
+        for <linux-nfs@vger.kernel.org>; Tue, 28 Feb 2023 08:35:47 +0000 (UTC)
+Received: from localhost (unknown [10.66.60.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4C6CC140EBF6;
+        Tue, 28 Feb 2023 08:35:47 +0000 (UTC)
+From:   Zhi Li <yieli@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     steved@redhat.com, Zhi Li <yieli@redhat.com>
+Subject: [PATCH] [nfs/nfs-utils/rpcbind] rpcbind: avoid dereferencing NULL from realloc()
+Date:   Tue, 28 Feb 2023 16:35:44 +0800
+Message-Id: <20230228083544.4035733-1-yieli@redhat.com>
 MIME-Version: 1.0
-References: <167751664019.187639.5290505948970809072.stgit@bazille.1015granger.net>
-In-Reply-To: <167751664019.187639.5290505948970809072.stgit@bazille.1015granger.net>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 27 Feb 2023 20:43:23 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdW7mKmji6yyd2w+TrX0toyMN5r=hWvyxtM8D=qdBLcdww@mail.gmail.com>
-Message-ID: <CAMuHMdW7mKmji6yyd2w+TrX0toyMN5r=hWvyxtM8D=qdBLcdww@mail.gmail.com>
-Subject: Re: [PATCH] SUNRPC: Ensure test case arrays are properly terminated
-To:     Chuck Lever <cel@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Chuck,
+Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=2173869
 
-On Mon, Feb 27, 2023 at 5:53 PM Chuck Lever <cel@kernel.org> wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->
-> Geert Uytterhoeven reports:
->
-> ...
->         ok 9 Encrypt 13 bytes with camellia256-cts-cmac
->         ok 10 Encrypt 30 bytes with camellia256-cts-cmac
->     # RFC 6803 encryption: pass:0 fail:0 skip:10 total:10
->     ok 3 RFC 6803 encryption # SKIP Encryption type is not available
-> 8<--- cut here ---
-> Unable to handle kernel paging request at virtual address 73657420 when execute
-> [73657420] *pgd=00000000
-> Internal error: Oops: 80000005 [#1] ARM
-> CPU: 0 PID: 1 Comm: swapper Tainted: G                 N 6.2.0-rc7-00133-g373f26a81164-dirty #9
-> Hardware name: Generic DT based system
-> PC is at 0x73657420
-> LR is at kunit_run_tests+0x3e0/0x5f4
->
-> On x86 with GCC 12, the missing array terminators did not seem to
-> matter. Other platforms appear to be more picky.
+Signed-off-by: Zhi Li <yieli@redhat.com>
+---
+ src/rpcbind.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Doesn't gcc on x86 align all arrays to a 16-byte boundary, hence
-adding zero-padding here?
-
->
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-
-Tested-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/src/rpcbind.c b/src/rpcbind.c
+index ecebe97..6379a4e 100644
+--- a/src/rpcbind.c
++++ b/src/rpcbind.c
+@@ -471,6 +471,8 @@ init_transport(struct netconfig *nconf)
+ 		nhostsbak = nhosts;
+ 		nhostsbak++;
+ 		hosts = realloc(hosts, nhostsbak * sizeof(char *));
++		if (hosts == NULL)
++			errx(1, "Out of memory");
+ 		if (nhostsbak == 1)
+ 			hosts[0] = "*";
+ 		else {
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.39.0
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
