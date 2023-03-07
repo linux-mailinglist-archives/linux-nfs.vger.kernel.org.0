@@ -2,133 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 095976AEB5E
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Mar 2023 18:43:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECD886AEC6B
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Mar 2023 18:55:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232033AbjCGRnx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Mar 2023 12:43:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54218 "EHLO
+        id S229726AbjCGRzJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Mar 2023 12:55:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231826AbjCGRn2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Mar 2023 12:43:28 -0500
-Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289DE9CBCC
-        for <linux-nfs@vger.kernel.org>; Tue,  7 Mar 2023 09:39:30 -0800 (PST)
-Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-53d277c1834so82336787b3.10
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Mar 2023 09:39:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google; t=1678210763;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yKJ1xnLvZwucLv+2Y8pUPYv8nLOOyK0pjzTdrCv/Nvk=;
-        b=WC7B2nu/JFqbJfuLcWrxbAW3K1A0nXmyYBI60rVjFALCyKcygCcgGnQ7NXJ57S4lB5
-         fEBUA8EdiBo1FpQNvazINvYUEeO7rd1whK0nZjN6hqAWcZIlb97kmPpVQDE15S0xN4Mk
-         29FY+i2AkJ7m3Y9/CqQtEJtUBoD8bKCF7a5s3kqxAWlmQDbbEUrOgi6pL5xAjkF2HhLT
-         RH8VOwEtAwF0NSPRjlCnma4RejxnDAzsLWdOKB5JUye/azDNFy5mLPgmSFb3abzRQ++G
-         syWM3hw3LxNtzhXHCm8UuYphL6yOIpzWSEWrZT8IQ+MAHgkt2jxkPQqLb7qBQc126Y2n
-         h0pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678210763;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yKJ1xnLvZwucLv+2Y8pUPYv8nLOOyK0pjzTdrCv/Nvk=;
-        b=uVQakleru6VI9L4y5Zkv4lOJ+QIB8bBf11NBWTRtkQ8toN+YJTN0OGVPGf1dJv3R2R
-         +6rgSg8WMN6sBvPAhOUUNHvRK5fmXWK4AV+yoevi8HuuTGaE2IpLUDnSfNfiPdhPOmbi
-         X0LqfjHtREUMi4jTpnkpZPROPzj8SpL3F9mcx2wMNggqo43koqn4qrq4d+E3a76xSlzf
-         1uryeXmFvjVQHpPGmXp4ph3tHesKElg3JFKT+c0TbDXcI6ZVjMLtHr9BMK5jBy0me5SU
-         oIzL8SaNJlIygpNdRd84gA+grSs8CHYLaCbhGqyckJbX86G6NbFS967PdniHFURPTojg
-         FhAg==
-X-Gm-Message-State: AO0yUKUuOP92FkIjZ7ugL0w7LO7y+rbV0/8Pb28WZkVY8eODqvR7Anc2
-        CRhvkTGu8XNwD/rH8/PTnmkKmLOBFvgWe4aHNsUc6/AEFQZz02qFZg0=
-X-Google-Smtp-Source: AK7set+Og5xVamBh4Vd1gJuyh7nbkgynmnF1xtE5go6HJ3oOlssbxIcGk9fSSEdHBkjoVtKBPy9wmJH4NLmZCnsA4Lw=
-X-Received: by 2002:a81:b286:0:b0:533:9185:fc2c with SMTP id
- q128-20020a81b286000000b005339185fc2cmr9960049ywh.7.1678210762823; Tue, 07
- Mar 2023 09:39:22 -0800 (PST)
+        with ESMTP id S230219AbjCGRyl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Mar 2023 12:54:41 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C561BAF5;
+        Tue,  7 Mar 2023 09:49:29 -0800 (PST)
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 327G4rhm028559;
+        Tue, 7 Mar 2023 17:48:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=4aAJWJBy975NS+0ZaKkPZz9k8xW/dBALS7N/Lh1ppNI=;
+ b=qHhYfoo1Ym8JeCNzGkEWB0Wb33jiZ/DJ13mKTE8uPGTZUxBtyl0crkgWwNsDUxJqaeSP
+ 1SvNWyuXjcBLRkvuGtNP9kZEFJnTbhzHHUllLvHesAesWYjXweHy+hf6LDkpg+FYi3yn
+ rUHoj+c726kyoGRrlDe0zKyd8W1H3NaFcKeedQvpNtZD6J4xiwF3jNFpd6t4q204HbRi
+ wiXjnIr1/iao42mp20VuE075569kjYd+XtktZJkZnXWaj45mc4WrqV91R2akiIO/IfTX
+ SMhxJ4B3ENAcKoDTNkaEvmbEbM+QS/5Njbar9MqrJIMmANx+EMGRUh1Z3SI4MYHl/Uq7 Aw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p66uup6sb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Mar 2023 17:48:55 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 327HLCmp012848;
+        Tue, 7 Mar 2023 17:48:54 GMT
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p66uup6s1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Mar 2023 17:48:54 +0000
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 327GtTjE010337;
+        Tue, 7 Mar 2023 17:48:53 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([9.208.129.116])
+        by ppma04wdc.us.ibm.com (PPS) with ESMTPS id 3p419ecgf8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 07 Mar 2023 17:48:53 +0000
+Received: from smtpav05.wdc07v.mail.ibm.com (smtpav05.wdc07v.mail.ibm.com [10.39.53.232])
+        by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 327HmpM96161056
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 7 Mar 2023 17:48:52 GMT
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D6F355805D;
+        Tue,  7 Mar 2023 17:48:51 +0000 (GMT)
+Received: from smtpav05.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF42E58053;
+        Tue,  7 Mar 2023 17:48:49 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+        by smtpav05.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Mar 2023 17:48:49 +0000 (GMT)
+Message-ID: <89c5588f-e039-6048-84a2-653194bd6eb8@linux.ibm.com>
+Date:   Tue, 7 Mar 2023 12:48:49 -0500
 MIME-Version: 1.0
-From:   Daire Byrne <daire@dneg.com>
-Date:   Tue, 7 Mar 2023 17:38:47 +0000
-Message-ID: <CAPt2mGMgCCWYP-ZaHCovMuRZmHYYPhApNiUybKTw4pr5XwZkjw@mail.gmail.com>
-Subject: v6.2 client behaviour change (repeat access calls)?
-To:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 22/28] security: Introduce key_post_create_or_update hook
+Content-Language: en-US
+To:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        viro@zeniv.linux.org.uk, chuck.lever@oracle.com,
+        jlayton@kernel.org, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, brauner@kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
+ <20230303181842.1087717-23-roberto.sassu@huaweicloud.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <20230303181842.1087717-23-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: tKntTEC0eACe4lrs-UD5ZSxdfWUJ8N9j
+X-Proofpoint-ORIG-GUID: 1J7-_yGEaxKEfEZLMGq6PBJqb3ufz54B
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-07_12,2023-03-07_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 bulkscore=0
+ impostorscore=0 mlxlogscore=999 clxscore=1015 lowpriorityscore=0
+ adultscore=0 malwarescore=0 priorityscore=1501 spamscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303070157
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I noticed a change in behaviour in the v6.2.x client versus v6.1.12 (and be=
-low).
 
-We have some servers that mount Netapps from different locations many
-milliseconds away, and these contain apps and libs that get added to
-the LD_LIBRARY_PATH and PATH on remote login.
 
-I then noticed that when I ssh'd into a remote server that had these
-mounts and the shell was starting, the first login was normal and I
-observed an expected flurry of lookups,getattrs and access calls for a
-grand total of only ~120 packets to the Netapp.
+On 3/3/23 13:18, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> In preparation for moving IMA and EVM to the LSM infrastructure, introduce
+> the key_post_create_or_update hook.
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
-But when I disconnect and reconnect (ssh), now I see a flood of access
-calls to the netapp for a handful of repeating filehandles which look
-something like:
-
- 2700 85.942563180 10.23.112.10 =E2=86=92 10.23.21.11  NFS 254 V3 ACCESS Ca=
-ll,
-FH: 0x7f36addc, [Check: RD LU MD XT DL]
- 2701 85.999838796  10.23.21.11 =E2=86=92 10.23.112.10 NFS 190 V3 ACCESS Re=
-ply
-(Call In 2700), [Allowed: RD LU MD XT DL]
- 2702 85.999970825 10.23.112.10 =E2=86=92 10.23.21.11  NFS 254 V3 ACCESS Ca=
-ll,
-FH: 0x7f36addc, [Check: RD LU MD XT DL]
- 2703 86.055340946  10.23.21.11 =E2=86=92 10.23.112.10 NFS 190 V3 ACCESS Re=
-ply
-(Call In 2702), [Allowed: RD LU MD XT DL]
- 2704 86.056865308 10.23.112.10 =E2=86=92 10.23.21.11  NFS 254 V3 ACCESS Ca=
-ll,
-FH: 0x7f36addc, [Check: RD LU MD XT DL]
- 2705 86.112233415  10.23.21.11 =E2=86=92 10.23.112.10 NFS 190 V3 ACCESS Re=
-ply
-(Call In 2704), [Allowed: RD LU MD XT DL]
-
-This time we total 5000+ packets for this login which becomes very
-noticeable when the Netapp is 50ms away.
-
-I didn't understand why the first login was fine but the second goes
-into this repeating access pattern. I set actimeo=3D3600 (long) but it
-does not seem to affect it.
-
-I do not see this prior to v6.2 where repeated logins are equally fast
-and we don't see the repeating access calls.
-
-So a bit of digging through the v6.2 changes and this looked like the
-relevant change:
-
-commit 0eb43812c027 ("NFS: Clear the file access cache upon login=E2=80=9D)
-[PATCH] NFS: Judge the file access cache's timestamp in rcu path?
-
-I reverted those and got the prior (v6.1) performance.
-
-What constitutes a login exactly? I also have services like "sysstat"
-or pcp that cause a systemd-logind to trigger regularly on our
-machines.... does that count and invalidate the cache?
-
-Do the repeated access calls on the same handful of filehandles make
-sense? Even prior to those patches (or v6.1) there are only a couple
-of ACCESS calls to the Netapp on login.
-
-We are a bit unique in that we run quite a few WAN high latency NFS
-workflows so are happy to trade long lived caches (e.g. actimeo and
-even nocto on occasion) for lower ops at the expense of total
-correctness.
-
-Cheers,
-
-Daire
+Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
