@@ -2,167 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C09436AEE54
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Mar 2023 19:11:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F8456AF833
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Mar 2023 23:05:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232397AbjCGSLG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Mar 2023 13:11:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48110 "EHLO
+        id S230225AbjCGWFy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Mar 2023 17:05:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbjCGSKu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Mar 2023 13:10:50 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CFE35DECD;
-        Tue,  7 Mar 2023 10:05:40 -0800 (PST)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 327HGv5u002333;
-        Tue, 7 Mar 2023 18:05:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=hoz4RkVCJGwvQNNgSt4WLK6sHH0UVal/pigvAKVzo24=;
- b=KmYsR+wgzGHSKd2v0EhZiBj2MtYYjTed21FDk7VT0FDzn++Pa9LUhrxtOEdxY1tP0GZn
- VCO1Pk7iNQb8lGXM/S9XQPemTobWQnBQj7eT7rsay6FepXWh4Vk2WHPUWmiWf3X26ynZ
- xpKLFriFrXs4D92nYjxy3GxMkhkqhHPc0vCg4KiBUo0ZneDWg2BskimpR5tEBFVlRJNp
- wYFOMgYkiaVk7X23H12gTFeYEu5DwpqaxTHc6dbfJXw6dVhwAczgX0yMrDagPpdZdOyt
- fSDCSzMNYNS3VWM9c6Y1/VrYkJm+ZPLzWaqGz+/s2UEAxhn8pGxzUTYZf/f+1/lYJ/dc hw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p67wfmdtg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Mar 2023 18:05:03 +0000
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 327HqNgi004706;
-        Tue, 7 Mar 2023 18:05:02 GMT
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p67wfmdsy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Mar 2023 18:05:02 +0000
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 327H9dUc015329;
-        Tue, 7 Mar 2023 18:05:01 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([9.208.129.119])
-        by ppma02dal.us.ibm.com (PPS) with ESMTPS id 3p4199sp2n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 07 Mar 2023 18:05:01 +0000
-Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
-        by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 327I4xJr32309734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Mar 2023 18:05:00 GMT
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE1DD5805A;
-        Tue,  7 Mar 2023 18:04:59 +0000 (GMT)
-Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 600B15803F;
-        Tue,  7 Mar 2023 18:04:55 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-        by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Mar 2023 18:04:55 +0000 (GMT)
-Message-ID: <4b158d7e-a96d-58ae-cc34-0ad6abc1cea9@linux.ibm.com>
-Date:   Tue, 7 Mar 2023 13:04:54 -0500
+        with ESMTP id S229614AbjCGWFx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Mar 2023 17:05:53 -0500
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70181AB0A6
+        for <linux-nfs@vger.kernel.org>; Tue,  7 Mar 2023 14:05:50 -0800 (PST)
+Received: by mail-pj1-x1032.google.com with SMTP id l1so14689803pjt.2
+        for <linux-nfs@vger.kernel.org>; Tue, 07 Mar 2023 14:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=skydio.com; s=google; t=1678226750;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iuFv0A/Ck/Q8e4YuvcBqj0gUpgGQfLBTSNOCt9bIelM=;
+        b=XKJICQ5d2fSyxMll4s29WUxxIdUEbV3pRAWR10gMjlwWaUvdxauJBg5FihyholtycU
+         eycULJgQOucWEzOMljNnymK7KzNChsHyUZVXUvsKOR2B806ksqYY8qtvuzDS4EvLgYix
+         R/QdZ3zTECbz3e3GB4EFoqWxwA0teV7/j2SuUOFsnpPr2zvNu5Zr2AoJjvjjBNIpBe1y
+         nJlzsxMLKw76SaWGlvZCK4vycqj4s95TKyY4/Mzhl8nlalmM3qSOHGirBE0xmWHoBjpG
+         zNb8qpZ1TuEb78N2Obwdw7Wshw2L7wqceX0SO6gX/vp5YHY+FWnjB8Almvi748uD8u7t
+         aBCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678226750;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iuFv0A/Ck/Q8e4YuvcBqj0gUpgGQfLBTSNOCt9bIelM=;
+        b=JKHebqdcvRAPco8UploqluRJQW6ApAN/gpBBlt0EEfYJIsYgFRQLOMPyP15tBwGBeh
+         QAoLR/0bEDeaysSte03MRBpskDHl2Nsy7GtG+lmy4jUa+LfwafF1waUmYfhsHgajqpZb
+         6MBDIYNmnhAjMNb8Bf7Sd4DmVYQFs/5C3zC48NNIq1kIP5hKncUe/KOJFCKT+WzP5qzr
+         w/1+z9z9HN59AXcKRbTI+uipPmln+yBpW7VJCYiv3dUHRL3s+RKwlYYxbMPlzi6ki3fW
+         WjDR9iA0qsDWewbaKt25Iqig8p9NAug+t7RS9FSFaF8P0TZtABl+N1M2dV4Ch5lOK89C
+         zO0Q==
+X-Gm-Message-State: AO0yUKXeC8Oozy9QzyzFv1b78U0cjZEaVPfpOfcG3JLvkF3aYPQ1J4Oi
+        Z2O71f9WH82DMxi1/7z6JakD4A==
+X-Google-Smtp-Source: AK7set8MWjv/nOw2kbx81+IF1fiyHTSOf4h0lLrxKVo1CstC0uzddY+5gW9iITvsxJwK/wF6dptGJw==
+X-Received: by 2002:a05:6a20:8f08:b0:c7:6a98:5bdc with SMTP id b8-20020a056a208f0800b000c76a985bdcmr22521829pzk.16.1678226749788;
+        Tue, 07 Mar 2023 14:05:49 -0800 (PST)
+Received: from jerry-desktop3.skydio.lan ([50.217.93.66])
+        by smtp.gmail.com with ESMTPSA id j14-20020a62e90e000000b005a8de0f4c76sm8596844pfh.17.2023.03.07.14.05.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Mar 2023 14:05:49 -0800 (PST)
+From:   Jerry Zhang <jerry@skydio.com>
+X-Google-Original-From: Jerry Zhang <Jerry@skydio.com>
+Cc:     embedded@skydio.com, Jerry Zhang <Jerry@skydio.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, NeilBrown <neilb@suse.de>,
+        "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] sunrpc: Fix incorrect parsing of expiry time
+Date:   Tue,  7 Mar 2023 14:05:25 -0800
+Message-Id: <20230307220525.54895-1-Jerry@skydio.com>
+X-Mailer: git-send-email 2.40.0.rc2
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 23/28] security: Introduce LSM_ORDER_LAST
-Content-Language: en-US
-To:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
-        viro@zeniv.linux.org.uk, chuck.lever@oracle.com,
-        jlayton@kernel.org, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, brauner@kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
- <20230303182602.1088032-1-roberto.sassu@huaweicloud.com>
-From:   Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20230303182602.1088032-1-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: z2sA_jePHs3pgRRx2w8x57GTfaIXwbl5
-X-Proofpoint-ORIG-GUID: giscmAA8yJRKHabeezSzr5z2e0B3EN--
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-07_12,2023-03-07_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- clxscore=1015 malwarescore=0 bulkscore=0 mlxscore=0 suspectscore=0
- spamscore=0 priorityscore=1501 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303070161
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,T_SPF_PERMERROR,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+The expiry time field is mean to be expressed in seconds since boot.
+The get_expiry() function parses a relative time value in seconds.
+In order to get the absolute time of seconds since boot that the given
+message will expire, the right thing is to add seconds_since_boot()
+to the given relative value.
 
+Previously this logic was subtracting boot.tv_sec from the relative
+value, which was causing some confusing behavior. The return type of
+time64_t could possibly underflow if time since boot is greater than
+the passed in relative argument. Also several checks in nfs code compare
+the return value to 0 to indicate failure, and this could spuriously
+be tripped if seconds since boot happened to match the argument.
 
-On 3/3/23 13:25, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
-> 
-> Introduce LSM_ORDER_LAST, to satisfy the requirement of LSMs willing to be
-> the last, e.g. the 'integrity' LSM, without changing the kernel command
-> line or configuration.
-> 
-> As for LSM_ORDER_FIRST, LSMs with LSM_ORDER_LAST are always enabled and put
-> at the end of the LSM list in no particular order.
-> 
+Fixes: c5b29f885afe ("sunrpc: use seconds since boot in expiry cache")
+Signed-off-by: Jerry Zhang <Jerry@skydio.com>
+---
+ include/linux/sunrpc/cache.h | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-I think you should describe the reason for the change for LSM_ORDER_MUTABLE as well.
+diff --git a/include/linux/sunrpc/cache.h b/include/linux/sunrpc/cache.h
+index ec5a555df96f..b96b1319c93d 100644
+--- a/include/linux/sunrpc/cache.h
++++ b/include/linux/sunrpc/cache.h
+@@ -301,16 +301,14 @@ static inline int get_time(char **bpp, time64_t *time)
+ }
+ 
+ static inline time64_t get_expiry(char **bpp)
+ {
+ 	time64_t rv;
+-	struct timespec64 boot;
+ 
+ 	if (get_time(bpp, &rv))
+ 		return 0;
+ 	if (rv < 0)
+ 		return 0;
+-	getboottime64(&boot);
+-	return rv - boot.tv_sec;
++	return rv + seconds_since_boot();
+ }
+ 
+ #endif /*  _LINUX_SUNRPC_CACHE_H_ */
+-- 
+2.37.3
 
-
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> ---
->   include/linux/lsm_hooks.h |  1 +
->   security/security.c       | 12 +++++++++---
->   2 files changed, 10 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-> index 21a8ce23108..05c4b831d99 100644
-> --- a/include/linux/lsm_hooks.h
-> +++ b/include/linux/lsm_hooks.h
-> @@ -93,6 +93,7 @@ extern void security_add_hooks(struct security_hook_list *hooks, int count,
->   enum lsm_order {
->   	LSM_ORDER_FIRST = -1,	/* This is only for capabilities. */
->   	LSM_ORDER_MUTABLE = 0,
-> +	LSM_ORDER_LAST = 1,
->   };
->   
->   struct lsm_info {
-> diff --git a/security/security.c b/security/security.c
-> index 322090a50cd..24f52ba3218 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -284,9 +284,9 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
->   		bool found = false;
->   
->   		for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
-> -			if (lsm->order == LSM_ORDER_MUTABLE &&
-> -			    strcmp(lsm->name, name) == 0) {
-> -				append_ordered_lsm(lsm, origin);
-> +			if (strcmp(lsm->name, name) == 0) {
-> +				if (lsm->order == LSM_ORDER_MUTABLE)
-> +					append_ordered_lsm(lsm, origin);
->   				found = true;
->   			}
->   		}
-> @@ -306,6 +306,12 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
->   		}
->   	}
->   
-> +	/* LSM_ORDER_LAST is always last. */
-> +	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
-> +		if (lsm->order == LSM_ORDER_LAST)
-> +			append_ordered_lsm(lsm, "   last");
-> +	}
-> +
->   	/* Disable all LSMs not in the ordered list. */
->   	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
->   		if (exists_ordered_lsm(lsm))
