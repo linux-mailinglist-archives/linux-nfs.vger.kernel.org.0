@@ -2,89 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D4BB6AD222
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Mar 2023 23:58:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 858E46AD9BB
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Mar 2023 09:58:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbjCFW56 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Mar 2023 17:57:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39948 "EHLO
+        id S230079AbjCGI64 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Mar 2023 03:58:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229646AbjCFW55 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Mar 2023 17:57:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2243C03
-        for <linux-nfs@vger.kernel.org>; Mon,  6 Mar 2023 14:57:56 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A661A6101A
-        for <linux-nfs@vger.kernel.org>; Mon,  6 Mar 2023 22:57:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A95FC433EF;
-        Mon,  6 Mar 2023 22:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678143475;
-        bh=UYT7P8hAn8Sox16YHsE1mSy4/NQN+tHDfPbCl2U8c2A=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KLOeAZJZXgjeCZSYdc7q1tOll475a98RwfjCb753USnK9cA7vEyPAd7MDlPImLMLf
-         hiSMcX06XdOSS3mQiqgpaBgoFSZ9MdpXMSs7xSYWo4DcahX038AYcy0oNGeGceE5fu
-         ImDGgYsnKH637i04De4DfI7J9C3qy+Q51ckK6rQKXkEUB2jCQtgLzmbXRccf6z1RT8
-         aAFb3AlargvspgAoA9sPMoq1Qj0DhiP1Wl3trngMJ1lU0Ih2U2FNEkRKiTvzLgUxFm
-         gfk0HGwZ1NMVmugyJSyG43xzxSj6zNrvER1eB8xDbe8a76LP7Q1pF7CnfSNLuUq6eo
-         /5fE2oV8H56Mg==
-Message-ID: <ac05071a4a9dee6f249945d23e37812aa350fcc5.camel@kernel.org>
-Subject: Re: [PATCH] NFSD: Protect against filesystem freezing
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
-Cc:     jack@suse.de, flole@flole.de
-Date:   Mon, 06 Mar 2023 17:57:53 -0500
-In-Reply-To: <167811742782.1909.380332356774647144.stgit@bazille.1015granger.net>
-References: <167811742782.1909.380332356774647144.stgit@bazille.1015granger.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        with ESMTP id S229593AbjCGI6z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Mar 2023 03:58:55 -0500
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 478E7515F7;
+        Tue,  7 Mar 2023 00:58:53 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4PW8KD3lV2z9yB6h;
+        Tue,  7 Mar 2023 16:50:08 +0800 (CST)
+Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
+        by APP2 (Coremail) with SMTP id GxC2BwC3gVio_AZktq14AQ--.19560S2;
+        Tue, 07 Mar 2023 09:58:29 +0100 (CET)
+Message-ID: <f604ce5c7a535755a56736395a82220f65bcbc3f.camel@huaweicloud.com>
+Subject: Re: [PATCH 11/28] evm: Complete description of evm_inode_setattr()
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>, viro@zeniv.linux.org.uk,
+        chuck.lever@oracle.com, jlayton@kernel.org, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, brauner@kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Tue, 07 Mar 2023 09:58:14 +0100
+In-Reply-To: <ecb168e5-e85f-73ee-7bc4-c13d0ea8811e@linux.ibm.com>
+References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
+         <20230303181842.1087717-12-roberto.sassu@huaweicloud.com>
+         <ecb168e5-e85f-73ee-7bc4-c13d0ea8811e@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: GxC2BwC3gVio_AZktq14AQ--.19560S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7WrWkJF48Xr4UCFyUAr45GFg_yoW8XF13pa
+        yfKa48Gr4rtry29F98ta1xZa4Sg3y0gryj9398Aw4qyFn8GrnavryIkryrur98Kr18Cr1F
+        ya4av3W3Za15A3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+        xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+        6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFDGOUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAJBF1jj4pFJgACsW
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2023-03-06 at 10:43 -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> Flole observes this WARNING on occasion:
->=20
-> [1210423.486503] WARNING: CPU: 8 PID: 1524732 at fs/ext4/ext4_jbd2.c:75 e=
-xt4_journal_check_start+0x68/0xb0
->=20
-> Reported-by: <flole@flole.de>
-> Suggested-by: Jan Kara <jack@suse.cz>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217123
-> Fixes: 73da852e3831 ("nfsd: use vfs_iter_read/write")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/nfsd/vfs.c |    2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 21d5209f6e04..ba34a31a7c70 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1104,7 +1104,9 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_f=
-h *fhp, struct nfsd_file *nf,
->  	since =3D READ_ONCE(file->f_wb_err);
->  	if (verf)
->  		nfsd_copy_write_verifier(verf, nn);
-> +	file_start_write(file);
->  	host_err =3D vfs_iter_write(file, &iter, &pos, flags);
-> +	file_end_write(file);
->  	if (host_err < 0) {
->  		nfsd_reset_write_verifier(nn);
->  		trace_nfsd_writeverf_reset(nn, rqstp, host_err);
->=20
->=20
+On Mon, 2023-03-06 at 12:04 -0500, Stefan Berger wrote:
+> 
+> On 3/3/23 13:18, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> > 
+> > Add the description for missing parameters of evm_inode_setattr() to
+> > avoid the warning arising with W=n compile option.
+> > 
+> > Fixes: 817b54aa45db ("evm: add evm_inode_setattr to prevent updating an invalid security.evm")
+> > Fixes: c1632a0f1120 ("fs: port ->setattr() to pass mnt_idmap")
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> Among the previous patches I think there were 2 fixes like this one you could possibly also split off.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Didn't find it.
+
+Thanks
+
+Roberto
+
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> > ---
+> >   security/integrity/evm/evm_main.c | 2 ++
+> >   1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
+> > index 1155a58ae87..8b5c472f78b 100644
+> > --- a/security/integrity/evm/evm_main.c
+> > +++ b/security/integrity/evm/evm_main.c
+> > @@ -798,7 +798,9 @@ static int evm_attr_change(struct mnt_idmap *idmap,
+> >   
+> >   /**
+> >    * evm_inode_setattr - prevent updating an invalid EVM extended attribute
+> > + * @idmap: idmap of the mount
+> >    * @dentry: pointer to the affected dentry
+> > + * @attr: iattr structure containing the new file attributes
+> >    *
+> >    * Permit update of file attributes when files have a valid EVM signature,
+> >    * except in the case of them having an immutable portable signature.
+
