@@ -2,140 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BCCF6B007F
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Mar 2023 09:07:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EB1F6B04B0
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Mar 2023 11:38:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbjCHIHn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Mar 2023 03:07:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46184 "EHLO
+        id S229920AbjCHKit (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Mar 2023 05:38:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230019AbjCHIHj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Mar 2023 03:07:39 -0500
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7E89DE29;
-        Wed,  8 Mar 2023 00:07:13 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.229])
-        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4PWl6y2Ntbz9xqcC;
-        Wed,  8 Mar 2023 15:58:18 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwAX41kGQghkLu58AQ--.21290S2;
-        Wed, 08 Mar 2023 09:06:42 +0100 (CET)
-Message-ID: <8c7034e74c55e9c4eb6424aa472f5c66b389b34f.camel@huaweicloud.com>
-Subject: Re: [PATCH 23/28] security: Introduce LSM_ORDER_LAST
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Stefan Berger <stefanb@linux.ibm.com>, viro@zeniv.linux.org.uk,
-        chuck.lever@oracle.com, jlayton@kernel.org, zohar@linux.ibm.com,
-        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
-        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, brauner@kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Wed, 08 Mar 2023 09:06:28 +0100
-In-Reply-To: <4b158d7e-a96d-58ae-cc34-0ad6abc1cea9@linux.ibm.com>
-References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
-         <20230303182602.1088032-1-roberto.sassu@huaweicloud.com>
-         <4b158d7e-a96d-58ae-cc34-0ad6abc1cea9@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        with ESMTP id S230093AbjCHKis (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Mar 2023 05:38:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75EBC7BA07
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Mar 2023 02:37:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678271854;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0L8FZid4N7P9MdijKVAa5eEqgL3IuYPUm/CexmqP84s=;
+        b=e6MQdRxi1lr0gVw2S1V1IveRysGJ/mQkwt1oM1HX0KmylQYOE/R+/Df48flnX3w8XcHvu9
+        fcOsJsilUis7dJaIqU0qQcW/fpQjIs2vzfrc7vG5M49ipbVRxR0bUVTFOE/lHyf9DVx/bJ
+        oeV36gES0wC4mbmOFNHmmfZyMpe6v20=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-262-SkXTkqk6OteHKBRtuuny6g-1; Wed, 08 Mar 2023 05:37:33 -0500
+X-MC-Unique: SkXTkqk6OteHKBRtuuny6g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 032A985A5B1;
+        Wed,  8 Mar 2023 10:37:33 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.50.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51F7A14171B6;
+        Wed,  8 Mar 2023 10:37:31 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/1] SUNRPC: Fix a server shutdown leak
+Date:   Wed, 08 Mar 2023 05:37:29 -0500
+Message-ID: <F4367E72-25E7-432F-A19C-4A480DF63BD4@redhat.com>
+In-Reply-To: <FA64D05E-9902-4C37-9F14-40E3EEA3B656@oracle.com>
+References: <cover.1677877233.git.bcodding@redhat.com>
+ <65d0248533fbdea2f6190faa1ee150d2d615344b.1677877233.git.bcodding@redhat.com>
+ <FA64D05E-9902-4C37-9F14-40E3EEA3B656@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: GxC2BwAX41kGQghkLu58AQ--.21290S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7AFy8AF15Ar45KrW7ur47twb_yoW8KF1Upa
-        yktFWfGr4FyFy8W3WDX3ZxK3W8t39YkFWUC39rWr1UXa92qrySkr43Cr1S9FyDXF9rCFyI
-        vrWav34akwn0yaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAKBF1jj4pQsgAAsW
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-03-07 at 13:04 -0500, Stefan Berger wrote:
-> 
-> On 3/3/23 13:25, Roberto Sassu wrote:
-> > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > 
-> > Introduce LSM_ORDER_LAST, to satisfy the requirement of LSMs willing to be
-> > the last, e.g. the 'integrity' LSM, without changing the kernel command
-> > line or configuration.
-> > 
-> > As for LSM_ORDER_FIRST, LSMs with LSM_ORDER_LAST are always enabled and put
-> > at the end of the LSM list in no particular order.
-> > 
-> 
-> I think you should describe the reason for the change for LSM_ORDER_MUTABLE as well.
+On 7 Mar 2023, at 22:14, Chuck Lever III wrote:
 
-Right.
+>> On Mar 3, 2023, at 4:08 PM, Benjamin Coddington <bcodding@redhat.com> =
+wrote:
+>>
+>> Fix a race where kthread_stop() may prevent the threadfn from ever get=
+ting
+>> called.  If that happens the svc_rqst will not be cleaned up.
+>>
+>> Fixes: ed6473ddc704 ("NFSv4: Fix callback server shutdown")
+>> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+>> ---
+>> net/sunrpc/svc.c | 6 +++++-
+>> 1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+>> index 1fd3f5e57285..fea7ce8fba14 100644
+>> --- a/net/sunrpc/svc.c
+>> +++ b/net/sunrpc/svc.c
+>> @@ -798,6 +798,7 @@ svc_start_kthreads(struct svc_serv *serv, struct s=
+vc_pool *pool, int nrservs)
+>> static int
+>> svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nr=
+servs)
+>> {
+>> + struct svc_rqst *rqstp;
+>> struct task_struct *task;
+>> unsigned int state =3D serv->sv_nrthreads-1;
+>>
+>> @@ -806,7 +807,10 @@ svc_stop_kthreads(struct svc_serv *serv, struct s=
+vc_pool *pool, int nrservs)
+>> task =3D choose_victim(serv, pool, &state);
+>> if (task =3D=3D NULL)
+>> break;
+>> - kthread_stop(task);
+>> + rqstp =3D kthread_data(task);
+>> + /* Did we lose a race to svo_function threadfn? */
+>> + if (kthread_stop(task) =3D=3D -EINTR)
+>> + svc_exit_thread(rqstp);
+>> nrservs++;
+>> } while (nrservs < 0);
+>> return 0;
+>> -- =
 
-Thanks
+>> 2.31.1
+>>
+>
+> Seems sensible, applied. Is there a bugzilla link that should be includ=
+ed?
 
-Roberto
+No, the issue was found in a private environment.
 
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > ---
-> >   include/linux/lsm_hooks.h |  1 +
-> >   security/security.c       | 12 +++++++++---
-> >   2 files changed, 10 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-> > index 21a8ce23108..05c4b831d99 100644
-> > --- a/include/linux/lsm_hooks.h
-> > +++ b/include/linux/lsm_hooks.h
-> > @@ -93,6 +93,7 @@ extern void security_add_hooks(struct security_hook_list *hooks, int count,
-> >   enum lsm_order {
-> >   	LSM_ORDER_FIRST = -1,	/* This is only for capabilities. */
-> >   	LSM_ORDER_MUTABLE = 0,
-> > +	LSM_ORDER_LAST = 1,
-> >   };
-> >   
-> >   struct lsm_info {
-> > diff --git a/security/security.c b/security/security.c
-> > index 322090a50cd..24f52ba3218 100644
-> > --- a/security/security.c
-> > +++ b/security/security.c
-> > @@ -284,9 +284,9 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
-> >   		bool found = false;
-> >   
-> >   		for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
-> > -			if (lsm->order == LSM_ORDER_MUTABLE &&
-> > -			    strcmp(lsm->name, name) == 0) {
-> > -				append_ordered_lsm(lsm, origin);
-> > +			if (strcmp(lsm->name, name) == 0) {
-> > +				if (lsm->order == LSM_ORDER_MUTABLE)
-> > +					append_ordered_lsm(lsm, origin);
-> >   				found = true;
-> >   			}
-> >   		}
-> > @@ -306,6 +306,12 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
-> >   		}
-> >   	}
-> >   
-> > +	/* LSM_ORDER_LAST is always last. */
-> > +	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
-> > +		if (lsm->order == LSM_ORDER_LAST)
-> > +			append_ordered_lsm(lsm, "   last");
-> > +	}
-> > +
-> >   	/* Disable all LSMs not in the ordered list. */
-> >   	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
-> >   		if (exists_ordered_lsm(lsm))
+Ben
 
