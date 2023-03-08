@@ -2,241 +2,246 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 682AA6B119A
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Mar 2023 20:03:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FA5C6B11B1
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Mar 2023 20:05:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230023AbjCHTDO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Mar 2023 14:03:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40782 "EHLO
+        id S229868AbjCHTF3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Mar 2023 14:05:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbjCHTBq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Mar 2023 14:01:46 -0500
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021020.outbound.protection.outlook.com [52.101.57.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E746DBF3A5;
-        Wed,  8 Mar 2023 11:01:43 -0800 (PST)
+        with ESMTP id S229958AbjCHTFH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Mar 2023 14:05:07 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2DDD00BE
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Mar 2023 11:04:31 -0800 (PST)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 328HiZrV010463
+        for <linux-nfs@vger.kernel.org>; Wed, 8 Mar 2023 19:03:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=JLcpEwwV9jmuXfoiy7B1e6c1p+HKaJIWJ8kGTtAVFNw=;
+ b=wCnkQo1Mgt2xAGm8XQO07VhLK9P4XYmkP5EJHkgg2AlcrBO6X2w8cah5ujaL3gQ3W5by
+ Q1RlKIi6SMXaPGsZ4FfsIJ2Xdqi/POvqavmoK2XIiZfuV7JXXhp6FJwLJHRVAnr4PSZV
+ KaKg/fY8pCyRc37hfCY3HBD7UPGOgzKLOIm++0PtgBKTAC3VzNh3aAHhMF7fb5nLaCbg
+ URiI+DkSE5LuRn2Vsxi3TYM/qq6uj9KUJDm4WWigxS1GXn3FIuKcFdK/QQIjKR/BUOMM
+ YyBwvClEJ4pyZiSd5h7T8t4TVEMwYwbdvbJiz8vSjneoTYD4ngBhp7QVeOQyz1osE3az qQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3p416wrxp5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Mar 2023 19:03:54 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 328IO9CY007124
+        for <linux-nfs@vger.kernel.org>; Wed, 8 Mar 2023 19:03:53 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3p6g4g5kue-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Mar 2023 19:03:53 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PfRt4usrKRlkEjcb2oOGfC7gG3I0gEu6o574pNsrVyodMc0635V7JLrYTLxWXfDGoRUyXtaTj2H4d+EkpgRij96uKPz801oOe8sXYRIxxdyliDHR/6SYROt9LfFGOLrKITnZUojC0hb4rbvqvzV/t7sRk2FnZ+17BuT02XgG2je+iK7aF3c+5bR+5Od1LAU3wA4CXZTTaQ+SBh5/x/7kQHVTJ/CAVh+G5hKFKhtRl1arE+frR3oHc2tQA20mP+GDZ7+/6GpZ2aKbz4r/+axxOWDqrF/dY1HvIwZEgJxz5GLX/r2xPDVayl0c5qleQjy5/vxrhh44Gl85mU09FzIVXg==
+ b=jXaPRRPMqenrep8E5dK9M1rd67MQniJbblBuO+38U2pR0Eitezq/yZTChX4IekXDTZrY3rUbAmNXkhUvaOk+q8BqtzTINjzV2L1YwCem5AB39mDgCPoCaauP4R3Tp0yzwHHlSyZln2rQU73pdNc4cN5pHN3Iu2Nyo7xsXvo4B+KPLgLZZiYd8DQxmA19jQVPdKe7FzQhw/ohEcEtkH+LfPBA5PrYNThHa3KtLF5rEDcLegy3ust4tKIrNpHflyVJhXkusF9LTBHtMdmTjHAW8jKKx78IiJDRLQOmh5ontwaK7EPsstcF4sudaMZczJ29TzXmXam2rxGUM5MAR4as3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uoYWamkrjZ84+4IieLlvpv/Ii5EwRGyYQVhBePB4JzU=;
- b=D1hTdg5uAHScSwulThW3M3lszkiTEGVSjbH02eelecSlWwGNcdXfcjqU2jwDr2QtXz+fr04N59yC2xlct11nCBhm9NhKJpAy57Tzd6RYE6IDLdZwOdwMrdkwEvcXPViBr3AM97dyFWpQc5Q03FcJevPoytfgpCHAstdChfRHqgPk9nf8VfIF41nwEQNEI3Hz7y5qP9aXhw1cMoRSCnFiEn+XTYR+rADzuD9iWmAALN2SUu8YcZkdyGeAp5OdBt5dkuZXG06RMnMig1+uQVDJcbkipzv0PcK2fsnoYzm4wC7HmC0uB/T1M+XF72L698eggworIIIf58+bp7tjRM5Afw==
+ bh=JLcpEwwV9jmuXfoiy7B1e6c1p+HKaJIWJ8kGTtAVFNw=;
+ b=R34W14X4AVcynTRZbTmHQpuOYmi/PYGKZlkGfRlTw9kvLsDJEpvfCf8qTr6vFN2/7/8fBZHT1WUXxPc902lZQn3q+/jqotGqN3yCPI8jWHXUtXqIu7IhpOTqVgk8IGflHhzs8w+wGF++HNz5Kf0BCZN+6zA52W/Bxm4VezfnFqEsntenQ+8U0OhJ8+a5OGaGjJ3SiPBm2TjhocdbQUvRTOwXQIiGrbMRVtcSKUrGexIjIqnRFSh7Gw15Z4iIZGIKIuJ925CILyZUpynn3omOdYUvPcclAr2f8suA9sADz1cuwMC0EJqDAko6IBA6NYw8BOvNTgUtYEtgtcJYWAZ+5g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uoYWamkrjZ84+4IieLlvpv/Ii5EwRGyYQVhBePB4JzU=;
- b=igiebuOh4BYuyaGjQLJGFmRBpGNDQlP951XPW7A9Qvj7jz7MM3CO2sImHcvjLOmNxDhqJIjInP6Am+J76sz0VeHJWXL7NZOL7AGCoL5CBWLUhf5Aw2mcYIgsukjXMf85Eblne9hALWl0g3FbN/A2frvbcW/N5ofwWpy+XL8Zta0=
-Received: from DM4PR21MB3680.namprd21.prod.outlook.com (2603:10b6:8:a1::17) by
- DM6PR21MB1530.namprd21.prod.outlook.com (2603:10b6:5:256::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6178.17; Wed, 8 Mar 2023 19:01:41 +0000
-Received: from DM4PR21MB3680.namprd21.prod.outlook.com
- ([fe80::7490:33b7:44cd:8545]) by DM4PR21MB3680.namprd21.prod.outlook.com
- ([fe80::7490:33b7:44cd:8545%3]) with mapi id 15.20.6178.016; Wed, 8 Mar 2023
- 19:01:41 +0000
-From:   Siddharth Kawar <Siddharth.Kawar@microsoft.com>
-To:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Dave Bauer <Dave.Bauer@microsoft.com>,
-        Siddharth Kawar <Siddharth.Kawar@microsoft.com>
-Subject: [PATCH] SUNRPC: fix shutdown of NFS TCP client socket
-Thread-Topic: [PATCH] SUNRPC: fix shutdown of NFS TCP client socket
-Thread-Index: AQHZUeAZAxku0qbuG0Kqc9IzASs6vg==
-Date:   Wed, 8 Mar 2023 19:01:40 +0000
-Message-ID: <DM4PR21MB368002F6F7A9A0EB8D7CFC87FCB49@DM4PR21MB3680.namprd21.prod.outlook.com>
-Accept-Language: en-US
+ bh=JLcpEwwV9jmuXfoiy7B1e6c1p+HKaJIWJ8kGTtAVFNw=;
+ b=vue+K/iTthLRlmckXRtHhlVPf8fpoiHmeqvhbnUxXTqSa3Oqd8GNga8/N++5i3W5El6B9B+OGdo8k8iAMX7yVw7kEHYuSJSn9uQzJOw8Vgb6jbMAQdHMMRDeei1uoQ3AFPUry+1qWDyYT4yYJajQUqbA9fk3OHeUDRIkYeNFLBI=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by DS7PR10MB4895.namprd10.prod.outlook.com (2603:10b6:5:3a7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.17; Wed, 8 Mar
+ 2023 19:03:50 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::82d2:a5f:8f53:813]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::82d2:a5f:8f53:813%4]) with mapi id 15.20.6178.017; Wed, 8 Mar 2023
+ 19:03:50 +0000
+Message-ID: <182842b2-3de4-d64b-d729-f4f6c9c576d6@oracle.com>
+Date:   Wed, 8 Mar 2023 11:03:46 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.8.0
+Subject: Re: [PATCH] SUNRPC: remove the maximum number of retries in
+ call_bind_status
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-08T19:01:23.143Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM4PR21MB3680:EE_|DM6PR21MB1530:EE_
-x-ms-office365-filtering-correlation-id: 444adccf-63bf-449c-b071-08db20078d49
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 3rl4KzzZhwHbJVYpNzYHUaMEkMLm3dsxbfblaqQSBl4w04ZwcuOBw7QxelqSXCL8tPj9nsNbl99/QZBBO+LfUhm/h4/TKJmbJWWYXzIAwbqSZVYk1MW1LIvsF/SzENxfAAXxSwQsugZuaGh4QsfV0qpQPsfhUp9W2raRZ5uAArUS8oYWP1+N5AzIhw7sm2jK82FWvAxp0uasuMtfeRD2S4BRTDxjlnKfWeDGsdLPp8zK8FfcMj92pnWW4t68EtSYJjk2OvLCWcLNI0hPAGjgWJ1klagLbAWqaDqNsQyXh2h/wGWnRYlEppf+MIR8QwBFhg94aHDLNN7PqTkjQRhwy87ffspnST3MdQSPIlC6eXs3adeHrMxJ22bA6UTn6mLiGR1JvS+vbUfrr+qDCpKrEtFYCvGpjfwrMZYfnUu0KIHdBxkqRv3qSnyd83dSPKAj1LXZm2VNaIusXf1zYMfwym4uvUVShLETa1C6HOjRXIl0S1sdgOZUAEgrIQDSAGIRJWQ6MZaO8/IOO2RPx79J8FARoGlM+sRROpP8YrL6AagHBCXwFVFY+559cBiCnAerfwQb4vND9PQX4mQYOFwi1B/iUFLAEVQLrjudSCuWFyZo0JCE5wcLHZ/tfpvxez0fgZxsUYo43RU5FX96j94pAqqThKu/3/P9fl5DD6Wdb0cFXCFu34xxho183eIVbP+VVf4E/lDZWihgRYYilGFUvdnlehuooEOF5qE42hhRv80UZ5KdeSLiAPlmZsCqK4rE
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR21MB3680.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(366004)(136003)(396003)(39860400002)(346002)(376002)(451199018)(33656002)(82950400001)(71200400001)(83380400001)(7696005)(186003)(107886003)(6506007)(478600001)(8936002)(4326008)(86362001)(41300700001)(64756008)(66476007)(52536014)(76116006)(2906002)(66946007)(66556008)(8676002)(8990500004)(5660300002)(66446008)(91956017)(10290500003)(82960400001)(38100700002)(316002)(122000001)(9686003)(110136005)(55016003)(54906003)(38070700005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?s5Axk7yaHA/4N3nLLnKsqh03sRiSQF+S0WqCssZGwzOgXGIMt4XYulsC+4?=
- =?iso-8859-1?Q?4YHUBqjK697L0SEEdVKSlXhmoEklqlApg4V7KqRzz9I6KPoYRXWqpOxUMf?=
- =?iso-8859-1?Q?AKnncDrCIeQnKi05ujOWNK6NxRncwG7rRAKlbeS0N9TjlO+SBzPR8WGuu1?=
- =?iso-8859-1?Q?cbIt54iUxgEohugJWLsrs8dfcfLMXRlSdC0VqElJbW+hQOQ2WYaL2R/+6y?=
- =?iso-8859-1?Q?yJygNZCbSUs6/I6L3FSk08jnfG/zxnofHJUV5UnM7IREuIKBLGFFB4P18a?=
- =?iso-8859-1?Q?yt6VAab9jrtqUF0tg2wkBB2diNuATcvOcovYUxUPI+a9puTyvjKuXLNwDT?=
- =?iso-8859-1?Q?z1c+klh12DcFrpaPexqCmuHKUTHo+L2J1z2nVgc4p5CvZ2pEWr8qbsus4D?=
- =?iso-8859-1?Q?5yBKt4k9nVKUh3uaJFf9plXUQkZJZpl1xj68zviPuROHYtKhsmL9Zsldl6?=
- =?iso-8859-1?Q?En0VmAbseMIu5BVWU23n1lpnc/Gac9VtAK9uQFsdai1Tc2AZl0EAFlw5SL?=
- =?iso-8859-1?Q?Enq9rFNZ63KyP31U4k4YvgE40DeGoUatbm1iCjGaCW3f2uLcqD0FgNgNMY?=
- =?iso-8859-1?Q?99G7VQ+m5Bz35fHoxA35+ITQf1vmm99JxKx1s3nV88PHWlL6oxOb4GXvMS?=
- =?iso-8859-1?Q?Ny9s1UG9MIsLQbJAywaDg8ZzzkvC9dci0qzpQBF0Wl64a6xer5fhMOGpd5?=
- =?iso-8859-1?Q?pcpEcrtTkttu3iQ8ftWwY417/rU8jp4qwG/IclbihZmC+MmpeaPDnhWIP/?=
- =?iso-8859-1?Q?Ykt7OFZM4fSNeBgpNZTmb3LwGymDYZ2gCX40SxAYd814kk1WXlKiIce9Fk?=
- =?iso-8859-1?Q?pnrKSzs6HZtoEmthce152xUPM++j6ay/0kNv7YW7Vv/lIj6XHd2MIcIGV8?=
- =?iso-8859-1?Q?QbljXdMj1w6/J5hRfEbLd8z2v2VU3S1LYe7+r4BQLeS0IBIwFpCnS1xRuh?=
- =?iso-8859-1?Q?KT7GLnv8WT33b99VDTRca+0ETtHCa3tIYYHw5ELoeoeuao7QbXoSPFi4ii?=
- =?iso-8859-1?Q?db7SPLKEcAKzkB4YTBcRyiE+pEFmYG1NddWRGa4HlcOM25rrDrmnqofdaS?=
- =?iso-8859-1?Q?YrpCVY1TvEH+lyhuxlVg3R8BMPwV519MiN5FWpspD9htXrVZOZj4M2oaTI?=
- =?iso-8859-1?Q?6GTmCz+nxC0f85ik85Ufog5UEDFzwHzIW6fM6/GVG0cDOITA6wRISeJmVv?=
- =?iso-8859-1?Q?siANR4L+5ZZ/Z8sLHsFNe5duIhuEhAQ44s0gHY+T8mvu5r8KWnSbMLVEJw?=
- =?iso-8859-1?Q?CwDuj7Ieu15ywiiuLRsHFjBU3ZJ/iKRcqRqplFsrAPvdWCRXMomU0aLGkt?=
- =?iso-8859-1?Q?zocRh1BdKfLAgRnFBI8egRL8qjH03+3/xnvpKzdom3G9F6cnyjx0INVCSl?=
- =?iso-8859-1?Q?YbgdmNKpHsKyu6UU63ukTv+TFZhUv3/wt3FTQFMO4gjqW51miNL5SmvP7+?=
- =?iso-8859-1?Q?ZcKn1Ow3kcrxWWACT5O0S9SfJo3modc1Pj2MIKmKfxwWazJkVKaWgU6m8t?=
- =?iso-8859-1?Q?XHpYjpO5DAXD7JUcT+YIEqZzi9Oo0XZH95DHVR9e1PaI/YTVIquNapsu+r?=
- =?iso-8859-1?Q?PndxpXG8IU45v2N7D78Bigwxldvl/I73IdJ/Y6mieh2oMHDEHh241HY4bT?=
- =?iso-8859-1?Q?Lm0HPGnbr54iovv/ZuRHifPSfbGXA3MVDnG3B2B1QXchj3DYgY4+EKSPwb?=
- =?iso-8859-1?Q?goDOQpzMCmYmV8V5Z7+Ve1oxJvTo1DMTFYqcEMKy?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Helen Chao <helen.chao@oracle.com>
+References: <1678301132-24496-1-git-send-email-dai.ngo@oracle.com>
+ <9D5A190A-333A-4470-8572-CF85EE9A8086@oracle.com>
+From:   dai.ngo@oracle.com
+In-Reply-To: <9D5A190A-333A-4470-8572-CF85EE9A8086@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR01CA0054.prod.exchangelabs.com (2603:10b6:208:23f::23)
+ To BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|DS7PR10MB4895:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba762df9-afb1-4602-4dc6-08db2007da58
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vlff5JSJPUhyLFdGz8HPb1/d222IlMN5kR0Ot87eZVjsqHMCio1iv/o6thR8uL81pFzDs3Syh4PQ19vGFLPip0gNhGLNsiVLtdz0R6lc/3/RnNzjPyQSyZvgUJY/tA5kbHw2tcdXlfO7hViBpOhVdHtnYMe2szk1rwn++wB3VKCJEBRxyrRlee+IRY9yeUcFYskq1EGMUFaO+z437JV9tbjMTTrvVzZVo4cTkYUJ4yXnjzMnhOwyMGJFeZx6NJv3Q/CO/eoEwqUciYPsKWO8fHiqyts+kw77R0kt9uyNRfYtcATPIfI9TZuM1SxQIY6+AtJQEmOUSjqJHmDcQdvKK7ZAeZzM95Y8cAthtjtigDSczjScckde7rmg7t9iKqJrB7kpzSyjwVibFYmmD+6A9kGnfHZ8taxQC8VdvFlYKfZhlcdViwqYLyCGXLb2A3yjYpd2fpjzZYeGum9lgRiG+/UjEeOv+rMi6j/HNWH9jNSlIvwayfl102C3GtXW9ssxvjOhVldpoJHA7n2WCaZV7MVwddLc8TgXVikOv2vqa8oNGWcdV9qfnxBGBjStYqhSsevdTErXeS5LdZZ1CHVVL8ulmbIRAHqy+9c42Oa/hF7VMH1ITraWBD+8JtOxdmEIzFPJt6Rf6B+qgwNGEcfV0MRgIfSCGMZBGVoTItEbiWSOz0tOyB+vzW3rOG9iXjx2IZK9rdAvSBzNVvjH2cH31g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(376002)(39860400002)(396003)(366004)(346002)(451199018)(83380400001)(478600001)(36756003)(186003)(54906003)(38100700002)(66556008)(9686003)(66476007)(66946007)(8676002)(4326008)(26005)(6512007)(2906002)(6506007)(53546011)(2616005)(6666004)(31696002)(5660300002)(107886003)(37006003)(31686004)(316002)(6486002)(41300700001)(8936002)(86362001)(6862004)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NjkrUXErcWhCZmNwakxWYTN4NGN6NFEvcnV3VGMyR0lrTFlCWlUxd0JnMnVm?=
+ =?utf-8?B?YzV3d0I0ZTZMU244VXZZSEYwUitqVlR2MVJpQWhLSXg1WkxqRXFSVm5qN1ZT?=
+ =?utf-8?B?T2N4UVBiUUVsaytWSmFEdXc3am9TbnhzSm1UVXRacWtUTmRxeVg5UkNjLzJN?=
+ =?utf-8?B?ajkvQmlOem5PVlI2c1dwWFJ3enZFZ3lyd3JPSmdxZjNhZ1M4RkZ3cTdrclE3?=
+ =?utf-8?B?N2xhMGpGSEJLT2ZIRk0rODFpU1ZZWGFyYzRUNUpCRklGOE42K0tkRUdjVE13?=
+ =?utf-8?B?UHNEd2NPVkc5VzRjb0JrSU4vZ0FMb3ErVE1HWkpSWmlZZ0IwMTM2ZlF2SHIz?=
+ =?utf-8?B?R3VEaXJQa043ZWhJV3E3UjlFTEF0VWJvZlZaT2VSM2RROU5razFMSXJjdHI3?=
+ =?utf-8?B?N3Bsc0JzbDJPWWxVK04vR044Nk9rT0xyQjlNWkt4ZjEzSEcyclFFNWFNS3Ni?=
+ =?utf-8?B?TUlkd1JIOUhRc1pOai85N09uVUY4cnMzZmFRQ2JxellyTWpnYmNWK25Ib1R6?=
+ =?utf-8?B?QXplaXRVMkZWQnh3UDhaNWdCd0pYTmhVZXRoSnBoZStMTXNEeGJUWmt4TUNn?=
+ =?utf-8?B?a2M4Vk10emVlSFNxdEVXR2hLTnFpVloxNXR3MEsrOFBhUVQrRTY3MUpjNGps?=
+ =?utf-8?B?Z0w1NHNLbUlvc3lDNDY2WkZSMG5DY3VmQitvY29VTW9wcGVYVHJWZUtDSWtt?=
+ =?utf-8?B?bTVVY2Z0ek8wMXV0UzJrVUJsUG1kZlJIK3RuSG1LdjhGUjdMOUdFTUEvMGFH?=
+ =?utf-8?B?Y05YR2dKYUljNE5xT0Z2YVFYL2JqYnNNL1FNZjdxWndVUVlOWUs3bS80YnZJ?=
+ =?utf-8?B?eVJkVmR2TnJNUWF6UkQyTkFpWTdJclJEZE03cXIrMXJ4TDNWSGtmR3pHaHVE?=
+ =?utf-8?B?ZmsrM3ZRRGhTdVE4dk55dFZOUm90OGZ5VnBaaUxjamNGaFZiNldPY3pXd0Zr?=
+ =?utf-8?B?RGJlMXc3TnpETGFETzA4MDBvUEd6K0l0eCs5REM2REhPbmxCUm5HOVVLRTBU?=
+ =?utf-8?B?WHE3RmlGTWdwcW5FSjNhS0ZEYXNTL3NZOFM1a3BWRERyUUEvZC9WeDJKNndx?=
+ =?utf-8?B?d1A0QjNlVGNmYUJOcXkzdEptV1dhTmp5ak9oVmpXWE14TjI2QVpVUCtERk00?=
+ =?utf-8?B?bWR4bEVKMDVVTi8rYWpjZUZ2YStGbWdPYm1iZWZ5aVpYYUVwT1FFZmVHdHlw?=
+ =?utf-8?B?ZEsxVksyR29kMnZlREFzdWxOZDRoZlQxeW15ZnJ1eDMxVzJWRnVrVUtXeVBU?=
+ =?utf-8?B?NVg5YjBlRUVZZC93bStmTy80Q3RZUTJQczdMN1MreGJKcGZQMnBkQzJEMnNR?=
+ =?utf-8?B?TUtGay9tKzNmR0IyVEg1UmF2M3lxMDk3aWNVN1R4eUF0N3YyYUFqM0phNUJ2?=
+ =?utf-8?B?N0JqNUNTanlHVVhqVXRRQVhYbUV3Y0NRZkVLV0liSU95a0RnZjRqMmhjZGx5?=
+ =?utf-8?B?QnBQaHMzYm8xMmpFTm1YTkxTV2RvZmluWG9aSlFKN2tCYkNxam0ycmtPRzlH?=
+ =?utf-8?B?Z2hvU3VGNG4wTWROOEY2eWFoakJQRnpZK08zUGFnb3kvWDJnTnlLNTFjWXdE?=
+ =?utf-8?B?QVNuNlY3TThlSE5GaDVUQWdFMUFvVVRWYzhzUm15MnF2WHkzeEdiMnpsMG1L?=
+ =?utf-8?B?bnJ6blB1Q0JRSEpiMzNmTmVmNEN2NGk2S25hSzF0TzY1QWtNa3ZQZUFzTnJa?=
+ =?utf-8?B?U3dsSGdmSHJQemNoVVBPU25xMXBUamdHOE9xMWtRRmNmNzIxOS8zL3FhbER1?=
+ =?utf-8?B?LzFOeVgvVW9uN09DazBlenVhWTQxRldTdVBBbmczakZlSXkreW42MU15eGhw?=
+ =?utf-8?B?SkROM0JKWWRlQlpWVWxBa014TTIvZVUySkVNcUlTWllXc1ZpUU9aQlcrZ2pX?=
+ =?utf-8?B?RzRQK2YxWkVQamx5RDh4TC9LZVNQNFA1YnRPOWlwMjhRYTVvcURRRnVwcjRX?=
+ =?utf-8?B?UFFYejYvTnhUYVpNUG1OTWxqaUViUVorNTN1VmtRODVlMDFjK1NKcGxMUzU1?=
+ =?utf-8?B?c0NmUmxrUFZwRVJ0UWVnclVla3AwWUlDU25MUHlMV0g1T3p0SWxvOFlIYjlh?=
+ =?utf-8?B?UzFiQmZhYzZuL0ZNSzNjSTRvMUFWR3NDc2I4NlpCUHZlUDhxQ0h6bW5mTmdT?=
+ =?utf-8?Q?i1ez49I/DldNQChUSTF7bR4ix?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 2oFCvtmoAmawDKJCvJYz5FSZW1YqJDWNVn4DVyVaXmI40Tqum+It9jkW96JJZe88n298UwhVvjwHP2xdZi3/eRA5zvqORkYTe28Ws+A63kLAbN1C5uK7tHRR7ol1GOp13l4i2l1IZuH6UmZB8H8HGm/XHQ/ggKBkyULzXWHJduttVqSTaTOTDc0dVB+JqRbKKJ5pYH+/5tWeAwfvRovChbsCW+UlmKhWPDQirHF9QrpxMJMdE9w78pPzktddBlWDA4ykcZXcrxACbbBykEeWlwQnMXxNFTgVG/Dc4oPzJ9D/SfiA7q9vjtwIcMOVQw6mtWNvJO3rSKoaRg1/Z++T+gVEaImWJ+yyQXvAZHAOALTTjAEWvpY0EAZkXNS7HmzoECFYPDyuB7mJ9hcNcXdO673MZoQrbFeKETutqirz386lVQWW+GF0eRkRozU28eerz4S6hZecMehjHw0gq83vQ6Xj5Uom8ZVWDv73dSW6ctXTA8DdFi448aibGshz81DFiTTfdZVmXz2uGLE906Zi8/5KEUYCZYDJgfxmD1IrD1l0DkhfqUnmf8B7JwawXaBCsX2vJyqLaETqW6+Y8lXf2C5GjMY6GYdKkSSYp2ujkgB/IAbxxLHIiXvCsuxYSCten0A3Cdy7Y2c5PO/OENV++iRA9D87hoRSx8pm+f+G1px4Q1ZlI02cZ5uhAf5wC+2UsM7N4xY1JHWzizT1lhh9dSJuV0UC9cTYIRIc3O06PW2yivlmBPL29Lo8p708ikx+
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba762df9-afb1-4602-4dc6-08db2007da58
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR21MB3680.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 444adccf-63bf-449c-b071-08db20078d49
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Mar 2023 19:01:40.9865
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Mar 2023 19:03:50.5168
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: IPf8uPHzoe4XTTLQu385ZP0CKROa9tNrL9dcoslXgEmwTFSrYfFnSYTa9/2RUQSavqmO7mwOQ62Gu1nB9bzvmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1530
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 50m116L12HBioGhGBDqJb7sHE9ZMP2UfW4gKmY1Ablw6rTxoIOMotPI7J9j2DNQyRqugr1m5JkpNjRUHjMrW9g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4895
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-08_12,2023-03-08_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 mlxscore=0
+ mlxlogscore=999 adultscore=0 bulkscore=0 phishscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303080162
+X-Proofpoint-GUID: -izOnPOzVLs4oV-sNXwd9Hmb0HL5SCYk
+X-Proofpoint-ORIG-GUID: -izOnPOzVLs4oV-sNXwd9Hmb0HL5SCYk
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Subject: [PATCH] SUNRPC: fix shutdown of NFS TCP client socket=0A=
-=0A=
-NFS server Duplicate Request Cache (DRC) algorithms rely on NFS clients=0A=
-reconnecting using the same local TCP port. Unique NFS operations are=0A=
-identified by the per-TCP connection set of XIDs. This prevents file=0A=
-corruption when non-idempotent NFS operations are retried.=0A=
-=0A=
-Currently, NFS client TCP connections are using different local TCP ports=
-=0A=
-when reconnecting to NFS servers.=0A=
-=0A=
-After an NFS server initiates shutdown of the TCP connection, the NFS=0A=
-client's TCP socket is set to NULL after the socket state has reached=0A=
-TCP_LAST_ACK(9). When reconnecting, the new socket attempts to reuse=0A=
-the same local port but fails with EADDRNOTAVAIL (99). This forces the=0A=
-socket to use a different local TCP port to reconnect to the remote NFS=0A=
-server.=0A=
-=0A=
-State Transition and Events:=0A=
-TCP_CLOSING(8)=0A=
-TCP_LAST_ACK(9)=0A=
-connect(fail EADDRNOTAVAIL(99))=0A=
-TCP_CLOSE(7)=0A=
-bind on new port=0A=
-connect success=0A=
-=0A=
-dmesg excerpts showing reconnect switching from local port of 688 to 1014:=
-=0A=
-[590701.200229] NFS: mkdir(0:61/560857152), testQ=0A=
-[590701.200231] NFS call  mkdir testQ=0A=
-[590701.200259] RPC:       xs_tcp_send_request(224) =3D 0=0A=
-[590751.883111] RPC:       xs_tcp_state_change client 0000000051f4e000...=
-=0A=
-[590751.883146] RPC:       state 8 conn 1 dead 0 zapped 1 sk_shutdown 1=0A=
-[590751.883160] RPC:       xs_data_ready...=0A=
-[590751.883232] RPC:       xs_tcp_state_change client 0000000051f4e000...=
-=0A=
-[590751.883235] RPC:       state 9 conn 0 dead 0 zapped 1 sk_shutdown 3=0A=
-[590751.883238] RPC:       xs_tcp_state_change client 0000000051f4e000...=
-=0A=
-[590751.883239] RPC:       state 9 conn 0 dead 0 zapped 1 sk_shutdown 3=0A=
-[590751.883283] RPC:       xs_connect scheduled xprt 0000000051f4e000=0A=
-[590751.883314] RPC:       xs_bind 0.0.0.0:688: ok (0)=0A=
-[590751.883321] RPC:       worker connecting xprt 0000000051f4e000 via tcp=
-=0A=
-			   to 10.101.1.30 (port 2049)=0A=
-[590751.883330] RPC:       0000000051f4e000 connect status 99 connected 0=
-=0A=
-			   sock state 7=0A=
-[590751.883342] RPC:       xs_tcp_state_change client 0000000051f4e000...=
-=0A=
-[590751.883343] RPC:       state 7 conn 0 dead 0 zapped 1 sk_shutdown 3=0A=
-[590751.883356] RPC:       xs_connect scheduled xprt 0000000051f4e000=0A=
-[590751.883383] RPC:       xs_bind 0.0.0.0:1014: ok (0)=0A=
-[590751.883388] RPC:       worker connecting xprt 0000000051f4e000 via tcp=
-=0A=
-			   to 10.101.1.30 (port 2049)=0A=
-[590751.883420] RPC:       0000000051f4e000 connect status 115 connected 0=
-=0A=
-			   sock state 2=0A=
-...=0A=
-=0A=
-=0A=
-State Transition and Events with patch applied:=0A=
-TCP_CLOSING(8)=0A=
-TCP_LAST_ACK(9)=0A=
-TCP_CLOSE(7)=0A=
-connect(reuse of port succeeds)=0A=
-=0A=
-dmesg excerpts showing reconnect on same port (936):=0A=
-[  257.139935] NFS: mkdir(0:59/560857152), testQ=0A=
-[  257.139937] NFS call  mkdir testQ=0A=
-...=0A=
-[  307.822702] RPC:       state 8 conn 1 dead 0 zapped 1 sk_shutdown 1=0A=
-[  307.822714] RPC:       xs_data_ready...=0A=
-[  307.822817] RPC:       xs_tcp_state_change client 00000000ce702f14...=0A=
-[  307.822821] RPC:       state 9 conn 0 dead 0 zapped 1 sk_shutdown 3=0A=
-[  307.822825] RPC:       xs_tcp_state_change client 00000000ce702f14...=0A=
-[  307.822826] RPC:       state 9 conn 0 dead 0 zapped 1 sk_shutdown 3=0A=
-[  307.823606] RPC:       xs_tcp_state_change client 00000000ce702f14...=0A=
-[  307.823609] RPC:       state 7 conn 0 dead 0 zapped 1 sk_shutdown 3=0A=
-[  307.823629] RPC:       xs_tcp_state_change client 00000000ce702f14...=0A=
-[  307.823632] RPC:       state 7 conn 0 dead 0 zapped 1 sk_shutdown 3=0A=
-[  307.823676] RPC:       xs_connect scheduled xprt 00000000ce702f14=0A=
-[  307.823704] RPC:       xs_bind 0.0.0.0:936: ok (0)=0A=
-[  307.823709] RPC:       worker connecting xprt 00000000ce702f14 via tcp=
-=0A=
-			  to 10.101.1.30 (port 2049)=0A=
-[  307.823748] RPC:       00000000ce702f14 connect status 115 connected 0=
-=0A=
-			  sock state 2=0A=
-...=0A=
-[  314.916193] RPC:       state 7 conn 0 dead 0 zapped 1 sk_shutdown 3=0A=
-[  314.916251] RPC:       xs_connect scheduled xprt 00000000ce702f14=0A=
-[  314.916282] RPC:       xs_bind 0.0.0.0:936: ok (0)=0A=
-[  314.916292] RPC:       worker connecting xprt 00000000ce702f14 via tcp=
-=0A=
-			  to 10.101.1.30 (port 2049)=0A=
-[  314.916342] RPC:       00000000ce702f14 connect status 115 connected 0=
-=0A=
-			  sock state 2=0A=
-=0A=
-Fixes: 7c81e6a9d75b (SUNRPC: Tweak TCP socket shutdown in the RPC client)=
-=0A=
-Signed-off-by: Siddharth Rajendra Kawar <sikawar@microsoft.com>=0A=
----=0A=
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c=0A=
-index d8ee06a9650a..e55e380bc10c 100644=0A=
---- a/net/sunrpc/xprtsock.c=0A=
-+++ b/net/sunrpc/xprtsock.c=0A=
-@@ -2094,6 +2094,7 @@ static void xs_tcp_shutdown(struct rpc_xprt *xprt)=0A=
-		break;=0A=
-	case TCP_ESTABLISHED:=0A=
-	case TCP_CLOSE_WAIT:=0A=
-+	case TCP_LAST_ACK:=0A=
-		kernel_sock_shutdown(sock, SHUT_RDWR);=0A=
-		trace_rpc_socket_shutdown(xprt, sock);=0A=
-		break;=
+On 3/8/23 10:50 AM, Chuck Lever III wrote:
+>
+>> On Mar 8, 2023, at 1:45 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+>>
+>> Currently call_bind_status places a hard limit of 3 to the number of
+>> retries on EACCES error. This limit was done to accommodate the behavior
+>> of a buggy server that keeps returning garbage when the NLM daemon is
+>> killed on the NFS server. However this change causes problem for other
+>> servers that take a little longer than 9 seconds for the port mapper to
+>> become ready when the NFS server is restarted.
+>>
+>> This patch removes this hard coded limit and let the RPC handles
+>> the retry according to whether the export is soft or hard mounted.
+>>
+>> To avoid the hang with buggy server, the client can use soft mount for
+>> the export.
+>>
+>> Fixes: 0b760113a3a1 ("NLM: Don't hang forever on NLM unlock requests")
+>> Reported-by: Helen Chao <helen.chao@oracle.com>
+>> Tested-by: Helen Chao <helen.chao@oracle.com>
+>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> Helen is the royal queen of ^C  ;-)
+>
+> Did you try ^C on a mount while it waits for a rebind?
+
+She uses a test script that restarts the NFS server while NLM lock test
+is running. The failure is random, sometimes it fails and sometimes it
+passes depending on when the LOCK/UNLOCK requests come in so I think
+it's hard to time it to do the ^C, but I will ask.
+
+Thanks,
+-Dai
+
+>
+>
+>> ---
+>> include/linux/sunrpc/sched.h | 3 +--
+>> net/sunrpc/clnt.c            | 3 ---
+>> net/sunrpc/sched.c           | 1 -
+>> 3 files changed, 1 insertion(+), 6 deletions(-)
+>>
+>> diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+>> index b8ca3ecaf8d7..8ada7dc802d3 100644
+>> --- a/include/linux/sunrpc/sched.h
+>> +++ b/include/linux/sunrpc/sched.h
+>> @@ -90,8 +90,7 @@ struct rpc_task {
+>> #endif
+>> 	unsigned char		tk_priority : 2,/* Task priority */
+>> 				tk_garb_retry : 2,
+>> -				tk_cred_retry : 2,
+>> -				tk_rebind_retry : 2;
+>> +				tk_cred_retry : 2;
+>> };
+>>
+>> typedef void			(*rpc_action)(struct rpc_task *);
+>> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+>> index 0b0b9f1eed46..63b438d8564b 100644
+>> --- a/net/sunrpc/clnt.c
+>> +++ b/net/sunrpc/clnt.c
+>> @@ -2050,9 +2050,6 @@ call_bind_status(struct rpc_task *task)
+>> 			status = -EOPNOTSUPP;
+>> 			break;
+>> 		}
+>> -		if (task->tk_rebind_retry == 0)
+>> -			break;
+>> -		task->tk_rebind_retry--;
+>> 		rpc_delay(task, 3*HZ);
+>> 		goto retry_timeout;
+>> 	case -ENOBUFS:
+>> diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+>> index be587a308e05..c8321de341ee 100644
+>> --- a/net/sunrpc/sched.c
+>> +++ b/net/sunrpc/sched.c
+>> @@ -817,7 +817,6 @@ rpc_init_task_statistics(struct rpc_task *task)
+>> 	/* Initialize retry counters */
+>> 	task->tk_garb_retry = 2;
+>> 	task->tk_cred_retry = 2;
+>> -	task->tk_rebind_retry = 2;
+>>
+>> 	/* starting timestamp */
+>> 	task->tk_start = ktime_get();
+>> -- 
+>> 2.9.5
+>>
+> --
+> Chuck Lever
+>
+>
