@@ -2,112 +2,140 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CBEC6B0070
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Mar 2023 09:04:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BCCF6B007F
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Mar 2023 09:07:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjCHID7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Mar 2023 03:03:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42668 "EHLO
+        id S229682AbjCHIHn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Mar 2023 03:07:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjCHID6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Mar 2023 03:03:58 -0500
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EADB895467
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Mar 2023 00:03:56 -0800 (PST)
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 5397E3F591
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Mar 2023 08:03:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1678262635;
-        bh=2IYMzNnksZIP1hL57uLqalvS3Qh9IbL5iEW+1r4B2xs=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=W7Te3pw1/nBxEV0X265ZxiLUR6nN1ID/bBh+rflzuAoIowtX9+7ImnYRu1hD3IS++
-         oyah98UREhMJzaSDlqtAgDyYG/ewe6wtsZnbBgL3Sc+tUQ/C7fnzUGU+07DW06NLNt
-         ZVhd3Qf9ATI3FxSCbmJycJKjI2hv/czkU1ROFhTv+7d9uF2zc+FU1louPVYKXtTdoi
-         9Egyw8jDeYEP1D9TMMUT0769aq8gOe3ty8st2/+qZRq7dvAdXdFdWO2xS5dnVTRWy6
-         qgQlMhpLz1RxAQXtVuiXCJbv91RqMBEQdARWz19GDAiBdvO7wfAa3JTm/MDWmulcO6
-         csQwEDvuO/A3Q==
-Received: by mail-pj1-f70.google.com with SMTP id x63-20020a17090a6c4500b00237731465feso6241602pjj.8
-        for <linux-nfs@vger.kernel.org>; Wed, 08 Mar 2023 00:03:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678262634;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2IYMzNnksZIP1hL57uLqalvS3Qh9IbL5iEW+1r4B2xs=;
-        b=qSF3/Ib+jKKrG2MGgBxE/8pD14gmnUw29q/AqsdNA6rCFKatFFmcolpuyVf5lMJ4R2
-         HHTEbgJipjEgwIGkTqS9M43qZP/F/exICo3r9sHQBE9RCspCuYjpa1oX/QKUtS69kFwQ
-         BfIUEZMMBXfu+2hQARzYSBTSrETYYJWBBkgoRFhqxV3JTNsPaq7H91hSvghONviMMYdP
-         LzZX3gTusEvCDl2S2H7wke9z/OHNlLGzewEBT/H4pOucD250NmziWq04bObeIQRRuIHZ
-         djN+04fK1JbxS3CUpdBwP8bO5NJJ0zRLev6u9Hagtz5XMjcP5t4TmcLvS43x0sHJ9/sv
-         vN8A==
-X-Gm-Message-State: AO0yUKW7ZtHqR05NdHLSpVhGLlfLS2WLcI9w05mYtKk/Dp7kSLUrxppY
-        o8UgS2YG75unhdV9M61TaKrg4ecuv0A9dS6WHRQQYTAhjbKITwDu0/KMLeH6610rtgJPpNRIONr
-        I8DUaejXqZjqDY/669O73hadH0TY0aT8kwE1+BQ==
-X-Received: by 2002:a05:6a20:4303:b0:cc:692d:92de with SMTP id h3-20020a056a20430300b000cc692d92demr19851886pzk.44.1678262633894;
-        Wed, 08 Mar 2023 00:03:53 -0800 (PST)
-X-Google-Smtp-Source: AK7set/zES7EuvZZAfjAPFznv2GnHq4TUH2uu2ojZuDWdYMj39OMJnF6Pcl2po7qwBuhl5jebtzDpA==
-X-Received: by 2002:a05:6a20:4303:b0:cc:692d:92de with SMTP id h3-20020a056a20430300b000cc692d92demr19851875pzk.44.1678262633609;
-        Wed, 08 Mar 2023 00:03:53 -0800 (PST)
-Received: from chengendu.. (111-248-104-66.dynamic-ip.hinet.net. [111.248.104.66])
-        by smtp.gmail.com with ESMTPSA id f6-20020aa782c6000000b0059416691b64sm9275574pfn.19.2023.03.08.00.03.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 00:03:53 -0800 (PST)
-From:   Chengen Du <chengen.du@canonical.com>
-To:     trond.myklebust@hammerspace.com
-Cc:     anna@kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chengen Du <chengen.du@canonical.com>
-Subject: [PATCH] NFS: Correct timing for assigning access cache timestamp
-Date:   Wed,  8 Mar 2023 16:03:27 +0800
-Message-Id: <20230308080327.33906-1-chengen.du@canonical.com>
-X-Mailer: git-send-email 2.37.2
+        with ESMTP id S230019AbjCHIHj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Mar 2023 03:07:39 -0500
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C7E89DE29;
+        Wed,  8 Mar 2023 00:07:13 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.18.147.229])
+        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4PWl6y2Ntbz9xqcC;
+        Wed,  8 Mar 2023 15:58:18 +0800 (CST)
+Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
+        by APP2 (Coremail) with SMTP id GxC2BwAX41kGQghkLu58AQ--.21290S2;
+        Wed, 08 Mar 2023 09:06:42 +0100 (CET)
+Message-ID: <8c7034e74c55e9c4eb6424aa472f5c66b389b34f.camel@huaweicloud.com>
+Subject: Re: [PATCH 23/28] security: Introduce LSM_ORDER_LAST
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     Stefan Berger <stefanb@linux.ibm.com>, viro@zeniv.linux.org.uk,
+        chuck.lever@oracle.com, jlayton@kernel.org, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, brauner@kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Wed, 08 Mar 2023 09:06:28 +0100
+In-Reply-To: <4b158d7e-a96d-58ae-cc34-0ad6abc1cea9@linux.ibm.com>
+References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
+         <20230303182602.1088032-1-roberto.sassu@huaweicloud.com>
+         <4b158d7e-a96d-58ae-cc34-0ad6abc1cea9@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: GxC2BwAX41kGQghkLu58AQ--.21290S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7AFy8AF15Ar45KrW7ur47twb_yoW8KF1Upa
+        yktFWfGr4FyFy8W3WDX3ZxK3W8t39YkFWUC39rWr1UXa92qrySkr43Cr1S9FyDXF9rCFyI
+        vrWav34akwn0yaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAKBF1jj4pQsgAAsW
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When the user's login time is newer than the cache's timestamp,
-the original entry in the RB-tree will be replaced by a new entry.
-Currently, the timestamp is only set if the entry is not found in
-the RB-tree, which can cause the timestamp to be undefined when
-the entry exists. This may result in a significant increase in
-ACCESS operations if the timestamp is set to zero.
+On Tue, 2023-03-07 at 13:04 -0500, Stefan Berger wrote:
+> 
+> On 3/3/23 13:25, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> > 
+> > Introduce LSM_ORDER_LAST, to satisfy the requirement of LSMs willing to be
+> > the last, e.g. the 'integrity' LSM, without changing the kernel command
+> > line or configuration.
+> > 
+> > As for LSM_ORDER_FIRST, LSMs with LSM_ORDER_LAST are always enabled and put
+> > at the end of the LSM list in no particular order.
+> > 
+> 
+> I think you should describe the reason for the change for LSM_ORDER_MUTABLE as well.
 
-Signed-off-by: Chengen Du <chengen.du@canonical.com>
----
- fs/nfs/dir.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Right.
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index a41c3ee4549c..6fbcbb8d6587 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -3089,7 +3089,6 @@ static void nfs_access_add_rbtree(struct inode *inode,
- 		else
- 			goto found;
- 	}
--	set->timestamp = ktime_get_ns();
- 	rb_link_node(&set->rb_node, parent, p);
- 	rb_insert_color(&set->rb_node, root_node);
- 	list_add_tail(&set->lru, &nfsi->access_cache_entry_lru);
-@@ -3114,6 +3113,7 @@ void nfs_access_add_cache(struct inode *inode, struct nfs_access_entry *set,
- 	cache->fsgid = cred->fsgid;
- 	cache->group_info = get_group_info(cred->group_info);
- 	cache->mask = set->mask;
-+	cache->timestamp = ktime_get_ns();
- 
- 	/* The above field assignments must be visible
- 	 * before this item appears on the lru.  We cannot easily
--- 
-2.37.2
+Thanks
+
+Roberto
+
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > ---
+> >   include/linux/lsm_hooks.h |  1 +
+> >   security/security.c       | 12 +++++++++---
+> >   2 files changed, 10 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+> > index 21a8ce23108..05c4b831d99 100644
+> > --- a/include/linux/lsm_hooks.h
+> > +++ b/include/linux/lsm_hooks.h
+> > @@ -93,6 +93,7 @@ extern void security_add_hooks(struct security_hook_list *hooks, int count,
+> >   enum lsm_order {
+> >   	LSM_ORDER_FIRST = -1,	/* This is only for capabilities. */
+> >   	LSM_ORDER_MUTABLE = 0,
+> > +	LSM_ORDER_LAST = 1,
+> >   };
+> >   
+> >   struct lsm_info {
+> > diff --git a/security/security.c b/security/security.c
+> > index 322090a50cd..24f52ba3218 100644
+> > --- a/security/security.c
+> > +++ b/security/security.c
+> > @@ -284,9 +284,9 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+> >   		bool found = false;
+> >   
+> >   		for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
+> > -			if (lsm->order == LSM_ORDER_MUTABLE &&
+> > -			    strcmp(lsm->name, name) == 0) {
+> > -				append_ordered_lsm(lsm, origin);
+> > +			if (strcmp(lsm->name, name) == 0) {
+> > +				if (lsm->order == LSM_ORDER_MUTABLE)
+> > +					append_ordered_lsm(lsm, origin);
+> >   				found = true;
+> >   			}
+> >   		}
+> > @@ -306,6 +306,12 @@ static void __init ordered_lsm_parse(const char *order, const char *origin)
+> >   		}
+> >   	}
+> >   
+> > +	/* LSM_ORDER_LAST is always last. */
+> > +	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
+> > +		if (lsm->order == LSM_ORDER_LAST)
+> > +			append_ordered_lsm(lsm, "   last");
+> > +	}
+> > +
+> >   	/* Disable all LSMs not in the ordered list. */
+> >   	for (lsm = __start_lsm_info; lsm < __end_lsm_info; lsm++) {
+> >   		if (exists_ordered_lsm(lsm))
 
