@@ -2,137 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 118176B0E92
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Mar 2023 17:24:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C0D06B1146
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Mar 2023 19:45:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbjCHQYO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Mar 2023 11:24:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
+        id S230105AbjCHSpp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Mar 2023 13:45:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229835AbjCHQYN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Mar 2023 11:24:13 -0500
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30ACEC1C0C;
-        Wed,  8 Mar 2023 08:24:02 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.228])
-        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4PWy7j4CqPz9xHM1;
-        Thu,  9 Mar 2023 00:14:41 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwBHHGN5tghkH4B+AQ--.22743S2;
-        Wed, 08 Mar 2023 17:23:35 +0100 (CET)
-Message-ID: <0a15c85e9de2235c313b10839aabf750f276552f.camel@huaweicloud.com>
-Subject: Re: [PATCH 00/28] security: Move IMA and EVM to the LSM
- infrastructure
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>, viro@zeniv.linux.org.uk,
-        chuck.lever@oracle.com, jlayton@kernel.org,
-        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
-        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, brauner@kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stefanb@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Wed, 08 Mar 2023 17:23:18 +0100
-In-Reply-To: <59eb6d6d2ffd5522b2116000ab48b1711d57f5e5.camel@linux.ibm.com>
-References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
-         <59eb6d6d2ffd5522b2116000ab48b1711d57f5e5.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: GxC2BwBHHGN5tghkH4B+AQ--.22743S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxArW7Aw17XFWDGryDJw4fXwb_yoW5ZF15pF
-        Z8K3W5Kr4ktF109rs2v3y8uFWfCa1fJ3yUJr95K34UZa45GF1FqFWvkF15uFyDG3s0kFyF
-        qF4jq3s5Z3WDZrDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-        7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-        6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU13rcDUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAKBF1jj4pXogABsA
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229529AbjCHSpo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Mar 2023 13:45:44 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7BECB32B2
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Mar 2023 10:45:41 -0800 (PST)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 328HibZf022874
+        for <linux-nfs@vger.kernel.org>; Wed, 8 Mar 2023 18:45:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2022-7-12;
+ bh=nI5n8zRCNTyfxPVzhG3h6fM+H6Y2vGxn9fzkbcuC+N8=;
+ b=u7wxzofwgq6+4zjaPdTNG7kDftKQYtoluOBSvGwcnokBegESlraEWwo7VhskZ7AW1BCZ
+ QKs9579hlEUmPp327ZPkPOaPOm0LELGaVtKyQGBF56N1AYvq+2/E7OOT+xyzB6gZKWhv
+ si+KgwxlPbC69Uv/yHusFRalwYE7mk5XFtQdtwUeTrNELOzfthv9Ixmm1DanzHPpImbZ
+ 6HRAJAhEhmvFGa9HZrhHA8tOjhPU3z6qkIW+T2jZgT7Qh4G9CLoyW7ycOSOf9sQEatYR
+ o1LtfpzdQqyy9md+Mal757+20NL7E2yXzi3lhrmSm0qyzD6ZbbkFE1dDwIW97w5in/nG OA== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3p41620tkm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Mar 2023 18:45:40 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 328IPCL6026602
+        for <linux-nfs@vger.kernel.org>; Wed, 8 Mar 2023 18:45:40 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3p6g9u3x9k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Mar 2023 18:45:39 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 328Iexon016377
+        for <linux-nfs@vger.kernel.org>; Wed, 8 Mar 2023 18:45:39 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3p6g9u3x9b-1;
+        Wed, 08 Mar 2023 18:45:39 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     helen.chao@oracle.com
+Subject: [PATCH] SUNRPC: remove the maximum number of retries in call_bind_status
+Date:   Wed,  8 Mar 2023 10:45:32 -0800
+Message-Id: <1678301132-24496-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-08_12,2023-03-08_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxlogscore=999
+ adultscore=0 bulkscore=0 spamscore=0 malwarescore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303080160
+X-Proofpoint-GUID: CzAEbTG5drgPUNk9Iz91-piEoCnCU8zL
+X-Proofpoint-ORIG-GUID: CzAEbTG5drgPUNk9Iz91-piEoCnCU8zL
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-03-08 at 10:14 -0500, Mimi Zohar wrote:
-> Hi Roberto,
-> 
-> On Fri, 2023-03-03 at 19:18 +0100, Roberto Sassu wrote:
-> > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > 
-> > This patch set depends on:
-> > - https://lore.kernel.org/linux-integrity/20221201104125.919483-1-roberto.sassu@huaweicloud.com/ (there will be a v8 shortly)
-> > - https://lore.kernel.org/linux-security-module/20230217032625.678457-1-paul@paul-moore.com/
-> > 
-> > IMA and EVM are not effectively LSMs, especially due the fact that in the
-> > past they could not provide a security blob while there is another LSM
-> > active.
-> > 
-> > That changed in the recent years, the LSM stacking feature now makes it
-> > possible to stack together multiple LSMs, and allows them to provide a
-> > security blob for most kernel objects. While the LSM stacking feature has
-> > some limitations being worked out, it is already suitable to make IMA and
-> > EVM as LSMs.
-> > 
-> > In short, while this patch set is big, it does not make any functional
-> > change to IMA and EVM. IMA and EVM functions are called by the LSM
-> > infrastructure in the same places as before (except ima_post_path_mknod()),
-> > rather being hardcoded calls, and the inode metadata pointer is directly
-> > stored in the inode security blob rather than in a separate rbtree.
-> > 
-> > More specifically, patches 1-13 make IMA and EVM functions suitable to
-> > be registered to the LSM infrastructure, by aligning function parameters.
-> > 
-> > Patches 14-22 add new LSM hooks in the same places where IMA and EVM
-> > functions are called, if there is no LSM hook already.
-> > 
-> > Patch 23 adds the 'last' ordering strategy for LSMs, so that IMA and EVM
-> > functions are called in the same order as of today. Also, like with the
-> > 'first' strategy, LSMs using it are always enabled, so IMA and EVM
-> > functions will be always called (if IMA and EVM are compiled built-in).
-> > 
-> > Patches 24-27 do the bulk of the work, remove hardcoded calls to IMA and
-> > EVM functions, register those functions in the LSM infrastructure, and let
-> > the latter call them. In addition, they also reserve one slot for EVM to 
-> > supply an xattr to the inode_init_security hook.
-> > 
-> > Finally, patch 28 removes the rbtree used to bind metadata to the inodes,
-> > and instead reserve a space in the inode security blob to store the pointer
-> > to metadata. This also brings performance improvements due to retrieving
-> > metadata in constant time, as opposed to logarithmic.
-> 
-> Prior to IMA being upstreamed, it went through a number of iterations,
-> first on the security hooks, then as a separate parallel set of
-> integrity hooks, and, finally, co-located with the security hooks,
-> where they exist.  With this patch set we've come full circle.
-> 
-> With the LSM stacking support, multiple LSMs can now use the
-> 'i_security' field removing the need for the rbtree indirection for
-> accessing integrity state info.
-> 
-> Roberto, thank you for making this change.  Mostly it looks good.  
-> Reviewing the patch set will be easier once the prereq's and this patch
-> set can be properly applied.
+Currently call_bind_status places a hard limit of 3 to the number of
+retries on EACCES error. This limit was done to accommodate the behavior
+of a buggy server that keeps returning garbage when the NLM daemon is
+killed on the NFS server. However this change causes problem for other
+servers that take a little longer than 9 seconds for the port mapper to
+become ready when the NFS server is restarted.
 
-Welcome. Yes, once Paul reviews the other patch set, we can
-progressively apply the patches.
+This patch removes this hard coded limit and let the RPC handles
+the retry according to whether the export is soft or hard mounted.
 
-Thanks
+To avoid the hang with buggy server, the client can use soft mount for
+the export.
 
-Roberto
+Fixes: 0b760113a3a1 ("NLM: Don't hang forever on NLM unlock requests")
+Reported-by: Helen Chao <helen.chao@oracle.com>
+Tested-by: Helen Chao <helen.chao@oracle.com>
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ include/linux/sunrpc/sched.h | 3 +--
+ net/sunrpc/clnt.c            | 3 ---
+ net/sunrpc/sched.c           | 1 -
+ 3 files changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index b8ca3ecaf8d7..8ada7dc802d3 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -90,8 +90,7 @@ struct rpc_task {
+ #endif
+ 	unsigned char		tk_priority : 2,/* Task priority */
+ 				tk_garb_retry : 2,
+-				tk_cred_retry : 2,
+-				tk_rebind_retry : 2;
++				tk_cred_retry : 2;
+ };
+ 
+ typedef void			(*rpc_action)(struct rpc_task *);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 0b0b9f1eed46..63b438d8564b 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2050,9 +2050,6 @@ call_bind_status(struct rpc_task *task)
+ 			status = -EOPNOTSUPP;
+ 			break;
+ 		}
+-		if (task->tk_rebind_retry == 0)
+-			break;
+-		task->tk_rebind_retry--;
+ 		rpc_delay(task, 3*HZ);
+ 		goto retry_timeout;
+ 	case -ENOBUFS:
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index be587a308e05..c8321de341ee 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -817,7 +817,6 @@ rpc_init_task_statistics(struct rpc_task *task)
+ 	/* Initialize retry counters */
+ 	task->tk_garb_retry = 2;
+ 	task->tk_cred_retry = 2;
+-	task->tk_rebind_retry = 2;
+ 
+ 	/* starting timestamp */
+ 	task->tk_start = ktime_get();
+-- 
+2.9.5
 
