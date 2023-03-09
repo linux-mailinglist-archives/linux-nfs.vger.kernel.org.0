@@ -2,79 +2,154 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B4546B1B52
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Mar 2023 07:21:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CDAE6B1C35
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Mar 2023 08:24:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjCIGVR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Mar 2023 01:21:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42268 "EHLO
+        id S229778AbjCIHYW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Mar 2023 02:24:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjCIGVQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Mar 2023 01:21:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 853B662DB5
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Mar 2023 22:20:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678342830;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=JFokQHIjXYFyeTHYgRE3xFYltw7h+XQtRMZf1xTco78=;
-        b=GcBBFvtEBrtCmvNrQKVFVOrLLlqBKTki07g9ppZ69fvQ8Kp5WffN5wag9i0Ifbjw/nE/Ti
-        qomu3vQ6USmwwZ37karMuiQOTh4fvwg7VBNz1bqcJQGPOCu2eT6HcEnoakeV87aX0EOiyO
-        Sdvx3yV0xyVPl1r1AqV/82sTpUiqCyA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-528-XXFSNnuxMJm74qIArlrutA-1; Thu, 09 Mar 2023 01:20:29 -0500
-X-MC-Unique: XXFSNnuxMJm74qIArlrutA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 528D7101A52E
-        for <linux-nfs@vger.kernel.org>; Thu,  9 Mar 2023 06:20:29 +0000 (UTC)
-Received: from localhost (unknown [10.66.60.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB42A4024CA3;
-        Thu,  9 Mar 2023 06:20:28 +0000 (UTC)
-From:   Zhi Li <yieli@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     steved@redhat.com, Zhi Li <yieli@redhat.com>
-Subject: [PATCH] [nfs/nfs-utils] rpcdebug: avoid buffer underflow if read() returns 0
-Date:   Thu,  9 Mar 2023 14:20:25 +0800
-Message-Id: <20230309062025.731671-1-yieli@redhat.com>
+        with ESMTP id S229644AbjCIHYV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Mar 2023 02:24:21 -0500
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7445D8AF
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Mar 2023 23:24:16 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id C0D9B5C011D
+        for <linux-nfs@vger.kernel.org>; Thu,  9 Mar 2023 02:24:05 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Thu, 09 Mar 2023 02:24:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nubmail.ca; h=cc
+        :content-transfer-encoding:content-type:content-type:date:date
+        :from:from:in-reply-to:message-id:mime-version:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1678346645; x=1678433045; bh=Jy
+        JQmlen5cEkFA39ZNElJRyURgazpayuIp3dc6AsjNg=; b=iR6FHU9Vz8mWdLS5oo
+        /cgYGdfcl89jT7/euiuXX+ZqixqtQ3Gl7wRWbDZfObialxj6gMMo3s+5FgnUCREc
+        pe/SHhE5/24XnnS8rCQc0bVtzTtwVewl81q+BlWsGuDiJV3mQkkT5VGqxWPbRyv8
+        yWbuTBdJZ7WTNb5UXJu77Fdkl9AQ2sWDxiBWsy2XDtsXCiFAfxBrFcBNi/o6X7Xy
+        msVAkYqcdJelBQ9/LrPnM8WJjWyZpkLIQGgaVfom7W2APv/riZfeuot6pVRWE/6s
+        2NHWyyB1hfCvVn85OG0kWG+DQlQFEuv4l9TOwFZg0ha1GBO7uULRqF/JpW+IPOIb
+        wqQw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1678346645; x=1678433045; bh=JyJQmlen5cEkF
+        A39ZNElJRyURgazpayuIp3dc6AsjNg=; b=UbvFkx7pV55hux3Qby8Wm8p1j1iiL
+        +dL6SACVJB/Msxc5SV1pqErI1Fd7tTWvIA3ss8TS9N7HHDKc8POOhdQb9geFOFG7
+        bsu6EFVdaOifBPGLa1joBxB89ie7nqZ3y1tgdbj84pkyBvfaPd3w2LyIechNyDTR
+        EDnF8QjX+UzrCjoQsYN1fCaBwme9gRxESX1C9JmENnP6O9qX3Pcv3HUeHXLplxhq
+        7NyXE0qsQbcqeSDljYUzwsDHXaK7ExwoqmK9fGaY4O80cPw1M1weJwObah1EvEux
+        EhR+lqI7b4AOaNY8e0RWtOdiCZVGZFn0xNNqfhDq3jMQDPc5SleZa++uw==
+X-ME-Sender: <xms:lYkJZByf31GgXh05JyHWUeQ0-9HHwhAyas1tThAzZM7Rp86nUtP9Tg>
+    <xme:lYkJZBQD8AL2L8qU_T_8VedpdLmh7u2rbEAwsDiCoYauDL0_Z_MH7YcjM0ARxeKlQ
+    DXGpBpMr73VvTqENOY>
+X-ME-Received: <xmr:lYkJZLWfxQjGVl9Ihnnvjy_GBo4XfkmoxtfT_IJBUwIH__-guh0uvgWQIUJ-4HUY9lNNjUaBFOSXJtuUFf3YLbV2hQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdduhedgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucenucfjughrpefkffggfgfhuffvtgfgsehtkeertd
+    dtfeejnecuhfhrohhmpeetrhgrmhcutehkhhgrvhgrnhcuoegrrhgrmhesnhhusghmrghi
+    lhdrtggrqeenucggtffrrghtthgvrhhnpeekvdegvdejuefgvdegudffteegheffkefgje
+    egieduvdeghedthefffeeileekhfenucffohhmrghinhepnhhusgdrlhgrnhenucevlhhu
+    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhgrmhesnhhusg
+    hmrghilhdrtggr
+X-ME-Proxy: <xmx:lYkJZDgKYb-v6PvUdH9ypVhEMkqAitk03_aP2kSqL7zOx6mlVOxRZQ>
+    <xmx:lYkJZDBuY-MFKRsakbcRgqVzXSPT7KncP6PVEutmiEF169n3MzJocw>
+    <xmx:lYkJZMKme9ukgtpB1sQqV8sx-L786TIifMBCIv744zasSUacWhz57w>
+    <xmx:lYkJZG8EgsD-gDb_YF8earbiSYdmMjwWwDT_D7tNr9ilePr9-gIE2Q>
+Feedback-ID: i8ce9446d:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA for
+ <linux-nfs@vger.kernel.org>; Thu, 9 Mar 2023 02:24:05 -0500 (EST)
+Message-ID: <ff66197f-8b60-5ff8-a2ac-8f5090b231cf@nubmail.ca>
+Date:   Wed, 8 Mar 2023 23:23:04 -0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+From:   Aram Akhavan <aram@nubmail.ca>
+Subject: nfs-idmapd startup race
+To:     linux-nfs@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=2176740
+Hi all,
 
-Signed-off-by: Zhi Li <yieli@redhat.com>
----
- tools/rpcdebug/rpcdebug.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I've been debugging an nfs server issue where id mapping was not 
+happening correctly unless I restarted nfs-kernel-server and re-exported 
+shares shortly after reboot. The main symptom is the following log 
+entries from nfs-idmapd.service:
 
-diff --git a/tools/rpcdebug/rpcdebug.c b/tools/rpcdebug/rpcdebug.c
-index 68206cc5..ec05179e 100644
---- a/tools/rpcdebug/rpcdebug.c
-+++ b/tools/rpcdebug/rpcdebug.c
-@@ -257,7 +257,7 @@ get_flags(char *module)
- 		perror(filename);
- 		exit(1);
- 	}
--	if ((len = read(sysfd, buffer, sizeof(buffer))) < 0) {
-+	if ((len = read(sysfd, buffer, sizeof(buffer))) <= 0) {
- 		perror("read");
- 		exit(1);
- 	}
--- 
-2.39.0
+Mar 08 22:45:59 343guiltyspark.nub.lan systemd[1]: Starting NFSv4 ID-name mapping service...
+Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: libnfsidmap: Unable to determine the NFSv4 domain; Using 'localdomain' as the NFSv4 domain which means UIDs will be mapped to the 'Nobody-User' user defined in /etc/idmapd.conf
+Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: rpc.idmapd: libnfsidmap: Unable to determine the NFSv4 domain; Using 'localdomain' as the NFSv4 domain which means UIDs will be mapped to the 'Nobody-User' user defined in /etc/idmapd.conf
+Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: rpc.idmapd: libnfsidmap: using (default) domain: localdomain
+Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: rpc.idmapd: libnfsidmap: Realms list: 'LOCALDOMAIN'
+Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: rpc.idmapd: libnfsidmap: loaded plugin /lib/x86_64-linux-gnu/libnfsidmap/nsswitch.so for method nsswitch
+
+I wrote a little test program to mimic libnfsidmap's domain_from_dns() 
+function, which causes the above message:
+
+#include <netdb.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+extern int h_errno;
+int main() {
+     struct hostent *he;
+     char hname[64], *c;
+
+     if (gethostname(hname, sizeof(hname)))
+         printf("gethostname error: %d\n", errno);
+     else
+         printf("gethostname: '%s'\n", hname);
+
+     if ((he = gethostbyname(hname)) == NULL)
+         printf("gethostbyname error: '%s'\n", hstrerror(h_errno));
+     else {
+         printf("gethostbyname h_name: '%s'\n", he->h_name);
+     }
+}
+
+and added it as an ExecStartPre= to the systemd service. The output is:
+
+gethostname: '343guiltyspark.nub.lan'
+gethostbyname error: 'Host name lookup failure'
+
+It seems dns resolution isn't quite working when the service is started, 
+so I added Wants=network-online.target (and After=) to the systemd 
+service. It still fails.
+But if I then add a "sleep 1" to the ExecStartPre, everything starts up 
+correctly.
+
+Obviously there are many solutions, including the above and setting the 
+domain manually in /etc/idmap.conf. But on principle I'd like to solve 
+the root race condition and help others avoid the same issue.
+
+I'm hoping someone can answer my open questions:
+
+1. Why does libnfsidmap use gethostname() and gethostbyname() (i.e. why 
+does it need a dns lookup on the hostname)?
+
+2. nfs-server.service already has a dependency on network-online.target, 
+but nfs-idmapd.service does not (and it starts first). Since id mapping 
+can depend on DNS resolution (and seems to out of the box), why not add 
+the dependency to the latter as well?
+
+3. Since the network-online.target doesn't completely solve the issue, 
+any ideas on how to fix the startup race without something haphazard 
+like a "sleep"?
+
+Thanks,
+
+Aram
 
