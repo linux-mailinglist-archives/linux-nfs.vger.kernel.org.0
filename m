@@ -2,130 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F72D6B24F3
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Mar 2023 14:08:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E5CD96B28CC
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Mar 2023 16:25:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230266AbjCINIe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Mar 2023 08:08:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53682 "EHLO
+        id S230166AbjCIPZu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Mar 2023 10:25:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230118AbjCINId (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Mar 2023 08:08:33 -0500
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB0B7D82;
-        Thu,  9 Mar 2023 05:08:07 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.229])
-        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4PXTlB12Nyz9xGWf;
-        Thu,  9 Mar 2023 20:58:46 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwC3QAwS2glkNqSEAQ--.25311S2;
-        Thu, 09 Mar 2023 14:07:43 +0100 (CET)
-Message-ID: <92c36707c8f9398f7f626c3da01bb98586880836.camel@huaweicloud.com>
-Subject: Re: [PATCH 15/28] security: Introduce inode_post_removexattr hook
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>, viro@zeniv.linux.org.uk,
-        chuck.lever@oracle.com, jlayton@kernel.org,
-        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
-        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, brauner@kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stefanb@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Thu, 09 Mar 2023 14:07:26 +0100
-In-Reply-To: <f5a61c0f09c1b8d8aaeb99ad7ba4aab15818c5ed.camel@linux.ibm.com>
-References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
-         <20230303181842.1087717-16-roberto.sassu@huaweicloud.com>
-         <f5a61c0f09c1b8d8aaeb99ad7ba4aab15818c5ed.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        with ESMTP id S231439AbjCIPZa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Mar 2023 10:25:30 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C92171FCC;
+        Thu,  9 Mar 2023 07:25:01 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id p16so1409021wmq.5;
+        Thu, 09 Mar 2023 07:25:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678375500;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=29V03fvB3UU3ILRRCDLx0p+xrMkONX6jLzeWPsnHEJg=;
+        b=gPCM1bppWBuMvjUvdsgYtIzU9jOlB9WotoqRUq4Pf/XFwofW0tosBWMFp/es7SjEEh
+         Wa8PdOKBaGw8bdJzCKL/TUW0yRP0ZH6EBil9dgW0uggcSKFPZ4Z1RHVFf2bKFpjELdvU
+         XgKD2ORkbrnXo8A55LWP9d6LNvL5KFc61nE+tb9yo2J7rlOM5PBaObuEVdOWRgcxNXH4
+         dsM92K1mDFWYWu8MQrPTKM+gOTvPm5A1wyoWLkFsa/Ny3FXzaQSG3nsdLlWk89cjt+No
+         pr542rZWF/ZRba3QixGKBnvzAlKqs/dpABubEVltjnM2eN7g45PX43OYwFe/aYqu51dS
+         um1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678375500;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=29V03fvB3UU3ILRRCDLx0p+xrMkONX6jLzeWPsnHEJg=;
+        b=G5rKI8X5ZCceeWMaGV1TLWt782ZZukI9lRfA0nTL4eNP7K027UscvdevETuvPgLLPu
+         TQdmcdhELzP47VwV4p9ZzJsZWVli9amihWrrYTOR0ND/s/qJohixaCR57AqxvMCWxRlj
+         9Jw9u7s0YffiH2D483hWx1FlM2ONDm9LYy5ehQi9ycn1bMHJ/h9KwLxA+DNoxpnv25aJ
+         7GHlM5bPaVAB4UhAcvUEF4bF7XuP5nSjeVpPbOVuZC7w848e9mvmgBcvCMoT2WAo0R7A
+         u4U1ev2NRfWg2v2HaThMCeHwNlGOyFzIEPYMfaXrvP/6iSIkMjvhDL0Usa2AaYo3FTYR
+         2/BA==
+X-Gm-Message-State: AO0yUKVrRlIoSt5sHljlXVaR2v9zikAdBiQ+u1hi8LRvkpdQXNHCiVQb
+        YCnJnSNPAv6WEw/pMBqtNWfZ1uKyBlgpLBbC9DMMwHzPekMA6A==
+X-Google-Smtp-Source: AK7set8bM2z4l7nqYTMmJ2SziZ2vFggDgMcbbRq2+BRlQoOdQrVIH7txE5VtjFw43fUecwY372LFFHhZGDnPbE49eNA=
+X-Received: by 2002:a7b:c2a2:0:b0:3eb:5a1e:d524 with SMTP id
+ c2-20020a7bc2a2000000b003eb5a1ed524mr5068235wmk.3.1678375499996; Thu, 09 Mar
+ 2023 07:24:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LxC2BwC3QAwS2glkNqSEAQ--.25311S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1DuFW3ur4ftrWxGr1xXwb_yoW8trykpF
-        s8t3ZxCF4rXr17GF97tF4UCwsagw48Gr4UJ3y2gw1jvFn7twn2qFWUKr15uFyrXr4j9Fyq
-        qFnIgr95Cr15AaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkYb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-        7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
-        6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU13rcDUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgALBF1jj4ZjhQAAsc
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <CACH9xG8-tEtWstUVmD9eZFEEAqx-E8Gs14wDL+=uNtBK=-KJvQ@mail.gmail.com>
+ <ZAmv57xeNqs7v9hY@kroah.com> <CACH9xG9=BFszD9OXspttTFdki0e68b5Hw7o11AUQ7pptSMy9wQ@mail.gmail.com>
+ <ZAmzT/D8YxJ3844j@kroah.com>
+In-Reply-To: <ZAmzT/D8YxJ3844j@kroah.com>
+From:   Sylvain Menu <sylvain.menu@gmail.com>
+Date:   Thu, 9 Mar 2023 16:24:48 +0100
+Message-ID: <CACH9xG_v_2Y9d3Q16YB57Q5xVwSXe5FqLFSnjox6GotOT3DPmw@mail.gmail.com>
+Subject: Re: nfs mount disappears due to inode revalidate failure
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     stable@vger.kernel.org, regressions@lists.linux.dev,
+        chuck.lever@oracle.com, jlayton@kernel.org,
+        linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-03-08 at 10:43 -0500, Mimi Zohar wrote:
-> Hi Roberto,
-> 
-> On Fri, 2023-03-03 at 19:18 +0100, Roberto Sassu wrote:
-> > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > 
-> > In preparation for moving IMA and EVM to the LSM infrastructure, introduce
-> > the inode_post_removexattr hook.
-> > 
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > ---
-> >  fs/xattr.c                    |  1 +
-> >  include/linux/lsm_hook_defs.h |  2 ++
-> >  include/linux/security.h      |  5 +++++
-> >  security/security.c           | 14 ++++++++++++++
-> >  4 files changed, 22 insertions(+)
-> > 
-> > diff --git a/fs/xattr.c b/fs/xattr.c
-> > index 14a7eb3c8fa..10c959d9fc6 100644
-> > --- a/fs/xattr.c
-> > +++ b/fs/xattr.c
-> > @@ -534,6 +534,7 @@ __vfs_removexattr_locked(struct mnt_idmap *idmap,
-> >  
-> >  	if (!error) {
-> >  		fsnotify_xattr(dentry);
-> > +		security_inode_post_removexattr(dentry, name);
-> >  		evm_inode_post_removexattr(dentry, name);
-> >  	}
-> 
-> Nothing wrong with this, but other places in this function test "if
-> (error) goto ...".   Perhaps it is time to clean this up.
+No I don't have that, I found the bug in production by no chance.
+I tried to dive into the code but it quickly becomes complex for me,
+at least it's easy to reproduce with a little script (while(1) timeout
+my_c.code)
 
-Theoretically, all 'goto out' can be replaced with 'return error'.
+thanks
+sylvain menu
 
-I would be more in favor of minimizing the changes as much as possible
-to reach the main goal. But it is ok also to change the last part.
-
-Thanks
-
-Roberto
-
-> >  
-> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-> > index eedefbcdde3..2ae5224d967 100644
-> > --- a/include/linux/lsm_hook_defs.h
-> > +++ b/include/linux/lsm_hook_defs.h
-> > @@ -147,6 +147,8 @@ LSM_HOOK(int, 0, inode_getxattr, struct dentry *dentry, const char *name)
-> >  LSM_HOOK(int, 0, inode_listxattr, struct dentry *dentry)
-> >  LSM_HOOK(int, 0, inode_removexattr, struct mnt_idmap *idmap,
-> >  	 struct dentry *dentry, const char *name)
-> > +LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
-> > +	 const char *name)
-> 
-> @Christian should the security_inode_removexattr() and
-> security_inode_post_removexattr() arguments be the same?
-> 
-> >  LSM_HOOK(int, 0, inode_set_acl, struct mnt_idmap *idmap,
-> >  	 struct dentry *dentry, const char *acl_name, struct posix_acl *kacl)
-> >  LSM_HOOK(int, 0, inode_get_acl, struct mnt_idmap *idmap,
-
+Le jeu. 9 mars 2023 =C3=A0 11:22, Greg KH <gregkh@linuxfoundation.org> a =
+=C3=A9crit :
+>
+> On Thu, Mar 09, 2023 at 11:17:30AM +0100, Sylvain Menu wrote:
+> > I think it's a regression according to the old resolved bugs/tickets
+> > but no idea since when it's broken again
+>
+> Any chance you can do 'git bisect' to find where it broke and what
+> commit broke it?
+>
+> thanks,
+>
+> greg k-h
