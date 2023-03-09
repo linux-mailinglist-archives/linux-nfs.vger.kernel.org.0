@@ -2,154 +2,165 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CDAE6B1C35
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Mar 2023 08:24:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC0656B1F90
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Mar 2023 10:12:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbjCIHYW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Mar 2023 02:24:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42012 "EHLO
+        id S230342AbjCIJMv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Mar 2023 04:12:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229644AbjCIHYV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Mar 2023 02:24:21 -0500
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7445D8AF
-        for <linux-nfs@vger.kernel.org>; Wed,  8 Mar 2023 23:24:16 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id C0D9B5C011D
-        for <linux-nfs@vger.kernel.org>; Thu,  9 Mar 2023 02:24:05 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Thu, 09 Mar 2023 02:24:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nubmail.ca; h=cc
-        :content-transfer-encoding:content-type:content-type:date:date
-        :from:from:in-reply-to:message-id:mime-version:reply-to:sender
-        :subject:subject:to:to; s=fm1; t=1678346645; x=1678433045; bh=Jy
-        JQmlen5cEkFA39ZNElJRyURgazpayuIp3dc6AsjNg=; b=iR6FHU9Vz8mWdLS5oo
-        /cgYGdfcl89jT7/euiuXX+ZqixqtQ3Gl7wRWbDZfObialxj6gMMo3s+5FgnUCREc
-        pe/SHhE5/24XnnS8rCQc0bVtzTtwVewl81q+BlWsGuDiJV3mQkkT5VGqxWPbRyv8
-        yWbuTBdJZ7WTNb5UXJu77Fdkl9AQ2sWDxiBWsy2XDtsXCiFAfxBrFcBNi/o6X7Xy
-        msVAkYqcdJelBQ9/LrPnM8WJjWyZpkLIQGgaVfom7W2APv/riZfeuot6pVRWE/6s
-        2NHWyyB1hfCvVn85OG0kWG+DQlQFEuv4l9TOwFZg0ha1GBO7uULRqF/JpW+IPOIb
-        wqQw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:message-id:mime-version:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1678346645; x=1678433045; bh=JyJQmlen5cEkF
-        A39ZNElJRyURgazpayuIp3dc6AsjNg=; b=UbvFkx7pV55hux3Qby8Wm8p1j1iiL
-        +dL6SACVJB/Msxc5SV1pqErI1Fd7tTWvIA3ss8TS9N7HHDKc8POOhdQb9geFOFG7
-        bsu6EFVdaOifBPGLa1joBxB89ie7nqZ3y1tgdbj84pkyBvfaPd3w2LyIechNyDTR
-        EDnF8QjX+UzrCjoQsYN1fCaBwme9gRxESX1C9JmENnP6O9qX3Pcv3HUeHXLplxhq
-        7NyXE0qsQbcqeSDljYUzwsDHXaK7ExwoqmK9fGaY4O80cPw1M1weJwObah1EvEux
-        EhR+lqI7b4AOaNY8e0RWtOdiCZVGZFn0xNNqfhDq3jMQDPc5SleZa++uw==
-X-ME-Sender: <xms:lYkJZByf31GgXh05JyHWUeQ0-9HHwhAyas1tThAzZM7Rp86nUtP9Tg>
-    <xme:lYkJZBQD8AL2L8qU_T_8VedpdLmh7u2rbEAwsDiCoYauDL0_Z_MH7YcjM0ARxeKlQ
-    DXGpBpMr73VvTqENOY>
-X-ME-Received: <xmr:lYkJZLWfxQjGVl9Ihnnvjy_GBo4XfkmoxtfT_IJBUwIH__-guh0uvgWQIUJ-4HUY9lNNjUaBFOSXJtuUFf3YLbV2hQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdduhedgtdelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucenucfjughrpefkffggfgfhuffvtgfgsehtkeertd
-    dtfeejnecuhfhrohhmpeetrhgrmhcutehkhhgrvhgrnhcuoegrrhgrmhesnhhusghmrghi
-    lhdrtggrqeenucggtffrrghtthgvrhhnpeekvdegvdejuefgvdegudffteegheffkefgje
-    egieduvdeghedthefffeeileekhfenucffohhmrghinhepnhhusgdrlhgrnhenucevlhhu
-    shhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhgrmhesnhhusg
-    hmrghilhdrtggr
-X-ME-Proxy: <xmx:lYkJZDgKYb-v6PvUdH9ypVhEMkqAitk03_aP2kSqL7zOx6mlVOxRZQ>
-    <xmx:lYkJZDBuY-MFKRsakbcRgqVzXSPT7KncP6PVEutmiEF169n3MzJocw>
-    <xmx:lYkJZMKme9ukgtpB1sQqV8sx-L786TIifMBCIv744zasSUacWhz57w>
-    <xmx:lYkJZG8EgsD-gDb_YF8earbiSYdmMjwWwDT_D7tNr9ilePr9-gIE2Q>
-Feedback-ID: i8ce9446d:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA for
- <linux-nfs@vger.kernel.org>; Thu, 9 Mar 2023 02:24:05 -0500 (EST)
-Message-ID: <ff66197f-8b60-5ff8-a2ac-8f5090b231cf@nubmail.ca>
-Date:   Wed, 8 Mar 2023 23:23:04 -0800
+        with ESMTP id S230267AbjCIJMf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Mar 2023 04:12:35 -0500
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C7ADCA5F;
+        Thu,  9 Mar 2023 01:12:17 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4PXNWj1ywgz9xtnb;
+        Thu,  9 Mar 2023 17:03:29 +0800 (CST)
+Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
+        by APP1 (Coremail) with SMTP id LxC2BwB39QDLoglkaOCDAQ--.24643S2;
+        Thu, 09 Mar 2023 10:11:52 +0100 (CET)
+Message-ID: <3f3c321a870ff8eae8634bab42ea276d6e6a7ed5.camel@huaweicloud.com>
+Subject: Re: [PATCH 03/28] ima: Align ima_post_create_tmpfile() definition
+ with LSM infrastructure
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>, viro@zeniv.linux.org.uk,
+        chuck.lever@oracle.com, jlayton@kernel.org,
+        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, brauner@kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stefanb@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Thu, 09 Mar 2023 10:11:36 +0100
+In-Reply-To: <502bd55cdbe47df40542f957f29f201502d7218f.camel@linux.ibm.com>
+References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
+         <20230303181842.1087717-4-roberto.sassu@huaweicloud.com>
+         <502bd55cdbe47df40542f957f29f201502d7218f.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5-0ubuntu1 
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-From:   Aram Akhavan <aram@nubmail.ca>
-Subject: nfs-idmapd startup race
-To:     linux-nfs@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: LxC2BwB39QDLoglkaOCDAQ--.24643S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWFWrXr4xJFy8CrWxKw1fXrb_yoW5uFyrpF
+        Z3K3WUGrs3Xry7ury0qa13ZrySg3yvqr1UZrWfWa4qyF1ktrnY9F1fCrn0kF45CrWrCr1j
+        q3W3KrZ8Ar1UtFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+        AFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
+        7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
+        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
+        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
+        AIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280
+        aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQALBF1jj4pcuAACsT
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi all,
+On Wed, 2023-03-08 at 10:15 -0500, Mimi Zohar wrote:
+> Hi Roberto,
+> 
+> On Fri, 2023-03-03 at 19:18 +0100, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> > 
+> > Change ima_post_create_tmpfile() definition, so that it can be registered
+> > as implementation of the post_create_tmpfile hook.
+> 
+> Since neither security_create_tmpfile() nor
+> security_post_create_tmpfile() already exist, why not pass a pointer to
+> the file to conform to the other file related security hooks?
 
-I've been debugging an nfs server issue where id mapping was not 
-happening correctly unless I restarted nfs-kernel-server and re-exported 
-shares shortly after reboot. The main symptom is the following log 
-entries from nfs-idmapd.service:
+Ok, will change the parameter.
 
-Mar 08 22:45:59 343guiltyspark.nub.lan systemd[1]: Starting NFSv4 ID-name mapping service...
-Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: libnfsidmap: Unable to determine the NFSv4 domain; Using 'localdomain' as the NFSv4 domain which means UIDs will be mapped to the 'Nobody-User' user defined in /etc/idmapd.conf
-Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: rpc.idmapd: libnfsidmap: Unable to determine the NFSv4 domain; Using 'localdomain' as the NFSv4 domain which means UIDs will be mapped to the 'Nobody-User' user defined in /etc/idmapd.conf
-Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: rpc.idmapd: libnfsidmap: using (default) domain: localdomain
-Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: rpc.idmapd: libnfsidmap: Realms list: 'LOCALDOMAIN'
-Mar 08 22:45:59 343guiltyspark.nub.lan rpc.idmapd[620]: rpc.idmapd: libnfsidmap: loaded plugin /lib/x86_64-linux-gnu/libnfsidmap/nsswitch.so for method nsswitch
+Thanks
 
-I wrote a little test program to mimic libnfsidmap's domain_from_dns() 
-function, which causes the above message:
+Roberto
 
-#include <netdb.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <errno.h>
-extern int h_errno;
-int main() {
-     struct hostent *he;
-     char hname[64], *c;
-
-     if (gethostname(hname, sizeof(hname)))
-         printf("gethostname error: %d\n", errno);
-     else
-         printf("gethostname: '%s'\n", hname);
-
-     if ((he = gethostbyname(hname)) == NULL)
-         printf("gethostbyname error: '%s'\n", hstrerror(h_errno));
-     else {
-         printf("gethostbyname h_name: '%s'\n", he->h_name);
-     }
-}
-
-and added it as an ExecStartPre= to the systemd service. The output is:
-
-gethostname: '343guiltyspark.nub.lan'
-gethostbyname error: 'Host name lookup failure'
-
-It seems dns resolution isn't quite working when the service is started, 
-so I added Wants=network-online.target (and After=) to the systemd 
-service. It still fails.
-But if I then add a "sleep 1" to the ExecStartPre, everything starts up 
-correctly.
-
-Obviously there are many solutions, including the above and setting the 
-domain manually in /etc/idmap.conf. But on principle I'd like to solve 
-the root race condition and help others avoid the same issue.
-
-I'm hoping someone can answer my open questions:
-
-1. Why does libnfsidmap use gethostname() and gethostbyname() (i.e. why 
-does it need a dns lookup on the hostname)?
-
-2. nfs-server.service already has a dependency on network-online.target, 
-but nfs-idmapd.service does not (and it starts first). Since id mapping 
-can depend on DNS resolution (and seems to out of the box), why not add 
-the dependency to the latter as well?
-
-3. Since the network-online.target doesn't completely solve the issue, 
-any ideas on how to fix the startup race without something haphazard 
-like a "sleep"?
-
-Thanks,
-
-Aram
+> Mimi
+> 
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > ---
+> >  fs/namei.c                        | 2 +-
+> >  include/linux/ima.h               | 7 +++++--
+> >  security/integrity/ima/ima_main.c | 8 ++++++--
+> >  3 files changed, 12 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index b5a1ec29193..57727a1ae38 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -3622,7 +3622,7 @@ static int vfs_tmpfile(struct mnt_idmap *idmap,
+> >  		inode->i_state |= I_LINKABLE;
+> >  		spin_unlock(&inode->i_lock);
+> >  	}
+> > -	ima_post_create_tmpfile(idmap, inode);
+> > +	ima_post_create_tmpfile(idmap, dir, file_dentry(file), mode);
+> >  	return 0;
+> >  }
+> >  
+> > diff --git a/include/linux/ima.h b/include/linux/ima.h
+> > index 179ce52013b..7535686a403 100644
+> > --- a/include/linux/ima.h
+> > +++ b/include/linux/ima.h
+> > @@ -19,7 +19,8 @@ extern enum hash_algo ima_get_current_hash_algo(void);
+> >  extern int ima_bprm_check(struct linux_binprm *bprm);
+> >  extern int ima_file_check(struct file *file, int mask);
+> >  extern void ima_post_create_tmpfile(struct mnt_idmap *idmap,
+> > -				    struct inode *inode);
+> > +				    struct inode *dir, struct dentry *dentry,
+> > +				    umode_t mode);
+> >  extern void ima_file_free(struct file *file);
+> >  extern int ima_file_mmap(struct file *file, unsigned long reqprot,
+> >  			 unsigned long prot, unsigned long flags);
+> > @@ -69,7 +70,9 @@ static inline int ima_file_check(struct file *file, int mask)
+> >  }
+> >  
+> >  static inline void ima_post_create_tmpfile(struct mnt_idmap *idmap,
+> > -					   struct inode *inode)
+> > +					   struct inode *dir,
+> > +					   struct dentry *dentry,
+> > +					   umode_t mode)
+> >  {
+> >  }
+> >  
+> > diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> > index 8941305376b..4a3d0c8bcba 100644
+> > --- a/security/integrity/ima/ima_main.c
+> > +++ b/security/integrity/ima/ima_main.c
+> > @@ -659,16 +659,20 @@ EXPORT_SYMBOL_GPL(ima_inode_hash);
+> >  /**
+> >   * ima_post_create_tmpfile - mark newly created tmpfile as new
+> >   * @idmap: idmap of the mount the inode was found from
+> > - * @inode: inode of the newly created tmpfile
+> > + * @dir: inode structure of the parent of the new file
+> > + * @dentry: dentry structure of the new file
+> > + * @mode: mode of the new file
+> >   *
+> >   * No measuring, appraising or auditing of newly created tmpfiles is needed.
+> >   * Skip calling process_measurement(), but indicate which newly, created
+> >   * tmpfiles are in policy.
+> >   */
+> >  void ima_post_create_tmpfile(struct mnt_idmap *idmap,
+> > -			     struct inode *inode)
+> > +			     struct inode *dir, struct dentry *dentry,
+> > +			     umode_t mode)
+> >  {
+> >  	struct integrity_iint_cache *iint;
+> > +	struct inode *inode = dentry->d_inode;
+> >  	int must_appraise;
+> >  
+> >  	if (!ima_policy_flag || !S_ISREG(inode->i_mode))
 
