@@ -2,201 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F72D6B920D
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Mar 2023 12:50:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A53A6B9221
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Mar 2023 12:52:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229605AbjCNLuN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Mar 2023 07:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35904 "EHLO
+        id S231535AbjCNLw0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Mar 2023 07:52:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230173AbjCNLuN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Mar 2023 07:50:13 -0400
-Received: from mail-vs1-xe31.google.com (mail-vs1-xe31.google.com [IPv6:2607:f8b0:4864:20::e31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8646F1814B
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Mar 2023 04:50:09 -0700 (PDT)
-Received: by mail-vs1-xe31.google.com with SMTP id by13so13839625vsb.3
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Mar 2023 04:50:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678794608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JjPVqtaOTeOVwAw3mvVvciUuMTo4DHmzUtmhcH6zrUE=;
-        b=kkB1VLGGfKW09y5C9Wmh3wv0AgffDmsBC4N9jsrnCmbnbCkatx+mF5h8JgOFQoqaza
-         MElZo0Scj0XejiE0aBlQUykwpDz5zICIoi2aDDrEb4em+eh9F1sZooBrzRQ7uAkNYeSP
-         5+sKTb0g6buiDwf3/1gFEEGU4kkPJtRJV7xH9IgkyEnQiLuV2WE2W4SwX/VxkeXQpVKB
-         yywZ/RAmupZFA6vV54wP5qwk8j/m5STQ0fXbsKiVM75cwaiRIfFjPE8blvvBo8G+6/3H
-         xvByrlvfJZVt3WQPECmK/i3h30ompsE5JV+K7Hyc6qInrv2jM0D1k1hGvS4X84nWnm6k
-         XLgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678794608;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JjPVqtaOTeOVwAw3mvVvciUuMTo4DHmzUtmhcH6zrUE=;
-        b=oqH7NbD+bmKds4NSvZjyFGuvtdXK5B7rl4J6iq0YN4jAQafN4u1KnU2J1wP0Cw+hX4
-         dwdSzyJmpITu30/Td5TY+y50YhGhiUrtIBv7PZbZaZfQb7QJHqNd+5IOH3GgLOhAQrG/
-         dyTmEPjysAUPnIVrCd1l1TL3sYFyqHiPWOIB6pqQgKctrpyoPNDCNseJDjyhjsBFXU7l
-         4UtYU2Aynj3GGfcloodJML3gfpbw78hXXS1Aw4q2tnqgh4LjEVDpnuWShXEaI96F5Alw
-         7H1U5WHHDjl0ZllI08MBKiVOogthg6QGDKAOfqc6udHbW1T2f/CCfHfkIGVduF/eF4uo
-         wIuw==
-X-Gm-Message-State: AO0yUKVe1uKL9CQdlB9tFC1Qpc60JKpllZB+1DygNsbP0PDdZd6qdk8j
-        aHlzsDbGz4X9biToH3Ch3WR8r+6yKjs+T6NSef99pf6/eeY=
-X-Google-Smtp-Source: AK7set/z1sm+cjmNavyuCqfZkWbCxVTzgUYHl5WnDcfCKyi6064RtrXqTTKPA6OJ6jBWjr3GpxUKdwrch1g24kD6xaQ=
-X-Received: by 2002:a67:ea49:0:b0:411:a740:c3ea with SMTP id
- r9-20020a67ea49000000b00411a740c3eamr25055870vso.0.1678794608509; Tue, 14 Mar
- 2023 04:50:08 -0700 (PDT)
+        with ESMTP id S231543AbjCNLwU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Mar 2023 07:52:20 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AA129F23D;
+        Tue, 14 Mar 2023 04:51:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 64D4DB81900;
+        Tue, 14 Mar 2023 11:51:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BE65C433EF;
+        Tue, 14 Mar 2023 11:51:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678794684;
+        bh=KZjiynn5m0OMtAoxPlZVjdQJtzScY7f9adPldMxlz+M=;
+        h=From:Date:Subject:To:Cc:From;
+        b=ns1xQ9b5Mfc3NQEP31O/YjorwVBpZl6w2O/OcmPN5EbzRmhtz/6F8g2zKJxeLh7iP
+         1mUr46A0MxL8tnUU2N8TBH3pCgUjv75wBx5JCUtL1SEzyfoCIZaT+fNLCJRDyR/P1i
+         hqqtwtuPWCbZNFh4G2JxTyHz/iMP4Cw6Ii3HmHmIzOrr8ZuhiIHqzLMoUebBdEu5ze
+         6lP5hJGi53W3tkULxzl14U1xrnoSPxE46RyB8ibgzj25/MC/UQYxbaAMNSs85E7iTo
+         OA/IBzPdOvPN8qMiIeH/e4tt52K455+GKtJ/2FlUW7QlX72VXDhehphVtdQCYXUpfU
+         ZEKL46E5X75HA==
+From:   Christian Brauner <brauner@kernel.org>
+Date:   Tue, 14 Mar 2023 12:51:10 +0100
+Subject: [PATCH v2] nfs: use vfs setgid helper
 MIME-Version: 1.0
-References: <20230314102058.10761-1-jlayton@kernel.org>
-In-Reply-To: <20230314102058.10761-1-jlayton@kernel.org>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 14 Mar 2023 13:49:57 +0200
-Message-ID: <CAOQ4uxgrgNAJHGjqo1B05aEa5zXO+UYUPNUHfJA6GKLoiPfUUw@mail.gmail.com>
-Subject: Re: [PATCH] lockd: set file_lock start and end when decoding nlm4 testargs
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     chuck.lever@oracle.com, trond.myklebust@hammerspace.com,
-        anna@kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230313-fs-nfs-setgid-v2-1-9a59f436cfc0@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAK1fEGQC/3WNwQ6CMBBEf4Xs2ZpusUQ8+R+GQwtbaNRCdgnRE
+ P7dwt3DHN5MJm8FIY4kcCtWYFqixDFlMKcC2sGlnlTsMoPRptQlliqISjlCcx87Vdn6gtqh9sZ
+ C/ngnpDy71A776+1kJt6HiSnEzyF6NJmHKPPI38O74N7+UyyoUFmPwdm6Dnit7k/iRK/zyD002
+ 7b9APugEoDEAAAA
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org,
+        "Christian Brauner (Microsoft)" <brauner@kernel.org>
+X-Mailer: b4 0.13-dev-2eb1a
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3199; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=KZjiynn5m0OMtAoxPlZVjdQJtzScY7f9adPldMxlz+M=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaQIxO98GHhtVbyDisOXgwdPJ/ZNljiX8FP88xHreo3lXr/S
+ +9jfdZSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEyk9AbDH67TIpck2VsWGvBOYdlYZv
+ rhg0+36XrbLkb/O56/Tj+yusTIcIjboSapOEY1P8n5oPWaLqv6K9bHr2mmnJ5x1Jf/VXwaGwA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 12:21=E2=80=AFPM Jeff Layton <jlayton@kernel.org> w=
-rote:
->
-> Commit 6930bcbfb6ce dropped the setting of the file_lock range when
-> decoding a nlm_lock off the wire. This causes the client side grant
-> callback to miss matching blocks and reject the lock, only to rerequest
-> it 30s later.
->
-> Add a helper function to set the file_lock range from the start and end
-> values that the protocol uses, and have the nlm_lock decoder call that to
-> set up the file_lock args properly.
->
-> Fixes: 6930bcbfb6ce ("lockd: detect and reject lock arguments that overfl=
-ow")
-> Reported-by: Amir Goldstein <amir73il@gmail.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/lockd/clnt4xdr.c        |  9 +--------
->  fs/lockd/xdr4.c            | 13 ++++++++++++-
->  include/linux/lockd/xdr4.h |  1 +
->  3 files changed, 14 insertions(+), 9 deletions(-)
->
-> Hi Amir,
->
-> Thanks for the bug report. This patch seems to fix up the 30s stalls for
-> me. Can you give it a spin and see if it also helps you? I am still
+We've aligned setgid behavior over multiple kernel releases. The details
+can be found in the following two merge messages:
+cf619f891971 ("Merge tag 'fs.ovl.setgid.v6.2')
+426b4ca2d6a5 ("Merge tag 'fs.setgid.v6.0')
+Consistent setgid stripping behavior is now encapsulated in the
+setattr_should_drop_sgid() helper which is used by all filesystems that
+strip setgid bits outside of vfs proper. Switch nfs to rely on this
+helper as well. Without this patch the setgid stripping tests in
+xfstests will fail.
 
-Works like a charm :)
+Signed-off-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+---
+Changes in v2:
+- Christoph Hellwig <hch@lst.de>:
+  * Export setattr_should_sgid() so it actually can be used by filesystems
+- Link to v1: https://lore.kernel.org/r/20230313-fs-nfs-setgid-v1-1-5b1fa599f186@kernel.org
+---
+ fs/attr.c          | 1 +
+ fs/internal.h      | 2 --
+ fs/nfs/inode.c     | 4 +---
+ include/linux/fs.h | 2 ++
+ 4 files changed, 4 insertions(+), 5 deletions(-)
 
-I tested a backport to 5.15.y (trivial conflict in h file).
-against 5.10.109 and 5.15.88 servers.
+diff --git a/fs/attr.c b/fs/attr.c
+index aca9ff7aed33..d60dc1edb526 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -47,6 +47,7 @@ int setattr_should_drop_sgid(struct mnt_idmap *idmap,
+ 		return ATTR_KILL_SGID;
+ 	return 0;
+ }
++EXPORT_SYMBOL(setattr_should_drop_sgid);
+ 
+ /**
+  * setattr_should_drop_suidgid - determine whether the set{g,u}id bit needs to
+diff --git a/fs/internal.h b/fs/internal.h
+index dc4eb91a577a..ab36ed8fa41c 100644
+--- a/fs/internal.h
++++ b/fs/internal.h
+@@ -259,8 +259,6 @@ ssize_t __kernel_write_iter(struct file *file, struct iov_iter *from, loff_t *po
+ /*
+  * fs/attr.c
+  */
+-int setattr_should_drop_sgid(struct mnt_idmap *idmap,
+-			     const struct inode *inode);
+ struct mnt_idmap *alloc_mnt_idmap(struct user_namespace *mnt_userns);
+ struct mnt_idmap *mnt_idmap_get(struct mnt_idmap *idmap);
+ void mnt_idmap_put(struct mnt_idmap *idmap);
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 222a28320e1c..97a76706fd54 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -717,9 +717,7 @@ void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
+ 		if ((attr->ia_valid & ATTR_KILL_SUID) != 0 &&
+ 		    inode->i_mode & S_ISUID)
+ 			inode->i_mode &= ~S_ISUID;
+-		if ((attr->ia_valid & ATTR_KILL_SGID) != 0 &&
+-		    (inode->i_mode & (S_ISGID | S_IXGRP)) ==
+-		     (S_ISGID | S_IXGRP))
++		if (setattr_should_drop_sgid(&nop_mnt_idmap, inode))
+ 			inode->i_mode &= ~S_ISGID;
+ 		if ((attr->ia_valid & ATTR_MODE) != 0) {
+ 			int mode = attr->ia_mode & S_IALLUGO;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index c85916e9f7db..af95b64fc810 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2675,6 +2675,8 @@ extern struct inode *new_inode(struct super_block *sb);
+ extern void free_inode_nonrcu(struct inode *inode);
+ extern int setattr_should_drop_suidgid(struct mnt_idmap *, struct inode *);
+ extern int file_remove_privs(struct file *);
++int setattr_should_drop_sgid(struct mnt_idmap *idmap,
++			     const struct inode *inode);
+ 
+ /*
+  * This must be used for allocating filesystems specific inodes to set
 
-Tested-by: Amir Goldstein <amir73il@gmail.com>
+---
+base-commit: eeac8ede17557680855031c6f305ece2378af326
+change-id: 20230313-fs-nfs-setgid-659410a10b25
 
-> seeing one test failure with nfstest_lock, but I'm not sure it's related
-> to this. I'll plan to follow up with Jorge.
-
-I don't see this failure in my tests.
-
-Please fast track this fix which also fixes an LTS 5.15.y kernel regression=
-.
-Please cc stable and let me know if you want me to post the 5.15.y backport=
-.
-
-Thanks for the prompt fix,
-Amir.
-
->
-> Thanks,
-> Jeff
->
-> diff --git a/fs/lockd/clnt4xdr.c b/fs/lockd/clnt4xdr.c
-> index 7df6324ccb8a..8161667c976f 100644
-> --- a/fs/lockd/clnt4xdr.c
-> +++ b/fs/lockd/clnt4xdr.c
-> @@ -261,7 +261,6 @@ static int decode_nlm4_holder(struct xdr_stream *xdr,=
- struct nlm_res *result)
->         u32 exclusive;
->         int error;
->         __be32 *p;
-> -       s32 end;
->
->         memset(lock, 0, sizeof(*lock));
->         locks_init_lock(fl);
-> @@ -285,13 +284,7 @@ static int decode_nlm4_holder(struct xdr_stream *xdr=
-, struct nlm_res *result)
->         fl->fl_type  =3D exclusive !=3D 0 ? F_WRLCK : F_RDLCK;
->         p =3D xdr_decode_hyper(p, &l_offset);
->         xdr_decode_hyper(p, &l_len);
-> -       end =3D l_offset + l_len - 1;
-> -
-> -       fl->fl_start =3D (loff_t)l_offset;
-> -       if (l_len =3D=3D 0 || end < 0)
-> -               fl->fl_end =3D OFFSET_MAX;
-> -       else
-> -               fl->fl_end =3D (loff_t)end;
-> +       nlm4svc_set_file_lock_range(fl, l_offset, l_len);
->         error =3D 0;
->  out:
->         return error;
-> diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
-> index 712fdfeb8ef0..5fcbf30cd275 100644
-> --- a/fs/lockd/xdr4.c
-> +++ b/fs/lockd/xdr4.c
-> @@ -33,6 +33,17 @@ loff_t_to_s64(loff_t offset)
->         return res;
->  }
->
-> +void nlm4svc_set_file_lock_range(struct file_lock *fl, u64 off, u64 len)
-> +{
-> +       s64 end =3D off + len - 1;
-> +
-> +       fl->fl_start =3D off;
-> +       if (len =3D=3D 0 || end < 0)
-> +               fl->fl_end =3D OFFSET_MAX;
-> +       else
-> +               fl->fl_end =3D end;
-> +}
-> +
->  /*
->   * NLM file handles are defined by specification to be a variable-length
->   * XDR opaque no longer than 1024 bytes. However, this implementation
-> @@ -80,7 +91,7 @@ svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_l=
-ock *lock)
->         locks_init_lock(fl);
->         fl->fl_flags =3D FL_POSIX;
->         fl->fl_type  =3D F_RDLCK;
-> -
-> +       nlm4svc_set_file_lock_range(fl, lock->lock_start, lock->lock_len)=
-;
->         return true;
->  }
->
-> diff --git a/include/linux/lockd/xdr4.h b/include/linux/lockd/xdr4.h
-> index 9a6b55da8fd6..72831e35dca3 100644
-> --- a/include/linux/lockd/xdr4.h
-> +++ b/include/linux/lockd/xdr4.h
-> @@ -22,6 +22,7 @@
->  #define        nlm4_fbig               cpu_to_be32(NLM_FBIG)
->  #define        nlm4_failed             cpu_to_be32(NLM_FAILED)
->
-> +void   nlm4svc_set_file_lock_range(struct file_lock *fl, u64 off, u64 le=
-n);
->  bool   nlm4svc_decode_void(struct svc_rqst *rqstp, struct xdr_stream *xd=
-r);
->  bool   nlm4svc_decode_testargs(struct svc_rqst *rqstp, struct xdr_stream=
- *xdr);
->  bool   nlm4svc_decode_lockargs(struct svc_rqst *rqstp, struct xdr_stream=
- *xdr);
-> --
-> 2.39.2
->
