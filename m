@@ -2,104 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4224B6B85E5
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Mar 2023 00:09:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25C026B8849
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Mar 2023 03:19:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbjCMXJS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Mar 2023 19:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60816 "EHLO
+        id S229791AbjCNCTg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Mar 2023 22:19:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229889AbjCMXJP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Mar 2023 19:09:15 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03638C83B;
-        Mon, 13 Mar 2023 16:08:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678748933; x=1710284933;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KshWSejkFbkeVBwakT7QiRHIr/W7baLNEGoxZeDhpeo=;
-  b=c6+sPB9rnTyoE8r5QWk8wv7EiOqEu1Dct4dzAczEz1NfnzM3thHe4oQn
-   6gGIodcueU1evOQIJ5iq2OVgrAgo8dhXLEyW4ulCtArO8u+Bo8ht5G5K8
-   tgbY9FLsesTQyG3pme/+GwR3Z3M70evR8NLQk2PblSpK3/ujLPUIgOtgX
-   QJ/uMBsK2jEkTh8IR+jAPect5WwLuOICUrbVl9lyDpPrPoknaxWRsaqvy
-   K8E0ORL/ljiKt2uK7efEIapNOFaqeBj/K98f11WfoOFxcaFbc91Euz7Ed
-   kSJ9VSxB1Q+qJTcYfg67QB2A7PmoBh2TSXSl2aH5ZmdjEVpZFQWN1kzlX
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="399871312"
-X-IronPort-AV: E=Sophos;i="5.98,258,1673942400"; 
-   d="scan'208";a="399871312"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2023 16:08:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10648"; a="628806685"
-X-IronPort-AV: E=Sophos;i="5.98,258,1673942400"; 
-   d="scan'208";a="628806685"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 13 Mar 2023 16:08:51 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pbrHe-0006EC-0e;
-        Mon, 13 Mar 2023 23:08:50 +0000
-Date:   Tue, 14 Mar 2023 07:07:53 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Christian Brauner (Microsoft)" <brauner@kernel.org>
-Subject: Re: [PATCH] nfs: use vfs setgid helper
-Message-ID: <202303140652.dN7XrtM4-lkp@intel.com>
-References: <20230313-fs-nfs-setgid-v1-1-5b1fa599f186@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230313-fs-nfs-setgid-v1-1-5b1fa599f186@kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229755AbjCNCTf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Mar 2023 22:19:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDC131B541;
+        Mon, 13 Mar 2023 19:19:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 88C8B61572;
+        Tue, 14 Mar 2023 02:19:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DFDAC4339C;
+        Tue, 14 Mar 2023 02:19:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1678760373;
+        bh=jQhD/M7Ani+bWf3eE9KwDDKZgpO+n2YjiyMZ49M+DVU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TEy2LQY75YaxuMZ9i9d0txb/bAPwVksXWhiZdQy+Gp0ocrEuwRrFo+5Wh7rqlFeNe
+         1LlrirqETNh2b1bMxwBWU+ClRS3UtSm156sFelxG38ph5FucwHNDR7Wyqo4Eq0iphr
+         BLQ4sFlz8R2QZTg6FkeByENg0z1522RLRjMbOHgw=
+Date:   Mon, 13 Mar 2023 19:19:31 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     kernel test robot <yujie.liu@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>, <oe-lkp@lists.linux.dev>,
+        <lkp@intel.com>, Linux Memory Management List <linux-mm@kvack.org>,
+        "Andreas Gruenbacher" <agruenba@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        <linux-afs@lists.infradead.org>, <linux-ext4@vger.kernel.org>,
+        <linux-xfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-nfs@vger.kernel.org>, <linux-nilfs@vger.kernel.org>,
+        <cgroups@vger.kernel.org>
+Subject: Re: [linux-next:master] [mm] 480c454ff6:
+ BUG:kernel_NULL_pointer_dereference
+Message-Id: <20230313191931.f84776cb09dc8c4b50673a76@linux-foundation.org>
+In-Reply-To: <202303140916.5e8e96b2-yujie.liu@intel.com>
+References: <202303140916.5e8e96b2-yujie.liu@intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Christian,
+On Tue, 14 Mar 2023 10:10:42 +0800 kernel test robot <yujie.liu@intel.com> wrote:
 
-I love your patch! Yet something to improve:
+> Greeting,
+> 
+> Previous report:
+> https://lore.kernel.org/oe-lkp/202303100947.9b421b1c-yujie.liu@intel.com
+> 
+> FYI, we noticed BUG:kernel_NULL_pointer_dereference,address due to commit (built with gcc-11):
+> 
+> commit: 480c454ff64b734a35677ee4b239e32143a4235c ("mm: return an ERR_PTR from __filemap_get_folio")
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+> 
+> [test failed on linux-next/master 24469a0e5052ba01a35a15f104717a82b7a4798b]
+> 
+> in testcase: trinity
+> version: trinity-x86_64-e63e4843-1_20220913
+> with following parameters:
+> 
+> 	runtime: 300s
+> 	group: group-04
+> 
+> test-description: Trinity is a linux system call fuzz tester.
+> test-url: http://codemonkey.org.uk/projects/trinity/
+> 
+> on test machine: qemu-system-x86_64 -enable-kvm -cpu SandyBridge -smp 2 -m 16G
+> 
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+> 
+> 
+> [   29.300153][ T6430] BUG: kernel NULL pointer dereference, address: 0000000000000000
 
-[auto build test ERROR on eeac8ede17557680855031c6f305ece2378af326]
+Thanks, I expect this is fixed by
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Brauner/nfs-use-vfs-setgid-helper/20230313-212725
-base:   eeac8ede17557680855031c6f305ece2378af326
-patch link:    https://lore.kernel.org/r/20230313-fs-nfs-setgid-v1-1-5b1fa599f186%40kernel.org
-patch subject: [PATCH] nfs: use vfs setgid helper
-config: parisc64-defconfig (https://download.01.org/0day-ci/archive/20230314/202303140652.dN7XrtM4-lkp@intel.com/config)
-compiler: hppa64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/503d040be490a519b2e483672702dcca530443ce
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Christian-Brauner/nfs-use-vfs-setgid-helper/20230313-212725
-        git checkout 503d040be490a519b2e483672702dcca530443ce
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=parisc64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=parisc64 SHELL=/bin/bash
+commit 151dff099e8e6d9c8efcc75ad0ad3b8eead58704
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Fri Mar 10 08:00:23 2023 +0100
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303140652.dN7XrtM4-lkp@intel.com/
+    mm-return-an-err_ptr-from-__filemap_get_folio-fix
+    
+    fix null-pointer deref
+    
+    Link: https://lkml.kernel.org/r/20230310070023.GA13563@lst.de
+    Signed-off-by: Christoph Hellwig <hch@lst.de>
+    Reported-by: Naoya Horiguchi <naoya.horiguchi@linux.dev>
+      Link: https://lkml.kernel.org/r/20230310043137.GA1624890@u2004
+    Cc: Andreas Gruenbacher <agruenba@redhat.com>
+    Cc: Hugh Dickins <hughd@google.com>
+    Cc: Matthew Wilcox (Oracle) <willy@infradead.org>
+    Cc: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index c7160070b9da..b76a65ac28b3 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -390,6 +390,8 @@ struct folio *filemap_get_incore_folio(struct address_space *mapping,
+ 	struct swap_info_struct *si;
+ 	struct folio *folio = filemap_get_entry(mapping, index);
+ 
++	if (!folio)
++		return ERR_PTR(-ENOENT);
+ 	if (!xa_is_value(folio))
+ 		return folio;
+ 	if (!shmem_mapping(mapping))
 
->> ERROR: modpost: "setattr_should_drop_sgid" [fs/nfs/nfs.ko] undefined!
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+
