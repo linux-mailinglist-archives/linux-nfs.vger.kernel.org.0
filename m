@@ -2,100 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4A3A6BBFA0
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Mar 2023 23:10:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 288706BBF90
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Mar 2023 23:04:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbjCOWK4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Mar 2023 18:10:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50888 "EHLO
+        id S230361AbjCOWEh convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 15 Mar 2023 18:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbjCOWKz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Mar 2023 18:10:55 -0400
-X-Greylist: delayed 570 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 15 Mar 2023 15:10:53 PDT
-Received: from smtpq4.tb.ukmail.iss.as9143.net (smtpq4.tb.ukmail.iss.as9143.net [212.54.57.99])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201051C5BB
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Mar 2023 15:10:52 -0700 (PDT)
-Received: from [212.54.57.97] (helo=smtpq2.tb.ukmail.iss.as9143.net)
-        by smtpq4.tb.ukmail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <trevor.hemsley@ntlworld.com>)
-        id 1pcZBS-00063p-Jy
-        for linux-nfs@vger.kernel.org; Wed, 15 Mar 2023 23:01:22 +0100
-Received: from [212.54.57.108] (helo=csmtp4.tb.ukmail.iss.as9143.net)
-        by smtpq2.tb.ukmail.iss.as9143.net with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <trevor.hemsley@ntlworld.com>)
-        id 1pcZBQ-00044k-8M
-        for linux-nfs@vger.kernel.org; Wed, 15 Mar 2023 23:01:20 +0100
-Received: from [192.168.111.4] ([82.3.223.249])
-        by cmsmtp with ESMTPA
-        id cZBPpSw8CPjoOcZBQp6dHl; Wed, 15 Mar 2023 23:01:20 +0100
-X-SourceIP: 82.3.223.249
-X-Authenticated-Sender: trevor.hemsley@ntlworld.com
-X-Spam: 0
-X-Authority: v=2.4 cv=O8n//jxW c=1 sm=1 tr=0 ts=64124030 cx=a_exe
- a=7Y/zLBzgJ9hZK8ZgStTyBw==:117 a=7Y/zLBzgJ9hZK8ZgStTyBw==:17
- a=IkcTkHD0fZMA:10 a=k__wU0fu6RkA:10 a=20KFwNOVAAAA:8 a=P77aPiMhK8IHW1t27mAA:9
- a=QEXdDO2ut3YA:10
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ntlworld.com;
-        s=meg.feb2017; t=1678917680;
-        bh=/mEPAFTpDJ824cGXHPONRAB65CPJq9fyAhaLEfrrco4=;
-        h=Date:To:From:Subject;
-        b=Cq3LhNt/0Zz4a7WN+GBKV+e6vCqjMPo25ZxPM4E8Pa+6Os3NbAmY7wE8CHSvaL7BI
-         IIyGhIYXRhG6PV6iPbRtCK6w6vYe9MhAvj7PDKk5LXgIf15yWIgHZ3XTEtytgxo2tB
-         tOzCw6X72t1A7DsGhosNWtXQ35019+mj3CJJb4760GroPDAD+dm1sqRbbx2PxVQcLW
-         3p6Mr7J1efYBfdRrXt0sgkst18Me6DsMYfP7A7lVEW3udJgheLUj3SZ7lTxLwq/AvG
-         DVu/uY2CAMCh7/s+Kn34EtcD3Ja94cXzkxoFSbeNBGu4f4Vpi8Lv4md9U4Wwi/MGEK
-         tBzJWbmmZxQCQ==
-Message-ID: <6d3d381d-84b4-98c7-e6b2-a3b1ad25409b@ntlworld.com>
-Date:   Wed, 15 Mar 2023 22:01:19 +0000
+        with ESMTP id S230322AbjCOWEg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Mar 2023 18:04:36 -0400
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDFEE40DC
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Mar 2023 15:04:33 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id F08B261989E6;
+        Wed, 15 Mar 2023 23:04:30 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id XVog1uZQtGyi; Wed, 15 Mar 2023 23:04:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id A055261989EA;
+        Wed, 15 Mar 2023 23:04:30 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id AGtvM36tc7lN; Wed, 15 Mar 2023 23:04:30 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 8526A61989E6;
+        Wed, 15 Mar 2023 23:04:30 +0100 (CET)
+Date:   Wed, 15 Mar 2023 23:04:30 +0100 (CET)
+From:   Richard Weinberger <richard@nod.at>
+To:     Steve Dickson <steved@redhat.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        trond myklebust <trond.myklebust@hammerspace.com>,
+        chris chilvers <chris.chilvers@appsbroker.com>
+Message-ID: <1335921550.247985.1678917870352.JavaMail.zimbra@nod.at>
+In-Reply-To: <404384146.237438.1678639902506.JavaMail.zimbra@nod.at>
+References: <1497292229.221220.1678287959937.JavaMail.zimbra@nod.at> <655a8ee6-dd94-effd-738a-9ce8db8ebed7@redhat.com> <156604342.233758.1678553565027.JavaMail.zimbra@nod.at> <31643f88-26ec-515c-d1d6-fad951248a8c@redhat.com> <1826031117.236924.1678628160815.JavaMail.zimbra@nod.at> <ecfe32fc-f547-ca7f-dc07-018af4d23f39@redhat.com> <404384146.237438.1678639902506.JavaMail.zimbra@nod.at>
+Subject: Re: mountd: Possible bug in next_mnt()
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Content-Language: en-GB
-To:     linux-nfs@vger.kernel.org
-From:   Trevor Hemsley <trevor.hemsley@ntlworld.com>
-Subject: Crash in nfsd on kernel > 5.19
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4xfDu8tyK2TLaInHMygz47ATg5+sN/nzMfXAgVd+4bkBXt4jznXDs1/s4PSgsdbFizN1szlHpSxPT1F4d9o2d6dirKupvhD35RjksZsIt/cw3fjB0Zb+QY
- s6yNZWLi4Di0tAPwXzEaNzu5rKcQz1Z5IYYizYBku9j6WRZUiaJJzJfXriu6Opnju3boqtoupgfpm2SvkKmRYecbeM2aruSCPKs=
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
+Thread-Topic: mountd: Possible bug in next_mnt()
+Thread-Index: wocOLM+GHMEzj1fvYhC4rhW6Kianr2enxbB6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        T_SPF_PERMERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+----- Ursprüngliche Mail -----
+>> I'm still trying to reproduce problem... I have
+>> 
+>> /etc/nfs.conf: rootdir=/export
+>> 
+>> /etc/exports:
+>> /home *(rw,sec=sys:krb5:krb5i:krb5p)
+>> /tmp *(rw,fsid=666,all_squash)
+>> / *(rw,fsid=root,all_squash)
+>> 
+>> I'm not seeing the problem... Where does the crossmount come in?
+> 
+> Chris reported the problem to me while he was testing my re-export/crossmount
+> patches.
+> I can try reproducing without re-exporting later.
 
-Hi
+Finally I found some cycles to reproduce without my re-exporting setup.
 
-I am not subscribed to this list so please cc me on any replies.
+1. /etc/exports contains:
+/       *(rw,crossmnt,no_subtree_check,fsid=root)
 
-I have a problem using a media player called Kodi when it plays a media 
-file that is hosted on an NFS share. Reverting to 
-kernel-5.19.16-200.fc36.x86_64 fixes the problem so I suspect this is a 
-change made between 5.19 and 6.0.
+2. /etc/nfs.conf contains:
 
-I'm running libreelec 10.$latest as the client, which is distro 
-specifically to allow kodi to run, and the problem is easily 
-reproducible from there. All it takes is to play any movie/tv episode 
-from an NFS share on a Fedora 36 host and attempt to fast forward the 
-motion. Within a second or two, it crashes nfsd on the host. This 
-started happening when Fedora updated from kernel 5.19.x to 6.0.x. My 
-first crash was on kernel 6.0.9 and it has happened with each 6.0.x 
-minor update and with 6.1.x since.
+[exports]
+ rootdir=/nfs_srv
+ 
+3. Mounts:
 
-I raised a bugzilla entry 
-https://bugzilla.redhat.com/show_bug.cgi?id=2148276 to report this and 
-it has seen no traction. There are a few crashes detailed in the ticket. 
-Several others have "me too'ed" that bugzilla and the latest example is 
-from an untainted kernel 6.1.15-200.fc37.x86_64. I figure it's time to 
-try reporting it here instead.
+/root/fs1.ext4 on /nfs_srv type ext4 (rw,relatime)
+/root/fs2.ext4 on /nfs_srv/fs2 type ext4 (rw,relatime)
 
-Am happy to test any patches if I can make them apply to the current 
-Fedora 6.1.18 (latest) source
+4. On the client:
 
-Trevor
+# ls /nfs_client/fs2
+ls: cannot open directory '/nfs_client/fs2': Stale file handle
+
+I'll send a proper patch ASAP.
+next_mnt() has to deal with "/" too.
+
+Thanks,
+//richard
