@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 588FB6C14D2
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Mar 2023 15:35:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45C566C14D3
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Mar 2023 15:35:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231363AbjCTOfy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Mar 2023 10:35:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38688 "EHLO
+        id S231261AbjCTOf4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Mar 2023 10:35:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231401AbjCTOfw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Mar 2023 10:35:52 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5270324102
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Mar 2023 07:35:43 -0700 (PDT)
+        with ESMTP id S231461AbjCTOfy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Mar 2023 10:35:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4568823C5F
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Mar 2023 07:35:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1338AB80EA9
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Mar 2023 14:35:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83E68C4339B;
-        Mon, 20 Mar 2023 14:35:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A3D3561558
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Mar 2023 14:35:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3B33C433EF;
+        Mon, 20 Mar 2023 14:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679322939;
-        bh=zN0oM9XiEoK72jUqODp/U1yby6qhSUkBTlEBEOvg+Zw=;
+        s=k20201202; t=1679322946;
+        bh=Ho2a0Fb1NVpOC9wO5p7dPQkLq9nEpMEu/1j1Av1Vwf4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=U1mBbJ6Gm5riNhecx57lb6ZcvQpC59xNlOI2N9t/EHvCRSRSR7rKAmJKZ4RgEIJzI
-         oeREq1eD49CWIOuh1cfDvqv6AUGIJv7dyfRhaJGuWXb7fuq1aetkQrVsvSDHQS/BeW
-         Id0mJrJbCEXIZqbSro4dYHnd7fvXEFGzRpzbVY+63EWrdMlX3BLP7odC3K+4UG0Oog
-         bRymBs0/fAiZF0AVb2YxEOqa1keDkTb9gc46YPTYXQ2HasN3mBFRhGMETw3F6Pm80v
-         xxsww4aU5yu56sZOLzt0oiDjyyMXHYqoaLnoTKm9IReqYJfDPcFBBZhaLuocbnNGUa
-         E6gTfa2ymjbRQ==
-Subject: [PATCH v1 2/4] exports: Add an xprtsec= export option
+        b=GSD1aOjQ/nvBRh1TesIDgVwlUtUIRCQ2a1pU5UDAZHaT5XpEURsduYGAL1V2LPYDS
+         x5Nw7l/tjPaDiHnflkprgk4DwlXqjKLVXIYu+IfuUrPtZ5pWaNjYujIyUc5kTTn3Yl
+         zDpXmZHoG2DsmdGBa4lU3esan+lhaFS1W+eg0BkbvZLzrN/1XcqY8vw7BqLdtP7cw2
+         akQ21qw/73tRCCBCUqCxI8DtuX1iTgHx3K5UKur6D0lIevOYd0PHX3p0hw3hbIGYDk
+         DCR8ewDfd9B7A8dwX2fhv1W7EnN1uCfcbgGwd+S8BkrpWg/hXUtN5iN3Ehiu2DhnUI
+         9DIvzA1S7yNSg==
+Subject: [PATCH v1 3/4] exportfs: Push xprtsec settings to the kernel
 From:   Chuck Lever <cel@kernel.org>
 To:     SteveD@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 20 Mar 2023 10:35:38 -0400
-Message-ID: <167932293857.3437.10836642078898996996.stgit@manet.1015granger.net>
+Date:   Mon, 20 Mar 2023 10:35:44 -0400
+Message-ID: <167932294491.3437.5540093843072637245.stgit@manet.1015granger.net>
 In-Reply-To: <167932279970.3437.7130911928591001093.stgit@manet.1015granger.net>
 References: <167932279970.3437.7130911928591001093.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -54,209 +54,51 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The overall goal is to enable administrators to require the use of
-transport layer security when clients access particular exports.
-
-This patch adds support to exportfs to parse and display a new
-xprtsec= export option. The setting is not yet passed to the kernel.
-
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- support/include/nfs/export.h |    6 +++
- support/include/nfslib.h     |   14 +++++++
- support/nfs/exports.c        |   85 ++++++++++++++++++++++++++++++++++++++++++
- utils/exportfs/exportfs.c    |    1 
- 4 files changed, 106 insertions(+)
+ support/export/cache.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/support/include/nfs/export.h b/support/include/nfs/export.h
-index 0eca828ee3ad..b29c6fa4f554 100644
---- a/support/include/nfs/export.h
-+++ b/support/include/nfs/export.h
-@@ -40,4 +40,10 @@
- #define NFSEXP_OLD_SECINFO_FLAGS (NFSEXP_READONLY | NFSEXP_ROOTSQUASH \
- 					| NFSEXP_ALLSQUASH)
- 
-+enum {
-+	NFSEXP_XPRTSEC_NONE = 1,
-+	NFSEXP_XPRTSEC_TLS = 2,
-+	NFSEXP_XPRTSEC_MTLS = 3,
-+};
-+
- #endif /* _NSF_EXPORT_H */
-diff --git a/support/include/nfslib.h b/support/include/nfslib.h
-index 6faba71bf0cd..9a188fb84790 100644
---- a/support/include/nfslib.h
-+++ b/support/include/nfslib.h
-@@ -62,6 +62,18 @@ struct sec_entry {
- 	int flags;
- };
- 
-+#define XPRTSECMODE_COUNT 4
-+
-+struct xprtsec_info {
-+	const char		*name;
-+	int			number;
-+};
-+
-+struct xprtsec_entry {
-+	const struct xprtsec_info *info;
-+	int			flags;
-+};
-+
- /*
-  * Data related to a single exports entry as returned by getexportent.
-  * FIXME: export options should probably be parsed at a later time to
-@@ -83,6 +95,7 @@ struct exportent {
- 	char *          e_fslocdata;
- 	char *		e_uuid;
- 	struct sec_entry e_secinfo[SECFLAVOR_COUNT+1];
-+	struct xprtsec_entry e_xprtsec[XPRTSECMODE_COUNT + 1];
- 	unsigned int	e_ttl;
- 	char *		e_realpath;
- };
-@@ -99,6 +112,7 @@ struct rmtabent {
- void			setexportent(char *fname, char *type);
- struct exportent *	getexportent(int,int);
- void 			secinfo_show(FILE *fp, struct exportent *ep);
-+void			xprtsecinfo_show(FILE *fp, struct exportent *ep);
- void			putexportent(struct exportent *xep);
- void			endexportent(void);
- struct exportent *	mkexportent(char *hname, char *path, char *opts);
-diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-index 7f12383981c3..da8ace3a65fd 100644
---- a/support/nfs/exports.c
-+++ b/support/nfs/exports.c
-@@ -99,6 +99,7 @@ static void init_exportent (struct exportent *ee, int fromkernel)
- 	ee->e_fslocmethod = FSLOC_NONE;
- 	ee->e_fslocdata = NULL;
- 	ee->e_secinfo[0].flav = NULL;
-+	ee->e_xprtsec[0].info = NULL;
- 	ee->e_nsquids = 0;
- 	ee->e_nsqgids = 0;
- 	ee->e_uuid = NULL;
-@@ -248,6 +249,17 @@ void secinfo_show(FILE *fp, struct exportent *ep)
- 	}
+diff --git a/support/export/cache.c b/support/export/cache.c
+index 2497d4f48df3..9354f71db894 100644
+--- a/support/export/cache.c
++++ b/support/export/cache.c
+@@ -932,6 +932,7 @@ static void write_fsloc(char **bp, int *blen, struct exportent *ep)
+ 	release_replicas(servers);
  }
- 
-+void xprtsecinfo_show(FILE *fp, struct exportent *ep)
-+{
-+	struct xprtsec_entry *p1, *p2;
+ #endif
 +
-+	for (p1 = ep->e_xprtsec; p1->info; p1 = p2) {
-+		fprintf(fp, ",xprtsec=%s", p1->info->name);
-+		for (p2 = p1 + 1; p2->info && (p1->flags == p2->flags); p2++)
-+			fprintf(fp, ":%s", p2->info->name);
-+	}
-+}
-+
- static void
- fprintpath(FILE *fp, const char *path)
+ static void write_secinfo(char **bp, int *blen, struct exportent *ep, int flag_mask)
  {
-@@ -344,6 +356,7 @@ putexportent(struct exportent *ep)
+ 	struct sec_entry *p;
+@@ -949,7 +950,20 @@ static void write_secinfo(char **bp, int *blen, struct exportent *ep, int flag_m
+ 		qword_addint(bp, blen, p->flav->fnum);
+ 		qword_addint(bp, blen, p->flags & flag_mask);
  	}
- 	fprintf(fp, "anonuid=%d,anongid=%d", ep->e_anonuid, ep->e_anongid);
- 	secinfo_show(fp, ep);
-+	xprtsecinfo_show(fp, ep);
- 	fprintf(fp, ")\n");
- }
- 
-@@ -482,6 +495,75 @@ static unsigned int parse_flavors(char *str, struct exportent *ep)
- 	return out;
- }
- 
-+static const struct xprtsec_info xprtsec_name2info[] = {
-+	{ "none",	NFSEXP_XPRTSEC_NONE },
-+	{ "tls",	NFSEXP_XPRTSEC_TLS },
-+	{ "mtls",	NFSEXP_XPRTSEC_MTLS },
-+	{ NULL,		0 }
-+};
-+
-+static const struct xprtsec_info *find_xprtsec_info(const char *name)
-+{
-+	const struct xprtsec_info *info;
-+
-+	for (info = xprtsec_name2info; info->name; info++)
-+		if (strcmp(info->name, name) == 0)
-+			return info;
-+	return NULL;
 +}
 +
-+/*
-+ * Append the given xprtsec mode to the exportent's e_xprtsec array,
-+ * or do nothing if it's already there. Returns the index of flavor in
-+ * the resulting array in any case.
-+ */
-+static int xprtsec_addmode(const struct xprtsec_info *info, struct exportent *ep)
++static void write_xprtsec(char **bp, int *blen, struct exportent *ep)
 +{
 +	struct xprtsec_entry *p;
 +
++	for (p = ep->e_xprtsec; p->info; p++);
++	if (p == ep->e_xprtsec)
++		return;
+ 
++	qword_add(bp, blen, "xprtsec");
++	qword_addint(bp, blen, p - ep->e_xprtsec);
 +	for (p = ep->e_xprtsec; p->info; p++)
-+		if (p->info == info || p->info->number == info->number)
-+			return p - ep->e_xprtsec;
-+
-+	if (p - ep->e_xprtsec >= XPRTSECMODE_COUNT) {
-+		xlog(L_ERROR, "more than %d xprtsec modes on an export\n",
-+			XPRTSECMODE_COUNT);
-+		return -1;
-+	}
-+	p->info = info;
-+	p->flags = ep->e_flags;
-+	(p + 1)->info = NULL;
-+	return p - ep->e_xprtsec;
-+}
-+
-+/*
-+ * @str is a colon seperated list of transport layer security modes.
-+ * Their order is recorded in @ep, and a bitmap corresponding to the
-+ * list is returned.
-+ *
-+ * A zero return indicates an error.
-+ */
-+static unsigned int parse_xprtsec(char *str, struct exportent *ep)
-+{
-+	unsigned int out = 0;
-+	char *name;
-+
-+	while ((name = strsep(&str, ":"))) {
-+		const struct xprtsec_info *info = find_xprtsec_info(name);
-+		int bit;
-+
-+		if (!info) {
-+			xlog(L_ERROR, "unknown xprtsec mode %s\n", name);
-+			return 0;
-+		}
-+		bit = xprtsec_addmode(info, ep);
-+		if (bit < 0)
-+			return 0;
-+		out |= 1 << bit;
-+	}
-+	return out;
-+}
-+
- /* Sets the bits in @mask for the appropriate security flavor flags. */
- static void setflags(int mask, unsigned int active, struct exportent *ep)
- {
-@@ -687,6 +769,9 @@ bad_option:
- 			active = parse_flavors(opt+4, ep);
- 			if (!active)
- 				goto bad_option;
-+		} else if (strncmp(opt, "xprtsec=", 8) == 0) {
-+			if (!parse_xprtsec(opt + 8, ep))
-+				goto bad_option;
- 		} else {
- 			xlog(L_ERROR, "%s:%d: unknown keyword \"%s\"\n",
- 					flname, flline, opt);
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 6d79a5b3480d..37b9e4b3612d 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -743,6 +743,7 @@ dump(int verbose, int export_format)
- #endif
- 			}
- 			secinfo_show(stdout, ep);
-+			xprtsecinfo_show(stdout, ep);
- 			printf("%c\n", (c != '(')? ')' : ' ');
++		qword_addint(bp, blen, p->info->number);
+ }
+ 
+ static int dump_to_cache(int f, char *buf, int blen, char *domain,
+@@ -992,6 +1006,7 @@ static int dump_to_cache(int f, char *buf, int blen, char *domain,
+ 			qword_add(&bp, &blen, "uuid");
+ 			qword_addhex(&bp, &blen, u, 16);
  		}
- 	}
++		write_xprtsec(&bp, &blen, exp);
+ 		xlog(D_AUTH, "granted access to %s for %s",
+ 		     path, *domain == '$' ? domain+1 : domain);
+ 	} else {
 
 
