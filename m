@@ -2,338 +2,189 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 839CC6C39A1
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Mar 2023 19:59:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CBDE6C3BA8
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Mar 2023 21:21:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbjCUS7A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 Mar 2023 14:59:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50662 "EHLO
+        id S229733AbjCUUVk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 Mar 2023 16:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbjCUS67 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Mar 2023 14:58:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE57A49E1
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Mar 2023 11:58:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4BD2761DAD
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Mar 2023 18:58:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28FFAC433D2;
-        Tue, 21 Mar 2023 18:58:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679425135;
-        bh=Xir1Mq4XDfYVbJp8fUjF+pmeNN+uaDa6Kzn4BsRzRtM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=AaYBCw8eDEcLxIn6o+MmjAE8jK6XAKuFHyzNt25XI3xfKw8eoj2XrFD6z04P64oPh
-         zc+Fqc2dYYjQ9VMGjEAdBkVuCoYoqKc2MO1t8E2xBORdG7p/MCeAHhWxXfgpb2koMq
-         0s61u6c/21z+3S6SD6bXRV8GHvuWOxeZm/15TSIgHsLykMFqtpYSUg9ddO2DjvssXT
-         ZiVUBDIIn3Q7eozUmvaD3lTAlir//joJmq7A9hVOPBkWwBxqTcHRv9l7O8zLAkxQRh
-         SF3M5l96LtNRgMK4Tt/nudyox3V/CZJ4dO+WDWyhEUPNdOQh2VCK7t2pJnSBJe0z0N
-         86h4wwB5rsD4A==
-Message-ID: <01df993e636b200dbd7636946761208bb183d5c7.camel@kernel.org>
-Subject: Re: [PATCH v1 2/4] exports: Add an xprtsec= export option
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Chuck Lever <cel@kernel.org>, Steve Dickson <SteveD@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Tue, 21 Mar 2023 14:58:53 -0400
-In-Reply-To: <07F10068-A3E6-4C45-BB1E-F67FF4378155@oracle.com>
-References: <167932279970.3437.7130911928591001093.stgit@manet.1015granger.net>
-         <167932293857.3437.10836642078898996996.stgit@manet.1015granger.net>
-         <b1da1fdbb190f50409f9fcd18b466defdfc04353.camel@kernel.org>
-         <07F10068-A3E6-4C45-BB1E-F67FF4378155@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
+        with ESMTP id S229651AbjCUUVj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Mar 2023 16:21:39 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFCF43593;
+        Tue, 21 Mar 2023 13:20:38 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32LGnWiH024686;
+        Tue, 21 Mar 2023 20:20:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=xX/XFEUvIt+HZH3nOoO6waag4fYzuF2IAJvsMzzjZWI=;
+ b=Z1HnNhGjKQN93FNNiITeTT5C1PS7pTWMK9iONT9y/UWG0S3IzdaXSS7FpNNL0REyTCVW
+ DJqnNmBstspzsdMmLvhiTpcyCOqJJPtIgbgXQj4xrv7+wqYowE8m2TsdN+rHeMTdNAHl
+ 8N91+FhMFq75n77GQc7fmVRgY2kQzsTgq5H31QL105sIosrhpQsB049jyUbLAGZOF8kP
+ RF7Yinvq6O8QlSbxoQHkO8xOlSizJpNdT+SMypqshaY6pWiHjPiygUlk7nk5totHlADQ
+ MpsdxzGXMAb4knHxC1vD4tA8Ao2gCG6MOljZxO7fEYxs4bF+bivhYDvlp1qnomZe7TQW yg== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3pd5uuf8sa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Mar 2023 20:20:14 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32LK9E94034020;
+        Tue, 21 Mar 2023 20:20:13 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2109.outbound.protection.outlook.com [104.47.70.109])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3pfkc60fb4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Mar 2023 20:20:13 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=neZaA28e+Y1fSFH4DIVCRJC3IkTnje3Gkl/XSsDaqyqJk5n0uv7Ws2SZ1fcrk6umJLKguMfjFABOAOIPi5D35IbppR5XIeSnz76JASAYOA/JMnldpkMDZppf3M32a7sgOnxUD1pR/5Y2tz/UzNXcvrlGytAME1y4Sise/ZtjTtxDQCWKqdp6DPI/dXucNppV1jgEgXp9qnpWsMWzlFMTnjN/pYaGFesrFZyN2BN2o3c29n/8Jqpo3FcubOSNxbC7GkjYX/itWhSpi28aozhKXfnGqySytyVxopY+ndwKpGXm/7y8P724aekr6Ip6YvXDIyB9hisvfLRJ7N61dM2ppA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=xX/XFEUvIt+HZH3nOoO6waag4fYzuF2IAJvsMzzjZWI=;
+ b=ZxC2gOrMrSLbZjw3wrRybzEhn4fljrezK6k9eHNkPpGEFu/YGYZuLByIf789+0lfFco8/DCI38U+rgaPTeRXuTi4UQn1W1MqY9tUwd+owM+snnBr4zPef4Qk44X8tXkcwYLomKyeM8RK1BKX81pLo9PkhhSXxb07uHDpM3UnIHipl5FhJStDK/wcIeo1caMaLejkIB/itA2DRihWg17afAh7HcxHiXuJhnfkZvthcXu0U049wWMG00Li/AysCCuLLLw6kovcMIfksXzIIZbNmFsleIQk/PbssvqJxGyJDqKmRHIjugPfjSIdp/dzKlDV0XsN7mKOItls7OldQkriZw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=xX/XFEUvIt+HZH3nOoO6waag4fYzuF2IAJvsMzzjZWI=;
+ b=Ma+N2WgNXy3qUCPBoy7MXNgmGyEdRUj2rIuZ4V+OnmUbsGOb0p9uefyPYwtkoVwSiyHP8FWLtyrWfRnugiX9zJiT+XjJawcTiQQx1onMcthfy6WFpzcn9GIgpbVsv6jupam39d8pkHzywR3BOTT/NW4RBrxjCVyEz+mc99zKnfw=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by MN2PR10MB4160.namprd10.prod.outlook.com (2603:10b6:208:1df::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Tue, 21 Mar
+ 2023 20:20:11 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::5c2f:5e81:b6c4:a127]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::5c2f:5e81:b6c4:a127%8]) with mapi id 15.20.6178.037; Tue, 21 Mar 2023
+ 20:20:10 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: [GIT PULL] nfsd fixes for 6.3-rc3
+Thread-Topic: [GIT PULL] nfsd fixes for 6.3-rc3
+Thread-Index: AQHZXDKJUkc5buE1fUeDj3ONlvU3Lw==
+Date:   Tue, 21 Mar 2023 20:20:10 +0000
+Message-ID: <2AD73E1B-E81B-4553-9975-11FA02841471@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.2)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|MN2PR10MB4160:EE_
+x-ms-office365-filtering-correlation-id: af51ced7-291f-4dc3-7bbc-08db2a49abf1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dzt/f2dpnHBhV6xMoVI2LlcaWk+RTdiXE+UhJZchZBh+tJvO6fhBFxYX4r0+BCod8cwhk/hW2o8pfghMGMClr1xR5J2xQlI4W+jrKiJbr12TWTzKugmHjp9r85kiFosI9U55cuMkaL63zWuIP9B5jhM5cK9ASnoVdSdae7R9CSFBHfqBxYnV9NhvRdktDyu3J5iOm3bWZTjfo5U5O/FATiZVyQELcrjQMxUPtoDGq0l+sMQhHILnGSbY25q60JPh+ZzmXy0PfEJq/W0fwrsUm7sq/DmdBzCgt8KbwV2F+oJla79EnNvjuzP4f9oojY6eHXr/mDW8lq6La2TXRRlyJKvv5y6JbDq6W6ho7dR7RS/ekPUoM5Br9OUIBUKbWesBGBHXtwRLJHPfol8o5ujIVW6SgmDa5MjP3w2L3SElcyL9BtyAlQjmzq/HcB3fdHeA84gV8cmL19iPYN+yR0CmetAgSbgZ33gJx9TyoktNmtmSiu6IpuWCe81wkOL1Cjgwe3hsz1d1qbh+HdELVv63p3iOfRTxHhjDK4fRLqJnQDt5ClSv2KlmCzzs3nt9zxt2avubTgjIq/ERzRgPSV8f61BZdv69qKYENUWAYeQuLESA1RH5I2cU0VtgHwOi0bHxt6U6kjVidwPSbJHlqxyZrpLFK2bpPQbg6czz3bMHEz/H7etCD2l/otpeZHCP3xxorB4TmTye9QIc9OMWDLE/eT9Wmi4VKzssDW+yLvcI3Pg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(366004)(136003)(376002)(396003)(39860400002)(451199018)(8936002)(5660300002)(4744005)(41300700001)(33656002)(36756003)(38070700005)(86362001)(38100700002)(2906002)(122000001)(4326008)(966005)(6486002)(83380400001)(478600001)(54906003)(2616005)(186003)(71200400001)(26005)(6512007)(6506007)(8676002)(66446008)(6916009)(316002)(91956017)(66556008)(76116006)(66946007)(64756008)(66476007)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?DPiOnj/XuVJS0rO9dSf4fuWpbGbMrmdMk+cB3QQOyvjHN1Qcm0vHw65NOe00?=
+ =?us-ascii?Q?gZI7R6Cd+bRNLIwKA8RrMQQ2sK/tzo1dq+axmCLPSxlEpXdSmZ1IJJz5Mws6?=
+ =?us-ascii?Q?3h117Zqp1EGiww6gXEkjhABd6oocrKyNuIiKrXSANz2hBD2i1ZLPja5qAubT?=
+ =?us-ascii?Q?IzGHR1j81fwFrUJzJNdEahl6IEem1Jc8n+gVzH5NvPSGF2+vblD1G3Qfq0SQ?=
+ =?us-ascii?Q?avO5n5Us3I3jIBfIG/CrKwnmH4DPBhCsvVhPYPi3b9hHVvk0ntx5/S0bDswi?=
+ =?us-ascii?Q?BVhshRS2ky4j44UpigYRNfkxnBdXzQpdZuoNPDsAj0+gYumIpK2Fehsmy4Qa?=
+ =?us-ascii?Q?BZxST+4lb43/r1UoiJ0nS6r7K6hz8i/Qm2/jO5V6BZv4LGtszcf3u9EdnxPi?=
+ =?us-ascii?Q?KQ92HAXPubQPO6M/ZTOleRV16PxhfZ1O2c2skQ5afKwkjiuga2mpT5Dw4q9X?=
+ =?us-ascii?Q?7gCsnWNrM7nXMB5hQ5KvZuhvT7qljPToqdlltTZVXpEEzhsQ/WASd2/s5LQt?=
+ =?us-ascii?Q?5knji8bSnNam3032gUnddprm1nAYQYmoQ/+yOuHAYeNkLwPAQokmUOOBQTG5?=
+ =?us-ascii?Q?IN5tfuZbwRrfrA+YBYN61vebEGmzTQmvtmNePA6rcsM3CQSdfSmmRit1I/cZ?=
+ =?us-ascii?Q?tFXCIeiJU13dJOkHxKB9+qwfk6HVufbNTNanXyU7hbK0Mx61ILsia0RvuTRB?=
+ =?us-ascii?Q?rXPkQjP7fUOj2P5hklYqqdF6pFxigJMs+vePgZ/OE7VF+83xJMt6MEpYGKxu?=
+ =?us-ascii?Q?csQUjSgaVKuZCyPrNtfx3zfyUCVXISGaKj0N54SA5Bu9MCDMcXMiZE8iqFK/?=
+ =?us-ascii?Q?AD6se1dTo3hW3d55pvZia09lEWL7Br2XAbeP4Zcj3AngujxQsBDOMR++vZwT?=
+ =?us-ascii?Q?jfFX7ojvAoiC3YrycvgaeMxvnrtxsZ5vA7vMn2OngAd4r1uxBbJuEn5/b6RZ?=
+ =?us-ascii?Q?EnC42kt/LrY+YGDRj+oedFO7NGrlOfEtkTsp1SowprwYtPizPrwVpmoIlPUb?=
+ =?us-ascii?Q?TbRF8KCG+/GB744gOyU2EZE81s6Rgw1lLoK6bh0QD4Nc5pypa0DJ+Gq9iEpQ?=
+ =?us-ascii?Q?xp7r9v7Qas+k0d4SgRA8tLBT9Xzvg+RiZfvxc4IvV9LdlV6x+LvtFeQjlnSh?=
+ =?us-ascii?Q?ErdDSvAMYI6f423raWZBfMkxBN/PEngDxKESvZD0Dk0LikVSnS7cjTbf4YgY?=
+ =?us-ascii?Q?2IMEqCQHtPRTT1Tr2KByrhPR0H/lZybw+75FTec9iXd9jyn6A9YCwc1GQGQa?=
+ =?us-ascii?Q?UIeZAlXkOhUvGtt0Zf/+RyH2fJywcaoGHOJipJs49fCTi8ax5eziLR+AgtTp?=
+ =?us-ascii?Q?oGGXNF+yl8CP+llZvbO+4jFV0QAE09c9Dj+lDZRGqs6FfUCYbDVfr4t+fCk6?=
+ =?us-ascii?Q?7+8kisZ3R1DmnpA3vSCMXwzGglbzP8TCe8z2WdbEm7Ng5Zdr38/m+E7o/PU4?=
+ =?us-ascii?Q?o2k2YE6WF2FSiwtJ6QNqyM4TeMKR+PXK/byEkFXhhDtK+hrDt6J4pQOr8of2?=
+ =?us-ascii?Q?oiXp7rX1HyYRQ6y/6u/DaeqOtKj/+tmvlwugtGP27QNparGYZ4Uz3ryRA4Xz?=
+ =?us-ascii?Q?LQOd4twvD1vztSbXi1gngdASB5HrKZxCaIGg8i6zheJaKBlEY3xzQ1Zv/CTG?=
+ =?us-ascii?Q?lA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5CAFE5C96ADF8841849E33FFEDA55A35@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: sSKT8k4Pi8yPtxk2Rzai67B7xhZBXlMZoZWHF+gmGDO5ZZ0SjINZRpC6urM9e2kzxw++rLPvk/QaJvtEuKVyhaL08+I2OYuw2XCk/UbhOKyBooxyRO08BJi+sMpoB36qCY4U4wO8KyALIqalZ5wVXQbOKkj9cD8XMlASYQtmeOPlY8FJVfhwtwtewM+OxfiDAVQJpl5jp1lnOHu+jpeQoCkDi/q0q4ch3BneeyFsAel3lf4hjvRsasl72zA1gUoPbZuJ4vSt97xg25T/16mXN+wAiPetGzvBc0hluXoVMDIQc9tf+HuP52Od4qVPGgYDC0dS3GWcW5KDbC4MW6BtCe82hU9//cVEP3avGyQ06IKpQOkWkvfXnjVJA3f2x82LHYb2gZA3pTwBRl5kSRf19Rh/OxErNReTgPGKpOB3RTSF0p8bjC3T/eoNlzG9BIsAPERP6MVinbCGeR+XfPMj7B717a2qNe/PIa/Q+ZwIh9Nx5BLNI6BqYmfAEafj1/UuaqdCxuz6ejPa4Oeh0DAk/uIaQDRzHyX0gaTsy3xnFZYePsUQEhpqoZIkNr71b/J3NaR6OxSIPbJes8bgnrMjTFgsi5QHHMS/Np6xVLziqp8+r/D8Uz13noLmjf/u8WUXt2x6MQc6GyQ2KnVb9FNtC8wq9A6ufgqoDnAXAXsSrxmWLOEe1S9AP2P8GAYhfnBA/gSZ9Gk6nUy48jM4VIY3ZB82YqKeeWQ9l53l5FPQI22MfnRX711xrpeVXRnPxeFOXR1eheujpevkqS6241YAlNW/eYe+MBqZy6sGkvSmBCoXxQFuk+4Vd8iWM5fOsoQAgdxq4gHMqt8/Jw7SyQKvuIfMvrl+aFLF3LjQRjji1m4=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: af51ced7-291f-4dc3-7bbc-08db2a49abf1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Mar 2023 20:20:10.8453
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: s1OT8YpGwsl08ZOhSvbjV0jWsBPmlK7ccFFiEY15jBsosyTYnHnjKI4hEJFSLEfwRZ1fJix7zb/Rfst1dlPTTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4160
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-21_11,2023-03-21_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 bulkscore=0
+ phishscore=0 mlxlogscore=999 mlxscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303150002
+ definitions=main-2303210162
+X-Proofpoint-GUID: CI8gv5kh9jHHjtrwjWM2JnRvhTTM-0JV
+X-Proofpoint-ORIG-GUID: CI8gv5kh9jHHjtrwjWM2JnRvhTTM-0JV
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-03-21 at 18:08 +0000, Chuck Lever III wrote:
->=20
-> > On Mar 21, 2023, at 7:55 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > On Mon, 2023-03-20 at 10:35 -0400, Chuck Lever wrote:
-> > > From: Chuck Lever <chuck.lever@oracle.com>
-> > >=20
-> > > The overall goal is to enable administrators to require the use of
-> > > transport layer security when clients access particular exports.
-> > >=20
-> > > This patch adds support to exportfs to parse and display a new
-> > > xprtsec=3D export option. The setting is not yet passed to the kernel=
-.
-> > >=20
-> > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > ---
-> > > support/include/nfs/export.h |    6 +++
-> > > support/include/nfslib.h     |   14 +++++++
-> > > support/nfs/exports.c        |   85 +++++++++++++++++++++++++++++++++=
-+++++++++
-> > > utils/exportfs/exportfs.c    |    1=20
-> > > 4 files changed, 106 insertions(+)
-> > >=20
-> > > diff --git a/support/include/nfs/export.h b/support/include/nfs/expor=
-t.h
-> > > index 0eca828ee3ad..b29c6fa4f554 100644
-> > > --- a/support/include/nfs/export.h
-> > > +++ b/support/include/nfs/export.h
-> > > @@ -40,4 +40,10 @@
-> > > #define NFSEXP_OLD_SECINFO_FLAGS (NFSEXP_READONLY | NFSEXP_ROOTSQUASH=
- \
-> > > 					| NFSEXP_ALLSQUASH)
-> > >=20
-> > > +enum {
-> > > +	NFSEXP_XPRTSEC_NONE =3D 1,
-> > > +	NFSEXP_XPRTSEC_TLS =3D 2,
-> > > +	NFSEXP_XPRTSEC_MTLS =3D 3,
-> > > +};
-> > > +
-> >=20
-> > Can we put these into a uapi header somewhere and then just have
-> > nfs-utils use those if they're defined?
->=20
-> I moved these to include/uapi/linux/nfsd/export.h in the
-> kernel patches, and adjust the nfs-utils patches to use the
-> same numeric values in exportfs as the kernel.
->
-> But it's not clear how a uAPI header would become visible
-> during, say, an RPM build of nfs-utils. Does anyone know
-> how that works? The kernel docs I've read suggest uAPI is
-> for user space tools that actually live in the kernel source
-> tree.
->=20
+Hi Linus -
 
-Unfortunately, you need to build on a box that has kernel headers from
-an updated kernel.
+The following changes since commit 9ca6705d9d609441d34f8b853e1e4a6369b3b171=
+:
 
-The usual way to deal with this is to have a copy in the userland
-sources but only define them if one of the relevant constants isn't
-already defined.
+  SUNRPC: Fix a server shutdown leak (2023-03-08 08:46:41 -0500)
 
-So you'll probably want to keep something like this in the userland
-tree:
+are available in the Git repository at:
 
-#ifndef NFSEXP_XPRTSEC_NONE
-# define NFSEXP_XPRTSEC_NONE 1
-# define NFSEXP_XPRTSEC_TLS  2
-# define NFSEXP_XPRTSEC_MTLS 3
-#endif
+  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6=
+.3-3
 
-There may be some way to do that and keep it as an enum too. I'm not
-sure.
+for you to fetch changes up to 27c934dd8832dd40fd34776f916dc201e18b319b:
 
-> I think the cases where only user space or only the kernel
-> support xprtsec should work OK: the kernel has a default
-> transport layer security policy of "all ok" and old kernels
-> ignore export options from user space they don't recognize.
->=20
+  nfsd: don't replace page in rq_pages if it's a continuation of last page =
+(2023-03-17 18:18:15 -0400)
 
-Great!
+----------------------------------------------------------------
+nfsd-6.3 fixes:
+- Fix a crash during NFS READs from certain client implementations
+- Address a minor kbuild regression in v6.3
 
-> > > #endif /* _NSF_EXPORT_H */
-> > > diff --git a/support/include/nfslib.h b/support/include/nfslib.h
-> > > index 6faba71bf0cd..9a188fb84790 100644
-> > > --- a/support/include/nfslib.h
-> > > +++ b/support/include/nfslib.h
-> > > @@ -62,6 +62,18 @@ struct sec_entry {
-> > > 	int flags;
-> > > };
-> > >=20
-> > > +#define XPRTSECMODE_COUNT 4
-> > > +
-> > > +struct xprtsec_info {
-> > > +	const char		*name;
-> > > +	int			number;
-> > > +};
-> > > +
-> > > +struct xprtsec_entry {
-> > > +	const struct xprtsec_info *info;
-> > > +	int			flags;
-> > > +};
-> > > +
-> > > /*
-> > >  * Data related to a single exports entry as returned by getexportent=
-.
-> > >  * FIXME: export options should probably be parsed at a later time to
-> > > @@ -83,6 +95,7 @@ struct exportent {
-> > > 	char *          e_fslocdata;
-> > > 	char *		e_uuid;
-> > > 	struct sec_entry e_secinfo[SECFLAVOR_COUNT+1];
-> > > +	struct xprtsec_entry e_xprtsec[XPRTSECMODE_COUNT + 1];
-> > > 	unsigned int	e_ttl;
-> > > 	char *		e_realpath;
-> > > };
-> > > @@ -99,6 +112,7 @@ struct rmtabent {
-> > > void			setexportent(char *fname, char *type);
-> > > struct exportent *	getexportent(int,int);
-> > > void 			secinfo_show(FILE *fp, struct exportent *ep);
-> > > +void			xprtsecinfo_show(FILE *fp, struct exportent *ep);
-> > > void			putexportent(struct exportent *xep);
-> > > void			endexportent(void);
-> > > struct exportent *	mkexportent(char *hname, char *path, char *opts);
-> > > diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-> > > index 7f12383981c3..da8ace3a65fd 100644
-> > > --- a/support/nfs/exports.c
-> > > +++ b/support/nfs/exports.c
-> > > @@ -99,6 +99,7 @@ static void init_exportent (struct exportent *ee, i=
-nt fromkernel)
-> > > 	ee->e_fslocmethod =3D FSLOC_NONE;
-> > > 	ee->e_fslocdata =3D NULL;
-> > > 	ee->e_secinfo[0].flav =3D NULL;
-> > > +	ee->e_xprtsec[0].info =3D NULL;
-> > > 	ee->e_nsquids =3D 0;
-> > > 	ee->e_nsqgids =3D 0;
-> > > 	ee->e_uuid =3D NULL;
-> > > @@ -248,6 +249,17 @@ void secinfo_show(FILE *fp, struct exportent *ep=
-)
-> > > 	}
-> > > }
-> > >=20
-> > > +void xprtsecinfo_show(FILE *fp, struct exportent *ep)
-> > > +{
-> > > +	struct xprtsec_entry *p1, *p2;
-> > > +
-> > > +	for (p1 =3D ep->e_xprtsec; p1->info; p1 =3D p2) {
-> > > +		fprintf(fp, ",xprtsec=3D%s", p1->info->name);
-> > > +		for (p2 =3D p1 + 1; p2->info && (p1->flags =3D=3D p2->flags); p2++=
-)
-> > > +			fprintf(fp, ":%s", p2->info->name);
-> > > +	}
-> > > +}
-> > > +
-> > > static void
-> > > fprintpath(FILE *fp, const char *path)
-> > > {
-> > > @@ -344,6 +356,7 @@ putexportent(struct exportent *ep)
-> > > 	}
-> > > 	fprintf(fp, "anonuid=3D%d,anongid=3D%d", ep->e_anonuid, ep->e_anongi=
-d);
-> > > 	secinfo_show(fp, ep);
-> > > +	xprtsecinfo_show(fp, ep);
-> > > 	fprintf(fp, ")\n");
-> > > }
-> > >=20
-> > > @@ -482,6 +495,75 @@ static unsigned int parse_flavors(char *str, str=
-uct exportent *ep)
-> > > 	return out;
-> > > }
-> > >=20
-> > > +static const struct xprtsec_info xprtsec_name2info[] =3D {
-> > > +	{ "none",	NFSEXP_XPRTSEC_NONE },
-> > > +	{ "tls",	NFSEXP_XPRTSEC_TLS },
-> > > +	{ "mtls",	NFSEXP_XPRTSEC_MTLS },
-> > > +	{ NULL,		0 }
-> > > +};
-> > > +
-> > > +static const struct xprtsec_info *find_xprtsec_info(const char *name=
-)
-> > > +{
-> > > +	const struct xprtsec_info *info;
-> > > +
-> > > +	for (info =3D xprtsec_name2info; info->name; info++)
-> > > +		if (strcmp(info->name, name) =3D=3D 0)
-> > > +			return info;
-> > > +	return NULL;
-> > > +}
-> > > +
-> > > +/*
-> > > + * Append the given xprtsec mode to the exportent's e_xprtsec array,
-> > > + * or do nothing if it's already there. Returns the index of flavor =
-in
-> > > + * the resulting array in any case.
-> > > + */
-> > > +static int xprtsec_addmode(const struct xprtsec_info *info, struct e=
-xportent *ep)
-> > > +{
-> > > +	struct xprtsec_entry *p;
-> > > +
-> > > +	for (p =3D ep->e_xprtsec; p->info; p++)
-> > > +		if (p->info =3D=3D info || p->info->number =3D=3D info->number)
-> > > +			return p - ep->e_xprtsec;
-> > > +
-> > > +	if (p - ep->e_xprtsec >=3D XPRTSECMODE_COUNT) {
-> > > +		xlog(L_ERROR, "more than %d xprtsec modes on an export\n",
-> > > +			XPRTSECMODE_COUNT);
-> > > +		return -1;
-> > > +	}
-> > > +	p->info =3D info;
-> > > +	p->flags =3D ep->e_flags;
-> > > +	(p + 1)->info =3D NULL;
-> > > +	return p - ep->e_xprtsec;
-> > > +}
-> > > +
-> > > +/*
-> > > + * @str is a colon seperated list of transport layer security modes.
-> > > + * Their order is recorded in @ep, and a bitmap corresponding to the
-> > > + * list is returned.
-> > > + *
-> > > + * A zero return indicates an error.
-> > > + */
-> > > +static unsigned int parse_xprtsec(char *str, struct exportent *ep)
-> > > +{
-> > > +	unsigned int out =3D 0;
-> > > +	char *name;
-> > > +
-> > > +	while ((name =3D strsep(&str, ":"))) {
-> > > +		const struct xprtsec_info *info =3D find_xprtsec_info(name);
-> > > +		int bit;
-> > > +
-> > > +		if (!info) {
-> > > +			xlog(L_ERROR, "unknown xprtsec mode %s\n", name);
-> > > +			return 0;
-> > > +		}
-> > > +		bit =3D xprtsec_addmode(info, ep);
-> > > +		if (bit < 0)
-> > > +			return 0;
-> > > +		out |=3D 1 << bit;
-> > > +	}
-> > > +	return out;
-> > > +}
-> > > +
-> > > /* Sets the bits in @mask for the appropriate security flavor flags. =
-*/
-> > > static void setflags(int mask, unsigned int active, struct exportent =
-*ep)
-> > > {
-> > > @@ -687,6 +769,9 @@ bad_option:
-> > > 			active =3D parse_flavors(opt+4, ep);
-> > > 			if (!active)
-> > > 				goto bad_option;
-> > > +		} else if (strncmp(opt, "xprtsec=3D", 8) =3D=3D 0) {
-> > > +			if (!parse_xprtsec(opt + 8, ep))
-> > > +				goto bad_option;
-> > > 		} else {
-> > > 			xlog(L_ERROR, "%s:%d: unknown keyword \"%s\"\n",
-> > > 					flname, flline, opt);
-> > > diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-> > > index 6d79a5b3480d..37b9e4b3612d 100644
-> > > --- a/utils/exportfs/exportfs.c
-> > > +++ b/utils/exportfs/exportfs.c
-> > > @@ -743,6 +743,7 @@ dump(int verbose, int export_format)
-> > > #endif
-> > > 			}
-> > > 			secinfo_show(stdout, ep);
-> > > +			xprtsecinfo_show(stdout, ep);
-> > > 			printf("%c\n", (c !=3D '(')? ')' : ' ');
-> > > 		}
-> > > 	}
-> > >=20
-> > >=20
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
->=20
-> --
-> Chuck Lever
->=20
->=20
+----------------------------------------------------------------
+Chuck Lever (1):
+      NFS & NFSD: Update GSS dependencies
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Jeff Layton (1):
+      nfsd: don't replace page in rq_pages if it's a continuation of last p=
+age
+
+ fs/nfs/Kconfig  | 2 +-
+ fs/nfsd/Kconfig | 2 +-
+ fs/nfsd/vfs.c   | 9 ++++++++-
+ 3 files changed, 10 insertions(+), 3 deletions(-)
+
+--
+Chuck Lever
+
+
