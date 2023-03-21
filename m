@@ -2,105 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E06426C30E4
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Mar 2023 12:53:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25A2E6C30FA
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Mar 2023 12:55:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbjCULxH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 Mar 2023 07:53:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57520 "EHLO
+        id S230429AbjCULzX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 Mar 2023 07:55:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229917AbjCULxG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Mar 2023 07:53:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CFF45242
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Mar 2023 04:52:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C734961B4B
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Mar 2023 11:52:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9303C433D2;
-        Tue, 21 Mar 2023 11:52:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679399577;
-        bh=CmMZ1klRJvwsDqsConHuj1q1DcpFrF6ICuzfaznTxwI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Bk9rW5t3Q+zzkGAFyF1HaPnznqmEKdmaWncOBpLyALWWAt88xTqN3cQ0tx6VtV8kp
-         ulEZjVHLU4P62+BTYZLV+sR0eI8V4vL72rN6RbxI8c4YqgeAGC98fIlQH0f6Y/YHjc
-         V6zIfZDFr67LaTc2IugvVxq5vYQSCeDfUUsDoln44p2TcTkZ+96/0ME2Izuqyd5bgA
-         NT9PiAfLi4AYYVhTC5dx/nHcH7rzomllaJZNCLtrrRLnzErmJoNStOoyyc9JHObKCz
-         16WEMBEXGoLRKuX6i+EV5b2loKsI4ZnmPsWTEEUIyZr3AafqLuFzD1KFN6hy8gXNS4
-         o/PNJUdb6Ireg==
-Message-ID: <d5c93e97f10a8ae803efaad02559dd118e9b9b6f.camel@kernel.org>
-Subject: Re: [PATCH v1 0/4] nfs-utils changes for RPC-with-TLS server
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever <cel@kernel.org>, SteveD@redhat.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 21 Mar 2023 07:52:55 -0400
-In-Reply-To: <167932279970.3437.7130911928591001093.stgit@manet.1015granger.net>
-References: <167932279970.3437.7130911928591001093.stgit@manet.1015granger.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        with ESMTP id S230358AbjCULzW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Mar 2023 07:55:22 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CBEA4C6CB;
+        Tue, 21 Mar 2023 04:54:51 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1peaZk-0003yv-QP; Tue, 21 Mar 2023 12:54:48 +0100
+Message-ID: <b5920311-abbe-1b00-5bb5-66a545f2d481@leemhuis.info>
+Date:   Tue, 21 Mar 2023 12:54:48 +0100
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [regression] Bug 217165 - NFS cache stops working if accessed
+ from process with PPID of 1
+Content-Language: en-US, de-DE
+From:   "Linux regression tracking #update (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+To:     Chengen Du <chengen.du@canonical.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux kernel regressions list <regressions@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>,
+          Linux regressions mailing list 
+          <regressions@lists.linux.dev>
+References: <1ee77457-3345-0f7f-a0d0-fa8eced53b8f@leemhuis.info>
+ <16171331-8301-738e-8c1d-b48a11275ce9@leemhuis.info>
+In-Reply-To: <16171331-8301-738e-8c1d-b48a11275ce9@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1679399691;87f1a59d;
+X-HE-SMSGID: 1peaZk-0003yv-QP
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2023-03-20 at 10:35 -0400, Chuck Lever wrote:
-> Hi Steve-
->=20
-> This is server-side support for RPC-with-TLS, to accompany similar
-> support in the Linux NFS client. This implementation can support
-> both the opportunistic use of transport layer security (it will be
-> used if the client cares to) and the required use of transport
-> layer security (the server requires the client to use it to access
-> a particular export).
->=20
-> Without any other user space componentry, this implementation will
-> be able to handle clients that request the use of RPC-with-TLS. To
-> support security policies that restrict access to exports based on
-> the client's use of TLS, modifications to exportfs and mountd are
-> needed. These can be found here:
->=20
-> git://git.linux-nfs.org/projects/cel/nfs-utils.git
->=20
-> They include an update to exports(5) explaining how to use the new
-> "xprtsec=3D" export option.
->=20
-> The kernel patches, along with the the handshake upcall, are carried
-> in the topic-rpc-with-tls-upcall branch available from:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
->=20
-> This was posted under separate cover.
->=20
-> ---
->=20
-> Chuck Lever (4):
->       libexports: Fix whitespace damage in support/nfs/exports.c
->       exports: Add an xprtsec=3D export option
->       exportfs: Push xprtsec settings to the kernel
->       exports.man: Add description of xprtsec=3D to exports(5)
->=20
->=20
->  support/export/cache.c       |  15 ++++++
->  support/include/nfs/export.h |   6 +++
->  support/include/nfslib.h     |  14 +++++
->  support/nfs/exports.c        | 100 ++++++++++++++++++++++++++++++++---
->  utils/exportfs/exportfs.c    |   1 +
->  utils/exportfs/exports.man   |  45 +++++++++++++++-
->  6 files changed, 172 insertions(+), 9 deletions(-)
->=20
+[TLDR: This mail in primarily relevant for Linux kernel regression
+tracking. See link in footer if these mails annoy you.]
 
-Nice work, Chuck! This all looks pretty straightforward. I have a
-(minor) concern about potentially blocking nfsd threads for up to 20s in
-a handshake, but this seems like a good place to start.
---=20
-Jeff Layton <jlayton@kernel.org>
+On 20.03.23 13:40, Thorsten Leemhuis wrote:
+> [adding the author of the culprit, the NFS maintainers & list and lkml
+> to the list of recipients]
+
+Chengen Du, thx for replying in bugzilla!
+
+> On 10.03.23 10:42, Linux regression tracking #adding (Thorsten Leemhuis)
+> wrote:
+> 
+> Seems I was wrong in this case or in general, as that bug report didn't
+> get a single reply yet. Hence this mail to ensure the right people have
+> it on their radar. Or was some progress to address this made and I just
+> missed it?
+> 
+>> nevertheless I'd like to add
+>> to the tracking to ensure it's doesn't fall through the cracks in the end:
+>>
+>> #regzbot introduced: 029085b8949f5d269ae
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217165
+>> #regzbot title: nfs: cache stops working if accessed from process with
+>> PPID of 1
+>> #regzbot ignore-activity
+
+#regzbot fix: 21fd9e8700de86d1169f6336e97d7a74916ed0
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
