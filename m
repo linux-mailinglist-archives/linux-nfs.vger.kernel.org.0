@@ -2,55 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50C006C352D
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Mar 2023 16:10:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54E006C3539
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Mar 2023 16:11:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230040AbjCUPKj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 Mar 2023 11:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54512 "EHLO
+        id S231588AbjCUPLj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 Mar 2023 11:11:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229899AbjCUPKi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Mar 2023 11:10:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E99709B
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Mar 2023 08:10:36 -0700 (PDT)
+        with ESMTP id S231561AbjCUPLe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Mar 2023 11:11:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C5AB113C2
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Mar 2023 08:11:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8530B61CBC
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Mar 2023 15:10:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B1ACC433D2;
-        Tue, 21 Mar 2023 15:10:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A81B961CBD
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Mar 2023 15:11:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9956CC433EF;
+        Tue, 21 Mar 2023 15:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679411435;
-        bh=8K3gBcFOQuqNE2iVJnAM1ZPUBhJ/EmLCYk/eIeYLM2E=;
+        s=k20201202; t=1679411481;
+        bh=k2p0L/2pV3jBUSKScaX8eINXK9sjX4wL6sN8pcrxIbU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bBEWkBUSQLrbmt0UzXbxlU/5Xqh7uyBWaRDs4YU2wG3YSmGcypc6bGmdJofGpxw5A
-         vCzeUSIPmLgyi6QGkwFh74MZVQslJv7Q5ojDWUlLxS3L4vGk0jD+ju9yNJFahjkFcA
-         IJoSpEy9TIBxy77ZSMZM1wgg5L5LtVMFx7Cw9e+5mr4mzCynjm9k6FUceBDJb+e7aM
-         mS1DqEWZnT95UQ84zgwfEaERPkLoDfXgdXPYFzCRO+Kz4KOrrH0S9f8gXRScBYAyQ2
-         tSF3Mr0NMGT3rmRxDmD/+Fnzrr1BdgTxFo42azayZ++XUr/28oeI47d/AkaeRVJ/4q
-         lIpCPev+WxlUg==
-Message-ID: <00aa56c1944e5212fd0c64914aab9126cff5be06.camel@kernel.org>
-Subject: Re: [PATCH RFC 5/5] NFSD: Handle new xprtsec= export option
+        b=bGS0J6IVhqIX+x0Lk/ElzoPmQkZcnQJLGWBZ4p9Nqd7MKeNga/4vPXwCJPMhaxOvA
+         PCWuwGMPkWL7mAeShnek91xFfB9rzvKEI0ZMg1wEvp7BUZpTN3zpxIsOKa6fNp/9jf
+         HCVXyreSpKhhc8vKPPaPsNHmOV9cvbwmROVkby39scz6If2hZTU5pEMls7aS9uAFXN
+         rglHBDKIQeM43oNSFo+G9hqfqHO1FhJgbg04kQfLiPmFWlf76SAHtvxY/7r+EdC8Dj
+         51ZqvA1vVYY/liredVKAOQWcVDzsHV8Fpuo/g5N01f55FcAODQ+o9fdX0xSOa+BEFo
+         I7fVCUWXt6Cbw==
+Message-ID: <d1d1dcc9833a32c3530251c75c888a6156e200b0.camel@kernel.org>
+Subject: Re: [PATCH v1 4/4] exports.man: Add description of xprtsec= to
+ exports(5)
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Chuck Lever <cel@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "kernel-tls-handshake@lists.linux.dev" 
-        <kernel-tls-handshake@lists.linux.dev>
-Date:   Tue, 21 Mar 2023 11:10:34 -0400
-In-Reply-To: <C56DB6DF-5120-44D3-B5C4-09603A3B3553@oracle.com>
-References: <167932094748.3131.11264549266195745851.stgit@manet.1015granger.net>
-         <167932229302.3131.3108041458819604050.stgit@manet.1015granger.net>
-         <3dec5ea0dd4efbf96767333d3de90457b9fd3ecd.camel@kernel.org>
-         <C56DB6DF-5120-44D3-B5C4-09603A3B3553@oracle.com>
+Cc:     Chuck Lever <cel@kernel.org>, Steve Dickson <SteveD@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Tue, 21 Mar 2023 11:11:19 -0400
+In-Reply-To: <00B8D419-0F7F-43FB-8DA1-5C6BD93DE1A7@oracle.com>
+References: <167932279970.3437.7130911928591001093.stgit@manet.1015granger.net>
+         <167932295124.3437.894267501240103990.stgit@manet.1015granger.net>
+         <fdfa374a7d5072c9b4606476b52f049a6a165ef9.camel@kernel.org>
+         <00B8D419-0F7F-43FB-8DA1-5C6BD93DE1A7@oracle.com>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -59,195 +58,147 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-03-21 at 14:05 +0000, Chuck Lever III wrote:
+On Tue, 2023-03-21 at 14:08 +0000, Chuck Lever III wrote:
 >=20
-> > On Mar 21, 2023, at 7:50 AM, Jeff Layton <jlayton@kernel.org> wrote:
+> > On Mar 21, 2023, at 8:06 AM, Jeff Layton <jlayton@kernel.org> wrote:
 > >=20
-> > On Mon, 2023-03-20 at 10:24 -0400, Chuck Lever wrote:
+> > On Mon, 2023-03-20 at 10:35 -0400, Chuck Lever wrote:
 > > > From: Chuck Lever <chuck.lever@oracle.com>
 > > >=20
-> > > Enable administrators to require clients to use transport layer
-> > > security when accessing particular exports.
-> >=20
 > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > > > ---
-> > > fs/nfsd/export.c |   53 +++++++++++++++++++++++++++++++++++++++++++++=
-+++++---
-> > > fs/nfsd/export.h |   11 +++++++++++
-> > > 2 files changed, 61 insertions(+), 3 deletions(-)
+> > > utils/exportfs/exports.man |   45 +++++++++++++++++++++++++++++++++++=
+++++++++-
+> > > 1 file changed, 44 insertions(+), 1 deletion(-)
 > > >=20
-> > > diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
-> > > index 668c7527b17e..171ebc21bf07 100644
-> > > --- a/fs/nfsd/export.c
-> > > +++ b/fs/nfsd/export.c
-> > > @@ -439,7 +439,6 @@ static int check_export(struct path *path, int *f=
-lags, unsigned char *uuid)
-> > > 		return -EINVAL;
-> > > 	}
-> > > 	return 0;
-> > > -
-> > > }
-> > >=20
-> > > #ifdef CONFIG_NFSD_V4
-> > > @@ -546,6 +545,31 @@ static inline int
-> > > secinfo_parse(char **mesg, char *buf, struct svc_export *exp) { retur=
-n 0; }
-> > > #endif
-> > >=20
-> > > +static int xprtsec_parse(char **mesg, char *buf, struct svc_export *=
-exp)
-> > > +{
-> > > +	unsigned int i, mode, listsize;
-> > > +	int err;
-> > > +
-> > > +	err =3D get_uint(mesg, &listsize);
-> > > +	if (err)
-> > > +		return err;
-> > > +	if (listsize > 3)
-> > > +		return -EINVAL;
+> > > diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
+> > > index 54b3f8776ea6..cca9bb7b4aeb 100644
+> > > --- a/utils/exportfs/exports.man
+> > > +++ b/utils/exportfs/exports.man
+> > > @@ -125,7 +125,49 @@ In that case you may include multiple sec=3D opt=
+ions, and following options
+> > > will be enforced only for access using flavors listed in the immediat=
+ely
+> > > preceding sec=3D option.  The only options that are permitted to vary=
+ in
+> > > this way are ro, rw, no_root_squash, root_squash, and all_squash.
+> > > +.SS Transport layer security
+> > > +The Linux NFS server supports the use of transport layer security to
+> > > +protect RPC traffic between itself and its clients.
+> > > +This can be in the form of a VPN, an ssh tunnel, or via RPC-with-TLS=
+,
+> > > +which uses TLSv1.3.
 > >=20
-> > Might want to make a note that the limit of 3 here is arbitrary, and
-> > that it might need to be lifted in the future (if/when we grow other
-> > xprtsec options).
+> > This is a little awkward, as the NFS server really isn't involved at al=
+l
+> > at that level in the case of a VPN or ssh tunnel. How about:
+> >=20
+> > The Linux NFS server supports transport layer security (TLS) to protect
+> > RPC traffic between itself and its clients via RPC-with-TLS which uses
+> > TLSv1.3. Alternately, RPC traffic can be secured via a VPN, ssh tunnel
+> > or similar mechanism that encrypts traffic in a way that is transparent
+> > to the server.
 >=20
-> Well I can easily add a symbolic constant for that too. I
-> missed this one in the final clean-up before posting.
+> Sure, that expresses what I was after.
 >=20
-> The bigger question is whether the new downcall parameter is
-> sensible. If there's a nicer way for mountd to get this
-> information to the kernel, I'm open to suggestion.
+>=20
+> > > .PP
+> > > +Administrators may choose to require the use of
+> > > +RPC-with-TLS to protect access to individual exports.
+> > > +This is particularly useful when using non-cryptographic security
+> > > +flavors such as
+> > > +.IR sec=3Dsys .
+> > > +The
+> > > +.I xprtsec=3D
+> > > +option, followed by a colon-delimited list of security policies,
+> > > +can restrict access to the export to only clients that have negotiat=
+ed
+> > > +transport-layer security.
+> > > +Currently supported transport layer security policies include:
+> > > +.TP
+> > > +.IR none
+> > > +The server permits clients to access the export
+> > > +without the use of transport layer security.
+> > > +.TP
+> > > +.IR tls
+> > > +The server permits clients that have negotiated an RPC-with-TLS sess=
+ion
+> > > +without peer authentication (confidentiality only) to access the exp=
+ort.
+> > > +Clients are not required to offer an x.509 certificate
+> > > +when establishing a transport layer security session.
+> > > +.TP
+> > > +.IR mtls
+> > > +The server permits clients that have negotiated an RPC-with-TLS sess=
+ion
+> > > +with peer authentication to access the export.
+> > > +The server requires clients to offer an x.509 certificate
+> > > +when establishing a transport layer security session.
+> > > +.PP
+> > > +The default setting is
+> > > +.IR xprtsec=3Dnone:tls:mtls .
+> >=20
+> > Shouldn't that list order be reversed? IOW, shouldn't we default to mtl=
+s
+> > first since it's more secure?
+> >=20
+> > It might also be good to spell out what the kernel does with an ordered
+> > list here. In what order are these methods attempted and at what point
+> > does the server give up?
+>=20
+> There's no order to this list. It's simply a list of
+> transport layer security settings that the server will
+> permit clients to use on this transport.
+>=20
+> The "ordered list" concept is from the MNT protocol.
+> For xprtsec, there's no communication or negotiation
+> of preferences with clients.
 >=20
 
-I don't know of one. Export options seem fine here, since that's how we
-control all sorts of options in the nfs server.
+Duh, of course. That makes sense.
 
 >=20
-> > > +
-> > > +	exp->ex_xprtsec_modes =3D 0;
-> > > +	for (i =3D 0; i < listsize; i++) {
-> > > +		err =3D get_uint(mesg, &mode);
-> > > +		if (err)
-> > > +			return err;
-> > > +		mode--;
-> > > +		if (mode > 2)
-> > > +			return -EINVAL;
-> > > +		/* Ad hoc */
-> > > +		exp->ex_xprtsec_modes |=3D 1 << mode;
-> > > +	}
-> > > +	return 0;
-> > > +}
-> > > +
-> > > static inline int
-> > > nfsd_uuid_parse(char **mesg, char *buf, unsigned char **puuid)
-> > > {
-> > > @@ -608,6 +632,7 @@ static int svc_export_parse(struct cache_detail *=
-cd, char *mesg, int mlen)
-> > > 	exp.ex_client =3D dom;
-> > > 	exp.cd =3D cd;
-> > > 	exp.ex_devid_map =3D NULL;
-> > > +	exp.ex_xprtsec_modes =3D NFSEXP_XPRTSEC_ALL;
-> > >=20
-> > > 	/* expiry */
-> > > 	err =3D -EINVAL;
-> > > @@ -650,6 +675,8 @@ static int svc_export_parse(struct cache_detail *=
-cd, char *mesg, int mlen)
-> > > 				err =3D nfsd_uuid_parse(&mesg, buf, &exp.ex_uuid);
-> > > 			else if (strcmp(buf, "secinfo") =3D=3D 0)
-> > > 				err =3D secinfo_parse(&mesg, buf, &exp);
-> > > +			else if (strcmp(buf, "xprtsec") =3D=3D 0)
-> > > +				err =3D xprtsec_parse(&mesg, buf, &exp);
-> > > 			else
-> > > 				/* quietly ignore unknown words and anything
-> > > 				 * following. Newer user-space can try to set
-> > > @@ -663,6 +690,7 @@ static int svc_export_parse(struct cache_detail *=
-cd, char *mesg, int mlen)
-> > > 		err =3D check_export(&exp.ex_path, &exp.ex_flags, exp.ex_uuid);
-> > > 		if (err)
-> > > 			goto out4;
-> > > +
-> > > 		/*
-> > > 		 * No point caching this if it would immediately expire.
-> > > 		 * Also, this protects exportfs's dummy export from the
-> > > @@ -824,6 +852,7 @@ static void export_update(struct cache_head *cnew=
-, struct cache_head *citem)
-> > > 	for (i =3D 0; i < MAX_SECINFO_LIST; i++) {
-> > > 		new->ex_flavors[i] =3D item->ex_flavors[i];
-> > > 	}
-> > > +	new->ex_xprtsec_modes =3D item->ex_xprtsec_modes;
-> > > }
-> > >=20
-> > > static struct cache_head *svc_export_alloc(void)
-> > > @@ -1035,9 +1064,26 @@ static struct svc_export *exp_find(struct cach=
-e_detail *cd,
-> > >=20
-> > > __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqs=
-tp)
-> > > {
-> > > -	struct exp_flavor_info *f;
-> > > -	struct exp_flavor_info *end =3D exp->ex_flavors + exp->ex_nflavors;
-> > > +	struct exp_flavor_info *f, *end =3D exp->ex_flavors + exp->ex_nflav=
-ors;
-> > > +	struct svc_xprt *xprt =3D rqstp->rq_xprt;
-> > > +
-> > > +	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_NONE) {
-> > > +		if (!test_bit(XPT_TLS_SESSION, &xprt->xpt_flags))
-> > > +			goto ok;
-> > > +	}
-> > > +	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_TLS) {
-> > > +		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
-> > > +		    !test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
-> > > +			goto ok;
-> > > +	}
-> > > +	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_MTLS) {
-> > > +		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
-> > > +		    test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
-> > > +			goto ok;
-> > > +	}
-> > > +	goto denied;
-> > >=20
-> > > +ok:
-> > > 	/* legacy gss-only clients are always OK: */
-> > > 	if (exp->ex_client =3D=3D rqstp->rq_gssclient)
-> > > 		return 0;
-> > > @@ -1062,6 +1108,7 @@ __be32 check_nfsd_access(struct svc_export *exp=
-, struct svc_rqst *rqstp)
-> > > 	if (nfsd4_spo_must_allow(rqstp))
-> > > 		return 0;
-> > >=20
-> > > +denied:
-> > > 	return rqstp->rq_vers < 4 ? nfserr_acces : nfserr_wrongsec;
-> > > }
-> > >=20
-> > > diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-> > > index d03f7f6a8642..61e1e8383c3d 100644
-> > > --- a/fs/nfsd/export.h
-> > > +++ b/fs/nfsd/export.h
-> > > @@ -77,8 +77,19 @@ struct svc_export {
-> > > 	struct cache_detail	*cd;
-> > > 	struct rcu_head		ex_rcu;
-> > > 	struct export_stats	ex_stats;
-> > > +	unsigned long		ex_xprtsec_modes;
-> > > };
-> > >=20
-> > > +enum {
-> > > +	NFSEXP_XPRTSEC_NONE	=3D 0x01,
-> > > +	NFSEXP_XPRTSEC_TLS	=3D 0x02,
-> > > +	NFSEXP_XPRTSEC_MTLS	=3D 0x04,
-> > > +};
-> > > +
-> > > +#define NFSEXP_XPRTSEC_ALL	(NFSEXP_XPRTSEC_NONE | \
-> > > +				 NFSEXP_XPRTSEC_TLS | \
-> > > +				 NFSEXP_XPRTSEC_MTLS)
-> > > +
-> > > /* an "export key" (expkey) maps a filehandlefragement to an
-> > >  * svc_export for a given client.  There can be several per export,
-> > >  * for the different fsid types.
+> > > +This is also known as "opportunistic mode".
+> > > +The server permits clients to use any transport layer security mecha=
+nism
+> > > +to access the export.
+> > > +.PP
+> > > +The server administrator must install and configure
+> > > +.BR tlshd
+> > > +to handle transport layer security handshake requests from the local=
+ kernel.
+> >=20
+> > In the event that tlshd isn't running, what happens? I assume we give u=
+p
+> > on TLS at that point, but how long does it take for the kernel to
+> > realize that it's not there?
+>=20
+> If tlshd is not running, the handshake request fails immediately.
+> There's no timeout needed thanks to netlink multi-cast.
+>=20
+
+Good, thanks!
+
+>=20
+> > > .SS General Options
+> > > .BR exportfs
+> > > understands the following export options:
+> > > @@ -581,7 +623,8 @@ a character class wildcard match.
+> > > .BR netgroup (5),
+> > > .BR mountd (8),
+> > > .BR nfsd (8),
+> > > -.BR showmount (8).
+> > > +.BR showmount (8),
+> > > +.BR tlshd (8).
+> > > .\".SH DIAGNOSTICS
+> > > .\"An error parsing the file is reported using syslogd(8) as level NO=
+TICE from
+> > > .\"a DAEMON whenever
 > > >=20
 > > >=20
 > >=20
 > > --=20
 > > Jeff Layton <jlayton@kernel.org>
-> >=20
 >=20
 > --
 > Chuck Lever
