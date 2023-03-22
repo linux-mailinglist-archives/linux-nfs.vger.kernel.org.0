@@ -2,50 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A6CA6C537A
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Mar 2023 19:17:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7072C6C5403
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Mar 2023 19:47:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbjCVSRE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Mar 2023 14:17:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34706 "EHLO
+        id S231134AbjCVSrX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Mar 2023 14:47:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230505AbjCVSQ5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Mar 2023 14:16:57 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D22A6772E
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Mar 2023 11:15:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679508954;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bAxnqs+Ogn6qo/OhRrl9BnE7xhQCbwUnC+atvsz6j8g=;
-        b=ZR3nVVJ6KOTeeEgkqkYyhjFzZY6WENL5J/12QP+6kRLHNyrc5DNr+TcWHlNg2/ah7tEnLQ
-        rd6V1E8OiXL4crTJdmFEOi0YK5RLciaFPmIWpm1TOqh1n0eT/XcWUYf85T2Ln7ISgXUJh2
-        m7smcMpegZoye1oVjKL6isFjvAlX1bY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-414-nUwhuDkVOwezAETRkcIqyQ-1; Wed, 22 Mar 2023 14:15:49 -0400
-X-MC-Unique: nUwhuDkVOwezAETRkcIqyQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63FF48028B3;
-        Wed, 22 Mar 2023 18:15:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C240A1121314;
-        Wed, 22 Mar 2023 18:15:45 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <9C741BDB-31B0-460C-8FE7-F1C9B49002D5@hammerspace.com>
-References: <9C741BDB-31B0-460C-8FE7-F1C9B49002D5@hammerspace.com> <8F8B62FD-0F16-4383-BB34-97E850DAA7AF@hammerspace.com> <3DFBF27C-A62B-4AFE-87FD-3DF53FC39E8E@hammerspace.com> <20230316152618.711970-1-dhowells@redhat.com> <20230316152618.711970-28-dhowells@redhat.com> <754534.1678983891@warthog.procyon.org.uk> <809995.1678990010@warthog.procyon.org.uk>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        with ESMTP id S231153AbjCVSrN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Mar 2023 14:47:13 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2138.outbound.protection.outlook.com [40.107.96.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E2666D0B;
+        Wed, 22 Mar 2023 11:47:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oSDgzX4NzxnlGi271+e+MMDwSHksalpRAqrcLw/D6FMzrF0WPpLl1lZVxSJRibXJiaC6bp3Sp45U6EPOha4Ckgx/tt/gGpsgxTXLFJm3+KrdtsXrVVtgnqYnNLiAJDzco7llqaxT18OF9cR/Y9dgd8sIbIbPEVxp5ibZxqTSOGd3Vi7Sfnv14HJmE9X1yCGcydHTHTyN1MPf2yAs/fBJyf6QsZIoUv7U7wqaLbunUkyGm279Hyjypn2gULqJzbDsJHhyyksb+gcv0/uuq/GBoDxXv2yBef08efJosTGSilStPsLKXrCcAo8/wEJesVbsm3kapSywOcZRe9CrrvaLTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YG5744UtzRrKKq7Zaqa79DMygwSS8PQEHsQz4/qpuaU=;
+ b=MReR/pr9lZ0cQEZrt2NAckTfVqbOJ24xcidX8IX+4dm+YQQiPj/EaTIxY+Q5faG1iUKG/p6OpcvwiSR63si+sy8JU0ULoyfrFxj8CLvgcPgWwR1mZ8xOdmvdfHY07peihSCcjhu/cr+MyCvNBx61b3eyIT9wJ4LxGdaiZoWsqpzpf8YKakydDN3FDtZ8FAfdkBJBaEfsVPEKBqAFjhsCdE1L71OKbzP7d1lG+f/zpQr5KhJDgYwnwhJD74w3WR2LqWzK9oEhUnImNen8M2E62LvWmt+IMPIGNZ8U8A2g/geQ8+C9HSg75BbnJt0EHwVupDYjyL9zLfQeGlWG4DrGdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YG5744UtzRrKKq7Zaqa79DMygwSS8PQEHsQz4/qpuaU=;
+ b=R6/4xZmHJc/owLVivs9fbVG2stCJnaeRlULZDytvy5VHXdFepL5XXqB59Ou5UHzfseilsy7rlBKq5nUucw1NP4xRK8Epwo3kVsk+I2gsRHBjku1JGYbY2R/sgwjgWvDERmf1CQ8rvPsbbZOug+pU7BOMj0MMeBcWFxhEWg4cHXs=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by BLAPR13MB4610.namprd13.prod.outlook.com (2603:10b6:208:306::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Wed, 22 Mar
+ 2023 18:47:10 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::d23a:123:3111:e459]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::d23a:123:3111:e459%5]) with mapi id 15.20.6178.037; Wed, 22 Mar 2023
+ 18:47:09 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     David Howells <dhowells@redhat.com>
+CC:     Matthew Wilcox <willy@infradead.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
@@ -63,17 +58,83 @@ Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
         Anna Schumaker <anna@kernel.org>,
         Charles Edward Lever <chuck.lever@oracle.com>,
         "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: [RFC PATCH] iov_iter: Add an iterator-of-iterators
-MIME-Version: 1.0
+Subject: Re: [RFC PATCH] iov_iter: Add an iterator-of-iterators
+Thread-Topic: [RFC PATCH] iov_iter: Add an iterator-of-iterators
+Thread-Index: AQHZXOpZqMZ5cQQWc0+LGrWKGRAzsa8HI4mA
+Date:   Wed, 22 Mar 2023 18:47:09 +0000
+Message-ID: <438D8115-68AE-47C6-B942-485814B77416@hammerspace.com>
+References: <9C741BDB-31B0-460C-8FE7-F1C9B49002D5@hammerspace.com>
+ <8F8B62FD-0F16-4383-BB34-97E850DAA7AF@hammerspace.com>
+ <3DFBF27C-A62B-4AFE-87FD-3DF53FC39E8E@hammerspace.com>
+ <20230316152618.711970-1-dhowells@redhat.com>
+ <20230316152618.711970-28-dhowells@redhat.com>
+ <754534.1678983891@warthog.procyon.org.uk>
+ <809995.1678990010@warthog.procyon.org.uk>
+ <3416400.1679508945@warthog.procyon.org.uk>
+In-Reply-To: <3416400.1679508945@warthog.procyon.org.uk>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.400.51.1.1)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|BLAPR13MB4610:EE_
+x-ms-office365-filtering-correlation-id: 11d82513-ee7a-4745-bc40-08db2b05d7c9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ikQ3z6x9W4SbcJTg0VK7md25jVfOqWtNnrm/nb3Xn6vWaGlCLz396fQ8PkyAt89Ag0DKZ0r8j6JIuGSNbEmt5o6g2vZSyn0LRlzqJOgJEc2cIy47vEIRejSAg2dqtdWi1QYo5H4Q5Fb9e9MBNJ9oZBd6DztqQ2XCcoUqzF+TYlAPFMhFAvHFKWLwEU5N3IGdIn2IDaSkL3M5dr75UOujR6h1OwuGZk4kwDPok5mbZGyRjy6n8VWZ3ZOAYN4xu3hhc6vXaMM2fPx+HZIG5mocP1MswhEI/JIblQzaA8Lko1iw7lq9WEfeb/NO9ugYrn7/Uwd47+/aSL0CqgYoVWczjRG6iacZMwYp1ekRoEa/hs81lOlZ7dTugBV6/NyOp5J4mBrIaQhG/vPgtpTH2rFwwUI5iqqLSQ4Rj9TmpbAHTDXEotobIm+JOgzTXT/9vzuc/runF2xDGBm4xJS72tIqSoWN1N1pxKiL8pk26xP0J8U4qQDk8NxRLS7Cde7NiOwrm7WnES/SwYFW7ZM9dipGG5UQkWrnDltlcoowe4Rcry7WqkM4S7R17UL/7RuetY0m23MHJMOuF18FMbLvWe1gKiJqYtjcA++onT9MWXf2+g84fWSis5KzUwLy+m1tI/M7qllme4DzrARJvkYrc5bdWDhVCVqlhQ1/iiqmihLrdoE5TCHjMBGpeK4sp65QMvmnNzlDiwFsDMXQVk8CmU7M965XLZ3luaKVFqKOaO/ytpFKM9AHj7DBfUATDhscsfjDRXaUi/us9re/6Ol0Xtr2Vw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(396003)(136003)(346002)(39840400004)(366004)(451199018)(38100700002)(71200400001)(66946007)(4744005)(8676002)(66476007)(64756008)(33656002)(316002)(54906003)(36756003)(4326008)(66556008)(76116006)(8936002)(6916009)(41300700001)(66446008)(5660300002)(7416002)(2906002)(478600001)(122000001)(86362001)(2616005)(6506007)(186003)(38070700005)(53546011)(6512007)(6486002)(45980500001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Sau/7v9a5tbEX8S0+rcuqXIX/sQ8juZT9lmC6M4F85apXD3OVVC7oxdCXdX2?=
+ =?us-ascii?Q?S90tC9DCCLcROA7dmc/fd3mI+yx7+y5BuwkQpy+Jtf4j5KdhiqvOYwcgZegn?=
+ =?us-ascii?Q?A3e+PSWovI5QOMmyOQEUQxIF8jkryXstdx89l/IEaXDrSxLxNisIa2aA6TNR?=
+ =?us-ascii?Q?7sbFcrWDMdpFJPK2NBBBgBG8mL5CSI/us0Ujre18UWaDkw4RExjjR+1cD8NW?=
+ =?us-ascii?Q?hVPwHIaN+qJktLJ4/APffvMBpj57HQXqetGvR0S4ql6lnLYbOk/AaxkdwkIW?=
+ =?us-ascii?Q?Kofw9cBuCfuptEXk5Lpa/y6LyvGUT1LC+VtCg5HD5dzpuFle3EDt0yUBs9gp?=
+ =?us-ascii?Q?PoL2XZ+IcSd1qc/2fwLgjqWnokYa2Hog8X91Tq5nrucZmoOobf5lPkHHXEoV?=
+ =?us-ascii?Q?ZpZn2SAlrZRjXlMNI5nxvGrREHjT27bqn0jlQUc3eB7XUOOQZsSHW5OOmBSV?=
+ =?us-ascii?Q?h0JIEkB7MmfaqCFXIo0ul81/Jp5+Iuw/yp/xrQhKnnJBymgT0g6A4Gyfj+eN?=
+ =?us-ascii?Q?5STa8zywTPp67QPbpa3lJ75nl9J+LtDRpXaegoXTGxGWW+/EdB5HBQEUrKe9?=
+ =?us-ascii?Q?FzEuFL0nDW18X6yAak5Wz9vkS8u1wQX1jz5btu33q95qweVKXoqn6xrgZJCG?=
+ =?us-ascii?Q?yvRmOEsUS27zTS/vArmXYDaVUze2cxjlVcO1b0LaAgp0SlVKRhkaRc5Oka2G?=
+ =?us-ascii?Q?SwW2qXJumvbLRqHJTsJT1Gh7kzdm4ILnw4zZK4zHW6y55Wr4AJA0h4AjzzKJ?=
+ =?us-ascii?Q?nMeZSAf9/j5sl9CZrDQeDXVsfadwUECl2TU5UyGw+0Nf8TuZCAbbDfDx8/kT?=
+ =?us-ascii?Q?QvaAASpclDNY3Fwj28wzIrrNrddhs4eK/rJ26J5TMaWgJFC0YsjyezK4rSKr?=
+ =?us-ascii?Q?Bv39iXH8Cd/Ixp5T+Dti1a+aBBeu+nSO8DyFH6XFCYch0QAT418w0Z81eojz?=
+ =?us-ascii?Q?7w0bS+I+MJD3rY9jxWcEMtojA4FITkN+XkmB14Th17ieD+ppL9betUNEAMgB?=
+ =?us-ascii?Q?jYfNFEvhq7slGXhy48T8WvYVQAFpkLPt2HnkxdmYQLCAHu6HCLzXiWf5zN9M?=
+ =?us-ascii?Q?uXPMP4uHFYExY2RyA4t0f7Qr1ifXk0Uslb2Waz5BuAStEfXyrya92ydnqaYq?=
+ =?us-ascii?Q?/SmS+YsiQwKkZ7qPO2es9r4ozYCvIafzZtUD5gOsuQeYKJ/g1hmWbfjFL7V+?=
+ =?us-ascii?Q?GJbAdV+/Ox5yUmYE415E4GcfP3G3YsKyo2j0bBXUIcPVBtXNcAr1xusjqBN3?=
+ =?us-ascii?Q?jiR989JVnJlNl60EdIbU+V8U9UoMb76bgvaXoEXDRcHOPLtRa7qliaQ/OJ4s?=
+ =?us-ascii?Q?EdFwTJHAQbPagepWMRdbjoMKK+j6F9axDX2izqaNTovtotdDxr6iGIPCpfdj?=
+ =?us-ascii?Q?iZ7oOVu3y+CfVi5EazWwPhpFi4HKgP7OdGYKkgR9ONf7YWF0ee1vTSpnQJGW?=
+ =?us-ascii?Q?WreFSDnEUXJPuWeBSc4BmvNtaruM+KX34oKkuSTRjr3YEVZKPMe4K3VPQziE?=
+ =?us-ascii?Q?/scAV6gYNuhIsCi7mCz9sTFzS6qFNVc9sS1icERua8nnPYwxvDccp01BbjjN?=
+ =?us-ascii?Q?9nKB4ITzWoMB0FwUWx26Lbn0jOK3VjGvBjwqfJig4c2MCKqlX1D2qSnIGE2W?=
+ =?us-ascii?Q?XkoerbcCLK/9R+BqLufqiJY3fYRvWVbhsoFYphLGccKUTf/wzOGOzfsJxmja?=
+ =?us-ascii?Q?M3e8xQ=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3416399.1679508945.1@warthog.procyon.org.uk>
+Content-ID: <6379EBE9A8BDA54E97A1E7F53F97313E@namprd13.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-Date:   Wed, 22 Mar 2023 18:15:45 +0000
-Message-ID: <3416400.1679508945@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11d82513-ee7a-4745-bc40-08db2b05d7c9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Mar 2023 18:47:09.8054
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xuioWdasXjJngL5UsVGhGvMgrDY6c5UNkN8xJd2f0LJXqZ/uoJ35m55ax0O4xCVGxUvz7I2LYhEQGVR63qL9jw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR13MB4610
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,578 +142,38 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trond Myklebust <trondmy@hammerspace.com> wrote:
 
-> Add an enum iter_type for ITER_ITER ? :-)
 
-Well, you asked for it...  It's actually fairly straightforward once
-ITER_PIPE is removed.
+> On Mar 22, 2023, at 14:15, David Howells <dhowells@redhat.com> wrote:
+>=20
+> Trond Myklebust <trondmy@hammerspace.com> wrote:
+>=20
+>> Add an enum iter_type for ITER_ITER ? :-)
+>=20
+> Well, you asked for it...  It's actually fairly straightforward once
+> ITER_PIPE is removed.
+>=20
+> ---
+> iov_iter: Add an iterator-of-iterators
+>=20
+> Provide an I/O iterator that takes an array of iterators and iterates ove=
+r
+> them in turn.  Then make the sunrpc service code (and thus nfsd) use it.
+>=20
+> In this particular instance, the svc_tcp_sendmsg() sets up an array of
+> three iterators: once for the marker+header, one for the body and one
+> optional one for the tail, then sets msg_iter to be an
+> iterator-of-iterators across them.
 
----
-iov_iter: Add an iterator-of-iterators
+Cool! This is something that can be used on the receive side as well, so ve=
+ry useful. I can imagine it might also open up a few more use cases for ITE=
+R_XARRAY.
 
-Provide an I/O iterator that takes an array of iterators and iterates over
-them in turn.  Then make the sunrpc service code (and thus nfsd) use it.
+Thanks!
+  Trond
 
-In this particular instance, the svc_tcp_sendmsg() sets up an array of
-three iterators: once for the marker+header, one for the body and one
-optional one for the tail, then sets msg_iter to be an
-iterator-of-iterators across them.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----    =
-
- include/linux/uio.h  |   19 +++-
- lib/iov_iter.c       |  233 +++++++++++++++++++++++++++++++++++++++++++++=
-++++--
- net/sunrpc/svcsock.c |   29 +++---
- 3 files changed, 258 insertions(+), 23 deletions(-)
-
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index 74598426edb4..321381d3d616 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -27,6 +27,7 @@ enum iter_type {
- 	ITER_XARRAY,
- 	ITER_DISCARD,
- 	ITER_UBUF,
-+	ITER_ITERLIST,
- };
- =
-
- #define ITER_SOURCE	1	// =3D=3D WRITE
-@@ -43,17 +44,17 @@ struct iov_iter {
- 	bool nofault;
- 	bool data_source;
- 	bool user_backed;
--	union {
--		size_t iov_offset;
--		int last_offset;
--	};
-+	bool spliceable;
-+	size_t iov_offset;
- 	size_t count;
-+	size_t orig_count;
- 	union {
- 		const struct iovec *iov;
- 		const struct kvec *kvec;
- 		const struct bio_vec *bvec;
- 		struct xarray *xarray;
- 		void __user *ubuf;
-+		struct iov_iter *iterlist;
- 	};
- 	union {
- 		unsigned long nr_segs;
-@@ -104,6 +105,11 @@ static inline bool iov_iter_is_xarray(const struct io=
-v_iter *i)
- 	return iov_iter_type(i) =3D=3D ITER_XARRAY;
- }
- =
-
-+static inline bool iov_iter_is_iterlist(const struct iov_iter *i)
-+{
-+	return iov_iter_type(i) =3D=3D ITER_ITERLIST;
-+}
-+
- static inline unsigned char iov_iter_rw(const struct iov_iter *i)
- {
- 	return i->data_source ? WRITE : READ;
-@@ -238,6 +244,8 @@ void iov_iter_bvec(struct iov_iter *i, unsigned int di=
-rection, const struct bio_
- void iov_iter_discard(struct iov_iter *i, unsigned int direction, size_t =
-count);
- void iov_iter_xarray(struct iov_iter *i, unsigned int direction, struct x=
-array *xarray,
- 		     loff_t start, size_t count);
-+void iov_iter_iterlist(struct iov_iter *i, unsigned int direction, struct=
- iov_iter *iterlist,
-+		       unsigned long nr_segs, size_t count);
- ssize_t iov_iter_get_pages(struct iov_iter *i, struct page **pages,
- 		size_t maxsize, unsigned maxpages, size_t *start,
- 		iov_iter_extraction_t extraction_flags);
-@@ -345,7 +353,8 @@ static inline void iov_iter_ubuf(struct iov_iter *i, u=
-nsigned int direction,
- 		.user_backed =3D true,
- 		.data_source =3D direction,
- 		.ubuf =3D buf,
--		.count =3D count
-+		.count =3D count,
-+		.orig_count =3D count,
- 	};
- }
- /* Flags for iov_iter_get/extract_pages*() */
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index fad95e4cf372..34ce3b958b6c 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -282,7 +282,8 @@ void iov_iter_init(struct iov_iter *i, unsigned int di=
-rection,
- 		.iov =3D iov,
- 		.nr_segs =3D nr_segs,
- 		.iov_offset =3D 0,
--		.count =3D count
-+		.count =3D count,
-+		.orig_count =3D count,
- 	};
- }
- EXPORT_SYMBOL(iov_iter_init);
-@@ -364,6 +365,26 @@ size_t _copy_from_iter(void *addr, size_t bytes, stru=
-ct iov_iter *i)
- 	if (WARN_ON_ONCE(!i->data_source))
- 		return 0;
- =
-
-+	if (unlikely(iov_iter_is_iterlist(i))) {
-+		size_t copied =3D 0;
-+
-+		while (bytes && i->count) {
-+			size_t part =3D min(bytes, i->iterlist->count), n;
-+
-+			if (part > 0)
-+				n =3D _copy_from_iter(addr, part, i->iterlist);
-+			addr +=3D n;
-+			copied +=3D n;
-+			bytes -=3D n;
-+			i->count -=3D n;
-+			if (n < part || !bytes)
-+				break;
-+			i->iterlist++;
-+			i->nr_segs--;
-+		}
-+		return copied;
-+	}
-+
- 	if (user_backed_iter(i))
- 		might_fault();
- 	iterate_and_advance(i, bytes, base, len, off,
-@@ -380,6 +401,27 @@ size_t _copy_from_iter_nocache(void *addr, size_t byt=
-es, struct iov_iter *i)
- 	if (WARN_ON_ONCE(!i->data_source))
- 		return 0;
- =
-
-+	if (unlikely(iov_iter_is_iterlist(i))) {
-+		size_t copied =3D 0;
-+
-+		while (bytes && i->count) {
-+			size_t part =3D min(bytes, i->iterlist->count), n;
-+
-+			if (part > 0)
-+				n =3D _copy_from_iter_nocache(addr, part,
-+							    i->iterlist);
-+			addr +=3D n;
-+			copied +=3D n;
-+			bytes -=3D n;
-+			i->count -=3D n;
-+			if (n < part || !bytes)
-+				break;
-+			i->iterlist++;
-+			i->nr_segs--;
-+		}
-+		return copied;
-+	}
-+
- 	iterate_and_advance(i, bytes, base, len, off,
- 		__copy_from_user_inatomic_nocache(addr + off, base, len),
- 		memcpy(addr + off, base, len)
-@@ -411,6 +453,27 @@ size_t _copy_from_iter_flushcache(void *addr, size_t =
-bytes, struct iov_iter *i)
- 	if (WARN_ON_ONCE(!i->data_source))
- 		return 0;
- =
-
-+	if (unlikely(iov_iter_is_iterlist(i))) {
-+		size_t copied =3D 0;
-+
-+		while (bytes && i->count) {
-+			size_t part =3D min(bytes, i->iterlist->count), n;
-+
-+			if (part > 0)
-+				n =3D _copy_from_iter_flushcache(addr, part,
-+							       i->iterlist);
-+			addr +=3D n;
-+			copied +=3D n;
-+			bytes -=3D n;
-+			i->count -=3D n;
-+			if (n < part || !bytes)
-+				break;
-+			i->iterlist++;
-+			i->nr_segs--;
-+		}
-+		return copied;
-+	}
-+
- 	iterate_and_advance(i, bytes, base, len, off,
- 		__copy_from_user_flushcache(addr + off, base, len),
- 		memcpy_flushcache(addr + off, base, len)
-@@ -514,7 +577,31 @@ EXPORT_SYMBOL(iov_iter_zero);
- size_t copy_page_from_iter_atomic(struct page *page, unsigned offset, siz=
-e_t bytes,
- 				  struct iov_iter *i)
- {
--	char *kaddr =3D kmap_atomic(page), *p =3D kaddr + offset;
-+	char *kaddr, *p;
-+
-+	if (unlikely(iov_iter_is_iterlist(i))) {
-+		size_t copied =3D 0;
-+
-+		while (bytes && i->count) {
-+			size_t part =3D min(bytes, i->iterlist->count), n;
-+
-+			if (part > 0)
-+				n =3D copy_page_from_iter_atomic(page, offset, part,
-+							       i->iterlist);
-+			offset +=3D n;
-+			copied +=3D n;
-+			bytes -=3D n;
-+			i->count -=3D n;
-+			if (n < part || !bytes)
-+				break;
-+			i->iterlist++;
-+			i->nr_segs--;
-+		}
-+		return copied;
-+	}
-+
-+	kaddr =3D kmap_atomic(page);
-+	p =3D kaddr + offset;
- 	if (!page_copy_sane(page, offset, bytes)) {
- 		kunmap_atomic(kaddr);
- 		return 0;
-@@ -585,19 +672,49 @@ void iov_iter_advance(struct iov_iter *i, size_t siz=
-e)
- 		iov_iter_bvec_advance(i, size);
- 	} else if (iov_iter_is_discard(i)) {
- 		i->count -=3D size;
-+	}else if (iov_iter_is_iterlist(i)) {
-+		i->count -=3D size;
-+		for (;;) {
-+			size_t part =3D min(size, i->iterlist->count);
-+
-+			if (part > 0)
-+				iov_iter_advance(i->iterlist, part);
-+			size -=3D part;
-+			if (!size)
-+				break;
-+			i->iterlist++;
-+			i->nr_segs--;
-+		}
- 	}
- }
- EXPORT_SYMBOL(iov_iter_advance);
- =
-
-+static void iov_iter_revert_iterlist(struct iov_iter *i, size_t unroll)
-+{
-+	for (;;) {
-+		size_t part =3D min(unroll, i->iterlist->orig_count - i->iterlist->coun=
-t);
-+
-+		if (part > 0)
-+			iov_iter_revert(i->iterlist, part);
-+		unroll -=3D part;
-+		if (!unroll)
-+			break;
-+		i->iterlist--;
-+		i->nr_segs++;
-+	}
-+}
-+
- void iov_iter_revert(struct iov_iter *i, size_t unroll)
- {
- 	if (!unroll)
- 		return;
--	if (WARN_ON(unroll > MAX_RW_COUNT))
-+	if (WARN_ON(unroll > i->orig_count - i->count))
- 		return;
- 	i->count +=3D unroll;
- 	if (unlikely(iov_iter_is_discard(i)))
- 		return;
-+	if (unlikely(iov_iter_is_iterlist(i)))
-+		return iov_iter_revert_iterlist(i, unroll);
- 	if (unroll <=3D i->iov_offset) {
- 		i->iov_offset -=3D unroll;
- 		return;
-@@ -641,6 +758,8 @@ EXPORT_SYMBOL(iov_iter_revert);
-  */
- size_t iov_iter_single_seg_count(const struct iov_iter *i)
- {
-+	if (iov_iter_is_iterlist(i))
-+		i =3D i->iterlist;
- 	if (i->nr_segs > 1) {
- 		if (likely(iter_is_iovec(i) || iov_iter_is_kvec(i)))
- 			return min(i->count, i->iov->iov_len - i->iov_offset);
-@@ -662,7 +781,8 @@ void iov_iter_kvec(struct iov_iter *i, unsigned int di=
-rection,
- 		.kvec =3D kvec,
- 		.nr_segs =3D nr_segs,
- 		.iov_offset =3D 0,
--		.count =3D count
-+		.count =3D count,
-+		.orig_count =3D count,
- 	};
- }
- EXPORT_SYMBOL(iov_iter_kvec);
-@@ -678,7 +798,8 @@ void iov_iter_bvec(struct iov_iter *i, unsigned int di=
-rection,
- 		.bvec =3D bvec,
- 		.nr_segs =3D nr_segs,
- 		.iov_offset =3D 0,
--		.count =3D count
-+		.count =3D count,
-+		.orig_count =3D count,
- 	};
- }
- EXPORT_SYMBOL(iov_iter_bvec);
-@@ -706,6 +827,7 @@ void iov_iter_xarray(struct iov_iter *i, unsigned int =
-direction,
- 		.xarray =3D xarray,
- 		.xarray_start =3D start,
- 		.count =3D count,
-+		.orig_count =3D count,
- 		.iov_offset =3D 0
- 	};
- }
-@@ -727,11 +849,47 @@ void iov_iter_discard(struct iov_iter *i, unsigned i=
-nt direction, size_t count)
- 		.iter_type =3D ITER_DISCARD,
- 		.data_source =3D false,
- 		.count =3D count,
-+		.orig_count =3D count,
- 		.iov_offset =3D 0
- 	};
- }
- EXPORT_SYMBOL(iov_iter_discard);
- =
-
-+/**
-+ * iov_iter_iterlist - Initialise an I/O iterator that is a list of itera=
-tors
-+ * @iter: The iterator to initialise.
-+ * @direction: The direction of the transfer.
-+ * @iterlist: The list of iterators
-+ * @nr_segs: The number of elements in the list
-+ * @count: The size of the I/O buffer in bytes.
-+ *
-+ * Set up an I/O iterator that just discards everything that's written to=
- it.
-+ * It's only available as a source iterator (for WRITE), all the iterator=
-s in
-+ * the list must be the same and none of them can be ITER_ITERLIST type.
-+ */
-+void iov_iter_iterlist(struct iov_iter *iter, unsigned int direction,
-+		       struct iov_iter *iterlist, unsigned long nr_segs,
-+		       size_t count)
-+{
-+	unsigned long i;
-+
-+	BUG_ON(direction !=3D WRITE);
-+	for (i =3D 0; i < nr_segs; i++) {
-+		BUG_ON(iterlist[i].iter_type =3D=3D ITER_ITERLIST);
-+		BUG_ON(!iterlist[i].data_source);
-+	}
-+
-+	*iter =3D (struct iov_iter){
-+		.iter_type	=3D ITER_ITERLIST,
-+		.data_source	=3D true,
-+		.count		=3D count,
-+		.orig_count	=3D count,
-+		.iterlist	=3D iterlist,
-+		.nr_segs	=3D nr_segs,
-+	};
-+}
-+EXPORT_SYMBOL(iov_iter_iterlist);
-+
- static bool iov_iter_aligned_iovec(const struct iov_iter *i, unsigned add=
-r_mask,
- 				   unsigned len_mask)
- {
-@@ -879,6 +1037,15 @@ unsigned long iov_iter_alignment(const struct iov_it=
-er *i)
- 	if (iov_iter_is_xarray(i))
- 		return (i->xarray_start + i->iov_offset) | i->count;
- =
-
-+	if (iov_iter_is_iterlist(i)) {
-+		unsigned long align =3D 0;
-+		unsigned int j;
-+
-+		for (j =3D 0; j < i->nr_segs; j++)
-+			align |=3D iov_iter_alignment(&i->iterlist[j]);
-+		return align;
-+	}
-+
- 	return 0;
- }
- EXPORT_SYMBOL(iov_iter_alignment);
-@@ -1078,6 +1245,18 @@ static ssize_t __iov_iter_get_pages_alloc(struct io=
-v_iter *i,
- 	}
- 	if (iov_iter_is_xarray(i))
- 		return iter_xarray_get_pages(i, pages, maxsize, maxpages, start);
-+	if (iov_iter_is_iterlist(i)) {
-+		ssize_t size;
-+
-+		while (!i->iterlist->count) {
-+			i->iterlist++;
-+			i->nr_segs--;
-+		}
-+		size =3D __iov_iter_get_pages_alloc(i->iterlist, pages, maxsize, maxpag=
-es,
-+						  start, extraction_flags);
-+		i->count -=3D size;
-+		return size;
-+	}
- 	return -EFAULT;
- }
- =
-
-@@ -1126,6 +1305,31 @@ ssize_t iov_iter_get_pages_alloc2(struct iov_iter *=
-i,
- }
- EXPORT_SYMBOL(iov_iter_get_pages_alloc2);
- =
-
-+static size_t csum_and_copy_from_iterlist(void *addr, size_t bytes, __wsu=
-m *csum,
-+					  struct iov_iter *i)
-+{
-+	size_t copied =3D 0, n;
-+
-+	while (i->count && i->nr_segs) {
-+		struct iov_iter *j =3D i->iterlist;
-+
-+		if (j->count =3D=3D 0) {
-+			i->iterlist++;
-+			i->nr_segs--;
-+			continue;
-+		}
-+
-+		n =3D csum_and_copy_from_iter(addr, bytes - copied, csum, j);
-+		addr +=3D n;
-+		copied +=3D n;
-+		i->count -=3D n;
-+		if (n =3D=3D 0)
-+			break;
-+	}
-+
-+	return copied;
-+}
-+
- size_t csum_and_copy_from_iter(void *addr, size_t bytes, __wsum *csum,
- 			       struct iov_iter *i)
- {
-@@ -1133,6 +1337,8 @@ size_t csum_and_copy_from_iter(void *addr, size_t by=
-tes, __wsum *csum,
- 	sum =3D *csum;
- 	if (WARN_ON_ONCE(!i->data_source))
- 		return 0;
-+	if (iov_iter_is_iterlist(i))
-+		return csum_and_copy_from_iterlist(addr, bytes, csum, i);
- =
-
- 	iterate_and_advance(i, bytes, base, len, off, ({
- 		next =3D csum_and_copy_from_user(base, addr + off, len);
-@@ -1236,6 +1442,21 @@ static int bvec_npages(const struct iov_iter *i, in=
-t maxpages)
- 	return npages;
- }
- =
-
-+static int iterlist_npages(const struct iov_iter *i, int maxpages)
-+{
-+	ssize_t size =3D i->count;
-+	const struct iov_iter *p;
-+	int npages =3D 0;
-+
-+	for (p =3D i->iterlist; size; p++) {
-+		size -=3D p->count;
-+		npages +=3D iov_iter_npages(p, maxpages - npages);
-+		if (unlikely(npages >=3D maxpages))
-+			return maxpages;
-+	}
-+	return npages;
-+}
-+
- int iov_iter_npages(const struct iov_iter *i, int maxpages)
- {
- 	if (unlikely(!i->count))
-@@ -1255,6 +1476,8 @@ int iov_iter_npages(const struct iov_iter *i, int ma=
-xpages)
- 		int npages =3D DIV_ROUND_UP(offset + i->count, PAGE_SIZE);
- 		return min(npages, maxpages);
- 	}
-+	if (iov_iter_is_iterlist(i))
-+		return iterlist_npages(i, maxpages);
- 	return 0;
- }
- EXPORT_SYMBOL(iov_iter_npages);
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 1d0f0f764e16..030a1fa5171b 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1073,11 +1073,13 @@ static int svc_tcp_sendmsg(struct socket *sock, st=
-ruct xdr_buf *xdr,
- {
- 	const struct kvec *head =3D xdr->head;
- 	const struct kvec *tail =3D xdr->tail;
-+	struct iov_iter iters[3];
-+	struct bio_vec head_bv, tail_bv;
- 	struct msghdr msg =3D {
--		.msg_flags	=3D MSG_SPLICE_PAGES,
-+		.msg_flags	=3D 0, //MSG_SPLICE_PAGES,
- 	};
--	void *m, *h, *t;
--	int ret, n =3D xdr_buf_pagecount(xdr), size;
-+	void *m, *t;
-+	int ret, n =3D 2, size;
- =
-
- 	*sentp =3D 0;
- 	ret =3D xdr_alloc_bvec(xdr, GFP_KERNEL);
-@@ -1089,27 +1091,28 @@ static int svc_tcp_sendmsg(struct socket *sock, st=
-ruct xdr_buf *xdr,
- 	if (!m)
- 		return -ENOMEM;
- =
-
--	h =3D m + sizeof(marker);
--	t =3D h + head->iov_len;
-+	memcpy(m, &marker, sizeof(marker));
-+	if (head->iov_len)
-+		memcpy(m + sizeof(marker), head->iov_base, head->iov_len);
-+	bvec_set_virt(&head_bv, m, sizeof(marker) + head->iov_len);
-+	iov_iter_bvec(&iters[0], ITER_SOURCE, &head_bv, 1,
-+		      sizeof(marker) + head->iov_len);
- =
-
--	bvec_set_virt(&xdr->bvec[-1], m, sizeof(marker) + head->iov_len);
--	n++;
-+	iov_iter_bvec(&iters[1], ITER_SOURCE, xdr->bvec,
-+		      xdr_buf_pagecount(xdr), xdr->page_len);
- =
-
- 	if (tail->iov_len) {
- 		t =3D page_frag_alloc(NULL, tail->iov_len, GFP_KERNEL);
- 		if (!t)
- 			return -ENOMEM;
--		bvec_set_virt(&xdr->bvec[n],  t, tail->iov_len);
- 		memcpy(t, tail->iov_base, tail->iov_len);
-+		bvec_set_virt(&tail_bv,  t, tail->iov_len);
-+		iov_iter_bvec(&iters[2], ITER_SOURCE, &tail_bv, 1, tail->iov_len);
- 		n++;
- 	}
- =
-
--	memcpy(m, &marker, sizeof(marker));
--	if (head->iov_len)
--		memcpy(h, head->iov_base, head->iov_len);
--
- 	size =3D sizeof(marker) + head->iov_len + xdr->page_len + tail->iov_len;
--	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, xdr->bvec - 1, n, size);
-+	iov_iter_iterlist(&msg.msg_iter, ITER_SOURCE, iters, n, size);
- =
-
- 	ret =3D sock_sendmsg(sock, &msg);
- 	if (ret < 0)
+_________________________________
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trond.myklebust@hammerspace.com
 
