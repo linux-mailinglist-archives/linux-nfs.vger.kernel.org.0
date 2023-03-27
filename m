@@ -2,156 +2,160 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 424756CA7BF
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Mar 2023 16:32:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 068296CA985
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Mar 2023 17:48:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232717AbjC0Ocq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Mar 2023 10:32:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60356 "EHLO
+        id S232976AbjC0PsU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Mar 2023 11:48:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230041AbjC0Ocm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Mar 2023 10:32:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33D72B5
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Mar 2023 07:32:33 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BE4B061295
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Mar 2023 14:32:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6994C433D2;
-        Mon, 27 Mar 2023 14:32:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679927552;
-        bh=8qASZ1qocBeaLqiqw5NqIi1qKMvQMwyjDALtpIveXiQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=SmflCMB6c78piklXhX0Nn1NR3qMUQ9+Yyq75kYG9aIdy7xd+i0H86+bAB2xNhFeCL
-         cHwdLWiAOOpgbCArWLtUr20IKLk+Vy0ONuzs9MnbhrMTz5S2zgslhNCl4R+4C7UmDt
-         yB+y3boj4bDv7tIADvLV3fjgiKLTfntAzqpldljRhYcC5ZIPxr80IplRZ1riq13cMh
-         OgJ6sO6aS8eCew/r/n1VZkHUmKbnNRCKzMfeyaL2pWM/qPk7jVr8Urd+qAfpw8Bn1c
-         2TTYDpjhacZ8t8ZIaNM7M58S4vLqPT2EC07+9dWBZXZDLJSlSooviiGb8xa4qwsMl8
-         uQsk7ceNUwxfw==
-Message-ID: <97ed6d002603347a14b12796808b7aa9d729a13c.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: call op_release, even when op_func returns an
- error
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Zhi Li <yieli@redhat.com>
-Date:   Mon, 27 Mar 2023 10:32:30 -0400
-In-Reply-To: <C871117E-1591-4F1C-94DE-3854F88FF8FF@oracle.com>
-References: <20230327102137.15412-1-jlayton@kernel.org>
-         <C871117E-1591-4F1C-94DE-3854F88FF8FF@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        with ESMTP id S233093AbjC0PsN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Mar 2023 11:48:13 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC3CA35B0
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Mar 2023 08:48:06 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id ek18so38096821edb.6
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Mar 2023 08:48:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20210112.gappssmtp.com; s=20210112; t=1679932085;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Mq4TDtGBlZgtpfQYSLhxkdtO2GoRthaF5pRlyFflCXo=;
+        b=F0MEvHzoRggtBRwslqTKOi7DRRvBJocU8agCqh4ERSkzBqgSn/p1fYiQrrPTHbPrsq
+         SIUDd7kKEDi5FKnGn6qxS4LUNglPu/ixavhped3Gpwe2WDQkLaX/ihH/FRMXZwICVAMz
+         EPXiNCQ8+2poI0o+uIU4Z2C0mckVtse+lXLhOMu9BV8wNoOUtGtOFmpiUTBMy+rzTNEN
+         it8Ofk/85idW2g7D03Hz/Jj2EMvv7jwhdQAYfndpCzqS/u9/6+p2XvPX7sSEP56nKKOQ
+         xRV6yBThtHFJq27m8hqYcBhpektFHRTfunQNqsUm8UXFaesr+Fd6vW6R56hbUXscp/G8
+         rEQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679932085;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mq4TDtGBlZgtpfQYSLhxkdtO2GoRthaF5pRlyFflCXo=;
+        b=Fhe8Zhjr3DKDHsz6PZ87yBP8/3X3wGVjDSj7s1iEGiscU2zkHmSC9L51qLRWcN5Ym7
+         GcPmPne6+6R9+n2hNi0twTLGZxFXJvhzsV2OEgAuyKaezw04hbzgs6Sizi/cSqz85epL
+         IPIcynzUIFiQBawrLJ924eSPxCkp473xfer19B+hTlVzijCTF3ljip4+d0SRRMvNeoiL
+         vrpcZlguFJxwFHAOza0lvUc13LPYzTdyk2Wu77dWr1ebNTXweTGMZD6KdiyzboP4ij1b
+         M/tOL60N0YynX+RgltcYzBIK+/gve5YpNC9FN3mv8DilgaJLXrIkM+Kzy5hudZ5tXK1L
+         7HJQ==
+X-Gm-Message-State: AAQBX9eTc/F9tJoXtwRDx6XgNaPxiPr4rPU9Nminq1MZ6GBhWvY4uV/V
+        vAqC4JCJf1WjNvWZuP+k/xJGhkGJOIXVOnZXFX/wxQ==
+X-Google-Smtp-Source: AKy350Z816BKucrxqsIw9VJx4kreTdsQ8n/JXUFFOb19w7i8QBPgEd4p2cspo4kSemJI3sIAoBzKLQ==
+X-Received: by 2002:a17:906:49d9:b0:932:217c:b85d with SMTP id w25-20020a17090649d900b00932217cb85dmr11770907ejv.37.1679932085449;
+        Mon, 27 Mar 2023 08:48:05 -0700 (PDT)
+Received: from localhost (p54ac5f91.dip0.t-ipconnect.de. [84.172.95.145])
+        by smtp.gmail.com with ESMTPSA id i4-20020a170906850400b0093018c7c07dsm14064339ejx.82.2023.03.27.08.48.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Mar 2023 08:48:04 -0700 (PDT)
+Date:   Mon, 27 Mar 2023 17:48:04 +0200
+From:   Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+To:     Chuck Lever <cel@kernel.org>
+Cc:     geert@linux-m68k.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC] NFS & NFSD: Update GSS dependencies
+Message-ID: <ZCG6tIoz0VN6d+oy@sleipner.dyn.berto.se>
+References: <167828670993.16253.6476667874038066881.stgit@bazille.1015granger.net>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <167828670993.16253.6476667874038066881.stgit@bazille.1015granger.net>
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2023-03-27 at 13:14 +0000, Chuck Lever III wrote:
->=20
-> > On Mar 27, 2023, at 6:21 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > For ops with "trivial" replies, nfsd4_encode_operation will shortcut
-> > most of the encoding work and skip to just marshalling up the status.
-> > One of the things it skips is calling op_release. This could cause a
-> > memory leak in the layoutget codepath if there is an error at an
-> > inopportune time.
-> >=20
-> > Have the compound processing engine always call op_release, even when
-> > op_func sets an error in op->status. With this change, we also need
-> > nfsd4_block_get_device_info_scsi to set the gd_device pointer to NULL
-> > on error to avoid a double free.
-> >=20
-> > Reported-by: Zhi Li <yieli@redhat.com>
-> > Link: https://bugzilla.redhat.com/show_bug.cgi?id=3D2181403
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
->=20
-> Thanks, Jeff.
->=20
-> May I add: Fixes: 34b1744c91cc ("nfsd4: define ->op_release for
-> compound ops") ?
->=20
->=20
+Hi Chuck,
 
-Sure. It does look like the leaks stretch back at least that far.
-=20
-> > ---
-> > fs/nfsd/blocklayout.c |  1 +
-> > fs/nfsd/nfs4xdr.c     | 13 +++++++------
-> > 2 files changed, 8 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-> > index 04697f8dc37d..01d7fd108cf3 100644
-> > --- a/fs/nfsd/blocklayout.c
-> > +++ b/fs/nfsd/blocklayout.c
-> > @@ -297,6 +297,7 @@ nfsd4_block_get_device_info_scsi(struct super_block=
- *sb,
-> >=20
-> > out_free_dev:
-> > 	kfree(dev);
-> > +	gdp->gd_device =3D NULL;
-> > 	return ret;
-> > }
-> >=20
-> > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> > index e12e5a4ad502..6b675fbdabd0 100644
-> > --- a/fs/nfsd/nfs4xdr.c
-> > +++ b/fs/nfsd/nfs4xdr.c
-> > @@ -5402,7 +5402,7 @@ nfsd4_encode_operation(struct nfsd4_compoundres *=
-resp, struct nfsd4_op *op)
-> > 	p =3D xdr_reserve_space(xdr, 8);
-> > 	if (!p) {
-> > 		WARN_ON_ONCE(1);
-> > -		return;
-> > +		goto release;
-> > 	}
-> > 	*p++ =3D cpu_to_be32(op->opnum);
-> > 	post_err_offset =3D xdr->buf->len;
-> > @@ -5418,8 +5418,6 @@ nfsd4_encode_operation(struct nfsd4_compoundres *=
-resp, struct nfsd4_op *op)
-> > 	op->status =3D encoder(resp, op->status, &op->u);
-> > 	if (op->status)
-> > 		trace_nfsd_compound_encode_err(rqstp, op->opnum, op->status);
-> > -	if (opdesc && opdesc->op_release)
-> > -		opdesc->op_release(&op->u);
-> > 	xdr_commit_encode(xdr);
-> >=20
-> > 	/* nfsd4_check_resp_size guarantees enough room for error status */
-> > @@ -5460,11 +5458,14 @@ nfsd4_encode_operation(struct nfsd4_compoundres=
- *resp, struct nfsd4_op *op)
-> > 	}
-> > status:
-> > 	*p =3D op->status;
-> > +release:
-> > +	if (opdesc && opdesc->op_release)
-> > +		opdesc->op_release(&op->u);
-> > }
-> >=20
-> > -/*=20
-> > - * Encode the reply stored in the stateowner reply cache=20
-> > - *=20
-> > +/*
-> > + * Encode the reply stored in the stateowner reply cache
-> > + *
-> >  * XDR note: do not encode rp->rp_buflen: the buffer contains the
-> >  * previously sent already encoded operation.
-> >  */
-> > --=20
-> > 2.39.2
-> >=20
->=20
-> --
-> Chuck Lever
->=20
->=20
+This commits seems to have been picked up already, but FWIW it produces 
+two new warnings with shmobile_defconfig.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+WARNING: unmet direct dependencies detected for RPCSEC_GSS_KRB5
+  Depends on [n]: NETWORK_FILESYSTEMS [=y] && SUNRPC [=y] && CRYPTO [=n]
+  Selected by [y]:
+  - NFS_V4 [=y] && NETWORK_FILESYSTEMS [=y] && NFS_FS [=y]
+
+WARNING: unmet direct dependencies detected for RPCSEC_GSS_KRB5
+  Depends on [n]: NETWORK_FILESYSTEMS [=y] && SUNRPC [=y] && CRYPTO [=n]
+  Selected by [y]:
+  - NFS_V4 [=y] && NETWORK_FILESYSTEMS [=y] && NFS_FS [=y]
+
+On 2023-03-08 09:45:09 -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> Geert reports that:
+> > On v6.2, "make ARCH=m68k defconfig" gives you
+> > CONFIG_RPCSEC_GSS_KRB5=m
+> > On v6.3, it became builtin, due to dropping the dependencies on
+> > the individual crypto modules.
+> >
+> > $ grep -E "CRYPTO_(MD5|DES|CBC|CTS|ECB|HMAC|SHA1|AES)" .config
+> > CONFIG_CRYPTO_AES=y
+> > CONFIG_CRYPTO_AES_TI=m
+> > CONFIG_CRYPTO_DES=m
+> > CONFIG_CRYPTO_CBC=m
+> > CONFIG_CRYPTO_CTS=m
+> > CONFIG_CRYPTO_ECB=m
+> > CONFIG_CRYPTO_HMAC=m
+> > CONFIG_CRYPTO_MD5=m
+> > CONFIG_CRYPTO_SHA1=m
+> 
+> This behavior is triggered by the "default y" in the definition of
+> RPCSEC_GSS.
+> 
+> The "default y" was added in 2010 by commit df486a25900f ("NFS: Fix
+> the selection of security flavours in Kconfig"). However,
+> svc_gss_principal was removed in 2012 by commit 03a4e1f6ddf2
+> ("nfsd4: move principal name into svc_cred"), so the 2010 fix is
+> no longer necessary. We can safely change the NFS_V4 and NFSD_V4
+> dependencies back to RPCSEC_GSS_KRB5 to get the nicer v6.2
+> behavior back.
+> 
+> Selecting KRB5 symbolically represents the true requirement here:
+> that all spec-compliant NFSv4 implementations must have Kerberos
+> available to use.
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfs/Kconfig  |    2 +-
+>  fs/nfsd/Kconfig |    2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+> index 14a72224b657..450d6c3bc05e 100644
+> --- a/fs/nfs/Kconfig
+> +++ b/fs/nfs/Kconfig
+> @@ -75,7 +75,7 @@ config NFS_V3_ACL
+>  config NFS_V4
+>  	tristate "NFS client support for NFS version 4"
+>  	depends on NFS_FS
+> -	select SUNRPC_GSS
+> +	select RPCSEC_GSS_KRB5
+>  	select KEYS
+>  	help
+>  	  This option enables support for version 4 of the NFS protocol
+> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+> index 7c441f2bd444..43b88eaf0673 100644
+> --- a/fs/nfsd/Kconfig
+> +++ b/fs/nfsd/Kconfig
+> @@ -73,7 +73,7 @@ config NFSD_V4
+>  	bool "NFS server support for NFS version 4"
+>  	depends on NFSD && PROC_FS
+>  	select FS_POSIX_ACL
+> -	select SUNRPC_GSS
+> +	select RPCSEC_GSS_KRB5
+>  	select CRYPTO
+>  	select CRYPTO_MD5
+>  	select CRYPTO_SHA256
+> 
+> 
+
+-- 
+Kind Regards,
+Niklas Söderlund
