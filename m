@@ -2,60 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BF036CB2E3
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Mar 2023 02:49:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC1D6CB45C
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Mar 2023 04:53:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjC1AtF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Mar 2023 20:49:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44322 "EHLO
+        id S229658AbjC1CxI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Mar 2023 22:53:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbjC1AtE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Mar 2023 20:49:04 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D6A21A5
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Mar 2023 17:49:03 -0700 (PDT)
+        with ESMTP id S229645AbjC1CxH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Mar 2023 22:53:07 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE7D51FF0
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Mar 2023 19:53:06 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 4E53B219DB;
-        Tue, 28 Mar 2023 00:49:02 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 1721C1FD6A;
+        Tue, 28 Mar 2023 02:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1679964542; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1679971985; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=IVb/5QucqYE4QMQAmYoi2YL8WeufPm/rBXRcF2ZA60U=;
-        b=z8TPHMD/f59fY6sEmaT+VIqkas1RwF2i7yMQgjcU/hJCmCXPYlgmXDm9TrQJGnTNtA5leF
-        1n9U0i7xMjMqhwORaJvpqF50ooX3LJFeffQM1a4qImHiyN7FLYmSBRMn7bNq8rAH6s3H1D
-        QH3c6xAdZMu5gZW/IOLQ0W7+umeBR/w=
+        bh=1eNZOzjtx2l9dFrbZ6TzlJEzuvxBpdSKMOkg8I/uaqE=;
+        b=VhFiiUi3LJJ7Ep7ZZvQYQCTMCBip0yXlRxtcNggTP1+LhqlDnyBALlXRqMrM7SLsaryaGp
+        hXeMXYXBWbym1b/A2ad/zOXtZJlc5RajP79ipzpJS/5DfbTBDmmB2RrsA8u2sTMuYJxSKy
+        MKa2kPxU9doK2L9UZAA0oyY8ZuM7YT8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1679964542;
+        s=susede2_ed25519; t=1679971985;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=IVb/5QucqYE4QMQAmYoi2YL8WeufPm/rBXRcF2ZA60U=;
-        b=rb0MNcFDowAJy6NgoF36l1HzQ1WZf77DKiytE4hOWRsNiLjfyTSHABuOjXM0ZHtaU1kL2d
-        xEIIR8loD6Csh/Cw==
+        bh=1eNZOzjtx2l9dFrbZ6TzlJEzuvxBpdSKMOkg8I/uaqE=;
+        b=tCvMbdV3ytE9wdp4Ng5pCQe3MSNtZla5E/malr584wEywRg2nHfHkr2VO6WCR9kmfN1Bfw
+        Jor0sB2Q7mlOvNCA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2245813329;
-        Tue, 28 Mar 2023 00:49:00 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DFF22133B6;
+        Tue, 28 Mar 2023 02:53:03 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id TQTbMnw5ImQJAgAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 28 Mar 2023 00:49:00 +0000
+        id nF9lJY9WImSHJgAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 28 Mar 2023 02:53:03 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     Bruce Fields <bfields@fieldses.org>,
-        Jeff Layton <jlayton@kernel.org>
+To:     Steve Dickson <steved@redhat.com>
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: [PATCH pynfs] rpc.py: Don't try to subscript an exception.
-Date:   Tue, 28 Mar 2023 11:48:57 +1100
-Message-id: <167996453785.8106.14290228013263156210@noble.neil.brown.name>
+Subject: [PATCH nfs-utils] mount.nfs: always include mountpoint or spec if
+ error messages.
+Date:   Tue, 28 Mar 2023 13:53:00 +1100
+Message-id: <167997198028.8106.1574926503489095936@noble.neil.brown.name>
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
@@ -66,42 +66,94 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-As far as I can tell python3 has never supported subscripting of
-exceptions.
-So don't try to...
+If you try to mount from a server that is inaccessible you might get an
+error like:
+    mount.nfs: No route to host
+
+This is OK when running "mount" interactively, but hardly useful when
+found in system logs.
+
+This patch changes mount_error() to always included at least one of
+mount_point and spec in any error message.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- nfs4.0/lib/rpc/rpc.py | 2 +-
- rpc/rpc.py            | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ utils/mount/error.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-diff --git a/nfs4.0/lib/rpc/rpc.py b/nfs4.0/lib/rpc/rpc.py
-index 24a7fc72eff0..585db3551f73 100644
---- a/nfs4.0/lib/rpc/rpc.py
-+++ b/nfs4.0/lib/rpc/rpc.py
-@@ -227,7 +227,7 @@ class RPCClient(object):
-                 sock.bind(('', port))
-                 return
-             except socket.error as why:
--                if why[0] == errno.EADDRINUSE:
-+                if why.errno == errno.EADDRINUSE:
-                     port += 1
-                 else:
-                     print("Could not use low port")
-diff --git a/rpc/rpc.py b/rpc/rpc.py
-index 1fe285aa2b5b..814de4e08bc9 100644
---- a/rpc/rpc.py
-+++ b/rpc/rpc.py
-@@ -846,7 +846,7 @@ class ConnectionHandler(object):
-                 s.bind(('', using))
-                 return
-             except socket.error as why:
--                if why[0] == errno.EADDRINUSE:
-+                if why.errno == errno.EADDRINUSE:
-                     using += 1
-                     if port < 1024 <= using:
-                         # If we ask for a secure port, make sure we don't
--- 
+diff --git a/utils/mount/error.c b/utils/mount/error.c
+index 73295bf0567c..9ddbcc096f72 100644
+--- a/utils/mount/error.c
++++ b/utils/mount/error.c
+@@ -207,16 +207,17 @@ void mount_error(const char *spec, const char *mount_po=
+int, int error)
+ 				progname, spec);
+ 		break;
+ 	case EINVAL:
+-		nfs_error(_("%s: an incorrect mount option was specified"), progname);
++		nfs_error(_("%s: an incorrect mount option was specified for %s"),
++				progname, mount_point);
+ 		break;
+ 	case EOPNOTSUPP:
+-		nfs_error(_("%s: requested NFS version or transport protocol is not suppor=
+ted"),
+-				progname);
++		nfs_error(_("%s: requested NFS version or transport protocol is not suppor=
+ted for %s"),
++				progname, mount_point);
+ 		break;
+ 	case ENOTDIR:
+ 		if (spec)
+-			nfs_error(_("%s: mount spec %s or point %s is not a "
+-				  "directory"),	progname, spec, mount_point);
++			nfs_error(_("%s: mount spec %s or point %s is not a directory"),
++				  progname, spec, mount_point);
+ 		else
+ 			nfs_error(_("%s: mount point %s is not a directory"),
+ 				  progname, mount_point);
+@@ -227,31 +228,31 @@ void mount_error(const char *spec, const char *mount_po=
+int, int error)
+ 		break;
+ 	case ENOENT:
+ 		if (spec)
+-			nfs_error(_("%s: mounting %s failed, "
+-				"reason given by server: %s"),
+-				progname, spec, strerror(error));
++			nfs_error(_("%s: mounting %s failed, reason given by server: %s"),
++				  progname, spec, strerror(error));
+ 		else
+ 			nfs_error(_("%s: mount point %s does not exist"),
+-				progname, mount_point);
++				  progname, mount_point);
+ 		break;
+ 	case ESPIPE:
+ 		rpc_mount_errors((char *)spec, 0, 0);
+ 		break;
+ 	case EIO:
+-		nfs_error(_("%s: mount system call failed"), progname);
++		nfs_error(_("%s: mount system call failed for %s"),
++			  progname, mount_point);
+ 		break;
+ 	case EFAULT:
+-		nfs_error(_("%s: encountered unexpected error condition."),
+-				progname);
++		nfs_error(_("%s: encountered unexpected error condition for %s."),
++			  progname, mount_point);
+ 		nfs_error(_("%s: please report the error to" PACKAGE_BUGREPORT),
+-				progname);
++			  progname);
+ 		break;
+ 	case EALREADY:
+ 		/* Error message has already been provided */
+ 		break;
+ 	default:
+-		nfs_error(_("%s: %s"),
+-			progname, strerror(error));
++		nfs_error(_("%s: %s for %s on %s"),
++			  progname, strerror(error), spec, mount_point);
+ 	}
+ }
+=20
+--=20
 2.40.0
 
