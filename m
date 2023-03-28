@@ -2,52 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84FA86CB965
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Mar 2023 10:30:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 549CE6CBE3C
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Mar 2023 13:57:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjC1IaO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Mar 2023 04:30:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48794 "EHLO
+        id S230378AbjC1L5S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Mar 2023 07:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232256AbjC1IaM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Mar 2023 04:30:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE9A03C34;
-        Tue, 28 Mar 2023 01:30:08 -0700 (PDT)
+        with ESMTP id S229436AbjC1L5S (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Mar 2023 07:57:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0303F83EC;
+        Tue, 28 Mar 2023 04:57:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2788F6155E;
-        Tue, 28 Mar 2023 08:30:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 934D6C433EF;
-        Tue, 28 Mar 2023 08:30:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679992207;
-        bh=57O8SXNkoQuVQhQlA6YOIdV+n7nmtB7ImkM0TollDxE=;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 907D4B81C1B;
+        Tue, 28 Mar 2023 11:57:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1A5C433EF;
+        Tue, 28 Mar 2023 11:57:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1680004634;
+        bh=LwTBjMUAtQcMZXMxLYmp9A8uaSZhKZEpmFKC/rgoKJY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UH0Bpsdj7JJwhRJgS8Cizn5aCDGc3hjM1vT2wXHx2MtYLBADvs9H2TXvkp0QYcV8j
-         jnVWh/MGBZQr8YKuIS0lqbasqkeI8FfVdgFAeGVPCRVFYfZhWXd9peNt0x6flQfTpD
-         uvT/qMLOGo3yAIZk581lp8CImiMbvVHndk357O8OsuTr+l4PbBAgdPRtsiHYkEfomX
-         aJ3vSvHaELl+PGSOmHlJhTGzKyNKleK0ve0gCWM42Ga8KSzgAY2WPr4yiHx7xcj5Ji
-         /c01c0NEhe9N3M5LLEC/Gg1jXnLllIR6uA2Z6wqsB4zJDElJu+jIEVAWHtMbDvp9Y/
-         uewV1EiFcSC7w==
-Date:   Tue, 28 Mar 2023 10:30:02 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] nfs: use vfs setgid helper
-Message-ID: <20230328083002.5yn5ggpqpe7caeuz@wittgenstein>
-References: <20230313-fs-nfs-setgid-v2-1-9a59f436cfc0@kernel.org>
+        b=zHay5p5fLqPGgAO5n1RcEFOPfuCuYDn+uTA08vLA2bp7aoZUrhDvbrBsqy9CJ9jBG
+         ii1hSMUXI9pZfTIuBMsaEEKZhLT/dig/t7CtB3g2cB9vlxdvVGsMbaJrfBy7tBGisa
+         DpdtDbfqV86HWBH3fjiFzDY1oqTHRl+0B3X+s2Bo=
+Date:   Tue, 28 Mar 2023 13:57:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Sasha Levin <sashal@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        stable@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 5.15] lockd: set file_lock start and end when decoding
+ nlm4 testargs
+Message-ID: <ZCLWF3hNQxyncHNz@kroah.com>
+References: <20230321104628.37323-1-amir73il@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230313-fs-nfs-setgid-v2-1-9a59f436cfc0@kernel.org>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+In-Reply-To: <20230321104628.37323-1-amir73il@gmail.com>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,25 +51,37 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 12:51:10PM +0100, Christian Brauner wrote:
-> We've aligned setgid behavior over multiple kernel releases. The details
-> can be found in the following two merge messages:
-> cf619f891971 ("Merge tag 'fs.ovl.setgid.v6.2')
-> 426b4ca2d6a5 ("Merge tag 'fs.setgid.v6.0')
-> Consistent setgid stripping behavior is now encapsulated in the
-> setattr_should_drop_sgid() helper which is used by all filesystems that
-> strip setgid bits outside of vfs proper. Switch nfs to rely on this
-> helper as well. Without this patch the setgid stripping tests in
-> xfstests will fail.
+On Tue, Mar 21, 2023 at 12:46:28PM +0200, Amir Goldstein wrote:
+> From: Jeff Layton <jlayton@kernel.org>
 > 
-> Signed-off-by: Christian Brauner (Microsoft) <brauner@kernel.org>
+> commit 7ff84910c66c9144cc0de9d9deed9fb84c03aff0 upstream.
+> 
+> Commit 6930bcbfb6ce dropped the setting of the file_lock range when
+> decoding a nlm_lock off the wire. This causes the client side grant
+> callback to miss matching blocks and reject the lock, only to rerequest
+> it 30s later.
+> 
+> Add a helper function to set the file_lock range from the start and end
+> values that the protocol uses, and have the nlm_lock decoder call that to
+> set up the file_lock args properly.
+> 
+> Fixes: 6930bcbfb6ce ("lockd: detect and reject lock arguments that overflow")
+> Reported-by: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> Tested-by: Amir Goldstein <amir73il@gmail.com>
+> Cc: stable@vger.kernel.org #6.0
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 > ---
-> Changes in v2:
-> - Christoph Hellwig <hch@lst.de>:
->   * Export setattr_should_sgid() so it actually can be used by filesystems
-> - Link to v1: https://lore.kernel.org/r/20230313-fs-nfs-setgid-v1-1-5b1fa599f186@kernel.org
-> ---
+> 
+> Greg,
+> 
+> The upstream fix applies cleanly to 6.1.y and 6.2.y, so as the
+> Cc stable mentions, please apply upstream fix to those trees.
+> 
+> Alas, the regressing commit was also applied to v5.15.61,
+> so please apply this backport to fix 5.15.y.
 
-If someone has a few cycles to give this a review it would be
-appreciated. I'm happy to carry this patch or the NFS tree can.
-I'm not fussed.
+Now queued up, thanks.
+
+greg k-h
