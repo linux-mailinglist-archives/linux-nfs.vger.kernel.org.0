@@ -2,87 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E57D6CFC0B
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Mar 2023 08:57:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E209F6CFFCB
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Mar 2023 11:30:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230382AbjC3G5Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Mar 2023 02:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48494 "EHLO
+        id S230224AbjC3JaG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Mar 2023 05:30:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230381AbjC3G5O (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Mar 2023 02:57:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1B465B7;
-        Wed, 29 Mar 2023 23:57:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S230016AbjC3JaB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Mar 2023 05:30:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 425016A63
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Mar 2023 02:29:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680168556;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+XgWAMkX5gl81w36XkfWKNCMFULxOFJmmzo6Xs6xITY=;
+        b=VyxB1NNhEjH7AWD1MbEBKslgSyYpUSp5adkL4tMexfkhgWiiPhOB4nqlORqhrTog/JXJoT
+        2GlNw0o8u2L3iC5jFQWSObYr+cnP4foLvYEgxtIPde4nh1KX9gkASmhRhIf3ZQ6lBhV2Em
+        bTQVmbCyDGTD2O+N45hsZ7EbZmcFi+Q=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-544-jczfNWu4OtqMRHX0J7vacA-1; Thu, 30 Mar 2023 05:29:11 -0400
+X-MC-Unique: jczfNWu4OtqMRHX0J7vacA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C8CD7B82600;
-        Thu, 30 Mar 2023 06:57:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B54C433EF;
-        Thu, 30 Mar 2023 06:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680159429;
-        bh=dRxto1nKOBv47Hgtnxtl36FhSOrP9QavSk0iDsliXGk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pzvXgy54cpqTFF1OzYug+6fWtlmk7w3vi8ZPTWfSO5aqM06+zhuEpJowQ4PjFF576
-         BvvZYWv4gPtoKeg36pw9+5G9LXf/2i6liGdcDKLpkaaWlfPXxTO16yCYSEegweYl1S
-         Nqxg1bd79bYgaINS/UY+6GgDNIH9fWcrPw1dGjBhhzEOFLJyB2Y9eu2Ytqpgch4SFY
-         kPBhCm/I5QvXEO4EzCUQyIWrLLZGx64O8DVocq/91Ou/U8yhXkdv2aqoV2bhY+sVod
-         hOHG5LjD3aYLuZda3gtkvLlcieDjJlAW6uzZYm/U/EkiaB1NQ2clhNSLNWxT08k6MU
-         uK4SXFjwKIIYQ==
-Date:   Thu, 30 Mar 2023 08:57:03 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8C7768828CB;
+        Thu, 30 Mar 2023 09:29:10 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE8D34020C82;
+        Thu, 30 Mar 2023 09:29:07 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <6F2985FF-2474-4F36-BD94-5F8E97E46AC2@oracle.com>
+References: <6F2985FF-2474-4F36-BD94-5F8E97E46AC2@oracle.com> <20230329141354.516864-1-dhowells@redhat.com> <20230329141354.516864-41-dhowells@redhat.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Jeff Layton <jlayton@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Christian Brauner <brauner@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] nfs: use vfs setgid helper
-Message-ID: <20230330-nifty-radiator-fffd92d2b2fa@brauner>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=837; i=brauner@kernel.org;
- h=from:subject:message-id; bh=yNyLgGjEDjRE400I25HPN4HDcYoV0hPW9uuPEycb/yU=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSoGlX/vN1e7ViiwuXzxm2/t8SSXb8+9tufFT+R15Jna13v
- npzRUcLCIMbFICumyOLQbhIut5ynYrNRpgbMHFYmkCEMXJwCMJF/Kxj+6a2wrU24n5jM1WEy97dLWP
- 2mA/IPuIrDjkTblU49lTrFg+G7+4klAXcPcLgHGB77fp0xTFtavO3344W/n9/VETrV684HAA==
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-References: <20230313-fs-nfs-setgid-v2-1-9a59f436cfc0@kernel.org>
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [RFC PATCH v2 40/48] sunrpc: Use sendmsg(MSG_SPLICE_PAGES) rather then sendpage
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230313-fs-nfs-setgid-v2-1-9a59f436cfc0@kernel.org>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <777294.1680168547.1@warthog.procyon.org.uk>
+Date:   Thu, 30 Mar 2023 10:29:07 +0100
+Message-ID: <777295.1680168547@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Chuck Lever III <chuck.lever@oracle.com> wrote:
 
-On Tue, 14 Mar 2023 12:51:10 +0100, Christian Brauner wrote:
-> We've aligned setgid behavior over multiple kernel releases. The details
-> can be found in the following two merge messages:
-> cf619f891971 ("Merge tag 'fs.ovl.setgid.v6.2')
-> 426b4ca2d6a5 ("Merge tag 'fs.setgid.v6.0')
-> Consistent setgid stripping behavior is now encapsulated in the
-> setattr_should_drop_sgid() helper which is used by all filesystems that
-> strip setgid bits outside of vfs proper. Switch nfs to rely on this
-> helper as well. Without this patch the setgid stripping tests in
-> xfstests will fail.
-> 
-> [...]
+> It seems to me that you could eliminate the kernel_sendpage()
+> consumer here in svc_tcp_sendmsg() without also replacing the
+> kernel_sendmsg() calls. That would be a conservative step-wise
+> approach which would carry less risk, and would accomplish
+> your stated goal without more radical surgery.
 
-So I've picked this up now,
+Note that only the marker is sent with kernel_sendmsg() in the unmodified
+code; the head and tail are sent with svc_tcp_send_kvec()... which uses
+kernel_sendpage() which needs to be changed in my patchset.  I can make it do
+individual sendmsg calls for all those for now.
 
-tree: git://git.kernel.org/pub/scm/linux/kernel/git/vfs/idmapping.git
-branch: fs.misc
-[1/1] nfs: use vfs setgid helper
-      commit: 4f704d9a8352f5c0a8fcdb6213b934630342bd44
+David
 
-Thanks!
-Christian
