@@ -2,181 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCB236D2584
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Mar 2023 18:31:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1AE76D2890
+	for <lists+linux-nfs@lfdr.de>; Fri, 31 Mar 2023 21:16:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233106AbjCaQbJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 31 Mar 2023 12:31:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
+        id S231539AbjCaTQa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 31 Mar 2023 15:16:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231666AbjCaQaw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 Mar 2023 12:30:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E082E23B77
-        for <linux-nfs@vger.kernel.org>; Fri, 31 Mar 2023 09:25:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680279901;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v5XUK+PQOR7d9klL6/6O6KO8pAUYr8F8Qal1kb1WUAE=;
-        b=KmIN8RBYMz+5VCxar/kXevF3d9tOl2f4dLfi9mJkI1VP9BiPK7nnrAPSPUdocmTzuqDl7n
-        nd4F+CC2A0aRUwa+dcvPk0MHx60+nB2a1ze1AHvkgyAuvZoVTE5Ioqn+jxmQc+kWHPMYsU
-        OOymT8sXo/wyt15X7NlZ2XcReMJXNiw=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-256-fHdJvov2Og26gxE1ES-_Qg-1; Fri, 31 Mar 2023 12:11:35 -0400
-X-MC-Unique: fHdJvov2Og26gxE1ES-_Qg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S231241AbjCaTQ3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 31 Mar 2023 15:16:29 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8349D22933;
+        Fri, 31 Mar 2023 12:16:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4E74229ABA17;
-        Fri, 31 Mar 2023 16:11:34 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22BEA492C3E;
-        Fri, 31 Mar 2023 16:11:32 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     Matthew Wilcox <willy@infradead.org>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id 31520B831F0;
+        Fri, 31 Mar 2023 19:16:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C4C3C433D2;
+        Fri, 31 Mar 2023 19:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680290185;
+        bh=67/RGvHHjDJru2OHFghr0M4JV0SNZ9LI/thmTUTVZmM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=aNACXKQuDUI3+ZSSXDzQ9hXLgYS/6W4y1lJmYGI2AJCSAQ8gI9vK5YAaMB8YjWfP/
+         WxGuNi/5prRbfRHJ0LhidgHqMFjXaxIdnQozGH7K21NYrdLAXP+9qfLPtx+gYg6xmq
+         +zFk4DvuEQp6bd0mcn73ISpURphCWTxSfdCHgjN60tbEmU50HlnqBjc7jgSeOHIg8p
+         HSRGQKxhzfS0gjSoDOEvJndbHRrOa1zeZ1IfRvLFmtk9oxsqCkvs09h0TaijHb57lp
+         6792bIjh8vmBYuk6G9//dekKpnzDUNzXv64+Yw4y/LEQrIO6OC98qEN7xx92VF6c18
+         kp5BsgidzrtsA==
+Message-ID: <6a0e9fd260a9ef373b5a9f64af46974f73201760.camel@kernel.org>
+Subject: Re: [PATCH v3 02/55] iov_iter: Remove last_offset member
+From:   Jeff Layton <jlayton@kernel.org>
+To:     David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
         Christoph Hellwig <hch@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Jeff Layton <jlayton@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
         Christian Brauner <brauner@kernel.org>,
         Chuck Lever III <chuck.lever@oracle.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH v3 48/55] sunrpc: Use sendmsg(MSG_SPLICE_PAGES) rather then sendpage
-Date:   Fri, 31 Mar 2023 17:09:07 +0100
-Message-Id: <20230331160914.1608208-49-dhowells@redhat.com>
-In-Reply-To: <20230331160914.1608208-1-dhowells@redhat.com>
+        linux-nfs@vger.kernel.org
+Date:   Fri, 31 Mar 2023 15:16:22 -0400
+In-Reply-To: <20230331160914.1608208-3-dhowells@redhat.com>
 References: <20230331160914.1608208-1-dhowells@redhat.com>
+         <20230331160914.1608208-3-dhowells@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When transmitting data, call down into TCP using sendmsg with
-MSG_SPLICE_PAGES to indicate that content should be spliced rather than
-performing sendpage calls to transmit header, data pages and trailer.
+On Fri, 2023-03-31 at 17:08 +0100, David Howells wrote:
+> With the removal of ITER_PIPE, the last_offset member of struct iov_iter =
+is
+> no longer used, so remove it and un-unionise the remaining member.
+>=20
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Jens Axboe <axboe@kernel.dk>
+> cc: Matthew Wilcox <willy@infradead.org>
+> cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> cc: Jeff Layton <jlayton@kernel.org>
+> cc: linux-nfs@vger.kernel.org
+> cc: linux-fsdevel@vger.kernel.org
+> cc: linux-mm@kvack.org
+> cc: netdev@vger.kernel.org
+> ---
+>  include/linux/uio.h | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
+>=20
+> diff --git a/include/linux/uio.h b/include/linux/uio.h
+> index 74598426edb4..2d8a70cb9b26 100644
+> --- a/include/linux/uio.h
+> +++ b/include/linux/uio.h
+> @@ -43,10 +43,7 @@ struct iov_iter {
+>  	bool nofault;
+>  	bool data_source;
+>  	bool user_backed;
+> -	union {
+> -		size_t iov_offset;
+> -		int last_offset;
+> -	};
+> +	size_t iov_offset;
+>  	size_t count;
+>  	union {
+>  		const struct iovec *iov;
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-cc: Anna Schumaker <anna@kernel.org>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: linux-nfs@vger.kernel.org
-cc: netdev@vger.kernel.org
----
- include/linux/sunrpc/svc.h | 11 +++++------
- net/sunrpc/svcsock.c       | 38 ++++++++++++--------------------------
- 2 files changed, 17 insertions(+), 32 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 877891536c2f..456ae554aa11 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -161,16 +161,15 @@ static inline bool svc_put_not_last(struct svc_serv *serv)
- extern u32 svc_max_payload(const struct svc_rqst *rqstp);
- 
- /*
-- * RPC Requsts and replies are stored in one or more pages.
-+ * RPC Requests and replies are stored in one or more pages.
-  * We maintain an array of pages for each server thread.
-  * Requests are copied into these pages as they arrive.  Remaining
-  * pages are available to write the reply into.
-  *
-- * Pages are sent using ->sendpage so each server thread needs to
-- * allocate more to replace those used in sending.  To help keep track
-- * of these pages we have a receive list where all pages initialy live,
-- * and a send list where pages are moved to when there are to be part
-- * of a reply.
-+ * Pages are sent using ->sendmsg with MSG_SPLICE_PAGES so each server thread
-+ * needs to allocate more to replace those used in sending.  To help keep track
-+ * of these pages we have a receive list where all pages initialy live, and a
-+ * send list where pages are moved to when there are to be part of a reply.
-  *
-  * We use xdr_buf for holding responses as it fits well with NFS
-  * read responses (that have a header, and some data pages, and possibly
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 03a4f5615086..3a015abac5bd 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1063,13 +1063,14 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
- static int svc_tcp_send_kvec(struct socket *sock, const struct kvec *vec,
- 			      int flags)
- {
--	return kernel_sendpage(sock, virt_to_page(vec->iov_base),
--			       offset_in_page(vec->iov_base),
--			       vec->iov_len, flags);
-+	struct msghdr msg = { .msg_flags = MSG_SPLICE_PAGES | flags, };
-+
-+	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, vec, 1, vec->iov_len);
-+	return sock_sendmsg(sock, &msg);
- }
- 
- /*
-- * kernel_sendpage() is used exclusively to reduce the number of
-+ * MSG_SPLICE_PAGES is used exclusively to reduce the number of
-  * copy operations in this path. Therefore the caller must ensure
-  * that the pages backing @xdr are unchanging.
-  *
-@@ -1109,28 +1110,13 @@ static int svc_tcp_sendmsg(struct socket *sock, struct xdr_buf *xdr,
- 	if (ret != head->iov_len)
- 		goto out;
- 
--	if (xdr->page_len) {
--		unsigned int offset, len, remaining;
--		struct bio_vec *bvec;
--
--		bvec = xdr->bvec + (xdr->page_base >> PAGE_SHIFT);
--		offset = offset_in_page(xdr->page_base);
--		remaining = xdr->page_len;
--		while (remaining > 0) {
--			len = min(remaining, bvec->bv_len - offset);
--			ret = kernel_sendpage(sock, bvec->bv_page,
--					      bvec->bv_offset + offset,
--					      len, 0);
--			if (ret < 0)
--				return ret;
--			*sentp += ret;
--			if (ret != len)
--				goto out;
--			remaining -= len;
--			offset = 0;
--			bvec++;
--		}
--	}
-+	msg.msg_flags = MSG_SPLICE_PAGES;
-+	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, xdr->bvec,
-+		      xdr_buf_pagecount(xdr), xdr->page_len);
-+	ret = sock_sendmsg(sock, &msg);
-+	if (ret < 0)
-+		return ret;
-+	*sentp += ret;
- 
- 	if (tail->iov_len) {
- 		ret = svc_tcp_send_kvec(sock, tail, 0);
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
