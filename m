@@ -2,120 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FD986D47BA
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Apr 2023 16:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D2D46D4E7D
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Apr 2023 18:57:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233156AbjDCOXA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Apr 2023 10:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47410 "EHLO
+        id S233037AbjDCQ5c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Apr 2023 12:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233158AbjDCOW7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Apr 2023 10:22:59 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38C32CAF0;
-        Mon,  3 Apr 2023 07:22:42 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 86BEC21DCA;
-        Mon,  3 Apr 2023 14:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1680531761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R46s3dzmAWjax7iXZKikFYCLr1xSbo6uFhX0zzjg4pU=;
-        b=XViU3+ETjmX+Zv1i3Q4VVTn7Ny+KHI+pcGRnoPPT3r61aXIzJBxPYzNkNl9++TJ9aBjV6M
-        pj5xzmCEcljzJ3VrWr7zg8WDaJErfGUilAp+755lKhp6uAWpsjuSCcyiyy9snmSveJO8Pa
-        dYp4hCNxKq+rm1Sy8iI/zHvhEXqBk/Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1680531761;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R46s3dzmAWjax7iXZKikFYCLr1xSbo6uFhX0zzjg4pU=;
-        b=U1FjLpLfehFJEz9putWhis2w9XqHu0U3h3oaiL98jCSHliu31HtoSv01Qgpvds/nc1S0hp
-        frS9z8ZPoJjwAoCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 773A813416;
-        Mon,  3 Apr 2023 14:22:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id nFUjHTHhKmRzFQAAMHmgww
-        (envelope-from <jack@suse.cz>); Mon, 03 Apr 2023 14:22:41 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id EF44AA0723; Mon,  3 Apr 2023 16:22:40 +0200 (CEST)
-Date:   Mon, 3 Apr 2023 16:22:40 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, ocfs2-devel@oss.oracle.com,
-        devel@lists.orangefs.org, reiserfs-devel@vger.kernel.org,
-        Evgeniy Dushistov <dushistov@mail.ru>
-Subject: Re: RFC: Filesystem metadata in HIGHMEM
-Message-ID: <20230403142240.ftkywr3vn3r73yva@quack3>
-References: <ZBCJ11qT8AWGA9y8@casper.infradead.org>
+        with ESMTP id S233040AbjDCQ53 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Apr 2023 12:57:29 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D93D9EC
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Apr 2023 09:57:25 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id cu12so19620852pfb.13
+        for <linux-nfs@vger.kernel.org>; Mon, 03 Apr 2023 09:57:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1680541045;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pBz1pk/5SBE58dXFmTYNeO1tLW+cVeVrWxWstO6am4o=;
+        b=hzyxekJeWG0rYzELrVRQsBnVjdFUsqeqzXk8AlsDVntI0N894CbRQ1RPJAEBGr9trv
+         3itG4yCEtmfDi5e+p3U2nosi9EFfMgkxkMr3BVt0WJ2wYCA3OPCtB4EsR4EGgaayUpuh
+         JJLp3CmoM67LaTTckeRv0P0pWAWKBL18p8E+bHHvEEh8JgGXLS7WmlZqiqpXkF/nPp5O
+         Sk9y8GS/aN8GDbUdIaYuC/qKER6a21//pqlsvFdc/yHiqjXjuCdXJ9v56T4fvFvgEORh
+         FHCV7HdAqf4uWMeIVOHwMvbGpjp4Qo12DHEvUWYEUFT3/ALkP9tuAlpldSykhgxy7Xm2
+         4fhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680541045;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pBz1pk/5SBE58dXFmTYNeO1tLW+cVeVrWxWstO6am4o=;
+        b=kCTGIuA7xZTodHXt/jt37FdGuBdtGbEWHu1mgh4AI2J3PlSN5NYC/M/oaIai4gf62w
+         K+MIyk0YTjGqpx6w6oW982MgXta64WFKltLfDpdkdxDdMW1A/mZbHokfeH9MNzop8kmH
+         ufb9CtIGx14X1eetpLXxc6aH0E621tq/nfHPg7+HMbO7J2cYhuOjUSmvxC5LbE8Y1FW6
+         F+wmG4xrnqt7UgGX20lfpMud3hrd0hGToHXJIcY1pA9WOUF2/1i/oTxE+ypQN9K7hAts
+         5hHhvzNsX6Io7nAJAzz2P2yeEF0Nphknk0o8qXZF9lCpVk2Ac0sOukjIqfCPeY0Ldx9d
+         o6jw==
+X-Gm-Message-State: AAQBX9eq7aDunBllGGm6Oy/jRjo53cW5tLHf4XMUvJK2VW7Z0u4yPWUY
+        btkHx/Pmpu6grP9lUVukx4076FYmxu2G/aUJwMrxF5cF
+X-Google-Smtp-Source: AKy350bKU/ZEMd1Spw3gf0FP4oyJ7kpzzKJWmBKOGHn5Iu1hWyViufFcNo9fl3+dUTLVYe7Y57y5fASOpeh4vxZmrTo=
+X-Received: by 2002:a65:5ac7:0:b0:50c:bde:50c7 with SMTP id
+ d7-20020a655ac7000000b0050c0bde50c7mr9791248pgt.12.1680541044832; Mon, 03 Apr
+ 2023 09:57:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZBCJ11qT8AWGA9y8@casper.infradead.org>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL autolearn=unavailable autolearn_force=no version=3.4.6
+References: <CAM5tNy5T1-K3oH7TLeUG=F3V8u_aRhcvMEJkkaV7wj+5vqqq_w@mail.gmail.com>
+In-Reply-To: <CAM5tNy5T1-K3oH7TLeUG=F3V8u_aRhcvMEJkkaV7wj+5vqqq_w@mail.gmail.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Mon, 3 Apr 2023 12:57:09 -0400
+Message-ID: <CAN-5tyHt6dxBAO==RgDB6fBOBimE5jP6ZbY-AFDwBCbfOREUeA@mail.gmail.com>
+Subject: Re: sec=krb5 feature or bug??
+To:     Rick Macklem <rick.macklem@gmail.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue 14-03-23 14:51:03, Matthew Wilcox wrote:
-> TLDR: I think we should rip out support for fs metadata in highmem
-> 
-> We want to support filesystems on devices with LBA size > PAGE_SIZE.
-> That's subtly different and slightly harder than fsblk size > PAGE_SIZE.
-> We can use large folios to read the blocks into, but reading/writing
-> the data in those folios is harder if it's in highmem.  The kmap family
-> of functions can only map a single page at a time (and changing that
-> is hard).  We could vmap, but that's slow and can't be used from atomic
-> context.  Working a single page at a time can be tricky (eg consider an
-> ext2 directory entry that spans a page boundary).
-> 
-> Many filesystems do not support having their metadata in highmem.
-> ext4 doesn't.  xfs doesn't.  f2fs doesn't.  afs, ceph, ext2, hfs,
-> minix, nfs, nilfs2, ntfs, ntfs3, ocfs2, orangefs, qnx6, reiserfs, sysv
-> and ufs do.
-> 
-> Originally, ext2 directories in the page cache were done by Al Viro
-> in 2001.  At that time, the important use-case was machines with tens of
-> gigabytes of highmem and ~800MB of lowmem.  Since then, the x86 systems
-> have gone to 64-bit and the only real uses for highmem are cheap systems
-> with ~8GB of memory total and 2-4GB of lowmem.  These systems really
-> don't need to keep directories in highmem; using highmem for file &
-> anon memory is enough to keep the system in balance.
-> 
-> So let's just rip out the ability to keep directories (and other fs
-> metadata) in highmem.  Many filesystems already don't support this,
-> and it makes supporting LBA size > PAGE_SIZE hard.
-> 
-> I'll turn this into an LSFMM topic if we don't reach resolution on the
-> mailing list, but I'm optimistic that everybody will just agree with
-> me ;-)
+Hi Rick,
 
-FWIW I won't object for the local filesystems I know about ;). But you
-mention some networking filesystems above like NFS, AFS, orangefs - how are
-they related to the LBA size problem you mention and what exactly you want
-to get rid of there? FWIW I can imagine some 32-bit system (possibly
-diskless) that uses NFS and that would benefit in caching stuff in
-highmem...
+That's by design (rather that's what spec says? It may be rfc 8881
+2.4.3 and probably somewhere else that ops that are done with machine
+creds must use the same gss flavor? ). All state operations are done
+with sec=3Dkrb5i (if kerberos is configured on the machine) and then
+other operations are done with whatever flavor was specified on the
+mount command.
 
-								Honza
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+On Sun, Apr 2, 2023 at 7:24=E2=80=AFPM Rick Macklem <rick.macklem@gmail.com=
+> wrote:
+>
+> Hi,
+>
+> I've been testing a Linxu 5.15 NFSv4.2 client against a
+> FreeBSD server to test recently added SP4_MACH_CRED
+> support in the FreeBSD server.
+>
+> I noticed the following oddity, which I thought I'd report
+> in case it is considered a bug and not a feature.
+> I do a mount like:
+> # mount -t nfs -o nfsvers=3D4,sec=3Dkrb5 nfsv4-server:/ /mnt
+> #
+> - When looking at the packet capture during the mount,
+>   the ExchangeID, CreateSession and ReclaimComplete
+>   are done with integrity (ie. krb5i) and ExchangeID uses
+>   SP4_MACH_CRED.
+> - Then, subsequent RPCs do not use integrity, as I would
+>   have assumed, given the "sec=3Dkrb5" argument.
+> However, some subsequent RPCs in the must_allow ops
+> list for SP4_MACH_CRED choose to use the "machine
+> principal" and do krb5i.
+>
+> It just seems weird that it mixes krb5 and krb5i. I had
+> not expected it to use SP4_MACH_CRED when
+> "sec=3Dkrb5" was specified.
+>
+> However, it seems to work fine this way, so I can see
+> the argument that this is a "feature" and not a bug.
+>
+> Just fyi, rick
