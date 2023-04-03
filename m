@@ -2,127 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CE2C6D3AFF
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Apr 2023 01:54:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD986D47BA
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Apr 2023 16:23:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229379AbjDBXxZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 2 Apr 2023 19:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50914 "EHLO
+        id S233156AbjDCOXA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Apr 2023 10:23:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjDBXxW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 2 Apr 2023 19:53:22 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65239A25D
-        for <linux-nfs@vger.kernel.org>; Sun,  2 Apr 2023 16:53:21 -0700 (PDT)
+        with ESMTP id S233158AbjDCOW7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Apr 2023 10:22:59 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D38C32CAF0;
+        Mon,  3 Apr 2023 07:22:42 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 008AA1F383;
-        Sun,  2 Apr 2023 23:53:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1680479600; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 86BEC21DCA;
+        Mon,  3 Apr 2023 14:22:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1680531761; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UjsyuSiTuYez2c4wOAodUEwmsgIyfEqHigq4Z+IKE6Y=;
-        b=NQ9Fix5PyhrAE+H67IvH3VrR+KLzgb/7BPeDE3b8r5Q/aYvSygUf+SaAIMk86FaZyarI/L
-        mSfIzKeZkNxY3am6JmDX2Xs4vXNoj+fguMC1gJiekiyrE23otXMTEqCttfhCa3uwKiwoW7
-        LVexZbn/YNyiL+x2zFIIGLrODYk+Ijc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1680479600;
+        bh=R46s3dzmAWjax7iXZKikFYCLr1xSbo6uFhX0zzjg4pU=;
+        b=XViU3+ETjmX+Zv1i3Q4VVTn7Ny+KHI+pcGRnoPPT3r61aXIzJBxPYzNkNl9++TJ9aBjV6M
+        pj5xzmCEcljzJ3VrWr7zg8WDaJErfGUilAp+755lKhp6uAWpsjuSCcyiyy9snmSveJO8Pa
+        dYp4hCNxKq+rm1Sy8iI/zHvhEXqBk/Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1680531761;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UjsyuSiTuYez2c4wOAodUEwmsgIyfEqHigq4Z+IKE6Y=;
-        b=0Fii5gbZjeJmi0TKjn2ojhjqlEsA62W34QErsvRQ/OwRhBAyaxFgl6MMpemLdXf94yCFXX
-        ZFTRtCcn+epYPdDg==
+        bh=R46s3dzmAWjax7iXZKikFYCLr1xSbo6uFhX0zzjg4pU=;
+        b=U1FjLpLfehFJEz9putWhis2w9XqHu0U3h3oaiL98jCSHliu31HtoSv01Qgpvds/nc1S0hp
+        frS9z8ZPoJjwAoCw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B475913443;
-        Sun,  2 Apr 2023 23:53:18 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 773A813416;
+        Mon,  3 Apr 2023 14:22:41 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id oRSyGW4VKmRTbwAAMHmgww
-        (envelope-from <neilb@suse.de>); Sun, 02 Apr 2023 23:53:18 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        id nFUjHTHhKmRzFQAAMHmgww
+        (envelope-from <jack@suse.cz>); Mon, 03 Apr 2023 14:22:41 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id EF44AA0723; Mon,  3 Apr 2023 16:22:40 +0200 (CEST)
+Date:   Mon, 3 Apr 2023 16:22:40 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+        ntfs3@lists.linux.dev, ocfs2-devel@oss.oracle.com,
+        devel@lists.orangefs.org, reiserfs-devel@vger.kernel.org,
+        Evgeniy Dushistov <dushistov@mail.ru>
+Subject: Re: RFC: Filesystem metadata in HIGHMEM
+Message-ID: <20230403142240.ftkywr3vn3r73yva@quack3>
+References: <ZBCJ11qT8AWGA9y8@casper.infradead.org>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Dai Ngo" <dai.ngo@oracle.com>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] NFSD: callback request does not use correct credential
- for AUTH_SYS
-In-reply-to: <CF4DFCD5-332D-4147-AA8A-F81FAB96AFA4@oracle.com>
-References: <1680380528-22306-1-git-send-email-dai.ngo@oracle.com>,
- <CF4DFCD5-332D-4147-AA8A-F81FAB96AFA4@oracle.com>
-Date:   Mon, 03 Apr 2023 09:53:15 +1000
-Message-id: <168047959550.14629.15820193625931684256@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZBCJ11qT8AWGA9y8@casper.infradead.org>
+X-Spam-Status: No, score=-1.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_SOFTFAIL autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 03 Apr 2023, Chuck Lever III wrote:
->=20
-> > On Apr 1, 2023, at 4:22 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
-> >=20
-> > Currently callback request does not use the credential specified in
-> > CREATE_SESSION if the security flavor for the back channel is AUTH_SYS.
-> >=20
-> > Problem was discovered by pynfs 4.1 DELEG5 and DELEG7 test with error:
-> > DELEG5   st_delegation.testCBSecParms     : FAILURE
-> >           expected callback with uid, gid =3D=3D 17, 19, got 0, 0
-> >=20
-> > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->=20
-> Does
->=20
-> Fixes: 8276c902bbe9 ("SUNRPC: remove uid and gid from struct auth_cred")
->=20
-> sound OK to everyone?
+On Tue 14-03-23 14:51:03, Matthew Wilcox wrote:
+> TLDR: I think we should rip out support for fs metadata in highmem
+> 
+> We want to support filesystems on devices with LBA size > PAGE_SIZE.
+> That's subtly different and slightly harder than fsblk size > PAGE_SIZE.
+> We can use large folios to read the blocks into, but reading/writing
+> the data in those folios is harder if it's in highmem.  The kmap family
+> of functions can only map a single page at a time (and changing that
+> is hard).  We could vmap, but that's slow and can't be used from atomic
+> context.  Working a single page at a time can be tricky (eg consider an
+> ext2 directory entry that spans a page boundary).
+> 
+> Many filesystems do not support having their metadata in highmem.
+> ext4 doesn't.  xfs doesn't.  f2fs doesn't.  afs, ceph, ext2, hfs,
+> minix, nfs, nilfs2, ntfs, ntfs3, ocfs2, orangefs, qnx6, reiserfs, sysv
+> and ufs do.
+> 
+> Originally, ext2 directories in the page cache were done by Al Viro
+> in 2001.  At that time, the important use-case was machines with tens of
+> gigabytes of highmem and ~800MB of lowmem.  Since then, the x86 systems
+> have gone to 64-bit and the only real uses for highmem are cheap systems
+> with ~8GB of memory total and 2-4GB of lowmem.  These systems really
+> don't need to keep directories in highmem; using highmem for file &
+> anon memory is enough to keep the system in balance.
+> 
+> So let's just rip out the ability to keep directories (and other fs
+> metadata) in highmem.  Many filesystems already don't support this,
+> and it makes supporting LBA size > PAGE_SIZE hard.
+> 
+> I'll turn this into an LSFMM topic if we don't reach resolution on the
+> mailing list, but I'm optimistic that everybody will just agree with
+> me ;-)
 
-Yes, that looks right to me.  Thanks.
+FWIW I won't object for the local filesystems I know about ;). But you
+mention some networking filesystems above like NFS, AFS, orangefs - how are
+they related to the LBA size problem you mention and what exactly you want
+to get rid of there? FWIW I can imagine some 32-bit system (possibly
+diskless) that uses NFS and that would benefit in caching stuff in
+highmem...
 
-NeilBrown
+								Honza
 
->=20
->=20
-> > ---
-> > fs/nfsd/nfs4callback.c | 4 ++--
-> > 1 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> > index 2a815f5a52c4..4039ffcf90ba 100644
-> > --- a/fs/nfsd/nfs4callback.c
-> > +++ b/fs/nfsd/nfs4callback.c
-> > @@ -946,8 +946,8 @@ static const struct cred *get_backchannel_cred(struct=
- nfs4_client *clp, struct r
-> > if (!kcred)
-> > return NULL;
-> >=20
-> > - kcred->uid =3D ses->se_cb_sec.uid;
-> > - kcred->gid =3D ses->se_cb_sec.gid;
-> > + kcred->fsuid =3D ses->se_cb_sec.uid;
-> > + kcred->fsgid =3D ses->se_cb_sec.gid;
-> > return kcred;
-> > }
-> > }
-> > --=20
-> > 2.9.5
-> >=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
