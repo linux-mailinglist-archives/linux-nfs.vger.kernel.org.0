@@ -2,58 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA11F6D6D1D
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Apr 2023 21:27:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB96F6D6FFD
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 00:17:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235710AbjDDT1k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Apr 2023 15:27:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54546 "EHLO
+        id S236450AbjDDWQ7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Apr 2023 18:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235912AbjDDT1i (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Apr 2023 15:27:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88534686;
-        Tue,  4 Apr 2023 12:27:31 -0700 (PDT)
+        with ESMTP id S229973AbjDDWQ5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Apr 2023 18:16:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEA9E40D9;
+        Tue,  4 Apr 2023 15:16:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BCED36390B;
-        Tue,  4 Apr 2023 19:27:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2EC53C433EF;
-        Tue,  4 Apr 2023 19:27:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 495E163962;
+        Tue,  4 Apr 2023 22:16:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3400BC433EF;
+        Tue,  4 Apr 2023 22:16:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680636451;
-        bh=Ka48JskYXkurF0Cfr2N+t4BQhhcPKr/MFDHcZZf6KxY=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=mq4WUVVmamZU4k2aRmYN4PBMgvXZSYz0UkDypZPqyQTkrjaMsb7PZNr1s7TjiMmV2
-         w2KN+4MeqoXW8xlY0Ec767wjyfc08OqwNWPzpttWAEohwxfzsjzkErcsVFuSGnPlbc
-         1bEgT5rx6PIpAuJ3rLR1VfhSD80ZESVwf2pQ0H0eipq74ybSP5O3ZeLGwd8xnx9dCJ
-         Kd2u7wUvCqglJR4PoZsRRKhDdxPZAzquj06LyLDAPyMGS5wcN4Adf5pCYxkx6tJeMK
-         lPjh7BqydvRu+maCki0Pz0VU8VD4imcranfzCNMkwlQcP8y1kpgum+9QzzBI4LnCWJ
-         oNGooL9HtYjXA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 17F24E5EA85;
-        Tue,  4 Apr 2023 19:27:31 +0000 (UTC)
-Subject: Re: [GIT PULL] nfsd fixes for 6.3-rc5
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <84B35B0A-C629-4C3F-A289-859A9A83E3CD@oracle.com>
-References: <84B35B0A-C629-4C3F-A289-859A9A83E3CD@oracle.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <84B35B0A-C629-4C3F-A289-859A9A83E3CD@oracle.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.3-5
-X-PR-Tracked-Commit-Id: 7de82c2f36fb26aa78440bbf0efcf360b691d98b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: ceeea1b78293834378b8d32a18288610de5600f3
-Message-Id: <168063645109.19891.1235163630995332716.pr-tracker-bot@kernel.org>
-Date:   Tue, 04 Apr 2023 19:27:31 +0000
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        s=k20201202; t=1680646615;
+        bh=iq/IdV4ogpOzaM8KgGTnYC5Td3WCpb/PqmrSUjFcqq0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hKIBSlBctkP5bivjN4Y21mckkcqW66+dkJqVt3sV5xlPSN1yzxtbcIDAa/udoQiUM
+         sYGbOLNwfOA0gXRR+Wndw2VsarlhINwbmR9rKVH1FeHvdejvWrBskWjfnQnco9YqvD
+         rpI3rk+9EzaMTkMEFIRuzDVL9UMVtvyfJBQ1f5Ze4NeqUuke7n1BCeowZBAWgMngKo
+         42ZuMczWbvBA3Owwg/N+nslkw274BP30Pj/y3YKUBj/353slDtMf8ZPciuUUqEM6Ip
+         0wa3X6hCp3Y9aaK3d1yKPuqKpW2wz0WLI7SD2d8mkTPKHHanh741qLv7i4NdaAMa8g
+         +Pz1NY60vkAcQ==
+Date:   Tue, 4 Apr 2023 15:16:53 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Zorro Lang <zlang@kernel.org>
+Cc:     fstests@vger.kernel.org, brauner@kernel.org,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        djwong@kernel.org, amir73il@gmail.com,
+        linux-unionfs@vger.kernel.org, anand.jain@oracle.com,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        fdmanana@suse.com, ocfs2-devel@oss.oracle.com, jack@suse.com,
+        linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 3/5] fstests/MAINTAINERS: add supported mailing list
+Message-ID: <20230404221653.GC1893@sol.localdomain>
+References: <20230404171411.699655-1-zlang@kernel.org>
+ <20230404171411.699655-4-zlang@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230404171411.699655-4-zlang@kernel.org>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,15 +59,31 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Tue, 4 Apr 2023 14:03:24 +0000:
+Hi Zorro,
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.3-5
+On Wed, Apr 05, 2023 at 01:14:09AM +0800, Zorro Lang wrote:
+> +FSVERITY
+> +L:	fsverity@lists.linux.dev
+> +S:	Supported
+> +F:	common/verity
+> +
+> +FSCRYPT
+> +L:      linux-fscrypt@vger.kernel.org
+> +S:	Supported
+> +F:	common/encrypt
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/ceeea1b78293834378b8d32a18288610de5600f3
+Most of the encrypt and verity tests are in tests/generic/ and are in the
+'encrypt' or 'verity' test groups.
 
-Thank you!
+These file patterns only pick up the common files, not the actual tests.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Have you considered adding a way to specify maintainers for a test group?
+Something like:
+
+    G:      encrypt
+
+and
+
+    G:      verity
+
+- Eric
