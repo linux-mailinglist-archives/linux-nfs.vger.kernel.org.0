@@ -2,61 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C816D6D7960
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 12:16:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D2586D7DD7
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 15:37:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237610AbjDEKQG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Apr 2023 06:16:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33192 "EHLO
+        id S238266AbjDENhY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Apr 2023 09:37:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237291AbjDEKQE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Apr 2023 06:16:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1060F1737
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Apr 2023 03:15:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680689722;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=5IwQffGQgbW5+GGPT7GHsPI80Xqx/MpQcxXTIga+7R4=;
-        b=MUbAtwA1+wPs0JHsWLmTEsx24uZDQa/j2oAwCPJG+Yrs6idM6L19lvwDPyI/e6cJw6Jcki
-        Ar9OyUScOOzxKbZy/+SSV6JGg9kP7PJeE8CN59S+oGRYG50Q2kIl37k7vbH4O5VC9cW3GS
-        gBkf7jp/gn2Foib0ywyiVEZLfve4dV8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-454-h9N5vcbAOs2WQe-xnr3Yfg-1; Wed, 05 Apr 2023 06:15:19 -0400
-X-MC-Unique: h9N5vcbAOs2WQe-xnr3Yfg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6D560185A790;
-        Wed,  5 Apr 2023 10:15:18 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1665F440D6;
-        Wed,  5 Apr 2023 10:15:16 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-cc:     dhowells@redhat.com, Christoph Hellwig <hch@lst.de>,
+        with ESMTP id S238276AbjDENhX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Apr 2023 09:37:23 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DADB4C19
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Apr 2023 06:37:22 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-3261b76b17aso1180505ab.0
+        for <linux-nfs@vger.kernel.org>; Wed, 05 Apr 2023 06:37:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1680701841;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SMACiJoNW6UL2b8KEXrA9z4AHCYPwLvMVkZG5jbqYsU=;
+        b=0SbrqR9Hi2bWm4bLG/5yE8o+jagwr5aLVKJ10+MOeHuh65tZpSboNe3YBLIJb9yRma
+         6aUGVy1vXvM9WHZcuJ3OQo07NKs96I5Pu8c4KAqH+7vjm0A0eBmGar9GQDAoiEfTjjKI
+         S77L3SLvhI36dkqqUyiNoPqE0OVa6SKvTXMvrb8r9IfNXxNvVRpx1Ft/If7yFlbSqLx6
+         nufX8WVg0Hw9mjQl/rwT5c5W3dGWXWkGQXWLpFBUf0IdN1BJ/2CnQYHiB6usAZa8n4x2
+         Ep9AWHFYMdIINBv3I1yMNN1PxKW3yZOIpxjzEIokw95DLH2rr2gTYrnnjOiKrpNoIbTy
+         B/tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680701841;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SMACiJoNW6UL2b8KEXrA9z4AHCYPwLvMVkZG5jbqYsU=;
+        b=S3PqvJW3B/9vNmn6Bn7p3DhdRAwZDTFIryTkViHyrbjSlOGFy17n83LtTzB5YJy35U
+         p+oRafGHietrCtZ73mdC/tGNwhX/E9p62xtkJitjJ3x7jFNk9McLakocE696ewnokDGR
+         XV37mCaOB8TYse8e7aSYO9yym587/24MzCV5kCNTJV4of34aZupTPPuPZwFhwNJdwh2P
+         qWTfNvoiHVzCIXA3KQOmSoPMxY+GT8DJtkXbR5dXOc9mSq7fR0nb5+yuLfXQzues95/N
+         vCU6jtEHJU9dsDlo/ZHup2yidNE7gKlHBLoLY27rxYIhCAdXX1MBuewc33bH24E/dvNX
+         uCtA==
+X-Gm-Message-State: AAQBX9eZyehSeJdwNcCD2LyqtuKNRliarx7alscCnTt73klAluuTh9GV
+        STR269NhTE2EvpxvveoV+OULSQ==
+X-Google-Smtp-Source: AKy350Zi/uU7mBlI7a3mLEo2lbcBTqjpeVirj1zVYuJdxOFP0K02w1bg5MQyzg/cTnEsUTe/dc0ljQ==
+X-Received: by 2002:a05:6602:3941:b0:758:9c9e:d6c6 with SMTP id bt1-20020a056602394100b007589c9ed6c6mr1788054iob.2.1680701841412;
+        Wed, 05 Apr 2023 06:37:21 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id u19-20020a02b1d3000000b0040b4ac6490dsm680489jah.96.2023.04.05.06.37.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Apr 2023 06:37:21 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
         Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iov_iter: Remove last_offset member
+In-Reply-To: <2933618.1680689716@warthog.procyon.org.uk>
+References: <2933618.1680689716@warthog.procyon.org.uk>
+Subject: Re: [PATCH] iov_iter: Remove last_offset member
+Message-Id: <168070184053.176456.9607242016242560793.b4-ty@kernel.dk>
+Date:   Wed, 05 Apr 2023 07:37:20 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2933617.1680689716.1@warthog.procyon.org.uk>
-Date:   Wed, 05 Apr 2023 11:15:16 +0100
-Message-ID: <2933618.1680689716@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-00303
+X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,44 +75,22 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Jens,
 
-Can you add this to the block tree?
+On Wed, 05 Apr 2023 11:15:16 +0100, David Howells wrote:
+> Can you add this to the block tree?
+> 
+> David
+> 
+> 
 
-David
----
-iov_iter: Remove last_offset member
+Applied, thanks!
 
-With the removal of ITER_PIPE, the last_offset member of struct iov_iter is
-no longer used, so remove it and un-unionise the remaining member.
+[1/1] iov_iter: Remove last_offset member
+      commit: 867e1cbba73ea240f9417439479df7eb74b1299c
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: linux-nfs@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
-cc: netdev@vger.kernel.org
----
- include/linux/uio.h |    5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+Best regards,
+-- 
+Jens Axboe
 
-diff --git a/include/linux/uio.h b/include/linux/uio.h
-index 74598426edb4..2d8a70cb9b26 100644
---- a/include/linux/uio.h
-+++ b/include/linux/uio.h
-@@ -43,10 +43,7 @@ struct iov_iter {
- 	bool nofault;
- 	bool data_source;
- 	bool user_backed;
--	union {
--		size_t iov_offset;
--		int last_offset;
--	};
-+	size_t iov_offset;
- 	size_t count;
- 	union {
- 		const struct iovec *iov;
+
 
