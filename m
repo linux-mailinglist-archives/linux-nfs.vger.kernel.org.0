@@ -2,72 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D2586D7DD7
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 15:37:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 291286D7EA1
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 16:06:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238266AbjDENhY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Apr 2023 09:37:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47712 "EHLO
+        id S238505AbjDEOGz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Apr 2023 10:06:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238276AbjDENhX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Apr 2023 09:37:23 -0400
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DADB4C19
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Apr 2023 06:37:22 -0700 (PDT)
-Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-3261b76b17aso1180505ab.0
-        for <linux-nfs@vger.kernel.org>; Wed, 05 Apr 2023 06:37:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20210112.gappssmtp.com; s=20210112; t=1680701841;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SMACiJoNW6UL2b8KEXrA9z4AHCYPwLvMVkZG5jbqYsU=;
-        b=0SbrqR9Hi2bWm4bLG/5yE8o+jagwr5aLVKJ10+MOeHuh65tZpSboNe3YBLIJb9yRma
-         6aUGVy1vXvM9WHZcuJ3OQo07NKs96I5Pu8c4KAqH+7vjm0A0eBmGar9GQDAoiEfTjjKI
-         S77L3SLvhI36dkqqUyiNoPqE0OVa6SKvTXMvrb8r9IfNXxNvVRpx1Ft/If7yFlbSqLx6
-         nufX8WVg0Hw9mjQl/rwT5c5W3dGWXWkGQXWLpFBUf0IdN1BJ/2CnQYHiB6usAZa8n4x2
-         Ep9AWHFYMdIINBv3I1yMNN1PxKW3yZOIpxjzEIokw95DLH2rr2gTYrnnjOiKrpNoIbTy
-         B/tw==
+        with ESMTP id S238504AbjDEOGi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Apr 2023 10:06:38 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922686EAB
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Apr 2023 07:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680703334;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=net1/YQpLyeedtAUAtKmhMoSFz+7An5MzKe0V2cpLas=;
+        b=ckchfDaswZqr2jOOzGRRkrtwF+7vq5SpjseThpUHpCtEqlUdGdLKFYFTteNTBoAIasLjlJ
+        VqjtF00gB5nJoG3leYh+iDHQlyvgWc9tBhGoebVYSh/SodYplfZ/rgih5QZUWfngIBB2Gg
+        IUVCMWOoosqg++nz1/JjEld4EJTmU9c=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-352-6S5W-m_VOo2NrYIv6Y51cg-1; Wed, 05 Apr 2023 10:02:12 -0400
+X-MC-Unique: 6S5W-m_VOo2NrYIv6Y51cg-1
+Received: by mail-pj1-f72.google.com with SMTP id d5-20020a17090ac24500b0023cb04ec86fso9630771pjx.7
+        for <linux-nfs@vger.kernel.org>; Wed, 05 Apr 2023 07:02:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680701841;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SMACiJoNW6UL2b8KEXrA9z4AHCYPwLvMVkZG5jbqYsU=;
-        b=S3PqvJW3B/9vNmn6Bn7p3DhdRAwZDTFIryTkViHyrbjSlOGFy17n83LtTzB5YJy35U
-         p+oRafGHietrCtZ73mdC/tGNwhX/E9p62xtkJitjJ3x7jFNk9McLakocE696ewnokDGR
-         XV37mCaOB8TYse8e7aSYO9yym587/24MzCV5kCNTJV4of34aZupTPPuPZwFhwNJdwh2P
-         qWTfNvoiHVzCIXA3KQOmSoPMxY+GT8DJtkXbR5dXOc9mSq7fR0nb5+yuLfXQzues95/N
-         vCU6jtEHJU9dsDlo/ZHup2yidNE7gKlHBLoLY27rxYIhCAdXX1MBuewc33bH24E/dvNX
-         uCtA==
-X-Gm-Message-State: AAQBX9eZyehSeJdwNcCD2LyqtuKNRliarx7alscCnTt73klAluuTh9GV
-        STR269NhTE2EvpxvveoV+OULSQ==
-X-Google-Smtp-Source: AKy350Zi/uU7mBlI7a3mLEo2lbcBTqjpeVirj1zVYuJdxOFP0K02w1bg5MQyzg/cTnEsUTe/dc0ljQ==
-X-Received: by 2002:a05:6602:3941:b0:758:9c9e:d6c6 with SMTP id bt1-20020a056602394100b007589c9ed6c6mr1788054iob.2.1680701841412;
-        Wed, 05 Apr 2023 06:37:21 -0700 (PDT)
-Received: from [127.0.0.1] ([96.43.243.2])
-        by smtp.gmail.com with ESMTPSA id u19-20020a02b1d3000000b0040b4ac6490dsm680489jah.96.2023.04.05.06.37.20
+        d=1e100.net; s=20210112; t=1680703331;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=net1/YQpLyeedtAUAtKmhMoSFz+7An5MzKe0V2cpLas=;
+        b=G9kOxeojx2AKc5wG2M7iSg2SaHfDf/8pEADXs0xTf1Rh3qOzT2+6ELH0eEBNo2l3QE
+         3AF4IolVewn5COaLPGuOASzuq8EPBik+nvjPl1fbi9JgJ5/j59T8Dgua6VKJuSGiIjJd
+         2zpvBWkDKJZaQb4G7zxrDUZtJowoRNedFi3OalUERjo8hEBoo0FqhMyL2h/m1bB8EW0x
+         DcJpqvWQNlrkk+7qshFkWCgwZdQHAWJThejsa/Jkn3ecyajK1f5dSEVbuM+96EGTLr1L
+         8w33yIEet03Qy0Qg/WX7bNqFnx4WT3ISH0ED6QCtIkQt1ugMDWNwQvPVcLQ2c0xjwzmn
+         zd5w==
+X-Gm-Message-State: AAQBX9ex359hk6dmV+XX8qpTxkWbjtao3iUryRqMYpZ1AESgCwIXrXbV
+        VZFpvkJvPckerfTfJU1tBdvEnGKDqN1T/OpHw8eVsQBFfWYev74vr7C2aJUFhyMQaXuaSUBpR+H
+        DcV/ARX10fQNZtY7nEQXl
+X-Received: by 2002:a17:903:283:b0:1a1:cd69:d301 with SMTP id j3-20020a170903028300b001a1cd69d301mr6292230plr.68.1680703330930;
+        Wed, 05 Apr 2023 07:02:10 -0700 (PDT)
+X-Google-Smtp-Source: AKy350Z3hrO2tDczikPPadND/siCWP3StMDF6ZwRfuQDU1LtW+SuQXatmasFWBRAsAV4qHbVdUEpFA==
+X-Received: by 2002:a17:903:283:b0:1a1:cd69:d301 with SMTP id j3-20020a170903028300b001a1cd69d301mr6292202plr.68.1680703330583;
+        Wed, 05 Apr 2023 07:02:10 -0700 (PDT)
+Received: from zlang-mailbox ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id b24-20020a630c18000000b005023496e339sm9037285pgl.63.2023.04.05.07.02.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 06:37:21 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <2933618.1680689716@warthog.procyon.org.uk>
-References: <2933618.1680689716@warthog.procyon.org.uk>
-Subject: Re: [PATCH] iov_iter: Remove last_offset member
-Message-Id: <168070184053.176456.9607242016242560793.b4-ty@kernel.dk>
-Date:   Wed, 05 Apr 2023 07:37:20 -0600
+        Wed, 05 Apr 2023 07:02:10 -0700 (PDT)
+Date:   Wed, 5 Apr 2023 22:02:02 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Zorro Lang <zlang@kernel.org>, fstests@vger.kernel.org,
+        brauner@kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, djwong@kernel.org, amir73il@gmail.com,
+        linux-unionfs@vger.kernel.org, anand.jain@oracle.com,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        fdmanana@suse.com, jack@suse.com, linux-fsdevel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 3/5] fstests/MAINTAINERS: add supported mailing list
+Message-ID: <20230405140202.bdp3lzgross2cjbt@zlang-mailbox>
+References: <20230404171411.699655-1-zlang@kernel.org>
+ <20230404171411.699655-4-zlang@kernel.org>
+ <20230404221653.GC1893@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-00303
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230404221653.GC1893@sol.localdomain>
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,22 +84,41 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-On Wed, 05 Apr 2023 11:15:16 +0100, David Howells wrote:
-> Can you add this to the block tree?
+On Tue, Apr 04, 2023 at 03:16:53PM -0700, Eric Biggers wrote:
+> Hi Zorro,
 > 
-> David
+> On Wed, Apr 05, 2023 at 01:14:09AM +0800, Zorro Lang wrote:
+> > +FSVERITY
+> > +L:	fsverity@lists.linux.dev
+> > +S:	Supported
+> > +F:	common/verity
+> > +
+> > +FSCRYPT
+> > +L:      linux-fscrypt@vger.kernel.org
+> > +S:	Supported
+> > +F:	common/encrypt
 > 
+> Most of the encrypt and verity tests are in tests/generic/ and are in the
+> 'encrypt' or 'verity' test groups.
 > 
+> These file patterns only pick up the common files, not the actual tests.
+> 
+> Have you considered adding a way to specify maintainers for a test group?
+> Something like:
+> 
+>     G:      encrypt
+> 
+> and
+> 
+>     G:      verity
 
-Applied, thanks!
+Good idea! Let's check if this patchset is acceptable by most of you,
+then I'll think about how to add this feature later.
 
-[1/1] iov_iter: Remove last_offset member
-      commit: 867e1cbba73ea240f9417439479df7eb74b1299c
+Thanks,
+Zorro
 
-Best regards,
--- 
-Jens Axboe
-
-
+> 
+> - Eric
+> 
 
