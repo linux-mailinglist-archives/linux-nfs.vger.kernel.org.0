@@ -2,67 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 639236D83B5
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 18:30:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 288F86D83B7
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 18:31:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232656AbjDEQar (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Apr 2023 12:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38222 "EHLO
+        id S229679AbjDEQbY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Apr 2023 12:31:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233369AbjDEQaq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Apr 2023 12:30:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4FCA2115
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Apr 2023 09:30:01 -0700 (PDT)
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        with ESMTP id S229628AbjDEQbY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Apr 2023 12:31:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4E0E40CC
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Apr 2023 09:30:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680712237;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dTqXxRhdY+JvHS3UGlRLeVtjHUzW22PSd9gtCa10I7s=;
+        b=LEUYmYZP8JoNIwa+JYazs3GNF0xGofT3QagY4JxkU8hAkKdwMR63LGREmXPSzNhWmAmOjV
+        n8wTGp/oTDc4sJqFr5BnYrYzeXAqVVXA6XjA+VEC0u0nZ7KxEZL+wSc06uEOKtfVdENGQ+
+        LNCDxBuUutCWJuDU6zgRY1w0Kzjd+Sc=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-323-zO-K_aCHNs6UKx0eeYXFwA-1; Wed, 05 Apr 2023 12:30:00 -0400
-X-MC-Unique: zO-K_aCHNs6UKx0eeYXFwA-1
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-746b617d095so6238485a.0
-        for <linux-nfs@vger.kernel.org>; Wed, 05 Apr 2023 09:29:59 -0700 (PDT)
+ us-mta-464-LlriofMCOl-QJIFx0V2kTA-1; Wed, 05 Apr 2023 12:30:35 -0400
+X-MC-Unique: LlriofMCOl-QJIFx0V2kTA-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-74678af9349so119490785a.0
+        for <linux-nfs@vger.kernel.org>; Wed, 05 Apr 2023 09:30:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680712199; x=1683304199;
+        d=1e100.net; s=20210112; t=1680712234;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3R2e+Py70F6/l2XshaOrAurKVbrVVROj0+CQ7zPSHtY=;
-        b=tXvFKyWirB5zQnGNUN0oW0ItXLZP+CGDdRKJZtyr5wAJz1x+jtDcWUybUxnXdEOTYv
-         bxlQm2SHfPYZHftlxY8WPZfJvxoWlvmgfIJJk482SXqk2jgoTxLDRcov3hChxO/9h7lN
-         kE19ZKNdeule0FKaviYOIq40JuixsoRK/A9Tg54t8050A8Vws54AUCniz/N/ruuwAvtT
-         +w89nJ+dzNwfA0pNeuCAi0DcpIWmwNpVMRo18zgCFX8d03GoGkmEV0sMqIW2jVJE6X26
-         ZyVxymgvZTyjPI18Uqc11ep/joxSyDfyjRZ93hD2V5Zxl8zBevij2khXdhHzfXD96tm/
-         eUYg==
-X-Gm-Message-State: AAQBX9cS0N20pW8KavRfaqsdzPxNr1qLAp0o7651/bOzy1FelLs4TZyx
-        e0rYsh1lDnssrEdGUlj3gUR30eTJlBia0jh8aRrqLEHBv03DlHVrnYueNIJghqwxUqctTf5/FEk
-        3HeB1idWdro8CyDRsRiHRJ4vs6KFe
-X-Received: by 2002:a05:6214:5190:b0:5ad:cd4b:3765 with SMTP id kl16-20020a056214519000b005adcd4b3765mr4441355qvb.1.1680712198849;
-        Wed, 05 Apr 2023 09:29:58 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZKTusuUx4Ld5JkVa8N4NIsYhOSQayyfkRJV8HU2X9jmUA5C9X8XBuFTu4xJ/hHpMDIkkOjFQ==
-X-Received: by 2002:a05:6214:5190:b0:5ad:cd4b:3765 with SMTP id kl16-20020a056214519000b005adcd4b3765mr4441326qvb.1.1680712198495;
-        Wed, 05 Apr 2023 09:29:58 -0700 (PDT)
+        bh=dTqXxRhdY+JvHS3UGlRLeVtjHUzW22PSd9gtCa10I7s=;
+        b=dk6tOMNryMpBOreXPDe5ZRMKmUOrk2i44Y5p7ltw4y/W6pEDtycjIGt8JEi9AMqiNP
+         g0+alyhSffwTcBb1wObKCR7nei6J1AuGf4d5uUt/o5J+5Dt7IopOxA5m+i1/vYSX8Rz4
+         T/xU2L80iYTOCD7YMiagNvMatL+rZ3zIN15PMFevC5iLIoHL5BFPi1RPXRbNeFAO/Hcq
+         URcX+K+hm8gAnclSrw2DCaVUCCmSyWJWzEkiBFLpgjGjudVopPMfv7q+OWKEhf2sLzu2
+         sUesgYpWNpjRhwloXpL+5rYlR6VpQvqJf//l2Nxvdltt8ef9tsiLewyghAlDX6J8FQpy
+         gWKg==
+X-Gm-Message-State: AAQBX9fFbTsMf8xU42Gk4D5ddNoOa/pIZY43vg5Up83DH8YI1uYI2MQO
+        e9KCnJw5XR9a+rwcD517GaZFJw72MvKYT+G9ULvBo7+erDtti2nyi0M3tgykuvF2t6lcCby2QE1
+        XAoAe6o+MAG9L3bx8PAGv82an0Rzq
+X-Received: by 2002:a05:622a:1a24:b0:3e6:707e:d3c2 with SMTP id f36-20020a05622a1a2400b003e6707ed3c2mr6825324qtb.0.1680712234398;
+        Wed, 05 Apr 2023 09:30:34 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bQ2wGRMPg3OM35i1KHUh2mUzuHGUbQ9xJNIDKPwPzVaLoflb8YKdCjGsTqfHtTnZ4+lTGcJQ==
+X-Received: by 2002:a05:622a:1a24:b0:3e6:707e:d3c2 with SMTP id f36-20020a05622a1a2400b003e6707ed3c2mr6825262qtb.0.1680712233930;
+        Wed, 05 Apr 2023 09:30:33 -0700 (PDT)
 Received: from [172.31.1.6] ([70.109.174.217])
-        by smtp.gmail.com with ESMTPSA id r9-20020ae9d609000000b0074a29c9d8b7sm3766256qkk.134.2023.04.05.09.29.57
+        by smtp.gmail.com with ESMTPSA id e1-20020a05620a014100b0074a1d2a17c8sm4380214qkn.29.2023.04.05.09.30.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Apr 2023 09:29:57 -0700 (PDT)
-Message-ID: <ed63ab9d-e863-5596-1259-7d7efca2cf79@redhat.com>
-Date:   Wed, 5 Apr 2023 12:29:57 -0400
+        Wed, 05 Apr 2023 09:30:33 -0700 (PDT)
+Message-ID: <13fd348e-cf5a-8507-4ee6-5600de2d034d@redhat.com>
+Date:   Wed, 5 Apr 2023 12:30:32 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH] export: Fix rootdir corner case in next_mnt()
+Subject: Re: [PATCH nfs-utils] mount.nfs: always include mountpoint or spec if
+ error messages.
 Content-Language: en-US
-To:     Richard Weinberger <richard@nod.at>
-Cc:     trond.myklebust@hammerspace.com, linux-nfs@vger.kernel.org,
-        chris.chilvers@appsbroker.com
-References: <20230324121608.16808-1-richard@nod.at>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <167997198028.8106.1574926503489095936@noble.neil.brown.name>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20230324121608.16808-1-richard@nod.at>
+In-Reply-To: <167997198028.8106.1574926503489095936@noble.neil.brown.name>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.6 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -71,58 +82,93 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 3/24/23 8:16 AM, Richard Weinberger wrote:
-> Currently the following setup causes failure:
+On 3/27/23 10:53 PM, NeilBrown wrote:
 > 
-> 1. /etc/exports:
-> / *(rw,crossmnt,no_subtree_check,fsid=root)
+> If you try to mount from a server that is inaccessible you might get an
+> error like:
+>      mount.nfs: No route to host
 > 
-> 2. /etc/nfs.conf:
-> [exports]
->   rootdir=/nfs_srv
+> This is OK when running "mount" interactively, but hardly useful when
+> found in system logs.
 > 
-> 3. Mounts:
-> /root/fs1.ext4 on /nfs_srv type ext4 (rw,relatime)
-> /root/fs2.ext4 on /nfs_srv/fs2 type ext4 (rw,relatime)
+> This patch changes mount_error() to always included at least one of
+> mount_point and spec in any error message.
 > 
-> 4. On the client:
-> $ ls /nfs_client/fs2
-> ls: cannot open directory '/nfs_client/fs2': Stale file handle
-> 
-> The problem is that next_mnt() misses the corner case that
-> every mount is a sub-mount of "/".
-> So it fails to see that /nfs_srv/fs2 is a mountpoint when the
-> client asks for fs2 it and as consequence the crossmnt mechanism
-> fails.
-> 
-> Signed-off-by: Richard Weinberger <richard@nod.at>
+> Signed-off-by: NeilBrown <neilb@suse.de>
 Committed... (tag: nfs-utils-2-6-3-rc7)
 
 steved.
 > ---
->   support/export/cache.c | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
+>   utils/mount/error.c | 31 ++++++++++++++++---------------
+>   1 file changed, 16 insertions(+), 15 deletions(-)
 > 
-> diff --git a/support/export/cache.c b/support/export/cache.c
-> index 2497d4f48df3..1c526277d3c6 100644
-> --- a/support/export/cache.c
-> +++ b/support/export/cache.c
-> @@ -410,12 +410,16 @@ static char *next_mnt(void **v, char *p)
->   		*v = f;
->   	} else
->   		f = *v;
-> -	while ((me = getmntent(f)) != NULL && l > 1) {
-> +	while ((me = getmntent(f)) != NULL && l >= 1) {
->   		char *mnt_dir = nfsd_path_strip_root(me->mnt_dir);
->   
->   		if (!mnt_dir)
->   			continue;
->   
-> +		/* Everything below "/" is a proper sub-mount */
-> +		if (strcmp(p, "/") == 0)
-> +			return mnt_dir;
-> +
->   		if (strncmp(mnt_dir, p, l) == 0 && mnt_dir[l] == '/')
->   			return mnt_dir;
+> diff --git a/utils/mount/error.c b/utils/mount/error.c
+> index 73295bf0567c..9ddbcc096f72 100644
+> --- a/utils/mount/error.c
+> +++ b/utils/mount/error.c
+> @@ -207,16 +207,17 @@ void mount_error(const char *spec, const char *mount_point, int error)
+>   				progname, spec);
+>   		break;
+>   	case EINVAL:
+> -		nfs_error(_("%s: an incorrect mount option was specified"), progname);
+> +		nfs_error(_("%s: an incorrect mount option was specified for %s"),
+> +				progname, mount_point);
+>   		break;
+>   	case EOPNOTSUPP:
+> -		nfs_error(_("%s: requested NFS version or transport protocol is not supported"),
+> -				progname);
+> +		nfs_error(_("%s: requested NFS version or transport protocol is not supported for %s"),
+> +				progname, mount_point);
+>   		break;
+>   	case ENOTDIR:
+>   		if (spec)
+> -			nfs_error(_("%s: mount spec %s or point %s is not a "
+> -				  "directory"),	progname, spec, mount_point);
+> +			nfs_error(_("%s: mount spec %s or point %s is not a directory"),
+> +				  progname, spec, mount_point);
+>   		else
+>   			nfs_error(_("%s: mount point %s is not a directory"),
+>   				  progname, mount_point);
+> @@ -227,31 +228,31 @@ void mount_error(const char *spec, const char *mount_point, int error)
+>   		break;
+>   	case ENOENT:
+>   		if (spec)
+> -			nfs_error(_("%s: mounting %s failed, "
+> -				"reason given by server: %s"),
+> -				progname, spec, strerror(error));
+> +			nfs_error(_("%s: mounting %s failed, reason given by server: %s"),
+> +				  progname, spec, strerror(error));
+>   		else
+>   			nfs_error(_("%s: mount point %s does not exist"),
+> -				progname, mount_point);
+> +				  progname, mount_point);
+>   		break;
+>   	case ESPIPE:
+>   		rpc_mount_errors((char *)spec, 0, 0);
+>   		break;
+>   	case EIO:
+> -		nfs_error(_("%s: mount system call failed"), progname);
+> +		nfs_error(_("%s: mount system call failed for %s"),
+> +			  progname, mount_point);
+>   		break;
+>   	case EFAULT:
+> -		nfs_error(_("%s: encountered unexpected error condition."),
+> -				progname);
+> +		nfs_error(_("%s: encountered unexpected error condition for %s."),
+> +			  progname, mount_point);
+>   		nfs_error(_("%s: please report the error to" PACKAGE_BUGREPORT),
+> -				progname);
+> +			  progname);
+>   		break;
+>   	case EALREADY:
+>   		/* Error message has already been provided */
+>   		break;
+>   	default:
+> -		nfs_error(_("%s: %s"),
+> -			progname, strerror(error));
+> +		nfs_error(_("%s: %s for %s on %s"),
+> +			  progname, strerror(error), spec, mount_point);
 >   	}
+>   }
+>   
 
