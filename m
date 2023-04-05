@@ -2,80 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 291286D7EA1
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 16:06:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D6826D83B0
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Apr 2023 18:29:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238505AbjDEOGz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Apr 2023 10:06:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43282 "EHLO
+        id S233337AbjDEQ3p (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Apr 2023 12:29:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238504AbjDEOGi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Apr 2023 10:06:38 -0400
+        with ESMTP id S233314AbjDEQ3n (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Apr 2023 12:29:43 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 922686EAB
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Apr 2023 07:03:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C9DD173C
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Apr 2023 09:28:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680703334;
+        s=mimecast20190719; t=1680712138;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=net1/YQpLyeedtAUAtKmhMoSFz+7An5MzKe0V2cpLas=;
-        b=ckchfDaswZqr2jOOzGRRkrtwF+7vq5SpjseThpUHpCtEqlUdGdLKFYFTteNTBoAIasLjlJ
-        VqjtF00gB5nJoG3leYh+iDHQlyvgWc9tBhGoebVYSh/SodYplfZ/rgih5QZUWfngIBB2Gg
-        IUVCMWOoosqg++nz1/JjEld4EJTmU9c=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=9XXa7u/ZymdLZshDt7Rw2pqVY2tMNdpMevRdngIpft4=;
+        b=bXMZYN45T22XyyYBtLcb8amP8j7ln2+Lojef9i3FdXoVHn4Dk0z/R9yxhO4im6LTmtFoJJ
+        EG82gUgpzJO5CbOlZU4itiSGcguMGjcmhOpqGZ+jQnO546AqH4WQpnDbuCBWZ4Jwt0XNwc
+        n/LCjagImxBJ2tdAUtvtZOmqtEie/fk=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-352-6S5W-m_VOo2NrYIv6Y51cg-1; Wed, 05 Apr 2023 10:02:12 -0400
-X-MC-Unique: 6S5W-m_VOo2NrYIv6Y51cg-1
-Received: by mail-pj1-f72.google.com with SMTP id d5-20020a17090ac24500b0023cb04ec86fso9630771pjx.7
-        for <linux-nfs@vger.kernel.org>; Wed, 05 Apr 2023 07:02:11 -0700 (PDT)
+ us-mta-528-GJyIaBEKNUaiVlGVAsAzSA-1; Wed, 05 Apr 2023 12:28:57 -0400
+X-MC-Unique: GJyIaBEKNUaiVlGVAsAzSA-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-74a65b255beso1631385a.0
+        for <linux-nfs@vger.kernel.org>; Wed, 05 Apr 2023 09:28:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680703331;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=net1/YQpLyeedtAUAtKmhMoSFz+7An5MzKe0V2cpLas=;
-        b=G9kOxeojx2AKc5wG2M7iSg2SaHfDf/8pEADXs0xTf1Rh3qOzT2+6ELH0eEBNo2l3QE
-         3AF4IolVewn5COaLPGuOASzuq8EPBik+nvjPl1fbi9JgJ5/j59T8Dgua6VKJuSGiIjJd
-         2zpvBWkDKJZaQb4G7zxrDUZtJowoRNedFi3OalUERjo8hEBoo0FqhMyL2h/m1bB8EW0x
-         DcJpqvWQNlrkk+7qshFkWCgwZdQHAWJThejsa/Jkn3ecyajK1f5dSEVbuM+96EGTLr1L
-         8w33yIEet03Qy0Qg/WX7bNqFnx4WT3ISH0ED6QCtIkQt1ugMDWNwQvPVcLQ2c0xjwzmn
-         zd5w==
-X-Gm-Message-State: AAQBX9ex359hk6dmV+XX8qpTxkWbjtao3iUryRqMYpZ1AESgCwIXrXbV
-        VZFpvkJvPckerfTfJU1tBdvEnGKDqN1T/OpHw8eVsQBFfWYev74vr7C2aJUFhyMQaXuaSUBpR+H
-        DcV/ARX10fQNZtY7nEQXl
-X-Received: by 2002:a17:903:283:b0:1a1:cd69:d301 with SMTP id j3-20020a170903028300b001a1cd69d301mr6292230plr.68.1680703330930;
-        Wed, 05 Apr 2023 07:02:10 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Z3hrO2tDczikPPadND/siCWP3StMDF6ZwRfuQDU1LtW+SuQXatmasFWBRAsAV4qHbVdUEpFA==
-X-Received: by 2002:a17:903:283:b0:1a1:cd69:d301 with SMTP id j3-20020a170903028300b001a1cd69d301mr6292202plr.68.1680703330583;
-        Wed, 05 Apr 2023 07:02:10 -0700 (PDT)
-Received: from zlang-mailbox ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id b24-20020a630c18000000b005023496e339sm9037285pgl.63.2023.04.05.07.02.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 07:02:10 -0700 (PDT)
-Date:   Wed, 5 Apr 2023 22:02:02 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Zorro Lang <zlang@kernel.org>, fstests@vger.kernel.org,
-        brauner@kernel.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, djwong@kernel.org, amir73il@gmail.com,
-        linux-unionfs@vger.kernel.org, anand.jain@oracle.com,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        fdmanana@suse.com, jack@suse.com, linux-fsdevel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 3/5] fstests/MAINTAINERS: add supported mailing list
-Message-ID: <20230405140202.bdp3lzgross2cjbt@zlang-mailbox>
-References: <20230404171411.699655-1-zlang@kernel.org>
- <20230404171411.699655-4-zlang@kernel.org>
- <20230404221653.GC1893@sol.localdomain>
+        d=1e100.net; s=20210112; t=1680712136;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9XXa7u/ZymdLZshDt7Rw2pqVY2tMNdpMevRdngIpft4=;
+        b=jUH16lLo8j2reXU2Gzao6OdR1pPtAD4Jv3jhtrim5LpMsE3xbX0Tv9q95NQUw8n/4d
+         VqueHQzFn3HqAmA2pHWS6PcXKLrNloSXKWe2yL6oqXFsXufVB8nox6qGEbimV7GD2/i7
+         jC/oSZnCY9Mj55Xkslfg5dpmw9UJJjw+xexGBVTMFFyeiLlew2skdaQI6myMdZ46+ihk
+         c+1DA0CD7hSzI4VPF6FCWO22bRKcJRgeXfBovfdgUCqs/mgcxFMMUKTFhaMd3HHz0alj
+         dRVmmuyo7HOiEaK2fcaPL1wQUeRJjfnELyEDLcame8A/CztnYl3IkYKzblm3pNnDYqMB
+         M6zQ==
+X-Gm-Message-State: AAQBX9fmcDY3cgrUEdk77YxgAFLaZl/RAOrv2vayzP1fmFwPb1L4NcYV
+        UzjPo7v6slqI++MDaroxEQcnaaaF24IbfAs8A60gysuDT5Ej9uqO/8qFq6VmIRz0jO1t7p1k/qO
+        Lnr8cDFUq4KmPkqYpxsSP7wXDxEQm
+X-Received: by 2002:a05:622a:1a1d:b0:3e3:1d31:e37 with SMTP id f29-20020a05622a1a1d00b003e31d310e37mr5042427qtb.1.1680712136360;
+        Wed, 05 Apr 2023 09:28:56 -0700 (PDT)
+X-Google-Smtp-Source: AKy350aUhagyU/7xwTLI/cv+7Yw5TOtA76tRal77Rjh/0OZFiAA1r246s4L55Af/KYtr3jj//1T68g==
+X-Received: by 2002:a05:622a:1a1d:b0:3e3:1d31:e37 with SMTP id f29-20020a05622a1a1d00b003e31d310e37mr5042381qtb.1.1680712135860;
+        Wed, 05 Apr 2023 09:28:55 -0700 (PDT)
+Received: from [172.31.1.6] ([70.109.174.217])
+        by smtp.gmail.com with ESMTPSA id v19-20020ac87293000000b003e2e919bcf7sm4081818qto.78.2023.04.05.09.28.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Apr 2023 09:28:55 -0700 (PDT)
+Message-ID: <3661346d-da08-927e-fd76-20bdf6587c11@redhat.com>
+Date:   Wed, 5 Apr 2023 12:28:54 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230404221653.GC1893@sol.localdomain>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH] [nfs/nfs-utils] rpcdebug: avoid buffer underflow if
+ read() returns 0
+Content-Language: en-US
+To:     Zhi Li <yieli@redhat.com>, linux-nfs@vger.kernel.org
+References: <20230309062025.731671-1-yieli@redhat.com>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20230309062025.731671-1-yieli@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.6 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -84,41 +79,30 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 04, 2023 at 03:16:53PM -0700, Eric Biggers wrote:
-> Hi Zorro,
-> 
-> On Wed, Apr 05, 2023 at 01:14:09AM +0800, Zorro Lang wrote:
-> > +FSVERITY
-> > +L:	fsverity@lists.linux.dev
-> > +S:	Supported
-> > +F:	common/verity
-> > +
-> > +FSCRYPT
-> > +L:      linux-fscrypt@vger.kernel.org
-> > +S:	Supported
-> > +F:	common/encrypt
-> 
-> Most of the encrypt and verity tests are in tests/generic/ and are in the
-> 'encrypt' or 'verity' test groups.
-> 
-> These file patterns only pick up the common files, not the actual tests.
-> 
-> Have you considered adding a way to specify maintainers for a test group?
-> Something like:
-> 
->     G:      encrypt
-> 
-> and
-> 
->     G:      verity
 
-Good idea! Let's check if this patchset is acceptable by most of you,
-then I'll think about how to add this feature later.
 
-Thanks,
-Zorro
+On 3/9/23 1:20 AM, Zhi Li wrote:
+> Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=2176740
+> 
+> Signed-off-by: Zhi Li <yieli@redhat.com>
+Committed... (tag: nfs-utils-2-6-3-rc7)
 
+steved.
+> ---
+>   tools/rpcdebug/rpcdebug.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> - Eric
-> 
+> diff --git a/tools/rpcdebug/rpcdebug.c b/tools/rpcdebug/rpcdebug.c
+> index 68206cc5..ec05179e 100644
+> --- a/tools/rpcdebug/rpcdebug.c
+> +++ b/tools/rpcdebug/rpcdebug.c
+> @@ -257,7 +257,7 @@ get_flags(char *module)
+>   		perror(filename);
+>   		exit(1);
+>   	}
+> -	if ((len = read(sysfd, buffer, sizeof(buffer))) < 0) {
+> +	if ((len = read(sysfd, buffer, sizeof(buffer))) <= 0) {
+>   		perror("read");
+>   		exit(1);
+>   	}
 
