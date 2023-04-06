@@ -2,117 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A9386D996C
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Apr 2023 16:17:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89FC46D9C74
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Apr 2023 17:33:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239082AbjDFORh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 Apr 2023 10:17:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38136 "EHLO
+        id S229667AbjDFPdT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 Apr 2023 11:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237723AbjDFORe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Apr 2023 10:17:34 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1731180;
-        Thu,  6 Apr 2023 07:17:33 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S239215AbjDFPdS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Apr 2023 11:33:18 -0400
+Received: from phd-imap.ethz.ch (phd-imap.ethz.ch [129.132.80.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C4910C4
+        for <linux-nfs@vger.kernel.org>; Thu,  6 Apr 2023 08:33:15 -0700 (PDT)
+Received: from localhost (192-168-127-49.net4.ethz.ch [192.168.127.49])
+        by phd-imap.ethz.ch (Postfix) with ESMTP id 4PslrT3j81z30;
+        Thu,  6 Apr 2023 17:33:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phys.ethz.ch;
+        s=2023; t=1680795193;
+        bh=irUNyor4Vu3vTfZes8C6R31gvUaeyykJeiWbWxtLoLU=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=eR1hDRejBH4jnInZq/kxdWVa4OPCfKY+qVnjsQCS6R1wvynz0fIYmuvZvkkKPDukZ
+         XYQ/7EOfhszeMkaFiOgnk9POsHWKHAa9DhO09uiOjqANnIbctVi3IkLpeMxPOkKNte
+         8qHdi4i+liIjXhtQ66Ozb5y55gubqNOPDAGHYbNpWdxxzC8CfeuFLXuZYtSI6ydgwe
+         +s6Hv2YgHLv/Bm7LlPKMpbG4cC/DnlBVFxZTun3xizdrj3OxJSX7bVr1PV3bOtBVB2
+         BQGippXjg3xj8VDvhKOP2NhuSW5PhB0givVhHcdVK7sQf4PX38EQqEdx5Q2P8LiGeU
+         DS4snS5cN5H9A==
+X-Virus-Scanned: Debian amavisd-new at phys.ethz.ch
+Received: from phd-mxin.ethz.ch ([192.168.127.53])
+        by localhost (phd-mailscan.ethz.ch [192.168.127.49]) (amavisd-new, port 10024)
+        with LMTP id vRramUPYqrHA; Thu,  6 Apr 2023 17:33:13 +0200 (CEST)
+Received: from phys.ethz.ch (mothership.ethz.ch [192.33.96.20])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 4EE761F898;
-        Thu,  6 Apr 2023 14:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1680790652;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XIwFAYmq+ddhYZF0Zfe4K0b1+UJuE82HHInNFEctczc=;
-        b=ZeJlivpALd8nO/1+mor0TCnnNBCMsJ16FUvMbjtBENF8lESP30O3UQN0FbK8ak1vh1Omwl
-        9TT+BNH6w2K4aPeYip1Ds2fvoITG3Q8Fm+KvriE04i9alnRCUvhm69FhfCLv5mocbumPb1
-        0G+YcC5Y0BrrKYEE3HWcPauZDd0rLVE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1680790652;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XIwFAYmq+ddhYZF0Zfe4K0b1+UJuE82HHInNFEctczc=;
-        b=57+ei+nga6/9LWL0dAtibPJpgEe7tVSlAh13SWgoLWDg91xKuwog3XYPUrzIaZgUJ974ZK
-        mnJ0Dn3Ki8c7xoBQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E50021351F;
-        Thu,  6 Apr 2023 14:17:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id auwvN3vULmQXJwAAMHmgww
-        (envelope-from <dsterba@suse.cz>); Thu, 06 Apr 2023 14:17:31 +0000
-Date:   Thu, 6 Apr 2023 16:17:29 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     Zorro Lang <zlang@kernel.org>
-Cc:     fstests@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        ocfs2-devel@oss.oracle.com, linux-unionfs@vger.kernel.org,
-        jack@suse.com, linux-xfs@vger.kernel.org, fdmanana@suse.com,
-        ebiggers@google.com, brauner@kernel.org, amir73il@gmail.com,
-        djwong@kernel.org, anand.jain@oracle.com
-Subject: Re: [PATCH 5/5] fstests/MAINTAINERS: add a co-maintainer for btrfs
- testing part
-Message-ID: <20230406141729.GP19619@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20230404171411.699655-1-zlang@kernel.org>
- <20230404171411.699655-6-zlang@kernel.org>
+        (Authenticated sender: daduke@phd-mxin.ethz.ch)
+        by phd-mxin.ethz.ch (Postfix) with ESMTPSA id 4PslrT2qvsz9r;
+        Thu,  6 Apr 2023 17:33:13 +0200 (CEST)
+Date:   Thu, 6 Apr 2023 17:33:12 +0200
+From:   Christian Herzog <herzog@phys.ethz.ch>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: file server freezes with all nfsds stuck in D state after
+ upgrade to Debian bookworm
+Message-ID: <ZC7mOH4I3roIM4xr@phys.ethz.ch>
+Reply-To: Christian Herzog <herzog@phys.ethz.ch>
+References: <ZC6oX7FxdJd86rF7@phys.ethz.ch>
+ <6785EFE7-2CE1-45CD-8643-C40CCCDADEB8@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230404171411.699655-6-zlang@kernel.org>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Status: No, score=-1.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <6785EFE7-2CE1-45CD-8643-C40CCCDADEB8@oracle.com>
+X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 01:14:11AM +0800, Zorro Lang wrote:
-> Darrick J. Wong would like to nominate Anand Jain to help more on
-> btrfs testing part (tests/btrfs and common/btrfs). He would like to
-> be a co-maintainer of btrfs part, will help to review and test
-> fstests btrfs related patches, and I might merge from him if there's
-> big patchset. So CC him besides send to fstests@ list, when you have
-> a btrfs fstests patch.
-> 
-> Signed-off-by: Zorro Lang <zlang@kernel.org>
-> ---
-> 
-> Please btrfs list help to review this change, if you agree (or no objection),
-> then I'll push this change.
-> 
-> A co-maintainer will do:
-> 1) Review patches are related with him.
-> 2) Merge and test patches in his local git repo, and give the patch an ACK.
-> 3) Maintainer will trust the ack from co-maintainer more (might merge directly).
-> 4) Maintainer might merge from co-maintainer when he has a big patchset wait for
->    merging.
-> 
-> Thanks,
-> Zorro
-> 
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0ad12a38..9fc6c6b5 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -108,6 +108,7 @@ Maintainers List
->  	  or reviewer or co-maintainer can be in cc list.
->  
->  BTRFS
-> +M:	Anand Jain <anand.jain@oracle.com>
+Dear Chuck,
 
-Acked-by: David Sterba <dsterba@suse.com>
+> > for our researchers we are running file servers in the hundreds-of-TiB to
+> > low-PiB range that export via NFS and SMB. Storage is iSCSI-over-Infiniband
+> > LUNs LVM'ed into individual XFS file systems. With Ubuntu 18.04 nearing EOL,
+> > we prepared an upgrade to Debian bookworm and tests went well. About a week
+> > after one of the upgrades, we ran into the first occurence of our problem: all
+> > of a sudden, all nfsds enter the D state and are not recoverable. However, the
+> > underlying file systems seem fine and can be read and written to. The only way
+> > out appears to be to reboot the server. The only clues are the frozen nfsds
+> > and strack traces like
+> > 
+> > [<0>] rq_qos_wait+0xbc/0x130
+> > [<0>] wbt_wait+0xa2/0x110
+> 
+> Hi Christian, you have a pretty deep storage stack!
+> rq_qos_wait is a few layers below NFSD. Jens Axboe
+> and linux-block are the folks who maintain that.
+are you saying the root cause isn't nfs*, but the file system? That was our
+first idea too, but we haven't found any indication that this is the case. The
+xfs file systems seem perfectly fine when all nfsds are in D state, and we can
+read from them and write to them. If xfs were to block nfs IO, this should
+affect other processes too, right?
+
+thanks and Happy Easter,
+-Christian
+
