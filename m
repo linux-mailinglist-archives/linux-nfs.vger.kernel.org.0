@@ -2,158 +2,643 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1BD16D94E2
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Apr 2023 13:17:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E02E6D981A
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Apr 2023 15:24:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237513AbjDFLQ6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 Apr 2023 07:16:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46310 "EHLO
+        id S238146AbjDFNYm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 Apr 2023 09:24:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236782AbjDFLQ5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Apr 2023 07:16:57 -0400
-X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 06 Apr 2023 04:16:52 PDT
-Received: from phd-imap.ethz.ch (phd-imap.ethz.ch [129.132.80.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553A97EEA
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Apr 2023 04:16:52 -0700 (PDT)
-Received: from localhost (192-168-127-49.net4.ethz.ch [192.168.127.49])
-        by phd-imap.ethz.ch (Postfix) with ESMTP id 4Psf0028vVz31
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Apr 2023 13:09:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phys.ethz.ch;
-        s=2023; t=1680779360;
-        bh=BMwSwDW3tf+m9f404UNj2blP0nPh4eBGgEkKy/aaiBc=;
-        h=Date:From:To:Subject:Reply-To:From;
-        b=CRW2oB3wgEkWt7TfOMaTWeJjAMJThnttNw8VO28nX3tw7Y+vpzZtqel58lvXZT1/u
-         ljaNIkD1AzAsqn9GDDk9ZWhOxqwfaE3LqhsV90/WvioDJRwTKI6wQyDWUmlvluHX4S
-         TLdLK3O9+bKSbJQOnxTPBhP/W9EGDWtuDDckZ9FJiYJm1ZehwUwiq+06qAwdT7lR9f
-         Xdk08Si5SZkXhWhLtb+qbHGxP08bevDGoQGAu3BcxQTn59oUMoSPKRfVKUDxdXzYw4
-         vSch+aYhaxyJznC/s6d/7urhX6k9eh+V3897ANBmRES8K4fxaiB/Q8ukYbCkJGBHAB
-         HbzzwyIRwE7jQ==
-X-Virus-Scanned: Debian amavisd-new at phys.ethz.ch
-Received: from phd-mxin.ethz.ch ([192.168.127.53])
-        by localhost (phd-mailscan.ethz.ch [192.168.127.49]) (amavisd-new, port 10024)
-        with LMTP id bQCg_9jtf8Go for <linux-nfs@vger.kernel.org>;
-        Thu,  6 Apr 2023 13:09:20 +0200 (CEST)
-Received: from phys.ethz.ch (mothership.ethz.ch [192.33.96.20])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: daduke@phd-mxin.ethz.ch)
-        by phd-mxin.ethz.ch (Postfix) with ESMTPSA id 4Psf001KQYz9x
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Apr 2023 13:09:20 +0200 (CEST)
-Date:   Thu, 6 Apr 2023 13:09:19 +0200
-From:   Christian Herzog <herzog@phys.ethz.ch>
-To:     linux-nfs@vger.kernel.org
-Subject: file server freezes with all nfsds stuck in D state after upgrade to
- Debian bookworm
-Message-ID: <ZC6oX7FxdJd86rF7@phys.ethz.ch>
-Reply-To: Christian Herzog <herzog@phys.ethz.ch>
+        with ESMTP id S237895AbjDFNYl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Apr 2023 09:24:41 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45AD4C3F
+        for <linux-nfs@vger.kernel.org>; Thu,  6 Apr 2023 06:23:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680787399;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=rgCIbbvzCMYs+3uuSPs5pCnIhgoQTWoSVUqLy8xoLco=;
+        b=Te7g5Eg1m/nAJ3zfST2WD7/IbYYlguY+cz6C8TnmvDY97t0NCOhkgpVTdIGSLdXbKTl/3O
+        1+3Bs2yqWwrIGx4G2b7HP23kz63UzHeCAHugyX8DWfPD2nO1eykPkAZj2wEV7MqGlfkdh/
+        oNfROztOJQ2iFoLmu0O4Zhk5lzolQBI=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-225-tAqvZObUMWOFxTQIBBIL5A-1; Thu, 06 Apr 2023 09:23:17 -0400
+X-MC-Unique: tAqvZObUMWOFxTQIBBIL5A-1
+Received: by mail-pl1-f198.google.com with SMTP id c2-20020a170903234200b001a0aecba4e1so22842174plh.16
+        for <linux-nfs@vger.kernel.org>; Thu, 06 Apr 2023 06:23:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680787396;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rgCIbbvzCMYs+3uuSPs5pCnIhgoQTWoSVUqLy8xoLco=;
+        b=tB4aomsZqqvs7m5UMF2KoKN0lB7uRnMDKoNmGeFOKM8fNKXULj2GM1RP3+xpCvhBMN
+         DCfXHkSLq1AEeTlOZVJpAbYxj5908v4waHxUFeEOz2F57EV+Pq6qKRwVRJbsFxkxMihf
+         filTyOUZLVFL1sxioQibInNfYnF7VK9j+rmwA5YbsUY6YAa1MmDghw53G37q2Avs/LXf
+         Ege0dSJgK6ptXUhB7mhHiszKtkA+XNJo4XArDc17HX/HtOmTG1SIRwZrZsPogoeyuxxp
+         d8l9ofKYSOHDBlfVrPEEAWLVi89a+q0l0dPb7wnM/liIoRQ5vrc5WupLhvxVVjL4Gyn8
+         A23g==
+X-Gm-Message-State: AAQBX9flWMWV1V3PgBtUyr0xlFiMdUviGoY4oGCEAtzbwsFjWb+HbDcg
+        KvhecG1a1JWFryxqqziiMWr5V3orLO/U0ykm8tB+G2CxTuBRmwF7pBEzT/Vx3r0SqeF0PMf5Ri9
+        8aI+uOhtAzokd3dhz+HQ/+8E5CuqYwSvqDwhJLtSNWfapZDs=
+X-Received: by 2002:a17:902:c3c3:b0:1a0:7630:8ef4 with SMTP id j3-20020a170902c3c300b001a076308ef4mr3817557plj.2.1680787395806;
+        Thu, 06 Apr 2023 06:23:15 -0700 (PDT)
+X-Google-Smtp-Source: AKy350a16qPMUhiln/vPTu1ipHb5arFc28dnV2D/+OgcsBxZrxetpjMf3JH16jT6WA3Eadmp0oXY0A0fsrF2SFb0qkg=
+X-Received: by 2002:a17:902:c3c3:b0:1a0:7630:8ef4 with SMTP id
+ j3-20020a170902c3c300b001a076308ef4mr3817547plj.2.1680787395435; Thu, 06 Apr
+ 2023 06:23:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Thu, 6 Apr 2023 09:22:39 -0400
+Message-ID: <CALF+zOnizN1KSE=V095LV6Mug8dJirqk7eN1joX8L1-EroohPA@mail.gmail.com>
+Subject: RFC: umount() fails on an NFS mount ("/A/B") mounted on an underlying
+ ("/A") NFS mount when access is removed to the underlying mount
+To:     Anna Schumaker <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Jeff Layton <jlayton@kernel.org>, NeilBrown <neilb@suse.de>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000a62cd705f8aacfb6"
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dear all,
+--000000000000a62cd705f8aacfb6
+Content-Type: text/plain; charset="UTF-8"
 
-for our researchers we are running file servers in the hundreds-of-TiB to
-low-PiB range that export via NFS and SMB. Storage is iSCSI-over-Infiniband
-LUNs LVM'ed into individual XFS file systems. With Ubuntu 18.04 nearing EOL,
-we prepared an upgrade to Debian bookworm and tests went well. About a week
-after one of the upgrades, we ran into the first occurence of our problem: all
-of a sudden, all nfsds enter the D state and are not recoverable. However, the
-underlying file systems seem fine and can be read and written to. The only way
-out appears to be to reboot the server. The only clues are the frozen nfsds
-and strack traces like
+Anna, Trond, Jeff, Neil, others,
 
-[<0>] rq_qos_wait+0xbc/0x130
-[<0>] wbt_wait+0xa2/0x110
-[<0>] __rq_qos_throttle+0x20/0x40
-[<0>] blk_mq_submit_bio+0x2d3/0x580
-[<0>] submit_bio_noacct_nocheck+0xf7/0x2c0
-[<0>] iomap_submit_ioend+0x4b/0x80
-[<0>] iomap_do_writepage+0x4b4/0x820
-[<0>] write_cache_pages+0x180/0x4c0
-[<0>] iomap_writepages+0x1c/0x40
-[<0>] xfs_vm_writepages+0x79/0xb0 [xfs]
-[<0>] do_writepages+0xbd/0x1c0
-[<0>] filemap_fdatawrite_wbc+0x5f/0x80
-[<0>] __filemap_fdatawrite_range+0x58/0x80
-[<0>] file_write_and_wait_range+0x41/0x90
-[<0>] xfs_file_fsync+0x5a/0x2a0 [xfs]
-[<0>] nfsd_commit+0x93/0x190 [nfsd]
-[<0>] nfsd4_commit+0x5e/0x90 [nfsd]
-[<0>] nfsd4_proc_compound+0x352/0x660 [nfsd]
-[<0>] nfsd_dispatch+0x167/0x280 [nfsd]
-[<0>] svc_process_common+0x286/0x5e0 [sunrpc]
-[<0>] svc_process+0xad/0x100 [sunrpc]
-[<0>] nfsd+0xd5/0x190 [nfsd]
-[<0>] kthread+0xe6/0x110
-[<0>] ret_from_fork+0x1f/0x30
+This is a RFC post regarding a problem report from a customer.  I am
+not sure this is worth fixing though (look towards the end for a few
+approaches), and maybe a more experienced NFS developer would have
+seen this before and have guidance if this is something worth
+pursuing?  I think this is likely to have been a long outstanding
+issue - the reproducer below works on upstream 6.3-rc5, our RHEL8
+series kernels (4.18 based), as well as RHEL7 series (3.10 based)
+kernels.
 
-(we've also seen nfsd3). It's very sporadic, we have no idea what's triggering
-it and it has now happened 4 times on one server and once on a second.
-Needless to say, these are production systems, so we have a window of a few
-minutes for debugging before people start yelling. We've thrown everything we
-could at our test setup but so far haven't been able to trigger it.
-Any pointers would be highly appreciated.
+We had a customer report a failure to remove an autofs mountpoint that
+was mounted on an underlying NFS mount whose access changed on the NFS
+server.  Unfortunately the customer was unable to provide the exact
+steps of what changed, and was unable to provide a full tcpdump or
+kernel trace.  However, they did provide the specific 'umount' output
+and error, which was unusual (see below), as well as output such as
+exports and paths to the underlying mounts.  Based on the information
+the customer provided, we investigated and were able to replicate the
+unique umount error, with a simplified reproducer that does not
+involve autofs.  The reproducer is attached and output is as follows:
+# ./test-non-autofs.sh
+setting exports available
+exporting 127.0.0.1:/exports/dir1
+exporting 127.0.0.1:/exports
+setting exports unavailable
+exporting 1.2.3.4:/exports/dir1
+exporting 1.2.3.4:/exports
+sleeping 60s to let attribute cache expire
+ls: cannot access '/mnt/exports/dir1': Permission denied
+umount.nfs4: /mnt/exports/dir1: block devices not permitted on fs
+TEST FAIL on 6.3.0-rc5-bz2149406+
+output of 'grep 127.0.0.1 /proc/mounts'
+127.0.0.1:/ /mnt/exports nfs4
+rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1,local_lock=none,addr=127.0.0.1
+0 0
+127.0.0.1:/dir1 /mnt/exports/dir1 nfs4
+rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=127.0.0.1,local_lock=none,addr=127.0.0.1
+0 0
+exporting 127.0.0.1:/exports/dir1
+exporting 127.0.0.1:/exports
+#
 
+From ftracing the reproducer (attached), the reason the umount
+systemcall fails is due to link_path_walk() failing, which is due to
+access being removed on the dependent mountpoint and the NFS attribute
+cache expiring.  The link_path_walk() will call nfs_permission(), and
+ultimately nfs_revalidate_inode() because the attributes have expired.
+The nfs_revalidate_inode() will fail due to GETATTR call getting an
+NFS server response of AUTH_ERR, which gets sent back up to
+user_path_at() with -EACCESS.  Since user_path_at() fails, the system
+call never gets to path_umount() and thus umount fails.
 
-thanks and best regards,
--Christian
+1915 static int ksys_umount(char __user *name, int flags)
+1916 {
+1917         int lookup_flags = LOOKUP_MOUNTPOINT;
+1918         struct path path;
+1919         int ret;
+1920
+1921         // basic validity checks done first
+1922         if (flags & ~(MNT_FORCE | MNT_DETACH | MNT_EXPIRE |
+UMOUNT_NOFOLLOW))
+1923                 return -EINVAL;
+1924
+1925         if (!(flags & UMOUNT_NOFOLLOW))
+1926                 lookup_flags |= LOOKUP_FOLLOW;
+1927         ret = user_path_at(AT_FDCWD, name, lookup_flags, &path);
+<--- this fails with -13 (EACCESS)
+1928         if (ret)
+1929                 return ret;
+1930         return path_umount(&path, flags);
+1931 }
+1932
+1933 SYSCALL_DEFINE2(umount, char __user *, name, int, flags)
+1934 {
+1935         return ksys_umount(name, flags);
+1936 }
 
+To fix this, I initially tried to add/reuse an existing mount flag
+just as a proof of concept, and fail "user_path_at()" with a special
+error code if the flag was set, and continue to path_umount().
+However, this approach does not work (kernel oops) because
+path_umount() requires a valid path structure, and so user_path_at()
+must be successful.
 
+The only other approach I thought about is to somehow pass down the
+umount flag all the way down to the NFS layer to nfs_permission(), and
+then essentially have nfs_permission() skip over the call to
+nfs_revalidate_inode() - the flag would essentially say "there is a
+umount in progress, act as though the attributes have not expired on
+this directory inode and skip over refreshing".  Unfortunately it
+looks like I'll need multiple flags at different layers, one that
+controls lookup in the VFS layer, and one down to the NFS layer.  It's
+possible some flags such as LOOKUP_MOUNTPOINT may be re-used, but I'm
+not very optimistic about the idea of patching the VFS layer for such
+a problem.  So in the end, I'm not sure if this is worthwhile, and
+would like some feedback on the above before investigating further.
 
-cat /etc/os-release 
-PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+Note that this is the same "cascading mount" configuration that was
+reported recently in another recent thread [1] and described in the
+patch [2] that fixed a similar problem:
+[1] https://lore.kernel.org/linux-nfs/CACH9xG8-tEtWstUVmD9eZFEEAqx-E8Gs14wDL+=uNtBK=-KJvQ@mail.gmail.com/
+[2] https://github.com/torvalds/linux/commit/cc89684c9a265828ce061037f1f79f4a68ccd3f7
 
-uname -vr
-6.1.0-7-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.20-1 (2023-03-19)
+--000000000000a62cd705f8aacfb6
+Content-Type: text/plain; charset="US-ASCII"; name="ftrace-output-6.3.0-rc5-bz2149406+.txt"
+Content-Disposition: attachment; 
+	filename="ftrace-output-6.3.0-rc5-bz2149406+.txt"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lg55bv2m1>
+X-Attachment-Id: f_lg55bv2m1
 
-apt list --installed '*nfs*'
-libnfsidmap1/testing,now 1:2.6.2-4 amd64 [installed,automatic]
-nfs-common/testing,now 1:2.6.2-4 amd64 [installed]
-nfs-kernel-server/testing,now 1:2.6.2-4 amd64 [installed]
+IyB0cmFjZXI6IGZ1bmN0aW9uX2dyYXBoCiMKIyBDUFUgIERVUkFUSU9OICAgICAgICAgICAgICAg
+ICAgRlVOQ1RJT04gQ0FMTFMKIyB8ICAgICB8ICAgfCAgICAgICAgICAgICAgICAgICAgIHwgICB8
+ICAgfCAgIHwKIDIpICAgICAgICAgICAgICAgfCAgLyogbmZzX3JldmFsaWRhdGVfaW5vZGVfZW50
+ZXI6IGZpbGVpZD0wMDoyYjo1OTE2NjIyMCBmaGFuZGxlPTB4NjJkNDBjNTIgdmVyc2lvbj0xNyAg
+Ki8KIDIpICAgICAgICAgICAgICAgfCAgLyogbmZzX3JldmFsaWRhdGVfaW5vZGVfZXhpdDogZXJy
+b3I9LTEzIChBQ0NFUykgZmlsZWlkPTAwOjJiOjU5MTY2MjIwIGZoYW5kbGU9MHg2MmQ0MGM1MiB0
+eXBlPTQgKERJUikgdmVyc2lvbj0xNyBzaXplPTE4IGNhY2hlX3ZhbGlkaXR5PTB4MCAoKSBuZnNf
+ZmxhZ3M9MHg0IChBQ0xfTFJVX1NFVCkgKi8KIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQogMikgICAgbHMtMTI1MiAgICAgPT4gIHVtb3VudC0xMjUzICAKIC0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQoKIDIpICAgICAgICAgICAgICAg
+fCAgLyogbmZzX3JldmFsaWRhdGVfaW5vZGVfZW50ZXI6IGZpbGVpZD0wMDoyYjo1OTE2NjIyMCBm
+aGFuZGxlPTB4NjJkNDBjNTIgdmVyc2lvbj0xNyAgKi8KIDIpICAgICAgICAgICAgICAgfCAgLyog
+bmZzX3JldmFsaWRhdGVfaW5vZGVfZXhpdDogZXJyb3I9LTEzIChBQ0NFUykgZmlsZWlkPTAwOjJi
+OjU5MTY2MjIwIGZoYW5kbGU9MHg2MmQ0MGM1MiB0eXBlPTQgKERJUikgdmVyc2lvbj0xNyBzaXpl
+PTE4IGNhY2hlX3ZhbGlkaXR5PTB4MCAoKSBuZnNfZmxhZ3M9MHg0IChBQ0xfTFJVX1NFVCkgKi8K
+IDMpICAgICAgICAgICAgICAgfCAgLyogc3lzX3Vtb3VudChuYW1lOiA1NWFhMDRjOWFjYzAsIGZs
+YWdzOiAwKSAqLwogMykgICAgICAgICAgICAgICB8ICBfX3g2NF9zeXNfdW1vdW50KCkgewogMykg
+ICAgICAgICAgICAgICB8ICAgIGtzeXNfdW1vdW50KCkgewogMykgICAgICAgICAgICAgICB8ICAg
+ICAgdXNlcl9wYXRoX2F0X2VtcHR5KCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICBnZXRu
+YW1lX2ZsYWdzKCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgIGdldG5hbWVfZmxhZ3Mu
+cGFydC4wKCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAga21lbV9jYWNoZV9hbGxv
+YygpIHsKIDMpICAgMS4wNzcgdXMgICAgfCAgICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsK
+IDMpICAgMC45ODUgdXMgICAgfCAgICAgICAgICAgICAgc2hvdWxkX2ZhaWxzbGFiKCk7CiAzKSAg
+IDEuMDEwIHVzICAgIHwgICAgICAgICAgICAgIGdldF9zdGFja19pbmZvKCk7CiAzKSAgICAgICAg
+ICAgICAgIHwgICAgICAgICAgICAgIGlzX2JwZl90ZXh0X2FkZHJlc3MoKSB7CiAzKSAgIDEuMDYw
+IHVzICAgIHwgICAgICAgICAgICAgICAgYnBmX2tzeW1fZmluZCgpOwogMykgICAzLjA0NiB1cyAg
+ICB8ICAgICAgICAgICAgICB9CiAzKSAgIDEuMDcyIHVzICAgIHwgICAgICAgICAgICAgIGZpbHRl
+cl9pcnFfc3RhY2tzKCk7CiAzKSArIDE5LjUwOCB1cyAgIHwgICAgICAgICAgICB9CiAzKSAgICAg
+ICAgICAgICAgIHwgICAgICAgICAgICBfX2NoZWNrX29iamVjdF9zaXplKCkgewogMykgICAxLjAy
+MiB1cyAgICB8ICAgICAgICAgICAgICBjaGVja19zdGFja19vYmplY3QoKTsKIDMpICAgMS4wMTMg
+dXMgICAgfCAgICAgICAgICAgICAgaXNfdm1hbGxvY19hZGRyKCk7CiAzKSAgIDEuMDIyIHVzICAg
+IHwgICAgICAgICAgICAgIF9fdmlydF9hZGRyX3ZhbGlkKCk7CiAzKSAgIDEuMDAyIHVzICAgIHwg
+ICAgICAgICAgICAgIF9fY2hlY2tfaGVhcF9vYmplY3QoKTsKIDMpICAgOC45NzEgdXMgICAgfCAg
+ICAgICAgICAgIH0KIDMpICsgMzEuNTM4IHVzICAgfCAgICAgICAgICB9CiAzKSArIDMzLjQ0OCB1
+cyAgIHwgICAgICAgIH0KIDMpICAgICAgICAgICAgICAgfCAgICAgICAgZmlsZW5hbWVfbG9va3Vw
+KCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgIHBhdGhfbG9va3VwYXQoKSB7CiAzKSAg
+ICAgICAgICAgICAgIHwgICAgICAgICAgICBwYXRoX2luaXQoKSB7CiAzKSAgICAgICAgICAgICAg
+IHwgICAgICAgICAgICAgIG5kX2p1bXBfcm9vdCgpIHsKIDMpICAgMS4wNzEgdXMgICAgfCAgICAg
+ICAgICAgICAgICBzZXRfcm9vdCgpOwogMykgICAzLjA5NCB1cyAgICB8ICAgICAgICAgICAgICB9
+CiAzKSAgIDUuMTE5IHVzICAgIHwgICAgICAgICAgICB9CiAzKSAgICAgICAgICAgICAgIHwgICAg
+ICAgICAgICBsaW5rX3BhdGhfd2Fsay5wYXJ0LjAuY29uc3Rwcm9wLjAoKSB7CiAzKSAgICAgICAg
+ICAgICAgIHwgICAgICAgICAgICAgIGlub2RlX3Blcm1pc3Npb24oKSB7CiAzKSAgICAgICAgICAg
+ICAgIHwgICAgICAgICAgICAgICAgZ2VuZXJpY19wZXJtaXNzaW9uKCkgewogMykgICAxLjAxMiB1
+cyAgICB8ICAgICAgICAgICAgICAgICAgbWFrZV92ZnN1aWQoKTsKIDMpICAgMi45NzcgdXMgICAg
+fCAgICAgICAgICAgICAgICB9CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgc2Vj
+dXJpdHlfaW5vZGVfcGVybWlzc2lvbigpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAg
+ICAgICAgIHNlbGludXhfaW5vZGVfcGVybWlzc2lvbigpIHsKIDMpICAgMS4wMDYgdXMgICAgfCAg
+ICAgICAgICAgICAgICAgICAgX19pbm9kZV9zZWN1cml0eV9yZXZhbGlkYXRlKCk7CiAzKSAgIDEu
+MDIxIHVzICAgIHwgICAgICAgICAgICAgICAgICAgIGF2Y19sb29rdXAoKTsKIDMpICAgNS4wNDIg
+dXMgICAgfCAgICAgICAgICAgICAgICAgIH0KIDMpICAgNi45OTkgdXMgICAgfCAgICAgICAgICAg
+ICAgICB9CiAzKSArIDEyLjg0OCB1cyAgIHwgICAgICAgICAgICAgIH0KIDMpICAgICAgICAgICAg
+ICAgfCAgICAgICAgICAgICAgd2Fsa19jb21wb25lbnQoKSB7CiAzKSAgICAgICAgICAgICAgIHwg
+ICAgICAgICAgICAgICAgbG9va3VwX2Zhc3QoKSB7CiAzKSAgIDEuMjA3IHVzICAgIHwgICAgICAg
+ICAgICAgICAgICBfX2RfbG9va3VwX3JjdSgpOwogMykgICAzLjE3OCB1cyAgICB8ICAgICAgICAg
+ICAgICAgIH0KIDMpICAgMS4wNzUgdXMgICAgfCAgICAgICAgICAgICAgICBzdGVwX2ludG8oKTsK
+IDMpICAgNy4xNDMgdXMgICAgfCAgICAgICAgICAgICAgfQogMykgICAgICAgICAgICAgICB8ICAg
+ICAgICAgICAgICBpbm9kZV9wZXJtaXNzaW9uKCkgewogMykgICAgICAgICAgICAgICB8ICAgICAg
+ICAgICAgICAgIGdlbmVyaWNfcGVybWlzc2lvbigpIHsKIDMpICAgMS4wMzYgdXMgICAgfCAgICAg
+ICAgICAgICAgICAgIG1ha2VfdmZzdWlkKCk7CiAzKSAgIDMuMDAyIHVzICAgIHwgICAgICAgICAg
+ICAgICAgfQogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgIHNlY3VyaXR5X2lub2Rl
+X3Blcm1pc3Npb24oKSB7CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICBzZWxp
+bnV4X2lub2RlX3Blcm1pc3Npb24oKSB7CiAzKSAgIDEuMDg3IHVzICAgIHwgICAgICAgICAgICAg
+ICAgICAgIF9faW5vZGVfc2VjdXJpdHlfcmV2YWxpZGF0ZSgpOwogMykgICAxLjMxMyB1cyAgICB8
+ICAgICAgICAgICAgICAgICAgICBhdmNfbG9va3VwKCk7CiAzKSAgIDUuMzczIHVzICAgIHwgICAg
+ICAgICAgICAgICAgICB9CiAzKSAgIDcuMzI4IHVzICAgIHwgICAgICAgICAgICAgICAgfQogMykg
+KyAxMy42MDYgdXMgICB8ICAgICAgICAgICAgICB9CiAzKSAgICAgICAgICAgICAgIHwgICAgICAg
+ICAgICAgIHdhbGtfY29tcG9uZW50KCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAg
+ICAgIGxvb2t1cF9mYXN0KCkgewogMykgICAxLjE4NCB1cyAgICB8ICAgICAgICAgICAgICAgICAg
+X19kX2xvb2t1cF9yY3UoKTsKIDMpICAgMy4xNDQgdXMgICAgfCAgICAgICAgICAgICAgICB9CiAz
+KSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgc3RlcF9pbnRvKCkgewogMykgICAxLjA1
+NyB1cyAgICB8ICAgICAgICAgICAgICAgICAgX19sb29rdXBfbW50KCk7CiAzKSAgIDMuMTUzIHVz
+ICAgIHwgICAgICAgICAgICAgICAgfQogMykgICA5LjE2MCB1cyAgICB8ICAgICAgICAgICAgICB9
+CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgIGlub2RlX3Blcm1pc3Npb24oKSB7CiAz
+KSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgbmZzX3Blcm1pc3Npb24gW25mc10oKSB7
+CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICBuZnNfZG9fYWNjZXNzIFtuZnNd
+KCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICBuZnNfYWNjZXNzX2dl
+dF9jYWNoZWQgW25mc10oKSB7CiAzKSAgIDEuMTc1IHVzICAgIHwgICAgICAgICAgICAgICAgICAg
+ICAgY3JlZF9mc2NtcCgpOwogMykgICAxLjU5MSB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAg
+IGNyZWRfZnNjbXAoKTsKIDMpICAgMS4xMTAgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICBj
+cmVkX2ZzY21wKCk7CiAzKSAgIDEuMzc1IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgY3Jl
+ZF9mc2NtcCgpOwogMykgICAxLjI1OCB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgIGNyZWRf
+ZnNjbXAoKTsKIDMpICAgMS4xMTIgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICBhY2Nlc3Nf
+Y21wIFtuZnNdKCk7CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgbmZz
+X2NoZWNrX2NhY2hlX2ludmFsaWQgW25mc10oKSB7CiAzKSAgICAgICAgICAgICAgIHwgICAgICAg
+ICAgICAgICAgICAgICAgICBuZnNfYXR0cmlidXRlX2NhY2hlX2V4cGlyZWQgW25mc10oKSB7CiAz
+KSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgIG5mczRfaGF2ZV9kZWxl
+Z2F0aW9uIFtuZnN2NF0oKSB7CiAzKSAgIDEuMDIwIHVzICAgIHwgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgbmZzNF9pc192YWxpZF9kZWxlZ2F0aW9uIFtuZnN2NF0oKTsKIDMpICAgMy4xMjMg
+dXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgfQogMykgICA1LjUwMSB1cyAgICB8ICAg
+ICAgICAgICAgICAgICAgICAgICAgfQogMykgICA3Ljk1OCB1cyAgICB8ICAgICAgICAgICAgICAg
+ICAgICAgIH0KIDMpICAgMS4wNDMgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICBjcmVkX2Zz
+Y21wKCk7CiAzKSAgIDEuMDQzIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgY3JlZF9mc2Nt
+cCgpOwogMykgICAxLjA1NiB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgIGNyZWRfZnNjbXAo
+KTsKIDMpICAgMS4wODQgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICBjcmVkX2ZzY21wKCk7
+CiAzKSAgIDEuMDY4IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgY3JlZF9mc2NtcCgpOwog
+MykgICAxLjA1MCB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgIGFjY2Vzc19jbXAgW25mc10o
+KTsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICBuZnNfY2hlY2tfY2Fj
+aGVfaW52YWxpZCBbbmZzXSgpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAg
+ICAgICAgIG5mc19hdHRyaWJ1dGVfY2FjaGVfZXhwaXJlZCBbbmZzXSgpIHsKIDMpICAgICAgICAg
+ICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgbmZzNF9oYXZlX2RlbGVnYXRpb24gW25m
+c3Y0XSgpIHsKIDMpICAgMS4wMzAgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICBu
+ZnM0X2lzX3ZhbGlkX2RlbGVnYXRpb24gW25mc3Y0XSgpOwogMykgICAzLjA2OSB1cyAgICB8ICAg
+ICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAgIDUuMDg3IHVzICAgIHwgICAgICAgICAgICAg
+ICAgICAgICAgICB9CiAzKSAgIDcuMTE0IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgfQog
+MykgKyA1MC41NDMgdXMgICB8ICAgICAgICAgICAgICAgICAgICB9CiAzKSArIDUyLjcxMCB1cyAg
+IHwgICAgICAgICAgICAgICAgICB9CiAzKSArIDU1LjAyMCB1cyAgIHwgICAgICAgICAgICAgICAg
+fQogMykgKyA1Ny4zNTMgdXMgICB8ICAgICAgICAgICAgICB9CiAzKSAgICAgICAgICAgICAgIHwg
+ICAgICAgICAgICAgIHRyeV90b191bmxhenkoKSB7CiAzKSAgIDEuMDI5IHVzICAgIHwgICAgICAg
+ICAgICAgICAgbGVnaXRpbWl6ZV9saW5rcygpOwogMykgICAgICAgICAgICAgICB8ICAgICAgICAg
+ICAgICAgIF9fbGVnaXRpbWl6ZV9wYXRoKCkgewogMykgICAxLjI2NiB1cyAgICB8ICAgICAgICAg
+ICAgICAgICAgX19sZWdpdGltaXplX21udCgpOwogMykgICAzLjMxNyB1cyAgICB8ICAgICAgICAg
+ICAgICAgIH0KIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICBfX2xlZ2l0aW1pemVf
+cGF0aCgpIHsKIDMpICAgMS4wMTcgdXMgICAgfCAgICAgICAgICAgICAgICAgIF9fbGVnaXRpbWl6
+ZV9tbnQoKTsKIDMpICAgMy4wMzggdXMgICAgfCAgICAgICAgICAgICAgICB9CiAzKSArIDExLjM5
+NyB1cyAgIHwgICAgICAgICAgICAgIH0KIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAg
+aW5vZGVfcGVybWlzc2lvbigpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICBu
+ZnNfcGVybWlzc2lvbiBbbmZzXSgpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAg
+ICAgIG5mc19kb19hY2Nlc3MgW25mc10oKSB7CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAg
+ICAgICAgICAgIG5mc19hY2Nlc3NfZ2V0X2NhY2hlZCBbbmZzXSgpIHsKIDMpICAgMS4wNjMgdXMg
+ICAgfCAgICAgICAgICAgICAgICAgICAgICBjcmVkX2ZzY21wKCk7CiAzKSAgIDEuMDUxIHVzICAg
+IHwgICAgICAgICAgICAgICAgICAgICAgY3JlZF9mc2NtcCgpOwogMykgICAxLjA0MiB1cyAgICB8
+ICAgICAgICAgICAgICAgICAgICAgIGNyZWRfZnNjbXAoKTsKIDMpICAgMS4wNDMgdXMgICAgfCAg
+ICAgICAgICAgICAgICAgICAgICBjcmVkX2ZzY21wKCk7CiAzKSAgIDEuMDc3IHVzICAgIHwgICAg
+ICAgICAgICAgICAgICAgICAgY3JlZF9mc2NtcCgpOwogMykgICAxLjA1MyB1cyAgICB8ICAgICAg
+ICAgICAgICAgICAgICAgIGFjY2Vzc19jbXAgW25mc10oKTsKIDMpICAgICAgICAgICAgICAgfCAg
+ICAgICAgICAgICAgICAgICAgICBuZnNfY2hlY2tfY2FjaGVfaW52YWxpZCBbbmZzXSgpIHsKIDMp
+ICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgIG5mc19hdHRyaWJ1dGVfY2Fj
+aGVfZXhwaXJlZCBbbmZzXSgpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgbmZzNF9oYXZlX2RlbGVnYXRpb24gW25mc3Y0XSgpIHsKIDMpICAgMS4wMTcgdXMg
+ICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICBuZnM0X2lzX3ZhbGlkX2RlbGVnYXRpb24g
+W25mc3Y0XSgpOwogMykgICAzLjA1NCB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICB9
+CiAzKSAgIDUuMDY5IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAgIDcuMDM0
+IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgfQogMykgICAxLjA0NiB1cyAgICB8ICAgICAg
+ICAgICAgICAgICAgICAgIGNyZWRfZnNjbXAoKTsKIDMpICAgMS4wNDggdXMgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICBjcmVkX2ZzY21wKCk7CiAzKSAgIDEuMDQ3IHVzICAgIHwgICAgICAgICAg
+ICAgICAgICAgICAgY3JlZF9mc2NtcCgpOwogMykgICAxLjA0OCB1cyAgICB8ICAgICAgICAgICAg
+ICAgICAgICAgIGNyZWRfZnNjbXAoKTsKIDMpICAgMS4wNjYgdXMgICAgfCAgICAgICAgICAgICAg
+ICAgICAgICBjcmVkX2ZzY21wKCk7CiAzKSAgIDEuMDQwIHVzICAgIHwgICAgICAgICAgICAgICAg
+ICAgICAgYWNjZXNzX2NtcCBbbmZzXSgpOwogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAg
+ICAgICAgICAgIG5mc19jaGVja19jYWNoZV9pbnZhbGlkIFtuZnNdKCkgewogMykgICAgICAgICAg
+ICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgbmZzX2F0dHJpYnV0ZV9jYWNoZV9leHBpcmVk
+IFtuZnNdKCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICBu
+ZnM0X2hhdmVfZGVsZWdhdGlvbiBbbmZzdjRdKCkgewogMykgICAxLjAxOCB1cyAgICB8ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIG5mczRfaXNfdmFsaWRfZGVsZWdhdGlvbiBbbmZzdjRdKCk7
+CiAzKSAgIDMuMDM3IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgIH0KIDMpICAgNS4w
+NTggdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgIH0KIDMpICAgNy4wMDkgdXMgICAgfCAg
+ICAgICAgICAgICAgICAgICAgICB9CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAg
+ICAgICAgX19uZnNfcmV2YWxpZGF0ZV9pbm9kZSBbbmZzXSgpIHsKIDMpICAgICAgICAgICAgICAg
+fCAgICAgICAgICAgICAgICAgICAgICAgIC8qIG5mc19yZXZhbGlkYXRlX2lub2RlX2VudGVyOiBm
+aWxlaWQ9MDA6MmI6NTkxNjYyMjAgZmhhbmRsZT0weDYyZDQwYzUyIHZlcnNpb249MTcgICovCiAz
+KSAgIDEuMDIyIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICBpc19iYWRfaW5vZGUoKTsK
+IDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgIG5mc19hbGxvY19mYXR0
+cl93aXRoX2xhYmVsIFtuZnNdKCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAg
+ICAgICAgICAgICBrbWFsbG9jX3RyYWNlKCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIF9fa21lbV9jYWNoZV9hbGxvY19ub2RlKCkgewogMykgICAxLjMw
+MCB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsK
+IDMpICAgMS4wMTUgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNob3VsZF9m
+YWlsc2xhYigpOwogMykgICA1LjQ4NCB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IH0KIDMpICAgMS4wMjQgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICBnZXRfc3Rh
+Y2tfaW5mbygpOwogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGlzX2JwZl90ZXh0X2FkZHJlc3MoKSB7CiAzKSAgIDEuMDczIHVzICAgIHwgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBicGZfa3N5bV9maW5kKCk7CiAzKSAgIDMuMTA3IHVzICAgIHwgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfQogMykgICAxLjE5NSB1cyAgICB8ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGZpbHRlcl9pcnFfc3RhY2tzKCk7CiAzKSArIDI5LjY2OCB1cyAgIHwg
+ICAgICAgICAgICAgICAgICAgICAgICAgIH0KIDMpICAgMS4wNjQgdXMgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgbmZzNF9sYWJlbF9hbGxvYyBbbmZzXSgpOwogMykgKyAzMy45MTggdXMg
+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgfQogMykgICAgICAgICAgICAgICB8ICAgICAgICAg
+ICAgICAgICAgICAgICAgbmZzNF9wcm9jX2dldGF0dHIgW25mc3Y0XSgpIHsKIDMpICAgICAgICAg
+ICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgX25mczRfcHJvY19nZXRhdHRyIFtuZnN2
+NF0oKSB7CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgbmZz
+NF9iaXRtYXBfY29weV9hZGp1c3QgW25mc3Y0XSgpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIG5mczRfaGF2ZV9kZWxlZ2F0aW9uIFtuZnN2NF0oKSB7
+CiAzKSAgIDEuMDI1IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG5mczRf
+aXNfdmFsaWRfZGVsZWdhdGlvbiBbbmZzdjRdKCk7CiAzKSAgIDMuMDM3IHVzICAgIHwgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAgIDUuMDcxIHVzICAgIHwgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfQogMykgICAxLjA3NyB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIG5mc19mYXR0cl9pbml0IFtuZnNdKCk7CiAzKSAgICAgICAgICAgICAgIHwgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgbmZzNF9kb19jYWxsX3N5bmMgW25mc3Y0XSgpIHsKIDMpICAg
+ICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJwY19ydW5fdGFzayBb
+c3VucnBjXSgpIHsKIDMpICsgMzguNDU0IHVzICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgcnBjX25ld190YXNrIFtzdW5ycGNdKCk7CiAzKSAgIDMuMDc4IHVzICAgIHwgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHJwY190YXNrX3NldF90cmFuc3BvcnQgW3N1bnJwY10o
+KTsKIDMpICMgNTE1Mi4xODUgdXMgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcnBj
+X2V4ZWN1dGUgW3N1bnJwY10oKTsKIDMpICMgNTE5OS41NDEgdXMgfCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIH0KIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHJwY19wdXRfdGFzayBbc3VucnBjXSgpIHsKIDMpICAgMS44MzEgdXMgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcnBjX3JlbGVhc2VfcmVzb3VyY2VzX3Rhc2sgW3N1
+bnJwY10oKTsKIDMpICsgMTcuNDQ5IHVzICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgcnBjX2ZyZWVfdGFzayBbc3VucnBjXSgpOwogMykgKyAyMi4zNDcgdXMgICB8ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfQogMykgIyA1MjI1LjE4NSB1cyB8ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIH0KIDMpICMgNTIzNS41MzYgdXMgfCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgfQogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICBuZnM0X2hh
+bmRsZV9leGNlcHRpb24gW25mc3Y0XSgpIHsKIDMpICAgMS4zMDEgdXMgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBuZnM0X2RvX2hhbmRsZV9leGNlcHRpb24gW25mc3Y0XSgpOwogMykg
+ICA0LjMyMyB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAjIDUyNDMuMzA5
+IHVzIHwgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAgICAgICAgICAgICAgIHwgICAgICAg
+ICAgICAgICAgICAgICAgICBrZnJlZSgpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgX19rbWVtX2NhY2hlX2ZyZWUoKSB7CiAzKSAgIDEuMDI2IHVzICAgIHwg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgZml4dXBfcmVkX2xlZnQoKTsKIDMpICAgMS4wNDQg
+dXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICBnZXRfc3RhY2tfaW5mbygpOwogMykg
+ICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlzX2JwZl90ZXh0X2Fk
+ZHJlc3MoKSB7CiAzKSAgIDEuMDc5IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBicGZfa3N5bV9maW5kKCk7CiAzKSAgIDMuMDgzIHVzICAgIHwgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfQogMykgICAxLjE3NiB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGZpbHRlcl9pcnFfc3RhY2tzKCk7CiAzKSArIDIxLjg3OSB1cyAgIHwgICAgICAgICAgICAgICAg
+ICAgICAgICAgIH0KIDMpICsgMjMuOTg5IHVzICAgfCAgICAgICAgICAgICAgICAgICAgICAgIH0K
+IDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgIC8qIG5mc19yZXZhbGlk
+YXRlX2lub2RlX2V4aXQ6IGVycm9yPS0xMyAoQUNDRVMpIGZpbGVpZD0wMDoyYjo1OTE2NjIyMCBm
+aGFuZGxlPTB4NjJkNDBjNTIgdHlwZT00IChESVIpIHZlcnNpb249MTcgc2l6ZT0xOCBjYWNoZV92
+YWxpZGl0eT0weDAgKCkgbmZzX2ZsYWdzPTB4NCAoQUNMX0xSVV9TRVQpICovCiAzKSAjIDUzMTMu
+MTYyIHVzIHwgICAgICAgICAgICAgICAgICAgICAgfQogMykgIyA1MzU2LjAzMyB1cyB8ICAgICAg
+ICAgICAgICAgICAgICB9CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgIG5m
+czRfcHJvY19hY2Nlc3MgW25mc3Y0XSgpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICBfbmZzNF9wcm9jX2FjY2VzcyBbbmZzdjRdKCkgewogMykgICAgICAgICAgICAg
+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgbmZzNF9oYXZlX2RlbGVnYXRpb24gW25mc3Y0XSgp
+IHsKIDMpICAgMS4wMzMgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgbmZzNF9pc192
+YWxpZF9kZWxlZ2F0aW9uIFtuZnN2NF0oKTsKIDMpICAgMy4xMDggdXMgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgIH0KIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
+IG5mc19hbGxvY19mYXR0ciBbbmZzXSgpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAga21hbGxvY190cmFjZSgpIHsKIDMpICAgICAgICAgICAgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBfX2ttZW1fY2FjaGVfYWxsb2Nfbm9kZSgpIHsKIDMpICAg
+MS4wMTggdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fY29uZF9yZXNjaGVk
+KCk7CiAzKSAgIDEuMDE0IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzaG91
+bGRfZmFpbHNsYWIoKTsKIDMpICAgNS4wNTQgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB9CiAzKSAgIDEuMDI1IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ2V0
+X3N0YWNrX2luZm8oKTsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICBpc19icGZfdGV4dF9hZGRyZXNzKCkgewogMykgICAxLjA3OSB1cyAgICB8ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgYnBmX2tzeW1fZmluZCgpOwogMykgICAzLjA4MCB1cyAgICB8
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KIDMpICAgMS4xODEgdXMgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBmaWx0ZXJfaXJxX3N0YWNrcygpOwogMykgKyAyNy43NDYgdXMg
+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSArIDI5Ljg1MyB1cyAgIHwgICAgICAg
+ICAgICAgICAgICAgICAgICB9CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAg
+ICAgICBuZnM0X2NhbGxfc3luY19zZXF1ZW5jZSBbbmZzdjRdKCkgewogMykgICAgICAgICAgICAg
+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgICBycGNfcnVuX3Rhc2sgW3N1bnJwY10oKSB7CiAz
+KSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgcnBjX25ld190YXNr
+IFtzdW5ycGNdKCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAga21lbV9jYWNoZV9hbGxvYygpIHsKIDMpICAgMS4wNTcgdXMgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICAgMS4wMTUgdXMgICAg
+fCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2hvdWxkX2ZhaWxzbGFiKCk7CiAzKSAg
+IDEuMDI2IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGdldF9zdGFja19p
+bmZvKCk7CiAzKSAgIDEuNDI2IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGlzX2JwZl90ZXh0X2FkZHJlc3MoKTsKIDMpICAgMS4xODMgdXMgICAgfCAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgZmlsdGVyX2lycV9zdGFja3MoKTsKIDMpICsgMzAuOTE3IHVzICAg
+fCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KIDMpICAgMS4wNjMgdXMgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHhwcnRfZ2V0IFtzdW5ycGNdKCk7CiAzKSAgIDEuMDIw
+IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBycGNfdGFza19nZXRfeHBydCBb
+c3VucnBjXSgpOwogMykgICAxLjA2MyB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAga3RpbWVfZ2V0KCk7CiAzKSArIDM5LjE5NSB1cyAgIHwgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfQogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJw
+Y190YXNrX3NldF90cmFuc3BvcnQgW3N1bnJwY10oKSB7CiAzKSAgICAgICAgICAgICAgIHwgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB4cHJ0X2l0ZXJfZ2V0X25leHQgW3N1bnJwY10oKSB7
+CiAzKSAgIDEuMDkwIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHhwcnRf
+aXRlcl9maXJzdF9lbnRyeSBbc3VucnBjXSgpOwogMykgICAxLjA4MyB1cyAgICB8ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICB4cHJ0X2dldCBbc3VucnBjXSgpOwogMykgICA1LjIxOSB1
+cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogMykgICAxLjA4OSB1cyAgICB8
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcnBjX3Rhc2tfZ2V0X3hwcnQgW3N1bnJwY10o
+KTsKIDMpICAgOS4zMzcgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAg
+ICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgcnBjX2V4ZWN1dGUgW3N1
+bnJwY10oKSB7CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBycGNfbWFrZV9ydW5uYWJsZSBbc3VucnBjXSgpIHsKIDMpICAgMS4xMTcgdXMgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgd2FrZV91cF9iaXQoKTsKIDMpICAgMy4xMjAgdXMg
+ICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KIDMpICAgICAgICAgICAgICAgfCAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fcnBjX2V4ZWN1dGUgW3N1bnJwY10oKSB7CiAz
+KSAgIDMuMTA0IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJwY19wcmVw
+YXJlX3Rhc2sgW3N1bnJwY10oKTsKIDMpICAgMS4wMjkgdXMgICAgfCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICAgMS40NTggdXMgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbF9zdGFydCBbc3VucnBjXSgpOwogMykgICAx
+LjAxMiB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2NvbmRfcmVzY2hl
+ZCgpOwogMykgICAyLjQ4MiB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBj
+YWxsX3Jlc2VydmUgW3N1bnJwY10oKTsKIDMpICAgMS4wMTMgdXMgICAgfCAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICAgMS4wNDAgdXMgICAgfCAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbF9yZXNlcnZlcmVzdWx0IFtzdW5ycGNd
+KCk7CiAzKSAgIDEuMDE0IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9f
+Y29uZF9yZXNjaGVkKCk7CiAzKSArIDIxLjc5NSB1cyAgIHwgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGNhbGxfcmVmcmVzaCBbc3VucnBjXSgpOwogMykgICAxLjAyNyB1cyAgICB8ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2NvbmRfcmVzY2hlZCgpOwogMykgICAxLjMz
+MiB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxsX3JlZnJlc2hyZXN1
+bHQgW3N1bnJwY10oKTsKIDMpICAgMS4wMjkgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICsgMjAuMjc0IHVzICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgY2FsbF9hbGxvY2F0ZSBbc3VucnBjXSgpOwogMykgICAxLjAz
+MyB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2NvbmRfcmVzY2hlZCgp
+OwogMykgKyAxOC4yNDAgdXMgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxs
+X2VuY29kZSBbc3VucnBjXSgpOwogMykgICAxLjAyNyB1cyAgICB8ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBfX2NvbmRfcmVzY2hlZCgpOwogMykgICAzLjAyOSB1cyAgICB8ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxsX3RyYW5zbWl0IFtzdW5ycGNdKCk7CiAzKSAh
+IDQ2Ny44ODMgdXMgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG91dF9vZl9saW5l
+X3dhaXRfb25fYml0KCk7CiAzKSAgIDEuNzc3IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIGNhbGxfdHJhbnNtaXRfc3RhdHVzIFtzdW5ycGNdKCk7CiAzKSAgIDEuMDQzIHVz
+ICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fY29uZF9yZXNjaGVkKCk7CiAz
+KSAgIDEuNDkzIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxfdHJh
+bnNtaXQgW3N1bnJwY10oKTsKIDMpICAgMC45OTkgdXMgICAgfCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICAgMS42MDYgdXMgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgY2FsbF90cmFuc21pdF9zdGF0dXMgW3N1bnJwY10oKTsK
+IDMpICAgMS4wMDMgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19jb25k
+X3Jlc2NoZWQoKTsKIDMpICAgMS4wNjEgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgY2FsbF9iaW5kIFtzdW5ycGNdKCk7CiAzKSAgIDEuMDAwIHVzICAgIHwgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIF9fY29uZF9yZXNjaGVkKCk7CiAzKSArIDMyLjM3NiB1cyAg
+IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxfY29ubmVjdCBbc3VucnBjXSgp
+OwogMykgIyAyMTMxLjcyNyB1cyB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBvdXRf
+b2ZfbGluZV93YWl0X29uX2JpdCgpOwogMykgICAxLjE5MCB1cyAgICB8ICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBjYWxsX2Nvbm5lY3Rfc3RhdHVzIFtzdW5ycGNdKCk7CiAzKSAgIDEu
+MDEwIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fY29uZF9yZXNjaGVk
+KCk7CiAzKSAgIDMuMjQyIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNh
+bGxfdHJhbnNtaXQgW3N1bnJwY10oKTsKIDMpICEgNTcwLjY5NSB1cyAgfCAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgb3V0X29mX2xpbmVfd2FpdF9vbl9iaXQoKTsKIDMpICAgMS43OTEg
+dXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbF90cmFuc21pdF9zdGF0
+dXMgW3N1bnJwY10oKTsKIDMpICAgMS4wMTEgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICEgNDkzLjk1MyB1cyAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgY2FsbF90cmFuc21pdCBbc3VucnBjXSgpOwogMykgICAxLjEx
+MyB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2NvbmRfcmVzY2hlZCgp
+OwogMykgICA2LjMzNCB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxs
+X3RyYW5zbWl0X3N0YXR1cyBbc3VucnBjXSgpOwogMykgIyAxMTUwLjA0OCB1cyB8ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBvdXRfb2ZfbGluZV93YWl0X29uX2JpdCgpOwogMykgICAx
+LjExOSB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB4cHJ0X3RpbWVyIFtz
+dW5ycGNdKCk7CiAzKSAgIDEuMDM3IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIF9fY29uZF9yZXNjaGVkKCk7CiAzKSAgIDEuMTUwIHVzICAgIHwgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGNhbGxfc3RhdHVzIFtzdW5ycGNdKCk7CiAzKSAgIDEuMDMyIHVzICAg
+IHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fY29uZF9yZXNjaGVkKCk7CiAzKSAr
+IDMwLjM5MSB1cyAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxfZGVjb2Rl
+IFtzdW5ycGNdKCk7CiAzKSAgIDEuMDYyIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIF9fY29uZF9yZXNjaGVkKCk7CiAzKSAgIDEuNTM5IHVzICAgIHwgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGNhbGxfZW5jb2RlIFtzdW5ycGNdKCk7CiAzKSAgIDEuMDQ3IHVz
+ICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9fY29uZF9yZXNjaGVkKCk7CiAz
+KSAgIDEuNDQzIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxfdHJh
+bnNtaXQgW3N1bnJwY10oKTsKIDMpICAgMS4wNTAgdXMgICAgfCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICAgMS4zNzIgdXMgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgY2FsbF90cmFuc21pdF9zdGF0dXMgW3N1bnJwY10oKTsK
+IDMpICAgMS4wNDkgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19jb25k
+X3Jlc2NoZWQoKTsKIDMpICAgMS4wNzYgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgY2FsbF9zdGF0dXMgW3N1bnJwY10oKTsKIDMpICAgMS4wMzAgdXMgICAgfCAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICAgMy43NzAgdXMg
+ICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbF9kZWNvZGUgW3N1bnJwY10o
+KTsKIDMpICAgMS4wNDQgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19j
+b25kX3Jlc2NoZWQoKTsKIDMpICAgMS40MDMgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgY2FsbF9lbmNvZGUgW3N1bnJwY10oKTsKIDMpICAgMS4wNDUgdXMgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgX19jb25kX3Jlc2NoZWQoKTsKIDMpICAgMS4zNDIg
+dXMgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbF90cmFuc21pdCBbc3Vu
+cnBjXSgpOwogMykgICAxLjA0NSB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBfX2NvbmRfcmVzY2hlZCgpOwogMykgICAxLjM0NiB1cyAgICB8ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjYWxsX3RyYW5zbWl0X3N0YXR1cyBbc3VucnBjXSgpOwogMykgICAxLjAz
+NCB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2NvbmRfcmVzY2hlZCgp
+OwogMykgICAxLjA2NSB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxs
+X3N0YXR1cyBbc3VucnBjXSgpOwogMykgICAxLjAzNCB1cyAgICB8ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBfX2NvbmRfcmVzY2hlZCgpOwogMykgICAzLjc2OCB1cyAgICB8ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxsX2RlY29kZSBbc3VucnBjXSgpOwogMykgICAx
+LjA0MiB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfX2NvbmRfcmVzY2hl
+ZCgpOwogMykgICA1LjY0MyB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBy
+cGNfZXhpdF90YXNrIFtzdW5ycGNdKCk7CiAzKSAgIDEuMDU5IHVzICAgIHwgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIF9fY29uZF9yZXNjaGVkKCk7CiAzKSArIDU3LjE3MyB1cyAgIHwg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJwY19yZWxlYXNlX3Jlc291cmNlc190YXNr
+IFtzdW5ycGNdKCk7CiAzKSAjIDUxNTQuMjUxIHVzIHwgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB9CiAzKSAjIDUxNjAuNDE3IHVzIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQog
+MykgIyA1MjEzLjIyMSB1cyB8ICAgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAgICAgICAg
+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgIHJwY19wdXRfdGFzayBbc3VucnBjXSgp
+IHsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICBycGNfcmVs
+ZWFzZV9yZXNvdXJjZXNfdGFzayBbc3VucnBjXSgpIHsKIDMpICAgMS4wNTEgdXMgICAgfCAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHhwcnRfcmVsZWFzZSBbc3VucnBjXSgpOwogMykgICAg
+ICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcnBjX3Rhc2tfcmVsZWFz
+ZV9jbGllbnQgW3N1bnJwY10oKSB7CiAzKSAgIDEuMDM4IHVzICAgIHwgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJwY190YXNrX3JlbGVhc2VfdHJhbnNwb3J0IFtzdW5ycGNdKCk7CiAz
+KSAgIDMuMDI3IHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAgIDcu
+MDEwIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogMykgICAgICAgICAgICAg
+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJwY19mcmVlX3Rhc2sgW3N1bnJwY10oKSB7
+CiAzKSAgIDEuMDIxIHVzICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwdXRfcnBj
+Y3JlZCBbc3VucnBjXSgpOwogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgbWVtcG9vbF9mcmVlKCkgewogMykgKyAxNC41MTggdXMgICB8ICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBtZW1wb29sX2ZyZWVfc2xhYigpOwogMykgKyAxNi42MjQgdXMg
+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfQogMykgKyAyMC42NTUgdXMgICB8ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIH0KIDMpICsgMzAuNjEwIHVzICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfQogMykgIyA1MjQ3LjgwNSB1cyB8ICAgICAgICAgICAgICAgICAgICAg
+ICAgfQogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAga2ZyZWUoKSB7
+CiAzKSAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgIF9fa21lbV9jYWNo
+ZV9mcmVlKCkgewogMykgICAxLjAyMSB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGZpeHVwX3JlZF9sZWZ0KCk7CiAzKSAgIDEuMDI4IHVzICAgIHwgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgZ2V0X3N0YWNrX2luZm8oKTsKIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICBpc19icGZfdGV4dF9hZGRyZXNzKCkgewogMykgICAxLjA4MiB1cyAg
+ICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYnBmX2tzeW1fZmluZCgpOwogMykgICAz
+LjA4NiB1cyAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0KIDMpICAgMS4xNjYgdXMg
+ICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWx0ZXJfaXJxX3N0YWNrcygpOwogMykg
+KyAyMS44NzggdXMgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSArIDIzLjk0NSB1
+cyAgIHwgICAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAjIDUzMDkuODMxIHVzIHwgICAgICAg
+ICAgICAgICAgICAgICAgfQogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAg
+IG5mczRfaGFuZGxlX2V4Y2VwdGlvbiBbbmZzdjRdKCkgewogMykgICAxLjExMiB1cyAgICB8ICAg
+ICAgICAgICAgICAgICAgICAgICAgbmZzNF9kb19oYW5kbGVfZXhjZXB0aW9uIFtuZnN2NF0oKTsK
+IDMpICAgMy4xMzQgdXMgICAgfCAgICAgICAgICAgICAgICAgICAgICB9CiAzKSAjIDUzMTYuMjU0
+IHVzIHwgICAgICAgICAgICAgICAgICAgIH0KIDMpICogMTA2NzUuOTAgdXMgfCAgICAgICAgICAg
+ICAgICAgIH0KIDMpICogMTA2NzcuOTYgdXMgfCAgICAgICAgICAgICAgICB9CiAzKSAqIDEwNjgw
+LjAyIHVzIHwgICAgICAgICAgICAgIH0KIDMpICogMTA3OTkuNTggdXMgfCAgICAgICAgICAgIH0K
+IDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgIHRlcm1pbmF0ZV93YWxrKCkgewogMykgICAg
+ICAgICAgICAgICB8ICAgICAgICAgICAgICBkcHV0KCkgewogMykgICAxLjAxOSB1cyAgICB8ICAg
+ICAgICAgICAgICAgIF9fY29uZF9yZXNjaGVkKCk7CiAzKSAgIDMuMTQ5IHVzICAgIHwgICAgICAg
+ICAgICAgIH0KIDMpICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgbW50cHV0KCkgewogMykg
+ICAxLjIzOCB1cyAgICB8ICAgICAgICAgICAgICAgIG1udHB1dF9ub19leHBpcmUoKTsKIDMpICAg
+My4yMzkgdXMgICAgfCAgICAgICAgICAgICAgfQogMykgICAgICAgICAgICAgICB8ICAgICAgICAg
+ICAgICBkcHV0KCkgewogMykgICAxLjAxMCB1cyAgICB8ICAgICAgICAgICAgICAgIF9fY29uZF9y
+ZXNjaGVkKCk7CiAzKSAgIDMuMTA4IHVzICAgIHwgICAgICAgICAgICAgIH0KIDMpICAgICAgICAg
+ICAgICAgfCAgICAgICAgICAgICAgbW50cHV0KCkgewogMykgICAxLjA4OSB1cyAgICB8ICAgICAg
+ICAgICAgICAgIG1udHB1dF9ub19leHBpcmUoKTsKIDMpICAgMy4wNzQgdXMgICAgfCAgICAgICAg
+ICAgICAgfQogMykgKyAxNy42MTIgdXMgICB8ICAgICAgICAgICAgfQogMykgKiAxMDgyNi4xOSB1
+cyB8ICAgICAgICAgIH0KIDMpICogMTA4MjguMjQgdXMgfCAgICAgICAgfQogMykgICAgICAgICAg
+ICAgICB8ICAgICAgICBwdXRuYW1lKCkgewogMykgICAgICAgICAgICAgICB8ICAgICAgICAgIGtt
+ZW1fY2FjaGVfZnJlZSgpIHsKIDMpICAgMS4wMTQgdXMgICAgfCAgICAgICAgICAgIGZpeHVwX3Jl
+ZF9sZWZ0KCk7CiAzKSAgIDEuMDIwIHVzICAgIHwgICAgICAgICAgICBnZXRfc3RhY2tfaW5mbygp
+OwogMykgICAgICAgICAgICAgICB8ICAgICAgICAgICAgaXNfYnBmX3RleHRfYWRkcmVzcygpIHsK
+IDMpICAgMS4wNzkgdXMgICAgfCAgICAgICAgICAgICAgYnBmX2tzeW1fZmluZCgpOwogMykgICAz
+LjA4MCB1cyAgICB8ICAgICAgICAgICAgfQogMykgICAxLjA5NiB1cyAgICB8ICAgICAgICAgICAg
+ZmlsdGVyX2lycV9zdGFja3MoKTsKIDMpICsgMTYuMjk1IHVzICAgfCAgICAgICAgICB9CiAzKSAr
+IDE4LjM4OSB1cyAgIHwgICAgICAgIH0KIDMpICogMTA4ODMuOTUgdXMgfCAgICAgIH0KIDMpICAg
+ICAgICAgICAgICAgfCAgICAgIC8qIGtzeXNfdW1vdW50OiB1c2VyX3BhdGhfYXQgZmFpbGVkIHdp
+dGggLTEzICovCiAzKSAqIDEwODk0LjA3IHVzIHwgICAgfQogMykgKiAxMDg5Ny4yNSB1cyB8ICB9
+CiAzKSAgICAgICAgICAgICAgIHwgIC8qIHN5c191bW91bnQgLT4gMHhmZmZmZmZmZmZmZmZmZmYz
+ICovCg==
+--000000000000a62cd705f8aacfb6
+Content-Type: application/x-shellscript; name="test-non-autofs.sh"
+Content-Disposition: attachment; filename="test-non-autofs.sh"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lg55bv2h0>
+X-Attachment-Id: f_lg55bv2h0
 
-nfsconf -d
-[exportd]
- debug = all
-[exportfs]
- debug = all
-[general]
- pipefs-directory = /run/rpc_pipefs
-[lockd]
- port = 32769
- udp-port = 32769
-[mountd]
- debug = all
- manage-gids = True
- port = 892
-[nfsd]
- debug = all
- port = 2049
- threads = 48
-[nfsdcld]
- debug = all
-[nfsdcltrack]
- debug = all
-[sm-notify]
- debug = all
- outgoing-port = 846
-[statd]
- debug = all
- outgoing-port = 2020
- port = 662
+IyEvYmluL2Jhc2gKIwojIFJlcHJvZHVjZXIgZm9yIGh0dHBzOi8vYnVnemlsbGEucmVkaGF0LmNv
+bS9zaG93X2J1Zy5jZ2k/aWQ9MjE0OTQwNgojIEJ1ZyAyMTQ5NDA2IC0gdW1vdW50KCkgZmFpbHMg
+dG8gdW5tb3VudCBhbiBORlMgbW91bnRlZCBhdXRvZnMgcGF0aCB3aGVyZSB0aGUgZXhwb3J0ZWQg
+ZmlsZXN5c3RlbSBpcyBubyBsb25nZXIgZXhwb3J0ZWQgdG8gdGhlIGNsaWVudCBhbmQgdGhlIHNl
+cnZlciByZXR1cm5zIE5GUzRFUlJfUEVSTSBpbiByZXNwb25zZSB0byBHRVRBVFRSIGR1cmluZyB1
+bm1vdW50CiMKIyBOT1RFOiBUaGlzIHJlcHJvZHVjZXMgdGhlIGVycm9yIG9uIGJvdGggJ2xzJyBh
+bmQgJ3Vtb3VudCcgd2hlbiB0aGUgZXhwb3J0cyBhcmUgc2V0IHVuYXZhaWxhYmxlLgojIEhvd2V2
+ZXIsIGl0IGRvZXMgbm90IHJlcHJvZHVjZSB0aGUgTkZTIHNlcnZlciByZXR1cm5pbmcgTkZTNEVS
+Ul9QRVJNIGluIHJlc3BvbnNlIHRvIEdFVEFUVFIuCiMgV2l0aCB0aGUgTGludXggTkZTIHNlcnZl
+ciB0aGUgcmVzcG9uc2UgaXMgYW4gQVVUSF9FUlJPUiBvbiB2YXJpb3VzIE5GUyAvIFJQQ3MuCiMK
+ZnVuY3Rpb24gY2hlY2tfc2VydmljZSB7CglzeXN0ZW1jdGwgc3RhdHVzICQxID4vZGV2L251bGwg
+Mj4mMQoJaWYgWyAkPyAtbmUgMCBdOyB0aGVuCgkJZWNobyBUcnlpbmcgdG8gc3RhcnQgJDEKCQlz
+eXN0ZW1jdGwgc3RhcnQgJDEgPi9kZXYvbnVsbCAyPiYxCiAgICAgICAgZmkKICAgICAgICBpZiBb
+ICQ/IC1uZSAwIF07IHRoZW4KICAgICAgICAgICAgICAgIGVjaG8gY291bGQgbm90IHN0YXJ0ICQx
+CiAgICAgICAgICAgICAgICBleGl0IDE7CiAgICAgICAgZmkKfQpmdW5jdGlvbiBzZXRfZXhwb3J0
+c19hdmFpbGFibGUgewoJdGVzdCAtZiAvZXRjL2V4cG9ydHMuYmFrIHx8IGNwIC9ldGMvZXhwb3J0
+cyAvZXRjL2V4cG9ydHMuYmFrCglta2RpciAtcCAvZXhwb3J0cy9kaXIxCgllY2hvICIvZXhwb3J0
+cwkJCTEyNy4wLjAuMShydyxmc2lkPTApIiA+IC9ldGMvZXhwb3J0cwoJZWNobyAiL2V4cG9ydHMv
+ZGlyMQkJMTI3LjAuMC4xKHJ3LGZzaWQ9MTApIiA+PiAvZXRjL2V4cG9ydHMKCWV4cG9ydGZzIC1h
+dnUgOyBleHBvcnRmcyAtYXYKfQpmdW5jdGlvbiBzZXRfZXhwb3J0c191bmF2YWlsYWJsZSB7Cgll
+Y2hvICIvZXhwb3J0cwkJCTEuMi4zLjQocncsZnNpZD0wLG5vY3Jvc3NtbnQpIiAJPiAvZXRjL2V4
+cG9ydHMKCWVjaG8gIi9leHBvcnRzL2RpcjEJCTEuMi4zLjQocncsZnNpZD0xMCkiCT4+IC9ldGMv
+ZXhwb3J0cwoJZXhwb3J0ZnMgLWF2dSA7IGV4cG9ydGZzIC1hdgp9CgpjaGVja19zZXJ2aWNlIG5m
+cy1zZXJ2ZXIKCmVjaG8gc2V0dGluZyBleHBvcnRzIGF2YWlsYWJsZQpzZXRfZXhwb3J0c19hdmFp
+bGFibGUKbW91bnQgLW92ZXJzPTQuMSAxMjcuMC4wLjE6LyAvbW50L2V4cG9ydHMKbW91bnQgLW92
+ZXJzPTQuMSAxMjcuMC4wLjE6L2RpcjEgL21udC9leHBvcnRzL2RpcjEKCmVjaG8gc2V0dGluZyBl
+eHBvcnRzIHVuYXZhaWxhYmxlCnNldF9leHBvcnRzX3VuYXZhaWxhYmxlCgplY2hvIHNsZWVwaW5n
+IDYwcyB0byBsZXQgYXR0cmlidXRlIGNhY2hlIGV4cGlyZQpzbGVlcCA2MAoKIyBUT0RPOiBDaGVj
+ayBmb3IgZXJyb3IgY29kZSAvIG1lc3NhZ2UKIyBsczogY2Fubm90IGFjY2VzcyAnL21udC9leHBv
+cnRzL2RpcjEvZGlyMic6IFBlcm1pc3Npb24gZGVuaWVkCmxzIC1hbCAvbW50L2V4cG9ydHMvZGly
+MQoKIyBUT0RPOiBDaGVjayBmb3IgZXJyb3IgY29kZSAvIG1lc3NhZ2U/CiMgdW1vdW50Lm5mczog
+L21udC9leHBvcnRzL2RpcjEvZGlyMjogYmxvY2sgZGV2aWNlcyBub3QgcGVybWl0dGVkIG9uIGZz
+CnVtb3VudCAvbW50L2V4cG9ydHMvZGlyMQppZiBbICQ/IC1uZSAwIF07IHRoZW4KCWVjaG8gVEVT
+VCBGQUlMIG9uICQodW5hbWUgLXIpCgllY2hvICJvdXRwdXQgb2YgJ2dyZXAgMTI3LjAuMC4xIC9w
+cm9jL21vdW50cyciCglncmVwIDEyNy4wLjAuMSAvcHJvYy9tb3VudHMKCXNldF9leHBvcnRzX2F2
+YWlsYWJsZQoJZXhpdCAxCmZpCmVjaG8gVEVTVCBQQVNTIG9uICQodW5hbWUgLXIpCg==
+--000000000000a62cd705f8aacfb6--
 
-
-
--- 
-Dr. Christian Herzog <herzog@phys.ethz.ch>  support: +41 44 633 26 68
-Head, IT Services Group, HPT H 8              voice: +41 44 633 39 50
-Department of Physics, ETH Zurich           
-8093 Zurich, Switzerland                     http://isg.phys.ethz.ch/
