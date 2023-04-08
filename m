@@ -2,159 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9028A6DB570
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Apr 2023 22:48:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A5346DB89A
+	for <lists+linux-nfs@lfdr.de>; Sat,  8 Apr 2023 05:30:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229633AbjDGUsd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Apr 2023 16:48:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
+        id S229896AbjDHDad (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Apr 2023 23:30:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjDGUsc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Apr 2023 16:48:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85653618B
-        for <linux-nfs@vger.kernel.org>; Fri,  7 Apr 2023 13:48:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DAC9464FF9
-        for <linux-nfs@vger.kernel.org>; Fri,  7 Apr 2023 20:48:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3EFEC433D2;
-        Fri,  7 Apr 2023 20:48:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680900508;
-        bh=ArnyrxT86ik1Y3a0D03JRx9QILk6FZv4/GOVFZUjPsI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kekUtAwMue0hd1zj6olv1JkfuW3IWJYU/5q9XFx4WOmL60LFhwhed0JH3rLSrw1IJ
-         9b31gAWOsqRBKqvriRTqBokd3P3HoZxRY0exyc8b6Hn5CH8LlOZMa4kkWvdtkxX48q
-         bZpXWaSQrd7uHVDgA4jrAIa0YyuwrA93V2/3NOq+TgYcGznmWvBSvIyjFwJ0hEFpJW
-         BECBgwh04CDaNyP/Pz849YAcE7jMQCaHkyEp5l6s8CdqlMd+Atx3ZQIp5OIbpsgkb0
-         o4wODbgWHaFDoQJJv+vri9GtqQSvH9TIRRMVKiXvMKofmlNDVXU9Yvwq4Xz7IYvTdI
-         +Vyp/ksqYibZg==
-From:   Anna Schumaker <anna@kernel.org>
-To:     linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
-Cc:     anna@kernel.org
-Subject: [PATCH] NFSv4.2: Rework scratch handling for READ_PLUS
-Date:   Fri,  7 Apr 2023 16:48:26 -0400
-Message-Id: <20230407204826.1274206-1-anna@kernel.org>
-X-Mailer: git-send-email 2.40.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S229626AbjDHDab (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Apr 2023 23:30:31 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28DC5CC09
+        for <linux-nfs@vger.kernel.org>; Fri,  7 Apr 2023 20:30:30 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3383KKmM029956;
+        Sat, 8 Apr 2023 03:30:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2022-7-12;
+ bh=4Ey3c+fRrNNTL8Pli8xGzfAIsRaE56UtjHNaZW4WhWo=;
+ b=EjbqRXiCqM5h8UMofMPKV2IYt9PUNsD5u0CsyqlLafLkg4g6UU8GbRPkUC31u8Sl2dnC
+ wS08uiKUqlplVJ6myxdRaSlq0B9Y/SHTNQQrlA8B6b71pu0ehfeME4FAXmrQgavKLmrZ
+ DMJYDyI7cLHeADWPG/gfFLKNkU2mt1jy7z7kBU1eh7qKkgy+KUiE60J2GT0fLPV4RCiH
+ mSKerz6iWu3y/YhbTZer3edF6BxkqAyI/P77rU8d+JSSJU2e39GTerYSIv91RUr7BZcT
+ CNMVGSJrLiSz3KFCMr8c7B3P4tTLznMgdcujVxg71vRnDniclQUqUqfz76v4FVGlwdDw JA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3pu05ar08h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 Apr 2023 03:30:26 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3383IURI038981;
+        Sat, 8 Apr 2023 03:30:25 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ptxq7ucky-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 Apr 2023 03:30:24 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3383UOAI018893;
+        Sat, 8 Apr 2023 03:30:24 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3ptxq7ucjt-1;
+        Sat, 08 Apr 2023 03:30:24 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] SUNRPC: increase max timeout for rebind to handle NFS server restart
+Date:   Fri,  7 Apr 2023 20:30:00 -0700
+Message-Id: <1680924600-11171-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-07_16,2023-04-06_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304080030
+X-Proofpoint-GUID: xQUogv82V2ZN9B5Wg-gXkUzHho9_hGY7
+X-Proofpoint-ORIG-GUID: xQUogv82V2ZN9B5Wg-gXkUzHho9_hGY7
+X-Spam-Status: No, score=-0.9 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Currently call_bind_status places a hard limit of 9 seconds for retries
+on EACCES error. This limit was done to prevent the RPC request from
+being retried forever if the remote server has problem and never comes
+up
 
-Instead of using a tiny scratch buffer, we should use a full scratch
-page to match how other NFSv4 operations handle scratch data. This patch
-also lets us set the scratch page before decoding any part of the
-READ_PLUS operation instead of setting the buffer right before segment
-decoding, which feels a little more robust to me.
+However this 9 seconds timeout is too short, comparing to other RPC
+timeouts which are generally in minutes. This causes intermittent failure
+with EIO on the client side when there are lots of NLM activity and the
+NFS server is restarted.
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Instead of removing the max timeout for retry and relying on the RPC
+timeout mechanism to handle the retry, which can lead to the RPC being
+retried forever if the remote NLM service fails to come up. This patch
+simply increases the max timeout of call_bind_status from 9 to 90 seconds
+which should allow enough time for NLM to register after a restart, and
+not retrying forever if there is real problem with the remote system.
+
+Fixes: 0b760113a3a1 ("NLM: Don't hang forever on NLM unlock requests")
+Reported-by: Helen Chao <helen.chao@oracle.com>
+Tested-by: Helen Chao <helen.chao@oracle.com>
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 ---
- fs/nfs/nfs42xdr.c       |  4 ++--
- fs/nfs/nfs4proc.c       | 17 ++++++++++++-----
- include/linux/nfs_xdr.h |  1 +
- 3 files changed, 15 insertions(+), 7 deletions(-)
+ include/linux/sunrpc/clnt.h  | 3 +++
+ include/linux/sunrpc/sched.h | 4 ++--
+ net/sunrpc/clnt.c            | 2 +-
+ net/sunrpc/sched.c           | 3 ++-
+ 4 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-index d80ee88ca996..702567d5b1db 100644
---- a/fs/nfs/nfs42xdr.c
-+++ b/fs/nfs/nfs42xdr.c
-@@ -1122,7 +1122,6 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
- 	uint32_t segments;
- 	struct read_plus_segment *segs;
- 	int status, i;
--	char scratch_buf[16];
- 	__be32 *p;
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index 770ef2cb5775..81afc5ea2665 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -162,6 +162,9 @@ struct rpc_add_xprt_test {
+ #define RPC_CLNT_CREATE_REUSEPORT	(1UL << 11)
+ #define RPC_CLNT_CREATE_CONNECTED	(1UL << 12)
  
- 	status = decode_op_hdr(xdr, OP_READ_PLUS);
-@@ -1143,7 +1142,6 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
- 	if (!segs)
- 		return -ENOMEM;
- 
--	xdr_set_scratch_buffer(xdr, &scratch_buf, sizeof(scratch_buf));
- 	status = -EIO;
- 	for (i = 0; i < segments; i++) {
- 		status = decode_read_plus_segment(xdr, &segs[i]);
-@@ -1348,6 +1346,8 @@ static int nfs4_xdr_dec_read_plus(struct rpc_rqst *rqstp,
- 	struct compound_hdr hdr;
- 	int status;
- 
-+	xdr_set_scratch_page(xdr, res->scratch);
++#define	RPC_CLNT_REBIND_DELAY		3
++#define	RPC_CLNT_REBIND_MAX_TIMEOUT	90
 +
- 	status = decode_compound_hdr(xdr, &hdr);
- 	if (status)
- 		goto out;
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 5607b1e2b821..2b5e62713bdd 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5439,6 +5439,8 @@ static bool nfs4_read_plus_not_supported(struct rpc_task *task,
+ struct rpc_clnt *rpc_create(struct rpc_create_args *args);
+ struct rpc_clnt	*rpc_bind_new_program(struct rpc_clnt *,
+ 				const struct rpc_program *, u32);
+diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+index b8ca3ecaf8d7..e9dc142f10bb 100644
+--- a/include/linux/sunrpc/sched.h
++++ b/include/linux/sunrpc/sched.h
+@@ -90,8 +90,8 @@ struct rpc_task {
+ #endif
+ 	unsigned char		tk_priority : 2,/* Task priority */
+ 				tk_garb_retry : 2,
+-				tk_cred_retry : 2,
+-				tk_rebind_retry : 2;
++				tk_cred_retry : 2;
++	unsigned char		tk_rebind_retry;
+ };
  
- static int nfs4_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- {
-+	if (hdr->res.scratch)
-+		__free_page(hdr->res.scratch);
- 	if (!nfs4_sequence_done(task, &hdr->res.seq_res))
- 		return -EAGAIN;
- 	if (nfs4_read_stateid_changed(task, &hdr->args))
-@@ -5452,17 +5454,22 @@ static int nfs4_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
- }
+ typedef void			(*rpc_action)(struct rpc_task *);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index fd7e1c630493..222578af6b01 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2053,7 +2053,7 @@ call_bind_status(struct rpc_task *task)
+ 		if (task->tk_rebind_retry == 0)
+ 			break;
+ 		task->tk_rebind_retry--;
+-		rpc_delay(task, 3*HZ);
++		rpc_delay(task, RPC_CLNT_REBIND_DELAY * HZ);
+ 		goto retry_timeout;
+ 	case -ENOBUFS:
+ 		rpc_delay(task, HZ >> 2);
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index be587a308e05..5c18a35752aa 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -817,7 +817,8 @@ rpc_init_task_statistics(struct rpc_task *task)
+ 	/* Initialize retry counters */
+ 	task->tk_garb_retry = 2;
+ 	task->tk_cred_retry = 2;
+-	task->tk_rebind_retry = 2;
++	task->tk_rebind_retry = RPC_CLNT_REBIND_MAX_TIMEOUT /
++					RPC_CLNT_REBIND_DELAY;
  
- #if defined CONFIG_NFS_V4_2 && defined CONFIG_NFS_V4_2_READ_PLUS
--static void nfs42_read_plus_support(struct nfs_pgio_header *hdr,
-+static bool nfs42_read_plus_support(struct nfs_pgio_header *hdr,
- 				    struct rpc_message *msg)
- {
- 	/* Note: We don't use READ_PLUS with pNFS yet */
--	if (nfs_server_capable(hdr->inode, NFS_CAP_READ_PLUS) && !hdr->ds_clp)
-+	if (nfs_server_capable(hdr->inode, NFS_CAP_READ_PLUS) && !hdr->ds_clp) {
- 		msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ_PLUS];
-+		hdr->res.scratch = alloc_page(GFP_KERNEL);
-+		return hdr->res.scratch != NULL;
-+	}
-+	return false;
- }
- #else
--static void nfs42_read_plus_support(struct nfs_pgio_header *hdr,
-+static bool nfs42_read_plus_support(struct nfs_pgio_header *hdr,
- 				    struct rpc_message *msg)
- {
-+	return false;
- }
- #endif /* CONFIG_NFS_V4_2 */
- 
-@@ -5472,8 +5479,8 @@ static void nfs4_proc_read_setup(struct nfs_pgio_header *hdr,
- 	hdr->timestamp   = jiffies;
- 	if (!hdr->pgio_done_cb)
- 		hdr->pgio_done_cb = nfs4_read_done_cb;
--	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
--	nfs42_read_plus_support(hdr, msg);
-+	if (!nfs42_read_plus_support(hdr, msg))
-+		msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
- 	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
- }
- 
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index e86cf6642d21..6d821aaf0b1a 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -670,6 +670,7 @@ struct nfs_pgio_res {
- 		struct {
- 			unsigned int		replen;		/* used by read */
- 			int			eof;		/* used by read */
-+			struct page		*scratch;	/* used by read */
- 		};
- 		struct {
- 			struct nfs_writeverf *	verf;		/* used by write */
+ 	/* starting timestamp */
+ 	task->tk_start = ktime_get();
 -- 
-2.40.0
+2.9.5
 
