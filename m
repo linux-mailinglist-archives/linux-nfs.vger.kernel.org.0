@@ -2,148 +2,159 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA7DB6DE1F1
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Apr 2023 19:11:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6700C6DE7DD
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Apr 2023 01:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229960AbjDKRLO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Apr 2023 13:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59704 "EHLO
+        id S229522AbjDKXNw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Apr 2023 19:13:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229899AbjDKRLM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Apr 2023 13:11:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE71469F;
-        Tue, 11 Apr 2023 10:11:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BBB6E629B1;
-        Tue, 11 Apr 2023 17:11:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 726DBC4339B;
-        Tue, 11 Apr 2023 17:11:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681233061;
-        bh=Z1vS1CZUHcjyBePBOAorksWeXWINj9Fg7ftzrrGoqxU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=D0mVuMS2zEpPUjigFlE+EG/i7FtUIzq9DWNMZrbNP02GSjlSx+VrJFn659veZib9A
-         Pmghq1klwiischli2dMlSeIv9OCE2CZx3Ko3oQzqtb14e91cPTupLaGRmpQlJubhFm
-         kB2g5LdxaWodBIWODzACWRjkUuggJV/FaImRE0szEgFpeC9v44Y2LZEL7yJIeP0/mn
-         mu9VeRTtrAfLG8QpXohhbNRoGzERHlwNfon4EFbA8eWo8uW+HnxqAz3dGG5qqaK7DV
-         15F7jyBTlSkcjgeH4Bz0C34vVHFDoIaIFgptFqHLqvmLAsaOku76d71SPmLorUwPQT
-         m2h8+2C0ItDUw==
-Message-ID: <b18204512e016fe986bfbc707201d4ccd50dbf79.camel@kernel.org>
-Subject: Re: [PATCH v2] nfs: use vfs setgid helper
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org,
+        with ESMTP id S229604AbjDKXNv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Apr 2023 19:13:51 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F3E0173E
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Apr 2023 16:13:49 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id y11-20020a17090a600b00b0024693e96b58so8613648pji.1
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Apr 2023 16:13:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20210112.gappssmtp.com; s=20210112; t=1681254829;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=cm7n7h0+YQqhaMN60giOfNLEV6DHkhKIhtK3vaJrO+s=;
+        b=UBHxzOgxwXGsNLNd5A9P7VT4b7Po+zYBdXSmczVUbcnEawjNUyc6Q0yDVbqcVgbHAg
+         QTmK+YIBP35K5pUYpip9sBXhtyUf3gX81/VeiKVT9jXLZfpHY4YVEyyU98F+6x0du6WZ
+         0zcsJKBeXD/aW3FwNY4xrZy9lJPBMYsetXsgXCawQz79UCg/xkbw2C6P4uSHEP5b0LeH
+         Yp4N8YFsCKela8bX7OHmf/BCOT0KrvQlxQBmDffLwLAoPcYTSBOAI1r/FXscGJF4uU+I
+         h84W2aDFzxwDHnMk2PUzMcRvbOJzzT7/wuUQYX4/fg8IeZhrkFXJLIAckBOjX9w41HXp
+         ooow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681254829;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cm7n7h0+YQqhaMN60giOfNLEV6DHkhKIhtK3vaJrO+s=;
+        b=42BZJan8OEAZUbxvEqM4bEhtYtDzHIi0xQC8DbgmPzzRhmmnE16PIZK0e7NIJSJGns
+         IpZVK0WhdUwida7Gzi2f5p79mVOeZB/OW0FUAYynmQe2gZsuk0TeSciX/WF/IHCPyY0r
+         L7xeqV25nCeHT3HrZfKG+zQnxYGmWmUX1hGvq5XXvWdt61dvb4iX1FSPWXPmBhW2kGZc
+         RYMN6XBLszDzNJJLic9YkwDxgzJxdmx8zxVLOGfgNb29hy2ApdNef3Za15NCpOcqZe7j
+         LUaxcwshh3yhr1uZ5myfbspVmNQYsA0ITxnkKBReebd0UC9zs3v9G6Mc2l2JUyVyZiQA
+         eOsA==
+X-Gm-Message-State: AAQBX9eTqV//CIEpKdh6Uec/8bR+O/f6lVTRIQOTBZIGd64Ws+eU2EKP
+        5NdVEMAimS+HH/l0sIRcG6ogdA==
+X-Google-Smtp-Source: AKy350bcqK4pAcsiH06EOT8P/jZME+o+zads0C6tIbm53vEQbRbnDvgTAjpPgh+ebvn7V4wp2JvjLw==
+X-Received: by 2002:a17:90a:6b09:b0:23d:16d6:2f05 with SMTP id v9-20020a17090a6b0900b0023d16d62f05mr17621391pjj.22.1681254828818;
+        Tue, 11 Apr 2023 16:13:48 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-41-174.pa.nsw.optusnet.com.au. [49.180.41.174])
+        by smtp.gmail.com with ESMTPSA id jh6-20020a170903328600b001a64011899asm330544plb.25.2023.04.11.16.13.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 16:13:48 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1pmNBJ-002H1W-AF; Wed, 12 Apr 2023 09:13:45 +1000
+Date:   Wed, 12 Apr 2023 09:13:45 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-mm@kvack.org,
         linux-nfs@vger.kernel.org
-Date:   Tue, 11 Apr 2023 13:10:59 -0400
-In-Reply-To: <20230313-fs-nfs-setgid-v2-1-9a59f436cfc0@kernel.org>
-References: <20230313-fs-nfs-setgid-v2-1-9a59f436cfc0@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+Subject: Re: [RFC PATCH 0/3][RESEND] fs: opportunistic high-res file
+ timestamps
+Message-ID: <20230411231345.GB3223426@dread.disaster.area>
+References: <20230411143702.64495-1-jlayton@kernel.org>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230411143702.64495-1-jlayton@kernel.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-03-14 at 12:51 +0100, Christian Brauner wrote:
-> We've aligned setgid behavior over multiple kernel releases. The details
-> can be found in the following two merge messages:
-> cf619f891971 ("Merge tag 'fs.ovl.setgid.v6.2')
-> 426b4ca2d6a5 ("Merge tag 'fs.setgid.v6.0')
-> Consistent setgid stripping behavior is now encapsulated in the
-> setattr_should_drop_sgid() helper which is used by all filesystems that
-> strip setgid bits outside of vfs proper. Switch nfs to rely on this
-> helper as well. Without this patch the setgid stripping tests in
-> xfstests will fail.
->=20
-> Signed-off-by: Christian Brauner (Microsoft) <brauner@kernel.org>
-> ---
-> Changes in v2:
-> - Christoph Hellwig <hch@lst.de>:
->   * Export setattr_should_sgid() so it actually can be used by filesystem=
-s
-> - Link to v1: https://lore.kernel.org/r/20230313-fs-nfs-setgid-v1-1-5b1fa=
-599f186@kernel.org
-> ---
->  fs/attr.c          | 1 +
->  fs/internal.h      | 2 --
->  fs/nfs/inode.c     | 4 +---
->  include/linux/fs.h | 2 ++
->  4 files changed, 4 insertions(+), 5 deletions(-)
->=20
-> diff --git a/fs/attr.c b/fs/attr.c
-> index aca9ff7aed33..d60dc1edb526 100644
-> --- a/fs/attr.c
-> +++ b/fs/attr.c
-> @@ -47,6 +47,7 @@ int setattr_should_drop_sgid(struct mnt_idmap *idmap,
->  		return ATTR_KILL_SGID;
->  	return 0;
->  }
-> +EXPORT_SYMBOL(setattr_should_drop_sgid);
-> =20
->  /**
->   * setattr_should_drop_suidgid - determine whether the set{g,u}id bit ne=
-eds to
-> diff --git a/fs/internal.h b/fs/internal.h
-> index dc4eb91a577a..ab36ed8fa41c 100644
-> --- a/fs/internal.h
-> +++ b/fs/internal.h
-> @@ -259,8 +259,6 @@ ssize_t __kernel_write_iter(struct file *file, struct=
- iov_iter *from, loff_t *po
->  /*
->   * fs/attr.c
->   */
-> -int setattr_should_drop_sgid(struct mnt_idmap *idmap,
-> -			     const struct inode *inode);
->  struct mnt_idmap *alloc_mnt_idmap(struct user_namespace *mnt_userns);
->  struct mnt_idmap *mnt_idmap_get(struct mnt_idmap *idmap);
->  void mnt_idmap_put(struct mnt_idmap *idmap);
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 222a28320e1c..97a76706fd54 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -717,9 +717,7 @@ void nfs_setattr_update_inode(struct inode *inode, st=
-ruct iattr *attr,
->  		if ((attr->ia_valid & ATTR_KILL_SUID) !=3D 0 &&
->  		    inode->i_mode & S_ISUID)
->  			inode->i_mode &=3D ~S_ISUID;
-> -		if ((attr->ia_valid & ATTR_KILL_SGID) !=3D 0 &&
-> -		    (inode->i_mode & (S_ISGID | S_IXGRP)) =3D=3D
-> -		     (S_ISGID | S_IXGRP))
-> +		if (setattr_should_drop_sgid(&nop_mnt_idmap, inode))
->  			inode->i_mode &=3D ~S_ISGID;
->  		if ((attr->ia_valid & ATTR_MODE) !=3D 0) {
->  			int mode =3D attr->ia_mode & S_IALLUGO;
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index c85916e9f7db..af95b64fc810 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2675,6 +2675,8 @@ extern struct inode *new_inode(struct super_block *=
-sb);
->  extern void free_inode_nonrcu(struct inode *inode);
->  extern int setattr_should_drop_suidgid(struct mnt_idmap *, struct inode =
-*);
->  extern int file_remove_privs(struct file *);
-> +int setattr_should_drop_sgid(struct mnt_idmap *idmap,
-> +			     const struct inode *inode);
-> =20
->  /*
->   * This must be used for allocating filesystems specific inodes to set
->=20
-> ---
-> base-commit: eeac8ede17557680855031c6f305ece2378af326
-> change-id: 20230313-fs-nfs-setgid-659410a10b25
->=20
+On Tue, Apr 11, 2023 at 10:36:59AM -0400, Jeff Layton wrote:
+> (Apologies for the resend, but I didn't send this with a wide enough
+> distribution list originally).
+> 
+> A few weeks ago, during one of the discussions around i_version, Dave
+> Chinner wrote this:
+> 
+> "You've missed the part where I suggested lifting the "nfsd sampled
+> i_version" state into an inode state flag rather than hiding it in
+> the i_version field. At that point, we could optimise away the
+> secondary ctime updates just like you are proposing we do with the
+> i_version updates.  Further, we could also use that state it to
+> decide whether we need to use high resolution timestamps when
+> recording ctime updates - if the nfsd has not sampled the
+> ctime/i_version, we don't need high res timestamps to be recorded
+> for ctime...."
+> 
+> While I don't think we can practically optimize away ctime updates
+> like we do with i_version, I do like the idea of using this scheme to
+> indicate when we need to use a high-res timestamp.
+> 
+> This patchset is a first stab at a scheme to do this. It declares a new
+> i_state flag for this purpose and adds two new vfs-layer functions to
+> implement conditional high-res timestamp fetching. It then converts both
+> tmpfs and xfs to use it.
+> 
+> This seems to behave fine under xfstests, but I haven't yet done
+> any performance testing with it. I wouldn't expect it to create huge
+> regressions though since we're only grabbing high res timestamps after
+> each query.
+> 
+> I like this scheme because we can potentially convert any filesystem to
+> use it. No special storage requirements like with i_version field.  I
+> think it'd potentially improve NFS cache coherency with a whole swath of
+> exportable filesystems, and helps out NFSv3 too.
+> 
+> This is really just a proof-of-concept. There are a number of things we
+> could change:
+> 
+> 1/ We could use the top bit in the tv_sec field as the flag. That'd give
+>    us different flags for ctime and mtime. We also wouldn't need to use
+>    a spinlock.
+> 
+> 2/ We could probably optimize away the high-res timestamp fetch in more
+>    cases. Basically, always do a coarse-grained ts fetch and only fetch
+>    the high-res ts when the QUERIED flag is set and the existing time
+>    hasn't changed.
+> 
+> If this approach looks reasonable, I'll plan to start working on
+> converting more filesystems.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Seems reasonable to me. In terms of testing, I suspect the main
+impact is going to be the additionaly overhead of taking a spinlock
+in normal stat calls. In which case, testing common tools like giti
+would be useful.  e.g. `git status` runs about 170k stat calls on a
+typical kernel tree. If anything is going to be noticed by users
+that actually care, it'll be workloads like this...
+
+If we manage to elide the spinlock altogether, then I don't think
+we're going to be able to measure any sort perf difference on modern
+hardware short of high end NFS benchmarks that drive servers to
+their CPU usage limits....
+
+> One thing I'm not clear on is how widely available high res timestamps
+> are. Is this something we need to gate on particular CONFIG_* options?
+
+Don't think so - the kernel should always provide the highest
+resoultion it can through the get_time interfaces - the _coarse
+variants simple return what was read from the high res timer at the
+last scheduler tick, hence avoiding the hardware timer overhead when
+high res timer resolution is not needed.....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
