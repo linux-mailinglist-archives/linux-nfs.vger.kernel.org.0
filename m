@@ -2,109 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABF046E0E17
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Apr 2023 15:09:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBAF06E0F3F
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Apr 2023 15:52:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbjDMNJT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 13 Apr 2023 09:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39576 "EHLO
+        id S231515AbjDMNwz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 Apr 2023 09:52:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230211AbjDMNJS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Apr 2023 09:09:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AEF93F2;
-        Thu, 13 Apr 2023 06:09:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S231440AbjDMNwu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Apr 2023 09:52:50 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17DE87280
+        for <linux-nfs@vger.kernel.org>; Thu, 13 Apr 2023 06:52:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1681393923;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=B7GgR7IsxIkffahtry2Nj63PUFsJG3FcJvFXpSBJLNA=;
+        b=T7+QvR3y6EGIKj22s2vgU4ppZyTw/Y6vX8MU0Cc2TDHONEnodzmbQRFM+NdezIZ/1eiehK
+        hyjkJGy8nGg49HCYuSvNAZxtxCMzqpQhyiwaoTK+DWBq7ybg9sJf9HZrHcNv/J+cLB0u6W
+        FXnFHa4T9cqywZJm/l79raAn3Se3m6A=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-22-jphSqTr7PGaLvWhPkTXB_g-1; Thu, 13 Apr 2023 09:51:59 -0400
+X-MC-Unique: jphSqTr7PGaLvWhPkTXB_g-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0260762E89;
-        Thu, 13 Apr 2023 13:09:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA5C8C433EF;
-        Thu, 13 Apr 2023 13:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681391356;
-        bh=AWbmYvm0BaPLBXxQYzVBS7Z1o98tfRJX55ZZ9uopePg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cW5WbjWN+LmvoIXAVWeBWo780XujpOR9w00INy4sikwvZCRjBX3zEEzo+EVjYogN8
-         fvqSjMiMXtZsNLPRdyDuqdDN+EsC+tIXPC0N72FJjIhnLj98jK79Ud3gcDC2nsGERH
-         KtoH+iV5egkyplBkJjIiOgQlZprWEHg01/ZSc1DxriqKYVQ2q2tBVJbhk60dww458r
-         tOJHG+fF6iSbzuxreJnUJwpUdw1XcfktVGcwt60BdsR1Y9gbmqS/acs1gpZRTuQ9ps
-         B5CXZluaFTT+8J5z8eUd0TwIVlugjryhKP1m/lyH6yvWNHgdCpc/KIkOK6keuTboKK
-         hgPz0FsfMX9iw==
-Message-ID: <a486f239b361a6f03cf40c3762876e206c5dbfd8.camel@kernel.org>
-Subject: Re: [LSF/MM/BPF TOPIC] BoF for nfsd
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Christian Brauner <brauner@kernel.org>,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     "lsf-pc@lists.linux-foundation.org" 
-        <lsf-pc@lists.linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Thu, 13 Apr 2023 09:09:14 -0400
-In-Reply-To: <20230413-perspektive-glasur-6e2685229a95@brauner>
-References: <FF0202C3-7500-4BB3-914B-DBAA3E0EA3D7@oracle.com>
-         <20230413-perspektive-glasur-6e2685229a95@brauner>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C45411C07597;
+        Thu, 13 Apr 2023 13:51:57 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.177])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E0C43492B00;
+        Thu, 13 Apr 2023 13:51:56 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+cc:     dhowells@redhat.com, Scott Mayhew <smayhew@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] sunrpc: Fix RFC6803 encryption test
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1078409.1681393916.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 13 Apr 2023 14:51:56 +0100
+Message-ID: <1078410.1681393916@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2023-04-13 at 11:33 +0200, Christian Brauner wrote:
-> On Wed, Apr 12, 2023 at 06:27:07PM +0000, Chuck Lever III wrote:
-> > I'd like to request some time for those interested specifically
-> > in NFSD to gather and discuss some topics. Not a network file
-> > system free-for-all, but specifically for NFSD, because there
-> > is a long list of potential topics:
-> >=20
-> >     =E2=80=A2 Progress on using iomap for NFSD READ/READ_PLUS (anna)
-> >     =E2=80=A2 Replacing nfsd_splice_actor (all)
-> >     =E2=80=A2 Transition from page arrays to bvecs (dhowells, hch)
-> >     =E2=80=A2 tmpfs directory cookie stability (cel)
-> >     =E2=80=A2 timestamp resolution and i_version (jlayton)
->=20
-> I'd attend this one.
->=20
+    =
 
-I wonder if we ought to propose a separate FS track spot for this? I
-sort of expect some lively discussion, and this may be of more interest
-than just nfsd folks.
+The usage_data[] array in rfc6803_encrypt_case() is uninitialised, so clea=
+r
+it as it may cause the tests to fail otherwise.
 
-> >     =E2=80=A2 GSS Kerberos futures (dhowells)
-> >     =E2=80=A2 NFS/NFSD CI (jlayton)
-> >     =E2=80=A2 NFSD POSIX to NFSv4 ACL translation - writing down the ru=
-les (all)
->=20
-> I have some experience dealing with ACLs so I'm happy to attend just in
-> case I may be useful.
+Fixes: b958cff6b27b ("SUNRPC: Add encryption KUnit tests for the RFC 6803 =
+encryption types")
+Link: https://lore.kernel.org/r/380323.1681314997@warthog.procyon.org.uk/
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Chuck Lever <chuck.lever@oracle.com>
+cc: Scott Mayhew <smayhew@redhat.com>
+cc: Herbert Xu <herbert@gondor.apana.org.au>
+cc: linux-nfs@vger.kernel.org
+cc: linux-crypto@vger.kernel.org
+---
+ net/sunrpc/auth_gss/gss_krb5_test.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-That would be helpful! I'll note that there was a draft RFC for this
-many years ago, but it expired:
+diff --git a/net/sunrpc/auth_gss/gss_krb5_test.c b/net/sunrpc/auth_gss/gss=
+_krb5_test.c
+index ce0541e32fc9..aa6ec4e858aa 100644
+--- a/net/sunrpc/auth_gss/gss_krb5_test.c
++++ b/net/sunrpc/auth_gss/gss_krb5_test.c
+@@ -1327,6 +1327,7 @@ static void rfc6803_encrypt_case(struct kunit *test)
+ 	if (!gk5e)
+ 		kunit_skip(test, "Encryption type is not available");
+ =
 
-  =C2=A0https://datatracker.ietf.org/doc/html/draft-ietf-nfsv4-acl-mapping-=
-05
++	memset(usage_data, 0, sizeof(usage_data));
+ 	usage.data[3] =3D param->constant;
+ =
 
-I think most of the rules are laid out there, but there are some areas
-where things just don't work right.
+ 	Ke.len =3D gk5e->Ke_length;
 
-A more radical idea:
-
-I wonder if we could get any traction at the IETF on a POSIX ACL
-extension for NFSv4? Basically, we could resurrect the old v3 nfsacl
-protocol as new operations for v4, and allow the client and server to
-negotiate on using them.
-
-Given that almost all the clients and servers in operation on the planet
-have to translate these, it makes some sense to avoid the translation
-when we can.
-
---=20
-Jeff Layton <jlayton@kernel.org>
