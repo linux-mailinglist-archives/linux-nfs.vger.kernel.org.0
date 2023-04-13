@@ -2,100 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBAF06E0F3F
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Apr 2023 15:52:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51B686E0F53
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Apr 2023 15:56:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231515AbjDMNwz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 13 Apr 2023 09:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54520 "EHLO
+        id S230128AbjDMN4b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 Apr 2023 09:56:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231440AbjDMNwu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Apr 2023 09:52:50 -0400
+        with ESMTP id S229636AbjDMN4a (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Apr 2023 09:56:30 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17DE87280
-        for <linux-nfs@vger.kernel.org>; Thu, 13 Apr 2023 06:52:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86AF2715
+        for <linux-nfs@vger.kernel.org>; Thu, 13 Apr 2023 06:55:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681393923;
+        s=mimecast20190719; t=1681394142;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=B7GgR7IsxIkffahtry2Nj63PUFsJG3FcJvFXpSBJLNA=;
-        b=T7+QvR3y6EGIKj22s2vgU4ppZyTw/Y6vX8MU0Cc2TDHONEnodzmbQRFM+NdezIZ/1eiehK
-        hyjkJGy8nGg49HCYuSvNAZxtxCMzqpQhyiwaoTK+DWBq7ybg9sJf9HZrHcNv/J+cLB0u6W
-        FXnFHa4T9cqywZJm/l79raAn3Se3m6A=
+         in-reply-to:in-reply-to:references:references;
+        bh=zAyG0A+b0GuohSioj1G+MKBql7l3GfquTjJB8uXanBs=;
+        b=BP04ya4TQdyquyWoyAnEWJNsoVRcjkVQkEQ9moxvJFn6Lfbfh2O3kXyACniaZsb9ulXWnm
+        n/wHOsD+8LjggUUQxIqqM/mRAGYMuQhEVReG6DymHsbs4Ju4KLl4LSlIhE6svPpH5tTBu4
+        ARymyKMnIy5ma/Iw99fw26xQfeKKVmY=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-22-jphSqTr7PGaLvWhPkTXB_g-1; Thu, 13 Apr 2023 09:51:59 -0400
-X-MC-Unique: jphSqTr7PGaLvWhPkTXB_g-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+ us-mta-440-M36pobzLNHyM6JvGzIpeWQ-1; Thu, 13 Apr 2023 09:55:40 -0400
+X-MC-Unique: M36pobzLNHyM6JvGzIpeWQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C45411C07597;
-        Thu, 13 Apr 2023 13:51:57 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0645D1C04321;
+        Thu, 13 Apr 2023 13:55:40 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.177])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E0C43492B00;
-        Thu, 13 Apr 2023 13:51:56 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 18A90112132E;
+        Thu, 13 Apr 2023 13:55:39 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
 From:   David Howells <dhowells@redhat.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-cc:     dhowells@redhat.com, Scott Mayhew <smayhew@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sunrpc: Fix RFC6803 encryption test
+In-Reply-To: <48886D84-1A04-4B07-A666-BB56684E759F@oracle.com>
+References: <48886D84-1A04-4B07-A666-BB56684E759F@oracle.com> <380323.1681314997@warthog.procyon.org.uk>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     dhowells@redhat.com, Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Subject: Re: Did the in-kernel Camellia or CMAC crypto implementation break?
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1078409.1681393916.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 13 Apr 2023 14:51:56 +0100
-Message-ID: <1078410.1681393916@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+Content-ID: <1078649.1681394138.1@warthog.procyon.org.uk>
+Date:   Thu, 13 Apr 2023 14:55:38 +0100
+Message-ID: <1078650.1681394138@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-    =
+Chuck Lever III <chuck.lever@oracle.com> wrote:
 
-The usage_data[] array in rfc6803_encrypt_case() is uninitialised, so clea=
-r
-it as it may cause the tests to fail otherwise.
+> Ah, I see Scott is Cc'd. Yes, Scott reported this to me yesterday.
 
-Fixes: b958cff6b27b ("SUNRPC: Add encryption KUnit tests for the RFC 6803 =
-encryption types")
-Link: https://lore.kernel.org/r/380323.1681314997@warthog.procyon.org.uk/
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Chuck Lever <chuck.lever@oracle.com>
-cc: Scott Mayhew <smayhew@redhat.com>
-cc: Herbert Xu <herbert@gondor.apana.org.au>
-cc: linux-nfs@vger.kernel.org
-cc: linux-crypto@vger.kernel.org
----
- net/sunrpc/auth_gss/gss_krb5_test.c |    1 +
- 1 file changed, 1 insertion(+)
+Found it (see patch sent separately).  There was an uninitialised variable in
+sunrpc.
 
-diff --git a/net/sunrpc/auth_gss/gss_krb5_test.c b/net/sunrpc/auth_gss/gss=
-_krb5_test.c
-index ce0541e32fc9..aa6ec4e858aa 100644
---- a/net/sunrpc/auth_gss/gss_krb5_test.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_test.c
-@@ -1327,6 +1327,7 @@ static void rfc6803_encrypt_case(struct kunit *test)
- 	if (!gk5e)
- 		kunit_skip(test, "Encryption type is not available");
- =
+The krb5lib problem was that I'd lost the byteswapping of the usage value in
+the test data when I split it out of the net/rxrpc/ directory, e.g.:
 
-+	memset(usage_data, 0, sizeof(usage_data));
- 	usage.data[3] =3D param->constant;
- =
+@@ -167,7 +167,7 @@ const struct krb5_enc_test krb5_enc_tests[] = {
+ 		.plain	= "'1",
+ 		.conf	= "6F2FC3C2A166FD8898967A83DE9596D9",
+ 		.K0	= "5027BC231D0F3A9D23333F1CA6FDBE7C",
+-		.usage	= 1,
++		.usage	= htonl(1),
+ 		.ct	= "842D21FD950311C0DD464A3F4BE8D6DA88A56D559C9B47D3F9A85067AF661559B8",
+ 	}, {
+ 		.krb5	= &krb5_camellia128_cts_cmac,
 
- 	Ke.len =3D gk5e->Ke_length;
+David
 
