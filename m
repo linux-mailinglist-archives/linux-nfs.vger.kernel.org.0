@@ -2,112 +2,189 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 805036E2A62
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 21:01:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 707256E2A61
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 21:01:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbjDNTB4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Apr 2023 15:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41638 "EHLO
+        id S229468AbjDNTBt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Apr 2023 15:01:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjDNTBz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 15:01:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B1B9ED5
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 12:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681498868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZDjTR4W4QJJ8lrexEDMtF9xBKiiiN6ss3zxDd4U1Dc0=;
-        b=jKZ1TW6De0IgjAQQNm4xDOXZRNE5cUWV5Ck/yFOwQYS/nznmbDs+wZaz/OyYzKBQL+iY+w
-        JnhMo1WRXoweFVo8Xeq16M0u04RwFTnrWp6AX0lUIToQ8mdZA5mejoPQhf66ZtVSLif+qs
-        Q3/sH2VWCdOxsVTzHrMKWoTEWEXJG2k=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-82-fCzJ1CmvMEm-8Ukfj5p4rw-1; Fri, 14 Apr 2023 15:01:05 -0400
-X-MC-Unique: fCzJ1CmvMEm-8Ukfj5p4rw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S229464AbjDNTBs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 15:01:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D54900B
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 12:01:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D7B391C0898E;
-        Fri, 14 Apr 2023 19:01:04 +0000 (UTC)
-Received: from [172.16.193.1] (ovpn-0-3.rdu2.redhat.com [10.22.0.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 25736C16028;
-        Fri, 14 Apr 2023 19:01:02 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Jeffrey Layton <jlayton@kernel.org>,
-        Neil Brown <neilb@suse.de>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: allowing for a completely cached umount(2) pathwalk
-Date:   Fri, 14 Apr 2023 15:01:01 -0400
-Message-ID: <6F3DB6E1-F104-492B-9AF1-5AEC8C27D267@redhat.com>
-In-Reply-To: <E746F6B4-779A-4184-A2A7-5879E3D3DAEE@hammerspace.com>
-References: <95ee689c76bf034fa2fe9fade0bccdb311f3a04f.camel@kernel.org>
- <168142566371.24821.15867603327393356000@noble.neil.brown.name>
- <20230414024312.GF3390869@ZenIV>
- <2631cb9c05087ddd917679b7cebc58cb42cd2de6.camel@kernel.org>
- <20230414-sowas-unmittelbar-67fdae9ca5cd@brauner>
- <9192A185-03BF-4062-B12F-E7EF52578014@hammerspace.com>
- <20230414-leiht-lektion-18f5a7a38306@brauner>
- <91D4AC04-A016-48A9-8E3A-BBB6C38E8C4B@hammerspace.com>
- <4F4F5C98-AA06-40FB-AE51-79E860CD1D76@hammerspace.com>
- <20230414162253.GL3390869@ZenIV>
- <E746F6B4-779A-4184-A2A7-5879E3D3DAEE@hammerspace.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DF1C164A01
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 19:01:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04272C433EF;
+        Fri, 14 Apr 2023 19:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681498906;
+        bh=kMr4a+m5n4USTjTsatU2JxzAs08Y8CfeNpLy+UU70hk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=lcOBveiP8YwrP4JclIYI9NCVuhd4oyYreMUjeqDAua2jL6r0OkgqAQoeUG7aSWALz
+         Mo9KWdXJhpto+f8Mpueui2qMrtW5jeeaPubr9YO0J4IlpENadVqM5qN02TcuXZawJj
+         w20yN/pnMx+SOea72JeudD+Jwjr3l1NpSCGgT4C6o5k3lC3nYrzA9MN7wg7nEVUQLy
+         Z90Ms4de+pn93D6nlIwLyuTKw5q1eXoRYstygrILFmfoKQpbznSKcy1vyXtD75fXnf
+         54qny4Od4ItSkKdxEdNTp5UviTDEvfpEu6mN4u4FycE6LSE54Mdjquxo4zA4P/AYaf
+         rvsOcq/ArXKqQ==
+Message-ID: <3353149c8e7965e44807f2a7ed5055df51d6c856.camel@kernel.org>
+Subject: Re: [PATCH 3/6] nfsd: simplify the delayed disposal list code
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Fri, 14 Apr 2023 15:01:44 -0400
+In-Reply-To: <7810C14C-DC16-48DF-8A14-1A1E7B9A2CD8@oracle.com>
+References: <20230118173139.71846-1-jlayton@kernel.org>
+         <20230118173139.71846-4-jlayton@kernel.org>
+         <7810C14C-DC16-48DF-8A14-1A1E7B9A2CD8@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 14 Apr 2023, at 12:41, Trond Myklebust wrote:
->
-> I mean both cases. Doing a lazy umount with a hard mounted filesystem i=
-s a risk sport: if the server does become permanently borked, you can fil=
-l up your page cache with stuff that can=E2=80=99t be evicted. Most users=
- don=E2=80=99t realise this, so they get confused when it happens (partic=
-ularly since the filesystem is out-of-sight and hence out-of-mind).
+On Fri, 2023-04-14 at 18:20 +0000, Chuck Lever III wrote:
+> > On Jan 18, 2023, at 12:31 PM, Jeff Layton <jlayton@kernel.org>
+> > wrote:
+> >=20
+> > When queueing a dispose list to the appropriate "freeme" lists, it
+> > pointlessly queues the objects one at a time to an intermediate
+> > list.
+> >=20
+> > Remove a few helpers and just open code a list_move to make it more
+> > clear and efficient. Better document the resulting functions with
+> > kerneldoc comments.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > fs/nfsd/filecache.c | 63 +++++++++++++++----------------------------
+> > --
+> > 1 file changed, 21 insertions(+), 42 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index 58ac93e7e680..a2bc4bd90b9a 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -513,49 +513,25 @@ nfsd_file_dispose_list(struct list_head
+> > *dispose)
+> > }
+> > }
+> >=20
+> > -static void
+> > -nfsd_file_list_remove_disposal(struct list_head *dst,
+> > - struct nfsd_fcache_disposal *l)
+> > -{
+> > - spin_lock(&l->lock);
+> > - list_splice_init(&l->freeme, dst);
+> > - spin_unlock(&l->lock);
+> > -}
+> > -
+> > -static void
+> > -nfsd_file_list_add_disposal(struct list_head *files, struct net
+> > *net)
+> > -{
+> > - struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> > - struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+> > -
+> > - spin_lock(&l->lock);
+> > - list_splice_tail_init(files, &l->freeme);
+> > - spin_unlock(&l->lock);
+> > - queue_work(nfsd_filecache_wq, &l->work);
+> > -}
+> > -
+> > -static void
+> > -nfsd_file_list_add_pernet(struct list_head *dst, struct list_head
+> > *src,
+> > - struct net *net)
+> > -{
+> > - struct nfsd_file *nf, *tmp;
+> > -
+> > - list_for_each_entry_safe(nf, tmp, src, nf_lru) {
+> > - if (nf->nf_net =3D=3D net)
+> > - list_move_tail(&nf->nf_lru, dst);
+> > - }
+> > -}
+> > -
+> > +/**
+> > + * nfsd_file_dispose_list_delayed - move list of dead files to
+> > net's freeme list
+> > + * @dispose: list of nfsd_files to be disposed
+> > + *
+> > + * Transfers each file to the "freeme" list for its nfsd_net, to
+> > eventually
+> > + * be disposed of by the per-net garbage collector.
+> > + */
+> > static void
+> > nfsd_file_dispose_list_delayed(struct list_head *dispose)
+> > {
+> > - LIST_HEAD(list);
+> > - struct nfsd_file *nf;
+> > -
+> > while(!list_empty(dispose)) {
+> > - nf =3D list_first_entry(dispose, struct nfsd_file, nf_lru);
+> > - nfsd_file_list_add_pernet(&list, dispose, nf->nf_net);
+> > - nfsd_file_list_add_disposal(&list, nf->nf_net);
+> > + struct nfsd_file *nf =3D list_first_entry(dispose,
+> > + struct nfsd_file, nf_lru);
+> > + struct nfsd_net *nn =3D net_generic(nf->nf_net, nfsd_net_id);
+> > + struct nfsd_fcache_disposal *l =3D nn->fcache_disposal;
+> > +
+> > + spin_lock(&l->lock);
+> > + list_move_tail(&nf->nf_lru, &l->freeme);
+> > + spin_unlock(&l->lock);
+> > }
+> > }
+> >=20
+> > @@ -765,8 +741,8 @@ nfsd_file_close_inode_sync(struct inode *inode)
+> > =A0* nfsd_file_delayed_close - close unused nfsd_files
+> > =A0* @work: dummy
+> > =A0*
+> > - * Walk the LRU list and destroy any entries that have not been
+> > used since
+> > - * the last scan.
+> > + * Scrape the freeme list for this nfsd_net, and then dispose of
+> > them
+> > + * all.
+> > =A0*/
+> > static void
+> > nfsd_file_delayed_close(struct work_struct *work)
+> > @@ -775,7 +751,10 @@ nfsd_file_delayed_close(struct work_struct
+> > *work)
+> > struct nfsd_fcache_disposal *l =3D container_of(work,
+> > struct nfsd_fcache_disposal, work);
+> >=20
+> > - nfsd_file_list_remove_disposal(&head, l);
+> > + spin_lock(&l->lock);
+> > + list_splice_init(&l->freeme, &head);
+> > + spin_unlock(&l->lock);
+> > +
+> > nfsd_file_dispose_list(&head);
+> > }
+>=20
+> Hey Jeff -
+>=20
+> After applying this one, tmpfs exports appear to leak space,
+> even after all files and directories are deleted. Eventually
+> the filesystem is "full" -- modifying operations return ENOSPC
+> but removing files doesn't recover the used space.
+>=20
+> Can you have a look at this?
+>=20
 
-I've been pecking away at a sysfs knob for this case.  Seemed a clearer p=
-ath to destruction.
+Hrm, ok. Do you have a reproducer?
 
->>
->> Note, BTW, that hard vs. soft is a property of fs instance; if you hav=
-e
->> it present elsewhere in the mount tree, flipping it would affect all
->> such places.  I don't see any good way to make it a per-mount thing, T=
-BH=E2=80=A6
->
->
-> The main use case is for when the server is permanently down, so normal=
-ly it shouldn=E2=80=99t be a problem with flipping the mode on all instan=
-ces.
-
-Is there another case?  Because, if so..
-
-> That said, it might be nice to make it per-mountpoint at some time. We =
-do have the ability to declare individual RPC calls to time out, so it=E2=
-=80=99s doable at the RPC level. All we would really need is the ability =
-to store a per-vfsmount flag.
-
-=2E. maybe vfsmount's mnt_root d_fsdata?
-
-Ben
-
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
