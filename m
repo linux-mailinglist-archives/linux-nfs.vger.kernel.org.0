@@ -2,122 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C28366E2421
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 15:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B19A6E2478
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 15:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjDNNSH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Apr 2023 09:18:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52004 "EHLO
+        id S229911AbjDNNlT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Apr 2023 09:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbjDNNSG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 09:18:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39A413A
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 06:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681478242;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Bl5CykRMZhAhKzWq0hTBe7uu2r1EpOUA3ikJ3QXm9Fs=;
-        b=hQKmSg6ig4c37jgUIAZo1bm8amlAN3YIjp1bsv/Mp5eLtlupv682nhKopLFYAaJZ1FTM/p
-        rF/h8UBFGnHcSccdZKRIEA4ob6kG1RzBHiFmnVEN/6Ua/hQbNNA4OE06eFXQ7wohE7hsEY
-        9ADSz9hwMnwuaBSmM1XOjHrfE0lJEtM=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-193-jM8rj_MvMGKYaZq_5RXbpQ-1; Fri, 14 Apr 2023 09:17:21 -0400
-X-MC-Unique: jM8rj_MvMGKYaZq_5RXbpQ-1
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2473661358eso190356a91.1
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 06:17:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681478240; x=1684070240;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bl5CykRMZhAhKzWq0hTBe7uu2r1EpOUA3ikJ3QXm9Fs=;
-        b=QY2Vba36P4tN2CFPVP8Y2Y/BYnqBs9TSfvQB5AKRCh75my+72vxabl2h3CfMJPmoYd
-         UtVvhEo/CDmef4SfoYS62hO00Tod8Y0mYPJtHPp6/7Vr7EMTCRrlWRHegB0ufYlDV1qb
-         97USw8SWKAIgMftHf0SBjZmqkRKioUfGAflzkN+kOJUbUghCp7G6jzVDFytCUfarlNvf
-         8qyPVeldF0DdNnXNBSNgZVFOX/SlTVqluI7bS7ya9kW/b+ztQiIv2DxKJNAyGlA4joz2
-         CYqDI49apw3q32r9quAKRmJ5ODc4hebxZGG1HAxBwdzT0DLyhBOQKYHd6fCGe9io30Pw
-         MMPQ==
-X-Gm-Message-State: AAQBX9cqqTtLjs9U5McwwgZBHtn91UD/CWXPCExchjhi31bBdFxPwKg3
-        KJX7QJUdLynunxI+OO942w7yYWyNtxD51uXNDFUFCW7vagR8OOTtAb87sD4t25HiTEpghyutNrV
-        ldNi7/4J6gARwW0gLjrLcBJ5LKir4eS/6g5cu
-X-Received: by 2002:a05:6a00:1946:b0:63a:fefa:6cc9 with SMTP id s6-20020a056a00194600b0063afefa6cc9mr3078573pfk.2.1681478240421;
-        Fri, 14 Apr 2023 06:17:20 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Y4qd1bBj8owZmmZRVlehZ/QnrEY2G6TKuXp3/MjTR91YiCvj4RwGD7WWvmQyWFSMAusEdJkRHyI8/wkfKbJPI=
-X-Received: by 2002:a05:6a00:1946:b0:63a:fefa:6cc9 with SMTP id
- s6-20020a056a00194600b0063afefa6cc9mr3078559pfk.2.1681478240141; Fri, 14 Apr
- 2023 06:17:20 -0700 (PDT)
-MIME-Version: 1.0
-References: <95ee689c76bf034fa2fe9fade0bccdb311f3a04f.camel@kernel.org> <20230414023211.GE3390869@ZenIV>
-In-Reply-To: <20230414023211.GE3390869@ZenIV>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Fri, 14 Apr 2023 09:16:43 -0400
-Message-ID: <CALF+zOnbBf01ThYyv2sByyjBJww6pbkza93ixb1Vdh4i3B1+BQ@mail.gmail.com>
-Subject: Re: allowing for a completely cached umount(2) pathwalk
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
+        with ESMTP id S229625AbjDNNlS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 09:41:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F2B9767;
+        Fri, 14 Apr 2023 06:41:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 22F376481B;
+        Fri, 14 Apr 2023 13:41:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76A83C4339B;
+        Fri, 14 Apr 2023 13:41:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681479667;
+        bh=OQSBRh1Pyn9f1qpl5ItWY38UJ7ErfhmCLeQGiieKP3U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SEsHDQVCCSqfwwGSVMzY6ea+SPRafgN6d8m0KgbS2kqV00DU7cY2TINDgaIARyurQ
+         hG6FZO1nIsgQFYjKtrs6/8D4gZdMP9P3LuziWjaavz8YzIiH3GhPhMHaPTb6jG/9To
+         yTmK8vi2G21ZD14CYaQwB6t8pr+getC8vkrxlUU1aGE/RWQegpWy5er0HuEqz8ugRQ
+         2LgUa4BbhLoKCybEuhI/ETTuRioEi7B6VmQylqUBACLJEfjEJ9eNaXYNgs6wDTkYTO
+         dWaVof6Z6nH7UShViqn3vi1V0j1DoneMSidOKx8hE0LUOkfbOPNaFNu55PlY6RwXdf
+         We3g5+danuP4Q==
+Date:   Fri, 14 Apr 2023 15:41:02 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, NeilBrown <neilb@suse.de>,
+        Dave Wysochanski <dwysocha@redhat.com>,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         linux-nfs <linux-nfs@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>, NeilBrown <neilb@suse.de>,
+        David Howells <dhowells@redhat.com>,
         Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Subject: Re: allowing for a completely cached umount(2) pathwalk
+Message-ID: <20230414-sowas-unmittelbar-67fdae9ca5cd@brauner>
+References: <95ee689c76bf034fa2fe9fade0bccdb311f3a04f.camel@kernel.org>
+ <168142566371.24821.15867603327393356000@noble.neil.brown.name>
+ <20230414024312.GF3390869@ZenIV>
+ <2631cb9c05087ddd917679b7cebc58cb42cd2de6.camel@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <2631cb9c05087ddd917679b7cebc58cb42cd2de6.camel@kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 10:34=E2=80=AFPM Al Viro <viro@zeniv.linux.org.uk> =
-wrote:
->
-> On Thu, Apr 13, 2023 at 06:00:42PM -0400, Jeff Layton wrote:
->
-> > It describes a situation where there are nested NFS mounts on a client,
-> > and one of the intermediate mounts ends up being unexported from the
-> > server. In a situation like this, we end up being unable to pathwalk
-> > down to the child mount of these unreachable dentries and can't unmount
-> > anything, even as root.
->
-> So umount -l the stuck sucker.  What's the problem with that?
->
+On Fri, Apr 14, 2023 at 06:06:38AM -0400, Jeff Layton wrote:
+> On Fri, 2023-04-14 at 03:43 +0100, Al Viro wrote:
+> > On Fri, Apr 14, 2023 at 08:41:03AM +1000, NeilBrown wrote:
+> > 
+> > > The path name that appears in /proc/mounts is the key that must be used
+> > > to find and unmount a filesystem.  When you do that "find"ing you are
+> > > not looking up a name in a filesystem, you are looking up a key in the
+> > > mount table.
+> > 
+> > No.  The path name in /proc/mounts is *NOT* a key - it's a best-effort
+> > attempt to describe the mountpoint.  Pathname resolution does not work
+> > in terms of "the longest prefix is found and we handle the rest within
+> > that filesystem".
+> > 
+> > > We could, instead, create an api that is given a mount-id (first number
+> > > in /proc/self/mountinfo) and unmounts that.  Then /sbin/umount could
+> > > read /proc/self/mountinfo, find the mount-id, and unmount it - all
+> > > without ever doing path name lookup in the traditional sense.
+> > > 
+> > > But I prefer your suggestion.  LOOKUP_MOUNTPOINT could be renamed
+> > > LOOKUP_CACHED, and it only finds paths that are in the dcache, never
+> > > revalidates, at most performs simple permission checks based on cached
+> > > content.
+> > 
+> > umount /proc/self/fd/42/barf/something
+> > 
+> 
+> Does any of that involve talking to the server? I don't necessarily see
+> a problem with doing the above. If "something" is in cache then that
+> should still work.
+> 
+> The main idea here is that we want to avoid communicating with the
+> backing store during the umount(2) pathwalk.
+> 
+> > Discuss.
+> > 
+> > OTON, umount-by-mount-id is an interesting idea, but we'll need to decide
+> > what would the right permissions be for it.
+> > 
+> > But please, lose the "mount table is a mapping from path prefix to filesystem"
+> > notion - it really, really is not.  IIRC, there are systems that work that way,
+> > but it's nowhere near the semantics used by any Unices, all variants of Linux
+> > included.
+> 
+> I'm not opposed to something by umount-by-mount-id either. All of this
+> seems like something that should probably rely on CAP_SYS_ADMIN.
 
-Speaking in the context of the original reproducer:
-This does work if you "umount -l /A" - the underlying "/A" mount,
-but not if you do "umount -l /A/B" (both have lost their access on
-the server).
+The permission model needs to account for the fact that mount ids are
+global and as such you could in principle unmount any mount in any mount
+namespace. IOW, you can circumvent lookup restrictions completely.
 
-The problem with this is IMO, it is not very intuitive to lazy unmount
-the root of a whole tree like that.  Also, the customer's case was autofs,
-and I don't think autofs does this, it tries to umount the children
-first and gets stuck there in this scenario.
+So we could resolve the mnt-id to an FMODE_PATH and then very roughly
+with no claim to solving everything:
 
-But overall yes it does make sense, IMO.
+may_umount_by_mnt_id(struct path *opath)
+{
+	struct path root;
+	bool reachable;
 
-> > 2/ disallow ->lookup operations: a umount is about removing an existing
-> > mount, so the dentries had better already be there.
->
-> That changes the semantics; as it is, you need exec permissions on the
-> entire path...
->
-> > Is this a terrible idea? Are there potentially problems with
-> > containerized setups if we were to do something like this? Are there
-> > better ways to solve this problem (and others like it)? Maybe this woul=
-d
-> > be best done with a new UMOUNT_CACHED flag for umount2()?
->
-> We already have lazy umount.  And what will you do to symlinks you run
-> into along the way?  They *are* traversed; requiring the caller to
-> canonicalize them will only shift the problem to userland...
->
+	// caller in principle able to circumvent lookup restrictions
+        if (!may_cap_dac_readsearch())
+		return false;
 
+	// caller can mount in their mountns
+	if (!may_mount())
+		return false;
+
+	// target mount and caller in the same mountns
+	if (!check_mnt())
+		return false;
+
+	// caller could in principle reach mount from it's root
+	get_fs_root(current->fs, &root);
+        reachable = is_path_reachable(real_mount(opath->mnt), opath->dentry, &root);
+	path_put(&root);
+
+	return reachable;
+}
+
+However, that still means that we have laxer restrictions on unmounting
+by mount-id then on unmount with lookup as for lookup just having
+CAP_DAC_READ_SEARCH isn't enough. Usually - at least for filesytems
+without custom permission handlers - we also establish that the inode
+can be mapped into the caller's idmapping.
+
+So that would mean that unmounting by mount-id would allow you to
+unmount mounts in cases where you wouldn't with umount. That might be
+fine though as that's ultimately the goal here in a way.
+
+One could also see a very useful feature in this where you require
+capable(CAP_DAC_READ_SEARCH) and capable(CAP_SYS_ADMIN) and then allow
+unmounting any mount in the system by mount-id. This would obviously be
+very useful for privileged service managers but I haven't thought this
+through.
