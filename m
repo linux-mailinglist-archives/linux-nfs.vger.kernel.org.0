@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 707256E2A61
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 21:01:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BC9D6E2A91
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 21:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229468AbjDNTBt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Apr 2023 15:01:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41674 "EHLO
+        id S229628AbjDNTRT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Apr 2023 15:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjDNTBs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 15:01:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D54900B
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 12:01:47 -0700 (PDT)
+        with ESMTP id S229579AbjDNTRS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 15:17:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE6A35A1
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 12:17:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DF1C164A01
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 19:01:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04272C433EF;
-        Fri, 14 Apr 2023 19:01:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 48158649E4
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 19:17:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60A7FC433EF;
+        Fri, 14 Apr 2023 19:17:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681498906;
-        bh=kMr4a+m5n4USTjTsatU2JxzAs08Y8CfeNpLy+UU70hk=;
+        s=k20201202; t=1681499836;
+        bh=fVDkY0PIuvALMsbgLbLVD0M9q1gJ01NZorKdJ6KS5PM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lcOBveiP8YwrP4JclIYI9NCVuhd4oyYreMUjeqDAua2jL6r0OkgqAQoeUG7aSWALz
-         Mo9KWdXJhpto+f8Mpueui2qMrtW5jeeaPubr9YO0J4IlpENadVqM5qN02TcuXZawJj
-         w20yN/pnMx+SOea72JeudD+Jwjr3l1NpSCGgT4C6o5k3lC3nYrzA9MN7wg7nEVUQLy
-         Z90Ms4de+pn93D6nlIwLyuTKw5q1eXoRYstygrILFmfoKQpbznSKcy1vyXtD75fXnf
-         54qny4Od4ItSkKdxEdNTp5UviTDEvfpEu6mN4u4FycE6LSE54Mdjquxo4zA4P/AYaf
-         rvsOcq/ArXKqQ==
-Message-ID: <3353149c8e7965e44807f2a7ed5055df51d6c856.camel@kernel.org>
+        b=ltoWJYkcyciTqJR+cyzB2OFBnaY3TZT6g6PPJI4XT9ghFGBmhamKWzlTPY9ltreXc
+         wTdT6vXhjQMGyLrWgA64UZ9DyLRd9fRlZ/k6wgWKitWCK6Eo2ICPmo0/Oqnk7IxQEl
+         xX7/5RM2Z8fTy16yt53SA9FgNEooa309M8FnuFbEjaashETK4vPzfR3K8YicJwsZtp
+         1+/+QYRSD1H/4J08KCHznK59dLIjZmCtCv1mPJY4xuPORk/bjkSmh521j4I/oge+bD
+         O28SFY1fW1lNkwg5/uFG3bHbPPsTsVTpNMJIuISyc97PzTrL4E1TWC+FjIRiog+RWg
+         bJGc6yqU/EPUQ==
+Message-ID: <be4b5a40778b4e8eab7c0d8943474cdc8f2b097a.camel@kernel.org>
 Subject: Re: [PATCH 3/6] nfsd: simplify the delayed disposal list code
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever III <chuck.lever@oracle.com>
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Fri, 14 Apr 2023 15:01:44 -0400
+Date:   Fri, 14 Apr 2023 15:17:15 -0400
 In-Reply-To: <7810C14C-DC16-48DF-8A14-1A1E7B9A2CD8@oracle.com>
 References: <20230118173139.71846-1-jlayton@kernel.org>
          <20230118173139.71846-4-jlayton@kernel.org>
@@ -45,8 +45,8 @@ Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -183,8 +183,19 @@ On Fri, 2023-04-14 at 18:20 +0000, Chuck Lever III wrote:
 > Can you have a look at this?
 >=20
 
-Hrm, ok. Do you have a reproducer?
+Actually, I may see the bug. Does this fix it?
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index c173d460b17d..f40d8f3b35a4 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -421,6 +421,7 @@ nfsd_file_dispose_list_delayed(struct list_head
+*dispose)
+ 		spin_lock(&l->lock);
+ 		list_move_tail(&nf->nf_lru, &l->freeme);
+ 		spin_unlock(&l->lock);
++		queue_work(nfsd_filecache_wq, &l->work);
+ 	}
+ }
+=20
+
