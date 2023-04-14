@@ -2,125 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 280FA6E204D
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 12:09:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 930C66E208D
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 12:18:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229615AbjDNKJy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Apr 2023 06:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47100 "EHLO
+        id S229839AbjDNKSC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Apr 2023 06:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbjDNKJv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 06:09:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B61641FF7;
-        Fri, 14 Apr 2023 03:09:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229784AbjDNKSC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 06:18:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB2D0C9
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 03:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1681467437;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HGlU0PvOV1zf33jFs6Isk0h8BFNeNak/ejipOrEy1sk=;
+        b=YgV9rN1vqE+jRLymjhjFMf5830T/ys+0Ws9HfDirhCHgPffXhLuHp76R6JdGCcqSEXU1eC
+        zX4a9CKQmKfVhrfmUxrwFiVIS1OyabxKt0G30OPAlks3wLH0rNPGXmpvZQnb34hZspJgXe
+        /utL1TG1mVHnOHTJveEK5ZS1tlAsDcQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-589-n6LkH29JOM-7W2ZSpQRXPA-1; Fri, 14 Apr 2023 06:17:12 -0400
+X-MC-Unique: n6LkH29JOM-7W2ZSpQRXPA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 44ED06223F;
-        Fri, 14 Apr 2023 10:09:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2A50C433D2;
-        Fri, 14 Apr 2023 10:09:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681466988;
-        bh=nr947F56m6325zW1COKJH1Btv7pX83NFx31ZY+F3jos=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=AoI0sBfkcJo7DfGfxxMHZWdJFGiAzxoV8tRDhx+Hjw9vu/yDqabcnHhykbQfeg9ir
-         5OlyLR6QiKDIX9Kme+DWEPcmINxGT8H8Ztknd6ph0Op9pt8Yg4W0lzUI1FBQ5bWmoI
-         oQNZhi5a8FTVl1SP1S4tVHnSxQT/D9Fxw7TOHGa3Jpsb+lSDLar/PU+hbO4c2dw0ZU
-         cIuDnzudL5ah2BFOpelHShA1YvKEkruE0PiRmojAw/InDAqgi3+gvqdsa8ZRpBhXzC
-         Jc7WLPYdqWuqdYtTBvLQV1i3TtZqvg24eqstUOsFaE50s5kJQsiZoiODXoLhquqGbx
-         alklAFuxvTypw==
-Message-ID: <3492fa76339672ccc48995ccf934744c63db4b80.camel@kernel.org>
-Subject: Re: allowing for a completely cached umount(2) pathwalk
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Christian Brauner <brauner@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Neil Brown <neilb@suse.de>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Date:   Fri, 14 Apr 2023 06:09:46 -0400
-In-Reply-To: <20230414-leihgabe-eisig-71fb7bb44d49@brauner>
-References: <95ee689c76bf034fa2fe9fade0bccdb311f3a04f.camel@kernel.org>
-         <168142566371.24821.15867603327393356000@noble.neil.brown.name>
-         <20230414024312.GF3390869@ZenIV>
-         <8EC5C625-ACD6-4BA0-A190-21A73CCBAC34@hammerspace.com>
-         <20230414035104.GH3390869@ZenIV>
-         <20230414-leihgabe-eisig-71fb7bb44d49@brauner>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9011A811E7C;
+        Fri, 14 Apr 2023 10:17:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A7327492C14;
+        Fri, 14 Apr 2023 10:17:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <ZDkUSESImVSUX0RW@gondor.apana.org.au>
+References: <ZDkUSESImVSUX0RW@gondor.apana.org.au> <ZDi1qjVpcpr2BZfN@gondor.apana.org.au> <48886D84-1A04-4B07-A666-BB56684E759F@oracle.com> <380323.1681314997@warthog.procyon.org.uk> <1078650.1681394138@warthog.procyon.org.uk> <1235770.1681462057@warthog.procyon.org.uk>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     dhowells@redhat.com, Chuck Lever III <chuck.lever@oracle.com>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Subject: Re: Did the in-kernel Camellia or CMAC crypto implementation break?
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1239034.1681467430.1@warthog.procyon.org.uk>
+Date:   Fri, 14 Apr 2023 11:17:10 +0100
+Message-ID: <1239035.1681467430@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-04-14 at 11:41 +0200, Christian Brauner wrote:
-> On Fri, Apr 14, 2023 at 04:51:04AM +0100, Al Viro wrote:
-> > On Fri, Apr 14, 2023 at 03:28:45AM +0000, Trond Myklebust wrote:
-> >=20
-> > > We already have support for directory file descriptors when mounting =
-with move_mount(). Why not add a umountat() with similar support for the un=
-mount side?
-> > > Then add a syscall to allow users with (e.g.) the CAP_DAC_OVERRIDE pr=
-ivilege to convert the mount-id into an O_PATH file descriptor.
-> >=20
-> > You can already do umount -l /proc/self/fd/69 if you have a descriptor.
->=20
-> Way back when we put together stuff for [2] we had umountat() as an item
-> but decided against it because it's mostely useful when used as AT_EMPTY_=
-PATH.
->=20
-> umount("/proc/self/fd/<nr>", ...) is useful when you don't trust the
-> path and you need to resolve it with lookup restrictions. Then path
-> resolution restrictions of openat2() can be used to get an fd. Which can
-> be passed to umount().
->=20
-> I need to step outside so this is a halfway-out-the-door thought but
-> given your description of the problem Jeff, why doesn't the following
-> work (Just sketching this, you can't call openat2() like that.):
->=20
->         fd_mnt =3D openat2("/my/funky/nfs/share/mount", RESOLVE_CACHED)
->         umount("/proc/self/fd/fd_mnt", MNT_DETACH)
+Herbert Xu <herbert@gondor.apana.org.au> wrote:
 
-Something like that might work. A RESOLVE_CACHED flag is something that
-would involve more than just umount(2) though. That said, it could be
-useful in other situations.
+> > Actually, I was wondering about that.  I see that all the testing data
+> > seems to be statically loaded in testmgr.[ch], even if the algorithms to
+> > be tested are resident in modules that aren't loaded yet (so it's kind of
+> > test "on demand").  I guess it can't be split up amongst the algorithm
+> > modules as some of the tests require stuff from multiple modules (eg. aes
+> > + cbs + cts).
+> 
+> Yes I've been meaning to split this up so they're colocated with
+> the generic implementation.
 
->=20
-> > Converting mount-id to O_PATH... might be an interesting idea.
->=20
-> I think using mount-ids would be nice and fwiw, something we considered
-> as an alternative to umountat(). Not just can they be gotten from
-> /proc/<pid>/mountinfo but we also do expose the mount id to userspace
-> nowadays through:
->=20
->         STATX_MNT_ID
->         __u64	stx_mnt_id;
->=20
-> which also came out of [2]. And it should be safe to do via
-> AT_STATX_DONT_SYNC:
->=20
->         statx(my_cached_fd, AT_NO_AUTOMOUNT|AT_SYMLINK_NOFOLLOW|AT_STATX_=
-DONT_SYNC)
->=20
-> using STATX_ATTR_MOUNT_ROOT to identify a potential mountpoint. Then
-> pass that mount-id to the new system call.
->=20
-> [2]: https://github.com/uapi-group/kernel-features
+Might be easier if I wait to see how you do that.
 
-This is generating a lot of good ideas! Maybe we should plan to discuss
-this further at LSF/MM?
+> Unless this code has at least two users it's probably not worth
+> it (but there are exceptions, e.g. we did a one-user algorithm
+> for dm-crypt).
 
---=20
-Jeff Layton <jlayton@kernel.org>
+There would be just two users at the moment: sunrpc/nfs and rxrpc/afs.  I
+don't know if cifs or ceph could make use of it.
+
+David
+
