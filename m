@@ -2,56 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D03826E1B07
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 06:21:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1DB76E1EC3
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Apr 2023 10:49:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbjDNEVN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Apr 2023 00:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55102 "EHLO
+        id S229611AbjDNIs7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Apr 2023 04:48:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjDNEVN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 00:21:13 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B5444B2;
-        Thu, 13 Apr 2023 21:21:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jdps3r6fgYR8iwPcyplXDldaP6A4WGQs91BonlW9KMQ=; b=sx9fxINcbWPbnHjCjX/Y3sAUiX
-        iSBpALQJKnaqvR0yvC2UpxuEidZ7a9t7Sil+lSqVyIEAyfub2n2JNx0fuCS4ziQwAmiEUgNZvWit9
-        LWecx1R12XcwTI7pCuqNsLPROaTYLbohdohSsZrIDOZ9+zSE2WIjuivYu3FfdZcj0+r1RnHuhbNl0
-        iv5jxfUfA8wQ/QRhb8nWru0sz7Zay1b8KBgtz6J7KQa4V6jIKGwdnTknxkFzTrxqyRhRuAJmjXjUI
-        N3NqGqqp46x97lR599e8n6fQNSEtjF9suyq3Wxo1fOXzhk0jNqTiYckhS+vn7NV+9TQCKYAZfAFqk
-        tR98CjTQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1pnAvo-008qNF-2r;
-        Fri, 14 Apr 2023 04:21:04 +0000
-Date:   Fri, 14 Apr 2023 05:21:04 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     Neil Brown <neilb@suse.de>, Jeffrey Layton <jlayton@kernel.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: allowing for a completely cached umount(2) pathwalk
-Message-ID: <20230414042104.GI3390869@ZenIV>
-References: <95ee689c76bf034fa2fe9fade0bccdb311f3a04f.camel@kernel.org>
- <168142566371.24821.15867603327393356000@noble.neil.brown.name>
- <20230414024312.GF3390869@ZenIV>
- <8EC5C625-ACD6-4BA0-A190-21A73CCBAC34@hammerspace.com>
- <20230414035104.GH3390869@ZenIV>
- <93A5B3C4-0E20-4531-9B65-0D24C092CE70@hammerspace.com>
+        with ESMTP id S229494AbjDNIs6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 04:48:58 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B918F5BB9
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 01:47:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1681462061;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jb/RqJ7lTYgOp0Zg/Ax0skaO2qNbV/j6uuRXrVdlbsY=;
+        b=EcjHSzZmyOCgMyYdRbmyGUvHB5MUaMOW8euRTx+69nIlqMvXBF6rPckjJxRyDnKbee1xfh
+        55tweDMqcX2ZQoW22CE4MBFf2t3QSCZNB8newCXf7LYXE+60KAh21sEP6JuStm1grRB6vV
+        a32BNmaU5GcEJeRcmKkCMqXdEFeedu0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-480-UUVI9vDUNtibQQKhwMkfkw-1; Fri, 14 Apr 2023 04:47:39 -0400
+X-MC-Unique: UUVI9vDUNtibQQKhwMkfkw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1C27085A588;
+        Fri, 14 Apr 2023 08:47:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 136FE2166B26;
+        Fri, 14 Apr 2023 08:47:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+In-Reply-To: <ZDi1qjVpcpr2BZfN@gondor.apana.org.au>
+References: <ZDi1qjVpcpr2BZfN@gondor.apana.org.au> <48886D84-1A04-4B07-A666-BB56684E759F@oracle.com> <380323.1681314997@warthog.procyon.org.uk> <1078650.1681394138@warthog.procyon.org.uk>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     dhowells@redhat.com, Chuck Lever III <chuck.lever@oracle.com>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>
+Subject: Re: Did the in-kernel Camellia or CMAC crypto implementation break?
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <93A5B3C4-0E20-4531-9B65-0D24C092CE70@hammerspace.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1235645.1681461986.1@warthog.procyon.org.uk>
+From:   David Howells <dhowells@redhat.com>
+Date:   Fri, 14 Apr 2023 09:47:37 +0100
+Message-ID: <1235770.1681462057@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,21 +67,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 04:06:03AM +0000, Trond Myklebust wrote:
-> 
-> 
-> > On Apr 13, 2023, at 23:51, Al Viro <viro@ZenIV.linux.org.uk> wrote:
-> > 
-> > On Fri, Apr 14, 2023 at 03:28:45AM +0000, Trond Myklebust wrote:
-> > 
-> >> We already have support for directory file descriptors when mounting with move_mount(). Why not add a umountat() with similar support for the unmount side?
-> >> Then add a syscall to allow users with (e.g.) the CAP_DAC_OVERRIDE privilege to convert the mount-id into an O_PATH file descriptor.
-> > 
-> > You can already do umount -l /proc/self/fd/69 if you have a descriptor.
-> > Converting mount-id to O_PATH... might be an interesting idea.
-> 
-> A dedicated umountat() might avoid the need for the lazy flag, if it were allowed to close the descriptor on success for the special case of an empty path.
+Herbert Xu <herbert@gondor.apana.org.au> wrote:
 
-No.  It's a wrong abstraction layer, anyway - "close the descriptor"
-!= "make the opened file close", nevermind that it's a very odd
-corner case that will cause a lot of headache down the road.
+> Now that you have it working, perhaps you could convert some of
+> your test vectors into crypto API test vectors?
+
+Actually, I was wondering about that.  I see that all the testing data seems
+to be statically loaded in testmgr.[ch], even if the algorithms to be tested
+are resident in modules that aren't loaded yet (so it's kind of test "on
+demand").  I guess it can't be split up amongst the algorithm modules as some
+of the tests require stuff from multiple modules (eg. aes + cbs + cts).
+
+If I'm going to do that, I presume I'd need to create an API akin to the
+skcipher API or the hash API, say, to do autoload/create krb5 crypto.  Maybe
+loading with something like:
+
+	struct crypto_krb5 *alg;
+
+	alg = crypto_alloc_krb5("aes256-cts-hmac-sha384-192", 0,
+				CRYPTO_ALG_ASYNC);
+
+and split the algorithms into separate modules?  Much of the code would still
+end up in a common module, though.
+
+Note that each algorithm can be asked to do four different things and has four
+different types of test:
+
+ - PRF calculation
+ - Key derivation
+ - Encryption/decryption
+ - Checksum generation/verification
+
+David
+
