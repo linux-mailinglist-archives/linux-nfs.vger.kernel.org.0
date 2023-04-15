@@ -2,47 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E88D6E3126
-	for <lists+linux-nfs@lfdr.de>; Sat, 15 Apr 2023 13:42:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56B266E3150
+	for <lists+linux-nfs@lfdr.de>; Sat, 15 Apr 2023 14:13:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229922AbjDOLmY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 15 Apr 2023 07:42:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39636 "EHLO
+        id S229468AbjDOMN0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 15 Apr 2023 08:13:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjDOLmX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 15 Apr 2023 07:42:23 -0400
+        with ESMTP id S229540AbjDOMNZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 15 Apr 2023 08:13:25 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D5249EE
-        for <linux-nfs@vger.kernel.org>; Sat, 15 Apr 2023 04:42:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F570AD;
+        Sat, 15 Apr 2023 05:13:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F9D960905
-        for <linux-nfs@vger.kernel.org>; Sat, 15 Apr 2023 11:42:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37C2DC433EF;
-        Sat, 15 Apr 2023 11:42:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D70C6615B9;
+        Sat, 15 Apr 2023 12:13:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D93C6C433EF;
+        Sat, 15 Apr 2023 12:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681558941;
-        bh=wI4H4Kk/IigGpqVNCe8P24rp11GMgD5MDFPWNCg+lVM=;
-        h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=CC9Ta6MHkxcnCLBvcF4sYLe+dYKtNSrd8pyUSSsuDlQNVvRq9ql5rRCzr6IJIF6rd
-         gUgtSvLwY1Hsl/podk1DbMIDFQ22rHNPAF58M34qE8uRm9+CHEwG9O77iS0XkTNQv8
-         MEgkVqpX7rdtiAoHmyEa3j/xC4tc8gcYlRjb9XiFB6E4U0/tAB9lKWPNC7JhrDT+OP
-         tQ1tCuNluJf+HV+juHQvOZ4DFG+TCXLQBtlJxmt3m+aHAp43+5SyNjgUeCpPWbr4/J
-         uEkn/Drybu387V8OB/PAtjJ+uQWUCY2QZzDZPCrQyp017f9bw9IllrqXcvLQFcTk0P
-         WlqiFduVxqQug==
-Message-ID: <e8cbe0fb8292b872ce40b2471a8878478fb71530.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: don't use GFP_KERNEL from
- nfsd_getxattr()/nfsd_listxattr()
+        s=k20201202; t=1681560801;
+        bh=vISxtwgPDbbPk2EBE4+0qWc3uawfwrv6lg/w51U7c6M=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=TIZnNaCcjQcrtSjP8IynjFI1zOZE3ioOSGp+Xn3NEVkUwUEXcrwHvksQ98DP4NHpW
+         9Zx2SJ/mlVxxXSTmIGv/qSCXlFMtBnImrVbhnUv0Ur+hMnqUkmhE0Ks0XdjxDTc9uf
+         ceCXE1LxO4OkhkFijr5SUnlAgCAcvKjIsPnx0C4nU1OQDh+fnp1vd6vJ+0WCpvOXiC
+         3XGbuoH61TENPu8kv3jwKXweUll2mdc/qmkkIq1eUwOZr8dAAnvX7x6Xb2G+K9Qh5F
+         ZNn+GAhUJrngGxyhRHEc154VKiYwXivaxryFgHhYxlWV+B1QI2v2ivKCbTs6PASN7F
+         IhmSdcNSSglqQ==
+Message-ID: <e03485c02c6f9fefdaf76e93724978e4874d5442.camel@kernel.org>
+Subject: Re: [RFC PATCH 0/3][RESEND] fs: opportunistic high-res file
+ timestamps
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+To:     Amir Goldstein <amir73il@gmail.com>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Chuck Lever <chuck.lever@oracle.com>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>
-Date:   Sat, 15 Apr 2023 07:42:19 -0400
-In-Reply-To: <72bf692e-bb6b-c1f2-d1ba-3205ab649b43@I-love.SAKURA.ne.jp>
-References: <72bf692e-bb6b-c1f2-d1ba-3205ab649b43@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset="ISO-8859-15"
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>
+Date:   Sat, 15 Apr 2023 08:13:18 -0400
+In-Reply-To: <CAOQ4uxi9rz1GFP+jMJm482axyAPtAcB+jnZ5jCR++EYKA_iRpw@mail.gmail.com>
+References: <20230411143702.64495-1-jlayton@kernel.org>
+         <CAOQ4uxi9rz1GFP+jMJm482axyAPtAcB+jnZ5jCR++EYKA_iRpw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
@@ -55,47 +63,118 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 2023-04-15 at 20:07 +0900, Tetsuo Handa wrote:
-> Since GFP_KERNEL is GFP_NOFS | __GFP_FS, usage like GFP_KERNEL | GFP_NOFS
-> does not make sense. Drop __GFP_FS flag in order to avoid deadlock.
+On Sat, 2023-04-15 at 14:35 +0300, Amir Goldstein wrote:
+> On Tue, Apr 11, 2023 at 5:38=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> >=20
+> > (Apologies for the resend, but I didn't send this with a wide enough
+> > distribution list originally).
+> >=20
+> > A few weeks ago, during one of the discussions around i_version, Dave
+> > Chinner wrote this:
+> >=20
+> > "You've missed the part where I suggested lifting the "nfsd sampled
+> > i_version" state into an inode state flag rather than hiding it in
+> > the i_version field. At that point, we could optimise away the
+> > secondary ctime updates just like you are proposing we do with the
+> > i_version updates.  Further, we could also use that state it to
+> > decide whether we need to use high resolution timestamps when
+> > recording ctime updates - if the nfsd has not sampled the
+> > ctime/i_version, we don't need high res timestamps to be recorded
+> > for ctime...."
+> >=20
+> > While I don't think we can practically optimize away ctime updates
+> > like we do with i_version, I do like the idea of using this scheme to
+> > indicate when we need to use a high-res timestamp.
+> >=20
+> > This patchset is a first stab at a scheme to do this. It declares a new
+> > i_state flag for this purpose and adds two new vfs-layer functions to
+> > implement conditional high-res timestamp fetching. It then converts bot=
+h
+> > tmpfs and xfs to use it.
+> >=20
+> > This seems to behave fine under xfstests, but I haven't yet done
+> > any performance testing with it. I wouldn't expect it to create huge
+> > regressions though since we're only grabbing high res timestamps after
+> > each query.
+> >=20
+> > I like this scheme because we can potentially convert any filesystem to
+> > use it. No special storage requirements like with i_version field.  I
+> > think it'd potentially improve NFS cache coherency with a whole swath o=
+f
+> > exportable filesystems, and helps out NFSv3 too.
+> >=20
+> > This is really just a proof-of-concept. There are a number of things we
+> > could change:
+> >=20
+> > 1/ We could use the top bit in the tv_sec field as the flag. That'd giv=
+e
+> >    us different flags for ctime and mtime. We also wouldn't need to use
+> >    a spinlock.
+> >=20
+> > 2/ We could probably optimize away the high-res timestamp fetch in more
+> >    cases. Basically, always do a coarse-grained ts fetch and only fetch
+> >    the high-res ts when the QUERIED flag is set and the existing time
+> >    hasn't changed.
+> >=20
+> > If this approach looks reasonable, I'll plan to start working on
+> > converting more filesystems.
+> >=20
+> > One thing I'm not clear on is how widely available high res timestamps
+> > are. Is this something we need to gate on particular CONFIG_* options?
+> >=20
+> > Thoughts?
 >=20
-> Fixes: 32119446bb65 ("nfsd: define xattr functions to call into their vfs=
- counterparts")
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> ---
->  fs/nfsd/vfs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Jeff,
 >=20
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 5783209f17fc..109b31246666 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -2164,7 +2164,7 @@ nfsd_getxattr(struct svc_rqst *rqstp, struct svc_fh=
- *fhp, char *name,
->  		goto out;
->  	}
-> =20
-> -	buf =3D kvmalloc(len, GFP_KERNEL | GFP_NOFS);
-> +	buf =3D kvmalloc(len, GFP_NOFS);
->  	if (buf =3D=3D NULL) {
->  		err =3D nfserr_jukebox;
->  		goto out;
-> @@ -2230,7 +2230,7 @@ nfsd_listxattr(struct svc_rqst *rqstp, struct svc_f=
-h *fhp, char **bufp,
->  	/*
->  	 * We're holding i_rwsem - use GFP_NOFS.
->  	 */
-> -	buf =3D kvmalloc(len, GFP_KERNEL | GFP_NOFS);
-> +	buf =3D kvmalloc(len, GFP_NOFS);
->  	if (buf =3D=3D NULL) {
->  		err =3D nfserr_jukebox;
->  		goto out;
+> Considering that this proposal is pretty uncontroversial,
+> do you still want to discuss/lead a session on i_version changes in LSF/M=
+M?
+>=20
+> I noticed that Chuck listed "timespamt resolution and i_version" as part
+> of his NFSD BoF topic proposal [1], but I do not think all of these topic=
+s
+> can fit in one 30 minute session.
+>=20
 
-I don't get it.
+Agreed. I think we'll need an hour for the nfsd BoF.
 
-These are the NFS server handlers for the GETXATTR and LISTXATTR
-operations. Basically the client is making a call to the server to fetch
-or list xattrs. I don't really see a huge issue with them recursing into
-reclaim. It's not like this code is in the writeback path.
+I probably don't need a full 30 min slot for this topic, between the
+nfsd BoF and hallway track.
+
+I've started a TOPIC email for this about 5 times now, and keep deleting
+it. I think most of the more controversial bits are pretty much settled
+at this point, and the rest (crash resilience) is still too embryonic
+for discussion.
+
+I might want a lightning talk at some point about what I'd _really_ like
+to do long term with the i_version counter (basically: I want to be able
+to do a write that is gated on the i_version not having changed).
+
+
+> Dave,
+>=20
+> I would like to use this opportunity to invite you and any developers tha=
+t
+> are involved in fs development and not going to attend LSF/MM in-person,
+> to join LSF/MM virtually for some sessions that you may be interested in.
+> See this lore query [2] for TOPICs proposed this year.
+>=20
+> You can let me know privately which sessions you are interested in
+> attending and your time zone and I will do my best to schedule those
+> sessions in time slots that would be more convenient for your time zone.
+>=20
+> Obviously, I am referring to FS track sessions.
+> Cross track sessions are going to be harder to accommodate,
+> but I can try.
+>=20
+> Thanks,
+> Amir.
+>=20
+> [1] https://lore.kernel.org/linux-fsdevel/FF0202C3-7500-4BB3-914B-DBAA3E0=
+EA3D7@oracle.com/
+> [2] https://lore.kernel.org/linux-fsdevel/?q=3DLSF+TOPIC+-re+d%3A4.months=
+.ago..
+
 --=20
 Jeff Layton <jlayton@kernel.org>
