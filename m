@@ -2,49 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F5706E2DE1
-	for <lists+linux-nfs@lfdr.de>; Sat, 15 Apr 2023 02:18:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 58D006E3027
+	for <lists+linux-nfs@lfdr.de>; Sat, 15 Apr 2023 11:51:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229841AbjDOASU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Apr 2023 20:18:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48220 "EHLO
+        id S229822AbjDOJva (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 15 Apr 2023 05:51:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjDOASS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Apr 2023 20:18:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C33340F8
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Apr 2023 17:18:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 18E1063856
-        for <linux-nfs@vger.kernel.org>; Sat, 15 Apr 2023 00:18:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AFF5C433EF;
-        Sat, 15 Apr 2023 00:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681517896;
-        bh=gwoDKthJAF1WHfbGuiCRuLpxNhrgjIi9oMkJ9fM63b0=;
-        h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=q30o4mYFhbelsQ8SGE1YZKn7WuVdtBSkF/hM8jmtBXkBFL3iTHEyl/yOTRJojvgFL
-         HtRjb1M2zuyVP9HdYzisBRXDr7Nudgn6kl8Sfkd6Wk5RiNo0Awfxy9tR01XCJdY+vN
-         ztCNBwS4uIFBTzJzqXnDdlzU7Z+Pbk+zEUIZH+dmsfxnAMXQpeOg8MMG+e9ilf85Lq
-         MK0S+fv153+w9uV3dASWZ/ekqK5L93DeDpcoPINWbGQmkp5OkG2brxO0k+oH/22SMe
-         +XlBeo3arby3UnHwREkIDVlkbDJfJ+dOYot8uc+M3lMHXMV6OqcBkP5MVFIGHjG+1V
-         EAIAoVm5G/SeQ==
-Subject: [PATCH v1 4/4] SUNRPC: Be even lazier about releasing pages
-From:   Chuck Lever <cel@kernel.org>
-To:     linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Date:   Fri, 14 Apr 2023 20:18:15 -0400
-Message-ID: <168151789543.1588.6591139655130358318.stgit@klimt.1015granger.net>
-In-Reply-To: <168151777579.1588.7882383278745556830.stgit@klimt.1015granger.net>
-References: <168151777579.1588.7882383278745556830.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5
+        with ESMTP id S229561AbjDOJv3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 15 Apr 2023 05:51:29 -0400
+Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1297030FA;
+        Sat, 15 Apr 2023 02:51:28 -0700 (PDT)
+Received: by mail-ua1-x934.google.com with SMTP id v18so2980427uak.8;
+        Sat, 15 Apr 2023 02:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681552287; x=1684144287;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pQSrMitubAa5dm92J1EU6dgGqf9jY7pOt+TO9UehZvw=;
+        b=JmErCpU4HA2Yb+ZG4TsNQQ7yE7MYLLifsaHW+rEUtFSFSPUYGpu+7+46oxp+CYhVbF
+         lGu/lLSyoIL/bwr2vJBKjqYHQOS6OmUYR6Y2UjuqilTNMJIf4rfLoVcNhDbCU81Gw5gl
+         Nup4TSCsPAKsymphEm9BLnj8UyDmskEC1XxkACingum/qRHRVU2hGpyiszx6VBV8c1mb
+         bHkSq/SYp5qk+EcDPnsXNF9fsqyQFzUCbW6Gq8On3pPs3r014kBgiZLXziHDnlADZY7Y
+         EhHKK/wwuXtYvtalvK5Kqt1hDvdHEX4h5sU1qsYYkzEB9Nbrnr83UZ3QRo5j1zxoyryC
+         xDcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681552287; x=1684144287;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pQSrMitubAa5dm92J1EU6dgGqf9jY7pOt+TO9UehZvw=;
+        b=ONqkJgyKZ1ubiNoNEPaD5PBlkCEx9MH6i5FhmWlztp+l/8yAUKRMkGjqnsIfTOnvO6
+         C6HuLj8pwSXxqbeqUbW2iV7nzTTcR5hfyc9qB7ODqevG3iA8zu9TDpWAkWCTmleb8TCX
+         xKVcbNdITDfNYWDLbgvddnCIFxzdqhmaGJh1UMMTH7UoOvHpf4M8aqYOfmt4ay3TKMwr
+         uAohxPp1yNUWFMEwyZHIsArUaYn12rdY1yF8Ilt9FLMJdhngPRZ/KbCbYqm0ivOzBliX
+         CL1KgSADiHvxtuqbbEDXMyCY3A2tN4owLb9WwTznct4HEkw247BLHdLqAcLtJWZr0StK
+         fyPg==
+X-Gm-Message-State: AAQBX9eyc604/C9KOF3g/uqmSm/gOPTBbIwgGe4FkIrQ1TSUs75xERo2
+        sOgfBkq+2h2RYhr/EFcUZsqOg5hLuxnLVBQKwOc=
+X-Google-Smtp-Source: AKy350Z5nVrufCwZKNEMVH1sYWilmflndlpOE0yJT8bBLf2aQzDs1QMIvi5XItWJYHiiJa2hSiVMrgrRrEceoYYP4Hs=
+X-Received: by 2002:a1f:2957:0:b0:440:380f:fc20 with SMTP id
+ p84-20020a1f2957000000b00440380ffc20mr4635002vkp.0.1681552286971; Sat, 15 Apr
+ 2023 02:51:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <95ee689c76bf034fa2fe9fade0bccdb311f3a04f.camel@kernel.org>
+ <168142566371.24821.15867603327393356000@noble.neil.brown.name>
+ <20230414024312.GF3390869@ZenIV> <8EC5C625-ACD6-4BA0-A190-21A73CCBAC34@hammerspace.com>
+ <20230414035104.GH3390869@ZenIV> <20230414-leihgabe-eisig-71fb7bb44d49@brauner>
+ <3492fa76339672ccc48995ccf934744c63db4b80.camel@kernel.org>
+In-Reply-To: <3492fa76339672ccc48995ccf934744c63db4b80.camel@kernel.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sat, 15 Apr 2023 12:51:15 +0300
+Message-ID: <CAOQ4uxig=vXv_V1dvXoFb2gFECjOhZSg4yNCidxYO+PYzGihtQ@mail.gmail.com>
+Subject: Re: allowing for a completely cached umount(2) pathwalk
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Neil Brown <neilb@suse.de>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Josef Bacik <josef@toxicpanda.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,65 +80,86 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Fri, Apr 14, 2023 at 1:13=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> On Fri, 2023-04-14 at 11:41 +0200, Christian Brauner wrote:
+> > On Fri, Apr 14, 2023 at 04:51:04AM +0100, Al Viro wrote:
+> > > On Fri, Apr 14, 2023 at 03:28:45AM +0000, Trond Myklebust wrote:
+> > >
+> > > > We already have support for directory file descriptors when mountin=
+g with move_mount(). Why not add a umountat() with similar support for the =
+unmount side?
+> > > > Then add a syscall to allow users with (e.g.) the CAP_DAC_OVERRIDE =
+privilege to convert the mount-id into an O_PATH file descriptor.
+> > >
+> > > You can already do umount -l /proc/self/fd/69 if you have a descripto=
+r.
+> >
+> > Way back when we put together stuff for [2] we had umountat() as an ite=
+m
+> > but decided against it because it's mostely useful when used as AT_EMPT=
+Y_PATH.
+> >
+> > umount("/proc/self/fd/<nr>", ...) is useful when you don't trust the
+> > path and you need to resolve it with lookup restrictions. Then path
+> > resolution restrictions of openat2() can be used to get an fd. Which ca=
+n
+> > be passed to umount().
+> >
+> > I need to step outside so this is a halfway-out-the-door thought but
+> > given your description of the problem Jeff, why doesn't the following
+> > work (Just sketching this, you can't call openat2() like that.):
+> >
+> >         fd_mnt =3D openat2("/my/funky/nfs/share/mount", RESOLVE_CACHED)
+> >         umount("/proc/self/fd/fd_mnt", MNT_DETACH)
+>
+> Something like that might work. A RESOLVE_CACHED flag is something that
+> would involve more than just umount(2) though. That said, it could be
+> useful in other situations.
+>
+> >
+> > > Converting mount-id to O_PATH... might be an interesting idea.
+> >
+> > I think using mount-ids would be nice and fwiw, something we considered
+> > as an alternative to umountat(). Not just can they be gotten from
+> > /proc/<pid>/mountinfo but we also do expose the mount id to userspace
+> > nowadays through:
+> >
+> >         STATX_MNT_ID
+> >         __u64 stx_mnt_id;
+> >
+> > which also came out of [2]. And it should be safe to do via
+> > AT_STATX_DONT_SYNC:
+> >
+> >         statx(my_cached_fd, AT_NO_AUTOMOUNT|AT_SYMLINK_NOFOLLOW|AT_STAT=
+X_DONT_SYNC)
+> >
+> > using STATX_ATTR_MOUNT_ROOT to identify a potential mountpoint. Then
+> > pass that mount-id to the new system call.
+> >
+> > [2]: https://github.com/uapi-group/kernel-features
+>
+> This is generating a lot of good ideas! Maybe we should plan to discuss
+> this further at LSF/MM?
+>
 
-A single RPC transaction that touches only a couple of pages means
-rq_pvec will not be even close to full in svc_xpt_release(). This is
-a common case.
+Hi Jeff,
 
-Instead, just leave the pages in rq_pvec until it is completely
-full. This improves the efficiency of the batch release mechanism
-on workloads that involve small RPC messages.
+I am trying to collect the topics for LSF/MM FS sessions, but it is somewha=
+t
+hard to do without an official [TOPIC] suggestion.
 
-The rq_pvec is also fully emptied just before thread exit.
+Not sure if this specific thread has anything left to discuss in a session
+or if the original SUBJECT still describes the wider topic accurately.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/svc.c      |    3 +++
- net/sunrpc/svc_xprt.c |    3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Could you please follow up with a [TOPIC] proposal or just let me know
+1. That you are interested to lead the session
+2. Descriptive title for the session to put in the schedule
+3. lore link to put in the schedule
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index b982f802f2a0..26367cf4c17a 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -649,6 +649,8 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_pool *pool, int node)
- 	if (!rqstp)
- 		return rqstp;
- 
-+	pagevec_init(&rqstp->rq_pvec);
-+
- 	__set_bit(RQ_BUSY, &rqstp->rq_flags);
- 	rqstp->rq_server = serv;
- 	rqstp->rq_pool = pool;
-@@ -894,6 +896,7 @@ void svc_rqst_release_pages(struct svc_rqst *rqstp)
- void
- svc_rqst_free(struct svc_rqst *rqstp)
- {
-+	pagevec_release(&rqstp->rq_pvec);
- 	svc_release_buffer(rqstp);
- 	if (rqstp->rq_scratch_page)
- 		put_page(rqstp->rq_scratch_page);
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 533e08c4f319..e3952b690f54 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -541,7 +541,6 @@ static void svc_xprt_release(struct svc_rqst *rqstp)
- 	kfree(rqstp->rq_deferred);
- 	rqstp->rq_deferred = NULL;
- 
--	pagevec_release(&rqstp->rq_pvec);
- 	svc_rqst_release_pages(rqstp);
- 	rqstp->rq_res.page_len = 0;
- 	rqstp->rq_res.page_base = 0;
-@@ -667,8 +666,6 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
- 	struct xdr_buf *arg = &rqstp->rq_arg;
- 	unsigned long pages, filled, ret;
- 
--	pagevec_init(&rqstp->rq_pvec);
--
- 	pages = (serv->sv_max_mesg + 2 * PAGE_SIZE) >> PAGE_SHIFT;
- 	if (pages > RPCSVC_MAXPAGES) {
- 		pr_warn_once("svc: warning: pages=%lu > RPCSVC_MAXPAGES=%lu\n",
+While at it, please provide me with this info regarding
+"i_version improvements".
 
-
+Thanks,
+Amir.
