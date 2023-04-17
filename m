@@ -2,117 +2,220 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5B0B6E49EA
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Apr 2023 15:31:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D460B6E4A27
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Apr 2023 15:42:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbjDQNbM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Apr 2023 09:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
+        id S230494AbjDQNmZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Apr 2023 09:42:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjDQNbL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Apr 2023 09:31:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE5E0F5
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Apr 2023 06:30:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681738225;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=b0XyvvSMhsrQHVV1gbqau/zzA7diR74fJ5XXhH8LNi4=;
-        b=I8TU4hLqBasYp3PLWgE6Qgvlz6ITPY6UD6tiVk6M8QXQw+2unA+4FBAvLZhnQ9dzZ0IhEu
-        WczlaOHU9u+2I2YzBwz2twNKVhu/7rbl384rnheAPV43QN0Q5C/yNfZoLPi+DQ8k+DnaN3
-        wD3Hgf0yRhwHWgntdO8Gl1S/fmwD4Ow=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-659--mXldnzYNJebticL3MAYWA-1; Mon, 17 Apr 2023 09:30:23 -0400
-X-MC-Unique: -mXldnzYNJebticL3MAYWA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S230514AbjDQNmS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Apr 2023 09:42:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1B5C7EFD;
+        Mon, 17 Apr 2023 06:42:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 617EF185A790;
-        Mon, 17 Apr 2023 13:30:23 +0000 (UTC)
-Received: from aion.usersys.redhat.com (unknown [10.22.34.107])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 539CC2166B26;
-        Mon, 17 Apr 2023 13:30:23 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id DF6BA1A27F5; Mon, 17 Apr 2023 09:30:22 -0400 (EDT)
-Date:   Mon, 17 Apr 2023 09:30:22 -0400
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Chuck Lever <cel@kernel.org>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] SUNRPC: Fix failures of checksum Kunit tests
-Message-ID: <ZD1J7jL0+tpaYiSq@aion.usersys.redhat.com>
-References: <168166470652.2679.10078886564885712799.stgit@bazille.1015granger.net>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 07BE3624FA;
+        Mon, 17 Apr 2023 13:42:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF26C43443;
+        Mon, 17 Apr 2023 13:42:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681738935;
+        bh=QzqCugjzQH1Lr4AppRKbCr+Vu0Q06zyTuT7vZV5X6tc=;
+        h=Subject:From:To:Date:From;
+        b=ZoAqjkJK+bP8KqGmqxdl3dSpW/HDfrTExOruOzAn2krRF/PE8n5ExawRf/obl9y+l
+         BXwf50bdQb8Qm/UWZhVIkTzSmMRsbjfouLGWvs/cUYFRcHNEv09gjolI8BVxOGn54a
+         PuhmSEUnXFCwOhiuX36P9QSfuCyNmjUyp/Juz3WCECdSMNLd/3libhqnZgv9Q5Zakp
+         6rBSk/JGSQeBmk+K/Bry8EihOuQn806z5cF1nFU0/vLXnPZlmHFHYMq0rtfS3f/WT3
+         MZMwJv6P7lP9nxxYiRI7uxXYcU/n9yhvTOAcyGTlgRNKk17MjwNWKihfXrlNV6nB44
+         YYmO4Fm9qp9EA==
+Subject: [PATCH] SUNRPC: Recognize control messages in server-side TCP socket
+ code
+From:   Chuck Lever <cel@kernel.org>
+To:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Date:   Mon, 17 Apr 2023 09:42:14 -0400
+Message-ID: <168173882205.9129.1071917922340260936.stgit@91.116.238.104.host.secureserver.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168166470652.2679.10078886564885712799.stgit@bazille.1015granger.net>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks, Chuck.  That fixes the test for me.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Tested-by: Scott Mayhew <smayhew@redhat.com>
+To support kTLS, the server-side TCP socket code needs to watch for
+CMSGs, just like on the client side.
 
--Scott
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/net/tls.h             |    2 ++
+ include/trace/events/sunrpc.h |   39 +++++++++++++++++++++++++++++++++
+ net/sunrpc/svcsock.c          |   49 +++++++++++++++++++++++++++++++++++++++--
+ 3 files changed, 88 insertions(+), 2 deletions(-)
 
-On Sun, 16 Apr 2023, Chuck Lever wrote:
+I'm planning to add this to nfsd-next, as it can be applied before
+the net/handshake/ changes go in.
 
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> Scott reports that when the new GSS krb5 Kunit tests are built as
-> a separate module and loaded, the RFC 6803 and RFC 8009 checksum
-> tests all fail, even though they pass when run under kunit.py.
-> 
-> It appears that passing a buffer backed by static const memory to
-> gss_krb5_checksum() is a problem. A printk in checksum_case() shows
-> the correct plaintext, but by the time the buffer has been converted
-> to a scatterlist and arrives at checksummer(), it contains all
-> zeroes.
-> 
-> Replacing this buffer with one that is dynamically allocated fixes
-> the issue.
-> 
-> Reported-by: Scott Mayhew <smayhew@redhat.com>
-> Fixes: 02142b2ca8fc ("SUNRPC: Add checksum KUnit tests for the RFC 6803 encryption types")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/auth_gss/gss_krb5_test.c |    5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/sunrpc/auth_gss/gss_krb5_test.c b/net/sunrpc/auth_gss/gss_krb5_test.c
-> index aa6ec4e858aa..95ca783795c5 100644
-> --- a/net/sunrpc/auth_gss/gss_krb5_test.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_test.c
-> @@ -73,7 +73,6 @@ static void checksum_case(struct kunit *test)
->  {
->  	const struct gss_krb5_test_param *param = test->param_value;
->  	struct xdr_buf buf = {
-> -		.head[0].iov_base	= param->plaintext->data,
->  		.head[0].iov_len	= param->plaintext->len,
->  		.len			= param->plaintext->len,
->  	};
-> @@ -99,6 +98,10 @@ static void checksum_case(struct kunit *test)
->  	err = crypto_ahash_setkey(tfm, Kc.data, Kc.len);
->  	KUNIT_ASSERT_EQ(test, err, 0);
->  
-> +	buf.head[0].iov_base = kunit_kzalloc(test, buf.head[0].iov_len, GFP_KERNEL);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf.head[0].iov_base);
-> +	memcpy(buf.head[0].iov_base, param->plaintext->data, buf.head[0].iov_len);
-> +
->  	checksum.len = gk5e->cksumlength;
->  	checksum.data = kunit_kzalloc(test, checksum.len, GFP_KERNEL);
->  	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, checksum.data);
-> 
-> 
+diff --git a/include/net/tls.h b/include/net/tls.h
+index 154949c7b0c8..6056ce5a2aa5 100644
+--- a/include/net/tls.h
++++ b/include/net/tls.h
+@@ -69,6 +69,8 @@ extern const struct tls_cipher_size_desc tls_cipher_size_desc[];
+ 
+ #define TLS_CRYPTO_INFO_READY(info)	((info)->cipher_type)
+ 
++#define TLS_RECORD_TYPE_ALERT		0x15
++#define TLS_RECORD_TYPE_HANDSHAKE	0x16
+ #define TLS_RECORD_TYPE_DATA		0x17
+ 
+ #define TLS_AAD_SPACE_SIZE		13
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 3ca54536f8f7..3ffb82956bd1 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -49,6 +49,19 @@ TRACE_DEFINE_ENUM(AF_INET6);
+ 		{ AF_INET,		"AF_INET" },		\
+ 		{ AF_INET6,		"AF_INET6" })
+ 
++/*
++ * From https://www.iana.org/assignments/tls-parameters/tls-parameters.xhtml
++ */
++#define rpc_show_tls_content_type(type) \
++	__print_symbolic(type, \
++		{ 20,		"change cipher spec" }, \
++		{ 21,		"alert" }, \
++		{ 22,		"handshake" }, \
++		{ 23,		"application data" }, \
++		{ 24,		"heartbeat" }, \
++		{ 25,		"tls12_cid" }, \
++		{ 26,		"ACK" })
++
+ DECLARE_EVENT_CLASS(rpc_xdr_buf_class,
+ 	TP_PROTO(
+ 		const struct rpc_task *task,
+@@ -2254,6 +2267,32 @@ DECLARE_EVENT_CLASS(svcsock_accept_class,
+ DEFINE_ACCEPT_EVENT(accept);
+ DEFINE_ACCEPT_EVENT(getpeername);
+ 
++TRACE_EVENT(svcsock_tls_ctype,
++	TP_PROTO(
++		const struct svc_xprt *xprt,
++		unsigned char ctype
++	),
++
++	TP_ARGS(xprt, ctype),
++
++	TP_STRUCT__entry(
++		SVC_XPRT_ENDPOINT_FIELDS(xprt)
++
++		__field(unsigned long, ctype)
++	),
++
++	TP_fast_assign(
++		SVC_XPRT_ENDPOINT_ASSIGNMENTS(xprt);
++
++		__entry->ctype = ctype;
++	),
++
++	TP_printk(SVC_XPRT_ENDPOINT_FORMAT " %s",
++		SVC_XPRT_ENDPOINT_VARARGS,
++		rpc_show_tls_content_type(__entry->ctype)
++	)
++);
++
+ DECLARE_EVENT_CLASS(cache_event,
+ 	TP_PROTO(
+ 		const struct cache_detail *cd,
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index 03a4f5615086..c8cbe3b5182d 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -43,6 +43,7 @@
+ #include <net/udp.h>
+ #include <net/tcp.h>
+ #include <net/tcp_states.h>
++#include <net/tls.h>
+ #include <linux/uaccess.h>
+ #include <linux/highmem.h>
+ #include <asm/ioctls.h>
+@@ -216,6 +217,50 @@ static int svc_one_sock_name(struct svc_sock *svsk, char *buf, int remaining)
+ 	return len;
+ }
+ 
++static int
++svc_tcp_sock_process_cmsg(struct svc_sock *svsk, struct msghdr *msg,
++			  struct cmsghdr *cmsg, int ret)
++{
++	if (cmsg->cmsg_level == SOL_TLS &&
++	    cmsg->cmsg_type == TLS_GET_RECORD_TYPE) {
++		u8 content_type = *((u8 *)CMSG_DATA(cmsg));
++
++		trace_svcsock_tls_ctype(&svsk->sk_xprt, content_type);
++		switch (content_type) {
++		case TLS_RECORD_TYPE_DATA:
++			/* TLS sets EOR at the end of each application data
++			 * record, even though there might be more frames
++			 * waiting to be decrypted.
++			 */
++			msg->msg_flags &= ~MSG_EOR;
++			break;
++		case TLS_RECORD_TYPE_ALERT:
++			ret = -ENOTCONN;
++			break;
++		default:
++			ret = -EAGAIN;
++		}
++	}
++	return ret;
++}
++
++static int
++svc_tcp_sock_recv_cmsg(struct svc_sock *svsk, struct msghdr *msg)
++{
++	union {
++		struct cmsghdr	cmsg;
++		u8		buf[CMSG_SPACE(sizeof(u8))];
++	} u;
++	int ret;
++
++	msg->msg_control = &u;
++	msg->msg_controllen = sizeof(u);
++	ret = sock_recvmsg(svsk->sk_sock, msg, MSG_DONTWAIT);
++	if (unlikely(msg->msg_controllen != sizeof(u)))
++		ret = svc_tcp_sock_process_cmsg(svsk, msg, &u.cmsg, ret);
++	return ret;
++}
++
+ #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+ static void svc_flush_bvec(const struct bio_vec *bvec, size_t size, size_t seek)
+ {
+@@ -263,7 +308,7 @@ static ssize_t svc_tcp_read_msg(struct svc_rqst *rqstp, size_t buflen,
+ 		iov_iter_advance(&msg.msg_iter, seek);
+ 		buflen -= seek;
+ 	}
+-	len = sock_recvmsg(svsk->sk_sock, &msg, MSG_DONTWAIT);
++	len = svc_tcp_sock_recv_cmsg(svsk, &msg);
+ 	if (len > 0)
+ 		svc_flush_bvec(bvec, len, seek);
+ 
+@@ -877,7 +922,7 @@ static ssize_t svc_tcp_read_marker(struct svc_sock *svsk,
+ 		iov.iov_base = ((char *)&svsk->sk_marker) + svsk->sk_tcplen;
+ 		iov.iov_len  = want;
+ 		iov_iter_kvec(&msg.msg_iter, ITER_DEST, &iov, 1, want);
+-		len = sock_recvmsg(svsk->sk_sock, &msg, MSG_DONTWAIT);
++		len = svc_tcp_sock_recv_cmsg(svsk, &msg);
+ 		if (len < 0)
+ 			return len;
+ 		svsk->sk_tcplen += len;
+
 
