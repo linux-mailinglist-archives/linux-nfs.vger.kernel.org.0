@@ -2,38 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D80CD6E3D70
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Apr 2023 04:25:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 487176E4271
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Apr 2023 10:22:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbjDQCZn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 16 Apr 2023 22:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47594 "EHLO
+        id S230150AbjDQIW3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Apr 2023 04:22:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjDQCZm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 16 Apr 2023 22:25:42 -0400
-Received: from out28-80.mail.aliyun.com (out28-80.mail.aliyun.com [115.124.28.80])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268D21FCC
-        for <linux-nfs@vger.kernel.org>; Sun, 16 Apr 2023 19:25:40 -0700 (PDT)
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.06908055|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0113397-0.000391995-0.988268;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047192;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=6;RT=6;SR=0;TI=SMTPD_---.SHwAW1s_1681698335;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.SHwAW1s_1681698335)
-          by smtp.aliyun-inc.com;
-          Mon, 17 Apr 2023 10:25:36 +0800
-Date:   Mon, 17 Apr 2023 10:25:37 +0800
-From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     "NeilBrown" <neilb@suse.de>
-Subject: Re: [PATCH nfs-utils] mountd: don't advertise krb5 for v4root when not configured.
-Cc:     "Steve Dickson" <steved@redhat.com>, "Petr Vorel" <pvorel@suse.cz>,
-        "linux-nfs" <linux-nfs@vger.kernel.org>,
-        "Dave Jones" <davej@codemonkey.org.uk>, bfields@redhat.com
-In-Reply-To: <168169801568.24821.12909751358635990715@noble.neil.brown.name>
-References: <20230417100511.9131.409509F4@e16-tech.com> <168169801568.24821.12909751358635990715@noble.neil.brown.name>
-Message-Id: <20230417102536.FAE6.409509F4@e16-tech.com>
+        with ESMTP id S230505AbjDQIWR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Apr 2023 04:22:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D889198B;
+        Mon, 17 Apr 2023 01:22:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 39DF262000;
+        Mon, 17 Apr 2023 08:22:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC1AC433EF;
+        Mon, 17 Apr 2023 08:22:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681719733;
+        bh=MIG8Wmkr3JxNCkp7vK6igu8UUGrt17VNwrJGqRM2cyw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tdTbC/T5GadLou6Ias/lEIjL8gz3DcneQQK0tHfCCvZ3IVLeOOhgDxF3w6pxtfoK9
+         2GaXcPVp8U7SvxikBXiexyx63Hfha9cMs4OGGnyOmkF3572cZgdSd5hXf4sthe7RjL
+         GFMIJtAMOGrzEs+VJ0GpkuVNj2i7k+SbHD/4NZ4oQTdzmvqFsjJN2gVQ3COEhDa4Bn
+         XXv7XrGgOjVF9u2SwtA6WckCUOC6+XJc6Gt/0l4HNruvaxF2FeDkP0yl0PqPACzCgt
+         sTq6GyfD2bIcl8bJO6KgSF9lvPIQwDA6eioV9OkgKeYMy8PHnXziTV4XIUh8ihZg1T
+         TYtSoKFd5QawA==
+Date:   Mon, 17 Apr 2023 10:22:07 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jeffrey Layton <jlayton@kernel.org>,
+        Neil Brown <neilb@suse.de>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: allowing for a completely cached umount(2) pathwalk
+Message-ID: <20230417-schmecken-gurken-d477ec6d3331@brauner>
+References: <20230414024312.GF3390869@ZenIV>
+ <2631cb9c05087ddd917679b7cebc58cb42cd2de6.camel@kernel.org>
+ <20230414-sowas-unmittelbar-67fdae9ca5cd@brauner>
+ <9192A185-03BF-4062-B12F-E7EF52578014@hammerspace.com>
+ <20230414-leiht-lektion-18f5a7a38306@brauner>
+ <91D4AC04-A016-48A9-8E3A-BBB6C38E8C4B@hammerspace.com>
+ <4F4F5C98-AA06-40FB-AE51-79E860CD1D76@hammerspace.com>
+ <20230414162253.GL3390869@ZenIV>
+ <E746F6B4-779A-4184-A2A7-5879E3D3DAEE@hammerspace.com>
+ <6F3DB6E1-F104-492B-9AF1-5AEC8C27D267@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.81.04 [en]
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6F3DB6E1-F104-492B-9AF1-5AEC8C27D267@redhat.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -41,57 +70,34 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
-
-> On Mon, 17 Apr 2023, Wang Yugui wrote:
-> > Hi,
-> > 
-> > > 
-> > > If /etc/krb5.keytab does not exist, then krb5 cannot work, so
-> > > advertising it as an option for v4root is pointless.
-> > > Since linux commit 676e4ebd5f2c ("NFSD: SECINFO doesn't handle
-> > > unsupported pseudoflavors correctly") this can result in an unhelpful
-> > > warning if the krb5 code is not built, or built as a module which is not
-> > > installed.
-> > > 
-> > > [  161.668635] NFS: SECINFO: security flavor 390003 is not supported
-> > > [  161.668655] NFS: SECINFO: security flavor 390004 is not supported
-> > > [  161.668670] NFS: SECINFO: security flavor 390005 is not supported
-> > > 
-> > > So avoid advertising krb5 security options when krb5.keytab cannot be
-> > > found.
-> > > 
-> > > Link: https://lore.kernel.org/linux-nfs/20170104190327.v3wbpcbqtfa5jy7d@codemonkey.org.uk/
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> > >  support/export/v4root.c         |  2 ++
-> > >  support/include/pseudoflavors.h |  1 +
-> > >  support/nfs/exports.c           | 14 +++++++-------
-> > >  3 files changed, 10 insertions(+), 7 deletions(-)
-> > > 
-> > > diff --git a/support/export/v4root.c b/support/export/v4root.c
-> > > index fbb0ad5f5b81..3e049582d7c1 100644
-> > > --- a/support/export/v4root.c
-> > > +++ b/support/export/v4root.c
-> > > @@ -66,6 +66,8 @@ set_pseudofs_security(struct exportent *pseudo)
-> > >  
-> > >  		if (!flav->fnum)
-> > >  			continue;
-> > > +		if (flav->need_krb5 && !access("/etc/krb5.keytab", F_OK))
-> > > +			continue;
-> > 
-> > Could we replace "/etc/krb5.keytab" with krb5_kt_default_name()?
+On Fri, Apr 14, 2023 at 03:01:01PM -0400, Benjamin Coddington wrote:
+> On 14 Apr 2023, at 12:41, Trond Myklebust wrote:
+> >
+> > I mean both cases. Doing a lazy umount with a hard mounted filesystem is a risk sport: if the server does become permanently borked, you can fill up your page cache with stuff that can’t be evicted. Most users don’t realise this, so they get confused when it happens (particularly since the filesystem is out-of-sight and hence out-of-mind).
 > 
-> Maybe?  Why would we want to?
+> I've been pecking away at a sysfs knob for this case.  Seemed a clearer path to destruction.
 > 
-> The presence of /etc/krb5.keytab is what we already use in a couple of
-> systemd unit files to determine if krb5 is configured.  Why not just use
-> the same here?
+> >>
+> >> Note, BTW, that hard vs. soft is a property of fs instance; if you have
+> >> it present elsewhere in the mount tree, flipping it would affect all
+> >> such places.  I don't see any good way to make it a per-mount thing, TBH…
+> >
+> >
+> > The main use case is for when the server is permanently down, so normally it shouldn’t be a problem with flipping the mode on all instances.
+> 
+> Is there another case?  Because, if so..
+> 
+> > That said, it might be nice to make it per-mountpoint at some time.
+> > We do have the ability to declare individual RPC calls to time out,
+> > so it’s doable at the RPC level. All we would really need is the
+> > ability to store a per-vfsmount flag.
 
-OK to just same as other files.
+I would very much like to avoid having filesystem specific data in
+struct vfsmount. That sounds like a maintenance nightmare going forward.
+Mount structures should remain pure vfs constructs that only carry
+generic properties imho.
 
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2023/04/17
+> 
+> .. maybe vfsmount's mnt_root d_fsdata?
 
-
+I don't think that would work without having access to the vfsmount.
