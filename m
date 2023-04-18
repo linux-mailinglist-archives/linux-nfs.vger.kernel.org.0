@@ -2,51 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 565266E6DC4
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Apr 2023 22:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 81D646E7014
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Apr 2023 01:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232385AbjDRU6d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Apr 2023 16:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55466 "EHLO
+        id S231393AbjDRXyf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Apr 2023 19:54:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229838AbjDRU6c (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Apr 2023 16:58:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CD2D40FA
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Apr 2023 13:58:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229750AbjDRXye (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Apr 2023 19:54:34 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C007EC2
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Apr 2023 16:54:28 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 14B8063218
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Apr 2023 20:58:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1214DC433EF;
-        Tue, 18 Apr 2023 20:58:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681851510;
-        bh=kTW6qH3LfeNthGNM5SF7dxAsX454yaFXPL2XOxiQ/Kk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=cPagfBWND9O5xeW++Mi0Qy3hwpyLfhzPlpXr/u0IB59XnXR03rpoZBbfILM7+e+Ay
-         lnSBhSQj+XA/t0DAPlivJxkjUaE+i+Y21ruI43dNGvmGy7cA4OxPqBgj6qzz3FquJc
-         kpYSzVW/a8GOtwZa0AMGAGd+ivs5zbtLgjwrCCQnKeK87rUKCMXCv6z0AhmZnhtQMl
-         dqEUtcXkLS8EwWOm2UhApXFREdo9L0DqcgLhbTJUKKbztwb/iADzKTSihqeJ5JQR5U
-         B261YrOD/aevi9tEiCXNW38qtXBeWLBYtpRnHoUejtGETDpASDiusAnTUbR9nmi42d
-         Eg2ajztzucMvQ==
-Message-ID: <017f0bc7049f3320ddc298cdcc510abb2e3b2fa9.camel@kernel.org>
-Subject: Re: [PATCH] NFSD: Fix problem of COMMIT and NFS4ERR_DELAY in
- infinite loop
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 18 Apr 2023 16:58:28 -0400
-In-Reply-To: <1681849891-29377-1-git-send-email-dai.ngo@oracle.com>
-References: <1681849891-29377-1-git-send-email-dai.ngo@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 5E811219FC;
+        Tue, 18 Apr 2023 23:54:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1681862066; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0LbajA3vKXZ221CAVqqdef1AaReTmxB/P0kUvZqTCLA=;
+        b=GW+Speys85/inA1Tt3S5SZMGHUtWjYcrcC4JDlLavm5m4kEkirUUskIx3UANz4ICYuyOS8
+        MopyZBDS69V8ZBh5Q27HUwXxHfEsZ9gEGMcuJIOQ5Xx3yWiEdzoiLzYr8nq457iPU6pWR7
+        tlOcKzmW2vR6CCII3xDWnaho58+6cC0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1681862066;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0LbajA3vKXZ221CAVqqdef1AaReTmxB/P0kUvZqTCLA=;
+        b=+rZSzuDAumG4RRbZY1NXWg+K+ne92dEZT9X7TF2Eold2RztFnxtvfHRhmY6qdhq4vl83fg
+        Rfu8LUQ+SG1fnZDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 99D16139CC;
+        Tue, 18 Apr 2023 23:54:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id HepeFLAtP2QobgAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 18 Apr 2023 23:54:24 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Steve Dickson" <steved@redhat.com>
+Cc:     "Petr Vorel" <pvorel@suse.cz>,
+        "linux-nfs" <linux-nfs@vger.kernel.org>,
+        "Dave Jones" <davej@codemonkey.org.uk>, bfields@redhat.com
+Subject: Re: [PATCH nfs-utils] mountd: don't advertise krb5 for v4root when
+ not configured.
+In-reply-to: <168169080542.24821.1095959058130927513@noble.neil.brown.name>
+References: <168169080542.24821.1095959058130927513@noble.neil.brown.name>
+Date:   Wed, 19 Apr 2023 09:54:21 +1000
+Message-id: <168186206158.24821.3625716286887021869@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,47 +72,96 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-04-18 at 13:31 -0700, Dai Ngo wrote:
-> The following request sequence to the same file causes the NFS client and
-> server to get into an infinite loop with COMMIT and NFS4ERR_DELAY:
+On Mon, 17 Apr 2023, NeilBrown wrote:
+> If /etc/krb5.keytab does not exist, then krb5 cannot work, so
+> advertising it as an option for v4root is pointless.
+> Since linux commit 676e4ebd5f2c ("NFSD: SECINFO doesn't handle
+> unsupported pseudoflavors correctly") this can result in an unhelpful
+> warning if the krb5 code is not built, or built as a module which is not
+> installed.
 >=20
-> OPEN
-> REMOVE
-> WRITE
-> COMMIT
+> [  161.668635] NFS: SECINFO: security flavor 390003 is not supported
+> [  161.668655] NFS: SECINFO: security flavor 390004 is not supported
+> [  161.668670] NFS: SECINFO: security flavor 390005 is not supported
 >=20
-> Problem reported test recall11, recall12, recall14, recall20, recall22,
-> recall40, recall42, recall48, recall50 of nfstest suite.
+> So avoid advertising krb5 security options when krb5.keytab cannot be
+> found.
 >=20
-> This patch restores the handling of race condition in nfsd_file_do_acquir=
-e
-> with unlink to that prior of the regression.
->=20
-> Fixes: ac3a2585f018 ("nfsd: rework refcounting in filecache")
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> Link: https://lore.kernel.org/linux-nfs/20170104190327.v3wbpcbqtfa5jy7d@cod=
+emonkey.org.uk/
+> Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/filecache.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  support/export/v4root.c         |  2 ++
+>  support/include/pseudoflavors.h |  1 +
+>  support/nfs/exports.c           | 14 +++++++-------
+>  3 files changed, 10 insertions(+), 7 deletions(-)
 >=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 6e8712bd7c99..63f7d9f4ea99 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -1170,9 +1170,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
- svc_fh *fhp,
->  	 * If construction failed, or we raced with a call to unlink()
->  	 * then unhash.
->  	 */
-> -	if (status =3D=3D nfs_ok && key.inode->i_nlink =3D=3D 0)
-> -		status =3D nfserr_jukebox;
-> -	if (status !=3D nfs_ok)
-> +	if (status !=3D nfs_ok || key.inode->i_nlink =3D=3D 0)
->  		nfsd_file_unhash(nf);
->  	clear_bit_unlock(NFSD_FILE_PENDING, &nf->nf_flags);
->  	smp_mb__after_atomic();
+> diff --git a/support/export/v4root.c b/support/export/v4root.c
+> index fbb0ad5f5b81..3e049582d7c1 100644
+> --- a/support/export/v4root.c
+> +++ b/support/export/v4root.c
+> @@ -66,6 +66,8 @@ set_pseudofs_security(struct exportent *pseudo)
+> =20
+>  		if (!flav->fnum)
+>  			continue;
+> +		if (flav->need_krb5 && !access("/etc/krb5.keytab", F_OK))
+> +			continue;
 
-It took me a min of staring at it, but I think you're right. If the link
-count goes to 0, we still want to allow access to it, but we want to
-unhash it to make sure that it gets cleaned up ASAP.
+This is "obviously" wrong - thanks to Petr for testing more thoroughly
+than I did (hint: you need to "rmmod nfsd" or reboot between tests, as
+the messages are only reported once).
+access() returns 0 on success, negative on failure.  It doesn't return
+bool like the above suggests.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+I will repost with a fixed version.
+
+NeilBrown
+
+
+> =20
+>  		i =3D secinfo_addflavor(flav, pseudo);
+>  		new =3D &pseudo->e_secinfo[i];
+> diff --git a/support/include/pseudoflavors.h b/support/include/pseudoflavor=
+s.h
+> index deb052b130e6..1f16f3f796f3 100644
+> --- a/support/include/pseudoflavors.h
+> +++ b/support/include/pseudoflavors.h
+> @@ -8,6 +8,7 @@
+>  struct flav_info {
+>  	char    *flavour;
+>  	int     fnum;
+> +	int	need_krb5;
+>  };
+> =20
+>  extern struct flav_info flav_map[];
+> diff --git a/support/nfs/exports.c b/support/nfs/exports.c
+> index 2c8f0752ad9d..010dfe423d6f 100644
+> --- a/support/nfs/exports.c
+> +++ b/support/nfs/exports.c
+> @@ -36,13 +36,13 @@
+>    (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_NOSUBTR=
+EECHECK)
+> =20
+>  struct flav_info flav_map[] =3D {
+> -	{ "krb5",	RPC_AUTH_GSS_KRB5	},
+> -	{ "krb5i",	RPC_AUTH_GSS_KRB5I	},
+> -	{ "krb5p",	RPC_AUTH_GSS_KRB5P	},
+> -	{ "unix",	AUTH_UNIX		},
+> -	{ "sys",	AUTH_SYS		},
+> -	{ "null",	AUTH_NULL		},
+> -	{ "none",	AUTH_NONE		},
+> +	{ "krb5",	RPC_AUTH_GSS_KRB5,	1},
+> +	{ "krb5i",	RPC_AUTH_GSS_KRB5I,	1},
+> +	{ "krb5p",	RPC_AUTH_GSS_KRB5P,	1},
+> +	{ "unix",	AUTH_UNIX,		0},
+> +	{ "sys",	AUTH_SYS,		0},
+> +	{ "null",	AUTH_NULL,		0},
+> +	{ "none",	AUTH_NONE,		0},
+>  };
+> =20
+>  const int flav_map_size =3D sizeof(flav_map)/sizeof(flav_map[0]);
+> --=20
+> 2.40.0
+>=20
+>=20
+
