@@ -2,76 +2,180 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DBAE16E5763
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Apr 2023 04:15:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D3066E57D5
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Apr 2023 05:25:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbjDRCPc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Apr 2023 22:15:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55394 "EHLO
+        id S229517AbjDRDZb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Apr 2023 23:25:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbjDRCPb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Apr 2023 22:15:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC164198C
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Apr 2023 19:15:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 88E2761001
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Apr 2023 02:15:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3D95C433EF
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Apr 2023 02:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681784130;
-        bh=74qQ/dF4HU7lvocEDz3TVqiMrSgxsgB+zW6ARn6mmFo=;
-        h=Subject:From:To:Date:From;
-        b=tsmGkZmOhkCXhpyJzbDs3fhghiRTl1p35+WkcJayhH9xdXyS6W1uER1mZ/KjeCol7
-         O+VXmY+BLBKYqilthFDl85m1SNb2LjX1gTbJ5fUUazkmg9ZWyRHGCVz8hFyD/Owwxz
-         TXC6tRfoqiW2/qC3Kcz5r5LJwts12KY/nYISboSuLP9Kudg5V++ReZaAr5F+CRlm3W
-         hRb9bSs7q2m2KKPQcGm47L68RIqZuPX6k3xX9VfGINqfDekKI/CiLZlQLA0622HIo1
-         BD0Nk5cW8AM4X6o+TKV9sykHJPWlKlO0VL2sOyxutuGXDw9FnNvVUyHetHmv4JeAvo
-         XOG2BgfFx81/w==
-Subject: [PATCH] SUNRPC: Clear rq_xid when receiving a new RPC Call
-From:   Chuck Lever <cel@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Date:   Mon, 17 Apr 2023 22:15:28 -0400
-Message-ID: <168178412883.8769.9296327350018086805.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229872AbjDRDZ3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Apr 2023 23:25:29 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D3BE211B
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Apr 2023 20:25:25 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1a68f2345c5so9611605ad.2
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Apr 2023 20:25:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dilger-ca.20221208.gappssmtp.com; s=20221208; t=1681788325; x=1684380325;
+        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dc+z8UcT8gLBd7VEIREz6So3ovN0gIJ35zlOxamT89Q=;
+        b=3274Yui6rH0Nmf2GNT2U3kKf+v46ad2HN7CSmKxrgcHbVsZjIN2Q0QfJ0MrboMgcsB
+         cXpJK+AMfpuUXzBpsB6OQuZ2kypvD5kKuF/65nyfVt7qZuD/fEB2wagnEE5696Fxlf5M
+         n4nQwYppxsFhl6/oPzSttqtdY/6Kn5R+p03rWJq+4AlSlrh3kbRa00Gd+s4tCNUZJPtq
+         J2bzbOfVx9TOeOp7dpXV5yXY5MHV15Y+qQ0pc+QZtxUlDdJhuXtS8K+Yd8EYy8CrAP+K
+         dANfGVkUWYB0yLp0uaTfUSA/1OGCi5Px66c+U4lVDrsNdxseaeY4u5refNQy2Kn7g6Bl
+         qTJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681788325; x=1684380325;
+        h=references:to:cc:in-reply-to:date:subject:mime-version:message-id
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dc+z8UcT8gLBd7VEIREz6So3ovN0gIJ35zlOxamT89Q=;
+        b=JWogY3DIVMTNHBlkhcda+zRq3L9ntuUQalkJNUJudADm1ALdslr9dn75K6iT1fL7dO
+         mYz9w9OORPHS2zvQC7H/gt9xUULNOC74BcslVTTOvHnGs3qZrxkVFWpSWbhyhJ/voXfz
+         74hWOXRzAt+ge1qxD2YKgUzuHtnuRTSVvDhyQNxKzzkLwvt5Bgg7LQO/km4wJOwXtmbu
+         pffhJfFZlMQWorYgUPPRz4TowfcqCDuECqYzqjy9gjAd9t3kdt83uQdGehWBV55Cs6SN
+         jvmfDE3wuMZmUTD6gytfRVSKrZDChtTkHXXUuy9O9DZ5g4khAFTcvi5qB6+7JqE3rnTi
+         v2OA==
+X-Gm-Message-State: AAQBX9eR7C2LkcyREArihzNIosknSGwoBL7ujbWKJzI3MhIHMQDLx2L6
+        InWKL5AiMRUtVcvEm/L3FNukeA==
+X-Google-Smtp-Source: AKy350ZXvC63ci+YEOlpHYFoSVBiObzFZEAeooGgAhHTKgLvqt6Qxfz75tFijyzCUui44AjCfBlB6g==
+X-Received: by 2002:a17:903:40cc:b0:1a6:c58e:2d57 with SMTP id t12-20020a17090340cc00b001a6c58e2d57mr655579pld.50.1681788324832;
+        Mon, 17 Apr 2023 20:25:24 -0700 (PDT)
+Received: from cabot.adilger.int (S01061cabc081bf83.cg.shawcable.net. [70.77.221.9])
+        by smtp.gmail.com with ESMTPSA id c3-20020a170902724300b001a217a7a11csm8352037pll.131.2023.04.17.20.25.23
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Apr 2023 20:25:23 -0700 (PDT)
+From:   Andreas Dilger <adilger@dilger.ca>
+Message-Id: <1AC965F2-BAC6-4D0F-A2A6-C414CDF110AF@dilger.ca>
+Content-Type: multipart/signed;
+ boundary="Apple-Mail=_581956D5-D9DE-48C3-929B-CAF6060706C3";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Mime-Version: 1.0 (Mac OS X Mail 10.3 \(3273\))
+Subject: Re: [PATCH/RFC] VFS: LOOKUP_MOUNTPOINT should used cached info
+ whenever possible.
+Date:   Mon, 17 Apr 2023 21:25:20 -0600
+In-Reply-To: <85774a5de74b2b7828c8b8f7e041f0e9e2bc6094.camel@kernel.org>
+Cc:     Christian Brauner <brauner@kernel.org>, NeilBrown <neilb@suse.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Karel Zak <kzak@redhat.com>
+To:     Jeff Layton <jlayton@kernel.org>
+References: <95ee689c76bf034fa2fe9fade0bccdb311f3a04f.camel@kernel.org>
+ <168168683217.24821.6260957092725278201@noble.neil.brown.name>
+ <20230417-beisein-investieren-360fa20fb68a@brauner>
+ <6c08ad94ca949d0f3525f7e1fc24a72c50affd59.camel@kernel.org>
+ <20230417-relaxen-selektiert-4b4b4143d7f6@brauner>
+ <85774a5de74b2b7828c8b8f7e041f0e9e2bc6094.camel@kernel.org>
+X-Mailer: Apple Mail (2.3273)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
 
-This is an eye-catcher for tracepoints that record the XID: it means
-the svc_rqst has not received a full RPC Call with an XID yet.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/svc_xprt.c |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index e3952b690f54..3b9708b39e35 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -701,6 +701,8 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
- 	arg->page_len = (pages-2)*PAGE_SIZE;
- 	arg->len = (pages-1)*PAGE_SIZE;
- 	arg->tail[0].iov_len = 0;
-+
-+	rqstp->rq_xid = xdr_zero;
- 	return 0;
- }
- 
+--Apple-Mail=_581956D5-D9DE-48C3-929B-CAF6060706C3
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=us-ascii
 
 
+> On Apr 17, 2023, at 9:21 AM, Jeff Layton <jlayton@kernel.org> wrote:
+> 
+> On Mon, 2023-04-17 at 16:24 +0200, Christian Brauner wrote:
+>> And I'm curious why is it obvious that we don't want to revalidate _any_
+>> path component and not just the last one? Why is that generally safe?
+>> Why can't this be used to access files and directories the caller
+>> wouldn't otherwise be able to access? I would like to have this spelled
+>> out for slow people like me, please.
+>> 
+>> From my point of view, this would only be somewhat safe _generally_ if
+>> you'd allow circumvention for revalidation and permission checking if
+>> MNT_FORCE is specified and the caller has capable(CAP_DAC_READ_SEARCH).
+>> You'd still mess with overlayfs permission model in this case though.
+>> 
+>> Plus, there are better options of solving this problem. Again, I'd
+>> rather build a separate api for unmounting then playing such potentially
+>> subtle security sensitive games with permission checking during path
+>> lookup.
+> 
+> umount(2) is really a special case because the whole intent is to detach
+> a mount from the local hierarchy and stop using it. The unfortunate bit
+> is that it is a path-based syscall.
+> 
+> So usually we have to:
+> 
+> - determine the path: Maybe stat() it and to validate that it's the
+>   mountpoint we want to drop
+
+The stat() itself may hang because a remote server, or USB stick is
+inaccessible or having media errors.
+
+I've just been having a conversation with Karel Zak to change
+umount(1) to use statx() so that it interacts minimally with the fs.
+
+In particular, nfs_getattr() skips revalidate if only minimal attrs
+are fetched (STATX_TYPE | STATX_INO), and also skips revalidate if
+locally-cached attrs are still valid (STATX_MODE), so this will
+avoid yet one more place that unmount can hang.
+
+In theory, vfs_getattr() could get all of these attributes directly
+from the vfs_inode in the unmount case.
+
+> - then call umount with that path
+> 
+> The last thing we want in that case is for the server to decide to
+> change some intermediate dentry in between the two operations. Best
+> case, you'll get back ENOENT or something when the pathwalk fails. Worst
+> case, the server swaps what are two different mountpoints on your client
+> and you unmount the wrong one.
+> 
+> If we don't revaliate, then we're no worse off, and may be better off if
+> something hinky happens to the server of an intermediate dentry in the
+> path.
+> --
+> Jeff Layton <jlayton@kernel.org>
+
+
+Cheers, Andreas
+
+
+
+
+
+
+--Apple-Mail=_581956D5-D9DE-48C3-929B-CAF6060706C3
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - http://gpgtools.org
+
+iQIzBAEBCAAdFiEEDb73u6ZejP5ZMprvcqXauRfMH+AFAmQ+DaAACgkQcqXauRfM
+H+D9bhAArwx6YZ1JWmKrSRDxkjrjKPXa7tALqsqaRKxRH9Ar2aZNhOsQNH/APN9G
++kLPKYXTveRbj2LEvRwkk+O2rpmJ+7u2UFb1/l+gCWnEmlrdS9yQZI4k6cnX/iNW
+gD6eXO7172P5ZHkOtQTxlRVt0gAk21h97xAkCF4D/+xgqRnTXUzkpsLmy3082cJH
+WHWoXenHnoVMKA1KXZedMS19wvPuoNsJJvVvXNN4K7q28G+PTbKHIamdXuoshW5N
+n7EnhCm7CxHpZyLybnrDUWCBDCxWfEv+geBomG/hofsk4IdctfkU0Se92vDtyu9U
+LchEF8rP1ckwGEX4Kl5mjePRXRn2eNNIi1Y8XpslmKzljQvdvPerM0NZbIxwz+JJ
+HkjBTC/GHBQ1dFUcxJdLb82fF5Lg7H0uqeEOgLgOhxei6C+YcgqnetXMp+VEMInn
+ZrqymJhpZWs5WQm3B4aLeA4u5918TBNPknZm1Vk3zl+y2khctkVlF4CE90kkGHC6
+fZrPKRk694rFE2l8y5f+tXDPBKsoHYwD6tP9E1bwKNqGatCwXRcX5b3hfqK6Vt0w
+znGX0sxxKKKM2drEeqJrIOzb5ztwAFca/FH7tnA1zJnxuq4GCeY6dkmKjqDjgVGe
+kT6dcKfsHNHj58FCFmT/yI/LFQJ+rVhqQTMV0uIhh0QmKqHVgEo=
+=bL3W
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_581956D5-D9DE-48C3-929B-CAF6060706C3--
