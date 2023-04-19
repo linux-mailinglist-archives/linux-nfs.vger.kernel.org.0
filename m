@@ -2,149 +2,230 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 823886E701F
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Apr 2023 01:57:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C8A46E73D7
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Apr 2023 09:18:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229879AbjDRX55 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Apr 2023 19:57:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59104 "EHLO
+        id S231238AbjDSHSb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Apr 2023 03:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjDRX55 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Apr 2023 19:57:57 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC446449F
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Apr 2023 16:57:55 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 961CC1FD77;
-        Tue, 18 Apr 2023 23:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1681862274; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Mf2HAOM5KmRtIP/VLefkHfomNEDVrpzZoJiwtt2EBFU=;
-        b=IZnLhVWhoZzK/MO/l4BFyuP/Rd9TF3CXOMVdUSibkW66WKs9bB3hKZPbadn86BCAqjn31D
-        uL+tjZXzXirZzwVu3BII4Mv2cfvGTtYOJhVeA2UkVgezlY/juO94nlSy74gRhrESuB6/9a
-        pe29JOqRqcairxKQOrOvm4MCUq9eizY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1681862274;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Mf2HAOM5KmRtIP/VLefkHfomNEDVrpzZoJiwtt2EBFU=;
-        b=VTrFPFS5y9WpYR4GXgAWkRmpgAxly7J78fZnlZGZIBl23LRRKKFGi/3GELCkITkPrQKEit
-        wtGi7rIsGIj60hAw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F200613413;
-        Tue, 18 Apr 2023 23:57:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id BonMJ4AuP2SjbwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 18 Apr 2023 23:57:52 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231167AbjDSHS3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Apr 2023 03:18:29 -0400
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC0593C2
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Apr 2023 00:18:11 -0700 (PDT)
+Received: by mail-yb1-xb35.google.com with SMTP id b10so3230366ybk.9
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Apr 2023 00:18:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google; t=1681888690; x=1684480690;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=+FaMupUOtZXVRvIYAidVKZ4twQNYjfgdR23Ua0bUiJ0=;
+        b=KVfpy2S4mkCqQtMG1jmfBuRBogqjuMtLsB14DifrJrwBzDtRsnbHdatJY107IcP1n7
+         Korb0wMeiBpbZfZjeWHzSstBZEOfHkS4Y8ikEjAYDoPhk1Hv3Q2TKpYWpns2+ZabzHnG
+         Xe2lwiMO6ej1m18jTOTfGT6Yzq30YMU2LX9bi4I0fj4/3r9Z+ZasuYvT6VgvkA6jjm5t
+         +qMsGFrCpmai9sVrvFJWzxXfClPitd5lhbdgGo+olT8B0Bi2tHpLbMK+XtwPK6+WtIJg
+         pGRRaoHy7N3XWpyPKSv/61wARHmPGFbSgnIGjxXrXNLpp0CbK4jUu/UzUPk2Kop4rQwJ
+         2/og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681888690; x=1684480690;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+FaMupUOtZXVRvIYAidVKZ4twQNYjfgdR23Ua0bUiJ0=;
+        b=INhOm54WF4nv2zquoB125LgGDzi+klExrvhA9FDq12WcO1O9RI0TRlGyPo2N+QMmAD
+         2e+6QrS0gLCIgLXchcdVw+p3lMr67GL4ZiV6sRXvv/KmzYSdtiJl4erYFxav721GSprx
+         tbLcv46gJcjq3hoQRAhCu1UCdlzFzOOJt40ORd0OounpGXKuZDJ43qkItqxPU8WRY9VP
+         Gbe0OeO+W6g5+szGmh5AU6Jn01b5OjfJ7JlliZDQPSF3XthMT55ExiW68+fPn96LSvfl
+         +tU1t6JD0WqDYFuIwu8RRCFoq5QoXEBV0zocKGi8GLtYX7Vu2/mEPGt4G9G/mx4RznNY
+         OYEA==
+X-Gm-Message-State: AAQBX9dx5hhlagzgmlWgGqr4hbjc+ip76GmspTa5qEgXAP+nTFSarReh
+        y3iD4Ajzb3KaLXwA2rPbvJao8qwtQhzg0G5Y1Bg3Gw==
+X-Google-Smtp-Source: AKy350bMJoTdh5eOXV/7UpTp2rMOgWZVxTHtVIrifzZ987IpHuosbz0IMYULRlRuLOTEbKUJleub4fuueAvkL5YpkXA=
+X-Received: by 2002:a25:588b:0:b0:b8f:3b82:bf9c with SMTP id
+ m133-20020a25588b000000b00b8f3b82bf9cmr20330471ybb.41.1681888689816; Wed, 19
+ Apr 2023 00:18:09 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Petr Vorel <pvorel@suse.cz>, linux-nfs <linux-nfs@vger.kernel.org>,
-        Bruce Fields <bfields@fieldses.org>
-Subject: [nfs-utils PATCH v2] mountd: don't advertise krb5 for v4root when not
- configured.
-Date:   Wed, 19 Apr 2023 09:57:49 +1000
-Message-id: <168186226971.24821.9774040849376889413@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230411030248.53356-1-chengen.du@canonical.com>
+In-Reply-To: <20230411030248.53356-1-chengen.du@canonical.com>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Wed, 19 Apr 2023 08:17:32 +0100
+Message-ID: <CAPt2mGNqqDeRMeCSVh6oX_=nS0UcGCfhBfVcuaVG9HpdwVSzVg@mail.gmail.com>
+Subject: Re: [PATCH] NFS: Add mount option 'nofasc'
+To:     Chengen Du <chengen.du@canonical.com>
+Cc:     trond.myklebust@hammerspace.com, anna@kernel.org,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Just to say, I am personally for this or some other way to opt out of
+the increased ACCESS calls on select servers (e.g. ones with high
+latency or with lots of multi user logins).
 
-If /etc/krb5.keytab does not exist, then krb5 cannot work, so
-advertising it as an option for v4root is pointless.
-Since linux commit 676e4ebd5f2c ("NFSD: SECINFO doesn't handle
-unsupported pseudoflavors correctly") this can result in an unhelpful
-warning if the krb5 code is not built, or built as a module which is not
-installed.
+I see it as similar to "actimeo" and "nocto" options in allowing users
+to reduce "correctness" at their own risk if it helps with their
+workloads and they deem the risk worth it.
 
-[  161.668635] NFS: SECINFO: security flavor 390003 is not supported
-[  161.668655] NFS: SECINFO: security flavor 390004 is not supported
-[  161.668670] NFS: SECINFO: security flavor 390005 is not supported
+I am currently reverting the original patches in our kernel for our
+nfs re-exporting workloads.
 
-So avoid advertising krb5 security options when krb5.keytab cannot be
-found.
+Daire
 
-Note that testing for /etc/krb5.keytab is what we already do in a couple
-of systemd unit file to determine if krb5 is enabled.
 
-Link: https://lore.kernel.org/linux-nfs/20170104190327.v3wbpcbqtfa5jy7d@codem=
-onkey.org.uk/
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- support/export/v4root.c         |  2 ++
- support/include/pseudoflavors.h |  1 +
- support/nfs/exports.c           | 14 +++++++-------
- 3 files changed, 10 insertions(+), 7 deletions(-)
-
-diff --git a/support/export/v4root.c b/support/export/v4root.c
-index fbb0ad5f5b81..03805dcb4e6d 100644
---- a/support/export/v4root.c
-+++ b/support/export/v4root.c
-@@ -66,6 +66,8 @@ set_pseudofs_security(struct exportent *pseudo)
-=20
- 		if (!flav->fnum)
- 			continue;
-+		if (flav->need_krb5 && access("/etc/krb5.keytab", F_OK) !=3D 0)
-+			continue;
-=20
- 		i =3D secinfo_addflavor(flav, pseudo);
- 		new =3D &pseudo->e_secinfo[i];
-diff --git a/support/include/pseudoflavors.h b/support/include/pseudoflavors.h
-index deb052b130e6..1f16f3f796f3 100644
---- a/support/include/pseudoflavors.h
-+++ b/support/include/pseudoflavors.h
-@@ -8,6 +8,7 @@
- struct flav_info {
- 	char    *flavour;
- 	int     fnum;
-+	int	need_krb5;
- };
-=20
- extern struct flav_info flav_map[];
-diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-index 2c8f0752ad9d..010dfe423d6f 100644
---- a/support/nfs/exports.c
-+++ b/support/nfs/exports.c
-@@ -36,13 +36,13 @@
-   (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_NOSUBTREE=
-CHECK)
-=20
- struct flav_info flav_map[] =3D {
--	{ "krb5",	RPC_AUTH_GSS_KRB5	},
--	{ "krb5i",	RPC_AUTH_GSS_KRB5I	},
--	{ "krb5p",	RPC_AUTH_GSS_KRB5P	},
--	{ "unix",	AUTH_UNIX		},
--	{ "sys",	AUTH_SYS		},
--	{ "null",	AUTH_NULL		},
--	{ "none",	AUTH_NONE		},
-+	{ "krb5",	RPC_AUTH_GSS_KRB5,	1},
-+	{ "krb5i",	RPC_AUTH_GSS_KRB5I,	1},
-+	{ "krb5p",	RPC_AUTH_GSS_KRB5P,	1},
-+	{ "unix",	AUTH_UNIX,		0},
-+	{ "sys",	AUTH_SYS,		0},
-+	{ "null",	AUTH_NULL,		0},
-+	{ "none",	AUTH_NONE,		0},
- };
-=20
- const int flav_map_size =3D sizeof(flav_map)/sizeof(flav_map[0]);
---=20
-2.40.0
-
+On Tue, 11 Apr 2023 at 04:03, Chengen Du <chengen.du@canonical.com> wrote:
+>
+> This mount option is used to skip clearing the file access cache
+> upon login. Some users or applications switch to other privileged
+> users via commands such as 'su' to operate on NFS-mounted folders.
+> In such cases, the privileged user's login time will be renewed,
+> and NFS ACCESS operations will need to be re-sent, potentially
+> leading to performance degradation.
+> In some production environments where the access cache can be
+> trusted due to stable group membership, this option could be
+> particularly useful.
+>
+> Signed-off-by: Chengen Du <chengen.du@canonical.com>
+> ---
+>  fs/nfs/dir.c              | 21 ++++++++++++---------
+>  fs/nfs/fs_context.c       |  8 ++++++++
+>  fs/nfs/super.c            |  1 +
+>  include/linux/nfs_fs_sb.h |  1 +
+>  4 files changed, 22 insertions(+), 9 deletions(-)
+>
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 6fbcbb8d6587..9a6d86e2044e 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -2953,12 +2953,14 @@ static struct nfs_access_entry *nfs_access_search_rbtree(struct inode *inode, co
+>         return NULL;
+>  }
+>
+> -static u64 nfs_access_login_time(const struct task_struct *task,
+> -                                const struct cred *cred)
+> +static inline
+> +bool nfs_check_access_stale(const struct task_struct *task,
+> +                           const struct cred *cred,
+> +                           const struct nfs_access_entry *cache)
+>  {
+>         const struct task_struct *parent;
+>         const struct cred *pcred;
+> -       u64 ret;
+> +       u64 login_time;
+>
+>         rcu_read_lock();
+>         for (;;) {
+> @@ -2968,15 +2970,15 @@ static u64 nfs_access_login_time(const struct task_struct *task,
+>                         break;
+>                 task = parent;
+>         }
+> -       ret = task->start_time;
+> +       login_time = task->start_time;
+>         rcu_read_unlock();
+> -       return ret;
+> +
+> +       return ((s64)(login_time - cache->timestamp) > 0);
+>  }
+>
+>  static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *cred, u32 *mask, bool may_block)
+>  {
+>         struct nfs_inode *nfsi = NFS_I(inode);
+> -       u64 login_time = nfs_access_login_time(current, cred);
+>         struct nfs_access_entry *cache;
+>         bool retry = true;
+>         int err;
+> @@ -3005,7 +3007,8 @@ static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *
+>                 retry = false;
+>         }
+>         err = -ENOENT;
+> -       if ((s64)(login_time - cache->timestamp) > 0)
+> +       if (!(NFS_SERVER(inode)->flags & NFS_MOUNT_NOFASC) &&
+> +           nfs_check_access_stale(current, cred, cache))
+>                 goto out;
+>         *mask = cache->mask;
+>         list_move_tail(&cache->lru, &nfsi->access_cache_entry_lru);
+> @@ -3025,7 +3028,6 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+>          * but do it without locking.
+>          */
+>         struct nfs_inode *nfsi = NFS_I(inode);
+> -       u64 login_time = nfs_access_login_time(current, cred);
+>         struct nfs_access_entry *cache;
+>         int err = -ECHILD;
+>         struct list_head *lh;
+> @@ -3040,7 +3042,8 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+>                 cache = NULL;
+>         if (cache == NULL)
+>                 goto out;
+> -       if ((s64)(login_time - cache->timestamp) > 0)
+> +       if (!(NFS_SERVER(inode)->flags & NFS_MOUNT_NOFASC) &&
+> +           nfs_check_access_stale(current, cred, cache))
+>                 goto out;
+>         if (nfs_check_cache_invalid(inode, NFS_INO_INVALID_ACCESS))
+>                 goto out;
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 9bcd53d5c7d4..5cd9b2882c79 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -88,6 +88,7 @@ enum nfs_param {
+>         Opt_vers,
+>         Opt_wsize,
+>         Opt_write,
+> +       Opt_fasc,
+>  };
+>
+>  enum {
+> @@ -194,6 +195,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+>         fsparam_string("vers",          Opt_vers),
+>         fsparam_enum  ("write",         Opt_write, nfs_param_enums_write),
+>         fsparam_u32   ("wsize",         Opt_wsize),
+> +       fsparam_flag_no("fasc",         Opt_fasc),
+>         {}
+>  };
+>
+> @@ -861,6 +863,12 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+>         case Opt_sloppy:
+>                 ctx->sloppy = true;
+>                 break;
+> +       case Opt_fasc:
+> +               if (result.negated)
+> +                       ctx->flags |= NFS_MOUNT_NOFASC;
+> +               else
+> +                       ctx->flags &= ~NFS_MOUNT_NOFASC;
+> +               break;
+>         }
+>
+>         return 0;
+> diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> index 05ae23657527..059513d403f8 100644
+> --- a/fs/nfs/super.c
+> +++ b/fs/nfs/super.c
+> @@ -444,6 +444,7 @@ static void nfs_show_mount_options(struct seq_file *m, struct nfs_server *nfss,
+>                 { NFS_MOUNT_NORDIRPLUS, ",nordirplus", "" },
+>                 { NFS_MOUNT_UNSHARED, ",nosharecache", "" },
+>                 { NFS_MOUNT_NORESVPORT, ",noresvport", "" },
+> +               { NFS_MOUNT_NOFASC, ",nofasc", "" },
+>                 { 0, NULL, NULL }
+>         };
+>         const struct proc_nfs_info *nfs_infop;
+> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> index ea2f7e6b1b0b..a39ae1bd2217 100644
+> --- a/include/linux/nfs_fs_sb.h
+> +++ b/include/linux/nfs_fs_sb.h
+> @@ -153,6 +153,7 @@ struct nfs_server {
+>  #define NFS_MOUNT_WRITE_EAGER          0x01000000
+>  #define NFS_MOUNT_WRITE_WAIT           0x02000000
+>  #define NFS_MOUNT_TRUNK_DISCOVERY      0x04000000
+> +#define NFS_MOUNT_NOFASC               0x08000000
+>
+>         unsigned int            fattr_valid;    /* Valid attributes */
+>         unsigned int            caps;           /* server capabilities */
+> --
+> 2.37.2
+>
