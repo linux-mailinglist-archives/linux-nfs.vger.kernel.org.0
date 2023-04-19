@@ -2,103 +2,160 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68D4E6E83FC
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Apr 2023 23:54:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B3866E85F3
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 01:32:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230331AbjDSVyp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Apr 2023 17:54:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
+        id S229547AbjDSXct (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Apr 2023 19:32:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229812AbjDSVyo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Apr 2023 17:54:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F41B526F
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Apr 2023 14:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681941237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=7V/7A9HFgrOFYYI+MzgPh8m/YX9YupoUtBE6VyddJTo=;
-        b=H03nh/LOJbBp/ZfTLCKkdKP+dxhB1u70Mugr4xCIUb3AJSuGSbyXgcse4yqA3XAk9DrFq5
-        Q38mlj5oQyhcGvfcbV3kF1cHyCq7J2dZOGhMydu27P+ufVWnObQzjscyWoAr4ldjb+I1q8
-        OQN4tZpRyeXYcKxYaB2FmgZLySW3/S8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-63-hg3qMRh6NI-bfpfC1yAjKA-1; Wed, 19 Apr 2023 17:53:54 -0400
-X-MC-Unique: hg3qMRh6NI-bfpfC1yAjKA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B2B49800047;
-        Wed, 19 Apr 2023 21:53:53 +0000 (UTC)
-Received: from aion.usersys.redhat.com (unknown [10.22.16.241])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A676F140EBF4;
-        Wed, 19 Apr 2023 21:53:53 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 4533D1A27F5; Wed, 19 Apr 2023 17:53:53 -0400 (EDT)
-Date:   Wed, 19 Apr 2023 17:53:53 -0400
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-Subject: RPCSEC GSS krb5 KUnit test fails on arm64 with h/w accelerated
- ciphers enabled
-Message-ID: <ZEBi8ReG9LKLcmW3@aion.usersys.redhat.com>
+        with ESMTP id S232249AbjDSXcs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Apr 2023 19:32:48 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB8630EA
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Apr 2023 16:32:47 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-63d4595d60fso3235686b3a.0
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Apr 2023 16:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1681947167; x=1684539167;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XVPu+f8UpKVdX5LhOFNZNUccbpjEUaJMQwYn4eLNppI=;
+        b=sgqFjkz74tih5s3kSz9L2uAbFEJqj34+Q/Z2A7BAaNmARaNR+Qzw8OcuMtLHF9beSs
+         RxCFsRAeyUI05/ReeU84siBy3V/xA9JgHXUeV79M6YCgzhhIrhjLGikNO+Elq8L4e85f
+         3mRXjZwCUCFB5/i0dhSPmxYektdRUsgh2agz0e9rp8VvmfpxXBDJr46SmA3Nx09vMTw0
+         dfb+c+dGLj2v+cVoGkJlZ55Wd6VpY1Gg0lGZCMh35Pr7Epjr/1+t70VPUwnRk+RaNMZg
+         mG+jgQmR1HLDEQb+/3twq5UdzflC9YrbD0N+t9o7dE9Ik/yTFpDf1f9FQSapiopyIT1W
+         hnNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681947167; x=1684539167;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XVPu+f8UpKVdX5LhOFNZNUccbpjEUaJMQwYn4eLNppI=;
+        b=C6/GfSgXG0IKpF3XWkt1ExUpGzJInidGd0McfBtzzvZhFnEOhEQb5Ox9bzNTAt07Jd
+         KXf5UU+AOIL+s9HLB3ax9e9j+6H8Hbg4JG7WerMy1f0xEaiKsUeGmvk4siFzPcT7bRHp
+         rNUFJFYswyK8SKiFJxbto5F1ex0nGlLGexNHZNnpZuwYMLEme6lE64g+LZ1WK73JnYg0
+         rFYB/ksK5lAcAN6ifSaBjRuzzZ+9GAEqEDg6A/hfvmeDaQ+7CAvQMs6RImOAitrHhmU+
+         OkU8QMWBEs2b0249fTxHCremwuaV9cPeJ/zzPAwT97KzXB1oO+X00puK9B/VkLkgkHhJ
+         bXDg==
+X-Gm-Message-State: AAQBX9c/DtFtDiH6LfSP/cv2xvNW5OKQBDBlebWO8UQeZHBm+ZWzjEHO
+        bhsGi3jaR8Rt/XTojXanHMHdCw==
+X-Google-Smtp-Source: AKy350ZxXpDEylBrVNZD3esB0oOUwFConbodE061zkY7YRJA5nYoyCngPUn2ADOo904yyypEDZekrQ==
+X-Received: by 2002:a17:90a:9e5:b0:246:aeee:e61c with SMTP id 92-20020a17090a09e500b00246aeeee61cmr4269732pjo.11.1681947166775;
+        Wed, 19 Apr 2023 16:32:46 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-41-174.pa.nsw.optusnet.com.au. [49.180.41.174])
+        by smtp.gmail.com with ESMTPSA id b3-20020a170902bd4300b001a67eace820sm32035plx.3.2023.04.19.16.32.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Apr 2023 16:32:46 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1ppHI3-005Rde-DU; Thu, 20 Apr 2023 09:32:43 +1000
+Date:   Thu, 20 Apr 2023 09:32:43 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Jeff Layton <jlayton@kernel.org>,
+        Frank van der Linden <fllinden@amazon.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] nfsd: don't use GFP_KERNEL from
+ nfsd_getxattr()/nfsd_listxattr()
+Message-ID: <20230419233243.GM447837@dread.disaster.area>
+References: <72bf692e-bb6b-c1f2-d1ba-3205ab649b43@I-love.SAKURA.ne.jp>
+ <4BC7955B-40E4-4A43-B2D1-2E9302E84337@oracle.com>
+ <b014047a-4a70-b38f-c5bb-01bc3c53d6f2@I-love.SAKURA.ne.jp>
+ <aee35d52ab19e7e95f69742be8329764db72cbf8.camel@kernel.org>
+ <c310695e-4279-b1a7-5c2a-2771cc19aa66@I-love.SAKURA.ne.jp>
+ <7246a80ae33244a4553bbc0ca9e771ce8143d97b.camel@kernel.org>
+ <20230416233758.GD447837@dread.disaster.area>
+ <A23409BB-9BA1-44E5-96A8-C080B417CCB5@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <A23409BB-9BA1-44E5-96A8-C080B417CCB5@oracle.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Chuck's recently-added RPCSEC GSS krb5 KUnit test
-(net/sunrpc/auth_gss/gss_krb5_test.c) is failing on arm64, specifically
-the RFC 3962 test cases (I'm just pasting the output of 1 case, but all
-6 cases fail):
+On Wed, Apr 19, 2023 at 01:51:12PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Apr 16, 2023, at 7:37 PM, Dave Chinner <david@fromorbit.com> wrote:
+> > 
+> > On Sun, Apr 16, 2023 at 07:51:41AM -0400, Jeff Layton wrote:
+> >> On Sun, 2023-04-16 at 08:21 +0900, Tetsuo Handa wrote:
+> >>> On 2023/04/16 3:40, Jeff Layton wrote:
+> >>>> On Sun, 2023-04-16 at 02:11 +0900, Tetsuo Handa wrote:
+> >>>>> On 2023/04/16 1:13, Chuck Lever III wrote:
+> >>>>>>> On Apr 15, 2023, at 7:07 AM, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
+> >>>>>>> 
+> >>>>>>> Since GFP_KERNEL is GFP_NOFS | __GFP_FS, usage like GFP_KERNEL | GFP_NOFS
+> >>>>>>> does not make sense. Drop __GFP_FS flag in order to avoid deadlock.
+> >>>>>> 
+> >>>>>> The server side threads run in process context. GFP_KERNEL
+> >>>>>> is safe to use here -- as Jeff said, this code is not in
+> >>>>>> the server's reclaim path. Plenty of other call sites in
+> >>>>>> the NFS server code use GFP_KERNEL.
+> >>>>> 
+> >>>>> GFP_KERNEL memory allocation calls filesystem's shrinker functions
+> >>>>> because of __GFP_FS flag. My understanding is
+> >>>>> 
+> >>>>>  Whether this code is in memory reclaim path or not is irrelevant.
+> >>>>>  Whether memory reclaim path might hold lock or not is relevant.
+> >>>>> 
+> >>>>> . Therefore, question is, does nfsd hold i_rwsem during memory reclaim path?
+> >>>>> 
+> >>>> 
+> >>>> No. At the time of these allocations, the i_rwsem is not held.
+> >>> 
+> >>> Excuse me? nfsd_getxattr()/nfsd_listxattr() _are_ holding i_rwsem
+> >>> via inode_lock_shared(inode) before kvmalloc(GFP_KERNEL | GFP_NOFS) allocation.
+> >>> That's why
+> >>> 
+> >>> /*
+> >>>  * We're holding i_rwsem - use GFP_NOFS.
+> >>>  */
+> >>> 
+> >>> is explicitly there in nfsd_listxattr() side.
+> > 
+> > You can do GFP_KERNEL allocations holding the i_rwsem just fine.
+> > All that it requires is the caller holds a reference to the inode,
+> > and at that point inode will should skip the given inode without
+> > every locking it.
+> 
+> This suggests that the fix is to replace "GFP_KERNEL | GFP_NOFS"
+> with "GFP_KERNEL" /and/ ensure those paths are holding an
+> appropriate inode reference.
 
----8<---
-[  237.255197]         # Subtest: RFC 3962 encryption
-[  237.255588]     # RFC 3962 encryption: EXPECTATION FAILED at net/sunrpc/auth_gss/gss_krb5_test.c:772
-                   Expected memcmp(param->next_iv->data, iv, param->next_iv->len) == 0, but
-                       memcmp(param->next_iv->data, iv, param->next_iv->len) == 1 (0x1)
-               
-               IV mismatch
----8<---
+If the code that provided the inode to nfsd_listxattr() did not
+already have an active inode reference in the first place then there
+are much, much bigger UAF problems to worry about than simple
+memory reclaim deadlocks.
 
-If I disable the hardware accelerated ciphers
-(CONFIG_CRYPTO_AES_ARM64_CE_BLK and CONFIG_CRYPTO_AES_ARM64_NEON_BLK),
-then the test works.
+That said, nfsd_listxattr() does:
 
-Likewise, if I modify Chuck's test to explicitly request
-"cts(cbc(aes-generic))", then the test works.
+        dentry = fhp->fh_dentry;
+        inode = d_inode(dentry);
+        *lenp = 0;
 
-The problem is that the asm helper aes_cbc_cts_encrypt in
-arch/arm64/crypto/aes-modes.S doesn't return the next IV.
+        inode_lock_shared(inode);
 
-If I make the following change, then the test works:
+        len = vfs_listxattr(dentry, NULL, 0);
 
-diff --git a/arch/arm64/crypto/aes-modes.S b/arch/arm64/crypto/aes-modes.S
-index 0e834a2c062c..477605fad76b 100644
---- a/arch/arm64/crypto/aes-modes.S
-+++ b/arch/arm64/crypto/aes-modes.S
-@@ -268,6 +268,7 @@ AES_FUNC_START(aes_cbc_cts_encrypt)
- 	add		x4, x0, x4
- 	st1		{v0.16b}, [x4]			/* overlapping stores */
- 	st1		{v1.16b}, [x0]
-+	st1		{v1.16b}, [x5]
- 	ret
- AES_FUNC_END(aes_cbc_cts_encrypt)
+Given that a dentry pointing to an inode *must* hold an active
+reference to that inode, I don't see how it is possible this code
+path could be using an unreferenced inode.
 
-But I don't know if that change is at all correct! (I've never even
-looked at arm64 asm before).  If someone who's knowledgeable about this
-code could chime in, I'd appreciate it.
+nfsd_getxattr() has a similar code fragment to obtain the inode as
+well, so same goes for that...
 
--Scott
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
