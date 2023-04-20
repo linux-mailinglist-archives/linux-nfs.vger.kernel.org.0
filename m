@@ -2,68 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72E806E9DF1
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 23:35:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87B3E6E9E23
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 23:52:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232465AbjDTVfl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Apr 2023 17:35:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52612 "EHLO
+        id S232030AbjDTVwB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Apr 2023 17:52:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231376AbjDTVfk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Apr 2023 17:35:40 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB9959F8;
-        Thu, 20 Apr 2023 14:35:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XdPzgZMga4nxCngAf5Uk4oKS+beDjYzCM1eCd0jiQBA=; b=Izx7MYewJXzDPQyTvwJddCGkk2
-        J4g7k/NJcTTr6noFbMY8sEkbMSb5wGamu45DmAVAXmPVwUazWDXuduj1qJr4tdwMtR95s3zttJPoJ
-        zu98Ixjbug4mWHQPTTivKHw6b96+YzIK6ejpVJh55L0un51eZvjpeLrAiVRKRWte5+7BTpwmPUhE3
-        gVPL5noyX99klWH1GQZTNIZ/8XcDiMMIhvM/KeP+ruLDEu416Wg6xKS9qCyF7w3DmuK54B93ntI2R
-        73sVv84JMfFN1QsCAh+1StpTbnZV8lRC7fdNkZuASIo5SUUx6D20HX3QklDI1mq2G8bjUd4EBExa4
-        QYwtO41Q==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1ppbw9-00AxwI-2n;
-        Thu, 20 Apr 2023 21:35:30 +0000
-Date:   Thu, 20 Apr 2023 22:35:29 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH/RFC] VFS: LOOKUP_MOUNTPOINT should used cached info
- whenever possible.
-Message-ID: <20230420213529.GS3390869@ZenIV>
-References: <95ee689c76bf034fa2fe9fade0bccdb311f3a04f.camel@kernel.org>
- <168168683217.24821.6260957092725278201@noble.neil.brown.name>
- <20230417-beisein-investieren-360fa20fb68a@brauner>
- <168176679417.24821.211742267573907874@noble.neil.brown.name>
+        with ESMTP id S231996AbjDTVwB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Apr 2023 17:52:01 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F4640C5
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Apr 2023 14:51:56 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id D03582183A;
+        Thu, 20 Apr 2023 21:51:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1682027514; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=efOaqnHv69/fuyxGBvR6MhrPsAgoiRU4DgNqKQS6vtg=;
+        b=UWexn8ltFu5BnXxu89YeUbvE1PaqeV8lJONVHzVSseJqoM/Kp6iYDtPVXbX2er6ftwBZP1
+        MT5ME8DXG3LfQouYSKgoee/HUOkuRheExdp1fm4HISr760GjPSQj1KTtaB5ze/zV8cCA3p
+        aXoZLb9GNrYINP3espvTf1kGKKKRagA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1682027514;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=efOaqnHv69/fuyxGBvR6MhrPsAgoiRU4DgNqKQS6vtg=;
+        b=lfRXjGa5rInKo29o7UatngKG88kOqTEP5RJYkjU68JlqiFxIzXQ4v+O8buQmZxS3DSxAY6
+        UoeISIqapWmJ0tAw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 427761333C;
+        Thu, 20 Apr 2023 21:51:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id IaWPOfizQWSMDAAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 20 Apr 2023 21:51:52 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168176679417.24821.211742267573907874@noble.neil.brown.name>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Benjamin Coddington" <bcodding@redhat.com>
+Cc:     "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+        "Anna Schumaker" <anna@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFS: Cleanup unused rpc_clnt variable
+In-reply-to: <7b299fff0277489fd6f8a12d377fb3edc5fb3a80.1682007300.git.bcodding@redhat.com>
+References: <7b299fff0277489fd6f8a12d377fb3edc5fb3a80.1682007300.git.bcodding@redhat.com>
+Date:   Fri, 21 Apr 2023 07:51:49 +1000
+Message-id: <168202750930.24821.8678139655016357466@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 07:26:34AM +1000, NeilBrown wrote:
+On Fri, 21 Apr 2023, Benjamin Coddington wrote:
+> The root rpc_clnt is not used here, clean it up.
 
-> MNT_FORCE is, I think, a good idea and a needed functionality that has
-> never been implemented well.
-> MNT_FORCE causes nfs_umount_begin to be called as you noted, which
-> aborts all pending RPCs on that filesystem.
+True.  The actions on rpc_clnt happen in nfs4_run_state_manager, not
+here.  So this is not needed.  Thanks.
 
-Suppose it happens to be mounted in another namespace as well.  Or bound
-at different mountpoint, for that matter.  What should MNT_FORCE do?
+>=20
+> Fixes: 4dc73c679114 ("NFSv4: keep state manager thread active if swap is en=
+abled")
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+
+Reviewed-by: NeilBrown <neilb@suse.de>
+
+Thanks,
+NeilBrown
+
+
+> ---
+>  fs/nfs/nfs4state.c | 4 ----
+>  1 file changed, 4 deletions(-)
+>=20
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 2a0ca5c7f082..f8afd75e520d 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -1205,10 +1205,6 @@ void nfs4_schedule_state_manager(struct nfs_client *=
+clp)
+>  {
+>  	struct task_struct *task;
+>  	char buf[INET6_ADDRSTRLEN + sizeof("-manager") + 1];
+> -	struct rpc_clnt *cl =3D clp->cl_rpcclient;
+> -
+> -	while (cl !=3D cl->cl_parent)
+> -		cl =3D cl->cl_parent;
+> =20
+>  	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+>  	if (test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state) !=3D 0) {
+> --=20
+> 2.39.2
+>=20
+>=20
+
