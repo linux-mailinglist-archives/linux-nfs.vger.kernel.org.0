@@ -2,160 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B3866E85F3
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 01:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C9F26E8782
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 03:37:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229547AbjDSXct (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Apr 2023 19:32:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48096 "EHLO
+        id S229793AbjDTBhm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Apr 2023 21:37:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232249AbjDSXcs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Apr 2023 19:32:48 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB8630EA
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Apr 2023 16:32:47 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-63d4595d60fso3235686b3a.0
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Apr 2023 16:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1681947167; x=1684539167;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XVPu+f8UpKVdX5LhOFNZNUccbpjEUaJMQwYn4eLNppI=;
-        b=sgqFjkz74tih5s3kSz9L2uAbFEJqj34+Q/Z2A7BAaNmARaNR+Qzw8OcuMtLHF9beSs
-         RxCFsRAeyUI05/ReeU84siBy3V/xA9JgHXUeV79M6YCgzhhIrhjLGikNO+Elq8L4e85f
-         3mRXjZwCUCFB5/i0dhSPmxYektdRUsgh2agz0e9rp8VvmfpxXBDJr46SmA3Nx09vMTw0
-         dfb+c+dGLj2v+cVoGkJlZ55Wd6VpY1Gg0lGZCMh35Pr7Epjr/1+t70VPUwnRk+RaNMZg
-         mG+jgQmR1HLDEQb+/3twq5UdzflC9YrbD0N+t9o7dE9Ik/yTFpDf1f9FQSapiopyIT1W
-         hnNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681947167; x=1684539167;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XVPu+f8UpKVdX5LhOFNZNUccbpjEUaJMQwYn4eLNppI=;
-        b=C6/GfSgXG0IKpF3XWkt1ExUpGzJInidGd0McfBtzzvZhFnEOhEQb5Ox9bzNTAt07Jd
-         KXf5UU+AOIL+s9HLB3ax9e9j+6H8Hbg4JG7WerMy1f0xEaiKsUeGmvk4siFzPcT7bRHp
-         rNUFJFYswyK8SKiFJxbto5F1ex0nGlLGexNHZNnpZuwYMLEme6lE64g+LZ1WK73JnYg0
-         rFYB/ksK5lAcAN6ifSaBjRuzzZ+9GAEqEDg6A/hfvmeDaQ+7CAvQMs6RImOAitrHhmU+
-         OkU8QMWBEs2b0249fTxHCremwuaV9cPeJ/zzPAwT97KzXB1oO+X00puK9B/VkLkgkHhJ
-         bXDg==
-X-Gm-Message-State: AAQBX9c/DtFtDiH6LfSP/cv2xvNW5OKQBDBlebWO8UQeZHBm+ZWzjEHO
-        bhsGi3jaR8Rt/XTojXanHMHdCw==
-X-Google-Smtp-Source: AKy350ZxXpDEylBrVNZD3esB0oOUwFConbodE061zkY7YRJA5nYoyCngPUn2ADOo904yyypEDZekrQ==
-X-Received: by 2002:a17:90a:9e5:b0:246:aeee:e61c with SMTP id 92-20020a17090a09e500b00246aeeee61cmr4269732pjo.11.1681947166775;
-        Wed, 19 Apr 2023 16:32:46 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-41-174.pa.nsw.optusnet.com.au. [49.180.41.174])
-        by smtp.gmail.com with ESMTPSA id b3-20020a170902bd4300b001a67eace820sm32035plx.3.2023.04.19.16.32.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 16:32:46 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ppHI3-005Rde-DU; Thu, 20 Apr 2023 09:32:43 +1000
-Date:   Thu, 20 Apr 2023 09:32:43 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Jeff Layton <jlayton@kernel.org>,
-        Frank van der Linden <fllinden@amazon.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: don't use GFP_KERNEL from
- nfsd_getxattr()/nfsd_listxattr()
-Message-ID: <20230419233243.GM447837@dread.disaster.area>
-References: <72bf692e-bb6b-c1f2-d1ba-3205ab649b43@I-love.SAKURA.ne.jp>
- <4BC7955B-40E4-4A43-B2D1-2E9302E84337@oracle.com>
- <b014047a-4a70-b38f-c5bb-01bc3c53d6f2@I-love.SAKURA.ne.jp>
- <aee35d52ab19e7e95f69742be8329764db72cbf8.camel@kernel.org>
- <c310695e-4279-b1a7-5c2a-2771cc19aa66@I-love.SAKURA.ne.jp>
- <7246a80ae33244a4553bbc0ca9e771ce8143d97b.camel@kernel.org>
- <20230416233758.GD447837@dread.disaster.area>
- <A23409BB-9BA1-44E5-96A8-C080B417CCB5@oracle.com>
+        with ESMTP id S229547AbjDTBhl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Apr 2023 21:37:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B277B1BF0;
+        Wed, 19 Apr 2023 18:37:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C50B63E9C;
+        Thu, 20 Apr 2023 01:37:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79534C433D2;
+        Thu, 20 Apr 2023 01:37:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681954659;
+        bh=7cH2zRhR59zp/D07mZkxwHxPzmQt9+7nFDK8wxJ1aXw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gwh4FrmAlJwXvRGhCLM0YSWgf/eu/ROm+eZq297nwgqhuL+7X3bCgQiAo/3U/4amx
+         IP0O864wuu7HU3namoB8DWPYwWXHcYcJAHFOhufZuzWPMNcDWpXDzcC7MVmlU5D1mn
+         JWLIj7CDwnKK9LI0LO0ykejw959ulhF2kZWcx9qQSRtCwhaFYiRn20J57gAdYBW/hM
+         OQ+7nXFqVimBsjUrCffbF8+l1csfiTyH7Ot4OT0z9G2KIxuT5XObLDrBelCbZp7zpn
+         dG78dx5BIe0wQgoQIsxZiOjZszm8uCQo2aVg+dN3xRY/5RPW906Ldhh5t6SAHvxLb9
+         Q+0TY8K1zpg1w==
+Date:   Wed, 19 Apr 2023 18:37:38 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Chuck Lever <cel@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH] SUNRPC: Recognize control messages in server-side TCP
+ socket code
+Message-ID: <20230419183738.776928ec@kernel.org>
+In-Reply-To: <168173882205.9129.1071917922340260936.stgit@91.116.238.104.host.secureserver.net>
+References: <168173882205.9129.1071917922340260936.stgit@91.116.238.104.host.secureserver.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <A23409BB-9BA1-44E5-96A8-C080B417CCB5@oracle.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 19, 2023 at 01:51:12PM +0000, Chuck Lever III wrote:
+On Mon, 17 Apr 2023 09:42:14 -0400 Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
 > 
+> To support kTLS, the server-side TCP socket code needs to watch for
+> CMSGs, just like on the client side.
 > 
-> > On Apr 16, 2023, at 7:37 PM, Dave Chinner <david@fromorbit.com> wrote:
-> > 
-> > On Sun, Apr 16, 2023 at 07:51:41AM -0400, Jeff Layton wrote:
-> >> On Sun, 2023-04-16 at 08:21 +0900, Tetsuo Handa wrote:
-> >>> On 2023/04/16 3:40, Jeff Layton wrote:
-> >>>> On Sun, 2023-04-16 at 02:11 +0900, Tetsuo Handa wrote:
-> >>>>> On 2023/04/16 1:13, Chuck Lever III wrote:
-> >>>>>>> On Apr 15, 2023, at 7:07 AM, Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp> wrote:
-> >>>>>>> 
-> >>>>>>> Since GFP_KERNEL is GFP_NOFS | __GFP_FS, usage like GFP_KERNEL | GFP_NOFS
-> >>>>>>> does not make sense. Drop __GFP_FS flag in order to avoid deadlock.
-> >>>>>> 
-> >>>>>> The server side threads run in process context. GFP_KERNEL
-> >>>>>> is safe to use here -- as Jeff said, this code is not in
-> >>>>>> the server's reclaim path. Plenty of other call sites in
-> >>>>>> the NFS server code use GFP_KERNEL.
-> >>>>> 
-> >>>>> GFP_KERNEL memory allocation calls filesystem's shrinker functions
-> >>>>> because of __GFP_FS flag. My understanding is
-> >>>>> 
-> >>>>>  Whether this code is in memory reclaim path or not is irrelevant.
-> >>>>>  Whether memory reclaim path might hold lock or not is relevant.
-> >>>>> 
-> >>>>> . Therefore, question is, does nfsd hold i_rwsem during memory reclaim path?
-> >>>>> 
-> >>>> 
-> >>>> No. At the time of these allocations, the i_rwsem is not held.
-> >>> 
-> >>> Excuse me? nfsd_getxattr()/nfsd_listxattr() _are_ holding i_rwsem
-> >>> via inode_lock_shared(inode) before kvmalloc(GFP_KERNEL | GFP_NOFS) allocation.
-> >>> That's why
-> >>> 
-> >>> /*
-> >>>  * We're holding i_rwsem - use GFP_NOFS.
-> >>>  */
-> >>> 
-> >>> is explicitly there in nfsd_listxattr() side.
-> > 
-> > You can do GFP_KERNEL allocations holding the i_rwsem just fine.
-> > All that it requires is the caller holds a reference to the inode,
-> > and at that point inode will should skip the given inode without
-> > every locking it.
-> 
-> This suggests that the fix is to replace "GFP_KERNEL | GFP_NOFS"
-> with "GFP_KERNEL" /and/ ensure those paths are holding an
-> appropriate inode reference.
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-If the code that provided the inode to nfsd_listxattr() did not
-already have an active inode reference in the first place then there
-are much, much bigger UAF problems to worry about than simple
-memory reclaim deadlocks.
-
-That said, nfsd_listxattr() does:
-
-        dentry = fhp->fh_dentry;
-        inode = d_inode(dentry);
-        *lenp = 0;
-
-        inode_lock_shared(inode);
-
-        len = vfs_listxattr(dentry, NULL, 0);
-
-Given that a dentry pointing to an inode *must* hold an active
-reference to that inode, I don't see how it is possible this code
-path could be using an unreferenced inode.
-
-nfsd_getxattr() has a similar code fragment to obtain the inode as
-well, so same goes for that...
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Acked-by: Jakub Kicinski <kuba@kernel.org>
