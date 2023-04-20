@@ -2,42 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F5686E9B21
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 19:56:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C45A6E9B22
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 19:56:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229984AbjDTR43 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Apr 2023 13:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52812 "EHLO
+        id S230127AbjDTR4f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Apr 2023 13:56:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230008AbjDTR42 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Apr 2023 13:56:28 -0400
+        with ESMTP id S230037AbjDTR4e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Apr 2023 13:56:34 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1152690
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Apr 2023 10:56:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901D12690
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Apr 2023 10:56:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DCA46151A
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Apr 2023 17:56:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D83BCC433EF;
-        Thu, 20 Apr 2023 17:56:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2BB806151A
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Apr 2023 17:56:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69E0BC433EF;
+        Thu, 20 Apr 2023 17:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682013386;
-        bh=8vit0GvIibeS2YwJFIUmR/tYZG0XWRIT7iQh9RIBsmY=;
+        s=k20201202; t=1682013392;
+        bh=/SbfuxzidwhfKSqhs5xHtJb0tWqZEYnOHpFcd9eNzqo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XiFHZxEXZldQBwV8ZPMtcDNVT+azMVs+eVlaxaJp45OGvG9tQ+n6g2zdKt+p8YFDL
-         VkI40j8yQCcyEc7UVUCQR4V7NSemiOI0Owu/rb+Z9ST3P7+fj8d48OSLavuPawjYlq
-         heP19JPt1WKQWaI49qAmSg95NLYwoFLl0MOiJz62EcYlU6QpLHmHWqF1XWXOC8+Z16
-         0RWeUKoLVXsj7MYz5X9j/QCUhXVyrDle6OpSQgX6RDO/nI44JkhzcvkrA5YyuA3a8F
-         pqTJ1g25csXgyenIc3z+B1+O/YVOdaTqj1jQOWSJdTJvs1XESoM9AR9u0buBc9GAyP
-         oBM62rAzHfb6A==
-Subject: [PATCH v1 1/2] SUNRPC: Support TLS handshake in the server-side TCP
- socket code
+        b=JTrdkP1kWDcjtNr3pyHf218GtGuX8Khvl7NEB2KebOEtVXV+34H+DlQ//InWaIYMF
+         4qy2zyC2wGm5ShsSgTyb+WALEaqIzSGYq5YrsWPC/ULsIVVqhwfKrPf0/LuZ+5I5M8
+         ZbfGTP7pDmuGJlrSdy0NCArp5XS+7rIllZDLFnQqfR1olrGeXqyiiqqzm0AQQN27Su
+         SFsHvWBOe08uMORpR5m9amRjGFmfxBvYPrOw3zeMTms0xcjBCTCOcYUzHNgA1Y/246
+         7QkmnkBh7Hjds4gyjbE/q51Ec5DY22C/bSAFeuFdZXczi13SHBZazy4kGjCgbSqdec
+         LsTM81vEWzOug==
+Subject: [PATCH v1 2/2] NFSD: Handle new xprtsec= export option
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     kernel-tls-handshake@lists.linux.dev
-Date:   Thu, 20 Apr 2023 13:56:24 -0400
-Message-ID: <168201338475.6370.13549486153072281084.stgit@91.116.238.104.host.secureserver.net>
+Date:   Thu, 20 Apr 2023 13:56:31 -0400
+Message-ID: <168201339129.6370.5280916277494986894.stgit@91.116.238.104.host.secureserver.net>
 In-Reply-To: <168201329016.6370.17351667274885826598.stgit@91.116.238.104.host.secureserver.net>
 References: <168201329016.6370.17351667274885826598.stgit@91.116.238.104.host.secureserver.net>
 User-Agent: StGit/1.5
@@ -56,310 +55,162 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-This patch adds opportunitistic RPC-with-TLS to the Linux in-kernel
-NFS server. If the client requests RPC-with-TLS and the user space
-handshake agent is running, the server will set up a TLS session.
-
-There are no policy settings yet. For example, the server cannot
-yet require the use of RPC-with-TLS to access its data.
+Enable administrators to require clients to use transport layer
+security when accessing particular exports.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_xprt.h |    5 ++
- include/linux/sunrpc/svcsock.h  |    2 +
- include/trace/events/sunrpc.h   |   16 ++++++
- net/sunrpc/svc_xprt.c           |    5 ++
- net/sunrpc/svcauth_unix.c       |   11 +++-
- net/sunrpc/svcsock.c            |  101 ++++++++++++++++++++++++++++++++++++++-
- 6 files changed, 132 insertions(+), 8 deletions(-)
+ fs/nfsd/export.c                 |   51 ++++++++++++++++++++++++++++++++++++--
+ fs/nfsd/export.h                 |    1 +
+ include/uapi/linux/nfsd/export.h |   13 ++++++++++
+ 3 files changed, 62 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
-index 775368802762..867479204840 100644
---- a/include/linux/sunrpc/svc_xprt.h
-+++ b/include/linux/sunrpc/svc_xprt.h
-@@ -27,7 +27,7 @@ struct svc_xprt_ops {
- 	void		(*xpo_detach)(struct svc_xprt *);
- 	void		(*xpo_free)(struct svc_xprt *);
- 	void		(*xpo_kill_temp_xprt)(struct svc_xprt *);
--	void		(*xpo_start_tls)(struct svc_xprt *);
-+	void		(*xpo_handshake)(struct svc_xprt *xprt);
- };
- 
- struct svc_xprt_class {
-@@ -70,6 +70,9 @@ struct svc_xprt {
- #define XPT_LOCAL	12		/* connection from loopback interface */
- #define XPT_KILL_TEMP   13		/* call xpo_kill_temp_xprt before closing */
- #define XPT_CONG_CTRL	14		/* has congestion control */
-+#define XPT_HANDSHAKE	15		/* xprt requests a handshake */
-+#define XPT_TLS_SESSION	16		/* transport-layer security established */
-+#define XPT_PEER_AUTH	17		/* peer has been authenticated */
- 
- 	struct svc_serv		*xpt_server;	/* service for transport */
- 	atomic_t    	    	xpt_reserved;	/* space on outq that is rsvd */
-diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
-index dd73fa174af5..d16ae621782c 100644
---- a/include/linux/sunrpc/svcsock.h
-+++ b/include/linux/sunrpc/svcsock.h
-@@ -38,6 +38,8 @@ struct svc_sock {
- 	/* Number of queued send requests */
- 	atomic_t		sk_sendqlen;
- 
-+	struct completion	sk_handshake_done;
-+
- 	struct page *		sk_pages[RPCSVC_MAXPAGES];	/* received data */
- };
- 
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 030c7ff6862b..88ef5537c49e 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -1870,7 +1870,10 @@ TRACE_EVENT(svc_stats_latency,
- 		{ BIT(XPT_CACHE_AUTH),		"CACHE_AUTH" },		\
- 		{ BIT(XPT_LOCAL),		"LOCAL" },		\
- 		{ BIT(XPT_KILL_TEMP),		"KILL_TEMP" },		\
--		{ BIT(XPT_CONG_CTRL),		"CONG_CTRL" })
-+		{ BIT(XPT_CONG_CTRL),		"CONG_CTRL" },		\
-+		{ BIT(XPT_HANDSHAKE),		"HANDSHAKE" },		\
-+		{ BIT(XPT_TLS_SESSION),		"TLS_SESSION" },	\
-+		{ BIT(XPT_PEER_AUTH),		"PEER_AUTH" })
- 
- TRACE_EVENT(svc_xprt_create_err,
- 	TP_PROTO(
-@@ -2003,6 +2006,17 @@ DEFINE_SVC_XPRT_EVENT(close);
- DEFINE_SVC_XPRT_EVENT(detach);
- DEFINE_SVC_XPRT_EVENT(free);
- 
-+#define DEFINE_SVC_TLS_EVENT(name) \
-+	DEFINE_EVENT(svc_xprt_event, svc_tls_##name, \
-+		TP_PROTO(const struct svc_xprt *xprt), \
-+		TP_ARGS(xprt))
-+
-+DEFINE_SVC_TLS_EVENT(start);
-+DEFINE_SVC_TLS_EVENT(upcall);
-+DEFINE_SVC_TLS_EVENT(unavailable);
-+DEFINE_SVC_TLS_EVENT(not_started);
-+DEFINE_SVC_TLS_EVENT(timed_out);
-+
- TRACE_EVENT(svc_xprt_accept,
- 	TP_PROTO(
- 		const struct svc_xprt *xprt,
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 3b9708b39e35..84e5d7d31481 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -427,7 +427,7 @@ static bool svc_xprt_ready(struct svc_xprt *xprt)
- 
- 	if (xpt_flags & BIT(XPT_BUSY))
- 		return false;
--	if (xpt_flags & (BIT(XPT_CONN) | BIT(XPT_CLOSE)))
-+	if (xpt_flags & (BIT(XPT_CONN) | BIT(XPT_CLOSE) | BIT(XPT_HANDSHAKE)))
- 		return true;
- 	if (xpt_flags & (BIT(XPT_DATA) | BIT(XPT_DEFERRED))) {
- 		if (xprt->xpt_ops->xpo_has_wspace(xprt) &&
-@@ -828,6 +828,9 @@ static int svc_handle_xprt(struct svc_rqst *rqstp, struct svc_xprt *xprt)
- 			module_put(xprt->xpt_class->xcl_owner);
- 		}
- 		svc_xprt_received(xprt);
-+	} else if (test_bit(XPT_HANDSHAKE, &xprt->xpt_flags)) {
-+		xprt->xpt_ops->xpo_handshake(xprt);
-+		svc_xprt_received(xprt);
- 	} else if (svc_xprt_reserve_slot(rqstp, xprt)) {
- 		/* XPT_DATA|XPT_DEFERRED case: */
- 		dprintk("svc: server %p, pool %u, transport %p, inuse=%d\n",
-diff --git a/net/sunrpc/svcauth_unix.c b/net/sunrpc/svcauth_unix.c
-index 4485088ce27b..174783f804fa 100644
---- a/net/sunrpc/svcauth_unix.c
-+++ b/net/sunrpc/svcauth_unix.c
-@@ -17,8 +17,9 @@
- #include <net/ipv6.h>
- #include <linux/kernel.h>
- #include <linux/user_namespace.h>
--#define RPCDBG_FACILITY	RPCDBG_AUTH
-+#include <trace/events/sunrpc.h>
- 
-+#define RPCDBG_FACILITY	RPCDBG_AUTH
- 
- #include "netns.h"
- 
-@@ -832,6 +833,7 @@ svcauth_tls_accept(struct svc_rqst *rqstp)
- {
- 	struct xdr_stream *xdr = &rqstp->rq_arg_stream;
- 	struct svc_cred	*cred = &rqstp->rq_cred;
-+	struct svc_xprt *xprt = rqstp->rq_xprt;
- 	u32 flavor, len;
- 	void *body;
- 	__be32 *p;
-@@ -865,14 +867,19 @@ svcauth_tls_accept(struct svc_rqst *rqstp)
- 	if (cred->cr_group_info == NULL)
- 		return SVC_CLOSE;
- 
--	if (rqstp->rq_xprt->xpt_ops->xpo_start_tls) {
-+	if (xprt->xpt_ops->xpo_handshake) {
- 		p = xdr_reserve_space(&rqstp->rq_res_stream, XDR_UNIT * 2 + 8);
- 		if (!p)
- 			return SVC_CLOSE;
-+		trace_svc_tls_start(xprt);
- 		*p++ = rpc_auth_null;
- 		*p++ = cpu_to_be32(8);
- 		memcpy(p, "STARTTLS", 8);
-+
-+		set_bit(XPT_HANDSHAKE, &xprt->xpt_flags);
-+		svc_xprt_enqueue(xprt);
- 	} else {
-+		trace_svc_tls_unavailable(xprt);
- 		if (xdr_stream_encode_opaque_auth(&rqstp->rq_res_stream,
- 						  RPC_AUTH_NULL, NULL, 0) < 0)
- 			return SVC_CLOSE;
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index f4a7d99360e8..4e50c6187c63 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -44,9 +44,11 @@
- #include <net/tcp.h>
- #include <net/tcp_states.h>
- #include <net/tls.h>
-+#include <net/handshake.h>
- #include <linux/uaccess.h>
- #include <linux/highmem.h>
- #include <asm/ioctls.h>
-+#include <linux/key.h>
- 
- #include <linux/sunrpc/types.h>
- #include <linux/sunrpc/clnt.h>
-@@ -64,6 +66,12 @@
- 
- #define RPCDBG_FACILITY	RPCDBG_SVCXPRT
- 
-+/* To-do: to avoid tying up an nfsd thread while waiting for a
-+ * handshake request, the request could instead be deferred.
-+ */
-+enum {
-+	SVC_HANDSHAKE_TO	= 5U * HZ
-+};
- 
- static struct svc_sock *svc_setup_socket(struct svc_serv *, struct socket *,
- 					 int flags);
-@@ -360,6 +368,8 @@ static void svc_data_ready(struct sock *sk)
- 		rmb();
- 		svsk->sk_odata(sk);
- 		trace_svcsock_data_ready(&svsk->sk_xprt, 0);
-+		if (test_bit(XPT_HANDSHAKE, &svsk->sk_xprt.xpt_flags))
-+			return;
- 		if (!test_and_set_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags))
- 			svc_xprt_enqueue(&svsk->sk_xprt);
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 6da74aebe1fb..ae85257b4238 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -439,7 +439,6 @@ static int check_export(struct path *path, int *flags, unsigned char *uuid)
+ 		return -EINVAL;
  	}
-@@ -397,6 +407,88 @@ static void svc_tcp_kill_temp_xprt(struct svc_xprt *xprt)
- 	sock_no_linger(svsk->sk_sock->sk);
+ 	return 0;
+-
  }
  
-+/**
-+ * svc_tcp_handshake_done - Handshake completion handler
-+ * @data: address of xprt to wake
-+ * @status: status of handshake
-+ * @peerid: serial number of key containing the remote peer's identity
-+ *
-+ * If a security policy is specified as an export option, we don't
-+ * have a specific export here to check. So we set a "TLS session
-+ * is present" flag on the xprt and let an upper layer enforce local
-+ * security policy.
-+ */
-+static void svc_tcp_handshake_done(void *data, int status, key_serial_t peerid)
+ #ifdef CONFIG_NFSD_V4
+@@ -546,6 +545,29 @@ static inline int
+ secinfo_parse(char **mesg, char *buf, struct svc_export *exp) { return 0; }
+ #endif
+ 
++static int xprtsec_parse(char **mesg, char *buf, struct svc_export *exp)
 +{
-+	struct svc_xprt *xprt = data;
-+	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
++	unsigned int i, mode, listsize;
++	int err;
 +
-+	if (!status) {
-+		if (peerid != TLS_NO_PEERID)
-+			set_bit(XPT_PEER_AUTH, &xprt->xpt_flags);
-+		set_bit(XPT_TLS_SESSION, &xprt->xpt_flags);
++	err = get_uint(mesg, &listsize);
++	if (err)
++		return err;
++	if (listsize > NFSEXP_XPRTSEC_NUM)
++		return -EINVAL;
++
++	exp->ex_xprtsec_modes = 0;
++	for (i = 0; i < listsize; i++) {
++		err = get_uint(mesg, &mode);
++		if (err)
++			return err;
++		if (mode > NFSEXP_XPRTSEC_MTLS)
++			return -EINVAL;
++		exp->ex_xprtsec_modes |= mode;
 +	}
-+	clear_bit(XPT_HANDSHAKE, &xprt->xpt_flags);
-+	complete_all(&svsk->sk_handshake_done);
++	return 0;
 +}
 +
-+/**
-+ * svc_tcp_handshake - Perform a transport-layer security handshake
-+ * @xprt: connected transport endpoint
-+ *
-+ */
-+static void svc_tcp_handshake(struct svc_xprt *xprt)
-+{
-+	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
-+	struct sock *sk = svsk->sk_sock->sk;
-+	struct tls_handshake_args args = {
-+		.ta_sock	= svsk->sk_sock,
-+		.ta_done	= svc_tcp_handshake_done,
-+		.ta_data	= xprt,
-+	};
-+	int ret;
+ static inline int
+ nfsd_uuid_parse(char **mesg, char *buf, unsigned char **puuid)
+ {
+@@ -608,6 +630,7 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
+ 	exp.ex_client = dom;
+ 	exp.cd = cd;
+ 	exp.ex_devid_map = NULL;
++	exp.ex_xprtsec_modes = NFSEXP_XPRTSEC_ALL;
+ 
+ 	/* expiry */
+ 	err = get_expiry(&mesg, &exp.h.expiry_time);
+@@ -649,6 +672,8 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
+ 				err = nfsd_uuid_parse(&mesg, buf, &exp.ex_uuid);
+ 			else if (strcmp(buf, "secinfo") == 0)
+ 				err = secinfo_parse(&mesg, buf, &exp);
++			else if (strcmp(buf, "xprtsec") == 0)
++				err = xprtsec_parse(&mesg, buf, &exp);
+ 			else
+ 				/* quietly ignore unknown words and anything
+ 				 * following. Newer user-space can try to set
+@@ -662,6 +687,7 @@ static int svc_export_parse(struct cache_detail *cd, char *mesg, int mlen)
+ 		err = check_export(&exp.ex_path, &exp.ex_flags, exp.ex_uuid);
+ 		if (err)
+ 			goto out4;
 +
-+	trace_svc_tls_upcall(xprt);
+ 		/*
+ 		 * No point caching this if it would immediately expire.
+ 		 * Also, this protects exportfs's dummy export from the
+@@ -823,6 +849,7 @@ static void export_update(struct cache_head *cnew, struct cache_head *citem)
+ 	for (i = 0; i < MAX_SECINFO_LIST; i++) {
+ 		new->ex_flavors[i] = item->ex_flavors[i];
+ 	}
++	new->ex_xprtsec_modes = item->ex_xprtsec_modes;
+ }
+ 
+ static struct cache_head *svc_export_alloc(void)
+@@ -1034,9 +1061,26 @@ static struct svc_export *exp_find(struct cache_detail *cd,
+ 
+ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
+ {
+-	struct exp_flavor_info *f;
+-	struct exp_flavor_info *end = exp->ex_flavors + exp->ex_nflavors;
++	struct exp_flavor_info *f, *end = exp->ex_flavors + exp->ex_nflavors;
++	struct svc_xprt *xprt = rqstp->rq_xprt;
 +
-+	clear_bit(XPT_TLS_SESSION, &xprt->xpt_flags);
-+	init_completion(&svsk->sk_handshake_done);
-+
-+	ret = tls_server_hello_x509(&args, GFP_KERNEL);
-+	if (ret) {
-+		trace_svc_tls_not_started(xprt);
-+		goto out_failed;
++	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_NONE) {
++		if (!test_bit(XPT_TLS_SESSION, &xprt->xpt_flags))
++			goto ok;
 +	}
-+
-+	ret = wait_for_completion_interruptible_timeout(&svsk->sk_handshake_done,
-+							SVC_HANDSHAKE_TO);
-+	if (ret <= 0) {
-+		if (tls_handshake_cancel(sk)) {
-+			trace_svc_tls_timed_out(xprt);
-+			goto out_close;
-+		}
++	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_TLS) {
++		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
++		    !test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
++			goto ok;
 +	}
-+
-+	if (!test_bit(XPT_TLS_SESSION, &xprt->xpt_flags)) {
-+		trace_svc_tls_unavailable(xprt);
-+		goto out_close;
++	if (exp->ex_xprtsec_modes & NFSEXP_XPRTSEC_MTLS) {
++		if (test_bit(XPT_TLS_SESSION, &xprt->xpt_flags) &&
++		    test_bit(XPT_PEER_AUTH, &xprt->xpt_flags))
++			goto ok;
 +	}
-+
-+	/* Mark the transport ready in case the remote sent RPC
-+	 * traffic before the kernel received the handshake
-+	 * completion downcall.
-+	 */
-+	set_bit(XPT_DATA, &xprt->xpt_flags);
-+	svc_xprt_enqueue(xprt);
-+	return;
-+
-+out_close:
-+	set_bit(XPT_CLOSE, &xprt->xpt_flags);
-+out_failed:
-+	clear_bit(XPT_HANDSHAKE, &xprt->xpt_flags);
-+	set_bit(XPT_DATA, &xprt->xpt_flags);
-+	svc_xprt_enqueue(xprt);
-+}
-+
- /*
-  * See net/ipv6/ip_sockglue.c : ip_cmsg_recv_pktinfo
-  */
-@@ -1258,6 +1350,7 @@ static const struct svc_xprt_ops svc_tcp_ops = {
- 	.xpo_has_wspace = svc_tcp_has_wspace,
- 	.xpo_accept = svc_tcp_accept,
- 	.xpo_kill_temp_xprt = svc_tcp_kill_temp_xprt,
-+	.xpo_handshake = svc_tcp_handshake,
++	goto denied;
+ 
++ok:
+ 	/* legacy gss-only clients are always OK: */
+ 	if (exp->ex_client == rqstp->rq_gssclient)
+ 		return 0;
+@@ -1061,6 +1105,7 @@ __be32 check_nfsd_access(struct svc_export *exp, struct svc_rqst *rqstp)
+ 	if (nfsd4_spo_must_allow(rqstp))
+ 		return 0;
+ 
++denied:
+ 	return rqstp->rq_vers < 4 ? nfserr_acces : nfserr_wrongsec;
+ }
+ 
+diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
+index d03f7f6a8642..2df8ae25aad3 100644
+--- a/fs/nfsd/export.h
++++ b/fs/nfsd/export.h
+@@ -77,6 +77,7 @@ struct svc_export {
+ 	struct cache_detail	*cd;
+ 	struct rcu_head		ex_rcu;
+ 	struct export_stats	ex_stats;
++	unsigned long		ex_xprtsec_modes;
  };
  
- static struct svc_xprt_class svc_tcp_class = {
-@@ -1581,10 +1674,12 @@ static void svc_tcp_sock_detach(struct svc_xprt *xprt)
- static void svc_sock_free(struct svc_xprt *xprt)
- {
- 	struct svc_sock *svsk = container_of(xprt, struct svc_sock, sk_xprt);
-+	struct socket *sock = svsk->sk_sock;
+ /* an "export key" (expkey) maps a filehandlefragement to an
+diff --git a/include/uapi/linux/nfsd/export.h b/include/uapi/linux/nfsd/export.h
+index 2124ba904779..a73ca3703abb 100644
+--- a/include/uapi/linux/nfsd/export.h
++++ b/include/uapi/linux/nfsd/export.h
+@@ -62,5 +62,18 @@
+ 					| NFSEXP_ALLSQUASH \
+ 					| NFSEXP_INSECURE_PORT)
  
--	if (svsk->sk_sock->file)
--		sockfd_put(svsk->sk_sock);
-+	tls_handshake_cancel(sock->sk);
-+	if (sock->file)
-+		sockfd_put(sock);
- 	else
--		sock_release(svsk->sk_sock);
-+		sock_release(sock);
- 	kfree(svsk);
- }
++/*
++ * Transport layer security policies that are permitted to access
++ * an export
++ */
++#define NFSEXP_XPRTSEC_NONE	0x0001
++#define NFSEXP_XPRTSEC_TLS	0x0002
++#define NFSEXP_XPRTSEC_MTLS	0x0004
++
++#define NFSEXP_XPRTSEC_NUM	(3)
++
++#define NFSEXP_XPRTSEC_ALL	(NFSEXP_XPRTSEC_NONE | \
++				 NFSEXP_XPRTSEC_TLS | \
++				 NFSEXP_XPRTSEC_MTLS)
+ 
+ #endif /* _UAPINFSD_EXPORT_H */
 
 
