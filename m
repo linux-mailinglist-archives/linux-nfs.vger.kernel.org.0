@@ -2,69 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CE3B6E9957
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 18:17:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 592626E995A
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Apr 2023 18:18:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231341AbjDTQR6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Apr 2023 12:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40110 "EHLO
+        id S233476AbjDTQSb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Apr 2023 12:18:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231334AbjDTQR4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Apr 2023 12:17:56 -0400
+        with ESMTP id S232284AbjDTQSa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Apr 2023 12:18:30 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D77C2139
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Apr 2023 09:17:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A846A3C04
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Apr 2023 09:17:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682007428;
+        s=mimecast20190719; t=1682007463;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding;
-        bh=xpW87KmDjomF/XnIr+sGvwMjmLo84cGnzstO6sr3FAA=;
-        b=Pb6hrb4feIgHjsy2c6GXIgNrVPgR2wUYOUHHlGzeOxvhlAZ2QHUHC8A0/oJeJaZtIJzk6t
-        BZHFF6Hoytk9468riKtR+sBcaDU2CrSIZH3zGrYZtegBNw+mkcToFhJ+L348Db1mmsfwKC
-        55gQBeVJtQtvTWTAWExckiby/dJfJos=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-358-EUwYLD7zO3irdEIgSPw6fw-1; Thu, 20 Apr 2023 12:17:07 -0400
-X-MC-Unique: EUwYLD7zO3irdEIgSPw6fw-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-74e1cdf9cbeso364821185a.0
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Apr 2023 09:17:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682007426; x=1684599426;
-        h=mime-version:user-agent:content-transfer-encoding:date:to:from
-         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xpW87KmDjomF/XnIr+sGvwMjmLo84cGnzstO6sr3FAA=;
-        b=fzv1u18zMkqJnRb48misYYp/nooFlRQjrsdXtYw0H6UfJGqWP5LPOBEqTSadJze7nV
-         1NnsouNSMA8PmZQzFD1J3ZHd4iPl0W6cbHpwt7GxwecXk7djJF+ROi9TDvG2DPN4O3+H
-         FrpSeii9oTP2LTSBih5rPxowI1u9vOkfW53vpivE56xeJdqSdOPNxPqaJhq2HudY4uCb
-         T0D2itcSjRWOP2ycQB2tOLQLgSULatkdsvgYeNMnS2dYbI69q859R3cpQUD9HT53Xsmy
-         Ct8JH64QGeqo0Ur67qrvVDeLy0TGf5VBTdVVTmiFv15oFt0EKN9aIEh1ry4AYKlMkC2h
-         iMNw==
-X-Gm-Message-State: AAQBX9dNhp0BbZtzwXqxQyrAC2o9d+DKjpMeQ8CVxxQO+LIVF5015Mok
-        beXUXO6SdYrjYaSiC3VV0TfTcJkzsjy1JRaUbbzioEVTKSYCC+Q9v2C5vAmGWxXBxnRf8+TRKYR
-        yewOQZo4h10z7DaDXUzbbgUOngJG49MEkGzkNJ5ZjAA3uVjr8ux1p2xEIV9rS0kL5k61M70m2Gg
-        uNhJc=
-X-Received: by 2002:ac8:7f07:0:b0:3db:9289:6949 with SMTP id f7-20020ac87f07000000b003db92896949mr5422110qtk.3.1682007426316;
-        Thu, 20 Apr 2023 09:17:06 -0700 (PDT)
-X-Google-Smtp-Source: AKy350b10i77sotQOnptkKJ7cSZw1BYnrgnKHDTON0qheXqzSDyYAJ7H+5NiJucFNPeumCOzSTu/1A==
-X-Received: by 2002:ac8:7f07:0:b0:3db:9289:6949 with SMTP id f7-20020ac87f07000000b003db92896949mr5422066qtk.3.1682007425929;
-        Thu, 20 Apr 2023 09:17:05 -0700 (PDT)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id 78-20020a370651000000b0074e15df0941sm545686qkg.38.2023.04.20.09.17.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 09:17:05 -0700 (PDT)
-Message-ID: <85ee133945a9f816ffb9612146a6f835c6d443ec.camel@redhat.com>
-Subject: Fedora packages for ktls testing available
-From:   Jeff Layton <jlayton@redhat.com>
-To:     linux-nfs <linux-nfs@vger.kernel.org>,
-        kernel-tls-handshake <kernel-tls-handshake@lists.linux.dev>
-Date:   Thu, 20 Apr 2023 12:17:04 -0400
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.0 (3.48.0-1.fc38) 
+        bh=WIOeVYmsgdb/B86+ukVBj/ov84WzL1MRxSVIp0Qg25U=;
+        b=QypWT37rvLoZwyKrCbVaTlyAHyGmKPnkMBeOPAMxi067qytSw3Df923zQIB2q1EFl3iIcz
+        5azJ9i1fgKhSMDxXgPfptxMtLK+WuB5M7/Q/CRyAHjeWp2RG5fotQYDbsye2W5N7mwzjyG
+        HSM3gsBlX9ufWhOGMVoSmtpu0rSwhZE=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-544-mOqj999qOw-sMuE9u5z36g-1; Thu, 20 Apr 2023 12:17:37 -0400
+X-MC-Unique: mOqj999qOw-sMuE9u5z36g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6F85829A9D3C;
+        Thu, 20 Apr 2023 16:17:37 +0000 (UTC)
+Received: from bcodding.csb.redhat.com (ovpn-0-3.rdu2.redhat.com [10.22.0.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 95B021410F1C;
+        Thu, 20 Apr 2023 16:17:36 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Cleanup unused rpc_clnt variable
+Date:   Thu, 20 Apr 2023 12:17:35 -0400
+Message-Id: <7b299fff0277489fd6f8a12d377fb3edc5fb3a80.1682007300.git.bcodding@redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -75,20 +57,29 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I have a Fedora COPR repo set up with the latest RPC with TLS bits from
-Chuck:
+The root rpc_clnt is not used here, clean it up.
 
-    https://copr.fedorainfracloud.org/coprs/jlayton/rpctls/
+Fixes: 4dc73c679114 ("NFSv4: keep state manager thread active if swap is enabled")
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/nfs/nfs4state.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-It has a kernel package (currently based on v6.3-rc7), an updated nfs-
-utils package (only needed by the NFS server), and a new ktls-utils
-package (0.8 based currently) that I'm working to get into the main
-Fedora repos after the kernel patches are merged.
-
-My goal is to keep this up to date until the relevant code starts
-landing in the main Fedora repos.
-
-Cheers,
---=20
-Jeff Layton <jlayton@redhat.com>
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 2a0ca5c7f082..f8afd75e520d 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -1205,10 +1205,6 @@ void nfs4_schedule_state_manager(struct nfs_client *clp)
+ {
+ 	struct task_struct *task;
+ 	char buf[INET6_ADDRSTRLEN + sizeof("-manager") + 1];
+-	struct rpc_clnt *cl = clp->cl_rpcclient;
+-
+-	while (cl != cl->cl_parent)
+-		cl = cl->cl_parent;
+ 
+ 	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+ 	if (test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state) != 0) {
+-- 
+2.39.2
 
