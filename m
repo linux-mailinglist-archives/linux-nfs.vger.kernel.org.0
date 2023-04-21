@@ -2,130 +2,160 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E5006EB178
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Apr 2023 20:19:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 424CC6EB190
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Apr 2023 20:24:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbjDUSTt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Apr 2023 14:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36942 "EHLO
+        id S232909AbjDUSYe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Apr 2023 14:24:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232732AbjDUSTs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Apr 2023 14:19:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B21510E0
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 11:19:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1682101140;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=E9SyDoqjOzCoHU0CLcEEQiVLTDc8JZCJBxnRlrk87Ds=;
-        b=fre09ebqeh9wFjIpsgQtYhwIvzAL0gEBcZC/1QT2maewottZa7uftt1QWlz0Amr4RtpqjU
-        P0gR9nCBFUb2qVR+D7wor/2UdVu1ZDMYrNkQV/TlGwnExTWJDUFin2iUMH7JrmGdEv+2yg
-        7q/FxV7XWx/xVT8xRk2rNmKJA1jzMmU=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-93-QpfU3eWUPyayTv43yCbgHQ-1; Fri, 21 Apr 2023 14:18:59 -0400
-X-MC-Unique: QpfU3eWUPyayTv43yCbgHQ-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-3ecc0c4b867so6637281cf.1
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 11:18:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682101138; x=1684693138;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=E9SyDoqjOzCoHU0CLcEEQiVLTDc8JZCJBxnRlrk87Ds=;
-        b=FIanldpEvXygHrgdgG5cTq/X5wQ2EGf7ZQ3POJ7XtAh7oIiB0J0XKCSh8xvoUHe1Ms
-         vmvvOeX7Tpmjx8HBjv816JSJ7v1gAz5iz0OE+KFhwivuhiyRHeG/NJWN7sDesYV1wjHm
-         UPgMnOeE++HbYluGJOBHxld60hQI3x60ZHjWngeEF7NhtjX2/jpBf4K4qUcIbNxfXYRd
-         Q6UxCd19+a7JS+CrBlYSoKHOSQ7gEI03LqxerBGsYuaAnP8GKvG2XivOrcN9plyYCgfN
-         R1V/GeL11qqcInagBJHZkYA2ELQDVLpE92u7aHCB3DGn7e+DjLT8t4eVtLB9VVQuKTfn
-         YV7A==
-X-Gm-Message-State: AAQBX9dPui+k8xvUQGs+R3G0iBwrWvnwftKKxLPSkpJAOy10rP1DNDqQ
-        Ro1IxI0PmUXREsAjsUWqPjAotNGNlF7mhmz8OPPCi1KF2EDyruucVA5gpgx1MhbEBMoDOpAiKmB
-        p4woJm5o5DU/9IX6+S7BB
-X-Received: by 2002:a05:622a:1348:b0:3ef:5587:723b with SMTP id w8-20020a05622a134800b003ef5587723bmr9667004qtk.3.1682101138554;
-        Fri, 21 Apr 2023 11:18:58 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Z96RworQ01tJmqVnX6zy79/fZWu0P6riCY4RVvEYIzAlHQrb7q9MbZfM2bFnWA2BGa+R/XMQ==
-X-Received: by 2002:a05:622a:1348:b0:3ef:5587:723b with SMTP id w8-20020a05622a134800b003ef5587723bmr9666971qtk.3.1682101138276;
-        Fri, 21 Apr 2023 11:18:58 -0700 (PDT)
-Received: from [172.31.1.6] ([71.161.80.57])
-        by smtp.gmail.com with ESMTPSA id px6-20020a05620a870600b00749fa9e12e9sm1492057qkn.124.2023.04.21.11.18.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Apr 2023 11:18:57 -0700 (PDT)
-Message-ID: <bdd364a9-4e54-df31-2c3b-2d58925bd8d9@redhat.com>
-Date:   Fri, 21 Apr 2023 14:18:56 -0400
+        with ESMTP id S229578AbjDUSY2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Apr 2023 14:24:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09AFD10C7
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 11:24:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F23362FAB
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 18:24:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73617C433D2;
+        Fri, 21 Apr 2023 18:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682101465;
+        bh=5RXRhTWACuxMk4kc+fmZGxwaAtqK4J1pVUUWkTgq4FU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=PCdh0jLIVTc3NFvewpOhhFE3GO5Cbn+zrNQiOchvP+q/9ZR0tvyERv3RRG2KW/NsW
+         4hyppD/LjrqfHMP+gJq3BjxMmefLGKWpoF4q1H5/sAxkKG8D3hH/8AbIUGfoaHhzmv
+         aXRNsEMdtHV/WoHW3NbI7XU6XqJe8tad3LY3opOxphceFvLHkBjX9feOZSUYngWuey
+         UhUeQX73ckKkVoBtP2mF+fqETmsf4NCaNbRlGrnxGQdmMuZYYXX5kPT86V4benNjhl
+         LDZzCwb88AK8X2epqhJJ67SbYD4kU+qXhHJE27ILLNIpEe0xq1w+s5v2pxZimUw1hN
+         /2MuVk3S6C4Gg==
+From:   Anna Schumaker <anna@kernel.org>
+To:     linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
+Cc:     anna@kernel.org
+Subject: [PATCH v2] NFSv4.2: Rework scratch handling for READ_PLUS
+Date:   Fri, 21 Apr 2023 14:24:24 -0400
+Message-Id: <20230421182424.900762-1-anna@kernel.org>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [Libtirpc-devel] [PATCH] allow TCP-only portmapper
-Content-Language: en-US
-To:     =?UTF-8?Q?Dan_Hor=c3=a1k?= <dan@danny.cz>,
-        libtirpc-devel@lists.sourceforge.net
-Cc:     linux-nfs@vger.kernel.org, Rob Riggs <rob+redhat@pangalactic.org>
-References: <20230411121142.23312-1-dan@danny.cz>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20230411121142.23312-1-dan@danny.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
+Instead of using a tiny, static scratch buffer, we should use a kmalloc()-ed
+buffer that is allocated when checking for read plus usage. This lets us
+use the buffer before decoding any part of the READ_PLUS operation
+instead of setting it right before segment decoding, meaning it should
+be a little more robust.
 
-On 4/11/23 8:11 AM, Dan Horák wrote:
-> Code that works in GLIBC's runrpc implementation fails with libtirpc.
-> libtirpc forces the RPC library to talk to the portmapper via UDP,
-> even when the client specifies TCP.  This breaks existing code which
-> expect the protocol specified to be honored, even when talking to
-> portmapper.
-> 
-> This is upstreaming of an old patch by Rob Riggs reported in Fedora.
-> 
-> Resolves: https://bugzilla.redhat.com/show_bug.cgi?id=1725329
-> Signed-off-by: Rob Riggs <rob+redhat@pangalactic.org>
-> Signed-off-by: Dan Horák <dan@danny.cz>
-Committed... (tag: libtirpc-1-3-4-rc1)
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+ fs/nfs/nfs42xdr.c       |  4 ++--
+ fs/nfs/nfs4proc.c       | 17 ++++++++++++-----
+ include/linux/nfs_xdr.h |  1 +
+ 3 files changed, 15 insertions(+), 7 deletions(-)
 
-steved.
-> ---
->   src/rpcb_clnt.c | 9 +++------
->   1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/src/rpcb_clnt.c b/src/rpcb_clnt.c
-> index 9a9de69..d178d86 100644
-> --- a/src/rpcb_clnt.c
-> +++ b/src/rpcb_clnt.c
-> @@ -496,11 +496,7 @@ getpmaphandle(nconf, hostname, tgtaddr)
->   	CLIENT *client = NULL;
->   	rpcvers_t pmapvers = 2;
->   
-> -	/*
-> -	 * Try UDP only - there are some portmappers out
-> -	 * there that use UDP only.
-> -	 */
-> -	if (nconf == NULL || strcmp(nconf->nc_proto, NC_TCP) == 0) {
-> +	if (nconf == NULL) {
->   		struct netconfig *newnconf;
->   
->   		if ((newnconf = getnetconfigent("udp")) == NULL) {
-> @@ -509,7 +505,8 @@ getpmaphandle(nconf, hostname, tgtaddr)
->   		}
->   		client = getclnthandle(hostname, newnconf, tgtaddr);
->   		freenetconfigent(newnconf);
-> -	} else if (strcmp(nconf->nc_proto, NC_UDP) == 0) {
-> +	} else if (strcmp(nconf->nc_proto, NC_UDP) == 0 ||
-> +	    strcmp(nconf->nc_proto, NC_TCP) == 0) {
->   		if (strcmp(nconf->nc_protofmly, NC_INET) != 0)
->   			return NULL;
->   		client = getclnthandle(hostname, nconf, tgtaddr);
+diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+index d80ee88ca996..a6df815a140c 100644
+--- a/fs/nfs/nfs42xdr.c
++++ b/fs/nfs/nfs42xdr.c
+@@ -1122,7 +1122,6 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
+ 	uint32_t segments;
+ 	struct read_plus_segment *segs;
+ 	int status, i;
+-	char scratch_buf[16];
+ 	__be32 *p;
+ 
+ 	status = decode_op_hdr(xdr, OP_READ_PLUS);
+@@ -1143,7 +1142,6 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
+ 	if (!segs)
+ 		return -ENOMEM;
+ 
+-	xdr_set_scratch_buffer(xdr, &scratch_buf, sizeof(scratch_buf));
+ 	status = -EIO;
+ 	for (i = 0; i < segments; i++) {
+ 		status = decode_read_plus_segment(xdr, &segs[i]);
+@@ -1348,6 +1346,8 @@ static int nfs4_xdr_dec_read_plus(struct rpc_rqst *rqstp,
+ 	struct compound_hdr hdr;
+ 	int status;
+ 
++	xdr_set_scratch_buffer(xdr, res->scratch, sizeof(res->scratch));
++
+ 	status = decode_compound_hdr(xdr, &hdr);
+ 	if (status)
+ 		goto out;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 5607b1e2b821..18f25ff4bff7 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5439,6 +5439,8 @@ static bool nfs4_read_plus_not_supported(struct rpc_task *task,
+ 
+ static int nfs4_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
+ {
++	if (hdr->res.scratch)
++		kfree(hdr->res.scratch);
+ 	if (!nfs4_sequence_done(task, &hdr->res.seq_res))
+ 		return -EAGAIN;
+ 	if (nfs4_read_stateid_changed(task, &hdr->args))
+@@ -5452,17 +5454,22 @@ static int nfs4_read_done(struct rpc_task *task, struct nfs_pgio_header *hdr)
+ }
+ 
+ #if defined CONFIG_NFS_V4_2 && defined CONFIG_NFS_V4_2_READ_PLUS
+-static void nfs42_read_plus_support(struct nfs_pgio_header *hdr,
++static bool nfs42_read_plus_support(struct nfs_pgio_header *hdr,
+ 				    struct rpc_message *msg)
+ {
+ 	/* Note: We don't use READ_PLUS with pNFS yet */
+-	if (nfs_server_capable(hdr->inode, NFS_CAP_READ_PLUS) && !hdr->ds_clp)
++	if (nfs_server_capable(hdr->inode, NFS_CAP_READ_PLUS) && !hdr->ds_clp) {
+ 		msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ_PLUS];
++		hdr->res.scratch = kmalloc(32, GFP_KERNEL);
++		return hdr->res.scratch != NULL;
++	}
++	return false;
+ }
+ #else
+-static void nfs42_read_plus_support(struct nfs_pgio_header *hdr,
++static bool nfs42_read_plus_support(struct nfs_pgio_header *hdr,
+ 				    struct rpc_message *msg)
+ {
++	return false;
+ }
+ #endif /* CONFIG_NFS_V4_2 */
+ 
+@@ -5472,8 +5479,8 @@ static void nfs4_proc_read_setup(struct nfs_pgio_header *hdr,
+ 	hdr->timestamp   = jiffies;
+ 	if (!hdr->pgio_done_cb)
+ 		hdr->pgio_done_cb = nfs4_read_done_cb;
+-	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
+-	nfs42_read_plus_support(hdr, msg);
++	if (!nfs42_read_plus_support(hdr, msg))
++		msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_READ];
+ 	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
+ }
+ 
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index e86cf6642d21..2fd973d188c4 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -670,6 +670,7 @@ struct nfs_pgio_res {
+ 		struct {
+ 			unsigned int		replen;		/* used by read */
+ 			int			eof;		/* used by read */
++			void *			scratch;	/* used by read */
+ 		};
+ 		struct {
+ 			struct nfs_writeverf *	verf;		/* used by write */
+-- 
+2.40.0
 
