@@ -2,45 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E3266EB06E
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Apr 2023 19:19:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD9206EB06D
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Apr 2023 19:19:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233327AbjDURTb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Apr 2023 13:19:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60300 "EHLO
+        id S231368AbjDURTX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Apr 2023 13:19:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbjDURT3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Apr 2023 13:19:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE00810F
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 10:18:42 -0700 (PDT)
+        with ESMTP id S229920AbjDURTX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Apr 2023 13:19:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D63010D1
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 10:18:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
         s=mimecast20190719; t=1682097522;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ZANFOfnDvOnk5iS1Fz8Ne/mYBQjPnrhL6RXhlUon1D4=;
-        b=M5HSq7mERrwHZ5K2N6hjCx6R+2wzFvW+4zFodNoEOTLkHOzzYHyeTL0at+9wxnl55aT8C/
-        4AGeu7UYLBEYIHYikbqEfFXHa1auaapNIHD5NhynQ5dkFLiU4QO+HT8LmAm9HAqnWhlpCe
-        Pc9dTNZiHCNL7URlqcZssuCNCmkdyWw=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mUqPpBsJy9yXuVdRMY7+DV0E3whm/8u/LqgfTtzlFHI=;
+        b=G4zZ7xoKgf3zzGSih7VsK3MUccVQesoGSZV+MTImwCTpEeCLEMR5UGEdIVmLPCmD8XSPiw
+        HFu6jngtCiiQnDNs0CjHaxW7BNKDq5d/LrJsGHusQkSpEtxY+LQa5Yt55d9NZRKdN+s19q
+        MMVtQTIga4QowsZmN/lqos+gUZL73tQ=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-22-MHUwpD3XNuK7mzPD8FbvJA-1; Fri, 21 Apr 2023 13:18:40 -0400
-X-MC-Unique: MHUwpD3XNuK7mzPD8FbvJA-1
+ us-mta-471-JGFpbZvpPDWAJAI3Gpf1eQ-1; Fri, 21 Apr 2023 13:18:41 -0400
+X-MC-Unique: JGFpbZvpPDWAJAI3Gpf1eQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5DC772807D67
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 17:18:40 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 07D623C10141
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 17:18:41 +0000 (UTC)
 Received: from bcodding.csb.redhat.com (ovpn-0-3.rdu2.redhat.com [10.22.0.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0949A40C2064
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 17:18:39 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A5C6840C2064
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 17:18:40 +0000 (UTC)
 From:   Benjamin Coddington <bcodding@redhat.com>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 0/9 RFC v3] NFS sysfs scaffolding
-Date:   Fri, 21 Apr 2023 13:18:30 -0400
-Message-Id: <cover.1682097420.git.bcodding@redhat.com>
+Subject: [PATCH 1/9] NFS: rename nfs_client_kset to nfs_kset
+Date:   Fri, 21 Apr 2023 13:18:31 -0400
+Message-Id: <698994379a2d17dded9f853bbdf3649345808126.1682097420.git.bcodding@redhat.com>
+In-Reply-To: <cover.1682097420.git.bcodding@redhat.com>
+References: <cover.1682097420.git.bcodding@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
@@ -54,47 +57,64 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-.. and an immediate new version because I had the wrong patch in 0/8 last
-time.  Sorry for the noise.
+Be brief and match the subsystem name.  There's no need to distinguish this
+kset variable from the server.
 
-Here's another round of sysfs entries for each nfs_server, this time with a
-single use-case: a "shutdown" toggle that causes the basic rpc_clnt(s) to
-immediately fail tasks with -EIO.  It works well for the non pNFS cases to
-allow an unmount of a filesystem when the NFS server has gone away.
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/nfs/sysfs.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-I'm posting to gain potential NACKing, or to be redirected, or to serve as
-fodder for discussion at LSF.
-
-I'm thinking I'd like to toggle v4.2 things like READ_PLUS in here next, or
-other module-level options that maybe would be useful per-mount.
-
-Benjamin Coddington (9):
-  NFS: rename nfs_client_kset to nfs_kset
-  NFS: rename nfs_client_kobj to nfs_net_kobj
-  NFS: add superblock sysfs entries
-  NFS: Add sysfs links to sunrpc clients for nfs_clients
-  NFS: add a sysfs link to the lockd rpc_client
-  NFS: add a sysfs link to the acl rpc_client
-  NFS: add sysfs shutdown knob
-  NFS: Cancel all existing RPC tasks when shutdown
-  NFSv4: Clean up some shutdown loops
-
- fs/lockd/clntlock.c         |   6 ++
- fs/nfs/client.c             |  21 +++++
- fs/nfs/nfs3client.c         |   4 +
- fs/nfs/nfs4client.c         |   2 +
- fs/nfs/nfs4proc.c           |   2 +-
- fs/nfs/nfs4state.c          |   3 +
- fs/nfs/super.c              |   6 +-
- fs/nfs/sysfs.c              | 159 +++++++++++++++++++++++++++++++++---
- fs/nfs/sysfs.h              |   9 +-
- include/linux/lockd/bind.h  |   2 +
- include/linux/nfs_fs_sb.h   |   3 +
- include/linux/sunrpc/clnt.h |  11 ++-
- net/sunrpc/clnt.c           |   5 ++
- net/sunrpc/sysfs.h          |   7 --
- 14 files changed, 216 insertions(+), 24 deletions(-)
-
+diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+index 0cbcd2dfa732..81d98727b79f 100644
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -18,7 +18,7 @@
+ #include "sysfs.h"
+ 
+ struct kobject *nfs_client_kobj;
+-static struct kset *nfs_client_kset;
++static struct kset *nfs_kset;
+ 
+ static void nfs_netns_object_release(struct kobject *kobj)
+ {
+@@ -55,13 +55,13 @@ static struct kobject *nfs_netns_object_alloc(const char *name,
+ 
+ int nfs_sysfs_init(void)
+ {
+-	nfs_client_kset = kset_create_and_add("nfs", NULL, fs_kobj);
+-	if (!nfs_client_kset)
++	nfs_kset = kset_create_and_add("nfs", NULL, fs_kobj);
++	if (!nfs_kset)
+ 		return -ENOMEM;
+-	nfs_client_kobj = nfs_netns_object_alloc("net", nfs_client_kset, NULL);
++	nfs_client_kobj = nfs_netns_object_alloc("net", nfs_kset, NULL);
+ 	if  (!nfs_client_kobj) {
+-		kset_unregister(nfs_client_kset);
+-		nfs_client_kset = NULL;
++		kset_unregister(nfs_kset);
++		nfs_kset = NULL;
+ 		return -ENOMEM;
+ 	}
+ 	return 0;
+@@ -70,7 +70,7 @@ int nfs_sysfs_init(void)
+ void nfs_sysfs_exit(void)
+ {
+ 	kobject_put(nfs_client_kobj);
+-	kset_unregister(nfs_client_kset);
++	kset_unregister(nfs_kset);
+ }
+ 
+ static ssize_t nfs_netns_identifier_show(struct kobject *kobj,
+@@ -159,7 +159,7 @@ static struct nfs_netns_client *nfs_netns_client_alloc(struct kobject *parent,
+ 	p = kzalloc(sizeof(*p), GFP_KERNEL);
+ 	if (p) {
+ 		p->net = net;
+-		p->kobject.kset = nfs_client_kset;
++		p->kobject.kset = nfs_kset;
+ 		if (kobject_init_and_add(&p->kobject, &nfs_netns_client_type,
+ 					parent, "nfs_client") == 0)
+ 			return p;
 -- 
 2.39.2
 
