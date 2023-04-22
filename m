@@ -2,193 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 167A76EB19B
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Apr 2023 20:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A81A6EBB81
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Apr 2023 23:27:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbjDUS1p (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Apr 2023 14:27:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42414 "EHLO
+        id S229500AbjDVV1R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 22 Apr 2023 17:27:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233029AbjDUS1m (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Apr 2023 14:27:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38C12691
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 11:27:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 51BA564E25
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Apr 2023 18:27:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651ACC433D2;
-        Fri, 21 Apr 2023 18:27:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682101659;
-        bh=b4KIzptUhzTcQCxMJhTXnsMiiG8jJrmadsHmNaVOQWM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=VXCqRIYGgrvBsZ8RWlzwS4P9f+jsLT+3lrrBUqGAdP9HOVEHFXwXz4HEzSd8Xi6Nk
-         hJAvpvMoeBpvmNUyy03TyRmE3hiG1B3afWVLLtl05k56ZQRSJZa9/ev76EogcdC8m7
-         NWn5Po8T7gOw6gt8PGZcB3Mm+Nic+kCz2HeqW3YGNCDmQFR2+y46RPyRenrwqtuBqV
-         u8/qrX0BbWOTGnl30g3DHiZjoRQM/Nt3BTOjPBRywF7dryQ/VHEu08aEOp9fZ1Slmd
-         Tj8f0hQrA3/7fMJTzZZ4uYXg0nurY3jnHTB3tQMGQs0/ektgAwdgkfOqRX0gYx+o3z
-         YsckoQV9UymXg==
-From:   Anna Schumaker <anna@kernel.org>
-To:     linux-nfs@vger.kernel.org, bcodding@redhat.com
-Cc:     anna@kernel.org
-Subject: [RFC PATCH] NFS: add a sysfs file for enabling & disabling nfs features
-Date:   Fri, 21 Apr 2023 14:27:38 -0400
-Message-Id: <20230421182738.901701-1-anna@kernel.org>
-X-Mailer: git-send-email 2.40.0
+        with ESMTP id S229668AbjDVV1Q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Apr 2023 17:27:16 -0400
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 349C1198B;
+        Sat, 22 Apr 2023 14:27:14 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6DD2D5C0131;
+        Sat, 22 Apr 2023 17:27:12 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute2.internal (MEProxy); Sat, 22 Apr 2023 17:27:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=benboeckel.net;
+         h=cc:cc:content-type:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1682198832; x=
+        1682285232; bh=DruTjwzpMyWiIaxUQ/8q7NTY33luPc4IWWsktpThtlA=; b=p
+        ntWKjmNvW464H3DEa1QjgffP+BkP5pSkxOjdbjag3QNuOsO1EKhu/O1ufAuGl41m
+        KFVhW+7VegwXKihHB89Np1Xinsdvgm1GXPveAPijsVT/ps564DTYg2Afr12FtfEV
+        H7qlHFv9bjVxh0vW9nq7l8Zc4wAHuUL+GWo5hcMhEHpsvL4UWVa0yaQyGVdqFAKh
+        nry0yih3UaBOsxF3MVln/S4ONDXQn483LiOG26iFPnier6YxXuQ/cNqotFGGGmby
+        kTe+nIZog2WF5r/VxoA3ulo45mw4Gjai+wH9MRrgfjMJX/AHm/F9juDkulO8dGO3
+        zhJQ7PBoKhbAu2h849f+A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1682198832; x=1682285232; bh=DruTjwzpMyWiI
+        axUQ/8q7NTY33luPc4IWWsktpThtlA=; b=ALt6Ka2MGjdVJdZ3yvLZusE2FHG5l
+        VMlPrLcNAKntOsP468QvUSsj4exf9NLF00KMgcfdSur/rRzu4sd8APDnMqfKgAqw
+        YjEBPhBVe/n13CkN80fPxC6HjU2fVtlbX43YmqUVZAIEGV0eoRUsrVsC0l8JKpXD
+        o8dze49KeoT2zyidhjM/qJ+sFI5JYrepOuo70pObBFh4JHjocDHh5NjXgjmVI/8+
+        XKtICci6UXn6bqkjn3VgRS+R+xpH/XDN0d8tw3u/gGqiaiUk54UHN2gY7Xweq/Lu
+        Bjzz9SKzqVb+fIw7lH/MG3H/KPS3EUtoQTI1x5+ikMPjVZ9YCCWU1YayA==
+X-ME-Sender: <xms:MFFEZGM851jqSBH46GzTeZhAzZ2XGrqLPLuF0QYx4kYeI2ufhLP8qg>
+    <xme:MFFEZE_E72cTaL7A-akDbHA2cyzd-OoTWDUH5BEbIz1d-FOSdDuEAenyXwBAzBT7I
+    PF0gy93Viv5QHuknNU>
+X-ME-Received: <xmr:MFFEZNTnqR0rIy2h1vCNkjyK6ZIQ1tYhF4KcEakcrJ-JroUi1q8vVcKZAc_e69_eP3mJHG5HE6SaQmU0AisJg58mrXJAGBcmTmls>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedtiedgudeiudcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjfgesthdtredttderjeenucfhrhhomhepuegv
+    nhcuuehovggtkhgvlhcuoehmvgessggvnhgsohgvtghkvghlrdhnvghtqeenucggtffrrg
+    htthgvrhhnpeffleegffevleekffekheeigfdtleeuvddtgffhtddvfefgjeehffduueev
+    kedvvdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hmvgessggvnhgsohgvtghkvghlrdhnvght
+X-ME-Proxy: <xmx:MFFEZGuZ8xsTe5jeu6Em6Q2lRlLeTFmyfTMWw-6EBURIND8B-3-F-w>
+    <xmx:MFFEZOc4djfI--aNovrzQJehiBtgfpjCzlu30P_ivptBvkBZGcbMZw>
+    <xmx:MFFEZK1gUBzdsBKWimv_shvOXk7_m76fKHK8wMlywSNPReXtPF6vMw>
+    <xmx:MFFEZCFHfqPOL7ubleIW1VhPY_6q5SuhKfVK59_oeLsZ0dXx6rpkAw>
+Feedback-ID: iffc1478b:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 22 Apr 2023 17:27:12 -0400 (EDT)
+Date:   Sat, 22 Apr 2023 17:27:10 -0400
+From:   Ben Boeckel <me@benboeckel.net>
+To:     Scott Mayhew <smayhew@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [RFC PATCH 5/5] SUNRPC: store GSS creds in keyrings
+Message-ID: <20230422212710.GA813856@farprobe>
+References: <20230420202004.239116-1-smayhew@redhat.com>
+ <20230420202004.239116-6-smayhew@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230420202004.239116-6-smayhew@redhat.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On Thu, Apr 20, 2023 at 16:20:04 -0400, Scott Mayhew wrote:
+> This patch adds the option to store GSS credentials in keyrings as an
+> alternative to the RPC credential cache, to give users the ability to
+> destroy their GSS credentials on demand via 'keyctl unlink'.
 
-And add some basic checking so we only enable features that are present
-in a given NFS version.
+Can documentation please be added to `Documentation/security/keys` about
+this key type?
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfs/sysfs.c | 99 ++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfs/sysfs.h |  6 +++
- 2 files changed, 105 insertions(+)
+> Summary of the changes:
+> 
+> - Added key_type key_type_gss_cred and associated functions.  The
+>   request_key function makes use of the existing upcall mechanism to
+>   gssd.
+> 
+> - Added a keyring to the gss_auth struct to allow all of the assocated
+>   GSS credentials to be destroyed on RPC client shutdown (when the
+>   filesystem is unmounted).
+> 
+> - The key description contains the RPC client id, the user id, and the
+>   principal (for machine creds).
 
-diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-index 39bfcbcf916c..667c3e544b23 100644
---- a/fs/nfs/sysfs.c
-+++ b/fs/nfs/sysfs.c
-@@ -216,7 +216,106 @@ static void nfs_sysfs_sb_release(struct kobject *kobj)
- 	/* no-op: why? see lib/kobject.c kobject_cleanup() */
- }
- 
-+static inline char nfs_sysfs_server_capable(struct nfs_server *server,
-+					    unsigned int capability)
-+{
-+	return (server->caps & capability) ? '+' : '-';
-+}
-+
-+static ssize_t nfs_netns_sb_features_show(struct kobject *kobj,
-+					  struct kobj_attribute *attr,
-+					  char *buf)
-+{
-+	struct nfs_server *server = container_of(kobj, struct nfs_server, kobj);
-+
-+	return sysfs_emit(buf, "%creaddirplus\n"
-+				"%csecurity_label\n"
-+				"%cseek\n"
-+				"%callocate\n"
-+				"%cdeallocate\n"
-+				"%clayoutstats\n"
-+				"%cclone\n"
-+				"%ccopy\n"
-+				"%coffload_cancel\n"
-+				"%clayouterror\n"
-+				"%ccopy_notify\n"
-+				"%cxattr\n"
-+				"%cread_plus\n",
-+			nfs_sysfs_server_capable(server, NFS_CAP_READDIRPLUS),
-+			nfs_sysfs_server_capable(server, NFS_CAP_SECURITY_LABEL),
-+			nfs_sysfs_server_capable(server, NFS_CAP_SEEK),
-+			nfs_sysfs_server_capable(server, NFS_CAP_ALLOCATE),
-+			nfs_sysfs_server_capable(server, NFS_CAP_DEALLOCATE),
-+			nfs_sysfs_server_capable(server, NFS_CAP_LAYOUTSTATS),
-+			nfs_sysfs_server_capable(server, NFS_CAP_CLONE),
-+			nfs_sysfs_server_capable(server, NFS_CAP_COPY),
-+			nfs_sysfs_server_capable(server, NFS_CAP_OFFLOAD_CANCEL),
-+			nfs_sysfs_server_capable(server, NFS_CAP_LAYOUTERROR),
-+			nfs_sysfs_server_capable(server, NFS_CAP_COPY_NOTIFY),
-+			nfs_sysfs_server_capable(server, NFS_CAP_XATTR),
-+			nfs_sysfs_server_capable(server, NFS_CAP_READ_PLUS));
-+}
-+
-+static ssize_t nfs_netns_sb_features_store(struct kobject *kobj,
-+					   struct kobj_attribute *attr,
-+					   const char *buf, size_t count)
-+{
-+	struct nfs_server *server = container_of(kobj, struct nfs_server, kobj);
-+	unsigned int cap;
-+
-+	if (!strncmp(buf + 1, "readdirplus", count - 2))
-+		cap = NFS_CAP_READDIRPLUS;
-+	else if (!strncmp(buf + 1, "security_label", count - 2))
-+		cap = NFS_CAP_SECURITY_LABEL;
-+	else if (!strncmp(buf + 1, "seek", count - 2))
-+		cap = NFS_CAP_SEEK;
-+	else if (!strncmp(buf + 1, "allocate", count - 2))
-+		cap = NFS_CAP_ALLOCATE;
-+	else if (!strncmp(buf + 1, "deallocate", count - 2))
-+		cap = NFS_CAP_DEALLOCATE;
-+	else if (!strncmp(buf + 1, "layoutstats", count - 2))
-+		cap = NFS_CAP_LAYOUTSTATS;
-+	else if (!strncmp(buf + 1, "clone", count - 2))
-+		cap = NFS_CAP_CLONE;
-+	else if (!strncmp(buf + 1, "copy", count - 2))
-+		cap = NFS_CAP_COPY;
-+	else if (!strncmp(buf + 1, "offload_cancel", count - 2))
-+		cap = NFS_CAP_OFFLOAD_CANCEL;
-+	else if (!strncmp(buf + 1, "layouterror", count - 2))
-+		cap = NFS_CAP_LAYOUTERROR;
-+	else if (!strncmp(buf + 1, "copy_notify", count - 2))
-+		cap = NFS_CAP_COPY_NOTIFY;
-+	else if (!strncmp(buf + 1, "xattr", count - 2))
-+		cap = NFS_CAP_XATTR;
-+	else if (!strncmp(buf + 1, "read_plus", count - 2))
-+		cap = NFS_CAP_READ_PLUS;
-+	else
-+		return -EINVAL;
-+
-+	switch (cap) {
-+	case NFS_CAP_READDIRPLUS:
-+		if (server->nfs_client->rpc_ops->version == 2)
-+			return -EINVAL;
-+		break;
-+	default:
-+		if (server->nfs_client->rpc_ops->version != 4 ||
-+		    server->nfs_client->cl_minorversion < 2)
-+			return -EINVAL;
-+	}
-+
-+	if (buf[0] == '+')
-+		server->caps |= cap;
-+	else
-+		server->caps &= ~cap;
-+		
-+	return count;
-+}
-+
-+static struct kobj_attribute nfs_netns_sb_features = __ATTR(features,
-+		0644, nfs_netns_sb_features_show, nfs_netns_sb_features_store);
-+
- static struct attribute *nfs_mp_attrs[] = {
-+	&nfs_netns_sb_features.attr,
-         NULL,
- };
- 
-diff --git a/fs/nfs/sysfs.h b/fs/nfs/sysfs.h
-index 34e40f3a14cb..ed89fc873c68 100644
---- a/fs/nfs/sysfs.h
-+++ b/fs/nfs/sysfs.h
-@@ -14,6 +14,12 @@ struct nfs_netns_client {
- 	const char __rcu *identifier;
- };
- 
-+struct nfs_netns_server {
-+	struct kobject kobject;
-+	struct net *net;
-+	unsigned int caps;
-+};
-+
- extern struct kobject *nfs_client_kobj;
- 
- extern int nfs_sysfs_init(void);
--- 
-2.40.0
+What is the format of this within the bytes?
 
+> - The key payload contains the address of the gss_cred.
+
+What is the format of this within the bytes?
+
+> - The key is linked to the user's user keyring (KEY_SPEC_USER_KEYRING)
+>   as well as to the keyring on the gss_auth struct.
+
+Where is this documented? Can the key be moved later?
+
+> - gss_cred_init() now takes an optional pointer to an authkey, which is
+>   passed down to gss_create_upcall() and gss_setup_upcall(), where it is
+>   added to the gss_msg.  This is used for complete_request_key() after
+>   the upcall is done.
+> 
+> - put_rpccred() now returns a bool to indicate whether it called
+>   crdestroy(), and is used by gss_key_revoke() and gss_key_destroy() to
+>   determine whether to clear the key payload.
+> 
+> - gss_fill_context() now returns the GSS context's timeout via the tout
+>   parameter, which is used to set the timeout of the key.
+> 
+> - Added the module parameter 'use_keyring'.  When set to true, the GSS
+>   credentials are stored in the keyrings.  When false, the GSS
+>   credentials are stored in the RPC credential caches.
+> 
+> - Added a tracepoint to log the result of the key request, which prints
+>   either the key serial or an error return value.
+> 
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  include/linux/sunrpc/auth.h    |   4 +-
+>  include/trace/events/rpcgss.h  |  46 ++++-
+>  net/sunrpc/auth.c              |   9 +-
+>  net/sunrpc/auth_gss/auth_gss.c | 338 +++++++++++++++++++++++++++++++--
+>  4 files changed, 376 insertions(+), 21 deletions(-)
+
+Thanks,
+
+--Ben
