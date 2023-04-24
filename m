@@ -2,181 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC9B36ED10C
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Apr 2023 17:11:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5FB96ED45C
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Apr 2023 20:28:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232053AbjDXPLS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Apr 2023 11:11:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54004 "EHLO
+        id S231360AbjDXS2X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Apr 2023 14:28:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231667AbjDXPLP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Apr 2023 11:11:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C35449E;
-        Mon, 24 Apr 2023 08:11:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F5CA625E1;
-        Mon, 24 Apr 2023 15:11:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C104DC433EF;
-        Mon, 24 Apr 2023 15:11:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682349073;
-        bh=CH5ETGl1VCk5J+tPCp/iNHJe4ToABvcdm5xjv9j3lBA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eGQWsqzImKJ+8lpWetGzUbqVKVCqOyNDACZBvfubmDwpHAUKkWDsXk6wIc8LfJqaK
-         nyLaJYE9kP1DiwLE8yaDX0eQraEuY6HWKq7r5Hl+BvOmqNN+F/w7jjvUIyotvhxmcc
-         AJVuX2xkwrs7BQ/+8D1nH7+PqP0vMBxxrlILiu1rnTe8WBdUM7PrlmX14WU6IGGZVc
-         r4s0mGlEBEyV3aQTHdCOSFpyCYTtCoG1k6sm2tQQfPTTcF+xOsdbflSU/ocxbICwO/
-         vXjykC6ZZq/0vC+9egeYOjg6yCY+jYo40zseLcQwn6hk0xmlQjWcJW5rNCfvHZp0fi
-         I8ql5Fgb0amOg==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH v2 3/3] xfs: mark the inode for high-res timestamp update in getattr
-Date:   Mon, 24 Apr 2023 11:11:04 -0400
-Message-Id: <20230424151104.175456-4-jlayton@kernel.org>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230424151104.175456-1-jlayton@kernel.org>
-References: <20230424151104.175456-1-jlayton@kernel.org>
+        with ESMTP id S231137AbjDXS2W (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Apr 2023 14:28:22 -0400
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CEE5FE8;
+        Mon, 24 Apr 2023 11:28:20 -0700 (PDT)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 38DD45C0144;
+        Mon, 24 Apr 2023 14:28:18 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Mon, 24 Apr 2023 14:28:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=benboeckel.net;
+         h=cc:cc:content-type:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm3; t=1682360898; x=
+        1682447298; bh=VOtQWSe0xvxW1FIdIb1ccZwP8gLrLM7o39j9Dmdc54I=; b=m
+        6j1KrD6/x0TIdAnTRPKggGG5tI7CITj3eG8steSjud4rqvfVVDKYdtxCuAmhMZo+
+        CQ/bxc9mdhmEkCHHn0qaVGxnQ+IG05KmWBWSn8+WDLW/aFsgv2jd4MoU7kcs6taW
+        y3JS6WxbsvY+4X3G5Ogo3OvEeFVCOzyeTjV+GrqBFMSzyC6BFVNt4vFJT5RFP6IC
+        dPXISTIdlMu1wPczPNlFTQ9SWkNizg0+vvvkRXMUn6NkgASOAo63JmY7/Eu939sJ
+        A3DEcd8BeIIrWcMhGU+gxkw/9cNgO7wTWvlb1sksOzOO5Xiv7E5h4YdxtEhDtFFd
+        wVEKZkHuG5eHCld1vcK8Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; t=1682360898; x=1682447298; bh=VOtQWSe0xvxW1
+        FIdIb1ccZwP8gLrLM7o39j9Dmdc54I=; b=N2u01yyu5kC0PGXiOWLRGxUL1Bubo
+        qlJYHyBkDTj+SVKwwsX3fpzowqCJ4KFbMXc7SEnm0xEm9GNoN7BTRWvyMx2BExgD
+        imIhsWAw1w34DwGdJ2MJOcEDyqNLDEC4fiilDhKhFXDUeg2tkZNW2CqJpAtayWnR
+        V+usxytGnw3QqsyBy2fc7z2mI9bsudMAzj/suY+xJuqcD/vzvOluKfERS5n6Gvd4
+        6EYrgF2gCHzXaURMCp7+TNaX5cCMk86bqgt33FeGk6jGZ5EXAll4nDsoVDaLSaJv
+        jC86spX1KyhGotgma19Cmh2QQJEMo1DSY6IZnlYD1aJRJZeewpoHjKmgQ==
+X-ME-Sender: <xms:QcpGZD0WW6ziXWiFPxTpNJ2ubpD3tew5jtrT2wDBZQwq3Vxsy1spog>
+    <xme:QcpGZCFi9ebkP4x4qlEAWETqp3gvZmwjAAOMgRz4RiHr2ltc221t1n6nlavcTASpI
+    482oDkSTjzwclozda4>
+X-ME-Received: <xmr:QcpGZD7GcNire0qVq8oj8Dd94z9zRfJrw0T1XwnOnuk5YgDJt8eCPLvCXg0S5L9RBD2dhh9_We9FtZSJ_76_rG6JkuVBQyYq_9mO>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedutddguddvgecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvvefukfhfgggtuggjfgesthdtredttderjeenucfhrhhomhepuegv
+    nhcuuehovggtkhgvlhcuoehmvgessggvnhgsohgvtghkvghlrdhnvghtqeenucggtffrrg
+    htthgvrhhnpeeghefgueekfeffffelieehhfejtdefjeefveffiefgvdfhheeujeeggfef
+    teeijeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivg
+    eptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsegsvghnsghovggtkhgvlhdrnhgv
+    th
+X-ME-Proxy: <xmx:QspGZI2IK0SKF8slKZpfkDffJ_lg8XIiNekbvxmsawv74pLzfD7Mzg>
+    <xmx:QspGZGGWd4eyoo3GwQZcREmz9ilmRkV2o7KIAwougOcFBlJXdRO3ZA>
+    <xmx:QspGZJ_JWF8jSZEBhKb4TYzIvawNA5HdLyLFzupTDTsrzQSesQYSUQ>
+    <xmx:QspGZIM4JD5bDxSDYK7YdxxrUWh-DR_lMET6FVuOWPOY3Lyu8jBqCA>
+Feedback-ID: iffc1478b:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 24 Apr 2023 14:28:17 -0400 (EDT)
+Date:   Mon, 24 Apr 2023 14:28:17 -0400
+From:   Ben Boeckel <me@benboeckel.net>
+To:     Scott Mayhew <smayhew@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, keyrings@vger.kernel.org
+Subject: Re: [RFC PATCH 5/5] SUNRPC: store GSS creds in keyrings
+Message-ID: <20230424182817.GA1118847@farprobe>
+References: <20230420202004.239116-1-smayhew@redhat.com>
+ <20230420202004.239116-6-smayhew@redhat.com>
+ <20230422212710.GA813856@farprobe>
+ <ZEaL8Wueo5/vOGTg@aion.usersys.redhat.com>
+ <20230424142309.GB1072182@farprobe>
+ <ZEaZ5sLo2nBXUjl/@aion.usersys.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZEaZ5sLo2nBXUjl/@aion.usersys.redhat.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When the mtime or ctime is being queried via getattr, ensure that we
-mark the inode for a high-res timestamp update on the next pass. Also,
-switch to current_cmtime for other c/mtime updates.
+On Mon, Apr 24, 2023 at 11:01:58 -0400, Scott Mayhew wrote:
+> Just to be clear, this isn't meant to be written or read by userspace.
+> The user isn't explicitly requesting the creation of a key with the
+> gss_cred key type.  It happens automatically when they access an NFS
+> filesystem mounted with "sec=krb5{,i,p}", using the existing upcall
+> mechanism to rpc.gssd.  The only difference is that instead of sticking
+> the resulting gss_cred in the rpc_auth.au_credcache hash table, we're
+> now creating a key with the address of the gss_cred and storing it in
+> keyrings.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/xfs/libxfs/xfs_trans_inode.c | 2 +-
- fs/xfs/xfs_acl.c                | 2 +-
- fs/xfs/xfs_inode.c              | 2 +-
- fs/xfs/xfs_inode_item.c         | 2 +-
- fs/xfs/xfs_iops.c               | 9 ++++++---
- fs/xfs/xfs_super.c              | 5 ++++-
- 6 files changed, 14 insertions(+), 8 deletions(-)
+Ah, ok. I'm mostly interested in the userspace side as the author of
+https://github.com/mathstuf/rust-keyutils which I try to keep some safe
+wrappers around various keytypes.
 
-diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-index 8b5547073379..c08be3aa3339 100644
---- a/fs/xfs/libxfs/xfs_trans_inode.c
-+++ b/fs/xfs/libxfs/xfs_trans_inode.c
-@@ -63,7 +63,7 @@ xfs_trans_ichgtime(
- 	ASSERT(tp);
- 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
- 
--	tv = current_time(inode);
-+	tv = current_ctime(inode);
- 
- 	if (flags & XFS_ICHGTIME_MOD)
- 		inode->i_mtime = tv;
-diff --git a/fs/xfs/xfs_acl.c b/fs/xfs/xfs_acl.c
-index 791db7d9c849..85353e6e9004 100644
---- a/fs/xfs/xfs_acl.c
-+++ b/fs/xfs/xfs_acl.c
-@@ -233,7 +233,7 @@ xfs_acl_set_mode(
- 	xfs_ilock(ip, XFS_ILOCK_EXCL);
- 	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
- 	inode->i_mode = mode;
--	inode->i_ctime = current_time(inode);
-+	inode->i_ctime = current_ctime(inode);
- 	xfs_trans_log_inode(tp, ip, XFS_ILOG_CORE);
- 
- 	if (xfs_has_wsync(mp))
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index 5808abab786c..ac299c1a9838 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -843,7 +843,7 @@ xfs_init_new_inode(
- 	ip->i_df.if_nextents = 0;
- 	ASSERT(ip->i_nblocks == 0);
- 
--	tv = current_time(inode);
-+	tv = current_ctime(inode);
- 	inode->i_mtime = tv;
- 	inode->i_atime = tv;
- 	inode->i_ctime = tv;
-diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
-index ca2941ab6cbc..dc33f495f4fa 100644
---- a/fs/xfs/xfs_inode_item.c
-+++ b/fs/xfs/xfs_inode_item.c
-@@ -381,7 +381,7 @@ xfs_inode_to_log_dinode(
- 	memset(to->di_pad3, 0, sizeof(to->di_pad3));
- 	to->di_atime = xfs_inode_to_log_dinode_ts(ip, inode->i_atime);
- 	to->di_mtime = xfs_inode_to_log_dinode_ts(ip, inode->i_mtime);
--	to->di_ctime = xfs_inode_to_log_dinode_ts(ip, inode->i_ctime);
-+	to->di_ctime = xfs_inode_to_log_dinode_ts(ip, timestamp_truncate(inode->i_ctime, inode));
- 	to->di_nlink = inode->i_nlink;
- 	to->di_gen = inode->i_generation;
- 	to->di_mode = inode->i_mode;
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 24718adb3c16..b0490e46e825 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -573,8 +573,11 @@ xfs_vn_getattr(
- 	stat->gid = vfsgid_into_kgid(vfsgid);
- 	stat->ino = ip->i_ino;
- 	stat->atime = inode->i_atime;
--	stat->mtime = inode->i_mtime;
--	stat->ctime = inode->i_ctime;
-+	if (request_mask & (STATX_MTIME|STATX_CTIME))
-+		generic_fill_multigrain_cmtime(inode, stat);
-+	else
-+		stat->result_mask &= ~(STATX_CTIME|STATX_MTIME);
-+
- 	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
- 
- 	if (xfs_has_v3inodes(mp)) {
-@@ -917,7 +920,7 @@ xfs_setattr_size(
- 	if (newsize != oldsize &&
- 	    !(iattr->ia_valid & (ATTR_CTIME | ATTR_MTIME))) {
- 		iattr->ia_ctime = iattr->ia_mtime =
--			current_time(inode);
-+			current_ctime(inode);
- 		iattr->ia_valid |= ATTR_CTIME | ATTR_MTIME;
- 	}
- 
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 4f814f9e12ab..ee9d0b43bf15 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1620,7 +1620,7 @@ xfs_fs_fill_super(
- 	sb->s_blocksize_bits = ffs(sb->s_blocksize) - 1;
- 	sb->s_maxbytes = MAX_LFS_FILESIZE;
- 	sb->s_max_links = XFS_MAXLINK;
--	sb->s_time_gran = 1;
-+	sb->s_time_gran = 2;
- 	if (xfs_has_bigtime(mp)) {
- 		sb->s_time_min = xfs_bigtime_to_unix(XFS_BIGTIME_TIME_MIN);
- 		sb->s_time_max = xfs_bigtime_to_unix(XFS_BIGTIME_TIME_MAX);
-@@ -1633,6 +1633,9 @@ xfs_fs_fill_super(
- 
- 	set_posix_acl_flag(sb);
- 
-+	/* Enable multigrain timestamps */
-+	sb->s_flags |= SB_MULTIGRAIN_TS;
-+
- 	/* version 5 superblocks support inode version counters. */
- 	if (xfs_has_crc(mp))
- 		sb->s_flags |= SB_I_VERSION;
--- 
-2.40.0
+> We definitely allow unlinking - that's sort of the whole point because
+> it allows users to establish a new GSS credential (most likely with a
+> different initiator principal that the old one).
+> 
+> It doesn't really make sense for the key to be on any other keyring besides
+> the user keyring.  If it were on the session keyring, and if you were
+> logged into multiple sessions, then those sessions would be constantly
+> whacking each others GSS creds and they be constantly
+> creating/destroying new GSS creds with the NFS server.
+> 
+> Having them on the session keyring also presents another problem because
+> the NFS client caches NFSv4 open owners, which take a reference on a
+> struct cred.  When you log out, pam_keyinit revokes the session keying.
+> If you log back in and try to resume NFS access (generating a new key),
+> the current request key code will find the cred with the revoked session
+> keyring, and it will try to link the new key to that revoked session
+> keyring, which will then fail with -EKEYREVOKED.  That's the reason
+> for patches 3/5 and 4/5, to allow request_key_with_auxdata() to link the
+> key directly to the user keyring.
 
+Ok. These lifetime things definitely deserve docs.
+
+Thanks,
+
+--Ben
