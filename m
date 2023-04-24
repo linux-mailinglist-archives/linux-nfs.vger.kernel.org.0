@@ -2,129 +2,211 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5FB96ED45C
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Apr 2023 20:28:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBCD86ED4E6
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Apr 2023 20:56:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231360AbjDXS2X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Apr 2023 14:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33346 "EHLO
+        id S232493AbjDXS4G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Apr 2023 14:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231137AbjDXS2W (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Apr 2023 14:28:22 -0400
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98CEE5FE8;
-        Mon, 24 Apr 2023 11:28:20 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 38DD45C0144;
-        Mon, 24 Apr 2023 14:28:18 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 24 Apr 2023 14:28:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=benboeckel.net;
-         h=cc:cc:content-type:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1682360898; x=
-        1682447298; bh=VOtQWSe0xvxW1FIdIb1ccZwP8gLrLM7o39j9Dmdc54I=; b=m
-        6j1KrD6/x0TIdAnTRPKggGG5tI7CITj3eG8steSjud4rqvfVVDKYdtxCuAmhMZo+
-        CQ/bxc9mdhmEkCHHn0qaVGxnQ+IG05KmWBWSn8+WDLW/aFsgv2jd4MoU7kcs6taW
-        y3JS6WxbsvY+4X3G5Ogo3OvEeFVCOzyeTjV+GrqBFMSzyC6BFVNt4vFJT5RFP6IC
-        dPXISTIdlMu1wPczPNlFTQ9SWkNizg0+vvvkRXMUn6NkgASOAo63JmY7/Eu939sJ
-        A3DEcd8BeIIrWcMhGU+gxkw/9cNgO7wTWvlb1sksOzOO5Xiv7E5h4YdxtEhDtFFd
-        wVEKZkHuG5eHCld1vcK8Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; t=1682360898; x=1682447298; bh=VOtQWSe0xvxW1
-        FIdIb1ccZwP8gLrLM7o39j9Dmdc54I=; b=N2u01yyu5kC0PGXiOWLRGxUL1Bubo
-        qlJYHyBkDTj+SVKwwsX3fpzowqCJ4KFbMXc7SEnm0xEm9GNoN7BTRWvyMx2BExgD
-        imIhsWAw1w34DwGdJ2MJOcEDyqNLDEC4fiilDhKhFXDUeg2tkZNW2CqJpAtayWnR
-        V+usxytGnw3QqsyBy2fc7z2mI9bsudMAzj/suY+xJuqcD/vzvOluKfERS5n6Gvd4
-        6EYrgF2gCHzXaURMCp7+TNaX5cCMk86bqgt33FeGk6jGZ5EXAll4nDsoVDaLSaJv
-        jC86spX1KyhGotgma19Cmh2QQJEMo1DSY6IZnlYD1aJRJZeewpoHjKmgQ==
-X-ME-Sender: <xms:QcpGZD0WW6ziXWiFPxTpNJ2ubpD3tew5jtrT2wDBZQwq3Vxsy1spog>
-    <xme:QcpGZCFi9ebkP4x4qlEAWETqp3gvZmwjAAOMgRz4RiHr2ltc221t1n6nlavcTASpI
-    482oDkSTjzwclozda4>
-X-ME-Received: <xmr:QcpGZD7GcNire0qVq8oj8Dd94z9zRfJrw0T1XwnOnuk5YgDJt8eCPLvCXg0S5L9RBD2dhh9_We9FtZSJ_76_rG6JkuVBQyYq_9mO>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfedutddguddvgecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjfgesthdtredttderjeenucfhrhhomhepuegv
-    nhcuuehovggtkhgvlhcuoehmvgessggvnhgsohgvtghkvghlrdhnvghtqeenucggtffrrg
-    htthgvrhhnpeeghefgueekfeffffelieehhfejtdefjeefveffiefgvdfhheeujeeggfef
-    teeijeenucffohhmrghinhepghhithhhuhgsrdgtohhmnecuvehluhhsthgvrhfuihiivg
-    eptdenucfrrghrrghmpehmrghilhhfrhhomhepmhgvsegsvghnsghovggtkhgvlhdrnhgv
-    th
-X-ME-Proxy: <xmx:QspGZI2IK0SKF8slKZpfkDffJ_lg8XIiNekbvxmsawv74pLzfD7Mzg>
-    <xmx:QspGZGGWd4eyoo3GwQZcREmz9ilmRkV2o7KIAwougOcFBlJXdRO3ZA>
-    <xmx:QspGZJ_JWF8jSZEBhKb4TYzIvawNA5HdLyLFzupTDTsrzQSesQYSUQ>
-    <xmx:QspGZIM4JD5bDxSDYK7YdxxrUWh-DR_lMET6FVuOWPOY3Lyu8jBqCA>
-Feedback-ID: iffc1478b:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 24 Apr 2023 14:28:17 -0400 (EDT)
-Date:   Mon, 24 Apr 2023 14:28:17 -0400
-From:   Ben Boeckel <me@benboeckel.net>
-To:     Scott Mayhew <smayhew@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, keyrings@vger.kernel.org
-Subject: Re: [RFC PATCH 5/5] SUNRPC: store GSS creds in keyrings
-Message-ID: <20230424182817.GA1118847@farprobe>
-References: <20230420202004.239116-1-smayhew@redhat.com>
- <20230420202004.239116-6-smayhew@redhat.com>
- <20230422212710.GA813856@farprobe>
- <ZEaL8Wueo5/vOGTg@aion.usersys.redhat.com>
- <20230424142309.GB1072182@farprobe>
- <ZEaZ5sLo2nBXUjl/@aion.usersys.redhat.com>
+        with ESMTP id S232495AbjDXS4C (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Apr 2023 14:56:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADF0E7AA0
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Apr 2023 11:55:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1682362510;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cC2m6cj4by0ic+ocHcPEbRFoxwEEiKQQoS0Ge1Avf1U=;
+        b=eXIuqQc4jpMTnNotakUfcHMztDE4KLaz+C/f3E7nq8gpq7tXM6Kw4EA6Me/EkDAkJJIQnN
+        qAMKzVP5W9+nbepdk5/F0vLUjyHtQbuMPsezR8igLkV3bKred+r+4AITu5C6e5mepa/C6T
+        pL9uSixeh59GSC5r4bbxWQBcT+7PFSg=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-350-aoZFZmnaMHOMWGTMI8QtMw-1; Mon, 24 Apr 2023 14:55:09 -0400
+X-MC-Unique: aoZFZmnaMHOMWGTMI8QtMw-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-24b6a888085so3451284a91.0
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Apr 2023 11:55:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682362508; x=1684954508;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cC2m6cj4by0ic+ocHcPEbRFoxwEEiKQQoS0Ge1Avf1U=;
+        b=RYqB2vaLrCoDxk4bP2sLIxdT5sRzJOPTGfd5VdjAFxBAaQE9IuR4+rbnGNh6zzExu7
+         vaqkNx4DbO6QjBHmUCv94ldJjr+YBhC7TdWCVgX3cMy/K1KR7hAOENAhQxSe6+//jc35
+         +5GnX+M2UTxYieh3uSCe3ujsaM4bqWzxPrWiWV9UmUQU/a2eFVqRBjOGFsdkcvBQaaL9
+         NH2dNIsoMjy+3+hmdLX0qz/P1SyjhjQl7PCFD77g9Zv2xdA6qSO42h6QNlGmJefOYqC1
+         C4WRvlvIM+r+Cl6lC6b5mG4h36iGHHnBLigH9TRmMF2s+BlAByDX2JH2JdElMdhuuvkZ
+         gjlQ==
+X-Gm-Message-State: AAQBX9eTmiccDqygl1Wa4qDtyaP7gjpAx99lcgfMPHp/1MAjy3GvMYDS
+        3ZK6p+z7+6+/GQ8ZyytmQZIqVQSzpy10yTYQs1V5RrMJrSLVpIwFNseT4YuICLBOxjdzZJGdB8p
+        +XK6fo8KqGK5wypU1IuxzgrS/RERBWr25bVDm
+X-Received: by 2002:a17:90b:3a8d:b0:23e:f855:79ed with SMTP id om13-20020a17090b3a8d00b0023ef85579edmr14646832pjb.28.1682362508594;
+        Mon, 24 Apr 2023 11:55:08 -0700 (PDT)
+X-Google-Smtp-Source: AKy350bw6UUmfa7x2kgzI/S3M36kQcMIx/LORGs9afdrTUJulizrDq8UK+lWvA5A9k5nXONeKEERR5M4Fbn0vBOkkLM=
+X-Received: by 2002:a17:90b:3a8d:b0:23e:f855:79ed with SMTP id
+ om13-20020a17090b3a8d00b0023ef85579edmr14646811pjb.28.1682362508271; Mon, 24
+ Apr 2023 11:55:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZEaZ5sLo2nBXUjl/@aion.usersys.redhat.com>
-User-Agent: Mutt/2.2.9 (2022-11-12)
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230424054926.26927-1-hch@lst.de> <20230424054926.26927-6-hch@lst.de>
+In-Reply-To: <20230424054926.26927-6-hch@lst.de>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Mon, 24 Apr 2023 20:54:56 +0200
+Message-ID: <CAHc6FU7tuLJk1JEHdmK7VmEuvuG2sMg1=D9qYJAuhn2ES4NFAA@mail.gmail.com>
+Subject: Re: [Cluster-devel] [PATCH 05/17] filemap: update ki_pos in generic_perform_write
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-nfs@vger.kernel.org, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        linux-kernel@vger.kernel.org, Matthew Wilcox <willy@infradead.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        David Howells <dhowells@redhat.com>, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-ext4@vger.kernel.org, ceph-devel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 11:01:58 -0400, Scott Mayhew wrote:
-> Just to be clear, this isn't meant to be written or read by userspace.
-> The user isn't explicitly requesting the creation of a key with the
-> gss_cred key type.  It happens automatically when they access an NFS
-> filesystem mounted with "sec=krb5{,i,p}", using the existing upcall
-> mechanism to rpc.gssd.  The only difference is that instead of sticking
-> the resulting gss_cred in the rpc_auth.au_credcache hash table, we're
-> now creating a key with the address of the gss_cred and storing it in
-> keyrings.
+On Mon, Apr 24, 2023 at 8:22=E2=80=AFAM Christoph Hellwig <hch@lst.de> wrot=
+e:
+> All callers of generic_perform_write need to updated ki_pos, move it into
+> common code.
 
-Ah, ok. I'm mostly interested in the userspace side as the author of
-https://github.com/mathstuf/rust-keyutils which I try to keep some safe
-wrappers around various keytypes.
+We've actually got a similar situation with
+iomap_file_buffered_write() and its callers. Would it make sense to
+fix that up as well?
 
-> We definitely allow unlinking - that's sort of the whole point because
-> it allows users to establish a new GSS credential (most likely with a
-> different initiator principal that the old one).
-> 
-> It doesn't really make sense for the key to be on any other keyring besides
-> the user keyring.  If it were on the session keyring, and if you were
-> logged into multiple sessions, then those sessions would be constantly
-> whacking each others GSS creds and they be constantly
-> creating/destroying new GSS creds with the NFS server.
-> 
-> Having them on the session keyring also presents another problem because
-> the NFS client caches NFSv4 open owners, which take a reference on a
-> struct cred.  When you log out, pam_keyinit revokes the session keying.
-> If you log back in and try to resume NFS access (generating a new key),
-> the current request key code will find the cred with the revoked session
-> keyring, and it will try to link the new key to that revoked session
-> keyring, which will then fail with -EKEYREVOKED.  That's the reason
-> for patches 3/5 and 4/5, to allow request_key_with_auxdata() to link the
-> key directly to the user keyring.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  fs/ceph/file.c | 2 --
+>  fs/ext4/file.c | 9 +++------
+>  fs/f2fs/file.c | 1 -
+>  fs/nfs/file.c  | 1 -
+>  mm/filemap.c   | 8 ++++----
+>  5 files changed, 7 insertions(+), 14 deletions(-)
+>
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index f4d8bf7dec88a8..feeb9882ef635a 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -1894,8 +1894,6 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, =
+struct iov_iter *from)
+>                  * can not run at the same time
+>                  */
+>                 written =3D generic_perform_write(iocb, from);
+> -               if (likely(written >=3D 0))
+> -                       iocb->ki_pos =3D pos + written;
+>                 ceph_end_io_write(inode);
+>         }
+>
+> diff --git a/fs/ext4/file.c b/fs/ext4/file.c
+> index 0b8b4499e5ca18..1026acaf1235a0 100644
+> --- a/fs/ext4/file.c
+> +++ b/fs/ext4/file.c
+> @@ -291,12 +291,9 @@ static ssize_t ext4_buffered_write_iter(struct kiocb=
+ *iocb,
+>
+>  out:
+>         inode_unlock(inode);
+> -       if (likely(ret > 0)) {
+> -               iocb->ki_pos +=3D ret;
+> -               ret =3D generic_write_sync(iocb, ret);
+> -       }
+> -
+> -       return ret;
+> +       if (unlikely(ret <=3D 0))
+> +               return ret;
+> +       return generic_write_sync(iocb, ret);
+>  }
+>
+>  static ssize_t ext4_handle_inode_extension(struct inode *inode, loff_t o=
+ffset,
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index f4ab23efcf85f8..5a9ae054b6da7d 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -4511,7 +4511,6 @@ static ssize_t f2fs_buffered_write_iter(struct kioc=
+b *iocb,
+>         current->backing_dev_info =3D NULL;
+>
+>         if (ret > 0) {
+> -               iocb->ki_pos +=3D ret;
+>                 f2fs_update_iostat(F2FS_I_SB(inode), inode,
+>                                                 APP_BUFFERED_IO, ret);
+>         }
+> diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+> index 893625eacab9fa..abdae2b29369be 100644
+> --- a/fs/nfs/file.c
+> +++ b/fs/nfs/file.c
+> @@ -666,7 +666,6 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov=
+_iter *from)
+>                 goto out;
+>
+>         written =3D result;
+> -       iocb->ki_pos +=3D written;
+>         nfs_add_stats(inode, NFSIOS_NORMALWRITTENBYTES, written);
+>
+>         if (mntflags & NFS_MOUNT_WRITE_EAGER) {
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 2723104cc06a12..0110bde3708b3f 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -3960,7 +3960,10 @@ ssize_t generic_perform_write(struct kiocb *iocb, =
+struct iov_iter *i)
+>                 balance_dirty_pages_ratelimited(mapping);
+>         } while (iov_iter_count(i));
+>
+> -       return written ? written : status;
+> +       if (!written)
+> +               return status;
+> +       iocb->ki_pos +=3D written;
 
-Ok. These lifetime things definitely deserve docs.
+Could be turned into:
+iocb->ki_pos =3D pos;
+
+> +       return written;
+>  }
+>  EXPORT_SYMBOL(generic_perform_write);
+>
+> @@ -4039,7 +4042,6 @@ ssize_t __generic_file_write_iter(struct kiocb *ioc=
+b, struct iov_iter *from)
+>                 endbyte =3D pos + status - 1;
+>                 err =3D filemap_write_and_wait_range(mapping, pos, endbyt=
+e);
+>                 if (err =3D=3D 0) {
+> -                       iocb->ki_pos =3D endbyte + 1;
+>                         written +=3D status;
+>                         invalidate_mapping_pages(mapping,
+>                                                  pos >> PAGE_SHIFT,
+> @@ -4052,8 +4054,6 @@ ssize_t __generic_file_write_iter(struct kiocb *ioc=
+b, struct iov_iter *from)
+>                 }
+>         } else {
+>                 written =3D generic_perform_write(iocb, from);
+> -               if (likely(written > 0))
+> -                       iocb->ki_pos +=3D written;
+>         }
+>  out:
+>         current->backing_dev_info =3D NULL;
+> --
+> 2.39.2
+>
 
 Thanks,
+Andreas
 
---Ben
