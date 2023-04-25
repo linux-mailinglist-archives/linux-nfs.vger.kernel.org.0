@@ -2,43 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF6B16EDDC0
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Apr 2023 10:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAC336EE05C
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Apr 2023 12:30:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233539AbjDYIN2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Apr 2023 04:13:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41140 "EHLO
+        id S233238AbjDYKaD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Apr 2023 06:30:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232603AbjDYIN1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Apr 2023 04:13:27 -0400
-X-Greylist: delayed 1172 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 25 Apr 2023 01:13:25 PDT
-Received: from mail.camacfoy.pl (mail.camacfoy.pl [195.231.80.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC26549E8
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Apr 2023 01:13:25 -0700 (PDT)
-Received: by mail.camacfoy.pl (Postfix, from userid 1001)
-        id B8039A407E; Tue, 25 Apr 2023 08:36:11 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=camacfoy.pl; s=mail;
-        t=1682408188; bh=0DnDcjJl846YrSvLcp0W7cMkWp4Lfhp/OZAq4oBoaY8=;
-        h=Date:From:To:Subject:From;
-        b=U0vVC7o4HcCWtsJlKewvhOQnSQnWgsWqC6+olIeIFqaDWpLpklcxsva7jbAwGcvlA
-         nbUBVuIUzSH3uvM/9E+NYfaHWS1QpeqfrBuB9IUQEXvBInPsxxuzoVHiSyycocSoAm
-         mGaB3c8NasI5c7vfRivm+e2ij07SQG8S6ZoonqRPFHmGcFHerGjYFyEnVO66oS4WNF
-         D/4sT/e/pC09jo68E67ThDv72MpMbnb/W8NWwUyMmr5TTBJc5darnbRFVAywYFnBfO
-         zuwTPj0Ma36gvaVRp6/biBmPzAL9eYuVlLuSiE6LoeFJsxcplSJscvuCqKqRAnDmdb
-         JmWUhso+DjLsg==
-Received: by mail.camacfoy.pl for <linux-nfs@vger.kernel.org>; Tue, 25 Apr 2023 07:36:05 GMT
-Message-ID: <20230425074502-0.1.83.bzd8.0.prb5jr7j25@camacfoy.pl>
-Date:   Tue, 25 Apr 2023 07:36:05 GMT
-From:   "Krzysztof Maj" <krzysztof.maj@camacfoy.pl>
-To:     <linux-nfs@vger.kernel.org>
-Subject: biznesowy angielski 
-X-Mailer: mail.camacfoy.pl
+        with ESMTP id S233709AbjDYKaB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Apr 2023 06:30:01 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5544CC3D
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Apr 2023 03:29:59 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 549D81FDA6;
+        Tue, 25 Apr 2023 10:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1682418598;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n5Pl854vOoDZtv0CHQa6qbCgSEDBT3YwmdX581qycGk=;
+        b=tYKjIJj2SR1PVZ9e18mJeFjWWdvSHLdVd86WGrXt0AxhjW8QBSpE8YxHnfW/8er+FgWvcE
+        DRtjjkhzs/Z80/2Amy9lwrOhJe6TeLA2IK7NP/eT5r1+71h4QwK+VvVarDag3Jsfd+Zh16
+        GAaQdTEhBOC1TILqk7NvrNmgcqNgNm4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1682418598;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=n5Pl854vOoDZtv0CHQa6qbCgSEDBT3YwmdX581qycGk=;
+        b=vWAT59+umvjQyPAjmMZiOoMO/HXOErnAe0klbQpT3izRDKWBWIGwpUuNAw5mO23lX082eu
+        Am9ErGbkPC0nDlCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 08D12138E3;
+        Tue, 25 Apr 2023 10:29:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id ri8VAaarR2R8KgAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Tue, 25 Apr 2023 10:29:58 +0000
+Date:   Tue, 25 Apr 2023 12:30:06 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     ltp@lists.linux.it
+Cc:     NeilBrown <neilb@suse.de>, Cyril Hrubis <chrubis@suse.cz>,
+        linux-nfs@vger.kernel.org, Steve Dickson <steved@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: Re: [PATCH v3 3/3] nfs: Run on all filesystems
+Message-ID: <20230425103006.GA2926981@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20230424210818.2885479-1-pvorel@suse.cz>
+ <20230424210818.2885479-4-pvorel@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230424210818.2885479-4-pvorel@suse.cz>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -46,29 +74,91 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dzie=C5=84 dobry,=20
+Hi all,
 
-czy rozwa=C5=BCali Pa=C5=84stwo rozw=C3=B3j kwalifikacji j=C4=99zykowych =
-swoich pracownik=C3=B3w?
+unfortunately nfs05.sh fails for some reason (the only test which fails).
+It works on various filesystems:
 
-Opracowali=C5=9Bmy kursy j=C4=99zykowe dla r=C3=B3=C5=BCnych bran=C5=BC, =
-w kt=C3=B3rych koncentrujemy si=C4=99 na podniesieniu poziomu s=C5=82owni=
-ctwa i jako=C5=9Bci komunikacji wykorzystuj=C4=85c autorsk=C4=85 metod=C4=
-=99, stworzon=C4=85 specjalnie dla wymagaj=C4=85cego biznesu.=20
+nfs05 1 TINFO: using not default LTP netns: 'tst_ns_exec 31811 net,mnt'
+nfs05 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
+nfs05 1 TINFO: add local addr 10.0.0.2/24
+nfs05 1 TINFO: add local addr fd00:1:1:1::2/64
+nfs05 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
+nfs05 1 TINFO: add remote addr 10.0.0.1/24
+nfs05 1 TINFO: add remote addr fd00:1:1:1::1/64
+nfs05 1 TINFO: Network config (local -- remote):
+nfs05 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
+nfs05 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
+nfs05 1 TINFO: fd00:1:1:1::2/64 -- fd00:1:1:1::1/64
+tst_device.c:96: TINFO: Found free device 0 '/dev/loop0'
+tst_supported_fs_types.c:90: TINFO: Kernel supports ext2
+tst_supported_fs_types.c:55: TINFO: mkfs.ext2 does exist
+tst_supported_fs_types.c:90: TINFO: Kernel supports ext3
+tst_supported_fs_types.c:55: TINFO: mkfs.ext3 does exist
+tst_supported_fs_types.c:90: TINFO: Kernel supports ext4
+tst_supported_fs_types.c:55: TINFO: mkfs.ext4 does exist
+tst_supported_fs_types.c:90: TINFO: Kernel supports xfs
+tst_supported_fs_types.c:55: TINFO: mkfs.xfs does exist
+tst_supported_fs_types.c:90: TINFO: Kernel supports btrfs
+tst_supported_fs_types.c:55: TINFO: mkfs.btrfs does exist
+tst_supported_fs_types.c:90: TINFO: Kernel supports vfat
+tst_supported_fs_types.c:55: TINFO: mkfs.vfat does exist
+tst_supported_fs_types.c:157: TINFO: Skipping exfat as requested by the test
+tst_supported_fs_types.c:120: TINFO: FUSE does support ntfs
+tst_supported_fs_types.c:55: TINFO: mkfs.ntfs does exist
+tst_supported_fs_types.c:90: TINFO: Kernel supports tmpfs
+tst_supported_fs_types.c:42: TINFO: mkfs is not needed for tmpfs
+nfs05 1 TINFO: === Testing on ext2 ===
+nfs05 1 TINFO: Formatting ext2 with opts='/dev/loop0'
+nfs05 1 TINFO: Mounting device: mount -t ext2 /dev/loop0 /tmp/LTP_nfs05.BXqm4Onw7z/mntpoint 
+nfs05 1 TINFO: timeout per run is 0h 10m 0s
+nfs05 1 TINFO: mount.nfs: (linux nfs-utils 2.6.2)
+nfs05 1 TINFO: setup NFSv4, socket type tcp
+nfs05 1 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=4 10.0.0.2:/tmp/LTP_nfs05.BXqm4Onw7z/mntpoint/4/tcp /tmp/LTP_nfs05.BXqm4Onw7z/4/0
+nfs05 1 TINFO: start nfs05_make_tree -d 10 -f 30 -t 8
+tst_test.c:1558: TINFO: Timeout per run is 0h 11m 00s
+nfs05_make_tree.c:211: TPASS: 'make' successfully build and clean all targets
 
-Niestandardowy kurs on-line, dopasowany do profilu firmy i obszar=C3=B3w =
-=C5=9Bwiadczonych us=C5=82ug, w szybkim czasie przyniesie efekty, kt=C3=B3=
-re zwi=C4=99ksz=C4=85 komfort i jako=C5=9B=C4=87 pracy, rozwijaj=C4=85c m=
-o=C5=BCliwo=C5=9Bci biznesowe.=20
+Summary:
+passed   1
+failed   0
+broken   0
+skipped  0
+warnings 0
+nfs05 1 TPASS: test finished
+nfs05 2 TINFO: Cleaning up testcase
+nfs05 2 TINFO: === Testing on ext3 ===
+...
 
-Zdalne szkolenie j=C4=99zykowe to m.in. zaj=C4=99cia z native speakerami,=
- kt=C3=B3re w szybkim czasie naucz=C4=85 pracownik=C3=B3w rozmawia=C4=87 =
-za pomoc=C4=85 jasnego i zwi=C4=99z=C5=82ego j=C4=99zyka Business English=
-=2E
+But later it fails for btrfs:
+nfs05 5 TINFO: === Testing on btrfs ===
+nfs05 5 TINFO: Formatting btrfs with opts='/dev/loop0'
+nfs05 5 TINFO: Mounting device: mount -t btrfs /dev/loop0 /tmp/LTP_nfs05.BXqm4Onw7z/mntpoint 
+nfs05 5 TINFO: timeout per run is 0h 10m 0s
+nfs05 5 TINFO: mount.nfs: (linux nfs-utils 2.6.2)
+nfs05 5 TINFO: setup NFSv4, socket type tcp
+nfs05 5 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=4 10.0.0.2:/tmp/LTP_nfs05.BXqm4Onw7z/mntpoint/4/tcp /tmp/LTP_nfs05.BXqm4Onw7z/4/0
+nfs05 5 TINFO: start nfs05_make_tree -d 10 -f 30 -t 8
+tst_test.c:1558: TINFO: Timeout per run is 0h 11m 00s
+/usr/lib64/gcc/x86_64-suse-linux/13/../../../../x86_64-suse-linux/bin/ld: 1021.2.5: final close failed: No space left on device
+collect2: error: ld returned 1 exit status
+make[2]: *** [makefile:7: 1021.2.5] Error 1
+make[1]: *** [makefile:9: dir] Error 2
+make: *** [makefile:9: dir] Error 2
+tst_cmd.c:121: TBROK: 'make' exited with a non-zero code 2 at tst_cmd.c:121
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 wi=C4=99cej szczeg=C3=B3=C5=82=C3=B3=
-w i opowiedzie=C4=87 jak dzia=C5=82amy?
+Summary:
+passed   0
+failed   0
+broken   1
+skipped  0
+warnings 0
+nfs05 5 TBROK: nfs05_make_tree -d 10 -f 30 -t 8 failed
+nfs05 5 TINFO: Cleaning up testcase
+/usr/lib64/gcc/x86_64-suse-linux/13/../../../../x86_64-suse-linux/bin/ld: 1015.2.9: final close failed: No space left on device
 
+I expect the problem is not with btrfs itself, but with somehow broken cleanup
+of the space.
 
-Pozdrawiam
-Krzysztof Maj
+Kind regards,
+Petr
