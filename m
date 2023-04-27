@@ -2,161 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E59256F09EB
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Apr 2023 18:34:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E0426F0A90
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Apr 2023 19:14:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243481AbjD0Qeh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Apr 2023 12:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32974 "EHLO
+        id S244235AbjD0RO5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Apr 2023 13:14:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243284AbjD0Qeg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Apr 2023 12:34:36 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F88146BE;
-        Thu, 27 Apr 2023 09:34:34 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S244240AbjD0RO5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Apr 2023 13:14:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F5D2D5F;
+        Thu, 27 Apr 2023 10:14:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id A4D3821C0C;
-        Thu, 27 Apr 2023 16:34:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1682613272; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wmth4alCSERvbUxN8itO1bBdqjrbePJcRRiASYpuefg=;
-        b=N+H7rNV5TR1kkSt+Pt2fFhVCX5g3/KGe34ja7R5U5iZSXsi/t+V4vNzMunQJp9Jiy0KtKU
-        h5RWrdUPLix8+f0jcFBkbGiO5FRDWBZSENTWfEegyGiUIqLDHFAf1ozSIwLnQc86CdWIgw
-        +CtWEyqkxZTxNKHaL4R4I03cpr1VwV4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1682613272;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Wmth4alCSERvbUxN8itO1bBdqjrbePJcRRiASYpuefg=;
-        b=c97+0kpHj1vO46+6chAlHjo2vadkqmUhok9b1kF4ptixPiwvttSpSE+9rry89dlXtv2l91
-        jZulZ1xAsP8EPyCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8D6E613910;
-        Thu, 27 Apr 2023 16:34:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id sll1IhikSmQMXQAAMHmgww
-        (envelope-from <jack@suse.cz>); Thu, 27 Apr 2023 16:34:32 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id E1A57A0729; Thu, 27 Apr 2023 18:34:31 +0200 (CEST)
-Date:   Thu, 27 Apr 2023 18:34:31 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-unionfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-api@vger.kernel.org, Chuck Lever <cel@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [RFC][PATCH 4/4] fanotify: support reporting non-decodeable file
- handles
-Message-ID: <20230427163431.ndw3r5spjs2nbber@quack3>
-References: <20230425130105.2606684-1-amir73il@gmail.com>
- <20230425130105.2606684-5-amir73il@gmail.com>
- <20230427114849.cv3kzxk7rvxpohjc@quack3>
- <CAOQ4uxhBaZ4_c5Ko6jZ6UzqtB-4spE_xiRC=TNMO8+bwnYMSnA@mail.gmail.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 421CC60A3D;
+        Thu, 27 Apr 2023 17:14:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB43C4339B;
+        Thu, 27 Apr 2023 17:14:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682615694;
+        bh=YFdlPAagU57g5PVVlBC6wpVOtjfrCy0Kaqyslksz8v4=;
+        h=Subject:From:To:Cc:Date:From;
+        b=ifDR7F1ddKjHimZW4Kkj+VOS+z6Kyr0hrM6yikH6HOF4FyqebdHz7Z9DIybEFROQb
+         tphe5j84iGylOjKJJr31QPTEzQYY5Df17sI8w4Ol9GierO6FIe+EtMhODbhI7WuZ08
+         1gwvuHUFvUBs2oO8NlOqIdCDcxm2WSustNHU6sw3Oc0AfxrQ3B+atAwfyxiYpNWQo9
+         00+ZI2h8sjfl7cn4jXE74Vqp/h4VRchlTUosCkgMZmHTQJqHE2906pr7QRYDSLpbnm
+         WvTAfixRE/DeA+jRlocGljkPaGOnQIoAm8dj3yzlTdOb5LEVqcQR/F2V2FMcJPOArG
+         kli3qpuNjpPrA==
+Subject: [PATCH RFC] RDMA/core: Store zero GIDs in some cases
+From:   Chuck Lever <cel@kernel.org>
+To:     BMT@zurich.ibm.com
+Cc:     linux-rdma@vger.kernel.org, linux-nfs@vger.kernel.org
+Date:   Thu, 27 Apr 2023 13:14:43 -0400
+Message-ID: <168261567323.5727.12145565111706096503.stgit@oracle-102.nfsv4bat.org>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOQ4uxhBaZ4_c5Ko6jZ6UzqtB-4spE_xiRC=TNMO8+bwnYMSnA@mail.gmail.com>
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu 27-04-23 15:28:23, Amir Goldstein wrote:
-> s_export_op
-> 
-> On Thu, Apr 27, 2023 at 2:48 PM Jan Kara <jack@suse.cz> wrote:
-> >
-> > On Tue 25-04-23 16:01:05, Amir Goldstein wrote:
-> > > fanotify users do not always need to decode the file handles reported
-> > > with FAN_REPORT_FID.
-> > >
-> > > Relax the restriction that filesystem needs to support NFS export and
-> > > allow reporting file handles from filesystems that only support ecoding
-> > > unique file handles.
-> > >
-> > > For such filesystems, users will have to use the AT_HANDLE_FID of
-> > > name_to_handle_at(2) if they want to compare the object in path to the
-> > > object fid reported in an event.
-> > >
-> > > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > ...
-> > > diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
-> > > index 8f430bfad487..a5af84cbb30d 100644
-> > > --- a/fs/notify/fanotify/fanotify_user.c
-> > > +++ b/fs/notify/fanotify/fanotify_user.c
-> > > @@ -1586,11 +1586,9 @@ static int fanotify_test_fid(struct dentry *dentry)
-> > >        * We need to make sure that the file system supports at least
-> > >        * encoding a file handle so user can use name_to_handle_at() to
-> > >        * compare fid returned with event to the file handle of watched
-> > > -      * objects. However, name_to_handle_at() requires that the
-> > > -      * filesystem also supports decoding file handles.
-> > > +      * objects, but it does not need to support decoding file handles.
-> > >        */
-> > > -     if (!dentry->d_sb->s_export_op ||
-> > > -         !dentry->d_sb->s_export_op->fh_to_dentry)
-> > > +     if (!dentry->d_sb->s_export_op)
-> > >               return -EOPNOTSUPP;
-> >
-> > So AFAICS the only thing you require is that s_export_op is set to
-> > *something* as exportfs_encode_inode_fh() can deal with NULL ->encode_fh
-> > just fine without any filesystem cooperation. What is the reasoning behind
-> > the dentry->d_sb->s_export_op check? Is there an implicit expectation that
-> > if s_export_op is set to something, the filesystem has sensible
-> > i_generation? Or is it just a caution that you don't want the functionality
-> > to be enabled for unexpected filesystems?
-> 
-> A little bit of both.
-> Essentially, I do not want to use the generic encoding unless the filesystem
-> opted-in to say "This is how objects should be identified".
-> 
-> The current fs that have s_export_op && !s_export_op->encode_fh
-> practically make that statement because they support NFS export
-> (i.e. they implement fh_to_dentry()).
+From: Bernard Metzler <bmt@zurich.ibm.com>
 
-Makes sense.
+Tunnel devices have zero GIDs, so skip the zero GID check when
+setting up soft iWARP over a tunnel device.
 
-> I don't like the implicit fallback to generic encoding, especially when
-> introducing this new functionality of encode_fid().
-> 
-> Before posting this patch set I had two earlier revisions.
-> One that changed the encode_fh() to mandatory and converted
-> all the INO32_GEN fs to explicitly set
-> s_export_op.encode_fh = generic_encode_ino32_fh,
-> And one that marked all the INO32_GEN fs with
-> s_export_op.flags = EXPORT_OP_ENCODE_INO32_GEN
-> in both cases there was no blind fallback to INO32_GEN.
-> 
-> But in the end, these added noise without actual value so
-> I dropped them, because the d_sb->s_export_op check is anyway
-> a pretty strong indication for opt-in to export fids.
-> 
-> CC exportfs maintainers in case they have an opinion one
-> way or the other.
+Suggested-by: Bernard Metzler <bmt@zurich.ibm.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ drivers/infiniband/core/cache.c      |    4 +++-
+ drivers/infiniband/sw/siw/siw_main.c |    1 +
+ include/rdma/iw_cm.h                 |    9 ++++++++-
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
-Yeah, I agree with your judgement. I just wanted to make sure I understand
-everything properly.
+diff --git a/drivers/infiniband/core/cache.c b/drivers/infiniband/core/cache.c
+index 2e91d8879326..2493ca4f2739 100644
+--- a/drivers/infiniband/core/cache.c
++++ b/drivers/infiniband/core/cache.c
+@@ -41,6 +41,7 @@
+ #include <net/addrconf.h>
+ 
+ #include <rdma/ib_cache.h>
++#include <rdma/iw_cm.h>
+ 
+ #include "core_priv.h"
+ 
+@@ -441,7 +442,8 @@ static int add_modify_gid(struct ib_gid_table *table,
+ 	 * leave other unused entries as the zero GID. Convert zero GIDs to
+ 	 * empty table entries instead of storing them.
+ 	 */
+-	if (rdma_is_zero_gid(&attr->gid))
++	if (rdma_is_zero_gid(&attr->gid) &&
++	   !(attr->device->iw_driver_flags & IW_F_STORE_0GID))
+ 		return 0;
+ 
+ 	entry = alloc_gid_entry(attr);
+diff --git a/drivers/infiniband/sw/siw/siw_main.c b/drivers/infiniband/sw/siw/siw_main.c
+index dacc174604bf..842a039fa457 100644
+--- a/drivers/infiniband/sw/siw/siw_main.c
++++ b/drivers/infiniband/sw/siw/siw_main.c
+@@ -359,6 +359,7 @@ static struct siw_device *siw_device_create(struct net_device *netdev)
+ 
+ 	/* Disable TCP port mapping */
+ 	base_dev->iw_driver_flags = IW_F_NO_PORT_MAP;
++	base_dev->iw_driver_flags = IW_F_STORE_0GID;
+ 
+ 	sdev->attrs.max_qp = SIW_MAX_QP;
+ 	sdev->attrs.max_qp_wr = SIW_MAX_QP_WR;
+diff --git a/include/rdma/iw_cm.h b/include/rdma/iw_cm.h
+index 03abd30e6c8c..c48f2cbe37b5 100644
+--- a/include/rdma/iw_cm.h
++++ b/include/rdma/iw_cm.h
+@@ -90,7 +90,14 @@ enum iw_flags {
+ 	 * reserve the port.  This is required for soft iwarp
+ 	 * to play in the port mapped iwarp space.
+ 	 */
+-	IW_F_NO_PORT_MAP = (1 << 0),
++	IW_F_NO_PORT_MAP = BIT(0),
++
++	/*
++	 * This flag allows the insertion of zero GIDs into the
++	 * stored GID table. That is needed to enable soft iWARP
++	 * on tunnel devices.
++	 */
++	IW_F_STORE_0GID = BIT(1),
+ };
+ 
+ /**
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
