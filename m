@@ -2,146 +2,158 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D5F46F03D2
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Apr 2023 11:58:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F99F6F05C5
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Apr 2023 14:29:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243282AbjD0J5y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Apr 2023 05:57:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42066 "EHLO
+        id S243850AbjD0M2o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Apr 2023 08:28:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243439AbjD0J5v (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Apr 2023 05:57:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D86644A9;
-        Thu, 27 Apr 2023 02:57:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 37DF763C17;
-        Thu, 27 Apr 2023 09:57:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FD41C433EF;
-        Thu, 27 Apr 2023 09:57:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682589467;
-        bh=USht+Uhb9xZz9unMUb+D4xBAM+5FX4XpLOVJcmQLh1U=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=byAFePc0ODsjd5aiGO9OPca7OVWAZDPXzpeqUTYbMwvg/LgHb+Nd89oeLryh1Vjs7
-         mNs4G0c5xvx9hPHhbPbqqb2wXnfj0hssVe3TfUDySJVnk2oJxTiOy1qYOe+28ZFoqc
-         soDJQVIvZDzswir043Ask61bZCvd8O0/7HPCwsjVW+HkiRya/gKcqEv4o7uWYbYNfD
-         UFEJ/AOiPH0ZipnF2tb1U57ShzE0LtqnRotiitK+rYq9zfecX+cG91iThdn1CtqbFB
-         XyDR5aNQJoGNXTu40yuMplZ/vbGv5gH/JngiDbHisrJKKedk7MZ8io8BRU6s3H7C65
-         Nu/DjCcXdQYug==
-Message-ID: <0f504cb85005676fdae06d00b276518b6b983986.camel@kernel.org>
-Subject: Re: [PATCH v2 1/3] fs: add infrastructure for multigrain inode
- i_m/ctime
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org
-Date:   Thu, 27 Apr 2023 05:57:44 -0400
-In-Reply-To: <20230427-rebel-vergibt-99cf6a7838a2@brauner>
-References: <20230424151104.175456-1-jlayton@kernel.org>
-         <20230424151104.175456-2-jlayton@kernel.org>
-         <20230426-bahnanlagen-ausmusterung-4877cbf40d4c@brauner>
-         <03e91ee4c56829995c08f4f8fb1052d3c6cc40c4.camel@kernel.org>
-         <20230427-rebel-vergibt-99cf6a7838a2@brauner>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+        with ESMTP id S243996AbjD0M2h (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Apr 2023 08:28:37 -0400
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85DE15BB7;
+        Thu, 27 Apr 2023 05:28:35 -0700 (PDT)
+Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-77217c862b3so2620299241.3;
+        Thu, 27 Apr 2023 05:28:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682598514; x=1685190514;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c4upoSGz+k+e+el5zscXUKPfxUEDiAW8o9zGPiapxio=;
+        b=DPnim84Ki8Z5lVy0hY7rTRJQ17k6jHg37OMO7mxe19JyrOc2XGr+8vD5AN0jNAiNA4
+         FkBTmCDOdHhnXz/kNZkbfCIssDVpSVhkpWJL81ToU1eQa4vIxRJnNsw1s8cHQozj5j6S
+         /1N60U8POemboyMsf5Ks2QHaSQN386N0LTFzwStylM6p2n83XosvIgG4q7gmgKvfz/sH
+         WOPBCpXI1AIel1RmDPTX7zYSybJA4ZrURGdH+HrQXfwqyP/N8IFqGcs/Z16imtzHZQ2n
+         xcULxnlzz4J0IIEQsRT2l6nbxBx0iXU14m51RSqaAjWK+xX1G8RX8dkemsikMXqwS7Zw
+         G9+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682598514; x=1685190514;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c4upoSGz+k+e+el5zscXUKPfxUEDiAW8o9zGPiapxio=;
+        b=YatOIi1xlaO8SRoM8bT0nC45tOpgeTO+UUEGfZfyHow8DURcmWFH3nJGI20Ch9XeQd
+         QeA2QxcwJ/LEP2Nuh7jYXiJ8Qv0QsW3dcDXGlEbiXRg1OLce5GoDeunahMaKXuGWC8BR
+         JY+L8vKOZljb5JBFwWsgDGux/11kxshj9gsAq06ogGh0MZErxcjPs9F+ocMtZaCvV1nc
+         M1XgxFfZVdH/hMq8RopSt9CtCzztmVZ+WECRNtc5u5hZABHaNzbNquHImoP0LG0eq5Cl
+         dy9k0G1WUDGdqn+Buqn00SOaojsXm0uCjHpdJys5ykqbqyboenawC6FNY5Ltkr2uBVIv
+         Dmcw==
+X-Gm-Message-State: AC+VfDyGdzbSxzLTrV0es+Pc+PoKkrLpDewATUSVlojipVoY83PWTKE2
+        W56SdtPRephnMDI5oBjO2+oCH2NHCAge/3DkG0s=
+X-Google-Smtp-Source: ACHHUZ7TC6YiCnC1CVuW7jNBUZeaZU1KaGfmdmSZ85GStKkw/Otlm49DYVKQPEfWGI7TnFZ+UfpZEJkXpENk762lBh4=
+X-Received: by 2002:a05:6102:3579:b0:42f:ec21:1c18 with SMTP id
+ bh25-20020a056102357900b0042fec211c18mr589937vsb.35.1682598514273; Thu, 27
+ Apr 2023 05:28:34 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230425130105.2606684-1-amir73il@gmail.com> <20230425130105.2606684-5-amir73il@gmail.com>
+ <20230427114849.cv3kzxk7rvxpohjc@quack3>
+In-Reply-To: <20230427114849.cv3kzxk7rvxpohjc@quack3>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 27 Apr 2023 15:28:23 +0300
+Message-ID: <CAOQ4uxhBaZ4_c5Ko6jZ6UzqtB-4spE_xiRC=TNMO8+bwnYMSnA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 4/4] fanotify: support reporting non-decodeable file handles
+To:     Jan Kara <jack@suse.cz>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        linux-unionfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-api@vger.kernel.org, Chuck Lever <cel@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2023-04-27 at 11:51 +0200, Christian Brauner wrote:
-> On Wed, Apr 26, 2023 at 05:48:38AM -0400, Jeff Layton wrote:
-> > On Wed, 2023-04-26 at 09:07 +0200, Christian Brauner wrote:
-> > > On Mon, Apr 24, 2023 at 11:11:02AM -0400, Jeff Layton wrote:
-> > > > The VFS always uses coarse-grained timestamp updates for filling ou=
-t the
-> > > > ctime and mtime after a change. This has the benefit of allowing
-> > > > filesystems to optimize away a lot metaupdates, to around once per
-> > > > jiffy, even when a file is under heavy writes.
-> > > >=20
-> > > > Unfortunately, this has always been an issue when we're exporting v=
-ia
-> > > > NFSv3, which relies on timestamps to validate caches. Even with NFS=
-v4, a
-> > > > lot of exported filesystems don't properly support a change attribu=
-te
-> > > > and are subject to the same problems with timestamp granularity. Ot=
-her
-> > > > applications have similar issues (e.g backup applications).
-> > > >=20
-> > > > Switching to always using fine-grained timestamps would improve the
-> > > > situation for NFS, but that becomes rather expensive, as the underl=
-ying
-> > > > filesystem will have to log a lot more metadata updates.
-> > > >=20
-> > > > What we need is a way to only use fine-grained timestamps when they=
- are
-> > > > being actively queried:
-> > > >=20
-> > > > Whenever the mtime changes, the ctime must also change since we're
-> > > > changing the metadata. When a superblock has a s_time_gran >1, we c=
-an
-> > > > use the lowest-order bit of the inode->i_ctime as a flag to indicat=
-e
-> > > > that the value has been queried. Then on the next write, we'll fetc=
-h a
-> > > > fine-grained timestamp instead of the usual coarse-grained one.
-> > > >=20
-> > > > We could enable this for any filesystem that has a s_time_gran >1, =
-but
-> > > > for now, this patch adds a new SB_MULTIGRAIN_TS flag to allow files=
-ystems
-> > > > to opt-in to this behavior.
-> > >=20
-> > > Hm, the patch raises the flag in s_flags. Please at least move this t=
-o
-> > > s_iflags as SB_I_MULTIGRAIN and treat this as an internal flag. There=
-'s
-> > > no need to give the impression that this will become a mount option.
-> > >=20
-> > > Also, this looks like it's a filesystem property not a superblock
-> > > property as the granularity isn't changeable. So shouldn't this be an
-> > > FS_* flag instead?
-> >=20
-> > It could be a per-sb thing if there was some filesystem that wanted to
-> > do that, but I'm hoping that most will not want to do that.
->=20
-> Yeah, I'd really hope this isn't an sb thing.
->=20
-> >=20
-> > My initial patches for this actually did use a FS_* flag, but I figured
->=20
-> Oh, I might've just missed that.
->=20
+s_export_op
 
-Sorry, I didn't actually post that set. But I did go with a FS_* flag
-before I made it a SB_* flag.
+On Thu, Apr 27, 2023 at 2:48=E2=80=AFPM Jan Kara <jack@suse.cz> wrote:
+>
+> On Tue 25-04-23 16:01:05, Amir Goldstein wrote:
+> > fanotify users do not always need to decode the file handles reported
+> > with FAN_REPORT_FID.
+> >
+> > Relax the restriction that filesystem needs to support NFS export and
+> > allow reporting file handles from filesystems that only support ecoding
+> > unique file handles.
+> >
+> > For such filesystems, users will have to use the AT_HANDLE_FID of
+> > name_to_handle_at(2) if they want to compare the object in path to the
+> > object fid reported in an event.
+> >
+> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ...
+> > diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fa=
+notify_user.c
+> > index 8f430bfad487..a5af84cbb30d 100644
+> > --- a/fs/notify/fanotify/fanotify_user.c
+> > +++ b/fs/notify/fanotify/fanotify_user.c
+> > @@ -1586,11 +1586,9 @@ static int fanotify_test_fid(struct dentry *dent=
+ry)
+> >        * We need to make sure that the file system supports at least
+> >        * encoding a file handle so user can use name_to_handle_at() to
+> >        * compare fid returned with event to the file handle of watched
+> > -      * objects. However, name_to_handle_at() requires that the
+> > -      * filesystem also supports decoding file handles.
+> > +      * objects, but it does not need to support decoding file handles=
+.
+> >        */
+> > -     if (!dentry->d_sb->s_export_op ||
+> > -         !dentry->d_sb->s_export_op->fh_to_dentry)
+> > +     if (!dentry->d_sb->s_export_op)
+> >               return -EOPNOTSUPP;
+>
+> So AFAICS the only thing you require is that s_export_op is set to
+> *something* as exportfs_encode_inode_fh() can deal with NULL ->encode_fh
+> just fine without any filesystem cooperation. What is the reasoning behin=
+d
+> the dentry->d_sb->s_export_op check? Is there an implicit expectation tha=
+t
+> if s_export_op is set to something, the filesystem has sensible
+> i_generation? Or is it just a caution that you don't want the functionali=
+ty
+> to be enabled for unexpected filesystems?
 
-> > that was one more pointer to chase when you wanted to check the flag.
->=20
-> Hm, unless you have reasons to think that it would be noticable in terms
-> of perf I'd rather do the correct thing and have it be an FS_* flag.
+A little bit of both.
+Essentially, I do not want to use the generic encoding unless the filesyste=
+m
+opted-in to say "This is how objects should be identified".
 
-Sure. I'll make the switch before the next posting.
+The current fs that have s_export_op && !s_export_op->encode_fh
+practically make that statement because they support NFS export
+(i.e. they implement fh_to_dentry()).
 
-Thanks for the review!
---=20
-Jeff Layton <jlayton@kernel.org>
+I don't like the implicit fallback to generic encoding, especially when
+introducing this new functionality of encode_fid().
+
+Before posting this patch set I had two earlier revisions.
+One that changed the encode_fh() to mandatory and converted
+all the INO32_GEN fs to explicitly set
+s_export_op.encode_fh =3D generic_encode_ino32_fh,
+And one that marked all the INO32_GEN fs with
+s_export_op.flags =3D EXPORT_OP_ENCODE_INO32_GEN
+in both cases there was no blind fallback to INO32_GEN.
+
+But in the end, these added noise without actual value so
+I dropped them, because the d_sb->s_export_op check is anyway
+a pretty strong indication for opt-in to export fids.
+
+CC exportfs maintainers in case they have an opinion one
+way or the other.
+
+> In either case it would be good
+> to capture the reasoning either in a comment or the changelog...
+>
+
+Will do.
+
+Thanks,
+Amir.
