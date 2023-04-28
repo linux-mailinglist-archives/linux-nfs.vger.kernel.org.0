@@ -2,54 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 414B26F1EF8
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Apr 2023 21:54:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4BE56F2163
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Apr 2023 01:48:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346563AbjD1TyD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Apr 2023 15:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33334 "EHLO
+        id S1347041AbjD1XsI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Apr 2023 19:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346255AbjD1TyC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Apr 2023 15:54:02 -0400
+        with ESMTP id S1347055AbjD1XsC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Apr 2023 19:48:02 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C258359C
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Apr 2023 12:54:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83914C04;
+        Fri, 28 Apr 2023 16:47:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C159060FBF
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Apr 2023 19:54:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CDB5C433D2
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Apr 2023 19:54:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D8FE2631AD;
+        Fri, 28 Apr 2023 23:46:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1286AC433D2;
+        Fri, 28 Apr 2023 23:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682711640;
-        bh=mmA731S5SbhaKcTMkTi/cAwxVpbAF6Hb/QTkDuy6wqw=;
-        h=References:In-Reply-To:From:Date:Subject:To:From;
-        b=RcL6/otaHRt0uTp28od08sXuTYmu7I03yRf5uGRwY8zr7hCK0UyQsRtDkmXhEj9C/
-         d44Td8Al1R7uqaIl1/yVTMdrWioAb7n/sj5pQDfRFpRiDDwEeBY43fld+F6dSu9sK2
-         Jj++QPGi1k03+TRylAD4z3oZB/3JhFUbt/C2evzfC1/XH7xOL6UnGi4CnVJJsyBnJ/
-         Cn4q4XKdhXyKzdtHzyjOkQVPHtDZz6Vu043fgQJvov8WjTsBehz+MR5x7mwROFjvje
-         FxaV6YZwnLZGtJXDngI02q0XcRabCg/cKLsvydIvs6rPS2ZJyBXSuFwRYcml6t4+9H
-         23pkekXI+cuWA==
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-3ef69281e68so1598741cf.1
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Apr 2023 12:54:00 -0700 (PDT)
-X-Gm-Message-State: AC+VfDxhLTdFxhk8GxRNUQ91me73YTedDRKM4+5jUZ/DlVC+4wkVPITa
-        H/FCH1daYw6U0fr8GQGDe0bTQMt0LF4gecMQzDA=
-X-Google-Smtp-Source: ACHHUZ5wYY/zVMJ4DWab3qkn4fQX8k88l7OVRgxbnwyC4PvlQbSK+33FgK/DOBKzaul+i+MVAKc119rRPKK9cg4oNiA=
-X-Received: by 2002:a05:622a:60c:b0:3f0:a892:3c0e with SMTP id
- z12-20020a05622a060c00b003f0a8923c0emr10148773qta.47.1682711639238; Fri, 28
- Apr 2023 12:53:59 -0700 (PDT)
+        s=k20201202; t=1682725601;
+        bh=kfZZr6KMfoLR9GKJOF8IGsGbILU6f3g0vJrOdB364gE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VIqITLiE5JfV5HMm7a4hnTYSC9E5B9WRpkDFjAtDHgZ9LHeTPCDExX+/RBtIpqLhD
+         ytd7NxeGOhbzxK9O3J9nX9nzNS5hPULLNvFdruPZGAAwJh6ioyyS2lN2Y+RAHbmNl1
+         yKiuq+FB4UNad21ZQGq8MCl3Zxd+ls06+ICgcEulFXPk3uPUDjaP9AfU3tS1tiS2Ok
+         kPS8xiZmenpR3VlrG1cHHr+F4wj3uTph0YjIWWLnj1lQ77mTk8dG02nxPQqwCF6HCR
+         Dn+FuRJqAWZC0xgap+G3KFH5cQQrA+00Hbo5I13WzrEEXn4hjI3SilJCqMYryWzQmp
+         1Q9xXIwdYRyVg==
+Date:   Fri, 28 Apr 2023 16:46:39 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Scott Mayhew <smayhew@redhat.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: RPCSEC GSS krb5 KUnit test fails on arm64 with h/w accelerated
+ ciphers enabled
+Message-ID: <20230428234639.GD3150@sol.localdomain>
+References: <ZEBi8ReG9LKLcmW3@aion.usersys.redhat.com>
+ <ZEuVcizjPtG96/ST@gondor.apana.org.au>
+ <CAMj1kXGOxw2mm8dVNHBg3HfJ7==JVV+vdXaW3iGGKamb4ZAg-g@mail.gmail.com>
+ <F46EA3E0-1338-4E92-8CCF-DD869BD573BE@oracle.com>
+ <CAMj1kXE29dMSgjkDPUXf0LFnxyrMeSO5NxG8fjYCuG=HJJ7wiA@mail.gmail.com>
+ <870429E7-8202-405B-96F7-46A11B41EF05@oracle.com>
+ <CAMj1kXGrrRj6b6RR4orKNykjjxyvd4Xe+8eOu-nY9jT=25_21A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230428195215.234246-1-anna@kernel.org>
-In-Reply-To: <20230428195215.234246-1-anna@kernel.org>
-From:   Anna Schumaker <anna@kernel.org>
-Date:   Fri, 28 Apr 2023 15:53:43 -0400
-X-Gmail-Original-Message-ID: <CAFX2Jfmezew=2JjLkygdu79pAXm=pmbnF2fjN6+rMWDpOiAB9Q@mail.gmail.com>
-Message-ID: <CAFX2Jfmezew=2JjLkygdu79pAXm=pmbnF2fjN6+rMWDpOiAB9Q@mail.gmail.com>
-Subject: Re: [PATCH v2] NFSv4.2: Rework scratch handling for READ_PLUS
-To:     linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGrrRj6b6RR4orKNykjjxyvd4Xe+8eOu-nY9jT=25_21A@mail.gmail.com>
 X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,134 +64,112 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Sorry about the repost, I accidentally pointed a script to the wrong file!
+On Fri, Apr 28, 2023 at 05:48:30PM +0100, Ard Biesheuvel wrote:
+> On Fri, 28 Apr 2023 at 17:18, Chuck Lever III <chuck.lever@oracle.com> wrote:
+> >
+> >
+> >
+> > > On Apr 28, 2023, at 12:09 PM, Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >
+> > > On Fri, 28 Apr 2023 at 13:59, Chuck Lever III <chuck.lever@oracle.com> wrote:
+> > >>
+> > >>
+> > >>
+> > >>> On Apr 28, 2023, at 5:57 AM, Ard Biesheuvel <ardb@kernel.org> wrote:
+> > >>>
+> > >>> On Fri, 28 Apr 2023 at 10:44, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+> > >>>>
+> > >>>> Scott Mayhew <smayhew@redhat.com> wrote:
+> > >>>>>
+> > >>>>> diff --git a/arch/arm64/crypto/aes-modes.S b/arch/arm64/crypto/aes-modes.S
+> > >>>>> index 0e834a2c062c..477605fad76b 100644
+> > >>>>> --- a/arch/arm64/crypto/aes-modes.S
+> > >>>>> +++ b/arch/arm64/crypto/aes-modes.S
+> > >>>>> @@ -268,6 +268,7 @@ AES_FUNC_START(aes_cbc_cts_encrypt)
+> > >>>>>      add             x4, x0, x4
+> > >>>>>      st1             {v0.16b}, [x4]                  /* overlapping stores */
+> > >>>>>      st1             {v1.16b}, [x0]
+> > >>>>> +       st1             {v1.16b}, [x5]
+> > >>>>>      ret
+> > >>>>> AES_FUNC_END(aes_cbc_cts_encrypt)
+> > >>>>>
+> > >>>>> But I don't know if that change is at all correct! (I've never even
+> > >>>>> looked at arm64 asm before).  If someone who's knowledgeable about this
+> > >>>>> code could chime in, I'd appreciate it.
+> > >>>>
+> > >>>> Ard, could you please take a look at this?
+> > >>>>
+> > >>>
+> > >>> The issue seems to be that the caller expects iv_out to have been
+> > >>> populated even when doing ciphertext stealing.
+> > >>>
+> > >>> This is meaningless, because the output IV can only be used to chain
+> > >>> additional encrypted data if the split is at a block boundary. The
+> > >>> ciphertext stealing fundamentally terminates the encryption, and
+> > >>> produces a block of ciphertext that is shorter than the block size, so
+> > >>> what the output IV should be is actually unspecified.
+> > >>>
+> > >>> IOW, test cases having plain/ciphertext vectors whose size is not a
+> > >>> multiple of the cipher block size should not specify an expected value
+> > >>> for the output IV.
+> > >>
+> > >> The test cases are extracted from RFC 3962 Appendix B. The
+> > >> standard clearly expects there to be a non-zero next IV for
+> > >> plaintext sizes that are not block-aligned.
+> > >>
+> > >
+> > > OK, so this is the Kerberos V specific spec on how to use AES in CBC
+> > > mode, which appears to describe how to chain multiple CBC encryptions
+> > > together.
+> > >
+> > > CBC-CTS itself does not define this: the IV is an input only, and the
+> > > reason we happen to return the IV is because a single CBC operation
+> > > may be broken up into several ones, which can only be done on block
+> > > boundaries. This is why CBC-CTS itself passes all its tests: a single
+> > > CBC-CTS encryption only performs ciphertext stealing at the very end,
+> > > and the next IV is never used in that case. (This is why the CTS mode
+> > > tests in crypto/testmgr.h don't have iv_out vectors)
+> > >
+> > > Note that RFC3962 defines that the penultimate block of CBC-CTS
+> > > ciphertext is used as the next IV. CBC returns the last ciphertext
+> > > block as the output IV. It is a happy coincidence that the generic CTS
+> > > template encapsulates CBC in a way where its output IV ends up in the
+> > > right place.
+> > >
+> > >> Also, these test cases pass on other hardware platforms.
+> > >>
+> > >
+> > > Fair enough.
+> > >
+> > > I am not opposed to fixing this, but given that it is the RFC3962 spec
+> > > that defines that the next IV is the penultimate full block of the
+> > > previous CBC-CTS ciphertext, we might consider doing the memcpy() in
+> > > the Kerberos code not in the CBC-CTS implementations.
+> >
+> > Interesting thought. I'm all about proper layering, so I think this
+> > is worth considering. Can you send an RFC patch?
+> >
+> 
+> I'm not that familiar with kunit so this is just an off hand
+> suggestion, but I imagine something like the below would suffice
+> 
+> --- a/net/sunrpc/auth_gss/gss_krb5_crypto.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
+> @@ -639,6 +639,13 @@ gss_krb5_cts_crypt(struct crypto_sync_skcipher
+> *cipher, struct xdr_buf *buf,
+> 
+>         ret = write_bytes_to_xdr_buf(buf, offset, data, len);
+> 
+> +       /*
+> +        * CBC-CTS does not define an output IV but RFC 3962 defines it as the
+> +        * penultimate block of ciphertext, so copy that into the IV buffer
+> +        * before returning.
+> +        */
+> +       if (encrypt)
+> +               memcpy(iv, data, crypto_sync_skcipher_ivsize(cipher));
 
-Anna
+The whole "update the IV" thing that the crypto API does for some algorithms is
+very weird and nonstandard, and most algorithms don't implement it.  So I'd
+definitely support handling this in the caller here.
 
-On Fri, Apr 28, 2023 at 3:52=E2=80=AFPM Anna Schumaker <anna@kernel.org> wr=
-ote:
->
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->
-> Instead of using a tiny, static scratch buffer, we should use a kmalloc()=
--ed
-> buffer that is allocated when checking for read plus usage. This lets us
-> use the buffer before decoding any part of the READ_PLUS operation
-> instead of setting it right before segment decoding, meaning it should
-> be a little more robust.
->
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> ---
->  fs/nfs/nfs42xdr.c       |  4 ++--
->  fs/nfs/nfs4proc.c       | 17 ++++++++++++-----
->  include/linux/nfs_xdr.h |  1 +
->  3 files changed, 15 insertions(+), 7 deletions(-)
->
-> diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
-> index d80ee88ca996..a6df815a140c 100644
-> --- a/fs/nfs/nfs42xdr.c
-> +++ b/fs/nfs/nfs42xdr.c
-> @@ -1122,7 +1122,6 @@ static int decode_read_plus(struct xdr_stream *xdr,=
- struct nfs_pgio_res *res)
->         uint32_t segments;
->         struct read_plus_segment *segs;
->         int status, i;
-> -       char scratch_buf[16];
->         __be32 *p;
->
->         status =3D decode_op_hdr(xdr, OP_READ_PLUS);
-> @@ -1143,7 +1142,6 @@ static int decode_read_plus(struct xdr_stream *xdr,=
- struct nfs_pgio_res *res)
->         if (!segs)
->                 return -ENOMEM;
->
-> -       xdr_set_scratch_buffer(xdr, &scratch_buf, sizeof(scratch_buf));
->         status =3D -EIO;
->         for (i =3D 0; i < segments; i++) {
->                 status =3D decode_read_plus_segment(xdr, &segs[i]);
-> @@ -1348,6 +1346,8 @@ static int nfs4_xdr_dec_read_plus(struct rpc_rqst *=
-rqstp,
->         struct compound_hdr hdr;
->         int status;
->
-> +       xdr_set_scratch_buffer(xdr, res->scratch, sizeof(res->scratch));
-> +
->         status =3D decode_compound_hdr(xdr, &hdr);
->         if (status)
->                 goto out;
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 5607b1e2b821..18f25ff4bff7 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -5439,6 +5439,8 @@ static bool nfs4_read_plus_not_supported(struct rpc=
-_task *task,
->
->  static int nfs4_read_done(struct rpc_task *task, struct nfs_pgio_header =
-*hdr)
->  {
-> +       if (hdr->res.scratch)
-> +               kfree(hdr->res.scratch);
->         if (!nfs4_sequence_done(task, &hdr->res.seq_res))
->                 return -EAGAIN;
->         if (nfs4_read_stateid_changed(task, &hdr->args))
-> @@ -5452,17 +5454,22 @@ static int nfs4_read_done(struct rpc_task *task, =
-struct nfs_pgio_header *hdr)
->  }
->
->  #if defined CONFIG_NFS_V4_2 && defined CONFIG_NFS_V4_2_READ_PLUS
-> -static void nfs42_read_plus_support(struct nfs_pgio_header *hdr,
-> +static bool nfs42_read_plus_support(struct nfs_pgio_header *hdr,
->                                     struct rpc_message *msg)
->  {
->         /* Note: We don't use READ_PLUS with pNFS yet */
-> -       if (nfs_server_capable(hdr->inode, NFS_CAP_READ_PLUS) && !hdr->ds=
-_clp)
-> +       if (nfs_server_capable(hdr->inode, NFS_CAP_READ_PLUS) && !hdr->ds=
-_clp) {
->                 msg->rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_READ_PLU=
-S];
-> +               hdr->res.scratch =3D kmalloc(32, GFP_KERNEL);
-> +               return hdr->res.scratch !=3D NULL;
-> +       }
-> +       return false;
->  }
->  #else
-> -static void nfs42_read_plus_support(struct nfs_pgio_header *hdr,
-> +static bool nfs42_read_plus_support(struct nfs_pgio_header *hdr,
->                                     struct rpc_message *msg)
->  {
-> +       return false;
->  }
->  #endif /* CONFIG_NFS_V4_2 */
->
-> @@ -5472,8 +5479,8 @@ static void nfs4_proc_read_setup(struct nfs_pgio_he=
-ader *hdr,
->         hdr->timestamp   =3D jiffies;
->         if (!hdr->pgio_done_cb)
->                 hdr->pgio_done_cb =3D nfs4_read_done_cb;
-> -       msg->rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_READ];
-> -       nfs42_read_plus_support(hdr, msg);
-> +       if (!nfs42_read_plus_support(hdr, msg))
-> +               msg->rpc_proc =3D &nfs4_procedures[NFSPROC4_CLNT_READ];
->         nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
->  }
->
-> diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-> index e86cf6642d21..2fd973d188c4 100644
-> --- a/include/linux/nfs_xdr.h
-> +++ b/include/linux/nfs_xdr.h
-> @@ -670,6 +670,7 @@ struct nfs_pgio_res {
->                 struct {
->                         unsigned int            replen;         /* used b=
-y read */
->                         int                     eof;            /* used b=
-y read */
-> +                       void *                  scratch;        /* used b=
-y read */
->                 };
->                 struct {
->                         struct nfs_writeverf *  verf;           /* used b=
-y write */
-> --
-> 2.40.0
->
+- Eric
