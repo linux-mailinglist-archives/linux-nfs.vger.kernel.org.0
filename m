@@ -2,174 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4BE56F2163
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Apr 2023 01:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83F686F2186
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Apr 2023 02:12:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347041AbjD1XsI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Apr 2023 19:48:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40388 "EHLO
+        id S1346890AbjD2AMJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Apr 2023 20:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347055AbjD1XsC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Apr 2023 19:48:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C83914C04;
-        Fri, 28 Apr 2023 16:47:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D8FE2631AD;
-        Fri, 28 Apr 2023 23:46:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1286AC433D2;
-        Fri, 28 Apr 2023 23:46:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682725601;
-        bh=kfZZr6KMfoLR9GKJOF8IGsGbILU6f3g0vJrOdB364gE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VIqITLiE5JfV5HMm7a4hnTYSC9E5B9WRpkDFjAtDHgZ9LHeTPCDExX+/RBtIpqLhD
-         ytd7NxeGOhbzxK9O3J9nX9nzNS5hPULLNvFdruPZGAAwJh6ioyyS2lN2Y+RAHbmNl1
-         yKiuq+FB4UNad21ZQGq8MCl3Zxd+ls06+ICgcEulFXPk3uPUDjaP9AfU3tS1tiS2Ok
-         kPS8xiZmenpR3VlrG1cHHr+F4wj3uTph0YjIWWLnj1lQ77mTk8dG02nxPQqwCF6HCR
-         Dn+FuRJqAWZC0xgap+G3KFH5cQQrA+00Hbo5I13WzrEEXn4hjI3SilJCqMYryWzQmp
-         1Q9xXIwdYRyVg==
-Date:   Fri, 28 Apr 2023 16:46:39 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        with ESMTP id S229579AbjD2AMH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Apr 2023 20:12:07 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E782422C;
+        Fri, 28 Apr 2023 17:12:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=SFptb4bxgIj4illZMUP0+LEQ5YHjcoe6ZdfH4QgLaE8=; b=DcPVwA/0w7w3ihDlMcami/XEWr
+        na4uR2ZaEMVCEbed/HJorphO6NziasFTaQ/zYpNdLymwt359fTb4MF19qW/HlRtwr3sGpvxYpY3vn
+        FNwF1Ud9N8hZiOmwnL8ihw9/GZF/Co33LwX7BxutpUaUuWy0QKSQNgpxztYInRxUVY4TwkdaivSsm
+        TObjCzU3FiAg0zpoZslTlxk6Bulg0bgzssnJYmH3uGhGo83sh5uG/oGFSYkWww1qp7KHrBMglzvOu
+        k9jRJfica0AfFGfpyfWeLMxApO8wY0Rp63A9R8CMDIuPAT0l/bpU0AL36zhkgs8xPCwcjTboLwdlp
+        AfI1a4iw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1psYBx-00BykC-2P;
+        Sat, 29 Apr 2023 00:11:57 +0000
+Date:   Fri, 28 Apr 2023 17:11:57 -0700
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>,
+        Pankaj Raghav <p.raghav@samsung.com>,
+        Daniel Gomez <da.gomez@samsung.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         David Howells <dhowells@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Scott Mayhew <smayhew@redhat.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: RPCSEC GSS krb5 KUnit test fails on arm64 with h/w accelerated
- ciphers enabled
-Message-ID: <20230428234639.GD3150@sol.localdomain>
-References: <ZEBi8ReG9LKLcmW3@aion.usersys.redhat.com>
- <ZEuVcizjPtG96/ST@gondor.apana.org.au>
- <CAMj1kXGOxw2mm8dVNHBg3HfJ7==JVV+vdXaW3iGGKamb4ZAg-g@mail.gmail.com>
- <F46EA3E0-1338-4E92-8CCF-DD869BD573BE@oracle.com>
- <CAMj1kXE29dMSgjkDPUXf0LFnxyrMeSO5NxG8fjYCuG=HJJ7wiA@mail.gmail.com>
- <870429E7-8202-405B-96F7-46A11B41EF05@oracle.com>
- <CAMj1kXGrrRj6b6RR4orKNykjjxyvd4Xe+8eOu-nY9jT=25_21A@mail.gmail.com>
+        Matthew Wilcox <willy@infradead.org>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 17/17] fs: add CONFIG_BUFFER_HEAD
+Message-ID: <ZExgzbBCbdC1y9Wk@bombadil.infradead.org>
+References: <20230424054926.26927-1-hch@lst.de>
+ <20230424054926.26927-18-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGrrRj6b6RR4orKNykjjxyvd4Xe+8eOu-nY9jT=25_21A@mail.gmail.com>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230424054926.26927-18-hch@lst.de>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Apr 28, 2023 at 05:48:30PM +0100, Ard Biesheuvel wrote:
-> On Fri, 28 Apr 2023 at 17:18, Chuck Lever III <chuck.lever@oracle.com> wrote:
-> >
-> >
-> >
-> > > On Apr 28, 2023, at 12:09 PM, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >
-> > > On Fri, 28 Apr 2023 at 13:59, Chuck Lever III <chuck.lever@oracle.com> wrote:
-> > >>
-> > >>
-> > >>
-> > >>> On Apr 28, 2023, at 5:57 AM, Ard Biesheuvel <ardb@kernel.org> wrote:
-> > >>>
-> > >>> On Fri, 28 Apr 2023 at 10:44, Herbert Xu <herbert@gondor.apana.org.au> wrote:
-> > >>>>
-> > >>>> Scott Mayhew <smayhew@redhat.com> wrote:
-> > >>>>>
-> > >>>>> diff --git a/arch/arm64/crypto/aes-modes.S b/arch/arm64/crypto/aes-modes.S
-> > >>>>> index 0e834a2c062c..477605fad76b 100644
-> > >>>>> --- a/arch/arm64/crypto/aes-modes.S
-> > >>>>> +++ b/arch/arm64/crypto/aes-modes.S
-> > >>>>> @@ -268,6 +268,7 @@ AES_FUNC_START(aes_cbc_cts_encrypt)
-> > >>>>>      add             x4, x0, x4
-> > >>>>>      st1             {v0.16b}, [x4]                  /* overlapping stores */
-> > >>>>>      st1             {v1.16b}, [x0]
-> > >>>>> +       st1             {v1.16b}, [x5]
-> > >>>>>      ret
-> > >>>>> AES_FUNC_END(aes_cbc_cts_encrypt)
-> > >>>>>
-> > >>>>> But I don't know if that change is at all correct! (I've never even
-> > >>>>> looked at arm64 asm before).  If someone who's knowledgeable about this
-> > >>>>> code could chime in, I'd appreciate it.
-> > >>>>
-> > >>>> Ard, could you please take a look at this?
-> > >>>>
-> > >>>
-> > >>> The issue seems to be that the caller expects iv_out to have been
-> > >>> populated even when doing ciphertext stealing.
-> > >>>
-> > >>> This is meaningless, because the output IV can only be used to chain
-> > >>> additional encrypted data if the split is at a block boundary. The
-> > >>> ciphertext stealing fundamentally terminates the encryption, and
-> > >>> produces a block of ciphertext that is shorter than the block size, so
-> > >>> what the output IV should be is actually unspecified.
-> > >>>
-> > >>> IOW, test cases having plain/ciphertext vectors whose size is not a
-> > >>> multiple of the cipher block size should not specify an expected value
-> > >>> for the output IV.
-> > >>
-> > >> The test cases are extracted from RFC 3962 Appendix B. The
-> > >> standard clearly expects there to be a non-zero next IV for
-> > >> plaintext sizes that are not block-aligned.
-> > >>
-> > >
-> > > OK, so this is the Kerberos V specific spec on how to use AES in CBC
-> > > mode, which appears to describe how to chain multiple CBC encryptions
-> > > together.
-> > >
-> > > CBC-CTS itself does not define this: the IV is an input only, and the
-> > > reason we happen to return the IV is because a single CBC operation
-> > > may be broken up into several ones, which can only be done on block
-> > > boundaries. This is why CBC-CTS itself passes all its tests: a single
-> > > CBC-CTS encryption only performs ciphertext stealing at the very end,
-> > > and the next IV is never used in that case. (This is why the CTS mode
-> > > tests in crypto/testmgr.h don't have iv_out vectors)
-> > >
-> > > Note that RFC3962 defines that the penultimate block of CBC-CTS
-> > > ciphertext is used as the next IV. CBC returns the last ciphertext
-> > > block as the output IV. It is a happy coincidence that the generic CTS
-> > > template encapsulates CBC in a way where its output IV ends up in the
-> > > right place.
-> > >
-> > >> Also, these test cases pass on other hardware platforms.
-> > >>
-> > >
-> > > Fair enough.
-> > >
-> > > I am not opposed to fixing this, but given that it is the RFC3962 spec
-> > > that defines that the next IV is the penultimate full block of the
-> > > previous CBC-CTS ciphertext, we might consider doing the memcpy() in
-> > > the Kerberos code not in the CBC-CTS implementations.
-> >
-> > Interesting thought. I'm all about proper layering, so I think this
-> > is worth considering. Can you send an RFC patch?
-> >
-> 
-> I'm not that familiar with kunit so this is just an off hand
-> suggestion, but I imagine something like the below would suffice
-> 
-> --- a/net/sunrpc/auth_gss/gss_krb5_crypto.c
-> +++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
-> @@ -639,6 +639,13 @@ gss_krb5_cts_crypt(struct crypto_sync_skcipher
-> *cipher, struct xdr_buf *buf,
-> 
->         ret = write_bytes_to_xdr_buf(buf, offset, data, len);
-> 
-> +       /*
-> +        * CBC-CTS does not define an output IV but RFC 3962 defines it as the
-> +        * penultimate block of ciphertext, so copy that into the IV buffer
-> +        * before returning.
-> +        */
-> +       if (encrypt)
-> +               memcpy(iv, data, crypto_sync_skcipher_ivsize(cipher));
+On Mon, Apr 24, 2023 at 07:49:26AM +0200, Christoph Hellwig wrote:
+> +const struct address_space_operations def_blk_aops = {
+> +	.dirty_folio	= filemap_dirty_folio,
+> +	.release_folio		= iomap_release_folio,
+> +	.invalidate_folio	= iomap_invalidate_folio,
+> +	.read_folio		= blkdev_read_folio,
+> +	.readahead		= blkdev_readahead,
+> +	.writepages		= blkdev_writepages,
+> +	.is_partially_uptodate  = iomap_is_partially_uptodate,
+> +	.error_remove_page	= generic_error_remove_page,
+> +	.migrate_folio		= filemap_migrate_folio,
+> +};
+> +#endif /* CONFIG_BUFFER_HEAD */
 
-The whole "update the IV" thing that the crypto API does for some algorithms is
-very weird and nonstandard, and most algorithms don't implement it.  So I'd
-definitely support handling this in the caller here.
+We've tested this with bs > ps (LBS) devices and it would seem it crashes,
+as Pankaj notes perhaps due to lack of higher order folio support yet
+on this path, for the block cache. The same crash happens with NVMe
+(using out-of-tree nvme_core.debug_large_lbas boot parameter to enable NVMe
+LBS) or brd with LBS. To enable NVMe LBS or brd with LBS you need
+out of tree patches though of course, so I've stashed these into
+a branch, large-block-20230426 [0] so to help folks who may want
+to experiment further.
 
-- Eric
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=large-block-20230426
+
+[   11.245248] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[   11.254581] #PF: supervisor read access in kernel mode
+[   11.257387] #PF: error_code(0x0000) - not-present page
+[   11.260921] PGD 0 P4D 0
+[   11.262600] Oops: 0000 [#1] PREEMPT SMP PTI
+[   11.264993] CPU: 7 PID: 198 Comm: (udev-worker) Not tainted 6.3.0-large-block-20230426 #2
+[   11.269385] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.0-debian-1.16.0-5 04/01/2014
+[   11.275054] RIP: 0010:iomap_page_create.isra.0+0xc/0xd0
+[   11.277924] Code: 41 5e 41 5f c3 cc cc cc cc 0f 1f 44 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 0f 1f 44 00 00 41 54 55 48 89 f5 53 <48> 8b 06 48 c1 e8 0d 89 c6 83 e6 01 0f 84 a1 00 00 00 4c 8b 65 28
+[   11.287293] RSP: 0018:ffffb0f0805ef9d8 EFLAGS: 00010293
+[   11.289964] RAX: ffff9de3c1fa8388 RBX: ffffb0f0805efa78 RCX: 000000037ffe0000
+[   11.293212] RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000000000d
+[   11.296485] RBP: 0000000000000000 R08: 0000000000021000 R09: ffffffff9c733b20
+[   11.299724] R10: 0000000000000001 R11: 000000000000c000 R12: 0000000000000000
+[   11.302974] R13: ffffffff9be96260 R14: ffffb0f0805efa58 R15: 0000000000000000
+[   11.306206] FS:  00007f03ea8368c0(0000) GS:ffff9de43bdc0000(0000) knlGS:0000000000000000
+[   11.309949] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   11.312464] CR2: 0000000000000000 CR3: 0000000117ec6006 CR4: 0000000000770ee0
+[   11.315442] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   11.318310] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   11.321010] PKRU: 55555554
+[   11.322212] Call Trace:
+[   11.323224]  <TASK>
+[   11.324146]  iomap_readpage_iter+0x96/0x300
+[   11.325694]  iomap_readahead+0x174/0x2d0
+[   11.327129]  read_pages+0x69/0x1f0
+[   11.328389]  ? folio_add_lru+0x7e/0xe0
+[   11.329751]  page_cache_ra_unbounded+0x187/0x1d0
+[   11.331301]  force_page_cache_ra+0x94/0xb0
+[   11.332681]  filemap_get_pages+0x10e/0x650
+[   11.334073]  ? _raw_spin_lock+0x13/0x40
+[   11.335287]  filemap_read+0xbf/0x340
+[   11.336430]  ? aa_file_perm+0x117/0x4b0
+[   11.337646]  ? generic_fillattr+0x45/0xf0
+[   11.338887]  ? _copy_to_user+0x22/0x30
+[   11.340026]  ? cp_new_stat+0x150/0x180
+[   11.341166]  blkdev_read_iter+0x5e/0x140
+[   11.342357]  vfs_read+0x1f0/0x2c0
+[   11.343354]  ksys_read+0x63/0xe0
+[   11.344331]  do_syscall_64+0x37/0x90
+[   11.345411]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+[   11.346760] RIP: 0033:0x7f03eaf3903d
+
+(gdb) l *(iomap_readpage_iter+0x96)
+0xffffffff814021b6 is in iomap_readpage_iter (fs/iomap/buffered-io.c:280).
+275             if (iomap->type == IOMAP_INLINE)
+276                     return iomap_read_inline_data(iter, folio);
+277
+278             /* zero post-eof blocks as the page may be mapped */
+279             iop = iomap_page_create(iter->inode, folio, iter->flags);
+280             iomap_adjust_read_range(iter->inode, folio, &pos, length, &poff, &plen);
+281             if (plen == 0)
+282                     goto done;
+283
+284             if (iomap_block_needs_zeroing(iter, pos)) {
+(gdb) l *(iomap_page_create+0xc)
+0xffffffff81400cdc is in iomap_page_create (./arch/x86/include/asm/bitops.h:207).
+202     }
+203
+204     static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
+205     {
+206             return ((1UL << (nr & (BITS_PER_LONG-1))) &
+207                     (addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+208     }
+209
+210     static __always_inline bool constant_test_bit_acquire(long nr, const volatile unsigned long *addr)
+211     {
+
+To reproduce one would want a system with only say XFS as the root
+image. I've enabled this on kdevops through "pure-iomap" option:
+
+https://github.com/linux-kdevops/kdevops/blob/master/docs/lbs.md
+
+  Luis
