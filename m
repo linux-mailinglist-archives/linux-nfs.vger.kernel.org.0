@@ -2,104 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41CEF6F43CE
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 May 2023 14:25:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 445BB6F441A
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 May 2023 14:48:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233833AbjEBMZz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 May 2023 08:25:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50382 "EHLO
+        id S234190AbjEBMsd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 May 2023 08:48:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233813AbjEBMZy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 May 2023 08:25:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915AAE6A
-        for <linux-nfs@vger.kernel.org>; Tue,  2 May 2023 05:25:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2D8A6623C3
-        for <linux-nfs@vger.kernel.org>; Tue,  2 May 2023 12:25:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04953C433D2;
-        Tue,  2 May 2023 12:25:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683030348;
-        bh=dE0BXw8S2d8Spp83u+tI7KEEZzL1wh2CX5ZK4sGTLOw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=M5kkGaSkDkzDAjO6Ti1f+vHWcsQ4FhFpP3fjO1N6kShQJuwSWsdi3fYaCVfAO87IQ
-         Fsdkarq6Q/eRYlm6OrS8to6wb1EtX99dv5/4PE5Zy5S65+JLPEl+fJf+kpxDU/cagz
-         cT1KBAJMgdS2u4U5kqNSRvruqw+uCOWWpqStSXbGW6qsMv4VllFC3iJszI3hL+BuvA
-         C1WTGiOWLsVKJzHr/nNZNZyQLNu+t268zIohUNc/xHlK7Ti0aZCVxzpNTQqLLGv3eE
-         pC3o/MIwQL1Q7FD4xVwklXbEIed0xfwbu5Rwc3j1u+BTh/NNaJ2+xRZwOyaUGFVmQb
-         km3WrCQ+k3ueQ==
-Message-ID: <d441b9f9dfcbb4719d97c7b3b5950dfeeb8913d2.camel@kernel.org>
-Subject: Re: [PATCH 1/1] nfslock01.sh: Don't test on NFS v3 on TCP
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Petr Vorel <pvorel@suse.cz>, ltp@lists.linux.it
-Cc:     NeilBrown <neilb@suse.de>, Cyril Hrubis <chrubis@suse.cz>,
-        linux-nfs@vger.kernel.org
-Date:   Tue, 02 May 2023 08:25:46 -0400
-In-Reply-To: <20230502075921.3614794-1-pvorel@suse.cz>
-References: <20230502075921.3614794-1-pvorel@suse.cz>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+        with ESMTP id S234138AbjEBMs0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 May 2023 08:48:26 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1310D59D8;
+        Tue,  2 May 2023 05:48:25 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-3062db220a3so1417276f8f.0;
+        Tue, 02 May 2023 05:48:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683031703; x=1685623703;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JooDqQHtb6tzP9frEgY2kAPOSpeIW6/2YPfInBxKMsI=;
+        b=fxp9GBxOUXAYc9XvyjEQt1VV3L7DXkzp/o9k8tN6ufqmPR3+p7mc/zqiNT+6fDujqr
+         dwViXaREasIX6+ZtPTUy4P8PRiFFiAFNfcuIFvjj+uRSEy9q2eT7TUBWirPu8FtVC+wi
+         iXupLRxKw693p4XXmNuacYjttMDNmr1YhcP4E0JOM/MXrzlXCxKXXddDX1oIMmqG3Ref
+         U6gJYszGYjCJuS1rWM0ISxnAzwYw/H3hs2itjHNKDuc+YKV6O2RQMBuc+obL5MIlRZjb
+         W9COsueOSAwIxhC9Ig0RuVgw/aUn22CcirwhFv2/9Kys+SevUQB4/zlSQHATzm3qG6TK
+         Jcxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683031703; x=1685623703;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JooDqQHtb6tzP9frEgY2kAPOSpeIW6/2YPfInBxKMsI=;
+        b=hjNIbS8KFJAHdMBDp0VGGzdtZmOGxqyuhp49Zjb3jngC6b1sPgOcyOU/Eh1TAEYVtx
+         5mQZ3QC8pUqSFj2t4BeCJXL6pTmwzdaVth+9L2FWPsOWhuoqZ3e9XZn81+wINMogr7lg
+         6aQ0+EtrXxoLhXcM8SVK1ufj9J7kJRqE9HhCvpntUu7Lhx46lZ+X5tWeqxpqM1wHXTel
+         6kr9bGWHvyUFDfpISTYTfQXeXH92z3Hdt4iWVcU95uIJRUvpopFuEstFTgSFSQ9xkWSI
+         HhFPAQfP0kPI7ag0zgclq9jeydhVwaWb4R8YsPGl/HEIqj5BIyasNUZ/Ce0z90bG2hhm
+         1iIg==
+X-Gm-Message-State: AC+VfDxL9xEEgmtAxjPKhq4uQosTBHEwN0q1NT+xlAnuGO04FosVpVuZ
+        kJZt3pfqJ/lilVJv/N66GUs=
+X-Google-Smtp-Source: ACHHUZ64f4ZE78idc6pi+50aWLIFmp6qAgX12q2FScHycyYGhjhEYZGkqYT/kkqxAfcLu5f/GQIsHg==
+X-Received: by 2002:adf:e30f:0:b0:2f6:9368:63c5 with SMTP id b15-20020adfe30f000000b002f6936863c5mr11708964wrj.10.1683031703199;
+        Tue, 02 May 2023 05:48:23 -0700 (PDT)
+Received: from amir-ThinkPad-T480.lan ([5.29.249.86])
+        by smtp.gmail.com with ESMTPSA id d9-20020a5d6dc9000000b00304adbeeabbsm14226259wrz.99.2023.05.02.05.48.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 May 2023 05:48:22 -0700 (PDT)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org
+Subject: [PATCH v2 0/4] Prepare for supporting more filesystems with fanotify
+Date:   Tue,  2 May 2023 15:48:13 +0300
+Message-Id: <20230502124817.3070545-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-05-02 at 09:59 +0200, Petr Vorel wrote:
-> nfs_flock (run via nfslock01.sh) is known to fail on NFS v3 [1]:
->=20
->     not unsharing /var makes AF_UNIX socket for host's rpcbind to become
->     available inside ltp_ns. Then, at NFS v3 mount time, kernel creates
->     an instance of lockd for ltp_ns, and ports for that instance leak to
->     host's rpcbind and overwrite ports for lockd already active for root
->     namespace. This breaks nfs3 file locking.
->=20
+Jan,
 
-Yeccchhh...that is pretty nasty.
+Following v2 incorporates a few fixes and ACKs from review of v1 [1].
 
-rpcbind was obviously written in a time before namespaces were even a
-thought to anyone. I wonder if there is something we can do in rpcbind
-itself to guard against these sorts of shenanigans? Probably not, I
-guess...
+While fanotify relaxes the requirements for filesystems to support
+reporting fid to require only the ->encode_fh() operation, there are
+currently no new filesystems that meet the relaxed requirements.
 
-Is /var shared between namespaces in this test for some particular
-reason?
+Patches to add ->encode_fh() to overlay with default configuation
+are available on my github branch [2].  I will re-post them after
+this patch set will be approved.
 
-> Before bd512e733 ("nfs_flock: fail the test if lock/unlock ops fail")
-> it run indefinitely with "unhandled error -107":
-> [ 2840.099565] lockd: cannot monitor 10.0.0.2
-> [ 2840.109353] lockd: cannot monitor 10.0.0.2
-> [ 2843.286811] xs_tcp_setup_socket: connect returned unhandled error -107
-> [ 2850.198791] xs_tcp_setup_socket: connect returned unhandled error -107
->=20
-> bd512e733 caused an early abort (therefore only "cannot monitor 10.0.0.2"
-> appears).
->=20
-> Although there is suggestion, how to fix the problem in kernel [2]:
->=20
->     > Maybe rpcb_create_local() shall detect that it is not in root
->     > netns, and only try AF_INET connection to > localhost in that case.
->=20
->     That would be simple and might be sensible.  IF changing the AF_UNIX
->     path to "/run/rpcbind.sock" isn't sufficient, then testing for the
->     root_ns is probably the best second option.
->=20
+Based on the discussion on the UAPI alternatives, I kept the
+AT_HANDLE_FID UAPI, which seems the simplest of them all.
 
-Was it determined that changing the location of the socket wasn't
-sufficient to fix this? FWIW, My Fedora 38 machine seems to listen on
-that socket already:
+There is an LTP test [3] that tests reporting fid from overlayfs,
+which also demonstrates the use of AT_HANDLE_FID for requesting a
+non-decodeable file handle by userspace and there is a man page
+draft [4] for the documentation of the AT_HANDLE_FID flags.
 
-    [Socket]
-    ListenStream=3D/run/rpcbind.sock
+Thanks,
+Amir.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Changes since v1:
+- Fixes to Kerneldoc (Chuck)
+- Added ACKs (Chuck,Jeff)
+- Explain the logic of requiring ->s_export_op (Jan)
+- Added man page draft
+
+[1] https://lore.kernel.org/linux-fsdevel/20230425130105.2606684-1-amir73il@gmail.com/
+[2] https://github.com/amir73il/linux/commits/exportfs_encode_fid
+[3] https://github.com/amir73il/ltp/commits/exportfs_encode_fid
+[4] https://github.com/amir73il/man-pages/commits/exportfs_encode_fid
+
+Amir Goldstein (4):
+  exportfs: change connectable argument to bit flags
+  exportfs: add explicit flag to request non-decodeable file handles
+  exportfs: allow exporting non-decodeable file handles to userspace
+  fanotify: support reporting non-decodeable file handles
+
+ Documentation/filesystems/nfs/exporting.rst |  4 +--
+ fs/exportfs/expfs.c                         | 33 ++++++++++++++++++---
+ fs/fhandle.c                                | 22 +++++++++-----
+ fs/nfsd/nfsfh.c                             |  5 ++--
+ fs/notify/fanotify/fanotify.c               |  4 +--
+ fs/notify/fanotify/fanotify_user.c          |  7 ++---
+ fs/notify/fdinfo.c                          |  2 +-
+ include/linux/exportfs.h                    | 18 +++++++++--
+ include/uapi/linux/fcntl.h                  |  5 ++++
+ 9 files changed, 74 insertions(+), 26 deletions(-)
+
+-- 
+2.34.1
+
