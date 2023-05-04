@@ -2,59 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E32C6F6528
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 May 2023 08:38:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB3436F68F6
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 May 2023 12:16:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230016AbjEDGil (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 May 2023 02:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52752 "EHLO
+        id S230128AbjEDKQJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 May 2023 06:16:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjEDGik (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 May 2023 02:38:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EF0D2713
-        for <linux-nfs@vger.kernel.org>; Wed,  3 May 2023 23:38:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S230178AbjEDKQI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 May 2023 06:16:08 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0AC46B7
+        for <linux-nfs@vger.kernel.org>; Thu,  4 May 2023 03:16:07 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0CA0F63026
-        for <linux-nfs@vger.kernel.org>; Thu,  4 May 2023 06:38:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFDEBC433EF;
-        Thu,  4 May 2023 06:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683182318;
-        bh=6qx6l3zW0LV7J9K1OMuDGwXITRI4dS+m35AAlxBZAgA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fiz8BHr4WhrzMQ9TSGzuA2aS6GL3ck0f3v8bPftxdzK+xyUBSIs5LYNqUz39LaM8S
-         0yiGKi6diqdXaTNd16DYdNNJYHXWCwNn7K5NqgMBJEKsFjYs2JmhVle516HCUFROdz
-         ewgk+MwDnmkNPydl1d5/MbPpWcAcemOjDfm7IicypfEDb/Cn3FeQOztwguoVG+PmGa
-         3Rvxj/3yCA4X1ItzRs4BJAgXDm7hFw6+bfQD4I9cui44pslo9BlJ1RCZCkGr7YlprZ
-         gRNlpad+6OvDgT1nJK2Mx1KTGhmuSbb54vrh5DFlSzSFe5eMo3KKZUp9c/xXJqE7nb
-         nJ0Z1ByAj+bpQ==
-Date:   Thu, 4 May 2023 08:38:33 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Sherry Yang <sherry.yang@oracle.com>,
-        Darren Kenny <darren.kenny@oracle.com>
-Subject: Re: [PATCH] nfsd: use vfs setgid helper
-Message-ID: <20230504-rasten-vibrieren-ee7f0e7a39ef@brauner>
-References: <20230502-agenda-regeln-04d2573bd0fd@brauner>
- <77C7061E-2316-4C73-89E5-7C8CA0AEB6FD@oracle.com>
- <51805A56-F815-405F-8CDF-4CD04A17436C@oracle.com>
- <741D94D5-4058-452E-830B-49D3BEBD5D8E@oracle.com>
- <20230503-mehrverbrauch-spargel-258668d27f53@brauner>
- <ac5c9882-8cc7-8d64-5784-fd71b04dde3a@oracle.com>
- <A5A8DAD5-7FFD-4CE6-ADC9-FF9F5E509869@oracle.com>
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 04A661F8A4;
+        Thu,  4 May 2023 10:16:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1683195366;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=B7DVxXBVVM6d5BjARHR9arHNn419fzOm2B2VZfl4v1g=;
+        b=RfaBvKCC6m9xEj33naUewP0HyNlqxTIJFGPSE4Y56jXzrvTnZU+lhOWRcOkma8cLRzFmWA
+        YxC30WLsuYI2sJ0BOxAxau3e/BvZL1M4kBPjSTKNDcKZ/Nn1/BjR6Uuoi03bX0j5voBDf/
+        cX7NhzQlI+cxBZDN1ctM8A55pT1cAuY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1683195366;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=B7DVxXBVVM6d5BjARHR9arHNn419fzOm2B2VZfl4v1g=;
+        b=PW9PY2xpufGo6tuj6GACNL0ttcfzxxWFpltNVCAHmaa+nDGUMS+P+ZE76IQim4uh/QTpSI
+        /MAhIr1B7EFy2YAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AC4E5133F7;
+        Thu,  4 May 2023 10:16:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id odhbKOWFU2RXcwAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Thu, 04 May 2023 10:16:05 +0000
+Date:   Thu, 4 May 2023 12:16:19 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Steve Dickson <steved@redhat.com>
+Cc:     libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        ltp@lists.linux.it
+Subject: LTP: tirpc_rpcb_rmtcall is failing
+Message-ID: <20230504101619.GA3801922@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <A5A8DAD5-7FFD-4CE6-ADC9-FF9F5E509869@oracle.com>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,97 +66,75 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 03, 2023 at 02:05:48PM +0000, Chuck Lever III wrote:
-> 
-> 
-> > On May 3, 2023, at 6:53 AM, Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com> wrote:
-> > 
-> > Hi Christian,
-> > 
-> > On 03/05/23 12:30 pm, Christian Brauner wrote:
-> >> On Tue, May 02, 2023 at 06:23:51PM +0000, Chuck Lever III wrote:
-> >>> 
-> >>> 
-> >>>> On May 2, 2023, at 12:50 PM, Chuck Lever III <chuck.lever@oracle.com> wrote:
-> >>>> 
-> >>>> 
-> >>>> 
-> >>>>> On May 2, 2023, at 9:49 AM, Chuck Lever III <chuck.lever@oracle.com> wrote:
-> >>>>> 
-> >>>>>> 
-> >>>>>> On May 2, 2023, at 9:36 AM, Christian Brauner <brauner@kernel.org> wrote:
-> >>>>>> 
-> >>>>>> We've aligned setgid behavior over multiple kernel releases. The details
-> >>>>>> can be found in commit cf619f891971 ("Merge tag 'fs.ovl.setgid.v6.2' of
-> >>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/vfs/idmapping") and
-> >>>>>> commit 426b4ca2d6a5 ("Merge tag 'fs.setgid.v6.0' of
-> >>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux").
-> >>>>>> Consistent setgid stripping behavior is now encapsulated in the
-> >>>>>> setattr_should_drop_sgid() helper which is used by all filesystems that
-> >>>>>> strip setgid bits outside of vfs proper. Usually ATTR_KILL_SGID is
-> >>>>>> raised in e.g., chown_common() and is subject to the
-> >>>>>> setattr_should_drop_sgid() check to determine whether the setgid bit can
-> >>>>>> be retained. Since nfsd is raising ATTR_KILL_SGID unconditionally it
-> >>>>>> will cause notify_change() to strip it even if the caller had the
-> >>>>>> necessary privileges to retain it. Ensure that nfsd only raises
-> >>>>>> ATR_KILL_SGID if the caller lacks the necessary privileges to retain the
-> >>>>>> setgid bit.
-> >>>>>> 
-> >>>>>> Without this patch the setgid stripping tests in LTP will fail:
-> >>>>>> 
-> >>>>>>> As you can see, the problem is S_ISGID (0002000) was dropped on a
-> >>>>>>> non-group-executable file while chown was invoked by super-user, while
-> >>>>>> 
-> >>>>>> [...]
-> >>>>>> 
-> >>>>>>> fchown02.c:66: TFAIL: testfile2: wrong mode permissions 0100700, expected 0102700
-> >>>>>> 
-> >>>>>> [...]
-> >>>>>> 
-> >>>>>>> chown02.c:57: TFAIL: testfile2: wrong mode permissions 0100700, expected 0102700
-> >>>>>> 
-> >>>>>> With this patch all tests pass.
-> >>>>>> 
-> >>>>>> Reported-by: Sherry Yang <sherry.yang@oracle.com>
-> >>>>>> Signed-off-by: Christian Brauner <brauner@kernel.org>
-> >>>>> 
-> > 
-> > We had a very similar report from kernel-test-robot.
-> > 
-> > https://lore.kernel.org/all/202210091600.dbe52cbf-yujie.liu@intel.com/
-> > 
-> > Which points to commit: ed5a7047d201 ("attr: use consistent sgid stripping checks")
-> > 
-> > And the above commit is backported to LTS kernels -- 5.10.y,5.15.y and 6.1.y
-> > 
-> > So would it be better to tag it to stable by adding "Cc: <stable@vger.kernel.org>" ?
-> > 
-> > Thanks,
-> > Harshit
-> > 
-> >>>>> There are some similar fstests failures this fix might address.
-> >>>>> 
-> >>>>> I've applied this patch to the nfsd-fixes tree for broader
-> >>>>> testing.
-> >>>> 
-> >>>> ERROR: modpost: "setattr_should_drop_sgid" [fs/nfsd/nfsd.ko] undefined!
-> >>>> 
-> >>>> Did I apply this patch to the wrong kernel?
-> >>> 
-> >>> setattr_should_drop_sgid() is not available to callers built as
-> >>> modules. It needs an EXPORT_SYMBOL or _GPL.
-> >> Hey Chuck,
-> >> Thanks for taking a look!
-> >> The required export is part of
-> >> commit 4f704d9a835 ("nfs: use vfs setgid helper")
-> >> which is in current mainline as of Monday this week which was part of my
-> >> v6.4/vfs.misc PR that was merged.
-> >> So this should all work fine on mainline. Seems I didn't use --base
-> >> which is why that info was missing.
-> >> Thanks!
-> >> Christian
-> 
-> I'll apply this to nfsd-next (6.5) and add Jeff's Reviewed-by
-> and a Cc: stable.
+Hi Steve,
 
-Thanks all! Appreciate the Cc: stable fixup.
+tirpc_rpcb_rmtcall is failing. I was able to reproduce it on
+* openSUSE Tumbleweed with libtirpc 1.3.3
+* Debian stable  11 (bullseye) with libtirpc 1.3.1-1
+
+OTOH SLE 15-SP4 with libtirpc 1.2.6 is working.
+
+PATH="/opt/ltp/testcases/bin:$PATH" rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
+rpc_test 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
+rpc_test 1 TINFO: add local addr 10.0.0.2/24
+rpc_test 1 TINFO: add local addr fd00:1:1:1::2/64
+rpc_test 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
+rpc_test 1 TINFO: add remote addr 10.0.0.1/24
+rpc_test 1 TINFO: add remote addr fd00:1:1:1::1/64
+rpc_test 1 TINFO: Network config (local -- remote):
+rpc_test 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
+rpc_test 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
+rpc_test 1 TINFO: fd00:1:1:1::2/64 -- fd00:1:1:1::1/64
+rpc_test 1 TINFO: timeout per run is 0h 5m 0s
+rpc_test 1 TINFO: check registered RPC with rpcinfo
+rpc_test 1 TINFO: registered RPC:
+   program vers proto   port  service
+    100000    4   tcp    111  portmapper
+    100000    3   tcp    111  portmapper
+    100000    2   tcp    111  portmapper
+    100000    4   udp    111  portmapper
+    100000    3   udp    111  portmapper
+    100000    2   udp    111  portmapper
+    100005    1   udp  20048  mountd
+    100005    1   tcp  20048  mountd
+    100005    2   udp  20048  mountd
+    100005    2   tcp  20048  mountd
+    100005    3   udp  20048  mountd
+    100005    3   tcp  20048  mountd
+    100024    1   udp  37966  status
+    100024    1   tcp  43643  status
+    100003    3   tcp   2049  nfs
+    100003    4   tcp   2049  nfs
+    100227    3   tcp   2049  nfs_acl
+    100021    1   udp  59603  nlockmgr
+    100021    3   udp  59603  nlockmgr
+    100021    4   udp  59603  nlockmgr
+    100021    1   tcp  39145  nlockmgr
+    100021    3   tcp  39145  nlockmgr
+    100021    4   tcp  39145  nlockmgr
+rpc_test 1 TINFO: using libtirpc: yes
+rpc_test 1 TFAIL: tirpc_rpcb_rmtcall 10.0.0.2 536875000 failed unexpectedly
+1
+
+The problem is in tirpc_rpcb_rmtcall.c [1], which calls rpcb_rmtcall(), which
+returns 1 (I suppose RPC_CANTENCODEARGS - can't encode arguments - enum
+clnt_stat from tirpc/rpc/clnt_stat.h):
+
+	cs = rpcb_rmtcall(nconf, argc[1], progNum, VERSNUM, PROCNUM,
+			  (xdrproc_t) xdr_int, (char *)&var_snd,
+			  (xdrproc_t) xdr_int, (char *)&var_rec, tv, &svcaddr);
+
+	test_status = (cs == RPC_SUCCESS) ? 0 : 1;
+
+	//This last printf gives the result status to the tests suite
+	//normally should be 0: test has passed or 1: test has failed
+	printf("%d\n", test_status);
+
+	return test_status;
+
+Any idea what could be wrong with these very old tests?
+
+Kind regards,
+Petr
+
+[1] https://github.com/linux-test-project/ltp/blob/12765c115f11026c090ab0ee5dd79b38d95ef31f/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/tirpc/tirpc_expertlevel_rpcb_rmtcall/tirpc_rpcb_rmtcall.c#L91-L93
