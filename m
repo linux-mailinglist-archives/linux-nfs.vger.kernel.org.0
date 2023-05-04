@@ -2,63 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB3436F68F6
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 May 2023 12:16:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65D7E6F69B1
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 May 2023 13:19:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230128AbjEDKQJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 May 2023 06:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46358 "EHLO
+        id S229878AbjEDLTP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 May 2023 07:19:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230178AbjEDKQI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 May 2023 06:16:08 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0AC46B7
-        for <linux-nfs@vger.kernel.org>; Thu,  4 May 2023 03:16:07 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S229723AbjEDLTO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 May 2023 07:19:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31138358A;
+        Thu,  4 May 2023 04:19:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 04A661F8A4;
-        Thu,  4 May 2023 10:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1683195366;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=B7DVxXBVVM6d5BjARHR9arHNn419fzOm2B2VZfl4v1g=;
-        b=RfaBvKCC6m9xEj33naUewP0HyNlqxTIJFGPSE4Y56jXzrvTnZU+lhOWRcOkma8cLRzFmWA
-        YxC30WLsuYI2sJ0BOxAxau3e/BvZL1M4kBPjSTKNDcKZ/Nn1/BjR6Uuoi03bX0j5voBDf/
-        cX7NhzQlI+cxBZDN1ctM8A55pT1cAuY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1683195366;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=B7DVxXBVVM6d5BjARHR9arHNn419fzOm2B2VZfl4v1g=;
-        b=PW9PY2xpufGo6tuj6GACNL0ttcfzxxWFpltNVCAHmaa+nDGUMS+P+ZE76IQim4uh/QTpSI
-        /MAhIr1B7EFy2YAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AC4E5133F7;
-        Thu,  4 May 2023 10:16:05 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id odhbKOWFU2RXcwAAMHmgww
-        (envelope-from <pvorel@suse.cz>); Thu, 04 May 2023 10:16:05 +0000
-Date:   Thu, 4 May 2023 12:16:19 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        ltp@lists.linux.it
-Subject: LTP: tirpc_rpcb_rmtcall is failing
-Message-ID: <20230504101619.GA3801922@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B51AB63351;
+        Thu,  4 May 2023 11:19:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBA37C433EF;
+        Thu,  4 May 2023 11:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683199152;
+        bh=HDWeeiD6b9TOwYY85iPJ6EMKm03YYjllu+bpWXbIPwA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UgMWXBTKo2ViNRBCp12/oVETYV+T4nqNVyVgpSAExX+wlD6jlargnQLsl8ql8xK2n
+         wYhbG0BUY18jadO7xXtl5uKSpvN6a2/E61P9HJcofrHqaxVqUT0rHSVQGNEv0Nar+Z
+         XC3EkUjClSTcmYDkpplU4LGzYBcCH66S5asrLMETmTZY9Z4OhtZunmji+4Z83oxtlM
+         pGr0nwtGuo2mnz4Dmq/I5AfnoN5aifO3mJpgQ3z9rDVzqu1bis+LQ2huiUIvh3IEu2
+         lCCLQjlfbshaSboYwvjYOrk7PCY+AU8kuM+PztTvqW296MWmirIBIo+4HQU2xBpSjx
+         1HcQpmqBUqCBA==
+Date:   Thu, 4 May 2023 13:19:06 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-api@vger.kernel.org,
+        Amir Goldstein <amir73il@gmail.com>,
+        Al Viro <viro@ZenIV.linux.org.uk>
+Subject: Re: [PATCH v2 3/4] exportfs: allow exporting non-decodeable file
+ handles to userspace
+Message-ID: <20230504-unruhen-lauftraining-d676c7702fea@brauner>
+References: <20230502124817.3070545-1-amir73il@gmail.com>
+ <20230502124817.3070545-4-amir73il@gmail.com>
+ <20230503172314.kptbcaluwd6xiamz@quack3>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+In-Reply-To: <20230503172314.kptbcaluwd6xiamz@quack3>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,75 +61,51 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve,
+On Wed, May 03, 2023 at 07:23:14PM +0200, Jan Kara wrote:
+> On Tue 02-05-23 15:48:16, Amir Goldstein wrote:
+> > Some userspace programs use st_ino as a unique object identifier, even
+> > though inode numbers may be recycable.
+> > 
+> > This issue has been addressed for NFS export long ago using the exportfs
+> > file handle API and the unique file handle identifiers are also exported
+> > to userspace via name_to_handle_at(2).
+> > 
+> > fanotify also uses file handles to identify objects in events, but only
+> > for filesystems that support NFS export.
+> > 
+> > Relax the requirement for NFS export support and allow more filesystems
+> > to export a unique object identifier via name_to_handle_at(2) with the
+> > flag AT_HANDLE_FID.
+> > 
+> > A file handle requested with the AT_HANDLE_FID flag, may or may not be
+> > usable as an argument to open_by_handle_at(2).
+> > 
+> > To allow filesystems to opt-in to supporting AT_HANDLE_FID, a struct
+> > export_operations is required, but even an empty struct is sufficient
+> > for encoding FIDs.
+> 
+> Christian (or Al), are you OK with sparing one AT_ flag for this
+> functionality? Otherwise the patch series looks fine to me so I'd like to
+> queue it into my tree. Thanks!
 
-tirpc_rpcb_rmtcall is failing. I was able to reproduce it on
-* openSUSE Tumbleweed with libtirpc 1.3.3
-* Debian stable  11 (bullseye) with libtirpc 1.3.1-1
+At first it looked like there are reasons to complain about this on the
+grounds that this seems like a flag only for a single system call. But
+another look at include/uapi/linux/fcntl.h reveals that oh well, the
+AT_* flag namespace already contains system call specific flags.
 
-OTOH SLE 15-SP4 with libtirpc 1.2.6 is working.
+The overloading of AT_EACCESS and AT_REMOVEDIR as 0x200 is especially
+creative since it doesn't even use an infix like the statx specific
+flags.
 
-PATH="/opt/ltp/testcases/bin:$PATH" rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
-rpc_test 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
-rpc_test 1 TINFO: add local addr 10.0.0.2/24
-rpc_test 1 TINFO: add local addr fd00:1:1:1::2/64
-rpc_test 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
-rpc_test 1 TINFO: add remote addr 10.0.0.1/24
-rpc_test 1 TINFO: add remote addr fd00:1:1:1::1/64
-rpc_test 1 TINFO: Network config (local -- remote):
-rpc_test 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
-rpc_test 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
-rpc_test 1 TINFO: fd00:1:1:1::2/64 -- fd00:1:1:1::1/64
-rpc_test 1 TINFO: timeout per run is 0h 5m 0s
-rpc_test 1 TINFO: check registered RPC with rpcinfo
-rpc_test 1 TINFO: registered RPC:
-   program vers proto   port  service
-    100000    4   tcp    111  portmapper
-    100000    3   tcp    111  portmapper
-    100000    2   tcp    111  portmapper
-    100000    4   udp    111  portmapper
-    100000    3   udp    111  portmapper
-    100000    2   udp    111  portmapper
-    100005    1   udp  20048  mountd
-    100005    1   tcp  20048  mountd
-    100005    2   udp  20048  mountd
-    100005    2   tcp  20048  mountd
-    100005    3   udp  20048  mountd
-    100005    3   tcp  20048  mountd
-    100024    1   udp  37966  status
-    100024    1   tcp  43643  status
-    100003    3   tcp   2049  nfs
-    100003    4   tcp   2049  nfs
-    100227    3   tcp   2049  nfs_acl
-    100021    1   udp  59603  nlockmgr
-    100021    3   udp  59603  nlockmgr
-    100021    4   udp  59603  nlockmgr
-    100021    1   tcp  39145  nlockmgr
-    100021    3   tcp  39145  nlockmgr
-    100021    4   tcp  39145  nlockmgr
-rpc_test 1 TINFO: using libtirpc: yes
-rpc_test 1 TFAIL: tirpc_rpcb_rmtcall 10.0.0.2 536875000 failed unexpectedly
-1
+Long story short, since there's already overloading of the flag
+namespace happening it wouldn't be unprecedent or in any way wrong if
+this patch just reused the 0x200 value as well.
 
-The problem is in tirpc_rpcb_rmtcall.c [1], which calls rpcb_rmtcall(), which
-returns 1 (I suppose RPC_CANTENCODEARGS - can't encode arguments - enum
-clnt_stat from tirpc/rpc/clnt_stat.h):
+In fact, it might come in handy since it would mean that we have the bit
+you're using right now free for a flag that is meaningful for multiple
+system calls. So something to consider but you can just change that
+in-tree as far as I'm concerned.
 
-	cs = rpcb_rmtcall(nconf, argc[1], progNum, VERSNUM, PROCNUM,
-			  (xdrproc_t) xdr_int, (char *)&var_snd,
-			  (xdrproc_t) xdr_int, (char *)&var_rec, tv, &svcaddr);
+All this amounts to a long-winded,
 
-	test_status = (cs == RPC_SUCCESS) ? 0 : 1;
-
-	//This last printf gives the result status to the tests suite
-	//normally should be 0: test has passed or 1: test has failed
-	printf("%d\n", test_status);
-
-	return test_status;
-
-Any idea what could be wrong with these very old tests?
-
-Kind regards,
-Petr
-
-[1] https://github.com/linux-test-project/ltp/blob/12765c115f11026c090ab0ee5dd79b38d95ef31f/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/tirpc/tirpc_expertlevel_rpcb_rmtcall/tirpc_rpcb_rmtcall.c#L91-L93
+Acked-by: Christian Brauner <brauner@kernel.org> 
