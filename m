@@ -2,190 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45CFE6FA312
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 May 2023 11:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2209C6FB2EB
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 May 2023 16:30:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232932AbjEHJQd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 May 2023 05:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53070 "EHLO
+        id S235404AbjEHOak (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 May 2023 10:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232273AbjEHJQb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 May 2023 05:16:31 -0400
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34EEC1D97E;
-        Mon,  8 May 2023 02:16:30 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4QFFlZ6VHTz9v7J2;
-        Mon,  8 May 2023 17:06:34 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwB3MEfbvVhkRGuKAg--.32045S2;
-        Mon, 08 May 2023 10:16:16 +0100 (CET)
-Message-ID: <3001688cf29f03df88bee59e41e6f041fe59357f.camel@huaweicloud.com>
-Subject: Re: NFS mount fail
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     linux-security-module@vger.kernel.org, linux-nfs@vger.kernel.org,
-        chuck.lever@oracle.com, jlayton@kernel.org
-Date:   Mon, 08 May 2023 11:16:07 +0200
-In-Reply-To: <8361cbdc-5eed-b7c5-2ba8-d6be12c8da88@schaufler-ca.com>
-References: <1923bc2f330f576cd246856f976af448c035d02e.camel@huaweicloud.com>
-         <d34c30ba-55cc-8662-3587-bb66e234b714@schaufler-ca.com>
-         <6b5f941a4dd57f357f942df4051ccc9995b4ba15.camel@huaweicloud.com>
-         <8361cbdc-5eed-b7c5-2ba8-d6be12c8da88@schaufler-ca.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        with ESMTP id S234705AbjEHOaJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 May 2023 10:30:09 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE037EF1
+        for <linux-nfs@vger.kernel.org>; Mon,  8 May 2023 07:29:46 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id 5b1f17b1804b1-3f19323259dso46841315e9.3
+        for <linux-nfs@vger.kernel.org>; Mon, 08 May 2023 07:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683556184; x=1686148184;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hUor3hnZlV6CjNv1XT2yupcGqO1CT/IUMKuxwy2d4BY=;
+        b=a3JJVfp1vlOSFO7cUVXrHY8brqAsJkP+DihHSIV6ePrjyL6qwbaXQ2QQRAX3cosQzW
+         cc05YH7IGKxha0KqGX5pCb6Z9RNQU4FlSjSQS1IQBnVswZ4bnJOzgBFsFr/YFbX6YB86
+         1wMNJsynmq14ud1KKOAGmCLkgX3dQQ+gcrcwTl7liL0rLmYF/tABOx5d15/TCVpDbwDx
+         76vXmUEwSobNTiwqxNtg0N3QMhdRhvvXxhaz8iX+VhrYxT4isyuqN6CpiXP53+GHu7M+
+         poDc4YCwjhLiYeNNedygWPgsHthTUJyWnGqHHeFdp5x8a0lAVbAfaEGAR6ouKtrNJnMv
+         jsKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683556184; x=1686148184;
+        h=content-transfer-encoding:to:subject:message-id:date:from:sender
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hUor3hnZlV6CjNv1XT2yupcGqO1CT/IUMKuxwy2d4BY=;
+        b=HT4Wkg6pODFreylP+yds7nhAompMH/pzXOytTPPLnxILPUh4CYqi+JUb4WiGbFse1r
+         sjpVquwaIkRJqzhKHeb7h503U4RoFF7UjcLBTmFgjB1S2qJRBj0McbzV4/Z3TrxfFF4x
+         MYhpWS/5Sz9dQZzGNHqadEqXm9I8BKo09NeVdLyjCzKGe8Ez3iFsITnrAAJqFSc/nyRL
+         lhDkZO5bKDsRwttaeNCZF+rCoK2EaLfLTWURIJYqCFK+DVx9QvyryFeS9drxWCMS5kDX
+         L2dfNk/+Qlyvylxag0ezz3oV9nR45FZbiT50YYd4pK+3dvXDlpIpALad43Lb39UJsn37
+         9M8Q==
+X-Gm-Message-State: AC+VfDw8ACEY5//k9ckPwhdjdcvPJW9l++7BMyNNdE7CxLxNve0ktFLo
+        gmSbQaQZYuIgfbbIRd19td7NA3EnBTVGQf01dgM=
+X-Google-Smtp-Source: ACHHUZ5tFC4Upq8+BMRe1mhCQabZOBDzRCVGWu9Cnqoh7fuga/3WHyjwVVDANytpXs4vPhoGohTk20Q2nAQOLVyfbLk=
+X-Received: by 2002:a7b:cc15:0:b0:3f0:9564:f4f6 with SMTP id
+ f21-20020a7bcc15000000b003f09564f4f6mr6832933wmh.1.1683556184311; Mon, 08 May
+ 2023 07:29:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: GxC2BwB3MEfbvVhkRGuKAg--.32045S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXr1rWF1rXw43WrWxZFy5Jwb_yoWruF1fpr
-        y5XF4SkF4ktFy8J3yIgw4Utr4F9rWDZFyUu3s8X3yjya1qgF12vw17Kr45uayDCF1UCF42
-        vFWYka4avryDCaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-        Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-        AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
-        cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrZr1j6s0DMI
-        IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-        KfnxnUUI43ZEXa7IU1CPfJUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQALBF1jj4z1jgACsK
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Sender: rev.john.koffi2@gmail.com
+Received: by 2002:a5d:684b:0:b0:307:95b2:be01 with HTTP; Mon, 8 May 2023
+ 07:29:43 -0700 (PDT)
+From:   Sandrina Omaru <sandrina.omaru2022@gmail.com>
+Date:   Mon, 8 May 2023 16:29:43 +0200
+X-Google-Sender-Auth: vZyXBWTw0GwrSvQbT0O_RVnDG_0
+Message-ID: <CAF9xu2SqS4u4RipVUqD8FD+hHF2Kco6VW4esX24dOv30t0xxOA@mail.gmail.com>
+Subject: Hello Dearest,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.7 required=5.0 tests=ADVANCE_FEE_5_NEW_MONEY,
+        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,LOTS_OF_MONEY,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:32c listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [rev.john.koffi2[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [sandrina.omaru2022[at]gmail.com]
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  0.0 LOTS_OF_MONEY Huge... sums of money
+        *  3.0 ADVANCE_FEE_5_NEW_MONEY Advance Fee fraud and lots of money
+        *  2.9 UNDISC_MONEY Undisclosed recipients + money/fraud signs
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-05-05 at 10:06 -0700, Casey Schaufler wrote:
-> On 5/4/2023 11:53 PM, Roberto Sassu wrote:
-> > On Thu, 2023-05-04 at 17:59 -0700, Casey Schaufler wrote:
-> > > On 5/4/2023 9:11 AM, Roberto Sassu wrote:
-> > > > Hi Casey
-> > > > 
-> > > > while developing the fix for overlayfs, I tried first to address the
-> > > > issue of a NFS filesystem failing to mount.
-> > > > 
-> > > > The NFS server does not like the packets sent by the client:
-> > > > 
-> > > > 14:52:20.827208 IP (tos 0x0, ttl 64, id 60628, offset 0, flags [DF], proto TCP (6), length 72, options (unknown 134,EOL))
-> > > >     localhost.localdomain.omginitialrefs > _gateway.nfs: Flags [S], cksum 0x7618 (incorrect -> 0xa18c), seq 455337903, win 64240, options [mss 1460,sackOK,TS val 2178524519 ecr 0,nop,wscale 7], length 0
-> > > > 14:52:20.827376 IP (tos 0xc0, ttl 64, id 5906, offset 0, flags [none], proto ICMP (1), length 112, options (unknown 134,EOL))
-> > > >     _gateway > localhost.localdomain: ICMP parameter problem - octet 22, length 80
-> > > > 
-> > > > I looked at the possible causes. SELinux works properly.
-> > > SELinux was the reference LSM implementation for labeled networking.
-> > > 
-> > > > What it seems to happen is that there is a default netlabel mapping,
-> > > > that is used to send the packets out.
-> > > Correct. SELinux only uses CIPSO options for MLS. Smack uses CIPSO for
-> > > almost all packets.
-> > > 
-> > > > We are in this part of the code:
-> > > > 
-> > > > Thread 1 hit Breakpoint 2, netlbl_sock_setattr (sk=sk@entry=0xffff888025178000, family=family@entry=2, secattr=0xffff88802504b200) at net/netlabel/netlabel_kapi.c:980
-> > > > 980	{
-> > > > (gdb) n
-> > > > 771		__rcu_read_lock();
-> > > > (gdb) 
-> > > > 985		dom_entry = netlbl_domhsh_getentry(secattr->domain, family);
-> > > > (gdb) 
-> > > > 986		if (dom_entry == NULL) {
-> > > > (gdb) 
-> > > > 990		switch (family) {
-> > > > (gdb) 
-> > > > 992			switch (dom_entry->def.type) {
-> > > > 
-> > > > Here is the difference between Smack and SELinux.
-> > > > 
-> > > > Smack:
-> > > > 
-> > > > (gdb) p *dom_entry
-> > > > $2 = {domain = 0x0 <fixed_percpu_data>, family = 2, def = {type = 3, {addrsel = 0xffff888006bbef40, cipso = 0xffff888006bbef40, calipso = 0xffff888006bbef40}}, valid = 1, list = {next = 0xffff88800767f6e8, prev = 0xffff88800767f6e8}, rcu = {next = 0x0 <fixed_percpu_data>, 
-> > > >     func = 0x0 <fixed_percpu_data>}}
-> > > > 
-> > > > SELinux:
-> > > > 
-> > > > (gdb) p *dom_entry
-> > > > $5 = {domain = 0x0 <fixed_percpu_data>, family = 2, def = {type = 5, {addrsel = 0x0 <fixed_percpu_data>, cipso = 0x0 <fixed_percpu_data>, calipso = 0x0 <fixed_percpu_data>}}, valid = 1, list = {next = 0xffff888006012c88, prev = 0xffff888006012c88}, rcu = {
-> > > >     next = 0x0 <fixed_percpu_data>, func = 0x0 <fixed_percpu_data>}}
-> > > > 
-> > > > 
-> > > > type = 3 (for Smack) is NETLBL_NLTYPE_CIPSOV4.
-> > > > type = 5 (for SELinux) is NETLBL_NLTYPE_UNLABELED.
-> > > > 
-> > > > This is why SELinux works (no incompatible options are sent).
-> > > SELinux "works" because that's the use case that was verified.
-> > > 
-> > > > The netlabel mapping is added here:
-> > > > 
-> > > > static void smk_cipso_doi(void)
-> > > > {
-> > > > 
-> > > > [...]
-> > > > 
-> > > > 	rc = netlbl_cfg_cipsov4_map_add(doip->doi, NULL, NULL, NULL, &nai);
-> > > > 
-> > > > 
-> > > > Not sure exactly how we can solve this issue. Just checked that
-> > > > commenting the call to smk_cipso_doi() in init_smk_fs() allows the NFS
-> > > > filesystem to be mounted.
-> > > Are both the server and client using Smack? Are they on a network that can
-> > > propagate labeled packets? What are you using for a Smack rule configuration?
-> > Only the client (Fedora 38).
-> 
-> Does the client run processes with Smack labels other than floor ("_")?
+Hello Dearest,
 
-No, everything with _.
+I deep it a respect and humble submission, I beg to state the
+following few lines for your kind consideration, I hope you will spare
+some of your valuable minutes to read the following appeal with
+sympathetic mind. I must confess that it is with great hopes, joy and
+enthusiasm that I write you this email which I know and believe by
+faith that it must surely find you in good condition of health.
 
-> Are you using any of the Smack mount options?
+My name is Sandrina Omaru; I am the only child of my late parents
+Chief. Mr. Williams Omaru. My father was a highly reputable business
+magnet who operated in the capital of Ivory Coast during his days.
 
-Just: defaults.
+It is sad to say that he passed away mysteriously in France during one
+of his business trips abroad Though his sudden death was linked or
+rather suspected to have been masterminded by an uncle of mine who
+travelled with him at that time. But God knows the truth! My mother
+died when I was just 6yrs old, and since then my father took me so
+special.
 
-> What value is in /sys/fs/smackfs/ambient?
+Before the death of my father, he called me and informed me that he
+has the sum of Three Million, Six Hundred thousand
+Euro.(=E2=82=AC3,600,000.00) he deposited in a private Bank here in Abidjan
+Cote D'Ivoire.. He told me that he deposited the money in my name, and
+also gave me all the necessary legal documents regarding to this
+deposit with the Bank,
 
-_
+I am just 22 years old and a university undergraduate and really don't
+know what to do. Now I want an honest and GOD fearing partner overseas
+who I can transfer this money with his assistance and after the
+transaction I will come and reside permanently in your country till
+such a time that it will be convenient for me to return back home if I
+so desire. This is because I have suffered a lot of set backs as a
+result of incessant political crisis here in Ivory coast.
 
+The death of my father actually brought sorrow to my life. I also want
+to invest the fund under your care because I am ignorant of business
+world. I am in a sincere desire of your humble assistance in these
+regards.Your suggestions and ideas will be highly regarded.
 
-And actually, this seems to be the problem.
+Please, consider this and get back to me as soon as possible.
+Immediately I confirm your willingness, I will send to you my Picture
+and also inform you more details involved in this matter.
 
-In smack_socket_post_create(), kernel threads are given the @ label,
-which causes the packets to be processed according to the default
-mapping (labeled).
+Kind Regards,
 
-If I do:
-
-echo @ > /sys/fs/smackfs/ambient
-
-NFS can be mounted again.
-
->  The server is Ubuntu 20.04.06 LTS and uses
-> > Apparmor.
-> 
-> Because the AppArmor server doesn't speak CIPSO you will need to identify
-> it as an unlabeled host. This effectively labels all communication with
-> the host as having a specific label. See Documentation/admin-guide/LSM/Smack.rst
-> for details.
-> 
-> >  The client is a VM created with libvirt. The connection is
-> > the classic tap attached to a bridge.
-> 
-> OK, does TAP on a bridge support IPv4 options on packets?
-
-Sorry, don't know.
-
-Thanks
-
-Roberto
-
-> > Thanks
-> > 
-> > Roberto
-> > 
-
+Sandrina Omaru.
