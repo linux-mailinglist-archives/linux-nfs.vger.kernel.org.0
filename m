@@ -2,330 +2,289 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA0A86FBB7D
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 May 2023 01:43:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBCBA6FBD46
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 May 2023 04:31:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbjEHXm6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 May 2023 19:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53012 "EHLO
+        id S231459AbjEICbx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 May 2023 22:31:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232230AbjEHXm5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 May 2023 19:42:57 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05FC8559D
-        for <linux-nfs@vger.kernel.org>; Mon,  8 May 2023 16:42:54 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        with ESMTP id S232838AbjEICbv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 May 2023 22:31:51 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E9613AA5
+        for <linux-nfs@vger.kernel.org>; Mon,  8 May 2023 19:31:47 -0700 (PDT)
+Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com [209.85.219.197])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 250A0202A5;
-        Mon,  8 May 2023 23:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1683589372; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RA5eovxRZvZ+csnuGTI/FwQLC2K+BHp8qkbQyGP9V88=;
-        b=KpHH718d+JHLcoXzbutXpUzmLDEXZg85BzhamO9TwFwLPPKDZ7H39n8GZNZKPJL1Zpb+lx
-        Ec24L4on5+YNeYX09KiK/vYhpC81KXXYICwfqG6eUx5jsTDSwV7L6vSfLbcC58vxhI4mz3
-        sW05JybGnHB+rSvboIIB37PVHxxTFo0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1683589372;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RA5eovxRZvZ+csnuGTI/FwQLC2K+BHp8qkbQyGP9V88=;
-        b=iqqHJXX6s8rqzK17dk/xL+pF11I9lBtk/awdBiwsTkQHMv+IYwoTPtSv+Np3WPLq5AN8PX
-        vnSW4V18sHh0jBCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E98491346B;
-        Mon,  8 May 2023 23:42:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id RwKnJ/qIWWT6dgAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 08 May 2023 23:42:50 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id A058F3F229
+        for <linux-nfs@vger.kernel.org>; Tue,  9 May 2023 02:31:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1683599504;
+        bh=PU1OLdX01YDDG26M4QS6MQQfkEnrym1NDlR+hrR8gA8=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=HJ6MGYkQ6LrFlNc4wf/D9JY4ahIBX8O833edSuY2L1uudUQpbvSSoeV7CBm0j/Fly
+         YAZJMazq0s+A939MgQXAuv7KL3+aZYe+aZjrv/wkweHCtwODaESmCTlCWLpZxEr4RB
+         Mf6oZSB+r+MVXtYOmqhKgA8FHAVkqb2VOiJ6MD/dfi+P8GLFMBk/V92WL7bCdwfDFE
+         +nrVVMO73tcRhLX9fvwjZA/tI6vTs3W9mzm4OXaAXqMLF40gjtSJjBuOmklEaGc+5R
+         uSmiEVeQbLsQ77h81pJajVenbMVc+QOxs7+KazNqIevV1YQEEdAPdJVVZFXfWeYW7x
+         LWtRGS9Y4ofvg==
+Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-ba2b9ecfadaso3655422276.2
+        for <linux-nfs@vger.kernel.org>; Mon, 08 May 2023 19:31:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683599503; x=1686191503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PU1OLdX01YDDG26M4QS6MQQfkEnrym1NDlR+hrR8gA8=;
+        b=KidlHp4dbKeUJ+zkeC4zRNySe59VZTA2ElOcvSw0FpN+bANL7L/3dNFDYQDeGc3FcJ
+         4Tp6Gpl2hBfjryGVgxohgaTCD/E3lBBMUUc3XawNLJHCyLMdWmACtskdm8jOjAstxCC1
+         Wg+JXWlpjcYjtgPLflPCvsUxVMaFOrkFJKIZQJbAXHgMM3eYHt+jAbWdIn2tHOFlDYIZ
+         Gb2DHiQlJY5BfHyV+CI0/7TSglQXJ4TnkPB13gIIZpqm2UuL3bH1xqBI1f/sdx/JWnc/
+         7WKE6YYPPX2hc7A+K2QpLKUVFuyLkDW2DGbgoSaphtUqJD0BugbR8Rr29odGeKMetT0m
+         iykw==
+X-Gm-Message-State: AC+VfDzMLPPudPdq+nys0njmrYjHgQSZz1qOGxuQgOYQI+f4UDRw+RQK
+        CLQGZfNaD1kHXk148ybu4ZcXxOt1PP7BmsSdZBqnPLJtlCcW2qQb15DY42bI6Z4Nzi24f1I5b7C
+        JMu3uCWKL6ielJXQR8cQabV4yje65tVXl+QdV/kBjRHEB5QokjUiqL8Q3RLDk25t9
+X-Received: by 2002:a25:d185:0:b0:b9d:7887:4423 with SMTP id i127-20020a25d185000000b00b9d78874423mr14976493ybg.16.1683599503356;
+        Mon, 08 May 2023 19:31:43 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ74VBAq6LWXxyQnoiM2BKvO6NxFZ7mC8NQe3lskTY2OIyRRQpHN0uFc/ScvPbjuwTXQOjR+xdffO6DDzIeK7Cs=
+X-Received: by 2002:a25:d185:0:b0:b9d:7887:4423 with SMTP id
+ i127-20020a25d185000000b00b9d78874423mr14976480ybg.16.1683599503035; Mon, 08
+ May 2023 19:31:43 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever" <chuck.lever@oracle.com>,
-        "Jeff Layton" <jlayton@kernel.org>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] SUNRPC: always free ctxt when freeing deferred request
-In-reply-to: <168358930939.26026.4067210924697967164@noble.neil.brown.name>
-References: <168358930939.26026.4067210924697967164@noble.neil.brown.name>
-Date:   Tue, 09 May 2023 09:42:47 +1000
-Message-id: <168358936786.26026.624483381722608538@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20230411030248.53356-1-chengen.du@canonical.com>
+ <CAPt2mGNqqDeRMeCSVh6oX_=nS0UcGCfhBfVcuaVG9HpdwVSzVg@mail.gmail.com> <CAPza5qee7vHKwjwhS27xB8xXTgAFHEmv7eiFk6zGTUUc4s8=TQ@mail.gmail.com>
+In-Reply-To: <CAPza5qee7vHKwjwhS27xB8xXTgAFHEmv7eiFk6zGTUUc4s8=TQ@mail.gmail.com>
+From:   Chengen Du <chengen.du@canonical.com>
+Date:   Tue, 9 May 2023 10:31:32 +0800
+Message-ID: <CAPza5qcz_-zSJ0AQkq6tnhYvY7Gs+qAnDoaqiH67zgWhjAtAkA@mail.gmail.com>
+Subject: Re: [PATCH] NFS: Add mount option 'nofasc'
+To:     trond.myklebust@hammerspace.com
+Cc:     anna@kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Trond,
 
-Since the ->xprt_ctxt pointer was added to svc_deferred_req, it has not
-been sufficient to use kfree() to free a deferred request.  We may need
-to free the ctxt as well.
+I sincerely apologize for interrupting you, as I understand that you
+may have other pressing matters to attend to.
+However, I was hoping to bring your attention to a pressing matter
+that a number of community users are currently experiencing.
+As can be seen in this link:
+https://bugs.launchpad.net/ubuntu/+source/linux/+bug/2015827,
+the issue at hand is causing a significant amount of inconvenience to
+many individuals.
 
-As freeing the ctxt is all that ->xpo_release_rqst() does, we repurpose
-it to explicit do that even when the ctxt is not stored in an rqst.
-So we now have ->xpo_release_ctxt() which is given an xprt and a ctxt,
-which may have been taken either from an rqst or from a dreq.  The
-caller is now responsible for clearing that pointer after the call to
-->xpo_release_ctxt.
+If it wouldn't be too much trouble, I would be immensely grateful if
+you could spare a moment to examine the patch and perhaps offer some
+guidance on how best to proceed.
+Your assistance in this matter would be greatly appreciated.
 
-We also clear dr->xprt_ctxt when the ctxt is moved into a new rqst when
-revisiting a deferred request.  This ensures there is only one pointer
-to the ctxt, so the risk of double freeing in future is reduced.  The
-new code in svc_xprt_release which releases both the ctxt and any
-rq_deferred depends on this.
+Best regards,
+Chengen Du
 
-Fixes: 773f91b2cf3f ("SUNRPC: Fix NFSD's request deferral on RDMA transports")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- include/linux/sunrpc/svc_rdma.h          |  2 +-
- include/linux/sunrpc/svc_xprt.h          |  2 +-
- net/sunrpc/svc_xprt.c                    | 21 ++++++++++++-----
- net/sunrpc/svcsock.c                     | 30 +++++++++++++-----------
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c  | 11 ++++-----
- net/sunrpc/xprtrdma/svc_rdma_transport.c |  2 +-
- 6 files changed, 39 insertions(+), 29 deletions(-)
-
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index 24aa159d29a7..fbc4bd423b35 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -176,7 +176,7 @@ extern struct svc_rdma_recv_ctxt *
- extern void svc_rdma_recv_ctxt_put(struct svcxprt_rdma *rdma,
- 				   struct svc_rdma_recv_ctxt *ctxt);
- extern void svc_rdma_flush_recv_queues(struct svcxprt_rdma *rdma);
--extern void svc_rdma_release_rqst(struct svc_rqst *rqstp);
-+extern void svc_rdma_release_ctxt(struct svc_xprt *xprt, void *ctxt);
- extern int svc_rdma_recvfrom(struct svc_rqst *);
-=20
- /* svc_rdma_rw.c */
-diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
-index 867479204840..6f4473ee68e1 100644
---- a/include/linux/sunrpc/svc_xprt.h
-+++ b/include/linux/sunrpc/svc_xprt.h
-@@ -23,7 +23,7 @@ struct svc_xprt_ops {
- 	int		(*xpo_sendto)(struct svc_rqst *);
- 	int		(*xpo_result_payload)(struct svc_rqst *, unsigned int,
- 					      unsigned int);
--	void		(*xpo_release_rqst)(struct svc_rqst *);
-+	void		(*xpo_release_ctxt)(struct svc_xprt *, void *);
- 	void		(*xpo_detach)(struct svc_xprt *);
- 	void		(*xpo_free)(struct svc_xprt *);
- 	void		(*xpo_kill_temp_xprt)(struct svc_xprt *);
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 5fd94f6bdc75..1e3bba433561 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -532,13 +532,21 @@ void svc_reserve(struct svc_rqst *rqstp, int space)
- }
- EXPORT_SYMBOL_GPL(svc_reserve);
-=20
-+static void free_deferred(struct svc_xprt *xprt, struct svc_deferred_req *dr)
-+{
-+	if (dr)
-+		xprt->xpt_ops->xpo_release_ctxt(xprt, dr->xprt_ctxt);
-+	kfree(dr);
-+}
-+
- static void svc_xprt_release(struct svc_rqst *rqstp)
- {
- 	struct svc_xprt	*xprt =3D rqstp->rq_xprt;
-=20
--	xprt->xpt_ops->xpo_release_rqst(rqstp);
-+	xprt->xpt_ops->xpo_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
-+	rqstp->rq_xprt_ctxt =3D NULL;
-=20
--	kfree(rqstp->rq_deferred);
-+	free_deferred(xprt, rqstp->rq_deferred);
- 	rqstp->rq_deferred =3D NULL;
-=20
- 	svc_rqst_release_pages(rqstp);
-@@ -1054,7 +1062,7 @@ static void svc_delete_xprt(struct svc_xprt *xprt)
- 	spin_unlock_bh(&serv->sv_lock);
-=20
- 	while ((dr =3D svc_deferred_dequeue(xprt)) !=3D NULL)
--		kfree(dr);
-+		free_deferred(xprt, dr);
-=20
- 	call_xpt_users(xprt);
- 	svc_xprt_put(xprt);
-@@ -1176,8 +1184,8 @@ static void svc_revisit(struct cache_deferred_req *dreq=
-, int too_many)
- 	if (too_many || test_bit(XPT_DEAD, &xprt->xpt_flags)) {
- 		spin_unlock(&xprt->xpt_lock);
- 		trace_svc_defer_drop(dr);
-+		free_deferred(xprt, dr);
- 		svc_xprt_put(xprt);
--		kfree(dr);
- 		return;
- 	}
- 	dr->xprt =3D NULL;
-@@ -1222,14 +1230,13 @@ static struct cache_deferred_req *svc_defer(struct ca=
-che_req *req)
- 		dr->addrlen =3D rqstp->rq_addrlen;
- 		dr->daddr =3D rqstp->rq_daddr;
- 		dr->argslen =3D rqstp->rq_arg.len >> 2;
--		dr->xprt_ctxt =3D rqstp->rq_xprt_ctxt;
-=20
- 		/* back up head to the start of the buffer and copy */
- 		skip =3D rqstp->rq_arg.len - rqstp->rq_arg.head[0].iov_len;
- 		memcpy(dr->args, rqstp->rq_arg.head[0].iov_base - skip,
- 		       dr->argslen << 2);
- 	}
--	WARN_ON_ONCE(rqstp->rq_xprt_ctxt !=3D dr->xprt_ctxt);
-+	dr->xprt_ctxt =3D rqstp->rq_xprt_ctxt;
- 	rqstp->rq_xprt_ctxt =3D NULL;
- 	trace_svc_defer(rqstp);
- 	svc_xprt_get(rqstp->rq_xprt);
-@@ -1263,6 +1270,8 @@ static noinline int svc_deferred_recv(struct svc_rqst *=
-rqstp)
- 	rqstp->rq_daddr       =3D dr->daddr;
- 	rqstp->rq_respages    =3D rqstp->rq_pages;
- 	rqstp->rq_xprt_ctxt   =3D dr->xprt_ctxt;
-+
-+	dr->xprt_ctxt =3D NULL;
- 	svc_xprt_received(rqstp->rq_xprt);
- 	return dr->argslen << 2;
- }
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index a51c9b989d58..aa4f31a770e3 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -121,27 +121,27 @@ static void svc_reclassify_socket(struct socket *sock)
- #endif
-=20
- /**
-- * svc_tcp_release_rqst - Release transport-related resources
-- * @rqstp: request structure with resources to be released
-+ * svc_tcp_release_ctxt - Release transport-related resources
-+ * @xprt: the transport which owned the context
-+ * @ctxt: the context from rqstp->rq_xprt_ctxt or dr->xprt_ctxt
-  *
-  */
--static void svc_tcp_release_rqst(struct svc_rqst *rqstp)
-+static void svc_tcp_release_ctxt(struct svc_xprt *xprt, void *ctxt)
- {
- }
-=20
- /**
-- * svc_udp_release_rqst - Release transport-related resources
-- * @rqstp: request structure with resources to be released
-+ * svc_udp_release_ctxt - Release transport-related resources
-+ * @xprt: the transport which owned the context
-+ * @ctxt: the context from rqstp->rq_xprt_ctxt or dr->xprt_ctxt
-  *
-  */
--static void svc_udp_release_rqst(struct svc_rqst *rqstp)
-+static void svc_udp_release_ctxt(struct svc_xprt *xprt, void *ctxt)
- {
--	struct sk_buff *skb =3D rqstp->rq_xprt_ctxt;
-+	struct sk_buff *skb =3D ctxt;
-=20
--	if (skb) {
--		rqstp->rq_xprt_ctxt =3D NULL;
-+	if (skb)
- 		consume_skb(skb);
--	}
- }
-=20
- union svc_pktinfo_u {
-@@ -696,7 +696,8 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
- 	unsigned int sent;
- 	int err;
-=20
--	svc_udp_release_rqst(rqstp);
-+	svc_udp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
-+	rqstp->rq_xprt_ctxt =3D NULL;
-=20
- 	svc_set_cmsg_data(rqstp, cmh);
-=20
-@@ -768,7 +769,7 @@ static const struct svc_xprt_ops svc_udp_ops =3D {
- 	.xpo_recvfrom =3D svc_udp_recvfrom,
- 	.xpo_sendto =3D svc_udp_sendto,
- 	.xpo_result_payload =3D svc_sock_result_payload,
--	.xpo_release_rqst =3D svc_udp_release_rqst,
-+	.xpo_release_ctxt =3D svc_udp_release_ctxt,
- 	.xpo_detach =3D svc_sock_detach,
- 	.xpo_free =3D svc_sock_free,
- 	.xpo_has_wspace =3D svc_udp_has_wspace,
-@@ -1298,7 +1299,8 @@ static int svc_tcp_sendto(struct svc_rqst *rqstp)
- 	unsigned int sent;
- 	int err;
-=20
--	svc_tcp_release_rqst(rqstp);
-+	svc_tcp_release_ctxt(xprt, rqstp->rq_xprt_ctxt);
-+	rqstp->rq_xprt_ctxt =3D NULL;
-=20
- 	atomic_inc(&svsk->sk_sendqlen);
- 	mutex_lock(&xprt->xpt_mutex);
-@@ -1343,7 +1345,7 @@ static const struct svc_xprt_ops svc_tcp_ops =3D {
- 	.xpo_recvfrom =3D svc_tcp_recvfrom,
- 	.xpo_sendto =3D svc_tcp_sendto,
- 	.xpo_result_payload =3D svc_sock_result_payload,
--	.xpo_release_rqst =3D svc_tcp_release_rqst,
-+	.xpo_release_ctxt =3D svc_tcp_release_ctxt,
- 	.xpo_detach =3D svc_tcp_sock_detach,
- 	.xpo_free =3D svc_sock_free,
- 	.xpo_has_wspace =3D svc_tcp_has_wspace,
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/sv=
-c_rdma_recvfrom.c
-index 1c658fa43063..5c51e28b3111 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -239,21 +239,20 @@ void svc_rdma_recv_ctxt_put(struct svcxprt_rdma *rdma,
- }
-=20
- /**
-- * svc_rdma_release_rqst - Release transport-specific per-rqst resources
-- * @rqstp: svc_rqst being released
-+ * svc_rdma_release_ctxt - Release transport-specific per-rqst resources
-+ * @xprt: the transport which owned the context
-+ * @ctxt: the context from rqstp->rq_xprt_ctxt or dr->xprt_ctxt
-  *
-  * Ensure that the recv_ctxt is released whether or not a Reply
-  * was sent. For example, the client could close the connection,
-  * or svc_process could drop an RPC, before the Reply is sent.
-  */
--void svc_rdma_release_rqst(struct svc_rqst *rqstp)
-+void svc_rdma_release_ctxt(struct svc_xprt *xprt, void *vctxt)
- {
--	struct svc_rdma_recv_ctxt *ctxt =3D rqstp->rq_xprt_ctxt;
--	struct svc_xprt *xprt =3D rqstp->rq_xprt;
-+	struct svc_rdma_recv_ctxt *ctxt =3D vctxt;
- 	struct svcxprt_rdma *rdma =3D
- 		container_of(xprt, struct svcxprt_rdma, sc_xprt);
-=20
--	rqstp->rq_xprt_ctxt =3D NULL;
- 	if (ctxt)
- 		svc_rdma_recv_ctxt_put(rdma, ctxt);
- }
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/s=
-vc_rdma_transport.c
-index 416b298f74dd..ca04f7a6a085 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -80,7 +80,7 @@ static const struct svc_xprt_ops svc_rdma_ops =3D {
- 	.xpo_recvfrom =3D svc_rdma_recvfrom,
- 	.xpo_sendto =3D svc_rdma_sendto,
- 	.xpo_result_payload =3D svc_rdma_result_payload,
--	.xpo_release_rqst =3D svc_rdma_release_rqst,
-+	.xpo_release_ctxt =3D svc_rdma_release_ctxt,
- 	.xpo_detach =3D svc_rdma_detach,
- 	.xpo_free =3D svc_rdma_free,
- 	.xpo_has_wspace =3D svc_rdma_has_wspace,
---=20
-2.40.1
-
+On Tue, Apr 25, 2023 at 9:41=E2=80=AFAM Chengen Du <chengen.du@canonical.co=
+m> wrote:
+>
+> Hi,
+>
+> May I ask if there are any concerns or opinions regarding the
+> introduction of the new mount option?
+> If there is a more suitable solution, we can discuss it, and I can
+> work on implementing it.
+>
+> Best regards,
+> Chengen Du
+>
+> On Wed, Apr 19, 2023 at 3:18=E2=80=AFPM Daire Byrne <daire@dneg.com> wrot=
+e:
+> >
+> > Just to say, I am personally for this or some other way to opt out of
+> > the increased ACCESS calls on select servers (e.g. ones with high
+> > latency or with lots of multi user logins).
+> >
+> > I see it as similar to "actimeo" and "nocto" options in allowing users
+> > to reduce "correctness" at their own risk if it helps with their
+> > workloads and they deem the risk worth it.
+> >
+> > I am currently reverting the original patches in our kernel for our
+> > nfs re-exporting workloads.
+> >
+> > Daire
+> >
+> >
+> > On Tue, 11 Apr 2023 at 04:03, Chengen Du <chengen.du@canonical.com> wro=
+te:
+> > >
+> > > This mount option is used to skip clearing the file access cache
+> > > upon login. Some users or applications switch to other privileged
+> > > users via commands such as 'su' to operate on NFS-mounted folders.
+> > > In such cases, the privileged user's login time will be renewed,
+> > > and NFS ACCESS operations will need to be re-sent, potentially
+> > > leading to performance degradation.
+> > > In some production environments where the access cache can be
+> > > trusted due to stable group membership, this option could be
+> > > particularly useful.
+> > >
+> > > Signed-off-by: Chengen Du <chengen.du@canonical.com>
+> > > ---
+> > >  fs/nfs/dir.c              | 21 ++++++++++++---------
+> > >  fs/nfs/fs_context.c       |  8 ++++++++
+> > >  fs/nfs/super.c            |  1 +
+> > >  include/linux/nfs_fs_sb.h |  1 +
+> > >  4 files changed, 22 insertions(+), 9 deletions(-)
+> > >
+> > > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> > > index 6fbcbb8d6587..9a6d86e2044e 100644
+> > > --- a/fs/nfs/dir.c
+> > > +++ b/fs/nfs/dir.c
+> > > @@ -2953,12 +2953,14 @@ static struct nfs_access_entry *nfs_access_se=
+arch_rbtree(struct inode *inode, co
+> > >         return NULL;
+> > >  }
+> > >
+> > > -static u64 nfs_access_login_time(const struct task_struct *task,
+> > > -                                const struct cred *cred)
+> > > +static inline
+> > > +bool nfs_check_access_stale(const struct task_struct *task,
+> > > +                           const struct cred *cred,
+> > > +                           const struct nfs_access_entry *cache)
+> > >  {
+> > >         const struct task_struct *parent;
+> > >         const struct cred *pcred;
+> > > -       u64 ret;
+> > > +       u64 login_time;
+> > >
+> > >         rcu_read_lock();
+> > >         for (;;) {
+> > > @@ -2968,15 +2970,15 @@ static u64 nfs_access_login_time(const struct=
+ task_struct *task,
+> > >                         break;
+> > >                 task =3D parent;
+> > >         }
+> > > -       ret =3D task->start_time;
+> > > +       login_time =3D task->start_time;
+> > >         rcu_read_unlock();
+> > > -       return ret;
+> > > +
+> > > +       return ((s64)(login_time - cache->timestamp) > 0);
+> > >  }
+> > >
+> > >  static int nfs_access_get_cached_locked(struct inode *inode, const s=
+truct cred *cred, u32 *mask, bool may_block)
+> > >  {
+> > >         struct nfs_inode *nfsi =3D NFS_I(inode);
+> > > -       u64 login_time =3D nfs_access_login_time(current, cred);
+> > >         struct nfs_access_entry *cache;
+> > >         bool retry =3D true;
+> > >         int err;
+> > > @@ -3005,7 +3007,8 @@ static int nfs_access_get_cached_locked(struct =
+inode *inode, const struct cred *
+> > >                 retry =3D false;
+> > >         }
+> > >         err =3D -ENOENT;
+> > > -       if ((s64)(login_time - cache->timestamp) > 0)
+> > > +       if (!(NFS_SERVER(inode)->flags & NFS_MOUNT_NOFASC) &&
+> > > +           nfs_check_access_stale(current, cred, cache))
+> > >                 goto out;
+> > >         *mask =3D cache->mask;
+> > >         list_move_tail(&cache->lru, &nfsi->access_cache_entry_lru);
+> > > @@ -3025,7 +3028,6 @@ static int nfs_access_get_cached_rcu(struct ino=
+de *inode, const struct cred *cre
+> > >          * but do it without locking.
+> > >          */
+> > >         struct nfs_inode *nfsi =3D NFS_I(inode);
+> > > -       u64 login_time =3D nfs_access_login_time(current, cred);
+> > >         struct nfs_access_entry *cache;
+> > >         int err =3D -ECHILD;
+> > >         struct list_head *lh;
+> > > @@ -3040,7 +3042,8 @@ static int nfs_access_get_cached_rcu(struct ino=
+de *inode, const struct cred *cre
+> > >                 cache =3D NULL;
+> > >         if (cache =3D=3D NULL)
+> > >                 goto out;
+> > > -       if ((s64)(login_time - cache->timestamp) > 0)
+> > > +       if (!(NFS_SERVER(inode)->flags & NFS_MOUNT_NOFASC) &&
+> > > +           nfs_check_access_stale(current, cred, cache))
+> > >                 goto out;
+> > >         if (nfs_check_cache_invalid(inode, NFS_INO_INVALID_ACCESS))
+> > >                 goto out;
+> > > diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> > > index 9bcd53d5c7d4..5cd9b2882c79 100644
+> > > --- a/fs/nfs/fs_context.c
+> > > +++ b/fs/nfs/fs_context.c
+> > > @@ -88,6 +88,7 @@ enum nfs_param {
+> > >         Opt_vers,
+> > >         Opt_wsize,
+> > >         Opt_write,
+> > > +       Opt_fasc,
+> > >  };
+> > >
+> > >  enum {
+> > > @@ -194,6 +195,7 @@ static const struct fs_parameter_spec nfs_fs_para=
+meters[] =3D {
+> > >         fsparam_string("vers",          Opt_vers),
+> > >         fsparam_enum  ("write",         Opt_write, nfs_param_enums_wr=
+ite),
+> > >         fsparam_u32   ("wsize",         Opt_wsize),
+> > > +       fsparam_flag_no("fasc",         Opt_fasc),
+> > >         {}
+> > >  };
+> > >
+> > > @@ -861,6 +863,12 @@ static int nfs_fs_context_parse_param(struct fs_=
+context *fc,
+> > >         case Opt_sloppy:
+> > >                 ctx->sloppy =3D true;
+> > >                 break;
+> > > +       case Opt_fasc:
+> > > +               if (result.negated)
+> > > +                       ctx->flags |=3D NFS_MOUNT_NOFASC;
+> > > +               else
+> > > +                       ctx->flags &=3D ~NFS_MOUNT_NOFASC;
+> > > +               break;
+> > >         }
+> > >
+> > >         return 0;
+> > > diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+> > > index 05ae23657527..059513d403f8 100644
+> > > --- a/fs/nfs/super.c
+> > > +++ b/fs/nfs/super.c
+> > > @@ -444,6 +444,7 @@ static void nfs_show_mount_options(struct seq_fil=
+e *m, struct nfs_server *nfss,
+> > >                 { NFS_MOUNT_NORDIRPLUS, ",nordirplus", "" },
+> > >                 { NFS_MOUNT_UNSHARED, ",nosharecache", "" },
+> > >                 { NFS_MOUNT_NORESVPORT, ",noresvport", "" },
+> > > +               { NFS_MOUNT_NOFASC, ",nofasc", "" },
+> > >                 { 0, NULL, NULL }
+> > >         };
+> > >         const struct proc_nfs_info *nfs_infop;
+> > > diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> > > index ea2f7e6b1b0b..a39ae1bd2217 100644
+> > > --- a/include/linux/nfs_fs_sb.h
+> > > +++ b/include/linux/nfs_fs_sb.h
+> > > @@ -153,6 +153,7 @@ struct nfs_server {
+> > >  #define NFS_MOUNT_WRITE_EAGER          0x01000000
+> > >  #define NFS_MOUNT_WRITE_WAIT           0x02000000
+> > >  #define NFS_MOUNT_TRUNK_DISCOVERY      0x04000000
+> > > +#define NFS_MOUNT_NOFASC               0x08000000
+> > >
+> > >         unsigned int            fattr_valid;    /* Valid attributes *=
+/
+> > >         unsigned int            caps;           /* server capabilitie=
+s */
+> > > --
+> > > 2.37.2
+> > >
