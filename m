@@ -2,137 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 008E66FE6FE
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 May 2023 00:09:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C5B06FE707
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 May 2023 00:10:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236361AbjEJWIM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 May 2023 18:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57744 "EHLO
+        id S229745AbjEJWKi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 May 2023 18:10:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236375AbjEJWIH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 May 2023 18:08:07 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E206189
-        for <linux-nfs@vger.kernel.org>; Wed, 10 May 2023 15:08:05 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C04A71FD6B;
-        Wed, 10 May 2023 22:08:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1683756483; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J/e3rIshzrYg4pAK0dSAEbWV4SJAQMPKkivuMAu6Qxw=;
-        b=qd7DU+NkPZ7J0U5viyzukzL2hC95usTnLeAG0+ETe3b5oufZitnUYY+MYciEnjDm7YxoRV
-        04wjmuoi6hN6Nn5s4WDV2obJoCxj71tRXV8qOnnRSKAIYbQ9QHK4mWpLhv9pSeDV8hiKfd
-        UdJ2tIeBWnMhRaPQqnaa6dj9kx7RHoc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1683756483;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=J/e3rIshzrYg4pAK0dSAEbWV4SJAQMPKkivuMAu6Qxw=;
-        b=Zo8Xls5LwZs+tjJ5IJgBndJArwcLDBJxE1kLvc/biBV0k7XTyXHGM3hJ5t5YvauAVjQl/Q
-        nzCRJH4UndQ9l3Ag==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A51C213519;
-        Wed, 10 May 2023 22:08:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id aG6TFsEVXGTqBAAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 10 May 2023 22:08:01 +0000
-Subject: [PATCH 1/2] SUNRPC: support abstract unix socket addresses
-From:   NeilBrown <neilb@suse.de>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     linux-nfs@vger.kernel.org, Petr Vorel <pvorel@suse.cz>,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Steve Dickson <steved@redhat.com>
-Date:   Thu, 11 May 2023 08:06:24 +1000
-Message-ID: <168375638439.26246.18054236712842151913.stgit@noble.brown>
-In-Reply-To: <168375610447.26246.3237443941479930060.stgit@noble.brown>
-References: <168375610447.26246.3237443941479930060.stgit@noble.brown>
-User-Agent: StGit/1.5
+        with ESMTP id S230165AbjEJWKh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 May 2023 18:10:37 -0400
+Received: from mail-io1-xd2d.google.com (mail-io1-xd2d.google.com [IPv6:2607:f8b0:4864:20::d2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 370687EF7;
+        Wed, 10 May 2023 15:10:01 -0700 (PDT)
+Received: by mail-io1-xd2d.google.com with SMTP id ca18e2360f4ac-76c75d32005so20478039f.1;
+        Wed, 10 May 2023 15:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683756600; x=1686348600;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3s4NS5h+ppIdgnnYQegn2z2147cbkAQceVt2XlyQw1Y=;
+        b=ImPDHWBF2qUQho/XSGzYwmUlPuFNt5nW0etWoAQx6NgoilJ5vmlVPRuX6Lbxc5bd8X
+         erKFHCSLp5kU9kyH1UEXsSCL1OeKxknhYhiCqHtMAZIt6/4hMA9tPMXd1ixAFYhUdY9I
+         ngeO9pyIGVx0Fe1/3lDNo+xH8rh8wyYrWLjkbuAfcusAgy6TpOuqVD932Kjh64493UBe
+         myoMDto8+XjFryW4HEm0xdCCxEVGuGCmwGTcgUkyKUngTZ2T2a/66/C3bbrvrUrYYpNY
+         HzPeLBosHjCK7IXn5tw+AZ6pw236RStp0hyIvHB2cC/qTiaoXv2YLcPKsMuSR12Joq6C
+         D+Mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683756600; x=1686348600;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3s4NS5h+ppIdgnnYQegn2z2147cbkAQceVt2XlyQw1Y=;
+        b=kP9uiGXvs6ZIunNM/w/QCbQPhk0z+18TW22cPiQXCzoFMENbVIUtx1VHhy9uStmVU+
+         hlm89Rs1o0YFtyBHujDfKeVj1ChHiF8nndhyc0lsKMyLQJ/v0qogaQR+Xe2bMKBOF8/b
+         f3m/0gNmccgLZQ8AJD2dcUZesS7ZbpH2tndWOt2Jyjqo0AjJY9PGowZJnjxXVkNBD/KV
+         CiYOBt+4dpXkQtyIdDteKlzwOfsDArjLrnGfOK17nQYYmgDZs7q/V+68gMmtQQO34VQn
+         lcE0zTJ/ZdD6gen24DU4VypbYeLKdaTI6iUn6BpcaIhtkcq5V08GKzSDVOK08u0iWOUY
+         tCdQ==
+X-Gm-Message-State: AC+VfDxBu9P8y62yuidbAcGwam4mQ4bAJvZNVRJqjfcEzsMpFDCbsMMv
+        ZVA364vHVAlSc2uSlWbA1YY=
+X-Google-Smtp-Source: ACHHUZ5Vr8aIzsxRpff9WfyD51ew3E6uvhrr4J0w4KIP58YXQy6L7ENpQQmdIKhw92vzL8FF4DvPUw==
+X-Received: by 2002:a5e:d603:0:b0:76c:5cc1:22a9 with SMTP id w3-20020a5ed603000000b0076c5cc122a9mr4929885iom.17.1683756600028;
+        Wed, 10 May 2023 15:10:00 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id s14-20020a02cf2e000000b0040fad79ac08sm3846047jar.89.2023.05.10.15.09.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 May 2023 15:09:59 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFSD: Replace all non-returning strlcpy with strscpy
+Date:   Wed, 10 May 2023 22:09:52 +0000
+Message-ID: <20230510220952.3507366-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.40.1.521.gf1e218fcd8-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-An "abtract" address for an AF_UNIX socket start with a nul and can
-contain any bytes for the given length, but traditionally doesn't
-contain other nuls.  When reported, the leading nul is replaced by '@'.
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
 
-sunrpc currently rejects connections to these addresses and reports them
-as an empty string.  To provide support for future use of these
-addresses, allow them for outgoing connections and report them more
-usefully.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- net/sunrpc/clnt.c     |    8 ++++++--
- net/sunrpc/xprtsock.c |    9 +++++++--
- 2 files changed, 13 insertions(+), 4 deletions(-)
+ fs/nfsd/trace.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index d2ee56634308..18f70854f528 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -565,8 +565,12 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
- 		servername[0] = '\0';
- 		switch (args->address->sa_family) {
- 		case AF_LOCAL:
--			snprintf(servername, sizeof(servername), "%s",
--				 sun->sun_path);
-+			if (sun->sun_path[0])
-+				snprintf(servername, sizeof(servername), "%s",
-+					 sun->sun_path);
-+			else
-+				snprintf(servername, sizeof(servername), "@%s",
-+					 sun->sun_path+1);
- 			break;
- 		case AF_INET:
- 			snprintf(servername, sizeof(servername), "%pI4",
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 5f9030b81c9e..515328a8dafe 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -253,7 +253,12 @@ static void xs_format_common_peer_addresses(struct rpc_xprt *xprt)
- 	switch (sap->sa_family) {
- 	case AF_LOCAL:
- 		sun = xs_addr_un(xprt);
--		strscpy(buf, sun->sun_path, sizeof(buf));
-+		if (sun->sun_path[0]) {
-+			strscpy(buf, sun->sun_path, sizeof(buf));
-+		} else {
-+			buf[0] = '@';
-+			strscpy(buf+1, sun->sun_path+1, sizeof(buf)-1);
-+		}
- 		xprt->address_strings[RPC_DISPLAY_ADDR] =
- 						kstrdup(buf, GFP_KERNEL);
- 		break;
-@@ -2858,7 +2863,7 @@ static struct rpc_xprt *xs_setup_local(struct xprt_create *args)
- 
- 	switch (sun->sun_family) {
- 	case AF_LOCAL:
--		if (sun->sun_path[0] != '/') {
-+		if (sun->sun_path[0] != '/' && sun->sun_path[0] != '\0') {
- 			dprintk("RPC:       bad AF_LOCAL address: %s\n",
- 					sun->sun_path);
- 			ret = ERR_PTR(-EINVAL);
-
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 4183819ea082..9b32cda54808 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -1370,7 +1370,7 @@ TRACE_EVENT(nfsd_cb_setup,
+ 	TP_fast_assign(
+ 		__entry->cl_boot = clp->cl_clientid.cl_boot;
+ 		__entry->cl_id = clp->cl_clientid.cl_id;
+-		strlcpy(__entry->netid, netid, sizeof(__entry->netid));
++		strscpy(__entry->netid, netid, sizeof(__entry->netid));
+ 		__entry->authflavor = authflavor;
+ 		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
+ 				  clp->cl_cb_conn.cb_addrlen)
 
