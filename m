@@ -2,152 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B06716FD3D6
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 May 2023 04:27:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1DBB6FD3E3
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 May 2023 04:44:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235038AbjEJC1P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 May 2023 22:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43820 "EHLO
+        id S229536AbjEJCo0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 May 2023 22:44:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235081AbjEJC1O (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 May 2023 22:27:14 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58A37270D
-        for <linux-nfs@vger.kernel.org>; Tue,  9 May 2023 19:27:13 -0700 (PDT)
-Received: from mail-yw1-f198.google.com (mail-yw1-f198.google.com [209.85.128.198])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 63D9C3F202
-        for <linux-nfs@vger.kernel.org>; Wed, 10 May 2023 02:27:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1683685631;
-        bh=y5bI/misqR+WRX+BTmIKcOem6MQLYfoxEtgDnZLbuN4=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=c2OVFq1nZW2y3JfBbQ2JaHtAQXVn/cxTbueAZvzVysGPFcECOLY/G20lVwxUOvwSW
-         Jd6qUQE6gJTuf/D7XKJwY2iJwsvck7+XqF6btLH7nAOUQIAzTJAJKKPs6Vbf2qIDl5
-         9Er3JPzTL3SZaiYUlZq0IxPj1wCY245Zo1T2CIjxB9CRsGmWvvmj9HBck92W18xPDm
-         e9Eh2cH5v/4UrllHoulo2f0jUggF8MGHS5LWqcrduRaZEJAFIWX5+fDGIvJ3qTPcFn
-         hZaMS+0JO50RsjuLgwjPRZi5pjtJqkgq5Gym2YajFY5bPhUUpribI3jzPGb0JowXHl
-         5S//ewfTYzYQg==
-Received: by mail-yw1-f198.google.com with SMTP id 00721157ae682-559ffd15df9so109065527b3.3
-        for <linux-nfs@vger.kernel.org>; Tue, 09 May 2023 19:27:11 -0700 (PDT)
+        with ESMTP id S229501AbjEJCoY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 May 2023 22:44:24 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A58273C
+        for <linux-nfs@vger.kernel.org>; Tue,  9 May 2023 19:44:23 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2acb6571922so47954711fa.0
+        for <linux-nfs@vger.kernel.org>; Tue, 09 May 2023 19:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20221208.gappssmtp.com; s=20221208; t=1683686661; x=1686278661;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m2XOAZShFq8RdiQ/JcdpE0C0lZjWyHGZgNTXx8hfjF8=;
+        b=k+NwNKT47qVXF5SB+5jaJgZ68vytuEen6cXJRqJdvN55QPDagMivHS1JEziXJnVGCp
+         pcFv6t8jNfYbzhjCDWnAipVtm7VELVVaOQ+oQLYPQP5OUjsQ6PYuB0fwLWod1odGVfEN
+         6rbATTibKrwj5elLbDQSDxnqk7QIwGQsuLMsdaveIaZIJ8IvvLpvhou4EuOsdtsJr2n1
+         000Yodsg085rID1m+TaW8Lc4kEiYBJHLFN/RTi7PsYZ/wfKCXYvxsGvDBi+JoPhZDbuI
+         IllEsVvtPNrnEnBasseB8XoBPDo2Z04MHI63Fi2o6+qvgBYRloxREJ9kDM/FnUT0HpXp
+         SHuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683685630; x=1686277630;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=y5bI/misqR+WRX+BTmIKcOem6MQLYfoxEtgDnZLbuN4=;
-        b=aPaCPvHVUmlnb7V7/NenCeO/KFP9vd4zUy83Fr0zVlGEtjSFFP82T5Xjsox6Hfx4Wx
-         lPrlszHFwh2GC5OhXczax+qzOwcx8NGW+VOBRI3uolaYpUpxWDNy35D//tz51LzyOe+X
-         1AztPqbS5jpqwkaVeA+qP5Wfw8hHczLsrhEM63m0Lnk4KzEhRbMtIz50Qw/klXcBcqeS
-         rWiSa1paiSeICyv7lEJjdQvURmEqzeyBDBoVbJa6CylXMjBiNdq3prgkENINpgHe2+Wk
-         VyhCrLDRf0PoN5FEuMVsftdHhZx4vUxaCpSajApP6MNGbmbfDIEDyg9wT5VbA7MXepN5
-         x2iA==
-X-Gm-Message-State: AC+VfDxfl8efMOOwjuHIOCsbv6qQRtQDy0BgK15euvaL8bX1uy6RSCml
-        8k1TrUPJA092tTDIMSqTWxYkahlKBT4G5Neide4TJGtwmMLhFb57mqyADl71MfndqIjB7hhnyr8
-        cM7JlydXAEIE9UrsR7cmr75iWxvcONaOFepkLj7qEhjaBVpwtAQ06Tg==
-X-Received: by 2002:a81:4e0f:0:b0:559:e5e2:756d with SMTP id c15-20020a814e0f000000b00559e5e2756dmr17891972ywb.48.1683685630135;
-        Tue, 09 May 2023 19:27:10 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4ysxRGbPhh3hrAKvBnznvLCCCVJ3uzuJ1Yg5X6PBUfHMt+OMWxwnH1VViUQJuzIcznMT0IPRJI04nfd6Dbn5E=
-X-Received: by 2002:a81:4e0f:0:b0:559:e5e2:756d with SMTP id
- c15-20020a814e0f000000b00559e5e2756dmr17891964ywb.48.1683685629916; Tue, 09
- May 2023 19:27:09 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683686661; x=1686278661;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m2XOAZShFq8RdiQ/JcdpE0C0lZjWyHGZgNTXx8hfjF8=;
+        b=Ul6OjgR91ehfctpnXHsXdSbU6E8ZkA1LcdYCzLm5EcqTTdXqGv2kqhFfyFUufpttyJ
+         VemY80S8iWnJVzxQxfTphcTtMJRBPGlcuwY+2TmiQdBCPc7RYmZr4O6em8nD5l1ecn95
+         L2WZiWMF+8dTrTs00ZJU673T81R8XJXUP2vldwXMQ1n1oVhOlhPx1ZlJ91gVlhGa1lap
+         ecFvCQy2ZpDINclDXZw8hWZ+mcD15MhnlWc2xfeD/HllFtm1m+2cSEhzO+5kVvxnRCFF
+         PrA0xGDkTuLD4dkkK4EchbI2dQ3oedcugT8CJAI657kqw4bpxU0b1fwUUC+RXcDRFHDe
+         mB6A==
+X-Gm-Message-State: AC+VfDzaM5mO8bgFvJ6ztDu9xejBBM/Spj69LaJ4jjqtxz3aJcwRKA+l
+        S3kx+38ecRfe/xBkdj2awwy1Aw==
+X-Google-Smtp-Source: ACHHUZ5/UgJSsNisMjjiVB+kpsbIVgeNwhiqSO3VQFx885KqxGdWVUnre0HiyrjMuXZkKron5g2OZw==
+X-Received: by 2002:a2e:918c:0:b0:2ac:7d78:3465 with SMTP id f12-20020a2e918c000000b002ac7d783465mr1548638ljg.15.1683686661474;
+        Tue, 09 May 2023 19:44:21 -0700 (PDT)
+Received: from [192.168.8.148] ([85.193.100.38])
+        by smtp.gmail.com with ESMTPSA id u17-20020a2e9b11000000b002adb0164258sm165813lji.112.2023.05.09.19.44.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 09 May 2023 19:44:21 -0700 (PDT)
+Message-ID: <f7bb2f33-ef06-b372-b296-49dc70d37c95@cogentembedded.com>
+Date:   Wed, 10 May 2023 08:44:18 +0600
 MIME-Version: 1.0
-References: <20230411030248.53356-1-chengen.du@canonical.com>
- <CAPt2mGNqqDeRMeCSVh6oX_=nS0UcGCfhBfVcuaVG9HpdwVSzVg@mail.gmail.com>
- <CAPza5qee7vHKwjwhS27xB8xXTgAFHEmv7eiFk6zGTUUc4s8=TQ@mail.gmail.com> <B9E03B97-F67C-48FC-B5EE-5B02E288C227@redhat.com>
-In-Reply-To: <B9E03B97-F67C-48FC-B5EE-5B02E288C227@redhat.com>
-From:   Chengen Du <chengen.du@canonical.com>
-Date:   Wed, 10 May 2023 10:26:59 +0800
-Message-ID: <CAPza5qeTqYfnpDa+h+d_nGTz4xh=aiFZZJuH81ZaTA0-t1iqpw@mail.gmail.com>
-Subject: Re: [PATCH] NFS: Add mount option 'nofasc'
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     trond.myklebust@hammerspace.com, anna@kernel.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH 1/1] nfslock01.sh: Don't test on NFS v3 on TCP
+Content-Language: en-US
+To:     NeilBrown <neilb@suse.de>
+Cc:     Petr Vorel <pvorel@suse.cz>, Jeff Layton <jlayton@kernel.org>,
+        ltp@lists.linux.it, Cyril Hrubis <chrubis@suse.cz>,
+        linux-nfs@vger.kernel.org, Steve Dickson <steved@redhat.com>,
+        Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+References: <20230502075921.3614794-1-pvorel@suse.cz>
+ <d441b9f9dfcbb4719d97c7b3b5950dfeeb8913d2.camel@kernel.org>
+ <20230502134146.GA3654451@pevik>
+ <81826e4f-aa4c-1213-8b2e-28ef57caf1a3@cogentembedded.com>
+ <168367324318.15152.8314945101964061099@noble.neil.brown.name>
+From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+In-Reply-To: <168367324318.15152.8314945101964061099@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Benjamin,
+>> The overall picture is:
+>>
+>> - by design, filesystem namespaces and network namespaces are independent, it is pretty ok for two
+>> processes to share filesystem namespace and be in different network namespaces, or vice versa.
+>>
+>> - the code in question, while being in the kernel for ages, is breaking this basic design, by using
+>> filesystem path to contact a network service,
+> 
+> Not just in the kernel, but also in user-space.  The kernel contacts
+> rpcbind to find how to talk to statd.  statd talks to rpcbind to tell it
+> how it where it can be reached.
 
-Thank you so much for your valuable advice.
-I truly appreciate your input and it has been very helpful for me.
+AFAIR the badness happens when in-kernel nfsd registers itself in rpcbind, using AF_LOCAL to contact it. 
+When nfsd is started for a child network namespace, it immediately breaks nfsd running in the root 
+network namespace, because ports used by the later get overwritten inside rpcbind and become no longer 
+available for local or remote clients.
 
-In my humble opinion, users should base their decision on the remote
-target they use to mount.
-If the remote target has stable group membership or if they have
-performance concerns,
-they can consider skipping the clearing of the file access cache.
-In order to avoid affecting current behavior, I will also change the
-default to not clear the file access cache.
+I'd say it is userspace responsibility to make entire setup consistent against the used namespaces, but 
+it is kernel responsibility to keep namespaces isolation while executing individual operations. In the 
+case of registering in-kernel nfsd being started, using namespace-safe way to do it looks more important 
+for me than the reasoning outlined in commit 7402ab19cdd5 ("SUNRPC: Use AF_LOCAL for rpcbind upcalls") 
+that you mention.
 
-I understand that my choice may not be the best, but I will try to
-propose the mount option first.
-After I modify the man page description, I will resend the patches and
-discuss with the upstream.
+And, this won't be fixed by trying to an abstract AF_LOCAL socket before using a filepath-bound one, 
+since if one is not available, the nfsd running in the root namespace will still get broken by starting 
+nfsd in a child namespace.
 
-Once again, I really appreciate your help and guidance.
+Maybe, the way used to reach rpcbind to register in-kernel services shall be special cased.
 
-Best regards,
-Chengen Du
-
-On Tue, May 9, 2023 at 11:16=E2=80=AFPM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
->
-> On 24 Apr 2023, at 21:41, Chengen Du wrote:
->
-> > Hi,
-> >
-> > May I ask if there are any concerns or opinions regarding the
-> > introduction of the new mount option?
-> > If there is a more suitable solution, we can discuss it, and I can
-> > work on implementing it.
->
-> I suspect there's some weariness of mount options, we have a lot of them =
-and
-> they are not easily removed once implemented.  Additionally, requests to =
-add
-> them usually can show the appropriate changes to the nfs-utils mount.nfs =
-and
-> man pages required.  Incompleteness here may be the reason you're not
-> hearing back from a maintainer.
->
-> However, without guidance from a maintainer, you might end up doing extra
-> work trying to meet unclear standards.
->
-> There's a couple of other ways to address the access cache performance
-> "degradation" that was introduced by the changes that other folks
-> desperately needed for correctness.
->
-> We can change nfs_access_login_time to have a module parameter modifying
-> the behavior.  The downside is this would affect every mount.
->
-> We can grow a sysfs knob to change the behavior.  Downside is we only hav=
-e
-> very preliminary sysfs scaffolding as of yet.
->
-> However, if you want to keep pushing for the mount option, I'd suggest do=
-ing
-> a v2 with the userspace patches, and if that gets ignored then do a "PATC=
-H
-> RESEND" on that a month or so before each mainline merge window.
->
-> I've found that bump-replying to old patches isn't as effective at gettin=
-g
-> work merged here.  I believe the maintainers want to see that you're
-> rebasing as mainline progresses, and you have active ownership over the w=
-ork
-> to fix bugs that may follow or address other fallout from the community.
->
-> Ben
->
+Nikita
