@@ -2,148 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 191FE6FDD3F
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 May 2023 13:57:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 137FB6FDE0C
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 May 2023 14:46:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234032AbjEJL46 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 May 2023 07:56:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45946 "EHLO
+        id S235768AbjEJMqG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 May 2023 08:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231355AbjEJL45 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 May 2023 07:56:57 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289D53C16
-        for <linux-nfs@vger.kernel.org>; Wed, 10 May 2023 04:56:55 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2ac82c08542so71955251fa.2
-        for <linux-nfs@vger.kernel.org>; Wed, 10 May 2023 04:56:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683719813; x=1686311813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=01DOxGWaKMv0xzZNrctBlV7kzsI5IKgFoVE/rKSLpT0=;
-        b=oWLZ5V79fhh6oTojY7cTDLyT541291+CAS+uctWxcEnPiKeVyeRj2atKe8lNbRMTt9
-         hvhQp6aU4z5QzQx/+UhFyuZsvEeBAxgDOYT2Jn6FcXiJwSw3xTkO4JMTFUfOfh1gOlax
-         FDKvpKMasFq0PjcQelQsG8s2WpEPWp2YjlPw42uUMnTkBUTJx54FBcf0uwTqCMmJyjT/
-         aiL+Hnwogpcavbz3oYpMeLLghXiH54pyrCgcHUBZO32ycQyQQK5uBDWffpFM3cFxGasN
-         RmEGPZ8PQKmBAVbJmWprR3Q+0PuCfh9BJHiNRyWAplPdw+xpLlDym17i0H4Sab7IOjCL
-         3bWw==
+        with ESMTP id S236938AbjEJMqE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 May 2023 08:46:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38B1DD
+        for <linux-nfs@vger.kernel.org>; Wed, 10 May 2023 05:45:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683722719;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HlfXvFTTYNBYEhaE1u958kYZLZR0hq9KH8C895ArNdI=;
+        b=C27wYneb6UT83bL4+2zuSwfNDa00zeHYEGzu09SwlFpLxRh/ADWIBtxylg3WKl0blNjwqK
+        6ECW3a6SeMNBbXF6x0RQK+QrIyw/Tlt/NE8vMY+Mo8oGjq6z7osWYFGyEG83md+gmgHfO7
+        /s80N0kHEmXHK8g1AYheqh0rzH55JsY=
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
+ [209.85.216.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-248-da1zeOK5N0G0OrG4iXIH1Q-1; Wed, 10 May 2023 08:45:17 -0400
+X-MC-Unique: da1zeOK5N0G0OrG4iXIH1Q-1
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-24df4ef0603so3857301a91.2
+        for <linux-nfs@vger.kernel.org>; Wed, 10 May 2023 05:45:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683719813; x=1686311813;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=01DOxGWaKMv0xzZNrctBlV7kzsI5IKgFoVE/rKSLpT0=;
-        b=ej4TOY2huVKMDwnIeYzAzEEOHMOucts15bMTwP7Qop+ywFTqd4d25ldLFpVb8EhyeA
-         B6cX4UbfHI7rDA2XxxfILWA4hdwE1zQqTmnjGLMaspbWijYaghLwbmv5hOkZHDX0t4K3
-         7oQaUGE8eKSm/FbxUX1Yv8JJuFjuMehkoR/uDEDnq9gNbmtIW5QT6jBk3dTObqvxcDbe
-         aDBDeTap3fIg5RhFC55sHvqqQ+7BQfohD5qHPiSn2ktV3/qR1haRx2o3sa/i3jhdTYXu
-         dFfq7ElQ9QevgCAsOwoeZQVQ26SDJx6/Z8DPMW3VpZXQ3fp4Wiyia3dmrWgjIqP3hs0i
-         BxjA==
-X-Gm-Message-State: AC+VfDxa1+cS5LqQ892AKvFAkCXca0CmDjRaP9Ltzkzy+X8nV4Td0XQw
-        e5vN4L70XFbhcyVvK5I037Wo23l2tflMpg==
-X-Google-Smtp-Source: ACHHUZ7g1APEj4OTPVTdI2MWeSUM5pbOrlAfSG31PX9MZSl6aVHhSJudlitbIwwrjUDPrzewg37aTw==
-X-Received: by 2002:a05:651c:150:b0:2ad:9c26:3638 with SMTP id c16-20020a05651c015000b002ad9c263638mr2098591ljd.52.1683719813250;
-        Wed, 10 May 2023 04:56:53 -0700 (PDT)
-Received: from GDN-N-WIKTORJ.advaoptical.com (188.147.96.20.nat.umts.dynamic.t-mobile.pl. [188.147.96.20])
-        by smtp.gmail.com with ESMTPSA id a5-20020a05651c010500b002ac9138a419sm1937784ljb.80.2023.05.10.04.56.52
+        d=1e100.net; s=20221208; t=1683722716; x=1686314716;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HlfXvFTTYNBYEhaE1u958kYZLZR0hq9KH8C895ArNdI=;
+        b=bd1ATQxvVfYHAsftaWvx2outAYGNYS/h8ha3Uk/3vF+Urc0fl5ALWEG3e3sqjaa26y
+         3pQLWROS612VhAOSGjvzoRnZvcrfWmJ1DuZONYd9xYBKrUc7L/csNHBcJBzJzcNmYm1B
+         aUobMBS3NTVZdbXY66YG47g61OBJEXefamYwXtpkO9AXuNjt0xnA7LHJsOvXl/Bwek9E
+         OqHvPn2s49S22CnFJSZsW7LewwPSwtMJbp2KrqiRNuCY9T7M6HnlQVv5cfiZkuxLoz8+
+         O9Sq7cwJrrPv6l1BEp8349JMADE3juBS3BDRrS6cBv1TAgFgF61Cs6S+JioylfVN095D
+         inmQ==
+X-Gm-Message-State: AC+VfDxQuS57Zoj1pXenEehkZnUVOpRBUe0mrY26ovUrmkZkostqubNT
+        aml+9PaWA7KQg1rLwk2lvspMoezoBY+dhecJsI9TEfVJ+Q5E1R7P+yz/RHwW9gh3MT+zm/6bSmk
+        qRmkDQ1o+FqYjfMIEHSgv
+X-Received: by 2002:a17:90b:342:b0:24e:3b7b:ca3 with SMTP id fh2-20020a17090b034200b0024e3b7b0ca3mr16974972pjb.20.1683722716389;
+        Wed, 10 May 2023 05:45:16 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ56/2hFm5Z89VwspNMTSPgJBgw37CrONay/Ky5mFExV+LCN1cXx7LqJzqSFDr4JrMQfboeNiQ==
+X-Received: by 2002:a17:90b:342:b0:24e:3b7b:ca3 with SMTP id fh2-20020a17090b034200b0024e3b7b0ca3mr16974951pjb.20.1683722715912;
+        Wed, 10 May 2023 05:45:15 -0700 (PDT)
+Received: from zlang-mailbox ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id o15-20020a17090ac08f00b0024b79a69361sm13503296pjs.32.2023.05.10.05.45.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 May 2023 04:56:52 -0700 (PDT)
-From:   Wiktor Jaskulski <wikjas97@gmail.com>
-X-Google-Original-From: Wiktor Jaskulski <wjaskulski@adva.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     wjaskulski <wjaskulski@adva.com>
-Subject: [PATCH] libevent and libsqlite3 checked when nfsv4 is disabled
-Date:   Wed, 10 May 2023 13:56:37 +0200
-Message-Id: <20230510115637.29271-1-wjaskulski@adva.com>
-X-Mailer: git-send-email 2.34.1
+        Wed, 10 May 2023 05:45:15 -0700 (PDT)
+Date:   Wed, 10 May 2023 20:45:11 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Anna Schumaker <anna@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH v2] generic/728: Add a test for xattr ctime updates
+Message-ID: <20230510124511.wcgy63menqywvt34@zlang-mailbox>
+References: <20230505172427.94963-1-anna@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230505172427.94963-1-anna@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: wjaskulski <wjaskulski@adva.com>
+On Fri, May 05, 2023 at 01:24:27PM -0400, Anna Schumaker wrote:
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> 
+> The NFS client wasn't updating ctime after a setxattr request. This is a
+> test written while fixing the bug.
+> 
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> 
+> ---
+> v2:
+>  - Move test to generic/
+>  - Address comments from the mailing list
+> ---
+>  tests/generic/728     | 42 ++++++++++++++++++++++++++++++++++++++++++
+>  tests/generic/728.out |  2 ++
+>  2 files changed, 44 insertions(+)
+>  create mode 100755 tests/generic/728
+>  create mode 100644 tests/generic/728.out
+> 
+> diff --git a/tests/generic/728 b/tests/generic/728
+> new file mode 100755
+> index 000000000000..ab2414c151db
+> --- /dev/null
+> +++ b/tests/generic/728
+> @@ -0,0 +1,42 @@
+> +#! /bin/bash
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (c) 2023 Netapp Inc., All Rights Reserved.
+> +#
+> +# FS QA Test 728
+> +#
+> +# Test a bug where the NFS client wasn't sending a post-op GETATTR to the
+> +# server after setting an xattr, resulting in `stat` reporting a stale ctime.
+> +#
+> +. ./common/preamble
+> +_begin_fstest auto quick attr
+> +
+> +# Import common functions
+> +. ./common/attr
+> +
+> +# real QA test starts here
+> +_supported_fs generic
+> +_require_test
+> +_require_attrs
+> +
+> +rm -rf $TEST_DIR/testfile
+> +touch $TEST_DIR/testfile
+> +
+> +
+> +_check_xattr_op()
+> +{
+> +  what=$1
+> +  shift 1
+> +
+> +  before_ctime=$(stat -c %z $TEST_DIR/testfile)
+> +  $SETFATTR_PROG $* $TEST_DIR/testfile
 
-Even if nfsv4 is disabled component fsidd has libevent and libsqlite3 as dependencies.
+Hi Anna,
 
-Problems with compilation and error logs can be found at:
-https://github.com/gentoo/gentoo/pull/30789
-https://bugs.gentoo.org/904718
+If there's not objection from you, I'll add below codes at here, and merge
+this case in next fstests release:
 
-Signed-off-by: Wiktor Jaskulski <wjaskulski@adva.com>
----
- configure.ac | 38 +++++++++++++++-----------------------
- 1 file changed, 15 insertions(+), 23 deletions(-)
++       # There might be filesystem's timestamp granularity, so sleep 2 seconds
++       # for most filesystems can capture a different timestamp across a
++       # setxattr operation
++       sleep 2s
 
-diff --git a/configure.ac b/configure.ac
-index 4ade528d..519cacbf 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -335,42 +335,34 @@ AC_CHECK_HEADER(rpc/rpc.h, ,
-                 AC_MSG_ERROR([Header file rpc/rpc.h not found - maybe try building with --enable-tirpc]))
- CPPFLAGS="${nfsutils_save_CPPFLAGS}"
- 
-+dnl check for libevent libraries and headers
-+AC_LIBEVENT
-+
-+dnl Check for sqlite3
-+AC_SQLITE3_VERS
-+
-+case $libsqlite3_cv_is_recent in
-+yes) ;;
-+unknown)
-+   dnl do not fail when cross-compiling
-+   AC_MSG_WARN([assuming sqlite is at least v3.3]) ;;
-+*)
-+   AC_MSG_ERROR([nfsdcld requires sqlite-devel]) ;;
-+esac
-+
- if test "$enable_nfsv4" = yes; then
--  dnl check for libevent libraries and headers
--  AC_LIBEVENT
- 
-   dnl check for the keyutils libraries and headers
-   AC_KEYUTILS
- 
--  dnl Check for sqlite3
--  AC_SQLITE3_VERS
--
-   if test "$enable_nfsdcld" = "yes"; then
- 	AC_CHECK_HEADERS([libgen.h sys/inotify.h], ,
- 		AC_MSG_ERROR([Cannot find header needed for nfsdcld]))
--
--    case $libsqlite3_cv_is_recent in
--    yes) ;;
--    unknown)
--      dnl do not fail when cross-compiling
--      AC_MSG_WARN([assuming sqlite is at least v3.3]) ;;
--    *)
--      AC_MSG_ERROR([nfsdcld requires sqlite-devel]) ;;
--    esac
-   fi
- 
-   if test "$enable_nfsdcltrack" = "yes"; then
- 	AC_CHECK_HEADERS([libgen.h sys/inotify.h], ,
- 		AC_MSG_ERROR([Cannot find header needed for nfsdcltrack]))
--
--    case $libsqlite3_cv_is_recent in
--    yes) ;;
--    unknown)
--      dnl do not fail when cross-compiling
--      AC_MSG_WARN([assuming sqlite is at least v3.3]) ;;
--    *)
--      AC_MSG_ERROR([nfsdcltrack requires sqlite-devel]) ;;
--    esac
-   fi
- 
- else
--- 
-2.34.1
+BTW, is there a known git commit which fix the issue of this case trying to
+test?
+
+Thanks,
+Zorro
+
+> +  after_ctime=$(stat -c %z $TEST_DIR/testfile)
+> +
+> +  test "$before_ctime" != "$after_ctime" || echo "Expected ctime to change after $what."
+> +}
+> +
+> +_check_xattr_op setxattr -n user.foobar -v 123
+> +_check_xattr_op removexattr -x user.foobar
+> +
+> +echo "Silence is golden"
+> +status=0
+> +exit
+> diff --git a/tests/generic/728.out b/tests/generic/728.out
+> new file mode 100644
+> index 000000000000..ab39f45fe5da
+> --- /dev/null
+> +++ b/tests/generic/728.out
+> @@ -0,0 +1,2 @@
+> +QA output created by 728
+> +Silence is golden
+> -- 
+> 2.40.1
+> 
 
