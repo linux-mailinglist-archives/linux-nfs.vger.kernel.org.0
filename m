@@ -2,110 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1DBB6FD3E3
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 May 2023 04:44:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 191FE6FDD3F
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 May 2023 13:57:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229536AbjEJCo0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 May 2023 22:44:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48040 "EHLO
+        id S234032AbjEJL46 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 May 2023 07:56:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229501AbjEJCoY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 May 2023 22:44:24 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A58273C
-        for <linux-nfs@vger.kernel.org>; Tue,  9 May 2023 19:44:23 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2acb6571922so47954711fa.0
-        for <linux-nfs@vger.kernel.org>; Tue, 09 May 2023 19:44:23 -0700 (PDT)
+        with ESMTP id S231355AbjEJL45 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 10 May 2023 07:56:57 -0400
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289D53C16
+        for <linux-nfs@vger.kernel.org>; Wed, 10 May 2023 04:56:55 -0700 (PDT)
+Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2ac82c08542so71955251fa.2
+        for <linux-nfs@vger.kernel.org>; Wed, 10 May 2023 04:56:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20221208.gappssmtp.com; s=20221208; t=1683686661; x=1686278661;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m2XOAZShFq8RdiQ/JcdpE0C0lZjWyHGZgNTXx8hfjF8=;
-        b=k+NwNKT47qVXF5SB+5jaJgZ68vytuEen6cXJRqJdvN55QPDagMivHS1JEziXJnVGCp
-         pcFv6t8jNfYbzhjCDWnAipVtm7VELVVaOQ+oQLYPQP5OUjsQ6PYuB0fwLWod1odGVfEN
-         6rbATTibKrwj5elLbDQSDxnqk7QIwGQsuLMsdaveIaZIJ8IvvLpvhou4EuOsdtsJr2n1
-         000Yodsg085rID1m+TaW8Lc4kEiYBJHLFN/RTi7PsYZ/wfKCXYvxsGvDBi+JoPhZDbuI
-         IllEsVvtPNrnEnBasseB8XoBPDo2Z04MHI63Fi2o6+qvgBYRloxREJ9kDM/FnUT0HpXp
-         SHuw==
+        d=gmail.com; s=20221208; t=1683719813; x=1686311813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=01DOxGWaKMv0xzZNrctBlV7kzsI5IKgFoVE/rKSLpT0=;
+        b=oWLZ5V79fhh6oTojY7cTDLyT541291+CAS+uctWxcEnPiKeVyeRj2atKe8lNbRMTt9
+         hvhQp6aU4z5QzQx/+UhFyuZsvEeBAxgDOYT2Jn6FcXiJwSw3xTkO4JMTFUfOfh1gOlax
+         FDKvpKMasFq0PjcQelQsG8s2WpEPWp2YjlPw42uUMnTkBUTJx54FBcf0uwTqCMmJyjT/
+         aiL+Hnwogpcavbz3oYpMeLLghXiH54pyrCgcHUBZO32ycQyQQK5uBDWffpFM3cFxGasN
+         RmEGPZ8PQKmBAVbJmWprR3Q+0PuCfh9BJHiNRyWAplPdw+xpLlDym17i0H4Sab7IOjCL
+         3bWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683686661; x=1686278661;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m2XOAZShFq8RdiQ/JcdpE0C0lZjWyHGZgNTXx8hfjF8=;
-        b=Ul6OjgR91ehfctpnXHsXdSbU6E8ZkA1LcdYCzLm5EcqTTdXqGv2kqhFfyFUufpttyJ
-         VemY80S8iWnJVzxQxfTphcTtMJRBPGlcuwY+2TmiQdBCPc7RYmZr4O6em8nD5l1ecn95
-         L2WZiWMF+8dTrTs00ZJU673T81R8XJXUP2vldwXMQ1n1oVhOlhPx1ZlJ91gVlhGa1lap
-         ecFvCQy2ZpDINclDXZw8hWZ+mcD15MhnlWc2xfeD/HllFtm1m+2cSEhzO+5kVvxnRCFF
-         PrA0xGDkTuLD4dkkK4EchbI2dQ3oedcugT8CJAI657kqw4bpxU0b1fwUUC+RXcDRFHDe
-         mB6A==
-X-Gm-Message-State: AC+VfDzaM5mO8bgFvJ6ztDu9xejBBM/Spj69LaJ4jjqtxz3aJcwRKA+l
-        S3kx+38ecRfe/xBkdj2awwy1Aw==
-X-Google-Smtp-Source: ACHHUZ5/UgJSsNisMjjiVB+kpsbIVgeNwhiqSO3VQFx885KqxGdWVUnre0HiyrjMuXZkKron5g2OZw==
-X-Received: by 2002:a2e:918c:0:b0:2ac:7d78:3465 with SMTP id f12-20020a2e918c000000b002ac7d783465mr1548638ljg.15.1683686661474;
-        Tue, 09 May 2023 19:44:21 -0700 (PDT)
-Received: from [192.168.8.148] ([85.193.100.38])
-        by smtp.gmail.com with ESMTPSA id u17-20020a2e9b11000000b002adb0164258sm165813lji.112.2023.05.09.19.44.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 19:44:21 -0700 (PDT)
-Message-ID: <f7bb2f33-ef06-b372-b296-49dc70d37c95@cogentembedded.com>
-Date:   Wed, 10 May 2023 08:44:18 +0600
+        d=1e100.net; s=20221208; t=1683719813; x=1686311813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=01DOxGWaKMv0xzZNrctBlV7kzsI5IKgFoVE/rKSLpT0=;
+        b=ej4TOY2huVKMDwnIeYzAzEEOHMOucts15bMTwP7Qop+ywFTqd4d25ldLFpVb8EhyeA
+         B6cX4UbfHI7rDA2XxxfILWA4hdwE1zQqTmnjGLMaspbWijYaghLwbmv5hOkZHDX0t4K3
+         7oQaUGE8eKSm/FbxUX1Yv8JJuFjuMehkoR/uDEDnq9gNbmtIW5QT6jBk3dTObqvxcDbe
+         aDBDeTap3fIg5RhFC55sHvqqQ+7BQfohD5qHPiSn2ktV3/qR1haRx2o3sa/i3jhdTYXu
+         dFfq7ElQ9QevgCAsOwoeZQVQ26SDJx6/Z8DPMW3VpZXQ3fp4Wiyia3dmrWgjIqP3hs0i
+         BxjA==
+X-Gm-Message-State: AC+VfDxa1+cS5LqQ892AKvFAkCXca0CmDjRaP9Ltzkzy+X8nV4Td0XQw
+        e5vN4L70XFbhcyVvK5I037Wo23l2tflMpg==
+X-Google-Smtp-Source: ACHHUZ7g1APEj4OTPVTdI2MWeSUM5pbOrlAfSG31PX9MZSl6aVHhSJudlitbIwwrjUDPrzewg37aTw==
+X-Received: by 2002:a05:651c:150:b0:2ad:9c26:3638 with SMTP id c16-20020a05651c015000b002ad9c263638mr2098591ljd.52.1683719813250;
+        Wed, 10 May 2023 04:56:53 -0700 (PDT)
+Received: from GDN-N-WIKTORJ.advaoptical.com (188.147.96.20.nat.umts.dynamic.t-mobile.pl. [188.147.96.20])
+        by smtp.gmail.com with ESMTPSA id a5-20020a05651c010500b002ac9138a419sm1937784ljb.80.2023.05.10.04.56.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 May 2023 04:56:52 -0700 (PDT)
+From:   Wiktor Jaskulski <wikjas97@gmail.com>
+X-Google-Original-From: Wiktor Jaskulski <wjaskulski@adva.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     wjaskulski <wjaskulski@adva.com>
+Subject: [PATCH] libevent and libsqlite3 checked when nfsv4 is disabled
+Date:   Wed, 10 May 2023 13:56:37 +0200
+Message-Id: <20230510115637.29271-1-wjaskulski@adva.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH 1/1] nfslock01.sh: Don't test on NFS v3 on TCP
-Content-Language: en-US
-To:     NeilBrown <neilb@suse.de>
-Cc:     Petr Vorel <pvorel@suse.cz>, Jeff Layton <jlayton@kernel.org>,
-        ltp@lists.linux.it, Cyril Hrubis <chrubis@suse.cz>,
-        linux-nfs@vger.kernel.org, Steve Dickson <steved@redhat.com>,
-        Alexey Kodanev <aleksei.kodanev@bell-sw.com>
-References: <20230502075921.3614794-1-pvorel@suse.cz>
- <d441b9f9dfcbb4719d97c7b3b5950dfeeb8913d2.camel@kernel.org>
- <20230502134146.GA3654451@pevik>
- <81826e4f-aa4c-1213-8b2e-28ef57caf1a3@cogentembedded.com>
- <168367324318.15152.8314945101964061099@noble.neil.brown.name>
-From:   Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-In-Reply-To: <168367324318.15152.8314945101964061099@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
->> The overall picture is:
->>
->> - by design, filesystem namespaces and network namespaces are independent, it is pretty ok for two
->> processes to share filesystem namespace and be in different network namespaces, or vice versa.
->>
->> - the code in question, while being in the kernel for ages, is breaking this basic design, by using
->> filesystem path to contact a network service,
-> 
-> Not just in the kernel, but also in user-space.  The kernel contacts
-> rpcbind to find how to talk to statd.  statd talks to rpcbind to tell it
-> how it where it can be reached.
+From: wjaskulski <wjaskulski@adva.com>
 
-AFAIR the badness happens when in-kernel nfsd registers itself in rpcbind, using AF_LOCAL to contact it. 
-When nfsd is started for a child network namespace, it immediately breaks nfsd running in the root 
-network namespace, because ports used by the later get overwritten inside rpcbind and become no longer 
-available for local or remote clients.
+Even if nfsv4 is disabled component fsidd has libevent and libsqlite3 as dependencies.
 
-I'd say it is userspace responsibility to make entire setup consistent against the used namespaces, but 
-it is kernel responsibility to keep namespaces isolation while executing individual operations. In the 
-case of registering in-kernel nfsd being started, using namespace-safe way to do it looks more important 
-for me than the reasoning outlined in commit 7402ab19cdd5 ("SUNRPC: Use AF_LOCAL for rpcbind upcalls") 
-that you mention.
+Problems with compilation and error logs can be found at:
+https://github.com/gentoo/gentoo/pull/30789
+https://bugs.gentoo.org/904718
 
-And, this won't be fixed by trying to an abstract AF_LOCAL socket before using a filepath-bound one, 
-since if one is not available, the nfsd running in the root namespace will still get broken by starting 
-nfsd in a child namespace.
+Signed-off-by: Wiktor Jaskulski <wjaskulski@adva.com>
+---
+ configure.ac | 38 +++++++++++++++-----------------------
+ 1 file changed, 15 insertions(+), 23 deletions(-)
 
-Maybe, the way used to reach rpcbind to register in-kernel services shall be special cased.
+diff --git a/configure.ac b/configure.ac
+index 4ade528d..519cacbf 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -335,42 +335,34 @@ AC_CHECK_HEADER(rpc/rpc.h, ,
+                 AC_MSG_ERROR([Header file rpc/rpc.h not found - maybe try building with --enable-tirpc]))
+ CPPFLAGS="${nfsutils_save_CPPFLAGS}"
+ 
++dnl check for libevent libraries and headers
++AC_LIBEVENT
++
++dnl Check for sqlite3
++AC_SQLITE3_VERS
++
++case $libsqlite3_cv_is_recent in
++yes) ;;
++unknown)
++   dnl do not fail when cross-compiling
++   AC_MSG_WARN([assuming sqlite is at least v3.3]) ;;
++*)
++   AC_MSG_ERROR([nfsdcld requires sqlite-devel]) ;;
++esac
++
+ if test "$enable_nfsv4" = yes; then
+-  dnl check for libevent libraries and headers
+-  AC_LIBEVENT
+ 
+   dnl check for the keyutils libraries and headers
+   AC_KEYUTILS
+ 
+-  dnl Check for sqlite3
+-  AC_SQLITE3_VERS
+-
+   if test "$enable_nfsdcld" = "yes"; then
+ 	AC_CHECK_HEADERS([libgen.h sys/inotify.h], ,
+ 		AC_MSG_ERROR([Cannot find header needed for nfsdcld]))
+-
+-    case $libsqlite3_cv_is_recent in
+-    yes) ;;
+-    unknown)
+-      dnl do not fail when cross-compiling
+-      AC_MSG_WARN([assuming sqlite is at least v3.3]) ;;
+-    *)
+-      AC_MSG_ERROR([nfsdcld requires sqlite-devel]) ;;
+-    esac
+   fi
+ 
+   if test "$enable_nfsdcltrack" = "yes"; then
+ 	AC_CHECK_HEADERS([libgen.h sys/inotify.h], ,
+ 		AC_MSG_ERROR([Cannot find header needed for nfsdcltrack]))
+-
+-    case $libsqlite3_cv_is_recent in
+-    yes) ;;
+-    unknown)
+-      dnl do not fail when cross-compiling
+-      AC_MSG_WARN([assuming sqlite is at least v3.3]) ;;
+-    *)
+-      AC_MSG_ERROR([nfsdcltrack requires sqlite-devel]) ;;
+-    esac
+   fi
+ 
+ else
+-- 
+2.34.1
 
-Nikita
