@@ -2,172 +2,144 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCF4E6FD2E9
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 May 2023 01:00:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B66B6FD362
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 May 2023 02:58:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229785AbjEIXAx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 9 May 2023 19:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47074 "EHLO
+        id S235320AbjEJA6Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 May 2023 20:58:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233293AbjEIXAw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 May 2023 19:00:52 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0176A4EE8
-        for <linux-nfs@vger.kernel.org>; Tue,  9 May 2023 16:00:50 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id ADDD121A04;
-        Tue,  9 May 2023 23:00:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1683673249; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W5ZYMOe2Fpogi11yQEuWpeo5bSSvmGsXaTGdRZdiNGo=;
-        b=b8ViCKFNn8vPUa66u7b8TJxk1JZU70JJPK5GEhEanVKnhh4Tzk5sp4H15gGnuLeR83H5gi
-        Ej3nz9C22LfeEyHhXLMGq327W1BpmJ+VxpUflowr/HnmP9pu3tj/+Uxgx7wkVh3gefXUP7
-        H0kZLLA3dQW24ra865PTd+U3untNxao=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1683673249;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W5ZYMOe2Fpogi11yQEuWpeo5bSSvmGsXaTGdRZdiNGo=;
-        b=EjOOl7jZWW8NRirjx+BgDY4hflWi2AKGxRrZ1fOEpcBHmyFVu0fXDsaPDExMAvCkJ9b/ah
-        KMooibUav7nXqpAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E3839139B3;
-        Tue,  9 May 2023 23:00:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id P99SJZ7QWmR0fwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 09 May 2023 23:00:46 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229702AbjEJA6W (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 May 2023 20:58:22 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A375E44AB;
+        Tue,  9 May 2023 17:58:20 -0700 (PDT)
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QGGjw6xnszTkTS;
+        Wed, 10 May 2023 08:53:40 +0800 (CST)
+Received: from [10.67.110.112] (10.67.110.112) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Wed, 10 May 2023 08:58:18 +0800
+Message-ID: <c6e84076-9134-8c27-75bb-9191da6c23c3@huawei.com>
+Date:   Wed, 10 May 2023 08:58:17 +0800
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Nikita Yushchenko" <nikita.yoush@cogentembedded.com>
-Cc:     "Petr Vorel" <pvorel@suse.cz>, "Jeff Layton" <jlayton@kernel.org>,
-        ltp@lists.linux.it, "Cyril Hrubis" <chrubis@suse.cz>,
-        linux-nfs@vger.kernel.org, "Steve Dickson" <steved@redhat.com>,
-        "Alexey Kodanev" <aleksei.kodanev@bell-sw.com>
-Subject: Re: [PATCH 1/1] nfslock01.sh: Don't test on NFS v3 on TCP
-In-reply-to: <81826e4f-aa4c-1213-8b2e-28ef57caf1a3@cogentembedded.com>
-References: <20230502075921.3614794-1-pvorel@suse.cz>,
- <d441b9f9dfcbb4719d97c7b3b5950dfeeb8913d2.camel@kernel.org>,
- <20230502134146.GA3654451@pevik>,
- <81826e4f-aa4c-1213-8b2e-28ef57caf1a3@cogentembedded.com>
-Date:   Wed, 10 May 2023 09:00:43 +1000
-Message-id: <168367324318.15152.8314945101964061099@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.1
+Subject: Re: [PATCH -next 0/2] lsm: Change inode_setattr() to take struct
+Content-Language: en-US
+From:   xiujianfeng <xiujianfeng@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+        <viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
+        <dhowells@redhat.com>, <code@tyhicks.com>,
+        <hirofumi@mail.parknet.co.jp>, <linkinjeon@kernel.org>,
+        <sfrench@samba.org>, <senozhatsky@chromium.org>, <tom@talpey.com>,
+        <chuck.lever@oracle.com>, <jlayton@kernel.org>,
+        <miklos@szeredi.hu>, <paul@paul-moore.com>, <jmorris@namei.org>,
+        <serge@hallyn.com>, <stephen.smalley.work@gmail.com>,
+        <eparis@parisplace.org>, <casey@schaufler-ca.com>,
+        <dchinner@redhat.com>, <john.johansen@canonical.com>,
+        <mcgrof@kernel.org>, <mortonm@chromium.org>, <fred@cloudflare.com>,
+        <mic@digikod.net>, <mpe@ellerman.id.au>, <nathanl@linux.ibm.com>,
+        <gnoack3000@gmail.com>, <roberto.sassu@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-cachefs@redhat.com>, <ecryptfs@vger.kernel.org>,
+        <linux-cifs@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        <linux-unionfs@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>, <selinux@vger.kernel.org>,
+        <wangweiyang2@huawei.com>
+References: <20230505081200.254449-1-xiujianfeng@huawei.com>
+In-Reply-To: <20230505081200.254449-1-xiujianfeng@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.112]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 08 May 2023, Nikita Yushchenko wrote:
-> >> rpcbind was obviously written in a time before namespaces were even a
-> >> thought to anyone. I wonder if there is something we can do in rpcbind
-> >> itself to guard against these sorts of shenanigans? Probably not, I
-> >> guess...
-> >=20
-> > Maybe Steve or Neil have some idea.
-> >=20
-> >> Is /var shared between namespaces in this test for some particular
-> >> reason?
-> >=20
-> > I hope I got , we talk about /var/run/netns/ltp_ns, which is symlink to
-> > /proc/$pid/ns/net. Or is it really about /run/rpcbind.sock vs
-> > /var/run/rpcbind.sock?
->=20
-> The overall picture is:
->=20
-> - by design, filesystem namespaces and network namespaces are independent, =
-it is pretty ok for two=20
-> processes to share filesystem namespace and be in different network namespa=
-ces, or vice versa.
->=20
-> - the code in question, while being in the kernel for ages, is breaking thi=
-s basic design, by using=20
-> filesystem path to contact a network service,
+sorry, I forgot to add the link to preview discussion:
 
-Not just in the kernel, but also in user-space.  The kernel contacts
-rpcbind to find how to talk to statd.  statd talks to rpcbind to tell it
-how it where it can be reached.  As you say - it has been this way for
-"ages".
+https://lore.kernel.org/all/20220827111215.131442-1-xiujianfeng@huawei.com/
 
-So maybe the bug is that something creates a network namespace without
-also creating a filesystem namespace.  Certainly the kernel allows this
-as it should because the kernel doesn't set policy.
-But using the freedom to create a setup that doesn't actually work is
-foolish.  If ltp creates a network namespace without creating a matching
-filesystem name space, and expects NFSv3 to work - then that is a bug in
-ltp.
-
-Now I agree that using path names seems not ideal in this case, and it
-would be a valuable enhancement to make it easy to avoid that.  But it
-is an enhancement, not a bugfix.
-
->=20
-> - thus the fix is: just not do that.
-
-Surely the fix is to do something else, not just to do nothing :-)
-
->=20
-> I consider kernel contacting rpcbind via AF_UNIX being a bug in the kernel =
-namespace implementation. So=20
-> this is a rare case when a test suite (LTP) helped to find a non-obvious ke=
-rnel bug. Just need to fix=20
-> that bug, if not yet.
-
-There is good reason to use use AF_UNIX for the kernel to contact
-rpcbind.
-
-In fact the kernel has only been using AF_UNIX to contact rpcbind for
-about 12 years.
-
-Commit 7402ab19cdd5 ("SUNRPC: Use AF_LOCAL for rpcbind upcalls")
-gives some of the reasons for the change.  They are still good reasons.
-
-Fortunately Linux provides "abstract" AF_UNIX names, which provide all
-the benefits that we want of AF_UNIX, but doesn't depend on the
-filesystem and keeps the bindings private to the network namespace - the
-best of both worlds.
-
-To fully implement this we need changes to libtirpc and to the kernel.
-Not big changes, but not entirely trivial either.
-
->=20
-> Rpcbind listens both via AF_INET and via AP_UNIX, and did so for ages.
-> It is even not possible to disable AF_INET listening without patching code.=
- By stopping contacting it=20
-> via AF_UNIX, it is virtually impossible to break anything.
-
-Check that commit for what can break.
-
-For testing, you can change /usr/lib/rpcbind.sock to listen on
-/run/NOT-rpcbind.sock instead. of /run/rpcbind.sock
-
-It must listen on at least one AF_UNIX socket as you noted,
-but it doesn't have to listen on one that any tool will talk to.  This
-will cause all code (user-space and kernel) to fall-back on IPv6 or IPv4
-to contact rpcbind.
-So maybe you can work-around the bug in ltp that way.  You could even
-just "rm -f /var/run/rpcbind.sock" after starting rpcbind, and before
-running the test.
-
-Meanwhile I'll post some patches which enhancements to the kernel and to
-libtirpc to use abstract AF_UNIX socket when available.
-
-Thanks,
-NeilBrown
+On 2023/5/5 16:11, Xiu Jianfeng wrote:
+> Hi,
+> 
+> I am working on adding xattr/attr support for landlock [1], so we can
+> control fs accesses such as chmod, chown, uptimes, setxattr, etc.. inside
+> landlock sandbox. the LSM hooks as following are invoved:
+> 1.inode_setattr
+> 2.inode_setxattr
+> 3.inode_removexattr
+> 4.inode_set_acl
+> 5.inode_remove_acl
+> which are controlled by LANDLOCK_ACCESS_FS_WRITE_METADATA.
+> 
+> and
+> 1.inode_getattr
+> 2.inode_get_acl
+> 3.inode_getxattr
+> 4.inode_listxattr
+> which are controlled by LANDLOCK_ACCESS_FS_READ_METADATA
+> 
+> Some of these hooks only take struct dentry as a argument, However, for
+> path-based LSMs such Landlock, Apparmor and Tomoyo, struct path instead
+> of struct dentry required to make sense of attr/xattr accesses. So we
+> need to refactor these hooks to take a struct path argument.
+> 
+> This patchset only refators inode_setattr hook as part of whole work.
+> 
+> Also, I have a problem about file_dentry() in __file_remove_privs() of the
+> first patch, before changes in commit c1892c37769cf ("vfs: fix deadlock in
+> file_remove_privs() on overlayfs"), it gets dentry and inode as belows:
+> 
+> struct dentry *dentry = file->f_path.dentry;
+> struct inode *inode = d_inode(dentry);
+> 
+> That would be clear to change it to pass &file->f_path to
+> __remove_privs()->notify_change()->inode_setattr().
+> After that commit, it has been changed to:
+> 
+> struct dentry *dentry = file_dentry(file);
+> struct inode *inode = file_inode(file);
+> 
+> If I understand correctly, the dentry from file_dentry() maybe the upper
+> or the lower, it can be different from file->f_path.dentry. It can't just
+> go back to use &file->f_path otherwise the bug will come back for
+> overlayfs. So for such scenario, how to get a path from file if the file
+> maybe or not from overlayfs, and which kind of overlayfs path is ok for
+> Landlock?
+> 
+> Xiu Jianfeng (2):
+>   fs: Change notify_change() to take struct path argument
+>   lsm: Change inode_setattr hook to take struct path argument
+> 
+>  drivers/base/devtmpfs.c       |  5 +++--
+>  fs/attr.c                     |  7 ++++---
+>  fs/cachefiles/interface.c     |  4 ++--
+>  fs/coredump.c                 |  2 +-
+>  fs/ecryptfs/inode.c           | 18 +++++++++---------
+>  fs/fat/file.c                 |  2 +-
+>  fs/inode.c                    |  8 +++++---
+>  fs/ksmbd/smb2pdu.c            |  6 +++---
+>  fs/ksmbd/smbacl.c             |  2 +-
+>  fs/namei.c                    |  2 +-
+>  fs/nfsd/vfs.c                 | 12 ++++++++----
+>  fs/open.c                     | 19 ++++++++++---------
+>  fs/overlayfs/overlayfs.h      |  4 +++-
+>  fs/utimes.c                   |  2 +-
+>  include/linux/fs.h            |  4 ++--
+>  include/linux/lsm_hook_defs.h |  2 +-
+>  include/linux/security.h      |  4 ++--
+>  security/security.c           | 10 +++++-----
+>  security/selinux/hooks.c      |  3 ++-
+>  security/smack/smack_lsm.c    |  5 +++--
+>  20 files changed, 67 insertions(+), 54 deletions(-)
+> 
