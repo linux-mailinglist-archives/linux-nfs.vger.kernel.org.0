@@ -2,120 +2,173 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ECDA6FF231
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 May 2023 15:11:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F5F06FF288
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 May 2023 15:19:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237258AbjEKNLD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 May 2023 09:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58596 "EHLO
+        id S238218AbjEKNS7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 May 2023 09:18:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238028AbjEKNKe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 May 2023 09:10:34 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA86E40E5
-        for <linux-nfs@vger.kernel.org>; Thu, 11 May 2023 06:10:27 -0700 (PDT)
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id E4CE53F4DF
-        for <linux-nfs@vger.kernel.org>; Thu, 11 May 2023 13:10:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1683810625;
-        bh=AHYIcvlg5Q9MskWL2MZg375hggjT//gb5ewnFK7RT3Y=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
-        b=rCaNFB0nhEza+k9sSuHg9DyXaTn+gN1pv/16z/qzRpcaKxWgj050WjYojybVnqOmG
-         gEQhrRxYk92dsUPbeiIA4vK5ViwTrDFa7pZ9iHTUfhapoQYiC/oRE4aU9V4Qvtez6G
-         Ru7051Qdww6Utr3/BNBoR7XVIji30pHF1C2gPBroP4fN2CYHM8Ddw+wJRtp1QUPrwb
-         +uDzSGPDaX6jGl3srbxqx6Wf+Qf1A21ywrjKdaOzOSTKNiWgJE6QnrEEJK6tXmNkCU
-         eYpgj4Uu8womR4zLhcG3eYEveMXPUtYX2RKObypmyvK0lgGBFnvknYySb+2JYHAQ2g
-         W5eoaUi25ZTrw==
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-25014b171a4so8301486a91.1
-        for <linux-nfs@vger.kernel.org>; Thu, 11 May 2023 06:10:25 -0700 (PDT)
+        with ESMTP id S238110AbjEKNSI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 May 2023 09:18:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA817106E0
+        for <linux-nfs@vger.kernel.org>; Thu, 11 May 2023 06:15:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683810939;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h7GdN215yNA43SzrNgI0qnS3dew63bkmnn0zBwKGt4M=;
+        b=jIURgN4dRC4mayhdFQPmJ2pRl01Mmks7qnRDe4j+mnWcWt0pQBY7xpLLNtPkbHTwSfAWHX
+        new2Jw8VAWY232p2hj2ro+npPA6p7ROdv+OTgElCeLrorjiscXBTYPGaJuKZHNrzYrmp5O
+        hCjpBKr9sXnrzSDn37YqSwMegFBnSrQ=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-490-xop2eY-1PySRaqm_tbUlHg-1; Thu, 11 May 2023 09:15:38 -0400
+X-MC-Unique: xop2eY-1PySRaqm_tbUlHg-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-621189941cdso8487416d6.1
+        for <linux-nfs@vger.kernel.org>; Thu, 11 May 2023 06:15:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683810624; x=1686402624;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AHYIcvlg5Q9MskWL2MZg375hggjT//gb5ewnFK7RT3Y=;
-        b=UtRec3BGXT1hQA8lImWghDI9tOvTZy+S2RD+ir8YfF4HLv5jOToeCPNUxHTgFP7NqF
-         XUOVrHpPAgZkvBREsYNxFUJWz5jbIfiXkvKi5VorGBWz2OutPT+TltcNCUPOw6H040Um
-         /Fa590xRZIYpqZ07I9lwE2nfAEDhWDKBzUI471Q1RCAmKOo4dT+4hUZP0RbDg04IKAoQ
-         vJFukt+gvlGoJfdgCyf7xAUZ80W2ZL7TsQt/6MgoSTn/y/Ys8auWtiBmytUXVqMG6fFV
-         nEZjObpaC198bpRTWub+GFRmOusXDuSLaLlaUrhyNsF5a5LYkXmDhUxJrImntC/j8AE3
-         mleg==
-X-Gm-Message-State: AC+VfDyVEpb9Yc8CQLQ5nAuloswOH+cHG2wzI/ljBRzufiq+RSL2wwNc
-        rYUuF+XKo2+VStuCKYHZ/MjvewLl8mnisqFkaKDW2wwJEDzd5w72Deao9SPirYm2m5hZFVJlFeU
-        FsPjVVVsNHyjgyiUGsnv9rjHZgxAwgBiqBTTaeaSCD9RIhQ==
-X-Received: by 2002:a17:90b:2250:b0:24d:e123:1eb2 with SMTP id hk16-20020a17090b225000b0024de1231eb2mr21456328pjb.37.1683810624458;
-        Thu, 11 May 2023 06:10:24 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4JMhmw+c7UKhhD3GmfDm29FcwiYOuQVJaSEuO+JzoYllgM8Hk5PdULrf0tb55I6HBSwJ8snw==
-X-Received: by 2002:a17:90b:2250:b0:24d:e123:1eb2 with SMTP id hk16-20020a17090b225000b0024de1231eb2mr21456307pjb.37.1683810624123;
-        Thu, 11 May 2023 06:10:24 -0700 (PDT)
-Received: from chengendu.. (111-248-154-232.dynamic-ip.hinet.net. [111.248.154.232])
-        by smtp.gmail.com with ESMTPSA id n11-20020a17090a9f0b00b0025023726fc4sm11987163pjp.26.2023.05.11.06.10.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 06:10:23 -0700 (PDT)
-From:   Chengen Du <chengen.du@canonical.com>
-To:     steved@redhat.com
-Cc:     linux-nfs@vger.kernel.org, Chengen Du <chengen.du@canonical.com>
-Subject: [PATCH] nfs(5): adding new mount option 'fasc'
-Date:   Thu, 11 May 2023 21:10:18 +0800
-Message-Id: <20230511131018.61266-1-chengen.du@canonical.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20221208; t=1683810937; x=1686402937;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h7GdN215yNA43SzrNgI0qnS3dew63bkmnn0zBwKGt4M=;
+        b=F6TQ7I3SD3WWiZOwLensW0RrJ8TlhQHRLgBbMrh8P4847JV1iek80Lz1ZQZ250RWvt
+         iXOh81DXNZ025yZrpqzVBjK8KU7gHH3SA4OeR0s8Y7eaY2CCilBltrNSRBnzXcgFId6Y
+         vQOwCO7NuVkLpUXDB8AbnLXB4IX7iAlKfuz9a8gzwPLbVo3EJ3osWqaJWiHYPzuYpHWj
+         d7NDb6FGF394RcbOWZzbpNPZR4JYEh1wiq426x72ZrxtyvYpDRfgJ2v24OPqapdbtV+s
+         TjZvJcR/xiWZfeWSKUWGYNcEL4oxJNpbC6TECxzzi//3rLrD9gwlp7TjNnOuox0afzG0
+         cwLg==
+X-Gm-Message-State: AC+VfDx4s675z8UdI712oBwZ1CnH647lFhLpHN6XV7fxbYrsFmity+5Q
+        ZY+odbXTPfYyLG6m0Y8LaPgyrYGd1rW3gIj/hAIMsH/+Dx1DpRF/NbLMZGvi1hMkHcHE8Eh604s
+        kAR1CM5h90UDuYFxJkpOIBm9lZ8Wz
+X-Received: by 2002:a05:6214:4017:b0:61b:6b8e:16e0 with SMTP id kd23-20020a056214401700b0061b6b8e16e0mr27925085qvb.1.1683810937690;
+        Thu, 11 May 2023 06:15:37 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7QrDuh1/3VnUeK77k+XBHREIqjDJBgvF7m/Cgt+2BZot4AWIC4wi4ZCroOdjQoYSYMlcYXjA==
+X-Received: by 2002:a05:6214:4017:b0:61b:6b8e:16e0 with SMTP id kd23-20020a056214401700b0061b6b8e16e0mr27925049qvb.1.1683810937318;
+        Thu, 11 May 2023 06:15:37 -0700 (PDT)
+Received: from [172.31.1.12] ([70.109.154.41])
+        by smtp.gmail.com with ESMTPSA id m7-20020a05620a13a700b00758c1bd6d9esm969296qki.133.2023.05.11.06.15.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 May 2023 06:15:36 -0700 (PDT)
+Message-ID: <76403fb4-87f2-88cb-ab0c-ba63feacbeee@redhat.com>
+Date:   Thu, 11 May 2023 09:15:35 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: LTP: tirpc_rpcb_rmtcall is failing
+Content-Language: en-US
+To:     Petr Vorel <pvorel@suse.cz>
+Cc:     libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        ltp@lists.linux.it
+References: <20230504101619.GA3801922@pevik>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20230504101619.GA3801922@pevik>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add an option that triggers the clearing of the file
-access cache as soon as the cache timestamp becomes
-older than the user's login time.
+Hello Petr,
 
-Signed-off-by: Chengen Du <chengen.du@canonical.com>
----
- utils/mount/nfs.man | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On 5/4/23 6:16 AM, Petr Vorel wrote:
+> Hi Steve,
+> 
+> tirpc_rpcb_rmtcall is failing. I was able to reproduce it on
+> * openSUSE Tumbleweed with libtirpc 1.3.3
+> * Debian stable  11 (bullseye) with libtirpc 1.3.1-1
+> 
+> OTOH SLE 15-SP4 with libtirpc 1.2.6 is working.
+> 
+> PATH="/opt/ltp/testcases/bin:$PATH" rpc_test.sh -s tirpc_svc_4 -c tirpc_rpcb_rmtcall
+> rpc_test 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
+> rpc_test 1 TINFO: add local addr 10.0.0.2/24
+> rpc_test 1 TINFO: add local addr fd00:1:1:1::2/64
+> rpc_test 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
+> rpc_test 1 TINFO: add remote addr 10.0.0.1/24
+> rpc_test 1 TINFO: add remote addr fd00:1:1:1::1/64
+> rpc_test 1 TINFO: Network config (local -- remote):
+> rpc_test 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
+> rpc_test 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
+> rpc_test 1 TINFO: fd00:1:1:1::2/64 -- fd00:1:1:1::1/64
+> rpc_test 1 TINFO: timeout per run is 0h 5m 0s
+> rpc_test 1 TINFO: check registered RPC with rpcinfo
+> rpc_test 1 TINFO: registered RPC:
+>     program vers proto   port  service
+>      100000    4   tcp    111  portmapper
+>      100000    3   tcp    111  portmapper
+>      100000    2   tcp    111  portmapper
+>      100000    4   udp    111  portmapper
+>      100000    3   udp    111  portmapper
+>      100000    2   udp    111  portmapper
+>      100005    1   udp  20048  mountd
+>      100005    1   tcp  20048  mountd
+>      100005    2   udp  20048  mountd
+>      100005    2   tcp  20048  mountd
+>      100005    3   udp  20048  mountd
+>      100005    3   tcp  20048  mountd
+>      100024    1   udp  37966  status
+>      100024    1   tcp  43643  status
+>      100003    3   tcp   2049  nfs
+>      100003    4   tcp   2049  nfs
+>      100227    3   tcp   2049  nfs_acl
+>      100021    1   udp  59603  nlockmgr
+>      100021    3   udp  59603  nlockmgr
+>      100021    4   udp  59603  nlockmgr
+>      100021    1   tcp  39145  nlockmgr
+>      100021    3   tcp  39145  nlockmgr
+>      100021    4   tcp  39145  nlockmgr
+> rpc_test 1 TINFO: using libtirpc: yes
+> rpc_test 1 TFAIL: tirpc_rpcb_rmtcall 10.0.0.2 536875000 failed unexpectedly
+> 1
+> 
+> The problem is in tirpc_rpcb_rmtcall.c [1], which calls rpcb_rmtcall(), which
+> returns 1 (I suppose RPC_CANTENCODEARGS - can't encode arguments - enum
+> clnt_stat from tirpc/rpc/clnt_stat.h):
+> 
+> 	cs = rpcb_rmtcall(nconf, argc[1], progNum, VERSNUM, PROCNUM,
+> 			  (xdrproc_t) xdr_int, (char *)&var_snd,
+> 			  (xdrproc_t) xdr_int, (char *)&var_rec, tv, &svcaddr);
+> 
+> 	test_status = (cs == RPC_SUCCESS) ? 0 : 1;
+> 
+> 	//This last printf gives the result status to the tests suite
+> 	//normally should be 0: test has passed or 1: test has failed
+> 	printf("%d\n", test_status);
+> 
+> 	return test_status;
+> 
+> Any idea what could be wrong with these very old tests?
+No... No idea... but I'm unable to reproduce it. It appears
+you are using different repo that the one I found on
+github [1]. But...
 
-diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-index 7a410422..68514fbd 100644
---- a/utils/mount/nfs.man
-+++ b/utils/mount/nfs.man
-@@ -574,6 +574,7 @@ The
- .B sloppy
- option is an alternative to specifying
- .BR mount.nfs " -s " option.
-+
- .TP 1.5i
- .BI xprtsec= policy
- Specifies the use of transport layer security to protect NFS network
-@@ -607,6 +608,19 @@ option is not specified,
- the default behavior depends on the kernel,
- but is usually equivalent to
- .BR "xprtsec=none" .
-+.TP 1.5i
-+.B fasc
-+Triggers the clearing of the file access cache as soon as the cache 
-+timestamp becomes older than the user's login time. It is supported 
-+in kernels 6.4 and later.
-+.IP
-+NFS servers often refresh their users' group membership at their 
-+own cadence, which means the NFS client's file access cache can 
-+become stale if the user's group membership changes on the server 
-+after they've logged in on the client. To align with the principles 
-+of the POSIX design, which only refreshes the user's supplementary 
-+group information upon login, the mechanism uses the user's login 
-+time to determine whether the file access cache needs to be refreshed.
- .SS "Options for NFS versions 2 and 3 only"
- Use these options, along with the options in the above subsection,
- for NFS versions 2 and 3 only.
--- 
-2.39.2
+Looking code, RPC_CANTENCODEARGS is returned when
+there is an xdr problem which might means a
+memory problem??
+
+With that said... commits 21718bbb^..fa153d63 did
+make a lot of changes in the locking and cache
+management.
+
+steved.
+
+[1] https://github.com/linux-test-project/ltp
+> 
+> Kind regards,
+> Petr
+> 
+> [1] https://github.com/linux-test-project/ltp/blob/12765c115f11026c090ab0ee5dd79b38d95ef31f/testcases/network/rpc/rpc-tirpc/tests_pack/rpc_suite/tirpc/tirpc_expertlevel_rpcb_rmtcall/tirpc_rpcb_rmtcall.c#L91-L93
+> 
 
