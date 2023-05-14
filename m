@@ -2,86 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BD4A701EF2
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 May 2023 20:30:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DDEA701EF4
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 May 2023 20:31:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjENSaO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 14 May 2023 14:30:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34626 "EHLO
+        id S233374AbjENSbJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 14 May 2023 14:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbjENSaN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 May 2023 14:30:13 -0400
+        with ESMTP id S229627AbjENSbH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 May 2023 14:31:07 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADCFD3593;
-        Sun, 14 May 2023 11:30:10 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D0E3AA0;
+        Sun, 14 May 2023 11:31:06 -0700 (PDT)
 Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34EAn4i5026484;
-        Sun, 14 May 2023 18:29:51 GMT
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34EIHlqv002641;
+        Sun, 14 May 2023 18:31:02 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=rlgIQsa6fk4e+Gw5Ey9aKB9t2B8uYzQyxz5SS1kwJYs=;
- b=i3nIkJXQx0ANbvXciOsJM4nKKb6AHQjEKxiDdfGOZcWu62o5GRAjboc/NdCz/K3kbJij
- KQvm4ECS1uTIkPes9tztWIjRzbigih2VyAOXAtW3iA5Tj3DdQzVWQXvc4Lnr5r2hG4NV
- w+Pz934p94Eo4cOqDwiD96JlddSky1VGPxL2a000UuMEK81sR4jeTCMEVpAmGAsj5SML
- 9TpBWgBdP+vkptBKXWEE07PFlsOFDybu885YZrqDvyjcEAGHvMXHpSgsXT3gLuDpM8ZV
- XMMsUxxzihEHoES1tJduBwSmCQ3kwjGHkfMij2gKq8lcSgDWmvaHY9Da+vS8uWKYnF+u 6Q== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj2eawj7s-1
+ bh=0FkrBGieJCC399l8PGjZcXcldghxIFqiff1aHLKlHB0=;
+ b=lkr3Ry16JC5ydkNYCX9w+dDuPc+U26JwrSldE5oDX/cKpSBGQYZQ5nv7YlYrK4PH0IEO
+ qKovll9yQwi5RVcjG/l3gsVr4321HNQUShbpvZqrUzuLpgXitlv0cRPq1FdU6KKah06Q
+ i2aWtLY+K67kCltfIf2BuTpiXgFQDjkK5Rhz4z8KjE5qRsn1bZebRXS1VgH5O7QODmlN
+ KimG2S0GePkISO0sI14+uQzlmY9s5klsiZZohpum5VYAyDIdd9UlB8+k2kg02Mi12XnX
+ 6bp7hDx9kxExm7e9VG3Y44ubqByBzV+gL5ZHx0cPkYzVjVvrNlAJy3bKfi1qbMDrztxV yA== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj2eawj8g-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 May 2023 18:29:51 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34EE9x3O036693;
-        Sun, 14 May 2023 18:29:49 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qj1082uwq-1
+        Sun, 14 May 2023 18:31:01 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34EH0Ao2013659;
+        Sun, 14 May 2023 18:31:01 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qj102avsx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 14 May 2023 18:29:49 +0000
+        Sun, 14 May 2023 18:31:01 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PjarHTb3WWuPX2uNf7mEDnBq/TTTaK9lioBvTZf4DKn5y5T+TdS22NItgOvOSQRUTiZmXT3tLGIn8U52bIaR3Dt+TwjO+mA6p4EJ5oeypwnBRm7BVwEAJu99vIthKUSiuwKb6zwWmMw6/JUJ3eZBpkWch03QtUOTnWAnvraeweQkBaSipxfFqnShdeM+b9akXWKERV/iYOz2Vhyr289sifBkWXWLTotV1H1gIA8fCUNJU6gLgJpKxHU5DwnqlRSlgxKt1ww75Md50A8Q3YdDwCf1ifREsbu5zoIgFJkPWiwTxB4mABqRuVDqgezFsOpqYX5PFV0+2rkbq05glYxJCw==
+ b=XmHzlXIc2DHDUVaMuiVi+u3LGEnT7fMhaVJyUupboyRyM5Pr4/bxMvwWw+lllHX6q0KC5EiN3SKybfbsBsSdIz5liSvnXkwUVcemG4lLQhaMd5ovUg/XDqFE58TWmbNIHD1EgMJQiTU2sHRN+CuVTsUIqjDDA5DnPsFYGsm75OyrdR96/vmJLd64w2ElXiLXEOcV5Zje0iwswBJ9kzaCPx64VijLgrjs1GhFK/fvVIjwYxO74FVwtfxmWTQUlKk3KASl2ZfPmetELXWujh8VLkC831a/gvzBEyO+3k8hXl0jfRWTG0vRcI3GNU32S/Y1qj7rGOXYORS3c42AhXAnWA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rlgIQsa6fk4e+Gw5Ey9aKB9t2B8uYzQyxz5SS1kwJYs=;
- b=aKUNh7OV7KyfGyyWhROUD+jSVafuNigxTIW0bM4Cvb0bGztk7CgTXQdL3T8AFMz3oRGJU1s/Rx3P1HftfnJBZ12uyXn6VnkiIlDQvT294RdOzOMh7i6nppyYz8clqsXWwDzLGprgjVSAcyLLEpHQf1X3xdnfX5/6usmuTENCkx2ahi1+N5aVWFPhPNzg2AC9VkmlAs6rQcUlljxeNGlcnnI+JKBNoor54R/0g9iZ49LIxxBqVIZHyzeyVuIRI4YK3mFyKGl4QRFjB66/Yva/Th41jfIBcId/WWyHOZMhohPIaWWitZiNVDqKK7QWxgYR4gYso6ecQ2MmHg4B6aIT4g==
+ bh=0FkrBGieJCC399l8PGjZcXcldghxIFqiff1aHLKlHB0=;
+ b=GpKZ8X0cE401DeWXT4zbhPyZI+dCCTKjiIQdkHJbaUXUgZxC8+CLtKcVygxE6TavHY11aOXnE3LZcVobGVRyVsTrYxxDzxRVxVRd1gDVj5fhGVd1KpdF7XrTvtqGcvGfs251aIv/9Mc/lQSS5e8/gtFXmaQ4ee2CJ4dSFx9/gBppMybaDJS4yi0GdnYG+SioEfh0psYhGW9jgDUup3HvBFSxPAhhvpxNIlOIdwween5+77gRHp7jWoil/kmANjR3xpvVhEbKtHbU2PymWSyaajlTYZLWW8CtcIbmbi9GOPyVLJ55S9Kx2VPc7nzVmCWPp72WTMBka6ks1BAy65YWEQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rlgIQsa6fk4e+Gw5Ey9aKB9t2B8uYzQyxz5SS1kwJYs=;
- b=CQVZP1Xvmm83cfSS1pT3EIAkTDfj+nIukfiuCDF1PRx4YSQKpAdGBfCqco2kHCW/+L9PiOs8kzO2KAeGMpSd8D1Zo9RsG4B11BhjjdXuQFUmXgkjQ2cGlL9DdS4T7VvAj2KJ+ZFit1NYqcZpNdYoBc9/eHHCNHunLwz4MyEcsDs=
+ bh=0FkrBGieJCC399l8PGjZcXcldghxIFqiff1aHLKlHB0=;
+ b=SoKSLEYfRj/7eJGOZsTOkolLpPDyF5TzpRv4GnMJ/fB0Hz7TiAwJThkxhk4p2Ap48xdYyRZbqXEk0JkkyN7U9my5BpVj8giHauDFWvvtEBHMreiIY8+ib3/C60LgXTROP1+lGKnQhR9kmR/gkgj/4M0mcNKuUzAwMAeGBOo9yMA=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
  by SJ0PR10MB7692.namprd10.prod.outlook.com (2603:10b6:a03:51a::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.29; Sun, 14 May
- 2023 18:29:47 +0000
+ 2023 18:30:58 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::ecbd:fc46:2528:36db]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::ecbd:fc46:2528:36db%5]) with mapi id 15.20.6387.030; Sun, 14 May 2023
- 18:29:46 +0000
+ 18:30:58 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Ding Hui <dinghui@sangfor.com.cn>
-CC:     "jlayton@kernel.org" <jlayton@kernel.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "anna@kernel.org" <anna@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+CC:     Jeff Layton <jlayton@kernel.org>,
+        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] SUNRPC: Fix UAF in svc_tcp_listen_data_ready()
-Thread-Topic: [RFC PATCH] SUNRPC: Fix UAF in svc_tcp_listen_data_ready()
-Thread-Index: AQHZgMQOKc4fcioBR0q2bzqWePFl4a9O7x4AgACpTgCACoocgA==
-Date:   Sun, 14 May 2023 18:29:46 +0000
-Message-ID: <53664FF4-A917-46FE-AEA7-45F31CE1CD88@oracle.com>
-References: <20230507091131.23540-1-dinghui@sangfor.com.cn>
- <EED05302-8BC6-4593-B798-BFC476FA190E@oracle.com>
- <19f9a9bb-7164-dca0-1aff-da4a46b0ee74@sangfor.com.cn>
-In-Reply-To: <19f9a9bb-7164-dca0-1aff-da4a46b0ee74@sangfor.com.cn>
+Subject: Re: [PATCH v2] NFSD: Remove all occurences of strlcpy
+Thread-Topic: [PATCH v2] NFSD: Remove all occurences of strlcpy
+Thread-Index: AQHZhOJYGV62rs3GkUCJMHqFG7AZcq9WvaEAgAAnyoCAADM6AIAAYPYAgAGYxQCAAQhCgA==
+Date:   Sun, 14 May 2023 18:30:58 +0000
+Message-ID: <C065205E-54D3-4A72-94A8-EEDE948CB134@oracle.com>
+References: <20230512145356.396567-1-azeemshaikh38@gmail.com>
+ <109A2974-3AE0-48C6-8EE3-FADE95E8EF30@oracle.com>
+ <5E054593-8995-46FF-824E-55B18BF53BE2@oracle.com>
+ <CADmuW3UQ-wqobay34PY+myyk1Pr7s-cf7b-U7TUCnarEf+jsxg@mail.gmail.com>
+ <A1414FC8-9CE0-4B8C-ABB1-2365E2F62B10@oracle.com>
+ <CADmuW3UkNrSqwQPgZVqRc46hZPK9J6jGYNfU4iS1bQKmEib8bQ@mail.gmail.com>
+In-Reply-To: <CADmuW3UkNrSqwQPgZVqRc46hZPK9J6jGYNfU4iS1bQKmEib8bQ@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -89,83 +87,67 @@ X-MS-TNEF-Correlator:
 x-mailer: Apple Mail (2.3731.500.231)
 x-ms-publictraffictype: Email
 x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SJ0PR10MB7692:EE_
-x-ms-office365-filtering-correlation-id: a521be4c-0ce5-4195-4ddb-08db54a931f0
+x-ms-office365-filtering-correlation-id: 1e134934-70be-4180-01df-08db54a95cc8
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: FGMxtu6ZoNeyYvneI2aw0h6BFDlteovTirmASs8mqeStPFTb4jTZjeTTLwkkWrjtfVC0Cdo3khGa6012Gbvo9HLjQtOAK8dmY/sz6faeCJS7En9loWGi12TzwLv8LajVT7wSo/wVupsY9IQsRoCgESrV5OAsuFoDHtDlEbdp3RyhhmuctBVhZcZBWnynZ5za68YYofwb7tHR7bTEB3KPzwJmz1PWdizjhcPasNPjK7mMJcZhmsXrXVDq9CozPg66Xqw/krUtNiHAXrv0xUQOzBhKoGllI44a1VFQtu6FuhzmepHE9TD2drngvpzaZfXC2B9/NTBLM+LZrejdLCeen0xyV6kUUDwOuaOJ1P80nXCeE7qvs5BdzCsONMxU6vFEu3sdDmlXsJJVeQNw4v5vmLCs06bdgi3ylfIBNtLXpRDwC+VQEicMqOQa08Ne+XaFTGSmXwivUnpuAqKjVK5RrYnEHZMwlYASViTmbmyCVMN7qcDgPSvS5ZVMn/gJFhnxBK9OoA+xo3g6ny0uZCTOl+0w/9hpm/zvtaaOO/hqX1QRXfWGZpK8EX07im5RVmFZ3T0eogPOJoUMAVcvJ0VdXpbUxYO2A+sUuIbegPRwxJrwLBQS76hbYnyYg7TpsyAPMEee0wrLZpZqSK3HhPkDOg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(136003)(396003)(39860400002)(376002)(451199021)(316002)(36756003)(64756008)(6916009)(2906002)(4326008)(7416002)(66476007)(5660300002)(8676002)(8936002)(41300700001)(76116006)(66556008)(66446008)(91956017)(66946007)(86362001)(71200400001)(54906003)(478600001)(33656002)(186003)(53546011)(6512007)(26005)(83380400001)(6486002)(2616005)(6506007)(38070700005)(122000001)(38100700002)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: IYC3J8udtQJN2VB2ElBKTZXxsGsvI45q6zUpP6TwV/rXqsg2Pk9eKnNGjnXMdb3pxrKAp82g3okPgqZKYUWACr0e6u2BQ6clL64X1EcwQyNLaikLVDT07hyVq4loxhdXNJsFHsyLOjI7kQw0rZkwtlb6bZzHI3StlpPc062IbT1LEZ5isB0lmW+57Sw1CC6a5TlLwTZZk/c/rCoESDFny9Nhjr+mh29f28rAvPMY227vd7lFNM/r4EZFtZzX/a0vZGj/InXVrtfPjtGtl+BOztMkH3gXI8j+jQH+kMuUIzw54RqA6H0/7XtdCwEeGWzU2kTxjWwfbuK9TH6yRpu66/JtA5QXYcoKyzzbe0tkTiV/FCegJb5d4HHvqsADrj6jwujoMW47+Y6kIljS8WQGJK6bzPGOUbuU7SrIPpP7cynDCsXyDaIm7bdhto1JMJUfGibIIZwVhvwWytya6kOqgBU6VodXuTUIwxAvaSBU+T45ktt5IMLkmzbCXNyydaezELg6iPHPrAXyAWvMnrzu4QGpRzQCwechMrPI6iyakOFRgn6XkFe6QjPluCLFUbfdHWD/geee6jNZDHcG+JlG7GdDut/VuSJWbD9UxkdxZq0e4kaxqyqRM5XkgCUlmWwb98g7ay0PDn1EzENS9XekajpLdaKLmsmlIYh0FduaW+pr63p+9SNiO+YNQSYTMYLf93evTp82p2dXKVGf5QW7Bg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(346002)(136003)(396003)(39860400002)(376002)(451199021)(316002)(36756003)(64756008)(6916009)(2906002)(4326008)(66476007)(5660300002)(8676002)(8936002)(41300700001)(76116006)(66556008)(66446008)(91956017)(66946007)(86362001)(71200400001)(54906003)(478600001)(33656002)(186003)(53546011)(6512007)(26005)(966005)(6486002)(2616005)(6506007)(38070700005)(122000001)(38100700002)(156123004)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ttRv9gAyFzcTfrq+64bvUWgH39De1o+Ed095h+iAdKQnP/zrcV/XN9OHZIRi?=
- =?us-ascii?Q?TBpq4v7K5ROnNxEHyloLaCZC8S2SebZkCWqKou8uwv6DRgQNM9zjA52ZE2Oz?=
- =?us-ascii?Q?egi77eMHuIpquA+JBzSCuINfDDfYeDJ97PB/1ZjtlyTW+258wWUilLKPy63A?=
- =?us-ascii?Q?5oY+yxPytGd2QxAuNDT4XWLnsfraj38bZalLyh/kuxs9XqYL9muXxzrwDuxX?=
- =?us-ascii?Q?doK99iNPa09nWB0sUNE7xVzJ84X9laS2HxdCIgL92xaTUV19FykTXeFqoWGu?=
- =?us-ascii?Q?ilxDcOMveXxxYWrQ6OKubk7JjPnLNlMF5CwPncQBCo14qlZG1tiODj44mRmg?=
- =?us-ascii?Q?F8+ZpkudP8YHXfMF0r1n5QOkhOau4Jj5QhHC7lxwVrlQGazRklXcEOSQq5ni?=
- =?us-ascii?Q?vvQToHR6GY2gyk4nTUMVfPGllU9qf9p+g+J9goG60stM2SJVW+UxUWvZXgZ7?=
- =?us-ascii?Q?rIaKdXy9nJ6JYyS/o8aKxq0Jr4tNYDm5sNmDlGxQUb/HTSYZqPyNFZXXwda5?=
- =?us-ascii?Q?Wx/xzCum/yNQtnY/zR23H5vtid/tmise2ZoTlRhAsm/gfFmTmKTKquPZlwbO?=
- =?us-ascii?Q?2nIO8S7Q4FBT7gxlAQz3M2/Wht4feDkYJHs1iSdPIJT8Ad47ySzNNP+5l6yy?=
- =?us-ascii?Q?OIKkzKWodtyDzZF3d/fbeYQpzfseCBhvHritv2NxIK+GUALV3LHAHopIwY2d?=
- =?us-ascii?Q?IZSnjDzB/SJsTKav/MhTBdZ7QWMflMLhdAHzV2NGaBNx9/Y1WMlF+4bw+PpF?=
- =?us-ascii?Q?z3t0l9+6o9inXnWxOb5k42nKQMJMhizQvVMkfAOlse0sw8rE3p4qBzN3PIH2?=
- =?us-ascii?Q?WRe1eafiHjTKskOKVoBtSCAQsE+Jv1lsDP6vsDgBmbNj8yMR+LvdG+N8x285?=
- =?us-ascii?Q?XEVMAOG2l4jXdR6Rt4f+2+9bt+4OZUPqDQ12k3QEUxzZdPeLwQszJvGz03YT?=
- =?us-ascii?Q?oh0cR9VkE3+LdO+xr5j14TkYbkwrMMxfBRaNaL7lI+F95SV+omEtt2obmOKs?=
- =?us-ascii?Q?sEi9X4udZ84hDILazV0SHlJckFSEIuKdlqHYLSRbGObPj9NDqIzP6oYj4m80?=
- =?us-ascii?Q?HZ0LtBwoFmLQsclFp+S/AzIlcvIDfgdftLPwzMv8Mv/Jj6U49yAXB/K7d8Vm?=
- =?us-ascii?Q?WIrD+mCniep1kvYi9udcrbW6nhiHnLNoxRmiCbsFvWWAkfiwXC02N2XBsF6R?=
- =?us-ascii?Q?TVW5w2jW7gjyE1mlkd4nrwurquApQC1IwzWE0JAdFtPIh8FNkUo7x9UJEWE7?=
- =?us-ascii?Q?C+POZGHsq9yY7ueg+bp2nLw0BdUddjCqBHQFFmElAj0RGBzUYfmK31c5ITtL?=
- =?us-ascii?Q?RmaN40/IBr10Dm5uZgMvcuvgS3G1/AiFiYf6jXvcq8VV9JcKROwgOW3W6Wbt?=
- =?us-ascii?Q?HgbiCgxLhG7DkvCeXlVL/aRrnfKY0NDXuHgIqOFb7AvLfXkAvgNp0GAz28Dv?=
- =?us-ascii?Q?IXNoFdO+YL6cXxZp6DgypLfDKdcb3raXT+YAf8XJAg8c+aIugEtCUtCvE0ZF?=
- =?us-ascii?Q?P80tMeMd2zJfMrHHaMwUhSszMLp0WFtG8QwoOpHe17FbYhh+uEQ+xTZYTMFF?=
- =?us-ascii?Q?hFmxZhCosjsNxzG/9BpPh8fmB9XbK9s/5CJtxqHV5floetTLFR1AmeNYHmPY?=
- =?us-ascii?Q?4w=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?1ieUPFHcrzz+eMloe8EQWDwzNBYZDE6bcUR3Hfqk1jSB8u5Dqk0umb1XOV4G?=
+ =?us-ascii?Q?FbJfsLtSGS1HRXfk2Vg3o7YdKbRl6tt5iSDt82OXopHwk/Kk1JtLAG07MJ5f?=
+ =?us-ascii?Q?m+FxnXX0wjzIVc40ALXViLDQPpZzHOLGgx+lL76aCE//BmWrWnVAF8wjvi+q?=
+ =?us-ascii?Q?VHfo2ccCIzs5CSoTQQ1XC5HHTe2u+o1/+79EFnaCLhCD75Qi6MFVaURvg4bi?=
+ =?us-ascii?Q?gFvhhiBfLQ+LND18uJSyDT+xNID+rWjjmnty5AKfpWFj889Wp2GUqrqdrCX/?=
+ =?us-ascii?Q?TDndkh+cbEt64GLshHCotDeKhUsQUmEmRPNoqXBVm4sCz+tF2FkUar7Jjwjp?=
+ =?us-ascii?Q?lcICP2U/YANKAjqLuO3pgh9oQccnvBiztVSCkI6t59ql66dxeMnW3uTOCLY3?=
+ =?us-ascii?Q?qh5c1DUUtel19LqWP6iFxq/A8mXBEXCrc0L2yqYU73tGDnlAsN171zWE/o0m?=
+ =?us-ascii?Q?x6Qf3sZigH8kINH2BGpWstJPuh1IXLnUk8e76goc5KFVL77YgTTyukkeeANo?=
+ =?us-ascii?Q?h8mbrpVBvfhd0WeCRF45geBQ/EbcghcatCwjfKruCsdAUYOT055o30qlfFed?=
+ =?us-ascii?Q?6ZDdX+/J90ZvTlZPwVv8E1j9ZmWJjjoHZlfntV3aj3aCXZaFxY4yKBgVEWBd?=
+ =?us-ascii?Q?JxDx2aUZcOlRkrIIoqxMtk52YqaXx7M3NH5AF3Vpv3kcc2I0nRZebo0+bKvO?=
+ =?us-ascii?Q?TOMqUfQD9PG8OgRwSpRi+AqUoOPKLWhVQvB3mBSBD6BC0Q7j6FE8DX5VHrfd?=
+ =?us-ascii?Q?eyeYx1EvJkHnsiKuTSw4CS5eSTsBCfVWDjyh5jaSX/GWzko4NdESQ60jd2cM?=
+ =?us-ascii?Q?eCtqfcpj3+ya599m61W4ajlxB9vG+3I8LrmtFCymOTT7bhpbBk9E8TKMrHbv?=
+ =?us-ascii?Q?TYWv2jilDs2qSFjGuSgA9f9vo8dcFC1tpQtRmORmuVlAAYNe/aYBC1tzjhyo?=
+ =?us-ascii?Q?2IGGLenWWLR8lzdVtGNVJU3sCrqVKiJTKPebrOvvpjw/tODnQuqu5TGocVZl?=
+ =?us-ascii?Q?MiYctFkeATZmCMmtAbmyVEj+j+B8YJ3CplKb8IUsnTMARzQLLvxFD+vd8Ssz?=
+ =?us-ascii?Q?Pb4iWKbwGDFLGGUhiH/1BmA6MEWIwRS9h5yWYkpMe160IYJJZm0lb7Adw4oQ?=
+ =?us-ascii?Q?FRUR7HSlhR7L/1pOvztRdbgyyQVvI7bIwtpsevjLytDT24XEFk2dpXpu/1YZ?=
+ =?us-ascii?Q?pbZQgRttagca/gaoFYbPUzzh7T29s8pnRvkjvj/zib06+ddgS0Db5Gm0CQIs?=
+ =?us-ascii?Q?7XWnDNP3pLbH3O/oBEKQaMxiyUYR0G9MRaKGMFi/opt4iSY5lHWjgOPnebUi?=
+ =?us-ascii?Q?ARMcI2+vSfKqWfqA1fggu3BS+G+5piXSH9DUCZfI9Jx8LCuSv9RS8zR+T4PA?=
+ =?us-ascii?Q?hHd/7/H4ZiPEiya1z/RYHus1R5MEy6VEv+I9lXCBVNGAYN3IliVMJh9CCHUc?=
+ =?us-ascii?Q?pJFcc9CNSjIITWusJhQxzYK+T7ULXnNnjYb9n4lWE/GgJGAn2sPWUAssWM1R?=
+ =?us-ascii?Q?X/TxNkVVPtp9IbyE4InzehP5+Kltek8CpvGS/vWm9ZyfSVoog9t6PcnpKJfE?=
+ =?us-ascii?Q?AIDNhi6RZtQ3i3hKDSC49TWZz0f+yJY1UEE4r5kDBsMYB1XFPyAQlBlnP5b+?=
+ =?us-ascii?Q?8g=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <566BC7F8F0930F4CB755EEF35DD230B7@namprd10.prod.outlook.com>
+Content-ID: <0A670862056FFF4DA63A2409169EC16B@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?TeROo5TuqbgJ//9xF0gm3XBHY9WE/6IXJr4k1mGc/1dGoPPhBrS0DIvKn+eh?=
- =?us-ascii?Q?KqCvhFFqK7m40EiOqWF9eOWHkU9Mp7eSlMkOIesfWndjfH1kPyO26FgfuEOB?=
- =?us-ascii?Q?1Q+04lzN3xMh2DY9hA86iZmCXNooU7jj2KfxohAABXr0Mrv5HedADBFH5qt5?=
- =?us-ascii?Q?XIw6qyzKXUvtDAj6mED7veJoJj6oEsYvhHXWx1wJXSLqp/kgDqXKijzdikzC?=
- =?us-ascii?Q?4wLvEGe2GO7N9CqZ+FksVnFvPRPlRpX5S7qXGkl0WZD2Dq70nDZzjcZhgrsz?=
- =?us-ascii?Q?sDg0k4D+nbiyh8EW1LcXpZZpxfjxdiQ112ZTCyE/NJax2JcrbA9aL3oAfNBC?=
- =?us-ascii?Q?ZzXu8u8RxWyLAIUjEn5Y2l9nF5fuFCB6ZrirQwNFhqEKScClfKLo1ksCLfQN?=
- =?us-ascii?Q?txxl8tueVenQFM8ivsmwZTQwWrxiIXCZsPSFSIUVjmrLL9bLb9jWDTeRnbcS?=
- =?us-ascii?Q?W+WPp59u2+/x/pKI1gRDWF4cZGIaxTpCSR/bOYLUMtWIK6HfGWbOnSqXhRS1?=
- =?us-ascii?Q?l1vL6crrrQsBMrCYMQEmus5HyKoiH5XbePsn3B5svujegn3r+cDF59Hb2C5l?=
- =?us-ascii?Q?vd1tLvtQOfK3vz8Q7G7owvIuGjUL9oH1bO+OjwMb98VJqIaXFbrqkkFNhAbV?=
- =?us-ascii?Q?10vuw++0M6KcvmfTMBXGNUl6rLDDf18FxLYnXAmApJ4f4t8VBrIIhVBAt4jp?=
- =?us-ascii?Q?29Z1s8NbUs/ewa95N5wrT2fhuTqiw7pDsqCvz230o3c1PFip7A8bnodsw1b/?=
- =?us-ascii?Q?umRfwIye2ewrhNfoSl8RAadLFewiCsIwKuiJWsqV3CEdcQ6WBdXAIQzetFel?=
- =?us-ascii?Q?7EIUFNhaPls8N29Efm0NH675fPl3qn8n3PVxHkGpOysPOjbAG0y6SfQ+O/qm?=
- =?us-ascii?Q?UITnlhNg/NYN/A4AdVlTwSiJAv4NX6vqz9if2x/AW4CaqIjgGvBdBOCfWtOh?=
- =?us-ascii?Q?QMLmlQ2kgrHN8nMi+x2EDw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: l8KtGEkt2GRR4/oK6IE0CrLEmwmvxSgpBRyOKyIt1c0YkDqE0qufR4kLxBTBkg9KyDsmv05a4BfYyhMGbfbXp7fwf9Ed4o7IsGL8XboKEc/T1MJRJmVzt3rvUfRW/srcht7xMcSMvdOq7QslKjxfVDU3+zvpMGRg8KPYL1EW96sPSPsmSA0oEg08o+u7V7TMC/r2aPXvKw4O/LbpNh8cZmkcCcgABaRbqpRLSkXBAJI41m7rHEg/3HHD+F1eNYjBc8WQckjw82fC12bxWnURvG5VeI3J5vvuk33tRZ84/x9maue69xVnJ5Tz7urU80o7nRPP5XhflybGVbF2SskVeWAyyM+Cio1gRpCY5NtHQP0M5TunPu1sLEgSTTpU5/OKxdStIBbIDznZBRFFkXjvBcfxcZ5WtV96JztNwJmIFcxikJSfceKB5Df8cBz+KNoqfXNQzPQkRAmgDRMegErKKbaqKFkdl2jIZPAX/qU4ccZpcM/Vr84dcCmeFpzyQayFkb2di7INqgVowLW4owk7E5n9dSlhpMgjeDX3PUXbuN8wttVS2NlQa4lXRU2oMur41A8Y0cDaOT/bBEz0ionkfn+44xMNqbM6oLMoDG2BuYoOTeSjiSTX4oo3Ue3BOTn1DNKMAJKTp15r+oEi2VBvbw8u9JLogu8y8MPjrU2zQhQuodSrYSe+deyaZwe0+8J10DRswViyhhEF8uSy99jOloFybk1yRtxCXo2eSBqcsqm14KeiUfbEdHFGyCS95zODvB7J1kEEXThFBaJweE16jS4XkqtgRBfZPb4425JeGeBuguDq74JU6S0nPLgwuTJobaDgbx6whPlnSRZt8rxMFHDmB5/38/kRMbunKOucZ28=
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a521be4c-0ce5-4195-4ddb-08db54a931f0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2023 18:29:46.6662
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e134934-70be-4180-01df-08db54a95cc8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 May 2023 18:30:58.5528
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g7Ne9g0lSfVLF9irYgKEFP5AslqfCeyFIKSTukLwZOhsX5AsV4rWgIeZbHsHpS8N9NxkUT3ZrCx7K/OmgjECcg==
+X-MS-Exchange-CrossTenant-userprincipalname: bZXr2Mmqa5LzcWz1/uU8ALFvKL7rsoYCUkN7TgG3HD9vy/dTw9gztIXozrP0p/MC3qY8USCBH5yJYiZF5fEroQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB7692
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-05-14_14,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
- phishscore=0 bulkscore=0 adultscore=0 malwarescore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305140171
-X-Proofpoint-GUID: DlouYZ-GrDJwcHjiZ3FktAX8fufU1lEr
-X-Proofpoint-ORIG-GUID: DlouYZ-GrDJwcHjiZ3FktAX8fufU1lEr
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 phishscore=0 spamscore=0
+ bulkscore=0 suspectscore=0 mlxlogscore=409 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
+ definitions=main-2305140171
+X-Proofpoint-GUID: pbawG1gX-g8jgPPfv0PC3-BE8QO-6UGY
+X-Proofpoint-ORIG-GUID: pbawG1gX-g8jgPPfv0PC3-BE8QO-6UGY
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -176,221 +158,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-[ Removing the stale address for Bruce from the Cc, as he no longer
-  works at Red Hat. ]
 
 
-> On May 7, 2023, at 9:32 PM, Ding Hui <dinghui@sangfor.com.cn> wrote:
+> On May 13, 2023, at 10:44 PM, Azeem Shaikh <azeemshaikh38@gmail.com> wrot=
+e:
 >=20
-> On 2023/5/7 23:26, Chuck Lever III wrote:
->>> On May 7, 2023, at 5:11 AM, Ding Hui <dinghui@sangfor.com.cn> wrote:
+>>> No, I plan to land this patch before attempting to fix __assign_str its=
+elf.
+>>> Let me know if the below description looks good to you and I'll send
+>>> over a v3 patch:
 >>>=20
->>> After the listener svc_sock freed, and before invoking svc_tcp_accept()
->>> for the established child sock, there is a window that the newsock
->>> retaining a freed listener svc_sock in sk_user_data which cloning from
->>> parent. In the race windows if data is received on the newsock, we will
->>> observe use-after-free report in svc_tcp_listen_data_ready().
->> My thought is that not calling sk_odata() for the newsock
->> could potentially result in missing a data_ready event,
->> resulting in a hung client on that socket.
+>>> [PATCH v3] NFSD: Remove open coding of string copy
+>>>=20
+>>> Instead of open coding a __dynamic_array(), use the __string() and
+>>> __assign_str()
+>>> helper macros that exist for this kind of use case.
+>>>=20
+>>> Part of an effort to remove deprecated strlcpy() [1] completely from th=
+e
+>>> kernel[2].
+>>>=20
+>>> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strl=
+cpy
+>>> [2] https://github.com/KSPP/linux/issues/89
+>>>=20
+>>> Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
+>>> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+>>=20
+>> This looks good to me. So you'd like me to take this through
+>> the nfsd tree, possibly for 6.4-rc ?
+>>=20
 >=20
-> I checked the vmcore, found that sk_odata points to sock_def_readable(),
-> and the sk_wq of newsock is NULL, which be assigned by sk_clone_lock()
-> unconditionally.
->=20
-> Calling sk_odata() for the newsock maybe do not wake up any sleepers.
->=20
->> IMO the preferred approach is to ensure that svsk is always
->> safe to dereference in tcp_listen_data_ready. I haven't yet
->> thought carefully about how to do that.
->=20
-> Agree, but I don't have a good way for now.
->=20
->>> Reproduce by two tasks:
->>>=20
->>> 1. while :; do rpc.nfsd 0 ; rpc.nfsd; done
->>> 2. while :; do echo "" | ncat -4 127.0.0.1 2049 ; done
+> This is my first week contributing to the Linux kernel so I might be
+> miscommunicating :)
+> By "land this patch", I meant to get this patch into to the nfsd tree.
+> I'll leave it up to you when you push it through to the mainline tree.
+> Although, it would be great to get this through to 6.4-rc if that's at
+> all possible.
 
-I haven't been able to reproduce a crash with this snippet. But
-I've done some archaeology to understand the problem better.
+Please send v3 along, and I will apply it to nfsd-fixes.
 
-I found that svc_tcp_listen_data_ready is actually invoked /three/
-times: once for the listener socket, and /twice/ for the child.
-The big comment, which pre-dates the git era, appears to be
-somewhat stale; or perhaps it's the specifics of this particular
-test that triggers the third call.
-
-I reviewed several other tcp_listen_data_ready callbacks. They
-generally do not do anything at all with non-listener sockets,
-suggesting that approach would likely be safe for NFSD.
-
-Prior to commit 939bb7ef901b ("[PATCH] Code cleanups in calbacks
-in svcsock"), this data_ready callback was a complete no-op for
-non-listener sockets as well. That commit is described as only
-a clean-up, but it indeed changes the logic.
-
-I also note that most other data_ready callbacks take the
-sk_callback_lock, and svc_tcp_listen_data_ready does not. Not
-clear to me whether svc_tcp_listen_data_ready should be taking
-that lock too.
-
-The upshot is that I think it would be reasonable to simply do
-nothing in svc_tcp_listen_data_ready() if state !=3D TCP_LISTEN.
-
-
->>> KASAN report:
->>>=20
->>>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>>  BUG: KASAN: slab-use-after-free in svc_tcp_listen_data_ready+0x1cf/0x1=
-f0 [sunrpc]
->>>  Read of size 8 at addr ffff888139d96228 by task nc/102553
->>>  CPU: 7 PID: 102553 Comm: nc Not tainted 6.3.0+ #18
->>>  Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Refe=
-rence Platform, BIOS 6.00 11/12/2020
->>>  Call Trace:
->>>   <IRQ>
->>>   dump_stack_lvl+0x33/0x50
->>>   print_address_description.constprop.0+0x27/0x310
->>>   print_report+0x3e/0x70
->>>   kasan_report+0xae/0xe0
->>>   svc_tcp_listen_data_ready+0x1cf/0x1f0 [sunrpc]
->>>   tcp_data_queue+0x9f4/0x20e0
->>>   tcp_rcv_established+0x666/0x1f60
->>>   tcp_v4_do_rcv+0x51c/0x850
->>>   tcp_v4_rcv+0x23fc/0x2e80
->>>   ip_protocol_deliver_rcu+0x62/0x300
->>>   ip_local_deliver_finish+0x267/0x350
->>>   ip_local_deliver+0x18b/0x2d0
->>>   ip_rcv+0x2fb/0x370
->>>   __netif_receive_skb_one_core+0x166/0x1b0
->>>   process_backlog+0x24c/0x5e0
->>>   __napi_poll+0xa2/0x500
->>>   net_rx_action+0x854/0xc90
->>>   __do_softirq+0x1bb/0x5de
->>>   do_softirq+0xcb/0x100
->>>   </IRQ>
->>>   <TASK>
->>>   ...
->>>   </TASK>
->>>=20
->>>  Allocated by task 102371:
->>>   kasan_save_stack+0x1e/0x40
->>>   kasan_set_track+0x21/0x30
->>>   __kasan_kmalloc+0x7b/0x90
->>>   svc_setup_socket+0x52/0x4f0 [sunrpc]
->>>   svc_addsock+0x20d/0x400 [sunrpc]
->>>   __write_ports_addfd+0x209/0x390 [nfsd]
->>>   write_ports+0x239/0x2c0 [nfsd]
->>>   nfsctl_transaction_write+0xac/0x110 [nfsd]
->>>   vfs_write+0x1c3/0xae0
->>>   ksys_write+0xed/0x1c0
->>>   do_syscall_64+0x38/0x90
->>>   entry_SYSCALL_64_after_hwframe+0x72/0xdc
->>>=20
->>>  Freed by task 102551:
->>>   kasan_save_stack+0x1e/0x40
->>>   kasan_set_track+0x21/0x30
->>>   kasan_save_free_info+0x2a/0x50
->>>   __kasan_slab_free+0x106/0x190
->>>   __kmem_cache_free+0x133/0x270
->>>   svc_xprt_free+0x1e2/0x350 [sunrpc]
->>>   svc_xprt_destroy_all+0x25a/0x440 [sunrpc]
->>>   nfsd_put+0x125/0x240 [nfsd]
->>>   nfsd_svc+0x2cb/0x3c0 [nfsd]
->>>   write_threads+0x1ac/0x2a0 [nfsd]
->>>   nfsctl_transaction_write+0xac/0x110 [nfsd]
->>>   vfs_write+0x1c3/0xae0
->>>   ksys_write+0xed/0x1c0
->>>   do_syscall_64+0x38/0x90
->>>   entry_SYSCALL_64_after_hwframe+0x72/0xdc
->>>=20
->>> In this RFC patch, I try to fix the UAF by skipping dereferencing
->>> svsk for all child socket in svc_tcp_listen_data_ready(), it is
->>> easy to backport for stable.
->>>=20
->>> However I'm not sure if there are other potential risks in the race
->>> window, so I thought another fix which depends on SK_USER_DATA_NOCOPY
->>> introduced in commit f1ff5ce2cd5e ("net, sk_msg: Clear sk_user_data
->>> pointer on clone if tagged").
->>>=20
->>> Saving svsk into sk_user_data with SK_USER_DATA_NOCOPY tag in
->>> svc_setup_socket() like this:
->>>=20
->>>  __rcu_assign_sk_user_data_with_flags(inet, svsk, SK_USER_DATA_NOCOPY);
->>>=20
->>> Obtaining svsk in callbacks like this:
->>>=20
->>>  struct svc_sock *svsk =3D rcu_dereference_sk_user_data(sk);
->>>=20
->>> This will avoid copying sk_user_data for sunrpc svc_sock in
->>> sk_clone_lock(), so the sk_user_data of child sock before accepted
->>> will be NULL.
->>>=20
->>> Appreciate any comment and suggestion, thanks.
->>>=20
->>> Fixes: fa9251afc33c ("SUNRPC: Call the default socket callbacks instead=
- of open coding")
->>> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
->>> ---
->>> net/sunrpc/svcsock.c | 23 +++++++++++------------
->>> 1 file changed, 11 insertions(+), 12 deletions(-)
->>>=20
->>> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
->>> index a51c9b989d58..9aca6e1e78e4 100644
->>> --- a/net/sunrpc/svcsock.c
->>> +++ b/net/sunrpc/svcsock.c
->>> @@ -825,12 +825,6 @@ static void svc_tcp_listen_data_ready(struct sock =
-*sk)
->>>=20
->>> trace_sk_data_ready(sk);
->>>=20
->>> - if (svsk) {
->>> - /* Refer to svc_setup_socket() for details. */
->>> - rmb();
->>> - svsk->sk_odata(sk);
->>> - }
->>> -
->>> /*
->>> * This callback may called twice when a new connection
->>> * is established as a child socket inherits everything
->>> @@ -839,13 +833,18 @@ static void svc_tcp_listen_data_ready(struct sock=
- *sk)
->>> *    when one of child sockets become ESTABLISHED.
->>> * 2) data_ready method of the child socket may be called
->>> *    when it receives data before the socket is accepted.
->>> - * In case of 2, we should ignore it silently.
->>> + * In case of 2, we should ignore it silently and DO NOT
->>> + * dereference svsk.
->>> */
->>> - if (sk->sk_state =3D=3D TCP_LISTEN) {
->>> - if (svsk) {
->>> - set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
->>> - svc_xprt_enqueue(&svsk->sk_xprt);
->>> - }
->>> + if (sk->sk_state !=3D TCP_LISTEN)
->>> + return;
->>> +
->>> + if (svsk) {
->>> + /* Refer to svc_setup_socket() for details. */
->>> + rmb();
->>> + svsk->sk_odata(sk);
->>> + set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
->>> + svc_xprt_enqueue(&svsk->sk_xprt);
->>> }
->>> }
->>>=20
->>> --=20
->>> 2.17.1
->>>=20
->> --
->> Chuck Lever
->=20
-> --=20
-> Thanks,
-> - Ding Hui
->=20
 
 --
 Chuck Lever
