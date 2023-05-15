@@ -2,47 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC87B702E28
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 15:32:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49120702E29
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 15:32:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241560AbjEONci (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 May 2023 09:32:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48194 "EHLO
+        id S241313AbjEONcq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 May 2023 09:32:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241313AbjEONch (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 May 2023 09:32:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201AAE69
-        for <linux-nfs@vger.kernel.org>; Mon, 15 May 2023 06:32:37 -0700 (PDT)
+        with ESMTP id S240863AbjEONcp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 May 2023 09:32:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76F681700
+        for <linux-nfs@vger.kernel.org>; Mon, 15 May 2023 06:32:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A975E62471
-        for <linux-nfs@vger.kernel.org>; Mon, 15 May 2023 13:32:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3747C433EF;
-        Mon, 15 May 2023 13:32:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1091762471
+        for <linux-nfs@vger.kernel.org>; Mon, 15 May 2023 13:32:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EA12C433EF;
+        Mon, 15 May 2023 13:32:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684157556;
-        bh=3QRWBdHGoTgubTd219S/cX9j98l6PzVeTzpE53lScX8=;
-        h=Subject:From:To:Cc:Date:From;
-        b=U76osPHk+EcF8xTpJ5SBfa5Uk6SKm5dCj4LSFSzagv/h1HNOMgpAl/m2DBytIXVMT
-         BNYmKY/jVuVP5Fm1Is/ATl2kW/SRR8iCEGYj7EYFxxEvRfBfz1oCRLKRlzJBh0nUJS
-         bRtKtHW2MTs8Fl5ekWEDAlroua5Jm/Bjv7uZftTpmuW138sYSMO5oy3Y6Y55QoDXze
-         geLPhG+0LMTKLB+Kw4ZM7e8chMIHycC1iu9fSn1jpS6RJQb8qm0odgwFsBBub/i+Vq
-         0qK+l8DMelY2kKGGfGvxBV1PIW+GTJWYjktiHsRxhMU+q6j6owuVOaJTdD4xJbIQ19
-         mTgzVNo2K6COQ==
-Subject: [PATCH 0/4] Socket creation observability
+        s=k20201202; t=1684157562;
+        bh=yCDjkNv+oqwBKcrh0OpYTEwzg7kxtSFsXePgNXq/u0k=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=N7KmZOSRCe7fyuZOy8hGwjEnLvC/rAO9DrGb6yVbblHnwBe3fO4k25rbE1SOdM0jF
+         AjWv90vQ7kfg+1TweZYqU7UuERkBpmcq0pYLjKUQb70G99McuDeKeHbHuDHQUEzAmP
+         3vJObVjXxfZK04fSGIUga3GYXIylrvb4EFpcFkklgkL/us8SiJaBk94h9QRFl+LeQj
+         h7ZWciEguAficMs6aCzHHDQa2K0R6FqFAg9QRGpfnXiVimV8X6qW5nqm0dWAZyuaMI
+         qFBCmF6ybVx6yU6OagS88jRaA3gD8Iv5jbhEbePX2P3YhgpstAha+X9DSPcw1OKPUS
+         nq7DmKSor1Qww==
+Subject: [PATCH 1/4] SUNRPC: Fix an incorrect comment
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 15 May 2023 09:32:34 -0400
-Message-ID: <168415745478.9504.1882537002036193828.stgit@manet.1015granger.net>
+Date:   Mon, 15 May 2023 09:32:41 -0400
+Message-ID: <168415756128.9504.10972346476896238136.stgit@manet.1015granger.net>
+In-Reply-To: <168415745478.9504.1882537002036193828.stgit@manet.1015granger.net>
+References: <168415745478.9504.1882537002036193828.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -51,27 +53,27 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This series updates observability around socket creation and
-destruction to help troubleshoot issues such as:
+From: Chuck Lever <chuck.lever@oracle.com>
 
-https://lore.kernel.org/linux-nfs/65AFD2EF-E5D3-4461-B23A-D294486D5F65@oracle.com/T/#t
+The correct function name is svc_tcp_listen_data_ready().
 
-I plan to apply these to nfsd-next.
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ net/sunrpc/svcsock.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Chuck Lever (4):
-      SUNRPC: Fix an incorrect comment
-      SUNRPC: Remove dprintk() in svc_handle_xprt()
-      SUNRPC: Improve observability in svc_tcp_accept()
-      SUNRPC: Trace struct svc_sock lifetime events
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index 9aca6e1e78e4..e0fb65e90af2 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -1469,7 +1469,7 @@ static struct svc_sock *svc_setup_socket(struct svc_serv *serv,
+ 	svsk->sk_owspace = inet->sk_write_space;
+ 	/*
+ 	 * This barrier is necessary in order to prevent race condition
+-	 * with svc_data_ready(), svc_listen_data_ready() and others
++	 * with svc_data_ready(), svc_tcp_listen_data_ready(), and others
+ 	 * when calling callbacks above.
+ 	 */
+ 	wmb();
 
-
- include/trace/events/sunrpc.h | 39 ++++++++++++++++++++++++-----------
- net/sunrpc/svc_xprt.c         |  3 ---
- net/sunrpc/svcsock.c          | 15 ++++++--------
- 3 files changed, 33 insertions(+), 24 deletions(-)
-
---
-Chuck Lever
 
