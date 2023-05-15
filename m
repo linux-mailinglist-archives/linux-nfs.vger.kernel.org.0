@@ -2,346 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D76307020C6
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 02:21:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63D4670210A
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 03:18:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237651AbjEOAVN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 14 May 2023 20:21:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52454 "EHLO
+        id S231506AbjEOBSR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 14 May 2023 21:18:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237348AbjEOAVF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 May 2023 20:21:05 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C66CB10EA;
-        Sun, 14 May 2023 17:21:03 -0700 (PDT)
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34ELb9xf021061;
-        Mon, 15 May 2023 00:20:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=eDprdPZqfb9iFGp3Ai++QEvtrKM0TWfqVdTbu9bjRVk=;
- b=T5IJhmyPxd9zSmECsuNAZHQi/NShIEJaGxJxuGm8Nm23XBbjYy37WweRt2Pxhyyzfh57
- wvY4lSF0xgnPUcl8Akt1tctzsFWdlVeD/4IzXqUnGOIW4omsD8mCqXaasVTMLtPOlZ5o
- 8Q5Jwc4COOkaBBrQUfSmPbAB8/6bIBnS5G/kpj3/l08y2YxeDpAdN7uQwOE0PKQv3cXW
- Je1jKfeKs8hyyxRw2ATRKc+cdbYtI7bjM7fLEtJaRCsAyvOOTvTde3uZyDUPKIOaIdFJ
- 0CYLt3eYi+sY7uhxdttLUHq8N42rhOiXz/d4fGuvEkvV0hoYc+86wRxZytpmgcGLO3y+ Uw== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj2kde5bp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 May 2023 00:20:55 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34F0Hm4b034044;
-        Mon, 15 May 2023 00:20:54 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qj107ymts-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 May 2023 00:20:54 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34F0KoeS004448;
-        Mon, 15 May 2023 00:20:54 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3qj107yms7-5;
-        Mon, 15 May 2023 00:20:54 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v2 4/4] NFSD: handle GETATTR conflict with write delegation
-Date:   Sun, 14 May 2023 17:20:38 -0700
-Message-Id: <1684110038-11266-5-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1684110038-11266-1-git-send-email-dai.ngo@oracle.com>
-References: <1684110038-11266-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-14_18,2023-05-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305150000
-X-Proofpoint-GUID: 8-z7ge8mGNcIdCSCnwMTZXfzx4Vry7cC
-X-Proofpoint-ORIG-GUID: 8-z7ge8mGNcIdCSCnwMTZXfzx4Vry7cC
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229534AbjEOBSP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 May 2023 21:18:15 -0400
+Received: from mail-m127104.qiye.163.com (mail-m127104.qiye.163.com [115.236.127.104])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7292E13D;
+        Sun, 14 May 2023 18:18:12 -0700 (PDT)
+Received: from [0.0.0.0] (unknown [172.96.223.238])
+        by mail-m127104.qiye.163.com (Hmail) with ESMTPA id 8453BA401A1;
+        Mon, 15 May 2023 09:18:01 +0800 (CST)
+Message-ID: <2e8da045-354f-43a1-72b9-9644d1e2f280@sangfor.com.cn>
+Date:   Mon, 15 May 2023 09:17:56 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [RFC PATCH] SUNRPC: Fix UAF in svc_tcp_listen_data_ready()
+Content-Language: en-US
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     "jlayton@kernel.org" <jlayton@kernel.org>,
+        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "anna@kernel.org" <anna@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20230507091131.23540-1-dinghui@sangfor.com.cn>
+ <EED05302-8BC6-4593-B798-BFC476FA190E@oracle.com>
+ <19f9a9bb-7164-dca0-1aff-da4a46b0ee74@sangfor.com.cn>
+ <53664FF4-A917-46FE-AEA7-45F31CE1CD88@oracle.com>
+From:   Ding Hui <dinghui@sangfor.com.cn>
+In-Reply-To: <53664FF4-A917-46FE-AEA7-45F31CE1CD88@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDTBhPVh9MTExMHR1ISEtPTFUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpMSVVCTVVJSUhVSUhDWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLVUtZBg++
+X-HM-Tid: 0a881cfc71feb282kuuu8453ba401a1
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MCo6Hxw6OD0WPxkWShIOKC0M
+        MR0wCQxVSlVKTUNPSkpIT0NMSUhIVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
+        QVlKTElVQk1VSUlIVUlIQ1lXWQgBWUFOTUtLNwY+
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If the GETATTR request on a file that has write delegation in effect
-and the request attributes include the change info and size attribute
-then the request is handled as below:
+On 2023/5/15 2:29, Chuck Lever III wrote:
+> [ Removing the stale address for Bruce from the Cc, as he no longer
+>    works at Red Hat. ]
+> 
+> 
+>> On May 7, 2023, at 9:32 PM, Ding Hui <dinghui@sangfor.com.cn> wrote:
+>>
+>> On 2023/5/7 23:26, Chuck Lever III wrote:
+>>>> On May 7, 2023, at 5:11 AM, Ding Hui <dinghui@sangfor.com.cn> wrote:
+>>>>
+>>>> After the listener svc_sock freed, and before invoking svc_tcp_accept()
+>>>> for the established child sock, there is a window that the newsock
+>>>> retaining a freed listener svc_sock in sk_user_data which cloning from
+>>>> parent. In the race windows if data is received on the newsock, we will
+>>>> observe use-after-free report in svc_tcp_listen_data_ready().
+>>> My thought is that not calling sk_odata() for the newsock
+>>> could potentially result in missing a data_ready event,
+>>> resulting in a hung client on that socket.
+>>
+>> I checked the vmcore, found that sk_odata points to sock_def_readable(),
+>> and the sk_wq of newsock is NULL, which be assigned by sk_clone_lock()
+>> unconditionally.
+>>
+>> Calling sk_odata() for the newsock maybe do not wake up any sleepers.
+>>
+>>> IMO the preferred approach is to ensure that svsk is always
+>>> safe to dereference in tcp_listen_data_ready. I haven't yet
+>>> thought carefully about how to do that.
+>>
+>> Agree, but I don't have a good way for now.
+>>
+>>>> Reproduce by two tasks:
+>>>>
+>>>> 1. while :; do rpc.nfsd 0 ; rpc.nfsd; done
+>>>> 2. while :; do echo "" | ncat -4 127.0.0.1 2049 ; done
+> 
+> I haven't been able to reproduce a crash with this snippet. But
 
-Server sends CB_GETATTR to client to get the latest change info and file
-size. If these values are the same as the server's cached values then
-the GETATTR proceeds as normal.
+KASAN report should be easier to reproduce than real crash.
 
-If either the change info or file size is different from the server's
-cached values, or the file was already marked as modified, then:
+> I've done some archaeology to understand the problem better.
+> 
+> I found that svc_tcp_listen_data_ready is actually invoked /three/
+> times: once for the listener socket, and /twice/ for the child.
+> The big comment, which pre-dates the git era, appears to be
+> somewhat stale; or perhaps it's the specifics of this particular
+> test that triggers the third call.
+> 
+> I reviewed several other tcp_listen_data_ready callbacks. They
+> generally do not do anything at all with non-listener sockets,
+> suggesting that approach would likely be safe for NFSD.
+> 
+> Prior to commit 939bb7ef901b ("[PATCH] Code cleanups in calbacks
+> in svcsock"), this data_ready callback was a complete no-op for
+> non-listener sockets as well. That commit is described as only
+> a clean-up, but it indeed changes the logic.
+> 
+> I also note that most other data_ready callbacks take the
+> sk_callback_lock, and svc_tcp_listen_data_ready does not. Not
+> clear to me whether svc_tcp_listen_data_ready should be taking
+> that lock too.
+> 
 
-   . update time_modify and time_metadata into file's metadata
-     with current time
+I notice the lock too, IMO the sk_callback_lock should be used
+to protect the svsk avoiding be freed during in the callbacks.
 
-   . encode GETATTR as normal except the file size is encoded with
-     the value returned from CB_GETATTR
+Perhaps it can be reproduced by increasing the processing time in
+svc_tcp_listen_data_ready(), but anyway, it would be another issue.
 
-   . mark the file as modified
+> The upshot is that I think it would be reasonable to simply do
+> nothing in svc_tcp_listen_data_ready() if state != TCP_LISTEN.
+> 
 
-If the CB_GETATTR fails for any reasons, the delegation is recalled
-and NFS4ERR_DELAY is returned for the GETATTR.
+Thanks for the information.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 58 ++++++++++++++++++++++++++++++++++++
- fs/nfsd/nfs4xdr.c   | 84 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
- fs/nfsd/state.h     |  7 +++++
- 3 files changed, 148 insertions(+), 1 deletion(-)
+I will send the formal patch soon later.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 09a9e16407f9..fb305b28a090 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -127,6 +127,7 @@ static void free_session(struct nfsd4_session *);
- 
- static const struct nfsd4_callback_ops nfsd4_cb_recall_ops;
- static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops;
-+static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops;
- 
- static struct workqueue_struct *laundry_wq;
- 
-@@ -1175,6 +1176,10 @@ alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
- 	dp->dl_recalled = false;
- 	nfsd4_init_cb(&dp->dl_recall, dp->dl_stid.sc_client,
- 		      &nfsd4_cb_recall_ops, NFSPROC4_CLNT_CB_RECALL);
-+	nfsd4_init_cb(&dp->dl_cb_fattr.ncf_getattr, dp->dl_stid.sc_client,
-+			&nfsd4_cb_getattr_ops, NFSPROC4_CLNT_CB_GETATTR);
-+	dp->dl_cb_fattr.ncf_file_modified = false;
-+	dp->dl_cb_fattr.ncf_cb_bmap[0] = FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE;
- 	get_nfs4_file(fp);
- 	dp->dl_stid.sc_file = fp;
- 	return dp;
-@@ -2882,11 +2887,49 @@ nfsd4_cb_recall_any_release(struct nfsd4_callback *cb)
- 	spin_unlock(&nn->client_lock);
- }
- 
-+static int
-+nfsd4_cb_getattr_done(struct nfsd4_callback *cb, struct rpc_task *task)
-+{
-+	struct nfs4_cb_fattr *ncf =
-+		container_of(cb, struct nfs4_cb_fattr, ncf_getattr);
-+
-+	ncf->ncf_cb_status = task->tk_status;
-+	switch (task->tk_status) {
-+	case -NFS4ERR_DELAY:
-+		rpc_delay(task, 2 * HZ);
-+		return 0;
-+	default:
-+		return 1;
-+	}
-+}
-+
-+static void
-+nfsd4_cb_getattr_release(struct nfsd4_callback *cb)
-+{
-+	struct nfs4_cb_fattr *ncf =
-+		container_of(cb, struct nfs4_cb_fattr, ncf_getattr);
-+
-+	clear_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags);
-+	wake_up_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY);
-+}
-+
- static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops = {
- 	.done		= nfsd4_cb_recall_any_done,
- 	.release	= nfsd4_cb_recall_any_release,
- };
- 
-+static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops = {
-+	.done		= nfsd4_cb_getattr_done,
-+	.release	= nfsd4_cb_getattr_release,
-+};
-+
-+void nfs4_cb_getattr(struct nfs4_cb_fattr *ncf)
-+{
-+	if (test_and_set_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags))
-+		return;
-+	nfsd4_run_cb(&ncf->ncf_getattr);
-+}
-+
- static struct nfs4_client *create_client(struct xdr_netobj name,
- 		struct svc_rqst *rqstp, nfs4_verifier *verf)
- {
-@@ -5591,6 +5634,8 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	int cb_up;
- 	int status = 0;
- 	u32 wdeleg = false;
-+	struct kstat stat;
-+	struct path path;
- 
- 	cb_up = nfsd4_cb_channel_good(oo->oo_owner.so_client);
- 	open->op_recall = 0;
-@@ -5626,6 +5671,19 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	wdeleg = open->op_share_access & NFS4_SHARE_ACCESS_WRITE;
- 	open->op_delegate_type = wdeleg ?
- 			NFS4_OPEN_DELEGATE_WRITE : NFS4_OPEN_DELEGATE_READ;
-+	if (wdeleg) {
-+		path.mnt = currentfh->fh_export->ex_path.mnt;
-+		path.dentry = currentfh->fh_dentry;
-+		if (vfs_getattr(&path, &stat, STATX_BASIC_STATS,
-+						AT_STATX_SYNC_AS_STAT)) {
-+			nfs4_put_stid(&dp->dl_stid);
-+			destroy_delegation(dp);
-+			goto out_no_deleg;
-+		}
-+		dp->dl_cb_fattr.ncf_cur_fsize = stat.size;
-+		dp->dl_cb_fattr.ncf_initial_cinfo = nfsd4_change_attribute(&stat,
-+							d_inode(currentfh->fh_dentry));
-+	}
- 	nfs4_put_stid(&dp->dl_stid);
- 	return;
- out_no_deleg:
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 76db2fe29624..5d7e11db8ccf 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2920,6 +2920,77 @@ nfsd4_encode_bitmap(struct xdr_stream *xdr, u32 bmval0, u32 bmval1, u32 bmval2)
- 	return nfserr_resource;
- }
- 
-+static struct file_lock *
-+nfs4_wrdeleg_filelock(struct svc_rqst *rqstp, struct inode *inode)
-+{
-+	struct file_lock_context *ctx;
-+	struct file_lock *fl;
-+
-+	ctx = locks_inode_context(inode);
-+	if (!ctx)
-+		return NULL;
-+	spin_lock(&ctx->flc_lock);
-+	list_for_each_entry(fl, &ctx->flc_lease, fl_list) {
-+		if (fl->fl_type == F_WRLCK) {
-+			spin_unlock(&ctx->flc_lock);
-+			return fl;
-+		}
-+	}
-+	spin_unlock(&ctx->flc_lock);
-+	return NULL;
-+}
-+
-+static __be32
-+nfs4_handle_wrdeleg_conflict(struct svc_rqst *rqstp, struct inode *inode,
-+			bool *modified, u64 *size)
-+{
-+	__be32 status;
-+	struct file_lock *fl;
-+	struct nfs4_delegation *dp;
-+	struct nfs4_cb_fattr *ncf;
-+	struct iattr attrs;
-+
-+	*modified = false;
-+	fl = nfs4_wrdeleg_filelock(rqstp, inode);
-+	if (!fl)
-+		return 0;
-+	dp = fl->fl_owner;
-+	ncf = &dp->dl_cb_fattr;
-+	if (dp->dl_recall.cb_clp == *(rqstp->rq_lease_breaker))
-+		return 0;
-+
-+	refcount_inc(&dp->dl_stid.sc_count);
-+	nfs4_cb_getattr(&dp->dl_cb_fattr);
-+	wait_on_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY, TASK_INTERRUPTIBLE);
-+	if (ncf->ncf_cb_status) {
-+		status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
-+		nfs4_put_stid(&dp->dl_stid);
-+		return status;
-+	}
-+	ncf->ncf_cur_fsize = ncf->ncf_cb_fsize;
-+	if (!ncf->ncf_file_modified &&
-+			(ncf->ncf_initial_cinfo != ncf->ncf_cb_change ||
-+			ncf->ncf_cur_fsize != ncf->ncf_cb_fsize)) {
-+		ncf->ncf_file_modified = true;
-+	}
-+
-+	if (ncf->ncf_file_modified) {
-+		/*
-+		 * The server would not update the file's metadata
-+		 * with the client's modified size.
-+		 * nfsd4 change attribute is constructed from ctime.
-+		 */
-+		attrs.ia_mtime = attrs.ia_ctime = current_time(inode);
-+		attrs.ia_valid = ATTR_MTIME | ATTR_CTIME;
-+		setattr_copy(&nop_mnt_idmap, inode, &attrs);
-+		mark_inode_dirty(inode);
-+		*size = ncf->ncf_cur_fsize;
-+		*modified = true;
-+	}
-+	nfs4_put_stid(&dp->dl_stid);
-+	return 0;
-+}
-+
- /*
-  * Note: @fhp can be NULL; in this case, we might have to compose the filehandle
-  * ourselves.
-@@ -2957,6 +3028,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		.dentry	= dentry,
- 	};
- 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
-+	bool file_modified;
-+	u64 size = 0;
- 
- 	BUG_ON(bmval1 & NFSD_WRITEONLY_ATTRS_WORD1);
- 	BUG_ON(!nfsd_attrs_supported(minorversion, bmval));
-@@ -2966,6 +3039,12 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		if (status)
- 			goto out;
- 	}
-+	if (bmval0 & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
-+		status = nfs4_handle_wrdeleg_conflict(rqstp, d_inode(dentry),
-+						&file_modified, &size);
-+		if (status)
-+			goto out;
-+	}
- 
- 	err = vfs_getattr(&path, &stat,
- 			  STATX_BASIC_STATS | STATX_BTIME | STATX_CHANGE_COOKIE,
-@@ -3089,7 +3168,10 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		p = xdr_reserve_space(xdr, 8);
- 		if (!p)
- 			goto out_resource;
--		p = xdr_encode_hyper(p, stat.size);
-+		if (file_modified)
-+			p = xdr_encode_hyper(p, size);
-+		else
-+			p = xdr_encode_hyper(p, stat.size);
- 	}
- 	if (bmval0 & FATTR4_WORD0_LINK_SUPPORT) {
- 		p = xdr_reserve_space(xdr, 4);
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 9fb69ed8ae80..b20b65fe89b4 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -121,6 +121,10 @@ struct nfs4_cb_fattr {
- 	struct nfsd4_callback ncf_getattr;
- 	u32 ncf_cb_status;
- 	u32 ncf_cb_bmap[1];
-+	unsigned long ncf_cb_flags;
-+	bool ncf_file_modified;
-+	u64 ncf_initial_cinfo;
-+	u64 ncf_cur_fsize;
- 
- 	/* from CB_GETATTR reply */
- 	u64 ncf_cb_change;
-@@ -744,6 +748,9 @@ extern void nfsd4_client_record_remove(struct nfs4_client *clp);
- extern int nfsd4_client_record_check(struct nfs4_client *clp);
- extern void nfsd4_record_grace_done(struct nfsd_net *nn);
- 
-+/* CB_GETTTAR */
-+extern void nfs4_cb_getattr(struct nfs4_cb_fattr *ncf);
-+
- static inline bool try_to_expire_client(struct nfs4_client *clp)
- {
- 	cmpxchg(&clp->cl_state, NFSD4_COURTESY, NFSD4_EXPIRABLE);
 -- 
-2.9.5
+Thanks,
+- Ding Hui
 
