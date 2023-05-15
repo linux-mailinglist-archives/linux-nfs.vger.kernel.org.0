@@ -2,142 +2,179 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63D4670210A
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 03:18:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA214702164
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 04:13:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231506AbjEOBSR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 14 May 2023 21:18:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38514 "EHLO
+        id S233214AbjEOCNw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 14 May 2023 22:13:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjEOBSP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 May 2023 21:18:15 -0400
+        with ESMTP id S229645AbjEOCNv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 May 2023 22:13:51 -0400
 Received: from mail-m127104.qiye.163.com (mail-m127104.qiye.163.com [115.236.127.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7292E13D;
-        Sun, 14 May 2023 18:18:12 -0700 (PDT)
-Received: from [0.0.0.0] (unknown [172.96.223.238])
-        by mail-m127104.qiye.163.com (Hmail) with ESMTPA id 8453BA401A1;
-        Mon, 15 May 2023 09:18:01 +0800 (CST)
-Message-ID: <2e8da045-354f-43a1-72b9-9644d1e2f280@sangfor.com.cn>
-Date:   Mon, 15 May 2023 09:17:56 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [RFC PATCH] SUNRPC: Fix UAF in svc_tcp_listen_data_ready()
-Content-Language: en-US
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     "jlayton@kernel.org" <jlayton@kernel.org>,
-        "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "anna@kernel.org" <anna@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20230507091131.23540-1-dinghui@sangfor.com.cn>
- <EED05302-8BC6-4593-B798-BFC476FA190E@oracle.com>
- <19f9a9bb-7164-dca0-1aff-da4a46b0ee74@sangfor.com.cn>
- <53664FF4-A917-46FE-AEA7-45F31CE1CD88@oracle.com>
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B392110DB;
+        Sun, 14 May 2023 19:13:48 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPV6:240e:3b7:3270:1980:719c:500e:9fa7:6718])
+        by mail-m127104.qiye.163.com (Hmail) with ESMTPA id 83E3DA40111;
+        Mon, 15 May 2023 10:13:44 +0800 (CST)
 From:   Ding Hui <dinghui@sangfor.com.cn>
-In-Reply-To: <53664FF4-A917-46FE-AEA7-45F31CE1CD88@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+To:     chuck.lever@oracle.com, jlayton@kernel.org,
+        trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dinghui@sangfor.com.cn, stable@vger.kernel.org
+Subject: [PATCH] SUNRPC: Fix UAF in svc_tcp_listen_data_ready()
+Date:   Mon, 15 May 2023 10:13:07 +0800
+Message-Id: <20230515021307.3072-1-dinghui@sangfor.com.cn>
+X-Mailer: git-send-email 2.17.1
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDTBhPVh9MTExMHR1ISEtPTFUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpMSVVCTVVJSUhVSUhDWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLVUtZBg++
-X-HM-Tid: 0a881cfc71feb282kuuu8453ba401a1
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCThkYVksYGkIeTkwYS0xLGFUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUlPSx5BSBlMQUhJTEtBSkJDS0FMSkIYQU5LSx5BQh0aTEFNTEpDWVdZFhoPEhUdFF
+        lBWU9LSFVKSktISkxVSktLVUtZBg++
+X-HM-Tid: 0a881d2f6370b282kuuu83e3da40111
 X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MCo6Hxw6OD0WPxkWShIOKC0M
-        MR0wCQxVSlVKTUNPSkpIT0NMSUhIVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
-        QVlKTElVQk1VSUlIVUlIQ1lXWQgBWUFOTUtLNwY+
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MT46Hio5Mj0XNxksMEIOHR8U
+        TD4wCSpVSlVKTUNPSkpNQ0lOSEJIVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
+        QVlJT0seQUgZTEFISUxLQUpCQ0tBTEpCGEFOS0seQUIdGkxBTUxKQ1lXWQgBWUFOT01NNwY+
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2023/5/15 2:29, Chuck Lever III wrote:
-> [ Removing the stale address for Bruce from the Cc, as he no longer
->    works at Red Hat. ]
-> 
-> 
->> On May 7, 2023, at 9:32 PM, Ding Hui <dinghui@sangfor.com.cn> wrote:
->>
->> On 2023/5/7 23:26, Chuck Lever III wrote:
->>>> On May 7, 2023, at 5:11 AM, Ding Hui <dinghui@sangfor.com.cn> wrote:
->>>>
->>>> After the listener svc_sock freed, and before invoking svc_tcp_accept()
->>>> for the established child sock, there is a window that the newsock
->>>> retaining a freed listener svc_sock in sk_user_data which cloning from
->>>> parent. In the race windows if data is received on the newsock, we will
->>>> observe use-after-free report in svc_tcp_listen_data_ready().
->>> My thought is that not calling sk_odata() for the newsock
->>> could potentially result in missing a data_ready event,
->>> resulting in a hung client on that socket.
->>
->> I checked the vmcore, found that sk_odata points to sock_def_readable(),
->> and the sk_wq of newsock is NULL, which be assigned by sk_clone_lock()
->> unconditionally.
->>
->> Calling sk_odata() for the newsock maybe do not wake up any sleepers.
->>
->>> IMO the preferred approach is to ensure that svsk is always
->>> safe to dereference in tcp_listen_data_ready. I haven't yet
->>> thought carefully about how to do that.
->>
->> Agree, but I don't have a good way for now.
->>
->>>> Reproduce by two tasks:
->>>>
->>>> 1. while :; do rpc.nfsd 0 ; rpc.nfsd; done
->>>> 2. while :; do echo "" | ncat -4 127.0.0.1 2049 ; done
-> 
-> I haven't been able to reproduce a crash with this snippet. But
+After the listener svc_sock be freed, and before invoking svc_tcp_accept()
+for the established child sock, there is a window that the newsock
+retaining a freed listener svc_sock in sk_user_data which cloning from
+parent. In the race windows if data is received on the newsock, we will
+observe use-after-free report in svc_tcp_listen_data_ready().
 
-KASAN report should be easier to reproduce than real crash.
+Reproduce by two tasks:
 
-> I've done some archaeology to understand the problem better.
-> 
-> I found that svc_tcp_listen_data_ready is actually invoked /three/
-> times: once for the listener socket, and /twice/ for the child.
-> The big comment, which pre-dates the git era, appears to be
-> somewhat stale; or perhaps it's the specifics of this particular
-> test that triggers the third call.
-> 
-> I reviewed several other tcp_listen_data_ready callbacks. They
-> generally do not do anything at all with non-listener sockets,
-> suggesting that approach would likely be safe for NFSD.
-> 
-> Prior to commit 939bb7ef901b ("[PATCH] Code cleanups in calbacks
-> in svcsock"), this data_ready callback was a complete no-op for
-> non-listener sockets as well. That commit is described as only
-> a clean-up, but it indeed changes the logic.
-> 
-> I also note that most other data_ready callbacks take the
-> sk_callback_lock, and svc_tcp_listen_data_ready does not. Not
-> clear to me whether svc_tcp_listen_data_ready should be taking
-> that lock too.
-> 
+1. while :; do rpc.nfsd 0 ; rpc.nfsd; done
+2. while :; do echo "" | ncat -4 127.0.0.1 2049 ; done
 
-I notice the lock too, IMO the sk_callback_lock should be used
-to protect the svsk avoiding be freed during in the callbacks.
+KASAN report:
 
-Perhaps it can be reproduced by increasing the processing time in
-svc_tcp_listen_data_ready(), but anyway, it would be another issue.
+  ==================================================================
+  BUG: KASAN: slab-use-after-free in svc_tcp_listen_data_ready+0x1cf/0x1f0 [sunrpc]
+  Read of size 8 at addr ffff888139d96228 by task nc/102553
+  CPU: 7 PID: 102553 Comm: nc Not tainted 6.3.0+ #18
+  Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
+  Call Trace:
+   <IRQ>
+   dump_stack_lvl+0x33/0x50
+   print_address_description.constprop.0+0x27/0x310
+   print_report+0x3e/0x70
+   kasan_report+0xae/0xe0
+   svc_tcp_listen_data_ready+0x1cf/0x1f0 [sunrpc]
+   tcp_data_queue+0x9f4/0x20e0
+   tcp_rcv_established+0x666/0x1f60
+   tcp_v4_do_rcv+0x51c/0x850
+   tcp_v4_rcv+0x23fc/0x2e80
+   ip_protocol_deliver_rcu+0x62/0x300
+   ip_local_deliver_finish+0x267/0x350
+   ip_local_deliver+0x18b/0x2d0
+   ip_rcv+0x2fb/0x370
+   __netif_receive_skb_one_core+0x166/0x1b0
+   process_backlog+0x24c/0x5e0
+   __napi_poll+0xa2/0x500
+   net_rx_action+0x854/0xc90
+   __do_softirq+0x1bb/0x5de
+   do_softirq+0xcb/0x100
+   </IRQ>
+   <TASK>
+   ...
+   </TASK>
 
-> The upshot is that I think it would be reasonable to simply do
-> nothing in svc_tcp_listen_data_ready() if state != TCP_LISTEN.
-> 
+  Allocated by task 102371:
+   kasan_save_stack+0x1e/0x40
+   kasan_set_track+0x21/0x30
+   __kasan_kmalloc+0x7b/0x90
+   svc_setup_socket+0x52/0x4f0 [sunrpc]
+   svc_addsock+0x20d/0x400 [sunrpc]
+   __write_ports_addfd+0x209/0x390 [nfsd]
+   write_ports+0x239/0x2c0 [nfsd]
+   nfsctl_transaction_write+0xac/0x110 [nfsd]
+   vfs_write+0x1c3/0xae0
+   ksys_write+0xed/0x1c0
+   do_syscall_64+0x38/0x90
+   entry_SYSCALL_64_after_hwframe+0x72/0xdc
 
-Thanks for the information.
+  Freed by task 102551:
+   kasan_save_stack+0x1e/0x40
+   kasan_set_track+0x21/0x30
+   kasan_save_free_info+0x2a/0x50
+   __kasan_slab_free+0x106/0x190
+   __kmem_cache_free+0x133/0x270
+   svc_xprt_free+0x1e2/0x350 [sunrpc]
+   svc_xprt_destroy_all+0x25a/0x440 [sunrpc]
+   nfsd_put+0x125/0x240 [nfsd]
+   nfsd_svc+0x2cb/0x3c0 [nfsd]
+   write_threads+0x1ac/0x2a0 [nfsd]
+   nfsctl_transaction_write+0xac/0x110 [nfsd]
+   vfs_write+0x1c3/0xae0
+   ksys_write+0xed/0x1c0
+   do_syscall_64+0x38/0x90
+   entry_SYSCALL_64_after_hwframe+0x72/0xdc
 
-I will send the formal patch soon later.
+Fix the UAF by simply doing nothing in svc_tcp_listen_data_ready()
+if state != TCP_LISTEN, that will avoid dereferencing svsk for all
+child socket.
 
+Link: https://lore.kernel.org/lkml/20230507091131.23540-1-dinghui@sangfor.com.cn/
+Fixes: fa9251afc33c ("SUNRPC: Call the default socket callbacks instead of open coding")
+Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
+Cc: <stable@vger.kernel.org>
+---
+ net/sunrpc/svcsock.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
+
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index a51c9b989d58..9aca6e1e78e4 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -825,12 +825,6 @@ static void svc_tcp_listen_data_ready(struct sock *sk)
+ 
+ 	trace_sk_data_ready(sk);
+ 
+-	if (svsk) {
+-		/* Refer to svc_setup_socket() for details. */
+-		rmb();
+-		svsk->sk_odata(sk);
+-	}
+-
+ 	/*
+ 	 * This callback may called twice when a new connection
+ 	 * is established as a child socket inherits everything
+@@ -839,13 +833,18 @@ static void svc_tcp_listen_data_ready(struct sock *sk)
+ 	 *    when one of child sockets become ESTABLISHED.
+ 	 * 2) data_ready method of the child socket may be called
+ 	 *    when it receives data before the socket is accepted.
+-	 * In case of 2, we should ignore it silently.
++	 * In case of 2, we should ignore it silently and DO NOT
++	 * dereference svsk.
+ 	 */
+-	if (sk->sk_state == TCP_LISTEN) {
+-		if (svsk) {
+-			set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
+-			svc_xprt_enqueue(&svsk->sk_xprt);
+-		}
++	if (sk->sk_state != TCP_LISTEN)
++		return;
++
++	if (svsk) {
++		/* Refer to svc_setup_socket() for details. */
++		rmb();
++		svsk->sk_odata(sk);
++		set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
++		svc_xprt_enqueue(&svsk->sk_xprt);
+ 	}
+ }
+ 
 -- 
-Thanks,
-- Ding Hui
+2.17.1
 
