@@ -2,44 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C1ED70350A
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 18:55:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA00070353C
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 18:57:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243256AbjEOQzO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 May 2023 12:55:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59172 "EHLO
+        id S243228AbjEOQ5I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 May 2023 12:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243312AbjEOQy4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 May 2023 12:54:56 -0400
+        with ESMTP id S243247AbjEOQ5H (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 May 2023 12:57:07 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A8EE6A7E
-        for <linux-nfs@vger.kernel.org>; Mon, 15 May 2023 09:54:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5214D7A92
+        for <linux-nfs@vger.kernel.org>; Mon, 15 May 2023 09:56:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ECC22629D1
-        for <linux-nfs@vger.kernel.org>; Mon, 15 May 2023 16:54:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0575AC4339B;
-        Mon, 15 May 2023 16:54:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 31BA362A1F
+        for <linux-nfs@vger.kernel.org>; Mon, 15 May 2023 16:56:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E56DC4339B;
+        Mon, 15 May 2023 16:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684169681;
-        bh=JhdVYJ6Uf1Ei2CFmN9v5PZC9uGAY0jYcRYwGGFDefEE=;
+        s=k20201202; t=1684169816;
+        bh=Q+nclGJ4CteWjUVuOrzyFbrsJwbyFnomG9sLl3GdGgY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dYmKUntG17x7CG+085n2VoCWH6K0BQOJncYrBf88jnNmkhazXcuNCJKRxu3PiuJgi
-         8juVsEniB8G1dJCPQEPi7WzLb5DOeWkJQAewE0JlyD016wqaKtV/DVYsOHHxKAR7nf
-         P5ZTYgtHTOpBFcXM6NM+CNkH6eZCg0WKJjbG1HUc1ui6xJraWAm12Xpo1Wi8/xIhWk
-         fGoUEYBg79PPUWjF3fkHQ9zqmtLvkiFHke1JMG4riRHNGISnPLIwbkRwVdwcPF83Vm
-         iREgMw+yMydjzioMExb7CiXDKME+A+YHwGEiSToOLM/olhfOxM8KUKnyrNhhJLYQig
-         S8lATOY4oGQxg==
-Message-ID: <13c6a090134e64ce4961c322681a941399268cb9.camel@kernel.org>
-Subject: Re: [PATCH 3/4] SUNRPC: Improve observability in svc_tcp_accept()
+        b=EfoyaEO3TysX+gC4GYICEVkvAFmCfS59TR/62rIIsUnne+1cT8wu3FB2myJN863I9
+         GZ9ekAFevlqg3IlzOuqfKIYZPsFOFq/xXKfl4G4cvDlqGRdj+Z+pPx73Jteneg8nMY
+         nb6ABaYyBW3v3EMluCw2NevkndmWWj/WH/y2LdI224hts+1YejeXWNjjKw7c+iZTu/
+         H8/2YMCMZyT3JG/fZVy+MZvoRXaU7zh/JgiKxTwcxaQS4098Uaea3pgxPrhe2Uq3YV
+         o5RUiQbKbqrzOAs6gUGJ6d/JnI2wfDXrYWNGc/7gX+jxeyMHrSwAp0ZCgKq/grHg9w
+         iv5dA33NBZnFA==
+Message-ID: <cad818127d6df4ebcc6e837def684ad381de83fe.camel@kernel.org>
+Subject: Re: [PATCH 0/4] Socket creation observability
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 15 May 2023 12:54:39 -0400
-In-Reply-To: <168415757392.9504.14836685251349712202.stgit@manet.1015granger.net>
+Date:   Mon, 15 May 2023 12:56:54 -0400
+In-Reply-To: <168415745478.9504.1882537002036193828.stgit@manet.1015granger.net>
 References: <168415745478.9504.1882537002036193828.stgit@manet.1015granger.net>
-         <168415757392.9504.14836685251349712202.stgit@manet.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
@@ -55,46 +54,33 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Mon, 2023-05-15 at 09:32 -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+> This series updates observability around socket creation and
+> destruction to help troubleshoot issues such as:
 >=20
-> The -ENOMEM arm could fire repeatedly if the system runs low on
-> memory, so remove it.
+> https://lore.kernel.org/linux-nfs/65AFD2EF-E5D3-4461-B23A-D294486D5F65@or=
+acle.com/T/#t
 >=20
-> Don't bother to trace -EAGAIN error events, since those fire after
-> a listener is created (with no work done) and once again after an
-> accept has been handled successfully (again, with no work done).
+> I plan to apply these to nfsd-next.
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  net/sunrpc/svcsock.c |    9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
 >=20
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index e0fb65e90af2..2058641ab9f6 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -885,13 +885,8 @@ static struct svc_xprt *svc_tcp_accept(struct svc_xp=
-rt *xprt)
->  	clear_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
->  	err =3D kernel_accept(sock, &newsock, O_NONBLOCK);
->  	if (err < 0) {
-> -		if (err =3D=3D -ENOMEM)
-> -			printk(KERN_WARNING "%s: no more sockets!\n",
-> -			       serv->sv_name);
-> -		else if (err !=3D -EAGAIN)
-> -			net_warn_ratelimited("%s: accept failed (err %d)!\n",
-> -					     serv->sv_name, -err);
-> -		trace_svcsock_accept_err(xprt, serv->sv_name, err);
-> +		if (err !=3D -EAGAIN)
-> +			trace_svcsock_accept_err(xprt, serv->sv_name, err);
-
-Would this be better done as a TP_CONDITION tracepoint?
-
->  		return NULL;
->  	}
->  	set_bit(XPT_CONN, &svsk->sk_xprt.xpt_flags);
+> Chuck Lever (4):
+>       SUNRPC: Fix an incorrect comment
+>       SUNRPC: Remove dprintk() in svc_handle_xprt()
+>       SUNRPC: Improve observability in svc_tcp_accept()
+>       SUNRPC: Trace struct svc_sock lifetime events
 >=20
 >=20
+>  include/trace/events/sunrpc.h | 39 ++++++++++++++++++++++++-----------
+>  net/sunrpc/svc_xprt.c         |  3 ---
+>  net/sunrpc/svcsock.c          | 15 ++++++--------
+>  3 files changed, 33 insertions(+), 24 deletions(-)
+>=20
+> --
+> Chuck Lever
+>=20
 
---=20
-Jeff Layton <jlayton@kernel.org>
+These all look fine to me. I had one nit about a conditional tracepoint,
+but your call on whether you want to respin it that way.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
