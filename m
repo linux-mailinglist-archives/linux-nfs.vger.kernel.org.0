@@ -2,48 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4EF0701F4E
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 May 2023 21:52:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D69A7020C1
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 May 2023 02:21:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjENTwB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 14 May 2023 15:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50588 "EHLO
+        id S237110AbjEOAVE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 14 May 2023 20:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbjENTwB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 May 2023 15:52:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80531CE
-        for <linux-nfs@vger.kernel.org>; Sun, 14 May 2023 12:52:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1F9EF60D2C
-        for <linux-nfs@vger.kernel.org>; Sun, 14 May 2023 19:52:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506DEC433EF;
-        Sun, 14 May 2023 19:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684093919;
-        bh=d4OEIanrVuKIyxV2aCXzxScHdOmhLzrIVb4oLSOJNf0=;
-        h=Subject:From:To:Cc:Date:From;
-        b=gWw5rY4fgAVkYxJU8TW+okbemFcgDGiaJ8hj+eBswtj7Lw967XCAW37TGmXkEpOf2
-         T9Ri2uN2tjooWpdPcWcuX/Qu1b23ot17lLaFI7+1qzHvFHOavzvM1HTzirai+B+/Gd
-         xOJze2CwTMpmWVVleyMN6MGhV0c0AfQlqkWYB9zrGPEgX23ynf4kh1j/BXl7dodCw8
-         SBzEW8SOLfH4AAjDAmkB3gWELgFmdID5eP1PWHut64AWX+fIDEW6H1ZQ/ekgbwcBMw
-         OwBtWfBVkNB3k34S8gUHCXVWhop+5g6MpgZILZjj1fqsSqLNxS/2UP6LyEbmkasGkI
-         I6Xs91Q29qBVQ==
-Subject: [PATCH] SUNRPC: Fix trace_svc_register() call site
-From:   Chuck Lever <cel@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Sun, 14 May 2023 15:51:48 -0400
-Message-ID: <168409389798.9284.10566481510384675833.stgit@oracle-102.nfsv4bat.org>
-User-Agent: StGit/1.5
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S233485AbjEOAVD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 14 May 2023 20:21:03 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5777810EA;
+        Sun, 14 May 2023 17:21:00 -0700 (PDT)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34EM8s8m019522;
+        Mon, 15 May 2023 00:20:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-03-30;
+ bh=nuOWrHiyAXW7/vpIpeHu9L5cU1vtcIwKTikenFS2wKU=;
+ b=s/32eCHjsIfTY3ZwLFS7MByJVCxt3M/fcJND4MXISCJ/gVjiMbKpoIKi7Z3dFMhN/56r
+ K6aB3tw4jIskjOhv/G1Bfluzbw/flbQ13o04S6fst3ymtDIVFExWqFRw09RpcCPsa6fq
+ rcwWzAU9IKp4OeBseWQfcYmV/EAHqNWu5D7HZ+QMvgO00kjePasAinLWhVpyzpsSEuz3
+ /5biDM8Y1B/W0bFwpvno2V4WFkUYgpoZ7PkO1VX9yvPpTohd8tQiOzjQvi8MlaDx4Nij
+ IWNlcF/Z99kJAv3N6kIDr688b2rt7bFhxBfU/bqYTJUNJ0XWbA8mTTm6eU3Jtu7q+mra yQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj25tx0we-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 May 2023 00:20:52 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34EJUF4e033095;
+        Mon, 15 May 2023 00:20:51 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qj107ymsc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 May 2023 00:20:51 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34F0KoeK004448;
+        Mon, 15 May 2023 00:20:50 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3qj107yms7-1;
+        Mon, 15 May 2023 00:20:50 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v2 0/4] NFSD: add support for NFSv4 write delegation
+Date:   Sun, 14 May 2023 17:20:34 -0700
+Message-Id: <1684110038-11266-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-14_18,2023-05-05_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=710 adultscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305150000
+X-Proofpoint-ORIG-GUID: QLsd4qkw5VRi5TlcYvCihbxROujSE-Qn
+X-Proofpoint-GUID: QLsd4qkw5VRi5TlcYvCihbxROujSE-Qn
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,28 +68,45 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+NFSD: add support for NFSv4 write delegation
 
-The arguments are in the wrong order.
+The NFSv4 server currently supports read delegation using VFS lease
+which is implemented using file_lock. 
 
-Fixes: b4af59328c25 ("SUNRPC: Trace server-side rpcbind registration events")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/svc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch series add write delegation support for NFSv4 server by:
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 26367cf4c17a..a83d849318b3 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1052,7 +1052,7 @@ static int __svc_register(struct net *net, const char *progname,
- #endif
- 	}
- 
--	trace_svc_register(progname, version, protocol, port, family, error);
-+	trace_svc_register(progname, version, family, protocol, port, error);
- 	return error;
- }
- 
+    . remove the check for F_WRLCK in generic_add_lease to allow
+      file_lock to be used for write delegation.  
 
+    . grant write delegation for OPEN with NFS4_SHARE_ACCESS_WRITE
+      if there is no conflict with other OPENs.
 
+    . add XDR support for sending and receiving CB_GETATTR.
+
+    . handle GETATTR from another client on a file that has outstanding
+      write delegation by using CB_GETATTR to get the latest change_info
+      and size for the GETATTR reply.
+
+Write delegation conflict with another OPEN, REMOVE, RENAME and SETATTR
+are handled the same as read delegation using notify_change, try_break_deleg.
+
+Changes since v1:
+
+[PATCH 3/4] NFSD: add supports for CB_GETATTR callback
+- remove WARN_ON_ONCE from encode_bitmap4
+- replace decode_bitmap4 with xdr_stream_decode_uint32_array
+- replace xdr_inline_decode and xdr_decode_hyper in decode_cb_getattr
+   with xdr_stream_decode_u64. Also remove the un-needed likely().
+- modify signature of encode_cb_getattr4args to take pointer to
+   nfs4_cb_fattr
+- replace decode_attr_length with xdr_stream_decode_u32
+- rename decode_cb_getattr to decode_cb_fattr4
+- fold the initialization of cb_cinfo and cb_fsize into decode_cb_fattr4
+- rename ncf_cb_cinfo to ncf_cb_change to avoid confusion of cindo usage
+  in fs/nfsd/nfs4xdr.c
+- correct NFS4_dec_cb_getattr_sz and update size description
+
+[PATCH 4/4] NFSD: handle GETATTR conflict with write delegation
+- change nfs4_handle_wrdeleg_conflict returns __be32 to fix test robot
+- change ncf_cb_cinfo to ncf_cb_change to avoid confusion of cindo usage
+  in fs/nfsd/nfs4xdr.c
