@@ -2,59 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1296705277
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 17:42:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BFB6705702
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:23:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232607AbjEPPm5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 May 2023 11:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
+        id S229492AbjEPTXr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 May 2023 15:23:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233985AbjEPPm4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 11:42:56 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F606E85
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 08:42:52 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50bcb229adaso26025383a12.2
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 08:42:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684251771; x=1686843771;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bJdGKICWmGv85K5wtQSHIYe7lme/vN6+44Of5jYTNMU=;
-        b=AGkd0Fz5+91D7h7EYcZxGV5kihGAaQdg7yXQKHqrph7R/nJckoEKkJAEWAktWs89Sf
-         eViUTbAa8w/hSs+ziaFUSpu+2Y8UjkeZ1xiKP9gOAUJogIIDr73yhB+ux07mVt/dDER7
-         sCjVGWjqZfeNDD5mhrYu8wsjMunedzVE48t56BpO9VkjOJYWqY6qRlqdvRqgu2ZJA+wX
-         mh9/d+03W42cxvG1/7QmMFoMNp8/96quVvWVWP82JLq+VMcNsIdOu1P7SeFBZ/7h4Dgg
-         PdaWGSSZ7nl19l0XzGBtWeXiedcyXtNJVEg1shgtNiAJCl5EYMIAehbAdRzeDMQti2Zs
-         g8Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684251771; x=1686843771;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bJdGKICWmGv85K5wtQSHIYe7lme/vN6+44Of5jYTNMU=;
-        b=IiXP3thu5Dqb8W8fGsktycYCH4B6IV7MWeF5x3PQBSTF++qwos6qYWT+i2eBzGHQpZ
-         aCUuW+yIBAvu6kk9xxP8wXDfu9/vJpUdRknOy4yeQDJHY3Ol9+S3x24RjrclHa6KXy8t
-         o6QTokn3GAD6p6xPFhNBj5/2ZRWz5D4Rz0fKdIBn8wRknR6SElkuFf8GT9+N3xcvyIWx
-         T3pEw0gPPPMn9jrsQ820BVXCcXe37hr5NnMQpyV+3lwM7KdVRMQ/DTtVIHBduZkRHh8b
-         fuEh/JuWNqWBn+RzpstpbJ2nwApx3cT4+x8ke0ZqtO78Ff1hYgm+3ncJpaqm+Rx7jk5E
-         G+bA==
-X-Gm-Message-State: AC+VfDww5HVqf+cLx9MLCkzCr3vWAPo181l/jr0d6xnS1E7i35dBTy6s
-        gPbXPKfa1WRMdgZ1kjsfZpY9RKPsdju3vjWgFGbteGceAx0=
-X-Google-Smtp-Source: ACHHUZ7VKppiy6hYOyleXTuQ96f7BodeChTwl7i14yAj3Zq/zNyLxt2UpJEJR6P0RDpZEQU662kK+EGa9etmJm/9c0g=
-X-Received: by 2002:a17:907:eab:b0:969:813c:9868 with SMTP id
- ho43-20020a1709070eab00b00969813c9868mr28463819ejc.18.1684251770723; Tue, 16
- May 2023 08:42:50 -0700 (PDT)
+        with ESMTP id S229565AbjEPTXq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:23:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C608B7AB8
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:23:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3EBF8633A0
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 19:23:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E35AEC433A0;
+        Tue, 16 May 2023 19:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684265023;
+        bh=AHTGLkEWNe4FtI3CuaotSz2+Drt6D6081z2Ghjay72c=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=h95Ueo2WCtevQ0sq/r76jbswXptkLkWfG5v6s3fSxFC5mVADBSUWoQu04GJiYbled
+         1uOWbIn7EPZTthgP0rmcxQE+qsm/EhIOQ18l0p/wgu/wNDe5JRLvDhlCMqGovJK+Q/
+         bb2IlYFvyifXe5XhaG1VzvF8QvXS2cl6WG6KMdBzT1AiugOHXJKww/zHMSAWgfY2II
+         ERBz7aGWU1pw5WketkPMaBU/CDJQAy1UpRsUUVUWWpk6FRNNYmmMmEpipqSHzV9mSa
+         zYDrfOH/t/OAaJVNtYyTeiNMvxWfMfdeoXK8K58EN9MLch8QEqPMhW6vhMWvk0gKnx
+         0S/vQ4Ky8vfAQ==
+Message-ID: <569be8e6eff7af373e6baaf2170edb8a8c52f262.camel@kernel.org>
+Subject: Re: [PATCH v1 26/27] SUNRPC: Set rq_accept_statp inside ->accept
+ methods
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Steve Dickson <SteveD@redhat.com>
+Cc:     Chuck Lever <cel@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Neil Brown <neilb@suse.de>,
+        Alexander Ahring Oder Aring <aahringo@redhat.com>
+Date:   Tue, 16 May 2023 15:23:41 -0400
+In-Reply-To: <4AB1ED03-57C8-42C1-9A04-6C224E98EDCC@oracle.com>
+References: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
+         <167319546521.7490.43383592461162363.stgit@bazille.1015granger.net>
+         <3e34a2dc-7d72-b719-248f-e78361db8a5b@kernel.org>
+         <4AB1ED03-57C8-42C1-9A04-6C224E98EDCC@oracle.com>
+Content-Type: multipart/mixed; boundary="=-igvbfTe4pJo+y8GPA1bU"
+User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
 MIME-Version: 1.0
-From:   Chris Chilvers <chilversc@gmail.com>
-Date:   Tue, 16 May 2023 16:42:39 +0100
-Message-ID: <CAAmbk-f_U8CPcTQM866L572uUHdK4p5iWKnUQs4r8fkW=6RW9g@mail.gmail.com>
-Subject: [BUG] fscache writing but not reading
-To:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com
-Cc:     Benjamin Maynard <benmaynard@google.com>, brennandoyle@google.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,62 +61,129 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-While testing the fscache performance fixes [1] that were merged into 6.4-rc1
-it appears that the caching no longer works. The client will write to the cache
-but never reads.
+--=-igvbfTe4pJo+y8GPA1bU
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
 
-I suspect this is related to known issue #1. However, I tested the client
-with rsize less than, equal to, and greater than readahead, and in all cases
-I see the issue.
+On Tue, 2023-05-02 at 14:14 +0000, Chuck Lever III wrote:
+>=20
+> > On May 2, 2023, at 7:01 AM, Jiri Slaby <jirislaby@kernel.org> wrote:
+> >=20
+> > On 08. 01. 23, 17:31, Chuck Lever wrote:
+> > > From: Chuck Lever <chuck.lever@oracle.com>
+> > > To navigate around the space that svcauth_gss_accept() reserves
+> > > for the RPC payload body length and sequence number fields,
+> > > svcauth_gss_release() does a little dance with the reply's
+> > > accept_stat, moving the accept_stat value in the response buffer
+> > > down by two words.
+> > > Instead, let's have the ->accept() methods each set the proper
+> > > final location of the accept_stat to avoid having to move
+> > > things.
+> >=20
+> > Hi,
+> >=20
+> > I bisected to this (4bcf0343e8)
+>=20
+> Assuming you did the bisect on the NFS server's kernel?
+>=20
+>=20
+> > as it breaks nfs3-only servers in 6.3. I.e. /etc/nfs.conf containing:
+> > [nfsd]
+> > vers4=3Dno
+>=20
+> Note: Changing the settings in /etc/nfs.conf had no effect
+> on my server, so I effected the change by stopping the
+> server and poking values into /proc/fs/nfsd/versions by
+> hand.
+>=20
+> Steve?
+>=20
+>=20
+> > The client sees:
+> >  mount("10.0.2.15:/tmp", "/mnt", "nfs", 0, "vers=3D4.2,addr=3D10.0.2.15=
+,clientad"...) =3D -1 EIO (Input/output error)
+> >  write(2, "mount.nfs: mount system call fai"..., 45
+> >  mount.nfs: mount system call failed for /mnt
+> >=20
+> > And the kernel says:
+> >  nfs4_discover_server_trunking unhandled error -5. Exiting with error E=
+IO
+> >=20
+> > I reported in downstream as:
+> > https://bugzilla.suse.com/show_bug.cgi?id=3D1210995
+> >=20
+> > It cannot be reverted cleanly on the top of 6.3.
+> >=20
+> > Any ideas?
+>=20
+> I can reproduce a similar problem. Network capture shows
+> that the server is responding with NFS4ERR_NOENT to the
+> EXCHANGE_ID operation, and the client kernel log says:
+>=20
+> >  nfs4_discover_server_trunking unhandled error -121. Exiting with error=
+ EIO
+>=20
+> That's not the failure mode I expected given the commit
+> you bisected to, so it might not be the same problem you've
+> hit. I'll troubleshoot this and send a fix for testing.
+>=20
 
-If I apply both the patches [2], [3] from the known issues to 6.4-rc1 then the
-cache works as expected. I suspect only patch [2] is required but have not
-tested patch [2] without [3].
+Alex hit this problem in testing too, and I took a quick look.
 
-Testing
-=======
-For the test I was just using dd to read 300 x 1gb files from an NFS
-share to fill the cache, then repeating the read.
+In the attached capture, the client should have gotten back a
+RPC_PROG_MISMATCH error, but the server has recorded an extra successful
+accept state before encoding the RPC_PROG_MISMATCH error, leading to a
+malformed reply.
 
-In the first test run, /var/cache/fscache steadily filled until reaching
-300 GB. The read I/O was less than 1 MB/s, and the write speed was fairly
-constant 270 MB/s.
+I think that the problem is that encoding the accept status too early
+means that we can't properly handle failures from the pg_init_request
+call.
 
-In the second run, /var/cache/fscache remained at 300 GB, so no new data was
-being written. However, the read I/O remained at less than 1 MB/s and the write
-rate at 270 MB/s.
+Chuck, any thoughts on how you'd like to handle this?
+--=20
+Jeff Layton <jlayton@kernel.org>
 
-    /var/cache/fscache
-                | 1st run     | 2nd run
-    disk usage  | 0 -> 300 GB | 300 GB
-    read speed  | < 1 MB/s    | < 1 MB/s
-    write speed | 270 MB/s    | 270 MB/s
+--=-igvbfTe4pJo+y8GPA1bU
+Content-Type: application/x-pcapng; name="bad-fallback.pcapng.gz"
+Content-Disposition: attachment; filename="bad-fallback.pcapng.gz"
+Content-Transfer-Encoding: base64
 
-This seems to imply that the already cached data was being read from the source
-server and re-written to the cache.
+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
+AGwAAAA=
 
-Known Issues
-============
-1. Unit test setting rsize < readahead does not properly read from
-fscache but re-reads data from the NFS server
-* This will be fixed with another dhowells patch [2]:
-  "[PATCH v6 2/2] mm, netfs, fscache: Stop read optimisation when
-folio removed from pagecache"
 
-2. "Cache volume key already in use" after xfstest runs involving
-multiple mounts
-* Simple reproducer requires just two mounts as follows:
- mount -overs=4.1,fsc,nosharecache -o
-context=system_u:object_r:root_t:s0  nfs-server:/exp1 /mnt1
- mount -overs=4.1,fsc,nosharecache -o
-context=system_u:object_r:root_t:s0  nfs-server:/exp2 /mnt2
-* This should be fixed with dhowells patch [3]:
-  "[PATCH v5] vfs, security: Fix automount superblock LSM init
-problem, preventing NFS sb sharing"
-
-References
-==========
-
-[1] https://lore.kernel.org/linux-nfs/20230220134308.1193219-1-dwysocha@redhat.com/
-[2] https://lore.kernel.org/linux-nfs/20230216150701.3654894-1-dhowells@redhat.com/T/#mf3807fa68fb6d495b87dde0d76b5237833a0cc81
-[3] https://lore.kernel.org/linux-kernel/217595.1662033775@warthog.procyon.org.uk/
+--=-igvbfTe4pJo+y8GPA1bU--
