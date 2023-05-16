@@ -2,43 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C101070579F
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:42:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D2EF7057A2
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:42:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjEPTmD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 May 2023 15:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35370 "EHLO
+        id S229571AbjEPTm1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 May 2023 15:42:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbjEPTl4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:41:56 -0400
+        with ESMTP id S229604AbjEPTmY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:42:24 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E647CD2D8
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:41:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B502B8A65
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:42:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AECD1632D6
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 19:41:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC113C433EF;
-        Tue, 16 May 2023 19:41:36 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 67D8C6324B
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 19:42:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74899C433EF;
+        Tue, 16 May 2023 19:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684266097;
-        bh=/FXcUiPBY4h/nqWV5kg4eNGidzreiacldZxEXTwAoSY=;
+        s=k20201202; t=1684266123;
+        bh=pyp+r8AOIeebwxeQ8Zcwp7nCJYkW552XOiZHtu17sPI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Pa+ESqZsI52h7K7HgFQX/TtAtmskF2LD3Tp4TifqwO6QSug5Z8OlNrCXIaqIdCcA6
-         2hWB4DdLut/YlW8M1Asu9s8mIzVWoogPpXUQJ+miU13diPC2/EfoVkOkvrARBq+3Vn
-         z33qADbZ0yBBvZZS9hD03VDyT/cOeW30UctZDV8krbv52GuhSB755Fc8p3OZErVQid
-         0XijfT7vKW2rvgbKvUsz1UJu0Cvp+fiZ8tRDnfMp/2jK5gvL/9JB+8BeYTcVwo64Iu
-         5zaUvt6MKpnkSXvLbVoG/M+s3KezhTSilVtXmX4MiJmeBEga0sSAdLmglIm7+XKErI
-         sUS9NtjXtbB/w==
-Subject: [PATCH RFC 07/12] SUNRPC: Capture CMSG metadata on client-side
- receive
+        b=XX1REkmatc/UUxOx9veQA3kdu1bAAeEIjvvNdAMNFEKyPJP4s2LIPqYpXzZWTcvpg
+         pDS+pNcLjaAhI5vMM8hIzBOMcDcSp+D9nXBdye97CFcudQnhwhj+uap53ewjF5afu2
+         RK4+DylwGji9tojoeJhIKC1xCJA7AdvNN838RTOMdMjhPGQFL4HeiWOuBpkT+jU1li
+         hSuNJgvMNNx0qRVXJeAvwUVTG9sJ5MzB6mY+3hFuFjF/pc7oPSKo+8fGO3uQoOBDKK
+         37gYRIXg7Kuv1lSiKUn6GsWmRPBSBcMGuXB+N+dXvja5ldwaBt3eM66zZXMeF5zB68
+         X7P39gWkA25XQ==
+Subject: [PATCH RFC 08/12] SUNRPC: Add a connect worker function for TLS
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
         kernel-tls-handshake@lists.linux.dev
-Date:   Tue, 16 May 2023 15:41:25 -0400
-Message-ID: <168426607555.74246.6449523526966543678.stgit@oracle-102.nfsv4bat.org>
+Date:   Tue, 16 May 2023 15:41:52 -0400
+Message-ID: <168426610228.74246.18273215173378177802.stgit@oracle-102.nfsv4bat.org>
 In-Reply-To: <168426587118.74246.214357450560967997.stgit@oracle-102.nfsv4bat.org>
 References: <168426587118.74246.214357450560967997.stgit@oracle-102.nfsv4bat.org>
 User-Agent: StGit/1.5
@@ -57,97 +56,121 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-kTLS sockets use CMSG to report decryption errors and the need
-for session re-keying.
-
-For RPC-with-TLS, an "application data" message contains a ULP
-payload, and that is passed along to the RPC client. An "alert"
-message triggers connection reset. Everything else is discarded.
+Introduce a connect worker function that will handle the AUTH_TLS
+probe and TLS handshake, once a TCP connection is established.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtsock.c |   49 +++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
+ include/linux/sunrpc/xprtsock.h |    1 +
+ net/sunrpc/xprtsock.c           |   70 ++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 70 insertions(+), 1 deletion(-)
 
+diff --git a/include/linux/sunrpc/xprtsock.h b/include/linux/sunrpc/xprtsock.h
+index daef030f4848..574a6a5391ba 100644
+--- a/include/linux/sunrpc/xprtsock.h
++++ b/include/linux/sunrpc/xprtsock.h
+@@ -60,6 +60,7 @@ struct sock_xprt {
+ 	struct sockaddr_storage	srcaddr;
+ 	unsigned short		srcport;
+ 	int			xprt_err;
++	struct rpc_clnt		*clnt;
+ 
+ 	/*
+ 	 * UDP socket buffer size parameters
 diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 37f608c2c0a0..6f2fc863b47e 100644
+index 6f2fc863b47e..7ea5984a52a3 100644
 --- a/net/sunrpc/xprtsock.c
 +++ b/net/sunrpc/xprtsock.c
-@@ -47,6 +47,8 @@
- #include <net/checksum.h>
- #include <net/udp.h>
- #include <net/tcp.h>
-+#include <net/tls.h>
-+
- #include <linux/bvec.h>
- #include <linux/highmem.h>
- #include <linux/uio.h>
-@@ -342,13 +344,56 @@ xs_alloc_sparse_pages(struct xdr_buf *buf, size_t want, gfp_t gfp)
- 	return want;
+@@ -2411,6 +2411,62 @@ static void xs_tcp_setup_socket(struct work_struct *work)
+ 	current_restore_flags(pflags, PF_MEMALLOC);
  }
  
-+static int
-+xs_sock_process_cmsg(struct socket *sock, struct msghdr *msg,
-+		     struct cmsghdr *cmsg, int ret)
++/**
++ * xs_tls_connect - establish a TLS session on a socket
++ * @work: queued work item
++ *
++ */
++static void xs_tls_connect(struct work_struct *work)
 +{
-+	if (cmsg->cmsg_level == SOL_TLS &&
-+	    cmsg->cmsg_type == TLS_GET_RECORD_TYPE) {
-+		u8 content_type = *((u8 *)CMSG_DATA(cmsg));
++	struct sock_xprt *transport =
++		container_of(work, struct sock_xprt, connect_worker.work);
++	struct rpc_clnt *clnt;
 +
-+		switch (content_type) {
-+		case TLS_RECORD_TYPE_DATA:
-+			/* TLS sets EOR at the end of each application data
-+			 * record, even though there might be more frames
-+			 * waiting to be decrypted.
-+			 */
-+			msg->msg_flags &= ~MSG_EOR;
-+			break;
-+		case TLS_RECORD_TYPE_ALERT:
-+			ret = -ENOTCONN;
-+			break;
-+		default:
-+			ret = -EAGAIN;
-+		}
++	clnt = transport->clnt;
++	transport->clnt = NULL;
++	if (IS_ERR(clnt))
++		goto out_unlock;
++
++	xs_tcp_setup_socket(work);
++
++	rpc_shutdown_client(clnt);
++
++out_unlock:
++	return;
++}
++
++static void xs_set_transport_clnt(struct rpc_clnt *clnt, struct rpc_xprt *xprt)
++{
++	struct sock_xprt *transport = container_of(xprt, struct sock_xprt, xprt);
++	struct rpc_create_args args = {
++		.net		= xprt->xprt_net,
++		.protocol	= xprt->prot,
++		.address	= (struct sockaddr *)&xprt->addr,
++		.addrsize	= xprt->addrlen,
++		.timeout	= clnt->cl_timeout,
++		.servername	= xprt->servername,
++		.nodename	= clnt->cl_nodename,
++		.program	= clnt->cl_program,
++		.prognumber	= clnt->cl_prog,
++		.version	= clnt->cl_vers,
++		.authflavor	= RPC_AUTH_TLS,
++		.cred		= clnt->cl_cred,
++		.xprtsec	= {
++			.policy		= RPC_XPRTSEC_NONE,
++		},
++		.flags		= RPC_CLNT_CREATE_NOPING,
++	};
++
++	switch (xprt->xprtsec.policy) {
++	case RPC_XPRTSEC_TLS_ANON:
++	case RPC_XPRTSEC_TLS_X509:
++		transport->clnt = rpc_create(&args);
++		break;
++	default:
++		transport->clnt = ERR_PTR(-ENOTCONN);
 +	}
-+	return ret;
 +}
 +
-+static int
-+xs_sock_recv_cmsg(struct socket *sock, struct msghdr *msg, int flags)
-+{
-+	union {
-+		struct cmsghdr	cmsg;
-+		u8		buf[CMSG_SPACE(sizeof(u8))];
-+	} u;
-+	int ret;
-+
-+	msg->msg_control = &u;
-+	msg->msg_controllen = sizeof(u);
-+	ret = sock_recvmsg(sock, msg, flags);
-+	if (msg->msg_controllen != sizeof(u))
-+		ret = xs_sock_process_cmsg(sock, msg, &u.cmsg, ret);
-+	return ret;
-+}
-+
- static ssize_t
- xs_sock_recvmsg(struct socket *sock, struct msghdr *msg, int flags, size_t seek)
- {
- 	ssize_t ret;
- 	if (seek != 0)
- 		iov_iter_advance(&msg->msg_iter, seek);
--	ret = sock_recvmsg(sock, msg, flags);
-+	ret = xs_sock_recv_cmsg(sock, msg, flags);
- 	return ret > 0 ? ret + seek : ret;
- }
+ /**
+  * xs_connect - connect a socket to a remote endpoint
+  * @xprt: pointer to transport structure
+@@ -2442,6 +2498,8 @@ static void xs_connect(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	} else
+ 		dprintk("RPC:       xs_connect scheduled xprt %p\n", xprt);
  
-@@ -374,7 +419,7 @@ xs_read_discard(struct socket *sock, struct msghdr *msg, int flags,
- 		size_t count)
- {
- 	iov_iter_discard(&msg->msg_iter, ITER_DEST, count);
--	return sock_recvmsg(sock, msg, flags);
-+	return xs_sock_recv_cmsg(sock, msg, flags);
- }
++	xs_set_transport_clnt(task->tk_client, xprt);
++
+ 	queue_delayed_work(xprtiod_workqueue,
+ 			&transport->connect_worker,
+ 			delay);
+@@ -3057,7 +3115,17 @@ static struct rpc_xprt *xs_setup_tcp(struct xprt_create *args)
  
- #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
+ 	INIT_WORK(&transport->recv_worker, xs_stream_data_receive_workfn);
+ 	INIT_WORK(&transport->error_worker, xs_error_handle);
+-	INIT_DELAYED_WORK(&transport->connect_worker, xs_tcp_setup_socket);
++
++	xprt->xprtsec = args->xprtsec;
++	switch (args->xprtsec.policy) {
++	case RPC_XPRTSEC_NONE:
++		INIT_DELAYED_WORK(&transport->connect_worker, xs_tcp_setup_socket);
++		break;
++	case RPC_XPRTSEC_TLS_ANON:
++	case RPC_XPRTSEC_TLS_X509:
++		INIT_DELAYED_WORK(&transport->connect_worker, xs_tls_connect);
++		break;
++	}
+ 
+ 	switch (addr->sa_family) {
+ 	case AF_INET:
 
 
