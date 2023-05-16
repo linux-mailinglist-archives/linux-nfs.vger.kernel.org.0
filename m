@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 093A8705795
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:40:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CB25705796
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:40:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbjEPTko (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 May 2023 15:40:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33480 "EHLO
+        id S229534AbjEPTkw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 May 2023 15:40:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230349AbjEPTkk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:40:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0371A26E
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:40:18 -0700 (PDT)
+        with ESMTP id S230109AbjEPTku (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:40:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E5A7198E
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:40:31 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3882E6340C
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 19:39:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4164AC433D2;
-        Tue, 16 May 2023 19:39:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DB7DC6353D
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 19:39:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E898DC433EF;
+        Tue, 16 May 2023 19:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684265944;
-        bh=W6pSRWidm3oORHNWnG4hOuGSoBOGNLTm6kBJ3ologDM=;
+        s=k20201202; t=1684265971;
+        bh=B/Oq6OxoYmxJJoUMpGRpgo5DE9Ta7n9iN3gKqzNAyQ4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VahPMldDVO2IHWU19qelZjX+RsW72GApwUURhhqtgTPvroNEvK+xBzqY6NGGII/Dl
-         QCwYCWyFKGJ7Tp7SjqncIvYrmNiftV+IvFtASYD9XxgA2Dzhg2ZeeIkPSKZ6YeX40b
-         DRVF9StGbqUj4bUjH2AatUY8NXIKUrJb7ZjrkrBy5mj/Q0SOOmGsNJa+22+YUylwlN
-         lRomEjf49jSXIJDgKbssaIWe8cYUNHhATd+RAqVtVsy1tFXnJcnRz1N7eMOu4iP2GK
-         NKa7NzdLSZA8+6o6rJCDbXHyILrBS+Dr3vWvQ344nih+K1kB/b/MQnXKATIkCNtRmT
-         fmHNW2mvBTFcQ==
-Subject: [PATCH RFC 01/12] NFS: Improvements for fs_context-related
- tracepoints
+        b=WUJqqkny62ScuR4b6BecnatWQ/yX1SEju0GkIaV77Rc5jEogyY4lbbaEqvyPA+325
+         cBusSivWGs1NZEAzp04lu50LXQO2NHX/Ducn9DXfqfKt22bGIoUEiRHUO7Qs6xp9+b
+         3XtyX7v4vNIiSP519tRz4rpa2nz2cqQxklopgfIBlKGi/SKGaDAOeAiqMzvCseE1yS
+         m2poL//xRKM0dECHddF/T+uHx8CriM1hLBgkYZbzbjP8MLkQNKQbAC1Gi25/6yWgZU
+         LV5eUdbgexpirmZyvGhHc9OFqEaxKCagGmFxVs1W2qB1g0tenjhDMbfcXKkAGLTTY7
+         SnbBaa5BMUcmg==
+Subject: [PATCH RFC 02/12] SUNRPC: Plumb an API for setting transport layer
+ security
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
         kernel-tls-handshake@lists.linux.dev
-Date:   Tue, 16 May 2023 15:38:53 -0400
-Message-ID: <168426592925.74246.2101276313805361150.stgit@oracle-102.nfsv4bat.org>
+Date:   Tue, 16 May 2023 15:39:19 -0400
+Message-ID: <168426594983.74246.14942869392163679761.stgit@oracle-102.nfsv4bat.org>
 In-Reply-To: <168426587118.74246.214357450560967997.stgit@oracle-102.nfsv4bat.org>
 References: <168426587118.74246.214357450560967997.stgit@oracle-102.nfsv4bat.org>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,54 +57,113 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Add some missing observability to the fs_context tracepoints
-added by commit 33ce83ef0bb0 ("NFS: Replace fs_context-related
-dprintk() call sites with tracepoints").
+Add an initial set of policies along with fields for upper layers to
+pass the requested policy down to the transport layer.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/fs_context.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ include/linux/sunrpc/clnt.h |    2 ++
+ include/linux/sunrpc/xprt.h |   17 +++++++++++++++++
+ net/sunrpc/clnt.c           |    4 ++++
+ 3 files changed, 23 insertions(+)
 
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 9bcd53d5c7d4..5626d358ee2e 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -791,16 +791,19 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		ctx->mount_server.addrlen = len;
- 		break;
- 	case Opt_nconnect:
-+		trace_nfs_mount_assign(param->key, param->string);
- 		if (result.uint_32 < 1 || result.uint_32 > NFS_MAX_CONNECTIONS)
- 			goto out_of_bounds;
- 		ctx->nfs_server.nconnect = result.uint_32;
- 		break;
- 	case Opt_max_connect:
-+		trace_nfs_mount_assign(param->key, param->string);
- 		if (result.uint_32 < 1 || result.uint_32 > NFS_MAX_TRANSPORTS)
- 			goto out_of_bounds;
- 		ctx->nfs_server.max_connect = result.uint_32;
- 		break;
- 	case Opt_lookupcache:
-+		trace_nfs_mount_assign(param->key, param->string);
- 		switch (result.uint_32) {
- 		case Opt_lookupcache_all:
- 			ctx->flags &= ~(NFS_MOUNT_LOOKUP_CACHE_NONEG|NFS_MOUNT_LOOKUP_CACHE_NONE);
-@@ -817,6 +820,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		}
- 		break;
- 	case Opt_local_lock:
-+		trace_nfs_mount_assign(param->key, param->string);
- 		switch (result.uint_32) {
- 		case Opt_local_lock_all:
- 			ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK |
-@@ -837,6 +841,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		}
- 		break;
- 	case Opt_write:
-+		trace_nfs_mount_assign(param->key, param->string);
- 		switch (result.uint_32) {
- 		case Opt_write_lazy:
- 			ctx->flags &=
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index 770ef2cb5775..063692cd2a60 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -58,6 +58,7 @@ struct rpc_clnt {
+ 				cl_noretranstimeo: 1,/* No retransmit timeouts */
+ 				cl_autobind : 1,/* use getport() */
+ 				cl_chatty   : 1;/* be verbose */
++	struct xprtsec_parms	cl_xprtsec;	/* transport security policy */
+ 
+ 	struct rpc_rtt *	cl_rtt;		/* RTO estimator data */
+ 	const struct rpc_timeout *cl_timeout;	/* Timeout strategy */
+@@ -139,6 +140,7 @@ struct rpc_create_args {
+ 	struct svc_xprt		*bc_xprt;	/* NFSv4.1 backchannel */
+ 	const struct cred	*cred;
+ 	unsigned int		max_connect;
++	struct xprtsec_parms	xprtsec;
+ };
+ 
+ struct rpc_add_xprt_test {
+diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
+index b9f59aabee53..9e7f12c240c5 100644
+--- a/include/linux/sunrpc/xprt.h
++++ b/include/linux/sunrpc/xprt.h
+@@ -129,6 +129,21 @@ struct rpc_rqst {
+ #define rq_svec			rq_snd_buf.head
+ #define rq_slen			rq_snd_buf.len
+ 
++/* RPC transport layer security policies */
++enum xprtsec_policies {
++	RPC_XPRTSEC_NONE = 0,
++	RPC_XPRTSEC_TLS_ANON,
++	RPC_XPRTSEC_TLS_X509,
++};
++
++struct xprtsec_parms {
++	enum xprtsec_policies	policy;
++
++	/* authentication material */
++	key_serial_t		cert_serial;
++	key_serial_t		privkey_serial;
++};
++
+ struct rpc_xprt_ops {
+ 	void		(*set_buffer_size)(struct rpc_xprt *xprt, size_t sndsize, size_t rcvsize);
+ 	int		(*reserve_xprt)(struct rpc_xprt *xprt, struct rpc_task *task);
+@@ -229,6 +244,7 @@ struct rpc_xprt {
+ 	 */
+ 	unsigned long		bind_timeout,
+ 				reestablish_timeout;
++	struct xprtsec_parms	xprtsec;
+ 	unsigned int		connect_cookie;	/* A cookie that gets bumped
+ 						   every time the transport
+ 						   is reconnected */
+@@ -333,6 +349,7 @@ struct xprt_create {
+ 	struct svc_xprt		*bc_xprt;	/* NFSv4.1 backchannel */
+ 	struct rpc_xprt_switch	*bc_xps;
+ 	unsigned int		flags;
++	struct xprtsec_parms	xprtsec;
+ };
+ 
+ struct xprt_class {
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index d2ee56634308..a18074f8edf2 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -385,6 +385,7 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
+ 	if (!clnt)
+ 		goto out_err;
+ 	clnt->cl_parent = parent ? : clnt;
++	clnt->cl_xprtsec = args->xprtsec;
+ 
+ 	err = rpc_alloc_clid(clnt);
+ 	if (err)
+@@ -532,6 +533,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
+ 		.addrlen = args->addrsize,
+ 		.servername = args->servername,
+ 		.bc_xprt = args->bc_xprt,
++		.xprtsec = args->xprtsec,
+ 	};
+ 	char servername[48];
+ 	struct rpc_clnt *clnt;
+@@ -727,6 +729,7 @@ int rpc_switch_client_transport(struct rpc_clnt *clnt,
+ 	struct rpc_clnt *parent;
+ 	int err;
+ 
++	args->xprtsec = clnt->cl_xprtsec;
+ 	xprt = xprt_create_transport(args);
+ 	if (IS_ERR(xprt))
+ 		return PTR_ERR(xprt);
+@@ -3046,6 +3049,7 @@ int rpc_clnt_add_xprt(struct rpc_clnt *clnt,
+ 
+ 	if (!xprtargs->ident)
+ 		xprtargs->ident = ident;
++	xprtargs->xprtsec = clnt->cl_xprtsec;
+ 	xprt = xprt_create_transport(xprtargs);
+ 	if (IS_ERR(xprt)) {
+ 		ret = PTR_ERR(xprt);
 
 
