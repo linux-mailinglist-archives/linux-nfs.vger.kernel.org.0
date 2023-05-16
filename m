@@ -2,123 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A93C704305
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 03:43:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66B657048E7
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 11:18:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229595AbjEPBnI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 May 2023 21:43:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59242 "EHLO
+        id S232048AbjEPJST (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 May 2023 05:18:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbjEPBnI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 May 2023 21:43:08 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C26346B4;
-        Mon, 15 May 2023 18:43:07 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id af79cd13be357-7590aa05af6so577289985a.0;
-        Mon, 15 May 2023 18:43:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684201386; x=1686793386;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=PYuCufuUbqg1yC376K0mBdw1imA+vLUuGUVBA9oZ0d8=;
-        b=W13eJeX2q/mX0gqq7Uj8HLHaeNuSjL+vzm7yEvo/zhyXdS4jXjf0sU1t4ivbvantKJ
-         gZtRNn/LDwTAWBDFevVfXSdKsYyj3rvapl/oNMl/t5g9trv9gGWP8mTL69NjuuGdbJbV
-         NmvhS4NcqmxTB1pWY1iEB2/67E5CqKJ2EhrChwncEoBEtVzLwrPysuGi339cHuR6y88N
-         XnqvrjGAb0t7GyWID138apzDb83AYJtesPBiZpZS8PXJ+rf080hgaD5BCbbb23Q8A1DG
-         /apvbO4jaPMPu9wNpVLRUwOmdQvaYHjWm2HRitIf/DLZLene/g0v1l1Of8OSPzkAB5mL
-         vUUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684201386; x=1686793386;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PYuCufuUbqg1yC376K0mBdw1imA+vLUuGUVBA9oZ0d8=;
-        b=giFlnRftSNsc4DjaCEfzDudD3uDgrgFGDu1Q+Ff+wkEcgQIoXS0bZzQoub9CtoAdGi
-         4sxxrjrCZru2lv7J7uctAyc7OPbzYCyEA0gVqjAj577LZmbqQopYLM9L47y3UkAOR5cE
-         Qqb9VEVKvTcuJ6aZBeitzORAXeYyrXhmJL4poZZGCUxl1U9Sfe+ZXTUAjd/DwJiZ2G//
-         Vp80dvb4l2oSzUJZ2zgGsHnwnboW0T3c6/GkBSHmksC3L5LgKbPXLnnP4d/oF3XM3sxO
-         JJZZl3i6LjkJ++Be7sP0G2FlsvGW+5GxGfMS/zPOcv2kTFulhtCDdiRYx7Ihbu/VcJ0i
-         fGjg==
-X-Gm-Message-State: AC+VfDxuqzAeid7WYCRP/PuKwv2ilkRXHPkr3N7X3H4e9hRPRfGSeQ2J
-        s2dgaFPcL496xg1xsnCW5g==
-X-Google-Smtp-Source: ACHHUZ4XOIQXyL0Nz5lOoCiEQ8/rWmcYTRiOoPCtyMBxoIMLICiVPx7Bu79c33fFVwHryoKKLIEtTA==
-X-Received: by 2002:a05:622a:1495:b0:3e6:2bba:87f3 with SMTP id t21-20020a05622a149500b003e62bba87f3mr62529651qtx.47.1684201386028;
-        Mon, 15 May 2023 18:43:06 -0700 (PDT)
-Received: from [192.168.75.138] (c-68-32-72-208.hsd1.mi.comcast.net. [68.32.72.208])
-        by smtp.gmail.com with ESMTPSA id fw6-20020a05622a4a8600b003f4e18bfa06sm4348835qtb.60.2023.05.15.18.43.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 May 2023 18:43:05 -0700 (PDT)
-Message-ID: <b5359d06a57541accbe09172b77b8107678769c0.camel@gmail.com>
-Subject: Re: [PATCH v2 4/4] NFSD: handle GETATTR conflict with write
- delegation
-From:   Trond Myklebust <trondmy@gmail.com>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Dai Ngo <dai.ngo@oracle.com>,
-        Olga Kornievskaia <aglo@umich.edu>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Date:   Mon, 15 May 2023 21:43:04 -0400
-In-Reply-To: <927e6aaab9e4c30add761ac6754ba91457c048c7.camel@kernel.org>
-References: <1684110038-11266-1-git-send-email-dai.ngo@oracle.com>
-         <1684110038-11266-5-git-send-email-dai.ngo@oracle.com>
-         <CAN-5tyH0GM8xOnLVDMQMn-tmoE-w_7N9ARmcwHq6ocySeoA1MQ@mail.gmail.com>
-         <392379f7-4e28-fae5-a799-00b4e35fe6fd@oracle.com>
-         <5318a050cbe6e89ae0949c654545ae8998ff7795.camel@kernel.org>
-         <CAN-5tyFE3=DF+48SBGrC2u3y-MNr+1nM+xFM4CXaYv23AMZvew@mail.gmail.com>
-         <30df13a02cbe9d7c72d0518c011e066e563bcbc8.camel@kernel.org>
-         <17E187C9-60D6-4882-B928-E7826AA68F45@oracle.com>
-         <927e6aaab9e4c30add761ac6754ba91457c048c7.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+        with ESMTP id S232109AbjEPJSG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 05:18:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64A535B8E;
+        Tue, 16 May 2023 02:17:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9555563696;
+        Tue, 16 May 2023 09:17:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 021A3C433D2;
+        Tue, 16 May 2023 09:17:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684228645;
+        bh=D1FIpTeDymukO1Q6Xds7qPwa9hJ34HUmc7++XnT/x40=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Lpqw6HI4joCpR2QJbAV6xXUEw0j8ww7BD9N1Ff8uLlGZbkXgBAQtHXM1L7Z0MWcZa
+         5e6jYywodOdYzUKM6ALr8v7AAAQyh8tCEC7mvccXP6IYHWKU8ZB1ZZu0pv6d2Mwhjq
+         h+nL0GB+yoE6H5uuyUMU4T8r7zMM+86CPWKbk29CUkgP3Xif6fqRu9iUKuLnOAT23A
+         annqmJ3+legV1xYX6pOJv3PvelsYOm/P7lfFtWA6pJRVxRUnzQgWxb/g9l2GSiehDl
+         sH3kHe7hT6uHItjrogAvMZC8zWKzNx8H80H7x++RxGx6J3u86BfVQ/DQesF9p/F8Uc
+         aRcE+ya4GbesQ==
+Date:   Tue, 16 May 2023 11:17:19 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "eggert@cs.ucla.edu" <eggert@cs.ucla.edu>,
+        "bruno@clisp.org" <bruno@clisp.org>,
+        "ondrej.valousek.xm@renesas.com" <ondrej.valousek.xm@renesas.com>,
+        "bug-gnulib@gnu.org" <bug-gnulib@gnu.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] fix NFSv4 acl detection on F39
+Message-ID: <20230516-distanz-abkommen-95e565ba928b@brauner>
+References: <20230501194321.57983-1-ondrej.valousek.xm@renesas.com>
+ <c955ee20-371c-5dde-fcb5-26d573f69cd9@cs.ucla.edu>
+ <TYXPR01MB1854B3C3B8215DD0FA7B83CCD96D9@TYXPR01MB1854.jpnprd01.prod.outlook.com>
+ <17355394.lhrHg4fidi@nimes>
+ <32edbaf1-d3b1-6057-aefc-d83df3266c20@cs.ucla.edu>
+ <4f1519d8-bda1-1b15-4a78-a8072ba1551a@cs.ucla.edu>
+ <TYXPR01MB18547A591663A4934B5D4D82D9789@TYXPR01MB1854.jpnprd01.prod.outlook.com>
+ <fb005d7e29f1167b83acf7b10800ff3124ee2a50.camel@redhat.com>
+ <f967cbcc1620d1a5e68d7f005571dc569c8b5bb4.camel@hammerspace.com>
+ <d4e26d9e4d9113f8da20425f5bf7ad91c786f381.camel@redhat.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d4e26d9e4d9113f8da20425f5bf7ad91c786f381.camel@redhat.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2023-05-15 at 18:53 -0400, Jeff Layton wrote:
->=20
-> Isn't CB_GETATTR the main benefit of a write delegation in the first
-> place? A write deleg doesn't really give any benefit otherwise, as
-> you
-> can buffer writes anyway without one.
->=20
-> AIUI, the point of a write delegation is to allow other clients (and
-> potentially the server) to get up to date information on file sizes
-> and
-> change attr when there is a single, active writer.
->=20
-> Without CB_GETATTR, your first stat() against the file will give you
-> fairly up to date info (since you'll have to recall the delegation),
-> but
-> then you'll be back to the server just reporting the size and change
-> attr that it has at the time.
->=20
+On Mon, May 15, 2023 at 01:49:21PM -0400, Jeff Layton wrote:
+> On Mon, 2023-05-15 at 17:28 +0000, Trond Myklebust wrote:
+> > On Mon, 2023-05-15 at 13:11 -0400, Jeff Layton wrote:
+> > > On Mon, 2023-05-15 at 11:50 +0000, Ondrej Valousek wrote:
+> > > > Hi Paul,
+> > > > 
+> > > > Ok first of all, thanks for taking initiative on this, I am unable
+> > > > to proceed on this on my own at the moment.
+> > > > I see few problems with this:
+> > > > 
+> > > > 1. The calculation of the 'listbufsize' is incorrect in your patch.
+> > > > It will _not_work as you expected and won't limit the number of
+> > > > syscalls (which is why we came up with this patch, right?). Check
+> > > > with my original proposal, we really need to check for
+> > > > 'system.nfs4' xattr name presence here
+> > > > 2. It mistakenly detects an ACL presence on files which do not have
+> > > > any ACL on NFSv4 filesystem. Digging further it seems that kernel
+> > > > in F39 behaves differently to the previous kernels:
+> > > > 
+> > > > F38: 
+> > > > # getfattr -m . /path_to_nfs4_file
+> > > > # file: path_to_nfs4_file
+> > > > system.nfs4_acl                                    <---- only
+> > > > single xattr detected
+> > > > 
+> > > > F39:
+> > > > # getfattr -m . /path_to_nfs4_file
+> > > > # file: path_to_nfs4_file
+> > > > system.nfs4_acl
+> > > > system.posix_acl_default
+> > > > /* SOMETIMES even shows this */
+> > > > system.posix_acl_default
+> > > 
+> > > (cc'ing Christian and relevant kernel lists)
+> > > 
+> > > I assume the F39 kernel is v6.4-rc based? If so, then I think that's
+> > > a
+> > > regression. NFSv4 client inodes should _not_ report a POSIX ACL
+> > > attribute since the protocol doesn't support them.
+> > > 
+> > > In fact, I think the rationale in the kernel commit below is wrong.
+> > > NFSv4 has a listxattr operation, but doesn't support POSIX ACLs.
+> > > 
+> > > Christian, do we need to revert this?
+> > > 
+> > > commit e499214ce3ef50c50522719e753a1ffc928c2ec1
+> > > Author: Christian Brauner <brauner@kernel.org>
+> > > Date:   Wed Feb 1 14:15:01 2023 +0100
+> > > 
+> > >     acl: don't depend on IOP_XATTR
+> > >     
+> > > 
+> > 
+> > 
+> > No. The problem is commit f2620f166e2a ("xattr: simplify listxattr
+> > helpers") which helpfully inserts posix acl handlers into
+> > generic_listxattr(), and makes it impossible to call from
+> > nfs4_listxattr().
+> > 
+> 
+> 
+> Ahh ok. Looking at that function though, it seems like it'd only report
+> these for mounts that set SB_POSIXACL. Any reason that we have that
+> turned on with v4 mounts?
 
-The only advantage of CB_GETATTR is that it allows you to determine
-whether or not the client holding the delegation is also holding cached
-writes. Since we pretty much always rely on close-to-open semantics
-anyway, the benefit of implementing it is pretty marginal.
-
-Personally, I see CB_GETATTR as being more useful once servers start
-implementing the timestamp/attribute delegations as per
-https://datatracker.ietf.org/doc/draft-ietf-nfsv4-delstid/=C2=A0
-Since those delegations allow the client to be authoritative for the
-atime and mtime timestamps, and to also cache those, then CB_GETATTR
-becomes a necessity in order to correctly timestamp writes that have
-already been committed to the file.
-
---=20
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trond.myklebust@hammerspace.com
-
-
+You seem to just be calling generic_listxattr() in fs/nfs/nfs4proc.c and
+not using it as an inode operation. So imho just add a tiny helper into
+fs/xattr.c that takes a boolean argument and skips over POSIX ACLs that
+you can call in nfs4. That should be enough, no?
