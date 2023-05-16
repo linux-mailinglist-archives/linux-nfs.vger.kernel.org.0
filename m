@@ -2,253 +2,217 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 532FA70570E
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:26:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EDCD705716
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:29:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjEPT0O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 May 2023 15:26:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
+        id S229572AbjEPT3q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 May 2023 15:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbjEPT0N (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:26:13 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8733E7DBF
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:26:10 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34GG46N3010428;
-        Tue, 16 May 2023 19:26:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=in/zZoobheOPKjvFTDYY8Bhu++tUXPDy9sAIBVh+ueY=;
- b=iPvZznxtDtw9NsMoyFmMunlLeqx83tjXIw6oJomL0yaGKUckcHztVMPtw3zziT6azStX
- zgOEGYZ7R+cySdczXrZu7CCGrBaqJRFerTg1Mi8p/+Ehb/uZDzOyJTon+0I8a0Fyi8Be
- /DRU0/1FKpvlRzzbLoYABZ7LD5WlxNIB3H3svg3iUwjmax58KHGpyvhgvJbfwBlN9eR2
- Pk58pcA3jvskKAKZzFnhxZYb/Z4IbQ+HMmlF6MpzpzNIR2L7Wp9pM1gcHoxBPlMZ2bxR
- sVDbJU0uz+nhyXMF/+Q2iqX+8DZyrYZ2rUMtQYPSGJ+3pDdVzaK8o45Is9kf8plbSu2P /Q== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj1b3v4u7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 May 2023 19:26:00 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34GIhpdX024981;
-        Tue, 16 May 2023 19:26:00 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2109.outbound.protection.outlook.com [104.47.70.109])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qj104gcx2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 May 2023 19:25:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DvHth2kbn+Gq4N2n3QCD51DhPGhoTOBzRAXK1OGdURB3sy5f4pLXsQEl4TsDThJwGLMwep20/cTPlMaiTskZDVsTrTx8E0U/q2xEOyPQfYELxLlZJii7ZlPf4yEnr7YaLxqTxixnAXFbzBbp9I0h5RzZ3RcpY/D+sDP8aatkLJABXKdCK3qAmxI/Q6gYr/DKHmNDfJ1dvQOBGuPqbuhg0s1l1yfQzFpMWk2C7HXzNckLy3Gi+wDSz1Y144JPekiEbsavtzzHHetyZswdw1gPFopPmHLtO9gPZKzfvZ+8TxYqil8sYQujSRE5KHacT0O9db9kXPGg/+AHAwUmf96b5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=in/zZoobheOPKjvFTDYY8Bhu++tUXPDy9sAIBVh+ueY=;
- b=GcDRnIVd5hv9pUhoASRZv4dkOEYB0ElQmFyB88FARBCfoPnDowV3JqUc3Y+lbUTF8dmlcV3Lj7V8GmEnb7l3NimFb8RJb9UD8IBHf9MrSRv4AHhecX/TILEXN66612dRD5qU8N6yu93G5rkrBvbMwi++RaLJan+TsMKP+RWhRkAhPSjGCjRP3HbkiRy/iJj8qJtIcZ8QxMUJQcvAAhVxr+TWHaRvkd3uQNLdGkVqS4d3ukBr86IL/etJBGFJbVHDxMiuiZ2/7GmU/RxLB9NkJTJPuyLcGZqdmtSBOC1PPnhXVYoxNLw9CeybVooNo2QUy5CoJeUuFXhO1sFYN6ziyw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=in/zZoobheOPKjvFTDYY8Bhu++tUXPDy9sAIBVh+ueY=;
- b=JN8WNhGhVr2P0jLfavAo1AqRj3faeByCzKJV56ozTYvP3bq4XJZ3xdLER2y6YsQAqYlsLMceiY57uMQEleVOMohESu57eHPa6pydi7HlOQLZEKLPF4pK18KT8IshwPOYa2phi9i9C1zxgT2VvTbFCRv7teNmj3I+NTXrGHKtlsU=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CO1PR10MB4785.namprd10.prod.outlook.com (2603:10b6:303:95::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.33; Tue, 16 May
- 2023 19:25:57 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ecbd:fc46:2528:36db]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ecbd:fc46:2528:36db%5]) with mapi id 15.20.6387.034; Tue, 16 May 2023
- 19:25:57 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@kernel.org>
-CC:     Jiri Slaby <jirislaby@kernel.org>,
-        Steve Dickson <SteveD@redhat.com>,
-        Chuck Lever <cel@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Neil Brown <neilb@suse.de>,
-        Alexander Ahring Oder Aring <aahringo@redhat.com>
-Subject: Re: [PATCH v1 26/27] SUNRPC: Set rq_accept_statp inside ->accept
- methods
-Thread-Topic: [PATCH v1 26/27] SUNRPC: Set rq_accept_statp inside ->accept
- methods
-Thread-Index: AQHZI37QRUQ4TvDJik2GwoQT/5RlW69HhAGAgAA1uwCAFlcegIAAAJUA
-Date:   Tue, 16 May 2023 19:25:57 +0000
-Message-ID: <0DEDF045-8C95-463D-B5E7-D2A3DF3230FC@oracle.com>
-References: <167319499150.7490.2294168831574653380.stgit@bazille.1015granger.net>
- <167319546521.7490.43383592461162363.stgit@bazille.1015granger.net>
- <3e34a2dc-7d72-b719-248f-e78361db8a5b@kernel.org>
- <4AB1ED03-57C8-42C1-9A04-6C224E98EDCC@oracle.com>
- <569be8e6eff7af373e6baaf2170edb8a8c52f262.camel@kernel.org>
-In-Reply-To: <569be8e6eff7af373e6baaf2170edb8a8c52f262.camel@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.500.231)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CO1PR10MB4785:EE_
-x-ms-office365-filtering-correlation-id: 568cba78-231b-4f89-0685-08db56435fc3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0Fn3xc87TuNbvYh70LdVdyOB5l7G3savfNEHi1zdIFeUk6JP7Pj8C8hQx1poClGggaojM5PMyGLZONr1XJzmOmq5Vxxw9AgbRhyDwVm0qIhwIx17fEewP8+wiiJ9YEHnrGzgeSTOU4ORKbZ8m4wQYkrBVSGvrfM1cQuw1Tvu3qZapZyxT+CYh5PeEhQz2kc1ihhiMBKj7A96aRoyn1i1FEIOZeKMz8kmfKDwEhXvlv1lYWCvdTMhapqoz098qdga2lc76lgHgon+4y68S+FehPsmcUdhLXzy2mw3kZvPWzleLwYjNVLdB/tvFUbz9sFEDHxukAsF/W+DJCzZZI5qgAQODPhbl9HZ9vJW3qy6cC42JoA15kwhrlm+/P5Fy4QEXY5H85nek95QSNCrsTor+TlM//rfMjQESTlNJ0eNdkuNz6+mdNp1ZuKvWeCXPdSF7eYWXDNKSGalr6gaz6FIWx4ZLsbjEgClRzg5DjSIO4X2QtikshzTib2HFHE4Qa8PyHT8DoaxtX+Q7m2p1x/JcmTBwS5HpxK9iz4GMJ655T/4mAf9mmMxUVE6eC9DPHzHO7Cl8rfBlTTAaaOeZzXL03Mg2U8E5/McFlnZH/B0wA74abIJEe2hPRWdBnuJ/OqsDEzlKE7oKvptpwUJQKEkNA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(396003)(366004)(39860400002)(136003)(376002)(451199021)(71200400001)(76116006)(66556008)(38070700005)(478600001)(966005)(66446008)(91956017)(66476007)(6486002)(64756008)(66946007)(36756003)(54906003)(6916009)(4326008)(86362001)(316002)(186003)(2616005)(6506007)(38100700002)(122000001)(26005)(6512007)(5660300002)(41300700001)(8936002)(2906002)(8676002)(33656002)(53546011)(83380400001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?iyXn4qcViLctt/NQo58IMLYp7cyDzMtMv8JGA7RWTCjl8rjiGEmu4wNSkxwe?=
- =?us-ascii?Q?/XayTIzRDxucU6v2vBs8kGlRpxHufYri94Gg6n2icpHDBMvh2e2Y8K28by98?=
- =?us-ascii?Q?iNTn2L08R7cntPWyl57CSzFAJVfps6t0tLS1kbkKOCnqRKlOXii6h1m3McSB?=
- =?us-ascii?Q?rSKvf2z6Uxn8ved5jkysJmJH84IWcFlVZvOvkW9ZI+J8MfPB8qxgUFwsOm7T?=
- =?us-ascii?Q?uGhkRojgPTp2rz0FlJ76ggIYMzIMr1Hk6wVmD3+HbTZ1oK/NTCxDKSfvotNw?=
- =?us-ascii?Q?UVplknA+Xok5fuhaHOvJNNS+NOjYSPlPzGka9bfskq3KJU+VfHQqwrwKE4Bs?=
- =?us-ascii?Q?V8VuPOI53+SARBB+/KVlPxsB3d10NuC25d8KbRebvEX77nQJ6+J6Cm+Nz6it?=
- =?us-ascii?Q?+zFgYqnB5frGKketIW/ZjCk3rqVvPWq4AM7ksVMq97BbfPPg8jbzm8IsVlJq?=
- =?us-ascii?Q?M5+X3q/gkvuw6SMj0jJmId/OIiukeCROhd0Kw2Xn/fR4zi5G25JkmBan701u?=
- =?us-ascii?Q?tpHmwi2dR2YrA4fPq3vOJdY6Bt1pEbo7Kq0SSwaOOxK/EVNx2baH/dOSUCBu?=
- =?us-ascii?Q?b13eQLYueMKE4wKoNVACPylg2IFzqoJvcmVVkzDT7MIrWAdcSX0F5vtQ3brt?=
- =?us-ascii?Q?s1OLUnWdpdrh335joe+JgJHaDJNVoOMhdLTSQqTT3qOeN8GfrsdB7Ks7fnsU?=
- =?us-ascii?Q?qvciJMXrKMCZWZTJHEAPEox/o+bJW1dYzkAp3SHTNdH6/GbaGzWqzhcd78cT?=
- =?us-ascii?Q?NGpOjcV8X6fQKdPxQMYdRIQFp/d26RgMGzvi7VT+++w1wz+mAJjrtDbRu9qR?=
- =?us-ascii?Q?FTSkMAthAJ5xx54TQfuDMXxOfNyrlgWJTxQhQv8aZs+RNwHLhxWHrb2Nop31?=
- =?us-ascii?Q?aKHtIUj7QimfryAaxDeHTSta4I3sdoO5nKOzHs+XrQeeB5dMf32QeNMGxb0N?=
- =?us-ascii?Q?itiLKHa51REOWOt2V8cSysuUOGBfDezf5Wt/tav+mQ87sxHXYsQFC6Nka/vQ?=
- =?us-ascii?Q?6WwQ6Od9dQavkYX2qiI8WzgJ0eNccw29+jZuGRwndPrGe2kXppcvB4gKkFLY?=
- =?us-ascii?Q?f41H0IpRAxkOVSRPbCVJi/9wByuK8HxjgtNdzztSB+GoO9L360RNve382ZAU?=
- =?us-ascii?Q?aHfbmvUW2YjnndGh0Ds5Ad7z42t6d7vHPU++S/jEIBeAvTBc+I6Lyi9jtlDG?=
- =?us-ascii?Q?OaQcz4Wy7R5KKyT8WKbY11PuWm0OR8X7sl2YNFaSaZ3cWXf/p2Pr180Pkvg3?=
- =?us-ascii?Q?wEi8AcQSBuP41WI23x8iuBHGzU5OrFGC445bn7DBZ4e6GFpOw/Goa9cVG0+4?=
- =?us-ascii?Q?PR5gdnwRIGNCYe09ejhCIF+MWQe5RmS3Ytn4xjFoCnYif/Z7DMhPYPTxCc2e?=
- =?us-ascii?Q?eowFrEULG932e/QqjoQNhY79tdx7WqFV19ZAVijmTRhESxOQmoW5n5uQFEw/?=
- =?us-ascii?Q?K2IsXKu98Yw0cTYSzj3sd+zXXW9IDuFp6NFJuNfoFG/WFQ+HgHr3tqSm3ua+?=
- =?us-ascii?Q?pAUEgFuV5QfS9gSb3B+97h9G5uzOUPmPrzVFC1L1YnH8Ju9TbVM2k6YG+aV+?=
- =?us-ascii?Q?iyuQHbnzPQ4FHKPaN3S3z3cgXS+zCSdU7ERCTZPpg1aCcocV89JXwkS1vDea?=
- =?us-ascii?Q?Ng=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BF175BED93F90D438698708C149CF0E0@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229497AbjEPT3p (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:29:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C66B5
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:28:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684265337;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bYmucfjpnAVSg8OqVdBBlDfXxKfZQdV3kdH7yQdtIZc=;
+        b=CkVR47hKoPTC147VQX6b25ISOruwsdzmudzDDv9t6DRNqz0+w3/lLacJBHwCZeGIubbRRm
+        HjUEKvCvsHSkxU2evnjqmqwPJBI1gxsOYSlFVWF68WZ/eux7z9xF9vY/5JBOnWQ16xcaiC
+        8ITfwFx+xJIw/0IFjcOhWNBMsihN6Z8=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-542-lPumbmrUM46ravYrUqHjLg-1; Tue, 16 May 2023 15:28:55 -0400
+X-MC-Unique: lPumbmrUM46ravYrUqHjLg-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-24de504c5fcso32484a91.2
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:28:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684265334; x=1686857334;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bYmucfjpnAVSg8OqVdBBlDfXxKfZQdV3kdH7yQdtIZc=;
+        b=MTg9S7ZiecKafu6TDmZMbhuUTGFqM3Vt8Fr1nejZRg3x96a7xuZfAP05lC4QlCZwiL
+         5CfJO5ITDBDxQXKH5tZyKxd0ZWpgfKDCldPTCw27lwrFsZwFOaS/Scn+8o3tfymAsC6w
+         imL0DA5oSS2kNdspCv9sX6tWjdbRfogt+PXipIboo4INAfrScOgCnlS5IbjWDciVpu6Y
+         LJD/4a6nyAckvza6xCxomnQODEsiSVyDa6+e3AzcAXY1FQ+M9VNRfEZYVnx5Sg+zZMt8
+         k8DKraSRtE2/1E8vtrHYYHRONQ5aJvAprgjKOgJry4il1TUAtVCRpuPNSNgshbcERAxX
+         sCKQ==
+X-Gm-Message-State: AC+VfDy4fTbwvloK+igEgqK3oOeNRKoFH0TqBfMstnhfUsguQ9pLI8st
+        YYXI18q9iWTtWobzu1NFByCgb0UCMjbWwiNDTQ8EW2TtFW+0MOUJNAzMGOpkndSM2YZ36qbBL3E
+        TRbPI9K/FnOQOtTo7ZbQgpKrhaqTEK3TGSOUA
+X-Received: by 2002:a17:90b:33c7:b0:250:69c7:a95e with SMTP id lk7-20020a17090b33c700b0025069c7a95emr31056918pjb.48.1684265334463;
+        Tue, 16 May 2023 12:28:54 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ560AMr/zL3GYG9F5BUX5SUUiepblXLTbu7Ntnw4Qdxg3GHdcGBO4Mz6NonG/zSmGI3irqD6OmgUYCJA2iA5Cw=
+X-Received: by 2002:a17:90b:33c7:b0:250:69c7:a95e with SMTP id
+ lk7-20020a17090b33c700b0025069c7a95emr31056904pjb.48.1684265334155; Tue, 16
+ May 2023 12:28:54 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: WnZYY6TzeF8DQi6Ny/CJGOr/UUKv08CR0jN4AiOCsAzKkOCj3+TtSr0Z3Sy4uulAAqdF7Z7TD0nMbbKHp6dwMIs6w3x5PUcwOJtqQPJ1OuDhqq/twcboQ8fewT5Qi2jmLYPiJtjokqJdfTHjlsTz7+5OCCt/OWSK53e+MpAee2ulKkBItn4l+6cSZgTH1oZUWMWLacXeG52rdVbgcdOn5rrC/eqrx1X/CEeDGAZGJMnkMKqO5mMvD1OwszPpu8txXTdwYASMll5ZH0q54cy/w/MdeZ7Q0+DMFNdWjMNip3GcgsuHbrlMT6hN3hpIZzQ+/6EIQ0Xn/F1esUcI2psMihnF3irD448rPlU14iBzxLpFcmPSv2fKEbi+FTXKMIwxbKd1FhbHStUebOkrZpl7Cxe7LzaQbP0aJBj89AONFeMLHlNgAcJFTG0dAXWLtfe0E1x2wx6dafDSn6bEmC+iBVifBnywHVtoXHgjrRGVDt25IDc1AMBzbzAEbdYoRpcQL5L3hL0uxLUWemL22ZzcZlFiWZTBcOMjWSDAL0eRD2P2RTvod3c7HFPul+GJYZpfoTW5UWfyvKWhrYdie4cP+0PYmPWbXvCqdgP6+YGgu/xPMXSvB/xPMo4ugzimsOTPpdepCCsfjiUKaZFLqMXH2OgMREH7Y3/lzt+Ej4OoaZrhIwtPwSYjGC6FqzJ2Zxtasl9uNYqbx0aQSKEGx5RkBX6JGIl52tVv+cbz6IuI6Zdln9qWTb0L3qDgYZgiwe3eQMO3OVBufBLunQ/8zEdzONBS27WV/jlZBa9JCvcXozFwxkpOzr4ZefVXNb6IUf2y3KpTxB58xdGAbTYzZh+deQ==
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 568cba78-231b-4f89-0685-08db56435fc3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 May 2023 19:25:57.1908
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VqJE31NQJ+TUwunk+UXylXK13SzC9XEuOfKGptjWrAqpErWTvs/l6AaD2xPIr93rFTJjwXxhyg0z1pON8VsSYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4785
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-16_11,2023-05-16_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 adultscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305160163
-X-Proofpoint-GUID: F6M999p_WqOW9UlOTujgZ_dcKt0QYcpL
-X-Proofpoint-ORIG-GUID: F6M999p_WqOW9UlOTujgZ_dcKt0QYcpL
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAAmbk-f_U8CPcTQM866L572uUHdK4p5iWKnUQs4r8fkW=6RW9g@mail.gmail.com>
+In-Reply-To: <CAAmbk-f_U8CPcTQM866L572uUHdK4p5iWKnUQs4r8fkW=6RW9g@mail.gmail.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Tue, 16 May 2023 15:28:17 -0400
+Message-ID: <CALF+zO=1oASFeb5WOezeZm_fbCuw=L8AL-n-mbCt8A==ZMAy3Q@mail.gmail.com>
+Subject: Re: [Linux-cachefs] [BUG] fscache writing but not reading
+To:     Chris Chilvers <chilversc@gmail.com>
+Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        brennandoyle@google.com, Benjamin Maynard <benmaynard@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, May 16, 2023 at 11:42=E2=80=AFAM Chris Chilvers <chilversc@gmail.co=
+m> wrote:
+>
+> While testing the fscache performance fixes [1] that were merged into 6.4=
+-rc1
+> it appears that the caching no longer works. The client will write to the=
+ cache
+> but never reads.
+>
+Thanks for the report.
+
+If you reboot do you see reads from the cache?
+
+You can check if the cache is being read from by looking in
+/proc/fs/fscache/stats
+at the "IO" line:
+# grep IO /proc/fs/fscache/stats
+IO     : rd=3D80030 wr=3D0
+
+You might consider saving that file before your test, then another copy aft=
+er,
+and doing a diff:
+# diff -u /tmp/fscachestats.1 /tmp/fscachestats.2
+--- /tmp/fscachestats.1 2023-05-16 14:48:43.126158403 -0400
++++ /tmp/fscachestats.2 2023-05-16 14:54:05.421402702 -0400
+@@ -1,14 +1,14 @@
+ FS-Cache statistics
+-Cookies: n=3D0 v=3D1 vcol=3D0 voom=3D0
+-Acquire: n=3D0 ok=3D0 oom=3D0
+-LRU    : n=3D0 exp=3D0 rmv=3D0 drp=3D0 at=3D0
++Cookies: n=3D5 v=3D1 vcol=3D0 voom=3D0
++Acquire: n=3D5 ok=3D5 oom=3D0
++LRU    : n=3D0 exp=3D5 rmv=3D0 drp=3D0 at=3D0
+ Invals : n=3D0
+-Updates: n=3D0 rsz=3D0 rsn=3D0
++Updates: n=3D5 rsz=3D0 rsn=3D0
+ Relinqs: n=3D0 rtr=3D0 drop=3D0
+ NoSpace: nwr=3D0 ncr=3D0 cull=3D6
+-IO     : rd=3D0 wr=3D0
+-RdHelp : RA=3D0 RP=3D0 WB=3D0 WBZ=3D0 rr=3D0 sr=3D0
++IO     : rd=3D40015 wr=3D0
++RdHelp : RA=3D40015 RP=3D0 WB=3D0 WBZ=3D0 rr=3D0 sr=3D0
+ RdHelp : ZR=3D0 sh=3D0 sk=3D0
+ RdHelp : DL=3D0 ds=3D0 df=3D0 di=3D0
+-RdHelp : RD=3D0 rs=3D0 rf=3D0
++RdHelp : RD=3D40015 rs=3D40015 rf=3D0
+ RdHelp : WR=3D0 ws=3D0 wf=3D0
 
 
-> On May 16, 2023, at 3:23 PM, Jeff Layton <jlayton@kernel.org> wrote:
->=20
-> On Tue, 2023-05-02 at 14:14 +0000, Chuck Lever III wrote:
->>=20
->>> On May 2, 2023, at 7:01 AM, Jiri Slaby <jirislaby@kernel.org> wrote:
->>>=20
->>> On 08. 01. 23, 17:31, Chuck Lever wrote:
->>>> From: Chuck Lever <chuck.lever@oracle.com>
->>>> To navigate around the space that svcauth_gss_accept() reserves
->>>> for the RPC payload body length and sequence number fields,
->>>> svcauth_gss_release() does a little dance with the reply's
->>>> accept_stat, moving the accept_stat value in the response buffer
->>>> down by two words.
->>>> Instead, let's have the ->accept() methods each set the proper
->>>> final location of the accept_stat to avoid having to move
->>>> things.
->>>=20
->>> Hi,
->>>=20
->>> I bisected to this (4bcf0343e8)
->>=20
->> Assuming you did the bisect on the NFS server's kernel?
->>=20
->>=20
->>> as it breaks nfs3-only servers in 6.3. I.e. /etc/nfs.conf containing:
->>> [nfsd]
->>> vers4=3Dno
->>=20
->> Note: Changing the settings in /etc/nfs.conf had no effect
->> on my server, so I effected the change by stopping the
->> server and poking values into /proc/fs/nfsd/versions by
->> hand.
->>=20
->> Steve?
->>=20
->>=20
->>> The client sees:
->>> mount("10.0.2.15:/tmp", "/mnt", "nfs", 0, "vers=3D4.2,addr=3D10.0.2.15,=
-clientad"...) =3D -1 EIO (Input/output error)
->>> write(2, "mount.nfs: mount system call fai"..., 45
->>> mount.nfs: mount system call failed for /mnt
->>>=20
->>> And the kernel says:
->>> nfs4_discover_server_trunking unhandled error -5. Exiting with error EI=
-O
->>>=20
->>> I reported in downstream as:
->>> https://bugzilla.suse.com/show_bug.cgi?id=3D1210995
->>>=20
->>> It cannot be reverted cleanly on the top of 6.3.
->>>=20
->>> Any ideas?
->>=20
->> I can reproduce a similar problem. Network capture shows
->> that the server is responding with NFS4ERR_NOENT to the
->> EXCHANGE_ID operation, and the client kernel log says:
->>=20
->>> nfs4_discover_server_trunking unhandled error -121. Exiting with error =
-EIO
->>=20
->> That's not the failure mode I expected given the commit
->> you bisected to, so it might not be the same problem you've
->> hit. I'll troubleshoot this and send a fix for testing.
->>=20
->=20
-> Alex hit this problem in testing too, and I took a quick look.
->=20
-> In the attached capture, the client should have gotten back a
-> RPC_PROG_MISMATCH error, but the server has recorded an extra successful
-> accept state before encoding the RPC_PROG_MISMATCH error, leading to a
-> malformed reply.
->=20
-> I think that the problem is that encoding the accept status too early
-> means that we can't properly handle failures from the pg_init_request
-> call.
->=20
-> Chuck, any thoughts on how you'd like to handle this?
-
-With this:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=3Dn=
-fsd-fixes&id=3D29cd2927fb914cc53b5ba4f67d2b74695c994ba4
-
-I plan to send the fix to Linus tomorrow.
+> I suspect this is related to known issue #1. However, I tested the client
+> with rsize less than, equal to, and greater than readahead, and in all ca=
+ses
+> I see the issue.
+>
+> If I apply both the patches [2], [3] from the known issues to 6.4-rc1 the=
+n the
+> cache works as expected. I suspect only patch [2] is required but have no=
+t
+> tested patch [2] without [3].
+>
+Agree it's likely only the patches from issue #1 are needed.
+Let me ping dhowells and willy on that thread for issue #1 as it looks
+stalled.
 
 
---
-Chuck Lever
+> Testing
+> =3D=3D=3D=3D=3D=3D=3D
+> For the test I was just using dd to read 300 x 1gb files from an NFS
+> share to fill the cache, then repeating the read.
+>
+Can you share:
+1. NFS server you're using (is it localhost or something else)
+2. NFS version
 
+> In the first test run, /var/cache/fscache steadily filled until reaching
+> 300 GB. The read I/O was less than 1 MB/s, and the write speed was fairly
+> constant 270 MB/s.
+>
+> In the second run, /var/cache/fscache remained at 300 GB, so no new data =
+was
+> being written. However, the read I/O remained at less than 1 MB/s and the=
+ write
+> rate at 270 MB/s.
+>
+>     /var/cache/fscache
+>                 | 1st run     | 2nd run
+>     disk usage  | 0 -> 300 GB | 300 GB
+>     read speed  | < 1 MB/s    | < 1 MB/s
+>     write speed | 270 MB/s    | 270 MB/s
+>
+> This seems to imply that the already cached data was being read from the =
+source
+> server and re-written to the cache.
+>
+
+In addition to checking the above for the reads from the cache, you can als=
+o
+see whether NFS reads are going over the wire pretty easily with a similar
+technique.
+
+Copy /proc/self/mounstats to a file before your test, then make a second co=
+py
+after the test, then run mountstats as follows:
+mountstats -S /tmp/mountstats.1 -f /tmp/mountstats.2
+
+
+
+> Known Issues
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> 1. Unit test setting rsize < readahead does not properly read from
+> fscache but re-reads data from the NFS server
+> * This will be fixed with another dhowells patch [2]:
+>   "[PATCH v6 2/2] mm, netfs, fscache: Stop read optimisation when
+> folio removed from pagecache"
+>
+> 2. "Cache volume key already in use" after xfstest runs involving
+> multiple mounts
+> * Simple reproducer requires just two mounts as follows:
+>  mount -overs=3D4.1,fsc,nosharecache -o
+> context=3Dsystem_u:object_r:root_t:s0  nfs-server:/exp1 /mnt1
+>  mount -overs=3D4.1,fsc,nosharecache -o
+> context=3Dsystem_u:object_r:root_t:s0  nfs-server:/exp2 /mnt2
+> * This should be fixed with dhowells patch [3]:
+>   "[PATCH v5] vfs, security: Fix automount superblock LSM init
+> problem, preventing NFS sb sharing"
+>
+> References
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> [1] https://lore.kernel.org/linux-nfs/20230220134308.1193219-1-dwysocha@r=
+edhat.com/
+> [2] https://lore.kernel.org/linux-nfs/20230216150701.3654894-1-dhowells@r=
+edhat.com/T/#mf3807fa68fb6d495b87dde0d76b5237833a0cc81
+> [3] https://lore.kernel.org/linux-kernel/217595.1662033775@warthog.procyo=
+n.org.uk/
+>
+> --
+> Linux-cachefs mailing list
+> Linux-cachefs@redhat.com
+> https://listman.redhat.com/mailman/listinfo/linux-cachefs
+>
 
