@@ -2,119 +2,184 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F252D704961
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 11:34:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C81A704DA3
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 14:21:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231792AbjEPJeF convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Tue, 16 May 2023 05:34:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45282 "EHLO
+        id S231557AbjEPMVQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 May 2023 08:21:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231283AbjEPJeF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 05:34:05 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9245F1AE
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 02:34:03 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-135-X5UBcpsYPH-IDE9hxwtcdQ-1; Tue, 16 May 2023 10:34:00 +0100
-X-MC-Unique: X5UBcpsYPH-IDE9hxwtcdQ-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Tue, 16 May
- 2023 10:33:58 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Tue, 16 May 2023 10:33:58 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Azeem Shaikh' <azeemshaikh38@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-CC:     "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] NFSD: Remove open coding of string copy
-Thread-Topic: [PATCH v3] NFSD: Remove open coding of string copy
-Thread-Index: AQHZhtarLR7mMXSOG0mD9inDFwvZGq9cpMAQ
-Date:   Tue, 16 May 2023 09:33:58 +0000
-Message-ID: <d48a166d1cbc477f9cf063e91f7b3005@AcuMS.aculab.com>
-References: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
-In-Reply-To: <20230515024044.2677124-1-azeemshaikh38@gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S231549AbjEPMVP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 08:21:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52EA469A
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 05:20:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684239636;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E0FZtsxQz3Rjm7C2/u5FO2j69Qx91RmAS6xW6uxmtbs=;
+        b=aLIIJUax4tVmCJObE2hs7vpWNq6FtPauhn2XTVx3ITImEctPRhCKkGUi05tOIbqpY2N/Q1
+        Oi0bPJqubTmNaC6eXU2Vg9cWzdtiI+0VqwotIp65pWCmzfk6V/tpVjtt/kJ7CJ/BgjfqNU
+        m3jS03mNj2XFGQxU3+A6G7ZGK7pfx1Q=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-247-F-8sc-qmNI2QESNjgcUeyQ-1; Tue, 16 May 2023 08:20:35 -0400
+X-MC-Unique: F-8sc-qmNI2QESNjgcUeyQ-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-61b1dbdb2f9so187846316d6.3
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 05:20:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684239635; x=1686831635;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=E0FZtsxQz3Rjm7C2/u5FO2j69Qx91RmAS6xW6uxmtbs=;
+        b=jtCuwA4Kakvap/iV4vhxmGNTFi+Aos5dewKiTVMId0X/HNlJFdo4COdSsHqAHDKNb0
+         epCpCQv78m9sOjeYc8ABhsb93KStP2HtP3RVwtcxk788uibpMpbiMjffOGUikxrtBvZ5
+         mSGKrTQvVNywlLjKyVDA0Sd6IXsWZL+ZoHUXszfE7HUSu3eaZSRd98cJU4XhUG/8vC9B
+         OqvoixXVKzXnOh8bzY9h1UYzQQrN+vr/WsXr7+DiPK1HTEuBXtZG5fuvGu9IQtsg+2to
+         9LuPeEcqqFqqzxcBYASetQDFDJrp4FXmJPbtXhMZm/FcGu/DgoF5jQr0ybvUIE0FJhg3
+         b25g==
+X-Gm-Message-State: AC+VfDxiRwLY5rFHpveOaK7M4CDNkPf976+kID0f5ejkpkLRGhjVE4zC
+        Bi5qU9PH7xmYws2CJ5vps3R4PTwngJkjBu/Ev8D1EFWdIypAUvw2AJR0+v2BkVN+Bht/HcEg7EZ
+        G3kmyX6gNpdWBpIoNm7GSYluPNq0J
+X-Received: by 2002:ad4:5cce:0:b0:61b:7383:798d with SMTP id iu14-20020ad45cce000000b0061b7383798dmr63602836qvb.40.1684239635143;
+        Tue, 16 May 2023 05:20:35 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5ItUHbySneQ59sTCRzmPR4UnU0PyajUWJ+MBcZ/7Bg8t+g7UugkdXD+80X50kOnePk3/gsyw==
+X-Received: by 2002:ad4:5cce:0:b0:61b:7383:798d with SMTP id iu14-20020ad45cce000000b0061b7383798dmr63602787qvb.40.1684239634701;
+        Tue, 16 May 2023 05:20:34 -0700 (PDT)
+Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id h10-20020a0cf20a000000b0061b5c45f970sm5594360qvk.74.2023.05.16.05.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 May 2023 05:20:34 -0700 (PDT)
+Message-ID: <b4f836aa654acef4825dc8e502afe415a6956ffb.camel@redhat.com>
+Subject: Re: [PATCH] fix NFSv4 acl detection on F39
+From:   Jeff Layton <jlayton@redhat.com>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "eggert@cs.ucla.edu" <eggert@cs.ucla.edu>,
+        "bruno@clisp.org" <bruno@clisp.org>,
+        "ondrej.valousek.xm@renesas.com" <ondrej.valousek.xm@renesas.com>,
+        "bug-gnulib@gnu.org" <bug-gnulib@gnu.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Date:   Tue, 16 May 2023 08:20:33 -0400
+In-Reply-To: <20230516-distanz-abkommen-95e565ba928b@brauner>
+References: <20230501194321.57983-1-ondrej.valousek.xm@renesas.com>
+         <c955ee20-371c-5dde-fcb5-26d573f69cd9@cs.ucla.edu>
+         <TYXPR01MB1854B3C3B8215DD0FA7B83CCD96D9@TYXPR01MB1854.jpnprd01.prod.outlook.com>
+         <17355394.lhrHg4fidi@nimes>
+         <32edbaf1-d3b1-6057-aefc-d83df3266c20@cs.ucla.edu>
+         <4f1519d8-bda1-1b15-4a78-a8072ba1551a@cs.ucla.edu>
+         <TYXPR01MB18547A591663A4934B5D4D82D9789@TYXPR01MB1854.jpnprd01.prod.outlook.com>
+         <fb005d7e29f1167b83acf7b10800ff3124ee2a50.camel@redhat.com>
+         <f967cbcc1620d1a5e68d7f005571dc569c8b5bb4.camel@hammerspace.com>
+         <d4e26d9e4d9113f8da20425f5bf7ad91c786f381.camel@redhat.com>
+         <20230516-distanz-abkommen-95e565ba928b@brauner>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,PDS_BAD_THREAD_QP_64,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Azeem Shaikh
-> Sent: 15 May 2023 03:41
-> 
-> Instead of open coding a __dynamic_array(), use the __string() and
-> __assign_str() helper macros that exist for this kind of use case.
+On Tue, 2023-05-16 at 11:17 +0200, Christian Brauner wrote:
+> On Mon, May 15, 2023 at 01:49:21PM -0400, Jeff Layton wrote:
+> > On Mon, 2023-05-15 at 17:28 +0000, Trond Myklebust wrote:
+> > > On Mon, 2023-05-15 at 13:11 -0400, Jeff Layton wrote:
+> > > > On Mon, 2023-05-15 at 11:50 +0000, Ondrej Valousek wrote:
+> > > > > Hi Paul,
+> > > > >=20
+> > > > > Ok first of all, thanks for taking initiative on this, I am unabl=
+e
+> > > > > to proceed on this on my own at the moment.
+> > > > > I see few problems with this:
+> > > > >=20
+> > > > > 1. The calculation of the 'listbufsize' is incorrect in your patc=
+h.
+> > > > > It will _not_work as you expected and won't limit the number of
+> > > > > syscalls (which is why we came up with this patch, right?). Check
+> > > > > with my original proposal, we really need to check for
+> > > > > 'system.nfs4' xattr name presence here
+> > > > > 2. It mistakenly detects an ACL presence on files which do not ha=
+ve
+> > > > > any ACL on NFSv4 filesystem. Digging further it seems that kernel
+> > > > > in F39 behaves differently to the previous kernels:
+> > > > >=20
+> > > > > F38:=20
+> > > > > # getfattr -m . /path_to_nfs4_file
+> > > > > # file: path_to_nfs4_file
+> > > > > system.nfs4_acl=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 <---- only
+> > > > > single xattr detected
+> > > > >=20
+> > > > > F39:
+> > > > > # getfattr -m . /path_to_nfs4_file
+> > > > > # file: path_to_nfs4_file
+> > > > > system.nfs4_acl
+> > > > > system.posix_acl_default
+> > > > > /* SOMETIMES even shows this */
+> > > > > system.posix_acl_default
+> > > >=20
+> > > > (cc'ing Christian and relevant kernel lists)
+> > > >=20
+> > > > I assume the F39 kernel is v6.4-rc based? If so, then I think that'=
+s
+> > > > a
+> > > > regression. NFSv4 client inodes should _not_ report a POSIX ACL
+> > > > attribute since the protocol doesn't support them.
+> > > >=20
+> > > > In fact, I think the rationale in the kernel commit below is wrong.
+> > > > NFSv4 has a listxattr operation, but doesn't support POSIX ACLs.
+> > > >=20
+> > > > Christian, do we need to revert this?
+> > > >=20
+> > > > commit e499214ce3ef50c50522719e753a1ffc928c2ec1
+> > > > Author: Christian Brauner <brauner@kernel.org>
+> > > > Date:=A0=A0 Wed Feb 1 14:15:01 2023 +0100
+> > > >=20
+> > > > =A0=A0=A0 acl: don't depend on IOP_XATTR
+> > > > =A0=A0=A0=20
+> > > >=20
+> > >=20
+> > >=20
+> > > No. The problem is commit f2620f166e2a ("xattr: simplify listxattr
+> > > helpers") which helpfully inserts posix acl handlers into
+> > > generic_listxattr(), and makes it impossible to call from
+> > > nfs4_listxattr().
+> > >=20
+> >=20
+> >=20
+> > Ahh ok. Looking at that function though, it seems like it'd only report
+> > these for mounts that set SB_POSIXACL. Any reason that we have that
+> > turned on with v4 mounts?
+>=20
+> You seem to just be calling generic_listxattr() in fs/nfs/nfs4proc.c and
+> not using it as an inode operation.
+>=20
 
-Is this actually a dynamic array, or just a char[8] ?
-On 64 bit copying a short fixed-length string is far better
-than any kind of dynamic sized allocation.
+Correct, but even if we were, this would be doing the wrong thing. As
+Trond pointed out, f2620f166e2a changed the behavior of
+generic_listxattr to make it include the POSIX ACL entries.
 
-	David
+> So imho just add a tiny helper into
+> fs/xattr.c that takes a boolean argument and skips over POSIX ACLs that
+> you can call in nfs4. That should be enough, no?
+>=20
 
-> 
-> Part of an effort to remove deprecated strlcpy() [1] completely from the
-> kernel[2].
-> 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
-> 
-> Fixes: 3c92fba557c6 ("NFSD: Enhance the nfsd_cb_setup tracepoint")
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> ---
->  fs/nfsd/trace.h |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index 4183819ea082..72a906a053dc 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -1365,19 +1365,19 @@ TRACE_EVENT(nfsd_cb_setup,
->  		__field(u32, cl_id)
->  		__field(unsigned long, authflavor)
->  		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
-> -		__array(unsigned char, netid, 8)
-> +		__string(netid, netid)
->  	),
->  	TP_fast_assign(
->  		__entry->cl_boot = clp->cl_clientid.cl_boot;
->  		__entry->cl_id = clp->cl_clientid.cl_id;
-> -		strlcpy(__entry->netid, netid, sizeof(__entry->netid));
-> +		__assign_str(netid, netid);
->  		__entry->authflavor = authflavor;
->  		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
->  				  clp->cl_cb_conn.cb_addrlen)
->  	),
->  	TP_printk("addr=%pISpc client %08x:%08x proto=%s flavor=%s",
->  		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
-> -		__entry->netid, show_nfsd_authflavor(__entry->authflavor))
-> +		__get_str(netid), show_nfsd_authflavor(__entry->authflavor))
->  );
-> 
->  TRACE_EVENT(nfsd_cb_setup_err,
-> --
-> 2.40.1.606.ga4b1b128d6-goog
-> 
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+The only other user of generic_listxattr is HFS, and I don't think it
+supports POSIX ACLs either. I think we should probably just remove the
+call to posix_acl_listxattr from generic_listxattr.
+--=20
+Jeff Layton <jlayton@redhat.com>
 
