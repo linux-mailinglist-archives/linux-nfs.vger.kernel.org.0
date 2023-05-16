@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 340967057A1
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:42:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C101070579F
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 May 2023 21:42:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbjEPTmU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 May 2023 15:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36154 "EHLO
+        id S229535AbjEPTmD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 May 2023 15:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230085AbjEPTmN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:42:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60839D2FC
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:41:59 -0700 (PDT)
+        with ESMTP id S230051AbjEPTl4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 May 2023 15:41:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E647CD2D8
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 12:41:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E86426353D
-        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 19:41:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 038C8C433EF;
-        Tue, 16 May 2023 19:41:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AECD1632D6
+        for <linux-nfs@vger.kernel.org>; Tue, 16 May 2023 19:41:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC113C433EF;
+        Tue, 16 May 2023 19:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684266070;
-        bh=Mc43fwltS3QekpCt60of6Wblc6njwsV9mLIl+Y+IwfM=;
+        s=k20201202; t=1684266097;
+        bh=/FXcUiPBY4h/nqWV5kg4eNGidzreiacldZxEXTwAoSY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ZummqM3wxaQ9G62ltZOYd8Ze6iusHjK/xFz9AVCBik+o0aYnd05Gyg/OEDsORHVhC
-         YHCWF17U+mcoCU7Jneyq0hMl+W4zaJdY65XU9UxX7Ru2mVHLc61IQMpxZyb8FigclI
-         DWWvEYwXM0VI0OtJWdl9DaubpH25QdBoJn9DCS8wVJiaX5Yc+JRbBC9Ma6P8QXL70B
-         U+Ht6lA8/ypXkKshfuza9SkL4hLydM60PogyuN7jkf6OVTFIVWRet3rHlePlC3t54s
-         722fRraZPpfghiK1CffFXfxjEcEo9L+O+5dnGxpCiS8e3I3v9SAGLWrwMaf0iafBkc
-         6YjLEYfOumVVg==
-Subject: [PATCH RFC 06/12] SUNRPC: Ignore data_ready callbacks during TLS
- handshakes
+        b=Pa+ESqZsI52h7K7HgFQX/TtAtmskF2LD3Tp4TifqwO6QSug5Z8OlNrCXIaqIdCcA6
+         2hWB4DdLut/YlW8M1Asu9s8mIzVWoogPpXUQJ+miU13diPC2/EfoVkOkvrARBq+3Vn
+         z33qADbZ0yBBvZZS9hD03VDyT/cOeW30UctZDV8krbv52GuhSB755Fc8p3OZErVQid
+         0XijfT7vKW2rvgbKvUsz1UJu0Cvp+fiZ8tRDnfMp/2jK5gvL/9JB+8BeYTcVwo64Iu
+         5zaUvt6MKpnkSXvLbVoG/M+s3KezhTSilVtXmX4MiJmeBEga0sSAdLmglIm7+XKErI
+         sUS9NtjXtbB/w==
+Subject: [PATCH RFC 07/12] SUNRPC: Capture CMSG metadata on client-side
+ receive
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
         kernel-tls-handshake@lists.linux.dev
-Date:   Tue, 16 May 2023 15:40:58 -0400
-Message-ID: <168426605675.74246.5563962844728488074.stgit@oracle-102.nfsv4bat.org>
+Date:   Tue, 16 May 2023 15:41:25 -0400
+Message-ID: <168426607555.74246.6449523526966543678.stgit@oracle-102.nfsv4bat.org>
 In-Reply-To: <168426587118.74246.214357450560967997.stgit@oracle-102.nfsv4bat.org>
 References: <168426587118.74246.214357450560967997.stgit@oracle-102.nfsv4bat.org>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,54 +57,97 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The RPC header parser doesn't recognize TLS handshake traffic, so it
-will close the connection prematurely with an error. To avoid that,
-shunt the transport's data_ready callback when there is a TLS
-handshake in progress.
+kTLS sockets use CMSG to report decryption errors and the need
+for session re-keying.
 
-The XPRT_SOCK_IGNORE_RECV flag will be toggled by code added in a
-subsequent patch.
+For RPC-with-TLS, an "application data" message contains a ULP
+payload, and that is passed along to the RPC client. An "alert"
+message triggers connection reset. Everything else is discarded.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/xprtsock.h |    1 +
- net/sunrpc/xprtsock.c           |    6 ++++++
- 2 files changed, 7 insertions(+)
+ net/sunrpc/xprtsock.c |   49 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sunrpc/xprtsock.h b/include/linux/sunrpc/xprtsock.h
-index 38284f25eddf..daef030f4848 100644
---- a/include/linux/sunrpc/xprtsock.h
-+++ b/include/linux/sunrpc/xprtsock.h
-@@ -90,5 +90,6 @@ struct sock_xprt {
- #define XPRT_SOCK_WAKE_DISCONNECT	(7)
- #define XPRT_SOCK_CONNECT_SENT	(8)
- #define XPRT_SOCK_NOSPACE	(9)
-+#define XPRT_SOCK_IGNORE_RECV	(10)
- 
- #endif /* _LINUX_SUNRPC_XPRTSOCK_H */
 diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 5f9030b81c9e..37f608c2c0a0 100644
+index 37f608c2c0a0..6f2fc863b47e 100644
 --- a/net/sunrpc/xprtsock.c
 +++ b/net/sunrpc/xprtsock.c
-@@ -695,6 +695,8 @@ static void xs_poll_check_readable(struct sock_xprt *transport)
+@@ -47,6 +47,8 @@
+ #include <net/checksum.h>
+ #include <net/udp.h>
+ #include <net/tcp.h>
++#include <net/tls.h>
++
+ #include <linux/bvec.h>
+ #include <linux/highmem.h>
+ #include <linux/uio.h>
+@@ -342,13 +344,56 @@ xs_alloc_sparse_pages(struct xdr_buf *buf, size_t want, gfp_t gfp)
+ 	return want;
+ }
+ 
++static int
++xs_sock_process_cmsg(struct socket *sock, struct msghdr *msg,
++		     struct cmsghdr *cmsg, int ret)
++{
++	if (cmsg->cmsg_level == SOL_TLS &&
++	    cmsg->cmsg_type == TLS_GET_RECORD_TYPE) {
++		u8 content_type = *((u8 *)CMSG_DATA(cmsg));
++
++		switch (content_type) {
++		case TLS_RECORD_TYPE_DATA:
++			/* TLS sets EOR at the end of each application data
++			 * record, even though there might be more frames
++			 * waiting to be decrypted.
++			 */
++			msg->msg_flags &= ~MSG_EOR;
++			break;
++		case TLS_RECORD_TYPE_ALERT:
++			ret = -ENOTCONN;
++			break;
++		default:
++			ret = -EAGAIN;
++		}
++	}
++	return ret;
++}
++
++static int
++xs_sock_recv_cmsg(struct socket *sock, struct msghdr *msg, int flags)
++{
++	union {
++		struct cmsghdr	cmsg;
++		u8		buf[CMSG_SPACE(sizeof(u8))];
++	} u;
++	int ret;
++
++	msg->msg_control = &u;
++	msg->msg_controllen = sizeof(u);
++	ret = sock_recvmsg(sock, msg, flags);
++	if (msg->msg_controllen != sizeof(u))
++		ret = xs_sock_process_cmsg(sock, msg, &u.cmsg, ret);
++	return ret;
++}
++
+ static ssize_t
+ xs_sock_recvmsg(struct socket *sock, struct msghdr *msg, int flags, size_t seek)
  {
+ 	ssize_t ret;
+ 	if (seek != 0)
+ 		iov_iter_advance(&msg->msg_iter, seek);
+-	ret = sock_recvmsg(sock, msg, flags);
++	ret = xs_sock_recv_cmsg(sock, msg, flags);
+ 	return ret > 0 ? ret + seek : ret;
+ }
  
- 	clear_bit(XPRT_SOCK_DATA_READY, &transport->sock_state);
-+	if (test_bit(XPRT_SOCK_IGNORE_RECV, &transport->sock_state))
-+		return;
- 	if (!xs_poll_socket_readable(transport))
- 		return;
- 	if (!test_and_set_bit(XPRT_SOCK_DATA_READY, &transport->sock_state))
-@@ -1380,6 +1382,10 @@ static void xs_data_ready(struct sock *sk)
- 		trace_xs_data_ready(xprt);
+@@ -374,7 +419,7 @@ xs_read_discard(struct socket *sock, struct msghdr *msg, int flags,
+ 		size_t count)
+ {
+ 	iov_iter_discard(&msg->msg_iter, ITER_DEST, count);
+-	return sock_recvmsg(sock, msg, flags);
++	return xs_sock_recv_cmsg(sock, msg, flags);
+ }
  
- 		transport->old_data_ready(sk);
-+
-+		if (test_bit(XPRT_SOCK_IGNORE_RECV, &transport->sock_state))
-+			return;
-+
- 		/* Any data means we had a useful conversation, so
- 		 * then we don't need to delay the next reconnect
- 		 */
+ #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
 
 
