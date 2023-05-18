@@ -2,41 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C528F708723
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 May 2023 19:46:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9F43708725
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 May 2023 19:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229520AbjERRqJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 May 2023 13:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38394 "EHLO
+        id S229820AbjERRqM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 May 2023 13:46:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbjERRqG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 May 2023 13:46:06 -0400
+        with ESMTP id S230094AbjERRqJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 May 2023 13:46:09 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB24FE61
-        for <linux-nfs@vger.kernel.org>; Thu, 18 May 2023 10:45:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6C6510E7
+        for <linux-nfs@vger.kernel.org>; Thu, 18 May 2023 10:46:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 80B0665152
-        for <linux-nfs@vger.kernel.org>; Thu, 18 May 2023 17:45:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C55EC433D2;
-        Thu, 18 May 2023 17:45:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0555A65172
+        for <linux-nfs@vger.kernel.org>; Thu, 18 May 2023 17:46:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2A2C4339B;
+        Thu, 18 May 2023 17:46:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684431957;
-        bh=YGp7ohilP2ZwBHsR3MUlES5YLo6UxMmn4o5e8mCRsiU=;
+        s=k20201202; t=1684431964;
+        bh=5cq3hHSmmvzznWlj+O2y3SpqOlSMPmQc3draLNBzshI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hkf7mfXLjMzEXq16Okx5SzTjULIZzmByLW+YM2mZ5hc2oXSAO64yeOZz+iR8CdVna
-         LWc3vc6aSxN2btkt0ckVWOukOTYxa6EE+w59WANIap4jEdm5v2S6k31/yfk72eNTjj
-         1gUh9fVMyoPvkWOT9FgTpa0quvDtb0UUQxh0jjjkJrszAOPWtObkSxLKxPerwSrLD1
-         3YpLb49krHDuBJTlSZor+HJhRf1EiBbdJTW1pQPsP46vaCiJcH34Zd8AiYOa0h3O3K
-         jQagroSjkRg56wWGVcCHo6RttMOuQYELiHRzklNSrvHY1Y5dtzwYJFSVlzLIDCXxN4
-         u40n7LITZyyqQ==
-Subject: [PATCH v1 4/6] NFSD: Hoist rq_vec preparation into nfsd_read()
+        b=BvcizT4eLLf858C8I2a9Yb9zyoz3PQ5d3MFwZknw3owzzmNsAiYU557RGsgej24ZE
+         sf2P4VGg9AgaP3DS4pZASQcmH/u2Hfnj4q0NEoDhbz2cXVqrAbSOwSpTgyXHHYdVrf
+         uWiEKvwpeGkeyfPP42x5C7DWzYxKVJAjkicCbU6WByaa9fF9CR76xZVmnKPeWAhjAW
+         +Ownk4wx8c7x5S4C1QtXE681ZRqE5h+0A5leNIIVnWVfW02Co11PC47VGw4TEXhj7d
+         w6jQedWl970LTl8Fsq+OX+PW8dXlbnSBH8WQArj2U2eeYGVgsqT9HEMqUxyfTyLkNc
+         xm8GOu3NfAQuw==
+Subject: [PATCH v1 5/6] NFSD: Hoist rq_vec preparation into nfsd_read() [step
+ two]
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, dhowells@redhat.com, jlayton@redhat.com
 Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date:   Thu, 18 May 2023 13:45:56 -0400
-Message-ID: <168443195664.516083.12106288760156437793.stgit@klimt.1015granger.net>
+Date:   Thu, 18 May 2023 13:46:03 -0400
+Message-ID: <168443196312.516083.6031724443786862273.stgit@klimt.1015granger.net>
 In-Reply-To: <168443154055.516083.746756240848084451.stgit@klimt.1015granger.net>
 References: <168443154055.516083.746756240848084451.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5
@@ -55,226 +56,155 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Accrue the following benefits:
+Now that the preparation of an rq_vec has been removed from the
+generic read path, nfsd_splice_read() no longer needs to reset
+rq_next_page.
 
-a) Deduplicate this common bit of code.
+nfsd4_encode_read() calls nfsd_splice_read() directly. As far as I
+can ascertain, resetting rq_next_page for NFSv4 splice reads is
+unnecessary because rq_next_page is already set correctly.
 
-b) Don't prepare rq_vec for NFSv2 and NFSv3 spliced reads, which
-   don't use rq_vec. This is already the case for
-   nfsd4_encode_read().
-
-c) Eventually, converting NFSD's read path to use a bvec iterator
-   will be simpler.
-
-In the next patch, nfsd_iter_read() will replace nfsd_readv() for
-all NFS versions.
+Moreover, resetting it might even be incorrect if previous
+operations in the COMPOUND have already consumed at least a page of
+the send buffer. I would expect that the result would be encoding
+the READ payload over previously-encoded results.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3proc.c |   14 +----------
- fs/nfsd/nfsproc.c  |   14 +----------
- fs/nfsd/vfs.c      |   68 ++++++++++++++++++++++++++++++++++++++++++++++------
- fs/nfsd/vfs.h      |    8 +++++-
- 4 files changed, 68 insertions(+), 36 deletions(-)
+ fs/nfsd/nfs4xdr.c          |   10 +++++-----
+ fs/nfsd/vfs.c              |   13 ++++++++++++-
+ include/linux/sunrpc/xdr.h |    3 +--
+ net/sunrpc/xdr.c           |   26 ++++++++++++--------------
+ 4 files changed, 30 insertions(+), 22 deletions(-)
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index e6bb8eeb5bc2..fc8d5b7db9f8 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -151,8 +151,6 @@ nfsd3_proc_read(struct svc_rqst *rqstp)
- {
- 	struct nfsd3_readargs *argp = rqstp->rq_argp;
- 	struct nfsd3_readres *resp = rqstp->rq_resp;
--	unsigned int len;
--	int v;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 23dd09c4b2cd..b83954fc57e3 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4104,13 +4104,13 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+ 	__be32 zero = xdr_zero;
+ 	__be32 nfserr;
  
- 	dprintk("nfsd: READ(3) %s %lu bytes at %Lu\n",
- 				SVCFH_fmt(&argp->fh),
-@@ -166,17 +164,7 @@ nfsd3_proc_read(struct svc_rqst *rqstp)
- 	if (argp->offset + argp->count > (u64)OFFSET_MAX)
- 		argp->count = (u64)OFFSET_MAX - argp->offset;
+-	read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, maxcount);
+-	if (read->rd_vlen < 0)
++	if (xdr_reserve_space_vec(xdr, maxcount) < 0)
+ 		return nfserr_resource;
  
--	v = 0;
--	len = argp->count;
- 	resp->pages = rqstp->rq_next_page;
--	while (len > 0) {
--		struct page *page = *(rqstp->rq_next_page++);
--
--		rqstp->rq_vec[v].iov_base = page_address(page);
--		rqstp->rq_vec[v].iov_len = min_t(unsigned int, len, PAGE_SIZE);
--		len -= rqstp->rq_vec[v].iov_len;
--		v++;
--	}
- 
- 	/* Obtain buffer pointer for payload.
- 	 * 1 (status) + 22 (post_op_attr) + 1 (count) + 1 (eof)
-@@ -187,7 +175,7 @@ nfsd3_proc_read(struct svc_rqst *rqstp)
- 
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = nfsd_read(rqstp, &resp->fh, argp->offset,
--				 rqstp->rq_vec, v, &resp->count, &resp->eof);
-+				 &resp->count, &resp->eof);
- 	return rpc_success;
- }
- 
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index c37195572fd0..a7315928a760 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -176,9 +176,7 @@ nfsd_proc_read(struct svc_rqst *rqstp)
- {
- 	struct nfsd_readargs *argp = rqstp->rq_argp;
- 	struct nfsd_readres *resp = rqstp->rq_resp;
--	unsigned int len;
- 	u32 eof;
--	int v;
- 
- 	dprintk("nfsd: READ    %s %d bytes at %d\n",
- 		SVCFH_fmt(&argp->fh),
-@@ -187,17 +185,7 @@ nfsd_proc_read(struct svc_rqst *rqstp)
- 	argp->count = min_t(u32, argp->count, NFSSVC_MAXBLKSIZE_V2);
- 	argp->count = min_t(u32, argp->count, rqstp->rq_res.buflen);
- 
--	v = 0;
--	len = argp->count;
- 	resp->pages = rqstp->rq_next_page;
--	while (len > 0) {
--		struct page *page = *(rqstp->rq_next_page++);
--
--		rqstp->rq_vec[v].iov_base = page_address(page);
--		rqstp->rq_vec[v].iov_len = min_t(unsigned int, len, PAGE_SIZE);
--		len -= rqstp->rq_vec[v].iov_len;
--		v++;
--	}
- 
- 	/* Obtain buffer pointer for payload. 19 is 1 word for
- 	 * status, 17 words for fattr, and 1 word for the byte count.
-@@ -207,7 +195,7 @@ nfsd_proc_read(struct svc_rqst *rqstp)
- 	resp->count = argp->count;
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = nfsd_read(rqstp, &resp->fh, argp->offset,
--				 rqstp->rq_vec, v, &resp->count, &eof);
-+				 &resp->count, &eof);
- 	if (resp->status == nfs_ok)
- 		resp->status = fh_getattr(&resp->fh, &resp->stat);
- 	else if (resp->status == nfserr_jukebox)
+-	nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
+-			    resp->rqstp->rq_vec, read->rd_vlen, &maxcount,
+-			    &read->rd_eof);
++	nfserr = nfsd_iter_read(resp->rqstp, read->rd_fhp, file,
++				read->rd_offset, &maxcount,
++				xdr->buf->page_len & ~PAGE_MASK,
++				&read->rd_eof);
+ 	read->rd_length = maxcount;
+ 	if (nfserr)
+ 		return nfserr;
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index c4ef24c5ffd0..054d58d01299 100644
+index 054d58d01299..13ccd385b308 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -1028,6 +1028,50 @@ __be32 nfsd_readv(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+@@ -995,6 +995,18 @@ static __be32 nfsd_finish_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	}
  }
  
 +/**
-+ * nfsd_iter_read - Perform a VFS read using an iterator
++ * nfsd_splice_read - Perform a VFS read using a splice pipe
 + * @rqstp: RPC transaction context
 + * @fhp: file handle of file to be read
 + * @file: opened struct file of file to be read
 + * @offset: starting byte offset
 + * @count: IN: requested number of bytes; OUT: number of bytes read
-+ * @base: offset in first page of read buffer
 + * @eof: OUT: set non-zero if operation reached the end of the file
-+ *
-+ * Some filesystems or situations cannot use nfsd_splice_read. This
-+ * function is the slightly less-performant fallback for those cases.
 + *
 + * Returns nfs_ok on success, otherwise an nfserr stat value is
 + * returned.
 + */
-+__be32 nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+		      struct file *file, loff_t offset, unsigned long *count,
-+		      unsigned int base, u32 *eof)
-+{
-+	unsigned long v, total;
-+	struct iov_iter iter;
-+	loff_t ppos = offset;
-+	struct page *page;
-+	ssize_t host_err;
-+
-+	v = 0;
-+	total = *count;
-+	while (total) {
-+		page = *(rqstp->rq_next_page++);
-+		rqstp->rq_vec[v].iov_base = page_address(page) + base;
-+		rqstp->rq_vec[v].iov_len = min_t(size_t, total, PAGE_SIZE - base);
-+		total -= rqstp->rq_vec[v].iov_len;
-+		++v;
-+		base = 0;
-+	}
-+	WARN_ON_ONCE(v > ARRAY_SIZE(rqstp->rq_vec));
-+
-+	trace_nfsd_read_vector(rqstp, fhp, offset, *count);
-+	iov_iter_kvec(&iter, ITER_DEST, rqstp->rq_vec, v, *count);
-+	host_err = vfs_iter_read(file, &iter, &ppos, 0);
-+	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
-+}
-+
- /*
-  * Gathered writes: If another process is currently writing to the file,
-  * there's a high chance this is another nfsd (triggered by a bulk write
-@@ -1153,14 +1197,24 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 	return nfserr;
- }
+ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 			struct file *file, loff_t offset, unsigned long *count,
+ 			u32 *eof)
+@@ -1008,7 +1020,6 @@ __be32 nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	ssize_t host_err;
  
--/*
-- * Read data from a file. count must contain the requested read count
-- * on entry. On return, *count contains the number of bytes actually read.
-+/**
-+ * nfsd_read - Read data from a file
-+ * @rqstp: RPC transaction context
-+ * @fhp: file handle of file to be read
-+ * @offset: starting byte offset
-+ * @count: IN: requested number of bytes; OUT: number of bytes read
-+ * @eof: OUT: set non-zero if operation reached the end of the file
+ 	trace_nfsd_read_splice(rqstp, fhp, offset, *count);
+-	rqstp->rq_next_page = rqstp->rq_respages + 1;
+ 	host_err = splice_direct_to_actor(file, &sd, nfsd_direct_splice_actor);
+ 	return nfsd_finish_read(rqstp, fhp, file, offset, count, eof, host_err);
+ }
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index 72014c9216fc..f89ec4b5ea16 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -242,8 +242,7 @@ extern void xdr_init_encode(struct xdr_stream *xdr, struct xdr_buf *buf,
+ extern void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf,
+ 			   struct page **pages, struct rpc_rqst *rqst);
+ extern __be32 *xdr_reserve_space(struct xdr_stream *xdr, size_t nbytes);
+-extern int xdr_reserve_space_vec(struct xdr_stream *xdr, struct kvec *vec,
+-		size_t nbytes);
++extern int xdr_reserve_space_vec(struct xdr_stream *xdr, size_t nbytes);
+ extern void __xdr_commit_encode(struct xdr_stream *xdr);
+ extern void xdr_truncate_encode(struct xdr_stream *xdr, size_t len);
+ extern void xdr_truncate_decode(struct xdr_stream *xdr, size_t len);
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index 36835b2f5446..2a22e78af116 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1070,22 +1070,22 @@ __be32 * xdr_reserve_space(struct xdr_stream *xdr, size_t nbytes)
+ }
+ EXPORT_SYMBOL_GPL(xdr_reserve_space);
+ 
+-
+ /**
+  * xdr_reserve_space_vec - Reserves a large amount of buffer space for sending
+  * @xdr: pointer to xdr_stream
+- * @vec: pointer to a kvec array
+  * @nbytes: number of bytes to reserve
+  *
+- * Reserves enough buffer space to encode 'nbytes' of data and stores the
+- * pointers in 'vec'. The size argument passed to xdr_reserve_space() is
+- * determined based on the number of bytes remaining in the current page to
+- * avoid invalidating iov_base pointers when xdr_commit_encode() is called.
++ * The size argument passed to xdr_reserve_space() is determined based
++ * on the number of bytes remaining in the current page to avoid
++ * invalidating iov_base pointers when xdr_commit_encode() is called.
 + *
-+ * The caller must verify that there is enough space in @rqstp.rq_res
-+ * to perform this operation.
-+ *
-  * N.B. After this call fhp needs an fh_put
-+ *
-+ * Returns nfs_ok on success, otherwise an nfserr stat value is
-+ * returned.
++ * Return values:
++ *   %0: success
++ *   %-EMSGSIZE: not enough space is available in @xdr
   */
- __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
--	loff_t offset, struct kvec *vec, int vlen, unsigned long *count,
--	u32 *eof)
-+		 loff_t offset, unsigned long *count, u32 *eof)
+-int xdr_reserve_space_vec(struct xdr_stream *xdr, struct kvec *vec, size_t nbytes)
++int xdr_reserve_space_vec(struct xdr_stream *xdr, size_t nbytes)
  {
- 	struct nfsd_file	*nf;
- 	struct file *file;
-@@ -1175,12 +1229,10 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (file->f_op->splice_read && test_bit(RQ_SPLICE_OK, &rqstp->rq_flags))
- 		err = nfsd_splice_read(rqstp, fhp, file, offset, count, eof);
- 	else
--		err = nfsd_readv(rqstp, fhp, file, offset, vec, vlen, count, eof);
-+		err = nfsd_iter_read(rqstp, fhp, file, offset, count, 0, eof);
+-	int thislen;
+-	int v = 0;
++	size_t thislen;
+ 	__be32 *p;
  
- 	nfsd_file_put(nf);
--
- 	trace_nfsd_read_done(rqstp, fhp, offset, *count);
--
- 	return err;
+ 	/*
+@@ -1097,21 +1097,19 @@ int xdr_reserve_space_vec(struct xdr_stream *xdr, struct kvec *vec, size_t nbyte
+ 		xdr->end = xdr->p;
+ 	}
+ 
++	/* XXX: Let's find a way to make this more efficient */
+ 	while (nbytes) {
+ 		thislen = xdr->buf->page_len % PAGE_SIZE;
+ 		thislen = min_t(size_t, nbytes, PAGE_SIZE - thislen);
+ 
+ 		p = xdr_reserve_space(xdr, thislen);
+ 		if (!p)
+-			return -EIO;
++			return -EMSGSIZE;
+ 
+-		vec[v].iov_base = p;
+-		vec[v].iov_len = thislen;
+-		v++;
+ 		nbytes -= thislen;
+ 	}
+ 
+-	return v;
++	return 0;
  }
+ EXPORT_SYMBOL_GPL(xdr_reserve_space_vec);
  
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 43fb57a301d3..6381a2890b0b 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -115,8 +115,12 @@ __be32		nfsd_readv(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				struct kvec *vec, int vlen,
- 				unsigned long *count,
- 				u32 *eof);
--__be32 		nfsd_read(struct svc_rqst *, struct svc_fh *,
--				loff_t, struct kvec *, int, unsigned long *,
-+__be32		nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+				struct file *file, loff_t offset,
-+				unsigned long *count, unsigned int base,
-+				u32 *eof);
-+__be32		nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
-+				loff_t offset, unsigned long *count,
- 				u32 *eof);
- __be32 		nfsd_write(struct svc_rqst *, struct svc_fh *, loff_t,
- 				struct kvec *, int, unsigned long *,
 
 
