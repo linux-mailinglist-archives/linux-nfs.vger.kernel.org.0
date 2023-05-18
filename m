@@ -2,193 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 906AB707982
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 May 2023 07:22:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CED0F707994
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 May 2023 07:26:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbjERFWQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 May 2023 01:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
+        id S229913AbjERF0Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 May 2023 01:26:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbjERFWP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 May 2023 01:22:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B795C30C2
-        for <linux-nfs@vger.kernel.org>; Wed, 17 May 2023 22:21:27 -0700 (PDT)
+        with ESMTP id S229563AbjERF0X (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 May 2023 01:26:23 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB133A90
+        for <linux-nfs@vger.kernel.org>; Wed, 17 May 2023 22:25:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684387286;
+        s=mimecast20190719; t=1684387532;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=wc+27JL/yOtB8a9pG/9pB0vmWbj5yDS5LrHGaZGLLHM=;
-        b=f6vWgY44dReN9eikyk7qBnmKfXjdSkYT+86Or5f0Hj5FoddbaPwQ1vF0zJXVCh445+QwIM
-        MM925HlzfSS7dpBXtqm67qG/AGWLWKJRGcy7KEcBxl5fPWLbT7MxqdRzDjoFkn9+Kv10rm
-        ZXaMdvXyCxMA4zlJfToaqYnkjyt0wKs=
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
- [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=XgjDn/fMn2KTsPrGr1IM2peFSMqoGe+HeOm/AiE4UBk=;
+        b=Q67zZT7RfO+npppT+srDf3+OOvktFu75mU01p+uTOXqp7CYR6SVUPKyBAA/U/8qgI8+d/q
+        bAuar//5VNWiJA3jCK065M3/MyoY1hkfSJfYInoqGnJuFSGU2Ew90UjaUoycCNGFDpd6Id
+        S+7gZQz3v8FGb2ifwgG1rvC0AtvkdjY=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-470-qibMoZbiOda2bQXfbLKCkA-1; Thu, 18 May 2023 01:21:25 -0400
-X-MC-Unique: qibMoZbiOda2bQXfbLKCkA-1
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1ae4c498f0cso18394475ad.2
-        for <linux-nfs@vger.kernel.org>; Wed, 17 May 2023 22:21:25 -0700 (PDT)
+ us-mta-621-UwuRv4wGPd20bKUqiFDipw-1; Thu, 18 May 2023 01:25:31 -0400
+X-MC-Unique: UwuRv4wGPd20bKUqiFDipw-1
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-64386573ba8so978870b3a.3
+        for <linux-nfs@vger.kernel.org>; Wed, 17 May 2023 22:25:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684387284; x=1686979284;
+        d=1e100.net; s=20221208; t=1684387530; x=1686979530;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wc+27JL/yOtB8a9pG/9pB0vmWbj5yDS5LrHGaZGLLHM=;
-        b=IixNFEaI9n6gRUNszpBE7hdZN6tq/r47hA3zmqWjE5HecEyUr/s6qJWOmvpdnVKTdA
-         Mt7PLmjomfm+pgCufk2AEniy9SV5Nlukaam6UPVsHm3tOuTwj/JomRs7W/N2GXQAFr2r
-         flumeBz92TgPhI6YBBovrLM5vvvQ5bBkFFRNB1+aPeC6+9VGSW4bTmTppT6ji2tNPhrI
-         FkJ9z4GL6Q9RzvK1v1+UJ8Bi6D3iXFH7+rRIm5ZfWcz7CRryeNpGNXhbMZ31Cp7m5a+X
-         CbLR822A9mpg4WtmuH5dv0m60BPTNZb4V9as3nr+2w6RVaI/Eri5LtGdO3uq+Y5bNNMa
-         jE8Q==
-X-Gm-Message-State: AC+VfDx98iOuAbK18dCQ5okuSMT8u05Ir/EpGjh66uanFLo4I+i8EpIg
-        9zIjgFBOyaHC4mgBD4+LFED3zPnPhy88uUFzO3jbbRYjXpkGCK63Tcc5SY3Al69z2Th64xCTkuN
-        1TUt+HiRgA7iTwr3bxEtyrQRqEfL8af3o/A==
-X-Received: by 2002:a17:902:eb46:b0:1ae:89a:92 with SMTP id i6-20020a170902eb4600b001ae089a0092mr1324171pli.59.1684387284118;
-        Wed, 17 May 2023 22:21:24 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4NuKpN7cVRM0ETD6pMBPt6iVxSpDl2D/m6w2E6HHup5ZO4MbT2ko+dhIK+4tFQ4J/XwXs+oA==
-X-Received: by 2002:a17:902:eb46:b0:1ae:89a:92 with SMTP id i6-20020a170902eb4600b001ae089a0092mr1324152pli.59.1684387283704;
-        Wed, 17 May 2023 22:21:23 -0700 (PDT)
+        bh=XgjDn/fMn2KTsPrGr1IM2peFSMqoGe+HeOm/AiE4UBk=;
+        b=PpK7hO324CooHEXYA06neO5BOJEn3bP1oD6cW55yPbP63FiJAbrSa52kKqFS61esVb
+         Ht+Iadh+npI4a8wpz3L6OBL6RZ6JfDh0+D2gVRRpcpSx98qMmjiukFfZRmNNuU3oEBPR
+         mTb7stqS0n1epNKvUT80KMJjV2pkgbnuOoMcElMtjX5S2CQ0RpsECNrN8+i9IOjMKeHw
+         JB4e4ROash4A4t1PiEkd1rOeYfC6tARzgtdq9gP7TL3srArui0tpipTA/drAkZJqxDB3
+         VP46F5OfQoLCEvwl58UK4auWrWfpVjYYwIWSenHPsr7+hslz3LLfDQmw2I2T6/0R1abg
+         PbYA==
+X-Gm-Message-State: AC+VfDy5HMHoxtO94dJ0z3fgBlNtC+TqfH7UIRCL9WHLDSQHvypulyF2
+        ECYy4D+chNjwOCNwonEfS8s3727fSvRv3mCVMprZ3qAWadYwqJBedMwaEI+MDS6Pi9FWANMbjwW
+        R6OIo4s+VB0n375J1w6J9Ja6yOcyoisuAtg==
+X-Received: by 2002:a05:6a21:6da9:b0:101:457:c687 with SMTP id wl41-20020a056a216da900b001010457c687mr1149750pzb.20.1684387529861;
+        Wed, 17 May 2023 22:25:29 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7T/jB8RExJYkHCtr4EJfPn00TyB+0UIDeZc2b6eY6r+YEAtuXYp+TZgyT+XhHQFCjrcB12wQ==
+X-Received: by 2002:a05:6a21:6da9:b0:101:457:c687 with SMTP id wl41-20020a056a216da900b001010457c687mr1149730pzb.20.1684387529496;
+        Wed, 17 May 2023 22:25:29 -0700 (PDT)
 Received: from zlang-mailbox ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id u11-20020a170902e80b00b001a6388ce38bsm312079plg.240.2023.05.17.22.21.21
+        by smtp.gmail.com with ESMTPSA id p37-20020a631e65000000b005143448896csm361081pgm.58.2023.05.17.22.25.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 22:21:23 -0700 (PDT)
-Date:   Thu, 18 May 2023 13:21:19 +0800
+        Wed, 17 May 2023 22:25:29 -0700 (PDT)
+Date:   Thu, 18 May 2023 13:25:24 +0800
 From:   Zorro Lang <zlang@redhat.com>
 To:     Anna Schumaker <anna@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, fstests@vger.kernel.org
+Cc:     linux-nfs@vger.kernel.org, fstests@vger.kernel.org,
+        Anand Jain <anand.jain@oracle.com>
 Subject: Re: [PATCH v3] generic/728: Add a test for xattr ctime updates
-Message-ID: <20230518052119.n6egt7itugl7wjyb@zlang-mailbox>
+Message-ID: <20230518052524.dzoniitzq72hkzyx@zlang-mailbox>
 References: <20230516141407.201674-1-anna@kernel.org>
- <20230516150027.GB858795@frogsfrogsfrogs>
+ <c4b7915a-0bb7-178e-0258-fe24ee3359df@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230516150027.GB858795@frogsfrogsfrogs>
+In-Reply-To: <c4b7915a-0bb7-178e-0258-fe24ee3359df@oracle.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, May 16, 2023 at 08:00:27AM -0700, Darrick J. Wong wrote:
-> On Tue, May 16, 2023 at 10:14:07AM -0400, Anna Schumaker wrote:
+On Wed, May 17, 2023 at 01:04:59PM +0800, Anand Jain wrote:
+> On 16/5/23 22:14, Anna Schumaker wrote:
 > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 > > 
 > > The NFS client wasn't updating ctime after a setxattr request. This is a
 > > test written while fixing the bug.
-> > 
-> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > 
-> > ---
-> > v3:
-> >  - Add a 2 second sleep before changing the xattr
-> > 
-> > v2:
-> >  - Move test to generic/
-> >  - Address comments from the mailing list
-> > ---
-> >  tests/generic/728     | 43 +++++++++++++++++++++++++++++++++++++++++++
-> >  tests/generic/728.out |  2 ++
-> >  2 files changed, 45 insertions(+)
-> >  create mode 100755 tests/generic/728
-> >  create mode 100644 tests/generic/728.out
-> > 
-> > diff --git a/tests/generic/728 b/tests/generic/728
-> > new file mode 100755
-> > index 000000000000..8e52eb4b219c
-> > --- /dev/null
-> > +++ b/tests/generic/728
-> > @@ -0,0 +1,43 @@
-> > +#! /bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Copyright (c) 2023 Netapp Inc., All Rights Reserved.
-> > +#
-> > +# FS QA Test 728
-> > +#
-> > +# Test a bug where the NFS client wasn't sending a post-op GETATTR to the
-> > +# server after setting an xattr, resulting in `stat` reporting a stale ctime.
-> > +#
-> > +. ./common/preamble
-> > +_begin_fstest auto quick attr
-> > +
-> > +# Import common functions
-> > +. ./common/attr
-> > +
-> > +# real QA test starts here
-> > +_supported_fs generic
-> > +_require_test
-> > +_require_attrs
-> > +
-> > +rm -rf $TEST_DIR/testfile
-> > +touch $TEST_DIR/testfile
-> > +
-> > +
-> > +_check_xattr_op()
 > 
-> nit: only common/* functions are supposed to have a leading underscore
-> in the name.
+> You can include the '_fixed_by_kernel_commit' field for hints
 
-I can help to remove the leading underscore when I merge this patch.
-
-> 
-> > +{
-> > +  what=$1
-> > +  shift 1
-> > +
-> > +  before_ctime=$(stat -c %z $TEST_DIR/testfile)
-> > +  sleep 2
-> 
-> I think it would be useful to document that 2 seconds is the worst ctime
-> granularity that we expect from any filesystem (fat) that might pass
-> through fstests.
-> 
-> Just in case, you know, we /ever/ create a fsinfo call to export
-> information like that, and need to refactor all these 'sleep 2'.
-> 
-> "sleep 2 # maximum known ctime granularity is 2s for fat"
-
-Hi Anna, if you don't want to send a v4, you can reply this email to tell
-us what comment you'd like to write. I can add it when I merge this patch.
-Or you'd like to send a v4 by yourself :)
+Anna said the related kernel commit hasn't been acked. I'm not sure what's the
+current status, if it's acked but not merged, Anna can use "xxxxxxxx" to replace
+the commit id temporarily, or add this later (just don't forget:)
 
 Thanks,
 Zorro
 
+> on unfixed kernels. With this and Darrick's suggestions, you
+> can add my RB.
 > 
-> With those two things fixed,
-> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+>  Reviewed-by: Anand Jain <anand.jain@oracle.com>
 > 
-> --D
-> 
-> 
-> > +  $SETFATTR_PROG $* $TEST_DIR/testfile
-> > +  after_ctime=$(stat -c %z $TEST_DIR/testfile)
-> > +
-> > +  test "$before_ctime" != "$after_ctime" || echo "Expected ctime to change after $what."
-> > +}
-> > +
-> > +_check_xattr_op setxattr -n user.foobar -v 123
-> > +_check_xattr_op removexattr -x user.foobar
-> > +
-> > +echo "Silence is golden"
-> > +status=0
-> > +exit
-> > diff --git a/tests/generic/728.out b/tests/generic/728.out
-> > new file mode 100644
-> > index 000000000000..ab39f45fe5da
-> > --- /dev/null
-> > +++ b/tests/generic/728.out
-> > @@ -0,0 +1,2 @@
-> > +QA output created by 728
-> > +Silence is golden
-> > -- 
-> > 2.40.1
-> > 
 > 
 
