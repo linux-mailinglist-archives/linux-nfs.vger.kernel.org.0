@@ -2,41 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82997708720
+	by mail.lfdr.de (Postfix) with ESMTP id CCA68708721
 	for <lists+linux-nfs@lfdr.de>; Thu, 18 May 2023 19:46:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230122AbjERRqE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 May 2023 13:46:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38150 "EHLO
+        id S229498AbjERRqF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 May 2023 13:46:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbjERRps (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 May 2023 13:45:48 -0400
+        with ESMTP id S230120AbjERRpz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 May 2023 13:45:55 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87AE810D9
-        for <linux-nfs@vger.kernel.org>; Thu, 18 May 2023 10:45:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D8B10D7
+        for <linux-nfs@vger.kernel.org>; Thu, 18 May 2023 10:45:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CF67165151
-        for <linux-nfs@vger.kernel.org>; Thu, 18 May 2023 17:45:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0043C433EF;
-        Thu, 18 May 2023 17:45:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B30A65152
+        for <linux-nfs@vger.kernel.org>; Thu, 18 May 2023 17:45:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71B4AC433D2;
+        Thu, 18 May 2023 17:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684431938;
-        bh=zmx31IBMhswvh8VvcwzaL8k+Mw8JRQIyOLRpM63CV0s=;
+        s=k20201202; t=1684431945;
+        bh=w9dAfnhhZKznEo7cq52KQd5r+P0fpvIilJBFp8XqpGs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bpUIM/xb/BsQt/XZiCRQKh+aA2Ak7oGdC+WuC4RA0n3zYZ51o4CFxYeW+4sRD2yPJ
-         YhqHTB+37Ko4FiQoVqVm1cDOO10W85NoE8OAvVcZz+Ab57CMMVZdRa3OgxBCBM7YZM
-         SKlpu1k//XQi4AtXCnNtAkpKEqcBOMoHi3ENqrvK0IIZV+0ECj8wOC8/mbIhjCIyOv
-         1OcXNSRD0AIktPej8PiUe51x40iZ7ak0aEi3Vq3e2OHgdnsjogvGADQuhN21aVDqta
-         ztwTkswQ9dSmnfBQRMV9eHvOTwfwUQINYYSlz+KdGdWfBzbSHlPfhU9FdkOx74baL9
-         5HToUEzWkmmmQ==
-Subject: [PATCH v1 1/6] NFSD: Ensure that xdr_write_pages updates rq_next_page
+        b=o7wA40gOV0D16I2HtIzDQfWxJdpZU5w4yEm5XqWvU0xdDIHWX5zd9AB6UlotSuePJ
+         FRm7vhRWl5ILgCTXU5yxbGNpwwmzYMo5KfJFfcPvPg7coRctuPrIlDW9R9ZDSQQ+4r
+         a+U6sGlwZYqn2DGL0O4gxQv1pB/fFecMlUe0BpHo3AWJmEx5ZgIm1Ob26Yj+1T9KJK
+         DEwNHcu6d9J67GYnY2+C736gFKhlLstU+M/N5OxEriui645Hix3T30GGZp+oLP/zza
+         XNlr4joDjrZ4McIU3leBXqxwMj7bvsY1r94HVGf3vhuBwPbVOFJ7R3iKKGgmBc57tV
+         ADVMwGwUKbtwg==
+Subject: [PATCH v1 2/6] NFSD: Use svcxdr_encode_opaque_pages() in
+ nfsd4_encode_splice_read()
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, dhowells@redhat.com, jlayton@redhat.com
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date:   Thu, 18 May 2023 13:45:36 -0400
-Message-ID: <168443193694.516083.10348236224527959251.stgit@klimt.1015granger.net>
+Cc:     Andy Zlotek <andy.zlotek@oracle.com>,
+        Calum Mackay <calum.mackay@oracle.com>,
+        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Date:   Thu, 18 May 2023 13:45:43 -0400
+Message-ID: <168443194347.516083.17882210704288086567.stgit@klimt.1015granger.net>
 In-Reply-To: <168443154055.516083.746756240848084451.stgit@klimt.1015granger.net>
 References: <168443154055.516083.746756240848084451.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5
@@ -55,119 +58,105 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-All other NFSv[23] procedures manage to keep page_ptr and
-rq_next_page in lock step.
+Commit 15b23ef5d348 ("nfsd4: fix corruption of NFSv4 read data")
+encountered exactly the same issue: after a splice read, a
+filesystem-owned page is left in rq_pages[]; the symptoms are the
+same as described there.
 
+If the computed number of pages in nfsd4_encode_splice_read() is not
+exactly the same as the actual number of pages that were consumed by
+nfsd_splice_actor() (say, because of a bug) then hilarity ensues.
+
+Instead of recomputing the page offset based on the size of the
+payload, use rq_next_page, which is already properly updated by
+nfsd_splice_actor(), to cause svc_rqst_release_pages() to operate
+correctly in every instance.
+
+This is a defensive change since we believe that after commit
+27c934dd8832 ("nfsd: don't replace page in rq_pages if it's a
+continuation of last page") has been applied, there are no known
+opportunities for nfsd_splice_actor() to screw up. So I'm not
+marking it for stable backport.
+
+Reported-by: Andy Zlotek <andy.zlotek@oracle.com>
+Suggested-by: Calum Mackay <calum.mackay@oracle.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3xdr.c          |   11 +++++++----
- fs/nfsd/nfsxdr.c           |   11 +++++++----
- include/linux/sunrpc/svc.h |   21 +++++++++++++++++++++
- 3 files changed, 35 insertions(+), 8 deletions(-)
+ fs/nfsd/nfs4xdr.c |   42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 3308dd671ef0..f32128955ec8 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -828,7 +828,8 @@ nfs3svc_encode_readlinkres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 			return false;
- 		if (xdr_stream_encode_u32(xdr, resp->len) < 0)
- 			return false;
--		xdr_write_pages(xdr, resp->pages, 0, resp->len);
-+		svcxdr_encode_opaque_pages(rqstp, xdr, resp->pages, 0,
-+					   resp->len);
- 		if (svc_encode_result_payload(rqstp, head->iov_len, resp->len) < 0)
- 			return false;
- 		break;
-@@ -859,8 +860,9 @@ nfs3svc_encode_readres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 			return false;
- 		if (xdr_stream_encode_u32(xdr, resp->count) < 0)
- 			return false;
--		xdr_write_pages(xdr, resp->pages, rqstp->rq_res.page_base,
--				resp->count);
-+		svcxdr_encode_opaque_pages(rqstp, xdr, resp->pages,
-+					   rqstp->rq_res.page_base,
-+					   resp->count);
- 		if (svc_encode_result_payload(rqstp, head->iov_len, resp->count) < 0)
- 			return false;
- 		break;
-@@ -961,7 +963,8 @@ nfs3svc_encode_readdirres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 			return false;
- 		if (!svcxdr_encode_cookieverf3(xdr, resp->verf))
- 			return false;
--		xdr_write_pages(xdr, dirlist->pages, 0, dirlist->len);
-+		svcxdr_encode_opaque_pages(rqstp, xdr, dirlist->pages, 0,
-+					   dirlist->len);
- 		/* no more entries */
- 		if (xdr_stream_encode_item_absent(xdr) < 0)
- 			return false;
-diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
-index caf6355b18fa..5777f40c7353 100644
---- a/fs/nfsd/nfsxdr.c
-+++ b/fs/nfsd/nfsxdr.c
-@@ -468,7 +468,8 @@ nfssvc_encode_readlinkres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 	case nfs_ok:
- 		if (xdr_stream_encode_u32(xdr, resp->len) < 0)
- 			return false;
--		xdr_write_pages(xdr, &resp->page, 0, resp->len);
-+		svcxdr_encode_opaque_pages(rqstp, xdr, &resp->page, 0,
-+					   resp->len);
- 		if (svc_encode_result_payload(rqstp, head->iov_len, resp->len) < 0)
- 			return false;
- 		break;
-@@ -491,8 +492,9 @@ nfssvc_encode_readres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 			return false;
- 		if (xdr_stream_encode_u32(xdr, resp->count) < 0)
- 			return false;
--		xdr_write_pages(xdr, resp->pages, rqstp->rq_res.page_base,
--				resp->count);
-+		svcxdr_encode_opaque_pages(rqstp, xdr, resp->pages,
-+					   rqstp->rq_res.page_base,
-+					   resp->count);
- 		if (svc_encode_result_payload(rqstp, head->iov_len, resp->count) < 0)
- 			return false;
- 		break;
-@@ -511,7 +513,8 @@ nfssvc_encode_readdirres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 		return false;
- 	switch (resp->status) {
- 	case nfs_ok:
--		xdr_write_pages(xdr, dirlist->pages, 0, dirlist->len);
-+		svcxdr_encode_opaque_pages(rqstp, xdr, dirlist->pages, 0,
-+					   dirlist->len);
- 		/* no more entries */
- 		if (xdr_stream_encode_item_absent(xdr) < 0)
- 			return false;
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 762d7231e574..3b10636c51a9 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -508,6 +508,27 @@ static inline void svcxdr_init_encode(struct svc_rqst *rqstp)
- 	xdr->rqst = NULL;
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index c5c6873b938d..0368e0902146 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4032,6 +4032,11 @@ nfsd4_encode_open_downgrade(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	return nfsd4_encode_stateid(xdr, &od->od_stateid);
  }
  
-+/**
-+ * svcxdr_encode_opaque_pages - Insert pages into an xdr_stream
-+ * @xdr: xdr_stream to be updated
-+ * @pages: array of pages to insert
-+ * @base: starting offset of first data byte in @pages
-+ * @len: number of data bytes in @pages to insert
-+ *
-+ * After the @pages are added, the tail iovec is instantiated pointing
-+ * to end of the head buffer, and the stream is set up to encode
-+ * subsequent items into the tail.
++/*
++ * The operation of this function assumes that this is the only
++ * READ operation in the COMPOUND. If there are multiple READs,
++ * we use nfsd4_encode_readv().
 + */
-+static inline void svcxdr_encode_opaque_pages(struct svc_rqst *rqstp,
-+					      struct xdr_stream *xdr,
-+					      struct page **pages,
-+					      unsigned int base,
-+					      unsigned int len)
-+{
-+	xdr_write_pages(xdr, pages, base, len);
-+	xdr->page_ptr = rqstp->rq_next_page - 1;
-+}
-+
- /**
-  * svcxdr_set_auth_slack -
-  * @rqstp: RPC transaction
+ static __be32 nfsd4_encode_splice_read(
+ 				struct nfsd4_compoundres *resp,
+ 				struct nfsd4_read *read,
+@@ -4042,8 +4047,12 @@ static __be32 nfsd4_encode_splice_read(
+ 	int status, space_left;
+ 	__be32 nfserr;
+ 
+-	/* Make sure there will be room for padding if needed */
+-	if (xdr->end - xdr->p < 1)
++	/*
++	 * Make sure there is room at the end of buf->head for
++	 * svcxdr_encode_opaque_pages() to create a tail buffer
++	 * to XDR-pad the payload.
++	 */
++	if (xdr->iov != xdr->buf->head || xdr->end - xdr->p < 1)
+ 		return nfserr_resource;
+ 
+ 	nfserr = nfsd_splice_read(read->rd_rqstp, read->rd_fhp,
+@@ -4059,31 +4068,22 @@ static __be32 nfsd4_encode_splice_read(
+ 		goto out_err;
+ 	}
+ 
+-	buf->page_len = maxcount;
+-	buf->len += maxcount;
+-	xdr->page_ptr += (buf->page_base + maxcount + PAGE_SIZE - 1)
+-							/ PAGE_SIZE;
+-
+-	/* Use rest of head for padding and remaining ops: */
+-	buf->tail[0].iov_base = xdr->p;
+-	buf->tail[0].iov_len = 0;
+-	xdr->iov = buf->tail;
+-	if (maxcount&3) {
+-		int pad = 4 - (maxcount&3);
+-
+-		*(xdr->p++) = 0;
+-
+-		buf->tail[0].iov_base += maxcount&3;
+-		buf->tail[0].iov_len = pad;
+-		buf->len += pad;
+-	}
++	svcxdr_encode_opaque_pages(read->rd_rqstp, xdr, buf->pages, 0,
++				   maxcount);
+ 
++	/*
++	 * Prepare to encode subsequent operations.
++	 *
++	 * xdr_truncate_encode() is not safe to use after a successful
++	 * splice read has been done, so the following stream
++	 * manipulations are open-coded.
++	 */
+ 	space_left = min_t(int, (void *)xdr->end - (void *)xdr->p,
+ 				buf->buflen - buf->len);
+ 	buf->buflen = buf->len + space_left;
+ 	xdr->end = (__be32 *)((void *)xdr->end + space_left);
+ 
+-	return 0;
++	return nfs_ok;
+ 
+ out_err:
+ 	/*
 
 
