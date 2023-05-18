@@ -2,173 +2,193 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 345DF707684
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 May 2023 01:39:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 906AB707982
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 May 2023 07:22:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229457AbjEQXjX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 May 2023 19:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59084 "EHLO
+        id S229513AbjERFWQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 May 2023 01:22:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjEQXjV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 May 2023 19:39:21 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08F2046B7;
-        Wed, 17 May 2023 16:39:16 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34HIGocf018161;
-        Wed, 17 May 2023 23:39:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=13yFsu/hc2QefBrXwXw9AQoe32PXPPNvjMgyb8bREfE=;
- b=0OZNozKmFSE+hL5S9Ki2xYKxnsWDxbQ65Bw7+VCu377pIGZC+5oeKsONAw5VzTVBRy9M
- +bQfWrDfngAfW+Qe2KrGsUPQp5Swi1CdJLd8IpWQ/W5H1zp5Brqanxu7MytXLWZS+F7K
- kXnecqdESdEzeWu8JktBYbSZ95VNmMjxB1+Nn9ZkgonFcRjXKJsq49i/iaQDUGjz+U4E
- RJLv7fxm47sKr8O71DsuQuBt/WolG7/K9jRa9n8/db7c2xClAGRbITFTo2fVZXA05+pm
- 3zIm0WUVu63P6WVd6zwy+kPqmuuYcK1qzCF0FhIrR3T1yN82vgEqM2WPmF0G1oHAppYr 7A== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qj0ye6q8a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 May 2023 23:39:13 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34HN94Qs032131;
-        Wed, 17 May 2023 23:39:13 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qj10c3umj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 May 2023 23:39:13 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34HNdABl015880;
-        Wed, 17 May 2023 23:39:12 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3qj10c3u5n-3;
-        Wed, 17 May 2023 23:39:12 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 2/2] NFSD: enable support for write delegation
-Date:   Wed, 17 May 2023 16:38:10 -0700
-Message-Id: <1684366690-28029-3-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1684366690-28029-1-git-send-email-dai.ngo@oracle.com>
-References: <1684366690-28029-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-17_04,2023-05-17_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305170194
-X-Proofpoint-ORIG-GUID: d7PWcoDHnUI4-tmHszg440bs8Yt6zc7G
-X-Proofpoint-GUID: d7PWcoDHnUI4-tmHszg440bs8Yt6zc7G
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        with ESMTP id S229668AbjERFWP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 May 2023 01:22:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B795C30C2
+        for <linux-nfs@vger.kernel.org>; Wed, 17 May 2023 22:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684387286;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wc+27JL/yOtB8a9pG/9pB0vmWbj5yDS5LrHGaZGLLHM=;
+        b=f6vWgY44dReN9eikyk7qBnmKfXjdSkYT+86Or5f0Hj5FoddbaPwQ1vF0zJXVCh445+QwIM
+        MM925HlzfSS7dpBXtqm67qG/AGWLWKJRGcy7KEcBxl5fPWLbT7MxqdRzDjoFkn9+Kv10rm
+        ZXaMdvXyCxMA4zlJfToaqYnkjyt0wKs=
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com
+ [209.85.214.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-470-qibMoZbiOda2bQXfbLKCkA-1; Thu, 18 May 2023 01:21:25 -0400
+X-MC-Unique: qibMoZbiOda2bQXfbLKCkA-1
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1ae4c498f0cso18394475ad.2
+        for <linux-nfs@vger.kernel.org>; Wed, 17 May 2023 22:21:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684387284; x=1686979284;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wc+27JL/yOtB8a9pG/9pB0vmWbj5yDS5LrHGaZGLLHM=;
+        b=IixNFEaI9n6gRUNszpBE7hdZN6tq/r47hA3zmqWjE5HecEyUr/s6qJWOmvpdnVKTdA
+         Mt7PLmjomfm+pgCufk2AEniy9SV5Nlukaam6UPVsHm3tOuTwj/JomRs7W/N2GXQAFr2r
+         flumeBz92TgPhI6YBBovrLM5vvvQ5bBkFFRNB1+aPeC6+9VGSW4bTmTppT6ji2tNPhrI
+         FkJ9z4GL6Q9RzvK1v1+UJ8Bi6D3iXFH7+rRIm5ZfWcz7CRryeNpGNXhbMZ31Cp7m5a+X
+         CbLR822A9mpg4WtmuH5dv0m60BPTNZb4V9as3nr+2w6RVaI/Eri5LtGdO3uq+Y5bNNMa
+         jE8Q==
+X-Gm-Message-State: AC+VfDx98iOuAbK18dCQ5okuSMT8u05Ir/EpGjh66uanFLo4I+i8EpIg
+        9zIjgFBOyaHC4mgBD4+LFED3zPnPhy88uUFzO3jbbRYjXpkGCK63Tcc5SY3Al69z2Th64xCTkuN
+        1TUt+HiRgA7iTwr3bxEtyrQRqEfL8af3o/A==
+X-Received: by 2002:a17:902:eb46:b0:1ae:89a:92 with SMTP id i6-20020a170902eb4600b001ae089a0092mr1324171pli.59.1684387284118;
+        Wed, 17 May 2023 22:21:24 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4NuKpN7cVRM0ETD6pMBPt6iVxSpDl2D/m6w2E6HHup5ZO4MbT2ko+dhIK+4tFQ4J/XwXs+oA==
+X-Received: by 2002:a17:902:eb46:b0:1ae:89a:92 with SMTP id i6-20020a170902eb4600b001ae089a0092mr1324152pli.59.1684387283704;
+        Wed, 17 May 2023 22:21:23 -0700 (PDT)
+Received: from zlang-mailbox ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170902e80b00b001a6388ce38bsm312079plg.240.2023.05.17.22.21.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 22:21:23 -0700 (PDT)
+Date:   Thu, 18 May 2023 13:21:19 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Anna Schumaker <anna@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, fstests@vger.kernel.org
+Subject: Re: [PATCH v3] generic/728: Add a test for xattr ctime updates
+Message-ID: <20230518052119.n6egt7itugl7wjyb@zlang-mailbox>
+References: <20230516141407.201674-1-anna@kernel.org>
+ <20230516150027.GB858795@frogsfrogsfrogs>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230516150027.GB858795@frogsfrogsfrogs>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This patch grants write delegation for OPEN with NFS4_SHARE_ACCESS_WRITE
-if there is no conflict with other OPENs.
+On Tue, May 16, 2023 at 08:00:27AM -0700, Darrick J. Wong wrote:
+> On Tue, May 16, 2023 at 10:14:07AM -0400, Anna Schumaker wrote:
+> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > 
+> > The NFS client wasn't updating ctime after a setxattr request. This is a
+> > test written while fixing the bug.
+> > 
+> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > 
+> > ---
+> > v3:
+> >  - Add a 2 second sleep before changing the xattr
+> > 
+> > v2:
+> >  - Move test to generic/
+> >  - Address comments from the mailing list
+> > ---
+> >  tests/generic/728     | 43 +++++++++++++++++++++++++++++++++++++++++++
+> >  tests/generic/728.out |  2 ++
+> >  2 files changed, 45 insertions(+)
+> >  create mode 100755 tests/generic/728
+> >  create mode 100644 tests/generic/728.out
+> > 
+> > diff --git a/tests/generic/728 b/tests/generic/728
+> > new file mode 100755
+> > index 000000000000..8e52eb4b219c
+> > --- /dev/null
+> > +++ b/tests/generic/728
+> > @@ -0,0 +1,43 @@
+> > +#! /bin/bash
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Copyright (c) 2023 Netapp Inc., All Rights Reserved.
+> > +#
+> > +# FS QA Test 728
+> > +#
+> > +# Test a bug where the NFS client wasn't sending a post-op GETATTR to the
+> > +# server after setting an xattr, resulting in `stat` reporting a stale ctime.
+> > +#
+> > +. ./common/preamble
+> > +_begin_fstest auto quick attr
+> > +
+> > +# Import common functions
+> > +. ./common/attr
+> > +
+> > +# real QA test starts here
+> > +_supported_fs generic
+> > +_require_test
+> > +_require_attrs
+> > +
+> > +rm -rf $TEST_DIR/testfile
+> > +touch $TEST_DIR/testfile
+> > +
+> > +
+> > +_check_xattr_op()
+> 
+> nit: only common/* functions are supposed to have a leading underscore
+> in the name.
 
-Write delegation conflict with another OPEN, REMOVE, RENAME and SETATTR
-are handled the same as read delegation using notify_change,
-try_break_deleg.
+I can help to remove the leading underscore when I merge this patch.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+> 
+> > +{
+> > +  what=$1
+> > +  shift 1
+> > +
+> > +  before_ctime=$(stat -c %z $TEST_DIR/testfile)
+> > +  sleep 2
+> 
+> I think it would be useful to document that 2 seconds is the worst ctime
+> granularity that we expect from any filesystem (fat) that might pass
+> through fstests.
+> 
+> Just in case, you know, we /ever/ create a fsinfo call to export
+> information like that, and need to refactor all these 'sleep 2'.
+> 
+> "sleep 2 # maximum known ctime granularity is 2s for fat"
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 6e61fa3acaf1..09a9e16407f9 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1144,7 +1144,7 @@ static void block_delegations(struct knfsd_fh *fh)
- 
- static struct nfs4_delegation *
- alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
--		 struct nfs4_clnt_odstate *odstate)
-+		struct nfs4_clnt_odstate *odstate, u32 dl_type)
- {
- 	struct nfs4_delegation *dp;
- 	long n;
-@@ -1170,7 +1170,7 @@ alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
- 	INIT_LIST_HEAD(&dp->dl_recall_lru);
- 	dp->dl_clnt_odstate = odstate;
- 	get_clnt_odstate(odstate);
--	dp->dl_type = NFS4_OPEN_DELEGATE_READ;
-+	dp->dl_type = dl_type;
- 	dp->dl_retries = 1;
- 	dp->dl_recalled = false;
- 	nfsd4_init_cb(&dp->dl_recall, dp->dl_stid.sc_client,
-@@ -5451,6 +5451,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	struct nfs4_delegation *dp;
- 	struct nfsd_file *nf;
- 	struct file_lock *fl;
-+	u32 deleg;
- 
- 	/*
- 	 * The fi_had_conflict and nfs_get_existing_delegation checks
-@@ -5460,7 +5461,13 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	if (fp->fi_had_conflict)
- 		return ERR_PTR(-EAGAIN);
- 
--	nf = find_readable_file(fp);
-+	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
-+		nf = find_writeable_file(fp);
-+		deleg = NFS4_OPEN_DELEGATE_WRITE;
-+	} else {
-+		nf = find_readable_file(fp);
-+		deleg = NFS4_OPEN_DELEGATE_READ;
-+	}
- 	if (!nf) {
- 		/*
- 		 * We probably could attempt another open and get a read
-@@ -5491,11 +5498,11 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 		return ERR_PTR(status);
- 
- 	status = -ENOMEM;
--	dp = alloc_init_deleg(clp, fp, odstate);
-+	dp = alloc_init_deleg(clp, fp, odstate, deleg);
- 	if (!dp)
- 		goto out_delegees;
- 
--	fl = nfs4_alloc_init_lease(dp, NFS4_OPEN_DELEGATE_READ);
-+	fl = nfs4_alloc_init_lease(dp, deleg);
- 	if (!fl)
- 		goto out_clnt_odstate;
- 
-@@ -5583,6 +5590,7 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	struct svc_fh *parent = NULL;
- 	int cb_up;
- 	int status = 0;
-+	u32 wdeleg = false;
- 
- 	cb_up = nfsd4_cb_channel_good(oo->oo_owner.so_client);
- 	open->op_recall = 0;
-@@ -5590,8 +5598,6 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 		case NFS4_OPEN_CLAIM_PREVIOUS:
- 			if (!cb_up)
- 				open->op_recall = 1;
--			if (open->op_delegate_type != NFS4_OPEN_DELEGATE_READ)
--				goto out_no_deleg;
- 			break;
- 		case NFS4_OPEN_CLAIM_NULL:
- 			parent = currentfh;
-@@ -5617,7 +5623,9 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	memcpy(&open->op_delegate_stateid, &dp->dl_stid.sc_stateid, sizeof(dp->dl_stid.sc_stateid));
- 
- 	trace_nfsd_deleg_read(&dp->dl_stid.sc_stateid);
--	open->op_delegate_type = NFS4_OPEN_DELEGATE_READ;
-+	wdeleg = open->op_share_access & NFS4_SHARE_ACCESS_WRITE;
-+	open->op_delegate_type = wdeleg ?
-+			NFS4_OPEN_DELEGATE_WRITE : NFS4_OPEN_DELEGATE_READ;
- 	nfs4_put_stid(&dp->dl_stid);
- 	return;
- out_no_deleg:
--- 
-2.9.5
+Hi Anna, if you don't want to send a v4, you can reply this email to tell
+us what comment you'd like to write. I can add it when I merge this patch.
+Or you'd like to send a v4 by yourself :)
+
+Thanks,
+Zorro
+
+> 
+> With those two things fixed,
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> 
+> --D
+> 
+> 
+> > +  $SETFATTR_PROG $* $TEST_DIR/testfile
+> > +  after_ctime=$(stat -c %z $TEST_DIR/testfile)
+> > +
+> > +  test "$before_ctime" != "$after_ctime" || echo "Expected ctime to change after $what."
+> > +}
+> > +
+> > +_check_xattr_op setxattr -n user.foobar -v 123
+> > +_check_xattr_op removexattr -x user.foobar
+> > +
+> > +echo "Silence is golden"
+> > +status=0
+> > +exit
+> > diff --git a/tests/generic/728.out b/tests/generic/728.out
+> > new file mode 100644
+> > index 000000000000..ab39f45fe5da
+> > --- /dev/null
+> > +++ b/tests/generic/728.out
+> > @@ -0,0 +1,2 @@
+> > +QA output created by 728
+> > +Silence is golden
+> > -- 
+> > 2.40.1
+> > 
+> 
 
