@@ -2,63 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A3397093BF
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 May 2023 11:38:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BC447093EE
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 May 2023 11:45:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231833AbjESJil (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 May 2023 05:38:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43610 "EHLO
+        id S230437AbjESJp3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 May 2023 05:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230358AbjESJhz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 May 2023 05:37:55 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E98910C9;
-        Fri, 19 May 2023 02:37:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=lKV8h274a8dJZYXDnZBnFaYep44iQbnn3gg/wqWXLcU=; b=cWIcWF+NCJsR16lt+GN3SyqYi8
-        20m98Sg1zXHAv7DP2DoTSsINVBJLT/jPU8582VtWjlVAlPAxQNKVTFaC0YOnpEd5FvRMnBLi4ey94
-        K4WsXk4K1iXMjE0WTmxaYPPuCk8QMzpH/S5exdIPqIWUyCVLjzR3cBZl2UWcus5acmbfLvwlunIjm
-        4ycE2BJo+CC540gWRfo2M+hpyeOMIoCToQspTNQ3U/ipx7csq77R4XMThx+m4QCcDyjZBfA7VJFoS
-        hKoo+WYpC8HvPYhP5WamSeG2WcUggfS4/afnmf7Abg1NQrcteg0tvokFZlTlL+/0VmwC02dijjfgF
-        XYj4OTgA==;
-Received: from [2001:4bb8:188:3dd5:e8d0:68bb:e5be:210a] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pzwWm-00Fjl7-2x;
-        Fri, 19 May 2023 09:36:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net (open list:F2FS FILE SYSTEM),
-        cluster-devel@redhat.com, linux-xfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH 13/13] fuse: use direct_write_fallback
-Date:   Fri, 19 May 2023 11:35:21 +0200
-Message-Id: <20230519093521.133226-14-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230519093521.133226-1-hch@lst.de>
-References: <20230519093521.133226-1-hch@lst.de>
+        with ESMTP id S231991AbjESJpE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 May 2023 05:45:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6930110FF
+        for <linux-nfs@vger.kernel.org>; Fri, 19 May 2023 02:42:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684489220;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=N3zJTPy7+Wv3Siu08/r/1ERvBUA7DhrvgCru8QrTFQ4=;
+        b=SkkOooGeAM6JktKvq63qZB8NfLRpmteD/ud/iFQZ7nl9ZUCYEMfwORjZDvLi7pEFeeO36P
+        La1sTvd7biavmaPS0AvUDuxqKB9iL7o4k/ZNqgCLiq1J6Cy8J1eRJjVkssr1DBinbgwAC5
+        iuLjgKeXuVkWk63qZno06UN3KsZPDt4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-550-2jnMJFdFOTWEH4gdEkMiMA-1; Fri, 19 May 2023 05:40:14 -0400
+X-MC-Unique: 2jnMJFdFOTWEH4gdEkMiMA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 581028002BF;
+        Fri, 19 May 2023 09:40:14 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.221])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7700A140E954;
+        Fri, 19 May 2023 09:40:13 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAAmbk-f_U8CPcTQM866L572uUHdK4p5iWKnUQs4r8fkW=6RW9g@mail.gmail.com>
+References: <CAAmbk-f_U8CPcTQM866L572uUHdK4p5iWKnUQs4r8fkW=6RW9g@mail.gmail.com>
+To:     Chris Chilvers <chilversc@gmail.com>
+Cc:     dhowells@redhat.com, linux-nfs@vger.kernel.org,
+        linux-cachefs@redhat.com, brennandoyle@google.com,
+        Benjamin Maynard <benmaynard@google.com>
+Subject: Re: [Linux-cachefs] [BUG] fscache writing but not reading
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1744184.1684489212.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 19 May 2023 10:40:12 +0100
+Message-ID: <1744185.1684489212@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,62 +66,26 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Use the generic direct_write_fallback helper instead of duplicating the
-logic.
+Chris Chilvers <chilversc@gmail.com> wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/fuse/file.c | 27 +++------------------------
- 1 file changed, 3 insertions(+), 24 deletions(-)
+> While testing the fscache performance fixes [1] that were merged into 6.=
+4-rc1
+> it appears that the caching no longer works. The client will write to th=
+e cache
+> but never reads.
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 5f7b58798f99fc..02ab446ab57f1f 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1340,11 +1340,9 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	struct file *file = iocb->ki_filp;
- 	struct address_space *mapping = file->f_mapping;
- 	ssize_t written = 0;
--	ssize_t written_buffered = 0;
- 	struct inode *inode = mapping->host;
- 	ssize_t err;
- 	struct fuse_conn *fc = get_fuse_conn(inode);
--	loff_t endbyte = 0;
- 
- 	if (fc->writeback_cache) {
- 		/* Update size (EOF optimization) and mode (SUID clearing) */
-@@ -1382,28 +1380,9 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
- 	if (iocb->ki_flags & IOCB_DIRECT) {
- 		written = generic_file_direct_write(iocb, from);
--		if (written < 0 || !iov_iter_count(from))
--			goto out;
--
--		written_buffered = fuse_perform_write(iocb, from);
--		if (written_buffered < 0) {
--			err = written_buffered;
--			goto out;
--		}
--		endbyte = iocb->ki_pos + written_buffered - 1;
--
--		err = filemap_write_and_wait_range(file->f_mapping,
--						   iocb->ki_pos,
--						   endbyte);
--		if (err)
--			goto out;
--
--		invalidate_mapping_pages(file->f_mapping,
--					 iocb->ki_pos >> PAGE_SHIFT,
--					 endbyte >> PAGE_SHIFT);
--
--		written += written_buffered;
--		iocb->ki_pos += written_buffered;
-+		if (written >= 0 && iov_iter_count(from))
-+			written = direct_write_fallback(iocb, from, written,
-+					fuse_perform_write(iocb, from));
- 	} else {
- 		written = fuse_perform_write(iocb, from);
- 	}
--- 
-2.39.2
+Can you try reading from afs?  You would need to enable CONFIG_AFS_FS in y=
+our
+kernel if it's not already set.
+
+Install kafs-client and do:
+
+	systemctl enable afs.mount
+	md5sum /afs/openafs.org/software/openafs/1.9.1/openafs-1.9.1-doc.tar.bz2
+	cat /proc/fs/fscache/stats
+	umount /afs/openafs.org
+	md5sum /afs/openafs.org/software/openafs/1.9.1/openafs-1.9.1-doc.tar.bz2
+	cat /proc/fs/fscache/stats
+
+David
 
