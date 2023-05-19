@@ -2,110 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 56295709610
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 May 2023 13:17:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDC02709626
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 May 2023 13:18:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231484AbjESLRa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 May 2023 07:17:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53492 "EHLO
+        id S231953AbjESLSJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 May 2023 07:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231502AbjESLR1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 May 2023 07:17:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C981510C6
-        for <linux-nfs@vger.kernel.org>; Fri, 19 May 2023 04:17:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 53AEC656E5
-        for <linux-nfs@vger.kernel.org>; Fri, 19 May 2023 11:17:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A3BC433EF;
-        Fri, 19 May 2023 11:17:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684495045;
-        bh=qxqvGwTqrZSZBSQOemnZkZlqkd+6FylAk1UlwxMcZkM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ABOLMzGXCQBKBgjOMttiY3FVm6oMc8HZ5l5Wi7Y3jcFCdcX9HBCfSVSQoKtjVTZFE
-         y6FREIBSTVWKy8Eu5FseLdGAjbNcIOJHT0uhT6IuhU5q+wDAtWFCESiS2/M90ci+4d
-         n46zKTwc0SkqgUpbwo3FYPRyYXzR0rS3Bw0miP5EGxrmNN7ftoze0KBZj7HIaJirOz
-         3D2IfOpIhrNiHTELwPfmb8NIs6z/hNBpEo6O3U42St8Li/PsNXUl7svSVBgZsncnz/
-         YrYvTgE1fzW4WzWeegPYQVMTo52QW0c6JNJSso/L6DY4BYyec5Yb8d3Pt4ThAynZOO
-         VVlESJcVr3fsQ==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] nfsd: don't provide pre/post-op attrs if fh_getattr fails
-Date:   Fri, 19 May 2023 07:17:23 -0400
-Message-Id: <20230519111723.20612-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.40.1
+        with ESMTP id S231696AbjESLSG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 May 2023 07:18:06 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53DE410FC
+        for <linux-nfs@vger.kernel.org>; Fri, 19 May 2023 04:18:04 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-50c8d87c775so4535028a12.3
+        for <linux-nfs@vger.kernel.org>; Fri, 19 May 2023 04:18:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684495083; x=1687087083;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
+        b=Wt/WzQmS095ww6zzUgoSSAlrCDxwL2gSoVBMsVxHRKn23YcliDiJyBLjqweTRoToj1
+         ufUOgV4j5pHE/9SR+dsRPr9gpju7XpaMYkUmYe1T6vrhoZIvsQDtFJjwfPWr0ZA8MwEK
+         A8xkN8RoXHrnV8mxXNMusUB3EToMcUvt2JPOXJbMgVYPwdz45S3ERx+Nyqo+cmGrrOa8
+         vd+RSV3BkQDybrevFx7U7UuvnFt+9sOfqdHCxo6t6nUsXpAQmNebiCtg7JMDFdLkqxgM
+         8PXBgbynXWRxC6QXqoh8bbtvc/aqA5Z2+Ycz9m8q7U5s8LdUBFb9kcl7MTOhQK2ZKsRi
+         q6Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684495083; x=1687087083;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YmxaI1amCfTksu6ynk2557PwK0HJxrBQmYIx/Pz5hBs=;
+        b=R1NEsJMbUNe/uCyEHenYwIgCOblg3genj1I961QsHiETkZ+TsbJcFgumOpZJHjV8kk
+         q/ZAdKisTTmDH/76g8sub0kHhWncqoPmGYU2Sj35b16ZdvjOTKlE8ocOEvxEQAb7EQJK
+         gPGwNyOMYfKKY8tOC4xgR5rBR3XBbDJMyqVwMgJBTRIrcRjfMr4zyehMIjew+Rgcpqfh
+         FGNdVDqVxFncSjN3A7kq4orN11NTUfuKaSWnWOo0qHAYh+pb6H58MGW3kvcNvx4wr6K4
+         mk0eSlO6e5sBDgPrBPslRYeY9DuRHle3FDTM5x4wlz7S62iQrAAFkycDDDJS4NrTiPw1
+         A0zQ==
+X-Gm-Message-State: AC+VfDwCIFl+uByy8o9leBO+DzX4XlpJfJNQVslx1KWH+7NNjASZxlVF
+        0Dy8kUzQ6nrb9CXrScHLMRTsaJIdtOqN2V+gKIY=
+X-Google-Smtp-Source: ACHHUZ4u0RD9o3Kl8FtNeecPkKIUUkqQP5EKCQy8Odb3BCVRQ/plvct7PNXp53hldLkfZ7jyXh0W2roGP4wdAWIFYf4=
+X-Received: by 2002:a17:906:af64:b0:966:5730:c3fe with SMTP id
+ os4-20020a170906af6400b009665730c3femr1223003ejb.52.1684495082502; Fri, 19
+ May 2023 04:18:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a17:907:7dab:b0:94f:7d03:8e8b with HTTP; Fri, 19 May 2023
+ 04:18:02 -0700 (PDT)
+Reply-To: ninacoulibaly03@myself.com
+From:   nina coulibaly <ninacoulibaly199@gmail.com>
+Date:   Fri, 19 May 2023 04:18:02 -0700
+Message-ID: <CAM7Z2JAs+q6RsD5Hw352ZDFruUVR5ngjAamir+4ZCakNdZyceg@mail.gmail.com>
+Subject: from nina coulibaly
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfsd calls fh_getattr to get the latest inode attrs for pre/post-op
-info. In the event that fh_getattr fails, it resorts to scraping cached
-values out of the inode directly.
+Dear,
 
-Since these attributes are optional, we can just skip providing them
-altogether when this happens.
+Please grant me permission to share a very crucial discussion with
+you. I am looking forward to hearing from you at your earliest
+convenience.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfsfh.c | 26 +++++++-------------------
- 1 file changed, 7 insertions(+), 19 deletions(-)
-
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index ccd8485fee04..e8e13ae72e3c 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -623,16 +623,9 @@ void fh_fill_pre_attrs(struct svc_fh *fhp)
- 
- 	inode = d_inode(fhp->fh_dentry);
- 	err = fh_getattr(fhp, &stat);
--	if (err) {
--		/* Grab the times from inode anyway */
--		stat.mtime = inode->i_mtime;
--		stat.ctime = inode->i_ctime;
--		stat.size  = inode->i_size;
--		if (v4 && IS_I_VERSION(inode)) {
--			stat.change_cookie = inode_query_iversion(inode);
--			stat.result_mask |= STATX_CHANGE_COOKIE;
--		}
--	}
-+	if (err)
-+		return;
-+
- 	if (v4)
- 		fhp->fh_pre_change = nfsd4_change_attribute(&stat, inode);
- 
-@@ -660,15 +653,10 @@ void fh_fill_post_attrs(struct svc_fh *fhp)
- 		printk("nfsd: inode locked twice during operation.\n");
- 
- 	err = fh_getattr(fhp, &fhp->fh_post_attr);
--	if (err) {
--		fhp->fh_post_saved = false;
--		fhp->fh_post_attr.ctime = inode->i_ctime;
--		if (v4 && IS_I_VERSION(inode)) {
--			fhp->fh_post_attr.change_cookie = inode_query_iversion(inode);
--			fhp->fh_post_attr.result_mask |= STATX_CHANGE_COOKIE;
--		}
--	} else
--		fhp->fh_post_saved = true;
-+	if (err)
-+		return;
-+
-+	fhp->fh_post_saved = true;
- 	if (v4)
- 		fhp->fh_post_change =
- 			nfsd4_change_attribute(&fhp->fh_post_attr, inode);
--- 
-2.40.1
-
+Mrs. Nina Coulibal
