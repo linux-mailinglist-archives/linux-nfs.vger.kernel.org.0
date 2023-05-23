@@ -2,52 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23E1670DF39
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 16:30:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 152A070DF3B
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 16:31:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237294AbjEWOav (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 May 2023 10:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59606 "EHLO
+        id S237088AbjEWObO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 May 2023 10:31:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235707AbjEWOau (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 10:30:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BAD6133
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 07:30:43 -0700 (PDT)
+        with ESMTP id S233239AbjEWObN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 10:31:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D62F119
+        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 07:31:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DCE7A63324
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 14:30:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2D93C433D2;
-        Tue, 23 May 2023 14:30:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B02626331B
+        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 14:31:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96836C433D2;
+        Tue, 23 May 2023 14:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684852242;
-        bh=QLJijva0Skh8Lw8HTuYurfuKSrgOa808Jcdr6DWqDVE=;
+        s=k20201202; t=1684852269;
+        bh=KwzLoOUAz/qQMUuX22LqTi45EsrZFW5E9YpM7VTUPDM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=r9kvZQWFieLf4kxMlAvZghwfukqOWeUy4agYG/HUnF/DNbj0IYg4SZKx2xnMIP4Xt
-         5fgWD9oBrECub4R2b55oXOSIHr7X4L9aHVO97Wt84duqsfIhMlNw01v/Amy1ymhqu4
-         Co6acsldvW83lolPBFoxBsRPeqkyuUUB8r4VV1jjY4ObZi4jWGY7WNKxrDGPP/1hQ9
-         1LS5KR0Mt/JsgDZpQR5IG2L4IOA1G7GT5lmYDtuyOt9L3KlZCW274W1IGv+9AaYTy3
-         VDmhUqXi7tQ3th4cDZxxaTS0o4fIVDkiY1lnL9gwBa4q3PzvHnJKZn+4djyPfn8Pq8
-         ANOanXBWQHxJw==
-Subject: [PATCH v2 02/11] SUNRPC: Plumb an API for setting transport layer
- security
+        b=TqXEagHSzdrqMB1oa8qUwDDDxfR6i4ijZMSVU6OmUWn6MV47AdYqcrkkCnHjlwnhf
+         uMniWoKFohRq6RrTSq6omjPYEZv72kU9Lnn6rVYaq2uinJuKtZkir3VtUJfB6nRCZN
+         U8D6aSiSDbxH0/4JhV7tLTlqJyesiRnph05qLNpEx61kDrYzVl6Jbfzzw0p0daQmO0
+         gxAfkZdTLu3l7E+e15pjFfl/YKRMNVBkQgrUhvL6p4SP9QFX36mmMpF+jn+4FBwEPN
+         TG9dXSEiIyFEQshtQx5DpWHtpNNjUS+w6qi4zCRy8zA82ruDA6f6f5sXHZzKHp6/4M
+         ORDZTKKEg4HGA==
+Subject: [PATCH v2 03/11] SUNRPC: Trace the rpc_create_args
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>, jlayton@redhat.com,
         linux-nfs@vger.kernel.org, kernel-tls-handshake@lists.linux.dev
-Date:   Tue, 23 May 2023 10:30:30 -0400
-Message-ID: <168485222061.6613.10736477127034272000.stgit@oracle-102.nfsv4bat.org>
+Date:   Tue, 23 May 2023 10:30:57 -0400
+Message-ID: <168485224750.6613.4286173587001829717.stgit@oracle-102.nfsv4bat.org>
 In-Reply-To: <168485183242.6613.7025123558596119858.stgit@oracle-102.nfsv4bat.org>
 References: <168485183242.6613.7025123558596119858.stgit@oracle-102.nfsv4bat.org>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,114 +57,112 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Add an initial set of policies along with fields for upper layers to
-pass the requested policy down to the transport layer.
+Pass the upper layer's rpc_create_args to the rpc_clnt_new()
+tracepoint so additional parts of the upper layer's request can be
+recorded.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
- include/linux/sunrpc/clnt.h |    2 ++
- include/linux/sunrpc/xprt.h |   17 +++++++++++++++++
- net/sunrpc/clnt.c           |    4 ++++
- 3 files changed, 23 insertions(+)
+ include/trace/events/sunrpc.h |   52 +++++++++++++++++++++++++++++++++--------
+ net/sunrpc/clnt.c             |    2 +-
+ 2 files changed, 43 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index 770ef2cb5775..063692cd2a60 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -58,6 +58,7 @@ struct rpc_clnt {
- 				cl_noretranstimeo: 1,/* No retransmit timeouts */
- 				cl_autobind : 1,/* use getport() */
- 				cl_chatty   : 1;/* be verbose */
-+	struct xprtsec_parms	cl_xprtsec;	/* transport security policy */
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 31bc7025cb44..34784f29a63d 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -139,36 +139,68 @@ DEFINE_RPC_CLNT_EVENT(release);
+ DEFINE_RPC_CLNT_EVENT(replace_xprt);
+ DEFINE_RPC_CLNT_EVENT(replace_xprt_err);
  
- 	struct rpc_rtt *	cl_rtt;		/* RTO estimator data */
- 	const struct rpc_timeout *cl_timeout;	/* Timeout strategy */
-@@ -139,6 +140,7 @@ struct rpc_create_args {
- 	struct svc_xprt		*bc_xprt;	/* NFSv4.1 backchannel */
- 	const struct cred	*cred;
- 	unsigned int		max_connect;
-+	struct xprtsec_parms	xprtsec;
- };
- 
- struct rpc_add_xprt_test {
-diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-index b9f59aabee53..9e7f12c240c5 100644
---- a/include/linux/sunrpc/xprt.h
-+++ b/include/linux/sunrpc/xprt.h
-@@ -129,6 +129,21 @@ struct rpc_rqst {
- #define rq_svec			rq_snd_buf.head
- #define rq_slen			rq_snd_buf.len
- 
-+/* RPC transport layer security policies */
-+enum xprtsec_policies {
-+	RPC_XPRTSEC_NONE = 0,
-+	RPC_XPRTSEC_TLS_ANON,
-+	RPC_XPRTSEC_TLS_X509,
-+};
++TRACE_DEFINE_ENUM(RPC_XPRTSEC_NONE);
++TRACE_DEFINE_ENUM(RPC_XPRTSEC_TLS_X509);
 +
-+struct xprtsec_parms {
-+	enum xprtsec_policies	policy;
++#define rpc_show_xprtsec_policy(policy)					\
++	__print_symbolic(policy,					\
++		{ RPC_XPRTSEC_NONE,		"none" },		\
++		{ RPC_XPRTSEC_TLS_ANON,		"tls-anon" },		\
++		{ RPC_XPRTSEC_TLS_X509,		"tls-x509" })
 +
-+	/* authentication material */
-+	key_serial_t		cert_serial;
-+	key_serial_t		privkey_serial;
-+};
++#define rpc_show_create_flags(flags)					\
++	__print_flags(flags, "|",					\
++		{ RPC_CLNT_CREATE_HARDRTRY,	"HARDRTRY" },		\
++		{ RPC_CLNT_CREATE_AUTOBIND,	"AUTOBIND" },		\
++		{ RPC_CLNT_CREATE_NONPRIVPORT,	"NONPRIVPORT" },	\
++		{ RPC_CLNT_CREATE_NOPING,	"NOPING" },		\
++		{ RPC_CLNT_CREATE_DISCRTRY,	"DISCRTRY" },		\
++		{ RPC_CLNT_CREATE_QUIET,	"QUIET" },		\
++		{ RPC_CLNT_CREATE_INFINITE_SLOTS,			\
++						"INFINITE_SLOTS" },	\
++		{ RPC_CLNT_CREATE_NO_IDLE_TIMEOUT,			\
++						"NO_IDLE_TIMEOUT" },	\
++		{ RPC_CLNT_CREATE_NO_RETRANS_TIMEOUT,			\
++						"NO_RETRANS_TIMEOUT" },	\
++		{ RPC_CLNT_CREATE_SOFTERR,	"SOFTERR" },		\
++		{ RPC_CLNT_CREATE_REUSEPORT,	"REUSEPORT" })
 +
- struct rpc_xprt_ops {
- 	void		(*set_buffer_size)(struct rpc_xprt *xprt, size_t sndsize, size_t rcvsize);
- 	int		(*reserve_xprt)(struct rpc_xprt *xprt, struct rpc_task *task);
-@@ -229,6 +244,7 @@ struct rpc_xprt {
- 	 */
- 	unsigned long		bind_timeout,
- 				reestablish_timeout;
-+	struct xprtsec_parms	xprtsec;
- 	unsigned int		connect_cookie;	/* A cookie that gets bumped
- 						   every time the transport
- 						   is reconnected */
-@@ -333,6 +349,7 @@ struct xprt_create {
- 	struct svc_xprt		*bc_xprt;	/* NFSv4.1 backchannel */
- 	struct rpc_xprt_switch	*bc_xps;
- 	unsigned int		flags;
-+	struct xprtsec_parms	xprtsec;
- };
+ TRACE_EVENT(rpc_clnt_new,
+ 	TP_PROTO(
+ 		const struct rpc_clnt *clnt,
+ 		const struct rpc_xprt *xprt,
+-		const char *program,
+-		const char *server
++		const struct rpc_create_args *args
+ 	),
  
- struct xprt_class {
+-	TP_ARGS(clnt, xprt, program, server),
++	TP_ARGS(clnt, xprt, args),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(unsigned int, client_id)
++		__field(unsigned long, xprtsec)
++		__field(unsigned long, flags)
++		__string(program, clnt->cl_program->name)
++		__string(server, xprt->servername)
+ 		__string(addr, xprt->address_strings[RPC_DISPLAY_ADDR])
+ 		__string(port, xprt->address_strings[RPC_DISPLAY_PORT])
+-		__string(program, program)
+-		__string(server, server)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->client_id = clnt->cl_clid;
++		__entry->xprtsec = args->xprtsec.policy;
++		__entry->flags = args->flags;
++		__assign_str(program, clnt->cl_program->name);
++		__assign_str(server, xprt->servername);
+ 		__assign_str(addr, xprt->address_strings[RPC_DISPLAY_ADDR]);
+ 		__assign_str(port, xprt->address_strings[RPC_DISPLAY_PORT]);
+-		__assign_str(program, program);
+-		__assign_str(server, server);
+ 	),
+ 
+-	TP_printk("client=" SUNRPC_TRACE_CLID_SPECIFIER
+-		  " peer=[%s]:%s program=%s server=%s",
++	TP_printk("client=" SUNRPC_TRACE_CLID_SPECIFIER " peer=[%s]:%s"
++		" program=%s server=%s xprtsec=%s flags=%s",
+ 		__entry->client_id, __get_str(addr), __get_str(port),
+-		__get_str(program), __get_str(server))
++		__get_str(program), __get_str(server),
++		rpc_show_xprtsec_policy(__entry->xprtsec),
++		rpc_show_create_flags(__entry->flags)
++	)
+ );
+ 
+ TRACE_EVENT(rpc_clnt_new_err,
 diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index d2ee56634308..a18074f8edf2 100644
+index a18074f8edf2..4cdb539b5854 100644
 --- a/net/sunrpc/clnt.c
 +++ b/net/sunrpc/clnt.c
-@@ -385,6 +385,7 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
- 	if (!clnt)
- 		goto out_err;
- 	clnt->cl_parent = parent ? : clnt;
-+	clnt->cl_xprtsec = args->xprtsec;
+@@ -435,7 +435,7 @@ static struct rpc_clnt * rpc_new_client(const struct rpc_create_args *args,
+ 	if (parent)
+ 		refcount_inc(&parent->cl_count);
  
- 	err = rpc_alloc_clid(clnt);
- 	if (err)
-@@ -532,6 +533,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
- 		.addrlen = args->addrsize,
- 		.servername = args->servername,
- 		.bc_xprt = args->bc_xprt,
-+		.xprtsec = args->xprtsec,
- 	};
- 	char servername[48];
- 	struct rpc_clnt *clnt;
-@@ -727,6 +729,7 @@ int rpc_switch_client_transport(struct rpc_clnt *clnt,
- 	struct rpc_clnt *parent;
- 	int err;
+-	trace_rpc_clnt_new(clnt, xprt, program->name, args->servername);
++	trace_rpc_clnt_new(clnt, xprt, args);
+ 	return clnt;
  
-+	args->xprtsec = clnt->cl_xprtsec;
- 	xprt = xprt_create_transport(args);
- 	if (IS_ERR(xprt))
- 		return PTR_ERR(xprt);
-@@ -3046,6 +3049,7 @@ int rpc_clnt_add_xprt(struct rpc_clnt *clnt,
- 
- 	if (!xprtargs->ident)
- 		xprtargs->ident = ident;
-+	xprtargs->xprtsec = clnt->cl_xprtsec;
- 	xprt = xprt_create_transport(xprtargs);
- 	if (IS_ERR(xprt)) {
- 		ret = PTR_ERR(xprt);
+ out_no_path:
 
 
