@@ -2,70 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C9A470DC51
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 14:17:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED95A70DCDA
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 14:46:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234381AbjEWMRb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 May 2023 08:17:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47248 "EHLO
+        id S236764AbjEWMqR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 May 2023 08:46:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236120AbjEWMRa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 08:17:30 -0400
+        with ESMTP id S230024AbjEWMqP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 08:46:15 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC791A1
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 05:17:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A20C1DB;
+        Tue, 23 May 2023 05:46:10 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id A59BE22A27;
-        Tue, 23 May 2023 12:17:21 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 3F71C22A61;
+        Tue, 23 May 2023 12:46:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1684844241;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
+        t=1684845969; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=xHyDx/YVDVlyI5mELhOX9sbEBf2QEz6wTh/McSpCJ4c=;
-        b=avxfzBP+UqCVErDEwfH47BoQvmlM9FoZ9GNVmNqd4W2K6gTw0TswKURn2oxrpzutTTZOCg
-        76kdQgLj9Kp/OCE/IzIOcBuWoPLXL28WlXJANN2EP9lMQYQMtPiqDHjvGYzHYsWGwWPUyH
-        gPTiH8c9qm2TjMlHw8mNgfG7l7QX8b4=
+        bh=D2nL3xyYPlMdtq9qs01YJNIyc/qfR7bb6+Vphl3LLao=;
+        b=eOBxwWMb3EwllwDof3+xAu6djq6MmFwQorTzrxkBCEBmVr+ed4A3SGo6BLOuvPawqLNp8j
+        +bLaynXcHXPaZ9hduIypIgdVXKOOjv8BKzR99NWAl5wWqkzGRzyyxyXBxy11ZGUNQ/XV9i
+        1RTWYrBE9v44zs3IXsZc7kq0jspZ7uI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1684844241;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
+        s=susede2_ed25519; t=1684845969;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=xHyDx/YVDVlyI5mELhOX9sbEBf2QEz6wTh/McSpCJ4c=;
-        b=2wYNcXsPct1+Ts/27T+yVdpZeC36JB8XQHUE9LYAv6dl57dAGcx3f2Pg96IYROqd0G9GPC
-        d9LdHrAx7tBWXnAw==
+        bh=D2nL3xyYPlMdtq9qs01YJNIyc/qfR7bb6+Vphl3LLao=;
+        b=s3H7NU7JGOmO3C7j1CKkYSeoBVTvMWjfTQOo/Ja+pc5RBlLw2VM4u3aqEqD6VQCd6TXpp1
+        Fz805agjqIxvCfCg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 409C113588;
-        Tue, 23 May 2023 12:17:21 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DF2EC13A10;
+        Tue, 23 May 2023 12:46:08 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 2CnUDNGubGRAJQAAMHmgww
-        (envelope-from <pvorel@suse.cz>); Tue, 23 May 2023 12:17:21 +0000
-Date:   Tue, 23 May 2023 14:17:19 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        linux-nfs@vger.kernel.org,
-        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Steve Dickson <steved@redhat.com>
-Subject: Re: [PATCH 0/2] Support abstract address for rpcbind in kernel
-Message-ID: <20230523121719.GA616123@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <168375610447.26246.3237443941479930060.stgit@noble.brown>
+        id IkZuNpC1bGSyMgAAMHmgww
+        (envelope-from <jack@suse.cz>); Tue, 23 May 2023 12:46:08 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 92B3CA075D; Tue, 23 May 2023 14:46:06 +0200 (CEST)
+Date:   Tue, 23 May 2023 14:46:06 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Neil Brown <neilb@suse.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Theodore T'so <tytso@mit.edu>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Tom Talpey <tom@talpey.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org
+Subject: Re: [PATCH v4 2/9] fs: add infrastructure for multigrain inode
+ i_m/ctime
+Message-ID: <20230523124606.bkkhwi6b67ieeygl@quack3>
+References: <20230518114742.128950-1-jlayton@kernel.org>
+ <20230518114742.128950-3-jlayton@kernel.org>
+ <20230523100240.mgeu4y46friv7hau@quack3>
+ <bf0065f2c9895edb66faeacc6cf77bd257088348.camel@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <168375610447.26246.3237443941479930060.stgit@noble.brown>
+In-Reply-To: <bf0065f2c9895edb66faeacc6cf77bd257088348.camel@kernel.org>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,147 +95,128 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Neil,
+On Tue 23-05-23 06:40:08, Jeff Layton wrote:
+> On Tue, 2023-05-23 at 12:02 +0200, Jan Kara wrote:
+> > On Thu 18-05-23 07:47:35, Jeff Layton wrote:
+> > > The VFS always uses coarse-grained timestamp updates for filling out the
+> > > ctime and mtime after a change. This has the benefit of allowing
+> > > filesystems to optimize away a lot metadata updates, down to around 1
+> > > per jiffy, even when a file is under heavy writes.
+> > > 
+> > > Unfortunately, this has always been an issue when we're exporting via
+> > > NFSv3, which relies on timestamps to validate caches. Even with NFSv4, a
+> > > lot of exported filesystems don't properly support a change attribute
+> > > and are subject to the same problems with timestamp granularity. Other
+> > > applications have similar issues (e.g backup applications).
+> > > 
+> > > Switching to always using fine-grained timestamps would improve the
+> > > situation, but that becomes rather expensive, as the underlying
+> > > filesystem will have to log a lot more metadata updates.
+> > > 
+> > > What we need is a way to only use fine-grained timestamps when they are
+> > > being actively queried.
+> > > 
+> > > The kernel always stores normalized ctime values, so only the first 30
+> > > bits of the tv_nsec field are ever used. Whenever the mtime changes, the
+> > > ctime must also change.
+> > > 
+> > > Use the 31st bit of the ctime tv_nsec field to indicate that something
+> > > has queried the inode for the i_mtime or i_ctime. When this flag is set,
+> > > on the next timestamp update, the kernel can fetch a fine-grained
+> > > timestamp instead of the usual coarse-grained one.
+> > > 
+> > > This patch adds the infrastructure this scheme. Filesytems can opt
+> > > into it by setting the FS_MULTIGRAIN_TS flag in the fstype.
+> > > 
+> > > Later patches will convert individual filesystems over to use it.
+> > > 
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > 
+> > So there are two things I dislike about this series because I think they
+> > are fragile:
+> > 
+> > 1) If we have a filesystem supporting multigrain ts and someone
+> > accidentally directly uses the value of inode->i_ctime, he can get bogus
+> > value (with QUERIED flag). This mistake is very easy to do. So I think we
+> > should rename i_ctime to something like __i_ctime and always use accessor
+> > function for it.
+> > 
+> 
+> We could do this, but it'll be quite invasive. We'd have to change any
+> place that touches i_ctime (and there are a lot of them), even on
+> filesystems that are not being converted.
 
-> These two patches cause the SUNRPC layer in Linux to attempt to contact
-> rpcbind using an AF_UNIX socket with an abstract address before
-> the existing attempts of AF_UNIX to a socket in the filesystem, and IP
-> to a well known port.
+Yes, that's why I suggested Coccinelle to deal with this.
 
-> This allows the benefits of an AF_UNIX connection combined with the
-> benefits of honouring the network namespace when connection rpcbind.
+> > 2) As I already commented in a previous version of the series, the scheme
+> > with just one flag for both ctime and mtime and flag getting cleared in
+> > current_time() relies on the fact that filesystems always do an equivalent
+> > of:
+> > 
+> > 	inode->i_mtime = inode->i_ctime = current_time();
+> > 
+> > Otherwise we can do coarse grained update where we should have done a fine
+> > grained one. Filesystems often update timestamps like this but not
+> > universally. Grepping shows some instances where only inode->i_mtime is set
+> > from current_time() e.g. in autofs or bfs. Again a mistake that is rather
+> > easy to make and results in subtle issues. I think this would be also
+> > nicely solved by renaming i_ctime to __i_ctime and using a function to set
+> > ctime. Mtime could then be updated with inode->i_mtime = ctime_peek().
+> >
+> > I understand this is quite some churn but a very mechanical one that could
+> > be just done with Coccinelle and a few manual fixups. So IMHO it is worth
+> > the more robust result.
+> 
+> AFAICT, under POSIX, you must _always_ set the ctime when you set the
+> mtime, but the reverse is not true. That's why keeping the flag in the
+> ctime makes sense. If we're updating the mtime, then we necessarily must
+> update the ctime.
 
-> For this to be useful, rpcbind must listed on that name, and user-space
-> tools must also connect to the same address.  This requires changes to
-> rpcbind and too libtirpc.  libtirpc currently has a bug which causes
-> sockets bountd to abstract addresses to appear to be unbound, so asking
-> systemd to pass rpcbind an abstract socket doesn't work - rpcbind
-> rejects it.
+Yes, but technically speaking:
 
-> Patches for rpcbind and libtirpc will follow.
+	inode->i_mtime = current_time();
+	inode->i_ctime = current_time();
 
-Thanks a lot for taking care. I finally find a time to test it.
-I tested all your patchsets on openSUSE with kernel 6.3.1 (built locally),
-rpcbind [2] and libtirpc [3], but although all patches LGTM, there is some
-failure:
+follows these requirements but is broken with your changes in unobvious
+way. And if mtime update is hidden in some function or condition, it is not
+even that suboptimal coding pattern.
 
-PATH="/opt/ltp/testcases/bin:$PATH" nfslock01.sh -v 3 -t tcp
-nfslock01 1 TINFO: IPv6 disabled on lhost via kernel command line or not compiled in
-nfslock01 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
-nfslock01 1 TINFO: add local addr 10.0.0.2/24
-nfslock01 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
-nfslock01 1 TINFO: add remote addr 10.0.0.1/24
-nfslock01 1 TINFO: Network config (local -- remote):
-nfslock01 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
-nfslock01 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
-nfslock01 1 TINFO: fd00:1:1:1::2/64/ -- fd00:1:1:1::1/64/
-tst_device.c:96: TINFO: Found free device 0 '/dev/loop0'
-tst_supported_fs_types.c:157: TINFO: Skipping ext2 as requested by the test
-tst_supported_fs_types.c:157: TINFO: Skipping ext3 as requested by the test
-tst_supported_fs_types.c:90: TINFO: Kernel supports ext4
-tst_supported_fs_types.c:55: TINFO: mkfs.ext4 does exist
-tst_supported_fs_types.c:90: TINFO: Kernel supports xfs
-tst_supported_fs_types.c:55: TINFO: mkfs.xfs does exist
-tst_supported_fs_types.c:90: TINFO: Kernel supports btrfs
-tst_supported_fs_types.c:55: TINFO: mkfs.btrfs does exist
-tst_supported_fs_types.c:157: TINFO: Skipping vfat as requested by the test
-tst_supported_fs_types.c:157: TINFO: Skipping exfat as requested by the test
-tst_supported_fs_types.c:157: TINFO: Skipping ntfs as requested by the test
-tst_supported_fs_types.c:157: TINFO: Skipping tmpfs as requested by the test
-nfslock01 1 TINFO: === Testing on ext4 ===
-nfslock01 1 TINFO: Formatting ext4 with opts='/dev/loop0'
-nfslock01 1 TINFO: YES TST_FS_TYPE: 'ext4'
-nfslock01 1 TINFO: Mounting device: mount -t ext4 /dev/loop0 /tmp/LTP_nfslock01.pLrRsUDH2Y/mntpoint -o i_version
-nfslock01 1 TINFO: timeout per run is 0h 5m 0s
-nfslock01 1 TINFO: mount.nfs: (linux nfs-utils 2.6.3)
-nfslock01 1 TINFO: setup NFSv3, socket type tcp
-nfslock01 1 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=3 10.0.0.2:/tmp/LTP_nfslock01.pLrRsUDH2Y/mntpoint/3/tcp /tmp/LTP_nfslock01.pLrRsUDH2Y/3/0
-mount.nfs: trying 10.0.0.2 prog 100003 vers 3 prot TCP port 2049
-mount.nfs: portmap query failed: RPC: Program not registered
-mount.nfs: trying 10.0.0.2 prog 100003 vers 3 prot TCP port 2049
-mount.nfs: portmap query failed: RPC: Program not registered
-mount.nfs: trying 10.0.0.2 prog 100003 vers 3 prot TCP port 2049
-mount.nfs: portmap query failed: RPC: Program not registered
-mount.nfs: requested NFS version or transport protocol is not supported for /tmp/LTP_nfslock01.pLrRsUDH2Y/3/0
-=> pvorel: ERROR above
-mount.nfs: timeout set for Tue May 23 07:49:10 2023
-mount.nfs: trying text-based options 'proto=tcp,vers=3,addr=10.0.0.2'
-mount.nfs: prog 100003, trying vers=3, prot=6
-mount.nfs: prog 100005, trying vers=3, prot=6
-mount.nfs: trying text-based options 'proto=tcp,vers=3,addr=10.0.0.2'
-mount.nfs: prog 100003, trying vers=3, prot=6
-mount.nfs: prog 100005, trying vers=3, prot=6
-mount.nfs: trying text-based options 'proto=tcp,vers=3,addr=10.0.0.2'
-mount.nfs: prog 100003, trying vers=3, prot=6
-mount.nfs: prog 100005, trying vers=3, prot=6
-nfslock01 1 TBROK: mount command failed
-nfslock01 1 TINFO: Cleaning up testcase
-nfslock01 1 TINFO: AppArmor enabled, this may affect test results
-nfslock01 1 TINFO: it can be disabled with TST_DISABLE_APPARMOR=1 (requires super/root)
-nfslock01 1 TINFO: loaded AppArmor profiles: none
+> > > +}
+> > > +
+> > > +/**
+> > > + * ctime_peek - peek at (but don't query) the ctime
+> > > + * @inode: inode to fetch the ctime from
+> > > + *
+> > > + * Grab the current ctime from the inode, sans I_CTIME_QUERIED flag. For
+> > > + * use by internal consumers that don't require a fine-grained update on
+> > > + * the next change.
+> > > + *
+> > > + * This is safe to call regardless of whether the underlying filesystem
+> > > + * is using multigrain timestamps.
+> > > + */
+> > > +static inline struct timespec64 ctime_peek(const struct inode *inode)
+> > > +{
+> > > +	struct timespec64 ctime;
+> > > +
+> > > +	ctime.tv_sec = inode->i_ctime.tv_sec;
+> > > +	ctime.tv_nsec = ctime_nsec_peek(inode);
+> > > +
+> > > +	return ctime;
+> > > +}
+> > 
+> > Given this is in a header that gets included in a lot of places, maybe we
+> > should call it like inode_ctime_peek() or inode_ctime_get() to reduce
+> > chances of a name clash?
+> 
+> I'd be fine with that, but "ctime" sort of implies inode->i_ctime to me.
+> We don't really use that nomenclature elsewhere.
 
-Summary:
-passed   0
-failed   0
-broken   1
-skipped  0
-warnings 0
+Yes, I don't insist here but we do have 'ctime' e.g. in IPC code
+(sem_ctime, shm_ctime, msg_ctime), we have ctime in md layer, ctime(3) is
+also a glibc function. So it is not *completely* impossible the clash
+happens but we can deal with it when it happens.
 
-I retest it also on single filesystem other than ext4:
-PATH="/opt/ltp/testcases/bin:$PATH" LTP_SINGLE_FS_TYPE=btrfs nfslock01.sh -v 3 -t tcp
-PATH="/opt/ltp/testcases/bin:$PATH" LTP_SINGLE_FS_TYPE=xfs nfslock01.sh -v 3 -t tcp
-But the result is the same: "mount command failed".
-
-BTW even other tests fail:
-PATH="/opt/ltp/testcases/bin:$PATH" LTP_SINGLE_FS_TYPE=btrfs nfs01.sh -t tcp
-
-I also downloaded LTP to slightly older code, when only single filesystem was used
-(before 9e61bb028), but obviously mount still fails.
-
-Therefore I tested just mount on loop device with the default NFSv4, which works:
-dd if=/dev/zero of=/tmp/dev bs=1M count=500
-losetup /dev/loop0 /tmp/dev
-mkfs.ext2 /dev/loop0
-mkdir -p /export
-mount /dev/loop0 /export
-exportfs -o no_root_squash,async,no_subtree_check,rw localhost:/export
-mkdir -p /import
-mount localhost:/export /import
-
-df | grep /import
-localhost:/export nfs4      467M     0  442M   0% /import
-
-mount | grep /import
-localhost:/export on /import type nfs4 (rw,relatime,vers=4.2,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp6,timeo=600,retrans=2,sec=sys,clientaddr=::1,local_lock=none,addr=::1)
-
-But testing NFSv3 does not work (nothing interesting in dmesg):
-umount /import
-mount -o proto=tcp,vers=3 localhost:/export /import
-
-Obviously, kernel 6.2.12 with the same NFS config with unmodified libtirpc and rpcbind works:
-
-localhost:/export on /import type nfs (rw,relatime,vers=3,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=127.0.0.1,mountvers=3,mountport=20048,mountproto=tcp,local_lock=none,addr=127.0.0.1)
-
-I double checked if I backported everything correctly, thus I expect there is
-some problem with the code.
-
-Kind regards,
-Petr
-
-[1] https://build.opensuse.org/package/binaries/home:pevik:branches:network/rpcbind/openSUSE_Tumbleweed
-[2] https://build.opensuse.org/package/show/home:pevik:branches:Base:System/libtirpc
-
-> NeilBrown
-
-
-> ---
-
-> NeilBrown (2):
->       SUNRPC: support abstract unix socket addresses
->       SUNRPC: attempt to reach rpcbind with an abstract socket name
-
-
->  net/sunrpc/clnt.c      |  8 ++++++--
->  net/sunrpc/rpcb_clnt.c | 39 +++++++++++++++++++++++++++++++--------
->  net/sunrpc/xprtsock.c  |  9 +++++++--
->  3 files changed, 44 insertions(+), 12 deletions(-)
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
