@@ -2,151 +2,189 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A1F470E89C
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 May 2023 00:04:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCF5F70E910
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 May 2023 00:27:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234317AbjEWWES (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 May 2023 18:04:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51476 "EHLO
+        id S238509AbjEWW1V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 May 2023 18:27:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238781AbjEWWER (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 18:04:17 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26C471BD
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 15:03:54 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D194C1FD6F;
-        Tue, 23 May 2023 22:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1684879432; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1eGOAP/MIWcs1Sz4S6So5wSJZfjFGT3JEy3/iwdOeWo=;
-        b=xxtefjmJC0kAMxGxQN0AOxbugpqWnNBMnZLUGuRjXcBKdVKRSdc1S78UxnEpkRmtnfjIHG
-        AcR5eFiapWFf8Hu1XSJRLywHzSjCDDwit3tSDzfrKZzrOWSBJ9JBG+Rh74DRD6qd6CH5qp
-        MNQ27uIuYdEiTOCT0TbXfDAn7/xElsk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1684879432;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1eGOAP/MIWcs1Sz4S6So5wSJZfjFGT3JEy3/iwdOeWo=;
-        b=VwH4katuQjLr7kx8lisX7yTkfitwvQV9HvTyRBhYNghKElAMJoqQ/j/9MFYBNqr8GQDnA+
-        aNelwdaKAMz5GyAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8AA0F13A10;
-        Tue, 23 May 2023 22:03:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id vasqD0c4bWSOEgAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 23 May 2023 22:03:51 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S235266AbjEWW1U (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 18:27:20 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DB9C1
+        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 15:27:18 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-64d44b198baso55269b3a.0
+        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 15:27:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1684880837; x=1687472837;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=o+Mu9QUDJUPxCQ+nxaGfODHItInO1Mx21+1cY8P0+ko=;
+        b=myd4lDfvuaaTHVDxIZueGM+k5E70olrh5Bi4kawJ2EqxlzdG3jx2hNsJKzBv1ExQrZ
+         aZIqungadEPCy/hk+arz6SCHAhumLQ2exHtv9ezxiuWyl92MWzYKy8HK8quRSz97EAMo
+         8HDOmtAd6fKra/CsSjrI/dK+pfZCIsI+1uCq1qHYsi0xHo3WYArXZwYWudExTIr6Fj27
+         3dDJ033Vg+M4TLAaJI5DgBCEbpaEmjNrP7x2LDAEYwxTkMPe/qI246iat844prVielH/
+         N1rZ8XOfFOa41MmZaZKsz9PVPHf7hGTl1NypGa83NrTRXoIwS26AGhLJnHwQKKez3ITY
+         DvPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684880837; x=1687472837;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o+Mu9QUDJUPxCQ+nxaGfODHItInO1Mx21+1cY8P0+ko=;
+        b=NbpvM+XQuOucC3JieQKe2dIwU1zhyjXNx90KuWcllnYs/TfS3vVmKs8JHu52npC4gd
+         VeVM7grXkXlW5Hc5N3qb2eAmWCqgi6dfFTpN6arzp50U3xft50hHJxuqmXvXJ85pabff
+         87j92khoGLs1PHU7xQWRBmCYjRNMoihns1v5Y0xxqql98FwrCJgkiVvu7OJEalFXnFnk
+         EibcEPeWa1iIXHsTTSWYQxsqjAcdKhQrSmmyIMPbK3FznpNXqhpjW2ixdIba4v8rdjcw
+         fHdsN/Pb6iIZvESmvW+fC/o0iBLcwdQmaocuPKfQdMjoU6583uPVopDfepMAyhSJZEDK
+         wJ2A==
+X-Gm-Message-State: AC+VfDxdK852BAi+jmSC2hqX0aa0MR95d11ooa/pFsgLCG29yaLgXBbq
+        qgPWLVZujYcqbfyf8ka57gC3Dg==
+X-Google-Smtp-Source: ACHHUZ5+wDLkzWl5hqADeJv/K/pEdU5ftVoYvaXjN5yUsSSnEKzwjNvqAoa0WrZdkbq9aiPARCtcUw==
+X-Received: by 2002:a05:6a20:3c8d:b0:10c:d5dd:c223 with SMTP id b13-20020a056a203c8d00b0010cd5ddc223mr1532145pzj.15.1684880837655;
+        Tue, 23 May 2023 15:27:17 -0700 (PDT)
+Received: from dread.disaster.area (pa49-179-0-188.pa.nsw.optusnet.com.au. [49.179.0.188])
+        by smtp.gmail.com with ESMTPSA id d11-20020a63fd0b000000b005308b255502sm6443395pgh.68.2023.05.23.15.27.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 May 2023 15:27:16 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1q1aTJ-0036Bu-2Z;
+        Wed, 24 May 2023 08:27:13 +1000
+Date:   Wed, 24 May 2023 08:27:13 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 16/17] block: use iomap for writes to block devices
+Message-ID: <ZG09wR4WOI8zDxJK@dread.disaster.area>
+References: <20230424054926.26927-1-hch@lst.de>
+ <20230424054926.26927-17-hch@lst.de>
+ <b96b397e-2f5e-7910-3bb3-7405d0e293a7@suse.de>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Jeff Layton" <jlayton@kernel.org>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: don't provide pre/post-op attrs if fh_getattr fails
-In-reply-to: <143D2797-B071-43FF-AA85-E4C4A7218691@oracle.com>
-References: <20230519111723.20612-1-jlayton@kernel.org>,
- <168471866230.5298.3283829268036917998@noble.neil.brown.name>,
- <143D2797-B071-43FF-AA85-E4C4A7218691@oracle.com>
-Date:   Wed, 24 May 2023 08:03:48 +1000
-Message-id: <168487942834.21808.17784288972950301860@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b96b397e-2f5e-7910-3bb3-7405d0e293a7@suse.de>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 23 May 2023, Chuck Lever III wrote:
-> 
-> > On May 21, 2023, at 9:24 PM, NeilBrown <neilb@suse.de> wrote:
+On Fri, May 19, 2023 at 04:22:01PM +0200, Hannes Reinecke wrote:
+> On 4/24/23 07:49, Christoph Hellwig wrote:
+> > Use iomap in buffer_head compat mode to write to block devices.
 > > 
-> > On Fri, 19 May 2023, Jeff Layton wrote:
-> >> nfsd calls fh_getattr to get the latest inode attrs for pre/post-op
-> >> info. In the event that fh_getattr fails, it resorts to scraping cached
-> >> values out of the inode directly.
-> >> 
-> >> Since these attributes are optional, we can just skip providing them
-> >> altogether when this happens.
-> >> 
-> >> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> >> ---
-> >> fs/nfsd/nfsfh.c | 26 +++++++-------------------
-> >> 1 file changed, 7 insertions(+), 19 deletions(-)
-> >> 
-> >> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> >> index ccd8485fee04..e8e13ae72e3c 100644
-> >> --- a/fs/nfsd/nfsfh.c
-> >> +++ b/fs/nfsd/nfsfh.c
-> >> @@ -623,16 +623,9 @@ void fh_fill_pre_attrs(struct svc_fh *fhp)
-> >> 
-> >> inode = d_inode(fhp->fh_dentry);
-> >> err = fh_getattr(fhp, &stat);
-> >> - if (err) {
-> >> - /* Grab the times from inode anyway */
-> >> - stat.mtime = inode->i_mtime;
-> >> - stat.ctime = inode->i_ctime;
-> >> - stat.size  = inode->i_size;
-> >> - if (v4 && IS_I_VERSION(inode)) {
-> >> - stat.change_cookie = inode_query_iversion(inode);
-> >> - stat.result_mask |= STATX_CHANGE_COOKIE;
-> >> - }
-> >> - }
-> >> + if (err)
-> >> + return;
-> >> +
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >   block/Kconfig |  1 +
+> >   block/fops.c  | 33 +++++++++++++++++++++++++++++----
+> >   2 files changed, 30 insertions(+), 4 deletions(-)
 > > 
-> > I wondered if this might exercise error paths which had not previously
-> > been tested.  Before this change fh_pre_saved is always set, now it is
-> > not.
-> > 
-> > The code looks OK, but I was amused by xdr_stream_encode_item_absent().
-> > Various places in the code test for "< 0" or "> 0" which seems to
-> > suggest that "0" is not being handled consistently.
+> > diff --git a/block/Kconfig b/block/Kconfig
+> > index 941b2dca70db73..672b08f0096ab4 100644
+> > --- a/block/Kconfig
+> > +++ b/block/Kconfig
+> > @@ -5,6 +5,7 @@
+> >   menuconfig BLOCK
+> >          bool "Enable the block layer" if EXPERT
+> >          default y
+> > +       select IOMAP
+> >          select SBITMAP
+> >          help
+> >   	 Provide block layer support for the kernel.
+> > diff --git a/block/fops.c b/block/fops.c
+> > index 318247832a7bcf..7910636f8df33b 100644
+> > --- a/block/fops.c
+> > +++ b/block/fops.c
+> > @@ -15,6 +15,7 @@
+> >   #include <linux/falloc.h>
+> >   #include <linux/suspend.h>
+> >   #include <linux/fs.h>
+> > +#include <linux/iomap.h>
+> >   #include <linux/module.h>
+> >   #include "blk.h"
+> > @@ -386,6 +387,27 @@ static ssize_t blkdev_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
+> >   	return __blkdev_direct_IO(iocb, iter, bio_max_segs(nr_pages));
+> >   }
+> > +static int blkdev_iomap_begin(struct inode *inode, loff_t offset, loff_t length,
+> > +		unsigned int flags, struct iomap *iomap, struct iomap *srcmap)
+> > +{
+> > +	struct block_device *bdev = I_BDEV(inode);
+> > +	loff_t isize = i_size_read(inode);
+> > +
+> > +	iomap->bdev = bdev;
+> > +	iomap->offset = ALIGN_DOWN(offset, bdev_logical_block_size(bdev));
+> > +	if (WARN_ON_ONCE(iomap->offset >= isize))
+> > +		return -EIO;
 > 
-> You can read those as "returns positive" and "returns negative" tests.
+> I'm hitting this during booting:
+> [    5.016324]  <TASK>
+> [    5.030256]  iomap_iter+0x11a/0x350
+> [    5.030264]  iomap_readahead+0x1eb/0x2c0
+> [    5.030272]  read_pages+0x5d/0x220
+> [    5.030279]  page_cache_ra_unbounded+0x131/0x180
+> [    5.030284]  filemap_get_pages+0xff/0x5a0
 
-That leaves the curious reader, who isn't completely familiar with the
-code, wondering what "0" would mean.
-It's not a big deal, but it looked odd so I thought I would mention it.
+Why is filemap_get_pages() using unbounded readahead? Surely
+readahead should be limited to reading within EOF....
 
+> [    5.030292]  filemap_read+0xca/0x320
+> [    5.030296]  ? aa_file_perm+0x126/0x500
+> [    5.040216]  ? touch_atime+0xc8/0x150
+> [    5.040224]  blkdev_read_iter+0xb0/0x150
+> [    5.040228]  vfs_read+0x226/0x2d0
+> [    5.040234]  ksys_read+0xa5/0xe0
+> [    5.040238]  do_syscall_64+0x5b/0x80
 > 
+> Maybe we should consider this patch:
 > 
-> > But of course xdr_stream_encode_item_absent() can never return 0.  It
-> > returns either XDR_UNIT or -EMSGSIZE.
+> diff --git a/block/fops.c b/block/fops.c
+> index 524b8a828aad..d202fb663f25 100644
+> --- a/block/fops.c
+> +++ b/block/fops.c
+> @@ -386,10 +386,13 @@ static int blkdev_iomap_begin(struct inode *inode,
+> loff_t offset, loff_t length,
 > 
-> I don't see any tests for it returning exactly zero.
-> 
-> 
-> > I wonder if we should be consistent in how we test for an error ....  or
-> > if it it really matters.
-> 
-> The xdr_stream_encode_* functions conventionally return a negative errno
-> or a positive number of bytes encoded. The "< 0" and "> 0" tests convert
-> that return value into a boolean.
-> 
-> I reviewed the call sites just now and do not see an evident problem.
-> 
-> 
-> > Patch itself looks good.
-> 
-> May I add "Reviewed-by: Neil Brown <neilb@suse.de <mailto:neilb@suse.de>>" ?
+>         iomap->bdev = bdev;
+>         iomap->offset = ALIGN_DOWN(offset, bdev_logical_block_size(bdev));
+> -       if (WARN_ON_ONCE(iomap->offset >= isize))
+> -               return -EIO;
+> -       iomap->type = IOMAP_MAPPED;
+> -       iomap->addr = iomap->offset;
+> +       if (WARN_ON_ONCE(iomap->offset >= isize)) {
+> +               iomap->type = IOMAP_HOLE;
+> +               iomap->addr = IOMAP_NULL_ADDR;
+> +       } else {
+> +               iomap->type = IOMAP_MAPPED;
+> +               iomap->addr = iomap->offset;
+> +       }
 
-Yes please. (though maybe without the "mailto:" :-)
+I think Christoph's code is correct. IMO, any attempt to read beyond
+the end of the device should throw out a warning and return an
+error, not silently return zeros.
 
-NeilBrown
+If readahead is trying to read beyond the end of the device, then it
+really seems to me like the problem here is readahead, not the iomap
+code detecting the OOB read request....
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
