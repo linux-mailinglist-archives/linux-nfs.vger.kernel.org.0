@@ -2,124 +2,218 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B4B570DB59
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 13:18:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C9A470DC51
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 14:17:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231410AbjEWLSY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 May 2023 07:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49122 "EHLO
+        id S234381AbjEWMRb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 May 2023 08:17:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbjEWLSX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 07:18:23 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60C82C4
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 04:18:22 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-96f50e26b8bso973903666b.2
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 04:18:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684840700; x=1687432700;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0zNJf1ZxIlrz72iFEKXCdEhtPieGC/o/YCVkxcPf5Cw=;
-        b=qqA/K+I9B6NMGuLEnngDkghGJwZ4m++6WJoa0t5lTvqmEn+ua7ok+RIH2q19DhyhGA
-         cG4ObwfD7/eO0Dwb0r9mHsQ8SLxkSsNx4naXAA1Ch3jClI9WMxzR42PkMMMD+0bjonC5
-         JvL1rlaE0DGa7kODDQjxyENLWtOi4nd8WtU5IrrJiAs9a4cpaviv+/Eu/4fi+nFS4pTu
-         Z28Y/+wdib8voI+cgFmZg77zGXVBvyjjEPEDfD2/4PT+mxBnKbqy2QNf64oNwgLkAsTw
-         rsfyyBFOdZ3aqrKzuM47ataM6u2xXYct/4eaBhvOmSubxXW79JWysFTRKemYiNak+Jcw
-         yp6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684840700; x=1687432700;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0zNJf1ZxIlrz72iFEKXCdEhtPieGC/o/YCVkxcPf5Cw=;
-        b=Y+fyLv99jVXw0/29e4gXyBTDlqcnRGjjm58F2NDdSJQi3mW21JCL9fRuWfTV7e51gc
-         Xohwq5qlUufSUV4rY+6xf5t5R+FUFV09HWGbbysMGYs/h63Zit28RrWiJ8bSUmuCtwzv
-         Ofcx+N367KdOIRkn+ViwpJa5h+fR1SfOrC67gMgwjG2IsT5uQ5E8vHoPgZFe3ruqscFC
-         zIX/ew8L9t1iD/1lF9sk65+JwVVj+al2MQFny1OPheI/huK+TPP4k0L7LvxsfZM+zgr+
-         8wLkczFLtith+ECs21f3g9Krb8RlgV9ch/rjOBKW55Ws2PThjXBZyIuvF7ydLCQAVSjO
-         /sbw==
-X-Gm-Message-State: AC+VfDyM/0wixDjD8vmT2F2AfLXd50461LT8cLRapU3arHx4ri3Feu4S
-        MZq9aZ7iXashCnTNv4zwHgaHQ1QoH77zIxOsM8BEtp2x/FQ=
-X-Google-Smtp-Source: ACHHUZ59THj5Tswww4xenEpO4c8mhlINpyXFkxbCi+i4JA9RU6XtgIVQFed0jO+NQcfy2Oiz/sTbAEQgMp4XniOrwSI=
-X-Received: by 2002:a17:906:5d04:b0:95e:d74b:d171 with SMTP id
- g4-20020a1709065d0400b0095ed74bd171mr13436332ejt.28.1684840699474; Tue, 23
- May 2023 04:18:19 -0700 (PDT)
+        with ESMTP id S236120AbjEWMRa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 08:17:30 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC791A1
+        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 05:17:22 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id A59BE22A27;
+        Tue, 23 May 2023 12:17:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1684844241;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xHyDx/YVDVlyI5mELhOX9sbEBf2QEz6wTh/McSpCJ4c=;
+        b=avxfzBP+UqCVErDEwfH47BoQvmlM9FoZ9GNVmNqd4W2K6gTw0TswKURn2oxrpzutTTZOCg
+        76kdQgLj9Kp/OCE/IzIOcBuWoPLXL28WlXJANN2EP9lMQYQMtPiqDHjvGYzHYsWGwWPUyH
+        gPTiH8c9qm2TjMlHw8mNgfG7l7QX8b4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1684844241;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xHyDx/YVDVlyI5mELhOX9sbEBf2QEz6wTh/McSpCJ4c=;
+        b=2wYNcXsPct1+Ts/27T+yVdpZeC36JB8XQHUE9LYAv6dl57dAGcx3f2Pg96IYROqd0G9GPC
+        d9LdHrAx7tBWXnAw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 409C113588;
+        Tue, 23 May 2023 12:17:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 2CnUDNGubGRAJQAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Tue, 23 May 2023 12:17:21 +0000
+Date:   Tue, 23 May 2023 14:17:19 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Steve Dickson <steved@redhat.com>
+Subject: Re: [PATCH 0/2] Support abstract address for rpcbind in kernel
+Message-ID: <20230523121719.GA616123@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <168375610447.26246.3237443941479930060.stgit@noble.brown>
 MIME-Version: 1.0
-References: <CAAmbk-f_U8CPcTQM866L572uUHdK4p5iWKnUQs4r8fkW=6RW9g@mail.gmail.com>
- <1744185.1684489212@warthog.procyon.org.uk>
-In-Reply-To: <1744185.1684489212@warthog.procyon.org.uk>
-From:   Chris Chilvers <chilversc@gmail.com>
-Date:   Tue, 23 May 2023 12:18:08 +0100
-Message-ID: <CAAmbk-ffz-6LqkEo+XavgiuefZK7BOHC7648ZhSs0BN88N=M4A@mail.gmail.com>
-Subject: Re: [Linux-cachefs] [BUG] fscache writing but not reading
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        brennandoyle@google.com, Benjamin Maynard <benmaynard@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <168375610447.26246.3237443941479930060.stgit@noble.brown>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 19 May 2023 at 10:40, David Howells <dhowells@redhat.com> wrote:
->
-> Chris Chilvers <chilversc@gmail.com> wrote:
->
-> > While testing the fscache performance fixes [1] that were merged into 6.4-rc1
-> > it appears that the caching no longer works. The client will write to the cache
-> > but never reads.
->
-> Can you try reading from afs?  You would need to enable CONFIG_AFS_FS in your
-> kernel if it's not already set.
->
-> Install kafs-client and do:
->
->         systemctl enable afs.mount
->         md5sum /afs/openafs.org/software/openafs/1.9.1/openafs-1.9.1-doc.tar.bz2
->         cat /proc/fs/fscache/stats
+Hi Neil,
 
-FS-Cache statistics
-Cookies: n=13 v=7 vcol=0 voom=0
-Acquire: n=13 ok=13 oom=0
-LRU    : n=1 exp=0 rmv=0 drp=0 at=2833
-Invals : n=0
-Updates: n=0 rsz=0 rsn=0
-Relinqs: n=0 rtr=0 drop=0
-NoSpace: nwr=0 ncr=0 cull=0
-IO     : rd=0 wr=18
-RdHelp : RA=18 RP=0 WB=0 WBZ=0 rr=0 sr=0
-RdHelp : ZR=1 sh=0 sk=0
-RdHelp : DL=18 ds=18 df=0 di=0
-RdHelp : RD=0 rs=0 rf=0
-RdHelp : WR=18 ws=18 wf=0
+> These two patches cause the SUNRPC layer in Linux to attempt to contact
+> rpcbind using an AF_UNIX socket with an abstract address before
+> the existing attempts of AF_UNIX to a socket in the filesystem, and IP
+> to a well known port.
 
-This was on an instance that was only just created, so the cache was
-initially unused (all the counters were 0).
+> This allows the benefits of an AF_UNIX connection combined with the
+> benefits of honouring the network namespace when connection rpcbind.
 
->         umount /afs/openafs.org
->         md5sum /afs/openafs.org/software/openafs/1.9.1/openafs-1.9.1-doc.tar.bz2
->         cat /proc/fs/fscache/stats
+> For this to be useful, rpcbind must listed on that name, and user-space
+> tools must also connect to the same address.  This requires changes to
+> rpcbind and too libtirpc.  libtirpc currently has a bug which causes
+> sockets bountd to abstract addresses to appear to be unbound, so asking
+> systemd to pass rpcbind an abstract socket doesn't work - rpcbind
+> rejects it.
 
-FS-Cache statistics
-Cookies: n=13 v=7 vcol=0 voom=0
-Acquire: n=26 ok=26 oom=0
-LRU    : n=1 exp=1 rmv=0 drp=0 at=467
-Invals : n=0
-Updates: n=0 rsz=0 rsn=0
-Relinqs: n=13 rtr=0 drop=13
-NoSpace: nwr=0 ncr=0 cull=0
-IO     : rd=18 wr=18
-RdHelp : RA=36 RP=0 WB=0 WBZ=0 rr=0 sr=0
-RdHelp : ZR=1 sh=0 sk=0
-RdHelp : DL=18 ds=18 df=0 di=0
-RdHelp : RD=18 rs=18 rf=0
-RdHelp : WR=18 ws=18 wf=0
+> Patches for rpcbind and libtirpc will follow.
 
-Looks like the cache is working fine with AFS. The second md5sum
-seemed a lot quicker than the first.
+Thanks a lot for taking care. I finally find a time to test it.
+I tested all your patchsets on openSUSE with kernel 6.3.1 (built locally),
+rpcbind [2] and libtirpc [3], but although all patches LGTM, there is some
+failure:
+
+PATH="/opt/ltp/testcases/bin:$PATH" nfslock01.sh -v 3 -t tcp
+nfslock01 1 TINFO: IPv6 disabled on lhost via kernel command line or not compiled in
+nfslock01 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
+nfslock01 1 TINFO: add local addr 10.0.0.2/24
+nfslock01 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
+nfslock01 1 TINFO: add remote addr 10.0.0.1/24
+nfslock01 1 TINFO: Network config (local -- remote):
+nfslock01 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
+nfslock01 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
+nfslock01 1 TINFO: fd00:1:1:1::2/64/ -- fd00:1:1:1::1/64/
+tst_device.c:96: TINFO: Found free device 0 '/dev/loop0'
+tst_supported_fs_types.c:157: TINFO: Skipping ext2 as requested by the test
+tst_supported_fs_types.c:157: TINFO: Skipping ext3 as requested by the test
+tst_supported_fs_types.c:90: TINFO: Kernel supports ext4
+tst_supported_fs_types.c:55: TINFO: mkfs.ext4 does exist
+tst_supported_fs_types.c:90: TINFO: Kernel supports xfs
+tst_supported_fs_types.c:55: TINFO: mkfs.xfs does exist
+tst_supported_fs_types.c:90: TINFO: Kernel supports btrfs
+tst_supported_fs_types.c:55: TINFO: mkfs.btrfs does exist
+tst_supported_fs_types.c:157: TINFO: Skipping vfat as requested by the test
+tst_supported_fs_types.c:157: TINFO: Skipping exfat as requested by the test
+tst_supported_fs_types.c:157: TINFO: Skipping ntfs as requested by the test
+tst_supported_fs_types.c:157: TINFO: Skipping tmpfs as requested by the test
+nfslock01 1 TINFO: === Testing on ext4 ===
+nfslock01 1 TINFO: Formatting ext4 with opts='/dev/loop0'
+nfslock01 1 TINFO: YES TST_FS_TYPE: 'ext4'
+nfslock01 1 TINFO: Mounting device: mount -t ext4 /dev/loop0 /tmp/LTP_nfslock01.pLrRsUDH2Y/mntpoint -o i_version
+nfslock01 1 TINFO: timeout per run is 0h 5m 0s
+nfslock01 1 TINFO: mount.nfs: (linux nfs-utils 2.6.3)
+nfslock01 1 TINFO: setup NFSv3, socket type tcp
+nfslock01 1 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=3 10.0.0.2:/tmp/LTP_nfslock01.pLrRsUDH2Y/mntpoint/3/tcp /tmp/LTP_nfslock01.pLrRsUDH2Y/3/0
+mount.nfs: trying 10.0.0.2 prog 100003 vers 3 prot TCP port 2049
+mount.nfs: portmap query failed: RPC: Program not registered
+mount.nfs: trying 10.0.0.2 prog 100003 vers 3 prot TCP port 2049
+mount.nfs: portmap query failed: RPC: Program not registered
+mount.nfs: trying 10.0.0.2 prog 100003 vers 3 prot TCP port 2049
+mount.nfs: portmap query failed: RPC: Program not registered
+mount.nfs: requested NFS version or transport protocol is not supported for /tmp/LTP_nfslock01.pLrRsUDH2Y/3/0
+=> pvorel: ERROR above
+mount.nfs: timeout set for Tue May 23 07:49:10 2023
+mount.nfs: trying text-based options 'proto=tcp,vers=3,addr=10.0.0.2'
+mount.nfs: prog 100003, trying vers=3, prot=6
+mount.nfs: prog 100005, trying vers=3, prot=6
+mount.nfs: trying text-based options 'proto=tcp,vers=3,addr=10.0.0.2'
+mount.nfs: prog 100003, trying vers=3, prot=6
+mount.nfs: prog 100005, trying vers=3, prot=6
+mount.nfs: trying text-based options 'proto=tcp,vers=3,addr=10.0.0.2'
+mount.nfs: prog 100003, trying vers=3, prot=6
+mount.nfs: prog 100005, trying vers=3, prot=6
+nfslock01 1 TBROK: mount command failed
+nfslock01 1 TINFO: Cleaning up testcase
+nfslock01 1 TINFO: AppArmor enabled, this may affect test results
+nfslock01 1 TINFO: it can be disabled with TST_DISABLE_APPARMOR=1 (requires super/root)
+nfslock01 1 TINFO: loaded AppArmor profiles: none
+
+Summary:
+passed   0
+failed   0
+broken   1
+skipped  0
+warnings 0
+
+I retest it also on single filesystem other than ext4:
+PATH="/opt/ltp/testcases/bin:$PATH" LTP_SINGLE_FS_TYPE=btrfs nfslock01.sh -v 3 -t tcp
+PATH="/opt/ltp/testcases/bin:$PATH" LTP_SINGLE_FS_TYPE=xfs nfslock01.sh -v 3 -t tcp
+But the result is the same: "mount command failed".
+
+BTW even other tests fail:
+PATH="/opt/ltp/testcases/bin:$PATH" LTP_SINGLE_FS_TYPE=btrfs nfs01.sh -t tcp
+
+I also downloaded LTP to slightly older code, when only single filesystem was used
+(before 9e61bb028), but obviously mount still fails.
+
+Therefore I tested just mount on loop device with the default NFSv4, which works:
+dd if=/dev/zero of=/tmp/dev bs=1M count=500
+losetup /dev/loop0 /tmp/dev
+mkfs.ext2 /dev/loop0
+mkdir -p /export
+mount /dev/loop0 /export
+exportfs -o no_root_squash,async,no_subtree_check,rw localhost:/export
+mkdir -p /import
+mount localhost:/export /import
+
+df | grep /import
+localhost:/export nfs4      467M     0  442M   0% /import
+
+mount | grep /import
+localhost:/export on /import type nfs4 (rw,relatime,vers=4.2,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp6,timeo=600,retrans=2,sec=sys,clientaddr=::1,local_lock=none,addr=::1)
+
+But testing NFSv3 does not work (nothing interesting in dmesg):
+umount /import
+mount -o proto=tcp,vers=3 localhost:/export /import
+
+Obviously, kernel 6.2.12 with the same NFS config with unmodified libtirpc and rpcbind works:
+
+localhost:/export on /import type nfs (rw,relatime,vers=3,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=127.0.0.1,mountvers=3,mountport=20048,mountproto=tcp,local_lock=none,addr=127.0.0.1)
+
+I double checked if I backported everything correctly, thus I expect there is
+some problem with the code.
+
+Kind regards,
+Petr
+
+[1] https://build.opensuse.org/package/binaries/home:pevik:branches:network/rpcbind/openSUSE_Tumbleweed
+[2] https://build.opensuse.org/package/show/home:pevik:branches:Base:System/libtirpc
+
+> NeilBrown
+
+
+> ---
+
+> NeilBrown (2):
+>       SUNRPC: support abstract unix socket addresses
+>       SUNRPC: attempt to reach rpcbind with an abstract socket name
+
+
+>  net/sunrpc/clnt.c      |  8 ++++++--
+>  net/sunrpc/rpcb_clnt.c | 39 +++++++++++++++++++++++++++++++--------
+>  net/sunrpc/xprtsock.c  |  9 +++++++--
+>  3 files changed, 44 insertions(+), 12 deletions(-)
