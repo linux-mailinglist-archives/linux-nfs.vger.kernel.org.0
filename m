@@ -2,43 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3682E70DF4F
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 16:33:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65C6570DF52
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 16:34:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236077AbjEWOdp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 May 2023 10:33:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33000 "EHLO
+        id S237083AbjEWOeF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 May 2023 10:34:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237094AbjEWOdn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 10:33:43 -0400
+        with ESMTP id S236937AbjEWOeE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 May 2023 10:34:04 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54458E9
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 07:33:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A08130
+        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 07:34:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D910463324
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 14:33:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF08C433EF;
-        Tue, 23 May 2023 14:33:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8318660A1F
+        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 14:34:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E57BC433EF;
+        Tue, 23 May 2023 14:33:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684852421;
-        bh=1Wk5rfVwPa3m8SSE4H+g89TYBlCdLdMsbGfj+mXdmuY=;
+        s=k20201202; t=1684852440;
+        bh=GE1LJlVqzqoJyPBK3T7QoC342wVBx65VGm9LOBvWSlg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YX18L1HH9XtVGJGrBkkcA160ClVHcp8za8sOHLiwkDjlyUp3iinpMu+fkuNcg2rgF
-         +7vjgJ73QRLjK1NZYCaQHDMhQCicUC0bQLXSpcTUh6k+yYNzwIk4nrB6AiH3cJf9jz
-         hsloOzx+glSpSBZj/UMIFdvrPUSGZqKwXTebqAeHm+ct1bnYoOsMcvPVjh3XSLTpPf
-         vnKzclak762k1OyvP9l0XjPDQw9HHXqCMNjTL/oTgS/af0/BDY4Erw/RG89Ujh56N2
-         y86LEvCVmFEaN+xDCgZNPUMeaKD74CSY4dia310HRTGt+gseTabQfP3pMRov/Z3/EQ
-         vEiu+xWRcseSQ==
-Subject: [PATCH v2 09/11] SUNRPC: Add RPC-with-TLS tracepoints
+        b=T1wiogvt6tUwQlHVH5ELwMjr5JyuQUkxKb4pB3rOF2gspurmMzBsSSXqAElZOSK+W
+         UOQzKLP7LgKKa4v6LQ3kSEzEAEimNdJTnbwfju+NGZ1y2Rs9QUtMxzHlhPkemQgG0T
+         uo+JLmfnrYVnp+EM0WK9wt7Hlba0gq4apmrphEfDFTifH/AtN2Lj9G/EV7nu7Ff/3q
+         wwG2Oq72BGnp24uZP8n+LlsdaprThZSEb6kTphVVxT2wMQivSO6iP26kvLNbYQvMe7
+         YjS/WNJFzLTviehh/ZxoNJqLCoEMPHbjVtwuWXRm4B0wz3EFbfrdrUJOf7G5n0zToO
+         uHVINS8nqh+mg==
+Subject: [PATCH v2 10/11] NFS: Have struct nfs_client carry a TLS policy field
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>, jlayton@redhat.com,
         linux-nfs@vger.kernel.org, kernel-tls-handshake@lists.linux.dev
-Date:   Tue, 23 May 2023 10:33:29 -0400
-Message-ID: <168485239971.6613.8469609569894808288.stgit@oracle-102.nfsv4bat.org>
+Date:   Tue, 23 May 2023 10:33:48 -0400
+Message-ID: <168485242649.6613.1124447028099829329.stgit@oracle-102.nfsv4bat.org>
 In-Reply-To: <168485183242.6613.7025123558596119858.stgit@oracle-102.nfsv4bat.org>
 References: <168485183242.6613.7025123558596119858.stgit@oracle-102.nfsv4bat.org>
 User-Agent: StGit/1.5
@@ -57,93 +57,169 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-RFC 9289 makes auditing TLS handshakes mandatory-to-implement.
+The new field is used to match struct nfs_clients that have the same
+TLS policy setting.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
- include/trace/events/sunrpc.h |   44 +++++++++++++++++++++++++++++++++++++++++
- net/sunrpc/xprtsock.c         |    5 ++++-
- 2 files changed, 48 insertions(+), 1 deletion(-)
+ fs/nfs/client.c           |    8 ++++++++
+ fs/nfs/internal.h         |    1 +
+ fs/nfs/nfs3client.c       |    1 +
+ fs/nfs/nfs4client.c       |   20 +++++++++++++++-----
+ include/linux/nfs_fs_sb.h |    3 ++-
+ 5 files changed, 27 insertions(+), 6 deletions(-)
 
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 34784f29a63d..7cd4bbd6904c 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -1525,6 +1525,50 @@ TRACE_EVENT(rpcb_unregister,
- 	)
- );
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index f50e025ae406..9bfdade0f6e6 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -184,6 +184,7 @@ struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *cl_init)
+ 	clp->cl_net = get_net(cl_init->net);
  
-+/**
-+ ** RPC-over-TLS tracepoints
-+ **/
-+
-+DECLARE_EVENT_CLASS(rpc_tls_class,
-+	TP_PROTO(
-+		const struct rpc_clnt *clnt,
-+		const struct rpc_xprt *xprt
-+	),
-+
-+	TP_ARGS(clnt, xprt),
-+
-+	TP_STRUCT__entry(
-+		__field(unsigned long, requested_policy)
-+		__field(u32, version)
-+		__string(servername, xprt->servername)
-+		__string(progname, clnt->cl_program->name)
-+	),
-+
-+	TP_fast_assign(
-+		__entry->requested_policy = clnt->cl_xprtsec.policy;
-+		__entry->version = clnt->cl_vers;
-+		__assign_str(servername, xprt->servername);
-+		__assign_str(progname, clnt->cl_program->name)
-+	),
-+
-+	TP_printk("server=%s %sv%u requested_policy=%s",
-+		__get_str(servername), __get_str(progname), __entry->version,
-+		rpc_show_xprtsec_policy(__entry->requested_policy)
-+	)
-+);
-+
-+#define DEFINE_RPC_TLS_EVENT(name) \
-+	DEFINE_EVENT(rpc_tls_class, rpc_tls_##name, \
-+			TP_PROTO( \
-+				const struct rpc_clnt *clnt, \
-+				const struct rpc_xprt *xprt \
-+			), \
-+			TP_ARGS(clnt, xprt))
-+
-+DEFINE_RPC_TLS_EVENT(unavailable);
-+DEFINE_RPC_TLS_EVENT(not_started);
-+
-+
- /* Record an xdr_buf containing a fully-formed RPC message */
- DECLARE_EVENT_CLASS(svc_xdr_msg_class,
- 	TP_PROTO(
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 686dd313f89f..7ade414aa1cb 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2630,6 +2630,7 @@ static void xs_tls_connect(struct work_struct *work)
- 	/* This implicitly sends an RPC_AUTH_TLS probe */
- 	lower_clnt = rpc_create(&args);
- 	if (IS_ERR(lower_clnt)) {
-+		trace_rpc_tls_unavailable(upper_clnt, upper_xprt);
- 		clear_bit(XPRT_SOCK_CONNECTING, &upper_transport->sock_state);
- 		xprt_clear_connecting(upper_xprt);
- 		xprt_wake_pending_tasks(upper_xprt, PTR_ERR(lower_clnt));
-@@ -2645,8 +2646,10 @@ static void xs_tls_connect(struct work_struct *work)
- 	lower_xprt = rcu_dereference(lower_clnt->cl_xprt);
- 	rcu_read_unlock();
- 	status = xs_tls_handshake_sync(lower_xprt, &upper_xprt->xprtsec);
--	if (status)
-+	if (status) {
-+		trace_rpc_tls_not_started(upper_clnt, upper_xprt);
- 		goto out_close;
-+	}
+ 	clp->cl_principal = "*";
++	clp->cl_xprtsec = cl_init->xprtsec;
+ 	return clp;
  
- 	status = xs_tls_finish_connecting(lower_xprt, upper_transport);
- 	if (status)
+ error_cleanup:
+@@ -326,6 +327,10 @@ static struct nfs_client *nfs_match_client(const struct nfs_client_initdata *dat
+ 							   sap))
+ 				continue;
+ 
++		/* Match the xprt security policy */
++		if (clp->cl_xprtsec.policy != data->xprtsec.policy)
++			continue;
++
+ 		refcount_inc(&clp->cl_count);
+ 		return clp;
+ 	}
+@@ -675,6 +680,9 @@ static int nfs_init_server(struct nfs_server *server,
+ 		.cred = server->cred,
+ 		.nconnect = ctx->nfs_server.nconnect,
+ 		.init_flags = (1UL << NFS_CS_REUSEPORT),
++		.xprtsec = {
++			.policy = RPC_XPRTSEC_NONE,
++		},
+ 	};
+ 	struct nfs_client *clp;
+ 	int error;
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 3cc027d3bd58..5c986c0d3cce 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -81,6 +81,7 @@ struct nfs_client_initdata {
+ 	struct net *net;
+ 	const struct rpc_timeout *timeparms;
+ 	const struct cred *cred;
++	struct xprtsec_parms xprtsec;
+ };
+ 
+ /*
+diff --git a/fs/nfs/nfs3client.c b/fs/nfs/nfs3client.c
+index 669cda757a5c..8fa187a9c46d 100644
+--- a/fs/nfs/nfs3client.c
++++ b/fs/nfs/nfs3client.c
+@@ -93,6 +93,7 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_server *mds_srv,
+ 		.net = mds_clp->cl_net,
+ 		.timeparms = &ds_timeout,
+ 		.cred = mds_srv->cred,
++		.xprtsec = mds_clp->cl_xprtsec,
+ 	};
+ 	struct nfs_client *clp;
+ 	char buf[INET6_ADDRSTRLEN + 1];
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index d3051b051a56..75ed8354576b 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -896,7 +896,8 @@ static int nfs4_set_client(struct nfs_server *server,
+ 		int proto, const struct rpc_timeout *timeparms,
+ 		u32 minorversion, unsigned int nconnect,
+ 		unsigned int max_connect,
+-		struct net *net)
++		struct net *net,
++		struct xprtsec_parms *xprtsec)
+ {
+ 	struct nfs_client_initdata cl_init = {
+ 		.hostname = hostname,
+@@ -909,6 +910,7 @@ static int nfs4_set_client(struct nfs_server *server,
+ 		.net = net,
+ 		.timeparms = timeparms,
+ 		.cred = server->cred,
++		.xprtsec = *xprtsec,
+ 	};
+ 	struct nfs_client *clp;
+ 
+@@ -978,6 +980,7 @@ struct nfs_client *nfs4_set_ds_client(struct nfs_server *mds_srv,
+ 		.net = mds_clp->cl_net,
+ 		.timeparms = &ds_timeout,
+ 		.cred = mds_srv->cred,
++		.xprtsec = mds_srv->nfs_client->cl_xprtsec,
+ 	};
+ 	char buf[INET6_ADDRSTRLEN + 1];
+ 
+@@ -1127,6 +1130,9 @@ static int nfs4_server_common_setup(struct nfs_server *server,
+ static int nfs4_init_server(struct nfs_server *server, struct fs_context *fc)
+ {
+ 	struct nfs_fs_context *ctx = nfs_fc2context(fc);
++	struct xprtsec_parms xprtsec = {
++		.policy		= RPC_XPRTSEC_NONE,
++	};
+ 	struct rpc_timeout timeparms;
+ 	int error;
+ 
+@@ -1157,7 +1163,8 @@ static int nfs4_init_server(struct nfs_server *server, struct fs_context *fc)
+ 				ctx->minorversion,
+ 				ctx->nfs_server.nconnect,
+ 				ctx->nfs_server.max_connect,
+-				fc->net_ns);
++				fc->net_ns,
++				&xprtsec);
+ 	if (error < 0)
+ 		return error;
+ 
+@@ -1247,7 +1254,8 @@ struct nfs_server *nfs4_create_referral_server(struct fs_context *fc)
+ 				parent_client->cl_mvops->minor_version,
+ 				parent_client->cl_nconnect,
+ 				parent_client->cl_max_connect,
+-				parent_client->cl_net);
++				parent_client->cl_net,
++				&parent_client->cl_xprtsec);
+ 	if (!error)
+ 		goto init_server;
+ #endif	/* IS_ENABLED(CONFIG_SUNRPC_XPRT_RDMA) */
+@@ -1263,7 +1271,8 @@ struct nfs_server *nfs4_create_referral_server(struct fs_context *fc)
+ 				parent_client->cl_mvops->minor_version,
+ 				parent_client->cl_nconnect,
+ 				parent_client->cl_max_connect,
+-				parent_client->cl_net);
++				parent_client->cl_net,
++				&parent_client->cl_xprtsec);
+ 	if (error < 0)
+ 		goto error;
+ 
+@@ -1336,7 +1345,8 @@ int nfs4_update_server(struct nfs_server *server, const char *hostname,
+ 	error = nfs4_set_client(server, hostname, sap, salen, buf,
+ 				clp->cl_proto, clnt->cl_timeout,
+ 				clp->cl_minorversion,
+-				clp->cl_nconnect, clp->cl_max_connect, net);
++				clp->cl_nconnect, clp->cl_max_connect,
++				net, &clp->cl_xprtsec);
+ 	clear_bit(NFS_MIG_TSM_POSSIBLE, &server->mig_status);
+ 	if (error != 0) {
+ 		nfs_server_insert_lists(server);
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index ea2f7e6b1b0b..fa5a592de798 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -63,7 +63,8 @@ struct nfs_client {
+ 	u32			cl_minorversion;/* NFSv4 minorversion */
+ 	unsigned int		cl_nconnect;	/* Number of connections */
+ 	unsigned int		cl_max_connect; /* max number of xprts allowed */
+-	const char *		cl_principal;  /* used for machine cred */
++	const char *		cl_principal;	/* used for machine cred */
++	struct xprtsec_parms	cl_xprtsec;	/* xprt security policy */
+ 
+ #if IS_ENABLED(CONFIG_NFS_V4)
+ 	struct list_head	cl_ds_clients; /* auth flavor data servers */
 
 
