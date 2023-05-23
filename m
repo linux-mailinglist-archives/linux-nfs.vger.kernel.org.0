@@ -2,50 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A6570D156
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 04:38:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B044170D17C
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 May 2023 04:43:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232190AbjEWCiD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 May 2023 22:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49746 "EHLO
+        id S234888AbjEWCnv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 May 2023 22:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232298AbjEWCiC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 May 2023 22:38:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58E31CD
-        for <linux-nfs@vger.kernel.org>; Mon, 22 May 2023 19:38:01 -0700 (PDT)
+        with ESMTP id S234877AbjEWCnu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 May 2023 22:43:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F20DE9;
+        Mon, 22 May 2023 19:43:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E961E62E13
-        for <linux-nfs@vger.kernel.org>; Tue, 23 May 2023 02:38:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E49ADC433EF;
-        Tue, 23 May 2023 02:37:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A540262E11;
+        Tue, 23 May 2023 02:43:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 995F8C433EF;
+        Tue, 23 May 2023 02:43:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684809480;
-        bh=J7vobndCNYxScNHj6ckEoE3gTvd0amC9yTAsOt9IOqU=;
+        s=k20201202; t=1684809825;
+        bh=X8VbVCFKITBC5cqkNteTtbljFMveelWWgEatZbTs04s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=THjMggFjjkY6Sy0q68jnL31RC4P4z0C5BKOl1eNIw27IgXU5Qy7s4Xas8A+fWG4oQ
-         2MQVo0ukcVULuuaXXeUbHS9RU1Teli8YJbIUKxv1MlrXUyGtX+hS5sNYcBWRfqp6rU
-         qgTGV0KGeG8JcgO0qmdZXCGZADndgCWr6E0w6+FbmFiPlC48PZSi4aoAu2KsLei0d8
-         221HBivYJhK14IVC/S4y7/p7ZrpaGdOeF3J/h8tObiTjmEFQ6PakMfW0wgXzifiUg+
-         JF0wxdRNk4Flw1+o+MD63TwZ1FOa7Tl/rAibPcunrIzUX8hMS8ZdhGmP5CSzIfXJ8Z
-         kGliA4lErZcSQ==
-Date:   Mon, 22 May 2023 22:37:57 -0400
+        b=GuW99+7zpZXnD1XsI5K4iSk8v0vkV2eL5lnirncVrE/GGUupJmCcqlfcs1tghZ+wj
+         kqqf5c56A5tUSlBLI+9B9oNtsbpm4VySLoRXxGGcOC2G/5kVU7wqB9FLnLkBFyWM7m
+         7/AU8uKRxqd+oI89eD4xT/Ilxysg/pQz+WssuGrooF79vMcj06DqTqR05sb9MWk4vT
+         ki09UtS8v6dyujPw5elczqNGfn/rQHmvq7fR5IS80pfa9CdCutOPxcH2KmwveCC2k2
+         7HaPl1jikM9nRurG2FbTsxHBBehxMQC1IP0NYppxWBMH7gyefTJLaL7EMpxDFq0yA3
+         DoHecIImRNNHw==
+Date:   Mon, 22 May 2023 22:43:42 -0400
 From:   Chuck Lever <cel@kernel.org>
-To:     anna.schumaker@netapp.com
-Cc:     Chuck Lever <chuck.lever@oracle.com>, jlayton@redhat.com,
-        linux-nfs@vger.kernel.org, kernel-tls-handshake@lists.linux.dev
-Subject: Re: [PATCH] SUNRPC: @clnt specifies auth flavor of RPC ping
-Message-ID: <ZGwnBY11KWX21nzC@manet.1015granger.net>
-References: <CAFX2Jfk9up-eyLhe7s65E6+vBTjXrATREFoYJVkCBLAT_56o2g@mail.gmail.com>
- <168479039188.9346.7280595186663128472.stgit@oracle-102.nfsv4bat.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     chuck.lever@oracle.com, jlayton@kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] NFSD: handle GETATTR conflict with write
+ delegation
+Message-ID: <ZGwoXtYZP0Z0JgAf@manet.1015granger.net>
+References: <1684799560-31663-1-git-send-email-dai.ngo@oracle.com>
+ <1684799560-31663-3-git-send-email-dai.ngo@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <168479039188.9346.7280595186663128472.stgit@oracle-102.nfsv4bat.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <1684799560-31663-3-git-send-email-dai.ngo@oracle.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -54,58 +55,102 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 22, 2023 at 05:21:22PM -0400, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> When connecting, we don't want to send both a NULL ping and an
-> RPC_AUTH_TLS probe, because, except for the detection of RPC-with-
-> TLS support, both serve effectively the same purpose.
-> 
-> Modify rpc_ping() so it can send a TLS probe when @clnt's flavor
-> is RPC_AUTH_TLS. All other callers continue to use AUTH_NONE.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+On Mon, May 22, 2023 at 04:52:39PM -0700, Dai Ngo wrote:
+> If the GETATTR request on a file that has write delegation in effect
+> and the request attributes include the change info and size attribute
+> then the write delegation is recalled and NFS4ERR_DELAY is returned
+> for the GETATTR.
+
+Isn't this yet another case where the server should send the
+CB_RECALL and wait for it briefly, before resorting to
+NFS4ERR_DELAY?
+
+
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 > ---
->  net/sunrpc/clnt.c |   14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+>  fs/nfsd/nfs4state.c | 37 +++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/nfs4xdr.c   |  5 +++++
+>  fs/nfsd/state.h     |  3 +++
+>  3 files changed, 45 insertions(+)
 > 
-> Does it help to replace 4/12 with this?  Compile-tested only.
-> 
-> 
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index 4cdb539b5854..274ad74cb2bd 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -2826,10 +2826,22 @@ EXPORT_SYMBOL_GPL(rpc_call_null);
->  
->  static int rpc_ping(struct rpc_clnt *clnt)
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index b90b74a5e66e..ea9cd781db5f 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -8353,3 +8353,40 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
 >  {
-> +	struct rpc_message msg = {
-> +		.rpc_proc = &rpcproc_null,
-> +	};
-> +	struct rpc_task_setup task_setup_data = {
-> +		.rpc_client = clnt,
-> +		.rpc_message = &msg,
-> +		.callback_ops = &rpc_null_ops,
-> +		.flags = RPC_TASK_SOFT | RPC_TASK_SOFTCONN,
-> +	};
->  	struct rpc_task	*task;
->  	int status;
->  
-> -	task = rpc_call_null_helper(clnt, NULL, NULL, 0, NULL, NULL);
-> +	if (clnt->cl_auth->au_flavor != RPC_AUTH_TLS)
-> +		flags |= RPC_TASK_NULLCREDS;
-
-Obviously this needs to be:
-
-		task_setup_data.flags |= RPC_TASK_NULLCREDS;
-
-This has been fixed in the topic-rpc-with-tls-upcall branch.
-
+>  	get_stateid(cstate, &u->write.wr_stateid);
+>  }
 > +
-> +	task = rpc_run_task(&task_setup_data);
->  	if (IS_ERR(task))
->  		return PTR_ERR(task);
->  	status = task->tk_status;
-> 
+> +__be32
+> +nfs4_handle_wrdeleg_conflict(struct svc_rqst *rqstp, struct inode *inode)
+
+As a globally-visible function, this needs a documenting comment, and
+please use "nfsd4_" rather than "nfs4_".
+
+
+> +{
+> +	struct file_lock_context *ctx;
+> +	struct file_lock *fl;
+> +	struct nfs4_delegation *dp;
+> +
+> +	ctx = locks_inode_context(inode);
+> +	if (!ctx)
+> +		return 0;
+> +	spin_lock(&ctx->flc_lock);
+> +	list_for_each_entry(fl, &ctx->flc_lease, fl_list) {
+> +		if (fl->fl_flags == FL_LAYOUT ||
+> +				fl->fl_lmops != &nfsd_lease_mng_ops)
+> +			continue;
+> +		if (fl->fl_type == F_WRLCK) {
+> +			dp = fl->fl_owner;
+> +			/*
+> +			 * increment the sc_count to prevent the delegation to
+> +			 * be freed while sending the CB_RECALL. The refcount is
+> +			 * decremented by nfs4_put_stid in nfsd4_cb_recall_release
+> +			 * after the request was sent.
+> +			 */
+> +			if (dp->dl_recall.cb_clp == *(rqstp->rq_lease_breaker) ||
+> +					!refcount_inc_not_zero(&dp->dl_stid.sc_count)) {
+> +				spin_unlock(&ctx->flc_lock);
+> +				return 0;
+> +			}
+> +			spin_unlock(&ctx->flc_lock);
+> +			return nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
+> +		}
+> +		break;
+> +	}
+> +	spin_unlock(&ctx->flc_lock);
+> +	return 0;
+> +}
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 76db2fe29624..ed09b575afac 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -2966,6 +2966,11 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>  		if (status)
+>  			goto out;
+>  	}
+> +	if (bmval0 & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
+> +		status = nfs4_handle_wrdeleg_conflict(rqstp, d_inode(dentry));
+> +		if (status)
+> +			goto out;
+> +	}
+>  
+>  	err = vfs_getattr(&path, &stat,
+>  			  STATX_BASIC_STATS | STATX_BTIME | STATX_CHANGE_COOKIE,
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index d49d3060ed4f..64727a39f0db 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -732,4 +732,7 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
+>  	cmpxchg(&clp->cl_state, NFSD4_COURTESY, NFSD4_EXPIRABLE);
+>  	return clp->cl_state == NFSD4_EXPIRABLE;
+>  }
+> +
+> +extern __be32 nfs4_handle_wrdeleg_conflict(struct svc_rqst *rqstp,
+> +				struct inode *inode);
+>  #endif   /* NFSD4_STATE_H */
+> -- 
+> 2.9.5
 > 
