@@ -2,186 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A297870F132
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 May 2023 10:40:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF39470F7AA
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 May 2023 15:33:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239935AbjEXIki (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 May 2023 04:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49330 "EHLO
+        id S234641AbjEXNd0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 May 2023 09:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240622AbjEXIkF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 May 2023 04:40:05 -0400
-Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641791BD5;
-        Wed, 24 May 2023 01:38:57 -0700 (PDT)
-Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-4572fc80fe2so507097e0c.1;
-        Wed, 24 May 2023 01:38:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684917508; x=1687509508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NfarnodxQu2uVifQlwyFWQBlKRRu34cl2qnKn/jHsVk=;
-        b=DqQa3/3cv/yETeS+tnJXyueNRkd6494IjWgKyztrzD2dU3E9eeaebzKLmvSG4wdzpy
-         QYGiITCSFHc7jLBkhP/AdlT9H5ZOSpDq33HfmvXaq8Us2mBX9w9CWMJ5gt8PhebWq9vn
-         8ZHHNYGHmd7O1DxZ+EREkLoRZjeSmR+q2vJTlG6sLPnfUNm2rQpaAt1gUgcQdyADOoIE
-         fq4QjJ60Ms85nLvLeNeFiWFsHdWt9F7GmLzjkgkxuNY8loiif0XPL4QWUkgCLiGlrzyH
-         YWKEo+LmuiVR7yajpa9M3AQmU2yBm+VV4M1kiyqpeFNc18N5iyHIVgb9p+ZaOJs5Xpsa
-         BoRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684917508; x=1687509508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NfarnodxQu2uVifQlwyFWQBlKRRu34cl2qnKn/jHsVk=;
-        b=YWrGMSbFO4u7B2N4tm0L2Y7qPhqcIwFg70Zg6oYXfB16FcE3oZWhQTNN0pkIsyyloi
-         iUYTi3qK2DP9Ozi/p344CS5P5eg9eGKIOPIa2KhGUQk4VXHtUgVU5NGKTP5sJykfkQrc
-         aziJ2aKihDvHHjZAU22ATTY5tEozZGcIkW81Wjk8yGEjhemfN2PSRqJXZAwZ5Ji+EpVD
-         401hcdEZtAeyhzY0FLPKFZd3dEJl+DymOux0t47keyo5+gspUWxjC8uG8uPeH81lE8or
-         16+Cj9qpRJ2RXctOFRUp5o/jrxY77+7lYyO92GBPBxanC6TcdhotDfvCO9dIOVIqSySz
-         Lz4w==
-X-Gm-Message-State: AC+VfDyP4Q68AkoFLyXtPbcyuOLuuXSr1YxIBuJ7DGAdH+TKqeY/gi8Q
-        WDaKxJomNkEmmhwTIgURiuXUkzzncn7/aE2XEwhxaFkWq7w=
-X-Google-Smtp-Source: ACHHUZ5xQRUy4pMOWZxpLLW/9i1uu+tK709ow3UcPYu8kFXzlb77oIdNVsh6fQO2qPmE9ogKKz+uaTpE5r+5AY8wz4M=
-X-Received: by 2002:a67:eb48:0:b0:439:4c9c:1f00 with SMTP id
- x8-20020a67eb48000000b004394c9c1f00mr2878336vso.30.1684917508396; Wed, 24 May
- 2023 01:38:28 -0700 (PDT)
+        with ESMTP id S230255AbjEXNdY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 May 2023 09:33:24 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47999A7;
+        Wed, 24 May 2023 06:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PlI3NINuTp5y2t5Z+4wg7vfiTt8lvB4SyLbHC5tKASU=; b=eq1oO18nKmxdfx79+rZ3TTo5Q2
+        2/F3VHC9ngHsBakNRFv680ymTTyCK9hQMC/hF/6ByoTd1QX5Huc2qSnkfOtIpqNxg3U3KILlEnohH
+        tk1m/vJLtoK5KkcBjlU2kaBM3cLYnmqGoN2Zya9Htl2CZTaH4W94BgkzuYeaOzmShvPd+qb3ym5EL
+        yonGPZiSfd3yzH3hEQFRUsVsx849CuZTYjYDAClbFB7R6Y5PcboAB1JCCXjmLj8dakGubsyS8QwrS
+        jjlaR0JAq6BqcKNmdvnkHdN+wsZcZz5xjzhHDugGtoEqqn7cXDiJJ1Gi7vDVBHa/uqXa8DUbUI1v1
+        peQuoiEw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1q1oc5-00BF3M-Tz; Wed, 24 May 2023 13:33:13 +0000
+Date:   Wed, 24 May 2023 14:33:13 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Hannes Reinecke <hare@suse.de>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 16/17] block: use iomap for writes to block devices
+Message-ID: <ZG4SGYOogQtEZrll@casper.infradead.org>
+References: <20230424054926.26927-1-hch@lst.de>
+ <20230424054926.26927-17-hch@lst.de>
+ <b96b397e-2f5e-7910-3bb3-7405d0e293a7@suse.de>
+ <ZG09wR4WOI8zDxJK@dread.disaster.area>
 MIME-Version: 1.0
-References: <ca02955f-1877-4fde-b453-3c1d22794740@kili.mountain>
-In-Reply-To: <ca02955f-1877-4fde-b453-3c1d22794740@kili.mountain>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 24 May 2023 11:38:17 +0300
-Message-ID: <CAOQ4uxi6ST19WGkZiM=ewoK_9o-7DHvZcAc3v2c5GrqSFf0WDQ@mail.gmail.com>
-Subject: Re: [bug report] fanotify: support reporting non-decodeable file handles
-To:     Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Dan Carpenter <dan.carpenter@linaro.org>,
-        Chuck Lever <cel@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZG09wR4WOI8zDxJK@dread.disaster.area>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 24, 2023 at 9:34=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> Hello Amir Goldstein,
->
-> The patch 7ba39960c7f3: "fanotify: support reporting non-decodeable
-> file handles" from May 2, 2023, leads to the following Smatch static
-> checker warning:
->
->         fs/notify/fanotify/fanotify.c:451 fanotify_encode_fh()
->         warn: assigning signed to unsigned: 'fh->type =3D type' 's32min-(=
--1),1-254,256-s32max'
->
-> (unpublished garbage Smatch check).
->
-> fs/notify/fanotify/fanotify.c
->     403 static int fanotify_encode_fh(struct fanotify_fh *fh, struct inod=
-e *inode,
->     404                               unsigned int fh_len, unsigned int *=
-hash,
->     405                               gfp_t gfp)
->     406 {
->     407         int dwords, type =3D 0;
->     408         char *ext_buf =3D NULL;
->     409         void *buf =3D fh->buf;
->     410         int err;
->     411
->     412         fh->type =3D FILEID_ROOT;
->     413         fh->len =3D 0;
->     414         fh->flags =3D 0;
->     415
->     416         /*
->     417          * Invalid FHs are used by FAN_FS_ERROR for errors not
->     418          * linked to any inode. The f_handle won't be reported
->     419          * back to userspace.
->     420          */
->     421         if (!inode)
->     422                 goto out;
->     423
->     424         /*
->     425          * !gpf means preallocated variable size fh, but fh_len c=
-ould
->     426          * be zero in that case if encoding fh len failed.
->     427          */
->     428         err =3D -ENOENT;
->     429         if (fh_len < 4 || WARN_ON_ONCE(fh_len % 4) || fh_len > MA=
-X_HANDLE_SZ)
->     430                 goto out_err;
->     431
->     432         /* No external buffer in a variable size allocated fh */
->     433         if (gfp && fh_len > FANOTIFY_INLINE_FH_LEN) {
->     434                 /* Treat failure to allocate fh as failure to enc=
-ode fh */
->     435                 err =3D -ENOMEM;
->     436                 ext_buf =3D kmalloc(fh_len, gfp);
->     437                 if (!ext_buf)
->     438                         goto out_err;
->     439
->     440                 *fanotify_fh_ext_buf_ptr(fh) =3D ext_buf;
->     441                 buf =3D ext_buf;
->     442                 fh->flags |=3D FANOTIFY_FH_FLAG_EXT_BUF;
->     443         }
->     444
->     445         dwords =3D fh_len >> 2;
->     446         type =3D exportfs_encode_fid(inode, buf, &dwords);
->     447         err =3D -EINVAL;
->     448         if (!type || type =3D=3D FILEID_INVALID || fh_len !=3D dw=
-ords << 2)
->
-> exportfs_encode_fid() can return negative errors.  Do we need to check
-> if (!type etc?
+On Wed, May 24, 2023 at 08:27:13AM +1000, Dave Chinner wrote:
+> On Fri, May 19, 2023 at 04:22:01PM +0200, Hannes Reinecke wrote:
+> > I'm hitting this during booting:
+> > [    5.016324]  <TASK>
+> > [    5.030256]  iomap_iter+0x11a/0x350
+> > [    5.030264]  iomap_readahead+0x1eb/0x2c0
+> > [    5.030272]  read_pages+0x5d/0x220
+> > [    5.030279]  page_cache_ra_unbounded+0x131/0x180
+> > [    5.030284]  filemap_get_pages+0xff/0x5a0
+> 
+> Why is filemap_get_pages() using unbounded readahead? Surely
+> readahead should be limited to reading within EOF....
 
-Well, it is true that exportfs_encode_fid() can return a negative value
-in principle, as did exportfs_encode_fh() before it, if there was a filesys=
-tem
-implementation of ->encode_fh() that returned a negative value.
-AFAIK, there currently is no such implementation in-tree, otherwise current
-upstream code would have been buggy.
+It isn't using unbounded readahead; that's an artifact of this
+incomplete stack trace.  Actual call stack:
 
-Patch 2/4 adds a new possible -EOPNOTSUPP return value from
-exportfs_encode_inode_fh() and even goes further to add a kerndoc:
- * Returns an enum fid_type or a negative errno.
-But this new return value is not possible from exportfs_encode_fid()
-that is used here and in {fa,i}notify_fdinfo().
+page_cache_ra_unbounded
+do_page_cache_ra
+ondemand_readahead
+page_cache_sync_ra
+page_cache_sync_readahead
+filemap_get_pages
 
-All the rest of the callers (nfsd, overlayfs, name_to_hanle_at) already
-check this same EOPNOTSUPP condition before calling, but there is
-no guarantee that this will not change in the future.
+As you can see, do_page_cache_ra() does limit readahead to i_size.
+Is ractl->mapping->host the correct way to find the inode?  I always
+get confused.
 
-All the callers mentioned above check the unexpected return value different=
-ly:
-nfsd: only type =3D=3D FILEID_INVALID
-fdinfo: type < 0 || type =3D=3D FILEID_INVALID
-fanotify: !type || type =3D=3D FILEID_INVALID
-overlayfs: type < 0 || type =3D=3D FILEID_INVALID
-name_to_hanle_at: (retval =3D=3D FILEID_INVALID) || (retval =3D=3D -ENOSPC)=
-)
-                /* As per old exportfs_encode_fh documentation
-                 * we could return ENOSPC to indicate overflow
-                 * But file system returned 255 always. So handle
-                 * both the values
-                 */
-
-So he have a bit of a mess.
-How should we clean it up?
-
-Option #1: Change encode_fh to return unsigned and replace that new
-                  EOPNOTSUPP with FILEID_INVALID
-Option #2: change all callers to check negative return value
-
-I am in favor of option #2.
-Shall I send a patch?
-
-Thanks,
-Amir.
+> I think Christoph's code is correct. IMO, any attempt to read beyond
+> the end of the device should throw out a warning and return an
+> error, not silently return zeros.
+> 
+> If readahead is trying to read beyond the end of the device, then it
+> really seems to me like the problem here is readahead, not the iomap
+> code detecting the OOB read request....
+> 
+> Cheers,
+> 
+> Dave.
+> -- 
+> Dave Chinner
+> david@fromorbit.com
