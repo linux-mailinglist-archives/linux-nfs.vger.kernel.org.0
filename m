@@ -2,89 +2,186 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA78570EF1C
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 May 2023 09:12:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A297870F132
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 May 2023 10:40:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239986AbjEXHMP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 May 2023 03:12:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48964 "EHLO
+        id S239935AbjEXIki (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 May 2023 04:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239504AbjEXHLt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 May 2023 03:11:49 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 400B010FE
-        for <linux-nfs@vger.kernel.org>; Wed, 24 May 2023 00:09:25 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-96fbc74fbf1so87347066b.1
-        for <linux-nfs@vger.kernel.org>; Wed, 24 May 2023 00:09:25 -0700 (PDT)
+        with ESMTP id S240622AbjEXIkF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 May 2023 04:40:05 -0400
+Received: from mail-vk1-xa36.google.com (mail-vk1-xa36.google.com [IPv6:2607:f8b0:4864:20::a36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 641791BD5;
+        Wed, 24 May 2023 01:38:57 -0700 (PDT)
+Received: by mail-vk1-xa36.google.com with SMTP id 71dfb90a1353d-4572fc80fe2so507097e0c.1;
+        Wed, 24 May 2023 01:38:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1684912157; x=1687504157;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=MB0PkgtOYu2DAciIYbJ/doyhq3ZdSDKw62DeZCSSPtg=;
-        b=FYCG0I0xG/KCzcPeRgfWGhFKBLQH8yo4Mb+b3h/3/MNGJYaOJxYFefWYzCbWzDOLJ5
-         GslHMTl4heaZuqXTEmqMZYV3JWjK8Zt4w+vYkPylVmw2imfly3Tp8dcGkm97OVZ15gac
-         hO02Kope0eh3dNS3sBBKR4sYeiW7mzVKy2JdY=
+        d=gmail.com; s=20221208; t=1684917508; x=1687509508;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NfarnodxQu2uVifQlwyFWQBlKRRu34cl2qnKn/jHsVk=;
+        b=DqQa3/3cv/yETeS+tnJXyueNRkd6494IjWgKyztrzD2dU3E9eeaebzKLmvSG4wdzpy
+         QYGiITCSFHc7jLBkhP/AdlT9H5ZOSpDq33HfmvXaq8Us2mBX9w9CWMJ5gt8PhebWq9vn
+         8ZHHNYGHmd7O1DxZ+EREkLoRZjeSmR+q2vJTlG6sLPnfUNm2rQpaAt1gUgcQdyADOoIE
+         fq4QjJ60Ms85nLvLeNeFiWFsHdWt9F7GmLzjkgkxuNY8loiif0XPL4QWUkgCLiGlrzyH
+         YWKEo+LmuiVR7yajpa9M3AQmU2yBm+VV4M1kiyqpeFNc18N5iyHIVgb9p+ZaOJs5Xpsa
+         BoRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684912157; x=1687504157;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MB0PkgtOYu2DAciIYbJ/doyhq3ZdSDKw62DeZCSSPtg=;
-        b=A7l1hskzm1S0jAyFCrEx6NR2cS3KNsD2MgOZoXkGSIdRbXY1nupKy7ODEadFK0aQic
-         m3N00nIJE5BSSw2Vjp9H7FE6HukKI7PQG0HbOsRYhTIqGvJ4Zl3ul//r2VUW2OUrkOZE
-         dQTWUEq1fnym60bU+srdApELgNUQ0q2ogqEWxbTDIIJ2YmBEUe7rQjaFYRtQPNU/mGIX
-         XHRRrzPbHrm48I81m8aq/MScDmjViHdxYxSkZu/o5VarVQW3i2CnweR0GOVRrogU5ouJ
-         yV8a/ykUHaE2Nfyr/X5Ff7TChbSfduGGNSLISNkCidNXavzGHU0smN3aC5507hwJtMXh
-         n5eA==
-X-Gm-Message-State: AC+VfDwYnfVOYOzYZ2i/NQrYeffX+FUYNsdhoBrcMgvYdg7+Oq0g1yO+
-        U3DwosT749lFXpN4MX4BbwsL5GsMG7CauZqaRrrkJA==
-X-Google-Smtp-Source: ACHHUZ4OvyrYEQkEUfZSmUZD5S0dixYDveppalH3smz8YjXbgWTLCqDqGb6U6n7MopqEkuxUiQE5XNBE/E81YW5lpSg=
-X-Received: by 2002:a17:907:60cc:b0:96a:580e:bf0f with SMTP id
- hv12-20020a17090760cc00b0096a580ebf0fmr18686933ejc.14.1684912157630; Wed, 24
- May 2023 00:09:17 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684917508; x=1687509508;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NfarnodxQu2uVifQlwyFWQBlKRRu34cl2qnKn/jHsVk=;
+        b=YWrGMSbFO4u7B2N4tm0L2Y7qPhqcIwFg70Zg6oYXfB16FcE3oZWhQTNN0pkIsyyloi
+         iUYTi3qK2DP9Ozi/p344CS5P5eg9eGKIOPIa2KhGUQk4VXHtUgVU5NGKTP5sJykfkQrc
+         aziJ2aKihDvHHjZAU22ATTY5tEozZGcIkW81Wjk8yGEjhemfN2PSRqJXZAwZ5Ji+EpVD
+         401hcdEZtAeyhzY0FLPKFZd3dEJl+DymOux0t47keyo5+gspUWxjC8uG8uPeH81lE8or
+         16+Cj9qpRJ2RXctOFRUp5o/jrxY77+7lYyO92GBPBxanC6TcdhotDfvCO9dIOVIqSySz
+         Lz4w==
+X-Gm-Message-State: AC+VfDyP4Q68AkoFLyXtPbcyuOLuuXSr1YxIBuJ7DGAdH+TKqeY/gi8Q
+        WDaKxJomNkEmmhwTIgURiuXUkzzncn7/aE2XEwhxaFkWq7w=
+X-Google-Smtp-Source: ACHHUZ5xQRUy4pMOWZxpLLW/9i1uu+tK709ow3UcPYu8kFXzlb77oIdNVsh6fQO2qPmE9ogKKz+uaTpE5r+5AY8wz4M=
+X-Received: by 2002:a67:eb48:0:b0:439:4c9c:1f00 with SMTP id
+ x8-20020a67eb48000000b004394c9c1f00mr2878336vso.30.1684917508396; Wed, 24 May
+ 2023 01:38:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230524063810.1595778-1-hch@lst.de> <20230524063810.1595778-12-hch@lst.de>
-In-Reply-To: <20230524063810.1595778-12-hch@lst.de>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 24 May 2023 09:09:06 +0200
-Message-ID: <CAJfpegtt2eD4Cw11f12cmcvHLe9VHhPLQdJWpwyAmeY-SrVuOA@mail.gmail.com>
-Subject: Re: [PATCH 11/11] fuse: drop redundant arguments to fuse_perform_write
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org
+References: <ca02955f-1877-4fde-b453-3c1d22794740@kili.mountain>
+In-Reply-To: <ca02955f-1877-4fde-b453-3c1d22794740@kili.mountain>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 24 May 2023 11:38:17 +0300
+Message-ID: <CAOQ4uxi6ST19WGkZiM=ewoK_9o-7DHvZcAc3v2c5GrqSFf0WDQ@mail.gmail.com>
+Subject: Re: [bug report] fanotify: support reporting non-decodeable file handles
+To:     Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        Chuck Lever <cel@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 24 May 2023 at 08:38, Christoph Hellwig <hch@lst.de> wrote:
+On Wed, May 24, 2023 at 9:34=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
 >
-> pos is always equal to iocb->ki_pos, and mapping is always equal to
-> iocb->ki_filp->f_mapping.
+> Hello Amir Goldstein,
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> The patch 7ba39960c7f3: "fanotify: support reporting non-decodeable
+> file handles" from May 2, 2023, leads to the following Smatch static
+> checker warning:
+>
+>         fs/notify/fanotify/fanotify.c:451 fanotify_encode_fh()
+>         warn: assigning signed to unsigned: 'fh->type =3D type' 's32min-(=
+-1),1-254,256-s32max'
+>
+> (unpublished garbage Smatch check).
+>
+> fs/notify/fanotify/fanotify.c
+>     403 static int fanotify_encode_fh(struct fanotify_fh *fh, struct inod=
+e *inode,
+>     404                               unsigned int fh_len, unsigned int *=
+hash,
+>     405                               gfp_t gfp)
+>     406 {
+>     407         int dwords, type =3D 0;
+>     408         char *ext_buf =3D NULL;
+>     409         void *buf =3D fh->buf;
+>     410         int err;
+>     411
+>     412         fh->type =3D FILEID_ROOT;
+>     413         fh->len =3D 0;
+>     414         fh->flags =3D 0;
+>     415
+>     416         /*
+>     417          * Invalid FHs are used by FAN_FS_ERROR for errors not
+>     418          * linked to any inode. The f_handle won't be reported
+>     419          * back to userspace.
+>     420          */
+>     421         if (!inode)
+>     422                 goto out;
+>     423
+>     424         /*
+>     425          * !gpf means preallocated variable size fh, but fh_len c=
+ould
+>     426          * be zero in that case if encoding fh len failed.
+>     427          */
+>     428         err =3D -ENOENT;
+>     429         if (fh_len < 4 || WARN_ON_ONCE(fh_len % 4) || fh_len > MA=
+X_HANDLE_SZ)
+>     430                 goto out_err;
+>     431
+>     432         /* No external buffer in a variable size allocated fh */
+>     433         if (gfp && fh_len > FANOTIFY_INLINE_FH_LEN) {
+>     434                 /* Treat failure to allocate fh as failure to enc=
+ode fh */
+>     435                 err =3D -ENOMEM;
+>     436                 ext_buf =3D kmalloc(fh_len, gfp);
+>     437                 if (!ext_buf)
+>     438                         goto out_err;
+>     439
+>     440                 *fanotify_fh_ext_buf_ptr(fh) =3D ext_buf;
+>     441                 buf =3D ext_buf;
+>     442                 fh->flags |=3D FANOTIFY_FH_FLAG_EXT_BUF;
+>     443         }
+>     444
+>     445         dwords =3D fh_len >> 2;
+>     446         type =3D exportfs_encode_fid(inode, buf, &dwords);
+>     447         err =3D -EINVAL;
+>     448         if (!type || type =3D=3D FILEID_INVALID || fh_len !=3D dw=
+ords << 2)
+>
+> exportfs_encode_fid() can return negative errors.  Do we need to check
+> if (!type etc?
 
-Acked-by: Miklos Szeredi <mszeredi@redhat.com>
+Well, it is true that exportfs_encode_fid() can return a negative value
+in principle, as did exportfs_encode_fh() before it, if there was a filesys=
+tem
+implementation of ->encode_fh() that returned a negative value.
+AFAIK, there currently is no such implementation in-tree, otherwise current
+upstream code would have been buggy.
+
+Patch 2/4 adds a new possible -EOPNOTSUPP return value from
+exportfs_encode_inode_fh() and even goes further to add a kerndoc:
+ * Returns an enum fid_type or a negative errno.
+But this new return value is not possible from exportfs_encode_fid()
+that is used here and in {fa,i}notify_fdinfo().
+
+All the rest of the callers (nfsd, overlayfs, name_to_hanle_at) already
+check this same EOPNOTSUPP condition before calling, but there is
+no guarantee that this will not change in the future.
+
+All the callers mentioned above check the unexpected return value different=
+ly:
+nfsd: only type =3D=3D FILEID_INVALID
+fdinfo: type < 0 || type =3D=3D FILEID_INVALID
+fanotify: !type || type =3D=3D FILEID_INVALID
+overlayfs: type < 0 || type =3D=3D FILEID_INVALID
+name_to_hanle_at: (retval =3D=3D FILEID_INVALID) || (retval =3D=3D -ENOSPC)=
+)
+                /* As per old exportfs_encode_fh documentation
+                 * we could return ENOSPC to indicate overflow
+                 * But file system returned 255 always. So handle
+                 * both the values
+                 */
+
+So he have a bit of a mess.
+How should we clean it up?
+
+Option #1: Change encode_fh to return unsigned and replace that new
+                  EOPNOTSUPP with FILEID_INVALID
+Option #2: change all callers to check negative return value
+
+I am in favor of option #2.
+Shall I send a patch?
+
+Thanks,
+Amir.
