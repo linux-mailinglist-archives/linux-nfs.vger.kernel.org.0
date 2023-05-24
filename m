@@ -2,68 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 770BA70FB81
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 May 2023 18:14:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3770470FBCB
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 May 2023 18:39:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233072AbjEXQOx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 May 2023 12:14:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40106 "EHLO
+        id S233239AbjEXQjk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 May 2023 12:39:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234020AbjEXQOv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 May 2023 12:14:51 -0400
+        with ESMTP id S229912AbjEXQjk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 May 2023 12:39:40 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA274122
-        for <linux-nfs@vger.kernel.org>; Wed, 24 May 2023 09:14:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0294DFC
+        for <linux-nfs@vger.kernel.org>; Wed, 24 May 2023 09:39:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684944851;
+        s=mimecast20190719; t=1684946340;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fQ8HGz/8PogFAssEpLQqVOmne0GpZ/pJdJitN20arrE=;
-        b=D0333hj3xdN9fsDe6+u8hMadWkz5Yfp04dJDP0+fnztB9DV/3ZN6LTkD38MqjFC3cQWc/w
-        /KzbG7F5mbJGGiaHALZuNJV0uz1BIlIis2LAuxdrbTisi+lGJpOPw3jzWHdTVb1zHETSmw
-        DIdu/LhSCroxQpz1XXpqPIrU4u+UNiE=
-Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
- [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=hIRDFYHmrI2ea9PgJ9cG2BzagPncv2WifE6ykqY/z1c=;
+        b=JYylOJb+NzvsPb3go+eofLvRUsLwcMr6QMlGTwp3VirHN/L/4sKl9a9qYhnmC/cR4+GW3d
+        WgZ+rzV2h5FhAmPtIqtdJOvefiLDq8bJMcp/9FetIiZ55k+xnl16pB8pwk1zJnzq32Gafw
+        R3IUsKP3/2ZQEZff8cdkFFfF9WrdBBE=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-624-tQCucx1rOxuHldRn6Cugxw-1; Wed, 24 May 2023 12:14:09 -0400
-X-MC-Unique: tQCucx1rOxuHldRn6Cugxw-1
-Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-53ba38cf091so241462a12.1
-        for <linux-nfs@vger.kernel.org>; Wed, 24 May 2023 09:14:09 -0700 (PDT)
+ us-mta-280-JsR9YobgOS-inVRecL9VOg-1; Wed, 24 May 2023 12:38:58 -0400
+X-MC-Unique: JsR9YobgOS-inVRecL9VOg-1
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1ae65e23bfcso4157235ad.3
+        for <linux-nfs@vger.kernel.org>; Wed, 24 May 2023 09:38:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684944848; x=1687536848;
+        d=1e100.net; s=20221208; t=1684946338; x=1687538338;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fQ8HGz/8PogFAssEpLQqVOmne0GpZ/pJdJitN20arrE=;
-        b=i77h0FbQuvuVmDtreKrXPXpLsP/nUb4vUIACR8C6S1AlhSVqk6nJVRt3lx/liHykBM
-         tW63yz2G/SdbyfU9YWp+2pFD3S0T6lJ5zRRPDh4V1pwiXeGv85X4PyOADmVZ17NJ0gkY
-         djMrMO23Q7xZ0cASvVuQIgyLhVAOKrhsZMYE3TIeO2HUi9nCSg7vmw+loqctUD0teZq6
-         wVXneg7wh0PZYOO06F2pETXbQUMSy/vktgKWoGDfyJO+4hsirV91jZiDJKhmn3Zyscb4
-         eeYCgGFIXDxtHQsuXS7/UlMe6zJ/y9io1Lx0Dao2I88yIr/VBhv07bf0fAC09fYjie+g
-         SeWA==
-X-Gm-Message-State: AC+VfDxYfSwDou943wnAreNhg+NZ7j0Q3jJlbKU0DVIZKFtPB0L3CJaH
-        z650nSqJYppGPDid1rEJgnDVVsJ7mdri35qjQYMC/ZMEmfcfyY2In5IF44Coz4aVUXUEESuZkNM
-        iK7Cc+KQvXtAZj5s60S5pdGNQHwHXWdUZ7+CX
-X-Received: by 2002:a17:903:32cd:b0:1a9:581b:fbb1 with SMTP id i13-20020a17090332cd00b001a9581bfbb1mr20622412plr.32.1684944848417;
-        Wed, 24 May 2023 09:14:08 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6ksRPI6C4Qbm3XTs2zMXExteCDHT1ueFX45NNxUR3Bmh0dl7msPgHXt9a+INLTvOYk2oEw3SpVm/ptycvFULM=
-X-Received: by 2002:a17:903:32cd:b0:1a9:581b:fbb1 with SMTP id
- i13-20020a17090332cd00b001a9581bfbb1mr20622391plr.32.1684944848109; Wed, 24
- May 2023 09:14:08 -0700 (PDT)
+        bh=hIRDFYHmrI2ea9PgJ9cG2BzagPncv2WifE6ykqY/z1c=;
+        b=Er5c/uylKhXwfp3Gqut7Qe9GOJQT2uI260vvY20hAI3YFGgMugoDvpwZkVtJcujx+P
+         E1vwQF2czmIRDVgsizEVTZxtqTXM4hZlPfFLaSkc9RYdFHoIi5+fUZHQ3iNUfJCRodGx
+         rKYVzMFX7WPjHuktEA6+jHdkfXMtT3fnqFa1DZqtTBm+4N6rFRBupb0TljylIM8Kr1Jw
+         uPJkKdxIssEP+7lR6NxjR0DrqirBlF/yvd64lNHABwPwZDKboa+pwwOcwf2KVxm+DIqG
+         m51UwHftogMTc72dulrR62elEckOvyhvx9fI5L1dUNjjThdWpJmWdeRNUaxG4M4/CGvb
+         nb+Q==
+X-Gm-Message-State: AC+VfDydJRTpXqmYGKO8Q5jfhtHkuW9+upOvz7XGJj48Vf9r6o/V1Fsk
+        SWcRsch1Vgd/0R52xjCU4DHNanzG2fHiatmiUH1QfU50XYNK5ampQh7QrTsPaRB1MIFjy8wdgCV
+        PLgTJQpTS0X8gC5TYdnGUwURRT5Jttbc0ILmO
+X-Received: by 2002:a17:903:428a:b0:1ac:4a41:d38d with SMTP id ju10-20020a170903428a00b001ac4a41d38dmr15831019plb.51.1684946337865;
+        Wed, 24 May 2023 09:38:57 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7QhwNbEG7dVnvKUcvcrF5VXTCpluYFQoMIGO7odXS8eF4N7acYVvSWWvlkVR9tfx1GsK6DpUi0zEDdnwhFY7c=
+X-Received: by 2002:a17:903:428a:b0:1ac:4a41:d38d with SMTP id
+ ju10-20020a170903428a00b001ac4a41d38dmr15830993plb.51.1684946337555; Wed, 24
+ May 2023 09:38:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAAmbk-f_U8CPcTQM866L572uUHdK4p5iWKnUQs4r8fkW=6RW9g@mail.gmail.com>
- <CALF+zO=1oASFeb5WOezeZm_fbCuw=L8AL-n-mbCt8A==ZMAy3Q@mail.gmail.com>
- <CAAmbk-cgTR+FxLY2C=upuPBwNaBYff=GHedXyQiFf=Hr5i3G0A@mail.gmail.com> <CALF+zO=vjPjs8QevssUmGHA_bZaTaF3HcqQa+OQgxegqB5yzmw@mail.gmail.com>
-In-Reply-To: <CALF+zO=vjPjs8QevssUmGHA_bZaTaF3HcqQa+OQgxegqB5yzmw@mail.gmail.com>
+References: <20230216150701.3654894-1-dhowells@redhat.com> <CALF+zO=w2Gyz6JtzEoFgTVjH67-_CuTaK7e+2yoHEwXZ8bPx_A@mail.gmail.com>
+In-Reply-To: <CALF+zO=w2Gyz6JtzEoFgTVjH67-_CuTaK7e+2yoHEwXZ8bPx_A@mail.gmail.com>
 From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Wed, 24 May 2023 12:13:32 -0400
-Message-ID: <CALF+zOn_qX4tcT2ucq4jD3G-1ERqZkL6Cw7hx75OnQF0ivqSeA@mail.gmail.com>
-Subject: Re: [Linux-cachefs] [BUG] fscache writing but not reading
-To:     Chris Chilvers <chilversc@gmail.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        brennandoyle@google.com, Benjamin Maynard <benmaynard@google.com>
+Date:   Wed, 24 May 2023 12:38:21 -0400
+Message-ID: <CALF+zO=Y8dMsJ79RYp1e7n9B5_0=segpqW9_tetBqPhFiQcZxA@mail.gmail.com>
+Subject: Re: [Linux-cachefs] [PATCH v6 0/2] mm, netfs, fscache: Stop read
+ optimisation when folio removed from pagecache
+To:     David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        Jeff Layton <jlayton@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -76,108 +82,137 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, May 19, 2023 at 7:53=E2=80=AFAM David Wysochanski <dwysocha@redhat.=
+On Tue, May 16, 2023 at 3:29=E2=80=AFPM David Wysochanski <dwysocha@redhat.=
 com> wrote:
 >
-> On Thu, May 18, 2023 at 4:21=E2=80=AFPM Chris Chilvers <chilversc@gmail.c=
+> On Thu, Feb 16, 2023 at 10:07=E2=80=AFAM David Howells <dhowells@redhat.c=
 om> wrote:
 > >
-> > On Tue, 16 May 2023 at 20:28, David Wysochanski <dwysocha@redhat.com> w=
-rote:
-> > >
-> > > On Tue, May 16, 2023 at 11:42=E2=80=AFAM Chris Chilvers <chilversc@gm=
-ail.com> wrote:
-> > > >
-> > > > While testing the fscache performance fixes [1] that were merged in=
-to 6.4-rc1
-> > > > it appears that the caching no longer works. The client will write =
-to the cache
-> > > > but never reads.
-> > > >
-> > > Thanks for the report.
-> > >
-> > > If you reboot do you see reads from the cache?
+> > Hi Willy,
 > >
-> > On the first read after a reboot it uses the cache, but subsequent
-> > reads do not use the cache.
+> > Is this okay by you?  You said you wanted to look at the remaining uses=
+ of
+> > page_has_private(), of which there are then three after these patches, =
+not
+> > counting folio_has_private():
 > >
-> > > You can check if the cache is being read from by looking in
-> > > /proc/fs/fscache/stats
-> > > at the "IO" line:
-> > > # grep IO /proc/fs/fscache/stats
-> > > IO     : rd=3D80030 wr=3D0
+> >         arch/s390/kernel/uv.c:          if (page_has_private(page))
+> >         mm/khugepaged.c:                    1 + page_mapcount(page) + p=
+age_has_private(page)) {
+> >         mm/migrate_device.c:            extra +=3D 1 + page_has_private=
+(page);
 > >
-> > Running the tests 4 times (twice before reboot, and twice after) give
-> > the following metrics:
-> > FS-Cache I/O (delta)
-> > Run       rd        wr
-> >  1         0    39,250
-> >  2       130    38,894
-> >  3    39,000         0
-> >  4        72    38,991
+> > --
+> > I've split the folio_has_private()/filemap_release_folio() call pair
+> > merging into its own patch, separate from the actual bugfix and pulled =
+out
+> > the folio_needs_release() function into mm/internal.h and made
+> > filemap_release_folio() use it.  I've also got rid of the bit clearance=
+s
+> > from the network filesystem evict_inode functions as they doesn't seem =
+to
+> > be necessary.
 > >
-> > > Can you share:
-> > > 1. NFS server you're using (is it localhost or something else)
-> > > 2. NFS version
+> > Note that the last vestiges of try_to_release_page() got swept away, so=
+ I
+> > rebased and dealt with that.  One comment remained, which is removed by=
+ the
+> > first patch.
 > >
-> > The NFS server and client are separate VMs on the same network.
-> > Server NFS version: Ubuntu 22.04 jammy, kernel 5.15.0-1021-gcp
-> > Client NFS version: Ubuntu 22.04 jammy, kernel 6.4.0-060400rc1-generic
-> > (https://kernel.ubuntu.com/~kernel-ppa/mainline/v6.4-rc1/)
-> > Client nfs-utils: 2.6.3-rc6
-> > Client cachefilesd: 0.10.10-0.2ubuntu1
+> > David
 > >
-> > > In addition to checking the above for the reads from the cache, you c=
-an also
-> > > see whether NFS reads are going over the wire pretty easily with a si=
-milar
-> > > technique.
-> > >
-> > > Copy /proc/self/mounstats to a file before your test, then make a sec=
-ond copy
-> > > after the test, then run mountstats as follows:
-> > > mountstats -S /tmp/mountstats.1 -f /tmp/mountstats.2
+> > Changes:
+> > =3D=3D=3D=3D=3D=3D=3D=3D
+> > ver #6)
+> >  - Drop the third patch which removes a duplicate check in vmscan().
 > >
-> > app read    =3D applications read bytes via read(2)
-> > client read =3D client read bytes via NFS READ
+> > ver #5)
+> >  - Rebased on linus/master.  try_to_release_page() has now been entirel=
+y
+> >    replaced by filemap_release_folio(), barring one comment.
+> >  - Cleaned up some pairs in ext4.
 > >
-> > Run           app read        client read
-> >  1     322,122,547,200    322,122,547,200
-> >  2     322,122,547,200    321,048,805,376
-> >  3     322,122,547,200                  0
-> >  4     322,122,547,200    321,593,053,184
+> > ver #4)
+> >  - Split has_private/release call pairs into own patch.
+> >  - Moved folio_needs_release() to mm/internal.h and removed open-coded
+> >    version from filemap_release_folio().
+> >  - Don't need to clear AS_RELEASE_ALWAYS in ->evict_inode().
+> >  - Added experimental patch to reduce shrink_folio_list().
 > >
-> > I've put the full data in a GitHub gist, along with a graph collected
-> > from a metrics agent:
-> > https://gist.github.com/chilversc/54eb76155ad37b66cb85186e7449beaa
-> > https://gist.githubusercontent.com/chilversc/54eb76155ad37b66cb85186e74=
-49beaa/raw/09828c596d0cfc44bc0eb67f40e4033db202326e/metrics.png
+> > ver #3)
+> >  - Fixed mapping_clear_release_always() to use clear_bit() not set_bit(=
+).
+> >  - Moved a '&&' to the correct line.
+> >
+> > ver #2)
+> >  - Rewrote entirely according to Willy's suggestion[1].
+> >
+> > Link: https://lore.kernel.org/r/Yk9V/03wgdYi65Lb@casper.infradead.org/ =
+[1]
+> > Link: https://lore.kernel.org/r/164928630577.457102.8519251179327601178=
+.stgit@warthog.procyon.org.uk/ # v1
+> > Link: https://lore.kernel.org/r/166844174069.1124521.108905063609741699=
+94.stgit@warthog.procyon.org.uk/ # v2
+> > Link: https://lore.kernel.org/r/166869495238.3720468.487815140908514676=
+4.stgit@warthog.procyon.org.uk/ # v3
+> > Link: https://lore.kernel.org/r/1459152.1669208550@warthog.procyon.org.=
+uk/ # v3 also
+> > Link: https://lore.kernel.org/r/166924370539.1772793.137306983607718213=
+17.stgit@warthog.procyon.org.uk/ # v4
+> > Link: https://lore.kernel.org/r/167172131368.2334525.856980892568773193=
+7.stgit@warthog.procyon.org.uk/ # v5
+> > ---
+> > %(shortlog)s
+> > %(diffstat)s
+> >
+> > David Howells (2):
+> >   mm: Merge folio_has_private()/filemap_release_folio() call pairs
+> >   mm, netfs, fscache: Stop read optimisation when folio removed from
+> >     pagecache
+> >
+> >  fs/9p/cache.c           |  2 ++
+> >  fs/afs/internal.h       |  2 ++
+> >  fs/cachefiles/namei.c   |  2 ++
+> >  fs/ceph/cache.c         |  2 ++
+> >  fs/cifs/fscache.c       |  2 ++
+> >  fs/ext4/move_extent.c   | 12 ++++--------
+> >  fs/splice.c             |  3 +--
+> >  include/linux/pagemap.h | 16 ++++++++++++++++
+> >  mm/filemap.c            |  2 ++
+> >  mm/huge_memory.c        |  3 +--
+> >  mm/internal.h           | 11 +++++++++++
+> >  mm/khugepaged.c         |  3 +--
+> >  mm/memory-failure.c     |  8 +++-----
+> >  mm/migrate.c            |  3 +--
+> >  mm/truncate.c           |  6 ++----
+> >  mm/vmscan.c             |  8 ++++----
+> >  16 files changed, 56 insertions(+), 29 deletions(-)
+> >
+> > --
+> > Linux-cachefs mailing list
+> > Linux-cachefs@redhat.com
+> > https://listman.redhat.com/mailman/listinfo/linux-cachefs
 > >
 >
-> Thanks Chris for all this info.  I see you're using NFSv3 so I'll
-> focus on that, and review all this info for clues.
-> I also have been working on some updated test cases and see some very
-> unusual behavior like you're reporting.
+> Willy, and David,
 >
-> I also confirmed that adding the two patches for "Issue #1"  onto
-> 6.4-rc1 resolve _most_ of the caching issues.
-> However, even after those patches, in some limited instances, there
-> are still NFS reads over the wire when there should only be reads from
-> the cache.
-> There may be multiple bugs here.
+> Can this series move forward?
+> This just got mentioned again [1] after Chris tested the NFS netfs
+> patches that were merged in 6.4-rc1
+>
+> [1] https://lore.kernel.org/linux-nfs/CAAmbk-f_U8CPcTQM866L572uUHdK4p5iWK=
+nUQs4r8fkW=3D6RW9g@mail.gmail.com/
 
-I actually misspoke regarding "multiple bugs", as I forgot to add a
-small NFS hunk (see below) needed to dhowells 2nd patch (v6 of mm,
-netfs, fscache: Stop read optimisation when folio removed from
-pagecache).
-After the below small hunk was added on top of dhowells 2nd patch, all
-my tests pass.
-I've also enhanced my existing tests to check NFS READs, fscache
-READs, and fscache WRITEs as expected.
-And I added an additional test to create files the size of RAM, read
-them multiple times, and check for the ops are as expected.
-So I'm confident if we add dhowells 2 patches, plus the below hunk for
-NFS, these caching issues will be resolved.
+Sorry about the timing on the original email as I forgot it lined up
+with LSF/MM.
+
+FYI, I tested with 6.4-rc1 plus these two patches, then I added the NFS
+hunk needed (see below).  All my tests pass now[1], and it makes sense
+from all the ftraces I've seen on test runs that fail (cachefiles_prep_read
+trace event would show "DOWN no-data" even after data was written
+previously).
+
+This small NFS hunk needs added to patch #2 in this series:
 
 diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
 index 8c35d88a84b1..d4a20748b14f 100644
@@ -195,4 +230,7 @@ index 8c35d88a84b1..d4a20748b14f 100644
  }
 
  /*
+
+[1] https://lore.kernel.org/linux-nfs/CALF+zOn_qX4tcT2ucq4jD3G-1ERqZkL6Cw7h=
+x75OnQF0ivqSeA@mail.gmail.com/
 
