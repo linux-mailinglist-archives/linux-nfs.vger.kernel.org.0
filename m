@@ -2,161 +2,151 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDCF27100E8
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 May 2023 00:25:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93FBD7108D1
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 May 2023 11:26:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237896AbjEXWZi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 May 2023 18:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51260 "EHLO
+        id S239208AbjEYJ03 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 May 2023 05:26:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56164 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237549AbjEXWZe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 May 2023 18:25:34 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCFBB99;
-        Wed, 24 May 2023 15:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6a4TWuzTGi7+tMMLrCXx2xS2HLm+fpIBXBWX9SQFhJc=; b=Olg5NsAiR4MXUKxEfN0JWQ26G+
-        48QUUb0p3dP2AO5RET1yB+OlmxpPgfW/OAuL8L3TmcLxGehBJ8zrOmr2kBjQvXnIDe74EGIXQUw5V
-        jrolzbG8yKU05ZkW5mpKw/LmaGIzjIW2osv7EnQcuMT1PVUpROY1wInr2AXsx/P1CtXqq68pLnhwc
-        o//oJNGyzcS02XIm8oZ0EkYqFxmeJvu+ZYfriDV2Rx6DKfxLwq6Z2WZASZL/SOiLmZyzD7t1ZY8rR
-        AcKIKrMHyGez7UPTrzHiDlh7DZpdMV2McGOt3pus8tAT+JlDrTHSf6mbJJPR2Ulm/XYS7au9Vkv2O
-        3mANUUxw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1q1wsv-00EnXL-1n;
-        Wed, 24 May 2023 22:23:09 +0000
-Date:   Wed, 24 May 2023 15:23:09 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>,
-        Daniel Gomez <da.gomez@samsung.com>,
-        Pankaj Raghav <p.raghav@samsung.com>,
-        Ming Lei <ming.lei@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Miklos Szeredi <miklos@szeredi.hu>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/17] block: open code __generic_file_write_iter for
- blkdev writes
-Message-ID: <ZG6OTWckNlz+P+mo@bombadil.infradead.org>
-References: <20230424054926.26927-1-hch@lst.de>
- <20230424054926.26927-15-hch@lst.de>
+        with ESMTP id S239472AbjEYJ01 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 May 2023 05:26:27 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6F1197
+        for <linux-nfs@vger.kernel.org>; Thu, 25 May 2023 02:26:24 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-3f611ccd06eso2643265e9.0
+        for <linux-nfs@vger.kernel.org>; Thu, 25 May 2023 02:26:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685006783; x=1687598783;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dXorc/Ao0djwBR5i8gI65lCGvXzAg/Z+z3rr0V+9Wp4=;
+        b=tpwpGVHDQLPfRjsQosbekXoWW5IgUuFzmpVGnPK78cdjjHQSclapCqZDFbLXpw45ht
+         eT6TbvnFZg7NVZlF2JYoSvC6Yg+tdCtOJTPqL61bK7EcpzfTA62/1PkbaVDJ8FokLt1K
+         jlhL2ztKglsbCqdcUAA0fi7gBi5x/DerzL7d5RGiFnuqSqNQWGvamJAINOARRL1tDaQo
+         i2xmnhKfI33fbWPc01tA23Fnw2LBS/gROECrlm03rRdXQoUdMG1VMFZcGWWxTNr1Yx4v
+         fOdcZgr2mRXHgwQDXLCRjVrBtu1QjcZ/HIqOwBXz/FD48NftK1wYeY+Weof/tZVNc4Mj
+         v57w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685006783; x=1687598783;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dXorc/Ao0djwBR5i8gI65lCGvXzAg/Z+z3rr0V+9Wp4=;
+        b=XBLVNqyCTZR/ZvVcYPvxxSz+wyUPo8H1rZRyhi0tLawE4kvr+PW+ZUAgA4wffQJw7i
+         PolneaItNz4qYNmvcIr22HLtZcpk3RQ2CPeXZ7E25UcM3FXeg3YmiCuexC5HiuSmWGY4
+         CzOdNeEhGDia8E9tuxff6lQf0g2n1ceDGQhnvxPUVqrFvR2+GYZxPSpoutQKpFdxOKmh
+         k6dgXSe56HGL94lJvTgIoCLFZ4lyOyPURpSWXq+r7KvQwzJZY6dRGF4dL36T+8BcfGnP
+         9ss7dyuP6R5hI8+rkZ9EL9zJ6SOJkprzz8MEIrg4g4zq65glsyKQvrbC8DYKM2ocl0Dy
+         RbKw==
+X-Gm-Message-State: AC+VfDxPIpYlyR4edQ/WDj3mUBCntDi1fsg3Af2YK6kARrsW6jg67IOt
+        OXXP/YPCZxb15sEJ9KOitYpgaQ==
+X-Google-Smtp-Source: ACHHUZ7rmoPjIMfC/+8a4HeULsZH8aC3cj93N62dkvYh8afc7wEE0h+bFB60yBgCHJ0V7O1OYUPGBA==
+X-Received: by 2002:a05:600c:205a:b0:3f4:26d4:91b0 with SMTP id p26-20020a05600c205a00b003f426d491b0mr1860574wmg.40.1685006783337;
+        Thu, 25 May 2023 02:26:23 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id l6-20020adff486000000b003047f7a7ad1sm1133808wro.71.2023.05.25.02.26.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 May 2023 02:26:21 -0700 (PDT)
+Date:   Thu, 25 May 2023 07:46:22 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        linux-fsdevel@vger.kernel.org, Chuck Lever <cel@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [bug report] fanotify: support reporting non-decodeable file
+ handles
+Message-ID: <080107ac-873c-41dc-b7c7-208970181c40@kili.mountain>
+References: <ca02955f-1877-4fde-b453-3c1d22794740@kili.mountain>
+ <CAOQ4uxi6ST19WGkZiM=ewoK_9o-7DHvZcAc3v2c5GrqSFf0WDQ@mail.gmail.com>
+ <20230524140648.u6pexxspze7pz63z@quack3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230424054926.26927-15-hch@lst.de>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230524140648.u6pexxspze7pz63z@quack3>
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 07:49:23AM +0200, Christoph Hellwig wrote:
-> Open code __generic_file_write_iter to remove the indirect call into
-> ->direct_IO and to prepare using the iomap based write code.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  block/fops.c | 46 ++++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 44 insertions(+), 2 deletions(-)
-> 
-> diff --git a/block/fops.c b/block/fops.c
-> index b670aa7c5bb745..fd510b6142bd57 100644
-> --- a/block/fops.c
-> +++ b/block/fops.c
-> @@ -508,6 +508,29 @@ static int blkdev_close(struct inode *inode, struct file *filp)
->  	return 0;
->  }
->  
-> +static ssize_t
-> +blkdev_direct_write(struct kiocb *iocb, struct iov_iter *from)
-> +{
-> +	size_t count = iov_iter_count(from);
-> +	ssize_t written;
-> +
-> +	written = kiocb_invalidate_pages(iocb, count);
-> +	if (written) {
-> +		if (written == -EBUSY)
-> +			return 0;
-> +		return written;
-> +	}
-> +
-> +	written = blkdev_direct_IO(iocb, from);
-> +	if (written > 0) {
-> +		kiocb_invalidate_post_write(iocb, count);
-> +		iocb->ki_pos += written;
-> +	}
+On Wed, May 24, 2023 at 04:06:48PM +0200, Jan Kara wrote:
+> Yes, I've checked and all ->encode_fh() implementations return
+> FILEID_INVALID in case of problems (which are basically always only
+> problems with not enough space in the handle buffer).
 
-Written can be negative here after blkdev_direct_IO()
+ceph_encode_fh() can return -EINVAL
 
-> +	if (written != -EIOCBQUEUED)
-> +		iov_iter_revert(from, count - written - iov_iter_count(from));
+$ smdb.py functions encode_fh > where
+$ for i in $(cut -d '|' -f 3 where | sort -u) ; do smdb.py return_states $i ; done | grep INTER | tee out
 
-And we'll then use it here on iov_iter_revert() and this can crash on
-with some values. For example this can crash on a 4k write attempt
-on a 32k drive when experimenting wit large block sizes.
+regards,
+dan carpenter
 
-kernel BUG at lib/iov_iter.c:999!
-invalid opcode: 0000 [#1] PREEMPT SMP PTI
-CPU: 4 PID: 949 Comm: fio Not tainted 6.3.0-large-block-20230426-dirty#28
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS
-1.16.0-debian-1.16.0-5        04/01/2014
-+RIP: 0010:iov_iter_revert.part.0+0x16e/0x170
-Code: f9 40 a2 63 af 74 07 03 56 08 89 d8 29 d0 89 45 08 44 89 6d 20
-<etc>
-RSP: 0018:ffffaa52006cfc60 EFLAGS: 00010246
-RAX: 0000000000000016 RBX: 0000000000000016 RCX: 0000000000000000
-RDX: 0000000000000004 RSI: 0000000000000006 RDI: ffffaa52006cfd08
-RBP: ffffaa52006cfd08 R08: 0000000000000000 R09: ffffaa52006cfb40
-R10: 0000000000000003 R11: ffffffffafcc21e8 R12: 0000000000004000
-R13: 0000000000003fea R14: ffff9de3d7565e00 R15: ffff9de3c1f68600
-FS:  00007f8bfe726c40(0000) GS:ffff9de43bd00000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8bf5eadd68 CR3: 0000000102c76001 CR4: 0000000000770ee0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-PKRU: 55555554
-Call Trace:
- <TASK>
-blkdev_direct_write+0xf0/0x160
-blkdev_write_iter+0x11b/0x230
-io_write+0x10c/0x420
-? kmem_cache_alloc_bulk+0x2a1/0x410
-? fget+0x79/0xb0
-io_issue_sqe+0x60/0x3b0
-? io_prep_rw+0x5a/0x190
-io_submit_sqes+0x1e6/0x640
-__do_sys_io_uring_enter+0x54c/0xb90
-? handle_mm_fault+0x9a/0x340
-? preempt_count_add+0x47/0xa0
-? up_read+0x37/0x70
-? do_user_addr_fault+0x27c/0x780
-do_syscall_64+0x37/0x90
-entry_SYSCALL_64_after_hw
-
-Although I fixed it with an early check on this routine
-with:
-
-if (count < bdev_logical_block_size(bdev))
-	return -EINVAL; 
-
-I think this can just be fixed by also using the alignment
-check earier here:
-
-if (blkdev_dio_unaligned(bdev, pos, iter))                               
-	return -EINVAL;  
-
-  Luis
+fs/btrfs/export.c | btrfs_encode_fh | 36 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/btrfs/export.c | btrfs_encode_fh | 37 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/btrfs/export.c | btrfs_encode_fh | 43 |            77|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/btrfs/export.c | btrfs_encode_fh | 44 |            79|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/btrfs/export.c | btrfs_encode_fh | 45 |            78|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ceph/export.c | ceph_encode_fh | 69 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ceph/export.c | ceph_encode_fh | 70 |         (-22)|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ceph/export.c | ceph_encode_fh | 71 |            78|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ceph/export.c | ceph_encode_fh | 72 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ceph/export.c | ceph_encode_fh | 73 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ceph/export.c | ceph_encode_fh | 88 |             2|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ceph/export.c | ceph_encode_fh | 89 |             1|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/fat/nfs.c | fat_encode_fh_nostale | 84 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/fat/nfs.c | fat_encode_fh_nostale | 85 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/fat/nfs.c | fat_encode_fh_nostale | 88 |           114|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/fat/nfs.c | fat_encode_fh_nostale | 89 |           113|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/fuse/inode.c | fuse_encode_fh | 475 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/fuse/inode.c | fuse_encode_fh | 478 |           130|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/fuse/inode.c | fuse_encode_fh | 479 |           129|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/gfs2/export.c | gfs2_encode_fh | 37 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/gfs2/export.c | gfs2_encode_fh | 38 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/gfs2/export.c | gfs2_encode_fh | 40 |             4|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/gfs2/export.c | gfs2_encode_fh | 42 |             8|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/isofs/export.c | isofs_export_encode_fh | 93 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/isofs/export.c | isofs_export_encode_fh | 94 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/isofs/export.c | isofs_export_encode_fh | 96 |             2|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/isofs/export.c | isofs_export_encode_fh | 97 |             1|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/kernfs/mount.c | kernfs_encode_fh | 59 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/kernfs/mount.c | kernfs_encode_fh | 60 |           254|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/nfs/export.c | nfs_encode_fh | 39 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/nfs/export.c | nfs_encode_fh | 45 | s32min-s32max|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/nilfs2/namei.c | nilfs_encode_fh | 289 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/nilfs2/namei.c | nilfs_encode_fh | 290 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/nilfs2/namei.c | nilfs_encode_fh | 291 |            98|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/nilfs2/namei.c | nilfs_encode_fh | 292 |            97|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ocfs2/export.c | ocfs2_encode_fh | 213 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ocfs2/export.c | ocfs2_encode_fh | 214 |             2|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/ocfs2/export.c | ocfs2_encode_fh | 215 |             1|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/orangefs/super.c | orangefs_encode_fh | 100 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/orangefs/super.c | orangefs_encode_fh | 101 |             2|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/orangefs/super.c | orangefs_encode_fh | 102 |             1|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/overlayfs/export.c | ovl_encode_fh | 111 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/overlayfs/export.c | ovl_encode_fh | 112 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/overlayfs/export.c | ovl_encode_fh | 113 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/overlayfs/export.c | ovl_encode_fh | 114 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/overlayfs/export.c | ovl_encode_fh | 115 |           248|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/reiserfs/inode.c | reiserfs_encode_fh | 740 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/reiserfs/inode.c | reiserfs_encode_fh | 741 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/reiserfs/inode.c | reiserfs_encode_fh | 744 |             3|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/reiserfs/inode.c | reiserfs_encode_fh | 745 |             6|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/reiserfs/inode.c | reiserfs_encode_fh | 746 |             5|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+mm/shmem.c | shmem_encode_fh | 2144 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+mm/shmem.c | shmem_encode_fh | 2149 |             1|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/udf/namei.c | udf_encode_fh | 447 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/udf/namei.c | udf_encode_fh | 448 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/udf/namei.c | udf_encode_fh | 450 |            82|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/udf/namei.c | udf_encode_fh | 451 |            81|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/xfs/xfs_export.c | xfs_fs_encode_fh | 48 |           255|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/xfs/xfs_export.c | xfs_fs_encode_fh | 53 |           130|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/xfs/xfs_export.c | xfs_fs_encode_fh | 54 |           129|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/xfs/xfs_export.c | xfs_fs_encode_fh | 55 |             1|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
+fs/xfs/xfs_export.c | xfs_fs_encode_fh | 56 |             2|        INTERNAL | -1 |                      | int(*)(struct inode*, uint*, int*, struct inode*) |
