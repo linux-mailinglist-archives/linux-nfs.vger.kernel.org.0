@@ -2,130 +2,168 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CB7E712BE4
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 May 2023 19:39:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72E95712C97
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 May 2023 20:39:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242337AbjEZRjJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 May 2023 13:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48534 "EHLO
+        id S237088AbjEZSjv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 May 2023 14:39:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237566AbjEZRjF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 May 2023 13:39:05 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884989C;
-        Fri, 26 May 2023 10:39:03 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34QHUhtb027460;
-        Fri, 26 May 2023 17:38:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=IfSW/UDWwBRWG8SDIQHpCEwrphBWk4YngDf3Lp64uek=;
- b=2Fz69+XpLWolstaZXxwprwNIRs56rITnMnBxDReWzz3fUpjbmmgyqZTr8RzvC+hlhGJS
- IJjLads0cKhcYTMq5bR7NoEZYWh40Hf34IjVZUezaUM35HJ+a7Q6qFVvjWYUUXmpC31h
- 2FbTmgSz1L4Rwk4Y50dnNrKTUv3A3JZN+cLYnRlLRqwJVD2GFhhusGtSQCpvBPURnrvP
- dI9aW8y6D68ArcdAnWSp9yVCX/JvRAEbMLV+rFykk/xhIdhfkXQRCoglf1gtXXMwN2cE
- N0rifZml/aZr+TkRIy87uVZUhcJ5QsU1VhwUD/p6qTds/1KDYk3CyfqdrQI/exvEHisF 4g== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qu17j00kv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 May 2023 17:38:56 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34QHQUAX029298;
-        Fri, 26 May 2023 17:38:55 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2vfpn3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 26 May 2023 17:38:55 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34QHcsE7029060;
-        Fri, 26 May 2023 17:38:55 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2vfpm6-3;
-        Fri, 26 May 2023 17:38:55 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 2/2] NFSD: add counter for write delegation recall due to conflict with GETATTR
-Date:   Fri, 26 May 2023 10:38:42 -0700
-Message-Id: <1685122722-18287-3-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1685122722-18287-1-git-send-email-dai.ngo@oracle.com>
+        with ESMTP id S230024AbjEZSju (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 May 2023 14:39:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6EDE65;
+        Fri, 26 May 2023 11:39:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 29CDE65265;
+        Fri, 26 May 2023 18:38:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3AB1C433D2;
+        Fri, 26 May 2023 18:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685126295;
+        bh=v7n0sXhrZiP5MnmX43KkAQxABzOU/qt4D/84aeS9sP8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VJabg4GWEwhYIlPb/el6csQMtx+/ezRSpEXUxy7KUIebNJoK3TMYVUPGeKMJSqIDd
+         0NVyISeQdN1qQy+ISjeJYzja0lKSGFDcaEQbTrvyK2yKF/WClp3RsWk5ozScf87yZ1
+         jKvo4spQCXDwkjxUcQvJxcqX4dsYLTXyPgDHIogDTFTarGPWh0JCwD9DJpuxFtH5oR
+         59TVi9jpoJjNHFTl6wQTDlmFclU8lGoZM/IvE1hiQ0CM71wx2v5IuuQ/mIq8tt4VbF
+         FuEPt2LpS+Y9skhhXsSyJxWvxBQb5hYsDmc3kKUjqsl8DkP2hpA9Qnjv0yYykW4nyc
+         Bsp2XJQR5Tt1w==
+Date:   Fri, 26 May 2023 14:38:12 -0400
+From:   Chuck Lever <cel@kernel.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     chuck.lever@oracle.com, jlayton@kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 1/2] NFSD: handle GETATTR conflict with write delegation
+Message-ID: <ZHD8lDQADV6wUO4V@manet.1015granger.net>
 References: <1685122722-18287-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-26_07,2023-05-25_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 adultscore=0
- mlxscore=0 bulkscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305260150
-X-Proofpoint-GUID: 6APJP43Ccmy90bxE_7GHzHZ_oyYQLWmN
-X-Proofpoint-ORIG-GUID: 6APJP43Ccmy90bxE_7GHzHZ_oyYQLWmN
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+ <1685122722-18287-2-git-send-email-dai.ngo@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1685122722-18287-2-git-send-email-dai.ngo@oracle.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add counter to keep track of how many times write delegations are
-recalled due to conflict with GETATTR.
+On Fri, May 26, 2023 at 10:38:41AM -0700, Dai Ngo wrote:
+> If the GETATTR request on a file that has write delegation in effect
+> and the request attributes include the change info and size attribute
+> then the write delegation is recalled. The server waits a maximum of
+> 90ms for the delegation to be returned before replying NFS4ERR_DELAY
+> for the GETATTR.
+> 
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  fs/nfsd/nfs4xdr.c   |  5 +++++
+>  fs/nfsd/state.h     |  3 +++
+>  3 files changed, 56 insertions(+)
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index b90b74a5e66e..9f551dbf50d6 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -8353,3 +8353,51 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
+>  {
+>  	get_stateid(cstate, &u->write.wr_stateid);
+>  }
+> +
+> +/**
+> + * nfsd4_deleg_getattr_conflict - Trigger recall if GETATTR causes conflict
+> + * @rqstp: RPC transaction context
+> + * @inode: file to be checked for a conflict
+> + *
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 1 +
- fs/nfsd/stats.c     | 2 ++
- fs/nfsd/stats.h     | 5 +++++
- 3 files changed, 8 insertions(+)
+Let's have this comment explain why this is necessary. At the least,
+it needs to cite RFC 8881 Section 18.7.4, which REQUIREs a conflicting
+write delegation to be gone before the server can respond to a
+change/size GETATTR request.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 9f551dbf50d6..89ec251f7e83 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -8386,6 +8386,7 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode)
- 				return 0;
- 			}
- 			spin_unlock(&ctx->flc_lock);
-+			nfsd_stats_wdeleg_getattr_inc();
- 			status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
- 			if (status != nfserr_jukebox)
- 				return status;
-diff --git a/fs/nfsd/stats.c b/fs/nfsd/stats.c
-index 777e24e5da33..63797635e1c3 100644
---- a/fs/nfsd/stats.c
-+++ b/fs/nfsd/stats.c
-@@ -65,6 +65,8 @@ static int nfsd_show(struct seq_file *seq, void *v)
- 		seq_printf(seq, " %lld",
- 			   percpu_counter_sum_positive(&nfsdstats.counter[NFSD_STATS_NFS4_OP(i)]));
- 	}
-+	seq_printf(seq, "\nwdeleg_getattr %lld",
-+		percpu_counter_sum_positive(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]));
- 
- 	seq_putc(seq, '\n');
- #endif
-diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
-index 9b43dc3d9991..e31bd3abdf07 100644
---- a/fs/nfsd/stats.h
-+++ b/fs/nfsd/stats.h
-@@ -22,6 +22,7 @@ enum {
- 	NFSD_STATS_FIRST_NFS4_OP,	/* count of individual nfsv4 operations */
- 	NFSD_STATS_LAST_NFS4_OP = NFSD_STATS_FIRST_NFS4_OP + LAST_NFS4_OP,
- #define NFSD_STATS_NFS4_OP(op)	(NFSD_STATS_FIRST_NFS4_OP + (op))
-+	NFSD_STATS_WDELEG_GETATTR,	/* count of getattr conflict with wdeleg */
- #endif
- 	NFSD_STATS_COUNTERS_NUM
- };
-@@ -93,4 +94,8 @@ static inline void nfsd_stats_drc_mem_usage_sub(struct nfsd_net *nn, s64 amount)
- 	percpu_counter_sub(&nn->counter[NFSD_NET_DRC_MEM_USAGE], amount);
- }
- 
-+static inline void nfsd_stats_wdeleg_getattr_inc(void)
-+{
-+	percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
-+}
- #endif /* _NFSD_STATS_H */
--- 
-2.9.5
 
+> + * Returns 0 if there is no conflict; otherwise an nfs_stat
+> + * code is returned.
+> + */
+> +__be32
+> +nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode)
+> +{
+> +	__be32 status;
+> +	int cnt;
+> +	struct file_lock_context *ctx;
+> +	struct file_lock *fl;
+> +	struct nfs4_delegation *dp;
+> +
+> +	ctx = locks_inode_context(inode);
+> +	if (!ctx)
+> +		return 0;
+> +	spin_lock(&ctx->flc_lock);
+> +	list_for_each_entry(fl, &ctx->flc_lease, fl_list) {
+> +		if (fl->fl_flags == FL_LAYOUT ||
+> +				fl->fl_lmops != &nfsd_lease_mng_ops)
+> +			continue;
+> +		if (fl->fl_type == F_WRLCK) {
+> +			dp = fl->fl_owner;
+> +			if (dp->dl_recall.cb_clp == *(rqstp->rq_lease_breaker)) {
+> +				spin_unlock(&ctx->flc_lock);
+> +				return 0;
+> +			}
+> +			spin_unlock(&ctx->flc_lock);
+> +			status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
+> +			if (status != nfserr_jukebox)
+> +				return status;
+> +			for (cnt = 3; cnt > 0; --cnt) {
+> +				if (!nfsd_wait_for_delegreturn(rqstp, inode))
+> +					continue;
+> +				return 0;
+> +			}
+
+I'd rather not retry here. Can you can say why a 30ms wait is not
+sufficient for this case?
+
+
+> +			return status;
+> +		}
+> +		break;
+> +	}
+> +	spin_unlock(&ctx->flc_lock);
+> +	return 0;
+> +}
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index b83954fc57e3..4590b893dbc8 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -2970,6 +2970,11 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>  		if (status)
+>  			goto out;
+>  	}
+> +	if (bmval0 & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
+> +		status = nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry));
+> +		if (status)
+> +			goto out;
+> +	}
+>  
+>  	err = vfs_getattr(&path, &stat,
+>  			  STATX_BASIC_STATS | STATX_BTIME | STATX_CHANGE_COOKIE,
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index d49d3060ed4f..cbddcf484dba 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -732,4 +732,7 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
+>  	cmpxchg(&clp->cl_state, NFSD4_COURTESY, NFSD4_EXPIRABLE);
+>  	return clp->cl_state == NFSD4_EXPIRABLE;
+>  }
+> +
+> +extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+> +				struct inode *inode);
+>  #endif   /* NFSD4_STATE_H */
+> -- 
+> 2.9.5
+> 
