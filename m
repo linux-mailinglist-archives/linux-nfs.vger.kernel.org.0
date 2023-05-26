@@ -2,119 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23B4A712AE6
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 May 2023 18:42:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 278D4712BDF
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 May 2023 19:39:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236831AbjEZQmc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 May 2023 12:42:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44230 "EHLO
+        id S229747AbjEZRjE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 May 2023 13:39:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229790AbjEZQmb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 May 2023 12:42:31 -0400
-X-Greylist: delayed 550 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 26 May 2023 09:42:27 PDT
-Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [IPv6:2001:1600:4:17::bc08])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06EBE1B7
-        for <linux-nfs@vger.kernel.org>; Fri, 26 May 2023 09:42:27 -0700 (PDT)
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [10.4.36.108])
-        by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4QSVpc2hLFzMq9gR;
-        Fri, 26 May 2023 18:33:12 +0200 (CEST)
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4QSVpV20JTzMskdH;
-        Fri, 26 May 2023 18:33:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=digikod.net;
-        s=20191114; t=1685118792;
-        bh=HJQhmbmtbBhKQKuJigfXUA3I5dGt5vNd+kwPhAR19ZE=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=QqUfw9dzLlsE/jUv5i4Jbgo6yOquEH/LNulEp4j1bWACweWhxdKLOxVud95fbWB4E
-         npEnxoPtqyuJGwkskhuE2oFCSu10WcSFOgyuW8dZTYuf1lnresczWPQXS0hze8B1ou
-         boYfLZK8RC3g7VGc+V2WpOIG30d240jDxiyeRn5Q=
-Message-ID: <75b4746d-d41e-7c9f-4bb0-42a46bda7f17@digikod.net>
-Date:   Fri, 26 May 2023 18:33:05 +0200
-MIME-Version: 1.0
-User-Agent: 
-Subject: Re: [PATCH -next 0/2] lsm: Change inode_setattr() to take struct
-Content-Language: en-US
-To:     Christian Brauner <brauner@kernel.org>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        viro@zeniv.linux.org.uk, dhowells@redhat.com, code@tyhicks.com,
-        hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org,
-        sfrench@samba.org, senozhatsky@chromium.org, tom@talpey.com,
-        chuck.lever@oracle.com, jlayton@kernel.org, miklos@szeredi.hu,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, dchinner@redhat.com,
-        john.johansen@canonical.com, mcgrof@kernel.org,
-        mortonm@chromium.org, fred@cloudflare.com, mpe@ellerman.id.au,
-        nathanl@linux.ibm.com, gnoack3000@gmail.com,
-        roberto.sassu@huawei.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
-        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        wangweiyang2@huawei.com
-References: <20230505081200.254449-1-xiujianfeng@huawei.com>
- <20230515-nutzen-umgekehrt-eee629a0101e@brauner>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-In-Reply-To: <20230515-nutzen-umgekehrt-eee629a0101e@brauner>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Infomaniak-Routing: alpha
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229847AbjEZRjD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 May 2023 13:39:03 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D24D8A4;
+        Fri, 26 May 2023 10:39:02 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34QHU9aA007730;
+        Fri, 26 May 2023 17:38:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-03-30;
+ bh=7GHixNjxW+UZDhXAwIA35lM4fZnSsriYlu6yHD9y7tI=;
+ b=TZEEm/1UAuO7eSs3k0rd7LxD42gOSuGN/YlnfsNr55DpQZ38eEBlgvnqUUuiTS0jVF/B
+ d4EOi4x596eehzyNuCAT8rPowNVRM53fdAhtq4O0ASjVt8DDG5htZOe3qBjhE8Q48HzQ
+ aIL6edw7Ka4pexY8v+BSTDj+p6mb/AdzeIgjdvCU8qcH/vaV1jAaOXrIF1lQFD6hFL71
+ YAOOXQkxPkaJONAwBpP2PmG+8C2YbtO0OwSmUsMAbUbzdvy9npvaRlI9ii5r7yRMOKJc
+ biRJXIhyl62YCFjckJlY2lrdK2OxeXiQzBIDXYbD84zq8r+B9GmNVYDjmgB4cqwuFNq9 rA== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qu17g80nr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 May 2023 17:38:55 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34QGOGKn028598;
+        Fri, 26 May 2023 17:38:54 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3qqk2vfpmf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 26 May 2023 17:38:54 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34QHcsE3029060;
+        Fri, 26 May 2023 17:38:54 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3qqk2vfpm6-1;
+        Fri, 26 May 2023 17:38:54 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH 0/2] NFSD: recall write delegation on GETATTR conflict
+Date:   Fri, 26 May 2023 10:38:40 -0700
+Message-Id: <1685122722-18287-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-26_07,2023-05-25_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 adultscore=0
+ mlxscore=0 bulkscore=0 suspectscore=0 mlxlogscore=818 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
+ definitions=main-2305260150
+X-Proofpoint-ORIG-GUID: I4db7zWHn7LiWDWqFdrimfw7QbAgkxDb
+X-Proofpoint-GUID: I4db7zWHn7LiWDWqFdrimfw7QbAgkxDb
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+This patch series adds the recall of write delegation when there is
+conflict with a GETATTR and a counter in /proc/net/rpc/nfsd to keep
+count of this recall.
 
-On 15/05/2023 17:12, Christian Brauner wrote:
-> On Fri, May 05, 2023 at 04:11:58PM +0800, Xiu Jianfeng wrote:
->> Hi,
->>
->> I am working on adding xattr/attr support for landlock [1], so we can
->> control fs accesses such as chmod, chown, uptimes, setxattr, etc.. inside
->> landlock sandbox. the LSM hooks as following are invoved:
->> 1.inode_setattr
->> 2.inode_setxattr
->> 3.inode_removexattr
->> 4.inode_set_acl
->> 5.inode_remove_acl
->> which are controlled by LANDLOCK_ACCESS_FS_WRITE_METADATA.
->>
->> and
->> 1.inode_getattr
->> 2.inode_get_acl
->> 3.inode_getxattr
->> 4.inode_listxattr
->> which are controlled by LANDLOCK_ACCESS_FS_READ_METADATA
-> 
-> It would be helpful to get the complete, full picture.
-> 
-> Piecemeal extending vfs helpers with struct path arguments is costly,
-> will cause a lot of churn and will require a lot of review time from us.
-> 
-> Please give us the list of all security hooks to which you want to pass
-> a struct path (if there are more to come apart from the ones listed
-> here). Then please follow all callchains and identify the vfs helpers
-> that would need to be updated. Then please figure out where those
-> vfs helpers are called from and follow all callchains finding all
-> inode_operations that would have to be updated and passed a struct path
-> argument. So ultimately we'll end up with a list of vfs helpers and
-> inode_operations that would have to be changed.
-> 
-> I'm very reluctant to see anything merged without knowing _exactly_ what
-> you're getting us into.
 
-Ultimately we'd like the path-based LSMs to reach parity with the 
-inode-based LSMs. This proposal's goal is to provide users the ability 
-to control (in a complete and easy way) file metadata access. For these 
-we need to extend the inode_*attr hooks and inode_*acl hooks to handle 
-paths. The chown/chmod hooks are already good.
-
-In the future, I'd also like to be able to control directory traversals 
-(e.g. chdir), which currently only calls inode_permission().
-
-What would be the best way to reach this goal?
