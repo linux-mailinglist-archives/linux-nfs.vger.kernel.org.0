@@ -2,102 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F6747132DE
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 May 2023 09:06:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3F01713497
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 May 2023 13:59:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbjE0HGw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 27 May 2023 03:06:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54468 "EHLO
+        id S229730AbjE0L7L (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 27 May 2023 07:59:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjE0HGv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 27 May 2023 03:06:51 -0400
-X-Greylist: delayed 1470 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 27 May 2023 00:06:45 PDT
-Received: from mail.imsc.res.in (mail.imsc.res.in [61.95.189.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C1BFB;
-        Sat, 27 May 2023 00:06:45 -0700 (PDT)
-Received: from [10.96.65.76] (helo=banyan.imsc.res.in)
-        by mail.imsc.res.in with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <vishwajeet@imsc.res.in>)
-        id 1q2ncW-0006fO-Cu; Sat, 27 May 2023 12:11:44 +0530
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=imsc.res.in
-        ; s=20220322; h=Message-ID:Reply-To:Subject:To:From:Date:
-        Content-Transfer-Encoding:Content-Type:MIME-Version:Sender:Cc:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=mE4sQOaQLPGDlr6eUvzNZvGjjV7bbhIH9Ix4fDc6Jxs=; b=j28tttxzIU7LKTnxd70YxKuteW
-        VUpjWrQhXsvNGzt86+t/AFrZx68e4/bEuXTFp0dTbwuZDC7G4aGcmnO05tsWAWT+WG3USgpix6PyV
-        yNGkBw6KuKXq53KQGcimB2tXfk/t3THOdqmdtdB1rkNNRBmrHTb8WOVeJ8c6HkMFH6CBHauPkv14D
-        tVdsCSef6O6zs2owNCu/yJ5KJwFgxeT/A2lPuDjCHNpfEuJWzmsf+/7f9vntuMmtWmaC3yWWHC/u7
-        LKl7HTlZ2IbvFH9OId+OvooF7Y1Ymb84UH7hFrUrZVv/JwI8gEeVdFUx1kf48d+xw4x5MM+RxAUX4
-        SoW7xT+Q==;
-Received: from wmail.imsc.res.in ([10.96.64.14])
-        by banyan.imsc.res.in with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <vishwajeet@imsc.res.in>)
-        id 1q2ncW-0006PO-8j; Sat, 27 May 2023 12:11:44 +0530
-Received: from localhost ([127.0.0.1] helo=webmail.imsc.res.in)
-        by wmail.imsc.res.in with esmtp (Exim 4.92)
-        (envelope-from <vishwajeet@imsc.res.in>)
-        id 1q2ncW-00007s-4z; Sat, 27 May 2023 12:11:44 +0530
+        with ESMTP id S231806AbjE0L7J (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 27 May 2023 07:59:09 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAAF29C;
+        Sat, 27 May 2023 04:59:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685188747; x=1716724747;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zmFzT5pRn/sMBj6n/h4s8aWxiX/SSMMcVknEBskT0dM=;
+  b=K7eC7VpxjzQ960JnYz4W55w4DHdI/32XmvGOuXdSFw8h9vyYY2ZWi1q+
+   5hygpEx3ZUMNsOZsdvrYmuva+rZphamE//OhcYN07QpkzkBc5eyfTRj2t
+   v/5m8VjzQULwK1TdlZduYTeTcK48oza/tHazFi3kwYv4m2BPB0fxRsSMo
+   z5Ugbp0rUskyTUIpBfckhTmmROQ7EtE20T5H0YqLE4UfkDop08QH/AHvU
+   GaRnVQAxKbZ4m6KcEikekDmgQ5LMsTigRf8RfK/sFkEoPaj4AKue/EKUM
+   griyrSRZGelVMSJlcUKzLxK8TWR2spXJk4IrHU79DhnVFAHrdLFmaZfPE
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="353233925"
+X-IronPort-AV: E=Sophos;i="6.00,196,1681196400"; 
+   d="scan'208";a="353233925"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2023 04:59:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10722"; a="817840390"
+X-IronPort-AV: E=Sophos;i="6.00,196,1681196400"; 
+   d="scan'208";a="817840390"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 27 May 2023 04:59:02 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q2sZZ-000Jwo-1L;
+        Sat, 27 May 2023 11:59:01 +0000
+Date:   Sat, 27 May 2023 19:58:24 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
+        jlayton@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 2/2] NFSD: add counter for write delegation recall due to
+ conflict with GETATTR
+Message-ID: <202305271936.3kL7Ufxk-lkp@intel.com>
+References: <1685122722-18287-3-git-send-email-dai.ngo@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 26 May 2023 23:41:44 -0700
-From:   ILLUMINATI <vishwajeet@imsc.res.in>
-To:     undisclosed-recipients:;
-Subject: MEMBERHSIP
-Organization: The Great Illuminati Organization 
-Reply-To: illuminatiinitiationcenter110@gmail.com
-Mail-Reply-To: illuminatiinitiationcenter110@gmail.com
-Message-ID: <1951ddafa93170e4541b032ccc62ee7e@imsc.res.in>
-X-Sender: vishwajeet@imsc.res.in
-User-Agent: Roundcube Webmail/1.3.17
-X-DKIM: DKIM passed: (address=vishwajeet@imsc.res.in domain=imsc.res.in), signature is good.
-X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FORGED_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,ODD_FREEM_REPTO,RDNS_DYNAMIC,SPF_HELO_NONE,
-        SPF_PASS,T_FILL_THIS_FORM_SHORT,T_SCC_BODY_TEXT_LINE,UPPERCASE_75_100
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [illuminatiinitiationcenter110[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.0 UPPERCASE_75_100 message body is 75-100% uppercase
-        *  1.0 RDNS_DYNAMIC Delivered to internal network by host with
-        *      dynamic-looking rDNS
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.6 ODD_FREEM_REPTO Has unusual reply-to header
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-        *  0.0 T_FILL_THIS_FORM_SHORT Fill in a short form with personal
-        *      information
-X-Spam-Level: ******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1685122722-18287-3-git-send-email-dai.ngo@oracle.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Dai,
 
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.4-rc3 next-20230525]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Dai-Ngo/NFSD-handle-GETATTR-conflict-with-write-delegation/20230527-013936
+base:   linus/master
+patch link:    https://lore.kernel.org/r/1685122722-18287-3-git-send-email-dai.ngo%40oracle.com
+patch subject: [PATCH 2/2] NFSD: add counter for write delegation recall due to conflict with GETATTR
+config: parisc-defconfig (https://download.01.org/0day-ci/archive/20230527/202305271936.3kL7Ufxk-lkp@intel.com/config)
+compiler: hppa-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        mkdir -p ~/bin
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/a90d0ca71c9459b76f9faa8c704c029ac8066d00
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Dai-Ngo/NFSD-handle-GETATTR-conflict-with-write-delegation/20230527-013936
+        git checkout a90d0ca71c9459b76f9faa8c704c029ac8066d00
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 ~/bin/make.cross W=1 O=build_dir ARCH=parisc olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 ~/bin/make.cross W=1 O=build_dir ARCH=parisc SHELL=/bin/bash fs/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202305271936.3kL7Ufxk-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from fs/nfsd/nfsd.h:28,
+                    from fs/nfsd/state.h:42,
+                    from fs/nfsd/xdr4.h:40,
+                    from fs/nfsd/trace.h:17,
+                    from fs/nfsd/trace.c:4:
+   fs/nfsd/stats.h: In function 'nfsd_stats_wdeleg_getattr_inc':
+>> fs/nfsd/stats.h:99:47: error: 'NFSD_STATS_WDELEG_GETATTR' undeclared (first use in this function)
+      99 |         percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
+         |                                               ^~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfsd/stats.h:99:47: note: each undeclared identifier is reported only once for each function it appears in
+--
+   In file included from fs/nfsd/nfsd.h:28,
+                    from fs/nfsd/export.c:21:
+   fs/nfsd/stats.h: In function 'nfsd_stats_wdeleg_getattr_inc':
+>> fs/nfsd/stats.h:99:47: error: 'NFSD_STATS_WDELEG_GETATTR' undeclared (first use in this function)
+      99 |         percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
+         |                                               ^~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfsd/stats.h:99:47: note: each undeclared identifier is reported only once for each function it appears in
+   fs/nfsd/export.c: In function 'exp_rootfh':
+   fs/nfsd/export.c:1005:34: warning: variable 'inode' set but not used [-Wunused-but-set-variable]
+    1005 |         struct inode            *inode;
+         |                                  ^~~~~
+--
+   In file included from fs/nfsd/nfsd.h:28,
+                    from fs/nfsd/state.h:42,
+                    from fs/nfsd/xdr4.h:40,
+                    from fs/nfsd/trace.h:17,
+                    from fs/nfsd/trace.c:4:
+   fs/nfsd/stats.h: In function 'nfsd_stats_wdeleg_getattr_inc':
+>> fs/nfsd/stats.h:99:47: error: 'NFSD_STATS_WDELEG_GETATTR' undeclared (first use in this function)
+      99 |         percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
+         |                                               ^~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfsd/stats.h:99:47: note: each undeclared identifier is reported only once for each function it appears in
+   In file included from fs/nfsd/trace.h:1589:
+   include/trace/define_trace.h: At top level:
+   include/trace/define_trace.h:95:42: fatal error: ./trace.h: No such file or directory
+      95 | #include TRACE_INCLUDE(TRACE_INCLUDE_FILE)
+         |                                          ^
+   compilation terminated.
+
+
+vim +/NFSD_STATS_WDELEG_GETATTR +99 fs/nfsd/stats.h
+
+    96	
+    97	static inline void nfsd_stats_wdeleg_getattr_inc(void)
+    98	{
+  > 99		percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
 
 -- 
-DO YOU WANT TO BE RICH AND FAMOUS? JOIN THE GREAT ILLUMINATI ORDER OF
-RICHES, POWER/FAME  NOW AND ACHIEVE ALL YOUR DREAMS? IF YES EMAIL US :
-MAIL: illuminatiinitiationcenter110@gmail.com
-
-YOUR FULL NAME:
-PHONE NUMBER :
-COUNTRY :
-GENDER:
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
