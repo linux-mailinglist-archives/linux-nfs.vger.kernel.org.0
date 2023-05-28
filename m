@@ -2,133 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A9F87135DC
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 May 2023 19:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1AE17137E9
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 May 2023 07:57:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbjE0RQP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 27 May 2023 13:16:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60954 "EHLO
+        id S229486AbjE1F5k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 28 May 2023 01:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbjE0RQO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 27 May 2023 13:16:14 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A50BEBB;
-        Sat, 27 May 2023 10:16:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685207773; x=1716743773;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eI4v3Kbvvfcjabeh6H6ktAqjlUA5edg4THJ0FK8h8A8=;
-  b=e5AHF406cXxJ/QgVpJedtDqEJD61J7z96j6Ak7rGmbLf+0ni7eAX9uWj
-   7s9gdLaXeg9Trq6ZnMJ5vS6WOgnh1USGEF+ibhoBln9M0Wj0NTZOSg4EX
-   nsllYVkjgJauRfvyaVeQc2F59lA0uw1cd4OAj65e/TwmHt96O7a79zPgl
-   n7249uBboHqhPiOQFYuBcBuRylyROv+mHOocIaU2rq/EA7pvlkYtoXIFJ
-   Ka+RVQ4pY+g25+wTieHNGnZBKCd7F9/fYIHiJLp5mzo+stTnQUJ5wyxAg
-   3jxz69lYnc194VSXi9QfSDwlkUfjLT63O0YbzjFgBMs+Uu+gTPlBmar6x
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10723"; a="334046264"
-X-IronPort-AV: E=Sophos;i="6.00,197,1681196400"; 
-   d="scan'208";a="334046264"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 May 2023 10:16:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10723"; a="879868893"
-X-IronPort-AV: E=Sophos;i="6.00,197,1681196400"; 
-   d="scan'208";a="879868893"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 27 May 2023 10:16:11 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q2xWU-000K5w-04;
-        Sat, 27 May 2023 17:16:10 +0000
-Date:   Sun, 28 May 2023 01:15:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
-        jlayton@kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 2/2] NFSD: add counter for write delegation recall due to
- conflict with GETATTR
-Message-ID: <202305280121.3RAeAt4l-lkp@intel.com>
-References: <1685122722-18287-3-git-send-email-dai.ngo@oracle.com>
+        with ESMTP id S229445AbjE1F5j (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 May 2023 01:57:39 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF20C7
+        for <linux-nfs@vger.kernel.org>; Sat, 27 May 2023 22:57:38 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id 38308e7fff4ca-2af225e5b4bso21898261fa.3
+        for <linux-nfs@vger.kernel.org>; Sat, 27 May 2023 22:57:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685253456; x=1687845456;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=18FYzqA4T6+l2CILnAmRATSQIJ/KHY5CmUYxEp4xBL4=;
+        b=YUMRuR/mlJVOaLsuL+11uUvHonRdUex5L6wfelfJonX9RjlcKTT2E2Xva/EDTDZ2+O
+         TmEcxGfByzG6zoEEaI9RHnY7CW+8eKFd1ARbJ0OFiP+mj1Y0otQIfgotzgGXAt19V9ra
+         MoqKMjV9U57CSo05KhAj6dwj+fb++wY7skyEI+fEdCJ8dZ6o38x/lOEfUg9Tkki7fEmO
+         2lE8ouLJxXc2yTxg0LuQsw1wBnuWnCKtyEPWt/yekDBD0qt5Ah6fB/otQxcy8j8xj4id
+         kx4D02oyishDg72RazhnGElGCdOmYbvAheF5CjsS3tC8+LqBAf+BJEyrqfWg64dsv49P
+         wJ7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685253456; x=1687845456;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=18FYzqA4T6+l2CILnAmRATSQIJ/KHY5CmUYxEp4xBL4=;
+        b=lfij2m2T3atTbNOSZ0M5H0h8gLoHQ6Gw/tpu5314aNMGLX8/0ZhIV2p3Jbrfzq4t5x
+         AThyEdmukAe3XD0glc97JJUU/HF/66pGF59uCyffFeFPpTf5pYdZSre6q/2uZbVVAM0w
+         LGIq8NwAWjrgfP/JTyQaUj7KIJz7TCD9FhhK6kmf88kCipihTtibJtGoh0JlPHBbyE1s
+         SSWBua2xDKT4Q1t86EWTTCpwOC6sQs9ABGK+fHWk5Kv2L0vyvqzzBMdm9U0mSVkJLl13
+         nxy3cnVWidnAwoPiRsqBt1AsmQ2ch3zOb0OtwzfqNJ1b57fZ1ginPU4rC1LqkVJE/5wv
+         ljUg==
+X-Gm-Message-State: AC+VfDxZWFH6ZPamTqjnxzRWjVMgThCT7A/7peB/TRHWaTouThMmk4Rk
+        qM2Y3HH2kh0EYnaJ+xtjTiLkuinpwgcGf20pWU4=
+X-Google-Smtp-Source: ACHHUZ6CANU+R+5WFcaB0QzrLqQDpf0SKGUP+i7YD6lOdlp4RnF9fjiYhSBMbyxFMumJyjtHYeTIwh8H+jq0vP3mUas=
+X-Received: by 2002:a2e:6a17:0:b0:2a9:f94f:d304 with SMTP id
+ f23-20020a2e6a17000000b002a9f94fd304mr2872558ljc.19.1685253456041; Sat, 27
+ May 2023 22:57:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1685122722-18287-3-git-send-email-dai.ngo@oracle.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6520:4c3:b0:25c:d94c:27d3 with HTTP; Sat, 27 May 2023
+ 22:57:35 -0700 (PDT)
+Reply-To: uyhte122@gmail.com
+From:   "John & Jason Adams" <johnmohr13f@gmail.com>
+Date:   Sat, 27 May 2023 22:57:35 -0700
+Message-ID: <CAM3BTdFz=gzXq6SMUYqV8uV6AHhWX=-gmUZPh8kmQkxiRGid=g@mail.gmail.com>
+Subject: Inquiry About CIF/FOB Price List
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=4.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Dai,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.4-rc3 next-20230525]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Dai-Ngo/NFSD-handle-GETATTR-conflict-with-write-delegation/20230527-013936
-base:   linus/master
-patch link:    https://lore.kernel.org/r/1685122722-18287-3-git-send-email-dai.ngo%40oracle.com
-patch subject: [PATCH 2/2] NFSD: add counter for write delegation recall due to conflict with GETATTR
-config: i386-randconfig-i074-20230526 (https://download.01.org/0day-ci/archive/20230528/202305280121.3RAeAt4l-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/a90d0ca71c9459b76f9faa8c704c029ac8066d00
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Dai-Ngo/NFSD-handle-GETATTR-conflict-with-write-delegation/20230527-013936
-        git checkout a90d0ca71c9459b76f9faa8c704c029ac8066d00
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202305280121.3RAeAt4l-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from fs/nfsd/trace.c:4:
-   In file included from fs/nfsd/trace.h:17:
-   In file included from fs/nfsd/xdr4.h:40:
-   In file included from fs/nfsd/state.h:42:
-   In file included from fs/nfsd/nfsd.h:28:
->> fs/nfsd/stats.h:99:40: error: use of undeclared identifier 'NFSD_STATS_WDELEG_GETATTR'
-           percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
-                                                 ^
-   1 error generated.
---
-   In file included from fs/nfsd/export.c:21:
-   In file included from fs/nfsd/nfsd.h:28:
->> fs/nfsd/stats.h:99:40: error: use of undeclared identifier 'NFSD_STATS_WDELEG_GETATTR'
-           percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
-                                                 ^
-   fs/nfsd/export.c:1005:17: warning: variable 'inode' set but not used [-Wunused-but-set-variable]
-           struct inode            *inode;
-                                    ^
-   1 warning and 1 error generated.
-
-
-vim +/NFSD_STATS_WDELEG_GETATTR +99 fs/nfsd/stats.h
-
-    96	
-    97	static inline void nfsd_stats_wdeleg_getattr_inc(void)
-    98	{
-  > 99		percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
-
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Dear Client,
+
+The South African government is looking for anyone who can competently
+meet the requirements of this emergency and urgent tender to supply
+this equipment/instrument in line with one of  your company's  product
+categories shown on your website. We have been appointed as the
+contract agency's angel investor to finance this project in four SADC
+member states through the South African government: www.salga.org.za
+Payment terms are 100% TT.
+
+Kindly email us your catalog and price if your company has the market
+potential to trade with the South African government. I appreciate
+your cooperation with this request.
+
+Regards
+Mohr and Jason Adams
+Mobile: +14084265778
