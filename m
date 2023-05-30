@@ -2,65 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 989397162CE
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 May 2023 15:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 11C4D71630D
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 May 2023 16:05:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232555AbjE3N6w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 May 2023 09:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
+        id S232876AbjE3OF0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 May 2023 10:05:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232519AbjE3N6v (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 09:58:51 -0400
+        with ESMTP id S232908AbjE3OFY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 10:05:24 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4F7103;
-        Tue, 30 May 2023 06:58:48 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D6E110
+        for <linux-nfs@vger.kernel.org>; Tue, 30 May 2023 07:05:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 64582622B2;
-        Tue, 30 May 2023 13:58:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8179C433EF;
-        Tue, 30 May 2023 13:58:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 045E8626D0
+        for <linux-nfs@vger.kernel.org>; Tue, 30 May 2023 14:05:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE9FAC433D2;
+        Tue, 30 May 2023 14:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685455127;
-        bh=hcaXRRGzPBhBBLpEW0isVOB3DKBAASE/ESHMgHvcgQE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WiHDyUv0qet+LrK4Zo5p1pc0ctSRdXlGbGZ8tl02Vx1vVgIRAhB0H5UMaqqDHCAjZ
-         XQjzg7jCBTWXmvjejDMJipaWrKARky609Yw4j6YSdroUBzfV6QT0wSj8m6CaH3tf0a
-         g4ThSKzN/ETU2CeP8TDgy1vX+fJrEgQ9qrU3Cu+nWH+h4goHpMT99clf4C9yvIzoAB
-         u6Ie6MA2SMi94iAxjNCCjqDTP+kXpP/GK97lw9niukWZB/T5wC/9lm8/PN4UXluqrd
-         /1sYc6xTyVRqd7BZWVLzTIgi3XyklcdR9AufeJU8WFw8ZcapWsg4DCuEgpAdU784dC
-         miq8usuqEjdFQ==
-Date:   Tue, 30 May 2023 15:58:35 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc:     Xiu Jianfeng <xiujianfeng@huawei.com>, gregkh@linuxfoundation.org,
-        rafael@kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com,
-        code@tyhicks.com, hirofumi@mail.parknet.co.jp,
-        linkinjeon@kernel.org, sfrench@samba.org, senozhatsky@chromium.org,
-        tom@talpey.com, chuck.lever@oracle.com, jlayton@kernel.org,
-        miklos@szeredi.hu, paul@paul-moore.com, jmorris@namei.org,
-        serge@hallyn.com, stephen.smalley.work@gmail.com,
-        eparis@parisplace.org, casey@schaufler-ca.com, dchinner@redhat.com,
-        john.johansen@canonical.com, mcgrof@kernel.org,
-        mortonm@chromium.org, fred@cloudflare.com, mpe@ellerman.id.au,
-        nathanl@linux.ibm.com, gnoack3000@gmail.com,
-        roberto.sassu@huawei.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
-        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        wangweiyang2@huawei.com, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH -next 0/2] lsm: Change inode_setattr() to take struct
-Message-ID: <20230530-mietfrei-zynisch-8b63a8566f66@brauner>
-References: <20230505081200.254449-1-xiujianfeng@huawei.com>
- <20230515-nutzen-umgekehrt-eee629a0101e@brauner>
- <75b4746d-d41e-7c9f-4bb0-42a46bda7f17@digikod.net>
+        s=k20201202; t=1685455521;
+        bh=teoKXskHIuWiFWjWwLW8rnqCDUwghrH0NfbdivrjD0E=;
+        h=Subject:From:To:Cc:Date:From;
+        b=U1jcjROGAa2/O2KAEVfj2y4e2Oxi0CbNUHlFlgKutJnFSm/OYCli1mo/B2BsvkL11
+         crtbSA0NZMZJL+EY9AUKZW/dxNbPXvhKNJkkYIUdHTMS3BkyAGTH32ixDFFkmxfHBu
+         /FnY0ftmAt+pWpyIE6ebMOOJuiECHW5v4PeXzebC7yyBEJihL4rxNtFmfgeh0sssbc
+         ZNwLaFqqxF83h1xkv6LoXHH9bxksiyOPo/cmaZSPGQI0w4r30KtF+WZnPDP6ejCi0S
+         4qLb1nffO81hjsDb7E8D6ilKgySXQuuHnQTSnmBPhpf/4CQ2nyK0Qb+iGskwOU24M/
+         Q2OqvEY9g/oAw==
+Subject: [PATCH v3 00/11] client-side RPC-with-TLS
+From:   Chuck Lever <cel@kernel.org>
+To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, jlayton@redhat.com,
+        linux-nfs@vger.kernel.org, kernel-tls-handshake@lists.linux.dev
+Date:   Tue, 30 May 2023 10:05:09 -0400
+Message-ID: <168545533442.1917.10040716812361925735.stgit@oracle-102.nfsv4bat.org>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <75b4746d-d41e-7c9f-4bb0-42a46bda7f17@digikod.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -71,103 +53,58 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, May 26, 2023 at 06:33:05PM +0200, Mickaël Salaün wrote:
-> 
-> On 15/05/2023 17:12, Christian Brauner wrote:
-> > On Fri, May 05, 2023 at 04:11:58PM +0800, Xiu Jianfeng wrote:
-> > > Hi,
-> > > 
-> > > I am working on adding xattr/attr support for landlock [1], so we can
-> > > control fs accesses such as chmod, chown, uptimes, setxattr, etc.. inside
-> > > landlock sandbox. the LSM hooks as following are invoved:
-> > > 1.inode_setattr
-> > > 2.inode_setxattr
-> > > 3.inode_removexattr
-> > > 4.inode_set_acl
-> > > 5.inode_remove_acl
-> > > which are controlled by LANDLOCK_ACCESS_FS_WRITE_METADATA.
-> > > 
-> > > and
-> > > 1.inode_getattr
-> > > 2.inode_get_acl
-> > > 3.inode_getxattr
-> > > 4.inode_listxattr
-> > > which are controlled by LANDLOCK_ACCESS_FS_READ_METADATA
-> > 
-> > It would be helpful to get the complete, full picture.
-> > 
-> > Piecemeal extending vfs helpers with struct path arguments is costly,
-> > will cause a lot of churn and will require a lot of review time from us.
-> > 
-> > Please give us the list of all security hooks to which you want to pass
-> > a struct path (if there are more to come apart from the ones listed
-> > here). Then please follow all callchains and identify the vfs helpers
-> > that would need to be updated. Then please figure out where those
-> > vfs helpers are called from and follow all callchains finding all
-> > inode_operations that would have to be updated and passed a struct path
-> > argument. So ultimately we'll end up with a list of vfs helpers and
-> > inode_operations that would have to be changed.
-> > 
-> > I'm very reluctant to see anything merged without knowing _exactly_ what
-> > you're getting us into.
-> 
-> Ultimately we'd like the path-based LSMs to reach parity with the
-> inode-based LSMs. This proposal's goal is to provide users the ability to
-> control (in a complete and easy way) file metadata access. For these we need
-> to extend the inode_*attr hooks and inode_*acl hooks to handle paths. The
-> chown/chmod hooks are already good.
-> 
-> In the future, I'd also like to be able to control directory traversals
-> (e.g. chdir), which currently only calls inode_permission().
-> 
-> What would be the best way to reach this goal?
+Let's have a look at what is needed to support NFS in-transit
+confidentiality in the Linux NFS client. These apply to 6.4-rc4
+but previously they've been tested at multiple NFS bake-a-thon
+events.
 
-The main concern which was expressed on other patchsets before is that
-modifying inode operations to take struct path is not the way to go.
-Passing struct path into individual filesystems is a clear layering
-violation for most inode operations, sometimes downright not feasible,
-and in general exposing struct vfsmount to filesystems is a hard no. At
-least as far as I'm concerned.
+This series is also available in the topic-rpc-with-tls-upcall
+branch at
 
-So the best way to achieve the landlock goal might be to add new hooks
-in cases where you would be required to modify inode operations
-otherwise. Taking the chdir() case as an example. That calls
-path_permission(). Since inode_permission() and generic_permission() are
-called in a lot of places where not even a dentry might be readily
-available we will not extend them to take a struct path argument. This
-would also involve extending the inode ->permission() method which is a
-no go. That's neither feasible and would involve modifying a good chunk
-of code for the sole purpose of an LSM.
+ https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
 
-So in path_permission() you might have the potential to add an LSM hook.
-Or if you need to know what syscall this was called for you might have
-to add a hook into chdir() itself. That is still unpleasant but since
-the alternative to adding new LSM hooks might be endless layering
-violations that's a compromise that at least I can live with. Ultimately
-you have to convince more people.
+Changes since v2:
+- Rebased on v6.4-rc4
 
-Some concerns around passing struct path to LSM hooks in general that I
-would like to just point out and ask you to keep in mind: As soon as
-there's an LSM hook that takes a path argument it means all LSMs have
-access to a struct path. At that point visibility into what's been done
-to that struct path is lost for the fs layer.
+Changes since RFC:
+- Add an rpc_authops method to send TLS probes
 
-One the one hand that's fine on the other hand sooner or later some LSM
-will try to get creative and do things like starting to infer
-relationships between mounts without understanding mount property and
-mount handling enough, or start trying to infer the parent of a path and
-perform permission checks on it in ways that aren't sane. And that sucks
-because this only becomes obvious when fs wide changes are done that
-affect LSM hooks as well.
+---
 
-And that's the other thing. The more objects the LSM layer gets access
-to the greater the cost to do fs wide changes because the fs layer is
-now even closer entangled with the LSM layer. For example, even simple
-things like removing IOP_XATTR - even just for POSIX ACLs - suddenly
-become complicated not because of the fs layer but because of how the
-LSM layer makes use of it. It might start relying on internal flags that
-would be revoked later and so on. That also goes for struct vfsmount. So
-it means going through every LSM trying to figure out if a change is ok
-or not. And we keep adding new LSMs without deprecating older ones (A
-problem we also face in the fs layer.) and then they sit around but
-still need to be taken into account when doing changes.
+Chuck Lever (11):
+      NFS: Improvements for fs_context-related tracepoints
+      SUNRPC: Plumb an API for setting transport layer security
+      SUNRPC: Trace the rpc_create_args
+      SUNRPC: Add RPC client support for the RPC_AUTH_TLS auth flavor
+      SUNRPC: Ignore data_ready callbacks during TLS handshakes
+      SUNRPC: Capture CMSG metadata on client-side receive
+      SUNRPC: Add a connect worker function for TLS
+      SUNRPC: Add RPC-with-TLS support to xprtsock.c
+      SUNRPC: Add RPC-with-TLS tracepoints
+      NFS: Have struct nfs_client carry a TLS policy field
+      NFS: Add an "xprtsec=" NFS mount option
+
+
+ fs/nfs/client.c                 |   7 +
+ fs/nfs/fs_context.c             |  55 +++++
+ fs/nfs/internal.h               |   2 +
+ fs/nfs/nfs3client.c             |   1 +
+ fs/nfs/nfs4client.c             |  18 +-
+ fs/nfs/super.c                  |  12 ++
+ include/linux/nfs_fs_sb.h       |   3 +-
+ include/linux/sunrpc/auth.h     |   2 +
+ include/linux/sunrpc/clnt.h     |   2 +
+ include/linux/sunrpc/xprt.h     |  17 ++
+ include/linux/sunrpc/xprtsock.h |   3 +
+ include/trace/events/sunrpc.h   |  96 ++++++++-
+ net/sunrpc/Makefile             |   2 +-
+ net/sunrpc/auth.c               |   2 +-
+ net/sunrpc/auth_tls.c           | 175 ++++++++++++++++
+ net/sunrpc/clnt.c               |   9 +-
+ net/sunrpc/xprtsock.c           | 343 +++++++++++++++++++++++++++++++-
+ 17 files changed, 727 insertions(+), 22 deletions(-)
+ create mode 100644 net/sunrpc/auth_tls.c
+
+--
+Chuck Lever
+
