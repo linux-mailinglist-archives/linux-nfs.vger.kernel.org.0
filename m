@@ -2,54 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C842C71675F
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 May 2023 17:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5767E716889
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 May 2023 18:02:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230283AbjE3Po2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 May 2023 11:44:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35590 "EHLO
+        id S233252AbjE3QC0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 May 2023 12:02:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbjE3Po1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 11:44:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7524FFC;
-        Tue, 30 May 2023 08:44:26 -0700 (PDT)
+        with ESMTP id S233258AbjE3QCV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 12:02:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830B5188;
+        Tue, 30 May 2023 09:02:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A56660A2A;
-        Tue, 30 May 2023 15:44:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DEEFC433EF;
-        Tue, 30 May 2023 15:44:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE42E61E32;
+        Tue, 30 May 2023 16:01:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81848C433D2;
+        Tue, 30 May 2023 16:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685461465;
-        bh=xyq2ElHNMFprRp6fU6YdEmdxHF45a2d8aKPnmaC4NpE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Ua6Ym9zyhup5L7v/DTEZ+Ak3SwWVrVqBVYo5kKEPXGbpul1uoG7x4yc3CHH3/P0LM
-         rRcuikqbwHasZyd99QU4jgbbfmZC4pLZeVweJ4qdwaNVz0+zxGr8ZKt7fJDy1Gwyl3
-         lmIHThM4utbYLiLMUW9Z3cvOIp06UXTrhyeOOp866fzvv1H0LVIhGEoQOuT/9kHBuI
-         YKcJHloQxVMmJP/jdpUXR112zFseDrlgcrqOyxtaEDvW3Su2Yjp84I5VPabZP7g/fe
-         qS2vfko8PLx72onhCd1JMwidj5Cu6kSQmgmDyQJGi5OonuT0uBCTcY57PzzZyQ9j5h
-         ZFShzUk0lEXzQ==
-Message-ID: <848c64cb6c6cf88fbbcf61624810c060f858a217.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: fix double fget() bug in __write_ports_addfd()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dan Carpenter <dan.carpenter@linaro.org>,
-        Stanislav Kinsbursky <skinsbursky@parallels.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date:   Tue, 30 May 2023 11:44:23 -0400
-In-Reply-To: <9c90e813-c7fb-4c90-b52b-131481640a78@kili.mountain>
-References: <9c90e813-c7fb-4c90-b52b-131481640a78@kili.mountain>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
+        s=k20201202; t=1685462519;
+        bh=+bjafflQkeGR0pj0+9Bhf6+uOuRDMWm4LCaEU7oL4w0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KLaTmgKr9+qOi4tzVuxg+TXb+MUGtQm7dHTrbVzElWgKQyLB4yL5GjduODeFwRiOu
+         Z/KbTROKs6gwvjktFWLm+DRnfyvGl9LTyL1jLsCJuUcwkddIxWa28IRFVdUB4mzHIc
+         ZIcKKI8sh6HsrQRBikCHvASIM1PBETBZ7XBXwUkiDGchVhpuNNcCgqYfC08Sw14KZN
+         J3FBIe+2O0JrexwQZbteEyl5Y1EvTCK0ovYPa5m9Wq+LR+BL0VbYMte2EVnFOh7pjt
+         vMCw9rDFL12RPrANGQ46P+uvqgCVwG7jGeAYU8SwL5GbXZS8i15QKkNMxcFQvwzrXA
+         B9MAgoVoJO94w==
+Date:   Tue, 30 May 2023 18:01:47 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        Xiu Jianfeng <xiujianfeng@huawei.com>,
+        gregkh@linuxfoundation.org, rafael@kernel.org,
+        viro@zeniv.linux.org.uk, dhowells@redhat.com, code@tyhicks.com,
+        hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org,
+        sfrench@samba.org, senozhatsky@chromium.org, tom@talpey.com,
+        chuck.lever@oracle.com, jlayton@kernel.org, miklos@szeredi.hu,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        dchinner@redhat.com, john.johansen@canonical.com,
+        mcgrof@kernel.org, mortonm@chromium.org, fred@cloudflare.com,
+        mpe@ellerman.id.au, nathanl@linux.ibm.com, gnoack3000@gmail.com,
+        roberto.sassu@huawei.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
+        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        wangweiyang2@huawei.com
+Subject: Re: [PATCH -next 0/2] lsm: Change inode_setattr() to take struct
+Message-ID: <20230530-tumult-adrenalin-8d48cb35d506@brauner>
+References: <20230505081200.254449-1-xiujianfeng@huawei.com>
+ <20230515-nutzen-umgekehrt-eee629a0101e@brauner>
+ <75b4746d-d41e-7c9f-4bb0-42a46bda7f17@digikod.net>
+ <20230530-mietfrei-zynisch-8b63a8566f66@brauner>
+ <20230530142826.GA9376@lst.de>
+ <301a58de-e03f-02fd-57c5-1267876eb2df@schaufler-ca.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <301a58de-e03f-02fd-57c5-1267876eb2df@schaufler-ca.com>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,125 +75,38 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2023-05-29 at 14:35 +0300, Dan Carpenter wrote:
-> The bug here is that you cannot rely on getting the same socket
-> from multiple calls to fget() because userspace can influence
-> that.  This is a kind of double fetch bug.
->=20
+On Tue, May 30, 2023 at 07:55:17AM -0700, Casey Schaufler wrote:
+> On 5/30/2023 7:28 AM, Christoph Hellwig wrote:
+> > On Tue, May 30, 2023 at 03:58:35PM +0200, Christian Brauner wrote:
+> >> The main concern which was expressed on other patchsets before is that
+> >> modifying inode operations to take struct path is not the way to go.
+> >> Passing struct path into individual filesystems is a clear layering
+> >> violation for most inode operations, sometimes downright not feasible,
+> >> and in general exposing struct vfsmount to filesystems is a hard no. At
+> >> least as far as I'm concerned.
+> > Agreed.  Passing struct path into random places is not how the VFS works.
+> >
+> >> So the best way to achieve the landlock goal might be to add new hooks
+> > What is "the landlock goal", and why does it matter?
+> >
+> >> or not. And we keep adding new LSMs without deprecating older ones (A
+> >> problem we also face in the fs layer.) and then they sit around but
+> >> still need to be taken into account when doing changes.
+> > Yes, I'm really worried about th amount of LSMs we have, and the weird
+> > things they do.
+> 
+> Which LSM(s) do you think ought to be deprecated? I only see one that I
 
-Nice catch.
+I don't have a good insight into what LSMs are actively used or are
+effectively unused but I would be curious to hear what LSMs are
+considered actively used/maintained from the LSM maintainer's
+perspective.
 
-> The fix is to delete the svc_alien_sock() function and insted do
-> the checking inside the svc_addsock() function.
->=20
-> Fixes: 3064639423c4 ("nfsd: check passed socket's net matches NFSd superb=
-lock's one")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
-> Based on static analysis and untested.  This goes through the NFS tree.=
-=20
-> Inspired by CVE-2023-1838.
->=20
->  include/linux/sunrpc/svcsock.h |  7 +++----
->  fs/nfsd/nfsctl.c               |  7 +------
->  net/sunrpc/svcsock.c           | 23 +++++------------------
->  3 files changed, 9 insertions(+), 28 deletions(-)
->=20
-> diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsoc=
-k.h
-> index d16ae621782c..a7116048a4d4 100644
-> --- a/include/linux/sunrpc/svcsock.h
-> +++ b/include/linux/sunrpc/svcsock.h
-> @@ -61,10 +61,9 @@ int		svc_recv(struct svc_rqst *, long);
->  void		svc_send(struct svc_rqst *rqstp);
->  void		svc_drop(struct svc_rqst *);
->  void		svc_sock_update_bufs(struct svc_serv *serv);
-> -bool		svc_alien_sock(struct net *net, int fd);
-> -int		svc_addsock(struct svc_serv *serv, const int fd,
-> -					char *name_return, const size_t len,
-> -					const struct cred *cred);
-> +int		svc_addsock(struct svc_serv *serv, struct net *net,
-> +			    const int fd, char *name_return, const size_t len,
-> +			    const struct cred *cred);
->  void		svc_init_xprt_sock(void);
->  void		svc_cleanup_xprt_sock(void);
->  struct svc_xprt *svc_sock_create(struct svc_serv *serv, int prot);
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index e0e98b40a6e5..1489e0b703b4 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -698,16 +698,11 @@ static ssize_t __write_ports_addfd(char *buf, struc=
-t net *net, const struct cred
->  		return -EINVAL;
->  	trace_nfsd_ctl_ports_addfd(net, fd);
-> =20
-> -	if (svc_alien_sock(net, fd)) {
-> -		printk(KERN_ERR "%s: socket net is different to NFSd's one\n", __func_=
-_);
-> -		return -EINVAL;
-> -	}
-> -
->  	err =3D nfsd_create_serv(net);
->  	if (err !=3D 0)
->  		return err;
-> =20
-> -	err =3D svc_addsock(nn->nfsd_serv, fd, buf, SIMPLE_TRANSACTION_LIMIT, c=
-red);
-> +	err =3D svc_addsock(nn->nfsd_serv, net, fd, buf, SIMPLE_TRANSACTION_LIM=
-IT, cred);
-> =20
->  	if (err >=3D 0 &&
->  	    !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 46845cb6465d..e4184e40793c 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -1474,22 +1474,6 @@ static struct svc_sock *svc_setup_socket(struct sv=
-c_serv *serv,
->  	return svsk;
->  }
-> =20
-> -bool svc_alien_sock(struct net *net, int fd)
-> -{
-> -	int err;
-> -	struct socket *sock =3D sockfd_lookup(fd, &err);
-> -	bool ret =3D false;
-> -
-> -	if (!sock)
-> -		goto out;
-> -	if (sock_net(sock->sk) !=3D net)
-> -		ret =3D true;
-> -	sockfd_put(sock);
-> -out:
-> -	return ret;
-> -}
-> -EXPORT_SYMBOL_GPL(svc_alien_sock);
-> -
->  /**
->   * svc_addsock - add a listener socket to an RPC service
->   * @serv: pointer to RPC service to which to add a new listener
-> @@ -1502,8 +1486,8 @@ EXPORT_SYMBOL_GPL(svc_alien_sock);
->   * Name is terminated with '\n'.  On error, returns a negative errno
->   * value.
->   */
-> -int svc_addsock(struct svc_serv *serv, const int fd, char *name_return,
-> -		const size_t len, const struct cred *cred)
-> +int svc_addsock(struct svc_serv *serv, struct net *net, const int fd,
-> +		char *name_return, const size_t len, const struct cred *cred)
->  {
->  	int err =3D 0;
->  	struct socket *so =3D sockfd_lookup(fd, &err);
-> @@ -1514,6 +1498,9 @@ int svc_addsock(struct svc_serv *serv, const int fd=
-, char *name_return,
-> =20
->  	if (!so)
->  		return err;
-> +	err =3D -EINVAL;
-> +	if (sock_net(so->sk) !=3D net)
-> +		goto out;
->  	err =3D -EAFNOSUPPORT;
->  	if ((so->sk->sk_family !=3D PF_INET) && (so->sk->sk_family !=3D PF_INET=
-6))
->  		goto out;
+> might consider a candidate. As for weird behavior, that's what LSMs are
+> for, and the really weird ones proposed (e.g. pathname character set limitations)
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+If this is effectively saying that LSMs are licensed to step outside the
+rules of the subsystem they're a guest in then it seems unlikely
+subsystems will be very excited to let new LSM changes go in important
+codepaths going forward. In fact this seems like a good argument against
+it.
