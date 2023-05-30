@@ -2,49 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FFDA715BC7
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 May 2023 12:30:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 989397162CE
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 May 2023 15:58:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbjE3Kad (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 May 2023 06:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56458 "EHLO
+        id S232555AbjE3N6w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 May 2023 09:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231774AbjE3KaI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 06:30:08 -0400
+        with ESMTP id S232519AbjE3N6v (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 09:58:51 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5C6FE5F;
-        Tue, 30 May 2023 03:29:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4F7103;
+        Tue, 30 May 2023 06:58:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4BB7661452;
-        Tue, 30 May 2023 10:29:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35727C433EF;
-        Tue, 30 May 2023 10:29:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 64582622B2;
+        Tue, 30 May 2023 13:58:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8179C433EF;
+        Tue, 30 May 2023 13:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685442558;
-        bh=eXgms0j3ifAbCZc7BYiC1NSMaPjHX66aHgUmpH3tBvs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VF/Db1v82fkkdflvmQJQv0Tn3NWCoQ1LF6FGOVoPhHUWyTAFsovHBt9JXJrkDEQd5
-         crQfneNPnHpy2Klo+VkE/L0VpqMfWZoIeVB2zu0moBxaRFKv2nOWMF7hfRkVcLazTg
-         VmRpe85R0Z31OWF+IFU5nSst8fZC+HFJKCMB74kdlmfpA9Oaj5TsPFsos9YsH7zYRM
-         sCSkeCbhMwoaLzpje2aTfMo2DvCSuOiOSLv7rn6PpDsYPmQ/c0RrAbi63TA1yZDSUB
-         FZTH5GG8KBx9GhUqrVoFqvtOwxfaUBzHg77+7n9E+DxaeC6eFFV8+LIdniUhCVMWBE
-         YlpZ0z23Ce8pA==
-Message-ID: <283915f369b99b88b2a335034a11cddf7b93fcff.camel@kernel.org>
-Subject: Re: [PATCH v2 1/2] NFSD: handle GETATTR conflict with write
- delegation
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Date:   Tue, 30 May 2023 06:29:16 -0400
-In-Reply-To: <1685429537-11855-2-git-send-email-dai.ngo@oracle.com>
-References: <1685429537-11855-1-git-send-email-dai.ngo@oracle.com>
-         <1685429537-11855-2-git-send-email-dai.ngo@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
+        s=k20201202; t=1685455127;
+        bh=hcaXRRGzPBhBBLpEW0isVOB3DKBAASE/ESHMgHvcgQE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WiHDyUv0qet+LrK4Zo5p1pc0ctSRdXlGbGZ8tl02Vx1vVgIRAhB0H5UMaqqDHCAjZ
+         XQjzg7jCBTWXmvjejDMJipaWrKARky609Yw4j6YSdroUBzfV6QT0wSj8m6CaH3tf0a
+         g4ThSKzN/ETU2CeP8TDgy1vX+fJrEgQ9qrU3Cu+nWH+h4goHpMT99clf4C9yvIzoAB
+         u6Ie6MA2SMi94iAxjNCCjqDTP+kXpP/GK97lw9niukWZB/T5wC/9lm8/PN4UXluqrd
+         /1sYc6xTyVRqd7BZWVLzTIgi3XyklcdR9AufeJU8WFw8ZcapWsg4DCuEgpAdU784dC
+         miq8usuqEjdFQ==
+Date:   Tue, 30 May 2023 15:58:35 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc:     Xiu Jianfeng <xiujianfeng@huawei.com>, gregkh@linuxfoundation.org,
+        rafael@kernel.org, viro@zeniv.linux.org.uk, dhowells@redhat.com,
+        code@tyhicks.com, hirofumi@mail.parknet.co.jp,
+        linkinjeon@kernel.org, sfrench@samba.org, senozhatsky@chromium.org,
+        tom@talpey.com, chuck.lever@oracle.com, jlayton@kernel.org,
+        miklos@szeredi.hu, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, stephen.smalley.work@gmail.com,
+        eparis@parisplace.org, casey@schaufler-ca.com, dchinner@redhat.com,
+        john.johansen@canonical.com, mcgrof@kernel.org,
+        mortonm@chromium.org, fred@cloudflare.com, mpe@ellerman.id.au,
+        nathanl@linux.ibm.com, gnoack3000@gmail.com,
+        roberto.sassu@huawei.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
+        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        wangweiyang2@huawei.com, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH -next 0/2] lsm: Change inode_setattr() to take struct
+Message-ID: <20230530-mietfrei-zynisch-8b63a8566f66@brauner>
+References: <20230505081200.254449-1-xiujianfeng@huawei.com>
+ <20230515-nutzen-umgekehrt-eee629a0101e@brauner>
+ <75b4746d-d41e-7c9f-4bb0-42a46bda7f17@digikod.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <75b4746d-d41e-7c9f-4bb0-42a46bda7f17@digikod.net>
 X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,122 +71,103 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2023-05-29 at 23:52 -0700, Dai Ngo wrote:
-> If the GETATTR request on a file that has write delegation in effect
-> and the request attributes include the change info and size attribute
-> then the write delegation is recalled. If the delegation is returned
-> within 30ms then the GETATTR is serviced as normal otherwise the
-> NFS4ERR_DELAY error is returned for the GETATTR.
->=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
->  fs/nfsd/nfs4state.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++=
-+++
->  fs/nfsd/nfs4xdr.c   |  5 +++++
->  fs/nfsd/state.h     |  3 +++
->  3 files changed, 58 insertions(+)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index b90b74a5e66e..7826483e8421 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -8353,3 +8353,53 @@ nfsd4_get_writestateid(struct nfsd4_compound_state=
- *cstate,
->  {
->  	get_stateid(cstate, &u->write.wr_stateid);
->  }
-> +
-> +/**
-> + * nfsd4_deleg_getattr_conflict - Trigger recall if GETATTR causes confl=
-ict
-> + * @rqstp: RPC transaction context
-> + * @inode: file to be checked for a conflict
-> + *
-> + * This function is called when there is a conflict between a write
-> + * delegation and a change/size GETATR from another client. The server
-> + * must either use the CB_GETATTR to get the current values of the
-> + * attributes from the client that hold the delegation or recall the
-> + * delegation before replying to the GETATTR. See RFC 8881 section
-> + * 18.7.4.
-> + *
-> + * Returns 0 if there is no conflict; otherwise an nfs_stat
-> + * code is returned.
-> + */
-> +__be32
-> +nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode=
-)
-> +{
-> +	__be32 status;
-> +	struct file_lock_context *ctx;
-> +	struct file_lock *fl;
-> +	struct nfs4_delegation *dp;
-> +
-> +	ctx =3D locks_inode_context(inode);
-> +	if (!ctx)
-> +		return 0;
-> +	spin_lock(&ctx->flc_lock);
-> +	list_for_each_entry(fl, &ctx->flc_lease, fl_list) {
-> +		if (fl->fl_flags =3D=3D FL_LAYOUT ||
-> +				fl->fl_lmops !=3D &nfsd_lease_mng_ops)
-> +			continue;
-> +		if (fl->fl_type =3D=3D F_WRLCK) {
-> +			dp =3D fl->fl_owner;
-> +			if (dp->dl_recall.cb_clp =3D=3D *(rqstp->rq_lease_breaker)) {
-> +				spin_unlock(&ctx->flc_lock);
-> +				return 0;
-> +			}
-> +			spin_unlock(&ctx->flc_lock);
-> +			status =3D nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
-> +			if (status !=3D nfserr_jukebox ||
-> +					!nfsd_wait_for_delegreturn(rqstp, inode))
-> +				return status;
-> +			return 0;
-> +		}
-> +		break;
-> +	}
-> +	spin_unlock(&ctx->flc_lock);
-> +	return 0;
-> +}
+On Fri, May 26, 2023 at 06:33:05PM +0200, Mickaël Salaün wrote:
+> 
+> On 15/05/2023 17:12, Christian Brauner wrote:
+> > On Fri, May 05, 2023 at 04:11:58PM +0800, Xiu Jianfeng wrote:
+> > > Hi,
+> > > 
+> > > I am working on adding xattr/attr support for landlock [1], so we can
+> > > control fs accesses such as chmod, chown, uptimes, setxattr, etc.. inside
+> > > landlock sandbox. the LSM hooks as following are invoved:
+> > > 1.inode_setattr
+> > > 2.inode_setxattr
+> > > 3.inode_removexattr
+> > > 4.inode_set_acl
+> > > 5.inode_remove_acl
+> > > which are controlled by LANDLOCK_ACCESS_FS_WRITE_METADATA.
+> > > 
+> > > and
+> > > 1.inode_getattr
+> > > 2.inode_get_acl
+> > > 3.inode_getxattr
+> > > 4.inode_listxattr
+> > > which are controlled by LANDLOCK_ACCESS_FS_READ_METADATA
+> > 
+> > It would be helpful to get the complete, full picture.
+> > 
+> > Piecemeal extending vfs helpers with struct path arguments is costly,
+> > will cause a lot of churn and will require a lot of review time from us.
+> > 
+> > Please give us the list of all security hooks to which you want to pass
+> > a struct path (if there are more to come apart from the ones listed
+> > here). Then please follow all callchains and identify the vfs helpers
+> > that would need to be updated. Then please figure out where those
+> > vfs helpers are called from and follow all callchains finding all
+> > inode_operations that would have to be updated and passed a struct path
+> > argument. So ultimately we'll end up with a list of vfs helpers and
+> > inode_operations that would have to be changed.
+> > 
+> > I'm very reluctant to see anything merged without knowing _exactly_ what
+> > you're getting us into.
+> 
+> Ultimately we'd like the path-based LSMs to reach parity with the
+> inode-based LSMs. This proposal's goal is to provide users the ability to
+> control (in a complete and easy way) file metadata access. For these we need
+> to extend the inode_*attr hooks and inode_*acl hooks to handle paths. The
+> chown/chmod hooks are already good.
+> 
+> In the future, I'd also like to be able to control directory traversals
+> (e.g. chdir), which currently only calls inode_permission().
+> 
+> What would be the best way to reach this goal?
 
+The main concern which was expressed on other patchsets before is that
+modifying inode operations to take struct path is not the way to go.
+Passing struct path into individual filesystems is a clear layering
+violation for most inode operations, sometimes downright not feasible,
+and in general exposing struct vfsmount to filesystems is a hard no. At
+least as far as I'm concerned.
 
-If there is a lease held by a userland program (e.g. Samba), why don't
-you want to break it here? Shouldn't it also be broken in this case?
+So the best way to achieve the landlock goal might be to add new hooks
+in cases where you would be required to modify inode operations
+otherwise. Taking the chdir() case as an example. That calls
+path_permission(). Since inode_permission() and generic_permission() are
+called in a lot of places where not even a dentry might be readily
+available we will not extend them to take a struct path argument. This
+would also involve extending the inode ->permission() method which is a
+no go. That's neither feasible and would involve modifying a good chunk
+of code for the sole purpose of an LSM.
 
-I think this logic may be wrong. ISTM that you want to basically always
-call nfsd_open_break_lease, unless it's a delegation held by the same
-client.
+So in path_permission() you might have the potential to add an LSM hook.
+Or if you need to know what syscall this was called for you might have
+to add a hook into chdir() itself. That is still unpleasant but since
+the alternative to adding new LSM hooks might be endless layering
+violations that's a compromise that at least I can live with. Ultimately
+you have to convince more people.
 
+Some concerns around passing struct path to LSM hooks in general that I
+would like to just point out and ask you to keep in mind: As soon as
+there's an LSM hook that takes a path argument it means all LSMs have
+access to a struct path. At that point visibility into what's been done
+to that struct path is lost for the fs layer.
 
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index b83954fc57e3..4590b893dbc8 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -2970,6 +2970,11 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct =
-svc_fh *fhp,
->  		if (status)
->  			goto out;
->  	}
-> +	if (bmval0 & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
-> +		status =3D nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry));
-> +		if (status)
-> +			goto out;
-> +	}
-> =20
->  	err =3D vfs_getattr(&path, &stat,
->  			  STATX_BASIC_STATS | STATX_BTIME | STATX_CHANGE_COOKIE,
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index d49d3060ed4f..cbddcf484dba 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -732,4 +732,7 @@ static inline bool try_to_expire_client(struct nfs4_c=
-lient *clp)
->  	cmpxchg(&clp->cl_state, NFSD4_COURTESY, NFSD4_EXPIRABLE);
->  	return clp->cl_state =3D=3D NFSD4_EXPIRABLE;
->  }
-> +
-> +extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
-> +				struct inode *inode);
->  #endif   /* NFSD4_STATE_H */
+One the one hand that's fine on the other hand sooner or later some LSM
+will try to get creative and do things like starting to infer
+relationships between mounts without understanding mount property and
+mount handling enough, or start trying to infer the parent of a path and
+perform permission checks on it in ways that aren't sane. And that sucks
+because this only becomes obvious when fs wide changes are done that
+affect LSM hooks as well.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+And that's the other thing. The more objects the LSM layer gets access
+to the greater the cost to do fs wide changes because the fs layer is
+now even closer entangled with the LSM layer. For example, even simple
+things like removing IOP_XATTR - even just for POSIX ACLs - suddenly
+become complicated not because of the fs layer but because of how the
+LSM layer makes use of it. It might start relying on internal flags that
+would be revoked later and so on. That also goes for struct vfsmount. So
+it means going through every LSM trying to figure out if a change is ok
+or not. And we keep adding new LSMs without deprecating older ones (A
+problem we also face in the fs layer.) and then they sit around but
+still need to be taken into account when doing changes.
