@@ -2,49 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11C4D71630D
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 May 2023 16:05:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE55D716315
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 May 2023 16:05:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232876AbjE3OF0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 May 2023 10:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49766 "EHLO
+        id S232729AbjE3OF5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 May 2023 10:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232908AbjE3OFY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 10:05:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8D6E110
-        for <linux-nfs@vger.kernel.org>; Tue, 30 May 2023 07:05:22 -0700 (PDT)
+        with ESMTP id S232895AbjE3OFz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 10:05:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 535D510A
+        for <linux-nfs@vger.kernel.org>; Tue, 30 May 2023 07:05:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 045E8626D0
-        for <linux-nfs@vger.kernel.org>; Tue, 30 May 2023 14:05:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE9FAC433D2;
-        Tue, 30 May 2023 14:05:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D35C962461
+        for <linux-nfs@vger.kernel.org>; Tue, 30 May 2023 14:05:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B97DBC433D2;
+        Tue, 30 May 2023 14:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685455521;
-        bh=teoKXskHIuWiFWjWwLW8rnqCDUwghrH0NfbdivrjD0E=;
-        h=Subject:From:To:Cc:Date:From;
-        b=U1jcjROGAa2/O2KAEVfj2y4e2Oxi0CbNUHlFlgKutJnFSm/OYCli1mo/B2BsvkL11
-         crtbSA0NZMZJL+EY9AUKZW/dxNbPXvhKNJkkYIUdHTMS3BkyAGTH32ixDFFkmxfHBu
-         /FnY0ftmAt+pWpyIE6ebMOOJuiECHW5v4PeXzebC7yyBEJihL4rxNtFmfgeh0sssbc
-         ZNwLaFqqxF83h1xkv6LoXHH9bxksiyOPo/cmaZSPGQI0w4r30KtF+WZnPDP6ejCi0S
-         4qLb1nffO81hjsDb7E8D6ilKgySXQuuHnQTSnmBPhpf/4CQ2nyK0Qb+iGskwOU24M/
-         Q2OqvEY9g/oAw==
-Subject: [PATCH v3 00/11] client-side RPC-with-TLS
+        s=k20201202; t=1685455548;
+        bh=k0Q/ahGF0o430xNI/stJcQcOEnDzyH5ZV74UxoXnvOw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=SNIWdVia1PguX26p7HlwDbCt+ngyd/MYrJeTgDAO+5PH+nrXYSO7jLdpuk+ae8oiv
+         UhBe4HIT+UTp794O3BmI0gSlonaUpgjC5BUwHVldVALWbwjCLY1OwxcOnIoC7gDrQs
+         AwFmOJc2PjRqwrhOBh6KeBS20dkmjEy3FbyXYmGOGZHUiTlwW+ulUzujIJFL1duChL
+         9NnGMxax2fJ9RgFoUbYy8nkXV5HwDU+TMudcqeP9LC1pXVSMf5jOWTqkW+nnsJY0av
+         VdgViboKaoGBGb8VwPPu8DhOu8DRSey03+z5eipUtmuNu2M5DgpLk5YvUtGocHjhSy
+         4giZt3M/IcqCQ==
+Subject: [PATCH v3 01/11] NFS: Improvements for fs_context-related tracepoints
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>, jlayton@redhat.com,
         linux-nfs@vger.kernel.org, kernel-tls-handshake@lists.linux.dev
-Date:   Tue, 30 May 2023 10:05:09 -0400
-Message-ID: <168545533442.1917.10040716812361925735.stgit@oracle-102.nfsv4bat.org>
+Date:   Tue, 30 May 2023 10:05:36 -0400
+Message-ID: <168545552661.1917.15372563404722059237.stgit@oracle-102.nfsv4bat.org>
+In-Reply-To: <168545533442.1917.10040716812361925735.stgit@oracle-102.nfsv4bat.org>
+References: <168545533442.1917.10040716812361925735.stgit@oracle-102.nfsv4bat.org>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -53,58 +55,57 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Let's have a look at what is needed to support NFS in-transit
-confidentiality in the Linux NFS client. These apply to 6.4-rc4
-but previously they've been tested at multiple NFS bake-a-thon
-events.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-This series is also available in the topic-rpc-with-tls-upcall
-branch at
+Add some missing observability to the fs_context tracepoints
+added by commit 33ce83ef0bb0 ("NFS: Replace fs_context-related
+dprintk() call sites with tracepoints").
 
- https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
-
-Changes since v2:
-- Rebased on v6.4-rc4
-
-Changes since RFC:
-- Add an rpc_authops method to send TLS probes
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
+ fs/nfs/fs_context.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-Chuck Lever (11):
-      NFS: Improvements for fs_context-related tracepoints
-      SUNRPC: Plumb an API for setting transport layer security
-      SUNRPC: Trace the rpc_create_args
-      SUNRPC: Add RPC client support for the RPC_AUTH_TLS auth flavor
-      SUNRPC: Ignore data_ready callbacks during TLS handshakes
-      SUNRPC: Capture CMSG metadata on client-side receive
-      SUNRPC: Add a connect worker function for TLS
-      SUNRPC: Add RPC-with-TLS support to xprtsock.c
-      SUNRPC: Add RPC-with-TLS tracepoints
-      NFS: Have struct nfs_client carry a TLS policy field
-      NFS: Add an "xprtsec=" NFS mount option
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 9bcd53d5c7d4..5626d358ee2e 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -791,16 +791,19 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 		ctx->mount_server.addrlen = len;
+ 		break;
+ 	case Opt_nconnect:
++		trace_nfs_mount_assign(param->key, param->string);
+ 		if (result.uint_32 < 1 || result.uint_32 > NFS_MAX_CONNECTIONS)
+ 			goto out_of_bounds;
+ 		ctx->nfs_server.nconnect = result.uint_32;
+ 		break;
+ 	case Opt_max_connect:
++		trace_nfs_mount_assign(param->key, param->string);
+ 		if (result.uint_32 < 1 || result.uint_32 > NFS_MAX_TRANSPORTS)
+ 			goto out_of_bounds;
+ 		ctx->nfs_server.max_connect = result.uint_32;
+ 		break;
+ 	case Opt_lookupcache:
++		trace_nfs_mount_assign(param->key, param->string);
+ 		switch (result.uint_32) {
+ 		case Opt_lookupcache_all:
+ 			ctx->flags &= ~(NFS_MOUNT_LOOKUP_CACHE_NONEG|NFS_MOUNT_LOOKUP_CACHE_NONE);
+@@ -817,6 +820,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 		}
+ 		break;
+ 	case Opt_local_lock:
++		trace_nfs_mount_assign(param->key, param->string);
+ 		switch (result.uint_32) {
+ 		case Opt_local_lock_all:
+ 			ctx->flags |= (NFS_MOUNT_LOCAL_FLOCK |
+@@ -837,6 +841,7 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 		}
+ 		break;
+ 	case Opt_write:
++		trace_nfs_mount_assign(param->key, param->string);
+ 		switch (result.uint_32) {
+ 		case Opt_write_lazy:
+ 			ctx->flags &=
 
-
- fs/nfs/client.c                 |   7 +
- fs/nfs/fs_context.c             |  55 +++++
- fs/nfs/internal.h               |   2 +
- fs/nfs/nfs3client.c             |   1 +
- fs/nfs/nfs4client.c             |  18 +-
- fs/nfs/super.c                  |  12 ++
- include/linux/nfs_fs_sb.h       |   3 +-
- include/linux/sunrpc/auth.h     |   2 +
- include/linux/sunrpc/clnt.h     |   2 +
- include/linux/sunrpc/xprt.h     |  17 ++
- include/linux/sunrpc/xprtsock.h |   3 +
- include/trace/events/sunrpc.h   |  96 ++++++++-
- net/sunrpc/Makefile             |   2 +-
- net/sunrpc/auth.c               |   2 +-
- net/sunrpc/auth_tls.c           | 175 ++++++++++++++++
- net/sunrpc/clnt.c               |   9 +-
- net/sunrpc/xprtsock.c           | 343 +++++++++++++++++++++++++++++++-
- 17 files changed, 727 insertions(+), 22 deletions(-)
- create mode 100644 net/sunrpc/auth_tls.c
-
---
-Chuck Lever
 
