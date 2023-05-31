@@ -2,132 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 014DF7173D1
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 04:35:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E47D57177B5
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 09:20:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233946AbjEaCfc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 May 2023 22:35:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
+        id S234573AbjEaHUY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 May 2023 03:20:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231842AbjEaCf0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 May 2023 22:35:26 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A80123;
-        Tue, 30 May 2023 19:35:25 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34UNOgXq015320;
-        Wed, 31 May 2023 02:35:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=J/dLiyzOlqOVO3IWRV52xWq8Kl3J1LMJAHb4zxE2SxI=;
- b=b/udPmEb8Mr4B1l3J5Ar4A01XFauaIdAmBvsnqz5oarMcPuw2nIe6bAuGzZzpOstsZJ/
- 98LVX2bEak0hRh75i1YgCVFf9302dkQht6vdIJK5sb6zV6HOLEmXa8FjdOp8cs6qt+Gr
- E25U1awf0ffGH8mOJCd+ur+9beL9KkEEbmpKRcCmCU3nWOF8FGNa7ZLF3zj+y7rRZMEk
- gZGQcmBJl5W58Sr0kriTXqcSPPqHOvTK1eMDiBp3eG7qSB9X/JthS6d+uUNjdgmYeaJp
- VSclxYOZIE45pbOh8oBQe/3s4rgPvIvVq6KGvLQmod3GUXviUWpy/hGm36cqa2wJSUss OQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3qvhj4vfr3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 May 2023 02:35:22 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 34V07Cc8000380;
-        Wed, 31 May 2023 02:35:21 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3qu8q99hu4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 May 2023 02:35:21 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34V2TtqZ012906;
-        Wed, 31 May 2023 02:35:21 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3qu8q99hsx-3;
-        Wed, 31 May 2023 02:35:21 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 2/2] NFSD: add counter for write delegation recall due to conflict with GETATTR
-Date:   Tue, 30 May 2023 19:35:07 -0700
-Message-Id: <1685500507-23598-3-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1685500507-23598-1-git-send-email-dai.ngo@oracle.com>
-References: <1685500507-23598-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-30_18,2023-05-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 malwarescore=0 adultscore=0 phishscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305310019
-X-Proofpoint-GUID: xMXQOQwd2makauZuOtD8QRpHd-A_1eBz
-X-Proofpoint-ORIG-GUID: xMXQOQwd2makauZuOtD8QRpHd-A_1eBz
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231922AbjEaHUX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 03:20:23 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C773113;
+        Wed, 31 May 2023 00:20:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=rTj30peRJt6m0YoKqBvWmseSjfUD4Z/EcECC7rWKQqY=; b=JaFUYzfMSOPN52M4KwZuEYVRlQ
+        qspmaDHSt+0PBCreJirznNvvorsKcGA4AAgC+3TxCg0mACC0ydyG3dGfhBbJezE3Y0ZtpJF2OgF3Q
+        gI2Vu/s5xp9CSycLSHwae8Q9sygUD16H7zP0U7SzIc0nuXifVHJlgqKhPE1D1OZAs4j4K/mSD0zZQ
+        IxZJ/z5goKiYfqqD8xLRft7sAoyVj8Y3IQgNP4sLkeSTLlYF9q28/9Oo4E03HX575EHeKdOJkHV/9
+        CkyvBQVfQ2OSot0w5Ra4gLl4vsn5TR3UKEAHq6LmBg2GbOKuXJMyE4VqGbDT/CR4c75Sz8C9Y+7i2
+        MzqkkGpg==;
+Received: from [2001:4bb8:182:6d06:f5c3:53d7:b5aa:b6a7] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1q4G7t-00GPh2-1k;
+        Wed, 31 May 2023 07:20:09 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Chao Yu <chao@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: cleanup the filemap / direct I/O interaction v3
+Date:   Wed, 31 May 2023 09:19:58 +0200
+Message-Id: <20230531072006.476386-1-hch@lst.de>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add counter to keep track of how many times write delegations are
-recalled due to conflict with GETATTR.
+Hi all,
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 1 +
- fs/nfsd/stats.c     | 2 ++
- fs/nfsd/stats.h     | 7 +++++++
- 3 files changed, 10 insertions(+)
+this series cleans up some of the generic write helper calling
+conventions and the page cache writeback / invalidation for
+direct I/O.  This is a spinoff from the no-bufferhead kernel
+project, for which we'll want to an use iomap based buffered
+write path in the block layer.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 29ed2e72b665..cba27dfa39e8 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -8402,6 +8402,7 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode)
- 			}
- break_lease:
- 			spin_unlock(&ctx->flc_lock);
-+			nfsd_stats_wdeleg_getattr_inc();
- 			status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
- 			if (status != nfserr_jukebox ||
- 					!nfsd_wait_for_delegreturn(rqstp, inode))
-diff --git a/fs/nfsd/stats.c b/fs/nfsd/stats.c
-index 777e24e5da33..63797635e1c3 100644
---- a/fs/nfsd/stats.c
-+++ b/fs/nfsd/stats.c
-@@ -65,6 +65,8 @@ static int nfsd_show(struct seq_file *seq, void *v)
- 		seq_printf(seq, " %lld",
- 			   percpu_counter_sum_positive(&nfsdstats.counter[NFSD_STATS_NFS4_OP(i)]));
- 	}
-+	seq_printf(seq, "\nwdeleg_getattr %lld",
-+		percpu_counter_sum_positive(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]));
- 
- 	seq_putc(seq, '\n');
- #endif
-diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
-index 9b43dc3d9991..cf5524e7ca06 100644
---- a/fs/nfsd/stats.h
-+++ b/fs/nfsd/stats.h
-@@ -22,6 +22,7 @@ enum {
- 	NFSD_STATS_FIRST_NFS4_OP,	/* count of individual nfsv4 operations */
- 	NFSD_STATS_LAST_NFS4_OP = NFSD_STATS_FIRST_NFS4_OP + LAST_NFS4_OP,
- #define NFSD_STATS_NFS4_OP(op)	(NFSD_STATS_FIRST_NFS4_OP + (op))
-+	NFSD_STATS_WDELEG_GETATTR,	/* count of getattr conflict with wdeleg */
- #endif
- 	NFSD_STATS_COUNTERS_NUM
- };
-@@ -93,4 +94,10 @@ static inline void nfsd_stats_drc_mem_usage_sub(struct nfsd_net *nn, s64 amount)
- 	percpu_counter_sub(&nn->counter[NFSD_NET_DRC_MEM_USAGE], amount);
- }
- 
-+#ifdef CONFIG_NFSD_V4
-+static inline void nfsd_stats_wdeleg_getattr_inc(void)
-+{
-+	percpu_counter_inc(&nfsdstats.counter[NFSD_STATS_WDELEG_GETATTR]);
-+}
-+#endif
- #endif /* _NFSD_STATS_H */
--- 
-2.9.5
+Changes since v2:
+ - stick to the existing behavior of returning a short write
+   if the buffer fallback write or sync fails
+ - bring back "fuse: use direct_write_fallback" which accidentally
+   got lost in v2
 
+Changes since v1:
+ - remove current->backing_dev_info entirely
+ - fix the pos/end calculation in direct_write_fallback
+ - rename kiocb_invalidate_post_write to
+   kiocb_invalidate_post_direct_write
+ - typo fixes
+
+diffstat:
+ block/fops.c            |   18 +-----
+ fs/btrfs/file.c         |    6 --
+ fs/ceph/file.c          |    6 --
+ fs/direct-io.c          |   10 ---
+ fs/ext4/file.c          |   11 +---
+ fs/f2fs/file.c          |    3 -
+ fs/fuse/file.c          |    4 -
+ fs/gfs2/file.c          |    6 --
+ fs/iomap/buffered-io.c  |    9 ++-
+ fs/iomap/direct-io.c    |   88 ++++++++++++---------------------
+ fs/nfs/file.c           |    6 --
+ fs/ntfs/file.c          |    2 
+ fs/ntfs3/file.c         |    3 -
+ fs/xfs/xfs_file.c       |    6 --
+ fs/zonefs/file.c        |    4 -
+ include/linux/fs.h      |    5 -
+ include/linux/pagemap.h |    4 +
+ include/linux/sched.h   |    3 -
+ mm/filemap.c            |  126 ++++++++++++++++++++++++++----------------------
+ 19 files changed, 125 insertions(+), 195 deletions(-)
