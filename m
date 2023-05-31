@@ -2,99 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC9857187B4
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 18:45:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE6957187F1
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 19:03:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229884AbjEaQpL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 May 2023 12:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34784 "EHLO
+        id S229980AbjEaRDA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 May 2023 13:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbjEaQpJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 12:45:09 -0400
-Received: from sonic309-27.consmr.mail.ne1.yahoo.com (sonic309-27.consmr.mail.ne1.yahoo.com [66.163.184.153])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C36135
-        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 09:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1685551506; bh=SJR338Vf7dbzf8RVV8TS187vO7lAXnTfCx/UpAwzXyM=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=h6ENdfUL8Awu+gBFaLkD+hzgCZvGXf1Wm9Ulgr74RtQHU/WA3+PS1hKxHX6CFWZmnkt2oFguW9ZroWgOrCy3nC36M0iBrePmm8lFk5FOPAp9G4mFyt8wBDVXHqaonjg/7QZhG+ErZlZxmj6fl90Z9DUrbdt2GFDzyQmYHGnVH3rEnOkTqdlPyuPmAVyfgrFt/V1pTU+0YG8mCFsTUP3iFQP+7jJUZLzkcpYCFMKQAAXLCQVcDS2AQd6scMPQyiMphL51R6IUKgNEhEvjivG8dJMIzxPUm+FKkNbTd9hqsnIhwIx8r+fmIsfE4pON8OtI7FVQqIye7wUhrqx5NQ8z9w==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1685551506; bh=IK4gslOeWW2xAgwNjF79sSMMDJ4aQyoyJI3YquDYDcv=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=jAWtEHJmvhubeBSmTqB0ckEPwUfFwywMKrCd0VAkbvfBOp93YxujbLeAq7uvJKzveVsUhcVLdoia1nkMTeFpwSXnKDVWGivZdQVzISUug+BmNDRPUf+pIOu4rcEvE2bc3IWJjDXrtGS/pu5BMyFaPlFbfHVq0iv6PYk2s9hIcpJE68x471JZk5aYw6l0wy0VfUqBXw/yoFTlxJA8u9WUgDAUhPGJu67B16gR8Ym35UbijnOSlYOlp0mnWyMC0SgSm0K/eHKWx+1wCNTy4lD0vw+nPAXLYoimbaUiQltt8nTub7zPY5Y1czAwbgVEyH9mJZ6HTY0j7Be3XTL6wP++Ww==
-X-YMail-OSG: rgeBCO8VM1ljf.g_Q8Uu4HS_ZUmEYXBNHKGjxGFeFP1zXRQjSTRHN8nmK_t3Ghh
- KfhjA97dsyErTNGzb2iQztk4XpI4plX8XNrAM9thC2YfJ83o1aid48x._U7bunTfYF22kKAfC86W
- pihY_Kd_AyLJwDspxCPJU7x2yz6Ww9ihlzM29qBJ63SjoKTZMoHzAaplbCbm4ix2mQfQfzR4M920
- TyWSRXJMdI5n5hDGC4WPm46QEY0zMWUOgVAkv1yVHS9kr0jBsxYjfwqs1FqQJU0mSwU3r3m_S3ye
- W9b75yqfA_mLknagjX_06Tjd._CoGdRyAiHjWrEcw4OqtQrMgNoKzGoYSi9PA6P2T0juIEMrrEek
- POEaXorQr8gJx5A7beMneXZ1ih.9jrhQ9PvHAxIWqW9eWz.M_6J3ZYmXZATZ7ksh5vwsNazoWeqE
- yY.Ty3WvL5Zf2MlQznIP2TSj2MfQA2BmTcfk5TTE2avbQC_0.W_nU0QVd_5StTGkTPCEDw7CWpaa
- Rd6L1tEpfx0o4FbxX9KlTTpIE_WRy9SemfMaJ39rNImgHlaVkIgeRdtmaAYWHmps6ADiPPeRb1sj
- 773B2oOSCpZLFC_3K7AbV9bVUTzw7RDe55huDpWRgH0VfNRsfy9VVaCXZzO5oq_oMBEJEMef.Pjd
- 2.GBTxonfgA3Y.np5AlLKRhTwT27x4fzruG786POBZ6QKVABH_v3Br9DhyyNh1D_yjZ_r0WM4QJR
- _RDW2jmTf0HObbjk7TPtwNrqqssro74U5dMV5nzd2Cbbvp3iEAtoEVPJK1I.nuxOfclzgXyxyj_c
- Xtv5qfFFuoTxa0jltG0_UaJFQ0D8_LKbxouwaVfh.ctIpdnG3Z_DKw2OpOth2mbx6VD0UNjlj0cI
- EazCeFbKRuguPX7eriAEpskoijKQXxGUu0qDK_DNL78Y8bD2f8HHcQWv5j8w.WPWqiaeEyi_GxTm
- YV8iJNWiTmGZ_SVMoXv15wdu6hjFd5f1WHQm_YUCI1nFDFR_QxKQQuw5IjoahYzR3ceSoTJu1Iwv
- iAhpfvvK54RBlpWXMvIuJNATzocWolr9t_pGkYiUrLWuncaFTLyXoQ.Aue0Fin.vzak8DtIXEdCt
- _i5XWmii9RUS3jL_GP_BqVTMCs.Y_mXJ_8tja3pkJ_ZJmt_X2RhXvk.ESwiPwf_2mqh2WxAkBaF_
- KJ6JaIiZlZaqquJmnm3PPGo6WPHsAf.N_Rh_pqRfDJQJ77vFo4Ex9oHwUMSbN95_6zVRyhRiflOu
- RwXoe2AERVLwDLMO6tcpetSOd_IgxIWK2UsdacwFRAIAiHeeU884r5xawKwFWr9fMrNJ3fCPQpz4
- fycG7D2KCWT5OXkwcxCGCkuGpHLD5utT2PG03u9LlbghhwPp1IG5O6xCr3ZPgPyghmcffILr4IOY
- hhIkMqt9j6rfJo7n3rOTDtLGELjc2raiHXgWXIg8zrxD8HevT9I5asSxx.IjMSOmvAkO4gjfpkU0
- TEPNxxrg1Xuv_U3FzWXOEF3k89BlycgJxoIiesbWBqkV17mQ0o0yRprUkRalcJZPCY5IAE5tLuAH
- GDhm43aOVKDYCxheBAEvfhshOXFrGcm6zt7qT29jU_eIXQ9GQfb7xNagUvXF9Ip8Ci8TkypgtuZc
- C14rmtStFLdivkFGpfdqhJwkjw87fWA2oFdX4Obb7o5X0vBhQCRtpk..B5W.EIAhz4pCCQz.9EEc
- MqoMz09zaHaNEWt7lbgP1m5mW410HjMjZEVGenH0YAnqPwiK0gOKCdkooEo5CfhEXGCpoMxlfRSI
- Os90fZagiOU0drdy2ZNP.8xS7dmfucAua7BvBJ6UvuHppG0H_SYZ3VkZQJdb4HNNTAdY8PvbTK12
- rlicdSMQv7H9v1Z9fi3JS0A0qBn_tqeZwl1IE.kw2f0Z2S3EJjmpyTyBcaQw0XPQKcjN4nweAC7v
- MQrm6d3HfBoSSSlE_YPAjIlzmm4JqdSLxe8f8MCaB_Ku8c05QeX9c9FXOWbZZ.u5XmMakVwxASAS
- TQuIyQX2VYVmmTW65cIeY8vvon2waKKff61vGcEN3ugb_MOBh9bw3sJlYZBHS3GvYUSWzsknh9zG
- _3s0JVQ3HUG6iiUR2D4DPoDQCcQlti8UC2HfaOHbV_CPj4FU4NKySEsHMVNqNeT1OFgx7mp_LZLe
- gvtN5Hu5J_pGoqSx8rRAe5w4bdwf1j1hcey_2V2q_NJn3XgBFnd0IyHOlRwI1CcnZ37gJk6Yp8bq
- v8mlCiX1pVMEqWDZ6GdyHTPfotsvu2g1HCLei.KGpQQbiVMWnf5h0lI9u2Miuty4g
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 3dc95e55-b757-4320-819b-cea79f802ef0
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Wed, 31 May 2023 16:45:06 +0000
-Received: by hermes--production-ne1-574d4b7954-xz2cn (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 803444bd8cafbcfff4fb75f278168acc;
-          Wed, 31 May 2023 16:45:02 +0000 (UTC)
-Message-ID: <498f8719-219d-b4cf-8231-54d7fb6a58dd@schaufler-ca.com>
-Date:   Wed, 31 May 2023 09:44:58 -0700
+        with ESMTP id S229961AbjEaRCz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 13:02:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2ECC911D
+        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 10:02:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1685552531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=nA468CPms0dwjrbNccXgZQd/+AP0rCkmXR+Xx2SRtqE=;
+        b=Rs6ZElUCAiplIY/+nVrdAryriEfInnmdaqsbpbijAK/kEOD62zJQoTRC8YGMWVXgdRhQd9
+        O1nYjjlTRmw08A/yOgsammgRD9b4fp+u5ku9+kuw6VpMeoyDYVift1hgbIVnAvGwzsZwFr
+        tLgIj5GSWQEsPXHYOpFrkg7N13JC4MU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-295-cycqWSbcNNOBUdVOr9AGhg-1; Wed, 31 May 2023 13:02:07 -0400
+X-MC-Unique: cycqWSbcNNOBUdVOr9AGhg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4A306185A78B;
+        Wed, 31 May 2023 17:02:07 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C0C8C154D7;
+        Wed, 31 May 2023 17:02:05 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Chuck Lever <chuck.lever@oracle.com>
+cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: How to get my krb5 crypto lib upstream?
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH -next 0/2] lsm: Change inode_setattr() to take struct
-Content-Language: en-US
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        Xiu Jianfeng <xiujianfeng@huawei.com>,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        viro@zeniv.linux.org.uk, dhowells@redhat.com, code@tyhicks.com,
-        hirofumi@mail.parknet.co.jp, linkinjeon@kernel.org,
-        sfrench@samba.org, senozhatsky@chromium.org, tom@talpey.com,
-        chuck.lever@oracle.com, jlayton@kernel.org, miklos@szeredi.hu,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        dchinner@redhat.com, john.johansen@canonical.com,
-        mcgrof@kernel.org, mortonm@chromium.org, fred@cloudflare.com,
-        mpe@ellerman.id.au, nathanl@linux.ibm.com, gnoack3000@gmail.com,
-        roberto.sassu@huawei.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
-        ecryptfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        wangweiyang2@huawei.com, Casey Schaufler <casey@schaufler-ca.com>
-References: <20230505081200.254449-1-xiujianfeng@huawei.com>
- <20230515-nutzen-umgekehrt-eee629a0101e@brauner>
- <75b4746d-d41e-7c9f-4bb0-42a46bda7f17@digikod.net>
- <20230530-mietfrei-zynisch-8b63a8566f66@brauner>
- <20230530142826.GA9376@lst.de>
- <301a58de-e03f-02fd-57c5-1267876eb2df@schaufler-ca.com>
- <20230530-tumult-adrenalin-8d48cb35d506@brauner>
- <28f3ca55-29ea-4582-655d-2769881127ad@schaufler-ca.com>
- <20230531-endpreis-gepflanzt-80a5a4a9c8d6@brauner>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <20230531-endpreis-gepflanzt-80a5a4a9c8d6@brauner>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.21495 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <723505.1685552525.1@warthog.procyon.org.uk>
+Date:   Wed, 31 May 2023 18:02:05 +0100
+Message-ID: <723506.1685552525@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -103,92 +62,148 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 5/31/2023 1:36 AM, Christian Brauner wrote:
-> On Tue, May 30, 2023 at 03:15:01PM -0700, Casey Schaufler wrote:
->> On 5/30/2023 9:01 AM, Christian Brauner wrote:
->>> On Tue, May 30, 2023 at 07:55:17AM -0700, Casey Schaufler wrote:
->>>> On 5/30/2023 7:28 AM, Christoph Hellwig wrote:
->>>>> On Tue, May 30, 2023 at 03:58:35PM +0200, Christian Brauner wrote:
->>>>>> The main concern which was expressed on other patchsets before is that
->>>>>> modifying inode operations to take struct path is not the way to go.
->>>>>> Passing struct path into individual filesystems is a clear layering
->>>>>> violation for most inode operations, sometimes downright not feasible,
->>>>>> and in general exposing struct vfsmount to filesystems is a hard no. At
->>>>>> least as far as I'm concerned.
->>>>> Agreed.  Passing struct path into random places is not how the VFS works.
->>>>>
->>>>>> So the best way to achieve the landlock goal might be to add new hooks
->>>>> What is "the landlock goal", and why does it matter?
->>>>>
->>>>>> or not. And we keep adding new LSMs without deprecating older ones (A
->>>>>> problem we also face in the fs layer.) and then they sit around but
->>>>>> still need to be taken into account when doing changes.
->>>>> Yes, I'm really worried about th amount of LSMs we have, and the weird
->>>>> things they do.
->>>> Which LSM(s) do you think ought to be deprecated? I only see one that I
->>> I don't have a good insight into what LSMs are actively used or are
->>> effectively unused but I would be curious to hear what LSMs are
->>> considered actively used/maintained from the LSM maintainer's
->>> perspective.
->> I'm not the LSM maintainer, but I've been working on the infrastructure
->> for quite some time. All the existing LSMs save one can readily be associated
->> with active systems, and the one that isn't is actively maintained. We have
->> not gotten into the habit of accepting LSMs upstream that don't have a real
->> world use.
->>
->>>> might consider a candidate. As for weird behavior, that's what LSMs are
->>>> for, and the really weird ones proposed (e.g. pathname character set limitations)
->>> If this is effectively saying that LSMs are licensed to step outside the
->>> rules of the subsystem they're a guest in then it seems unlikely
->>> subsystems will be very excited to let new LSM changes go in important
->>> codepaths going forward. In fact this seems like a good argument against
->>> it.
->> This is an artifact of Linus' decision that security models should be
->> supported as add-on modules. On the one hand, all that a subsystem maintainer
->> needs to know about a security feature is what it needs in the way of hooks.
->> On the other hand, the subsystem maintainer loses control over what kinds of
->> things the security feature does with the available information. It's a
->> tension that we've had to deal with since the Orange Book days of the late
->> 1980's. The deal has always been:
->>
->> 	You can have your security feature if:
->> 	1. If I turn it off it has no performance impact
->> 	2. I don't have to do anything to maintain it
->> 	3. It doesn't interfere with any other system behavior
->> 	4. You'll leave me alone
->>
->> As a security developer from way back I would be delighted if maintainers of
->> other subsystems took an active interest in some of what we've been trying
->> to accomplish in the security space. If the VFS maintainers would like to
->> see the LSM interfaces for file systems changed I, for one, would like very
->> much to hear about what they'd prefer. 
-> What is important for us is that the security layer must understand and
-> accept that some things cannot be done the way it envisions them to be
-> done because it would involve design compromises in the fs layer that
-> the fs maintainers are unwilling to make. The idea to pass struct path
-> to almost every security hook is a good example.
+Hi Herbert, Chuck,
 
-Yes, and that's completely acceptable. What would be really great is some
-guidance about what to do instead. Fishing for NAKs isn't fun for anybody.
+I'm wondering how to make progress on getting my krb5 crypto lib upstream.
 
-> If the project is feature parity between inode and path based LSMs then
-> it must be clear from the start that this won't be achieved at the cost
-> of mixing up the layer where only dentries and inodes are relevant and
-> the layer where struct paths are most relevant.
+Can I push it as it stands and then we try and build it into the crypto API
+for it later?  That would allow me to push my rxgk implementation for AF_RXRPC
+and at least allow userspace to use that.
 
-Which is a fair point, and helps those of us who don't work in the VFS
-layer daily understand the rationale.
+As far as building a crypto API around it goes, we need four interfaces:
 
->
->> We do a lot of crazy things to avoid interfering with the subsystems we
->> interact with. A closer developer relationship would be most welcome, so
->> long as it helps us achieve or goals. We get a lot of complaints about how
->> LSM feature perform, but no one wants to hear that a good deal of that comes
->> about because of what has to be done in support of 1, 2 and 3 above. Sometimes
->> we do stoopid things, but usually it's to avoid changes "outside our swim lane".
-> I personally am not opposed to comment on patches but they will
-> naturally have lower priority than other things.
+ (1) Key generation.  We may need to generate a {cipher,hash} key pair {Ke,Ki}
+     or just a hash key Kc.  We might conceivably want both.
 
-I can't say that I see how security features "naturally have lower priority",
-but everyone has to balance things.
+     At the moment, I return a prepared cipher or a prepared hash.  I don't
+     deal with the key pairing here as it makes testing a bit more awkward.
+
+	int crypto_krb5_get_Kc(const struct krb5_enctype *krb5,
+			       const struct krb5_buffer *TK,
+			       u32 usage,
+			       struct krb5_buffer *key,
+			       struct crypto_shash **_shash,
+			       gfp_t gfp);
+	int crypto_krb5_get_Ke(const struct krb5_enctype *krb5,
+			       const struct krb5_buffer *TK,
+			       u32 usage,
+			       struct krb5_buffer *key,
+			       struct crypto_sync_skcipher **_ci,
+			       gfp_t gfp);
+	int crypto_krb5_get_Ki(const struct krb5_enctype *krb5,
+			       const struct krb5_buffer *TK,
+			       u32 usage,
+			       struct krb5_buffer *key,
+			       struct crypto_shash **_shash,
+			       gfp_t gfp);
+
+ (2) PRF+ generation.  This takes some a key and a metadata blob and generates
+     a new blob that then gets used as a key.
+
+	int crypto_krb5_calc_PRFplus(const struct krb5_enctype *krb5,
+				     const struct krb5_buffer *K,
+				     unsigned int L,
+				     const struct krb5_buffer *S,
+				     struct krb5_buffer *result,
+				     gfp_t gfp);
+
+ (3) Encrypt and Decrypt.
+
+     Encrypt has to be parameterised to take a specific confounder for testing
+     and generate a random one for normal operation.  The IV is fixed all
+     zeroes in the cases I've implemented.  When testing, decrypt should
+     perhaps be passed the confounder to check it.
+
+     When encrypting, the output buffer will be larger than the input buffer
+     (or, at least, room must be set aside) so that a confounder, padding and
+     a checksum can be inserted.
+
+     When decrypting, we either want to provide a separate output buffer so
+     that the confounder and checksum can be stripped off, or we need to be
+     able to find out where the decrypted payload plus the padding will be (we
+     can't work out how much padding there is - that's left to the caller).
+
+     At the moment, I pass a single buffer descriptor, providing encrypt with
+     extra space front and back and providing decrypt with somewhere to save
+     offset and length:
+
+	ssize_t crypto_krb5_encrypt(const struct krb5_enctype *krb5,
+				    struct krb5_enc_keys *keys,
+				    struct scatterlist *sg, unsigned int nr_sg,
+				    size_t sg_len,
+				    size_t data_offset, size_t data_len,
+				    bool preconfounded);
+	int crypto_krb5_decrypt(const struct krb5_enctype *krb5,
+				struct krb5_enc_keys *keys,
+				struct scatterlist *sg, unsigned int nr_sg,
+				size_t *_offset, size_t *_len,
+				int *_error_code);
+
+     I also allow a krb5/gssapi error code to be returned so that it can be
+     used in the generation of abort messages.  This needs sorting out
+     better.  It may be that only one code is actually relevant to this and
+     that the caller generates all the rest as it checks the metadata.
+
+     The AEAD interface might suffice as it stands if we pass in the keys
+     already generated and passed in as a single key blob.  We don't want an
+     IV generator as the protocol defines the IV to use.
+
+ (4) GetMIC and VerifyMIC.
+
+     Both of these need parameterising with extra metadata that will get
+     inserted into the hash before the data is hashed.  GetMIC will insert the
+     checksum into the buffer and VerifyMIC will check it and strip it off.
+
+     I'm not sure that the hash API is suitable for this.  AEAD might suit for
+     GetMIC at least, but using AEAD for VerifyMIC would lead to an extraneous
+     copy I'd prefer to avoid.
+
+
+	ssize_t crypto_krb5_get_mic(const struct krb5_enctype *krb5,
+				    struct crypto_shash *shash,
+				    const struct krb5_buffer *metadata,
+				    struct scatterlist *sg, unsigned int nr_sg,
+				    size_t sg_len,
+				    size_t data_offset, size_t data_len);
+	int crypto_krb5_verify_mic(const struct krb5_enctype *krb5,
+				   struct crypto_shash *shash,
+				   const struct krb5_buffer *metadata,
+				   struct scatterlist *sg, unsigned int nr_sg,
+				   size_t *_offset, size_t *_len,
+				   int *_error_code);
+
+There's a lot to be said in using an asynchronous overrideable interface for
+encrypt and decrypt.  The problem is that we want to do simultaneous hash and
+crypt if we can.  I think the Intel AES/SHA instructions permit this to be
+done and there is sufficient register space to do it - and I *think* that it
+may be possible to offload this to the Intel QAT or the Intel IAA on the
+latest 4th Gen Xeons - and maybe NICs that can handle NFS/SMB offload.
+
+I think we'll perhaps need a "krb5 encoding type" API that can provide key
+derivation, PRF+ and information - something along the following lines:
+
+	struct krb5_enctype {
+		int		etype;		// Encryption (key) type
+		int		ctype;		// Checksum type
+		const char	*name;		// "Friendly" name
+		const char	*encrypt_name;	// Crypto encrypt name
+		const char	*cksum_name;	// Crypto checksum name
+		const char	*hash_name;	// Crypto hash name
+		u16		block_len;	// Length of encryption block
+		u16		conf_len;	// Length of confounder
+		u16		cksum_len;	// Length of checksum
+		u16		key_bytes;	// Length of raw key
+		u16		key_len;	// Length of final key
+		u16		hash_len;	// Length of hash
+		u16		prf_len;	// Length of PRF() result
+		u16		Kc_len;		// Length of Kc
+		u16		Ke_len;		// Length of Ke
+		u16		Ki_len;		// Length of Ki
+		bool		keyed_cksum;	// T if a keyed cksum
+		bool		pad;		// T if should pad
+	};
+
+We need to be able to look the encoding up by ID, not by name.
+
+David
 
