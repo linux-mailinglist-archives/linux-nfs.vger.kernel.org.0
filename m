@@ -2,124 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 495FA717904
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 09:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4771871795C
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 10:01:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234979AbjEaHwy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 May 2023 03:52:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55546 "EHLO
+        id S234122AbjEaIBI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 May 2023 04:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234880AbjEaHwA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 03:52:00 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0A210D5;
-        Wed, 31 May 2023 00:51:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=zxv1M1WmrjWJV8hj/zJXb5/eLkyYVzKVbPyzJ0QvWkE=; b=qCXO75gZuJgbpccptPK2DLklM9
-        7+jixpNM42DMgAIn5IVH47ttmh1LXyMN3Nm3ju6h4FrJ1vmcb8QK8gnjPjADfnAxP9X0MFv/u+Ktk
-        YTIMY24eQRcNpYuawN5uwkai/ooVN5y02Uo9VIZI++fjdqeeFflRYypDJV39i9odIMzqi/nrKdjxR
-        RErlb3jA6ZKsJrPH1N5ozDdN11HA75vxETG5rz6+OLXCcOzkw8VRqrcK8i7uNfXcXFqeTqk58bqq1
-        x7k/8x4r+F1Vr57n2meaCv9eQYXHVbIpUB3M28qDtFw9afFmrlhPRHbg7pecLYydha8NRG5/4zPi2
-        e749VASQ==;
-Received: from [2001:4bb8:182:6d06:f5c3:53d7:b5aa:b6a7] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q4Gbk-00GW1W-2H;
-        Wed, 31 May 2023 07:51:01 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
+        with ESMTP id S235095AbjEaH72 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 03:59:28 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E32E4C
+        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 00:58:58 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-3f623adec61so56959855e9.0
+        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 00:58:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685519937; x=1688111937;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=LGoVMkHiLGD64s03Y6+AFjuEJ/YkfPkSNgwpozijN6E=;
+        b=qpRVmSbM34qqrH3gCx8n/suiBR131xb9ZKYYmYExMuWV3Awb1ou96gvKFE8WKkLtWy
+         6ynBunEvz5k0ixVtgEpDcABbi1n57mZJZbs6ilqM8FMO+P5RzD2xBAjeKJT02Fq8lyfK
+         POpe/MwOY4D58UyuaPJAhgZNxm0+O+Cqpoa5ZlQd2tE9wXmfHOo0EIRcB4zG7RDWNRs1
+         FZDRZlEJA/fMYbTUzYf8RlOvpAodqgxr//acmFAASaD8EcKa1CaqNfrccXDETzaLWwn4
+         P5WUgvzSn630/95baknVapsYOZTwgIrev04E6KJ6IBCY0NENQIewnXwSNuHnEcr4d08A
+         UXgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685519937; x=1688111937;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LGoVMkHiLGD64s03Y6+AFjuEJ/YkfPkSNgwpozijN6E=;
+        b=J5KTEvReSwi+k2eIQngyJLll9gKiNkR6bZgpWWNv4466jsAPmlFtnxuYA47uayzh67
+         KWTODzoDgSz1B3LMfHW8VNzEbiaEVfFhywRGpdALQCCaFzIT7TdDG71rTUPLzFZL02+a
+         1YO+fsIRJp0xu3cNlAAfEMiZd9yWqwBfODZgfVBL7y4XoBUOti2P+mvtSkSU3FB2mWFp
+         v9lZZhewSO7kG+DOk2nvKyq9iJbwpIksMrxZR4SSRm6B3YKYoxvjNSvy8cL7w9/lOdUb
+         XYHqKxrOhcPxUMzW95K9ceobEov4Vt2WD0XKeZB0I1QgQ8I+ZPu0otClSS1I9FXCYmyX
+         +vnA==
+X-Gm-Message-State: AC+VfDziBEg7cihDwtaMjKESLPgcOfrwjXE4mK5N1HL/ZsO7XDgqBVn9
+        ISUrm3UyW8utt24qibpOzfuzlg==
+X-Google-Smtp-Source: ACHHUZ58AYa3MbtCcRUbj2mx8+2x0cns1qme0y7htZXh4dwN06OjOF6OPHWMbG5Q32MOUvkb2dNK7Q==
+X-Received: by 2002:a05:600c:b44:b0:3f2:48dc:5e02 with SMTP id k4-20020a05600c0b4400b003f248dc5e02mr3192671wmr.27.1685519937097;
+        Wed, 31 May 2023 00:58:57 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id s26-20020a7bc39a000000b003f42328b5d9sm19765106wmj.39.2023.05.31.00.58.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 May 2023 00:58:54 -0700 (PDT)
+Date:   Wed, 31 May 2023 10:58:51 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Stanislav Kinsbursky <skinsbursky@parallels.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: [PATCH 12/12] fuse: use direct_write_fallback
-Date:   Wed, 31 May 2023 09:50:26 +0200
-Message-Id: <20230531075026.480237-13-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230531075026.480237-1-hch@lst.de>
-References: <20230531075026.480237-1-hch@lst.de>
+        "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] nfsd: fix double fget() bug in __write_ports_addfd()
+Message-ID: <9279444f-b113-41ad-afaa-c6b550104906@kili.mountain>
+References: <9c90e813-c7fb-4c90-b52b-131481640a78@kili.mountain>
+ <168548566376.23533.14778348024215909777@noble.neil.brown.name>
+ <58fd7e35-ba6c-432e-8e02-9c5476c854b4@kili.mountain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <58fd7e35-ba6c-432e-8e02-9c5476c854b4@kili.mountain>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Use the generic direct_write_fallback helper instead of duplicating the
-logic.
+On Wed, May 31, 2023 at 10:48:09AM +0300, Dan Carpenter wrote:
+>  	err = nfsd_create_serv(net);
+>  	if (err != 0)
+> -		return err;
+> +		goto out_put_sock;
+>  
+> -	err = svc_addsock(nn->nfsd_serv, fd, buf, SIMPLE_TRANSACTION_LIMIT, cred);
+> +	err = svc_addsock(nn->nfsd_serv, so, buf, SIMPLE_TRANSACTION_LIMIT, cred);
+> +	if (err)
+> +		goto out_put_net;
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
----
- fs/fuse/file.c | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+Oops.  This change is wrong.  svc_addsock() actually does return
+positive values on success.
 
-diff --git a/fs/fuse/file.c b/fs/fuse/file.c
-index 025973ad813e05..7a72dc0a691201 100644
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1340,7 +1340,6 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	struct file *file = iocb->ki_filp;
- 	struct address_space *mapping = file->f_mapping;
- 	ssize_t written = 0;
--	ssize_t written_buffered = 0;
- 	struct inode *inode = mapping->host;
- 	ssize_t err;
- 	struct fuse_conn *fc = get_fuse_conn(inode);
-@@ -1377,30 +1376,11 @@ static ssize_t fuse_cache_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 		goto out;
- 
- 	if (iocb->ki_flags & IOCB_DIRECT) {
--		loff_t pos, endbyte;
--
- 		written = generic_file_direct_write(iocb, from);
- 		if (written < 0 || !iov_iter_count(from))
- 			goto out;
--
--		written_buffered = fuse_perform_write(iocb, from);
--		if (written_buffered < 0) {
--			err = written_buffered;
--			goto out;
--		}
--		pos = iocb->ki_pos - written_buffered;
--		endbyte = iocb->ki_pos - 1;
--
--		err = filemap_write_and_wait_range(file->f_mapping, pos,
--						   endbyte);
--		if (err)
--			goto out;
--
--		invalidate_mapping_pages(file->f_mapping,
--					 pos >> PAGE_SHIFT,
--					 endbyte >> PAGE_SHIFT);
--
--		written += written_buffered;
-+		written = direct_write_fallback(iocb, from, written,
-+				generic_perform_write(iocb, from));
- 	} else {
- 		written = fuse_perform_write(iocb, from);
- 	}
--- 
-2.39.2
+>  
+> -	if (err >= 0 &&
+> -	    !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
+> +	if (!nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
+>  		svc_get(nn->nfsd_serv);
+>  
+>  	nfsd_put(net);
+> +	return 0;
 
+Also wrong (same bug).
+
+> +
+> +out_put_net:
+> +	nfsd_put(net);
+> +out_put_sock:
+> +	sockfd_put(so);
+>  	return err;
+>  }
+
+regards,
+dan carpenter
