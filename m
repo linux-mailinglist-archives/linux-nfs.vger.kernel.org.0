@@ -2,190 +2,273 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B90907177F0
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 09:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28AA171789A
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 09:48:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234685AbjEaHV0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 May 2023 03:21:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
+        id S231785AbjEaHsW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 May 2023 03:48:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234143AbjEaHU5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 03:20:57 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E74B19C;
-        Wed, 31 May 2023 00:20:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=+TlwHQVmCcfSC9sL9si103D1qv7dfudCnmtDuQc976U=; b=GArYrnZpd4OZAs3xbif7+d7vqx
-        1Epxi2mxm3ip8SMuY4TSJYoZrVYNpe2qUyfEyPBIbs7ZP+YugOxkFqIeToOTmGhfq0A6McJ6nGNIL
-        ZvBgXgzRvw4K16aeaqXagkmXbjzhbc3gjcxGYVTl3zCXHVmLMCG4u3ssO6xd/AyVAAc/T/Px6RA5K
-        v9jqxkE2QuGNdw9Xm14krIBUUx6tDjepzsbzBGhTd/VsKffWs+ifjGCyax3OvF+8V3llDWnx2+M/a
-        3NggQtSHRBgxloKcjNBUvLBOJTXPLVWsAHcgCcYkZTj75LY/GK1DdVBVnTid2lzQJrmUUzl215JmJ
-        DBaU6RCg==;
-Received: from [2001:4bb8:182:6d06:f5c3:53d7:b5aa:b6a7] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1q4G8E-00GPmA-2F;
-        Wed, 31 May 2023 07:20:31 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
+        with ESMTP id S234758AbjEaHsU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 03:48:20 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C54125
+        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 00:48:17 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-30aea656e36so2495129f8f.1
+        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 00:48:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685519296; x=1688111296;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+tRSEdxP8IM2jGH9SQvtWqET/153WHbcp/+/2iayQMU=;
+        b=YXbMxXdWgXfUU0qf80s17Bl0IXn2Mnyry5L1rrzIdyXr3fLNdZCXDGRehczX0f16VP
+         bRBIEGNElh8ih3eLiHyFGF1LIxYeY4J2BT+vd2c2CXwVadyYRWh/dpUmLwCAHeEuWB2H
+         bgEEoFZ0XujkJfdKZbc61voLWN+nrcT2vxLK8lCAya/kyjZ+qcFpfUTLqg0MWZgt+pms
+         r4I2n7bXr0impDYuk8TngNUPYJJtzBl7U2bTb7q9WIyqoBQMil7u+hQ2IV9O8oq/pCcC
+         YQpcxb4Z9vSlB6kQa/jjczflaR+190dcR/sINyQ6iMmbDibLluP4TUjv40cGcbvreu8h
+         CerA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685519296; x=1688111296;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+tRSEdxP8IM2jGH9SQvtWqET/153WHbcp/+/2iayQMU=;
+        b=YWBLhMp6v8p96x/T3jzKPV4BU18335ln57g1sjWxT/FmXYjhO/qAz7ikuXREW4WDZN
+         qNt4YLoJBbxBnhaUQ1IvzOLZ4lHMa+FhRLPs4qChIfR3gqcQvx8gVa9SVi8oV9RO7DhF
+         gJN0NmkwSU186hKZx6hnoRp7uty7s4L0Hqa9d5fz7n/yPhP6wjC1To2VGZ4KfxjoN+Tk
+         JIpaljbeaD/Vv1EvIfPiP03qGc1PhG9AR7+9v06xkQnqrpkt9NmSi4DNt7EbqCsdzEVP
+         yNxbYJ26ElQdaoDEcwb3RErrTdn8fw5gTYPkFqlWEkPDYK9PRdHl3szskxwMR64RvJwc
+         ypEg==
+X-Gm-Message-State: AC+VfDwmJ5TyMwaTtDqxuJuf5tb+TL/VYR0WqxuU/h2lmGF84FSMScwJ
+        02ICFoWZaWWW8ud1ygPoynmtQg==
+X-Google-Smtp-Source: ACHHUZ77exca1531RsIDO/3C7eTHQt1nH/831RLyq6v8yb3Cqd/T8FdVYe6PeAe+nlDYDJAtMNHy2Q==
+X-Received: by 2002:a05:6000:1245:b0:306:297b:927f with SMTP id j5-20020a056000124500b00306297b927fmr3203075wrx.25.1685519295779;
+        Wed, 31 May 2023 00:48:15 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id b17-20020adff251000000b002c71b4d476asm5757981wrp.106.2023.05.31.00.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 May 2023 00:48:13 -0700 (PDT)
+Date:   Wed, 31 May 2023 10:48:09 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Stanislav Kinsbursky <skinsbursky@parallels.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 8/8] iomap: use kiocb_write_and_wait and kiocb_invalidate_pages
-Date:   Wed, 31 May 2023 09:20:06 +0200
-Message-Id: <20230531072006.476386-9-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230531072006.476386-1-hch@lst.de>
-References: <20230531072006.476386-1-hch@lst.de>
+        "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] nfsd: fix double fget() bug in __write_ports_addfd()
+Message-ID: <58fd7e35-ba6c-432e-8e02-9c5476c854b4@kili.mountain>
+References: <9c90e813-c7fb-4c90-b52b-131481640a78@kili.mountain>
+ <168548566376.23533.14778348024215909777@noble.neil.brown.name>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <168548566376.23533.14778348024215909777@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Use the common helpers for direct I/O page invalidation instead of
-open coding the logic.  This leads to a slight reordering of checks
-in __iomap_dio_rw to keep the logic straight.
+On Wed, May 31, 2023 at 08:27:43AM +1000, NeilBrown wrote:
+> On Mon, 29 May 2023, Dan Carpenter wrote:
+> > The bug here is that you cannot rely on getting the same socket
+> > from multiple calls to fget() because userspace can influence
+> > that.  This is a kind of double fetch bug.
+> > 
+> > The fix is to delete the svc_alien_sock() function and insted do
+> > the checking inside the svc_addsock() function.
+> 
+> Hi,
+>  I definitely agree with the change to pass the 'net' into
+>  svc_addsock(), and check the the fd has the correct net.
+> 
+>  I'm not sure I agree with the removal of the svc_alien_sock() test.  It
+>  is best to perform sanity tests before allocation things, and
+>  nfsd_create_serv() can create a new 'serv' - though most often it just
+>  incs the refcount.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-Reviewed-by: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Darrick J. Wong <djwong@kernel.org>
----
- fs/iomap/direct-io.c | 55 ++++++++++++++++----------------------------
- 1 file changed, 20 insertions(+), 35 deletions(-)
+That's true.  But the other philosophical rule is that we shouldn't
+optimize for the failure path.  If someone gives us bad data they
+deserve a slow down.
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index 0795c54a745bca..6bd14691f96e07 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -472,7 +472,6 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		const struct iomap_ops *ops, const struct iomap_dio_ops *dops,
- 		unsigned int dio_flags, void *private, size_t done_before)
+I also think leaving svc_alien_sock() is a trap for the unwary because
+it will lead to more double fget() bugs.  The svc_alien_sock() function
+is weird because it returns false on success and false on failure and
+true for alien sock.
+
+> 
+>  Maybe instead svc_alien_sock() could return the struct socket (if
+>  successful), and it could be passed to svc_addsock()???
+> 
+>  I would probably then change the name of svc_alien_sock()
+
+Yeah, because we don't want alien sockets, we want Earth sockets.
+Doing this is much more complicated...  The name svc_get_earth_sock()
+is just a joke.  Tell me what name to use if we decide to go this
+route.
+
+To be honest, I would probably still go with my v1 patch.
+
+regards,
+dan carpenter
+
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index e0e98b40a6e5d..affcd44f03d6b 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -689,6 +689,7 @@ static ssize_t __write_ports_names(char *buf, struct net *net)
+  */
+ static ssize_t __write_ports_addfd(char *buf, struct net *net, const struct cred *cred)
  {
--	struct address_space *mapping = iocb->ki_filp->f_mapping;
- 	struct inode *inode = file_inode(iocb->ki_filp);
- 	struct iomap_iter iomi = {
- 		.inode		= inode,
-@@ -481,11 +480,11 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		.flags		= IOMAP_DIRECT,
- 		.private	= private,
- 	};
--	loff_t end = iomi.pos + iomi.len - 1, ret = 0;
- 	bool wait_for_completion =
- 		is_sync_kiocb(iocb) || (dio_flags & IOMAP_DIO_FORCE_WAIT);
- 	struct blk_plug plug;
- 	struct iomap_dio *dio;
-+	loff_t ret = 0;
++	struct socket *so;
+ 	char *mesg = buf;
+ 	int fd, err;
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+@@ -698,22 +699,30 @@ static ssize_t __write_ports_addfd(char *buf, struct net *net, const struct cred
+ 		return -EINVAL;
+ 	trace_nfsd_ctl_ports_addfd(net, fd);
  
- 	trace_iomap_dio_rw_begin(iocb, iter, dio_flags, done_before);
+-	if (svc_alien_sock(net, fd)) {
++	so = svc_get_earth_sock(net, fd);
++	if (!so) {
+ 		printk(KERN_ERR "%s: socket net is different to NFSd's one\n", __func__);
+ 		return -EINVAL;
+ 	}
  
-@@ -509,31 +508,29 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 	dio->submit.waiter = current;
- 	dio->submit.poll_bio = NULL;
+ 	err = nfsd_create_serv(net);
+ 	if (err != 0)
+-		return err;
++		goto out_put_sock;
  
-+	if (iocb->ki_flags & IOCB_NOWAIT)
-+		iomi.flags |= IOMAP_NOWAIT;
+-	err = svc_addsock(nn->nfsd_serv, fd, buf, SIMPLE_TRANSACTION_LIMIT, cred);
++	err = svc_addsock(nn->nfsd_serv, so, buf, SIMPLE_TRANSACTION_LIMIT, cred);
++	if (err)
++		goto out_put_net;
+ 
+-	if (err >= 0 &&
+-	    !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
++	if (!nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
+ 		svc_get(nn->nfsd_serv);
+ 
+ 	nfsd_put(net);
++	return 0;
 +
- 	if (iov_iter_rw(iter) == READ) {
- 		if (iomi.pos >= dio->i_size)
- 			goto out_free_dio;
++out_put_net:
++	nfsd_put(net);
++out_put_sock:
++	sockfd_put(so);
+ 	return err;
+ }
  
--		if (iocb->ki_flags & IOCB_NOWAIT) {
--			if (filemap_range_needs_writeback(mapping, iomi.pos,
--					end)) {
--				ret = -EAGAIN;
--				goto out_free_dio;
--			}
--			iomi.flags |= IOMAP_NOWAIT;
--		}
--
- 		if (user_backed_iter(iter))
- 			dio->flags |= IOMAP_DIO_DIRTY;
-+
-+		ret = kiocb_write_and_wait(iocb, iomi.len);
-+		if (ret)
-+			goto out_free_dio;
- 	} else {
- 		iomi.flags |= IOMAP_WRITE;
- 		dio->flags |= IOMAP_DIO_WRITE;
+diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
+index d16ae621782c0..2422d260591bb 100644
+--- a/include/linux/sunrpc/svcsock.h
++++ b/include/linux/sunrpc/svcsock.h
+@@ -61,8 +61,8 @@ int		svc_recv(struct svc_rqst *, long);
+ void		svc_send(struct svc_rqst *rqstp);
+ void		svc_drop(struct svc_rqst *);
+ void		svc_sock_update_bufs(struct svc_serv *serv);
+-bool		svc_alien_sock(struct net *net, int fd);
+-int		svc_addsock(struct svc_serv *serv, const int fd,
++struct socket	*svc_get_earth_sock(struct net *net, int fd);
++int		svc_addsock(struct svc_serv *serv, struct socket *so,
+ 					char *name_return, const size_t len,
+ 					const struct cred *cred);
+ void		svc_init_xprt_sock(void);
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index 46845cb6465d7..78f6ae9fa42d4 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -1474,21 +1474,20 @@ static struct svc_sock *svc_setup_socket(struct svc_serv *serv,
+ 	return svsk;
+ }
  
--		if (iocb->ki_flags & IOCB_NOWAIT) {
--			if (filemap_range_has_page(mapping, iomi.pos, end)) {
--				ret = -EAGAIN;
-+		if (dio_flags & IOMAP_DIO_OVERWRITE_ONLY) {
-+			ret = -EAGAIN;
-+			if (iomi.pos >= dio->i_size ||
-+			    iomi.pos + iomi.len > dio->i_size)
- 				goto out_free_dio;
--			}
--			iomi.flags |= IOMAP_NOWAIT;
-+			iomi.flags |= IOMAP_OVERWRITE_ONLY;
- 		}
+-bool svc_alien_sock(struct net *net, int fd)
++struct socket *svc_get_earth_sock(struct net *net, int fd)
+ {
+ 	int err;
+ 	struct socket *sock = sockfd_lookup(fd, &err);
+-	bool ret = false;
  
- 		/* for data sync or sync, we need sync completion processing */
-@@ -549,31 +546,19 @@ __iomap_dio_rw(struct kiocb *iocb, struct iov_iter *iter,
- 			if (!(iocb->ki_flags & IOCB_SYNC))
- 				dio->flags |= IOMAP_DIO_WRITE_FUA;
- 		}
--	}
--
--	if (dio_flags & IOMAP_DIO_OVERWRITE_ONLY) {
--		ret = -EAGAIN;
--		if (iomi.pos >= dio->i_size ||
--		    iomi.pos + iomi.len > dio->i_size)
--			goto out_free_dio;
--		iomi.flags |= IOMAP_OVERWRITE_ONLY;
--	}
+ 	if (!sock)
+-		goto out;
+-	if (sock_net(sock->sk) != net)
+-		ret = true;
+-	sockfd_put(sock);
+-out:
+-	return ret;
++		return NULL;
++	if (sock_net(sock->sk) != net) {
++		sockfd_put(sock);
++		return NULL;
++	}
++	return sock;
+ }
+-EXPORT_SYMBOL_GPL(svc_alien_sock);
++EXPORT_SYMBOL_GPL(svc_get_earth_sock);
  
--	ret = filemap_write_and_wait_range(mapping, iomi.pos, end);
--	if (ret)
--		goto out_free_dio;
--
--	if (iov_iter_rw(iter) == WRITE) {
- 		/*
- 		 * Try to invalidate cache pages for the range we are writing.
- 		 * If this invalidation fails, let the caller fall back to
- 		 * buffered I/O.
- 		 */
--		if (invalidate_inode_pages2_range(mapping,
--				iomi.pos >> PAGE_SHIFT, end >> PAGE_SHIFT)) {
--			trace_iomap_dio_invalidate_fail(inode, iomi.pos,
--							iomi.len);
--			ret = -ENOTBLK;
-+		ret = kiocb_invalidate_pages(iocb, iomi.len);
-+		if (ret) {
-+			if (ret != -EAGAIN) {
-+				trace_iomap_dio_invalidate_fail(inode, iomi.pos,
-+								iomi.len);
-+				ret = -ENOTBLK;
-+			}
- 			goto out_free_dio;
- 		}
+ /**
+  * svc_addsock - add a listener socket to an RPC service
+@@ -1502,36 +1501,27 @@ EXPORT_SYMBOL_GPL(svc_alien_sock);
+  * Name is terminated with '\n'.  On error, returns a negative errno
+  * value.
+  */
+-int svc_addsock(struct svc_serv *serv, const int fd, char *name_return,
++int svc_addsock(struct svc_serv *serv, struct socket *so, char *name_return,
+ 		const size_t len, const struct cred *cred)
+ {
+-	int err = 0;
+-	struct socket *so = sockfd_lookup(fd, &err);
+ 	struct svc_sock *svsk = NULL;
+ 	struct sockaddr_storage addr;
+ 	struct sockaddr *sin = (struct sockaddr *)&addr;
+ 	int salen;
  
--- 
-2.39.2
+-	if (!so)
+-		return err;
+-	err = -EAFNOSUPPORT;
+ 	if ((so->sk->sk_family != PF_INET) && (so->sk->sk_family != PF_INET6))
+-		goto out;
+-	err =  -EPROTONOSUPPORT;
++		return -EAFNOSUPPORT;
+ 	if (so->sk->sk_protocol != IPPROTO_TCP &&
+ 	    so->sk->sk_protocol != IPPROTO_UDP)
+-		goto out;
+-	err = -EISCONN;
++		return -EPROTONOSUPPORT;
+ 	if (so->state > SS_UNCONNECTED)
+-		goto out;
+-	err = -ENOENT;
++		return -EISCONN;
+ 	if (!try_module_get(THIS_MODULE))
+-		goto out;
++		return -ENOENT;
+ 	svsk = svc_setup_socket(serv, so, SVC_SOCK_DEFAULTS);
+ 	if (IS_ERR(svsk)) {
+ 		module_put(THIS_MODULE);
+-		err = PTR_ERR(svsk);
+-		goto out;
++		return PTR_ERR(svsk);
+ 	}
+ 	salen = kernel_getsockname(svsk->sk_sock, sin);
+ 	if (salen >= 0)
+@@ -1539,9 +1529,6 @@ int svc_addsock(struct svc_serv *serv, const int fd, char *name_return,
+ 	svsk->sk_xprt.xpt_cred = get_cred(cred);
+ 	svc_add_new_perm_xprt(serv, &svsk->sk_xprt);
+ 	return svc_one_sock_name(svsk, name_return, len);
+-out:
+-	sockfd_put(so);
+-	return err;
+ }
+ EXPORT_SYMBOL_GPL(svc_addsock);
+ 
+
+
 
