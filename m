@@ -2,63 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 89964718ACB
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 22:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 247F0718B8A
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 23:04:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229514AbjEaUI7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 May 2023 16:08:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43884 "EHLO
+        id S229698AbjEaVE3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 May 2023 17:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbjEaUI6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 16:08:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 942AE128
-        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 13:08:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685563691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4MnqFJQxpF/JEEKD3EHgh5cLkYvc2BffAVPtqDwpky4=;
-        b=V8Vq2Y634QFzONdIySwBQ70ohA14y0LQ/vO700TcB9mb1OZ2XBIU6I8TAipnRV6ZRj49bN
-        doQxjNQUho/HKzsuGPtuhwgqcxX1bx1CN/X986fw+V/WaH0JFFiReHvuWliaui0Fi18MZq
-        /vkVyvTBpSHk2nxSqQ+6LoNs42sJlLE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-554-Bs9HTtfvMn-EFpV1xEA9-w-1; Wed, 31 May 2023 16:08:06 -0400
-X-MC-Unique: Bs9HTtfvMn-EFpV1xEA9-w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S229498AbjEaVE3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 17:04:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81EB6129
+        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 14:04:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5DBBC802E58;
-        Wed, 31 May 2023 20:08:06 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8CC46C154D7;
-        Wed, 31 May 2023 20:08:05 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <8C32DD7C-719D-4CC5-A1E3-33BCE0A7FEFF@oracle.com>
-References: <8C32DD7C-719D-4CC5-A1E3-33BCE0A7FEFF@oracle.com> <723506.1685552525@warthog.procyon.org.uk>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     dhowells@redhat.com, Herbert Xu <herbert@gondor.apana.org.au>,
-        "linux-afs@lists.infradead.org" <linux-afs@lists.infradead.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: How to get my krb5 crypto lib upstream?
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 14276614E6
+        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 21:04:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19AD3C433D2;
+        Wed, 31 May 2023 21:04:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685567066;
+        bh=rPtZAK9w8p9yyw4nFHJtqFWiNAOFSSIWJpQTMYq/zME=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fkG3xIHgeg+WVtSDQsxekPOjbY3IUMgeZ0xjcgweGmGCl/UNnLG4z8ng2BGirHrHe
+         U1h+Z8HcSeB+z9AG+N+wOqpo/E3gYPunJqW+VS/yUtWAgOdxPHR28EjzaIz1DSaQvF
+         YMCMLFXwG1aAp3NUm9ExOJ6shskiWYKBM7cZ13XS0NtfpQmvXwcPlCrp8CQ43aRxlr
+         kiabJpAg3mAD5Fftso2y9HLQYz1awNr1nVGpgMjk7O3Uqsn5TKtV7oJyU9HZPw/w9k
+         rs1noovzda6j/hocKJ7QQ+3w4TCFqhWCcSFzalFrn7k/5vd3Ym0Yhj+Olf/qa6m6CM
+         hyjuNarfvNQ+g==
+From:   Anna Schumaker <anna@kernel.org>
+To:     linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
+Cc:     anna@kernel.org
+Subject: [PATCH 1/2] NFSv4.2: Fix READ_PLUS smatch warnings
+Date:   Wed, 31 May 2023 17:04:23 -0400
+Message-Id: <20230531210424.360948-1-anna@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <726862.1685563684.1@warthog.procyon.org.uk>
-Date:   Wed, 31 May 2023 21:08:04 +0100
-Message-ID: <726863.1685563684@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,32 +50,45 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Chuck Lever III <chuck.lever@oracle.com> wrote:
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-> > int crypto_krb5_decrypt(const struct krb5_enctype *krb5,
-> > struct krb5_enc_keys *keys,
-> > struct scatterlist *sg, unsigned int nr_sg,
-> 
-> So are we going to stick with struct scatterlist here,
-> or should it be rather an iterator of some kind?
+Smatch reports:
+  fs/nfs/nfs42xdr.c:1131 decode_read_plus() warn: missing error code? 'status'
 
-For my purposes, a scatterlist is more useful as I have an skbuff to work
-with - plus I have to pass a scatterlist into the crypto functions inside of
-the krb5 lib.
+Which Dan suggests to fix by doing a hardcoded "return 0" from the
+"if (segments == 0)" check.
 
-> It's not clear why something like this would need to be
-> exposed to crypto/krb5 consumers. There are a few items
-> in here that XDR needs to know about (lengths and such)
-> but that kind of thing can be provided by a function
-> call rather than by having direct access to a structure.
+Additionally, smatch reports that the "status = -EIO" assignment is not
+used. This patch addresses both these issues.
 
-Fair point.  In rxgk, I use key_len, key_bytes, block_len, cksum_len plus the
-name for procfs purposes.  I also wonder if I need separate key_len and
-key_bytes if I'm not supporting DES (DES keys gets expanded IIRC).  Also, some
-of the checks I'm doing could perhaps be moved into the krb5 lib.
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <error27@gmail.com>
+Closes: https://lore.kernel.org/r/202305222209.6l5VM2lL-lkp@intel.com/
+Fixes: d3b00a802c845 ("NFS: Replace the READ_PLUS decoding code")
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+ fs/nfs/nfs42xdr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-The krb5 selftest code makes use of more of the fields, but I guess that's
-internal to krb5lib.
-
-David
+diff --git a/fs/nfs/nfs42xdr.c b/fs/nfs/nfs42xdr.c
+index a6df815a140c..ef3b150970ff 100644
+--- a/fs/nfs/nfs42xdr.c
++++ b/fs/nfs/nfs42xdr.c
+@@ -1136,13 +1136,12 @@ static int decode_read_plus(struct xdr_stream *xdr, struct nfs_pgio_res *res)
+ 	res->eof = be32_to_cpup(p++);
+ 	segments = be32_to_cpup(p++);
+ 	if (segments == 0)
+-		return status;
++		return 0;
+ 
+ 	segs = kmalloc_array(segments, sizeof(*segs), GFP_KERNEL);
+ 	if (!segs)
+ 		return -ENOMEM;
+ 
+-	status = -EIO;
+ 	for (i = 0; i < segments; i++) {
+ 		status = decode_read_plus_segment(xdr, &segs[i]);
+ 		if (status < 0)
+-- 
+2.40.1
 
