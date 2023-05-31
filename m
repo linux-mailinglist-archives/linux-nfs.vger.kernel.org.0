@@ -2,88 +2,282 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5B04717B89
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 11:15:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42727717CCC
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 12:06:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235419AbjEaJPo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 May 2023 05:15:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56112 "EHLO
+        id S235774AbjEaKGT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 May 2023 06:06:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235311AbjEaJPl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 05:15:41 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00CD3126
-        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 02:15:39 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-96ff9c0a103so790725866b.0
-        for <linux-nfs@vger.kernel.org>; Wed, 31 May 2023 02:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google; t=1685524538; x=1688116538;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=T/bYqGFJ4VOGoB5+32Mcq8JR70Vd1T1ITCSeV7/3ifk=;
-        b=UZJgvu6uIJY01EjK7iQN8XWB6pp1lB8CKfw+N0J9F6PgtqlKRqH1SLE+0gJUsS//CY
-         frv0e589K6FPUxK3WlywVEVU5EIXgi5CrlyDlCnTpxW2lWKTjmwY/duejSbBA4/xINGF
-         cl9p3WvJMPfMA2wH+RIqqUtbNfejKb30vQfU0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685524538; x=1688116538;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T/bYqGFJ4VOGoB5+32Mcq8JR70Vd1T1ITCSeV7/3ifk=;
-        b=OltQyJXCxGgoGO93FQDpcjm/ggeAEmvvkyQC8swxVNdfydvKSzhb7Cg1ykxeK7V+uE
-         DSHdRPlBbiqXvF871wrP+lOFa9Vsagy49msLkMo0wkHZN3uJZj7sYd0/MmljQlGEo8uh
-         SSybcJhsAIoB2VMAxOwOPcOTOotLb5tWoo8m2+Zfl7/rmaYqwoiGMnR4gICF/U+dVwZh
-         OSUfNHSe6a5CY39fQgXv3cUhbsz3v6/sZ/N9SQhz7Bxhp2zo4WQDFgn4NQQYq/vrWmpV
-         GB3A9GmeXnppElustuQZBQIQskUNI5jwUR7PIAhPKpHbbY+GV20lVXq2KZFvr9X9JZGZ
-         sJEw==
-X-Gm-Message-State: AC+VfDz1MTx0AIATfUsgr80y07AGLntfRhjQxjs17J3z9uICQTReF/zf
-        Q8dLntuswU/LvcRxz949Ej3U+SVoDWlCxYOhngXKFw==
-X-Google-Smtp-Source: ACHHUZ4+FWciM8qyJY0wuGopESAGDBSeuypok3sj/I3YbiV8yhFjyVDeVyjcnaAR9QRVCUk4jCbe3rFAcVDPPt68Cvo=
-X-Received: by 2002:a17:906:9756:b0:967:21:5887 with SMTP id
- o22-20020a170906975600b0096700215887mr4163471ejy.40.1685524538465; Wed, 31
- May 2023 02:15:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230531075026.480237-1-hch@lst.de> <20230531075026.480237-10-hch@lst.de>
-In-Reply-To: <20230531075026.480237-10-hch@lst.de>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Wed, 31 May 2023 11:15:27 +0200
-Message-ID: <CAJfpegtPM_=3uGdxxkb9xP8LVg5P0Lm-w4TNLYhw+MqcNi8c1g@mail.gmail.com>
-Subject: Re: [PATCH 09/12] fs: factor out a direct_write_fallback helper
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
+        with ESMTP id S234859AbjEaKGR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 06:06:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15ED8E5;
+        Wed, 31 May 2023 03:06:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E4B363874;
+        Wed, 31 May 2023 10:06:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F36EC433EF;
+        Wed, 31 May 2023 10:06:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685527575;
+        bh=CAfGkoCX7jrzOItNlPZnfGyufMo84Rg7e0vHaI13f/A=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=KhgoJxyih2pvUkn5EDeCJabDLgTI9qwBerUzpsc4EWFHjvRrVUQksByMzWn0cVimH
+         ZuHKgD1UhMpG/Fk+mDPa5MeNmUPri96kGJDZFxm0poacVcWm6LAyChH7i0c7zQ6tRY
+         gcM6UiphUXy8IV/j/u0pTAngJf4RvgeG5yNOXHvsmXshlOSzsyl0Bb+VF1yD2aAKLi
+         08cfkMucNYsgO4pBza8WtkarrFbSFyuf8v+/Ev0rCDvuK5UdiFPYwUUCyfCK4ZyLN2
+         J+6O0aQAduDPwnsr79YAn64sU8xpRn8+F9dqdjhlawFkq8Sh5Z1WJDGxjO5fSsOmAK
+         aasB4l9pPtMKA==
+Message-ID: <655a378d4b71942e19473caa00ba7d44e12641a5.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: fix double fget() bug in __write_ports_addfd()
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Dan Carpenter <dan.carpenter@linaro.org>, NeilBrown <neilb@suse.de>
+Cc:     Stanislav Kinsbursky <skinsbursky@parallels.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date:   Wed, 31 May 2023 06:06:12 -0400
+In-Reply-To: <58fd7e35-ba6c-432e-8e02-9c5476c854b4@kili.mountain>
+References: <9c90e813-c7fb-4c90-b52b-131481640a78@kili.mountain>
+         <168548566376.23533.14778348024215909777@noble.neil.brown.name>
+         <58fd7e35-ba6c-432e-8e02-9c5476c854b4@kili.mountain>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 31 May 2023 at 09:50, Christoph Hellwig <hch@lst.de> wrote:
->
-> Add a helper dealing with handling the syncing of a buffered write fallback
-> for direct I/O.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Wed, 2023-05-31 at 10:48 +0300, Dan Carpenter wrote:
+> On Wed, May 31, 2023 at 08:27:43AM +1000, NeilBrown wrote:
+> > On Mon, 29 May 2023, Dan Carpenter wrote:
+> > > The bug here is that you cannot rely on getting the same socket
+> > > from multiple calls to fget() because userspace can influence
+> > > that.  This is a kind of double fetch bug.
+> > >=20
+> > > The fix is to delete the svc_alien_sock() function and insted do
+> > > the checking inside the svc_addsock() function.
+> >=20
+> > Hi,
+> >  I definitely agree with the change to pass the 'net' into
+> >  svc_addsock(), and check the the fd has the correct net.
+> >=20
+> >  I'm not sure I agree with the removal of the svc_alien_sock() test.  I=
+t
+> >  is best to perform sanity tests before allocation things, and
+> >  nfsd_create_serv() can create a new 'serv' - though most often it just
+> >  incs the refcount.
+>=20
+> That's true.  But the other philosophical rule is that we shouldn't
+> optimize for the failure path.  If someone gives us bad data they
+> deserve a slow down.
 
-Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
+> I also think leaving svc_alien_sock() is a trap for the unwary because
+> it will lead to more double fget() bugs.  The svc_alien_sock() function
+> is weird because it returns false on success and false on failure and
+> true for alien sock.
+>=20
+> >=20
+> >  Maybe instead svc_alien_sock() could return the struct socket (if
+> >  successful), and it could be passed to svc_addsock()???
+> >=20
+> >  I would probably then change the name of svc_alien_sock()
+>=20
+> Yeah, because we don't want alien sockets, we want Earth sockets.
+> Doing this is much more complicated...  The name svc_get_earth_sock()
+> is just a joke.  Tell me what name to use if we decide to go this
+> route.
+>=20
+> To be honest, I would probably still go with my v1 patch.
+>=20
+
++1.  I don't see a need to do this check twice. Let's optimize for the
+success case and if someone sends down bogus data, then they just go
+slower.
+
+I too suggest we just go with Dan's original patch.
+
+
+
+> regards,
+> dan carpenter
+>=20
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index e0e98b40a6e5d..affcd44f03d6b 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -689,6 +689,7 @@ static ssize_t __write_ports_names(char *buf, struct =
+net *net)
+>   */
+>  static ssize_t __write_ports_addfd(char *buf, struct net *net, const str=
+uct cred *cred)
+>  {
+> +	struct socket *so;
+>  	char *mesg =3D buf;
+>  	int fd, err;
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> @@ -698,22 +699,30 @@ static ssize_t __write_ports_addfd(char *buf, struc=
+t net *net, const struct cred
+>  		return -EINVAL;
+>  	trace_nfsd_ctl_ports_addfd(net, fd);
+> =20
+> -	if (svc_alien_sock(net, fd)) {
+> +	so =3D svc_get_earth_sock(net, fd);
+> +	if (!so) {
+>  		printk(KERN_ERR "%s: socket net is different to NFSd's one\n", __func_=
+_);
+>  		return -EINVAL;
+>  	}
+> =20
+>  	err =3D nfsd_create_serv(net);
+>  	if (err !=3D 0)
+> -		return err;
+> +		goto out_put_sock;
+> =20
+> -	err =3D svc_addsock(nn->nfsd_serv, fd, buf, SIMPLE_TRANSACTION_LIMIT, c=
+red);
+> +	err =3D svc_addsock(nn->nfsd_serv, so, buf, SIMPLE_TRANSACTION_LIMIT, c=
+red);
+> +	if (err)
+> +		goto out_put_net;
+> =20
+> -	if (err >=3D 0 &&
+> -	    !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
+> +	if (!nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
+>  		svc_get(nn->nfsd_serv);
+> =20
+>  	nfsd_put(net);
+> +	return 0;
+> +
+> +out_put_net:
+> +	nfsd_put(net);
+> +out_put_sock:
+> +	sockfd_put(so);
+>  	return err;
+>  }
+> =20
+> diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsoc=
+k.h
+> index d16ae621782c0..2422d260591bb 100644
+> --- a/include/linux/sunrpc/svcsock.h
+> +++ b/include/linux/sunrpc/svcsock.h
+> @@ -61,8 +61,8 @@ int		svc_recv(struct svc_rqst *, long);
+>  void		svc_send(struct svc_rqst *rqstp);
+>  void		svc_drop(struct svc_rqst *);
+>  void		svc_sock_update_bufs(struct svc_serv *serv);
+> -bool		svc_alien_sock(struct net *net, int fd);
+> -int		svc_addsock(struct svc_serv *serv, const int fd,
+> +struct socket	*svc_get_earth_sock(struct net *net, int fd);
+> +int		svc_addsock(struct svc_serv *serv, struct socket *so,
+>  					char *name_return, const size_t len,
+>  					const struct cred *cred);
+>  void		svc_init_xprt_sock(void);
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index 46845cb6465d7..78f6ae9fa42d4 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -1474,21 +1474,20 @@ static struct svc_sock *svc_setup_socket(struct s=
+vc_serv *serv,
+>  	return svsk;
+>  }
+> =20
+> -bool svc_alien_sock(struct net *net, int fd)
+> +struct socket *svc_get_earth_sock(struct net *net, int fd)
+>  {
+>  	int err;
+>  	struct socket *sock =3D sockfd_lookup(fd, &err);
+> -	bool ret =3D false;
+> =20
+>  	if (!sock)
+> -		goto out;
+> -	if (sock_net(sock->sk) !=3D net)
+> -		ret =3D true;
+> -	sockfd_put(sock);
+> -out:
+> -	return ret;
+> +		return NULL;
+> +	if (sock_net(sock->sk) !=3D net) {
+> +		sockfd_put(sock);
+> +		return NULL;
+> +	}
+> +	return sock;
+>  }
+> -EXPORT_SYMBOL_GPL(svc_alien_sock);
+> +EXPORT_SYMBOL_GPL(svc_get_earth_sock);
+> =20
+>  /**
+>   * svc_addsock - add a listener socket to an RPC service
+> @@ -1502,36 +1501,27 @@ EXPORT_SYMBOL_GPL(svc_alien_sock);
+>   * Name is terminated with '\n'.  On error, returns a negative errno
+>   * value.
+>   */
+> -int svc_addsock(struct svc_serv *serv, const int fd, char *name_return,
+> +int svc_addsock(struct svc_serv *serv, struct socket *so, char *name_ret=
+urn,
+>  		const size_t len, const struct cred *cred)
+>  {
+> -	int err =3D 0;
+> -	struct socket *so =3D sockfd_lookup(fd, &err);
+>  	struct svc_sock *svsk =3D NULL;
+>  	struct sockaddr_storage addr;
+>  	struct sockaddr *sin =3D (struct sockaddr *)&addr;
+>  	int salen;
+> =20
+> -	if (!so)
+> -		return err;
+> -	err =3D -EAFNOSUPPORT;
+>  	if ((so->sk->sk_family !=3D PF_INET) && (so->sk->sk_family !=3D PF_INET=
+6))
+> -		goto out;
+> -	err =3D  -EPROTONOSUPPORT;
+> +		return -EAFNOSUPPORT;
+>  	if (so->sk->sk_protocol !=3D IPPROTO_TCP &&
+>  	    so->sk->sk_protocol !=3D IPPROTO_UDP)
+> -		goto out;
+> -	err =3D -EISCONN;
+> +		return -EPROTONOSUPPORT;
+>  	if (so->state > SS_UNCONNECTED)
+> -		goto out;
+> -	err =3D -ENOENT;
+> +		return -EISCONN;
+>  	if (!try_module_get(THIS_MODULE))
+> -		goto out;
+> +		return -ENOENT;
+>  	svsk =3D svc_setup_socket(serv, so, SVC_SOCK_DEFAULTS);
+>  	if (IS_ERR(svsk)) {
+>  		module_put(THIS_MODULE);
+> -		err =3D PTR_ERR(svsk);
+> -		goto out;
+> +		return PTR_ERR(svsk);
+>  	}
+>  	salen =3D kernel_getsockname(svsk->sk_sock, sin);
+>  	if (salen >=3D 0)
+> @@ -1539,9 +1529,6 @@ int svc_addsock(struct svc_serv *serv, const int fd=
+, char *name_return,
+>  	svsk->sk_xprt.xpt_cred =3D get_cred(cred);
+>  	svc_add_new_perm_xprt(serv, &svsk->sk_xprt);
+>  	return svc_one_sock_name(svsk, name_return, len);
+> -out:
+> -	sockfd_put(so);
+> -	return err;
+>  }
+>  EXPORT_SYMBOL_GPL(svc_addsock);
+> =20
+>=20
+>=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
