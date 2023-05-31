@@ -2,50 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42727717CCC
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 12:06:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02548717CE1
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 May 2023 12:11:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235774AbjEaKGT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 May 2023 06:06:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59982 "EHLO
+        id S235473AbjEaKLG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 May 2023 06:11:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234859AbjEaKGR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 06:06:17 -0400
+        with ESMTP id S229748AbjEaKLF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 May 2023 06:11:05 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15ED8E5;
-        Wed, 31 May 2023 03:06:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACBCAE2;
+        Wed, 31 May 2023 03:11:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E4B363874;
-        Wed, 31 May 2023 10:06:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F36EC433EF;
-        Wed, 31 May 2023 10:06:14 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 40EBB6393F;
+        Wed, 31 May 2023 10:11:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F55BC433D2;
+        Wed, 31 May 2023 10:11:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685527575;
-        bh=CAfGkoCX7jrzOItNlPZnfGyufMo84Rg7e0vHaI13f/A=;
+        s=k20201202; t=1685527862;
+        bh=h1EJ1xX7OolfopbpdWT6rGhdXYAHeK0qRMOGc/5lXkU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=KhgoJxyih2pvUkn5EDeCJabDLgTI9qwBerUzpsc4EWFHjvRrVUQksByMzWn0cVimH
-         ZuHKgD1UhMpG/Fk+mDPa5MeNmUPri96kGJDZFxm0poacVcWm6LAyChH7i0c7zQ6tRY
-         gcM6UiphUXy8IV/j/u0pTAngJf4RvgeG5yNOXHvsmXshlOSzsyl0Bb+VF1yD2aAKLi
-         08cfkMucNYsgO4pBza8WtkarrFbSFyuf8v+/Ev0rCDvuK5UdiFPYwUUCyfCK4ZyLN2
-         J+6O0aQAduDPwnsr79YAn64sU8xpRn8+F9dqdjhlawFkq8Sh5Z1WJDGxjO5fSsOmAK
-         aasB4l9pPtMKA==
-Message-ID: <655a378d4b71942e19473caa00ba7d44e12641a5.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: fix double fget() bug in __write_ports_addfd()
+        b=Q3FMY+gNoziIVz/PHcYZ3/LCIoAjvyuUEWjCkGrb32Nhq6mvQZMnE4BI1mX4iHX+6
+         i6YTGT74i/BbE9c8p17sJCUZ/dN6B4Y+sdy7IqNHpkRRTmVaE739KEv+L7zG6FUvce
+         +01ITrcMYGwxiPpuVadTpoJg9NExkebQI2/yMSHxB3FZ6skA7tjTGUvjCPGLg841dv
+         BtdElQqDeCtH2TnTfB75S0Hf5BnhN5VnXd7zZnkatF2Ei39A3dVIj1twrv6BMmgSSE
+         hxIu/0/eTL+YMZje0a63+UbnsC+Oqj/AoEUns0MjcNIMQfeq6P1GtCMG/r+HF+sP4t
+         rUseTKtnxn6sA==
+Message-ID: <8b89f4aa367e600f1d837187fe5694049e803539.camel@kernel.org>
+Subject: Re: [PATCH v3 1/2] NFSD: handle GETATTR conflict with write
+ delegation
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Dan Carpenter <dan.carpenter@linaro.org>, NeilBrown <neilb@suse.de>
-Cc:     Stanislav Kinsbursky <skinsbursky@parallels.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        "J. Bruce Fields" <bfields@redhat.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date:   Wed, 31 May 2023 06:06:12 -0400
-In-Reply-To: <58fd7e35-ba6c-432e-8e02-9c5476c854b4@kili.mountain>
-References: <9c90e813-c7fb-4c90-b52b-131481640a78@kili.mountain>
-         <168548566376.23533.14778348024215909777@noble.neil.brown.name>
-         <58fd7e35-ba6c-432e-8e02-9c5476c854b4@kili.mountain>
+To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Date:   Wed, 31 May 2023 06:11:00 -0400
+In-Reply-To: <1685500507-23598-2-git-send-email-dai.ngo@oracle.com>
+References: <1685500507-23598-1-git-send-email-dai.ngo@oracle.com>
+         <1685500507-23598-2-git-send-email-dai.ngo@oracle.com>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
@@ -60,224 +55,126 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-05-31 at 10:48 +0300, Dan Carpenter wrote:
-> On Wed, May 31, 2023 at 08:27:43AM +1000, NeilBrown wrote:
-> > On Mon, 29 May 2023, Dan Carpenter wrote:
-> > > The bug here is that you cannot rely on getting the same socket
-> > > from multiple calls to fget() because userspace can influence
-> > > that.  This is a kind of double fetch bug.
-> > >=20
-> > > The fix is to delete the svc_alien_sock() function and insted do
-> > > the checking inside the svc_addsock() function.
-> >=20
-> > Hi,
-> >  I definitely agree with the change to pass the 'net' into
-> >  svc_addsock(), and check the the fd has the correct net.
-> >=20
-> >  I'm not sure I agree with the removal of the svc_alien_sock() test.  I=
-t
-> >  is best to perform sanity tests before allocation things, and
-> >  nfsd_create_serv() can create a new 'serv' - though most often it just
-> >  incs the refcount.
+On Tue, 2023-05-30 at 19:35 -0700, Dai Ngo wrote:
+> If the GETATTR request on a file that has write delegation in effect
+> and the request attributes include the change info and size attribute
+> then the write delegation is recalled. If the delegation is returned
+> within 30ms then the GETATTR is serviced as normal otherwise the
+> NFS4ERR_DELAY error is returned for the GETATTR.
 >=20
-> That's true.  But the other philosophical rule is that we shouldn't
-> optimize for the failure path.  If someone gives us bad data they
-> deserve a slow down.
-
-> I also think leaving svc_alien_sock() is a trap for the unwary because
-> it will lead to more double fget() bugs.  The svc_alien_sock() function
-> is weird because it returns false on success and false on failure and
-> true for alien sock.
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/nfs4state.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  fs/nfsd/nfs4xdr.c   |  5 +++++
+>  fs/nfsd/state.h     |  3 +++
+>  3 files changed, 68 insertions(+)
 >=20
-> >=20
-> >  Maybe instead svc_alien_sock() could return the struct socket (if
-> >  successful), and it could be passed to svc_addsock()???
-> >=20
-> >  I would probably then change the name of svc_alien_sock()
->=20
-> Yeah, because we don't want alien sockets, we want Earth sockets.
-> Doing this is much more complicated...  The name svc_get_earth_sock()
-> is just a joke.  Tell me what name to use if we decide to go this
-> route.
->=20
-> To be honest, I would probably still go with my v1 patch.
->=20
-
-+1.  I don't see a need to do this check twice. Let's optimize for the
-success case and if someone sends down bogus data, then they just go
-slower.
-
-I too suggest we just go with Dan's original patch.
-
-
-
-> regards,
-> dan carpenter
->=20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index e0e98b40a6e5d..affcd44f03d6b 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -689,6 +689,7 @@ static ssize_t __write_ports_names(char *buf, struct =
-net *net)
->   */
->  static ssize_t __write_ports_addfd(char *buf, struct net *net, const str=
-uct cred *cred)
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index b90b74a5e66e..fea78d90ecf7 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -8353,3 +8353,63 @@ nfsd4_get_writestateid(struct nfsd4_compound_state=
+ *cstate,
 >  {
-> +	struct socket *so;
->  	char *mesg =3D buf;
->  	int fd, err;
->  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> @@ -698,22 +699,30 @@ static ssize_t __write_ports_addfd(char *buf, struc=
-t net *net, const struct cred
->  		return -EINVAL;
->  	trace_nfsd_ctl_ports_addfd(net, fd);
-> =20
-> -	if (svc_alien_sock(net, fd)) {
-> +	so =3D svc_get_earth_sock(net, fd);
-> +	if (!so) {
->  		printk(KERN_ERR "%s: socket net is different to NFSd's one\n", __func_=
-_);
->  		return -EINVAL;
->  	}
-> =20
->  	err =3D nfsd_create_serv(net);
->  	if (err !=3D 0)
-> -		return err;
-> +		goto out_put_sock;
-> =20
-> -	err =3D svc_addsock(nn->nfsd_serv, fd, buf, SIMPLE_TRANSACTION_LIMIT, c=
-red);
-> +	err =3D svc_addsock(nn->nfsd_serv, so, buf, SIMPLE_TRANSACTION_LIMIT, c=
-red);
-> +	if (err)
-> +		goto out_put_net;
-> =20
-> -	if (err >=3D 0 &&
-> -	    !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
-> +	if (!nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
->  		svc_get(nn->nfsd_serv);
-> =20
->  	nfsd_put(net);
-> +	return 0;
+>  	get_stateid(cstate, &u->write.wr_stateid);
+>  }
 > +
-> +out_put_net:
-> +	nfsd_put(net);
-> +out_put_sock:
-> +	sockfd_put(so);
->  	return err;
->  }
-> =20
-> diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsoc=
-k.h
-> index d16ae621782c0..2422d260591bb 100644
-> --- a/include/linux/sunrpc/svcsock.h
-> +++ b/include/linux/sunrpc/svcsock.h
-> @@ -61,8 +61,8 @@ int		svc_recv(struct svc_rqst *, long);
->  void		svc_send(struct svc_rqst *rqstp);
->  void		svc_drop(struct svc_rqst *);
->  void		svc_sock_update_bufs(struct svc_serv *serv);
-> -bool		svc_alien_sock(struct net *net, int fd);
-> -int		svc_addsock(struct svc_serv *serv, const int fd,
-> +struct socket	*svc_get_earth_sock(struct net *net, int fd);
-> +int		svc_addsock(struct svc_serv *serv, struct socket *so,
->  					char *name_return, const size_t len,
->  					const struct cred *cred);
->  void		svc_init_xprt_sock(void);
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 46845cb6465d7..78f6ae9fa42d4 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -1474,21 +1474,20 @@ static struct svc_sock *svc_setup_socket(struct s=
-vc_serv *serv,
->  	return svsk;
->  }
-> =20
-> -bool svc_alien_sock(struct net *net, int fd)
-> +struct socket *svc_get_earth_sock(struct net *net, int fd)
->  {
->  	int err;
->  	struct socket *sock =3D sockfd_lookup(fd, &err);
-> -	bool ret =3D false;
-> =20
->  	if (!sock)
-> -		goto out;
-> -	if (sock_net(sock->sk) !=3D net)
-> -		ret =3D true;
-> -	sockfd_put(sock);
-> -out:
-> -	return ret;
-> +		return NULL;
-> +	if (sock_net(sock->sk) !=3D net) {
-> +		sockfd_put(sock);
-> +		return NULL;
+> +/**
+> + * nfsd4_deleg_getattr_conflict - Trigger recall if GETATTR causes confl=
+ict
+> + * @rqstp: RPC transaction context
+> + * @inode: file to be checked for a conflict
+> + *
+> + * This function is called when there is a conflict between a write
+> + * delegation and a change/size GETATR from another client. The server
+> + * must either use the CB_GETATTR to get the current values of the
+> + * attributes from the client that hold the delegation or recall the
+> + * delegation before replying to the GETATTR. See RFC 8881 section
+> + * 18.7.4.
+> + *
+> + * Returns 0 if there is no conflict; otherwise an nfs_stat
+> + * code is returned.
+> + */
+> +__be32
+> +nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode=
+)
+> +{
+> +	__be32 status;
+> +	struct file_lock_context *ctx;
+> +	struct file_lock *fl;
+> +	struct nfs4_delegation *dp;
+> +
+> +	ctx =3D locks_inode_context(inode);
+> +	if (!ctx)
+> +		return 0;
+> +	spin_lock(&ctx->flc_lock);
+> +	list_for_each_entry(fl, &ctx->flc_lease, fl_list) {
+> +		if (fl->fl_flags =3D=3D FL_LAYOUT)
+> +			continue;
+> +		if (fl->fl_lmops !=3D &nfsd_lease_mng_ops) {
+> +			/*
+> +			 * non-nfs lease, if it's a lease with F_RDLCK then
+> +			 * we are done; there isn't any write delegation
+> +			 * on this inode
+> +			 */
+> +			if (fl->fl_type =3D=3D F_RDLCK)
+> +				break;
+> +			goto break_lease;
+> +		}
+> +		if (fl->fl_type =3D=3D F_WRLCK) {
+> +			dp =3D fl->fl_owner;
+> +			if (dp->dl_recall.cb_clp =3D=3D *(rqstp->rq_lease_breaker)) {
+> +				spin_unlock(&ctx->flc_lock);
+> +				return 0;
+> +			}
+> +break_lease:
+> +			spin_unlock(&ctx->flc_lock);
+> +			status =3D nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
+> +			if (status !=3D nfserr_jukebox ||
+> +					!nfsd_wait_for_delegreturn(rqstp, inode))
+> +				return status;
+> +			return 0;
+> +		}
+> +		break;
 > +	}
-> +	return sock;
->  }
-> -EXPORT_SYMBOL_GPL(svc_alien_sock);
-> +EXPORT_SYMBOL_GPL(svc_get_earth_sock);
-> =20
->  /**
->   * svc_addsock - add a listener socket to an RPC service
-> @@ -1502,36 +1501,27 @@ EXPORT_SYMBOL_GPL(svc_alien_sock);
->   * Name is terminated with '\n'.  On error, returns a negative errno
->   * value.
->   */
-> -int svc_addsock(struct svc_serv *serv, const int fd, char *name_return,
-> +int svc_addsock(struct svc_serv *serv, struct socket *so, char *name_ret=
-urn,
->  		const size_t len, const struct cred *cred)
->  {
-> -	int err =3D 0;
-> -	struct socket *so =3D sockfd_lookup(fd, &err);
->  	struct svc_sock *svsk =3D NULL;
->  	struct sockaddr_storage addr;
->  	struct sockaddr *sin =3D (struct sockaddr *)&addr;
->  	int salen;
-> =20
-> -	if (!so)
-> -		return err;
-> -	err =3D -EAFNOSUPPORT;
->  	if ((so->sk->sk_family !=3D PF_INET) && (so->sk->sk_family !=3D PF_INET=
-6))
-> -		goto out;
-> -	err =3D  -EPROTONOSUPPORT;
-> +		return -EAFNOSUPPORT;
->  	if (so->sk->sk_protocol !=3D IPPROTO_TCP &&
->  	    so->sk->sk_protocol !=3D IPPROTO_UDP)
-> -		goto out;
-> -	err =3D -EISCONN;
-> +		return -EPROTONOSUPPORT;
->  	if (so->state > SS_UNCONNECTED)
-> -		goto out;
-> -	err =3D -ENOENT;
-> +		return -EISCONN;
->  	if (!try_module_get(THIS_MODULE))
-> -		goto out;
-> +		return -ENOENT;
->  	svsk =3D svc_setup_socket(serv, so, SVC_SOCK_DEFAULTS);
->  	if (IS_ERR(svsk)) {
->  		module_put(THIS_MODULE);
-> -		err =3D PTR_ERR(svsk);
-> -		goto out;
-> +		return PTR_ERR(svsk);
->  	}
->  	salen =3D kernel_getsockname(svsk->sk_sock, sin);
->  	if (salen >=3D 0)
-> @@ -1539,9 +1529,6 @@ int svc_addsock(struct svc_serv *serv, const int fd=
-, char *name_return,
->  	svsk->sk_xprt.xpt_cred =3D get_cred(cred);
->  	svc_add_new_perm_xprt(serv, &svsk->sk_xprt);
->  	return svc_one_sock_name(svsk, name_return, len);
-> -out:
-> -	sockfd_put(so);
-> -	return err;
->  }
->  EXPORT_SYMBOL_GPL(svc_addsock);
-> =20
->=20
->=20
->=20
+> +	spin_unlock(&ctx->flc_lock);
+> +	return 0;
+> +}
 
---=20
-Jeff Layton <jlayton@kernel.org>
+I think you have the logic right now, but this function kind of
+resembles spaghetti. I'll add a reviewed-by, but it might be good to
+simplify this function somehow later.
+
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index b83954fc57e3..4590b893dbc8 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -2970,6 +2970,11 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct =
+svc_fh *fhp,
+>  		if (status)
+>  			goto out;
+>  	}
+> +	if (bmval0 & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
+> +		status =3D nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry));
+> +		if (status)
+> +			goto out;
+> +	}
+> =20
+>  	err =3D vfs_getattr(&path, &stat,
+>  			  STATX_BASIC_STATS | STATX_BTIME | STATX_CHANGE_COOKIE,
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index d49d3060ed4f..cbddcf484dba 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -732,4 +732,7 @@ static inline bool try_to_expire_client(struct nfs4_c=
+lient *clp)
+>  	cmpxchg(&clp->cl_state, NFSD4_COURTESY, NFSD4_EXPIRABLE);
+>  	return clp->cl_state =3D=3D NFSD4_EXPIRABLE;
+>  }
+> +
+> +extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
+> +				struct inode *inode);
+>  #endif   /* NFSD4_STATE_H */
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
