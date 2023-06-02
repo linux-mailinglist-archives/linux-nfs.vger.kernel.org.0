@@ -2,59 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3256D720882
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Jun 2023 19:41:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E516720AF5
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Jun 2023 23:28:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236952AbjFBRln (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Jun 2023 13:41:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51840 "EHLO
+        id S235360AbjFBV2q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Jun 2023 17:28:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236965AbjFBRlj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Jun 2023 13:41:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A1641BD;
-        Fri,  2 Jun 2023 10:41:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S234676AbjFBV2p (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Jun 2023 17:28:45 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF54DE4E
+        for <linux-nfs@vger.kernel.org>; Fri,  2 Jun 2023 14:28:40 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DB58060C43;
-        Fri,  2 Jun 2023 17:41:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D55EC433D2;
-        Fri,  2 Jun 2023 17:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685727694;
-        bh=MeJZHg99CKlydE+P+L7Y5wugVA7dLNcMZaQ+hUjc8g4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=qX0DiatAjw/Q9ngbWfH9L6nnWRXtnrJdY/HwPUm5CCz1iEplVI/81N5HjzBPmYQLS
-         +0MBC1J6VV0tkLDObWXStpgtuNnSaJ+JW2v70EYUI0+4KrGRiGg8zL/RC7gW5LtJSI
-         3+BkX+AlVeu+UVZwHtgXXZwhQSS7Gt1vT0zCzOtjIGvi9Nn2disn5rQEuaJ32nvvKL
-         AV3ahf60IYlvcvjp4IFE5FdT/geG9jdqfbj6ual+KRqK3RSfwrCCZnoPaAjW7VejUT
-         EyH18F6kELV2ELR4i5GZbAhM99LkSFvaJtC3KvbSyDtFAd1Z5HqLbJK5nj62KUUJMZ
-         KRzSJKivmQ8lQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2B258E52BF5;
-        Fri,  2 Jun 2023 17:41:34 +0000 (UTC)
-Subject: Re: [GIT PULL] nfsd fixes for v6.4-rc4
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <10156F3D-A4B8-4462-80EC-65ECDECE7B44@oracle.com>
-References: <10156F3D-A4B8-4462-80EC-65ECDECE7B44@oracle.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <10156F3D-A4B8-4462-80EC-65ECDECE7B44@oracle.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.4-2
-X-PR-Tracked-Commit-Id: c034203b6a9dae6751ef4371c18cb77983e30c28
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a746ca666a8486a04b6c0584966bfce16f6b1e1a
-Message-Id: <168572769417.31437.2089839050320893526.pr-tracker-bot@kernel.org>
-Date:   Fri, 02 Jun 2023 17:41:34 +0000
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linuxfoundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        by smtp-out2.suse.de (Postfix) with ESMTPS id C91301FE08;
+        Fri,  2 Jun 2023 21:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1685741313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zz5ziYFUFHP9/yHiDf1wsoEfkN3HDB6deqgE09uOyG4=;
+        b=kXYeTkzHs0AZlCNINokphwtYOJytZxf+cK3ZWOwPGKhHGU4RhF61VYrEDob9AFMxEcQp/4
+        dczeCYo4zxqziD1kaT0gHkpkEjkx2kJAxeWyzLgnY1sH/9GRCgjEx56S91Vh7+oC5CEM8d
+        xxTKwlwksuvyDzzWyDRNZOhGKDYLa3Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1685741313;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zz5ziYFUFHP9/yHiDf1wsoEfkN3HDB6deqgE09uOyG4=;
+        b=O3gocleQkFgehLIbqfYNDMeKAD4G46HwWWmrp9uBgphj/oLrcZDhR5KuqrAnCRLobjrGsk
+        wPP29xuQ7SuLI+AQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3A4D213A2E;
+        Fri,  2 Jun 2023 21:28:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 9HUNN/9eemR7BAAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 02 Jun 2023 21:28:31 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Ido Schimmel" <idosch@idosch.org>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 13/20] lockd: move lockd_start_svc() call into lockd_create_svc()
+In-reply-to: <ZHoO3GRH6h/bcRjm@shredder>
+References: <163816133466.32298.13831616524908720974.stgit@noble.brown>,
+ <163816148560.32298.15560175172815507979.stgit@noble.brown>,
+ <ZHoO3GRH6h/bcRjm@shredder>
+Date:   Sat, 03 Jun 2023 07:28:28 +1000
+Message-id: <168574130862.10905.10707785007987424080@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,15 +72,85 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Fri, 2 Jun 2023 14:42:30 +0000:
+On Sat, 03 Jun 2023, Ido Schimmel wrote:
+> On Mon, Nov 29, 2021 at 03:51:25PM +1100, NeilBrown wrote:
+> > lockd_start_svc() only needs to be called once, just after the svc is
+> > created.  If the start fails, the svc is discarded too.
+> >=20
+> > It thus makes sense to call lockd_start_svc() from lockd_create_svc().
+> > This allows us to remove the test against nlmsvc_rqst at the start of
+> > lockd_start_svc() - it must always be NULL.
+> >=20
+> > lockd_up() only held an extra reference on the svc until a thread was
+> > created - then it dropped it.  The thread - and thus the extra reference
+> > - will remain until kthread_stop() is called.
+> > Now that the thread is created in lockd_create_svc(), the extra
+> > reference can be dropped there.  So the 'serv' variable is no longer
+> > needed in lockd_up().
+>=20
+> Hi,
+>=20
+> I'm seeing the following memory leak [1] after unmounting a network
+> share. High level bisection shows that it started between v5.16 and
+> v5.17. Using git bisect [2] I've pinpointed it to this patch.
+>=20
+> Can you please look into it? I can easily trigger the issue and test
+> patches.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.4-2
+Thanks for the report.
+Please test this patch.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a746ca666a8486a04b6c0584966bfce16f6b1e1a
+Thanks,
+NeilBrown
 
-Thank you!
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+From 4f7278cb24a0331c1d58cc502029f8bf06bd4e9d Mon Sep 17 00:00:00 2001
+From: NeilBrown <neilb@suse.de>
+Date: Sat, 3 Jun 2023 07:14:14 +1000
+Subject: [PATCH] lockd: drop inappropriate svc_get() from locked_get()
+
+The below-mentioned patch was intended to simplify refcounting on the
+svc_serv used by locked.  The goal was to only ever have a single
+reference from the single thread.  To that end we dropped a call to
+lockd_start_svc() (except when creating thread) which would take a
+reference, and dropped the svc_put(serv) that would drop that reference.
+
+Unfortunately we didn't also remove the svc_get() from
+lockd_create_svc() in the case where the svc_serv already existed.
+So after the patch:
+ - on the first call the svc_serv was allocated and the one reference
+   was given to the thread, so there are no extra references
+ - on subsequent calls svc_get() was called so there is now an extra
+   reference.
+This is clearly not consistent.
+
+The inconsistency is also clear in the current code in lockd_get()
+takes *two* references, one on nlmsvc_serv and one by incrementing
+nlmsvc_users.   This clearly does not match lockd_put().
+
+So: drop that svc_get() from lockd_get() (which used to be in
+lockd_create_svc().
+
+Reported-by: Ido Schimmel <idosch@idosch.org>
+Fixes: b73a2972041b ("lockd: move lockd_start_svc() call into lockd_create_sv=
+c()")
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/lockd/svc.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index 04ba95b83d16..22d3ff3818f5 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -355,7 +355,6 @@ static int lockd_get(void)
+ 	int error;
+=20
+ 	if (nlmsvc_serv) {
+-		svc_get(nlmsvc_serv);
+ 		nlmsvc_users++;
+ 		return 0;
+ 	}
+--=20
+2.40.1
+
