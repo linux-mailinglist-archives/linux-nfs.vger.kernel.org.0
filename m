@@ -2,129 +2,222 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D44471F32A
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Jun 2023 21:47:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89ED271F84D
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Jun 2023 04:09:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231298AbjFATrH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Jun 2023 15:47:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36170 "EHLO
+        id S233483AbjFBCJt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Jun 2023 22:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231423AbjFATrH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Jun 2023 15:47:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B114E184
-        for <linux-nfs@vger.kernel.org>; Thu,  1 Jun 2023 12:46:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685648778;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s8OTCkfhnXCqr3MSd46tEPZird3E+hLWGbqbVPI2Tf8=;
-        b=C/GtXd/77+rCCpo36eB6Oh3Y1cX20XOCHmkLpl1d1NlX57xKhPA1tkL1LYJulE/p5VDl0a
-        eze/IjDsdzUaLI+Hx8AmRXXhCfi3e8A95iI2iE4LwfBbfyRRQi7s57rbwBY2TUHQiUedkK
-        wXJOKrimL+OkC0agOy5JZOddRTlYQto=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-622-XCOjvm7iPmK2PwcYSNZSDQ-1; Thu, 01 Jun 2023 15:46:17 -0400
-X-MC-Unique: XCOjvm7iPmK2PwcYSNZSDQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S231856AbjFBCJs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Jun 2023 22:09:48 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B88D7180
+        for <linux-nfs@vger.kernel.org>; Thu,  1 Jun 2023 19:09:45 -0700 (PDT)
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 81220800888
-        for <linux-nfs@vger.kernel.org>; Thu,  1 Jun 2023 19:46:17 +0000 (UTC)
-Received: from aion.usersys.redhat.com (unknown [10.22.32.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75E1CC154D7;
-        Thu,  1 Jun 2023 19:46:17 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 22F5C1A27F8; Thu,  1 Jun 2023 15:46:17 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     steved@redhat.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [nfs-utils PATCH 3/3] nfs(5): Document the trunkdiscovery/notrunkdiscovery mount option.
-Date:   Thu,  1 Jun 2023 15:46:17 -0400
-Message-Id: <20230601194617.2174639-4-smayhew@redhat.com>
-In-Reply-To: <20230601194617.2174639-1-smayhew@redhat.com>
-References: <20230601194617.2174639-1-smayhew@redhat.com>
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D34D13F1E9
+        for <linux-nfs@vger.kernel.org>; Fri,  2 Jun 2023 02:09:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1685671783;
+        bh=HGFWY1748xWHBeuQ3h2WYaCQqPEsRJy9T6c8zRERFxM=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=phEWswAl0wWSkyaj3oMRZhO53CNioAiy/CBfpIkavZbKunUkvStRzNYwWh+8hvm4S
+         pfxId/+pkgmbYxUeNCWMC1G2FSPuW9pIGx1fXW3RRfqlLDYMcaJCc4wTrS0BrgdQt9
+         mgLzaamBGMf25lcqjzlFyqEO/WeloMxmIDjcq35calekE8Lfd+YAm6ldXV6lAHBuZK
+         uRIWWlDYQaIiSgmwsopR9/DkniZiDMqdmDqONkyyEp2LQJ7FIQOaS1L291DHk3ubyW
+         Bkgqrn8n/anrNW4mjDaIdtkn0XyMV/kaNrD3u1bm29dsENyxVzbA+qFI1Ka5HbXdg1
+         R50jF7/S1aHzg==
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-1b034ca114cso7190655ad.1
+        for <linux-nfs@vger.kernel.org>; Thu, 01 Jun 2023 19:09:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685671781; x=1688263781;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HGFWY1748xWHBeuQ3h2WYaCQqPEsRJy9T6c8zRERFxM=;
+        b=O7eJFFPo2KDecNidGIdLQpIJ/A4CBCbwYAlXTscOgexeKEYnThDBgaHOzbmzUWeMJZ
+         TAowONGsleFhqlZWXmjRjTFJtL2a3qeny0CBIjCCjtZbCaQY+fo3F7dqkruPzvHuOeWK
+         yutFn8EHhbroWQvTzCaKUGOGUp5aibNrwBi6eqtNeMxwjQFE30UShuJVoJsd3wIDadMO
+         OGlbiiEVNpsHa3eAN66vSuLasKE+SI7SP2EprF9wCDuQhZ3/r73XdEsgGCP7TgfZXqWp
+         3mjCELaFYtoLFuZlyEGvfjc3egOstgSQd6gMXFytZShpm48CAYCPQFhk6FZHZW9OTwJ8
+         wrpQ==
+X-Gm-Message-State: AC+VfDxQNFLwxQHwUtzvJ5V2zOehXv697NOP1uWk2UpO2n8tTtufgcAB
+        ABAWTWq3tyMtEgYtcjXUoRUi4Q3zxpCSTUEptYS4fDLogZoSTDEyA1E2npdQrfPLC+NJX9Sg7Vm
+        Nxf6F1Jwj/W7Fa71UvNy7/bVWHT/gb8mQZpJwFA==
+X-Received: by 2002:a17:902:d503:b0:1b1:a2c3:29c0 with SMTP id b3-20020a170902d50300b001b1a2c329c0mr882202plg.24.1685671781282;
+        Thu, 01 Jun 2023 19:09:41 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ714BmOv9fruEm5Qgzxep6fJULya1ekyW4/JETSKvADOJrqtiqDHlU+NnOPyVOY75zkhlAelA==
+X-Received: by 2002:a17:902:d503:b0:1b1:a2c3:29c0 with SMTP id b3-20020a170902d50300b001b1a2c329c0mr882194plg.24.1685671780984;
+        Thu, 01 Jun 2023 19:09:40 -0700 (PDT)
+Received: from chengendu.. (111-248-148-133.dynamic-ip.hinet.net. [111.248.148.133])
+        by smtp.gmail.com with ESMTPSA id u11-20020a170902e80b00b001acacff3a70sm64391plg.125.2023.06.01.19.09.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jun 2023 19:09:40 -0700 (PDT)
+From:   Chengen Du <chengen.du@canonical.com>
+To:     trond.myklebust@hammerspace.com
+Cc:     anna@kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chengen Du <chengen.du@canonical.com>
+Subject: [PATCH v2 RESEND] NFS: Add mount option 'fasc'
+Date:   Fri,  2 Jun 2023 10:09:35 +0800
+Message-Id: <20230602020935.43367-1-chengen.du@canonical.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Also, move the documentation for max_connect to the section for
-NFSv4-specific options.
+In certain instances, users or applications switch to other privileged
+users by executing commands like 'su' to carry out operations on NFS-
+mounted folders. However, when this happens, the login time for the
+privileged user is reset, and any NFS ACCESS operations must be resent,
+which can result in a decrease in performance. In specific production
+environments where the access cache can be trusted due to stable group
+membership, there's no need to verify the cache stall situation.
+To maintain the initial behavior and performance, a new mount option
+called 'fasc' has been introduced. This option triggers the mechanism
+of clearing the file access cache upon login.
 
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+Signed-off-by: Chengen Du <chengen.du@canonical.com>
 ---
- utils/mount/nfs.man | 39 ++++++++++++++++++++++++++-------------
- 1 file changed, 26 insertions(+), 13 deletions(-)
+ fs/nfs/dir.c              | 21 ++++++++++++---------
+ fs/nfs/fs_context.c       |  5 +++++
+ fs/nfs/super.c            |  1 +
+ include/linux/nfs_fs_sb.h |  1 +
+ 4 files changed, 19 insertions(+), 9 deletions(-)
 
-diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-index 2ed898f8..0b976731 100644
---- a/utils/mount/nfs.man
-+++ b/utils/mount/nfs.man
-@@ -423,19 +423,6 @@ Note that the
- option may also be used by some pNFS drivers to decide how many
- connections to set up to the data servers.
- .TP 1.5i
--.BR max_connect= n
--While
--.BR nconnect
--option sets a limit on the number of connections that can be established
--to a given server IP,
--.BR max_connect
--option allows the user to specify maximum number of connections to different
--server IPs that belong to the same NFSv4.1+ server (session trunkable
--connections) up to a limit of 16. When client discovers that it established
--a client ID to an already existing server, instead of dropping the newly
--created network transport, the client will add this new connection to the
--list of available transports for that RPC client.
--.TP 1.5i
- .BR rdirplus " / " nordirplus
- Selects whether to use NFS v3 or v4 READDIRPLUS requests.
- If this option is not specified, the NFS client uses READDIRPLUS requests
-@@ -1000,6 +987,32 @@ when it identifies itself via a traditional identification string.
- .IP
- This mount option has no effect with NFSv4 minor versions newer than zero,
- which always use TSM-compatible client identification strings.
-+.TP 1.5i
-+.BR max_connect= n
-+While
-+.BR nconnect
-+option sets a limit on the number of connections that can be established
-+to a given server IP,
-+.BR max_connect
-+option allows the user to specify maximum number of connections to different
-+server IPs that belong to the same NFSv4.1+ server (session trunkable
-+connections) up to a limit of 16. When client discovers that it established
-+a client ID to an already existing server, instead of dropping the newly
-+created network transport, the client will add this new connection to the
-+list of available transports for that RPC client.
-+.TP 1.5i
-+.BR trunkdiscovery " / " notrunkdiscovery
-+When the client discovers a new filesystem on a NFSv4.1+ server, the
-+.BR trunkdiscovery
-+mount option will cause it to send a GETATTR for the fs_locations attribute.
-+If is receives a non-zero length reply, it will iterate through the response,
-+and for each server location it will establish a connection, send an
-+EXCHANGE_ID, and test for session trunking.  If the trunking test succeeds,
-+the connection will be added to the existing set of transports for the server,
-+subject to the limit specified by the
-+.BR max_connect
-+option.  The default is
-+.BR notrunkdiscovery .
- .SH nfs4 FILE SYSTEM TYPE
- The
- .BR nfs4
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 8f3112e71a6a..cefdb23d4cd7 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -2951,12 +2951,14 @@ static struct nfs_access_entry *nfs_access_search_rbtree(struct inode *inode, co
+ 	return NULL;
+ }
+ 
+-static u64 nfs_access_login_time(const struct task_struct *task,
+-				 const struct cred *cred)
++static inline
++bool nfs_check_access_stale(const struct task_struct *task,
++			    const struct cred *cred,
++			    const struct nfs_access_entry *cache)
+ {
+ 	const struct task_struct *parent;
+ 	const struct cred *pcred;
+-	u64 ret;
++	u64 login_time;
+ 
+ 	rcu_read_lock();
+ 	for (;;) {
+@@ -2966,15 +2968,15 @@ static u64 nfs_access_login_time(const struct task_struct *task,
+ 			break;
+ 		task = parent;
+ 	}
+-	ret = task->start_time;
++	login_time = task->start_time;
+ 	rcu_read_unlock();
+-	return ret;
++
++	return ((s64)(login_time - cache->timestamp) > 0);
+ }
+ 
+ static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *cred, u32 *mask, bool may_block)
+ {
+ 	struct nfs_inode *nfsi = NFS_I(inode);
+-	u64 login_time = nfs_access_login_time(current, cred);
+ 	struct nfs_access_entry *cache;
+ 	bool retry = true;
+ 	int err;
+@@ -3003,7 +3005,8 @@ static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *
+ 		retry = false;
+ 	}
+ 	err = -ENOENT;
+-	if ((s64)(login_time - cache->timestamp) > 0)
++	if ((NFS_SERVER(inode)->flags & NFS_MOUNT_FASC) &&
++	    nfs_check_access_stale(current, cred, cache))
+ 		goto out;
+ 	*mask = cache->mask;
+ 	list_move_tail(&cache->lru, &nfsi->access_cache_entry_lru);
+@@ -3023,7 +3026,6 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+ 	 * but do it without locking.
+ 	 */
+ 	struct nfs_inode *nfsi = NFS_I(inode);
+-	u64 login_time = nfs_access_login_time(current, cred);
+ 	struct nfs_access_entry *cache;
+ 	int err = -ECHILD;
+ 	struct list_head *lh;
+@@ -3038,7 +3040,8 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+ 		cache = NULL;
+ 	if (cache == NULL)
+ 		goto out;
+-	if ((s64)(login_time - cache->timestamp) > 0)
++	if ((NFS_SERVER(inode)->flags & NFS_MOUNT_FASC) &&
++	    nfs_check_access_stale(current, cred, cache))
+ 		goto out;
+ 	if (nfs_check_cache_invalid(inode, NFS_INO_INVALID_ACCESS))
+ 		goto out;
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index 9bcd53d5c7d4..0a14bd67efc1 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -88,6 +88,7 @@ enum nfs_param {
+ 	Opt_vers,
+ 	Opt_wsize,
+ 	Opt_write,
++	Opt_fasc,
+ };
+ 
+ enum {
+@@ -194,6 +195,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+ 	fsparam_string("vers",		Opt_vers),
+ 	fsparam_enum  ("write",		Opt_write, nfs_param_enums_write),
+ 	fsparam_u32   ("wsize",		Opt_wsize),
++	fsparam_flag  ("fasc",		Opt_fasc),
+ 	{}
+ };
+ 
+@@ -861,6 +863,9 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 	case Opt_sloppy:
+ 		ctx->sloppy = true;
+ 		break;
++	case Opt_fasc:
++		ctx->flags |= NFS_MOUNT_FASC;
++		break;
+ 	}
+ 
+ 	return 0;
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 30e53e93049e..e8d0ffd04b16 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -444,6 +444,7 @@ static void nfs_show_mount_options(struct seq_file *m, struct nfs_server *nfss,
+ 		{ NFS_MOUNT_NORDIRPLUS, ",nordirplus", "" },
+ 		{ NFS_MOUNT_UNSHARED, ",nosharecache", "" },
+ 		{ NFS_MOUNT_NORESVPORT, ",noresvport", "" },
++		{ NFS_MOUNT_FASC, ",fasc", "" },
+ 		{ 0, NULL, NULL }
+ 	};
+ 	const struct proc_nfs_info *nfs_infop;
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index ea2f7e6b1b0b..332ceb11be6c 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -153,6 +153,7 @@ struct nfs_server {
+ #define NFS_MOUNT_WRITE_EAGER		0x01000000
+ #define NFS_MOUNT_WRITE_WAIT		0x02000000
+ #define NFS_MOUNT_TRUNK_DISCOVERY	0x04000000
++#define NFS_MOUNT_FASC			0x08000000
+ 
+ 	unsigned int		fattr_valid;	/* Valid attributes */
+ 	unsigned int		caps;		/* server capabilities */
 -- 
 2.39.2
 
