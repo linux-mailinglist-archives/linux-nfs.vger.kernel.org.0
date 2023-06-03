@@ -2,155 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E516720AF5
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Jun 2023 23:28:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4CFB720EF7
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Jun 2023 11:33:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235360AbjFBV2q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Jun 2023 17:28:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41574 "EHLO
+        id S229674AbjFCJd5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 3 Jun 2023 05:33:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234676AbjFBV2p (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Jun 2023 17:28:45 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF54DE4E
-        for <linux-nfs@vger.kernel.org>; Fri,  2 Jun 2023 14:28:40 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C91301FE08;
-        Fri,  2 Jun 2023 21:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1685741313; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zz5ziYFUFHP9/yHiDf1wsoEfkN3HDB6deqgE09uOyG4=;
-        b=kXYeTkzHs0AZlCNINokphwtYOJytZxf+cK3ZWOwPGKhHGU4RhF61VYrEDob9AFMxEcQp/4
-        dczeCYo4zxqziD1kaT0gHkpkEjkx2kJAxeWyzLgnY1sH/9GRCgjEx56S91Vh7+oC5CEM8d
-        xxTKwlwksuvyDzzWyDRNZOhGKDYLa3Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1685741313;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zz5ziYFUFHP9/yHiDf1wsoEfkN3HDB6deqgE09uOyG4=;
-        b=O3gocleQkFgehLIbqfYNDMeKAD4G46HwWWmrp9uBgphj/oLrcZDhR5KuqrAnCRLobjrGsk
-        wPP29xuQ7SuLI+AQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3A4D213A2E;
-        Fri,  2 Jun 2023 21:28:31 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 9HUNN/9eemR7BAAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 02 Jun 2023 21:28:31 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Ido Schimmel" <idosch@idosch.org>
+        with ESMTP id S229673AbjFCJd4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 3 Jun 2023 05:33:56 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 951A6E49
+        for <linux-nfs@vger.kernel.org>; Sat,  3 Jun 2023 02:33:55 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 496845C0140;
+        Sat,  3 Jun 2023 05:33:53 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute2.internal (MEProxy); Sat, 03 Jun 2023 05:33:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1685784833; x=1685871233; bh=G+26Y7LTbSx5p
+        PxMyCY0C/ca8ZBZskQsUKX1JfLcFD0=; b=R6CJCLKPbjiydOk7GOke4wlcYj65p
+        FPRc0/TFalRaTHHlC4sB1PFpA3zUn7uBT12vO8zVF00mtZ07rtinNxKwl3zqWUA0
+        zoDMmKZ93J6zRr8FZMtrNd2BGKNuWDNYnJrGCw1wW012/f+f7dRvTKgO6PfoFB2x
+        7RMLv+nMeG06e19xPUgp6jWunZQX/wlXCt2UbIrSDdRFyAvBEZJHtRZvM5cElQi/
+        O5lvtoZruUlgZrIwdbDYDMMkWnrnQcMsC1QT/CT4SrKfYXeJvKfRNYmRA5dDgHu3
+        8uQ5Z1nvfsSredOPMjBhZzAU1O1Vkr9vWkIp0+f0XZskzvdUMTK45qDBA==
+X-ME-Sender: <xms:AAl7ZNxMktGxnVIfhTgvWaWv1VkUTU2NxyzSOdPG3DLI81yZd7YJcw>
+    <xme:AAl7ZNR9HpfbwLW8bAz8rKtXd6so8RkimTk-GZM27TjsROLm0tGgypNzOND_1f_Zs
+    W5eGHVm1VMZRj8>
+X-ME-Received: <xmr:AAl7ZHVj2Iudqtplu-EqrbDOwFtJPXIMnyd9sk57niJgXSS8fbSDStrEOqN8t9khL0BVnts31n70HhAoxb-zLXJXbBU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeelhedgudekucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepkfguohcu
+    ufgthhhimhhmvghluceoihguohhstghhsehiughoshgthhdrohhrgheqnecuggftrfgrth
+    htvghrnhepvddufeevkeehueegfedtvdevfefgudeifeduieefgfelkeehgeelgeejjeeg
+    gefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepih
+    guohhstghhsehiughoshgthhdrohhrgh
+X-ME-Proxy: <xmx:AAl7ZPjiPF-EVTLbKaA1uTJJYh_V2rk_OamwLviGnRQ9NXGwKYvqBg>
+    <xmx:AAl7ZPA3u8lKkz3h6i3Z7g2KWusOzg2tZIX8cabb0KuHj3hlq_vQgA>
+    <xmx:AAl7ZIINH0sE_OHuL35HjrQ_9recJNe3KNSPjV4fD4r5b5LEa70w6g>
+    <xmx:AQl7ZE5VAAkYkfYWTjZ8AdmGEMYgCOqjX_zlDDRyg2ngMDc-nsZ62A>
+Feedback-ID: i494840e7:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 3 Jun 2023 05:33:52 -0400 (EDT)
+Date:   Sat, 3 Jun 2023 12:33:48 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     NeilBrown <neilb@suse.de>
 Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 13/20] lockd: move lockd_start_svc() call into lockd_create_svc()
-In-reply-to: <ZHoO3GRH6h/bcRjm@shredder>
-References: <163816133466.32298.13831616524908720974.stgit@noble.brown>,
- <163816148560.32298.15560175172815507979.stgit@noble.brown>,
+        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 13/20] lockd: move lockd_start_svc() call into
+ lockd_create_svc()
+Message-ID: <ZHsI/H16VX9kJQX1@shredder>
+References: <163816133466.32298.13831616524908720974.stgit@noble.brown>
+ <163816148560.32298.15560175172815507979.stgit@noble.brown>
  <ZHoO3GRH6h/bcRjm@shredder>
-Date:   Sat, 03 Jun 2023 07:28:28 +1000
-Message-id: <168574130862.10905.10707785007987424080@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+ <168574130862.10905.10707785007987424080@noble.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <168574130862.10905.10707785007987424080@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 03 Jun 2023, Ido Schimmel wrote:
-> On Mon, Nov 29, 2021 at 03:51:25PM +1100, NeilBrown wrote:
-> > lockd_start_svc() only needs to be called once, just after the svc is
-> > created.  If the start fails, the svc is discarded too.
-> >=20
-> > It thus makes sense to call lockd_start_svc() from lockd_create_svc().
-> > This allows us to remove the test against nlmsvc_rqst at the start of
-> > lockd_start_svc() - it must always be NULL.
-> >=20
-> > lockd_up() only held an extra reference on the svc until a thread was
-> > created - then it dropped it.  The thread - and thus the extra reference
-> > - will remain until kthread_stop() is called.
-> > Now that the thread is created in lockd_create_svc(), the extra
-> > reference can be dropped there.  So the 'serv' variable is no longer
-> > needed in lockd_up().
->=20
-> Hi,
->=20
-> I'm seeing the following memory leak [1] after unmounting a network
-> share. High level bisection shows that it started between v5.16 and
-> v5.17. Using git bisect [2] I've pinpointed it to this patch.
->=20
-> Can you please look into it? I can easily trigger the issue and test
-> patches.
+On Sat, Jun 03, 2023 at 07:28:28AM +1000, NeilBrown wrote:
+> From: NeilBrown <neilb@suse.de>
+> Date: Sat, 3 Jun 2023 07:14:14 +1000
+> Subject: [PATCH] lockd: drop inappropriate svc_get() from locked_get()
+> 
+> The below-mentioned patch was intended to simplify refcounting on the
+> svc_serv used by locked.  The goal was to only ever have a single
+> reference from the single thread.  To that end we dropped a call to
+> lockd_start_svc() (except when creating thread) which would take a
+> reference, and dropped the svc_put(serv) that would drop that reference.
+> 
+> Unfortunately we didn't also remove the svc_get() from
+> lockd_create_svc() in the case where the svc_serv already existed.
+> So after the patch:
+>  - on the first call the svc_serv was allocated and the one reference
+>    was given to the thread, so there are no extra references
+>  - on subsequent calls svc_get() was called so there is now an extra
+>    reference.
+> This is clearly not consistent.
+> 
+> The inconsistency is also clear in the current code in lockd_get()
+> takes *two* references, one on nlmsvc_serv and one by incrementing
+> nlmsvc_users.   This clearly does not match lockd_put().
+> 
+> So: drop that svc_get() from lockd_get() (which used to be in
+> lockd_create_svc().
+> 
+> Reported-by: Ido Schimmel <idosch@idosch.org>
+> Fixes: b73a2972041b ("lockd: move lockd_start_svc() call into lockd_create_svc()")
+> Signed-off-by: NeilBrown <neilb@suse.de>
 
-Thanks for the report.
-Please test this patch.
+Thanks for the quick fix. I no longer see the memory leak with this
+patch.
 
-Thanks,
-NeilBrown
-
-
-From 4f7278cb24a0331c1d58cc502029f8bf06bd4e9d Mon Sep 17 00:00:00 2001
-From: NeilBrown <neilb@suse.de>
-Date: Sat, 3 Jun 2023 07:14:14 +1000
-Subject: [PATCH] lockd: drop inappropriate svc_get() from locked_get()
-
-The below-mentioned patch was intended to simplify refcounting on the
-svc_serv used by locked.  The goal was to only ever have a single
-reference from the single thread.  To that end we dropped a call to
-lockd_start_svc() (except when creating thread) which would take a
-reference, and dropped the svc_put(serv) that would drop that reference.
-
-Unfortunately we didn't also remove the svc_get() from
-lockd_create_svc() in the case where the svc_serv already existed.
-So after the patch:
- - on the first call the svc_serv was allocated and the one reference
-   was given to the thread, so there are no extra references
- - on subsequent calls svc_get() was called so there is now an extra
-   reference.
-This is clearly not consistent.
-
-The inconsistency is also clear in the current code in lockd_get()
-takes *two* references, one on nlmsvc_serv and one by incrementing
-nlmsvc_users.   This clearly does not match lockd_put().
-
-So: drop that svc_get() from lockd_get() (which used to be in
-lockd_create_svc().
-
-Reported-by: Ido Schimmel <idosch@idosch.org>
-Fixes: b73a2972041b ("lockd: move lockd_start_svc() call into lockd_create_sv=
-c()")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/lockd/svc.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-index 04ba95b83d16..22d3ff3818f5 100644
---- a/fs/lockd/svc.c
-+++ b/fs/lockd/svc.c
-@@ -355,7 +355,6 @@ static int lockd_get(void)
- 	int error;
-=20
- 	if (nlmsvc_serv) {
--		svc_get(nlmsvc_serv);
- 		nlmsvc_users++;
- 		return 0;
- 	}
---=20
-2.40.1
-
+Tested-by: Ido Schimmel <idosch@nvidia.com>
