@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40E9D722706
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Jun 2023 15:11:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BD86722707
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Jun 2023 15:11:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233662AbjFENLn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Jun 2023 09:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
+        id S232828AbjFENLr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Jun 2023 09:11:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233952AbjFENLe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Jun 2023 09:11:34 -0400
+        with ESMTP id S233942AbjFENLl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Jun 2023 09:11:41 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA0510B;
-        Mon,  5 Jun 2023 06:11:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A049197;
+        Mon,  5 Jun 2023 06:11:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 419CA61403;
-        Mon,  5 Jun 2023 13:11:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6522EC433EF;
-        Mon,  5 Jun 2023 13:11:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9FB52614AD;
+        Mon,  5 Jun 2023 13:11:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C127BC433EF;
+        Mon,  5 Jun 2023 13:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685970685;
-        bh=6DYpGv7XmUVu7r1PsY1rU+idxBTWrtIe6aWBUN0xwsA=;
+        s=k20201202; t=1685970692;
+        bh=6TSwjCLgzvNx/2L0igWS/k2nUWhVO7QFDvfC1T2mUYE=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=N4wlwrQjo+YpmViCjyIzVxwZj5lFP4+amgyiYdgRz38lYwv49lgpqCcB2NvR+hapK
-         izfCbvomNIOyfaJ3oU109K4Xxm7nlohJjAG/GIQJWdMxcZGZ8DwsYFfjKT2MaWPv4B
-         XX5P+Z3tKoYagOxycsL76MaHxxseBNfnMF0/RRjS9pFh8J7U+yZ2+EQjYKYh5Nk2NS
-         ob1oS8buJFsrhE1TEtTYGSMkeICzp0nZUHg6O1ih9JFs7sqbegiGpzwmBx71ceDC0D
-         hY7JTDyKh7Ie8nq8KPjDISOEjuT40Q5LtuUVS2OWOLt1xdgi53WKk5trh4hg2ll04x
-         rMnaxfXMvs+Sg==
-Subject: [PATCH v1 1/4] svcrdma: Allocate new transports on device's NUMA node
+        b=Zw0eEjQk2arI7zRozGL6CEMVloY+iEvSYuwvf2Nx7uwSp4wvrdiH1p9k+B+YA/SFW
+         tKoY8YklKy2vYQpasAyJgqP0gsZTm/B9GskvO0afshNkeFvjqXlLTn5yijlubV7etT
+         8hOmx7Sgn0yyuLZTdk9Pf+9zJb9LNCXkjgQVXuE12/QnqjNdkS1vqpy0eW7i3jWlBM
+         60Lt+R8/DSiOPpXD/lNWykrF2/N+6AxaYyEiWngkLqG+VNWTUpTdMip9Qnh1Sxf6Li
+         S6Fulbkty0LN8GPRbzr2BMMcprLFeHZzdBG8sOfJsQcmDJfRHeHkoGxTunEbqXvtTb
+         2lf/RFstVZd2g==
+Subject: [PATCH v1 2/4] svcrdma: Clean up allocation of svc_rdma_recv_ctxt
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-rdma@vger.kernel.org,
         tom@talpey.com
-Date:   Mon, 05 Jun 2023 09:11:24 -0400
-Message-ID: <168597068439.7694.12044689834419157360.stgit@manet.1015granger.net>
+Date:   Mon, 05 Jun 2023 09:11:30 -0400
+Message-ID: <168597069088.7694.3096274041268666449.stgit@manet.1015granger.net>
 In-Reply-To: <168597050247.7694.8719658227499409307.stgit@manet.1015granger.net>
 References: <168597050247.7694.8719658227499409307.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -56,69 +56,109 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The physical device's NUMA node ID is available when allocating an
-svc_xprt for an incoming connection. Use that value to ensure the
-svc_xprt structure is allocated on the NUMA node closest to the
-device.
+The physical device's favored NUMA node ID is available when
+allocating a recv_ctxt. Use that value instead of relying on the
+assumption that the memory allocation happens to be running on a
+node close to the device.
+
+This clean up eliminates the hack of destroying recv_ctxts that
+were not created by the receive CQ thread -- recv_ctxts are now
+always allocated on a "good" node.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_transport.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ include/linux/sunrpc/svc_rdma.h         |    1 -
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   18 +++++++-----------
+ 2 files changed, 7 insertions(+), 12 deletions(-)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index ca04f7a6a085..2abd895046ee 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -64,7 +64,7 @@
- #define RPCDBG_FACILITY	RPCDBG_SVCXPRT
+diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
+index fbc4bd423b35..a0f3ea357977 100644
+--- a/include/linux/sunrpc/svc_rdma.h
++++ b/include/linux/sunrpc/svc_rdma.h
+@@ -135,7 +135,6 @@ struct svc_rdma_recv_ctxt {
+ 	struct ib_sge		rc_recv_sge;
+ 	void			*rc_recv_buf;
+ 	struct xdr_stream	rc_stream;
+-	bool			rc_temp;
+ 	u32			rc_byte_len;
+ 	unsigned int		rc_page_count;
+ 	u32			rc_inv_rkey;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index a22fe7587fa6..46a719ba4917 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -125,14 +125,15 @@ static void svc_rdma_recv_cid_init(struct svcxprt_rdma *rdma,
+ static struct svc_rdma_recv_ctxt *
+ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ {
++	int node = ibdev_to_node(rdma->sc_cm_id->device);
+ 	struct svc_rdma_recv_ctxt *ctxt;
+ 	dma_addr_t addr;
+ 	void *buffer;
  
- static struct svcxprt_rdma *svc_rdma_create_xprt(struct svc_serv *serv,
--						 struct net *net);
-+						 struct net *net, int node);
- static struct svc_xprt *svc_rdma_create(struct svc_serv *serv,
- 					struct net *net,
- 					struct sockaddr *sa, int salen,
-@@ -123,14 +123,14 @@ static void qp_event_handler(struct ib_event *event, void *context)
+-	ctxt = kmalloc(sizeof(*ctxt), GFP_KERNEL);
++	ctxt = kmalloc_node(sizeof(*ctxt), GFP_KERNEL, node);
+ 	if (!ctxt)
+ 		goto fail0;
+-	buffer = kmalloc(rdma->sc_max_req_size, GFP_KERNEL);
++	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
+ 	if (!buffer)
+ 		goto fail1;
+ 	addr = ib_dma_map_single(rdma->sc_pd->device, buffer,
+@@ -155,7 +156,6 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ 	ctxt->rc_recv_sge.length = rdma->sc_max_req_size;
+ 	ctxt->rc_recv_sge.lkey = rdma->sc_pd->local_dma_lkey;
+ 	ctxt->rc_recv_buf = buffer;
+-	ctxt->rc_temp = false;
+ 	return ctxt;
+ 
+ fail2:
+@@ -232,10 +232,7 @@ void svc_rdma_recv_ctxt_put(struct svcxprt_rdma *rdma,
+ 	pcl_free(&ctxt->rc_write_pcl);
+ 	pcl_free(&ctxt->rc_reply_pcl);
+ 
+-	if (!ctxt->rc_temp)
+-		llist_add(&ctxt->rc_node, &rdma->sc_recv_ctxts);
+-	else
+-		svc_rdma_recv_ctxt_destroy(rdma, ctxt);
++	llist_add(&ctxt->rc_node, &rdma->sc_recv_ctxts);
  }
  
- static struct svcxprt_rdma *svc_rdma_create_xprt(struct svc_serv *serv,
--						 struct net *net)
-+						 struct net *net, int node)
+ /**
+@@ -258,7 +255,7 @@ void svc_rdma_release_ctxt(struct svc_xprt *xprt, void *vctxt)
+ }
+ 
+ static bool svc_rdma_refresh_recvs(struct svcxprt_rdma *rdma,
+-				   unsigned int wanted, bool temp)
++				   unsigned int wanted)
  {
--	struct svcxprt_rdma *cma_xprt = kzalloc(sizeof *cma_xprt, GFP_KERNEL);
-+	struct svcxprt_rdma *cma_xprt;
+ 	const struct ib_recv_wr *bad_wr = NULL;
+ 	struct svc_rdma_recv_ctxt *ctxt;
+@@ -275,7 +272,6 @@ static bool svc_rdma_refresh_recvs(struct svcxprt_rdma *rdma,
+ 			break;
  
--	if (!cma_xprt) {
--		dprintk("svcrdma: failed to create new transport\n");
-+	cma_xprt = kzalloc_node(sizeof(*cma_xprt), GFP_KERNEL, node);
-+	if (!cma_xprt)
- 		return NULL;
--	}
-+
- 	svc_xprt_init(net, &svc_rdma_class, &cma_xprt->sc_xprt, serv);
- 	INIT_LIST_HEAD(&cma_xprt->sc_accept_q);
- 	INIT_LIST_HEAD(&cma_xprt->sc_rq_dto_q);
-@@ -193,9 +193,9 @@ static void handle_connect_req(struct rdma_cm_id *new_cma_id,
- 	struct svcxprt_rdma *newxprt;
- 	struct sockaddr *sa;
+ 		trace_svcrdma_post_recv(ctxt);
+-		ctxt->rc_temp = temp;
+ 		ctxt->rc_recv_wr.next = recv_chain;
+ 		recv_chain = &ctxt->rc_recv_wr;
+ 		rdma->sc_pending_recvs++;
+@@ -309,7 +305,7 @@ static bool svc_rdma_refresh_recvs(struct svcxprt_rdma *rdma,
+  */
+ bool svc_rdma_post_recvs(struct svcxprt_rdma *rdma)
+ {
+-	return svc_rdma_refresh_recvs(rdma, rdma->sc_max_requests, true);
++	return svc_rdma_refresh_recvs(rdma, rdma->sc_max_requests);
+ }
  
--	/* Create a new transport */
- 	newxprt = svc_rdma_create_xprt(listen_xprt->sc_xprt.xpt_server,
--				       listen_xprt->sc_xprt.xpt_net);
-+				       listen_xprt->sc_xprt.xpt_net,
-+				       ibdev_to_node(new_cma_id->device));
- 	if (!newxprt)
- 		return;
- 	newxprt->sc_cm_id = new_cma_id;
-@@ -304,7 +304,7 @@ static struct svc_xprt *svc_rdma_create(struct svc_serv *serv,
+ /**
+@@ -343,7 +339,7 @@ static void svc_rdma_wc_receive(struct ib_cq *cq, struct ib_wc *wc)
+ 	 * client reconnects.
+ 	 */
+ 	if (rdma->sc_pending_recvs < rdma->sc_max_requests)
+-		if (!svc_rdma_refresh_recvs(rdma, rdma->sc_recv_batch, false))
++		if (!svc_rdma_refresh_recvs(rdma, rdma->sc_recv_batch))
+ 			goto dropped;
  
- 	if (sa->sa_family != AF_INET && sa->sa_family != AF_INET6)
- 		return ERR_PTR(-EAFNOSUPPORT);
--	cma_xprt = svc_rdma_create_xprt(serv, net);
-+	cma_xprt = svc_rdma_create_xprt(serv, net, NUMA_NO_NODE);
- 	if (!cma_xprt)
- 		return ERR_PTR(-ENOMEM);
- 	set_bit(XPT_LISTENER, &cma_xprt->sc_xprt.xpt_flags);
+ 	/* All wc fields are now known to be valid */
 
 
