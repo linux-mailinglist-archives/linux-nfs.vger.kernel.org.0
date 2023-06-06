@@ -2,68 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F6AD7237EC
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jun 2023 08:43:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2C68724A53
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jun 2023 19:33:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231822AbjFFGnu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Jun 2023 02:43:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
+        id S233418AbjFFRds (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Jun 2023 13:33:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230499AbjFFGnt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Jun 2023 02:43:49 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864B191;
-        Mon,  5 Jun 2023 23:43:48 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 294C46732D; Tue,  6 Jun 2023 08:43:44 +0200 (CEST)
-Date:   Tue, 6 Jun 2023 08:43:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, Miklos Szeredi <mszeredi@redhat.com>
-Subject: Re: [PATCH 09/12] fs: factor out a direct_write_fallback helper
-Message-ID: <20230606064343.GA27497@lst.de>
-References: <20230601145904.1385409-1-hch@lst.de> <20230601145904.1385409-10-hch@lst.de> <20230606000414.GJ1325469@frogsfrogsfrogs>
+        with ESMTP id S238218AbjFFRdU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Jun 2023 13:33:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95CF1E47;
+        Tue,  6 Jun 2023 10:33:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 318F262F6C;
+        Tue,  6 Jun 2023 17:33:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4910AC433D2;
+        Tue,  6 Jun 2023 17:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686072798;
+        bh=FaPJqhQSAErPpRFFLZLwZA00H3+2XbcO2bJz1NtUw28=;
+        h=Subject:From:To:Cc:Date:From;
+        b=PP0GGZzwO4Y2RBl+L7FJbo8DM59oWILT2FoH7dM3FPZdUw+C4+emgkaKddqiUQqHa
+         Q07r6AHtVdkYU6ZJRA83SgyXQnF+8WPq0ekxbCq0JwjMcrSt8gKwj/UkfhgBdvfAZb
+         +FAU1vqeYY3txclhANHTSGtVj93hcyj+nC+viGpYVtb4O4UDSx+1EHFGx4aCyTR+JM
+         8nNYTlc16EOVNCMOy7s1UXDzZnr16BaNyThJeLApUT5YU2ZVkYCvQaY+bm3164c/OK
+         eL3DOf7jllLNPyDcwNxro9+b35lek+5LYMMTZTAsh5t2EQcW9+M2JjTeFK8CN1Ixvc
+         oKILaBx0I6uZw==
+Subject: [PATCH v1 0/4] svcrdma: Go back to releasing pages-under-I/O
+From:   Chuck Lever <cel@kernel.org>
+To:     linux-nfs@vger.kernel.org
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-rdma@vger.kernel.org,
+        tom@talpey.com
+Date:   Tue, 06 Jun 2023 13:33:17 -0400
+Message-ID: <168607259937.2076.15447551371235387735.stgit@manet.1015granger.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230606000414.GJ1325469@frogsfrogsfrogs>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jun 05, 2023 at 05:04:14PM -0700, Darrick J. Wong wrote:
-> On Thu, Jun 01, 2023 at 04:59:01PM +0200, Christoph Hellwig wrote:
-> > Add a helper dealing with handling the syncing of a buffered write fallback
-> > for direct I/O.
-> > 
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
-> > Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
-> 
-> Looks good to me; whose tree do you want this to go through?
+Return to the behavior of releasing reply buffer pages as part of
+sending an RPC Reply over RDMA. I measured a performance improvement
+(which is documented in 4/4). Similar page release behavior with
+socket transports also means we should be able to share a little
+more code between transports as MSG_SPLICE_PAGES rolls out.
 
-Andrew has already picked them up.
+---
+
+Chuck Lever (4):
+      SUNRPC: Revert cc93ce9529a6
+      SUNRPC: Revert 579900670ac7
+      SUNRPC: Revert 2a1e4f21d841
+      SUNRPC: Optimize page release in svc_rdma_sendto()
+
+
+ include/linux/sunrpc/svc_rdma.h            |  4 +-
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  8 +---
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c      | 53 ++++++++++++++--------
+ 3 files changed, 38 insertions(+), 27 deletions(-)
+
+--
+Chuck Lever
+
