@@ -2,128 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C148D7235C5
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jun 2023 05:34:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F6AD7237EC
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Jun 2023 08:43:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230121AbjFFDeI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Jun 2023 23:34:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44272 "EHLO
+        id S231822AbjFFGnu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Jun 2023 02:43:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231258AbjFFDeG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Jun 2023 23:34:06 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6FD811B
-        for <linux-nfs@vger.kernel.org>; Mon,  5 Jun 2023 20:34:05 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 2C8E02199D;
-        Tue,  6 Jun 2023 03:34:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1686022444; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bpANx9X+sQF5S7Kv+fFBW2DnhKe6tEMNo5nE7/ii0nw=;
-        b=1dTnFYDRNJnc1u4A8Mw/hLM1PQXvhDskeBEXnYpPkG6ulnLssJXBykmj0f+VSXTGQNL5ZA
-        QyHzYlLUkfU5I/hdRKMFygPNdfgerGX8VK418fBi5iGFJxGPynlL7PP6shFUz8o4rC/XC6
-        gyVWPPFjUu8tfhcv4muUW1YLrzO8Z84=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1686022444;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bpANx9X+sQF5S7Kv+fFBW2DnhKe6tEMNo5nE7/ii0nw=;
-        b=eXnbPvleEVvjno4nA9IDAukrvQ4od4JP0PPCljaqIKWR+qtRK83qE5nF+h3tTEffCrXjDy
-        TYJ6NihB2Ugm8eDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DE2FB13343;
-        Tue,  6 Jun 2023 03:34:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id ysFnIyqpfmR6KAAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 06 Jun 2023 03:34:02 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230499AbjFFGnt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Jun 2023 02:43:49 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 864B191;
+        Mon,  5 Jun 2023 23:43:48 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 294C46732D; Tue,  6 Jun 2023 08:43:44 +0200 (CEST)
+Date:   Tue, 6 Jun 2023 08:43:43 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Miklos Szeredi <mszeredi@redhat.com>
+Subject: Re: [PATCH 09/12] fs: factor out a direct_write_fallback helper
+Message-ID: <20230606064343.GA27497@lst.de>
+References: <20230601145904.1385409-1-hch@lst.de> <20230601145904.1385409-10-hch@lst.de> <20230606000414.GJ1325469@frogsfrogsfrogs>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: [PATCH/RFC] NFS: fix use-after-free with O_DIRECT write
-Date:   Tue, 06 Jun 2023 13:33:58 +1000
-Message-id: <168602243849.29198.7621580343986486904@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230606000414.GJ1325469@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, Jun 05, 2023 at 05:04:14PM -0700, Darrick J. Wong wrote:
+> On Thu, Jun 01, 2023 at 04:59:01PM +0200, Christoph Hellwig wrote:
+> > Add a helper dealing with handling the syncing of a buffered write fallback
+> > for direct I/O.
+> > 
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> > Reviewed-by: Miklos Szeredi <mszeredi@redhat.com>
+> 
+> Looks good to me; whose tree do you want this to go through?
 
-If the page size is greater than the wsize, O_DIRECT writes are broken
-up into multiple sub-requests (subreqs) per page.
-If there are two subreqs for a given page, one (not the head)
-succeeds and the other succeeds but sees a write verifier mis-match, we
-get a problem.
-
-The first subreq will have been released (nfs_release_request) and will
-have a refcount of zero and PG_TEARDOWN will be set.
-The remainder of the request will be passed to
-nfs_direct_write_reschedule() and thence to nfs_direct_join_group().
-
-nfs_direct_join_group() calls nfs_release_request() on each non-head
-subreq, and this results in a refcounter underflow.
-
-The list is then passed to nfs_join_page_group() which should probably
-ignore these completed subreqs too, though there is no serious problem
-caused by not skipping them.  It finally gets to
-nfs_destroy_unlinked_subrequests() which handles these unrefed subreqs
-correctly.
-
-This behaviour has been seen on a ppc64 machine with 64K page size,
-mounting with NFSv3 an rsize=3Dwsize=3D32768.  The server-side filesystem
-fills up causing the Linux NFS server to report ENOSPC and to update
-the write verifier.
-
-This patch adds tests on PG_TEARDOWN and skips those subrequests in
-nfs_direcf_join_group().  It doesn't make changes to
-nfs_join_page_group().
-
-If a "head" subreq succeeds but other subreqs fail,
-nfs_direct_join_group() will not join those subreqs back together.  I
-doubt this is correct, but I haven't yet demonstrated a crash, or worked
-through all the consequences.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfs/direct.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 9a18c5a69ace..d41d4b869d42 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -483,8 +483,10 @@ nfs_direct_join_group(struct list_head *list, struct ino=
-de *inode)
- 		for (next =3D req->wb_this_page;
- 				next !=3D req->wb_head;
- 				next =3D next->wb_this_page) {
--			nfs_list_remove_request(next);
--			nfs_release_request(next);
-+			if (!test_bit(PG_TEARDOWN, &next->wb_flags)) {
-+				nfs_list_remove_request(next);
-+				nfs_release_request(next);
-+			}
- 		}
- 		nfs_join_page_group(req, inode);
- 	}
---=20
-2.40.1
-
+Andrew has already picked them up.
