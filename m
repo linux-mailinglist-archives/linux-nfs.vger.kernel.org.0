@@ -2,51 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 286A27261D9
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jun 2023 15:59:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E73E77261E2
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Jun 2023 16:00:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235026AbjFGN7D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Jun 2023 09:59:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
+        id S234318AbjFGOAD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Jun 2023 10:00:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240248AbjFGN7C (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Jun 2023 09:59:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B10B1BD9
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Jun 2023 06:59:01 -0700 (PDT)
+        with ESMTP id S240521AbjFGN7t (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Jun 2023 09:59:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9BF1FD5
+        for <linux-nfs@vger.kernel.org>; Wed,  7 Jun 2023 06:59:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 27A3A637D9
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Jun 2023 13:59:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 259B0C433D2;
-        Wed,  7 Jun 2023 13:59:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E605E60A16
+        for <linux-nfs@vger.kernel.org>; Wed,  7 Jun 2023 13:59:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E39FDC433EF;
+        Wed,  7 Jun 2023 13:59:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686146340;
-        bh=LMHuRd5WPLT8qIpWgE1SH25bjVB8IUFgTNdqEunPsTo=;
+        s=k20201202; t=1686146367;
+        bh=ZpQe1QrUNJoUjqBbDL/R99lqVyDyiKC77NEQdQxReSg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VqYUgFrqvJQjJWEgxxG4JOMQweqIuIPI0bgbao4iTn5SlqO27X8AJ41nOdFGAUHIU
-         ewqSi28RL6XN7Ngw11hiJH6/iZYgkU0rKrZ2hwIJGT1bR8Y5biyRqs+DZgO96AutQp
-         WGr/eR4fwo2pI202rrbJFyGcf6s2/4SNKVDUjY5m0Aezqks+g9ZUZPuJNaYkC/0SaD
-         uNas7bZUJbvC/ttAkO9QnmEq/Oo9SxBauv2JLCkxLxRqliDgUX98rMUH7cY98I1iIR
-         JQ/5IoNs7lC2k8amxJAN+5AYsINn5+kWSX8iUl2gXr+4ug7CsxaIdziQMGT9XXNofl
-         2MwLN6GvUfYHg==
-Subject: [PATCH v4 6/9] SUNRPC: Capture CMSG metadata on client-side receive
+        b=TIfNVxDnvDJqMEldxVcXHizeqyIZgmzr9vRU9GFcZ0nw068Lq04N3qv13Jj6LLRBK
+         DF5qBIyaMKbkfqA45gZBspSaxGVN6rTWMlVnkjbc5yGxpT4OZ43ReH1udDSyT0S6DS
+         VFNipXp3x2kjkIKQ7HZ8p+U8XVuwHZtH3PJK3gRR8P58S/7LTuMsU+AuxcH7RXuOlo
+         NobPxjNzUm2QcanFTTdY6BsnFOeYmxaxOlGPqjdE/804cvIYUGBXnHPefzmTV+JZPs
+         3m1YO+I7x7ht1CMWyCiaf5Npx/YA7Fyh8c7g+Hcm7qt47wc5j3uEMyV4thk0n7vwPC
+         3I8bPTeBefwyg==
+Subject: [PATCH v4 7/9] SUNRPC: Add a TCP-with-TLS RPC transport class
 From:   Chuck Lever <cel@kernel.org>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
         kernel-tls-handshake@lists.linux.dev
-Date:   Wed, 07 Jun 2023 09:58:49 -0400
-Message-ID: <168614631895.2082.7594259929276216556.stgit@oracle-102.nfsv4bat.org>
+Date:   Wed, 07 Jun 2023 09:59:15 -0400
+Message-ID: <168614634576.2082.2357894661167591305.stgit@oracle-102.nfsv4bat.org>
 In-Reply-To: <168614594328.2082.13408337606138447754.stgit@oracle-102.nfsv4bat.org>
 References: <168614594328.2082.13408337606138447754.stgit@oracle-102.nfsv4bat.org>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,98 +56,560 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-kTLS sockets use CMSG to report decryption errors and the need
-for session re-keying.
+Use the new TLS handshake API to enable the SunRPC client code
+to request a TLS handshake. This implements support for RFC 9289,
+only on TCP sockets.
 
-For RPC-with-TLS, an "application data" message contains a ULP
-payload, and that is passed along to the RPC client. An "alert"
-message triggers connection reset. Everything else is discarded.
+Upper layers such as NFS use RPC-with-TLS to protect in-transit
+traffic.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
- net/sunrpc/xprtsock.c |   49 +++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 47 insertions(+), 2 deletions(-)
+ include/linux/sunrpc/xprt.h     |    1 
+ include/linux/sunrpc/xprtsock.h |    2 
+ include/trace/events/sunrpc.h   |   44 +++++
+ net/sunrpc/sysfs.c              |    1 
+ net/sunrpc/xprtsock.c           |  370 +++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 418 insertions(+)
 
+diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
+index 9e7f12c240c5..b52411bcfe4e 100644
+--- a/include/linux/sunrpc/xprt.h
++++ b/include/linux/sunrpc/xprt.h
+@@ -200,6 +200,7 @@ enum xprt_transports {
+ 	XPRT_TRANSPORT_RDMA	= 256,
+ 	XPRT_TRANSPORT_BC_RDMA	= XPRT_TRANSPORT_RDMA | XPRT_TRANSPORT_BC,
+ 	XPRT_TRANSPORT_LOCAL	= 257,
++	XPRT_TRANSPORT_TCP_TLS	= 258,
+ };
+ 
+ struct rpc_sysfs_xprt;
+diff --git a/include/linux/sunrpc/xprtsock.h b/include/linux/sunrpc/xprtsock.h
+index daef030f4848..700a1e6c047c 100644
+--- a/include/linux/sunrpc/xprtsock.h
++++ b/include/linux/sunrpc/xprtsock.h
+@@ -57,9 +57,11 @@ struct sock_xprt {
+ 	struct work_struct	error_worker;
+ 	struct work_struct	recv_worker;
+ 	struct mutex		recv_mutex;
++	struct completion	handshake_done;
+ 	struct sockaddr_storage	srcaddr;
+ 	unsigned short		srcport;
+ 	int			xprt_err;
++	struct rpc_clnt		*clnt;
+ 
+ 	/*
+ 	 * UDP socket buffer size parameters
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 34784f29a63d..7cd4bbd6904c 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1525,6 +1525,50 @@ TRACE_EVENT(rpcb_unregister,
+ 	)
+ );
+ 
++/**
++ ** RPC-over-TLS tracepoints
++ **/
++
++DECLARE_EVENT_CLASS(rpc_tls_class,
++	TP_PROTO(
++		const struct rpc_clnt *clnt,
++		const struct rpc_xprt *xprt
++	),
++
++	TP_ARGS(clnt, xprt),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, requested_policy)
++		__field(u32, version)
++		__string(servername, xprt->servername)
++		__string(progname, clnt->cl_program->name)
++	),
++
++	TP_fast_assign(
++		__entry->requested_policy = clnt->cl_xprtsec.policy;
++		__entry->version = clnt->cl_vers;
++		__assign_str(servername, xprt->servername);
++		__assign_str(progname, clnt->cl_program->name)
++	),
++
++	TP_printk("server=%s %sv%u requested_policy=%s",
++		__get_str(servername), __get_str(progname), __entry->version,
++		rpc_show_xprtsec_policy(__entry->requested_policy)
++	)
++);
++
++#define DEFINE_RPC_TLS_EVENT(name) \
++	DEFINE_EVENT(rpc_tls_class, rpc_tls_##name, \
++			TP_PROTO( \
++				const struct rpc_clnt *clnt, \
++				const struct rpc_xprt *xprt \
++			), \
++			TP_ARGS(clnt, xprt))
++
++DEFINE_RPC_TLS_EVENT(unavailable);
++DEFINE_RPC_TLS_EVENT(not_started);
++
++
+ /* Record an xdr_buf containing a fully-formed RPC message */
+ DECLARE_EVENT_CLASS(svc_xdr_msg_class,
+ 	TP_PROTO(
+diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
+index 0d0db4e1064e..5c8ecdaaa985 100644
+--- a/net/sunrpc/sysfs.c
++++ b/net/sunrpc/sysfs.c
+@@ -239,6 +239,7 @@ static ssize_t rpc_sysfs_xprt_dstaddr_store(struct kobject *kobj,
+ 	if (!xprt)
+ 		return 0;
+ 	if (!(xprt->xprt_class->ident == XPRT_TRANSPORT_TCP ||
++	      xprt->xprt_class->ident == XPRT_TRANSPORT_TCP_TLS ||
+ 	      xprt->xprt_class->ident == XPRT_TRANSPORT_RDMA)) {
+ 		xprt_put(xprt);
+ 		return -EOPNOTSUPP;
 diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 37f608c2c0a0..6f2fc863b47e 100644
+index 6f2fc863b47e..c2a3db4e400d 100644
 --- a/net/sunrpc/xprtsock.c
 +++ b/net/sunrpc/xprtsock.c
-@@ -47,6 +47,8 @@
- #include <net/checksum.h>
+@@ -48,6 +48,7 @@
  #include <net/udp.h>
  #include <net/tcp.h>
-+#include <net/tls.h>
-+
+ #include <net/tls.h>
++#include <net/handshake.h>
+ 
  #include <linux/bvec.h>
  #include <linux/highmem.h>
- #include <linux/uio.h>
-@@ -342,13 +344,56 @@ xs_alloc_sparse_pages(struct xdr_buf *buf, size_t want, gfp_t gfp)
- 	return want;
+@@ -98,6 +99,7 @@ static struct ctl_table_header *sunrpc_table_header;
+ static struct xprt_class xs_local_transport;
+ static struct xprt_class xs_udp_transport;
+ static struct xprt_class xs_tcp_transport;
++static struct xprt_class xs_tcp_tls_transport;
+ static struct xprt_class xs_bc_tcp_transport;
+ 
+ /*
+@@ -189,6 +191,11 @@ static struct ctl_table xs_tunables_table[] = {
+  */
+ #define XS_IDLE_DISC_TO		(5U * 60 * HZ)
+ 
++/*
++ * TLS handshake timeout.
++ */
++#define XS_TLS_HANDSHAKE_TO	(10U * HZ)
++
+ #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+ # undef  RPC_DEBUG_DATA
+ # define RPCDBG_FACILITY	RPCDBG_TRANS
+@@ -1238,6 +1245,8 @@ static void xs_reset_transport(struct sock_xprt *transport)
+ 	if (atomic_read(&transport->xprt.swapper))
+ 		sk_clear_memalloc(sk);
+ 
++	tls_handshake_cancel(sk);
++
+ 	kernel_sock_shutdown(sock, SHUT_RDWR);
+ 
+ 	mutex_lock(&transport->recv_mutex);
+@@ -2411,6 +2420,267 @@ static void xs_tcp_setup_socket(struct work_struct *work)
+ 	current_restore_flags(pflags, PF_MEMALLOC);
  }
  
-+static int
-+xs_sock_process_cmsg(struct socket *sock, struct msghdr *msg,
-+		     struct cmsghdr *cmsg, int ret)
++/*
++ * Transfer the connected socket to @upper_transport, then mark that
++ * xprt CONNECTED.
++ */
++static int xs_tcp_tls_finish_connecting(struct rpc_xprt *lower_xprt,
++					struct sock_xprt *upper_transport)
 +{
-+	if (cmsg->cmsg_level == SOL_TLS &&
-+	    cmsg->cmsg_type == TLS_GET_RECORD_TYPE) {
-+		u8 content_type = *((u8 *)CMSG_DATA(cmsg));
++	struct sock_xprt *lower_transport =
++			container_of(lower_xprt, struct sock_xprt, xprt);
++	struct rpc_xprt *upper_xprt = &upper_transport->xprt;
 +
-+		switch (content_type) {
-+		case TLS_RECORD_TYPE_DATA:
-+			/* TLS sets EOR at the end of each application data
-+			 * record, even though there might be more frames
-+			 * waiting to be decrypted.
-+			 */
-+			msg->msg_flags &= ~MSG_EOR;
-+			break;
-+		case TLS_RECORD_TYPE_ALERT:
-+			ret = -ENOTCONN;
-+			break;
-+		default:
-+			ret = -EAGAIN;
++	if (!upper_transport->inet) {
++		struct socket *sock = lower_transport->sock;
++		struct sock *sk = sock->sk;
++
++		/* Avoid temporary address, they are bad for long-lived
++		 * connections such as NFS mounts.
++		 * RFC4941, section 3.6 suggests that:
++		 *    Individual applications, which have specific
++		 *    knowledge about the normal duration of connections,
++		 *    MAY override this as appropriate.
++		 */
++		if (xs_addr(upper_xprt)->sa_family == PF_INET6)
++			ip6_sock_set_addr_preferences(sk, IPV6_PREFER_SRC_PUBLIC);
++
++		xs_tcp_set_socket_timeouts(upper_xprt, sock);
++		tcp_sock_set_nodelay(sk);
++
++		lock_sock(sk);
++
++		/* @sk is already connected, so it now has the RPC callbacks.
++		 * Reach into @lower_transport to save the original ones.
++		 */
++		upper_transport->old_data_ready = lower_transport->old_data_ready;
++		upper_transport->old_state_change = lower_transport->old_state_change;
++		upper_transport->old_write_space = lower_transport->old_write_space;
++		upper_transport->old_error_report = lower_transport->old_error_report;
++		sk->sk_user_data = upper_xprt;
++
++		/* socket options */
++		sock_reset_flag(sk, SOCK_LINGER);
++
++		xprt_clear_connected(upper_xprt);
++
++		upper_transport->sock = sock;
++		upper_transport->inet = sk;
++		upper_transport->file = lower_transport->file;
++
++		release_sock(sk);
++
++		/* Reset lower_transport before shutting down its clnt */
++		mutex_lock(&lower_transport->recv_mutex);
++		lower_transport->inet = NULL;
++		lower_transport->sock = NULL;
++		lower_transport->file = NULL;
++
++		xprt_clear_connected(lower_xprt);
++		xs_sock_reset_connection_flags(lower_xprt);
++		xs_stream_reset_connect(lower_transport);
++		mutex_unlock(&lower_transport->recv_mutex);
++	}
++
++	if (!xprt_bound(upper_xprt))
++		return -ENOTCONN;
++
++	xs_set_memalloc(upper_xprt);
++
++	if (!xprt_test_and_set_connected(upper_xprt)) {
++		upper_xprt->connect_cookie++;
++		clear_bit(XPRT_SOCK_CONNECTING, &upper_transport->sock_state);
++		xprt_clear_connecting(upper_xprt);
++
++		upper_xprt->stat.connect_count++;
++		upper_xprt->stat.connect_time += (long)jiffies -
++					   upper_xprt->stat.connect_start;
++		xs_run_error_worker(upper_transport, XPRT_SOCK_WAKE_PENDING);
++	}
++	return 0;
++}
++
++/**
++ * xs_tls_handshake_done - TLS handshake completion handler
++ * @data: address of xprt to wake
++ * @status: status of handshake
++ * @peerid: serial number of key containing the remote's identity
++ *
++ */
++static void xs_tls_handshake_done(void *data, int status, key_serial_t peerid)
++{
++	struct rpc_xprt *lower_xprt = data;
++	struct sock_xprt *lower_transport =
++				container_of(lower_xprt, struct sock_xprt, xprt);
++
++	lower_transport->xprt_err = status ? -EACCES : 0;
++	complete(&lower_transport->handshake_done);
++	xprt_put(lower_xprt);
++}
++
++static int xs_tls_handshake_sync(struct rpc_xprt *lower_xprt, struct xprtsec_parms *xprtsec)
++{
++	struct sock_xprt *lower_transport =
++				container_of(lower_xprt, struct sock_xprt, xprt);
++	struct tls_handshake_args args = {
++		.ta_sock	= lower_transport->sock,
++		.ta_done	= xs_tls_handshake_done,
++		.ta_data	= xprt_get(lower_xprt),
++		.ta_peername	= lower_xprt->servername,
++	};
++	struct sock *sk = lower_transport->inet;
++	int rc;
++
++	init_completion(&lower_transport->handshake_done);
++	set_bit(XPRT_SOCK_IGNORE_RECV, &lower_transport->sock_state);
++	lower_transport->xprt_err = -ETIMEDOUT;
++	switch (xprtsec->policy) {
++	case RPC_XPRTSEC_TLS_ANON:
++		rc = tls_client_hello_anon(&args, GFP_KERNEL);
++		if (rc)
++			goto out_put_xprt;
++		break;
++	case RPC_XPRTSEC_TLS_X509:
++		args.ta_my_cert = xprtsec->cert_serial;
++		args.ta_my_privkey = xprtsec->privkey_serial;
++		rc = tls_client_hello_x509(&args, GFP_KERNEL);
++		if (rc)
++			goto out_put_xprt;
++		break;
++	default:
++		rc = -EACCES;
++		goto out_put_xprt;
++	}
++
++	rc = wait_for_completion_interruptible_timeout(&lower_transport->handshake_done,
++						       XS_TLS_HANDSHAKE_TO);
++	if (rc <= 0) {
++		if (!tls_handshake_cancel(sk)) {
++			if (rc == 0)
++				rc = -ETIMEDOUT;
++			goto out_put_xprt;
 +		}
 +	}
-+	return ret;
++
++	rc = lower_transport->xprt_err;
++
++out:
++	xs_stream_reset_connect(lower_transport);
++	clear_bit(XPRT_SOCK_IGNORE_RECV, &lower_transport->sock_state);
++	return rc;
++
++out_put_xprt:
++	xprt_put(lower_xprt);
++	goto out;
 +}
 +
-+static int
-+xs_sock_recv_cmsg(struct socket *sock, struct msghdr *msg, int flags)
++/**
++ * xs_tcp_tls_setup_socket - establish a TLS session on a TCP socket
++ * @work: queued work item
++ *
++ * Invoked by a work queue tasklet.
++ *
++ * For RPC-with-TLS, there is a two-stage connection process.
++ *
++ * The "upper-layer xprt" is visible to the RPC consumer. Once it has
++ * been marked connected, the consumer knows that a TCP connection and
++ * a TLS session have been established.
++ *
++ * A "lower-layer xprt", created in this function, handles the mechanics
++ * of connecting the TCP socket, performing the RPC_AUTH_TLS probe, and
++ * then driving the TLS handshake. Once all that is complete, the upper
++ * layer xprt is marked connected.
++ */
++static void xs_tcp_tls_setup_socket(struct work_struct *work)
 +{
-+	union {
-+		struct cmsghdr	cmsg;
-+		u8		buf[CMSG_SPACE(sizeof(u8))];
-+	} u;
-+	int ret;
++	struct sock_xprt *upper_transport =
++		container_of(work, struct sock_xprt, connect_worker.work);
++	struct rpc_clnt *upper_clnt = upper_transport->clnt;
++	struct rpc_xprt *upper_xprt = &upper_transport->xprt;
++	struct rpc_create_args args = {
++		.net		= upper_xprt->xprt_net,
++		.protocol	= upper_xprt->prot,
++		.address	= (struct sockaddr *)&upper_xprt->addr,
++		.addrsize	= upper_xprt->addrlen,
++		.timeout	= upper_clnt->cl_timeout,
++		.servername	= upper_xprt->servername,
++		.program	= upper_clnt->cl_program,
++		.prognumber	= upper_clnt->cl_prog,
++		.version	= upper_clnt->cl_vers,
++		.authflavor	= RPC_AUTH_TLS,
++		.cred		= upper_clnt->cl_cred,
++		.xprtsec	= {
++			.policy		= RPC_XPRTSEC_NONE,
++		},
++	};
++	unsigned int pflags = current->flags;
++	struct rpc_clnt *lower_clnt;
++	struct rpc_xprt *lower_xprt;
++	int status;
 +
-+	msg->msg_control = &u;
-+	msg->msg_controllen = sizeof(u);
-+	ret = sock_recvmsg(sock, msg, flags);
-+	if (msg->msg_controllen != sizeof(u))
-+		ret = xs_sock_process_cmsg(sock, msg, &u.cmsg, ret);
++	if (atomic_read(&upper_xprt->swapper))
++		current->flags |= PF_MEMALLOC;
++
++	xs_stream_start_connect(upper_transport);
++
++	/* This implicitly sends an RPC_AUTH_TLS probe */
++	lower_clnt = rpc_create(&args);
++	if (IS_ERR(lower_clnt)) {
++		trace_rpc_tls_unavailable(upper_clnt, upper_xprt);
++		clear_bit(XPRT_SOCK_CONNECTING, &upper_transport->sock_state);
++		xprt_clear_connecting(upper_xprt);
++		xprt_wake_pending_tasks(upper_xprt, PTR_ERR(lower_clnt));
++		xs_run_error_worker(upper_transport, XPRT_SOCK_WAKE_PENDING);
++		goto out_unlock;
++	}
++
++	/* RPC_AUTH_TLS probe was successful. Try a TLS handshake on
++	 * the lower xprt.
++	 */
++	rcu_read_lock();
++	lower_xprt = rcu_dereference(lower_clnt->cl_xprt);
++	rcu_read_unlock();
++	status = xs_tls_handshake_sync(lower_xprt, &upper_xprt->xprtsec);
++	if (status) {
++		trace_rpc_tls_not_started(upper_clnt, upper_xprt);
++		goto out_close;
++	}
++
++	status = xs_tcp_tls_finish_connecting(lower_xprt, upper_transport);
++	if (status)
++		goto out_close;
++
++	trace_rpc_socket_connect(upper_xprt, upper_transport->sock, 0);
++	if (!xprt_test_and_set_connected(upper_xprt)) {
++		upper_xprt->connect_cookie++;
++		clear_bit(XPRT_SOCK_CONNECTING, &upper_transport->sock_state);
++		xprt_clear_connecting(upper_xprt);
++
++		upper_xprt->stat.connect_count++;
++		upper_xprt->stat.connect_time += (long)jiffies -
++					   upper_xprt->stat.connect_start;
++		xs_run_error_worker(upper_transport, XPRT_SOCK_WAKE_PENDING);
++	}
++	rpc_shutdown_client(lower_clnt);
++
++out_unlock:
++	current_restore_flags(pflags, PF_MEMALLOC);
++	upper_transport->clnt = NULL;
++	xprt_unlock_connect(upper_xprt, upper_transport);
++	return;
++
++out_close:
++	rpc_shutdown_client(lower_clnt);
++
++	/* xprt_force_disconnect() wakes tasks with a fixed tk_status code.
++	 * Wake them first here to ensure they get our tk_status code.
++	 */
++	xprt_wake_pending_tasks(upper_xprt, status);
++	xs_tcp_force_close(upper_xprt);
++	xprt_clear_connecting(upper_xprt);
++	goto out_unlock;
++}
++
+ /**
+  * xs_connect - connect a socket to a remote endpoint
+  * @xprt: pointer to transport structure
+@@ -2442,6 +2712,7 @@ static void xs_connect(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	} else
+ 		dprintk("RPC:       xs_connect scheduled xprt %p\n", xprt);
+ 
++	transport->clnt = task->tk_client;
+ 	queue_delayed_work(xprtiod_workqueue,
+ 			&transport->connect_worker,
+ 			delay);
+@@ -3095,6 +3366,94 @@ static struct rpc_xprt *xs_setup_tcp(struct xprt_create *args)
+ 	return ret;
+ }
+ 
++/**
++ * xs_setup_tcp_tls - Set up transport to use a TCP with TLS
++ * @args: rpc transport creation arguments
++ *
++ */
++static struct rpc_xprt *xs_setup_tcp_tls(struct xprt_create *args)
++{
++	struct sockaddr *addr = args->dstaddr;
++	struct rpc_xprt *xprt;
++	struct sock_xprt *transport;
++	struct rpc_xprt *ret;
++	unsigned int max_slot_table_size = xprt_max_tcp_slot_table_entries;
++
++	if (args->flags & XPRT_CREATE_INFINITE_SLOTS)
++		max_slot_table_size = RPC_MAX_SLOT_TABLE_LIMIT;
++
++	xprt = xs_setup_xprt(args, xprt_tcp_slot_table_entries,
++			     max_slot_table_size);
++	if (IS_ERR(xprt))
++		return xprt;
++	transport = container_of(xprt, struct sock_xprt, xprt);
++
++	xprt->prot = IPPROTO_TCP;
++	xprt->xprt_class = &xs_tcp_transport;
++	xprt->max_payload = RPC_MAX_FRAGMENT_SIZE;
++
++	xprt->bind_timeout = XS_BIND_TO;
++	xprt->reestablish_timeout = XS_TCP_INIT_REEST_TO;
++	xprt->idle_timeout = XS_IDLE_DISC_TO;
++
++	xprt->ops = &xs_tcp_ops;
++	xprt->timeout = &xs_tcp_default_timeout;
++
++	xprt->max_reconnect_timeout = xprt->timeout->to_maxval;
++	xprt->connect_timeout = xprt->timeout->to_initval *
++		(xprt->timeout->to_retries + 1);
++
++	INIT_WORK(&transport->recv_worker, xs_stream_data_receive_workfn);
++	INIT_WORK(&transport->error_worker, xs_error_handle);
++
++	switch (args->xprtsec.policy) {
++	case RPC_XPRTSEC_TLS_ANON:
++	case RPC_XPRTSEC_TLS_X509:
++		xprt->xprtsec = args->xprtsec;
++		INIT_DELAYED_WORK(&transport->connect_worker,
++				  xs_tcp_tls_setup_socket);
++		break;
++	default:
++		ret = ERR_PTR(-EACCES);
++		goto out_err;
++	}
++
++	switch (addr->sa_family) {
++	case AF_INET:
++		if (((struct sockaddr_in *)addr)->sin_port != htons(0))
++			xprt_set_bound(xprt);
++
++		xs_format_peer_addresses(xprt, "tcp", RPCBIND_NETID_TCP);
++		break;
++	case AF_INET6:
++		if (((struct sockaddr_in6 *)addr)->sin6_port != htons(0))
++			xprt_set_bound(xprt);
++
++		xs_format_peer_addresses(xprt, "tcp", RPCBIND_NETID_TCP6);
++		break;
++	default:
++		ret = ERR_PTR(-EAFNOSUPPORT);
++		goto out_err;
++	}
++
++	if (xprt_bound(xprt))
++		dprintk("RPC:       set up xprt to %s (port %s) via %s\n",
++			xprt->address_strings[RPC_DISPLAY_ADDR],
++			xprt->address_strings[RPC_DISPLAY_PORT],
++			xprt->address_strings[RPC_DISPLAY_PROTO]);
++	else
++		dprintk("RPC:       set up xprt to %s (autobind) via %s\n",
++			xprt->address_strings[RPC_DISPLAY_ADDR],
++			xprt->address_strings[RPC_DISPLAY_PROTO]);
++
++	if (try_module_get(THIS_MODULE))
++		return xprt;
++	ret = ERR_PTR(-EINVAL);
++out_err:
++	xs_xprt_free(xprt);
 +	return ret;
 +}
 +
- static ssize_t
- xs_sock_recvmsg(struct socket *sock, struct msghdr *msg, int flags, size_t seek)
- {
- 	ssize_t ret;
- 	if (seek != 0)
- 		iov_iter_advance(&msg->msg_iter, seek);
--	ret = sock_recvmsg(sock, msg, flags);
-+	ret = xs_sock_recv_cmsg(sock, msg, flags);
- 	return ret > 0 ? ret + seek : ret;
+ /**
+  * xs_setup_bc_tcp - Set up transport to use a TCP backchannel socket
+  * @args: rpc transport creation arguments
+@@ -3204,6 +3563,15 @@ static struct xprt_class	xs_tcp_transport = {
+ 	.netid		= { "tcp", "tcp6", "" },
+ };
+ 
++static struct xprt_class	xs_tcp_tls_transport = {
++	.list		= LIST_HEAD_INIT(xs_tcp_tls_transport.list),
++	.name		= "tcp-with-tls",
++	.owner		= THIS_MODULE,
++	.ident		= XPRT_TRANSPORT_TCP_TLS,
++	.setup		= xs_setup_tcp_tls,
++	.netid		= { "tcp", "tcp6", "" },
++};
++
+ static struct xprt_class	xs_bc_tcp_transport = {
+ 	.list		= LIST_HEAD_INIT(xs_bc_tcp_transport.list),
+ 	.name		= "tcp NFSv4.1 backchannel",
+@@ -3225,6 +3593,7 @@ int init_socket_xprt(void)
+ 	xprt_register_transport(&xs_local_transport);
+ 	xprt_register_transport(&xs_udp_transport);
+ 	xprt_register_transport(&xs_tcp_transport);
++	xprt_register_transport(&xs_tcp_tls_transport);
+ 	xprt_register_transport(&xs_bc_tcp_transport);
+ 
+ 	return 0;
+@@ -3244,6 +3613,7 @@ void cleanup_socket_xprt(void)
+ 	xprt_unregister_transport(&xs_local_transport);
+ 	xprt_unregister_transport(&xs_udp_transport);
+ 	xprt_unregister_transport(&xs_tcp_transport);
++	xprt_unregister_transport(&xs_tcp_tls_transport);
+ 	xprt_unregister_transport(&xs_bc_tcp_transport);
  }
  
-@@ -374,7 +419,7 @@ xs_read_discard(struct socket *sock, struct msghdr *msg, int flags,
- 		size_t count)
- {
- 	iov_iter_discard(&msg->msg_iter, ITER_DEST, count);
--	return sock_recvmsg(sock, msg, flags);
-+	return xs_sock_recv_cmsg(sock, msg, flags);
- }
- 
- #if ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE
 
 
