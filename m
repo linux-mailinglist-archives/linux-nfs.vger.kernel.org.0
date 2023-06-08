@@ -2,173 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 474B0727251
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jun 2023 00:55:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED77B728324
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jun 2023 16:58:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230387AbjFGWzh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Jun 2023 18:55:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54188 "EHLO
+        id S236157AbjFHO6G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Jun 2023 10:58:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233185AbjFGWz0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Jun 2023 18:55:26 -0400
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6E9026A0
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Jun 2023 15:55:14 -0700 (PDT)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-51491b87565so2576988a12.1
-        for <linux-nfs@vger.kernel.org>; Wed, 07 Jun 2023 15:55:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686178513; x=1688770513;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lwmqmz3SLTAm/5XHn54kA2Qkz1KiGdBlOiEDAaxIk1A=;
-        b=h4j71OFNDV5FfvldtjCh/L+Qg71oYHcBnHuDB5srtk996zsBHlbD8SaqVv65TPPNSR
-         D55ZWk68qXdEmt+kIdXRugiaujZb/weZnFCTHcuZcbiNqcbtWT0X7OlskYnP/y/1JDzr
-         WbOZ68AcZfM/aHW4up57fkOGafclaBar/hLOCFBtTjAlCxKYQtVTvq0W4SECGmO4CUql
-         dig397pPxdZX0OTvC2J8JrOzuSqogeJM29duG5G1BgaFsW6donzZWRU1Jz4x6qDKSWR9
-         w6/41Hy1gwVz7zf6M5uQKiqeQS7jHj9sppdk3jRa//N+UQ6Qg+lxAaHE7mp4Zy+a5Adc
-         Kv2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686178513; x=1688770513;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lwmqmz3SLTAm/5XHn54kA2Qkz1KiGdBlOiEDAaxIk1A=;
-        b=IpOUIKnBRhgTAEnaUQBwjteqEq4dTxWnboHPLSYTqbqBmaH5y+17xGykM0ZUTwpMIC
-         CDT1jTWkbRxeXgNh7avq1k2y4LcImfBR0yhR4DjeUEPreWLAM4I3AVcxns3vjtoWkqk/
-         bPWKz7bQ7gwbgF5xNlnrk0MH4snd2VZqpORLj3foZbjmJxrkS/2/Do9Z+fIUyBNRiZWK
-         wVG3QmPLvLsGZzMtziGUomK1PNH6EmIwJ00xs+rBka0+w0vr6cUp4rj4m/s4XloMnGuB
-         Odbv0Ta1x8ybPYWD9vLkXrX6stO5XdP6gUpJwNKWELvoC2HKIyR8Lk6uWoV1sq6ofrZQ
-         cy6g==
-X-Gm-Message-State: AC+VfDzAdo5NMBu+kG/v0+weyM64+iVTywDAPAgOQa370mmct3NQtJZw
-        83uy+JNp4y8j+z4Q+bqI7di5erRLJtvwiMWjBmHBvu+ZH3581g==
-X-Google-Smtp-Source: ACHHUZ5q9v5E8VuN7LGrTh1boUYVANIIUnJnBwlK4YNL8XVT+z7GalrAexguq0b795Op+2qoCUEoHnMN8sFXq0M0ebg=
-X-Received: by 2002:a17:907:8a15:b0:96f:d154:54f7 with SMTP id
- sc21-20020a1709078a1500b0096fd15454f7mr7113590ejc.42.1686178492570; Wed, 07
- Jun 2023 15:54:52 -0700 (PDT)
+        with ESMTP id S235799AbjFHO6F (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Jun 2023 10:58:05 -0400
+X-Greylist: delayed 483 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 08 Jun 2023 07:58:03 PDT
+Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [IPv6:2001:638:700:1038::1:9c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F6DD1FFE
+        for <linux-nfs@vger.kernel.org>; Thu,  8 Jun 2023 07:58:03 -0700 (PDT)
+Received: from smtp-buf-3.desy.de (smtp-buf-3.desy.de [131.169.56.166])
+        by smtp-o-3.desy.de (Postfix) with ESMTP id 03D2F6080E
+        for <linux-nfs@vger.kernel.org>; Thu,  8 Jun 2023 16:49:56 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-3.desy.de 03D2F6080E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1686235797; bh=EoygC3UwgPv0k+4St30V54OcFcr1iVnkdlE4VkvPQ5I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IpAWSdzFKSkAQsOTYVqA9bDewEtX0tNPB0X9iL1d6TqKjQCsywj5ATzlDwIXkeCR6
+         jAJt8xVjQkIfZomr+kBJZ3XC5DGvyrrFNi/iub6wPe7q9trsh9sZ1YApL9BS+SJXD+
+         XNeSjq24xmz9mUSm6h/+SLr4isjXaiRdYYI2m4mE=
+Received: from smtp-m-3.desy.de (smtp-m-3.desy.de [131.169.56.131])
+        by smtp-buf-3.desy.de (Postfix) with ESMTP id EE8DEA00B3;
+        Thu,  8 Jun 2023 16:49:56 +0200 (CEST)
+Received: from a1722.mx.srv.dfn.de (a1722.mx.srv.dfn.de [IPv6:2001:638:d:c301:acdc:1979:2:e7])
+        by smtp-m-3.desy.de (Postfix) with ESMTP id E57B260211;
+        Thu,  8 Jun 2023 16:49:56 +0200 (CEST)
+Received-SPF: Neutral (mailfrom) identity=mailfrom; client-ip=131.169.56.83; helo=smtp-intra-2.desy.de; envelope-from=tigran.mkrtchyan@desy.de; receiver=<UNKNOWN> 
+Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [131.169.56.83])
+        by a1722.mx.srv.dfn.de (Postfix) with ESMTP id 2C3A1220043;
+        Thu,  8 Jun 2023 16:49:56 +0200 (CEST)
+Received: from ani.desy.de (zitpcx21033.desy.de [131.169.185.213])
+        by smtp-intra-2.desy.de (Postfix) with ESMTP id 142B0100077;
+        Thu,  8 Jun 2023 16:49:56 +0200 (CEST)
+From:   Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     linux-nfs@vger.kernel.org,
+        Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+Subject: [PATCH] nfs4: don't map EACCESS and EPERM to EIO
+Date:   Thu,  8 Jun 2023 16:49:33 +0200
+Message-Id: <20230608144933.412664-1-tigran.mkrtchyan@desy.de>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Received: by 2002:a54:2409:0:b0:217:72a9:f646 with HTTP; Wed, 7 Jun 2023
- 15:54:52 -0700 (PDT)
-Reply-To: unitednationcompensationcoordinatortreasury@hotmail.com
-From:   "UNITED NATION DEPUTY SECRETARY-GENERAL (U.N)" 
-        <successikolo@gmail.com>
-Date:   Wed, 7 Jun 2023 15:54:52 -0700
-Message-ID: <CADFNGJ8vkgORi1jPvvhP+FQnPCNqs4cr588+_a-ywDXpqf+qKA@mail.gmail.com>
-Subject: CONTACT DHL OFFICE IMMEDIATELY FOR YOUR ATM MASTER CARD 1.5 MILLION,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.6 required=5.0 tests=ADVANCE_FEE_3_NEW_FRM_MNY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FILL_THIS_FORM,FORM_FRAUD_5,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FORM,MONEY_FRAUD_5,MONEY_FREEMAIL_REPTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
-        T_FILL_THIS_FORM_LOAN,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:52d listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [successikolo[at]gmail.com]
-        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  0.2 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.0 FILL_THIS_FORM Fill in a form with personal information
-        *  0.0 T_FILL_THIS_FORM_LOAN Answer loan question(s)
-        *  0.0 MONEY_FORM Lots of money if you fill out a form
-        *  1.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  0.0 ADVANCE_FEE_3_NEW_FRM_MNY Advance Fee fraud form and lots of
-        *      money
-        *  0.2 MONEY_FRAUD_5 Lots of money and many fraud phrases
-        *  0.0 FORM_FRAUD_5 Fill a form and many fraud phrases
-X-Spam-Level: ******
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-UNITED NATION DEPUTY SECRETARY-GENERAL.
+the nfs4_map_errors function converts NFS specific errors to userland
+errors. However, it ignores NFS4ERR_PERM and EPERM, which then get
+mapped to EIO.
 
-This is to official inform you that we have been having meetings for
-the past three (3) weeks which ended two days ago with MR. JIM YONG
-KIM the world bank president and other seven continent presidents on
-the congress we treated on solution to scam victim problems.
+Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+---
+ fs/nfs/nfs4proc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
- Note: we have decided to contact you following the reports we
-received from anti-fraud international monitoring group your
-name/email has been submitted to us therefore the united nations have
-agreed to compensate you with the sum of (USD$ 1.5 Million) this
-compensation is also including international business that failed you
-in the past due to government problems etc.
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index d3665390c4cb..795205fe4f30 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -171,12 +171,14 @@ static int nfs4_map_errors(int err)
+ 	case -NFS4ERR_LAYOUTTRYLATER:
+ 	case -NFS4ERR_RECALLCONFLICT:
+ 		return -EREMOTEIO;
++	case -NFS4ERR_PERM:
+ 	case -NFS4ERR_WRONGSEC:
+ 	case -NFS4ERR_WRONG_CRED:
+ 		return -EPERM;
+ 	case -NFS4ERR_BADOWNER:
+ 	case -NFS4ERR_BADNAME:
+ 		return -EINVAL;
++	case -NFS4ERR_ACCESS:
+ 	case -NFS4ERR_SHARE_DENIED:
+ 		return -EACCES;
+ 	case -NFS4ERR_MINOR_VERS_MISMATCH:
+-- 
+2.40.1
 
- We have arranged your payment through our ATM Master Card and
-deposited it in DHL Office to deliver it to you which is the latest
-instruction from the World Bank president MR. JIM YONG KIM, For your
-information=E2=80=99s, the delivery charges already paid by U.N treasury, t=
-he
-only money you will send to DHL office south Korea is
-($500). for security keeping fee, U.N coordinator already paid for
-others charges fees for delivery except the security keeping fee, the
-director of DHL refused to collect the security keeping fee from U.N
-coordinator, the Director of DHL office said that they don=E2=80=99t know
-exactly time you will contact them to reconfirm your details to avoid
-counting demur-rage that is why they refused collecting the ($500) .
-for security keeping fee.
-
- Therefore be advice to contact DHL Office agent south Korea. Rev:John
-Lee Tae-seok
-who is in position to deliver your ATM
-Master Card to your location address, contact DHL Office immediately
-with the bellow email & phone number as listed below.
-
- Contact name: John Lee Tae-seok
-
- Email:( dhlgeneralheadquartersrepublic@gmail.com )
-
- Do not hesitate to Contact Rev: John Lee Tae-seok, as soon as you
-
- read this message. Email:( dhlgeneralheadquartersrepublic@gmail.com )
-
- Make sure you reconfirmed DHL Office your details ASAP as stated
-below to avoid wrong delivery.
-
- Your full name..........
-
- Home address:.........
-
- Your country...........
-
- Your city..............
-
- Telephone......
-
- Occupation:.......
-
- Age:=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6..
-
- Let us know as soon as possible you receive your ATM MasterCard
-for proper verification.
-
- Regards,
-
- Mrs Vivian kakadu.
-
- DEPUTY SECRETARY-GENERAL (U.N)
