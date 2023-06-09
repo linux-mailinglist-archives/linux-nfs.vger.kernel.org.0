@@ -2,179 +2,235 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DC2072968A
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jun 2023 12:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BF58729BA0
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jun 2023 15:30:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238794AbjFIKO0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Jun 2023 06:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54854 "EHLO
+        id S230413AbjFINal (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 9 Jun 2023 09:30:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241045AbjFIKNp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Jun 2023 06:13:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C08C4204
-        for <linux-nfs@vger.kernel.org>; Fri,  9 Jun 2023 03:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686304955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PTIph0AO3Glm0cHnpdSUPYaa1BCa6IyevnPVIS0MlWU=;
-        b=i5kB8L0P2NfgN0jURW7C3NH0GbT5paB2LmBr4+mHDrpuqcCxnKfhm1L01AJW9iHRBUyFYV
-        WyGd0VODEh/I6nVQHo9cxZ1WwbTt32who9DMNMutIMOWmrLtUnPNh0Jmmvb73cbB9zFm6l
-        Dwq5ShM/LlnQ6scIO6pN+A6zGOISQF0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-65-Y6xKU7LEMfuedTeRt3xdBA-1; Fri, 09 Jun 2023 06:02:34 -0400
-X-MC-Unique: Y6xKU7LEMfuedTeRt3xdBA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 75714185A78E;
-        Fri,  9 Jun 2023 10:02:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B47D840C1438;
-        Fri,  9 Jun 2023 10:02:30 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Ahern <dsahern@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH net-next 3/6] sunrpc: Use sendmsg(MSG_SPLICE_PAGES) rather then sendpage
-Date:   Fri,  9 Jun 2023 11:02:18 +0100
-Message-ID: <20230609100221.2620633-4-dhowells@redhat.com>
-In-Reply-To: <20230609100221.2620633-1-dhowells@redhat.com>
-References: <20230609100221.2620633-1-dhowells@redhat.com>
+        with ESMTP id S239546AbjFINak (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Jun 2023 09:30:40 -0400
+Received: from smtp-o-1.desy.de (smtp-o-1.desy.de [IPv6:2001:638:700:1038::1:9a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17DF30D6
+        for <linux-nfs@vger.kernel.org>; Fri,  9 Jun 2023 06:30:38 -0700 (PDT)
+Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
+        by smtp-o-1.desy.de (Postfix) with ESMTP id 41CF1E0A78
+        for <linux-nfs@vger.kernel.org>; Fri,  9 Jun 2023 15:30:37 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de 41CF1E0A78
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1686317437; bh=TXKLwvxWsSb5WlMTeItWVRMWJmtKcl8anfUqjo537jk=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=Z2S05bFjCwugvNQNXHMohK9+pob7jpYUiWgDIsw/7ISHwVj5UiwktRZuvPPl/AyEb
+         c1DZbDTdQXcERYB6Q1dqSqsorR3ct3EWTvzTuNemFTQupg6lFXj7XKO/fiYyWek6zH
+         kMnMNAFanJg0iiC+muZ1271bFlxwmU/qtG8+x/Gs=
+Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [IPv6:2001:638:700:1038::1:81])
+        by smtp-buf-1.desy.de (Postfix) with ESMTP id 35E491203BE;
+        Fri,  9 Jun 2023 15:30:37 +0200 (CEST)
+Received: from b1722.mx.srv.dfn.de (b1722.mx.srv.dfn.de [IPv6:2001:638:d:c302:acdc:1979:2:e7])
+        by smtp-m-1.desy.de (Postfix) with ESMTP id 2FE3D40317;
+        Fri,  9 Jun 2023 15:30:37 +0200 (CEST)
+Received-SPF: Neutral (mailfrom) identity=mailfrom; client-ip=131.169.56.82; helo=smtp-intra-1.desy.de; envelope-from=tigran.mkrtchyan@desy.de; receiver=<UNKNOWN> 
+Received: from smtp-intra-1.desy.de (smtp-intra-1.desy.de [131.169.56.82])
+        by b1722.mx.srv.dfn.de (Postfix) with ESMTP id 4F03B220039;
+        Fri,  9 Jun 2023 15:30:36 +0200 (CEST)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-1.desy.de (Postfix) with ESMTP id F0A29C00A2;
+        Fri,  9 Jun 2023 15:30:35 +0200 (CEST)
+Date:   Fri, 9 Jun 2023 15:30:35 +0200 (CEST)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     anna@kernel.org, linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1144390245.427543.1686317435856.JavaMail.zimbra@desy.de>
+In-Reply-To: <437767d036ee95a7ce92d7fa2add82a441eedf78.camel@hammerspace.com>
+References: <20230608144933.412664-1-tigran.mkrtchyan@desy.de> <cfde2b7b2a7f24f2652ce0bb82727cb0b810c758.camel@hammerspace.com> <AD6C85BF-50F9-42BB-83E8-16BCE03D3CF1@desy.de> <437767d036ee95a7ce92d7fa2add82a441eedf78.camel@hammerspace.com>
+Subject: Re: [PATCH] nfs4: don't map EACCESS and EPERM to EIO
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+        boundary="----=_Part_427544_212201746.1686317435931"
+X-Mailer: Zimbra 9.0.0_GA_4546 (ZimbraWebClient - FF114 (Linux)/9.0.0_GA_4546)
+Thread-Topic: nfs4: don't map EACCESS and EPERM to EIO
+Thread-Index: AQHZmhiBcPmt9J8+TUWQbzQkXHpsSa+BCOMAgAAkEgCAAAMCALMbuyzv
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When transmitting data, call down into TCP using sendmsg with
-MSG_SPLICE_PAGES to indicate that content should be spliced rather than
-performing sendpage calls to transmit header, data pages and trailer.
+------=_Part_427544_212201746.1686317435931
+Date: Fri, 9 Jun 2023 15:30:35 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: anna@kernel.org, linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1144390245.427543.1686317435856.JavaMail.zimbra@desy.de>
+In-Reply-To: <437767d036ee95a7ce92d7fa2add82a441eedf78.camel@hammerspace.com>
+References: <20230608144933.412664-1-tigran.mkrtchyan@desy.de> <cfde2b7b2a7f24f2652ce0bb82727cb0b810c758.camel@hammerspace.com> <AD6C85BF-50F9-42BB-83E8-16BCE03D3CF1@desy.de> <437767d036ee95a7ce92d7fa2add82a441eedf78.camel@hammerspace.com>
+Subject: Re: [PATCH] nfs4: don't map EACCESS and EPERM to EIO
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Zimbra 9.0.0_GA_4546 (ZimbraWebClient - FF114 (Linux)/9.0.0_GA_4546)
+Thread-Topic: nfs4: don't map EACCESS and EPERM to EIO
+Thread-Index: AQHZmhiBcPmt9J8+TUWQbzQkXHpsSa+BCOMAgAAkEgCAAAMCALMbuyzv
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-cc: Anna Schumaker <anna@kernel.org>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: linux-nfs@vger.kernel.org
-cc: netdev@vger.kernel.org
----
- include/linux/sunrpc/svc.h | 11 +++++------
- net/sunrpc/svcsock.c       | 38 ++++++++++++--------------------------
- 2 files changed, 17 insertions(+), 32 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 762d7231e574..f66ec8fdb331 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -161,16 +161,15 @@ static inline bool svc_put_not_last(struct svc_serv *serv)
- extern u32 svc_max_payload(const struct svc_rqst *rqstp);
- 
- /*
-- * RPC Requsts and replies are stored in one or more pages.
-+ * RPC Requests and replies are stored in one or more pages.
-  * We maintain an array of pages for each server thread.
-  * Requests are copied into these pages as they arrive.  Remaining
-  * pages are available to write the reply into.
-  *
-- * Pages are sent using ->sendpage so each server thread needs to
-- * allocate more to replace those used in sending.  To help keep track
-- * of these pages we have a receive list where all pages initialy live,
-- * and a send list where pages are moved to when there are to be part
-- * of a reply.
-+ * Pages are sent using ->sendmsg with MSG_SPLICE_PAGES so each server thread
-+ * needs to allocate more to replace those used in sending.  To help keep track
-+ * of these pages we have a receive list where all pages initialy live, and a
-+ * send list where pages are moved to when there are to be part of a reply.
-  *
-  * We use xdr_buf for holding responses as it fits well with NFS
-  * read responses (that have a header, and some data pages, and possibly
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index f77cebe2c071..9d9f522e3ae1 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1203,13 +1203,14 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
- static int svc_tcp_send_kvec(struct socket *sock, const struct kvec *vec,
- 			      int flags)
- {
--	return kernel_sendpage(sock, virt_to_page(vec->iov_base),
--			       offset_in_page(vec->iov_base),
--			       vec->iov_len, flags);
-+	struct msghdr msg = { .msg_flags = MSG_SPLICE_PAGES | flags, };
-+
-+	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, vec, 1, vec->iov_len);
-+	return sock_sendmsg(sock, &msg);
- }
- 
- /*
-- * kernel_sendpage() is used exclusively to reduce the number of
-+ * MSG_SPLICE_PAGES is used exclusively to reduce the number of
-  * copy operations in this path. Therefore the caller must ensure
-  * that the pages backing @xdr are unchanging.
-  *
-@@ -1249,28 +1250,13 @@ static int svc_tcp_sendmsg(struct socket *sock, struct xdr_buf *xdr,
- 	if (ret != head->iov_len)
- 		goto out;
- 
--	if (xdr->page_len) {
--		unsigned int offset, len, remaining;
--		struct bio_vec *bvec;
--
--		bvec = xdr->bvec + (xdr->page_base >> PAGE_SHIFT);
--		offset = offset_in_page(xdr->page_base);
--		remaining = xdr->page_len;
--		while (remaining > 0) {
--			len = min(remaining, bvec->bv_len - offset);
--			ret = kernel_sendpage(sock, bvec->bv_page,
--					      bvec->bv_offset + offset,
--					      len, 0);
--			if (ret < 0)
--				return ret;
--			*sentp += ret;
--			if (ret != len)
--				goto out;
--			remaining -= len;
--			offset = 0;
--			bvec++;
--		}
--	}
-+	msg.msg_flags = MSG_SPLICE_PAGES;
-+	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, xdr->bvec,
-+		      xdr_buf_pagecount(xdr), xdr->page_len);
-+	ret = sock_sendmsg(sock, &msg);
-+	if (ret < 0)
-+		return ret;
-+	*sentp += ret;
- 
- 	if (tail->iov_len) {
- 		ret = svc_tcp_send_kvec(sock, tail, 0);
+Hi Trond,
 
+Obviously, the patch is incorrect. The behavior of the upstream kernel and
+RHEL kernels are different.
+
+Sorry for the noise,
+  Tigran.
+
+
+----- Original Message -----
+> From: "Trond Myklebust" <trondmy@hammerspace.com>
+> To: anna@kernel.org, "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
+> Cc: "linux-nfs" <linux-nfs@vger.kernel.org>
+> Sent: Thursday, 8 June, 2023 19:53:07
+> Subject: Re: [PATCH] nfs4: don't map EACCESS and EPERM to EIO
+
+> On Thu, 2023-06-08 at 19:42 +0200, Tigran Mkrtchyan wrote:
+>> Hi Trond,
+>>=20
+>> I will check and let you know. What we see is EACCESS on layoutget
+>> reported as EIO to the applications
+>>=20
+>=20
+> If this is for a write, then that might just be
+> nfs_mapping_set_error(). In newer kernels, it tries to avoid sending
+> errors that are unexpected for strictly POSIX applications.
+>=20
+> Cheers
+>  Trond
+>=20
+>> Best regards,
+>> Tigran
+>>=20
+>>=20
+>> On June 8, 2023 5:33:16 PM GMT+02:00, Trond Myklebust
+>> <trondmy@hammerspace.com> wrote:
+>> > Hi Tigran,
+>> >=20
+>> > On Thu, 2023-06-08 at 16:49 +0200, Tigran Mkrtchyan wrote:
+>> > > the nfs4_map_errors function converts NFS specific errors to
+>> > > userland
+>> > > errors. However, it ignores NFS4ERR_PERM and EPERM, which then
+>> > > get
+>> > > mapped to EIO.
+>> > >=20
+>> > > Signed-off-by: Tigran Mkrtchyan
+>> > > <tigran.mkrtchyan@desy.de>=C2=A0fs/nfs/nfs4proc.c | 2 ++
+>> > > =C2=A01 file changed, 2 insertions(+)
+>> > >=20
+>> > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+>> > > index d3665390c4cb..795205fe4f30 100644
+>> > > --- a/fs/nfs/nfs4proc.c
+>> > > +++ b/fs/nfs/nfs4proc.c
+>> > > @@ -171,12 +171,14 @@ static int nfs4_map_errors(int err)
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_LAYOUT=
+TRYLATER:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_RECALL=
+CONFLICT:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -EREMOTEIO;
+>> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_PERM:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_WRONGS=
+EC:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_WRONG_=
+CRED:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -EPERM;
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_BADOWN=
+ER:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_BADNAM=
+E:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -EINVAL;
+>> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_ACCESS:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_SHARE_=
+DENIED:
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return -EACCES;
+>> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case -NFS4ERR_MINOR_=
+VERS_MISMATCH:
+>> > >=20
+>> >=20
+>> > Hmm... Aren't both these cases covered by the exception at the top
+>> > of
+>> > the function?
+>> >=20
+>> > static int nfs4_map_errors(int err)
+>> > {
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (err >=3D -1000)
+>> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0return err;
+>> >=20
+>> > As I read it, that should mean that err =3D -NFS4ERR_ACCESS (=3D -13)
+>> > and
+>> > err =3D -NFS4ERR_PERM (=3D -1) will get returned verbatim.
+>> >=20
+>> > Are you seeing these NFS4ERR_ACCESS and NFS4ERR_PERM cases hitting
+>> > the
+>> > default: dprintk() when you turn it on?
+>> >=20
+>=20
+> --
+> Trond Myklebust
+> CTO, Hammerspace Inc
+> 1900 S Norfolk St, Suite 350 - #45
+> San Mateo, CA 94403
+>=20
+> www.hammerspace.com
+
+------=_Part_427544_212201746.1686317435931
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIF
+vzCCBKegAwIBAgIMJENPm+MXSsxZAQzUMA0GCSqGSIb3DQEBCwUAMIGNMQswCQYDVQQGEwJERTFF
+MEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVpbmVzIERldXRzY2hlbiBGb3JzY2h1bmdz
+bmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUwIwYDVQQDDBxERk4tVmVyZWluIEdsb2Jh
+bCBJc3N1aW5nIENBMB4XDTIxMDIxMDEyMzEwOVoXDTI0MDIxMDEyMzEwOVowWDELMAkGA1UEBhMC
+REUxLjAsBgNVBAoMJURldXRzY2hlcyBFbGVrdHJvbmVuLVN5bmNocm90cm9uIERFU1kxGTAXBgNV
+BAMMEFRpZ3JhbiBNa3J0Y2h5YW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQClVKHU
+er1OiIaoo2MFDgCSzcqRCB8qVjjLJyJwzHWkhKniE6dwY8xHciG0HZFpSQqiRsoakD+BzqINXsqI
+CkVck5n7cUJ6cHBOM1r4pzEBcuuozPrT2tAfnHkFFGTZffOXgjmEITfSh6SD+DYeZH4Dt8kPZmnD
+mzWMDFDyB67WWcWApVC1nPh29yGgJk18UZ+Ut9a+woaovMZlutMbuvLVt/x5rpycMw0z+J1qeK7J
+8F3bKb0o2gg+Mnz9LzpLtJp7E9qJUKOTkZGDua9w9xrlo4XGX9Vn72K5wodu6woahdgNG+sXRcJM
+RH3aWgfdznoi1ORLJCfTbdfjSBpclvt/AgMBAAGjggJRMIICTTA+BgNVHSAENzA1MA8GDSsGAQQB
+ga0hgiwBAQQwEAYOKwYBBAGBrSGCLAEBBAgwEAYOKwYBBAGBrSGCLAIBBAgwCQYDVR0TBAIwADAO
+BgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBQG
+1+t/IHSjHSbbu11uU5Iw7JW92zAfBgNVHSMEGDAWgBRrOpiL+fJTidrgrbIyHgkf6Ko7dDAjBgNV
+HREEHDAagRh0aWdyYW4ubWtydGNoeWFuQGRlc3kuZGUwgY0GA1UdHwSBhTCBgjA/oD2gO4Y5aHR0
+cDovL2NkcDEucGNhLmRmbi5kZS9kZm4tY2EtZ2xvYmFsLWcyL3B1Yi9jcmwvY2FjcmwuY3JsMD+g
+PaA7hjlodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2Rmbi1jYS1nbG9iYWwtZzIvcHViL2NybC9jYWNy
+bC5jcmwwgdsGCCsGAQUFBwEBBIHOMIHLMDMGCCsGAQUFBzABhidodHRwOi8vb2NzcC5wY2EuZGZu
+LmRlL09DU1AtU2VydmVyL09DU1AwSQYIKwYBBQUHMAKGPWh0dHA6Ly9jZHAxLnBjYS5kZm4uZGUv
+ZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwSQYIKwYBBQUHMAKGPWh0dHA6
+Ly9jZHAyLnBjYS5kZm4uZGUvZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQw
+DQYJKoZIhvcNAQELBQADggEBADaFbcKsjBPbw6aRf5vxlJdehkafMy4JIdduMEGB+IjpBRZGmu0Z
+R2FRWNyq0lNRz03holZ8Rew0Ldx58REJmvAEzbwox4LT1wG8gRLEehyasSROajZBFrIHadDja0y4
+1JrfqP2umZFE2XWap8pDFpQk4sZOXW1mEamLzFtlgXtCfalmYmbnrq5DnSVKX8LOt5BZvDWin3r4
+m5v313d5/l0Qz2IrN6v7qNIyqT4peW90DUJHB1MGN60W2qe+VimWIuLJkQXMOpaUQJUlhkHOnhw8
+82g+jWG6kpKBMzIQMMGP0urFlPAia2Iuu2VtCkT7Wr43xyhiVzkZcT6uzR23PLsAADGCApswggKX
+AgEBMIGeMIGNMQswCQYDVQQGEwJERTFFMEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVp
+bmVzIERldXRzY2hlbiBGb3JzY2h1bmdzbmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUw
+IwYDVQQDDBxERk4tVmVyZWluIEdsb2JhbCBJc3N1aW5nIENBAgwkQ0+b4xdKzFkBDNQwDQYJYIZI
+AWUDBAIBBQCggc4wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMw
+NjA5MTMzMDM1WjAtBgkqhkiG9w0BCTQxIDAeMA0GCWCGSAFlAwQCAQUAoQ0GCSqGSIb3DQEBCwUA
+MC8GCSqGSIb3DQEJBDEiBCD8YfV1uRYcSIlp71Uoh0JUR7rCImqxge9GYF05q1Ch7jA0BgkqhkiG
+9w0BCQ8xJzAlMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAHBgUrDgMCBzANBgkqhkiG9w0B
+AQsFAASCAQAqVgBwgqmVgNFLtqDPx2pE+of/mBN1NdR3oshaIiPced3ZYQfCbEk/Sn9VfpIyLeKn
+JAkPHHXQzeJ83j+3SMXx/usXMGO/FerTkVz8Rinqo8kMvDbXlGODH7qgOH4oxz3xUwiNm6+DkH4u
+ghSTvAJo9ycQgZZSUuNyC6TQK2N5tdUxnt4XF5TlBVVSQ6TCN4kPfafw23FE8804RvAhJJBVDXqS
+mEsSL4AUquktF/Dbl3N4ZD0yrAZQKUmAetNuZYO+rAB3kJcUSaddj73NM2oumpx/vQywGTyVzRFO
+AWMtskg2hufGYvTHJN8w5DlN1gDFwKr1wtPSUFGluiBgo/ouAAAAAAAA
+------=_Part_427544_212201746.1686317435931--
