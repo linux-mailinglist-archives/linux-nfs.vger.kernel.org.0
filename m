@@ -2,132 +2,179 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAB51728A5C
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Jun 2023 23:42:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC2072968A
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Jun 2023 12:14:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjFHVm2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 8 Jun 2023 17:42:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39930 "EHLO
+        id S238794AbjFIKO0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 9 Jun 2023 06:14:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229596AbjFHVm1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Jun 2023 17:42:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C705D2D7C
-        for <linux-nfs@vger.kernel.org>; Thu,  8 Jun 2023 14:41:41 -0700 (PDT)
+        with ESMTP id S241045AbjFIKNp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Jun 2023 06:13:45 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C08C4204
+        for <linux-nfs@vger.kernel.org>; Fri,  9 Jun 2023 03:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686260500;
+        s=mimecast20190719; t=1686304955;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=gkXER8b7tlyAIoCC6U7LKpfJgf1PcreteHGOeKrXzqo=;
-        b=be/Gm//9OqRmi4EDCGdxN2CxuqA0M6Je7L3ADbivC6uuxFQwmLGnKPxAaO71cXA/9cN/eW
-        9fKWorFOGE0qM1sSQ/gWd3xp/4Ot62WXgdzmSTBlAKw/PoMFv6KPmjR43p4/EHPLKSTqeK
-        8U71H1CRQ+kJMtA0dSH3WXOyOVRTzvc=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PTIph0AO3Glm0cHnpdSUPYaa1BCa6IyevnPVIS0MlWU=;
+        b=i5kB8L0P2NfgN0jURW7C3NH0GbT5paB2LmBr4+mHDrpuqcCxnKfhm1L01AJW9iHRBUyFYV
+        WyGd0VODEh/I6nVQHo9cxZ1WwbTt32who9DMNMutIMOWmrLtUnPNh0Jmmvb73cbB9zFm6l
+        Dwq5ShM/LlnQ6scIO6pN+A6zGOISQF0=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-258-4Cz37dkOOQuc8uPr0cEwMw-1; Thu, 08 Jun 2023 17:41:39 -0400
-X-MC-Unique: 4Cz37dkOOQuc8uPr0cEwMw-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+ us-mta-65-Y6xKU7LEMfuedTeRt3xdBA-1; Fri, 09 Jun 2023 06:02:34 -0400
+X-MC-Unique: Y6xKU7LEMfuedTeRt3xdBA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2A609811E7C
-        for <linux-nfs@vger.kernel.org>; Thu,  8 Jun 2023 21:41:39 +0000 (UTC)
-Received: from dwysocha.rdu.csb (unknown [10.22.8.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E4369492B00;
-        Thu,  8 Jun 2023 21:41:38 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com, linux-nfs@vger.kernel.org
-Subject: [PATCH] netfs: Only call folio_start_fscache() one time for each folio
-Date:   Thu,  8 Jun 2023 17:41:37 -0400
-Message-Id: <20230608214137.856006-1-dwysocha@redhat.com>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 75714185A78E;
+        Fri,  9 Jun 2023 10:02:33 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B47D840C1438;
+        Fri,  9 Jun 2023 10:02:30 +0000 (UTC)
+From:   David Howells <dhowells@redhat.com>
+To:     netdev@vger.kernel.org
+Cc:     David Howells <dhowells@redhat.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        David Ahern <dsahern@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH net-next 3/6] sunrpc: Use sendmsg(MSG_SPLICE_PAGES) rather then sendpage
+Date:   Fri,  9 Jun 2023 11:02:18 +0100
+Message-ID: <20230609100221.2620633-4-dhowells@redhat.com>
+In-Reply-To: <20230609100221.2620633-1-dhowells@redhat.com>
+References: <20230609100221.2620633-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If a network filesystem using netfs implements a clamp_length()
-function, it can set subrequest lengths smaller than a page size.
-When we loop through the folios in netfs_rreq_unlock_folios() to
-set any folios to be written back, we need to make sure we only
-call folio_start_fscache() once for each folio.  Otherwise,
-this simple testcase:
-  mount -o fsc,rsize=1024,wsize=1024 127.0.0.1:/export /mnt/nfs
-  dd if=/dev/zero of=/mnt/nfs/file.bin bs=4096 count=1
-  1+0 records in
-  1+0 records out
-  4096 bytes (4.1 kB, 4.0 KiB) copied, 0.0126359 s, 324 kB/s
-  cat /mnt/nfs/file.bin > /dev/null
+When transmitting data, call down into TCP using sendmsg with
+MSG_SPLICE_PAGES to indicate that content should be spliced rather than
+performing sendpage calls to transmit header, data pages and trailer.
 
-will trigger an oops similar to the following:
-...
- page dumped because: VM_BUG_ON_FOLIO(folio_test_private_2(folio))
- ------------[ cut here ]------------
- kernel BUG at include/linux/netfs.h:44!
-...
- CPU: 5 PID: 134 Comm: kworker/u16:5 Kdump: loaded Not tainted 6.4.0-rc5
-...
- RIP: 0010:netfs_rreq_unlock_folios+0x68e/0x730 [netfs]
-...
- Call Trace:
-  <TASK>
-  netfs_rreq_assess+0x497/0x660 [netfs]
-  netfs_subreq_terminated+0x32b/0x610 [netfs]
-  nfs_netfs_read_completion+0x14e/0x1a0 [nfs]
-  nfs_read_completion+0x2f9/0x330 [nfs]
-  rpc_free_task+0x72/0xa0 [sunrpc]
-  rpc_async_release+0x46/0x70 [sunrpc]
-  process_one_work+0x3bd/0x710
-  worker_thread+0x89/0x610
-  kthread+0x181/0x1c0
-  ret_from_fork+0x29/0x50
-
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
+cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+cc: Anna Schumaker <anna@kernel.org>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: Jens Axboe <axboe@kernel.dk>
+cc: Matthew Wilcox <willy@infradead.org>
+cc: linux-nfs@vger.kernel.org
+cc: netdev@vger.kernel.org
 ---
- fs/netfs/buffered_read.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/linux/sunrpc/svc.h | 11 +++++------
+ net/sunrpc/svcsock.c       | 38 ++++++++++++--------------------------
+ 2 files changed, 17 insertions(+), 32 deletions(-)
 
-diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
-index 3404707ddbe7..0dafd970c1b6 100644
---- a/fs/netfs/buffered_read.c
-+++ b/fs/netfs/buffered_read.c
-@@ -21,6 +21,7 @@ void netfs_rreq_unlock_folios(struct netfs_io_request *rreq)
- 	pgoff_t last_page = ((rreq->start + rreq->len) / PAGE_SIZE) - 1;
- 	size_t account = 0;
- 	bool subreq_failed = false;
-+	bool folio_started;
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 762d7231e574..f66ec8fdb331 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -161,16 +161,15 @@ static inline bool svc_put_not_last(struct svc_serv *serv)
+ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
  
- 	XA_STATE(xas, &rreq->mapping->i_pages, start_page);
+ /*
+- * RPC Requsts and replies are stored in one or more pages.
++ * RPC Requests and replies are stored in one or more pages.
+  * We maintain an array of pages for each server thread.
+  * Requests are copied into these pages as they arrive.  Remaining
+  * pages are available to write the reply into.
+  *
+- * Pages are sent using ->sendpage so each server thread needs to
+- * allocate more to replace those used in sending.  To help keep track
+- * of these pages we have a receive list where all pages initialy live,
+- * and a send list where pages are moved to when there are to be part
+- * of a reply.
++ * Pages are sent using ->sendmsg with MSG_SPLICE_PAGES so each server thread
++ * needs to allocate more to replace those used in sending.  To help keep track
++ * of these pages we have a receive list where all pages initialy live, and a
++ * send list where pages are moved to when there are to be part of a reply.
+  *
+  * We use xdr_buf for holding responses as it fits well with NFS
+  * read responses (that have a header, and some data pages, and possibly
+diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+index f77cebe2c071..9d9f522e3ae1 100644
+--- a/net/sunrpc/svcsock.c
++++ b/net/sunrpc/svcsock.c
+@@ -1203,13 +1203,14 @@ static int svc_tcp_recvfrom(struct svc_rqst *rqstp)
+ static int svc_tcp_send_kvec(struct socket *sock, const struct kvec *vec,
+ 			      int flags)
+ {
+-	return kernel_sendpage(sock, virt_to_page(vec->iov_base),
+-			       offset_in_page(vec->iov_base),
+-			       vec->iov_len, flags);
++	struct msghdr msg = { .msg_flags = MSG_SPLICE_PAGES | flags, };
++
++	iov_iter_kvec(&msg.msg_iter, ITER_SOURCE, vec, 1, vec->iov_len);
++	return sock_sendmsg(sock, &msg);
+ }
  
-@@ -53,6 +54,7 @@ void netfs_rreq_unlock_folios(struct netfs_io_request *rreq)
+ /*
+- * kernel_sendpage() is used exclusively to reduce the number of
++ * MSG_SPLICE_PAGES is used exclusively to reduce the number of
+  * copy operations in this path. Therefore the caller must ensure
+  * that the pages backing @xdr are unchanging.
+  *
+@@ -1249,28 +1250,13 @@ static int svc_tcp_sendmsg(struct socket *sock, struct xdr_buf *xdr,
+ 	if (ret != head->iov_len)
+ 		goto out;
  
- 		pg_end = folio_pos(folio) + folio_size(folio) - 1;
+-	if (xdr->page_len) {
+-		unsigned int offset, len, remaining;
+-		struct bio_vec *bvec;
+-
+-		bvec = xdr->bvec + (xdr->page_base >> PAGE_SHIFT);
+-		offset = offset_in_page(xdr->page_base);
+-		remaining = xdr->page_len;
+-		while (remaining > 0) {
+-			len = min(remaining, bvec->bv_len - offset);
+-			ret = kernel_sendpage(sock, bvec->bv_page,
+-					      bvec->bv_offset + offset,
+-					      len, 0);
+-			if (ret < 0)
+-				return ret;
+-			*sentp += ret;
+-			if (ret != len)
+-				goto out;
+-			remaining -= len;
+-			offset = 0;
+-			bvec++;
+-		}
+-	}
++	msg.msg_flags = MSG_SPLICE_PAGES;
++	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, xdr->bvec,
++		      xdr_buf_pagecount(xdr), xdr->page_len);
++	ret = sock_sendmsg(sock, &msg);
++	if (ret < 0)
++		return ret;
++	*sentp += ret;
  
-+		folio_started = false;
- 		for (;;) {
- 			loff_t sreq_end;
- 
-@@ -60,8 +62,10 @@ void netfs_rreq_unlock_folios(struct netfs_io_request *rreq)
- 				pg_failed = true;
- 				break;
- 			}
--			if (test_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags))
-+			if (!folio_started && test_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags)) {
- 				folio_start_fscache(folio);
-+				folio_started = true;
-+			}
- 			pg_failed |= subreq_failed;
- 			sreq_end = subreq->start + subreq->len - 1;
- 			if (pg_end < sreq_end)
--- 
-2.31.1
+ 	if (tail->iov_len) {
+ 		ret = svc_tcp_send_kvec(sock, tail, 0);
 
