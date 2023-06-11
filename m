@@ -2,97 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6B3172B854
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jun 2023 08:53:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C34CC72B353
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jun 2023 19:46:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234634AbjFLGx3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Jun 2023 02:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60434 "EHLO
+        id S232579AbjFKRqQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 11 Jun 2023 13:46:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234600AbjFLGx1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Jun 2023 02:53:27 -0400
-X-Greylist: delayed 9006 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 11 Jun 2023 23:48:22 PDT
-Received: from mail1.ceniai.inf.cu (mail1.ceniai.inf.cu [169.158.128.150])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B615A10C2;
-        Sun, 11 Jun 2023 23:48:22 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail1.ceniai.inf.cu (Postfix) with ESMTP id 57EC14E8137;
-        Mon, 12 Jun 2023 00:09:26 -0400 (EDT)
-X-Virus-Scanned: amavisd-new at mail1.ceniai.inf.cu
-Received: from mail1.ceniai.inf.cu ([127.0.0.1])
-        by localhost (mail1.ceniai.inf.cu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id WSVsOis4rone; Mon, 12 Jun 2023 00:09:26 -0400 (EDT)
-Received: from mail.vega.inf.cu (mail.vega.inf.cu [169.158.143.34])
-        by mail1.ceniai.inf.cu (Postfix) with ESMTP id 9A3994E8D46;
-        Mon, 12 Jun 2023 00:00:28 -0400 (EDT)
-Received: from mx1.ecovida.cu (unknown [169.158.179.26])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (No client certificate requested)
-        by mail.vega.inf.cu (Postfix) with ESMTPS id D54B5565B0A;
-        Sun, 11 Jun 2023 11:40:11 -0400 (CDT)
-Received: from mx1.ecovida.cu (localhost [127.0.0.1])
-        by mx1.ecovida.cu (Proxmox) with ESMTP id 6A2B9240CE7;
-        Sun, 11 Jun 2023 15:23:52 -0400 (CDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ecovida.cu; h=cc
-        :content-description:content-transfer-encoding:content-type
-        :content-type:date:from:from:message-id:mime-version:reply-to
-        :reply-to:subject:subject:to:to; s=ecovida20; bh=eJCLj5LjLfltOUH
-        QwbhnEIM71NnOqC+k0uTJlyqNYA0=; b=DcRsVnh8PwZgs7y+XuOKXZsVaQBR/H6
-        XoACm7D3Yogbb1byEspwmAO2qEbTBHMBRjokBnHhowQEK0u5DCx6Q+DJuM4aPAGQ
-        m1IUL3Jrxhpnx1mha+204x7zV997W+a7qgttKpEZNEYo1zNd4bwr6JrPxUXBrvVV
-        rNjSKjASF1PcwDaH5VBWrFOfNBj+nT7kFyp1MNWVPoL6pgZtGf5rPwhdx6IMsT4C
-        /ezCQy3gmtNplW3691klQbMXXvf9m8f2STt41mJQnysXmxFaUi6AC3GMnQMOII6B
-        u4191nZxATn9FePP1IhGYMxqmuczU0qatcarBodAiiGfygRm1/JQUFA==
-Received: from correoweb.ecovida.cu (correoweb.ecovida.cu [192.168.100.7])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mx1.ecovida.cu (Proxmox) with ESMTPS id 5C4AE240A32;
-        Sun, 11 Jun 2023 15:23:52 -0400 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-        by correoweb.ecovida.cu (Postfix) with ESMTP id 8253F50575F;
-        Sun, 11 Jun 2023 13:20:22 -0400 (CDT)
-Received: from correoweb.ecovida.cu ([127.0.0.1])
-        by localhost (correoweb.ecovida.cu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 4y-7DLKV7ivg; Sun, 11 Jun 2023 13:20:22 -0400 (CDT)
-Received: from localhost (localhost [127.0.0.1])
-        by correoweb.ecovida.cu (Postfix) with ESMTP id 091644AD4E2;
-        Sun, 11 Jun 2023 12:35:34 -0400 (CDT)
-X-Virus-Scanned: amavisd-new at ecovida.cu
-Received: from correoweb.ecovida.cu ([127.0.0.1])
-        by localhost (correoweb.ecovida.cu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 4IrgkPfrbOHY; Sun, 11 Jun 2023 12:35:33 -0400 (CDT)
-Received: from [192.168.100.9] (unknown [45.88.97.218])
-        by correoweb.ecovida.cu (Postfix) with ESMTPSA id 5E2674B2B1D;
-        Sun, 11 Jun 2023 10:29:39 -0400 (CDT)
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S229583AbjFKRqP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 11 Jun 2023 13:46:15 -0400
+X-Greylist: delayed 60 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 11 Jun 2023 10:46:12 PDT
+Received: from smtpdh16-2.aruba.it (smtpdh16-2.aruba.it [62.149.155.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F25B1B7
+        for <linux-nfs@vger.kernel.org>; Sun, 11 Jun 2023 10:46:12 -0700 (PDT)
+Received: from localhost.localdomain ([146.241.109.39])
+        by Aruba Outgoing Smtp  with ESMTPSA
+        id 8P7lqAnlZgE4H8P7lqw6vm; Sun, 11 Jun 2023 19:45:09 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+        t=1686505509; bh=/u2UIhs06EIdaw0lKNg8GbbMsebWmhpyhvCbLKiRVD0=;
+        h=From:To:Subject:Date:MIME-Version;
+        b=bv/Qh8ynFQUiOHjce3Yr61qJkFrb3XZ+FonG1QeQLlw42dpdd4THcTadxoCi09h8K
+         G1mR+feHLL8fzgD9fN61hhwyZLgvUKdB4wQoNqEHzDQRkw1Rq8cEZSLhEHJd2k+9dU
+         fjmOd5w86uQ6RmkdB1nMqpqdpvVm8E74Uka9xg2oT+aWXJ6yu9piJScB0LS5kt0l8C
+         +WoKdgWu4DID8feYd9B2qFulIuSpOvkTx453kvdWwmHOq3BrktVEuSpZ4+iG58VLpv
+         PnZrhSHS47qCmusWcXFrOfMdZUBK1Ys6zD7jiBAudi2+kkq3WSYEmYC/xNhEcN0GaX
+         a63FzUmKTVp0w==
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Bernd Kuhls <bernd.kuhls@t-online.de>,
+        Giulio Benetti <giulio.benetti@benettiengineering.com>
+Subject: [PATCH] support/reexport: guard dlfcn.h include with HAVE_DLFCN_H
+Date:   Sun, 11 Jun 2023 19:45:06 +0200
+Message-Id: <20230611174506.3432934-1-giulio.benetti@benettiengineering.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: RE:
-To:     Recipients <lazaroluis@ecovida.cu>
-From:   Aldi Albrecht <lazaroluis@ecovida.cu>
-Date:   Sun, 11 Jun 2023 15:33:46 +0100
-Reply-To: aldiheister@gmail.com
-X-Antivirus: Avast (VPS 230611-4, 6/11/2023), Outbound message
-X-Antivirus-Status: Clean
-Message-Id: <20230611142940.5E2674B2B1D@correoweb.ecovida.cu>
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfNJ8hWLk+SeiB5BVAf+pnazzSw6W/Pm6Q8XFCiRwVt5odQzZSxEPJlu0+ZRUDv1xmdpJDRECJBRMeu2Rc17/zlFjKqIQzl+iyC5dGyWdHDOr0g6tUSRc
+ We7KTxCWY9j4zUJRqqMeUVCVpdSeV8AoN9pzanlUVF7pyWfd2iKbqmG+MFiZ/wV5EhS83z8VIw5CB/PR4CWKNRtsEdaHuVuGnWET9puBckbay0VVI9vZcpYl
+ KgYe3eI1w5sHkuMs1TUI5Ry96fh2O0vDfWwMBsE0tK6ARjhtFuBI/nAND4QoKS9m1n92w2xJmMNIC4YlvgEsh+Y740PDTdI03Nczl4Lp4Mc=
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hallo gesch=E4tzter Beg=FCnstigter, Sie wurden f=FCr eine gro=DFe Geldsumme=
- f=FCr humanit=E4re und Investitionszwecke jeglicher Art ausgew=E4hlt. F=FC=
-r weitere Details antworten Sie bitte.
+From: Bernd Kuhls <bernd.kuhls@t-online.de>
 
-Gr=FC=DFe
+Signed-off-by: Bernd Kuhls <bernd.kuhls@t-online.de>
+Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+---
+ support/reexport/fsidd.c    | 2 ++
+ support/reexport/reexport.c | 2 ++
+ 2 files changed, 4 insertions(+)
+
+diff --git a/support/reexport/fsidd.c b/support/reexport/fsidd.c
+index 37649d06..d4b245e8 100644
+--- a/support/reexport/fsidd.c
++++ b/support/reexport/fsidd.c
+@@ -3,7 +3,9 @@
+ #endif
  
-Beate Heister
-Eigent=FCmer
-Aldi Albrecht-TRUST
-
+ #include <assert.h>
++#ifdef HAVE_DLFCN_H
+ #include <dlfcn.h>
++#endif
+ #include <event2/event.h>
+ #include <limits.h>
+ #include <stdint.h>
+diff --git a/support/reexport/reexport.c b/support/reexport/reexport.c
+index d597a2f7..d9a700af 100644
+--- a/support/reexport/reexport.c
++++ b/support/reexport/reexport.c
+@@ -2,7 +2,9 @@
+ #include <config.h>
+ #endif
+ 
++#ifdef HAVE_DLFCN_H
+ #include <dlfcn.h>
++#endif
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <sys/random.h>
 -- 
-This email has been checked for viruses by Avast antivirus software.
-www.avast.com
+2.34.1
 
