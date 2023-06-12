@@ -2,42 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93CCD72C779
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jun 2023 16:14:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3EE772C7A2
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jun 2023 16:14:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237329AbjFLOO2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Jun 2023 10:14:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55128 "EHLO
+        id S238053AbjFLOOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Jun 2023 10:14:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237333AbjFLOOC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Jun 2023 10:14:02 -0400
+        with ESMTP id S237455AbjFLOOM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Jun 2023 10:14:12 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 286F810E5
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Jun 2023 07:14:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F251728
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Jun 2023 07:14:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B66B162218
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Jun 2023 14:13:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFEC3C433A0;
-        Mon, 12 Jun 2023 14:13:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 076E1629BA
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Jun 2023 14:14:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44717C4339E;
+        Mon, 12 Jun 2023 14:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686579239;
-        bh=/YH35t8xUhMRFWicEnRfAlCdNTPpL2IxiTw+ukxgcOY=;
+        s=k20201202; t=1686579245;
+        bh=8PHT9ojTIcOKf0VV5n7pIX+G+OnPi4wyyhae4q3yCDg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DoUHub86N2U6d37JC7s0nkKu6ztsCWDX6n8V+HtCtmcO2RWjlu+Mul4ULdvnt82Ps
-         NnhgessgnLX8to68uApB82JMQbzQxDzJgRx8M49xUqvM2hcVYXCTbSPeW5KPY1Gnsh
-         oQeuDmMN4bmLhGTiBxFKlB/Z6Yl2Nwth36TQvRmERRIz22Jg+AmTTgIG5uoKd5C7Ga
-         Z91svhJves0SA0vfVwg7siqdF7lLcKtiI/tPAGIuAZ93fzz1lJUBfZIR+kFCVhcD6Q
-         t4sdgA86GEJgT0j62p0zzEc7cNjM4tZ2NSHEjpG+GGhVIS7aj7ZfJLFwUL+QELSDlB
-         te1ptRuub7liw==
-Subject: [PATCH v1 5/7] svcrdma: Remove an unused argument from
- __svc_rdma_put_rw_ctxt()
+        b=M9AqbvrP/iiI9O0zv8S5Zup5yK+sRgAS14yhavRON6p35BswArljSQ3bnHqmwy2Ua
+         ibgf6THHxPrkm83nXQvhzNKzo0ilfvuCEZhuB8l2a8LCqpMdFGTCyGGA3bNwl0F+5D
+         wMXLN0KL7ipCuEdoUP5jgLE7uo/BrGVxKk/GxIgeuS5jC5C/kER6K7dJ1NSpZ5ZF7q
+         s3ttsQ0Ijrt38o8aBmLk/32gbCoivjmpWLaAuwNDXLmUVKJO8pLFg/Vux5dNe3ACob
+         OwJDDNJ9/VmAk5MPoKFHficB+CFPd0FNZ+V08+rCLbzp0grMTMhG3q2fPBWJuDjugx
+         EL2uu0zsqoQ1g==
+Subject: [PATCH v1 6/7] SUNRPC: Fix comments for transport class registration
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 12 Jun 2023 10:13:58 -0400
-Message-ID: <168657923806.5674.8002278565811410253.stgit@manet.1015granger.net>
+Date:   Mon, 12 Jun 2023 10:14:04 -0400
+Message-ID: <168657924433.5674.7660984476060437991.stgit@manet.1015granger.net>
 In-Reply-To: <168657912781.5674.12501431304770900992.stgit@manet.1015granger.net>
 References: <168657912781.5674.12501431304770900992.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -56,44 +55,46 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Clean up.
+The preceding block comment before svc_register_xprt_class() is
+not related to that function.
+
+While we're here, add proper documenting comments for these two
+publicly-visible functions.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_rw.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ net/sunrpc/svc_xprt.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 9836406cc41e..e460e25a1d6d 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -84,8 +84,7 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
- 	return NULL;
- }
- 
--static void __svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
--				   struct svc_rdma_rw_ctxt *ctxt,
-+static void __svc_rdma_put_rw_ctxt(struct svc_rdma_rw_ctxt *ctxt,
- 				   struct llist_head *list)
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 4af83a0fd395..6d70278bd88d 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -74,6 +74,13 @@ static LIST_HEAD(svc_xprt_class_list);
+  *		  that no other thread will be using the transport or will
+  *		  try to set XPT_DEAD.
+  */
++
++/**
++ * svc_reg_xprt_class - Register a server-side RPC transport class
++ * @xcl: New transport class to be registered
++ *
++ * Returns zero on success; otherwise a negative errno is returned.
++ */
+ int svc_reg_xprt_class(struct svc_xprt_class *xcl)
  {
- 	sg_free_table_chained(&ctxt->rw_sg_table, SG_CHUNK_SIZE);
-@@ -95,7 +94,7 @@ static void __svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
- static void svc_rdma_put_rw_ctxt(struct svcxprt_rdma *rdma,
- 				 struct svc_rdma_rw_ctxt *ctxt)
- {
--	__svc_rdma_put_rw_ctxt(rdma, ctxt, &rdma->sc_rw_ctxts);
-+	__svc_rdma_put_rw_ctxt(ctxt, &rdma->sc_rw_ctxts);
+ 	struct svc_xprt_class *cl;
+@@ -96,6 +103,11 @@ int svc_reg_xprt_class(struct svc_xprt_class *xcl)
  }
+ EXPORT_SYMBOL_GPL(svc_reg_xprt_class);
  
- /**
-@@ -200,7 +199,7 @@ static void svc_rdma_cc_release(struct svc_rdma_chunk_ctxt *cc,
- 		rdma_rw_ctx_destroy(&ctxt->rw_ctx, rdma->sc_qp,
- 				    rdma->sc_port_num, ctxt->rw_sg_table.sgl,
- 				    ctxt->rw_nents, dir);
--		__svc_rdma_put_rw_ctxt(rdma, ctxt, &free);
-+		__svc_rdma_put_rw_ctxt(ctxt, &free);
- 
- 		ctxt->rw_node.next = first;
- 		first = &ctxt->rw_node;
++/**
++ * svc_unreg_xprt_class - Unregister a server-side RPC transport class
++ * @xcl: Transport class to be unregistered
++ *
++ */
+ void svc_unreg_xprt_class(struct svc_xprt_class *xcl)
+ {
+ 	dprintk("svc: Removing svc transport class '%s'\n", xcl->xcl_name);
 
 
