@@ -2,47 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C34CC72B353
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Jun 2023 19:46:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63CD472C60C
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jun 2023 15:34:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232579AbjFKRqQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 11 Jun 2023 13:46:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52466 "EHLO
+        id S235517AbjFLNeK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Jun 2023 09:34:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjFKRqP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 11 Jun 2023 13:46:15 -0400
-X-Greylist: delayed 60 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 11 Jun 2023 10:46:12 PDT
-Received: from smtpdh16-2.aruba.it (smtpdh16-2.aruba.it [62.149.155.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F25B1B7
-        for <linux-nfs@vger.kernel.org>; Sun, 11 Jun 2023 10:46:12 -0700 (PDT)
-Received: from localhost.localdomain ([146.241.109.39])
-        by Aruba Outgoing Smtp  with ESMTPSA
-        id 8P7lqAnlZgE4H8P7lqw6vm; Sun, 11 Jun 2023 19:45:09 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
-        t=1686505509; bh=/u2UIhs06EIdaw0lKNg8GbbMsebWmhpyhvCbLKiRVD0=;
-        h=From:To:Subject:Date:MIME-Version;
-        b=bv/Qh8ynFQUiOHjce3Yr61qJkFrb3XZ+FonG1QeQLlw42dpdd4THcTadxoCi09h8K
-         G1mR+feHLL8fzgD9fN61hhwyZLgvUKdB4wQoNqEHzDQRkw1Rq8cEZSLhEHJd2k+9dU
-         fjmOd5w86uQ6RmkdB1nMqpqdpvVm8E74Uka9xg2oT+aWXJ6yu9piJScB0LS5kt0l8C
-         +WoKdgWu4DID8feYd9B2qFulIuSpOvkTx453kvdWwmHOq3BrktVEuSpZ4+iG58VLpv
-         PnZrhSHS47qCmusWcXFrOfMdZUBK1Ys6zD7jiBAudi2+kkq3WSYEmYC/xNhEcN0GaX
-         a63FzUmKTVp0w==
-From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     Bernd Kuhls <bernd.kuhls@t-online.de>,
-        Giulio Benetti <giulio.benetti@benettiengineering.com>
-Subject: [PATCH] support/reexport: guard dlfcn.h include with HAVE_DLFCN_H
-Date:   Sun, 11 Jun 2023 19:45:06 +0200
-Message-Id: <20230611174506.3432934-1-giulio.benetti@benettiengineering.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S235757AbjFLNeJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Jun 2023 09:34:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C6F109;
+        Mon, 12 Jun 2023 06:34:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9900F611CC;
+        Mon, 12 Jun 2023 13:34:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530B3C433D2;
+        Mon, 12 Jun 2023 13:34:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686576847;
+        bh=CducP5IqvGJjjNpSYSzFQgS1ZXIbd1XVtQqmaXSf5+k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=NfuuHD0hlIev++OR8YgKdYFsgVfHgLpZ+6YlIDIhHxrxkYWW6DzVOBTw4QZJpIvJX
+         tHTh0u2rofzfb+4CbAfJm1bMP0JRliL28g6l+FjXn7//y2sVPGBHpHjpzD6R/6jckR
+         osF62zNBDHGbLfzVqnPt7WNoj0IZaqFz44nyLGBKTTfSBLxyoZKJFs9D8yM34krDvD
+         8ojlXgRBzPOIo9Y9PpHCfMGXYgcZ5VMaZVOldTtSsG9yaC7ukTPkWfb0NN7ef/MU0U
+         JnaaKfU+Om+/g40todryJ5Cp1xqJ+mwvCM/bUxm9ug7N6oCw+MIlI+hTtE2fGRECtW
+         rgFr3JZOUz6Ag==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, NeilBrown <neilb@suse.de>
+Cc:     stable@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nfs: don't report STATX_BTIME in ->getattr
+Date:   Mon, 12 Jun 2023 09:34:04 -0400
+Message-Id: <20230612133404.181166-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4xfNJ8hWLk+SeiB5BVAf+pnazzSw6W/Pm6Q8XFCiRwVt5odQzZSxEPJlu0+ZRUDv1xmdpJDRECJBRMeu2Rc17/zlFjKqIQzl+iyC5dGyWdHDOr0g6tUSRc
- We7KTxCWY9j4zUJRqqMeUVCVpdSeV8AoN9pzanlUVF7pyWfd2iKbqmG+MFiZ/wV5EhS83z8VIw5CB/PR4CWKNRtsEdaHuVuGnWET9puBckbay0VVI9vZcpYl
- KgYe3eI1w5sHkuMs1TUI5Ry96fh2O0vDfWwMBsE0tK6ARjhtFuBI/nAND4QoKS9m1n92w2xJmMNIC4YlvgEsh+Y740PDTdI03Nczl4Lp4Mc=
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,43 +52,31 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Bernd Kuhls <bernd.kuhls@t-online.de>
+NFS doesn't properly support reporting the btime in getattr (yet), but
+61a968b4f05e mistakenly added it to the request_mask. This causes statx
+for STATX_BTIME to report a zeroed out btime instead of properly
+clearing the flag.
 
-Signed-off-by: Bernd Kuhls <bernd.kuhls@t-online.de>
-Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+Cc: stable@vger.kernel.org # v6.3+
+Fixes: 61a968b4f05e ("nfs: report the inode version in getattr if requested")
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- support/reexport/fsidd.c    | 2 ++
- support/reexport/reexport.c | 2 ++
- 2 files changed, 4 insertions(+)
+ fs/nfs/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/support/reexport/fsidd.c b/support/reexport/fsidd.c
-index 37649d06..d4b245e8 100644
---- a/support/reexport/fsidd.c
-+++ b/support/reexport/fsidd.c
-@@ -3,7 +3,9 @@
- #endif
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index bc4cac08bb24..9b51ffd7281d 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -846,7 +846,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
  
- #include <assert.h>
-+#ifdef HAVE_DLFCN_H
- #include <dlfcn.h>
-+#endif
- #include <event2/event.h>
- #include <limits.h>
- #include <stdint.h>
-diff --git a/support/reexport/reexport.c b/support/reexport/reexport.c
-index d597a2f7..d9a700af 100644
---- a/support/reexport/reexport.c
-+++ b/support/reexport/reexport.c
-@@ -2,7 +2,9 @@
- #include <config.h>
- #endif
+ 	request_mask &= STATX_TYPE | STATX_MODE | STATX_NLINK | STATX_UID |
+ 			STATX_GID | STATX_ATIME | STATX_MTIME | STATX_CTIME |
+-			STATX_INO | STATX_SIZE | STATX_BLOCKS | STATX_BTIME |
++			STATX_INO | STATX_SIZE | STATX_BLOCKS |
+ 			STATX_CHANGE_COOKIE;
  
-+#ifdef HAVE_DLFCN_H
- #include <dlfcn.h>
-+#endif
- #include <stdint.h>
- #include <stdio.h>
- #include <sys/random.h>
+ 	if ((query_flags & AT_STATX_DONT_SYNC) && !force_sync) {
 -- 
-2.34.1
+2.40.1
 
