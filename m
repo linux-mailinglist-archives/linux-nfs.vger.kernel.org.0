@@ -2,49 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4D5572C7BA
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jun 2023 16:15:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0040C72C85C
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Jun 2023 16:26:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236387AbjFLOO4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Jun 2023 10:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55414 "EHLO
+        id S237758AbjFLO0j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Jun 2023 10:26:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237443AbjFLOOm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Jun 2023 10:14:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C148A10E9
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Jun 2023 07:14:12 -0700 (PDT)
+        with ESMTP id S238707AbjFLO0A (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Jun 2023 10:26:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E52AC2950;
+        Mon, 12 Jun 2023 07:24:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 47928629BD
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Jun 2023 14:14:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86EFBC4339B;
-        Mon, 12 Jun 2023 14:14:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 483BF60AEA;
+        Mon, 12 Jun 2023 14:24:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 349F0C433EF;
+        Mon, 12 Jun 2023 14:24:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686579251;
-        bh=JG743CB01l3liH6PP0ugd6QB/cEaMR/c5BBA4LLg4ZQ=;
+        s=k20201202; t=1686579865;
+        bh=nL7l6jMDIUNe58Kj1nogyDqcGnGnbDiPkg0Tqwab0VU=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=C2hS5IQZSOqLSiK29HXuQOCyblf3TmTMUWLgRobMpfUWrQm+tkYyoHlVfZ+soo49T
-         4IAp9bcezMOylkUSdOVNw69JFjfS8gzdKSooFRz/k5feLx+gMEKhoGv4Flob/GR6jZ
-         5IWbhW6pPo0AMNpv6TYj/mWRadP4eSlsFivQyyfKuLsf/1qyZ8qUkXGpEQQ4ACx6gx
-         6E5bXsp8ZUMf4wXuf2WWKqz4ZfuhA6wXaSTyMS5kdELEnXIA3vPwiq3JW6ECO2FGe6
-         Et21GNLjYUKkDew2VW2qo10jsxtvJsxZOckxRJUbMOJokS686n8jTzsupSziuJSxJE
-         h6jTepM4Egh/g==
-Subject: [PATCH v1 7/7] SUNRPC: Remove transport class dprintk call sites
-From:   Chuck Lever <cel@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 12 Jun 2023 10:14:10 -0400
-Message-ID: <168657925061.5674.3781063108645045001.stgit@manet.1015granger.net>
-In-Reply-To: <168657912781.5674.12501431304770900992.stgit@manet.1015granger.net>
-References: <168657912781.5674.12501431304770900992.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5
+        b=CnZ7XZLzrNzlKkGqwSkmLdk5A6XurVS25ZHTvIFnhnO9iqQ/0vC5pyhfzTsQZU2tE
+         gZsfwa9umjFjMIHepG5RNJGdOzJ3O3oycepnwvVCJL+ftBuqtLXdQ8wXhJusvBswGL
+         UokPLx5FmsE5MVPtCIAtoAKOZLIbxDg+npb8CdGkVa4MMaQ29V6MAsR7bw5LIo2jPK
+         40vUTVEaYwPDQV5PA4T0TLczQsqg+/Heo9bp681YuijdGBIQsYF/DCphOsUKIRIyPk
+         wRbpRmFPZhWJgWGEajM0dudLGZH+sEeKeJijeQx9J0VHZsXJU83cI+VBSkE5xgeHih
+         vM1/YYM2IN2qw==
+Message-ID: <e3225c285c67f4b2840ee3f5ac138e6e8c63fc89.camel@kernel.org>
+Subject: Re: [PATCH v2 1/5] SUNRPC: Revert cc93ce9529a6 ("svcrdma: Retain
+ the page backing rq_res.head[0].iov_base")
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-rdma@vger.kernel.org,
+        tom@talpey.com
+Date:   Mon, 12 Jun 2023 10:24:23 -0400
+In-Reply-To: <168657900128.5619.7769165526407423007.stgit@manet.1015granger.net>
+References: <168657879115.5619.5573632864481586166.stgit@manet.1015granger.net>
+         <168657900128.5619.7769165526407423007.stgit@manet.1015granger.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.3 (3.48.3-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -53,35 +56,40 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 2023-06-12 at 10:10 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> Pre-requisite for releasing pages in the send completion handler.
+> Reverted by hand: patch -R would not apply cleanly.
+>=20
 
-Remove a couple of dprintk call sites that are of little value.
+I'm guessing because there were other patches to this area in the
+interim that you didn't want to revert?
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/svc_xprt.c |    3 ---
- 1 file changed, 3 deletions(-)
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  net/sunrpc/xprtrdma/svc_rdma_sendto.c |    5 -----
+>  1 file changed, 5 deletions(-)
+>=20
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/=
+svc_rdma_sendto.c
+> index a35d1e055b1a..8e7ccef74207 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+> @@ -975,11 +975,6 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
+>  	ret =3D svc_rdma_send_reply_msg(rdma, sctxt, rctxt, rqstp);
+>  	if (ret < 0)
+>  		goto put_ctxt;
+> -
+> -	/* Prevent svc_xprt_release() from releasing the page backing
+> -	 * rq_res.head[0].iov_base. It's no longer being accessed by
+> -	 * the I/O device. */
+> -	rqstp->rq_respages++;
+>  	return 0;
+> =20
+>  reply_chunk:
+>=20
+>=20
 
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 6d70278bd88d..ebdc2f70af90 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -86,8 +86,6 @@ int svc_reg_xprt_class(struct svc_xprt_class *xcl)
- 	struct svc_xprt_class *cl;
- 	int res = -EEXIST;
- 
--	dprintk("svc: Adding svc transport class '%s'\n", xcl->xcl_name);
--
- 	INIT_LIST_HEAD(&xcl->xcl_list);
- 	spin_lock(&svc_xprt_class_lock);
- 	/* Make sure there isn't already a class with the same name */
-@@ -110,7 +108,6 @@ EXPORT_SYMBOL_GPL(svc_reg_xprt_class);
-  */
- void svc_unreg_xprt_class(struct svc_xprt_class *xcl)
- {
--	dprintk("svc: Removing svc transport class '%s'\n", xcl->xcl_name);
- 	spin_lock(&svc_xprt_class_lock);
- 	list_del_init(&xcl->xcl_list);
- 	spin_unlock(&svc_xprt_class_lock);
-
-
+--=20
+Jeff Layton <jlayton@kernel.org>
