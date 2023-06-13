@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C43072D838
+	by mail.lfdr.de (Postfix) with ESMTP id 9243372D839
 	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jun 2023 05:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232569AbjFMDqf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S233225AbjFMDqf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Mon, 12 Jun 2023 23:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39430 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233225AbjFMDqd (ORCPT
+        with ESMTP id S230353AbjFMDqd (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Jun 2023 23:46:33 -0400
 Received: from wout3-smtp.messagingengine.com (wout3-smtp.messagingengine.com [64.147.123.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439C5A0
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Jun 2023 20:46:31 -0700 (PDT)
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 5BD763200916;
-        Mon, 12 Jun 2023 23:46:30 -0400 (EDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F0EBB4
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Jun 2023 20:46:32 -0700 (PDT)
+Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id CC5933200913;
+        Mon, 12 Jun 2023 23:46:31 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Mon, 12 Jun 2023 23:46:30 -0400
+  by compute2.internal (MEProxy); Mon, 12 Jun 2023 23:46:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nubmail.ca; h=cc
         :cc:content-transfer-encoding:content-type:date:date:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm2; t=1686627989; x=
-        1686714389; bh=+JTxOMVVMTOwKKftJktsGLYlOTRNS/qUmjXCD4prpqc=; b=z
-        SmNX5FsegU/MYtZ6p9bk1aaxwV1rX68zwt/jkmCbHf9k4CjfgyywHeazVTf2RV+o
-        pW0W5heFfRgilLr2MpnO9ZSSDhoeUbXmtjA6p8GHKtr54/m23hyrDc23ks0PtKzh
-        7MAp5rTdNA3JmTJJ+plvdiCxFnubAqBWGYEj4xRH1NTI6+R62Jj/byN2OpD/dgjC
-        bRmCYxiVKhebbW3N+w24sR267c5uA2k74nE9k4xku9W51V/H0z3sEwNsX3iBb7iT
-        AJmpv91kseAZiRFSbJYhwo6mNdrG3efK14e1TB3fNZIET+yFpmu8R1huUzu6wwCT
-        PbJyZKSlZOTQyykmWpV8w==
+        :reply-to:sender:subject:subject:to:to; s=fm2; t=1686627991; x=
+        1686714391; bh=iH1h2NrrphK3sn1s4pS2s9yjaVdW93PrKjQsi+VjOYM=; b=x
+        JJoDSkxCBYcGDYnLMO+pJG4ifkFQQJ4bGZ5Z5PhlnaBc0HtEvKbYjzulhNABE+UB
+        O2ICbGsdtTXVRnYxQad0TX6vBjCHFe4Ow4SOeLXOlO7Ly2rEzMDFGfGoFweH0UVC
+        rQQ9HajtoaJZqaWO2yQY+px3h2uOSa1Q4mzo18nqP498JhDu2FJ08VJvvltd8vnb
+        w1zhiFi6TGSCemOGzv4k+6APJuifI7QR70vcV2TJhmP9nV6bVM6VdLKRfJusi7V/
+        99ZbuJVT0s/Dxa2Blsn1MXYY+C188byvMqGF8uWVt2kKzsL6AV5DP+5j0a32GA4S
+        Bung4cZkavQXa28uN1qdg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:cc:content-transfer-encoding
         :content-type:date:date:feedback-id:feedback-id:from:from
         :in-reply-to:in-reply-to:message-id:mime-version:references
         :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1686627989; x=
-        1686714389; bh=+JTxOMVVMTOwKKftJktsGLYlOTRNS/qUmjXCD4prpqc=; b=p
-        fWM0QHmbkVuUn9+aPesKmVF57edPciYbonJJhWl/fCwObHVYFLoeEWptDP7SLYfz
-        PYqgR8rP+XgdmyDNYIR+ODNwi6Py/wCvrZZV2P5RDo2AJv9rkAbYyryOb+DTwCJC
-        SdSiy3BVEGaALS6bEoEN6eSFakg0vA04oi3FnzhpbibK9ApbsTaiNGJNhUUDDhEm
-        p1LQZG5nxzgdjtT4UT91NNivXv7Wmw9eODqR42GDkZ6iA7JNtfIGm1891oPeu36+
-        gVBUJ0PBnRA5EYOXre7h8MF+e0XrFBdvlisGaNa5S5ugxEa400jcyepkF/1aF+rQ
-        HbTcxajvyypc+skpgMNbg==
-X-ME-Sender: <xms:leaHZIFx-mxdWuv5yF6ndwH4MrQhHUnfvLBiuWWHGBULWLi8HnNj2A>
-    <xme:leaHZBVWfjFpQ1JUxlTfl6tQGMmUL4H00k2beQlV5Qoa699h892kI42I0I_24Yk6N
-    bn2TjXkT0COs21v4S8>
-X-ME-Received: <xmr:leaHZCLd3Rz_gDii3jfAQm-H5IzY4rSQJQULLSIn8IybeRWT7J3Sz1zDnBu7AZ4yqGKVNRPzcJ5WVZmXCFbKVtLCSYEy3-ImXbkLYe8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeduiedgjeeiucetufdoteggodetrfdotf
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1686627991; x=
+        1686714391; bh=iH1h2NrrphK3sn1s4pS2s9yjaVdW93PrKjQsi+VjOYM=; b=G
+        XnxzC7I4uUVqOKZe2hg+o1Y4/KmkAy5BvAUC1WvB0or/UnBKRgs0kIKpO+A8vxcq
+        X0Yb7gWh5S1VoLuGGFunkgrRb6/zBvbqHerdreSAgxB8WC6TtI1fKQ8UEo3XZ9az
+        6KyYE9a9wyOcubNVX6Vo6WYFnI03UsXDs4J8yQ45oDxOfWjlGUDJRbz2loKRr2Mz
+        RlQarrPF9ByCJvm9QlpJoAOrFWndj11g1gcj1Ope6VORHk2YgdvJuF99VKimugbp
+        vvFluJK6WnWoem+ZPty4JqcCmg23qj8dTsv4zowKfEq7HuSqeFgPkOgfBVAWV/0O
+        h+WcIMNn/fyTpu/dVKf1w==
+X-ME-Sender: <xms:l-aHZDtsmoFoZpZvBSwdGb65gW1FrjwURX60-wFPf7DHcBwKFvQmOA>
+    <xme:l-aHZEczVyQYquzcewAN8Qc7nVefWfI82ncRccvW8jlWt1Cx2iANAeMPEJxnlFesY
+    5rM72CYVWNVUFGWNqM>
+X-ME-Received: <xmr:l-aHZGz3BqAINGKwEMFJmJdSWJyBaUrY2whbB9Y1yJSQPcCztM46kLGyZcgM9LxeeJKzgCmCssnyRBlOCdhbnudlznX5HRgoEpW3di8>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeduiedgjeejucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtke
     ertdertddtnecuhfhrohhmpeetrhgrmhcutehkhhgrvhgrnhcuoehgihhthhhusgesrghr
@@ -55,19 +55,19 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeduiedgjeeiucetufdoteggod
     ejffffiedufedtleehffegteeiveejgfeffefhkeduvddtnecuvehluhhsthgvrhfuihii
     vgeptdenucfrrghrrghmpehmrghilhhfrhhomhepghhithhhuhgssegrrhgrmhdrnhhusg
     hmrghilhdrtggr
-X-ME-Proxy: <xmx:leaHZKEfXzsGcY3vgzVfYuBjOqPKpPYkUJrugmF0Y_-ERGxreRzUzw>
-    <xmx:leaHZOXhmsDadsGtP3xaO10vMuHptgvh9MN3G1IPJFV-HlRU6O9bBw>
-    <xmx:leaHZNOI6H6PeMnHT4F7BebfN-RerodLXXBDWixCD2G6gAp4tVA2yQ>
-    <xmx:leaHZJBWjcQk6kAGkXqy4J8s1ufIT03WyxjKQJRr0WA4PYA79Jo0Ug>
+X-ME-Proxy: <xmx:l-aHZCPNtWkNdToc8ko899_9WuzJdiuiV0vGMlp0LOWfVWO2VlwoGw>
+    <xmx:l-aHZD-OPQuRhkZMmJ_tEUq4eZis-Ua0QD11r-MXYc6PdUcUasQJwQ>
+    <xmx:l-aHZCXH_FsLENV4opNaZiaii4oSd6iwsYpkFM86OHReS-f-kVW-fQ>
+    <xmx:l-aHZALoHcrjVMLqNnONj9yhyjp5VHzjJH8iFIH1FfAcbgrLHMdzWw>
 Feedback-ID: i8ce9446d:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 12 Jun 2023 23:46:29 -0400 (EDT)
+ 12 Jun 2023 23:46:30 -0400 (EDT)
 From:   Aram Akhavan <github@aram.nubmail.ca>
 To:     linux-nfs@vger.kernel.org
 Cc:     Aram Akhavan <github@aram.nubmail.ca>
-Subject: [PATCH 1/2] nfs-idmapd.service: add network-online.target to Wants= and After=
-Date:   Mon, 12 Jun 2023 20:46:24 -0700
-Message-Id: <20230613034625.498132-2-github@aram.nubmail.ca>
+Subject: [PATCH 2/2] libnfsidmap: try to get the domain directly from hostname if the DNS lookup fails and always show the log message if the domain can't be determined
+Date:   Mon, 12 Jun 2023 20:46:25 -0700
+Message-Id: <20230613034625.498132-3-github@aram.nubmail.ca>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230613034625.498132-1-github@aram.nubmail.ca>
 References: <20230613034625.498132-1-github@aram.nubmail.ca>
@@ -83,29 +83,49 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfs-idmapd.service does not have any dependency on the network so there's no
-starting point to wait for DNS resolution. nfs-server.service already has this
-network dependency and ordering.
+In nfs4_init_name_mapping(), if no domain is specified in the config file, the hostname will be looked up in DNS, and the domain extracted from that.
+If DNS resolution isn't up at this time (i.e. on idmapd startup), the hardcoded domain in IDMAPD_DEFAULT_DOMAIN is used. This will break id mapping
+for anyone who doesn't happen to use "localdomain". Previously, the log message indicating this has happened requires -v to be passed, so the
+"failure" was silent by default.
 
 Signed-off-by: Aram Akhavan <github@aram.nubmail.ca>
 ---
- systemd/nfs-idmapd.service | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ support/nfsidmap/libnfsidmap.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/systemd/nfs-idmapd.service b/systemd/nfs-idmapd.service
-index f38fe527..198ca87c 100644
---- a/systemd/nfs-idmapd.service
-+++ b/systemd/nfs-idmapd.service
-@@ -2,7 +2,8 @@
- Description=NFSv4 ID-name mapping service
- DefaultDependencies=no
- Requires=rpc_pipefs.target
--After=rpc_pipefs.target local-fs.target
-+After=rpc_pipefs.target local-fs.target network-online.target
-+Wants=network-online.target
+diff --git a/support/nfsidmap/libnfsidmap.c b/support/nfsidmap/libnfsidmap.c
+index 0a912e52..f8c36480 100644
+--- a/support/nfsidmap/libnfsidmap.c
++++ b/support/nfsidmap/libnfsidmap.c
+@@ -219,10 +219,15 @@ static int domain_from_dns(char **domain)
  
- BindsTo=nfs-server.service
- 
+ 	if (gethostname(hname, sizeof(hname)) == -1)
+ 		return -1;
+-	if ((he = gethostbyname(hname)) == NULL)
+-		return -1;
+-	if ((c = strchr(he->h_name, '.')) == NULL || *++c == '\0')
+-		return -1;
++	if ((he = gethostbyname(hname)) == NULL) {
++		IDMAP_LOG(1, ("libnfsidmap: DNS lookup of hostname failed. Attempting to use domain from hostname as is."));
++		if ((c = strchr(hname, '.')) == NULL || *++c == '\0')
++			return -1;
++	}
++	else {
++		if ((c = strchr(he->h_name, '.')) == NULL || *++c == '\0')
++			return -1;
++	}
+ 	/* 
+ 	 * Query DNS to see if the _nfsv4idmapdomain TXT record exists
+ 	 * If so use it... 
+@@ -387,7 +392,7 @@ int nfs4_init_name_mapping(char *conffile)
+ 		dflt = 1;
+ 		ret = domain_from_dns(&default_domain);
+ 		if (ret) {
+-			IDMAP_LOG(1, ("libnfsidmap: Unable to determine "
++			IDMAP_LOG(0, ("libnfsidmap: Unable to determine "
+ 				  "the NFSv4 domain; Using '%s' as the NFSv4 domain "
+ 				  "which means UIDs will be mapped to the 'Nobody-User' "
+ 				  "user defined in %s", 
 -- 
 2.39.2
 
