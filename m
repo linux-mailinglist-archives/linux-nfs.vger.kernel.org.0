@@ -2,152 +2,312 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAE5672DC72
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jun 2023 10:27:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A99972E29F
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jun 2023 14:16:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234722AbjFMI1o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Jun 2023 04:27:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41090 "EHLO
+        id S238913AbjFMMP1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Jun 2023 08:15:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241213AbjFMI1n (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jun 2023 04:27:43 -0400
-Received: from smtp-o-1.desy.de (smtp-o-1.desy.de [IPv6:2001:638:700:1038::1:9a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD561D2
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Jun 2023 01:27:40 -0700 (PDT)
-Received: from smtp-buf-1.desy.de (smtp-buf-1.desy.de [IPv6:2001:638:700:1038::1:a4])
-        by smtp-o-1.desy.de (Postfix) with ESMTP id A9743E0A5B
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Jun 2023 10:27:38 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-1.desy.de A9743E0A5B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
-        t=1686644858; bh=fatxL0F99l70Gp5p8drVWgdRue5MVdJDTl4c50VDrXc=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=wjCURcb2qWiZkb/vXSkABHx+v5H1JhVBlcwy59BUo0iunkJ7byvB1cR4nmnavECLe
-         DNu62ujw/y+0jZRKQLI9cXECKvQrspcBfPI5wjUqbc+M9nTEAVTB1XDmbH1s3wAZR9
-         uCy4jTrRdPmW/6GUXyV8hor3ZsNmE06nfKCEQp+8=
-Received: from smtp-m-1.desy.de (smtp-m-1.desy.de [131.169.56.129])
-        by smtp-buf-1.desy.de (Postfix) with ESMTP id 9ED6512039C;
-        Tue, 13 Jun 2023 10:27:38 +0200 (CEST)
-Received: from a1722.mx.srv.dfn.de (a1722.mx.srv.dfn.de [IPv6:2001:638:d:c301:acdc:1979:2:e7])
-        by smtp-m-1.desy.de (Postfix) with ESMTP id 968034028A;
-        Tue, 13 Jun 2023 10:27:38 +0200 (CEST)
-Received-SPF: Neutral (mailfrom) identity=mailfrom; client-ip=131.169.56.83; helo=smtp-intra-2.desy.de; envelope-from=tigran.mkrtchyan@desy.de; receiver=<UNKNOWN> 
-Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [131.169.56.83])
-        by a1722.mx.srv.dfn.de (Postfix) with ESMTP id CEFF1220043;
-        Tue, 13 Jun 2023 10:27:37 +0200 (CEST)
-Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
-        by smtp-intra-2.desy.de (Postfix) with ESMTP id 5E762100266;
-        Tue, 13 Jun 2023 10:27:37 +0200 (CEST)
-Date:   Tue, 13 Jun 2023 10:27:37 +0200 (CEST)
-From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>, anna <anna@kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <1588974117.1198850.1686644857335.JavaMail.zimbra@desy.de>
-In-Reply-To: <83016291-825A-4A16-B7A8-8B492A47CD5A@redhat.com>
-References: <20230608144933.412664-1-tigran.mkrtchyan@desy.de> <cfde2b7b2a7f24f2652ce0bb82727cb0b810c758.camel@hammerspace.com> <AD6C85BF-50F9-42BB-83E8-16BCE03D3CF1@desy.de> <437767d036ee95a7ce92d7fa2add82a441eedf78.camel@hammerspace.com> <1144390245.427543.1686317435856.JavaMail.zimbra@desy.de> <83016291-825A-4A16-B7A8-8B492A47CD5A@redhat.com>
-Subject: Re: [PATCH] nfs4: don't map EACCESS and EPERM to EIO
+        with ESMTP id S234823AbjFMMP0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jun 2023 08:15:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62BB2E7D;
+        Tue, 13 Jun 2023 05:15:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DEE8163576;
+        Tue, 13 Jun 2023 12:15:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB3BC4339C;
+        Tue, 13 Jun 2023 12:15:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686658524;
+        bh=u87nLaY8CnHIf6lGPmCaMeaMMPHADO8Fwc25C1lXyNI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=otNZv5jG2XnneBVDhTwGf5eYQw63jyqJmJKda6cx2mOJeeWSjjpGD5bDDM/UWCJeY
+         qyEsS0cn0QaRG+oKxHxBw16uUwDTBejxpt/coODQCbRTDWRrWTPRiLbaOJEu5CtRNh
+         K+51rxtQY19QsheB8aE1wDuQ1uzvDoup7wV8Ix2xHxKdYZPODGIxdqPY96MlBMLuYr
+         dIZSZ2BRcpKOJ0dg4koIYpI1wAVmHuuvxm5Psxma/su+IGsRtR/RgghDAO0PNIEYB6
+         6meiHSglzzY6fRxU50VBsbgbEogiiiI+6DUsdQN7JNOoq+7a9836UTh4frcHFy/xuQ
+         jwRTSvSYxQKXQ==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     bcodding@redhat.com, Chris Perl <cperl@janestreet.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [RFC PATCH] errseq_t: split the ERRSEQ_SEEN flag into two
+Date:   Tue, 13 Jun 2023 08:15:20 -0400
+Message-Id: <20230613121521.146865-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
-        boundary="----=_Part_1198851_465769043.1686644857341"
-X-Mailer: Zimbra 9.0.0_GA_4546 (ZimbraWebClient - FF114 (Linux)/9.0.0_GA_4546)
-Thread-Topic: nfs4: don't map EACCESS and EPERM to EIO
-Thread-Index: g1eNkjomBVi+aJQH6NpOSPQXa14zzg==
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_ENVFROM,
-        HK_RANDOM_FROM,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-------=_Part_1198851_465769043.1686644857341
-Date: Tue, 13 Jun 2023 10:27:37 +0200 (CEST)
-From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: Trond Myklebust <trondmy@hammerspace.com>, anna <anna@kernel.org>, 
-	linux-nfs <linux-nfs@vger.kernel.org>
-Message-ID: <1588974117.1198850.1686644857335.JavaMail.zimbra@desy.de>
-In-Reply-To: <83016291-825A-4A16-B7A8-8B492A47CD5A@redhat.com>
-References: <20230608144933.412664-1-tigran.mkrtchyan@desy.de> <cfde2b7b2a7f24f2652ce0bb82727cb0b810c758.camel@hammerspace.com> <AD6C85BF-50F9-42BB-83E8-16BCE03D3CF1@desy.de> <437767d036ee95a7ce92d7fa2add82a441eedf78.camel@hammerspace.com> <1144390245.427543.1686317435856.JavaMail.zimbra@desy.de> <83016291-825A-4A16-B7A8-8B492A47CD5A@redhat.com>
-Subject: Re: [PATCH] nfs4: don't map EACCESS and EPERM to EIO
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: Zimbra 9.0.0_GA_4546 (ZimbraWebClient - FF114 (Linux)/9.0.0_GA_4546)
-Thread-Topic: nfs4: don't map EACCESS and EPERM to EIO
-Thread-Index: g1eNkjomBVi+aJQH6NpOSPQXa14zzg==
+NFS wants to use the errseq_t mechanism to detect errors that occur
+during a write, but for that use-case we want to ignore anything that
+happened before the sample point.
 
-Thanks, Ben!
+This points out a problem with the current errseq_t implementation. The
+SEEN flag is overloaded:
 
-Tigran.
+- errseq_set uses it to tell when it can skip incrementing the value
+- errseq_sample uses it to tell when there are unseen errors
 
------ Original Message -----
-> From: "Benjamin Coddington" <bcodding@redhat.com>
-> To: "Tigran Mkrtchyan" <tigran.mkrtchyan@desy.de>
-> Cc: "Trond Myklebust" <trondmy@hammerspace.com>, "anna" <anna@kernel.org>, "linux-nfs" <linux-nfs@vger.kernel.org>
-> Sent: Friday, 9 June, 2023 16:00:34
-> Subject: Re: [PATCH] nfs4: don't map EACCESS and EPERM to EIO
+When sampling for the NFS write usecase, we need to set the former
+without setting the latter.
 
-> On 9 Jun 2023, at 9:30, Mkrtchyan, Tigran wrote:
-> 
->> Hi Trond,
->>
->> Obviously, the patch is incorrect. The behavior of the upstream kernel and
->> RHEL kernels are different.
-> 
-> RHEL-9 should be ok here.
-> 
-> There's a few things we need to be fixing for RHEL-8.9.  This is one of them.
-> https://bugzilla.redhat.com/show_bug.cgi?id=2213828
-> 
-> Ben
+Carve a new flag bit out of the counter as an ERRSEQ_MUST_INC flag, and
+have errseq_set check for that instead of ERRSEQ_SEEN. Add a new
+errseq_sample_new function that will set this bit, and
+filemap_sample_new_wb_err wrapper that NFS can call from its write
+codepath.
 
-------=_Part_1198851_465769043.1686644857341
-Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+This reduces the max size of the errseq_t counter from 512k to 256k, but
+I believe that's an acceptable tradeoff here, as it further clarifies
+the meaning of the flags.
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIF
-vzCCBKegAwIBAgIMJENPm+MXSsxZAQzUMA0GCSqGSIb3DQEBCwUAMIGNMQswCQYDVQQGEwJERTFF
-MEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVpbmVzIERldXRzY2hlbiBGb3JzY2h1bmdz
-bmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUwIwYDVQQDDBxERk4tVmVyZWluIEdsb2Jh
-bCBJc3N1aW5nIENBMB4XDTIxMDIxMDEyMzEwOVoXDTI0MDIxMDEyMzEwOVowWDELMAkGA1UEBhMC
-REUxLjAsBgNVBAoMJURldXRzY2hlcyBFbGVrdHJvbmVuLVN5bmNocm90cm9uIERFU1kxGTAXBgNV
-BAMMEFRpZ3JhbiBNa3J0Y2h5YW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQClVKHU
-er1OiIaoo2MFDgCSzcqRCB8qVjjLJyJwzHWkhKniE6dwY8xHciG0HZFpSQqiRsoakD+BzqINXsqI
-CkVck5n7cUJ6cHBOM1r4pzEBcuuozPrT2tAfnHkFFGTZffOXgjmEITfSh6SD+DYeZH4Dt8kPZmnD
-mzWMDFDyB67WWcWApVC1nPh29yGgJk18UZ+Ut9a+woaovMZlutMbuvLVt/x5rpycMw0z+J1qeK7J
-8F3bKb0o2gg+Mnz9LzpLtJp7E9qJUKOTkZGDua9w9xrlo4XGX9Vn72K5wodu6woahdgNG+sXRcJM
-RH3aWgfdznoi1ORLJCfTbdfjSBpclvt/AgMBAAGjggJRMIICTTA+BgNVHSAENzA1MA8GDSsGAQQB
-ga0hgiwBAQQwEAYOKwYBBAGBrSGCLAEBBAgwEAYOKwYBBAGBrSGCLAIBBAgwCQYDVR0TBAIwADAO
-BgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBQG
-1+t/IHSjHSbbu11uU5Iw7JW92zAfBgNVHSMEGDAWgBRrOpiL+fJTidrgrbIyHgkf6Ko7dDAjBgNV
-HREEHDAagRh0aWdyYW4ubWtydGNoeWFuQGRlc3kuZGUwgY0GA1UdHwSBhTCBgjA/oD2gO4Y5aHR0
-cDovL2NkcDEucGNhLmRmbi5kZS9kZm4tY2EtZ2xvYmFsLWcyL3B1Yi9jcmwvY2FjcmwuY3JsMD+g
-PaA7hjlodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2Rmbi1jYS1nbG9iYWwtZzIvcHViL2NybC9jYWNy
-bC5jcmwwgdsGCCsGAQUFBwEBBIHOMIHLMDMGCCsGAQUFBzABhidodHRwOi8vb2NzcC5wY2EuZGZu
-LmRlL09DU1AtU2VydmVyL09DU1AwSQYIKwYBBQUHMAKGPWh0dHA6Ly9jZHAxLnBjYS5kZm4uZGUv
-ZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwSQYIKwYBBQUHMAKGPWh0dHA6
-Ly9jZHAyLnBjYS5kZm4uZGUvZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQw
-DQYJKoZIhvcNAQELBQADggEBADaFbcKsjBPbw6aRf5vxlJdehkafMy4JIdduMEGB+IjpBRZGmu0Z
-R2FRWNyq0lNRz03holZ8Rew0Ldx58REJmvAEzbwox4LT1wG8gRLEehyasSROajZBFrIHadDja0y4
-1JrfqP2umZFE2XWap8pDFpQk4sZOXW1mEamLzFtlgXtCfalmYmbnrq5DnSVKX8LOt5BZvDWin3r4
-m5v313d5/l0Qz2IrN6v7qNIyqT4peW90DUJHB1MGN60W2qe+VimWIuLJkQXMOpaUQJUlhkHOnhw8
-82g+jWG6kpKBMzIQMMGP0urFlPAia2Iuu2VtCkT7Wr43xyhiVzkZcT6uzR23PLsAADGCApswggKX
-AgEBMIGeMIGNMQswCQYDVQQGEwJERTFFMEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVp
-bmVzIERldXRzY2hlbiBGb3JzY2h1bmdzbmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUw
-IwYDVQQDDBxERk4tVmVyZWluIEdsb2JhbCBJc3N1aW5nIENBAgwkQ0+b4xdKzFkBDNQwDQYJYIZI
-AWUDBAIBBQCggc4wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMw
-NjEzMDgyNzM3WjAtBgkqhkiG9w0BCTQxIDAeMA0GCWCGSAFlAwQCAQUAoQ0GCSqGSIb3DQEBCwUA
-MC8GCSqGSIb3DQEJBDEiBCCH+mekGZ/7VXh/H3+Hf5GGlRVvwAhQ24ZDORGHd9ZH8DA0BgkqhkiG
-9w0BCQ8xJzAlMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAHBgUrDgMCBzANBgkqhkiG9w0B
-AQsFAASCAQCiEuivfamkgBx7/egiO1alk6MHdX0cI1JQL4x4ol/pr1PG+coT+q8/dZJsctRIpwjP
-rcmT/MJULp4c998F/ngQK3EjQgT9xgQsWSGjlMG9sE4aAHEZzUORuuXC0Dgj2up5xz3O/xckDaG8
-FTl5Pz5tftji6wXNaadAHeOvG/gbGrnX0zxvZT3GfbgS49vtpWDzJoHbFtNE9iwdqv0izBHwl7BX
-P7i0y3i3iImm0uS5MpKXdBxZftWr+XdX5FgYm4rCK/0b7ADcoWTvi3ls1gWHzOjLEI3J0uTyrZ/8
-OrQAqvTjE0UZNzv1uSDK64XO0lkDsGGmoFA5FNqJyhHrEPo+AAAAAAAA
-------=_Part_1198851_465769043.1686644857341--
+Reported-by: Chris Perl <cperl@janestreet.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfs/file.c           |  2 +-
+ include/linux/errseq.h  | 14 ++++++++++
+ include/linux/pagemap.h | 18 +++++++++++-
+ lib/errseq.c            | 62 +++++++++++++++++++++++++++++++----------
+ 4 files changed, 79 insertions(+), 17 deletions(-)
+
+This patch fixes the issue where an unseen writeback error prior to the
+file being opened is reported on write(). It does _not_ make any
+material difference to Chris' testcase however, because NFS will still
+report the error on close(), so the second "tee" call will still fail
+due to the writeback error.
+
+To _really_ fix that testcase, I think we'd need both this patch and to
+make NFS stop reporting writeback errors at close() (which is something
+problematic and not required by POSIX).
+
+Thoughts?
+
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 7d21b4ca2ec5..71ab5a396b5d 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -643,7 +643,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 
+ 	nfs_clear_invalid_mapping(file->f_mapping);
+ 
+-	since = filemap_sample_wb_err(file->f_mapping);
++	since = filemap_sample_new_wb_err(file->f_mapping);
+ 	nfs_start_io_write(inode);
+ 	result = generic_write_checks(iocb, from);
+ 	if (result > 0) {
+diff --git a/include/linux/errseq.h b/include/linux/errseq.h
+index fc2777770768..2403d2f390aa 100644
+--- a/include/linux/errseq.h
++++ b/include/linux/errseq.h
+@@ -7,8 +7,22 @@
+ 
+ typedef u32	errseq_t;
+ 
++/**
++ * errseq_fetch - Grab the current errseq_t value
++ * @eseq: Pointer to errseq_t to peek
++ *
++ * Grab the current errseq_t value and return it. This value is OK
++ * to use as a "since" value later, as long as you don't care about
++ * unseen errors that happened before this point.
++ */
++static inline errseq_t errseq_fetch(errseq_t *eseq)
++{
++	return READ_ONCE(*eseq);
++}
++
+ errseq_t errseq_set(errseq_t *eseq, int err);
+ errseq_t errseq_sample(errseq_t *eseq);
++errseq_t errseq_sample_new(errseq_t *eseq);
+ int errseq_check(errseq_t *eseq, errseq_t since);
+ int errseq_check_and_advance(errseq_t *eseq, errseq_t *since);
+ #endif
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index a56308a9d1a4..dbdf00a829fc 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -102,13 +102,29 @@ static inline int filemap_check_wb_err(struct address_space *mapping,
+  * @mapping: mapping to be sampled
+  *
+  * Writeback errors are always reported relative to a particular sample point
+- * in the past. This function provides those sample points.
++ * in the past. This function provides those sample points. In the event that
++ * there are unseen errors at the time of the sample, they will be reported
++ * during the next check.
+  */
+ static inline errseq_t filemap_sample_wb_err(struct address_space *mapping)
+ {
+ 	return errseq_sample(&mapping->wb_err);
+ }
+ 
++/**
++ * filemap_peek_wb_err - peek at the current errseq_t to test for later errors
++ * @mapping: mapping to peek
++ *
++ * Writeback errors are always reported relative to a particular sample point
++ * in the past. This function provides those such sample points. If there are
++ * unseen errors present at the time of the sample, then they will be ignored
++ * in later checks.
++ */
++static inline errseq_t filemap_sample_new_wb_err(struct address_space *mapping)
++{
++	return errseq_sample_new(&mapping->wb_err);
++}
++
+ /**
+  * file_sample_sb_err - sample the current errseq_t to test for later errors
+  * @file: file pointer to be sampled
+diff --git a/lib/errseq.c b/lib/errseq.c
+index 93e9b94358dc..ae28fa13f9c1 100644
+--- a/lib/errseq.c
++++ b/lib/errseq.c
+@@ -36,11 +36,17 @@
+ /* The low bits are designated for error code (max of MAX_ERRNO) */
+ #define ERRSEQ_SHIFT		ilog2(MAX_ERRNO + 1)
+ 
+-/* This bit is used as a flag to indicate whether the value has been seen */
++/* Error has been reported */
+ #define ERRSEQ_SEEN		(1 << ERRSEQ_SHIFT)
+ 
++/* Must increment the counter on the next recorded error */
++#define ERRSEQ_MUST_INC		(1 << (ERRSEQ_SHIFT + 1))
++
+ /* The lowest bit of the counter */
+-#define ERRSEQ_CTR_INC		(1 << (ERRSEQ_SHIFT + 1))
++#define ERRSEQ_CTR_INC		(1 << (ERRSEQ_SHIFT + 2))
++
++/* Both of the flag bits */
++#define ERRSEQ_ALL_FLAGS	(ERRSEQ_SEEN|ERRSEQ_MUST_INC)
+ 
+ /**
+  * errseq_set - set a errseq_t for later reporting
+@@ -54,7 +60,7 @@
+  *
+  * Return: The previous value, primarily for debugging purposes. The
+  * return value should not be used as a previously sampled value in later
+- * calls as it will not have the SEEN flag set.
++ * calls as it will not have the MUST_INC flag set.
+  */
+ errseq_t errseq_set(errseq_t *eseq, int err)
+ {
+@@ -69,7 +75,7 @@ errseq_t errseq_set(errseq_t *eseq, int err)
+ 	 * also don't accept zero here as that would effectively clear a
+ 	 * previous error.
+ 	 */
+-	old = READ_ONCE(*eseq);
++	old = errseq_fetch(eseq);
+ 
+ 	if (WARN(unlikely(err == 0 || (unsigned int)-err > MAX_ERRNO),
+ 				"err = %d\n", err))
+@@ -79,10 +85,10 @@ errseq_t errseq_set(errseq_t *eseq, int err)
+ 		errseq_t new;
+ 
+ 		/* Clear out error bits and set new error */
+-		new = (old & ~(MAX_ERRNO|ERRSEQ_SEEN)) | -err;
++		new = (old & ~(MAX_ERRNO|ERRSEQ_ALL_FLAGS)) | -err;
+ 
+-		/* Only increment if someone has looked at it */
+-		if (old & ERRSEQ_SEEN)
++		/* Only increment if marked for it */
++		if (old & ERRSEQ_MUST_INC)
+ 			new += ERRSEQ_CTR_INC;
+ 
+ 		/* If there would be no change, then call it done */
+@@ -122,7 +128,7 @@ EXPORT_SYMBOL(errseq_set);
+  */
+ errseq_t errseq_sample(errseq_t *eseq)
+ {
+-	errseq_t old = READ_ONCE(*eseq);
++	errseq_t old = errseq_fetch(eseq);
+ 
+ 	/* If nobody has seen this error yet, then we can be the first. */
+ 	if (!(old & ERRSEQ_SEEN))
+@@ -131,6 +137,33 @@ errseq_t errseq_sample(errseq_t *eseq)
+ }
+ EXPORT_SYMBOL(errseq_sample);
+ 
++/**
++ * errseq_sample_new() - Sample the errseq_t, ignoring earlier errors
++ * @eseq: Pointer to errseq_t to be sampled.
++ *
++ * This function allows callers to initialise their errseq_t variable.
++ * Any errors that occurred before this point will not be reported if
++ * this value is later used as a "since" value.
++ */
++errseq_t errseq_sample_new(errseq_t *eseq)
++{
++	errseq_t old = errseq_fetch(eseq);
++	errseq_t new = old;
++
++	/*
++	 * For the common case of no errors ever having been set, we can skip
++	 * marking the MUST_INC bit. Once an error has been set, the value
++	 * will never go back to zero.
++	 */
++	if (old != 0) {
++		new |= ERRSEQ_MUST_INC;
++		if (old != new)
++			cmpxchg(eseq, old, new);
++	}
++	return new;
++}
++EXPORT_SYMBOL(errseq_sample_new);
++
+ /**
+  * errseq_check() - Has an error occurred since a particular sample point?
+  * @eseq: Pointer to errseq_t value to be checked.
+@@ -144,9 +177,9 @@ EXPORT_SYMBOL(errseq_sample);
+  */
+ int errseq_check(errseq_t *eseq, errseq_t since)
+ {
+-	errseq_t cur = READ_ONCE(*eseq);
++	errseq_t cur = errseq_fetch(eseq) & ~ERRSEQ_ALL_FLAGS;
+ 
+-	if (likely(cur == since))
++	if (likely(cur == (since & ~ERRSEQ_ALL_FLAGS)))
+ 		return 0;
+ 	return -(cur & MAX_ERRNO);
+ }
+@@ -182,7 +215,7 @@ int errseq_check_and_advance(errseq_t *eseq, errseq_t *since)
+ 	 * so that the common case of no error is handled without needing
+ 	 * to take the lock that protects the "since" value.
+ 	 */
+-	old = READ_ONCE(*eseq);
++	old = errseq_fetch(eseq);
+ 	if (old != *since) {
+ 		/*
+ 		 * Set the flag and try to swap it into place if it has
+@@ -192,11 +225,10 @@ int errseq_check_and_advance(errseq_t *eseq, errseq_t *since)
+ 		 * swap doesn't occur, then it has either been updated by a
+ 		 * writer who is altering the value in some way (updating
+ 		 * counter or resetting the error), or another reader who is
+-		 * just setting the "seen" flag. Either outcome is OK, and we
+-		 * can advance "since" and return an error based on what we
+-		 * have.
++		 * just setting flags. Either outcome is OK, and we can
++		 * advance "since" and return an error based on what we have.
+ 		 */
+-		new = old | ERRSEQ_SEEN;
++		new = old | ERRSEQ_ALL_FLAGS;
+ 		if (new != old)
+ 			cmpxchg(eseq, old, new);
+ 		*since = new;
+-- 
+2.40.1
+
