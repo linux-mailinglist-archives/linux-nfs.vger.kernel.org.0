@@ -2,50 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A99972E29F
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jun 2023 14:16:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05CEA72E3C6
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Jun 2023 15:10:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238913AbjFMMP1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Jun 2023 08:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55936 "EHLO
+        id S242266AbjFMNJi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Jun 2023 09:09:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234823AbjFMMP0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jun 2023 08:15:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62BB2E7D;
-        Tue, 13 Jun 2023 05:15:25 -0700 (PDT)
+        with ESMTP id S233941AbjFMNJg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jun 2023 09:09:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF36A10E4;
+        Tue, 13 Jun 2023 06:09:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DEE8163576;
-        Tue, 13 Jun 2023 12:15:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EB3BC4339C;
-        Tue, 13 Jun 2023 12:15:23 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FFD5635FB;
+        Tue, 13 Jun 2023 13:09:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07119C433D9;
+        Tue, 13 Jun 2023 13:09:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686658524;
-        bh=u87nLaY8CnHIf6lGPmCaMeaMMPHADO8Fwc25C1lXyNI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=otNZv5jG2XnneBVDhTwGf5eYQw63jyqJmJKda6cx2mOJeeWSjjpGD5bDDM/UWCJeY
-         qyEsS0cn0QaRG+oKxHxBw16uUwDTBejxpt/coODQCbRTDWRrWTPRiLbaOJEu5CtRNh
-         K+51rxtQY19QsheB8aE1wDuQ1uzvDoup7wV8Ix2xHxKdYZPODGIxdqPY96MlBMLuYr
-         dIZSZ2BRcpKOJ0dg4koIYpI1wAVmHuuvxm5Psxma/su+IGsRtR/RgghDAO0PNIEYB6
-         6meiHSglzzY6fRxU50VBsbgbEogiiiI+6DUsdQN7JNOoq+7a9836UTh4frcHFy/xuQ
-         jwRTSvSYxQKXQ==
+        s=k20201202; t=1686661773;
+        bh=qrftKBs3i7D8ZGNlzf1fQKSMJm25AmjmFrSZlBDhScw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=nhWdmiD+f3lTmkCY4u7x2sZQyNmY/i0uQjZjngjBeAQc/cZz4AbT/0GNqRQRwttXe
+         l+dTGnkyPWartXH8Yc8Fl5zk9rX+CvYbmilx569mB9oi1CMboGUbNYB4Pin54O7rgx
+         Vnz6dZCxjmiWTMct/0+qGsoJjcEYDxxD0mcCDeEj+dw92aR/SKq40BKET/eqLRMddw
+         0HJh7Lni4O1QaCPklU2775AM1yCoJu2RXGsOg3q475QIjSh5266UNf0Zv2E5V7PVbS
+         sgpNQ6yQVVRsy6aGzfrLQ0R3YXowb2mCCIeIqCa8jFNrA7e0ymfT28M34UcsZTQMSH
+         EEa7/+T8NKNXQ==
+Message-ID: <11dc42c327c243ea1def211f352cb4fc38094cc0.camel@kernel.org>
+Subject: Re: [PATCH v4 2/9] fs: add infrastructure for multigrain inode
+ i_m/ctime
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     bcodding@redhat.com, Chris Perl <cperl@janestreet.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH] errseq_t: split the ERRSEQ_SEEN flag into two
-Date:   Tue, 13 Jun 2023 08:15:20 -0400
-Message-Id: <20230613121521.146865-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.40.1
+To:     Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Neil Brown <neilb@suse.de>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Theodore T'so <tytso@mit.edu>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Steve French <sfrench@samba.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Tom Talpey <tom@talpey.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org
+Date:   Tue, 13 Jun 2023 09:09:29 -0400
+In-Reply-To: <20230523124606.bkkhwi6b67ieeygl@quack3>
+References: <20230518114742.128950-1-jlayton@kernel.org>
+         <20230518114742.128950-3-jlayton@kernel.org>
+         <20230523100240.mgeu4y46friv7hau@quack3>
+         <bf0065f2c9895edb66faeacc6cf77bd257088348.camel@kernel.org>
+         <20230523124606.bkkhwi6b67ieeygl@quack3>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.3 (3.48.3-1.fc38) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -54,260 +79,284 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-NFS wants to use the errseq_t mechanism to detect errors that occur
-during a write, but for that use-case we want to ignore anything that
-happened before the sample point.
+On Tue, 2023-05-23 at 14:46 +0200, Jan Kara wrote:
+> On Tue 23-05-23 06:40:08, Jeff Layton wrote:
+> > On Tue, 2023-05-23 at 12:02 +0200, Jan Kara wrote:
+> > >=20
+> > > So there are two things I dislike about this series because I think t=
+hey
+> > > are fragile:
+> > >=20
+> > > 1) If we have a filesystem supporting multigrain ts and someone
+> > > accidentally directly uses the value of inode->i_ctime, he can get bo=
+gus
+> > > value (with QUERIED flag). This mistake is very easy to do. So I thin=
+k we
+> > > should rename i_ctime to something like __i_ctime and always use acce=
+ssor
+> > > function for it.
+> > >=20
+> >=20
+> > We could do this, but it'll be quite invasive. We'd have to change any
+> > place that touches i_ctime (and there are a lot of them), even on
+> > filesystems that are not being converted.
+>=20
+> Yes, that's why I suggested Coccinelle to deal with this.
 
-This points out a problem with the current errseq_t implementation. The
-SEEN flag is overloaded:
 
-- errseq_set uses it to tell when it can skip incrementing the value
-- errseq_sample uses it to tell when there are unseen errors
+I've done the work to convert all of the accesses of i_ctime into
+accessor functions in the kernel. The current state of it is here:
 
-When sampling for the NFS write usecase, we need to set the former
-without setting the latter.
+  =20
+https://git.kernel.org/pub/scm/linux/kernel/git/jlayton/linux.git/commit/?h=
+=3Dctime
 
-Carve a new flag bit out of the counter as an ERRSEQ_MUST_INC flag, and
-have errseq_set check for that instead of ERRSEQ_SEEN. Add a new
-errseq_sample_new function that will set this bit, and
-filemap_sample_new_wb_err wrapper that NFS can call from its write
-codepath.
+As expected, it touches a lot of code, all over the place. So far I have
+most of the conversion in one giant patch, and I need to split it up
+(probably per-subsystem).
 
-This reduces the max size of the errseq_t counter from 512k to 256k, but
-I believe that's an acceptable tradeoff here, as it further clarifies
-the meaning of the flags.
+What's the best way to feed this change into mainline? Should I try to
+get subsystem maintainers to pick these up, or are we better off feeding
+this in via a separate branch?
 
-Reported-by: Chris Perl <cperl@janestreet.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfs/file.c           |  2 +-
- include/linux/errseq.h  | 14 ++++++++++
- include/linux/pagemap.h | 18 +++++++++++-
- lib/errseq.c            | 62 +++++++++++++++++++++++++++++++----------
- 4 files changed, 79 insertions(+), 17 deletions(-)
+For reference, the diffstat for the big conversion patch is below:
 
-This patch fixes the issue where an unseen writeback error prior to the
-file being opened is reported on write(). It does _not_ make any
-material difference to Chris' testcase however, because NFS will still
-report the error on close(), so the second "tee" call will still fail
-due to the writeback error.
+ arch/powerpc/platforms/cell/spufs/inode.c |  2 +-
+ arch/s390/hypfs/inode.c                   |  4 +-
+ drivers/android/binderfs.c                |  8 ++--
+ drivers/infiniband/hw/qib/qib_fs.c        |  4 +-
+ drivers/misc/ibmasm/ibmasmfs.c            |  2 +-
+ drivers/misc/ibmvmc.c                     |  2 +-
+ drivers/usb/core/devio.c                  | 16 ++++----
+ drivers/usb/gadget/function/f_fs.c        |  6 +--
+ drivers/usb/gadget/legacy/inode.c         |  3 +-
+ fs/9p/vfs_inode.c                         |  6 ++-
+ fs/9p/vfs_inode_dotl.c                    | 11 +++---
+ fs/adfs/inode.c                           |  4 +-
+ fs/affs/amigaffs.c                        |  6 +--
+ fs/affs/inode.c                           | 17 ++++----
+ fs/afs/dynroot.c                          |  2 +-
+ fs/afs/inode.c                            |  6 +--
+ fs/attr.c                                 |  2 +-
+ fs/autofs/inode.c                         |  2 +-
+ fs/autofs/root.c                          |  6 +--
+ fs/bad_inode.c                            |  3 +-
+ fs/befs/linuxvfs.c                        |  2 +-
+ fs/bfs/dir.c                              | 16 ++++----
+ fs/bfs/inode.c                            |  6 +--
+ fs/binfmt_misc.c                          |  3 +-
+ fs/btrfs/delayed-inode.c                  | 10 +++--
+ fs/btrfs/file.c                           | 24 ++++-------
+ fs/btrfs/inode.c                          | 66 ++++++++++++------------
+-------
+ fs/btrfs/ioctl.c                          |  2 +-
+ fs/btrfs/reflink.c                        |  7 ++--
+ fs/btrfs/transaction.c                    |  3 +-
+ fs/btrfs/tree-log.c                       |  4 +-
+ fs/btrfs/xattr.c                          |  4 +-
+ fs/ceph/acl.c                             |  2 +-
+ fs/ceph/caps.c                            |  2 +-
+ fs/ceph/inode.c                           | 17 ++++----
+ fs/ceph/snap.c                            |  2 +-
+ fs/ceph/xattr.c                           |  2 +-
+ fs/coda/coda_linux.c                      |  2 +-
+ fs/coda/dir.c                             |  2 +-
+ fs/coda/file.c                            |  2 +-
+ fs/coda/inode.c                           |  2 +-
+ fs/configfs/inode.c                       |  6 +--
+ fs/cramfs/inode.c                         |  2 +-
+ fs/debugfs/inode.c                        |  2 +-
+ fs/devpts/inode.c                         |  6 +--
+ fs/ecryptfs/inode.c                       |  2 +-
+ fs/efivarfs/file.c                        |  2 +-
+ fs/efivarfs/inode.c                       |  2 +-
+ fs/efs/inode.c                            |  5 ++-
+ fs/erofs/inode.c                          | 16 ++++----
+ fs/exfat/file.c                           |  4 +-
+ fs/exfat/inode.c                          |  6 +--
+ fs/exfat/namei.c                          | 29 +++++++-------
+ fs/exfat/super.c                          |  4 +-
+ fs/ext2/acl.c                             |  2 +-
+ fs/ext2/dir.c                             |  6 +--
+ fs/ext2/ialloc.c                          |  2 +-
+ fs/ext2/inode.c                           | 11 +++---
+ fs/ext2/ioctl.c                           |  4 +-
+ fs/ext2/namei.c                           |  8 ++--
+ fs/ext2/super.c                           |  2 +-
+ fs/ext2/xattr.c                           |  2 +-
+ fs/ext4/acl.c                             |  2 +-
+ fs/ext4/ext4.h                            | 20 ++++++++++
+ fs/ext4/extents.c                         | 12 +++---
+ fs/ext4/ialloc.c                          |  2 +-
+ fs/ext4/inline.c                          |  4 +-
+ fs/ext4/inode.c                           | 16 ++++----
+ fs/ext4/ioctl.c                           |  9 +++--
+ fs/ext4/namei.c                           | 26 ++++++------
+ fs/ext4/super.c                           |  2 +-
+ fs/ext4/xattr.c                           |  6 +--
+ fs/f2fs/dir.c                             |  8 ++--
+ fs/f2fs/f2fs.h                            |  5 ++-
+ fs/f2fs/file.c                            | 16 ++++----
+ fs/f2fs/inline.c                          |  2 +-
+ fs/f2fs/inode.c                           | 10 ++---
+ fs/f2fs/namei.c                           | 12 +++---
+ fs/f2fs/recovery.c                        |  4 +-
+ fs/f2fs/super.c                           |  2 +-
+ fs/f2fs/xattr.c                           |  2 +-
+ fs/fat/inode.c                            |  8 ++--
+ fs/fat/misc.c                             |  7 +++-
+ fs/freevxfs/vxfs_inode.c                  |  4 +-
+ fs/fuse/control.c                         |  2 +-
+ fs/fuse/dir.c                             |  8 ++--
+ fs/fuse/inode.c                           | 18 +++++----
+ fs/gfs2/acl.c                             |  2 +-
+ fs/gfs2/bmap.c                            | 11 +++---
+ fs/gfs2/dir.c                             | 15 +++----
+ fs/gfs2/file.c                            |  2 +-
+ fs/gfs2/glops.c                           |  4 +-
+ fs/gfs2/inode.c                           |  8 ++--
+ fs/gfs2/super.c                           |  4 +-
+ fs/gfs2/xattr.c                           |  8 ++--
+ fs/hfs/catalog.c                          |  8 ++--
+ fs/hfs/dir.c                              |  2 +-
+ fs/hfs/inode.c                            | 13 +++---
+ fs/hfs/sysdep.c                           |  2 +-
+ fs/hfsplus/catalog.c                      |  8 ++--
+ fs/hfsplus/dir.c                          |  6 +--
+ fs/hfsplus/inode.c                        | 14 +++----
+ fs/hostfs/hostfs_kern.c                   |  5 ++-
+ fs/hpfs/dir.c                             |  8 ++--
+ fs/hpfs/inode.c                           |  6 +--
+ fs/hpfs/namei.c                           | 26 ++++++------
+ fs/hpfs/super.c                           |  5 ++-
+ fs/hugetlbfs/inode.c                      | 12 +++---
+ fs/inode.c                                | 12 ++++--
+ fs/isofs/inode.c                          |  4 +-
+ fs/isofs/rock.c                           | 16 ++++----
+ fs/jffs2/dir.c                            | 19 ++++-----
+ fs/jffs2/file.c                           |  3 +-
+ fs/jffs2/fs.c                             | 10 ++---
+ fs/jffs2/os-linux.h                       |  2 +-
+ fs/jfs/acl.c                              |  2 +-
+ fs/jfs/inode.c                            |  2 +-
+ fs/jfs/ioctl.c                            |  2 +-
+ fs/jfs/jfs_imap.c                         |  8 ++--
+ fs/jfs/jfs_inode.c                        |  4 +-
+ fs/jfs/namei.c                            | 25 ++++++------
+ fs/jfs/super.c                            |  2 +-
+ fs/jfs/xattr.c                            |  2 +-
+ fs/kernfs/inode.c                         |  4 +-
+ fs/libfs.c                                | 32 ++++++++-------
+ fs/minix/bitmap.c                         |  2 +-
+ fs/minix/dir.c                            |  6 +--
+ fs/minix/inode.c                          | 11 +++---
+ fs/minix/itree_common.c                   |  4 +-
+ fs/minix/namei.c                          |  6 +--
+ fs/nfs/callback_proc.c                    |  2 +-
+ fs/nfs/fscache.h                          |  4 +-
+ fs/nfs/inode.c                            | 21 +++++-----
+ fs/nfsd/nfsctl.c                          |  2 +-
+ fs/nfsd/nfsfh.c                           |  4 +-
+ fs/nfsd/vfs.c                             |  2 +-
+ fs/nilfs2/dir.c                           |  6 +--
+ fs/nilfs2/inode.c                         | 12 +++---
+ fs/nilfs2/ioctl.c                         |  2 +-
+ fs/nilfs2/namei.c                         |  8 ++--
+ fs/nsfs.c                                 |  2 +-
+ fs/ntfs/inode.c                           | 15 +++----
+ fs/ntfs/mft.c                             |  3 +-
+ fs/ntfs3/file.c                           |  6 +--
+ fs/ntfs3/frecord.c                        |  4 +-
+ fs/ntfs3/inode.c                          | 14 ++++---
+ fs/ntfs3/namei.c                          | 10 ++---
+ fs/ntfs3/xattr.c                          |  4 +-
+ fs/ocfs2/acl.c                            |  6 +--
+ fs/ocfs2/alloc.c                          |  6 +--
+ fs/ocfs2/aops.c                           |  2 +-
+ fs/ocfs2/dir.c                            |  8 ++--
+ fs/ocfs2/dlmfs/dlmfs.c                    |  4 +-
+ fs/ocfs2/dlmglue.c                        | 10 +++--
+ fs/ocfs2/file.c                           | 16 ++++----
+ fs/ocfs2/inode.c                          | 14 ++++---
+ fs/ocfs2/move_extents.c                   |  6 +--
+ fs/ocfs2/namei.c                          | 22 ++++++-----
+ fs/ocfs2/refcounttree.c                   | 14 +++----
+ fs/ocfs2/xattr.c                          |  6 +--
+ fs/omfs/dir.c                             |  4 +-
+ fs/omfs/inode.c                           | 10 ++---
+ fs/openpromfs/inode.c                     |  4 +-
+ fs/orangefs/namei.c                       |  2 +-
+ fs/orangefs/orangefs-utils.c              |  6 +--
+ fs/overlayfs/file.c                       |  7 +++-
+ fs/overlayfs/util.c                       |  2 +-
+ fs/pipe.c                                 |  2 +-
+ fs/posix_acl.c                            |  2 +-
+ fs/proc/base.c                            |  2 +-
+ fs/proc/inode.c                           |  2 +-
+ fs/proc/proc_sysctl.c                     |  2 +-
+ fs/proc/self.c                            |  2 +-
+ fs/proc/thread_self.c                     |  2 +-
+ fs/pstore/inode.c                         |  4 +-
+ fs/qnx4/inode.c                           |  4 +-
+ fs/qnx6/inode.c                           |  4 +-
+ fs/ramfs/inode.c                          |  6 +--
+ fs/reiserfs/inode.c                       | 14 +++----
+ fs/reiserfs/ioctl.c                       |  4 +-
+ fs/reiserfs/namei.c                       | 21 +++++-----
+ fs/reiserfs/stree.c                       |  4 +-
+ fs/reiserfs/super.c                       |  2 +-
+ fs/reiserfs/xattr.c                       |  5 ++-
+ fs/reiserfs/xattr_acl.c                   |  2 +-
+ fs/romfs/super.c                          |  4 +-
+ fs/smb/client/file.c                      |  4 +-
+ fs/smb/client/fscache.h                   |  5 ++-
+ fs/smb/client/inode.c                     | 15 ++++---
+ fs/smb/client/smb2ops.c                   |  2 +-
+ fs/smb/server/smb2pdu.c                   |  8 ++--
+ fs/squashfs/inode.c                       |  2 +-
+ fs/stack.c                                |  2 +-
+ fs/stat.c                                 |  2 +-
+ fs/sysv/dir.c                             |  6 +--
+ fs/sysv/ialloc.c                          |  2 +-
+ fs/sysv/inode.c                           |  6 +--
+ fs/sysv/itree.c                           |  4 +-
+ fs/sysv/namei.c                           |  6 +--
+ fs/tracefs/inode.c                        |  2 +-
+ fs/ubifs/debug.c                          |  4 +-
+ fs/ubifs/dir.c                            | 39 +++++++++---------
+ fs/ubifs/file.c                           | 16 ++++----
+ fs/ubifs/ioctl.c                          |  2 +-
+ fs/ubifs/journal.c                        |  4 +-
+ fs/ubifs/super.c                          |  4 +-
+ fs/ubifs/xattr.c                          |  6 +--
+ fs/udf/ialloc.c                           |  2 +-
+ fs/udf/inode.c                            | 17 ++++----
+ fs/udf/namei.c                            | 24 +++++------
+ fs/ufs/dir.c                              |  6 +--
+ fs/ufs/ialloc.c                           |  2 +-
+ fs/ufs/inode.c                            | 23 ++++++-----
+ fs/ufs/namei.c                            |  8 ++--
+ fs/vboxsf/utils.c                         |  4 +-
+ fs/xfs/libxfs/xfs_inode_buf.c             |  4 +-
+ fs/xfs/libxfs/xfs_trans_inode.c           |  2 +-
+ fs/xfs/xfs_acl.c                          |  2 +-
+ fs/xfs/xfs_bmap_util.c                    |  6 ++-
+ fs/xfs/xfs_inode.c                        |  2 +-
+ fs/xfs/xfs_inode_item.c                   |  2 +-
+ fs/xfs/xfs_iops.c                         |  4 +-
+ fs/xfs/xfs_itable.c                       |  4 +-
+ fs/zonefs/super.c                         |  8 ++--
+ include/linux/fs.h                        |  1 +
+ include/linux/fs_stack.h                  |  2 +-
+ ipc/mqueue.c                              | 20 +++++-----
+ kernel/bpf/inode.c                        |  4 +-
+ mm/shmem.c                                | 28 +++++++------
+ net/sunrpc/rpc_pipe.c                     |  2 +-
+ security/apparmor/apparmorfs.c            |  6 +--
+ security/apparmor/policy_unpack.c         |  4 +-
+ security/inode.c                          |  2 +-
+ security/selinux/selinuxfs.c              |  2 +-
+ 234 files changed, 851 insertions(+), 808 deletions(-)
 
-To _really_ fix that testcase, I think we'd need both this patch and to
-make NFS stop reporting writeback errors at close() (which is something
-problematic and not required by POSIX).
-
-Thoughts?
-
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 7d21b4ca2ec5..71ab5a396b5d 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -643,7 +643,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 
- 	nfs_clear_invalid_mapping(file->f_mapping);
- 
--	since = filemap_sample_wb_err(file->f_mapping);
-+	since = filemap_sample_new_wb_err(file->f_mapping);
- 	nfs_start_io_write(inode);
- 	result = generic_write_checks(iocb, from);
- 	if (result > 0) {
-diff --git a/include/linux/errseq.h b/include/linux/errseq.h
-index fc2777770768..2403d2f390aa 100644
---- a/include/linux/errseq.h
-+++ b/include/linux/errseq.h
-@@ -7,8 +7,22 @@
- 
- typedef u32	errseq_t;
- 
-+/**
-+ * errseq_fetch - Grab the current errseq_t value
-+ * @eseq: Pointer to errseq_t to peek
-+ *
-+ * Grab the current errseq_t value and return it. This value is OK
-+ * to use as a "since" value later, as long as you don't care about
-+ * unseen errors that happened before this point.
-+ */
-+static inline errseq_t errseq_fetch(errseq_t *eseq)
-+{
-+	return READ_ONCE(*eseq);
-+}
-+
- errseq_t errseq_set(errseq_t *eseq, int err);
- errseq_t errseq_sample(errseq_t *eseq);
-+errseq_t errseq_sample_new(errseq_t *eseq);
- int errseq_check(errseq_t *eseq, errseq_t since);
- int errseq_check_and_advance(errseq_t *eseq, errseq_t *since);
- #endif
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index a56308a9d1a4..dbdf00a829fc 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -102,13 +102,29 @@ static inline int filemap_check_wb_err(struct address_space *mapping,
-  * @mapping: mapping to be sampled
-  *
-  * Writeback errors are always reported relative to a particular sample point
-- * in the past. This function provides those sample points.
-+ * in the past. This function provides those sample points. In the event that
-+ * there are unseen errors at the time of the sample, they will be reported
-+ * during the next check.
-  */
- static inline errseq_t filemap_sample_wb_err(struct address_space *mapping)
- {
- 	return errseq_sample(&mapping->wb_err);
- }
- 
-+/**
-+ * filemap_peek_wb_err - peek at the current errseq_t to test for later errors
-+ * @mapping: mapping to peek
-+ *
-+ * Writeback errors are always reported relative to a particular sample point
-+ * in the past. This function provides those such sample points. If there are
-+ * unseen errors present at the time of the sample, then they will be ignored
-+ * in later checks.
-+ */
-+static inline errseq_t filemap_sample_new_wb_err(struct address_space *mapping)
-+{
-+	return errseq_sample_new(&mapping->wb_err);
-+}
-+
- /**
-  * file_sample_sb_err - sample the current errseq_t to test for later errors
-  * @file: file pointer to be sampled
-diff --git a/lib/errseq.c b/lib/errseq.c
-index 93e9b94358dc..ae28fa13f9c1 100644
---- a/lib/errseq.c
-+++ b/lib/errseq.c
-@@ -36,11 +36,17 @@
- /* The low bits are designated for error code (max of MAX_ERRNO) */
- #define ERRSEQ_SHIFT		ilog2(MAX_ERRNO + 1)
- 
--/* This bit is used as a flag to indicate whether the value has been seen */
-+/* Error has been reported */
- #define ERRSEQ_SEEN		(1 << ERRSEQ_SHIFT)
- 
-+/* Must increment the counter on the next recorded error */
-+#define ERRSEQ_MUST_INC		(1 << (ERRSEQ_SHIFT + 1))
-+
- /* The lowest bit of the counter */
--#define ERRSEQ_CTR_INC		(1 << (ERRSEQ_SHIFT + 1))
-+#define ERRSEQ_CTR_INC		(1 << (ERRSEQ_SHIFT + 2))
-+
-+/* Both of the flag bits */
-+#define ERRSEQ_ALL_FLAGS	(ERRSEQ_SEEN|ERRSEQ_MUST_INC)
- 
- /**
-  * errseq_set - set a errseq_t for later reporting
-@@ -54,7 +60,7 @@
-  *
-  * Return: The previous value, primarily for debugging purposes. The
-  * return value should not be used as a previously sampled value in later
-- * calls as it will not have the SEEN flag set.
-+ * calls as it will not have the MUST_INC flag set.
-  */
- errseq_t errseq_set(errseq_t *eseq, int err)
- {
-@@ -69,7 +75,7 @@ errseq_t errseq_set(errseq_t *eseq, int err)
- 	 * also don't accept zero here as that would effectively clear a
- 	 * previous error.
- 	 */
--	old = READ_ONCE(*eseq);
-+	old = errseq_fetch(eseq);
- 
- 	if (WARN(unlikely(err == 0 || (unsigned int)-err > MAX_ERRNO),
- 				"err = %d\n", err))
-@@ -79,10 +85,10 @@ errseq_t errseq_set(errseq_t *eseq, int err)
- 		errseq_t new;
- 
- 		/* Clear out error bits and set new error */
--		new = (old & ~(MAX_ERRNO|ERRSEQ_SEEN)) | -err;
-+		new = (old & ~(MAX_ERRNO|ERRSEQ_ALL_FLAGS)) | -err;
- 
--		/* Only increment if someone has looked at it */
--		if (old & ERRSEQ_SEEN)
-+		/* Only increment if marked for it */
-+		if (old & ERRSEQ_MUST_INC)
- 			new += ERRSEQ_CTR_INC;
- 
- 		/* If there would be no change, then call it done */
-@@ -122,7 +128,7 @@ EXPORT_SYMBOL(errseq_set);
-  */
- errseq_t errseq_sample(errseq_t *eseq)
- {
--	errseq_t old = READ_ONCE(*eseq);
-+	errseq_t old = errseq_fetch(eseq);
- 
- 	/* If nobody has seen this error yet, then we can be the first. */
- 	if (!(old & ERRSEQ_SEEN))
-@@ -131,6 +137,33 @@ errseq_t errseq_sample(errseq_t *eseq)
- }
- EXPORT_SYMBOL(errseq_sample);
- 
-+/**
-+ * errseq_sample_new() - Sample the errseq_t, ignoring earlier errors
-+ * @eseq: Pointer to errseq_t to be sampled.
-+ *
-+ * This function allows callers to initialise their errseq_t variable.
-+ * Any errors that occurred before this point will not be reported if
-+ * this value is later used as a "since" value.
-+ */
-+errseq_t errseq_sample_new(errseq_t *eseq)
-+{
-+	errseq_t old = errseq_fetch(eseq);
-+	errseq_t new = old;
-+
-+	/*
-+	 * For the common case of no errors ever having been set, we can skip
-+	 * marking the MUST_INC bit. Once an error has been set, the value
-+	 * will never go back to zero.
-+	 */
-+	if (old != 0) {
-+		new |= ERRSEQ_MUST_INC;
-+		if (old != new)
-+			cmpxchg(eseq, old, new);
-+	}
-+	return new;
-+}
-+EXPORT_SYMBOL(errseq_sample_new);
-+
- /**
-  * errseq_check() - Has an error occurred since a particular sample point?
-  * @eseq: Pointer to errseq_t value to be checked.
-@@ -144,9 +177,9 @@ EXPORT_SYMBOL(errseq_sample);
-  */
- int errseq_check(errseq_t *eseq, errseq_t since)
- {
--	errseq_t cur = READ_ONCE(*eseq);
-+	errseq_t cur = errseq_fetch(eseq) & ~ERRSEQ_ALL_FLAGS;
- 
--	if (likely(cur == since))
-+	if (likely(cur == (since & ~ERRSEQ_ALL_FLAGS)))
- 		return 0;
- 	return -(cur & MAX_ERRNO);
- }
-@@ -182,7 +215,7 @@ int errseq_check_and_advance(errseq_t *eseq, errseq_t *since)
- 	 * so that the common case of no error is handled without needing
- 	 * to take the lock that protects the "since" value.
- 	 */
--	old = READ_ONCE(*eseq);
-+	old = errseq_fetch(eseq);
- 	if (old != *since) {
- 		/*
- 		 * Set the flag and try to swap it into place if it has
-@@ -192,11 +225,10 @@ int errseq_check_and_advance(errseq_t *eseq, errseq_t *since)
- 		 * swap doesn't occur, then it has either been updated by a
- 		 * writer who is altering the value in some way (updating
- 		 * counter or resetting the error), or another reader who is
--		 * just setting the "seen" flag. Either outcome is OK, and we
--		 * can advance "since" and return an error based on what we
--		 * have.
-+		 * just setting flags. Either outcome is OK, and we can
-+		 * advance "since" and return an error based on what we have.
- 		 */
--		new = old | ERRSEQ_SEEN;
-+		new = old | ERRSEQ_ALL_FLAGS;
- 		if (new != old)
- 			cmpxchg(eseq, old, new);
- 		*since = new;
--- 
-2.40.1
-
+--=20
+Jeff Layton <jlayton@kernel.org>
