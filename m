@@ -2,212 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75A5272F65E
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 09:32:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B420F73003E
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 15:38:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235394AbjFNHcv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Jun 2023 03:32:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49228 "EHLO
+        id S245025AbjFNNiV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Jun 2023 09:38:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234394AbjFNHct (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Jun 2023 03:32:49 -0400
-X-Greylist: delayed 442 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 14 Jun 2023 00:32:48 PDT
-Received: from out-4.mta0.migadu.com (out-4.mta0.migadu.com [IPv6:2001:41d0:1004:224b::4])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8DC6E62
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Jun 2023 00:32:48 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1686727524;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=cnZA6R5dhheCWRN7S5Aij6O41OaBmn26JHiRPtLWJrg=;
-        b=ozbiDhejsVX0xqtk/O4xv5w7K/gwHY1rgEvgaeo+TfiYYiYot7jzITkhjVudTO2dF4tYTX
-        zEW/hLIqxsqOhsY7gVLd8KAI9ZWT2PvKq3oDX/LHEKyjh5I8CDBv1/iUFSf0DH1q/BmntT
-        Barc9KHGTM0FcAPUalkd/va76Mdcvvc=
-From:   Qi Zheng <qi.zheng@linux.dev>
-To:     trond.myklebust@hammerspace.com, anna@kernel.org,
-        fllinden@amazon.com
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH] NFSv4.2: fix wrong shrinker_id
-Date:   Wed, 14 Jun 2023 07:24:43 +0000
-Message-Id: <20230614072443.3264264-1-qi.zheng@linux.dev>
+        with ESMTP id S245023AbjFNNiU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Jun 2023 09:38:20 -0400
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C034A1FF9;
+        Wed, 14 Jun 2023 06:38:18 -0700 (PDT)
+Received: by mail-io1-xd33.google.com with SMTP id ca18e2360f4ac-77acb944bdfso375550239f.0;
+        Wed, 14 Jun 2023 06:38:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686749898; x=1689341898;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OcMpIHdjKp1THv65PvIPUr0YhjndAMsASg3ywF4WkSk=;
+        b=TMs/pAzNollaH2DS13pnVn8it1HkV9hqXZyhXw7W3eBeMLtTMJMbuXrJ0gWPRn2DvW
+         V4YJEDbsGmXp7SjtsJ3WxoYBSpAgI48j4zg+QgWHj9auVIYSwdir26qBBIVARp6qtyfx
+         Utn+1PjVx+qGNxU6jIlpFQ5DJnqprMaBlb+7ESS8tYiCcoxTa2Ak/OgqtdeuXnrKfogf
+         zccffifvA6uVfoE7EGloY10axykms28UXt/1drp4bJo7qSDkyHycQwqvD5LFVLqLhh/Y
+         1XjLv/ZmiRvVJ5XZFGMiK3biQZRmHP9hvouKsZpL0mMg9PeRWUIO5pXsIudkIOqUTp20
+         lRvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686749898; x=1689341898;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OcMpIHdjKp1THv65PvIPUr0YhjndAMsASg3ywF4WkSk=;
+        b=MhYUp728oiPK51HEDRIdt99Ym1c/XCNR62yQF0WAeRaSkjE6H+Eavzp7z4DSCu8S0k
+         A/WKFd5htLYhgnF5UiDLi45LRF9gRI15LPeHdn+13G3LrmONHVNSVLccJ5v9VrikFaRS
+         e2yr8nWukDzJy8J3T6Lh5VdOcKnFlq4MaX7Mwi8TmcnQE+uXl9eROxhtGv4HNztVJsG6
+         t8bRm9OjvP51LZMH9XJrc0rhcB0wWkAcJNzFBDix3vsP5PX4uVfdD7PDrQN9EyJ27xUy
+         86QqBQvjss7cc7zKTPjGpgCzBTAYtmBAc7MtjMnaWg4eG9kY6hyHhBc/qt4msH/VCdkm
+         X58Q==
+X-Gm-Message-State: AC+VfDwQDmUqhvwOp/C+fOWOR2Fhow91C6qOZ2s19n2cD88hRqDQksLw
+        ATWzRS4Dygc20iZygmqXa7U=
+X-Google-Smtp-Source: ACHHUZ7FFYwn9TAuhIaV3IPsryiva/NLrrg5aB2dNwsbpVo1p4MaX1lDfyst9q3lQTlhQBPPaWTY5A==
+X-Received: by 2002:a05:6602:2747:b0:774:8786:1b59 with SMTP id b7-20020a056602274700b0077487861b59mr14607161ioe.11.1686749897893;
+        Wed, 14 Jun 2023 06:38:17 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id z23-20020a02ceb7000000b00420d6fd5c06sm5022647jaq.80.2023.06.14.06.38.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jun 2023 06:38:17 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
+Subject: [PATCH v3] SUNRPC: Use sysfs_emit in place of strlcpy/sprintf
+Date:   Wed, 14 Jun 2023 13:37:57 +0000
+Message-ID: <20230614133757.2106902-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Qi Zheng <zhengqi.arch@bytedance.com>
+Part of an effort to remove strlcpy() tree-wide [1].
 
-Currently, the list_lru::shrinker_id corresponding to the nfs4_xattr
-shrinkers is wrong:
+Direct replacement is safe here since the getter in kernel_params_ops
+handles -errno return [2].
 
->>> prog["nfs4_xattr_cache_lru"].shrinker_id
-(int)0
->>> prog["nfs4_xattr_entry_lru"].shrinker_id
-(int)0
->>> prog["nfs4_xattr_large_entry_lru"].shrinker_id
-(int)0
->>> prog["nfs4_xattr_cache_shrinker"].id
-(int)18
->>> prog["nfs4_xattr_entry_shrinker"].id
-(int)19
->>> prog["nfs4_xattr_large_entry_shrinker"].id
-(int)20
+[1] https://github.com/KSPP/linux/issues/89
+[2] https://elixir.bootlin.com/linux/v6.4-rc6/source/include/linux/moduleparam.h#L52
 
-This is not what we expect, which will cause these shrinkers
-not to be found in shrink_slab_memcg().
-
-We should assign shrinker::id before calling list_lru_init_memcg(),
-so that the corresponding list_lru::shrinker_id will be assigned
-the correct value like below:
-
->>> prog["nfs4_xattr_cache_lru"].shrinker_id
-(int)16
->>> prog["nfs4_xattr_entry_lru"].shrinker_id
-(int)17
->>> prog["nfs4_xattr_large_entry_lru"].shrinker_id
-(int)18
->>> prog["nfs4_xattr_cache_shrinker"].id
-(int)16
->>> prog["nfs4_xattr_entry_shrinker"].id
-(int)17
->>> prog["nfs4_xattr_large_entry_shrinker"].id
-(int)18
-
-So just do it.
-
-Fixes: 95ad37f90c33 ("NFSv4.2: add client side xattr caching.")
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- fs/nfs/nfs42xattr.c | 83 ++++++++++++++++++++++++++-------------------
- 1 file changed, 48 insertions(+), 35 deletions(-)
+ net/sunrpc/svc.c |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
-index 76ae11834206..e3dab0131e4c 100644
---- a/fs/nfs/nfs42xattr.c
-+++ b/fs/nfs/nfs42xattr.c
-@@ -991,6 +991,33 @@ static void nfs4_xattr_cache_init_once(void *p)
- 	INIT_LIST_HEAD(&cache->dispose);
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index e6d4cec61e47..b011c318fef1 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -109,15 +109,15 @@ param_get_pool_mode(char *buf, const struct kernel_param *kp)
+ 	switch (*ip)
+ 	{
+ 	case SVC_POOL_AUTO:
+-		return strlcpy(buf, "auto\n", 20);
++		return sysfs_emit(buf, "auto\n");
+ 	case SVC_POOL_GLOBAL:
+-		return strlcpy(buf, "global\n", 20);
++		return sysfs_emit(buf, "global\n");
+ 	case SVC_POOL_PERCPU:
+-		return strlcpy(buf, "percpu\n", 20);
++		return sysfs_emit(buf, "percpu\n");
+ 	case SVC_POOL_PERNODE:
+-		return strlcpy(buf, "pernode\n", 20);
++		return sysfs_emit(buf, "pernode\n");
+ 	default:
+-		return sprintf(buf, "%d\n", *ip);
++		return sysfs_emit(buf, "%d\n", *ip);
+ 	}
  }
  
-+static int nfs4_xattr_shrinker_init(struct shrinker *shrinker,
-+				    struct list_lru *lru, const char *name)
-+{
-+	int ret = 0;
-+
-+	ret = prealloc_shrinker(shrinker, name);
-+	if (ret)
-+		return ret;
-+
-+	ret = list_lru_init_memcg(lru, shrinker);
-+	if (ret) {
-+		free_prealloced_shrinker(shrinker);
-+		return ret;
-+	}
-+
-+	register_shrinker_prepared(shrinker);
-+
-+	return 0;
-+}
-+
-+static void nfs4_xattr_shrinker_destroy(struct shrinker *shrinker,
-+					struct list_lru *lru)
-+{
-+	unregister_shrinker(shrinker);
-+	list_lru_destroy(lru);
-+}
-+
- int __init nfs4_xattr_cache_init(void)
- {
- 	int ret = 0;
-@@ -1002,44 +1029,30 @@ int __init nfs4_xattr_cache_init(void)
- 	if (nfs4_xattr_cache_cachep == NULL)
- 		return -ENOMEM;
- 
--	ret = list_lru_init_memcg(&nfs4_xattr_large_entry_lru,
--	    &nfs4_xattr_large_entry_shrinker);
--	if (ret)
--		goto out4;
--
--	ret = list_lru_init_memcg(&nfs4_xattr_entry_lru,
--	    &nfs4_xattr_entry_shrinker);
--	if (ret)
--		goto out3;
--
--	ret = list_lru_init_memcg(&nfs4_xattr_cache_lru,
--	    &nfs4_xattr_cache_shrinker);
--	if (ret)
--		goto out2;
--
--	ret = register_shrinker(&nfs4_xattr_cache_shrinker, "nfs-xattr_cache");
-+	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_cache_shrinker,
-+				       &nfs4_xattr_cache_lru,
-+				       "nfs-xattr_cache");
- 	if (ret)
- 		goto out1;
- 
--	ret = register_shrinker(&nfs4_xattr_entry_shrinker, "nfs-xattr_entry");
-+	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_entry_shrinker,
-+				       &nfs4_xattr_entry_lru,
-+				       "nfs-xattr_entry");
- 	if (ret)
--		goto out;
-+		goto out2;
- 
--	ret = register_shrinker(&nfs4_xattr_large_entry_shrinker,
--				"nfs-xattr_large_entry");
-+	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_large_entry_shrinker,
-+				       &nfs4_xattr_large_entry_lru,
-+				       "nfs-xattr_large_entry");
- 	if (!ret)
- 		return 0;
- 
--	unregister_shrinker(&nfs4_xattr_entry_shrinker);
--out:
--	unregister_shrinker(&nfs4_xattr_cache_shrinker);
--out1:
--	list_lru_destroy(&nfs4_xattr_cache_lru);
-+	nfs4_xattr_shrinker_destroy(&nfs4_xattr_entry_shrinker,
-+				    &nfs4_xattr_entry_lru);
- out2:
--	list_lru_destroy(&nfs4_xattr_entry_lru);
--out3:
--	list_lru_destroy(&nfs4_xattr_large_entry_lru);
--out4:
-+	nfs4_xattr_shrinker_destroy(&nfs4_xattr_cache_shrinker,
-+				    &nfs4_xattr_cache_lru);
-+out1:
- 	kmem_cache_destroy(nfs4_xattr_cache_cachep);
- 
- 	return ret;
-@@ -1047,11 +1060,11 @@ int __init nfs4_xattr_cache_init(void)
- 
- void nfs4_xattr_cache_exit(void)
- {
--	unregister_shrinker(&nfs4_xattr_large_entry_shrinker);
--	unregister_shrinker(&nfs4_xattr_entry_shrinker);
--	unregister_shrinker(&nfs4_xattr_cache_shrinker);
--	list_lru_destroy(&nfs4_xattr_large_entry_lru);
--	list_lru_destroy(&nfs4_xattr_entry_lru);
--	list_lru_destroy(&nfs4_xattr_cache_lru);
-+	nfs4_xattr_shrinker_destroy(&nfs4_xattr_large_entry_shrinker,
-+				    &nfs4_xattr_large_entry_lru);
-+	nfs4_xattr_shrinker_destroy(&nfs4_xattr_entry_shrinker,
-+				    &nfs4_xattr_entry_lru);
-+	nfs4_xattr_shrinker_destroy(&nfs4_xattr_cache_shrinker,
-+				    &nfs4_xattr_cache_lru);
- 	kmem_cache_destroy(nfs4_xattr_cache_cachep);
- }
 -- 
-2.30.2
+2.41.0.162.gfafddb0af9-goog
+
 
