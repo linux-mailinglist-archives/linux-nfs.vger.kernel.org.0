@@ -2,285 +2,236 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 521D47309CF
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 23:28:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48F087309F2
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 23:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235426AbjFNV17 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Jun 2023 17:27:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44698 "EHLO
+        id S235477AbjFNVn4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Jun 2023 17:43:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbjFNV16 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Jun 2023 17:27:58 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1501FFA
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Jun 2023 14:27:56 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1b4fef08cfdso7969425ad.1
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Jun 2023 14:27:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686778076; x=1689370076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OZQO4x072u4cWnbh0GBpHCvDSH4/8vzU3XXZujf36v4=;
-        b=f6m1MavHcSWfkB9fhLCpYFudDd1P0LHH1OKR68keI55X7RLI6JFYir5xiFF/IzygAu
-         /xrjsjD/Fr2JrQOyWvdMLxNSTdgOlC4HVK+gHLn1T0iUeEX+1M9Y78j/X4ye/OqrLmcN
-         kVkTRO9Ru/FnbNccZuZJKnFGGP0uvGvdhhFVfCj22fzoPQeMpmmalVxMAs4lqV6YtiV/
-         tZ7MFRO0al6uk2u60qiA6+jf2Ez0xjdLjVgsgvmZrNeMvk0DwlmMiVc7827Uj9TwxcnZ
-         NG1iPr7O1Ff7IepDSGkGK6wI/uBlWJnsEYM0SOG0wUl3a+sz7/wrSYIopnwi0cF20brq
-         /fxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686778076; x=1689370076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OZQO4x072u4cWnbh0GBpHCvDSH4/8vzU3XXZujf36v4=;
-        b=eLqKDQ/BxSC35/SQ7zssXDtpK7pXOdsuB2H1FMzqf1kvmSbjumeq9S0HhFWUtBTq8h
-         5zZHTnm8yyJ+L5aszBrnvH86no1P6TDovAdCyNtqieF8R487gOTZY0bx56qsLtJ4uBzi
-         8+tl7Niihj5yhlySMEfYbyWxgxArUCTlbd766Cr59DUdQfbcqSZT0Q8gfdo3sE4i9iKo
-         OkMux1SSoSZZBzu8bPIGjT+veoKozLEz+aJar4diAkyp5gjMe7Iu/eVG6UNlwL9ef/Eu
-         ym6Mb6aS3hjprK8HlFkhor7j5nLrIKxmHCnOFIfeqxJvmiXeW7aq7Up7zGMRCIvwAp26
-         zweA==
-X-Gm-Message-State: AC+VfDxJmnXy+BWOscghTfTIxFUpbbcZL/xEd1cfq8e2Zb4VdYRgfNrm
-        PqC0b2Z1/Q0RYaMwuAr1LrFo/J+mapt819BJz5DVj8w=
-X-Google-Smtp-Source: ACHHUZ6EA9+iVs+srhfTGr035F/ZihjO5Or7bGkWJEsopHqP60k3qTQbT7GvHWagZAFPCFKDWo0yO579i0L9gYBqFMI=
-X-Received: by 2002:a17:90b:4f8a:b0:25b:be4a:84c9 with SMTP id
- qe10-20020a17090b4f8a00b0025bbe4a84c9mr2381376pjb.17.1686778075842; Wed, 14
- Jun 2023 14:27:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAN-5tyGD2NCwgsUmaOVjhxjdtjxBng_LyjY1k5ap0qP0w+bxdg@mail.gmail.com>
- <CAM5tNy6LEEWbwE8Ema5kEMCJ3oB=ta7HndbUCKXuF5QJkjSTWw@mail.gmail.com>
- <CAN-5tyGMfARBVM2ZPju5tJA9yM-DLNvcp-OqAEVEApXOQ4df5A@mail.gmail.com> <CAN-5tyGiBP3XMS3wiOeQWVhO06JVMssURR0zd2xZhesdb8t8pQ@mail.gmail.com>
-In-Reply-To: <CAN-5tyGiBP3XMS3wiOeQWVhO06JVMssURR0zd2xZhesdb8t8pQ@mail.gmail.com>
-From:   Rick Macklem <rick.macklem@gmail.com>
-Date:   Wed, 14 Jun 2023 14:27:45 -0700
-Message-ID: <CAM5tNy6U9w4NuqKK2sSfxHs-utXzjrGtj+iWUm3XDUSmfGj=UA@mail.gmail.com>
+        with ESMTP id S230523AbjFNVnz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Jun 2023 17:43:55 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2133.outbound.protection.outlook.com [40.107.93.133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CC3268A
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Jun 2023 14:43:53 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JPTBMXXRv7W7l/L26CLZYBalYa+CcQUy7c9po8mX6/7FypzWOirRR+qqWx1OQTQpxpYB4Pa67RdrTaVBeGGFPuWz243lu84s/EOrWaNJGtETxif83qkCzXHG13snPYCtJgYCzSutbPFAwKBKun0VQRtlgi8rwwebdKUKaRpBFhN1H9WCaq0MmVkDosnGw8X5XX4zrDd+CdccIC70YUZxrIhV1wLCXVwniCTHsn6Uhdqv/H6Z1SmPibhVmm2Ao6Twf7uBPwFB05w7ON1LxX+Wk1VqFsjdUlgVeLmm/vPa7d9Ta9S/ybmH3GybcJJk5Yfj/VunpoAhCj94+ukeVMeINQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rVgpV3uIV07QV4/vNY6722Ga9nyRZD8r3NYxR5rqQ4g=;
+ b=GUwkepVNfPlDxUh3wpfL7XOG2PUpT5oRJW8L0QUZ8u5e7fFlvKSxFIjhafrEW4BIBrdEsqbU7fMcEYkZ6WPST0UacgpwvmXsV+lzMHsSBXXkJNgPEohlu/8VYvZFtmvfKb7/NxC1VdiNyPdw/PdiVCWcmLlpa1kU/lreq2xxm+UKXwQo0I7VNqIhsmrbUxmnmsMr4gVNo0sgvXbktddsMGKlKlCWS4ZtAwgWvcEf40797k9xd9y3V140UGzC5GAhiIpXfQjyqzo4RqtKNwXwR+0fHbR2gvUNu+xQC5LoCIe/wf3nTbVuYWqxb1SI9EWbbXHe47Y1eF7ZCmRFIzpoSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rVgpV3uIV07QV4/vNY6722Ga9nyRZD8r3NYxR5rqQ4g=;
+ b=a/zv0LC8hhWsnqztj2XGnURAWQO8V540tPBXFggXB0xwhLKDuhLlK0l3NZ/9bKriZpa6AGmzil6eeFYWGivG81+/Xag3Y3IYorCFUBohYPwnZg0kKODsHTATSpqjcDFP8/hBmQrF1qpKgCbn8tZXQOVQSXS4mDaXW4inE4sY77U=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by DS7PR13MB4605.namprd13.prod.outlook.com (2603:10b6:5:3a6::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6477.37; Wed, 14 Jun
+ 2023 21:43:49 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::6a2f:f437:6816:78f8]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::6a2f:f437:6816:78f8%6]) with mapi id 15.20.6477.028; Wed, 14 Jun 2023
+ 21:43:49 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "aglo@umich.edu" <aglo@umich.edu>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: Handling of BADSESSON error
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Thread-Topic: Handling of BADSESSON error
+Thread-Index: AQHZnvqZw5cwRhzKGU2XzH3yTx0Uea+K1KOA
+Date:   Wed, 14 Jun 2023 21:43:49 +0000
+Message-ID: <ec5c685da9f44197f38e8b2e7514ca495b078a5e.camel@hammerspace.com>
+References: <CAN-5tyGD2NCwgsUmaOVjhxjdtjxBng_LyjY1k5ap0qP0w+bxdg@mail.gmail.com>
+In-Reply-To: <CAN-5tyGD2NCwgsUmaOVjhxjdtjxBng_LyjY1k5ap0qP0w+bxdg@mail.gmail.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|DS7PR13MB4605:EE_
+x-ms-office365-filtering-correlation-id: bf6ef3c9-0182-4659-1b08-08db6d20705b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: /b0mP1kzpS7GOhopnv74qZ1EDufpEow3Q26txTP3hnH7k78FCnHCMM8PlGPf2xtFfoxLOHnDVTI26k9OBtSzaWtoMpEnswYPF+Fo2kS9q7P5yEYvR9av1PKy822Hdm8PAssP4qqTbny1ktUJ++ei1zPH3j4nBKCtfjEPwTSvRVWMEr0YA7z7F3U8j5Jp3dJXHDZ+EUVFjOHQFIOW/C5Iixs6Wh6PMsuPr0UAazAkjiSK4sCQMhc0nlS93e06/Id3dClqaCRbJgwHXmADjB6QZojFEphQ8rD2vpgHQ3T6XiKEYbfDYcstxW942dxp/wDc6OZnhbGjLfbWSb+fE/QyKnM+h/CVk/ITio25RIbHrzi/Yx74m0+BL3Yxcn2FLk6EgFopHyT5xxWIM0DtzsJ67jp03shhVGcrFJA3nLn0jIOl+5NrNkKNzps5aEjlgwqOEp6ywAKMmTmxxud7b19BVfiBUFwy4gEaYvy2T64kwJhG1NPv+oUfRc3dChKaXkkAQqiJ7YX4Hy/wVEwjVpKd+RULquRSchBwmGf8gRTP1rNxkuV8MmRIDDgam1lFh0ZgsS97Th/aShGFak8crJl3hYznc59vuQRcRSsVm3ZcI9T3mwrCeb2uN1G6RZMMU9WOSirC4NLTJ0tAJ9MdJIeNT42E1/8eEYOKww+spJzUqsg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(346002)(39850400004)(366004)(136003)(451199021)(8936002)(6486002)(26005)(8676002)(6512007)(3480700007)(41300700001)(38100700002)(478600001)(36756003)(71200400001)(66946007)(6916009)(66446008)(4326008)(66476007)(64756008)(66556008)(86362001)(76116006)(316002)(122000001)(38070700005)(6506007)(5660300002)(83380400001)(186003)(2616005)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Vis4YWJwS2FvemVIcXhTQ3ZoL05Rb1QyRVdyaFExUG9pdS9HaHNqaHB4N2ZX?=
+ =?utf-8?B?OG5KQzRUbDdid2syMG00cU96U0M3ZWdGemk0cGRSVUZ4bFIrQk1sU0FCWENm?=
+ =?utf-8?B?c1lDd2l5VVc5TlYwamdRcmR5TTlwOThvVG9JNXBDVXJpQk40d0dtdi9FK0VF?=
+ =?utf-8?B?QUxnRkRrMDZtb1BZeXRpdS8wVTh3UzBaa0VzSWVRbFlWNDRSS2U0aW1hTE1S?=
+ =?utf-8?B?STJyZThrWVRKZlJmbFE2Mit1S0p4YU16Z3BKRHJ4KzcwQzNmZmovY2FmQ0J4?=
+ =?utf-8?B?VWhMTXhNNWpITkc3b01Gb0JFTXE4NmtaSno2MVZLcjdIdTY5LzZMa0JscTg5?=
+ =?utf-8?B?SGtlVnVnS3lNUDEwN1ExSDN1eTU2WHZ4ZkdBdWE0RExpRnlaeDNHZTAvUzZt?=
+ =?utf-8?B?N1RJeVJ0dzBCVEQ3ZGZ3dVlrektSVkNTSkcyMlVaWms2YlBsSHRNdWU5bHJh?=
+ =?utf-8?B?amFWVEZJSE1wL3dsaitGOTZZUU9wNzJnSjdyUG9jem5wT01QMU0yZDVLNVI5?=
+ =?utf-8?B?RjBkOUN3OVMwK3VMY3NaVGNtWHRFaXNMRTdXa1VOVi9mOFdCZDVSdEFpT3Zp?=
+ =?utf-8?B?OVNicWpDTERvdnBiaGlRRW9aUzJTeUdHSDA0RkpRNmY2VG02SFZreWFhS3ZY?=
+ =?utf-8?B?bG9uSHVKbXBkc29FemlrenhCNzVleHNCektsMXhUcDhzWmVWa2w5UHB1SnFz?=
+ =?utf-8?B?R2FXbFUwS054bnEzRy85cUhudVE4NkNWaEQwaVVOMlZoMVJHZ3oxQ2U0L0Jo?=
+ =?utf-8?B?WGRpdUlyVEJiMyt4bUdDc3VreGNNaEVDR000Q0NhNUF1VUQ3eWFReEhUZWIr?=
+ =?utf-8?B?bURJNFVUcGxrZnh4bWpndkpwOGk2c3NVdDZZb2U5OStuY1ZvYStUckw5OUdu?=
+ =?utf-8?B?MjJpd0hIaE1pd0lzNzdRaTRxdmE5amN3b3ZtNno0R05VdkJReEFmWTJmakxz?=
+ =?utf-8?B?bzlPQTZrTThjSDVmQ2FLTk40cGpUcGJJdVJuWjk4MFFXRmliMlVqWFRJaERU?=
+ =?utf-8?B?T0FSTUtLR01qdnZEZkV1ZlRybGhybDl5MGFORUI0ODQvVEJaOUVNZmM1Uk9O?=
+ =?utf-8?B?ZHlTaXgyeDUvYnMvOEJkSmJwZ0VLaDEwREo0dGtNZkY1V2l3dzI5dWdMaWwv?=
+ =?utf-8?B?Umw1Z0dDQmVGdzFxdy9hdDVtSVlwMUZjRlBXMW5MYzA3MVNCTWI4anR5aVBV?=
+ =?utf-8?B?WnhHbmF4anJBdWxtUmxJblhsRFFiYlJ6TmhNek9jdStmUTh3Z1pqVFNqOG55?=
+ =?utf-8?B?OW9YbU5zajBQOVNyeTZSMzM1NXM2UXFVc1BUYjdvZi9pTWpsNnhhOHFSNlhr?=
+ =?utf-8?B?cVhnZnBSZzk3SWpCVUNPMnYrNHBmejc5dEg0UWhYcnhZZ1lNLzNHUjVhNE44?=
+ =?utf-8?B?R3N1WXd5UisvcmZpWC9UOEh0SzRlUCtrK2xIL01FYWcyTTgxTlRQYysrOFJN?=
+ =?utf-8?B?Z1JsdjRybTJWZmxvME1uRzc2Wm00WVVzYjFaMWQybG9SelhzUy9KTDQvaWJP?=
+ =?utf-8?B?czk2eGIxR2E5VGNqYk1FSDNjTWNVQ2Z4Nys1a0JXQU8zdmNMeUJ3QllCSGNs?=
+ =?utf-8?B?ak9LSDVwaWxXZnd6T3BNWnIrandPUTNLU3Bvc0lDR2psL2xiV0F0T1U2eG5C?=
+ =?utf-8?B?bnlLaWJHSEI5Um55alRmQWtjaGRMcndtalJmdE1vdzYyMHR6TWF1RkNzc3JN?=
+ =?utf-8?B?eCtQUEhsc0pTM29CQ1k2QW9qTWVnYmR0YjdGa0x1eGtuOTZ0NEZId2VlNTVU?=
+ =?utf-8?B?OEZkdStjVEt0a2hyVDQyLzMrN3FZMUoyOUVwb3o4TUFGUUtNZTlhODlTV0wy?=
+ =?utf-8?B?bmxIV29VQzIwMndISGdDRWU4dmV3TGpnMmhBTFBrcTFQc052dDI2bUlJZ09p?=
+ =?utf-8?B?SkJlM0sycDZ1cjR0bXNqVTlzYSt2ajZrbXc0YmRCdEFCSmtUMWRVVG1sRDVk?=
+ =?utf-8?B?enRpY3JESWZheEUwZExGVG1VTDRCK3FaQWJzalB4QjBLKzRrSjBIVklxL1RS?=
+ =?utf-8?B?R3JNT2dtbXoyY1NveklRVStNK0l2Ynhpd2kwNkNpSko1c2NmOW1PSENFMC9J?=
+ =?utf-8?B?UkFFMllIV3R4T3N1aDZPZzdNMTJnS1FSL0hJb05FV2lHK1dBYWJMOVcvd3Bt?=
+ =?utf-8?B?aUdvS0FwdFh1UTF3V3h4b0dBOCtLWU9NVThQeDVIK3lMdG9KazFuQUpPd2JU?=
+ =?utf-8?B?c0E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <003C73C826A57C4584F0F1F647F0EF05@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf6ef3c9-0182-4659-1b08-08db6d20705b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2023 21:43:49.4331
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OcTyP70r6AZPsXQDj+FQG0xVvrKyE10HGFA/OSgg2+ZHJwGs7hy84fyfVxsm8z3OXyLIxMAo93QdGmN6///I3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR13MB4605
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 1:44=E2=80=AFPM Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->
-> On Wed, Jun 14, 2023 at 4:43=E2=80=AFPM Olga Kornievskaia <aglo@umich.edu=
-> wrote:
-> >
-> > On Wed, Jun 14, 2023 at 4:24=E2=80=AFPM Rick Macklem <rick.macklem@gmai=
-l.com> wrote:
-> > >
-> > > On Wed, Jun 14, 2023 at 12:58=E2=80=AFPM Olga Kornievskaia <aglo@umic=
-h.edu> wrote:
-> > > >
-> > > >
-> > > > Hi Trond,
-> > > >
-> > > > I'm looking for advice on how to handle the problem that when
-> > > > BADSESSION is received (on an interrupted slot) and we don't increm=
-ent
-> > > > the seqid for that slot. The client releases the slot and it's
-> > > > possible for another thread to use it before the session is frozen.
-> > > > Here are the (unfiltered sequential) tracepoints showing the proble=
-m.
-> > > > Follow slot_nr=3D0 and seq_nr=3D7673
-> > > >
-> > > >    kworker/u2:26-541     [000] .....   869.508658: nfs4_sequence_do=
-ne:
-> > > > error=3D-10052 (BADSESSION) session=3D0x90caa481 slot_nr=3D4 seq_nr=
-=3D4259
-> > > > highest_slotid=3D0 target_highest_slotid=3D0 status_flags=3D0x0 ()
-> > > >    kworker/u2:26-541     [000] .....   869.508661: nfs4_write:
-> > > > error=3D-10052 (BADSESSION) fileid=3D00:3b:111 fhandle=3D0x59c8ccff
-> > > > offset=3D2304664 count=3D7992 res=3D0 stateid=3D1:0x3f4f04cd
-> > > > layoutstateid=3D0:0x00000000
-> > > >     kworker/u2:1-3198    [000] .....   869.508898: nfs4_xdr_status:
-> > > > task:0000a2ae@00000011 xid=3D0x5d0f6dda error=3D-10052 (BADSESSION)
-> > > > operation=3D53
-> > > >     kworker/u2:1-3198    [000] .....   869.508905: nfs4_sequence_do=
-ne:
-> > > > error=3D-10052 (BADSESSION) session=3D0x90caa481 slot_nr=3D0 seq_nr=
-=3D7673
-> > > > highest_slotid=3D0 target_highest_slotid=3D0 status_flags=3D0x0 ()
-> > > >               dt-3684    [000] .....   869.508918: nfs4_set_lock:
-> > > > error=3D-10052 (BADSESSION) cmd=3DSETLK:WRLCK range=3D1603340:18345=
-35
-> > > > fileid=3D00:3b:109 fhandle=3D0x7c6bc6b4 stateid=3D1:0x8f5f1fe4
-> > > > lockstateid=3D0:0x7bd5c66f
-> > > >
-> > > > *** this is use of slot_nr=3D0 seq_nr=3D7673 that gets BADSESSION. =
-Slot
-> > > > gets released without incrementing the seq#. The next tracepoint sh=
-ows
-> > > > the use of the slot again by another lock call ***
-> > > >
-> > > >     kworker/u2:1-3198    [000] .....   869.508928:
-> > > > nfs4_setup_sequence: session=3D0x90caa481 slot_nr=3D0 seq_nr=3D7673
-> > > > highest_used_slotid=3D1
-> > > >    kworker/u2:29-549     [000] .....   869.509746: nfs4_sequence_do=
-ne:
-> > > > error=3D0 (OK) session=3D0x90caa481 slot_nr=3D0 seq_nr=3D7673
-> > > > highest_slotid=3D63 target_highest_slotid=3D63 status_flags=3D0x0 (=
-)
-> > > >               dt-3672    [000] .....   869.509770: nfs4_set_lock:
-> > > > error=3D0 (OK) cmd=3DSETLK:WRLCK range=3D146432:159743 fileid=3D00:=
-3b:129
-> > > > fhandle=3D0x50fa2dd4 stateid=3D1:0xcf065b31 lockstateid=3D1:0x5c571=
-804
-> > > >    kworker/u2:26-541     [000] .....   869.509814:
-> > > > nfs4_setup_sequence: session=3D0x90caa481 slot_nr=3D0 seq_nr=3D7674
-> > > > highest_used_slotid=3D0
-> > > >    kworker/u2:26-541     [000] .....   869.509857:
-> > > > nfs4_setup_sequence: session=3D0x90caa481 slot_nr=3D1 seq_nr=3D7805
-> > > > highest_used_slotid=3D1
-> > > >
-> > > > ** finally the state manager gets to run? But only after 3 "NEW" us=
-e
-> > > > of slots are done **
-> > > >
-> > > >  172.28.68.180-m-3751    [000] .....   869.510267: nfs4_state_mgr:
-> > > > hostname=3D172.28.68.180 clp state=3DMANAGER_RUNNING|CHECK_LEASE|0x=
-c040
-> > > >    kworker/u2:29-549     [000] .....   869.510977: nfs4_xdr_status:
-> > > > task:0000a2c8@00000011 xid=3D0x5e0f6dda error=3D-10052 (BADSESSION)
-> > > > operation=3D53
-> > > >    kworker/u2:29-549     [000] .....   869.510983: nfs4_sequence_do=
-ne:
-> > > > error=3D-10052 (BADSESSION) session=3D0x90caa481 slot_nr=3D1 seq_nr=
-=3D7805
-> > > > highest_slotid=3D0 target_highest_slotid=3D0 status_flags=3D0x0 ()
-> > > >    kworker/u2:29-549     [000] .....   869.510985: nfs4_write:
-> > > > error=3D-10052 (BADSESSION) fileid=3D00:3b:129 fhandle=3D0x50fa2dd4
-> > > > offset=3D146432 count=3D13312 res=3D0 stateid=3D1:0xcf065b31
-> > > > layoutstateid=3D0:0x00000000
-> > > >    kworker/u2:26-541     [000] .....   869.511318: nfs4_sequence_do=
-ne:
-> > > > error=3D0 (OK) session=3D0x90caa481 slot_nr=3D0 seq_nr=3D7674
-> > > > highest_slotid=3D63 target_highest_slotid=3D63 status_flags=3D0x0 (=
-)
-> > > >               dt-3669    [000] .....   869.511337: nfs4_set_lock:
-> > > > error=3D0 (OK) cmd=3DSETLK:WRLCK range=3D2462720:2469375 fileid=3D0=
-0:3b:138
-> > > > fhandle=3D0xe30d8cf3 stateid=3D1:0xe2787aa1 lockstateid=3D1:0x21642=
-1fe
-> > > >  172.28.68.180-m-3751    [000] .....   869.511918:
-> > > > nfs4_destroy_session: error=3D0 (OK) dstaddr=3D172.28.68.180
-> > > >  172.28.68.180-m-3751    [000] .....   869.513347:
-> > > > nfs4_create_session: error=3D0 (OK) dstaddr=3D172.28.68.180
-> > > >
-> > > > To prevent reuse of the same slot/seqid for when we receive
-> > > > BADSESSION, can we perhaps set slot->seq_done? Then, when
-> > > > nfs41_sequence_process() calls nfs41_sequence_free_slot(), it'd
-> > > > increment seq_nr then. Slot re-use would be prevented.
-> > > >
-> > > > Or, perhaps we set the NFS4_SLOT_TBL_DRAINING bit right in
-> > > > nfs41_sequence_process() for BADSESSION so that nothing else can ge=
-t
-> > > > the slot when it's released?
-> > > >
-> > > > Or some other way or preventing slots being (re)used after receivin=
-g
-> > > > BADSESSION on that slot. The problem if re-using (interrupted) slot=
-s
-> > > > is that they get cached reply from the server and those operations
-> > > > "think" operation succeeded and they have wrong/invalid stateids fo=
-r
-> > > > instance.
-Yep. On thinking about it a little more, I think you are correct. The
-client either
-needs to avoid using that slot again (the FreeBSD client marks slots "bad" =
-when
-an RPC is interrupted without having received/processed a reply) or the cli=
-ent
-needs to stop using the session for regular RPCs when a BADSESSION reply is
-received.
-
-What it should do after that is not so obvious to me.
-There is the suggested algorithm in 2.10.13.1.4, but it does seem complex a=
-nd
-it only describes the cases where a Sequence by itself either succeeds or f=
-ails
-on the other connections. (It does not describe what to do if some succeed =
-and
-others fail, if I am reading it correctly.)
---> It might be easier to just CREATE_SESSION a new session and avoid using
-     the old one any more?
-This sounds like one of your suggested ways to handle it.
-
-Good luck with whatever you choose and sorry about the noise w.r.t. a broke=
-n
-server (although I'd personally prefer to consider such a server as broken,=
- the
-RFC allows it, so;-). rick
-
-> > > >
-> > > > Here's the sequence of events. First of all this is a session trunk=
-ing
-> > > > scenario where one of the servers leaves the group.
-> > > > NFS OP uses slot=3D0 seq=3D0 sends it to server 1. Server 1 process=
-es the
-> > > > request populates its session cache. But the reply never reaches th=
-e
-> > > > client. Connection gets reset.
-> > > > NFS OP is resent using slot=3D0 seq=3D0 to server 2 which just left=
- the
-> > > > trunking group. It replies with BADSESSION
-> > > > (session is not frozen on the client yet) new NFS OP uses slot=3D0 =
-seq=3D0
-> > > > and sends it to server 1. Server 1 responds out of the session cach=
-e.
-> > > To me, this sounds like a broken NFSv4.1/4.2 server. Once a session i=
-s bad,
-> > > I do not think there should ever be a reply that was cached in that b=
-ad session.
-> > > Put another way, the server should not leave the "trunking group' (wh=
-atever that
-> > > means?) without making the session bad for all trunks. I do not think
-> > > a session should
-> > > ever work on one server and not on another one.
-> >
-> > The spec allows for server to leave the group and session to be still v=
-alid.
-> >
-> > From section 2.10.13.1.4
-> > "If the SEQUENCE requests fail with NFS4ERR_BADSESSION, then the
-> > session no longer exists on any of the server network addresses for
-> > which the client has connections associated with that session ID. It
-> > is possible the session is still alive and available on other network
-> > addresses. "
-> >
-> > Linux server
->
-> I meant to say Linux client
->
-> > throws away the session on getting the BADSESSION but the
-> > problem is that it doesn't happen instantly. So some new requests can
-> > sneak before the session gets killed. Thus I'm advocating that slotid
-> > still happens on BADSESSION or I'm suggesting that we freeze the
-> > session table on BADSESSION which we currently don't do -- which
-> > allows new requests to go.
-> >
-> > >
-> > > Having said the above, I have no opinion w.r.t. how such a case shoul=
-d
-> > > be handled.
-> > > (Except to tell the NFS server vendor that their server is broken.)
-> > >
-> > > Just mho, rick
-> > >
-> > > > Client destroys the session
-> > > > Client uses stateid returned from the new OP which is really invali=
-d
-> > > > for the operation. Server fails the operation. Application failure
-> > > > occurs.
-> > > >
-> > > > Thank you..
+T24gV2VkLCAyMDIzLTA2LTE0IGF0IDE1OjU4IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
+ZToNCj4gSGkgVHJvbmQsDQo+IA0KPiBJJ20gbG9va2luZyBmb3IgYWR2aWNlIG9uIGhvdyB0byBo
+YW5kbGUgdGhlIHByb2JsZW0gdGhhdCB3aGVuDQo+IEJBRFNFU1NJT04gaXMgcmVjZWl2ZWQgKG9u
+IGFuIGludGVycnVwdGVkIHNsb3QpIGFuZCB3ZSBkb24ndA0KPiBpbmNyZW1lbnQNCj4gdGhlIHNl
+cWlkIGZvciB0aGF0IHNsb3QuIFRoZSBjbGllbnQgcmVsZWFzZXMgdGhlIHNsb3QgYW5kIGl0J3MN
+Cj4gcG9zc2libGUgZm9yIGFub3RoZXIgdGhyZWFkIHRvIHVzZSBpdCBiZWZvcmUgdGhlIHNlc3Np
+b24gaXMgZnJvemVuLg0KPiBIZXJlIGFyZSB0aGUgKHVuZmlsdGVyZWQgc2VxdWVudGlhbCkgdHJh
+Y2Vwb2ludHMgc2hvd2luZyB0aGUgcHJvYmxlbS4NCj4gRm9sbG93IHNsb3RfbnI9MCBhbmQgc2Vx
+X25yPTc2NzMNCj4gDQo+IMKgwqAga3dvcmtlci91MjoyNi01NDHCoMKgwqDCoCBbMDAwXSAuLi4u
+LsKgwqAgODY5LjUwODY1ODoNCj4gbmZzNF9zZXF1ZW5jZV9kb25lOg0KPiBlcnJvcj0tMTAwNTIg
+KEJBRFNFU1NJT04pIHNlc3Npb249MHg5MGNhYTQ4MSBzbG90X25yPTQgc2VxX25yPTQyNTkNCj4g
+aGlnaGVzdF9zbG90aWQ9MCB0YXJnZXRfaGlnaGVzdF9zbG90aWQ9MCBzdGF0dXNfZmxhZ3M9MHgw
+ICgpDQo+IMKgwqAga3dvcmtlci91MjoyNi01NDHCoMKgwqDCoCBbMDAwXSAuLi4uLsKgwqAgODY5
+LjUwODY2MTogbmZzNF93cml0ZToNCj4gZXJyb3I9LTEwMDUyIChCQURTRVNTSU9OKSBmaWxlaWQ9
+MDA6M2I6MTExIGZoYW5kbGU9MHg1OWM4Y2NmZg0KPiBvZmZzZXQ9MjMwNDY2NCBjb3VudD03OTky
+IHJlcz0wIHN0YXRlaWQ9MToweDNmNGYwNGNkDQo+IGxheW91dHN0YXRlaWQ9MDoweDAwMDAwMDAw
+DQo+IMKgwqDCoCBrd29ya2VyL3UyOjEtMzE5OMKgwqDCoCBbMDAwXSAuLi4uLsKgwqAgODY5LjUw
+ODg5ODogbmZzNF94ZHJfc3RhdHVzOg0KPiB0YXNrOjAwMDBhMmFlQDAwMDAwMDExIHhpZD0weDVk
+MGY2ZGRhIGVycm9yPS0xMDA1MiAoQkFEU0VTU0lPTikNCj4gb3BlcmF0aW9uPTUzDQo+IMKgwqDC
+oCBrd29ya2VyL3UyOjEtMzE5OMKgwqDCoCBbMDAwXSAuLi4uLsKgwqAgODY5LjUwODkwNToNCj4g
+bmZzNF9zZXF1ZW5jZV9kb25lOg0KPiBlcnJvcj0tMTAwNTIgKEJBRFNFU1NJT04pIHNlc3Npb249
+MHg5MGNhYTQ4MSBzbG90X25yPTAgc2VxX25yPTc2NzMNCj4gaGlnaGVzdF9zbG90aWQ9MCB0YXJn
+ZXRfaGlnaGVzdF9zbG90aWQ9MCBzdGF0dXNfZmxhZ3M9MHgwICgpDQo+IMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgIGR0LTM2ODTCoMKgwqAgWzAwMF0gLi4uLi7CoMKgIDg2OS41MDg5MTg6IG5m
+czRfc2V0X2xvY2s6DQo+IGVycm9yPS0xMDA1MiAoQkFEU0VTU0lPTikgY21kPVNFVExLOldSTENL
+IHJhbmdlPTE2MDMzNDA6MTgzNDUzNQ0KPiBmaWxlaWQ9MDA6M2I6MTA5IGZoYW5kbGU9MHg3YzZi
+YzZiNCBzdGF0ZWlkPTE6MHg4ZjVmMWZlNA0KPiBsb2Nrc3RhdGVpZD0wOjB4N2JkNWM2NmYNCj4g
+DQo+ICoqKiB0aGlzIGlzIHVzZSBvZiBzbG90X25yPTAgc2VxX25yPTc2NzMgdGhhdCBnZXRzIEJB
+RFNFU1NJT04uIFNsb3QNCj4gZ2V0cyByZWxlYXNlZCB3aXRob3V0IGluY3JlbWVudGluZyB0aGUg
+c2VxIy4gVGhlIG5leHQgdHJhY2Vwb2ludA0KPiBzaG93cw0KPiB0aGUgdXNlIG9mIHRoZSBzbG90
+IGFnYWluIGJ5IGFub3RoZXIgbG9jayBjYWxsICoqKg0KPiANCj4gwqDCoMKgIGt3b3JrZXIvdTI6
+MS0zMTk4wqDCoMKgIFswMDBdIC4uLi4uwqDCoCA4NjkuNTA4OTI4Og0KPiBuZnM0X3NldHVwX3Nl
+cXVlbmNlOiBzZXNzaW9uPTB4OTBjYWE0ODEgc2xvdF9ucj0wIHNlcV9ucj03NjczDQo+IGhpZ2hl
+c3RfdXNlZF9zbG90aWQ9MQ0KPiDCoMKgIGt3b3JrZXIvdTI6MjktNTQ5wqDCoMKgwqAgWzAwMF0g
+Li4uLi7CoMKgIDg2OS41MDk3NDY6DQo+IG5mczRfc2VxdWVuY2VfZG9uZToNCj4gZXJyb3I9MCAo
+T0spIHNlc3Npb249MHg5MGNhYTQ4MSBzbG90X25yPTAgc2VxX25yPTc2NzMNCj4gaGlnaGVzdF9z
+bG90aWQ9NjMgdGFyZ2V0X2hpZ2hlc3Rfc2xvdGlkPTYzIHN0YXR1c19mbGFncz0weDAgKCkNCj4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZHQtMzY3MsKgwqDCoCBbMDAwXSAuLi4uLsKgwqAg
+ODY5LjUwOTc3MDogbmZzNF9zZXRfbG9jazoNCj4gZXJyb3I9MCAoT0spIGNtZD1TRVRMSzpXUkxD
+SyByYW5nZT0xNDY0MzI6MTU5NzQzIGZpbGVpZD0wMDozYjoxMjkNCj4gZmhhbmRsZT0weDUwZmEy
+ZGQ0IHN0YXRlaWQ9MToweGNmMDY1YjMxIGxvY2tzdGF0ZWlkPTE6MHg1YzU3MTgwNA0KPiDCoMKg
+IGt3b3JrZXIvdTI6MjYtNTQxwqDCoMKgwqAgWzAwMF0gLi4uLi7CoMKgIDg2OS41MDk4MTQ6DQo+
+IG5mczRfc2V0dXBfc2VxdWVuY2U6IHNlc3Npb249MHg5MGNhYTQ4MSBzbG90X25yPTAgc2VxX25y
+PTc2NzQNCj4gaGlnaGVzdF91c2VkX3Nsb3RpZD0wDQo+IMKgwqAga3dvcmtlci91MjoyNi01NDHC
+oMKgwqDCoCBbMDAwXSAuLi4uLsKgwqAgODY5LjUwOTg1NzoNCj4gbmZzNF9zZXR1cF9zZXF1ZW5j
+ZTogc2Vzc2lvbj0weDkwY2FhNDgxIHNsb3RfbnI9MSBzZXFfbnI9NzgwNQ0KPiBoaWdoZXN0X3Vz
+ZWRfc2xvdGlkPTENCj4gDQo+ICoqIGZpbmFsbHkgdGhlIHN0YXRlIG1hbmFnZXIgZ2V0cyB0byBy
+dW4/IEJ1dCBvbmx5IGFmdGVyIDMgIk5FVyIgdXNlDQo+IG9mIHNsb3RzIGFyZSBkb25lICoqDQo+
+IA0KPiDCoDE3Mi4yOC42OC4xODAtbS0zNzUxwqDCoMKgIFswMDBdIC4uLi4uwqDCoCA4NjkuNTEw
+MjY3OiBuZnM0X3N0YXRlX21ncjoNCj4gaG9zdG5hbWU9MTcyLjI4LjY4LjE4MCBjbHAgc3RhdGU9
+TUFOQUdFUl9SVU5OSU5HfENIRUNLX0xFQVNFfDB4YzA0MA0KPiDCoMKgIGt3b3JrZXIvdTI6Mjkt
+NTQ5wqDCoMKgwqAgWzAwMF0gLi4uLi7CoMKgIDg2OS41MTA5Nzc6IG5mczRfeGRyX3N0YXR1czoN
+Cj4gdGFzazowMDAwYTJjOEAwMDAwMDAxMSB4aWQ9MHg1ZTBmNmRkYSBlcnJvcj0tMTAwNTIgKEJB
+RFNFU1NJT04pDQo+IG9wZXJhdGlvbj01Mw0KPiDCoMKgIGt3b3JrZXIvdTI6MjktNTQ5wqDCoMKg
+wqAgWzAwMF0gLi4uLi7CoMKgIDg2OS41MTA5ODM6DQo+IG5mczRfc2VxdWVuY2VfZG9uZToNCj4g
+ZXJyb3I9LTEwMDUyIChCQURTRVNTSU9OKSBzZXNzaW9uPTB4OTBjYWE0ODEgc2xvdF9ucj0xIHNl
+cV9ucj03ODA1DQo+IGhpZ2hlc3Rfc2xvdGlkPTAgdGFyZ2V0X2hpZ2hlc3Rfc2xvdGlkPTAgc3Rh
+dHVzX2ZsYWdzPTB4MCAoKQ0KPiDCoMKgIGt3b3JrZXIvdTI6MjktNTQ5wqDCoMKgwqAgWzAwMF0g
+Li4uLi7CoMKgIDg2OS41MTA5ODU6IG5mczRfd3JpdGU6DQo+IGVycm9yPS0xMDA1MiAoQkFEU0VT
+U0lPTikgZmlsZWlkPTAwOjNiOjEyOSBmaGFuZGxlPTB4NTBmYTJkZDQNCj4gb2Zmc2V0PTE0NjQz
+MiBjb3VudD0xMzMxMiByZXM9MCBzdGF0ZWlkPTE6MHhjZjA2NWIzMQ0KPiBsYXlvdXRzdGF0ZWlk
+PTA6MHgwMDAwMDAwMA0KPiDCoMKgIGt3b3JrZXIvdTI6MjYtNTQxwqDCoMKgwqAgWzAwMF0gLi4u
+Li7CoMKgIDg2OS41MTEzMTg6DQo+IG5mczRfc2VxdWVuY2VfZG9uZToNCj4gZXJyb3I9MCAoT0sp
+IHNlc3Npb249MHg5MGNhYTQ4MSBzbG90X25yPTAgc2VxX25yPTc2NzQNCj4gaGlnaGVzdF9zbG90
+aWQ9NjMgdGFyZ2V0X2hpZ2hlc3Rfc2xvdGlkPTYzIHN0YXR1c19mbGFncz0weDAgKCkNCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZHQtMzY2OcKgwqDCoCBbMDAwXSAuLi4uLsKgwqAgODY5
+LjUxMTMzNzogbmZzNF9zZXRfbG9jazoNCj4gZXJyb3I9MCAoT0spIGNtZD1TRVRMSzpXUkxDSyBy
+YW5nZT0yNDYyNzIwOjI0NjkzNzUgZmlsZWlkPTAwOjNiOjEzOA0KPiBmaGFuZGxlPTB4ZTMwZDhj
+ZjMgc3RhdGVpZD0xOjB4ZTI3ODdhYTEgbG9ja3N0YXRlaWQ9MToweDIxNjQyMWZlDQo+IMKgMTcy
+LjI4LjY4LjE4MC1tLTM3NTHCoMKgwqAgWzAwMF0gLi4uLi7CoMKgIDg2OS41MTE5MTg6DQo+IG5m
+czRfZGVzdHJveV9zZXNzaW9uOiBlcnJvcj0wIChPSykgZHN0YWRkcj0xNzIuMjguNjguMTgwDQo+
+IMKgMTcyLjI4LjY4LjE4MC1tLTM3NTHCoMKgwqAgWzAwMF0gLi4uLi7CoMKgIDg2OS41MTMzNDc6
+DQo+IG5mczRfY3JlYXRlX3Nlc3Npb246IGVycm9yPTAgKE9LKSBkc3RhZGRyPTE3Mi4yOC42OC4x
+ODANCj4gDQo+IFRvIHByZXZlbnQgcmV1c2Ugb2YgdGhlIHNhbWUgc2xvdC9zZXFpZCBmb3Igd2hl
+biB3ZSByZWNlaXZlDQo+IEJBRFNFU1NJT04sIGNhbiB3ZSBwZXJoYXBzIHNldCBzbG90LT5zZXFf
+ZG9uZT8gVGhlbiwgd2hlbg0KPiBuZnM0MV9zZXF1ZW5jZV9wcm9jZXNzKCkgY2FsbHMgbmZzNDFf
+c2VxdWVuY2VfZnJlZV9zbG90KCksIGl0J2QNCj4gaW5jcmVtZW50IHNlcV9uciB0aGVuLiBTbG90
+IHJlLXVzZSB3b3VsZCBiZSBwcmV2ZW50ZWQuDQo+IA0KPiBPciwgcGVyaGFwcyB3ZSBzZXQgdGhl
+IE5GUzRfU0xPVF9UQkxfRFJBSU5JTkcgYml0IHJpZ2h0IGluDQo+IG5mczQxX3NlcXVlbmNlX3By
+b2Nlc3MoKSBmb3IgQkFEU0VTU0lPTiBzbyB0aGF0IG5vdGhpbmcgZWxzZSBjYW4gZ2V0DQo+IHRo
+ZSBzbG90IHdoZW4gaXQncyByZWxlYXNlZD8NCj4gDQo+IE9yIHNvbWUgb3RoZXIgd2F5IG9yIHBy
+ZXZlbnRpbmcgc2xvdHMgYmVpbmcgKHJlKXVzZWQgYWZ0ZXIgcmVjZWl2aW5nDQo+IEJBRFNFU1NJ
+T04gb24gdGhhdCBzbG90LiBUaGUgcHJvYmxlbSBpZiByZS11c2luZyAoaW50ZXJydXB0ZWQpIHNs
+b3RzDQo+IGlzIHRoYXQgdGhleSBnZXQgY2FjaGVkIHJlcGx5IGZyb20gdGhlIHNlcnZlciBhbmQg
+dGhvc2Ugb3BlcmF0aW9ucw0KPiAidGhpbmsiIG9wZXJhdGlvbiBzdWNjZWVkZWQgYW5kIHRoZXkg
+aGF2ZSB3cm9uZy9pbnZhbGlkIHN0YXRlaWRzIGZvcg0KPiBpbnN0YW5jZS4NCj4gDQo+IEhlcmUn
+cyB0aGUgc2VxdWVuY2Ugb2YgZXZlbnRzLiBGaXJzdCBvZiBhbGwgdGhpcyBpcyBhIHNlc3Npb24N
+Cj4gdHJ1bmtpbmcNCj4gc2NlbmFyaW8gd2hlcmUgb25lIG9mIHRoZSBzZXJ2ZXJzIGxlYXZlcyB0
+aGUgZ3JvdXAuDQo+IE5GUyBPUCB1c2VzIHNsb3Q9MCBzZXE9MCBzZW5kcyBpdCB0byBzZXJ2ZXIg
+MS4gU2VydmVyIDEgcHJvY2Vzc2VzIHRoZQ0KPiByZXF1ZXN0IHBvcHVsYXRlcyBpdHMgc2Vzc2lv
+biBjYWNoZS4gQnV0IHRoZSByZXBseSBuZXZlciByZWFjaGVzIHRoZQ0KPiBjbGllbnQuIENvbm5l
+Y3Rpb24gZ2V0cyByZXNldC4NCj4gTkZTIE9QIGlzIHJlc2VudCB1c2luZyBzbG90PTAgc2VxPTAg
+dG8gc2VydmVyIDIgd2hpY2gganVzdCBsZWZ0IHRoZQ0KPiB0cnVua2luZyBncm91cC4gSXQgcmVw
+bGllcyB3aXRoIEJBRFNFU1NJT04NCj4gKHNlc3Npb24gaXMgbm90IGZyb3plbiBvbiB0aGUgY2xp
+ZW50IHlldCkgbmV3IE5GUyBPUCB1c2VzIHNsb3Q9MA0KPiBzZXE9MA0KPiBhbmQgc2VuZHMgaXQg
+dG8gc2VydmVyIDEuIFNlcnZlciAxIHJlc3BvbmRzIG91dCBvZiB0aGUgc2Vzc2lvbiBjYWNoZS4N
+Cj4gQ2xpZW50IGRlc3Ryb3lzIHRoZSBzZXNzaW9uDQo+IENsaWVudCB1c2VzIHN0YXRlaWQgcmV0
+dXJuZWQgZnJvbSB0aGUgbmV3IE9QIHdoaWNoIGlzIHJlYWxseSBpbnZhbGlkDQo+IGZvciB0aGUg
+b3BlcmF0aW9uLiBTZXJ2ZXIgZmFpbHMgdGhlIG9wZXJhdGlvbi4gQXBwbGljYXRpb24gZmFpbHVy
+ZQ0KPiBvY2N1cnMuDQo+IA0KPiBUaGFuayB5b3UuLg0KDQpJIHN1Z2dlc3QganVzdCBhZGRpbmcg
+YSBjYWxsIGFsb25nIHRoZSBsaW5lcyBvZg0KDQoJc2V0X2JpdChORlM0X1NMT1RfVEJMX0RSQUlO
+SU5HLCAmc2Vzc2lvbi0+ZmNfc2xvdF90YWJsZS5zbG90X3RibF9zdGF0ZSk7DQoNCmltbWVkaWF0
+ZWx5IGJlZm9yZSB0aGUgY2FsbCB0byBuZnM0X3NjaGVkdWxlX3Nlc3Npb25fcmVjb3ZlcnkoKSBp
+bg0KbmZzNDFfc2VxdWVuY2VfcHJvY2VzcygpLiBUaGF0IG91Z2h0IHRvIGJlIHJhY2UtZnJlZSBi
+ZWNhdXNlIHdlIHNob3VsZA0Kc3RpbGwgYmUgaG9sZGluZyB0aGUgc2xvdC4gSXQgd29uJ3QgdHJ5
+IHRvIGRvIGFueSBvZiB0aGUgb3RoZXIgZmFuY3kNCnN0dWZmIGluIG5mczRfZHJhaW5fc2xvdF90
+YmwoKS4gQWxsIHRoYXQgd2lsbCBoYXBwZW4gaXMgdGhhdA0KbmZzNF9zZXR1cF9zZXF1ZW5jZSgp
+IHdpbGwgc3RvcCBhbGxvY2F0aW5nIG5ldyB1bnByaXZpbGVnZWQgc2xvdHMuDQoNCi0tIA0KVHJv
+bmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0
+cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
