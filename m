@@ -2,242 +2,196 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CAF5730963
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 22:44:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA344730978
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 22:55:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbjFNUoM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Jun 2023 16:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60452 "EHLO
+        id S233385AbjFNUzg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Jun 2023 16:55:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231901AbjFNUoL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Jun 2023 16:44:11 -0400
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C6610F6
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Jun 2023 13:44:10 -0700 (PDT)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b1b1dd208dso14747971fa.0
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Jun 2023 13:44:09 -0700 (PDT)
+        with ESMTP id S230042AbjFNUzf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Jun 2023 16:55:35 -0400
+Received: from mail-qt1-x829.google.com (mail-qt1-x829.google.com [IPv6:2607:f8b0:4864:20::829])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BDD2211F;
+        Wed, 14 Jun 2023 13:55:34 -0700 (PDT)
+Received: by mail-qt1-x829.google.com with SMTP id d75a77b69052e-3f9aa383527so23404801cf.1;
+        Wed, 14 Jun 2023 13:55:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1686775448; x=1689367448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z89A2CXQJmGwOB5hRCNbTXuEaIm8LPH5dO0j91q1+cA=;
-        b=cpwwWFJsC9xlFZJ/lh24VB9GwCLZQOGUcb+1+dDP3bHYtO4E2aNjmi9Fey2bEaKavp
-         743ofFOp+5rx7MRnyanTYTmgo/fQ+e8/jc/ALW8yLC7nLy+Y+J75YMYXfV/DwGS66+m+
-         Fjmec6x6gnTr2vAIF9PNYcRAM1tFl2T7i5jF6ZXaqa9Zdcd7TQ3kcrXIroQGkpxCOTER
-         S/ksPRORbBEdHZlBdCUJ1x8G1uOmkdrKcihl6CW/pC807KnjW8DyEDy8UbttRpOZIKLD
-         zWlz38POZuMD0lTlVDDQCoSgjkmX2neGVwNqRbEk/COgDTyhB32+aeAR2xKJf/YgrerT
-         DSvA==
+        d=gmail.com; s=20221208; t=1686776134; x=1689368134;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=GuT2u5i+zu8JABUORePbTo/5nH4btXdVlFm59OPxaUI=;
+        b=IvbkYbAYvxtG7fFnqHvV03fOuUWiz0pN/YccpN4kgEbYzQJRPXy5MFNDhjz8NQR5ME
+         ciCn1m70FVNa8scFELdfef1tip+69F2LtcLm6GwZM6CpSvENCHNDInbmwtCsegcJ0KQU
+         DbQMGtgcl4aB2Zzttt06UDMGnqeRrkA3EebxOADTfsab2Ue/9gx4aYsu/dKGMGC0TFFs
+         lPXJdUtrEd61fQ/AcF+nmmNljLrPP7/i6UG3lbYweu/kVDEBcPojQ/xZjomQYxk8lAPs
+         r+hzX5x/PY/G7njLgBoh+B1fAplEmQRBgv2du1iPKKeRm9H3xyQO58CSHF6KoLn9MRTX
+         5z3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686775448; x=1689367448;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z89A2CXQJmGwOB5hRCNbTXuEaIm8LPH5dO0j91q1+cA=;
-        b=PzdGyKMXLKz584ezzaUF8Rex0ZCGT4XVlnGFkBcvk6pbA19ZDqIDXB194fyNc2vtp7
-         EJau05VWpNM2qnxrflWW7DoT591xl3U9WhaXuSGDUoXPHbPa4wM9unesGjuL/nXc1PdO
-         nDtsY7Mr4dQWjaCkXlPY1CKJOQyAC2mnmlecyhukz+KzWUV36HgOh37OU4aPYyKLxldo
-         HS1t8UqbG03Jc3YKz+DBEwohgetxP/13w0Exc9bQsdjMH3tf34V8LLAUnSV4b6GV0K2A
-         gU8BLoIrCIZ3SdktDrVHkdVHWqohJ6eSqP1gt6sPcxrzDEWuFs0XhKJyo3bFoeb+MBlM
-         6QyA==
-X-Gm-Message-State: AC+VfDw4AoSr6xLOLqyBlPcXVljwOADytHpbodk/hWketeOQi7JFdJgE
-        cSNaBwSs8rKwksKCviQK8x0VwltQB5OjDQVkWFQ=
-X-Google-Smtp-Source: ACHHUZ5mHEDjoYN1Xsgs2KO3+k9hDpxBGHBe64/nQSZoU6vy+Qgw7SL/zmbxAAEfeY/ZIpt3TgYSqXPMnB/KHs/79SI=
-X-Received: by 2002:a2e:a498:0:b0:2b3:4e9f:906b with SMTP id
- h24-20020a2ea498000000b002b34e9f906bmr1222521lji.1.1686775447974; Wed, 14 Jun
- 2023 13:44:07 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686776134; x=1689368134;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GuT2u5i+zu8JABUORePbTo/5nH4btXdVlFm59OPxaUI=;
+        b=U7S1wui2IkwKD9WdGifXiUrnmrBgf4CmF9ynhakt7OjiyR92VAtiJS+2oee64DpBo/
+         0kF/8TD2eZsyNLcSeIdpuCc40enIkjeIQga95ZQkUz5HHt9yVTH1C/bMn6RU7eb+N14y
+         2WS7/S+KqzYbvmMYOBYZ7hzHbg+fBQHTKpkCHZJMLaKz+XbO1Jh8CR6yo3Eqo3unCx+Y
+         n9gFi1vJD/JkTrNGVxiFsq6EHi8yjJpfjBrqqWsquhUz4OLKlC83Kk6Ymof6aVq8AEC+
+         q3VGNpRhQ0RnfTGfJAtCSrBJMau8DatVqps5m926IAZhIEk3otK5fmfDFJVj9x5rJIMb
+         4iGg==
+X-Gm-Message-State: AC+VfDyL7dI1rxk6xD3dK1bY0iHVIYBLEGOwGRCb2j+49ouRe6McQH9t
+        wfvf4HhLlm6YQYHMQjE+D+yzhghEDPh72TFV2w0=
+X-Google-Smtp-Source: ACHHUZ6DkH26XCIhr+wTdRpdpaHyJ5f/gxn6jjA5CNDtnOfSVK4gHdCkHUSyea/lG9umV3hV7rZ7i2rdqyWnmHbXJDs=
+X-Received: by 2002:a05:622a:138b:b0:3f9:adc9:4785 with SMTP id
+ o11-20020a05622a138b00b003f9adc94785mr3164763qtk.51.1686776133578; Wed, 14
+ Jun 2023 13:55:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAN-5tyGD2NCwgsUmaOVjhxjdtjxBng_LyjY1k5ap0qP0w+bxdg@mail.gmail.com>
- <CAM5tNy6LEEWbwE8Ema5kEMCJ3oB=ta7HndbUCKXuF5QJkjSTWw@mail.gmail.com> <CAN-5tyGMfARBVM2ZPju5tJA9yM-DLNvcp-OqAEVEApXOQ4df5A@mail.gmail.com>
-In-Reply-To: <CAN-5tyGMfARBVM2ZPju5tJA9yM-DLNvcp-OqAEVEApXOQ4df5A@mail.gmail.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Wed, 14 Jun 2023 16:43:56 -0400
-Message-ID: <CAN-5tyGiBP3XMS3wiOeQWVhO06JVMssURR0zd2xZhesdb8t8pQ@mail.gmail.com>
-Subject: Re: Handling of BADSESSON error
-To:     Rick Macklem <rick.macklem@gmail.com>
+References: <f591b13c-4600-e2a4-8efa-aac6ad828dd1@linaro.org>
+ <82526863-d07a-0a5d-2990-1555b1387f26@linaro.org> <2C5E9725-F152-4D2E-882E-CF92A35481BF@hammerspace.com>
+ <7ba38377-7992-7f0f-d905-cceb42510f39@linaro.org> <51430925-8046-7066-84ed-2ff0db835347@linaro.org>
+ <CAFX2Jf=5X3zyZEWQmD6Rg9jQAD7ccDbae5LQCwrAyPCVVoFumg@mail.gmail.com>
+ <2add1769-1458-b185-bc78-6d573f61b6fc@linaro.org> <CAFX2JfnKy7juGQaDTzqosN9SF-zd+XrhSL9uh_Xg0GpJGDux-A@mail.gmail.com>
+ <32530c36-91d0-d351-0689-aed6a0975a4b@linaro.org> <2f285607-cbf9-6abc-f436-edb6e9a3938b@linaro.org>
+ <CAFX2Jfmz7QqZBEdzbPUhPs0yctnXVaVF68tX1c57YX=6ki=0TA@mail.gmail.com>
+ <4fe39d77-eb7c-a578-aefa-45b76e2247c2@linaro.org> <CAFX2JfmdRMsHPTySiw4vm7BwJfRZj3s0V3_v7NJ+XwMxBBSo9A@mail.gmail.com>
+ <a3683dd3-3f30-bb4c-539d-d1519de6e5bf@linaro.org> <CAFX2JfnS9GVc4NaxKhr9E4y10NNv6SPgcv1yoeHTfEw5NvZgMg@mail.gmail.com>
+ <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org>
+In-Reply-To: <86d8e252-975f-5d48-4567-0911d5ef9a44@linaro.org>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Wed, 14 Jun 2023 16:55:17 -0400
+Message-ID: <CAFX2Jfn_DSs38WQYsRs2ifLi5w+T3BhZfSU2W80T6dK48_Bb5g@mail.gmail.com>
+Subject: Re: Regression: NULL pointer dereference after NFS_V4_2_READ_PLUS
+ (commit 7fd461c47)
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+Content-Type: multipart/mixed; boundary="000000000000426b2f05fe1d2cfc"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 4:43=E2=80=AFPM Olga Kornievskaia <aglo@umich.edu> =
-wrote:
->
-> On Wed, Jun 14, 2023 at 4:24=E2=80=AFPM Rick Macklem <rick.macklem@gmail.=
-com> wrote:
-> >
-> > On Wed, Jun 14, 2023 at 12:58=E2=80=AFPM Olga Kornievskaia <aglo@umich.=
-edu> wrote:
-> > >
-> > >
-> > > Hi Trond,
-> > >
-> > > I'm looking for advice on how to handle the problem that when
-> > > BADSESSION is received (on an interrupted slot) and we don't incremen=
-t
-> > > the seqid for that slot. The client releases the slot and it's
-> > > possible for another thread to use it before the session is frozen.
-> > > Here are the (unfiltered sequential) tracepoints showing the problem.
-> > > Follow slot_nr=3D0 and seq_nr=3D7673
-> > >
-> > >    kworker/u2:26-541     [000] .....   869.508658: nfs4_sequence_done=
-:
-> > > error=3D-10052 (BADSESSION) session=3D0x90caa481 slot_nr=3D4 seq_nr=
-=3D4259
-> > > highest_slotid=3D0 target_highest_slotid=3D0 status_flags=3D0x0 ()
-> > >    kworker/u2:26-541     [000] .....   869.508661: nfs4_write:
-> > > error=3D-10052 (BADSESSION) fileid=3D00:3b:111 fhandle=3D0x59c8ccff
-> > > offset=3D2304664 count=3D7992 res=3D0 stateid=3D1:0x3f4f04cd
-> > > layoutstateid=3D0:0x00000000
-> > >     kworker/u2:1-3198    [000] .....   869.508898: nfs4_xdr_status:
-> > > task:0000a2ae@00000011 xid=3D0x5d0f6dda error=3D-10052 (BADSESSION)
-> > > operation=3D53
-> > >     kworker/u2:1-3198    [000] .....   869.508905: nfs4_sequence_done=
-:
-> > > error=3D-10052 (BADSESSION) session=3D0x90caa481 slot_nr=3D0 seq_nr=
-=3D7673
-> > > highest_slotid=3D0 target_highest_slotid=3D0 status_flags=3D0x0 ()
-> > >               dt-3684    [000] .....   869.508918: nfs4_set_lock:
-> > > error=3D-10052 (BADSESSION) cmd=3DSETLK:WRLCK range=3D1603340:1834535
-> > > fileid=3D00:3b:109 fhandle=3D0x7c6bc6b4 stateid=3D1:0x8f5f1fe4
-> > > lockstateid=3D0:0x7bd5c66f
-> > >
-> > > *** this is use of slot_nr=3D0 seq_nr=3D7673 that gets BADSESSION. Sl=
-ot
-> > > gets released without incrementing the seq#. The next tracepoint show=
-s
-> > > the use of the slot again by another lock call ***
-> > >
-> > >     kworker/u2:1-3198    [000] .....   869.508928:
-> > > nfs4_setup_sequence: session=3D0x90caa481 slot_nr=3D0 seq_nr=3D7673
-> > > highest_used_slotid=3D1
-> > >    kworker/u2:29-549     [000] .....   869.509746: nfs4_sequence_done=
-:
-> > > error=3D0 (OK) session=3D0x90caa481 slot_nr=3D0 seq_nr=3D7673
-> > > highest_slotid=3D63 target_highest_slotid=3D63 status_flags=3D0x0 ()
-> > >               dt-3672    [000] .....   869.509770: nfs4_set_lock:
-> > > error=3D0 (OK) cmd=3DSETLK:WRLCK range=3D146432:159743 fileid=3D00:3b=
-:129
-> > > fhandle=3D0x50fa2dd4 stateid=3D1:0xcf065b31 lockstateid=3D1:0x5c57180=
-4
-> > >    kworker/u2:26-541     [000] .....   869.509814:
-> > > nfs4_setup_sequence: session=3D0x90caa481 slot_nr=3D0 seq_nr=3D7674
-> > > highest_used_slotid=3D0
-> > >    kworker/u2:26-541     [000] .....   869.509857:
-> > > nfs4_setup_sequence: session=3D0x90caa481 slot_nr=3D1 seq_nr=3D7805
-> > > highest_used_slotid=3D1
-> > >
-> > > ** finally the state manager gets to run? But only after 3 "NEW" use
-> > > of slots are done **
-> > >
-> > >  172.28.68.180-m-3751    [000] .....   869.510267: nfs4_state_mgr:
-> > > hostname=3D172.28.68.180 clp state=3DMANAGER_RUNNING|CHECK_LEASE|0xc0=
-40
-> > >    kworker/u2:29-549     [000] .....   869.510977: nfs4_xdr_status:
-> > > task:0000a2c8@00000011 xid=3D0x5e0f6dda error=3D-10052 (BADSESSION)
-> > > operation=3D53
-> > >    kworker/u2:29-549     [000] .....   869.510983: nfs4_sequence_done=
-:
-> > > error=3D-10052 (BADSESSION) session=3D0x90caa481 slot_nr=3D1 seq_nr=
-=3D7805
-> > > highest_slotid=3D0 target_highest_slotid=3D0 status_flags=3D0x0 ()
-> > >    kworker/u2:29-549     [000] .....   869.510985: nfs4_write:
-> > > error=3D-10052 (BADSESSION) fileid=3D00:3b:129 fhandle=3D0x50fa2dd4
-> > > offset=3D146432 count=3D13312 res=3D0 stateid=3D1:0xcf065b31
-> > > layoutstateid=3D0:0x00000000
-> > >    kworker/u2:26-541     [000] .....   869.511318: nfs4_sequence_done=
-:
-> > > error=3D0 (OK) session=3D0x90caa481 slot_nr=3D0 seq_nr=3D7674
-> > > highest_slotid=3D63 target_highest_slotid=3D63 status_flags=3D0x0 ()
-> > >               dt-3669    [000] .....   869.511337: nfs4_set_lock:
-> > > error=3D0 (OK) cmd=3DSETLK:WRLCK range=3D2462720:2469375 fileid=3D00:=
-3b:138
-> > > fhandle=3D0xe30d8cf3 stateid=3D1:0xe2787aa1 lockstateid=3D1:0x216421f=
-e
-> > >  172.28.68.180-m-3751    [000] .....   869.511918:
-> > > nfs4_destroy_session: error=3D0 (OK) dstaddr=3D172.28.68.180
-> > >  172.28.68.180-m-3751    [000] .....   869.513347:
-> > > nfs4_create_session: error=3D0 (OK) dstaddr=3D172.28.68.180
-> > >
-> > > To prevent reuse of the same slot/seqid for when we receive
-> > > BADSESSION, can we perhaps set slot->seq_done? Then, when
-> > > nfs41_sequence_process() calls nfs41_sequence_free_slot(), it'd
-> > > increment seq_nr then. Slot re-use would be prevented.
-> > >
-> > > Or, perhaps we set the NFS4_SLOT_TBL_DRAINING bit right in
-> > > nfs41_sequence_process() for BADSESSION so that nothing else can get
-> > > the slot when it's released?
-> > >
-> > > Or some other way or preventing slots being (re)used after receiving
-> > > BADSESSION on that slot. The problem if re-using (interrupted) slots
-> > > is that they get cached reply from the server and those operations
-> > > "think" operation succeeded and they have wrong/invalid stateids for
-> > > instance.
-> > >
-> > > Here's the sequence of events. First of all this is a session trunkin=
-g
-> > > scenario where one of the servers leaves the group.
-> > > NFS OP uses slot=3D0 seq=3D0 sends it to server 1. Server 1 processes=
- the
-> > > request populates its session cache. But the reply never reaches the
-> > > client. Connection gets reset.
-> > > NFS OP is resent using slot=3D0 seq=3D0 to server 2 which just left t=
-he
-> > > trunking group. It replies with BADSESSION
-> > > (session is not frozen on the client yet) new NFS OP uses slot=3D0 se=
-q=3D0
-> > > and sends it to server 1. Server 1 responds out of the session cache.
-> > To me, this sounds like a broken NFSv4.1/4.2 server. Once a session is =
-bad,
-> > I do not think there should ever be a reply that was cached in that bad=
- session.
-> > Put another way, the server should not leave the "trunking group' (what=
-ever that
-> > means?) without making the session bad for all trunks. I do not think
-> > a session should
-> > ever work on one server and not on another one.
->
-> The spec allows for server to leave the group and session to be still val=
-id.
->
-> From section 2.10.13.1.4
-> "If the SEQUENCE requests fail with NFS4ERR_BADSESSION, then the
-> session no longer exists on any of the server network addresses for
-> which the client has connections associated with that session ID. It
-> is possible the session is still alive and available on other network
-> addresses. "
->
-> Linux server
+--000000000000426b2f05fe1d2cfc
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I meant to say Linux client
+Hi Krzysztof,
 
-> throws away the session on getting the BADSESSION but the
-> problem is that it doesn't happen instantly. So some new requests can
-> sneak before the session gets killed. Thus I'm advocating that slotid
-> still happens on BADSESSION or I'm suggesting that we freeze the
-> session table on BADSESSION which we currently don't do -- which
-> allows new requests to go.
+On Sat, Jun 10, 2023 at 6:15=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 >
+> On 06/03/2023 18:09, Anna Schumaker wrote:
+> > Hi Krzysztof,
 > >
-> > Having said the above, I have no opinion w.r.t. how such a case should
-> > be handled.
-> > (Except to tell the NFS server vendor that their server is broken.)
+> > On Tue, Feb 14, 2023 at 6:02=E2=80=AFAM Krzysztof Kozlowski
+> > <krzysztof.kozlowski@linaro.org> wrote:
+> >>
+> >> On 12/02/2023 15:05, Anna Schumaker wrote:
+> >>>>> From ac2d6c501dbcdb306480edaee625b5496f1fb4f5 Mon Sep 17 00:00:00 2=
+001
+> >>>>> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> >>>>> Date: Fri, 10 Feb 2023 15:50:22 -0500
+> >>>>> Subject: [PATCH] NFSv4.2: Rework scratch handling for READ_PLUS
+> >>>>>
+> >>>>
+> >>>> Patch is corrupted - maybe mail program reformatted it when sending:
+> >>>>
+> >>>> Applying: NFSv4.2: Rework scratch handling for READ_PLUS
+> >>>> error: corrupt patch at line 12
+> >>>> Patch failed at 0001 NFSv4.2: Rework scratch handling for READ_PLUS
+> >>>
+> >>> That's weird. I wasn't expecting gmail to reformat the patch but I
+> >>> guess it did. I've added it as an attachment so that shouldn't happen
+> >>> again.
+> >>
+> >> Still null ptr (built on 420b2d4 with your patch):
 > >
-> > Just mho, rick
-> >
-> > > Client destroys the session
-> > > Client uses stateid returned from the new OP which is really invalid
-> > > for the operation. Server fails the operation. Application failure
-> > > occurs.
-> > >
-> > > Thank you..
+> > We're through the merge window and at rc1 now, so I can spend more
+> > time scratching my head over your bug again. We've come up with a
+> > patch (attached) that adds a bunch of printks to show us what the
+> > kernel thinks is going on. Do you mind trying it out and letting us
+> > know what gets printed out? You'll need to make sure
+> > CONFIG_NFS_V4_2_READ_PLUS is enabled when compiling the kernel.
+>
+> The patch does not apply. I tried: v6.4-rc1, v6.4-rc5, next-20230609.
+
+Can you try the attached patch on top of my 3-patch series from the
+other day, and let me know what gets printed out? It adds a bunch of
+printk()s at strategic points to print out what is going on with the
+xdr scratch buffer since it's suddenly a bad memory address after
+working for a bit on your machine.
+
+Thanks,
+Anna
+
+>
+> Best regards,
+> Krzysztof
+>
+
+--000000000000426b2f05fe1d2cfc
+Content-Type: text/x-patch; charset="US-ASCII"; 
+	name="0001-NFS-Add-debugging-printk-s-to-trace-the-xdr-scratch-.patch"
+Content-Disposition: attachment; 
+	filename="0001-NFS-Add-debugging-printk-s-to-trace-the-xdr-scratch-.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_liw6vo5i0>
+X-Attachment-Id: f_liw6vo5i0
+
+RnJvbSA5ODUyNDgxNjVlNTNhNjdlN2NiNmExOGVjMjgxM2FiYThiMjZkYTMzIE1vbiBTZXAgMTcg
+MDA6MDA6MDAgMjAwMQpGcm9tOiBBbm5hIFNjaHVtYWtlciA8QW5uYS5TY2h1bWFrZXJATmV0YXBw
+LmNvbT4KRGF0ZTogV2VkLCAxNCBKdW4gMjAyMyAxNjo0OTozNyAtMDQwMApTdWJqZWN0OiBbUkZD
+XSBORlM6IEFkZCBkZWJ1Z2dpbmcgcHJpbnRrKClzIHRvIHRyYWNlIHRoZSB4ZHItPnNjcmF0Y2gg
+YnVmZmVyCgpJJ20gdHJ5aW5nIHRvIGZpZ3VyZSBvdXQgYXQgd2hhdCBwb2ludCB0aGUgeGRyLT5z
+Y3JhdGNoIGJ1ZmZlciBpcwphbGxvY2F0ZWQsIGZyZWVkLCBzZXQsIGFuZCByZXNldCB0byBmaWd1
+cmUgb3V0IHdoeSBSRUFEX1BMVVMgc3VkZGVubHkKdGhpbmtzIGl0J3MgYSBOVUxMIHBvaW50ZXIg
+d2l0aCBsZW5ndGggMTYuCgpTaWduZWQtb2ZmLWJ5OiBBbm5hIFNjaHVtYWtlciA8QW5uYS5TY2h1
+bWFrZXJATmV0YXBwLmNvbT4KLS0tCiBmcy9uZnMvbmZzNDJ4ZHIuYyB8IDcgKysrKysrKwogZnMv
+bmZzL3JlYWQuYyAgICAgfCA4ICsrKysrKystCiAyIGZpbGVzIGNoYW5nZWQsIDE0IGluc2VydGlv
+bnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNDJ4ZHIuYyBiL2Zz
+L25mcy9uZnM0Mnhkci5jCmluZGV4IDIwYWE1ZTc0NjQ5Ny4uNmY2M2M4MTZiMGE1IDEwMDY0NAot
+LS0gYS9mcy9uZnMvbmZzNDJ4ZHIuYworKysgYi9mcy9uZnMvbmZzNDJ4ZHIuYwpAQCAtMTM1MSwy
+MSArMTM1MSwyOCBAQCBzdGF0aWMgaW50IG5mczRfeGRyX2RlY19yZWFkX3BsdXMoc3RydWN0IHJw
+Y19ycXN0ICpycXN0cCwKIAlzdHJ1Y3QgY29tcG91bmRfaGRyIGhkcjsKIAlpbnQgc3RhdHVzOwog
+CisJcHJpbnRrKEtFUk5fSU5GTyAiJXMoaGRyPSVweCwgc2NyYXRjaD0lcHgpXG4iLCBfX2Z1bmNf
+XywKKwkJY29udGFpbmVyX29mKHJlcywgc3RydWN0IG5mc19wZ2lvX2hlYWRlciwgcmVzKSwgcmVz
+LT5zY3JhdGNoKTsKIAl4ZHJfc2V0X3NjcmF0Y2hfYnVmZmVyKHhkciwgcmVzLT5zY3JhdGNoLCBS
+RUFEX1BMVVNfU0NSQVRDSF9TSVpFKTsKIAorCXByaW50ayhLRVJOX0lORk8gIiAgICBidWYgPSB7
+JXB4LCAlemR9XG4iLCB4ZHItPnNjcmF0Y2guaW92X2Jhc2UsIHhkci0+c2NyYXRjaC5pb3ZfbGVu
+KTsKIAlzdGF0dXMgPSBkZWNvZGVfY29tcG91bmRfaGRyKHhkciwgJmhkcik7CiAJaWYgKHN0YXR1
+cykKIAkJZ290byBvdXQ7CisJcHJpbnRrKEtFUk5fSU5GTyAiICAgIGJ1ZiA9IHslcHgsICV6ZH1c
+biIsIHhkci0+c2NyYXRjaC5pb3ZfYmFzZSwgeGRyLT5zY3JhdGNoLmlvdl9sZW4pOwogCXN0YXR1
+cyA9IGRlY29kZV9zZXF1ZW5jZSh4ZHIsICZyZXMtPnNlcV9yZXMsIHJxc3RwKTsKIAlpZiAoc3Rh
+dHVzKQogCQlnb3RvIG91dDsKKwlwcmludGsoS0VSTl9JTkZPICIgICAgYnVmID0geyVweCwgJXpk
+fVxuIiwgeGRyLT5zY3JhdGNoLmlvdl9iYXNlLCB4ZHItPnNjcmF0Y2guaW92X2xlbik7CiAJc3Rh
+dHVzID0gZGVjb2RlX3B1dGZoKHhkcik7CiAJaWYgKHN0YXR1cykKIAkJZ290byBvdXQ7CisJcHJp
+bnRrKEtFUk5fSU5GTyAiICAgIGJ1ZiA9IHslcHgsICV6ZH1cbiIsIHhkci0+c2NyYXRjaC5pb3Zf
+YmFzZSwgeGRyLT5zY3JhdGNoLmlvdl9sZW4pOwogCXN0YXR1cyA9IGRlY29kZV9yZWFkX3BsdXMo
+eGRyLCByZXMpOwogCWlmICghc3RhdHVzKQogCQlzdGF0dXMgPSByZXMtPmNvdW50Owogb3V0Ogor
+CXByaW50ayhLRVJOX0lORk8gIiAgICBidWYgPSB7JXB4LCAlemR9XG4iLCB4ZHItPnNjcmF0Y2gu
+aW92X2Jhc2UsIHhkci0+c2NyYXRjaC5pb3ZfbGVuKTsKIAlyZXR1cm4gc3RhdHVzOwogfQogCmRp
+ZmYgLS1naXQgYS9mcy9uZnMvcmVhZC5jIGIvZnMvbmZzL3JlYWQuYwppbmRleCA3ZGMyMWE0OGUz
+ZTcuLjdiOTMzMTZhNTJkZSAxMDA2NDQKLS0tIGEvZnMvbmZzL3JlYWQuYworKysgYi9mcy9uZnMv
+cmVhZC5jCkBAIC00Nyw4ICs0NywxMSBAQCBzdGF0aWMgc3RydWN0IG5mc19wZ2lvX2hlYWRlciAq
+bmZzX3JlYWRoZHJfYWxsb2Modm9pZCkKIAogc3RhdGljIHZvaWQgbmZzX3JlYWRoZHJfZnJlZShz
+dHJ1Y3QgbmZzX3BnaW9faGVhZGVyICpyaGRyKQogewotCWlmIChyaGRyLT5yZXMuc2NyYXRjaCAh
+PSBOVUxMKQorCWlmIChyaGRyLT5yZXMuc2NyYXRjaCAhPSBOVUxMKSB7CisJCXByaW50ayhLRVJO
+X0lORk8gIiVzKGhkcj0lcHgsIHNjcmF0Y2g9JXB4KVxuIiwKKwkJCV9fZnVuY19fLCByaGRyLCBy
+aGRyLT5yZXMuc2NyYXRjaCk7CiAJCWtmcmVlKHJoZHItPnJlcy5zY3JhdGNoKTsKKwl9CiAJa21l
+bV9jYWNoZV9mcmVlKG5mc19yZGF0YV9jYWNoZXAsIHJoZHIpOwogfQogCkBAIC0xMTQsNiArMTE3
+LDkgQEAgYm9vbCBuZnNfcmVhZF9hbGxvY19zY3JhdGNoKHN0cnVjdCBuZnNfcGdpb19oZWFkZXIg
+Kmhkciwgc2l6ZV90IHNpemUpCiB7CiAJV0FSTl9PTihoZHItPnJlcy5zY3JhdGNoICE9IE5VTEwp
+OwogCWhkci0+cmVzLnNjcmF0Y2ggPSBrbWFsbG9jKHNpemUsIEdGUF9LRVJORUwpOworCXByaW50
+ayhLRVJOX0lORk8gIlxuIik7CisJcHJpbnRrKEtFUk5fSU5GTyAiJXMoaGRyPSVweCwgc2l6ZT0l
+emQpID0gJXB4XG4iLAorCQlfX2Z1bmNfXywgaGRyLCBzaXplLCBoZHItPnJlcy5zY3JhdGNoKTsK
+IAlyZXR1cm4gaGRyLT5yZXMuc2NyYXRjaCAhPSBOVUxMOwogfQogRVhQT1JUX1NZTUJPTF9HUEwo
+bmZzX3JlYWRfYWxsb2Nfc2NyYXRjaCk7Ci0tIAoyLjQxLjAKCg==
+--000000000000426b2f05fe1d2cfc--
