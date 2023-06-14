@@ -2,124 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B420F73003E
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 15:38:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 045257301C8
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 16:26:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245025AbjFNNiV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Jun 2023 09:38:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47254 "EHLO
+        id S245603AbjFNO0l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Jun 2023 10:26:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245023AbjFNNiU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Jun 2023 09:38:20 -0400
-Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C034A1FF9;
-        Wed, 14 Jun 2023 06:38:18 -0700 (PDT)
-Received: by mail-io1-xd33.google.com with SMTP id ca18e2360f4ac-77acb944bdfso375550239f.0;
-        Wed, 14 Jun 2023 06:38:18 -0700 (PDT)
+        with ESMTP id S245662AbjFNO0i (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Jun 2023 10:26:38 -0400
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7229B1721;
+        Wed, 14 Jun 2023 07:26:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686749898; x=1689341898;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OcMpIHdjKp1THv65PvIPUr0YhjndAMsASg3ywF4WkSk=;
-        b=TMs/pAzNollaH2DS13pnVn8it1HkV9hqXZyhXw7W3eBeMLtTMJMbuXrJ0gWPRn2DvW
-         V4YJEDbsGmXp7SjtsJ3WxoYBSpAgI48j4zg+QgWHj9auVIYSwdir26qBBIVARp6qtyfx
-         Utn+1PjVx+qGNxU6jIlpFQ5DJnqprMaBlb+7ESS8tYiCcoxTa2Ak/OgqtdeuXnrKfogf
-         zccffifvA6uVfoE7EGloY10axykms28UXt/1drp4bJo7qSDkyHycQwqvD5LFVLqLhh/Y
-         1XjLv/ZmiRvVJ5XZFGMiK3biQZRmHP9hvouKsZpL0mMg9PeRWUIO5pXsIudkIOqUTp20
-         lRvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686749898; x=1689341898;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OcMpIHdjKp1THv65PvIPUr0YhjndAMsASg3ywF4WkSk=;
-        b=MhYUp728oiPK51HEDRIdt99Ym1c/XCNR62yQF0WAeRaSkjE6H+Eavzp7z4DSCu8S0k
-         A/WKFd5htLYhgnF5UiDLi45LRF9gRI15LPeHdn+13G3LrmONHVNSVLccJ5v9VrikFaRS
-         e2yr8nWukDzJy8J3T6Lh5VdOcKnFlq4MaX7Mwi8TmcnQE+uXl9eROxhtGv4HNztVJsG6
-         t8bRm9OjvP51LZMH9XJrc0rhcB0wWkAcJNzFBDix3vsP5PX4uVfdD7PDrQN9EyJ27xUy
-         86QqBQvjss7cc7zKTPjGpgCzBTAYtmBAc7MtjMnaWg4eG9kY6hyHhBc/qt4msH/VCdkm
-         X58Q==
-X-Gm-Message-State: AC+VfDwQDmUqhvwOp/C+fOWOR2Fhow91C6qOZ2s19n2cD88hRqDQksLw
-        ATWzRS4Dygc20iZygmqXa7U=
-X-Google-Smtp-Source: ACHHUZ7FFYwn9TAuhIaV3IPsryiva/NLrrg5aB2dNwsbpVo1p4MaX1lDfyst9q3lQTlhQBPPaWTY5A==
-X-Received: by 2002:a05:6602:2747:b0:774:8786:1b59 with SMTP id b7-20020a056602274700b0077487861b59mr14607161ioe.11.1686749897893;
-        Wed, 14 Jun 2023 06:38:17 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id z23-20020a02ceb7000000b00420d6fd5c06sm5022647jaq.80.2023.06.14.06.38.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jun 2023 06:38:17 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Subject: [PATCH v3] SUNRPC: Use sysfs_emit in place of strlcpy/sprintf
-Date:   Wed, 14 Jun 2023 13:37:57 +0000
-Message-ID: <20230614133757.2106902-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        d=fudan.edu.cn; s=dkim; h=Received:From:To:Cc:Subject:Date:
+        Message-Id; bh=ItmWSlvSWQ6Zl4Jxc1v5yGh+VD7YBbrlkzpYrIjnYBE=; b=t
+        TouFc8sAD2+PnIc9X6wlmOh377KTkwi+VEFp/M10sr8EVY52VY0eikZYhF2XN5dI
+        OGYettKVyAqDkhDCzSIItTQRv6YzqrkLXSvayssQPSR3VinYq6IMO+fjO0DG+xoT
+        ppCGafZ8OaQXAmRhzcCBUO20g9lNkKi/Ys/RNW9Px8=
+Received: from ubuntu.localdomain (unknown [10.230.35.76])
+        by app1 (Coremail) with SMTP id XAUFCgDHzr76zYlk6ZjrAA--.225S2;
+        Wed, 14 Jun 2023 22:26:03 +0800 (CST)
+From:   Chenyuan Mi <cymi20@fudan.edu.cn>
+To:     trond.myklebust@hammerspace.com
+Cc:     anna@kernel.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chenyuan Mi <cymi20@fudan.edu.cn>
+Subject: [PATCH] nfsroot: Fix missing check for return value of strsep() The strsep() function in root_nfs_parse_options() may return NULL if argument 'incoming' is NULL. Since 'incoming' has Null check in this function, it is also need to add Null check for return value of strsep().
+Date:   Wed, 14 Jun 2023 07:26:00 -0700
+Message-Id: <20230614142600.111703-1-cymi20@fudan.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: XAUFCgDHzr76zYlk6ZjrAA--.225S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrXw4DAFy8JF17uw4ftry3CFg_yoWxXFg_Cw
+        4fJr47uw4rtF4DC3WjkrWFyrnFqayvkF1xZF4xGF1DC34YvFyYkr9rGrZ5ZFy7ur4ayryf
+        u398try5trWYkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbsxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+        6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+        Cq3wAac4AC62xK8xCEY4vEwIxC4wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IE
+        rcIFxwCY02Avz4vE-syl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
+        IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
+        6r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
+        IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E
+        87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0x
+        ZFpf9x0JUq-erUUUUU=
+X-CM-SenderInfo: isqsiiisuqikmt6i3vldqovvfxof0/
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Part of an effort to remove strlcpy() tree-wide [1].
+Found by our static analysis tool.
 
-Direct replacement is safe here since the getter in kernel_params_ops
-handles -errno return [2].
-
-[1] https://github.com/KSPP/linux/issues/89
-[2] https://elixir.bootlin.com/linux/v6.4-rc6/source/include/linux/moduleparam.h#L52
-
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+Signed-off-by: Chenyuan Mi <cymi20@fudan.edu.cn>
 ---
- net/sunrpc/svc.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ fs/nfs/nfsroot.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index e6d4cec61e47..b011c318fef1 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -109,15 +109,15 @@ param_get_pool_mode(char *buf, const struct kernel_param *kp)
- 	switch (*ip)
- 	{
- 	case SVC_POOL_AUTO:
--		return strlcpy(buf, "auto\n", 20);
-+		return sysfs_emit(buf, "auto\n");
- 	case SVC_POOL_GLOBAL:
--		return strlcpy(buf, "global\n", 20);
-+		return sysfs_emit(buf, "global\n");
- 	case SVC_POOL_PERCPU:
--		return strlcpy(buf, "percpu\n", 20);
-+		return sysfs_emit(buf, "percpu\n");
- 	case SVC_POOL_PERNODE:
--		return strlcpy(buf, "pernode\n", 20);
-+		return sysfs_emit(buf, "pernode\n");
- 	default:
--		return sprintf(buf, "%d\n", *ip);
-+		return sysfs_emit(buf, "%d\n", *ip);
- 	}
- }
+diff --git a/fs/nfs/nfsroot.c b/fs/nfs/nfsroot.c
+index 620329b7e6ae..55c594dede9f 100644
+--- a/fs/nfs/nfsroot.c
++++ b/fs/nfs/nfsroot.c
+@@ -198,7 +198,7 @@ static int __init root_nfs_parse_options(char *incoming, char *exppath,
+ 	 * Set the NFS remote path
+ 	 */
+ 	p = strsep(&incoming, ",");
+-	if (*p != '\0' && strcmp(p, "default") != 0)
++	if (p != NULL && *p != '\0' && strcmp(p, "default") != 0)
+ 		if (root_nfs_copy(exppath, p, exppathlen))
+ 			return -1;
  
 -- 
-2.41.0.162.gfafddb0af9-goog
-
+2.17.1
 
