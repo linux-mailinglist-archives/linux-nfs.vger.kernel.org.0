@@ -2,59 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BF0A72F0D2
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 02:12:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDB8E72F14B
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 03:04:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbjFNAMy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Jun 2023 20:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50758 "EHLO
+        id S232576AbjFNBE1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Jun 2023 21:04:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240872AbjFNAMx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jun 2023 20:12:53 -0400
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65FBA10EC;
-        Tue, 13 Jun 2023 17:12:50 -0700 (PDT)
-Received: by mail-il1-x131.google.com with SMTP id e9e14a558f8ab-3408334f13bso3357965ab.3;
-        Tue, 13 Jun 2023 17:12:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686701570; x=1689293570;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fH6FmxGt/Oa/LI1in+ZqKzhAOMdBsI3JiFQigCkDIqc=;
-        b=pYt2RDhwc1sIPeNdgwx+UjMvY5EHQ25+1nToJd1CC7SPfwXpYYeDp7rXg6Qpu5ZqG4
-         x1VA9PKkrTPoobu997BcRhjMOBdrXNMzJgca8ddmkVD5Y9H0ZDfoAkPkibPK1PhRCXCs
-         ZgjYPKMWVlZgfucyDBSJUkCB13636HGvCMOK1mTSx0AvP4FBZlyIsJTmBCerfVgbmjEf
-         RsvbdmNrMPuO75dzAnEC4TuYCo/9rzLWc3IfQrs97y7QhREzNfrEHpa+yGlGC3hHgjh5
-         MNtGnuTU/Kt7wh5C/A5uOXWEUr8+A0AUWrGszSehAiyn4v5dJoVEB6/itmey48XFGx/1
-         KxUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686701570; x=1689293570;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fH6FmxGt/Oa/LI1in+ZqKzhAOMdBsI3JiFQigCkDIqc=;
-        b=RI1XqNA5F3YQpy7jBVfM2HQktmJAYSAf+2GfEOCK66HyzMvRL8YdidvuOwswp2UhMY
-         HFNYrIBaeO7cTVWZ1knO87nQTf+Mb44vHoOjDu/XYA19fW1Je2s32/fDIwcBw2t6BVv8
-         oMb4y8t6aL0MIv9Fcmp3EvbnFkrbN6gACr6c7E68ZO/mO2sCiib8+OLRC4fTGAgFHQYZ
-         XutxOG5apOmSJoAPMH5ljIH6MX1uJFnVG/jEU6uj9P+gbjW6hFAd+Q8+Aegjr8enjznc
-         Jn/tGaqQysgcOqZwlXhZHOIZeLgD4DxVOOdore9vDgRZN1HO80D4/NwZtd9ZrGZ2jw5b
-         NzLw==
-X-Gm-Message-State: AC+VfDxkro6ljxnBIlGoLXoZ7KKCR7qyJHVzsM9rUnu7QHWrpHvu4aTh
-        rFCWQfMwvyGaX7zlh2BCMxk=
-X-Google-Smtp-Source: ACHHUZ7sy2N8NvzKYSG+QFV1WfIDNfXpxQy1JxKKM+nnIWZkV1mmK/3kZmx5oP6YJJh9DhyzOuU9yQ==
-X-Received: by 2002:a92:d450:0:b0:33e:6378:d917 with SMTP id r16-20020a92d450000000b0033e6378d917mr10816259ilm.9.1686701569555;
-        Tue, 13 Jun 2023 17:12:49 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id p10-20020a92c10a000000b0033b27117120sm4090039ile.13.2023.06.13.17.12.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 17:12:48 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Chuck Lever <chuck.lever@oracle.com>,
+        with ESMTP id S230397AbjFNBE1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jun 2023 21:04:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DA091BE6;
+        Tue, 13 Jun 2023 18:04:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0579C62E72;
+        Wed, 14 Jun 2023 01:04:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4403DC433C8;
+        Wed, 14 Jun 2023 01:04:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686704662;
+        bh=lsO1eVWZBM6MvyPnhWRML3twvD4cN5i1hHFtDXs+nXk=;
+        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+        b=Hbko6dySTiq2eWSTr8BZvN7WscQfkrDv5setRSvi3YYEiu7/BfkJhp9wG/uU7FGuP
+         gB/hmiwi0obdbTIcJIkVwKLxmDKLOiCnIxsnNQQlqWJ2sswwIac5eEUI0q4u/1Rx7x
+         U15NrKi6VlrGUp012c5Ws+LWbqdXsSkeg6p9AU48AFe2NXy0qyusDn1MzoHvJzvKs6
+         NPX90LpZpBLIAuo6TDfcSs9xpk3dqy3lN01MCMa00YP2RYDJ/xk7v35oPoPQuVR4Hp
+         K4QI2Qr76jQAu9zbkostHoGtmeqsXRjG5fz/IIflOne34zYzroMMifoQSo/5LEX5zS
+         f+Lz3r4YU1Jtw==
+Date:   Tue, 13 Jun 2023 18:04:19 -0700
+From:   Kees Cook <kees@kernel.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>,
         Kees Cook <keescook@chromium.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Neil Brown <neilb@suse.de>,
+CC:     linux-hardening@vger.kernel.org, Neil Brown <neilb@suse.de>,
         Olga Kornievskaia <kolga@netapp.com>,
         Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
         linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -64,65 +48,77 @@ Cc:     linux-hardening@vger.kernel.org,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Subject: [PATCH v2] SUNRPC: Remove strlcpy
-Date:   Wed, 14 Jun 2023 00:12:46 +0000
-Message-ID: <20230614001246.538643-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+Subject: Re: [PATCH v2] SUNRPC: Remove strlcpy
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20230614001246.538643-1-azeemshaikh38@gmail.com>
+References: <20230614001246.538643-1-azeemshaikh38@gmail.com>
+Message-ID: <7E4A66A6-0B58-43AF-B9E0-62087F2EA11C@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with sysfs_emit().
+On June 13, 2023 5:12:46 PM PDT, Azeem Shaikh <azeemshaikh38@gmail=2Ecom> w=
+rote:
+>strlcpy() reads the entire source buffer first=2E
+>This read may exceed the destination size limit=2E
+>This is both inefficient and can lead to linear read
+>overflows if a source string is not NUL-terminated [1]=2E
+>In an effort to remove strlcpy() completely [2], replace
+>strlcpy() here with sysfs_emit()=2E
+>
+>Direct replacement is safe here since the getter in kernel_params_ops
+>handles -errno return [3]=2E
+>
+>[1] https://www=2Ekernel=2Eorg/doc/html/latest/process/deprecated=2Ehtml#=
+strlcpy
+>[2] https://github=2Ecom/KSPP/linux/issues/89
+>[3] https://elixir=2Ebootlin=2Ecom/linux/v6=2E4-rc6/source/include/linux/=
+moduleparam=2Eh#L52
+>
+>Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail=2Ecom>
+>---
+> net/sunrpc/svc=2Ec |    8 ++++----
+> 1 file changed, 4 insertions(+), 4 deletions(-)
+>
+>diff --git a/net/sunrpc/svc=2Ec b/net/sunrpc/svc=2Ec
+>index e6d4cec61e47=2E=2E77326f163801 100644
+>--- a/net/sunrpc/svc=2Ec
+>+++ b/net/sunrpc/svc=2Ec
+>@@ -109,13 +109,13 @@ param_get_pool_mode(char *buf, const struct kernel_=
+param *kp)
+> 	switch (*ip)
+> 	{
+> 	case SVC_POOL_AUTO:
+>-		return strlcpy(buf, "auto\n", 20);
+>+		return sysfs_emit(buf, "auto\n");
+> 	case SVC_POOL_GLOBAL:
+>-		return strlcpy(buf, "global\n", 20);
+>+		return sysfs_emit(buf, "global\n");
+> 	case SVC_POOL_PERCPU:
+>-		return strlcpy(buf, "percpu\n", 20);
+>+		return sysfs_emit(buf, "percpu\n");
+> 	case SVC_POOL_PERNODE:
+>-		return strlcpy(buf, "pernode\n", 20);
+>+		return sysfs_emit(buf, "pernode\n");
+> 	default:
+> 		return sprintf(buf, "%d\n", *ip);
 
-Direct replacement is safe here since the getter in kernel_params_ops
-handles -errno return [3].
+Please replace the sprintf too (and then the Subject could be "use sysfs_e=
+mit" or so)=2E
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
-[3] https://elixir.bootlin.com/linux/v6.4-rc6/source/include/linux/moduleparam.h#L52
-
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- net/sunrpc/svc.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index e6d4cec61e47..77326f163801 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -109,13 +109,13 @@ param_get_pool_mode(char *buf, const struct kernel_param *kp)
- 	switch (*ip)
- 	{
- 	case SVC_POOL_AUTO:
--		return strlcpy(buf, "auto\n", 20);
-+		return sysfs_emit(buf, "auto\n");
- 	case SVC_POOL_GLOBAL:
--		return strlcpy(buf, "global\n", 20);
-+		return sysfs_emit(buf, "global\n");
- 	case SVC_POOL_PERCPU:
--		return strlcpy(buf, "percpu\n", 20);
-+		return sysfs_emit(buf, "percpu\n");
- 	case SVC_POOL_PERNODE:
--		return strlcpy(buf, "pernode\n", 20);
-+		return sysfs_emit(buf, "pernode\n");
- 	default:
- 		return sprintf(buf, "%d\n", *ip);
- 	}
--- 
-2.41.0.162.gfafddb0af9-goog
+-Kees
 
 
+
+--=20
+Kees Cook
