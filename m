@@ -2,114 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 869D972EFB7
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 00:55:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BF0A72F0D2
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Jun 2023 02:12:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbjFMWzl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Jun 2023 18:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48286 "EHLO
+        id S230456AbjFNAMy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Jun 2023 20:12:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbjFMWzR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jun 2023 18:55:17 -0400
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7393698;
-        Tue, 13 Jun 2023 15:55:16 -0700 (PDT)
-Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-977c89c47bdso13597966b.2;
-        Tue, 13 Jun 2023 15:55:16 -0700 (PDT)
+        with ESMTP id S240872AbjFNAMx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Jun 2023 20:12:53 -0400
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65FBA10EC;
+        Tue, 13 Jun 2023 17:12:50 -0700 (PDT)
+Received: by mail-il1-x131.google.com with SMTP id e9e14a558f8ab-3408334f13bso3357965ab.3;
+        Tue, 13 Jun 2023 17:12:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686696915; x=1689288915;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ANEXcWjrRTe+RbBc7gwOrDGNXmOQrXArQ6Sp/mtywzs=;
-        b=YL3YERGon/SIzeeTtOmvAE/PrjlURwrDL8eGxn/wCB+JCYZclaPqTNDMw0n0U4QJ6/
-         qjgKwRewC2bbg0VnMYvbCS9St2U29LArgw582NXTskNv2wdcOTPYW4X0TwpgGb6NO9BY
-         vewxZwr6Y1GgRNmFG1OBcRMimQJAFsimI4IADBZN1GDttt7RIqCvvWwAcYOB1DVHR29C
-         OLTUM9AkM9zCMReF4i+CMU7BKJo5dYl4va4neQ0+NDz08GWe3lQYpRAL2Ri9C79wapzd
-         cdzZpdrGZWSV15GB+ZuidX/2B/6hy/ZpURqxyDV5FJF8jQKwClAz4vk2TjxMk0iemqsx
-         7dmQ==
+        d=gmail.com; s=20221208; t=1686701570; x=1689293570;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fH6FmxGt/Oa/LI1in+ZqKzhAOMdBsI3JiFQigCkDIqc=;
+        b=pYt2RDhwc1sIPeNdgwx+UjMvY5EHQ25+1nToJd1CC7SPfwXpYYeDp7rXg6Qpu5ZqG4
+         x1VA9PKkrTPoobu997BcRhjMOBdrXNMzJgca8ddmkVD5Y9H0ZDfoAkPkibPK1PhRCXCs
+         ZgjYPKMWVlZgfucyDBSJUkCB13636HGvCMOK1mTSx0AvP4FBZlyIsJTmBCerfVgbmjEf
+         RsvbdmNrMPuO75dzAnEC4TuYCo/9rzLWc3IfQrs97y7QhREzNfrEHpa+yGlGC3hHgjh5
+         MNtGnuTU/Kt7wh5C/A5uOXWEUr8+A0AUWrGszSehAiyn4v5dJoVEB6/itmey48XFGx/1
+         KxUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686696915; x=1689288915;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ANEXcWjrRTe+RbBc7gwOrDGNXmOQrXArQ6Sp/mtywzs=;
-        b=hKhcREfDLsXoMt7ZSuA4jcGWcd5/e8mCHr6mCxtmFw9m5ANJkZhGFLm4ZeoJZfYzj5
-         sHUBLKf3ofkK4ZM8DiiWByMW9M9fsdZnxdjqebYW6YaRuVaZOD22x+vl9vG54mAuFSmX
-         q41ywB7J+4gxTv2v2JlIy/6G2ktLZ9L5y6coKVVcitg+SgPuf0Zx6uzRoKG/6y08dv2R
-         Eje7DMmRjnogemRxex9WDDhOs4ChlzLaYu46HMFcNXgbODSfTj3v1WCkro+35rjGi9eY
-         pHxLaQFu2LYambU9PHgNrwH8oYK2Xfj+phBGD2qkEJM1MrKWsZF0f563jvUANdwOkK+z
-         0YuA==
-X-Gm-Message-State: AC+VfDw1ZW7aTSPJshI0Rt60TlQoEsQTXBOpBmGuMAls4agPY3c9ZNr6
-        Sc83/5UVKEPRTMQNliEO1MeR8RLLI3B7+oMX6Z0IlzAHJ/NrwQ==
-X-Google-Smtp-Source: ACHHUZ6lR5K/a5/7fvggUfZbZYvhUOfZqArLMLrVsSDH6rsX80Ja7nKdSfdlQfLbfopavfm8gHcFgETbVdKqWeUO2ho=
-X-Received: by 2002:a17:907:7202:b0:96f:cb13:8715 with SMTP id
- dr2-20020a170907720200b0096fcb138715mr13782006ejc.69.1686696914632; Tue, 13
- Jun 2023 15:55:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230613004054.3539554-1-azeemshaikh38@gmail.com>
- <01E2FCED-7EB6-4D06-8BB0-FB0D141B546E@oracle.com> <202306131238.92CBED5@keescook>
- <B3AC0B67-1629-44AC-8015-B28F020B018C@oracle.com>
-In-Reply-To: <B3AC0B67-1629-44AC-8015-B28F020B018C@oracle.com>
+        d=1e100.net; s=20221208; t=1686701570; x=1689293570;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fH6FmxGt/Oa/LI1in+ZqKzhAOMdBsI3JiFQigCkDIqc=;
+        b=RI1XqNA5F3YQpy7jBVfM2HQktmJAYSAf+2GfEOCK66HyzMvRL8YdidvuOwswp2UhMY
+         HFNYrIBaeO7cTVWZ1knO87nQTf+Mb44vHoOjDu/XYA19fW1Je2s32/fDIwcBw2t6BVv8
+         oMb4y8t6aL0MIv9Fcmp3EvbnFkrbN6gACr6c7E68ZO/mO2sCiib8+OLRC4fTGAgFHQYZ
+         XutxOG5apOmSJoAPMH5ljIH6MX1uJFnVG/jEU6uj9P+gbjW6hFAd+Q8+Aegjr8enjznc
+         Jn/tGaqQysgcOqZwlXhZHOIZeLgD4DxVOOdore9vDgRZN1HO80D4/NwZtd9ZrGZ2jw5b
+         NzLw==
+X-Gm-Message-State: AC+VfDxkro6ljxnBIlGoLXoZ7KKCR7qyJHVzsM9rUnu7QHWrpHvu4aTh
+        rFCWQfMwvyGaX7zlh2BCMxk=
+X-Google-Smtp-Source: ACHHUZ7sy2N8NvzKYSG+QFV1WfIDNfXpxQy1JxKKM+nnIWZkV1mmK/3kZmx5oP6YJJh9DhyzOuU9yQ==
+X-Received: by 2002:a92:d450:0:b0:33e:6378:d917 with SMTP id r16-20020a92d450000000b0033e6378d917mr10816259ilm.9.1686701569555;
+        Tue, 13 Jun 2023 17:12:49 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id p10-20020a92c10a000000b0033b27117120sm4090039ile.13.2023.06.13.17.12.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jun 2023 17:12:48 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Tue, 13 Jun 2023 18:55:03 -0400
-Message-ID: <CADmuW3VF6HhptF5p7PLJpcNNMCTfwRP=Rm=be=MaaFF_i2rr9g@mail.gmail.com>
-Subject: Re: [PATCH] SUNRPC: Replace strlcpy with strscpy
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
         Neil Brown <neilb@suse.de>,
         Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
+Subject: [PATCH v2] SUNRPC: Remove strlcpy
+Date:   Wed, 14 Jun 2023 00:12:46 +0000
+Message-ID: <20230614001246.538643-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
         FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 3:43=E2=80=AFPM Chuck Lever III <chuck.lever@oracle=
-.com> wrote:
->
-> > On Jun 13, 2023, at 3:42 PM, Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Tue, Jun 13, 2023 at 02:18:06PM +0000, Chuck Lever III wrote:
-> >>
-> >>
-> >>> On Jun 12, 2023, at 8:40 PM, Azeem Shaikh <azeemshaikh38@gmail.com> w=
-rote:
-> >>>
-> >>> strlcpy() reads the entire source buffer first.
-> >>> This read may exceed the destination size limit.
-> >>> This is both inefficient and can lead to linear read
-> >>> overflows if a source string is not NUL-terminated [1].
-> >>> In an effort to remove strlcpy() completely [2], replace
-> >>> strlcpy() here with strscpy().
-> >>
-> >> Using sprintf() seems cleaner to me: it would get rid of
-> >> the undocumented naked integer. Would that work for you?
-> >
-> > This is changing the "get" routine for reporting module parameters out
-> > of /sys. I think the right choice here is sysfs_emit(), as it performs
-> > the size tracking correctly. (Even the "default" sprintf() call should
-> > be replaced too, IMO.)
->
-> Agreed, that's even better.
->
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with sysfs_emit().
 
-Thanks folks. Will send over a v2 which replaces strlcpy with sysfs_emit.
+Direct replacement is safe here since the getter in kernel_params_ops
+handles -errno return [3].
+
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
+[3] https://elixir.bootlin.com/linux/v6.4-rc6/source/include/linux/moduleparam.h#L52
+
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ net/sunrpc/svc.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index e6d4cec61e47..77326f163801 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -109,13 +109,13 @@ param_get_pool_mode(char *buf, const struct kernel_param *kp)
+ 	switch (*ip)
+ 	{
+ 	case SVC_POOL_AUTO:
+-		return strlcpy(buf, "auto\n", 20);
++		return sysfs_emit(buf, "auto\n");
+ 	case SVC_POOL_GLOBAL:
+-		return strlcpy(buf, "global\n", 20);
++		return sysfs_emit(buf, "global\n");
+ 	case SVC_POOL_PERCPU:
+-		return strlcpy(buf, "percpu\n", 20);
++		return sysfs_emit(buf, "percpu\n");
+ 	case SVC_POOL_PERNODE:
+-		return strlcpy(buf, "pernode\n", 20);
++		return sysfs_emit(buf, "pernode\n");
+ 	default:
+ 		return sprintf(buf, "%d\n", *ip);
+ 	}
+-- 
+2.41.0.162.gfafddb0af9-goog
+
+
