@@ -2,82 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A765A7344D3
-	for <lists+linux-nfs@lfdr.de>; Sun, 18 Jun 2023 05:40:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E663E7345DB
+	for <lists+linux-nfs@lfdr.de>; Sun, 18 Jun 2023 12:40:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229490AbjFRDkB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 17 Jun 2023 23:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43730 "EHLO
+        id S229595AbjFRKka (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 18 Jun 2023 06:40:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjFRDkA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 17 Jun 2023 23:40:00 -0400
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4411D1988
-        for <linux-nfs@vger.kernel.org>; Sat, 17 Jun 2023 20:39:58 -0700 (PDT)
-Received: by mail-il1-x133.google.com with SMTP id e9e14a558f8ab-340bba768acso11395315ab.2
-        for <linux-nfs@vger.kernel.org>; Sat, 17 Jun 2023 20:39:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687059597; x=1689651597;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wWTmMQSsiLodfdKu7C8lcuyX7WesZia949PML8BXbEI=;
-        b=MS58pmUqBMhwOojW/rEqbOtsSErOz3ww0rXm+W+03miki0UYxV72yot6eJJOkhhcix
-         mjIkdWmIMeadYoLrHCQKwASWodweWj5hATdc1lkBKejgY/n8v6NURv+aRvRMPOZeBIJ8
-         fImxZcpiL/VdU1Yea5IiCmk1ablobFUYLsVZaMb19Jyqw3h5HnreQfKPjJ4AdDHc6Qgh
-         wVMXlk0CEZyAeFPrsZY5J/yE63RvPYCCYqe5mpZPzZtkCHm3jlMXiVbalJZyA6fG5K5l
-         5/D1prl3NHMSWE+eVucTsulchcMuPnGLFhfn7qvOJ4L4npS6QAxV5a+PfwHZz/ZZI3Zs
-         Li+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687059597; x=1689651597;
-        h=content-transfer-encoding:to:subject:message-id:date:from:sender
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wWTmMQSsiLodfdKu7C8lcuyX7WesZia949PML8BXbEI=;
-        b=fTrqSQ0euVZdQWHT/O3rciVQUiCzCxZElrMJKYc2gyuEDLeFFHtuOUhWKEM3p9QNa+
-         jlk0ANEjqaf4JI2lu2HLhKMkoMDEuRn61rmdNJgHbYHfykcT/DBfuzeggcqxCsXvgSpY
-         txZyIT4qureNq276WlArxS/k61s+QdwHMp2BpVk64VC2jdS1sL6QgqyxGDQxGEM3iFXH
-         Tkjj6vwqFX4VFdXsNpso114rAHBs/aszFPTIcLLszKuvRp1mktvs7Xq1D5eld2Oyk6Jc
-         /U2djatj5zRe6ypHnOalGf4YnJLREqCEjPwWVpuL5BSZzs87wVJ5N82uR/baN0Gtmo41
-         tQOw==
-X-Gm-Message-State: AC+VfDyJUvg6tUh6J0ZXn2cU98w01tqQMH6Y1tdgDdSQ07YJWTtZFO3J
-        emwy6lJE5Pynutb5clJzWhJioB7LJUZ+ITObljI=
-X-Google-Smtp-Source: ACHHUZ6jOcev/JRjqxHPWavgQ13qYoAVjVXRmkIC5sxX9/SxZ6VH0dWznntc9svs1D7wNvmgHCv5piGRu8+DlUlUOWM=
-X-Received: by 2002:a92:d309:0:b0:33d:3b69:2d23 with SMTP id
- x9-20020a92d309000000b0033d3b692d23mr2013988ila.19.1687059597619; Sat, 17 Jun
- 2023 20:39:57 -0700 (PDT)
+        with ESMTP id S229489AbjFRKk3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 18 Jun 2023 06:40:29 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684ADE60;
+        Sun, 18 Jun 2023 03:40:25 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1qAppU-0005HL-1I; Sun, 18 Jun 2023 12:40:20 +0200
+Message-ID: <d698b838-57e0-d019-a783-c229c04eeca4@leemhuis.info>
+Date:   Sun, 18 Jun 2023 12:40:19 +0200
 MIME-Version: 1.0
-Sender: ciissouf34@gmail.com
-Received: by 2002:ac0:d884:0:b0:2dc:5e5d:14a6 with HTTP; Sat, 17 Jun 2023
- 20:39:57 -0700 (PDT)
-From:   "Mrs. Ruth Roberto" <robertoruth48@gmail.com>
-Date:   Sat, 17 Jun 2023 19:39:57 -0800
-X-Google-Sender-Auth: W5Dt6JfxFofwIjj_K9UB4hDpmFo
-Message-ID: <CAFA2CT=KTsZwxS+bcrxAaCxvQPXY4Hj1GuXDz5NpfsVD=JxSdw@mail.gmail.com>
-Subject: I trust in God
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_3,NA_DOLLARS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Level: ****
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Content-Language: en-US, de-DE
+To:     Jeff Layton <jlayton@kernel.org>, Chuck Lever <cel@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        stable@vger.kernel.org, Eirik Fuller <efuller@redhat.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230616191744.202292-1-jlayton@kernel.org>
+ <ZIzFp3ViiU2SCi6J@manet.1015granger.net>
+ <4b5063eb5a1139adc9dd4bdadde30674faee0700.camel@kernel.org>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+Subject: Re: [PATCH] nfsd: move init of percpu reply_cache_stats counters back
+ to nfsd_init_net
+In-Reply-To: <4b5063eb5a1139adc9dd4bdadde30674faee0700.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1687084825;3626a0dc;
+X-HE-SMSGID: 1qAppU-0005HL-1I
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dear,
-It is true we do not know each other before but please bear with me,
-I=E2=80=99m writing you this mail from a Hospital bed. My name is Mrs.
-Ruth Roberto. I am a widow and very sick now. I am suffering from
-Endometrial Cancer which my doctor has confirmed that I will not
-survive it because of some damages. Now because of the condition of my
-health I have decided to donate out my late husband hard earn money
-the sum of ($3, 500,000.00) Three Million, Five Hundred Thousand Us
-Dollars on Charity Purpose through your help.if you are interested get
-back for more details.
-Mrs. Ruth Roberto
+On 16.06.23 22:54, Jeff Layton wrote:
+> On Fri, 2023-06-16 at 16:27 -0400, Chuck Lever wrote:
+>> Thanks Eirik and Jeff.
+>>
+>> At this point in the release cycle, I plan to apply this for the
+>> next merge window (6.5).
+> 
+> I think we should take this in sooner. This is a regression and a
+> user-triggerable oops in the right situation. If:
+> 
+> - non-x86_64 arch
+> - /proc/fs/nfsd is mounted in the namespace
+> - nfsd is not started in the namespace
+> - unprivileged user calls "cat /proc/fs/nfsd/reply_cache_stats"
+
+FWIW, might be worth to simply tell Linus about it and let him decide,
+that's totally fine and even documented in the old and the new docs for
+handling regressions[1].
+
+[1]
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/Documentation/process/handling-regressions.rst?id=eed892da9cd08be76a8f467c600ef58716dbb4d2
+
+>>> Cc: stable@vger.kernel.org # v6.3+
+>>> Fixes: f5f9d4a314da ("nfsd: move reply cache initialization into nfsd startup")
+>>
+>> Why both Fixes: and Cc: stable?
+> 
+> *shrug* : they mean different things. I can drop the Cc stable.
+
+Please leave it, only a stable tag ensures backporting; a fixes tag
+alone is not enough. See [1] above or these recent messages from Greg:
+
+https://lore.kernel.org/all/2023061137-algorithm-almanac-1337@gregkh/
+https://lore.kernel.org/all/2023060703-colony-shakily-3514@gregkh/
+
+Ciao, Thorsten
