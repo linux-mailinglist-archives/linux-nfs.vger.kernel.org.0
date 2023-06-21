@@ -2,52 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75996738DC5
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jun 2023 19:51:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEDDF738F98
+	for <lists+linux-nfs@lfdr.de>; Wed, 21 Jun 2023 21:04:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231716AbjFURvy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Jun 2023 13:51:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52586 "EHLO
+        id S231864AbjFUTEs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Jun 2023 15:04:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231769AbjFURu5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Jun 2023 13:50:57 -0400
+        with ESMTP id S231803AbjFUTEn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Jun 2023 15:04:43 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D69268A;
-        Wed, 21 Jun 2023 10:50:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443211FC8;
+        Wed, 21 Jun 2023 12:04:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 433FA61666;
-        Wed, 21 Jun 2023 17:50:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF744C433CC;
-        Wed, 21 Jun 2023 17:50:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CC6ED616A6;
+        Wed, 21 Jun 2023 19:04:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C959C433C8;
+        Wed, 21 Jun 2023 19:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687369831;
-        bh=cIQE0tqYqde1wQS9/IcLrDtGE0ZwQxHO+6tde8cVt4E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AYva0/5W7t0NxIgVeP53vFnVTqwMOS59neZkd9E2R3q/WoNeHdWpSaEZrCBAgnNvZ
-         OZblVRAyPgDiw5WctBsoo9L3Arvz5mqxj7q/DcmLR0zYNJXbXUEhK4nW6hnlL0Kn0K
-         EG2tHOVn/uhj4Fgy8ml/PRX+0nixFAdEnAy9IIL8Ej9UeYnn8/cXVNjinfbHefzGrh
-         FwmwzO5ItB8xnxbnZgy+N/5CBOVLiqLQUXvXdwWvd/RUOaHknzUqB+5I1T8bCU4cnX
-         4smek8cmnOm6kSHHkKKJui4WQ3aLMV26JdX/MTrOTAtfahzYcKu+6h09EanF26OCHN
-         cIjisblPWM5vQ==
-Date:   Wed, 21 Jun 2023 13:50:28 -0400
-From:   Chuck Lever <cel@kernel.org>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 09/13] net: Convert sunrpc from pagevec to folio_batch
-Message-ID: <ZJM4ZK8cKI4AmOgy@manet.1015granger.net>
-References: <20230621164557.3510324-1-willy@infradead.org>
- <20230621164557.3510324-10-willy@infradead.org>
+        s=k20201202; t=1687374259;
+        bh=XX+xnkHYFw12qk3N6BO1yCAkmNYCz3srtgwHCLCbmwk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=eoFhaja6StbjSzE51WfycuLc9VD3vd5yWqvsqfE9HX6PWJT1yzcX3K7pxsoKkV2jK
+         CSMDtiixzcKkB/W+RI3qooJz0Mj5OZPwcoQKeJRqbmzzkNB0TJlJBnQpM9cYVT/8mB
+         YCK866m0pKzbc6edkIvDABbN7i/mScrCT3o1PlDLHxTjCfvwqSOjcYesOzS0rv+ZFx
+         3dC6I3p4hMKaiY4E+sM3nzVYWT4lAlB372WdBdO9cjm3QvHKW/VfpC/gzIp9EeZOd4
+         uALZBH/U2IqGeiS0mX0ePl+5ix2qw9puLKYxvEu1rYC222AzD0jij5Qi0DExuivjU6
+         75+N/n6hRqn8Q==
+Message-ID: <03b904b3c5981676dce8a5ad9a3e3b8d9ae80ded.camel@kernel.org>
+Subject: Re: [PATCH][next] nfsd: remove redundant assignments to variable len
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Colin Ian King <colin.i.king@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        linux-nfs@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 21 Jun 2023 15:04:17 -0400
+In-Reply-To: <20230621145205.2682584-1-colin.i.king@gmail.com>
+References: <20230621145205.2682584-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.3 (3.48.3-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230621164557.3510324-10-willy@infradead.org>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,76 +59,84 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 05:45:53PM +0100, Matthew Wilcox (Oracle) wrote:
-> Remove the last usage of pagevecs.  There is a slight change here; we
-> now free the folio_batch as soon as it fills up instead of freeing the
-> folio_batch when we try to add a page to a full batch.  This should have
-> no effect in practice.
-> 
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-
-I don't yet have visibility into the folio_batch_* helpers, but this
-looks like a wholly mechanical replacement of pagevec. LGTM.
-
-I assume this is going to be merged via another tree, not nfsd-next,
-so:
-
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-
-
+On Wed, 2023-06-21 at 15:52 +0100, Colin Ian King wrote:
+> There are a few assignments to variable len where the value is not
+> being read and so the assignments are redundant and can be removed.
+> In one case, the variable len can be removed completely. Cleans up
+> 4 clang scan warnings of the form:
+>=20
+> fs/nfsd/export.c:100:7: warning: Although the value stored to 'len'
+> is used in the enclosing expression, the value is never actually
+> read from 'len' [deadcode.DeadStores]
+>=20
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 > ---
->  include/linux/sunrpc/svc.h |  2 +-
->  net/sunrpc/svc.c           | 10 +++++-----
->  2 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index c2807e301790..f8751118c122 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -222,7 +222,7 @@ struct svc_rqst {
->  	struct page *		*rq_next_page; /* next reply page to use */
->  	struct page *		*rq_page_end;  /* one past the last page */
->  
-> -	struct pagevec		rq_pvec;
-> +	struct folio_batch	rq_fbatch;
->  	struct kvec		rq_vec[RPCSVC_MAXPAGES]; /* generally useful.. */
->  	struct bio_vec		rq_bvec[RPCSVC_MAXPAGES];
->  
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index e7c101290425..587811a002c9 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -640,7 +640,7 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_pool *pool, int node)
->  	if (!rqstp)
->  		return rqstp;
->  
-> -	pagevec_init(&rqstp->rq_pvec);
-> +	folio_batch_init(&rqstp->rq_fbatch);
->  
->  	__set_bit(RQ_BUSY, &rqstp->rq_flags);
->  	rqstp->rq_server = serv;
-> @@ -851,9 +851,9 @@ bool svc_rqst_replace_page(struct svc_rqst *rqstp, struct page *page)
->  	}
->  
->  	if (*rqstp->rq_next_page) {
-> -		if (!pagevec_space(&rqstp->rq_pvec))
-> -			__pagevec_release(&rqstp->rq_pvec);
-> -		pagevec_add(&rqstp->rq_pvec, *rqstp->rq_next_page);
-> +		if (!folio_batch_add(&rqstp->rq_fbatch,
-> +				page_folio(*rqstp->rq_next_page)))
-> +			__folio_batch_release(&rqstp->rq_fbatch);
->  	}
->  
->  	get_page(page);
-> @@ -887,7 +887,7 @@ void svc_rqst_release_pages(struct svc_rqst *rqstp)
->  void
->  svc_rqst_free(struct svc_rqst *rqstp)
+>  fs/nfsd/export.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+> index ae85257b4238..11a0eaa2f914 100644
+> --- a/fs/nfsd/export.c
+> +++ b/fs/nfsd/export.c
+> @@ -97,7 +97,7 @@ static int expkey_parse(struct cache_detail *cd, char *=
+mesg, int mlen)
+>  		goto out;
+> =20
+>  	err =3D -EINVAL;
+> -	if ((len=3Dqword_get(&mesg, buf, PAGE_SIZE)) <=3D 0)
+> +	if (qword_get(&mesg, buf, PAGE_SIZE) <=3D 0)
+>  		goto out;
+> =20
+>  	err =3D -ENOENT;
+> @@ -107,7 +107,7 @@ static int expkey_parse(struct cache_detail *cd, char=
+ *mesg, int mlen)
+>  	dprintk("found domain %s\n", buf);
+> =20
+>  	err =3D -EINVAL;
+> -	if ((len=3Dqword_get(&mesg, buf, PAGE_SIZE)) <=3D 0)
+> +	if (qword_get(&mesg, buf, PAGE_SIZE) <=3D 0)
+>  		goto out;
+>  	fsidtype =3D simple_strtoul(buf, &ep, 10);
+>  	if (*ep)
+> @@ -593,7 +593,6 @@ static int svc_export_parse(struct cache_detail *cd, =
+char *mesg, int mlen)
 >  {
-> -	pagevec_release(&rqstp->rq_pvec);
-> +	folio_batch_release(&rqstp->rq_fbatch);
->  	svc_release_buffer(rqstp);
->  	if (rqstp->rq_scratch_page)
->  		put_page(rqstp->rq_scratch_page);
-> -- 
-> 2.39.2
-> 
+>  	/* client path expiry [flags anonuid anongid fsid] */
+>  	char *buf;
+> -	int len;
+>  	int err;
+>  	struct auth_domain *dom =3D NULL;
+>  	struct svc_export exp =3D {}, *expp;
+> @@ -609,8 +608,7 @@ static int svc_export_parse(struct cache_detail *cd, =
+char *mesg, int mlen)
+> =20
+>  	/* client */
+>  	err =3D -EINVAL;
+> -	len =3D qword_get(&mesg, buf, PAGE_SIZE);
+> -	if (len <=3D 0)
+> +	if (qword_get(&mesg, buf, PAGE_SIZE) <=3D 0)
+>  		goto out;
+> =20
+>  	err =3D -ENOENT;
+> @@ -620,7 +618,7 @@ static int svc_export_parse(struct cache_detail *cd, =
+char *mesg, int mlen)
+> =20
+>  	/* path */
+>  	err =3D -EINVAL;
+> -	if ((len =3D qword_get(&mesg, buf, PAGE_SIZE)) <=3D 0)
+> +	if (qword_get(&mesg, buf, PAGE_SIZE) <=3D 0)
+>  		goto out1;
+> =20
+>  	err =3D kern_path(buf, 0, &exp.ex_path);
+> @@ -665,7 +663,7 @@ static int svc_export_parse(struct cache_detail *cd, =
+char *mesg, int mlen)
+>  			goto out3;
+>  		exp.ex_fsid =3D an_int;
+> =20
+> -		while ((len =3D qword_get(&mesg, buf, PAGE_SIZE)) > 0) {
+> +		while (qword_get(&mesg, buf, PAGE_SIZE) > 0) {
+>  			if (strcmp(buf, "fsloc") =3D=3D 0)
+>  				err =3D fsloc_parse(&mesg, buf, &exp.ex_fslocs);
+>  			else if (strcmp(buf, "uuid") =3D=3D 0)
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
