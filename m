@@ -2,157 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D58B739A76
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jun 2023 10:43:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7963739A8B
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jun 2023 10:47:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231331AbjFVIni (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Jun 2023 04:43:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56896 "EHLO
+        id S229891AbjFVIr0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Jun 2023 04:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231207AbjFVImk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Jun 2023 04:42:40 -0400
-Received: from out-22.mta1.migadu.com (out-22.mta1.migadu.com [IPv6:2001:41d0:203:375::16])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 679601B4
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:41:44 -0700 (PDT)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1687423301;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZLNuxoO8OfzQ143YMlcA0F6NJodxjDO0V9/3OfXvbSM=;
-        b=eaBfLuYlG6JJ2wMMRdNKZV0a4oqFx389/61anHjbefPzDibHOLkGJsZGY3Dw+v+qevkyK3
-        n26AVKRC06swwDMkLHX6VNJZ04EnOeXYs8Wqh3UkaG0D+Uk7NLaSF2pUsBmfBvjexois2k
-        MY254J8+7levLBhOGEbqDhRxPfqcIBs=
-From:   Qi Zheng <qi.zheng@linux.dev>
-To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
-        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
-        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        dm-devel@redhat.com, linux-raid@vger.kernel.org,
-        linux-bcache@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH 14/29] jbd2,ext4: dynamically allocate the jbd2-journal shrinker
-Date:   Thu, 22 Jun 2023 08:39:17 +0000
-Message-Id: <20230622083932.4090339-15-qi.zheng@linux.dev>
-In-Reply-To: <20230622083932.4090339-1-qi.zheng@linux.dev>
-References: <20230622083932.4090339-1-qi.zheng@linux.dev>
+        with ESMTP id S230463AbjFVIrO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Jun 2023 04:47:14 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 782B0269F
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:46:55 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id ACB732278B;
+        Thu, 22 Jun 2023 08:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1687423613; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=J1TXXkFnQOTXBWHWQr71pNqDt+gA23LnV7lfAUEwHKQ=;
+        b=1+af6DkFHTQ9tLkpZWaaRKdt29Jo9BIEJjom7OJXCRIQKg4TIiw9FZxSHvIG/L1UypxY/4
+        pJJuqpJDa4QGRr4e8xoVTPDtZjPbEXULxzcz2M0S1uF5EnSxHdMY9NNJniWToJ5NMaYZxZ
+        DXtpE6OkhM1yMfJZGHSdmkXcmMk9MsQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1687423613;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=J1TXXkFnQOTXBWHWQr71pNqDt+gA23LnV7lfAUEwHKQ=;
+        b=ewtV+aKUVyoMHKaIQGw7+KerxBTVOxNCtwryYFDnHzMhJuttFjX1FUCPqCxgEuQuz11FmK
+        FUNmwDZXJWdMGcDg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4A251132BE;
+        Thu, 22 Jun 2023 08:46:53 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id yRTdCH0KlGTBBwAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Thu, 22 Jun 2023 08:46:53 +0000
+From:   Petr Vorel <pvorel@suse.cz>
+To:     ltp@lists.linux.it
+Cc:     Petr Vorel <pvorel@suse.cz>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] runtest/net.nfs: Run nfs02_06 on TCP only
+Date:   Thu, 22 Jun 2023 10:46:48 +0200
+Message-Id: <20230622084648.490498-1-pvorel@suse.cz>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Qi Zheng <zhengqi.arch@bytedance.com>
+UDP support disabled was on NFS server in kernel 5.6.
+Due that 2 of 3 nfs06.sh tests runs are being skipped on newer kernels.
 
-In preparation for implementing lockless slab shrink,
-we need to dynamically allocate the jbd2-journal shrinker,
-so that it can be freed asynchronously using kfree_rcu().
-Then it doesn't need to wait for RCU read-side critical
-section when releasing the struct journal_s.
+Therefore NFSv3 job in nfs02_06 test as TCP. This way all jobs in the
+test are TCP, thus test will not be skipped. This also bring NFSv3
+testing also under TCP (previously it was tested only on UDP).
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Keep UDP in nfs01_06 jobs, so that NFSv3 on UDP is still covered for
+older kernels.
+
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
 ---
- fs/jbd2/journal.c    | 32 +++++++++++++++++++-------------
- include/linux/jbd2.h |  2 +-
- 2 files changed, 20 insertions(+), 14 deletions(-)
+ runtest/net.nfs | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index eee3c0ae349a..92a2f4360b5f 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1301,7 +1301,7 @@ static int jbd2_min_tag_size(void)
- static unsigned long jbd2_journal_shrink_scan(struct shrinker *shrink,
- 					      struct shrink_control *sc)
- {
--	journal_t *journal = container_of(shrink, journal_t, j_shrinker);
-+	journal_t *journal = shrink->private_data;
- 	unsigned long nr_to_scan = sc->nr_to_scan;
- 	unsigned long nr_shrunk;
- 	unsigned long count;
-@@ -1327,7 +1327,7 @@ static unsigned long jbd2_journal_shrink_scan(struct shrinker *shrink,
- static unsigned long jbd2_journal_shrink_count(struct shrinker *shrink,
- 					       struct shrink_control *sc)
- {
--	journal_t *journal = container_of(shrink, journal_t, j_shrinker);
-+	journal_t *journal = shrink->private_data;
- 	unsigned long count;
+diff --git a/runtest/net.nfs b/runtest/net.nfs
+index 72cf4b307..15a960017 100644
+--- a/runtest/net.nfs
++++ b/runtest/net.nfs
+@@ -58,7 +58,7 @@ nfs41_ipv6_05 nfs05.sh -6 -v 4.1 -t tcp
+ nfs42_ipv6_05 nfs05.sh -6 -v 4.2 -t tcp
  
- 	count = percpu_counter_read_positive(&journal->j_checkpoint_jh_count);
-@@ -1415,21 +1415,27 @@ static journal_t *journal_init_common(struct block_device *bdev,
- 	journal->j_superblock = (journal_superblock_t *)bh->b_data;
+ nfs01_06  nfs06.sh -v "3,3,3,4,4,4" -t "udp,udp,tcp,tcp,tcp,tcp"
+-nfs02_06 nfs06.sh -v "3,4,4.1,4.2,4.2,4.2" -t "udp,tcp,tcp,tcp,tcp,tcp"
++nfs02_06 nfs06.sh -v "3,4,4.1,4.2,4.2,4.2" -t "tcp,tcp,tcp,tcp,tcp,tcp"
+ nfs03_ipv6_06 nfs06.sh -6 -v "4,4.1,4.1,4.2,4.2,4.2" -t "tcp,tcp,tcp,tcp,tcp,tcp"
  
- 	journal->j_shrink_transaction = NULL;
--	journal->j_shrinker.scan_objects = jbd2_journal_shrink_scan;
--	journal->j_shrinker.count_objects = jbd2_journal_shrink_count;
--	journal->j_shrinker.seeks = DEFAULT_SEEKS;
--	journal->j_shrinker.batch = journal->j_max_transaction_buffers;
- 
- 	if (percpu_counter_init(&journal->j_checkpoint_jh_count, 0, GFP_KERNEL))
- 		goto err_cleanup;
- 
--	if (register_shrinker(&journal->j_shrinker, "jbd2-journal:(%u:%u)",
--			      MAJOR(bdev->bd_dev), MINOR(bdev->bd_dev))) {
--		percpu_counter_destroy(&journal->j_checkpoint_jh_count);
--		goto err_cleanup;
--	}
-+	journal->j_shrinker = shrinker_alloc_and_init(jbd2_journal_shrink_count,
-+						      jbd2_journal_shrink_scan,
-+						      journal->j_max_transaction_buffers,
-+						      DEFAULT_SEEKS, 0, journal);
-+	if (!journal->j_shrinker)
-+		goto err_shrinker;
-+
-+	if (register_shrinker(journal->j_shrinker, "jbd2-journal:(%u:%u)",
-+			      MAJOR(bdev->bd_dev), MINOR(bdev->bd_dev)))
-+		goto err_register;
-+
- 	return journal;
- 
-+err_register:
-+	shrinker_free(journal->j_shrinker);
-+err_shrinker:
-+	percpu_counter_destroy(&journal->j_checkpoint_jh_count);
- err_cleanup:
- 	brelse(journal->j_sb_buffer);
- 	kfree(journal->j_wbuf);
-@@ -2190,9 +2196,9 @@ int jbd2_journal_destroy(journal_t *journal)
- 		brelse(journal->j_sb_buffer);
- 	}
- 
--	if (journal->j_shrinker.flags & SHRINKER_REGISTERED) {
-+	if (journal->j_shrinker->flags & SHRINKER_REGISTERED) {
- 		percpu_counter_destroy(&journal->j_checkpoint_jh_count);
--		unregister_shrinker(&journal->j_shrinker);
-+		unregister_and_free_shrinker(journal->j_shrinker);
- 	}
- 	if (journal->j_proc_entry)
- 		jbd2_stats_proc_exit(journal);
-diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-index 44c298aa58d4..beb4c4586320 100644
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -891,7 +891,7 @@ struct journal_s
- 	 * Journal head shrinker, reclaim buffer's journal head which
- 	 * has been written back.
- 	 */
--	struct shrinker		j_shrinker;
-+	struct shrinker		*j_shrinker;
- 
- 	/**
- 	 * @j_checkpoint_jh_count:
+ nfs3_07 nfs07.sh -v 3 -t udp
 -- 
-2.30.2
+2.40.1
 
