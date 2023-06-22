@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A375739B38
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jun 2023 10:59:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA149739B56
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jun 2023 10:59:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbjFVI5w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Jun 2023 04:57:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
+        id S229993AbjFVI6N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Jun 2023 04:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231661AbjFVI4A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Jun 2023 04:56:00 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EF292699
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:55:15 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b5585e84b4so6827465ad.0
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:55:15 -0700 (PDT)
+        with ESMTP id S231490AbjFVI50 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Jun 2023 04:57:26 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BE526AE
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:55:23 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b52418c25bso12032695ad.0
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:55:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1687424115; x=1690016115;
+        d=bytedance.com; s=google; t=1687424123; x=1690016123;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9Gb8UpD3lZt4bh5cbhFKOyQevww2sfofkVlmbPNwxg8=;
-        b=D5LVC+4HokJCz4FPeXcY+dsaTssife3Qqo2QFad+aTpXncu7uEYIb5Esgo0X9193yq
-         JD9ShpMbmoNV55hSp3a3PNB6eqKE4aEEgjXjfXMhn0CWCq43W/gk5ji4OA6QFiz5YEbm
-         Of780eCZQIl3oU3nzqHMjitXTfpqsvwkQAoJ3/aSYN48pFnlXdDicr+5TJONhzqSsJ8t
-         IgcwK0tiB9rdlMicFxhfFEkVC1N5FWb0hV5n3c+iSTxmBlXa0ZlHHEAwcq0BLcrHgmll
-         f7y7d2fR0/LzWuGi/rCVXp+lACayEzs+7pdEprt9XcBuFLw9Vycb7reaOybOjmFS0TWh
-         I1Bg==
+        bh=u/vExFBLW3qTniAw4XeP9KQ69i9zow/4wwrpInqlwjM=;
+        b=f9niG/1nDZCnLyGAdmXOPnr0UhYRgdnlIknKHTp5fpAvQQctnSzqFRWkCf20Ww177d
+         QG9jeeQWMuTex/IwaFDMA8vXlH6fpJPO6Zn2dpmhMfbdqmxsLU2UIGO2NDOzTGYWiDw7
+         ywIPFwnvUTjEHuZeccmcjrjEkLsXSYquHahbHd6ZdjnzqEP2RHdSMNMWgiY9L8TVZ0lC
+         G4aVTSqjJ5NrWtnVCJTDf1mbR/bEFK3aai4gwzFQmPA34Ikuzxs8i6IqNfr5Nxc5N0yO
+         /Hq8+LGyQI4XHPCqHbrNX4k2UTVR4h1zk7vD27aNaHUnKMeOkCqJba/XQtzAGJZToHzN
+         Aj7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687424115; x=1690016115;
+        d=1e100.net; s=20221208; t=1687424123; x=1690016123;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9Gb8UpD3lZt4bh5cbhFKOyQevww2sfofkVlmbPNwxg8=;
-        b=Z54HKfeM29tsZUn82w08NU37VfZObAozi54SvROjVuDdYiaEZr/rWCS2+PxLZKhh3w
-         JBZ1HsvDOcTWk2UsfVmosYo4FfPozvNtuIKzFee1GROM605Z/IY/UjMBq61+CoJP2+MH
-         6podUPlJR3mLIUofR7EXyDBZzlJu6wUv4I+vDG/p4OXVTCDWBZxPYfy9p0UjZ0UerPB9
-         MezEP7sp6ASKelRuakxgqW4JMvQzHkWOcu0QxGBH64INd0na+sXmVxVHZnvSOxk42SnC
-         8w/nHcu4ttrxL0SRZvGBxnGIOWExCIS/EKuu/LCUdDw5AFn/gtB9k93UIKp5bBuvtGE5
-         Kxxg==
-X-Gm-Message-State: AC+VfDyem6tCPts4YD8suVyfTFFVMrYbZJJCdeGoPEfWWuNLA2ZWWzSK
-        oO6ig6Liw1I4KFZc475Y2vFO3Q==
-X-Google-Smtp-Source: ACHHUZ4eMYIbb4I7cyZSyRLa7A39+u7jKZFqr72/TYsRg3oKUy2dca/PQ8JGq6DHBe5p8nrFI+JLcw==
-X-Received: by 2002:a17:903:2451:b0:1b0:34c6:3bf2 with SMTP id l17-20020a170903245100b001b034c63bf2mr21539426pls.5.1687424114850;
-        Thu, 22 Jun 2023 01:55:14 -0700 (PDT)
+        bh=u/vExFBLW3qTniAw4XeP9KQ69i9zow/4wwrpInqlwjM=;
+        b=FjS5Penydj0+5Fb7TtIIjgJxc4i3uci6srWLc00K62ntUwj4s7oTZag0lsCL4N6B+z
+         nSNPGml+xOTUpk/jeikrO+eai8ldTAM/spw1eHQBtiPzsqhxT5q3FYswyO6k43QD2Fmi
+         G60VomULawu6iKbC9VhrOAfPDyR/lDCi1z+ZiPLDmzdyuFrxrf6OtGX24jT+2azH9ImC
+         YtBNUZO+JZMK/xR5aKY4m8BqEmjoTYkGQgA78kFfNkj4+t7bqVPH1QfYmM31kj4AHXkK
+         WzEpOol3/fVzGvR3UZZgc5zZabd8R7itN9RxNCrsQfdaGAQGSxr33dlwBw8U8PEeYyO+
+         LMow==
+X-Gm-Message-State: AC+VfDw3ekPlayu6YDalWq8ocAw/uup/hnggCfOFZT1QZfp8NRG5ECXy
+        A6m4lKYBZ3mFAhWypQxgb9AEpA==
+X-Google-Smtp-Source: ACHHUZ4R6XsCch8DMbBn2ilzIIAPskFMWcDdECndDXpbpwroXAZTFBoXbn8TaLTiXdt1Xz94/St+OA==
+X-Received: by 2002:a17:902:dac6:b0:1a1:956d:2281 with SMTP id q6-20020a170902dac600b001a1956d2281mr22035085plx.3.1687424123198;
+        Thu, 22 Jun 2023 01:55:23 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([139.177.225.254])
-        by smtp.gmail.com with ESMTPSA id h2-20020a170902f7c200b001b549fce345sm4806971plw.230.2023.06.22.01.55.07
+        by smtp.gmail.com with ESMTPSA id h2-20020a170902f7c200b001b549fce345sm4806971plw.230.2023.06.22.01.55.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jun 2023 01:55:14 -0700 (PDT)
+        Thu, 22 Jun 2023 01:55:22 -0700 (PDT)
 From:   Qi Zheng <zhengqi.arch@bytedance.com>
 To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
         vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
@@ -61,9 +61,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
         linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-btrfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH 09/29] bcache: dynamically allocate the md-bcache shrinker
-Date:   Thu, 22 Jun 2023 16:53:15 +0800
-Message-Id: <20230622085335.77010-10-zhengqi.arch@bytedance.com>
+Subject: [PATCH 10/29] vmw_balloon: dynamically allocate the vmw-balloon shrinker
+Date:   Thu, 22 Jun 2023 16:53:16 +0800
+Message-Id: <20230622085335.77010-11-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230622085335.77010-1-zhengqi.arch@bytedance.com>
 References: <20230622085335.77010-1-zhengqi.arch@bytedance.com>
@@ -80,102 +80,61 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 In preparation for implementing lockless slab shrink,
-we need to dynamically allocate the md-bcache shrinker,
+we need to dynamically allocate the vmw-balloon shrinker,
 so that it can be freed asynchronously using kfree_rcu().
 Then it doesn't need to wait for RCU read-side critical
-section when releasing the struct cache_set.
+section when releasing the struct vmballoon.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 ---
- drivers/md/bcache/bcache.h |  2 +-
- drivers/md/bcache/btree.c  | 23 ++++++++++++++---------
- drivers/md/bcache/sysfs.c  |  2 +-
- 3 files changed, 16 insertions(+), 11 deletions(-)
+ drivers/misc/vmw_balloon.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/md/bcache/bcache.h b/drivers/md/bcache/bcache.h
-index 700dc5588d5f..53c73b372e7a 100644
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -541,7 +541,7 @@ struct cache_set {
- 	struct bio_set		bio_split;
+diff --git a/drivers/misc/vmw_balloon.c b/drivers/misc/vmw_balloon.c
+index 9ce9b9e0e9b6..2f86f666b476 100644
+--- a/drivers/misc/vmw_balloon.c
++++ b/drivers/misc/vmw_balloon.c
+@@ -380,7 +380,7 @@ struct vmballoon {
+ 	/**
+ 	 * @shrinker: shrinker interface that is used to avoid over-inflation.
+ 	 */
+-	struct shrinker shrinker;
++	struct shrinker *shrinker;
  
- 	/* For the btree cache */
--	struct shrinker		shrink;
-+	struct shrinker		*shrink;
- 
- 	/* For the btree cache and anything allocation related */
- 	struct mutex		bucket_lock;
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 569f48958bde..1131ae91f62a 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -667,7 +667,7 @@ static int mca_reap(struct btree *b, unsigned int min_order, bool flush)
- static unsigned long bch_mca_scan(struct shrinker *shrink,
- 				  struct shrink_control *sc)
+ 	/**
+ 	 * @shrinker_registered: whether the shrinker was registered.
+@@ -1569,7 +1569,7 @@ static unsigned long vmballoon_shrinker_count(struct shrinker *shrinker,
+ static void vmballoon_unregister_shrinker(struct vmballoon *b)
  {
--	struct cache_set *c = container_of(shrink, struct cache_set, shrink);
-+	struct cache_set *c = shrink->private_data;
- 	struct btree *b, *t;
- 	unsigned long i, nr = sc->nr_to_scan;
- 	unsigned long freed = 0;
-@@ -734,7 +734,7 @@ static unsigned long bch_mca_scan(struct shrinker *shrink,
- static unsigned long bch_mca_count(struct shrinker *shrink,
- 				   struct shrink_control *sc)
- {
--	struct cache_set *c = container_of(shrink, struct cache_set, shrink);
-+	struct cache_set *c = shrink->private_data;
- 
- 	if (c->shrinker_disabled)
- 		return 0;
-@@ -752,8 +752,8 @@ void bch_btree_cache_free(struct cache_set *c)
- 
- 	closure_init_stack(&cl);
- 
--	if (c->shrink.list.next)
--		unregister_shrinker(&c->shrink);
-+	if (c->shrink->list.next)
-+		unregister_and_free_shrinker(c->shrink);
- 
- 	mutex_lock(&c->bucket_lock);
- 
-@@ -828,14 +828,19 @@ int bch_btree_cache_alloc(struct cache_set *c)
- 		c->verify_data = NULL;
- #endif
- 
--	c->shrink.count_objects = bch_mca_count;
--	c->shrink.scan_objects = bch_mca_scan;
--	c->shrink.seeks = 4;
--	c->shrink.batch = c->btree_pages * 2;
-+	c->shrink = shrinker_alloc_and_init(bch_mca_count, bch_mca_scan,
-+					    c->btree_pages * 2, 4, 0, c);
-+	if (!c->shrink) {
-+		pr_warn("bcache: %s: could not allocate shrinker\n",
-+				__func__);
-+		return -ENOMEM;
-+	}
- 
--	if (register_shrinker(&c->shrink, "md-bcache:%pU", c->set_uuid))
-+	if (register_shrinker(c->shrink, "md-bcache:%pU", c->set_uuid)) {
- 		pr_warn("bcache: %s: could not register shrinker\n",
- 				__func__);
-+		shrinker_free(c->shrink);
-+	}
- 
- 	return 0;
+ 	if (b->shrinker_registered)
+-		unregister_shrinker(&b->shrinker);
++		unregister_and_free_shrinker(b->shrinker);
+ 	b->shrinker_registered = false;
  }
-diff --git a/drivers/md/bcache/sysfs.c b/drivers/md/bcache/sysfs.c
-index c6f677059214..771577581f52 100644
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -866,7 +866,7 @@ STORE(__bch_cache_set)
  
- 		sc.gfp_mask = GFP_KERNEL;
- 		sc.nr_to_scan = strtoul_or_return(buf);
--		c->shrink.scan_objects(&c->shrink, &sc);
-+		c->shrink->scan_objects(c->shrink, &sc);
- 	}
+@@ -1581,14 +1581,18 @@ static int vmballoon_register_shrinker(struct vmballoon *b)
+ 	if (!vmwballoon_shrinker_enable)
+ 		return 0;
  
- 	sysfs_strtoul_clamp(congested_read_threshold_us,
+-	b->shrinker.scan_objects = vmballoon_shrinker_scan;
+-	b->shrinker.count_objects = vmballoon_shrinker_count;
+-	b->shrinker.seeks = DEFAULT_SEEKS;
++	b->shrinker = shrinker_alloc_and_init(vmballoon_shrinker_count,
++					      vmballoon_shrinker_scan,
++					      0, DEFAULT_SEEKS, 0, b);
++	if (!b->shrinker)
++		return -ENOMEM;
+ 
+-	r = register_shrinker(&b->shrinker, "vmw-balloon");
++	r = register_shrinker(b->shrinker, "vmw-balloon");
+ 
+ 	if (r == 0)
+ 		b->shrinker_registered = true;
++	else
++		shrinker_free(b->shrinker);
+ 
+ 	return r;
+ }
 -- 
 2.30.2
 
