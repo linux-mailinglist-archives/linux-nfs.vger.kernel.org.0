@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 202BD739BDE
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jun 2023 11:08:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98ADA739BF7
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Jun 2023 11:08:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231975AbjFVJG0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Jun 2023 05:06:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48766 "EHLO
+        id S232048AbjFVJGX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Jun 2023 05:06:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232063AbjFVJEs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Jun 2023 05:04:48 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 655A049E7
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:58:09 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b693afe799so2466755ad.1
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:58:09 -0700 (PDT)
+        with ESMTP id S232317AbjFVJF1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Jun 2023 05:05:27 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91DB74C06
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:58:21 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1b5079b8cb3so12593665ad.1
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Jun 2023 01:58:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1687424252; x=1690016252;
+        d=bytedance.com; s=google; t=1687424260; x=1690016260;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YpqAnPCFjvBxCUJyQNRij7IdVYJH6Jib7EICYqtSs4Q=;
-        b=I9WP6mv1rDRCGtgaLzA9lhBXeFPAHaj8y0iyY2DOjVEWCsT2F7nfNJVwyIikm+kMao
-         zO6QJGdxbeP+Xd2yLUuD3B5OfZQRm3B4q5mm2BLvCFNnuFgYbDreBXTpY911jw5PjLjw
-         5qBcX7//daeu9fw2bM5v9uWJQ3Yj963JAAdMROcF9Ug6KJW+BwPKjtr4qnEx+svXyNj4
-         WQtBJXjBe1rX51UFB2Mb+BbnprNNOvKWLYHk9IXF69UQEETABYtrhl0ZHyku4x/+376s
-         ovmIBUSgYXrVJUG8L2WcJE6QBBiCJCq44tzgQbbUxJYU3EpXiLR3t2TzR3wvfdUTA7wG
-         r7SA==
+        bh=aRQUwtIbFrjRbKaWDWITc6Upds+hXxxlwcQqvFPvJow=;
+        b=Kv6dWh2IIchnBu9RbCVLsx8HZLugRgYdolMOnFdVv/Mze68pcgFvadMFaompRsV/Ii
+         Vr4ahAwXirWdfwADAjPFAtSTivwacduawKzyeKPVnp7cESQMTGYfaqAI7425tQvAdQ85
+         8rLDDpZCwcAbH67+6k+hMmW8Fi1etqH6LYFHkuQfbD+ESFiwPmeSocm5kXqI50kDiSjf
+         PCd9vDumWTECSSKSpOEWhL8aCyPGbcSxO0SaB85LOV7uPD9a5LVIfvAATYV0qgfKCSQQ
+         J+7inf8lDO5dvyUSQTFKKOcNdRaAbUMX2WbzVCHQayCH8tZA09PfVWiof+vKchWmVnWN
+         0e0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687424252; x=1690016252;
+        d=1e100.net; s=20221208; t=1687424260; x=1690016260;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YpqAnPCFjvBxCUJyQNRij7IdVYJH6Jib7EICYqtSs4Q=;
-        b=JDkxQ8j7dsfGMpvKPZlQCRiwiih/SfSgZjGhy5XGtaN2Zmkt0tw4ZwtHr/BKTXzilo
-         P7fN+AqoNR8Vn/RGzvg3HqX79tQTaIVdD/VNNvtG329Vq2SHvwuIM61QvG1/tDYuUHKr
-         QKsDPPOFgxujF+EQdpOwGPqDrmwQLkikX2bmEcI5QbXAVgSC2ju0VFl/T3bo36wEpqBP
-         l+UFOkOR952GkFOboHJqWgxsisk8Syl9QrIkhQkFHqyAyJfEB1MoZSk+oEstkmvOLmth
-         ML8NaB4WyW8Bq1aAQl4STH9MJyIN52SnlttLd+DlckpuAYvHfIbZ6xp2lM8/ewj0KgWt
-         OTiA==
-X-Gm-Message-State: AC+VfDwxU2yS+89DSApDSjhlPklK5qf/ZOdz6J09UQQWXayKqNjgWQjc
-        ncW56fYAJPETXvPrzEHCXxuylg==
-X-Google-Smtp-Source: ACHHUZ6FoF5W+f0N2ZUpFBUVBh1vs3Mj6G9dcM80ve0PhcTP+4niqZQRBrFmYJGvwbhs9MGB3E6MuA==
-X-Received: by 2002:a17:903:32c4:b0:1b3:e352:6d88 with SMTP id i4-20020a17090332c400b001b3e3526d88mr21673124plr.6.1687424251794;
-        Thu, 22 Jun 2023 01:57:31 -0700 (PDT)
+        bh=aRQUwtIbFrjRbKaWDWITc6Upds+hXxxlwcQqvFPvJow=;
+        b=HZnw9gEUXLDmb8MEKt7fY+jgFet9Le/UqEDxqr6cT0n5MG/Ac6z2hhb4ey2R0EdUap
+         ArmcRsq+L6QQwmRQdI9selcO1D7RdN0tCldeBPjDbW1dqjKdRQQpyZf5wePM4Ak2ldua
+         ctdUdY7icxOmLk4RzS9nSyEz49CrQHCoJReS3BxDglN0e9mLIT1l/qCWebIZd5mkX64v
+         0V1qni21a8Une/aPgXtXGPZ7Ms+DEGq4AKqkofS6X+44Q0/BpMQS42UU2JH+0Ull6IPp
+         ki+zP9TWN83PlgaB8Hw308HziHL/TGwBayM95WMLiQX3RMTbsNxKdWi2MctMHRhKVo+x
+         Jzgw==
+X-Gm-Message-State: AC+VfDzZqmjux2ZuJBAcCraDlYsY8S8shhm1hXf/KoMB52j01DTD5S3T
+        KjhChqcnZ+rSzBizlyrQRVWPtQ==
+X-Google-Smtp-Source: ACHHUZ4KKZ8AXrupsFYw18EsJWvGfL6qm7cyYV/rSPTKOdYWRQ8IhOkLOim7I9s7W96jDohmbJS9Lg==
+X-Received: by 2002:a17:903:41d2:b0:1a6:cf4b:4d7d with SMTP id u18-20020a17090341d200b001a6cf4b4d7dmr21650808ple.2.1687424260203;
+        Thu, 22 Jun 2023 01:57:40 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([139.177.225.254])
-        by smtp.gmail.com with ESMTPSA id h2-20020a170902f7c200b001b549fce345sm4806971plw.230.2023.06.22.01.57.24
+        by smtp.gmail.com with ESMTPSA id h2-20020a170902f7c200b001b549fce345sm4806971plw.230.2023.06.22.01.57.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jun 2023 01:57:31 -0700 (PDT)
+        Thu, 22 Jun 2023 01:57:39 -0700 (PDT)
 From:   Qi Zheng <zhengqi.arch@bytedance.com>
 To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
         vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
@@ -61,9 +61,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
         linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-btrfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>
-Subject: [PATCH 26/29] mm: shrinker: make count and scan in shrinker debugfs lockless
-Date:   Thu, 22 Jun 2023 16:53:32 +0800
-Message-Id: <20230622085335.77010-27-zhengqi.arch@bytedance.com>
+Subject: [PATCH 27/29] mm: vmscan: hold write lock to reparent shrinker nr_deferred
+Date:   Thu, 22 Jun 2023 16:53:33 +0800
+Message-Id: <20230622085335.77010-28-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230622085335.77010-1-zhengqi.arch@bytedance.com>
 References: <20230622085335.77010-1-zhengqi.arch@bytedance.com>
@@ -79,62 +79,41 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Like global and memcg slab shrink, also make count and scan
-operations in memory shrinker debugfs lockless.
+For now, reparent_shrinker_deferred() is the only holder
+of read lock of shrinker_rwsem. And it already holds the
+global cgroup_mutex, so it will not be called in parallel.
 
-The debugfs_remove_recursive() will wait for debugfs_file_put()
-to return, so there is no need to call rcu_read_lock() before
-calling shrinker_try_get().
+Therefore, in order to convert shrinker_rwsem to shrinker_mutex
+later, here we change to hold the write lock of shrinker_rwsem
+to reparent.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 ---
- mm/shrinker_debug.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ mm/vmscan.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/shrinker_debug.c b/mm/shrinker_debug.c
-index 3ab53fad8876..c18fa9b6b7f0 100644
---- a/mm/shrinker_debug.c
-+++ b/mm/shrinker_debug.c
-@@ -55,8 +55,8 @@ static int shrinker_debugfs_count_show(struct seq_file *m, void *v)
- 	if (!count_per_node)
- 		return -ENOMEM;
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 357a1f2ad690..0711b63e68d9 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -433,7 +433,7 @@ void reparent_shrinker_deferred(struct mem_cgroup *memcg)
+ 		parent = root_mem_cgroup;
  
--	ret = down_read_killable(&shrinker_rwsem);
--	if (ret) {
-+	ret = shrinker_try_get(shrinker);
-+	if (!ret) {
- 		kfree(count_per_node);
- 		return ret;
+ 	/* Prevent from concurrent shrinker_info expand */
+-	down_read(&shrinker_rwsem);
++	down_write(&shrinker_rwsem);
+ 	for_each_node(nid) {
+ 		child_info = shrinker_info_protected(memcg, nid);
+ 		parent_info = shrinker_info_protected(parent, nid);
+@@ -442,7 +442,7 @@ void reparent_shrinker_deferred(struct mem_cgroup *memcg)
+ 			atomic_long_add(nr, &parent_info->nr_deferred[i]);
+ 		}
  	}
-@@ -92,7 +92,7 @@ static int shrinker_debugfs_count_show(struct seq_file *m, void *v)
- 	} while ((memcg = mem_cgroup_iter(NULL, memcg, NULL)) != NULL);
- 
- 	rcu_read_unlock();
 -	up_read(&shrinker_rwsem);
-+	shrinker_put(shrinker);
++	up_write(&shrinker_rwsem);
+ }
  
- 	kfree(count_per_node);
- 	return ret;
-@@ -146,8 +146,8 @@ static ssize_t shrinker_debugfs_scan_write(struct file *file,
- 		return -EINVAL;
- 	}
- 
--	ret = down_read_killable(&shrinker_rwsem);
--	if (ret) {
-+	ret = shrinker_try_get(shrinker);
-+	if (!ret) {
- 		mem_cgroup_put(memcg);
- 		return ret;
- 	}
-@@ -159,7 +159,7 @@ static ssize_t shrinker_debugfs_scan_write(struct file *file,
- 
- 	shrinker->scan_objects(shrinker, &sc);
- 
--	up_read(&shrinker_rwsem);
-+	shrinker_put(shrinker);
- 	mem_cgroup_put(memcg);
- 
- 	return size;
+ static bool cgroup_reclaim(struct scan_control *sc)
 -- 
 2.30.2
 
