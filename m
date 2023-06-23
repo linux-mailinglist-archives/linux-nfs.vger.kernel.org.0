@@ -2,134 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7B8073C211
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jun 2023 23:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7AC573C336
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jun 2023 23:49:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232777AbjFWVJn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Jun 2023 17:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47078 "EHLO
+        id S231817AbjFWVsf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Jun 2023 17:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39916 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232547AbjFWVJm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Jun 2023 17:09:42 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926E483;
-        Fri, 23 Jun 2023 14:09:40 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-40082859ef7so10591971cf.2;
-        Fri, 23 Jun 2023 14:09:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687554579; x=1690146579;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=0IRfzdsPREExmTFRCdstQ25nFnB2H002ePSFXfYff2I=;
-        b=W43a0E6kfDK1mqgqp7b9fvpxG8De5ehOat9sWfgRLFyoZfj/LCb+GYYfoDfs0nipky
-         rACeeU+YWgzND33s9WpepQzJpiL8a0d9SILFT384eXA4iqN4aGFeir5dhc0JWKF7s5H7
-         CxK1ks1aq7Mrzy81wPDX89rczK8IQKpIAgkslfEHADrU4td/Oui3HMu8CJzMV0kcQsOf
-         S9BhKqTJPuVhrCtSyG8Pq+dbjDD4LGef3wseoG1vRv0nNdmunelzmco4VlHO1rE31Zo+
-         m4SN6BCozypW/XDRZQphvapVmesKmd85ZZO/tEowFDxmALnj+qGgEYQuLW69tKCj99Ri
-         PMSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687554579; x=1690146579;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0IRfzdsPREExmTFRCdstQ25nFnB2H002ePSFXfYff2I=;
-        b=QQdWlbnbcHgNdFIvIOmvsdEf55BNqyEMJLUVHz2M7bTWaUhzrc1RbCrfTknAfUiI1W
-         4j8r3BWfGiOyUnon/EOIyRCJqogfhKzX356HxU3itkI3UrnZEU1NSPy5WATfGKDXsgyq
-         WGyYB813/pYJM4+Y6mgIQIntx1FUcAUWFoeVrVTb7TaKWVvAdXxk9LiIMloMyha+VA8H
-         IXb00d6KY0lesfAa/iEV4SPBIEVpPD3xggo6jL6c9TpoEyYcuKQekF2swcI1gwvzDbWr
-         3VOGFqfEGIrc702sgdnZz29oJeahVvN3voWOmVmIjSlkQqDKXjOrZF2KCRhrLvtrB210
-         3sfA==
-X-Gm-Message-State: AC+VfDw3C29CMJjU0wzznz9vhiorM6losF1y1G1gjH+6wnVf8lns09q+
-        4v5MrvynJb0mJ0R87E1DiAQTHUJHM0ZhZQ==
-X-Google-Smtp-Source: ACHHUZ5X+OYGUe1o3a+gwaYBoQylve9a03x/VB9MreD23PK1dfkfJcMiR4yd72tlJCEGngrhEN8aPQ==
-X-Received: by 2002:ac8:5756:0:b0:3f6:c392:93ee with SMTP id 22-20020ac85756000000b003f6c39293eemr30127529qtx.42.1687554579482;
-        Fri, 23 Jun 2023 14:09:39 -0700 (PDT)
-Received: from tachyon.tail92c87.ts.net ([192.159.180.233])
-        by smtp.gmail.com with ESMTPSA id bp20-20020a05622a1b9400b003ff251b17c8sm5256522qtb.10.2023.06.23.14.09.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 14:09:39 -0700 (PDT)
-Sender: Tavian Barnes <tavianator@gmail.com>
-From:   tavianator@tavianator.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Tavian Barnes <tavianator@tavianator.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
+        with ESMTP id S231750AbjFWVsb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Jun 2023 17:48:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA52B26BD;
+        Fri, 23 Jun 2023 14:48:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5CA1960A38;
+        Fri, 23 Jun 2023 21:48:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F706C433C8;
+        Fri, 23 Jun 2023 21:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687556901;
+        bh=YyV6B6bNatDDFo2tW2JAoKmXfyIqLGPJxf2ibpnit1s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jYst5Xp7ILlkRwqwQWL4jvYYvRxPM2aJb0macvvkZ4++vwx+tPHjr0dzZuUki8e2g
+         zHP9VqmWZwUcjwZd6wNhKnuI7h1YmWes1WS3aQDTIePXtQPWfnXiRQXaPm9TPrQGpa
+         44KOsxybvdjFy6UTSOAdqz8X593r9hkZ3Inay+Ptm+mR6ZVqK5+y1hBA0XZYDV/5TK
+         3CH975FR3ieOzoR1/g3Hyp0Gs47ImHYoMARFc5aC65Qd1XSlt0IR2v+C6XJ6TECMst
+         5aNUlr5Nhz51r7ffB8+XukOtJlJjFoYpZXU8EF0UhR8KYKQuDHvNZw2Z6ZjuQSbDrI
+         xAivVG3cX2taA==
+Date:   Fri, 23 Jun 2023 17:48:19 -0400
+From:   Chuck Lever <cel@kernel.org>
+To:     tavianator@tavianator.com
+Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>,
         Ondrej Valousek <ondrej.valousek.xm@renesas.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] fs/nfsd: Fix creation time serialization order
-Date:   Fri, 23 Jun 2023 17:09:06 -0400
-Message-ID: <4154eb6503988c2096f5d30af26d06863fb5d973.1687554467.git.tavianator@tavianator.com>
-X-Mailer: git-send-email 2.41.0
+Subject: Re: [PATCH] fs/nfsd: Fix creation time serialization order
+Message-ID: <ZJYTI5ws3jNhDS25@manet.1015granger.net>
+References: <4154eb6503988c2096f5d30af26d06863fb5d973.1687554467.git.tavianator@tavianator.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4154eb6503988c2096f5d30af26d06863fb5d973.1687554467.git.tavianator@tavianator.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Tavian Barnes <tavianator@tavianator.com>
+On Fri, Jun 23, 2023 at 05:09:06PM -0400, tavianator@tavianator.com wrote:
+> From: Tavian Barnes <tavianator@tavianator.com>
+> 
+> In nfsd4_encode_fattr(), TIME_CREATE was being written out after all
+> other times.  However, they should be written out in an order that
+> matches the bit flags in bmval1, which in this case are
+> 
+>     #define FATTR4_WORD1_TIME_ACCESS        (1UL << 15)
+>     #define FATTR4_WORD1_TIME_CREATE        (1UL << 18)
+>     #define FATTR4_WORD1_TIME_DELTA         (1UL << 19)
+>     #define FATTR4_WORD1_TIME_METADATA      (1UL << 20)
+>     #define FATTR4_WORD1_TIME_MODIFY        (1UL << 21)
+> 
+> so TIME_CREATE should come second.
+> 
+> I noticed this on a FreeBSD NFSv4.2 client, which supports creation
+> times.  On this client, file times were weirdly permuted.  With this
+> patch applied on the server, times looked normal on the client.
+> 
+> Fixes: e377a3e698fb ("nfsd: Add support for the birth time attribute")
+> Link: https://unix.stackexchange.com/q/749605/56202
+> Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
 
-In nfsd4_encode_fattr(), TIME_CREATE was being written out after all
-other times.  However, they should be written out in an order that
-matches the bit flags in bmval1, which in this case are
+I'm not especially familiar with this area of the protocol, but this
+looks correct at first glance. I've applied this to nfsd-fixes for
+v6.5.
 
-    #define FATTR4_WORD1_TIME_ACCESS        (1UL << 15)
-    #define FATTR4_WORD1_TIME_CREATE        (1UL << 18)
-    #define FATTR4_WORD1_TIME_DELTA         (1UL << 19)
-    #define FATTR4_WORD1_TIME_METADATA      (1UL << 20)
-    #define FATTR4_WORD1_TIME_MODIFY        (1UL << 21)
+Out of interest, what type of filesystem does your server export?
 
-so TIME_CREATE should come second.
 
-I noticed this on a FreeBSD NFSv4.2 client, which supports creation
-times.  On this client, file times were weirdly permuted.  With this
-patch applied on the server, times looked normal on the client.
-
-Fixes: e377a3e698fb ("nfsd: Add support for the birth time attribute")
-Link: https://unix.stackexchange.com/q/749605/56202
-Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
----
- fs/nfsd/nfs4xdr.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 76db2fe29624..3037c5b0623e 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3354,6 +3354,13 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		p = xdr_encode_hyper(p, (s64)stat.atime.tv_sec);
- 		*p++ = cpu_to_be32(stat.atime.tv_nsec);
- 	}
-+	if (bmval1 & FATTR4_WORD1_TIME_CREATE) {
-+		p = xdr_reserve_space(xdr, 12);
-+		if (!p)
-+			goto out_resource;
-+		p = xdr_encode_hyper(p, (s64)stat.btime.tv_sec);
-+		*p++ = cpu_to_be32(stat.btime.tv_nsec);
-+	}
- 	if (bmval1 & FATTR4_WORD1_TIME_DELTA) {
- 		p = xdr_reserve_space(xdr, 12);
- 		if (!p)
-@@ -3374,13 +3381,6 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		p = xdr_encode_hyper(p, (s64)stat.mtime.tv_sec);
- 		*p++ = cpu_to_be32(stat.mtime.tv_nsec);
- 	}
--	if (bmval1 & FATTR4_WORD1_TIME_CREATE) {
--		p = xdr_reserve_space(xdr, 12);
--		if (!p)
--			goto out_resource;
--		p = xdr_encode_hyper(p, (s64)stat.btime.tv_sec);
--		*p++ = cpu_to_be32(stat.btime.tv_nsec);
--	}
- 	if (bmval1 & FATTR4_WORD1_MOUNTED_ON_FILEID) {
- 		u64 ino = stat.ino;
- 
--- 
-2.41.0
-
+> ---
+>  fs/nfsd/nfs4xdr.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 76db2fe29624..3037c5b0623e 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -3354,6 +3354,13 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>  		p = xdr_encode_hyper(p, (s64)stat.atime.tv_sec);
+>  		*p++ = cpu_to_be32(stat.atime.tv_nsec);
+>  	}
+> +	if (bmval1 & FATTR4_WORD1_TIME_CREATE) {
+> +		p = xdr_reserve_space(xdr, 12);
+> +		if (!p)
+> +			goto out_resource;
+> +		p = xdr_encode_hyper(p, (s64)stat.btime.tv_sec);
+> +		*p++ = cpu_to_be32(stat.btime.tv_nsec);
+> +	}
+>  	if (bmval1 & FATTR4_WORD1_TIME_DELTA) {
+>  		p = xdr_reserve_space(xdr, 12);
+>  		if (!p)
+> @@ -3374,13 +3381,6 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+>  		p = xdr_encode_hyper(p, (s64)stat.mtime.tv_sec);
+>  		*p++ = cpu_to_be32(stat.mtime.tv_nsec);
+>  	}
+> -	if (bmval1 & FATTR4_WORD1_TIME_CREATE) {
+> -		p = xdr_reserve_space(xdr, 12);
+> -		if (!p)
+> -			goto out_resource;
+> -		p = xdr_encode_hyper(p, (s64)stat.btime.tv_sec);
+> -		*p++ = cpu_to_be32(stat.btime.tv_nsec);
+> -	}
+>  	if (bmval1 & FATTR4_WORD1_MOUNTED_ON_FILEID) {
+>  		u64 ino = stat.ino;
+>  
+> -- 
+> 2.41.0
+> 
