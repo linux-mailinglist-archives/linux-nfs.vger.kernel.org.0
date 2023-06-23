@@ -2,61 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C9CE73C354
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Jun 2023 23:51:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 968A773C3C2
+	for <lists+linux-nfs@lfdr.de>; Sat, 24 Jun 2023 00:06:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232881AbjFWVu7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Jun 2023 17:50:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40326 "EHLO
+        id S231881AbjFWWGK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Jun 2023 18:06:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232753AbjFWVtk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Jun 2023 17:49:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BFBB26A5;
-        Fri, 23 Jun 2023 14:49:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E89EC60AF5;
-        Fri, 23 Jun 2023 21:49:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1671C433C8;
-        Fri, 23 Jun 2023 21:49:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687556978;
-        bh=bPOn8vNljb4Kts16IvF12pTxf9JAyk3Q+pkgmofKYTI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l4LxiaK6FHJV+LaN+k19qJLvpsW7q6peMpRqQDAloqrBAb7yaQiFzdxyJRQOlUbhL
-         XBecHa58jNv7ky9A034GYSD2hm6ptEDQNutUwI9YecVIS3WmPXE3L9OmXsZUz8kwS8
-         TTwQFFfOfOtb8MAgVm196q6ZTVuewtnjos3fSTZ9GEVB31g3k5MJS42AVjc5SzUh/V
-         FyhyE7GMMMzgjXlbaXwq0dZEfCVwkgehGZA7UY2GwQKM2vvvfQX8LDHnVUTOmbhZdZ
-         3Ac0f71z1GBnxhPGwb/beOuZzWJU5QKmGVyY8UMScHTrLfTWh6qN+V7ajaXz+LKLHt
-         /jQ/IQ+1PydAw==
-Date:   Fri, 23 Jun 2023 17:49:34 -0400
-From:   Chuck Lever <cel@kernel.org>
-To:     Qi Zheng <zhengqi.arch@bytedance.com>
-Cc:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
-        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
-        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
-        linux-bcache@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-raid@vger.kernel.org, linux-mm@kvack.org,
-        dm-devel@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 15/29] NFSD: dynamically allocate the nfsd-client shrinker
-Message-ID: <ZJYTbnmRKF7j3CHW@manet.1015granger.net>
-References: <20230622085335.77010-1-zhengqi.arch@bytedance.com>
- <20230622085335.77010-16-zhengqi.arch@bytedance.com>
+        with ESMTP id S231622AbjFWWGK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Jun 2023 18:06:10 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED7072705;
+        Fri, 23 Jun 2023 15:06:01 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-6300510605bso9567476d6.0;
+        Fri, 23 Jun 2023 15:06:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tavianator.com; s=google; t=1687557961; x=1690149961;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=laQGVXq6Eq5vx8huIZhgQpbdSACn2501LJRQT7hKbn4=;
+        b=nWK/FT/Zwtll8ccFigrw8j6mxM/K2tAd3Ut+FCmFGIDMLrdFCi3F9p+noxHJVxJOoJ
+         CKCXkb28R+v6xLHcjO/SGcE4TqnhSH83uz9GvmUSGY2yk+5FLQBqpBKCm7rC1GhdnOmB
+         Km9jw57UwFSdwh4zRSoXSEjd0egNTcU5nLCs8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687557961; x=1690149961;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=laQGVXq6Eq5vx8huIZhgQpbdSACn2501LJRQT7hKbn4=;
+        b=eRoOMYuzxJ2RmhffG452tPrnE4cNxGL6lU15J43icQOXRHFntwKVAZJDoGtI+ftIA7
+         zG6Efhho2PbE8e6HAOzh0iBMmCWgUYgzztoF18sqF0pHEz8OpWTXwPtviCOxXEoz0Nik
+         6rJQOWQLzC1Fjcq6m+eVipb5cqbaimK4k80C6VXs3/Gw0RE2YcrDapKRN+19MYCJ7R1x
+         21oo3ZnHYYwGY2bC5Q4+CGeove0e58v0p+SfqFEgal4tmdlgPCk2vQI+8oV6Tmqf3m/l
+         VvbYD5pbkf1XzXoqdjAcIhBC+c6fkxtjynKUYH3YxMaD4RAKpDXYgrXZxQ/CPeYJpt4F
+         eXzQ==
+X-Gm-Message-State: AC+VfDw2BInEbpX/3HH+gS9xxw32y5bROGkNfDxxzVqcr3yhe5nEZug1
+        4Srv+V8uautx1ghnQUkwv13UlVrb535sj9EKP0XCdr/pXH0=
+X-Google-Smtp-Source: ACHHUZ4PiJ6AyhA8VaHNNIRK+KvOta/7CJyrtjL956v341EAkza3azElAiqbsziCHVErBxbuQgSIIyzddSbSbw5TtfA=
+X-Received: by 2002:a05:6214:2348:b0:626:3a5a:f8dc with SMTP id
+ hu8-20020a056214234800b006263a5af8dcmr30029214qvb.57.1687557960967; Fri, 23
+ Jun 2023 15:06:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230622085335.77010-16-zhengqi.arch@bytedance.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <4154eb6503988c2096f5d30af26d06863fb5d973.1687554467.git.tavianator@tavianator.com>
+ <ZJYTI5ws3jNhDS25@manet.1015granger.net>
+In-Reply-To: <ZJYTI5ws3jNhDS25@manet.1015granger.net>
+From:   Tavian Barnes <tavianator@tavianator.com>
+Date:   Fri, 23 Jun 2023 18:05:50 -0400
+Message-ID: <CABg4E-=-1Ppri=TpWuTCUDmn0ye3g4cQrxvC9m0DRUrnx0Hh4Q@mail.gmail.com>
+Subject: Re: [PATCH] fs/nfsd: Fix creation time serialization order
+To:     Chuck Lever <cel@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ondrej Valousek <ondrej.valousek.xm@renesas.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,86 +69,40 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 04:53:21PM +0800, Qi Zheng wrote:
-> In preparation for implementing lockless slab shrink,
-> we need to dynamically allocate the nfsd-client shrinker,
-> so that it can be freed asynchronously using kfree_rcu().
-> Then it doesn't need to wait for RCU read-side critical
-> section when releasing the struct nfsd_net.
-> 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+On Fri, Jun 23, 2023 at 5:48=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
+> On Fri, Jun 23, 2023 at 05:09:06PM -0400, tavianator@tavianator.com wrote=
+:
+> > From: Tavian Barnes <tavianator@tavianator.com>
+> >
+> > In nfsd4_encode_fattr(), TIME_CREATE was being written out after all
+> > other times.  However, they should be written out in an order that
+> > matches the bit flags in bmval1, which in this case are
+> >
+> >     #define FATTR4_WORD1_TIME_ACCESS        (1UL << 15)
+> >     #define FATTR4_WORD1_TIME_CREATE        (1UL << 18)
+> >     #define FATTR4_WORD1_TIME_DELTA         (1UL << 19)
+> >     #define FATTR4_WORD1_TIME_METADATA      (1UL << 20)
+> >     #define FATTR4_WORD1_TIME_MODIFY        (1UL << 21)
+> >
+> > so TIME_CREATE should come second.
+> >
+> > I noticed this on a FreeBSD NFSv4.2 client, which supports creation
+> > times.  On this client, file times were weirdly permuted.  With this
+> > patch applied on the server, times looked normal on the client.
+> >
+> > Fixes: e377a3e698fb ("nfsd: Add support for the birth time attribute")
+> > Link: https://unix.stackexchange.com/q/749605/56202
+> > Signed-off-by: Tavian Barnes <tavianator@tavianator.com>
+>
+> I'm not especially familiar with this area of the protocol, but this
+> looks correct at first glance. I've applied this to nfsd-fixes for
+> v6.5.
 
-For 15/29 and 16/29 of this series:
+Great, thanks!
 
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> Out of interest, what type of filesystem does your server export?
 
+It's a btrfs filesystem.
 
-> ---
->  fs/nfsd/netns.h     |  2 +-
->  fs/nfsd/nfs4state.c | 20 ++++++++++++--------
->  2 files changed, 13 insertions(+), 9 deletions(-)
-> 
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index ec49b200b797..f669444d5336 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -195,7 +195,7 @@ struct nfsd_net {
->  	int			nfs4_max_clients;
->  
->  	atomic_t		nfsd_courtesy_clients;
-> -	struct shrinker		nfsd_client_shrinker;
-> +	struct shrinker		*nfsd_client_shrinker;
->  	struct work_struct	nfsd_shrinker_work;
->  };
->  
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 6e61fa3acaf1..a06184270548 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -4388,8 +4388,7 @@ static unsigned long
->  nfsd4_state_shrinker_count(struct shrinker *shrink, struct shrink_control *sc)
->  {
->  	int count;
-> -	struct nfsd_net *nn = container_of(shrink,
-> -			struct nfsd_net, nfsd_client_shrinker);
-> +	struct nfsd_net *nn = shrink->private_data;
->  
->  	count = atomic_read(&nn->nfsd_courtesy_clients);
->  	if (!count)
-> @@ -8094,14 +8093,19 @@ static int nfs4_state_create_net(struct net *net)
->  	INIT_WORK(&nn->nfsd_shrinker_work, nfsd4_state_shrinker_worker);
->  	get_net(net);
->  
-> -	nn->nfsd_client_shrinker.scan_objects = nfsd4_state_shrinker_scan;
-> -	nn->nfsd_client_shrinker.count_objects = nfsd4_state_shrinker_count;
-> -	nn->nfsd_client_shrinker.seeks = DEFAULT_SEEKS;
-> -
-> -	if (register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client"))
-> +	nn->nfsd_client_shrinker = shrinker_alloc_and_init(nfsd4_state_shrinker_count,
-> +							   nfsd4_state_shrinker_scan,
-> +							   0, DEFAULT_SEEKS, 0,
-> +							   nn);
-> +	if (!nn->nfsd_client_shrinker)
->  		goto err_shrinker;
-> +
-> +	if (register_shrinker(nn->nfsd_client_shrinker, "nfsd-client"))
-> +		goto err_register;
->  	return 0;
->  
-> +err_register:
-> +	shrinker_free(nn->nfsd_client_shrinker);
->  err_shrinker:
->  	put_net(net);
->  	kfree(nn->sessionid_hashtbl);
-> @@ -8197,7 +8201,7 @@ nfs4_state_shutdown_net(struct net *net)
->  	struct list_head *pos, *next, reaplist;
->  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
->  
-> -	unregister_shrinker(&nn->nfsd_client_shrinker);
-> +	unregister_and_free_shrinker(nn->nfsd_client_shrinker);
->  	cancel_work(&nn->nfsd_shrinker_work);
->  	cancel_delayed_work_sync(&nn->laundromat_work);
->  	locks_end_grace(&nn->nfsd4_manager);
-> -- 
-> 2.30.2
-> 
+--=20
+Tavian Barnes
