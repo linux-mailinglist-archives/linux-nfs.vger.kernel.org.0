@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41C5F742C02
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jun 2023 20:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F805742C05
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jun 2023 20:43:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232819AbjF2SnB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Jun 2023 14:43:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57408 "EHLO
+        id S231668AbjF2SnO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Jun 2023 14:43:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbjF2SnA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 14:43:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD222681
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 11:42:59 -0700 (PDT)
+        with ESMTP id S232825AbjF2SnK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 14:43:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5C62681
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 11:43:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B94E7615E4
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:42:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABFAC433C8;
-        Thu, 29 Jun 2023 18:42:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3AA76615E8
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:43:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35468C433C0;
+        Thu, 29 Jun 2023 18:43:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688064178;
-        bh=LCNqZcxIVd1RO7ZlOOofBxJSB+d62egEMIvK6s5EX2c=;
+        s=k20201202; t=1688064184;
+        bh=gFNY8BUQgoiA7qVABypwdwxxB4umlPMej7xWlY7ZoMY=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hF3kYUTDZcMqcnqOWKC6JgSAhs8YpIZley9hZDcNmTONM3cS1U8TNhuSdMSYCRTch
-         HxsEEXxyiQuKwwH1lcxYyaJQ+Ch7n/33KSn1bGfZFwk+Ihgm0cnR8hekVOLgUPyVMN
-         N4MJOZ9YpHAvqwD8lqw7IjZY/yhTyilps8sox/E8EGPXgPi8Eb2RVa4/AdPEDwbslL
-         55TZzI/tjgdzLTW7hrd8WOqNlq3Ljk4s2CW/PkcgkjhUzIXczzt5kQ3dORIHDyPQ8O
-         TKArG337X72EcOv3CT78fKDzcXYKANuofwYZgkbSaXbEp6871YwSP95cABZke1FZHW
-         xT38mH1SmvYDA==
-Subject: [PATCH RFC 5/8] SUNRPC: Replace dprintk() call site in __svc_create()
+        b=d92mHh+81At5RXQ3+sBo43OUnsZz9R0A7TV2L9SFQMnTcC0ZNNKl7+p5O09HOdVRd
+         cY0lkseW9I6UfOAlYXS8ipdTWy8UinAGPh+1+wp0VNJU/tgmQxkQ6HtDGExLad8CAj
+         HkaMUorqyWUrAm2N+2LaJkCd0pI8kc0Dr7al6C9txJFfffYjBCHz42iHyfZTTJW3Zb
+         oo5SswhCl2j7LKQs6dsBXajkxFr8yjGbxDQQ6Bmn8XJ4Cu02N94OR5fbsWxN0FZguh
+         iqRExuNgW2VNvPRCObA4ntVGtPb9UA+olJv6h0NYAYevN3wUodyic4YAwgEC9Bb5kx
+         7mG7wJfWMA+nw==
+Subject: [PATCH RFC 6/8] SUNRPC: Replace sp_threads_all with an xarray
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>, lorenzo@kernel.org,
         neilb@suse.de, jlayton@redhat.com, david@fromorbit.com
-Date:   Thu, 29 Jun 2023 14:42:56 -0400
-Message-ID: <168806417679.1034990.17820560466387975643.stgit@morisot.1015granger.net>
+Date:   Thu, 29 Jun 2023 14:43:03 -0400
+Message-ID: <168806418337.1034990.3706968041401141634.stgit@morisot.1015granger.net>
 In-Reply-To: <168806401782.1034990.9686296943273298604.stgit@morisot.1015granger.net>
 References: <168806401782.1034990.9686296943273298604.stgit@morisot.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,71 +57,309 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Done as part of converting SunRPC observability from printk to
-tracepoints.
+We want a thread lookup operation that can be done with RCU only,
+but to avoid the linked-list walk, which does not scale well in the
+number of svc threads.
+
+BH-disabled locking is no longer necessary because we're no longer
+sharing the pool's sp_lock to protect either the xarray or the
+pool's thread count. sp_lock also protects transport activity. As
+far as I can tell, there are no callers of svc_set_num_threads()
+that run outside of process context.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/sunrpc.h |   23 +++++++++++++++++++++++
- net/sunrpc/svc.c              |    5 ++---
- 2 files changed, 25 insertions(+), 3 deletions(-)
+ fs/nfsd/nfssvc.c              |    3 +-
+ include/linux/sunrpc/svc.h    |   11 +++----
+ include/trace/events/sunrpc.h |   47 +++++++++++++++++++++++++++++-
+ net/sunrpc/svc.c              |   65 +++++++++++++++++++++++++----------------
+ net/sunrpc/svc_xprt.c         |    2 +
+ 5 files changed, 92 insertions(+), 36 deletions(-)
 
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 2154fa63c5f2..d42b2a40c93c 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -62,8 +62,7 @@ static __be32			nfsd_init_request(struct svc_rqst *,
+  * If (out side the lock) nn->nfsd_serv is non-NULL, then it must point to a
+  * properly initialised 'struct svc_serv' with ->sv_nrthreads > 0 (unless
+  * nn->keep_active is set).  That number of nfsd threads must
+- * exist and each must be listed in ->sp_all_threads in some entry of
+- * ->sv_pools[].
++ * exist and each must be listed in some entry of ->sv_pools[].
+  *
+  * Each active thread holds a counted reference on nn->nfsd_serv, as does
+  * the nn->keep_active flag and various transient calls to svc_get().
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index fbfe6ea737c8..45aa7648dca6 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -32,10 +32,10 @@
+  */
+ struct svc_pool {
+ 	unsigned int		sp_id;	    	/* pool id; also node id on NUMA */
+-	spinlock_t		sp_lock;	/* protects all fields */
++	spinlock_t		sp_lock;	/* protects sp_sockets */
+ 	struct list_head	sp_sockets;	/* pending sockets */
+ 	unsigned int		sp_nrthreads;	/* # of threads in pool */
+-	struct list_head	sp_all_threads;	/* all server threads */
++	struct xarray		sp_thread_xa;
+ 
+ 	/* statistics on pool operation */
+ 	struct percpu_counter	sp_sockets_queued;
+@@ -194,7 +194,6 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
+  * processed.
+  */
+ struct svc_rqst {
+-	struct list_head	rq_all;		/* all threads list */
+ 	struct rcu_head		rq_rcu_head;	/* for RCU deferred kfree */
+ 	struct svc_xprt *	rq_xprt;	/* transport ptr */
+ 
+@@ -239,10 +238,10 @@ struct svc_rqst {
+ #define	RQ_SPLICE_OK	(4)			/* turned off in gss privacy
+ 						 * to prevent encrypting page
+ 						 * cache pages */
+-#define	RQ_VICTIM	(5)			/* about to be shut down */
+-#define	RQ_BUSY		(6)			/* request is busy */
+-#define	RQ_DATA		(7)			/* request has data */
++#define	RQ_BUSY		(5)			/* request is busy */
++#define	RQ_DATA		(6)			/* request has data */
+ 	unsigned long		rq_flags;	/* flags field */
++	u32			rq_thread_id;	/* xarray index */
+ 	ktime_t			rq_qtime;	/* enqueue time */
+ 
+ 	void *			rq_argp;	/* decoded arguments */
 diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index cf3d404ca6d8..70f3bc22c429 100644
+index 70f3bc22c429..4ec746048f15 100644
 --- a/include/trace/events/sunrpc.h
 +++ b/include/trace/events/sunrpc.h
-@@ -1842,6 +1842,29 @@ TRACE_EVENT(svc_stats_latency,
- 		__get_str(procedure), __entry->execute)
+@@ -1600,7 +1600,6 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
+ 	svc_rqst_flag(USEDEFERRAL)					\
+ 	svc_rqst_flag(DROPME)						\
+ 	svc_rqst_flag(SPLICE_OK)					\
+-	svc_rqst_flag(VICTIM)						\
+ 	svc_rqst_flag(BUSY)						\
+ 	svc_rqst_flag_end(DATA)
+ 
+@@ -2043,6 +2042,52 @@ TRACE_EVENT(svc_pool_starved,
+ 	)
  );
  
-+TRACE_EVENT(svc_pool_init,
++DECLARE_EVENT_CLASS(svc_thread_lifetime_class,
 +	TP_PROTO(
 +		const struct svc_serv *serv,
-+		const struct svc_pool *pool
++		const struct svc_pool *pool,
++		const struct svc_rqst *rqstp
 +	),
 +
-+	TP_ARGS(serv, pool),
++	TP_ARGS(serv, pool, rqstp),
 +
 +	TP_STRUCT__entry(
 +		__string(name, serv->sv_name)
 +		__field(int, pool_id)
++		__field(unsigned int, nrthreads)
++		__field(unsigned long, pool_flags)
++		__field(u32, thread_id)
++		__field(const void *, rqstp)
 +	),
 +
 +	TP_fast_assign(
 +		__assign_str(name, serv->sv_name);
 +		__entry->pool_id = pool->sp_id;
++		__entry->nrthreads = pool->sp_nrthreads;
++		__entry->pool_flags = pool->sp_flags;
++		__entry->thread_id = rqstp->rq_thread_id;
++		__entry->rqstp = rqstp;
 +	),
 +
-+	TP_printk("service=%s pool=%d",
-+		__get_str(name), __entry->pool_id
++	TP_printk("service=%s pool=%d pool_flags=%s nrthreads=%u thread_id=%u",
++		__get_str(name), __entry->pool_id,
++		show_svc_pool_flags(__entry->pool_flags),
++		__entry->nrthreads, __entry->thread_id
 +	)
 +);
 +
- #define show_svc_xprt_flags(flags)					\
- 	__print_flags(flags, "|",					\
- 		{ BIT(XPT_BUSY),		"BUSY" },		\
++#define DEFINE_SVC_THREAD_LIFETIME_EVENT(name) \
++	DEFINE_EVENT(svc_thread_lifetime_class, svc_pool_##name, \
++			TP_PROTO( \
++				const struct svc_serv *serv, \
++				const struct svc_pool *pool, \
++				const struct svc_rqst *rqstp \
++			), \
++			TP_ARGS(serv, pool, rqstp))
++
++DEFINE_SVC_THREAD_LIFETIME_EVENT(thread_init);
++DEFINE_SVC_THREAD_LIFETIME_EVENT(thread_exit);
++
+ DECLARE_EVENT_CLASS(svc_xprt_event,
+ 	TP_PROTO(
+ 		const struct svc_xprt *xprt
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index cf2e58ead35d..828d28883ea8 100644
+index 828d28883ea8..18fbb98895ea 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -505,9 +505,6 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
- 	for (i = 0; i < serv->sv_nrpools; i++) {
- 		struct svc_pool *pool = &serv->sv_pools[i];
+@@ -507,8 +507,8 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
  
--		dprintk("svc: initialising pool %u for %s\n",
--				i, serv->sv_name);
--
  		pool->sp_id = i;
  		INIT_LIST_HEAD(&pool->sp_sockets);
- 		INIT_LIST_HEAD(&pool->sp_all_threads);
-@@ -517,6 +514,8 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+-		INIT_LIST_HEAD(&pool->sp_all_threads);
+ 		spin_lock_init(&pool->sp_lock);
++		xa_init_flags(&pool->sp_thread_xa, XA_FLAGS_ALLOC);
+ 
+ 		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
  		percpu_counter_init(&pool->sp_threads_woken, 0, GFP_KERNEL);
- 		percpu_counter_init(&pool->sp_threads_timedout, 0, GFP_KERNEL);
- 		percpu_counter_init(&pool->sp_threads_starved, 0, GFP_KERNEL);
+@@ -592,6 +592,8 @@ svc_destroy(struct kref *ref)
+ 		percpu_counter_destroy(&pool->sp_threads_woken);
+ 		percpu_counter_destroy(&pool->sp_threads_timedout);
+ 		percpu_counter_destroy(&pool->sp_threads_starved);
 +
-+		trace_svc_pool_init(serv, pool);
++		xa_destroy(&pool->sp_thread_xa);
+ 	}
+ 	kfree(serv->sv_pools);
+ 	kfree(serv);
+@@ -672,7 +674,11 @@ EXPORT_SYMBOL_GPL(svc_rqst_alloc);
+ static struct svc_rqst *
+ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+ {
++	static const struct xa_limit limit = {
++		.max = UINT_MAX,
++	};
+ 	struct svc_rqst	*rqstp;
++	int ret;
+ 
+ 	rqstp = svc_rqst_alloc(serv, pool, node);
+ 	if (!rqstp)
+@@ -683,11 +689,21 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+ 	serv->sv_nrthreads += 1;
+ 	spin_unlock_bh(&serv->sv_lock);
+ 
+-	spin_lock_bh(&pool->sp_lock);
++	xa_lock(&pool->sp_thread_xa);
++	ret = __xa_alloc(&pool->sp_thread_xa, &rqstp->rq_thread_id, rqstp,
++			 limit, GFP_KERNEL);
++	if (ret) {
++		xa_unlock(&pool->sp_thread_xa);
++		goto out_free;
++	}
+ 	pool->sp_nrthreads++;
+-	list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
+-	spin_unlock_bh(&pool->sp_lock);
++	xa_unlock(&pool->sp_thread_xa);
++	trace_svc_pool_thread_init(serv, pool, rqstp);
+ 	return rqstp;
++
++out_free:
++	svc_rqst_free(rqstp);
++	return ERR_PTR(ret);
+ }
+ 
+ /**
+@@ -704,19 +720,17 @@ struct svc_rqst *svc_pool_wake_idle_thread(struct svc_serv *serv,
+ 					   struct svc_pool *pool)
+ {
+ 	struct svc_rqst	*rqstp;
++	unsigned long index;
+ 
+-	rcu_read_lock();
+-	list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
++	xa_for_each(&pool->sp_thread_xa, index, rqstp) {
+ 		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
+ 			continue;
+ 
+-		rcu_read_unlock();
+ 		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
+ 		wake_up_process(rqstp->rq_task);
+ 		percpu_counter_inc(&pool->sp_threads_woken);
+ 		return rqstp;
+ 	}
+-	rcu_read_unlock();
+ 
+ 	trace_svc_pool_starved(serv, pool);
+ 	percpu_counter_inc(&pool->sp_threads_starved);
+@@ -732,32 +746,31 @@ svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
+ static struct task_struct *
+ svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
+ {
+-	unsigned int i;
+ 	struct task_struct *task = NULL;
++	struct svc_rqst *rqstp;
++	unsigned long zero = 0;
++	unsigned int i;
+ 
+ 	if (pool != NULL) {
+-		spin_lock_bh(&pool->sp_lock);
++		xa_lock(&pool->sp_thread_xa);
+ 	} else {
+ 		for (i = 0; i < serv->sv_nrpools; i++) {
+ 			pool = &serv->sv_pools[--(*state) % serv->sv_nrpools];
+-			spin_lock_bh(&pool->sp_lock);
+-			if (!list_empty(&pool->sp_all_threads))
++			xa_lock(&pool->sp_thread_xa);
++			if (!xa_empty(&pool->sp_thread_xa))
+ 				goto found_pool;
+-			spin_unlock_bh(&pool->sp_lock);
++			xa_unlock(&pool->sp_thread_xa);
+ 		}
+ 		return NULL;
  	}
  
- 	return serv;
+ found_pool:
+-	if (!list_empty(&pool->sp_all_threads)) {
+-		struct svc_rqst *rqstp;
+-
+-		rqstp = list_entry(pool->sp_all_threads.next, struct svc_rqst, rq_all);
+-		set_bit(RQ_VICTIM, &rqstp->rq_flags);
+-		list_del_rcu(&rqstp->rq_all);
++	rqstp = xa_find(&pool->sp_thread_xa, &zero, U32_MAX, XA_PRESENT);
++	if (rqstp) {
++		__xa_erase(&pool->sp_thread_xa, rqstp->rq_thread_id);
+ 		task = rqstp->rq_task;
+ 	}
+-	spin_unlock_bh(&pool->sp_lock);
++	xa_unlock(&pool->sp_thread_xa);
+ 	return task;
+ }
+ 
+@@ -839,9 +852,9 @@ svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ 	if (pool == NULL) {
+ 		nrservs -= serv->sv_nrthreads;
+ 	} else {
+-		spin_lock_bh(&pool->sp_lock);
++		xa_lock(&pool->sp_thread_xa);
+ 		nrservs -= pool->sp_nrthreads;
+-		spin_unlock_bh(&pool->sp_lock);
++		xa_unlock(&pool->sp_thread_xa);
+ 	}
+ 
+ 	if (nrservs > 0)
+@@ -928,11 +941,11 @@ svc_exit_thread(struct svc_rqst *rqstp)
+ 	struct svc_serv	*serv = rqstp->rq_server;
+ 	struct svc_pool	*pool = rqstp->rq_pool;
+ 
+-	spin_lock_bh(&pool->sp_lock);
++	xa_lock(&pool->sp_thread_xa);
+ 	pool->sp_nrthreads--;
+-	if (!test_and_set_bit(RQ_VICTIM, &rqstp->rq_flags))
+-		list_del_rcu(&rqstp->rq_all);
+-	spin_unlock_bh(&pool->sp_lock);
++	__xa_erase(&pool->sp_thread_xa, rqstp->rq_thread_id);
++	xa_unlock(&pool->sp_thread_xa);
++	trace_svc_pool_thread_exit(serv, pool, rqstp);
+ 
+ 	spin_lock_bh(&serv->sv_lock);
+ 	serv->sv_nrthreads -= 1;
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 7d5aed4d1766..77fc20b2181d 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -46,7 +46,7 @@ static LIST_HEAD(svc_xprt_class_list);
+ 
+ /* SMP locking strategy:
+  *
+- *	svc_pool->sp_lock protects most of the fields of that pool.
++ *	svc_pool->sp_lock protects sp_sockets.
+  *	svc_serv->sv_lock protects sv_tempsocks, sv_permsocks, sv_tmpcnt.
+  *	when both need to be taken (rare), svc_serv->sv_lock is first.
+  *	The "service mutex" protects svc_serv->sv_nrthread.
 
 
