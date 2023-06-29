@@ -2,43 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16690742BFD
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jun 2023 20:42:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B75AF742C01
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jun 2023 20:42:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232791AbjF2Smp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Jun 2023 14:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
+        id S232439AbjF2Smy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Jun 2023 14:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232787AbjF2Smo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 14:42:44 -0400
+        with ESMTP id S232799AbjF2Sms (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 14:42:48 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7CF32681
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 11:42:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDF392681
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 11:42:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ED19D615E7
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:42:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9180C433C8;
-        Thu, 29 Jun 2023 18:42:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 95E27615E4
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:42:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AD11C433C0;
+        Thu, 29 Jun 2023 18:42:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688064158;
-        bh=1MpJ/jMmBL286yDmYlTszKW+QVO8O2BNdW6hS36K63c=;
+        s=k20201202; t=1688064165;
+        bh=UqeeQ6Lmu/aTxCKDiThwWw0WtcODAzks2kwzKD8n96g=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QYDbOAHHhH+EpmQuihg4rM80Tb5w3Ykf9BdJZMWDKcVYOKi+IJnacyiG9q61qHiuM
-         r7St13pIjvsImAhy2yHT5diaiemECp7e0LaKHw2ZWhqyWxIcAxEGHJ1DoAQd9ySmas
-         w+NKFW8Fu0Z+KPGSc/npTYh3yxqF0bFtaqYJnzrxtwZqYCb6WgLFF/c6aC1ca3WbK8
-         aWivujr/q4f8SKhXmJ+GgLzka1kXA/vZa5kqNVnBdAfBto9phfKokjDhvG8Ar1dJCw
-         f7TzHbTBBCy7dpkUAW13DGIUNdi4y0L/1Q3w38XxAf29a09IXkpNShEENJac2dcF5i
-         0EBUKGGkqf7lg==
-Subject: [PATCH RFC 2/8] SUNRPC: Report when no service thread is available.
+        b=tJWapsKC7qa+SJF9+n5U0unLHUnsuTrHBbv5+NPZosJ+rhnPfMF+Ud0ncRcHv/xpg
+         zp+VG650RgkyflsQEyFSewOAAhw1faRWlDO8VosffkJwfxZDrxguMH4rd5TMXQZ50s
+         IWHP7MetcPWl8Ql+Q95vfJBFfItOr63WDMBIEA1WXoeh4O2Oz/ncPCg2kcniuDdIT7
+         sEGYtjVDKrCOdXXZdx4Qokxfw22Irp2S6axmLWtRaUL1BXynHf6ZD4dF/kNLm4ws0b
+         N4ssKS/6+XkIw1UVAfDHHJIq3fmWfOIiYGT3iMfvB0D9NsF2nhv7dHOhxw9ErIMrnr
+         FeuY0l2KMpc3g==
+Subject: [PATCH RFC 3/8] SUNRPC: Split the svc_xprt_dequeue tracepoint
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>, lorenzo@kernel.org,
         neilb@suse.de, jlayton@redhat.com, david@fromorbit.com
-Date:   Thu, 29 Jun 2023 14:42:37 -0400
-Message-ID: <168806415706.1034990.3299102237393518473.stgit@morisot.1015granger.net>
+Date:   Thu, 29 Jun 2023 14:42:43 -0400
+Message-ID: <168806416357.1034990.16815431273227880388.stgit@morisot.1015granger.net>
 In-Reply-To: <168806401782.1034990.9686296943273298604.stgit@morisot.1015granger.net>
 References: <168806401782.1034990.9686296943273298604.stgit@morisot.1015granger.net>
 User-Agent: StGit/1.5
@@ -57,252 +57,127 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Count and record thread starvation. Administrators can take action
-by increasing thread count or decreasing workload.
+Distinguish between the case where new work was picked up just by
+looking at the transport queue versus when the thread was awoken.
+This gives us better visibility about how well-utilized the thread
+pool is.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc.h    |    5 +++-
- include/trace/events/sunrpc.h |   49 ++++++++++++++++++++++++++++++++++-------
- net/sunrpc/svc.c              |    9 +++++++-
- net/sunrpc/svc_xprt.c         |   21 ++++++++++--------
- 4 files changed, 64 insertions(+), 20 deletions(-)
+ include/trace/events/sunrpc.h |   48 +++++++++++++++++++++++++++++++----------
+ net/sunrpc/svc_xprt.c         |    9 +++++---
+ 2 files changed, 42 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index dc2d90a655e2..fbfe6ea737c8 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -22,7 +22,6 @@
- #include <linux/pagevec.h>
- 
- /*
-- *
-  * RPC service thread pool.
-  *
-  * Pool of threads and temporary sockets.  Generally there is only
-@@ -42,6 +41,7 @@ struct svc_pool {
- 	struct percpu_counter	sp_sockets_queued;
- 	struct percpu_counter	sp_threads_woken;
- 	struct percpu_counter	sp_threads_timedout;
-+	struct percpu_counter	sp_threads_starved;
- 
- #define	SP_TASK_PENDING		(0)		/* still work to do even if no
- 						 * xprt is queued. */
-@@ -427,7 +427,8 @@ int		   svc_register(const struct svc_serv *, struct net *, const int,
- 
- void		   svc_wake_up(struct svc_serv *);
- void		   svc_reserve(struct svc_rqst *rqstp, int space);
--struct svc_rqst	  *svc_pool_wake_idle_thread(struct svc_pool *pool);
-+struct svc_rqst	  *svc_pool_wake_idle_thread(struct svc_serv *serv,
-+					     struct svc_pool *pool);
- struct svc_pool   *svc_pool_for_cpu(struct svc_serv *serv);
- char *		   svc_print_addr(struct svc_rqst *, char *, size_t);
- const char *	   svc_proc_name(const struct svc_rqst *rqstp);
 diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 69e42ef30979..9813f4560eef 100644
+index 9813f4560eef..cf3d404ca6d8 100644
 --- a/include/trace/events/sunrpc.h
 +++ b/include/trace/events/sunrpc.h
-@@ -1918,21 +1918,21 @@ TRACE_EVENT(svc_xprt_create_err,
- TRACE_EVENT(svc_xprt_enqueue,
- 	TP_PROTO(
- 		const struct svc_xprt *xprt,
--		const struct svc_rqst *rqst
-+		const struct svc_rqst *wakee
- 	),
- 
--	TP_ARGS(xprt, rqst),
-+	TP_ARGS(xprt, wakee),
- 
- 	TP_STRUCT__entry(
- 		SVC_XPRT_ENDPOINT_FIELDS(xprt)
- 
--		__field(int, pid)
-+		__field(pid_t, pid)
- 	),
- 
- 	TP_fast_assign(
- 		SVC_XPRT_ENDPOINT_ASSIGNMENTS(xprt);
- 
--		__entry->pid = rqst? rqst->rq_task->pid : 0;
-+		__entry->pid = wakee->rq_task->pid;
- 	),
- 
- 	TP_printk(SVC_XPRT_ENDPOINT_FORMAT " pid=%d",
-@@ -1963,6 +1963,39 @@ TRACE_EVENT(svc_xprt_dequeue,
- 		SVC_XPRT_ENDPOINT_VARARGS, __entry->wakeup)
+@@ -1939,34 +1939,58 @@ TRACE_EVENT(svc_xprt_enqueue,
+ 		SVC_XPRT_ENDPOINT_VARARGS, __entry->pid)
  );
  
+-TRACE_EVENT(svc_xprt_dequeue,
 +#define show_svc_pool_flags(x)						\
 +	__print_flags(x, "|",						\
 +		{ BIT(SP_TASK_PENDING),		"TASK_PENDING" },	\
 +		{ BIT(SP_CONGESTED),		"CONGESTED" })
 +
-+TRACE_EVENT(svc_pool_starved,
-+	TP_PROTO(
-+		const struct svc_serv *serv,
-+		const struct svc_pool *pool
-+	),
-+
-+	TP_ARGS(serv, pool),
-+
-+	TP_STRUCT__entry(
-+		__string(name, serv->sv_name)
-+		__field(int, pool_id)
-+		__field(unsigned int, nrthreads)
-+		__field(unsigned long, flags)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(name, serv->sv_name);
-+		__entry->pool_id = pool->sp_id;
-+		__entry->nrthreads = pool->sp_nrthreads;
-+		__entry->flags = pool->sp_flags;
-+	),
-+
-+	TP_printk("service=%s pool=%d flags=%s nrthreads=%u",
-+		__get_str(name), __entry->pool_id,
-+		show_svc_pool_flags(__entry->flags), __entry->nrthreads
-+	)
-+);
-+
- DECLARE_EVENT_CLASS(svc_xprt_event,
++DECLARE_EVENT_CLASS(svc_pool_scheduler_class,
  	TP_PROTO(
- 		const struct svc_xprt *xprt
-@@ -2033,16 +2066,16 @@ TRACE_EVENT(svc_xprt_accept,
- );
+-		const struct svc_rqst *rqst
++		const struct svc_pool *pool,
++		const struct svc_rqst *rqstp
+ 	),
  
- TRACE_EVENT(svc_wake_up,
--	TP_PROTO(int pid),
-+	TP_PROTO(const struct svc_rqst *wakee),
- 
--	TP_ARGS(pid),
-+	TP_ARGS(wakee),
+-	TP_ARGS(rqst),
++	TP_ARGS(pool, rqstp),
  
  	TP_STRUCT__entry(
--		__field(int, pid)
-+		__field(pid_t, pid)
+-		SVC_XPRT_ENDPOINT_FIELDS(rqst->rq_xprt)
++		SVC_XPRT_ENDPOINT_FIELDS(rqstp->rq_xprt)
+ 
++		__string(name, rqstp->rq_server->sv_name)
++		__field(int, pool_id)
++		__field(unsigned int, nrthreads)
++		__field(unsigned long, pool_flags)
+ 		__field(unsigned long, wakeup)
  	),
  
  	TP_fast_assign(
--		__entry->pid = pid;
-+		__entry->pid = wakee->rq_task->pid;
+-		SVC_XPRT_ENDPOINT_ASSIGNMENTS(rqst->rq_xprt);
++		SVC_XPRT_ENDPOINT_ASSIGNMENTS(rqstp->rq_xprt);
+ 
++		__assign_str(name, rqstp->rq_server->sv_name);
++		__entry->pool_id = pool->sp_id;
++		__entry->nrthreads = pool->sp_nrthreads;
++		__entry->pool_flags = pool->sp_flags;
+ 		__entry->wakeup = ktime_to_us(ktime_sub(ktime_get(),
+-							rqst->rq_qtime));
++							rqstp->rq_qtime));
  	),
  
- 	TP_printk("pid=%d", __entry->pid)
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index e81ce5f76abd..04151e22ec44 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -516,6 +516,7 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
- 		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
- 		percpu_counter_init(&pool->sp_threads_woken, 0, GFP_KERNEL);
- 		percpu_counter_init(&pool->sp_threads_timedout, 0, GFP_KERNEL);
-+		percpu_counter_init(&pool->sp_threads_starved, 0, GFP_KERNEL);
- 	}
+-	TP_printk(SVC_XPRT_ENDPOINT_FORMAT " wakeup-us=%lu",
+-		SVC_XPRT_ENDPOINT_VARARGS, __entry->wakeup)
++	TP_printk(SVC_XPRT_ENDPOINT_FORMAT
++		" service=%s pool=%d pool_flags=%s nrthreads=%u wakeup-us=%lu",
++		SVC_XPRT_ENDPOINT_VARARGS, __get_str(name), __entry->pool_id,
++		show_svc_pool_flags(__entry->pool_flags), __entry->nrthreads,
++		__entry->wakeup
++	)
+ );
  
- 	return serv;
-@@ -591,6 +592,7 @@ svc_destroy(struct kref *ref)
- 		percpu_counter_destroy(&pool->sp_sockets_queued);
- 		percpu_counter_destroy(&pool->sp_threads_woken);
- 		percpu_counter_destroy(&pool->sp_threads_timedout);
-+		percpu_counter_destroy(&pool->sp_threads_starved);
- 	}
- 	kfree(serv->sv_pools);
- 	kfree(serv);
-@@ -691,6 +693,7 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- 
- /**
-  * svc_pool_wake_idle_thread - wake an idle thread in @pool
-+ * @serv: RPC service
-  * @pool: service thread pool
-  *
-  * Returns an idle service thread (now marked BUSY), or NULL
-@@ -698,7 +701,8 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
-  * thread and marking it BUSY is atomic with respect to other
-  * calls to svc_pool_wake_idle_thread().
-  */
--struct svc_rqst *svc_pool_wake_idle_thread(struct svc_pool *pool)
-+struct svc_rqst *svc_pool_wake_idle_thread(struct svc_serv *serv,
-+					   struct svc_pool *pool)
- {
- 	struct svc_rqst	*rqstp;
- 
-@@ -714,6 +718,9 @@ struct svc_rqst *svc_pool_wake_idle_thread(struct svc_pool *pool)
- 		return rqstp;
- 	}
- 	rcu_read_unlock();
+-#define show_svc_pool_flags(x)						\
+-	__print_flags(x, "|",						\
+-		{ BIT(SP_TASK_PENDING),		"TASK_PENDING" },	\
+-		{ BIT(SP_CONGESTED),		"CONGESTED" })
++#define DEFINE_SVC_POOL_SCHEDULER_EVENT(name) \
++	DEFINE_EVENT(svc_pool_scheduler_class, svc_pool_##name, \
++			TP_PROTO( \
++				const struct svc_pool *pool, \
++				const struct svc_rqst *rqstp \
++			), \
++			TP_ARGS(pool, rqstp))
 +
-+	trace_svc_pool_starved(serv, pool);
-+	percpu_counter_inc(&pool->sp_threads_starved);
- 	return NULL;
- }
++DEFINE_SVC_POOL_SCHEDULER_EVENT(polled);
++DEFINE_SVC_POOL_SCHEDULER_EVENT(awoken);
  
+ TRACE_EVENT(svc_pool_starved,
+ 	TP_PROTO(
 diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index f14476d11b67..859eecb7d52c 100644
+index 859eecb7d52c..7d5aed4d1766 100644
 --- a/net/sunrpc/svc_xprt.c
 +++ b/net/sunrpc/svc_xprt.c
-@@ -455,7 +455,7 @@ static bool svc_xprt_ready(struct svc_xprt *xprt)
-  */
- void svc_xprt_enqueue(struct svc_xprt *xprt)
- {
--	struct svc_rqst	*rqstp;
-+	struct svc_rqst *rqstp;
- 	struct svc_pool *pool;
+@@ -743,8 +743,10 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
+ 	WARN_ON_ONCE(rqstp->rq_xprt);
  
- 	if (!svc_xprt_ready(xprt))
-@@ -476,9 +476,11 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
- 	list_add_tail(&xprt->xpt_ready, &pool->sp_sockets);
- 	spin_unlock_bh(&pool->sp_lock);
- 
--	rqstp = svc_pool_wake_idle_thread(pool);
--	if (!rqstp)
-+	rqstp = svc_pool_wake_idle_thread(xprt->xpt_server, pool);
-+	if (!rqstp) {
- 		set_bit(SP_CONGESTED, &pool->sp_flags);
-+		return;
+ 	rqstp->rq_xprt = svc_xprt_dequeue(pool);
+-	if (rqstp->rq_xprt)
++	if (rqstp->rq_xprt) {
++		trace_svc_pool_polled(pool, rqstp);
+ 		goto out_found;
 +	}
  
- 	trace_svc_xprt_enqueue(xprt, rqstp);
+ 	/*
+ 	 * We have to be able to interrupt this wait
+@@ -766,8 +768,10 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
+ 	set_bit(RQ_BUSY, &rqstp->rq_flags);
+ 	smp_mb__after_atomic();
+ 	rqstp->rq_xprt = svc_xprt_dequeue(pool);
+-	if (rqstp->rq_xprt)
++	if (rqstp->rq_xprt) {
++		trace_svc_pool_awoken(pool, rqstp);
+ 		goto out_found;
++	}
+ 
+ 	if (!time_left)
+ 		percpu_counter_inc(&pool->sp_threads_timedout);
+@@ -783,7 +787,6 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
+ 		rqstp->rq_chandle.thread_wait = 5*HZ;
+ 	else
+ 		rqstp->rq_chandle.thread_wait = 1*HZ;
+-	trace_svc_xprt_dequeue(rqstp);
+ 	return rqstp->rq_xprt;
  }
-@@ -584,15 +586,15 @@ static void svc_xprt_release(struct svc_rqst *rqstp)
- void svc_wake_up(struct svc_serv *serv)
- {
- 	struct svc_pool *pool = &serv->sv_pools[0];
--	struct svc_rqst	*rqstp;
-+	struct svc_rqst *rqstp;
  
--	rqstp = svc_pool_wake_idle_thread(pool);
-+	rqstp = svc_pool_wake_idle_thread(serv, pool);
- 	if (!rqstp) {
- 		set_bit(SP_TASK_PENDING, &pool->sp_flags);
- 		return;
- 	}
- 
--	trace_svc_wake_up(rqstp->rq_task->pid);
-+	trace_svc_wake_up(rqstp);
- }
- EXPORT_SYMBOL_GPL(svc_wake_up);
- 
-@@ -1434,16 +1436,17 @@ static int svc_pool_stats_show(struct seq_file *m, void *p)
- 	struct svc_pool *pool = p;
- 
- 	if (p == SEQ_START_TOKEN) {
--		seq_puts(m, "# pool packets-arrived sockets-enqueued threads-woken threads-timedout\n");
-+		seq_puts(m, "# pool packets-arrived xprts-enqueued threads-woken threads-timedout starved\n");
- 		return 0;
- 	}
- 
--	seq_printf(m, "%u %llu %llu %llu %llu\n",
-+	seq_printf(m, "%u %llu %llu %llu %llu %llu\n",
- 		pool->sp_id,
- 		percpu_counter_sum_positive(&pool->sp_sockets_queued),
- 		percpu_counter_sum_positive(&pool->sp_sockets_queued),
- 		percpu_counter_sum_positive(&pool->sp_threads_woken),
--		percpu_counter_sum_positive(&pool->sp_threads_timedout));
-+		percpu_counter_sum_positive(&pool->sp_threads_timedout),
-+		percpu_counter_sum_positive(&pool->sp_threads_starved));
- 
- 	return 0;
- }
 
 
