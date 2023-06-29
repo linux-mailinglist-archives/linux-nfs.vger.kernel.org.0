@@ -2,43 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DDA8742C00
-	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jun 2023 20:42:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41C5F742C02
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Jun 2023 20:43:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232799AbjF2Smy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Jun 2023 14:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57402 "EHLO
+        id S232819AbjF2SnB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Jun 2023 14:43:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232813AbjF2Smy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 14:42:54 -0400
+        with ESMTP id S232507AbjF2SnA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 14:43:00 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99D6B2681
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 11:42:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BD222681
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 11:42:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C4F3615E4
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:42:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2023EC433C8;
-        Thu, 29 Jun 2023 18:42:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B94E7615E4
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:42:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BABFAC433C8;
+        Thu, 29 Jun 2023 18:42:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688064171;
-        bh=uuaHQhmmL7ku0nyVaFEQ9qlHbmFEZv9i0J/O3Fzz1tw=;
+        s=k20201202; t=1688064178;
+        bh=LCNqZcxIVd1RO7ZlOOofBxJSB+d62egEMIvK6s5EX2c=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rwoKD3iu8OrL110JrjVuvWFf30IMh4npTv1OnDGjD6YVDGBw/L81URBu2hqsjPbd+
-         FNz8WJDAp3/PwgWrSnaZbGdcuRk9ikpJBt9IxySCFnzgIfZc3GDptLDOwJaA252ZD9
-         BvxDi2HPWGy8aobcuSyCHNuBt3kXAZFAguMJ5T/Ihk2nW0Lf8YxA78jRrsx7Pld9XG
-         Ete+KYQoOTvAF5I7Wq2xbEgBaYRnOm5aN09Ksy7kNV/qaaQCTSt+93ewxddYZVh0Vo
-         CYlvXXWcz2c6cbNyX5QjBSSiZU3GSmmVMGoA5yXcb7WVeS6eS4/OkfMZnV8mqEVzwk
-         THlePelOQkd5w==
-Subject: [PATCH RFC 4/8] SUNRPC: Clean up svc_set_num_threads
+        b=hF3kYUTDZcMqcnqOWKC6JgSAhs8YpIZley9hZDcNmTONM3cS1U8TNhuSdMSYCRTch
+         HxsEEXxyiQuKwwH1lcxYyaJQ+Ch7n/33KSn1bGfZFwk+Ihgm0cnR8hekVOLgUPyVMN
+         N4MJOZ9YpHAvqwD8lqw7IjZY/yhTyilps8sox/E8EGPXgPi8Eb2RVa4/AdPEDwbslL
+         55TZzI/tjgdzLTW7hrd8WOqNlq3Ljk4s2CW/PkcgkjhUzIXczzt5kQ3dORIHDyPQ8O
+         TKArG337X72EcOv3CT78fKDzcXYKANuofwYZgkbSaXbEp6871YwSP95cABZke1FZHW
+         xT38mH1SmvYDA==
+Subject: [PATCH RFC 5/8] SUNRPC: Replace dprintk() call site in __svc_create()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>, lorenzo@kernel.org,
         neilb@suse.de, jlayton@redhat.com, david@fromorbit.com
-Date:   Thu, 29 Jun 2023 14:42:50 -0400
-Message-ID: <168806417022.1034990.13187981091421789973.stgit@morisot.1015granger.net>
+Date:   Thu, 29 Jun 2023 14:42:56 -0400
+Message-ID: <168806417679.1034990.17820560466387975643.stgit@morisot.1015granger.net>
 In-Reply-To: <168806401782.1034990.9686296943273298604.stgit@morisot.1015granger.net>
 References: <168806401782.1034990.9686296943273298604.stgit@morisot.1015granger.net>
 User-Agent: StGit/1.5
@@ -57,142 +57,71 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Document the API contract and remove stale or obvious comments.
+Done as part of converting SunRPC observability from printk to
+tracepoints.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/svc.c |   60 +++++++++++++++++++++++-------------------------------
- 1 file changed, 25 insertions(+), 35 deletions(-)
+ include/trace/events/sunrpc.h |   23 +++++++++++++++++++++++
+ net/sunrpc/svc.c              |    5 ++---
+ 2 files changed, 25 insertions(+), 3 deletions(-)
 
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index cf3d404ca6d8..70f3bc22c429 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1842,6 +1842,29 @@ TRACE_EVENT(svc_stats_latency,
+ 		__get_str(procedure), __entry->execute)
+ );
+ 
++TRACE_EVENT(svc_pool_init,
++	TP_PROTO(
++		const struct svc_serv *serv,
++		const struct svc_pool *pool
++	),
++
++	TP_ARGS(serv, pool),
++
++	TP_STRUCT__entry(
++		__string(name, serv->sv_name)
++		__field(int, pool_id)
++	),
++
++	TP_fast_assign(
++		__assign_str(name, serv->sv_name);
++		__entry->pool_id = pool->sp_id;
++	),
++
++	TP_printk("service=%s pool=%d",
++		__get_str(name), __entry->pool_id
++	)
++);
++
+ #define show_svc_xprt_flags(flags)					\
+ 	__print_flags(flags, "|",					\
+ 		{ BIT(XPT_BUSY),		"BUSY" },		\
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 04151e22ec44..cf2e58ead35d 100644
+index cf2e58ead35d..828d28883ea8 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -724,23 +724,14 @@ struct svc_rqst *svc_pool_wake_idle_thread(struct svc_serv *serv,
- 	return NULL;
- }
+@@ -505,9 +505,6 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 	for (i = 0; i < serv->sv_nrpools; i++) {
+ 		struct svc_pool *pool = &serv->sv_pools[i];
  
--/*
-- * Choose a pool in which to create a new thread, for svc_set_num_threads
-- */
--static inline struct svc_pool *
--choose_pool(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
-+static struct svc_pool *
-+svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
- {
--	if (pool != NULL)
--		return pool;
+-		dprintk("svc: initialising pool %u for %s\n",
+-				i, serv->sv_name);
 -
--	return &serv->sv_pools[(*state)++ % serv->sv_nrpools];
-+	return pool ? pool : &serv->sv_pools[(*state)++ % serv->sv_nrpools];
- }
- 
--/*
-- * Choose a thread to kill, for svc_set_num_threads
-- */
--static inline struct task_struct *
--choose_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
-+static struct task_struct *
-+svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
- {
- 	unsigned int i;
- 	struct task_struct *task = NULL;
-@@ -748,7 +739,6 @@ choose_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
- 	if (pool != NULL) {
- 		spin_lock_bh(&pool->sp_lock);
- 	} else {
--		/* choose a pool in round-robin fashion */
- 		for (i = 0; i < serv->sv_nrpools; i++) {
- 			pool = &serv->sv_pools[--(*state) % serv->sv_nrpools];
- 			spin_lock_bh(&pool->sp_lock);
-@@ -763,21 +753,15 @@ choose_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
- 	if (!list_empty(&pool->sp_all_threads)) {
- 		struct svc_rqst *rqstp;
- 
--		/*
--		 * Remove from the pool->sp_all_threads list
--		 * so we don't try to kill it again.
--		 */
- 		rqstp = list_entry(pool->sp_all_threads.next, struct svc_rqst, rq_all);
- 		set_bit(RQ_VICTIM, &rqstp->rq_flags);
- 		list_del_rcu(&rqstp->rq_all);
- 		task = rqstp->rq_task;
- 	}
- 	spin_unlock_bh(&pool->sp_lock);
--
- 	return task;
- }
- 
--/* create new threads */
- static int
- svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- {
-@@ -789,13 +773,12 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 
- 	do {
- 		nrservs--;
--		chosen_pool = choose_pool(serv, pool, &state);
--
-+		chosen_pool = svc_pool_next(serv, pool, &state);
- 		node = svc_pool_map_get_node(chosen_pool->sp_id);
+ 		pool->sp_id = i;
+ 		INIT_LIST_HEAD(&pool->sp_sockets);
+ 		INIT_LIST_HEAD(&pool->sp_all_threads);
+@@ -517,6 +514,8 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 		percpu_counter_init(&pool->sp_threads_woken, 0, GFP_KERNEL);
+ 		percpu_counter_init(&pool->sp_threads_timedout, 0, GFP_KERNEL);
+ 		percpu_counter_init(&pool->sp_threads_starved, 0, GFP_KERNEL);
 +
- 		rqstp = svc_prepare_thread(serv, chosen_pool, node);
- 		if (IS_ERR(rqstp))
- 			return PTR_ERR(rqstp);
--
- 		task = kthread_create_on_node(serv->sv_threadfn, rqstp,
- 					      node, "%s", serv->sv_name);
- 		if (IS_ERR(task)) {
-@@ -814,15 +797,6 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 	return 0;
- }
++		trace_svc_pool_init(serv, pool);
+ 	}
  
--/*
-- * Create or destroy enough new threads to make the number
-- * of threads the given number.  If `pool' is non-NULL, applies
-- * only to threads in that pool, otherwise round-robins between
-- * all pools.  Caller must ensure that mutual exclusion between this and
-- * server startup or shutdown.
-- */
--
--/* destroy old threads */
- static int
- svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- {
-@@ -830,9 +804,8 @@ svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 	struct task_struct *task;
- 	unsigned int state = serv->sv_nrthreads-1;
- 
--	/* destroy old threads */
- 	do {
--		task = choose_victim(serv, pool, &state);
-+		task = svc_pool_victim(serv, pool, &state);
- 		if (task == NULL)
- 			break;
- 		rqstp = kthread_data(task);
-@@ -844,6 +817,23 @@ svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 	return 0;
- }
- 
-+/**
-+ * svc_set_num_threads - adjust number of threads per RPC service
-+ * @serv: RPC service to adjust
-+ * @pool: Specific pool from which to choose threads, or NULL
-+ * @nrservs: New number of threads for @serv (0 or less means kill all threads)
-+ *
-+ * Create or destroy threads to make the number of threads for @serv the
-+ * given number. If @pool is non-NULL, change only threads in that pool;
-+ * otherwise, round-robin between all pools for @serv. @serv's
-+ * sv_nrthreads is adjusted for each thread created or destroyed.
-+ *
-+ * Caller must ensure mutual exclusion between this and server startup or
-+ * shutdown.
-+ *
-+ * Returns zero on success or a negative errno if an error occurred while
-+ * starting a thread.
-+ */
- int
- svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- {
+ 	return serv;
 
 
