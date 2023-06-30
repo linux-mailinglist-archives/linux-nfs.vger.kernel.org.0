@@ -2,113 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B14C9743BFF
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jun 2023 14:37:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A337743C8B
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jun 2023 15:19:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232088AbjF3MhI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 30 Jun 2023 08:37:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34384 "EHLO
+        id S232535AbjF3NTS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 30 Jun 2023 09:19:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232317AbjF3MhF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Jun 2023 08:37:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE66B35AF;
-        Fri, 30 Jun 2023 05:37:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S232571AbjF3NTL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Jun 2023 09:19:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651D33A98
+        for <linux-nfs@vger.kernel.org>; Fri, 30 Jun 2023 06:18:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1688131100;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=7+h+cT0KLIqwZmvYcotSB3FClbMsUogxCPafGAVI4zE=;
+        b=FctjwbiaZhN8/uF5ewWm2t+5IsyPU+4IY7R7yfJowMXuWk6EPc2g0NF3SaJh+2k48mWHL5
+        k/MET92Cy/2qYP5m1lBTvCYQMFUh2XdcCGZXfjo8b33a0327R/k+gVwuCvqk2lREO0ogUX
+        eaDgp7OfHI3eQCCe8Ztf+7VRf8bF2do=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-355-00DxZ6I1N36hx4SD5dwAcA-1; Fri, 30 Jun 2023 09:18:15 -0400
+X-MC-Unique: 00DxZ6I1N36hx4SD5dwAcA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7AC686175D;
-        Fri, 30 Jun 2023 12:37:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 825D7C433CB;
-        Fri, 30 Jun 2023 12:37:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688128621;
-        bh=c350ESZGWpi7StoatukQWJZpbWswxl0Lt+3NLEC0n8Y=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GQnTAbH9m1Nm0opSpMsyUQmgxS+lNoRn2rkuO1TfNmBB7BIglLEnijj3A9Pvvi3FD
-         o8CMN2OQiRqp95xDdwU8ZNFf9m96P0ykNxJ/WWa8fZAJS7KXlLhPzD/ZAb6Z8V2HeD
-         BCkt3DKp3bu3mRCjCJbyMvrzxGO3BCKdph3CCe8wpQiOcrP2tyMn8IeJxc2kNNhcbR
-         fymGCa2WPN3TOe/FdGkc7OmEdt9dnVLHBxYZueOydzTjSnavlRovr7M3jRjtZm7TlL
-         MQ4aO2IQju4ywPK6PMqPqrhvBvdZV0llfWG+3mmO3zDVWjwf6RN+bL8oqOJy//RTKI
-         RT/MIj2+zadQQ==
-Message-ID: <1529de75f7a35e7847c292705c936cdb4649be39.camel@kernel.org>
-Subject: Re: [PATCH] SUNRPC: clean up integer overflow check
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dan Carpenter <dan.carpenter@linaro.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Dmitry Antipov <dmantipov@yandex.ru>
-Cc:     Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-nfs@vger.kernel.org,
-        llvm@lists.linux.dev, kernel-janitors@vger.kernel.org
-Date:   Fri, 30 Jun 2023 08:36:59 -0400
-In-Reply-To: <2390fdc8-13fa-4456-ab67-44f0744db412@moroto.mountain>
-References: <2390fdc8-13fa-4456-ab67-44f0744db412@moroto.mountain>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.3 (3.48.3-1.fc38) 
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 56C0C856F67;
+        Fri, 30 Jun 2023 13:18:14 +0000 (UTC)
+Received: from bcodding.csb.redhat.com (unknown [10.22.50.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D7F271121314;
+        Fri, 30 Jun 2023 13:18:13 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     Olga.Kornievskaia@netapp.com, linux-nfs@vger.kernel.org
+Subject: [PATCH v2] NFSv4: Fix dropped lock for racing OPEN and delegation return
+Date:   Fri, 30 Jun 2023 09:18:13 -0400
+Message-Id: <50f5a8389be39630e9babeb9caba8377773c1cf2.1688131022.git.bcodding@redhat.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-06-30 at 12:46 +0300, Dan Carpenter wrote:
-> This integer overflow check works as intended but Clang and GCC and warn
-> about it when compiling with W=3D1.
->=20
->     include/linux/sunrpc/xdr.h:539:17: error: comparison is always false
->     due to limited range of data type [-Werror=3Dtype-limits]
->=20
-> Use size_mul() to prevent the integer overflow.  It silences the warning
-> and it's cleaner as well.
->=20
-> Reported-by: Dmitry Antipov <dmantipov@yandex.ru>
-> Closes: https://lore.kernel.org/all/20230601143332.255312-1-dmantipov@yan=
-dex.ru/
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
-> Btw, since the Clang developers are automatically CC'd, here is how I
-> silenced this type of false positive in Smatch:
->=20
-> 1) Check that longs are 64 bit.
-> 2) Check that the right hand side has a SIZE_MAX.  SIZE_MAX is defined
->    as -1UL so you want both the type and the value to match.
-> 3) Then on the other the other side, check that the type is uint.
->=20
-> I'm looking at this code now in Smatch and it's kind of ugly, and also
-> there are some other places where I need to apply the same logic...
->=20
->  include/linux/sunrpc/xdr.h | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-> index f89ec4b5ea16..dbf7620a2853 100644
-> --- a/include/linux/sunrpc/xdr.h
-> +++ b/include/linux/sunrpc/xdr.h
-> @@ -775,9 +775,7 @@ xdr_stream_decode_uint32_array(struct xdr_stream *xdr=
-,
-> =20
->  	if (unlikely(xdr_stream_decode_u32(xdr, &len) < 0))
->  		return -EBADMSG;
-> -	if (len > SIZE_MAX / sizeof(*p))
-> -		return -EBADMSG;
-> -	p =3D xdr_inline_decode(xdr, len * sizeof(*p));
-> +	p =3D xdr_inline_decode(xdr, size_mul(len, sizeof(*p)));
->  	if (unlikely(!p))
->  		return -EBADMSG;
->  	if (array =3D=3D NULL)
+Commmit f5ea16137a3f ("NFSv4: Retry LOCK on OLD_STATEID during delegation
+return") attempted to solve this problem by using nfs4's generic async error
+handling, but introduced a regression where v4.0 lock recovery would hang.
+The additional complexity introduced by overloading that error handling is
+not necessary for this case.  This patch expects that commit to be
+reverted.
 
+The problem as originally explained in the above commit is:
 
-Acked-by: Jeff Layton <jlayton@kernel.org>
+    There's a small window where a LOCK sent during a delegation return can
+    race with another OPEN on client, but the open stateid has not yet been
+    updated.  In this case, the client doesn't handle the OLD_STATEID error
+    from the server and will lose this lock, emitting:
+    "NFS: nfs4_handle_delegation_recall_error: unhandled error -10024".
+
+Fix this by using the old_stateid refresh helpers if the server replies
+with OLD_STATEID.
+
+Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/nfs/nfs4proc.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 6bb14f6cfbc0..bdfb4ac144d2 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7180,8 +7180,15 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+ 		} else if (!nfs4_update_lock_stateid(lsp, &data->res.stateid))
+ 			goto out_restart;
+ 		break;
+-	case -NFS4ERR_BAD_STATEID:
+ 	case -NFS4ERR_OLD_STATEID:
++		if (data->arg.new_lock_owner != 0 &&
++			nfs4_refresh_open_old_stateid(&data->arg.open_stateid,
++					lsp->ls_state))
++			goto out_restart;
++		if (nfs4_refresh_lock_old_stateid(&data->arg.lock_stateid, lsp))
++			goto out_restart;
++		fallthrough;
++	case -NFS4ERR_BAD_STATEID:
+ 	case -NFS4ERR_STALE_STATEID:
+ 	case -NFS4ERR_EXPIRED:
+ 		if (data->arg.new_lock_owner != 0) {
+-- 
+2.40.1
+
