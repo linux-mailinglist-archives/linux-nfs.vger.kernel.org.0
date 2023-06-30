@@ -2,289 +2,171 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 800AD743247
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jun 2023 03:35:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E09AF743263
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jun 2023 03:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231245AbjF3BfE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Jun 2023 21:35:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43892 "EHLO
+        id S231393AbjF3BxA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Jun 2023 21:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjF3BfD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 21:35:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 470B6297C
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:35:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C2E2C6167C
-        for <linux-nfs@vger.kernel.org>; Fri, 30 Jun 2023 01:35:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D792C433C8;
-        Fri, 30 Jun 2023 01:35:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688088901;
-        bh=4VZU7AH0lSUk+o+b9o0SdPb5coFHQCc7GkXMMBPxJiw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qsAogDP746jMzDd8pIw451IsvrhixGDf9vis+c2/yPiBe3ZndpU2bp4K53HPyzYWI
-         8Ds10Hju0I+t8I1ZxM/vDXpg+VX5wsDnkT4FuTFV+GDXAMjHhfmafwGfJEszhOtGIt
-         lLON1zNMnJ4EEmuWyQiC7sfNCKctbmpjPgKleL/IAymsoR7n1XUMWZ1u8SIZxAL5dM
-         /IBNDCtfLUWCz+6EmaowePg19IWq2k7HDuBWRQ9kbDkrgcsRazq1hDU1LYPizExKpT
-         NRpq7HJQSBwr+5HgceKC1yk3K7564RxW/b7zoLQZOY681Fau027gBK1OvtL2Xd4Eab
-         FFFx/Rurv/Ezg==
-Subject: [PATCH RFC 4/4] NFSD: Encode attributes in WORD2 using a bitmask loop
-From:   Chuck Lever <cel@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Thu, 29 Jun 2023 21:35:00 -0400
-Message-ID: <168808890015.7728.16717581858127708439.stgit@manet.1015granger.net>
-In-Reply-To: <168808788945.7728.6965361432016501208.stgit@manet.1015granger.net>
-References: <168808788945.7728.6965361432016501208.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230488AbjF3Bw7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 21:52:59 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6E1CA1
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:52:57 -0700 (PDT)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35U0BIKI000821;
+        Fri, 30 Jun 2023 01:52:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-03-30;
+ bh=2CfafyYfVVpAejWC5nlcIhibUPgsWoZu6VC/qLHctT0=;
+ b=34obVVFNJTs4Mvrm0/BPmiAkI6pIGlU9F9SGuxusJjbmiXDzbM7DCbR5reFb8/UF9GKJ
+ fiSuhYzbY/7CpAcchTGNTug6kpq60Hs9xTmRbhgmLZaPmGnLfyNNHURmT+LgneToXAXP
+ MdHQbmXK1q3tnRoO6NsmeihETHcMFSczpdvmY12gfA1u8WKK3X+dq353Ak1IJVab88ba
+ zCysi5x/RpXxdJusILaODs/OHu83jEdOUnWnVyVEy+WBnLnepakYv103e3nHYTzb7YW+
+ eX3JEaXkcvjcny8wltsAs9Unk811acM+k/eRtvTQBqK2l227JLEZ4yE3iG25S9Z5fNBo JA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdrhcy16k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Jun 2023 01:52:52 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35U0Vd5W019908;
+        Fri, 30 Jun 2023 01:52:52 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpxdypyg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Jun 2023 01:52:52 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35U1qpep034790;
+        Fri, 30 Jun 2023 01:52:51 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3rdpxdypy9-1;
+        Fri, 30 Jun 2023 01:52:51 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v7 0/4] NFSD: add support for NFSv4.1+ write delegation
+Date:   Thu, 29 Jun 2023 18:52:36 -0700
+Message-Id: <1688089960-24568-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-06-29_10,2023-06-27_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 bulkscore=0 spamscore=0 adultscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306300014
+X-Proofpoint-GUID: y-qJiNo4JUTfI75BZRn2VY4-szIPvM8x
+X-Proofpoint-ORIG-GUID: y-qJiNo4JUTfI75BZRn2VY4-szIPvM8x
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+The NFSv4 server currently supports read delegation using VFS lease
+which is implemented using file_lock. 
 
-Replace the current implementation with a branch table. This creates
-hard function scope boundaries, limiting side effects and reducing
-instruction cache footprint (uncalled encoders remain out of the
-cache).
+This patch series add write delegation support for NFSv4.1+ client by:
 
-This also makes it obvious which attributes are not supported by the
-Linux NFS server.
+    . remove the check for F_WRLCK in generic_add_lease to allow
+      file_lock to be used for write delegation.  
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4xdr.c |  153 +++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 101 insertions(+), 52 deletions(-)
+    . grant write delegation for OPEN with NFS4_SHARE_ACCESS_WRITE
+      if there is no conflict with other OPENs.
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 8335ca1e2da0..31dccf6d1caa 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2946,6 +2946,10 @@ struct nfsd4_fattr_args {
- 	struct kstat		stat;
- 	struct kstatfs		statfs;
- 	struct nfs4_acl		*acl;
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-+	void			*context;
-+	int			contextlen;
-+#endif
- 	u32			rdattr_err;
- 	bool			contextsupport;
- 	bool			ignore_crossmnt;
-@@ -3421,6 +3425,14 @@ static __be32 nfsd4_encode_fattr4_layout_types(struct xdr_stream *xdr,
- 	return nfsd4_encode_layout_types(xdr, args->exp->ex_layout_types);
- }
- 
-+static __be32 nfsd4_encode_fattr4_layout_blksize(struct xdr_stream *xdr,
-+						 struct nfsd4_fattr_args *args)
-+{
-+	if (xdr_stream_encode_u32(xdr, args->stat.blksize) < 0)
-+		return nfserr_resource;
-+	return nfs_ok;
-+}
-+
- #endif
- 
- static const nfsd4_enc_attr nfsd4_enc_fattr4_word1_ops[] = {
-@@ -3462,6 +3474,84 @@ static const nfsd4_enc_attr nfsd4_enc_fattr4_word1_ops[] = {
- 	[31]		= nfsd4_encode_fattr4__noop,	/* layout hint */
- };
- 
-+static __be32 nfsd4_encode_fattr4_suppattr_exclcreat(struct xdr_stream *xdr,
-+						     struct nfsd4_fattr_args *args)
-+{
-+	struct nfsd4_compoundres *resp = args->rqstp->rq_resp;
-+	u32 minorversion = resp->cstate.minorversion;
-+	u32 supp[3];
-+
-+	memcpy(supp, nfsd_suppattrs[minorversion], sizeof(supp));
-+	supp[0] &= NFSD_SUPPATTR_EXCLCREAT_WORD0;
-+	supp[1] &= NFSD_SUPPATTR_EXCLCREAT_WORD1;
-+	supp[2] &= NFSD_SUPPATTR_EXCLCREAT_WORD2;
-+
-+	return nfsd4_encode_bitmap(xdr, supp[0], supp[1], supp[2]);
-+}
-+
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-+static __be32 nfsd4_encode_fattr4_sec_label(struct xdr_stream *xdr,
-+					    struct nfsd4_fattr_args *args)
-+{
-+	return nfsd4_encode_security_label(xdr, args->rqstp,
-+					   args->context, args->contextlen);
-+}
-+#endif
-+
-+static __be32 nfsd4_encode_fattr4_xattr_support(struct xdr_stream *xdr,
-+						struct nfsd4_fattr_args *args)
-+{
-+	int err = xattr_supports_user_prefix(d_inode(args->dentry));
-+
-+	if (xdr_stream_encode_bool(xdr, err == 0) < 0)
-+		return nfserr_resource;
-+	return nfs_ok;
-+}
-+
-+static const nfsd4_enc_attr nfsd4_enc_fattr4_word2_ops[] = {
-+#ifdef CONFIG_NFSD_PNFS
-+	[0]		= nfsd4_encode_fattr4_layout_types,
-+	[1]		= nfsd4_encode_fattr4_layout_blksize,
-+#else
-+	[0]		= nfsd4_encode_fattr4__noop,
-+	[1]		= nfsd4_encode_fattr4__noop,
-+#endif
-+	[2]		= nfsd4_encode_fattr4__noop,	/* layout alignment */
-+	[3]		= nfsd4_encode_fattr4__noop,	/* fslocations info */
-+	[4]		= nfsd4_encode_fattr4__noop,	/* mds threshold */
-+	[5]		= nfsd4_encode_fattr4__noop,	/* retention get */
-+	[6]		= nfsd4_encode_fattr4__noop,	/* retention set */
-+	[7]		= nfsd4_encode_fattr4__noop,	/* retentevt get */
-+	[8]		= nfsd4_encode_fattr4__noop,	/* retentevt set */
-+	[9]		= nfsd4_encode_fattr4__noop,	/* retention hold */
-+	[10]		= nfsd4_encode_fattr4__noop,	/* mode set mask */
-+	[11]		= nfsd4_encode_fattr4_suppattr_exclcreat,
-+	[12]		= nfsd4_encode_fattr4__noop,	/* fs charset cap */
-+	[13]		= nfsd4_encode_fattr4__noop,	/* clone blksize */
-+	[14]		= nfsd4_encode_fattr4__noop,	/* space freed */
-+	[15]		= nfsd4_encode_fattr4__noop,	/* change attr type */
-+#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-+	[16]		= nfsd4_encode_fattr4_sec_label,
-+#else
-+	[16]		= nfsd4_encode_fattr4__noop,
-+#endif
-+	[17]		= nfsd4_encode_fattr4__noop,	/* mode_umask */
-+	[18]		= nfsd4_encode_fattr4_xattr_support,
-+	[19]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[20]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[21]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[22]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[23]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[24]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[25]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[26]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[27]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[28]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[29]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[30]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+	[31]		= nfsd4_encode_fattr4__noop,	/* reserved */
-+};
-+
- /*
-  * Note: @fhp can be NULL; in this case, we might have to compose the filehandle
-  * ourselves.
-@@ -3478,12 +3568,6 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	u32 bmval2 = bmval[2];
- 	struct svc_fh *tempfh = NULL;
- 	int starting_len = xdr->buf->len;
--#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	void *context = NULL;
--	int contextlen;
--#endif
--	struct nfsd4_compoundres *resp = rqstp->rq_resp;
--	u32 minorversion = resp->cstate.minorversion;
- 	int err, i, attrlen_offset;
- 	__be32 status, *attrlen_p;
- 	struct path path = {
-@@ -3491,7 +3575,6 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		.dentry	= dentry,
- 	};
- 	unsigned long mask;
--	__be32 *p;
- 
- 	args.rqstp = rqstp;
- 	args.fhp = fhp;
-@@ -3552,11 +3635,12 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	args.contextsupport = false;
- 
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-+	args.context = NULL;
- 	if ((bmval2 & FATTR4_WORD2_SECURITY_LABEL) ||
- 	     bmval0 & FATTR4_WORD0_SUPPORTED_ATTRS) {
- 		if (exp->ex_flags & NFSEXP_SECURITY_LABEL)
- 			err = security_inode_getsecctx(d_inode(dentry),
--						&context, &contextlen);
-+						&args.context, &args.contextlen);
- 		else
- 			err = -EOPNOTSUPP;
- 		args.contextsupport = (err == 0);
-@@ -3592,48 +3676,13 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 			goto out;
- 	}
- 
--#ifdef CONFIG_NFSD_PNFS
--	if (bmval2 & FATTR4_WORD2_LAYOUT_TYPES) {
--		status = nfsd4_encode_layout_types(xdr, exp->ex_layout_types);
--		if (status)
--			goto out;
--	}
--
--	if (bmval2 & FATTR4_WORD2_LAYOUT_BLKSIZE) {
--		p = xdr_reserve_space(xdr, 4);
--		if (!p)
--			goto out_resource;
--		*p++ = cpu_to_be32(args.stat.blksize);
--	}
--#endif /* CONFIG_NFSD_PNFS */
--	if (bmval2 & FATTR4_WORD2_SUPPATTR_EXCLCREAT) {
--		u32 supp[3];
--
--		memcpy(supp, nfsd_suppattrs[minorversion], sizeof(supp));
--		supp[0] &= NFSD_SUPPATTR_EXCLCREAT_WORD0;
--		supp[1] &= NFSD_SUPPATTR_EXCLCREAT_WORD1;
--		supp[2] &= NFSD_SUPPATTR_EXCLCREAT_WORD2;
--
--		status = nfsd4_encode_bitmap(xdr, supp[0], supp[1], supp[2]);
--		if (status)
--			goto out;
--	}
--
--#ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
--		status = nfsd4_encode_security_label(xdr, rqstp, context,
--								contextlen);
--		if (status)
--			goto out;
--	}
--#endif
--
--	if (bmval2 & FATTR4_WORD2_XATTR_SUPPORT) {
--		p = xdr_reserve_space(xdr, 4);
--		if (!p)
--			goto out_resource;
--		err = xattr_supports_user_prefix(d_inode(dentry));
--		*p++ = cpu_to_be32(err == 0);
-+	if (bmval2) {
-+		mask = bmval2;
-+		for_each_set_bit(i, &mask, 32) {
-+			status = nfsd4_enc_fattr4_word2_ops[i](xdr, &args);
-+			if (status)
-+				goto out;
-+		}
- 	}
- 
- 	*attrlen_p = cpu_to_be32(xdr->buf->len - attrlen_offset - XDR_UNIT);
-@@ -3641,8 +3690,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- out:
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	if (context)
--		security_release_secctx(context, contextlen);
-+	if (args.context)
-+		security_release_secctx(args.context, args.contextlen);
- #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
- 	kfree(args.acl);
- 	if (tempfh) {
+Write delegation conflict with another OPEN, REMOVE, RENAME and SETATTR
+are handled the same as read delegation using notify_change, try_break_deleg.
 
+The write delegation support is for NFSv4.1+ client only since the NFSv4.0
+Linux client behavior is not compliant with RFC 7530 Section 16.7.5. It
+expects the server to look ahead in the compound to find a stateid in order
+to determine whether the client that sends the GETATTR is the same client
+that holds the write delegation. RFC 7530 spec does not call for the server
+to look ahead in order to service the GETATTR op.
 
+Changes since v1:
+
+[PATCH 3/4] NFSD: add supports for CB_GETATTR callback
+- remove WARN_ON_ONCE from encode_bitmap4
+- replace decode_bitmap4 with xdr_stream_decode_uint32_array
+- replace xdr_inline_decode and xdr_decode_hyper in decode_cb_getattr
+   with xdr_stream_decode_u64. Also remove the un-needed likely().
+- modify signature of encode_cb_getattr4args to take pointer to
+   nfs4_cb_fattr
+- replace decode_attr_length with xdr_stream_decode_u32
+- rename decode_cb_getattr to decode_cb_fattr4
+- fold the initialization of cb_cinfo and cb_fsize into decode_cb_fattr4
+- rename ncf_cb_cinfo to ncf_cb_change to avoid confusion of cindo usage
+  in fs/nfsd/nfs4xdr.c
+- correct NFS4_dec_cb_getattr_sz and update size description
+
+[PATCH 4/4] NFSD: handle GETATTR conflict with write delegation
+- change nfs4_handle_wrdeleg_conflict returns __be32 to fix test robot
+- change ncf_cb_cinfo to ncf_cb_change to avoid confusion of cindo usage
+  in fs/nfsd/nfs4xdr.c
+
+Changes since v2:
+
+[PATCH 2/4] NFSD: enable support for write delegation
+- rename 'deleg' to 'dl_type' in nfs4_set_delegation
+- remove 'wdeleg' in nfs4_open_delegation
+
+- drop [PATCH 3/4] NFSD: add supports for CB_GETATTR callback
+  and [PATCH 4/4] NFSD: handle GETATTR conflict with write delegation
+  for futher clarification of the benefits of these patches
+
+Changes since v3:
+
+- recall write delegation when there is GETATTR from 2nd client
+- add trace point to track when write delegation is granted 
+
+Changes since v4:
+- squash 4/4 into 2/4
+- apply 1/4 last instead of first
+- combine nfs4_wrdeleg_filelock and nfs4_handle_wrdeleg_conflict to
+  nfsd4_deleg_getattr_conflict and move it to fs/nfsd/nfs4state.c
+- check for lock belongs to delegation before proceed and do it
+  under the fl_lock
+- check and skip FL_LAYOUT file_locks
+
+Changes since v5:
+- [patch 2/5] disable write delegation for NFSv4.0 client
+
+- [patch 4/5] allow client to use write delegation stateid for READ (same
+  behavior as Solaris server)
+
+  When the server receives a READ request with write delegation stateid
+  the server may returns the NFS4ERR_OPENMODE or allows the READ to proceed
+  to accommodate clients whose WRITE implementation may unavoidably do reads
+  (e.g., due to buffer cache constraints).  Per RFC 8881 section 9.1.2. Use
+  of the Stateid and Locking
+
+  Returning NFS4ERR_OPENMODE causes the client and server to enter an infinite
+  loop of READ, NFS4ERR_OPENMODE, TEST_STATEID, READs, NFS4ERR_OPENMODEs,
+  TEST_STATEID, READs, NFS4ERR_OPENMODEs. The Linux NFS client can not recover
+  from NFS4ERR_OPENMODE for READ request if the file was opened with
+  OPEN4_SHARE_ACCESS_WRITE. This READ was initiated internally from the NFS
+  client and not from the read(2) system call.
+
+- pass git regression test with 40 threads
+
+Changes since v6:
+
+- [patch 2/4] Patch 'NFSD: allow client to use write delegation stateid for READ'
+  was moved to before patch 'NFSD: Enable write delegation support for NFSv4.1+
+  client' to avoid bisect error.
+
+- [patch 4/4] Update comment on why write delegation for NFSv4.0 client is
+  not supported.
+  Move to last in the series.
+
+- [patch 3/4] Correct typo in function comment of nfsd4_deleg_getattr_conflict.
+  Add comment on the need for CB_GETATTR in commit message.
+
+  Squash patch 'NFSD: add counter for write delegation recall due to conflict
+  GETATTR' into this patch.
