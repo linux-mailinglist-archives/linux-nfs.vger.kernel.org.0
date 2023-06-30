@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DC1A743264
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jun 2023 03:53:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D64C743267
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Jun 2023 03:53:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230488AbjF3BxA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Jun 2023 21:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
+        id S231176AbjF3BxC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Jun 2023 21:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbjF3Bw7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 21:52:59 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC12E68
-        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:52:58 -0700 (PDT)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35TNbavE031766;
+        with ESMTP id S231784AbjF3BxA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Jun 2023 21:53:00 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE372BD
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Jun 2023 18:52:59 -0700 (PDT)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35U02ZJX000840;
         Fri, 30 Jun 2023 01:52:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=nq+VTikulC7/MtA6NoALJ65gGF5jo5R0NLyFgz/M0FE=;
- b=mTyhMFmqUqrwDBrzUhRmXITSB/FAD7wpA4z/KCHRSQvmugrBhChNeJfUVl8yFDMwBHR1
- SkxoFhlg1hAafZ+vwT4d64Zpm+emBWs9aXn9hueIwagmdMk9QecnC1OqdgSWistekQIn
- HwbaAttmr3GbO65kyV0s+vTEjTVwP0FvG/UIG2QGlIJrLM9qJBz/0zK2qep3gDmbEezb
- 9vgHLa5WaeFr4fHER/lga1KyWv1vbnuV/rbGFE/NkDFBn5RoDY9e7Yg3wbWkd8EP+TyU
- 4FGVnJnT83TLX4Y53HvUtHHxfEFsd+cjAvWidUyrIuHgclfSyOP9/L/jk+jUJOko6QVm KA== 
+ bh=lCzqRPS/8tq/wKrLFh7z2g4ja1SSDl2ay+TyAU/BXb4=;
+ b=p2pKdduO4swRLwg0A0kMWR1XsMrfSEXjDgDsagQ4QATRAEOTB+tB3032kKmuqo5kwWcr
+ XWMYplVci9AWtg7q5Gaz+a5BjMxFxAyGxRDX7ryCE3gF8i26BkZZMJB5UDiucWJJSoT0
+ YOvVzF7qLD+UutlGULVPLejd12g/VVWmWVe+cPZbM+FsH07QakMVCPo9baooubMkD5Wo
+ 4qOr6k8TJp5aTzRyrcWBSvcb9mtAmk9FB+JFiShdpeJ3KuYnxjpTi4cI9SQ/lOAXATXZ
+ g6DLthCuBrWfFp25eALCH76uFZbaKRdX2nu1PqbScP+4Sf/pSYWK+mCcgrZeDSPYn2hK tQ== 
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdqdtxy48-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rdrhcy16p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 30 Jun 2023 01:52:54 +0000
 Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35U0SwIS020074;
-        Fri, 30 Jun 2023 01:52:52 GMT
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 35U0pfSs019916;
+        Fri, 30 Jun 2023 01:52:53 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpxdypyu-1
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3rdpxdyq03-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 30 Jun 2023 01:52:52 +0000
+        Fri, 30 Jun 2023 01:52:53 +0000
 Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35U1qper034790;
-        Fri, 30 Jun 2023 01:52:52 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 35U1qpet034790;
+        Fri, 30 Jun 2023 01:52:53 GMT
 Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3rdpxdypy9-2;
-        Fri, 30 Jun 2023 01:52:52 +0000
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3rdpxdypy9-3;
+        Fri, 30 Jun 2023 01:52:53 +0000
 From:   Dai Ngo <dai.ngo@oracle.com>
 To:     chuck.lever@oracle.com, jlayton@kernel.org
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v7 1/4] locks: allow support for write delegation
-Date:   Thu, 29 Jun 2023 18:52:37 -0700
-Message-Id: <1688089960-24568-2-git-send-email-dai.ngo@oracle.com>
+Subject: [PATCH v7 2/4] NFSD: allow client to use write delegation stateid for READ
+Date:   Thu, 29 Jun 2023 18:52:38 -0700
+Message-Id: <1688089960-24568-3-git-send-email-dai.ngo@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <1688089960-24568-1-git-send-email-dai.ngo@oracle.com>
 References: <1688089960-24568-1-git-send-email-dai.ngo@oracle.com>
@@ -58,8 +58,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 suspec
  malwarescore=0 phishscore=0 bulkscore=0 spamscore=0 adultscore=0
  mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2305260000 definitions=main-2306300014
-X-Proofpoint-GUID: LS7gkiVvzCCUyqH_RAeG7KKiRYiqmajm
-X-Proofpoint-ORIG-GUID: LS7gkiVvzCCUyqH_RAeG7KKiRYiqmajm
+X-Proofpoint-GUID: Igz5ZViv8SEhMuciEQhDRno6Dr-avVaL
+X-Proofpoint-ORIG-GUID: Igz5ZViv8SEhMuciEQhDRno6Dr-avVaL
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -70,34 +70,94 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Remove the check for F_WRLCK in generic_add_lease to allow file_lock
-to be used for write delegation.
-
-First consumer is NFSD.
+Allow NFSv4 client to use write delegation stateid for READ operation.
+Per RFC 8881 section 9.1.2. Use of the Stateid and Locking.
 
 Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 ---
- fs/locks.c | 7 -------
- 1 file changed, 7 deletions(-)
+ fs/nfsd/nfs4proc.c | 16 ++++++++++++++--
+ fs/nfsd/nfs4xdr.c  |  9 +++++++++
+ fs/nfsd/xdr4.h     |  2 ++
+ 3 files changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/fs/locks.c b/fs/locks.c
-index df8b26a42524..08fb0b4fd4f8 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -1729,13 +1729,6 @@ generic_add_lease(struct file *filp, long arg, struct file_lock **flp, void **pr
- 	if (is_deleg && !inode_trylock(inode))
- 		return -EAGAIN;
- 
--	if (is_deleg && arg == F_WRLCK) {
--		/* Write delegations are not currently supported: */
--		inode_unlock(inode);
--		WARN_ON_ONCE(1);
--		return -EINVAL;
--	}
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 5ae670807449..3fa66cb38780 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -942,8 +942,18 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	/* check stateid */
+ 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
+ 					&read->rd_stateid, RD_STATE,
+-					&read->rd_nf, NULL);
 -
- 	percpu_down_read(&file_rwsem);
- 	spin_lock(&ctx->flc_lock);
- 	time_out_leases(inode, &dispose);
++					&read->rd_nf, &read->rd_wd_stid);
++	/*
++	 * rd_wd_stid is needed for nfsd4_encode_read to allow write
++	 * delegation stateid used for read. Its refcount is decremented
++	 * by nfsd4_read_release when read is done.
++	 */
++	if (!status && (read->rd_wd_stid->sc_type != NFS4_DELEG_STID ||
++			delegstateid(read->rd_wd_stid)->dl_type !=
++			NFS4_OPEN_DELEGATE_WRITE)) {
++		nfs4_put_stid(read->rd_wd_stid);
++		read->rd_wd_stid = NULL;
++	}
+ 	read->rd_rqstp = rqstp;
+ 	read->rd_fhp = &cstate->current_fh;
+ 	return status;
+@@ -953,6 +963,8 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ static void
+ nfsd4_read_release(union nfsd4_op_u *u)
+ {
++	if (u->read.rd_wd_stid)
++		nfs4_put_stid(u->read.rd_wd_stid);
+ 	if (u->read.rd_nf)
+ 		nfsd_file_put(u->read.rd_nf);
+ 	trace_nfsd_read_done(u->read.rd_rqstp, u->read.rd_fhp,
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 76db2fe29624..e0640b31d041 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4120,6 +4120,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	struct file *file;
+ 	int starting_len = xdr->buf->len;
+ 	__be32 *p;
++	fmode_t o_fmode = 0;
+ 
+ 	if (nfserr)
+ 		return nfserr;
+@@ -4139,10 +4140,18 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	maxcount = min_t(unsigned long, read->rd_length,
+ 			 (xdr->buf->buflen - xdr->buf->len));
+ 
++	if (read->rd_wd_stid) {
++		/* allow READ using write delegation stateid */
++		o_fmode = file->f_mode;
++		file->f_mode |= FMODE_READ;
++	}
+ 	if (file->f_op->splice_read && splice_ok)
+ 		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
+ 	else
+ 		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
++	if (o_fmode)
++		file->f_mode = o_fmode;
++
+ 	if (nfserr) {
+ 		xdr_truncate_encode(xdr, starting_len);
+ 		return nfserr;
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 510978e602da..3ccc40f9274a 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -307,6 +307,8 @@ struct nfsd4_read {
+ 	struct svc_rqst		*rd_rqstp;          /* response */
+ 	struct svc_fh		*rd_fhp;            /* response */
+ 	u32			rd_eof;             /* response */
++
++	struct nfs4_stid	*rd_wd_stid;		/* internal */
+ };
+ 
+ struct nfsd4_readdir {
 -- 
 2.39.3
 
