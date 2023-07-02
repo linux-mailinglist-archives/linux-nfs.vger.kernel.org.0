@@ -2,59 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73AB9744B32
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Jul 2023 23:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E4CA744F6F
+	for <lists+linux-nfs@lfdr.de>; Sun,  2 Jul 2023 19:55:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229908AbjGAVto (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 1 Jul 2023 17:49:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52148 "EHLO
+        id S229764AbjGBRz1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 2 Jul 2023 13:55:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjGAVto (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 1 Jul 2023 17:49:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A90CB2;
-        Sat,  1 Jul 2023 14:49:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E995D60A72;
-        Sat,  1 Jul 2023 21:49:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5A3ABC433C8;
-        Sat,  1 Jul 2023 21:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688248182;
-        bh=CqNsMs1ge4fApjWGu4EO5ntLXPQKj2XEYZR7t2Mcx9U=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=Ieu0hdN6blS9LhQRfEtbnABzT6EkGdndgMifiB6L91QcyzqeHbgc86gSb0wQFL41x
-         2Y+0c1PEt+cZu1OQBMgstDj30LlsqvavZ8pWKrJsW1c/QduKByPOzc+L54E/MYU8eF
-         vT6zGHNkdcMeQgFkEwQLgbei6TDlPr2E8DjVrnL+823jHbl8RJBD8ZPqk+B6sl2Xlm
-         bdlx5golS+mKOZR5h85pYI4tVjW06GY/xKHny82a0mQh2uU0BZHyN3jWDqIUK3HOqU
-         8nFKNpi2gHZigro0u/3/XvHxprBnhh/tKYLAmcYxFSnsZRO4hdMS2HrLXE2qMe56sE
-         QwX4oCcss5cow==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4A381C0C40E;
-        Sat,  1 Jul 2023 21:49:42 +0000 (UTC)
-Subject: Re: [GIT PULL] Please pull NFS client updates for Linux 6.5
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <fc3d657d436e21d86b51fcfa0553c04d217d4b80.camel@hammerspace.com>
-References: <fc3d657d436e21d86b51fcfa0553c04d217d4b80.camel@hammerspace.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <fc3d657d436e21d86b51fcfa0553c04d217d4b80.camel@hammerspace.com>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.5-1
-X-PR-Tracked-Commit-Id: 5b4a82a0724af1dfd1320826e0266117b6a57fbd
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dfab92f27c600fea3cadc6e2cb39f092024e1fef
-Message-Id: <168824818229.28886.11565152345827076204.pr-tracker-bot@kernel.org>
-Date:   Sat, 01 Jul 2023 21:49:42 +0000
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        with ESMTP id S229679AbjGBRz0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 2 Jul 2023 13:55:26 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1808E5E;
+        Sun,  2 Jul 2023 10:55:24 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-c13cb2cb428so622377276.0;
+        Sun, 02 Jul 2023 10:55:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688320524; x=1690912524;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=B/346nUIZErMaap4Xzifysw7agxmNBKblpAJllVen+8=;
+        b=HS1Xpu8RutGjzNf2cNefIvO40PuyEyyWN1lXpuUm3Zm6tYXGDXwbDrBzDuJeX7KOHr
+         q1UGGgd94SVTRefQw+1rgl1gQ50uEoBHL2OdSUILUjvF+1ATH9gvheGUN++hFOwLNLid
+         1XMjRZLU+9Ge2en4fJbD50bjnQdqOwyoXZfvhIPbUVY/sq6Vm6BAvUYZPRqmTRzyIG2n
+         JWXOYS2flIDtpE0mu19bw1MyMQp5M6uow+iO1HWzOXqc6Z90+aO2nBs6Bf+FGR5IBS25
+         laBmv/H9uClBFT1isqMjJFlPY+WcanwzxZg1N8ZxZIN6sqfmOEIBN1yT1YF0buNY5Ya/
+         4xig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688320524; x=1690912524;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B/346nUIZErMaap4Xzifysw7agxmNBKblpAJllVen+8=;
+        b=jXMzier0L+uA9uqJKLdm5TIwgOAhgiAZeSAf6CZ7pSDwvbckdaLE4/JtIdDJA73YLg
+         M1yROHqCUDtrY/d6QM/kLYRfUMkUW39C0xSaijLtk7V/6zkIUKaSdF0bTK5xqzYUOJ21
+         XdMwBdozbMKoKy2GJxu60H09R/zh+jyWANP2/OE6fKdooaiTPggHcKUuaA3MLv/3Jdhv
+         xMdFlk1Uq/jTYzBbOIYSGt4uTRVsHD+zsMsyHJ8qfP+m6a89VPqNNafySDtenOEE0PPW
+         z4AOUwPm5Bd/e0kORptURQp1sAqAxIRYTkl4iPL8RY0mSaU+4n/TgsVND+Kb7gqbxopG
+         V32Q==
+X-Gm-Message-State: ABy/qLbXBRFGQ9vXsWtEkPvP85QWn0z0iO+Pv2E4bf3Lh+XyNrNrqZim
+        170QS63XFk2rmFh6OnNwDK/RIGMcXish1f07JoJTnJKPmcUzgQ==
+X-Google-Smtp-Source: APBJJlGKLhOT4Bu7qJ+9PV6J1mFibevhHpEsj9SgVNCYM6WTAos06S2LRQMzHrHXF1fE6Av0kYh7XbCZNh0JTIxm3q8=
+X-Received: by 2002:a25:2b88:0:b0:bd6:6e3e:3af3 with SMTP id
+ r130-20020a252b88000000b00bd66e3e3af3mr4285143ybr.3.1688320523798; Sun, 02
+ Jul 2023 10:55:23 -0700 (PDT)
+MIME-Version: 1.0
+From:   Askar Safin <safinaskar@gmail.com>
+Date:   Sun, 2 Jul 2023 20:54:47 +0300
+Message-ID: <CAPnZJGB6gk47Hw-OE2_9eSKJ0DwOzEiL+tncMJyiOD6arw6xag@mail.gmail.com>
+Subject: Re: [PATCH net-next v3 17/18] sock: Remove ->sendpage*() in favour of sendmsg(MSG_SPLICE_PAGES)
+To:     David Howells <dhowells@redhat.com>
+Cc:     netdev@vger.kernel.org,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        David Ahern <dsahern@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Marc Kleine-Budde <mkl@pengutronix.de>, bpf@vger.kernel.org,
+        dccp@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
+        linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-hams@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-sctp@vger.kernel.org, linux-wpan@vger.kernel.org,
+        linux-x25@vger.kernel.org, mptcp@lists.linux.dev,
+        rds-devel@oss.oracle.com, tipc-discussion@lists.sourceforge.net,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,15 +82,18 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Sat, 1 Jul 2023 21:33:15 +0000:
+> -/* In some cases, both sendpage() and sendmsg() could have added
+> - * an skb to the write queue, but failed adding payload on it.
+> - * We need to remove it to consume less memory, but more
+> - * importantly be able to generate EPOLLOUT for Edge Trigger epoll()
+> - * users.
+> +/* In some cases, both sendmsg() could have added an skb to the write queue,
+> + * but failed adding payload on it.  We need to remove it to consume less
+> + * memory, but more importantly be able to generate EPOLLOUT for Edge Trigger
+> + * epoll() users.
+>   */
 
-> git://git.linux-nfs.org/projects/trondmy/linux-nfs.git tags/nfs-for-6.5-1
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dfab92f27c600fea3cadc6e2cb39f092024e1fef
-
-Thank you!
+There is a typo here. "Both" is redundant now
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Askar Safin
