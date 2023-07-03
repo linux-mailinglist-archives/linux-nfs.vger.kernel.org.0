@@ -2,98 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E4CA744F6F
-	for <lists+linux-nfs@lfdr.de>; Sun,  2 Jul 2023 19:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5F327454A1
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jul 2023 06:48:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229764AbjGBRz1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 2 Jul 2023 13:55:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
+        id S229481AbjGCEsY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jul 2023 00:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjGBRz0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 2 Jul 2023 13:55:26 -0400
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1808E5E;
-        Sun,  2 Jul 2023 10:55:24 -0700 (PDT)
-Received: by mail-yb1-xb29.google.com with SMTP id 3f1490d57ef6-c13cb2cb428so622377276.0;
-        Sun, 02 Jul 2023 10:55:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688320524; x=1690912524;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=B/346nUIZErMaap4Xzifysw7agxmNBKblpAJllVen+8=;
-        b=HS1Xpu8RutGjzNf2cNefIvO40PuyEyyWN1lXpuUm3Zm6tYXGDXwbDrBzDuJeX7KOHr
-         q1UGGgd94SVTRefQw+1rgl1gQ50uEoBHL2OdSUILUjvF+1ATH9gvheGUN++hFOwLNLid
-         1XMjRZLU+9Ge2en4fJbD50bjnQdqOwyoXZfvhIPbUVY/sq6Vm6BAvUYZPRqmTRzyIG2n
-         JWXOYS2flIDtpE0mu19bw1MyMQp5M6uow+iO1HWzOXqc6Z90+aO2nBs6Bf+FGR5IBS25
-         laBmv/H9uClBFT1isqMjJFlPY+WcanwzxZg1N8ZxZIN6sqfmOEIBN1yT1YF0buNY5Ya/
-         4xig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688320524; x=1690912524;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B/346nUIZErMaap4Xzifysw7agxmNBKblpAJllVen+8=;
-        b=jXMzier0L+uA9uqJKLdm5TIwgOAhgiAZeSAf6CZ7pSDwvbckdaLE4/JtIdDJA73YLg
-         M1yROHqCUDtrY/d6QM/kLYRfUMkUW39C0xSaijLtk7V/6zkIUKaSdF0bTK5xqzYUOJ21
-         XdMwBdozbMKoKy2GJxu60H09R/zh+jyWANP2/OE6fKdooaiTPggHcKUuaA3MLv/3Jdhv
-         xMdFlk1Uq/jTYzBbOIYSGt4uTRVsHD+zsMsyHJ8qfP+m6a89VPqNNafySDtenOEE0PPW
-         z4AOUwPm5Bd/e0kORptURQp1sAqAxIRYTkl4iPL8RY0mSaU+4n/TgsVND+Kb7gqbxopG
-         V32Q==
-X-Gm-Message-State: ABy/qLbXBRFGQ9vXsWtEkPvP85QWn0z0iO+Pv2E4bf3Lh+XyNrNrqZim
-        170QS63XFk2rmFh6OnNwDK/RIGMcXish1f07JoJTnJKPmcUzgQ==
-X-Google-Smtp-Source: APBJJlGKLhOT4Bu7qJ+9PV6J1mFibevhHpEsj9SgVNCYM6WTAos06S2LRQMzHrHXF1fE6Av0kYh7XbCZNh0JTIxm3q8=
-X-Received: by 2002:a25:2b88:0:b0:bd6:6e3e:3af3 with SMTP id
- r130-20020a252b88000000b00bd66e3e3af3mr4285143ybr.3.1688320523798; Sun, 02
- Jul 2023 10:55:23 -0700 (PDT)
+        with ESMTP id S229504AbjGCEsW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jul 2023 00:48:22 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E0811AB
+        for <linux-nfs@vger.kernel.org>; Sun,  2 Jul 2023 21:48:18 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 1B47E218E0;
+        Mon,  3 Jul 2023 04:48:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1688359692; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h/EZ7h6UxhORQqlIGJ3v2FQ5d3ZomNwIfwZHBLA3srU=;
+        b=xZIPht5ZfimLdBEQ60lvCKlazR+MN6nwmLg0nP0gC452uEA/kLG96Zm6UAkwfjZi1aiWPe
+        FfxwtKWipC1fzRoQmxrvd66a2Pq/l8T2fjxwl/2zDwN70+GjMuzPNxw5foRLFbmgTZXJ0g
+        j6j7htykJAVKftab+s/v+7iGuarf6dw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1688359692;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h/EZ7h6UxhORQqlIGJ3v2FQ5d3ZomNwIfwZHBLA3srU=;
+        b=jlexXMYRTp1s53W3Ar6i+Zfna0Q79W5NUPiHH8VcNUoy70QFyAc88AMYOXo4LXLKcYjMaf
+        pj7eadwJH/FOyIBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CDC2D13276;
+        Mon,  3 Jul 2023 04:48:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id YZ7GHwpTomROEAAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 03 Jul 2023 04:48:10 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-From:   Askar Safin <safinaskar@gmail.com>
-Date:   Sun, 2 Jul 2023 20:54:47 +0300
-Message-ID: <CAPnZJGB6gk47Hw-OE2_9eSKJ0DwOzEiL+tncMJyiOD6arw6xag@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 17/18] sock: Remove ->sendpage*() in favour of sendmsg(MSG_SPLICE_PAGES)
-To:     David Howells <dhowells@redhat.com>
-Cc:     netdev@vger.kernel.org,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Ahern <dsahern@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Marc Kleine-Budde <mkl@pengutronix.de>, bpf@vger.kernel.org,
-        dccp@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-can@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-hams@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-sctp@vger.kernel.org, linux-wpan@vger.kernel.org,
-        linux-x25@vger.kernel.org, mptcp@lists.linux.dev,
-        rds-devel@oss.oracle.com, tipc-discussion@lists.sourceforge.net,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever" <cel@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>
+Subject: Re: [PATCH RFC 0/4] Encode NFSv4 attributes via a branch table
+In-reply-to: <168808788945.7728.6965361432016501208.stgit@manet.1015granger.net>
+References: <168808788945.7728.6965361432016501208.stgit@manet.1015granger.net>
+Date:   Mon, 03 Jul 2023 14:48:07 +1000
+Message-id: <168835968730.8939.17203263812842647260@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> -/* In some cases, both sendpage() and sendmsg() could have added
-> - * an skb to the write queue, but failed adding payload on it.
-> - * We need to remove it to consume less memory, but more
-> - * importantly be able to generate EPOLLOUT for Edge Trigger epoll()
-> - * users.
-> +/* In some cases, both sendmsg() could have added an skb to the write queue,
-> + * but failed adding payload on it.  We need to remove it to consume less
-> + * memory, but more importantly be able to generate EPOLLOUT for Edge Trigger
-> + * epoll() users.
->   */
+On Fri, 30 Jun 2023, Chuck Lever wrote:
+> Here's something just for fun. I've converted nfsd4_encode_fattr4()
+> to use a bitmask loop, calling an encode helper for each attribute
+> to be encoded. Rotten tomatoes and gold stars are both acceptible.
 
-There is a typo here. "Both" is redundant now
+Tomatoes or stars .... it is a hard choice :-)
 
--- 
-Askar Safin
+I wonder what the compiler does with this code.
+If it unrolls the loop and inlines the functions - which it probably can
+do as the array of pointers is declared const - you end up with much the
+same result as the current code.
+
+And I wonder where the compiler puts the code in each conditional now.
+If it assumes an if() is unlikely, then it would all be out-of-line
+which sounds like part of your goal (or maybe just a nice-to-have).
+
+If the compiler does, or can be convinced to, do the unroll and inline
+and unlikely optimisations, then I think I'd give this a goal star.
+
+I guess in practice some of the attributes are "likely" and many are
+"unlikely".  With the current code we could easily annotate that if we
+wanted to and thought (or measured) there was any value.  With the
+looping code we cannot really annotate the likelihood of each.
+
+The code-generation idea is intriguing.  Even if we didn't reach that
+goal, having the code highly structured as though it were auto-generated
+would be no bad thing.
+
+Thanks,
+NeilBrown
