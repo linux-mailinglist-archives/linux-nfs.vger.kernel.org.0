@@ -2,67 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8E56746737
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jul 2023 04:17:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FC85746795
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jul 2023 04:31:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231382AbjGDCRh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Jul 2023 22:17:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58694 "EHLO
+        id S230028AbjGDCbF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jul 2023 22:31:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229505AbjGDCRg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jul 2023 22:17:36 -0400
+        with ESMTP id S229844AbjGDCbF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jul 2023 22:31:05 -0400
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10A85136
-        for <linux-nfs@vger.kernel.org>; Mon,  3 Jul 2023 19:17:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE1C184
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Jul 2023 19:31:04 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id AF83B20237;
-        Tue,  4 Jul 2023 02:17:33 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id DF35B2024A;
+        Tue,  4 Jul 2023 02:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1688437053; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1688437862; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=96gA9JNpJyGUaJZSaY15X7/BBIQ3q4HuIr6c3H9RHWQ=;
-        b=ml+02n/kOQFWVQHJlVE76ESaxXumlCaCjNpYfMQy9Wk6b1zZS6a1BZM5x7dVVcIoEWh1fD
-        6SOqRI2YUPi5jJlz0UgSxC6v86VNVReV0swqie4xGIkXmMTuhXnPZBAQ1FrBoCidHQwQo3
-        u++OC7vv2SeD6k/3i3EQN4dTS7vmPAU=
+        bh=//VBtrpwuh5XVGYr/OAhGjnlmDs8cg5fGO9KwlYP9sI=;
+        b=UHCs1kqMqiCH3IEl9PSkO5pcm3GVzqqQJ2NU1LxH4zAy4GjLIR3UfxSAIC05Zmg4/hXX4Q
+        ZFvvTTRc3Z5AsTHPmC2fFFa9sCW3rX19Ku+YBMfHdfSeiekAYzwObhm3x/CTObNWSiHpXX
+        qWD7w7vSx6S1YdKI0dTpa7Zwe9qQkMU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1688437053;
+        s=susede2_ed25519; t=1688437862;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=96gA9JNpJyGUaJZSaY15X7/BBIQ3q4HuIr6c3H9RHWQ=;
-        b=3apreq88rfkEd0GczKNHXFs6FnQlJD/P9Z/XlFU09SpROXrar01rJnL4OWpP3Hgky76wpI
-        rGsnMapIeU/Tr9Ag==
+        bh=//VBtrpwuh5XVGYr/OAhGjnlmDs8cg5fGO9KwlYP9sI=;
+        b=F3LcOx9CMwkZLZrwPR3k0PxajpWjXGaUm1FkmBocaQNYKdWunFlxQDQFvR0BPezLitBH7k
+        Jl77VvEEj97oXSBw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 80F71133F7;
-        Tue,  4 Jul 2023 02:17:31 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AF7C1133F7;
+        Tue,  4 Jul 2023 02:31:00 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id AgT7DDuBo2R5EAAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 04 Jul 2023 02:17:31 +0000
+        id +zE+GGSEo2R8FQAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 04 Jul 2023 02:31:00 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
 To:     "Chuck Lever" <cel@kernel.org>
 Cc:     linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>,
         lorenzo@kernel.org, jlayton@redhat.com, david@fromorbit.com
-Subject: Re: [PATCH v2 9/9] SUNRPC: Convert RQ_BUSY into a per-pool bitmap
-In-reply-to: <ZKN9xmRn+EN/TQwY@manet.1015granger.net>
+Subject: Re: [PATCH v2 4/9] SUNRPC: Count ingress RPC messages per svc_pool
+In-reply-to: <ZKN6GZ8q9NVLywOJ@manet.1015granger.net>
 References: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>,
- <168842930872.139194.10164846167275218299.stgit@manet.1015granger.net>,
- <168843398253.8939.16982425023664424215@noble.neil.brown.name>,
- <ZKN9xmRn+EN/TQwY@manet.1015granger.net>
-Date:   Tue, 04 Jul 2023 12:17:28 +1000
-Message-id: <168843704829.8939.9406594114602623376@noble.neil.brown.name>
+ <168842927591.139194.16920372497489479670.stgit@manet.1015granger.net>,
+ <168843152047.8939.5788535164524204707@noble.neil.brown.name>,
+ <ZKN6GZ8q9NVLywOJ@manet.1015granger.net>
+Date:   Tue, 04 Jul 2023 12:30:57 +1000
+Message-id: <168843785749.8939.9913705917013899427@noble.neil.brown.name>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
@@ -74,246 +74,43 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Tue, 04 Jul 2023, Chuck Lever wrote:
-> On Tue, Jul 04, 2023 at 11:26:22AM +1000, NeilBrown wrote:
+> On Tue, Jul 04, 2023 at 10:45:20AM +1000, NeilBrown wrote:
 > > On Tue, 04 Jul 2023, Chuck Lever wrote:
 > > > From: Chuck Lever <chuck.lever@oracle.com>
-> > >=20
-> > > I've noticed that client-observed server request latency goes up
-> > > simply when the nfsd thread count is increased.
-> > >=20
-> > > List walking is known to be memory-inefficient. On a busy server
-> > > with many threads, enqueuing a transport will walk the "all threads"
-> > > list quite frequently. This also pulls in the cache lines for some
-> > > hot fields in each svc_rqst (namely, rq_flags).
-> >=20
-> > I think this text could usefully be re-written.  By this point in the
-> > series we aren't list walking.
-> >=20
-> > I'd also be curious to know what latency different you get for just this
-> > change.
->=20
-> Not much of a latency difference at lower thread counts.
->=20
-> The difference I notice is that with the spinlock version of
-> pool_wake_idle_thread, there is significant lock contention as
-> the thread count increases, and the throughput result of my fio
-> test is lower (outside the result variance).
->=20
->=20
-> > > The svc_xprt_enqueue() call that concerns me most is the one in
-> > > svc_rdma_wc_receive(), which is single-threaded per CQ. Slowing
-> > > down completion handling limits the total throughput per RDMA
-> > > connection.
-> > >=20
-> > > So, avoid walking the "all threads" list to find an idle thread to
-> > > wake. Instead, set up an idle bitmap and use find_next_bit, which
-> > > should work the same way as RQ_BUSY but it will touch only the
-> > > cachelines that the bitmap is in. Stick with atomic bit operations
-> > > to avoid taking the pool lock.
-> > >=20
-> > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > ---
-> > >  include/linux/sunrpc/svc.h    |    6 ++++--
-> > >  include/trace/events/sunrpc.h |    1 -
-> > >  net/sunrpc/svc.c              |   27 +++++++++++++++++++++------
-> > >  net/sunrpc/svc_xprt.c         |   30 ++++++++++++++++++++++++------
-> > >  4 files changed, 49 insertions(+), 15 deletions(-)
-> > >=20
-> > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > > index 6f8bfcd44250..27ffcf7371d0 100644
-> > > --- a/include/linux/sunrpc/svc.h
-> > > +++ b/include/linux/sunrpc/svc.h
-> > > @@ -35,6 +35,7 @@ struct svc_pool {
-> > >  	spinlock_t		sp_lock;	/* protects sp_sockets */
-> > >  	struct list_head	sp_sockets;	/* pending sockets */
-> > >  	unsigned int		sp_nrthreads;	/* # of threads in pool */
-> > > +	unsigned long		*sp_idle_map;	/* idle threads */
-> > >  	struct xarray		sp_thread_xa;
-> > > =20
-> > >  	/* statistics on pool operation */
-> > > @@ -190,6 +191,8 @@ extern u32 svc_max_payload(const struct svc_rqst *r=
-qstp);
-> > >  #define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE \
-> > >  				+ 2 + 1)
-> > > =20
-> > > +#define RPCSVC_MAXPOOLTHREADS	(4096)
-> > > +
-> > >  /*
-> > >   * The context of a single thread, including the request currently bei=
-ng
-> > >   * processed.
-> > > @@ -239,8 +242,7 @@ struct svc_rqst {
-> > >  #define	RQ_SPLICE_OK	(4)			/* turned off in gss privacy
-> > >  						 * to prevent encrypting page
-> > >  						 * cache pages */
-> > > -#define	RQ_BUSY		(5)			/* request is busy */
-> > > -#define	RQ_DATA		(6)			/* request has data */
-> > > +#define	RQ_DATA		(5)			/* request has data */
-> >=20
-> > Might this be a good opportunity to convert this to an enum ??
-> >=20
-> > >  	unsigned long		rq_flags;	/* flags field */
-> > >  	u32			rq_thread_id;	/* xarray index */
-> > >  	ktime_t			rq_qtime;	/* enqueue time */
-> > > diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrp=
-c.h
-> > > index ea43c6059bdb..c07824a254bf 100644
-> > > --- a/include/trace/events/sunrpc.h
-> > > +++ b/include/trace/events/sunrpc.h
-> > > @@ -1676,7 +1676,6 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
-> > >  	svc_rqst_flag(USEDEFERRAL)					\
-> > >  	svc_rqst_flag(DROPME)						\
-> > >  	svc_rqst_flag(SPLICE_OK)					\
-> > > -	svc_rqst_flag(BUSY)						\
-> > >  	svc_rqst_flag_end(DATA)
-> > > =20
-> > >  #undef svc_rqst_flag
-> > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> > > index ef350f0d8925..d0278e5190ba 100644
-> > > --- a/net/sunrpc/svc.c
-> > > +++ b/net/sunrpc/svc.c
-> > > @@ -509,6 +509,12 @@ __svc_create(struct svc_program *prog, unsigned in=
-t bufsize, int npools,
-> > >  		INIT_LIST_HEAD(&pool->sp_sockets);
-> > >  		spin_lock_init(&pool->sp_lock);
-> > >  		xa_init_flags(&pool->sp_thread_xa, XA_FLAGS_ALLOC);
-> > > +		/* All threads initially marked "busy" */
-> > > +		pool->sp_idle_map =3D
-> > > +			bitmap_zalloc_node(RPCSVC_MAXPOOLTHREADS, GFP_KERNEL,
-> > > +					   svc_pool_map_get_node(i));
-> > > +		if (!pool->sp_idle_map)
-> > > +			return NULL;
-> > > =20
-> > >  		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
-> > >  		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
-> > > @@ -596,6 +602,8 @@ svc_destroy(struct kref *ref)
-> > >  		percpu_counter_destroy(&pool->sp_threads_starved);
-> > > =20
-> > >  		xa_destroy(&pool->sp_thread_xa);
-> > > +		bitmap_free(pool->sp_idle_map);
-> > > +		pool->sp_idle_map =3D NULL;
-> > >  	}
-> > >  	kfree(serv->sv_pools);
-> > >  	kfree(serv);
-> > > @@ -647,7 +655,6 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_po=
-ol *pool, int node)
-> > > =20
-> > >  	folio_batch_init(&rqstp->rq_fbatch);
-> > > =20
-> > > -	__set_bit(RQ_BUSY, &rqstp->rq_flags);
-> > >  	rqstp->rq_server =3D serv;
-> > >  	rqstp->rq_pool =3D pool;
-> > > =20
-> > > @@ -677,7 +684,7 @@ static struct svc_rqst *
-> > >  svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int n=
-ode)
-> > >  {
-> > >  	static const struct xa_limit limit =3D {
-> > > -		.max =3D U32_MAX,
-> > > +		.max =3D RPCSVC_MAXPOOLTHREADS,
-> > >  	};
-> > >  	struct svc_rqst	*rqstp;
-> > >  	int ret;
-> > > @@ -722,12 +729,19 @@ struct svc_rqst *svc_pool_wake_idle_thread(struct=
- svc_serv *serv,
-> > >  					   struct svc_pool *pool)
-> > >  {
-> > >  	struct svc_rqst	*rqstp;
-> > > -	unsigned long index;
-> > > +	unsigned long bit;
-> > > =20
-> > > -	xa_for_each(&pool->sp_thread_xa, index, rqstp) {
-> > > -		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
-> > > +	/* Check the pool's idle bitmap locklessly so that multiple
-> > > +	 * idle searches can proceed concurrently.
-> > > +	 */
-> > > +	for_each_set_bit(bit, pool->sp_idle_map, pool->sp_nrthreads) {
-> > > +		if (!test_and_clear_bit(bit, pool->sp_idle_map))
-> > >  			continue;
-> >=20
-> > I would really rather the map was "sp_busy_map". (initialised with bitmap=
-_fill())
-> > Then you could "test_and_set_bit_lock()" and later "clear_bit_unlock()"
-> > and so get all the required memory barriers.
-> > What we are doing here is locking a particular thread for a task, so
-> > "lock" is an appropriate description of what is happening.
-> > See also svc_pool_thread_mark_* below.
-> >=20
-> > > =20
-> > > +		rqstp =3D xa_load(&pool->sp_thread_xa, bit);
-> > > +		if (!rqstp)
-> > > +			break;
-> > > +
-> > >  		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
-> > >  		wake_up_process(rqstp->rq_task);
-> > >  		percpu_counter_inc(&pool->sp_threads_woken);
-> > > @@ -767,7 +781,8 @@ svc_pool_victim(struct svc_serv *serv, struct svc_p=
-ool *pool, unsigned int *stat
-> > >  	}
-> > > =20
-> > >  found_pool:
-> > > -	rqstp =3D xa_find(&pool->sp_thread_xa, &zero, U32_MAX, XA_PRESENT);
-> > > +	rqstp =3D xa_find(&pool->sp_thread_xa, &zero, RPCSVC_MAXPOOLTHREADS,
-> > > +			XA_PRESENT);
-> > >  	if (rqstp) {
-> > >  		__xa_erase(&pool->sp_thread_xa, rqstp->rq_thread_id);
-> > >  		task =3D rqstp->rq_task;
-> > > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > > index 7709120b45c1..2844b32c16ea 100644
-> > > --- a/net/sunrpc/svc_xprt.c
-> > > +++ b/net/sunrpc/svc_xprt.c
-> > > @@ -735,6 +735,25 @@ rqst_should_sleep(struct svc_rqst *rqstp)
-> > >  	return true;
-> > >  }
-> > > =20
-> > > +static void svc_pool_thread_mark_idle(struct svc_pool *pool,
-> > > +				      struct svc_rqst *rqstp)
-> > > +{
-> > > +	smp_mb__before_atomic();
-> > > +	set_bit(rqstp->rq_thread_id, pool->sp_idle_map);
-> > > +	smp_mb__after_atomic();
-> > > +}
-> >=20
-> > There memory barriers above and below bother me.  There is no comment
-> > telling me what they are protecting against.
-> > I would rather svc_pool_thread_mark_idle - which unlocks the thread -
-> > were
-> >=20
-> >     clear_bit_unlock(rqstp->rq_thread_id, pool->sp_busy_map);
-> >=20
-> > and  that svc_pool_thread_mark_busy were
-> >=20
-> >    test_and_set_bit_lock(rqstp->rq_thread_id, pool->sp_busy_map);
-> >=20
-> > Then it would be more obvious what was happening.
->=20
-> Not obvious to me, but that's very likely because I'm not clear what
-> clear_bit_unlock() does. :-)
+> > > 
+> > > To get a sense of the average number of transport enqueue operations
+> > > needed to process an incoming RPC message, re-use the "packets" pool
+> > > stat. Track the number of complete RPC messages processed by each
+> > > thread pool.
+> > 
+> > If I understand this correctly, then I would say it differently.
+> > 
+> > I think there are either zero or one transport enqueue operations for
+> > each incoming RPC message.  Is that correct?  So the average would be in
+> > (0,1].
+> > Wouldn't it be more natural to talk about the average number of incoming
+> > RPC messages processed per enqueue operation?  This would be typically
+> > be around 1 on a lightly loaded server and would climb up as things get
+> > busy. 
+> > 
+> > Was there a reason you wrote it the way around that you did?
+> 
+> Yes: more than one enqueue is done per incoming RPC. For example,
+> svc_data_ready() enqueues, and so does svc_xprt_receive().
+> 
+> If the RPC requires more than one call to ->recvfrom() to complete
+> the receive operation, each one of those calls does an enqueue.
+> 
 
-In general, any "lock" operation (mutex, spin, whatever) is (and must
-be) and "acquire" type operations which imposes a memory barrier so that
-read requests *after* the lock cannot be satisfied with data from
-*before* the lock.  The read must access data after the lock.
-Conversely any "unlock" operations is a "release" type operation which
-imposes a memory barrier so that any write request *before* the unlock
-must not be delayed until *after* the unlock.  The write must complete
-before the unlock.
+Ahhhh - that makes sense.  Thanks.
+So its really that a number of transport enqueue operations are needed
+to *receive* the message.  Once it is received, it is then processed
+with no more enqueuing.
 
-This is exactly what you would expect of locking - it creates a closed
-code region that is properly ordered w.r.t comparable closed regions.
+I was partly thrown by the fact that the series is mostly about the
+queue of threads, but this is about the queue of transports.
+I guess the more times a transport if queued, the more times a thread
+needs to be woken?
 
-test_and_set_bit_lock() and clear_bit_unlock() provide these expected
-semantics for bit operations.
-
-New code should (almost?) never have explicit memory barriers like
-smp_mb__after_atomic().
-It should use one of the many APIs with _acquire or _release suffixes,
-or with the more explicit _lock or _unlock.
-
->=20
-> I'll try this change for the next version of the series.
->=20
-
-Thanks.
-
+Thanks,
 NeilBrown
