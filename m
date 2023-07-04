@@ -2,450 +2,278 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74FA474679A
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jul 2023 04:32:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2893A746818
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jul 2023 05:46:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229844AbjGDCcu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Jul 2023 22:32:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36000 "EHLO
+        id S230494AbjGDDqT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jul 2023 23:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230349AbjGDCcs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jul 2023 22:32:48 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A623E6E
-        for <linux-nfs@vger.kernel.org>; Mon,  3 Jul 2023 19:32:46 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id CEE8820250;
-        Tue,  4 Jul 2023 02:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1688437964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K36k5CdNFhZkhnM2fL+fOmxK09PfyDVC6Qe2jO/FM9c=;
-        b=WwfU2hRuxm4XC+n/LTT8tx8+td9H2DnJezNRfnIrQU0dPh0ap+6UozxHYiUVbGYL0eldC3
-        154zygX2vNJr7/JeEbIF4bWhGJRN5xD0olAYe260hDbvv1Cs0Ty7Dd+Txye4/z8SHCPvb/
-        cYj3t6MrGib2zYe4eFULGL5GDzT7x6A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1688437964;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=K36k5CdNFhZkhnM2fL+fOmxK09PfyDVC6Qe2jO/FM9c=;
-        b=9eJZQvVszjJ/UZ4KRsLk2BoWuQpInvSKP40ZJ/9HHwOfLhEapK2W7zY0lZHrS41ukOFhjL
-        QS8ZMPPifLC9/iAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 56E41133F7;
-        Tue,  4 Jul 2023 02:32:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id HmXFAsqEo2QPFgAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 04 Jul 2023 02:32:42 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230351AbjGDDp6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jul 2023 23:45:58 -0400
+Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1EE7E5B
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Jul 2023 20:45:28 -0700 (PDT)
+Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1b898cfa6a1so2004385ad.1
+        for <linux-nfs@vger.kernel.org>; Mon, 03 Jul 2023 20:45:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1688442328; x=1691034328;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MFeBrddeuJ5VLdpmCCc9Ly4sKMWZlJ9dQaH0OIDXyXU=;
+        b=j7xJWhzFM4GE3eR0BWlTsy0HOBZgoak2dvLTatqMXnZnLNlVtwEQEMD37hReh1XlxL
+         r7hBjmyn6FTskoa4La7xZKdevvzdRYT77+N3epv4gV4kf7cq17ylBfxUBggc5e3s855p
+         GBBkk0n7PQiIlJc4/4tEUrT3R4iVDw8hzgofihKHl2t9qpb1Wo/DBMbPRp1jN35Ysfyk
+         NehRpBrYeu3yLN9/0Wq7Sp995UEH4u6Jpn1UiV9vGd2Ip0zNqgcG1X9kw2r/e/NkF6jp
+         XN82IHgovy+BsnEHQ6hQjvSqng1pgoniLOJy363s3drrdrxX6tuIJ1PwqNuLdqN7Qt1x
+         0hhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688442328; x=1691034328;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MFeBrddeuJ5VLdpmCCc9Ly4sKMWZlJ9dQaH0OIDXyXU=;
+        b=kx2YWZe5jmAD6Fx3tEBeSlmmYMjHYelxmMbKZZ4Vc1otS0INuMgfrR/t84xJ9izKi8
+         fZ6SaLPaeJu4+FkQWhoHtmo3myNMM/f6K5EubFFr8Lc/748qGUd5BZwzXAGatWaVTUD1
+         etTnb4Sbk+7aQwdNcM4irC/j4ITEP3FhsgaBOUpSbBeNnGgF1aGuBQU57WhtHna8D7+h
+         cSPYAC/rWqJyseNKSactsJZtn+LZGXkl8j+1Rotj6c7rPdttBAqVgWAvze0nuXkKluQ7
+         PQtmSqFZMrtb/H4jJ4SIY1dS26GWJ7UmPQrZwmmizk1E76HDEVy4DtD5N4EpABAyE0B7
+         5bEA==
+X-Gm-Message-State: ABy/qLavv4NdGse+DFHGFSAyv0EQOmDCQdbgaqPv4cQ1SzQwJFBeC6Ug
+        QhdpbMY7b8bwMQTeiRwizbzKSw==
+X-Google-Smtp-Source: APBJJlF81QfMj+OzGuweGT/AC35DngvuObAYHLJM7qqWJeHFGWrQw9pznSu7LGwsdhDNw+giWeybWA==
+X-Received: by 2002:a17:902:b20b:b0:1ae:4567:2737 with SMTP id t11-20020a170902b20b00b001ae45672737mr12710934plr.2.1688442328020;
+        Mon, 03 Jul 2023 20:45:28 -0700 (PDT)
+Received: from [10.70.252.135] ([203.208.167.147])
+        by smtp.gmail.com with ESMTPSA id az10-20020a170902a58a00b001b1866f7b5csm15891733plb.138.2023.07.03.20.45.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Jul 2023 20:45:27 -0700 (PDT)
+Message-ID: <3efa68e0-b04f-5c11-4fe2-2db0784064fc@bytedance.com>
+Date:   Tue, 4 Jul 2023 11:45:16 +0800
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever" <cel@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>,
-        lorenzo@kernel.org, jlayton@redhat.com, david@fromorbit.com
-Subject: Re: [PATCH v2 8/9] SUNRPC: Replace sp_threads_all with an xarray
-In-reply-to: <ZKN7ZT8XwUQP0OBW@manet.1015granger.net>
-References: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>,
- <168842930220.139194.2628840255224609992.stgit@manet.1015granger.net>,
- <168843311716.8939.12802231528437837606@noble.neil.brown.name>,
- <ZKN7ZT8XwUQP0OBW@manet.1015granger.net>
-Date:   Tue, 04 Jul 2023 12:32:39 +1000
-Message-id: <168843795906.8939.15881947835605707207@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH 24/29] mm: vmscan: make global slab shrink lockless
+Content-Language: en-US
+To:     paulmck@kernel.org, Dave Chinner <david@fromorbit.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, akpm@linux-foundation.org,
+        tkhai@ya.ru, roman.gushchin@linux.dev, djwong@kernel.org,
+        brauner@kernel.org, tytso@mit.edu, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        dm-devel@redhat.com, linux-raid@vger.kernel.org,
+        linux-bcache@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+References: <20230622085335.77010-1-zhengqi.arch@bytedance.com>
+ <20230622085335.77010-25-zhengqi.arch@bytedance.com>
+ <cf0d9b12-6491-bf23-b464-9d01e5781203@suse.cz>
+ <ZJU708VIyJ/3StAX@dread.disaster.area>
+ <cc894c77-717a-4e9f-b649-48bab40e7c60@paulmck-laptop>
+From:   Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <cc894c77-717a-4e9f-b649-48bab40e7c60@paulmck-laptop>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 04 Jul 2023, Chuck Lever wrote:
-> On Tue, Jul 04, 2023 at 11:11:57AM +1000, NeilBrown wrote:
-> > On Tue, 04 Jul 2023, Chuck Lever wrote:
-> > > From: Chuck Lever <chuck.lever@oracle.com>
-> > >=20
-> > > We want a thread lookup operation that can be done with RCU only,
-> > > but also we want to avoid the linked-list walk, which does not scale
-> > > well in the number of pool threads.
-> > >=20
-> > > BH-disabled locking is no longer necessary because we're no longer
-> > > sharing the pool's sp_lock to protect either the xarray or the
-> > > pool's thread count. sp_lock also protects transport activity. There
-> > > are no callers of svc_set_num_threads() that run outside of process
-> > > context.
-> > >=20
-> > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > ---
-> > >  fs/nfsd/nfssvc.c              |    3 +-
-> > >  include/linux/sunrpc/svc.h    |   11 +++----
-> > >  include/trace/events/sunrpc.h |   47 ++++++++++++++++++++++++++++-
-> > >  net/sunrpc/svc.c              |   67 ++++++++++++++++++++++++---------=
---------
-> > >  net/sunrpc/svc_xprt.c         |    2 +
-> > >  5 files changed, 93 insertions(+), 37 deletions(-)
-> > >=20
-> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > > index 2154fa63c5f2..d42b2a40c93c 100644
-> > > --- a/fs/nfsd/nfssvc.c
-> > > +++ b/fs/nfsd/nfssvc.c
-> > > @@ -62,8 +62,7 @@ static __be32			nfsd_init_request(struct svc_rqst *,
-> > >   * If (out side the lock) nn->nfsd_serv is non-NULL, then it must poin=
-t to a
-> > >   * properly initialised 'struct svc_serv' with ->sv_nrthreads > 0 (unl=
-ess
-> > >   * nn->keep_active is set).  That number of nfsd threads must
-> > > - * exist and each must be listed in ->sp_all_threads in some entry of
-> > > - * ->sv_pools[].
-> > > + * exist and each must be listed in some entry of ->sv_pools[].
-> > >   *
-> > >   * Each active thread holds a counted reference on nn->nfsd_serv, as d=
-oes
-> > >   * the nn->keep_active flag and various transient calls to svc_get().
-> > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > > index 74ea13270679..6f8bfcd44250 100644
-> > > --- a/include/linux/sunrpc/svc.h
-> > > +++ b/include/linux/sunrpc/svc.h
-> > > @@ -32,10 +32,10 @@
-> > >   */
-> > >  struct svc_pool {
-> > >  	unsigned int		sp_id;	    	/* pool id; also node id on NUMA */
-> > > -	spinlock_t		sp_lock;	/* protects all fields */
-> > > +	spinlock_t		sp_lock;	/* protects sp_sockets */
-> > >  	struct list_head	sp_sockets;	/* pending sockets */
-> > >  	unsigned int		sp_nrthreads;	/* # of threads in pool */
-> > > -	struct list_head	sp_all_threads;	/* all server threads */
-> > > +	struct xarray		sp_thread_xa;
-> > > =20
-> > >  	/* statistics on pool operation */
-> > >  	struct percpu_counter	sp_messages_arrived;
-> > > @@ -195,7 +195,6 @@ extern u32 svc_max_payload(const struct svc_rqst *r=
-qstp);
-> > >   * processed.
-> > >   */
-> > >  struct svc_rqst {
-> > > -	struct list_head	rq_all;		/* all threads list */
-> > >  	struct rcu_head		rq_rcu_head;	/* for RCU deferred kfree */
-> > >  	struct svc_xprt *	rq_xprt;	/* transport ptr */
-> > > =20
-> > > @@ -240,10 +239,10 @@ struct svc_rqst {
-> > >  #define	RQ_SPLICE_OK	(4)			/* turned off in gss privacy
-> > >  						 * to prevent encrypting page
-> > >  						 * cache pages */
-> > > -#define	RQ_VICTIM	(5)			/* about to be shut down */
-> > > -#define	RQ_BUSY		(6)			/* request is busy */
-> > > -#define	RQ_DATA		(7)			/* request has data */
-> > > +#define	RQ_BUSY		(5)			/* request is busy */
-> > > +#define	RQ_DATA		(6)			/* request has data */
-> > >  	unsigned long		rq_flags;	/* flags field */
-> > > +	u32			rq_thread_id;	/* xarray index */
-> > >  	ktime_t			rq_qtime;	/* enqueue time */
-> > > =20
-> > >  	void *			rq_argp;	/* decoded arguments */
-> > > diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrp=
-c.h
-> > > index 60c8e03268d4..ea43c6059bdb 100644
-> > > --- a/include/trace/events/sunrpc.h
-> > > +++ b/include/trace/events/sunrpc.h
-> > > @@ -1676,7 +1676,6 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
-> > >  	svc_rqst_flag(USEDEFERRAL)					\
-> > >  	svc_rqst_flag(DROPME)						\
-> > >  	svc_rqst_flag(SPLICE_OK)					\
-> > > -	svc_rqst_flag(VICTIM)						\
-> > >  	svc_rqst_flag(BUSY)						\
-> > >  	svc_rqst_flag_end(DATA)
-> > > =20
-> > > @@ -2118,6 +2117,52 @@ TRACE_EVENT(svc_pool_starved,
-> > >  	)
-> > >  );
-> > > =20
-> > > +DECLARE_EVENT_CLASS(svc_thread_lifetime_class,
-> > > +	TP_PROTO(
-> > > +		const struct svc_serv *serv,
-> > > +		const struct svc_pool *pool,
-> > > +		const struct svc_rqst *rqstp
-> > > +	),
-> > > +
-> > > +	TP_ARGS(serv, pool, rqstp),
-> > > +
-> > > +	TP_STRUCT__entry(
-> > > +		__string(name, serv->sv_name)
-> > > +		__field(int, pool_id)
-> > > +		__field(unsigned int, nrthreads)
-> > > +		__field(unsigned long, pool_flags)
-> > > +		__field(u32, thread_id)
-> > > +		__field(const void *, rqstp)
-> > > +	),
-> > > +
-> > > +	TP_fast_assign(
-> > > +		__assign_str(name, serv->sv_name);
-> > > +		__entry->pool_id =3D pool->sp_id;
-> > > +		__entry->nrthreads =3D pool->sp_nrthreads;
-> > > +		__entry->pool_flags =3D pool->sp_flags;
-> > > +		__entry->thread_id =3D rqstp->rq_thread_id;
-> > > +		__entry->rqstp =3D rqstp;
-> > > +	),
-> > > +
-> > > +	TP_printk("service=3D%s pool=3D%d pool_flags=3D%s nrthreads=3D%u thre=
-ad_id=3D%u",
-> > > +		__get_str(name), __entry->pool_id,
-> > > +		show_svc_pool_flags(__entry->pool_flags),
-> > > +		__entry->nrthreads, __entry->thread_id
-> > > +	)
-> > > +);
-> > > +
-> > > +#define DEFINE_SVC_THREAD_LIFETIME_EVENT(name) \
-> > > +	DEFINE_EVENT(svc_thread_lifetime_class, svc_pool_##name, \
-> > > +			TP_PROTO( \
-> > > +				const struct svc_serv *serv, \
-> > > +				const struct svc_pool *pool, \
-> > > +				const struct svc_rqst *rqstp \
-> > > +			), \
-> > > +			TP_ARGS(serv, pool, rqstp))
-> > > +
-> > > +DEFINE_SVC_THREAD_LIFETIME_EVENT(thread_init);
-> > > +DEFINE_SVC_THREAD_LIFETIME_EVENT(thread_exit);
-> > > +
-> > >  DECLARE_EVENT_CLASS(svc_xprt_event,
-> > >  	TP_PROTO(
-> > >  		const struct svc_xprt *xprt
-> > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> > > index 9b6701a38e71..ef350f0d8925 100644
-> > > --- a/net/sunrpc/svc.c
-> > > +++ b/net/sunrpc/svc.c
-> > > @@ -507,8 +507,8 @@ __svc_create(struct svc_program *prog, unsigned int=
- bufsize, int npools,
-> > > =20
-> > >  		pool->sp_id =3D i;
-> > >  		INIT_LIST_HEAD(&pool->sp_sockets);
-> > > -		INIT_LIST_HEAD(&pool->sp_all_threads);
-> > >  		spin_lock_init(&pool->sp_lock);
-> > > +		xa_init_flags(&pool->sp_thread_xa, XA_FLAGS_ALLOC);
-> > > =20
-> > >  		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
-> > >  		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
-> > > @@ -594,6 +594,8 @@ svc_destroy(struct kref *ref)
-> > >  		percpu_counter_destroy(&pool->sp_threads_woken);
-> > >  		percpu_counter_destroy(&pool->sp_threads_timedout);
-> > >  		percpu_counter_destroy(&pool->sp_threads_starved);
-> > > +
-> > > +		xa_destroy(&pool->sp_thread_xa);
-> > >  	}
-> > >  	kfree(serv->sv_pools);
-> > >  	kfree(serv);
-> > > @@ -674,7 +676,11 @@ EXPORT_SYMBOL_GPL(svc_rqst_alloc);
-> > >  static struct svc_rqst *
-> > >  svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int n=
-ode)
-> > >  {
-> > > +	static const struct xa_limit limit =3D {
-> > > +		.max =3D U32_MAX,
-> > > +	};
-> > >  	struct svc_rqst	*rqstp;
-> > > +	int ret;
-> > > =20
-> > >  	rqstp =3D svc_rqst_alloc(serv, pool, node);
-> > >  	if (!rqstp)
-> > > @@ -685,15 +691,25 @@ svc_prepare_thread(struct svc_serv *serv, struct =
-svc_pool *pool, int node)
-> > >  	serv->sv_nrthreads +=3D 1;
-> > >  	spin_unlock_bh(&serv->sv_lock);
-> > > =20
-> > > -	spin_lock_bh(&pool->sp_lock);
-> > > +	xa_lock(&pool->sp_thread_xa);
-> > > +	ret =3D __xa_alloc(&pool->sp_thread_xa, &rqstp->rq_thread_id, rqstp,
-> > > +			 limit, GFP_KERNEL);
-> > > +	if (ret) {
-> > > +		xa_unlock(&pool->sp_thread_xa);
-> > > +		goto out_free;
-> > > +	}
-> > >  	pool->sp_nrthreads++;
-> > > -	list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
-> > > -	spin_unlock_bh(&pool->sp_lock);
-> > > +	xa_unlock(&pool->sp_thread_xa);
-> > > +	trace_svc_pool_thread_init(serv, pool, rqstp);
-> > >  	return rqstp;
-> > > +
-> > > +out_free:
-> > > +	svc_rqst_free(rqstp);
-> > > +	return ERR_PTR(ret);
-> > >  }
-> > > =20
-> > >  /**
-> > > - * svc_pool_wake_idle_thread - wake an idle thread in @pool
-> > > + * svc_pool_wake_idle_thread - Find and wake an idle thread in @pool
-> > >   * @serv: RPC service
-> > >   * @pool: service thread pool
-> > >   *
-> > > @@ -706,19 +722,17 @@ struct svc_rqst *svc_pool_wake_idle_thread(struct=
- svc_serv *serv,
-> > >  					   struct svc_pool *pool)
-> > >  {
-> > >  	struct svc_rqst	*rqstp;
-> > > +	unsigned long index;
-> > > =20
-> > > -	rcu_read_lock();
-> > > -	list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
-> > > +	xa_for_each(&pool->sp_thread_xa, index, rqstp) {
-> > >  		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
-> > >  			continue;
-> > > =20
-> > > -		rcu_read_unlock();
-> > >  		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
-> > >  		wake_up_process(rqstp->rq_task);
-> > >  		percpu_counter_inc(&pool->sp_threads_woken);
-> > >  		return rqstp;
-> > >  	}
-> > > -	rcu_read_unlock();
-> > > =20
-> > >  	trace_svc_pool_starved(serv, pool);
-> > >  	percpu_counter_inc(&pool->sp_threads_starved);
-> > > @@ -734,32 +748,31 @@ svc_pool_next(struct svc_serv *serv, struct svc_p=
-ool *pool, unsigned int *state)
-> > >  static struct task_struct *
-> > >  svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned=
- int *state)
-> > >  {
-> > > -	unsigned int i;
-> > >  	struct task_struct *task =3D NULL;
-> > > +	struct svc_rqst *rqstp;
-> > > +	unsigned long zero =3D 0;
-> > > +	unsigned int i;
-> > > =20
-> > >  	if (pool !=3D NULL) {
-> > > -		spin_lock_bh(&pool->sp_lock);
-> > > +		xa_lock(&pool->sp_thread_xa);
-> > >  	} else {
-> > >  		for (i =3D 0; i < serv->sv_nrpools; i++) {
-> > >  			pool =3D &serv->sv_pools[--(*state) % serv->sv_nrpools];
-> > > -			spin_lock_bh(&pool->sp_lock);
-> > > -			if (!list_empty(&pool->sp_all_threads))
-> > > +			xa_lock(&pool->sp_thread_xa);
-> > > +			if (!xa_empty(&pool->sp_thread_xa))
-> > >  				goto found_pool;
-> > > -			spin_unlock_bh(&pool->sp_lock);
-> > > +			xa_unlock(&pool->sp_thread_xa);
-> > >  		}
-> > >  		return NULL;
-> > >  	}
-> > > =20
-> > >  found_pool:
-> > > -	if (!list_empty(&pool->sp_all_threads)) {
-> > > -		struct svc_rqst *rqstp;
-> > > -
-> > > -		rqstp =3D list_entry(pool->sp_all_threads.next, struct svc_rqst, rq_=
-all);
-> > > -		set_bit(RQ_VICTIM, &rqstp->rq_flags);
-> > > -		list_del_rcu(&rqstp->rq_all);
-> > > +	rqstp =3D xa_find(&pool->sp_thread_xa, &zero, U32_MAX, XA_PRESENT);
-> > > +	if (rqstp) {
-> > > +		__xa_erase(&pool->sp_thread_xa, rqstp->rq_thread_id);
-> >=20
-> > This bothers me.  We always delete the earliest thread in the xarray.
-> > So if we create 128 threads, then reduce the number to 64, the remaining
-> > threads will be numbers 128 to 256.
-> > This means searching in the bitmap will be (slightly) slower than
-> > necessary.
-> >=20
-> > xa doesn't have a "find last" interface, but we "know" how many entries
-> > are in the array - or we would if we decremented the counter when we
-> > removed an entry.
-> > Currently we only decrement the counter when the thread exits - at which
-> > time it is removed the entry - which may already have been removed.
-> > If we change that code to check if it is still present in the xarray and
-> > to only erase/decrement if it is, then we can decrement the counter here
-> > and always reliably be able to find the "last" entry.
-> >=20
-> > ... though I think we wait for a thread to exist before finding the next
-> >     victim, so maybe all we need to do is start the xa_find from
-> >     ->sp_nrthreads-1 rather than from zero ??
-> >=20
-> > Is it worth it?  I don't know.  But it bothers me.
->=20
-> Well it would be straightforward to change the "pool_wake_idle_thread"
-> search into a find_next_bit over a range. Store the lowest thread_id
-> in the svc_pool and use that as the starting point for the loop.
 
-Then if you add another 32 threads they will go at the front, so you
-have 32 then a gap of 32, then 64 threads in the first 128 slots.
 
-It's obviously not a big deal, but it just feels more tidy to keep them
-dense at the start of the array.
+On 2023/7/4 00:39, Paul E. McKenney wrote:
+> On Fri, Jun 23, 2023 at 04:29:39PM +1000, Dave Chinner wrote:
+>> On Thu, Jun 22, 2023 at 05:12:02PM +0200, Vlastimil Babka wrote:
+>>> On 6/22/23 10:53, Qi Zheng wrote:
+>>>> @@ -1067,33 +1068,27 @@ static unsigned long shrink_slab(gfp_t gfp_mask, int nid,
+>>>>   	if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
+>>>>   		return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
+>>>>   
+>>>> -	if (!down_read_trylock(&shrinker_rwsem))
+>>>> -		goto out;
+>>>> -
+>>>> -	list_for_each_entry(shrinker, &shrinker_list, list) {
+>>>> +	rcu_read_lock();
+>>>> +	list_for_each_entry_rcu(shrinker, &shrinker_list, list) {
+>>>>   		struct shrink_control sc = {
+>>>>   			.gfp_mask = gfp_mask,
+>>>>   			.nid = nid,
+>>>>   			.memcg = memcg,
+>>>>   		};
+>>>>   
+>>>> +		if (!shrinker_try_get(shrinker))
+>>>> +			continue;
+>>>> +		rcu_read_unlock();
+>>>
+>>> I don't think you can do this unlock?
+> 
+> Sorry to be slow to respond here, this one fell through the cracks.
+> And thank you to Qi for reminding me!
+> 
+> If you do this unlock, you had jolly well better nail down the current
+> element (the one referenced by shrinker), for example, by acquiring an
+> explicit reference count on the object.  And presumably this is exactly
+> what shrinker_try_get() is doing.  And a look at your 24/29 confirms this,
+> at least assuming that shrinker->refcount is set to zero before the call
+> to synchronize_rcu() in free_module() *and* that synchronize_rcu() doesn't
+> start until *after* shrinker_put() calls complete().  Plus, as always,
+> the object must be removed from the list before the synchronize_rcu()
+> starts.  (On these parts of the puzzle, I defer to those more familiar
+> with this code path.  And I strongly suggest carefully commenting this
+> type of action-at-a-distance design pattern.)
+
+Yeah, I think I've done it like above. A more detailed timing diagram is
+below.
+
+> 
+> Why is this important?  Because otherwise that object might be freed
+> before you get to the call to rcu_read_lock() at the end of this loop.
+> And if that happens, list_for_each_entry_rcu() will be walking the
+> freelist, which is quite bad for the health and well-being of your kernel.
+> 
+> There are a few other ways to make this sort of thing work:
+> 
+> 1.	Defer the shrinker_put() to the beginning of the loop.
+> 	You would need a flag initially set to zero, and then set to
+> 	one just before (or just after) the rcu_read_lock() above.
+> 	You would also need another shrinker_old pointer to track the
+> 	old pointer.  Then at the top of the loop, if the flag is set,
+> 	invoke shrinker_put() on shrinker_old.	This ensures that the
+> 	previous shrinker structure stays around long enough to allow
+> 	the loop to find the next shrinker structure in the list.
+> 
+> 	This approach is attractive when the removal code path
+> 	can invoke shrinker_put() after the grace period ends.
+> 
+> 2.	Make shrinker_put() invoke call_rcu() when ->refcount reaches
+> 	zero, and have the callback function free the object.  This of
+> 	course requires adding an rcu_head structure to the shrinker
+> 	structure, which might or might not be a reasonable course of
+> 	action.  If adding that rcu_head is reasonable, this simplifies
+> 	the logic quite a bit.
+> 
+> 3.	For the shrinker-structure-removal code path, remove the shrinker
+> 	structure, then remove the initial count from ->refcount,
+> 	and then keep doing grace periods until ->refcount is zero,
+> 	then do one more.  Of course, if the result of removing the
+> 	initial count was zero, then only a single additional grace
+> 	period is required.
+> 
+> 	This would need to be carefully commented, as it is a bit
+> 	unconventional.
+
+Thanks for such a detailed addition!
+
+> 
+> There are probably many other ways, but just to give an idea of a few
+> other ways to do this.
+> 
+>>>> +
+>>>>   		ret = do_shrink_slab(&sc, shrinker, priority);
+>>>>   		if (ret == SHRINK_EMPTY)
+>>>>   			ret = 0;
+>>>>   		freed += ret;
+>>>> -		/*
+>>>> -		 * Bail out if someone want to register a new shrinker to
+>>>> -		 * prevent the registration from being stalled for long periods
+>>>> -		 * by parallel ongoing shrinking.
+>>>> -		 */
+>>>> -		if (rwsem_is_contended(&shrinker_rwsem)) {
+>>>> -			freed = freed ? : 1;
+>>>> -			break;
+>>>> -		}
+>>>> -	}
+>>>>   
+>>>> -	up_read(&shrinker_rwsem);
+>>>> -out:
+>>>> +		rcu_read_lock();
+>>>
+>>> That new rcu_read_lock() won't help AFAIK, the whole
+>>> list_for_each_entry_rcu() needs to be under the single rcu_read_lock() to be
+>>> safe.
+>>
+>> Yeah, that's the pattern we've been taught and the one we can look
+>> at and immediately say "this is safe".
+>>
+>> This is a different pattern, as has been explained bi Qi, and I
+>> think it *might* be safe.
+>>
+>> *However.*
+>>
+>> Right now I don't have time to go through a novel RCU list iteration
+>> pattern it one step at to determine the correctness of the
+>> algorithm. I'm mostly worried about list manipulations that can
+>> occur outside rcu_read_lock() section bleeding into the RCU
+>> critical section because rcu_read_lock() by itself is not a memory
+>> barrier.
+>>
+>> Maybe Paul has seen this pattern often enough he could simply tell
+>> us what conditions it is safe in. But for me to work that out from
+>> first principles? I just don't have the time to do that right now.
+> 
+> If the code does just the right sequence of things on the removal path
+> (remove, decrement reference, wait for reference to go to zero, wait for
+> grace period, free), then it would work.  If this is what is happening,
+> I would argue for more comments.  ;-)
+
+The order of the removal path is slightly different from this:
+
+     shrink_slab                 unregister_shrinker
+     ===========                 ===================
+		
+    shrinker_try_get()
+    rcu_read_unlock()		
+                                 1. decrement initial reference
+				shrinker_put()
+				2. wait for reference to go to zero
+				wait_for_completion()
+    rcu_read_lock()
+
+    shrinker_put()
+				3. remove the shrinker from list
+				list_del_rcu()
+                                 4. wait for grace period
+				kfree_rcu()/synchronize_rcu()
+
+
+    list_for_each_entry()
+
+    shrinker_try_get()
+    rcu_read_unlock()
+				5. free the shrinker
+
+So the order is: decrement reference, wait for reference to go to zero,
+remove, wait for grace period, free.
+
+I think this can work. And we can only do the *step 3* after we hold the
+RCU read lock again, right? Please let me know if I missed something.
 
 Thanks,
-NeilBrown
+Qi
 
-
->=20
->=20
-> > NeilBrown
-> >=20
-> >=20
-> > >  		task =3D rqstp->rq_task;
-> > >  	}
-> > > -	spin_unlock_bh(&pool->sp_lock);
-> > > +	xa_unlock(&pool->sp_thread_xa);
-> > >  	return task;
-> > >  }
-> > > =20
-> > > @@ -841,9 +854,9 @@ svc_set_num_threads(struct svc_serv *serv, struct s=
-vc_pool *pool, int nrservs)
-> > >  	if (pool =3D=3D NULL) {
-> > >  		nrservs -=3D serv->sv_nrthreads;
-> > >  	} else {
-> > > -		spin_lock_bh(&pool->sp_lock);
-> > > +		xa_lock(&pool->sp_thread_xa);
-> > >  		nrservs -=3D pool->sp_nrthreads;
-> > > -		spin_unlock_bh(&pool->sp_lock);
-> > > +		xa_unlock(&pool->sp_thread_xa);
-> > >  	}
-> > > =20
-> > >  	if (nrservs > 0)
-> > > @@ -930,11 +943,11 @@ svc_exit_thread(struct svc_rqst *rqstp)
-> > >  	struct svc_serv	*serv =3D rqstp->rq_server;
-> > >  	struct svc_pool	*pool =3D rqstp->rq_pool;
-> > > =20
-> > > -	spin_lock_bh(&pool->sp_lock);
-> > > +	xa_lock(&pool->sp_thread_xa);
-> > >  	pool->sp_nrthreads--;
-> > > -	if (!test_and_set_bit(RQ_VICTIM, &rqstp->rq_flags))
-> > > -		list_del_rcu(&rqstp->rq_all);
-> > > -	spin_unlock_bh(&pool->sp_lock);
-> > > +	__xa_erase(&pool->sp_thread_xa, rqstp->rq_thread_id);
-> > > +	xa_unlock(&pool->sp_thread_xa);
-> > > +	trace_svc_pool_thread_exit(serv, pool, rqstp);
-> > > =20
-> > >  	spin_lock_bh(&serv->sv_lock);
-> > >  	serv->sv_nrthreads -=3D 1;
-> > > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > > index 8ced7591ce07..7709120b45c1 100644
-> > > --- a/net/sunrpc/svc_xprt.c
-> > > +++ b/net/sunrpc/svc_xprt.c
-> > > @@ -46,7 +46,7 @@ static LIST_HEAD(svc_xprt_class_list);
-> > > =20
-> > >  /* SMP locking strategy:
-> > >   *
-> > > - *	svc_pool->sp_lock protects most of the fields of that pool.
-> > > + *	svc_pool->sp_lock protects sp_sockets.
-> > >   *	svc_serv->sv_lock protects sv_tempsocks, sv_permsocks, sv_tmpcnt.
-> > >   *	when both need to be taken (rare), svc_serv->sv_lock is first.
-> > >   *	The "service mutex" protects svc_serv->sv_nrthread.
-> > >=20
-> > >=20
-> > >=20
-> >=20
->=20
-
+> 
+> 							Thanx, Paul
+> 
+>>> IIUC this is why Dave in [4] suggests unifying shrink_slab() with
+>>> shrink_slab_memcg(), as the latter doesn't iterate the list but uses IDR.
+>>
+>> Yes, I suggested the IDR route because radix tree lookups under RCU
+>> with reference counted objects are a known safe pattern that we can
+>> easily confirm is correct or not.  Hence I suggested the unification
+>> + IDR route because it makes the life of reviewers so, so much
+>> easier...
+>>
+>> Cheers,
+>>
+>> Dave.
+>> -- 
+>> Dave Chinner
+>> david@fromorbit.com
