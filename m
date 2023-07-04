@@ -2,43 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70A4D746652
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jul 2023 02:07:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF5DD746653
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jul 2023 02:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229943AbjGDAHd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Jul 2023 20:07:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56156 "EHLO
+        id S230144AbjGDAHj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jul 2023 20:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbjGDAHc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jul 2023 20:07:32 -0400
+        with ESMTP id S229504AbjGDAHj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jul 2023 20:07:39 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B19E189
-        for <linux-nfs@vger.kernel.org>; Mon,  3 Jul 2023 17:07:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 761F2189
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Jul 2023 17:07:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D7D66101C
-        for <linux-nfs@vger.kernel.org>; Tue,  4 Jul 2023 00:07:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6604FC433C7;
-        Tue,  4 Jul 2023 00:07:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 14D2F61089
+        for <linux-nfs@vger.kernel.org>; Tue,  4 Jul 2023 00:07:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1184BC433C9;
+        Tue,  4 Jul 2023 00:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688429250;
-        bh=H0s4RMJDK7bFW5DZ5Jz/CXciI1EolYWHac5OC1luPgw=;
-        h=Subject:From:To:Cc:Date:From;
-        b=X3DRHpkpV7kgxkL11s352DY50VtCA1zkr7OZ+yrwN+ahvqGcVjTgXH38Zpp/gj509
-         DVAGev5lkul4EpIleMCV2hyVRh3KtcS55sYupUFXyNWy0L2cg2qknUJ6GuJ84YbxzX
-         JyL9sAH/yFvx9G2MulIaXC3kjPg+1WG78pbPzNlygvO6iV87qITs1sPNsWlcShoRYH
-         3qQF5Jwd6jn4MkbcbN1koST/AE6bDNsT5NwDTCCbmB6/uHRsb25jxukrVbKQO8gzY2
-         SMA2xXrtGHtjjwLMEt2w970EbWhEIro7ISvw8yoO3fwr4PrPXMH1iGc6/DwBAZuoBW
-         9BuCpzLDQ/zEA==
-Subject: [PATCH v2 0/9] SUNRPC service thread scheduler optimizations
+        s=k20201202; t=1688429257;
+        bh=9HoA3ayuqif/MRiyu04L0DGS2/ZRjy2hHxko7SMSdrA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=lGUlPFR2kZ977TFgFZwbyd3uW2wyCpuJxkUi16LTpyqddD5JxWTnEYuXiqw9RJUYh
+         u7+c17hCABU+3fxnMEsJjjXjDlCI8d3Wi30EbnwnJUcCQRDSCzBvZ1Tw36G49gcvsU
+         ouUeTrjg5stMQ+OfCaJsKjzXEGlISViJOZf9qBl6BM6TOLdVjsuyOzVolfn5heeXjV
+         f9HHuf5e0/ZTopPYnivlceMxfyKM+0uB4hqCf+KYuRsdkeMFPjiEauKt6ORk6Tvekl
+         m8f4ixwHOL/Mfup54+jmjsPaDsO5+0mkclyBZwi43OO+ek08bx4uphPS2/75KeRceJ
+         8dJOUUDTXZ64A==
+Subject: [PATCH v2 1/9] SUNRPC: Deduplicate thread wake-up code
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>, lorenzo@kernel.org,
         neilb@suse.de, jlayton@redhat.com, david@fromorbit.com
-Date:   Mon, 03 Jul 2023 20:07:29 -0400
-Message-ID: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>
+Date:   Mon, 03 Jul 2023 20:07:36 -0400
+Message-ID: <168842925607.139194.5466712124437233518.stgit@manet.1015granger.net>
+In-Reply-To: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>
+References: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,56 +55,155 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Walking a linked list to find an idle thread is not CPU cache-
-friendly, and in fact I've noted palpable per-request latency
-impacts as the number of nfsd threads on the server increases.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-After discussing some possible improvements with Jeff at LSF/MM,
-I've been experimenting with the following series. I've measured an
-order of magnitude latency improvement in the thread lookup time,
-and have managed to keep the whole thing lockless.
+Refactor: Extract the loop that finds an idle service thread from
+svc_xprt_enqueue() and svc_wake_up(). Both functions do just about
+the same thing.
 
-After some offline discussion with Neil, I tried out using just
-the xarray plus its spinlock to mark threads idle or busy. This
-worked as well as the bitmap for lower thread counts, but got
-predictably bad as the thread count when past several hundred. For
-the moment I'm sticking with the wait-free bitmap lookup.
-
-Also, the maximum thread count is now 4096. I'm still willing to try
-an RCU-based bitmap resizing mechanism if we believe this is still
-to small of a maximum.
-
-
-Changes since RFC:
-* Add a counter for ingress RPC messages
-* Add a few documenting comments
-* Move the more controversial patches to the end of the series
-* Clarify the refactoring of svc_wake_up() 
-* Increase the value of RPCSVC_MAXPOOLTHREADS to 4096 (and tested with that many threads)
-* Optimize the loop in svc_pool_wake_idle_thread()
-* Optimize marking a thread "idle" in svc_get_next_xprt()
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ include/linux/sunrpc/svc.h |    1 +
+ net/sunrpc/svc.c           |   28 ++++++++++++++++++++++++++
+ net/sunrpc/svc_xprt.c      |   48 +++++++++++++++-----------------------------
+ 3 files changed, 45 insertions(+), 32 deletions(-)
 
-Chuck Lever (9):
-      SUNRPC: Deduplicate thread wake-up code
-      SUNRPC: Report when no service thread is available.
-      SUNRPC: Split the svc_xprt_dequeue tracepoint
-      SUNRPC: Count ingress RPC messages per svc_pool
-      SUNRPC: Clean up svc_set_num_threads
-      SUNRPC: Replace dprintk() call site in __svc_create()
-      SUNRPC: Don't disable BH's when taking sp_lock
-      SUNRPC: Replace sp_threads_all with an xarray
-      SUNRPC: Convert RQ_BUSY into a per-pool bitmap
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index f8751118c122..dc2d90a655e2 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -427,6 +427,7 @@ int		   svc_register(const struct svc_serv *, struct net *, const int,
+ 
+ void		   svc_wake_up(struct svc_serv *);
+ void		   svc_reserve(struct svc_rqst *rqstp, int space);
++struct svc_rqst	  *svc_pool_wake_idle_thread(struct svc_pool *pool);
+ struct svc_pool   *svc_pool_for_cpu(struct svc_serv *serv);
+ char *		   svc_print_addr(struct svc_rqst *, char *, size_t);
+ const char *	   svc_proc_name(const struct svc_rqst *rqstp);
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 587811a002c9..e81ce5f76abd 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -689,6 +689,34 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+ 	return rqstp;
+ }
+ 
++/**
++ * svc_pool_wake_idle_thread - wake an idle thread in @pool
++ * @pool: service thread pool
++ *
++ * Returns an idle service thread (now marked BUSY), or NULL
++ * if no service threads are available. Finding an idle service
++ * thread and marking it BUSY is atomic with respect to other
++ * calls to svc_pool_wake_idle_thread().
++ */
++struct svc_rqst *svc_pool_wake_idle_thread(struct svc_pool *pool)
++{
++	struct svc_rqst	*rqstp;
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
++		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
++			continue;
++
++		rcu_read_unlock();
++		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
++		wake_up_process(rqstp->rq_task);
++		percpu_counter_inc(&pool->sp_threads_woken);
++		return rqstp;
++	}
++	rcu_read_unlock();
++	return NULL;
++}
++
+ /*
+  * Choose a pool in which to create a new thread, for svc_set_num_threads
+  */
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 62c7919ea610..89302bf09b77 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -455,8 +455,8 @@ static bool svc_xprt_ready(struct svc_xprt *xprt)
+  */
+ void svc_xprt_enqueue(struct svc_xprt *xprt)
+ {
++	struct svc_rqst	*rqstp;
+ 	struct svc_pool *pool;
+-	struct svc_rqst	*rqstp = NULL;
+ 
+ 	if (!svc_xprt_ready(xprt))
+ 		return;
+@@ -476,20 +476,10 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
+ 	list_add_tail(&xprt->xpt_ready, &pool->sp_sockets);
+ 	spin_unlock_bh(&pool->sp_lock);
+ 
+-	/* find a thread for this xprt */
+-	rcu_read_lock();
+-	list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
+-		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
+-			continue;
+-		percpu_counter_inc(&pool->sp_threads_woken);
+-		rqstp->rq_qtime = ktime_get();
+-		wake_up_process(rqstp->rq_task);
+-		goto out_unlock;
+-	}
+-	set_bit(SP_CONGESTED, &pool->sp_flags);
+-	rqstp = NULL;
+-out_unlock:
+-	rcu_read_unlock();
++	rqstp = svc_pool_wake_idle_thread(pool);
++	if (!rqstp)
++		set_bit(SP_CONGESTED, &pool->sp_flags);
++
+ 	trace_svc_xprt_enqueue(xprt, rqstp);
+ }
+ EXPORT_SYMBOL_GPL(svc_xprt_enqueue);
+@@ -581,7 +571,10 @@ static void svc_xprt_release(struct svc_rqst *rqstp)
+ 	svc_xprt_put(xprt);
+ }
+ 
+-/*
++/**
++ * svc_wake_up - Wake up a service thread for non-transport work
++ * @serv: RPC service
++ *
+  * Some svc_serv's will have occasional work to do, even when a xprt is not
+  * waiting to be serviced. This function is there to "kick" a task in one of
+  * those services so that it can wake up and do that work. Note that we only
+@@ -590,27 +583,18 @@ static void svc_xprt_release(struct svc_rqst *rqstp)
+  */
+ void svc_wake_up(struct svc_serv *serv)
+ {
++	struct svc_pool *pool = &serv->sv_pools[0];
+ 	struct svc_rqst	*rqstp;
+-	struct svc_pool *pool;
+ 
+-	pool = &serv->sv_pools[0];
+-
+-	rcu_read_lock();
+-	list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
+-		/* skip any that aren't queued */
+-		if (test_bit(RQ_BUSY, &rqstp->rq_flags))
+-			continue;
+-		rcu_read_unlock();
+-		wake_up_process(rqstp->rq_task);
+-		trace_svc_wake_up(rqstp->rq_task->pid);
++	rqstp = svc_pool_wake_idle_thread(pool);
++	if (!rqstp) {
++		set_bit(SP_TASK_PENDING, &pool->sp_flags);
++		smp_wmb();
++		trace_svc_wake_up(0);
+ 		return;
+ 	}
+-	rcu_read_unlock();
+ 
+-	/* No free entries available */
+-	set_bit(SP_TASK_PENDING, &pool->sp_flags);
+-	smp_wmb();
+-	trace_svc_wake_up(0);
++	trace_svc_wake_up(rqstp->rq_task->pid);
+ }
+ EXPORT_SYMBOL_GPL(svc_wake_up);
+ 
 
-
- fs/nfsd/nfssvc.c              |   3 +-
- include/linux/sunrpc/svc.h    |  18 ++--
- include/trace/events/sunrpc.h | 159 +++++++++++++++++++++++++++----
- net/sunrpc/svc.c              | 174 ++++++++++++++++++++++------------
- net/sunrpc/svc_xprt.c         | 114 +++++++++++-----------
- 5 files changed, 328 insertions(+), 140 deletions(-)
-
---
-Chuck Lever
 
