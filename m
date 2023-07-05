@@ -2,367 +2,336 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 745E6747809
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jul 2023 19:49:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B03F1747ABE
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jul 2023 02:34:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230420AbjGDRtE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Jul 2023 13:49:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46626 "EHLO
+        id S229469AbjGEAeb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Jul 2023 20:34:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbjGDRtD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jul 2023 13:49:03 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 963BC197
-        for <linux-nfs@vger.kernel.org>; Tue,  4 Jul 2023 10:49:01 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 364HDqHL010664;
-        Tue, 4 Jul 2023 17:49:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=lb0tu8EvYJdhvFTemhQ+vqmiAU+ZcBa1AvUVGFG7cDc=;
- b=kEZtKe1ewlWwZ/iazKx+7RJKi9/7Q5xQw8gZRaEQB5DVYsi5drCln5VACmADegD2ApwD
- 3vE/jkraIoP73SriEzo/BFfBv2epPHfqgKQVjPoChmnLHUqRFOKsDVF/CcB+x5uSFt0L
- czDbzrKgWfuLG6XNvUTinC+AUrWLNyyN/FENqBI2vfoLjZJiQKCpjDMY2GrsBZlPK9dP
- mn3EZa+ntyRyD+/tU9ZxfhK/HKczJi2sqof/4kgz9PIKb4Ruo/g1w2WzTgAQVF+er4ud
- XBoc1m4EwUwQ/nS9QQ9DitPcqLAHR/XQan37MI6tTz5ZQ5YzveBngJPOIS68lDUZ0L7v rA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3rjbrtcybb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Jul 2023 17:49:00 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 364H4WO6039223;
-        Tue, 4 Jul 2023 17:48:59 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3rjak4mgmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 04 Jul 2023 17:48:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GBXkPQV91+ZZKkQaelYaCf5BWr01sIbJgIO67XsUAvgB2GMPpMO5PEPHejNi8tJyAhI8WueHN34dHo3+sAW3wyz8+4zvqPWuE47ebyCi/QlljRNF/r37jVMu5O8BI0qHl5ZMNigWbLzR9dixS0nZtLnvxEEsvVYTiG5fBwbwInecSKq4cSZ5CPkp8rtBm0scY/yyH55FmARZv7Sp7AAeXGymINIWJQMHp0NnvRiE9645ZG4RU5AhhKtijyAtVSN40XbAUoXwax8ACR0ql7FKQdmtr14/8LbenPJs9ki5WlQ4zES3jK58f4W7REz9HbDwtsYBORRKHSAJL7Be+JoeRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lb0tu8EvYJdhvFTemhQ+vqmiAU+ZcBa1AvUVGFG7cDc=;
- b=MdMGxvgzmCe2QJZhPbi1mxKfh3mkJQSN69hqPKPoxExAeqCQwCVOFrzFAUWRZFoj5NJ57OezuprAvWZCZuot10XMItu1v0LVmEL+55Ov8+3QLJ6/tywUGKYKwrtt+P7O+/Cz22fVngr1ZOXy8mdFjTrSq/0rLM32x6UUWk5IH3UcTNlko3Xulu1os76EkV9Lh8SpQIJuqpj5KDj5BpYshJQgYFstn16YyW1XF7cdgd3Tk7hU54onq5JB+h24Kkh++DA1xa9uVZ+DMphhmyGmEHEu1W6YLo5HMaeOcmVexRgZ+e3Zni+yUgr0B/IjvPUXk8iRyn0iaoNRT0INinwXgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lb0tu8EvYJdhvFTemhQ+vqmiAU+ZcBa1AvUVGFG7cDc=;
- b=nTcGSVlw5LfGYq0EIXlKqz25HV7ZcENt9w0Ip+tQF65w1dSwc/nuAYJoNErAwCEIqmIW0kupi5tr45b5hooj5zWKnAJpZVeGKlWgKfWG3AMzhps4lznfBlte7M0ojcXQyYGUtjSNvoD6aV2a69wxunZaBUl47qW7xRPbdbVDb80=
-Received: from MN2PR10MB4270.namprd10.prod.outlook.com (2603:10b6:208:1d6::21)
- by DS7PR10MB5040.namprd10.prod.outlook.com (2603:10b6:5:3b0::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6544.24; Tue, 4 Jul
- 2023 17:48:57 +0000
-Received: from MN2PR10MB4270.namprd10.prod.outlook.com
- ([fe80::1b0f:fad9:3eb1:95e8]) by MN2PR10MB4270.namprd10.prod.outlook.com
- ([fe80::1b0f:fad9:3eb1:95e8%7]) with mapi id 15.20.6544.024; Tue, 4 Jul 2023
- 17:48:57 +0000
-Message-ID: <284e5b86-1903-4073-fb3e-de60ad5d8f20@oracle.com>
-Date:   Tue, 4 Jul 2023 10:48:42 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: nfsd in D state, another case
-Content-Language: en-US
-To:     Miha Vrhovnik <miha.vrhovnik@visionect.com>,
-        linux-nfs@vger.kernel.org
-References: <CANbXbTt=smOsgJZHCkk8O0EzB+nBd=a7a40my9w59UKTtka0fg@mail.gmail.com>
-From:   dai.ngo@oracle.com
-In-Reply-To: <CANbXbTt=smOsgJZHCkk8O0EzB+nBd=a7a40my9w59UKTtka0fg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN4PR0501CA0117.namprd05.prod.outlook.com
- (2603:10b6:803:42::34) To MN2PR10MB4270.namprd10.prod.outlook.com
- (2603:10b6:208:1d6::21)
+        with ESMTP id S229512AbjGEAea (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jul 2023 20:34:30 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F85910F1
+        for <linux-nfs@vger.kernel.org>; Tue,  4 Jul 2023 17:34:24 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 5A4471FEB8;
+        Wed,  5 Jul 2023 00:34:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1688517262; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1LqUP08qx08dtTlXBgzrVhLJk8vY8th7Nck+wwGBz+Q=;
+        b=V4W3snMkjqI4KvJxSe1YYCvks0neLe3FnpfQzklcHY3mMx6FEWCXuBDKslnLw+qh+ADOt4
+        8BIfHoaGmtPQCGEo+gJ7wAOzm+wT93eomfzEitwULa/5ltv50vOcoOxK7asOwIP6Qw2Kt0
+        KykbKNdjSMrAHEh/vpCVuV+8MfWwBJU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1688517262;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1LqUP08qx08dtTlXBgzrVhLJk8vY8th7Nck+wwGBz+Q=;
+        b=ClnAJ1nQ3H+2+59W64Mu6SyGqI6bj7lRFqhEYYa5+zwkINgIWLEkHIoautJQoybyKO9RnZ
+        BD6h0SkMpeykjqBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2B110134F3;
+        Wed,  5 Jul 2023 00:34:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id CuGjM4u6pGQKCAAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 05 Jul 2023 00:34:19 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN2PR10MB4270:EE_|DS7PR10MB5040:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6d68411f-6725-4c4a-0663-08db7cb6f0d0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qZDiiLZBs9KYywlzwECkLYgEUbnr8eLMB68pN/a5qb/bnOV2TUDVpscfGAzI+tYi/ranePKKokb+Dm8NcrXhMj1z/bbaRUNAUwTGilXJhq9TOSdDPIPBAavhD1wGC8TaG5/2KT2/D8sYf2hhqDnPD9zfJa9xdC6wDBkLerdOPF/gYK17frNj3X5Ajh+MmUaT0FMdGETi89P8QNVXYY/OiDzz99m+qIddR3F/UNwAAQyKLCZfWWkd/zsi58UfC/D4/QZcfaoYnjlAFcENeWWpuKj378TvH8Gbg97kGe1HJ6DCW0FM90amxHIVR/y8zzAkuoHaWHamwK4I8g8Jun+MPgSX59u2ytJWId0VrPWC/PV8Qv5YQRYssjmpu3ZgqM2RDRDu6Gm2LeFouiJqB+GuZ/NB+rKz+aozzV7p9XWMk7jV7jYJ7LuwROkPIN6Q8yt3UtXTrmTLP5qS/JviEoFqWiIy5CTMn0JWalk81u+rGuQW3gIizQ1SLor8vJd08SH/iD9SBo1kVu+opWPjb+GAFwo8pjyyJzvr3+fCCf5FdK7u3vBcGSC8pkBf4kxmC0uBV/FGLQA1emDxbfgr/8JtRpD5ZgHUSc+ZTM3YDit9KQo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4270.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(136003)(396003)(39860400002)(366004)(376002)(451199021)(26005)(478600001)(31686004)(6666004)(9686003)(6506007)(966005)(6512007)(86362001)(31696002)(2616005)(186003)(53546011)(38100700002)(66556008)(66946007)(66476007)(83380400001)(6486002)(316002)(5660300002)(8676002)(8936002)(30864003)(41300700001)(2906002)(36756003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YXM5WFkxK2Zzd003V1lvZmxZaDViaXpxMVVkdVJhdmYvY0pUQWhFNXk4dHRZ?=
- =?utf-8?B?T2ZLdEtIWG56YlhxWXc1eG9LdjA1TnV3anlveEhjTDFma29RMGlWdmFLcnlw?=
- =?utf-8?B?Y29NNFVkM0krT0VydldTa0hkeCt5VFpMSWpzWUs5cmVjcW9VcUJEUkxjM0t1?=
- =?utf-8?B?ZnhhMGhKQmo1UGpxS3lHcFdTRVkyZGE4Uy9KQlNTL2pwK1ZaY0VGckxlQVp0?=
- =?utf-8?B?Y0J5ejV2RENJWmlja3g5dGY4R0JMbEhmcndUc2dldHZVc0s1RG5TdnFiMTdo?=
- =?utf-8?B?Znl1L0tyeGxOQ3p4Q1AyK2tkakU4U2tCRmFzSGlobTAvK2VVd1J0ZTlzNGhk?=
- =?utf-8?B?TzhaOFUrQTIzUTR3OGNnRStKWStSeGJqQ3FTR3VOb1c4YWdBZ1JvUFU5bnNO?=
- =?utf-8?B?WnZlcnNtMlNJRGZEdjZBaXRoOGt5TURyQ0U2Nm9uUjcvK1ZOMGpEZERmTzU2?=
- =?utf-8?B?akNHajI4ZGJSOE1xelFLRStBMVFYZmorNU8vSVJBTTFRUUR6dXJpSFVXOWpR?=
- =?utf-8?B?K1lVZWdrMmJueVZ4Y29ObGRGN3VaVFVXTGl6bWdjVTcvMnIrWEJBMHp0M3JF?=
- =?utf-8?B?VXIwd01hbXJyREpkNjhrUmJsdzhmdUVVTnJHRHc2Q0hGc05uVVovTU8wM1Zz?=
- =?utf-8?B?N2d5V25oTUJxei9OWXFuTzI2UzBjb1YzN1RReEFvSmFLNHkwekNjb0JlYnRN?=
- =?utf-8?B?SUFkMjlOY2hjbi9MQThZaHEwQ2h5b2RqcHM4NTJrRE5QL1ZKSUYwMmxvU0x2?=
- =?utf-8?B?YlNERnh0T2xHcTZ1MWVVS3BKb3JwYjVoYmRzR2dNUlI2TzAwRGlHYmg1WEtO?=
- =?utf-8?B?cXN1emRBYTBXdEZtK0RnNlZLS2x4SlArUDBPSXIwaERsRzBxZlVieWZxVFRL?=
- =?utf-8?B?YzFHRlc0bGZSQkJEUmtsOGQxV3pjalN3dUdOTy8vZitWVmJwa1djM0V2V25D?=
- =?utf-8?B?OGdvaXZzMWZ5ekJZdCtnSzU0L0RrQjNmd0x3Z1dTWXlWVVgrWWc0VjAzeDFG?=
- =?utf-8?B?dHNUaVMzL0RpVG1kY2RLdWhJMUpHYzU4OWlGZXgrRm5oNUxBeTJTSEFEbjYr?=
- =?utf-8?B?Q21SeWpSV2dJYzFYNG9QS0ZUTTV5L1pNQWpmc0c2b3VDRUQ4TVRaY0IrNDgy?=
- =?utf-8?B?MWpxK21CdGdUMzF6QU5GNit6MVV5OFEySHVwMGxNUmF3OVp2cGRYejdtZ2Jy?=
- =?utf-8?B?MXNCY2p6TnFYVHV1N3hKais5dlZKYmxwM1hRQjQ3aFRtc1FJeURaOWo2QzdK?=
- =?utf-8?B?czduWm5KTG1wUWV2M0NtREtudEtDQTNDTkxNdFhLdnliVkgxMHBrTk5CNDRB?=
- =?utf-8?B?N1hzZjgvNit6RC9zYllpRXI4ZUlWMG45T1VMLzhvU0NUaFRPWDB6cDlzNFN4?=
- =?utf-8?B?UTlxRDZZZTVXdGNFbjNlaGhJLzh5T2pQRkNwdERNdVUxUG9MSVhUbWUyQWtQ?=
- =?utf-8?B?b0FWTFRKaFZpdjlZTk5Mayt0bmUzN3Y2QVBwdzlJcml1Z3c5Sk9NUkVuVVdI?=
- =?utf-8?B?TFB1N01oRmR5bThFUjFtSUNKMXNyL2ZoNmtYUTNCSlZTZVZMWlUyc2RyaGdV?=
- =?utf-8?B?WERPRHd4b1p3WGZvdGlsL3lUenh5eW5KMDZiZE1pNkF1NVAyYzNtVXhSUENB?=
- =?utf-8?B?RGcwNndwSVRMNlNWeDY5N0drNlFBRXJjRUd6Q1NNdlNadldzdmJzbzVJRHhh?=
- =?utf-8?B?a29SQmtSUGhQQ3E1TnNaN2hNTkhLOFN3TnJkazRSYWJwTGVhd01jekV1RFRJ?=
- =?utf-8?B?aUp2VGd6d2hFeVcycHFHME5uSFpZdzBNOHQ3OEg5RzBISXd6OE04bkkzNkxI?=
- =?utf-8?B?SUJCWWVVZ3hSS0ZpTGV1ZmdZYlNTbkVGcXk3ZlZvN2JpOGFvNHFhRGJGcFJF?=
- =?utf-8?B?Y0k0NjNvczNCTXhhaDRVTy9UdXFPclJnSkxJdVJrY2lCV2FsbklYdXppM0R5?=
- =?utf-8?B?bDZGYm9SMTh3eEFaT0xvYnhRamoxZ1VUMy9waUZSUjNIWkVIU0JXMGpBdGdH?=
- =?utf-8?B?NGZpV285MXN0RTJQTDJSK3JybzZYYTgrVGxuT2UyREJNVGVGNG1DQVp2NytQ?=
- =?utf-8?B?TS9VcTdnUEU3VHRGam95QWQzZUd4bGt3VXljcTNwcG5adDFsbzdQTjZJcVdG?=
- =?utf-8?Q?mfGTaTjd9ysfgK9fKnVhQUX2E?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: UO4dQjaHyglXJwK2iEsK9/cGGWPgTNgoWrXPTTwDG5LP72iKp6rPlSZ+uFas/3OszxmheWZ+CIqkmIiGlImcwUrL/Y/QSoGJG+yzndANZvxItZeoo21EpOWGzI7A5rs2MmU7CMSLdh/LSxSOKHsODyR4Phu8Rg1PyuNoMe5ke8mFtROlwdKBEflPv8FQBwHBoWMPp48khBFQiYdqfrLRD6C7EbV6GOnEgrBCKvJmyEiQw7ePU8SwEZU4scMmZWvUwYxg9vTvcQYPynIflWgPyk3HdLG8teeGiHFhYXWPUCXwbdmR0aGcnTfH3nZhz6jTlpJ4YAZuEozYRus4oOI3UORjCOwWg91B6DYf2KFpvkZehN6SjbfiW/3R2nyaUFmVXab+/iKV1A9iy9fVpLDt+ggMrBYTAV6KXnK8zIxa9AiHlgmrLwThQwIRZ60Qr1sBcSJ6Y7nlwWX0PwxhVw5yorkDxJwxoDl66sqzEaOk87N0cjc1ho4i6ipVK3a8U0vOu4cd6eGPMRy+i8CbR2qWjJGCP7EDHrpEcQJb3/fnNmPcD+dUwAzGFQXE6mDNx0S9GaMJOy2qkIieoOgJhkdJAxIPM4PLAnu84/9GQ8r+RaL8YFu6Sa2bRqnOb4mg/qVIsuy3Xf9aNWOF+qjk9pjpOOxFXLY2b6HIVITsM1jbNifPDMtwTxi6diz629WO/xR0gw3/wE32YKt5Nqrozx+sMKhwDQetDwwGwW6Y0y78XMiT7LIP0zukhvQ5SNR3JwzHWJVzyLNVRF32kdfxf13ULD1f5GfvcLDEcXagBmwMyxg=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d68411f-6725-4c4a-0663-08db7cb6f0d0
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4270.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Jul 2023 17:48:57.4364
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HbVAOuUMGfPG5WZSzAJ1ixHZE3nLsiag5Cbn/w0kEaFOLh+dNd9j08hH0ci0DDQwBZNovhKu+GbhOrsYxZ9xhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5040
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-04_12,2023-07-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- spamscore=0 mlxscore=0 adultscore=0 phishscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2305260000 definitions=main-2307040153
-X-Proofpoint-GUID: GkFqJq29EqV_IOXwbihcawhmA47B1Z9U
-X-Proofpoint-ORIG-GUID: GkFqJq29EqV_IOXwbihcawhmA47B1Z9U
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Chuck Lever" <cel@kernel.org>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "lorenzo@kernel.org" <lorenzo@kernel.org>,
+        "Jeff Layton" <jlayton@redhat.com>,
+        "david@fromorbit.com" <david@fromorbit.com>
+Subject: Re: [PATCH v2 9/9] SUNRPC: Convert RQ_BUSY into a per-pool bitmap
+In-reply-to: <5A969052-0872-4C04-AE8C-C989B54A9CEB@oracle.com>
+References: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>,
+ <168842930872.139194.10164846167275218299.stgit@manet.1015granger.net>,
+ <168843398253.8939.16982425023664424215@noble.neil.brown.name>,
+ <ZKN9xmRn+EN/TQwY@manet.1015granger.net>,
+ <168843704829.8939.9406594114602623376@noble.neil.brown.name>,
+ <5A969052-0872-4C04-AE8C-C989B54A9CEB@oracle.com>
+Date:   Wed, 05 Jul 2023 10:34:16 +1000
+Message-id: <168851725628.8939.16614680783638523525@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Miha,
+On Wed, 05 Jul 2023, Chuck Lever III wrote:
+>=20
+> > On Jul 3, 2023, at 10:17 PM, NeilBrown <neilb@suse.de> wrote:
+> >=20
+> > On Tue, 04 Jul 2023, Chuck Lever wrote:
+> >> On Tue, Jul 04, 2023 at 11:26:22AM +1000, NeilBrown wrote:
+> >>> On Tue, 04 Jul 2023, Chuck Lever wrote:
+> >>>> From: Chuck Lever <chuck.lever@oracle.com>
+> >>>>=20
+> >>>> I've noticed that client-observed server request latency goes up
+> >>>> simply when the nfsd thread count is increased.
+> >>>>=20
+> >>>> List walking is known to be memory-inefficient. On a busy server
+> >>>> with many threads, enqueuing a transport will walk the "all threads"
+> >>>> list quite frequently. This also pulls in the cache lines for some
+> >>>> hot fields in each svc_rqst (namely, rq_flags).
+> >>>=20
+> >>> I think this text could usefully be re-written.  By this point in the
+> >>> series we aren't list walking.
+> >>>=20
+> >>> I'd also be curious to know what latency different you get for just this
+> >>> change.
+> >>=20
+> >> Not much of a latency difference at lower thread counts.
+> >>=20
+> >> The difference I notice is that with the spinlock version of
+> >> pool_wake_idle_thread, there is significant lock contention as
+> >> the thread count increases, and the throughput result of my fio
+> >> test is lower (outside the result variance).
+> >>=20
+> >>=20
+> >>>> The svc_xprt_enqueue() call that concerns me most is the one in
+> >>>> svc_rdma_wc_receive(), which is single-threaded per CQ. Slowing
+> >>>> down completion handling limits the total throughput per RDMA
+> >>>> connection.
+> >>>>=20
+> >>>> So, avoid walking the "all threads" list to find an idle thread to
+> >>>> wake. Instead, set up an idle bitmap and use find_next_bit, which
+> >>>> should work the same way as RQ_BUSY but it will touch only the
+> >>>> cachelines that the bitmap is in. Stick with atomic bit operations
+> >>>> to avoid taking the pool lock.
+> >>>>=20
+> >>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> >>>> ---
+> >>>> include/linux/sunrpc/svc.h    |    6 ++++--
+> >>>> include/trace/events/sunrpc.h |    1 -
+> >>>> net/sunrpc/svc.c              |   27 +++++++++++++++++++++------
+> >>>> net/sunrpc/svc_xprt.c         |   30 ++++++++++++++++++++++++------
+> >>>> 4 files changed, 49 insertions(+), 15 deletions(-)
+> >>>>=20
+> >>>> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> >>>> index 6f8bfcd44250..27ffcf7371d0 100644
+> >>>> --- a/include/linux/sunrpc/svc.h
+> >>>> +++ b/include/linux/sunrpc/svc.h
+> >>>> @@ -35,6 +35,7 @@ struct svc_pool {
+> >>>> spinlock_t sp_lock; /* protects sp_sockets */
+> >>>> struct list_head sp_sockets; /* pending sockets */
+> >>>> unsigned int sp_nrthreads; /* # of threads in pool */
+> >>>> + unsigned long *sp_idle_map; /* idle threads */
+> >>>> struct xarray sp_thread_xa;
+> >>>>=20
+> >>>> /* statistics on pool operation */
+> >>>> @@ -190,6 +191,8 @@ extern u32 svc_max_payload(const struct svc_rqst *=
+rqstp);
+> >>>> #define RPCSVC_MAXPAGES ((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE \
+> >>>> + 2 + 1)
+> >>>>=20
+> >>>> +#define RPCSVC_MAXPOOLTHREADS (4096)
+> >>>> +
+> >>>> /*
+> >>>>  * The context of a single thread, including the request currently bei=
+ng
+> >>>>  * processed.
+> >>>> @@ -239,8 +242,7 @@ struct svc_rqst {
+> >>>> #define RQ_SPLICE_OK (4) /* turned off in gss privacy
+> >>>> * to prevent encrypting page
+> >>>> * cache pages */
+> >>>> -#define RQ_BUSY (5) /* request is busy */
+> >>>> -#define RQ_DATA (6) /* request has data */
+> >>>> +#define RQ_DATA (5) /* request has data */
+> >>>=20
+> >>> Might this be a good opportunity to convert this to an enum ??
+> >>>=20
+> >>>> unsigned long rq_flags; /* flags field */
+> >>>> u32 rq_thread_id; /* xarray index */
+> >>>> ktime_t rq_qtime; /* enqueue time */
+> >>>> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunr=
+pc.h
+> >>>> index ea43c6059bdb..c07824a254bf 100644
+> >>>> --- a/include/trace/events/sunrpc.h
+> >>>> +++ b/include/trace/events/sunrpc.h
+> >>>> @@ -1676,7 +1676,6 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
+> >>>> svc_rqst_flag(USEDEFERRAL) \
+> >>>> svc_rqst_flag(DROPME) \
+> >>>> svc_rqst_flag(SPLICE_OK) \
+> >>>> - svc_rqst_flag(BUSY) \
+> >>>> svc_rqst_flag_end(DATA)
+> >>>>=20
+> >>>> #undef svc_rqst_flag
+> >>>> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> >>>> index ef350f0d8925..d0278e5190ba 100644
+> >>>> --- a/net/sunrpc/svc.c
+> >>>> +++ b/net/sunrpc/svc.c
+> >>>> @@ -509,6 +509,12 @@ __svc_create(struct svc_program *prog, unsigned i=
+nt bufsize, int npools,
+> >>>> INIT_LIST_HEAD(&pool->sp_sockets);
+> >>>> spin_lock_init(&pool->sp_lock);
+> >>>> xa_init_flags(&pool->sp_thread_xa, XA_FLAGS_ALLOC);
+> >>>> + /* All threads initially marked "busy" */
+> >>>> + pool->sp_idle_map =3D
+> >>>> + bitmap_zalloc_node(RPCSVC_MAXPOOLTHREADS, GFP_KERNEL,
+> >>>> +   svc_pool_map_get_node(i));
+> >>>> + if (!pool->sp_idle_map)
+> >>>> + return NULL;
+> >>>>=20
+> >>>> percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
+> >>>> percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
+> >>>> @@ -596,6 +602,8 @@ svc_destroy(struct kref *ref)
+> >>>> percpu_counter_destroy(&pool->sp_threads_starved);
+> >>>>=20
+> >>>> xa_destroy(&pool->sp_thread_xa);
+> >>>> + bitmap_free(pool->sp_idle_map);
+> >>>> + pool->sp_idle_map =3D NULL;
+> >>>> }
+> >>>> kfree(serv->sv_pools);
+> >>>> kfree(serv);
+> >>>> @@ -647,7 +655,6 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_p=
+ool *pool, int node)
+> >>>>=20
+> >>>> folio_batch_init(&rqstp->rq_fbatch);
+> >>>>=20
+> >>>> - __set_bit(RQ_BUSY, &rqstp->rq_flags);
+> >>>> rqstp->rq_server =3D serv;
+> >>>> rqstp->rq_pool =3D pool;
+> >>>>=20
+> >>>> @@ -677,7 +684,7 @@ static struct svc_rqst *
+> >>>> svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int n=
+ode)
+> >>>> {
+> >>>> static const struct xa_limit limit =3D {
+> >>>> - .max =3D U32_MAX,
+> >>>> + .max =3D RPCSVC_MAXPOOLTHREADS,
+> >>>> };
+> >>>> struct svc_rqst *rqstp;
+> >>>> int ret;
+> >>>> @@ -722,12 +729,19 @@ struct svc_rqst *svc_pool_wake_idle_thread(struc=
+t svc_serv *serv,
+> >>>>   struct svc_pool *pool)
+> >>>> {
+> >>>> struct svc_rqst *rqstp;
+> >>>> - unsigned long index;
+> >>>> + unsigned long bit;
+> >>>>=20
+> >>>> - xa_for_each(&pool->sp_thread_xa, index, rqstp) {
+> >>>> - if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
+> >>>> + /* Check the pool's idle bitmap locklessly so that multiple
+> >>>> + * idle searches can proceed concurrently.
+> >>>> + */
+> >>>> + for_each_set_bit(bit, pool->sp_idle_map, pool->sp_nrthreads) {
+> >>>> + if (!test_and_clear_bit(bit, pool->sp_idle_map))
+> >>>> continue;
+> >>>=20
+> >>> I would really rather the map was "sp_busy_map". (initialised with bitm=
+ap_fill())
+> >>> Then you could "test_and_set_bit_lock()" and later "clear_bit_unlock()"
+> >>> and so get all the required memory barriers.
+> >>> What we are doing here is locking a particular thread for a task, so
+> >>> "lock" is an appropriate description of what is happening.
+> >>> See also svc_pool_thread_mark_* below.
+> >>>=20
+> >>>>=20
+> >>>> + rqstp =3D xa_load(&pool->sp_thread_xa, bit);
+> >>>> + if (!rqstp)
+> >>>> + break;
+> >>>> +
+> >>>> WRITE_ONCE(rqstp->rq_qtime, ktime_get());
+> >>>> wake_up_process(rqstp->rq_task);
+> >>>> percpu_counter_inc(&pool->sp_threads_woken);
+> >>>> @@ -767,7 +781,8 @@ svc_pool_victim(struct svc_serv *serv, struct svc_=
+pool *pool, unsigned int *stat
+> >>>> }
+> >>>>=20
+> >>>> found_pool:
+> >>>> - rqstp =3D xa_find(&pool->sp_thread_xa, &zero, U32_MAX, XA_PRESENT);
+> >>>> + rqstp =3D xa_find(&pool->sp_thread_xa, &zero, RPCSVC_MAXPOOLTHREADS,
+> >>>> + XA_PRESENT);
+> >>>> if (rqstp) {
+> >>>> __xa_erase(&pool->sp_thread_xa, rqstp->rq_thread_id);
+> >>>> task =3D rqstp->rq_task;
+> >>>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> >>>> index 7709120b45c1..2844b32c16ea 100644
+> >>>> --- a/net/sunrpc/svc_xprt.c
+> >>>> +++ b/net/sunrpc/svc_xprt.c
+> >>>> @@ -735,6 +735,25 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+> >>>> return true;
+> >>>> }
+> >>>>=20
+> >>>> +static void svc_pool_thread_mark_idle(struct svc_pool *pool,
+> >>>> +      struct svc_rqst *rqstp)
+> >>>> +{
+> >>>> + smp_mb__before_atomic();
+> >>>> + set_bit(rqstp->rq_thread_id, pool->sp_idle_map);
+> >>>> + smp_mb__after_atomic();
+> >>>> +}
+> >>>=20
+> >>> There memory barriers above and below bother me.  There is no comment
+> >>> telling me what they are protecting against.
+> >>> I would rather svc_pool_thread_mark_idle - which unlocks the thread -
+> >>> were
+> >>>=20
+> >>>    clear_bit_unlock(rqstp->rq_thread_id, pool->sp_busy_map);
+> >>>=20
+> >>> and  that svc_pool_thread_mark_busy were
+> >>>=20
+> >>>   test_and_set_bit_lock(rqstp->rq_thread_id, pool->sp_busy_map);
+> >>>=20
+> >>> Then it would be more obvious what was happening.
+> >>=20
+> >> Not obvious to me, but that's very likely because I'm not clear what
+> >> clear_bit_unlock() does. :-)
+> >=20
+> > In general, any "lock" operation (mutex, spin, whatever) is (and must
+> > be) and "acquire" type operations which imposes a memory barrier so that
+> > read requests *after* the lock cannot be satisfied with data from
+> > *before* the lock.  The read must access data after the lock.
+> > Conversely any "unlock" operations is a "release" type operation which
+> > imposes a memory barrier so that any write request *before* the unlock
+> > must not be delayed until *after* the unlock.  The write must complete
+> > before the unlock.
+> >=20
+> > This is exactly what you would expect of locking - it creates a closed
+> > code region that is properly ordered w.r.t comparable closed regions.
+> >=20
+> > test_and_set_bit_lock() and clear_bit_unlock() provide these expected
+> > semantics for bit operations.
+>=20
+> Your explanation is more clear than what I read in Documentation/atomic*
+> so thanks. I feel a little more armed to make good use of it.
+>=20
+>=20
+> > New code should (almost?) never have explicit memory barriers like
+> > smp_mb__after_atomic().
+> > It should use one of the many APIs with _acquire or _release suffixes,
+> > or with the more explicit _lock or _unlock.
+>=20
+> Out of curiosity, is "should never have explicit memory barriers"
+> documented somewhere? I've been accused of skimming when I read, so
+> I might have missed it.
 
-I don't have any solution for this problem based on the provided data.
-However next time when this problem occurs, please do the following on
-the NFS server to gather some diagnostic info so we can investigate:
+My wife says I only read every second word of emails :-)
 
-1. dump the workqueues:
+I don't know that it is documented anywhere (maybe I should submit a
+patch).  The statement was really my personal rule that seems to be the
+natural sequel for the introduction of the many _acquire and _release
+interfaces.
 
-#  echo t > /proc/sysrq-trigger
-
-Output is written to /var/log/messages.
-
-2. gather nfsd and rpc task info:
-
-# (for tt in $(grep -l 'nfs' /proc/*/stack); do echo "${tt}:"; cat ${tt}; echo; done) > /tmp/nfs_threads.txt
-
-# cat /sys/kernel/debug/sunrpc/rpc_clnt/*/tasks > /tmp/rpc_tasks.txt
-
-
-You can put /var/log/messages, nfs_threads.txt and rpc_tasks.txt at some
-public place where we can get to, or you can email them directly to me.
-
-Thanks,
--Dai
-
-On 7/3/23 2:05 AM, Miha Vrhovnik wrote:
-> Hey everybody,
->
-> we are experiencing a similar issue to Dr. Herzog [1]. the details and
-> our configuration is a bit different than his, but I'd assume that the
-> same bug is behind this.
->
-> It's a single server per region, with NFS is on local storage formatted as ext4.
-> The servers don't have a swap and have plenty of free memory. 16G-20G
-> used (without caches) out of 64G.
-> The amount of data stored is rather small about 1G, with about 100.000
-> files over 17.000 directories
->
-> We've upgraded the servers from Ubuntu 20.04 to Ubuntu 22.04 about a
-> month ago and we had four outages since than.Our clients are still on
-> Ubuntu 20.04 if this helps
-> Our setup is rather small.But the impacts aprox. 10.000 users per region.
->
-> And the packages in Ubuntu 22.04 are a bit older than the ones in
-> Debian 12 (bookworm )
->
-> apt list --installed '*nfs*'
-> Listing... Done
-> libnfsidmap1/jammy-updates,now 1:2.6.1-1ubuntu1.2 amd64 [installed,automatic]
-> nfs-common/jammy-updates,now 1:2.6.1-1ubuntu1.2 amd64 [installed]
-> nfs-kernel-server/jammy-updates,now 1:2.6.1-1ubuntu1.2 amd64 [installed]
->
-> and the kernel
-> Linux redacted 5.19.0-1026-gcp #28~22.04.1-Ubuntu SMP Tue Jun 6
-> 07:24:26 UTC 2023 x86_64 x86_64 x86_64 GNU/Linux
->
-> Stack-trace is a different from the one provided by Dr. Herzog. But
-> the same between servers.
-> so only full server restart helps. And once this happened almost
-> immediately after the server was rebooted.
->
-> This is the first time that it happened that day.
->
-> Jun 26 11:34:07 redacted kernel: [326687.684554] receive_cb_reply: Got
-> unrecognized reply: calldir 0x1 xpt_bc_xprt 000000000dddae84 xid
-> bb78d292
-> Jun 26 11:34:07 redacted kernel: [326687.684634] receive_cb_reply: Got
-> unrecognized reply: calldir 0x1 xpt_bc_xprt 000000000dddae84 xid
-> ba78d292
-> Jun 26 11:41:38 redacted kernel: [327139.472177] receive_cb_reply: Got
-> unrecognized reply: calldir 0x1 xpt_bc_xprt 000000004df70d45 xid
-> 3bfdc2ea
-> Jun 26 11:44:30 redacted kernel: [327310.678539] INFO: task nfsd:848
-> blocked for more than 120 seconds.
-> Jun 26 11:44:30 redacted kernel: [327310.685086]       Not tainted
-> 5.19.0-1026-gcp #28~22.04.1-Ubuntu
-> Jun 26 11:44:30 redacted kernel: [327310.691358] "echo 0 >
-> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> Jun 26 11:44:30 redacted kernel: [327310.699442] task:nfsd
-> state:D stack:    0 pid:  848 ppid:     2 flags:0x00004000
-> Jun 26 11:44:30 redacted kernel: [327310.699451] Call Trace:
-> Jun 26 11:44:30 redacted kernel: [327310.699456]  <TASK>
-> Jun 26 11:44:30 redacted kernel: [327310.699464]  __schedule+0x248/0x5d0
-> Jun 26 11:44:30 redacted kernel: [327310.699478]  schedule+0x58/0x100
-> Jun 26 11:44:30 redacted kernel: [327310.699482]  schedule_timeout+0x10d/0x140
-> Jun 26 11:44:30 redacted kernel: [327310.699489]  __wait_for_common+0x99/0x1b0
-> Jun 26 11:44:30 redacted kernel: [327310.699493]  ? usleep_range_state+0xa0/0xa0
-> Jun 26 11:44:30 redacted kernel: [327310.699497]  wait_for_completion+0x24/0x40
-> Jun 26 11:44:30 redacted kernel: [327310.699501]  __flush_workqueue+0x140/0x3e0
-> Jun 26 11:44:30 redacted kernel: [327310.699512]
-> nfsd4_probe_callback_sync+0x1a/0x30 [nfsd]
-> Jun 26 11:44:30 redacted kernel: [327310.699566]
-> nfsd4_destroy_session+0x184/0x230 [nfsd]
-> Jun 26 11:44:30 redacted kernel: [327310.699597]
-> nfsd4_proc_compound+0x42b/0x770 [nfsd]
-> Jun 26 11:44:30 redacted kernel: [327310.699629]
-> nfsd_dispatch+0x174/0x270 [nfsd]
-> Jun 26 11:44:30 redacted kernel: [327310.699670]
-> svc_process_common+0x2a5/0x610 [sunrpc]
-> Jun 26 11:44:30 redacted kernel: [327310.699760]  ?
-> svc_handle_xprt+0x166/0x350 [sunrpc]
-> Jun 26 11:44:30 redacted kernel: [327310.699807]  ? nfsd_svc+0x1a0/0x1a0 [nfsd]
-> Jun 26 11:44:30 redacted kernel: [327310.699835]  ?
-> nfsd_shutdown_threads+0xa0/0xa0 [nfsd]
-> Jun 26 11:44:30 redacted kernel: [327310.699863]
-> svc_process+0xba/0x110 [sunrpc]
-> Jun 26 11:44:30 redacted kernel: [327310.699906]  nfsd+0xd1/0x1a0 [nfsd]
-> Jun 26 11:44:30 redacted kernel: [327310.699932]  kthread+0xce/0xf0
-> Jun 26 11:44:30 redacted kernel: [327310.699937]  ?
-> kthread_complete_and_exit+0x20/0x20
-> Jun 26 11:44:30 redacted kernel: [327310.699941]  ret_from_fork+0x1f/0x30
-> Jun 26 11:44:30 redacted kernel: [327310.699948]  </TASK>
->
->
->
-> This is about 10 minutes after reboot:
->
-> Jun 26 12:45:13 redacted kernel: [  373.274344] receive_cb_reply: Got
-> unrecognized reply: calldir 0x1 xpt_bc_xprt 0000000016b8f89c xid
-> b4752784
-> Jun 26 12:49:06 redacted kernel: [  605.568257] INFO: task nfsd:887
-> blocked for more than 120 seconds.
-> Jun 26 12:49:06 redacted kernel: [  605.574821]       Not tainted
-> 5.19.0-1026-gcp #28~22.04.1-Ubuntu
-> Jun 26 12:49:06 redacted kernel: [  605.581432] "echo 0 >
-> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> Jun 26 12:49:06 redacted kernel: [  605.589914] task:nfsd
-> state:D stack:    0 pid:  887 ppid:     2 flags:0x00004000
-> Jun 26 12:49:06 redacted kernel: [  605.589926] Call Trace:
-> Jun 26 12:49:06 redacted kernel: [  605.589931]  <TASK>
-> Jun 26 12:49:06 redacted kernel: [  605.589937]  __schedule+0x248/0x5d0
-> Jun 26 12:49:06 redacted kernel: [  605.590112]  schedule+0x58/0x100
-> Jun 26 12:49:06 redacted kernel: [  605.590117]  schedule_timeout+0x10d/0x140
-> Jun 26 12:49:06 redacted kernel: [  605.590125]  __wait_for_common+0x99/0x1b0
-> Jun 26 12:49:06 redacted kernel: [  605.590129]  ? usleep_range_state+0xa0/0xa0
-> Jun 26 12:49:06 redacted kernel: [  605.590134]  wait_for_completion+0x24/0x40
-> Jun 26 12:49:06 redacted kernel: [  605.590138]  __flush_workqueue+0x140/0x3e0
-> Jun 26 12:49:06 redacted kernel: [  605.590147]
-> nfsd4_probe_callback_sync+0x1a/0x30 [nfsd]
-> Jun 26 12:49:06 redacted kernel: [  605.590199]
-> nfsd4_destroy_session+0x184/0x230 [nfsd]
-> Jun 26 12:49:06 redacted kernel: [  605.590235]
-> nfsd4_proc_compound+0x42b/0x770 [nfsd]
-> Jun 26 12:49:06 redacted kernel: [  605.590270]
-> nfsd_dispatch+0x174/0x270 [nfsd]
-> Jun 26 12:49:06 redacted kernel: [  605.590303]
-> svc_process_common+0x2a5/0x610 [sunrpc]
-> Jun 26 12:49:06 redacted kernel: [  605.590392]  ?
-> svc_handle_xprt+0x166/0x350 [sunrpc]
-> Jun 26 12:49:06 redacted kernel: [  605.590447]  ? nfsd_svc+0x1a0/0x1a0 [nfsd]
-> Jun 26 12:49:06 redacted kernel: [  605.590479]  ?
-> nfsd_shutdown_threads+0xa0/0xa0 [nfsd]
-> Jun 26 12:49:06 redacted kernel: [  605.590510]  svc_process+0xba/0x110 [sunrpc]
-> Jun 26 12:49:06 redacted kernel: [  605.590561]  nfsd+0xd1/0x1a0 [nfsd]
-> Jun 26 12:49:06 redacted kernel: [  605.590598]  kthread+0xce/0xf0
-> Jun 26 12:49:06 redacted kernel: [  605.590603]  ?
-> kthread_complete_and_exit+0x20/0x20
-> Jun 26 12:49:06 redacted kernel: [  605.590608]  ret_from_fork+0x1f/0x30
-> Jun 26 12:49:06 redacted kernel: [  605.590616]  </TASK>
->
-> when things started to go really bad we gt another stacktrace:
-> Jun 26 12:53:07 redacted kernel: [  847.232530] INFO: task
-> kworker/u8:3:5078 blocked for more than 120 seconds.
-> Jun 26 12:53:07 redacted kernel: [  847.239937]       Not tainted
-> 5.19.0-1026-gcp #28~22.04.1-Ubuntu
-> Jun 26 12:53:08 redacted kernel: [  847.246163] "echo 0 >
-> /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> Jun 26 12:53:08 redacted kernel: [  847.254308] task:kworker/u8:3
-> state:D stack:    0 pid: 5078 ppid:     2 flags:0x00004000
-> Jun 26 12:53:08 redacted kernel: [  847.254328] Workqueue: nfsd4
-> laundromat_main [nfsd]
-> Jun 26 12:53:08 redacted kernel: [  847.254438] Call Trace:
-> Jun 26 12:53:08 redacted kernel: [  847.254443]  <TASK>
-> Jun 26 12:53:08 redacted kernel: [  847.254449]  __schedule+0x248/0x5d0
-> Jun 26 12:53:08 redacted kernel: [  847.254460]  ? available_idle_cpu+0x66/0xa0
-> Jun 26 12:53:08 redacted kernel: [  847.254467]  schedule+0x58/0x100
-> Jun 26 12:53:08 redacted kernel: [  847.254472]  schedule_timeout+0x10d/0x140
-> Jun 26 12:53:08 redacted kernel: [  847.254478]  __wait_for_common+0x99/0x1b0
-> Jun 26 12:53:08 redacted kernel: [  847.254482]  ? usleep_range_state+0xa0/0xa0
-> Jun 26 12:53:08 redacted kernel: [  847.254485]  wait_for_completion+0x24/0x40
-> Jun 26 12:53:08 redacted kernel: [  847.254489]  __flush_workqueue+0x140/0x3e0
-> Jun 26 12:53:08 redacted kernel: [  847.254494]
-> nfsd4_shutdown_callback+0x4d/0x130 [nfsd]
-> Jun 26 12:53:08 redacted kernel: [  847.254525]  ?
-> nfsd4_return_all_client_layouts+0xc9/0x160 [nfsd]
-> Jun 26 12:53:08 redacted kernel: [  847.254556]  ?
-> nfsd4_shutdown_copy+0x70/0xb0 [nfsd]
-> Jun 26 12:53:08 redacted kernel: [  847.254600]
-> __destroy_client+0x1a1/0x210 [nfsd]
-> Jun 26 12:53:08 redacted kernel: [  847.254630]  expire_client+0x57/0x70 [nfsd]
-> Jun 26 12:53:08 redacted kernel: [  847.254659]
-> nfs4_laundromat+0x26e/0x900 [nfsd]
-> Jun 26 12:53:08 redacted kernel: [  847.254690]  ?
-> finish_task_switch.isra.0+0x82/0x290
-> Jun 26 12:53:08 redacted kernel: [  847.254697]
-> laundromat_main+0x19/0x50 [nfsd]
-> Jun 26 12:53:08 redacted kernel: [  847.254726]  process_one_work+0x222/0x3c0
-> Jun 26 12:53:08 redacted kernel: [  847.254731]  worker_thread+0x50/0x3f0
-> Jun 26 12:53:08 redacted kernel: [  847.254734]  ? process_one_work+0x3c0/0x3c0
-> Jun 26 12:53:08 redacted kernel: [  847.254736]  kthread+0xce/0xf0
-> Jun 26 12:53:08 redacted kernel: [  847.254742]  ?
-> kthread_complete_and_exit+0x20/0x20
-> Jun 26 12:53:08 redacted kernel: [  847.254746]  ret_from_fork+0x1f/0x30
-> Jun 26 12:53:08 redacted kernel: [  847.254754]  </TASK>
->
->
-> 1 - https://marc.info/?l=linux-nfs&m=168258759703478&w=2
->
-> Regards,
-> Miha
+NeilBrown
