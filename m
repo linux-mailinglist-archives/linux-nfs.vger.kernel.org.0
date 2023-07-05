@@ -2,130 +2,305 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C485747B97
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jul 2023 04:43:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94B89747BC8
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Jul 2023 05:27:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbjGECnv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Jul 2023 22:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58728 "EHLO
+        id S229493AbjGED1m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Jul 2023 23:27:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229539AbjGECnu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jul 2023 22:43:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DA910F5
-        for <linux-nfs@vger.kernel.org>; Tue,  4 Jul 2023 19:43:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C7D29613EA
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Jul 2023 02:43:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6073C433C7;
-        Wed,  5 Jul 2023 02:43:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688525028;
-        bh=CJ68G7YuRbha143kXOOjRkrQiLW7e5WGvmWpfc7Wykw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y9IhkdLgOg8xKZyu+gnziCQBlvSOz3zHuWEFvFt7pDc82aK2nLELtrEOhKDII2nSj
-         1+V1q7Symr6YXXy0J+yMyfEDXqyWeZNlKemGVC9HV2N8B3i7gioxgI+hAdq4YONmpQ
-         SPQiDXdero859mWBla7djZvscSYa1fGnXA6fyN8fdzImAx+l1q6QxsKvHZp/oGjdQJ
-         DcSBJUgcIJAldf/Is8wINhPM+EEs7gTxOkG//MELnvdOdOws6OvGpV8f2EDH/CFW5G
-         x5TmvFi2s8u5TDhOji0I2ZpuiAHZ9/GlAbG4GTbHfRRonftUmdW4mjGxoSnG/Q8TkQ
-         UFU/CSyQeo+Uw==
-Date:   Tue, 4 Jul 2023 22:43:45 -0400
-From:   Chuck Lever <cel@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        lorenzo@kernel.org, jlayton@redhat.com, david@fromorbit.com
-Subject: Re: [PATCH v2 0/9] SUNRPC service thread scheduler optimizations
-Message-ID: <ZKTY4RiB6bC/SL2F@manet.1015granger.net>
-References: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>
- <168851931219.8939.14382911673248383020@noble.neil.brown.name>
+        with ESMTP id S229449AbjGED1l (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jul 2023 23:27:41 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CD2E10FB
+        for <linux-nfs@vger.kernel.org>; Tue,  4 Jul 2023 20:27:38 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-66d6a9851f3so1321874b3a.0
+        for <linux-nfs@vger.kernel.org>; Tue, 04 Jul 2023 20:27:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1688527657; x=1691119657;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NOwOUvz1NPkWlBxAp0GPGGO2Nrixl73uZn6xROfOEj8=;
+        b=ifLsYO8F2I4MBHVlF2Or5hf7tTNep81Mx+BsSk/nCvCzxaPTLrQYJUCegbZ71CLvqI
+         jnwmhHljMYjJqvknT1p7Cvh4o3Zetn0nbYVkcxdIejyVlEmEoOc51mjv2rm9Oe7hCkmi
+         BhkEzv2gsaM2VKlzfD2ZXlb5JXn4cFBH6rlbCG9Gisi0SSs52NHZD0JL0DYBTusr279z
+         ECt8JJbhMcUgBeDhNudIJn3gOdFaKif3GEH22u6ET+bb2NCPdK1crIBUZU+UjNX2cqQu
+         Xo1u3OB8WsD6YcqowSF12wIwDOJl+hjeHnPzPy5ZJwY8SE6f5Rm09aAg64VyQm7gLUPN
+         jgMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688527657; x=1691119657;
+        h=content-transfer-encoding:in-reply-to:references:cc:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NOwOUvz1NPkWlBxAp0GPGGO2Nrixl73uZn6xROfOEj8=;
+        b=QWUklVcE56+XTr2/6gZtJiUwPNUEo7/EKTrmxr63fAdabeXn42CtOOnDAcQpiprsPH
+         YPQBkiyn1R3RXyuo+L+E9vGlHzEenHPT+wXeSq7nPneXgoyitMX+j6TOVJ1+qh4iNuZl
+         QxqsD2n7omXmK9Ax8OAH20QB1O6YZLu0zq7dVs8U9pK9Uy0lHDPcMRqVDMMr8t3h5ts5
+         rpXGGvAN7bNqikbMLf44n2K3C0IQLXfRl34SNTIQGbdw/jBsd4OyaQSbqZK9N4IAo+1Y
+         zNVQQ9/9P6MtPjaiZXhqOHzI7OMHTv4q2W2DiUn33MSxC0davT25As/3sk1qEKBZG6J4
+         EQtw==
+X-Gm-Message-State: ABy/qLagFVCv5aYLNsYupN1EPWtDZIhtfmNpntg2/cgoEdZI6C31yoJF
+        0glR4IGKojHJmElA2YEGs1uzHQ==
+X-Google-Smtp-Source: APBJJlHJ/xdp2D4mprG7cOjZwHFFckWD0OnUdfulMpel6EsGVgn6d2uqpP3j7nke+gBKkBfRchiLhg==
+X-Received: by 2002:a05:6a00:1f90:b0:675:8627:a291 with SMTP id bg16-20020a056a001f9000b006758627a291mr16245087pfb.3.1688527657628;
+        Tue, 04 Jul 2023 20:27:37 -0700 (PDT)
+Received: from [10.70.252.135] ([203.208.167.147])
+        by smtp.gmail.com with ESMTPSA id fe10-20020a056a002f0a00b0064fde7ae1ffsm13136627pfb.38.2023.07.04.20.27.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 04 Jul 2023 20:27:37 -0700 (PDT)
+Message-ID: <733af312-fb2d-3ec4-54c8-f154447c2051@bytedance.com>
+Date:   Wed, 5 Jul 2023 11:27:28 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168851931219.8939.14382911673248383020@noble.neil.brown.name>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.12.0
+Subject: Re: [PATCH 24/29] mm: vmscan: make global slab shrink lockless
+Content-Language: en-US
+From:   Qi Zheng <zhengqi.arch@bytedance.com>
+To:     paulmck@kernel.org, Dave Chinner <david@fromorbit.com>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, akpm@linux-foundation.org,
+        tkhai@ya.ru, roman.gushchin@linux.dev, djwong@kernel.org,
+        brauner@kernel.org, tytso@mit.edu, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        dm-devel@redhat.com, linux-raid@vger.kernel.org,
+        linux-bcache@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+References: <20230622085335.77010-1-zhengqi.arch@bytedance.com>
+ <20230622085335.77010-25-zhengqi.arch@bytedance.com>
+ <cf0d9b12-6491-bf23-b464-9d01e5781203@suse.cz>
+ <ZJU708VIyJ/3StAX@dread.disaster.area>
+ <cc894c77-717a-4e9f-b649-48bab40e7c60@paulmck-laptop>
+ <3efa68e0-b04f-5c11-4fe2-2db0784064fc@bytedance.com>
+In-Reply-To: <3efa68e0-b04f-5c11-4fe2-2db0784064fc@bytedance.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 11:08:32AM +1000, NeilBrown wrote:
+
+
+On 2023/7/4 11:45, Qi Zheng wrote:
 > 
-> I've been pondering this scheduling mechanism in sunrpc/svc some more,
-> and I wonder if rather than optimising the search, we should eliminate
-> it.
 > 
-> Instead we could have a linked list of idle threads using llist.h
+> On 2023/7/4 00:39, Paul E. McKenney wrote:
+>> On Fri, Jun 23, 2023 at 04:29:39PM +1000, Dave Chinner wrote:
+>>> On Thu, Jun 22, 2023 at 05:12:02PM +0200, Vlastimil Babka wrote:
+>>>> On 6/22/23 10:53, Qi Zheng wrote:
+>>>>> @@ -1067,33 +1068,27 @@ static unsigned long shrink_slab(gfp_t 
+>>>>> gfp_mask, int nid,
+>>>>>       if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
+>>>>>           return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
+>>>>> -    if (!down_read_trylock(&shrinker_rwsem))
+>>>>> -        goto out;
+>>>>> -
+>>>>> -    list_for_each_entry(shrinker, &shrinker_list, list) {
+>>>>> +    rcu_read_lock();
+>>>>> +    list_for_each_entry_rcu(shrinker, &shrinker_list, list) {
+>>>>>           struct shrink_control sc = {
+>>>>>               .gfp_mask = gfp_mask,
+>>>>>               .nid = nid,
+>>>>>               .memcg = memcg,
+>>>>>           };
+>>>>> +        if (!shrinker_try_get(shrinker))
+>>>>> +            continue;
+>>>>> +        rcu_read_unlock();
+>>>>
+>>>> I don't think you can do this unlock?
+>>
+>> Sorry to be slow to respond here, this one fell through the cracks.
+>> And thank you to Qi for reminding me!
+>>
+>> If you do this unlock, you had jolly well better nail down the current
+>> element (the one referenced by shrinker), for example, by acquiring an
+>> explicit reference count on the object.  And presumably this is exactly
+>> what shrinker_try_get() is doing.  And a look at your 24/29 confirms 
+>> this,
+>> at least assuming that shrinker->refcount is set to zero before the call
+>> to synchronize_rcu() in free_module() *and* that synchronize_rcu() 
+>> doesn't
+>> start until *after* shrinker_put() calls complete().  Plus, as always,
+>> the object must be removed from the list before the synchronize_rcu()
+>> starts.  (On these parts of the puzzle, I defer to those more familiar
+>> with this code path.  And I strongly suggest carefully commenting this
+>> type of action-at-a-distance design pattern.)
 > 
-> svc_enqueue_xprt calls llist_del_first() and if the result is not NULL,
-> that thread is deemed busy (because it isn't on the list) and is woken.
+> Yeah, I think I've done it like above. A more detailed timing diagram is
+> below.
 > 
-> choose_victim() could also use llist_del_first().  If nothing is there
-> it could set a flag which gets cleared by the next thread to go idle.
-> That thread exits ..  or something.  Some interlock would be needed but
-> it shouldn't be too hard.
+>>
+>> Why is this important?  Because otherwise that object might be freed
+>> before you get to the call to rcu_read_lock() at the end of this loop.
+>> And if that happens, list_for_each_entry_rcu() will be walking the
+>> freelist, which is quite bad for the health and well-being of your 
+>> kernel.
+>>
+>> There are a few other ways to make this sort of thing work:
+>>
+>> 1.    Defer the shrinker_put() to the beginning of the loop.
+>>     You would need a flag initially set to zero, and then set to
+>>     one just before (or just after) the rcu_read_lock() above.
+>>     You would also need another shrinker_old pointer to track the
+>>     old pointer.  Then at the top of the loop, if the flag is set,
+>>     invoke shrinker_put() on shrinker_old.    This ensures that the
+>>     previous shrinker structure stays around long enough to allow
+>>     the loop to find the next shrinker structure in the list.
+>>
+>>     This approach is attractive when the removal code path
+>>     can invoke shrinker_put() after the grace period ends.
+>>
+>> 2.    Make shrinker_put() invoke call_rcu() when ->refcount reaches
+>>     zero, and have the callback function free the object.  This of
+>>     course requires adding an rcu_head structure to the shrinker
+>>     structure, which might or might not be a reasonable course of
+>>     action.  If adding that rcu_head is reasonable, this simplifies
+>>     the logic quite a bit.
+>>
+>> 3.    For the shrinker-structure-removal code path, remove the shrinker
+>>     structure, then remove the initial count from ->refcount,
+>>     and then keep doing grace periods until ->refcount is zero,
+>>     then do one more.  Of course, if the result of removing the
+>>     initial count was zero, then only a single additional grace
+>>     period is required.
+>>
+>>     This would need to be carefully commented, as it is a bit
+>>     unconventional.
 > 
-> svc_exit_thread would have difficulty removing itself from the idle
-> list, if it wasn't busy..  Possibly we could disallow that case (I think
-> sending a signal to a thread can make it exit while idle).
-> Alternately we could use llist_del_all() to clear the list, then wake
-> them all up so that they go back on the list if there is nothing to do
-> and if they aren't trying to exit.  That is fairly heavy handed, but
-> isn't a case that we need to optimise.
+> Thanks for such a detailed addition!
 > 
-> If you think that might be worth pursuing, I could have a go at writing
-> the patch - probably on top of all the cleanups in your series before
-> the xarray is added.
+>>
+>> There are probably many other ways, but just to give an idea of a few
+>> other ways to do this.
+>>
+>>>>> +
+>>>>>           ret = do_shrink_slab(&sc, shrinker, priority);
+>>>>>           if (ret == SHRINK_EMPTY)
+>>>>>               ret = 0;
+>>>>>           freed += ret;
+>>>>> -        /*
+>>>>> -         * Bail out if someone want to register a new shrinker to
+>>>>> -         * prevent the registration from being stalled for long 
+>>>>> periods
+>>>>> -         * by parallel ongoing shrinking.
+>>>>> -         */
+>>>>> -        if (rwsem_is_contended(&shrinker_rwsem)) {
+>>>>> -            freed = freed ? : 1;
+>>>>> -            break;
+>>>>> -        }
+>>>>> -    }
+>>>>> -    up_read(&shrinker_rwsem);
+>>>>> -out:
+>>>>> +        rcu_read_lock();
+>>>>
+>>>> That new rcu_read_lock() won't help AFAIK, the whole
+>>>> list_for_each_entry_rcu() needs to be under the single 
+>>>> rcu_read_lock() to be
+>>>> safe.
+>>>
+>>> Yeah, that's the pattern we've been taught and the one we can look
+>>> at and immediately say "this is safe".
+>>>
+>>> This is a different pattern, as has been explained bi Qi, and I
+>>> think it *might* be safe.
+>>>
+>>> *However.*
+>>>
+>>> Right now I don't have time to go through a novel RCU list iteration
+>>> pattern it one step at to determine the correctness of the
+>>> algorithm. I'm mostly worried about list manipulations that can
+>>> occur outside rcu_read_lock() section bleeding into the RCU
+>>> critical section because rcu_read_lock() by itself is not a memory
+>>> barrier.
+>>>
+>>> Maybe Paul has seen this pattern often enough he could simply tell
+>>> us what conditions it is safe in. But for me to work that out from
+>>> first principles? I just don't have the time to do that right now.
+>>
+>> If the code does just the right sequence of things on the removal path
+>> (remove, decrement reference, wait for reference to go to zero, wait for
+>> grace period, free), then it would work.  If this is what is happening,
+>> I would argue for more comments.  ;-)
+> 
+> The order of the removal path is slightly different from this:
+> 
+>      shrink_slab                 unregister_shrinker
+>      ===========                 ===================
+> 
+>     shrinker_try_get()
+>     rcu_read_unlock()
+>                                  1. decrement initial reference
+>                  shrinker_put()
+>                  2. wait for reference to go to zero
+>                  wait_for_completion()
+>     rcu_read_lock()
+> 
+>     shrinker_put()
+>                  3. remove the shrinker from list
+>                  list_del_rcu()
+>                                  4. wait for grace period
+>                  kfree_rcu()/synchronize_rcu()
+> 
+> 
+>     list_for_each_entry()
+> 
+>     shrinker_try_get()
+>     rcu_read_unlock()
+>                  5. free the shrinker
+> 
+> So the order is: decrement reference, wait for reference to go to zero,
+> remove, wait for grace period, free.
+> 
+> I think this can work. And we can only do the *step 3* after we hold the
+> RCU read lock again, right? Please let me know if I missed something.
 
-The thread pool is effectively a cached resource, so it is a use case
-that fits llist well. svcrdma uses llist in a few spots in that very
-capacity.
+Oh, you are right, It would be better to move step 3 to step 1. We
+should first remove the shrinker from the shrinker_list to prevent
+other traversers from finding it again, otherwise the following
+situations may occur theoretically:
 
-If you think you can meet all of the criteria in the table at the top of
-llist.h so thread scheduling works entirely without a lock, that might
-be an interesting point of comparison.
+CPU 0                 CPU 1
 
-My only concern is that the current set of candidate mechanisms manage
-to use mostly the first thread, rather than round-robining through the
-thread list. Using mostly one process tends to be more cache-friendly.
-An llist-based thread scheduler should try to follow that behavior,
-IMO.
+shrinker_try_get()
 
+                       shrinker_try_get()
 
-> I also wonder if we should avoid waking too many threads up at once.
-> If multiple events happen in quick succession, we currently wake up
-> multiple threads and if there is any scheduling delay (which is expected
-> based on Commit 22700f3c6df5 ("SUNRPC: Improve ordering of transport processing"))
-> then by the time the threads wake up, there may no longer be work to do
-> as another thread might have gone idle and taken the work.
+shrinker_put()
+shrinker_try_get()
+                       shrinker_put()
 
-It might be valuable to add some observability of wake-ups that find
-nothing to do. I'll look into that.
+Thanks,
+Qi
 
-
-> Instead we could have a limit on the number of threads waking up -
-> possibly 1 or 3.  If the counter is maxed out, don't do a wake up.
-> When a thread wakes up, it decrements the counter, dequeues some work,
-> and if there is more to do, then it queues another task.
-
-I consider reducing the wake-up rate as the next step for improving
-RPC service thread scalability. Any experimentation in that area is
-worth looking into.
-
-
-> I imagine the same basic protocol would be used for creating new threads
-> when load is high - start just one at a time, though maybe a new thread
-> would handle a first request before possibly starting another thread.
-
-I envision that dynamically tuning the pool thread count as something
-that should be managed in user space, since it's a policy rather than
-a mechanism.
-
-That could be a problem, though, if we wanted to shut down a few pool
-threads based on shrinker activity.
+> 
+> Thanks,
+> Qi
+> 
+>>
+>>                             Thanx, Paul
+>>
+>>>> IIUC this is why Dave in [4] suggests unifying shrink_slab() with
+>>>> shrink_slab_memcg(), as the latter doesn't iterate the list but uses 
+>>>> IDR.
+>>>
+>>> Yes, I suggested the IDR route because radix tree lookups under RCU
+>>> with reference counted objects are a known safe pattern that we can
+>>> easily confirm is correct or not.  Hence I suggested the unification
+>>> + IDR route because it makes the life of reviewers so, so much
+>>> easier...
+>>>
+>>> Cheers,
+>>>
+>>> Dave.
+>>> -- 
+>>> Dave Chinner
+>>> david@fromorbit.com
