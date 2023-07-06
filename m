@@ -2,75 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5915F749DD4
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Jul 2023 15:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D82F74A003
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Jul 2023 16:55:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231769AbjGFNea (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 Jul 2023 09:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50548 "EHLO
+        id S233639AbjGFOzS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 Jul 2023 10:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229555AbjGFNe3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Jul 2023 09:34:29 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B053F1996;
-        Thu,  6 Jul 2023 06:34:27 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 68C7421B05;
-        Thu,  6 Jul 2023 13:34:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1688650466; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+HWAIIhhV1bbuzI9bn8sagrmpXmB6BY8CYYY/NSQTwM=;
-        b=npaGavp6icAn1NmRjA9mKQDvfWmqXbyKpBHBZr1tu6i8zpkXeKW3rOP6f8uzseYID9+vXz
-        NsWzXJrKKb6lvLciPYWsM/tfBLa6vE62JeDrc61WKqHz12fBmeAIOqgkdjbuVJVjuVHp9Q
-        9RrXPM1oC2eG7HbQ5w4193yqb4ruPGE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1688650466;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+HWAIIhhV1bbuzI9bn8sagrmpXmB6BY8CYYY/NSQTwM=;
-        b=EamnCtiW/jL/E0B3FI40IZChzyblMMUeCqgK2LZ6EQpUEWQGipeXUAU1IBq8i+Kv4XoDda
-        yNP2u3/6t5/edjCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5AA63138EE;
-        Thu,  6 Jul 2023 13:34:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id w6EgFuLCpmQqWgAAMHmgww
-        (envelope-from <jack@suse.cz>); Thu, 06 Jul 2023 13:34:26 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id F11EBA0707; Thu,  6 Jul 2023 15:34:25 +0200 (CEST)
-Date:   Thu, 6 Jul 2023 15:34:25 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 58/92] nfsd: convert to ctime accessor functions
-Message-ID: <20230706133425.ahb7vxida6hks6z7@quack3>
-References: <20230705185755.579053-1-jlayton@kernel.org>
- <20230705190309.579783-1-jlayton@kernel.org>
- <20230705190309.579783-56-jlayton@kernel.org>
+        with ESMTP id S233622AbjGFOzO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Jul 2023 10:55:14 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88DBCB9;
+        Thu,  6 Jul 2023 07:54:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=fhykVYOZkzlXT4yh75rGeCVJ3cPkDr5sjhaxZXHjD+c=; b=zbagyQChudyQPE2bMPZfTnWPir
+        xEx+mIn+jmhXiSkClrK6vyYVxVucLdM5bush+XAhi1L8+RYYMWbrfI/PXNLKjNrWkvX1JuFMBGnvz
+        hobfOtgzfc30tNgXDTW5f735BiGierSS2sw4A5BsLsjO+NIDmCJaoqnJvjB6GpO63lTBhPw1Ktdzv
+        09/JTSE1nHQ4VXLt2IEwE6yDDWWPLCfOggEtJrOTiDfYzQXVq9m9NhYrAKw8aQvc7GPBw2+8hQS8A
+        80c0RawRFeosEEQrvmZs9gRIzWZlEHNQkGLdtR04aftBqsNeChaMLjpw0CwixmzDs5mdRTNLsZohR
+        2STEGtcw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qHQNf-001vuf-2T;
+        Thu, 06 Jul 2023 14:54:51 +0000
+Date:   Thu, 6 Jul 2023 07:54:51 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Alasdair Kergon <agk@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        Joern Engel <joern@lazybastard.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Song Liu <song@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH RFC 0/32] block: Make blkdev_get_by_*() return handle
+Message-ID: <ZKbVuyn0jELh8UDM@infradead.org>
+References: <20230629165206.383-1-jack@suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230705190309.579783-56-jlayton@kernel.org>
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+In-Reply-To: <20230629165206.383-1-jack@suse.cz>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,54 +83,21 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed 05-07-23 15:01:23, Jeff Layton wrote:
-> In later patches, we're going to change how the inode's ctime field is
-> used. Switch to using accessor functions instead of raw accesses of
-> inode->i_ctime.
+On Tue, Jul 04, 2023 at 02:21:27PM +0200, Jan Kara wrote:
+> Hello,
 > 
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-
-Looks good. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/nfsd/nfsctl.c | 2 +-
->  fs/nfsd/vfs.c    | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> this patch series implements the idea of blkdev_get_by_*() calls returning
+> bdev_handle which is then passed to blkdev_put() [1]. This makes the get
+> and put calls for bdevs more obviously matching and allows us to propagate
+> context from get to put without having to modify all the users (again!).
+> In particular I need to propagate used open flags to blkdev_put() to be able
+> count writeable opens and add support for blocking writes to mounted block
+> devices. I'll send that series separately.
 > 
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 1b8b1aab9a15..a53c5660a8c4 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1131,7 +1131,7 @@ static struct inode *nfsd_get_inode(struct super_block *sb, umode_t mode)
->  	/* Following advice from simple_fill_super documentation: */
->  	inode->i_ino = iunique(sb, NFSD_MaxReserved);
->  	inode->i_mode = mode;
-> -	inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
-> +	inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
->  	switch (mode & S_IFMT) {
->  	case S_IFDIR:
->  		inode->i_fop = &simple_dir_operations;
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 8a2321d19194..40a68bae88fc 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -520,7 +520,7 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  
->  	nfsd_sanitize_attrs(inode, iap);
->  
-> -	if (check_guard && guardtime != inode->i_ctime.tv_sec)
-> +	if (check_guard && guardtime != inode_get_ctime(inode).tv_sec)
->  		return nfserr_notsync;
->  
->  	/*
-> -- 
-> 2.41.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> The series is based on Linus' tree as of yesterday + two bcache fixes which are
+> in the block tree. Patches have passed some basic testing, I plan to test more
+> users once we agree this is the right way to go.
+
+Can you post a link to a git branch for this and the follow up series?
+Especially with a fairly unstable base it's kinda hard to look at the
+result otherwise.
