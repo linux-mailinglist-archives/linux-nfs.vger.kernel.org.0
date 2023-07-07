@@ -2,209 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 118C874B705
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jul 2023 21:23:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D57CB74B8D6
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jul 2023 23:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233024AbjGGTXK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Jul 2023 15:23:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57602 "EHLO
+        id S231761AbjGGVuk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Jul 2023 17:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233020AbjGGTXJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jul 2023 15:23:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49F8519AE;
-        Fri,  7 Jul 2023 12:23:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C1B1A61A53;
-        Fri,  7 Jul 2023 19:23:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63501C433C7;
-        Fri,  7 Jul 2023 19:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688757785;
-        bh=94A738552oPcNLUcdadUB8TIEGBu7Z7b4zP4i/CSZhk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tgLCFacDRH2vFBvGsS1BdApLvk5sLS7WaSV2sgoXnSapnBONfvmv9X8eKnvugMJHE
-         jqjgRwSKqOqTX8fmIldEGKg0KhXTvE0Bema9AGOztxJ3On1k5IAODVtjRLYQSXxP2D
-         t/ZQ+Qpmi+iWBisfwT5UB4sgtSMbE1mZirUi9Sv4DwscQ0HrO92bVw63QK67r9cxrQ
-         QxbM6U35zant3vdXmjw3fsF5Ss+czDaGBBWJvUTejeoPPj3ruozwzQAv9CaKvhOlKV
-         2nM3B31uev1RK+ZATSoyzNzgygragekkgVMBHp/70Fr46Mi/QGbs3iEtE2igexxk6o
-         AYNbqLhudXizg==
-From:   SeongJae Park <sj@kernel.org>
-To:     David Wysochanski <dwysocha@redhat.com>
-Cc:     Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
-        linux-fsdevel@vger.kernel.org,
-        Rohith Surabattula <rohiths.msft@gmail.com>,
-        Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Ilya Dryomov <idryomov@gmail.com>, linux-mm@kvack.org,
-        Daire Byrne <daire.byrne@gmail.com>,
-        SeongJae Park <sj@kernel.org>
-Subject: Re: [BUG mm-unstable] BUG: KASAN: use-after-free in shrink_folio_list+0x9f4/0x1ae0
-Date:   Fri,  7 Jul 2023 19:23:01 +0000
-Message-Id: <20230707192301.27308-1-sj@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <CALF+zO=nGdoxcT-ya3aaUCBi-4iKPo3kZyzcWYCKMCf4n2wVbA@mail.gmail.com>
-References: 
+        with ESMTP id S229663AbjGGVui (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jul 2023 17:50:38 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D5E112A
+        for <linux-nfs@vger.kernel.org>; Fri,  7 Jul 2023 14:50:35 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-635857af3beso14201076d6.0
+        for <linux-nfs@vger.kernel.org>; Fri, 07 Jul 2023 14:50:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1688766634; x=1691358634;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FoLevPobh7UXy5Nn5YH78W9QxOTU70GaTZt5uBUlM0A=;
+        b=l7nzQ6ic8JvejRrTXeSP9pxsZ4sZpYgEseqeeNmP9tOIRZNTCYJOGUj3u6v5xmSkKd
+         OsGDSBLhMCQCLTDROiZOQPSY4n3XvefXTb8Zu3G6/DKWn449TmE86ze0rC9zM0hq/t31
+         W184sHYkrvflPMo7snf9U29pvGHJZG3E9J66dE3tnh4VgWlH6fT1cWJBoqz2VLzpBBuY
+         r+lZmj1ies7BcP3uSA6UegEarirOuydiO6La9+kxtMfMMXAsUY03/e6ZKuY6Wgmmq22C
+         b8N5z2jOmAGYsC9KQjpfqsh1MiRObcU//UJbLJ0KeKi4ZI2Z1bbDwf1hDh9JlRpZ5He7
+         Y1Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688766634; x=1691358634;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FoLevPobh7UXy5Nn5YH78W9QxOTU70GaTZt5uBUlM0A=;
+        b=kYcglLtLJkSkuj1tpossEfhCQyLenaLxPrORQEDVt7t14k3xZJ4gYgqXy9VZ9o4eWl
+         jPsGRtCXo3d5Uj6FHA6kMyiKE8/C5EIeB3/3MD9ycIAG7hi+iFzRQHiVR54pJgHZg/0s
+         HuGlrG9sUVzFsc8rWD8cOL925h3sdI1C4rBG7hYF8aben/KIhEUbSkb81lSoRoNIU/f6
+         A22QQnurOrLBf59ltiCOebAXVSbLSsW7Vu7fhL/6aN2pqtYJ7PAr7gz9VO9xlq/QTG1i
+         jIY/3dNO2cYBjT0qesKzY/0HhUC/6IrL42mb9iHGAbR3MLlCnE/NX9n9YYzYecdRw3bg
+         l+yg==
+X-Gm-Message-State: ABy/qLa2wecHLKJP+ik00Bo7QNQOkaMWWzE5ZgXj7AeR9EFpNfLzt097
+        XXcVnp9srpbwREP76ELgq4wU8EsReEjYiRv7YUPWlQ==
+X-Google-Smtp-Source: APBJJlGlQcMZJ3Ushv3xcZlmwD9Pa978expjejTPgbABddwl3wCKInGfLZ2iqBhhPxZWR1b1uxBwbCLiukFcHrak5qI=
+X-Received: by 2002:a0c:e54d:0:b0:634:7c34:6c96 with SMTP id
+ n13-20020a0ce54d000000b006347c346c96mr5045432qvm.7.1688766633968; Fri, 07 Jul
+ 2023 14:50:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230703113737.694995-1-arnd@kernel.org> <6b963674-fc5a-4abb-8678-a82d35a3f3fd@kadam.mountain>
+In-Reply-To: <6b963674-fc5a-4abb-8678-a82d35a3f3fd@kadam.mountain>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 7 Jul 2023 14:50:23 -0700
+Message-ID: <CAKwvOdmedTDChYYSgdC0LQGOdrzm1ua--kUcz-KGXi4TnxcvUg@mail.gmail.com>
+Subject: Re: [PATCH] sunrpc: avoid constant-out-of-range warning with clang
+To:     Dan Carpenter <dan.carpenter@linaro.org>,
+        Arnd Bergmann <arnd@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Tom Rix <trix@redhat.com>, Dan Carpenter <error27@gmail.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 7 Jul 2023 14:12:06 -0400 David Wysochanski <dwysocha@redhat.com> wrote:
-
-> On Fri, Jul 7, 2023 at 12:46 PM Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
+On Mon, Jul 3, 2023 at 5:42=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro.=
+org> wrote:
+>
+> On Mon, Jul 03, 2023 at 01:37:22PM +0200, Arnd Bergmann wrote:
+> > From: Arnd Bergmann <arnd@arndb.de>
 > >
-> > On Sat, Jul 8, 2023 at 1:39 AM Hyeonggon Yoo <42.hyeyoo@gmail.com> wrote:
-> > >
-> > > On Wed, Jun 28, 2023 at 11:48:52AM +0100, David Howells wrote:
-> > > > Fscache has an optimisation by which reads from the cache are skipped until
-> > > > we know that (a) there's data there to be read and (b) that data isn't
-> > > > entirely covered by pages resident in the netfs pagecache.  This is done
-> > > > with two flags manipulated by fscache_note_page_release():
-> > > >
-> > > >       if (...
-> > > >           test_bit(FSCACHE_COOKIE_HAVE_DATA, &cookie->flags) &&
-> > > >           test_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags))
-> > > >               clear_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags);
-> > > >
-> > > > where the NO_DATA_TO_READ flag causes cachefiles_prepare_read() to indicate
-> > > > that netfslib should download from the server or clear the page instead.
-> > > >
-> > > > The fscache_note_page_release() function is intended to be called from
-> > > > ->releasepage() - but that only gets called if PG_private or PG_private_2
-> > > > is set - and currently the former is at the discretion of the network
-> > > > filesystem and the latter is only set whilst a page is being written to the
-> > > > cache, so sometimes we miss clearing the optimisation.
-> > > >
-> > > > Fix this by following Willy's suggestion[1] and adding an address_space
-> > > > flag, AS_RELEASE_ALWAYS, that causes filemap_release_folio() to always call
-> > > > ->release_folio() if it's set, even if PG_private or PG_private_2 aren't
-> > > > set.
-> > > >
-> > > > Note that this would require folio_test_private() and page_has_private() to
-> > > > become more complicated.  To avoid that, in the places[*] where these are
-> > > > used to conditionalise calls to filemap_release_folio() and
-> > > > try_to_release_page(), the tests are removed the those functions just
-> > > > jumped to unconditionally and the test is performed there.
-> > > >
-> > > > [*] There are some exceptions in vmscan.c where the check guards more than
-> > > > just a call to the releaser.  I've added a function, folio_needs_release()
-> > > > to wrap all the checks for that.
-> > > >
-> > > > AS_RELEASE_ALWAYS should be set if a non-NULL cookie is obtained from
-> > > > fscache and cleared in ->evict_inode() before truncate_inode_pages_final()
-> > > > is called.
-> > > >
-> > > > Additionally, the FSCACHE_COOKIE_NO_DATA_TO_READ flag needs to be cleared
-> > > > and the optimisation cancelled if a cachefiles object already contains data
-> > > > when we open it.
-> > > >
-> > > > Fixes: 1f67e6d0b188 ("fscache: Provide a function to note the release of a page")
-> > > > Fixes: 047487c947e8 ("cachefiles: Implement the I/O routines")
-> > > > Reported-by: Rohith Surabattula <rohiths.msft@gmail.com>
-> > > > Suggested-by: Matthew Wilcox <willy@infradead.org>
-> > > > Signed-off-by: David Howells <dhowells@redhat.com>
-> > >
-> > > Hi David,
-> > >
-> > > I was bisecting a use-after-free BUG on the latest mm-unstable,
-> > > where HEAD is 347e208de0e4 ("rmap: pass the folio to __page_check_anon_rmap()").
-> > >
-> > > According to my bisection, this is the first bad commit.
-> > > Use-After-Free is triggered on reclamation path when swap is enabled.
+> > The overflow check in xdr_stream_decode_uint32_array() was added for
+> > 32-bit systems, but on 64-bit builds it causes a build warning when
+> > building with clang and W=3D1:
 > >
-> > This was originally occurred during kernel compilation but
-> > can easily be reproduced via:
+> > In file included from init/do_mounts.c:22:
+> > include/linux/sunrpc/xdr.h:778:10: error: result of comparison of const=
+ant 4611686018427387903 with expression of type '__u32' (aka 'unsigned int'=
+) is always false [-Werror,-Wtautological-constant-out-of-range-compare]
+> >   778 |         if (len > SIZE_MAX / sizeof(*p))
 > >
-> > stress-ng --bigheap $(nproc)
+> > Shut up the warning with a type cast.
 > >
-> > > (and couldn't trigger without swap enabled)
-> > >
-> > > the config, KASAN splat, bisect log are attached.
-> > > hope this isn't too late :(
-> > >
-> > > > cc: Matthew Wilcox <willy@infradead.org>
-> > > > cc: Linus Torvalds <torvalds@linux-foundation.org>
-> > > > cc: Steve French <sfrench@samba.org>
-> > > > cc: Shyam Prasad N <nspmangalore@gmail.com>
-> > > > cc: Rohith Surabattula <rohiths.msft@gmail.com>
-> > > > cc: Dave Wysochanski <dwysocha@redhat.com>
-> > > > cc: Dominique Martinet <asmadeus@codewreck.org>
-> > > > cc: Ilya Dryomov <idryomov@gmail.com>
-> > > > cc: linux-cachefs@redhat.com
-> > > > cc: linux-cifs@vger.kernel.org
-> > > > cc: linux-afs@lists.infradead.org
-> > > > cc: v9fs-developer@lists.sourceforge.net
-> > > > cc: ceph-devel@vger.kernel.org
-> > > > cc: linux-nfs@vger.kernel.org
-> > > > cc: linux-fsdevel@vger.kernel.org
-> > > > cc: linux-mm@kvack.org
-> > > > ---
-> > > >
-> > > > Notes:
-> > > >     ver #7)
-> > > >      - Make NFS set AS_RELEASE_ALWAYS.
-> > > >
-> > > >     ver #4)
-> > > >      - Split out merging of folio_has_private()/filemap_release_folio() call
-> > > >        pairs into a preceding patch.
-> > > >      - Don't need to clear AS_RELEASE_ALWAYS in ->evict_inode().
-> > > >
-> > > >     ver #3)
-> > > >      - Fixed mapping_clear_release_always() to use clear_bit() not set_bit().
-> > > >      - Moved a '&&' to the correct line.
-> > > >
-> > > >     ver #2)
-> > > >      - Rewrote entirely according to Willy's suggestion[1].
-> > > >
-> > > >  fs/9p/cache.c           |  2 ++
-> > > >  fs/afs/internal.h       |  2 ++
-> > > >  fs/cachefiles/namei.c   |  2 ++
-> > > >  fs/ceph/cache.c         |  2 ++
-> > > >  fs/nfs/fscache.c        |  3 +++
-> > > >  fs/smb/client/fscache.c |  2 ++
-> > > >  include/linux/pagemap.h | 16 ++++++++++++++++
-> > > >  mm/internal.h           |  5 ++++-
-> > > >  8 files changed, 33 insertions(+), 1 deletion(-)
-> 
-> 
-> I think myself / Daire Byrne may have already tracked this down and I
-> found a 1-liner that fixed a similar crash in his environment.
-> 
-> Can you try this patch on top and let me know if it still crashes?
-> https://github.com/DaveWysochanskiRH/kernel/commit/902c990e311120179fa5de99d68364b2947b79ec
+> > Fixes: 23a9dbbe0faf1 ("NFSD: prevent integer overflow on 32 bit systems=
+")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  include/linux/sunrpc/xdr.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+> > index f89ec4b5ea169..6736121ee6a03 100644
+> > --- a/include/linux/sunrpc/xdr.h
+> > +++ b/include/linux/sunrpc/xdr.h
+> > @@ -775,7 +775,7 @@ xdr_stream_decode_uint32_array(struct xdr_stream *x=
+dr,
+> >
+> >       if (unlikely(xdr_stream_decode_u32(xdr, &len) < 0))
+> >               return -EBADMSG;
+> > -     if (len > SIZE_MAX / sizeof(*p))
+> > +     if ((size_t)len > SIZE_MAX / sizeof(*p))
+> >               return -EBADMSG;
+> >       p =3D xdr_inline_decode(xdr, len * sizeof(*p));
+>
+> I sent a patch for this last week that takes a different approach.
+>
+> https://lore.kernel.org/all/2390fdc8-13fa-4456-ab67-44f0744db412@moroto.m=
+ountain/
+>
+> I probably should have used a Fixes tag just for informational purposes.
 
-I also encountered this issue with my DAMON tests, and was trying to find a
-time slot for deep dive.  And I confirmed your fix works.  Thank you for this
-great work.  Please Cc me when you post the patch if possible.
+I have a slight preference for retaining the existing error handling
+here, but am happy to have 2 fixes in hand rather than 0; thank you
+both for your time looking at this.
 
-Tested-by: SeongJae Park <sj@kernel.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+>
+> regards,
+> dan carpenter
+>
 
 
+--=20
 Thanks,
-SJ
-
-> 
-> 
+~Nick Desaulniers
