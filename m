@@ -2,94 +2,217 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9070374B477
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jul 2023 17:40:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AF6A74B537
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jul 2023 18:46:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232076AbjGGPk5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Jul 2023 11:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37932 "EHLO
+        id S229643AbjGGQqs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Jul 2023 12:46:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjGGPk4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jul 2023 11:40:56 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D62AB2
-        for <linux-nfs@vger.kernel.org>; Fri,  7 Jul 2023 08:40:55 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4fb90f72062so584706e87.0
-        for <linux-nfs@vger.kernel.org>; Fri, 07 Jul 2023 08:40:54 -0700 (PDT)
+        with ESMTP id S229540AbjGGQqr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jul 2023 12:46:47 -0400
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F353F1FEF;
+        Fri,  7 Jul 2023 09:46:45 -0700 (PDT)
+Received: by mail-vk1-xa32.google.com with SMTP id 71dfb90a1353d-47e3f56ec02so845155e0c.2;
+        Fri, 07 Jul 2023 09:46:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1688744453; x=1691336453;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5R4eozUtjXLtDhhJAmJbsCY3yc0r3hvvLbsEttTUeK4=;
-        b=rM99xSQXRUvsX9Fb7/+2CuxbOfAWei2FAHZ4vZQvK2AdmA3/2kdE+En5Tf+9qCmtF5
-         QXHMAc96cgi8N9q8n3A8k/Po54kt6iCo93vmuJD8Ig2fc3ZxO9wHF8GzgZ+OuZPh/aiw
-         IgTUoJX4XiuJKa7Hh6AM/yHzwhtW3KSj4YX8W1PapO/1zTPQZEFEM6ehxFKNvnrQ0zBX
-         IMwdTot0rFoX26YUJsV7lh6xifMom2mDrO3c9DHnwRjbZXEAXdHfe/8VKfsp15Avlavy
-         Mm+zon94ZztiHwk+SV5zXFZlueTUG9ZNkAbBFgvDsWiIU1u1f88E9LlZCFQA86+SIMMV
-         aktQ==
+        d=gmail.com; s=20221208; t=1688748405; x=1691340405;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Z/ReIviycKOpXSvVBgcqd1EotrbzaoMQKO3qVU7I/G8=;
+        b=rdIoGdwP5Ghffl0SSNU+UexYiw7dQQTY/KbUSpraUXheaqWYQIzf9VS2G54zkxoXeK
+         Zs8WYI2qt4N0BqTuDA21gVijWUiGiy3OrYR8lv3DKyrgrFEFY/VwOEHPHcniApVN32A0
+         PyNQdCHlm8WB6hLN7Grylpw6RdoDNjUV6Py9A1+F4jya88T8Iq9Ka7vxdq5yT5c1LaGv
+         mhT4LjqqufdVQx6CIlQHGhtHR9EIUodVt14QLVcTA2E3j7ZHuNoD2AWGoyZkb9l6fTKO
+         8M1Q1mr7rQzV9JK8pww9IzJ4dCo0vnfyDZPwzvga/a4qwpdfyRbTwoQs0RfSeuNrnbjJ
+         agjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688744453; x=1691336453;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=5R4eozUtjXLtDhhJAmJbsCY3yc0r3hvvLbsEttTUeK4=;
-        b=XxFIqqsVsCUWB1tDMLaYTB+dwM+mu8DfQ74iSPXZUY1gTI5RhlAloPxivG4ZEFrTuN
-         9La5uIg6nHFuX6+S7nRG4T6pfowBo/VcSpqog+QVSNAnkGR0lwaEkWwbrqc+LEtSaZrX
-         EV+BZlpa7dZvr+PWn4hZthEQy9zUFGmVMsyJ4x8GJMUji5Lt7KVzLtbyvg9ZCzXsBCZV
-         IvFRVX7KFZwETP4B2i5HEKgyttG66FwUFroZoD5p8Tw9QqDyUNe/6cC2gU64lv9TapZ5
-         qui5XvYqyKGPbgSuH1LzjBhejFLp6YphDlTkH0aBo4w0aPTzbEm9I0V9VY0gbmxhVDjE
-         lFgw==
-X-Gm-Message-State: ABy/qLZKmYzD0RWGeol/g8T2EsV2EzpDq4gHSE9Nf4TEmjX5QtROpN2v
-        Gq1YAIoX8Ksoh+zijvIm/76YuYM81/XgEqAfDoSq60Uc
-X-Google-Smtp-Source: APBJJlHSWdpNRfHpciDGZTDz6YnFaosmvztUq3zfacF69ZSGIyYlyttgfTJN09aRXBJElIHns5tliM1CMjJN1AKh5jU=
-X-Received: by 2002:a05:651c:989:b0:2b6:99a2:fe00 with SMTP id
- b9-20020a05651c098900b002b699a2fe00mr5332863ljq.2.1688744452614; Fri, 07 Jul
- 2023 08:40:52 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688748405; x=1691340405;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Z/ReIviycKOpXSvVBgcqd1EotrbzaoMQKO3qVU7I/G8=;
+        b=JRkZb6423qO91aA8dIBYdKHE71w7M3HbP+jZIVW3f6g+mL77jtgRfiptqGZqo3aXz1
+         yce2FKoNDTGGV9dd4LJOpZjoQHneBtc8UIhO9BDnejf6VZ/E8ikQqXIUqB9GxktseSUd
+         tDateM2s6f77zGsusGZzBkbFPeAwMaHAy5r7moBhkIqSTvbd8US9g05YIlTp9q8KuPIf
+         KtL7V3YIOL+89zXAK3Ajony4WGITwfdz3qsAwf4J+k88ShS/1+Xp6XShjlWEuvjiGePI
+         8S1C8l4Qc4N52yvObIha43gL3QBv4UCZo0n8K5GzjSZVd69tk5cGU4+FLHazitc++/9Y
+         Hmfw==
+X-Gm-Message-State: ABy/qLZO53MtVqIBoCEO79B/VrPPELLzQmwmO4hA72PrFMc1nzzGft7I
+        7laA2TXAezY6BNDGjm4nnZX+kU3bsOPziTl/b6HAjeX2y26fzg==
+X-Google-Smtp-Source: APBJJlGKmNTgweK2kwJWs4/wFqNBmjg4Djz4jCj6ZqMtOK2vtD8XozEN8rFv3LAaQCX0JTqMTCJbsPKbO24byO+QNwg=
+X-Received: by 2002:a1f:43c4:0:b0:47e:91fc:d2b8 with SMTP id
+ q187-20020a1f43c4000000b0047e91fcd2b8mr3487027vka.2.1688748404847; Fri, 07
+ Jul 2023 09:46:44 -0700 (PDT)
 MIME-Version: 1.0
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 7 Jul 2023 11:40:41 -0400
-Message-ID: <CAN-5tyGb0xb1-C9781gdkfPRNtKSixT_TfU44VV6FRCZooixXw@mail.gmail.com>
-Subject: trunking rules
-To:     linux-nfs <linux-nfs@vger.kernel.org>
+References: <20230628104852.3391651-1-dhowells@redhat.com> <20230628104852.3391651-3-dhowells@redhat.com>
+ <ZKg/J3OG3kQ9ynSO@fedora>
+In-Reply-To: <ZKg/J3OG3kQ9ynSO@fedora>
+From:   Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Date:   Sat, 8 Jul 2023 01:46:33 +0900
+Message-ID: <CAB=+i9Qbi7+o90Cd_ecd1TeaAYnWPcO-gNp7kzc95Pxecy0XTw@mail.gmail.com>
+Subject: Re: [BUG mm-unstable] BUG: KASAN: use-after-free in shrink_folio_list+0x9f4/0x1ae0
+To:     David Howells <dhowells@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
+        linux-fsdevel@vger.kernel.org,
+        Rohith Surabattula <rohiths.msft@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Ilya Dryomov <idryomov@gmail.com>, linux-mm@kvack.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi folks,
+On Sat, Jul 8, 2023 at 1:39=E2=80=AFAM Hyeonggon Yoo <42.hyeyoo@gmail.com> =
+wrote:
+>
+> On Wed, Jun 28, 2023 at 11:48:52AM +0100, David Howells wrote:
+> > Fscache has an optimisation by which reads from the cache are skipped u=
+ntil
+> > we know that (a) there's data there to be read and (b) that data isn't
+> > entirely covered by pages resident in the netfs pagecache.  This is don=
+e
+> > with two flags manipulated by fscache_note_page_release():
+> >
+> >       if (...
+> >           test_bit(FSCACHE_COOKIE_HAVE_DATA, &cookie->flags) &&
+> >           test_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags))
+> >               clear_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags)=
+;
+> >
+> > where the NO_DATA_TO_READ flag causes cachefiles_prepare_read() to indi=
+cate
+> > that netfslib should download from the server or clear the page instead=
+.
+> >
+> > The fscache_note_page_release() function is intended to be called from
+> > ->releasepage() - but that only gets called if PG_private or PG_private=
+_2
+> > is set - and currently the former is at the discretion of the network
+> > filesystem and the latter is only set whilst a page is being written to=
+ the
+> > cache, so sometimes we miss clearing the optimisation.
+> >
+> > Fix this by following Willy's suggestion[1] and adding an address_space
+> > flag, AS_RELEASE_ALWAYS, that causes filemap_release_folio() to always =
+call
+> > ->release_folio() if it's set, even if PG_private or PG_private_2 aren'=
+t
+> > set.
+> >
+> > Note that this would require folio_test_private() and page_has_private(=
+) to
+> > become more complicated.  To avoid that, in the places[*] where these a=
+re
+> > used to conditionalise calls to filemap_release_folio() and
+> > try_to_release_page(), the tests are removed the those functions just
+> > jumped to unconditionally and the test is performed there.
+> >
+> > [*] There are some exceptions in vmscan.c where the check guards more t=
+han
+> > just a call to the releaser.  I've added a function, folio_needs_releas=
+e()
+> > to wrap all the checks for that.
+> >
+> > AS_RELEASE_ALWAYS should be set if a non-NULL cookie is obtained from
+> > fscache and cleared in ->evict_inode() before truncate_inode_pages_fina=
+l()
+> > is called.
+> >
+> > Additionally, the FSCACHE_COOKIE_NO_DATA_TO_READ flag needs to be clear=
+ed
+> > and the optimisation cancelled if a cachefiles object already contains =
+data
+> > when we open it.
+> >
+> > Fixes: 1f67e6d0b188 ("fscache: Provide a function to note the release o=
+f a page")
+> > Fixes: 047487c947e8 ("cachefiles: Implement the I/O routines")
+> > Reported-by: Rohith Surabattula <rohiths.msft@gmail.com>
+> > Suggested-by: Matthew Wilcox <willy@infradead.org>
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+>
+> Hi David,
+>
+> I was bisecting a use-after-free BUG on the latest mm-unstable,
+> where HEAD is 347e208de0e4 ("rmap: pass the folio to __page_check_anon_rm=
+ap()").
+>
+> According to my bisection, this is the first bad commit.
+> Use-After-Free is triggered on reclamation path when swap is enabled.
 
-I'm looking for some guidance/consensus/agreement on what should be
-trunking rules.
+This was originally occurred during kernel compilation but
+can easily be reproduced via:
 
-Prior to adding MDS session trunking, we had pnfs session trunking for
-a long time. In GETDEVICEINFO the server would return a list of IPs
-and the client, after verifying that it's allowed to trunk, would then
-use. The number of IPs isn't limited by number but rather by the
-sizeof deviceinfo structure (gdia_macount). At the same time, if
-GETDEVICEINFO returned IPs that were in the same as MDS, then those
-IPs would be squashed (I'm gathering the logic was if DS=MDS then it's
-MDS trunking and that wasn't supported).
+stress-ng --bigheap $(nproc)
 
-Fast forward now, MDS trunking is supported but controlled and limited
-by the mount parameter max_connect.
-What kind of rule should be used for trunking when DS=MDS now?
-(1) Treat it strictly as MDS trunking. If no max_connect is given on
-mount, then even if GETDEVICEINFO returns multiple IPs everything is
-going to be squashed. If max_connect is given then it's the
-max_connect that limits the number of trunks and not like other pnfs
-trunking where it's the size of getdeviceinfo structure?
-(2) Treat it as DS trunking and disregard max_connect constraints
-because after all it is triggered as pnfs trunking not MDS trunking?
-
-Or should max_connect be now required for any kind of trunking DS or
-MDS trunking? Though I'm not in favor of this as it seems to defeat
-the purpose of specifying a size of GETDEVICEINFO reply and just limit
-it to max_connect always.
-
-Thank you.
+> (and couldn't trigger without swap enabled)
+>
+> the config, KASAN splat, bisect log are attached.
+> hope this isn't too late :(
+>
+> > cc: Matthew Wilcox <willy@infradead.org>
+> > cc: Linus Torvalds <torvalds@linux-foundation.org>
+> > cc: Steve French <sfrench@samba.org>
+> > cc: Shyam Prasad N <nspmangalore@gmail.com>
+> > cc: Rohith Surabattula <rohiths.msft@gmail.com>
+> > cc: Dave Wysochanski <dwysocha@redhat.com>
+> > cc: Dominique Martinet <asmadeus@codewreck.org>
+> > cc: Ilya Dryomov <idryomov@gmail.com>
+> > cc: linux-cachefs@redhat.com
+> > cc: linux-cifs@vger.kernel.org
+> > cc: linux-afs@lists.infradead.org
+> > cc: v9fs-developer@lists.sourceforge.net
+> > cc: ceph-devel@vger.kernel.org
+> > cc: linux-nfs@vger.kernel.org
+> > cc: linux-fsdevel@vger.kernel.org
+> > cc: linux-mm@kvack.org
+> > ---
+> >
+> > Notes:
+> >     ver #7)
+> >      - Make NFS set AS_RELEASE_ALWAYS.
+> >
+> >     ver #4)
+> >      - Split out merging of folio_has_private()/filemap_release_folio()=
+ call
+> >        pairs into a preceding patch.
+> >      - Don't need to clear AS_RELEASE_ALWAYS in ->evict_inode().
+> >
+> >     ver #3)
+> >      - Fixed mapping_clear_release_always() to use clear_bit() not set_=
+bit().
+> >      - Moved a '&&' to the correct line.
+> >
+> >     ver #2)
+> >      - Rewrote entirely according to Willy's suggestion[1].
+> >
+> >  fs/9p/cache.c           |  2 ++
+> >  fs/afs/internal.h       |  2 ++
+> >  fs/cachefiles/namei.c   |  2 ++
+> >  fs/ceph/cache.c         |  2 ++
+> >  fs/nfs/fscache.c        |  3 +++
+> >  fs/smb/client/fscache.c |  2 ++
+> >  include/linux/pagemap.h | 16 ++++++++++++++++
+> >  mm/internal.h           |  5 ++++-
+> >  8 files changed, 33 insertions(+), 1 deletion(-)
