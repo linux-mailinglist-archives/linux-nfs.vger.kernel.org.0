@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC51D74C651
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jul 2023 17:45:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAE8A74C652
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jul 2023 17:45:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233020AbjGIPpq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 9 Jul 2023 11:45:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55374 "EHLO
+        id S230107AbjGIPpw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 9 Jul 2023 11:45:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231897AbjGIPpp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jul 2023 11:45:45 -0400
+        with ESMTP id S231602AbjGIPpv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jul 2023 11:45:51 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A09DB
-        for <linux-nfs@vger.kernel.org>; Sun,  9 Jul 2023 08:45:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47684CE
+        for <linux-nfs@vger.kernel.org>; Sun,  9 Jul 2023 08:45:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 93D6E60B51
-        for <linux-nfs@vger.kernel.org>; Sun,  9 Jul 2023 15:45:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB64FC433C7;
-        Sun,  9 Jul 2023 15:45:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D9FED60BE9
+        for <linux-nfs@vger.kernel.org>; Sun,  9 Jul 2023 15:45:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24505C433C7;
+        Sun,  9 Jul 2023 15:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688917543;
-        bh=nFUu2RHmIDtZRQw4plTdD0hMuXLn/JviVytuo+4B7Mk=;
+        s=k20201202; t=1688917549;
+        bh=AuYH2/bpA7ApbH6pbu7k9d6JvQpKwFc4F1iHZE0xPZw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XQQd7u0RKng0fpbsuwTkxHIBefcJVBzwwECtTW6YC5m7MLs9YKA8vCslmqPOrfkXc
-         lqF5/2KmGFKB051alvmwAv0dYSszqNHfF4KMF+DdwuuJKyQhv7qKaCfxzC9qcVyOYC
-         mfg2/IQQtSyVug9N16wj+O7wyCez7yuwjcAtaeN0F37/n7HNqsp5dxjmXBLxh9T/9j
-         N8zjUrnYIbcB5ijKfaMt8zCWTWDTVWTSJKgifccYWImTbxaGqFdULEwc5OEf9ATKqP
-         5kv0FQ/gYEGZ8GDvPGIiOxjeheHfhbsJEYCQG6ycS/itJHgTyf9MYaK6lqagmOunw2
-         fcMzrPwTvmriQ==
-Subject: [PATCH v1 5/6] NFSD: Remove svc_rqst::rq_cacherep
+        b=PB/bIiSte/tDl71K3aWLrkUZaTxZbo1UVCw7TY5a0CAOKzaTFCNjWbz+Mlq7OilBb
+         K7OMchXxiLTYq/ZRi8umD1B1HxXk+eJs84jSR8VLFA2p2G/TTKShLSIEDfj4ZxmX04
+         Z3Wrv13mL7UtZ5KX7H8vIeqFDFt6BbWANAkaG5zm4QMXb0cczioxUJvwEQhhXCKSDx
+         D9Ie+OUVVAtdMNOJNNTBB1PfYYhwfNJsgGkZEx+qtJQ60RqhtYntFWClTuFv5ijzj3
+         5ea/yIdrOeJAlbJw4TKdsEWi+90lbwbxOJe11Lq3847eWDU2Hvy55ZozWO4kXpMBno
+         UA+ryRTBkE9Lg==
+Subject: [PATCH v1 6/6] NFSD: Rename struct svc_cacherep
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Sun, 09 Jul 2023 11:45:41 -0400
-Message-ID: <168891754187.3964.10104099550029601077.stgit@manet.1015granger.net>
+Date:   Sun, 09 Jul 2023 11:45:48 -0400
+Message-ID: <168891754819.3964.3352471615633843308.stgit@manet.1015granger.net>
 In-Reply-To: <168891733570.3964.15456501153247760888.stgit@manet.1015granger.net>
 References: <168891733570.3964.15456501153247760888.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -56,152 +56,239 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Over time I'd like to see NFS-specific fields moved out of struct
-svc_rqst, which is an RPC layer object. These fields are layering
-violations.
+The svc_ prefix is identified with the SunRPC layer. Although the
+duplicate reply cache caches RPC replies, it is only for the NFS
+protocol. Rename the struct to better reflect its purpose.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/cache.h            |    6 ++++--
- fs/nfsd/nfscache.c         |   11 ++++++-----
- fs/nfsd/nfssvc.c           |   10 ++++++----
- include/linux/sunrpc/svc.h |    1 -
- 4 files changed, 16 insertions(+), 12 deletions(-)
+ fs/nfsd/cache.h    |    6 +++---
+ fs/nfsd/nfscache.c |   44 ++++++++++++++++++++++----------------------
+ fs/nfsd/nfssvc.c   |    2 +-
+ fs/nfsd/trace.h    |    4 ++--
+ 4 files changed, 28 insertions(+), 28 deletions(-)
 
 diff --git a/fs/nfsd/cache.h b/fs/nfsd/cache.h
-index 4c9b87850ab1..27610b071880 100644
+index 27610b071880..929248c6ca84 100644
 --- a/fs/nfsd/cache.h
 +++ b/fs/nfsd/cache.h
-@@ -84,8 +84,10 @@ int	nfsd_net_reply_cache_init(struct nfsd_net *nn);
- void	nfsd_net_reply_cache_destroy(struct nfsd_net *nn);
+@@ -19,7 +19,7 @@
+  * typical sockaddr_storage. This is for space reasons, since sockaddr_storage
+  * is much larger than a sockaddr_in6.
+  */
+-struct svc_cacherep {
++struct nfsd_cacherep {
+ 	struct {
+ 		/* Keep often-read xid, csum in the same cache line: */
+ 		__be32			k_xid;
+@@ -85,8 +85,8 @@ void	nfsd_net_reply_cache_destroy(struct nfsd_net *nn);
  int	nfsd_reply_cache_init(struct nfsd_net *);
  void	nfsd_reply_cache_shutdown(struct nfsd_net *);
--int	nfsd_cache_lookup(struct svc_rqst *);
--void	nfsd_cache_update(struct svc_rqst *, int, __be32 *);
-+int	nfsd_cache_lookup(struct svc_rqst *rqstp,
-+			  struct svc_cacherep **cacherep);
-+void	nfsd_cache_update(struct svc_rqst *rqstp, struct svc_cacherep *rp,
-+			  int cachetype, __be32 *statp);
+ int	nfsd_cache_lookup(struct svc_rqst *rqstp,
+-			  struct svc_cacherep **cacherep);
+-void	nfsd_cache_update(struct svc_rqst *rqstp, struct svc_cacherep *rp,
++			  struct nfsd_cacherep **cacherep);
++void	nfsd_cache_update(struct svc_rqst *rqstp, struct nfsd_cacherep *rp,
+ 			  int cachetype, __be32 *statp);
  int	nfsd_reply_cache_stats_show(struct seq_file *m, void *v);
  
- #endif /* NFSCACHE_H */
 diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index c08078ac9284..9bdcd73206c9 100644
+index 9bdcd73206c9..6eb3d7bdfaf3 100644
 --- a/fs/nfsd/nfscache.c
 +++ b/fs/nfsd/nfscache.c
-@@ -464,6 +464,7 @@ nfsd_cache_insert(struct nfsd_drc_bucket *b, struct svc_cacherep *key,
- /**
-  * nfsd_cache_lookup - Find an entry in the duplicate reply cache
-  * @rqstp: Incoming Call to find
-+ * @cacherep: OUT: DRC entry for this request
-  *
-  * Try to find an entry matching the current call in the cache. When none
-  * is found, we try to grab the oldest expired entry off the LRU list. If
-@@ -476,7 +477,7 @@ nfsd_cache_insert(struct nfsd_drc_bucket *b, struct svc_cacherep *key,
+@@ -84,11 +84,11 @@ nfsd_hashsize(unsigned int limit)
+ 	return roundup_pow_of_two(limit / TARGET_BUCKET_SIZE);
+ }
+ 
+-static struct svc_cacherep *
++static struct nfsd_cacherep *
+ nfsd_cacherep_alloc(struct svc_rqst *rqstp, __wsum csum,
+ 		    struct nfsd_net *nn)
+ {
+-	struct svc_cacherep	*rp;
++	struct nfsd_cacherep *rp;
+ 
+ 	rp = kmem_cache_alloc(drc_slab, GFP_KERNEL);
+ 	if (rp) {
+@@ -110,7 +110,7 @@ nfsd_cacherep_alloc(struct svc_rqst *rqstp, __wsum csum,
+ 	return rp;
+ }
+ 
+-static void nfsd_cacherep_free(struct svc_cacherep *rp)
++static void nfsd_cacherep_free(struct nfsd_cacherep *rp)
+ {
+ 	kfree(rp->c_replvec.iov_base);
+ 	kmem_cache_free(drc_slab, rp);
+@@ -119,11 +119,11 @@ static void nfsd_cacherep_free(struct svc_cacherep *rp)
+ static unsigned long
+ nfsd_cacherep_dispose(struct list_head *dispose)
+ {
+-	struct svc_cacherep *rp;
++	struct nfsd_cacherep *rp;
+ 	unsigned long freed = 0;
+ 
+ 	while (!list_empty(dispose)) {
+-		rp = list_first_entry(dispose, struct svc_cacherep, c_lru);
++		rp = list_first_entry(dispose, struct nfsd_cacherep, c_lru);
+ 		list_del(&rp->c_lru);
+ 		nfsd_cacherep_free(rp);
+ 		freed++;
+@@ -133,7 +133,7 @@ nfsd_cacherep_dispose(struct list_head *dispose)
+ 
+ static void
+ nfsd_cacherep_unlink_locked(struct nfsd_net *nn, struct nfsd_drc_bucket *b,
+-			    struct svc_cacherep *rp)
++			    struct nfsd_cacherep *rp)
+ {
+ 	if (rp->c_type == RC_REPLBUFF && rp->c_replvec.iov_base)
+ 		nfsd_stats_drc_mem_usage_sub(nn, rp->c_replvec.iov_len);
+@@ -146,7 +146,7 @@ nfsd_cacherep_unlink_locked(struct nfsd_net *nn, struct nfsd_drc_bucket *b,
+ }
+ 
+ static void
+-nfsd_reply_cache_free_locked(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
++nfsd_reply_cache_free_locked(struct nfsd_drc_bucket *b, struct nfsd_cacherep *rp,
+ 				struct nfsd_net *nn)
+ {
+ 	nfsd_cacherep_unlink_locked(nn, b, rp);
+@@ -154,7 +154,7 @@ nfsd_reply_cache_free_locked(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
+ }
+ 
+ static void
+-nfsd_reply_cache_free(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
++nfsd_reply_cache_free(struct nfsd_drc_bucket *b, struct nfsd_cacherep *rp,
+ 			struct nfsd_net *nn)
+ {
+ 	spin_lock(&b->cache_lock);
+@@ -166,7 +166,7 @@ nfsd_reply_cache_free(struct nfsd_drc_bucket *b, struct svc_cacherep *rp,
+ int nfsd_drc_slab_create(void)
+ {
+ 	drc_slab = kmem_cache_create("nfsd_drc",
+-				sizeof(struct svc_cacherep), 0, 0, NULL);
++				sizeof(struct nfsd_cacherep), 0, 0, NULL);
+ 	return drc_slab ? 0: -ENOMEM;
+ }
+ 
+@@ -235,7 +235,7 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
+ 
+ void nfsd_reply_cache_shutdown(struct nfsd_net *nn)
+ {
+-	struct svc_cacherep	*rp;
++	struct nfsd_cacherep *rp;
+ 	unsigned int i;
+ 
+ 	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
+@@ -243,7 +243,7 @@ void nfsd_reply_cache_shutdown(struct nfsd_net *nn)
+ 	for (i = 0; i < nn->drc_hashsize; i++) {
+ 		struct list_head *head = &nn->drc_hashtbl[i].lru_head;
+ 		while (!list_empty(head)) {
+-			rp = list_first_entry(head, struct svc_cacherep, c_lru);
++			rp = list_first_entry(head, struct nfsd_cacherep, c_lru);
+ 			nfsd_reply_cache_free_locked(&nn->drc_hashtbl[i],
+ 									rp, nn);
+ 		}
+@@ -260,7 +260,7 @@ void nfsd_reply_cache_shutdown(struct nfsd_net *nn)
+  * not already scheduled.
+  */
+ static void
+-lru_put_end(struct nfsd_drc_bucket *b, struct svc_cacherep *rp)
++lru_put_end(struct nfsd_drc_bucket *b, struct nfsd_cacherep *rp)
+ {
+ 	rp->c_timestamp = jiffies;
+ 	list_move_tail(&rp->c_lru, &b->lru_head);
+@@ -283,7 +283,7 @@ nfsd_prune_bucket_locked(struct nfsd_net *nn, struct nfsd_drc_bucket *b,
+ 			 unsigned int max, struct list_head *dispose)
+ {
+ 	unsigned long expiry = jiffies - RC_EXPIRE;
+-	struct svc_cacherep *rp, *tmp;
++	struct nfsd_cacherep *rp, *tmp;
+ 	unsigned int freed = 0;
+ 
+ 	lockdep_assert_held(&b->cache_lock);
+@@ -401,8 +401,8 @@ nfsd_cache_csum(struct svc_rqst *rqstp)
+ }
+ 
+ static int
+-nfsd_cache_key_cmp(const struct svc_cacherep *key,
+-			const struct svc_cacherep *rp, struct nfsd_net *nn)
++nfsd_cache_key_cmp(const struct nfsd_cacherep *key,
++		   const struct nfsd_cacherep *rp, struct nfsd_net *nn)
+ {
+ 	if (key->c_key.k_xid == rp->c_key.k_xid &&
+ 	    key->c_key.k_csum != rp->c_key.k_csum) {
+@@ -418,11 +418,11 @@ nfsd_cache_key_cmp(const struct svc_cacherep *key,
+  * Must be called with cache_lock held. Returns the found entry or
+  * inserts an empty key on failure.
+  */
+-static struct svc_cacherep *
+-nfsd_cache_insert(struct nfsd_drc_bucket *b, struct svc_cacherep *key,
++static struct nfsd_cacherep *
++nfsd_cache_insert(struct nfsd_drc_bucket *b, struct nfsd_cacherep *key,
+ 			struct nfsd_net *nn)
+ {
+-	struct svc_cacherep	*rp, *ret = key;
++	struct nfsd_cacherep	*rp, *ret = key;
+ 	struct rb_node		**p = &b->rb_head.rb_node,
+ 				*parent = NULL;
+ 	unsigned int		entries = 0;
+@@ -431,7 +431,7 @@ nfsd_cache_insert(struct nfsd_drc_bucket *b, struct svc_cacherep *key,
+ 	while (*p != NULL) {
+ 		++entries;
+ 		parent = *p;
+-		rp = rb_entry(parent, struct svc_cacherep, c_node);
++		rp = rb_entry(parent, struct nfsd_cacherep, c_node);
+ 
+ 		cmp = nfsd_cache_key_cmp(key, rp, nn);
+ 		if (cmp < 0)
+@@ -477,10 +477,10 @@ nfsd_cache_insert(struct nfsd_drc_bucket *b, struct svc_cacherep *key,
   *   %RC_REPLY: Reply from cache
   *   %RC_DROPIT: Do not process the request further
   */
--int nfsd_cache_lookup(struct svc_rqst *rqstp)
-+int nfsd_cache_lookup(struct svc_rqst *rqstp, struct svc_cacherep **cacherep)
+-int nfsd_cache_lookup(struct svc_rqst *rqstp, struct svc_cacherep **cacherep)
++int nfsd_cache_lookup(struct svc_rqst *rqstp, struct nfsd_cacherep **cacherep)
  {
  	struct nfsd_net		*nn;
- 	struct svc_cacherep	*rp, *found;
-@@ -487,7 +488,6 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
- 	LIST_HEAD(dispose);
- 	int rtn = RC_DOIT;
- 
--	rqstp->rq_cacherep = NULL;
- 	if (type == RC_NOCACHE) {
- 		nfsd_stats_rc_nocache_inc();
- 		goto out;
-@@ -509,7 +509,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
- 	found = nfsd_cache_insert(b, rp, nn);
- 	if (found != rp)
- 		goto found_entry;
--	rqstp->rq_cacherep = rp;
-+	*cacherep = rp;
- 	rp->c_state = RC_INPROG;
- 	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
- 	spin_unlock(&b->cache_lock);
-@@ -567,6 +567,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
- /**
-  * nfsd_cache_update - Update an entry in the duplicate reply cache.
-  * @rqstp: svc_rqst with a finished Reply
-+ * @rp: IN: DRC entry for this request
-  * @cachetype: which cache to update
-  * @statp: pointer to Reply's NFS status code, or NULL
-  *
-@@ -584,10 +585,10 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
+-	struct svc_cacherep	*rp, *found;
++	struct nfsd_cacherep	*rp, *found;
+ 	__wsum			csum;
+ 	struct nfsd_drc_bucket	*b;
+ 	int type = rqstp->rq_cachetype;
+@@ -585,7 +585,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, struct svc_cacherep **cacherep)
   * nfsd failed to encode a reply that otherwise would have been cached.
   * In this case, nfsd_cache_update is called with statp == NULL.
   */
--void nfsd_cache_update(struct svc_rqst *rqstp, int cachetype, __be32 *statp)
-+void nfsd_cache_update(struct svc_rqst *rqstp, struct svc_cacherep *rp,
-+		       int cachetype, __be32 *statp)
+-void nfsd_cache_update(struct svc_rqst *rqstp, struct svc_cacherep *rp,
++void nfsd_cache_update(struct svc_rqst *rqstp, struct nfsd_cacherep *rp,
+ 		       int cachetype, __be32 *statp)
  {
  	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
--	struct svc_cacherep *rp = rqstp->rq_cacherep;
- 	struct kvec	*resv = &rqstp->rq_res.head[0], *cachv;
- 	struct nfsd_drc_bucket *b;
- 	int		len;
 diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index d42b2a40c93c..64ac70990019 100644
+index 64ac70990019..5bdbac1f4d0f 100644
 --- a/fs/nfsd/nfssvc.c
 +++ b/fs/nfsd/nfssvc.c
-@@ -1045,6 +1045,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+@@ -1045,7 +1045,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
  {
  	const struct svc_procedure *proc = rqstp->rq_procinfo;
  	__be32 *statp = rqstp->rq_accept_statp;
-+	struct svc_cacherep *rp;
+-	struct svc_cacherep *rp;
++	struct nfsd_cacherep *rp;
  
  	/*
  	 * Give the xdr decoder a chance to change this if it wants
-@@ -1055,7 +1056,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
- 	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
- 		goto out_decode_err;
- 
--	switch (nfsd_cache_lookup(rqstp)) {
-+	rp = NULL;
-+	switch (nfsd_cache_lookup(rqstp, &rp)) {
- 	case RC_DOIT:
- 		break;
- 	case RC_REPLY:
-@@ -1071,7 +1073,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
- 	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
- 		goto out_encode_err;
- 
--	nfsd_cache_update(rqstp, rqstp->rq_cachetype, statp + 1);
-+	nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
- out_cached_reply:
- 	return 1;
- 
-@@ -1081,13 +1083,13 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
- 	return 1;
- 
- out_update_drop:
--	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
-+	nfsd_cache_update(rqstp, rp, RC_NOCACHE, NULL);
- out_dropit:
- 	return 0;
- 
- out_encode_err:
- 	trace_nfsd_cant_encode_err(rqstp);
--	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
-+	nfsd_cache_update(rqstp, rp, RC_NOCACHE, NULL);
- 	*statp = rpc_system_err;
- 	return 1;
- }
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 6669f3eb9ed4..604ca45af429 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -268,7 +268,6 @@ struct svc_rqst {
- 	/* Catering to nfsd */
- 	struct auth_domain *	rq_client;	/* RPC peer info */
- 	struct auth_domain *	rq_gssclient;	/* "gss/"-style peer info */
--	struct svc_cacherep *	rq_cacherep;	/* cache info */
- 	struct task_struct	*rq_task;	/* service thread */
- 	struct net		*rq_bc_net;	/* pointer to backchannel's
- 						 * net namespace
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index c06c505d04fb..2388053eb862 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -1240,8 +1240,8 @@ TRACE_EVENT(nfsd_drc_found,
+ TRACE_EVENT(nfsd_drc_mismatch,
+ 	TP_PROTO(
+ 		const struct nfsd_net *nn,
+-		const struct svc_cacherep *key,
+-		const struct svc_cacherep *rp
++		const struct nfsd_cacherep *key,
++		const struct nfsd_cacherep *rp
+ 	),
+ 	TP_ARGS(nn, key, rp),
+ 	TP_STRUCT__entry(
 
 
