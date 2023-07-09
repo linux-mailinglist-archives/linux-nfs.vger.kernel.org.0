@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0702974C650
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jul 2023 17:45:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC51D74C651
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jul 2023 17:45:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230155AbjGIPpk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 9 Jul 2023 11:45:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55300 "EHLO
+        id S233020AbjGIPpq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 9 Jul 2023 11:45:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233020AbjGIPpj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jul 2023 11:45:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4A791
-        for <linux-nfs@vger.kernel.org>; Sun,  9 Jul 2023 08:45:37 -0700 (PDT)
+        with ESMTP id S231897AbjGIPpp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jul 2023 11:45:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A09DB
+        for <linux-nfs@vger.kernel.org>; Sun,  9 Jul 2023 08:45:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 41E4560BCC
-        for <linux-nfs@vger.kernel.org>; Sun,  9 Jul 2023 15:45:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E5CBC433C9;
-        Sun,  9 Jul 2023 15:45:36 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 93D6E60B51
+        for <linux-nfs@vger.kernel.org>; Sun,  9 Jul 2023 15:45:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB64FC433C7;
+        Sun,  9 Jul 2023 15:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688917536;
-        bh=ESyCxUz+L4CLWq/U+M6xm5NiCuhMJDeWLU2DOm1WrZY=;
+        s=k20201202; t=1688917543;
+        bh=nFUu2RHmIDtZRQw4plTdD0hMuXLn/JviVytuo+4B7Mk=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rguEMf9lihj+7wqKm2/6fLPzRhJ+nNWLtbhZe95KTCAij5xuDnHMWf7wrzcFfK2cJ
-         LOKUbVoL9t0jTeVfwg8h1LWpIvP2vvyiSlfirV5pufk9fB7ktlVOgRHyh2ldeAGcON
-         uQWzq/3LNvHUmLWrQDIQWsnE6+09CYejc3sFyVedJIOUBYlwoBagz5/sKIsZVrLOO+
-         Ytz19zAxPo95lp5MXSPou51upkfskjo8599WlK00cbIjio6esdlCtz0kjQXyGwqyLV
-         3bMxYO0O+mXaleOzjeRNJI3wFF2LK+j+2F6Xw2PNx0DJnuPRNg2az0RPCZF4QSQLJs
-         dOlFGv+iXhboA==
-Subject: [PATCH v1 4/6] NFSD: Refactor the duplicate reply cache shrinker
+        b=XQQd7u0RKng0fpbsuwTkxHIBefcJVBzwwECtTW6YC5m7MLs9YKA8vCslmqPOrfkXc
+         lqF5/2KmGFKB051alvmwAv0dYSszqNHfF4KMF+DdwuuJKyQhv7qKaCfxzC9qcVyOYC
+         mfg2/IQQtSyVug9N16wj+O7wyCez7yuwjcAtaeN0F37/n7HNqsp5dxjmXBLxh9T/9j
+         N8zjUrnYIbcB5ijKfaMt8zCWTWDTVWTSJKgifccYWImTbxaGqFdULEwc5OEf9ATKqP
+         5kv0FQ/gYEGZ8GDvPGIiOxjeheHfhbsJEYCQG6ycS/itJHgTyf9MYaK6lqagmOunw2
+         fcMzrPwTvmriQ==
+Subject: [PATCH v1 5/6] NFSD: Remove svc_rqst::rq_cacherep
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Sun, 09 Jul 2023 11:45:35 -0400
-Message-ID: <168891753555.3964.17240379490969380455.stgit@manet.1015granger.net>
+Date:   Sun, 09 Jul 2023 11:45:41 -0400
+Message-ID: <168891754187.3964.10104099550029601077.stgit@manet.1015granger.net>
 In-Reply-To: <168891733570.3964.15456501153247760888.stgit@manet.1015granger.net>
 References: <168891733570.3964.15456501153247760888.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -56,127 +56,152 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Avoid holding the bucket lock while freeing cache entries. This
-change also caps the number of entries that are freed when the
-shrinker calls to reduce the shrinker's impact on the cache's
-effectiveness.
+Over time I'd like to see NFS-specific fields moved out of struct
+svc_rqst, which is an RPC layer object. These fields are layering
+violations.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfscache.c |   82 +++++++++++++++++++++++++---------------------------
- 1 file changed, 39 insertions(+), 43 deletions(-)
+ fs/nfsd/cache.h            |    6 ++++--
+ fs/nfsd/nfscache.c         |   11 ++++++-----
+ fs/nfsd/nfssvc.c           |   10 ++++++----
+ include/linux/sunrpc/svc.h |    1 -
+ 4 files changed, 16 insertions(+), 12 deletions(-)
 
+diff --git a/fs/nfsd/cache.h b/fs/nfsd/cache.h
+index 4c9b87850ab1..27610b071880 100644
+--- a/fs/nfsd/cache.h
++++ b/fs/nfsd/cache.h
+@@ -84,8 +84,10 @@ int	nfsd_net_reply_cache_init(struct nfsd_net *nn);
+ void	nfsd_net_reply_cache_destroy(struct nfsd_net *nn);
+ int	nfsd_reply_cache_init(struct nfsd_net *);
+ void	nfsd_reply_cache_shutdown(struct nfsd_net *);
+-int	nfsd_cache_lookup(struct svc_rqst *);
+-void	nfsd_cache_update(struct svc_rqst *, int, __be32 *);
++int	nfsd_cache_lookup(struct svc_rqst *rqstp,
++			  struct svc_cacherep **cacherep);
++void	nfsd_cache_update(struct svc_rqst *rqstp, struct svc_cacherep *rp,
++			  int cachetype, __be32 *statp);
+ int	nfsd_reply_cache_stats_show(struct seq_file *m, void *v);
+ 
+ #endif /* NFSCACHE_H */
 diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index c8b572d2c72a..c08078ac9284 100644
+index c08078ac9284..9bdcd73206c9 100644
 --- a/fs/nfsd/nfscache.c
 +++ b/fs/nfsd/nfscache.c
-@@ -309,68 +309,64 @@ nfsd_prune_bucket_locked(struct nfsd_net *nn, struct nfsd_drc_bucket *b,
- 	}
- }
- 
--static long prune_bucket(struct nfsd_drc_bucket *b, struct nfsd_net *nn,
--			 unsigned int max)
-+/**
-+ * nfsd_reply_cache_count - count_objects method for the DRC shrinker
-+ * @shrink: our registered shrinker context
-+ * @sc: garbage collection parameters
-+ *
-+ * Returns the total number of entries in the duplicate reply cache. To
-+ * keep things simple and quick, this is not the number of expired entries
-+ * in the cache (ie, the number that would be removed by a call to
-+ * nfsd_reply_cache_scan).
-+ */
-+static unsigned long
-+nfsd_reply_cache_count(struct shrinker *shrink, struct shrink_control *sc)
- {
--	struct svc_cacherep *rp, *tmp;
--	long freed = 0;
-+	struct nfsd_net *nn = container_of(shrink,
-+				struct nfsd_net, nfsd_reply_cache_shrinker);
- 
--	list_for_each_entry_safe(rp, tmp, &b->lru_head, c_lru) {
--		/*
--		 * Don't free entries attached to calls that are still
--		 * in-progress, but do keep scanning the list.
--		 */
--		if (rp->c_state == RC_INPROG)
--			continue;
--		if (atomic_read(&nn->num_drc_entries) <= nn->max_drc_entries &&
--		    time_before(jiffies, rp->c_timestamp + RC_EXPIRE))
--			break;
--		nfsd_reply_cache_free_locked(b, rp, nn);
--		if (max && freed++ > max)
--			break;
--	}
--	return freed;
-+	return atomic_read(&nn->num_drc_entries);
- }
- 
--/*
-- * Walk the LRU list and prune off entries that are older than RC_EXPIRE.
-- * Also prune the oldest ones when the total exceeds the max number of entries.
-+/**
-+ * nfsd_reply_cache_scan - scan_objects method for the DRC shrinker
-+ * @shrink: our registered shrinker context
-+ * @sc: garbage collection parameters
-+ *
-+ * Free expired entries on each bucket's LRU list until we've released
-+ * nr_to_scan freed objects. Nothing will be released if the cache
-+ * has not exceeded it's max_drc_entries limit.
-+ *
-+ * Returns the number of entries released by this call.
+@@ -464,6 +464,7 @@ nfsd_cache_insert(struct nfsd_drc_bucket *b, struct svc_cacherep *key,
+ /**
+  * nfsd_cache_lookup - Find an entry in the duplicate reply cache
+  * @rqstp: Incoming Call to find
++ * @cacherep: OUT: DRC entry for this request
+  *
+  * Try to find an entry matching the current call in the cache. When none
+  * is found, we try to grab the oldest expired entry off the LRU list. If
+@@ -476,7 +477,7 @@ nfsd_cache_insert(struct nfsd_drc_bucket *b, struct svc_cacherep *key,
+  *   %RC_REPLY: Reply from cache
+  *   %RC_DROPIT: Do not process the request further
   */
--static long
--prune_cache_entries(struct nfsd_net *nn)
-+static unsigned long
-+nfsd_reply_cache_scan(struct shrinker *shrink, struct shrink_control *sc)
+-int nfsd_cache_lookup(struct svc_rqst *rqstp)
++int nfsd_cache_lookup(struct svc_rqst *rqstp, struct svc_cacherep **cacherep)
  {
-+	struct nfsd_net *nn = container_of(shrink,
-+				struct nfsd_net, nfsd_reply_cache_shrinker);
-+	unsigned long freed = 0;
-+	LIST_HEAD(dispose);
- 	unsigned int i;
--	long freed = 0;
+ 	struct nfsd_net		*nn;
+ 	struct svc_cacherep	*rp, *found;
+@@ -487,7 +488,6 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
+ 	LIST_HEAD(dispose);
+ 	int rtn = RC_DOIT;
  
- 	for (i = 0; i < nn->drc_hashsize; i++) {
- 		struct nfsd_drc_bucket *b = &nn->drc_hashtbl[i];
- 
- 		if (list_empty(&b->lru_head))
- 			continue;
-+
- 		spin_lock(&b->cache_lock);
--		freed += prune_bucket(b, nn, 0);
-+		nfsd_prune_bucket_locked(nn, b, 0, &dispose);
- 		spin_unlock(&b->cache_lock);
--	}
--	return freed;
--}
- 
--static unsigned long
--nfsd_reply_cache_count(struct shrinker *shrink, struct shrink_control *sc)
--{
--	struct nfsd_net *nn = container_of(shrink,
--				struct nfsd_net, nfsd_reply_cache_shrinker);
-+		freed += nfsd_cacherep_dispose(&dispose);
-+		if (freed > sc->nr_to_scan)
-+			break;
-+	}
- 
--	return atomic_read(&nn->num_drc_entries);
-+	trace_nfsd_drc_gc(nn, freed);
-+	return freed;
- }
- 
--static unsigned long
--nfsd_reply_cache_scan(struct shrinker *shrink, struct shrink_control *sc)
--{
--	struct nfsd_net *nn = container_of(shrink,
--				struct nfsd_net, nfsd_reply_cache_shrinker);
--
--	return prune_cache_entries(nn);
--}
- /*
-  * Walk an xdr_buf and get a CRC for at most the first RC_CSUMLEN bytes
+-	rqstp->rq_cacherep = NULL;
+ 	if (type == RC_NOCACHE) {
+ 		nfsd_stats_rc_nocache_inc();
+ 		goto out;
+@@ -509,7 +509,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
+ 	found = nfsd_cache_insert(b, rp, nn);
+ 	if (found != rp)
+ 		goto found_entry;
+-	rqstp->rq_cacherep = rp;
++	*cacherep = rp;
+ 	rp->c_state = RC_INPROG;
+ 	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+ 	spin_unlock(&b->cache_lock);
+@@ -567,6 +567,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
+ /**
+  * nfsd_cache_update - Update an entry in the duplicate reply cache.
+  * @rqstp: svc_rqst with a finished Reply
++ * @rp: IN: DRC entry for this request
+  * @cachetype: which cache to update
+  * @statp: pointer to Reply's NFS status code, or NULL
+  *
+@@ -584,10 +585,10 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp)
+  * nfsd failed to encode a reply that otherwise would have been cached.
+  * In this case, nfsd_cache_update is called with statp == NULL.
   */
+-void nfsd_cache_update(struct svc_rqst *rqstp, int cachetype, __be32 *statp)
++void nfsd_cache_update(struct svc_rqst *rqstp, struct svc_cacherep *rp,
++		       int cachetype, __be32 *statp)
+ {
+ 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
+-	struct svc_cacherep *rp = rqstp->rq_cacherep;
+ 	struct kvec	*resv = &rqstp->rq_res.head[0], *cachv;
+ 	struct nfsd_drc_bucket *b;
+ 	int		len;
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index d42b2a40c93c..64ac70990019 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -1045,6 +1045,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+ {
+ 	const struct svc_procedure *proc = rqstp->rq_procinfo;
+ 	__be32 *statp = rqstp->rq_accept_statp;
++	struct svc_cacherep *rp;
+ 
+ 	/*
+ 	 * Give the xdr decoder a chance to change this if it wants
+@@ -1055,7 +1056,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+ 	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
+ 		goto out_decode_err;
+ 
+-	switch (nfsd_cache_lookup(rqstp)) {
++	rp = NULL;
++	switch (nfsd_cache_lookup(rqstp, &rp)) {
+ 	case RC_DOIT:
+ 		break;
+ 	case RC_REPLY:
+@@ -1071,7 +1073,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+ 	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
+ 		goto out_encode_err;
+ 
+-	nfsd_cache_update(rqstp, rqstp->rq_cachetype, statp + 1);
++	nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
+ out_cached_reply:
+ 	return 1;
+ 
+@@ -1081,13 +1083,13 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+ 	return 1;
+ 
+ out_update_drop:
+-	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
++	nfsd_cache_update(rqstp, rp, RC_NOCACHE, NULL);
+ out_dropit:
+ 	return 0;
+ 
+ out_encode_err:
+ 	trace_nfsd_cant_encode_err(rqstp);
+-	nfsd_cache_update(rqstp, RC_NOCACHE, NULL);
++	nfsd_cache_update(rqstp, rp, RC_NOCACHE, NULL);
+ 	*statp = rpc_system_err;
+ 	return 1;
+ }
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 6669f3eb9ed4..604ca45af429 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -268,7 +268,6 @@ struct svc_rqst {
+ 	/* Catering to nfsd */
+ 	struct auth_domain *	rq_client;	/* RPC peer info */
+ 	struct auth_domain *	rq_gssclient;	/* "gss/"-style peer info */
+-	struct svc_cacherep *	rq_cacherep;	/* cache info */
+ 	struct task_struct	*rq_task;	/* service thread */
+ 	struct net		*rq_bc_net;	/* pointer to backchannel's
+ 						 * net namespace
 
 
