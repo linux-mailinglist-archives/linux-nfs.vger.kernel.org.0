@@ -2,49 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0FAE74DB5C
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jul 2023 18:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B98A974DBB5
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jul 2023 18:56:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230289AbjGJQnD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Jul 2023 12:43:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45762 "EHLO
+        id S231185AbjGJQ4k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jul 2023 12:56:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230300AbjGJQm4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jul 2023 12:42:56 -0400
+        with ESMTP id S231587AbjGJQ4d (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jul 2023 12:56:33 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 586A5120
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Jul 2023 09:42:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67DC7E4F
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Jul 2023 09:56:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E26176112E
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Jul 2023 16:42:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBB3BC433C7;
-        Mon, 10 Jul 2023 16:42:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A1E4861132
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Jul 2023 16:56:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C5EBC433C7;
+        Mon, 10 Jul 2023 16:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689007374;
-        bh=JbHD/rU7Mj0Td0pbaqlWP5W3I3wsehbQq5EqN6GbxDk=;
+        s=k20201202; t=1689008165;
+        bh=0QgCXyrKmTj3+AJKz9/KBmaIQlUXpXmYfGIait7ieOM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=gvi9gG5FJm6xKvEkfeVBZJ+wzyGU2knogKx2gJZcThLYyvlhsHPil4OiSjfvTqveq
-         01pMGVwev+lRniEIrDFP39wQru+BSfcphe8Ad9Ayl7EXJefY93wz/HJ9lHpTrZ2+R6
-         sgMa/NNef3ryuOaIJvGWk41LZjraQZLyNN59f5SwZcX9WYPjJ74MHQpTWRk7JymnN1
-         FxZ3JWiw/TXvVKfcafW8YKzFMq85nq0PcyIFA33zgbBFgTHIztz7S9Vj3FvzWaQQ4P
-         CxyLlXUHNowTreAJ3tGwRc72AHHmBS3uc8UMJU2V7EZ1Pj2/5tnMdiU3/yXxtw9rSW
-         zmmQv7rCPBvvQ==
-Subject: [PATCH v3 9/9] SUNRPC: Convert RQ_BUSY into a per-pool bitmap
-From:   Chuck Lever <cel@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>, lorenzo@kernel.org,
-        neilb@suse.de, jlayton@redhat.com, david@fromorbit.com
-Date:   Mon, 10 Jul 2023 12:42:52 -0400
-Message-ID: <168900737297.7514.333293207540036098.stgit@manet.1015granger.net>
-In-Reply-To: <168900729243.7514.15141312295052254929.stgit@manet.1015granger.net>
-References: <168900729243.7514.15141312295052254929.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5
+        b=N5VKwqUOJy3mygK6APd9uNqGGsdhZWMNRxwGda5MQRlvcfE8YesF43yp4tTX4w6AC
+         QTXhIk6eg1WVa7COHV8I1fbPkVOWUzaz8gO3mAMVi+q4FCShSHi+KlC/iepEKtQ9vL
+         CVEtnP5KQOFaxkPJQaBaic+VcBBwcRzQJykc1+UyaLXHh5TK/TzZ9lSa4XTFJsHAhg
+         +Hdethsb4ETG3J1HtEMPyQs38VlnW7d9VV86n1TjCNJ9q4OdQ+fTWP3zYyj0mrKrX4
+         mAdQqmmDTVFcuJF+BSFCSL0HmYqH9iqpePbahUWAcSrAlHlUFu2pknRcw6xYxuOzQE
+         1qGbOag/UhxIw==
+Message-ID: <1034ac186c7df01611052e743fded11d6a4fc179.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: add rpc_status entry in nfsd debug filesystem
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org
+Cc:     lorenzo.bianconi@redhat.com, chuck.lever@oracle.com
+Date:   Mon, 10 Jul 2023 12:56:03 -0400
+In-Reply-To: <9495cf3f3674351579b5fd13d5ccacd7a6336088.1689005402.git.lorenzo@kernel.org>
+References: <9495cf3f3674351579b5fd13d5ccacd7a6336088.1689005402.git.lorenzo@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -55,192 +54,243 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 2023-07-10 at 18:16 +0200, Lorenzo Bianconi wrote:
+> Introduce rpc_status entry in nfsd debug filesystem in order to dump
+> pending RPC requests debugging information.
+>=20
+> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D366
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> ---
+> Changes since RFCv1:
+> - riduce time holding nfsd_mutex bumping svc_serv refcoung in
+>   nfsd_rpc_status_open()
+> - dump rqstp->rq_stime
+> - add missing kdoc for nfsd_rpc_status_open()
+> ---
+>  fs/nfsd/nfs4proc.c |  4 +--
+>  fs/nfsd/nfsctl.c   | 10 ++++++
+>  fs/nfsd/nfsd.h     |  2 ++
+>  fs/nfsd/nfssvc.c   | 88 ++++++++++++++++++++++++++++++++++++++++++++++
+>  net/sunrpc/svc.c   |  2 +-
+>  5 files changed, 102 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 5ae670807449..a4dd1ef104c3 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -2452,8 +2452,6 @@ static inline void nfsd4_increment_op_stats(u32 opn=
+um)
+> =20
+>  static const struct nfsd4_operation nfsd4_ops[];
+> =20
+> -static const char *nfsd4_op_name(unsigned opnum);
+> -
+>  /*
+>   * Enforce NFSv4.1 COMPOUND ordering rules:
+>   *
+> @@ -3583,7 +3581,7 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op)
+>  	}
+>  }
+> =20
+> -static const char *nfsd4_op_name(unsigned opnum)
+> +const char *nfsd4_op_name(unsigned opnum)
+>  {
+>  	if (opnum < ARRAY_SIZE(nfsd4_ops))
+>  		return nfsd4_ops[opnum].op_name;
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 1b8b1aab9a15..629b4296e7c6 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -57,6 +57,8 @@ enum {
+>  	NFSD_RecoveryDir,
+>  	NFSD_V4EndGrace,
+>  #endif
+> +	NFSD_Rpc_Status,
+> +
+>  	NFSD_MaxReserved
+>  };
+> =20
+> @@ -195,6 +197,13 @@ static inline struct net *netns(struct file *file)
+>  	return file_inode(file)->i_sb->s_fs_info;
+>  }
+> =20
+> +static const struct file_operations nfsd_rpc_status_operations =3D {
+> +	.open		=3D nfsd_rpc_status_open,
+> +	.read		=3D seq_read,
+> +	.llseek		=3D seq_lseek,
+> +	.release	=3D nfsd_pool_stats_release,
+> +};
+> +
+>  /*
+>   * write_unlock_ip - Release all locks used by a client
+>   *
+> @@ -1400,6 +1409,7 @@ static int nfsd_fill_super(struct super_block *sb, =
+struct fs_context *fc)
+>  		[NFSD_RecoveryDir] =3D {"nfsv4recoverydir", &transaction_ops, S_IWUSR|=
+S_IRUSR},
+>  		[NFSD_V4EndGrace] =3D {"v4_end_grace", &transaction_ops, S_IWUSR|S_IRU=
+GO},
+>  #endif
+> +		[NFSD_Rpc_Status] =3D {"rpc_status", &nfsd_rpc_status_operations, S_IR=
+UGO},
+>  		/* last one */ {""}
+>  	};
+> =20
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index d88498f8b275..75a3e1d55bc8 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -94,6 +94,7 @@ int		nfsd_get_nrthreads(int n, int *, struct net *);
+>  int		nfsd_set_nrthreads(int n, int *, struct net *);
+>  int		nfsd_pool_stats_open(struct inode *, struct file *);
+>  int		nfsd_pool_stats_release(struct inode *, struct file *);
+> +int		nfsd_rpc_status_open(struct inode *inode, struct file *file);
+>  void		nfsd_shutdown_threads(struct net *net);
+> =20
+>  void		nfsd_put(struct net *net);
+> @@ -506,6 +507,7 @@ extern void nfsd4_ssc_init_umount_work(struct nfsd_ne=
+t *nn);
+> =20
+>  extern void nfsd4_init_leases_net(struct nfsd_net *nn);
+> =20
+> +const char *nfsd4_op_name(unsigned opnum);
+>  #else /* CONFIG_NFSD_V4 */
+>  static inline int nfsd4_is_junction(struct dentry *dentry)
+>  {
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 2154fa63c5f2..ef1eb8b1c5bf 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -1147,3 +1147,91 @@ int nfsd_pool_stats_release(struct inode *inode, s=
+truct file *file)
+>  	mutex_unlock(&nfsd_mutex);
+>  	return ret;
+>  }
+> +
+> +static int nfsd_rpc_status_show(struct seq_file *m, void *v)
+> +{
+> +	struct inode *inode =3D file_inode(m->file);
+> +	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id=
+);
+> +	int i;
+> +
+> +	rcu_read_lock();
+> +
 
-I've noticed that client-observed server request latency goes up
-simply when the nfsd thread count is increased.
+Much nicer without all of the heavyweight locking, I think!
 
-Walking the whole set of pool threads is memory-inefficient. On a
-busy server with many threads, enqueuing a transport will visit all
-the threads in the pool quite frequently. This also pulls in the
-cache lines for some hot fields in each svc_rqst (namely, rq_flags).
+> +	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+> +		struct svc_rqst *rqstp;
+> +
+> +		seq_puts(m, "XID        | FLAGS      | PROG       |");
+> +		seq_puts(m, " VERS       | PROC\t| TS(us)\t   |");
+> +		seq_puts(m, " REMOTE - LOCAL IP ADDR");
+> +		seq_puts(m, "\t\t\t\t\t\t\t\t   | NFS4 COMPOUND OPS\n");
 
-The svc_xprt_enqueue() call that concerns me most is the one in
-svc_rdma_wc_receive(), which is single-threaded per CQ. Slowing
-down completion handling limits the total throughput per RDMA
-connection.
+It may be best to just eliminate the header, or at the very least, only
+print it once by moving it outside of the for loop.
 
-Instead, set up a busy bitmap and use find_next_clear_bit, which
-should work the same way as RQ_BUSY but will touch only the cache
-lines that the bitmap is in. Stick with atomic bit operations to
-avoid taking a spinlock during the search.
+> +		list_for_each_entry_rcu(rqstp,
+> +				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
+> +				rq_all) {
+> +			if (!test_bit(RQ_BUSY, &rqstp->rq_flags))
+> +				continue;
+> +
+> +			seq_printf(m,
+> +				   "0x%08x | 0x%08lx | 0x%08x | NFSv%d      |"
+> +				   " %s\t| %016lld |",
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc.h    |    6 ++++--
- include/trace/events/sunrpc.h |    1 -
- net/sunrpc/svc.c              |   24 +++++++++++++++++++-----
- net/sunrpc/svc_xprt.c         |   26 ++++++++++++++++++++------
- 4 files changed, 43 insertions(+), 14 deletions(-)
+I'd definitely get rid of the '|' delimiters. I think that it'd be best
+to just separate the fields by single spaces, as that will be simpler
+for scripts to parse. There are plenty of examples in the kernel that do
+that (/proc/locks, /proc/self/mountstats, etc.).
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 86377506a514..6669f3eb9ed4 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -35,6 +35,7 @@ struct svc_pool {
- 	spinlock_t		sp_lock;	/* protects sp_sockets */
- 	struct list_head	sp_sockets;	/* pending sockets */
- 	unsigned int		sp_nrthreads;	/* # of threads in pool */
-+	unsigned long		*sp_busy_map;	/* running threads */
- 	struct xarray		sp_thread_xa;
- 
- 	/* statistics on pool operation */
-@@ -191,6 +192,8 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
- #define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE \
- 				+ 2 + 1)
- 
-+#define RPCSVC_MAXPOOLTHREADS	(4096)
-+
- /*
-  * The context of a single thread, including the request currently being
-  * processed.
-@@ -240,8 +243,7 @@ struct svc_rqst {
- #define	RQ_SPLICE_OK	(4)			/* turned off in gss privacy
- 						 * to prevent encrypting page
- 						 * cache pages */
--#define	RQ_BUSY		(5)			/* request is busy */
--#define	RQ_DATA		(6)			/* request has data */
-+#define	RQ_DATA		(5)			/* request has data */
- 	unsigned long		rq_flags;	/* flags field */
- 	u32			rq_thread_id;	/* xarray index */
- 	ktime_t			rq_qtime;	/* enqueue time */
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index ea43c6059bdb..c07824a254bf 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -1676,7 +1676,6 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
- 	svc_rqst_flag(USEDEFERRAL)					\
- 	svc_rqst_flag(DROPME)						\
- 	svc_rqst_flag(SPLICE_OK)					\
--	svc_rqst_flag(BUSY)						\
- 	svc_rqst_flag_end(DATA)
- 
- #undef svc_rqst_flag
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 109d7f047385..f6305b66fd28 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -509,6 +509,12 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
- 		INIT_LIST_HEAD(&pool->sp_sockets);
- 		spin_lock_init(&pool->sp_lock);
- 		xa_init_flags(&pool->sp_thread_xa, XA_FLAGS_ALLOC);
-+		pool->sp_busy_map =
-+			bitmap_alloc_node(RPCSVC_MAXPOOLTHREADS, GFP_KERNEL,
-+					  svc_pool_map_get_node(i));
-+		if (!pool->sp_busy_map)
-+			return NULL;
-+		bitmap_fill(pool->sp_busy_map, RPCSVC_MAXPOOLTHREADS);
- 
- 		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
- 		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
-@@ -598,6 +604,8 @@ svc_destroy(struct kref *ref)
- 		percpu_counter_destroy(&pool->sp_threads_no_work);
- 
- 		xa_destroy(&pool->sp_thread_xa);
-+		bitmap_free(pool->sp_busy_map);
-+		pool->sp_busy_map = NULL;
- 	}
- 	kfree(serv->sv_pools);
- 	kfree(serv);
-@@ -649,7 +657,6 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_pool *pool, int node)
- 
- 	folio_batch_init(&rqstp->rq_fbatch);
- 
--	__set_bit(RQ_BUSY, &rqstp->rq_flags);
- 	rqstp->rq_server = serv;
- 	rqstp->rq_pool = pool;
- 
-@@ -679,7 +686,7 @@ static struct svc_rqst *
- svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- {
- 	struct xa_limit limit = {
--		.max = U32_MAX,
-+		.max = RPCSVC_MAXPOOLTHREADS,
- 	};
- 	struct svc_rqst	*rqstp;
- 	int ret;
-@@ -724,12 +731,19 @@ struct svc_rqst *svc_pool_wake_idle_thread(struct svc_serv *serv,
- 					   struct svc_pool *pool)
- {
- 	struct svc_rqst	*rqstp;
--	unsigned long index;
-+	unsigned long bit;
- 
--	xa_for_each(&pool->sp_thread_xa, index, rqstp) {
--		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
-+	/* Check the pool's idle bitmap locklessly so that multiple
-+	 * idle searches can proceed concurrently.
-+	 */
-+	for_each_clear_bit(bit, pool->sp_busy_map, pool->sp_nrthreads) {
-+		if (test_and_set_bit(bit, pool->sp_busy_map))
- 			continue;
- 
-+		rqstp = xa_load(&pool->sp_thread_xa, bit);
-+		if (!rqstp)
-+			break;
-+
- 		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
- 		wake_up_process(rqstp->rq_task);
- 		percpu_counter_inc(&pool->sp_threads_woken);
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index db40f771b60a..f9c9babe0cba 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -735,6 +735,21 @@ rqst_should_sleep(struct svc_rqst *rqstp)
- 	return true;
- }
- 
-+static void svc_pool_thread_mark_idle(struct svc_pool *pool,
-+				      struct svc_rqst *rqstp)
-+{
-+	clear_bit_unlock(rqstp->rq_thread_id, pool->sp_busy_map);
-+}
-+
-+/*
-+ * Note: If we were awoken, then this rqstp has already been marked busy.
-+ */
-+static void svc_pool_thread_mark_busy(struct svc_pool *pool,
-+				      struct svc_rqst *rqstp)
-+{
-+	test_and_set_bit_lock(rqstp->rq_thread_id, pool->sp_busy_map);
-+}
-+
- static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
- {
- 	struct svc_pool		*pool = rqstp->rq_pool;
-@@ -756,18 +771,17 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
- 	set_current_state(TASK_INTERRUPTIBLE);
- 	smp_mb__before_atomic();
- 	clear_bit(SP_CONGESTED, &pool->sp_flags);
--	clear_bit(RQ_BUSY, &rqstp->rq_flags);
--	smp_mb__after_atomic();
- 
--	if (likely(rqst_should_sleep(rqstp)))
-+	if (likely(rqst_should_sleep(rqstp))) {
-+		svc_pool_thread_mark_idle(pool, rqstp);
- 		time_left = schedule_timeout(timeout);
--	else
-+	} else
- 		__set_current_state(TASK_RUNNING);
- 
- 	try_to_freeze();
- 
--	set_bit(RQ_BUSY, &rqstp->rq_flags);
--	smp_mb__after_atomic();
-+	svc_pool_thread_mark_busy(pool, rqstp);
-+
- 	rqstp->rq_xprt = svc_xprt_dequeue(pool);
- 	if (rqstp->rq_xprt) {
- 		trace_svc_pool_awoken(rqstp);
+We can always write a simple shell or python script for nfs-utils that
+parses and pretty-prints the fields.
 
+> +				   be32_to_cpu(rqstp->rq_xid), rqstp->rq_flags,
+> +				   rqstp->rq_prog, rqstp->rq_vers,
+> +				   svc_proc_name(rqstp),
+> +				   ktime_to_us(rqstp->rq_stime));
+> +
+> +			if (rqstp->rq_addr.ss_family =3D=3D AF_INET) {
+> +				seq_printf(m, " %pI4 - %pI4\t\t\t\t\t\t\t   |",
+> +					   &((struct sockaddr_in *)&rqstp->rq_addr)->sin_addr,
+> +					   &((struct sockaddr_in *)&rqstp->rq_daddr)->sin_addr);
+> +			} else if (rqstp->rq_addr.ss_family =3D=3D AF_INET6) {
+> +				seq_printf(m, " %pI6 - %pI6 |",
+> +					   &((struct sockaddr_in6 *)&rqstp->rq_addr)->sin6_addr,
+> +					   &((struct sockaddr_in6 *)&rqstp->rq_daddr)->sin6_addr);
+> +			} else {
+> +				seq_printf(m, " Unknown address family: %hu\n",
 
+...and if we're going to go for something machine-parseable, maybe just
+print this as "unknown:%hu". Also, I don't think you want the extra
+newline here.
+
+> +					   rqstp->rq_addr.ss_family);
+> +				continue;
+> +			}
+> +#ifdef CONFIG_NFSD_V4
+> +			if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
+> +			    rqstp->rq_proc =3D=3D NFSPROC4_COMPOUND) {
+> +				/* NFSv4 compund */
+> +				struct nfsd4_compoundargs *args =3D rqstp->rq_argp;
+> +				struct nfsd4_compoundres *resp =3D rqstp->rq_resp;
+> +
+> +				while (resp->opcnt < args->opcnt) {
+> +					struct nfsd4_op *op =3D &args->ops[resp->opcnt++];
+> +
+> +					seq_printf(m, " %s", nfsd4_op_name(op->opnum));
+> +				}
+> +			}
+> +#endif /* CONFIG_NFSD_V4 */
+> +			seq_puts(m, "\n");
+> +		}
+> +	}
+> +
+> +	rcu_read_unlock();
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * nfsd_rpc_status_open - Atomically copy a write verifier
+> + * @inode: entry inode pointer.
+> + * @file: entry file pointer.
+> + *
+> + * This routine dumps pending RPC requests info queued into nfs server.
+> + */
+> +int nfsd_rpc_status_open(struct inode *inode, struct file *file)
+> +{
+> +	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id=
+);
+> +
+> +	mutex_lock(&nfsd_mutex);
+> +	if (!nn->nfsd_serv) {
+> +		mutex_unlock(&nfsd_mutex);
+> +		return -ENODEV;
+> +	}
+> +
+> +	svc_get(nn->nfsd_serv);
+> +	mutex_unlock(&nfsd_mutex);
+> +
+> +	return single_open(file, nfsd_rpc_status_show, inode->i_private);
+> +}
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 587811a002c9..44eac83b35a1 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -1629,7 +1629,7 @@ const char *svc_proc_name(const struct svc_rqst *rq=
+stp)
+>  		return rqstp->rq_procinfo->pc_name;
+>  	return "unknown";
+>  }
+> -
+> +EXPORT_SYMBOL_GPL(svc_proc_name);
+> =20
+>  /**
+>   * svc_encode_result_payload - mark a range of bytes as a result payload
+
+--=20
+Jeff Layton <jlayton@kernel.org>
