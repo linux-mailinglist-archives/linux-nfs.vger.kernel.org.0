@@ -2,54 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC8C874DEF1
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jul 2023 22:15:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9527274E0EA
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jul 2023 00:18:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229612AbjGJUPK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Jul 2023 16:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35528 "EHLO
+        id S229864AbjGJWS1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jul 2023 18:18:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjGJUPH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jul 2023 16:15:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24263BB
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Jul 2023 13:15:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S229563AbjGJWS0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jul 2023 18:18:26 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DFFB189
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Jul 2023 15:18:23 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B4F07611CA
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Jul 2023 20:15:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82D77C433C8;
-        Mon, 10 Jul 2023 20:15:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689020105;
-        bh=P5wp+izuaDzxZMFaFGqhtVvdScB2bBCIWhwbpsGHd5k=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=QkgkHpq7wWCv/B98EQjCgApU09V4V6JtR1AtvWm659N7diHCdl548Relctdz6sor+
-         hi986TSpFS4fnZXRSOGJlsIWyNw6swxV+6mkdB4hF03nytHXcNQfaVeaTtfVKIthfV
-         DbkYc0HTvjJf3cDrIMR5yPrtm441ls162uK4/alUNEgyEhC2nz0yUZEaRH8qZB24ac
-         dyUqjWvsto9ln7tre8q853TJ8RlE5NvtNUXVjP9Q1MvszXFBijKAAHxdu9ub7J5LYq
-         yFxnyP7t5Frry/e6d93UBjXxqLGdJrDqrNyqxxRYu646rEHiiDL2f4Ar24OWkh/obX
-         evzFHd7S24VoA==
-Message-ID: <68d67a7c60c8bc27dab4a4f9d9e83598c24f7f37.camel@kernel.org>
-Subject: Re: [PATCH v3 9/9] SUNRPC: Convert RQ_BUSY into a per-pool bitmap
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever <cel@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        lorenzo@kernel.org, neilb@suse.de, david@fromorbit.com
-Date:   Mon, 10 Jul 2023 16:15:03 -0400
-In-Reply-To: <ZKxUrJ1y5bM3wYMU@manet.1015granger.net>
-References: <168900729243.7514.15141312295052254929.stgit@manet.1015granger.net>
-         <168900737297.7514.333293207540036098.stgit@manet.1015granger.net>
-         <f6320e113f9ba505638a774ae33adda68575cec4.camel@kernel.org>
-         <ZKxUrJ1y5bM3wYMU@manet.1015granger.net>
-Content-Type: text/plain; charset="ISO-8859-15"
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 296F0200E6;
+        Mon, 10 Jul 2023 22:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1689027502; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QsSVO2dMq6bT37NWqDVWJVct96J5YxFPnRKy5YXyqSg=;
+        b=bUl92jDQSBSb+SNKwbEXXXiag/8G0e61ccCR+uUhFRuzZM9tW/tniToK9ywTHSbHwGJBMR
+        vm/DDqmOEM94GYEFkHEUiXt9b9sd/iBTVXj9QBPIOyawxXOa/mL0xUhl6Gr0fwPMRL3Tcp
+        1dQA0EuwV2QTtZOnqKwPVjdMEvSSgXg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1689027502;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QsSVO2dMq6bT37NWqDVWJVct96J5YxFPnRKy5YXyqSg=;
+        b=koNaa/B+TRJznb5Ihobd1XslOhwdrIkDjTsP76AsW/OG/vQuVdWtp1lsGZGUoxn8xhvEDY
+        pkcgMpkI1CVwi0Aw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A8DF01361C;
+        Mon, 10 Jul 2023 22:18:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id A+fRFquDrGQteAAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 10 Jul 2023 22:18:19 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever" <cel@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, "Chuck Lever" <chuck.lever@oracle.com>,
+        lorenzo@kernel.org, jlayton@redhat.com, david@fromorbit.com
+Subject: Re: [PATCH/RFC] sunrpc: constant-time code to wake idle thread
+In-reply-to: <ZKwYhbo76v8ElI1b@manet.1015granger.net>
+References: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>,
+ <168842927591.139194.16920372497489479670.stgit@manet.1015granger.net>,
+ <168843152047.8939.5788535164524204707@noble.neil.brown.name>,
+ <ZKN6GZ8q9NVLywOJ@manet.1015granger.net>,
+ <168894969894.8939.6993305724636717703@noble.neil.brown.name>,
+ <ZKwYhbo76v8ElI1b@manet.1015granger.net>
+Date:   Tue, 11 Jul 2023 08:18:15 +1000
+Message-id: <168902749573.8939.3668770103738816387@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -58,251 +75,960 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2023-07-10 at 14:57 -0400, Chuck Lever wrote:
-> On Mon, Jul 10, 2023 at 02:28:56PM -0400, Jeff Layton wrote:
-> > On Mon, 2023-07-10 at 12:42 -0400, Chuck Lever wrote:
-> > > From: Chuck Lever <chuck.lever@oracle.com>
-> > >=20
-> > > I've noticed that client-observed server request latency goes up
-> > > simply when the nfsd thread count is increased.
-> > >=20
-> > > Walking the whole set of pool threads is memory-inefficient. On a
-> > > busy server with many threads, enqueuing a transport will visit all
-> > > the threads in the pool quite frequently. This also pulls in the
-> > > cache lines for some hot fields in each svc_rqst (namely, rq_flags).
-> > >=20
-> > > The svc_xprt_enqueue() call that concerns me most is the one in
-> > > svc_rdma_wc_receive(), which is single-threaded per CQ. Slowing
-> > > down completion handling limits the total throughput per RDMA
-> > > connection.
-> > >=20
-> > > Instead, set up a busy bitmap and use find_next_clear_bit, which
-> > > should work the same way as RQ_BUSY but will touch only the cache
-> > > lines that the bitmap is in. Stick with atomic bit operations to
-> > > avoid taking a spinlock during the search.
-> > >=20
-> > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > ---
-> > >  include/linux/sunrpc/svc.h    |    6 ++++--
-> > >  include/trace/events/sunrpc.h |    1 -
-> > >  net/sunrpc/svc.c              |   24 +++++++++++++++++++-----
-> > >  net/sunrpc/svc_xprt.c         |   26 ++++++++++++++++++++------
-> > >  4 files changed, 43 insertions(+), 14 deletions(-)
-> > >=20
-> > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > > index 86377506a514..6669f3eb9ed4 100644
-> > > --- a/include/linux/sunrpc/svc.h
-> > > +++ b/include/linux/sunrpc/svc.h
-> > > @@ -35,6 +35,7 @@ struct svc_pool {
-> > >  	spinlock_t		sp_lock;	/* protects sp_sockets */
-> > >  	struct list_head	sp_sockets;	/* pending sockets */
-> > >  	unsigned int		sp_nrthreads;	/* # of threads in pool */
-> > > +	unsigned long		*sp_busy_map;	/* running threads */
-> > >  	struct xarray		sp_thread_xa;
-> > > =20
-> > >  	/* statistics on pool operation */
-> > > @@ -191,6 +192,8 @@ extern u32 svc_max_payload(const struct svc_rqst =
-*rqstp);
-> > >  #define RPCSVC_MAXPAGES		((RPCSVC_MAXPAYLOAD+PAGE_SIZE-1)/PAGE_SIZE =
-\
-> > >  				+ 2 + 1)
-> > > =20
-> > > +#define RPCSVC_MAXPOOLTHREADS	(4096)
-> > > +
-> > >  /*
-> > >   * The context of a single thread, including the request currently b=
-eing
-> > >   * processed.
-> > > @@ -240,8 +243,7 @@ struct svc_rqst {
-> > >  #define	RQ_SPLICE_OK	(4)			/* turned off in gss privacy
-> > >  						 * to prevent encrypting page
-> > >  						 * cache pages */
-> > > -#define	RQ_BUSY		(5)			/* request is busy */
-> > > -#define	RQ_DATA		(6)			/* request has data */
-> > > +#define	RQ_DATA		(5)			/* request has data */
-> > >  	unsigned long		rq_flags;	/* flags field */
-> > >  	u32			rq_thread_id;	/* xarray index */
-> > >  	ktime_t			rq_qtime;	/* enqueue time */
-> > > diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sun=
-rpc.h
-> > > index ea43c6059bdb..c07824a254bf 100644
-> > > --- a/include/trace/events/sunrpc.h
-> > > +++ b/include/trace/events/sunrpc.h
-> > > @@ -1676,7 +1676,6 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
-> > >  	svc_rqst_flag(USEDEFERRAL)					\
-> > >  	svc_rqst_flag(DROPME)						\
-> > >  	svc_rqst_flag(SPLICE_OK)					\
-> > > -	svc_rqst_flag(BUSY)						\
-> > >  	svc_rqst_flag_end(DATA)
-> > > =20
-> > >  #undef svc_rqst_flag
-> > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> > > index 109d7f047385..f6305b66fd28 100644
-> > > --- a/net/sunrpc/svc.c
-> > > +++ b/net/sunrpc/svc.c
-> > > @@ -509,6 +509,12 @@ __svc_create(struct svc_program *prog, unsigned =
-int bufsize, int npools,
-> > >  		INIT_LIST_HEAD(&pool->sp_sockets);
-> > >  		spin_lock_init(&pool->sp_lock);
-> > >  		xa_init_flags(&pool->sp_thread_xa, XA_FLAGS_ALLOC);
-> > > +		pool->sp_busy_map =3D
-> > > +			bitmap_alloc_node(RPCSVC_MAXPOOLTHREADS, GFP_KERNEL,
-> > > +					  svc_pool_map_get_node(i));
-> > > +		if (!pool->sp_busy_map)
-> > > +			return NULL;
-> > > +		bitmap_fill(pool->sp_busy_map, RPCSVC_MAXPOOLTHREADS);
-> > > =20
-> > >  		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
-> > >  		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
-> > > @@ -598,6 +604,8 @@ svc_destroy(struct kref *ref)
-> > >  		percpu_counter_destroy(&pool->sp_threads_no_work);
-> > > =20
-> > >  		xa_destroy(&pool->sp_thread_xa);
-> > > +		bitmap_free(pool->sp_busy_map);
-> > > +		pool->sp_busy_map =3D NULL;
-> > >  	}
-> > >  	kfree(serv->sv_pools);
-> > >  	kfree(serv);
-> > > @@ -649,7 +657,6 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_=
+On Tue, 11 Jul 2023, Chuck Lever wrote:
+> On Mon, Jul 10, 2023 at 10:41:38AM +1000, NeilBrown wrote:
+> >=20
+> > The patch show an alternate approach to the recent patches which improve
+> > the latency for waking an idle thread when work is ready.
+> >=20
+> > The current approach involves searching a linked list for an idle thread
+> > to wake.  The recent patches instead use a bitmap search to find the
+> > idle thread.  With this patch no search is needed - and idle thread is
+> > directly available without searching.
+> >=20
+> > The idle threads are kept in an "llist" - there is no longer a list of
+> > all threads.
+> >=20
+> > The llist ADT does not allow concurrent delete_first operations, so to
+> > wake an idle thread we simply wake it and do not remove it from the
+> > list.
+> > When the thread is scheduled it will remove itself - which is safe - and
+> > will take the next thread if there is more work to do (and if there is
+> > another thread).
+> >=20
+> > The "remove itself" requires and addition to the llist api.
+> > "llist_del_first_this()" removes a given item if is it the first.
+> > Multiple callers can call this concurrently as along as they each give a
+> > different "this", so each thread can safely try to remove itself.  It
+> > must be prepared for failure.
+> >=20
+> > Reducing the thread count currently requires finding any thing, idle or
+> > not, and calling kthread_stop().  This no longer possible as we don't
+> > have a list of all threads (though I guess we could keep the list if we
+> > wanted to...).  Instead the pool is marked NEED_VICTIM and the next
+> > thread to go idle will become the VICTIM and duly exit - signalling
+> > this be clearing VICTIM_REMAINS.  We replace kthread_should_stop() call
+> > with a new svc_should_stop() which checks and sets victim flags.
+> >=20
+> > nfsd threads can currently be told to exit with a signal.  It might be
+> > time to deprecate/remove this feature.  However this patch does support
+> > it.
+> >=20
+> > If the signalled thread is not at the head of the idle list it cannot
+> > remove itself.  In this case it sets RQ_CLEAN_ME and SP_CLEANUP and the
+> > next thread to wake up will use llist_del_all_this() to remove all
+> > threads from the idle list.  It then finds and removes any RQ_CLEAN_ME
+> > threads and puts the rest back on the list.
+> >=20
+> > There is quite a bit of churn here so it will need careful testing.
+> > In fact - it doesn't handle nfsv4 callback handling threads properly as
+> > they don't wait the same way that other threads wait...  I'll need to
+> > think about that but I don't have time just now.
+> >=20
+> > For now it is primarily an RFC.  I haven't given a lot of thought to
+> > trace points.
+> >=20
+> > It apply it you will need
+> >=20
+> >  SUNRPC: Deduplicate thread wake-up code
+> >  SUNRPC: Report when no service thread is available.
+> >  SUNRPC: Split the svc_xprt_dequeue tracepoint
+> >  SUNRPC: Clean up svc_set_num_threads
+> >  SUNRPC: Replace dprintk() call site in __svc_create()
+> >=20
+> > from recent post by Chuck.
+>=20
+> Hi, thanks for letting us see your pencil sketches. :-)
+>=20
+> Later today, I'll push a topic branch to my kernel.org repo that we
+> can use as a base for continuing this work.
+>=20
+> Some initial remarks below, recognizing that this patch is still
+> incomplete.
+>=20
+>=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  fs/lockd/svc.c                |   4 +-
+> >  fs/lockd/svclock.c            |   4 +-
+> >  fs/nfs/callback.c             |   5 +-
+> >  fs/nfsd/nfssvc.c              |   3 +-
+> >  include/linux/llist.h         |   4 +
+> >  include/linux/lockd/lockd.h   |   2 +-
+> >  include/linux/sunrpc/svc.h    |  55 +++++++++-----
+> >  include/trace/events/sunrpc.h |   7 +-
+> >  lib/llist.c                   |  51 +++++++++++++
+> >  net/sunrpc/svc.c              | 139 ++++++++++++++++++++++++----------
+> >  net/sunrpc/svc_xprt.c         |  61 ++++++++-------
+> >  11 files changed, 239 insertions(+), 96 deletions(-)
+> >=20
+> > diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+> > index 22d3ff3818f5..df295771bd40 100644
+> > --- a/fs/lockd/svc.c
+> > +++ b/fs/lockd/svc.c
+> > @@ -147,7 +147,7 @@ lockd(void *vrqstp)
+> >  	 * The main request loop. We don't terminate until the last
+> >  	 * NFS mount or NFS daemon has gone away.
+> >  	 */
+> > -	while (!kthread_should_stop()) {
+> > +	while (!svc_should_stop(rqstp)) {
+> >  		long timeout =3D MAX_SCHEDULE_TIMEOUT;
+> >  		RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
+> > =20
+> > @@ -160,7 +160,7 @@ lockd(void *vrqstp)
+> >  			continue;
+> >  		}
+> > =20
+> > -		timeout =3D nlmsvc_retry_blocked();
+> > +		timeout =3D nlmsvc_retry_blocked(rqstp);
+> > =20
+> >  		/*
+> >  		 * Find a socket with data available and call its
+> > diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+> > index c43ccdf28ed9..54b679fcbcab 100644
+> > --- a/fs/lockd/svclock.c
+> > +++ b/fs/lockd/svclock.c
+> > @@ -1009,13 +1009,13 @@ retry_deferred_block(struct nlm_block *block)
+> >   * be retransmitted.
+> >   */
+> >  unsigned long
+> > -nlmsvc_retry_blocked(void)
+> > +nlmsvc_retry_blocked(struct svc_rqst *rqstp)
+> >  {
+> >  	unsigned long	timeout =3D MAX_SCHEDULE_TIMEOUT;
+> >  	struct nlm_block *block;
+> > =20
+> >  	spin_lock(&nlm_blocked_lock);
+> > -	while (!list_empty(&nlm_blocked) && !kthread_should_stop()) {
+> > +	while (!list_empty(&nlm_blocked) && !svc_should_stop(rqstp)) {
+> >  		block =3D list_entry(nlm_blocked.next, struct nlm_block, b_list);
+> > =20
+> >  		if (block->b_when =3D=3D NLM_NEVER)
+> > diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+> > index 456af7d230cf..646425f1dc36 100644
+> > --- a/fs/nfs/callback.c
+> > +++ b/fs/nfs/callback.c
+> > @@ -111,7 +111,7 @@ nfs41_callback_svc(void *vrqstp)
+> > =20
+> >  	set_freezable();
+> > =20
+> > -	while (!kthread_freezable_should_stop(NULL)) {
+> > +	while (!svc_should_stop(rqstp)) {
+> > =20
+> >  		if (signal_pending(current))
+> >  			flush_signals(current);
+> > @@ -130,10 +130,11 @@ nfs41_callback_svc(void *vrqstp)
+> >  				error);
+> >  		} else {
+> >  			spin_unlock_bh(&serv->sv_cb_lock);
+> > -			if (!kthread_should_stop())
+> > +			if (!svc_should_stop(rqstp))
+> >  				schedule();
+> >  			finish_wait(&serv->sv_cb_waitq, &wq);
+> >  		}
+> > +		try_to_freeze();
+> >  	}
+> > =20
+> >  	svc_exit_thread(rqstp);
+> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > index 9c7b1ef5be40..7cfa7f2e9bf7 100644
+> > --- a/fs/nfsd/nfssvc.c
+> > +++ b/fs/nfsd/nfssvc.c
+> > @@ -62,8 +62,7 @@ static __be32			nfsd_init_request(struct svc_rqst *,
+> >   * If (out side the lock) nn->nfsd_serv is non-NULL, then it must point =
+to a
+> >   * properly initialised 'struct svc_serv' with ->sv_nrthreads > 0 (unless
+> >   * nn->keep_active is set).  That number of nfsd threads must
+> > - * exist and each must be listed in ->sp_all_threads in some entry of
+> > - * ->sv_pools[].
+> > + * exist.
+> >   *
+> >   * Each active thread holds a counted reference on nn->nfsd_serv, as does
+> >   * the nn->keep_active flag and various transient calls to svc_get().
+> > diff --git a/include/linux/llist.h b/include/linux/llist.h
+> > index 85bda2d02d65..5a22499844c8 100644
+> > --- a/include/linux/llist.h
+> > +++ b/include/linux/llist.h
+> > @@ -248,6 +248,10 @@ static inline struct llist_node *__llist_del_all(str=
+uct llist_head *head)
+> >  }
+> > =20
+> >  extern struct llist_node *llist_del_first(struct llist_head *head);
+> > +extern struct llist_node *llist_del_first_this(struct llist_head *head,
+> > +					       struct llist_node *this);
+> > +extern struct llist_node *llist_del_all_this(struct llist_head *head,
+> > +					     struct llist_node *this);
+> > =20
+> >  struct llist_node *llist_reverse_order(struct llist_node *head);
+> > =20
+> > diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
+> > index f42594a9efe0..c48020e7ee08 100644
+> > --- a/include/linux/lockd/lockd.h
+> > +++ b/include/linux/lockd/lockd.h
+> > @@ -280,7 +280,7 @@ __be32		  nlmsvc_testlock(struct svc_rqst *, struct n=
+lm_file *,
+> >  			struct nlm_host *, struct nlm_lock *,
+> >  			struct nlm_lock *, struct nlm_cookie *);
+> >  __be32		  nlmsvc_cancel_blocked(struct net *net, struct nlm_file *, stru=
+ct nlm_lock *);
+> > -unsigned long	  nlmsvc_retry_blocked(void);
+> > +unsigned long	  nlmsvc_retry_blocked(struct svc_rqst *rqstp);
+> >  void		  nlmsvc_traverse_blocks(struct nlm_host *, struct nlm_file *,
+> >  					nlm_host_match_fn_t match);
+> >  void		  nlmsvc_grant_reply(struct nlm_cookie *, __be32);
+> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> > index 366f2b6b689c..cb2497b977c1 100644
+> > --- a/include/linux/sunrpc/svc.h
+> > +++ b/include/linux/sunrpc/svc.h
+> > @@ -31,11 +31,11 @@
+> >   * node traffic on multi-node NUMA NFS servers.
+> >   */
+> >  struct svc_pool {
+> > -	unsigned int		sp_id;	    	/* pool id; also node id on NUMA */
+> > -	spinlock_t		sp_lock;	/* protects all fields */
+> > +	unsigned int		sp_id;		/* pool id; also node id on NUMA */
+> > +	spinlock_t		sp_lock;	/* protects all sp_socketsn sp_nrthreads*/
+> >  	struct list_head	sp_sockets;	/* pending sockets */
+> >  	unsigned int		sp_nrthreads;	/* # of threads in pool */
+> > -	struct list_head	sp_all_threads;	/* all server threads */
+> > +	struct llist_head	sp_idle_threads;/* idle server threads */
+> > =20
+> >  	/* statistics on pool operation */
+> >  	struct percpu_counter	sp_sockets_queued;
+> > @@ -43,12 +43,17 @@ struct svc_pool {
+> >  	struct percpu_counter	sp_threads_timedout;
+> >  	struct percpu_counter	sp_threads_starved;
+> > =20
+> > -#define	SP_TASK_PENDING		(0)		/* still work to do even if no
+> > -						 * xprt is queued. */
+> > -#define SP_CONGESTED		(1)
+> >  	unsigned long		sp_flags;
+> >  } ____cacheline_aligned_in_smp;
+> > =20
+> > +enum svc_sp_flags {
+>=20
+> Let's make this an anonymous enum. Ditto below.
+
+The name was to compensate for moving the definitions away from the
+declaration for sp_flags.  It means that if I search for "sp_flags" I'll
+easily find this list of bits.  I guess a comment could achieve the same
+end, but I prefer code to be self-documenting where possible.
+>=20
+>=20
+> > +	SP_TASK_PENDING,	/* still work to do even if no xprt is queued */
+> > +	SP_CONGESTED,
+> > +	SP_NEED_VICTIM,		/* One thread needs to agree to exit */
+> > +	SP_VICTIM_REMAINS,	/* One thread needs to actually exit */
+> > +	SP_CLEANUP,		/* A thread has set RQ_CLEAN_ME */
+> > +};
+> > +
+>=20
+> Converting the bit flags to an enum seems like an unrelated clean-
+> up. It isn't necessary in order to implement the new scheduler.
+> Let's extract this into a separate patch that can be applied first.
+>=20
+> Also, I'm not clear on the justification for this clean up. That
+> should be explained in the patch description of the split-out
+> clean-up patch(es).
+>=20
+>=20
+> >  /*
+> >   * RPC service.
+> >   *
+> > @@ -195,7 +200,7 @@ extern u32 svc_max_payload(const struct svc_rqst *rqs=
+tp);
+> >   * processed.
+> >   */
+> >  struct svc_rqst {
+> > -	struct list_head	rq_all;		/* all threads list */
+> > +	struct llist_node	rq_idle;	/* On pool's idle list */
+> >  	struct rcu_head		rq_rcu_head;	/* for RCU deferred kfree */
+> >  	struct svc_xprt *	rq_xprt;	/* transport ptr */
+> > =20
+> > @@ -233,16 +238,6 @@ struct svc_rqst {
+> >  	u32			rq_proc;	/* procedure number */
+> >  	u32			rq_prot;	/* IP protocol */
+> >  	int			rq_cachetype;	/* catering to nfsd */
+> > -#define	RQ_SECURE	(0)			/* secure port */
+> > -#define	RQ_LOCAL	(1)			/* local request */
+> > -#define	RQ_USEDEFERRAL	(2)			/* use deferral */
+> > -#define	RQ_DROPME	(3)			/* drop current reply */
+> > -#define	RQ_SPLICE_OK	(4)			/* turned off in gss privacy
+> > -						 * to prevent encrypting page
+> > -						 * cache pages */
+> > -#define	RQ_VICTIM	(5)			/* about to be shut down */
+> > -#define	RQ_BUSY		(6)			/* request is busy */
+> > -#define	RQ_DATA		(7)			/* request has data */
+> >  	unsigned long		rq_flags;	/* flags field */
+> >  	ktime_t			rq_qtime;	/* enqueue time */
+> > =20
+> > @@ -274,6 +269,20 @@ struct svc_rqst {
+> >  	void **			rq_lease_breaker; /* The v4 client breaking a lease */
+> >  };
+> > =20
+> > +enum svc_rq_flags {
+> > +	RQ_SECURE,			/* secure port */
+> > +	RQ_LOCAL,			/* local request */
+> > +	RQ_USEDEFERRAL,			/* use deferral */
+> > +	RQ_DROPME,			/* drop current reply */
+> > +	RQ_SPLICE_OK,			/* turned off in gss privacy
+> > +					 * to prevent encrypting page
+> > +					 * cache pages */
+> > +	RQ_VICTIM,			/* agreed to shut down */
+> > +	RQ_DATA,			/* request has data */
+> > +	RQ_CLEAN_ME,			/* Thread needs to exit but
+> > +					 * is on the idle list */
+> > +};
+> > +
+>=20
+> Likewise here. And let's keep the flag clean-ups in separate patches.
+>=20
+>=20
+> >  #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq=
+_bc_net)
+> > =20
+> >  /*
+> > @@ -309,6 +318,15 @@ static inline struct sockaddr *svc_daddr(const struc=
+t svc_rqst *rqst)
+> >  	return (struct sockaddr *) &rqst->rq_daddr;
+> >  }
+> > =20
+>=20
+> This needs a kdoc comment and a more conventional name. How about
+> svc_thread_should_stop() ?
+>=20
+> Actually it seems like a better abstraction all around if the upper
+> layers don't have to care that they are running in a kthread  -- so
+> maybe replacing kthread_should_stop() is a good clean-up to apply
+> in advance.
+>=20
+>=20
+> > +static inline bool svc_should_stop(struct svc_rqst *rqstp)
+> > +{
+> > +	if (test_and_clear_bit(SP_NEED_VICTIM, &rqstp->rq_pool->sp_flags)) {
+> > +		set_bit(RQ_VICTIM, &rqstp->rq_flags);
+> > +		return true;
+> > +	}
+> > +	return test_bit(RQ_VICTIM, &rqstp->rq_flags);
+> > +}
+> > +
+> >  struct svc_deferred_req {
+> >  	u32			prot;	/* protocol (UDP or TCP) */
+> >  	struct svc_xprt		*xprt;
+> > @@ -416,6 +434,7 @@ bool		   svc_rqst_replace_page(struct svc_rqst *rqstp,
+> >  void		   svc_rqst_release_pages(struct svc_rqst *rqstp);
+> >  void		   svc_rqst_free(struct svc_rqst *);
+> >  void		   svc_exit_thread(struct svc_rqst *);
+> > +bool		   svc_dequeue_rqst(struct svc_rqst *rqstp);
+> >  struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned int,
+> >  				     int (*threadfn)(void *data));
+> >  int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int);
+> > @@ -428,7 +447,7 @@ int		   svc_register(const struct svc_serv *, struct =
+net *, const int,
+> > =20
+> >  void		   svc_wake_up(struct svc_serv *);
+> >  void		   svc_reserve(struct svc_rqst *rqstp, int space);
+> > -struct svc_rqst	  *svc_pool_wake_idle_thread(struct svc_serv *serv,
+> > +bool		   svc_pool_wake_idle_thread(struct svc_serv *serv,
+> >  					     struct svc_pool *pool);
+> >  struct svc_pool   *svc_pool_for_cpu(struct svc_serv *serv);
+> >  char *		   svc_print_addr(struct svc_rqst *, char *, size_t);
+> > diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+> > index f6fd48961074..f63289d1491d 100644
+> > --- a/include/trace/events/sunrpc.h
+> > +++ b/include/trace/events/sunrpc.h
+> > @@ -1601,7 +1601,7 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
+> >  	svc_rqst_flag(DROPME)						\
+> >  	svc_rqst_flag(SPLICE_OK)					\
+> >  	svc_rqst_flag(VICTIM)						\
+> > -	svc_rqst_flag(BUSY)						\
+> > +	svc_rqst_flag(CLEAN_ME)						\
+> >  	svc_rqst_flag_end(DATA)
+> > =20
+> >  #undef svc_rqst_flag
+> > @@ -1965,7 +1965,10 @@ TRACE_EVENT(svc_xprt_enqueue,
+> >  #define show_svc_pool_flags(x)						\
+> >  	__print_flags(x, "|",						\
+> >  		{ BIT(SP_TASK_PENDING),		"TASK_PENDING" },	\
+> > -		{ BIT(SP_CONGESTED),		"CONGESTED" })
+> > +		{ BIT(SP_CONGESTED),		"CONGESTED" },		\
+> > +		{ BIT(SP_NEED_VICTIM),		"NEED_VICTIM" },	\
+> > +		{ BIT(SP_VICTIM_REMAINS),	"VICTIM_REMAINS" },	\
+> > +		{ BIT(SP_CLEANUP),		"CLEANUP" })
+> > =20
+> >  DECLARE_EVENT_CLASS(svc_pool_scheduler_class,
+> >  	TP_PROTO(
+> > diff --git a/lib/llist.c b/lib/llist.c
+> > index 6e668fa5a2c6..660be07795ac 100644
+> > --- a/lib/llist.c
+> > +++ b/lib/llist.c
+> > @@ -65,6 +65,57 @@ struct llist_node *llist_del_first(struct llist_head *=
+head)
+> >  }
+> >  EXPORT_SYMBOL_GPL(llist_del_first);
+> > =20
+> > +/**
+> > + * llist_del_first_this - delete given entry of lock-less list if it is =
+first
+> > + * @head:	the head for your lock-less list
+> > + * @this:	a list entry.
+> > + *
+> > + * If head of the list is given entry, delete and return it, else
+> > + * return %NULL.
+> > + *
+> > + * Providing the caller has exclusive access to @this, multiple callers =
+can
+> > + * safely call this concurrently with multiple llist_add() callers.
+> > + */
+> > +struct llist_node *llist_del_first_this(struct llist_head *head,
+> > +					struct llist_node *this)
+> > +{
+> > +	struct llist_node *entry, *next;
+> > +
+> > +	entry =3D smp_load_acquire(&head->first);
+> > +	do {
+> > +		if (entry !=3D this)
+> > +			return NULL;
+> > +		next =3D READ_ONCE(entry->next);
+> > +	} while (!try_cmpxchg(&head->first, &entry, next));
+> > +
+> > +	return entry;
+> > +}
+> > +EXPORT_SYMBOL_GPL(llist_del_first_this);
+> > +
+> > +/**
+> > + * llist_del_all_this - delete all entries from lock-less list if first =
+is the given element
+> > + * @head:	the head of lock-less list to delete all entries
+> > + * @this:	the expected first element.
+> > + *
+> > + * If the first element of the list is @this, delete all elements and
+> > + * return them, else return %NULL.  Providing the caller has exclusive a=
+ccess
+> > + * to @this, multiple concurrent callers can call this or list_del_first=
+_this()
+> > + * simultaneuously with multiple callers of llist_add().
+> > + */
+> > +struct llist_node *llist_del_all_this(struct llist_head *head,
+> > +				      struct llist_node *this)
+> > +{
+> > +	struct llist_node *entry;
+> > +
+> > +	entry =3D smp_load_acquire(&head->first);
+> > +	do {
+> > +		if (entry !=3D this)
+> > +			return NULL;
+> > +	} while (!try_cmpxchg(&head->first, &entry, NULL));
+> > +
+> > +	return entry;
+> > +}
+> > +
+>=20
+> I was going to say that we should copy the maintainer of
+> lib/llist.c on this patch set, but I'm a little surprised to see
+> no maintainer listed for it. I'm not sure how to get proper
+> review for the new API and mechanism.
+
+I would certainly copy the author if this ends up going anywhere.
+
+>=20
+> Sidebar: Are there any self-tests or kunit tests for llist?
+>=20
+>=20
+> >  /**
+> >   * llist_reverse_order - reverse order of a llist chain
+> >   * @head:	first item of the list to be reversed
+> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > index ffb7200e8257..55339cbbbc6e 100644
+> > --- a/net/sunrpc/svc.c
+> > +++ b/net/sunrpc/svc.c
+> > @@ -507,7 +507,7 @@ __svc_create(struct svc_program *prog, unsigned int b=
+ufsize, int npools,
+> > =20
+> >  		pool->sp_id =3D i;
+> >  		INIT_LIST_HEAD(&pool->sp_sockets);
+> > -		INIT_LIST_HEAD(&pool->sp_all_threads);
+> > +		init_llist_head(&pool->sp_idle_threads);
+> >  		spin_lock_init(&pool->sp_lock);
+> > =20
+> >  		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
+> > @@ -652,9 +652,9 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_pool=
+ *pool, int node)
+> > =20
+> >  	pagevec_init(&rqstp->rq_pvec);
+> > =20
+> > -	__set_bit(RQ_BUSY, &rqstp->rq_flags);
+> >  	rqstp->rq_server =3D serv;
+> >  	rqstp->rq_pool =3D pool;
+> > +	rqstp->rq_idle.next =3D &rqstp->rq_idle;
+>=20
+> Is there really no initializer helper for this?
+
+This convention for ".next =3D=3D &node" meaning it isn't on the list is a
+convention that I created.  So there is no pre-existing help.  Yes: I
+should add one.
+
+>=20
+>=20
+> >  	rqstp->rq_scratch_page =3D alloc_pages_node(node, GFP_KERNEL, 0);
+> >  	if (!rqstp->rq_scratch_page)
+> > @@ -694,7 +694,6 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_=
 pool *pool, int node)
-> > > =20
-> > >  	folio_batch_init(&rqstp->rq_fbatch);
-> > > =20
-> > > -	__set_bit(RQ_BUSY, &rqstp->rq_flags);
-> > >  	rqstp->rq_server =3D serv;
-> > >  	rqstp->rq_pool =3D pool;
-> > > =20
-> > > @@ -679,7 +686,7 @@ static struct svc_rqst *
-> > >  svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int=
- node)
-> > >  {
-> > >  	struct xa_limit limit =3D {
-> > > -		.max =3D U32_MAX,
-> > > +		.max =3D RPCSVC_MAXPOOLTHREADS,
-> > >  	};
-> > >  	struct svc_rqst	*rqstp;
-> > >  	int ret;
-> > > @@ -724,12 +731,19 @@ struct svc_rqst *svc_pool_wake_idle_thread(stru=
-ct svc_serv *serv,
-> > >  					   struct svc_pool *pool)
-> > >  {
-> > >  	struct svc_rqst	*rqstp;
-> > > -	unsigned long index;
-> > > +	unsigned long bit;
-> > > =20
-> > > -	xa_for_each(&pool->sp_thread_xa, index, rqstp) {
-> > > -		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
-> > > +	/* Check the pool's idle bitmap locklessly so that multiple
-> > > +	 * idle searches can proceed concurrently.
-> > > +	 */
-> > > +	for_each_clear_bit(bit, pool->sp_busy_map, pool->sp_nrthreads) {
-> > > +		if (test_and_set_bit(bit, pool->sp_busy_map))
-> > >  			continue;
-> > >=20
-> > >=20
-> >=20
-> > I wonder if we also need to set the sp_busy_map bit when we're trying t=
-o
-> > shrink the threadpool? It seems like the code above that is trying to
-> > find a thread to do work could race with the task being killed, such
-> > that we try to take up a task that is no longer functional.
+> > =20
+> >  	spin_lock_bh(&pool->sp_lock);
+> >  	pool->sp_nrthreads++;
+> > -	list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
+> >  	spin_unlock_bh(&pool->sp_lock);
+> >  	return rqstp;
+> >  }
+> > @@ -704,32 +703,34 @@ svc_prepare_thread(struct svc_serv *serv, struct sv=
+c_pool *pool, int node)
+> >   * @serv: RPC service
+> >   * @pool: service thread pool
+> >   *
+> > - * Returns an idle service thread (now marked BUSY), or NULL
+> > - * if no service threads are available. Finding an idle service
+> > - * thread and marking it BUSY is atomic with respect to other
+> > - * calls to svc_pool_wake_idle_thread().
+> > + * If there are any idle threads in the pool, wake one up and return
+> > + * %true, else return %false.  The thread will become non-idle once
+> > + * the scheduler schedules it, at which point is might wake another
+> > + * thread if there seems to be enough work to justify that.
 >=20
-> What I /think/ will happen is that while svc_pool_victim() is
-> holding the xa_lock, it will remove the rqst from the xarray.
+> So I'm wondering how another call to svc_pool_wake_idle_thread()
+> that happens concurrently will not find and wake the same thread?
 
-> Then when svc_pool_wake_idle_thread() calls xa_load(), it should
-> get a NULL, and treat that like a pool that doesn't have an
-> available thread to wake.
->=20
-
-Right, but we're searching under RCU, so a search could find the thing
-just before it gets removed. IOW, something like this is possible:
-
-receiving task			rpc.nfsd			nfsd thread
----------------------------------------------------------------------------=
-------------
-svc_pool_wake_idle_thread
-    xa_load
-
-				svc_set_num_threads
-				    svc_stop_kthreads
-					(remove from xarray)
-
-								svc_exit_thread
-
-test_and_set_bit
-wake_up_process
-
-Granted, I think this is a potential race in the existing code too, so
-this patch probably doesn't make anything worse.
-
+It will find an wake the same thread.  When that thread is scheduled it
+will de-queue any work that is needed.  Then if there is more it will
+wake another.
 
 >=20
-> > > +		rqstp =3D xa_load(&pool->sp_thread_xa, bit);
-> > > +		if (!rqstp)
-> > > +			break;
-> > > +
-> > >  		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
-> > >  		wake_up_process(rqstp->rq_task);
-> > >  		percpu_counter_inc(&pool->sp_threads_woken);
-> > > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > > index db40f771b60a..f9c9babe0cba 100644
-> > > --- a/net/sunrpc/svc_xprt.c
-> > > +++ b/net/sunrpc/svc_xprt.c
-> > > @@ -735,6 +735,21 @@ rqst_should_sleep(struct svc_rqst *rqstp)
-> > >  	return true;
-> > >  }
-> > > =20
-> > > +static void svc_pool_thread_mark_idle(struct svc_pool *pool,
-> > > +				      struct svc_rqst *rqstp)
-> > > +{
-> > > +	clear_bit_unlock(rqstp->rq_thread_id, pool->sp_busy_map);
-> > > +}
-> > > +
-> > > +/*
-> > > + * Note: If we were awoken, then this rqstp has already been marked =
-busy.
-> > > + */
-> > > +static void svc_pool_thread_mark_busy(struct svc_pool *pool,
-> > > +				      struct svc_rqst *rqstp)
-> > > +{
-> > > +	test_and_set_bit_lock(rqstp->rq_thread_id, pool->sp_busy_map);
-> > > +}
-> > > +
-> > >  static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, lo=
-ng timeout)
-> > >  {
-> > >  	struct svc_pool		*pool =3D rqstp->rq_pool;
-> > > @@ -756,18 +771,17 @@ static struct svc_xprt *svc_get_next_xprt(struc=
-t svc_rqst *rqstp, long timeout)
-> > >  	set_current_state(TASK_INTERRUPTIBLE);
-> > >  	smp_mb__before_atomic();
-> > >  	clear_bit(SP_CONGESTED, &pool->sp_flags);
-> > > -	clear_bit(RQ_BUSY, &rqstp->rq_flags);
-> > > -	smp_mb__after_atomic();
-> > > =20
-> > > -	if (likely(rqst_should_sleep(rqstp)))
-> > > +	if (likely(rqst_should_sleep(rqstp))) {
-> > > +		svc_pool_thread_mark_idle(pool, rqstp);
-> > >  		time_left =3D schedule_timeout(timeout);
-> > > -	else
-> > > +	} else
-> > >  		__set_current_state(TASK_RUNNING);
-> > > =20
-> > >  	try_to_freeze();
-> > > =20
-> > > -	set_bit(RQ_BUSY, &rqstp->rq_flags);
-> > > -	smp_mb__after_atomic();
-> > > +	svc_pool_thread_mark_busy(pool, rqstp);
-> > > +
-> > >  	rqstp->rq_xprt =3D svc_xprt_dequeue(pool);
-> > >  	if (rqstp->rq_xprt) {
-> > >  		trace_svc_pool_awoken(rqstp);
-> > >=20
-> > >=20
-> >=20
+>=20
+> >   */
+> > -struct svc_rqst *svc_pool_wake_idle_thread(struct svc_serv *serv,
+> > -					   struct svc_pool *pool)
+> > +bool svc_pool_wake_idle_thread(struct svc_serv *serv,
+> > +			       struct svc_pool *pool)
+> >  {
+> >  	struct svc_rqst	*rqstp;
+> > +	struct llist_node *ln;
+> > =20
+> >  	rcu_read_lock();
+> > -	list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
+> > -		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
+> > -			continue;
+> > -
+> > -		rcu_read_unlock();
+> > +	ln =3D READ_ONCE(pool->sp_idle_threads.first);
+> > +	if (ln) {
+> > +		rqstp =3D llist_entry(ln, struct svc_rqst, rq_idle);
+> >  		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
+> > -		wake_up_process(rqstp->rq_task);
+> > -		percpu_counter_inc(&pool->sp_threads_woken);
+> > -		return rqstp;
+> > +		if (!task_is_running(rqstp->rq_task)) {
+> > +			wake_up_process(rqstp->rq_task);
+> > +			percpu_counter_inc(&pool->sp_threads_woken);
+> > +		}
+> > +		rcu_read_unlock();
+> > +		return true;
+> >  	}
+> >  	rcu_read_unlock();
+> > =20
+> >  	trace_svc_pool_starved(serv, pool);
+> >  	percpu_counter_inc(&pool->sp_threads_starved);
+> > -	return NULL;
+> > +	return false;
+> >  }
+> > =20
+> >  static struct svc_pool *
+> > @@ -738,19 +739,22 @@ svc_pool_next(struct svc_serv *serv, struct svc_poo=
+l *pool, unsigned int *state)
+> >  	return pool ? pool : &serv->sv_pools[(*state)++ % serv->sv_nrpools];
+> >  }
+> > =20
+> > -static struct task_struct *
+> > +static struct svc_pool *
+> >  svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned i=
+nt *state)
+> >  {
+> > -	unsigned int i;
+> > -	struct task_struct *task =3D NULL;
+> > =20
+> >  	if (pool !=3D NULL) {
+> >  		spin_lock_bh(&pool->sp_lock);
+> > +		if (pool->sp_nrthreads > 0)
+> > +			goto found_pool;
+> > +		spin_unlock_bh(&pool->sp_lock);
+> > +		return NULL;
+> >  	} else {
+> > +		unsigned int i;
+> >  		for (i =3D 0; i < serv->sv_nrpools; i++) {
+> >  			pool =3D &serv->sv_pools[--(*state) % serv->sv_nrpools];
+> >  			spin_lock_bh(&pool->sp_lock);
+> > -			if (!list_empty(&pool->sp_all_threads))
+> > +			if (pool->sp_nrthreads > 0)
+> >  				goto found_pool;
+> >  			spin_unlock_bh(&pool->sp_lock);
+> >  		}
+> > @@ -758,16 +762,10 @@ svc_pool_victim(struct svc_serv *serv, struct svc_p=
+ool *pool, unsigned int *stat
+> >  	}
+> > =20
+> >  found_pool:
+> > -	if (!list_empty(&pool->sp_all_threads)) {
+> > -		struct svc_rqst *rqstp;
+> > -
+> > -		rqstp =3D list_entry(pool->sp_all_threads.next, struct svc_rqst, rq_al=
+l);
+> > -		set_bit(RQ_VICTIM, &rqstp->rq_flags);
+> > -		list_del_rcu(&rqstp->rq_all);
+> > -		task =3D rqstp->rq_task;
+> > -	}
+> > +	set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
+> > +	set_bit(SP_NEED_VICTIM, &pool->sp_flags);
+> >  	spin_unlock_bh(&pool->sp_lock);
+> > -	return task;
+> > +	return pool;
+> >  }
+> > =20
+> >  static int
+> > @@ -808,18 +806,16 @@ svc_start_kthreads(struct svc_serv *serv, struct sv=
+c_pool *pool, int nrservs)
+> >  static int
+> >  svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrse=
+rvs)
+> >  {
+> > -	struct svc_rqst	*rqstp;
+> > -	struct task_struct *task;
+> >  	unsigned int state =3D serv->sv_nrthreads-1;
+> > +	struct svc_pool *vpool;
+> > =20
+> >  	do {
+> > -		task =3D svc_pool_victim(serv, pool, &state);
+> > -		if (task =3D=3D NULL)
+> > +		vpool =3D svc_pool_victim(serv, pool, &state);
+> > +		if (vpool =3D=3D NULL)
+> >  			break;
+> > -		rqstp =3D kthread_data(task);
+> > -		/* Did we lose a race to svo_function threadfn? */
+> > -		if (kthread_stop(task) =3D=3D -EINTR)
+> > -			svc_exit_thread(rqstp);
+> > +		svc_pool_wake_idle_thread(serv, vpool);
+> > +		wait_on_bit(&vpool->sp_flags, SP_VICTIM_REMAINS,
+> > +			    TASK_UNINTERRUPTIBLE);
+> >  		nrservs++;
+> >  	} while (nrservs < 0);
+> >  	return 0;
+> > @@ -931,16 +927,75 @@ svc_rqst_free(struct svc_rqst *rqstp)
+> >  }
+> >  EXPORT_SYMBOL_GPL(svc_rqst_free);
+> > =20
+>=20
+> Can you add a kdoc comment for svc_dequeue_rqst()?
+>=20
+> There is a lot of complexity here that I'm not grokking on first
+> read. Either it needs more comments or simplification (or both).
+>=20
+> It's not winning me over, I have to say ;-)
+>=20
+>=20
+> > +bool svc_dequeue_rqst(struct svc_rqst *rqstp)
+> > +{
+> > +	struct svc_pool *pool =3D rqstp->rq_pool;
+> > +	struct llist_node *le, *last;
+> > +
+> > +retry:
+> > +	if (pool->sp_idle_threads.first !=3D &rqstp->rq_idle)
+>=20
+> Would be better if there was a helper for this test.
+>=20
+>=20
+> > +		/* Not at head of queue, so cannot wake up */
+> > +		return false;
+> > +	if (!test_and_clear_bit(SP_CLEANUP, &pool->sp_flags)) {
+> > +		le =3D llist_del_first_this(&pool->sp_idle_threads,
+> > +					  &rqstp->rq_idle);
+> > +		if (le)
+> > +			le->next =3D le;
+> > +		return !!le;
+> > +	}
+> > +	/* Need to deal will RQ_CLEAN_ME thread */
+> > +	le =3D llist_del_all_this(&pool->sp_idle_threads,
+> > +				&rqstp->rq_idle);
+> > +	if (!le) {
+> > +		/* lost a race, someone else need to clean up */
+> > +		set_bit(SP_CLEANUP, &pool->sp_flags);
+> > +		svc_pool_wake_idle_thread(rqstp->rq_server,
+> > +					  pool);
+> > +		goto retry;
+> > +	}
+> > +	if (!le->next)
+> > +		return true;
+> > +	last =3D le;
+> > +	while (last->next) {
+> > +		rqstp =3D list_entry(last->next, struct svc_rqst, rq_idle);
+> > +		if (!test_bit(RQ_CLEAN_ME, &rqstp->rq_flags)) {
+> > +			last =3D last->next;
+> > +			continue;
+> > +		}
+> > +		last->next =3D last->next->next;
+> > +		rqstp->rq_idle.next =3D &rqstp->rq_idle;
+> > +		wake_up_process(rqstp->rq_task);
+> > +	}
+> > +	if (last !=3D le)
+> > +		llist_add_batch(le->next, last, &pool->sp_idle_threads);
+> > +	le->next =3D le;
+> > +	return true;
+> > +}
+> > +
+> >  void
+> >  svc_exit_thread(struct svc_rqst *rqstp)
+> >  {
+> >  	struct svc_serv	*serv =3D rqstp->rq_server;
+> >  	struct svc_pool	*pool =3D rqstp->rq_pool;
+> > =20
+> > +	while (rqstp->rq_idle.next !=3D &rqstp->rq_idle) {
+>=20
+> Helper, maybe?
+>=20
+>=20
+> > +		/* Still on the idle list. */
+> > +		if (llist_del_first_this(&pool->sp_idle_threads,
+> > +					 &rqstp->rq_idle)) {
+> > +			/* Safely removed */
+> > +			rqstp->rq_idle.next =3D &rqstp->rq_idle;
+> > +		} else {
+> > +			set_current_state(TASK_UNINTERRUPTIBLE);
+> > +			set_bit(RQ_CLEAN_ME, &rqstp->rq_flags);
+> > +			set_bit(SP_CLEANUP, &pool->sp_flags);
+> > +			svc_pool_wake_idle_thread(serv, pool);
+> > +			if (!svc_dequeue_rqst(rqstp))
+> > +				schedule();
+> > +			__set_current_state(TASK_RUNNING);
+> > +		}
+> > +	}
+> >  	spin_lock_bh(&pool->sp_lock);
+> >  	pool->sp_nrthreads--;
+> > -	if (!test_and_set_bit(RQ_VICTIM, &rqstp->rq_flags))
+> > -		list_del_rcu(&rqstp->rq_all);
+> >  	spin_unlock_bh(&pool->sp_lock);
+> > =20
+> >  	spin_lock_bh(&serv->sv_lock);
+> > @@ -948,6 +1003,8 @@ svc_exit_thread(struct svc_rqst *rqstp)
+> >  	spin_unlock_bh(&serv->sv_lock);
+> >  	svc_sock_update_bufs(serv);
+> > =20
+> > +	if (test_bit(RQ_VICTIM, &rqstp->rq_flags))
+> > +		clear_and_wake_up_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
+> >  	svc_rqst_free(rqstp);
+> > =20
+> >  	svc_put(serv);
+> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> > index c4521bce1f27..d51587cd8d99 100644
+> > --- a/net/sunrpc/svc_xprt.c
+> > +++ b/net/sunrpc/svc_xprt.c
+> > @@ -446,7 +446,6 @@ static bool svc_xprt_ready(struct svc_xprt *xprt)
+> >   */
+> >  void svc_xprt_enqueue(struct svc_xprt *xprt)
+> >  {
+> > -	struct svc_rqst *rqstp;
+> >  	struct svc_pool *pool;
+> > =20
+> >  	if (!svc_xprt_ready(xprt))
+> > @@ -467,20 +466,19 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
+> >  	list_add_tail(&xprt->xpt_ready, &pool->sp_sockets);
+> >  	spin_unlock_bh(&pool->sp_lock);
+> > =20
+> > -	rqstp =3D svc_pool_wake_idle_thread(xprt->xpt_server, pool);
+> > -	if (!rqstp) {
+> > +	if (!svc_pool_wake_idle_thread(xprt->xpt_server, pool)) {
+> >  		set_bit(SP_CONGESTED, &pool->sp_flags);
+> >  		return;
+> >  	}
+> > =20
+> > -	trace_svc_xprt_enqueue(xprt, rqstp);
+> > +	// trace_svc_xprt_enqueue(xprt, rqstp);
+> >  }
+> >  EXPORT_SYMBOL_GPL(svc_xprt_enqueue);
+> > =20
+> >  /*
+> >   * Dequeue the first transport, if there is one.
+> >   */
+> > -static struct svc_xprt *svc_xprt_dequeue(struct svc_pool *pool)
+> > +static struct svc_xprt *svc_xprt_dequeue(struct svc_pool *pool, bool *mo=
+re)
+> >  {
+> >  	struct svc_xprt	*xprt =3D NULL;
+> > =20
+> > @@ -493,6 +491,7 @@ static struct svc_xprt *svc_xprt_dequeue(struct svc_p=
+ool *pool)
+> >  					struct svc_xprt, xpt_ready);
+> >  		list_del_init(&xprt->xpt_ready);
+> >  		svc_xprt_get(xprt);
+> > +		*more =3D !list_empty(&pool->sp_sockets);
+> >  	}
+> >  	spin_unlock_bh(&pool->sp_lock);
+> >  out:
+> > @@ -577,15 +576,13 @@ static void svc_xprt_release(struct svc_rqst *rqstp)
+> >  void svc_wake_up(struct svc_serv *serv)
+> >  {
+> >  	struct svc_pool *pool =3D &serv->sv_pools[0];
+> > -	struct svc_rqst *rqstp;
+> > =20
+> > -	rqstp =3D svc_pool_wake_idle_thread(serv, pool);
+> > -	if (!rqstp) {
+> > +	if (!svc_pool_wake_idle_thread(serv, pool)) {
+> >  		set_bit(SP_TASK_PENDING, &pool->sp_flags);
+> >  		return;
+> >  	}
+> > =20
+> > -	trace_svc_wake_up(rqstp);
+> > +	// trace_svc_wake_up(rqstp);
+> >  }
+> >  EXPORT_SYMBOL_GPL(svc_wake_up);
+> > =20
+> > @@ -676,7 +673,7 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
+> >  			continue;
+> > =20
+> >  		set_current_state(TASK_INTERRUPTIBLE);
+> > -		if (signalled() || kthread_should_stop()) {
+> > +		if (signalled() || svc_should_stop(rqstp)) {
+> >  			set_current_state(TASK_RUNNING);
+> >  			return -EINTR;
+> >  		}
+> > @@ -706,7 +703,10 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+> >  	struct svc_pool		*pool =3D rqstp->rq_pool;
+> > =20
+> >  	/* did someone call svc_wake_up? */
+> > -	if (test_and_clear_bit(SP_TASK_PENDING, &pool->sp_flags))
+> > +	if (test_bit(SP_TASK_PENDING, &pool->sp_flags))
+> > +		return false;
+> > +	if (test_bit(SP_CLEANUP, &pool->sp_flags))
+> > +		/* a signalled thread needs to be released */
+> >  		return false;
+> > =20
+> >  	/* was a socket queued? */
+> > @@ -714,7 +714,7 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+> >  		return false;
+> > =20
+> >  	/* are we shutting down? */
+> > -	if (signalled() || kthread_should_stop())
+> > +	if (signalled() || svc_should_stop(rqstp))
+> >  		return false;
+> > =20
+> >  	/* are we freezing? */
+> > @@ -728,11 +728,9 @@ static struct svc_xprt *svc_get_next_xprt(struct svc=
+_rqst *rqstp, long timeout)
+> >  {
+> >  	struct svc_pool		*pool =3D rqstp->rq_pool;
+> >  	long			time_left =3D 0;
+> > +	bool			more =3D false;
+> > =20
+> > -	/* rq_xprt should be clear on entry */
+> > -	WARN_ON_ONCE(rqstp->rq_xprt);
+> > -
+> > -	rqstp->rq_xprt =3D svc_xprt_dequeue(pool);
+> > +	rqstp->rq_xprt =3D svc_xprt_dequeue(pool, &more);
+> >  	if (rqstp->rq_xprt) {
+> >  		trace_svc_pool_polled(pool, rqstp);
+> >  		goto out_found;
+> > @@ -743,11 +741,10 @@ static struct svc_xprt *svc_get_next_xprt(struct sv=
+c_rqst *rqstp, long timeout)
+> >  	 * to bring down the daemons ...
+> >  	 */
+> >  	set_current_state(TASK_INTERRUPTIBLE);
+> > -	smp_mb__before_atomic();
+> > -	clear_bit(SP_CONGESTED, &pool->sp_flags);
+> > -	clear_bit(RQ_BUSY, &rqstp->rq_flags);
+> > -	smp_mb__after_atomic();
+> > +	clear_bit_unlock(SP_CONGESTED, &pool->sp_flags);
+> > =20
+> > +	llist_add(&rqstp->rq_idle, &pool->sp_idle_threads);
+> > +again:
+> >  	if (likely(rqst_should_sleep(rqstp)))
+> >  		time_left =3D schedule_timeout(timeout);
+> >  	else
+> > @@ -755,9 +752,20 @@ static struct svc_xprt *svc_get_next_xprt(struct svc=
+_rqst *rqstp, long timeout)
+> > =20
+> >  	try_to_freeze();
+> > =20
+> > -	set_bit(RQ_BUSY, &rqstp->rq_flags);
+> > -	smp_mb__after_atomic();
+> > -	rqstp->rq_xprt =3D svc_xprt_dequeue(pool);
+> > +	if (!svc_dequeue_rqst(rqstp)) {
+> > +		if (signalled())
+> > +			/* Can only return while on idle list if signalled */
+> > +			return ERR_PTR(-EINTR);
+> > +		/* Still on the idle list */
+> > +		goto again;
+> > +	}
+> > +
+> > +	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
+> > +
+> > +	if (svc_should_stop(rqstp))
+> > +		return ERR_PTR(-EINTR);
+> > +
+> > +	rqstp->rq_xprt =3D svc_xprt_dequeue(pool, &more);
+> >  	if (rqstp->rq_xprt) {
+> >  		trace_svc_pool_awoken(pool, rqstp);
+> >  		goto out_found;
+> > @@ -766,10 +774,11 @@ static struct svc_xprt *svc_get_next_xprt(struct sv=
+c_rqst *rqstp, long timeout)
+> >  	if (!time_left)
+> >  		percpu_counter_inc(&pool->sp_threads_timedout);
+> > =20
+> > -	if (signalled() || kthread_should_stop())
+> > -		return ERR_PTR(-EINTR);
+> >  	return ERR_PTR(-EAGAIN);
+> >  out_found:
+> > +	if (more)
+> > +		svc_pool_wake_idle_thread(rqstp->rq_server, pool);
+> > +
+>=20
+> I'm thinking that dealing with more work should be implemented as a
+> separate optimization (ie, a subsequent patch).
+
+Ideally: yes.  However the two changes are inter-related.
+Using a lockless queue lends itself particularly well to only waking one
+thread at a time - the thread at the head.
+To preserve the current practice of waking a thread every time a
+work-item is queue we would need a lock to remove the thread from the
+queue.  There would be a small constant amount of work to do under that
+lock, so the cost would be minimal and I could do that.
+But then I would just remove the lock again when changing to wake
+threads sequentially.
+Still - might be worth doing it that way for independent testing and
+performance comparison.
+
+>=20
+>=20
+> >  	/* Normally we will wait up to 5 seconds for any required
+> >  	 * cache information to be provided.
+> >  	 */
+> > @@ -866,7 +875,7 @@ int svc_recv(struct svc_rqst *rqstp, long timeout)
+> >  	try_to_freeze();
+> >  	cond_resched();
+> >  	err =3D -EINTR;
+> > -	if (signalled() || kthread_should_stop())
+> > +	if (signalled() || svc_should_stop(rqstp))
+> >  		goto out;
+> > =20
+> >  	xprt =3D svc_get_next_xprt(rqstp, timeout);
 > > --=20
-> > Jeff Layton <jlayton@kernel.org>
+> > 2.40.1
+> >=20
+>=20
 
---=20
-Jeff Layton <jlayton@kernel.org>
+
+Thanks for the review.  I generally agree with anything that I didn't
+reply to - and much that I did.
+
+What do you think of removing the ability to stop an nfsd thread by
+sending it a signal.  Note that this doesn't apply to lockd or to nfsv4
+callback threads.  And nfs-utils never relies on this.
+I'm keen.  It would make this patch a lot simpler.
+
+Thanks,
+NeilBrown
