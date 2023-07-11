@@ -2,180 +2,388 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A855674F1A2
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jul 2023 16:19:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D032574F2ED
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jul 2023 17:05:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231950AbjGKOTA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jul 2023 10:19:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55716 "EHLO
+        id S229548AbjGKPFl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Jul 2023 11:05:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230203AbjGKOSm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jul 2023 10:18:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275EF1989
-        for <linux-nfs@vger.kernel.org>; Tue, 11 Jul 2023 07:17:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689085041;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zdeN1Hp9W4wPLdDGA6IzqQ5pGaEglZA2vwjVFT47q58=;
-        b=IpOZHWsSMAycy9ZIjriZXP0u/t/qexswr7DZZ0iuuHTBCjQcIF0T1OYB1Pw3KQ419FyzYe
-        qzd14XSzS1qgS7pyMRGtPJKicxRGauLCRtcW1msLT4z/3tx986Mds/AIzjtGSRfPl+Dcu1
-        p49GAUEixH/4coTe5dVG65dXvvF1RCE=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-582-R_X4GJHoMwGug0Ah8k03Mg-1; Tue, 11 Jul 2023 10:08:19 -0400
-X-MC-Unique: R_X4GJHoMwGug0Ah8k03Mg-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-76783ba6d62so641978385a.3
-        for <linux-nfs@vger.kernel.org>; Tue, 11 Jul 2023 07:07:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689084472; x=1691676472;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=zdeN1Hp9W4wPLdDGA6IzqQ5pGaEglZA2vwjVFT47q58=;
-        b=R6z7Mnm5V5Lm6ZEsuGtyQVvoTPgZKGyynh75XMD5QlNkcnkNrb2qfNUQYh3BgO9LSP
-         EXqypYXmCI/5Ozh7C3FcC08CbRZ4jbHebJIy0gg9raEBGbKKLAzXanDtMOchJB95D573
-         uqLixQbydCG+XQijlTiXROSDrMfBwlWKfe6bsaOheymeF6yFxc59TwZNckZmO8TWwdTZ
-         /sG2M3BgLqFiJmpwllWWpQMP5iz0wfzmN+lcaIpXYNcvX8AcB9mJOk6y4qpfwKjYhS/X
-         oKleuOM/8VCmpi8G7ulmJEV2d+VuK7L4olVwmbwRfnvTPNDkC77Lq9mwgQyCLV8rAmLa
-         gXsA==
-X-Gm-Message-State: ABy/qLagk7dZ9Ng6hNFSayoij99n3u7dnWhu/Bi0HQFQGFW7lrRL65l9
-        +YWKUUHZWs/SaTvMBq/HF2Gwjq7RhFONbT9p+Ehf+Hm1C/uymi3YMDSz8ADeWaN9GAGtWjLAiGo
-        IGhccUMUO0FJGGeHZ5FQsepnMWT0F
-X-Received: by 2002:a05:620a:4052:b0:767:3cfa:dc0f with SMTP id i18-20020a05620a405200b007673cfadc0fmr17008540qko.25.1689084472061;
-        Tue, 11 Jul 2023 07:07:52 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHqKkXrNet5txR8cTBZXgmvFMGumL40AXHGrvCoi2Iou639W5yaPpe5oO+lCq0w0njA/oVnww==
-X-Received: by 2002:a05:620a:4052:b0:767:3cfa:dc0f with SMTP id i18-20020a05620a405200b007673cfadc0fmr17008508qko.25.1689084471612;
-        Tue, 11 Jul 2023 07:07:51 -0700 (PDT)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id b23-20020a05620a119700b00767e2668536sm513900qkk.17.2023.07.11.07.07.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 07:07:51 -0700 (PDT)
-Message-ID: <b6dd961f8e4bb43a4a14876ace227d1e3f924463.camel@redhat.com>
-Subject: Re: [PATCH v3 5/9] SUNRPC: Count pool threads that were awoken but
- found no work to do
-From:   Jeff Layton <jlayton@redhat.com>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Chuck Lever <cel@kernel.org>,
+        with ESMTP id S229538AbjGKPFl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jul 2023 11:05:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 748D310D5
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Jul 2023 08:05:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EBE0E61529
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Jul 2023 15:05:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2DEAC433C8;
+        Tue, 11 Jul 2023 15:05:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689087938;
+        bh=eDW4QzHazlaXsJlrdrPCg5zA44upmRXa1R9Nc6QU2Ts=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=dEslJSZezNYOAEuS8II7EzPNL/QF8OT8GvpkNP2a0li8ceSRhPjTSmsdx+ht+OTjI
+         M2NkA6TqyMI8UulMSqY56Xk9WMNBuHe7BiLZWjo2mVDGCRo5LHSBLuYBlug+gdN8/H
+         Zj1p5J7+FblkGyWKPxTeugCWsaF6y4oNHJ2Nhh1HY1WyJiWgpDhEzMQdqiOW6nRBsA
+         0AwOT8wkp//kyTzmvxpFgnwfR0IxoKoJLclA8AAqRt/Qs516e8RiPJiklWrgscU8Wo
+         KJTsD4WIMh8LMl0GkOwPEPIrRuliBbNsHDanV56dgCBuwSKj419nHUqQWEa12malox
+         LGVuOdL8UOk5Q==
+Message-ID: <20a9d2c6f7d7131c12d0e6e3496d30ec9e8cccde.camel@kernel.org>
+Subject: Re: [PATCH v3 8/9] SUNRPC: Replace sp_threads_all with an xarray
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Chuck Lever <cel@kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         "lorenzo@kernel.org" <lorenzo@kernel.org>,
+        Neil Brown <neilb@suse.de>,
         "david@fromorbit.com" <david@fromorbit.com>
-Date:   Tue, 11 Jul 2023 10:07:50 -0400
-In-Reply-To: <168907783478.8939.2524484078705916909@noble.neil.brown.name>
+Date:   Tue, 11 Jul 2023 11:05:36 -0400
+In-Reply-To: <4E83808E-399F-46B7-9EF1-1D2999C801CC@oracle.com>
 References: <168900729243.7514.15141312295052254929.stgit@manet.1015granger.net>
-        , <168900734678.7514.887270657845753276.stgit@manet.1015granger.net>
-        , <168902815363.8939.4838920400288577480@noble.neil.brown.name>
-        , <D20E4286-30D2-461D-B856-41D3C53C756C@oracle.com>
-        , <168906929382.8939.6551236368797730920@noble.neil.brown.name>
-        , <18061cab9338b08da691e8651e75f8fe8e88b830.camel@redhat.com>
-         <168907783478.8939.2524484078705916909@noble.neil.brown.name>
+         <168900736644.7514.16807799597793601214.stgit@manet.1015granger.net>
+         <9de14c8ef8584545ceef2179f0b57f84ef7706fe.camel@kernel.org>
+         <0D6735B0-77A8-4710-8EE7-1F8E382A139B@oracle.com>
+         <2909e8cfc2cbd218372e78f5e215759722faba51.camel@kernel.org>
+         <ZKy9Q1wX/xPx5Mbu@manet.1015granger.net>
+         <c0a221115e2bae7910b9e4ab6eacdc745f320b43.camel@kernel.org>
+         <4E83808E-399F-46B7-9EF1-1D2999C801CC@oracle.com>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-07-11 at 22:17 +1000, NeilBrown wrote:
-> On Tue, 11 Jul 2023, Jeff Layton wrote:
-> > On Tue, 2023-07-11 at 19:54 +1000, NeilBrown wrote:
-> > > On Tue, 11 Jul 2023, Chuck Lever III wrote:
-> > > >=20
-> > > > > On Jul 10, 2023, at 6:29 PM, NeilBrown <neilb@suse.de> wrote:
+On Tue, 2023-07-11 at 12:39 +0000, Chuck Lever III wrote:
+>=20
+> > On Jul 11, 2023, at 7:57 AM, Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > On Mon, 2023-07-10 at 22:24 -0400, Chuck Lever wrote:
+> > > On Mon, Jul 10, 2023 at 09:06:02PM -0400, Jeff Layton wrote:
+> > > > On Tue, 2023-07-11 at 00:58 +0000, Chuck Lever III wrote:
 > > > > >=20
-> > > > > On Tue, 11 Jul 2023, Chuck Lever wrote:
-> > > > > > From: Chuck Lever <chuck.lever@oracle.com>
+> > > > > > On Jul 10, 2023, at 2:24 PM, Jeff Layton <jlayton@kernel.org> w=
+rote:
 > > > > > >=20
-> > > > > > Measure a source of thread scheduling inefficiency -- count thr=
-eads
-> > > > > > that were awoken but found that the transport queue had already=
- been
-> > > > > > emptied.
+> > > > > > On Mon, 2023-07-10 at 12:42 -0400, Chuck Lever wrote:
+> > > > > > > From: Chuck Lever <chuck.lever@oracle.com>
+> > > > > > >=20
+> > > > > > > We want a thread lookup operation that can be done with RCU o=
+nly,
+> > > > > > > but also we want to avoid the linked-list walk, which does no=
+t scale
+> > > > > > > well in the number of pool threads.
+> > > > > > >=20
+> > > > > > > This patch splits out the use of the sp_lock to protect the s=
+et
+> > > > > > > of threads. Svc thread information is now protected by the xa=
+rray's
+> > > > > > > lock (when making thread count changes) and the RCU read lock=
+ (when
+> > > > > > > only looking up a thread).
+> > > > > > >=20
+> > > > > > > Since thread count changes are done only via nfsd filesystem =
+API,
+> > > > > > > which runs only in process context, we can safely dispense wi=
+th the
+> > > > > > > use of a bottom-half-disabled lock.
+> > > > > > >=20
+> > > > > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > > > > > > ---
+> > > > > > > fs/nfsd/nfssvc.c              |    3 +-
+> > > > > > > include/linux/sunrpc/svc.h    |   11 +++----
+> > > > > > > include/trace/events/sunrpc.h |   47 ++++++++++++++++++++++++=
+++++-
+> > > > > > > net/sunrpc/svc.c              |   67 ++++++++++++++++++++++++=
++----------------
+> > > > > > > net/sunrpc/svc_xprt.c         |    2 +
+> > > > > > > 5 files changed, 94 insertions(+), 36 deletions(-)
+> > > > > > >=20
+> > > > > > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > > > > > > index 2154fa63c5f2..d42b2a40c93c 100644
+> > > > > > > --- a/fs/nfsd/nfssvc.c
+> > > > > > > +++ b/fs/nfsd/nfssvc.c
+> > > > > > > @@ -62,8 +62,7 @@ static __be32 nfsd_init_request(struct svc_=
+rqst *,
+> > > > > > > * If (out side the lock) nn->nfsd_serv is non-NULL, then it m=
+ust point to a
+> > > > > > > * properly initialised 'struct svc_serv' with ->sv_nrthreads =
+> 0 (unless
+> > > > > > > * nn->keep_active is set).  That number of nfsd threads must
+> > > > > > > - * exist and each must be listed in ->sp_all_threads in some=
+ entry of
+> > > > > > > - * ->sv_pools[].
+> > > > > > > + * exist and each must be listed in some entry of ->sv_pools=
+[].
+> > > > > > > *
+> > > > > > > * Each active thread holds a counted reference on nn->nfsd_se=
+rv, as does
+> > > > > > > * the nn->keep_active flag and various transient calls to svc=
+_get().
+> > > > > > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrp=
+c/svc.h
+> > > > > > > index 9dd3b16cc4c2..86377506a514 100644
+> > > > > > > --- a/include/linux/sunrpc/svc.h
+> > > > > > > +++ b/include/linux/sunrpc/svc.h
+> > > > > > > @@ -32,10 +32,10 @@
+> > > > > > > */
+> > > > > > > struct svc_pool {
+> > > > > > > unsigned int sp_id;     /* pool id; also node id on NUMA */
+> > > > > > > - spinlock_t sp_lock; /* protects all fields */
+> > > > > > > + spinlock_t sp_lock; /* protects sp_sockets */
+> > > > > > > struct list_head sp_sockets; /* pending sockets */
+> > > > > > > unsigned int sp_nrthreads; /* # of threads in pool */
+> > > > > > > - struct list_head sp_all_threads; /* all server threads */
+> > > > > > > + struct xarray sp_thread_xa;
+> > > > > > >=20
+> > > > > > > /* statistics on pool operation */
+> > > > > > > struct percpu_counter sp_messages_arrived;
+> > > > > > > @@ -196,7 +196,6 @@ extern u32 svc_max_payload(const struct s=
+vc_rqst *rqstp);
+> > > > > > > * processed.
+> > > > > > > */
+> > > > > > > struct svc_rqst {
+> > > > > > > - struct list_head rq_all; /* all threads list */
+> > > > > > > struct rcu_head rq_rcu_head; /* for RCU deferred kfree */
+> > > > > > > struct svc_xprt * rq_xprt; /* transport ptr */
+> > > > > > >=20
+> > > > > > > @@ -241,10 +240,10 @@ struct svc_rqst {
+> > > > > > > #define RQ_SPLICE_OK (4) /* turned off in gss privacy
+> > > > > > > * to prevent encrypting page
+> > > > > > > * cache pages */
+> > > > > > > -#define RQ_VICTIM (5) /* about to be shut down */
+> > > > > > > -#define RQ_BUSY (6) /* request is busy */
+> > > > > > > -#define RQ_DATA (7) /* request has data */
+> > > > > > > +#define RQ_BUSY (5) /* request is busy */
+> > > > > > > +#define RQ_DATA (6) /* request has data */
+> > > > > > > unsigned long rq_flags; /* flags field */
+> > > > > > > + u32 rq_thread_id; /* xarray index */
+> > > > > > > ktime_t rq_qtime; /* enqueue time */
+> > > > > > >=20
+> > > > > > > void * rq_argp; /* decoded arguments */
+> > > > > > > diff --git a/include/trace/events/sunrpc.h b/include/trace/ev=
+ents/sunrpc.h
+> > > > > > > index 60c8e03268d4..ea43c6059bdb 100644
+> > > > > > > --- a/include/trace/events/sunrpc.h
+> > > > > > > +++ b/include/trace/events/sunrpc.h
+> > > > > > > @@ -1676,7 +1676,6 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
+> > > > > > > svc_rqst_flag(USEDEFERRAL) \
+> > > > > > > svc_rqst_flag(DROPME) \
+> > > > > > > svc_rqst_flag(SPLICE_OK) \
+> > > > > > > - svc_rqst_flag(VICTIM) \
+> > > > > > > svc_rqst_flag(BUSY) \
+> > > > > > > svc_rqst_flag_end(DATA)
+> > > > > > >=20
+> > > > > > > @@ -2118,6 +2117,52 @@ TRACE_EVENT(svc_pool_starved,
+> > > > > > > )
+> > > > > > > );
+> > > > > > >=20
+> > > > > > > +DECLARE_EVENT_CLASS(svc_thread_lifetime_class,
+> > > > > > > + TP_PROTO(
+> > > > > > > + const struct svc_serv *serv,
+> > > > > > > + const struct svc_pool *pool,
+> > > > > > > + const struct svc_rqst *rqstp
+> > > > > > > + ),
+> > > > > > > +
+> > > > > > > + TP_ARGS(serv, pool, rqstp),
+> > > > > > > +
+> > > > > > > + TP_STRUCT__entry(
+> > > > > > > + __string(name, serv->sv_name)
+> > > > > > > + __field(int, pool_id)
+> > > > > > > + __field(unsigned int, nrthreads)
+> > > > > > > + __field(unsigned long, pool_flags)
+> > > > > > > + __field(u32, thread_id)
+> > > > > > > + __field(const void *, rqstp)
+> > > > > > > + ),
+> > > > > > > +
+> > > > > > > + TP_fast_assign(
+> > > > > > > + __assign_str(name, serv->sv_name);
+> > > > > > > + __entry->pool_id =3D pool->sp_id;
+> > > > > > > + __entry->nrthreads =3D pool->sp_nrthreads;
+> > > > > > > + __entry->pool_flags =3D pool->sp_flags;
+> > > > > > > + __entry->thread_id =3D rqstp->rq_thread_id;
+> > > > > > > + __entry->rqstp =3D rqstp;
+> > > > > > > + ),
+> > > > > > > +
+> > > > > > > + TP_printk("service=3D%s pool=3D%d pool_flags=3D%s nrthreads=
+=3D%u thread_id=3D%u",
+> > > > > > > + __get_str(name), __entry->pool_id,
+> > > > > > > + show_svc_pool_flags(__entry->pool_flags),
+> > > > > > > + __entry->nrthreads, __entry->thread_id
+> > > > > > > + )
+> > > > > > > +);
+> > > > > > > +
+> > > > > > > +#define DEFINE_SVC_THREAD_LIFETIME_EVENT(name) \
+> > > > > > > + DEFINE_EVENT(svc_thread_lifetime_class, svc_pool_##name, \
+> > > > > > > + TP_PROTO( \
+> > > > > > > + const struct svc_serv *serv, \
+> > > > > > > + const struct svc_pool *pool, \
+> > > > > > > + const struct svc_rqst *rqstp \
+> > > > > > > + ), \
+> > > > > > > + TP_ARGS(serv, pool, rqstp))
+> > > > > > > +
+> > > > > > > +DEFINE_SVC_THREAD_LIFETIME_EVENT(thread_init);
+> > > > > > > +DEFINE_SVC_THREAD_LIFETIME_EVENT(thread_exit);
+> > > > > > > +
+> > > > > > > DECLARE_EVENT_CLASS(svc_xprt_event,
+> > > > > > > TP_PROTO(
+> > > > > > > const struct svc_xprt *xprt
+> > > > > > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > > > > > > index ad29df00b454..109d7f047385 100644
+> > > > > > > --- a/net/sunrpc/svc.c
+> > > > > > > +++ b/net/sunrpc/svc.c
+> > > > > > > @@ -507,8 +507,8 @@ __svc_create(struct svc_program *prog, un=
+signed int bufsize, int npools,
+> > > > > > >=20
+> > > > > > > pool->sp_id =3D i;
+> > > > > > > INIT_LIST_HEAD(&pool->sp_sockets);
+> > > > > > > - INIT_LIST_HEAD(&pool->sp_all_threads);
+> > > > > > > spin_lock_init(&pool->sp_lock);
+> > > > > > > + xa_init_flags(&pool->sp_thread_xa, XA_FLAGS_ALLOC);
+> > > > > > >=20
+> > > > > > > percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL=
+);
+> > > > > > > percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
+> > > > > > > @@ -596,6 +596,8 @@ svc_destroy(struct kref *ref)
+> > > > > > > percpu_counter_destroy(&pool->sp_threads_timedout);
+> > > > > > > percpu_counter_destroy(&pool->sp_threads_starved);
+> > > > > > > percpu_counter_destroy(&pool->sp_threads_no_work);
+> > > > > > > +
+> > > > > > > + xa_destroy(&pool->sp_thread_xa);
+> > > > > > > }
+> > > > > > > kfree(serv->sv_pools);
+> > > > > > > kfree(serv);
+> > > > > > > @@ -676,7 +678,11 @@ EXPORT_SYMBOL_GPL(svc_rqst_alloc);
+> > > > > > > static struct svc_rqst *
+> > > > > > > svc_prepare_thread(struct svc_serv *serv, struct svc_pool *po=
+ol, int node)
+> > > > > > > {
+> > > > > > > + struct xa_limit limit =3D {
+> > > > > > > + .max =3D U32_MAX,
+> > > > > > > + };
+> > > > > > > struct svc_rqst *rqstp;
+> > > > > > > + int ret;
+> > > > > > >=20
+> > > > > > > rqstp =3D svc_rqst_alloc(serv, pool, node);
+> > > > > > > if (!rqstp)
+> > > > > > > @@ -687,11 +693,21 @@ svc_prepare_thread(struct svc_serv *ser=
+v, struct svc_pool *pool, int node)
+> > > > > > > serv->sv_nrthreads +=3D 1;
+> > > > > > > spin_unlock_bh(&serv->sv_lock);
+> > > > > > >=20
+> > > > > > > - spin_lock_bh(&pool->sp_lock);
+> > > > > > > + xa_lock(&pool->sp_thread_xa);
+> > > > > > > + ret =3D __xa_alloc(&pool->sp_thread_xa, &rqstp->rq_thread_i=
+d, rqstp,
+> > > > > > > + limit, GFP_KERNEL);
+> > > > > > > + if (ret) {
+> > > > > > > + xa_unlock(&pool->sp_thread_xa);
+> > > > > > > + goto out_free;
+> > > > > > > + }
+> > > > > > > pool->sp_nrthreads++;
+> > > > > > > - list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
+> > > > > > > - spin_unlock_bh(&pool->sp_lock);
+> > > > > > > + xa_unlock(&pool->sp_thread_xa);
+> > > > > > > + trace_svc_pool_thread_init(serv, pool, rqstp);
+> > > > > > > return rqstp;
+> > > > > > > +
+> > > > > > > +out_free:
+> > > > > > > + svc_rqst_free(rqstp);
+> > > > > > > + return ERR_PTR(ret);
+> > > > > > > }
+> > > > > > >=20
+> > > > > > > /**
+> > > > > > > @@ -708,19 +724,17 @@ struct svc_rqst *svc_pool_wake_idle_thr=
+ead(struct svc_serv *serv,
+> > > > > > >  struct svc_pool *pool)
+> > > > > > > {
+> > > > > > > struct svc_rqst *rqstp;
+> > > > > > > + unsigned long index;
+> > > > > > >=20
+> > > > > > > - rcu_read_lock();
 > > > > > >=20
-> > > > > > An empty transport queue is possible when threads that run betw=
-een
-> > > > > > the wake_up_process() call and the woken thread returning from =
-the
-> > > > > > scheduler have pulled all remaining work off the transport queu=
-e
-> > > > > > using the first svc_xprt_dequeue() in svc_get_next_xprt().
+> > > > > >=20
+> > > > > > While it does do its own locking, the resulting object that xa_=
+for_each
+> > > > > > returns needs some protection too. Between xa_for_each returnin=
+g a rqstp
+> > > > > > and calling test_and_set_bit, could the rqstp be freed? I suspe=
+ct so,
+> > > > > > and I think you probably need to keep the rcu_read_lock() call =
+above.
 > > > > >=20
-> > > > > I'm in two minds about this.  The data being gathered here is
-> > > > > potentially useful
+> > > > > Should I keep the rcu_read_lock() even with the bitmap/xa_load
+> > > > > version of svc_pool_wake_idle_thread() in 9/9 ?
+> > > > >=20
 > > > >=20
-> > > > It's actually pretty shocking: I've measured more than
-> > > > 15% of thread wake-ups find no work to do.
+> > > > Yeah, I think you have to. We're not doing real locking on the sear=
+ch or
+> > > > taking references, so nothing else will ensure that the rqstp will =
+stick
+> > > > around once you've found it. I think you have to hold it until afte=
+r
+> > > > wake_up_process (at least).
 > > >=20
-> > > That is a bigger number than I would have guessed!
+> > > I can keep the RCU read lock around the search and xa_load(). But
+> > > I notice that the code we're replacing releases the RCU read lock
+> > > before calling wake_up_process(). Not saying that's right, but we
+> > > haven't had a problem reported.
+> > >=20
 > > >=20
 > >=20
-> > I'm guessing the idea is that the receiver is waking a thread to do the
-> > work, and that races with one that's already running? I'm sure there ar=
-e
-> > ways we can fix that, but it really does seem like we're trying to
-> > reinvent workqueues here.
+> > Understood. Given that we're not sleeping in that section, it's quite
+> > possible that the RCU callbacks just never have a chance to run before
+> > we wake the thing up and so you never hit the problem.
+> >=20
+> > Still, I think it'd be best to just keep the rcu_read_lock around that
+> > whole block. It's relatively cheap and safe to take it recursively, and
+> > that makes it explicit that the found rqst mustn't vanish before the
+> > wakeup is done.
 >=20
-> True.  But then workqueues seem to reinvent themselves every so often
-> too.  Once gets the impression they are trying to meet an enormous
-> variety of needs.
-> I'm not against trying to see if nfsd could work well in a workqueue
-> environment, but I'm not certain it is a good idea.  Maintaining control
-> of our own thread pools might be safer.
+> My point is that since the existing code doesn't hold the
+> RCU read lock for the wake_up_process() call, either it's
+> unnecessary or the existing code is broken and needs a
+> back-portable fix.
 >=20
-> I have a vague memory of looking into this in more detail once and
-> deciding that it wasn't a good fit, but I cannot recall or easily deduce
-> the reason.  Obviously we would have to give up SIGKILL, but we want to
-> do that anyway.
->=20
-> Would we want unbound work queues - so they can be scheduled across
-> different CPUs?  Are NFSD threads cpu-intensive or not?  I'm not sure.
->=20
-> I would be happy to explore a credible attempt at a conversion.
+> Do you think the existing code is broken?
 >=20
 
-I had some patches several years ago that did a conversion from nfsd
-threads to workqueues.=A0
+Actually, it varies. svc_xprt_enqueue calls wake_up_process with the
+rcu_read_lock held. svc_wake_up doesn't though.
 
-It worked reasonably well, but under heavy loads it didn't perform as
-well as having a dedicated threadpool...which is not too surprising,
-really. nfsd has been tuned for performance over years and it's fairly
-"greedy" about squatting on system resources even when it's idle.
+So yes, I think svc_wake_up is broken, though I imagine this is hard to
+hit outside of some very specific circumstances. Here is the existing
+svc_wake_up block:
 
-If we wanted to look again at doing this with workqueues, we'd need the
-workqueue infrastructure to allow for long-running jobs that may block
-for a long time. That means it might need to be more cavalier about
-spinning up new workqueue threads and keeping them running when there
-are a lot of concurrent, but sleeping workqueue jobs.
+        rcu_read_lock();
+        list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
+                /* skip any that aren't queued */
+                if (test_bit(RQ_BUSY, &rqstp->rq_flags))
+                        continue;
+                rcu_read_unlock();
+                wake_up_process(rqstp->rq_task);
+                trace_svc_wake_up(rqstp->rq_task->pid);
+                return;
+        }
+        rcu_read_unlock();
 
-We probably would want unbound workqueues so we can have more jobs in
-flight at any given time than cpus, given that a lot of them will end up
-being blocked in some way or another.
+Once rcu_read_unlock is called, rqstp could technically be freed before
+we go to dereference the pointer. I don't see anything that prevents
+that from occurring, though you'd have to be doing this while the
+service's thread count is being reduced (which would cause entries to be
+freed).
 
-CPU utilization is a good question. Mostly we just call down into the
-filesystem to do things, and the encoding and decoding is not _that_ cpu
-intensive. For most storage stacks, I suspect we don't use a lot of CPU
-aside from normal copying of data.  There might be some exceptions
-though, like when the underlying storage is using encryption, etc.
-
-The main upside to switching to workqueues is that it would allow us to
-get rid of a lot of fiddly, hand-tuned thread handling code. It might
-also make it simpler to convert to a more asynchronous model.
-
-For instance, it would be nice to be able to not have to put a thread to
-sleep while waiting on writeback for a COMMIT. I think that'd be easier
-to handle with a workqueue-like model.
+Worth fixing, IMO, but probably not worth sending to stable.
 --=20
-Jeff Layton <jlayton@redhat.com>
-
+Jeff Layton <jlayton@kernel.org>
