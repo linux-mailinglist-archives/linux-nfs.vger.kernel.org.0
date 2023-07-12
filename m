@@ -2,132 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 850F0750D88
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jul 2023 18:06:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A108D75113B
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jul 2023 21:29:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232357AbjGLQGv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jul 2023 12:06:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43560 "EHLO
+        id S231417AbjGLT3o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jul 2023 15:29:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232606AbjGLQGu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jul 2023 12:06:50 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9E8119A6
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Jul 2023 09:06:47 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4f4b2bc1565so11508992e87.2
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Jul 2023 09:06:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1689178006; x=1691770006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8X6ArMXh62A5UxRR3ZN+q1CvObhoeb8ltfmXU1xj+zw=;
-        b=V0Mwyzpfv5NHo344FebMkemb4OkDhqesSJzk3oLJrC1sXingJzi/DqoHJPX3cM7/kU
-         /daZbGumusx7p3ETz9bL+dV7+a249DzrdJ5ucaxUqFs1cH4q4UNK1aBbCP0kRMVezgvK
-         Gb0u18D1omT5qk875/bvJSIuyWWXlLKu5WnA0OT929rTcOY7rHqZVsWOvIcdQTq+Q4TI
-         Xty8IQiQ2uEFjkBqRHhjaYUeIIjdk3TlKuW6ZBNL29/kZI8LKdOXvAAi+FiRNxSMUXsG
-         92h/diWQ5jGfG/Pc/9JTOLcLZ2bS8Hyd3sIfxIs/rFITeR6YjIQmonhcUevYE5m/zN7s
-         SmPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689178006; x=1691770006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8X6ArMXh62A5UxRR3ZN+q1CvObhoeb8ltfmXU1xj+zw=;
-        b=UT6UaDAhxB+Q9npuiAXPjUJrlCUNX7dw+jDtAVRAAZF/p39txOwkx6CGXIYyRPao/V
-         IZFIlueAXQuLOZxPwLFmSof6gCUKvVik9woGAZ3s4Vwo8UU3/GcHMQGaM1whMkW3G6S/
-         GHgJRMkX24wwVTXJsSddmHJmzUEYRApz79KDU4mzuDlT2ghgOgM/WzKXDYaDl4Z7HU8f
-         0IoUu70XF9X+ufiYHo0BzIWKGhR3Shxyw93DVovleAoJbMOcQDsmx0m4LTC0C6Ji4ALS
-         BJtgr2vYrbojKv05WgA4ermhjQdBqHm7esYIEU61dQr0sZdnx8CDRJJJd8O8QURifvnO
-         hFNQ==
-X-Gm-Message-State: ABy/qLaP5hcGvys77SQrr6GSzM/X5qDfsoGVe/kmetc0o8JLTA2lVKJ5
-        Fu2xvXdoS6WvXEfmHxnyzIWR4RsLu6tQlTWqUPr9mw==
-X-Google-Smtp-Source: APBJJlHjPtNIqZNhhKZT3JSG1orBAozCwd3+TwwvFjulJuToD7D5iIrA7grwKZQU8Z67qc0UJ0oDxWof6WbkdfMRi3A=
-X-Received: by 2002:ac2:5b1d:0:b0:4fb:7a90:1abe with SMTP id
- v29-20020ac25b1d000000b004fb7a901abemr15797051lfn.49.1689178006211; Wed, 12
- Jul 2023 09:06:46 -0700 (PDT)
+        with ESMTP id S230504AbjGLT3n (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jul 2023 15:29:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F961FC3
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jul 2023 12:29:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A1B55618D5
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jul 2023 19:29:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7770AC433C8;
+        Wed, 12 Jul 2023 19:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689190181;
+        bh=dcF1sXrC6vkXxYFxbP9xUGDUjUWhh2AcbWCrUCWRQGU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l/IL+br7oOpb1Ena+2O0QXZG5AYFd5Qf5pm0RnDUfxuKzzQweQXW8JRC5czPuR+U0
+         kAnfbrxlVunEaGOf0fOCzmnRd0sIfomcKOhDOmu3pfZ/mnxGzTMViKorsaBaOZ5+z4
+         D6CcyVKCDyHRogGIutbJL8Ens8aXk4YhcJh8PgA99DKwOgStKt86vytt1y1LelyJw0
+         /DiUmaO7bqe5w43eXJgYWk/4WEQdiOYBWXFmsN2xgNGThgHydyF7Ssg4AIBZgiW1/4
+         Z0uBL/pwFqp4u9sgcYAXvtHNTQazJZ7N2TfGQaWwP7lYCFVSXltNFxj15C2ZG/jK7Z
+         zoHqusd6nycLQ==
+Date:   Wed, 12 Jul 2023 15:29:38 -0400
+From:   Chuck Lever <cel@kernel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "lorenzo@kernel.org" <lorenzo@kernel.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        "david@fromorbit.com" <david@fromorbit.com>
+Subject: Re: [PATCH/RFC] sunrpc: constant-time code to wake idle thread
+Message-ID: <ZK7/IsK8XrChIuTK@bazille.1015granger.net>
+References: <168842897573.139194.15893960758088950748.stgit@manet.1015granger.net>
+ <168842927591.139194.16920372497489479670.stgit@manet.1015granger.net>
+ <168843152047.8939.5788535164524204707@noble.neil.brown.name>
+ <ZKN6GZ8q9NVLywOJ@manet.1015granger.net>
+ <168894969894.8939.6993305724636717703@noble.neil.brown.name>
+ <ZKwYhbo76v8ElI1b@manet.1015granger.net>
+ <168902749573.8939.3668770103738816387@noble.neil.brown.name>
+ <2211CC3B-806F-461D-A5AA-E95E35E1E408@oracle.com>
+ <168906970156.8939.2877716074642019289@noble.neil.brown.name>
 MIME-Version: 1.0
-References: <20230629165206.383-1-jack@suse.cz> <20230704122224.16257-1-jack@suse.cz>
- <ZKbgAG5OoHVyUKOG@infradead.org>
-In-Reply-To: <ZKbgAG5OoHVyUKOG@infradead.org>
-From:   Haris Iqbal <haris.iqbal@ionos.com>
-Date:   Wed, 12 Jul 2023 18:06:35 +0200
-Message-ID: <CAJpMwyiUcw+mH0sZa8f8UJsaSZ7NSE65s2gZDEia+pASyP_gJQ@mail.gmail.com>
-Subject: Re: [PATCH 01/32] block: Provide blkdev_get_handle_* functions
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Jan Kara <jack@suse.cz>, linux-block@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Alasdair Kergon <agk@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        Joern Engel <joern@lazybastard.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-xfs@vger.kernel.org, Mike Snitzer <snitzer@kernel.org>,
-        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Song Liu <song@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <168906970156.8939.2877716074642019289@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jul 6, 2023 at 5:38=E2=80=AFPM Christoph Hellwig <hch@infradead.org=
-> wrote:
->
-> On Tue, Jul 04, 2023 at 02:21:28PM +0200, Jan Kara wrote:
-> > Create struct bdev_handle that contains all parameters that need to be
-> > passed to blkdev_put() and provide blkdev_get_handle_* functions that
-> > return this structure instead of plain bdev pointer. This will
-> > eventually allow us to pass one more argument to blkdev_put() without
-> > too much hassle.
->
-> Can we use the opportunity to come up with better names?  blkdev_get_*
-> was always a rather horrible naming convention for something that
-> ends up calling into ->open.
->
-> What about:
->
-> struct bdev_handle *bdev_open_by_dev(dev_t dev, blk_mode_t mode, void *ho=
-lder,
->                 const struct blk_holder_ops *hops);
-> struct bdev_handle *bdev_open_by_path(dev_t dev, blk_mode_t mode,
->                 void *holder, const struct blk_holder_ops *hops);
-> void bdev_release(struct bdev_handle *handle);
+On Tue, Jul 11, 2023 at 08:01:41PM +1000, NeilBrown wrote:
+> On Tue, 11 Jul 2023, Chuck Lever III wrote:
+> > > On Jul 10, 2023, at 6:18 PM, NeilBrown <neilb@suse.de> wrote:
+> > > 
+> > > What do you think of removing the ability to stop an nfsd thread by
+> > > sending it a signal.  Note that this doesn't apply to lockd or to nfsv4
+> > > callback threads.  And nfs-utils never relies on this.
+> > > I'm keen.  It would make this patch a lot simpler.
+> > 
+> > I agree the code base would be cleaner for it.
+> > 
+> > But I'm the new kid. I'm not really sure if this is
+> > part of a kernel - user space API that we mustn't
+> > alter, or whether it's something that was added but
+> > never used, or ....
+> > 
+> > I can sniff around to get a better understanding.
+> 
+> Once upon a time it was the only way to kill the threads.
+> There was a syscall which let you start some threads.  You couldn't
+> change the number of threads, but you could kill them.
+> And shutdown always kills processes, so letting nfsd threads be killed
+> meant that would be removed at system shutdown.
+> 
+> When I added the ability to dynamically change the number of threads it
+> made sense that we could set the number to zero, and then to use that
+> functionality to shut down the nfs server.  So the /etc/init.d/nfsd
+> script changed from "killall -9 nfsd" or whatever it was to 
+> "rpc.nfsd 0".
+> 
+> But it didn't seem sensible to remove the "kill" functionality until
+> after a transition process, and I never thought the schedule a formal
+> deprecation.  So it just stayed...
+> 
+> The more I think about it, the more I am in favour of removing it.  I
+> don't think any other kernel threads can be killed.  nfsd doesn't need
+> to be special.
+> 
+> Maybe I'll post a patch which just does that.
 
-+1 to this.
-Also, if we are removing "handle" from the function, should the name
-of the structure it returns also change? Would something like bdev_ctx
-be better?
-
-(Apologies for the previous non-plaintext email)
-
->
-> ?
+I won't NACK such a patch out-of-hand. It seems like a sensible
+clean-up, but let's have a look at the details.
