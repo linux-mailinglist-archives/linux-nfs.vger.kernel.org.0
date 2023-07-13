@@ -2,146 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3EFF7529E4
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jul 2023 19:35:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28789752AD2
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jul 2023 21:18:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231303AbjGMRfP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 13 Jul 2023 13:35:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55786 "EHLO
+        id S232912AbjGMTSB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 Jul 2023 15:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbjGMRfP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Jul 2023 13:35:15 -0400
-Received: from mail-il1-x12b.google.com (mail-il1-x12b.google.com [IPv6:2607:f8b0:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 431A12699
-        for <linux-nfs@vger.kernel.org>; Thu, 13 Jul 2023 10:35:14 -0700 (PDT)
-Received: by mail-il1-x12b.google.com with SMTP id e9e14a558f8ab-346317895e7so456535ab.1
-        for <linux-nfs@vger.kernel.org>; Thu, 13 Jul 2023 10:35:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689269713; x=1689874513;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/jGLZbFflKh8iVJ5pfkLpxhZEV6cFYv+46Kvu9MMZAU=;
-        b=VC5Xx7zQ7S/Z4aOuGj53my6J4oSh4gU+bKTQ3FZBQ0Ki4FMkjahp7ofQfvXCDaMyMy
-         Wbkm1Uc57FI3IduSCIw+S1E2h5WuGlFO0HwC5NmOb2WuygI/3nnKw+AQHI28oPIxCMsD
-         WpPddcpPq+tK82EHUL7uZNRymlWvY6Ke8nDbwfwWsd2VlmWHHKzbvEDBolANwoJj9IHY
-         mbHaztKyxBRU3za3gDSSDHTzb1obt41UQogyAJNTN8n5WYQXULHKitWoT9+XRYaSzGDs
-         dhe7gjSuwhFukpsRqx+BBTCOr5NLbRzC5JJFvT7BEbziqEZve6OGF6iNaTEkcNBmMXHV
-         3MdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689269713; x=1689874513;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/jGLZbFflKh8iVJ5pfkLpxhZEV6cFYv+46Kvu9MMZAU=;
-        b=QdwmXl+y12TBOjvVIkiZEWLseov0alp427sYDlkGlDeb4jRKEc+vzjj5s3mUER3byG
-         ZzymlPavdDYUMfNRW0O4Ob1LpcrFzcM6G9mndLY9WN+tRp9VHAaveFujE3yeC0QUf9Fi
-         IzXfXafgYe0M8H9ppDTNRIFnac/LT9FkVogcmkIVJ4YGYNQuic3u2c0whKZXebEbwiBQ
-         89wGVqUgTZ0wNAfMVDlcmTUAtpexD9qS4V5Fbw3bElKpMMxC4ieADaJIwTW0td4xjPFV
-         pD1ZHKOcq5iz5BmPQQlFmlj9IoTE9ELoOQ5fhuPHFRtkH59p0kOfqxb8i+CfBy/kF5sQ
-         kgtg==
-X-Gm-Message-State: ABy/qLabWaIgotP5rtZUXuznOqKt21a06kI36UM6tfEwMuMS8C2hjJTL
-        QimwYGOYAjNjtyCq6Na3Q8lQSO85TW4=
-X-Google-Smtp-Source: APBJJlHYcUFzTrxE3jCtd/gsmstrAjk5JltYlnVDudmftnP/hm4WxOR7gwFLxtgaD3r7laYkAYSyPw==
-X-Received: by 2002:a05:6e02:924:b0:33b:d741:5888 with SMTP id o4-20020a056e02092400b0033bd7415888mr1538341ilt.0.1689269713497;
-        Thu, 13 Jul 2023 10:35:13 -0700 (PDT)
-Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:e116:c73f:66fd:3d1b])
-        by smtp.gmail.com with ESMTPSA id b3-20020a92db03000000b00345e3a04f2dsm2171705iln.62.2023.07.13.10.35.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jul 2023 10:35:12 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSv4.1: fix pnfs MDS=DS session trunking
-Date:   Thu, 13 Jul 2023 13:35:11 -0400
-Message-Id: <20230713173511.24651-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+        with ESMTP id S232910AbjGMTSB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Jul 2023 15:18:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F981FD8
+        for <linux-nfs@vger.kernel.org>; Thu, 13 Jul 2023 12:17:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689275832;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+7TBVpMGjwD9DsMUWCZqrJZ4ffMsGc24Osuaf3WBSDU=;
+        b=RmmCOGQuqkl1Tg4pyCkpdM8fKGyw9TWipGadtYPhTS14Qgl7eSoa1G2Cb69HDKo+48iWeZ
+        xYbcTnZdZzDiz7mJ7L4Nq3x/3A/47JPpTo+NZP3YzGveiW4sVR8HEkZig8sYvr8ERm8NY+
+        XJ8IFDGc9GbwT0w+1M4YRfvsh13N0Zo=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-563-qCypdEwGPku8zkWzBEhnfQ-1; Thu, 13 Jul 2023 15:17:09 -0400
+X-MC-Unique: qCypdEwGPku8zkWzBEhnfQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 108BF8564EF;
+        Thu, 13 Jul 2023 19:17:09 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.50.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 474C0C478DF;
+        Thu, 13 Jul 2023 19:17:08 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     Kinglong Mee <kinglongmee@gmail.com>
+Cc:     Anna Schumaker <anna@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>
+Subject: Re: [PATCH] nfs: fix redundant readdir request after get eof
+Date:   Thu, 13 Jul 2023 15:17:07 -0400
+Message-ID: <5E28252D-6EA1-4DD9-A5B3-957E13589982@redhat.com>
+In-Reply-To: <8d6d9329-f5f1-2f15-f578-e4f8010b9b02@gmail.com>
+References: <8d6d9329-f5f1-2f15-f578-e4f8010b9b02@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+On 13 Jul 2023, at 10:52, Kinglong Mee wrote:
 
-Currently, when GETDEVICEINFO returns multiple locations where each
-is a different IP but the server's identity is same as MDS, then
-nfs4_set_ds_client() finds the existing nfs_client structure which
-has the MDS's max_connect value (and if it's 1), then the 1st IP
-on the DS's list will get dropped due to MDS trunking rules. Other
-IPs would be added as they fall under the pnfs trunking rules.
+> When a directory contains 18 files (includes . and ..), nfs client sends
+> a redundant readdir request after get eof.
 
-Instead, this patch prposed to treat MDS=DS as DS trunking and
-make sure that MDS's max_connect limit does not apply to the
-1st IP returned in the GETDEVICEINFO list.
+This breaks the optimization in
+85aa8ddc3818 NFS: Trigger the "ls -l" readdir heuristic sooner
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- fs/nfs/nfs4client.c | 7 ++++++-
- net/sunrpc/clnt.c   | 7 +++++--
- 2 files changed, 11 insertions(+), 3 deletions(-)
+The way to see that breakage happing is to "ls -l" a directory with more
+than 16 dentries, and then when you do a 2nd "ls -l" you'll see that the NFS
+client does a GETATTR for every single dentry instead of just the first 16
+and then user READDIRPLUS for the rest.
 
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index 27fb25567ce7..b35acd79b895 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -417,6 +417,7 @@ static void nfs4_add_trunk(struct nfs_client *clp, struct nfs_client *old)
- 		.net = old->cl_net,
- 		.servername = old->cl_hostname,
- 	};
-+	int max_connect = old->cl_max_connect;
- 
- 	if (clp->cl_proto != old->cl_proto)
- 		return;
-@@ -428,9 +429,12 @@ static void nfs4_add_trunk(struct nfs_client *clp, struct nfs_client *old)
- 
- 	xprt_args.dstaddr = clp_sap;
- 	xprt_args.addrlen = clp_salen;
-+	if (clp->cl_max_connect != old->cl_max_connect &&
-+	    test_bit(NFS_CS_DS, &clp->cl_flags))
-+		max_connect = clp->cl_max_connect;
- 
- 	rpc_clnt_add_xprt(old->cl_rpcclient, &xprt_args,
--			  rpc_clnt_test_and_add_xprt, NULL);
-+			  rpc_clnt_test_and_add_xprt, &max_connect);
- }
- 
- /**
-@@ -1010,6 +1014,7 @@ struct nfs_client *nfs4_set_ds_client(struct nfs_server *mds_srv,
- 		__set_bit(NFS_CS_NORESVPORT, &cl_init.init_flags);
- 
- 	__set_bit(NFS_CS_DS, &cl_init.init_flags);
-+	cl_init.max_connect = NFS_MAX_TRANSPORTS;
- 	/*
- 	 * Set an authflavor equual to the MDS value. Use the MDS nfs_client
- 	 * cl_ipaddr so as to use the same EXCHANGE_ID co_ownerid as the MDS
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index d7c697af3762..dfdb4bc96367 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2908,12 +2908,15 @@ static const struct rpc_call_ops rpc_cb_add_xprt_call_ops = {
-  */
- int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
- 		struct rpc_xprt_switch *xps, struct rpc_xprt *xprt,
--		void *dummy)
-+		void *in_max_connect)
- {
- 	struct rpc_cb_add_xprt_calldata *data;
- 	struct rpc_task *task;
-+	int max_connect = clnt->cl_max_connect;
- 
--	if (xps->xps_nunique_destaddr_xprts + 1 > clnt->cl_max_connect) {
-+	if (in_max_connect)
-+		max_connect = *(int *)in_max_connect;
-+	if (xps->xps_nunique_destaddr_xprts + 1 > max_connect) {
- 		rcu_read_lock();
- 		pr_warn("SUNRPC: reached max allowed number (%d) did not add "
- 			"transport to server: %s\n", clnt->cl_max_connect,
--- 
-2.39.1
+I think what's going wrong with Kinglong's case is that when
+array->folio_is_eof, we set desc->eof to the negation of desc->eob.  That
+does the wrong thing for directories with 18 dentries.
+
+Here's a way around it, but I hate how ugly it is just for this single case:
+
+
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 8f3112e71a6a..ace454da9d4d 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1107,14 +1107,20 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor *desc,
+                        desc->ctx->pos = desc->dir_cookie;
+                else
+                        desc->ctx->pos++;
++
+                if (first_emit && i > NFS_READDIR_CACHE_MISS_THRESHOLD + 1) {
+                        desc->eob = true;
+-                       break;
++                       /* handle the case where there are NFS_READDIR_CACHE_MISS_THRESHOLD + 2
++                        * entries:  we also need to set desc->eof */
++                       if (array->folio_is_eof && i == array->size - 1)
++                               desc->eof = true;
++                       goto done;
+                }
+        }
+        if (array->folio_is_eof)
+                desc->eof = !desc->eob;
+
++done:
+        kunmap_local(array);
+        dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %llu\n",
+                        (unsigned long long)desc->dir_cookie);
+
+Ben
 
