@@ -2,66 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50C4E753C4C
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jul 2023 15:57:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62837753E8D
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jul 2023 17:14:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235512AbjGNN5V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Jul 2023 09:57:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51942 "EHLO
+        id S235268AbjGNPOB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Jul 2023 11:14:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235689AbjGNN5U (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jul 2023 09:57:20 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AFA7271E
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Jul 2023 06:57:19 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2b6993ef4f2so6034691fa.0
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Jul 2023 06:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689343037; x=1689947837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p021yPXuGCEf0Yb8TOURyaAQQtPefTMD89Uo9MAEr8c=;
-        b=Zhzw8C7SlZE7n37DuCluVsD5wfwMob9jg/twgxMVXkv29LHb+ySv8WK1hK/iowZ6Ky
-         oSmf5eBSGf8lSzWToDjrHNZ02pIAzUTIjhKZKwxCpM9EVBSD1mdOW1Dr0KId+6PUtgtj
-         Aj40tvzwGUk1mQZgy3DSpwZlOWfGOSHlceKju88zpLCIxJ4/azHR0bLDaB8zu5ou4/8W
-         feOmz8DrRIllfg1NJHyElwDKo8EkoQTN1HtygfBx4/FZdOeNuA9OS5TnZpvF1Ptlw32r
-         F2sVwqcyEUZHG8nj+p/pXp7eszMbuqTqsmWgpqLgn50Ai0HKsJNF1TM5CzrgZ0cAL79Z
-         GwHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689343037; x=1689947837;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=p021yPXuGCEf0Yb8TOURyaAQQtPefTMD89Uo9MAEr8c=;
-        b=Ua5g/nnAg8hlAI6kOvGVZjkl9B9OACg1jjR7rpK6ohu1cCDeUVoZfbl2FtbKI3dIUp
-         hAZ94e269iYSbtStVCzH1D2C64LzQczTgRu9vcNGCeeDxy/D5KRZRH3PBtDBE0BDxb3p
-         Vlxy3nKAk8cosF2MAPzeWlsHFqINNx7rcNY94yLeyuuyFobrcZdAeBYdKNLL3jMvZF0Y
-         CqdXvyIDmGZZwKmIk4C1fzIRuNnSrCsZ3mualmX5jrw/yuzM1aJRmuseWALd+MvYjJXz
-         8qEHHfd0Gf1ZBfcu969pnHgZv2We0OLUELB2tv20td6Fm1sp63pD1OjJkTlAyfFyGPQG
-         XfwQ==
-X-Gm-Message-State: ABy/qLZKKlACsrUEooKr2gUEvipc8gMwwZD3owvRi9GUsMT79Ebs9s7d
-        X8uyJ5nWVI/M0E2Nd5f3Y5ZYcaxzrzm/wdhXXSFSn+xn
-X-Google-Smtp-Source: APBJJlFKdjvrE4kvPsWzhpUkiIKDjuWwWpJ3OV774vFT9vBNcpCCNjIlz4gMBcV1XSifpXHc2+dhvy+jCVG9yPh35xg=
-X-Received: by 2002:a05:651c:2124:b0:2b6:b7ae:94e5 with SMTP id
- a36-20020a05651c212400b002b6b7ae94e5mr3807469ljq.4.1689343036992; Fri, 14 Jul
- 2023 06:57:16 -0700 (PDT)
+        with ESMTP id S235611AbjGNPOA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jul 2023 11:14:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C7F72708;
+        Fri, 14 Jul 2023 08:13:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1197661D45;
+        Fri, 14 Jul 2023 15:13:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E576C433C8;
+        Fri, 14 Jul 2023 15:13:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689347638;
+        bh=AjVTiZGxGBSrlBE9CQQLTcrSS2ZLHDUVxtNcNgrghTs=;
+        h=Subject:From:To:Cc:Date:From;
+        b=Sk3NHpATkvI6p0L4o0QETvAL6ovz9R9/463BjESUzCTQVjm7cL/IQ7Qxkxh1jTKy/
+         NDqifVByRjcxwewBtJN8BxHF9AX21s99lyCZ/Ys8D0ArFR2VehhvFR1o0piMH3Dk30
+         KdCZUEI2r6lwx/6MyFJHHQBR5dQWbG7XarnrxAZ4eJlWiTjRssK5k5Yyg7/WQmfKY0
+         0h4wl8FKfW/7U7MXlUkEVMNJYWZNDW7LWmbVYthJKE6+hquDz96kpuQzNWJIyR8q4x
+         KcYPUw6p/XAW9C7dLWuahxp+w6hc/81wBtEouuldDBOFPAQIHt6TW02ke5O0X0m3mh
+         IJ+UN0ZC3xgeQ==
+Subject: [PATCH] xprtrdma: Remap Receive buffers after a reconnect
+From:   Chuck Lever <cel@kernel.org>
+To:     anna.schumaker@netapp.com
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+        linux-rdma@vger.kernel.org, tom@talpey.com, kolga@netapp.com
+Date:   Fri, 14 Jul 2023 11:13:56 -0400
+Message-ID: <168934757954.2781502.4228890662497418497.stgit@morisot.1015granger.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-References: <20230713195416.30414-1-olga.kornievskaia@gmail.com>
- <A0663B9C-F005-4089-ABD6-542F77EE43ED@redhat.com> <CAN-5tyGa1dV1A5RgZsMCQzFHDV63=LDJq0DTpg8aJ=UCO+k+Og@mail.gmail.com>
- <A05D90E0-6D74-4948-B948-852B1448DD3C@redhat.com>
-In-Reply-To: <A05D90E0-6D74-4948-B948-852B1448DD3C@redhat.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Fri, 14 Jul 2023 09:57:05 -0400
-Message-ID: <CAN-5tyGiiSr+jkh=WL_C4=wBAfZUiQZVsJoVxn0Sxg=yK+TA9g@mail.gmail.com>
-Subject: Re: [PATCH 1/1] NFSv4.1: fix zero value filehandle in post open getattr
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -70,79 +53,58 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 6:13=E2=80=AFPM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
->
-> On 13 Jul 2023, at 17:27, Olga Kornievskaia wrote:
->
-> > On Thu, Jul 13, 2023 at 5:09=E2=80=AFPM Benjamin Coddington <bcodding@r=
-edhat.com> wrote:
-> >>
-> >> On 13 Jul 2023, at 15:54, Olga Kornievskaia wrote:
-> >>
-> >>> From: Olga Kornievskaia <kolga@netapp.com>
-> >>>
-> >>> Currently, if the OPEN compound experiencing an error and needs to
-> >>> get the file attributes separately, it will send a stand alone
-> >>> GETATTR but it would use the filehandle from the results of
-> >>> the OPEN compound. In case of the CLAIM_FH OPEN, nfs_openres's fh
-> >>> is zero value. That generate a GETATTR that's sent with a zero
-> >>> value filehandle, and results in the server returning an error.
-> >>>
-> >>> Instead, for the CLAIM_FH OPEN, take the filehandle that was used
-> >>> in the PUTFH of the OPEN compound.
-> >>>
-> >>> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> >>> ---
-> >>>  fs/nfs/nfs4proc.c | 6 +++++-
-> >>>  1 file changed, 5 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> >>> index 8edc610dc1d3..0b1b49f01c5b 100644
-> >>> --- a/fs/nfs/nfs4proc.c
-> >>> +++ b/fs/nfs/nfs4proc.c
-> >>> @@ -2703,8 +2703,12 @@ static int _nfs4_proc_open(struct nfs4_opendat=
-a *data,
-> >>>                       return status;
-> >>>       }
-> >>>       if (!(o_res->f_attr->valid & NFS_ATTR_FATTR)) {
-> >>> +             struct nfs_fh *fh =3D &o_res->fh;
-> >>> +
-> >>>               nfs4_sequence_free_slot(&o_res->seq_res);
-> >>> -             nfs4_proc_getattr(server, &o_res->fh, o_res->f_attr, NU=
-LL);
-> >>> +             if (o_arg->claim =3D=3D NFS4_OPEN_CLAIM_FH)
-> >>> +                     fh =3D NFS_FH(d_inode(data->dentry));
-> >>> +             nfs4_proc_getattr(server, fh, o_res->f_attr, NULL);
-> >>>       }
-> >>>       return 0;
-> >>>  }
-> >>
-> >> Looks good, but why not just use o_arg->fh?  Maybe also an opportunity
-> >> to fix the whitespace damage a few lines before this hunk too.
-> >>
-> >
-> > I did try it first. I had 2 problems with it. First of o_arg->fh is a
-> > "const struct" so it wouldn't allow me to be assigned without casting.
-> > Ok so perhaps it's not a big deal that we are going against the
-> > "const". Second of all, when I did do that, it produced the following
-> > warning and so I thought perhaps I should really use the original fh
-> > instead of what's in the args:
->
-> Oh maybe because this is the error path and nfs4_opendata is getting clea=
-ned
-> up in nfs4_open_release()?  The comments in nfs4_open_release are a bit
-> confusing, but I think for the cases where we need to re-use the opendata=
- we
-> are doing a kref_get on it.  Maybe we need a kref_get on the opendata for
-> this case?
+From: Chuck Lever <chuck.lever@oracle.com>
 
-I guess I don't understand what's the problem with the current
-approach which is simple.
+On server-initiated disconnect, rpcrdma_xprt_disconnect() DMA-unmaps
+the transport's Receive buffers, but rpcrdma_post_recvs() neglected
+to remap them after a new connection had been established. The
+result is immediate failure of the new connection with the Receives
+flushing with LOCAL_PROT_ERR.
 
-> .. I suspect we'd have the o_res.fh from nfs4_opendata_get_inode().  Out =
-of
-> time, will check back in tomorrow.
->
-> Ben
->
+Fixes: 671c450b6fe0 ("xprtrdma: Fix oops in Receive handler after device removal")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/xprtrdma/verbs.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+Hi Anna-
+
+Can you apply this for 6.5-rc ?
+
+
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index b098fde373ab..28c0771c4e8c 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -935,9 +935,6 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
+ 	if (!rep->rr_rdmabuf)
+ 		goto out_free;
+ 
+-	if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf))
+-		goto out_free_regbuf;
+-
+ 	rep->rr_cid.ci_completion_id =
+ 		atomic_inc_return(&r_xprt->rx_ep->re_completion_ids);
+ 
+@@ -956,8 +953,6 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
+ 	spin_unlock(&buf->rb_lock);
+ 	return rep;
+ 
+-out_free_regbuf:
+-	rpcrdma_regbuf_free(rep->rr_rdmabuf);
+ out_free:
+ 	kfree(rep);
+ out:
+@@ -1363,6 +1358,10 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, int needed, bool temp)
+ 			rep = rpcrdma_rep_create(r_xprt, temp);
+ 		if (!rep)
+ 			break;
++		if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf)) {
++			rpcrdma_rep_put(buf, rep);
++			break;
++		}
+ 
+ 		rep->rr_cid.ci_queue_id = ep->re_attr.recv_cq->res.id;
+ 		trace_xprtrdma_post_recv(rep);
+
+
