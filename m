@@ -2,127 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 492F1754A70
-	for <lists+linux-nfs@lfdr.de>; Sat, 15 Jul 2023 19:21:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D74B754A91
+	for <lists+linux-nfs@lfdr.de>; Sat, 15 Jul 2023 20:08:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229935AbjGORVj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 15 Jul 2023 13:21:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32940 "EHLO
+        id S229650AbjGOSIf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 15 Jul 2023 14:08:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjGORVi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 15 Jul 2023 13:21:38 -0400
-X-Greylist: delayed 1201 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 15 Jul 2023 10:21:37 PDT
-Received: from smtp.rcn.com (mail.rcn.syn-alias.com [129.213.13.252])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0532706
-        for <linux-nfs@vger.kernel.org>; Sat, 15 Jul 2023 10:21:37 -0700 (PDT)
-X-Authed-Username: dG10YWxwZXlAcmNuLmNvbQ==
-Authentication-Results:  smtp01.rcn.email-ash1.sync.lan smtp.user=<hidden>; auth=pass (PLAIN)
-Received: from [96.237.161.173] ([96.237.161.173:53335] helo=[192.168.0.206])
-        by smtp.rcn.com (envelope-from <tom@talpey.com>)
-        (ecelerity 4.4.0.19839 r(msys-ecelerity:tags/4.4.0.0^0)) with ESMTPSA (cipher=AES128-GCM-SHA256) 
-        id AF/C5-05333-FE0D2B46; Sat, 15 Jul 2023 13:01:35 -0400
-Message-ID: <a9f18064-45d4-4346-0156-dcd74e001b82@talpey.com>
-Date:   Sat, 15 Jul 2023 13:01:34 -0400
+        with ESMTP id S229500AbjGOSIe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 15 Jul 2023 14:08:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC3EF2127
+        for <linux-nfs@vger.kernel.org>; Sat, 15 Jul 2023 11:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689444466;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iamKAJgwJgdTwW02X5OuZ3rqyMMNbIZBCLF/DQ4FzlY=;
+        b=VhPi+E6kBTDxzcjpr2xKABb5iOv6TH6D+26gJVqn352FV1Gq3LZ0FhH6nhI/WkFptdW/Bc
+        /NNwEIY95eyvgpead0Beg7M85xx81b62N7gkkCJNLufeSlKzT1pobzMDgg+5QFrp1dndSb
+        QEhsxlN/VfwSp4vo+xJJ3oE/Ec2WlK8=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-673-jEiRZawQPTOxJnmwwj1cNw-1; Sat, 15 Jul 2023 14:07:44 -0400
+X-MC-Unique: jEiRZawQPTOxJnmwwj1cNw-1
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-635de6f75e0so7142016d6.1
+        for <linux-nfs@vger.kernel.org>; Sat, 15 Jul 2023 11:07:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689444464; x=1692036464;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iamKAJgwJgdTwW02X5OuZ3rqyMMNbIZBCLF/DQ4FzlY=;
+        b=VcGpvkUEe8mJ93FgeyOIa/iz0oFj/uSiJD27ljaE+MuPBm3jYtlwZ4MpP2s3vWNv+J
+         DMKnDvctbFWirw6YupRYGaspODVtiOkLQ5tF2jkytjYWLDkBvUxsI1xp6c9VQgRE+Eq2
+         KS96k/iZQ77PnVEZFYSxTIGcQgNBUDZAcXQR72ZbQOXTg9CE3mjF4XeLv6xUpHUsMuen
+         3+V/E0THnGBXS3e/QP/FmVbfLx9W5LagbPQjs2nBJbEm+sF6cAIEPm6ik5vEY9FkY+d2
+         VYwql4rsyn7MNh5vqzZHGMrGkfTNZsdK2/NFSw8JcD7lCWLGcWYBne2Fp5QsHJzF6y2M
+         OATg==
+X-Gm-Message-State: ABy/qLavbzc0gyzgSlmQERQczK4oPFExFBdCEQozIGSGfsXpaQoUMeH3
+        IAhhK85VZ7MBk91o3+VHng/BYR7sOc9jomN6q/98+u6OBOdWwYNl4uLHeLyZEL1ztsK5DSNtTTT
+        4Lkj23Gd3L3eC0k/0t8tK
+X-Received: by 2002:ad4:4eea:0:b0:634:cdae:9941 with SMTP id dv10-20020ad44eea000000b00634cdae9941mr1009539qvb.0.1689444463952;
+        Sat, 15 Jul 2023 11:07:43 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHpFiktFMhrHpBHw2rfuvkyjIDtNfi5r6thvCZQjcPC2IoRqJ9U6ucmHnqseKI8om42XgXByQ==
+X-Received: by 2002:ad4:4eea:0:b0:634:cdae:9941 with SMTP id dv10-20020ad44eea000000b00634cdae9941mr1009526qvb.0.1689444463631;
+        Sat, 15 Jul 2023 11:07:43 -0700 (PDT)
+Received: from [172.31.1.12] ([70.109.163.31])
+        by smtp.gmail.com with ESMTPSA id e20-20020a0ce3d4000000b006375f9fd170sm5052947qvl.34.2023.07.15.11.07.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 15 Jul 2023 11:07:43 -0700 (PDT)
+Message-ID: <a6e861a1-1609-11fc-219c-88dd8d90b526@redhat.com>
+Date:   Sat, 15 Jul 2023 14:07:41 -0400
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] xprtrdma: Remap Receive buffers after a reconnect
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v1] nfs(5): Document the new "xprtsec=" mount option
 Content-Language: en-US
-To:     Chuck Lever <cel@kernel.org>, anna.schumaker@netapp.com
+To:     Chuck Lever <cel@kernel.org>
 Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        linux-rdma@vger.kernel.org, kolga@netapp.com
-References: <168934757954.2781502.4228890662497418497.stgit@morisot.1015granger.net>
-From:   Tom Talpey <tom@talpey.com>
-In-Reply-To: <168934757954.2781502.4228890662497418497.stgit@morisot.1015granger.net>
+        kernel-tls-handshake@lists.linux.dev
+References: <168935977873.1850.8214830433103692090.stgit@bazille.1015granger.net>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <168935977873.1850.8214830433103692090.stgit@bazille.1015granger.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Vade-Verdict: clean
-X-Vade-Analysis-1: gggruggvucftvghtrhhoucdtuddrgedviedrfeekgddutdelucetufdoteggodetrfdotffvucfrrhho
-X-Vade-Analysis-2: fhhilhgvmecuufgjpfetvefqtfdptfevpfdpgffpggdqtfevpfdpqfgfvfenuceurghilhhouhhtmecu
-X-Vade-Analysis-3: fedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgj
-X-Vade-Analysis-4: tgfgsehtjeertddtfeejnecuhfhrohhmpefvohhmucfvrghlphgvhicuoehtohhmsehtrghlphgvhidr
-X-Vade-Analysis-5: tghomheqnecuggftrfgrthhtvghrnhepudethfegfeejjeeghedtffegkedttdduueekleejhfduudek
-X-Vade-Analysis-6: gfehuedvudfgudefnecukfhppeeliedrvdefjedrudeiuddrudejfeenucevlhhushhtvghrufhiiigv
-X-Vade-Analysis-7: pedtnecurfgrrhgrmhepihhnvghtpeeliedrvdefjedrudeiuddrudejfedphhgvlhhopegludelvddr
-X-Vade-Analysis-8: udeikedrtddrvddtiegnpdhmrghilhhfrhhomhepthhomhesthgrlhhpvgihrdgtohhmpdhrtghpthht
-X-Vade-Analysis-9: oheptggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnnhgrrdhstghhuhhmrghkvghrsehn
-X-Vade-Analysis-10: vghtrghpphdrtghomhdprhgtphhtthhopegthhhutghkrdhlvghvvghrsehorhgrtghlvgdrtghomhdp
-X-Vade-Analysis-11: rhgtphhtthhopehlihhnuhigqdhnfhhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-X-Vade-Analysis-12: lhhinhhugidqrhgumhgrsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhholhhgrges
-X-Vade-Analysis-13: nhgvthgrphhprdgtohhmpdhmthgrhhhoshhtpehsmhhtphdtuddrrhgtnhdrvghmrghilhdqrghshhdu
-X-Vade-Analysis-14: rdhshihntgdrlhgrnh
-X-Vade-Client: RCN
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_FAIL,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 7/14/2023 11:13 AM, Chuck Lever wrote:
+Hey!
+
+On 7/14/23 2:36 PM, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 > 
-> On server-initiated disconnect, rpcrdma_xprt_disconnect() DMA-unmaps
-> the transport's Receive buffers, but rpcrdma_post_recvs() neglected
-> to remap them after a new connection had been established. The
-> result is immediate failure of the new connection with the Receives
-> flushing with LOCAL_PROT_ERR.
-
-The fix is correct, my only comment is that the failure occurs when the
-first message is received, and only the first CQE is a LOCAL_PROT_ERR.
-The remainder of the posted receives are simply flushed.
-
-Same result of course! The summary is ok as-is. Important fix.
-
-Reviewed-by: Tom Talpey <tom@talpey.com>
-
-> Fixes: 671c450b6fe0 ("xprtrdma: Fix oops in Receive handler after device removal")
+> More information about RPC-with-TLS and some brief set-up guidance
+> are to be provided in a separate man page in Section 7.
+> 
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Question: commit b5e4539f already add this RPC-with-TLS
+update to the man page. So do you want me to revert b5e4539f
+and replace it with this patch?
+
+steved.
+
 > ---
->   net/sunrpc/xprtrdma/verbs.c |    9 ++++-----
->   1 file changed, 4 insertions(+), 5 deletions(-)
+>   utils/mount/nfs.man |   38 +++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 37 insertions(+), 1 deletion(-)
 > 
-> Hi Anna-
-> 
-> Can you apply this for 6.5-rc ?
-> 
-> 
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index b098fde373ab..28c0771c4e8c 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -935,9 +935,6 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
->   	if (!rep->rr_rdmabuf)
->   		goto out_free;
->   
-> -	if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf))
-> -		goto out_free_regbuf;
+> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+> index d9f34df36b42..dfc31a5dad26 100644
+> --- a/utils/mount/nfs.man
+> +++ b/utils/mount/nfs.man
+> @@ -574,7 +574,43 @@ The
+>   .B sloppy
+>   option is an alternative to specifying
+>   .BR mount.nfs " -s " option.
 > -
->   	rep->rr_cid.ci_completion_id =
->   		atomic_inc_return(&r_xprt->rx_ep->re_completion_ids);
->   
-> @@ -956,8 +953,6 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrdma_xprt *r_xprt,
->   	spin_unlock(&buf->rb_lock);
->   	return rep;
->   
-> -out_free_regbuf:
-> -	rpcrdma_regbuf_free(rep->rr_rdmabuf);
->   out_free:
->   	kfree(rep);
->   out:
-> @@ -1363,6 +1358,10 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, int needed, bool temp)
->   			rep = rpcrdma_rep_create(r_xprt, temp);
->   		if (!rep)
->   			break;
-> +		if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf)) {
-> +			rpcrdma_rep_put(buf, rep);
-> +			break;
-> +		}
->   
->   		rep->rr_cid.ci_queue_id = ep->re_attr.recv_cq->res.id;
->   		trace_xprtrdma_post_recv(rep);
+> +.TP 1.5i
+> +.BI xprtsec= policy
+> +Specifies the use of transport layer security to protect NFS network
+> +traffic on behalf of this mount point.
+> +.I policy
+> +can be one of
+> +.BR none ,
+> +.BR tls ,
+> +or
+> +.BR mtls .
+> +.IP
+> +If
+> +.B none
+> +is specified,
+> +transport layer security is forced off, even if the NFS server supports
+> +transport layer security.
+> +If
+> +.B tls
+> +is specified, the client uses RPC-with-TLS to provide in-transit
+> +confidentiality.
+> +If
+> +.B mtls
+> +is specified, the client uses RPC-with-TLS to authenticate itself and
+> +to provide in-transit confidentiality.
+> +If either
+> +.B tls
+> +or
+> +.B mtls
+> +is specified and the server does not support RPC-with-TLS or peer
+> +authentication fails, the mount attempt fails.
+> +.IP
+> +If the
+> +.B xprtsec=
+> +option is not specified,
+> +the default behavior depends on the kernel version,
+> +but is usually equivalent to
+> +.BR "xprtsec=none" .
+>   .SS "Options for NFS versions 2 and 3 only"
+>   Use these options, along with the options in the above subsection,
+>   for NFS versions 2 and 3 only.
 > 
 > 
-> 
+
