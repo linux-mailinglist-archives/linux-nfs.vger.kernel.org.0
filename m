@@ -2,173 +2,247 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AE05754C0E
-	for <lists+linux-nfs@lfdr.de>; Sat, 15 Jul 2023 22:53:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BEAF75500F
+	for <lists+linux-nfs@lfdr.de>; Sun, 16 Jul 2023 19:11:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjGOUx4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 15 Jul 2023 16:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47208 "EHLO
+        id S229775AbjGPRLn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 16 Jul 2023 13:11:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229530AbjGOUxz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 15 Jul 2023 16:53:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484CB198
-        for <linux-nfs@vger.kernel.org>; Sat, 15 Jul 2023 13:53:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689454386;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QpkPSceFuY9FMC6Pe6nu4cZ/mdvGwOzewmFbBTQQp20=;
-        b=AxUFuOHabHYM1tD/P6BnmdAOC5Ma6hllUFEGcRrZJQW7xymn8GPwuNw9oSd8v2ltZVnG+m
-        BcNHJqHjE1Nx328FuP8zBnUc7abaGEtRG9VEtp6rRCkTTkrFZZpOBk+ppR+W6hvJhAANyp
-        UOejMD59cMj3vSjWZNBn249jVnGC4Vk=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-158-la7rNxyXNyWkw_rhVrC5Sg-1; Sat, 15 Jul 2023 16:53:05 -0400
-X-MC-Unique: la7rNxyXNyWkw_rhVrC5Sg-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-767d30ab094so70421685a.1
-        for <linux-nfs@vger.kernel.org>; Sat, 15 Jul 2023 13:53:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689454384; x=1692046384;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QpkPSceFuY9FMC6Pe6nu4cZ/mdvGwOzewmFbBTQQp20=;
-        b=YBvs+uTc6qKDGRQHKeI7wKuPsmeZnP3sOpdk0ZhJ4XIZ5n3BXSY31KUlp58MqmPMCE
-         VGErqm60m/JlS20jy0Z6yp28YhCFGy5NUlGmpg308WzNDv/IGptxNKSRUJJTKdtT4mW6
-         twn3wktMYmZEzPuigU4w3S36yY+JbPSQAcx146xIqiQaNXjPRwlbIYcss/uYuIsFbe+7
-         9ldV6+ajgByqfFAKMcyOdihewf3RmqHnzoi1AESqpUNMwveAs0X4PMDp3f3qaI2kc/j7
-         nyzusfbWL/pdCIEf0lIB6Ir9gFWcJFjjWCv5t8+NwAlINIM5nUe25Frx60xk5t8XZiKJ
-         RgqA==
-X-Gm-Message-State: ABy/qLaY7x4HwSBiNJwn+ikpokSLkXxNnkmIdQiIolCp2QaENyrHnEDT
-        AS6S3oZ6lW30hcBOsMwsjXtkYNABlIhSs/fRow1GqzzkShwSfICOQI77156Yj9SuwFRlmIRknOs
-        D0AfnmF/jVLKe0ZYWjanS1RIMszHP
-X-Received: by 2002:a05:620a:408e:b0:765:58ac:9458 with SMTP id f14-20020a05620a408e00b0076558ac9458mr3767296qko.7.1689454384233;
-        Sat, 15 Jul 2023 13:53:04 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHWze3aLXsumpOHnUekhuZlh05sj2n+FZ0AlDpdRlgmluPQMplAyrZ6NP/UpXfXjHVP657eTQ==
-X-Received: by 2002:a05:620a:408e:b0:765:58ac:9458 with SMTP id f14-20020a05620a408e00b0076558ac9458mr3767289qko.7.1689454383923;
-        Sat, 15 Jul 2023 13:53:03 -0700 (PDT)
-Received: from [172.31.1.12] ([70.109.163.31])
-        by smtp.gmail.com with ESMTPSA id g7-20020a05620a108700b00767d05117fesm4859280qkk.36.2023.07.15.13.53.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 15 Jul 2023 13:53:03 -0700 (PDT)
-Message-ID: <5230337e-b028-0e86-9693-c29f7d1165b2@redhat.com>
-Date:   Sat, 15 Jul 2023 16:53:02 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] systemd: Ensure that statdpath exists using
- systemd-tmpfiles
+        with ESMTP id S229495AbjGPRLm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 16 Jul 2023 13:11:42 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4AC7184;
+        Sun, 16 Jul 2023 10:11:40 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36GH091b029834;
+        Sun, 16 Jul 2023 17:11:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=sAi/r+9P38L247cdJib3B9EXoC8Clin6pdnclGVNXuE=;
+ b=zdkYYL2MMbvWltIATWEM9Ld33i7BWaynELbYW44K/6/D56BZtD2IyeD8PQA572YTrcEk
+ qS6JBS+wQ/uwgztfN9TOqKjmZMz1FAL8YmsFoqHO9vEGhCy0WBNJdPMNhxjkuUlZ8haA
+ GFI7VVpKKa7Fud5Lt/2ps12Ni6LVhOehvZOatwAirDmgBVitUnp8QOiflcIo7FRh026M
+ 53f+W+RJKkYfQy9WBEdT795r/PAEnmS2kcCp15B8EPhtP65OolIuf9tBgubR4ecYWwWZ
+ tIsZHDVw1QQm94a5U0oIKQ0gdvkTMEv4ruSqhsLvlZ9Dhh/cz8PrPHTk4jxwl+bvY5MI LA== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3run781drr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Jul 2023 17:11:33 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36GGVeP7038163;
+        Sun, 16 Jul 2023 17:11:32 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2103.outbound.protection.outlook.com [104.47.55.103])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ruhw2nh84-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Jul 2023 17:11:32 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OkKbrg8T7XSDniBAuXadbMFHSk4s5MagEtuzZ3cDC6T1aLU2dV2ZyDcFzJvmWYVeLLayEBPfTVeEtacouRboi9Q89ezqz6u22NFJE6H+druBIKwJvxZrrJlqdwq+HRcBQPS+afN1u+9S9W4ZwFaUA+QhNt1qNKkSMNwREGODREhbw3r+FYtF7ypuZo8f1g4rVSGFxsrXBWj55yuiPHzXBMHP/n4j72iWJ4TvWKHXQ3P/28UurbhYvU/S+KTmyTbnPKeWwXGAFeVKmauLISxMciqjtOgBiFK2AEQH4Qeoj3zgco6gtYmg+iDhVjGIkTaWUGHmeAz55w1cn6rGDA+LXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sAi/r+9P38L247cdJib3B9EXoC8Clin6pdnclGVNXuE=;
+ b=N/19klKRq585T2Chx7g3PKy/h1oX4/ljzN1DMN1oKRrA8X3Xid3+mUHmiuLPJ7nSJGxOZHXfi/I242e1CBhDGXeBiaESBBvoYlLXxWkGywUg0/MWWP5Ny26uan/lQi3OdVsubWQGEl6s+1dpHQgDmj9WLW8oaSzDyHthHhKs1bDLqcgg25BDLBs+TY/yf6FJaOrnDR9lznIgBBrk2ZmTksqgND8ql/jeDAHywsY9NwY/Yju3SKkQjErTvaeKcS1UsgllNyKWQ/foUrCHtOBRW/827/9O6j9ABttutqbMrja0qDkOjh6pQON6GRCWFALjEHFH25T+Fg+IhnxvMN/uVA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sAi/r+9P38L247cdJib3B9EXoC8Clin6pdnclGVNXuE=;
+ b=w3S8qST+FxgrmiaeHmrjQW5LNFCZE0LHaAZn1gL8w9RK0uiyKjz5/p1YstocCi1+VGX3nSQgudxGdp9KRg2iWGsC22hcjbTyEob4MWKTDn0hsP5T5aId4LjXndTHcH0Fa5mcGu7oMFzWCIhzysyncWoNEzIWoVhoH0ZtX5SHWnU=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH0PR10MB4726.namprd10.prod.outlook.com (2603:10b6:510:3d::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.31; Sun, 16 Jul
+ 2023 17:11:30 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2107:f712:a7c5:9ac7]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2107:f712:a7c5:9ac7%3]) with mapi id 15.20.6588.031; Sun, 16 Jul 2023
+ 17:11:30 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Anna Schumaker <anna.schumaker@netapp.com>
+CC:     Chuck Lever <cel@kernel.org>, Tom Talpey <tom@talpey.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Olga Kornievskaia <kolga@netapp.com>
+Subject: Re: [PATCH] xprtrdma: Remap Receive buffers after a reconnect
+Thread-Topic: [PATCH] xprtrdma: Remap Receive buffers after a reconnect
+Thread-Index: AQHZtmXW1KhFMZKe0k63dgGlYrfiG6+7DzkAgAAgMYCAAXTdgA==
+Date:   Sun, 16 Jul 2023 17:11:29 +0000
+Message-ID: <1678F63C-DBBB-48FE-B2B9-0C2A5CD5217C@oracle.com>
+References: <168934757954.2781502.4228890662497418497.stgit@morisot.1015granger.net>
+ <a9f18064-45d4-4346-0156-dcd74e001b82@talpey.com>
+ <FF1F6B85-A97D-41A0-B28F-AF7A568EEC68@oracle.com>
+In-Reply-To: <FF1F6B85-A97D-41A0-B28F-AF7A568EEC68@oracle.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Alberto Garcia <berto@igalia.com>, linux-nfs@vger.kernel.org
-References: <20230713102531.131072-1-berto@igalia.com>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20230713102531.131072-1-berto@igalia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.600.7)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|PH0PR10MB4726:EE_
+x-ms-office365-filtering-correlation-id: e155690f-cbf1-44ee-ba9a-08db861fb281
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: NeMaE3QhKUMo/pmftrFgrETahIf+q8MSKz8hJI00m4PO9SJ0PM9oWHu7XdYu/gK61Ds/hdX65mCiE4neBENGAa5TrD8UIOYI6OJsL48B8YY7dPLOTZhWD8khyg21afNkXD2f1eYA8MUt2U3h1JHXkM2nVmsqrD6pKZb+dqVv8BCGdSgRbSjs7jnRitJGz5VyyUeYP0ywjbV6K7DB8kW2qWYOcj58XKK0lAxBa8amk9cStpN4PuOLOI/jPUlzomiUzFvTf2BdT9VB1srePedo3kE+LSBFSLAwG7o1C2jaBaQBEooyCWSC70a05LLfYbLhQmegZMzqL5O+WNARxuxhX/vCNUFXEU1ccFig2eFYFvRZqewrLQxX5wvEUfcvgJJ4sSrs5rs5dCq0WDxgc5B2G22zw9BHcxQ0LvgR3Xh2rMPFE5FMVJJTxKlu6lkPm70CsIfGr+11quE67b3AI/qlUDO/oaGMWelgiBCXbkJk5+dJ6JFb0C4ahCPC6AmzKuq4zo7GLtKvOqvPV3yUTLsAOjQhQvek6vbj0b20NdBTbhFjblE+J+lN1vaJRBQp0jwEIXBi87LJwlzvr8W55y2vvn5ZzHPh3qhw0I7gRIr5jYbXmSX7+3EWcxbPxvyPDdU4oU/bWmVhgVDNQftN8uuR9w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(136003)(396003)(346002)(366004)(376002)(451199021)(478600001)(6486002)(91956017)(76116006)(54906003)(71200400001)(36756003)(33656002)(38070700005)(86362001)(2616005)(2906002)(66946007)(5660300002)(53546011)(186003)(6506007)(6512007)(122000001)(316002)(64756008)(8676002)(66446008)(38100700002)(26005)(66476007)(66556008)(4326008)(83380400001)(41300700001)(8936002)(6916009)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?qtKS1FV3OJkTk/tOmT+TzYsRTywEGrAlwpVW6DAqXgs6//B1RUB3BqpV/l5z?=
+ =?us-ascii?Q?a4hFBXP55NS/Bcedz+DxPZAciJ6yowGdwW4zu/WnYPsnjelbUfXP5mFj8lf5?=
+ =?us-ascii?Q?URb54Q1rKqBS9xeY8Fc/gPelYeZtyXn7SNYvTO7jdaZxf6VcmDw2Xxe6S/GI?=
+ =?us-ascii?Q?vHgx3RaCq4iB82anNfI4yJXLCpd3W85NkHceFCuAMvm0qLSIq4+d7CGq1B56?=
+ =?us-ascii?Q?qMLjsfeeRDkQqFVGY2BOLEvCulvcsjKmSQc/2hdG2Mv3+IjcWQtWEAF010rx?=
+ =?us-ascii?Q?TdEkODnWNgrQwBZk2WUMjJ9kz+cBB9qVw6CrPwuHf6/6CBf3fSr4thMjGWSd?=
+ =?us-ascii?Q?RRgLlP9lh8rfeWjCj+FuemJqHM6D2t1WKyF52Y8kcFXQlaYktNwoTurtTJqh?=
+ =?us-ascii?Q?XDnc41w0mrEfLlxLdVDxMmlyH68e5rdHmKKczHhWUcWN1kLMklGq2e+Yq0Jw?=
+ =?us-ascii?Q?kh29oIxXnIyyVQKmV21yl4bGTRStAv1P1rPeTnFcLDjfHw7gyPFm9CHWBMBO?=
+ =?us-ascii?Q?kUNFdZ4V01b45DXWzATN/Yml3maK8iX5j2pO5Jejri+W51NqrtxTrK+tnZXN?=
+ =?us-ascii?Q?sf625j5qhMMcxr9yehVfGCepqg5U6wG+FZxWHI7L1em+1xoW9aKdVZTfk9Ie?=
+ =?us-ascii?Q?m6E8EyoKQLh2QsVJtq7VKXgq3tWdIjhjr1KmsZsyiZYoWCwcHMNyezDG1yTw?=
+ =?us-ascii?Q?pYM0Rmgep7ixATyzLwGu8T7/YEvjLC06lDi1JuuCXOLWINhUzXvV2xVcQj85?=
+ =?us-ascii?Q?61084W0V/sA4nr15Xst1N+VxV0LzyfmZRXQ478WnAVpgT41spOGn5L1QfX7v?=
+ =?us-ascii?Q?+FqQGg2dPr6Itlz9qP9v+fX6VA++guahxLNm6IRoVlgefOZ/0qRJF13pezNV?=
+ =?us-ascii?Q?5OGNkNqYdpwfHIOz7azroga24IJErmh/jSLDeM7z6SiQpeuDG94Kizof9fWr?=
+ =?us-ascii?Q?lTBB72Zlh+UTbTs1Q71Q9il6z6XOeNASwEWQR/OBTlZ3GJ7uaXvdWug3QEov?=
+ =?us-ascii?Q?yJPSsP5+h4Qt8Ze8UR2AXvz06nD5wkHnKKMXsC12YDYCh3oXyaxJqRDwy6K3?=
+ =?us-ascii?Q?5RGfDEpEcCH/qlAkjajcU4EAeE9GcOABkktc2ES87zNzyz11wFtEgXP5EXSm?=
+ =?us-ascii?Q?CCpNghPmVv2T6Unw7s0+lizkUa/8tRupvxm/D3UGlY0Y7WiO+Sy2UKIeLdVw?=
+ =?us-ascii?Q?/rpezovzewnbLlB067amS9mivt1boIDbyzVJge8AfE18jPkQAGfXCZSg2lXE?=
+ =?us-ascii?Q?Aopdcvt4FJh4d+nzGQRr6oNzZajmMgN1T7fqlHdbvhYUDdteF9vJHvdo28Tf?=
+ =?us-ascii?Q?BtibUibY5DynIggvyGHHOcLiemBwqyNlBSs4enAuZLmSqMJZPNaDdRSCKeZf?=
+ =?us-ascii?Q?r4UIMT81qv8BSdhfIVP+2Dqbuw5aRjj2d5UcFq76veEPVeEuyWgaLbZyrRw7?=
+ =?us-ascii?Q?3J8b/NI/sWRaSQ1BmiZk9T2w+SZmzeUirpD3Ruq19khyHGbCPHUn2uKURQmG?=
+ =?us-ascii?Q?wzjvhGfxUttC4gugxG4oLKUFEkUxnST7MUZgdlMy98XRucUh2KqeB8Ty+xW+?=
+ =?us-ascii?Q?PEWEuIcQJy2+QHA2py48RZsyX93Hhr+Gh/nxq9rInqNlIKg429rb8f76k7v5?=
+ =?us-ascii?Q?8Q=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <7EF2BFC827BB3B4CB295B152C4379700@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: WB7Ca4zuRSeSrcvhs/ZUUy5IJDaUZoSYjvlmxMvVrHbJ3QYbOzhP2YSaGNJRgT+OZ0goVA2Dm1svYZ7ZKOlBOtcg6pgwkHQsjJAYfyQj8x0q/la5aPWvbvlZqgv8oxAVmM2GR/KwkOUdlOX6UflDToxldByjTP0OwRx8lyB6rHQ08yIL/T3JvQVyxbv/hUdn42KdPYCcqkIFXMdBTajRw6L0GTbm4mlhYC5Xsv8WNQ4c0Os7PVnU/PrMWU7/u5blE/Jy5xrCPHryJfla1HdGAD73EHEnGUytFf2BuXMq4P04r5HT6K4VnwAH05EAfHzgGeeKFd5Z4jvHcHWRfmB+xIioHO/2QSvr+OV0R7AdL+vaLJ4L1eQ80vUu0BRFvPKvHSE80+x00MZMH4TAwydpffLYQObpn+cRkhvvIkI8xKSs5PAhpEQED3NAJtVb6/XZ9a3Qa0/k0SwtU6ylzC/RU4TEyF0C4/IxhkB2V3ztyCpkus+Oy98FJPlo3pNYQkDv2ONzgsgSTPgYl1itClWiP/ontjUuRhuQmNpRgGveQLfFbONzoHwMvbXawhTHIM60nXY/E5p0kCDCFndYAT9SOs4O9SsqniHcK5zRFklQm9EAqxcfZNys+JDAkViaI4YPcuFEivUru/2bkYVDYwMjZ0x6S9Ot+DvXTiAjXH3Op751Lx41oL4UgVdqMnmm181AAsvQA3IlOsavnry9+Volg9BAIJe5P1Z25ZbKiM3HvU32O8Fu9rH7Kok0GXukbjCUWz8Ek972wSgEGFO+BHnvR8JNJxgbwf6i4xsCMyMC9otg4FbiJrwnQZZpraoZExpi4U5qZOLG7nZWyjl8faiwNE3Vx8DVNfxbFFgqWv0iJrk=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e155690f-cbf1-44ee-ba9a-08db861fb281
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2023 17:11:29.9969
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 8R0oqQzrjUntmZinqQVuMX2ErgLgR315/xTuFxIdN0BFAY/KPnddNiqrAF0k6uu1WofN+mkwFpX+3lisQmnRoA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4726
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-16_04,2023-07-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
+ adultscore=0 spamscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2307160163
+X-Proofpoint-ORIG-GUID: ighcbo9fo8NYdfgrzAivIr-s7KqkFpuW
+X-Proofpoint-GUID: ighcbo9fo8NYdfgrzAivIr-s7KqkFpuW
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
 
-On 7/13/23 6:25 AM, Alberto Garcia wrote:
-> The NFS utils store their state under /var/lib/nfs and they can
-> generally handle the case where that directory is missing by creating
-> the appropriate files and directories automatically.
-> 
-> This is not the case of rpc-statd: if sm and sm.bak (under $statdpath,
-> which also defaults to /var/lib/nfs) are missing the daemon will
-> refuse to start and will exit with an error.
-Why are they would be missing? They are created on the
-nfs-utils installation.
 
-> 
-> If nfs-utils is configured with systemd support it can take advantage
-> of systemd-tmpfiles to ensure that the state directories are always
-> present and have the appropriate ownership.
-> 
-> This would normally be handled with the StateDirectory directive in
-> rpc-statd.service, however that method would not be able to change the
-> ownership of the directories to $statduser because this daemon needs
-> to be run as root, and only later changes its uid and gid.
-Just curious... how did you test this patch? When I apply it
-I get this error
+> On Jul 15, 2023, at 2:56 PM, Chuck Lever III <chuck.lever@oracle.com> wro=
+te:
+>=20
+>=20
+>=20
+>> On Jul 15, 2023, at 1:01 PM, Tom Talpey <tom@talpey.com> wrote:
+>>=20
+>> On 7/14/2023 11:13 AM, Chuck Lever wrote:
+>>> From: Chuck Lever <chuck.lever@oracle.com>
+>>> On server-initiated disconnect, rpcrdma_xprt_disconnect() DMA-unmaps
+>>> the transport's Receive buffers, but rpcrdma_post_recvs() neglected
+>>> to remap them after a new connection had been established. The
+>>> result is immediate failure of the new connection with the Receives
+>>> flushing with LOCAL_PROT_ERR.
+>>=20
+>> The fix is correct, my only comment is that the failure occurs when the
+>> first message is received, and only the first CQE is a LOCAL_PROT_ERR.
+>> The remainder of the posted receives are simply flushed.
+>>=20
+>> Same result of course! The summary is ok as-is. Important fix.
+>>=20
+>> Reviewed-by: Tom Talpey <tom@talpey.com>
+>=20
+> Thanks for the look!
+>=20
+> Anna, when applying this patch, can you replace:
+>=20
+> "The result is immediate failure of the new connection with the Receives
+> flushing with LOCAL_PROT_ERR."
+>=20
+> with
+>=20
+> "The result is immediate failure of the new connection with the first
+> unmapped Receive completing with LOCAL_PROT_ERR."
 
-Failed to insert: creating /var/lib/nfs/statd/sm/<client>: Permission denied
-STAT_FAIL to <server> for SM_MON of <server_ip>
+Also, please add:
 
-Maybe this is packing issue but I'm thinking it is more
-of systemd issue... the permissions on the sm directory
-are
-283 drwx------. 2 nobody rpcuser 6 Apr 18 20:00 /var/lib/nfs/statd/sm
-instead of
-283 drwx------. 2 rpcuser rpcuser 6 Apr 18 20:00 /var/lib/nfs/statd/sm
+Reported-by: Olga Kornievskaia <kolga@netapp.com>
 
-Even when I change the owner to rpcuser, I still get the
-permission error...
 
-steved.
-> 
-> Signed-off-by: Alberto Garcia <berto@igalia.com>
-> ---
->   configure.ac              | 1 +
->   systemd/Makefile.am       | 5 +++++
->   systemd/nfs-utils.conf.in | 4 ++++
->   3 files changed, 10 insertions(+)
->   create mode 100644 systemd/nfs-utils.conf.in
-> 
-> diff --git a/configure.ac b/configure.ac
-> index 6fbcb974..fe958ab3 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -695,6 +695,7 @@ AC_CONFIG_COMMANDS_PRE([eval eval _rpc_pipefsmount=$rpc_pipefsmount])
->   
->   AC_CONFIG_FILES([
->   	Makefile
-> +	systemd/nfs-utils.conf
->   	systemd/rpc-gssd.service
->   	systemd/rpc_pipefs.target
->   	systemd/var-lib-nfs-rpc_pipefs.mount
-> diff --git a/systemd/Makefile.am b/systemd/Makefile.am
-> index b4483222..6127986e 100644
-> --- a/systemd/Makefile.am
-> +++ b/systemd/Makefile.am
-> @@ -5,6 +5,9 @@ MAINTAINERCLEANFILES = Makefile.in
->   udev_rulesdir = /usr/lib/udev/rules.d/
->   udev_files = 60-nfs.rules
->   
-> +sdtmpfilesdir = /usr/lib/tmpfiles.d/
-> +sdtmpfiles_files = nfs-utils.conf
-> +
->   unit_files =  \
->       nfs-client.target \
->       rpc_pipefs.target \
-> @@ -85,4 +88,6 @@ install-data-hook: $(unit_files) $(udev_files)
->   	cp $(rpc_pipefs_mount_file) $(DESTDIR)/$(unitdir)/$(rpc_pipefsmount)
->   	mkdir -p $(DESTDIR)/$(udev_rulesdir)
->   	cp $(udev_files) $(DESTDIR)/$(udev_rulesdir)
-> +	mkdir -p $(DESTDIR)/$(sdtmpfilesdir)
-> +	cp $(sdtmpfiles_files) $(DESTDIR)/$(sdtmpfilesdir)
->   endif
-> diff --git a/systemd/nfs-utils.conf.in b/systemd/nfs-utils.conf.in
-> new file mode 100644
-> index 00000000..a44c337e
-> --- /dev/null
-> +++ b/systemd/nfs-utils.conf.in
-> @@ -0,0 +1,4 @@
-> +# This is a systemd-tmpfiles configuration file
-> +# type path			mode	uid	gid	age	argument
-> +d      @statdpath@/sm		0700	@statduser@	:root	-       -
-> +d      @statdpath@/sm.bak	0700	@statduser@	:root	-	-
+>>> Fixes: 671c450b6fe0 ("xprtrdma: Fix oops in Receive handler after devic=
+e removal")
+>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>>> ---
+>>> net/sunrpc/xprtrdma/verbs.c |    9 ++++-----
+>>> 1 file changed, 4 insertions(+), 5 deletions(-)
+>>> Hi Anna-
+>>> Can you apply this for 6.5-rc ?
+>>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+>>> index b098fde373ab..28c0771c4e8c 100644
+>>> --- a/net/sunrpc/xprtrdma/verbs.c
+>>> +++ b/net/sunrpc/xprtrdma/verbs.c
+>>> @@ -935,9 +935,6 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrd=
+ma_xprt *r_xprt,
+>>>  if (!rep->rr_rdmabuf)
+>>>  goto out_free;
+>>> - if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf))
+>>> - goto out_free_regbuf;
+>>> -
+>>>  rep->rr_cid.ci_completion_id =3D
+>>>  atomic_inc_return(&r_xprt->rx_ep->re_completion_ids);
+>>> @@ -956,8 +953,6 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrd=
+ma_xprt *r_xprt,
+>>>  spin_unlock(&buf->rb_lock);
+>>>  return rep;
+>>> -out_free_regbuf:
+>>> - rpcrdma_regbuf_free(rep->rr_rdmabuf);
+>>> out_free:
+>>>  kfree(rep);
+>>> out:
+>>> @@ -1363,6 +1358,10 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_x=
+prt, int needed, bool temp)
+>>>  rep =3D rpcrdma_rep_create(r_xprt, temp);
+>>>  if (!rep)
+>>>  break;
+>>> + if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf)) {
+>>> + rpcrdma_rep_put(buf, rep);
+>>> + break;
+>>> + }
+>>>    rep->rr_cid.ci_queue_id =3D ep->re_attr.recv_cq->res.id;
+>>>  trace_xprtrdma_post_recv(rep);
+>=20
+> --
+> Chuck Lever
+
+
+--
+Chuck Lever
+
 
