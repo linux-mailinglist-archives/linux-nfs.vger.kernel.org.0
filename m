@@ -2,78 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB9BA756F1C
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jul 2023 23:49:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C7AE2756F20
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jul 2023 23:50:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbjGQVtJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Jul 2023 17:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59604 "EHLO
+        id S229579AbjGQVuF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Jul 2023 17:50:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbjGQVtI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jul 2023 17:49:08 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAECC18C
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 14:48:21 -0700 (PDT)
+        with ESMTP id S229458AbjGQVuE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jul 2023 17:50:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F57318C
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 14:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689630498;
+        s=mimecast20190719; t=1689630556;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=K+EyE2QbRkAvOrPfcyegLMwUxP5zgW6KdyG5negjf1g=;
-        b=bEkiBd+JWvb+mWznU8llJ0GZzJroFJ9PnwzTj6X7+/hZ78zeQGQuyHyo1zDUhmHEojYtRD
-        kpWxrk67yUBbgTZM0CkF86zi9LaD09PVYZeUuSOxUdM9OjL6WNnKWL7OtWAVd1RGMxn96V
-        E1IO/7tyo0A3EsXNA0d6G4Lr2HwgXXE=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=SUsbOV58nTmrf8yVoHZfbYogGzZNZw+5WJGeG44s1AM=;
+        b=VMUHfrGK3VeABXl6wi8LZuSvARRSalxR/ConhlWPBdNnUj85UAsIbRtKMbnY99sGH5Nb5C
+        qKmIxSLr6Qyq/mLFdbzXgfeXPFSJgBUhgRZg9Cc8zdpwh8+YE23+Kxl0T3gCj1XM7Rth8N
+        mOLHKeaIlnTcw5WvWRydy5H3N5ZXOVo=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-634-RmFcROKcNX6Do7IEV3HYMw-1; Mon, 17 Jul 2023 17:48:16 -0400
-X-MC-Unique: RmFcROKcNX6Do7IEV3HYMw-1
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-401e1fc831fso9028371cf.1
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 14:48:16 -0700 (PDT)
+ us-mta-509-vSNtojDyNZKmYRRIwqsA1Q-1; Mon, 17 Jul 2023 17:49:14 -0400
+X-MC-Unique: vSNtojDyNZKmYRRIwqsA1Q-1
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-401e1fc831fso9031101cf.1
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 14:49:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689630495; x=1692222495;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        d=1e100.net; s=20221208; t=1689630554; x=1692222554;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K+EyE2QbRkAvOrPfcyegLMwUxP5zgW6KdyG5negjf1g=;
-        b=LHJ3RkFompgrmW07346M6FPltU9qyrxS1gL7KThyfhM/6yAUILGwwZ3d4CQkBqg0CF
-         uKDCDEl3PAgGxjuF5ZKJVkgYPY8nMnTnV1zUsFjzH/BSx2Ztz4INhOHOLltpfaZkToF0
-         rGfpy4Hhb9UrdKlgsHm6R2GmBA1xjBAHHRh4Ag7nBS5F4ewUDdI0jGOBv7heH4OOf7VD
-         vhMX6JbA8p3cOUmthyZSdfXWN/+6B7HalSfIIdGcZ0N0/lvwBQowsfJzw+HNzvndFDPf
-         Lirmxp6uZcvCOdniiXAsUdfNWOjYFVXsAtrkr4bEQXO2kt+mDw9wHxVRO57j0SEJ15Tf
-         iHeQ==
-X-Gm-Message-State: ABy/qLaKhM8ymZTj8vVuwZUMcSWCXEdDAiPfcUTnzD722U6EZp3Kg+LU
-        77v5+EhRC3AuQBi/eCfDLLnkJvwZR//I57kFUj5LuJpFHStGxlHijYqUK21AIxJ4MIkejP5GYS4
-        f5B8x+Vtv2Us/8fOWaLvCiIZhYP/T
-X-Received: by 2002:a05:622a:1884:b0:400:aaa0:a4ef with SMTP id v4-20020a05622a188400b00400aaa0a4efmr9043927qtc.6.1689630495622;
-        Mon, 17 Jul 2023 14:48:15 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHstyCvWGjdoDMceawBR8xdSBPawalrQ8SeJH8VNrHPdzXhc3mpC5hBKaL3L/I/MMbS/qT9YQ==
-X-Received: by 2002:a05:622a:1884:b0:400:aaa0:a4ef with SMTP id v4-20020a05622a188400b00400aaa0a4efmr9043919qtc.6.1689630495404;
-        Mon, 17 Jul 2023 14:48:15 -0700 (PDT)
+        bh=SUsbOV58nTmrf8yVoHZfbYogGzZNZw+5WJGeG44s1AM=;
+        b=Ve0yQGF1fxe8yapTnJYHzt9vaWE5Eggl8j2J6nbLqKYzzUIk0y5Z5emmZmDE4O5IEl
+         wCS+xnlLe7U8nPYBJKSBGNlgR0OGBIQqZzGU5nicWtA0jtmPoii0lo9s9tKFVzz/eI2i
+         J2WfAOI50FDJ/U7denVjPAnblLGDpInW/nsdfYb9X8Nt1VPNcc1Mc+8pCYm5+MRE6cXM
+         MZvdXQX2gNnL/vm2d3IE5nlrzEkhD6ooYb7wuoxzpmsFv3w68fV0jAtfLdcgVMSyxO/Z
+         wnHl+sC3Xo2Oyj/mteTpKg2wJHUYAWTpnO4OVpKH8B0UlA/7P8pj5upEjrHApKH1augK
+         Z82g==
+X-Gm-Message-State: ABy/qLYXPoaBqpnbYKZbCkKKMz7gR6gw17ihC8n819PZzC4ha+/wSZ2t
+        EO7K5uEXgrk2vNPMnVG4C0/6ZfnqniB3bDAABCUbGyy6zk+q5EL+bDtb+HZ09Cw5iK99O0yoRYG
+        6BTsMY4/TcufPeA24N5UA
+X-Received: by 2002:a05:6214:2aa8:b0:625:86ed:8ab4 with SMTP id js8-20020a0562142aa800b0062586ed8ab4mr9935683qvb.3.1689630553867;
+        Mon, 17 Jul 2023 14:49:13 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlFalgQZ4qvKzPaXLVGInV8DQnwXdKZtgu+9cFviEGWrApTb5CQt2cXQ9MyF/Dc4LUkLur+pzg==
+X-Received: by 2002:a05:6214:2aa8:b0:625:86ed:8ab4 with SMTP id js8-20020a0562142aa800b0062586ed8ab4mr9935668qvb.3.1689630553530;
+        Mon, 17 Jul 2023 14:49:13 -0700 (PDT)
 Received: from [172.31.1.12] ([70.105.251.231])
-        by smtp.gmail.com with ESMTPSA id k10-20020ac8474a000000b004033c3948f9sm163946qtp.42.2023.07.17.14.48.14
+        by smtp.gmail.com with ESMTPSA id g15-20020a0caacf000000b006263c531f61sm222521qvb.24.2023.07.17.14.49.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 14:48:14 -0700 (PDT)
-Message-ID: <fd91b129-b383-9b1d-0978-032a7ff92dbb@redhat.com>
-Date:   Mon, 17 Jul 2023 17:48:13 -0400
+        Mon, 17 Jul 2023 14:49:13 -0700 (PDT)
+Message-ID: <b2663a92-7947-d528-b852-fab3552ea867@redhat.com>
+Date:   Mon, 17 Jul 2023 17:49:12 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH 0/2] Mitigate startup race between DNS resolution and
- idmapd
+Subject: Re: [PATCH nfs-utils] start-statd: Fix shellcheck warnings
 Content-Language: en-US
-To:     Aram Akhavan <github@aram.nubmail.ca>, linux-nfs@vger.kernel.org
-References: <20230613034625.498132-1-github@aram.nubmail.ca>
+To:     Salvatore Bonaccorso <carnil@debian.org>, NeilBrown <neilb@suse.de>
+Cc:     linux-nfs@vger.kernel.org, Ben Hutchings <benh@debian.org>
+References: <20230709072028.829990-1-carnil@debian.org>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20230613034625.498132-1-github@aram.nubmail.ca>
+In-Reply-To: <20230709072028.829990-1-carnil@debian.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -82,26 +82,51 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 6/12/23 11:46 PM, Aram Akhavan wrote:
-> idmapd needs DNS resolution on startup if a domain isn't specified by
-> config file. This isn't trivial since even with systemd's
-> network-online.target, DNS resolution isn't guaranteed. On Debian,
-> for example (in part due to some lingering bugs), adding the
-> target, and even enabling the not-well-documented
-> ifupdown-wait-online.service is not enough. These two patches aim to
-> improve the startup behavior in common setup scenarios.
+On 7/9/23 3:20 AM, Salvatore Bonaccorso wrote:
+> From: Ben Hutchings <benh@debian.org>
 > 
-> Aram Akhavan (2):
->    nfs-idmapd.service: add network-online.target to Wants= and After=
->    libnfsidmap: try to get the domain directly from hostname if the DNS
->      lookup fails and always show the log message if the domain can't be
->      determined
+> shellcheck currently complains:
 > 
->   support/nfsidmap/libnfsidmap.c | 15 ++++++++++-----
->   systemd/nfs-idmapd.service     |  3 ++-
->   2 files changed, 12 insertions(+), 6 deletions(-)
+> In utils/statd/start-statd line 14:
+>         [ 1`cat /run/rpc.statd.pid` -gt 1 ] &&
+>            ^----------------------^ SC2046 (warning): Quote this to prevent word splitting.
+>            ^----------------------^ SC2006 (style): Use $(...) notation instead of legacy backticks `...`.
 > 
-Both committed... (Tag nfs-utils-2-6-4-rc3)
+> Did you mean:
+>         [ 1$(cat /run/rpc.statd.pid) -gt 1 ] &&
+> 
+> In utils/statd/start-statd line 15:
+>         kill -0 `cat /run/rpc.statd.pid` > /dev/null 2>&1
+>                 ^----------------------^ SC2046 (warning): Quote this to prevent word splitting.
+>                 ^----------------------^ SC2006 (style): Use $(...) notation instead of legacy backticks `...`.
+> 
+> Did you mean:
+>         kill -0 $(cat /run/rpc.statd.pid) > /dev/null 2>&1
+> 
+> Use quotes and $() as recommended.
+> 
+> Signed-off-by: Ben Hutchings <benh@debian.org>
+> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+Committed (tag: nfs-utils-2-6-4-rc3)
 
-steved
+steved.
+> ---
+>   utils/statd/start-statd | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/utils/statd/start-statd b/utils/statd/start-statd
+> index 2baf73c385cf..b11a7d91a7f6 100755
+> --- a/utils/statd/start-statd
+> +++ b/utils/statd/start-statd
+> @@ -11,8 +11,8 @@ exec 9> /run/rpc.statd.lock
+>   flock -e 9
+>   
+>   if [ -s /run/rpc.statd.pid ] &&
+> -       [ 1`cat /run/rpc.statd.pid` -gt 1 ] &&
+> -       kill -0 `cat /run/rpc.statd.pid` > /dev/null 2>&1
+> +       [ "1$(cat /run/rpc.statd.pid)" -gt 1 ] &&
+> +       kill -0 "$(cat /run/rpc.statd.pid)" > /dev/null 2>&1
+>   then
+>       # statd already running - must have been slow to respond.
+>       exit 0
 
