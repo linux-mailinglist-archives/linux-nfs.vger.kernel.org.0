@@ -2,131 +2,309 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7AE2756F20
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jul 2023 23:50:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19026756F1F
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jul 2023 23:49:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjGQVuF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Jul 2023 17:50:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59648 "EHLO
+        id S230192AbjGQVtg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Jul 2023 17:49:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjGQVuE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jul 2023 17:50:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F57318C
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 14:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689630556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        with ESMTP id S229458AbjGQVtg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jul 2023 17:49:36 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1FC318D
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 14:49:34 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 0FBF821906;
+        Mon, 17 Jul 2023 21:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1689630572; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SUsbOV58nTmrf8yVoHZfbYogGzZNZw+5WJGeG44s1AM=;
-        b=VMUHfrGK3VeABXl6wi8LZuSvARRSalxR/ConhlWPBdNnUj85UAsIbRtKMbnY99sGH5Nb5C
-        qKmIxSLr6Qyq/mLFdbzXgfeXPFSJgBUhgRZg9Cc8zdpwh8+YE23+Kxl0T3gCj1XM7Rth8N
-        mOLHKeaIlnTcw5WvWRydy5H3N5ZXOVo=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-509-vSNtojDyNZKmYRRIwqsA1Q-1; Mon, 17 Jul 2023 17:49:14 -0400
-X-MC-Unique: vSNtojDyNZKmYRRIwqsA1Q-1
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-401e1fc831fso9031101cf.1
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 14:49:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689630554; x=1692222554;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SUsbOV58nTmrf8yVoHZfbYogGzZNZw+5WJGeG44s1AM=;
-        b=Ve0yQGF1fxe8yapTnJYHzt9vaWE5Eggl8j2J6nbLqKYzzUIk0y5Z5emmZmDE4O5IEl
-         wCS+xnlLe7U8nPYBJKSBGNlgR0OGBIQqZzGU5nicWtA0jtmPoii0lo9s9tKFVzz/eI2i
-         J2WfAOI50FDJ/U7denVjPAnblLGDpInW/nsdfYb9X8Nt1VPNcc1Mc+8pCYm5+MRE6cXM
-         MZvdXQX2gNnL/vm2d3IE5nlrzEkhD6ooYb7wuoxzpmsFv3w68fV0jAtfLdcgVMSyxO/Z
-         wnHl+sC3Xo2Oyj/mteTpKg2wJHUYAWTpnO4OVpKH8B0UlA/7P8pj5upEjrHApKH1augK
-         Z82g==
-X-Gm-Message-State: ABy/qLYXPoaBqpnbYKZbCkKKMz7gR6gw17ihC8n819PZzC4ha+/wSZ2t
-        EO7K5uEXgrk2vNPMnVG4C0/6ZfnqniB3bDAABCUbGyy6zk+q5EL+bDtb+HZ09Cw5iK99O0yoRYG
-        6BTsMY4/TcufPeA24N5UA
-X-Received: by 2002:a05:6214:2aa8:b0:625:86ed:8ab4 with SMTP id js8-20020a0562142aa800b0062586ed8ab4mr9935683qvb.3.1689630553867;
-        Mon, 17 Jul 2023 14:49:13 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlFalgQZ4qvKzPaXLVGInV8DQnwXdKZtgu+9cFviEGWrApTb5CQt2cXQ9MyF/Dc4LUkLur+pzg==
-X-Received: by 2002:a05:6214:2aa8:b0:625:86ed:8ab4 with SMTP id js8-20020a0562142aa800b0062586ed8ab4mr9935668qvb.3.1689630553530;
-        Mon, 17 Jul 2023 14:49:13 -0700 (PDT)
-Received: from [172.31.1.12] ([70.105.251.231])
-        by smtp.gmail.com with ESMTPSA id g15-20020a0caacf000000b006263c531f61sm222521qvb.24.2023.07.17.14.49.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jul 2023 14:49:13 -0700 (PDT)
-Message-ID: <b2663a92-7947-d528-b852-fab3552ea867@redhat.com>
-Date:   Mon, 17 Jul 2023 17:49:12 -0400
+        bh=NEiuhFpDJt41CxMn8KqZ/C5pngD46ngqNY25fo3jtko=;
+        b=CBn5iSbjV1O7UHcT09R0TDDjLIruBdFU3XQpxw/4sckAJbVHbuPEHDzM+x16O49YSPNq8P
+        7x5+/syUV6cYLMgu0Qa+sNl+QD/WXNNZX8ES92WbuHx3Fj1lpMkCCSs2brI6uB0Fe8dHLR
+        Na9o4ID7URLUiX9d24l6LOZBtJDaEWg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1689630572;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NEiuhFpDJt41CxMn8KqZ/C5pngD46ngqNY25fo3jtko=;
+        b=fD1T+H9VoNuiEpUDkBJyGz4wnLV89ZxvlYe9V+v4kYoOUO51zjDHgOwrgMt9vO2zyl0C+0
+        RyzdgA5ZkFZRU2Dg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2968213276;
+        Mon, 17 Jul 2023 21:49:29 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 3N4oM2m3tWTDKQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 17 Jul 2023 21:49:29 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH nfs-utils] start-statd: Fix shellcheck warnings
-Content-Language: en-US
-To:     Salvatore Bonaccorso <carnil@debian.org>, NeilBrown <neilb@suse.de>
-Cc:     linux-nfs@vger.kernel.org, Ben Hutchings <benh@debian.org>
-References: <20230709072028.829990-1-carnil@debian.org>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20230709072028.829990-1-carnil@debian.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Lorenzo Bianconi" <lorenzo@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com,
+        chuck.lever@oracle.com, jlayton@kernel.org
+Subject: Re: [PATCH v3] NFSD: add rpc_status entry in nfsd debug filesystem
+In-reply-to: <4aa3c87872031ca42d411ed60169c6daa951620b.1689610081.git.lorenzo@kernel.org>
+References: <4aa3c87872031ca42d411ed60169c6daa951620b.1689610081.git.lorenzo@kernel.org>
+Date:   Tue, 18 Jul 2023 07:49:24 +1000
+Message-id: <168963056470.1518.10737362406173956339@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-On 7/9/23 3:20 AM, Salvatore Bonaccorso wrote:
-> From: Ben Hutchings <benh@debian.org>
-> 
-> shellcheck currently complains:
-> 
-> In utils/statd/start-statd line 14:
->         [ 1`cat /run/rpc.statd.pid` -gt 1 ] &&
->            ^----------------------^ SC2046 (warning): Quote this to prevent word splitting.
->            ^----------------------^ SC2006 (style): Use $(...) notation instead of legacy backticks `...`.
-> 
-> Did you mean:
->         [ 1$(cat /run/rpc.statd.pid) -gt 1 ] &&
-> 
-> In utils/statd/start-statd line 15:
->         kill -0 `cat /run/rpc.statd.pid` > /dev/null 2>&1
->                 ^----------------------^ SC2046 (warning): Quote this to prevent word splitting.
->                 ^----------------------^ SC2006 (style): Use $(...) notation instead of legacy backticks `...`.
-> 
-> Did you mean:
->         kill -0 $(cat /run/rpc.statd.pid) > /dev/null 2>&1
-> 
-> Use quotes and $() as recommended.
-> 
-> Signed-off-by: Ben Hutchings <benh@debian.org>
-> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
-Committed (tag: nfs-utils-2-6-4-rc3)
-
-steved.
+On Tue, 18 Jul 2023, Lorenzo Bianconi wrote:
+> Introduce rpc_status entry in nfsd debug filesystem in order to dump
+> pending RPC requests debugging information.
+>=20
+> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D366
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 > ---
->   utils/statd/start-statd | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/utils/statd/start-statd b/utils/statd/start-statd
-> index 2baf73c385cf..b11a7d91a7f6 100755
-> --- a/utils/statd/start-statd
-> +++ b/utils/statd/start-statd
-> @@ -11,8 +11,8 @@ exec 9> /run/rpc.statd.lock
->   flock -e 9
->   
->   if [ -s /run/rpc.statd.pid ] &&
-> -       [ 1`cat /run/rpc.statd.pid` -gt 1 ] &&
-> -       kill -0 `cat /run/rpc.statd.pid` > /dev/null 2>&1
-> +       [ "1$(cat /run/rpc.statd.pid)" -gt 1 ] &&
-> +       kill -0 "$(cat /run/rpc.statd.pid)" > /dev/null 2>&1
->   then
->       # statd already running - must have been slow to respond.
->       exit 0
+> Changes since v2:
+> - minor changes in nfsd_rpc_status_show output
+>=20
+> Changes since v1:
+> - rework nfsd_rpc_status_show output
+>=20
+> Changes since RFCv1:
+> - riduce time holding nfsd_mutex bumping svc_serv refcoung in
+>   nfsd_rpc_status_open()
+> - dump rqstp->rq_stime
+> - add missing kdoc for nfsd_rpc_status_open()
+> ---
+>  fs/nfsd/nfs4proc.c |  4 +--
+>  fs/nfsd/nfsctl.c   | 10 ++++++
+>  fs/nfsd/nfsd.h     |  2 ++
+>  fs/nfsd/nfssvc.c   | 83 ++++++++++++++++++++++++++++++++++++++++++++++
+>  net/sunrpc/svc.c   |  2 +-
+>  5 files changed, 97 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index d8e7a533f9d2..a7f522390a66 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -2463,8 +2463,6 @@ static inline void nfsd4_increment_op_stats(u32 opnum)
+> =20
+>  static const struct nfsd4_operation nfsd4_ops[];
+> =20
+> -static const char *nfsd4_op_name(unsigned opnum);
+> -
+>  /*
+>   * Enforce NFSv4.1 COMPOUND ordering rules:
+>   *
+> @@ -3594,7 +3592,7 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op)
+>  	}
+>  }
+> =20
+> -static const char *nfsd4_op_name(unsigned opnum)
+> +const char *nfsd4_op_name(unsigned opnum)
+>  {
+>  	if (opnum < ARRAY_SIZE(nfsd4_ops))
+>  		return nfsd4_ops[opnum].op_name;
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 1b8b1aab9a15..629b4296e7c6 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -57,6 +57,8 @@ enum {
+>  	NFSD_RecoveryDir,
+>  	NFSD_V4EndGrace,
+>  #endif
+> +	NFSD_Rpc_Status,
+> +
+>  	NFSD_MaxReserved
+>  };
+> =20
+> @@ -195,6 +197,13 @@ static inline struct net *netns(struct file *file)
+>  	return file_inode(file)->i_sb->s_fs_info;
+>  }
+> =20
+> +static const struct file_operations nfsd_rpc_status_operations =3D {
+> +	.open		=3D nfsd_rpc_status_open,
+> +	.read		=3D seq_read,
+> +	.llseek		=3D seq_lseek,
+> +	.release	=3D nfsd_pool_stats_release,
+> +};
+> +
+>  /*
+>   * write_unlock_ip - Release all locks used by a client
+>   *
+> @@ -1400,6 +1409,7 @@ static int nfsd_fill_super(struct super_block *sb, st=
+ruct fs_context *fc)
+>  		[NFSD_RecoveryDir] =3D {"nfsv4recoverydir", &transaction_ops, S_IWUSR|S_=
+IRUSR},
+>  		[NFSD_V4EndGrace] =3D {"v4_end_grace", &transaction_ops, S_IWUSR|S_IRUGO=
+},
+>  #endif
+> +		[NFSD_Rpc_Status] =3D {"rpc_status", &nfsd_rpc_status_operations, S_IRUG=
+O},
+>  		/* last one */ {""}
+>  	};
+> =20
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index d88498f8b275..75a3e1d55bc8 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -94,6 +94,7 @@ int		nfsd_get_nrthreads(int n, int *, struct net *);
+>  int		nfsd_set_nrthreads(int n, int *, struct net *);
+>  int		nfsd_pool_stats_open(struct inode *, struct file *);
+>  int		nfsd_pool_stats_release(struct inode *, struct file *);
+> +int		nfsd_rpc_status_open(struct inode *inode, struct file *file);
+>  void		nfsd_shutdown_threads(struct net *net);
+> =20
+>  void		nfsd_put(struct net *net);
+> @@ -506,6 +507,7 @@ extern void nfsd4_ssc_init_umount_work(struct nfsd_net =
+*nn);
+> =20
+>  extern void nfsd4_init_leases_net(struct nfsd_net *nn);
+> =20
+> +const char *nfsd4_op_name(unsigned opnum);
+>  #else /* CONFIG_NFSD_V4 */
+>  static inline int nfsd4_is_junction(struct dentry *dentry)
+>  {
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 97830e28c140..3f6d53e5f579 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -1149,3 +1149,86 @@ int nfsd_pool_stats_release(struct inode *inode, str=
+uct file *file)
+>  	mutex_unlock(&nfsd_mutex);
+>  	return ret;
+>  }
+> +
+> +static int nfsd_rpc_status_show(struct seq_file *m, void *v)
+> +{
+> +	struct inode *inode =3D file_inode(m->file);
+> +	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id);
+> +	int i;
+> +
+> +	rcu_read_lock();
+> +
+> +	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+> +		struct svc_rqst *rqstp;
+> +
+> +		list_for_each_entry_rcu(rqstp,
+> +				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
+> +				rq_all) {
+> +			if (!test_bit(RQ_BUSY, &rqstp->rq_flags))
+> +				continue;
+
+The fact that RQ_BUSY is set doesn't mean that the various fields you
+are sampling are valid or stable.
+
+I suggest you add add a counter to the rqstp which is incremented from
+even to odd after parsing a request - including he v4 parsing needed to
+have a sable ->opcnt - and then incremented from odd to even when the
+request is complete.
+Then this code samples the counter, skips the rqst if the counter is
+even, and resamples the counter after collecting the data.  If it has
+changed, the drop the record.
+
+> +
+> +			seq_printf(m,
+> +				   "0x%08x 0x%08lx 0x%08x NFSv%d %s %016lld",
+> +				   be32_to_cpu(rqstp->rq_xid), rqstp->rq_flags,
+> +				   rqstp->rq_prog, rqstp->rq_vers,
+> +				   svc_proc_name(rqstp),
+> +				   ktime_to_us(rqstp->rq_stime));
+> +
+> +			if (rqstp->rq_addr.ss_family =3D=3D AF_INET)
+> +				seq_printf(m, " %pI4 %pI4",
+> +					   &((struct sockaddr_in *)&rqstp->rq_addr)->sin_addr,
+> +					   &((struct sockaddr_in *)&rqstp->rq_daddr)->sin_addr);
+> +			else if (rqstp->rq_addr.ss_family =3D=3D AF_INET6)
+> +				seq_printf(m, " %pI6 %pI6",
+> +					   &((struct sockaddr_in6 *)&rqstp->rq_addr)->sin6_addr,
+> +					   &((struct sockaddr_in6 *)&rqstp->rq_daddr)->sin6_addr);
+> +			else
+> +				seq_printf(m, " unknown:%hu unknown:%hu",
+> +					   rqstp->rq_addr.ss_family,
+> +					   rqstp->rq_daddr.ss_family);
+
+The above code looks a lot like svc_print_addr().  Can we use the same
+code?  Do they need to be different.
+
+NeilBrown
+
+
+> +#ifdef CONFIG_NFSD_V4
+> +			if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
+> +			    rqstp->rq_proc =3D=3D NFSPROC4_COMPOUND) {
+> +				/* NFSv4 compund */
+> +				struct nfsd4_compoundargs *args =3D rqstp->rq_argp;
+> +				struct nfsd4_compoundres *resp =3D rqstp->rq_resp;
+> +
+> +				while (resp->opcnt < args->opcnt) {
+> +					struct nfsd4_op *op =3D &args->ops[resp->opcnt++];
+> +
+> +					seq_printf(m, " %s%s", nfsd4_op_name(op->opnum),
+> +						   resp->opcnt < args->opcnt ? ":" : "");
+> +				}
+> +			}
+> +#endif /* CONFIG_NFSD_V4 */
+> +			seq_puts(m, "\n");
+> +		}
+> +	}
+> +
+> +	rcu_read_unlock();
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * nfsd_rpc_status_open - Atomically copy a write verifier
+> + * @inode: entry inode pointer.
+> + * @file: entry file pointer.
+> + *
+> + * This routine dumps pending RPC requests info queued into nfs server.
+> + */
+> +int nfsd_rpc_status_open(struct inode *inode, struct file *file)
+> +{
+> +	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id);
+> +
+> +	mutex_lock(&nfsd_mutex);
+> +	if (!nn->nfsd_serv) {
+> +		mutex_unlock(&nfsd_mutex);
+> +		return -ENODEV;
+> +	}
+> +
+> +	svc_get(nn->nfsd_serv);
+> +	mutex_unlock(&nfsd_mutex);
+> +
+> +	return single_open(file, nfsd_rpc_status_show, inode->i_private);
+> +}
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 587811a002c9..44eac83b35a1 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -1629,7 +1629,7 @@ const char *svc_proc_name(const struct svc_rqst *rqst=
+p)
+>  		return rqstp->rq_procinfo->pc_name;
+>  	return "unknown";
+>  }
+> -
+> +EXPORT_SYMBOL_GPL(svc_proc_name);
+> =20
+>  /**
+>   * svc_encode_result_payload - mark a range of bytes as a result payload
+> --=20
+> 2.41.0
+>=20
+>=20
 
