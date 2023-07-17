@@ -2,247 +2,266 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BEAF75500F
-	for <lists+linux-nfs@lfdr.de>; Sun, 16 Jul 2023 19:11:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA15756305
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jul 2023 14:45:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229775AbjGPRLn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 16 Jul 2023 13:11:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59510 "EHLO
+        id S230322AbjGQMpX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Jul 2023 08:45:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbjGPRLm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 16 Jul 2023 13:11:42 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4AC7184;
-        Sun, 16 Jul 2023 10:11:40 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36GH091b029834;
-        Sun, 16 Jul 2023 17:11:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=sAi/r+9P38L247cdJib3B9EXoC8Clin6pdnclGVNXuE=;
- b=zdkYYL2MMbvWltIATWEM9Ld33i7BWaynELbYW44K/6/D56BZtD2IyeD8PQA572YTrcEk
- qS6JBS+wQ/uwgztfN9TOqKjmZMz1FAL8YmsFoqHO9vEGhCy0WBNJdPMNhxjkuUlZ8haA
- GFI7VVpKKa7Fud5Lt/2ps12Ni6LVhOehvZOatwAirDmgBVitUnp8QOiflcIo7FRh026M
- 53f+W+RJKkYfQy9WBEdT795r/PAEnmS2kcCp15B8EPhtP65OolIuf9tBgubR4ecYWwWZ
- tIsZHDVw1QQm94a5U0oIKQ0gdvkTMEv4ruSqhsLvlZ9Dhh/cz8PrPHTk4jxwl+bvY5MI LA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3run781drr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 16 Jul 2023 17:11:33 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36GGVeP7038163;
-        Sun, 16 Jul 2023 17:11:32 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2103.outbound.protection.outlook.com [104.47.55.103])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ruhw2nh84-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 16 Jul 2023 17:11:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OkKbrg8T7XSDniBAuXadbMFHSk4s5MagEtuzZ3cDC6T1aLU2dV2ZyDcFzJvmWYVeLLayEBPfTVeEtacouRboi9Q89ezqz6u22NFJE6H+druBIKwJvxZrrJlqdwq+HRcBQPS+afN1u+9S9W4ZwFaUA+QhNt1qNKkSMNwREGODREhbw3r+FYtF7ypuZo8f1g4rVSGFxsrXBWj55yuiPHzXBMHP/n4j72iWJ4TvWKHXQ3P/28UurbhYvU/S+KTmyTbnPKeWwXGAFeVKmauLISxMciqjtOgBiFK2AEQH4Qeoj3zgco6gtYmg+iDhVjGIkTaWUGHmeAz55w1cn6rGDA+LXg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sAi/r+9P38L247cdJib3B9EXoC8Clin6pdnclGVNXuE=;
- b=N/19klKRq585T2Chx7g3PKy/h1oX4/ljzN1DMN1oKRrA8X3Xid3+mUHmiuLPJ7nSJGxOZHXfi/I242e1CBhDGXeBiaESBBvoYlLXxWkGywUg0/MWWP5Ny26uan/lQi3OdVsubWQGEl6s+1dpHQgDmj9WLW8oaSzDyHthHhKs1bDLqcgg25BDLBs+TY/yf6FJaOrnDR9lznIgBBrk2ZmTksqgND8ql/jeDAHywsY9NwY/Yju3SKkQjErTvaeKcS1UsgllNyKWQ/foUrCHtOBRW/827/9O6j9ABttutqbMrja0qDkOjh6pQON6GRCWFALjEHFH25T+Fg+IhnxvMN/uVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sAi/r+9P38L247cdJib3B9EXoC8Clin6pdnclGVNXuE=;
- b=w3S8qST+FxgrmiaeHmrjQW5LNFCZE0LHaAZn1gL8w9RK0uiyKjz5/p1YstocCi1+VGX3nSQgudxGdp9KRg2iWGsC22hcjbTyEob4MWKTDn0hsP5T5aId4LjXndTHcH0Fa5mcGu7oMFzWCIhzysyncWoNEzIWoVhoH0ZtX5SHWnU=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH0PR10MB4726.namprd10.prod.outlook.com (2603:10b6:510:3d::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.31; Sun, 16 Jul
- 2023 17:11:30 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::2107:f712:a7c5:9ac7]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::2107:f712:a7c5:9ac7%3]) with mapi id 15.20.6588.031; Sun, 16 Jul 2023
- 17:11:30 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Anna Schumaker <anna.schumaker@netapp.com>
-CC:     Chuck Lever <cel@kernel.org>, Tom Talpey <tom@talpey.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>
-Subject: Re: [PATCH] xprtrdma: Remap Receive buffers after a reconnect
-Thread-Topic: [PATCH] xprtrdma: Remap Receive buffers after a reconnect
-Thread-Index: AQHZtmXW1KhFMZKe0k63dgGlYrfiG6+7DzkAgAAgMYCAAXTdgA==
-Date:   Sun, 16 Jul 2023 17:11:29 +0000
-Message-ID: <1678F63C-DBBB-48FE-B2B9-0C2A5CD5217C@oracle.com>
-References: <168934757954.2781502.4228890662497418497.stgit@morisot.1015granger.net>
- <a9f18064-45d4-4346-0156-dcd74e001b82@talpey.com>
- <FF1F6B85-A97D-41A0-B28F-AF7A568EEC68@oracle.com>
-In-Reply-To: <FF1F6B85-A97D-41A0-B28F-AF7A568EEC68@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.600.7)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|PH0PR10MB4726:EE_
-x-ms-office365-filtering-correlation-id: e155690f-cbf1-44ee-ba9a-08db861fb281
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: NeMaE3QhKUMo/pmftrFgrETahIf+q8MSKz8hJI00m4PO9SJ0PM9oWHu7XdYu/gK61Ds/hdX65mCiE4neBENGAa5TrD8UIOYI6OJsL48B8YY7dPLOTZhWD8khyg21afNkXD2f1eYA8MUt2U3h1JHXkM2nVmsqrD6pKZb+dqVv8BCGdSgRbSjs7jnRitJGz5VyyUeYP0ywjbV6K7DB8kW2qWYOcj58XKK0lAxBa8amk9cStpN4PuOLOI/jPUlzomiUzFvTf2BdT9VB1srePedo3kE+LSBFSLAwG7o1C2jaBaQBEooyCWSC70a05LLfYbLhQmegZMzqL5O+WNARxuxhX/vCNUFXEU1ccFig2eFYFvRZqewrLQxX5wvEUfcvgJJ4sSrs5rs5dCq0WDxgc5B2G22zw9BHcxQ0LvgR3Xh2rMPFE5FMVJJTxKlu6lkPm70CsIfGr+11quE67b3AI/qlUDO/oaGMWelgiBCXbkJk5+dJ6JFb0C4ahCPC6AmzKuq4zo7GLtKvOqvPV3yUTLsAOjQhQvek6vbj0b20NdBTbhFjblE+J+lN1vaJRBQp0jwEIXBi87LJwlzvr8W55y2vvn5ZzHPh3qhw0I7gRIr5jYbXmSX7+3EWcxbPxvyPDdU4oU/bWmVhgVDNQftN8uuR9w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(136003)(396003)(346002)(366004)(376002)(451199021)(478600001)(6486002)(91956017)(76116006)(54906003)(71200400001)(36756003)(33656002)(38070700005)(86362001)(2616005)(2906002)(66946007)(5660300002)(53546011)(186003)(6506007)(6512007)(122000001)(316002)(64756008)(8676002)(66446008)(38100700002)(26005)(66476007)(66556008)(4326008)(83380400001)(41300700001)(8936002)(6916009)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?qtKS1FV3OJkTk/tOmT+TzYsRTywEGrAlwpVW6DAqXgs6//B1RUB3BqpV/l5z?=
- =?us-ascii?Q?a4hFBXP55NS/Bcedz+DxPZAciJ6yowGdwW4zu/WnYPsnjelbUfXP5mFj8lf5?=
- =?us-ascii?Q?URb54Q1rKqBS9xeY8Fc/gPelYeZtyXn7SNYvTO7jdaZxf6VcmDw2Xxe6S/GI?=
- =?us-ascii?Q?vHgx3RaCq4iB82anNfI4yJXLCpd3W85NkHceFCuAMvm0qLSIq4+d7CGq1B56?=
- =?us-ascii?Q?qMLjsfeeRDkQqFVGY2BOLEvCulvcsjKmSQc/2hdG2Mv3+IjcWQtWEAF010rx?=
- =?us-ascii?Q?TdEkODnWNgrQwBZk2WUMjJ9kz+cBB9qVw6CrPwuHf6/6CBf3fSr4thMjGWSd?=
- =?us-ascii?Q?RRgLlP9lh8rfeWjCj+FuemJqHM6D2t1WKyF52Y8kcFXQlaYktNwoTurtTJqh?=
- =?us-ascii?Q?XDnc41w0mrEfLlxLdVDxMmlyH68e5rdHmKKczHhWUcWN1kLMklGq2e+Yq0Jw?=
- =?us-ascii?Q?kh29oIxXnIyyVQKmV21yl4bGTRStAv1P1rPeTnFcLDjfHw7gyPFm9CHWBMBO?=
- =?us-ascii?Q?kUNFdZ4V01b45DXWzATN/Yml3maK8iX5j2pO5Jejri+W51NqrtxTrK+tnZXN?=
- =?us-ascii?Q?sf625j5qhMMcxr9yehVfGCepqg5U6wG+FZxWHI7L1em+1xoW9aKdVZTfk9Ie?=
- =?us-ascii?Q?m6E8EyoKQLh2QsVJtq7VKXgq3tWdIjhjr1KmsZsyiZYoWCwcHMNyezDG1yTw?=
- =?us-ascii?Q?pYM0Rmgep7ixATyzLwGu8T7/YEvjLC06lDi1JuuCXOLWINhUzXvV2xVcQj85?=
- =?us-ascii?Q?61084W0V/sA4nr15Xst1N+VxV0LzyfmZRXQ478WnAVpgT41spOGn5L1QfX7v?=
- =?us-ascii?Q?+FqQGg2dPr6Itlz9qP9v+fX6VA++guahxLNm6IRoVlgefOZ/0qRJF13pezNV?=
- =?us-ascii?Q?5OGNkNqYdpwfHIOz7azroga24IJErmh/jSLDeM7z6SiQpeuDG94Kizof9fWr?=
- =?us-ascii?Q?lTBB72Zlh+UTbTs1Q71Q9il6z6XOeNASwEWQR/OBTlZ3GJ7uaXvdWug3QEov?=
- =?us-ascii?Q?yJPSsP5+h4Qt8Ze8UR2AXvz06nD5wkHnKKMXsC12YDYCh3oXyaxJqRDwy6K3?=
- =?us-ascii?Q?5RGfDEpEcCH/qlAkjajcU4EAeE9GcOABkktc2ES87zNzyz11wFtEgXP5EXSm?=
- =?us-ascii?Q?CCpNghPmVv2T6Unw7s0+lizkUa/8tRupvxm/D3UGlY0Y7WiO+Sy2UKIeLdVw?=
- =?us-ascii?Q?/rpezovzewnbLlB067amS9mivt1boIDbyzVJge8AfE18jPkQAGfXCZSg2lXE?=
- =?us-ascii?Q?Aopdcvt4FJh4d+nzGQRr6oNzZajmMgN1T7fqlHdbvhYUDdteF9vJHvdo28Tf?=
- =?us-ascii?Q?BtibUibY5DynIggvyGHHOcLiemBwqyNlBSs4enAuZLmSqMJZPNaDdRSCKeZf?=
- =?us-ascii?Q?r4UIMT81qv8BSdhfIVP+2Dqbuw5aRjj2d5UcFq76veEPVeEuyWgaLbZyrRw7?=
- =?us-ascii?Q?3J8b/NI/sWRaSQ1BmiZk9T2w+SZmzeUirpD3Ruq19khyHGbCPHUn2uKURQmG?=
- =?us-ascii?Q?wzjvhGfxUttC4gugxG4oLKUFEkUxnST7MUZgdlMy98XRucUh2KqeB8Ty+xW+?=
- =?us-ascii?Q?PEWEuIcQJy2+QHA2py48RZsyX93Hhr+Gh/nxq9rInqNlIKg429rb8f76k7v5?=
- =?us-ascii?Q?8Q=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7EF2BFC827BB3B4CB295B152C4379700@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230017AbjGQMpW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jul 2023 08:45:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB655E76
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 05:44:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689597871;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cPBr5P6RMAc5J6eRrRxygG6j4FumvyTiuWHqCKdLMWY=;
+        b=aDHpUpmUn/U+cZFS/NefpRRSb+sHvxQXJxmlGtJtfT9kYpi1SEGiRcVdqAKuoWsXQ+J3yN
+        LSoyGQ+6G+PCIqzrDNaP6rnwMFAdZxP/CcoksMtBvT0IpfwhU1/dPz93geSjbNrJGxU22n
+        LD3HvrL2lEsELaPNBqy+pFZSSxX4HEM=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-386-riv3EcZtP9ayH4yQFW9tEA-1; Mon, 17 Jul 2023 08:44:30 -0400
+X-MC-Unique: riv3EcZtP9ayH4yQFW9tEA-1
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-262d69faef9so1979378a91.3
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 05:44:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689597867; x=1692189867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cPBr5P6RMAc5J6eRrRxygG6j4FumvyTiuWHqCKdLMWY=;
+        b=CjEJOlhoJvj6M8rOTjfqejfSswM3/Whoh+OEcom8RnuHL1fDuEBvFAfpfKdntb+YJo
+         EklJ1s1W2KnrAYKX/xALEiERXVCfH3ltShOUfUC5I10F0BYL9IPHbzxDh17zonuKNkKF
+         0+F8pZaMDpTIoX1mfLkrL2e7XvfnjEpeN9mZWdxtIB5qVFIoiY5SU3XW8RzTj5gOtrjR
+         vRJHEulKVUixGLRKGOmyP4RI4Bo8GuwUKhNzXn53k7z81WZLvsg83V+EesN/pyIbUxgJ
+         Xsn96IGoMgpi2DXMQjrMM5cbRkkNBz4vJYMQ+sxZNmdZUx7EumUXNqkpGiKtRosGzsFe
+         13zQ==
+X-Gm-Message-State: ABy/qLY6TkxChsmbfAwKWREoHfC40cO5dU5p2FutGyAO+cLtCjSGlI5I
+        diVFO/qoZh+hUBthd/1WuAMh8okGwldOUgkqJd3FdZCsaUFc9xIKrxx0eDXA+VsEdQ0YFkO1mtl
+        rjoS+SXxuPflovWzEvzLBBrKyqle1cd0qviDQ
+X-Received: by 2002:a17:90a:5902:b0:263:ea6a:1049 with SMTP id k2-20020a17090a590200b00263ea6a1049mr10021663pji.2.1689597867202;
+        Mon, 17 Jul 2023 05:44:27 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHasnKG+SNiDONa+CP1OSdvJTohPXX69WzDE7nIpw5fYJbI1G9ilrC2Cj9qoIe3xkPsQOURqnSvBH8qP+XIJY0=
+X-Received: by 2002:a17:90a:5902:b0:263:ea6a:1049 with SMTP id
+ k2-20020a17090a590200b00263ea6a1049mr10021649pji.2.1689597866936; Mon, 17 Jul
+ 2023 05:44:26 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: WB7Ca4zuRSeSrcvhs/ZUUy5IJDaUZoSYjvlmxMvVrHbJ3QYbOzhP2YSaGNJRgT+OZ0goVA2Dm1svYZ7ZKOlBOtcg6pgwkHQsjJAYfyQj8x0q/la5aPWvbvlZqgv8oxAVmM2GR/KwkOUdlOX6UflDToxldByjTP0OwRx8lyB6rHQ08yIL/T3JvQVyxbv/hUdn42KdPYCcqkIFXMdBTajRw6L0GTbm4mlhYC5Xsv8WNQ4c0Os7PVnU/PrMWU7/u5blE/Jy5xrCPHryJfla1HdGAD73EHEnGUytFf2BuXMq4P04r5HT6K4VnwAH05EAfHzgGeeKFd5Z4jvHcHWRfmB+xIioHO/2QSvr+OV0R7AdL+vaLJ4L1eQ80vUu0BRFvPKvHSE80+x00MZMH4TAwydpffLYQObpn+cRkhvvIkI8xKSs5PAhpEQED3NAJtVb6/XZ9a3Qa0/k0SwtU6ylzC/RU4TEyF0C4/IxhkB2V3ztyCpkus+Oy98FJPlo3pNYQkDv2ONzgsgSTPgYl1itClWiP/ontjUuRhuQmNpRgGveQLfFbONzoHwMvbXawhTHIM60nXY/E5p0kCDCFndYAT9SOs4O9SsqniHcK5zRFklQm9EAqxcfZNys+JDAkViaI4YPcuFEivUru/2bkYVDYwMjZ0x6S9Ot+DvXTiAjXH3Op751Lx41oL4UgVdqMnmm181AAsvQA3IlOsavnry9+Volg9BAIJe5P1Z25ZbKiM3HvU32O8Fu9rH7Kok0GXukbjCUWz8Ek972wSgEGFO+BHnvR8JNJxgbwf6i4xsCMyMC9otg4FbiJrwnQZZpraoZExpi4U5qZOLG7nZWyjl8faiwNE3Vx8DVNfxbFFgqWv0iJrk=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e155690f-cbf1-44ee-ba9a-08db861fb281
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2023 17:11:29.9969
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 8R0oqQzrjUntmZinqQVuMX2ErgLgR315/xTuFxIdN0BFAY/KPnddNiqrAF0k6uu1WofN+mkwFpX+3lisQmnRoA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4726
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-16_04,2023-07-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
- adultscore=0 spamscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2307160163
-X-Proofpoint-ORIG-GUID: ighcbo9fo8NYdfgrzAivIr-s7KqkFpuW
-X-Proofpoint-GUID: ighcbo9fo8NYdfgrzAivIr-s7KqkFpuW
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230628104852.3391651-3-dhowells@redhat.com> <202307171548.7ab20146-oliver.sang@intel.com>
+In-Reply-To: <202307171548.7ab20146-oliver.sang@intel.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Mon, 17 Jul 2023 08:43:50 -0400
+Message-ID: <CALF+zOm5RuFSkd=KNxh+-vF+2SNsgP7s-WVrwHxVxxLrS6NtxQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/2] mm, netfs, fscache: Stop read optimisation when
+ folio removed from pagecache
+To:     kernel test robot <oliver.sang@intel.com>
+Cc:     David Howells <dhowells@redhat.com>, oe-lkp@lists.linux.dev,
+        lkp@intel.com, Rohith Surabattula <rohiths.msft@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Steve French <sfrench@samba.org>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Ilya Dryomov <idryomov@gmail.com>, v9fs@lists.linux.dev,
+        linux-afs@lists.infradead.org, linux-cachefs@redhat.com,
+        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, Jul 17, 2023 at 3:35=E2=80=AFAM kernel test robot <oliver.sang@inte=
+l.com> wrote:
+>
+>
+>
+> Hello,
+>
+> kernel test robot noticed "canonical_address#:#[##]" on:
+>
+> commit: 830503440449014dcf0e4b0b6d905a1b0b2c92ad ("[PATCH v7 2/2] mm, net=
+fs, fscache: Stop read optimisation when folio removed from pagecache")
+> url: https://github.com/intel-lab-lkp/linux/commits/David-Howells/mm-Merg=
+e-folio_has_private-filemap_release_folio-call-pairs/20230628-185100
+> base: https://git.kernel.org/cgit/linux/kernel/git/akpm/mm.git mm-everyth=
+ing
+> patch link: https://lore.kernel.org/all/20230628104852.3391651-3-dhowells=
+@redhat.com/
+> patch subject: [PATCH v7 2/2] mm, netfs, fscache: Stop read optimisation =
+when folio removed from pagecache
+>
+> in testcase: vm-scalability
+> version: vm-scalability-x86_64-1.0-0_20220518
+> with following parameters:
+>
+>         runtime: 300
+>         thp_enabled: always
+>         thp_defrag: always
+>         nr_task: 32
+>         nr_ssd: 1
+>         priority: 1
+>         test: swap-w-rand
+>         cpufreq_governor: performance
+>
+> test-description: The motivation behind this suite is to exercise functio=
+ns and regions of the mm/ of the Linux kernel which are of interest to us.
+> test-url: https://git.kernel.org/cgit/linux/kernel/git/wfg/vm-scalability=
+.git/
+>
+>
+> compiler: gcc-12
+> test machine: 128 threads 2 sockets Intel(R) Xeon(R) Platinum 8358 CPU @ =
+2.60GHz (Ice Lake) with 128G memory
+>
+> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>
+>
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <oliver.sang@intel.com>
+> | Closes: https://lore.kernel.org/oe-lkp/202307171548.7ab20146-oliver.san=
+g@intel.com
+>
+
+This has already been fixed with
+https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git/commit/?h=3Dmm-=
+everything&id=3Daf18573471db5c5c9b96ec95208c340ae7c00e64
 
 
-> On Jul 15, 2023, at 2:56 PM, Chuck Lever III <chuck.lever@oracle.com> wro=
-te:
->=20
->=20
->=20
->> On Jul 15, 2023, at 1:01 PM, Tom Talpey <tom@talpey.com> wrote:
->>=20
->> On 7/14/2023 11:13 AM, Chuck Lever wrote:
->>> From: Chuck Lever <chuck.lever@oracle.com>
->>> On server-initiated disconnect, rpcrdma_xprt_disconnect() DMA-unmaps
->>> the transport's Receive buffers, but rpcrdma_post_recvs() neglected
->>> to remap them after a new connection had been established. The
->>> result is immediate failure of the new connection with the Receives
->>> flushing with LOCAL_PROT_ERR.
->>=20
->> The fix is correct, my only comment is that the failure occurs when the
->> first message is received, and only the first CQE is a LOCAL_PROT_ERR.
->> The remainder of the posted receives are simply flushed.
->>=20
->> Same result of course! The summary is ok as-is. Important fix.
->>=20
->> Reviewed-by: Tom Talpey <tom@talpey.com>
->=20
-> Thanks for the look!
->=20
-> Anna, when applying this patch, can you replace:
->=20
-> "The result is immediate failure of the new connection with the Receives
-> flushing with LOCAL_PROT_ERR."
->=20
-> with
->=20
-> "The result is immediate failure of the new connection with the first
-> unmapped Receive completing with LOCAL_PROT_ERR."
-
-Also, please add:
-
-Reported-by: Olga Kornievskaia <kolga@netapp.com>
-
-
->>> Fixes: 671c450b6fe0 ("xprtrdma: Fix oops in Receive handler after devic=
-e removal")
->>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>> ---
->>> net/sunrpc/xprtrdma/verbs.c |    9 ++++-----
->>> 1 file changed, 4 insertions(+), 5 deletions(-)
->>> Hi Anna-
->>> Can you apply this for 6.5-rc ?
->>> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
->>> index b098fde373ab..28c0771c4e8c 100644
->>> --- a/net/sunrpc/xprtrdma/verbs.c
->>> +++ b/net/sunrpc/xprtrdma/verbs.c
->>> @@ -935,9 +935,6 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrd=
-ma_xprt *r_xprt,
->>>  if (!rep->rr_rdmabuf)
->>>  goto out_free;
->>> - if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf))
->>> - goto out_free_regbuf;
->>> -
->>>  rep->rr_cid.ci_completion_id =3D
->>>  atomic_inc_return(&r_xprt->rx_ep->re_completion_ids);
->>> @@ -956,8 +953,6 @@ struct rpcrdma_rep *rpcrdma_rep_create(struct rpcrd=
-ma_xprt *r_xprt,
->>>  spin_unlock(&buf->rb_lock);
->>>  return rep;
->>> -out_free_regbuf:
->>> - rpcrdma_regbuf_free(rep->rr_rdmabuf);
->>> out_free:
->>>  kfree(rep);
->>> out:
->>> @@ -1363,6 +1358,10 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_x=
-prt, int needed, bool temp)
->>>  rep =3D rpcrdma_rep_create(r_xprt, temp);
->>>  if (!rep)
->>>  break;
->>> + if (!rpcrdma_regbuf_dma_map(r_xprt, rep->rr_rdmabuf)) {
->>> + rpcrdma_rep_put(buf, rep);
->>> + break;
->>> + }
->>>    rep->rr_cid.ci_queue_id =3D ep->re_attr.recv_cq->res.id;
->>>  trace_xprtrdma_post_recv(rep);
->=20
+>
+> [   45.898720][ T1453]
+> [   45.907480][ T1453] 2023-07-16 00:36:07  ./case-swap-w-rand
+> [   45.907481][ T1453]
+> [   45.917873][ T1453] 2023-07-16 00:36:07  ./usemem --runtime 300 -n 32 =
+--random 8048142432
+> [   45.917876][ T1453]
+> [   47.348632][  T973] general protection fault, probably for non-canonic=
+al address 0xf8ff1100207778e6: 0000 [#1] SMP NOPTI
+> [   47.359787][  T973] CPU: 123 PID: 973 Comm: kswapd1 Tainted: G S      =
+           6.4.0-rc4-00533-g830503440449 #3
+> [   47.370301][  T973] Hardware name: Intel Corporation M50CYP2SB1U/M50CY=
+P2SB1U, BIOS SE5C620.86B.01.01.0003.2104260124 04/26/2021
+> [ 47.382201][ T973] RIP: 0010:filemap_release_folio (kbuild/src/x86_64/mm=
+/filemap.c:4063 (discriminator 1))
+> [ 47.388172][ T973] Code: 00 48 8b 07 48 8b 57 18 83 e0 01 74 4f 48 f7 07=
+ 00 60 00 00 74 22 48 8b 07 f6 c4 80 75 32 48 85 d2 74 34 48 8b 82 90 00 00=
+ 00 <48> 8b 40 48 48 85 c0 74 24 ff e0 cc 66 90 48 85 d2 74 15 48 8b 8a
+> All code
+> =3D=3D=3D=3D=3D=3D=3D=3D
+>    0:   00 48 8b                add    %cl,-0x75(%rax)
+>    3:   07                      (bad)
+>    4:   48 8b 57 18             mov    0x18(%rdi),%rdx
+>    8:   83 e0 01                and    $0x1,%eax
+>    b:   74 4f                   je     0x5c
+>    d:   48 f7 07 00 60 00 00    testq  $0x6000,(%rdi)
+>   14:   74 22                   je     0x38
+>   16:   48 8b 07                mov    (%rdi),%rax
+>   19:   f6 c4 80                test   $0x80,%ah
+>   1c:   75 32                   jne    0x50
+>   1e:   48 85 d2                test   %rdx,%rdx
+>   21:   74 34                   je     0x57
+>   23:   48 8b 82 90 00 00 00    mov    0x90(%rdx),%rax
+>   2a:*  48 8b 40 48             mov    0x48(%rax),%rax          <-- trapp=
+ing instruction
+>   2e:   48 85 c0                test   %rax,%rax
+>   31:   74 24                   je     0x57
+>   33:   ff e0                   jmpq   *%rax
+>   35:   cc                      int3
+>   36:   66 90                   xchg   %ax,%ax
+>   38:   48 85 d2                test   %rdx,%rdx
+>   3b:   74 15                   je     0x52
+>   3d:   48                      rex.W
+>   3e:   8b                      .byte 0x8b
+>   3f:   8a                      .byte 0x8a
+>
+> Code starting with the faulting instruction
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>    0:   48 8b 40 48             mov    0x48(%rax),%rax
+>    4:   48 85 c0                test   %rax,%rax
+>    7:   74 24                   je     0x2d
+>    9:   ff e0                   jmpq   *%rax
+>    b:   cc                      int3
+>    c:   66 90                   xchg   %ax,%ax
+>    e:   48 85 d2                test   %rdx,%rdx
+>   11:   74 15                   je     0x28
+>   13:   48                      rex.W
+>   14:   8b                      .byte 0x8b
+>   15:   8a                      .byte 0x8a
+> [   47.408103][  T973] RSP: 0018:ffa00000094f7b28 EFLAGS: 00010246
+> [   47.414266][  T973] RAX: f8ff11002077789e RBX: ffa00000094f7c08 RCX: 9=
+8ff110020777898
+> [   47.422337][  T973] RDX: ff11002077788f71 RSI: 0000000000000cc0 RDI: f=
+fd4000042870d00
+> [   47.430417][  T973] RBP: ffa00000094f7b98 R08: ff110001ba106300 R09: 0=
+000000000000028
+> [   47.438497][  T973] R10: ff110010846bd080 R11: ff1100207ffd4000 R12: f=
+fd4000042870d00
+> [   47.446575][  T973] R13: ffa00000094f7e10 R14: ffa00000094f7c1c R15: f=
+fd4000042870d08
+> [   47.454658][  T973] FS:  0000000000000000(0000) GS:ff110020046c0000(00=
+00) knlGS:0000000000000000
+> [   47.463703][  T973] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   47.470406][  T973] CR2: 00007fddcaf308f8 CR3: 00000001e1a82003 CR4: 0=
+000000000771ee0
+> [   47.478496][  T973] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0=
+000000000000000
+> [   47.486594][  T973] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0=
+000000000000400
+> [   47.494696][  T973] PKRU: 55555554
+> [   47.498372][  T973] Call Trace:
+> [   47.501795][  T973]  <TASK>
+> [ 47.504870][ T973] ? die_addr (kbuild/src/x86_64/arch/x86/kernel/dumpsta=
+ck.c:421 kbuild/src/x86_64/arch/x86/kernel/dumpstack.c:460)
+> [ 47.509153][ T973] ? exc_general_protection (kbuild/src/x86_64/arch/x86/=
+kernel/traps.c:783 kbuild/src/x86_64/arch/x86/kernel/traps.c:728)
+> [ 47.514826][ T973] ? asm_exc_general_protection (kbuild/src/x86_64/arch/=
+x86/include/asm/idtentry.h:564)
+> [ 47.520679][ T973] ? filemap_release_folio (kbuild/src/x86_64/mm/filemap=
+.c:4063 (discriminator 1))
+>
+>
+> To reproduce:
+>
+>         git clone https://github.com/intel/lkp-tests.git
+>         cd lkp-tests
+>         sudo bin/lkp install job.yaml           # job file is attached in=
+ this email
+>         bin/lkp split-job --compatible job.yaml # generate the yaml file =
+for lkp run
+>         sudo bin/lkp run generated-yaml-file
+>
+>         # if come across any failure that blocks the test,
+>         # please remove ~/.lkp and /lkp dir to run from a clean state.
+>
+>
+>
 > --
-> Chuck Lever
-
-
---
-Chuck Lever
-
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+>
+>
 
