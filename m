@@ -2,277 +2,335 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1809375747B
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jul 2023 08:40:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B975757471
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jul 2023 08:39:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230451AbjGRGkK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Jul 2023 02:40:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45582 "EHLO
+        id S230245AbjGRGjc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jul 2023 02:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230512AbjGRGkJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jul 2023 02:40:09 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 223FB18B
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 23:40:05 -0700 (PDT)
+        with ESMTP id S229811AbjGRGjb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jul 2023 02:39:31 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A57D51A6
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Jul 2023 23:39:26 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 6D0731FDBC;
-        Tue, 18 Jul 2023 06:40:04 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 0004721958;
+        Tue, 18 Jul 2023 06:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1689662404; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1689662365; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k1/4gT7LMd1Y2NHFUexFp26CiG8lpSWxUIeJR9tPvB4=;
-        b=Jt/19zwB1l16thGbuVGbPYLmda/YrwoiZ5+deiaxvQwt/F6jZIJ5j8cpsLuLGXVdfkY7px
-        5ocn4F75aau0mywYK0JGx75Wthejjkfen7kz9ePijwVw1yxILaD2SBv9zz2UC0iPnSQUsh
-        rY3BfZriYZiYi8xHRKRyvRzWL2IBQVA=
+        bh=CF2Clzk7tKgySjNqen1ELNCMJ6JvvWQXIe0cIO8GlYQ=;
+        b=Pa6VUi3fpIR0gox7yoG9XVfMjkyhJhX1Q62obRWzRXLq+jOIDoooEZMI26DwqKJIIcGMuz
+        3K6yOsdZz8Tun3u25Mb4C+RU03HUmLgKsoLl8r6LPM6eHjdwJXXoj1RnhCbFrWhh4ycVHh
+        hCmkrIgwsD5qEYe5IFGASUxOi9aEbqc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1689662404;
+        s=susede2_ed25519; t=1689662365;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k1/4gT7LMd1Y2NHFUexFp26CiG8lpSWxUIeJR9tPvB4=;
-        b=TZizD6vdNq9S38Nsk6OeA8mwSrymgJ3RWjvsg01WZ4dDpuuFybY8n3OO1Vs/nWp8UP+Fso
-        ArOvZA2J5CPZRZAQ==
+        bh=CF2Clzk7tKgySjNqen1ELNCMJ6JvvWQXIe0cIO8GlYQ=;
+        b=rzlLb4XtpDvcJPYZCum8pDTl41S8TZKTUnld1R88/B0DuAmIzcb7CzA+YYZAwkj4N2gKge
+        ZOi3Mj+Nn8myTnAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2F14813494;
-        Tue, 18 Jul 2023 06:40:02 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B535F13494;
+        Tue, 18 Jul 2023 06:39:23 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id e0XNNMIztmTTDAAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 18 Jul 2023 06:40:02 +0000
-Subject: [PATCH 13/14] SUNRPC: change service idle list to be an llist
+        id 5HLqGZsztmR9DAAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 18 Jul 2023 06:39:23 +0000
+Subject: [PATCH 05/14] SUNRPC: remove timeout arg from svc_recv()
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>
 Cc:     linux-nfs@vger.kernel.org
 Date:   Tue, 18 Jul 2023 16:38:08 +1000
-Message-ID: <168966228868.11075.13775072041089806843.stgit@noble.brown>
+Message-ID: <168966228862.11075.7544295807519851006.stgit@noble.brown>
 In-Reply-To: <168966227838.11075.2974227708495338626.stgit@noble.brown>
 References: <168966227838.11075.2974227708495338626.stgit@noble.brown>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-With an llist we don't need to take a lock to add a thread to the list,
-though we still need a lock to remove it.  That will go in the next
-patch.
+Most svc threads have no interest in a timeout.
+nfsd sets it to 1 hour, but this is a wart of no significance.
 
-Unlike double-linked lists, a thread cannot remove itself from the list.
-Only the first thread can be removed, and that can change
-asynchronously. So some care is needed.
+lockd uses the timeout so that it can call nlmsvc_retry_blocked().
+It also sometimes calls svc_wake_up() to ensure this is called.
 
-Firstly, we don't add ourselves to the list of there is more work to do
-- we just go ahead and do it.  So we remain in the busy state.  That
-already applied to xprts being ready, it now applies to all possible
-triggers.  We DON'T keep the likely annotation on this test for "more
-work to do".  It isn't particularly likely that there is no work to do,
-and there is definitely no need to optimise for that case.
+So change lockd to be consistent and always use svc_wake_up() to trigger
+nlmsvc_retry_blocked() - using a timer instead of a timeout to
+svc_recv().
 
-Secondly if we do find something needs to be done after adding ourselves
-to the list, we simply wake up the first thread on the list.  If that
-was us, we have been removed and can continue.  If it was some other
-thread, they will do the work that needs to be done.  We can safely
-sleep until woken.
+And change svc_recv() to not take a timeout arg.
 
-With this a thread could call rqst_should_sleep() without actually
-proceeding to do work if told not to sleep.  So that function mustn't
-clear SP_TASK_PENDING.  The flag must stay set until some thread commits
-to not sleeping.
-
-We also remove the test on freezing() from rqst_should_sleep().  Instead
-we always try_to_freeze() before scheduling, which is needed as we now
-schedule() in a loop waiting to be removed from the idle queue.
+This makes the sp_threads_timedout counter always zero.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- include/linux/sunrpc/svc.h |   14 +++++++-----
- net/sunrpc/svc.c           |   11 +++++----
- net/sunrpc/svc_xprt.c      |   51 ++++++++++++++++++++++++++------------------
- 3 files changed, 44 insertions(+), 32 deletions(-)
+ fs/lockd/svc.c                 |   11 ++++++++---
+ fs/lockd/svclock.c             |    5 +++--
+ fs/nfs/callback.c              |    2 +-
+ fs/nfsd/nfssvc.c               |    2 +-
+ include/linux/lockd/lockd.h    |    4 +++-
+ include/linux/sunrpc/svc.h     |    1 -
+ include/linux/sunrpc/svcsock.h |    2 +-
+ net/sunrpc/svc.c               |    2 --
+ net/sunrpc/svc_xprt.c          |   27 ++++++++++++---------------
+ 9 files changed, 29 insertions(+), 27 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index f5b69e6da0f8..5941b8a8e754 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -36,7 +36,7 @@ struct svc_pool {
- 	struct list_head	sp_sockets;	/* pending sockets */
- 	unsigned int		sp_nrthreads;	/* # of threads in pool */
- 	struct list_head	sp_all_threads;	/* all server threads */
--	struct list_head	sp_idle_threads; /* idle server threads */
-+	struct llist_head	sp_idle_threads; /* idle server threads */
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index a43b63e46127..4f55cd42c2e6 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -55,6 +55,11 @@ static DEFINE_MUTEX(nlmsvc_mutex);
+ static unsigned int		nlmsvc_users;
+ static struct svc_serv		*nlmsvc_serv;
+ unsigned long			nlmsvc_timeout;
++static void nlmsvc_request_retry(struct timer_list *tl)
++{
++	svc_wake_up(nlmsvc_serv);
++}
++DEFINE_TIMER(nlmsvc_retry, nlmsvc_request_retry);
  
- 	/* statistics on pool operation */
- 	struct percpu_counter	sp_messages_arrived;
-@@ -199,7 +199,7 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
-  */
- struct svc_rqst {
- 	struct list_head	rq_all;		/* all threads list */
--	struct list_head	rq_idle;	/* On the idle list */
-+	struct llist_node	rq_idle;	/* On the idle list */
- 	struct rcu_head		rq_rcu_head;	/* for RCU deferred kfree */
- 	struct svc_xprt *	rq_xprt;	/* transport ptr */
+ unsigned int lockd_net_id;
  
-@@ -286,22 +286,24 @@ enum {
-  * svc_thread_set_busy - mark a thread as busy
-  * @rqstp: the thread which is now busy
-  *
-- * If rq_idle is "empty", the thread must be busy.
-+ * By convention a thread is busy if rq_idle.next points to rq_idle.
-+ * This ensures it is not on the idle list.
-  */
- static inline void svc_thread_set_busy(struct svc_rqst *rqstp)
- {
--	INIT_LIST_HEAD(&rqstp->rq_idle);
-+	smp_store_release(&rqstp->rq_idle.next, &rqstp->rq_idle);
+@@ -130,18 +135,17 @@ lockd(void *vrqstp)
+ 	 * NFS mount or NFS daemon has gone away.
+ 	 */
+ 	while (!kthread_should_stop()) {
+-		long timeout = MAX_SCHEDULE_TIMEOUT;
+ 
+ 		/* update sv_maxconn if it has changed */
+ 		rqstp->rq_server->sv_maxconn = nlm_max_connections;
+ 
+-		timeout = nlmsvc_retry_blocked();
++		nlmsvc_retry_blocked();
+ 
+ 		/*
+ 		 * Find any work to do, such as a socket with data available,
+ 		 * and do the work.
+ 		 */
+-		svc_recv(rqstp, timeout);
++		svc_recv(rqstp);
+ 	}
+ 	if (nlmsvc_ops)
+ 		nlmsvc_invalidate_all();
+@@ -375,6 +379,7 @@ static void lockd_put(void)
+ #endif
+ 
+ 	svc_set_num_threads(nlmsvc_serv, NULL, 0);
++	timer_delete_sync(&nlmsvc_retry);
+ 	nlmsvc_serv = NULL;
+ 	dprintk("lockd_down: service destroyed\n");
  }
- 
- /**
-  * svc_thread_busy - check if a thread as busy
-  * @rqstp: the thread which might be busy
-  *
-- * If rq_idle is "empty", the thread must be busy.
-+ * By convention a thread is busy if rq_idle.next points to rq_idle.
-+ * This ensures it is not on the idle list.
+diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+index c43ccdf28ed9..3d7bd5c04b36 100644
+--- a/fs/lockd/svclock.c
++++ b/fs/lockd/svclock.c
+@@ -1008,7 +1008,7 @@ retry_deferred_block(struct nlm_block *block)
+  * picks up locks that can be granted, or grant notifications that must
+  * be retransmitted.
   */
- static inline bool svc_thread_busy(struct svc_rqst *rqstp)
+-unsigned long
++void
+ nlmsvc_retry_blocked(void)
  {
--	return list_empty(&rqstp->rq_idle);
-+	return smp_load_acquire(&rqstp->rq_idle.next) == &rqstp->rq_idle;
+ 	unsigned long	timeout = MAX_SCHEDULE_TIMEOUT;
+@@ -1038,5 +1038,6 @@ nlmsvc_retry_blocked(void)
+ 	}
+ 	spin_unlock(&nlm_blocked_lock);
+ 
+-	return timeout;
++	if (timeout < MAX_SCHEDULE_TIMEOUT)
++		mod_timer(&nlmsvc_retry, jiffies + timeout);
  }
- 
- #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index f6da390932cd..9287a08250b2 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -702,15 +702,16 @@ void svc_pool_wake_idle_thread(struct svc_serv *serv,
- 			       struct svc_pool *pool)
- {
- 	struct svc_rqst	*rqstp;
-+	struct llist_node *ln;
- 
- 	rcu_read_lock();
- 	spin_lock_bh(&pool->sp_lock);
--	rqstp = list_first_entry_or_null(&pool->sp_idle_threads,
--					 struct svc_rqst, rq_idle);
--	if (rqstp)
--		list_del_init(&rqstp->rq_idle);
-+	ln = llist_del_first(&pool->sp_idle_threads);
- 	spin_unlock_bh(&pool->sp_lock);
--	if (rqstp) {
-+	if (ln) {
-+		rqstp = llist_entry(ln, struct svc_rqst, rq_idle);
-+		svc_thread_set_busy(rqstp);
-+
- 		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
- 		wake_up_process(rqstp->rq_task);
- 		rcu_read_unlock();
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index b82a66f68f17..eb8d345641b2 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -704,7 +704,7 @@ rqst_should_sleep(struct svc_rqst *rqstp)
- 	struct svc_pool		*pool = rqstp->rq_pool;
- 
- 	/* did someone call svc_wake_up? */
--	if (test_and_clear_bit(SP_TASK_PENDING, &pool->sp_flags))
-+	if (test_bit(SP_TASK_PENDING, &pool->sp_flags))
- 		return false;
- 
- 	/* was a socket queued? */
-@@ -715,10 +715,6 @@ rqst_should_sleep(struct svc_rqst *rqstp)
- 	if (svc_thread_should_stop(rqstp))
- 		return false;
- 
--	/* are we freezing? */
--	if (freezing(current))
--		return false;
--
- #if defined(CONFIG_SUNRPC_BACKCHANNEL)
- 	if (svc_is_backchannel(rqstp)) {
- 		if (!list_empty(&rqstp->rq_server->sv_cb_list))
-@@ -733,27 +729,40 @@ static void svc_wait_for_work(struct svc_rqst *rqstp)
- {
- 	struct svc_pool		*pool = rqstp->rq_pool;
- 
--	set_current_state(TASK_IDLE);
--	spin_lock_bh(&pool->sp_lock);
--	list_add(&rqstp->rq_idle, &pool->sp_idle_threads);
--	spin_unlock_bh(&pool->sp_lock);
-+	if (rqst_should_sleep(rqstp)) {
-+		set_current_state(TASK_IDLE);
-+		llist_add(&rqstp->rq_idle, &pool->sp_idle_threads);
-+
-+		if (unlikely(!rqst_should_sleep(rqstp)))
-+			/* maybe there were no idle threads when some work
-+			 * became ready and so nothing was woken.  We've just
-+			 * become idle so someone can to the work - maybe us.
-+			 * But we cannot reliably remove ourselves from the
-+			 * idle list - we can only remove the first task which
-+			 * might be us, and might not.
-+			 * So remove and wake it, then schedule().  If it was
-+			 * us, we won't sleep.  If it is some other thread, they
-+			 * will do the work.
-+			 */
-+			svc_pool_wake_idle_thread(rqstp->rq_server, pool);
- 
--	if (likely(rqst_should_sleep(rqstp)))
--		schedule();
--	else
-+		/* We mustn't continue while on the idle list, and we
-+		 * cannot remove outselves reliably.  The only "work"
-+		 * we can do while on the idle list is to freeze.
-+		 * So loop until someone removes us
-+		 */
-+		while (!svc_thread_busy(rqstp)) {
-+			try_to_freeze();
-+			schedule();
-+			set_current_state(TASK_IDLE);
-+		}
- 		__set_current_state(TASK_RUNNING);
--
--	/* We *must* be removed from the list before we can continue.
--	 * If we were woken, this is already done
--	 */
--	if (!svc_thread_busy(rqstp)) {
--		spin_lock_bh(&pool->sp_lock);
--		list_del_init(&rqstp->rq_idle);
--		spin_unlock_bh(&pool->sp_lock);
+diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+index 914d2402ca98..c47834970224 100644
+--- a/fs/nfs/callback.c
++++ b/fs/nfs/callback.c
+@@ -82,7 +82,7 @@ nfs4_callback_svc(void *vrqstp)
+ 		/*
+ 		 * Listen for a request on the socket
+ 		 */
+-		svc_recv(rqstp, MAX_SCHEDULE_TIMEOUT);
++		svc_recv(rqstp);
  	}
  
- 	try_to_freeze();
+ 	svc_exit_thread(rqstp);
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 5bf48c33986e..b536b254c59e 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -979,7 +979,7 @@ nfsd(void *vrqstp)
+ 		 * Find a socket with data available and call its
+ 		 * recvfrom routine.
+ 		 */
+-		svc_recv(rqstp, 60*60*HZ);
++		svc_recv(rqstp);
+ 		validate_process_creds();
+ 	}
  
-+	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
+diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
+index f42594a9efe0..0f016d69c996 100644
+--- a/include/linux/lockd/lockd.h
++++ b/include/linux/lockd/lockd.h
+@@ -204,6 +204,8 @@ extern unsigned long		nlmsvc_timeout;
+ extern bool			nsm_use_hostnames;
+ extern u32			nsm_local_state;
+ 
++extern struct timer_list	nlmsvc_retry;
 +
- 	rqstp->rq_xprt = svc_xprt_dequeue(pool);
- 	if (rqstp->rq_xprt) {
- 		trace_svc_pool_awoken(rqstp);
-@@ -785,7 +794,7 @@ static void svc_wait_for_work(struct svc_rqst *rqstp)
- 	/* Normally we will wait up to 5 seconds for any required
- 	 * cache information to be provided.
- 	 */
--	if (!list_empty(&pool->sp_idle_threads))
-+	if (pool->sp_idle_threads.first != NULL)
- 		rqstp->rq_chandle.thread_wait = 5*HZ;
+ /*
+  * Lockd client functions
+  */
+@@ -280,7 +282,7 @@ __be32		  nlmsvc_testlock(struct svc_rqst *, struct nlm_file *,
+ 			struct nlm_host *, struct nlm_lock *,
+ 			struct nlm_lock *, struct nlm_cookie *);
+ __be32		  nlmsvc_cancel_blocked(struct net *net, struct nlm_file *, struct nlm_lock *);
+-unsigned long	  nlmsvc_retry_blocked(void);
++void		  nlmsvc_retry_blocked(void);
+ void		  nlmsvc_traverse_blocks(struct nlm_host *, struct nlm_file *,
+ 					nlm_host_match_fn_t match);
+ void		  nlmsvc_grant_reply(struct nlm_cookie *, __be32);
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index d51ae1e109b6..f3df7f963653 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -41,7 +41,6 @@ struct svc_pool {
+ 	struct percpu_counter	sp_messages_arrived;
+ 	struct percpu_counter	sp_sockets_queued;
+ 	struct percpu_counter	sp_threads_woken;
+-	struct percpu_counter	sp_threads_timedout;
+ 	struct percpu_counter	sp_threads_starved;
+ 	struct percpu_counter	sp_threads_no_work;
+ 
+diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsock.h
+index fb5c98069356..8da31799affe 100644
+--- a/include/linux/sunrpc/svcsock.h
++++ b/include/linux/sunrpc/svcsock.h
+@@ -64,7 +64,7 @@ static inline u32 svc_sock_final_rec(struct svc_sock *svsk)
+  * Function prototypes.
+  */
+ void		svc_close_net(struct svc_serv *, struct net *);
+-void		svc_recv(struct svc_rqst *, long);
++void		svc_recv(struct svc_rqst *);
+ void		svc_send(struct svc_rqst *rqstp);
+ void		svc_drop(struct svc_rqst *);
+ void		svc_sock_update_bufs(struct svc_serv *serv);
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index f09b0cce041c..170eabc03988 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -513,7 +513,6 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
+ 		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
+ 		percpu_counter_init(&pool->sp_threads_woken, 0, GFP_KERNEL);
+-		percpu_counter_init(&pool->sp_threads_timedout, 0, GFP_KERNEL);
+ 		percpu_counter_init(&pool->sp_threads_starved, 0, GFP_KERNEL);
+ 		percpu_counter_init(&pool->sp_threads_no_work, 0, GFP_KERNEL);
+ 
+@@ -593,7 +592,6 @@ svc_destroy(struct kref *ref)
+ 		percpu_counter_destroy(&pool->sp_messages_arrived);
+ 		percpu_counter_destroy(&pool->sp_sockets_queued);
+ 		percpu_counter_destroy(&pool->sp_threads_woken);
+-		percpu_counter_destroy(&pool->sp_threads_timedout);
+ 		percpu_counter_destroy(&pool->sp_threads_starved);
+ 		percpu_counter_destroy(&pool->sp_threads_no_work);
+ 	}
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 67825eef8646..44a33b1f542f 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -735,10 +735,9 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+ 	return true;
+ }
+ 
+-static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
++static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp)
+ {
+ 	struct svc_pool		*pool = rqstp->rq_pool;
+-	long			time_left = 0;
+ 
+ 	/* rq_xprt should be clear on entry */
+ 	WARN_ON_ONCE(rqstp->rq_xprt);
+@@ -756,7 +755,7 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
+ 	smp_mb__after_atomic();
+ 
+ 	if (likely(rqst_should_sleep(rqstp)))
+-		time_left = schedule_timeout(timeout);
++		schedule();
  	else
- 		rqstp->rq_chandle.thread_wait = 1*HZ;
+ 		__set_current_state(TASK_RUNNING);
+ 
+@@ -770,8 +769,6 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp, long timeout)
+ 		goto out_found;
+ 	}
+ 
+-	if (!time_left)
+-		percpu_counter_inc(&pool->sp_threads_timedout);
+ 	if (kthread_should_stop())
+ 		return NULL;
+ 	percpu_counter_inc(&pool->sp_threads_no_work);
+@@ -856,7 +853,7 @@ static int svc_handle_xprt(struct svc_rqst *rqstp, struct svc_xprt *xprt)
+  * organised not to touch any cachelines in the shared svc_serv
+  * structure, only cachelines in the local svc_pool.
+  */
+-void svc_recv(struct svc_rqst *rqstp, long timeout)
++void svc_recv(struct svc_rqst *rqstp)
+ {
+ 	struct svc_xprt		*xprt = NULL;
+ 	struct svc_serv		*serv = rqstp->rq_server;
+@@ -870,7 +867,7 @@ void svc_recv(struct svc_rqst *rqstp, long timeout)
+ 	if (kthread_should_stop())
+ 		goto out;
+ 
+-	xprt = svc_get_next_xprt(rqstp, timeout);
++	xprt = svc_get_next_xprt(rqstp);
+ 	if (!xprt)
+ 		goto out;
+ 
+@@ -1437,14 +1434,14 @@ static int svc_pool_stats_show(struct seq_file *m, void *p)
+ 		return 0;
+ 	}
+ 
+-	seq_printf(m, "%u %llu %llu %llu %llu %llu %llu\n",
+-		pool->sp_id,
+-		percpu_counter_sum_positive(&pool->sp_messages_arrived),
+-		percpu_counter_sum_positive(&pool->sp_sockets_queued),
+-		percpu_counter_sum_positive(&pool->sp_threads_woken),
+-		percpu_counter_sum_positive(&pool->sp_threads_timedout),
+-		percpu_counter_sum_positive(&pool->sp_threads_starved),
+-		percpu_counter_sum_positive(&pool->sp_threads_no_work));
++	seq_printf(m, "%u %llu %llu %llu 0 %llu %llu\n",
++		   pool->sp_id,
++		   percpu_counter_sum_positive(&pool->sp_messages_arrived),
++		   percpu_counter_sum_positive(&pool->sp_sockets_queued),
++		   percpu_counter_sum_positive(&pool->sp_threads_woken),
++		   /* prevously pool->sp_threads_timedout */
++		   percpu_counter_sum_positive(&pool->sp_threads_starved),
++		   percpu_counter_sum_positive(&pool->sp_threads_no_work));
+ 
+ 	return 0;
+ }
 
 
