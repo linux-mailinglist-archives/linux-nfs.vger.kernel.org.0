@@ -2,59 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54366757E2A
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jul 2023 15:51:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0257757EC8
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jul 2023 15:59:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231881AbjGRNvf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Tue, 18 Jul 2023 09:51:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
+        id S229793AbjGRN7P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jul 2023 09:59:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231280AbjGRNve (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jul 2023 09:51:34 -0400
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D99398
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Jul 2023 06:51:33 -0700 (PDT)
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-403b36a4226so30215251cf.0
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Jul 2023 06:51:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689688292; x=1692280292;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=soZjzBFx9rRvxI8NaKcPcdFgo86l+KYfnuxZdlrt0Z0=;
-        b=FQaGHBg6jbARuGJK+maEiK1D385F6G/0o3NankAk1Y9O/T9ys5UCMn8sdXiBd6pdK5
-         LEMognkwxsAIpgKwndkG7UlkY4t2mNM8Amojwgf12TW64IFI773USoi5LjlRFclFLI5D
-         Y80h0iHtUx8CEODlcJIOWP9eq5zaix9gXYl1X8G5byKEyu1KCscx+jt+zY9SdBtUd+83
-         Q0QSNMe2PTq0vHdyLlRpnfJqI9racHSaSRXjlkbrBGY0jA9sgVJdcBKaSGqcdnwCbxxO
-         Nd1xAZQBpdb11lldjIdd0pO/g7EVsSL/UvGbYdiDsxlCtKbqpXYbe2fVL0IS1g9UZRbr
-         35Hw==
-X-Gm-Message-State: ABy/qLagcv8vLtVI2iTgkpSP5iA0dQlLU2wknjyno7jRPuID8/8wLIQk
-        WPr03ujWpXItjRV3ekbHOKgWrsRVvg==
-X-Google-Smtp-Source: APBJJlHn7TdfCkY0o3nHQQ+G2SNt9DFn+qxJKfvPZwhnMG2y/si1FpAJls7JiLbRkjMNQla+tCmI0Q==
-X-Received: by 2002:a05:622a:215:b0:403:fd78:ff46 with SMTP id b21-20020a05622a021500b00403fd78ff46mr1094471qtx.52.1689688292427;
-        Tue, 18 Jul 2023 06:51:32 -0700 (PDT)
-Received: from [192.168.75.138] (c-68-32-72-208.hsd1.mi.comcast.net. [68.32.72.208])
-        by smtp.gmail.com with ESMTPSA id d23-20020ac84e37000000b0040338d69f51sm639785qtw.80.2023.07.18.06.51.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 06:51:31 -0700 (PDT)
-Message-ID: <106daf5e0242b67bdb04e2e8e4ae7e114a4b47ab.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: Remove incorrect check in nfsd4_validate_stateid
-From:   Trond Myklebust <trondmy@kernel.org>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Date:   Tue, 18 Jul 2023 09:51:31 -0400
-In-Reply-To: <6dc89e4859a6851773bc2931d919e1cb204ae690.camel@kernel.org>
-References: <20230718123837.124780-1-trondmy@kernel.org>
-         <6dc89e4859a6851773bc2931d919e1cb204ae690.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        with ESMTP id S231537AbjGRN7O (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jul 2023 09:59:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 444C4137
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Jul 2023 06:58:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 22ED9615B5
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Jul 2023 13:58:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EFFFC433C9;
+        Tue, 18 Jul 2023 13:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689688709;
+        bh=2lwfdAX6JUgMENDp4agUxYEwoJYbLZPR1o0BMOaHuNs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kX0mKEFVYwMwtV1dD+CgIo2Y7JVDPntGvYs5IghO1lnZEb1PHmFWu+gu0rBWKjGGW
+         6vOV35ToD4qir6WXJlhXP/AofraD7rbasBblAGFJCShNGsAYIj0uarPC4xBNR7I5Q+
+         G4xK7mBvTIf+2WVQHdv/eIb6FIkMiXwQmLp3lZjQpDVAjrUdwh/IRMRhFQBSm/VL9X
+         PffckD74nH2lPDL7bMneK4jLuujakSvKKnJhw+SGzjl4KU95ZHFfBB2cyI5Tggfmdq
+         WHMA0lQ0FaXiqmCu9RhGSGmSJWDuPlH87j8Rr2IjP3a0g2Nd9fCKbrQgx5G1rcPmP7
+         nqUVx//uuNuQA==
+Date:   Tue, 18 Jul 2023 09:58:27 -0400
+From:   Chuck Lever <cel@kernel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 10/14] SUNRPC: change svc_pool_wake_idle_thread() to
+ return nothing.
+Message-ID: <ZLaagzqpB9MsQ5yb@bazille.1015granger.net>
+References: <168966227838.11075.2974227708495338626.stgit@noble.brown>
+ <168966228866.11075.18415964365983945832.stgit@noble.brown>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <168966228866.11075.18415964365983945832.stgit@noble.brown>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,62 +56,123 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-07-18 at 09:35 -0400, Jeff Layton wrote:
-> On Tue, 2023-07-18 at 08:38 -0400, trondmy@kernel.org wrote:
-> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > 
-> > If the client is calling TEST_STATEID, then it is because some
-> > event
-> > occurred that requires it to check all the stateids for validity
-> > and
-> > call FREE_STATEID on the ones that have been revoked. In this case,
-> > either the stateid exists in the list of stateids associated with
-> > that
-> > nfs4_client, in which case it should be tested, or it does not.
-> > There
-> > are no additional conditions to be considered.
-> > 
-> > Reported-by: Frank Ch. Eigler <fche@redhat.com>
-> > Fixes: 663e36f07666 ("nfsd4: kill warnings on testing stateids with
-> > mismatched clientids")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > ---
-> >  fs/nfsd/nfs4state.c | 2 --
-> >  1 file changed, 2 deletions(-)
-> > 
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 6e61fa3acaf1..3aefbad4cc09 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -6341,8 +6341,6 @@ static __be32 nfsd4_validate_stateid(struct
-> > nfs4_client *cl, stateid_t *stateid)
-> >         if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
-> >                 CLOSE_STATEID(stateid))
-> >                 return status;
-> > -       if (!same_clid(&stateid->si_opaque.so_clid, &cl-
-> > >cl_clientid))
-> > -               return status;
-> >         spin_lock(&cl->cl_lock);
-> >         s = find_stateid_locked(cl, stateid);
-> >         if (!s)
+On Tue, Jul 18, 2023 at 04:38:08PM +1000, NeilBrown wrote:
+> No callers of svc_pool_wake_idle_thread() care which thread was woken -
+> except one that wants to trace the wakeup.  For now we drop that
+> tracepoint.
+
+That's an important tracepoint, IMO.
+
+It might be better to have svc_pool_wake_idle_thread() return void
+right from it's introduction, and move the tracepoint into that
+function. I can do that and respin if you agree.
+
+
+> One caller wants to know if anything was woken to set SP_CONGESTED, so
+> set that inside the function instead.
 > 
-> IDGI. Is this fixing an actual bug? Granted this code does seem
-> unnecessary, but removing it doesn't seem like it will cause any
-> user-visible change in behavior. Am I missing something?
-
-It was clearly triggering in
-https://bugzilla.redhat.com/show_bug.cgi?id=2176575
-
-Furthermore, if you look at commit 663e36f07666, you'll see that all it
-does is remove the log message because "it is expected". For some
-unknown reason, it did not register that "then the check is incorrect".
-
-So yes, this is fixing a real bug.
-
--- 
-Trond Myklebust
-Linux NFS client maintainer, Hammerspace
-trond.myklebust@hammerspace.com
-
-
+> Now svc_pool_wake_idle_thread() can "return" void.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  include/linux/sunrpc/svc.h |    2 +-
+>  net/sunrpc/svc.c           |   13 +++++--------
+>  net/sunrpc/svc_xprt.c      |   18 +++---------------
+>  3 files changed, 9 insertions(+), 24 deletions(-)
+> 
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index ea3ce1315416..b39c613fbe06 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -454,7 +454,7 @@ int		   svc_register(const struct svc_serv *, struct net *, const int,
+>  
+>  void		   svc_wake_up(struct svc_serv *);
+>  void		   svc_reserve(struct svc_rqst *rqstp, int space);
+> -struct svc_rqst	  *svc_pool_wake_idle_thread(struct svc_serv *serv,
+> +void		   svc_pool_wake_idle_thread(struct svc_serv *serv,
+>  					     struct svc_pool *pool);
+>  struct svc_pool   *svc_pool_for_cpu(struct svc_serv *serv);
+>  char *		   svc_print_addr(struct svc_rqst *, char *, size_t);
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index b18175ef74ec..fd49e7b12c94 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -696,13 +696,10 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+>   * @serv: RPC service
+>   * @pool: service thread pool
+>   *
+> - * Returns an idle service thread (now marked BUSY), or NULL
+> - * if no service threads are available. Finding an idle service
+> - * thread and marking it BUSY is atomic with respect to other
+> - * calls to svc_pool_wake_idle_thread().
+> + * Wake an idle thread if there is one, else mark the pool as congested.
+>   */
+> -struct svc_rqst *svc_pool_wake_idle_thread(struct svc_serv *serv,
+> -					   struct svc_pool *pool)
+> +void svc_pool_wake_idle_thread(struct svc_serv *serv,
+> +			       struct svc_pool *pool)
+>  {
+>  	struct svc_rqst	*rqstp;
+>  
+> @@ -715,13 +712,13 @@ struct svc_rqst *svc_pool_wake_idle_thread(struct svc_serv *serv,
+>  		wake_up_process(rqstp->rq_task);
+>  		rcu_read_unlock();
+>  		percpu_counter_inc(&pool->sp_threads_woken);
+> -		return rqstp;
+> +		return;
+>  	}
+>  	rcu_read_unlock();
+>  
+>  	trace_svc_pool_starved(serv, pool);
+>  	percpu_counter_inc(&pool->sp_threads_starved);
+> -	return NULL;
+> +	set_bit(SP_CONGESTED, &pool->sp_flags);
+>  }
+>  EXPORT_SYMBOL_GPL(svc_pool_wake_idle_thread);
+>  
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index 948605e7043b..964c97dbb36c 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -456,7 +456,6 @@ static bool svc_xprt_ready(struct svc_xprt *xprt)
+>   */
+>  void svc_xprt_enqueue(struct svc_xprt *xprt)
+>  {
+> -	struct svc_rqst *rqstp;
+>  	struct svc_pool *pool;
+>  
+>  	if (!svc_xprt_ready(xprt))
+> @@ -477,13 +476,7 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
+>  	list_add_tail(&xprt->xpt_ready, &pool->sp_sockets);
+>  	spin_unlock_bh(&pool->sp_lock);
+>  
+> -	rqstp = svc_pool_wake_idle_thread(xprt->xpt_server, pool);
+> -	if (!rqstp) {
+> -		set_bit(SP_CONGESTED, &pool->sp_flags);
+> -		return;
+> -	}
+> -
+> -	trace_svc_xprt_enqueue(xprt, rqstp);
+> +	svc_pool_wake_idle_thread(xprt->xpt_server, pool);
+>  }
+>  EXPORT_SYMBOL_GPL(svc_xprt_enqueue);
+>  
+> @@ -587,14 +580,9 @@ static void svc_xprt_release(struct svc_rqst *rqstp)
+>  void svc_wake_up(struct svc_serv *serv)
+>  {
+>  	struct svc_pool *pool = &serv->sv_pools[0];
+> -	struct svc_rqst *rqstp;
+>  
+> -	rqstp = svc_pool_wake_idle_thread(serv, pool);
+> -	if (!rqstp) {
+> -		set_bit(SP_TASK_PENDING, &pool->sp_flags);
+> -		smp_wmb();
+> -		return;
+> -	}
+> +	set_bit(SP_TASK_PENDING, &pool->sp_flags);
+> +	svc_pool_wake_idle_thread(serv, pool);
+>  }
+>  EXPORT_SYMBOL_GPL(svc_wake_up);
+>  
+> 
+> 
