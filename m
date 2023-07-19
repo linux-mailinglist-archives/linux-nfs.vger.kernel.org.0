@@ -2,128 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 903E6758AE7
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jul 2023 03:35:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F21DA75928F
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jul 2023 12:18:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbjGSBfr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Jul 2023 21:35:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38206 "EHLO
+        id S229591AbjGSKSB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Jul 2023 06:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjGSBfo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jul 2023 21:35:44 -0400
-Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EC7F1BD7
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Jul 2023 18:35:42 -0700 (PDT)
-Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-1b06da65bdbso4839944fac.1
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Jul 2023 18:35:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20221208.gappssmtp.com; s=20221208; t=1689730541; x=1692322541;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xZssYNKocP7SJAjxckC3wBJ507CzulE9IvrMWjf3P+k=;
-        b=5Slf0Wf1DkEOl9A1TiQUYv8SMKm8hpMZkE2pdlrBFVPzzvpLYuiVjUXLVmHCw57mm3
-         QfMAXPNPanSdHmq5ZWXmuM6TgukKEbveLzpwksx2dw9ZklwdjhA52vimEHT2eirBfa+2
-         IT2vnquxNaJm7BjHGdah8DmKJSIjdo0Yp6c26+N05rt7PzrzOKrn94s8yKsSInPTUfNp
-         YfGoevKBsYDtPuhIbewKvY1jLvJ5fb914inI0h60wc0+K8b0g/S/UYKcw11+BXpzkI08
-         6FecWUvMm8TYFIR2erayRFzaDHDt6sysMcKT2DfDdd2VqMiXCbsW5RRwMl7laE7GyBrL
-         HnfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689730541; x=1692322541;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xZssYNKocP7SJAjxckC3wBJ507CzulE9IvrMWjf3P+k=;
-        b=MR3EFsBgmIosbvSJgGrJO4CpqmgE/68HsEIvHNX0Hm8oJE3wU8z5RTYGhmqGuicALL
-         a8g87CVNB5NiDemtoLDjDBI1D8K59TzISH/wzulZD03aZFWFPcpXP3h+lxfXCeB2K/2u
-         0jGe3UB4z4SWwuuCAZLsxmCuXQBNXaRVgRYzWUiq4LGkjhIEGaqXZfsIJYANLB1jT/Zv
-         kWEsnFwp1Uz9fKujwBiENedlbM7VaraRmMpYfunCZXVOGUKl25mhU5YT3Bp6bCi5nfLm
-         ZIBWVbCSc8Is5dck0RbIbx8YZ2+b/4yKlgGTng5xLXNQasVwbQmwILc2Tf98udBam4cY
-         /wLA==
-X-Gm-Message-State: ABy/qLY89Gs79RyiOsHWjp1hoZMNnYoN/YvX9vEtLEJ9+rwQWWpnyqLj
-        wthnUovYXD+M910hpBel1bmrHA==
-X-Google-Smtp-Source: APBJJlHb4gEwJfD+TL2icCrXL1rPSO1/If2sqk52+FC1gSV2ztjdma15fYoDbEqUpP5c7bsoFPcHEw==
-X-Received: by 2002:a05:6870:96a6:b0:1b3:8d35:c85f with SMTP id o38-20020a05687096a600b001b38d35c85fmr1011777oaq.1.1689730541592;
-        Tue, 18 Jul 2023 18:35:41 -0700 (PDT)
-Received: from dread.disaster.area (pa49-186-119-116.pa.vic.optusnet.com.au. [49.186.119.116])
-        by smtp.gmail.com with ESMTPSA id 201-20020a6301d2000000b005633311c70dsm2343100pgb.32.2023.07.18.18.35.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jul 2023 18:35:40 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qLw6L-007mcz-1V;
-        Wed, 19 Jul 2023 11:35:37 +1000
-Date:   Wed, 19 Jul 2023 11:35:37 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Richard Weinberger <richard@nod.at>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>, v9fs@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-nfs@vger.kernel.org,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v5 6/8] xfs: switch to multigrain timestamps
-Message-ID: <ZLc96V2Yo72sthsi@dread.disaster.area>
-References: <20230713-mgctime-v5-0-9eb795d2ae37@kernel.org>
- <20230713-mgctime-v5-6-9eb795d2ae37@kernel.org>
+        with ESMTP id S230459AbjGSKR7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jul 2023 06:17:59 -0400
+Received: from mail.208.org (unknown [183.242.55.162])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECEB1BF5
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Jul 2023 03:17:57 -0700 (PDT)
+Received: from mail.208.org (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTP id 4R5Wwd4FHBzBRDrZ
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Jul 2023 18:17:53 +0800 (CST)
+Authentication-Results: mail.208.org (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)" header.d=208.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=208.org; h=
+        content-transfer-encoding:content-type:message-id:user-agent
+        :references:in-reply-to:subject:to:from:date:mime-version; s=
+        dkim; t=1689761873; x=1692353874; bh=OPzYp2r3St+A8ub/rS9zAYkNqGK
+        Z1nd9QbmIsgDXZNg=; b=uWICH71hDS+2mPc980QwOBS8Chqp4GncOtzGK93Q0Xt
+        GV0XQAI21kBFQ+KRVxRLzLeFsVByx2I6WcmV9Yo7RTars7rXqgAPzpcvd+h/aI6Z
+        kXjKB7SSyiU0WWgtUs3iMUBaYfcIybrnCrIOjONPxBKuQe3qNYkljVedjr8lKTiU
+        Qjw7hi8skfrBa0Y4BkZYagD8m7f1mDIu5+9ROeP7cHOha/12hYrCU3K+7OYO/i4m
+        aLH4AxzQNED5G3m8HKFElwyZDO9cWgIaDDYmJ38xouGdzyGwwZcFd0LsLrbMVJUh
+        j2yrS7n4IIBXHho19nYfUeVKT0BrcMkLj00cEKogl1Q==
+X-Virus-Scanned: amavisd-new at mail.208.org
+Received: from mail.208.org ([127.0.0.1])
+        by mail.208.org (mail.208.org [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id UU2qw4c9b7Re for <linux-nfs@vger.kernel.org>;
+        Wed, 19 Jul 2023 18:17:53 +0800 (CST)
+Received: from localhost (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTPSA id 4R5Wwd2JQ1zBRDrT;
+        Wed, 19 Jul 2023 18:17:53 +0800 (CST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230713-mgctime-v5-6-9eb795d2ae37@kernel.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+Date:   Wed, 19 Jul 2023 18:17:53 +0800
+From:   huzhi001@208suo.com
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFSv4.1: Fix errors in nfs4state.c
+In-Reply-To: <tencent_5D2B9BC6DA996AFC3A398652FB2DAD9BB207@qq.com>
+References: <tencent_5D2B9BC6DA996AFC3A398652FB2DAD9BB207@qq.com>
+User-Agent: Roundcube Webmail
+Message-ID: <e19db8d4e30d076af0c9dc46413ad1df@208suo.com>
+X-Sender: huzhi001@208suo.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_BLOCKED,RDNS_NONE,SPF_HELO_FAIL,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -131,39 +61,111 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 07:00:55PM -0400, Jeff Layton wrote:
-> Enable multigrain timestamps, which should ensure that there is an
-> apparent change to the timestamp whenever it has been written after
-> being actively observed via getattr.
-> 
-> Also, anytime the mtime changes, the ctime must also change, and those
-> are now the only two options for xfs_trans_ichgtime. Have that function
-> unconditionally bump the ctime, and warn if XFS_ICHGTIME_CHG is ever not
-> set.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/xfs/libxfs/xfs_trans_inode.c | 6 +++---
->  fs/xfs/xfs_iops.c               | 4 ++--
->  fs/xfs/xfs_super.c              | 2 +-
->  3 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-> index 0c9df8df6d4a..86f5ffce2d89 100644
-> --- a/fs/xfs/libxfs/xfs_trans_inode.c
-> +++ b/fs/xfs/libxfs/xfs_trans_inode.c
-> @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
->  	ASSERT(tp);
->  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
->  
-> -	tv = current_time(inode);
-> +	/* If the mtime changes, then ctime must also change */
-> +	WARN_ON_ONCE(!(flags & XFS_ICHGTIME_CHG));
+Signed-off-by: ZhiHu <huzhi001@208suo.com>
+---
+  fs/nfs/nfs4state.c | 58 ++++++++++++++++++++++------------------------
+  1 file changed, 28 insertions(+), 30 deletions(-)
 
-Make that an ASSERT(flags & XFS_ICHGTIME_CHG), please. There's no
-need to verify this at runtime on production kernels.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index bbe49315d99e..8fedb9a4efd5 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -788,14 +788,14 @@ static void __nfs4_close(struct nfs4_state *state,
+      /* Protect against nfs4_find_state() */
+      spin_lock(&owner->so_lock);
+      switch (fmode & (FMODE_READ | FMODE_WRITE)) {
+-        case FMODE_READ:
+-            state->n_rdonly--;
+-            break;
+-        case FMODE_WRITE:
+-            state->n_wronly--;
+-            break;
+-        case FMODE_READ|FMODE_WRITE:
+-            state->n_rdwr--;
++    case FMODE_READ:
++        state->n_rdonly--;
++        break;
++    case FMODE_WRITE:
++        state->n_wronly--;
++        break;
++    case FMODE_READ|FMODE_WRITE:
++        state->n_rdwr--;
+      }
+      newstate = FMODE_READ|FMODE_WRITE;
+      if (state->n_rdwr == 0) {
+@@ -905,9 +905,8 @@ void nfs4_free_lock_state(struct nfs_server *server, 
+struct nfs4_lock_state *lsp
+  static struct nfs4_lock_state *nfs4_get_lock_state(struct nfs4_state 
+*state, fl_owner_t owner)
+  {
+      struct nfs4_lock_state *lsp, *new = NULL;
+-
+      for(;;) {
+-        spin_lock(&state->state_lock);
++        spin_lock (&state->state_lock);
+          lsp = __nfs4_find_lock_state(state, owner, NULL);
+          if (lsp != NULL)
+              break;
+@@ -1120,25 +1119,25 @@ void nfs_free_seqid(struct nfs_seqid *seqid)
+  static void nfs_increment_seqid(int status, struct nfs_seqid *seqid)
+  {
+      switch (status) {
+-        case 0:
+-            break;
+-        case -NFS4ERR_BAD_SEQID:
+-            if (seqid->sequence->flags & NFS_SEQID_CONFIRMED)
+-                return;
+-            pr_warn_ratelimited("NFS: v4 server returned a bad"
+-                    " sequence-id error on an"
+-                    " unconfirmed sequence %p!\n",
+-                    seqid->sequence);
+-            return;
+-        case -NFS4ERR_STALE_CLIENTID:
+-        case -NFS4ERR_STALE_STATEID:
+-        case -NFS4ERR_BAD_STATEID:
+-        case -NFS4ERR_BADXDR:
+-        case -NFS4ERR_RESOURCE:
+-        case -NFS4ERR_NOFILEHANDLE:
+-        case -NFS4ERR_MOVED:
+-            /* Non-seqid mutating errors */
++    case 0:
++        break;
++    case -NFS4ERR_BAD_SEQID:
++        if (seqid->sequence->flags & NFS_SEQID_CONFIRMED)
+              return;
++        pr_warn_ratelimited("NFS: v4 server returned a bad"
++                " sequence-id error on an"
++                " unconfirmed sequence %p!\n",
++                seqid->sequence);
++        return;
++    case -NFS4ERR_STALE_CLIENTID:
++    case -NFS4ERR_STALE_STATEID:
++    case -NFS4ERR_BAD_STATEID:
++    case -NFS4ERR_BADXDR:
++    case -NFS4ERR_RESOURCE:
++    case -NFS4ERR_NOFILEHANDLE:
++    case -NFS4ERR_MOVED:
++        /* Non-seqid mutating errors */
++        return;
+      }
+      /*
+       * Note: no locking needed as we are guaranteed to be first
+@@ -1335,7 +1334,7 @@ int nfs4_client_recover_expired_lease(struct 
+nfs_client *clp)
+          if (ret != 0)
+              break;
+          if (!test_bit(NFS4CLNT_LEASE_EXPIRED, &clp->cl_state) &&
+-            !test_bit(NFS4CLNT_CHECK_LEASE,&clp->cl_state))
++            !test_bit(NFS4CLNT_CHECK_LEASE, &clp->cl_state))
+              break;
+          nfs4_schedule_state_manager(clp);
+          ret = -EIO;
+@@ -1643,7 +1642,6 @@ static int nfs4_reclaim_open_state(struct 
+nfs4_state_owner *sp,
+  #ifdef CONFIG_NFS_V4_2
+      bool found_ssc_copy_state = false;
+  #endif /* CONFIG_NFS_V4_2 */
+-
+      /* Note: we rely on the sp->so_states list being ordered
+       * so that we always reclaim open(O_RDWR) and/or open(O_WRITE)
+       * states first.
