@@ -2,59 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DBFD75969E
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jul 2023 15:25:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E498759AED
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jul 2023 18:36:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229637AbjGSNZi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Jul 2023 09:25:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48900 "EHLO
+        id S229707AbjGSQgW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Jul 2023 12:36:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbjGSNZh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jul 2023 09:25:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD1DD119
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Jul 2023 06:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689773089;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H+WScs5V062wBamLy/VYSwG2qEzMGnHGCJxs3puPkcM=;
-        b=TEd1HrVTmPwkiiUu6MrcEVCRfJCkiaCKCG1FZaR4hsn5If34deQ3u5mfcWt7xQRQ8Fq4HK
-        +sVeCL0/YCuP/Cpe+5I/y9v3j5QWt72uzO4Btvtvr+j22kyKAg5C3J/EzbM3MlpsFL51FY
-        W5Ml4p8e1/DBB18n32h22ZpQz8FIU+Q=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-502-p4-rr414Pz6JgT17AE4n9w-1; Wed, 19 Jul 2023 09:24:48 -0400
-X-MC-Unique: p4-rr414Pz6JgT17AE4n9w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8279F10504B2;
-        Wed, 19 Jul 2023 13:24:47 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.50.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A9D9940D2839;
-        Wed, 19 Jul 2023 13:24:46 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Kinglong Mee <kinglongmee@gmail.com>
-Cc:     Anna Schumaker <anna@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>
-Subject: Re: [PATCH v2] nfs: fix redundant readdir request after get eof
-Date:   Wed, 19 Jul 2023 09:24:45 -0400
-Message-ID: <ECE48590-218F-4304-A043-B9AEB04CD3DA@redhat.com>
-In-Reply-To: <CAB6yy374gQmrAjtLmFWGDVq9GBfxFoA-L95oELo=k+W9TF7cyg@mail.gmail.com>
-References: <CAB6yy374gQmrAjtLmFWGDVq9GBfxFoA-L95oELo=k+W9TF7cyg@mail.gmail.com>
+        with ESMTP id S229524AbjGSQgV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jul 2023 12:36:21 -0400
+Received: from mail.208.org (unknown [183.242.55.162])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC6472100
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Jul 2023 09:36:00 -0700 (PDT)
+Received: from mail.208.org (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTP id 4R5hJ62cDMzBRDrQ
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Jul 2023 00:35:18 +0800 (CST)
+Authentication-Results: mail.208.org (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)" header.d=208.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=208.org; h=
+        content-transfer-encoding:content-type:message-id:user-agent
+        :references:in-reply-to:subject:to:from:date:mime-version; s=
+        dkim; t=1689784516; x=1692376517; bh=QBL7hyJ4zfeX5L8G+qvS4vfiCIR
+        +etA4h9MhqkiPafw=; b=Slj9qiZ3y46hHXfivDmg7EEPKxIfa+3207gdi89ZLTW
+        7GXHGRKIyrRoneAllnGtC6cVjAq8k6JUVrnqJ1UHih0sRuvu/TTY4eWT4zpKZqMq
+        T1A6RXTV9Cq/NCIDszSuTH1Dcf2q9hkMzVC0N58jvoAdcUxwxlHe/2e6rvCERhG0
+        xLCXC4EO9LMYeS3y5gzfmcBVkJwlmZhxPiThFrsZ9YCmom1YKRXTXs3nWUom3mGl
+        b/MunWox38n47SweZV8v3HbhUovww1kVOJTuepR8MA9z9o4nr0iNM1h1MllSNRF4
+        KT/wAh10V2mhjoIMrfhYC/c0o4i9cTArwKrqtBYE3zg==
+X-Virus-Scanned: amavisd-new at mail.208.org
+Received: from mail.208.org ([127.0.0.1])
+        by mail.208.org (mail.208.org [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id u-qVn8WRowjA for <linux-nfs@vger.kernel.org>;
+        Thu, 20 Jul 2023 00:35:16 +0800 (CST)
+Received: from localhost (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTPSA id 4R5Xsz06wgzBR5CB;
+        Wed, 19 Jul 2023 19:00:38 +0800 (CST)
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Date:   Wed, 19 Jul 2023 19:00:38 +0800
+From:   huzhi001@208suo.com
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] filemap: Fix errors in file.c
+In-Reply-To: <tencent_405AD96A973A6206087B37AD8032389BA807@qq.com>
+References: <tencent_405AD96A973A6206087B37AD8032389BA807@qq.com>
+User-Agent: Roundcube Webmail
+Message-ID: <0918d0a7d468ab484d075593c35470ad@208suo.com>
+X-Sender: huzhi001@208suo.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=0.7 required=5.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+        DKIM_INVALID,DKIM_SIGNED,RCVD_IN_DNSWL_BLOCKED,RDNS_NONE,SPF_HELO_FAIL,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,47 +61,26 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 18 Jul 2023, at 8:44, Kinglong Mee wrote:
+The following checkpatch errors are removed:
+ERROR: "foo * bar" should be "foo *bar"
+"foo * bar" should be "foo *bar"
 
-> When a directory contains 17 files (except . and ..), nfs client sends
-> a redundant readdir request after get eof.
->
-> A simple reproduce,
-> At NFS server, create a directory with 17 files under exported director=
-y.
->  # mkdir test
->  # cd test
->  # for i in {0..16}  ; do touch $i; done
->
-> At NFS client, no matter mounting through nfsv3 or nfsv4,
-> does ls (or ll) at the created test directory.
->
-> A tshark output likes following (for nfsv4),
->
->  # tshark -i eth0 tcp port 2049 -Tfields -e ip.src -e ip.dst -e nfs -e
-> nfs.cookie4
->
-> srcip   dstip   SEQUENCE, PUTFH, READDIR        0
-> dstip   srcip   SEQUENCE PUTFH READDIR
-> 909539109313539306,2108391201987888856,2305312124304486544,256633545246=
-3141496,2978225129081509984,4263037479923412583,4304697173036510679,46667=
-03455469210097,4759208201298769007,4776701232145978803,533840847851208126=
-2,5949498658935544804,5971526429894832903,6294060338267709855,65288405662=
-29532529,8600463293536422524,9223372036854775807
-> srcip   dstip
-> srcip   dstip   SEQUENCE, PUTFH, READDIR        9223372036854775807
-> dstip   srcip   SEQUENCE PUTFH READDIR
->
-> The READDIR with cookie 9223372036854775807(0x7FFFFFFFFFFFFFFF) is
-> redundant.
->
-> Signed-off-by: Kinglong Mee <kinglongmee@gmail.com>
+Signed-off-by: ZhiHu <huzhi001@208suo.com>
+---
+  fs/nfs/file.c | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Weird, I never got a copy from linux-nfs.   The plain-text version of thi=
-s
-is whitespace damaged, but the HTML version looks right.
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 79b1b3fcd3fc..3f9768810427 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -200,7 +200,7 @@ nfs_file_splice_read(struct file *in, loff_t *ppos, 
+struct pipe_inode_info *pipe
+  EXPORT_SYMBOL_GPL(nfs_file_splice_read);
 
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-
-Ben
-
+  int
+-nfs_file_mmap(struct file * file, struct vm_area_struct * vma)
++nfs_file_mmap(struct file *file, struct vm_area_struct *vma)
+  {
+      struct inode *inode = file_inode(file);
+      int    status;
