@@ -2,39 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C08975AEF0
+	by mail.lfdr.de (Postfix) with ESMTP id 1BB2575AEEF
 	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jul 2023 14:59:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjGTM7F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S229991AbjGTM7F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Thu, 20 Jul 2023 08:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56634 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbjGTM7E (ORCPT
+        with ESMTP id S229651AbjGTM7E (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Jul 2023 08:59:04 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5058F269D
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Jul 2023 05:58:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D23A269A
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Jul 2023 05:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689857900;
+        s=mimecast20190719; t=1689857899;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=Sx/HzIS/UO4hgoN0aFqF4zaXoqar7pWy8ZsgfEG48iA=;
-        b=P1PDCAB/sDBYxkp5v4AdnokcbOiChZ5zzdKSaTosWSmn/8tZezudgiJ9MhE/D97YVaCPYc
-        dvL/S5TUKtIg6xo9SNjDsoX17MOPAaAnH7i4zKibtx+iPrRRqKRekbNytY4wqRBXPpXtLu
-        TL814ffj55ep2KdDDZKQWOBaPcGK5SE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-671-_CkjmfvGM4KSkvHYZOIa2g-1; Thu, 20 Jul 2023 08:58:15 -0400
-X-MC-Unique: _CkjmfvGM4KSkvHYZOIa2g-1
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UUy1M7UsNjb1vyE9f94nUBKR0l9EKezxR8VVlMF4DT4=;
+        b=dzGSmEUdyrfvEqQsYpn2/hOq9qhtXTMiYrSum/eagGGvQvn8DAddAiF0rX8rR3omZMtRB1
+        9FIFLvUJb5j9vDbnwNXOJ0Uo3IQvzZrUZ2ihS0emN3TqZsiVXILwJY0/My2nQDivHrmKba
+        DKgr6GnqrJA9QZB3xUo5cwH4M/de+sc=
+Received: from mimecast-mx02.redhat.com (66.187.233.73 [66.187.233.73]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-453-ob898gn3MCiI1d5_3HufPw-1; Thu, 20 Jul 2023 08:58:16 -0400
+X-MC-Unique: ob898gn3MCiI1d5_3HufPw-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9C091185A795;
-        Thu, 20 Jul 2023 12:58:14 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 04BA02999B2E;
+        Thu, 20 Jul 2023 12:58:15 +0000 (UTC)
 Received: from fs-i40c-03.fs.lab.eng.bos.redhat.com (fs-i40c-03.fs.lab.eng.bos.redhat.com [10.16.224.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22A4D2166B25;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A3C9F2166B25;
         Thu, 20 Jul 2023 12:58:14 +0000 (UTC)
 From:   Alexander Aring <aahringo@redhat.com>
 To:     chuck.lever@oracle.com
@@ -43,9 +44,11 @@ Cc:     jlayton@kernel.org, neilb@suse.de, kolga@netapp.com,
         trond.myklebust@hammerspace.com, anna@kernel.org,
         linux-nfs@vger.kernel.org, teigland@redhat.com,
         cluster-devel@redhat.com, aahringo@redhat.com, agruenba@redhat.com
-Subject: [RFC v6.5-rc2 1/3] fs: lockd: nlm_blocked list race fixes
-Date:   Thu, 20 Jul 2023 08:58:04 -0400
-Message-Id: <20230720125806.1385279-1-aahringo@redhat.com>
+Subject: [RFC v6.5-rc2 2/3] fs: lockd: fix race in async lock request handling
+Date:   Thu, 20 Jul 2023 08:58:05 -0400
+Message-Id: <20230720125806.1385279-2-aahringo@redhat.com>
+In-Reply-To: <20230720125806.1385279-1-aahringo@redhat.com>
+References: <20230720125806.1385279-1-aahringo@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
@@ -60,100 +63,185 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This patch fixes races when lockd accessing the global nlm_blocked list.
-It was mostly safe to access the list because everything was accessed
-from the lockd kernel thread context but there exists cases like
-nlmsvc_grant_deferred() that could manipulate the nlm_blocked list and
-it can be called from any context.
+This patch fixes a race in async lock request handling between adding
+the relevant struct nlm_block to nlm_blocked list after the request was
+sent by vfs_lock_file() and nlmsvc_grant_deferred() does a lookup of the
+nlm_block in the nlm_blocked list. It could be that the async request is
+completed before the nlm_block was added to the list. This would end
+in a -ENOENT and a kernel log message of "lockd: grant for unknown
+block".
 
-Cc: stable@vger.kernel.org
+To solve this issue we add the nlm_block before the vfs_lock_file() call
+to be sure it has been added when a possible nlmsvc_grant_deferred() is
+called. If the vfs_lock_file() results in an case when it wouldn't be
+added to nlm_blocked list, the nlm_block struct will be removed from
+this list again.
+
 Signed-off-by: Alexander Aring <aahringo@redhat.com>
 ---
- fs/lockd/svclock.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ fs/lockd/svclock.c          | 80 +++++++++++++++++++++++++++----------
+ include/linux/lockd/lockd.h |  1 +
+ 2 files changed, 60 insertions(+), 21 deletions(-)
 
 diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index c43ccdf28ed9..28abec5c451d 100644
+index 28abec5c451d..62ef27a69a9e 100644
 --- a/fs/lockd/svclock.c
 +++ b/fs/lockd/svclock.c
-@@ -131,12 +131,14 @@ static void nlmsvc_insert_block(struct nlm_block *block, unsigned long when)
- static inline void
- nlmsvc_remove_block(struct nlm_block *block)
- {
-+	spin_lock(&nlm_blocked_lock);
- 	if (!list_empty(&block->b_list)) {
--		spin_lock(&nlm_blocked_lock);
- 		list_del_init(&block->b_list);
- 		spin_unlock(&nlm_blocked_lock);
- 		nlmsvc_release_block(block);
-+		return;
+@@ -297,6 +297,8 @@ static void nlmsvc_free_block(struct kref *kref)
+ 
+ 	dprintk("lockd: freeing block %p...\n", block);
+ 
++	WARN_ON_ONCE(block->b_flags & B_PENDING_CALLBACK);
++
+ 	/* Remove block from file's list of blocks */
+ 	list_del_init(&block->b_flist);
+ 	mutex_unlock(&file->f_mutex);
+@@ -543,6 +545,12 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+ 		goto out;
  	}
-+	spin_unlock(&nlm_blocked_lock);
+ 
++	if (block->b_flags & B_PENDING_CALLBACK)
++		goto pending_request;
++
++	/* Append to list of blocked */
++	nlmsvc_insert_block(block, NLM_NEVER);
++
+ 	if (!wait)
+ 		lock->fl.fl_flags &= ~FL_SLEEP;
+ 	mode = lock_to_openmode(&lock->fl);
+@@ -552,9 +560,13 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+ 	dprintk("lockd: vfs_lock_file returned %d\n", error);
+ 	switch (error) {
+ 		case 0:
++			nlmsvc_remove_block(block);
+ 			ret = nlm_granted;
+ 			goto out;
+ 		case -EAGAIN:
++			if (!wait)
++				nlmsvc_remove_block(block);
++pending_request:
+ 			/*
+ 			 * If this is a blocking request for an
+ 			 * already pending lock request then we need
+@@ -565,6 +577,8 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+ 			ret = async_block ? nlm_lck_blocked : nlm_lck_denied;
+ 			goto out;
+ 		case FILE_LOCK_DEFERRED:
++			block->b_flags |= B_PENDING_CALLBACK;
++
+ 			if (wait)
+ 				break;
+ 			/* Filesystem lock operation is in progress
+@@ -572,17 +586,16 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+ 			ret = nlmsvc_defer_lock_rqst(rqstp, block);
+ 			goto out;
+ 		case -EDEADLK:
++			nlmsvc_remove_block(block);
+ 			ret = nlm_deadlock;
+ 			goto out;
+ 		default:			/* includes ENOLCK */
++			nlmsvc_remove_block(block);
+ 			ret = nlm_lck_denied_nolocks;
+ 			goto out;
+ 	}
+ 
+ 	ret = nlm_lck_blocked;
+-
+-	/* Append to list of blocked */
+-	nlmsvc_insert_block(block, NLM_NEVER);
+ out:
+ 	mutex_unlock(&file->f_mutex);
+ 	nlmsvc_release_block(block);
+@@ -739,34 +752,59 @@ nlmsvc_update_deferred_block(struct nlm_block *block, int result)
+ 		block->b_flags |= B_TIMED_OUT;
  }
  
- /*
-@@ -152,6 +154,7 @@ nlmsvc_lookup_block(struct nlm_file *file, struct nlm_lock *lock)
- 				file, lock->fl.fl_pid,
- 				(long long)lock->fl.fl_start,
- 				(long long)lock->fl.fl_end, lock->fl.fl_type);
-+	spin_lock(&nlm_blocked_lock);
++static int __nlmsvc_grant_deferred(struct nlm_block *block,
++				   struct file_lock *fl,
++				   int result)
++{
++	int rc = 0;
++
++	dprintk("lockd: nlmsvc_notify_blocked block %p flags %d\n",
++					block, block->b_flags);
++	if (block->b_flags & B_QUEUED) {
++		if (block->b_flags & B_TIMED_OUT) {
++			rc = -ENOLCK;
++			goto out;
++		}
++		nlmsvc_update_deferred_block(block, result);
++	} else if (result == 0)
++		block->b_granted = 1;
++
++	nlmsvc_insert_block_locked(block, 0);
++	svc_wake_up(block->b_daemon);
++out:
++	return rc;
++}
++
+ static int nlmsvc_grant_deferred(struct file_lock *fl, int result)
+ {
+-	struct nlm_block *block;
+-	int rc = -ENOENT;
++	struct nlm_block *block = NULL;
++	int rc;
+ 
+ 	spin_lock(&nlm_blocked_lock);
  	list_for_each_entry(block, &nlm_blocked, b_list) {
- 		fl = &block->b_call->a_args.lock.fl;
- 		dprintk("lockd: check f=%p pd=%d %Ld-%Ld ty=%d cookie=%s\n",
-@@ -161,9 +164,11 @@ nlmsvc_lookup_block(struct nlm_file *file, struct nlm_lock *lock)
- 				nlmdbg_cookie2a(&block->b_call->a_args.cookie));
- 		if (block->b_file == file && nlm_compare_locks(fl, &lock->fl)) {
- 			kref_get(&block->b_count);
-+			spin_unlock(&nlm_blocked_lock);
- 			return block;
+ 		if (nlm_compare_locks(&block->b_call->a_args.lock.fl, fl)) {
+-			dprintk("lockd: nlmsvc_notify_blocked block %p flags %d\n",
+-							block, block->b_flags);
+-			if (block->b_flags & B_QUEUED) {
+-				if (block->b_flags & B_TIMED_OUT) {
+-					rc = -ENOLCK;
+-					break;
+-				}
+-				nlmsvc_update_deferred_block(block, result);
+-			} else if (result == 0)
+-				block->b_granted = 1;
+-
+-			nlmsvc_insert_block_locked(block, 0);
+-			svc_wake_up(block->b_daemon);
+-			rc = 0;
++			kref_get(&block->b_count);
+ 			break;
  		}
  	}
-+	spin_unlock(&nlm_blocked_lock);
- 
- 	return NULL;
- }
-@@ -185,16 +190,19 @@ nlmsvc_find_block(struct nlm_cookie *cookie)
- {
- 	struct nlm_block *block;
- 
+ 	spin_unlock(&nlm_blocked_lock);
+-	if (rc == -ENOENT)
+-		printk(KERN_WARNING "lockd: grant for unknown block\n");
++
++	if (!block) {
++		pr_warn("lockd: grant for unknown pending block\n");
++		return -ENOENT;
++	}
++
++	/* don't interfere with nlmsvc_lock() */
++	mutex_lock(&block->b_file->f_mutex);
++	block->b_flags &= ~B_PENDING_CALLBACK;
++
 +	spin_lock(&nlm_blocked_lock);
- 	list_for_each_entry(block, &nlm_blocked, b_list) {
- 		if (nlm_cookie_match(&block->b_call->a_args.cookie,cookie))
- 			goto found;
- 	}
++	WARN_ON_ONCE(list_empty(&block->b_list));
++	rc = __nlmsvc_grant_deferred(block, fl, result);
 +	spin_unlock(&nlm_blocked_lock);
- 
- 	return NULL;
- 
- found:
- 	dprintk("nlmsvc_find_block(%s): block=%p\n", nlmdbg_cookie2a(cookie), block);
- 	kref_get(&block->b_count);
-+	spin_unlock(&nlm_blocked_lock);
- 	return block;
++	mutex_unlock(&block->b_file->f_mutex);
++
++	nlmsvc_release_block(block);
+ 	return rc;
  }
  
-@@ -317,6 +325,7 @@ void nlmsvc_traverse_blocks(struct nlm_host *host,
+diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
+index f42594a9efe0..a977be8bcc2c 100644
+--- a/include/linux/lockd/lockd.h
++++ b/include/linux/lockd/lockd.h
+@@ -189,6 +189,7 @@ struct nlm_block {
+ #define B_QUEUED		1	/* lock queued */
+ #define B_GOT_CALLBACK		2	/* got lock or conflicting lock */
+ #define B_TIMED_OUT		4	/* filesystem too slow to respond */
++#define B_PENDING_CALLBACK	8	/* pending callback for lock request */
+ };
  
- restart:
- 	mutex_lock(&file->f_mutex);
-+	spin_lock(&nlm_blocked_lock);
- 	list_for_each_entry_safe(block, next, &file->f_blocks, b_flist) {
- 		if (!match(block->b_host, host))
- 			continue;
-@@ -325,11 +334,13 @@ void nlmsvc_traverse_blocks(struct nlm_host *host,
- 		if (list_empty(&block->b_list))
- 			continue;
- 		kref_get(&block->b_count);
-+		spin_unlock(&nlm_blocked_lock);
- 		mutex_unlock(&file->f_mutex);
- 		nlmsvc_unlink_block(block);
- 		nlmsvc_release_block(block);
- 		goto restart;
- 	}
-+	spin_unlock(&nlm_blocked_lock);
- 	mutex_unlock(&file->f_mutex);
- }
- 
+ /*
 -- 
 2.31.1
 
