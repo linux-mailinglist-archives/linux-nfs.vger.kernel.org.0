@@ -2,37 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 926A875B31D
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jul 2023 17:39:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D9CE75B343
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jul 2023 17:43:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232817AbjGTPjw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Jul 2023 11:39:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41834 "EHLO
+        id S232867AbjGTPnn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Jul 2023 11:43:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232674AbjGTPjg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Jul 2023 11:39:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40E46210C;
-        Thu, 20 Jul 2023 08:39:34 -0700 (PDT)
+        with ESMTP id S232865AbjGTPnn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Jul 2023 11:43:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B1E510A;
+        Thu, 20 Jul 2023 08:43:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ABEA761B56;
-        Thu, 20 Jul 2023 15:39:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52E39C433C7;
-        Thu, 20 Jul 2023 15:39:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B666561B59;
+        Thu, 20 Jul 2023 15:43:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E5DAC433C7;
+        Thu, 20 Jul 2023 15:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689867573;
-        bh=3XmIRlQQPgVJh457fLrkHCVVLfu5lsGxcUhR80fgQGI=;
+        s=k20201202; t=1689867821;
+        bh=KUt565SRXpXnvkF8G6PZj4sOu4mf7685mCIq6zmz5II=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=B6LBWayvTzhFVhuN61gSMvyIp5sTvtI0d7Td1e+/ofB514zDTzxLQs6p5ji6Q+JyG
-         jetM6KDOIq8Zb09iTjKlbWrs7AwkoiQ5XJG4efFkGz6FZg91ISUO+HqAZjjAUUoopp
-         PvMxCs2P1X+hHGP9FXC2m+yo8xAxY1j0MBOPnVxWNKFtYRMWb/qRsC8P67IK0vKIcF
-         3SwSryjr8MR7MBIQBz433auh6i7P9zrVc3hdW7ogBwFXhmD1mtvL+cWIKYzzdTjcvb
-         wwqbHrA/IEJZs9/UOqUX7G4ZFdiE4JngBrF4MDwG3o+JNzF0TDiwIQNithzZ1lkRZL
-         2hBthDZ4lz1JA==
-Message-ID: <29bcbdbb1b8b0c65fed6e64883a43b38e74f7948.camel@kernel.org>
+        b=R/Lz+L5jrr0VsbxbCCDU8OlGSWH4Vy1hyPyJHgkIrJWKe3h2GdGzzkZF/oUxQ6U/W
+         gOLaqEVOOmQQsfPZDGqmQmH1qPY0q0hIheAG349RSgrC9jH3pUCwV1LHO/r6NzJSZn
+         71+cnzTIgZxgNW9iZdT7aXHP+8Sb9jBKSSHxiB/TXaZegr6xaXTXnZBn+hFCUhnH1/
+         iyqDg6qwqw66EkkIFVsyJyNBpQrV3FKbKZFdBHzuCpRYDuDbjP4WNPUrSdIlgXoaAV
+         B9GY++Y+9Uwb2ZzULoHLJxEK8YFi/LART7BBUOwWxsEdrev5cVbJjD/B5FS5u4cReS
+         I73M0Qp0/dCZQ==
+Message-ID: <d666a76bd243d4299551381523698a47229df71b.camel@kernel.org>
 Subject: Re: [PATCH] nfsd: remove unsafe BUG_ON from set_change_info
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever III <chuck.lever@oracle.com>
@@ -41,7 +41,7 @@ Cc:     Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Boyang Xue <bxue@redhat.com>
-Date:   Thu, 20 Jul 2023 11:39:31 -0400
+Date:   Thu, 20 Jul 2023 11:43:39 -0400
 In-Reply-To: <C4A9048C-C3C8-4C62-B68F-7170C6CDC5BE@oracle.com>
 References: <20230720-bz2223560-v1-1-edb4900043b8@kernel.org>
          <4B067A0F-93E3-435A-A32B-B17BC07D4606@oracle.com>
@@ -51,10 +51,10 @@ Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -117,6 +117,15 @@ s
 > rather than return a cobbled-up changeinfo4. Maybe for another
 > day.
 >=20
+
+If we issue a create or rename or something and it did happen, then we
+don't want to return an error just because we couldn't collect the info
+on it.
+
+We probably could abort the operation if collecting the pre-change info
+fails though.
+
+
 >=20
 > > > > Move set_change_info to nfs4proc.c since all of the callers are the=
 re.
@@ -194,9 +203,6 @@ p)
 > > > "From the server"? Is it only likely to fail if the exported
 > > > filesystem is an NFS mount? Or did you mean "from the filesystem" ?
 > > >=20
-
-Yep, will fix.
-
 > > >=20
 > > > > + * change values, after throwing a warning.
 > > > > + */
@@ -205,9 +211,6 @@ Yep, will fix.
 > > > Maybe you should clear ->atomic as well in this case.
 > > >=20
 > > >=20
-
-It should already be clear since fh_pre_saved isn't set.
-
 > > > > + cinfo->before_change =3D 0;
 > > > > + cinfo->after_change =3D 0;
 > > > > + return;
