@@ -2,67 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7358D75B6A0
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jul 2023 20:23:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE90475B877
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jul 2023 22:02:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231405AbjGTSXj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Jul 2023 14:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58336 "EHLO
+        id S229671AbjGTUCx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Jul 2023 16:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231383AbjGTSXh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Jul 2023 14:23:37 -0400
+        with ESMTP id S229796AbjGTUCw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Jul 2023 16:02:52 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51612272A;
-        Thu, 20 Jul 2023 11:23:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 157D02733
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Jul 2023 13:02:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C5DB561BD6;
-        Thu, 20 Jul 2023 18:23:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 774AEC433C9;
-        Thu, 20 Jul 2023 18:23:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 549C061C37
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Jul 2023 20:02:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BF1EC433C8;
+        Thu, 20 Jul 2023 20:02:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689877413;
-        bh=jKKeU03qB6wSaY/9QeYm5xXkIiRbAsA5WZOfWdz1d20=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-        b=hdmDeHyOF6rP5yExA2dI53Zgug7c4I+C7VzuO/2/wvdlJxUg6eKfw6MWKux+kCKjr
-         lucoK2ctTkb69VEFqUvFb2zLm3I4ut0luBjAIVxgdICnIvHXI3ilJZ0nstGbx3i3yJ
-         gydyR1NamB1a55v9lyp/9Qov08Yda0bwZ2ZQKjeYyc4UTHTSI9eFdKkzRSH1YBFe7C
-         QUM2NDoUf9XVAwsTHVRC5oKNTvJopcGoj3xLgDWAUFvmHfd1oG603mL2D53Tc60945
-         Gj4V9AIzFJfDEYWcHpnmjn6YL8/Hhxy7M7YpuKiTbsWsx9xgQUVhEUJs7LX3g3FMy3
-         bcTMJgDJhtwAw==
+        s=k20201202; t=1689883368;
+        bh=SvieGcw8gPEiqy2JZD9xuvadM4O2boLVCOdgo14NCEM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=TtnuEWJAi070k2GAarr0C39NSp2YoGn6MYYpIqedrJHoboZMEujyifm19pKy7bh8U
+         ZdnV9SpHb7RGr/Kz3SuIvDU5vVvJvzToX6VgfXnmZb/Y2vRm9Y8VvSkfdWAKU06b6N
+         gazB3MLpoMW9j7PzaXbGQonSypd08Eusti9hX3SZfQRlSgbqt3xM18z2AjEjyoiDCB
+         3riu9/DVE2XCxV5v9tp1DHs1B7fMyq7frVpLcr28XbsrR982fQTd67ujnSDBfZ55eB
+         x24+7DP9Aj8fOlXvdM57U+nq/9Ce7cr+3Cy4vOEv1VMBZR1C60HAiBhh/tIcEqk3Wk
+         QcM11s30eTaHg==
+Message-ID: <32d10c61803c83d4e4812c84a3080728acb91061.camel@kernel.org>
+Subject: Re: [PATCH 04/14] SUNRPC: change svc_recv() to return void.
 From:   Jeff Layton <jlayton@kernel.org>
-Date:   Thu, 20 Jul 2023 14:23:21 -0400
-Subject: [PATCH v2 2/2] nfsd: remove unsafe BUG_ON from set_change_info
+To:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Date:   Thu, 20 Jul 2023 16:02:47 -0400
+In-Reply-To: <168966228862.11075.10086063375287695723.stgit@noble.brown>
+References: <168966227838.11075.2974227708495338626.stgit@noble.brown>
+         <168966228862.11075.10086063375287695723.stgit@noble.brown>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230720-bz2223560-v2-2-070aaf2660b7@kernel.org>
-References: <20230720-bz2223560-v2-0-070aaf2660b7@kernel.org>
-In-Reply-To: <20230720-bz2223560-v2-0-070aaf2660b7@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc:     Boyang Xue <bxue@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3438; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=jKKeU03qB6wSaY/9QeYm5xXkIiRbAsA5WZOfWdz1d20=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBkuXuiMsg2S8SgxdqtY3Xh7fzaNBidHZ3LVKQWw
- 8REgPndYKSJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZLl7ogAKCRAADmhBGVaC
- FVVqEADN0pNpC9pl2UcTsyIvtNwBpTIRk98fqUkcuK6JLmrwjtjFFWpaxrMcCqaPKqpae68reAf
- q5gInG7ZzJnDdcBmsWAbb+YfzuZw5vuL1KPYXFDsSkQ+I7ftIggjJu8bp8hC5Zb7fnG8UEBk2bV
- ljKhKSja5qIKo8Pf28vEPbj6UEX2/LGHC8XxNcrcOrLgsg3TBdvuv2PCHgz6Oasnimn/Q7pqIaU
- oB7ErmpPrBqS/cJxgxK/6JhYV/Bnhxq5qecp1lZ/e0sFkmirftqXzVbX9Ehm6zC3XUBX2kr9eEe
- fRTXqGhtFqtt9RU+feNY3bV6Cp4kc+YuprG7L8Wc6pcvgdRGWWBMVu9G4HZGTyQWsDwI/MJycQ2
- EMImx1P76f7nMh0mD/M+23iHm9FXuUQ1jEFbKk0KfgCfnPaJ6PFUAb/WNGS+sduLtsvnucHnBO/
- NTMPp2+7XRa+GktVrQRFKrsZYRu8reZYh0Xxq2VLRdBinZ1rc4UU03THl7KgoFbsWPb58gTv3HO
- 8CNDIDdGEP1ouvzfC+xGrhTS49+O2wRkX56n5PvWokFPcOELT29iIAF20uhQqJtg0X1RKnkgHib
- cGGxt2zjFFMFw6WxrYJ95GeGZjUvAxQj7t+k96rjreoJAmYO/caa9BNRzopz1ZXn2nl+IqX7gTm
- 4urwpua1Euy3Pew==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -73,93 +55,239 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-At one time, nfsd would scrape inode information directly out of struct
-inode in order to populate the change_info4. At that time, the BUG_ON in
-set_change_info made some sense, since having it unset meant a coding
-error.
+On Tue, 2023-07-18 at 16:38 +1000, NeilBrown wrote:
+> svc_recv() currently returns a 0 on success or one of two errors:
+>  - -EAGAIN means no message was successfully received
+>  - -EINTR means the thread has been told to stop
+>=20
+> Previously nfsd would stop as the result of a signal as well as
+> following kthread_stop().  In that case the difference was useful: EINTR
+> means stop unconditionally.  EAGAIN means stop if kthread_should_stop(),
+> continue otherwise.
+>=20
+> Now threads only exit when kthread_should_stop() so we don't need the
+> distinction.
+>=20
+> So have all threads test kthread_should_stop() (most do), and return
+> simple success/failure from svc_recv().
 
-More recently, it calls vfs_getattr to get this information, which can
-fail. If that fails, fh_pre_saved can end up not being set. While this
-situation is unfortunate, we don't need to crash the box.
+The patch makes sense, but the above sentence doesn't. You're making
+svc_recv void return, but you're returning simple success/failure?
 
-Move set_change_info to nfs4proc.c since all of the callers are there.
-Revise the condition for setting "atomic" to also check for
-fh_pre_saved, and rework the rest to try and handle either flag being
-missing when this occurs.
+> Also change some helpers that svc_recv() uses to not bother with an
+> error code, returning a bool in once case, and NULL for failure in
+> another.
+>=20
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/lockd/svc.c                 |    9 +++------
+>  fs/nfs/callback.c              |    5 +----
+>  fs/nfsd/nfssvc.c               |    8 ++------
+>  include/linux/sunrpc/svcsock.h |    2 +-
+>  net/sunrpc/svc_xprt.c          |   27 +++++++++++----------------
+>  5 files changed, 18 insertions(+), 33 deletions(-)
+>=20
+> diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+> index 91ef139a7757..a43b63e46127 100644
+> --- a/fs/lockd/svc.c
+> +++ b/fs/lockd/svc.c
+> @@ -116,7 +116,6 @@ static void set_grace_period(struct net *net)
+>  static int
+>  lockd(void *vrqstp)
+>  {
+> -	int		err =3D 0;
+>  	struct svc_rqst *rqstp =3D vrqstp;
+>  	struct net *net =3D &init_net;
+>  	struct lockd_net *ln =3D net_generic(net, lockd_net_id);
+> @@ -139,12 +138,10 @@ lockd(void *vrqstp)
+>  		timeout =3D nlmsvc_retry_blocked();
+> =20
+>  		/*
+> -		 * Find a socket with data available and call its
+> -		 * recvfrom routine.
+> +		 * Find any work to do, such as a socket with data available,
+> +		 * and do the work.
+>  		 */
+> -		err =3D svc_recv(rqstp, timeout);
+> -		if (err =3D=3D -EAGAIN || err =3D=3D -EINTR)
+> -			continue;
+> +		svc_recv(rqstp, timeout);
+>  	}
+>  	if (nlmsvc_ops)
+>  		nlmsvc_invalidate_all();
+> diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+> index 2d94384bd6a9..914d2402ca98 100644
+> --- a/fs/nfs/callback.c
+> +++ b/fs/nfs/callback.c
+> @@ -74,7 +74,6 @@ static int nfs4_callback_up_net(struct svc_serv *serv, =
+struct net *net)
+>  static int
+>  nfs4_callback_svc(void *vrqstp)
+>  {
+> -	int err;
+>  	struct svc_rqst *rqstp =3D vrqstp;
+> =20
+>  	set_freezable();
+> @@ -83,9 +82,7 @@ nfs4_callback_svc(void *vrqstp)
+>  		/*
+>  		 * Listen for a request on the socket
+>  		 */
+> -		err =3D svc_recv(rqstp, MAX_SCHEDULE_TIMEOUT);
+> -		if (err =3D=3D -EAGAIN || err =3D=3D -EINTR)
+> -			continue;
+> +		svc_recv(rqstp, MAX_SCHEDULE_TIMEOUT);
+>  	}
+> =20
+>  	svc_exit_thread(rqstp);
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 3e08cc746870..5bf48c33986e 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -953,7 +953,6 @@ nfsd(void *vrqstp)
+>  	struct svc_xprt *perm_sock =3D list_entry(rqstp->rq_server->sv_permsock=
+s.next, typeof(struct svc_xprt), xpt_list);
+>  	struct net *net =3D perm_sock->xpt_net;
+>  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+> -	int err;
+> =20
+>  	/* At this point, the thread shares current->fs
+>  	 * with the init process. We need to create files with the
+> @@ -972,7 +971,7 @@ nfsd(void *vrqstp)
+>  	/*
+>  	 * The main request loop
+>  	 */
+> -	for (;;) {
+> +	while (!kthread_should_stop()) {
+>  		/* Update sv_maxconn if it has changed */
+>  		rqstp->rq_server->sv_maxconn =3D nn->max_connections;
+> =20
+> @@ -980,10 +979,7 @@ nfsd(void *vrqstp)
+>  		 * Find a socket with data available and call its
+>  		 * recvfrom routine.
+>  		 */
+> -		while ((err =3D svc_recv(rqstp, 60*60*HZ)) =3D=3D -EAGAIN)
+> -			;
+> -		if (err =3D=3D -EINTR)
+> -			break;
+> +		svc_recv(rqstp, 60*60*HZ);
+>  		validate_process_creds();
+>  	}
+> =20
+> diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsoc=
+k.h
+> index 55446136499f..fb5c98069356 100644
+> --- a/include/linux/sunrpc/svcsock.h
+> +++ b/include/linux/sunrpc/svcsock.h
+> @@ -64,7 +64,7 @@ static inline u32 svc_sock_final_rec(struct svc_sock *s=
+vsk)
+>   * Function prototypes.
+>   */
+>  void		svc_close_net(struct svc_serv *, struct net *);
+> -int		svc_recv(struct svc_rqst *, long);
+> +void		svc_recv(struct svc_rqst *, long);
+>  void		svc_send(struct svc_rqst *rqstp);
+>  void		svc_drop(struct svc_rqst *);
+>  void		svc_sock_update_bufs(struct svc_serv *serv);
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index c808f6d60c99..67825eef8646 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -664,7 +664,7 @@ static void svc_check_conn_limits(struct svc_serv *se=
+rv)
+>  	}
+>  }
+> =20
+> -static int svc_alloc_arg(struct svc_rqst *rqstp)
+> +static bool svc_alloc_arg(struct svc_rqst *rqstp)
+>  {
+>  	struct svc_serv *serv =3D rqstp->rq_server;
+>  	struct xdr_buf *arg =3D &rqstp->rq_arg;
+> @@ -689,7 +689,7 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
+>  		set_current_state(TASK_IDLE);
+>  		if (kthread_should_stop()) {
+>  			set_current_state(TASK_RUNNING);
+> -			return -EINTR;
+> +			return false;
+>  		}
+>  		trace_svc_alloc_arg_err(pages, ret);
+>  		memalloc_retry_wait(GFP_KERNEL);
+> @@ -708,7 +708,7 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
+>  	arg->tail[0].iov_len =3D 0;
+> =20
+>  	rqstp->rq_xid =3D xdr_zero;
+> -	return 0;
+> +	return true;
+>  }
+> =20
+>  static bool
+> @@ -773,9 +773,9 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_=
+rqst *rqstp, long timeout)
+>  	if (!time_left)
+>  		percpu_counter_inc(&pool->sp_threads_timedout);
+>  	if (kthread_should_stop())
+> -		return ERR_PTR(-EINTR);
+> +		return NULL;
+>  	percpu_counter_inc(&pool->sp_threads_no_work);
+> -	return ERR_PTR(-EAGAIN);
+> +	return NULL;
+>  out_found:
+>  	/* Normally we will wait up to 5 seconds for any required
+>  	 * cache information to be provided.
+> @@ -856,32 +856,27 @@ static int svc_handle_xprt(struct svc_rqst *rqstp, =
+struct svc_xprt *xprt)
+>   * organised not to touch any cachelines in the shared svc_serv
+>   * structure, only cachelines in the local svc_pool.
+>   */
+> -int svc_recv(struct svc_rqst *rqstp, long timeout)
+> +void svc_recv(struct svc_rqst *rqstp, long timeout)
+>  {
+>  	struct svc_xprt		*xprt =3D NULL;
+>  	struct svc_serv		*serv =3D rqstp->rq_server;
+> -	int			len, err;
+> +	int			len;
+> =20
+> -	err =3D svc_alloc_arg(rqstp);
+> -	if (err)
+> +	if (!svc_alloc_arg(rqstp))
+>  		goto out;
+> =20
+>  	try_to_freeze();
+>  	cond_resched();
+> -	err =3D -EINTR;
+>  	if (kthread_should_stop())
+>  		goto out;
+> =20
+>  	xprt =3D svc_get_next_xprt(rqstp, timeout);
+> -	if (IS_ERR(xprt)) {
+> -		err =3D PTR_ERR(xprt);
+> +	if (!xprt)
+>  		goto out;
+> -	}
+> =20
+>  	len =3D svc_handle_xprt(rqstp, xprt);
+> =20
+>  	/* No data, incomplete (TCP) read, or accept() */
+> -	err =3D -EAGAIN;
+>  	if (len <=3D 0)
+>  		goto out_release;
+> =20
+> @@ -896,12 +891,12 @@ int svc_recv(struct svc_rqst *rqstp, long timeout)
+>  	percpu_counter_inc(&rqstp->rq_pool->sp_messages_arrived);
+>  	rqstp->rq_stime =3D ktime_get();
+>  	svc_process(rqstp);
+> -	return 0;
+> +	return;
+>  out_release:
+>  	rqstp->rq_res.len =3D 0;
+>  	svc_xprt_release(rqstp);
+>  out:
+> -	return err;
+> +	return;
+>  }
+>  EXPORT_SYMBOL_GPL(svc_recv);
+> =20
+>=20
+>=20
 
-Reported-by: Boyang Xue <bxue@redhat.com>
-Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2223560
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4proc.c | 31 +++++++++++++++++++++++++++++++
- fs/nfsd/xdr4.h     | 11 -----------
- 2 files changed, 31 insertions(+), 11 deletions(-)
-
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 9285e1eab4d5..4467be7d9c2a 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -382,6 +382,37 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	return status;
- }
- 
-+/**
-+ * set_change_info - set up the change_info4 for a reply
-+ * @cinfo: pointer to nfsd4_change_info to be populated
-+ * @fhp: pointer to svc_fh to use as source
-+ *
-+ * Many operations in NFSv4 require change_info4 in the reply. This function
-+ * populates that from the info that we (should!) have already collected. In
-+ * the event that we didn't get any pre-attrs, just zero out both.
-+ */
-+static void
-+set_change_info(struct nfsd4_change_info *cinfo, struct svc_fh *fhp)
-+{
-+	cinfo->atomic = (u32)(fhp->fh_pre_saved && fhp->fh_post_saved && !fhp->fh_no_atomic_attr);
-+	cinfo->before_change = fhp->fh_pre_change;
-+	cinfo->after_change = fhp->fh_post_change;
-+
-+	/*
-+	 * If fetching the pre-change attributes failed, then we should
-+	 * have already failed the whole operation. We could have still
-+	 * failed to fetch post-change attributes however.
-+	 *
-+	 * The pre field should be set at this point. WARN if it's
-+	 * that's ever not the case. If either value is unset, then just
-+	 * zero out the field since we don't have any other recourse.
-+	 */
-+	if (WARN_ON_ONCE(!fhp->fh_pre_saved))
-+		cinfo->before_change = 0;
-+	if (!fhp->fh_post_saved)
-+		cinfo->after_change = 0;
-+}
-+
- static __be32
- do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, struct nfsd4_open *open, struct svc_fh **resfh)
- {
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index b2931fdf53be..9e67f63c5f4d 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -775,17 +775,6 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op);
- 
- #define NFS4_SVC_XDRSIZE		sizeof(struct nfsd4_compoundargs)
- 
--static inline void
--set_change_info(struct nfsd4_change_info *cinfo, struct svc_fh *fhp)
--{
--	BUG_ON(!fhp->fh_pre_saved);
--	cinfo->atomic = (u32)(fhp->fh_post_saved && !fhp->fh_no_atomic_attr);
--
--	cinfo->before_change = fhp->fh_pre_change;
--	cinfo->after_change = fhp->fh_post_change;
--}
--
--
- bool nfsd4_mach_creds_match(struct nfs4_client *cl, struct svc_rqst *rqstp);
- bool nfs4svc_decode_compoundargs(struct svc_rqst *rqstp, struct xdr_stream *xdr);
- bool nfs4svc_encode_compoundres(struct svc_rqst *rqstp, struct xdr_stream *xdr);
-
--- 
-2.41.0
-
+--=20
+Jeff Layton <jlayton@kernel.org>
