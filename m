@@ -2,82 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F9B175D5D6
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jul 2023 22:40:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C32475D7A9
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jul 2023 00:46:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229609AbjGUUkA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Jul 2023 16:40:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52952 "EHLO
+        id S229679AbjGUWqj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Jul 2023 18:46:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230014AbjGUUj7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jul 2023 16:39:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5641701
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Jul 2023 13:39:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 485D861B24
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Jul 2023 20:39:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53E00C433CC;
-        Fri, 21 Jul 2023 20:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689971997;
-        bh=8rk4YsBhatHs6nw4dwWS9Cf8lXaWPzEbw/xq2Wsz6to=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ss6UCV0sONuQl+21zcHz2JGxZM9tC80w2AwoX0LYFd16xFCHE5fEKdktOnTGkYnRH
-         j6zr0UM44jmDkm4XnioYQt8O5ZCO0qqDHbDvSZBkuCD1ZempZ4DRG2U8IuRk3DbBH8
-         x+/DPsOEe4lPs5zl9BBXZZw1Bp2XY5kzpKiI+pYhD2tR9A9JiC8MoEU4XZ58BSqcod
-         aH9ISCQxTo9qx2qL7udkjGsbc1AFeRKVEEJ+jlEYpa9XKPc3exwnxFv9Ji8eoscyI0
-         uA2Sdqz26001jzulvFpKD3+fiXINJHn7oneddj+M67+t4skDeehLiXLMRabQ7r++ob
-         BGJz0MtNTfShQ==
-From:   Anna Schumaker <anna@kernel.org>
-To:     linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
-Cc:     anna@kernel.org, krzysztof.kozlowski@linaro.org
-Subject: [PATCH v6 5/5] NFS: Enable the READ_PLUS operation by default
-Date:   Fri, 21 Jul 2023 16:39:53 -0400
-Message-ID: <20230721203953.315706-6-anna@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230721203953.315706-1-anna@kernel.org>
-References: <20230721203953.315706-1-anna@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229628AbjGUWqi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jul 2023 18:46:38 -0400
+X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 21 Jul 2023 15:46:37 PDT
+Received: from smtp-lb.pixar.com (smtp-lb.pixar.com [138.72.247.109])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C484A3A8E
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Jul 2023 15:46:37 -0700 (PDT)
+DomainKey-Signature: s=emeryville; d=pixar.com; c=nofws; q=dns;
+  h=Authentication-Results:IronPort-SDR:X-PixarMID:
+   X-PixarRecvListener:X-PixarRemoteIP:X-PixarMailFlowPolicy:
+   Received:Date:From:To:Subject:Message-ID:User-Agent;
+  b=XlZOpKfXe8jkwOal9rd3J/whNrcF3OKmVp2+Sul3L27Dp0z4tQaTtwGL
+   py0wqSrcAMKIZiLzhW6cDGY8iyD+1C2+PRwce8g8aviPrDFbjqkXVc5lD
+   CShDZ6lOXeb99jXMgVMf7AijFP+bCuDUGKqOH5m3JiwHNi1i1rHGGV8H6
+   2QOzBf0nuXm9SA6UQOokq5ju2PjX3mVtrMeFmJcxCKO0HAf1MFDXO32x6
+   NOdbshypYNuIncNrH77oq3GYwYSskw+FvxypPeyrk396TSuhAtF4dOApP
+   lMUeIFPywVgCHQblTJKkeWU56DLmf045N4Y588OqXKVwna2EUggb0M1Rp
+   A==;
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=pixar.com; i=@pixar.com; q=dns/txt; s=dkimdefault;
+  t=1689979597; x=1721515597;
+  h=date:from:to:subject:message-id;
+  bh=rtm/13IaEWLwGw6fDTEZWeGdUcfqzSb4COY+z75ySWE=;
+  b=pp1354sAG/0EQbcTDRvw1E6DlgbbgOjecautBYwpaxBWDQxKqu4VHRmi
+   87ZJ692mP8NDDUbij+eJiHcCpf7GdH9iSaiN5ZSnxBK1eiUeyZNAsgWqd
+   AOk3vi4t8KO+OxdB1LArvhZCeKGuE6qER0XQ3AG7Xk9MTDKwioAM7+Ist
+   15SpZQcVkjckLQD6KVUVsp6Tuiy56mLdnuqyP2q3B/j03dfakWcEeLDK6
+   wG6DIfSP/BUmiXbn81gVL0UIXxiu5ojViF5K7GZItaacVQURB5AVBZ7In
+   yno6jTmjIRj9furUfTjeDyydONMbjte90xIXbF+wlM9ub65yupdbrlxQG
+   Q==;
+Authentication-Results: smtp-lb.pixar.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: IwJ56G2YYtKlIkbqQzfOAXOGiAFKz4LipS4wkANmTqNVffLwp85+Wa1Fk/IXHoIaz7IOjB59ky
+ sYgVnT+aX5Tg==
+X-PixarMID: 106817265
+X-PixarRecvListener: OutboundMail
+X-PixarRemoteIP: 138.72.53.70
+X-PixarMailFlowPolicy: $RELAYED
+Received: by belboz.pixar.com (Postfix, from userid 1690)
+        id A04056017A94; Fri, 21 Jul 2023 15:45:30 -0700 (PDT)
+Date:   Fri, 21 Jul 2023 15:45:30 -0700
+From:   lars@pixar.com
+To:     linux-nfs@vger.kernel.org
+Subject: Best kernel function to probe for NFS write accounting?
+Message-ID: <20230721224530.I6e45%lars@pixar.com>
+User-Agent: s-nail v14.9.22
+X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Hello,
 
-Now that the remaining issues have been worked out, including some
-unexpected 32 bit issues, we can safely enable the feature by default.
+I'm using BPF to do NFS operation accounting for user-space processes. I'd like
+to include the number of bytes read and written to each file any processes open
+over NFS.
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- fs/nfs/Kconfig | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+For write operations, I'm currently using an fexit probe on the
+nfs_writeback_done function, and my program appears to be getting the
+information I'm hoping for. But I can see that under some circumstances the
+actual operations are being done by kworker threads, and so the PID reported by
+the BPF program is for that kworker instead of the user-space process that
+requested the write.
 
-diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-index b6fc169be1b1..7df2503cef6c 100644
---- a/fs/nfs/Kconfig
-+++ b/fs/nfs/Kconfig
-@@ -209,8 +209,6 @@ config NFS_DISABLE_UDP_SUPPORT
- config NFS_V4_2_READ_PLUS
- 	bool "NFS: Enable support for the NFSv4.2 READ_PLUS operation"
- 	depends on NFS_V4_2
--	default n
-+	default y
- 	help
--	 This is intended for developers only. The READ_PLUS operation has
--	 been shown to have issues under specific conditions and should not
--	 be used in production.
-+	 Choose Y here to enable use of the NFS v4.2 READ_PLUS operation.
--- 
-2.41.0
+Is there a more appropriate function to probe for this information if I only
+want it triggered in context of the user-space process that performed the
+write? If not, I'm wondering if there's enough information in a probe triggered
+in the kworker context to track down the user-space PID that initiated the
+writes.
 
+I didn't find anything related in the kernel's Documentation directory, and I'm
+not yet proficient enough with the vfs, nfs, and sunrpc code to find an
+appropriate function myself.
+
+If it matters, our infrastructure is all based on NFSv3.
+
+Thanks for any leads or documentation pointers!
+Lars
