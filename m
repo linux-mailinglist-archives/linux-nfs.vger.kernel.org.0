@@ -2,62 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A37F475D0AE
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jul 2023 19:29:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A84CC75D0D6
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jul 2023 19:46:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229790AbjGUR3C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Jul 2023 13:29:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41502 "EHLO
+        id S229579AbjGURqe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Jul 2023 13:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbjGUR3B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jul 2023 13:29:01 -0400
+        with ESMTP id S229451AbjGURqd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jul 2023 13:46:33 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A6573588;
-        Fri, 21 Jul 2023 10:28:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68EB430D4
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Jul 2023 10:46:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CC5BA61D4E;
-        Fri, 21 Jul 2023 17:28:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EA0AC433CA;
-        Fri, 21 Jul 2023 17:28:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EF61C61D6D
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Jul 2023 17:46:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 339ABC433C7;
+        Fri, 21 Jul 2023 17:46:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689960534;
-        bh=84jCfZT2r4jooZTwz3FGXNUNGGcDlHqeZoXLxklnp6M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ef5nDrJrcgwFCIMpE41AaU/BP23efqIrQyd1kgruowInlrOlp1FRydF26U1bvrOux
-         uhUNN9e+ICRpj7GKEXEH3qqmnOl7D2P2FTaoz5e6wdLC3vaGXcoMH/f+HLodYLqYX/
-         GNVqVNuOvHqhsMK76lnZLy7MbCG9AnoMhlOfCz4hNrcXRqbt8TXzc5HlKmCCMCk8fQ
-         uD/7hCMNC9O5bSvhP4aMuf1b89KgvXMPkMFRKapPPrvUz3Cvppc5FMxcafvdgUIpf2
-         +IZbmtLIiDYjAmVGrk8GMf5DBsfMx+DDhc26m1QhtjMADTTSloSqKGrFmTy6esvUas
-         yDjZ1jktjQofQ==
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-403470df1d0so16103131cf.0;
-        Fri, 21 Jul 2023 10:28:54 -0700 (PDT)
-X-Gm-Message-State: ABy/qLZgugN5jsf3FTluYAxJ9xb9NCHgmzdXRrs6oktLEKH9aOXE65Uf
-        wIalhpVM0o20+HVt7fI+DtXl/EB49V3Qr5Afcfo=
-X-Google-Smtp-Source: APBJJlFDdeg+vQAolLbGsNYVX9X6JREEDQgc6jKYJP5FIsWmDkXs5yw/ZTbEA6lNvBFR3fQAZd57evwuxQIT0Oej18A=
-X-Received: by 2002:a05:622a:19a6:b0:405:4df2:72fe with SMTP id
- u38-20020a05622a19a600b004054df272femr642277qtc.30.1689960533310; Fri, 21 Jul
- 2023 10:28:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <e655db6f-471b-4184-8907-0551e909acbb@moroto.mountain>
-In-Reply-To: <e655db6f-471b-4184-8907-0551e909acbb@moroto.mountain>
-From:   Anna Schumaker <anna@kernel.org>
-Date:   Fri, 21 Jul 2023 13:28:37 -0400
-X-Gmail-Original-Message-ID: <CAFX2JfmdpaRWbBypM+Xd4omd86mAbMNQ79+=xAtJXNjip95Sag@mail.gmail.com>
-Message-ID: <CAFX2JfmdpaRWbBypM+Xd4omd86mAbMNQ79+=xAtJXNjip95Sag@mail.gmail.com>
-Subject: Re: [PATCH] nfs/blocklayout: Use the passed in gfp flags
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Jens Axboe <axboe@kernel.dk>, Jack Wang <jinpu.wang@ionos.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Hannes Reinecke <hare@suse.de>,
-        Christian Brauner <brauner@kernel.org>,
-        linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        s=k20201202; t=1689961591;
+        bh=xNpSAvq4xm8u45grRMGvwSCH3lbrP0MpP85uUXYkv1s=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=HopmFE4n7uUw0TKg1b62MVnSFFvDh3xJUX6PB/M6CCRLQPTfA06Gs6YJL6tf7c46K
+         eoLQB85vKL6s7JD90IpYwC5obhnDrfRHVabCVrj8Ii8+reNksCcosz3Gj/5Ewx5LwE
+         VYSPCAPj1Os9vJ+cq2gfULsqFa51IaR/MgZU+SwMzA9/CbyWHS5theEYIWhFRbWc96
+         YtKq5R34EuWu6edWAJa/n4TojpGk/z7DIAQLmDf1d1KXroVjxRfqCP1oTW7P9Pk1s2
+         mYcgfQ1Y3Hf+rfE5gJuWiglT3K0O4ijUxEoF1GvcPF9DBD4TPa36RJXKCIEEZPjjmp
+         be+7AMqzFke4A==
+Message-ID: <fc5c5e0bcfa7110282106c3319af6a0b5a63b221.camel@kernel.org>
+Subject: Re: [RFC v6.5-rc2 3/3] fs: lockd: introduce safe async lock op
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Alexander Aring <aahringo@redhat.com>, chuck.lever@oracle.com
+Cc:     neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com,
+        tom@talpey.com, trond.myklebust@hammerspace.com, anna@kernel.org,
+        linux-nfs@vger.kernel.org, teigland@redhat.com,
+        cluster-devel@redhat.com, agruenba@redhat.com
+Date:   Fri, 21 Jul 2023 13:46:28 -0400
+In-Reply-To: <20230720125806.1385279-3-aahringo@redhat.com>
+References: <20230720125806.1385279-1-aahringo@redhat.com>
+         <20230720125806.1385279-3-aahringo@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+MIME-Version: 1.0
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -68,53 +58,126 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Dan,
-
-On Fri, Jul 21, 2023 at 10:58=E2=80=AFAM Dan Carpenter <dan.carpenter@linar=
-o.org> wrote:
+On Thu, 2023-07-20 at 08:58 -0400, Alexander Aring wrote:
+> This patch reverts mostly commit 40595cdc93ed ("nfs: block notification
+> on fs with its own ->lock") and introduces an EXPORT_OP_SAFE_ASYNC_LOCK
+> export flag to signal that the "own ->lock" implementation supports
+> async lock requests. The only main user is DLM that is used by GFS2 and
+> OCFS2 filesystem. Those implement their own lock() implementation and
+> return FILE_LOCK_DEFERRED as return value. Since commit 40595cdc93ed
+> ("nfs: block notification on fs with its own ->lock") the DLM
+> implementation were never updated. This patch should prepare for DLM
+> to set the EXPORT_OP_SAFE_ASYNC_LOCK export flag and update the DLM
+> plock implementation regarding to it.
 >
-> This allocation should use the passed in GFP_ flags instead of
-> GFP_KERNEL.  All the callers that I reviewed passed GFP_KERNEL as the
-> allocation flags so this might not affect runtime, but it's still worth
-> cleaning up.
-
-If all the callers are passing GFP_KERNEL anyway, then can we instead
-remove the gfp_mask argument from these functions?
-
-Anna
-
->
-> Fixes: 5c83746a0cf2 ("pnfs/blocklayout: in-kernel GETDEVICEINFO XDR parsi=
-ng")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Alexander Aring <aahringo@redhat.com>
 > ---
->  fs/nfs/blocklayout/dev.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/nfs/blocklayout/dev.c b/fs/nfs/blocklayout/dev.c
-> index 70f5563a8e81..65cbb5607a5f 100644
-> --- a/fs/nfs/blocklayout/dev.c
-> +++ b/fs/nfs/blocklayout/dev.c
-> @@ -404,7 +404,7 @@ bl_parse_concat(struct nfs_server *server, struct pnf=
-s_block_dev *d,
->         int ret, i;
->
->         d->children =3D kcalloc(v->concat.volumes_count,
-> -                       sizeof(struct pnfs_block_dev), GFP_KERNEL);
-> +                       sizeof(struct pnfs_block_dev), gfp_mask);
->         if (!d->children)
->                 return -ENOMEM;
->
-> @@ -433,7 +433,7 @@ bl_parse_stripe(struct nfs_server *server, struct pnf=
-s_block_dev *d,
->         int ret, i;
->
->         d->children =3D kcalloc(v->stripe.volumes_count,
-> -                       sizeof(struct pnfs_block_dev), GFP_KERNEL);
-> +                       sizeof(struct pnfs_block_dev), gfp_mask);
->         if (!d->children)
->                 return -ENOMEM;
->
-> --
-> 2.39.2
->
+>  fs/lockd/svclock.c       |  5 ++---
+>  fs/nfsd/nfs4state.c      | 11 ++++++++---
+>  include/linux/exportfs.h |  1 +
+>  3 files changed, 11 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
+> index 62ef27a69a9e..54a67bd33843 100644
+> --- a/fs/lockd/svclock.c
+> +++ b/fs/lockd/svclock.c
+> @@ -483,9 +483,7 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *=
+file,
+>  	    struct nlm_host *host, struct nlm_lock *lock, int wait,
+>  	    struct nlm_cookie *cookie, int reclaim)
+>  {
+> -#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+>  	struct inode		*inode =3D nlmsvc_file_inode(file);
+> -#endif
+>  	struct nlm_block	*block =3D NULL;
+>  	int			error;
+>  	int			mode;
+> @@ -499,7 +497,8 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *=
+file,
+>  				(long long)lock->fl.fl_end,
+>  				wait);
+> =20
+> -	if (nlmsvc_file_file(file)->f_op->lock) {
+> +	if (!(inode->i_sb->s_export_op->flags & EXPORT_OP_SAFE_ASYNC_LOCK) &&
+> +	    nlmsvc_file_file(file)->f_op->lock) {
+>  		async_block =3D wait;
+>  		wait =3D 0;
+>  	}
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 6e61fa3acaf1..efcea229d640 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -7432,6 +7432,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  	struct nfsd4_blocked_lock *nbl =3D NULL;
+>  	struct file_lock *file_lock =3D NULL;
+>  	struct file_lock *conflock =3D NULL;
+> +	struct super_block *sb;
+>  	__be32 status =3D 0;
+>  	int lkflg;
+>  	int err;
+> @@ -7453,6 +7454,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  		dprintk("NFSD: nfsd4_lock: permission denied!\n");
+>  		return status;
+>  	}
+> +	sb =3D cstate->current_fh.fh_dentry->d_sb;
+> =20
+>  	if (lock->lk_is_new) {
+>  		if (nfsd4_has_session(cstate))
+> @@ -7504,7 +7506,8 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  	fp =3D lock_stp->st_stid.sc_file;
+>  	switch (lock->lk_type) {
+>  		case NFS4_READW_LT:
+> -			if (nfsd4_has_session(cstate))
+> +			if (sb->s_export_op->flags & EXPORT_OP_SAFE_ASYNC_LOCK &&
+
+This will break existing filesystems that don't set the new flag. Maybe
+you also need to test for the filesystem's ->lock operation here too?
+
+This might be more nicely expressed in a helper function.
+
+> +			    nfsd4_has_session(cstate))
+>  				fl_flags |=3D FL_SLEEP;
+>  			fallthrough;
+>  		case NFS4_READ_LT:
+> @@ -7516,7 +7519,8 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  			fl_type =3D F_RDLCK;
+>  			break;
+>  		case NFS4_WRITEW_LT:
+> -			if (nfsd4_has_session(cstate))
+> +			if (sb->s_export_op->flags & EXPORT_OP_SAFE_ASYNC_LOCK &&
+> +			    nfsd4_has_session(cstate))
+>  				fl_flags |=3D FL_SLEEP;
+>  			fallthrough;
+>  		case NFS4_WRITE_LT:
+> @@ -7544,7 +7548,8 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_com=
+pound_state *cstate,
+>  	 * for file locks), so don't attempt blocking lock notifications
+>  	 * on those filesystems:
+>  	 */
+> -	if (nf->nf_file->f_op->lock)
+> +	if (!(sb->s_export_op->flags & EXPORT_OP_SAFE_ASYNC_LOCK) &&
+> +	    nf->nf_file->f_op->lock)
+>  		fl_flags &=3D ~FL_SLEEP;
+> =20
+>  	nbl =3D find_or_allocate_block(lock_sop, &fp->fi_fhandle, nn);
+> diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+> index 11fbd0ee1370..da742abbaf3e 100644
+> --- a/include/linux/exportfs.h
+> +++ b/include/linux/exportfs.h
+> @@ -224,6 +224,7 @@ struct export_operations {
+>  						  atomic attribute updates
+>  						*/
+>  #define EXPORT_OP_FLUSH_ON_CLOSE	(0x20) /* fs flushes file data on close=
+ */
+> +#define EXPORT_OP_SAFE_ASYNC_LOCK	(0x40) /* fs can do async lock request=
+ */
+>  	unsigned long	flags;
+>  };
+> =20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
