@@ -2,60 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C32475D7A9
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jul 2023 00:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3141E75D835
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jul 2023 02:34:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjGUWqj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Jul 2023 18:46:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46130 "EHLO
+        id S230343AbjGVAeR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Jul 2023 20:34:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229628AbjGUWqi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jul 2023 18:46:38 -0400
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 21 Jul 2023 15:46:37 PDT
-Received: from smtp-lb.pixar.com (smtp-lb.pixar.com [138.72.247.109])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C484A3A8E
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Jul 2023 15:46:37 -0700 (PDT)
-DomainKey-Signature: s=emeryville; d=pixar.com; c=nofws; q=dns;
-  h=Authentication-Results:IronPort-SDR:X-PixarMID:
-   X-PixarRecvListener:X-PixarRemoteIP:X-PixarMailFlowPolicy:
-   Received:Date:From:To:Subject:Message-ID:User-Agent;
-  b=XlZOpKfXe8jkwOal9rd3J/whNrcF3OKmVp2+Sul3L27Dp0z4tQaTtwGL
-   py0wqSrcAMKIZiLzhW6cDGY8iyD+1C2+PRwce8g8aviPrDFbjqkXVc5lD
-   CShDZ6lOXeb99jXMgVMf7AijFP+bCuDUGKqOH5m3JiwHNi1i1rHGGV8H6
-   2QOzBf0nuXm9SA6UQOokq5ju2PjX3mVtrMeFmJcxCKO0HAf1MFDXO32x6
-   NOdbshypYNuIncNrH77oq3GYwYSskw+FvxypPeyrk396TSuhAtF4dOApP
-   lMUeIFPywVgCHQblTJKkeWU56DLmf045N4Y588OqXKVwna2EUggb0M1Rp
-   A==;
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=pixar.com; i=@pixar.com; q=dns/txt; s=dkimdefault;
-  t=1689979597; x=1721515597;
-  h=date:from:to:subject:message-id;
-  bh=rtm/13IaEWLwGw6fDTEZWeGdUcfqzSb4COY+z75ySWE=;
-  b=pp1354sAG/0EQbcTDRvw1E6DlgbbgOjecautBYwpaxBWDQxKqu4VHRmi
-   87ZJ692mP8NDDUbij+eJiHcCpf7GdH9iSaiN5ZSnxBK1eiUeyZNAsgWqd
-   AOk3vi4t8KO+OxdB1LArvhZCeKGuE6qER0XQ3AG7Xk9MTDKwioAM7+Ist
-   15SpZQcVkjckLQD6KVUVsp6Tuiy56mLdnuqyP2q3B/j03dfakWcEeLDK6
-   wG6DIfSP/BUmiXbn81gVL0UIXxiu5ojViF5K7GZItaacVQURB5AVBZ7In
-   yno6jTmjIRj9furUfTjeDyydONMbjte90xIXbF+wlM9ub65yupdbrlxQG
-   Q==;
-Authentication-Results: smtp-lb.pixar.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: IwJ56G2YYtKlIkbqQzfOAXOGiAFKz4LipS4wkANmTqNVffLwp85+Wa1Fk/IXHoIaz7IOjB59ky
- sYgVnT+aX5Tg==
-X-PixarMID: 106817265
-X-PixarRecvListener: OutboundMail
-X-PixarRemoteIP: 138.72.53.70
-X-PixarMailFlowPolicy: $RELAYED
-Received: by belboz.pixar.com (Postfix, from userid 1690)
-        id A04056017A94; Fri, 21 Jul 2023 15:45:30 -0700 (PDT)
-Date:   Fri, 21 Jul 2023 15:45:30 -0700
-From:   lars@pixar.com
-To:     linux-nfs@vger.kernel.org
-Subject: Best kernel function to probe for NFS write accounting?
-Message-ID: <20230721224530.I6e45%lars@pixar.com>
-User-Agent: s-nail v14.9.22
-X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        with ESMTP id S229744AbjGVAeR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jul 2023 20:34:17 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 571AE35AC;
+        Fri, 21 Jul 2023 17:34:10 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id E3A7421903;
+        Sat, 22 Jul 2023 00:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1689986048; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qSXC/2EX9oy7Zub+xfuyFakWJVtNoucQuw1q9yV6Xeg=;
+        b=yLqNv1r4YqQh6E1WAEpOgBxySH8ndFJEDsEEEvrxVszfMMm1IMVEHQ2oTH9oV9kQv1WXdV
+        uaD3dDScl+kh7d8DBptUah4MEpmnTl3oTBzI0Wb/13XFWtoiixZ2OL/MbAgRjRT7JiTo4/
+        wABfVLd1kiFR5Tl/sGBaFv17sDpz/K8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1689986048;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qSXC/2EX9oy7Zub+xfuyFakWJVtNoucQuw1q9yV6Xeg=;
+        b=7ek051keFIYVAERfA+joxMZtS8Ghn+h7CZZXDKTAoCKKFkq5d247zVZX8Q/D93Un8XRe8i
+        82hlJigUlfdR9pBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1EDE4134B0;
+        Sat, 22 Jul 2023 00:34:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id iVrFMP0ju2SGDwAAMHmgww
+        (envelope-from <neilb@suse.de>); Sat, 22 Jul 2023 00:34:05 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Jeff Layton" <jlayton@kernel.org>
+Cc:     "Chuck Lever" <chuck.lever@oracle.com>,
+        "Olga Kornievskaia" <kolga@netapp.com>,
+        "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
+        "Boyang Xue" <bxue@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] nfsd: sanely handle inabilty to fetch pre/post attributes
+In-reply-to: <11c799a6cb0bf073dda77f592d70d809fca9b030.camel@kernel.org>
+References: <20230720-bz2223560-v2-0-070aaf2660b7@kernel.org>,
+ <168988936713.11078.5407820394334916284@noble.neil.brown.name>,
+ <11c799a6cb0bf073dda77f592d70d809fca9b030.camel@kernel.org>
+Date:   Sat, 22 Jul 2023 10:34:01 +1000
+Message-id: <168998604179.11078.18238251274062077853@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -63,30 +75,73 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+On Fri, 21 Jul 2023, Jeff Layton wrote:
+> On Fri, 2023-07-21 at 07:42 +1000, NeilBrown wrote:
+> > 
+> > I think both v3 and v4 allow a reply that says "the operation was a
+> > success but there are no post-op attrs".  With v4 you can say "there is
+> > no change-attr, but here are some other attrs".  I think.
+> > 
+> 
+> v3 has this ability:
+> 
+>       union pre_op_attr switch (bool attributes_follow) {
+>       case TRUE:
+>            wcc_attr  attributes;
+>       case FALSE:
+>            void;
+>       };
+> 
+> ...we can just set the attributes_follow flag to false there in that
+> case.
+> 
+> That's not possible with v4, AFAICT. Several of the *4resok structures
+> contain a change_info4, which just looks like this:
+> 
+> struct change_info4 {
+>         bool            atomic;
+>         changeid4       before;
+>         changeid4       after;
+> };
 
-I'm using BPF to do NFS operation accounting for user-space processes. I'd like
-to include the number of bytes read and written to each file any processes open
-over NFS.
+Yes...  I was thinking of GETATTR which reports a bitmap of all the
+attributes that it can return.  Though I'm not sure if the server is
+"allowed" to not return something that it has said is "supported".  And
+I think changeid has to be "supported".  I'm not sure.
 
-For write operations, I'm currently using an fexit probe on the
-nfs_writeback_done function, and my program appears to be getting the
-information I'm hoping for. But I can see that under some circumstances the
-actual operations are being done by kworker threads, and so the PID reported by
-the BPF program is for that kworker instead of the user-space process that
-requested the write.
+But anyway, that doesn't help change_info4 which comes with
+directory-modifying operation.
 
-Is there a more appropriate function to probe for this information if I only
-want it triggered in context of the user-space process that performed the
-write? If not, I'm wondering if there's enough information in a probe triggered
-in the kworker context to track down the user-space PID that initiated the
-writes.
+> 
+> We can set "atomic" to false (and this patch does that in this
+> situation), but I don't believe there is any alternative to the change
+> attribute. If the underlying fs doesn't support native change attrs, the
+> server is expected to fake one up somehow (usually from the ctime).
 
-I didn't find anything related in the kernel's Documentation directory, and I'm
-not yet proficient enough with the vfs, nfs, and sunrpc code to find an
-appropriate function myself.
+I had a look again at the current code and your patch, and I think that
+if the "post' vfs_getattr() fails, then the operation succeeds, the
+change_info is marked non-atomic (as you say) and the "after" changeid is
+set to an uninitialised value.  Is that right?  Did I miss something?
+Maybe we should set it to the pre value plus 1.
 
-If it matters, our infrastructure is all based on NFSv3.
+It probably doesn't matter at all in practice, but if I'm right and it
+is using an uninitialized value, we should at least fix that.
 
-Thanks for any leads or documentation pointers!
-Lars
+Thanks - your v3 patch looks good in general.  I like the must_check and
+the goto structure.
+
+Thanks,
+NeilBrown
+
+
+> 
+> We could (in principle) allow the operation to proceed on v3 even if
+> fh_fill_pre_attrs fails, but I don't think we can do the same thing with
+> v4. That said, if getattr is failing then it's somewhat likely that
+> other operations will fail too, so aborting the operation in this
+> situation doesn't seem too onerous.
+> 
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
+
