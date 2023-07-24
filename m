@@ -2,200 +2,258 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36C8F75F4CF
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jul 2023 13:18:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA5BB75F5B3
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jul 2023 14:13:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230503AbjGXLSK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Jul 2023 07:18:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
+        id S230141AbjGXMNR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jul 2023 08:13:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbjGXLSI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jul 2023 07:18:08 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 24B84E65;
-        Mon, 24 Jul 2023 04:17:47 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B206CDE0;
-        Mon, 24 Jul 2023 04:18:29 -0700 (PDT)
-Received: from [10.57.34.62] (unknown [10.57.34.62])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C518B3F5A1;
-        Mon, 24 Jul 2023 04:17:39 -0700 (PDT)
-Message-ID: <cdd08c9e-81d3-a85f-5426-5db738aa73ec@arm.com>
-Date:   Mon, 24 Jul 2023 12:17:40 +0100
+        with ESMTP id S229477AbjGXMNQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jul 2023 08:13:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57F791BF;
+        Mon, 24 Jul 2023 05:13:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CF7266111F;
+        Mon, 24 Jul 2023 12:13:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 391B9C433C8;
+        Mon, 24 Jul 2023 12:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690200794;
+        bh=5lARTRlkcLkwGHmez9f9aPfhEdGhUKlUDQvXf3fnxUs=;
+        h=From:Date:Subject:To:Cc:From;
+        b=SgkOYSbsypxENA7qLIE42GPi9QQvDn8kOXcpBs79FktLXUKABXbRW5Rp0VaUuWdpr
+         G+VwtwKT/iDQ0hWPf2bNTb/xYVk07Ch+4ssYK44I7Xul9htnH76ar4YvwczNlZMa0d
+         binvBO7joXNFSYEWB4+AQAHyf+I6XNerocP/F7xczKsZQA9HA1554fSP2JnVolErqG
+         FtPjo7eD7zAPUuapTl0wsfyEaxUwPXAZhGlzRWyq4mWo7TSLzt5Acg5f5qFvAX8x10
+         ZrXj+LWb0/bepQMTJXeoxtsbRrM3TyaaSmVlFPZR/9Nr8c8+oVk2TkBHldqptLDw+A
+         3ejBpJ3E34LKQ==
+From:   Jeff Layton <jlayton@kernel.org>
+Date:   Mon, 24 Jul 2023 08:13:05 -0400
+Subject: [PATCH v2] nfsd: inherit required unset default acls from
+ effective set
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v2 24/47] drm/panfrost: dynamically allocate the
- drm-panfrost shrinker
-To:     Qi Zheng <zhengqi.arch@bytedance.com>, akpm@linux-foundation.org,
-        david@fromorbit.com, tkhai@ya.ru, vbabka@suse.cz,
-        roman.gushchin@linux.dev, djwong@kernel.org, brauner@kernel.org,
-        paulmck@kernel.org, tytso@mit.edu, cel@kernel.org,
-        senozhatsky@chromium.org, yujie.liu@intel.com,
-        gregkh@linuxfoundation.org, muchun.song@linux.dev
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-erofs@lists.ozlabs.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        rcu@vger.kernel.org, netdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        dm-devel@redhat.com, linux-raid@vger.kernel.org,
-        linux-bcache@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
-References: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
- <20230724094354.90817-25-zhengqi.arch@bytedance.com>
-Content-Language: en-GB
-From:   Steven Price <steven.price@arm.com>
-In-Reply-To: <20230724094354.90817-25-zhengqi.arch@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Message-Id: <20230724-nfsd-acl-v2-1-1cfaac973498@kernel.org>
+X-B4-Tracking: v=1; b=H4sIANBqvmQC/23Myw6CMBCF4Vchs3ZML0KDK9/DsCh0ChNJMa1pN
+ KTvbmXt8j85+XZIFJkSXJsdImVOvIUa6tTAtNgwE7KrDUooLYzsMfjk0E4rtnbsZKsNXaiDen9
+ G8vw+qPtQe+H02uLnkLP8rX+QLFEijcJbr53qpbk9KAZaz1ucYSilfAEAo/veoQAAAA==
+To:     Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc:     Andreas Gruenbacher <agruenba@redhat.com>,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ondrej Valousek <ondrej.valousek@diasemi.com>,
+        Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5550; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=5lARTRlkcLkwGHmez9f9aPfhEdGhUKlUDQvXf3fnxUs=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBkvmrY2NPF3xcpJD5VmN8da0rZmazOFfAGJk/vF
+ 3yCe0PvzwGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZL5q2AAKCRAADmhBGVaC
+ FYz2D/9avmrWR7g+tY4C0l/iG/c6BSsASRhbPCfBfaCtCFD0HI54YZPjqG7rxh5sE75gOd4l8ht
+ sdzNc2qew/AleCsn4e8lIN1+hFvGRh2VTSuiE36GdudaU5qrW9J/9jm3F/Af7vT3PDtes5RxQBZ
+ 1sNYi++smIz+NS/h+TWZndRTH/Psgm0M7X7yeH5n1yELqmkAC1z5uRJUPdsDifNY4gyUq1f72QZ
+ IKeeWuUlB1ppts9Gl76SGKoZqLOs7hvr4jrSC/98eAEvJ23DVYvEwwFC7wWRGfbP5r0urBF/CD0
+ 2NdG6AHIGfeBuCHhJc6bswZEEX+9FiEMrrMgCpcAFfKcgjbNzd9FkHPE7IcQJFNUfBXbIu5vnM0
+ NIWm3Ht95ciJtsxsdf8ajF9r+vW5lW+KI3jlNXbqDBibyFgKacg0NLQhaeBAkJsqko4vnDo/Vug
+ sc7IA1sv576yblWC8YkYB1snbg1cedQ/RiYnh5AEllHmJyK0vchlqxYu/DlH+rTKZRVD4mEqocO
+ 5jG58cJ1LCVBvLDpZvVsZcYrQQz0Q6DU/qiD4nAl+mse223g2p1FNgvLwamAL5AO6hYOrZdsE9Z
+ sPeRRAEnxz+9OsYuLdgovKQv8iWUSjGy2CXwgfVZazrvX/mN+hdw8PAASaAdlXYdV3sNbMwSkZG
+ iZNZKz0dPL7Lqsw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 24/07/2023 10:43, Qi Zheng wrote:
-> In preparation for implementing lockless slab shrink, use new APIs to
-> dynamically allocate the drm-panfrost shrinker, so that it can be freed
-> asynchronously using kfree_rcu(). Then it doesn't need to wait for RCU
-> read-side critical section when releasing the struct panfrost_device.
-> 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+A well-formed NFSv4 ACL will always contain OWNER@/GROUP@/EVERYONE@
+ACEs, but there is no requirement for inheritable entries for those
+entities. POSIX ACLs must always have owner/group/other entries, even for a
+default ACL.
 
-One nit below, but otherwise:
+nfsd builds the default ACL from inheritable ACEs, but the current code
+just leaves any unspecified ACEs zeroed out. The result is that adding a
+default user or group ACE to an inode can leave it with unwanted deny
+entries.
 
-Reviewed-by: Steven Price <steven.price@arm.com>
+For instance, a newly created directory with no acl will look something
+like this:
 
-> ---
->  drivers/gpu/drm/panfrost/panfrost_device.h    |  2 +-
->  drivers/gpu/drm/panfrost/panfrost_drv.c       |  6 +++-
->  drivers/gpu/drm/panfrost/panfrost_gem.h       |  2 +-
->  .../gpu/drm/panfrost/panfrost_gem_shrinker.c  | 32 ++++++++++++-------
->  4 files changed, 27 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
-> index b0126b9fbadc..e667e5689353 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
-> @@ -118,7 +118,7 @@ struct panfrost_device {
->  
->  	struct mutex shrinker_lock;
->  	struct list_head shrinker_list;
-> -	struct shrinker shrinker;
-> +	struct shrinker *shrinker;
->  
->  	struct panfrost_devfreq pfdevfreq;
->  };
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> index bbada731bbbd..f705bbdea360 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
-> @@ -598,10 +598,14 @@ static int panfrost_probe(struct platform_device *pdev)
->  	if (err < 0)
->  		goto err_out1;
->  
-> -	panfrost_gem_shrinker_init(ddev);
-> +	err = panfrost_gem_shrinker_init(ddev);
-> +	if (err)
-> +		goto err_out2;
->  
->  	return 0;
->  
-> +err_out2:
-> +	drm_dev_unregister(ddev);
->  err_out1:
->  	pm_runtime_disable(pfdev->dev);
->  	panfrost_device_fini(pfdev);
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem.h b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> index ad2877eeeccd..863d2ec8d4f0 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem.h
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem.h
-> @@ -81,7 +81,7 @@ panfrost_gem_mapping_get(struct panfrost_gem_object *bo,
->  void panfrost_gem_mapping_put(struct panfrost_gem_mapping *mapping);
->  void panfrost_gem_teardown_mappings_locked(struct panfrost_gem_object *bo);
->  
-> -void panfrost_gem_shrinker_init(struct drm_device *dev);
-> +int panfrost_gem_shrinker_init(struct drm_device *dev);
->  void panfrost_gem_shrinker_cleanup(struct drm_device *dev);
->  
->  #endif /* __PANFROST_GEM_H__ */
-> diff --git a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> index bf0170782f25..9a90dfb5301f 100644
-> --- a/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> +++ b/drivers/gpu/drm/panfrost/panfrost_gem_shrinker.c
-> @@ -18,8 +18,7 @@
->  static unsigned long
->  panfrost_gem_shrinker_count(struct shrinker *shrinker, struct shrink_control *sc)
->  {
-> -	struct panfrost_device *pfdev =
-> -		container_of(shrinker, struct panfrost_device, shrinker);
-> +	struct panfrost_device *pfdev = shrinker->private_data;
->  	struct drm_gem_shmem_object *shmem;
->  	unsigned long count = 0;
->  
-> @@ -65,8 +64,7 @@ static bool panfrost_gem_purge(struct drm_gem_object *obj)
->  static unsigned long
->  panfrost_gem_shrinker_scan(struct shrinker *shrinker, struct shrink_control *sc)
->  {
-> -	struct panfrost_device *pfdev =
-> -		container_of(shrinker, struct panfrost_device, shrinker);
-> +	struct panfrost_device *pfdev = shrinker->private_data;
->  	struct drm_gem_shmem_object *shmem, *tmp;
->  	unsigned long freed = 0;
->  
-> @@ -97,13 +95,24 @@ panfrost_gem_shrinker_scan(struct shrinker *shrinker, struct shrink_control *sc)
->   *
->   * This function registers and sets up the panfrost shrinker.
->   */
-> -void panfrost_gem_shrinker_init(struct drm_device *dev)
-> +int panfrost_gem_shrinker_init(struct drm_device *dev)
->  {
->  	struct panfrost_device *pfdev = dev->dev_private;
-> -	pfdev->shrinker.count_objects = panfrost_gem_shrinker_count;
-> -	pfdev->shrinker.scan_objects = panfrost_gem_shrinker_scan;
-> -	pfdev->shrinker.seeks = DEFAULT_SEEKS;
-> -	WARN_ON(register_shrinker(&pfdev->shrinker, "drm-panfrost"));
-> +
-> +	pfdev->shrinker = shrinker_alloc(0, "drm-panfrost");
-> +	if (!pfdev->shrinker) {
-> +		WARN_ON(1);
+	# NFSv4 translation by server
+	A::OWNER@:rwaDxtTcCy
+	A::GROUP@:rxtcy
+	A::EVERYONE@:rxtcy
 
-I don't think this WARN_ON is particularly useful - if there's a failed
-memory allocation we should see output from the kernel anyway. And we're
-changing the semantics from "continue just without a shrinker" (which
-argueably justifies the warning) to "probe fails, device doesn't work"
-which will be obvious to the user so I don't feel we need the additional
-warn.
+	# POSIX ACL of underlying file
+	user::rwx
+	group::r-x
+	other::r-x
 
-> +		return -ENOMEM;
-> +	}
-> +
-> +	pfdev->shrinker->count_objects = panfrost_gem_shrinker_count;
-> +	pfdev->shrinker->scan_objects = panfrost_gem_shrinker_scan;
-> +	pfdev->shrinker->seeks = DEFAULT_SEEKS;
-> +	pfdev->shrinker->private_data = pfdev;
-> +
-> +	shrinker_register(pfdev->shrinker);
-> +
-> +	return 0;
->  }
->  
->  /**
-> @@ -116,7 +125,6 @@ void panfrost_gem_shrinker_cleanup(struct drm_device *dev)
->  {
->  	struct panfrost_device *pfdev = dev->dev_private;
->  
-> -	if (pfdev->shrinker.nr_deferred) {
-> -		unregister_shrinker(&pfdev->shrinker);
-> -	}
-> +	if (pfdev->shrinker)
-> +		shrinker_unregister(pfdev->shrinker);
->  }
+...if I then add new v4 ACE:
+
+	nfs4_setfacl -a A:fd:1000:rwx /mnt/local/test
+
+...I end up with a result like this today:
+
+	user::rwx
+	user:1000:rwx
+	group::r-x
+	mask::rwx
+	other::r-x
+	default:user::---
+	default:user:1000:rwx
+	default:group::---
+	default:mask::rwx
+	default:other::---
+
+	A::OWNER@:rwaDxtTcCy
+	A::1000:rwaDxtcy
+	A::GROUP@:rxtcy
+	A::EVERYONE@:rxtcy
+	D:fdi:OWNER@:rwaDx
+	A:fdi:OWNER@:tTcCy
+	A:fdi:1000:rwaDxtcy
+	A:fdi:GROUP@:tcy
+	A:fdi:EVERYONE@:tcy
+
+...which is not at all expected. Adding a single inheritable allow ACE
+should not result in everyone else losing access.
+
+The setfacl command solves a silimar issue by copying owner/group/other
+entries from the effective ACL when none of them are set:
+
+    "If a Default ACL entry is created, and the  Default  ACL  contains  no
+     owner,  owning group,  or  others  entry,  a  copy of the ACL owner,
+     owning group, or others entry is added to the Default ACL.
+
+Having nfsd do the same provides a more sane result (with no deny ACEs
+in the resulting set):
+
+	user::rwx
+	user:1000:rwx
+	group::r-x
+	mask::rwx
+	other::r-x
+	default:user::rwx
+	default:user:1000:rwx
+	default:group::r-x
+	default:mask::rwx
+	default:other::r-x
+
+	A::OWNER@:rwaDxtTcCy
+	A::1000:rwaDxtcy
+	A::GROUP@:rxtcy
+	A::EVERYONE@:rxtcy
+	A:fdi:OWNER@:rwaDxtTcCy
+	A:fdi:1000:rwaDxtcy
+	A:fdi:GROUP@:rxtcy
+	A:fdi:EVERYONE@:rxtcy
+
+Reported-by: Ondrej Valousek <ondrej.valousek@diasemi.com>
+Closes: https://bugzilla.redhat.com/show_bug.cgi?id=2136452
+Suggested-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v2:
+- always set missing ACEs whenever default ACL has any ACEs that are
+  explicitly set. This better conforms to how setfacl works.
+- drop now-unneeded "empty" boolean
+- Link to v1: https://lore.kernel.org/r/20230719-nfsd-acl-v1-1-eb0faf3d2917@kernel.org
+---
+ fs/nfsd/nfs4acl.c | 32 ++++++++++++++++++++++++++++----
+ 1 file changed, 28 insertions(+), 4 deletions(-)
+
+diff --git a/fs/nfsd/nfs4acl.c b/fs/nfsd/nfs4acl.c
+index 518203821790..b931d4383517 100644
+--- a/fs/nfsd/nfs4acl.c
++++ b/fs/nfsd/nfs4acl.c
+@@ -441,7 +441,7 @@ struct posix_ace_state_array {
+  * calculated so far: */
+ 
+ struct posix_acl_state {
+-	int empty;
++	unsigned char valid;
+ 	struct posix_ace_state owner;
+ 	struct posix_ace_state group;
+ 	struct posix_ace_state other;
+@@ -457,7 +457,6 @@ init_state(struct posix_acl_state *state, int cnt)
+ 	int alloc;
+ 
+ 	memset(state, 0, sizeof(struct posix_acl_state));
+-	state->empty = 1;
+ 	/*
+ 	 * In the worst case, each individual acl could be for a distinct
+ 	 * named user or group, but we don't know which, so we allocate
+@@ -500,7 +499,7 @@ posix_state_to_acl(struct posix_acl_state *state, unsigned int flags)
+ 	 * and effective cases: when there are no inheritable ACEs,
+ 	 * calls ->set_acl with a NULL ACL structure.
+ 	 */
+-	if (state->empty && (flags & NFS4_ACL_TYPE_DEFAULT))
++	if (!state->valid && (flags & NFS4_ACL_TYPE_DEFAULT))
+ 		return NULL;
+ 
+ 	/*
+@@ -622,9 +621,10 @@ static void process_one_v4_ace(struct posix_acl_state *state,
+ 				struct nfs4_ace *ace)
+ {
+ 	u32 mask = ace->access_mask;
++	short type = ace2type(ace);
+ 	int i;
+ 
+-	state->empty = 0;
++	state->valid |= type;
+ 
+ 	switch (ace2type(ace)) {
+ 	case ACL_USER_OBJ:
+@@ -726,6 +726,30 @@ static int nfs4_acl_nfsv4_to_posix(struct nfs4_acl *acl,
+ 		if (!(ace->flag & NFS4_ACE_INHERIT_ONLY_ACE))
+ 			process_one_v4_ace(&effective_acl_state, ace);
+ 	}
++
++	/*
++	 * At this point, the default ACL may have zeroed-out entries for owner,
++	 * group and other. That usually results in a non-sensical resulting ACL
++	 * that denies all access except to any ACE that was explicitly added.
++	 *
++	 * The setfacl command solves a similar problem with this logic:
++	 *
++	 * "If  a  Default  ACL  entry is created, and the Default ACL contains
++	 *  no owner, owning group, or others entry,  a  copy of  the  ACL
++	 *  owner, owning group, or others entry is added to the Default ACL."
++	 *
++	 * Copy any missing ACEs from the effective set, if any ACEs were
++	 * explicitly set.
++	 */
++	if (default_acl_state.valid) {
++		if (!(default_acl_state.valid & ACL_USER_OBJ))
++			default_acl_state.owner = effective_acl_state.owner;
++		if (!(default_acl_state.valid & ACL_GROUP_OBJ))
++			default_acl_state.group = effective_acl_state.group;
++		if (!(default_acl_state.valid & ACL_OTHER))
++			default_acl_state.other = effective_acl_state.other;
++	}
++
+ 	*pacl = posix_state_to_acl(&effective_acl_state, flags);
+ 	if (IS_ERR(*pacl)) {
+ 		ret = PTR_ERR(*pacl);
+
+---
+base-commit: 7bfb36a2ee1d329a501ba4781db4145dc951c798
+change-id: 20230719-nfsd-acl-5ab61537e4e6
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
 
