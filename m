@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A165C75E5C9
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jul 2023 02:03:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B31275EA9C
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jul 2023 06:44:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229477AbjGXADi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 23 Jul 2023 20:03:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37456 "EHLO
+        id S229477AbjGXEos (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jul 2023 00:44:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjGXADh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 Jul 2023 20:03:37 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 223AABD
-        for <linux-nfs@vger.kernel.org>; Sun, 23 Jul 2023 17:03:26 -0700 (PDT)
+        with ESMTP id S229456AbjGXEor (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jul 2023 00:44:47 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8C41B6
+        for <linux-nfs@vger.kernel.org>; Sun, 23 Jul 2023 21:44:46 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id AA904202DC;
-        Mon, 24 Jul 2023 00:03:25 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 2FE6220464;
+        Mon, 24 Jul 2023 04:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1690157005; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1690173885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XpKfjKSl5tBYGYbFTH9D8TsruW8hZ+h9uOlwyv+SlFI=;
-        b=OeTc83l2pt89CI4bY4ZLb+4Htj75WNkiVjOClOPwcARVbvEa2j+xEID7TFeRDilPk353kD
-        br7D7PhM0HqDmZRbSkGhpIoVMeaBQ+EOBxetg0oq4Ls+k6G5EyVPfaAjQkyym2V+7sE2Lp
-        Hvb89umn4Iyj6NHegg0ls/oNptlXL/c=
+        bh=OFtpjNPgHbqZMTDfrd954Tbh0T2fHi4O5O8kL6aex30=;
+        b=v2w3Vk6HG32J+sDeKUYbffXwJwZK2Nq53Chyf/JTbSYbLc90Xv6cQzI/SUKN22neYygPFW
+        xsgP2nnb0Gnb4DiBNakF3Adm5hN6dZatgzc1LORwUsUOwxFDk7AFk3vuz5p+AZ/gWgCcJk
+        b+d1XZzA+dbhBJlFYGscf/gXpGJhL/Y=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1690157005;
+        s=susede2_ed25519; t=1690173885;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XpKfjKSl5tBYGYbFTH9D8TsruW8hZ+h9uOlwyv+SlFI=;
-        b=FZ9hh5g1kdHPtFUzQ0pOshqIXv1qO8cjMtdOjboDb0k4t1G9cg9roqK+Ys01VOa17E51ip
-        BAmbmlm6xISOagBA==
+        bh=OFtpjNPgHbqZMTDfrd954Tbh0T2fHi4O5O8kL6aex30=;
+        b=y3zW71o0SJb3m1Hc4pkihXdy3f61x+et6Wztv1YT+EUfqTacabOmDUx02pXgdC8/JK8XQE
+        vwr11yr3v6y/ccBw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1D34413476;
-        Mon, 24 Jul 2023 00:03:23 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 88B6213476;
+        Mon, 24 Jul 2023 04:44:43 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id g3ZFMMu/vWT5LgAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 24 Jul 2023 00:03:23 +0000
+        id q4S4DrsBvmTdGQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 24 Jul 2023 04:44:43 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
@@ -66,11 +66,11 @@ References: <168966227838.11075.2974227708495338626.stgit@noble.brown>,
  <168980881867.11078.6059884952065090216@noble.neil.brown.name>,
  <E93923C4-080B-4B43-9A3B-28A233BF5DFC@oracle.com>,
  <3A9F5306-EAEE-427C-80D2-E0CD81212238@oracle.com>
-Date:   Mon, 24 Jul 2023 10:03:18 +1000
-Message-id: <169015699813.11078.13302996883028676357@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,NO_DNS_FOR_FROM,RCVD_IN_DNSWL_MED,T_SCC_BODY_TEXT_LINE,
-        T_SPF_HELO_TEMPERROR,T_SPF_TEMPERROR autolearn=ham autolearn_force=no
+Date:   Mon, 24 Jul 2023 14:44:39 +1000
+Message-id: <169017387952.11078.1482563019296445946@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -129,20 +129,22 @@ n -
 >=20
 > Pushed to https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
 > in branch topic-sunrpc-thread-scheduling
->=20
 
-Thanks.
-One little thing to fix.
-In
-    SUNRPC: Report when no service thread is available.
-you now have
+Another thing.
+You have made svc_pool_wake_idle_thread() return, but for different
+reasons than me.
 
--	return false;
-+
-+	trace_svc_pool_starved(serv, pool);
-+	percpu_counter_inc(&pool->sp_threads_starved);
-+	return NULL;
+I wanted bool so I could trace a wake up due to enqueuing an xprt
+differently from a wakeup due to a call to svc_wake_up().  I thought the
+difference might be important.
 
-That should still be "return false" at the end;
+You have it returning a bool so that:
+- in one case you can set SP_CONGESTED - but that can be safely set
+  inside svc_pool_wake_idle_thread()
+- in another case so SP_TASK_PENDING can be set.  But I think it is
+  best to set that anyway, and clear it when svc_recv() wakes up.
 
+So maybe it can return void after all.
+
+Thanks,
 NeilBrown
