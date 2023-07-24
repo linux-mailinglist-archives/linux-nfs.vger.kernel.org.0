@@ -2,72 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B31275EA9C
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jul 2023 06:44:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 789B175EAB8
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jul 2023 07:09:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229477AbjGXEos (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Jul 2023 00:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
+        id S229705AbjGXFJJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jul 2023 01:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjGXEor (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jul 2023 00:44:47 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA8C41B6
-        for <linux-nfs@vger.kernel.org>; Sun, 23 Jul 2023 21:44:46 -0700 (PDT)
+        with ESMTP id S229703AbjGXFJI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jul 2023 01:09:08 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B733DB;
+        Sun, 23 Jul 2023 22:09:07 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 2FE6220464;
-        Mon, 24 Jul 2023 04:44:45 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id B3CCE2048B;
+        Mon, 24 Jul 2023 05:09:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1690173885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1690175345; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OFtpjNPgHbqZMTDfrd954Tbh0T2fHi4O5O8kL6aex30=;
-        b=v2w3Vk6HG32J+sDeKUYbffXwJwZK2Nq53Chyf/JTbSYbLc90Xv6cQzI/SUKN22neYygPFW
-        xsgP2nnb0Gnb4DiBNakF3Adm5hN6dZatgzc1LORwUsUOwxFDk7AFk3vuz5p+AZ/gWgCcJk
-        b+d1XZzA+dbhBJlFYGscf/gXpGJhL/Y=
+        bh=fytMvTwmPjgGSNd8fUaW0uPfvA4FOVLSKyY6fXWrTds=;
+        b=nZaS5uf28SPRU4eQoC5q6uPXgpduVpt7qqNfMvFSEc2biFCt8kCxm8cxQOj2r8HZKYFKbt
+        jkehVqXEJCg2idssg5DefeLfz7Q4rX4ortoJdVrbzMQ9cghUue19403cvugupzgI91IQ2w
+        8fCafT7EWiwMHLuIxz4fdBKnoVSmMrU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1690173885;
+        s=susede2_ed25519; t=1690175345;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=OFtpjNPgHbqZMTDfrd954Tbh0T2fHi4O5O8kL6aex30=;
-        b=y3zW71o0SJb3m1Hc4pkihXdy3f61x+et6Wztv1YT+EUfqTacabOmDUx02pXgdC8/JK8XQE
-        vwr11yr3v6y/ccBw==
+        bh=fytMvTwmPjgGSNd8fUaW0uPfvA4FOVLSKyY6fXWrTds=;
+        b=uWDfMDPo300lo9JyO+jgzkI0qaLoli4boYygrzKP71E4YLARAOnSl2dCT/MdmGB3l2bfGo
+        yxr9gknx7NnY5ZAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 88B6213476;
-        Mon, 24 Jul 2023 04:44:43 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4A9E713476;
+        Mon, 24 Jul 2023 05:09:01 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id q4S4DrsBvmTdGQAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 24 Jul 2023 04:44:43 +0000
+        id 2+pMO20HvmSrIgAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 24 Jul 2023 05:09:01 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Chuck Lever" <cel@kernel.org>, "Jeff Layton" <jlayton@kernel.org>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 10/14] SUNRPC: change svc_pool_wake_idle_thread() to
- return nothing.
-In-reply-to: <3A9F5306-EAEE-427C-80D2-E0CD81212238@oracle.com>
-References: <168966227838.11075.2974227708495338626.stgit@noble.brown>,
- <168966228866.11075.18415964365983945832.stgit@noble.brown>,
- <ZLaagzqpB9MsQ5yb@bazille.1015granger.net>,
- <168972938409.11078.8409356274248659649@noble.neil.brown.name>,
- <9EEE82A6-6D25-4939-A4F5-BAC8E9986FF3@oracle.com>,
- <168980881867.11078.6059884952065090216@noble.neil.brown.name>,
- <E93923C4-080B-4B43-9A3B-28A233BF5DFC@oracle.com>,
- <3A9F5306-EAEE-427C-80D2-E0CD81212238@oracle.com>
-Date:   Mon, 24 Jul 2023 14:44:39 +1000
-Message-id: <169017387952.11078.1482563019296445946@noble.neil.brown.name>
+To:     "YueHaibing" <yuehaibing@huawei.com>
+Cc:     chuck.lever@oracle.com, jlayton@kernel.org, kolga@netapp.com,
+        Dai.Ngo@oracle.com, tom@talpey.com,
+        trond.myklebust@hammerspace.com, anna@kernel.org,
+        yuehaibing@huawei.com, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] sunrpc: Remove unused extern declarations
+In-reply-to: <20230722033116.17988-1-yuehaibing@huawei.com>
+References: <20230722033116.17988-1-yuehaibing@huawei.com>
+Date:   Mon, 24 Jul 2023 15:08:59 +1000
+Message-id: <169017533908.11078.1160756498004010060@noble.neil.brown.name>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -78,73 +73,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 21 Jul 2023, Chuck Lever III wrote:
+On Sat, 22 Jul 2023, YueHaibing wrote:
+> Since commit 49b28684fdba ("nfsd: Remove deprecated nfsctl system call and =
+related code.")
+> these declarations are unused, so can remove it.
 >=20
-> > On Jul 19, 2023, at 7:44 PM, Chuck Lever III <chuck.lever@oracle.com> wro=
-te:
-> >=20
-> >=20
-> >=20
-> >> On Jul 19, 2023, at 7:20 PM, NeilBrown <neilb@suse.de> wrote:
-> >>=20
-> >> On Wed, 19 Jul 2023, Chuck Lever III wrote:
-> >>>=20
-> >>>> On Jul 18, 2023, at 9:16 PM, NeilBrown <neilb@suse.de> wrote:
-> >>>>=20
-> >>>> On Tue, 18 Jul 2023, Chuck Lever wrote:
-> >>>>> On Tue, Jul 18, 2023 at 04:38:08PM +1000, NeilBrown wrote:
-> >>>>>> No callers of svc_pool_wake_idle_thread() care which thread was woke=
-n -
-> >>>>>> except one that wants to trace the wakeup.  For now we drop that
-> >>>>>> tracepoint.
-> >>>>>=20
-> >>>>> That's an important tracepoint, IMO.
-> >>>>>=20
-> >>>>> It might be better to have svc_pool_wake_idle_thread() return void
-> >>>>> right from it's introduction, and move the tracepoint into that
-> >>>>> function. I can do that and respin if you agree.
-> >>>>=20
-> >>>> Mostly I agree.
-> >>>>=20
-> >>>> It isn't clear to me how you would handle trace_svc_xprt_enqueue(),
-> >>>> as there would be no code that can see both the trigger xprt, and the
-> >>>> woken rqst.
-> >>>>=20
-> >>>> I also wonder if having the trace point when the wake-up is requested
-> >>>> makes any sense, as there is no guarantee that thread with handle that
-> >>>> xprt.
-> >>>>=20
-> >>>> Maybe the trace point should report when the xprt is dequeued.  i.e.
-> >>>> maybe trace_svc_pool_awoken() should report the pid, and we could have
-> >>>> trace_svc_xprt_enqueue() only report the xprt, not the rqst.
-> >>>=20
-> >>> I'll come up with something that rearranges the tracepoints so that
-> >>> svc_pool_wake_idle_thread() can return void.
-> >>=20
-> >> My current draft code has svc_pool_wake_idle_thread() returning bool -
-> >> if it found something to wake up - purely for logging.
-> >=20
-> > This is also where I have ended up. I'll post an update probably tomorrow
-> > my time. Too much other stuff going on to finish it today.
->=20
-> Pushed to https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
-> in branch topic-sunrpc-thread-scheduling
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Another thing.
-You have made svc_pool_wake_idle_thread() return, but for different
-reasons than me.
+Thanks.
+Could you remove the declaration of auth_unix_lookup too?
+It was removed in that commit, but the declaration is still with us.
 
-I wanted bool so I could trace a wake up due to enqueuing an xprt
-differently from a wakeup due to a call to svc_wake_up().  I thought the
-difference might be important.
-
-You have it returning a bool so that:
-- in one case you can set SP_CONGESTED - but that can be safely set
-  inside svc_pool_wake_idle_thread()
-- in another case so SP_TASK_PENDING can be set.  But I think it is
-  best to set that anyway, and clear it when svc_recv() wakes up.
-
-So maybe it can return void after all.
-
-Thanks,
+Thanks!
 NeilBrown
+
+> ---
+>  include/linux/sunrpc/svcauth.h | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/include/linux/sunrpc/svcauth.h b/include/linux/sunrpc/svcauth.h
+> index 6d9cc9080aca..2402b7ca5d1a 100644
+> --- a/include/linux/sunrpc/svcauth.h
+> +++ b/include/linux/sunrpc/svcauth.h
+> @@ -157,11 +157,9 @@ extern void	svc_auth_unregister(rpc_authflavor_t flavo=
+r);
+> =20
+>  extern struct auth_domain *unix_domain_find(char *name);
+>  extern void auth_domain_put(struct auth_domain *item);
+> -extern int auth_unix_add_addr(struct net *net, struct in6_addr *addr, stru=
+ct auth_domain *dom);
+>  extern struct auth_domain *auth_domain_lookup(char *name, struct auth_doma=
+in *new);
+>  extern struct auth_domain *auth_domain_find(char *name);
+>  extern struct auth_domain *auth_unix_lookup(struct net *net, struct in6_ad=
+dr *addr);
+> -extern int auth_unix_forget_old(struct auth_domain *dom);
+>  extern void svcauth_unix_purge(struct net *net);
+>  extern void svcauth_unix_info_release(struct svc_xprt *xpt);
+>  extern int svcauth_unix_set_client(struct svc_rqst *rqstp);
+> --=20
+> 2.34.1
+>=20
+>=20
+
