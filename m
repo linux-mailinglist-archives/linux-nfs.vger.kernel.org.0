@@ -2,149 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BA237606A8
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jul 2023 05:28:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03C407606D5
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jul 2023 05:48:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231648AbjGYD2s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Jul 2023 23:28:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36026 "EHLO
+        id S229877AbjGYDsY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jul 2023 23:48:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230484AbjGYD2j (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jul 2023 23:28:39 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E46EA1736
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Jul 2023 20:28:10 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-682a5465e9eso1181683b3a.1
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Jul 2023 20:28:10 -0700 (PDT)
+        with ESMTP id S229497AbjGYDsX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jul 2023 23:48:23 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C67171E
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Jul 2023 20:48:20 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id 5614622812f47-3a3b7fafd61so3528746b6e.2
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Jul 2023 20:48:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1690255690; x=1690860490;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6wY4cILkEhsrpRf+mNddP0nleKOSU9sayj8Z5h0ToXM=;
-        b=PknHptOa2Z8+2vaclzexjcjHcgGTKnQ0JRJ89LK+GvkJZyUzNmFYDaw4LaxhrbAB97
-         Qlt49eA21cgLfip1YkLzQvNHl9NRE1uu+H3yLMzr5GUQw2R94ASja3LKRc7K2/IuJ877
-         /rUQws3HOX4h/pSV0QLIC/txctttQBZDy4goWlpNGxYwzk8J6CttdGDNpskz9IiWFE6E
-         W06R7YBvAlwN2Ll/k0WZ+e8J2UJKgy2rlagtK3lUaqPgpyCrwLsDTNoP/0MXBrAUaLK4
-         fe8VXE6m3BmotnBeZ7KmASyzpGnPX5FsNzpJdMUNn5TjD0dfcmx5lygJuqraNOT+sjor
-         yB3A==
+        d=gmail.com; s=20221208; t=1690256899; x=1690861699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MKrWizUyAS1vBnZ8CLGVaJEkaZY/ep7nAYLeXdQOKWU=;
+        b=VhrfyCbhabWftdEIjCueUMd2o9A1rLTCbMk0hF4CHI9jzquZqxBAdaz2GSPgRxLEbX
+         T6Ge0S9rNzBSCrrqakza3mcoUzC1d8PBtZrgVLugnk+XyrakLCCCbtni4xT8hYptLu4I
+         rSNgPmVKmHWl84Fiym34AKZIxESV8R1NvNSZ+WexkaHSTU5qyW95GOW9a6OYwFrgNlcM
+         kFSqTmixmo1mHj19pyjyTjNAPlb23UuTXMl2RXtxTWRkxim99XskIpojidSlSD6FADMW
+         ulVFUOjcIcobPTJS4W+fPLAvcScIC+fkl/IpDNHtlQNcwOgAsi/vw9K5kjPDRs2n6lSf
+         xNig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690255690; x=1690860490;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6wY4cILkEhsrpRf+mNddP0nleKOSU9sayj8Z5h0ToXM=;
-        b=DhykwBQV4RfZ6waqZjmemfCzCnV6GugMfQxrUrcYxvL02yjQXxKGoSlu7naY8tW/hM
-         5DzrrtmECszVMbPeX6bGV2TCZS4OlDL8I6jxm/NIHbzn980JN9/K1gHIDka0B2jgGFrh
-         biz5aGLPxuCFlxK35RW77ZJpfymST23I5VkxZeO0I9939f4ZvxiWZf6dJuTccZBYbQRo
-         qYqj86dl3Q0/bzCx07LY+jYr/3cPArBvLltpxW9wjWqAxdmpKEGwLnmCIjruiZZm4xXw
-         cYqpxTTtuI5rTVcDPnpmAJTa8Oh/aNMULagho2tit0zoUn0nopTYrbllvqoN7b+g67UL
-         JgrA==
-X-Gm-Message-State: ABy/qLZn8MqyPaExm7P99uWtWMOqdEWcj1ex14U6I8p0/3qZxUAsElKL
-        8BzAT9ZFzAQOZKCsmM91/fq4/Q==
-X-Google-Smtp-Source: APBJJlHvnzRChS6v/nee9rDGEWxm9C29UVXVwYKOSH3HP5ue/guAsHAKmcdiSeukVqd30tCkGAz2cw==
-X-Received: by 2002:a05:6a00:cd1:b0:677:bb4c:c321 with SMTP id b17-20020a056a000cd100b00677bb4cc321mr15272930pfv.0.1690255690395;
-        Mon, 24 Jul 2023 20:28:10 -0700 (PDT)
-Received: from ?IPV6:fdbd:ff1:ce00:1c25:884:3ed:e1db:b610? ([240e:694:e21:b::2])
-        by smtp.gmail.com with ESMTPSA id s3-20020aa78283000000b00682a9325ffcsm8407714pfm.5.2023.07.24.20.27.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jul 2023 20:28:10 -0700 (PDT)
-Message-ID: <bbd36d96-b6b8-08c3-1092-e3d0b255134a@bytedance.com>
-Date:   Tue, 25 Jul 2023 11:27:55 +0800
+        d=1e100.net; s=20221208; t=1690256899; x=1690861699;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MKrWizUyAS1vBnZ8CLGVaJEkaZY/ep7nAYLeXdQOKWU=;
+        b=XoXdC0Tw6tp7dHBRzEzYYXTilQrTtlmEVfehNbo0SXY2yPCdqyfqIJMpAKMpeTPcK8
+         NRFO2azVEWwih4GIp1an7kkze+wwv5yfJBSBgwHGOCUd5v0nUOphhXW/HtZi2Re+sE95
+         CIXABveOQTv/a8Us0gqZa6me3PEyqorETmzq47ve+Zb1indsE6quq2hS1jCRA62+C+sp
+         /0gt7/dSDh5iQeCBuv8sKTOZcAtF8vl3Vhj4Ij+2iUhh9m08rRsJ/1GWzRCVxFI8z8/4
+         lphmAB6w8HelV29gUl8gatfd/Og3UYXGauueUZ/T9pOEYA0OnGNRG7lj6qTcQBNCEa3q
+         EyXQ==
+X-Gm-Message-State: ABy/qLYEGelFU2zcjneozixvlOwvC17y2ENU7UhbF69AE3hmGtL47fsD
+        yGqpsQNG/jFq/X/s9KaMCd8GMMXCPWNOMg==
+X-Google-Smtp-Source: APBJJlEJLev9ltZyp76HDIlnugv2kj8vhpBatvodwQMbvaMjPDw0qqi5c5OIJjZqw2pcZdzOmYu6lg==
+X-Received: by 2002:a54:4703:0:b0:3a1:eb15:5ec4 with SMTP id k3-20020a544703000000b003a1eb155ec4mr9451286oik.42.1690256899077;
+        Mon, 24 Jul 2023 20:48:19 -0700 (PDT)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9100:6180::569b])
+        by smtp.gmail.com with ESMTPSA id x9-20020a63aa49000000b0056334a7b9b2sm9450076pgo.33.2023.07.24.20.48.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jul 2023 20:48:18 -0700 (PDT)
+From:   Khem Raj <raj.khem@gmail.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] locktest: Makefile.am: Do not use build flags
+Date:   Mon, 24 Jul 2023 20:48:16 -0700
+Message-ID: <20230725034816.983892-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCH v2 01/47] mm: vmscan: move shrinker-related code into a
- separate file
-Content-Language: en-US
-To:     Muchun Song <muchun.song@linux.dev>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, david@fromorbit.com,
-        tkhai@ya.ru, Vlastimil Babka <vbabka@suse.cz>,
-        Roman Gushchin <roman.gushchin@linux.dev>, djwong@kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, tytso@mit.edu,
-        steven.price@arm.com, cel@kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        yujie.liu@intel.com, Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        x86@kernel.org, kvm@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-erofs@lists.ozlabs.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        rcu@vger.kernel.org, netdev <netdev@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        dm-devel@redhat.com, linux-raid@vger.kernel.org,
-        linux-bcache@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
-References: <20230724094354.90817-1-zhengqi.arch@bytedance.com>
- <20230724094354.90817-2-zhengqi.arch@bytedance.com>
- <97E80C37-8872-4C5A-A027-A0B35F39152A@linux.dev>
- <d2621ad0-8b99-9154-5ff5-509dec2f32a3@bytedance.com>
- <6FE62F56-1B4E-4E2A-BEA9-0DA6907A2FA9@linux.dev>
-From:   Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <6FE62F56-1B4E-4E2A-BEA9-0DA6907A2FA9@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Using CFLAGS_FOR_BUILD etc. here means it is using wrong flags
+when thse flags are speficied different than target flags which
+is common when cross-building. It can pass wrong paths to linker
+and it would find incompatible libraries during link since they
+are from host system and target maybe not same as build host.
 
+Fixes subtle errors like
+| aarch64-yoe-linux-ld.lld: error: /mnt/b/yoe/master/build/tmp/work/cortexa72-cortexa53-crypto-yoe-linux/nfs-utils/2.6.3-r0/recipe-sysroot-native/usr/lib/libsqlite3.so is incompatible with elf64-littleaarch64
 
-On 2023/7/25 11:23, Muchun Song wrote:
-> 
-> 
->> On Jul 25, 2023, at 11:09, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
->>
->>
->>
->> On 2023/7/25 10:35, Muchun Song wrote:
->>>> On Jul 24, 2023, at 17:43, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
->>>>
->>>> The mm/vmscan.c file is too large, so separate the shrinker-related
->>>> code from it into a separate file. No functional changes.
->>>>
->>>> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
->>>> ---
->>>> include/linux/shrinker.h |   3 +
->>>> mm/Makefile              |   4 +-
->>>> mm/shrinker.c            | 707 +++++++++++++++++++++++++++++++++++++++
->>>> mm/vmscan.c              | 701 --------------------------------------
->>>> 4 files changed, 712 insertions(+), 703 deletions(-)
->>>> create mode 100644 mm/shrinker.c
->>>>
->>>> diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
->>>> index 224293b2dd06..961cb84e51f5 100644
->>>> --- a/include/linux/shrinker.h
->>>> +++ b/include/linux/shrinker.h
->>>> @@ -96,6 +96,9 @@ struct shrinker {
->>>>   */
->>>> #define SHRINKER_NONSLAB (1 << 3)
->>>>
->>>> +unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
->>>> +    int priority);
->>> A good cleanup, vmscan.c is so huge.
->>> I'd like to introduce a new header in mm/ directory and contains those
->>> declarations of functions (like this and other debug function in
->>> shrinker_debug.c) since they are used internally across mm.
->>
->> How about putting them in the mm/internal.h file?
-> 
-> Either is fine to me.
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ tools/locktest/Makefile.am | 3 ---
+ 1 file changed, 3 deletions(-)
 
-OK, will do in the next version.
+diff --git a/tools/locktest/Makefile.am b/tools/locktest/Makefile.am
+index e8914655..2fd36971 100644
+--- a/tools/locktest/Makefile.am
++++ b/tools/locktest/Makefile.am
+@@ -2,8 +2,5 @@
+ 
+ noinst_PROGRAMS = testlk
+ testlk_SOURCES = testlk.c
+-testlk_CFLAGS=$(CFLAGS_FOR_BUILD)
+-testlk_CPPFLAGS=$(CPPFLAGS_FOR_BUILD)
+-testlk_LDFLAGS=$(LDFLAGS_FOR_BUILD)
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+-- 
+2.41.0
 
-> 
->>
->>> Thanks.
-> 
-> 
