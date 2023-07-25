@@ -2,162 +2,184 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F41E761D15
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jul 2023 17:14:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFED8761DD9
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jul 2023 17:59:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232564AbjGYPO4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jul 2023 11:14:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
+        id S230086AbjGYP72 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jul 2023 11:59:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231728AbjGYPOz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jul 2023 11:14:55 -0400
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2112.outbound.protection.outlook.com [40.107.102.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3889D19A2
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jul 2023 08:14:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kvIpJs2ZLiH0Vjx+FhAmCKCpvP4gq/+nKocnKyBqif47xNWZHqApCszM8LqCFntTR3cICgeLG9N9dEYhpVZY0h8T+/AaYaWOgkl0embfd/7X6MhVnnrYKZUar9YG4080f0r1xXtsl18P63PziSltHISh7Cqe+iVTiDXn4D7flRgNz2xaP21oz0aj+aoEQV3Z66hDRvXsZLTlywoibJxn/41O+sQ6A9+Da/7Oxzrs+njg5gOygyJoojRx4VbSayK4kMNRQhUESQq2aLw4O6A2jfHMQT9q7QMZKtBhZWrVbB49HcYy46PQYvTpJiUedXwhKPUmGllIzf6ESiGdSExQRg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HZ6uPQBqLc42FixOY2d7QqLkxu7B1C4F89BlEwsVJOo=;
- b=Fx9DcnKIagDJf8uHLbzgLE5b83LoWvceAY5/I2IFV5/2GfE4LMJVQc/mA0XTFGiKYTV/GiOVFKWYWDOirV7b3/N05y4/+8vSufrGS49sgq9BOgFFh+eksLcoA3SwzeXvlWrohJUGtXc98wX9PruJ+3wInTtp13ZcO/3R5hQhj73qDTilso58iHvU9r9tiixi9iX7IqH/qKhJX9Q0k7OPOqChK0EXmHLcyM4NpMAl9jBv2X2StVnc2vj0sNWD6npvOKfH7sxc8l/XJW/qgECsNAzocYHoGjhEB3J+uGOZK/prD9hrID6sqhnrU3MD8LHXzzmF083ngoEVlcXKJ2aXnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HZ6uPQBqLc42FixOY2d7QqLkxu7B1C4F89BlEwsVJOo=;
- b=LiE042Miz0Lgm5joY2L1NXdTzWR3MhVcTYch53W+Nor+YpDKnhR9BkZ2emfHaIJgSzN9RbBWu9wBwGIn26qOUKvtQRHciYNt92q/8RKMXcSXIPEeW1FyKVPCtE6HIYFHyhGsBthMmgF4YqvETm5adiM+OVfGc1XYe2eoJ7rja0I=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by MW4PR13MB5505.namprd13.prod.outlook.com (2603:10b6:303:180::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.24; Tue, 25 Jul
- 2023 15:14:51 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::3fa6:b553:8f2f:6895]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::3fa6:b553:8f2f:6895%7]) with mapi id 15.20.6609.032; Tue, 25 Jul 2023
- 15:14:51 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "anna@kernel.org" <anna@kernel.org>,
-        "smayhew@redhat.com" <smayhew@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/1] NFS: Fix potential oops in nfs_inode_remove_request()
-Thread-Topic: [PATCH 1/1] NFS: Fix potential oops in
- nfs_inode_remove_request()
-Thread-Index: AQHZvwnVRFucrcRHAEGnrsZ0TgKm16/Kl26A
-Date:   Tue, 25 Jul 2023 15:14:51 +0000
-Message-ID: <fcf5eee44ff2f02414d3747f2b625aecd8811a0c.camel@hammerspace.com>
-References: <20230725150807.8770-1-smayhew@redhat.com>
-         <20230725150807.8770-2-smayhew@redhat.com>
-In-Reply-To: <20230725150807.8770-2-smayhew@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|MW4PR13MB5505:EE_
-x-ms-office365-filtering-correlation-id: e0166c5d-2e14-4051-8e26-08db8d21e49a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: f/55BIHAJipDtnyIyv6bb/A2l1PZgeKCYJospPDdix7bHZfJS/k8aRLRErg+wPO9pA98nRiPiOnutuoUo1+4VZnSb0E1hCXVPWLBwORnScE8TfKYD7AGrhFplj4lN9arDh/Xehd0VdYLhxNaqeIGxWaPeKj347w/H6bdvuzIUuL7H4gfa0txoZa75bsDmxdfBe9ZOPmdpRUNq2FHD7y5xfHFS4n5WD5ImSPH7CKL7xM3hWFNhe+2xqopmkrmVdE/S5zXMXYA85YG1hwGvMqXbgS7F7+R4Q9UHDvOqGjl/oDB1Hynnp8wdgM3+bwd1jiO7zr01D+PmtZLXb8qp2z+KBuS995RqbNtafLWoycDBcnXb1/NzEkgSyMNM6ZxhYSo4qD6pGlPCbNy+XQTbz1B3fMCvhY00+Cgbl12615yUMFQfmqKSR/fSLvZ33YCa9mRI0LxFOdLYzda8FsojT1ElqRQruaYWACasIre2+jmqmOMVMUw7KfcJHucpbMccBdXjlLlcwstOCE+LMy0XvIFY5EUW7PSLk7eW7i9+BjjK9RDHcD7+P8GXJpoAHV9WRV7vfUrnlcSrTLIm4SHXxS4TiQE23uB+gkTqhQMepO2eXUMM6ZZwT+eBxEhG5cjR82kz3XizT6qWyiWn3YHUwrpHQpE3HYMsiRbiBidFrYQrWc=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(346002)(39850400004)(376002)(366004)(136003)(451199021)(122000001)(38100700002)(38070700005)(36756003)(86362001)(6486002)(6512007)(71200400001)(478600001)(2906002)(26005)(186003)(5660300002)(6506007)(8676002)(316002)(76116006)(8936002)(41300700001)(110136005)(66946007)(66476007)(64756008)(66556008)(66446008)(4326008)(2616005)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?azFyYTQ5NXJWUkJ0eVMxSTdOZzcxV09leXJGOEZzYzh2LzBxQXFXajFEdUc1?=
- =?utf-8?B?MG9NYXFLQWxvQjhHSkw4a1BGRlZVZXNzZk9EV0dNZ0RhZFRUaC9zSFZiTUZG?=
- =?utf-8?B?U3Y5blZlZms5bThjN0c2RXFKeVJFK3c4L0dUZWQrbUIzM2FETHkrZU5lU1RR?=
- =?utf-8?B?SFlZRHJEcmxtOE96bWRSUzR4UEdZOUxwNDdkQWZ0dUY1RE5kSTRjU0N6ODQr?=
- =?utf-8?B?SFRiTTFMd2IvWitEd3h2Q0x5WENxVnUxYWNINGZDWkR3NmlQWUhZQVRDVWQw?=
- =?utf-8?B?OTI3NFU5SUduUTlaMVFEZWdWa1krNXpYZXNxNUhQaFpxcHh1UzA2WkVBUng4?=
- =?utf-8?B?UFd2Zm1naW1RbjZNNHBFWjJEL0xPQmFaV2MrZGhjS2ZiVU44WGowMU1qUEJq?=
- =?utf-8?B?engwNE1rQ29XcTBIQ0drcXRkN0xmd1FPeDEyN29ZRDBWS2tEOG5vcEJ3cFhj?=
- =?utf-8?B?M3UyWVdicXgyNVBFRE8vaERsZllJQXhSMzVQQXROcExGc0ZLMFd5TjBIUlNR?=
- =?utf-8?B?NTdvRS9TdkRXVzBKYnE0SDZ0U2MyQzhkc1ZLNVRUZlMvT3Zkc1VaVUxtYUJj?=
- =?utf-8?B?cTlOaFBLbEVmZ094SzYyc0dUbERKdzRiZktkOFJYeWpWeHhkcEFuL3BNdlRJ?=
- =?utf-8?B?TUYxMmVsck1sZmlTRWlwZlNTYjd0akdqYTRKYnNuTGFpVmUwQ2ZUaHp6a28v?=
- =?utf-8?B?bmZsMkJMaFFiZHRTK2NyVXVpV2hHUHBFdmllV1RsYmZadlNKQWlFbVBKT0Mz?=
- =?utf-8?B?Um1NVGFRWnBkRXZqWWdmOW8xMENXMmpqU3JJcTFIRWV0YXNoUE0zNmdGTk1R?=
- =?utf-8?B?dUI5VEU5RFVHS3gvZElYRUdpVmVYSlVRTjc5czlEdVBIaW5jaW12bDNQZkJW?=
- =?utf-8?B?cUJjdnltb3JqOXJEOFFaM2VqNy83RHRTZFJ5OVA0eGh6YnJESEhDUFIyTEQ5?=
- =?utf-8?B?OVdYWWRCbnVLTGhMSGhlRUFpK0VYdW53QWFqK0ZPcnNMaW1tZytaNEcwaHNi?=
- =?utf-8?B?L3M1ZEpmeG5wRVZuS0pScVo0U1Q2K3VENjdaNnVFMFpFT3ZqUlVuMUZBU2kx?=
- =?utf-8?B?YVg5djZiZE5EQnkycnpHdnhnZTVxU3JwQUNMZVpCVUc1QU1SSk9ta2xCTGZq?=
- =?utf-8?B?TmRDWUdzbzhyQ2F5YkdHQW45Zms4cXNvd3lzSmVLMHAxaUduZHZkUDE0d1FR?=
- =?utf-8?B?VmRrYVRXZzVKUzFwNHpKZS9iUlphTUhBb08rK2lqQzBabTV5NjM0TEpReUty?=
- =?utf-8?B?SnI2RW94d2NZNTZld0hRRlpYMlpjM2VDRk93N1ZYcklLdStDdzBxbEZYMzFJ?=
- =?utf-8?B?RFdNNHdSMGFMYzJWKzc3NmxnL05NYXVtcVROK3lGY2d1b0c3Z3VkM0lXZEVn?=
- =?utf-8?B?dTd4ajZLaDlpU3ZqRk9VdytWQ3hDcGpvdG9pOW11UHJtT0o0a08raEdpWHhS?=
- =?utf-8?B?Mjh4ZlA2RGJCaCtaUlRWdVRPS3U5elpHUnNmVDdKVm1TZ2pVRU9tdndjTURm?=
- =?utf-8?B?M2JVV3ZQRFVGcG51Tk5PRWhZZ1dkMjhLUi82REZXNjMwa2NSWERISEMzOFZR?=
- =?utf-8?B?aG5PMzFBenVDVk83djV6eGdsZHRFQVJ6QTJ3Q01lY1dCRW9UTEYrSXVabGV2?=
- =?utf-8?B?STh4N3V1TWFsL3RxOSt5NExHL245T2w5a1RuN2NXTW82WmltSEtFci8xczkw?=
- =?utf-8?B?amU4WXJmOVdhdytPeU5zSTdPSDdidjVrMTNrMXBJQnVEU3I3WFp1Y0psV2hE?=
- =?utf-8?B?MnhFejYvNG5qQk5sVlQ5T0crTytVb2kwRURjMWN3RllvTFZkaTF6aDIxTjRU?=
- =?utf-8?B?dzJ4dGtlUVEvdkUxTkhmUmRzQ2tjUmh4bWpRcDBpZUtES2dhci9RK0lPZ2F0?=
- =?utf-8?B?ZDBHeDhMZFJ4RERFYlFtU3hMZ1J5WkdSZXFxLzhGb1pCZmJuTkxOdmZPQlFp?=
- =?utf-8?B?ZHhDWVlWamVXZVBMSnJsWmliRzR2V043N2tzbzIraUNTQXZOTkp2NkRmRWR0?=
- =?utf-8?B?L09vSjRkcmorczArRVl5S0tCY2xLdFlBazRsZ2ZzdFU0OEw5OVMvOXFEWHo0?=
- =?utf-8?B?QXZTOTUvcnZQZTIwOTgvNVZQT0N4ai8wL09KSlVmSDNEbjgvczZqQVVkTDdQ?=
- =?utf-8?B?akU0WnlaaTl5aUVDMjdqUkhFd3p0c2NSSWVzaTFpZk9CSEVBTnRRWGJFSWR5?=
- =?utf-8?B?ZHc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <AC584384A0F10A419DD0D534F25949FE@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S229684AbjGYP70 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jul 2023 11:59:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C33210E5
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jul 2023 08:58:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690300722;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UebXzSZJJbns4Q4iwMQ1Tl1eusSXjfQY70IBKGqiPDI=;
+        b=KNYaWpxATuy0nIRQPR/NdM42d5qHMosGMAYN7D3GmRHUTaFtQ5nsBvVGlX8Y1My3b4LcXi
+        6YMF6RZT/sRgmlJq8s2E3RXl8WlIJzAcEv/pJwEUUI8UvLvx0HRm+QjXn0ilp6504NHc6y
+        JG6gALl9nlqViPUAMlc3DFbRUk9J3H0=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-322-MZgeXcd0PZ2KTa_ZRhD4mg-1; Tue, 25 Jul 2023 11:58:41 -0400
+X-MC-Unique: MZgeXcd0PZ2KTa_ZRhD4mg-1
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7672918d8a4so149743685a.0
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jul 2023 08:58:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690300720; x=1690905520;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UebXzSZJJbns4Q4iwMQ1Tl1eusSXjfQY70IBKGqiPDI=;
+        b=jcTzF1jEyOHqDP3QGbo6ICwQuppLegnLpYGwgh3BG9JaL3Jv7CCLM7vfgjC5rw7DrU
+         KcKKsHuy6+XTRleSgwM0p3IBSnJ8WPoKFj2p20EvfSVIdSqqOQWP5xm39Ik4kOsjx10l
+         VuSoKvK69V78N5n7J5iR1PK/EEJBzS/6ZLyhDkluAitw+mrK8bnoLIngR9Cw2lDIPgdx
+         9F7GTNPOkYOZ8GOEHkkzxCA/N1ZhcGlvhtEEa104qq2Kl4sYzvHQice5m+y7i9+MxOGs
+         KflIcDMmCZLCUmjrNfk587r/mQ6zl8qoHa7UdeEamvVVUxBsKrPt1vavTzC1LVdNqImZ
+         Vh5g==
+X-Gm-Message-State: ABy/qLbPzxvB9Fv37Q94F1HG1ZrTMPOeRyDiMfPdFGCk5+tHenmctyeg
+        wH2bu9257axvGhX4Cfd3r3C4SROtO6oxP1M2z34byYuXvL9EbDLvyAMaNEBc0VjAZYbTtgJoUBD
+        u0p2ItoshBb3fAAv+kd1bpADY163G
+X-Received: by 2002:a05:620a:2409:b0:76a:f689:dff2 with SMTP id d9-20020a05620a240900b0076af689dff2mr8656912qkn.7.1690300719990;
+        Tue, 25 Jul 2023 08:58:39 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHU88rw5EM8xm4Da/LxK2KaVzYwcS1Da7lcAcB5Gmy4x58OCpFNTGYa5OgCMHBQvSSMnRKWUw==
+X-Received: by 2002:a05:620a:2409:b0:76a:f689:dff2 with SMTP id d9-20020a05620a240900b0076af689dff2mr8656899qkn.7.1690300719711;
+        Tue, 25 Jul 2023 08:58:39 -0700 (PDT)
+Received: from [10.19.60.48] (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id pe39-20020a05620a852700b00767cbd5e942sm3752235qkn.72.2023.07.25.08.58.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 25 Jul 2023 08:58:39 -0700 (PDT)
+Message-ID: <42fe1621-d9c3-2fd5-807c-539ddd917ac8@redhat.com>
+Date:   Tue, 25 Jul 2023 11:58:38 -0400
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0166c5d-2e14-4051-8e26-08db8d21e49a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2023 15:14:51.1728
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fblLhH5TNzjaf0JTkkiEnkZCLXzs6scJxiAFe94LlgcPkghwrPCncXqYT8hl90NSruZuiO0tsIhsOEKxg0UXvQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR13MB5505
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH] systemd: Ensure that statdpath exists using
+ systemd-tmpfiles
+To:     Alberto Garcia <berto@igalia.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <20230713102531.131072-1-berto@igalia.com>
+ <5230337e-b028-0e86-9693-c29f7d1165b2@redhat.com>
+ <ZLcPIEUeVKElhqwB@igalia.com>
+Content-Language: en-US
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <ZLcPIEUeVKElhqwB@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIzLTA3LTI1IGF0IDExOjA4IC0wNDAwLCBTY290dCBNYXloZXcgd3JvdGU6DQo+
-IE9uY2UgYSBmb2xpbydzIHByaXZhdGUgZGF0YSBoYXMgYmVlbiBjbGVhcmVkLCBpdCdzIHBvc3Np
-YmxlIGZvcg0KPiBhbm90aGVyDQo+IHByb2Nlc3MgdG8gY2xlYXIgdGhlIGZvbGlvLT5tYXBwaW5n
-IChlLmcuIHZpYQ0KPiBpbnZhbGlkYXRlX2NvbXBsZXRlX2ZvbGlvMg0KPiBvciBldmljdF9tYXBw
-aW5nX2ZvbGlvKSwgc28gaXQgd291bGRuJ3QgYmUgc2FmZSB0byBjYWxsDQo+IG5mc19wYWdlX3Rv
-X2lub2RlKCkgYWZ0ZXIgdGhhdC4NCj4gDQo+IEZpeGVzOiAwYzQ5M2I1Y2YxNmUgKCJORlM6IENv
-bnZlcnQgYnVmZmVyZWQgd3JpdGVzIHRvIHVzZSBmb2xpb3MiKQ0KPiBTaWduZWQtb2ZmLWJ5OiBT
-Y290dCBNYXloZXcgPHNtYXloZXdAcmVkaGF0LmNvbT4NCj4gLS0tDQo+IMKgZnMvbmZzL3dyaXRl
-LmMgfCA0ICsrKy0NCj4gwqAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0
-aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL3dyaXRlLmMgYi9mcy9uZnMvd3JpdGUu
-Yw0KPiBpbmRleCBmNGNjYThmMDBjMGMuLjQ4OWMzZjlkYWUyMyAxMDA2NDQNCj4gLS0tIGEvZnMv
-bmZzL3dyaXRlLmMNCj4gKysrIGIvZnMvbmZzL3dyaXRlLmMNCj4gQEAgLTc4NSw2ICs3ODUsOCBA
-QCBzdGF0aWMgdm9pZCBuZnNfaW5vZGVfYWRkX3JlcXVlc3Qoc3RydWN0IG5mc19wYWdlDQo+ICpy
-ZXEpDQo+IMKgICovDQo+IMKgc3RhdGljIHZvaWQgbmZzX2lub2RlX3JlbW92ZV9yZXF1ZXN0KHN0
-cnVjdCBuZnNfcGFnZSAqcmVxKQ0KPiDCoHsNCj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IG5mc19p
-bm9kZSAqbmZzaSA9IE5GU19JKG5mc19wYWdlX3RvX2lub2RlKHJlcSkpOw0KPiArDQo+IMKgwqDC
-oMKgwqDCoMKgwqBpZiAobmZzX3BhZ2VfZ3JvdXBfc3luY19vbl9iaXQocmVxLCBQR19SRU1PVkUp
-KSB7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGZvbGlvICpmb2xp
-byA9IG5mc19wYWdlX3RvX2ZvbGlvKHJlcS0NCj4gPndiX2hlYWQpOw0KPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBhZGRyZXNzX3NwYWNlICptYXBwaW5nID0NCj4gZm9s
-aW9fZmlsZV9tYXBwaW5nKGZvbGlvKTsNCj4gQEAgLTgwMCw3ICs4MDIsNyBAQCBzdGF0aWMgdm9p
-ZCBuZnNfaW5vZGVfcmVtb3ZlX3JlcXVlc3Qoc3RydWN0DQo+IG5mc19wYWdlICpyZXEpDQo+IMKg
-DQo+IMKgwqDCoMKgwqDCoMKgwqBpZiAodGVzdF9hbmRfY2xlYXJfYml0KFBHX0lOT0RFX1JFRiwg
-JnJlcS0+d2JfZmxhZ3MpKSB7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbmZz
-X3JlbGVhc2VfcmVxdWVzdChyZXEpOw0KPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-YXRvbWljX2xvbmdfZGVjKCZORlNfSShuZnNfcGFnZV90b19pbm9kZShyZXEpKS0NCj4gPm5yZXF1
-ZXN0cyk7DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBhdG9taWNfbG9uZ19kZWMo
-Jm5mc2ktPm5yZXF1ZXN0cyk7DQoNCldoeSBub3QganVzdCBpbnZlcnQgdGhlIG9yZGVyIG9mIHRo
-ZSBhdG9taWNfbG9uZ19kZWMoKSBhbmQgdGhlDQpuZnNfcmVsZWFzZV9yZXF1ZXN0KCk/IFRoYXQg
-d2F5IHlvdSBhcmUgYWxzbyBlbnN1cmluZyB0aGF0IHRoZSBpbm9kZSBpcw0Kc3RpbGwgcGlubmVk
-IGluIG1lbW9yeSBieSB0aGUgb3BlbiBjb250ZXh0Lg0KPiDCoMKgwqDCoMKgwqDCoMKgfQ0KPiDC
-oH0NCj4gwqANCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRh
-aW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+Sorry for the delay... I'll take another look
+
+steved.
+
+On 7/18/23 6:16 PM, Alberto Garcia wrote:
+> On Sat, Jul 15, 2023 at 04:53:02PM -0400, Steve Dickson wrote:
+>>> This is not the case of rpc-statd: if sm and sm.bak (under
+>>> $statdpath, which also defaults to /var/lib/nfs) are missing the
+>>> daemon will refuse to start and will exit with an error.
+>> Why are they would be missing? They are created on the nfs-utils
+>> installation.
+> 
+> Hello,
+> 
+> yes, in a traditional Linux system that is indeed the case. The idea
+> behind this is to add support to factory reset and stateless scenarios
+> like the ones described here:
+> 
+>     https://0pointer.net/blog/projects/stateless.html
+> 
+> The goal is that a system can boot with an empty /var and
+> all necessary files and directories are created without user
+> intervention. In the case of nfs-utils this is already happening
+> except for rpc-statd.
+> 
+> For projects that use systemd this is generally easy to do without
+> touching the code because systemd provides directives that can be used
+> to ensure that /var/lib/foo, /var/log/foo, etc. exist before a service
+> is started.
+> 
+> In the rpc-statd case this would normally be as simple as adding
+> something like "StateDirectory=nfs/sm nfs/sm.bak" to the .service
+> file. However it seems that this one is a bit special because it goes
+> like this if I'm not mistaken:
+> 
+> 1. The configure script determines $statduser (the value of
+>     --with-statduser, else rpcuser if available, else nobody).
+> 
+> 2. 'make install' creates sm / sm.bak followed by chown $statduser
+> 
+> 3. rpc.statd starts as root, then does lstat("/var/lib/nfs/sm", &st)
+>     and finally setgid(st.st_gid) / setuid(st.st_uid). At this point
+>     uid/gid is not necessarily what was set during configure/make
+>     install ($statduser/root) because downstreams can create a
+>     different user/group and change the ownership of those directories.
+> 
+> StateDirectory and similar directives from systemd can only create
+> directories owned by the user that starts the service, but since here
+> the service needs to run as root this would not work.
+> 
+> systemd-tmpfiles can be used for cases like this one, and that's why I
+> chose it for this patch.
+> 
+>> Just curious... how did you test this patch? When I apply it
+>> I get this error
+>>
+>> Failed to insert: creating /var/lib/nfs/statd/sm/<client>: Permission denied
+>> STAT_FAIL to <server> for SM_MON of <server_ip>
+>>
+>> Maybe this is packing issue but I'm thinking it is more
+>> of systemd issue... the permissions on the sm directory
+>> are
+>> 283 drwx------. 2 nobody rpcuser 6 Apr 18 20:00 /var/lib/nfs/statd/sm
+>> instead of
+>> 283 drwx------. 2 rpcuser rpcuser 6 Apr 18 20:00 /var/lib/nfs/statd/sm
+> 
+> Are you creating a package with the patched sources? If it's something
+> like the Fedora one then I think that the problem is that since the
+> configure script does not use --with-statduser then there's a mismatch
+> between the user that appears in nfs-utils.conf (added by this patch)
+> and these lines from the .spec file:
+> 
+> %dir %attr(700,rpcuser,rpcuser) %{_sharedstatedir}/nfs/statd
+> %dir %attr(700,rpcuser,rpcuser) %{_sharedstatedir}/nfs/statd/sm
+> %dir %attr(700,rpcuser,rpcuser) %{_sharedstatedir}/nfs/statd/sm.bak
+> 
+> So probably /var/lib/nfs/statd/sm is drwx------ nobody but
+>              /var/lib/nfs/statd    is drwx------ rpcuser ?
+> 
+> Passing --with-statduser=rpcuser to configure should fix this problem.
+> 
+> After having a look at a couple of downstream packages it seems that
+> they simply don't use --with-statduser at all and change the ownership
+> to whatever user/group they want in their post-installation scripts.
+> So they would need to start doing it if this patch is included in
+> nfs-utils.
+> 
+> I realize that although this should be trivial to handle by downstream
+> packagers it does require manual intervention so I'm not expecting it
+> to be completely uncontroversial. But if you like the overall idea I'm
+> happy to discuss / iterate this patch further. This can of course be
+> applied only by the downstreams who are interested in this feature,
+> but since nfs-utils already uses systemd and the change is rather
+> small I thought it made more sense to have it directly upstream.
+> 
+> Regards,
+> 
+> Berto
+> 
+
