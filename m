@@ -2,145 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92B5B763735
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jul 2023 15:11:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 009A47637E2
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jul 2023 15:44:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231968AbjGZNLb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Jul 2023 09:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
+        id S234185AbjGZNo1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 Jul 2023 09:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231167AbjGZNLa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Jul 2023 09:11:30 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5BB41BF2;
-        Wed, 26 Jul 2023 06:11:28 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36Q8QbBu010691;
-        Wed, 26 Jul 2023 13:11:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-03-30;
- bh=8RNaEe8cWG7shh7BzbV9Xcc224/oqVsNRKiFfMxxONg=;
- b=Og44KuiYs4ylkrQXvY5eVaOyT/mZkZDv3EFvF+Frsvh3Zp/fa1HKMhCSd+EYxa36BwR6
- u+joZWS3QRmBFiKUDjD+M5M2OE/ODpOpuH6EYf1FRuokrjuOCRbYIPO8HtJ1kZ87tQt0
- zHl1n7BWGv0/ybpdHM45bL8fwdnqxz8fLegvwmYJTlp3/Fqqq+iuPzWr8T5vqPHzEKpK
- nQBZvmf27ho3G6B2ky8vzdzjoAQ8355Ll4sxIX8DbwdrmZNMG5GxHOqnXQbM1MnYTLbC
- ZIL9KLyoSN2a7SF/6TN62oRBFdVm46HzmHmwxWW73emkNb2gFftM9lelZw0i2QAPjTM4 cQ== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s07nuqc6k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jul 2023 13:11:19 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36QCUVZX030404;
-        Wed, 26 Jul 2023 13:11:17 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s05jcfpbx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Jul 2023 13:11:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eeJABbMGSCYdUs/dKx51F+0umv7wuyyoxpkgTtD1S8tMsF7EMsml5p9wkUktYLcJSHNpaGecBPMtqZr71xjPVz6xjIdRpDukZ5L5gHURisPxfOwcF44ePv4EHQwGeaRrVicfwp5xXJ6CWSCGNp5AbxOQbEXfbN0a9FFvlCw/usXFQ629OhscTol4Vg5xNc+zDPHk6RNpXGyCsRjp8X7Z12le0uuMO2SZJOJ4JcVstuUBAVTtkiWXwDViL8hUXX6fW8/trPS6CxQkk1Ws71xc5FH6Q8hKB1KmZU5V880cJJhfmyRC4M63VCeEtVt23AB/usUQYY0d8ZtmDg/pxgOfgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8RNaEe8cWG7shh7BzbV9Xcc224/oqVsNRKiFfMxxONg=;
- b=Uc93q3+gUG+VtlML5arrhCwgA5GhhmuA7gCdAwNpoKr3qTRC/UD0eAZ33zCAYgUWLweVIpos8zSjABmDcQmeZbbWzAEe9O7EfOCx9Inxkk5vv0JfHDnZWIAAQ7eWlEfccXD03KjWr/5ayhyfdszuo/6yPJCEx+pRD0x6XzG1j46N4caYPxTk7oP4KbspPE0Sw1ADell39qLXDfgjrdwaNwmP4pu71kPuR5I8AOSuU2ZiVvJhSKboZ/Wy3Pk+i3xjo5p6wS7B7UvDqvKYKdwbVaIxzvWfJmVcXLcMR8s+5yCmx7N7L1WtjWF4oGCPpqjHjKCAEuLBhKJMt0TkwdObhA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8RNaEe8cWG7shh7BzbV9Xcc224/oqVsNRKiFfMxxONg=;
- b=McuTu7rsCQWE+/vO5Z0Mo/lvV3HfYa6oQF1981Tmnkf4QuUJMS1aBgAeZzaoDxrmJwvsm+FLwMy/uXjmexA1t4MQo3OhdEKtyMfwj1l4b/aNMxk5g4Fr2XR4xi6KhDpwCwBY38QpbJirqrBufBFSrpvh0y6s6jC9zB/0VwJBP54=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BN0PR10MB5093.namprd10.prod.outlook.com (2603:10b6:408:12d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.29; Wed, 26 Jul
- 2023 13:11:16 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::2990:c166:9436:40e]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::2990:c166:9436:40e%6]) with mapi id 15.20.6631.026; Wed, 26 Jul 2023
- 13:11:16 +0000
-Date:   Wed, 26 Jul 2023 09:11:13 -0400
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH v3 3/5] SUNRPC: Convert svc_udp_sendto() to use the
- per-socket bio_vec array
-Message-ID: <ZMEbcfc0hqT2mcDU@tissot.1015granger.net>
-References: <168979147611.1905271.944494362977362823.stgit@morisot.1015granger.net>
- <168979108540.1905271.9720708849149797793.stgit@morisot.1015granger.net>
- <6650.1690373730@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6650.1690373730@warthog.procyon.org.uk>
-X-ClientProxiedBy: CH0PR08CA0028.namprd08.prod.outlook.com
- (2603:10b6:610:33::33) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        with ESMTP id S234105AbjGZNoZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Jul 2023 09:44:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE34926AC
+        for <linux-nfs@vger.kernel.org>; Wed, 26 Jul 2023 06:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690379008;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Vgu13nEy44fnYsza5CLtItP7F9KLHENaJWfQp22OtOA=;
+        b=JQS2bI9yDRm64+j7AiGf3OxS7DlOyaTC5eW5r2iTTMa4djUWR5QR90TB4ENW/nToRDNTWe
+        qYFoCOvmue3WC+wBk87varrTAhW5Ha3xDddM3ay7om9oKKyW9deaLqgUbVtRJjU3bD4Pt9
+        vqRcAdY9kdmY22tu0gT4deHw90LhFsc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-68-kYISSdN4Oj2ivR92Fy6-bg-1; Wed, 26 Jul 2023 09:43:24 -0400
+X-MC-Unique: kYISSdN4Oj2ivR92Fy6-bg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5DE8188D707;
+        Wed, 26 Jul 2023 13:43:24 +0000 (UTC)
+Received: from aion.redhat.com (unknown [10.22.8.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4779BC2C7D3;
+        Wed, 26 Jul 2023 13:43:24 +0000 (UTC)
+Received: by aion.redhat.com (Postfix, from userid 1000)
+        id AD0EF63E7F; Wed, 26 Jul 2023 09:43:23 -0400 (EDT)
+Date:   Wed, 26 Jul 2023 09:43:23 -0400
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "anna@kernel.org" <anna@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/1] NFS: Fix potential oops in nfs_inode_remove_request()
+Message-ID: <ZMEi+/3cmz3Vl7lq@aion>
+References: <20230725150807.8770-1-smayhew@redhat.com>
+ <20230725150807.8770-2-smayhew@redhat.com>
+ <fcf5eee44ff2f02414d3747f2b625aecd8811a0c.camel@hammerspace.com>
+ <ZL/3MZDNGqwlOgPW@aion>
+ <1a2ee0602cd169a96db29565449e2e6cc7a31912.camel@hammerspace.com>
+ <7b8e81b3ab44b5bc788a024dec6465adcc01d7a3.camel@kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|BN0PR10MB5093:EE_
-X-MS-Office365-Filtering-Correlation-Id: 812f45b5-f88f-4d5f-712c-08db8dd9cb3e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cU6AaM/+GIFlrvoVk6rJm4mAh5CJC0ci3lSQyHBnwyBzYHVdiZzArKCvGpZfMHLK3WndKmoMoXcq++3qxGTEtlc9YhdywU9e/MPfkF4spgB9vhv++ZaU61tVRd7OdkjkpkpNzXoX2rBs14Lnz74UvohVf/6l7YSViHBEy2RVDplJm2Kbvl2EAts2pEGiTRaIBdy85Fm9NfplVUaHPS/1kT33ZJGE0i57J/eHedy6K2NZ8P5l8cGMdpXHE1qZfBk8fuMJ8WV2Xb+Vm9Ga1DKPXKmFLRLnDYY0zGFytesKjHpKcrcxZEwx8L73xtF+z5ZOaE22ZftGdQsU3DZQd2KIEutomZPhjf4flsNiaP+rYGTwMWQVJT+LQYiUOv9j7G3a9rVGuBciS5e2+lWVDDpC6ZcA2dCR/PAerMXJj7ETHAmKbzkE4mxNWG6geTgKMwxvzysTE6a/QLrBSaLGlQsiWgvDu6zAxiXa5yIkFNxZHtYGI7U918EwfMWfrqZtHFVuFYArvYAIfmgkmuTUwcAZuhaPWkhuDJyoB4+JBtUDP1wlf7dfefnbl4RlKPXaTlfh
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(39860400002)(396003)(136003)(346002)(366004)(451199021)(5660300002)(8676002)(8936002)(558084003)(186003)(316002)(26005)(6506007)(86362001)(4326008)(66556008)(66476007)(6486002)(6916009)(66946007)(44832011)(6512007)(9686003)(6666004)(41300700001)(478600001)(2906002)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UBKgikAASGsf5Hjgu1VAPb2zB/UuhFtn8iHS1ZfdxPemBPBNIlqeT+j0CgX6?=
- =?us-ascii?Q?Pxj1IvO6ww2PEjmSjyfWQSLnZNiRjpYJR12OXvkYkAXWV1rBv5sV9W5zEsFC?=
- =?us-ascii?Q?MKe54RSo2kNiGYiW0Sl6HKL1H8Z41SUpkEfCWJeWQJjDuG2NXG7p4VJCjKVl?=
- =?us-ascii?Q?1OtFqZ5EJJ6MQqOkxq4jU6Z0mfgMb5WOQE1/mwebu4GxWuDqGbUmKL6ojWu2?=
- =?us-ascii?Q?lJRR8wBV+eeVhDMb7ubHLNa9Lig7X1H1XEgIQ471/IDdC4Z6k38dIim8u/mj?=
- =?us-ascii?Q?/jMWyMyaCYpJsnWgZ55Cbqzk+cbY4qBgmnKOdDasinCUsW2CcxcfPe34DUoG?=
- =?us-ascii?Q?nRxku2hYU4TH4ChRCq3mLnMjvHZ3Ubccd6TMQ1b9De1Rv6/rKlAZ/DEtYxBI?=
- =?us-ascii?Q?obp2ynU1RkFij3eT57wOAVSLVeVAVqk41AfiYqaKNvPcgY4IkDhmL/fD5vOk?=
- =?us-ascii?Q?MC1gSrUmwHlRezlrDr8cNp9ddlXT7ftGATTTfDd4A8LZUye8niYcDQA2Tpt/?=
- =?us-ascii?Q?X4icC8S8qmSyexbNALSKVddchddPG44SV9nh8uLzEmXMSOAUmi3djNW0OQfZ?=
- =?us-ascii?Q?B72BTha06CgEL36EAFsCGJbymQVQEzQRNwY/YukEwaJR6iO+5yER1iWR4s04?=
- =?us-ascii?Q?FUbkNJb4QHdHo2rSerdQeGEFOTXALtm+5GI4c7l72nOKCAbHIlNQoNPZmPu1?=
- =?us-ascii?Q?lRkNt945H9eOeUZZZaFFHn9Q8X40N1QmmLsimfxJC8eiumTzzIWPLBe07JkP?=
- =?us-ascii?Q?L8zatWnb1Yk5g4kolRrkxL6P947SIFikBlUU9m3unMtGth54OdixuN9vnIJL?=
- =?us-ascii?Q?0v9Su8ZJb8QlK/686UCFdmxKcX+iEKEN5JZz5ZwUHGIcP+gtex/cXJ02mXLN?=
- =?us-ascii?Q?pMKBrO/s7Z0txe/P1OAlzt0n3kkxQwHIJ+EzRLM/XFPk6h0/PJyP9PUrff5/?=
- =?us-ascii?Q?FMr7PoESobzqYBz9Mqc1YdQYAxveA7A3FBEYvoYSEmrozw6QKRiky9K5Zr4N?=
- =?us-ascii?Q?csJQQD46AxCpQtCj8a/BuFKfgaSkwB5b4DJikr404AVYBJa1hzIjEQdp7p4A?=
- =?us-ascii?Q?bJV5MteXccUTqKLAbvj12T0zUf1vbhtSOSd5NTjaj98TvCz1LoR3I43UpjqW?=
- =?us-ascii?Q?6FGA/ZpJNCMUX5dCeiBjKCxtrhQ7eMw9SWW3i4Psd1Aulww2kKTouBRszquY?=
- =?us-ascii?Q?u6QSL+2RD8IrWgf+HU1vS9aRHveQy8Os0iBjOqf2QtIFxKghzSXfH4/58AMV?=
- =?us-ascii?Q?rPJYFKRoPFC4JaKloP8NpT0/K+Fgn1HfKuAH7XPAQV+lrks7zp2NY3AyO1Zb?=
- =?us-ascii?Q?t23hJRbv/A+mcQCHujEu7/LBtE4P/36rWirsmtdO93m4hXrh9ydThapIkV1Q?=
- =?us-ascii?Q?sURGBlqsXaJFzFYzLn7wRn8T02KLy+5mshoBF9iREAuFHN5CLjFP2v0RHUyb?=
- =?us-ascii?Q?MA2gOI7PheO1qgOU7afG0ivWXduYU/0MwGuM9NDdXXk92rvrRvjMnl9H/bfb?=
- =?us-ascii?Q?az6cGoBXZA1G7umVUUnlIVxu3S3IaFRwrdYqJPuyvtrlMdyIffv2Nht7eg1d?=
- =?us-ascii?Q?XJ23YkFNH429mdjd9ZFrOinK9HlJxFAyHBbe4sMmAyK8Jtg6aIuS0bZZeLX0?=
- =?us-ascii?Q?hA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: WlCsBMyRULo5BL6BrgO4OFMii6SwBvqPErUIdoINBVChY/j7mJi10nrQtuLx30ScelSeJEBXHIRX0ZBUSCdQBR2vYHMtoGKc+nhdhIu+Pi9BueQAXI23pWRCaQ3+v7qS0LIBSvxy2/A6E64fNnGU4doE5h8MhL3wvbQ5eEMWRozbmp1r4OWao72yZaTEYHT+v8r1yVIISJQ6qRbajmsoJdMRGGb++cYEm7pXyjWoCuAsYEbJ4046CkzEEi1UlCr3iiw7ym5r0QcXtXwORM3NBEZrJHakLyqxzDNuZQEpqqd1NARc2YjPLLESKWczVjrLtf2GR+3tOP8jOdzBfDGdaYgnwEVR5CMfOK+rCt0oPE9clT2aUPJcuiKucjXw0n/h+IpfzpKfaZMC4XPrKWCWpjUZeX6yM76Ikc2OKXZudKb3ZkmxMXf2NUjKLoguOcV9zng9DApolk0ymKp400bh6/UwpbEGy3Q3PvLLqVa7vp1lAvmpVVzGI5QKftytzOO+l3U7IovV6Eg2eEni4FwBL+7GG4MhgJFL1st2MtaR4Rvrj+Ov282283+ineUufPFlRorgh/wWxBo4atEIqZfdJ9qJvNAimHVD0dRmTOZuvEnHPZmYdyQV3bBmZOQynR5a0QbopEwQ2KLxl9Ju8oHWvWHupJ4iKN8xgfcDJrriZ9uXyr71c/qGpPk+KlGCwk6RGdO8abWAGGtBo/OHMhfwicAeLpL7M1GPMvqF4dzhVNZZtwocvFl1coJacAymUNvt3eDCoejwqJ/AEGTTZl/jr4GmeHjI2HA9qIfBJD5/pijqlvoCznGtlfZOZgzkJ7JF
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 812f45b5-f88f-4d5f-712c-08db8dd9cb3e
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jul 2023 13:11:16.2193
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Ss961g1Ugo45n2XEqCSsjmNOsjobYwnpx+s2V9A4KmMtxs/iECOUyCE7zoN2c0AjAArv7Bs39E9cGNr1zysFNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5093
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-26_06,2023-07-26_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=723 spamscore=0
- adultscore=0 suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307260116
-X-Proofpoint-ORIG-GUID: EWONM3QnQs_roNKQA6c3xLRADCYbH7OE
-X-Proofpoint-GUID: EWONM3QnQs_roNKQA6c3xLRADCYbH7OE
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <7b8e81b3ab44b5bc788a024dec6465adcc01d7a3.camel@kernel.org>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -148,10 +69,209 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 01:15:30PM +0100, David Howells wrote:
-> Should svc_udp_sendto() also be using MSG_SPLICE_PAGES now?
+On Wed, 26 Jul 2023, Jeff Layton wrote:
 
-Ah. Yes, it should. Will fix.
+> On Tue, 2023-07-25 at 17:41 +0000, Trond Myklebust wrote:
+> > On Tue, 2023-07-25 at 12:24 -0400, Scott Mayhew wrote:
+> > > On Tue, 25 Jul 2023, Trond Myklebust wrote:
+> > >=20
+> > > > On Tue, 2023-07-25 at 11:08 -0400, Scott Mayhew wrote:
+> > > > > Once a folio's private data has been cleared, it's possible for
+> > > > > another
+> > > > > process to clear the folio->mapping (e.g. via
+> > > > > invalidate_complete_folio2
+> > > > > or evict_mapping_folio), so it wouldn't be safe to call
+> > > > > nfs_page_to_inode() after that.
+> > > > >=20
+> > > > > Fixes: 0c493b5cf16e ("NFS: Convert buffered writes to use
+> > > > > folios")
+> > > > > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> > > > > ---
+> > > > > =A0fs/nfs/write.c | 4 +++-
+> > > > > =A01 file changed, 3 insertions(+), 1 deletion(-)
+> > > > >=20
+> > > > > diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> > > > > index f4cca8f00c0c..489c3f9dae23 100644
+> > > > > --- a/fs/nfs/write.c
+> > > > > +++ b/fs/nfs/write.c
+> > > > > @@ -785,6 +785,8 @@ static void nfs_inode_add_request(struct
+> > > > > nfs_page
+> > > > > *req)
+> > > > > =A0 */
+> > > > > =A0static void nfs_inode_remove_request(struct nfs_page *req)
+> > > > > =A0{
+> > > > > +=A0=A0=A0=A0=A0=A0=A0struct nfs_inode *nfsi =3D NFS_I(nfs_page_t=
+o_inode(req));
+> > > > > +
+> > > > > =A0=A0=A0=A0=A0=A0=A0=A0if (nfs_page_group_sync_on_bit(req, PG_RE=
+MOVE)) {
+> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0struct folio *fol=
+io =3D nfs_page_to_folio(req-
+> > > > > > wb_head);
+> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0struct address_sp=
+ace *mapping =3D
+> > > > > folio_file_mapping(folio);
+> > > > > @@ -800,7 +802,7 @@ static void nfs_inode_remove_request(struct
+> > > > > nfs_page *req)
+> > > > > =A0
+> > > > > =A0=A0=A0=A0=A0=A0=A0=A0if (test_and_clear_bit(PG_INODE_REF, &req=
+->wb_flags)) {
+> > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0nfs_release_reque=
+st(req);
+> > > > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0atomic_long_dec(&NF=
+S_I(nfs_page_to_inode(req))-
+> > > > > > nrequests);
+> > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0atomic_long_dec(&nf=
+si->nrequests);
+> > > >=20
+> > > > Why not just invert the order of the atomic_long_dec() and the
+> > > > nfs_release_request()? That way you are also ensuring that the
+> > > > inode is
+> > > > still pinned in memory by the open context.
+> > >=20
+> > > I'm not following.=A0 How does inverting the order prevent the
+> > > folio->mapping from getting clobbered?
+> > >=20
+> >=20
+> > The open/lock context is refcounted by the nfs_page until the latter is
+> > released. That's why the inode is guaranteed to remain around at least
+> > until the  call to nfs_release_request().
+> >=20
+>=20
+> The problem is not that the inode is going away, but rather that we
+> can't guarantee that the page is still part of the mapping at this
+> point, and so we can't safely dereference page->mapping there. I do see
+> that nfs_release_request releases a reference to the page, but I don't
+> think that's sufficient to ensure that it remains part of the mapping.
+>=20
+> AFAICT, once we clear page->private, the page is subject to be removed
+> from the mapping. So, I *think* it's safe to just move the call to
+> nfs_page_to_inode prior to the call to nfs_page_group_sync_on_bit.
 
--- 
-Chuck Lever
+Yeah, the inode hasn't gone away.  I can pick the nfs_commit_data
+address off the stack in nfs_commit_release_pages:
+
+crash> nfs_commit_data.inode c0000006774cae00
+  inode =3D 0xc00000006c1b05f8,
+=20
+The nfs_inode is still allocated:
+
+crash> kmem 0xc00000006c1b05f8
+CACHE             OBJSIZE  ALLOCATED     TOTAL  SLABS  SSIZE  NAME
+c000000030332600     1088        128      5959    101    64k  nfs_inode_cac=
+he
+  SLAB              MEMORY            NODE  TOTAL  ALLOCATED  FREE
+  c00c0000001b06c0  c00000006c1b0000     0     59          1    58
+  FREE / [ALLOCATED]
+  [c00000006c1b0448]
+
+      PAGE        PHYSICAL      MAPPING       INDEX CNT FLAGS
+c00c0000001b06c0  6c1b0000 c000000030332600 c00000006c1b4480  1 23ffff80000=
+0200 slab
+
+The vfs_inode:
+
+crash> px &((struct nfs_inode *)0xc00000006c1b0448)->vfs_inode
+$7 =3D (struct inode *) 0xc00000006c1b05f8
+
+Matches the inodes open by both nfs_flock programs from the test:
+
+crash> foreach nfs_flock files
+PID: 4006780  TASK: c00000009d436600  CPU: 43   COMMAND: "nfs_flock"
+ROOT: /    CWD: /tmp/ltp-aFr4AJt3R9/LTP_nfslock01.9hyHNgoKqq/3/0/
+ FD       FILE            DENTRY           INODE       TYPE PATH
+  0 c000000196e9a000 c000000004090840 c00000000ae13bf0 CHR  /dev/null
+  1 c0000000bfd1ff00 c0000000963e0e40 c00000006c573900 REG  /opt/ltp/output=
+/nfslock01.sh_20230610112802
+  2 c0000000bfd1ff00 c0000000963e0e40 c00000006c573900 REG  /opt/ltp/output=
+/nfslock01.sh_20230610112802
+  3 c000000196e97700 c000000419ccb040 c00000006c1b05f8 REG  /tmp/ltp-aFr4AJ=
+t3R9/LTP_nfslock01.9hyHNgoKqq/3/0/flock_idata
+                                      ^^^^^^^^^^^^^^^^
+
+PID: 4006781  TASK: c00000009d42d500  CPU: 42   COMMAND: "nfs_flock"
+ROOT: /    CWD: /tmp/ltp-aFr4AJt3R9/LTP_nfslock01.9hyHNgoKqq/3/0/
+ FD       FILE            DENTRY           INODE       TYPE PATH
+  0 c0000000f0812200 c000000004090840 c00000000ae13bf0 CHR  /dev/null
+  1 c0000000bfd1ff00 c0000000963e0e40 c00000006c573900 REG  /opt/ltp/output=
+/nfslock01.sh_20230610112802
+  2 c0000000bfd1ff00 c0000000963e0e40 c00000006c573900 REG  /opt/ltp/output=
+/nfslock01.sh_20230610112802
+  3 c0000000f0813c00 c000000419ccb040 c00000006c1b05f8 REG  /tmp/ltp-aFr4AJ=
+t3R9/LTP_nfslock01.9hyHNgoKqq/3/0/flock_idata
+                                      ^^^^^^^^^^^^^^^^
+
+The file->f_mapping for both struct files matches the inode->i_data:
+
+crash> file.f_mapping c000000196e97700
+  f_mapping =3D 0xc00000006c1b0770,
+crash> file.f_mapping c0000000f0813c00
+  f_mapping =3D 0xc00000006c1b0770,
+crash> px &((struct inode *)0xc00000006c1b05f8)->i_data
+$8 =3D (struct address_space *) 0xc00000006c1b0770
+
+and if I look at one of those nfs_flock tasks, the folio
+passed in to nfs_read_folio has the same mapping:
+
+crash> bt 4006781
+PID: 4006781  TASK: c00000009d42d500  CPU: 42   COMMAND: "nfs_flock"
+ #0 [c000000177053710] __schedule at c000000000f61d9c
+ #1 [c0000001770537d0] schedule at c000000000f621f4
+ #2 [c000000177053840] io_schedule at c000000000f62354
+ #3 [c000000177053870] folio_wait_bit_common at c00000000042dc60
+ #4 [c000000177053970] nfs_read_folio at c0080000050108a8 [nfs]
+ #5 [c000000177053a60] nfs_write_begin at c008000004fff06c [nfs]
+ #6 [c000000177053b10] generic_perform_write at c00000000042b044
+ #7 [c000000177053bc0] nfs_file_write at c008000004ffda08 [nfs]
+ #8 [c000000177053c60] new_sync_write at c00000000057fdd8
+ #9 [c000000177053d10] vfs_write at c000000000582fd4
+#10 [c000000177053d60] ksys_write at c0000000005833a4
+#11 [c000000177053db0] system_call_exception at c00000000002f434
+#12 [c000000177053e10] system_call_vectored_common at c00000000000bfe8
+
+crash> folio.mapping c00c000000564400
+      mapping =3D 0xc00000006c1b0770,
+
+It's just that if we go back to the nfs_page being released by our panic
+task, the folio->mapping has been cleared, so we panic when we try to go
+folio->mapping->host.
+
+crash> nfs_page c00000016fb2a600
+struct nfs_page {
+  wb_list =3D {
+    next =3D 0xc00000016fb2a600,
+    prev =3D 0xc00000016fb2a600
+  },
+  {
+    wb_page =3D 0xc00c000001d49580,
+    wb_folio =3D 0xc00c000001d49580
+  },
+  wb_lock_context =3D 0xc00000010518b2c0,
+  wb_index =3D 0x1,
+  wb_offset =3D 0x6940,
+  wb_pgbase =3D 0x6940,
+  wb_bytes =3D 0x40,
+  wb_kref =3D {
+    refcount =3D {
+      refs =3D {
+        counter =3D 0x1
+      }
+    }
+  },
+  wb_flags =3D 0x5,
+  wb_verf =3D {
+    data =3D "\214\205_d\214\210W\036"
+  },
+  wb_this_page =3D 0xc00000016fb2a600,
+  wb_head =3D 0xc00000016fb2a600,
+  wb_nio =3D 0x0
+}
+crash> folio.mapping 0xc00c000001d49580
+      mapping =3D 0x0,
+
+-Scott
+
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+>=20
+
