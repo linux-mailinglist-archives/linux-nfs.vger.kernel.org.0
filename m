@@ -2,65 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2918767870
-	for <lists+linux-nfs@lfdr.de>; Sat, 29 Jul 2023 00:23:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AF3F76792C
+	for <lists+linux-nfs@lfdr.de>; Sat, 29 Jul 2023 01:55:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229780AbjG1WXf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Jul 2023 18:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45184 "EHLO
+        id S231883AbjG1XzJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Jul 2023 19:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbjG1WXe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jul 2023 18:23:34 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E9F448A
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Jul 2023 15:23:33 -0700 (PDT)
+        with ESMTP id S230274AbjG1XzJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jul 2023 19:55:09 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A691A4231;
+        Fri, 28 Jul 2023 16:55:07 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 2B6C61F896;
-        Fri, 28 Jul 2023 22:23:32 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 582231F896;
+        Fri, 28 Jul 2023 23:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1690583012; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1690588505; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6RhxYR0Sf7bvPVvtf7XWF+5NVIJ/yj5ZZx0OZW2DiFc=;
-        b=H4QQDoUUFii55GYVQCJiUgqL5aNpTv8TWTKvP8h+kFWHojc9X25pNYZ4TMc1NyUyMqq4ri
-        bLxZQ0z/dr1tXNO6ElMwGnLc/mqZVWuV4SZpPGwRdUkQJRhdbDQGdagS0Z1TpinT8+VupD
-        j/LfrPnZL/GMN2bdTN0FBjMNxncLC88=
+        bh=Vpkws96VxtaEEsabDbCElfZ/CAGrK02wRH+80AynJeI=;
+        b=Zg53RflBzXPb/WjOhq9z7GxPVaVruduuA94kKZsJzMtKSgnxgDI5subY4BsPKxKUj9bawz
+        R8IYSw0j2TterfOw53YuY58c+Hd4LizvlARaUXX+5LbD5+ptMqSBHyBgjlVKJI92alnzLb
+        RtXNi0nCF9IwrnONB9jSWfS5SJgSWbg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1690583012;
+        s=susede2_ed25519; t=1690588505;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=6RhxYR0Sf7bvPVvtf7XWF+5NVIJ/yj5ZZx0OZW2DiFc=;
-        b=RkUhM11k8iN6mJZ0NCZcTG6IfTWJtWRtI4i+b6QiinDRg6vnLAEJxUTR45wAOopCX6J3oD
-        wXI5dAvZ+e02nCCw==
+        bh=Vpkws96VxtaEEsabDbCElfZ/CAGrK02wRH+80AynJeI=;
+        b=8Q55lJUXFBHf57Cv+CiVQiUiSOH7V5hOKA6feYU+GV3JRVICNdSfLqIBR1+peepyi30Au+
+        Ahu9gx8p4TVr9XAw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 43A58133F7;
-        Fri, 28 Jul 2023 22:23:29 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EC26D13276;
+        Fri, 28 Jul 2023 23:55:01 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 2sFOOeE/xGToXwAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 28 Jul 2023 22:23:29 +0000
+        id EVBRJ1VVxGTpfgAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 28 Jul 2023 23:55:01 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Lorenzo Bianconi" <lorenzo@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com,
-        chuck.lever@oracle.com, jlayton@kernel.org
-Subject: Re: [PATCH v4 2/2] NFSD: add rpc_status entry in nfsd debug filesystem
-In-reply-to: <a23a0482a465299ac06d07d191e0c9377a11a4d1.1690569488.git.lorenzo@kernel.org>
-References: <cover.1690569488.git.lorenzo@kernel.org>,
- <a23a0482a465299ac06d07d191e0c9377a11a4d1.1690569488.git.lorenzo@kernel.org>
-Date:   Sat, 29 Jul 2023 08:23:26 +1000
-Message-id: <169058300693.32308.16341899855806134699@noble.neil.brown.name>
+To:     "Chuck Lever" <cel@kernel.org>
+Cc:     "Chuck Lever" <chuck.lever@oracle.com>,
+        "David Howells" <dhowells@redhat.com>,
+        "Jeff Layton" <jlayton@kernel.org>,
+        "Hugh Dickins" <hughd@google.com>, "Jens Axboe" <axboe@kernel.dk>,
+        "Matthew Wilcox" <willy@infradead.org>, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] nfsd: Fix reading via splice
+In-reply-to: <169054754615.3783.11682801287165281930.stgit@klimt.1015granger.net>
+References: <169054754615.3783.11682801287165281930.stgit@klimt.1015granger.net>
+Date:   Sat, 29 Jul 2023 09:54:58 +1000
+Message-id: <169058849828.32308.14965537137761913794@noble.neil.brown.name>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
@@ -71,211 +74,113 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 29 Jul 2023, Lorenzo Bianconi wrote:
-> Introduce rpc_status entry in nfsd debug filesystem in order to dump
-> pending RPC requests debugging information.
+On Fri, 28 Jul 2023, Chuck Lever wrote:
+> From: David Howells <dhowells@redhat.com>
 >=20
-> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D366
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> nfsd_splice_actor() has a clause in its loop that chops up a compound page
+> into individual pages such that if the same page is seen twice in a row, it
+> is discarded the second time.  This is a problem with the advent of
+> shmem_splice_read() as that inserts zero_pages into the pipe in lieu of
+> pages that aren't present in the pagecache.
+>=20
+> Fix this by assuming that the last page is being extended only if the
+> currently stored length + starting offset is not currently on a page
+> boundary.
+>=20
+> This can be tested by NFS-exporting a tmpfs filesystem on the test machine
+> and truncating it to more than a page in size (eg. truncate -s 8192) and
+> then reading it by NFS.  The first page will be all zeros, but thereafter
+> garbage will be read.
+>=20
+> Note: I wonder if we can ever get a situation now where we get a splice
+> that gives us contiguous parts of a page in separate actor calls.  As NFSD
+> can only be splicing from a file (I think), there are only three sources of
+> the page: copy_splice_read(), shmem_splice_read() and file_splice_read().
+> The first allocates pages for the data it reads, so the problem cannot
+> occur; the second should never see a partial page; and the third waits for
+> each page to become available before we're allowed to read from it.
+>=20
+> Fixes: bd194b187115 ("shmem: Implement splice-read")
+> Reported-by: Chuck Lever <chuck.lever@oracle.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> cc: Hugh Dickins <hughd@google.com>
+> cc: Jens Axboe <axboe@kernel.dk>
+> cc: Matthew Wilcox <willy@infradead.org>
+> cc: linux-nfs@vger.kernel.org
+> cc: linux-fsdevel@vger.kernel.org
+> cc: linux-mm@kvack.org
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfs4proc.c         |   4 +-
->  fs/nfsd/nfsctl.c           |  10 +++
->  fs/nfsd/nfsd.h             |   2 +
->  fs/nfsd/nfssvc.c           | 122 +++++++++++++++++++++++++++++++++++++
->  include/linux/sunrpc/svc.h |   1 +
->  net/sunrpc/svc.c           |   2 +-
->  6 files changed, 137 insertions(+), 4 deletions(-)
+>  fs/nfsd/vfs.c |    9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index f0f318e78630..b7ad3081bc36 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -2497,8 +2497,6 @@ static inline void nfsd4_increment_op_stats(u32 opnum)
-> =20
->  static const struct nfsd4_operation nfsd4_ops[];
-> =20
-> -static const char *nfsd4_op_name(unsigned opnum);
-> -
->  /*
->   * Enforce NFSv4.1 COMPOUND ordering rules:
->   *
-> @@ -3628,7 +3626,7 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op)
->  	}
->  }
-> =20
-> -static const char *nfsd4_op_name(unsigned opnum)
-> +const char *nfsd4_op_name(unsigned opnum)
->  {
->  	if (opnum < ARRAY_SIZE(nfsd4_ops))
->  		return nfsd4_ops[opnum].op_name;
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 35d2e2cde1eb..f2e4f4b1e4d1 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -57,6 +57,8 @@ enum {
->  	NFSD_RecoveryDir,
->  	NFSD_V4EndGrace,
->  #endif
-> +	NFSD_Rpc_Status,
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 59b7d60ae33e..ee3bbaa79478 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -956,10 +956,13 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, struc=
+t pipe_buffer *buf,
+>  	last_page =3D page + (offset + sd->len - 1) / PAGE_SIZE;
+>  	for (page +=3D offset / PAGE_SIZE; page <=3D last_page; page++) {
+>  		/*
+> -		 * Skip page replacement when extending the contents
+> -		 * of the current page.
+> +		 * Skip page replacement when extending the contents of the
+> +		 * current page.  But note that we may get two zero_pages in a
+> +		 * row from shmem.
+>  		 */
+> -		if (page =3D=3D *(rqstp->rq_next_page - 1))
+> +		if (page =3D=3D *(rqstp->rq_next_page - 1) &&
+> +		    offset_in_page(rqstp->rq_res.page_base +
+> +				   rqstp->rq_res.page_len))
 
-I think NFSD_Rpc_Status needs to come before the CONFIG_NFSD_V4 block.
-Otherwise the comment above (which I apparently approved) makes even
-less sense than it does now.
-(Maybe just remove the comment??)
+This seems fragile in that it makes assumptions about the pages being
+sent and their alignment.
+Given that it was broken by the splice-read change, that confirms it is
+fragile.  Maybe we could make the code a bit more explicit about what is
+expected.
 
-> +
->  	NFSD_MaxReserved
->  };
-> =20
-> @@ -195,6 +197,13 @@ static inline struct net *netns(struct file *file)
->  	return file_inode(file)->i_sb->s_fs_info;
->  }
-> =20
-> +static const struct file_operations nfsd_rpc_status_operations =3D {
-> +	.open		=3D nfsd_rpc_status_open,
-> +	.read		=3D seq_read,
-> +	.llseek		=3D seq_lseek,
-> +	.release	=3D nfsd_pool_stats_release,
-> +};
-> +
->  /*
->   * write_unlock_ip - Release all locks used by a client
->   *
-> @@ -1400,6 +1409,7 @@ static int nfsd_fill_super(struct super_block *sb, st=
-ruct fs_context *fc)
->  		[NFSD_RecoveryDir] =3D {"nfsv4recoverydir", &transaction_ops, S_IWUSR|S_=
-IRUSR},
->  		[NFSD_V4EndGrace] =3D {"v4_end_grace", &transaction_ops, S_IWUSR|S_IRUGO=
-},
->  #endif
-> +		[NFSD_Rpc_Status] =3D {"rpc_status", &nfsd_rpc_status_operations, S_IRUG=
-O},
->  		/* last one */ {""}
->  	};
-> =20
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index d88498f8b275..75a3e1d55bc8 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -94,6 +94,7 @@ int		nfsd_get_nrthreads(int n, int *, struct net *);
->  int		nfsd_set_nrthreads(int n, int *, struct net *);
->  int		nfsd_pool_stats_open(struct inode *, struct file *);
->  int		nfsd_pool_stats_release(struct inode *, struct file *);
-> +int		nfsd_rpc_status_open(struct inode *inode, struct file *file);
->  void		nfsd_shutdown_threads(struct net *net);
-> =20
->  void		nfsd_put(struct net *net);
-> @@ -506,6 +507,7 @@ extern void nfsd4_ssc_init_umount_work(struct nfsd_net =
-*nn);
-> =20
->  extern void nfsd4_init_leases_net(struct nfsd_net *nn);
-> =20
-> +const char *nfsd4_op_name(unsigned opnum);
->  #else /* CONFIG_NFSD_V4 */
->  static inline int nfsd4_is_junction(struct dentry *dentry)
->  {
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 97830e28c140..e9e954b5ae47 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -1057,6 +1057,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
->  	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
->  		goto out_decode_err;
-> =20
-> +	atomic_inc(&rqstp->rq_status_counter);
-> +
->  	rp =3D NULL;
->  	switch (nfsd_cache_lookup(rqstp, &rp)) {
->  	case RC_DOIT:
-> @@ -1074,6 +1076,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
->  	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
->  		goto out_encode_err;
-> =20
-> +	atomic_inc(&rqstp->rq_status_counter);
-> +
->  	nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
->  out_cached_reply:
->  	return 1;
-> @@ -1149,3 +1153,121 @@ int nfsd_pool_stats_release(struct inode *inode, st=
-ruct file *file)
->  	mutex_unlock(&nfsd_mutex);
->  	return ret;
->  }
-> +
-> +static int nfsd_rpc_status_show(struct seq_file *m, void *v)
-> +{
-> +	struct inode *inode =3D file_inode(m->file);
-> +	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id);
-> +	int i;
-> +
-> +	rcu_read_lock();
-> +
-> +	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
-> +		struct svc_rqst *rqstp;
-> +
-> +		list_for_each_entry_rcu(rqstp,
-> +				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
-> +				rq_all) {
-> +			struct nfsd_rpc_status_info {
-> +				struct sockaddr daddr;
-> +				struct sockaddr saddr;
-> +				unsigned long rq_flags;
-> +				__be32 rq_xid;
-> +				u32 rq_prog;
-> +				u32 rq_vers;
-> +				const char *pc_name;
-> +				ktime_t rq_stime;
-> +				u32 opnum[NFSD_MAX_OPS_PER_COMPOUND]; /* NFSv4 compund */
-> +			} rqstp_info;
-> +			unsigned int status_counter;
-> +			char buf[RPC_MAX_ADDRBUFLEN];
-> +			int j, opcnt =3D 0;
-> +
-> +			if (!test_bit(RQ_BUSY, &rqstp->rq_flags))
-> +				continue;
-> +
-> +			status_counter =3D atomic_read(&rqstp->rq_status_counter);
-> +
-> +			rqstp_info.rq_xid =3D rqstp->rq_xid;
-> +			rqstp_info.rq_flags =3D rqstp->rq_flags;
-> +			rqstp_info.rq_prog =3D rqstp->rq_prog;
-> +			rqstp_info.rq_vers =3D rqstp->rq_vers;
-> +			rqstp_info.pc_name =3D svc_proc_name(rqstp);
-> +			rqstp_info.rq_stime =3D rqstp->rq_stime;
-> +			memcpy(&rqstp_info.daddr, svc_daddr(rqstp),
-> +			       sizeof(struct sockaddr));
-> +			memcpy(&rqstp_info.saddr, svc_addr(rqstp),
-> +			       sizeof(struct sockaddr));
-> +
-> +#ifdef CONFIG_NFSD_V4
-> +			if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
-> +			    rqstp->rq_proc =3D=3D NFSPROC4_COMPOUND) {
-> +				/* NFSv4 compund */
-> +				struct nfsd4_compoundargs *args =3D rqstp->rq_argp;
-> +
-> +				opcnt =3D args->opcnt;
-> +				for (j =3D 0; j < opcnt; j++) {
-> +					struct nfsd4_op *op =3D &args->ops[j];
-> +
-> +					rqstp_info.opnum[j] =3D op->opnum;
-> +				}
-> +			}
-> +#endif /* CONFIG_NFSD_V4 */
-> +
-> +			/* In order to detect if the RPC request is pending and
-> +			 * RPC info are stable we check if rq_status_counter
-> +			 * has been incremented during the handler processing.
-> +			 */
-> +			if (status_counter !=3D atomic_read(&rqstp->rq_status_counter))
-> +				continue;
-> +
-> +			seq_printf(m,
-> +				   "0x%08x, 0x%08lx, 0x%08x, NFSv%d, %s, %016lld,",
+Also, I don't think this test can ever be relevant after the first time
+through the loop.  So I think it would be clearest to have the
+interesting case outside the loop.
 
-Please drop the commas.
-It might be defensible to have commas and no spaces by comparing with
-/proc/fs/nfsd/supported_krb5_enctypes, but the dominant pattern is to
-use only spaces to separate fields on /proc files.
+ page +=3D offset / PAGE_SIZE;
+ if (rqstp->rq_res.pages_len > 0) {
+      /* appending to page list - check alignment */
+      if (offset % PAGE_SIZE !=3D (rqstp->rq_res.page_base +
+                                 rqstp-.rq_res.page_len) % PAGE_SIZE)
+	  return -EIO;
+      if (offset % PAGE_SIZE !=3D 0) {
+           /* continuing previous page */
+           if (page !=3D rqstp->rq_next_page[-1])
+               return -EIO;
+	   page +=3D 1;
+      }
+ } else
+      /* Starting new page list */
+      rqstp->rq_res.page_base =3D offset % PAGE_SIZE;
 
-Thanks,
+ for ( ; page <=3D last_page ; page++)
+       if (unlikely(!svc_rqst_replace_page(rqstp, page)))
+           return -EIO;
+
+ rqstp->rq_res.page_len +=3D sd->len;
+ return sd->len;
+
+
+Also, the name "svc_rqst_replace_page" doesn't give any hint that the
+next_page pointer is advanced.  Maybe svc_rqst_add_page() ???  Not great
+I admit.
+
 NeilBrown
+
+  =20
+
+>  			continue;
+>  		if (unlikely(!svc_rqst_replace_page(rqstp, page)))
+>  			return -EIO;
+>=20
+>=20
+>=20
+
