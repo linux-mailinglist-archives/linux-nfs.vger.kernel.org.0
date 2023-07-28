@@ -2,74 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B47A3766FEA
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jul 2023 16:58:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8573576717C
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jul 2023 18:07:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236011AbjG1O6A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Jul 2023 10:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39196 "EHLO
+        id S230473AbjG1QHJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Jul 2023 12:07:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235368AbjG1O57 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jul 2023 10:57:59 -0400
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31CE41FFF;
-        Fri, 28 Jul 2023 07:57:58 -0700 (PDT)
-Received: by mail-pl1-x636.google.com with SMTP id d9443c01a7336-1b8ad356f03so13415465ad.1;
-        Fri, 28 Jul 2023 07:57:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690556277; x=1691161077;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rWih78y74Ukc7tMBq7op5SFjYJrM34VhQ6EyDtgFMU4=;
-        b=qyhJpkRNW5HBXmr5I5Wd6yIoCQjowGdk0dvkGn9Igw8BRhjmw7u3jH73rqkOk9FyV6
-         61JwHLhiljEePIVTZiH/a8IES3ShoZhRn4V6WhVHybU4uy49F2ap2MAujgZoYjtVTYeW
-         cUa2nCnOI1b1owZz0SJG4RVoQcD/lKywjbjoAoJLXjmvGf3Skj1sZip88qgg1R4kw+td
-         Bnj/iDYMDt7JPxaZh9ZslEX7WMjXpfeFXqTaihKcWamKyI6/2VEk0+J1u4IMl5Hq9nxj
-         bYTIrplYpQz07kS4j12vBy4HR34xBHAHwy1tZy91HNWjuCJJQjb/EJbk5aGcDYOC8nFU
-         QidQ==
+        with ESMTP id S235025AbjG1QHI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jul 2023 12:07:08 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BC8D2686
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Jul 2023 09:07:05 -0700 (PDT)
+Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com [209.85.161.71])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id D9CB33F189
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Jul 2023 16:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1690560423;
+        bh=VGKDtuRAPZGAWg88VlGexTNJNyyT4L+ygCbCelBAKJI=;
+        h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
+        b=YVwtGYwDtyU/NMC3yldIcnaSJl2Z64xTwvTjyFOcfxVfO/HrG+bI9ILM8V+R9eQEj
+         4n65f4AbnmX+LUTRxCaatrAS4fgyvLlWrmuhAdRoSrU4soO5tdkoy4tMxlMizpLbBY
+         JpAZgEypYAI1YWkuKChVq2c6I6HhgJAtSh066MUbRdVm2kLX1FVXpMbYDza1ohmsS7
+         +XVNNWwXzTIe+0MsiJ6pS+ZvByzBlhVJKydEKY2+gWuTWm9HScHAw/y2xTqjqMkpJ5
+         jY+xr6zyI4Mno1POsh3ymrKS/OjG0867nkt9D7tyYMs36QLXRD3LFkmeUdQPmpM1/y
+         GRbbrWCz4eWFw==
+Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-565dd317fe8so3633382eaf.0
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Jul 2023 09:07:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690556277; x=1691161077;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rWih78y74Ukc7tMBq7op5SFjYJrM34VhQ6EyDtgFMU4=;
-        b=e3F7S091m2R/yiVoZhNbx8BbGTiSHj+C1r+jsWZARlEMHCklJ7UBJaEToHWBjkKBY6
-         rLBOw+830Rjc2QI8kIGzmvZ6B+LjxHlPmGgX+W3sLG0foxvE5Z8NYeG14MnfwCmCNQf2
-         GIU8G2yRw1IQMKvQWtMiZ3TAfMSRDGYBX/8TtsMktvhS+YZD818f4eYt3aqMOn9oOfEh
-         vcwkWjv6dzjiE7wuJtVfONkCzqpbB/Y2MJ63tAd+kYjVrasTTmDIgPOK0tomYbRxXsiw
-         xrRiJLUc5gQgPtAN3ouQGQRTtoIYoGFYSwXsLg8FYstadw8kkE3mtcZbiuI4BJ12h0hb
-         +QqA==
-X-Gm-Message-State: ABy/qLbbxX83KeMgIa2geRG5AtR7EB2+Ek9IJT/C8lfkdfCtQ68dsTxF
-        eTaPxNwPy8Bmg3F24mvkzIk=
-X-Google-Smtp-Source: APBJJlHf75Ucy13XE140hxL8itT7EhC/1kUs+N+64as49WqRmyugumIN1FWfiplpvy0d7gSmMv5hYw==
-X-Received: by 2002:a17:903:32cf:b0:1b9:c68f:91a5 with SMTP id i15-20020a17090332cf00b001b9c68f91a5mr1946142plr.6.1690556277539;
-        Fri, 28 Jul 2023 07:57:57 -0700 (PDT)
-Received: from ubuntu777.domain.name (36-228-95-101.dynamic-ip.hinet.net. [36.228.95.101])
-        by smtp.gmail.com with ESMTPSA id 2-20020a170902e9c200b001bba27d1b65sm3690346plk.85.2023.07.28.07.57.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jul 2023 07:57:56 -0700 (PDT)
-From:   Min-Hua Chen <minhuadotchen@gmail.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-Cc:     Min-Hua Chen <minhuadotchen@gmail.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] sunrpc: wrap debug symobls with CONFIG_SUNRPC_DEBUG
-Date:   Fri, 28 Jul 2023 22:57:50 +0800
-Message-Id: <20230728145751.138057-1-minhuadotchen@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20221208; t=1690560422; x=1691165222;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VGKDtuRAPZGAWg88VlGexTNJNyyT4L+ygCbCelBAKJI=;
+        b=BD1jzOS0pgoDLGiw0e1lRTDwN8QOKzYfU0ZuMB7R08WbAUCdqG3dS1hQJG5wPlC5Qu
+         pWPqHhbtF+5cxfYf248WpQsmdyXQ7J/9rQOQ/xnb+PDhUlzUiiXgKa1g/GxI4SxXnjEn
+         vvCbpvBwI+8MigLa6PDPLhP6K5W1b6WxLWPTCiXcU23MFTW2TmHQFXOp9ZEGp7j8R0zd
+         VweyDhn3eZkaHsDR+w5fI12mZ130WzRflkBOqXAirEAqs5yCjjFokw43MIKNzNa8dofk
+         uxgN18PkGSvrWxfG15BgaRqvGs9Hyyfydc1gDecLFry3s7aSiIW+ZxO0I2+DDc+Q967H
+         oX7Q==
+X-Gm-Message-State: ABy/qLbj1ce/QzpGcWgZ9WWEP4SBMOuAj5CCk79GAh6uyykN8pG7dY90
+        Ed40Lh0c1VAhMs9jpEsbGe+IanCBCCV6o/e4CQsjzX0PS9iZMY2ADdq+vS8t2d8LrdqwKgTj9M9
+        Zxpv3y71mNUOwULwlVVkgCznDbz8j7Wws/3PjvvatBwbwkNnyrMIzLBsS+F4QnI2M
+X-Received: by 2002:aca:2308:0:b0:3a1:e85f:33ee with SMTP id e8-20020aca2308000000b003a1e85f33eemr3059033oie.56.1690560422026;
+        Fri, 28 Jul 2023 09:07:02 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlGZBrSapoxLUJAH0Mu7Ejmb26xsjQBLJlOUSMDSx/tUlyf8lRYDBJkewghwCMAAqbBPlqeAopwX9eZwMz08s6c=
+X-Received: by 2002:aca:2308:0:b0:3a1:e85f:33ee with SMTP id
+ e8-20020aca2308000000b003a1e85f33eemr3058924oie.56.1690560420315; Fri, 28 Jul
+ 2023 09:07:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+From:   Andreas Hasenack <andreas@canonical.com>
+Date:   Fri, 28 Jul 2023 13:06:49 -0300
+Message-ID: <CANYNYEEy2vf2rxLFeQ0hkstPrvF=eeA-joc0imGZt96Q+_r44w@mail.gmail.com>
+Subject: [PATCH 0/2] Prefer generator to static systemd units
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,42 +69,60 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-rpc_debug, nfs_debug, nfsd_debug, and nlm_debug are used
-if CONFIG_SUNRPC_DEBUG is set. Wrap them with CONFIG_SUNRPC_DEBUG
-and fix the following sparse warnings:
+Hi,
 
-net/sunrpc/sysctl.c:29:17: sparse: warning: symbol 'rpc_debug' was not declared. Should it be static?
-net/sunrpc/sysctl.c:32:17: sparse: warning: symbol 'nfs_debug' was not declared. Should it be static?
-net/sunrpc/sysctl.c:35:17: sparse: warning: symbol 'nfsd_debug' was not declared. Should it be static?
-net/sunrpc/sysctl.c:38:17: sparse: warning: symbol 'nlm_debug' was not declared. Should it be static?
+in Debian and Ubuntu, the configuration file /etc/nfs.conf is only
+placed on disk in the postinst script[1]. In this scenario it's possible
+to have the nfs-common generators run before /etc/nfs.conf exists[2],
+via another package's postinst calling systemctl daemon-reload. Since
+there is no /etc/nfs.conf yet, defaults are assumed and the generators
+exit silently, and the corresponding static units are used.
 
-Signed-off-by: Min-Hua Chen <minhuadotchen@gmail.com>
----
- net/sunrpc/sysctl.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+But in Debian/Ubuntu, the rpc_pipefs directory is /run/rpc_pipefs, and
+not the one specified in the static units, and thus we get it mounted in
+the wrong directory.
 
-diff --git a/net/sunrpc/sysctl.c b/net/sunrpc/sysctl.c
-index 93941ab12549..887bdeae3c89 100644
---- a/net/sunrpc/sysctl.c
-+++ b/net/sunrpc/sysctl.c
-@@ -23,6 +23,8 @@
- 
- #include "netns.h"
- 
-+#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
-+
- /*
-  * Declare the debug flags here
-  */
-@@ -38,8 +40,6 @@ EXPORT_SYMBOL_GPL(nfsd_debug);
- unsigned int	nlm_debug;
- EXPORT_SYMBOL_GPL(nlm_debug);
- 
--#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
--
- static int proc_do_xprt(struct ctl_table *table, int write,
- 			void *buffer, size_t *lenp, loff_t *ppos)
- {
+It seems best to always rely on the generators, as they will always be
+able to produce the correct target and mount units.
+
+For reference, this was first brought up in this thread[3].
+
+Producing an upstream set of patches was a bit confusing, since these
+systemd units are highly distro dependent. They are not even installed
+via `make install` because of this, so I have more confidence in the
+first patch of the series.
+
+I produced a Debian package with these two patches applied on top of
+Debian's 2.6.3[6], and ran the DEP8 tests of nfs-utils[4] and autofs[5],
+which exercise some simple v3 and v4 mounts, with and without kerberos.
+These tests passed[7][8] (ephemeral links, will be gone once the PPA is
+destroyed).
+
+1. https://git.launchpad.net/ubuntu/+source/nfs-utils/tree/debian/nfs-common.postinst?h=applied/ubuntu/devel#n6
+2. https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/1971935/comments/22
+3. https://marc.info/?l=linux-nfs&m=165729895515639&w=4
+4. https://git.launchpad.net/ubuntu/+source/nfs-utils/tree/debian/tests?h=applied/ubuntu/lunar-devel
+5. https://git.launchpad.net/ubuntu/+source/autofs/tree/debian/tests?h=applied/ubuntu/lunar-devel
+6. https://code.launchpad.net/~ahasenack/ubuntu/+source/nfs-utils/+git/nfs-utils/+ref/upstream-nfs-utils-test
+7. https://autopkgtest.ubuntu.com/results/autopkgtest-mantic-ahasenack-nfs-upstream-test/mantic/amd64/a/autofs/20230728_135149_0895b@/log.gz
+8. https://autopkgtest.ubuntu.com/results/autopkgtest-mantic-ahasenack-nfs-upstream-test/mantic/amd64/n/nfs-utils/20230728_150122_3ef18@/log.gz
+
+Andreas Hasenack (2):
+  Always run the rpc_pipefs generator
+  Use the generated units instead of static ones
+
+ configure.ac                            |  8 +-------
+ systemd/Makefile.am                     |  5 -----
+ systemd/rpc-pipefs-generator.c          |  3 ---
+ systemd/rpc_pipefs.target               |  3 ---
+ systemd/rpc_pipefs.target.in            |  3 ---
+ systemd/var-lib-nfs-rpc_pipefs.mount    | 10 ----------
+ systemd/var-lib-nfs-rpc_pipefs.mount.in | 10 ----------
+ 7 files changed, 1 insertion(+), 41 deletions(-)
+ delete mode 100644 systemd/rpc_pipefs.target
+ delete mode 100644 systemd/rpc_pipefs.target.in
+ delete mode 100644 systemd/var-lib-nfs-rpc_pipefs.mount
+ delete mode 100644 systemd/var-lib-nfs-rpc_pipefs.mount.in
+
 -- 
-2.34.1
-
+2.39.2
