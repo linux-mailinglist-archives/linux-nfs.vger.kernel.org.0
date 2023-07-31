@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D28B768C59
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jul 2023 08:52:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42A03768C5A
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jul 2023 08:52:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjGaGwQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jul 2023 02:52:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37170 "EHLO
+        id S230315AbjGaGwS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jul 2023 02:52:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230336AbjGaGwF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 02:52:05 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB7110DD
-        for <linux-nfs@vger.kernel.org>; Sun, 30 Jul 2023 23:52:02 -0700 (PDT)
+        with ESMTP id S230323AbjGaGwN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 02:52:13 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 620BA10CA
+        for <linux-nfs@vger.kernel.org>; Sun, 30 Jul 2023 23:52:11 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 0ED531F460;
-        Mon, 31 Jul 2023 06:52:01 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 86DE722427;
+        Mon, 31 Jul 2023 06:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1690786321; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1690786329; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5AEIwizLgjmYYBuYyjus/ttgE+eZRibUsijD5P7lW1k=;
-        b=IOpJXcNnLbSD8IY5jv+bOUCVzhzHld37pgyDi6kN7Kx6BAu8EXUANl7ZIakxB4WkpAY3KD
-        EqS0J+N6di3JtzNDrd006bPeUSLljg82DSvWYKi2wJKzv4JR9OZpkxVW/re+S+gwBW2r0P
-        bPKU6/Rq5MSAf6vVtrcVBkHB3dkQwE0=
+        bh=DQgQJSRc2CCkM0dN63vIqD+yShPtjyvWxE+ziqGK80k=;
+        b=DsQEP77D8guozOLeJyN9IyO+uhg0QyGv/Sa0rUzyfRLhQjaOQ7xkunx+MnXNGWMQTYE9rx
+        eNKjnsHb/wJQUl+Wve0Hxzj3RSz2+Fxgqd39vqm5opiOy1XiQo/gaKiQpuh5urwKaujCop
+        DsbWdWKQXDw7eohJcrir1eNxWCTqf+I=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1690786321;
+        s=susede2_ed25519; t=1690786329;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5AEIwizLgjmYYBuYyjus/ttgE+eZRibUsijD5P7lW1k=;
-        b=SVDVkFI2ETfKQ4fgeB2XPQ8iR2SjVxaxqTZGZhqjG/tpynmw52pl80R9bgzDm4waqGg4k7
-        0wNO4ZX7UoZa3aDQ==
+        bh=DQgQJSRc2CCkM0dN63vIqD+yShPtjyvWxE+ziqGK80k=;
+        b=DVQ5oBjJ8leZp3f2Rvi6jxqwpKj/YPIPZgRrs9SRdZPKPXYw/7+28RRorkxUHoykNrCBns
+        AJmaGkFyG3ukdVBQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C17F61322C;
-        Mon, 31 Jul 2023 06:51:59 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4476E1322C;
+        Mon, 31 Jul 2023 06:52:07 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id irEkHA9ax2ThbwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 31 Jul 2023 06:51:59 +0000
+        id 0d28ORdax2QDcAAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 31 Jul 2023 06:52:07 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 08/12] SUNRPC: move task-dequeueing code into svc_recv()
-Date:   Mon, 31 Jul 2023 16:48:35 +1000
-Message-Id: <20230731064839.7729-9-neilb@suse.de>
+Subject: [PATCH 09/12] SUNRPC: integrate back-channel processing with svc_recv()
+Date:   Mon, 31 Jul 2023 16:48:36 +1000
+Message-Id: <20230731064839.7729-10-neilb@suse.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230731064839.7729-1-neilb@suse.de>
 References: <20230731064839.7729-1-neilb@suse.de>
@@ -70,122 +70,223 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-svc_recv() has become rather small, and svc_rqst_wait_and_dequeue_work()
-performs two different tasks.
+Using svc_recv() for (NFSv4.1) back-channel handling means we have just
+one mechanism for waking threads.
 
-So move the "dequeue" part out of svc_rqst_wait_and_dequeue_work()
-into svc_recv().  This balances code between the two.
-
-svc_rqst_wait_and_dequeue_work() is now svc_rqst_wait_for_work() and
-returns bool if it actually waited.  This is used to guide tracing and
-some statistics gathering.
+Also change kthread_freezable_should_stop() in nfs4_callback_svc() to
+kthread_should_stop() as used elsewhere.
+kthread_freezable_should_stop() effectively adds a try_to_freeze() call,
+and svc_recv() already contains that at an appropriate place.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- net/sunrpc/svc_xprt.c | 67 +++++++++++++++++++++----------------------
- 1 file changed, 32 insertions(+), 35 deletions(-)
+ fs/nfs/callback.c                 | 46 ++-----------------------------
+ include/linux/sunrpc/svc.h        |  2 --
+ net/sunrpc/backchannel_rqst.c     |  8 ++----
+ net/sunrpc/svc.c                  |  2 +-
+ net/sunrpc/svc_xprt.c             | 32 +++++++++++++++++++++
+ net/sunrpc/xprtrdma/backchannel.c |  2 +-
+ 6 files changed, 39 insertions(+), 53 deletions(-)
 
+diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+index 466ebf1d41b2..42a0c2f1e785 100644
+--- a/fs/nfs/callback.c
++++ b/fs/nfs/callback.c
+@@ -78,7 +78,7 @@ nfs4_callback_svc(void *vrqstp)
+ 
+ 	set_freezable();
+ 
+-	while (!kthread_freezable_should_stop(NULL))
++	while (!kthread_should_stop())
+ 		svc_recv(rqstp);
+ 
+ 	svc_exit_thread(rqstp);
+@@ -86,45 +86,6 @@ nfs4_callback_svc(void *vrqstp)
+ }
+ 
+ #if defined(CONFIG_NFS_V4_1)
+-/*
+- * The callback service for NFSv4.1 callbacks
+- */
+-static int
+-nfs41_callback_svc(void *vrqstp)
+-{
+-	struct svc_rqst *rqstp = vrqstp;
+-	struct svc_serv *serv = rqstp->rq_server;
+-	struct rpc_rqst *req;
+-	int error;
+-	DEFINE_WAIT(wq);
+-
+-	set_freezable();
+-
+-	while (!kthread_freezable_should_stop(NULL)) {
+-		prepare_to_wait(&serv->sv_cb_waitq, &wq, TASK_IDLE);
+-		spin_lock_bh(&serv->sv_cb_lock);
+-		if (!list_empty(&serv->sv_cb_list)) {
+-			req = list_first_entry(&serv->sv_cb_list,
+-					struct rpc_rqst, rq_bc_list);
+-			list_del(&req->rq_bc_list);
+-			spin_unlock_bh(&serv->sv_cb_lock);
+-			finish_wait(&serv->sv_cb_waitq, &wq);
+-			dprintk("Invoking bc_svc_process()\n");
+-			error = bc_svc_process(serv, req, rqstp);
+-			dprintk("bc_svc_process() returned w/ error code= %d\n",
+-				error);
+-		} else {
+-			spin_unlock_bh(&serv->sv_cb_lock);
+-			if (!kthread_should_stop())
+-				schedule();
+-			finish_wait(&serv->sv_cb_waitq, &wq);
+-		}
+-	}
+-
+-	svc_exit_thread(rqstp);
+-	return 0;
+-}
+-
+ static inline void nfs_callback_bc_serv(u32 minorversion, struct rpc_xprt *xprt,
+ 		struct svc_serv *serv)
+ {
+@@ -237,10 +198,7 @@ static struct svc_serv *nfs_callback_create_svc(int minorversion)
+ 			cb_info->users);
+ 
+ 	threadfn = nfs4_callback_svc;
+-#if defined(CONFIG_NFS_V4_1)
+-	if (minorversion)
+-		threadfn = nfs41_callback_svc;
+-#else
++#if !defined(CONFIG_NFS_V4_1)
+ 	if (minorversion)
+ 		return ERR_PTR(-ENOTSUPP);
+ #endif
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index db3de4ea33f9..a3f1916937b4 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -93,8 +93,6 @@ struct svc_serv {
+ 						 * that arrive over the same
+ 						 * connection */
+ 	spinlock_t		sv_cb_lock;	/* protects the svc_cb_list */
+-	wait_queue_head_t	sv_cb_waitq;	/* sleep here if there are no
+-						 * entries in the svc_cb_list */
+ 	bool			sv_bc_enabled;	/* service uses backchannel */
+ #endif /* CONFIG_SUNRPC_BACKCHANNEL */
+ };
+diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
+index 65a6c6429a53..60b8d310bb27 100644
+--- a/net/sunrpc/backchannel_rqst.c
++++ b/net/sunrpc/backchannel_rqst.c
+@@ -349,10 +349,8 @@ struct rpc_rqst *xprt_lookup_bc_request(struct rpc_xprt *xprt, __be32 xid)
+ }
+ 
+ /*
+- * Add callback request to callback list.  The callback
+- * service sleeps on the sv_cb_waitq waiting for new
+- * requests.  Wake it up after adding enqueing the
+- * request.
++ * Add callback request to callback list.  Wake a thread
++ * on the first pool (usually the only pool) to handle it.
+  */
+ void xprt_complete_bc_request(struct rpc_rqst *req, uint32_t copied)
+ {
+@@ -371,6 +369,6 @@ void xprt_complete_bc_request(struct rpc_rqst *req, uint32_t copied)
+ 	xprt_get(xprt);
+ 	spin_lock(&bc_serv->sv_cb_lock);
+ 	list_add(&req->rq_bc_list, &bc_serv->sv_cb_list);
+-	wake_up(&bc_serv->sv_cb_waitq);
+ 	spin_unlock(&bc_serv->sv_cb_lock);
++	svc_pool_wake_idle_thread(bc_serv, &bc_serv->sv_pools[0]);
+ }
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index f2971d94b4aa..bdb64651679f 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -440,7 +440,6 @@ __svc_init_bc(struct svc_serv *serv)
+ {
+ 	INIT_LIST_HEAD(&serv->sv_cb_list);
+ 	spin_lock_init(&serv->sv_cb_lock);
+-	init_waitqueue_head(&serv->sv_cb_waitq);
+ }
+ #else
+ static void
+@@ -724,6 +723,7 @@ void svc_pool_wake_idle_thread(struct svc_serv *serv, struct svc_pool *pool)
+ 	percpu_counter_inc(&pool->sp_threads_starved);
+ 	set_bit(SP_CONGESTED, &pool->sp_flags);
+ }
++EXPORT_SYMBOL_GPL(svc_pool_wake_idle_thread);
+ 
+ static struct svc_pool *
+ svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
 diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 604c486c8576..45a76313b7e1 100644
+index 45a76313b7e1..6543e7fac264 100644
 --- a/net/sunrpc/svc_xprt.c
 +++ b/net/sunrpc/svc_xprt.c
-@@ -722,14 +722,11 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+@@ -17,6 +17,7 @@
+ #include <linux/sunrpc/svc_xprt.h>
+ #include <linux/sunrpc/svcsock.h>
+ #include <linux/sunrpc/xprt.h>
++#include <linux/sunrpc/bc_xprt.h>
+ #include <linux/module.h>
+ #include <linux/netdevice.h>
+ #include <trace/events/sunrpc.h>
+@@ -719,6 +720,13 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+ 	if (freezing(current))
+ 		return false;
+ 
++#if defined(CONFIG_SUNRPC_BACKCHANNEL)
++	if (svc_is_backchannel(rqstp)) {
++		if (!list_empty(&rqstp->rq_server->sv_cb_list))
++			return false;
++	}
++#endif
++
  	return true;
  }
  
--static void svc_rqst_wait_and_dequeue_work(struct svc_rqst *rqstp)
-+static bool svc_rqst_wait_for_work(struct svc_rqst *rqstp)
- {
--	struct svc_pool		*pool = rqstp->rq_pool;
-+	struct svc_pool *pool = rqstp->rq_pool;
- 	bool slept = false;
- 
--	/* rq_xprt should be clear on entry */
--	WARN_ON_ONCE(rqstp->rq_xprt);
--
- 	if (rqst_should_sleep(rqstp)) {
- 		set_current_state(TASK_IDLE);
- 		smp_mb__before_atomic();
-@@ -749,31 +746,7 @@ static void svc_rqst_wait_and_dequeue_work(struct svc_rqst *rqstp)
- 		smp_mb__after_atomic();
- 	}
- 	try_to_freeze();
--
--	if (kthread_should_stop())
--		return;
--
--	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
--	rqstp->rq_xprt = svc_xprt_dequeue(pool);
--	if (rqstp->rq_xprt) {
--		if (slept)
--			trace_svc_pool_awoken(rqstp);
--		else
--			trace_svc_pool_polled(rqstp);
--		goto out_found;
--	}
--
--	if (slept)
--		percpu_counter_inc(&pool->sp_threads_no_work);
--	return;
--out_found:
--	/* Normally we will wait up to 5 seconds for any required
--	 * cache information to be provided.
--	 */
--	if (!test_bit(SP_CONGESTED, &pool->sp_flags))
--		rqstp->rq_chandle.thread_wait = 5*HZ;
--	else
--		rqstp->rq_chandle.thread_wait = 1*HZ;
-+	return slept;
- }
- 
- static void svc_add_new_temp_xprt(struct svc_serv *serv, struct svc_xprt *newxpt)
-@@ -865,17 +838,41 @@ static void svc_handle_xprt(struct svc_rqst *rqstp, struct svc_xprt *xprt)
-  */
- void svc_recv(struct svc_rqst *rqstp)
- {
--	struct svc_xprt		*xprt = NULL;
-+	struct svc_pool *pool = rqstp->rq_pool;
-+	bool slept;
- 
- 	if (!svc_alloc_arg(rqstp))
+@@ -871,6 +879,30 @@ void svc_recv(struct svc_rqst *rqstp)
  		return;
+ 	}
  
--	svc_rqst_wait_and_dequeue_work(rqstp);
-+	slept = svc_rqst_wait_for_work(rqstp);
- 
--	xprt = rqstp->rq_xprt;
--	if (xprt)
-+	if (kthread_should_stop())
-+		return;
++#if defined(CONFIG_SUNRPC_BACKCHANNEL)
++	if (svc_is_backchannel(rqstp)) {
++		struct svc_serv *serv = rqstp->rq_server;
++		struct rpc_rqst *req;
 +
-+	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
++		spin_lock_bh(&serv->sv_cb_lock);
++		req = list_first_entry_or_null(&serv->sv_cb_list,
++					       struct rpc_rqst, rq_bc_list);
++		if (req) {
++			int error;
 +
-+	rqstp->rq_xprt = svc_xprt_dequeue(pool);
-+	if (rqstp->rq_xprt) {
-+		struct svc_xprt *xprt = rqstp->rq_xprt;
++			list_del(&req->rq_bc_list);
++			spin_unlock_bh(&serv->sv_cb_lock);
 +
-+		if (slept)
-+			trace_svc_pool_awoken(rqstp);
-+		else
-+			trace_svc_pool_polled(rqstp);
-+
-+		/* Normally we will wait up to 5 seconds for any required
-+		 * cache information to be provided.
-+		 */
-+		if (test_bit(SP_CONGESTED, &pool->sp_flags))
-+			rqstp->rq_chandle.thread_wait = 5 * HZ;
-+		else
-+			rqstp->rq_chandle.thread_wait = 1 * HZ;
- 		svc_handle_xprt(rqstp, xprt);
--out:
-+		return;
++			dprintk("Invoking bc_svc_process()\n");
++			error = bc_svc_process(rqstp->rq_server, req, rqstp);
++			dprintk("bc_svc_process() returned w/ error code= %d\n",
++				error);
++			return;
++		}
++		spin_unlock_bh(&serv->sv_cb_lock);
 +	}
++#endif
 +
-+	if (slept)
-+		percpu_counter_inc(&pool->sp_threads_no_work);
+ 	if (slept)
+ 		percpu_counter_inc(&pool->sp_threads_no_work);
  }
- EXPORT_SYMBOL_GPL(svc_recv);
+diff --git a/net/sunrpc/xprtrdma/backchannel.c b/net/sunrpc/xprtrdma/backchannel.c
+index e4d84a13c566..f1e1d4909434 100644
+--- a/net/sunrpc/xprtrdma/backchannel.c
++++ b/net/sunrpc/xprtrdma/backchannel.c
+@@ -267,7 +267,7 @@ void rpcrdma_bc_receive_call(struct rpcrdma_xprt *r_xprt,
+ 	list_add(&rqst->rq_bc_list, &bc_serv->sv_cb_list);
+ 	spin_unlock(&bc_serv->sv_cb_lock);
  
+-	wake_up(&bc_serv->sv_cb_waitq);
++	svc_pool_wake_idle_thread(bc_serv, &bc_serv->sv_pools[0]);
+ 
+ 	r_xprt->rx_stats.bcall_count++;
+ 	return;
 -- 
 2.40.1
 
