@@ -2,126 +2,181 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEA4F76A1D5
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jul 2023 22:27:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08AB576A3E3
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Aug 2023 00:05:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbjGaU1i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jul 2023 16:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49128 "EHLO
+        id S231611AbjGaWFU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jul 2023 18:05:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjGaU1h (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 16:27:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EB23133;
-        Mon, 31 Jul 2023 13:27:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S231653AbjGaWFO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 18:05:14 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1225E8
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Jul 2023 15:05:13 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B0674612CB;
-        Mon, 31 Jul 2023 20:27:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65EFAC433C8;
-        Mon, 31 Jul 2023 20:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690835255;
-        bh=TmbK524pfD8a3wRy4IrVFirwLTHysXeU3Jn2VfJulsQ=;
-        h=From:Date:Subject:To:Cc:From;
-        b=ZygBj+AMp4tlhH/6B20I9e1AhTXK71uW09MNLzKXq76l23R7Mg9jrQnRNzzM4i/E1
-         sQ63hOBkya0hX/N3/K8T8Rntb/gub/FnoDiZDtYUF5mXY54evXtIVilNRPkLE2PdyQ
-         VZyevRaH4LdtW7kpXgSXy/Pp+PqYo3vcmpgDVtj1M4PvDPKu/XV/5m4BSG4UZKb5mI
-         qic/XjjFtTL+uxKMADZqHIdPAHmtBD6qv0ySSVAbAiA9Sw6/0RHXD8NvygSMVbVJVI
-         4hrmXLVlIffiQ1NRS7B7SCk6VmWUBas21L7cmEzedzY/OGh17chuobRvwgQSkODitG
-         y6i5lM9SCkXEA==
-From:   Jeff Layton <jlayton@kernel.org>
-Date:   Mon, 31 Jul 2023 16:27:30 -0400
-Subject: [PATCH RFC] nfsd: don't hand out write delegations on O_WRONLY
- opens
-MIME-Version: 1.0
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 62BA11F88D;
+        Mon, 31 Jul 2023 22:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1690841112; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SaVeUgdOjOCvA4nNTdhrDKHxQQjulw5CAhE7/CeCIxk=;
+        b=xZxVRV52pAEaSChsfqgaL0UcTCGPXDE93ckgiCtjEHtxVtLNw4KdENbOKKFv5mKFpYw+Fx
+        cgs2IwB5zi7uokqF40AVximfXWwrkJeYzKp6iw9qk0YJlo61S6yx+5BrbSa9G1XZZOJevQ
+        i/A+MWxFX2jtG31ToZV4bmf7voV0vc4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1690841112;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SaVeUgdOjOCvA4nNTdhrDKHxQQjulw5CAhE7/CeCIxk=;
+        b=IOH//gFkxZvu6ZoNwlpLTzoQifulzvHiw2gjz3N+DjIV49BYTyAjIB5TmM8dLcjXZYwEC8
+        Gs88t0WE33e6+bDg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 219F8133F7;
+        Mon, 31 Jul 2023 22:05:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id U2iKMRYwyGTxIAAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 31 Jul 2023 22:05:10 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230731-wdeleg-v1-1-f8fe1ce11b36@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADEZyGQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2MDc2ND3fKU1JzUdN2kpJQksyQj00TjZDMloOKCotS0zAqwQdFKQW7OSrG
- 1tQCgK1ToXQAAAA==
-To:     Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1768; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=TmbK524pfD8a3wRy4IrVFirwLTHysXeU3Jn2VfJulsQ=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBkyBk2u6nbq3M7Vqj+uN7GKDpu6v5UE5FoFoEKa
- yTCfF3CqKSJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZMgZNgAKCRAADmhBGVaC
- FVydEADOE1IOAcbwePjD7rmhaUtW4W+4f6uA28DwVoHhLJAsP9GGCijdqeSXpoY3js0bbRKdc8L
- Eoi7FdsYcZw0pncyx2GAtQUlvu7V5i2cpucu/o568T3PN86cGBbDhKDuF3lAKYcSSsXLG7iQkaj
- 0uw5z6nQCH8BI3dazkQoKphuKx1WZIWe0d+VfTsPxa1ScFZdSlQv/cwsU5SCEKFzu/DhIu4mIsS
- qdfMdZG6ca7ooVQzqjWTPt7UXEtsDBZRgynVIM8SRNObMwqL1vlMxFuzmipcM4L5v6hjPczhsvb
- Khkupqd0imwdmmGP+XTKlrcB7Qvfji+0Zo3GeP7RF1jQPF5knHTap2JDhR2fpIzZHhtOR3igJNd
- UW8yWYM7nwqVZXYyP9oHyuOkDAbeM643X9EMWQlGjw1Bcqw028eIztoCYdo+/6FnUqnBKs+MqSR
- t7LfxQyNFTZYzHLF3GWjUC48nZcmJrKIlYAqp2zlxR0FBbm83aS6TtsIxyO8ldt0qq1ueYHNL61
- bm8NHW52sHaPOTeXALLNUD2eArsdKlctGhoMYLqtPJTeHVZdsAFVe/YAxbGKc4ziN89eVvE2z1n
- 40KAchXnqJBhCAhQNqfdxJfqzlP9REpNL2UbwlSxbRjeVcGcUhZn9At8Q204lsAByaERVwo1YgG
- zSgGf4Y2vSBdGBQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 01/12] SUNRPC: make rqst_should_sleep() idempotent()
+In-reply-to: <ZMfDa8YRUH3Lm15p@tissot.1015granger.net>
+References: <20230731064839.7729-1-neilb@suse.de>,
+ <20230731064839.7729-2-neilb@suse.de>,
+ <ZMfDa8YRUH3Lm15p@tissot.1015granger.net>
+Date:   Tue, 01 Aug 2023 08:05:06 +1000
+Message-id: <169084110651.32308.3326402203041564605@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I noticed that xfstests generic/001 was failing against linux-next nfsd.
+On Tue, 01 Aug 2023, Chuck Lever wrote:
+> On Mon, Jul 31, 2023 at 04:48:28PM +1000, NeilBrown wrote:
+> > Based on its name you would think that rqst_should_sleep() would be
+> > read-only, not changing anything.  But it fact it will clear
+> > SP_TASK_PENDING if that was set.  This is surprising, and it blurs the
+> > line between "check for work to do" and "dequeue work to do".
+>=20
+> I agree that rqst_should_sleep() sounds like it should be a
+> predicate without side effects.
+>=20
+>=20
+> > So change the "test_and_clear" to simple "test" and clear the bit once
+> > the thread has decided to wake up and return to the caller.
+> >=20
+> > With this, it makes sense to *always* set SP_TASK_PENDING when asked,
+> > rather than only to set it if no thread could be woken up.
+>=20
+> I'm lost here. Why does always setting TASK_PENDING now make sense?
+> If there's no task pending, won't this trigger a wake up when there
+> is nothing to do?
 
-The client would request a OPEN4_SHARE_ACCESS_WRITE open, and the server
-would hand out a write delegation. The client would then try to use that
-write delegation as the source stateid in a COPY or CLONE operation, and
-the server would respond with NFS4ERR_STALE.
+Clearly Jedi mind tricks don't work on you...  I'll have to try logic
+instead.
 
-The problem is that the struct file associated with the delegation does
-not necessarily have read permissions. It's handing out a write
-delegation on what is effectively an O_WRONLY open. RFC 8881 states:
+ This separation of "test" and "clear" is a first step in re-organising
+ the queueing of tasks around a clear pattern of "client queues a task",
+ "service checks if any tasks are queued" and "service dequeues and
+ performs a task".  The first step for TASK_PENDING doesn't quite follow
+ a clear pattern as the flag is only set (the work is only queued) if
+ no thread could be immediately woken.  This imposes on the
+ implementation of the service.  For example, whenever a service is
+ woken it *must* return to the caller of svc_recv(), just in case it was
+ woken by svc_wake_up().  It cannot test if there is work to do, and if
+ not - go back to sleep.  It provides a cleaner implementation of the
+ pattern to *always* queue the work.  i.e. *always* set the flag.  Which
+ ever thread first sees and clears the flag will return to caller and
+ perform the required work.  If the woken thread doesn't find anything
+ to do, it could go back to sleep (though currently it doesn't).
 
- "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on its
-  own, all opens."
+If that more convincing?
 
-Given that the client didn't request any read permissions, and that nfsd
-didn't check for any, it seems wrong to give out a write delegation.
+Thanks,
+NeilBrown
 
-Don't hand out a delegation if the client didn't request
-OPEN4_SHARE_ACCESS_BOTH.
 
-This fixes xfstest generic/001.
-
-Closes: https://bugzilla.linux-nfs.org/show_bug.cgi?id=412
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index ef7118ebee00..9f1c90afed72 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5462,6 +5462,8 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 		return ERR_PTR(-EAGAIN);
- 
- 	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
-+		if (!(open->op_share_access & NFS4_SHARE_ACCESS_READ))
-+			return ERR_PTR(-EBADF);
- 		nf = find_writeable_file(fp);
- 		dl_type = NFS4_OPEN_DELEGATE_WRITE;
- 	} else {
-
----
-base-commit: ec89391563792edd11d138a853901bce76d11f44
-change-id: 20230731-wdeleg-bbdb6b25a3c6
-
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+>=20
+>=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  net/sunrpc/svc_xprt.c | 8 +++++---
+> >  1 file changed, 5 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> > index cd92cb54132d..380fb3caea4c 100644
+> > --- a/net/sunrpc/svc_xprt.c
+> > +++ b/net/sunrpc/svc_xprt.c
+> > @@ -581,8 +581,8 @@ void svc_wake_up(struct svc_serv *serv)
+> >  {
+> >  	struct svc_pool *pool =3D &serv->sv_pools[0];
+> > =20
+> > -	if (!svc_pool_wake_idle_thread(serv, pool))
+> > -		set_bit(SP_TASK_PENDING, &pool->sp_flags);
+> > +	set_bit(SP_TASK_PENDING, &pool->sp_flags);
+> > +	svc_pool_wake_idle_thread(serv, pool);
+> >  }
+> >  EXPORT_SYMBOL_GPL(svc_wake_up);
+> > =20
+> > @@ -704,7 +704,7 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+> >  	struct svc_pool		*pool =3D rqstp->rq_pool;
+> > =20
+> >  	/* did someone call svc_wake_up? */
+> > -	if (test_and_clear_bit(SP_TASK_PENDING, &pool->sp_flags))
+> > +	if (test_bit(SP_TASK_PENDING, &pool->sp_flags))
+> >  		return false;
+> > =20
+> >  	/* was a socket queued? */
+> > @@ -750,6 +750,7 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_=
+rqst *rqstp)
+> > =20
+> >  	set_bit(RQ_BUSY, &rqstp->rq_flags);
+> >  	smp_mb__after_atomic();
+> > +	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
+>=20
+> Why wouldn't this go before the smp_mb__after_atomic()?
+>=20
+>=20
+> >  	rqstp->rq_xprt =3D svc_xprt_dequeue(pool);
+> >  	if (rqstp->rq_xprt) {
+> >  		trace_svc_pool_awoken(rqstp);
+> > @@ -761,6 +762,7 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_=
+rqst *rqstp)
+> >  	percpu_counter_inc(&pool->sp_threads_no_work);
+> >  	return NULL;
+> >  out_found:
+> > +	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
+>=20
+> clear_bit_unlock ?
+>=20
+> >  	/* Normally we will wait up to 5 seconds for any required
+> >  	 * cache information to be provided.
+> >  	 */
+> > --=20
+> > 2.40.1
+> >=20
+>=20
+> --=20
+> Chuck Lever
+>=20
 
