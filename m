@@ -2,45 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA05B769994
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jul 2023 16:33:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18A49769BEF
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jul 2023 18:11:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232052AbjGaOdv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jul 2023 10:33:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44076 "EHLO
+        id S232172AbjGaQLZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jul 2023 12:11:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230406AbjGaOdu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 10:33:50 -0400
+        with ESMTP id S232634AbjGaQLY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 12:11:24 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04B34D3
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Jul 2023 07:33:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27100197
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Jul 2023 09:11:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A5826117D
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Jul 2023 14:33:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F323C433C7;
-        Mon, 31 Jul 2023 14:33:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 95001611F9
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Jul 2023 16:11:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76142C433C7;
+        Mon, 31 Jul 2023 16:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690814028;
-        bh=VmddOGqds86SdRxieOyMrDjvop1nXoX4tnuCfSukvQg=;
+        s=k20201202; t=1690819882;
+        bh=xmTlKBz8x2vU7luZnsk+NExJUT8/KLPO2Q4rjFr7Psg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iLSJ/M1VWf2TOLo7Hfo9WPwW21egOgW+Btb5cftJ8WF4YTldL1Xpm55gdRkj60A4m
-         4OhC5WwzcBxvUhKmLRU8NABzmh5D1j8en0QSGhJ/SaYEnjbWw99k8BGu0LuVUUUNa+
-         l6NHdlUoRmpbhR20pgZbGzIqsIRLsuxFCQZF5ny2kcq404MYoi7lfmt429UGlojl18
-         XUkFpwbwHGZxy4B478vvOLHjT1az6S9vEYcIylNZIWFcj4uYg2zn2iZXmEUpJhMGXq
-         gue1lSasFEcRFq/zYSjYzgh79z86n/1e+aPdFAni9TuawIKouHwT4BwoF4eWOTbWQo
-         4N7UVhI5o5eAw==
-Message-ID: <0c4b0d2cec4d49a4ff845771b88bf26771b65ff5.camel@kernel.org>
-Subject: Re: [PATCH 01/12] SUNRPC: make rqst_should_sleep() idempotent()
+        b=klRV4BWK641XQRwY3M+B8/zoKUBrlMPSHTbksl1Fw7aCVsjbYeSd72xYZYR3xIwJ/
+         vt9So6uSqMPIWEKqkiqB5Vb427OqLnm+mVOTWuLHsrgjz+CdPeShYZGlRRpmygnZtV
+         eZ7T0QDoXocRNh1EARzPX+MTFPo2/yZnaglAsimUjtJr8/unpdP7G9Vn6M+3OWp59a
+         /Cbho11z1wvGyESISsFnRIPleQU5e3cH8ZS7Q1zDk+LfdmmuCcSqijtUrtxmh1o4c4
+         +FGqwB8OACUeccfXBW8aAr64RY69u8SoR3P3jxKIXONCNOmqX0fUM501HsAl/fKHEf
+         5McyLuChC/utQ==
+Message-ID: <b519542134a605daa2d41742b1bfd0e8a1a2f436.camel@kernel.org>
+Subject: Re: [PATCH v4 1/2] SUNRPC: add verbose parameter to
+ __svc_print_addr()
 From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 31 Jul 2023 10:33:47 -0400
-In-Reply-To: <20230731064839.7729-2-neilb@suse.de>
-References: <20230731064839.7729-1-neilb@suse.de>
-         <20230731064839.7729-2-neilb@suse.de>
+To:     NeilBrown <neilb@suse.de>, Lorenzo Bianconi <lorenzo@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com,
+        chuck.lever@oracle.com
+Date:   Mon, 31 Jul 2023 12:11:20 -0400
+In-Reply-To: <169058239308.32308.14184895022271604035@noble.neil.brown.name>
+References: <cover.1690569488.git.lorenzo@kernel.org>
+        , <5b0eff4e3ef9bf9621f5095189933f60def40f0d.1690569488.git.lorenzo@kernel.org>
+         <169058239308.32308.14184895022271604035@noble.neil.brown.name>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
@@ -55,70 +58,89 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2023-07-31 at 16:48 +1000, NeilBrown wrote:
-> Based on its name you would think that rqst_should_sleep() would be
-> read-only, not changing anything.  But it fact it will clear
-> SP_TASK_PENDING if that was set.  This is surprising, and it blurs the
-> line between "check for work to do" and "dequeue work to do".
+On Sat, 2023-07-29 at 08:13 +1000, NeilBrown wrote:
+> On Sat, 29 Jul 2023, Lorenzo Bianconi wrote:
+> > Introduce verbose parameter to utility routine in order to reduce outpu=
+t
+> > verbosity. This is a preliminary patch to add rpc_status entry in nfsd
+> > debug filesystem in order to dump pending RPC requests debugging
+> > information.
+> >=20
+> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > ---
+> >  include/linux/sunrpc/svc_xprt.h | 12 ++++++------
+> >  net/sunrpc/svc_xprt.c           |  2 +-
+> >  2 files changed, 7 insertions(+), 7 deletions(-)
+> >=20
+> > diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc=
+_xprt.h
+> > index a6b12631db21..1715d4c6bd6b 100644
+> > --- a/include/linux/sunrpc/svc_xprt.h
+> > +++ b/include/linux/sunrpc/svc_xprt.h
+> > @@ -209,21 +209,21 @@ static inline unsigned short svc_xprt_remote_port=
+(const struct svc_xprt *xprt)
+> >  }
+> > =20
+> >  static inline char *__svc_print_addr(const struct sockaddr *addr,
+> > -				     char *buf, const size_t len)
+> > +				     char *buf, const size_t len,
+> > +				     bool verbose)
+> >  {
+> >  	const struct sockaddr_in *sin =3D (const struct sockaddr_in *)addr;
+> >  	const struct sockaddr_in6 *sin6 =3D (const struct sockaddr_in6 *)addr=
+;
+> > =20
+> >  	switch (addr->sa_family) {
+> >  	case AF_INET:
+> > -		snprintf(buf, len, "%pI4, port=3D%u", &sin->sin_addr,
+> > -			ntohs(sin->sin_port));
+> > +		snprintf(buf, len, "%pI4, %s%u", &sin->sin_addr,
+> > +			 verbose ? "port=3D" : "", ntohs(sin->sin_port));
 >=20
-> So change the "test_and_clear" to simple "test" and clear the bit once
-> the thread has decided to wake up and return to the caller.
+> I would move the "," into the verbose part too.
+> so
+>    verbose ? ", port=3D" : " "
 >=20
-> With this, it makes sense to *always* set SP_TASK_PENDING when asked,
-> rather than only to set it if no thread could be woken up.
+> Other than that, I like this approach.
 >=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  net/sunrpc/svc_xprt.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> index cd92cb54132d..380fb3caea4c 100644
-> --- a/net/sunrpc/svc_xprt.c
-> +++ b/net/sunrpc/svc_xprt.c
-> @@ -581,8 +581,8 @@ void svc_wake_up(struct svc_serv *serv)
->  {
->  	struct svc_pool *pool =3D &serv->sv_pools[0];
-> =20
-> -	if (!svc_pool_wake_idle_thread(serv, pool))
-> -		set_bit(SP_TASK_PENDING, &pool->sp_flags);
-> +	set_bit(SP_TASK_PENDING, &pool->sp_flags);
-> +	svc_pool_wake_idle_thread(serv, pool);
->  }
->  EXPORT_SYMBOL_GPL(svc_wake_up);
-> =20
-> @@ -704,7 +704,7 @@ rqst_should_sleep(struct svc_rqst *rqstp)
->  	struct svc_pool		*pool =3D rqstp->rq_pool;
-> =20
->  	/* did someone call svc_wake_up? */
-> -	if (test_and_clear_bit(SP_TASK_PENDING, &pool->sp_flags))
-> +	if (test_bit(SP_TASK_PENDING, &pool->sp_flags))
->  		return false;
-> =20
->  	/* was a socket queued? */
-> @@ -750,6 +750,7 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_=
-rqst *rqstp)
-> =20
->  	set_bit(RQ_BUSY, &rqstp->rq_flags);
->  	smp_mb__after_atomic();
-> +	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
 
-Took me a few mins to decide that splitting up the test_and_clear_bit
-didn't open a ToC/ToU race. I think we're saved by the fact that only
-nfsd thread itself clears the bit, so we're guaranteed not to race with
-another clear (whew).
-=20
->  	rqstp->rq_xprt =3D svc_xprt_dequeue(pool);
->  	if (rqstp->rq_xprt) {
->  		trace_svc_pool_awoken(rqstp);
-> @@ -761,6 +762,7 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_=
-rqst *rqstp)
->  	percpu_counter_inc(&pool->sp_threads_no_work);
->  	return NULL;
->  out_found:
-> +	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
->  	/* Normally we will wait up to 5 seconds for any required
->  	 * cache information to be provided.
->  	 */
+If we're separating fields in the main seqfile by ' ', then we probably
+want to use a different delimiter here in the !verbose case. Maybe ':'
+or ',' instead?
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Also, ntohs is going to return a short, so the format should probably be
+using "%hu" for the port.
+
+>=20
+> >  		break;
+> > =20
+> >  	case AF_INET6:
+> > -		snprintf(buf, len, "%pI6, port=3D%u",
+> > -			 &sin6->sin6_addr,
+> > -			ntohs(sin6->sin6_port));
+> > +		snprintf(buf, len, "%pI6, %s%u", &sin6->sin6_addr,
+> > +			 verbose ? "port=3D" : "", ntohs(sin6->sin6_port));
+> >  		break;
+> > =20
+> >  	default:
+> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> > index 62c7919ea610..16b794d291a4 100644
+> > --- a/net/sunrpc/svc_xprt.c
+> > +++ b/net/sunrpc/svc_xprt.c
+> > @@ -386,7 +386,7 @@ EXPORT_SYMBOL_GPL(svc_xprt_copy_addrs);
+> >   */
+> >  char *svc_print_addr(struct svc_rqst *rqstp, char *buf, size_t len)
+> >  {
+> > -	return __svc_print_addr(svc_addr(rqstp), buf, len);
+> > +	return __svc_print_addr(svc_addr(rqstp), buf, len, true);
+> >  }
+> >  EXPORT_SYMBOL_GPL(svc_print_addr);
+> > =20
+> > --=20
+> > 2.41.0
+> >=20
+> >=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
