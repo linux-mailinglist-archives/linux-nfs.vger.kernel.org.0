@@ -2,147 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83B3676A431
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Aug 2023 00:31:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E276B76A44E
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Aug 2023 00:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbjGaWbm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jul 2023 18:31:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49648 "EHLO
+        id S229767AbjGaWoc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jul 2023 18:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjGaWbm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 18:31:42 -0400
+        with ESMTP id S229452AbjGaWob (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 18:44:31 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDE4EC
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Jul 2023 15:31:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A6D12102;
+        Mon, 31 Jul 2023 15:43:54 -0700 (PDT)
 Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36VKfv9c001804;
-        Mon, 31 Jul 2023 22:31:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=zsyKe3lTdoH/QiV3D0JhTfjeGWWWWj+VUs6vKwhtD4M=;
- b=NMsjQF1ERG2/sfs0rh1UxUyxXNBJ6WOXnKb8eNh58QgBURYjOO1Sb1Yv//ojn8rUCHsp
- uF8vGr1WNOasBuKKu7PvPp6fbhbyUkuudaWQfhzdvvtn/m8NFBpAVo2EV+HPckQVqvuY
- 01z+vGL+JQ5p0QYMDf8wrDnzhpwiAZQZYIN9/bV04AY3WJzF1ILBECu3ITVs3M1P2k2T
- RscvXbnkbBZvUM9RBmgow6yE9C7WhHGn+bZZyqZkcH218oD0F5PppNW1LAqwTvnU4G8G
- opw3FZCGGMPGRHiNzo7So7JpZTvU1r/9tcr32gf1TtfGN5Rk2OpzXZeSe0jlBC1c57Ud rw== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s4spc3qje-1
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36VKMVFW001798;
+        Mon, 31 Jul 2023 22:43:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-03-30;
+ bh=qLVtAWDxssO83WVuWj3gGYNLr+kMLTnV4nRfwnDES+s=;
+ b=eUUPQskJwBnyGnmNyndEN6tpDcB7Lv4ZxlOjgCtTMpxHIS0gaip5wbsk+8jD+yrytKIZ
+ EQxdA/KkznFMuGK6KKZXyEc9ZKxXZ5tckZo6FVFIupR1Bql7FTGaVGj1GRQ1UZVwgmLX
+ TBiEL1dtfkUsFc+X3hPRUHmN449yfRBEO1nv9h/KfvnaVqWMsU2spK6w/X9DYxdFmYO9
+ UjaObyZ72yZFvjuWrYpA6IJ5LkyOPh6Jo+YKYOEDuAzJr8m2g5P6WsF5ornAZPg7hndi
+ Cp5FcWGUF47zBM+v1v3N3/CSwoFsfW5UFDl1uBoAeyWfA2/s706o+oE8VqaFFZoDBse7 jQ== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s4spc3r1m-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Jul 2023 22:31:35 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36VLHd1K038121;
-        Mon, 31 Jul 2023 22:31:34 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2102.outbound.protection.outlook.com [104.47.55.102])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s4s7btvdj-1
+        Mon, 31 Jul 2023 22:43:31 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36VMSRIb000605;
+        Mon, 31 Jul 2023 22:43:30 GMT
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2047.outbound.protection.outlook.com [104.47.57.47])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s4s7bb9fv-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Jul 2023 22:31:33 +0000
+        Mon, 31 Jul 2023 22:43:30 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bcOzPqh7eF7Q/HmwUbZw0Atdz0O4MlG2q0YdMe6eazMeCnh/R6xQvDPyK/FwTH8sJWc/PZVTLCMLvsmtrWFDJJg/mrl/LmqNLidGVjA1ATm9RxvbAyzl/ev5OehTEL6dGl3xZ7BagJMbY+aYt7Y37mHTko+aYX4iS1CCQ1IpAHgZsJ8RcJWnXhJQQSUNmuuZdH62bCDJhbcXH+4hHm22TQzMptPEfAmAM64J92HvhbtcU3f27/Csrd67uIVozhjiuEPMu+40YDJLUIXUR9utv+uuh5XEO0lAst5UpBtYzfdLTfD31uO6GDkxs42UmWRStT5sw+WUYjqRP8bwr33gtg==
+ b=hV7XMsBC1uAyMcl+ZSUDSl5BrvKsLDeLzUe8qWAQ9sw38ijxqmgH9dWTiencF6TYcX4gPPYnAno0v3IEsacfk70NUBEuhcILsNEcx/ZF8qXwr3NEzc+STVbz7Un/zJj7nN9AIVyiL/QbIieT2G0c7LwLHli1DNdxQB7gn5vrtBFxLjOYDrGgQIjfCUPK9nW4eDuZPGaXGfi+DqRxTGp5esMrhWlC495kLBbOECxvqgEcfOc2u2+MzgmZsawls5MXIaUadxhPIDDz5vaieXCxI49jDVSgwbDTpeW3gYMgFFisXGcg8V9YTDfg6UtB7j6cyvUK+kMGEVM0FXlMGxsbjg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zsyKe3lTdoH/QiV3D0JhTfjeGWWWWj+VUs6vKwhtD4M=;
- b=HtQZ7mA39CS7YJ3Yt7O4WSYhtzAea9yMzylER+vSZqGCORTjP09yTZChKLX8/sHfS8z6RyH4MAdqV7ToGHimvGOixmm9LBlEmwdOrcDrgMnwy70raLJxGk7RZg9S3rxz80arVLo3Lk+0YgQdoI+WZk18yQrLEB0DygdcH3hJb+sVcFQ9HNGvjMMNXnHvWd/ScK14+Nl2cr4ij6DZltM2I1MWoD35QJW5el3sdX+wC4w1ydEZ9r8fytoaf5Huwt7VX+q8NGQKt0LyRiku5QiFfhcNh7hveDaCOyGW08SCxMklpl46euIO+DWIHcgCeDrLeWlyANGPLm3sEY6ca2cW2Q==
+ bh=qLVtAWDxssO83WVuWj3gGYNLr+kMLTnV4nRfwnDES+s=;
+ b=MfiB7WVwb9JAGYw3uZkdyux3UP7i2ji7Vc55dk72CvJHTuEqkXUXovEaJZuky9mDU4qfrscPcPxtrZ5qqB1FI4R0uhBknQJThh502VvWeZ1kngmb5fkprgg43xcrhFBr8QibYMieoQHV0U9Z3HTh5DjkC+vH/beAbv9m6ebOQ7LVCZHKgpdHhzRuCLDKWGo6+q4JRwdfocThOZX3ZYxOktLKIZ7ZT1LMwi5GJoQnJL+T9ysc9pfnSvg+SoW01Ec212tFoMUCTPJYG58cwSGLfv88Xv94qL4uSIGWUkKK9z5H4HI8jiUQ5mbKBoc8L6nzkgaA2a0JrFQIu11SyWAGQQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zsyKe3lTdoH/QiV3D0JhTfjeGWWWWj+VUs6vKwhtD4M=;
- b=PHUEMdge335hw+I4+616KnTvBSefw4idICw/r9zw/x7ER07ttLaHkANlpbXgZWDBJODvsrAfGqniWVrnWyuit60ne47XuLDCPjB2tkUMcNDq+BDjQD50qbJtZ6yDSDEMI69B0hgCScnVoyVeuDT+VCxufNREmcOnx5vBr16vBeg=
+ bh=qLVtAWDxssO83WVuWj3gGYNLr+kMLTnV4nRfwnDES+s=;
+ b=Q5eXO2AHMIZBGoLSlglxGF6PBR6KLOBH7ha4Vb0gxIcQfJiCpg8/cEnHknvUPzVbxWguX+aoXRvWPSss2dHajN3BGL0QfQmsRpybPLV8aAOWsa2OaiDa4hFj4EAx5lz5YdowsV12pHbcL9Eq8bTfIIiK30wk7Y/FZGyp4FdLjL8=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MW4PR10MB6419.namprd10.prod.outlook.com (2603:10b6:303:20f::11) with
+ by SN4PR10MB5654.namprd10.prod.outlook.com (2603:10b6:806:20d::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.39; Mon, 31 Jul
- 2023 22:31:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.20; Mon, 31 Jul
+ 2023 22:43:28 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::2990:c166:9436:40e]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::2990:c166:9436:40e%6]) with mapi id 15.20.6631.043; Mon, 31 Jul 2023
- 22:31:30 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Neil Brown <neilb@suse.de>
-CC:     Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 01/12] SUNRPC: make rqst_should_sleep() idempotent()
-Thread-Topic: [PATCH 01/12] SUNRPC: make rqst_should_sleep() idempotent()
-Thread-Index: AQHZw3tyol8zBRXZ2EKzzd+n2PPZC6/T7aOAgACBhgCAAAdTgA==
-Date:   Mon, 31 Jul 2023 22:31:30 +0000
-Message-ID: <E1419C3D-9912-4A59-BC7F-78A48AF9A173@oracle.com>
-References: <20230731064839.7729-1-neilb@suse.de>
- <20230731064839.7729-2-neilb@suse.de>
- <ZMfDa8YRUH3Lm15p@tissot.1015granger.net>
- <169084110651.32308.3326402203041564605@noble.neil.brown.name>
-In-Reply-To: <169084110651.32308.3326402203041564605@noble.neil.brown.name>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.700.6)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|MW4PR10MB6419:EE_
-x-ms-office365-filtering-correlation-id: 652093f9-2930-4cfc-8a33-08db9215e2e1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rw7Qz2f/UgA4aahQzHmUFiESvGuEZGmSEZUPdZkTke7RpUk7nEB7T5zpggf6f9Pi2VPMfz9A4qtqNPictAUMB0BMNDckHgjsr827JDqpGIsD7fLqGZLJzvjiSSA5jkwQy1SVWGDIVgvKtIC7HMZllkZ9wKoVSIgYko/PIXy91GGgSIKYhXUD6GM5k7RyvS/DksF1mXbhUfyYGuckL5eh+fIdimxFrTrvxvO9Hj3LTZxyhCI7mIvIm9NvNVm1NIAy0hcpfS3j8MOo2Ytck17hk3f9tc4uWugb6vXeW82DE9VOxoZJ/RqWAzxHYXhNIYkuZCr4KB60VqKindg+pdTnh7TnwxlT2qLbPMx/W8i6PVZL6pMtpTGL1i9bA8pnxMMq7TYSXI6ny4R6SArVQWVp1onFKdQbGP+nrVZXHbWZtQ/s/lHcinjEpNDx89W8Z3jeo3urkWhsx7jbCraI2+lvsB1eJgfgvPpVguiPsumwBakIe8s1SuMlSqXxtlDJRiO8+8KYzBaAQftamLo6QZ16Lm3tTK3zEW+AKGb1M0Z6vu9TgnzYYkBM4brE1lSItu8RVQkmEKTFAvFbOdRN2sviX4c2JEysoDUbvjCADhvGG5QnLBzVsq9wgsHC61X7K+2vPXZeFwAeqMMFUnxCZeDOFg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(376002)(366004)(39860400002)(136003)(396003)(451199021)(76116006)(6916009)(66446008)(66556008)(66946007)(66476007)(64756008)(2906002)(4326008)(5660300002)(91956017)(54906003)(41300700001)(316002)(2616005)(71200400001)(6486002)(8936002)(6506007)(8676002)(26005)(53546011)(186003)(83380400001)(122000001)(478600001)(36756003)(38100700002)(38070700005)(33656002)(6512007)(86362001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?e9GbDo8mSxZtqEqlROgI2fiBYuCK+1dJlGTse6ua98KExaQLwfmIHfqJSJLy?=
- =?us-ascii?Q?c9WYMk7HWcVkGNHIUJeDoNN/5GXss0Xh/Xhv1BTZ852+jHGDcs3HyTVbZr5P?=
- =?us-ascii?Q?IqYwMHiTaK2OSYnvPfQYgQAXadn7KLJDatcF5O4FKYD4gtpmbiodnQ5/ylav?=
- =?us-ascii?Q?JCSWGVo5jDqSDS83iVnk4iU85L52C6GZ2cxm58rqrRbNLpHTPglSASmKkEtR?=
- =?us-ascii?Q?QLhstt5ecxx3/m+heM6OQ8BguWnMHgd3qy4NVJXHOoaGK/LbazP2ZN0r3IPz?=
- =?us-ascii?Q?HUDAUIJhV5fnywZ4dk5+rMHThi16PIwxj1ifZ40AKNuUu2905+ykYooO7Kbs?=
- =?us-ascii?Q?fU4cpOGXmBZXEW+t+SV809wx0qMpMFFvCqwN+JdMwTXr0Emlldf1fYXOtmyW?=
- =?us-ascii?Q?XTlEJr/Lfoo/vvrA7MY6+xYjQNECu48axMpNggJyVn+QuBLpRwbNAHOyg3I/?=
- =?us-ascii?Q?vvIavDpO3CBXvxrLPvy2MXjjQzxo5O/frhtwl7YMJbtSdGn2y68RcUo3TYsO?=
- =?us-ascii?Q?Wjl+yty/oE9qQetCj4AKsq/7+CcNywmI2Z/tDcCfzwC6tFpSN9M9UcqTerpO?=
- =?us-ascii?Q?cSGIUHFsFqu/mqc8T8Hyb139YdgH8oozuH8Q3bKAOK4icYCwAEcRGqtXKAq3?=
- =?us-ascii?Q?JUXKerwbKliYU8ehqk/FmRLE7Y36Poqn0MgyDaJryGkg/odWjnXh8QFrxu/W?=
- =?us-ascii?Q?3L77LTF3Vo5SyxC2Egz+mYdcUB2O6+A6Msiund/PW6WVoCmpbXVkoiNR5BvJ?=
- =?us-ascii?Q?qZcKzW7Y/5uSg+2tK9GgUYWOhfWLwCEk1/zgldL5BZBWnHeL0uX5Kw9tEAux?=
- =?us-ascii?Q?7wCvpPlFgdv/PjQYF3zSVWhAPtECg28PVq3VbAJsI40zQql2zjRaZHEYGln6?=
- =?us-ascii?Q?pnyGzpIuDZtYao1UbgAJiBDZhqvbUDTWz7RsSaQhpvTmVbOgJG0UezI/0Z3a?=
- =?us-ascii?Q?V/J2aRGbresWHAQ4d2GSiFVEktc13iXFKU5lF+elaW+1mTkCFwET8SltGwMJ?=
- =?us-ascii?Q?qxMyS3PqAKWZ6XsTbLrd7llAwB4kFTF5VURlkoCHxgr5yoyvjCLXanV6flml?=
- =?us-ascii?Q?FoUx0uVsHg+5p/vwFk525GHJ3+bOs53lgxJqPfkY+/tI9zMbmOYQxQQzJZed?=
- =?us-ascii?Q?uFTHRKmxBdDrD9zsfPKY+6DUtBZ/NuDLEEnsgZFLjhsH/buRNjjWbHYzJhbj?=
- =?us-ascii?Q?HtxbBaoJLixTyuTZSQVGRM13tHvTcOmBTcdHhAWRb//ycG+L4mJD9LZUG2Wy?=
- =?us-ascii?Q?WszqJOcvrT8URf59vk8La1kvZw1guJ5QALF6ZqAnWtGv7BvdWOuu2VuZu5Ye?=
- =?us-ascii?Q?mVFeIKFXCPMPGRzATpRp/RDe7Y3H7TpMp+9lGICw8RtpG4HhRxmiIiKhspI9?=
- =?us-ascii?Q?PIQU5dAcqNkcUEmoR3gcFdPUZfjC61gFv1tx5X2iznaoyjfeHgqRURKx6mUv?=
- =?us-ascii?Q?IXIM7R0iz2myIqHXgWO6zCcibXUWrLt6Yb/7S5cC9ygWK9MgEEHAI6TBFyIx?=
- =?us-ascii?Q?zS6SzLVog0KdC7pH8YV+6U8lC/JyOYpyTjj0bKZL1+adu55p6lXSFfOfgolh?=
- =?us-ascii?Q?qJBz6Hzj+oxtVo49h0y4foHk2zelMdUgrDKznAZ6OhoSFjvyZrYE4cXuGM0H?=
- =?us-ascii?Q?VA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BA69E3C6A86EC340A85ED23F2B7064A2@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+ 22:43:25 +0000
+Date:   Mon, 31 Jul 2023 18:43:22 -0400
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] nfsd: don't hand out write delegations on O_WRONLY
+ opens
+Message-ID: <ZMg5CrlMPsDj95Ua@tissot.1015granger.net>
+References: <20230731-wdeleg-v1-1-f8fe1ce11b36@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230731-wdeleg-v1-1-f8fe1ce11b36@kernel.org>
+X-ClientProxiedBy: CH0P221CA0020.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11c::21) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SN4PR10MB5654:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a424f06-68a7-4040-0e68-08db92178d66
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OaKM2S8Cqemac8UfzOjir2hVhv+wa9C1QRRYZJZUaRNyjK2NKbB1ApOXnE5LVt6wli0csm3Z4O68eq1v6yg7EG40UHin+R/bI/Xmv/nE1Yj8Xqytk4rXiLhRS60R1/zwCA5UT1sdNmI3xuArf9ht6WJXuN2smv4AMxFpoUqcRgY6yVdSejDAEcE+mT9f83C51Qg7eS/xUebc/a8R/s0YkPd7Eo4P70j4JjkLvvPFKNSrcbrInCc1/ujjf/P17Q5UfVBxcAPvEEC57K+bfi7zJuNxIaMIue9OVFLllwAWs0xqJrldE7em8o0bwFXaCsgW2RInQTLolMB1mEwvXphpWrIWzy/7BYKQuBSQzGHnUrOPYjJyU37jbaei+UObapcb2viPLK765tZEH1pANS6BdJHlgpfLfxBiNJtXesYwtNpCmKGVRLeke6FLg5a93S5FnZxMjEnZjV7hmsldsQJTB28HjTjhNSSkQ90l1ojC4Nprj1LBZvnnwHQqt+afmdzqRzX9aKSuO/y28dovp4yEV4sDrwbdUdgTkC9W362JBhE=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(136003)(376002)(396003)(346002)(39860400002)(366004)(451199021)(66476007)(86362001)(8936002)(8676002)(5660300002)(6916009)(316002)(41300700001)(66946007)(66556008)(4326008)(54906003)(478600001)(2906002)(38100700002)(6666004)(6512007)(966005)(44832011)(9686003)(6486002)(26005)(6506007)(186003)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?j4ykoGBjHY/zhgyFz61uevVj9Ni5woqIwpiN2WfHfC/bcJOtE0KUdEekT0Ef?=
+ =?us-ascii?Q?tdd276UuVIuM+ZJxvr7W5NKxLIEdSDBKHdtOipP0pFpvEzM6MaD/ofztKVKQ?=
+ =?us-ascii?Q?t8tQqOc+znq/9030rNX7Z01PjGEwfunWMBCTWTQnWS3+1lO8ksz5uxEnuCKt?=
+ =?us-ascii?Q?2uLb0NiO8hCzudb7nMCdhKtNyRKn+3+S4Fh3181c4QTtjxH9LN4id/gRCvCW?=
+ =?us-ascii?Q?J51R2/j5FngrbSnUfnt3NPTndzOoYRjc7UnGiiptGTCKwkJMe8FmBAVweI/u?=
+ =?us-ascii?Q?4+VoZCRzHqNbBsGdTDRwi6vHusHdQswxJCONhjbSgTfZYFwfZ5ObNyLBK3nD?=
+ =?us-ascii?Q?g8fupsJ5vokyaZ+SFiowpkmdl3/bt1v6DTGT31J6qAqQdw4u0O1eeDnBa/yf?=
+ =?us-ascii?Q?K0Nx7B2rKXa6a7nA1AnxS32XHeE5QPflQCAoA9FowhAGbm/FZmH8zev/83Fb?=
+ =?us-ascii?Q?Nm6RCAhMzsWYJjahhPuBrukqqvxk6mjUhBo3ZatNoxFKGjKs+ddFk+UjY6F3?=
+ =?us-ascii?Q?J93IKaVON/cCv1a3+AELySoEhgL/Pz86X59Ac33qiRZ6I8HB4AHVCdy1m9sf?=
+ =?us-ascii?Q?U6iy76HyKdU/BrT0tGWlkSat1+B8JyLuiGmvkXx6+brfhCQlQOd8DHASXlen?=
+ =?us-ascii?Q?JcjI+9QpDAVsPNYwKMRz8+LkRYKtpeKNqmt3QSRu65Ha3/8Ujlo6Gp8RiPJR?=
+ =?us-ascii?Q?7v2FDLAWYndi4M1cMzLwRd17SGyNzpPoktVWcbrFEGOUndLSL3ZuVteBpeV6?=
+ =?us-ascii?Q?RnmHGj5SsYw77jrEQllWiEvijnXerS4DV+nqpsvEjmeDeFL/DBPuyOGo9v/l?=
+ =?us-ascii?Q?AuDsnZlzFXB29tq9iatUwT/YjEynzjDgrsBXadzJrnaLNKWIBtg2AEz5szqd?=
+ =?us-ascii?Q?uAidMNEpoCkwFvYfxNxGGk6Hiw67PenEoQv/X8Lw/fKsXNUFAXAdx62c6TWc?=
+ =?us-ascii?Q?UykTKeefKGMYvq8is9xzam983TW9vmY+Cz9VctZSxpaeDwq/IzAwW5h22e0/?=
+ =?us-ascii?Q?NADRfJOm5m1UerjwCXc0p1nd1xQzUs5izMRPPTYf+fcWJCQclWf+xeOPRnqq?=
+ =?us-ascii?Q?T9CZE/YOMxrNvA18gVBUupuajapUtpbJyvW2nSNa1exJr0yFNzTUWyOlK5B+?=
+ =?us-ascii?Q?XfUIHOBDYdFj6GVdYvUtU3pVTKnb12QYAWgFzJZiy+8+fZzR1HwY5dLGzGE+?=
+ =?us-ascii?Q?33SoH7iVqBF9WJ5F9NkxeCUKVQ5dIelhDVWncmVn5vev5FGIyOixgReySdOR?=
+ =?us-ascii?Q?uJQ7PofyohdBLtD6x5LyLCP+0hy4zZGw8u6mtCzU6z6u1WALDC0qe3xouXEa?=
+ =?us-ascii?Q?khqR7+Lks2VJ01PNxRORmqYkG+hifKcFoPvPLMvCCONhzHs/LzSUt9FgasGj?=
+ =?us-ascii?Q?wDYhSGd7JnXQVEryO4PIrUBq2cLO9dtOtFwEnomepj4zDC+VGIi9jfBXmiZz?=
+ =?us-ascii?Q?rti6VFbxBRVP9Sieajca0FaWT55eodCD+ikXU0qHKer/qLoKLNh+x55CNgFt?=
+ =?us-ascii?Q?EoYVGntGN7ecxRn1nVbGLJzNR+8cpeMOSO8Gg4lV2r3u5VmUvl2VYUUWsFxk?=
+ =?us-ascii?Q?Ra18bpixa8HEZKqhOR0I7JTYyPiPCwucsqOl3u+SvVGrbsI0uNdBfOxCjzKc?=
+ =?us-ascii?Q?GQ=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: pVNItAEA7FlLJ1w9NhIZVb5+EXBxFfXPZc8TV/kwHU7IGAxm/yywF+j/0JLPzUIUgh3xAOAGMPg6kQ+C/b4o0I6j0Uy2CXKIvRCFiG2V9qg4H+d5zXZ+vLg5gqOZaCh8kOmMv3BWOM0IlwBqnN4mJRc1INpVLlyVsxiU9bjDcBsjTL/oqvlhGqTG2Saw/ir8l7NmE88DJAfb9CThIrOWf+ACvXn34f4f4c7M8GNjwUsMaBXfq/VFTs7mgtrJkqbhlF3ueLrXWJVGwvsnpWoTgsbPVYl8ppfB9fVpp+vntI4nWUsqaiWZObTb/nkgXvLdHPuEtJ6gY4G1nTMJufl49T6ondQHDjeICfATsoqQ8Ja2Zfp20AQKHFcfYcp/y8bx6vWwoo9vzuIykvgLWsTAbaGU+Rc+pSwjoInFxPDh3Wa9BvwTqM0qr75XE1f9O9ZZ9vSfocP2bCjB2MLGnuzMtG2Ypc5lcV4DGBByyvijvTpGuzlAUBO8Z3dlG043wNbdI680YovZ4IVxOMVWBAS9khjwZxPElsnLJOdhZCWyhQcMklSfsR6DyDNHdqc90SOeRqdVrvftU98YOBOc/lSAWLxDiWARHDjEmbzHrJgPdTWM1J7KcGr0vbzAlEeICNoCqe7g0KILgQqO8qQt51m02OrxYocaDOyBh8ysbW6+MhdshRGpMRQiia25JARFBsHcgwTaguK/NwefDar2U4BcoSXgVqNWP+hbw46b7+Rg7ZQsfZjUv5C+A89jIC/QL7VYJ6VLRCYWTeYgHdRBDtUkZXONmjttw+dO+xdTLY3Xo1xR7yc+TKiMoj2M3owYFFxy
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 8rRoQpAvKc1/E3WbKh7oOx9HeNlDk8GfFdq1VBYCC1Cj66jOGbJfArI/6lhHGuqFtmxo1SwryAAu76wxdMz5Y40S8dnCBf6lyM/vB+Jtm7KfCmQ2Fiuj/cYSH7FWC8OT1js7nePLvgVpl3+x1rQjCT2cOxsj0OeZnJfIWTpgLJBVkkGpdM9f66Gi9xfw/qZuHyFSapETtmlkLk4cxLjtQeM/uZh/a0GF/HiEbEFL5+RDhtPg3cnNdjr5oxodOQ1q5qX42LCW96GSzSUpP4NV74D0aHo2nQIk6GnQVkMb7CI0M7Z2L2BBc9Gvta7laip/1rOE+U29wfzdLnmu0dclQ+X9CdY/x/wj0r4B3elzXT5/jESS97TnxkPsTvqYK5NdvveMdoOC9cXiQxLa51TltPr/AnLdqvmsHV0bdJzljmYNl5BcCELQt6+ZzFFZMGvQkoYqM7wQM5JEAueS5e5dqa1kh151XUfPTtQq6dELaga5xeLosGT0BBV2TFc/VrieXW+WdaWDvb9fiy0/81Zi6XnsCWAHpybwLv2iTwZcWPY/s/rTVULJJDVPu1KQI6ezGWJ8ubCOkIo+LiuaaHinG7bY7y4OORNbEm6am8qqSjJqn1HWRNOlNqj7vVZVCyteRmP+6NEA9UCZ2+SEP5YH4yZyqhubPwwVm8rntfiABoca0bffKZva1jy07PZcS57JH8AFarqnJLcpTmHU4nik737BsT2ofMS0e8U2YlzvT8MnQGyIGqL7hqwsLmQj9zTWPSceQdiup83dYw0u4JQxj+AoH21qYMoILooGo7EcobQJsU6eMzpCekx1ZHkHwh6vGphIbqnCgtutw/e1KiiiUAiO0KPSwas3LCS50bl9SJKOAhDWsjU157/WujaCdEIF
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a424f06-68a7-4040-0e68-08db92178d66
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 652093f9-2930-4cfc-8a33-08db9215e2e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Jul 2023 22:31:30.1214
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2023 22:43:25.8515
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BQ4bt7TIuYULpK3trBYVxK/jQF+8fZUHq94Reybx5+VagidqzoPHXvz9shxYMoy18NcGdUFQvRUzHjPrwqB81w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6419
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cDcgDPRF6VGctHnru1v1dgJd/xjWU3fa6TzSyOTgFYIWMnbYJI+1FsnP3KkVvER6ncRgUKHHxUQLUmcLl9/JnA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR10MB5654
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
  definitions=2023-07-31_15,2023-07-31_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
- adultscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
+ adultscore=0 mlxlogscore=681 spamscore=0 malwarescore=0 mlxscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2307310204
-X-Proofpoint-ORIG-GUID: kR2G_leaXeu3TF030dR0UYf66_SdFW1j
-X-Proofpoint-GUID: kR2G_leaXeu3TF030dR0UYf66_SdFW1j
+ definitions=main-2307310206
+X-Proofpoint-ORIG-GUID: 76MT4lR_YYtyvYE_wAug9HFIGHx8qiHC
+X-Proofpoint-GUID: 76MT4lR_YYtyvYE_wAug9HFIGHx8qiHC
 X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -153,146 +147,76 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, Jul 31, 2023 at 04:27:30PM -0400, Jeff Layton wrote:
+> I noticed that xfstests generic/001 was failing against linux-next nfsd.
+
+Only on NFSv4.2 mounts, I presume?
 
 
-> On Jul 31, 2023, at 6:05 PM, NeilBrown <neilb@suse.de> wrote:
->=20
-> On Tue, 01 Aug 2023, Chuck Lever wrote:
->> On Mon, Jul 31, 2023 at 04:48:28PM +1000, NeilBrown wrote:
->>> Based on its name you would think that rqst_should_sleep() would be
->>> read-only, not changing anything.  But it fact it will clear
->>> SP_TASK_PENDING if that was set.  This is surprising, and it blurs the
->>> line between "check for work to do" and "dequeue work to do".
->>=20
->> I agree that rqst_should_sleep() sounds like it should be a
->> predicate without side effects.
->>=20
->>=20
->>> So change the "test_and_clear" to simple "test" and clear the bit once
->>> the thread has decided to wake up and return to the caller.
->>>=20
->>> With this, it makes sense to *always* set SP_TASK_PENDING when asked,
->>> rather than only to set it if no thread could be woken up.
->>=20
->> I'm lost here. Why does always setting TASK_PENDING now make sense?
->> If there's no task pending, won't this trigger a wake up when there
->> is nothing to do?
->=20
-> Clearly Jedi mind tricks don't work on you...  I'll have to try logic
-> instead.
->=20
-> This separation of "test" and "clear" is a first step in re-organising
-> the queueing of tasks around a clear pattern of "client queues a task",
-> "service checks if any tasks are queued" and "service dequeues and
-> performs a task".  The first step for TASK_PENDING doesn't quite follow
-> a clear pattern as the flag is only set (the work is only queued) if
-> no thread could be immediately woken.  This imposes on the
-> implementation of the service.  For example, whenever a service is
-> woken it *must* return to the caller of svc_recv(), just in case it was
-> woken by svc_wake_up().  It cannot test if there is work to do, and if
-> not - go back to sleep.  It provides a cleaner implementation of the
-> pattern to *always* queue the work.  i.e. *always* set the flag.  Which
-> ever thread first sees and clears the flag will return to caller and
-> perform the required work.  If the woken thread doesn't find anything
-> to do, it could go back to sleep (though currently it doesn't).
->=20
-> If that more convincing?
+> The client would request a OPEN4_SHARE_ACCESS_WRITE open, and the server
+> would hand out a write delegation. The client would then try to use that
+> write delegation as the source stateid in a COPY or CLONE operation, and
+> the server would respond with NFS4ERR_STALE.
+> 
+> The problem is that the struct file associated with the delegation does
+> not necessarily have read permissions. It's handing out a write
+> delegation on what is effectively an O_WRONLY open. RFC 8881 states:
+> 
+>  "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on its
+>   own, all opens."
+> 
+> Given that the client didn't request any read permissions, and that nfsd
+> didn't check for any, it seems wrong to give out a write delegation.
 
-Well, that makes sense if TASK_PENDING means the same as XPT_BUSY
-except it marks the whole pool busy instead of only a particular
-transport.
-
-We're always setting XPT_BUSY this way, for instance -- if there's
-work to do, whether or not a wake-up was successful, this bit is
-set.
-
-The meaning of TASK_PENDING before this patch was "the wake-up
-didn't succeed, so make sure to go back and look for the work".
-Your patch changes that.
-
-So, perhaps the patch description needs to document that
-particular change in semantics rather than describing only the
-code changes. Or we could rename the bit SP_BUSY or something a
-little more self-explanatory.
-
-(A more crazy idea would be to add a phony transport to each
-pool that acts as the locus for these transportless tasks).
-
-I do not object to the patch. It's just hard to square up the
-current description with the patch itself. Speaking, of course,
-as someone who will no doubt have to read this description
-in a year or two and ask "what were we thinking?"
+A client is, in fact, permitted to use a write delegation stateid
+in an otw READ operation. So, this makes sense to me.
 
 
-> Thanks,
-> NeilBrown
->=20
->=20
->>=20
->>=20
->>> Signed-off-by: NeilBrown <neilb@suse.de>
->>> ---
->>> net/sunrpc/svc_xprt.c | 8 +++++---
->>> 1 file changed, 5 insertions(+), 3 deletions(-)
->>>=20
->>> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
->>> index cd92cb54132d..380fb3caea4c 100644
->>> --- a/net/sunrpc/svc_xprt.c
->>> +++ b/net/sunrpc/svc_xprt.c
->>> @@ -581,8 +581,8 @@ void svc_wake_up(struct svc_serv *serv)
->>> {
->>> struct svc_pool *pool =3D &serv->sv_pools[0];
->>>=20
->>> - if (!svc_pool_wake_idle_thread(serv, pool))
->>> - set_bit(SP_TASK_PENDING, &pool->sp_flags);
->>> + set_bit(SP_TASK_PENDING, &pool->sp_flags);
->>> + svc_pool_wake_idle_thread(serv, pool);
->>> }
->>> EXPORT_SYMBOL_GPL(svc_wake_up);
->>>=20
->>> @@ -704,7 +704,7 @@ rqst_should_sleep(struct svc_rqst *rqstp)
->>> struct svc_pool *pool =3D rqstp->rq_pool;
->>>=20
->>> /* did someone call svc_wake_up? */
->>> - if (test_and_clear_bit(SP_TASK_PENDING, &pool->sp_flags))
->>> + if (test_bit(SP_TASK_PENDING, &pool->sp_flags))
->>> return false;
->>>=20
->>> /* was a socket queued? */
->>> @@ -750,6 +750,7 @@ static struct svc_xprt *svc_get_next_xprt(struct sv=
-c_rqst *rqstp)
->>>=20
->>> set_bit(RQ_BUSY, &rqstp->rq_flags);
->>> smp_mb__after_atomic();
->>> + clear_bit(SP_TASK_PENDING, &pool->sp_flags);
->>=20
->> Why wouldn't this go before the smp_mb__after_atomic()?
->>=20
->>=20
->>> rqstp->rq_xprt =3D svc_xprt_dequeue(pool);
->>> if (rqstp->rq_xprt) {
->>> trace_svc_pool_awoken(rqstp);
->>> @@ -761,6 +762,7 @@ static struct svc_xprt *svc_get_next_xprt(struct sv=
-c_rqst *rqstp)
->>> percpu_counter_inc(&pool->sp_threads_no_work);
->>> return NULL;
->>> out_found:
->>> + clear_bit(SP_TASK_PENDING, &pool->sp_flags);
->>=20
->> clear_bit_unlock ?
->>=20
->>> /* Normally we will wait up to 5 seconds for any required
->>>  * cache information to be provided.
->>>  */
->>> --=20
->>> 2.40.1
->>>=20
->>=20
->> --=20
->> Chuck Lever
+> Don't hand out a delegation if the client didn't request
+> OPEN4_SHARE_ACCESS_BOTH.
+> 
+> This fixes xfstest generic/001.
+> 
+> Closes: https://bugzilla.linux-nfs.org/show_bug.cgi?id=412
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+
+I'm thinking this should be squashed into commit
+68a593f24a35 ("NFSD: Enable write delegation support").
 
 
---
+> ---
+>  fs/nfsd/nfs4state.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index ef7118ebee00..9f1c90afed72 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5462,6 +5462,8 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+>  		return ERR_PTR(-EAGAIN);
+>  
+>  	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+> +		if (!(open->op_share_access & NFS4_SHARE_ACCESS_READ))
+> +			return ERR_PTR(-EBADF);
+
+			return ERR_PTR(-EAGAIN);
+
+might be more consistent with the other failure returns in this
+function.
+
+
+>  		nf = find_writeable_file(fp);
+>  		dl_type = NFS4_OPEN_DELEGATE_WRITE;
+>  	} else {
+> 
+> ---
+> base-commit: ec89391563792edd11d138a853901bce76d11f44
+> change-id: 20230731-wdeleg-bbdb6b25a3c6
+> 
+> Best regards,
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
+
+-- 
 Chuck Lever
-
-
