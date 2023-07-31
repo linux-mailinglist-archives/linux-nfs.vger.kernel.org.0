@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E983768C55
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jul 2023 08:52:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D6FC768C56
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jul 2023 08:52:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229875AbjGaGwE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jul 2023 02:52:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37056 "EHLO
+        id S229708AbjGaGwG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jul 2023 02:52:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230301AbjGaGvx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 02:51:53 -0400
+        with ESMTP id S230308AbjGaGwB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 02:52:01 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DC4C10EF
-        for <linux-nfs@vger.kernel.org>; Sun, 30 Jul 2023 23:51:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E8DE7D
+        for <linux-nfs@vger.kernel.org>; Sun, 30 Jul 2023 23:51:50 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id D2B6822431;
-        Mon, 31 Jul 2023 06:51:43 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 98AC022427;
+        Mon, 31 Jul 2023 06:51:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1690786303; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1690786309; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5k7osmNyqLkFeyRd3xv0Iv/wEZImUba5nBcluA0dsIs=;
-        b=QDwVsXstJzTAA3QrhrSC4rVWlfDRvd7wHv7Kl1ZSTlG/a75XZ1eMpI6T0tKyOtFPLgHcJa
-        vXYb4jRZVJpArVFrl4bmKVXxoeTjGg2mOMF6IA4gaa7VQ1OuIA6RBEygk63h1iT3/gEzPG
-        1t3MOSnwQTJMcuQs5TNBB9UPnuOadiI=
+        bh=yGYTwMnBniBM8J+hJQvYA5X597a/aspEMqpPLwlLxCc=;
+        b=pKmcRPgluvgSa6ncSFVT8NA6NtN2S0HzfySXPfV4nECtusavVqlYXut4puIalfQl6ILo4z
+        w/E7xmuj42/uvvUMVIdONV/UfxRjrMT+b9NYbiN5pG00MA5NVQlrottu/mTcautUO//Eq/
+        jp4uQzUiLq1CoA3bQCFbWaxlWyq90Ww=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1690786303;
+        s=susede2_ed25519; t=1690786309;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5k7osmNyqLkFeyRd3xv0Iv/wEZImUba5nBcluA0dsIs=;
-        b=a4ZLvBIe276xGBad3u30Bqwr3BEDfrxYy/iYRWGTHsdFAku0gBQ/mrBto/l7f3l7s8LedZ
-        QILgK2YI/aEV2nAg==
+        bh=yGYTwMnBniBM8J+hJQvYA5X597a/aspEMqpPLwlLxCc=;
+        b=ihJiNAOwIdZpQqTCqSgUOX8zd8nRJGbPdrZAU1nWSr25bnQUwfjJzW7O3iyUiMbM6ULPrB
+        vPOqfJSODPH22QAg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 91BE61322C;
-        Mon, 31 Jul 2023 06:51:42 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5B3391322C;
+        Mon, 31 Jul 2023 06:51:48 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id fPIiEf5Zx2S/bwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 31 Jul 2023 06:51:42 +0000
+        id jDQcBARax2TFbwAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 31 Jul 2023 06:51:48 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 05/12] nfsd: separate nfsd_last_thread() from nfsd_put()
-Date:   Mon, 31 Jul 2023 16:48:32 +1000
-Message-Id: <20230731064839.7729-6-neilb@suse.de>
+Subject: [PATCH 06/12] SUNRPC: rename and refactor svc_get_next_xprt().
+Date:   Mon, 31 Jul 2023 16:48:33 +1000
+Message-Id: <20230731064839.7729-7-neilb@suse.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230731064839.7729-1-neilb@suse.de>
 References: <20230731064839.7729-1-neilb@suse.de>
@@ -70,172 +70,138 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Now that the last nfsd thread is stopped by an explicit act of calling
-svc_set_num_threads() with a count of zero, we only have a limited
-number of places that can happen, and don't need to call
-nfsd_last_thread() in nfsd_put()
+svc_get_next_xprt() does a lot more than just get an xprt.  It also
+decides if it needs to sleep, depending not only on the availability of
+xprts, but also on the need to exit or handle external work
+(SP_TASK_PENDING).
 
-So separate that out and call it at the two places where the number of
-threads is set to zero.
+So rename it to svc_rqst_wait_and_dequeue_work(), don't return the xprt
+(which can easily be found in rqstp->rq_xprt), and restructure to make a
+clear separation between waiting and dequeueing.
 
-Move the clearing of ->nfsd_serv and the call to svc_xprt_destroy_all()
-into nfsd_last_thread(), as they are really part of the same action.
+All the scheduling-related code like try_to_freeze() and
+kthread_should_stop() is moved into svc_rqst_wait_and_dequeue_work().
 
-nfsd_put() is now a thin wrapper around svc_put(), so make it a static inline.
+Rather than calling svc_xprt_dequeue() twice (before and after deciding
+to wait), it now calls rqst_should_sleep() twice.  If the first fails,
+we skip all the waiting code completely.  In the waiting code we call
+again after setting the task state in case we missed a wake-up.
 
-nfsd_put() cannot be called after nfsd_last_thread(), so in a couple of
-places we have to use svc_put() instead.
+We now only have one call to try_to_freeze() and one call to
+svc_xprt_dequeue().  We still have two calls to kthread_should_stop() -
+one in rqst_should_sleep() to avoid sleeping, and one afterwards to
+avoid dequeueing any work (it previously came after dequeueing which
+doesn't seem right).
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfsd.h   |  7 ++++++-
- fs/nfsd/nfssvc.c | 52 ++++++++++++++++++------------------------------
- 2 files changed, 25 insertions(+), 34 deletions(-)
+ net/sunrpc/svc_xprt.c | 62 +++++++++++++++++++++----------------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index d88498f8b275..11c14faa6c67 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -96,7 +96,12 @@ int		nfsd_pool_stats_open(struct inode *, struct file *);
- int		nfsd_pool_stats_release(struct inode *, struct file *);
- void		nfsd_shutdown_threads(struct net *net);
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 380fb3caea4c..67f2b34cb8e4 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -722,47 +722,51 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+ 	return true;
+ }
  
--void		nfsd_put(struct net *net);
-+static inline void nfsd_put(struct net *net)
-+{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+
-+	svc_put(nn->nfsd_serv);
-+}
- 
- bool		i_am_nfsd(void);
- 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 33a80725e14e..1582af33e204 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -542,9 +542,14 @@ static struct notifier_block nfsd_inet6addr_notifier = {
- /* Only used under nfsd_mutex, so this atomic may be overkill: */
- static atomic_t nfsd_notifier_refcount = ATOMIC_INIT(0);
- 
--static void nfsd_last_thread(struct svc_serv *serv, struct net *net)
-+static void nfsd_last_thread(struct net *net)
+-static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp)
++static void svc_rqst_wait_and_dequeue_work(struct svc_rqst *rqstp)
  {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv = nn->nfsd_serv;
+ 	struct svc_pool		*pool = rqstp->rq_pool;
++	bool slept = false;
+ 
+ 	/* rq_xprt should be clear on entry */
+ 	WARN_ON_ONCE(rqstp->rq_xprt);
+ 
+-	rqstp->rq_xprt = svc_xprt_dequeue(pool);
+-	if (rqstp->rq_xprt) {
+-		trace_svc_pool_polled(rqstp);
+-		goto out_found;
++	if (rqst_should_sleep(rqstp)) {
++		set_current_state(TASK_IDLE);
++		smp_mb__before_atomic();
++		clear_bit(SP_CONGESTED, &pool->sp_flags);
++		clear_bit(RQ_BUSY, &rqstp->rq_flags);
++		smp_mb__after_atomic();
 +
-+	spin_lock(&nfsd_notifier_lock);
-+	nn->nfsd_serv = NULL;
-+	spin_unlock(&nfsd_notifier_lock);
- 
- 	/* check if the notifier still has clients */
- 	if (atomic_dec_return(&nfsd_notifier_refcount) == 0) {
-@@ -554,6 +559,8 @@ static void nfsd_last_thread(struct svc_serv *serv, struct net *net)
- #endif
++		/* Need to test again after setting task state */
++		if (likely(rqst_should_sleep(rqstp))) {
++			schedule();
++			slept = true;
++		} else {
++			__set_current_state(TASK_RUNNING);
++			cond_resched();
++		}
++		set_bit(RQ_BUSY, &rqstp->rq_flags);
++		smp_mb__after_atomic();
  	}
+-
+-	set_current_state(TASK_IDLE);
+-	smp_mb__before_atomic();
+-	clear_bit(SP_CONGESTED, &pool->sp_flags);
+-	clear_bit(RQ_BUSY, &rqstp->rq_flags);
+-	smp_mb__after_atomic();
+-
+-	if (likely(rqst_should_sleep(rqstp)))
+-		schedule();
+-	else
+-		__set_current_state(TASK_RUNNING);
+-
+ 	try_to_freeze();
  
-+	svc_xprt_destroy_all(serv, net);
+-	set_bit(RQ_BUSY, &rqstp->rq_flags);
+-	smp_mb__after_atomic();
++	if (kthread_should_stop())
++		return;
 +
- 	/*
- 	 * write_ports can create the server without actually starting
- 	 * any threads--if we get shut down before any threads are
-@@ -644,7 +651,8 @@ void nfsd_shutdown_threads(struct net *net)
- 	svc_get(serv);
- 	/* Kill outstanding nfsd threads */
- 	svc_set_num_threads(serv, NULL, 0);
--	nfsd_put(net);
-+	nfsd_last_thread(net);
-+	svc_put(serv);
- 	mutex_unlock(&nfsd_mutex);
- }
- 
-@@ -674,9 +682,6 @@ int nfsd_create_serv(struct net *net)
- 	serv->sv_maxconn = nn->max_connections;
- 	error = svc_bind(serv, net);
- 	if (error < 0) {
--		/* NOT nfsd_put() as notifiers (see below) haven't
--		 * been set up yet.
--		 */
- 		svc_put(serv);
- 		return error;
+ 	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
+ 	rqstp->rq_xprt = svc_xprt_dequeue(pool);
+ 	if (rqstp->rq_xprt) {
+-		trace_svc_pool_awoken(rqstp);
++		if (slept)
++			trace_svc_pool_awoken(rqstp);
++		else
++			trace_svc_pool_polled(rqstp);
+ 		goto out_found;
  	}
-@@ -719,29 +724,6 @@ int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
- 	return 0;
+ 
+-	if (kthread_should_stop())
+-		return NULL;
+-	percpu_counter_inc(&pool->sp_threads_no_work);
+-	return NULL;
++	if (slept)
++		percpu_counter_inc(&pool->sp_threads_no_work);
++	return;
+ out_found:
+-	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
+ 	/* Normally we will wait up to 5 seconds for any required
+ 	 * cache information to be provided.
+ 	 */
+@@ -770,7 +774,6 @@ static struct svc_xprt *svc_get_next_xprt(struct svc_rqst *rqstp)
+ 		rqstp->rq_chandle.thread_wait = 5*HZ;
+ 	else
+ 		rqstp->rq_chandle.thread_wait = 1*HZ;
+-	return rqstp->rq_xprt;
  }
  
--/* This is the callback for kref_put() below.
-- * There is no code here as the first thing to be done is
-- * call svc_shutdown_net(), but we cannot get the 'net' from
-- * the kref.  So do all the work when kref_put returns true.
-- */
--static void nfsd_noop(struct kref *ref)
--{
--}
--
--void nfsd_put(struct net *net)
--{
--	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
--
--	if (kref_put(&nn->nfsd_serv->sv_refcnt, nfsd_noop)) {
--		svc_xprt_destroy_all(nn->nfsd_serv, net);
--		nfsd_last_thread(nn->nfsd_serv, net);
--		svc_destroy(&nn->nfsd_serv->sv_refcnt);
--		spin_lock(&nfsd_notifier_lock);
--		nn->nfsd_serv = NULL;
--		spin_unlock(&nfsd_notifier_lock);
--	}
--}
--
- int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
- {
- 	int i = 0;
-@@ -792,7 +774,7 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
- 		if (err)
- 			break;
- 	}
--	nfsd_put(net);
-+	svc_put(nn->nfsd_serv);
- 	return err;
- }
- 
-@@ -807,6 +789,7 @@ nfsd_svc(int nrservs, struct net *net, const struct cred *cred)
- 	int	error;
- 	bool	nfsd_up_before;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv;
- 
- 	mutex_lock(&nfsd_mutex);
- 	dprintk("nfsd: creating service\n");
-@@ -826,22 +809,25 @@ nfsd_svc(int nrservs, struct net *net, const struct cred *cred)
+ static void svc_add_new_temp_xprt(struct svc_serv *serv, struct svc_xprt *newxpt)
+@@ -854,12 +857,9 @@ void svc_recv(struct svc_rqst *rqstp)
+ 	if (!svc_alloc_arg(rqstp))
  		goto out;
  
- 	nfsd_up_before = nn->nfsd_net_up;
-+	serv = nn->nfsd_serv;
+-	try_to_freeze();
+-	cond_resched();
+-	if (kthread_should_stop())
+-		goto out;
++	svc_rqst_wait_and_dequeue_work(rqstp);
  
- 	error = nfsd_startup_net(net, cred);
- 	if (error)
- 		goto out_put;
--	error = svc_set_num_threads(nn->nfsd_serv, NULL, nrservs);
-+	error = svc_set_num_threads(serv, NULL, nrservs);
- 	if (error)
- 		goto out_shutdown;
--	error = nn->nfsd_serv->sv_nrthreads;
-+	error = serv->sv_nrthreads;
-+	if (error == 0)
-+		nfsd_last_thread(net);
- out_shutdown:
- 	if (error < 0 && !nfsd_up_before)
- 		nfsd_shutdown_net(net);
- out_put:
- 	/* Threads now hold service active */
- 	if (xchg(&nn->keep_active, 0))
--		nfsd_put(net);
--	nfsd_put(net);
-+		svc_put(serv);
-+	svc_put(serv);
- out:
- 	mutex_unlock(&nfsd_mutex);
- 	return error;
+-	xprt = svc_get_next_xprt(rqstp);
++	xprt = rqstp->rq_xprt;
+ 	if (!xprt)
+ 		goto out;
+ 
 -- 
 2.40.1
 
