@@ -2,71 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4218B76A3EC
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Aug 2023 00:11:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B11A76A401
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Aug 2023 00:15:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231788AbjGaWLd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jul 2023 18:11:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41072 "EHLO
+        id S229716AbjGaWPU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jul 2023 18:15:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229807AbjGaWLb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 18:11:31 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A210D173B;
-        Mon, 31 Jul 2023 15:11:25 -0700 (PDT)
+        with ESMTP id S229664AbjGaWPT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jul 2023 18:15:19 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC7E6B2
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Jul 2023 15:15:17 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 143DD21FE4;
-        Mon, 31 Jul 2023 22:11:24 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 9FC2D21FD4;
+        Mon, 31 Jul 2023 22:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1690841484; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1690841716; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Bw+Jr2yeF1CiIVeGOjntXCYonV3uJi6Y2bNB1cSheIA=;
-        b=WnnRtBMu5Z6V92niNpUnues7Ixn2rT3cd3H3KnZE7ot3/Gpjck32OpMdSgf22FkO5pI8mK
-        2Qa2q5zOGsiFtBkl+U6VrTHBz0Nm8g7llIlzd+nNj70ZoFFvJ1OcOOLmO7OM4VLcEdQpxV
-        EN9MFD+uYVs3pzulfNN4bVgglC+KAXw=
+        bh=mNS3V/2grMP0yG96HXAVD+rwC4dfDVur5DHPovpj+uw=;
+        b=Rg8kbnhDi3ow5U58dDtQex//DPJUBsT3oBnUP0w1efkx6BTjHoJelYsO8egokGpOZrI8qk
+        Wrq905Yr6LJQg2mkBMKt5ivwG8FzQAR8UqgHTTtBfRiI0riPihKzropenXzniB4z+713vR
+        pD8Ss9YTAjWkpSngmh6MJYoKnc/U/Cs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1690841484;
+        s=susede2_ed25519; t=1690841716;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Bw+Jr2yeF1CiIVeGOjntXCYonV3uJi6Y2bNB1cSheIA=;
-        b=dpUkTvS1IVr2KTByRL7YF+YpZRJTxDSi3K/DSRdodAPX2XjUUemun3y0Dl59STIrkWayOf
-        DjryFbdCioRV94DA==
+        bh=mNS3V/2grMP0yG96HXAVD+rwC4dfDVur5DHPovpj+uw=;
+        b=MFa4qAGAIrsZf0aCqhvj3ZOq378RAPSnHk9p7eUCDtbB27m9uPbgmuqWqZu08G8W6srg8Z
+        lL3rGR3k0+jqytCw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 912F2133F7;
-        Mon, 31 Jul 2023 22:11:21 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BCD8A133F7;
+        Mon, 31 Jul 2023 22:15:14 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 6wAlEYkxyGRsIwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 31 Jul 2023 22:11:21 +0000
+        id JmenG3IyyGTaJAAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 31 Jul 2023 22:15:14 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
 To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     "Chuck Lever" <chuck.lever@oracle.com>,
-        "Olga Kornievskaia" <kolga@netapp.com>,
-        "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH RFC] nfsd: don't hand out write delegations on O_WRONLY opens
-In-reply-to: <20230731-wdeleg-v1-1-f8fe1ce11b36@kernel.org>
-References: <20230731-wdeleg-v1-1-f8fe1ce11b36@kernel.org>
-Date:   Tue, 01 Aug 2023 08:11:18 +1000
-Message-id: <169084147821.32308.9286837678268595107@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Cc:     "Lorenzo Bianconi" <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
+        lorenzo.bianconi@redhat.com, chuck.lever@oracle.com
+Subject: Re: [PATCH v4 1/2] SUNRPC: add verbose parameter to __svc_print_addr()
+In-reply-to: <b519542134a605daa2d41742b1bfd0e8a1a2f436.camel@kernel.org>
+References: <cover.1690569488.git.lorenzo@kernel.org>,
+ <5b0eff4e3ef9bf9621f5095189933f60def40f0d.1690569488.git.lorenzo@kernel.org>,
+ <169058239308.32308.14184895022271604035@noble.neil.brown.name>,
+ <b519542134a605daa2d41742b1bfd0e8a1a2f436.camel@kernel.org>
+Date:   Tue, 01 Aug 2023 08:15:11 +1000
+Message-id: <169084171153.32308.15857155053964820267@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -74,70 +74,102 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Tue, 01 Aug 2023, Jeff Layton wrote:
-> I noticed that xfstests generic/001 was failing against linux-next nfsd.
+> On Sat, 2023-07-29 at 08:13 +1000, NeilBrown wrote:
+> > On Sat, 29 Jul 2023, Lorenzo Bianconi wrote:
+> > > Introduce verbose parameter to utility routine in order to reduce output
+> > > verbosity. This is a preliminary patch to add rpc_status entry in nfsd
+> > > debug filesystem in order to dump pending RPC requests debugging
+> > > information.
+> > >=20
+> > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > ---
+> > >  include/linux/sunrpc/svc_xprt.h | 12 ++++++------
+> > >  net/sunrpc/svc_xprt.c           |  2 +-
+> > >  2 files changed, 7 insertions(+), 7 deletions(-)
+> > >=20
+> > > diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc=
+_xprt.h
+> > > index a6b12631db21..1715d4c6bd6b 100644
+> > > --- a/include/linux/sunrpc/svc_xprt.h
+> > > +++ b/include/linux/sunrpc/svc_xprt.h
+> > > @@ -209,21 +209,21 @@ static inline unsigned short svc_xprt_remote_port=
+(const struct svc_xprt *xprt)
+> > >  }
+> > > =20
+> > >  static inline char *__svc_print_addr(const struct sockaddr *addr,
+> > > -				     char *buf, const size_t len)
+> > > +				     char *buf, const size_t len,
+> > > +				     bool verbose)
+> > >  {
+> > >  	const struct sockaddr_in *sin =3D (const struct sockaddr_in *)addr;
+> > >  	const struct sockaddr_in6 *sin6 =3D (const struct sockaddr_in6 *)addr;
+> > > =20
+> > >  	switch (addr->sa_family) {
+> > >  	case AF_INET:
+> > > -		snprintf(buf, len, "%pI4, port=3D%u", &sin->sin_addr,
+> > > -			ntohs(sin->sin_port));
+> > > +		snprintf(buf, len, "%pI4, %s%u", &sin->sin_addr,
+> > > +			 verbose ? "port=3D" : "", ntohs(sin->sin_port));
+> >=20
+> > I would move the "," into the verbose part too.
+> > so
+> >    verbose ? ", port=3D" : " "
+> >=20
+> > Other than that, I like this approach.
+> >=20
 >=20
-> The client would request a OPEN4_SHARE_ACCESS_WRITE open, and the server
-> would hand out a write delegation. The client would then try to use that
-> write delegation as the source stateid in a COPY or CLONE operation, and
-> the server would respond with NFS4ERR_STALE.
->=20
-> The problem is that the struct file associated with the delegation does
-> not necessarily have read permissions. It's handing out a write
-> delegation on what is effectively an O_WRONLY open. RFC 8881 states:
->=20
->  "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on its
->   own, all opens."
->=20
-> Given that the client didn't request any read permissions, and that nfsd
-> didn't check for any, it seems wrong to give out a write delegation.
->=20
-> Don't hand out a delegation if the client didn't request
-> OPEN4_SHARE_ACCESS_BOTH.
->=20
-> This fixes xfstest generic/001.
->=20
-> Closes: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D412
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/nfsd/nfs4state.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index ef7118ebee00..9f1c90afed72 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -5462,6 +5462,8 @@ nfs4_set_delegation(struct nfsd4_open *open, struct n=
-fs4_ol_stateid *stp,
->  		return ERR_PTR(-EAGAIN);
-> =20
->  	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
-> +		if (!(open->op_share_access & NFS4_SHARE_ACCESS_READ))
-> +			return ERR_PTR(-EBADF);
-<bikeshed>
-The actual error code returned by nfs4_set_delegation() is ignored -
-only the fact of an error is relevant.
-Given that, how did you choose -EBADF.  nfsd doesn't use file
-descriptors, and doesn't use EBADF anywhere else.
-Given that you have just tested access, EACCES might be justifiable.
-But I would prefer if nfs4_set_delegation() returns NULL if it could not
-find or create a delegation, without bothering with giving a reason.
-</bikeshed>
+> If we're separating fields in the main seqfile by ' ', then we probably
+> want to use a different delimiter here in the !verbose case. Maybe ':'
+> or ',' instead?
 
-Reviewed-by: NeilBrown <neilb@suse.de>
+Aren't the address and the port two different fields?
+Colon is normal for separating host and port, but as IPv6 addresses
+contain colons, you would need [IP::V6]:port which is probably isn't
+really an improvement.
+I would leave address and port as separate fields.
 
+>=20
+> Also, ntohs is going to return a short, so the format should probably be
+> using "%hu" for the port.
+
+Probably.
+
+Thanks,
 NeilBrown
 
->  		nf =3D find_writeable_file(fp);
->  		dl_type =3D NFS4_OPEN_DELEGATE_WRITE;
->  	} else {
 >=20
-> ---
-> base-commit: ec89391563792edd11d138a853901bce76d11f44
-> change-id: 20230731-wdeleg-bbdb6b25a3c6
+> >=20
+> > >  		break;
+> > > =20
+> > >  	case AF_INET6:
+> > > -		snprintf(buf, len, "%pI6, port=3D%u",
+> > > -			 &sin6->sin6_addr,
+> > > -			ntohs(sin6->sin6_port));
+> > > +		snprintf(buf, len, "%pI6, %s%u", &sin6->sin6_addr,
+> > > +			 verbose ? "port=3D" : "", ntohs(sin6->sin6_port));
+> > >  		break;
+> > > =20
+> > >  	default:
+> > > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> > > index 62c7919ea610..16b794d291a4 100644
+> > > --- a/net/sunrpc/svc_xprt.c
+> > > +++ b/net/sunrpc/svc_xprt.c
+> > > @@ -386,7 +386,7 @@ EXPORT_SYMBOL_GPL(svc_xprt_copy_addrs);
+> > >   */
+> > >  char *svc_print_addr(struct svc_rqst *rqstp, char *buf, size_t len)
+> > >  {
+> > > -	return __svc_print_addr(svc_addr(rqstp), buf, len);
+> > > +	return __svc_print_addr(svc_addr(rqstp), buf, len, true);
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(svc_print_addr);
+> > > =20
+> > > --=20
+> > > 2.41.0
+> > >=20
+> > >=20
+> >=20
 >=20
-> Best regards,
 > --=20
 > Jeff Layton <jlayton@kernel.org>
->=20
 >=20
 
