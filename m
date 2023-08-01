@@ -2,173 +2,165 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02CE776B5E9
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Aug 2023 15:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E19B76B693
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Aug 2023 16:02:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234034AbjHANdR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Aug 2023 09:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42640 "EHLO
+        id S232732AbjHAOCF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Aug 2023 10:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234451AbjHANdM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Aug 2023 09:33:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A53E1BDB;
-        Tue,  1 Aug 2023 06:33:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FEDC615A4;
-        Tue,  1 Aug 2023 13:33:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC329C433C7;
-        Tue,  1 Aug 2023 13:33:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690896790;
-        bh=qW9IP+djYLOwZukIeqaHto6GDgMjZwheXduDcYTrR/c=;
-        h=From:Date:Subject:To:Cc:From;
-        b=iFu9TKbcb3PzeiZVSO6f9KNXrcQ2wDLU8Z/igj3oTts8ZzyTz6CYgAjBYty8yO4mt
-         a9450h9QLAurU11lxSvBWojiK/h6w1U1KprjTILupy8al6VQZ+0dsb5n7Xs2z78y/N
-         /Wyfq1aTY2wHoqd/M3ZaHUpoLm+L75/YM6xWDI6IYEQbxsTDlNj1R+eiCsOrKqEsWA
-         EFUPNU+HmoqMzj6HHe2yjapybiou+ik+zVI2GCyqMTZ04xIWX8Ri9uJT37DMa5lbFf
-         ugNkBMwAWrX4dwxcSdhWTVOvxrsFRSB6V4XnfUik94SRHKbjMWnmCurT5VWUSUa0T/
-         ArNIhYU9fAD9g==
-From:   Jeff Layton <jlayton@kernel.org>
-Date:   Tue, 01 Aug 2023 09:33:06 -0400
-Subject: [PATCH v2] nfsd: don't hand out write delegations on O_WRONLY
- opens
+        with ESMTP id S231980AbjHAOCD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Aug 2023 10:02:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4EC0115
+        for <linux-nfs@vger.kernel.org>; Tue,  1 Aug 2023 07:01:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690898478;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DF+njAny3wsNOML4M55BTFjHT9hZNobHn09pQS3woNw=;
+        b=cUCTaJiHPnWTTfSYCVW0zu2b7tCiKH9VQwUfzogxazYPivkMQL1GVhxMcxQF738iEWIvAS
+        jmBaXj2Qx1bkWgTfZjo7k+c4tlcB9pKPeJwhdtI6vpFckfkQBZ0whS/LSeT9n/htfitBhg
+        u88LwYn6sJXzwiwNUCtCmEK58DTTDNg=
+Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com
+ [209.85.160.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-10-DtBUB7LrOiiukst6_hZZcw-1; Tue, 01 Aug 2023 10:01:16 -0400
+X-MC-Unique: DtBUB7LrOiiukst6_hZZcw-1
+Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-1a9e3f67989so1758755fac.1
+        for <linux-nfs@vger.kernel.org>; Tue, 01 Aug 2023 07:01:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690898468; x=1691503268;
+        h=content-transfer-encoding:in-reply-to:from:references:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DF+njAny3wsNOML4M55BTFjHT9hZNobHn09pQS3woNw=;
+        b=ItWPCfsZwdEuSl/cw7/9WZC8smVFdYzpaqOpkAiBDyKMhX+yZ476x0Ki+udRsmpuZJ
+         eAcpoO/KVxTyfinQvACTHlMWq2BWP8c4fchmT7BbpgkEFqu1PU/1jUgRqlgK0Q2f5b9K
+         hkAtnoW2zHfbAJ58gc3iAb/bQAEQdD4esNOxFSWc6kZUYNhkCMXkMBjhY0EZXzto5Awc
+         HwhbOfS+ziHyZrOBDlwRdQYJccTtzesr7OL4dKqo/60+kidPVRc/0kfm2iszAdHVJrQM
+         bTEit1gaxmwI6yTXG2EIZOLXgNuTi5Jq/P2Y+jb5zKBD6geT2sUnsKPTlztKyDJDViu/
+         6FQw==
+X-Gm-Message-State: ABy/qLZzM0hEEBudcQlkJ81r5ktuJhLZt0Ado0v005DjBzsKjyrNBKug
+        h8JQZZhZbVODNEtvd2NbpqgEf9Yz+JDH0jp7jni78pOut5U4IMpeAyPznRNl4NyXwyw8dvbmP9s
+        HRwrQa3JlwB5LCHNF/tA1VNsj1s+4
+X-Received: by 2002:a05:6359:206:b0:134:c407:6823 with SMTP id ej6-20020a056359020600b00134c4076823mr4007002rwb.0.1690898468532;
+        Tue, 01 Aug 2023 07:01:08 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlF7pd+mMo1Q0DmKa8oMxN0WcrTo7NYgJ5krQtCuw9C1k+Qu7eczFXin4k+VXZ55O/adFaYTEg==
+X-Received: by 2002:a05:6359:206:b0:134:c407:6823 with SMTP id ej6-20020a056359020600b00134c4076823mr4006983rwb.0.1690898468189;
+        Tue, 01 Aug 2023 07:01:08 -0700 (PDT)
+Received: from [172.31.1.12] ([70.105.251.231])
+        by smtp.gmail.com with ESMTPSA id p4-20020a0c8c84000000b0063cfb3fbb7esm4668903qvb.16.2023.08.01.07.01.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Aug 2023 07:01:07 -0700 (PDT)
+Message-ID: <30aabd24-2b5f-5f5f-9bdd-0c505cd37b6d@redhat.com>
+Date:   Tue, 1 Aug 2023 10:01:06 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230801-wdeleg-v2-1-20c14252bab4@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAJIJyWQC/2XMQQ7CIBCF4as0sxbTgYjGlfdouigw0IkNNWBQ0
- 3B3sVuX/8vLt0GmxJTh2m2QqHDmNbaQhw7sPMVAgl1rkL1U/VmheDlaKAhjnNFGniZlNbTzI5H
- n9w4NY+uZ83NNn90t+Fv/iIIChb94QkuIRunbnVKk5bimAGOt9QtQKItCnQAAAA==
-To:     Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3422; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=qW9IP+djYLOwZukIeqaHto6GDgMjZwheXduDcYTrR/c=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBkyQmVvF49eJYxC8Cze43AUKz+wTs72Hw99FIhD
- H/3ISU/H/2JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZMkJlQAKCRAADmhBGVaC
- FUDvEACPOE0efmtrAtjPvrN6+mM0+nCautiP4Et5TfR5vMua2dkdW7Jj+uH9C/ortYSO2HZ1cCM
- OLNoW6ZR5ehyrc+Xo8g8uW2AyrRe6eCravWjeHFQErTf6Mm3RriI6cSHeBJ05uE/AwPbLqUCZJ6
- KDPMOU+0Ebr8q9EVvnLMqtkbD0ePEsroFB0UdNmuKKuBH72Ae0CwI+CgZA8s9SGbWXs7mTqmMnE
- P9co02/XQNX9UgxP1/MopRHJPrpuSFzmVxP6feomQvX242lRmhZrOyjLkiNRbEIhrFuuN1frrBS
- aFvRTIw9imnVApsTp9xDQz9YQNxh7yzQLHw93SP5GzEaiu3cNAmf8bq4EqBqWKRt2H4S7RtIwMS
- +FUSu9CXj9GueO/mQOpoIEaCI3PaQRR+HkQMD43dKAGVKpRrYufcv1TLNYa8JeWHkzTAunuc4vc
- 5iefJdp9dOJAu4hVI++PqwHAYkpwjV/p3OuboJu5J+9V43hHBrwFuJ1Z/UDizkqLyF0q4zci/Zg
- dsDbuoYTlibqqYIrrBKU10Sy23OUjmesOLK7HfpFRGLwrA9Qq75caQLh/ULQs5Ifw06zHAF9zve
- 8m10Jz6cMTn4aHucUORJTOZODpNVmGT07lgbKjusM5T0ojGjDg7Or9i9iV2usJtDRczyHJOKfJf
- TluOvGrnosstehQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: Double-Free and Memory Leak Found In libtirpc
+Content-Language: en-US
+To:     "Wartens, Herb" <wartens2@llnl.gov>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <E931E05A-A78D-4802-9877-B04E9F610817@llnl.gov>
+ <968E8957-2AF6-4901-84B0-92EDB5791131@llnl.gov>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <968E8957-2AF6-4901-84B0-92EDB5791131@llnl.gov>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I noticed that xfstests generic/001 was failing against linux-next nfsd.
 
-The client would request a OPEN4_SHARE_ACCESS_WRITE open, and the server
-would hand out a write delegation. The client would then try to use that
-write delegation as the source stateid in a COPY or CLONE operation, and
-the server would respond with NFS4ERR_STALE.
 
-The problem is that the struct file associated with the delegation does
-not necessarily have read permissions. It's handing out a write
-delegation on what is effectively an O_WRONLY open. RFC 8881 states:
+On 7/27/23 5:48 PM, Wartens, Herb wrote:
+> 
+> Just to be clear...
+> These patches were not made for the upstream branch (might not apply as cleanly as expected). I applied and tested them against libtirpc-1.1.4-8.el8. I have not gone through the trouble of verifying/testing them against upstream sources. Was just asked to mail these patches here by RH in the bug. Hopefully this is still helpful.
+Thank you! I'm looking into them now...
 
- "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on its
-  own, all opens."
-
-Given that the client didn't request any read permissions, and that nfsd
-didn't check for any, it seems wrong to give out a write delegation.
-
-Only hand out a write delegation if we have a O_RDWR descriptor
-available. If it fails to find an appropriate write descriptor, go
-ahead and try for a read delegation if NFS4_SHARE_ACCESS_READ was
-requested.
-
-This fixes xfstest generic/001.
-
-Closes: https://bugzilla.linux-nfs.org/show_bug.cgi?id=412
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-Changes in v2:
-- Rework the logic when finding struct file for the delegation. The
-  earlier patch might still have attached a O_WRONLY file to the deleg
-  in some cases, and could still have handed out a write delegation on
-  an O_WRONLY OPEN request in some cases.
----
- fs/nfsd/nfs4state.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index ef7118ebee00..e79d82fd05e7 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5449,7 +5449,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	struct nfs4_file *fp = stp->st_stid.sc_file;
- 	struct nfs4_clnt_odstate *odstate = stp->st_clnt_odstate;
- 	struct nfs4_delegation *dp;
--	struct nfsd_file *nf;
-+	struct nfsd_file *nf = NULL;
- 	struct file_lock *fl;
- 	u32 dl_type;
- 
-@@ -5461,21 +5461,28 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	if (fp->fi_had_conflict)
- 		return ERR_PTR(-EAGAIN);
- 
--	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
--		nf = find_writeable_file(fp);
-+	/*
-+	 * Try for a write delegation first. We need an O_RDWR file
-+	 * since a write delegation allows the client to perform any open
-+	 * from its cache.
-+	 */
-+	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) == NFS4_SHARE_ACCESS_BOTH) {
-+		nf = nfsd_file_get(fp->fi_fds[O_RDWR]);
- 		dl_type = NFS4_OPEN_DELEGATE_WRITE;
--	} else {
-+	}
-+
-+	/*
-+	 * If the file is being opened O_RDONLY or we couldn't get a O_RDWR
-+	 * file for some reason, then try for a read deleg instead.
-+	 */
-+	if (!nf && (open->op_share_access & NFS4_SHARE_ACCESS_READ)) {
- 		nf = find_readable_file(fp);
- 		dl_type = NFS4_OPEN_DELEGATE_READ;
- 	}
--	if (!nf) {
--		/*
--		 * We probably could attempt another open and get a read
--		 * delegation, but for now, don't bother until the
--		 * client actually sends us one.
--		 */
-+
-+	if (!nf)
- 		return ERR_PTR(-EAGAIN);
--	}
-+
- 	spin_lock(&state_lock);
- 	spin_lock(&fp->fi_lock);
- 	if (nfs4_delegation_exists(clp, fp))
-
----
-base-commit: a734662572708cf062e974f659ae50c24fc1ad17
-change-id: 20230731-wdeleg-bbdb6b25a3c6
-
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+steved.
+> 
+> -Herb
+> 
+> 
+>> On Jul 27, 2023, at 9:08 AM, Wartens, Herb <wartens2@llnl.gov> wrote:
+>>
+>> Hello All,
+>> We have opened up two separate RedHat bugs for these issues. I added patches to those bugs, but was asked to send the patches here as well since the patches might need to go upstream first.
+>>
+>> 1) https://bugzilla.redhat.com/show_bug.cgi?id=2224666
+>>
+>> We have an application called HPSS that heavily uses libtirpc. When we updated to RHEL8.8 our application started crashing all of a sudden. We believe the change that introduced this problem was 2112116:
+>>
+>> 2022-08-03 Steve Dickson mailto:steved@redhat.com 1.1.4-8
+>> - rpcb_clnt.c add mechanism to try v2 protocol first (bz 2107650)
+>> - Multithreaded cleanup (bz 2112116)
+>>
+>> 252     for (cptr = front; cptr != NULL; cptr = cptr->ac_next) {
+>> 253         if (!memcmp(cptr->ac_taddr->buf, addr->buf, addr->len)) {
+>> 254             /* Unlink from cache. We'll destroy it after releasing the mutex. */
+>> 255             if (cptr->ac_uaddr)
+>> 256                 free(cptr->ac_uaddr);
+>> 257             if (prevptr)
+>> 258                 prevptr->ac_next = cptr->ac_next;
+>> 259             else
+>> 260                 front = cptr->ac_next;
+>> 261             cachesize--;
+>> 262             break;
+>> 263         }
+>> 264         prevptr = cptr;
+>> 265     }
+>> 266
+>> 267     mutex_unlock(&rpcbaddr_cache_lock);
+>> 268     destroy_addr(cptr);
+>>
+>> so we have free'd cptr->ac_uaddr. I believe after that free probably safer to set cptr->ac_uaddr to NULL.
+>> Note that destroy_addr() will also try to free it.
+>>
+>> 2) https://bugzilla.redhat.com/show_bug.cgi?id=2225226
+>>
+>> While inspecting the changes between the versions of libtirpc in question, I noticed a memory leak as well.
+>>
+>> /*
+>> + * Destroys a cached address entry structure.
+>> + *
+>> + */
+>> +static void
+>> +destroy_addr(addr)
+>> +       struct address_cache *addr;
+>> +{
+>> +       if (addr == NULL)
+>> +               return;
+>> +       if(addr->ac_host != NULL)
+>> +               free(addr->ac_host);
+>> +       if(addr->ac_netid != NULL)
+>> +               free(addr->ac_netid);
+>> +       if(addr->ac_uaddr != NULL)
+>> +               free(addr->ac_uaddr);
+>> +       if(addr->ac_taddr != NULL) {
+>> +               if(addr->ac_taddr->buf != NULL)
+>> +                       free(addr->ac_taddr->buf);
+>> +       }
+>> +       free(addr);
+>> +}
+>>
+>> Pretty clear that addr->ac_taddr never was properly free’d. I also verified that with valgrind.
+>>
+>> I am happy to add more detail, but hopefully others on this list can access the bugs in question. If not let me know and I can add more detail here if needed. Thanks.
+>>
+>> -Herb
+>>
+>> <libtirpc-1.1.4-LLNL-memleak.patch><libtirpc-1.1.4-LLNL-crash.patch>
+> 
 
