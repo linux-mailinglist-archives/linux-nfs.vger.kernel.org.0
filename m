@@ -2,253 +2,249 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E21B76D7AE
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 21:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94C2B76D7DA
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 21:34:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231426AbjHBT0C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Aug 2023 15:26:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
+        id S230175AbjHBTed (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Aug 2023 15:34:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbjHBT0B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 15:26:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E97EF1995
-        for <linux-nfs@vger.kernel.org>; Wed,  2 Aug 2023 12:25:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691004317;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=z+NCAApqbNw2Pro3K3FkTCUJU1Tn5lJ6dVDlokitvGg=;
-        b=ImczoTgfKcc4FokDUbiTPtU1lZFjt2s0+dl0M4TqAVbXnw+6B+kdT270fSHEVhCvY9aNyl
-        goYDYJ+CiUbAfuCjeO3jK2M5qaompzdOFSRvA+X3iYPjEmjTRlv8gPtrcDSLKh02q6XHpA
-        e3S4nDmoObG0ghhf/9hWrKmoJ5WA4z8=
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
- [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-54-LPHvGBpGNSuSJJawTwDbYg-1; Wed, 02 Aug 2023 15:25:15 -0400
-X-MC-Unique: LPHvGBpGNSuSJJawTwDbYg-1
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-1bb29dc715bso1369745ad.1
-        for <linux-nfs@vger.kernel.org>; Wed, 02 Aug 2023 12:25:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691004314; x=1691609114;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z+NCAApqbNw2Pro3K3FkTCUJU1Tn5lJ6dVDlokitvGg=;
-        b=YhK6XP8flWGK0+Y9Cd8UMOe8YGp34kVffoczU6A/WIUbpRsgxi2zdqYVKjxS6vtU61
-         P1QQFR3443ZpzI/5u+IVQfAeG5GlQOBliKhJxlT9+V7WxneF49QeLzQAXr7qkGjM0tqC
-         xQ5rERdWPFyzrPbB4qWggeaCOX97ThNHUICqrzvc4/TntNaQxenn5QWs35LtBBTaDspw
-         cnmtl89i1GNquhFBrIoBOWXXOW7/j/CXfo4fpIpOUUxx4Kbs19eOXa1eSmvpI4YeQo+D
-         A8nWXfzkx6DNRc0VPtt/AMS5vovPUuFy2u8f5LWqNtjXwrroXxsxtjYSg8WIE6nU1VjY
-         opxw==
-X-Gm-Message-State: ABy/qLa16Wklnqnm0MWfMv+8Vgi/7p/s785VPFHX07WHS6TM6klxbhFj
-        l5cFAurWvi6qZjTufp59lfunlpPfRW1jr5XvdiRyQ8kl8Yj6zCd5yJOmpJ5X2vDBh4DVAjiAZP7
-        CGKOwW91gw2ZV7gfZlCv9
-X-Received: by 2002:a17:902:e809:b0:1b8:7613:594d with SMTP id u9-20020a170902e80900b001b87613594dmr21942598plg.24.1691004314512;
-        Wed, 02 Aug 2023 12:25:14 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlHZiwFlmOJ2fvSoNElkqU2gYznUU3MA3Fp61RAewpOqQ2xV9KWv0TiIR6/ORMRQmdlwKTIt8Q==
-X-Received: by 2002:a17:902:e809:b0:1b8:7613:594d with SMTP id u9-20020a170902e80900b001b87613594dmr21942576plg.24.1691004314186;
-        Wed, 02 Aug 2023 12:25:14 -0700 (PDT)
-Received: from zlang-mailbox ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id b21-20020a170902d31500b001b552309aedsm12767209plc.192.2023.08.02.12.25.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Aug 2023 12:25:13 -0700 (PDT)
-Date:   Thu, 3 Aug 2023 03:25:10 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Zorro Lang <zlang@kernel.org>, fstests@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] nfs: test files written size as expected
-Message-ID: <20230802192510.tecctatj3kqcw3e4@zlang-mailbox>
-References: <20230802054646.2197854-1-zlang@kernel.org>
- <20230802163640.GY11352@frogsfrogsfrogs>
- <20230802172418.2ulrealxsj2cvnxo@zlang-mailbox>
- <20230802174326.GL11340@frogsfrogsfrogs>
+        with ESMTP id S230026AbjHBTec (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 15:34:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED2E51722;
+        Wed,  2 Aug 2023 12:34:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8332961AE1;
+        Wed,  2 Aug 2023 19:34:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60FACC433C8;
+        Wed,  2 Aug 2023 19:34:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691004869;
+        bh=R2XNFOMlpoKl3UKqeQ3+36FDclL2w1qNFFl0yjA37tY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=C8tuKoLO6v8SLMytvrLPwndxfP+0EOH/QEtMW3GJkCjQAxRpGQsFVQHB/HAsaisCU
+         256mv/t4snxdZ3//Xy7Ac/F+bQsl+5dzotXS05l+rbc3Jot7bm2Vcyj2ibLwRrCRhN
+         BKfgG40x2qSYlWKCEP2xv4bzz7NimUZ9QWoXMkJIy0zk/fMiBLWdt/nTR2kAESkfaa
+         1vV8/tm8koNlddsl/BvuGlW/oZfBRhKqONBIIdELktYvy3kXp6ut4Q+xbup7+eJCYh
+         cN8VLCF5Oy7OxQzNJzOIN7BDjfDvUejh5Cw9qsBQnNn92ChU56i5uEWvNOaeeikxlJ
+         Ooqfax0lPIFQA==
+Message-ID: <ca156cecbc070c3b7c68626572274806079a6e04.camel@kernel.org>
+Subject: Re: [PATCH v6] vfs, security: Fix automount superblock LSM init 
+ problem, preventing NFS sb sharing
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Paul Moore <paul@paul-moore.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        Scott Mayhew <smayhew@redhat.com>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Date:   Wed, 02 Aug 2023 15:34:27 -0400
+In-Reply-To: <bac543537058619345b363bbfc745927.paul@paul-moore.com>
+References: <20230802-master-v6-1-45d48299168b@kernel.org>
+         <bac543537058619345b363bbfc745927.paul@paul-moore.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230802174326.GL11340@frogsfrogsfrogs>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 10:43:26AM -0700, Darrick J. Wong wrote:
-> On Thu, Aug 03, 2023 at 01:24:18AM +0800, Zorro Lang wrote:
-> > On Wed, Aug 02, 2023 at 09:36:40AM -0700, Darrick J. Wong wrote:
-> > > On Wed, Aug 02, 2023 at 01:46:46PM +0800, Zorro Lang wrote:
-> > > > Test nfs and its underlying fs, make sure file size as expected
-> > > > after writting a file, and the speculative allocation space can
-> > > > be shrunken.
-> > > > 
-> > > > Signed-off-by: Zorro Lang <zlang@kernel.org>
-> > > > ---
-> > > > 
-> > > > Last year I sent a patch to fstests@, but it sometimes fails on the upstream
-> > > > kernel that year:
-> > > > 
-> > > >   https://lore.kernel.org/fstests/Y3vTbHqT64gsQ573@magnolia/
-> > > > 
-> > > > And we didn't get a proper reason for that, so that patch was blocked. Now
-> > > > I found this case test passed on current upstream linux [1] (after loop
-> > > > running it a whole night). So I think it's time to rebase and re-send this
-> > > > patch to get review.
-> > > > 
-> > > > Thanks,
-> > > > Zorro
-> > > > 
-> > > > [1]
-> > > > FSTYP         -- nfs
-> > > > PLATFORM      -- Linux/x86_64 xxxx 6.5.0-rc4 #1 SMP PREEMPT_DYNAMIC Tue Aug  1 15:32:55 EDT 2023
-> > > > MKFS_OPTIONS  -- xxxx.redhat.com:/mnt/xfstests/scratch/nfs-server
-> > > > MOUNT_OPTIONS -- -o vers=4.2 -o context=system_u:object_r:root_t:s0 xxxx.redhat.com:/mnt/xfstests/scratch/nfs-server /mnt/xfstests/scratch/nfs-client
-> > > > 
-> > > > nfs/002 4s ...  4s
-> > > > Ran: nfs/002
-> > > > Passed all 1 tests
-> > > > 
-> > > >  tests/nfs/002     | 46 ++++++++++++++++++++++++++++++++++++++++++++++
-> > > >  tests/nfs/002.out |  2 ++
-> > > >  2 files changed, 48 insertions(+)
-> > > >  create mode 100755 tests/nfs/002
-> > > >  create mode 100644 tests/nfs/002.out
-> > > > 
-> > > > diff --git a/tests/nfs/002 b/tests/nfs/002
-> > > > new file mode 100755
-> > > > index 00000000..b4b6554c
-> > > > --- /dev/null
-> > > > +++ b/tests/nfs/002
-> > > > @@ -0,0 +1,46 @@
-> > > > +#! /bin/bash
-> > > > +# SPDX-License-Identifier: GPL-2.0
-> > > > +# Copyright (c) 2023 Red Hat, Inc.  All Rights Reserved.
-> > > > +#
-> > > > +# FS QA Test 002
-> > > > +#
-> > > > +# Make sure nfs gets expected file size after writting a big sized file. It's
-> > > > +# not only testing nfs, test its underlying fs too. For example a known old bug
-> > > > +# on xfs (underlying fs) caused nfs get larger file size (e.g. 16M) after
-> > > > +# writting 10M data to a file. It's fixed by a series of patches around
-> > > > +# 579b62faa5fb16 ("xfs: add background scanning to clear eofblocks inodes")
-> > > 
-> > > Er... has this been banging around in the trunk for 11 years? ;)
-> > 
-> > Yeah, that's an old enough test case :-D I tried to tidy our internal test cases,
-> > felt this case can be in fstests.
-> > 
-> > > 
-> > > > +#
-> > > > +. ./common/preamble
-> > > > +_begin_fstest auto quick rw
-> > > > +
-> > > > +# real QA test starts here
-> > > > +_supported_fs nfs
-> > > > +# Need a series of patches related with this patch
-> > > > +_fixed_by_kernel_commit 579b62faa5fb16 \
-> > > > +	"xfs: add background scanning to clear eofblocks inodes"
-> > > > +_require_test
-> > > > +
-> > > > +localfile=$TEST_DIR/testfile.$seq
-> > > > +rm -rf $localfile
-> > > > +
-> > > > +$XFS_IO_PROG -f -t -c "pwrite 0 10m" -c "fsync" $localfile >>$seqres.full 2>&1
-> > > > +block_size=`stat -c '%B' $localfile`
-> > > > +iblocks_expected=$((10 * 1024 * 1024 / $block_size))
-> > > > +# Try several times for the speculative allocated file size can be shrunken
-> > > > +res=1
-> > > > +for ((i=0; i<10; i++));do
-> > > > +	iblocks_real=`stat -c '%b' $localfile`
-> > > > +	if [ "$iblocks_expected" = "$iblocks_real" ];then
-> > > 
-> > > What happens if real < expected?  Should there be some sort of bail out
-> > > for unexpected things like that?
-> > 
-> > Hmm... I never thought that. I saw the real >= expected, is there any
-> > chance to get real < expected?
-> 
-> <shrug> Suppose the NFS server is running on top of a filesystem that
-> supports compression and i_blocks as returned by stat reflects that?
-> 
-> --D
-> 
-> > > 
-> > > > +		res=0
-> > > > +		break
-> > > > +	fi
-> > > > +	sleep 10
-> > > > +done
-> > > 
-> > > Though I guess the runtime is capped at ~100s so maybe it doesn't
-> > > matter practically.
-> > 
-> > Mostly the test done in several seconds in my testing:
-> > 
-> > FSTYP         -- nfs
-> > PLATFORM      -- Linux/x86_64 hp-dl360g9-06 6.5.0-rc4 #1 SMP PREEMPT_DYNAMIC Tue Aug  1 15:32:55 EDT 2023
-> > MKFS_OPTIONS  -- hp-dl360g9-06.rhts.eng.pek2.redhat.com:/mnt/xfstests/scratch/nfs-server
-> > MOUNT_OPTIONS -- -o vers=4.2 -o context=system_u:object_r:root_t:s0 hp-dl360g9-06.rhts.eng.pek2.redhat.com:/mnt/xfstests/scratch/nfs-server /mnt/xfstests/scratch/nfs-client
-> > 
-> > nfs/002 5s ...  4s
-> > Ran: nfs/002
-> > Passed all 1 tests
-> 
-> Doesn't xfs remove the speculative preallocations every time a write fd
-> is closed?
-> 
-> Yes, it does do that:
-> https://lore.kernel.org/linux-xfs/155259894034.30230.7188877605950498518.stgit@magnolia/
-> 
-> IOWs, how is this test actually checking the behavior of background
-> blockgc clearing out speculative preallocations?
+On Wed, 2023-08-02 at 14:16 -0400, Paul Moore wrote:
+> On Aug  2, 2023 Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > When NFS superblocks are created by automounting, their LSM parameters
+> > aren't set in the fs_context struct prior to sget_fc() being called,
+> > leading to failure to match existing superblocks.
+> >=20
+> > Fix this by adding a new LSM hook to load fc->security for submount
+> > creation when alloc_fs_context() is creating the fs_context for it.
+> >=20
+> > However, this uncovers a further bug: nfs_get_root() initialises the
+> > superblock security manually by calling security_sb_set_mnt_opts() or
+> > security_sb_clone_mnt_opts() - but then vfs_get_tree() calls
+> > security_sb_set_mnt_opts(), which can lead to SELinux, at least,
+> > complaining.
+> >=20
+> > Fix that by adding a flag to the fs_context that suppresses the
+> > security_sb_set_mnt_opts() call in vfs_get_tree().  This can be set by =
+NFS
+> > when it sets the LSM context on the new superblock.
+> >=20
+> > The first bug leads to messages like the following appearing in dmesg:
+> >=20
+> > 	NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,10000=
+0,100000,2ee,3a98,1d4c,3a98,1)
+> >=20
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount(=
+) to it.")
+> > Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
+> > Tested-by: Jeff Layton <jlayton@kernel.org>
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+> > Acked-by: "Christian Brauner (Microsoft)" <brauner@kernel.org>
+> > Link: https://lore.kernel.org/r/165962680944.3334508.661002390034914203=
+4.stgit@warthog.procyon.org.uk/ # v1
+> > Link: https://lore.kernel.org/r/165962729225.3357250.143507288464715271=
+37.stgit@warthog.procyon.org.uk/ # v2
+> > Link: https://lore.kernel.org/r/165970659095.2812394.686889417110231879=
+6.stgit@warthog.procyon.org.uk/ # v3
+> > Link: https://lore.kernel.org/r/166133579016.3678898.628319501948056727=
+5.stgit@warthog.procyon.org.uk/ # v4
+> > Link: https://lore.kernel.org/r/217595.1662033775@warthog.procyon.org.u=
+k/ # v5
+> > ---
+> > This patch was originally sent by David several months ago, but it
+> > never got merged. I'm resending to resurrect the discussion. Can we
+> > get this fixed?
+>=20
+> Sorry, I sorta lost track of this after the ROOTCONTEXT_MNT discussion
+> back in v3.  Looking at it a bit closer now I have one nitpicky
+> request and one larger concern (see below).
+>=20
+> > diff --git a/fs/super.c b/fs/super.c
+> > index e781226e2880..13adf43e2e5d 100644
+> > --- a/fs/super.c
+> > +++ b/fs/super.c
+> > @@ -1541,10 +1541,12 @@ int vfs_get_tree(struct fs_context *fc)
+> >  	smp_wmb();
+> >  	sb->s_flags |=3D SB_BORN;
+> > =20
+> > -	error =3D security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
+> > -	if (unlikely(error)) {
+> > -		fc_drop_locked(fc);
+> > -		return error;
+> > +	if (!(fc->lsm_set)) {
+> > +		error =3D security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
+> > +		if (unlikely(error)) {
+> > +			fc_drop_locked(fc);
+> > +			return error;
+> > +		}
+> >  	}
+>=20
+> I generally dislike core kernel code which makes LSM calls conditional
+> on some kernel state maintained outside the LSM.  Sometimes it has to
+> be done as there is no other good options, but I would like us to try
+> and avoid it if possible.  The commit description mentioned that this
+> was put here to avoid a SELinux complaint, can you provide an example
+> of the complain?  Does it complain about a double/invalid mount, e.g.
+> "SELinux: mount invalid.  Same superblock, different security ..."?
+>=20
 
-OK, looks like this case is invalid. I'll keep it :)
+The problem I had was not so much SELinux warnings, but rather that in a
+situation where I would expect to share superblocks between two
+filesystems, it didn't.
 
-Thanks,
-Zorro
+Basically if you do something like this:
 
-> 
-> > > (What happens if xfs blockgc only runs every 5 minutes?)
-> > 
-> > How can can make that happen? If the 100s isn't enough, is there an upper
-> > limit, or how to make an upper limit?
-> 
-> There's no way to tell over NFS...
-> 
-> --D
-> 
-> > 
-> > Thanks,
-> > Zorro
-> > 
-> > > 
-> > > --D
-> > > 
-> > > > +if [ $res -ne 0 ];then
-> > > > +	echo "Write $iblocks_expected blocks, but get $iblocks_real blocks"
-> > > > +fi
-> > > > +
-> > > > +echo "Silence is golden"
-> > > > +# success, all done
-> > > > +status=0
-> > > > +exit
-> > > > diff --git a/tests/nfs/002.out b/tests/nfs/002.out
-> > > > new file mode 100644
-> > > > index 00000000..61705c7c
-> > > > --- /dev/null
-> > > > +++ b/tests/nfs/002.out
-> > > > @@ -0,0 +1,2 @@
-> > > > +QA output created by 002
-> > > > +Silence is golden
-> > > > -- 
-> > > > 2.40.1
-> > > > 
-> > > 
-> > 
-> 
+# mount nfsserver:/export/foo /mnt/foo -o context=3Dsystem_u:object_r:root_=
+t:s0
+# mount nfsserver:/export/bar /mnt/bar -o context=3Dsystem_u:object_r:root_=
+t:s0
 
+...when "foo" and "bar" are directories on the same filesystem on the
+server, you should get two vfsmounts that share a superblock. That's
+what you get if selinux is disabled, but not when it's enabled (even
+when it's in permissive mode).
+
+The problems that David hit with the automounter have a similar root
+cause though, I believe.
+
+> I'd like to understand why the sb_set_mnt_opts() call fails when it
+> comes after the fs_context_init() call.  I'm particulary curious to
+> know if the failure is due to conflicting SELinux state in the
+> fs_context, or if it is simply an issue of sb_set_mnt_opts() not
+> properly handling existing values.  Perhaps I'm being overly naive,
+> but I'm hopeful that we can address both of these within the SELinux
+> code itself.
+>=20
+
+The problem I hit was that nfs_compare_super is called with a fs_context
+that has a NULL ->security pointer. That caused it to call
+selinux_sb_mnt_opts_compat with mnt_opts set to NULL, and at that point
+it returns 1 and decides not to share sb's.
+
+Filling out fc->security with this new operation seems to fix that, but
+if you see a better way to do this, then I'm certainly open to the idea.
+
+> In a worst case situation, we could always implement a flag *inside*
+> the SELinux code, similar to what has been done with 'lsm_set' here.
+>=20
+
+I'm fine with a different solution, if you see a better one. You'll have
+to handhold me through this one though. LSM stuff is not really my
+forte'. Let me know what you'd like to see here.
+
+
+> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> > index d06e350fedee..29cce0fadbeb 100644
+> > --- a/security/selinux/hooks.c
+> > +++ b/security/selinux/hooks.c
+> > @@ -2745,6 +2745,30 @@ static int selinux_umount(struct vfsmount *mnt, =
+int flags)
+> >  				   FILESYSTEM__UNMOUNT, NULL);
+> >  }
+> > =20
+> > +static int selinux_fs_context_init(struct fs_context *fc,
+> > +				   struct dentry *reference)
+> > +{
+> > +	const struct superblock_security_struct *sbsec;
+> > +	struct selinux_mnt_opts *opts;
+> > +
+> > +	if (fc->purpose =3D=3D FS_CONTEXT_FOR_SUBMOUNT) {
+> > +		opts =3D kzalloc(sizeof(*opts), GFP_KERNEL);
+> > +		if (!opts)
+> > +			return -ENOMEM;
+> > +
+> > +		sbsec =3D selinux_superblock(reference->d_sb);
+> > +		if (sbsec->flags & FSCONTEXT_MNT)
+> > +			opts->fscontext_sid	=3D sbsec->sid;
+> > +		if (sbsec->flags & CONTEXT_MNT)
+> > +			opts->context_sid	=3D sbsec->mntpoint_sid;
+> > +		if (sbsec->flags & DEFCONTEXT_MNT)
+> > +			opts->defcontext_sid	=3D sbsec->def_sid;
+>=20
+> I acknowledge this is very nitpicky, but we're starting to make a
+> greater effort towards using consistent style within the SELinux
+> code.  With that in mind, please remove the alignment whitespace in
+> the assignments above.  Thank you.
+>=20
+
+Will do. Thanks for having a look!
+
+> > +		fc->security =3D opts;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int selinux_fs_context_dup(struct fs_context *fc,
+> >  				  struct fs_context *src_fc)
+> >  {
+>=20
+> --
+> paul-moore.com
+
+--=20
+Jeff Layton <jlayton@kernel.org>
