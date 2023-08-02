@@ -2,901 +2,273 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE8E776D10C
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 17:08:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA87076D3A8
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 18:30:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230392AbjHBPIO convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 2 Aug 2023 11:08:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
+        id S231687AbjHBQaE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Aug 2023 12:30:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234789AbjHBPHj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 11:07:39 -0400
-X-Greylist: delayed 702 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 02 Aug 2023 08:07:09 PDT
-Received: from xmailer.gwdg.de (xmailer.gwdg.de [134.76.10.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E1A3A89
-        for <linux-nfs@vger.kernel.org>; Wed,  2 Aug 2023 08:07:08 -0700 (PDT)
-Received: from excmbx-27.um.gwdg.de ([134.76.9.230] helo=email.gwdg.de)
-        by mailer.gwdg.de with esmtp (GWDG Mailer)
-        (envelope-from <Louis.Giannone@ipp.mpg.de>)
-        id 1qRDFz-000HPh-EC
-        for linux-nfs@vger.kernel.org; Wed, 02 Aug 2023 16:55:24 +0200
-Received: from MBX19-SUB-07.um.gwdg.de (10.108.142.72) by EXCMBX-27.um.gwdg.de
- (134.76.9.230) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.27; Wed, 2
- Aug 2023 16:55:24 +0200
-Received: from smtpclient.apple (10.250.9.199) by MBX19-SUB-07.um.gwdg.de
- (10.108.142.72) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.2.1118.30; Wed, 2 Aug
- 2023 16:55:23 +0200
-From:   Louis Giannone <Louis.Giannone@ipp.mpg.de>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0 (Mac OS X Mail 16.0 \(3731.600.7\))
-Subject: nfs4acleditor.cpp updated for qt5 compatibility
-Message-ID: <3F503B44-5CF5-4C40-9194-4E09C393B15E@ipp.mpg.de>
-Date:   Wed, 2 Aug 2023 16:55:15 +0200
-To:     <linux-nfs@vger.kernel.org>
-X-Mailer: Apple Mail (2.3731.600.7)
-X-Originating-IP: [10.250.9.199]
-X-ClientProxiedBy: excmbx-14.um.gwdg.de (134.76.9.225) To
- MBX19-SUB-07.um.gwdg.de (10.108.142.72)
-X-Virus-Scanned: (clean) by clamav
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        with ESMTP id S229892AbjHBQaC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 12:30:02 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 792BD213D;
+        Wed,  2 Aug 2023 09:30:01 -0700 (PDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 372FYSpO021840;
+        Wed, 2 Aug 2023 16:29:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=MHRH0FoR9mBpQKvMfWkHqg9UkK3B8cL5Z4+kU5rZStg=;
+ b=zsik+J6F7LJBBlLSc8qiMTzw4hZjbnuhZ/qImkW4n8ecEQ0IdHsTee1sY/2z4bWt6pFh
+ bUNOY0XjFs/lhcRZRzLliWFqbbnxdbQ5L0vgXrjeuH3fuc4JsJgW0QNG60+zcWLhw7jl
+ WJ0a4O2qDcv+ROCcY7b/sYnGdRL3pO559W39ol8ixS+bM08wvliqPDFPgazDL1xemUlh
+ JvZ+o9kZXmB69hNgvB5sFONQyOZGhxmfaxTfTF4/yKijTnbBg0QdpMjxdsyLAjKHZHS7
+ IOWeMnJ2dsz9vxcsi33lBAF/0h7EohjsQlMZlphxOy+QB2wgor3Tv7kYsuXDAJG91f+4 mw== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s4spc7scc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Aug 2023 16:29:52 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 372F6JBw020541;
+        Wed, 2 Aug 2023 16:29:51 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2102.outbound.protection.outlook.com [104.47.55.102])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3s4s78df1p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Aug 2023 16:29:51 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mZtAO993wCRD1wWBf2aps/6PyFEEZqcFX0oInJEKEN27l9iC2EOR/2YZdTXxMknwpl4TSkmT62glRxW4brWuXbk2oLHZNgcBSxu09QnrsODVtJoqLk7GLZarUEQFQH1TliFssE/fnfIRnM07Q/Gt1PsqXEzpRQfEI+im2eiqmlJakCLipiM+QfqV0ujK0QMnxY87ds8roiw5KEt+V1KRDa9VaMglGKsE82UEUm534nkz+MubjGKJoK4+b8cQkX9Pju/guUUvdHJbeDr2OpmHA/ATJPSNhBzGjD1teunF7HS23PJH8GjxdgtIBKb3hgb7qY9mG/VBxERkbAPmPSnPOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=MHRH0FoR9mBpQKvMfWkHqg9UkK3B8cL5Z4+kU5rZStg=;
+ b=LcNyxrZAzxkh+7LmFadg7amt6B3udIxhoEWFXumG5Xw3xvObaC/7w0HYWCaRERGhG1Y5hB5Ca4H0nQak/OGDVkgbEKMc70738P1YfE4RAmzu6I6VXZ2AZmNDE3mu8FjhNDfGeCQn/WIVGM4nh2VHpCCCQDjCpACL+7sZ98y3qFUwmNrKvR5aFvJHc6VBHHCyAfVOXZuLHZ7YJ/Ulby8IhujlNIzJO3mrYnV0yYTLhmDemEpdnRyIZt6zL8W32r8kQjf7svy4RSrH3eBWT4Zrrso7YtdhMg2Mb5W08/kkDZ8fiidvHXFeT7uuCZPwrp8IYZXgCuHUO4hHcXYSstDCCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=MHRH0FoR9mBpQKvMfWkHqg9UkK3B8cL5Z4+kU5rZStg=;
+ b=IEsRXj6YA2cyHFDxmr8bZqXYWpXYDAwE40tLNmUVjATcuB8Mi/Fd8HtiyE/WgIBkYvn/ppIfV3DQ1emCv7WN8Mb/LGb45UweN0R9cWjSvRoWD++vF3mRCBV8acrOdD0PwxjBrop54iqUldD3m0H/AXBanH8gGOB2ILhxKHXl+ho=
+Received: from MN2PR10MB4270.namprd10.prod.outlook.com (2603:10b6:208:1d6::21)
+ by DS7PR10MB4861.namprd10.prod.outlook.com (2603:10b6:5:3a7::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.19; Wed, 2 Aug
+ 2023 16:29:49 +0000
+Received: from MN2PR10MB4270.namprd10.prod.outlook.com
+ ([fe80::3fd7:973:c9d7:afe2]) by MN2PR10MB4270.namprd10.prod.outlook.com
+ ([fe80::3fd7:973:c9d7:afe2%4]) with mapi id 15.20.6631.045; Wed, 2 Aug 2023
+ 16:29:49 +0000
+Message-ID: <8c3adfce-39f0-0e60-e35a-2f1be6fb67e6@oracle.com>
+Date:   Wed, 2 Aug 2023 09:29:37 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.13.0
+Subject: Re: [PATCH v2] nfsd: don't hand out write delegations on O_WRONLY
+ opens
+Content-Language: en-US
+To:     Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Tom Talpey <tom@talpey.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230801-wdeleg-v2-1-20c14252bab4@kernel.org>
+From:   dai.ngo@oracle.com
+In-Reply-To: <20230801-wdeleg-v2-1-20c14252bab4@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN1PR12CA0064.namprd12.prod.outlook.com
+ (2603:10b6:802:20::35) To MN2PR10MB4270.namprd10.prod.outlook.com
+ (2603:10b6:208:1d6::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR10MB4270:EE_|DS7PR10MB4861:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ac2a45a-6de9-424e-b503-08db9375b0cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: yVAEZ7Y0xkxHKaLb2VqGvYAgjbqaKEYNZ/b6NtnbSVM6LL+O95bdYKgCgccfCTqDJebA+DztnpQdwfu6r+xkZq1UqNkQcahGT/CwGX+ilDfg99qK65sf58MN7ioplWwtPxA6mxRXSxURP4RP/z6D+y85RlxUdo/Edu4svUQ3dRKn9WgOhDiiBT5uMl4qF1uMk4SfO/yLROcSAEm4+cRPIUcH2OMXzM734VZtJC1PiNW4/L/7XaRpNWti3l5wh1otZxr0iGBm0E5wneUsUj6agua8M6xBRk2Wx7ttlGO+UnbuXKJtKp5teV+euPIrEyULnoW7vFZXxOkeHeevnrtiUR49ZzMvJhVtn7ZAkZgZfRJW6G4+gIKp2hWeKObVNGbqSCd+5N4tHhJKpuHEt06AHnOVsqVAzs2mJGSMXyTVcrc9lHtN//A0snqwYpaaGKoJPg3wnu3p4wS0zB/PrKCW491eGqpWu1EsPaWfCl8geG28mao4SZBalKjnvu++NZWqvYVRvCJU+8sS2pAnNxluy3SFVLLnKpNLrTpcrQ1/8BCOkmX8ks/XpVkYCYgYfH5S/zn6P1RX8mF4F9ZKy+OSj4nKkurj4CEYLmqaHf5uFTs=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR10MB4270.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(366004)(396003)(346002)(39860400002)(136003)(451199021)(31686004)(31696002)(86362001)(36756003)(478600001)(110136005)(38100700002)(2616005)(6506007)(83380400001)(186003)(26005)(53546011)(41300700001)(8676002)(8936002)(966005)(6512007)(9686003)(6666004)(6486002)(316002)(66476007)(4326008)(5660300002)(66946007)(66556008)(2906002)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VklHbHZjQSs4ZEJHdmErdUdIeC9iVC8wa3RuaVJtZ1NUSzNGV2RtZnV6OFRJ?=
+ =?utf-8?B?eGgxbmxxQjFtK016OEJaekdvTHRyUTBiM2VmdXN1QVcxRnFML05lQU1ZU0pw?=
+ =?utf-8?B?VmxWcjBVWUFwYkdIejZEeHZZZnMyMG9KZlczZ1djY0U0bnhZdWtjQ0M3SUVX?=
+ =?utf-8?B?eWIweUI5aWRnUXVIeUE3ejZ5QU9qbVRoZDYyMmUyZDZNTUtXL2RRZE1uME9Z?=
+ =?utf-8?B?bmZ2TFdUdk1iWlVpYnV0alRjOGdFZFc1QnRmcHpxWjIwK3ZGSEFpdTNqWTNm?=
+ =?utf-8?B?QWkzVUhQbUk4RnlkUGpZVWtpY3VWWWIxVzZTbHNDbzJlb2RMWnpweUdSUFg1?=
+ =?utf-8?B?M1U4aU1PY0lIaFl3MGZETk1rVXFmQlg5bXE3UitnTitBTER1SitGNTdkSFR3?=
+ =?utf-8?B?alpqTjdhNStReVBaMzlvUDFtQW5nbkRHNFk2Rk9yMzZVS3F1UlN3TkRnV3VB?=
+ =?utf-8?B?U0xpL2FGUHdVUzk4VnRmU3JlYm1pR3NwSU9LSE83enhvbmRzY3VZd0tUc0hX?=
+ =?utf-8?B?bVk1UE80OEJEY21JempTaFUrbG1DOTVJci9jUWxsSjAzM3hSWDVhd3NKL3g4?=
+ =?utf-8?B?ZTUrUFhaMW9qSHlxTFlJTTRoMUE0a1hDVXVZS2pJek5vL1h3V00vc3JPL3hi?=
+ =?utf-8?B?Qm1XM1drZUprWmRXMStLZWFYZEV3dzBUTmpERFgrQ2xLVnU3YjUyL2xNZVV4?=
+ =?utf-8?B?UHFDR0tGV3FUVlFrZ1JOZloxSENBeTQxeU53bnJEWGlHaFk2OCtucDZMOWdZ?=
+ =?utf-8?B?MzFvMjNMbENBRGxnMFJGQkV3bTltTStIWGc2V012SmlGZzFERUswdUFQVU0v?=
+ =?utf-8?B?RXYvQktiOTR5NHVJdFQwazNUVXNJRzJndnpZa0NkZEJpb0FkWlM1eWx1QTZa?=
+ =?utf-8?B?Ym1tZHNzOEI4ZmlLdjVLaDAvZXpqRFdhdVh4SG5wKzZCT3BYWlZ6SkZLWldr?=
+ =?utf-8?B?WGg1NzlzYlAvVWxFbmJsYk1TM2Q2TTd3UUFuVWRuM0txbjJhcVd2MWNPdlNh?=
+ =?utf-8?B?SUZIeTRNeWFyR1F4RmxOUXhvWlZIVDRDMSsrNVZDQTNyb2pMVG90dW1QMlFk?=
+ =?utf-8?B?MDJrbjIxbmNCQjZPME9TdWF1RkR0U2YwTHMwNmRhbUpFSVVwK0pVQjZPQ1kr?=
+ =?utf-8?B?bVlHMEZUdHFZVUVDSi91d3BtSjhmbkNPYjZZOElTRmJKbWFOd3dxMHpqVnl1?=
+ =?utf-8?B?akNZYWNHWDRXUkowUWJ6L2N4RzdlOU1mY1dHaERId3BxcFFSeDJQYk81S2pE?=
+ =?utf-8?B?WmJ5STZ5SUFnbUZZTU5Ra2xCZHMwWXpXTG94ekh4MmdoYnNGOEp5TDV3RHR5?=
+ =?utf-8?B?dmE3ZHBYZHRjdVdkMERhNU1WQmlmaWMweWlLRmRCQTlWaUtXUkIwUkl5V1Qw?=
+ =?utf-8?B?TStpVjNRRW15T3l1dWx3K1JlMUIrak53dEtsdFIxWHFvMERrNnoyaWtaOTNU?=
+ =?utf-8?B?bW1WSCtrbmlqd0R0dHJVdkp6WEoyT1dPTENyRFpTNnNVck4xQnZ0UHcrdFhl?=
+ =?utf-8?B?VkRWbk5oUHV2K05KMndQekJ0VEpzSjNYZ1BDNDZHWkpudnFFWUh4T01hK25z?=
+ =?utf-8?B?OFlSRkpmamYzRklHMGsvV1F3RWFDU3RKWlNNaFE4NUlWODlxNnlSa2lVMlFi?=
+ =?utf-8?B?SVJueWRGWG8xUDR0eHFON0lWQWpaa2dhd2tldVRWNkErMG5sU2I2Ky9PajJC?=
+ =?utf-8?B?SC9pQzBoT2RWVTFEUERoNVB4VHFzUGRBdXhMSi9xcW5Ya0QwK25BUmFQWUQz?=
+ =?utf-8?B?SGxpOEpLaCsyS1QzdWZGWjl3R1haVVp3dm8xN2RkaHpKM2FYQVFFQlFqRXF2?=
+ =?utf-8?B?eERuRmcvdFd4dkVwRlBzVFJSU3NrU3pwVUREQ05yTnQ1UlBmQzd2YUdwWFZa?=
+ =?utf-8?B?d0J6MHgzc08wR24vUWJ2NVpueG9BQm5vZlQ3VjNSQmFLYnZYdEFGQ0NTcUxJ?=
+ =?utf-8?B?c01nMVlWaHRKd3FDNWNaclYrQUZXbHhRc2lYZEt1MWkvL21HR25WQnQxSitJ?=
+ =?utf-8?B?Q1pCQit3TXdlY1lKNGpCWXEyL2ZnaC9OQjlINFg0RTJuejNwaTdMRTZWMk9a?=
+ =?utf-8?B?Sk5WQlNYak4vU25QWHRVYkF6b0kySUFKU2NIbUQ2bFpIVHlwanN3N3B5NWdE?=
+ =?utf-8?Q?/a0JwWJqROUxWAAEEcLbHmNR9?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: Wql0pk6cYLHSuTqcsBa5MxCnFjZ7UUy5dqyRLOv+Q9biF7GYoEdxy6kzH1iDpKyVPmrCi3+5G5etlND7F5mG/gCIyGUtFEOMxhyK0ACAlVOK+7XFougL30F83y0jMSVouAN2gGUH3vnz5YZsz/ZHunRLoLTifIlh66wURguD0ZFvmofn7qkxHCsMBn7wo/z4N/kmAvo5g/SJHpoLQVMY0cRvLIDiADRGmSIfknZVyQYXNzCrjp7ZeALrUQiP5tpsWI0v6EIwwv5j/bf52CZ71eA5W5jboJklY8RP/JDes+6CNoL2Z/IwE7h2e3uID2T2Z0a8I7K5s4XxbVfVmHv3LQ3pM9gzH4LhRciWmYQO/gwH0f8QLLOkCxXIN/38Tv7dbyTWFl8qZZx6bnAacOunR7n1/fy2rrExSjHbM5rPpggXHPNrMJ79soqP4/rvm520+R5rrtDDKeOkhJFu8lVvx4CFc6c7ZwVn+Q7ieD/QpenUdmNdaFOaTpJwxf46qyzhbkeJGNOTBSnyuTV+4bierZ2qwJGLTydwU/ztB3ohcRAsekn2Nl1YJYhaOTg0rqt9XPWn1W9piO9VoLkUkURnvpECWUMQ3kK6b2T1sWj5Oiz6zPuQbwrHGHkXhfhLlDNGkR2xqOeubcwX4zOswlirTTitXk4F15pN+vkaorAap+1XzfihyZGPFd2ygfmyQWg6JIlRsUS0wuvKjZJgrJi05/t4wrlb6l/+KRgUaUZYbSs1W5ayEfmJGg7UMTvdQ8kdgOEXZtwqfKckxsZrA37Jn/8ZcKn3c7vGjA/sNxXi5QPasXTuKtUA9v50wT2DwO/NjENgNaqLU3qefeWDPWnW3ZAEwKRcKJ1R548hXsgRq3NgkDTeH1fUtTpAHfXqCUPc
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ac2a45a-6de9-424e-b503-08db9375b0cb
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR10MB4270.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2023 16:29:49.2162
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4olItmmw/kdp0TrxVFt4OGw6v5ipF59+wYnUIY/5tEmX0GLqjTpanHD5dtLHyius57hiRx03r/3OZ4/MwRO75g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4861
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-02_12,2023-08-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 spamscore=0
+ mlxlogscore=849 malwarescore=0 adultscore=0 suspectscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308020146
+X-Proofpoint-ORIG-GUID: DNL08SQzO00UWb3CtOOTYrmn295D-rrd
+X-Proofpoint-GUID: DNL08SQzO00UWb3CtOOTYrmn295D-rrd
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-/*  Copyright (c) 2006 The Regents of the University of Michigan.
- *  All rights reserved.
- *
- *  David M. Richter <richterd@citi.umich.edu>
- *  Alexis Mackenzie <allamack@citi.umich.edu>
- * qt5 compatibility added by 
- *   Louis.Giannone@ipp.mpg.de
- *   Giovanni.Tardini@ipp.mpg.de
-  *  David M. Richter <richterd@citi.umich.edu>
- *  Alexis Mackenzie <allamack@citi.umich.edu>
- *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
- *
- *  1. Redistributions of source code must retain the above copyright
- *     notice, this list of conditions and the following disclaimer.
- *  2. Redistributions in binary form must reproduce the above copyright
- *     notice, this list of conditions and the following disclaimer in the
- *     documentation and/or other materials provided with the distribution.
- *  3. Neither the name of the University nor the names of its
- *     contributors may be used to endorse or promote products derived
- *     from this software without specific prior written permission.
- *
- *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
- *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
- *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
- *  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- *  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
-#include <string.h>
-#include "nfs4acleditor.h"
-
-NFS4_ACL_Editor::NFS4_ACL_Editor(QWidget *parent, char *filearg) : QMainWindow(parent)
-{
-	uis = QString(":images/user.gif");
-	gis = QString(":images/group2.gif");
-	eis = QString(":images/everyone2.gif");
-
-	uils = QString(":images/user-light.gif");
-	gils = QString(":images/group2.gif");
-	eils = QString(":images/everyone2.gif");
-
-	nacl = NULL;
-	pbg = NULL;
-	dpbg = NULL;
-	fpbg = NULL;
-	selectedACE = NULL;
-	selectedLogical = -1;
-	selectedVisual = -1;
-	is_directory = 0;
-	deleting = 0;
-
-	setWindowIcon(QIcon(QPixmap(":images/citi-icon.gif")));
-	populateMenus();
-
-	cw = new QWidget(this);
-	setCentralWidget(cw);
-
-	sw = new QStackedWidget();
-	sw->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-	gl = new QGridLayout(cw);
-	fl = new QLabel(" ");
-	fl->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-	gl->addWidget(fl, 0, 0, 1, 5);
-
-	/* the main ACL table */
-	sl << "ACE type" << "Principal" << "Permissions" << "Flags";
-	tw  = new QTableWidget(0, 4);
-	tw->setHorizontalHeaderLabels(sl);
-	tw->setAlternatingRowColors(true);
-	tw->setEditTriggers(QAbstractItemView::NoEditTriggers);
-	tw->setSelectionMode(QAbstractItemView::SingleSelection);
-	tw->setSelectionBehavior(QAbstractItemView::SelectRows);
-	tw->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	tw->setFocus(Qt::OtherFocusReason);
-	tw->setSortingEnabled(false);
-	tw->setColumnWidth(2, 130);
-	tw->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
-	tw->horizontalHeader()->setSectionsMovable(true);
-	tw->verticalHeader()->setSectionResizeMode(QHeaderView::Custom);
-
-	//tw->setDragEnabled(true);
-	//tw->setAcceptDrops(true);
-	//tw->setDropIndicatorShown(true);
-	/// should be fixed by Trolltech///	tw->verticalHeader()->setMovable(true);
-	///	//connect(tw->verticalHeader(), SIGNAL(sectionMoved(int, int, int)), this, SLOT(aceMoved(int, int, int)));
-	///	//connect(tw, SIGNAL(rowMoved(int, int, int)), this, SLOT(aceMoved(int, int, int)));
-
-	connect(tw, SIGNAL(currentCellChanged(int, int, int, int)), this, SLOT(aceSelected(int, int, int, int)));
-	gl->addWidget(tw, 1, 0, 2, 5);
-	gl->setRowStretch(1, 5);
-	gl->setColumnStretch(1, 50);
-
-	/* add a spacer */
-	f = new QFrame();
-	f->setMidLineWidth(1);
-	f->setLineWidth(2);
-	f->setMinimumHeight(2);
-	f->setMaximumHeight(4);
-	f->setFrameStyle(QFrame::HLine | QFrame::Raised);
-	gl->addWidget(f, 3, 0, 1, 5, Qt::AlignTop);
-	gl->setRowMinimumHeight(3, 15);
-	//gl->setColumnMinimumWidth(2, 15);
-
-	/* most of the fields underneath the ACL table */
-	populateTypeWho();
-	populatePerms();
-	populateFlags();
-	populateButtons();
-
-	cw->setLayout(gl);
-	tw->resizeColumnToContents(0);
-	initWithFile(QString(filearg));
-
-#ifdef DEBUG
-	for (int i = 0; i < acl.size(); i++) {
-		ace = acl.at(i);
-		dprintf("%d) i see %x is '%s' in %x, length %d\n", i, ace, ace->who, ace->who, strlen(ace->who));
-	}
-#endif
-	normal = QPalette(tw->palette());
-	light = QPalette(normal);
-	qc = normal.color(QPalette::Highlight);
-	light.setColor(QPalette::Highlight, qc.light(125));
-}
-
-
-void NFS4_ACL_Editor::typeModified(int index)
-{
-	int newtypemask = maskForType(index);
-
-	if (acl.empty() || selectedLogical < 0 || selectedVisual < 0 || selectedACE == NULL)
-		return;
-
-	selectedACE->type = newtypemask;
-	setRowType(selectedLogical, textForType(index));
-	setRowIcon(selectedLogical, iconForACE(selectedACE));
-}
-
-void NFS4_ACL_Editor::principalModified(const QString &s)
-{
-//	printf("ICON FOR PRINCIPAL: %s (flags: %x) (item: %p) (logical: %d) (count: %d)\n", qPrintable(s), selectedACE->flag, tw->item(selectedLogical, 1), selectedLogical, tw->rowCount());
-
-	setRowPrincipal(selectedLogical, s);
-	if (isSpecialGroup(s)) {
-		groupifyACE(selectedACE);
-		updateFlags();
-	} else if (isEveryone(s)) {
-		ungroupifyACE(selectedACE);
-		updateFlags();
-	}
-	syncWho(selectedACE, qPrintable(s));
-	setRowIcon(selectedLogical, iconForPrincipal(qPrintable(s), isGroupACE(selectedACE)));
-}
-
-void NFS4_ACL_Editor::permsModified(QAbstractButton *a)
-{
-	QCheckBox *c = (QCheckBox *)a;
-
-	if (acl.empty() || selectedLogical < 0 || selectedVisual < 0 || selectedACE == NULL)
-		return;
-
-	if (c->isChecked())
-		selectedACE->access_mask |= pbg->id(c);
-	else
-		selectedACE->access_mask ^= pbg->id(c);
-	updatePerms();
-}
-
-void NFS4_ACL_Editor::shortcutsModified(QAbstractButton *a)
-{
-	if (acl.empty() || selectedLogical < 0 || selectedVisual < 0 || selectedACE == NULL)
-		return;
-
-	selectedACE->access_mask = sbg->id(a);
-	updatePerms();
-}
-
-void NFS4_ACL_Editor::flagsModified(QAbstractButton *a)
-{
-	QCheckBox *c = (QCheckBox *)a;
-
-	if (acl.empty() || selectedLogical < 0 || selectedVisual < 0 || selectedACE == NULL)
-		return;
-
-	if (c->isChecked())
-		selectedACE->flag |= fbg->id(c);
-	else
-		selectedACE->flag ^= fbg->id(c);
-
-	updateFlags();
-	setRowIcon(selectedLogical, iconForACE(selectedACE));
-}
-
-void NFS4_ACL_Editor::aceSelected(int row, int column, int prevrow, int prevcolumn)
-{
-	if (acl.empty())
-		return;
-
-	dprintf("aceSelected(): deleting? %d   row %d col %d  prevrow %d prevcol %d   currentrow %d\n", deleting, row, column, prevrow, prevcolumn, tw->currentRow());
-	if (!deleting) {
-		selectedLogical = row;
-		selectedVisual = tw->visualRow(selectedLogical);
-	}
-	else {
-		/* special case: if you're deleting the nth row, 'row' is n and 'prevrow' is n+1,
-		 *       -but-   if you're deleting the 0th row, 'row' is 1 and 'prevrow' is 0
-		 *
-		 * this can be tricky: means that if you're on the 1st row and delete it, current
-		 * becomes 0.  but if you're on the 0th row and delete IT, current becomes 1!
-		 */
-		if (row == 1 && prevrow == 0) {
-			selectedLogical = 0;
-			selectedVisual = 0;
-		}
-
-		/* during a DELETE, the outgoing row is still included in rowCount().
-		 * currentRow is the new end-of-list index.
-		 * to see if currentRow will-soon-be the end-of-list, subtract two (1 for 0-based,
-		 *   and 1 for "haven't decremented for the outgoing row yet"-in the table).
-		 */
-		else if (tw->currentRow() == tw->rowCount() - 2) {
-			selectedLogical = tw->currentRow();
-			selectedVisual = selectedLogical;
-		}
-
-		else {
-			if (selectedLogical != 0) {
-				selectedLogical = row + 1;
-				if (selectedLogical >= tw->rowCount())
-					selectedLogical = tw->currentRow();
-			} else
-				selectedLogical = row;
-
-			selectedVisual = tw->visualRow(selectedLogical);
-		}
-	}
-
-	dprintf("aceSelected(): NEAR-END:  logical %d  visual %d  currentrow %d  aces %d  rows %d\n", selectedLogical, selectedVisual, tw->currentRow(), acl.size(), tw->rowCount());
-	if (selectedLogical < 0 || selectedVisual < 0 || row < 0) {
-		dprintf("aceSelected(): selectedLogical %d, selectedVisual %d, ACE %p, ACL supposedly has %d ACEs\n", selectedLogical, selectedVisual, selectedACE, acl.size());
-		selectedACE = NULL;
-		return;
-	}
-	selectedACE = acl.at(selectedVisual);
-	le->setText(selectedACE->who);
-	updateType();
-	updatePerms();
-	updateFlags();
-
-	dprintf("aceSelected(): sindex %d is type %d '%s'\n", selectedVisual, selectedACE->type, selectedACE->who);
-}
-
-void NFS4_ACL_Editor::aceMoved(int logical, int oldind, int newind)
-{
-	acl.move(oldind, newind);
-	selectedLogical = logical;
-	selectedVisual = tw->visualRow(selectedLogical);
-	selectedACE = acl.at(selectedVisual);
-	dprintf("aceMoved(): selectedLogical is %d == logical is %d, visual is %d == newind %d\n", selectedLogical, logical, selectedVisual, newind);
-}
-
-void NFS4_ACL_Editor::updateType()
-{
-	for (int i = 0; i < TYPE_COUNT; i++) {
-		if (maskForType(i) == selectedACE->type) {
-			cmb->setCurrentIndex(i);
-			break;
-		}
-	}
-}
-
-void NFS4_ACL_Editor::updatePerms()
-{
-	dprintf("UPDATE_PERMS: currentRow: %d; selectedLogical: %d; selectedVisual: %d  pbg: %p  sACE %d %p %s mask %x  || ", tw->currentRow(), selectedLogical, selectedVisual, pbg, selectedACE->type, selectedACE, selectedACE->who, selectedACE->access_mask );
-	updateCheckBoxesWithMask(pbg, selectedACE->access_mask);
-	setRowPerms(selectedLogical, nfs4_get_ace_access(selectedACE, buf, is_directory));
-}
-
-void NFS4_ACL_Editor::updateFlags()
-{
-	updateCheckBoxesWithMask(fbg, selectedACE->flag);
-	setRowFlags(selectedLogical, nfs4_get_ace_flags(selectedACE, buf));
-}
-
-void NFS4_ACL_Editor::updateCheckBoxesWithMask(QButtonGroup *bg, unsigned int mask)
-{
-	if (bg == NULL)
-		return;
-
-	ButtonList bl = (ButtonList)bg->buttons();
-	QCheckBox *c;
-
-	for (int i = 0; i < bl.size(); i++) {
-		c = (QCheckBox *)bl.at(i);
-		if (bg->id(c) & mask)
-			c->setCheckState(Qt::Checked);
-		else
-			c->setCheckState(Qt::Unchecked);
-	}
-}
-
-void NFS4_ACL_Editor::getACL()
-{
-	doHighlight(0);
-	if (!dfd->exec(filename))
-		initWithFile(dfd->selectedPath());
-}
-
-void NFS4_ACL_Editor::reloadACL()
-{
-	nfs4_free_acl(nacl);
-	acl.clear();
-	initWithFile(filename);
-}
-
-void NFS4_ACL_Editor::newACE()
-{
-	struct nfs4_ace *ace;
-
-	if (nacl == NULL)
-		return;
-
-	ace = nfs4_new_ace(nacl->is_directory, NFS4_ACE_ACCESS_ALLOWED_ACE_TYPE, 0, 0, NFS4_ACL_WHO_NAMED, " ");
-	if (!ace) {
-		fprintf(stderr, "ERROR: failed to create new ACE (%p).\n", nacl);
-		perror(strerror(errno));
-		return;
-	}
-
-	/* trim the name to zero-length.  leaks a byte --
-	 * it's like spilling some malt liquor for fallen homies. */
-	ace->who[0] = '\0';
-
-	if (nfs4_prepend_ace(nacl, ace)) {
-		fprintf(stderr, "ERROR: failed to add ACE to ACL.\n");
-		free(ace);
-		return;
-	}
-	acl.prepend(ace);
-	selectedLogical = 0;
-	tw->insertRow(selectedLogical);
-	selectedVisual = tw->visualRow(selectedLogical);
-	selectedACE = ace;
-
-	dprintf("newACE(): currentRow: %d; selectedLogical: %d == selectedVisual: %d == acl->size(%d) - 1\n", tw->currentRow(), selectedLogical, selectedVisual, acl.size());
-
-	initRowWithACE(selectedLogical, selectedACE);
-	tw->setCurrentCell(selectedLogical, 0);
-}
-
-void NFS4_ACL_Editor::deleteACE()
-{
-	if (acl.empty() || nacl == NULL || selectedLogical < 0 || selectedVisual < 0 || selectedACE == NULL)
-		return;
-//	dprintf("deleteACE(): deleting %s  type %d   logical: %d  visual: %d  (ACE: %x %s)\n", selectedACE->who, selectedACE->type, selectedLogical, selectedVisual, acl.at(selectedVisual)->type, acl.at(selectedVisual)->who);
-
-	deleting = 1;
-	dprintf("deleteACE(): naces %d  acl %d  rows %d \n", nacl->naces, acl.size(), tw->rowCount());
-	dprintf("deleteACE(): sACE %p  %s  ACL(0) %p  %s\n", selectedACE, selectedACE->who, acl.at(0), acl.at(0)->who);
-	nfs4_remove_ace(nacl, selectedACE);
-	acl.removeAt(tw->currentRow());
-
-	dprintf("\n\n");
-	for (int z = 0; z < tw->rowCount(); z++) {
-		dprintf("logical row %d seems to be visual row %d\n", z, tw->visualRow(z));
-	}
-	tw->removeRow(tw->currentRow());
-	deleting = 0;
-
-	if (tw->rowCount() > 0) {
-		dprintf("deleteACE(): post-removeRow:  logical %d  visual %d   currentRow %d  currentVis %d  ACL size %d\n", selectedLogical, selectedVisual, tw->currentRow(), tw->visualRow(tw->currentRow()), acl.size());
-		// set in aceSelected instead...	selectedLogical = tw->currentRow();
-		selectedACE = acl.at(selectedLogical);
-	} else {
-		selectedLogical = -1;
-		selectedVisual = -1;
-		selectedACE = NULL;
-	}
-	tw->setCurrentCell(selectedLogical, 0);
-}
-
-void NFS4_ACL_Editor::setACL()
-{
-	struct nfs4_ace *ace;
-
-	if (acl.empty() || nacl == NULL)
-		return;
-
-	/* must reorder nfs4_acl to match our NFS4_ACL and make "who" match */
-	//printf("\npre-reordering:\n");	//acl_nfs4_print(nacl);
-	TAILQ_INIT(&nacl->ace_head);
-	for (int i = 0; i < acl.size(); i++) {
-		ace = acl.at(i);
-		TAILQ_INSERT_TAIL(&nacl->ace_head, ace, l_ace);
-		syncWho(ace, qPrintable(tw->item(i, 1)->text()));
-	}
-	//printf("\npost-reordering:\n");	//acl_nfs4_print(nacl);
-	if (nfs4_set_acl(nacl, qPrintable(filename)))
-		fprintf(stderr, "ERROR: failed to set ACL \n");
-}
-
-/* b/c of signals, moveUp/moveDown need to be functions and not just #defines */
-void NFS4_ACL_Editor::move(int by)
-{
-	int at = tw->currentRow();
-	int to = at + by;
-
-	swapRows(at, to);
-	tw->selectRow(to);
-}
-
-void NFS4_ACL_Editor::moveUp()
-{
-	    move(-1);
-}
-
-void NFS4_ACL_Editor::moveDown()
-{
-	    move(1);
-}
-
-void NFS4_ACL_Editor::initWithFile(QString file)
-{
-	filename.clear();
-	if (file.isEmpty())
-		goto out;
-
-	dprintf("\nINIT: STARTING\n");
-	nacl = nfs4_acl_for_path(qPrintable(file));
-	if (nacl == NULL) {
-		filename.append("<font color='#a01020'>ERROR: file not found, or perhaps it's not on an NFSv4 mount.</font>");
-		goto out;
-	}
-	filename.append(file);
-
-	is_directory = nacl->is_directory;
-	pbg = (is_directory) ? dpbg : fpbg;
-	sbg = (is_directory) ? dsbg : fsbg;
-
-	acl.clear();
-	nfs4_acl_to_NFS4_ACL(nacl, &acl);
-	sw->setCurrentIndex(is_directory);
-
-	dprintf("INIT: .. about to remove rows..\n");
-	deleting = 1;
-	while (tw->rowCount() > 0)
-		tw->removeRow(0);
-	deleting = 0;
-
-	dprintf("INIT: .. about to insert rows..\n");
-	for (int i = 0; i < acl.size(); i++) {
-		ace = acl.at(i);
-		//nfs4_print_ace(ace, is_directory);
-		tw->insertRow(tw->rowCount());
-		initRowWithACE(tw->rowCount() - 1, ace);
-	}
-	tw->setCurrentCell(0, 0);
-out:
-	reformatFilename();
-}
-
-void NFS4_ACL_Editor::initRowWithACE(int row, struct nfs4_ace *ace)
-{
-	tw->setVerticalHeaderItem(row, new QTableWidgetItem());
-	setRowIcon(row, iconForACE(ace));
-	tw->setItem(row, 0, new QTableWidgetItem(nfs4_get_ace_type(ace, buf, 1)));
-	tw->setItem(row, 1, new QTableWidgetItem(ace->who));
-	tw->setItem(row, 2, new QTableWidgetItem(nfs4_get_ace_access(ace, buf, is_directory)));
-	tw->setItem(row, 3, new QTableWidgetItem(nfs4_get_ace_flags(ace, buf)));
-}
-
-void NFS4_ACL_Editor::initRowWithList(int row, QStringList *t)
-{
-	if (!t || t->size() != 4) {
-		fprintf(stderr, "ERROR: initRowWithList() bailed (t: %p)\n", t);
-		exit(1);
-	}
-	for (int i = 0; i < 4; i++)
-		tw->item(row, i)->setText(t->at(i));
-}
-
-QStringList* NFS4_ACL_Editor::listForRow(int row)
-{
-	QStringList *qsl = new QStringList();
-
-	for (int i = 0; i < 4; i++)
-		qsl->append(tw->item(row, i)->text());
-
-	return qsl;
-}
-
-void NFS4_ACL_Editor::swapRows(int from, int to)
-{
-	QStringList *lf, *lt;
-	QIcon fip, tip;
-
-	if (to < 0 || to > tw->rowCount() - 1)
-		return;
-
-	dprintf("swapRows(): from %d  to %d\n", from, to);
-	fip = iconForRow(from);
-	tip = iconForRow(to);
-	lf = listForRow(from);
-	lt = listForRow(to);
-	initRowWithList(to, lf);
-	initRowWithList(from, lt);
-	setRowIcon(to, QIcon(fip));
-	setRowIcon(from, QIcon(tip));
-	acl.swap(from, to);
-
-	delete lf;
-	delete lt;
-}
-
-QIcon NFS4_ACL_Editor::iconForRow(int row)
-{
-	return tw->verticalHeaderItem(row)->icon();
-}
-
-QIcon NFS4_ACL_Editor::iconForACE(struct nfs4_ace *ace)
-{
-	return iconForACE(ace, 0);
-}
-
-QIcon NFS4_ACL_Editor::iconForACE(struct nfs4_ace *ace, int highlight)
-{
-	if (ace == NULL)
-		return QIcon();
-
-	dprintf("ICON FOR  '%s'  type '%d'  flags '%x'\n", ace->who, ace->whotype, ace->flag);
-	if (ace->whotype == NFS4_ACL_WHO_GROUP || (ace->flag & NFS4_ACE_IDENTIFIER_GROUP))
-		return QIcon(highlight ? gils : gis);
-	else if (ace->whotype == NFS4_ACL_WHO_NAMED || ace->whotype == NFS4_ACL_WHO_OWNER)
-		return QIcon(highlight ? uils : uis);
-	else if (ace->whotype == NFS4_ACL_WHO_EVERYONE)
-		return QIcon(highlight ? eils : eis);
-	return QIcon();
-}
-
-QIcon NFS4_ACL_Editor::iconForPrincipal(const char *name, int is_group)
-{
-	if (name == NULL)
-		return QIcon();
-
-	if (!strncmp(NFS4_ACL_WHO_EVERYONE_STRING, name, NFS4_MAX_PRINCIPALSIZE))
-		return QIcon(eis);
-	else if (!strncmp(NFS4_ACL_WHO_GROUP_STRING, name, NFS4_MAX_PRINCIPALSIZE)
-				|| is_group)
-		return QIcon(gis);
-	else
-		return QIcon(uis);
-}
-
-void NFS4_ACL_Editor::syncWho(struct nfs4_ace *ace, const char *who)
-{
-	unsigned int i = 0;
-
-	if (ace == NULL || who == NULL)
-		return;
-
-	dprintf("syncWho(): changing %x '%s' (%x) to '%s' (type %d)\n", ace, ace->who, ace->who, who, ace->type);
-	if (strncmp(ace->who, who, NFS4_MAX_PRINCIPALSIZE)) {
-		i = strlen(who);
-		if (i > strlen(ace->who)) {
-			dprintf("syncWho(): fromlen %d  tolen %u\n", strlen(ace->who), i);
-		}
-		strncpy(ace->who, who, NFS4_MAX_PRINCIPALSIZE);
-	}
-}
-
-void NFS4_ACL_Editor::reformatFilename()
-{
-	formattedfilename.clear();
-	if (! filename.isEmpty()) {
-		formattedfilename.append("<font size=-1>NFSv4 ACL for ");
-		if (is_directory)
-			formattedfilename.append("directory");
-		else
-			formattedfilename.append("file");
-
-		formattedfilename.append(":&nbsp;&nbsp;</font><br>");
-		formattedfilename.append("<b><font color='#002060'>");
-		formattedfilename.append(filename);
-	}
-	else
-		formattedfilename.append("<b><font>(no file or directory selected)");
-	formattedfilename.append("</font></b>");
-	fl->setText(formattedfilename);
-}
-
-void NFS4_ACL_Editor::populateMenus()
-{
-	fileMenu = menuBar()->addMenu("&File");
-	dfd = new DirFileDialog(this);
-	a = new QAction("&Get ACL for file/dir ...", this);
-	a->setShortcut(QKeySequence(QString("Ctrl+G")));
-	connect(a, SIGNAL(triggered()), this, SLOT(getACL()));
-	fileMenu->addAction(a);
-
-	a = new QAction("&Reload/Revert ACL", this);
-	a->setShortcut(QKeySequence(QString("Ctrl+R")));
-	a->setToolTip("Set this tooltip on the button, silly.");
-	connect(a, SIGNAL(triggered()), this, SLOT(reloadACL()));
-	fileMenu->addAction(a);
-
-	a = new QAction("&Set ACL", this);
-	a->setShortcut(QKeySequence(QString("Ctrl+S")));
-	a->setToolTip("Set the NFSv4 ACL for the current file or directory");
-	connect(a, SIGNAL(triggered()), this, SLOT(setACL()));
-	fileMenu->addAction(a);
-
-	fileMenu->addSeparator();
-	a = new QAction("&Quit", this);
-	a->setShortcut(QKeySequence(QString("Ctrl+Q")));
-	a->setToolTip("Quit");
-	connect(a, SIGNAL(triggered()), this, SLOT(quit()));
-	fileMenu->addAction(a);
-
-
-	actionsMenu = menuBar()->addMenu("&Actions");
-	a = new QAction("&New ACE", this);
-	a->setShortcut(QKeySequence(QString("Ctrl+N")));
-	a->setToolTip("Create a new ACE in the current ACL");
-	connect(a, SIGNAL(triggered()), this, SLOT(newACE()));
-	actionsMenu->addAction(a);
-
-	a = new QAction("Delete ACE", this);
-	a->setShortcut(QKeySequence(QString("Ctrl+Backspace")));
-	a->setToolTip("Delete the selected ACE");
-	connect(a, SIGNAL(triggered()), this, SLOT(deleteACE()));
-	actionsMenu->addAction(a);
-
-	a = new QAction("Move ACE &up", this);
-	a->setShortcut(QKeySequence(QString("Ctrl+Up")));
-	connect(a, SIGNAL(triggered()), this, SLOT(moveUp()));
-	actionsMenu->addAction(a);
-
-	a = new QAction("Move ACE &down", this);
-	a->setShortcut(QKeySequence(QString("Ctrl+Down")));
-	connect(a, SIGNAL(triggered()), this, SLOT(moveDown()));
-	actionsMenu->addAction(a);
-}
-
-void NFS4_ACL_Editor::populateTypeWho()
-{
-	cmb = new QComboBox(cw);
-	cmb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	for (int i = 0; i < TYPE_COUNT; i++)
-		cmb->addItem(textForType(i));
-
-	connect(cmb, SIGNAL(activated(int)), this, SLOT(typeModified(int)));
-	gl->addWidget(cmb, 4, 0);
-
-	le = new QLineEdit(cw);
-	le->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-	connect(le, SIGNAL(textChanged(const QString &)), this, SLOT(principalModified(const QString &)));
-	gl->addWidget(le, 4, 1, 1, 2);
-
-	gcb = new QCheckBox("Is this a group?", cw);
-	gcb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	gl->addWidget(gcb, 4, 3, Qt::AlignLeft);
-}
-
-void NFS4_ACL_Editor::populatePerms()
-{
-	dpgb = new QGroupBox("Permissions");
-	fpgb = new QGroupBox("Permissions");
-	dpbg = new QButtonGroup();
-	fpbg = new QButtonGroup();
-
-	populatePerms(dpgb, dpbg, 1);
-	populatePerms(fpgb, fpbg, 0);
-
-	sw->addWidget(fpgb);
-	sw->addWidget(dpgb);
-	pbg = fpbg;
-	sbg = fsbg;
-	gl->addWidget(sw, 5, 0, 3, 2);
-}
-
-void NFS4_ACL_Editor::populatePerms(QGroupBox *qgb, QButtonGroup *qbg, int is_dir)
-{
-	const struct __access_info *info;
-	int total_perm_count;
-
-	qbg->setExclusive(false);
-	sgl = new QGridLayout(qgb);
-	sgl->setSpacing(0);
-
-	if (is_dir) {
-		info = __dir_perm_info;
-		total_perm_count = DIR_PERM_COUNT;
-	} else {
-		info = __file_perm_info;
-		total_perm_count = FILE_PERM_COUNT;
-	}
-	for (int i = 0; i < COLUMN1_PERM_COUNT; i++) {
-		cb = new QCheckBox(info[i].text);
-		qbg->addButton(cb, info[i].mask);
-		sgl->addWidget(cb, i, 0, Qt::AlignTop);
-	}
-	for (int i = COLUMN1_PERM_COUNT, j = 0; i < total_perm_count; i++, j++) {
-		cb = new QCheckBox(info[i].text);
-		qbg->addButton(cb, info[i].mask);
-		sgl->addWidget(cb, j, 1, Qt::AlignTop);
-	}
-	connect(qbg, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(permsModified(QAbstractButton *)));
-
-	/* add a spacer */
-	f = new QFrame(qgb);
-	f->setMidLineWidth(1);
-	f->setLineWidth(1);
-	f->setMinimumHeight(2);
-	f->setMaximumHeight(4);
-	f->setFrameStyle(QFrame::HLine | QFrame::Raised);
-	sgl->addWidget(f, FILE_PERM_COUNT1, 0, 2, 2);
-	sgl->setRowMinimumHeight(FILE_PERM_COUNT1, 15);
-	sgl->addWidget(new QLabel("<font size=-1><i><b>shortcuts</b></i></font>"), (FILE_PERM_COUNT + 1), 0, 1, 2, Qt::AlignHCenter);
-
-	w = new QWidget(qgb);
-	hbl = new QHBoxLayout();
-	sbg = new QButtonGroup(cw);
-	if (is_dir)
-		dsbg = sbg;
-	else
-		fsbg = sbg;
-
-	for (int i = 0; i < EXTRA_PERM_COUNT; i++) {
-		pb = new QPushButton(textForExtraPerm(i), w);
-		pb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-		sbg->addButton(pb, maskForExtraPerm(i));
-		hbl->addWidget(pb);
-	}
-	hbl->setSpacing(0);
-	hbl->setMargin(0);
-	w->setLayout(hbl);
-	sgl->addWidget(w, (FILE_PERM_COUNT + 2), 0, 2, 2, Qt::AlignBottom);
-
-	connect(sbg, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(shortcutsModified(QAbstractButton *)));
-	qgb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	qgb->setLayout(sgl);
-}
-
-void NFS4_ACL_Editor::populateFlags()
-{
-	fgb = new QGroupBox("Inheritance flags", cw);
-	fgb->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
-	fbg = new QButtonGroup(cw);
-	fbg->setExclusive(false);
-	sgl = new QGridLayout(fgb);
-	sgl->setSpacing(0);
-
-	for (int i = 0; i < FLAG_COUNT; i++) {
-		cb = new QCheckBox(textForFlag(i), fgb);
-		fbg->addButton(cb, maskForFlag(i));
-		sgl->addWidget(cb, i, 0, Qt::AlignTop);
-	}
-	fbg->addButton(gcb, NFS4_ACE_IDENTIFIER_GROUP);
-
-	connect(fbg, SIGNAL(buttonClicked(QAbstractButton *)), this, SLOT(flagsModified(QAbstractButton *)));
-	fgb->setLayout(sgl);
-	gl->addWidget(fgb, 5, 2, 1, 2, Qt::AlignTop);
-}
-
-void NFS4_ACL_Editor::populateButtons()
-{
-	sb = new QPushButton("&New ACE", cw);
-	//sb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	connect(sb, SIGNAL(clicked()), this, SLOT(newACE()));
-	gl->addWidget(sb, 6, 2, 1, 1);
-
-	rb = new QPushButton("&Delete ACE", cw);
-	//rb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	connect(rb, SIGNAL(clicked()), this, SLOT(deleteACE()));
-	gl->addWidget(rb, 7, 2, 1, 1);
-
-	sb = new QPushButton("&Set ACL", cw);
-	//sb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	connect(sb, SIGNAL(clicked()), this, SLOT(setACL()));
-	gl->addWidget(sb, 6, 3, 1, 1);
-
-	rb = new QPushButton("&Reload ACL", cw);
-	//rb->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	connect(rb, SIGNAL(clicked()), this, SLOT(reloadACL()));
-	gl->addWidget(rb, 7, 3, 1, 1);
-}
-
-void NFS4_ACL_Editor::doHighlight(int willDo)
-{
-	if (tw->rowCount() < 1)
-		return;
-
-	tw->setPalette(willDo ? light : normal);
-	setRowIcon(selectedLogical, iconForACE(selectedACE, willDo));
-}
-
-void NFS4_ACL_Editor::keyPressEvent(QKeyEvent *e)
-{
-	if ((e->modifiers() & Qt::ControlModifier) && (e->type() & QEvent::KeyPress))
-		doHighlight(1);
-}
-
-void NFS4_ACL_Editor::keyReleaseEvent(QKeyEvent *e)
-{
-	if (!(e->modifiers() & Qt::ControlModifier) && (e->key() == Qt::Key_Control))
-		doHighlight(0);
-}
-
-void NFS4_ACL_Editor::activationChange(QEvent *e)
-{
-	dprintf("activationChange: %x\n", e->type());
-	if (e->type() == QEvent::WindowUnblocked) {
-		dprintf("unblocked\n");
-		setRowIcon(selectedLogical, iconForACE(selectedACE));
-	}
-}
-
-void NFS4_ACL_Editor::quit()
-{
-	qApp->quit();
-}
-
-/* why does it always squeeze the table view?? */
-void NFS4_ACL_Editor::show()
-{
-	((QMainWindow *)this)->show();
-	resize(width(), height() + 20);
-//	tw->setIconSize(QSize(48, 48));
-//	tw->verticalHeader()->setIconSize(QSize(48, 48));
-
-	dprintf("show()ing!  table w: %d h: %d,  shw: %d  shh: %d,\n"
-			"        viewport w: %d h: %d,  shw: %d  shh: %d \n"
-			"          window w: %d h: %d,  shw: %d  shh: %d \n",
-			tw->width(), tw->height(), tw->sizeHint().width(), tw->sizeHint().height(),
-			tw->viewport()->width(), tw->viewport()->height(), tw->viewport()->sizeHint().width(),
-			tw->viewport()->sizeHint().height(),
-			width(), height(), sizeHint().width(), sizeHint().height());
-}
-
+On 8/1/23 6:33 AM, Jeff Layton wrote:
+> I noticed that xfstests generic/001 was failing against linux-next nfsd.
+>
+> The client would request a OPEN4_SHARE_ACCESS_WRITE open, and the server
+> would hand out a write delegation. The client would then try to use that
+> write delegation as the source stateid in a COPY
+
+not sure why the client opens the source file of a COPY operation with
+OPEN4_SHARE_ACCESS_WRITE?
+
+>   or CLONE operation, and
+> the server would respond with NFS4ERR_STALE.
+
+If the server does not allow client to use write delegation for the
+READ, should the correct error return be NFS4ERR_OPENMODE?
+
+>
+> The problem is that the struct file associated with the delegation does
+> not necessarily have read permissions. It's handing out a write
+> delegation on what is effectively an O_WRONLY open. RFC 8881 states:
+>
+>   "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on its
+>    own, all opens."
+>
+> Given that the client didn't request any read permissions, and that nfsd
+> didn't check for any, it seems wrong to give out a write delegation.
+>
+> Only hand out a write delegation if we have a O_RDWR descriptor
+> available. If it fails to find an appropriate write descriptor, go
+> ahead and try for a read delegation if NFS4_SHARE_ACCESS_READ was
+> requested.
+>
+> This fixes xfstest generic/001.
+>
+> Closes: https://bugzilla.linux-nfs.org/show_bug.cgi?id=412
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Changes in v2:
+> - Rework the logic when finding struct file for the delegation. The
+>    earlier patch might still have attached a O_WRONLY file to the deleg
+>    in some cases, and could still have handed out a write delegation on
+>    an O_WRONLY OPEN request in some cases.
+> ---
+>   fs/nfsd/nfs4state.c | 29 ++++++++++++++++++-----------
+>   1 file changed, 18 insertions(+), 11 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index ef7118ebee00..e79d82fd05e7 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -5449,7 +5449,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+>   	struct nfs4_file *fp = stp->st_stid.sc_file;
+>   	struct nfs4_clnt_odstate *odstate = stp->st_clnt_odstate;
+>   	struct nfs4_delegation *dp;
+> -	struct nfsd_file *nf;
+> +	struct nfsd_file *nf = NULL;
+>   	struct file_lock *fl;
+>   	u32 dl_type;
+>   
+> @@ -5461,21 +5461,28 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+>   	if (fp->fi_had_conflict)
+>   		return ERR_PTR(-EAGAIN);
+>   
+> -	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+> -		nf = find_writeable_file(fp);
+> +	/*
+> +	 * Try for a write delegation first. We need an O_RDWR file
+> +	 * since a write delegation allows the client to perform any open
+> +	 * from its cache.
+> +	 */
+> +	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) == NFS4_SHARE_ACCESS_BOTH) {
+> +		nf = nfsd_file_get(fp->fi_fds[O_RDWR]);
+>   		dl_type = NFS4_OPEN_DELEGATE_WRITE;
+> -	} else {
+
+Does this mean OPEN4_SHARE_ACCESS_WRITE do not get a write delegation?
+It does not seem right.
+
+-Dai
+
+> +	}
+> +
+> +	/*
+> +	 * If the file is being opened O_RDONLY or we couldn't get a O_RDWR
+> +	 * file for some reason, then try for a read deleg instead.
+> +	 */
+> +	if (!nf && (open->op_share_access & NFS4_SHARE_ACCESS_READ)) {
+>   		nf = find_readable_file(fp);
+>   		dl_type = NFS4_OPEN_DELEGATE_READ;
+>   	}
+> -	if (!nf) {
+> -		/*
+> -		 * We probably could attempt another open and get a read
+> -		 * delegation, but for now, don't bother until the
+> -		 * client actually sends us one.
+> -		 */
+> +
+> +	if (!nf)
+>   		return ERR_PTR(-EAGAIN);
+> -	}
+> +
+>   	spin_lock(&state_lock);
+>   	spin_lock(&fp->fi_lock);
+>   	if (nfs4_delegation_exists(clp, fp))
+>
+> ---
+> base-commit: a734662572708cf062e974f659ae50c24fc1ad17
+> change-id: 20230731-wdeleg-bbdb6b25a3c6
+>
+> Best regards,
