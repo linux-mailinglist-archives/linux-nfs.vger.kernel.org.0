@@ -2,221 +2,193 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C788376D5BE
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 19:43:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB84976D60B
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 19:50:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233785AbjHBRns (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Aug 2023 13:43:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35448 "EHLO
+        id S232766AbjHBRuA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Aug 2023 13:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233769AbjHBRnq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 13:43:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0C3A173F;
-        Wed,  2 Aug 2023 10:43:28 -0700 (PDT)
+        with ESMTP id S233462AbjHBRtm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 13:49:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB1A144B8;
+        Wed,  2 Aug 2023 10:49:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D53F861A71;
-        Wed,  2 Aug 2023 17:43:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D86CC43397;
-        Wed,  2 Aug 2023 17:43:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D49F561A81;
+        Wed,  2 Aug 2023 17:48:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BB32C433C7;
+        Wed,  2 Aug 2023 17:48:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690998207;
-        bh=vaJTxaCZ975/tctv6B9aEdJ6YfGyCydOS/DUhZJ8Y9M=;
+        s=k20201202; t=1690998534;
+        bh=llcebvZe/hkTeRKgHM9EKZHOV4OnEZQnmHgz/2BQCWE=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LA2eru1SX6SMikJLCSUZK3MWp1HQen0EzR0lMLneoYQNH2Vj+mNBjFCv3XLVwP+dS
-         seMS3Q+dlWMFts2nxiVx0vVrFSyW4enaljKpOpL9qrJHjSEjHFWiwlRI3RgbhN3Pc6
-         5to3TkblWn4fIIQApZtgSLJSkKHrhajSarmD6NC7NmGx1RVTsuAdWI300MjzU36Tim
-         usv4thFXHjvwgTLHadxpA7fav1uLO+HLWcE+hkKtvMOV4OrgzIu99D5bKCO+5ZXiVw
-         sA0TqsDXDJmEoikXGSGm1qRYCQLzjzgxx3iaw2Ivo921y3spNyla0ig/zU0Fql64Dr
-         dUBU0RlsvHFMQ==
-Date:   Wed, 2 Aug 2023 10:43:26 -0700
+        b=mvxuU6kSe40eik5JXODSzEUcQCom178bEIK/ueyoWRpPBYA045brCsn1TKHc//Xbp
+         0ObmccZq1JK/3BS0VYByWWa5KMlUgDASDUx+Tg3MIvNOAUYxUN5IA3Q6lhJnKpS+Kr
+         sJpmoKfyS9TkkEjB5QiyyKjYqppx1pnxNqB5iMeyjJu+17+GIbmic7cVmXJSuLaPLd
+         3IndlMaTUYFSp0rFtJkAhEAA+wijtIBWkzROVqk80WuAfa/+5o+BWPM09WvvAR3rkz
+         JrCY5Grb5YAFwp2aCPycS4pLSm1cHlwT5kTUQjtvoINT5B7AR/RvqxCMtj/D0aZcEn
+         M8gGWOmNe33KQ==
+Date:   Wed, 2 Aug 2023 10:48:53 -0700
 From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Zorro Lang <zlang@redhat.com>
-Cc:     Zorro Lang <zlang@kernel.org>, fstests@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] nfs: test files written size as expected
-Message-ID: <20230802174326.GL11340@frogsfrogsfrogs>
-References: <20230802054646.2197854-1-zlang@kernel.org>
- <20230802163640.GY11352@frogsfrogsfrogs>
- <20230802172418.2ulrealxsj2cvnxo@zlang-mailbox>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Steve French <sfrench@samba.org>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Richard Weinberger <richard@nod.at>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Anthony Iliopoulos <ailiop@suse.com>, v9fs@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, linux-nfs@vger.kernel.org,
+        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 5/7] xfs: switch to multigrain timestamps
+Message-ID: <20230802174853.GC11352@frogsfrogsfrogs>
+References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
+ <20230725-mgctime-v6-5-a794c2b7abca@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230802172418.2ulrealxsj2cvnxo@zlang-mailbox>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230725-mgctime-v6-5-a794c2b7abca@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 03, 2023 at 01:24:18AM +0800, Zorro Lang wrote:
-> On Wed, Aug 02, 2023 at 09:36:40AM -0700, Darrick J. Wong wrote:
-> > On Wed, Aug 02, 2023 at 01:46:46PM +0800, Zorro Lang wrote:
-> > > Test nfs and its underlying fs, make sure file size as expected
-> > > after writting a file, and the speculative allocation space can
-> > > be shrunken.
-> > > 
-> > > Signed-off-by: Zorro Lang <zlang@kernel.org>
-> > > ---
-> > > 
-> > > Last year I sent a patch to fstests@, but it sometimes fails on the upstream
-> > > kernel that year:
-> > > 
-> > >   https://lore.kernel.org/fstests/Y3vTbHqT64gsQ573@magnolia/
-> > > 
-> > > And we didn't get a proper reason for that, so that patch was blocked. Now
-> > > I found this case test passed on current upstream linux [1] (after loop
-> > > running it a whole night). So I think it's time to rebase and re-send this
-> > > patch to get review.
-> > > 
-> > > Thanks,
-> > > Zorro
-> > > 
-> > > [1]
-> > > FSTYP         -- nfs
-> > > PLATFORM      -- Linux/x86_64 xxxx 6.5.0-rc4 #1 SMP PREEMPT_DYNAMIC Tue Aug  1 15:32:55 EDT 2023
-> > > MKFS_OPTIONS  -- xxxx.redhat.com:/mnt/xfstests/scratch/nfs-server
-> > > MOUNT_OPTIONS -- -o vers=4.2 -o context=system_u:object_r:root_t:s0 xxxx.redhat.com:/mnt/xfstests/scratch/nfs-server /mnt/xfstests/scratch/nfs-client
-> > > 
-> > > nfs/002 4s ...  4s
-> > > Ran: nfs/002
-> > > Passed all 1 tests
-> > > 
-> > >  tests/nfs/002     | 46 ++++++++++++++++++++++++++++++++++++++++++++++
-> > >  tests/nfs/002.out |  2 ++
-> > >  2 files changed, 48 insertions(+)
-> > >  create mode 100755 tests/nfs/002
-> > >  create mode 100644 tests/nfs/002.out
-> > > 
-> > > diff --git a/tests/nfs/002 b/tests/nfs/002
-> > > new file mode 100755
-> > > index 00000000..b4b6554c
-> > > --- /dev/null
-> > > +++ b/tests/nfs/002
-> > > @@ -0,0 +1,46 @@
-> > > +#! /bin/bash
-> > > +# SPDX-License-Identifier: GPL-2.0
-> > > +# Copyright (c) 2023 Red Hat, Inc.  All Rights Reserved.
-> > > +#
-> > > +# FS QA Test 002
-> > > +#
-> > > +# Make sure nfs gets expected file size after writting a big sized file. It's
-> > > +# not only testing nfs, test its underlying fs too. For example a known old bug
-> > > +# on xfs (underlying fs) caused nfs get larger file size (e.g. 16M) after
-> > > +# writting 10M data to a file. It's fixed by a series of patches around
-> > > +# 579b62faa5fb16 ("xfs: add background scanning to clear eofblocks inodes")
-> > 
-> > Er... has this been banging around in the trunk for 11 years? ;)
+On Tue, Jul 25, 2023 at 10:58:18AM -0400, Jeff Layton wrote:
+> Enable multigrain timestamps, which should ensure that there is an
+> apparent change to the timestamp whenever it has been written after
+> being actively observed via getattr.
 > 
-> Yeah, that's an old enough test case :-D I tried to tidy our internal test cases,
-> felt this case can be in fstests.
+> Also, anytime the mtime changes, the ctime must also change, and those
+> are now the only two options for xfs_trans_ichgtime. Have that function
+> unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
+> always set.
 > 
-> > 
-> > > +#
-> > > +. ./common/preamble
-> > > +_begin_fstest auto quick rw
-> > > +
-> > > +# real QA test starts here
-> > > +_supported_fs nfs
-> > > +# Need a series of patches related with this patch
-> > > +_fixed_by_kernel_commit 579b62faa5fb16 \
-> > > +	"xfs: add background scanning to clear eofblocks inodes"
-> > > +_require_test
-> > > +
-> > > +localfile=$TEST_DIR/testfile.$seq
-> > > +rm -rf $localfile
-> > > +
-> > > +$XFS_IO_PROG -f -t -c "pwrite 0 10m" -c "fsync" $localfile >>$seqres.full 2>&1
-> > > +block_size=`stat -c '%B' $localfile`
-> > > +iblocks_expected=$((10 * 1024 * 1024 / $block_size))
-> > > +# Try several times for the speculative allocated file size can be shrunken
-> > > +res=1
-> > > +for ((i=0; i<10; i++));do
-> > > +	iblocks_real=`stat -c '%b' $localfile`
-> > > +	if [ "$iblocks_expected" = "$iblocks_real" ];then
-> > 
-> > What happens if real < expected?  Should there be some sort of bail out
-> > for unexpected things like that?
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/xfs/libxfs/xfs_trans_inode.c | 6 +++---
+>  fs/xfs/xfs_iops.c               | 4 ++--
+>  fs/xfs/xfs_super.c              | 2 +-
+>  3 files changed, 6 insertions(+), 6 deletions(-)
 > 
-> Hmm... I never thought that. I saw the real >= expected, is there any
-> chance to get real < expected?
+> diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
+> index 6b2296ff248a..ad22656376d3 100644
+> --- a/fs/xfs/libxfs/xfs_trans_inode.c
+> +++ b/fs/xfs/libxfs/xfs_trans_inode.c
+> @@ -62,12 +62,12 @@ xfs_trans_ichgtime(
+>  	ASSERT(tp);
+>  	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+>  
+> -	tv = current_time(inode);
+> +	/* If the mtime changes, then ctime must also change */
+> +	ASSERT(flags & XFS_ICHGTIME_CHG);
+>  
+> +	tv = inode_set_ctime_current(inode);
+>  	if (flags & XFS_ICHGTIME_MOD)
+>  		inode->i_mtime = tv;
+> -	if (flags & XFS_ICHGTIME_CHG)
+> -		inode_set_ctime_to_ts(inode, tv);
+>  	if (flags & XFS_ICHGTIME_CREATE)
+>  		ip->i_crtime = tv;
+>  }
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 3a9363953ef2..3f89ef5a2820 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -573,10 +573,10 @@ xfs_vn_getattr(
+>  	stat->gid = vfsgid_into_kgid(vfsgid);
+>  	stat->ino = ip->i_ino;
+>  	stat->atime = inode->i_atime;
+> -	stat->mtime = inode->i_mtime;
+> -	stat->ctime = inode_get_ctime(inode);
+>  	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
+>  
+> +	fill_mg_cmtime(request_mask, inode, stat);
 
-<shrug> Suppose the NFS server is running on top of a filesystem that
-supports compression and i_blocks as returned by stat reflects that?
+Huh.  I would've thought @stat would come first since that's what we're
+acting upon, but ... eh. :)
+
+If everyone else is ok with the fill_mg_cmtime signature,
+Acked-by: Darrick J. Wong <djwong@kernel.org>
 
 --D
 
-> > 
-> > > +		res=0
-> > > +		break
-> > > +	fi
-> > > +	sleep 10
-> > > +done
-> > 
-> > Though I guess the runtime is capped at ~100s so maybe it doesn't
-> > matter practically.
+> +
+>  	if (xfs_has_v3inodes(mp)) {
+>  		if (request_mask & STATX_BTIME) {
+>  			stat->result_mask |= STATX_BTIME;
+> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+> index 818510243130..4b10edb2c972 100644
+> --- a/fs/xfs/xfs_super.c
+> +++ b/fs/xfs/xfs_super.c
+> @@ -2009,7 +2009,7 @@ static struct file_system_type xfs_fs_type = {
+>  	.init_fs_context	= xfs_init_fs_context,
+>  	.parameters		= xfs_fs_parameters,
+>  	.kill_sb		= kill_block_super,
+> -	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
+> +	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
+>  };
+>  MODULE_ALIAS_FS("xfs");
+>  
 > 
-> Mostly the test done in several seconds in my testing:
-> 
-> FSTYP         -- nfs
-> PLATFORM      -- Linux/x86_64 hp-dl360g9-06 6.5.0-rc4 #1 SMP PREEMPT_DYNAMIC Tue Aug  1 15:32:55 EDT 2023
-> MKFS_OPTIONS  -- hp-dl360g9-06.rhts.eng.pek2.redhat.com:/mnt/xfstests/scratch/nfs-server
-> MOUNT_OPTIONS -- -o vers=4.2 -o context=system_u:object_r:root_t:s0 hp-dl360g9-06.rhts.eng.pek2.redhat.com:/mnt/xfstests/scratch/nfs-server /mnt/xfstests/scratch/nfs-client
-> 
-> nfs/002 5s ...  4s
-> Ran: nfs/002
-> Passed all 1 tests
-
-Doesn't xfs remove the speculative preallocations every time a write fd
-is closed?
-
-Yes, it does do that:
-https://lore.kernel.org/linux-xfs/155259894034.30230.7188877605950498518.stgit@magnolia/
-
-IOWs, how is this test actually checking the behavior of background
-blockgc clearing out speculative preallocations?
-
-> > (What happens if xfs blockgc only runs every 5 minutes?)
-> 
-> How can can make that happen? If the 100s isn't enough, is there an upper
-> limit, or how to make an upper limit?
-
-There's no way to tell over NFS...
-
---D
-
-> 
-> Thanks,
-> Zorro
-> 
-> > 
-> > --D
-> > 
-> > > +if [ $res -ne 0 ];then
-> > > +	echo "Write $iblocks_expected blocks, but get $iblocks_real blocks"
-> > > +fi
-> > > +
-> > > +echo "Silence is golden"
-> > > +# success, all done
-> > > +status=0
-> > > +exit
-> > > diff --git a/tests/nfs/002.out b/tests/nfs/002.out
-> > > new file mode 100644
-> > > index 00000000..61705c7c
-> > > --- /dev/null
-> > > +++ b/tests/nfs/002.out
-> > > @@ -0,0 +1,2 @@
-> > > +QA output created by 002
-> > > +Silence is golden
-> > > -- 
-> > > 2.40.1
-> > > 
-> > 
+> -- 
+> 2.41.0
 > 
