@@ -2,201 +2,205 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AAD276D73F
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 20:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 793BB76D734
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 20:54:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232895AbjHBSzN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Aug 2023 14:55:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52124 "EHLO
+        id S233328AbjHBSyM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Aug 2023 14:54:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232306AbjHBSyt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 14:54:49 -0400
-X-Greylist: delayed 402 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 02 Aug 2023 11:54:47 PDT
-Received: from mx.manguebit.com (mx.manguebit.com [167.235.159.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD14513E;
-        Wed,  2 Aug 2023 11:54:47 -0700 (PDT)
-Message-ID: <471c346601a7daace902428e56b8579b.pc@manguebit.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-        s=dkim; t=1691002083;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LM5dlnWT81GTwNGuf8M3+0tmWSk26IjSyG3XZJNlGxg=;
-        b=q+WFWoVwU8f/i7FIz0XAfDaWphvSKk6j9cTrweJn7z9x5iBr7hiB35FGPAUBDF4ISjvz5h
-        zznWulE1I6cYjxCc8w+oI7LqEsabOb90uMokjyBo26cUl9nOO1TEwZN8Rko1gnGWvU899Z
-        +EBpH1/sTAIcDBro/WhZd/24PR+naT0wlQBLDVmBmCkMhE+2F6usEQx/ESFOSTzKfD3foi
-        57LqLxR9Es5qHclOHN7ZNd3Wf1NFp5sNHd92kPnDoE27zzkvm/xF1Zegdhw2DWwM4cUSYl
-        FcRs0tYEjK3/9OByMH8nBUpqgGgWvImVoeFcmbN4cGs0tbYOYiDHxrQ3J3/9aA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=manguebit.com;
-        s=dkim; t=1691002083;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LM5dlnWT81GTwNGuf8M3+0tmWSk26IjSyG3XZJNlGxg=;
-        b=AoW9sil2tg15RxkemetVcD0MQH7aqHOPx9s45t6q2mXk4iNoevRltavPuQhHJickRN06JC
-        9twitSFZovdSmN54RsIMwcP9LbHZ1K86aCiRYdAMGoHCsXm0u0QTFFXXd8+eXqppmU9Kp1
-        Q9pg/HXE5fSlbCGR+84Z036/rAjhvge6A7ij00bIpSGub9bNIOdCFcEgHSqmL5WMnIl1Uf
-        VF0itzVid71/SBJv2BhC3GrS7WwIz1UW8ofISSDCmwhyuSGM2Z2MEfKyccU/HDsRsX7g/2
-        qop6kKp78QWclngeoV7X+/F2IIcl/qVTZIg1Eck9BzyGSdE1iSwHxnOAmhWl8g==
-ARC-Authentication-Results: i=1;
-        ORIGINATING;
-        auth=pass smtp.auth=pc@manguebit.com smtp.mailfrom=pc@manguebit.com
-ARC-Seal: i=1; s=dkim; d=manguebit.com; t=1691002083; a=rsa-sha256;
-        cv=none;
-        b=cp3+mC0OMj7F40WMT7qUHuJDwt5m+4Y0ISygYXiZ4GOzzVuy+cXksXQTjexnbnoHqJnkLv
-        A/Xh4iI5m54yLclEpvkUfV+Z5z+yl3bkiSW7DPqp7d3qf2mgApmdG2r6OnrC3HAVdpFkRR
-        FGIzkra0rLP1oeUH2LzXYwCEn0h5f1JOcg5inVxvd5FI0X3iaV9zS9fxN8/uoNWsRSS8bg
-        YveFBiSbZ9Cz5RuNQ9Dpsxd6wNh4r8y+aIu582+NYrL0UgzojRiCHbVTSN7csXMG8yKhXg
-        YDPPznVWXhPSF0A8cu9cmJOJmS32KIv4mwdX1lo6pb8zpon7EJ1dEyaA13ArHw==
-From:   Paulo Alcantara <pc@manguebit.com>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Steve French <sfrench@samba.org>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Richard Weinberger <richard@nod.at>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Anthony Iliopoulos <ailiop@suse.com>, v9fs@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-nfs@vger.kernel.org,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
-        Jeff Layton <jlayton@kernel.org>
-Subject: Re: [PATCH v6 1/7] fs: pass the request_mask to generic_fillattr
-In-Reply-To: <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
-References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
- <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
-Date:   Wed, 02 Aug 2023 15:47:56 -0300
+        with ESMTP id S231226AbjHBSyD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 14:54:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12B82701;
+        Wed,  2 Aug 2023 11:53:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F2E9561AB0;
+        Wed,  2 Aug 2023 18:53:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B07A4C433C7;
+        Wed,  2 Aug 2023 18:53:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691002397;
+        bh=TvgIJlHzFWDffomtHVsmKn5zC5v3OVkVeJam/u/ReGY=;
+        h=From:Date:Subject:To:Cc:From;
+        b=mRze6LWQqphoK2Pr7ODLQ68f2QZHF/K90CGSQUcur+5dzicbVIP7GtMESk4qQn0vU
+         emEAcoVLHAYY9XWHCtBGOqFmOSEYF0pN/wepjDbSqFhALK+M/xmp2AOnv9CuGp+5sW
+         M3cI8z5nn/S76EKnX07RWOVMKAGzVJbg87OHmHwyF6/dmRW9haYBZu9UlpGqw5ChY9
+         EKAsHnV8xz/dJ7ULXTkfHw4jSeewPKXDvkWyAT1yO7R4yZwDFx7q80jqdotM88m1b7
+         uVRl92tRTo5E156O96A9cjGtphn/CLSSmccPYwnzylqLwC6GtaLsZDJcjR2iqeGM54
+         jD7pWU61A0Dow==
+From:   Jeff Layton <jlayton@kernel.org>
+Date:   Wed, 02 Aug 2023 14:53:00 -0400
+Subject: [PATCH v3] nfsd: don't hand out write delegations on O_WRONLY
+ opens
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230802-wdeleg-v3-1-d7cd1d696045@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAAumymQC/2WMQQ6CMBBFr0JmbU1nCkhceQ/jgikDNBIwrakaw
+ t0tbIhx+X7+ezME8U4CnLMZvEQX3DQmMIcMbF+PnSjXJAbSZPTJoHo1MkinmBsumYra2BLS+eG
+ lde8tdL0l7l14Tv6zdSOu618iokLVVq2gFUQ25eUufpThOPkO1kak3av07lHySFvMqSCuOf/xl
+ mX5AtjFDnvVAAAA
+To:     Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4270; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=TvgIJlHzFWDffomtHVsmKn5zC5v3OVkVeJam/u/ReGY=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBkyqYY70ujOe+WDZ5WtkzxThP97DCMC+KbsNdUd
+ kMjE5a5L6yJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZMqmGAAKCRAADmhBGVaC
+ FQ/sD/46vC+P5i0iV3hoSC8Yl7Fs+tSnHPH25PhUwOLvzsvCJgtJyu6vudsEs9n4eZ89hayUJBp
+ ducx/hwrbI+WJ5aIMxYf7rOvIjsLjv/BF558Eaw6qyhq1ie9Cfq802Z/FxcYa5oIrtxNuC5b6RE
+ MO/0wOK1FGNW6VxTATjdq/IY11hu6f1z2m2cP1qbQMqQAmP3qAw9n+hL8k4aUu4FxQ4P+Ls/5xy
+ o8a2Ym8USMoQEJeP6EiqD501IHcSr93CPhfSFofQ70M29+sIPPwjMUA/7isCIZPkWchOc8Wsb5A
+ 0DPjtSb/eYgTjG1xxYgeuS4VfeUtXY5tm9f3syGOIeNL2pp3ma2o8T22blMDiaux841Qmsbu4Ug
+ V6WCR5MljL1WFeZJVIrBdMoZOdXz2qVSaFw/3hAsvor/2Q8Ztm0SgMzLPsxkkmnDQBugs1O53B/
+ h/G2Tov5udfjtseIz+lxp+/OewvCjtHUbRnlXQXueCxL8K5VmnzsfgVC+821yPKlYPFurAwkZ78
+ twz5unRnetfBHM7lvHSLOv5JW74ZOOenCL0pJPgATNGBgfmB5GmdULxFcOwc3a6kDiTd/nayDcG
+ En9TEdUz2NMq6kIhQg+zHA8mcTR3uAhBmrQrlIaJUUNijQ7x/G2xWGi5btsf7TVURIV+/k1aYOQ
+ 8GUFgb2dIOMCHWQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Jeff Layton <jlayton@kernel.org> writes:
+I noticed that xfstests generic/001 was failing against linux-next nfsd.
 
-> generic_fillattr just fills in the entire stat struct indiscriminately
-> today, copying data from the inode. There is at least one attribute
-> (STATX_CHANGE_COOKIE) that can have side effects when it is reported,
-> and we're looking at adding more with the addition of multigrain
-> timestamps.
->
-> Add a request_mask argument to generic_fillattr and have most callers
-> just pass in the value that is passed to getattr. Have other callers
-> (e.g. ksmbd) just pass in STATX_BASIC_STATS. Also move the setting of
-> STATX_CHANGE_COOKIE into generic_fillattr.
->
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/9p/vfs_inode.c       |  4 ++--
->  fs/9p/vfs_inode_dotl.c  |  4 ++--
->  fs/afs/inode.c          |  2 +-
->  fs/btrfs/inode.c        |  2 +-
->  fs/ceph/inode.c         |  2 +-
->  fs/coda/inode.c         |  3 ++-
->  fs/ecryptfs/inode.c     |  5 +++--
->  fs/erofs/inode.c        |  2 +-
->  fs/exfat/file.c         |  2 +-
->  fs/ext2/inode.c         |  2 +-
->  fs/ext4/inode.c         |  2 +-
->  fs/f2fs/file.c          |  2 +-
->  fs/fat/file.c           |  2 +-
->  fs/fuse/dir.c           |  2 +-
->  fs/gfs2/inode.c         |  2 +-
->  fs/hfsplus/inode.c      |  2 +-
->  fs/kernfs/inode.c       |  2 +-
->  fs/libfs.c              |  4 ++--
->  fs/minix/inode.c        |  2 +-
->  fs/nfs/inode.c          |  2 +-
->  fs/nfs/namespace.c      |  3 ++-
->  fs/ntfs3/file.c         |  2 +-
->  fs/ocfs2/file.c         |  2 +-
->  fs/orangefs/inode.c     |  2 +-
->  fs/proc/base.c          |  4 ++--
->  fs/proc/fd.c            |  2 +-
->  fs/proc/generic.c       |  2 +-
->  fs/proc/proc_net.c      |  2 +-
->  fs/proc/proc_sysctl.c   |  2 +-
->  fs/proc/root.c          |  3 ++-
->  fs/smb/client/inode.c   |  2 +-
->  fs/smb/server/smb2pdu.c | 22 +++++++++++-----------
->  fs/smb/server/vfs.c     |  3 ++-
->  fs/stat.c               | 18 ++++++++++--------
->  fs/sysv/itree.c         |  3 ++-
->  fs/ubifs/dir.c          |  2 +-
->  fs/udf/symlink.c        |  2 +-
->  fs/vboxsf/utils.c       |  2 +-
->  include/linux/fs.h      |  2 +-
->  mm/shmem.c              |  2 +-
->  40 files changed, 70 insertions(+), 62 deletions(-)
->
-> [...]
->
-> diff --git a/fs/smb/client/inode.c b/fs/smb/client/inode.c
-> index 218f03dd3f52..93fe43789d7a 100644
-> --- a/fs/smb/client/inode.c
-> +++ b/fs/smb/client/inode.c
-> @@ -2540,7 +2540,7 @@ int cifs_getattr(struct mnt_idmap *idmap, const struct path *path,
->  			return rc;
->  	}
->  
-> -	generic_fillattr(&nop_mnt_idmap, inode, stat);
-> +	generic_fillattr(&nop_mnt_idmap, request_mask, inode, stat);
->  	stat->blksize = cifs_sb->ctx->bsize;
->  	stat->ino = CIFS_I(inode)->uniqueid;
+The client would request a OPEN4_SHARE_ACCESS_WRITE open, and the server
+would hand out a write delegation. The client would then try to use that
+write delegation as the source stateid in a COPY or CLONE operation, and
+the server would respond with NFS4ERR_STALE.
 
-Reviewed-by: Paulo Alcantara (SUSE) <pc@manguebit.com>
+The problem is that the struct file associated with the delegation does
+not necessarily have read permissions. It's handing out a write
+delegation on what is effectively an O_WRONLY open. RFC 8881 states:
+
+ "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on its
+  own, all opens."
+
+Given that the client didn't request any read permissions, and that nfsd
+didn't check for any, it seems wrong to give out a write delegation.
+
+Only hand out a write delegation if we have a O_RDWR descriptor
+available. If it fails to find an appropriate write descriptor, go
+ahead and try for a read delegation if NFS4_SHARE_ACCESS_READ was
+requested.
+
+This fixes xfstest generic/001.
+
+Closes: https://bugzilla.linux-nfs.org/show_bug.cgi?id=412
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v3:
+- add find_rw_file helper to ensure spinlock is taken appropriately
+- refine comments over conditionals
+- Link to v2: https://lore.kernel.org/r/20230801-wdeleg-v2-1-20c14252bab4@kernel.org
+
+Changes in v2:
+- Rework the logic when finding struct file for the delegation. The
+  earlier patch might still have attached a O_WRONLY file to the deleg
+  in some cases, and could still have handed out a write delegation on
+  an O_WRONLY OPEN request in some cases.
+---
+ fs/nfsd/nfs4state.c | 48 +++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 37 insertions(+), 11 deletions(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index ef7118ebee00..c551784d108a 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -649,6 +649,18 @@ find_readable_file(struct nfs4_file *f)
+ 	return ret;
+ }
+ 
++static struct nfsd_file *
++find_rw_file(struct nfs4_file *f)
++{
++	struct nfsd_file *ret;
++
++	spin_lock(&f->fi_lock);
++	ret = nfsd_file_get(f->fi_fds[O_RDWR]);
++	spin_unlock(&f->fi_lock);
++
++	return ret;
++}
++
+ struct nfsd_file *
+ find_any_file(struct nfs4_file *f)
+ {
+@@ -5449,7 +5461,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 	struct nfs4_file *fp = stp->st_stid.sc_file;
+ 	struct nfs4_clnt_odstate *odstate = stp->st_clnt_odstate;
+ 	struct nfs4_delegation *dp;
+-	struct nfsd_file *nf;
++	struct nfsd_file *nf = NULL;
+ 	struct file_lock *fl;
+ 	u32 dl_type;
+ 
+@@ -5461,21 +5473,35 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+ 	if (fp->fi_had_conflict)
+ 		return ERR_PTR(-EAGAIN);
+ 
+-	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+-		nf = find_writeable_file(fp);
++	/*
++	 * Try for a write delegation first. RFC8881 section 10.4 says:
++	 *
++	 *  "An OPEN_DELEGATE_WRITE delegation allows the client to handle,
++	 *   on its own, all opens."
++	 *
++	 * Furthermore the client can use a write delegationf or most read
++	 * operations as well, so we require a O_RDWR file here.
++	 *
++	 * Only a write delegation in the case of a BOTH open, and ensure
++	 * we get the O_RDWR descriptor.
++	 */
++	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) == NFS4_SHARE_ACCESS_BOTH) {
++		nf = find_rw_file(fp);
+ 		dl_type = NFS4_OPEN_DELEGATE_WRITE;
+-	} else {
++	}
++
++	/*
++	 * If the file is being opened O_RDONLY or we couldn't get a O_RDWR
++	 * file for some reason, then try for a read deleg instead.
++	 */
++	if (!nf && (open->op_share_access & NFS4_SHARE_ACCESS_READ)) {
+ 		nf = find_readable_file(fp);
+ 		dl_type = NFS4_OPEN_DELEGATE_READ;
+ 	}
+-	if (!nf) {
+-		/*
+-		 * We probably could attempt another open and get a read
+-		 * delegation, but for now, don't bother until the
+-		 * client actually sends us one.
+-		 */
++
++	if (!nf)
+ 		return ERR_PTR(-EAGAIN);
+-	}
++
+ 	spin_lock(&state_lock);
+ 	spin_lock(&fp->fi_lock);
+ 	if (nfs4_delegation_exists(clp, fp))
+
+---
+base-commit: a734662572708cf062e974f659ae50c24fc1ad17
+change-id: 20230731-wdeleg-bbdb6b25a3c6
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
