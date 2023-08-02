@@ -2,576 +2,390 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1807B76D90E
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 22:56:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1E7776D914
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Aug 2023 22:58:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231361AbjHBU4c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Aug 2023 16:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44796 "EHLO
+        id S230301AbjHBU6m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Aug 2023 16:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230498AbjHBU41 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 16:56:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98EE53AAE;
-        Wed,  2 Aug 2023 13:55:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2485D61B24;
-        Wed,  2 Aug 2023 20:54:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 241AAC433C7;
-        Wed,  2 Aug 2023 20:54:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691009657;
-        bh=eOQo/dMF0+gMrXDa2SMyyUjYDJ7k1QyvTEZKWFuh/ys=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ZP8N/8rXbxSt0//AryOCTAZ990GcRdzzLnkSBRMOCzxFBsYHBReTdTT3OsHcM95K7
-         q7vYRFprEEDwVuBv3Niaw4cgn3uRyB0WGlNLBzdJV98gyzod+FPkYyLr+iWZ0Vpkbh
-         YaFVvhRwDy7l/6sYOtyansM5Y3IZGn24Lii3BpTRbVhh4VYitNqIBZJjS2FN34j0Om
-         LybhkRbszVR70hnZdLwgfEbLwr8htKpkZnI+aOB5+3X8owm7dEPrZraY0wibWfcm6C
-         K5pkOcpEO/KdWB0OhcjU6Sxk1HZLJTR5iUBk1a9LKp0lCdij4BZmcgKvt43vNz5W4F
-         eq0CjmAQ716IQ==
-Message-ID: <ccc52562305bd1a1affb14e94a1cc08433eb8316.camel@kernel.org>
-Subject: Re: [PATCH v6 2/7] fs: add infrastructure for multigrain timestamps
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
+        with ESMTP id S231996AbjHBU62 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 16:58:28 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5D032D53;
+        Wed,  2 Aug 2023 13:58:00 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 372HJ8Jg031614;
+        Wed, 2 Aug 2023 20:57:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=++LnZbqAolO/qhSff0AZwxbRJBL2E17Ckdmx+vJ0vhs=;
+ b=G8DWpK5Y6GJZsA9xYuoqnRUzepMFGXLf5/kCTV3rfMP4XTcGgj/DA6eEj1IefXaWs7/p
+ m+/2exOrjoHpBLyn5brUlldTWmR0/wIo4vsmbVsBvQG+EkNNMawz5GPCx/R8jpv/L3jR
+ XccfSenXCIE4gL/eoSdWOX+kdO8JT2iT9EehNJw9udZNHhLBr2n4qEdJuYcoAVy/Crm0
+ pnYdd1g4+6uM5/2dx+86uo+pYkQuXzQxyB0A2Hz1deE6liRiyZmQceIH1eFKKOfZ7XoU
+ rN0Qfk/mKIVJRmNf4vuluuLA+vJoTGe8EiM2X42cQrAUkcpdV5we/5OrUs6/DUpp/wU1 pA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s79vbt9tk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Aug 2023 20:57:36 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 372KZHHG025214;
+        Wed, 2 Aug 2023 20:57:35 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s4s7f0mcv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 02 Aug 2023 20:57:35 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CkKj3dyvFFLTlnV2ORJsq8ryC4e8T2EKxtpear6wg4BtF+uUoeKX8BGnAcX65bNOvt01K/UUkvkR1V0MtMSdc0THmUSrUdnz9u1nC4+ivt2gXBx873J2GSsdBpNY9i1wI8mankZ5+qQBGWsHihPz5V8ENsC4097FoypA6giU6qMinNcmXxBCJc7D5++rzDFmo5/6WMBnkYI0siD9QE+4kjPsMpcruvUq1WD6/UtvBifpK7nni5ORoUFDrPvdGKpSqF6ogHHI+luLG1gixMrs52soHbB2XCIZ4dZtnjw2I8vlRTHGOC78NWx8GVvZduJ2pjfxXXA4VfLsK61EXUiUyg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=++LnZbqAolO/qhSff0AZwxbRJBL2E17Ckdmx+vJ0vhs=;
+ b=TjgvXX0dw5YofRqu4rpuYMTXF3GG1zN1l3BNky/uGU2YPIf/GcVIjunUlugv7k58VTzfSLzQNDw2vke1yIw/lo0i6d9KOh0j9fcu9tmNZJG1uBEBms5pu7SSxx7nE51CSbyuaOmxIoh/3wKby5YNGmYstDfL/IdRVPJOAycyHFQxgohaih1JD9ucoOvxTRiCC8bbhJD2q3HBroTzahJkF4CzF108bdO45e8VKv5gByGn3eoY+yqSGdbRtoU9LXHe5fdnQF+rletr4CptkmTOYRhraig5VQtzr1hFXsRO/LMAuXqh8aALHb8xkezvxGsIEfHwlaDR1NY0AFPJbEaIQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=++LnZbqAolO/qhSff0AZwxbRJBL2E17Ckdmx+vJ0vhs=;
+ b=Tc+kR/cr3Kfthw1WiEEFAHr5cMu5YIWJsvp8Womkxr5AOYK4f6u2C9NLYlfRbh4u5v4p1ndvjBBg5YTjqkfoMFMMC6McibPKRAUfRSXeQMEdG+nI/B36RJfHOoc29Impsg6jKNIf1AH+vrjjUo/MOGQLiE6ryVc7NzKApRlm1I4=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SA1PR10MB6344.namprd10.prod.outlook.com (2603:10b6:806:257::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.45; Wed, 2 Aug
+ 2023 20:57:33 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2990:c166:9436:40e]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2990:c166:9436:40e%6]) with mapi id 15.20.6652.020; Wed, 2 Aug 2023
+ 20:57:33 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Jeff Layton <jlayton@kernel.org>, Dai Ngo <dai.ngo@oracle.com>
+CC:     Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
         Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Richard Weinberger <richard@nod.at>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Anthony Iliopoulos <ailiop@suse.com>, v9fs@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-nfs@vger.kernel.org,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
-        linux-mm@kvack.org, linux-xfs@vger.kernel.org
-Date:   Wed, 02 Aug 2023 16:54:09 -0400
-In-Reply-To: <20230802193537.vtuuwuwazocjbatv@quack3>
-References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
-         <20230725-mgctime-v6-2-a794c2b7abca@kernel.org>
-         <20230802193537.vtuuwuwazocjbatv@quack3>
-Content-Type: text/plain; charset="ISO-8859-15"
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] nfsd: don't hand out write delegations on O_WRONLY
+ opens
+Thread-Topic: [PATCH v2] nfsd: don't hand out write delegations on O_WRONLY
+ opens
+Thread-Index: AQHZxHzI5IpG8/Fxw02QA37H09j/Q6/XNBSAgAAdtICAACFzgIAACRyAgAACjAA=
+Date:   Wed, 2 Aug 2023 20:57:33 +0000
+Message-ID: <26761CA2-923C-43FC-BDC6-14012115EAA0@oracle.com>
+References: <20230801-wdeleg-v2-1-20c14252bab4@kernel.org>
+ <8c3adfce-39f0-0e60-e35a-2f1be6fb67e6@oracle.com>
+ <c9370f6fde62205356f4c864891a3c35ef811877.camel@kernel.org>
+ <0a256174-44ea-d653-7643-b39f5081d8a5@oracle.com>
+ <d70f4dd0fc77566f15f5178424bcf901ed21fbad.camel@kernel.org>
+In-Reply-To: <d70f4dd0fc77566f15f5178424bcf901ed21fbad.camel@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.700.6)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SA1PR10MB6344:EE_
+x-ms-office365-filtering-correlation-id: 71a71961-cd3d-4c78-e8b1-08db939b17c0
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 9nmMa41I9MJfBqVT7Hd4wDjVitQLB3B7lHjx/4TczTb1PIj1bt4iKWFatQ/vHrASqbxkVfnGBSX4CjaCMXg65QK7qG6kl4psYn/EEO+S5xnxrKqJ2VyMif9qRoiN03zB/yDWfuNUYzbLVnHSbxdlkYViVCrAyT9GGMdDJtPolguT1NN+52/Ly6QXUddlVZl/AWoGnDMF3JXqf6qv/Ejm+Zpw6/EXSjh0pqnYE54Ne2XSGCrdQBehpXLGzzpHe33upluvJANDxluaN15Vn2i2plfS3xB5G6pE2586TrSpcrHpE3eny9Gq0GervngKgxO9UvTJoLzHgwBx6wm1Nv3oBRfuQ/B7x3UwSWdoRDdn4UkToL/S9Ke9XlEWOzY9wd0VBymDpTrL1zKRcWb2TmMEiCLv1JoN8dMAcw65GNiChskdo0iuqOArVo5RQf+/g+41sSHfNcOyb1Lg7Ijg8IlJAEr3lKXY3yLbby61Br6CstsCpbuS2zGCiKyiaO/nIk5pkps2MqPOjBKbK0FVMUcV/5JlLobsVcMOzGU/I5zwILL4GIs0EZHkT9hDGQ7w2yrxXblqVXVva61upq6otJC5/VUnfA49rLeiXLq5wq1I9hV0ysK8/P65V6+vn9T/08quzSZDDl0lAynr/xlCetZz/A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(346002)(366004)(136003)(376002)(396003)(451199021)(186003)(2616005)(36756003)(6512007)(966005)(316002)(478600001)(122000001)(86362001)(54906003)(110136005)(66946007)(66446008)(66476007)(71200400001)(66556008)(38100700002)(64756008)(6636002)(4326008)(6486002)(91956017)(33656002)(76116006)(53546011)(6506007)(26005)(41300700001)(38070700005)(8936002)(8676002)(83380400001)(5660300002)(2906002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?jLMTbAl3aau3uzo3bOodtYl729ohYEbX4gUQ9WWNeUGdEPHGDkcvjakaN++N?=
+ =?us-ascii?Q?/BgXTWzN0SRnsHuRd5qm4ACF6MZWT+/6Xl10s6fzGoV3iwZ05QlEMt3hI1SP?=
+ =?us-ascii?Q?uOYjObDo8IhBflsHnUIWv1nejp2VuXxD9HW6d4blNx6dNN4rEF8EI4psl+4Y?=
+ =?us-ascii?Q?bvWUlpX9KKMRAomuGFZwWwiiNFWqqn4mbVHWUlLCleiLXBfEIcqjaqpV1JYR?=
+ =?us-ascii?Q?naMm5DyCK92G3Ne0BuS70Bq2KOD1ADHhJDPjI1cBZRJPopwCgU/TkzjQJ9gk?=
+ =?us-ascii?Q?zlAbiigU7TR4vBvnM+L+4g9T2CyOYpOQ/tY+dLSxKF9LPF3UqqtWSkrKpfm1?=
+ =?us-ascii?Q?wkXuq/M+hXWJFQHmPZSNCH7HsFcMG1yNRkn3YH/J4U1mC40umQQFlUw53Xjw?=
+ =?us-ascii?Q?vzN1Jh+3mexSFtDzQ0AgFPWGlplI3iyrips8rclvItsEDPR+9viT9UobZ+OB?=
+ =?us-ascii?Q?uYt3lT+l4RfGckjwMNiiBvEKSYn2/4+9etQKERMce/FVgMMoTiwcQ8PaSkaQ?=
+ =?us-ascii?Q?t4A/PlVbSreWHs7/BHOLr7EP2HP7ishgDgP/ChweXLg6LyrKn1T7UkkBaPfy?=
+ =?us-ascii?Q?5ntNafKcq3o3wlDiuXu2zccNho9Gx/oxRgNeE33boZDDPjYYqNG+pmZeEinA?=
+ =?us-ascii?Q?GLn2KIcwAEbZXNaxPi2FlRlj25CqyNg+OZIRsscr2MnaGml0V6yRKUynqtic?=
+ =?us-ascii?Q?eF693KxnVma59/6QrHPeOxDfg5tqHqAbT15UsVIRnR8HvsKYzVv1vnX838f5?=
+ =?us-ascii?Q?El9wofnOyw7RX3wC27AB7Th+ggmRzYppO2oUdtzasbYRz2NfF8U8UFHeGyr4?=
+ =?us-ascii?Q?7oLwB3aG5O0CGC3r1NMqMOkxOg7Zx6SrURKGGpGXoQAkmsZNp6n97d6BpxLx?=
+ =?us-ascii?Q?Zl2ilnlj2NXFC8XllEMFPIjyCY08AHfy+bhW1YweVkJp5AoyCOoVXvIJdTyG?=
+ =?us-ascii?Q?SoraYvMCTuBIVUq8mWNTKslc7qt3btRQ7lm33DM1mQEnkqABnWp+tyAieS91?=
+ =?us-ascii?Q?BZli0GQ0CpkON55oBolzVB0v8YEP/ZmGe1cpJsA5KkaLMQA/OaOxBwkLqXYu?=
+ =?us-ascii?Q?lql4AvQIixTETqBPBuMoa28GbBc0lX0ZLehRDcHYa++L1CUBySqR10szu+rl?=
+ =?us-ascii?Q?yXWNSJKNUF6YWhkt1b15WH8z9ooG/PjEsL/H43NRJVRNe3BUuvVKLLPDEkKs?=
+ =?us-ascii?Q?m/cDRF0bcKdAKvyDjbm9Qq3Q+9IPNO28OS6rxYiLY04YUYWsE6LhVuB0kxw3?=
+ =?us-ascii?Q?By70ZdWxvIW4rqZygpYKXErb8vIH3CMoFkjnfQC7xH2e2Opma8Cb5/Jy+DUd?=
+ =?us-ascii?Q?QNCbbEk/AvFIotbnEcXKPAurgRc/m6uz0liZp8E1DG6qtYO3LsOXINO57X47?=
+ =?us-ascii?Q?zMfF3km27WKz9Wb/0wi/0jKnz8jmJDH0pod8YLP9MeM3QFzkm9O4iaxyuZfH?=
+ =?us-ascii?Q?HbpubzyuEoIY392vruElq8L/f4rGzSrZ82bOIOL/2pv+DN6FCia5Z+MTpTuY?=
+ =?us-ascii?Q?WIU9mM8bMPuKDx0dlXka294hG8DfP/abUmwHpLUtnocjzHt7XUVzTFDBaPjf?=
+ =?us-ascii?Q?IFX45UPxfdhH19ywQk2YYE1luTVmT4af/75uVtSv51N1UTNyTJfiS6ibQQKF?=
+ =?us-ascii?Q?pg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <4798EDD3DD25AD4BAE639A4AD4AEF1FE@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: youuegjEi9vkUWRYm99Cwq2ADC+TFIfp36j91BcX8259oReCM/1XcOC6KH2TuKSaoPBPeK8vLDhIfWBmsxamAwZY+nlcJzLBu9XZUH90yKgBsxx+KyYIXhNHGHNQKA3Wp+66i8LaYr41B+EnJTGL920NW1LzKb6Uh50HoRbjW5WijjFZVKWLstD3SjBGgFAARyTUd4JcybmBeuY9y0dTO5/LF7zU/qC7Cr+ELc2Oe5dAEhDV8spbpzzEXGXhG0vHZ/EeU3c3p4SxGMoQnxp+0WkQ9acX9Hg5b2o54XSFGynigvJtvccPo3xcif0Bc1H0hfM5eCpI0ZJQndUbQ1QUy5AuQZDOiPmia9yFRwjar3k/iHjvGCLGxaiMBHHaWCMFTxtYAr//XkF3V1sDVlRZV9gKVdtzmHEiNPY3tSDv7CJwJCZxoscinf8sU3wVY6vbtkQRVi/ENewoO6bUhg+UgsCRWAWmCkjV84L2Eg/aF9PcF44q7rHwOOnF+13xGgV38vPtT5bQGbZyfe+y3uiDUuiuRZR3URK6D280u5PhEXSlh9N2nQ9IKLPey1G4YQNw1OD1elBXQ/v43qMvVJEX+eqZUaIXto3pBV3OJOgVS1wP0LkGA1TxQrjxmPPLK/Rr9RzdtnZiSLHf7/Up6mFlM3qpQc+U5S9dBm4biv7sptFwF1U4FIsmzRHG6FJjxFV/WbdtvhP/weki3WRc/jLv2GFYzO8MBA/z1Ox9KBEDBo6efDkdRGUcJIY5BXCqmzpENSS7ZGfNy2jRXjvE7zue8+8Lmp6Ui+BO6Gq13l0Gyf6qlj09Gh+blgvtLZe+fJ4rTPLOMrlJrXLmEIyc9lvAA5MuwlFWQwMpTAm0wRlcABpFvdYCehZ7lLbpHRV1n3yj
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 71a71961-cd3d-4c78-e8b1-08db939b17c0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Aug 2023 20:57:33.0720
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4tVYaWCWIbM+9SCCTku03GBDO6J2an8tNCBhjUbn6exoFB+cBcZxhC960weZKzPGfYvEfKWtPy2je24j72CAYQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6344
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-02_18,2023-08-01_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 malwarescore=0
+ adultscore=0 mlxscore=0 suspectscore=0 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308020184
+X-Proofpoint-GUID: IyIqLX0pD4McJlrL0gqaoBrkuWlboyAi
+X-Proofpoint-ORIG-GUID: IyIqLX0pD4McJlrL0gqaoBrkuWlboyAi
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-08-02 at 21:35 +0200, Jan Kara wrote:
-> On Tue 25-07-23 10:58:15, Jeff Layton wrote:
-> > The VFS always uses coarse-grained timestamps when updating the ctime
-> > and mtime after a change. This has the benefit of allowing filesystems
-> > to optimize away a lot metadata updates, down to around 1 per jiffy,
-> > even when a file is under heavy writes.
-> >=20
-> > Unfortunately, this has always been an issue when we're exporting via
-> > NFSv3, which relies on timestamps to validate caches. A lot of changes
-> > can happen in a jiffy, so timestamps aren't sufficient to help the
-> > client decide to invalidate the cache. Even with NFSv4, a lot of
-> > exported filesystems don't properly support a change attribute and are
-> > subject to the same problems with timestamp granularity. Other
-> > applications have similar issues with timestamps (e.g backup
-> > applications).
-> >=20
-> > If we were to always use fine-grained timestamps, that would improve th=
-e
-> > situation, but that becomes rather expensive, as the underlying
-> > filesystem would have to log a lot more metadata updates.
-> >=20
-> > What we need is a way to only use fine-grained timestamps when they are
-> > being actively queried.
-> >=20
-> > POSIX generally mandates that when the the mtime changes, the ctime mus=
-t
-> > also change. The kernel always stores normalized ctime values, so only
-> > the first 30 bits of the tv_nsec field are ever used.
-> >=20
-> > Use the 31st bit of the ctime tv_nsec field to indicate that something
-> > has queried the inode for the mtime or ctime. When this flag is set,
-> > on the next mtime or ctime update, the kernel will fetch a fine-grained
-> > timestamp instead of the usual coarse-grained one.
-> >=20
-> > Filesytems can opt into this behavior by setting the FS_MGTIME flag in
-> > the fstype. Filesystems that don't set this flag will continue to use
-> > coarse-grained timestamps.
-> >=20
-> > Later patches will convert individual filesystems to use the new
-> > infrastructure.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/inode.c         | 98 ++++++++++++++++++++++++++++++++++++++--------=
---------
-> >  fs/stat.c          | 41 +++++++++++++++++++++--
-> >  include/linux/fs.h | 45 +++++++++++++++++++++++--
-> >  3 files changed, 151 insertions(+), 33 deletions(-)
-> >=20
-> > diff --git a/fs/inode.c b/fs/inode.c
-> > index d4ab92233062..369621e7faf5 100644
-> > --- a/fs/inode.c
-> > +++ b/fs/inode.c
-> > @@ -1919,6 +1919,21 @@ int inode_update_time(struct inode *inode, struc=
-t timespec64 *time, int flags)
-> >  }
-> >  EXPORT_SYMBOL(inode_update_time);
-> > =20
-> > +/**
-> > + * current_coarse_time - Return FS time
-> > + * @inode: inode.
-> > + *
-> > + * Return the current coarse-grained time truncated to the time
-> > + * granularity supported by the fs.
-> > + */
-> > +static struct timespec64 current_coarse_time(struct inode *inode)
-> > +{
-> > +	struct timespec64 now;
-> > +
-> > +	ktime_get_coarse_real_ts64(&now);
-> > +	return timestamp_truncate(now, inode);
-> > +}
-> > +
-> >  /**
-> >   *	atime_needs_update	-	update the access time
-> >   *	@path: the &struct path to update
-> > @@ -1952,7 +1967,7 @@ bool atime_needs_update(const struct path *path, =
-struct inode *inode)
-> >  	if ((mnt->mnt_flags & MNT_NODIRATIME) && S_ISDIR(inode->i_mode))
-> >  		return false;
-> > =20
-> > -	now =3D current_time(inode);
-> > +	now =3D current_coarse_time(inode);
-> > =20
-> >  	if (!relatime_need_update(mnt, inode, now))
-> >  		return false;
-> > @@ -1986,7 +2001,7 @@ void touch_atime(const struct path *path)
-> >  	 * We may also fail on filesystems that have the ability to make part=
-s
-> >  	 * of the fs read only, e.g. subvolumes in Btrfs.
-> >  	 */
-> > -	now =3D current_time(inode);
-> > +	now =3D current_coarse_time(inode);
-> >  	inode_update_time(inode, &now, S_ATIME);
-> >  	__mnt_drop_write(mnt);
-> >  skip_update:
+
+
+> On Aug 2, 2023, at 4:48 PM, Jeff Layton <jlayton@kernel.org> wrote:
 >=20
-> There are also calls in fs/smb/client/file.c:cifs_readpage_worker() and i=
+> On Wed, 2023-08-02 at 13:15 -0700, dai.ngo@oracle.com wrote:
+>> On 8/2/23 11:15 AM, Jeff Layton wrote:
+>>> On Wed, 2023-08-02 at 09:29 -0700, dai.ngo@oracle.com wrote:
+>>>> On 8/1/23 6:33 AM, Jeff Layton wrote:
+>>>>> I noticed that xfstests generic/001 was failing against linux-next nf=
+sd.
+>>>>>=20
+>>>>> The client would request a OPEN4_SHARE_ACCESS_WRITE open, and the ser=
+ver
+>>>>> would hand out a write delegation. The client would then try to use t=
+hat
+>>>>> write delegation as the source stateid in a COPY
+>>>> not sure why the client opens the source file of a COPY operation with
+>>>> OPEN4_SHARE_ACCESS_WRITE?
+>>>>=20
+>>> It doesn't. The original open is to write the data for the file being
+>>> copied. It then opens the file again for READ, but since it has a write
+>>> delegation, it doesn't need to talk to the server at all -- it can just
+>>> use that stateid for later operations.
+>>>=20
+>>>>>   or CLONE operation, and
+>>>>> the server would respond with NFS4ERR_STALE.
+>>>> If the server does not allow client to use write delegation for the
+>>>> READ, should the correct error return be NFS4ERR_OPENMODE?
+>>>>=20
+>>> The server must allow the client to use a write delegation for read
+>>> operations. It's required by the spec, AFAIU.
+>>>=20
+>>> The error in this case was just bogus. The vfs copy routine would retur=
 n
-> fs/ocfs2/file.c:ocfs2_update_inode_atime() that should probably use
-> current_coarse_time() to avoid needless querying of fine grained
-> timestamps. But see below...
->=20
-
-Technically, they already devolve to current_coarse_time anyway, but
-changing them would allow them to skip the fstype flag check, but I like
-your idea below better anyway.
-
-> > @@ -2072,6 +2087,56 @@ int file_remove_privs(struct file *file)
-> >  }
-> >  EXPORT_SYMBOL(file_remove_privs);
-> > =20
-> > +/**
-> > + * current_mgtime - Return FS time (possibly fine-grained)
-> > + * @inode: inode.
-> > + *
-> > + * Return the current time truncated to the time granularity supported=
- by
-> > + * the fs, as suitable for a ctime/mtime change. If the ctime is flagg=
-ed
-> > + * as having been QUERIED, get a fine-grained timestamp.
-> > + */
-> > +static struct timespec64 current_mgtime(struct inode *inode)
-> > +{
-> > +	struct timespec64 now;
-> > +	atomic_long_t *pnsec =3D (atomic_long_t *)&inode->__i_ctime.tv_nsec;
-> > +	long nsec =3D atomic_long_read(pnsec);
-> > +
-> > +	if (nsec & I_CTIME_QUERIED) {
-> > +		ktime_get_real_ts64(&now);
-> > +	} else {
-> > +		struct timespec64 ctime;
-> > +
-> > +		ktime_get_coarse_real_ts64(&now);
-> > +
-> > +		/*
-> > +		 * If we've recently fetched a fine-grained timestamp
-> > +		 * then the coarse-grained one may still be earlier than the
-> > +		 * existing one. Just keep the existing ctime if so.
-> > +		 */
-> > +		ctime =3D inode_get_ctime(inode);
-> > +		if (timespec64_compare(&ctime, &now) > 0)
-> > +			now =3D ctime;
-> > +	}
-> > +
-> > +	return timestamp_truncate(now, inode);
-> > +}
-> > +
-> > +/**
-> > + * current_time - Return timestamp suitable for ctime update
-> > + * @inode: inode to eventually be updated
-> > + *
-> > + * Return the current time, which is usually coarse-grained but may be=
- fine
-> > + * grained if the filesystem uses multigrain timestamps and the existi=
-ng
-> > + * ctime was queried since the last update.
-> > + */
-> > +struct timespec64 current_time(struct inode *inode)
-> > +{
-> > +	if (is_mgtime(inode))
-> > +		return current_mgtime(inode);
-> > +	return current_coarse_time(inode);
-> > +}
-> > +EXPORT_SYMBOL(current_time);
-> > +
->=20
-> So if you modify current_time() to handle multigrain timestamps the code
-> will be still racy. In particular fill_mg_cmtime() can race with
-> inode_set_ctime_current() like:
->=20
-> fill_mg_cmtime()				inode_set_ctime_current()
->   stat->mtime =3D inode->i_mtime;
->   stat->ctime.tv_sec =3D inode->__i_ctime.tv_sec;
-> 						  now =3D current_time();
-> 							/* fetches coarse
-> 							 * grained timestamp */
->   stat->ctime.tv_nsec =3D atomic_long_fetch_or(I_CTIME_QUERIED, pnsec) &
-> 				~I_CTIME_QUERIED;
-> 						  inode_set_ctime(inode, now.tv_sec, now.tv_nsec);
->=20
-> and the information about a need for finegrained timestamp update gets
-> lost. So what I'd propose is to leave current_time() alone (just always
-> reporting coarse grained timestamps) and put all the magic into
-> inode_set_ctime_current() only. There we need something like:
->=20
-> struct timespec64 inode_set_ctime_current(struct inode *inode)
-> {
-> 	... variables ...
->=20
-> 	nsec =3D READ_ONCE(inode->__i_ctime.tv_nsec);
->  	if (!(nsec & I_CTIME_QUERIED)) {
-> 		now =3D current_time(inode);
->=20
-> 		if (!is_gmtime(inode)) {
-> 			inode_set_ctime_to_ts(inode, now);
-> 		} else {
-> 			/*
-> 			 * If we've recently fetched a fine-grained
-> 			 * timestamp then the coarse-grained one may still
-> 			 * be earlier than the existing one. Just keep the
-> 			 * existing ctime if so.
-> 			 */
-> 			ctime =3D inode_get_ctime(inode);
-> 			if (timespec64_compare(&ctime, &now) > 0)
-> 				now =3D ctime;
->=20
-> 			/*
-> 			 * Ctime updates are generally protected by inode
-> 			 * lock but we could have raced with setting of
-> 			 * I_CTIME_QUERIED flag.
-> 			 */
-> 			if (cmpxchg(&inode->__i_ctime.tv_nsec, nsec,
-> 				    now.tv_nsec) !=3D nsec)
-> 				goto fine_grained;
-> 			inode->__i_ctime.tv_sec =3D now.tv_sec;
-> 		}
-> 		return now;
-> 	}
-> fine_grained:
-> 	ktime_get_real_ts64(&now);
-> 	inode_set_ctime_to_ts(inode, now);
->=20
-> 	return now;
-> }
->=20
-> 								Honza
->=20
-
-This is a great idea. I'll rework the series along the lines you
-suggest. That also answers my earlier question to Christian:
-
-I'll just resend the whole series (it's not very big anyway), and I'll
-include the fill_mg_cmtime prototype change.
-
-Cheers,
-
-> >  static int inode_needs_update_time(struct inode *inode, struct timespe=
-c64 *now)
-> >  {
-> >  	int sync_it =3D 0;
-> > @@ -2480,37 +2545,12 @@ struct timespec64 timestamp_truncate(struct tim=
-espec64 t, struct inode *inode)
-> >  }
-> >  EXPORT_SYMBOL(timestamp_truncate);
-> > =20
-> > -/**
-> > - * current_time - Return FS time
-> > - * @inode: inode.
-> > - *
-> > - * Return the current time truncated to the time granularity supported=
- by
-> > - * the fs.
-> > - *
-> > - * Note that inode and inode->sb cannot be NULL.
-> > - * Otherwise, the function warns and returns time without truncation.
-> > - */
-> > -struct timespec64 current_time(struct inode *inode)
-> > -{
-> > -	struct timespec64 now;
-> > -
-> > -	ktime_get_coarse_real_ts64(&now);
-> > -
-> > -	if (unlikely(!inode->i_sb)) {
-> > -		WARN(1, "current_time() called with uninitialized super_block in the=
- inode");
-> > -		return now;
-> > -	}
-> > -
-> > -	return timestamp_truncate(now, inode);
-> > -}
-> > -EXPORT_SYMBOL(current_time);
-> > -
-> >  /**
-> >   * inode_set_ctime_current - set the ctime to current_time
-> >   * @inode: inode
-> >   *
-> > - * Set the inode->i_ctime to the current value for the inode. Returns
-> > - * the current value that was assigned to i_ctime.
-> > + * Set the inode->__i_ctime to the current value for the inode. Return=
+>>> -EBADF since the file didn't have FMODE_READ, and the nfs server would
+>>> translate that into NFS4ERR_STALE.
+>>>=20
+>>> Probably there is a better v4 error code that we could translate EBADF
+>>> to, but with this patch it shouldn't be a problem any longer.
+>>>=20
+>>>>> The problem is that the struct file associated with the delegation do=
+es
+>>>>> not necessarily have read permissions. It's handing out a write
+>>>>> delegation on what is effectively an O_WRONLY open. RFC 8881 states:
+>>>>>=20
+>>>>>   "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on =
+its
+>>>>>    own, all opens."
+>>>>>=20
+>>>>> Given that the client didn't request any read permissions, and that n=
+fsd
+>>>>> didn't check for any, it seems wrong to give out a write delegation.
+>>>>>=20
+>>>>> Only hand out a write delegation if we have a O_RDWR descriptor
+>>>>> available. If it fails to find an appropriate write descriptor, go
+>>>>> ahead and try for a read delegation if NFS4_SHARE_ACCESS_READ was
+>>>>> requested.
+>>>>>=20
+>>>>> This fixes xfstest generic/001.
+>>>>>=20
+>>>>> Closes: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D412
+>>>>> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>>>>> ---
+>>>>> Changes in v2:
+>>>>> - Rework the logic when finding struct file for the delegation. The
+>>>>>    earlier patch might still have attached a O_WRONLY file to the del=
+eg
+>>>>>    in some cases, and could still have handed out a write delegation =
+on
+>>>>>    an O_WRONLY OPEN request in some cases.
+>>>>> ---
+>>>>>   fs/nfsd/nfs4state.c | 29 ++++++++++++++++++-----------
+>>>>>   1 file changed, 18 insertions(+), 11 deletions(-)
+>>>>>=20
+>>>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>>>>> index ef7118ebee00..e79d82fd05e7 100644
+>>>>> --- a/fs/nfsd/nfs4state.c
+>>>>> +++ b/fs/nfsd/nfs4state.c
+>>>>> @@ -5449,7 +5449,7 @@ nfs4_set_delegation(struct nfsd4_open *open, st=
+ruct nfs4_ol_stateid *stp,
+>>>>>    struct nfs4_file *fp =3D stp->st_stid.sc_file;
+>>>>>    struct nfs4_clnt_odstate *odstate =3D stp->st_clnt_odstate;
+>>>>>    struct nfs4_delegation *dp;
+>>>>> - struct nfsd_file *nf;
+>>>>> + struct nfsd_file *nf =3D NULL;
+>>>>>    struct file_lock *fl;
+>>>>>    u32 dl_type;
+>>>>>=20
+>>>>> @@ -5461,21 +5461,28 @@ nfs4_set_delegation(struct nfsd4_open *open, =
+struct nfs4_ol_stateid *stp,
+>>>>>    if (fp->fi_had_conflict)
+>>>>>    return ERR_PTR(-EAGAIN);
+>>>>>=20
+>>>>> - if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+>>>>> - nf =3D find_writeable_file(fp);
+>>>>> + /*
+>>>>> + * Try for a write delegation first. We need an O_RDWR file
+>>>>> + * since a write delegation allows the client to perform any open
+>>>>> + * from its cache.
+>>>>> + */
+>>>>> + if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) =3D=3D NFS4_SH=
+ARE_ACCESS_BOTH) {
+>>>>> + nf =3D nfsd_file_get(fp->fi_fds[O_RDWR]);
+>>>>>    dl_type =3D NFS4_OPEN_DELEGATE_WRITE;
+>>>>> - } else {
+>>>> Does this mean OPEN4_SHARE_ACCESS_WRITE do not get a write delegation?
+>>>> It does not seem right.
+>>>>=20
+>>>> -Dai
+>>>>=20
+>>> Why? Per RFC 8881:
+>>>=20
+>>> "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on its
+>>> own, all opens."
+>>>=20
+>>> All opens. That includes read opens.
+>>>=20
+>>> An OPEN4_SHARE_ACCESS_WRITE open will succeed on a file to which the
+>>> user has no read permissions. Therefore, we can't grant a write
+>>> delegation since can't guarantee that the user is allowed to do that.
+>>=20
+>> If the server grants the write delegation on an OPEN with
+>> OPEN4_SHARE_ACCESS_WRITE on the file with WR-only access mode then
+>> why can't the server checks and denies the subsequent READ?
+>>=20
+>> Per RFC 8881, section 9.1.2:
+>>=20
+>>     For delegation stateids, the access mode is based on the type of
+>>     delegation.
+>>=20
+>>     When a READ, WRITE, or SETATTR (that specifies the size attribute)
+>>     operation is done, the operation is subject to checking against the
+>>     access mode to verify that the operation is appropriate given the
+>>     stateid with which the operation is associated.
+>>=20
+>>     In the case of WRITE-type operations (i.e., WRITEs and SETATTRs that
+>>     set size), the server MUST verify that the access mode allows writin=
+g
+>>     and MUST return an NFS4ERR_OPENMODE error if it does not. In the cas=
+e
+>>     of READ, the server may perform the corresponding check on the acces=
 s
-> > + * the current value that was assigned to __i_ctime.
-> >   */
-> >  struct timespec64 inode_set_ctime_current(struct inode *inode)
-> >  {
-> > diff --git a/fs/stat.c b/fs/stat.c
-> > index 062f311b5386..51effd1c2bc2 100644
-> > --- a/fs/stat.c
-> > +++ b/fs/stat.c
-> > @@ -26,6 +26,37 @@
-> >  #include "internal.h"
-> >  #include "mount.h"
-> > =20
-> > +/**
-> > + * fill_mg_cmtime - Fill in the mtime and ctime and flag ctime as QUER=
-IED
-> > + * @request_mask: STATX_* values requested
-> > + * @inode: inode from which to grab the c/mtime
-> > + * @stat: where to store the resulting values
-> > + *
-> > + * Given @inode, grab the ctime and mtime out if it and store the resu=
-lt
-> > + * in @stat. When fetching the value, flag it as queried so the next w=
-rite
-> > + * will use a fine-grained timestamp.
-> > + */
-> > +void fill_mg_cmtime(u32 request_mask, struct inode *inode, struct ksta=
-t *stat)
-> > +{
-> > +	atomic_long_t *pnsec =3D (atomic_long_t *)&inode->__i_ctime.tv_nsec;
-> > +
-> > +	/* If neither time was requested, then don't report them */
-> > +	if (!(request_mask & (STATX_CTIME|STATX_MTIME))) {
-> > +		stat->result_mask &=3D ~(STATX_CTIME|STATX_MTIME);
-> > +		return;
-> > +	}
-> > +
-> > +	stat->mtime =3D inode->i_mtime;
-> > +	stat->ctime.tv_sec =3D inode->__i_ctime.tv_sec;
-> > +	/*
-> > +	 * Atomically set the QUERIED flag and fetch the new value with
-> > +	 * the flag masked off.
-> > +	 */
-> > +	stat->ctime.tv_nsec =3D atomic_long_fetch_or(I_CTIME_QUERIED, pnsec) =
-&
-> > +					~I_CTIME_QUERIED;
-> > +}
-> > +EXPORT_SYMBOL(fill_mg_cmtime);
-> > +
-> >  /**
-> >   * generic_fillattr - Fill in the basic attributes from the inode stru=
-ct
-> >   * @idmap:	idmap of the mount the inode was found from
-> > @@ -58,8 +89,14 @@ void generic_fillattr(struct mnt_idmap *idmap, u32 r=
-equest_mask,
-> >  	stat->rdev =3D inode->i_rdev;
-> >  	stat->size =3D i_size_read(inode);
-> >  	stat->atime =3D inode->i_atime;
-> > -	stat->mtime =3D inode->i_mtime;
-> > -	stat->ctime =3D inode_get_ctime(inode);
-> > +
-> > +	if (is_mgtime(inode)) {
-> > +		fill_mg_cmtime(request_mask, inode, stat);
-> > +	} else {
-> > +		stat->mtime =3D inode->i_mtime;
-> > +		stat->ctime =3D inode_get_ctime(inode);
-> > +	}
-> > +
-> >  	stat->blksize =3D i_blocksize(inode);
-> >  	stat->blocks =3D inode->i_blocks;
-> > =20
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 42d1434cc427..a0bdbefbf293 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -1477,15 +1477,43 @@ static inline bool fsuidgid_has_mapping(struct =
-super_block *sb,
-> >  struct timespec64 current_time(struct inode *inode);
-> >  struct timespec64 inode_set_ctime_current(struct inode *inode);
-> > =20
-> > +/*
-> > + * Multigrain timestamps
-> > + *
-> > + * Conditionally use fine-grained ctime and mtime timestamps when ther=
-e
-> > + * are users actively observing them via getattr. The primary use-case
-> > + * for this is NFS clients that use the ctime to distinguish between
-> > + * different states of the file, and that are often fooled by multiple
-> > + * operations that occur in the same coarse-grained timer tick.
-> > + *
-> > + * The kernel always keeps normalized struct timespec64 values in the =
-ctime,
-> > + * which means that only the first 30 bits of the value are used. Use =
-the
-> > + * 31st bit of the ctime's tv_nsec field as a flag to indicate that th=
-e value
-> > + * has been queried since it was last updated.
-> > + */
-> > +#define I_CTIME_QUERIED		(1L<<30)
-> > +
-> >  /**
-> >   * inode_get_ctime - fetch the current ctime from the inode
-> >   * @inode: inode from which to fetch ctime
-> >   *
-> > - * Grab the current ctime from the inode and return it.
-> > + * Grab the current ctime tv_nsec field from the inode, mask off the
-> > + * I_CTIME_QUERIED flag and return it. This is mostly intended for use=
- by
-> > + * internal consumers of the ctime that aren't concerned with ensuring=
- a
-> > + * fine-grained update on the next change (e.g. when preparing to stor=
-e
-> > + * the value in the backing store for later retrieval).
-> > + *
-> > + * This is safe to call regardless of whether the underlying filesyste=
-m
-> > + * is using multigrain timestamps.
-> >   */
-> >  static inline struct timespec64 inode_get_ctime(const struct inode *in=
-ode)
-> >  {
-> > -	return inode->__i_ctime;
-> > +	struct timespec64 ctime;
-> > +
-> > +	ctime.tv_sec =3D inode->__i_ctime.tv_sec;
-> > +	ctime.tv_nsec =3D inode->__i_ctime.tv_nsec & ~I_CTIME_QUERIED;
-> > +
-> > +	return ctime;
-> >  }
-> > =20
-> >  /**
-> > @@ -2261,6 +2289,7 @@ struct file_system_type {
-> >  #define FS_USERNS_MOUNT		8	/* Can be mounted by userns root */
-> >  #define FS_DISALLOW_NOTIFY_PERM	16	/* Disable fanotify permission even=
-ts */
-> >  #define FS_ALLOW_IDMAP         32      /* FS has been updated to handl=
-e vfs idmappings. */
-> > +#define FS_MGTIME		64	/* FS uses multigrain timestamps */
-> >  #define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during =
-rename() internally. */
-> >  	int (*init_fs_context)(struct fs_context *);
-> >  	const struct fs_parameter_spec *parameters;
-> > @@ -2284,6 +2313,17 @@ struct file_system_type {
-> > =20
-> >  #define MODULE_ALIAS_FS(NAME) MODULE_ALIAS("fs-" NAME)
-> > =20
-> > +/**
-> > + * is_mgtime: is this inode using multigrain timestamps
-> > + * @inode: inode to test for multigrain timestamps
-> > + *
-> > + * Return true if the inode uses multigrain timestamps, false otherwis=
-e.
-> > + */
-> > +static inline bool is_mgtime(const struct inode *inode)
-> > +{
-> > +	return inode->i_sb->s_type->fs_flags & FS_MGTIME;
-> > +}
-> > +
-> >  extern struct dentry *mount_bdev(struct file_system_type *fs_type,
-> >  	int flags, const char *dev_name, void *data,
-> >  	int (*fill_super)(struct super_block *, void *, int));
-> > @@ -2919,6 +2959,7 @@ extern void page_put_link(void *);
-> >  extern int page_symlink(struct inode *inode, const char *symname, int =
-len);
-> >  extern const struct inode_operations page_symlink_inode_operations;
-> >  extern void kfree_link(void *);
-> > +void fill_mg_cmtime(u32 request_mask, struct inode *inode, struct ksta=
-t *stat);
-> >  void generic_fillattr(struct mnt_idmap *, u32, struct inode *, struct =
-kstat *);
-> >  void generic_fill_statx_attr(struct inode *inode, struct kstat *stat);
-> >  extern int vfs_getattr_nosec(const struct path *, struct kstat *, u32,=
- unsigned int);
-> >=20
-> > --=20
-> > 2.41.0
-> >=20
+>>     mode, or it may choose to allow READ on OPENs for OPEN4_SHARE_ACCESS=
+_WRITE,
+>>     to accommodate clients whose WRITE implementation may unavoidably do
+>>     reads (e.g., due to buffer cache constraints). However, even if READ=
+s
+>>     are allowed in these circumstances, the server MUST still check for
+>>     locks that conflict with the READ (e.g., another OPEN specified
+>>     OPEN4_SHARE_DENY_READ or OPEN4_SHARE_DENY_BOTH). Note that a server
+>>     that does enforce the access mode check on READs need not explicitly
+>>     check for conflicting share reservations since the existence of OPEN
+>>     for OPEN4_SHARE_ACCESS_READ guarantees that no conflicting share
+>>     reservation can exist.
+>>=20
+>> FWIW, The Solaris server grants write delegation on OPEN with
+>> OPEN4_SHARE_ACCESS_WRITE on file with access mode either RW or
+>> WR-only. Maybe this is a bug? or the spec is not clear?
+>>=20
+>=20
+> I don't think that's necessarily a bug.
+>=20
+> It's not that the spec demands that we only hand out delegations on BOTH
+> opens.  This is more of a quirk of the Linux implementation. Linux'
+> write delegations require an open O_RDWR file descriptor because we may
+> be called upon to do a read on its behalf.
+>=20
+> Technically, we could probably just have it check for
+> OPEN4_SHARE_ACCESS_WRITE, but in the case where READ isn't also set,
+> then you're unlikely to get a delegation. Either the O_RDWR descriptor
+> will be NULL, or there are other, conflicting opens already present.
+>=20
+> Solaris may have a completely different design that doesn't require
+> this. I haven't looked at its code to know.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+I'm comfortable for now with not handing out write delegations for
+SHARE_ACCESS_WRITE opens. I prefer that to permission checking on
+every READ operation.
+
+If we find that it's a significant performance issue, we can revisit.
+
+
+>> It'd would be interesting to know how ONTAP server behaves in
+>> this scenario.
+>>=20
+>=20
+> Indeed. Most likely it behaves more like Solaris does, but it'd nice to
+> know.
+>=20
+>>=20
+>>>=20
+>>>=20
+>>>>> + }
+>>>>> +
+>>>>> + /*
+>>>>> + * If the file is being opened O_RDONLY or we couldn't get a O_RDWR
+>>>>> + * file for some reason, then try for a read deleg instead.
+>>>>> + */
+>>>>> + if (!nf && (open->op_share_access & NFS4_SHARE_ACCESS_READ)) {
+>>>>>    nf =3D find_readable_file(fp);
+>>>>>    dl_type =3D NFS4_OPEN_DELEGATE_READ;
+>>>>>    }
+>>>>> - if (!nf) {
+>>>>> - /*
+>>>>> - * We probably could attempt another open and get a read
+>>>>> - * delegation, but for now, don't bother until the
+>>>>> - * client actually sends us one.
+>>>>> - */
+>>>>> +
+>>>>> + if (!nf)
+>>>>>    return ERR_PTR(-EAGAIN);
+>>>>> - }
+>>>>> +
+>>>>>    spin_lock(&state_lock);
+>>>>>    spin_lock(&fp->fi_lock);
+>>>>>    if (nfs4_delegation_exists(clp, fp))
+>>>>>=20
+>>>>> ---
+>>>>> base-commit: a734662572708cf062e974f659ae50c24fc1ad17
+>>>>> change-id: 20230731-wdeleg-bbdb6b25a3c6
+>>>>>=20
+>>>>> Best regards,
+>=20
+> --=20
+> Jeff Layton <jlayton@kernel.org>
+
+--
+Chuck Lever
+
+
