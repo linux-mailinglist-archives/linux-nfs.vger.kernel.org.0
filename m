@@ -2,170 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F8B176DE72
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Aug 2023 04:46:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DE9776DEB7
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Aug 2023 05:08:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233513AbjHCCqq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Aug 2023 22:46:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33750 "EHLO
+        id S231497AbjHCDIq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Aug 2023 23:08:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233125AbjHCCqp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 22:46:45 -0400
-Received: from mail-yw1-x112a.google.com (mail-yw1-x112a.google.com [IPv6:2607:f8b0:4864:20::112a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56F92B2
-        for <linux-nfs@vger.kernel.org>; Wed,  2 Aug 2023 19:46:42 -0700 (PDT)
-Received: by mail-yw1-x112a.google.com with SMTP id 00721157ae682-583f837054eso4002767b3.3
-        for <linux-nfs@vger.kernel.org>; Wed, 02 Aug 2023 19:46:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1691030801; x=1691635601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=C7rPDjP3w7SFi7WVbOLZnOQv42SK/YK3pgxUtFOJqn8=;
-        b=NhqdR98K7bSRKTQ7CDjVRuusX4/Mn2110sFpO+gM2ndRgcP5OGA/FvizImRpEFEI4Z
-         PzGJ2fbtz7V+aSAsGKRRX4zdMzG2Ac0+NO8G5LU04GpWmY1oYpNibBULXCfo1KfjeD/Y
-         VkGVoJ4W5p9nydWS1OU+rOHdFLg07+H2eJVFgHRBmy669hWJ8MfQyLHxBzHgyNt/2Jk+
-         CcwoWKuzcB5rmpv9andPMrMoVDPaHBL3zU3r1fFGqN7x74QhHlDsK1NwpW9SEdncDCRd
-         FkoTtcniWlVsCYHVycdjAtMDuJQ9Pfykj7simTA9WCo2OIiEEMeuJSS5RVZpb31IsaiE
-         GjcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691030801; x=1691635601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=C7rPDjP3w7SFi7WVbOLZnOQv42SK/YK3pgxUtFOJqn8=;
-        b=bvk3N2yFz77viLDy3u5hQ3wb33zZxs4fgFcDTgnoXvaUMT7vbVCOkS5IUJk5BmTRkN
-         jpRcXBPG6ckempWeQDqzBV8rskb3lLwQzioTIAlLMnsywcodPN5HSdOGGAxOnY+9z6b9
-         IYdF+/1rrqh9inzfWPwWA9XP7X6wfQQsBMCxNfJcuvdXLFoiHPJzu+nKynmbMrpFETuD
-         oXsgi89bQBT72/7tdAJ2m9kK9RMoB1vAwAehztnKvpudzD24y0/O+L1r+4ELpxejVWmr
-         GWdzdXu17uq/GruQyLhdctWa5JPCT3dPVC3pBOnBu2P7Dp8u1RAQ1jAzlry0VH84+rzc
-         N+zQ==
-X-Gm-Message-State: ABy/qLbu55UesqtMwqUZhoE11E4w8GLm1ouCUAfCIE9ETL8A0zngpfUk
-        mtkfQKa+wU5+H0w47c58zlVYkoY4F7GZx08ba/qd
-X-Google-Smtp-Source: APBJJlFqHlrp0u9AowD2PWwPoxkgbyl77rYK4KODV0+X/B9t9X/ggsV9oR4Jf3avj9eFA1ansLbJ8J91robM9izXfWw=
-X-Received: by 2002:a81:7b05:0:b0:56c:e1e0:8da1 with SMTP id
- w5-20020a817b05000000b0056ce1e08da1mr23328025ywc.19.1691030801385; Wed, 02
- Aug 2023 19:46:41 -0700 (PDT)
+        with ESMTP id S231557AbjHCDIp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Aug 2023 23:08:45 -0400
+Received: from mail.nfschina.com (unknown [42.101.60.195])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 175951BD9;
+        Wed,  2 Aug 2023 20:08:43 -0700 (PDT)
+Received: from [172.30.11.106] (unknown [180.167.10.98])
+        by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPSA id 374596082CF9F;
+        Thu,  3 Aug 2023 11:08:35 +0800 (CST)
+Message-ID: <414e987b-df9f-53c9-6455-4a2d10f7fcf5@nfschina.com>
+Date:   Thu, 3 Aug 2023 11:08:34 +0800
 MIME-Version: 1.0
-References: <20230802-master-v6-1-45d48299168b@kernel.org> <bac543537058619345b363bbfc745927.paul@paul-moore.com>
- <ca156cecbc070c3b7c68626572274806079a6e04.camel@kernel.org>
-In-Reply-To: <ca156cecbc070c3b7c68626572274806079a6e04.camel@kernel.org>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 2 Aug 2023 22:46:30 -0400
-Message-ID: <CAHC9VhTQDVyZewU0Oiy4AfJt_UtB7O2_-PcUmXkZtuwKDQBfXg@mail.gmail.com>
-Subject: Re: [PATCH v6] vfs, security: Fix automount superblock LSM init
- problem, preventing NFS sb sharing
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH] fs: lockd: avoid possible wrong NULL parameter
+Content-Language: en-US
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        trond.myklebust@hammerspace.com, anna@kernel.org,
+        nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com,
+        bfields@fieldses.org, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        kernel-janitors@vger.kernel.org
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From:   Su Hui <suhui@nfschina.com>
+In-Reply-To: <0bd584fd-74ac-4b08-ae03-12e329ab186e@kadam.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=0.3 required=5.0 tests=BAYES_00,RDNS_NONE,
+        SCC_BODY_URI_ONLY,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 2, 2023 at 3:34=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
-te:
-> On Wed, 2023-08-02 at 14:16 -0400, Paul Moore wrote:
-> > On Aug  2, 2023 Jeff Layton <jlayton@kernel.org> wrote:
-
-...
-
-> > I generally dislike core kernel code which makes LSM calls conditional
-> > on some kernel state maintained outside the LSM.  Sometimes it has to
-> > be done as there is no other good options, but I would like us to try
-> > and avoid it if possible.  The commit description mentioned that this
-> > was put here to avoid a SELinux complaint, can you provide an example
-> > of the complain?  Does it complain about a double/invalid mount, e.g.
-> > "SELinux: mount invalid.  Same superblock, different security ..."?
+On 2023/8/2 18:41, Dan Carpenter wrote:
+> There was a big fight about memcpy() in 2010.
 >
-> The problem I had was not so much SELinux warnings, but rather that in a
-> situation where I would expect to share superblocks between two
-> filesystems, it didn't.
+> https://lwn.net/Articles/416821/
 >
-> Basically if you do something like this:
+> It's sort of related but also sort of different.  My understanding is
+> that the glibc memcpy() says that memcpy() always does a dereference so
+> it can delete all the NULL checks which come after.  The linux kernel
+> uses -fno-delete-null-pointer-checks to turn this behavior off.
+Really big fight!
+This article seems talk about  problem that using memcpy() to copy 
+overlapping regions.
+I'm not sure glibc memcpy does the check about NULL， but glibc printf 
+does this check.
+"And GNU libc checks strings passed to printf for a %s placeholder for 
+NULL,
+when the C standard says this is not allowed."[1]
+[1] https://lwn.net/Articles/416821/
 >
-> # mount nfsserver:/export/foo /mnt/foo -o context=3Dsystem_u:object_r:roo=
-t_t:s0
-> # mount nfsserver:/export/bar /mnt/bar -o context=3Dsystem_u:object_r:roo=
-t_t:s0
->
-> ...when "foo" and "bar" are directories on the same filesystem on the
-> server, you should get two vfsmounts that share a superblock. That's
-> what you get if selinux is disabled, but not when it's enabled (even
-> when it's in permissive mode).
-
-Thanks, that helps.  I'm guessing the difference in behavior is due to
-the old->has_sec_mnt_opts check in nfs_compare_super().
-
-> > I'd like to understand why the sb_set_mnt_opts() call fails when it
-> > comes after the fs_context_init() call.  I'm particulary curious to
-> > know if the failure is due to conflicting SELinux state in the
-> > fs_context, or if it is simply an issue of sb_set_mnt_opts() not
-> > properly handling existing values.  Perhaps I'm being overly naive,
-> > but I'm hopeful that we can address both of these within the SELinux
-> > code itself.
->
-> The problem I hit was that nfs_compare_super is called with a fs_context
-> that has a NULL ->security pointer. That caused it to call
-> selinux_sb_mnt_opts_compat with mnt_opts set to NULL, and at that point
-> it returns 1 and decides not to share sb's.
->
-> Filling out fc->security with this new operation seems to fix that, but
-> if you see a better way to do this, then I'm certainly open to the idea.
-
-Just as you mention that you are not a LSM expert, I am not a VFS
-expert, so I think we'll have to help each other a bit ;)
-
-I think I'm beginning to understand alloc_fs_context() a bit more,
-including the fs_context_for_XXX() wrappers.  One thing I have
-realized is that I believe we need to update the
-selinux_fs_context_init() and smack_fs_context_init() functions to
-properly handle a NULL @reference dentry; I think returning without
-error in both cases is the correct answer.  In the non-NULL @reference
-case, I believe your patch is correct, we do want to inherit the
-options from @reference.  My only concern now is the
-fs_context::lsm_set flag.
-
-You didn't mention exactly why the security_sb_set_mnt_opts() was
-failing, and requires the fs_context::lsm_set check, but my guess is
-that something is tripping over the fact that the superblock is
-already properly setup.  I'm working under the assumption that this
-problem - attempting to reconfigure a properly configured superblock -
-should only be happening in the submount/non-NULL-reference case.  If
-it is happening elsewhere I think I'm going to need some help
-understanding that ...
-
-However, assuming I'm mostly correct in the above paragraph, would it
-be possible to take a reference to the @reference dentry's superblock
-in security_fs_context_init(), that we could later compare to the
-superblock passed into security_sb_set_mnt_opts()?  If we know that
-the fs_context was initialized with the same superblock we are now
-being asked to set mount options on, we should be able to return from
-the LSM hook without doing anything.
-
-Right?
-
-Or am I missing something really silly? :)
-
---=20
-paul-moore.com
+> regards,
+> dan carpenter
