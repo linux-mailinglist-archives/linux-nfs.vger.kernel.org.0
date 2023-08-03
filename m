@@ -2,304 +2,285 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D49B176EA57
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Aug 2023 15:29:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3039776ECFB
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Aug 2023 16:44:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236050AbjHCN3a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Aug 2023 09:29:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47486 "EHLO
+        id S236540AbjHCOop (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Aug 2023 10:44:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236170AbjHCN3P (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Aug 2023 09:29:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0FA03C21;
-        Thu,  3 Aug 2023 06:28:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B917B61DA1;
-        Thu,  3 Aug 2023 13:28:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 717C9C433C7;
-        Thu,  3 Aug 2023 13:28:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691069285;
-        bh=h6hdfySgHxDqBVi3enZ1Bajg6bKORcm3++m69sKmuEE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IG4Gkucwm1mbLGKKV/B9RwfdNSOWljd5UbxhLOj6wF5WBY2BmAg3HZUVqbJk/TmkT
-         dlH2ZND/d8QkcFDZSkkQq7yC/boFCLguAAKcgWNO6VnJD6KtcdzdCNVRdaP4oO5ag6
-         yGCPfdmIsSfjA7Btzu8IXlHhvUuBXszz6yapaI+z2A9+fzElYvtF5LhheHO+fLz00+
-         Uu1wtXLg794Tii74Yd6gczLt2jKR0b/7f7D/j2ElkUm372ZJyfQq+vdpUa8GtgbjiF
-         NMgUS7R1zC6jkb4ntcvoiMn3OT0PuasIQMR0Brnb+2IdC3etFewGnbMAOeyuHY27+4
-         YAyUxuosntjNg==
-Date:   Thu, 3 Aug 2023 15:27:58 +0200
-From:   Christian Brauner <brauner@kernel.org>
+        with ESMTP id S235273AbjHCOod (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Aug 2023 10:44:33 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21D832D43;
+        Thu,  3 Aug 2023 07:44:15 -0700 (PDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 373Cg0KH000827;
+        Thu, 3 Aug 2023 14:44:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-03-30;
+ bh=LvKHazbtyxH/WXky1T44ts3mXQ7vO6pMKFNZw3VCFww=;
+ b=RThPO7IttU9q8T5ye2XjBPWdmANdZVJp7+Pdi/+9MfFm1uVNFfnSKCJVXA151GH/41lW
+ 9rZwqgsiXO7A/bf84uqeMxIxKGnLvFcT8qzYhfUnIrJq1JP8BwZ4plRDvM1sWt7s7dXj
+ eOVURx/Hh38CwlYdiqkCYs82TNcPSa7JQ709qNP9uV1uiDHyQSrhYOwvW6wMPFnhxBq9
+ uxUs4HMv7t0wP45YXwXjRB5kJKqUj4dBb6EZ2mFe4F07ztvWVFdmbqUkDMfICZeW8Z0+
+ krXvtPZbQFLH/4qqU0imhbLdhsITK/fPNJgWuj0B/POwjyo4JTZCaReMZSXxotwi1is+ rg== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s4spc9u37-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Aug 2023 14:44:04 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 373E2oN4006606;
+        Thu, 3 Aug 2023 14:44:02 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2048.outbound.protection.outlook.com [104.47.51.48])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3s4s7g0mf3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 03 Aug 2023 14:44:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D5piZWTdlxILNCrg9u/++mPb8GaS705G/DohST75Yar/XAUUYnBvVWHbo77RlLaC0c/0NOQXtDB8CTRENEAjLH831GW12WZJQruRz67ZdjgQ+5Pc2ELdIFe+PgYF++BLShcWMdb3ZPfTRaoXX+AG61UowBtyYoep5uEzTp+dCh2vrfIciAaEYY9/0qK96lFxIFFXcygl9HSR9krTHLKmcPnFdTFpKKqjvkt1TTbAHFS/H/xXhJfYxZwkMNvmsX9KLj8N+2vEAsfEwJyqEwmOJtMhVBBZQm5aaKVMeWrq/NkwxQ2qV7SatwWrmqShoAcyuVjAhZs25iXiz67bn/aO0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LvKHazbtyxH/WXky1T44ts3mXQ7vO6pMKFNZw3VCFww=;
+ b=exMrqwSZXs0lFCKScFmPQ8UzBoKM2CdAS/QyDId7nchBMOJqNBohuQ7g+/KrTy5Nd6F7nrmitOzfSXWFh2dKC5SrSwXi8b5fW1qTcDf5q8Jit/5SWfkVuAGZK2gGmthna9E2U3Q9FKK0owG3DvFrXis8H/RaNwiMQQ0M6e/uxl5z6OWpO8naQ7DSO1uDOb00Slgj7RtXlVFaGTKkdkVJWIlkbIxX022BpMd6g/6dFBXqURE3hH1skQCy1MUkwyJb4BDeijKdXR0N67cdWB/qAW0rF4W+X2LyL3km32NmAdzixuKWNnFtR6okxe5aJZ6f/ERIxqvWlZ/R9Flu25X/zQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LvKHazbtyxH/WXky1T44ts3mXQ7vO6pMKFNZw3VCFww=;
+ b=y0Wf4BDhg1abgpF/g5Wz0YwyoSlwx3h9HfAMg9VpbEagNjzuQ27bvUPaFzrNCS7tKwIgrhLROhWHl8pGK8LRivyrsJlQ9LRmTqv8dnWMYAf9PL09u79LdWKstuHOz31TvHir9CxadXakfHsstkURoL9Zd0Y2HD1IFc7YnG6X544=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by DM4PR10MB6792.namprd10.prod.outlook.com (2603:10b6:8:108::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.47; Thu, 3 Aug
+ 2023 14:43:41 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2990:c166:9436:40e]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2990:c166:9436:40e%6]) with mapi id 15.20.6652.020; Thu, 3 Aug 2023
+ 14:43:41 +0000
+Date:   Thu, 3 Aug 2023 10:43:36 -0400
+From:   Chuck Lever <chuck.lever@oracle.com>
 To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: Re: [PATCH v6] vfs, security: Fix automount superblock LSM init
- problem, preventing NFS sb sharing
-Message-ID: <20230803-verlassen-lernprogramm-b9e61719ce55@brauner>
-References: <20230802-master-v6-1-45d48299168b@kernel.org>
- <bac543537058619345b363bbfc745927.paul@paul-moore.com>
- <ca156cecbc070c3b7c68626572274806079a6e04.camel@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Cc:     Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] nfsd: don't hand out write delegations on O_WRONLY
+ opens
+Message-ID: <ZMu9GNzHD7nTOpZ3@tissot.1015granger.net>
+References: <20230802-wdeleg-v3-1-d7cd1d696045@kernel.org>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ca156cecbc070c3b7c68626572274806079a6e04.camel@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230802-wdeleg-v3-1-d7cd1d696045@kernel.org>
+X-ClientProxiedBy: CH2PR18CA0047.namprd18.prod.outlook.com
+ (2603:10b6:610:55::27) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DM4PR10MB6792:EE_
+X-MS-Office365-Filtering-Correlation-Id: 51b3e29f-c1f7-4add-a51e-08db94300673
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XnwDs+0YWe0ZuTSeDlW3Nbpp2K/cyYBtAsAq2PV4vAZOjvTMFDPp9vKs94CGd2swr8TEpg0IBAUq3OyUXODbJrQGoqdpVAiHIMn+55huSThZZ+RTmwIg0tmuYSFVOkjVW38QGudj8KzAxK7wrpzcse5q2Fyi9ItsGoKQ1crz59G21HaOGrzuiuj4uyEEsBlJBuZHmrzeB/xoODC5xpokU6IdXVi7dHumi7IvZ1FvhMglGklidbBDCKeAxmE0EKU3Q1YpmaCZzETe/gyzQYqYJCM0yq9gEw9T9CBrJBU+yhqpljqxWjpt5SCIPugOs2/Hx4HHePqzbg7b234KM30lu9G42cr00YuNcckuVYJ9+UfvISrszVc6I5hUgwVKob0MqyaIoEzgHnRznjjLOwI9v6M4KxJ+uJoDV4Xb4iKQRYQ4rrca7kEiRjLAAoqzXp3j/MdJnflYBfBQXrEcW1SLHhM80n4tLrfkyN2Lp4UuwpxCCNT3S+BzRZYEokrq+YBYLmp+oag/cuG3F8j/3VSCOD6yAjkFX0gmWgnY+Y/Gyz0c4c0NHDZ3PI+EgjGDogKDiVFimAi5CAeKFFiv4jYXqA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(376002)(396003)(366004)(136003)(39860400002)(346002)(451199021)(6506007)(186003)(83380400001)(26005)(8676002)(66476007)(316002)(66556008)(2906002)(4326008)(66946007)(5660300002)(6916009)(44832011)(8936002)(41300700001)(6486002)(6666004)(966005)(6512007)(9686003)(54906003)(478600001)(38100700002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XpANoqzc0tMpwc2Zrcw0koiFXYOS2LgRi+SWTeeaAWHZHMSM+iw16WOGSp9n?=
+ =?us-ascii?Q?dAJ2bfQFZgeGm8N8uExUnr2rsfahSUe9mgKpkPBRYPoqDyQNBEczdYUNgUb0?=
+ =?us-ascii?Q?4y2ZjXrrYDnXhTjLx7OHyUii2gdSYyjGDxlY+SCa2WMCzvl6t9TnSiUPqIaZ?=
+ =?us-ascii?Q?+czn+obsluJB2EgJaeYjwNqxZECoZsk85XFGDDMhIMpWJW1xcNTZ2f74DDcQ?=
+ =?us-ascii?Q?4SttJz7T3H79Wn8h/Zx17eyOtPg389Hkqup4UnlEJPzZXi/ZGWWjWqW9s4Hv?=
+ =?us-ascii?Q?OeS+d0tFxrGUH4sqQNKI5j/0ErZcerR2KYXX8InnQihOe1BDGYGH3qKQcw9C?=
+ =?us-ascii?Q?GtzuyR5QC/UvD5fyvkhawXBSHu5zDkI40G0rybkXWjdyJA6EciQiaz6A3l21?=
+ =?us-ascii?Q?SCuOlqBRKklqDCjTLFWK0GTybpo+mNhwOUS3oNTN9zLButGyHFLK0ZCTQO7x?=
+ =?us-ascii?Q?CLKoF1r3rsORqKa6hxINonHlbBnIIUfCvq8Wwwq7KBYvdsQEy0KjnonIbHaG?=
+ =?us-ascii?Q?Qw2jzXPZMu5ZPLKcy1QFBkSpbRQiHap/2Gb+6CU/o4geRKMYEu/9CbT2wQ7T?=
+ =?us-ascii?Q?srlrEbUIikrgrhfJRuyET/5EM7heJXmL+lJEY495jiWMHaIU7omgS3KRJL46?=
+ =?us-ascii?Q?uGKZEkLDcq1m09h4uis8bZhCKyQm/DTgjE35JGT4+TtPloYt0k4m8/4uqniM?=
+ =?us-ascii?Q?o5WnxGovKJeCPqzmXilwiw13ZopM+zzyno3Jy1YEAohKsrUJr0lSWLCLcPzD?=
+ =?us-ascii?Q?OfSBpGFbtJ8AhsOWldjArbPfXX+da9RB9GwPtMrJbnFUYqZdXeXtbMDwz0q6?=
+ =?us-ascii?Q?gQ7WM3Fj6AWEbQ+wJvZ7V+Gvi3ePy69GllsTzuxgc3jxuFmKNvz9qwCs5oH6?=
+ =?us-ascii?Q?gNFRX9AypH2HyGyXu6sKg/7dbBHRW4Ue7c0pkWCED8/uF0vGzHIzSEdXMUWy?=
+ =?us-ascii?Q?eysMlUSH1qx0d8SXadDD1RHrdIVaAoRdTtiHMzT3StS1TLDQnepNRs3Fv6JQ?=
+ =?us-ascii?Q?4NsKz3tgfkPWFnY1cfouotzIG57L5vy7ebaPXw3Wx7F8YPn3m0kxosMazC/P?=
+ =?us-ascii?Q?R2pUPZFIHnHf+zFNRk0FQFF0W/zY4sYMzHHi5Y1iqU/SRA5Wny3QOieIZDne?=
+ =?us-ascii?Q?z1rQO2D79I9sAGawDu4egyx1RM3lpGYCgYDz996NDIfmd2BC4w8Q+3v0DaGN?=
+ =?us-ascii?Q?6eYgSkhVv97yiBpTvgb8K7AYCPdRyOMX2jDeus0o4jnPMdFiR719opB9BAtu?=
+ =?us-ascii?Q?s+2FTmGTb4Y237gDP7k24RcJNS0e+iE4B2YlRa1IRw7iSeXCOGiiDw4+JoJw?=
+ =?us-ascii?Q?fghE4E4Wa0/qMrP+MOWpcnpii9TF16zYpkVYSvhmozE8scRgI7D7vPXzoNvc?=
+ =?us-ascii?Q?SgQNFAWiMOrac+VbLDOddAKmQMp9olykkZQksrodLFvmNfpSGEV9wakoszD3?=
+ =?us-ascii?Q?9LCozhYSdokWfmbThUxxtEyI7Tq0h0vEH4qVTA0yTZBA1JMDO8Zdsu+JUwC9?=
+ =?us-ascii?Q?CRpLpyLsj/6pMaHCH0IHeRZf6D4pIb8iI5QO111xU+pT+w22RHEcJ9tPI3d/?=
+ =?us-ascii?Q?8HgJaPly82MzHh5JryXakBrcwuOBKEcBhsct1+tQu0edyEAcHIUwnF/UiVF3?=
+ =?us-ascii?Q?AQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: SBKKhWdq1uYfiEgEnZpzzzmEpIQKj4nXWuUmBIrtXkkJvFsjXa8XKukj4iVYD/7UG6jV/5P0UTK8TyLhtPwAmPiuN5IMxu+vUXWFLPzA59LOE2/A6HM7OS17RanYbbxeGsVQLJZ8/WfkBYMT+872o/aw+qr+BsyinSIQRWaSnVdXyIlAWpDYtmk5FjTwYDWotnGjdu0E4NRxlBzwa6cU0HZlErTdYyg05x7uCjrUnZTBbfjJmTSisEB5IQAnEVSuCPXQsbEKnCZgj0ovpvUYSO5TKFkaSn+c3omsaQzO51SpHk3s0BAyBix9L0eONmGA7kKagZNLdrTMJ1qBCs7fEXiYU+KSXyYnoDInnKK4b6CU3Ggf/oVHTzIIeE8T04yR4mxKf7Mweay9K/kw1i5mklCrx6pO9ceoL9PAzywJQtHHgkUk7HdKl+XJpbnJxwuwiuDPjw1YSJPmj3+HKJnx2oxfhOi3pRUlKHtUSeoKAyUnwQnsPUAOoyfevbPsIS+/JrigVjzfm4Zw1umUyZieZA0d9Lg2fpS2NeIBsxDM2a+uKLMO6XpbVPUcLV8YGYKhZkah8EjZYci0Y5aOuAOagL7onKAirjKOGLaoB9eKBvxeQR4HX3LRCQWQZ9i52oDs2xVvuZ+o/5AQ3x9HFjxuHscojoUXMN6OWAUjgbE4u1oL/hKTbaMQ5PA+DH5NrD9k4DxCVHht9rR8K2YnEK/mpcbvgGE0B7rUZztBgBOrO8XNBKlJt3+64lp8Y5sThJK1M/DrmOU46jJAeFFRVK1KX4Tm3aweIQdY46tcw/qRLhTXd0s5tC3kS81Rr1aMsDZ8HkIF+Ma9lqXWi6N/a/DrYpxTe8MPRhGkpDViYSisGXRUSbVZYRaj7PQAw0mZFyYg
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51b3e29f-c1f7-4add-a51e-08db94300673
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2023 14:43:41.3322
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jv215dtBwOZuaWYbWposqgJq2GsORjdGYdCEIYSuK5oN/r5LCWOgClyEuOvWmJzM6ZzcLJM6A9bxuV65pwbxsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR10MB6792
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-03_14,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=913
+ phishscore=0 mlxscore=0 adultscore=0 malwarescore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2308030133
+X-Proofpoint-ORIG-GUID: ZCuroCaF8PYjip0A8B_FF-xrK5-cOOZl
+X-Proofpoint-GUID: ZCuroCaF8PYjip0A8B_FF-xrK5-cOOZl
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 02, 2023 at 03:34:27PM -0400, Jeff Layton wrote:
-> On Wed, 2023-08-02 at 14:16 -0400, Paul Moore wrote:
-> > On Aug  2, 2023 Jeff Layton <jlayton@kernel.org> wrote:
-> > > 
-> > > When NFS superblocks are created by automounting, their LSM parameters
-> > > aren't set in the fs_context struct prior to sget_fc() being called,
-> > > leading to failure to match existing superblocks.
-> > > 
-> > > Fix this by adding a new LSM hook to load fc->security for submount
-> > > creation when alloc_fs_context() is creating the fs_context for it.
-> > > 
-> > > However, this uncovers a further bug: nfs_get_root() initialises the
-> > > superblock security manually by calling security_sb_set_mnt_opts() or
-> > > security_sb_clone_mnt_opts() - but then vfs_get_tree() calls
-> > > security_sb_set_mnt_opts(), which can lead to SELinux, at least,
-> > > complaining.
-> > > 
-> > > Fix that by adding a flag to the fs_context that suppresses the
-> > > security_sb_set_mnt_opts() call in vfs_get_tree().  This can be set by NFS
-> > > when it sets the LSM context on the new superblock.
-> > > 
-> > > The first bug leads to messages like the following appearing in dmesg:
-> > > 
-> > > 	NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,100000,100000,2ee,3a98,1d4c,3a98,1)
-> > > 
-> > > Signed-off-by: David Howells <dhowells@redhat.com>
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount() to it.")
-> > > Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
-> > > Tested-by: Jeff Layton <jlayton@kernel.org>
-> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> > > Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-> > > Acked-by: "Christian Brauner (Microsoft)" <brauner@kernel.org>
-> > > Link: https://lore.kernel.org/r/165962680944.3334508.6610023900349142034.stgit@warthog.procyon.org.uk/ # v1
-> > > Link: https://lore.kernel.org/r/165962729225.3357250.14350728846471527137.stgit@warthog.procyon.org.uk/ # v2
-> > > Link: https://lore.kernel.org/r/165970659095.2812394.6868894171102318796.stgit@warthog.procyon.org.uk/ # v3
-> > > Link: https://lore.kernel.org/r/166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk/ # v4
-> > > Link: https://lore.kernel.org/r/217595.1662033775@warthog.procyon.org.uk/ # v5
-> > > ---
-> > > This patch was originally sent by David several months ago, but it
-> > > never got merged. I'm resending to resurrect the discussion. Can we
-> > > get this fixed?
-> > 
-> > Sorry, I sorta lost track of this after the ROOTCONTEXT_MNT discussion
-> > back in v3.  Looking at it a bit closer now I have one nitpicky
-> > request and one larger concern (see below).
-> > 
-> > > diff --git a/fs/super.c b/fs/super.c
-> > > index e781226e2880..13adf43e2e5d 100644
-> > > --- a/fs/super.c
-> > > +++ b/fs/super.c
-> > > @@ -1541,10 +1541,12 @@ int vfs_get_tree(struct fs_context *fc)
-> > >  	smp_wmb();
-> > >  	sb->s_flags |= SB_BORN;
-> > >  
-> > > -	error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
-> > > -	if (unlikely(error)) {
-> > > -		fc_drop_locked(fc);
-> > > -		return error;
-> > > +	if (!(fc->lsm_set)) {
-> > > +		error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
-> > > +		if (unlikely(error)) {
-> > > +			fc_drop_locked(fc);
-> > > +			return error;
-> > > +		}
-> > >  	}
-> > 
-> > I generally dislike core kernel code which makes LSM calls conditional
-> > on some kernel state maintained outside the LSM.  Sometimes it has to
-> > be done as there is no other good options, but I would like us to try
-> > and avoid it if possible.  The commit description mentioned that this
-> > was put here to avoid a SELinux complaint, can you provide an example
-> > of the complain?  Does it complain about a double/invalid mount, e.g.
-> > "SELinux: mount invalid.  Same superblock, different security ..."?
-> > 
+On Wed, Aug 02, 2023 at 02:53:00PM -0400, Jeff Layton wrote:
+> I noticed that xfstests generic/001 was failing against linux-next nfsd.
 > 
-> The problem I had was not so much SELinux warnings, but rather that in a
-> situation where I would expect to share superblocks between two
-> filesystems, it didn't.
+> The client would request a OPEN4_SHARE_ACCESS_WRITE open, and the server
+> would hand out a write delegation. The client would then try to use that
+> write delegation as the source stateid in a COPY or CLONE operation, and
+> the server would respond with NFS4ERR_STALE.
 > 
-> Basically if you do something like this:
+> The problem is that the struct file associated with the delegation does
+> not necessarily have read permissions. It's handing out a write
+> delegation on what is effectively an O_WRONLY open. RFC 8881 states:
 > 
-> # mount nfsserver:/export/foo /mnt/foo -o context=system_u:object_r:root_t:s0
-> # mount nfsserver:/export/bar /mnt/bar -o context=system_u:object_r:root_t:s0
+>  "An OPEN_DELEGATE_WRITE delegation allows the client to handle, on its
+>   own, all opens."
 > 
-> ...when "foo" and "bar" are directories on the same filesystem on the
-> server, you should get two vfsmounts that share a superblock. That's
-> what you get if selinux is disabled, but not when it's enabled (even
-> when it's in permissive mode).
+> Given that the client didn't request any read permissions, and that nfsd
+> didn't check for any, it seems wrong to give out a write delegation.
 > 
-> The problems that David hit with the automounter have a similar root
-> cause though, I believe.
+> Only hand out a write delegation if we have a O_RDWR descriptor
+> available. If it fails to find an appropriate write descriptor, go
+> ahead and try for a read delegation if NFS4_SHARE_ACCESS_READ was
+> requested.
 > 
-> > I'd like to understand why the sb_set_mnt_opts() call fails when it
-> > comes after the fs_context_init() call.  I'm particulary curious to
-> > know if the failure is due to conflicting SELinux state in the
-> > fs_context, or if it is simply an issue of sb_set_mnt_opts() not
-> > properly handling existing values.  Perhaps I'm being overly naive,
-> > but I'm hopeful that we can address both of these within the SELinux
-> > code itself.
-> > 
+> This fixes xfstest generic/001.
 > 
-> The problem I hit was that nfs_compare_super is called with a fs_context
-> that has a NULL ->security pointer. That caused it to call
-> selinux_sb_mnt_opts_compat with mnt_opts set to NULL, and at that point
-> it returns 1 and decides not to share sb's.
-
-I tried to follow this because I'm really still quite puzzled by this
-whole thing. Two consecutive mounts that should share the superblock
-don't share the superblock. But behavior differs between nfs3 and nfs4
-due to how automounting works.
-
-Afaict, the callchain you're looking at in this scenario is:
-
-(1) nfs3
-
-(1.1) mount 127.0.0.1:/export/foo /mnt/foo -o context=system_u:object_r:root_t:s0,nfsvers=3
-      vfs_get_tree(fc_foo)
-      -> fs_contex_operations->get_tree::nfs_get_tree(fc_foo)
-            -> ctx->nfs_mod->rpc_ops->try_get_tree::nfs_try_get_tree(fc_foo)
-               -> nfs_get_tree_common(fc_foo)
-                  -> sb_foo = sget_fc(fc_foo, nfs_compare_super, ...)
-
-(1.2) mount 127.0.0.1:/export/bar /mnt/bar -o context=system_u:object_r:root_t:s0,nfsvers=3
-      vfs_get_tree(fc_bar)
-      -> fs_contex_operations->get_tree::nfs_get_tree(fc_bar)
-            -> ctx->nfs_mod->rpc_ops->try_get_tree::nfs_try_get_tree(fc_bar)
-               -> nfs_get_tree_common(fc_bar)
-                  -> sb_foo = sget_fc(fc_bar, nfs_compare_super, ...)
-                     -> nfs_compare_super(sb_foo, fc_bar)
-                        -> selinux_sb_mnt_opts_compat(sb_foo, fc_bar->security)
-
-And fc_bar->security is non-NULL and compatible with sb_foo's current
-security settings. Fine.
-
-(2) nfs4
-
-But for nfs4 we're looking at a vastly more complicated callchain at
-least looking at this from a local nfs:
-
-(2.1) mount 127.0.0.1:/export/foo /mnt/foo -o context=system_u:object_r:root_t:s0
-      vfs_get_tree(fc_foo)
-      -> fs_contex_operations->get_tree::nfs_get_tree(fc_foo)
-         -> if (!ctx->internal) branch is taken
-            -> ctx->nfs_mod->rpc_ops->try_get_tree::nfs4_try_get_tree(fc_foo)
-               -> do_nfs4_mount(fc_foo)
-                  -> fc_dup_foo = vfs_dup_fs_context(fc_foo)
-                    -> security_fs_context_dup(fc_dup_foo, fc_foo)
-                       {
-                                fc_dup_foo->security = kmemdup(fc_foo->security)
-                       }
-                       new_fs_context->internal = true
-                  -> foo_mnt = fc_mount(fc_dup_foo)
-                    -> vfs_get_tree(fc_dup_foo)
-                       -> if (!ctx->internal) branch is _not_ taken
-                          -> nfs_get_tree_common(fc_dup_foo)
-                                 sb_foo = sget_fc(fc, nfs_compare_super, ...)
-                  -> mount_subtree()
-                     -> vfs_path_lookup(..., "/export/foo", LOOKUP_AUTOMOUNT)
-                        -> nfs_d_automount("export")
-                           -> fc_sub_foo = fs_context_for_submount()
-                              {
-                                      fc_sub_bar->security = NULL
-                              {
-                           -> nfs4_submount(fc_sub_foo)
-                              -> nfs4_do_submount(fc_sub_foo)
-                                 -> vfs_get_tree(fc_sub_foo)
-                                    -> nfs_get_tree_common(fc_sub_foo)
-                                       -> sb_foo_2 = sget_fc(fc_sub_foo, nfs_compare_super, ...)
-                        -> nfs_d_automount("foo")
-                           -> fc_sub_foo = fs_context_for_submount()
-                              {
-                                      fc_sub_bar->security = NULL
-                              {
-                           -> nfs4_submount(fc_sub_foo)
-                              -> nfs4_do_submount(fc_sub_foo)
-                                 -> vfs_get_tree(fc_sub_foo)
-                                    -> nfs_get_tree_common(fc_sub_foo)
-             |--------------------------> sb_foo_3 = sget_fc(fc_sub_foo, nfs_compare_super, ...)
-             |
-As far as I can see you're already allocating 3 separate superblocks of
-which two are discarded and only one survives. Afaict, the one that
-survives is _| the last one. Under the assumption that I'm correct,
-where does the third superblock get it's selinux context from given that
-fc->security isn't even set during submount?
-
-And where is the context=%s output generated for mountinfo?
-
-Is this a correct callchain?
-
+> Closes: https://bugzilla.linux-nfs.org/show_bug.cgi?id=412
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+> Changes in v3:
+> - add find_rw_file helper to ensure spinlock is taken appropriately
+> - refine comments over conditionals
+> - Link to v2: https://lore.kernel.org/r/20230801-wdeleg-v2-1-20c14252bab4@kernel.org
 > 
-> Filling out fc->security with this new operation seems to fix that, but
-> if you see a better way to do this, then I'm certainly open to the idea.
+> Changes in v2:
+> - Rework the logic when finding struct file for the delegation. The
+>   earlier patch might still have attached a O_WRONLY file to the deleg
+>   in some cases, and could still have handed out a write delegation on
+>   an O_WRONLY OPEN request in some cases.
+> ---
+>  fs/nfsd/nfs4state.c | 48 +++++++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 37 insertions(+), 11 deletions(-)
 > 
-> > In a worst case situation, we could always implement a flag *inside*
-> > the SELinux code, similar to what has been done with 'lsm_set' here.
-> > 
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index ef7118ebee00..c551784d108a 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -649,6 +649,18 @@ find_readable_file(struct nfs4_file *f)
+>  	return ret;
+>  }
+>  
+> +static struct nfsd_file *
+> +find_rw_file(struct nfs4_file *f)
+> +{
+> +	struct nfsd_file *ret;
+> +
+> +	spin_lock(&f->fi_lock);
+> +	ret = nfsd_file_get(f->fi_fds[O_RDWR]);
+> +	spin_unlock(&f->fi_lock);
+> +
+> +	return ret;
+> +}
+> +
+>  struct nfsd_file *
+>  find_any_file(struct nfs4_file *f)
+>  {
+> @@ -5449,7 +5461,7 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+>  	struct nfs4_file *fp = stp->st_stid.sc_file;
+>  	struct nfs4_clnt_odstate *odstate = stp->st_clnt_odstate;
+>  	struct nfs4_delegation *dp;
+> -	struct nfsd_file *nf;
+> +	struct nfsd_file *nf = NULL;
+>  	struct file_lock *fl;
+>  	u32 dl_type;
+>  
+> @@ -5461,21 +5473,35 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
+>  	if (fp->fi_had_conflict)
+>  		return ERR_PTR(-EAGAIN);
+>  
+> -	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
+> -		nf = find_writeable_file(fp);
+> +	/*
+> +	 * Try for a write delegation first. RFC8881 section 10.4 says:
+> +	 *
+> +	 *  "An OPEN_DELEGATE_WRITE delegation allows the client to handle,
+> +	 *   on its own, all opens."
+> +	 *
+> +	 * Furthermore the client can use a write delegationf or most read
+> +	 * operations as well, so we require a O_RDWR file here.
+> +	 *
+> +	 * Only a write delegation in the case of a BOTH open, and ensure
+> +	 * we get the O_RDWR descriptor.
+> +	 */
+> +	if ((open->op_share_access & NFS4_SHARE_ACCESS_BOTH) == NFS4_SHARE_ACCESS_BOTH) {
+> +		nf = find_rw_file(fp);
+>  		dl_type = NFS4_OPEN_DELEGATE_WRITE;
+> -	} else {
+> +	}
+> +
+> +	/*
+> +	 * If the file is being opened O_RDONLY or we couldn't get a O_RDWR
+> +	 * file for some reason, then try for a read deleg instead.
+> +	 */
+> +	if (!nf && (open->op_share_access & NFS4_SHARE_ACCESS_READ)) {
+>  		nf = find_readable_file(fp);
+>  		dl_type = NFS4_OPEN_DELEGATE_READ;
+>  	}
+> -	if (!nf) {
+> -		/*
+> -		 * We probably could attempt another open and get a read
+> -		 * delegation, but for now, don't bother until the
+> -		 * client actually sends us one.
+> -		 */
+> +
+> +	if (!nf)
+>  		return ERR_PTR(-EAGAIN);
+> -	}
+> +
+>  	spin_lock(&state_lock);
+>  	spin_lock(&fp->fi_lock);
+>  	if (nfs4_delegation_exists(clp, fp))
 > 
-> I'm fine with a different solution, if you see a better one. You'll have
+> ---
+> base-commit: a734662572708cf062e974f659ae50c24fc1ad17
+> change-id: 20230731-wdeleg-bbdb6b25a3c6
+> 
+> Best regards,
+> -- 
+> Jeff Layton <jlayton@kernel.org>
+> 
 
-Independent of the modification in fs_context_for_submount() you might want to
-think about something like:
+Tested and applied to nfsd-next as a separate patch. I intend
+to squash it into commit 68a593f24a35 ("NFSD: Enable write
+delegation support") in a few days.
 
-static const struct fs_context_operations nfs4_fs_context_ops = {
-      .free           = nfs4_free,
-      .parse_param    = nfs4_parse_param,
-      .get_tree       = nfs4_get_tree,
-};
 
-static const struct fs_context_operations nfs4_fs_submount_ops = {
-      .free           = nfs4_free_submount,
-      .parse_param    = nfs4_parse_param_submount,
-      .get_tree       = nfs4_get_tree_submount,
-};
-
-static int nfs4_init_fs_context_submount(struct fs_context *fc)
-{
-        return 0;
-}
-
-static int nfs4_fs_context_get_tree(struct fs_context *fc)
-{
-        if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT)
-                fc->ops = &nfs4_fs_submount_ops;
-        else
-                fc->ops = &nfs4_fs_context_ops;
-        .
-        .
-        .
-}
-
-which will make the callchain probably a lot to follow instead of wafting
-through the same nested functions over and over. But just a thought.
+-- 
+Chuck Lever
