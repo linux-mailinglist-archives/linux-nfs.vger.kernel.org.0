@@ -2,349 +2,388 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33E2D7701FA
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Aug 2023 15:39:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2583177027F
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Aug 2023 16:03:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231429AbjHDNjM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Aug 2023 09:39:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52292 "EHLO
+        id S231538AbjHDOD2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Aug 2023 10:03:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231387AbjHDNi6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Aug 2023 09:38:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B617749C5;
-        Fri,  4 Aug 2023 06:38:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3697A62023;
-        Fri,  4 Aug 2023 13:38:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F37DDC433D9;
-        Fri,  4 Aug 2023 13:38:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691156331;
-        bh=xsOXK3337r2+9tc024ms0Swr6StPO0/gPNY9Xj6RLOY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I5FANPmnhO5CzVHH1+5GLXxNpmqgaABeFjm+CMuZqAJvTROBRkO/J1dI0YqX9u1E4
-         RW5BRR1ckn36FD9E5halhlXcfVV7k83EL15sME9c/qMYwRiOvTjbqyee5NC8ApBBZJ
-         TvZlt3sRGZNKx4osgGiLeK+BH7CmNXEAkX46FBgSP6GM4RI1p1gUTgC6vo/rBEdDIh
-         0wqY32KjVuXVujwrqL/2j9wWIG4VaAALVcg0xSXjjQHpYSGSGj5s7D3PF/6Vucm+lI
-         NAr6QbhqEXG5Uin9dXeViQg44jfoZfD6CZ4YN3pA9VX29hz1VkSp+zw+r2x9omhta4
-         o7AegDWnqHWLg==
-Date:   Fri, 4 Aug 2023 15:38:44 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Paul Moore <paul@paul-moore.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: Re: [PATCH v6] vfs, security: Fix automount superblock LSM init
- problem, preventing NFS sb sharing
-Message-ID: <20230804-ehedrama-abspecken-1347ab6fe8a2@brauner>
-References: <20230802-master-v6-1-45d48299168b@kernel.org>
- <bac543537058619345b363bbfc745927.paul@paul-moore.com>
- <ca156cecbc070c3b7c68626572274806079a6e04.camel@kernel.org>
- <20230803-verlassen-lernprogramm-b9e61719ce55@brauner>
- <782a39afec947b1a3575be9cf8921e7294190326.camel@kernel.org>
- <20230803-verstanden-perfide-70ee3b425417@brauner>
- <bab1dda495bc157d3d0650738ea9b620365d9813.camel@kernel.org>
- <20230804-geruch-fortgehen-f9dc1743cf8b@brauner>
- <1fc42ea5c54f9e47786f9d11d7630c9a34782bae.camel@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        with ESMTP id S231534AbjHDOD0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Aug 2023 10:03:26 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD075B9
+        for <linux-nfs@vger.kernel.org>; Fri,  4 Aug 2023 07:03:24 -0700 (PDT)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 374CBx7N012760;
+        Fri, 4 Aug 2023 14:03:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-03-30;
+ bh=QzoGbPE+zgeZwelXt0lAD9S+NJdOWYdB+m8ZPtM92lc=;
+ b=tivYIohtWeGPjvJt72sXTBNDiDj73UjtgbMo46LtHQrm2dFNcX81G8e5MMpU+WQOu85o
+ z9WDD3v05ugi4tWKpMKf8dZ1BywQqX38lsAmu76ITnpxifpFa0rUFufRWM0tSMQ3GrGT
+ 2x/2+/nKBLS+AxAbOtkD4HxC+P+ZKm+GHhiBw/4gGAN5E1IJxQ0Cdl6S55o0GsCL/0I1
+ AdkRz094DWiYMsrqTGI19YOAzmrUAjcsnJgTxgoP1fzBNhFbh1O8YLyAnVbtETxwOr3j
+ JRAkczpbzBeM5NLm9GZTRqXrZlygmfUW1YA83JjQWiGI0H1ii7K0KCYobUGnf1YnayCp Qg== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3s4ttdbyaf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Aug 2023 14:03:05 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 374DMiwm029564;
+        Fri, 4 Aug 2023 14:03:04 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2102.outbound.protection.outlook.com [104.47.70.102])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3s8m293t07-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 04 Aug 2023 14:03:02 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d0M64rraLz/Er7sN+SMF32KwX3bEbyLzUx37U7hCVTS7SNoSxNhv5HHa12P/nZujZvvDuRb9tThAgR35H7FL4qGbqoKzlOv/jZNQaRGA7gkFw9e6cIaxB9e2vxWeuoKcslcMNArzhlHR8fV4fZlAW9B22qlKY4xt0KIZt3OU9otuMlGaEcG/7Zp9Qdq4/RhBdKBLD5INNF1aiGtrTjqpACNpfMKKgvGcT63S292PhqjCpcLjsqyZotfiqZfEqcAvuI72in5ERshSl4BfaOhEirUgC9DA/dc2JOk5xLhkv5gFDDKF2JN7ChTk11krs9zeLjTwVAnpzhdEnfmRWhvlRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QzoGbPE+zgeZwelXt0lAD9S+NJdOWYdB+m8ZPtM92lc=;
+ b=JMo54iCyoKgST/SH99a7wr4qIfvr9QexeuJXLgNHKsH6fvOmuoq391wPv3ma/a7wecIiFZExsLP77QeA5CU8q0mszCcymaM5w3kXPc0GhlFw9Qyb+s4JIVm4YACuW7Z3tToQykdtU0jdCfmo8gs9TwLqdW/KhxMNZB8i/KwdsV8h0f+rDf3Sdm78flxk50Kl8dCrrXqU+lr+gdK8+Lo0ATShHLUycXegW5NccYScRQdCXHz4h2rmcCuxWUekvX0fUYpV8gcwOUjYBeOOAiOqEsbPZAEX/iYVM9NETrt3cbEqBcUk/1EJldlsTCeIVTSOxdnHUpXg9vUt0wne2BWdig==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QzoGbPE+zgeZwelXt0lAD9S+NJdOWYdB+m8ZPtM92lc=;
+ b=Pfz+0dqfnVIeqkicYh4Zx7p6dKO5BC0ToWgtwR1u/N4D0wtxOVm3dJtQb8wd1TMTWlBtkYnUWAPZR1iX6lUv3gq/e92sGrSaFEP32Pa+mhIn5cnFGB85hjpY+Dah21No4IdkYf37odhtH84TGoictM3nDFU695YlBkep7hoi+J0=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH7PR10MB6986.namprd10.prod.outlook.com (2603:10b6:510:27e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.20; Fri, 4 Aug
+ 2023 14:02:59 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2990:c166:9436:40e]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2990:c166:9436:40e%6]) with mapi id 15.20.6652.021; Fri, 4 Aug 2023
+ 14:02:59 +0000
+Date:   Fri, 4 Aug 2023 10:02:50 -0400
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
+        jlayton@kernel.org, neilb@suse.de
+Subject: Re: [PATCH v4 2/2] NFSD: add rpc_status entry in nfsd debug
+ filesystem
+Message-ID: <ZM0FCrItmyHMDcZy@tissot.1015granger.net>
+References: <cover.1690569488.git.lorenzo@kernel.org>
+ <a23a0482a465299ac06d07d191e0c9377a11a4d1.1690569488.git.lorenzo@kernel.org>
+ <ZMQVX5RlQaWt5wkn@tissot.1015granger.net>
+ <ZMyvSxMhvH4elsBR@lore-rh-laptop>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1fc42ea5c54f9e47786f9d11d7630c9a34782bae.camel@kernel.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <ZMyvSxMhvH4elsBR@lore-rh-laptop>
+X-ClientProxiedBy: CH2PR16CA0028.namprd16.prod.outlook.com
+ (2603:10b6:610:50::38) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH7PR10MB6986:EE_
+X-MS-Office365-Filtering-Correlation-Id: 449c28dc-b77f-47cf-e0a4-08db94f3827b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CHU1t9xh5UUeQtB3UDHWAw5zEC4jmMveAnfx7dnMIkMiX67CL1ypxH+scUFXEgTpOyJ9CUJKNDL4e5jA3hh0uTf4szim7Ktt4UPuMn6RpAVWn2ME6Hxdq+5cMcyJZAdKsBuMyDNfrK66oXhOaqmwS1y/kuu5Lk5mNb36HJ47hKLVdAaF/DYMs17rTAhZKbq+NhBq29qVD3Vf7zgAsPti2zG8pXbUDU1nbgYysYFCbxh6+NrPkRUk90mkJetOwTwto+ZCFedIiLMsrqxf9QsmpQInC34796XW+faB6ANGA1Dp5gqB6YLidb0EeyTP8xmrKdVe0+eJLmDVOzyiDGsWw44KK6i6nwVbDWausankQa1uyVmKwjUmsD4ghSqinObD0T+j2ohbPifY8KRJq+/PUmmgQ9CrAndM749QX7ejWGB/QixpOAkTVgWq4h3ngcdGahWk5Aa0KYpRHF/XJoMdUof23oYEAgr9pMiqxcmoysMxXA9JIocHI2MU3C2U7kbgilEDSEJpFBrd5GWyWo2TSaOf1hKQ5OSaW8iwBjDrCHwuXeAomTwD3EPxCVfcpagV
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(346002)(396003)(39860400002)(136003)(376002)(366004)(451199021)(1800799003)(186006)(83380400001)(26005)(6506007)(8676002)(9686003)(316002)(66556008)(2906002)(5660300002)(66946007)(66476007)(6916009)(4326008)(44832011)(41300700001)(8936002)(6486002)(6512007)(6666004)(478600001)(38100700002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?jrB1BAydefJnzypB8defwWohZykMjdmjLFDagTB+vxcj5fH691wrnQ3ccs8E?=
+ =?us-ascii?Q?5Z2UYmqQU4SLcJ4v1YVUT4ZPh5hfTb6X50SjiMumj8a2NSrEVRy/4csmfox/?=
+ =?us-ascii?Q?upPnbKY9wXvXj8Ok/VUo0aBeYLplV0YzmC0ypccGtmqbZORQ4TLe2rBLRgTW?=
+ =?us-ascii?Q?mR5KAF+8Ask5ge1xtJ7ggWjnHJTJBVc8pZk5q+PzMP9ebh3SaGqKE3kQg/g/?=
+ =?us-ascii?Q?t5WGwpI88IgzUeL+zMC9ZIlIzeIV8qERfuqugBg6pcXueNgbQC58V5NxCEby?=
+ =?us-ascii?Q?DgOhyZBZMjiGFmk+aJ7BYjV5GGtf9aKdqpoTZCLWLLDmbrrysgRkIQE16vYt?=
+ =?us-ascii?Q?Hw9qzsCCkyXdLH97H0MB3YX2VxF6rMO4+KyqgOPvbjGP6+jSVdHG2BmXiULy?=
+ =?us-ascii?Q?LB6Zz9+9+gRDMwCHadUTsd01NEUETYT2tkLS1GR9mdcv9KaQCi3IVGrCJtjZ?=
+ =?us-ascii?Q?afWA0+eSNYyEAIdZWQVFQKEZBGCCojuzjuw/gydZdIFwg8zE60ytt1l2WvEB?=
+ =?us-ascii?Q?fzHZIblWe2RX3vmZx5uB0GOaKaeljP6jkzcGHJkkSR6CoWs65KgBEG73G3DY?=
+ =?us-ascii?Q?qkBBxyMAGBeH3jgsSOwHUUbIYx9uz6CsGTEvT58g18373XSxDz9axHBwufia?=
+ =?us-ascii?Q?knJpuJlI2fG5XOfeU+BNwxgXh/QV1xYexbRTn943ueIt3W1JD4cpCxBSt0Of?=
+ =?us-ascii?Q?5gcLQ1So2NS3GJR5zfkDasD22Y153NADrUrTa07H7KSuVuJGc7g7yoorkByE?=
+ =?us-ascii?Q?mAlIp+USKLp0cTIsdJ7Gjw8kDe0TRrr2XEvcya3AFEN5MbBYUyjNQCjTNw48?=
+ =?us-ascii?Q?2tOE+/bmlQX8slY4NuwU34NG5CdhpH/eJaMUAhc4vWkgsaXN+C5q2+LtWKVm?=
+ =?us-ascii?Q?EeG7RAMdlE2QguYeIMZIYu8S74ilPtLwHK/rN77f0Lii5mFV8LJSduRbfBvT?=
+ =?us-ascii?Q?Bg0h8cNa/srWnl5P/zlRlBzITCt5nxiwsXNjbfdiENd8Sanr2r62SJKCbP7X?=
+ =?us-ascii?Q?etoIEQ6elHg1ivNhDTpQ0YiKGKG4jQMrEN2Z5UiGG3D0MY4p5/yuAB5Q8I5f?=
+ =?us-ascii?Q?kXSpdvCRjrFeFYucw1pDRDVFrC79kE3jykaxPjiwZ0D0zxdis8nv2B7cfjuI?=
+ =?us-ascii?Q?EyXsn57s/TlnozqBdtB/aMVSzH06PQT27d77VVRMg9ItXNGJLTjoGryNDi+f?=
+ =?us-ascii?Q?JJI9ykOWhzsGwuOkj88Djz4j8HUmXZP0f/Ifg5s8Fyo4P/rqQLw2FBYgAETU?=
+ =?us-ascii?Q?jQCcskgOvAxL8x8N6xbp8WdxluoD+aMYtelX5hPoEHpdpnF8T7NCoM9EXtFp?=
+ =?us-ascii?Q?//JqFHE+t5KOPVUsNfK2AAxGUNDPX5vyX7R48CuHjlLH8v555wYtm4PVy/hb?=
+ =?us-ascii?Q?ymIObjfRjvMhnVmCZsUp6osNqGE3+qeT2iFpsjc4mwGdH+At+DHtLsgSV0pm?=
+ =?us-ascii?Q?YT/uqv0WOmrfjbjcrtLYxXiPuHKBK+OSv9gdgZY7wC0oC+7u0O2C2s017mHS?=
+ =?us-ascii?Q?gAlOcE6COruXMMDtACSc9btM0IK9T1INH/PE3bTHVyf7UcIwNPVe4DCTXphu?=
+ =?us-ascii?Q?UuiwFO07omk3Tvkaax1gCuwAwliRAiv6mt9q7GafbAKXwMo7g9YOBU6kCALq?=
+ =?us-ascii?Q?Jw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: OEvGhqNZEfXF1edeoid8L8C4khB9XadwygGrYN+ZcK/lFEu/5IZnmweRDT+z21XdsMBIrupoR9Ir9SPudpODgStHhD0dEoDQmZ0gvTyXxfKT5hgQqOgOWnFzqNE+0ZaBWFptTuuVp+qjRCsUgLN/UtK75LJb/wN+Qfc4cb480DKUiM+1S8ElUTslWv0do0nkhTQXozkBxzPgPK1M0cx7PfbbT9Q8aUtOSVsAFzy4cTMMsEttS+S4ltogFwpv88DOvAqvVNypkIOkzC7Z/3v9tMiI2ch+K3RKAMkPlDEoCyOCH6Xzt9qApUIPAPpau1THPn2NKvzRgox2NRxJEA/+aGwFc5v+64+3nJhcaIAc5hCJacmMj6aCamzB3fFFNtkMC1jZWLP2oR1v/+psh4IWLnN3iMD6HRfWXsDmshccF1Y/3dpJYMHQrkEjyYwcz7YR39l5FYFUaSjMl5MXSNKyd1+yy1oQFhBRM9irpN8Cc2rOhGXgWxFphRQL/zonaNjEF2TLkepdMudbB7xvjvfVSTsy+Hy6jO85F1/H+gDI1QjtuXxO18lbnXT2BRFFKnXOrOaWIMKHM8vB1k91bG4v7IkTEfC22EnwDYwfkhCMVklnGlbNcw6cxySonxtLJDct8MOLeyaEiOKfmr8sQ+adxR6Z3svge6mTn3wUTedbbzopyKStjkEibQMVBN+TjzpBUNuJC9Jv5hjlmsC9tGJetp6XWSlQKoX/CQlF7MfSBx1+hMUXXrgOQnjyU0BsfvgX3z7Ol5OH4GjQN1LSCWU6uYkeIRh9p1XA9uuj2qUPDyQRHwHjuNtx5c9eEzkTAcvY7DFgtuDNvz4A7t03WzsPZQ==
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 449c28dc-b77f-47cf-e0a4-08db94f3827b
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2023 14:02:59.1803
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: a+Yxep5rhoEyL5htw1fgHm75+xURD1F1xbuNxBfiv+CpnlbFrk9hMPtyRbjTBxYHt5R0xFN9xouOk3e0ftr9+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6986
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-08-04_13,2023-08-03_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0 phishscore=0
+ bulkscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2308040125
+X-Proofpoint-GUID: Pqnlrfz4KUu6YzX8vSvY7eftBf_j0ELX
+X-Proofpoint-ORIG-GUID: Pqnlrfz4KUu6YzX8vSvY7eftBf_j0ELX
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 04, 2023 at 09:25:40AM -0400, Jeff Layton wrote:
-> On Fri, 2023-08-04 at 10:25 +0200, Christian Brauner wrote:
-> > On Thu, Aug 03, 2023 at 02:58:46PM -0400, Jeff Layton wrote:
-> > > On Thu, 2023-08-03 at 19:36 +0200, Christian Brauner wrote:
-> > > > On Thu, Aug 03, 2023 at 12:09:33PM -0400, Jeff Layton wrote:
-> > > > > On Thu, 2023-08-03 at 15:27 +0200, Christian Brauner wrote:
-> > > > > > On Wed, Aug 02, 2023 at 03:34:27PM -0400, Jeff Layton wrote:
-> > > > > > > On Wed, 2023-08-02 at 14:16 -0400, Paul Moore wrote:
-> > > > > > > > On Aug  2, 2023 Jeff Layton <jlayton@kernel.org> wrote:
-> > > > > > > > > 
-> > > > > > > > > When NFS superblocks are created by automounting, their LSM parameters
-> > > > > > > > > aren't set in the fs_context struct prior to sget_fc() being called,
-> > > > > > > > > leading to failure to match existing superblocks.
-> > > > > > > > > 
-> > > > > > > > > Fix this by adding a new LSM hook to load fc->security for submount
-> > > > > > > > > creation when alloc_fs_context() is creating the fs_context for it.
-> > > > > > > > > 
-> > > > > > > > > However, this uncovers a further bug: nfs_get_root() initialises the
-> > > > > > > > > superblock security manually by calling security_sb_set_mnt_opts() or
-> > > > > > > > > security_sb_clone_mnt_opts() - but then vfs_get_tree() calls
-> > > > > > > > > security_sb_set_mnt_opts(), which can lead to SELinux, at least,
-> > > > > > > > > complaining.
-> > > > > > > > > 
-> > > > > > > > > Fix that by adding a flag to the fs_context that suppresses the
-> > > > > > > > > security_sb_set_mnt_opts() call in vfs_get_tree().  This can be set by NFS
-> > > > > > > > > when it sets the LSM context on the new superblock.
-> > > > > > > > > 
-> > > > > > > > > The first bug leads to messages like the following appearing in dmesg:
-> > > > > > > > > 
-> > > > > > > > > 	NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,100000,100000,2ee,3a98,1d4c,3a98,1)
-> > > > > > > > > 
-> > > > > > > > > Signed-off-by: David Howells <dhowells@redhat.com>
-> > > > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > > > > > > Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount() to it.")
-> > > > > > > > > Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
-> > > > > > > > > Tested-by: Jeff Layton <jlayton@kernel.org>
-> > > > > > > > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> > > > > > > > > Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-> > > > > > > > > Acked-by: "Christian Brauner (Microsoft)" <brauner@kernel.org>
-> > > > > > > > > Link: https://lore.kernel.org/r/165962680944.3334508.6610023900349142034.stgit@warthog.procyon.org.uk/ # v1
-> > > > > > > > > Link: https://lore.kernel.org/r/165962729225.3357250.14350728846471527137.stgit@warthog.procyon.org.uk/ # v2
-> > > > > > > > > Link: https://lore.kernel.org/r/165970659095.2812394.6868894171102318796.stgit@warthog.procyon.org.uk/ # v3
-> > > > > > > > > Link: https://lore.kernel.org/r/166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk/ # v4
-> > > > > > > > > Link: https://lore.kernel.org/r/217595.1662033775@warthog.procyon.org.uk/ # v5
-> > > > > > > > > ---
-> > > > > > > > > This patch was originally sent by David several months ago, but it
-> > > > > > > > > never got merged. I'm resending to resurrect the discussion. Can we
-> > > > > > > > > get this fixed?
-> > > > > > > > 
-> > > > > > > > Sorry, I sorta lost track of this after the ROOTCONTEXT_MNT discussion
-> > > > > > > > back in v3.  Looking at it a bit closer now I have one nitpicky
-> > > > > > > > request and one larger concern (see below).
-> > > > > > > > 
-> > > > > > > > > diff --git a/fs/super.c b/fs/super.c
-> > > > > > > > > index e781226e2880..13adf43e2e5d 100644
-> > > > > > > > > --- a/fs/super.c
-> > > > > > > > > +++ b/fs/super.c
-> > > > > > > > > @@ -1541,10 +1541,12 @@ int vfs_get_tree(struct fs_context *fc)
-> > > > > > > > >  	smp_wmb();
-> > > > > > > > >  	sb->s_flags |= SB_BORN;
-> > > > > > > > >  
-> > > > > > > > > -	error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
-> > > > > > > > > -	if (unlikely(error)) {
-> > > > > > > > > -		fc_drop_locked(fc);
-> > > > > > > > > -		return error;
-> > > > > > > > > +	if (!(fc->lsm_set)) {
-> > > > > > > > > +		error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
-> > > > > > > > > +		if (unlikely(error)) {
-> > > > > > > > > +			fc_drop_locked(fc);
-> > > > > > > > > +			return error;
-> > > > > > > > > +		}
-> > > > > > > > >  	}
-> > > > > > > > 
-> > > > > > > > I generally dislike core kernel code which makes LSM calls conditional
-> > > > > > > > on some kernel state maintained outside the LSM.  Sometimes it has to
-> > > > > > > > be done as there is no other good options, but I would like us to try
-> > > > > > > > and avoid it if possible.  The commit description mentioned that this
-> > > > > > > > was put here to avoid a SELinux complaint, can you provide an example
-> > > > > > > > of the complain?  Does it complain about a double/invalid mount, e.g.
-> > > > > > > > "SELinux: mount invalid.  Same superblock, different security ..."?
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > The problem I had was not so much SELinux warnings, but rather that in a
-> > > > > > > situation where I would expect to share superblocks between two
-> > > > > > > filesystems, it didn't.
-> > > > > > > 
-> > > > > > > Basically if you do something like this:
-> > > > > > > 
-> > > > > > > # mount nfsserver:/export/foo /mnt/foo -o context=system_u:object_r:root_t:s0
-> > > > > > > # mount nfsserver:/export/bar /mnt/bar -o context=system_u:object_r:root_t:s0
-> > > > > > > 
-> > > > > > > ...when "foo" and "bar" are directories on the same filesystem on the
-> > > > > > > server, you should get two vfsmounts that share a superblock. That's
-> > > > > > > what you get if selinux is disabled, but not when it's enabled (even
-> > > > > > > when it's in permissive mode).
-> > > > > > > 
-> > > > > > > The problems that David hit with the automounter have a similar root
-> > > > > > > cause though, I believe.
-> > > > > > > 
-> > > > > > > > I'd like to understand why the sb_set_mnt_opts() call fails when it
-> > > > > > > > comes after the fs_context_init() call.  I'm particulary curious to
-> > > > > > > > know if the failure is due to conflicting SELinux state in the
-> > > > > > > > fs_context, or if it is simply an issue of sb_set_mnt_opts() not
-> > > > > > > > properly handling existing values.  Perhaps I'm being overly naive,
-> > > > > > > > but I'm hopeful that we can address both of these within the SELinux
-> > > > > > > > code itself.
-> > > > > > > > 
-> > > > > > > 
-> > > > > > > The problem I hit was that nfs_compare_super is called with a fs_context
-> > > > > > > that has a NULL ->security pointer. That caused it to call
-> > > > > > > selinux_sb_mnt_opts_compat with mnt_opts set to NULL, and at that point
-> > > > > > > it returns 1 and decides not to share sb's.
-> > > > > > 
-> > > > > > I tried to follow this because I'm really still quite puzzled by this
-> > > > > > whole thing. Two consecutive mounts that should share the superblock
-> > > > > > don't share the superblock. But behavior differs between nfs3 and nfs4
-> > > > > > due to how automounting works.
-> > > > > > 
-> > > > > > Afaict, the callchain you're looking at in this scenario is:
-> > > > > > 
-> > > > > > (1) nfs3
-> > > > > > 
-> > > > > > (1.1) mount 127.0.0.1:/export/foo /mnt/foo -o context=system_u:object_r:root_t:s0,nfsvers=3
-> > > > > >       vfs_get_tree(fc_foo)
-> > > > > >       -> fs_contex_operations->get_tree::nfs_get_tree(fc_foo)
-> > > > > >             -> ctx->nfs_mod->rpc_ops->try_get_tree::nfs_try_get_tree(fc_foo)
-> > > > > >                -> nfs_get_tree_common(fc_foo)
-> > > > > >                   -> sb_foo = sget_fc(fc_foo, nfs_compare_super, ...)
-> > > > > > 
-> > > > > > (1.2) mount 127.0.0.1:/export/bar /mnt/bar -o context=system_u:object_r:root_t:s0,nfsvers=3
-> > > > > >       vfs_get_tree(fc_bar)
-> > > > > >       -> fs_contex_operations->get_tree::nfs_get_tree(fc_bar)
-> > > > > >             -> ctx->nfs_mod->rpc_ops->try_get_tree::nfs_try_get_tree(fc_bar)
-> > > > > >                -> nfs_get_tree_common(fc_bar)
-> > > > > >                   -> sb_foo = sget_fc(fc_bar, nfs_compare_super, ...)
-> > > > > >                      -> nfs_compare_super(sb_foo, fc_bar)
-> > > > > >                         -> selinux_sb_mnt_opts_compat(sb_foo, fc_bar->security)
-> > > > > > 
-> > > > > > And fc_bar->security is non-NULL and compatible with sb_foo's current
-> > > > > > security settings. Fine.
-> > > > > > 
-> > > > > > (2) nfs4
-> > > > > > 
-> > > > > > But for nfs4 we're looking at a vastly more complicated callchain at
-> > > > > > least looking at this from a local nfs:
-> > > > > > 
-> > > > > > (2.1) mount 127.0.0.1:/export/foo /mnt/foo -o context=system_u:object_r:root_t:s0
-> > > > > >       vfs_get_tree(fc_foo)
-> > > > > >       -> fs_contex_operations->get_tree::nfs_get_tree(fc_foo)
-> > > > > >          -> if (!ctx->internal) branch is taken
-> > > > > >             -> ctx->nfs_mod->rpc_ops->try_get_tree::nfs4_try_get_tree(fc_foo)
-> > > > > >                -> do_nfs4_mount(fc_foo)
-> > > > > >                   -> fc_dup_foo = vfs_dup_fs_context(fc_foo)
-> > > > > >                     -> security_fs_context_dup(fc_dup_foo, fc_foo)
-> > > > > >                        {
-> > > > > >                                 fc_dup_foo->security = kmemdup(fc_foo->security)
-> > > > > >                        }
-> > > > > >                        new_fs_context->internal = true
-> > > > > >                   -> foo_mnt = fc_mount(fc_dup_foo)
-> > > > > >                     -> vfs_get_tree(fc_dup_foo)
-> > > > > >                        -> if (!ctx->internal) branch is _not_ taken
-> > > > > >                           -> nfs_get_tree_common(fc_dup_foo)
-> > > > > >                                  sb_foo = sget_fc(fc, nfs_compare_super, ...)
-> > > > > >                   -> mount_subtree()
-> > > > > >                      -> vfs_path_lookup(..., "/export/foo", LOOKUP_AUTOMOUNT)
-> > > > > >                         -> nfs_d_automount("export")
-> > > > > >                            -> fc_sub_foo = fs_context_for_submount()
-> > > > > >                               {
-> > > > > >                                       fc_sub_bar->security = NULL
-> > > > > 
-> > > > > 
-> > > > > Should the above be:
-> > > > > 
-> > > > > 					fc_sub_foo->security = NULL;
-> > > > 
-> > > > Yes, typo for whatever reason.
-> > > > 
-> > > > > 
-> > > > > ?
-> > > > > 
-> > > > > If so, then with this patch, the above would no longer be NULL. We'd
-> > > > > inherit the security context info from the reference dentry passed to
-> > > > > fs_context_for_submount().
-> > > > > 
-> > > > > >                               {
-> > > > > >                            -> nfs4_submount(fc_sub_foo)
-> > > > > >                               -> nfs4_do_submount(fc_sub_foo)
-> > > > > >                                  -> vfs_get_tree(fc_sub_foo)
-> > > > > >                                     -> nfs_get_tree_common(fc_sub_foo)
-> > > > > >                                        -> sb_foo_2 = sget_fc(fc_sub_foo, nfs_compare_super, ...)
-> > > > > >                         -> nfs_d_automount("foo")
-> > > > > >                            -> fc_sub_foo = fs_context_for_submount()
-> > > > > >                               {
-> > > > > >                                       fc_sub_bar->security = NULL
-> > > > > 
-> > > > > Ditto here -- that should be fc_sub_foo , correct?
-> > > > 
-> > > > Yes, same. Was just a typo.
-> > > > 
-> > > > > >                               {
-> > > > > >                            -> nfs4_submount(fc_sub_foo)
-> > > > > >                               -> nfs4_do_submount(fc_sub_foo)
-> > > > > >                                  -> vfs_get_tree(fc_sub_foo)
-> > > > > >                                     -> nfs_get_tree_common(fc_sub_foo)
-> > > > > >              |--------------------------> sb_foo_3 = sget_fc(fc_sub_foo, nfs_compare_super, ...)
-> > > > > >              |
-> > > > > > As far as I can see you're already allocating 3 separate superblocks of
-> > > > > > which two are discarded and only one survives. Afaict, the one that
-> > > > > > survives is _| the last one. Under the assumption that I'm correct,
-> > > > > > where does the third superblock get it's selinux context from given that
-> > > > > > fc->security isn't even set during submount?
-> > > > > > 
-> > > > > 
-> > > > > That's the problem this patch is intended to fix. It allows child mounts
-> > > > > to properly inherit security options from a parent dentry.
-> > > > 
-> > > > Yeah, I'm aware. Your patch will ensure that the last superblock is
-> > > > found again. But you're always going to allocate addititional
-> > > > superblocks afaict. That's at least what I can gather from the logic.
-> > > > Say you have:
-> > > > 
-> > > > /export/a/b/c/d/e/foo   *(rw,insecure,no_subtree_check,no_root_squash)
-> > > > /export/a/b/c/d/e/bar   *(rw,insecure,no_subtree_check,no_root_squash)
-> > > > 
-> > > > you allocate 8 superblocks (it's always path components +1) of which you
-> > > > immediately discard 7 after you finished. That's easily reproducible
-> > > > with selinux completely disabled. I'm just astonished.
-> > > > 
-> > > 
-> > > Actually, your callchain might not be correct.
-> > > 
-> > > I think that you should only end up calling back into nfs_d_automount
-> > > and creating a new sb when we cross a mount boundary. So if each of
-> > > those intermediate directories represents a different fs, then you'll
-> > > get a bunch of superblocks that will end up discarded, but I don't
-> > > believe we create a new mount just for intermediate directories that we
-> > > can walk.
-> > > 
-> > > Basically the nfsv4 mount process is to create a (hidden) superblock for
-> > > the root of the tree on the server, and then use the normal pathwalk
-> > > scheme to walk down to the right dentry for the root. Once we get there
-> > > we can prune everything above that point and we end up with a single sb.
+On Fri, Aug 04, 2023 at 09:56:59AM +0200, Lorenzo Bianconi wrote:
+> [...]
+> > > +	atomic_inc(&rqstp->rq_status_counter);
+> > > +
 > > 
-> > Now, I may just be doing something really wrong but that's not what's
-> > happening according to my tracing. See below. 
-> > 
-> > cat /etc/exports
-> > /export/a/b/c/d/e/foo   *(rw,insecure,no_subtree_check,no_root_squash)
-> > /export/a/b/c/d/e/bar   *(rw,insecure,no_subtree_check,no_root_squash)
-> > 
-> > systemctl start nfs-server
-> > exportfs -avr
-> > mount 127.0.0.1:/export/a/b/c/d/e/foo /mnt/a
-> > 
+> > Does this really have to be an atomic_t ? Seems like nfsd_dispatch
+> > is the only function updating it. You might need release semantics
+> > here and acquire semantics in nfsd_rpc_status_show(). I'd rather
+> > avoid a full-on atomic op in nfsd_dispatch() unless it's absolutely
+> > needed.
 > 
-> Ahh ok. In your case, you're only exporting those single directories,
-> which means that the server has to create pseudoroot entries for all of
-> the intermediate directories in that path.
+> ack, I agree. I will work on it.
 > 
-> So, while "foo" corresponds to the directory on the server, the
-> intermediate /export/a/b/c/d/e hierarchy are constructed, and the client
-> is (probably) treating each of those as if they were new mountpoints.
+> > 
+> > Also, do you need to bump the rq_status_counter in the other RPC
+> > dispatch routines (lockd and nfs callback) too?
+> 
+> the only consumer at the moment is nfsd, do you think we should add them in
+> advance for lockd as well?
 
-That's kinda what I figured but I didn't really understand why.
+Ah... the reporting facility is added to the NFS server, not to
+SunRPC. My mistake. I got confused because struct svc_rqst is an RPC
+layer object.
 
-It's probably not too bad for nfs but it's a pricy endeavour for the
-whole system. Yes, it's rare but it means, if you have say 250 path
-components you're keeping 250 NFS superblocks in fs_type->instances
-until you finished mount_subtree(). Which means as pathwalk progresses
-costs for each new superblock increase dramatically and since sb_lock is
-global you're also stalling other superblocks creation on the system.
+So this is kind of a layering violation. The counter is for NFS
+procedures, but it's being added to svc_rqst, which is an RPC layer
+object. We're trying to fix up the places where NFSD stashes its
+state in RPC structures. (I recall that Neil suggested this
+arrangement).
 
-Anyway, that's for another time.
+But I don't have a better suggestion for where to put the counter.
+Leave it where it is for now, and we'll come up with something
+down the road ... or we'll decide we want the same watchdog for
+all RPC services. ;-)
+
+
+> > >  	rp = NULL;
+> > >  	switch (nfsd_cache_lookup(rqstp, &rp)) {
+> > >  	case RC_DOIT:
+> > > @@ -1074,6 +1076,8 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+> > >  	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
+> > >  		goto out_encode_err;
+> > >  
+> > > +	atomic_inc(&rqstp->rq_status_counter);
+> > > +
+> > >  	nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
+> > >  out_cached_reply:
+> > >  	return 1;
+> > > @@ -1149,3 +1153,121 @@ int nfsd_pool_stats_release(struct inode *inode, struct file *file)
+> > >  	mutex_unlock(&nfsd_mutex);
+> > >  	return ret;
+> > >  }
+> > > +
+> > > +static int nfsd_rpc_status_show(struct seq_file *m, void *v)
+> > > +{
+> > > +	struct inode *inode = file_inode(m->file);
+> > > +	struct nfsd_net *nn = net_generic(inode->i_sb->s_fs_info, nfsd_net_id);
+> > > +	int i;
+> > > +
+> > > +	rcu_read_lock();
+> > > +
+> > > +	for (i = 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+> > > +		struct svc_rqst *rqstp;
+> > > +
+> > > +		list_for_each_entry_rcu(rqstp,
+> > > +				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
+> > > +				rq_all) {
+> > > +			struct nfsd_rpc_status_info {
+> > > +				struct sockaddr daddr;
+> > > +				struct sockaddr saddr;
+> > > +				unsigned long rq_flags;
+> > > +				__be32 rq_xid;
+> > > +				u32 rq_prog;
+> > > +				u32 rq_vers;
+> > > +				const char *pc_name;
+> > > +				ktime_t rq_stime;
+> > > +				u32 opnum[NFSD_MAX_OPS_PER_COMPOUND]; /* NFSv4 compund */
+> > > +			} rqstp_info;
+> > > +			unsigned int status_counter;
+> > > +			char buf[RPC_MAX_ADDRBUFLEN];
+> > > +			int j, opcnt = 0;
+> > > +
+> > > +			if (!test_bit(RQ_BUSY, &rqstp->rq_flags))
+> > > +				continue;
+> > > +
+> > > +			status_counter = atomic_read(&rqstp->rq_status_counter);
+> > 
+> > Neil said:
+> > 
+> > > I suggest you add add a counter to the rqstp which is incremented from
+> > > even to odd after parsing a request - including he v4 parsing needed to
+> > > have a sable ->opcnt - and then incremented from odd to even when the
+> > > request is complete.
+> > > Then this code samples the counter, skips the rqst if the counter is
+> > > even, and resamples the counter after collecting the data.  If it has
+> > > changed, the drop the record.
+> > 
+> > I don't see a check if the status counter is even.
+> > 
+> > Also, as above, I'm not sure atomic_read() is necessary here. Maybe
+> > just READ_ONCE() ? Neil, any thoughts?
+> 
+> 
+> I used the RQ_BUSY check instead of checking if the counter is even, but I can
+> see the point now. I will fix it.
+> 
+> > 
+> > 
+> > > +
+> > > +			rqstp_info.rq_xid = rqstp->rq_xid;
+> > > +			rqstp_info.rq_flags = rqstp->rq_flags;
+> > > +			rqstp_info.rq_prog = rqstp->rq_prog;
+> > > +			rqstp_info.rq_vers = rqstp->rq_vers;
+> > > +			rqstp_info.pc_name = svc_proc_name(rqstp);
+> > > +			rqstp_info.rq_stime = rqstp->rq_stime;
+> > > +			memcpy(&rqstp_info.daddr, svc_daddr(rqstp),
+> > > +			       sizeof(struct sockaddr));
+> > > +			memcpy(&rqstp_info.saddr, svc_addr(rqstp),
+> > > +			       sizeof(struct sockaddr));
+> > > +
+> > > +#ifdef CONFIG_NFSD_V4
+> > > +			if (rqstp->rq_vers == NFS4_VERSION &&
+> > > +			    rqstp->rq_proc == NFSPROC4_COMPOUND) {
+> > > +				/* NFSv4 compund */
+> > > +				struct nfsd4_compoundargs *args = rqstp->rq_argp;
+> > > +
+> > > +				opcnt = args->opcnt;
+> > > +				for (j = 0; j < opcnt; j++) {
+> > > +					struct nfsd4_op *op = &args->ops[j];
+> > > +
+> > > +					rqstp_info.opnum[j] = op->opnum;
+> > > +				}
+> > > +			}
+> > > +#endif /* CONFIG_NFSD_V4 */
+> > > +
+> > > +			/* In order to detect if the RPC request is pending and
+> > > +			 * RPC info are stable we check if rq_status_counter
+> > > +			 * has been incremented during the handler processing.
+> > > +			 */
+> > > +			if (status_counter != atomic_read(&rqstp->rq_status_counter))
+> > > +				continue;
+> > > +
+> > > +			seq_printf(m,
+> > > +				   "0x%08x, 0x%08lx, 0x%08x, NFSv%d, %s, %016lld,",
+> > > +				   be32_to_cpu(rqstp_info.rq_xid),
+> > > +				   rqstp_info.rq_flags,
+> > > +				   rqstp_info.rq_prog,
+> > > +				   rqstp_info.rq_vers,
+> > > +				   rqstp_info.pc_name,
+> > > +				   ktime_to_us(rqstp_info.rq_stime));
+> > > +
+> > > +			seq_printf(m, " %s,",
+> > > +				   __svc_print_addr(&rqstp_info.saddr, buf,
+> > > +						    sizeof(buf), false));
+> > > +			seq_printf(m, " %s,",
+> > > +				   __svc_print_addr(&rqstp_info.daddr, buf,
+> > > +						    sizeof(buf), false));
+> > > +			for (j = 0; j < opcnt; j++)
+> > > +				seq_printf(m, " %s%s",
+> > > +					   nfsd4_op_name(rqstp_info.opnum[j]),
+> > > +					   j == opcnt - 1 ? "," : "");
+> > > +			seq_puts(m, "\n");
+> > > +		}
+> > > +	}
+> > > +
+> > > +	rcu_read_unlock();
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +/**
+> > > + * nfsd_rpc_status_open - Atomically copy a write verifier
+> > 
+> > The kdoc comment maybe was copied, pasted, and then not updated?
+> 
+> ack, I will fix it.
+> 
+> Regards,
+> Lorenzo
+> 
+> > 
+> > > + * @inode: entry inode pointer.
+> > > + * @file: entry file pointer.
+> > > + *
+> > > + * This routine dumps pending RPC requests info queued into nfs server.
+> > > + */
+> > > +int nfsd_rpc_status_open(struct inode *inode, struct file *file)
+> > > +{
+> > > +	struct nfsd_net *nn = net_generic(inode->i_sb->s_fs_info, nfsd_net_id);
+> > > +
+> > > +	mutex_lock(&nfsd_mutex);
+> > > +	if (!nn->nfsd_serv) {
+> > > +		mutex_unlock(&nfsd_mutex);
+> > > +		return -ENODEV;
+> > > +	}
+> > > +
+> > > +	svc_get(nn->nfsd_serv);
+> > > +	mutex_unlock(&nfsd_mutex);
+> > > +
+> > > +	return single_open(file, nfsd_rpc_status_show, inode->i_private);
+> > > +}
+> > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> > > index fe1394cc1371..cb516da9e270 100644
+> > > --- a/include/linux/sunrpc/svc.h
+> > > +++ b/include/linux/sunrpc/svc.h
+> > > @@ -270,6 +270,7 @@ struct svc_rqst {
+> > >  						 * net namespace
+> > >  						 */
+> > >  	void **			rq_lease_breaker; /* The v4 client breaking a lease */
+> > > +	atomic_t		rq_status_counter; /* RPC processing counter */
+> > >  };
+> > >  
+> > >  #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
+> > > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > > index 587811a002c9..44eac83b35a1 100644
+> > > --- a/net/sunrpc/svc.c
+> > > +++ b/net/sunrpc/svc.c
+> > > @@ -1629,7 +1629,7 @@ const char *svc_proc_name(const struct svc_rqst *rqstp)
+> > >  		return rqstp->rq_procinfo->pc_name;
+> > >  	return "unknown";
+> > >  }
+> > > -
+> > > +EXPORT_SYMBOL_GPL(svc_proc_name);
+> > >  
+> > >  /**
+> > >   * svc_encode_result_payload - mark a range of bytes as a result payload
+> > > -- 
+> > > 2.41.0
+> > > 
+> > 
+> > -- 
+> > Chuck Lever
+> > 
+
+
+
+-- 
+Chuck Lever
