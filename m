@@ -2,75 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77F0676F6EC
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Aug 2023 03:28:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A3E276F815
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Aug 2023 04:49:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbjHDB2X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Aug 2023 21:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49810 "EHLO
+        id S231822AbjHDCtF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Aug 2023 22:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbjHDB2W (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Aug 2023 21:28:22 -0400
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id 1C70B423E;
-        Thu,  3 Aug 2023 18:28:20 -0700 (PDT)
-Received: from localhost.localdomain (unknown [180.167.10.98])
-        by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id E2C10602F96C4;
-        Fri,  4 Aug 2023 09:28:06 +0800 (CST)
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From:   Su Hui <suhui@nfschina.com>
-To:     trond.myklebust@hammerspace.com, anna@kernel.org,
-        chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
-        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
-        nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com
-Cc:     bfields@fieldses.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        kernel-janitors@vger.kernel.org, Su Hui <suhui@nfschina.com>
-Subject: [PATCH v2] fs: lockd: avoid possible wrong NULL parameter
-Date:   Fri,  4 Aug 2023 09:26:57 +0800
-Message-Id: <20230804012656.4091877-1-suhui@nfschina.com>
-X-Mailer: git-send-email 2.30.2
+        with ESMTP id S231496AbjHDCtF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Aug 2023 22:49:05 -0400
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 257B030FD
+        for <linux-nfs@vger.kernel.org>; Thu,  3 Aug 2023 19:49:03 -0700 (PDT)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-5844bb9923eso19368037b3.0
+        for <linux-nfs@vger.kernel.org>; Thu, 03 Aug 2023 19:49:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1691117342; x=1691722142;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vd95Z3+osQHMY4UnbAFYs8153P0Rw3koffJjaaUVqu8=;
+        b=PS7MVmREtdk+t0YqbU+r1cv06QIkKaMZgrhKw9zvVfR87cpxMdSKlrUm0ED8EwbS+G
+         8vG57n9I5BgiXaUlca0jp6ISgoOtJurxusghMJizM47WzjUxGfezWrAughIOtqjuW83q
+         dlLn+h66NqO41NcMjSRF0rCNOiX9dMqGfS2nr00ndQBlwXVgHLA35XzkX9kDCwlvZxrS
+         Y0J+qtfivoQp+KRAa5VI6TjlK6xSTF/AzdMDxeJRcbCzUDhRDDEic/3Ya1LM5vYaElVx
+         ruML3a/NIPnZxzd9oRLznWO1BXP8QIVIDq5spPdmCEhrqd6TG1ixFLHjuyHI3ds6UHlJ
+         6J6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691117342; x=1691722142;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vd95Z3+osQHMY4UnbAFYs8153P0Rw3koffJjaaUVqu8=;
+        b=keSLZdoeuUywTpO/8SWyiuX+YVkQTjV981affCpcjit2CEt4xyxAaVeBHilbgGlTex
+         TwWIoLGN+HDMZuM3p9/GDTzXkpXQsoHJmOnB4RTpACWChiG1hpBBM/RWXHR11z3KWgEJ
+         Wzm8OYmCIXCd9VDo4h9aQjJ9p5lwZ04YpV1FTo0ISw9V8yOVoiRIFNt1QT+0JfMzrKFE
+         BDJe1kddDeAOv1A07qr3FGtr7z25BpfVZ1pKmHJe5QdHiL+YnOqmXdFxfsNKrrnZYkmi
+         juai5JXbpxCgtjutLmvHDfaiFuD1vdmiW8cXD0/HpDFaKWZkaCYYGPhAEkdjQ0vRkDjV
+         xh8Q==
+X-Gm-Message-State: AOJu0YwLC+dyqkOpuSYZTaNLdRscBXk/DMxlyWiYMmKA3C68aW0hLysU
+        3SmcbTZx/Qb60gjUcWCT1iz5ACg+vaD+d1qek+GQ
+X-Google-Smtp-Source: AGHT+IHzOMv/ju9Tw8bPVPB4bGc67BfMOW+0Um7p830iso0PGeWxqbRtl37oozAHp4DGTMSMiA7RzLqc14ciUx57+XE=
+X-Received: by 2002:a0d:e253:0:b0:584:189c:13ec with SMTP id
+ l80-20020a0de253000000b00584189c13ecmr519784ywe.21.1691117342044; Thu, 03 Aug
+ 2023 19:49:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,RDNS_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+References: <20230802-master-v6-1-45d48299168b@kernel.org> <bac543537058619345b363bbfc745927.paul@paul-moore.com>
+ <ca156cecbc070c3b7c68626572274806079a6e04.camel@kernel.org>
+ <CAHC9VhTQDVyZewU0Oiy4AfJt_UtB7O2_-PcUmXkZtuwKDQBfXg@mail.gmail.com> <ec1fd18f271593d5c6b6813cfaeb688994f20bf4.camel@kernel.org>
+In-Reply-To: <ec1fd18f271593d5c6b6813cfaeb688994f20bf4.camel@kernel.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Thu, 3 Aug 2023 22:48:50 -0400
+Message-ID: <CAHC9VhSNXbJzfKLF+DjfK+_2eJYYc_AC3u3aUc_NUs_o5M5AaA@mail.gmail.com>
+Subject: Re: [PATCH v6] vfs, security: Fix automount superblock LSM init
+ problem, preventing NFS sb sharing
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-clang's static analysis warning: fs/lockd/mon.c: line 293, column 2:
-Null pointer passed as 2nd argument to memory copy function.
+On Thu, Aug 3, 2023 at 12:27=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+> On Wed, 2023-08-02 at 22:46 -0400, Paul Moore wrote:
+> > On Wed, Aug 2, 2023 at 3:34=E2=80=AFPM Jeff Layton <jlayton@kernel.org>=
+ wrote:
+> > > On Wed, 2023-08-02 at 14:16 -0400, Paul Moore wrote:
+> > > > On Aug  2, 2023 Jeff Layton <jlayton@kernel.org> wrote:
 
-Assuming 'hostname' is NULL and calling 'nsm_create_handle()', this will
-pass NULL as 2nd argument to memory copy function 'memcpy()'. So return
-NULL if 'hostname' is invalid.
+...
 
-Fixes: 77a3ef33e2de ("NSM: More clean up of nsm_get_handle()")
-Signed-off-by: Su Hui <suhui@nfschina.com>
----
-v2:
- - move NULL check to the callee "nsm_create_handle()"
- fs/lockd/mon.c | 3 +++
- 1 file changed, 3 insertions(+)
+> > My only concern now is the fs_context::lsm_set flag.
+>
+> Yeah, that bit is ugly. David studied this problem a lot more than I
+> have, but basically, we only want to set the context info once, and
+> we're not always going to have a nice string to parse to set up the
+> options. This obviously works, but I'm fine with a more elegant method
+> if you can spot one.
 
-diff --git a/fs/lockd/mon.c b/fs/lockd/mon.c
-index 1d9488cf0534..87a0f207df0b 100644
---- a/fs/lockd/mon.c
-+++ b/fs/lockd/mon.c
-@@ -276,6 +276,9 @@ static struct nsm_handle *nsm_create_handle(const struct sockaddr *sap,
- {
- 	struct nsm_handle *new;
- 
-+	if (!hostname)
-+		return NULL;
-+
- 	new = kzalloc(sizeof(*new) + hostname_len + 1, GFP_KERNEL);
- 	if (unlikely(new == NULL))
- 		return NULL;
--- 
-2.30.2
+Like I said before, sometimes making a LSM hook conditional on some
+flag is the only practical solution, but I always worry that there is
+a chance that a future patch might end up toggling that flag by
+accident and we lose an important call into the LSM.  Even if all we
+end up doing is moving the flag down into the LSMs I would be happier;
+there is still a risk, but at least if something breaks it is our (the
+LSM folks) own damn fault ;)
 
+> > You didn't mention exactly why the security_sb_set_mnt_opts() was
+> > failing, and requires the fs_context::lsm_set check, but my guess is
+> > that something is tripping over the fact that the superblock is
+> > already properly setup.  I'm working under the assumption that this
+> > problem - attempting to reconfigure a properly configured superblock -
+> > should only be happening in the submount/non-NULL-reference case.  If
+> > it is happening elsewhere I think I'm going to need some help
+> > understanding that ...
+>
+> Correct. When you pass in the mount options, fc->security seems to be
+> properly set. NFS mounting is complex though, so the final superblock
+> you care about may end up being a descendant of the one that was
+> originally configured.
+
+Ooof, okay, there goes that idea.
+
+At this point I guess it comes back to that question of why is calling
+into security_sb_set_mnt_opts() a second (or third, etc.) time failing
+for you?  Is there some conflict with the superblock
+config/labeling/etc.?  Is there a permissions problem?  Better
+understanding why that is failing might help us come up with a better
+solution.
+
+--=20
+paul-moore.com
