@@ -2,92 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D659776FE42
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Aug 2023 12:16:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19D657700A1
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Aug 2023 14:58:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231381AbjHDKQA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Aug 2023 06:16:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33162 "EHLO
+        id S229668AbjHDM6m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Aug 2023 08:58:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231392AbjHDKP3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Aug 2023 06:15:29 -0400
+        with ESMTP id S229585AbjHDM6l (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Aug 2023 08:58:41 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D2049DA;
-        Fri,  4 Aug 2023 03:14:47 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B2D13D;
+        Fri,  4 Aug 2023 05:58:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7869E61F93;
-        Fri,  4 Aug 2023 10:14:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72970C433C9;
-        Fri,  4 Aug 2023 10:14:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8012061FDF;
+        Fri,  4 Aug 2023 12:58:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46253C433C8;
+        Fri,  4 Aug 2023 12:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691144085;
-        bh=5AbSMMDb611We4H8Uqf50UdR5/vu5K+47HcJ7iRObW4=;
+        s=k20201202; t=1691153919;
+        bh=FJU2BYATQry473jCPeCpOu9lfHYELvBFzEIys+3I708=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=pF7bqoESmf4ecbWV81PJn8imMt4V+BWKXh8PJTBVpPQYPDJivBcY0d/8XXPTW4bSs
-         ZpNzwdHq0W0/EHFRqrRYE7U4WVxCfdWYv931rVIIpzDRbEg6BzvHnTIHFm80hVRhvf
-         h28iNhNnyR/Bb8qX6wUoyZyjXK7ZaGRx/lCpzGHsSbLhZz/U1i/be7Zr397zFjeiIw
-         f5kxIpC5ZDdvpZc8kr38S6zONMPTBt998z/PEM5axUQoHZMbz4pbQVUO+iphrr8Jc4
-         GO6uqR02C1utDNxNThyTIgQdJWuYcpJH2maYVAhXOmoTy8cmI9Qq91cdezNhzYpGBy
-         LNaKeq4QBN8Rw==
-Message-ID: <85f0d8cb35c8e8c64810f448bae27292703d66ed.camel@kernel.org>
-Subject: Re: [PATCH v2] fs: lockd: avoid possible wrong NULL parameter
+        b=BfL3xD/hQTN+OEA2XaALBGIMQtjxr+xppY+5gosC0+dxWrRWMlW5n24DKRg07PExg
+         O6bbMq6tyjok2CmXagNkNZ+GXjejQs5quJRlZqV3naksus+477wBZdHrhariqq8pIV
+         Np6P4PQWGln7ckslB83NjJzc2do8oRsS7eJY4oERn113V3It4mSCZA2Js+0V/4/PiC
+         rB2QHlRKX7aa+BYkxTyWNLnbcIS4vM43y5S15nciEKsVNF5OKFph1ev/AP/UPjBcnw
+         1eVKSu/i6WGr9V6sHBBbrvjPBrSkw9+/cJKDzEpPW5GRN6Yhc/Hg30vroTT6t7/lbU
+         Z6Fu5yaS+DTBg==
+Message-ID: <d6b4f6b84f8470264702771f00531c47225f0e6b.camel@kernel.org>
+Subject: Re: [PATCH v6] vfs, security: Fix automount superblock LSM init
+ problem, preventing NFS sb sharing
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Su Hui <suhui@nfschina.com>, trond.myklebust@hammerspace.com,
-        anna@kernel.org, chuck.lever@oracle.com, neilb@suse.de,
-        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
-        nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com
-Cc:     bfields@fieldses.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-        kernel-janitors@vger.kernel.org
-Date:   Fri, 04 Aug 2023 06:14:43 -0400
-In-Reply-To: <20230804012656.4091877-1-suhui@nfschina.com>
-References: <20230804012656.4091877-1-suhui@nfschina.com>
-Content-Type: text/plain; charset="ISO-8859-15"
+To:     Paul Moore <paul@paul-moore.com>,
+        David Howells <dhowells@redhat.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Date:   Fri, 04 Aug 2023 08:58:37 -0400
+In-Reply-To: <CAHC9VhSNXbJzfKLF+DjfK+_2eJYYc_AC3u3aUc_NUs_o5M5AaA@mail.gmail.com>
+References: <20230802-master-v6-1-45d48299168b@kernel.org>
+         <bac543537058619345b363bbfc745927.paul@paul-moore.com>
+         <ca156cecbc070c3b7c68626572274806079a6e04.camel@kernel.org>
+         <CAHC9VhTQDVyZewU0Oiy4AfJt_UtB7O2_-PcUmXkZtuwKDQBfXg@mail.gmail.com>
+         <ec1fd18f271593d5c6b6813cfaeb688994f20bf4.camel@kernel.org>
+         <CAHC9VhSNXbJzfKLF+DjfK+_2eJYYc_AC3u3aUc_NUs_o5M5AaA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-08-04 at 09:26 +0800, Su Hui wrote:
-> clang's static analysis warning: fs/lockd/mon.c: line 293, column 2:
-> Null pointer passed as 2nd argument to memory copy function.
+On Thu, 2023-08-03 at 22:48 -0400, Paul Moore wrote:
+> On Thu, Aug 3, 2023 at 12:27=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> > On Wed, 2023-08-02 at 22:46 -0400, Paul Moore wrote:
+> > > On Wed, Aug 2, 2023 at 3:34=E2=80=AFPM Jeff Layton <jlayton@kernel.or=
+g> wrote:
+> > > > On Wed, 2023-08-02 at 14:16 -0400, Paul Moore wrote:
+> > > > > On Aug  2, 2023 Jeff Layton <jlayton@kernel.org> wrote:
 >=20
-> Assuming 'hostname' is NULL and calling 'nsm_create_handle()', this will
-> pass NULL as 2nd argument to memory copy function 'memcpy()'. So return
-> NULL if 'hostname' is invalid.
+> ...
 >=20
-> Fixes: 77a3ef33e2de ("NSM: More clean up of nsm_get_handle()")
-> Signed-off-by: Su Hui <suhui@nfschina.com>
-> ---
-> v2:
->  - move NULL check to the callee "nsm_create_handle()"
->  fs/lockd/mon.c | 3 +++
->  1 file changed, 3 insertions(+)
+> > > My only concern now is the fs_context::lsm_set flag.
+> >=20
+> > Yeah, that bit is ugly. David studied this problem a lot more than I
+> > have, but basically, we only want to set the context info once, and
+> > we're not always going to have a nice string to parse to set up the
+> > options. This obviously works, but I'm fine with a more elegant method
+> > if you can spot one.
 >=20
-> diff --git a/fs/lockd/mon.c b/fs/lockd/mon.c
-> index 1d9488cf0534..87a0f207df0b 100644
-> --- a/fs/lockd/mon.c
-> +++ b/fs/lockd/mon.c
-> @@ -276,6 +276,9 @@ static struct nsm_handle *nsm_create_handle(const str=
-uct sockaddr *sap,
->  {
->  	struct nsm_handle *new;
-> =20
-> +	if (!hostname)
-> +		return NULL;
-> +
->  	new =3D kzalloc(sizeof(*new) + hostname_len + 1, GFP_KERNEL);
->  	if (unlikely(new =3D=3D NULL))
->  		return NULL;
+> Like I said before, sometimes making a LSM hook conditional on some
+> flag is the only practical solution, but I always worry that there is
+> a chance that a future patch might end up toggling that flag by
+> accident and we lose an important call into the LSM.  Even if all we
+> end up doing is moving the flag down into the LSMs I would be happier;
+> there is still a risk, but at least if something breaks it is our (the
+> LSM folks) own damn fault ;)
+>=20
+> > > You didn't mention exactly why the security_sb_set_mnt_opts() was
+> > > failing, and requires the fs_context::lsm_set check, but my guess is
+> > > that something is tripping over the fact that the superblock is
+> > > already properly setup.  I'm working under the assumption that this
+> > > problem - attempting to reconfigure a properly configured superblock =
+-
+> > > should only be happening in the submount/non-NULL-reference case.  If
+> > > it is happening elsewhere I think I'm going to need some help
+> > > understanding that ...
+> >=20
+> > Correct. When you pass in the mount options, fc->security seems to be
+> > properly set. NFS mounting is complex though, so the final superblock
+> > you care about may end up being a descendant of the one that was
+> > originally configured.
+>=20
+> Ooof, okay, there goes that idea.
+>=20
+> At this point I guess it comes back to that question of why is calling
+> into security_sb_set_mnt_opts() a second (or third, etc.) time failing
+> for you?  Is there some conflict with the superblock
+> config/labeling/etc.?  Is there a permissions problem?  Better
+> understanding why that is failing might help us come up with a better
+> solution.
+>=20
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+I removed the lsm_set parameter from this patch, and my testcase still
+works fine.=C2=A0I can post a v7 if we want to go forward with that. I'm
+guessing the complaint he saw was the "out_double_mount" pr_warn.
+
+It looks like as long as the context options match, there shouldn't be
+an issue, and I don't see how you'd get mismatched ones if you're
+inheriting them.
+
+David, do you remember what prompted you to add the lsm_set parameter?
+--=20
+Jeff Layton <jlayton@kernel.org>
