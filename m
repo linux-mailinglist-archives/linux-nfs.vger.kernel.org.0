@@ -2,87 +2,183 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A24A774D7B
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 23:58:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E146774D84
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 23:58:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbjHHV6O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Aug 2023 17:58:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32878 "EHLO
+        id S231633AbjHHV6R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Aug 2023 17:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231559AbjHHV6F (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 17:58:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A320AFAEF3
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 09:40:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S231126AbjHHV6G (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 17:58:06 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E593A68F;
+        Tue,  8 Aug 2023 09:39:25 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9441B62436
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 08:22:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 704EEC433C7;
-        Tue,  8 Aug 2023 08:21:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691482920;
-        bh=u4Iv7m3wbA6teKV4zQtZKUsleKxV917J51JwCepSy1E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=L1+92ler0zTFElLgXSuKyPy3zmRIw82IH76lMR3h/+sR6vCaQLNR5WH0fpllZ+Grf
-         14hAxO+6tvq3FtNTlWK8cmJycTZmO93A3uHAWasA6Vl1LvX4uQRAFd04+sk0t6JggC
-         1dcdHVAiEOrujB2Z4MGL+TfRZulzb1TzKLDCg/JXXwLBTEGHdzXtgMH0Z9L9UsQfme
-         Ygp22qAEG69q43hc2tZ1P60Xk56IunDUfZrKtwGN8+AuEz84OG+Z92xFUwgYFPRGwM
-         /DJycovDHC5/hciEDiMU+4sT2s6uWJJutiYOEW3OG4njsTxZTCLAOvff0Qhs+DBv6c
-         N7Wwf4+P+I68A==
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     lorenzo.bianconi@redhat.com, chuck.lever@oracle.com,
-        jlayton@kernel.org, neilb@suse.de
-Subject: [PATCH] NFSD: add version field to nfsd_rpc_status_show handler
-Date:   Tue,  8 Aug 2023 10:21:32 +0200
-Message-ID: <6431d0ea2295a1e128f83cd76a419dee161e4c44.1691482815.git.lorenzo@kernel.org>
-X-Mailer: git-send-email 2.41.0
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 313B020317;
+        Tue,  8 Aug 2023 09:32:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1691487147; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=URemeKpdb8J18iMONbqIB4P02haKyRX6mS8Xu4Mgmc8=;
+        b=kAP4/qU3eebbLi9EbGgoNiblqEAMz2n9d8dDZjEU/zYHxmh4xQUAW4aRmDsDFAo1LDW4XS
+        Jz3jziQyqFQJ2OS6XJQCmcd5h9qdcD3Byn8qpddgol9CAV8ew1WhVYDKOVKgTmZrEM14u3
+        +VucJ+n1ddguqczAaW5Ki56KFXcMMvI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1691487147;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=URemeKpdb8J18iMONbqIB4P02haKyRX6mS8Xu4Mgmc8=;
+        b=zakAo2cWrWyYBcipF4rIUwLGrOqm5ZeFyaCmUH+fTkQWLNKyEQyre7V0L+jFNWPtWdDjYF
+        EO0z/Yllpo+E3ODA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1EA0313451;
+        Tue,  8 Aug 2023 09:32:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id uyF3B6sL0mR7GwAAMHmgww
+        (envelope-from <jack@suse.cz>); Tue, 08 Aug 2023 09:32:27 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 82443A0769; Tue,  8 Aug 2023 11:32:26 +0200 (CEST)
+Date:   Tue, 8 Aug 2023 11:32:26 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Steve French <sfrench@samba.org>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Richard Weinberger <richard@nod.at>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-nfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-mtd@lists.infradead.org, linux-mm@kvack.org,
+        linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
+Message-ID: <20230808093226.bq2qfxv5npckk643@quack3>
+References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
+ <20230807-mgctime-v7-5-d1dec143a704@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807-mgctime-v7-5-d1dec143a704@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Introduce version field to nfsd_rpc_status handler in order to help
-the user to maintain backward compatibility.
+On Mon 07-08-23 15:38:36, Jeff Layton wrote:
+> In later patches, we're going to drop the "now" parameter from the
+> update_time operation. Fix fat_update_time to fetch its own timestamp.
+> It turns out that this is easily done by just passing a NULL timestamp
+> pointer to fat_update_time.
+             ^^^ fat_truncate_time()
 
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
----
- fs/nfsd/nfssvc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> Also, it may be that things have changed by the time we get to calling
+> fat_update_time after checking inode_needs_update_time. Ensure that we
+> attempt the i_version bump if any of the S_* flags besides S_ATIME are
+> set.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 33ad91dd3a2d..6d5feeeb09a7 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -1117,6 +1117,9 @@ int nfsd_stats_release(struct inode *inode, struct file *file)
- 	return ret;
- }
- 
-+/* Increment NFSD_RPC_STATUS_VERSION adding new info to the handler */
-+#define NFSD_RPC_STATUS_VERSION		1
-+
- static int nfsd_rpc_status_show(struct seq_file *m, void *v)
- {
- 	struct inode *inode = file_inode(m->file);
-@@ -1125,6 +1128,8 @@ static int nfsd_rpc_status_show(struct seq_file *m, void *v)
- 
- 	rcu_read_lock();
- 
-+	seq_printf(m, "# version %u\n", NFSD_RPC_STATUS_VERSION);
-+
- 	for (i = 0; i < nn->nfsd_serv->sv_nrpools; i++) {
- 		struct svc_rqst *rqstp;
- 
+Looks good. Feel free to add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/fat/misc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/fat/misc.c b/fs/fat/misc.c
+> index 67006ea08db6..8cab87145d63 100644
+> --- a/fs/fat/misc.c
+> +++ b/fs/fat/misc.c
+> @@ -347,14 +347,14 @@ int fat_update_time(struct inode *inode, struct timespec64 *now, int flags)
+>  		return 0;
+>  
+>  	if (flags & (S_ATIME | S_CTIME | S_MTIME)) {
+> -		fat_truncate_time(inode, now, flags);
+> +		fat_truncate_time(inode, NULL, flags);
+>  		if (inode->i_sb->s_flags & SB_LAZYTIME)
+>  			dirty_flags |= I_DIRTY_TIME;
+>  		else
+>  			dirty_flags |= I_DIRTY_SYNC;
+>  	}
+>  
+> -	if ((flags & S_VERSION) && inode_maybe_inc_iversion(inode, false))
+> +	if ((flags & (S_VERSION|S_CTIME|S_MTIME)) && inode_maybe_inc_iversion(inode, false))
+>  		dirty_flags |= I_DIRTY_SYNC;
+>  
+>  	__mark_inode_dirty(inode, dirty_flags);
+> 
+> -- 
+> 2.41.0
+> 
 -- 
-2.41.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
