@@ -2,169 +2,270 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5085A77423D
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 19:37:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC9EA774952
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 21:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230101AbjHHRhu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Aug 2023 13:37:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42234 "EHLO
+        id S233785AbjHHTvs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Aug 2023 15:51:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234995AbjHHRhP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 13:37:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434C76CC9
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 09:16:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3EB3862576
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 13:48:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29424C433C7;
-        Tue,  8 Aug 2023 13:48:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691502524;
-        bh=IU+B8Une8eBp3/2eUVrZhqhdlYmULO6+tMNPdj+G4Tk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DRZdhOHl3EpYp2pn1lu0t3lGzYGqWO27KMDTfgBQkWqcg2v/PFG7LTBhCjor/MNs2
-         0cG9TietG++qgMzGkcCYYm9SXvSv+2c1tZGGBOg1Ctbkr4t4/jSB5DRKgcKbZRwazS
-         e0MVkq7zby/xuE6ym1p+nHtUJavxHmWJra5E2eL0JNqGvecVPhkxv89+b1V4XpiBtO
-         dZh9QzBlmCg00s222T83HP3P+0QVS44LIuyTpaaBfipaJy5u1K0sLq2C3FrQTP7SKf
-         RXHYLuSQN4ufOSmmX0U4mUaMOnljiO1oa1sAIDMfG8stVKlwukL+T1GUXa6onNaTuC
-         vYj9dUhn1A6hQ==
-Message-ID: <ea598236b2da9f1aa9b587ca797afaa9de5545c7.camel@kernel.org>
-Subject: Re: [PATCH] NFSD: add version field to nfsd_rpc_status_show handler
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@suse.de>
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
-        lorenzo.bianconi@redhat.com
-Date:   Tue, 08 Aug 2023 09:48:42 -0400
-In-Reply-To: <ZNJCIRjI64YIY+I0@tissot.1015granger.net>
-References: <6431d0ea2295a1e128f83cd76a419dee161e4c44.1691482815.git.lorenzo@kernel.org>
-         <169149440399.32308.1010201101079709026@noble.neil.brown.name>
-         <ZNJCIRjI64YIY+I0@tissot.1015granger.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        with ESMTP id S230112AbjHHTv2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 15:51:28 -0400
+Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C74D550E1
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 09:57:02 -0700 (PDT)
+Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-56cae50792fso612770eaf.1
+        for <linux-nfs@vger.kernel.org>; Tue, 08 Aug 2023 09:57:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1691513821; x=1692118621;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=if5VWB18nVWwRp6UCb6aPEiH47g9I/o9CGJnGCggs6I=;
+        b=GqhG311Z9Hh6hICynY8VVi8Zn9hhJkwrDUday3E/VDvWW7FAelXFBKsMdZP8Y8xRZU
+         l527yewt9MclEEkKBK0ctFMKkGwRg9fGD/HFIr74VzcQSKj8W+yGeqVFkJmRzLABk49e
+         cuC+oVHn3pCoKHUv9058mCTnPOu04gzFBd1oqM+jcrs8OV91kxJ7pjT1Vtn/e45+tD3Y
+         HMI6kxMM3GUJJlFYQdRjK4b0YTka1fii69JPgwzSiwlw4pfhGS1azbFusOOr7BpPei1L
+         9Z60HMZWdlznsSsBjaC/Doimk1JJS0EF74S8ooYkBHLLZ7modWKZLtQN/1OS95csQxUL
+         YiYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1691513821; x=1692118621;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=if5VWB18nVWwRp6UCb6aPEiH47g9I/o9CGJnGCggs6I=;
+        b=YdGoRgYC9bDyRTYdOsHwlQ92bLvUqPI2iKcecGPXyFdMwH/hpnJ2INtU1uYquk3N4r
+         T0gdVaXJ71aVRhbnlR+PwWiRhCHzWMpbbWpSSwybnkhfz1l/GF4GE4xiDG7czYUG+SM2
+         gKmbBadB7NlL7CkPmo/0In1U4k0EtOHtQsSZ9yv6X7pWxA/2NuLKXkoH4WwZl0vWO8C/
+         TtfN9PTrl3E7yzFztYP0dtsXZECBa29XVWLuUjzkD5QcGx7gSfshVS4ZpYFM3vxK0r4L
+         pYnu5o4J8bKJfO0OiWSBVzZ+/gwf6HVeZF9tO0D9cOn4IOuMq4HbwnLBnb5EfPewgibC
+         +CkQ==
+X-Gm-Message-State: AOJu0Yy5hTz8nmz3d/psnTwhc6GlCFhrzZ2h/LJldJo0Dpqblz+nC+wD
+        QyleUUWrD5ZlYZejSXt8Fb7VybcDUKs7XswwYIE=
+X-Google-Smtp-Source: AGHT+IGrIAD/R1XG8iT7hZdid4m31qfruz9y309af9L0+sAELwy0z1r+YzLKvbiH8nyqlY1j6mrYWw==
+X-Received: by 2002:a92:2802:0:b0:349:7518:4877 with SMTP id l2-20020a922802000000b0034975184877mr3215795ilf.0.1691479385787;
+        Tue, 08 Aug 2023 00:23:05 -0700 (PDT)
+Received: from [10.70.252.135] ([203.208.167.146])
+        by smtp.gmail.com with ESMTPSA id s15-20020a63af4f000000b00564ca424f79sm4948391pgo.48.2023.08.08.00.22.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Aug 2023 00:23:05 -0700 (PDT)
+Message-ID: <0fdb926c-0d61-d81f-1a52-4ef634b51804@bytedance.com>
+Date:   Tue, 8 Aug 2023 15:22:51 +0800
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.14.0
+Subject: Re: [PATCH v4 45/48] mm: shrinker: make global slab shrink lockless
+Content-Language: en-US
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     akpm@linux-foundation.org, tkhai@ya.ru, vbabka@suse.cz,
+        roman.gushchin@linux.dev, djwong@kernel.org, brauner@kernel.org,
+        paulmck@kernel.org, tytso@mit.edu, steven.price@arm.com,
+        cel@kernel.org, senozhatsky@chromium.org, yujie.liu@intel.com,
+        gregkh@linuxfoundation.org, muchun.song@linux.dev,
+        simon.horman@corigine.com, dlemoal@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
+        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-erofs@lists.ozlabs.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-nfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        rcu@vger.kernel.org, netdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        dm-devel@redhat.com, linux-raid@vger.kernel.org,
+        linux-bcache@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
+References: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
+ <20230807110936.21819-46-zhengqi.arch@bytedance.com>
+ <ZNGnSbiPN0lDLpSW@dread.disaster.area>
+From:   Qi Zheng <zhengqi.arch@bytedance.com>
+In-Reply-To: <ZNGnSbiPN0lDLpSW@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-08-08 at 09:24 -0400, Chuck Lever wrote:
-> On Tue, Aug 08, 2023 at 09:33:23PM +1000, NeilBrown wrote:
-> > On Tue, 08 Aug 2023, Lorenzo Bianconi wrote:
-> > > Introduce version field to nfsd_rpc_status handler in order to help
-> > > the user to maintain backward compatibility.
-> >=20
-> > I wonder if this really helps.  What do I do if I see a version that I
-> > don't understand?  Ignore the whole file?  That doesn't make for a good
-> > user experience.
->=20
-> There is no UX consideration here. A user browsing the file directly
-> will not care about the version.
->=20
-> This file is intended to be parsable by scripts and they have to
-> keep up with the occasional changes in format. Scripts can handle an
-> unrecogized version however they like.
->=20
-> This is what we typically get with a made-up format that isn't .ini
-> or JSON or XML. The file format isn't self-documenting. The final
-> field on each row is a variable number of tokens, so it will be
-> nearly impossible to simply add another field without breaking
-> something.
->=20
+Hi Dave,
 
-It shouldn't be a variable number of tokens per line. If there is, then
-that's a bug, IMO. We do want it to be simple to just add a new field,
-published version info notwithstanding.
+On 2023/8/8 10:24, Dave Chinner wrote:
+> On Mon, Aug 07, 2023 at 07:09:33PM +0800, Qi Zheng wrote:
+>> diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
+>> index eb342994675a..f06225f18531 100644
+>> --- a/include/linux/shrinker.h
+>> +++ b/include/linux/shrinker.h
+>> @@ -4,6 +4,8 @@
+>>   
+>>   #include <linux/atomic.h>
+>>   #include <linux/types.h>
+>> +#include <linux/refcount.h>
+>> +#include <linux/completion.h>
+>>   
+>>   #define SHRINKER_UNIT_BITS	BITS_PER_LONG
+>>   
+>> @@ -87,6 +89,10 @@ struct shrinker {
+>>   	int seeks;	/* seeks to recreate an obj */
+>>   	unsigned flags;
+>>   
+>> +	refcount_t refcount;
+>> +	struct completion done;
+>> +	struct rcu_head rcu;
+> 
+> Documentation, please. What does the refcount protect, what does the
+> completion provide, etc.
 
->=20
-> > I would suggest that the first step to promoting compatibility is to
-> > document the format, including how you expect to extend it.
->=20
-> I'd be OK with seeing that documentation added as a kdoc comment for
-> nfsd_rpc_status_show(), sure.
->=20
->=20
-> > Jeff's
-> > suggestion of a header line with field names makes a lot of sense for a
-> > file with space-separated fields like this.  You should probably promis=
-e
-> > not to remove fields, but to deprecate fields by replacing them with "X=
-"
-> > or whatever.
-> >=20
-> > A tool really needs to be able to extract anything it can understand,
-> > and know how to avoid what it doesn't understand.  A version number
-> > doesn't help with that.
->=20
-> It's how mountstats format changes are managed. We have bumped that
-> version number over the years, so there is precedent for it.
->=20
->=20
-> > And if you really wanted to change the format so much that old tools
-> > cannot use any of the content, it would likely make most sense to chang=
-e
-> > the name of the file...  or have two files - legacy file with old name
-> > and new-improved file with new name.
-> >=20
-> > So I'm not keen on a version number.
->=20
-> I'm a little surprised to get push-back on "# version" but OK, we
-> can drop that idea in favor of a comment line in rpc_status that
-> acts as a header row, just like in /proc/fs/nfsd/pool_stats.
-> Scripts can treat that header as format version information.
->=20
->=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> >=20
-> > >=20
-> > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > > ---
-> > >  fs/nfsd/nfssvc.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >=20
-> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > > index 33ad91dd3a2d..6d5feeeb09a7 100644
-> > > --- a/fs/nfsd/nfssvc.c
-> > > +++ b/fs/nfsd/nfssvc.c
-> > > @@ -1117,6 +1117,9 @@ int nfsd_stats_release(struct inode *inode, str=
-uct file *file)
-> > >  	return ret;
-> > >  }
-> > > =20
-> > > +/* Increment NFSD_RPC_STATUS_VERSION adding new info to the handler =
-*/
-> > > +#define NFSD_RPC_STATUS_VERSION		1
-> > > +
-> > >  static int nfsd_rpc_status_show(struct seq_file *m, void *v)
-> > >  {
-> > >  	struct inode *inode =3D file_inode(m->file);
-> > > @@ -1125,6 +1128,8 @@ static int nfsd_rpc_status_show(struct seq_file=
- *m, void *v)
-> > > =20
-> > >  	rcu_read_lock();
-> > > =20
-> > > +	seq_printf(m, "# version %u\n", NFSD_RPC_STATUS_VERSION);
-> > > +
-> > >  	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
-> > >  		struct svc_rqst *rqstp;
-> > > =20
-> > > --=20
-> > > 2.41.0
-> > >=20
-> > >=20
-> >=20
->=20
+How about the following:
 
---=20
-Jeff Layton <jlayton@kernel.org>
+	/*
+	 * reference count of this shrinker, holding this can guarantee
+	 * that the shrinker will not be released.
+	 */
+	refcount_t refcount;
+	/*
+	 * Wait for shrinker::refcount to reach 0, that is, no shrinker
+	 * is running or will run again.
+	 */
+	struct completion done;
+
+> 
+>> +
+>>   	void *private_data;
+>>   
+>>   	/* These are for internal use */
+>> @@ -120,6 +126,17 @@ struct shrinker *shrinker_alloc(unsigned int flags, const char *fmt, ...);
+>>   void shrinker_register(struct shrinker *shrinker);
+>>   void shrinker_free(struct shrinker *shrinker);
+>>   
+>> +static inline bool shrinker_try_get(struct shrinker *shrinker)
+>> +{
+>> +	return refcount_inc_not_zero(&shrinker->refcount);
+>> +}
+>> +
+>> +static inline void shrinker_put(struct shrinker *shrinker)
+>> +{
+>> +	if (refcount_dec_and_test(&shrinker->refcount))
+>> +		complete(&shrinker->done);
+>> +}
+>> +
+>>   #ifdef CONFIG_SHRINKER_DEBUG
+>>   extern int __printf(2, 3) shrinker_debugfs_rename(struct shrinker *shrinker,
+>>   						  const char *fmt, ...);
+>> diff --git a/mm/shrinker.c b/mm/shrinker.c
+>> index 1911c06b8af5..d318f5621862 100644
+>> --- a/mm/shrinker.c
+>> +++ b/mm/shrinker.c
+>> @@ -2,6 +2,7 @@
+>>   #include <linux/memcontrol.h>
+>>   #include <linux/rwsem.h>
+>>   #include <linux/shrinker.h>
+>> +#include <linux/rculist.h>
+>>   #include <trace/events/vmscan.h>
+>>   
+>>   #include "internal.h"
+>> @@ -577,33 +578,42 @@ unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
+>>   	if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
+>>   		return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
+>>   
+>> -	if (!down_read_trylock(&shrinker_rwsem))
+>> -		goto out;
+>> -
+>> -	list_for_each_entry(shrinker, &shrinker_list, list) {
+>> +	rcu_read_lock();
+>> +	list_for_each_entry_rcu(shrinker, &shrinker_list, list) {
+>>   		struct shrink_control sc = {
+>>   			.gfp_mask = gfp_mask,
+>>   			.nid = nid,
+>>   			.memcg = memcg,
+>>   		};
+>>   
+>> +		if (!shrinker_try_get(shrinker))
+>> +			continue;
+>> +
+>> +		/*
+>> +		 * We can safely unlock the RCU lock here since we already
+>> +		 * hold the refcount of the shrinker.
+>> +		 */
+>> +		rcu_read_unlock();
+>> +
+>>   		ret = do_shrink_slab(&sc, shrinker, priority);
+>>   		if (ret == SHRINK_EMPTY)
+>>   			ret = 0;
+>>   		freed += ret;
+>> +
+>>   		/*
+>> -		 * Bail out if someone want to register a new shrinker to
+>> -		 * prevent the registration from being stalled for long periods
+>> -		 * by parallel ongoing shrinking.
+>> +		 * This shrinker may be deleted from shrinker_list and freed
+>> +		 * after the shrinker_put() below, but this shrinker is still
+>> +		 * used for the next traversal. So it is necessary to hold the
+>> +		 * RCU lock first to prevent this shrinker from being freed,
+>> +		 * which also ensures that the next shrinker that is traversed
+>> +		 * will not be freed (even if it is deleted from shrinker_list
+>> +		 * at the same time).
+>>   		 */
+> 
+> This needs to be moved to the head of the function, and document
+> the whole list walk, get, put and completion parts of the algorithm
+> that make it safe. There's more to this than "we hold a reference
+> count", especially the tricky "we might see the shrinker before it
+> is fully initialised" case....
+
+How about moving these documents to before list_for_each_entry_rcu(),
+and then go to the head of shrink_slab_memcg() to explain the memcg
+slab shrink case.
+
+> 
+> 
+> .....
+>>   void shrinker_free(struct shrinker *shrinker)
+>>   {
+>>   	struct dentry *debugfs_entry = NULL;
+>> @@ -686,9 +712,18 @@ void shrinker_free(struct shrinker *shrinker)
+>>   	if (!shrinker)
+>>   		return;
+>>   
+>> +	if (shrinker->flags & SHRINKER_REGISTERED) {
+>> +		shrinker_put(shrinker);
+>> +		wait_for_completion(&shrinker->done);
+>> +	}
+> 
+> Needs a comment explaining why we need to wait here...
+
+/*
+  * Wait for all lookups of the shrinker to complete, after that, no
+  * shrinker is running or will run again, then we can safely free
+  * the structure where the shrinker is located, such as super_block
+  * etc.
+  */
+
+>> +
+>>   	down_write(&shrinker_rwsem);
+>>   	if (shrinker->flags & SHRINKER_REGISTERED) {
+>> -		list_del(&shrinker->list);
+>> +		/*
+>> +		 * Lookups on the shrinker are over and will fail in the future,
+>> +		 * so we can now remove it from the lists and free it.
+>> +		 */
+> 
+> .... rather than here after the wait has been done and provided the
+> guarantee that no shrinker is running or will run again...
+
+With the above comment, how about simplifying the comment here to the
+following:
+
+/*
+  * Now we can safely remove it from the shrinker_list and free it.
+  */
+
+Thanks,
+Qi
+
+> 
+> -Dave.
