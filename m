@@ -2,174 +2,186 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AC6A7747DB
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 21:21:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A30377472B
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 21:10:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236136AbjHHTVB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Aug 2023 15:21:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37132 "EHLO
+        id S233341AbjHHTK2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Aug 2023 15:10:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236027AbjHHTUl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 15:20:41 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F210510817A;
-        Tue,  8 Aug 2023 09:44:02 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        with ESMTP id S233379AbjHHTKH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 15:10:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAF9532988
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 09:31:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 32CD41F381;
-        Tue,  8 Aug 2023 09:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1691487422; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+dwojIKMsZIfKNojdAYP/LpuQmw+6rqqzdeGXh9OKdQ=;
-        b=xNkmZedHCH4JfPl5aI/7jFcoHvCmU2Ei7iO7owXcuJIhPHMXaR9JIDbudRkrv+OpRvBT78
-        QcY9S7zG3KilNTQJsdlbMzoPhbFYNRjSDo58qiEL/KKnRHAz06+KLjpoPEh0KdB8jKpl0d
-        Paghc7ScJ479EYrBJsHB5zKlYU4EE1o=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1691487422;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=+dwojIKMsZIfKNojdAYP/LpuQmw+6rqqzdeGXh9OKdQ=;
-        b=C9mvCUPaAa2cOnSGsmSgpsXVt5ts05YWI0vruOwxYGEk08U30pxAruMbAfjG0JtSrXhSu+
-        h+OsL5aeMUqW5DAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1E00A13451;
-        Tue,  8 Aug 2023 09:37:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id JlhMB74M0mRkHQAAMHmgww
-        (envelope-from <jack@suse.cz>); Tue, 08 Aug 2023 09:37:02 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 9F88DA0769; Tue,  8 Aug 2023 11:37:01 +0200 (CEST)
-Date:   Tue, 8 Aug 2023 11:37:01 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Richard Weinberger <richard@nod.at>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, ntfs3@lists.linux.dev,
-        ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-mtd@lists.infradead.org, linux-mm@kvack.org,
-        linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 06/13] ubifs: have ubifs_update_time use
- inode_update_timestamps
-Message-ID: <20230808093701.ggyj7tyqonivl7tb@quack3>
-References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
- <20230807-mgctime-v7-6-d1dec143a704@kernel.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B53C9624E1
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 11:40:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97B0FC433C7;
+        Tue,  8 Aug 2023 11:40:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691494856;
+        bh=gsyMb/07N0eGMczPL9H6ej98QpY2XyejWHJmO/bHLx8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=QAputt6AntFmvJv9T2xveiltUkdqtMGh+Bcw3tLnKW0FuwBARxqPdMu8XBnlyJKzU
+         IXSdnjosrbh7t+kQSbXrBmzoDeTeJcS9lCF6Ucc8tz+seocgBe4IQrV53ianOTjCh8
+         okvV36BlyvLnBtb/7y6uNpKDf1hY2I6oCQ7Mnd4w4R5hOTbNlkMw55UVA1tkLD7b3r
+         6jOnf5nzSMGvJTK3W9xa8UZrckxriNqYLwrVNYXHrNsxfc1l1vVmrC6vemL4eGQZao
+         OMY4IiXDV8T/rE3CeGDzNzMWpj8aSzSkl6Y+tNcTv0lGmmCch18TM6Wq1fBeNbvB0+
+         UHUcUtF8Rc1/g==
+Message-ID: <c8933c2d806b9859a79957b5ceba12b3f4893596.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: reduce code duplication between
+ pool_stats_operations and nfsd_rpc_status_operations
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org
+Cc:     lorenzo.bianconi@redhat.com, chuck.lever@oracle.com, neilb@suse.de
+Date:   Tue, 08 Aug 2023 07:40:54 -0400
+In-Reply-To: <426191138f5801148a6f7df470ccb59d219452d6.1691481752.git.lorenzo@kernel.org>
+References: <426191138f5801148a6f7df470ccb59d219452d6.1691481752.git.lorenzo@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230807-mgctime-v7-6-d1dec143a704@kernel.org>
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_SOFTFAIL,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon 07-08-23 15:38:37, Jeff Layton wrote:
-> In later patches, we're going to drop the "now" parameter from the
-> update_time operation. Prepare ubifs for this, by having it use the new
-> inode_update_timestamps helper.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+On Tue, 2023-08-08 at 10:05 +0200, Lorenzo Bianconi wrote:
+> Introduce nfsd_stats_open utility routine in order to reduce code
+> duplication between pool_stats_operations and
+> nfsd_rpc_status_operations.
+> Rename nfsd_pool_stats_release in nfsd_stats_release.
+>=20
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> ---
+>  fs/nfsd/nfsctl.c |  4 ++--
+>  fs/nfsd/nfsd.h   |  2 +-
+>  fs/nfsd/nfssvc.c | 35 ++++++++++++++++++++---------------
+>  3 files changed, 23 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 6bf168b6a410..83eb5c6d894e 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -179,7 +179,7 @@ static const struct file_operations pool_stats_operat=
+ions =3D {
+>  	.open		=3D nfsd_pool_stats_open,
+>  	.read		=3D seq_read,
+>  	.llseek		=3D seq_lseek,
+> -	.release	=3D nfsd_pool_stats_release,
+> +	.release	=3D nfsd_stats_release,
+>  };
+> =20
+>  DEFINE_SHOW_ATTRIBUTE(nfsd_reply_cache_stats);
+> @@ -200,7 +200,7 @@ static const struct file_operations nfsd_rpc_status_o=
+perations =3D {
+>  	.open		=3D nfsd_rpc_status_open,
+>  	.read		=3D seq_read,
+>  	.llseek		=3D seq_lseek,
+> -	.release	=3D nfsd_pool_stats_release,
+> +	.release	=3D nfsd_stats_release,
+>  };
+> =20
+>  /*
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 38c390fb2cf9..3e8a47b93fd4 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -93,7 +93,7 @@ int		nfsd_nrpools(struct net *);
+>  int		nfsd_get_nrthreads(int n, int *, struct net *);
+>  int		nfsd_set_nrthreads(int n, int *, struct net *);
+>  int		nfsd_pool_stats_open(struct inode *, struct file *);
+> -int		nfsd_pool_stats_release(struct inode *, struct file *);
+> +int		nfsd_stats_release(struct inode *, struct file *);
+>  int		nfsd_rpc_status_open(struct inode *inode, struct file *file);
+>  void		nfsd_shutdown_threads(struct net *net);
+> =20
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 51a6f7a8d3f7..33ad91dd3a2d 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -1079,23 +1079,34 @@ bool nfssvc_encode_voidres(struct svc_rqst *rqstp=
+, struct xdr_stream *xdr)
+>  	return true;
+>  }
+> =20
+> -int nfsd_pool_stats_open(struct inode *inode, struct file *file)
+> +static int nfsd_stats_open(struct inode *inode)
+>  {
+> -	int ret;
+>  	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id=
+);
+> =20
+>  	mutex_lock(&nfsd_mutex);
+> -	if (nn->nfsd_serv =3D=3D NULL) {
+> +	if (!nn->nfsd_serv) {
+>  		mutex_unlock(&nfsd_mutex);
+>  		return -ENODEV;
+>  	}
+> +
+>  	svc_get(nn->nfsd_serv);
+> -	ret =3D svc_pool_stats_open(nn->nfsd_serv, file);
 
-One comment below:
+Note that svc_pool_stats_open used to be called under the nfsd_mutex and
+it won't be after this change. I think that's ok though since you hold a
+reference to the serv.
 
-> diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
-> index df9086b19cd0..2d0178922e19 100644
-> --- a/fs/ubifs/file.c
-> +++ b/fs/ubifs/file.c
-> @@ -1397,15 +1397,9 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
->  		return err;
->  
->  	mutex_lock(&ui->ui_mutex);
-> -	if (flags & S_ATIME)
-> -		inode->i_atime = *time;
-> -	if (flags & S_CTIME)
-> -		inode_set_ctime_to_ts(inode, *time);
-> -	if (flags & S_MTIME)
-> -		inode->i_mtime = *time;
+>  	mutex_unlock(&nfsd_mutex);
+> -	return ret;
+> +
+> +	return 0;
+>  }
+> =20
+> -int nfsd_pool_stats_release(struct inode *inode, struct file *file)
+> +int nfsd_pool_stats_open(struct inode *inode, struct file *file)
+> +{
+> +	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id=
+);
+> +	int ret =3D nfsd_stats_open(inode);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	return svc_pool_stats_open(nn->nfsd_serv, file);
+> +}
+> +
+> +int nfsd_stats_release(struct inode *inode, struct file *file)
+>  {
+>  	int ret =3D seq_release(inode, file);
+>  	struct net *net =3D inode->i_sb->s_fs_info;
+> @@ -1217,16 +1228,10 @@ static int nfsd_rpc_status_show(struct seq_file *=
+m, void *v)
+>   */
+>  int nfsd_rpc_status_open(struct inode *inode, struct file *file)
+>  {
+> -	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id=
+);
+> +	int ret =3D nfsd_stats_open(inode);
+> =20
+> -	mutex_lock(&nfsd_mutex);
+> -	if (!nn->nfsd_serv) {
+> -		mutex_unlock(&nfsd_mutex);
+> -		return -ENODEV;
+> -	}
 > -
-> -	release = ui->dirty;
-> +	inode_update_timestamps(inode, flags);
->  	__mark_inode_dirty(inode, I_DIRTY_SYNC);
-> +	release = ui->dirty;
->  	mutex_unlock(&ui->ui_mutex);
+> -	svc_get(nn->nfsd_serv);
+> -	mutex_unlock(&nfsd_mutex);
+> +	if (ret)
+> +		return ret;
+> =20
+>  	return single_open(file, nfsd_rpc_status_show, inode->i_private);
+>  }
 
-I think this is wrong. You need to keep sampling ui->dirty before calling
-__mark_inode_dirty(). Otherwise you could release budget for inode update
-you really need...
+Meh. I'm not sure this change is really worth it, but it seems to be
+correct.
 
->  	if (release)
->  		ubifs_release_budget(c, &req);
-
-									Honza
-
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
