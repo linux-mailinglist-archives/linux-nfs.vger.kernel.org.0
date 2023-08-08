@@ -2,62 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 720A3774048
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 19:01:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5085A77423D
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 19:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233961AbjHHRBk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Aug 2023 13:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49682 "EHLO
+        id S230101AbjHHRhu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Aug 2023 13:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233736AbjHHRBB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 13:01:01 -0400
+        with ESMTP id S234995AbjHHRhP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 13:37:15 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A90B8682;
-        Tue,  8 Aug 2023 09:00:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434C76CC9
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 09:16:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 575C462544;
-        Tue,  8 Aug 2023 13:32:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31B3AC433C8;
-        Tue,  8 Aug 2023 13:32:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3EB3862576
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 13:48:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29424C433C7;
+        Tue,  8 Aug 2023 13:48:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691501527;
-        bh=xTIkYrBHz5+6SzO4pB3IGPq/HC4uBhzgU7+be7OH9VU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dZpEWm+PTm9uFdGmOoy5ygSH3XOPg6Y5ZyF0Ulu0M0HE1hTyuXrVvdG9f3BOamM/W
-         3m8sLzVajCx1eYX5lZ3b30+sYKYXM3u0ewDW4+nd1xPBNtK65Jo8h2yyJ+inwyMHGs
-         w2WK+YR84CUHGvViczIvWnkEgwBIt6jA9UIpd40G6jrmvqJVOK9KewB009NnSwZCHe
-         FuqGamjpS7LjpwZz+GvSUYyUZWQ2PfS5KwB+UQ3reJTzCdmZf4c/JSvS6NM2uliol5
-         LUwdEFraQwdTOXt7nGBplT/LAucUY6qUfKgCd/hdf4oAwdV56AZjsHCGIqFzd81wlg
-         GdbWrpF/FvN3g==
-Date:   Tue, 8 Aug 2023 15:31:56 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        David Howells <dhowells@redhat.com>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: Re: [PATCH v9] vfs, security: Fix automount superblock LSM init
- problem, preventing NFS sb sharing
-Message-ID: <20230808-erdaushub-sanieren-2bd8d7e0a286@brauner>
-References: <20230808-master-v9-1-e0ecde888221@kernel.org>
+        s=k20201202; t=1691502524;
+        bh=IU+B8Une8eBp3/2eUVrZhqhdlYmULO6+tMNPdj+G4Tk=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=DRZdhOHl3EpYp2pn1lu0t3lGzYGqWO27KMDTfgBQkWqcg2v/PFG7LTBhCjor/MNs2
+         0cG9TietG++qgMzGkcCYYm9SXvSv+2c1tZGGBOg1Ctbkr4t4/jSB5DRKgcKbZRwazS
+         e0MVkq7zby/xuE6ym1p+nHtUJavxHmWJra5E2eL0JNqGvecVPhkxv89+b1V4XpiBtO
+         dZh9QzBlmCg00s222T83HP3P+0QVS44LIuyTpaaBfipaJy5u1K0sLq2C3FrQTP7SKf
+         RXHYLuSQN4ufOSmmX0U4mUaMOnljiO1oa1sAIDMfG8stVKlwukL+T1GUXa6onNaTuC
+         vYj9dUhn1A6hQ==
+Message-ID: <ea598236b2da9f1aa9b587ca797afaa9de5545c7.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: add version field to nfsd_rpc_status_show handler
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@suse.de>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
+        lorenzo.bianconi@redhat.com
+Date:   Tue, 08 Aug 2023 09:48:42 -0400
+In-Reply-To: <ZNJCIRjI64YIY+I0@tissot.1015granger.net>
+References: <6431d0ea2295a1e128f83cd76a419dee161e4c44.1691482815.git.lorenzo@kernel.org>
+         <169149440399.32308.1010201101079709026@noble.neil.brown.name>
+         <ZNJCIRjI64YIY+I0@tissot.1015granger.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230808-master-v9-1-e0ecde888221@kernel.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -68,70 +57,114 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Aug 08, 2023 at 07:34:20AM -0400, Jeff Layton wrote:
-> From: David Howells <dhowells@redhat.com>
-> 
-> When NFS superblocks are created by automounting, their LSM parameters
-> aren't set in the fs_context struct prior to sget_fc() being called,
-> leading to failure to match existing superblocks.
-> 
-> This bug leads to messages like the following appearing in dmesg when
-> fscache is enabled:
-> 
->     NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,100000,100000,2ee,3a98,1d4c,3a98,1)
-> 
-> Fix this by adding a new LSM hook to load fc->security for submount
-> creation.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount() to it.")
-> Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
-> Tested-by: Jeff Layton <jlayton@kernel.org>
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Acked-by: Casey Schaufler <casey@schaufler-ca.com>
-> Acked-by: "Christian Brauner (Microsoft)" <brauner@kernel.org>
-> Link: https://lore.kernel.org/r/165962680944.3334508.6610023900349142034.stgit@warthog.procyon.org.uk/ # v1
-> Link: https://lore.kernel.org/r/165962729225.3357250.14350728846471527137.stgit@warthog.procyon.org.uk/ # v2
-> Link: https://lore.kernel.org/r/165970659095.2812394.6868894171102318796.stgit@warthog.procyon.org.uk/ # v3
-> Link: https://lore.kernel.org/r/166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk/ # v4
-> Link: https://lore.kernel.org/r/217595.1662033775@warthog.procyon.org.uk/ # v5
-> ---
-> ver #2)
-> - Added Smack support
-> - Made LSM parameter extraction dependent on reference != NULL.
-> 
-> ver #3)
-> - Made LSM parameter extraction dependent on fc->purpose ==
->    FS_CONTEXT_FOR_SUBMOUNT.  Shouldn't happen on FOR_RECONFIGURE.
-> 
-> ver #4)
-> - When doing a FOR_SUBMOUNT mount, don't set the root label in SELinux or Smack.
-> 
-> ver #5)
-> - Removed unused variable.
-> - Only allocate smack_mnt_opts if we're dealing with a submount.
-> 
-> ver #6)
-> - Rebase onto v6.5.0-rc4
-> - Link to v6: https://lore.kernel.org/r/20230802-master-v6-1-45d48299168b@kernel.org
-> 
-> ver #7)
-> - Drop lsm_set boolean
-> - Link to v7: https://lore.kernel.org/r/20230804-master-v7-1-5d4e48407298@kernel.org
-> 
-> ver #8)
-> - Remove spurious semicolon in smack_fs_context_init
-> - Make fs_context_init take a superblock as reference instead of dentry
-> - WARN_ON_ONCE's when fc->purpose != FS_CONTEXT_FOR_SUBMOUNT
-> - Call the security hook from fs_context_for_submount instead of alloc_fs_context
-> - Link to v8: https://lore.kernel.org/r/20230807-master-v8-1-54e249595f10@kernel.org
-> 
-> ver #9)
-> - rename *_fs_context_init to *_fs_context_submount
-> - remove checks for FS_CONTEXT_FOR_SUBMOUNT and NULL reference pointers
-> - fix prototype on smack_fs_context_submount
+On Tue, 2023-08-08 at 09:24 -0400, Chuck Lever wrote:
+> On Tue, Aug 08, 2023 at 09:33:23PM +1000, NeilBrown wrote:
+> > On Tue, 08 Aug 2023, Lorenzo Bianconi wrote:
+> > > Introduce version field to nfsd_rpc_status handler in order to help
+> > > the user to maintain backward compatibility.
+> >=20
+> > I wonder if this really helps.  What do I do if I see a version that I
+> > don't understand?  Ignore the whole file?  That doesn't make for a good
+> > user experience.
+>=20
+> There is no UX consideration here. A user browsing the file directly
+> will not care about the version.
+>=20
+> This file is intended to be parsable by scripts and they have to
+> keep up with the occasional changes in format. Scripts can handle an
+> unrecogized version however they like.
+>=20
+> This is what we typically get with a made-up format that isn't .ini
+> or JSON or XML. The file format isn't self-documenting. The final
+> field on each row is a variable number of tokens, so it will be
+> nearly impossible to simply add another field without breaking
+> something.
+>=20
 
-Thanks, this looks good from my perspective. If it looks fine to LSM
-folks as well I can put it with the rest of the super work for this
-cycle or it can go through the LSM tree.
+It shouldn't be a variable number of tokens per line. If there is, then
+that's a bug, IMO. We do want it to be simple to just add a new field,
+published version info notwithstanding.
+
+>=20
+> > I would suggest that the first step to promoting compatibility is to
+> > document the format, including how you expect to extend it.
+>=20
+> I'd be OK with seeing that documentation added as a kdoc comment for
+> nfsd_rpc_status_show(), sure.
+>=20
+>=20
+> > Jeff's
+> > suggestion of a header line with field names makes a lot of sense for a
+> > file with space-separated fields like this.  You should probably promis=
+e
+> > not to remove fields, but to deprecate fields by replacing them with "X=
+"
+> > or whatever.
+> >=20
+> > A tool really needs to be able to extract anything it can understand,
+> > and know how to avoid what it doesn't understand.  A version number
+> > doesn't help with that.
+>=20
+> It's how mountstats format changes are managed. We have bumped that
+> version number over the years, so there is precedent for it.
+>=20
+>=20
+> > And if you really wanted to change the format so much that old tools
+> > cannot use any of the content, it would likely make most sense to chang=
+e
+> > the name of the file...  or have two files - legacy file with old name
+> > and new-improved file with new name.
+> >=20
+> > So I'm not keen on a version number.
+>=20
+> I'm a little surprised to get push-back on "# version" but OK, we
+> can drop that idea in favor of a comment line in rpc_status that
+> acts as a header row, just like in /proc/fs/nfsd/pool_stats.
+> Scripts can treat that header as format version information.
+>=20
+>=20
+> > Thanks,
+> > NeilBrown
+> >=20
+> >=20
+> > >=20
+> > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> > > ---
+> > >  fs/nfsd/nfssvc.c | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >=20
+> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > > index 33ad91dd3a2d..6d5feeeb09a7 100644
+> > > --- a/fs/nfsd/nfssvc.c
+> > > +++ b/fs/nfsd/nfssvc.c
+> > > @@ -1117,6 +1117,9 @@ int nfsd_stats_release(struct inode *inode, str=
+uct file *file)
+> > >  	return ret;
+> > >  }
+> > > =20
+> > > +/* Increment NFSD_RPC_STATUS_VERSION adding new info to the handler =
+*/
+> > > +#define NFSD_RPC_STATUS_VERSION		1
+> > > +
+> > >  static int nfsd_rpc_status_show(struct seq_file *m, void *v)
+> > >  {
+> > >  	struct inode *inode =3D file_inode(m->file);
+> > > @@ -1125,6 +1128,8 @@ static int nfsd_rpc_status_show(struct seq_file=
+ *m, void *v)
+> > > =20
+> > >  	rcu_read_lock();
+> > > =20
+> > > +	seq_printf(m, "# version %u\n", NFSD_RPC_STATUS_VERSION);
+> > > +
+> > >  	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+> > >  		struct svc_rqst *rqstp;
+> > > =20
+> > > --=20
+> > > 2.41.0
+> > >=20
+> > >=20
+> >=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
