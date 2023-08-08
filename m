@@ -2,270 +2,371 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC9EA774952
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 21:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADBC477457A
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Aug 2023 20:42:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233785AbjHHTvs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Aug 2023 15:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
+        id S233931AbjHHSmk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Aug 2023 14:42:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230112AbjHHTv2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 15:51:28 -0400
-Received: from mail-oo1-xc35.google.com (mail-oo1-xc35.google.com [IPv6:2607:f8b0:4864:20::c35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C74D550E1
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Aug 2023 09:57:02 -0700 (PDT)
-Received: by mail-oo1-xc35.google.com with SMTP id 006d021491bc7-56cae50792fso612770eaf.1
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Aug 2023 09:57:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1691513821; x=1692118621;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=if5VWB18nVWwRp6UCb6aPEiH47g9I/o9CGJnGCggs6I=;
-        b=GqhG311Z9Hh6hICynY8VVi8Zn9hhJkwrDUday3E/VDvWW7FAelXFBKsMdZP8Y8xRZU
-         l527yewt9MclEEkKBK0ctFMKkGwRg9fGD/HFIr74VzcQSKj8W+yGeqVFkJmRzLABk49e
-         cuC+oVHn3pCoKHUv9058mCTnPOu04gzFBd1oqM+jcrs8OV91kxJ7pjT1Vtn/e45+tD3Y
-         HMI6kxMM3GUJJlFYQdRjK4b0YTka1fii69JPgwzSiwlw4pfhGS1azbFusOOr7BpPei1L
-         9Z60HMZWdlznsSsBjaC/Doimk1JJS0EF74S8ooYkBHLLZ7modWKZLtQN/1OS95csQxUL
-         YiYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691513821; x=1692118621;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=if5VWB18nVWwRp6UCb6aPEiH47g9I/o9CGJnGCggs6I=;
-        b=YdGoRgYC9bDyRTYdOsHwlQ92bLvUqPI2iKcecGPXyFdMwH/hpnJ2INtU1uYquk3N4r
-         T0gdVaXJ71aVRhbnlR+PwWiRhCHzWMpbbWpSSwybnkhfz1l/GF4GE4xiDG7czYUG+SM2
-         gKmbBadB7NlL7CkPmo/0In1U4k0EtOHtQsSZ9yv6X7pWxA/2NuLKXkoH4WwZl0vWO8C/
-         TtfN9PTrl3E7yzFztYP0dtsXZECBa29XVWLuUjzkD5QcGx7gSfshVS4ZpYFM3vxK0r4L
-         pYnu5o4J8bKJfO0OiWSBVzZ+/gwf6HVeZF9tO0D9cOn4IOuMq4HbwnLBnb5EfPewgibC
-         +CkQ==
-X-Gm-Message-State: AOJu0Yy5hTz8nmz3d/psnTwhc6GlCFhrzZ2h/LJldJo0Dpqblz+nC+wD
-        QyleUUWrD5ZlYZejSXt8Fb7VybcDUKs7XswwYIE=
-X-Google-Smtp-Source: AGHT+IGrIAD/R1XG8iT7hZdid4m31qfruz9y309af9L0+sAELwy0z1r+YzLKvbiH8nyqlY1j6mrYWw==
-X-Received: by 2002:a92:2802:0:b0:349:7518:4877 with SMTP id l2-20020a922802000000b0034975184877mr3215795ilf.0.1691479385787;
-        Tue, 08 Aug 2023 00:23:05 -0700 (PDT)
-Received: from [10.70.252.135] ([203.208.167.146])
-        by smtp.gmail.com with ESMTPSA id s15-20020a63af4f000000b00564ca424f79sm4948391pgo.48.2023.08.08.00.22.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Aug 2023 00:23:05 -0700 (PDT)
-Message-ID: <0fdb926c-0d61-d81f-1a52-4ef634b51804@bytedance.com>
-Date:   Tue, 8 Aug 2023 15:22:51 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-Subject: Re: [PATCH v4 45/48] mm: shrinker: make global slab shrink lockless
-Content-Language: en-US
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     akpm@linux-foundation.org, tkhai@ya.ru, vbabka@suse.cz,
-        roman.gushchin@linux.dev, djwong@kernel.org, brauner@kernel.org,
-        paulmck@kernel.org, tytso@mit.edu, steven.price@arm.com,
-        cel@kernel.org, senozhatsky@chromium.org, yujie.liu@intel.com,
-        gregkh@linuxfoundation.org, muchun.song@linux.dev,
-        simon.horman@corigine.com, dlemoal@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        kvm@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-erofs@lists.ozlabs.org,
+        with ESMTP id S231990AbjHHSmT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Aug 2023 14:42:19 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2985BDE9ED;
+        Tue,  8 Aug 2023 09:33:07 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 0187B22484;
+        Tue,  8 Aug 2023 09:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1691486712; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1DEnEiKO284zxT4/+fvA4uuffbMofkDORo642+Wc/io=;
+        b=ix372cs3mbIkTWg1MsYpwEmHKxymfpU2fRqMoB3bdsY5L5+d88wTzMILXUNjN2Hey8brqp
+        /zdSMsRPF0pQ9mO8VTms56EAKaxrkXcWWBEAdzVrBPrId8dDBBUjH8L2jH5yiaPdY8XiST
+        M7jwu5Zs1qGSi0jn9fW7GgGyREZQvck=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1691486712;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1DEnEiKO284zxT4/+fvA4uuffbMofkDORo642+Wc/io=;
+        b=nz47GajxRXd1Kr3p+NB1XcBjrQKYlyuj0q3UvQcQR7hQOVOIMR3ZkrS9KehXlRYW0RhdS3
+        rOQzce0ROF9jIWAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DE500139E9;
+        Tue,  8 Aug 2023 09:25:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id KHTeNfcJ0mSOFwAAMHmgww
+        (envelope-from <jack@suse.cz>); Tue, 08 Aug 2023 09:25:11 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 5F488A0769; Tue,  8 Aug 2023 11:25:11 +0200 (CEST)
+Date:   Tue, 8 Aug 2023 11:25:11 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Steve French <sfrench@samba.org>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Richard Weinberger <richard@nod.at>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
         linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        rcu@vger.kernel.org, netdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        dm-devel@redhat.com, linux-raid@vger.kernel.org,
-        linux-bcache@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
-References: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
- <20230807110936.21819-46-zhengqi.arch@bytedance.com>
- <ZNGnSbiPN0lDLpSW@dread.disaster.area>
-From:   Qi Zheng <zhengqi.arch@bytedance.com>
-In-Reply-To: <ZNGnSbiPN0lDLpSW@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        linux-nfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-mtd@lists.infradead.org, linux-mm@kvack.org,
+        linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v7 03/13] fs: drop the timespec64 arg from
+ generic_update_time
+Message-ID: <20230808092511.jh4lxer2dztdajpo@quack3>
+References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
+ <20230807-mgctime-v7-3-d1dec143a704@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807-mgctime-v7-3-d1dec143a704@kernel.org>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_SOFTFAIL,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Dave,
-
-On 2023/8/8 10:24, Dave Chinner wrote:
-> On Mon, Aug 07, 2023 at 07:09:33PM +0800, Qi Zheng wrote:
->> diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
->> index eb342994675a..f06225f18531 100644
->> --- a/include/linux/shrinker.h
->> +++ b/include/linux/shrinker.h
->> @@ -4,6 +4,8 @@
->>   
->>   #include <linux/atomic.h>
->>   #include <linux/types.h>
->> +#include <linux/refcount.h>
->> +#include <linux/completion.h>
->>   
->>   #define SHRINKER_UNIT_BITS	BITS_PER_LONG
->>   
->> @@ -87,6 +89,10 @@ struct shrinker {
->>   	int seeks;	/* seeks to recreate an obj */
->>   	unsigned flags;
->>   
->> +	refcount_t refcount;
->> +	struct completion done;
->> +	struct rcu_head rcu;
+On Mon 07-08-23 15:38:34, Jeff Layton wrote:
+> In future patches we're going to change how the ctime is updated
+> to keep track of when it has been queried. The way that the update_time
+> operation works (and a lot of its callers) make this difficult, since
+> they grab a timestamp early and then pass it down to eventually be
+> copied into the inode.
 > 
-> Documentation, please. What does the refcount protect, what does the
-> completion provide, etc.
-
-How about the following:
-
-	/*
-	 * reference count of this shrinker, holding this can guarantee
-	 * that the shrinker will not be released.
-	 */
-	refcount_t refcount;
-	/*
-	 * Wait for shrinker::refcount to reach 0, that is, no shrinker
-	 * is running or will run again.
-	 */
-	struct completion done;
-
+> All of the existing update_time callers pass in the result of
+> current_time() in some fashion. Drop the "time" parameter from
+> generic_update_time, and rework it to fetch its own timestamp.
 > 
->> +
->>   	void *private_data;
->>   
->>   	/* These are for internal use */
->> @@ -120,6 +126,17 @@ struct shrinker *shrinker_alloc(unsigned int flags, const char *fmt, ...);
->>   void shrinker_register(struct shrinker *shrinker);
->>   void shrinker_free(struct shrinker *shrinker);
->>   
->> +static inline bool shrinker_try_get(struct shrinker *shrinker)
->> +{
->> +	return refcount_inc_not_zero(&shrinker->refcount);
->> +}
->> +
->> +static inline void shrinker_put(struct shrinker *shrinker)
->> +{
->> +	if (refcount_dec_and_test(&shrinker->refcount))
->> +		complete(&shrinker->done);
->> +}
->> +
->>   #ifdef CONFIG_SHRINKER_DEBUG
->>   extern int __printf(2, 3) shrinker_debugfs_rename(struct shrinker *shrinker,
->>   						  const char *fmt, ...);
->> diff --git a/mm/shrinker.c b/mm/shrinker.c
->> index 1911c06b8af5..d318f5621862 100644
->> --- a/mm/shrinker.c
->> +++ b/mm/shrinker.c
->> @@ -2,6 +2,7 @@
->>   #include <linux/memcontrol.h>
->>   #include <linux/rwsem.h>
->>   #include <linux/shrinker.h>
->> +#include <linux/rculist.h>
->>   #include <trace/events/vmscan.h>
->>   
->>   #include "internal.h"
->> @@ -577,33 +578,42 @@ unsigned long shrink_slab(gfp_t gfp_mask, int nid, struct mem_cgroup *memcg,
->>   	if (!mem_cgroup_disabled() && !mem_cgroup_is_root(memcg))
->>   		return shrink_slab_memcg(gfp_mask, nid, memcg, priority);
->>   
->> -	if (!down_read_trylock(&shrinker_rwsem))
->> -		goto out;
->> -
->> -	list_for_each_entry(shrinker, &shrinker_list, list) {
->> +	rcu_read_lock();
->> +	list_for_each_entry_rcu(shrinker, &shrinker_list, list) {
->>   		struct shrink_control sc = {
->>   			.gfp_mask = gfp_mask,
->>   			.nid = nid,
->>   			.memcg = memcg,
->>   		};
->>   
->> +		if (!shrinker_try_get(shrinker))
->> +			continue;
->> +
->> +		/*
->> +		 * We can safely unlock the RCU lock here since we already
->> +		 * hold the refcount of the shrinker.
->> +		 */
->> +		rcu_read_unlock();
->> +
->>   		ret = do_shrink_slab(&sc, shrinker, priority);
->>   		if (ret == SHRINK_EMPTY)
->>   			ret = 0;
->>   		freed += ret;
->> +
->>   		/*
->> -		 * Bail out if someone want to register a new shrinker to
->> -		 * prevent the registration from being stalled for long periods
->> -		 * by parallel ongoing shrinking.
->> +		 * This shrinker may be deleted from shrinker_list and freed
->> +		 * after the shrinker_put() below, but this shrinker is still
->> +		 * used for the next traversal. So it is necessary to hold the
->> +		 * RCU lock first to prevent this shrinker from being freed,
->> +		 * which also ensures that the next shrinker that is traversed
->> +		 * will not be freed (even if it is deleted from shrinker_list
->> +		 * at the same time).
->>   		 */
+> This change means that an update_time could fetch a different timestamp
+> than was seen in inode_needs_update_time. update_time is only ever
+> called with one of two flag combinations: Either S_ATIME is set, or
+> S_MTIME|S_CTIME|S_VERSION are set.
 > 
-> This needs to be moved to the head of the function, and document
-> the whole list walk, get, put and completion parts of the algorithm
-> that make it safe. There's more to this than "we hold a reference
-> count", especially the tricky "we might see the shrinker before it
-> is fully initialised" case....
-
-How about moving these documents to before list_for_each_entry_rcu(),
-and then go to the head of shrink_slab_memcg() to explain the memcg
-slab shrink case.
-
+> With this change we now treat the flags argument as an indicator that
+> some value needed to be updated when last checked, rather than an
+> indication to update specific timestamps.
 > 
+> Rework the logic for updating the timestamps and put it in a new
+> inode_update_timestamps helper that other update_time routines can use.
+> S_ATIME is as treated as we always have, but if any of the other three
+> are set, then we attempt to update all three.
 > 
-> .....
->>   void shrinker_free(struct shrinker *shrinker)
->>   {
->>   	struct dentry *debugfs_entry = NULL;
->> @@ -686,9 +712,18 @@ void shrinker_free(struct shrinker *shrinker)
->>   	if (!shrinker)
->>   		return;
->>   
->> +	if (shrinker->flags & SHRINKER_REGISTERED) {
->> +		shrinker_put(shrinker);
->> +		wait_for_completion(&shrinker->done);
->> +	}
+> Also, some callers of generic_update_time need to know what timestamps
+> were actually updated. Change it to return an S_* flag mask to indicate
+> that and rework the callers to expect it.
 > 
-> Needs a comment explaining why we need to wait here...
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-/*
-  * Wait for all lookups of the shrinker to complete, after that, no
-  * shrinker is running or will run again, then we can safely free
-  * the structure where the shrinker is located, such as super_block
-  * etc.
-  */
+Looks good to me. Feel free to add:
 
->> +
->>   	down_write(&shrinker_rwsem);
->>   	if (shrinker->flags & SHRINKER_REGISTERED) {
->> -		list_del(&shrinker->list);
->> +		/*
->> +		 * Lookups on the shrinker are over and will fail in the future,
->> +		 * so we can now remove it from the lists and free it.
->> +		 */
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/gfs2/inode.c     |  3 +-
+>  fs/inode.c          | 84 +++++++++++++++++++++++++++++++++++++++++------------
+>  fs/orangefs/inode.c |  3 +-
+>  fs/ubifs/file.c     |  6 ++--
+>  fs/xfs/xfs_iops.c   |  6 ++--
+>  include/linux/fs.h  |  3 +-
+>  6 files changed, 80 insertions(+), 25 deletions(-)
 > 
-> .... rather than here after the wait has been done and provided the
-> guarantee that no shrinker is running or will run again...
-
-With the above comment, how about simplifying the comment here to the
-following:
-
-/*
-  * Now we can safely remove it from the shrinker_list and free it.
-  */
-
-Thanks,
-Qi
-
+> diff --git a/fs/gfs2/inode.c b/fs/gfs2/inode.c
+> index 200cabf3b393..f1f04557aa21 100644
+> --- a/fs/gfs2/inode.c
+> +++ b/fs/gfs2/inode.c
+> @@ -2155,7 +2155,8 @@ static int gfs2_update_time(struct inode *inode, struct timespec64 *time,
+>  		if (error)
+>  			return error;
+>  	}
+> -	return generic_update_time(inode, time, flags);
+> +	generic_update_time(inode, flags);
+> +	return 0;
+>  }
+>  
+>  static const struct inode_operations gfs2_file_iops = {
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 3fc251bfaf73..e07e45f6cd01 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1881,29 +1881,76 @@ static int relatime_need_update(struct vfsmount *mnt, struct inode *inode,
+>  	return 0;
+>  }
+>  
+> -int generic_update_time(struct inode *inode, struct timespec64 *time, int flags)
+> +/**
+> + * inode_update_timestamps - update the timestamps on the inode
+> + * @inode: inode to be updated
+> + * @flags: S_* flags that needed to be updated
+> + *
+> + * The update_time function is called when an inode's timestamps need to be
+> + * updated for a read or write operation. This function handles updating the
+> + * actual timestamps. It's up to the caller to ensure that the inode is marked
+> + * dirty appropriately.
+> + *
+> + * In the case where any of S_MTIME, S_CTIME, or S_VERSION need to be updated,
+> + * attempt to update all three of them. S_ATIME updates can be handled
+> + * independently of the rest.
+> + *
+> + * Returns a set of S_* flags indicating which values changed.
+> + */
+> +int inode_update_timestamps(struct inode *inode, int flags)
+>  {
+> -	int dirty_flags = 0;
+> +	int updated = 0;
+> +	struct timespec64 now;
+> +
+> +	if (flags & (S_MTIME|S_CTIME|S_VERSION)) {
+> +		struct timespec64 ctime = inode_get_ctime(inode);
+>  
+> -	if (flags & (S_ATIME | S_CTIME | S_MTIME)) {
+> -		if (flags & S_ATIME)
+> -			inode->i_atime = *time;
+> -		if (flags & S_CTIME)
+> -			inode_set_ctime_to_ts(inode, *time);
+> -		if (flags & S_MTIME)
+> -			inode->i_mtime = *time;
+> -
+> -		if (inode->i_sb->s_flags & SB_LAZYTIME)
+> -			dirty_flags |= I_DIRTY_TIME;
+> -		else
+> -			dirty_flags |= I_DIRTY_SYNC;
+> +		now = inode_set_ctime_current(inode);
+> +		if (!timespec64_equal(&now, &ctime))
+> +			updated |= S_CTIME;
+> +		if (!timespec64_equal(&now, &inode->i_mtime)) {
+> +			inode->i_mtime = now;
+> +			updated |= S_MTIME;
+> +		}
+> +		if (IS_I_VERSION(inode) && inode_maybe_inc_iversion(inode, updated))
+> +			updated |= S_VERSION;
+> +	} else {
+> +		now = current_time(inode);
+>  	}
+>  
+> -	if ((flags & S_VERSION) && inode_maybe_inc_iversion(inode, false))
+> -		dirty_flags |= I_DIRTY_SYNC;
+> +	if (flags & S_ATIME) {
+> +		if (!timespec64_equal(&now, &inode->i_atime)) {
+> +			inode->i_atime = now;
+> +			updated |= S_ATIME;
+> +		}
+> +	}
+> +	return updated;
+> +}
+> +EXPORT_SYMBOL(inode_update_timestamps);
+> +
+> +/**
+> + * generic_update_time - update the timestamps on the inode
+> + * @inode: inode to be updated
+> + * @flags: S_* flags that needed to be updated
+> + *
+> + * The update_time function is called when an inode's timestamps need to be
+> + * updated for a read or write operation. In the case where any of S_MTIME, S_CTIME,
+> + * or S_VERSION need to be updated we attempt to update all three of them. S_ATIME
+> + * updates can be handled done independently of the rest.
+> + *
+> + * Returns a S_* mask indicating which fields were updated.
+> + */
+> +int generic_update_time(struct inode *inode, int flags)
+> +{
+> +	int updated = inode_update_timestamps(inode, flags);
+> +	int dirty_flags = 0;
+>  
+> +	if (updated & (S_ATIME|S_MTIME|S_CTIME))
+> +		dirty_flags = inode->i_sb->s_flags & SB_LAZYTIME ? I_DIRTY_TIME : I_DIRTY_SYNC;
+> +	if (updated & S_VERSION)
+> +		dirty_flags |= I_DIRTY_SYNC;
+>  	__mark_inode_dirty(inode, dirty_flags);
+> -	return 0;
+> +	return updated;
+>  }
+>  EXPORT_SYMBOL(generic_update_time);
+>  
+> @@ -1915,7 +1962,8 @@ int inode_update_time(struct inode *inode, struct timespec64 *time, int flags)
+>  {
+>  	if (inode->i_op->update_time)
+>  		return inode->i_op->update_time(inode, time, flags);
+> -	return generic_update_time(inode, time, flags);
+> +	generic_update_time(inode, flags);
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL(inode_update_time);
+>  
+> diff --git a/fs/orangefs/inode.c b/fs/orangefs/inode.c
+> index a52c30e80f45..3afa2a69bc63 100644
+> --- a/fs/orangefs/inode.c
+> +++ b/fs/orangefs/inode.c
+> @@ -903,9 +903,10 @@ int orangefs_permission(struct mnt_idmap *idmap,
+>  int orangefs_update_time(struct inode *inode, struct timespec64 *time, int flags)
+>  {
+>  	struct iattr iattr;
+> +
+>  	gossip_debug(GOSSIP_INODE_DEBUG, "orangefs_update_time: %pU\n",
+>  	    get_khandle_from_ino(inode));
+> -	generic_update_time(inode, time, flags);
+> +	flags = generic_update_time(inode, flags);
+>  	memset(&iattr, 0, sizeof iattr);
+>          if (flags & S_ATIME)
+>  		iattr.ia_valid |= ATTR_ATIME;
+> diff --git a/fs/ubifs/file.c b/fs/ubifs/file.c
+> index 436b27d7c58f..df9086b19cd0 100644
+> --- a/fs/ubifs/file.c
+> +++ b/fs/ubifs/file.c
+> @@ -1387,8 +1387,10 @@ int ubifs_update_time(struct inode *inode, struct timespec64 *time,
+>  			.dirtied_ino_d = ALIGN(ui->data_len, 8) };
+>  	int err, release;
+>  
+> -	if (!IS_ENABLED(CONFIG_UBIFS_ATIME_SUPPORT))
+> -		return generic_update_time(inode, time, flags);
+> +	if (!IS_ENABLED(CONFIG_UBIFS_ATIME_SUPPORT)) {
+> +		generic_update_time(inode, flags);
+> +		return 0;
+> +	}
+>  
+>  	err = ubifs_budget_space(c, &req);
+>  	if (err)
+> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> index 3a9363953ef2..731f45391baa 100644
+> --- a/fs/xfs/xfs_iops.c
+> +++ b/fs/xfs/xfs_iops.c
+> @@ -1042,8 +1042,10 @@ xfs_vn_update_time(
+>  
+>  	if (inode->i_sb->s_flags & SB_LAZYTIME) {
+>  		if (!((flags & S_VERSION) &&
+> -		      inode_maybe_inc_iversion(inode, false)))
+> -			return generic_update_time(inode, now, flags);
+> +		      inode_maybe_inc_iversion(inode, false))) {
+> +			generic_update_time(inode, flags);
+> +			return 0;
+> +		}
+>  
+>  		/* Capture the iversion update that just occurred */
+>  		log_flags |= XFS_ILOG_CORE;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 85977cdeda94..bb3c2c4f871f 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2343,7 +2343,8 @@ extern int current_umask(void);
+>  
+>  extern void ihold(struct inode * inode);
+>  extern void iput(struct inode *);
+> -extern int generic_update_time(struct inode *, struct timespec64 *, int);
+> +int inode_update_timestamps(struct inode *inode, int flags);
+> +int generic_update_time(struct inode *, int);
+>  
+>  /* /sys/fs */
+>  extern struct kobject *fs_kobj;
 > 
-> -Dave.
+> -- 
+> 2.41.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
