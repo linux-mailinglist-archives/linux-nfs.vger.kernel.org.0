@@ -2,42 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 908A9776515
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Aug 2023 18:31:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E05B87766A5
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Aug 2023 19:44:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230382AbjHIQbD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Aug 2023 12:31:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
+        id S232971AbjHIRoW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Aug 2023 13:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229506AbjHIQbC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Aug 2023 12:31:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6C210F3;
-        Wed,  9 Aug 2023 09:31:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2950F63697;
-        Wed,  9 Aug 2023 16:31:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00FEDC433C8;
-        Wed,  9 Aug 2023 16:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691598660;
-        bh=Z7n9zJLdl712XVn1Py2iFtPG8LzL7lbCWNuqyD+/A3g=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UPQGy8NQtXAAQ4aU3XYZHYnotv5CJersRvEj3UxLTDTNa1yXwNRn0IJiEHo/bl0VP
-         UZsTGWxiaK4MtB7dfslKXsWsCHmiZVr63spdJLnJq8JDgcyekVH5Xc7NL7sGLhreu6
-         x15cmd+UhtlNWpehU4jYdveXB5k/7G4WPmTr0CQ6bDhyChBFc9/xsm+0Rn2qIx7rJs
-         G7MVuLgnF5bvQR49Ipq6cF6+TvuMnXYBCNHAg7UV972mLj2aJnJNB5RVRDI4hEyHex
-         /4cPUAWVkqpnS01ZlGmCOld61C8SWimdxp5ttui+xDqTyf2eAGc7ZrzDWG2FklGBAx
-         JNZznme+soZDw==
-Message-ID: <2cb998ff14ace352a9dd553e82cfa0aa92ec09ce.camel@kernel.org>
-Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
-From:   Jeff Layton <jlayton@kernel.org>
-To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Jan Kara <jack@suse.cz>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        with ESMTP id S229456AbjHIRoV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Aug 2023 13:44:21 -0400
+Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9377810D2;
+        Wed,  9 Aug 2023 10:44:19 -0700 (PDT)
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id B41832055FA5;
+        Thu, 10 Aug 2023 02:44:18 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379HiHKW223321
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Thu, 10 Aug 2023 02:44:18 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379HiHXo222009
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Thu, 10 Aug 2023 02:44:17 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.17.2/8.17.2/Submit) id 379HiApg221995;
+        Thu, 10 Aug 2023 02:44:10 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
         Christian Brauner <brauner@kernel.org>,
         Eric Van Hensbergen <ericvh@kernel.org>,
         Latchesar Ionkov <lucho@ionkov.net>,
@@ -55,7 +48,7 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Jeffle Xu <jefflexu@linux.alibaba.com>,
         Namjae Jeon <linkinjeon@kernel.org>,
         Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Jan Kara <jack@suse.com>, "Theodore Ts'o" <tytso@mit.edu>,
         Andreas Dilger <adilger.kernel@dilger.ca>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Miklos Szeredi <miklos@szeredi.hu>,
@@ -98,86 +91,78 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
         linux-mtd@lists.infradead.org, linux-mm@kvack.org,
         linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Date:   Wed, 09 Aug 2023 12:30:52 -0400
-In-Reply-To: <87v8do6y8q.fsf@mail.parknet.co.jp>
+Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
+In-Reply-To: <2cb998ff14ace352a9dd553e82cfa0aa92ec09ce.camel@kernel.org> (Jeff
+        Layton's message of "Wed, 09 Aug 2023 12:30:52 -0400")
 References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
-         <20230807-mgctime-v7-5-d1dec143a704@kernel.org>
-         <87msz08vc7.fsf@mail.parknet.co.jp>
-         <52bead1d6a33fec89944b96e2ec20d1ea8747a9a.camel@kernel.org>
-         <878rak8hia.fsf@mail.parknet.co.jp>
-         <20230809150041.452w7gucjmvjnvbg@quack3>
-         <87v8do6y8q.fsf@mail.parknet.co.jp>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        <20230807-mgctime-v7-5-d1dec143a704@kernel.org>
+        <87msz08vc7.fsf@mail.parknet.co.jp>
+        <52bead1d6a33fec89944b96e2ec20d1ea8747a9a.camel@kernel.org>
+        <878rak8hia.fsf@mail.parknet.co.jp>
+        <20230809150041.452w7gucjmvjnvbg@quack3>
+        <87v8do6y8q.fsf@mail.parknet.co.jp>
+        <2cb998ff14ace352a9dd553e82cfa0aa92ec09ce.camel@kernel.org>
+Date:   Thu, 10 Aug 2023 02:44:10 +0900
+Message-ID: <87leek6rh1.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2023-08-10 at 00:17 +0900, OGAWA Hirofumi wrote:
-> Jan Kara <jack@suse.cz> writes:
->=20
-> > Since you are talking past one another with Jeff let me chime in here :=
-). I
-> > think you are worried about this hunk:
->=20
-> Right.
+Jeff Layton <jlayton@kernel.org> writes:
+
+> On Thu, 2023-08-10 at 00:17 +0900, OGAWA Hirofumi wrote:
+>> Jan Kara <jack@suse.cz> writes:
+
+[...]
+
+> My mistake re: lazytime vs. relatime, but Jan is correct that this
+> shouldn't break anything there.
+
+Actually breaks ("break" means not corrupt fs, means it breaks lazytime
+optimization). It is just not always, but it should be always for some
+userspaces.
+
+> The logic in the revised generic_update_time is different because FAT is
+> is a bit strange. fat_update_time does extra truncation on the timestamp
+> that it is handed beyond what timestamp_truncate() does.
+> fat_truncate_time is called in many different places too, so I don't
+> feel comfortable making big changes to how that works.
 >
-> > -	if ((flags & S_VERSION) && inode_maybe_inc_iversion(inode, false))
-> > +	if ((flags & (S_VERSION|S_CTIME|S_MTIME)) && inode_maybe_inc_iversion=
-(inode, false))
-> >  		dirty_flags |=3D I_DIRTY_SYNC;
-> >=20
-> > which makes the 'flags' test pass even if we just modified ctime or mti=
-me.
-> > But do note the second part of the if - inode_maybe_inc_iversion() - so=
- we
-> > are going to mark the inode dirty with I_DIRTY_SYNC only if someone que=
-ried
-> > iversion since the last time we have incremented it.
-> >=20
-> > So this hunk is not really changing how inode is marked dirty, it only
-> > changes how often we check whether iversion needs increment and that sh=
-ould
-> > be fine (and desirable). Hence lazytime isn't really broken by this in =
-any
-> > way.
->=20
-> OK. However, then it doesn't explain what I asked. This is not same with
-> generic_update_time(), only FAT does.
+> In the case of generic_update_time, it calls inode_update_timestamps
+> which returns a mask that shows which timestamps got updated. It then
+> marks the dirty_flags appropriately for what was actually changed.
 >
-> If thinks it is right thing, why generic_update_time() doesn't? I said
-> first reply, this was from generic_update_time(). (Or I'm misreading
-> updated generic_update_time()?)
->=20
+> generic_update_time is used across many filesystems so we need to ensure
+> that it's OK to use even when multigrain timestamps are enabled. Those
+> haven't been enabled in FAT though, so I didn't bother, and left it to
+> dirtying the inode in the same way it was before, even though it now
+> fetches its own timestamps from the clock. Given the way that the mtime
+> and ctime are smooshed together in FAT, that seemed reasonable.
+>
+> Is there a particular case or flag combination you're concerned about
+> here?
 
-My mistake re: lazytime vs. relatime, but Jan is correct that this
-shouldn't break anything there.
+Yes. Because FAT has strange timestamps that different granularity on
+disk . This is why generic time truncation doesn't work for FAT.
 
-The logic in the revised generic_update_time is different because FAT is
-is a bit strange. fat_update_time does extra truncation on the timestamp
-that it is handed beyond what timestamp_truncate() does.
-fat_truncate_time is called in many different places too, so I don't
-feel comfortable making big changes to how that works.
+Well anyway, my concern is the only following part. In
+generic_update_time(), S_[CM]TIME are not the cause of I_DIRTY_SYNC if
+lazytime mode.
 
-In the case of generic_update_time, it calls inode_update_timestamps
-which returns a mask that shows which timestamps got updated. It then
-marks the dirty_flags appropriately for what was actually changed.
+-	if ((flags & S_VERSION) && inode_maybe_inc_iversion(inode, false))
++	if ((flags & (S_VERSION|S_CTIME|S_MTIME)) && inode_maybe_inc_iversion(inode, false))
+		dirty_flags |= I_DIRTY_SYNC;
 
-generic_update_time is used across many filesystems so we need to ensure
-that it's OK to use even when multigrain timestamps are enabled. Those
-haven't been enabled in FAT though, so I didn't bother, and left it to
-dirtying the inode in the same way it was before, even though it now
-fetches its own timestamps from the clock. Given the way that the mtime
-and ctime are smooshed together in FAT, that seemed reasonable.
+If reverted this part to check only S_VERSION, I'm fine.
 
-Is there a particular case or flag combination you're concerned about
-here?
---=20
-Jeff Layton <jlayton@kernel.org>
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
