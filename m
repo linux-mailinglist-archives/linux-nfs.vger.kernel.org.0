@@ -2,126 +2,182 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 02B807764CC
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Aug 2023 18:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 908A9776515
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Aug 2023 18:31:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbjHIQPc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Aug 2023 12:15:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58270 "EHLO
+        id S230382AbjHIQbD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Aug 2023 12:31:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbjHIQPb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Aug 2023 12:15:31 -0400
-Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1628E10D4
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Aug 2023 09:15:30 -0700 (PDT)
-Received: by mail-qk1-x72f.google.com with SMTP id af79cd13be357-7653bd3ff2fso3079985a.3
-        for <linux-nfs@vger.kernel.org>; Wed, 09 Aug 2023 09:15:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1691597729; x=1692202529;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=I3fttE8Ka5FbAuwos3r7+GvavRagrx9NXFQXtO4C8VM=;
-        b=drOZ6TCGfwObQp/c04AqPIZr6Tw/Uu//V6THTIqxuenN6Z47Pd4kVVzXg9hplexMsF
-         ZCrGxm2RzetA7I7cf95vrTcqKZoqAw10P/PYk733E2trSJONM+yj4uHZBQBOJCsrGlHM
-         WBNNxLRoPF1mG7zepYq4IEJgx2mVcAWgdB+YXgeYYjSG1E3jXrhYeh6gEz//B9lbXZDu
-         +WY2g5dEBwI/zbIm/DOwkrVv7jtQr2f4tj/yYhyokXMBuohvzjJs56upmQWgLQ26GQ1z
-         NEh+rYs0PSUHoxD22ECtV+G+yWCbb8MUpFyM+Sq8s156o0mG34Rn1/5Q96vFhEKZwLHn
-         tuyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691597729; x=1692202529;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=I3fttE8Ka5FbAuwos3r7+GvavRagrx9NXFQXtO4C8VM=;
-        b=g5xZ3CGpG2XY4AY2J6NeYzl1Jj4H1ojFUK8q6vZ5CN5YFzqTZsBJ/l1kAZXWQ7LMAf
-         lLvPvsP/JOY0YKf1AqYIFUyh542qfyT3wN5fvSnxI+2CeBN86s+zGDvvEMicNjQ+nobe
-         qz72GzJTbu2pJXXKq3Ij9XbmmUmLQl6aMpiR2FYlbtfRT22U0Jw3bK/Qsg/rA0hZnrxo
-         7oSF5cpwqbnCkgZ3D+9XGVN60pf77mS5H8V/uaQ3iT9HkmwYuRR0Bb5pPFR73oDcf/al
-         N+B1i+ng/tJtZZ4RfFIMV411WCUekE+mdBW2OLVBpowa3LA1RtHD7QQmVqRoGPt0jIgE
-         lNnQ==
-X-Gm-Message-State: AOJu0YzIrfuLJpao5W61F/A04k9apWRU7hy7k+rVwma0CBdOfhV350jV
-        dEbB25je61V0GshoFOd3Cux3PtsQvsxu
-X-Google-Smtp-Source: AGHT+IEhApmjBS/BBRoFLOs/hihGzBElb73CQ79jgP1ygdGLgQcbQlWBbZdWArHjPYUifZ4ojAgEXA==
-X-Received: by 2002:a37:ac01:0:b0:76c:9ac2:3f22 with SMTP id e1-20020a37ac01000000b0076c9ac23f22mr3348686qkm.68.1691597728965;
-        Wed, 09 Aug 2023 09:15:28 -0700 (PDT)
-Received: from localhost.localdomain (c-68-32-72-208.hsd1.mi.comcast.net. [68.32.72.208])
-        by smtp.gmail.com with ESMTPSA id y3-20020a37e303000000b0075b2af4a076sm4075223qki.16.2023.08.09.09.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Aug 2023 09:15:28 -0700 (PDT)
-From:   trondmy@gmail.com
-X-Google-Original-From: trond.myklebust@hammerspace.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Chris Mason <clm@fb.com>
-Subject: [PATCH 2/2] NFS: Fix a potential data corruption
-Date:   Wed,  9 Aug 2023 12:09:01 -0400
-Message-ID: <20230809160901.26679-2-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230809160901.26679-1-trond.myklebust@hammerspace.com>
-References: <20230809160901.26679-1-trond.myklebust@hammerspace.com>
+        with ESMTP id S229506AbjHIQbC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Aug 2023 12:31:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A6C210F3;
+        Wed,  9 Aug 2023 09:31:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2950F63697;
+        Wed,  9 Aug 2023 16:31:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00FEDC433C8;
+        Wed,  9 Aug 2023 16:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691598660;
+        bh=Z7n9zJLdl712XVn1Py2iFtPG8LzL7lbCWNuqyD+/A3g=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=UPQGy8NQtXAAQ4aU3XYZHYnotv5CJersRvEj3UxLTDTNa1yXwNRn0IJiEHo/bl0VP
+         UZsTGWxiaK4MtB7dfslKXsWsCHmiZVr63spdJLnJq8JDgcyekVH5Xc7NL7sGLhreu6
+         x15cmd+UhtlNWpehU4jYdveXB5k/7G4WPmTr0CQ6bDhyChBFc9/xsm+0Rn2qIx7rJs
+         G7MVuLgnF5bvQR49Ipq6cF6+TvuMnXYBCNHAg7UV972mLj2aJnJNB5RVRDI4hEyHex
+         /4cPUAWVkqpnS01ZlGmCOld61C8SWimdxp5ttui+xDqTyf2eAGc7ZrzDWG2FklGBAx
+         JNZznme+soZDw==
+Message-ID: <2cb998ff14ace352a9dd553e82cfa0aa92ec09ce.camel@kernel.org>
+Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
+From:   Jeff Layton <jlayton@kernel.org>
+To:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Jan Kara <jack@suse.cz>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        Yue Hu <huyue2@gl0jj8bn.sched.sma.tdnsstic1.cn>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Steve French <sfrench@samba.org>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Richard Weinberger <richard@nod.at>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
+        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-nfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-mtd@lists.infradead.org, linux-mm@kvack.org,
+        linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org
+Date:   Wed, 09 Aug 2023 12:30:52 -0400
+In-Reply-To: <87v8do6y8q.fsf@mail.parknet.co.jp>
+References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
+         <20230807-mgctime-v7-5-d1dec143a704@kernel.org>
+         <87msz08vc7.fsf@mail.parknet.co.jp>
+         <52bead1d6a33fec89944b96e2ec20d1ea8747a9a.camel@kernel.org>
+         <878rak8hia.fsf@mail.parknet.co.jp>
+         <20230809150041.452w7gucjmvjnvbg@quack3>
+         <87v8do6y8q.fsf@mail.parknet.co.jp>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Thu, 2023-08-10 at 00:17 +0900, OGAWA Hirofumi wrote:
+> Jan Kara <jack@suse.cz> writes:
+>=20
+> > Since you are talking past one another with Jeff let me chime in here :=
+). I
+> > think you are worried about this hunk:
+>=20
+> Right.
+>
+> > -	if ((flags & S_VERSION) && inode_maybe_inc_iversion(inode, false))
+> > +	if ((flags & (S_VERSION|S_CTIME|S_MTIME)) && inode_maybe_inc_iversion=
+(inode, false))
+> >  		dirty_flags |=3D I_DIRTY_SYNC;
+> >=20
+> > which makes the 'flags' test pass even if we just modified ctime or mti=
+me.
+> > But do note the second part of the if - inode_maybe_inc_iversion() - so=
+ we
+> > are going to mark the inode dirty with I_DIRTY_SYNC only if someone que=
+ried
+> > iversion since the last time we have incremented it.
+> >=20
+> > So this hunk is not really changing how inode is marked dirty, it only
+> > changes how often we check whether iversion needs increment and that sh=
+ould
+> > be fine (and desirable). Hence lazytime isn't really broken by this in =
+any
+> > way.
+>=20
+> OK. However, then it doesn't explain what I asked. This is not same with
+> generic_update_time(), only FAT does.
+>
+> If thinks it is right thing, why generic_update_time() doesn't? I said
+> first reply, this was from generic_update_time(). (Or I'm misreading
+> updated generic_update_time()?)
+>=20
 
-We must ensure that the subrequests are joined back into the head before
-we can retransmit a request. If the head was not on the commit lists,
-because the server wrote it synchronously, we still need to add it back
-to the retransmission list.
-Add a call that mirrors the effect of nfs_cancel_remove_inode() for
-O_DIRECT.
+My mistake re: lazytime vs. relatime, but Jan is correct that this
+shouldn't break anything there.
 
-Fixes: ed5d588fe47f ("NFS: Try to join page groups before an O_DIRECT retransmission")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/direct.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+The logic in the revised generic_update_time is different because FAT is
+is a bit strange. fat_update_time does extra truncation on the timestamp
+that it is handed beyond what timestamp_truncate() does.
+fat_truncate_time is called in many different places too, so I don't
+feel comfortable making big changes to how that works.
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index aaffaaa336cc..9b6bfc7905f6 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -472,13 +472,30 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter,
- 	return result;
- }
- 
-+static void nfs_direct_add_page_head(struct list_head *list,
-+				     struct nfs_page *req)
-+{
-+	struct nfs_page *head = req->wb_head;
-+
-+	if (!list_empty(&head->wb_list) || !nfs_lock_request(head))
-+		return;
-+	if (!list_empty(&head->wb_list)) {
-+		nfs_unlock_request(head);
-+		return;
-+	}
-+	list_add(&head->wb_list, list);
-+	kref_get(&head->wb_kref);
-+}
-+
- static void nfs_direct_join_group(struct list_head *list, struct inode *inode)
- {
- 	struct nfs_page *req, *subreq;
- 
- 	list_for_each_entry(req, list, wb_list) {
--		if (req->wb_head != req)
-+		if (req->wb_head != req) {
-+			nfs_direct_add_page_head(&req->wb_list, req);
- 			continue;
-+		}
- 		subreq = req->wb_this_page;
- 		if (subreq == req)
- 			continue;
--- 
-2.41.0
+In the case of generic_update_time, it calls inode_update_timestamps
+which returns a mask that shows which timestamps got updated. It then
+marks the dirty_flags appropriately for what was actually changed.
 
+generic_update_time is used across many filesystems so we need to ensure
+that it's OK to use even when multigrain timestamps are enabled. Those
+haven't been enabled in FAT though, so I didn't bother, and left it to
+dirtying the inode in the same way it was before, even though it now
+fetches its own timestamps from the clock. Given the way that the mtime
+and ctime are smooshed together in FAT, that seemed reasonable.
+
+Is there a particular case or flag combination you're concerned about
+here?
+--=20
+Jeff Layton <jlayton@kernel.org>
