@@ -2,46 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 089AA7778E8
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Aug 2023 14:58:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 666E87779F6
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Aug 2023 15:57:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233793AbjHJM6b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Aug 2023 08:58:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46730 "EHLO
+        id S235495AbjHJN5k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Aug 2023 09:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230458AbjHJM6b (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Aug 2023 08:58:31 -0400
+        with ESMTP id S230446AbjHJN5j (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Aug 2023 09:57:39 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275269C
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Aug 2023 05:58:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5236C212B;
+        Thu, 10 Aug 2023 06:57:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BC50F65BF7
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Aug 2023 12:58:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D398C433C7;
-        Thu, 10 Aug 2023 12:58:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E464C64A1F;
+        Thu, 10 Aug 2023 13:57:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88C1C433C7;
+        Thu, 10 Aug 2023 13:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1691672309;
-        bh=eO1KV7tE2hi6cZl/7YBj4L4BN+kgqMAFC45FkYMRyHA=;
+        s=k20201202; t=1691675858;
+        bh=8TLHDCTColfLSCdxEVFmLaRfu1yS1/99cHLfJeUUwA4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UcrSexvrPJpR+fYjDIqYSustLh7CIdJgNEwG7OO7dvuhMuIA7fJLmI7dBiYn69/db
-         2P9JOyvmq6p33Di42oY8Iik4ae2xIgPqjEaqEq/nvoDvIpi7fJVBttLohb06mPevcI
-         oy0KqPzmS67shxsZ/rcVd8hB43gAIrwZdfl7LHIciI8o4dg+0/Uh5mf0+0zI5/KuLC
-         DB1ptUyaKGUyZ3+pxqWuFrC77fzlKlrUAlV7sLtx49MSPY6hE5R4RsGJ4kH24J6ChR
-         BpxCkGY213DGzNcGVYcCvwseYz/+9WTcVsw+INswEP8NAoxQjA4bVm3qdz1zbC7eqr
-         F3xjSHGCy4oqw==
-Message-ID: <84282fdda69a2eb9e884417a9fe02d1210bc14af.camel@kernel.org>
-Subject: Re: [PATCH v6 3/3] NFSD: add rpc_status entry in nfsd debug
- filesystem
+        b=WBhsUVuR/RFO+wlrVpHGFEl49UYiU3eSfSTZmXJVEdoAdppwGGfY1w94k5Awt0ScR
+         Mqsx+eEA35BFxGTQ6rkQd/rL3nPeGShFLDkTNa42ScNw5j4b/fjbB05P7hiyqzbNYJ
+         nN7kCP3gcuWcsLOE62Yuk4R+iQPdGPvIi6q/A10mLqSk7zYclfVcVqEi2fIsVKmcFj
+         Xic7aeTVbHof/AB+wNsYOau7ha5h5XA3NAN0mFV1OnC2glqxt4UQWeFDy/jX8q/X4y
+         fJHzeKfg1Khy1hd/P0L7mEFqlG9B9C7f4sn9WirH0GBvu4zmim+X7zZnn1Tmdz+YfY
+         EjgoHPnX7wiBw==
+Message-ID: <7d596fc2c526a5d6e4a84240dede590e868f3345.camel@kernel.org>
+Subject: Re: [PATCH v9] vfs, security: Fix automount superblock LSM init
+ problem, preventing NFS sb sharing
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org
-Cc:     lorenzo.bianconi@redhat.com, chuck.lever@oracle.com, neilb@suse.de
-Date:   Thu, 10 Aug 2023 08:58:27 -0400
-In-Reply-To: <177cfd4fc640d9b406101761be24da07990ca81e.1691656474.git.lorenzo@kernel.org>
-References: <cover.1691656474.git.lorenzo@kernel.org>
-         <177cfd4fc640d9b406101761be24da07990ca81e.1691656474.git.lorenzo@kernel.org>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Date:   Thu, 10 Aug 2023 09:57:35 -0400
+In-Reply-To: <20230808-erdaushub-sanieren-2bd8d7e0a286@brauner>
+References: <20230808-master-v9-1-e0ecde888221@kernel.org>
+         <20230808-erdaushub-sanieren-2bd8d7e0a286@brauner>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
@@ -55,316 +69,94 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2023-08-10 at 10:39 +0200, Lorenzo Bianconi wrote:
-> Introduce rpc_status entry in nfsd debug filesystem in order to dump
-> pending RPC requests debugging information.
->=20
-> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D366
-> Reviewed-by: NeilBrown <neilb@suse.de>
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  fs/nfsd/nfs4proc.c         |   4 +-
->  fs/nfsd/nfsctl.c           |   9 +++
->  fs/nfsd/nfsd.h             |   7 ++
->  fs/nfsd/nfssvc.c           | 140 +++++++++++++++++++++++++++++++++++++
->  include/linux/sunrpc/svc.h |   1 +
->  net/sunrpc/svc.c           |   2 +-
->  6 files changed, 159 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index aa4f21f92deb..ff5a1dddc0ed 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -2496,8 +2496,6 @@ static inline void nfsd4_increment_op_stats(u32 opn=
-um)
-> =20
->  static const struct nfsd4_operation nfsd4_ops[];
-> =20
-> -static const char *nfsd4_op_name(unsigned opnum);
-> -
->  /*
->   * Enforce NFSv4.1 COMPOUND ordering rules:
->   *
-> @@ -3627,7 +3625,7 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op)
->  	}
->  }
-> =20
-> -static const char *nfsd4_op_name(unsigned opnum)
-> +const char *nfsd4_op_name(unsigned int opnum)
->  {
->  	if (opnum < ARRAY_SIZE(nfsd4_ops))
->  		return nfsd4_ops[opnum].op_name;
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index dad88bff3b9e..83eb5c6d894e 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -47,6 +47,7 @@ enum {
->  	NFSD_MaxBlkSize,
->  	NFSD_MaxConnections,
->  	NFSD_Filecache,
-> +	NFSD_Rpc_Status,
->  	/*
->  	 * The below MUST come last.  Otherwise we leave a hole in nfsd_files[]
->  	 * with !CONFIG_NFSD_V4 and simple_fill_super() goes oops
-> @@ -195,6 +196,13 @@ static inline struct net *netns(struct file *file)
->  	return file_inode(file)->i_sb->s_fs_info;
->  }
-> =20
-> +static const struct file_operations nfsd_rpc_status_operations =3D {
-> +	.open		=3D nfsd_rpc_status_open,
-> +	.read		=3D seq_read,
-> +	.llseek		=3D seq_lseek,
-> +	.release	=3D nfsd_stats_release,
-> +};
-> +
->  /*
->   * write_unlock_ip - Release all locks used by a client
->   *
-> @@ -1394,6 +1402,7 @@ static int nfsd_fill_super(struct super_block *sb, =
-struct fs_context *fc)
->  		[NFSD_MaxBlkSize] =3D {"max_block_size", &transaction_ops, S_IWUSR|S_I=
-RUGO},
->  		[NFSD_MaxConnections] =3D {"max_connections", &transaction_ops, S_IWUS=
-R|S_IRUGO},
->  		[NFSD_Filecache] =3D {"filecache", &nfsd_file_cache_stats_fops, S_IRUG=
-O},
-> +		[NFSD_Rpc_Status] =3D {"rpc_status", &nfsd_rpc_status_operations, S_IR=
-UGO},
->  #ifdef CONFIG_NFSD_V4
->  		[NFSD_Leasetime] =3D {"nfsv4leasetime", &transaction_ops, S_IWUSR|S_IR=
-USR},
->  		[NFSD_Gracetime] =3D {"nfsv4gracetime", &transaction_ops, S_IWUSR|S_IR=
-USR},
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 55b9d85ed71b..3e8a47b93fd4 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -94,6 +94,7 @@ int		nfsd_get_nrthreads(int n, int *, struct net *);
->  int		nfsd_set_nrthreads(int n, int *, struct net *);
->  int		nfsd_pool_stats_open(struct inode *, struct file *);
->  int		nfsd_stats_release(struct inode *, struct file *);
-> +int		nfsd_rpc_status_open(struct inode *inode, struct file *file);
->  void		nfsd_shutdown_threads(struct net *net);
-> =20
->  static inline void nfsd_put(struct net *net)
-> @@ -511,12 +512,18 @@ extern void nfsd4_ssc_init_umount_work(struct nfsd_=
-net *nn);
-> =20
->  extern void nfsd4_init_leases_net(struct nfsd_net *nn);
-> =20
-> +const char *nfsd4_op_name(unsigned int opnum);
->  #else /* CONFIG_NFSD_V4 */
->  static inline int nfsd4_is_junction(struct dentry *dentry)
->  {
->  	return 0;
->  }
-> =20
-> +static inline const char *nfsd4_op_name(unsigned int opnum)
-> +{
-> +	return "unknown_operation";
-> +}
-> +
->  static inline void nfsd4_init_leases_net(struct nfsd_net *nn) { };
-> =20
->  #define register_cld_notifier() 0
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 460219030ce1..237be14d3a11 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -998,6 +998,15 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
->  	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
->  		goto out_decode_err;
-> =20
-> +	/*
-> +	 * Release rq_status_counter setting it to an odd value after the rpc
-> +	 * request has been properly parsed. rq_status_counter is used to
-> +	 * notify the consumers if the rqstp fields are stable
-> +	 * (rq_status_counter is odd) or not meaningful (rq_status_counter
-> +	 * is even).
-> +	 */
-> +	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter |=
- 1);
-> +
->  	rp =3D NULL;
->  	switch (nfsd_cache_lookup(rqstp, &rp)) {
->  	case RC_DOIT:
-> @@ -1015,6 +1024,12 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
->  	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
->  		goto out_encode_err;
-> =20
-> +	/*
-> +	 * Release rq_status_counter setting it to an even value after the rpc
-> +	 * request has been properly processed.
-> +	 */
-> +	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter +=
- 1);
-> +
->  	nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
->  out_cached_reply:
->  	return 1;
-> @@ -1101,3 +1116,128 @@ int nfsd_stats_release(struct inode *inode, struc=
-t file *file)
->  	mutex_unlock(&nfsd_mutex);
->  	return ret;
->  }
-> +
-> +static int nfsd_rpc_status_show(struct seq_file *m, void *v)
-> +{
-> +	struct inode *inode =3D file_inode(m->file);
-> +	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id=
-);
-> +	int i;
-> +
-> +	seq_puts(m, "# XID FLAGS VERS PROC TIMESTAMP SADDR SPORT DADDR DPORT CO=
-MPOUND_OPS\n");
-> +
-> +	rcu_read_lock();
-> +
-> +	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
-> +		struct svc_rqst *rqstp;
-> +
-> +		list_for_each_entry_rcu(rqstp,
-> +				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
-> +				rq_all) {
-> +			struct {
-> +				struct sockaddr daddr;
-> +				struct sockaddr saddr;
-> +				unsigned long rq_flags;
-> +				const char *pc_name;
-> +				ktime_t rq_stime;
-> +				__be32 rq_xid;
-> +				u32 rq_vers;
-> +				/* NFSv4 compund */
-> +				u32 opnum[NFSD_MAX_OPS_PER_COMPOUND];
-> +			} rqstp_info;
-> +			unsigned int status_counter;
-> +			char buf[RPC_MAX_ADDRBUFLEN];
-> +			int opcnt =3D 0;
-> +
-> +			/*
-> +			 * Acquire rq_status_counter before parsing the rqst
-> +			 * fields. rq_status_counter is set to an odd value in
-> +			 * order to notify the consumers the rqstp fields are
-> +			 * meaningful.
-> +			 */
-> +			status_counter =3D smp_load_acquire(&rqstp->rq_status_counter);
-> +			if (!(status_counter & 1))
-> +				continue;
-> +
-> +			rqstp_info.rq_xid =3D rqstp->rq_xid;
-> +			rqstp_info.rq_flags =3D rqstp->rq_flags;
-> +			rqstp_info.rq_vers =3D rqstp->rq_vers;
-> +			rqstp_info.pc_name =3D svc_proc_name(rqstp);
-> +			rqstp_info.rq_stime =3D rqstp->rq_stime;
-> +			memcpy(&rqstp_info.daddr, svc_daddr(rqstp),
-> +			       sizeof(struct sockaddr));
-> +			memcpy(&rqstp_info.saddr, svc_addr(rqstp),
-> +			       sizeof(struct sockaddr));
-> +
-> +#ifdef CONFIG_NFSD_V4
-> +			if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
-> +			    rqstp->rq_proc =3D=3D NFSPROC4_COMPOUND) {
-> +				/* NFSv4 compund */
-> +				struct nfsd4_compoundargs *args =3D rqstp->rq_argp;
-> +				int j;
-> +
-> +				opcnt =3D args->opcnt;
-> +				for (j =3D 0; j < opcnt; j++) {
-> +					struct nfsd4_op *op =3D &args->ops[j];
-> +
-> +					rqstp_info.opnum[j] =3D op->opnum;
-> +				}
-> +			}
-> +#endif /* CONFIG_NFSD_V4 */
-> +
-> +			/*
-> +			 * Acquire rq_status_counter before reporting the rqst
-> +			 * fields to the user.
-> +			 */
-> +			if (smp_load_acquire(&rqstp->rq_status_counter) !=3D status_counter)
-> +				continue;
-> +
-> +			seq_printf(m,
-> +				   "%04u %04ld NFSv%d %s %016lld",
-> +				   be32_to_cpu(rqstp_info.rq_xid),
-> +				   rqstp_info.rq_flags,
-> +				   rqstp_info.rq_vers,
-> +				   rqstp_info.pc_name,
-> +				   ktime_to_us(rqstp_info.rq_stime));
-> +			seq_printf(m, " %s",
-> +				   __svc_print_addr(&rqstp_info.saddr, buf,
-> +						    sizeof(buf), false));
-> +			seq_printf(m, " %s",
-> +				   __svc_print_addr(&rqstp_info.daddr, buf,
-> +						    sizeof(buf), false));
-> +			if (opcnt) {
-> +				int j;
-> +
-> +				seq_puts(m, " ");
-> +				for (j =3D 0; j < opcnt; j++)
-> +					seq_printf(m, "%s%s",
-> +						   nfsd4_op_name(rqstp_info.opnum[j]),
-> +						   j =3D=3D opcnt - 1 ? "" : ":");
-> +			} else {
-> +				seq_puts(m, " -");
-> +			}
-> +			seq_puts(m, "\n");
-> +		}
-> +	}
-> +
-> +	rcu_read_unlock();
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * nfsd_rpc_status_open - open routine for nfsd_rpc_status handler
-> + * @inode: entry inode pointer.
-> + * @file: entry file pointer.
-> + *
-> + * nfsd_rpc_status_open is the open routine for nfsd_rpc_status procfs h=
-andler.
-> + * nfsd_rpc_status dumps pending RPC requests info queued into nfs serve=
-r.
-> + */
-> +int nfsd_rpc_status_open(struct inode *inode, struct file *file)
-> +{
-> +	int ret =3D nfsd_stats_open(inode);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	return single_open(file, nfsd_rpc_status_show, inode->i_private);
-> +}
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index 7838b37bcfa8..b49c0470b4fe 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -251,6 +251,7 @@ struct svc_rqst {
->  						 * net namespace
->  						 */
->  	void **			rq_lease_breaker; /* The v4 client breaking a lease */
-> +	unsigned int		rq_status_counter; /* RPC processing counter */
->  };
-> =20
->  /* bits for rq_flags */
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index af692bff44ab..83bee19df104 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -1656,7 +1656,7 @@ const char *svc_proc_name(const struct svc_rqst *rq=
-stp)
->  		return rqstp->rq_procinfo->pc_name;
->  	return "unknown";
->  }
-> -
-> +EXPORT_SYMBOL_GPL(svc_proc_name);
-> =20
->  /**
->   * svc_encode_result_payload - mark a range of bytes as a result payload
+On Tue, 2023-08-08 at 15:31 +0200, Christian Brauner wrote:
+> On Tue, Aug 08, 2023 at 07:34:20AM -0400, Jeff Layton wrote:
+> > From: David Howells <dhowells@redhat.com>
+> >=20
+> > When NFS superblocks are created by automounting, their LSM parameters
+> > aren't set in the fs_context struct prior to sget_fc() being called,
+> > leading to failure to match existing superblocks.
+> >=20
+> > This bug leads to messages like the following appearing in dmesg when
+> > fscache is enabled:
+> >=20
+> >     NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,10=
+0000,100000,2ee,3a98,1d4c,3a98,1)
+> >=20
+> > Fix this by adding a new LSM hook to load fc->security for submount
+> > creation.
+> >=20
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount(=
+) to it.")
+> > Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
+> > Tested-by: Jeff Layton <jlayton@kernel.org>
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > Acked-by: Casey Schaufler <casey@schaufler-ca.com>
 
-LGTM (at least until we decide the right sort of interface for this
-thing).
+I've made a significant number of changes since Casey acked this. It
+might be a good idea to drop his Acked-by (unless he wants to chime in
+and ask us to keep it).
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Thanks,
+Jeff
+
+> > Acked-by: "Christian Brauner (Microsoft)" <brauner@kernel.org>
+> > Link: https://lore.kernel.org/r/165962680944.3334508.661002390034914203=
+4.stgit@warthog.procyon.org.uk/ # v1
+> > Link: https://lore.kernel.org/r/165962729225.3357250.143507288464715271=
+37.stgit@warthog.procyon.org.uk/ # v2
+> > Link: https://lore.kernel.org/r/165970659095.2812394.686889417110231879=
+6.stgit@warthog.procyon.org.uk/ # v3
+> > Link: https://lore.kernel.org/r/166133579016.3678898.628319501948056727=
+5.stgit@warthog.procyon.org.uk/ # v4
+> > Link: https://lore.kernel.org/r/217595.1662033775@warthog.procyon.org.u=
+k/ # v5
+> > ---
+> > ver #2)
+> > - Added Smack support
+> > - Made LSM parameter extraction dependent on reference !=3D NULL.
+> >=20
+> > ver #3)
+> > - Made LSM parameter extraction dependent on fc->purpose =3D=3D
+> >    FS_CONTEXT_FOR_SUBMOUNT.  Shouldn't happen on FOR_RECONFIGURE.
+> >=20
+> > ver #4)
+> > - When doing a FOR_SUBMOUNT mount, don't set the root label in SELinux =
+or Smack.
+> >=20
+> > ver #5)
+> > - Removed unused variable.
+> > - Only allocate smack_mnt_opts if we're dealing with a submount.
+> >=20
+> > ver #6)
+> > - Rebase onto v6.5.0-rc4
+> > - Link to v6: https://lore.kernel.org/r/20230802-master-v6-1-45d4829916=
+8b@kernel.org
+> >=20
+> > ver #7)
+> > - Drop lsm_set boolean
+> > - Link to v7: https://lore.kernel.org/r/20230804-master-v7-1-5d4e484072=
+98@kernel.org
+> >=20
+> > ver #8)
+> > - Remove spurious semicolon in smack_fs_context_init
+> > - Make fs_context_init take a superblock as reference instead of dentry
+> > - WARN_ON_ONCE's when fc->purpose !=3D FS_CONTEXT_FOR_SUBMOUNT
+> > - Call the security hook from fs_context_for_submount instead of alloc_=
+fs_context
+> > - Link to v8: https://lore.kernel.org/r/20230807-master-v8-1-54e249595f=
+10@kernel.org
+> >=20
+> > ver #9)
+> > - rename *_fs_context_init to *_fs_context_submount
+> > - remove checks for FS_CONTEXT_FOR_SUBMOUNT and NULL reference pointers
+> > - fix prototype on smack_fs_context_submount
+>=20
+> Thanks, this looks good from my perspective. If it looks fine to LSM
+> folks as well I can put it with the rest of the super work for this
+> cycle or it can go through the LSM tree.
+
+--=20
+Jeff Layton <jlayton@kernel.org>
