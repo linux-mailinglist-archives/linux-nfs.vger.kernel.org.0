@@ -2,178 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58D55776C4C
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Aug 2023 00:38:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F60B77731D
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Aug 2023 10:39:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233122AbjHIWiJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Aug 2023 18:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36410 "EHLO
+        id S230064AbjHJIjt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Aug 2023 04:39:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232937AbjHIWiE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Aug 2023 18:38:04 -0400
-Received: from mail.parknet.co.jp (mail.parknet.co.jp [210.171.160.6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 51AA5138;
-        Wed,  9 Aug 2023 15:38:00 -0700 (PDT)
-Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
-        by mail.parknet.co.jp (Postfix) with ESMTPSA id 3CD87205DB98;
-        Thu, 10 Aug 2023 07:38:00 +0900 (JST)
-Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
-        by ibmpc.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379Mbwf6230731
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Thu, 10 Aug 2023 07:38:00 +0900
-Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
-        by devron.myhome.or.jp (8.17.2/8.17.2/Debian-1) with ESMTPS id 379MbwGI248785
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Thu, 10 Aug 2023 07:37:58 +0900
-Received: (from hirofumi@localhost)
-        by devron.myhome.or.jp (8.17.2/8.17.2/Submit) id 379MbqTh248778;
-        Thu, 10 Aug 2023 07:37:52 +0900
-From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Frank Sorenson <sorenson@redhat.com>, Jan Kara <jack@suse.cz>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>,
-        Yue Hu <huyue2@gl0jj8bn.sched.sma.tdnsstic1.cn>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Richard Weinberger <richard@nod.at>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@telemann.coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, ntfs3@lists.linux.dev,
-        ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-mtd@lists.infradead.org, linux-mm@kvack.org,
-        linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 05/13] fat: make fat_update_time get its own timestamp
-In-Reply-To: <e4cee2590f5cb9a13a8d4445e550e155d551670d.camel@kernel.org> (Jeff
-        Layton's message of "Wed, 09 Aug 2023 18:07:29 -0400")
-References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
-        <20230807-mgctime-v7-5-d1dec143a704@kernel.org>
-        <87msz08vc7.fsf@mail.parknet.co.jp>
-        <52bead1d6a33fec89944b96e2ec20d1ea8747a9a.camel@kernel.org>
-        <878rak8hia.fsf@mail.parknet.co.jp>
-        <20230809150041.452w7gucjmvjnvbg@quack3>
-        <87v8do6y8q.fsf@mail.parknet.co.jp>
-        <2cb998ff14ace352a9dd553e82cfa0aa92ec09ce.camel@kernel.org>
-        <87leek6rh1.fsf@mail.parknet.co.jp>
-        <ccffe6ca3397c8374352b002fe01d55b09d84ef4.camel@kernel.org>
-        <87h6p86p9z.fsf@mail.parknet.co.jp>
-        <edf8e8ca3b38e56f30e0d24ac7293f848ffee371.camel@kernel.org>
-        <87a5v06kij.fsf@mail.parknet.co.jp>
-        <e4cee2590f5cb9a13a8d4445e550e155d551670d.camel@kernel.org>
-Date:   Thu, 10 Aug 2023 07:37:52 +0900
-Message-ID: <87zg2z3kqn.fsf@mail.parknet.co.jp>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        with ESMTP id S232080AbjHJIjs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Aug 2023 04:39:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 908C31BFA
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Aug 2023 01:39:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2DCA565392
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Aug 2023 08:39:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 195B9C433C8;
+        Thu, 10 Aug 2023 08:39:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691656786;
+        bh=uYUd5l28aGHJI4Ay72COJdbaiGAo2Sp3Ttylyv3GPJU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=XYyc05a//SXuoeXS/X5T7Lkd0SiFCxGAkAvJ9IxQaIdMej2fFnn5MJum6QkCSZMc0
+         wUPzopy4nRtyekQwCRsxrcCzbZbfsNxElEwGQbev59M0w+EzzsPeWajaRPaU8cHknf
+         qePGJBU8ag2xHbXPAGXDCc3VIpWbF+/ysbTPRhnkLE4w9gQFCRvBayK3cDvBYWLUAV
+         OoI9xHe00OeMy9/xSiF2y8tRFfCWLzAPoMf2OIETMwvVn3Zeoaim/frN9frU8yUOQA
+         GP8jCfLP9B6f07YIwF90L5YXc/Io8rZTUGCZK+sNk4jk+S4S9Bld93UqOfDX8HOAU+
+         MAl19xirvCLCQ==
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     linux-nfs@vger.kernel.org
+Cc:     lorenzo.bianconi@redhat.com, chuck.lever@oracle.com,
+        jlayton@kernel.org, neilb@suse.de
+Subject: [PATCH v6 0/3] add rpc_status handler in nfsd debug filesystem
+Date:   Thu, 10 Aug 2023 10:39:18 +0200
+Message-ID: <cover.1691656474.git.lorenzo@kernel.org>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Jeff Layton <jlayton@kernel.org> writes:
+Introduce rpc_status entry in nfsd debug filesystem in order to dump
+pending RPC requests debugging information.
 
-> If you do that then the i_version counter would never be incremented.
-> But...I think I see what you're getting at.
->
-> Most filesystems that support the i_version counter have an on-disk
-> field for it. FAT obviously has no such thing. I suspect the i_version
-> bits in fat_update_time were added by mistake. FAT doesn't set
-> SB_I_VERSION so there's no need to do anything to the i_version field at
-> all.
->
-> Also, given that the mtime and ctime are always kept in sync on FAT,
-> we're probably fine to have it look something like this:
+Changes since v5:
+- add missing delimiters for nfs4 compound ops
+- add a header line for rpc_status handler
+- do not dump rq_prog
+- do not dump rq_flags in hex
 
-Yes.
+Changes since v4:
+- rely on acquire/release APIs and get rid of atomic operation
+- fix kdoc for nfsd_rpc_status_open
+- get rid of ',' as field delimiter in nfsd_rpc_status hanlder
+- move nfsd_rpc_status before nfsd_v4 enum entries
+- fix compilantion error if nfsdv4 is not enabled
 
-IIRC, when I wrote, I decided to make it keep similar with generic
-function, instead of heavily customize for FAT (for maintenance
-reason). It is why. There would be other places with same reason.
+Changes since v3:
+- introduce rq_status_counter in order to detect if the RPC request is
+  pending and RPC info are stable
+- rely on __svc_print_addr to dump IP info
 
-E.g. LAZYTIME check is same reason too. (current FAT doesn't support it)
+Changes since v2:
+- minor changes in nfsd_rpc_status_show output
 
-So I personally I would prefer to leave it. But if you want to remove
-it, it would be ok too.
+Changes since v1:
+- rework nfsd_rpc_status_show output
 
-Thanks.
+Changes since RFCv1:
+- riduce time holding nfsd_mutex bumping svc_serv refcoung in
+  nfsd_rpc_status_open()
+- dump rqstp->rq_stime
+- add missing kdoc for nfsd_rpc_status_open()
 
-> --------------------8<------------------
-> int fat_update_time(struct inode *inode, int flags) 
-> { 
->         int dirty_flags = 0;
->
->         if (inode->i_ino == MSDOS_ROOT_INO) 
->                 return 0;
->
->         fat_truncate_time(inode, NULL, flags);
->         if (inode->i_sb->s_flags & SB_LAZYTIME)
->                 dirty_flags |= I_DIRTY_TIME;
->         else
->                 dirty_flags |= I_DIRTY_SYNC;
->
->         __mark_inode_dirty(inode, dirty_flags);
->         return 0;
-> } 
-> --------------------8<------------------
->
-> ...and we should probably do that in a separate patch in advance of the
-> update_time rework, since it's really a different change.
->
-> If you're in agreement, then I'll plan to respin the series with this
-> fixed and resend.
->
-> Thanks for being patient!
+Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D366
+
+Lorenzo Bianconi (3):
+  SUNRPC: add verbose parameter to __svc_print_addr()
+  NFSD: introduce nfsd_stats_open utility routine
+  NFSD: add rpc_status entry in nfsd debug filesystem
+
+ fs/nfsd/nfs4proc.c              |   4 +-
+ fs/nfsd/nfsctl.c                |  11 ++-
+ fs/nfsd/nfsd.h                  |   9 +-
+ fs/nfsd/nfssvc.c                | 163 ++++++++++++++++++++++++++++++--
+ include/linux/sunrpc/svc.h      |   1 +
+ include/linux/sunrpc/svc_xprt.h |  12 +--
+ net/sunrpc/svc.c                |   2 +-
+ net/sunrpc/svc_xprt.c           |   2 +-
+ 8 files changed, 185 insertions(+), 19 deletions(-)
+
 -- 
-OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+2.41.0
+
