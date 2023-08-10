@@ -2,173 +2,431 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C914D778225
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Aug 2023 22:25:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25AF677821E
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Aug 2023 22:24:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235815AbjHJUZe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Aug 2023 16:25:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38530 "EHLO
+        id S235293AbjHJUYv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Aug 2023 16:24:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235891AbjHJUZa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Aug 2023 16:25:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 056592733
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Aug 2023 13:24:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1691699086;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+        with ESMTP id S233860AbjHJUYv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Aug 2023 16:24:51 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6AA02D41
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Aug 2023 13:24:47 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 7974F2187F;
+        Thu, 10 Aug 2023 20:24:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1691699086; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HqygJpPikOyXm/wHwFtZNHvPApi5DlCiSAoJ4H1J1qM=;
-        b=GarmIENn9NZOXH7UOdj4vN70wZ3qKFYCWPRLyvPqkFAEh5fIbDiB68MJWDRgF0NH7+7naq
-        a0UQ0PxDMyvl4vZzehVkRku2tvoNUKNRuwpdCDz6oi0O1KYrekwQSx/orYyMKacKTnF+ls
-        pfDAKhuXAWoawR/RSFXOa9s/oTURjTg=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-649-RoxN_FvwP1GWKIfuITJipQ-1; Thu, 10 Aug 2023 16:24:45 -0400
-X-MC-Unique: RoxN_FvwP1GWKIfuITJipQ-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-4fe4a1ce065so1269688e87.3
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Aug 2023 13:24:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691699083; x=1692303883;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HqygJpPikOyXm/wHwFtZNHvPApi5DlCiSAoJ4H1J1qM=;
-        b=cCXovrO8V1KiIoBYAcRkWNam11S06CuK0LX8RtVXL2orYcgii1j00IuYCSmPO8dmI/
-         M2YCsF8T03hnWTMRD2TAXVVEGZRQSVK1/b0XWu8VmG7PFAiuaOt523lSbBGM1QSF4V7z
-         DYsUfePVxQOmkfCyrNpVP8ooDATWGAHLc/UhVWXUJcJFlkFQzS7e8KMRPdSauoOFQBWj
-         N1e2jhtCOAR9D/joEMUQwVeYcognTdMLn2M84cblxOygpRVZVLJpPlFqdPIKI4a8WuUP
-         KvqK01Zd/MeLzv0zxBeEl/cJ5XUoO0lj2mxSRx+OANmYV5lILvjoD7yyzalSsf4zeGG9
-         4j3w==
-X-Gm-Message-State: AOJu0Yx0cWZ3/nbgkMZ6DrJIbe+zgs8w76t8Zk07FcYnFSWn+0XOv6Nb
-        +n/eBaNstUCYBaYi9lT91/UucMvA7ESuYqMxCmYynEIkS5bgmRdZ7jwlrNo45U3pxLywaKyWGlP
-        WqtNOak8nBrfjpgAQFQ8DBTipQbggCafAPDPM4wXxdkWi
-X-Received: by 2002:a19:644e:0:b0:4fe:ef9:c8d0 with SMTP id b14-20020a19644e000000b004fe0ef9c8d0mr2399099lfj.35.1691699082928;
-        Thu, 10 Aug 2023 13:24:42 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG4snsAYYAxitJ3kstAcmF6iy3hfrvRNaBhVUSfukWe/rN8pyfG+Rc91yAMi71zKGXU1Y4xobOMUc+21Uza6gA=
-X-Received: by 2002:a19:644e:0:b0:4fe:ef9:c8d0 with SMTP id
- b14-20020a19644e000000b004fe0ef9c8d0mr2399086lfj.35.1691699082596; Thu, 10
- Aug 2023 13:24:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230720125806.1385279-1-aahringo@redhat.com> <20230720125806.1385279-3-aahringo@redhat.com>
- <fc5c5e0bcfa7110282106c3319af6a0b5a63b221.camel@kernel.org>
-In-Reply-To: <fc5c5e0bcfa7110282106c3319af6a0b5a63b221.camel@kernel.org>
-From:   Alexander Aring <aahringo@redhat.com>
-Date:   Thu, 10 Aug 2023 16:24:31 -0400
-Message-ID: <CAK-6q+g4LiMixBe_U7o9sVxdz9i4FjXJ2XpBW-1JzrZ3WjkRCw@mail.gmail.com>
-Subject: Re: [RFC v6.5-rc2 3/3] fs: lockd: introduce safe async lock op
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com,
-        Dai.Ngo@oracle.com, tom@talpey.com,
-        trond.myklebust@hammerspace.com, anna@kernel.org,
-        linux-nfs@vger.kernel.org, teigland@redhat.com,
-        cluster-devel@redhat.com, agruenba@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+        bh=sXd8HHByZl5x4FgVYN7diqYoGPm/1Iq/ubEabUWaWWI=;
+        b=pkzKiPZYBelpDetgWMJjL/0olsuQ3j6Eliwzr3zETxbq/oE5XcfT1QVMDnJJQTSWo0hPnK
+        2awMdFerrpmtAzUkr//0SwltIKBEX9wKW1eiomR4haM7cQWRTAGh2d6zik/uFgBX1NoKSc
+        sr4NYix5oHc9GNlMUtjgaRZD2ucH5Yc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1691699086;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sXd8HHByZl5x4FgVYN7diqYoGPm/1Iq/ubEabUWaWWI=;
+        b=RB71XKCuZEErocC40g+0cguikg3cKiSEH62MwDMxrZXwlRwoeSPpWg069p2dv1CTh2HiHD
+        8ts7ON3/tWs7qpCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 936FD138E2;
+        Thu, 10 Aug 2023 20:24:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 0WWVEYxH1WTnDgAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 10 Aug 2023 20:24:44 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Lorenzo Bianconi" <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
+        lorenzo.bianconi@redhat.com, jlayton@kernel.org
+Subject: Re: [PATCH v6 3/3] NFSD: add rpc_status entry in nfsd debug filesystem
+In-reply-to: <ZNT7wdG8SYfDRkDg@tissot.1015granger.net>
+References: <cover.1691656474.git.lorenzo@kernel.org>,
+ <177cfd4fc640d9b406101761be24da07990ca81e.1691656474.git.lorenzo@kernel.org>,
+ <ZNT7wdG8SYfDRkDg@tissot.1015granger.net>
+Date:   Fri, 11 Aug 2023 06:24:39 +1000
+Message-id: <169169907976.11073.6029761322750936330@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
-
-On Fri, Jul 21, 2023 at 1:46=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> On Thu, 2023-07-20 at 08:58 -0400, Alexander Aring wrote:
-> > This patch reverts mostly commit 40595cdc93ed ("nfs: block notification
-> > on fs with its own ->lock") and introduces an EXPORT_OP_SAFE_ASYNC_LOCK
-> > export flag to signal that the "own ->lock" implementation supports
-> > async lock requests. The only main user is DLM that is used by GFS2 and
-> > OCFS2 filesystem. Those implement their own lock() implementation and
-> > return FILE_LOCK_DEFERRED as return value. Since commit 40595cdc93ed
-> > ("nfs: block notification on fs with its own ->lock") the DLM
-> > implementation were never updated. This patch should prepare for DLM
-> > to set the EXPORT_OP_SAFE_ASYNC_LOCK export flag and update the DLM
-> > plock implementation regarding to it.
-> >
-> > Signed-off-by: Alexander Aring <aahringo@redhat.com>
+On Fri, 11 Aug 2023, Chuck Lever wrote:
+> On Thu, Aug 10, 2023 at 10:39:21AM +0200, Lorenzo Bianconi wrote:
+> > Introduce rpc_status entry in nfsd debug filesystem in order to dump
+> > pending RPC requests debugging information.
+> >=20
+> > Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D366
+> > Reviewed-by: NeilBrown <neilb@suse.de>
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 > > ---
-> >  fs/lockd/svclock.c       |  5 ++---
-> >  fs/nfsd/nfs4state.c      | 11 ++++++++---
-> >  include/linux/exportfs.h |  1 +
-> >  3 files changed, 11 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-> > index 62ef27a69a9e..54a67bd33843 100644
-> > --- a/fs/lockd/svclock.c
-> > +++ b/fs/lockd/svclock.c
-> > @@ -483,9 +483,7 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file=
- *file,
-> >           struct nlm_host *host, struct nlm_lock *lock, int wait,
-> >           struct nlm_cookie *cookie, int reclaim)
+> >  fs/nfsd/nfs4proc.c         |   4 +-
+> >  fs/nfsd/nfsctl.c           |   9 +++
+> >  fs/nfsd/nfsd.h             |   7 ++
+> >  fs/nfsd/nfssvc.c           | 140 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/sunrpc/svc.h |   1 +
+> >  net/sunrpc/svc.c           |   2 +-
+> >  6 files changed, 159 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> > index aa4f21f92deb..ff5a1dddc0ed 100644
+> > --- a/fs/nfsd/nfs4proc.c
+> > +++ b/fs/nfsd/nfs4proc.c
+> > @@ -2496,8 +2496,6 @@ static inline void nfsd4_increment_op_stats(u32 opn=
+um)
+> > =20
+> >  static const struct nfsd4_operation nfsd4_ops[];
+> > =20
+> > -static const char *nfsd4_op_name(unsigned opnum);
+> > -
+> >  /*
+> >   * Enforce NFSv4.1 COMPOUND ordering rules:
+> >   *
+> > @@ -3627,7 +3625,7 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op)
+> >  	}
+> >  }
+> > =20
+> > -static const char *nfsd4_op_name(unsigned opnum)
+> > +const char *nfsd4_op_name(unsigned int opnum)
 > >  {
-> > -#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
-> >       struct inode            *inode =3D nlmsvc_file_inode(file);
-> > -#endif
-> >       struct nlm_block        *block =3D NULL;
-> >       int                     error;
-> >       int                     mode;
-> > @@ -499,7 +497,8 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file=
- *file,
-> >                               (long long)lock->fl.fl_end,
-> >                               wait);
-> >
-> > -     if (nlmsvc_file_file(file)->f_op->lock) {
-> > +     if (!(inode->i_sb->s_export_op->flags & EXPORT_OP_SAFE_ASYNC_LOCK=
-) &&
-> > +         nlmsvc_file_file(file)->f_op->lock) {
-> >               async_block =3D wait;
-> >               wait =3D 0;
-> >       }
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 6e61fa3acaf1..efcea229d640 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -7432,6 +7432,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
-> >       struct nfsd4_blocked_lock *nbl =3D NULL;
-> >       struct file_lock *file_lock =3D NULL;
-> >       struct file_lock *conflock =3D NULL;
-> > +     struct super_block *sb;
-> >       __be32 status =3D 0;
-> >       int lkflg;
-> >       int err;
-> > @@ -7453,6 +7454,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
-> >               dprintk("NFSD: nfsd4_lock: permission denied!\n");
-> >               return status;
-> >       }
-> > +     sb =3D cstate->current_fh.fh_dentry->d_sb;
-> >
-> >       if (lock->lk_is_new) {
-> >               if (nfsd4_has_session(cstate))
-> > @@ -7504,7 +7506,8 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_c=
-ompound_state *cstate,
-> >       fp =3D lock_stp->st_stid.sc_file;
-> >       switch (lock->lk_type) {
-> >               case NFS4_READW_LT:
-> > -                     if (nfsd4_has_session(cstate))
-> > +                     if (sb->s_export_op->flags & EXPORT_OP_SAFE_ASYNC=
-_LOCK &&
->
-> This will break existing filesystems that don't set the new flag. Maybe
-> you also need to test for the filesystem's ->lock operation here too?
->
+> >  	if (opnum < ARRAY_SIZE(nfsd4_ops))
+> >  		return nfsd4_ops[opnum].op_name;
+> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > index dad88bff3b9e..83eb5c6d894e 100644
+> > --- a/fs/nfsd/nfsctl.c
+> > +++ b/fs/nfsd/nfsctl.c
+> > @@ -47,6 +47,7 @@ enum {
+> >  	NFSD_MaxBlkSize,
+> >  	NFSD_MaxConnections,
+> >  	NFSD_Filecache,
+> > +	NFSD_Rpc_Status,
+> >  	/*
+> >  	 * The below MUST come last.  Otherwise we leave a hole in nfsd_files[]
+> >  	 * with !CONFIG_NFSD_V4 and simple_fill_super() goes oops
+> > @@ -195,6 +196,13 @@ static inline struct net *netns(struct file *file)
+> >  	return file_inode(file)->i_sb->s_fs_info;
+> >  }
+> > =20
+> > +static const struct file_operations nfsd_rpc_status_operations =3D {
+> > +	.open		=3D nfsd_rpc_status_open,
+> > +	.read		=3D seq_read,
+> > +	.llseek		=3D seq_lseek,
+> > +	.release	=3D nfsd_stats_release,
+> > +};
+> > +
+> >  /*
+> >   * write_unlock_ip - Release all locks used by a client
+> >   *
+> > @@ -1394,6 +1402,7 @@ static int nfsd_fill_super(struct super_block *sb, =
+struct fs_context *fc)
+> >  		[NFSD_MaxBlkSize] =3D {"max_block_size", &transaction_ops, S_IWUSR|S_I=
+RUGO},
+> >  		[NFSD_MaxConnections] =3D {"max_connections", &transaction_ops, S_IWUS=
+R|S_IRUGO},
+> >  		[NFSD_Filecache] =3D {"filecache", &nfsd_file_cache_stats_fops, S_IRUG=
+O},
+> > +		[NFSD_Rpc_Status] =3D {"rpc_status", &nfsd_rpc_status_operations, S_IR=
+UGO},
+> >  #ifdef CONFIG_NFSD_V4
+> >  		[NFSD_Leasetime] =3D {"nfsv4leasetime", &transaction_ops, S_IWUSR|S_IR=
+USR},
+> >  		[NFSD_Gracetime] =3D {"nfsv4gracetime", &transaction_ops, S_IWUSR|S_IR=
+USR},
+> > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> > index 55b9d85ed71b..3e8a47b93fd4 100644
+> > --- a/fs/nfsd/nfsd.h
+> > +++ b/fs/nfsd/nfsd.h
+> > @@ -94,6 +94,7 @@ int		nfsd_get_nrthreads(int n, int *, struct net *);
+> >  int		nfsd_set_nrthreads(int n, int *, struct net *);
+> >  int		nfsd_pool_stats_open(struct inode *, struct file *);
+> >  int		nfsd_stats_release(struct inode *, struct file *);
+> > +int		nfsd_rpc_status_open(struct inode *inode, struct file *file);
+> >  void		nfsd_shutdown_threads(struct net *net);
+> > =20
+> >  static inline void nfsd_put(struct net *net)
+> > @@ -511,12 +512,18 @@ extern void nfsd4_ssc_init_umount_work(struct nfsd_=
+net *nn);
+> > =20
+> >  extern void nfsd4_init_leases_net(struct nfsd_net *nn);
+> > =20
+> > +const char *nfsd4_op_name(unsigned int opnum);
+> >  #else /* CONFIG_NFSD_V4 */
+> >  static inline int nfsd4_is_junction(struct dentry *dentry)
+> >  {
+> >  	return 0;
+> >  }
+> > =20
+> > +static inline const char *nfsd4_op_name(unsigned int opnum)
+> > +{
+> > +	return "unknown_operation";
+> > +}
+> > +
+> >  static inline void nfsd4_init_leases_net(struct nfsd_net *nn) { };
+> > =20
+> >  #define register_cld_notifier() 0
+> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > index 460219030ce1..237be14d3a11 100644
+> > --- a/fs/nfsd/nfssvc.c
+> > +++ b/fs/nfsd/nfssvc.c
+> > @@ -998,6 +998,15 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+> >  	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
+> >  		goto out_decode_err;
+> > =20
+> > +	/*
+> > +	 * Release rq_status_counter setting it to an odd value after the rpc
+> > +	 * request has been properly parsed. rq_status_counter is used to
+> > +	 * notify the consumers if the rqstp fields are stable
+> > +	 * (rq_status_counter is odd) or not meaningful (rq_status_counter
+> > +	 * is even).
+> > +	 */
+> > +	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter |=
+ 1);
+> > +
+> >  	rp =3D NULL;
+> >  	switch (nfsd_cache_lookup(rqstp, &rp)) {
+> >  	case RC_DOIT:
+> > @@ -1015,6 +1024,12 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+> >  	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
+> >  		goto out_encode_err;
+> > =20
+> > +	/*
+> > +	 * Release rq_status_counter setting it to an even value after the rpc
+> > +	 * request has been properly processed.
+> > +	 */
+> > +	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter +=
+ 1);
+> > +
+> >  	nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
+> >  out_cached_reply:
+> >  	return 1;
+> > @@ -1101,3 +1116,128 @@ int nfsd_stats_release(struct inode *inode, struc=
+t file *file)
+> >  	mutex_unlock(&nfsd_mutex);
+> >  	return ret;
+> >  }
+> > +
+> > +static int nfsd_rpc_status_show(struct seq_file *m, void *v)
+> > +{
+> > +	struct inode *inode =3D file_inode(m->file);
+> > +	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id=
+);
+> > +	int i;
+> > +
+> > +	seq_puts(m, "# XID FLAGS VERS PROC TIMESTAMP SADDR SPORT DADDR DPORT CO=
+MPOUND_OPS\n");
+> > +
+> > +	rcu_read_lock();
+> > +
+> > +	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+> > +		struct svc_rqst *rqstp;
+> > +
+> > +		list_for_each_entry_rcu(rqstp,
+> > +				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
+> > +				rq_all) {
+> > +			struct {
+> > +				struct sockaddr daddr;
+> > +				struct sockaddr saddr;
+> > +				unsigned long rq_flags;
+> > +				const char *pc_name;
+> > +				ktime_t rq_stime;
+> > +				__be32 rq_xid;
+> > +				u32 rq_vers;
+> > +				/* NFSv4 compund */
+> > +				u32 opnum[NFSD_MAX_OPS_PER_COMPOUND];
+> > +			} rqstp_info;
+> > +			unsigned int status_counter;
+> > +			char buf[RPC_MAX_ADDRBUFLEN];
+> > +			int opcnt =3D 0;
+> > +
+> > +			/*
+> > +			 * Acquire rq_status_counter before parsing the rqst
+> > +			 * fields. rq_status_counter is set to an odd value in
+> > +			 * order to notify the consumers the rqstp fields are
+> > +			 * meaningful.
+> > +			 */
+> > +			status_counter =3D smp_load_acquire(&rqstp->rq_status_counter);
+> > +			if (!(status_counter & 1))
+> > +				continue;
+> > +
+> > +			rqstp_info.rq_xid =3D rqstp->rq_xid;
+> > +			rqstp_info.rq_flags =3D rqstp->rq_flags;
+> > +			rqstp_info.rq_vers =3D rqstp->rq_vers;
+> > +			rqstp_info.pc_name =3D svc_proc_name(rqstp);
+> > +			rqstp_info.rq_stime =3D rqstp->rq_stime;
+> > +			memcpy(&rqstp_info.daddr, svc_daddr(rqstp),
+> > +			       sizeof(struct sockaddr));
+> > +			memcpy(&rqstp_info.saddr, svc_addr(rqstp),
+> > +			       sizeof(struct sockaddr));
+> > +
+> > +#ifdef CONFIG_NFSD_V4
+> > +			if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
+> > +			    rqstp->rq_proc =3D=3D NFSPROC4_COMPOUND) {
+> > +				/* NFSv4 compund */
+> > +				struct nfsd4_compoundargs *args =3D rqstp->rq_argp;
+> > +				int j;
+> > +
+> > +				opcnt =3D args->opcnt;
+> > +				for (j =3D 0; j < opcnt; j++) {
+> > +					struct nfsd4_op *op =3D &args->ops[j];
+> > +
+> > +					rqstp_info.opnum[j] =3D op->opnum;
+> > +				}
+> > +			}
+> > +#endif /* CONFIG_NFSD_V4 */
+> > +
+> > +			/*
+> > +			 * Acquire rq_status_counter before reporting the rqst
+> > +			 * fields to the user.
+> > +			 */
+> > +			if (smp_load_acquire(&rqstp->rq_status_counter) !=3D status_counter)
+> > +				continue;
+> > +
+> > +			seq_printf(m,
+> > +				   "%04u %04ld NFSv%d %s %016lld",
+> > +				   be32_to_cpu(rqstp_info.rq_xid),
+>=20
+> It's proper to display XIDs as 8-hexit hexadecimal values, as you
+> did before. "0x%08x" is the correct format, as that matches the
+> XID display format used by Wireshark and our tracepoints.
+>=20
+>=20
+> > +				   rqstp_info.rq_flags,
+>=20
+> I didn't mean for you to change the flags format to decimal. I was
+> trying to point out that the content of this field will need to be
+> displayed symbolically if we care about an easy user experience.
+>=20
+> Let's stick with hex here. A clever user can read the bits directly
+> from that. All others should have a tool that parses this field and
+> prints the list of bits in it symbolically.
+>=20
+>=20
+> > +				   rqstp_info.rq_vers,
+> > +				   rqstp_info.pc_name,
+> > +				   ktime_to_us(rqstp_info.rq_stime));
+> > +			seq_printf(m, " %s",
+> > +				   __svc_print_addr(&rqstp_info.saddr, buf,
+> > +						    sizeof(buf), false));
+> > +			seq_printf(m, " %s",
+> > +				   __svc_print_addr(&rqstp_info.daddr, buf,
+> > +						    sizeof(buf), false));
+> > +			if (opcnt) {
+> > +				int j;
+> > +
+> > +				seq_puts(m, " ");
+> > +				for (j =3D 0; j < opcnt; j++)
+> > +					seq_printf(m, "%s%s",
+> > +						   nfsd4_op_name(rqstp_info.opnum[j]),
+> > +						   j =3D=3D opcnt - 1 ? "" : ":");
+> > +			} else {
+> > +				seq_puts(m, " -");
+> > +			}
+>=20
+> This looks correct to me.
+>=20
+> I'm leaning towards moving this to a netlink API that can be
+> extended over time to handle other stats and also act as an NFSD
+> control plane, similar to other network subsystems.
+>=20
+> Any comments, complaints or rotten fruit from anyone?
 
-yes.
+I think netlink is the best way forward.  'cat' is nice, but not
+necessary.  We have an established path for distributing tools for
+working with nfsd so we get easily get a suitable tool into the hands of
+our users.
 
-> This might be more nicely expressed in a helper function.
+The only fruit I have relates to the name "rpc_status", and it probably
+over-ripe rather than rotten :-)
+In the context of RPC, "status" means the success/failure result of a
+request.  That is not what this file provides.  It is a list of active
+requests.  So maybe "active_rpc".
+One advantage of netlink is that the API is based on numbers, not names!
 
-ok.
+NeilBrown
 
-- Alex
+
+>=20
+>=20
+> > +			seq_puts(m, "\n");
+> > +		}
+> > +	}
+> > +
+> > +	rcu_read_unlock();
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +/**
+> > + * nfsd_rpc_status_open - open routine for nfsd_rpc_status handler
+> > + * @inode: entry inode pointer.
+> > + * @file: entry file pointer.
+> > + *
+> > + * nfsd_rpc_status_open is the open routine for nfsd_rpc_status procfs h=
+andler.
+> > + * nfsd_rpc_status dumps pending RPC requests info queued into nfs serve=
+r.
+> > + */
+> > +int nfsd_rpc_status_open(struct inode *inode, struct file *file)
+> > +{
+> > +	int ret =3D nfsd_stats_open(inode);
+> > +
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return single_open(file, nfsd_rpc_status_show, inode->i_private);
+> > +}
+> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> > index 7838b37bcfa8..b49c0470b4fe 100644
+> > --- a/include/linux/sunrpc/svc.h
+> > +++ b/include/linux/sunrpc/svc.h
+> > @@ -251,6 +251,7 @@ struct svc_rqst {
+> >  						 * net namespace
+> >  						 */
+> >  	void **			rq_lease_breaker; /* The v4 client breaking a lease */
+> > +	unsigned int		rq_status_counter; /* RPC processing counter */
+> >  };
+> > =20
+> >  /* bits for rq_flags */
+> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> > index af692bff44ab..83bee19df104 100644
+> > --- a/net/sunrpc/svc.c
+> > +++ b/net/sunrpc/svc.c
+> > @@ -1656,7 +1656,7 @@ const char *svc_proc_name(const struct svc_rqst *rq=
+stp)
+> >  		return rqstp->rq_procinfo->pc_name;
+> >  	return "unknown";
+> >  }
+> > -
+> > +EXPORT_SYMBOL_GPL(svc_proc_name);
+> > =20
+> >  /**
+> >   * svc_encode_result_payload - mark a range of bytes as a result payload
+> > --=20
+> > 2.41.0
+> >=20
+>=20
+> --=20
+> Chuck Lever
+>=20
 
