@@ -2,89 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CD33778F72
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Aug 2023 14:27:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 94D49779161
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Aug 2023 16:07:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236483AbjHKM1d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Aug 2023 08:27:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40372 "EHLO
+        id S230189AbjHKOGz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Aug 2023 10:06:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235414AbjHKM1c (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Aug 2023 08:27:32 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E55FE60;
-        Fri, 11 Aug 2023 05:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=96Jyxa0hgrG24aZgu2ilDmsPaDJbIFT8CvAcqFGq7ak=; b=Lt8QMt/qiwPklQXJKNxAAayl50
-        ejm5z3TauQQgWXDYeiy6ev7CoxuktCUjLml+tQTXB0FrmwYo9bGjhm2G8bwiVtr2qWkYfM3c8FNl1
-        cPDaz7ayPa6vktH3ev1ZeHUse0hr9sV3dSKzn62142iTuA8TTM4tDaiYAHOFhJAm7nP3aQxRbODoe
-        cl8s2GHmVFeXScu6jrXcZHGDTmN2udO8XZ0pPwfpsd5QoOiRLOiFHXD6KYR9f2MEyvA/KeT9RzHmF
-        DIvDgADu/AxqynsuMYC3hcwdLyXOsBeZQBLnrFNVOoRqDCMnS+8kcWICKZ1ml8I/4TT3bYAOcmKWy
-        N15IsxAA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qUREm-00Abyw-17;
-        Fri, 11 Aug 2023 12:27:28 +0000
-Date:   Fri, 11 Aug 2023 05:27:28 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        Joern Engel <joern@lazybastard.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Song Liu <song@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v2 0/29] block: Make blkdev_get_by_*() return handle
-Message-ID: <ZNYpMPM5o4q1xcIt@infradead.org>
-References: <20230810171429.31759-1-jack@suse.cz>
+        with ESMTP id S230185AbjHKOGy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Aug 2023 10:06:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48A7EEA
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Aug 2023 07:06:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CCBE760F4B
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Aug 2023 14:06:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D28C433C7;
+        Fri, 11 Aug 2023 14:06:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691762813;
+        bh=rjoXSWhr5PpJOP959RUInL/N6dBmCddnze2P4T8fb78=;
+        h=Subject:From:To:Cc:Date:From;
+        b=cjOrcsxx1cxd2CBPpRPo/F/rvVWycrgvuTIukZAT+I9x9lzrtt8E3n9BdtFQQwaWS
+         vkgWV0lHPFSkSXACKIq8VuC4DwGCrzjEbuj5/6VQ9YwkyBRiSXBnXxR8JOWYtVtcki
+         EqBcJCL/oosaoZDdU9ELyyzl7jTrfXIAMfDHGM9bkHgnGnPd/FdWxNxfSxRripPsrS
+         pNrwrPvCWbdr6aA5MgjG1JWheCrTHK4oHtr8iuiWOrslgRVWg7NDqXRoHiLbJCZrJL
+         1qaAtU6xAU6ETgg+G4hsMliN/J+qf0QsCAaXjqH55JiZd5TprkXHbkXzaJHVh0NYxY
+         AEN4QpG3Cp8Uw==
+Message-ID: <b1ae55f1c835ea6b30089a9377ae67c40d43a0fc.camel@kernel.org>
+Subject: turning on s2s copy by default in knfsd
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <dai.ngo@oracle.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Steve Dickson <steved@redhat.com>,
+        Olga Kornieskaia <kolga@netapp.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Date:   Fri, 11 Aug 2023 10:06:51 -0400
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230810171429.31759-1-jack@suse.cz>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Except for a mostly cosmetic nitpick this looks good to me:
+Chuck and I were chatting yesterday about what it will take to make the
+inter_copy_offload_enable module option on by default, and I'd like to
+start working toward that end.
 
-Acked-by: Christoph Hellwig <hch@lst.de>
+I think what we want to aim for is to eventually deprecate the module
+option and have this "just work" when the conditions are right.
 
-That's not eactly the deep review I'd like to do, but as I'm about to
-head out for vacation that's probably as good as it gets.
+It looks like main obstacle is this (from RFC7862 section 4.9):
+
+   NFSv4 clients and servers supporting the inter-server COPY operations
+   described in this section are REQUIRED to implement the mechanism
+   described in Section 4.9.1.1 and to support rejecting COPY_NOTIFY
+   requests that do not use the RPC security protocol (RPCSEC_GSS)
+   [RFC7861] with privacy.  If the server-to-server copy protocol is
+   based on ONC RPC, the servers are also REQUIRED to implement
+   [RFC7861], including the RPCSEC_GSSv3 "copy_to_auth",
+   "copy_from_auth", and "copy_confirm_auth" structured privileges.
+   This requirement to implement is not a requirement to use; for
+   example, a server may, depending on configuration, also allow
+   COPY_NOTIFY requests that use only AUTH_SYS.
+
+   If a server requires the use of an RPCSEC_GSSv3 copy_to_auth,
+   copy_from_auth, or copy_confirm_auth privilege and it is not used,
+   the server will reject the request with NFS4ERR_PARTNER_NO_AUTH.
+
+We don't (yet) have GSSv3 support, so we'd need to implement that in
+order to make this work right with krb5. Has anyone started looking at
+GSSv3?
+
+Incidentally, has anyone tried doing this with sec=3Dkrb5 in the current
+code? Does it actually work? I don't see any place where we return
+nfserr_partner_no_auth, so I wonder if we need to fix up the s2s COPY
+authentication and error handling?
+
+Another question: The v4.2 spec was written before the RPC over TLS
+spec. Should we aim to allow this to work by default if the client and
+both servers are using xprtsec=3Dmtls and are secured by the same CA?
+
+1/ the client and servers are all using GSSv3 with krb5p (or some other
+encryption)
+
+...or...
+
+2/ the client and servers are all using mtls with certificates signed by
+the same CA
+
+
+...I expect we'll probably be able to accomodate #2 before #1.
+
+Beyond that, we could allow for module or export option that still
+allows s2s copy to work and relaxes the above restrictions (to allow
+people to use it over plaintext with AUTH_SYS on "secure" networks).
+
+Anything I've overlooked here, or other thoughts?
+
+Cheers,
+--=20
+Jeff Layton <jlayton@kernel.org>
