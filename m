@@ -2,156 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB1C6779CFE
-	for <lists+linux-nfs@lfdr.de>; Sat, 12 Aug 2023 05:30:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2FF779E63
+	for <lists+linux-nfs@lfdr.de>; Sat, 12 Aug 2023 11:06:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234196AbjHLDaD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Aug 2023 23:30:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40660 "EHLO
+        id S231894AbjHLI7h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 12 Aug 2023 04:59:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjHLDaC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Aug 2023 23:30:02 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D25C5
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Aug 2023 20:30:02 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37C2uACg024880;
-        Sat, 12 Aug 2023 03:29:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=r4qOFnTM5AqLrM+ox+ABGko9X0gZa7r630YW0VmZRFM=;
- b=FnIbhZRGD+D0ROR2ee4jReEOKifdW2TnOfFYq27QBZYxUqTsPTG4zydeFyBquJiSZ4E9
- CTG4gl1ZMEXfyEcBSaklOmTQMszw1BTRApOtwdRmH78hG2ng3U9E2wsbqOrLH/qNd2km
- 7LlMlZWJLX4G6kLML4TvC2AKhRRkDTISdxI7nntpbBEFkFVxpusGa5BBIlBluevA3Ate
- BAbWvZewVmdTpAqG5sryln4YNVrty1DqhSFJb3H2cgsaDeLoUattixKS2p854iZHcLoc
- ZLh240XgcfuxgIv09VLnL3v1JT1YV8LaHJPJLudGyP1CO29qienNasMzhV/MnOqWzBHg Yg== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3se0v3029c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Aug 2023 03:29:58 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37C1Ws3n006860;
-        Sat, 12 Aug 2023 03:29:57 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2109.outbound.protection.outlook.com [104.47.70.109])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3se0h19u3y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Aug 2023 03:29:57 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MAk9I+diSPimuU8GE+AE5m2XFqQNbBXK1Rcms1hx0oDU6YVjERBzw3i2mAawHQJqCWSuislvtJPG/Qu4tBuqKsGwQt/uqrtISlftnh0UynPf8yfXpAWDAe9X+FO6nX9UWlgsFaFaxRjFnYtW52yUk6Knsz58+senskRx4CNCJklIfg5Tndjl5kyWEjTNXNOleGw+MMS3v9lGI8a382wvYjYtFTicX0XDEHNIFoCCgGjN1DBvn+SdOg5VplDYZPCwFQ3QmD0dY+OlmwVqA/aFktWHukcA5LwGbMLTpZ23ufW5M1qEdB0CYzgVpY7HjHaL9lieGnq+oQs2QcfoEhO9oQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r4qOFnTM5AqLrM+ox+ABGko9X0gZa7r630YW0VmZRFM=;
- b=PD67XG8fPvFpt9wLeGsA754d6chpF8BRkrayrcIkPvkhiwLGklQXRdHasEt8mRiDGvhNhhBieQ5GOGi38hICJ1jLLR7K+J9z6mk8tP4Ey59bqZMni68z1kH2JZCxWMhn/ZHY/v4lGXwJ7Rq7gQsDNucaDeCmTlPrP5zZpUsDrkFq0ddYg6y1wP9LL8npIJtUrzVDD4kky/1UGv8ktKzYcPjDwN+izO81hCahF9XU+X7eQd/OtA7UFYZZIshQ0Z+g+z/QCM4I88PKkmv2VRVllT5zHQG+wnjkq4PToPFGg9ChN9iXLlChH+Ql/cggifo5LzxU+WYkWsG8Zd8k0tLe7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r4qOFnTM5AqLrM+ox+ABGko9X0gZa7r630YW0VmZRFM=;
- b=BMyebtjuVtHem7pm/M8lAWHvzvwKGDjvVrNWixY+bnv9GuVksEDxRm4kZO7btXIhERutWBJ40cgqpqJZpXka8pYnv+oSPO/zLTAopR3IHyTxRMrJPnaG9Re+0d7sI/93wfwYCnVamxHEByHBwguuhgArmf9KZP1VIqYtaoow4PI=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SA1PR10MB7709.namprd10.prod.outlook.com (2603:10b6:806:3a9::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6652.30; Sat, 12 Aug
- 2023 03:29:55 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::2990:c166:9436:40e]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::2990:c166:9436:40e%6]) with mapi id 15.20.6678.022; Sat, 12 Aug 2023
- 03:29:55 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@kernel.org>
-CC:     Dai Ngo <dai.ngo@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v7 2/4] NFSD: allow client to use write delegation stateid
- for READ
-Thread-Topic: [PATCH v7 2/4] NFSD: allow client to use write delegation
- stateid for READ
-Thread-Index: AQHZqvWWVa87zTcsc0+PkdjTnu1klq/lmuUAgAAHBICAABYBAIAAAH4AgAAXvQCAAHRoAA==
-Date:   Sat, 12 Aug 2023 03:29:54 +0000
-Message-ID: <9CF31D79-D696-43A2-8156-3ADD8335F271@oracle.com>
-References: <1688089960-24568-1-git-send-email-dai.ngo@oracle.com>
- <1688089960-24568-3-git-send-email-dai.ngo@oracle.com>
- <6756f84c4ff92845298ce4d7e3c4f0fb20671d3d.camel@kernel.org>
- <83cd1107-2efe-f16c-2015-3da15aec12a5@oracle.com>
- <41b59c4a1359c5b0224fbe95e9fec062b6d8bdbf.camel@kernel.org>
- <524E999E-2988-473E-A18B-9617ECD30E12@oracle.com>
- <aa182ccb2c879cee94a89a11c85f6aa15978452c.camel@kernel.org>
-In-Reply-To: <aa182ccb2c879cee94a89a11c85f6aa15978452c.camel@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.700.6)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|SA1PR10MB7709:EE_
-x-ms-office365-filtering-correlation-id: a9b3b212-e2df-4787-93a4-08db9ae4657f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: dL6n1jCFiDiYg6fci6s5yq8wZw6ZcLWvs23lh5Z3QJxJ1yLOwtYQy32awIcNoH+3CEPAd65FzZFrsIEymsJHhrAndXreyX3JTC7PeRQMEpEacQSu51DZKunmw063fmGsAAAWrsOI9V70GCwN+jnn/sHWyCDPsoG1SB8pdAFEyPy1mHjVSHgDvm7bL/ntdV9kQYhZeLFYrSeyNxUH7lo3b63pdcMcdShNV/4zlH6Hb4fuadz2iqKXrZ9cRtVLBvaHKKSN/CjIx1vLDIeQzUN2U1Wy3v3dqSVYPxTslBLA9cpZkpk0rutqBOwLQSd5LrRLgN5PjmMkpZgM8/NWYS4ah01xBlR5oTFDghdW7mLiMiBxzQdFX703Os1lHIKlUGDA2zAYmdhhN8ZJnpPzyzGkQvwYcKgh09ZMkU0mS4l5nO/i4VwHvcwwoMR+75ya62i0jYTeoqYKGDalvvntJjypJ0n4WAiCJuvkFuwxugaNHGsJWb2vKDBFv/Uyy28UNEKGWaCrk0hgAZlB3NCj5Qpd5gTaNT9AvV3QOnhr5YAQFG7ak5tCdOKQhQIapUs0Q/lPMoMwU2JnvoLQ+bhQHp3wMG7FWdEvk1Yy1FJrZlbCXUwCJ6DqNX/5g09wxQehFWoIBsc8b/khR4quRfpHdVJl1A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(346002)(366004)(136003)(39860400002)(376002)(186006)(1800799006)(451199021)(316002)(5660300002)(91956017)(41300700001)(33656002)(2616005)(36756003)(26005)(53546011)(6506007)(66446008)(66476007)(4744005)(6916009)(38100700002)(86362001)(64756008)(71200400001)(122000001)(38070700005)(4326008)(6486002)(54906003)(478600001)(76116006)(6512007)(2906002)(66556008)(66946007)(8936002)(8676002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?dxIyNpaSGLsoNW0hjTBCsljlIy7uxVJFvFDz8/u+FUhH0nADHDJUPIns+hjs?=
- =?us-ascii?Q?z3twG1FzVkzZH9Jx4d1H8bOwyrNyL5/dmLm1aCiHERqSiFCry0BPLN60QThd?=
- =?us-ascii?Q?TIhkLhREOnJy24J6HjLCjN1B+bDDL/G8sGXE3v08fT5qKIup3rtmZ//W3J0d?=
- =?us-ascii?Q?bL3d7SPnrS2F+LHdp3yJjWx0noe5Uy7HV9oBE4SbD+TSXI2HeNCiO6xUQdte?=
- =?us-ascii?Q?LLDLueM18H6LrrncpRfLHqjgNSGuo5LMdZQnb+LstZuOGVrJkhjAGku+q9RZ?=
- =?us-ascii?Q?osRiwCh6XSSuXHMWAcM/XxW3D8XGLDBS9KCi8G4Psn4BIfZbPi2ajgSsdZs9?=
- =?us-ascii?Q?gkHCwL0vW9xOFk2bFqkmhT/O9fnmN6HKzpPsEuCNLe5W5zGo9KdFv6GjU4vo?=
- =?us-ascii?Q?lkmg2FOAJgKw6WdaLYQEeao5sD1ngmeMNikVc6fLSnvmNBm052Cc786MU8A/?=
- =?us-ascii?Q?mGWRMuC8KH39OcaZBfawCIMWRglSo3UVk4Kw39qTVehTd4qWNMx7gL7BKaMR?=
- =?us-ascii?Q?o6LKSO6/VtP+kHF/EzNrfqaXGeO1nIZePYAC5wAR4xdoUU5Zcvhk0oM0fw1J?=
- =?us-ascii?Q?kR1RnHKcyvpqFfD5gaEAUBlWlyAjgum7Zm5N8YG0b0wqix57MFbuKWmVrOKS?=
- =?us-ascii?Q?7gDKIZdBFwY21cCyFy0oWsWS3ZHkQh10qsN24vUHe4Wrpo2pB/06emLsoRkv?=
- =?us-ascii?Q?3X1VvGMuwyp4d2W++dQu4fe3C1+RCsQt8W5dvwPSe0v67w6U0SsGvpjfikO6?=
- =?us-ascii?Q?Wapxch76hgFyUMj9JzxbVuMABLhAvcPz1gDkgTBiQHfJzhUUCks+SKo6dLB0?=
- =?us-ascii?Q?JbudJK8l0qEB6f4k5/p1b6HedWJSleJ5KOtunanlDtoMQghotOW3uatJaBC7?=
- =?us-ascii?Q?K/dkyIBrma8p0GSrwZDrLVrwxT55qI4TDj1RzdNX5u6gCQalyMwtwHuq8wdj?=
- =?us-ascii?Q?+emso6KY2XGFM+fu+SuLq1P7D+f5g09cKPugKK+jHESNHiqlTIXNSrC5fXTi?=
- =?us-ascii?Q?/krB5Q6ywv5nVrAEZfa4i1LJlRIAjlV42bqofEPlUeX5D744V3ZPzWl19CsV?=
- =?us-ascii?Q?M+ucvokMQ7ia22SdSTEDiwdY3AKA8YU+OmQqMdiyNs3ZIlgJyrGhKacv+BLh?=
- =?us-ascii?Q?T993Dyx/VPzteY9+XmjW56E05sATx3xxAOtltdLX5Sd64bzNba8VXqpbdMM3?=
- =?us-ascii?Q?cwHHMNp6Ug5PFjJGCRKHlFk+XF9JbKE66kyv00EY2BJyheSAz+Zzt7U5bHPU?=
- =?us-ascii?Q?4rHIPnuwxcR3oTeW/Kfg2EHlqcIR3S0IC6FNwYCVaMBPprALo/vwou0uRcOO?=
- =?us-ascii?Q?sQpE7rUypktvLL0CzJcXwgpmLkrf7Te3FT+A6Z4qdmj5mGvjbXxLmgUUw1JO?=
- =?us-ascii?Q?kjAs73fIEj9WLlewA4zv5ti3QIiKipNzpvKBUdNcm38Et4tYkBFJj1DqHSVW?=
- =?us-ascii?Q?n4Ab1Rs/fR5ehRc/pxEZNKjTyGwaDlc54ulELCGE/R7Im3wkTUwn1LXr/82F?=
- =?us-ascii?Q?Q+4yQycuTSOOWGO/bqRexboUa/N8b1id9E3qyGz71DM04OMcmVp6PpWHmNgT?=
- =?us-ascii?Q?7Q+biXNEq/09Oj259kNwO0pvoZdO8+wknVpPOLdyZ219oac54rtpNMy9lcKU?=
- =?us-ascii?Q?oA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FB0392D204BE8A459BDCA32E399AFEB3@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S235580AbjHLI7g (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 12 Aug 2023 04:59:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B465930DA
+        for <linux-nfs@vger.kernel.org>; Sat, 12 Aug 2023 01:59:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 339CD6371F
+        for <linux-nfs@vger.kernel.org>; Sat, 12 Aug 2023 08:59:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7260C433C8;
+        Sat, 12 Aug 2023 08:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1691830765;
+        bh=m08jXPhRdK8/B+F/ZxjmI0X/V5+8vZb0N6qeR2tMuxQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l+4pxWdLqMLH4b8JpnmqYCAXqzKlZc27eMtQ9pUMbklqM4AOl0e+W6oXIMIPs0nVi
+         Tjumv3e2vMMjDpanundNVEDp98cZVQpcQ/Ml5pPrtgwAt+AW+oJ2u8QtVkEcZETQJn
+         zmWQIcCR85oxvFtDv5egD2h9wn6mAEviMsRtEWK6Wtw38MhX9GNgYtijkLT446Syj6
+         hyAdqAvbwF1HzAWo4X2saP98PJJ7HhJy+C3R7KcWwVjzSCtS0QDZHlWv9L9zYVVdeB
+         mUGMaOX8J2yU4WT6oQ5XLKyqpWHqJuSIFVu7BHQGfJdQu2X9e1kSVOxuJ38CULFgrv
+         MJFwlgbwpbJXg==
+Date:   Sat, 12 Aug 2023 10:59:19 +0200
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Neil Brown <neilb@suse.de>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH v6 3/3] NFSD: add rpc_status entry in nfsd debug
+ filesystem
+Message-ID: <ZNdJ5/PePo1aQz0I@lore-rh-laptop>
+References: <cover.1691656474.git.lorenzo@kernel.org>
+ <177cfd4fc640d9b406101761be24da07990ca81e.1691656474.git.lorenzo@kernel.org>
+ <ZNT7wdG8SYfDRkDg@tissot.1015granger.net>
+ <169169907976.11073.6029761322750936330@noble.neil.brown.name>
+ <2D7CA2D5-EE53-412E-9F64-DB88B4938475@oracle.com>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 5gsNbfjUdLRGLMa6xpD5NtKwwhGb9AKf58YFRYFdMo0Qy0w2sO+0hsFTTybKt8k+V5lImwX5dJ4s5HGxK0UZKW9OpQW0OkVMbGzRrtjPfycRxxWCsCs7P3z165tcCcBm5+ZbaafoWH/3u6F9pCRNVHWs+5klrkTNIhqIZhbKZ8MGkJdYuU7zMNTE7B2Ud0kqwx7fxukfCVQh/AYcsC5TaCRgiWHVKJ/XnZRdnQ/89B0j2fWq2Yo6dV7hWRskEVh4ODBzmarTr1yKYEOdbsOlTaaV0D/uVNQEXoTu6rx4Uc4LsNkO+4SMREJ6Koza2sc1Kl/gDumGyL+tCV43KRcxW1un401Bvjccq3zp9zYGplsn8kcBkFClINFHgOxRXOyktTL8tBe+irDzF+Kx+Cny0rlwMKVxuQ4CWZ/aq3WDtLwmQ4X/J1iQKExZsoErsVvPicpKmgUv1LnEO5OeB87qIbcYIAw4PdqCnrIx5Ki+iEcnUfNSGMrNNgUhmBsd9Gb749q9XtIt5nq62Zji9W0tkGFIDEYngyd8apHc6xfLFkSkqrNJjM07tdzCHkRi4UiXlVmJvDU4XuEQqSWFgTxcnPVUHaCvCEyLl01Y1TIHJNv3S8vIQ74+2PhqcBe3dwNTh+GdtRpH9+8SZjfUYnx+wRsNKt+Vza3cVqAkERYN3fmvXiBD9L+XaoqywhzxNj+zuKi+EZ91pi3no/Xr1P56P6G1ASK8BlQZ0W6B+en2VPzYhIgyekV2o72f0i+sfp8ydPmJwbCFe8byH/BUYO4OvxDz9qYZp3o0+dasK7EKsLc=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9b3b212-e2df-4787-93a4-08db9ae4657f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Aug 2023 03:29:54.8817
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qDnh0vok7XiMEKjPjR15jUYRidC4AGRQ2KfHG5N5xdjXMUWr1VCfMShNWH29BywPnH29+NP9ExNEvbV9USevZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB7709
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-08-12_01,2023-08-10_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 adultscore=0
- suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=765
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2308120031
-X-Proofpoint-ORIG-GUID: u4-8K4LIk5djP9VKV3hdl-Q_Osg9pJUL
-X-Proofpoint-GUID: u4-8K4LIk5djP9VKV3hdl-Q_Osg9pJUL
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="VoFy/Yiikhh2v8CM"
+Content-Disposition: inline
+In-Reply-To: <2D7CA2D5-EE53-412E-9F64-DB88B4938475@oracle.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -159,30 +63,406 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
+--VoFy/Yiikhh2v8CM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Aug 11, 2023, at 4:33 PM, Jeff Layton <jlayton@kernel.org> wrote:
 >=20
-> On Fri, 2023-08-11 at 19:08 +0000, Chuck Lever III wrote:
->>=20
->>> On Aug 11, 2023, at 3:06 PM, Jeff Layton <jlayton@kernel.org> wrote:
->>>=20
->>> Yep. Reverting that patch seemed to fix the problem. Chuck, mind just
->>> dropping this patch from nfsd-next?
->>=20
->> I can, but let's make sure that doesn't break anything else first.
->> Send me any test results, and I'll run some tests here too.
 >=20
-> Sure, results attached from several runs. These are running "all" tests
-> in pynfs for both v4.0 and v4.1. The kernels are:
+> > On Aug 10, 2023, at 4:24 PM, NeilBrown <neilb@suse.de> wrote:
+> >=20
+> > On Fri, 11 Aug 2023, Chuck Lever wrote:
+> >> On Thu, Aug 10, 2023 at 10:39:21AM +0200, Lorenzo Bianconi wrote:
+> >>> Introduce rpc_status entry in nfsd debug filesystem in order to dump
+> >>> pending RPC requests debugging information.
+> >>>=20
+> >>> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D366
+> >>> Reviewed-by: NeilBrown <neilb@suse.de>
+> >>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> >>> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+> >>> ---
+> >>> fs/nfsd/nfs4proc.c         |   4 +-
+> >>> fs/nfsd/nfsctl.c           |   9 +++
+> >>> fs/nfsd/nfsd.h             |   7 ++
+> >>> fs/nfsd/nfssvc.c           | 140 +++++++++++++++++++++++++++++++++++++
+> >>> include/linux/sunrpc/svc.h |   1 +
+> >>> net/sunrpc/svc.c           |   2 +-
+> >>> 6 files changed, 159 insertions(+), 4 deletions(-)
+> >>>=20
+> >>> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> >>> index aa4f21f92deb..ff5a1dddc0ed 100644
+> >>> --- a/fs/nfsd/nfs4proc.c
+> >>> +++ b/fs/nfsd/nfs4proc.c
+> >>> @@ -2496,8 +2496,6 @@ static inline void nfsd4_increment_op_stats(u32=
+ opnum)
+> >>>=20
+> >>> static const struct nfsd4_operation nfsd4_ops[];
+> >>>=20
+> >>> -static const char *nfsd4_op_name(unsigned opnum);
+> >>> -
+> >>> /*
+> >>>  * Enforce NFSv4.1 COMPOUND ordering rules:
+> >>>  *
+> >>> @@ -3627,7 +3625,7 @@ void warn_on_nonidempotent_op(struct nfsd4_op *=
+op)
+> >>> }
+> >>> }
+> >>>=20
+> >>> -static const char *nfsd4_op_name(unsigned opnum)
+> >>> +const char *nfsd4_op_name(unsigned int opnum)
+> >>> {
+> >>> if (opnum < ARRAY_SIZE(nfsd4_ops))
+> >>> return nfsd4_ops[opnum].op_name;
+> >>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> >>> index dad88bff3b9e..83eb5c6d894e 100644
+> >>> --- a/fs/nfsd/nfsctl.c
+> >>> +++ b/fs/nfsd/nfsctl.c
+> >>> @@ -47,6 +47,7 @@ enum {
+> >>> NFSD_MaxBlkSize,
+> >>> NFSD_MaxConnections,
+> >>> NFSD_Filecache,
+> >>> + NFSD_Rpc_Status,
+> >>> /*
+> >>> * The below MUST come last.  Otherwise we leave a hole in nfsd_files[]
+> >>> * with !CONFIG_NFSD_V4 and simple_fill_super() goes oops
+> >>> @@ -195,6 +196,13 @@ static inline struct net *netns(struct file *fil=
+e)
+> >>> return file_inode(file)->i_sb->s_fs_info;
+> >>> }
+> >>>=20
+> >>> +static const struct file_operations nfsd_rpc_status_operations =3D {
+> >>> + .open =3D nfsd_rpc_status_open,
+> >>> + .read =3D seq_read,
+> >>> + .llseek =3D seq_lseek,
+> >>> + .release =3D nfsd_stats_release,
+> >>> +};
+> >>> +
+> >>> /*
+> >>>  * write_unlock_ip - Release all locks used by a client
+> >>>  *
+> >>> @@ -1394,6 +1402,7 @@ static int nfsd_fill_super(struct super_block *=
+sb, struct fs_context *fc)
+> >>> [NFSD_MaxBlkSize] =3D {"max_block_size", &transaction_ops, S_IWUSR|S_=
+IRUGO},
+> >>> [NFSD_MaxConnections] =3D {"max_connections", &transaction_ops, S_IWU=
+SR|S_IRUGO},
+> >>> [NFSD_Filecache] =3D {"filecache", &nfsd_file_cache_stats_fops, S_IRU=
+GO},
+> >>> + [NFSD_Rpc_Status] =3D {"rpc_status", &nfsd_rpc_status_operations, S=
+_IRUGO},
+> >>> #ifdef CONFIG_NFSD_V4
+> >>> [NFSD_Leasetime] =3D {"nfsv4leasetime", &transaction_ops, S_IWUSR|S_I=
+RUSR},
+> >>> [NFSD_Gracetime] =3D {"nfsv4gracetime", &transaction_ops, S_IWUSR|S_I=
+RUSR},
+> >>> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> >>> index 55b9d85ed71b..3e8a47b93fd4 100644
+> >>> --- a/fs/nfsd/nfsd.h
+> >>> +++ b/fs/nfsd/nfsd.h
+> >>> @@ -94,6 +94,7 @@ int nfsd_get_nrthreads(int n, int *, struct net *);
+> >>> int nfsd_set_nrthreads(int n, int *, struct net *);
+> >>> int nfsd_pool_stats_open(struct inode *, struct file *);
+> >>> int nfsd_stats_release(struct inode *, struct file *);
+> >>> +int nfsd_rpc_status_open(struct inode *inode, struct file *file);
+> >>> void nfsd_shutdown_threads(struct net *net);
+> >>>=20
+> >>> static inline void nfsd_put(struct net *net)
+> >>> @@ -511,12 +512,18 @@ extern void nfsd4_ssc_init_umount_work(struct n=
+fsd_net *nn);
+> >>>=20
+> >>> extern void nfsd4_init_leases_net(struct nfsd_net *nn);
+> >>>=20
+> >>> +const char *nfsd4_op_name(unsigned int opnum);
+> >>> #else /* CONFIG_NFSD_V4 */
+> >>> static inline int nfsd4_is_junction(struct dentry *dentry)
+> >>> {
+> >>> return 0;
+> >>> }
+> >>>=20
+> >>> +static inline const char *nfsd4_op_name(unsigned int opnum)
+> >>> +{
+> >>> + return "unknown_operation";
+> >>> +}
+> >>> +
+> >>> static inline void nfsd4_init_leases_net(struct nfsd_net *nn) { };
+> >>>=20
+> >>> #define register_cld_notifier() 0
+> >>> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> >>> index 460219030ce1..237be14d3a11 100644
+> >>> --- a/fs/nfsd/nfssvc.c
+> >>> +++ b/fs/nfsd/nfssvc.c
+> >>> @@ -998,6 +998,15 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+> >>> if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
+> >>> goto out_decode_err;
+> >>>=20
+> >>> + /*
+> >>> + * Release rq_status_counter setting it to an odd value after the rpc
+> >>> + * request has been properly parsed. rq_status_counter is used to
+> >>> + * notify the consumers if the rqstp fields are stable
+> >>> + * (rq_status_counter is odd) or not meaningful (rq_status_counter
+> >>> + * is even).
+> >>> + */
+> >>> + smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_count=
+er | 1);
+> >>> +
+> >>> rp =3D NULL;
+> >>> switch (nfsd_cache_lookup(rqstp, &rp)) {
+> >>> case RC_DOIT:
+> >>> @@ -1015,6 +1024,12 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+> >>> if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
+> >>> goto out_encode_err;
+> >>>=20
+> >>> + /*
+> >>> + * Release rq_status_counter setting it to an even value after the r=
+pc
+> >>> + * request has been properly processed.
+> >>> + */
+> >>> + smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_count=
+er + 1);
+> >>> +
+> >>> nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
+> >>> out_cached_reply:
+> >>> return 1;
+> >>> @@ -1101,3 +1116,128 @@ int nfsd_stats_release(struct inode *inode, s=
+truct file *file)
+> >>> mutex_unlock(&nfsd_mutex);
+> >>> return ret;
+> >>> }
+> >>> +
+> >>> +static int nfsd_rpc_status_show(struct seq_file *m, void *v)
+> >>> +{
+> >>> + struct inode *inode =3D file_inode(m->file);
+> >>> + struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_ne=
+t_id);
+> >>> + int i;
+> >>> +
+> >>> + seq_puts(m, "# XID FLAGS VERS PROC TIMESTAMP SADDR SPORT DADDR DPOR=
+T COMPOUND_OPS\n");
+> >>> +
+> >>> + rcu_read_lock();
+> >>> +
+> >>> + for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
+> >>> + struct svc_rqst *rqstp;
+> >>> +
+> >>> + list_for_each_entry_rcu(rqstp,
+> >>> + &nn->nfsd_serv->sv_pools[i].sp_all_threads,
+> >>> + rq_all) {
+> >>> + struct {
+> >>> + struct sockaddr daddr;
+> >>> + struct sockaddr saddr;
+> >>> + unsigned long rq_flags;
+> >>> + const char *pc_name;
+> >>> + ktime_t rq_stime;
+> >>> + __be32 rq_xid;
+> >>> + u32 rq_vers;
+> >>> + /* NFSv4 compund */
+> >>> + u32 opnum[NFSD_MAX_OPS_PER_COMPOUND];
+> >>> + } rqstp_info;
+> >>> + unsigned int status_counter;
+> >>> + char buf[RPC_MAX_ADDRBUFLEN];
+> >>> + int opcnt =3D 0;
+> >>> +
+> >>> + /*
+> >>> + * Acquire rq_status_counter before parsing the rqst
+> >>> + * fields. rq_status_counter is set to an odd value in
+> >>> + * order to notify the consumers the rqstp fields are
+> >>> + * meaningful.
+> >>> + */
+> >>> + status_counter =3D smp_load_acquire(&rqstp->rq_status_counter);
+> >>> + if (!(status_counter & 1))
+> >>> + continue;
+> >>> +
+> >>> + rqstp_info.rq_xid =3D rqstp->rq_xid;
+> >>> + rqstp_info.rq_flags =3D rqstp->rq_flags;
+> >>> + rqstp_info.rq_vers =3D rqstp->rq_vers;
+> >>> + rqstp_info.pc_name =3D svc_proc_name(rqstp);
+> >>> + rqstp_info.rq_stime =3D rqstp->rq_stime;
+> >>> + memcpy(&rqstp_info.daddr, svc_daddr(rqstp),
+> >>> +       sizeof(struct sockaddr));
+> >>> + memcpy(&rqstp_info.saddr, svc_addr(rqstp),
+> >>> +       sizeof(struct sockaddr));
+> >>> +
+> >>> +#ifdef CONFIG_NFSD_V4
+> >>> + if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
+> >>> +    rqstp->rq_proc =3D=3D NFSPROC4_COMPOUND) {
+> >>> + /* NFSv4 compund */
+> >>> + struct nfsd4_compoundargs *args =3D rqstp->rq_argp;
+> >>> + int j;
+> >>> +
+> >>> + opcnt =3D args->opcnt;
+> >>> + for (j =3D 0; j < opcnt; j++) {
+> >>> + struct nfsd4_op *op =3D &args->ops[j];
+> >>> +
+> >>> + rqstp_info.opnum[j] =3D op->opnum;
+> >>> + }
+> >>> + }
+> >>> +#endif /* CONFIG_NFSD_V4 */
+> >>> +
+> >>> + /*
+> >>> + * Acquire rq_status_counter before reporting the rqst
+> >>> + * fields to the user.
+> >>> + */
+> >>> + if (smp_load_acquire(&rqstp->rq_status_counter) !=3D status_counter)
+> >>> + continue;
+> >>> +
+> >>> + seq_printf(m,
+> >>> +   "%04u %04ld NFSv%d %s %016lld",
+> >>> +   be32_to_cpu(rqstp_info.rq_xid),
+> >>=20
+> >> It's proper to display XIDs as 8-hexit hexadecimal values, as you
+> >> did before. "0x%08x" is the correct format, as that matches the
+> >> XID display format used by Wireshark and our tracepoints.
+> >>=20
+> >>=20
+> >>> +   rqstp_info.rq_flags,
+> >>=20
+> >> I didn't mean for you to change the flags format to decimal. I was
+> >> trying to point out that the content of this field will need to be
+> >> displayed symbolically if we care about an easy user experience.
+> >>=20
+> >> Let's stick with hex here. A clever user can read the bits directly
+> >> from that. All others should have a tool that parses this field and
+> >> prints the list of bits in it symbolically.
+> >>=20
+> >>=20
+> >>> +   rqstp_info.rq_vers,
+> >>> +   rqstp_info.pc_name,
+> >>> +   ktime_to_us(rqstp_info.rq_stime));
+> >>> + seq_printf(m, " %s",
+> >>> +   __svc_print_addr(&rqstp_info.saddr, buf,
+> >>> +    sizeof(buf), false));
+> >>> + seq_printf(m, " %s",
+> >>> +   __svc_print_addr(&rqstp_info.daddr, buf,
+> >>> +    sizeof(buf), false));
+> >>> + if (opcnt) {
+> >>> + int j;
+> >>> +
+> >>> + seq_puts(m, " ");
+> >>> + for (j =3D 0; j < opcnt; j++)
+> >>> + seq_printf(m, "%s%s",
+> >>> +   nfsd4_op_name(rqstp_info.opnum[j]),
+> >>> +   j =3D=3D opcnt - 1 ? "" : ":");
+> >>> + } else {
+> >>> + seq_puts(m, " -");
+> >>> + }
+> >>=20
+> >> This looks correct to me.
+> >>=20
+> >> I'm leaning towards moving this to a netlink API that can be
+> >> extended over time to handle other stats and also act as an NFSD
+> >> control plane, similar to other network subsystems.
+> >>=20
+> >> Any comments, complaints or rotten fruit from anyone?
+> >=20
+> > I think netlink is the best way forward.  'cat' is nice, but not
+> > necessary.  We have an established path for distributing tools for
+> > working with nfsd so we get easily get a suitable tool into the hands of
+> > our users.
+> >=20
+> > The only fruit I have relates to the name "rpc_status", and it probably
+> > over-ripe rather than rotten :-)
+> > In the context of RPC, "status" means the success/failure result of a
+> > request.  That is not what this file provides.  It is a list of active
+> > requests.  So maybe "active_rpc".
+> > One advantage of netlink is that the API is based on numbers, not names!
 >=20
-> 6.5.0-rc5-00050-gb1e667caad15: your nfsd-next branch as of today
-> 6.5.0-rc5+: gb1e667caad15, but with this patch reverted
+> There won't be a file name with netlink, so right, it won't be an
+> issue.
+>=20
+> Lorenzo, can you proceed with netlink instead of /proc/fs/nfsd?=20
+> Maybe start with a yaml spec file?
 
-I haven't found any problems either, so I've dropped the patch
-and refreshed nfsd-next and topic-sunrpc-thread-scheduling.
+ack, I will start working on it soon.
 
+Regards,
+Lorenzo
 
---
-Chuck Lever
+>=20
+>=20
+> > NeilBrown
+> >=20
+> >=20
+> >>=20
+> >>=20
+> >>> + seq_puts(m, "\n");
+> >>> + }
+> >>> + }
+> >>> +
+> >>> + rcu_read_unlock();
+> >>> +
+> >>> + return 0;
+> >>> +}
+> >>> +
+> >>> +/**
+> >>> + * nfsd_rpc_status_open - open routine for nfsd_rpc_status handler
+> >>> + * @inode: entry inode pointer.
+> >>> + * @file: entry file pointer.
+> >>> + *
+> >>> + * nfsd_rpc_status_open is the open routine for nfsd_rpc_status proc=
+fs handler.
+> >>> + * nfsd_rpc_status dumps pending RPC requests info queued into nfs s=
+erver.
+> >>> + */
+> >>> +int nfsd_rpc_status_open(struct inode *inode, struct file *file)
+> >>> +{
+> >>> + int ret =3D nfsd_stats_open(inode);
+> >>> +
+> >>> + if (ret)
+> >>> + return ret;
+> >>> +
+> >>> + return single_open(file, nfsd_rpc_status_show, inode->i_private);
+> >>> +}
+> >>> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> >>> index 7838b37bcfa8..b49c0470b4fe 100644
+> >>> --- a/include/linux/sunrpc/svc.h
+> >>> +++ b/include/linux/sunrpc/svc.h
+> >>> @@ -251,6 +251,7 @@ struct svc_rqst {
+> >>> * net namespace
+> >>> */
+> >>> void ** rq_lease_breaker; /* The v4 client breaking a lease */
+> >>> + unsigned int rq_status_counter; /* RPC processing counter */
+> >>> };
+> >>>=20
+> >>> /* bits for rq_flags */
+> >>> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> >>> index af692bff44ab..83bee19df104 100644
+> >>> --- a/net/sunrpc/svc.c
+> >>> +++ b/net/sunrpc/svc.c
+> >>> @@ -1656,7 +1656,7 @@ const char *svc_proc_name(const struct svc_rqst=
+ *rqstp)
+> >>> return rqstp->rq_procinfo->pc_name;
+> >>> return "unknown";
+> >>> }
+> >>> -
+> >>> +EXPORT_SYMBOL_GPL(svc_proc_name);
+> >>>=20
+> >>> /**
+> >>>  * svc_encode_result_payload - mark a range of bytes as a result payl=
+oad
+> >>> --=20
+> >>> 2.41.0
+> >>>=20
+> >>=20
+> >> --=20
+> >> Chuck Lever
+> >>=20
+> >=20
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
 
+--VoFy/Yiikhh2v8CM
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHQEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZNdJ5AAKCRA6cBh0uS2t
+rJDMAQCqPfPJlJ2gfy1KEJ4B5fXyQnwJpLexj93kkAfbjw/lSwD3cZcVjaHe0q2/
+jZ5ZVhRj8Y9yvT53pHVU3cF3Kih3AQ==
+=AfNg
+-----END PGP SIGNATURE-----
+
+--VoFy/Yiikhh2v8CM--
