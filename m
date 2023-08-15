@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 174C277C57E
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Aug 2023 03:56:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C1B7577C57D
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Aug 2023 03:56:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233886AbjHOBzm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Aug 2023 21:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48060 "EHLO
+        id S233991AbjHOBzn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Aug 2023 21:55:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234077AbjHOBzP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Aug 2023 21:55:15 -0400
+        with ESMTP id S234041AbjHOBzT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Aug 2023 21:55:19 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2453B0
-        for <linux-nfs@vger.kernel.org>; Mon, 14 Aug 2023 18:55:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCA2CC3
+        for <linux-nfs@vger.kernel.org>; Mon, 14 Aug 2023 18:55:18 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 93AE62190B;
-        Tue, 15 Aug 2023 01:55:12 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 7DC772190B;
+        Tue, 15 Aug 2023 01:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1692064512; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1692064517; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0gSwsyqriynyV+uS86oSxbWW40zOQTBjaNZpc00vPDE=;
-        b=i9Tbjdm3Puaun8TxDkpFrmpMn5OQ70iuBEr1LUtUA+iERTLdaPAGLrJj4OFGqdr+6T/nDG
-        nY+OV4fCh4uLOIXe+mYyFUg86SxzlkVdoiXsxYteU0SQu/WJ7Hu15vAd7079+AFzmJIMQT
-        bPY53heYkI4Iz9ceO8Xs2VhHkutFZaU=
+        bh=O12ylgOFmtul3EDqXXC/xz0XUHuM7h3/LicV9atBAcs=;
+        b=uxLx8FocDXzZCaVX3KBjyEfiGCVEiJj+skEIn6JAbKumdOfYb82/E/qBiTBS/g9YgA/k5x
+        QBd+i6/QgzF0WW56UAUOoSEQEcH2SoAeUQQctnRVppKM4/4Rdaqkp76dnnbU6H7IZmy6nd
+        nAIDM+FhhmcXlE1zlNUTdOm0IqKSAH8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1692064512;
+        s=susede2_ed25519; t=1692064517;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0gSwsyqriynyV+uS86oSxbWW40zOQTBjaNZpc00vPDE=;
-        b=91hf9D/HCv9jt2ATyt1kLHySjjyN1Ypw8qlHw4msuwlfNNo8YsyOlkUj+wqig2h6htOftN
-        cHnkYoJX6b3oRcCw==
+        bh=O12ylgOFmtul3EDqXXC/xz0XUHuM7h3/LicV9atBAcs=;
+        b=WAvPm1PaikIyLzqn3myz5oU2yNOcbPagESDs5E9qje1ASMUNHpApZ1GSLTi//mlcVop+lh
+        /HUiWQknISxwoRAg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 59EEE1353E;
-        Tue, 15 Aug 2023 01:55:11 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3ECA41353E;
+        Tue, 15 Aug 2023 01:55:15 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 4OjwA//a2mTWCgAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 15 Aug 2023 01:55:11 +0000
+        id nJyGOAPb2mTbCgAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 15 Aug 2023 01:55:15 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 06/10] SUNRPC/svc: add light-weight queuing mechanism.
-Date:   Tue, 15 Aug 2023 11:54:22 +1000
-Message-Id: <20230815015426.5091-7-neilb@suse.de>
+Subject: [PATCH 07/10] SUNRPC: use lwq for sp_sockets - renamed to sp_xprts
+Date:   Tue, 15 Aug 2023 11:54:23 +1000
+Message-Id: <20230815015426.5091-8-neilb@suse.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230815015426.5091-1-neilb@suse.de>
 References: <20230815015426.5091-1-neilb@suse.de>
@@ -69,276 +69,180 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-lwq is a FIFO single-linked queue that only requires a spinlock
-for dequeueing, which happens in process context.  Enqueueing is atomic
-with no spinlock and can happen in any context.
+lwq avoids using back pointers in lists, and uses less locking.
+This introduces a new spinlock, but the other one will be removed in a
+future patch.
 
-Include a unit test for basic functionality - runs a boot/module-load
-time.  Does not use kunit framework.
+For svc_clean_up_xprts(), we now dequeue the entire queue, walk it to
+remove and process the xprts that need cleaning up, then re-enqueue the
+remaining queue.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- include/linux/sunrpc/svc_lwq.h |  79 +++++++++++++++++++
- net/sunrpc/Kconfig             |   6 ++
- net/sunrpc/Makefile            |   2 +-
- net/sunrpc/svc_lwq.c           | 135 +++++++++++++++++++++++++++++++++
- 4 files changed, 221 insertions(+), 1 deletion(-)
- create mode 100644 include/linux/sunrpc/svc_lwq.h
- create mode 100644 net/sunrpc/svc_lwq.c
+ include/linux/sunrpc/svc.h      |  3 +-
+ include/linux/sunrpc/svc_xprt.h |  2 +-
+ net/sunrpc/svc.c                |  2 +-
+ net/sunrpc/svc_xprt.c           | 57 ++++++++++-----------------------
+ 4 files changed, 21 insertions(+), 43 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc_lwq.h b/include/linux/sunrpc/svc_lwq.h
-new file mode 100644
-index 000000000000..4bd6cbffa155
---- /dev/null
-+++ b/include/linux/sunrpc/svc_lwq.h
-@@ -0,0 +1,79 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef SUNRPC_SVC_LWQ_H
-+#define SUNRPC_SVC_LWQ_H
-+
-+/*
-+ * light-weight single linked queue
-+ *
-+ * Entries can be enqueued from any context with no locking.
-+ * Entries can be dequeued from process context with integrated locking.
-+ *
-+ */
-+#include <linux/container_of.h>
-+#include <linux/spinlock.h>
-+#include <linux/llist.h>
-+
-+struct lwq_node {
-+	struct llist_node node;
-+};
-+
-+struct lwq {
-+	spinlock_t		lock;
-+	struct llist_node	*ready;		/* entries to be dequeued */
-+	struct llist_head	new;		/* entries being enqueued */
-+};
-+
-+static inline void lwq_init(struct lwq *q)
-+{
-+	spin_lock_init(&q->lock);
-+	q->ready = NULL;
-+	init_llist_head(&q->new);
-+}
-+
-+static inline bool lwq_empty(struct lwq *q)
-+{
-+	return READ_ONCE(q->ready) == NULL && llist_empty(&q->new);
-+}
-+
-+struct llist_node *__lwq_dequeue(struct lwq *q);
-+#define lwq_dequeue(_q, _type, _member)					\
-+	({ struct llist_node *_n = __lwq_dequeue(_q);			\
-+	  _n ? container_of(_n, _type, _member.node) : NULL; })
-+
-+struct llist_node *lwq_dequeue_all(struct lwq *q);
-+
-+/**
-+ * lwq_for_each_safe: iterate over detached queue allowing deletion
-+ * @_n:		iterator variable
-+ * @_t1:	temporary struct llist_node **
-+ * @_t2:	temporary struct llist_node *
-+ * @_l:		address of llist_node pointer from lwq_dequeue_all()
-+ * @_member:	member in _n where lwq_node is found.
-+ *
-+ * Iterate over members in a dequeued list.  If the iterator variable
-+ * is set to NULL, the iterator removes that entry from the queue.
-+ */
-+#define lwq_for_each_safe(_n, _t1, _t2, _l, _member)			\
-+	for (_t1 = (_l);						\
-+	     *(_t1) ? (_n = container_of(*(_t1), typeof(*(_n)), _member.node),\
-+		       _t2 = ((*_t1)->next),				\
-+		       true)						\
-+	     : false;							\
-+	     (_n) ? (_t1 = &(_n)->_member.node.next, 0)			\
-+	     : ((*(_t1) = (_t2)),  0))
-+
-+static inline bool lwq_enqueue(struct lwq_node *n, struct lwq *q)
-+{
-+	return llist_add(&n->node, &q->new) && READ_ONCE(q->ready) == NULL;
-+}
-+
-+static inline bool lwq_enqueue_batch(struct llist_node *n, struct lwq *q)
-+{
-+	struct llist_node *e = n;
-+
-+	return llist_add_batch(llist_reverse_order(n), e, &q->new) &&
-+		READ_ONCE(q->ready) == NULL;
-+}
-+
-+#endif /* SUNRPC_SVC_LWQ_H */
-diff --git a/net/sunrpc/Kconfig b/net/sunrpc/Kconfig
-index 2d8b67dac7b5..5de87d005962 100644
---- a/net/sunrpc/Kconfig
-+++ b/net/sunrpc/Kconfig
-@@ -115,3 +115,9 @@ config SUNRPC_XPRT_RDMA
- 
- 	  If unsure, or you know there is no RDMA capability on your
- 	  hardware platform, say N.
-+
-+config SUNRPC_LWQ_TEST
-+	bool "RPC: enable boot-time test for lwq queuing"
-+	depends on SUNRPC
-+	help
-+          Enable boot-time test of lwq functionality.
-diff --git a/net/sunrpc/Makefile b/net/sunrpc/Makefile
-index f89c10fe7e6a..b224cba1d0da 100644
---- a/net/sunrpc/Makefile
-+++ b/net/sunrpc/Makefile
-@@ -10,7 +10,7 @@ obj-$(CONFIG_SUNRPC_XPRT_RDMA) += xprtrdma/
- 
- sunrpc-y := clnt.o xprt.o socklib.o xprtsock.o sched.o \
- 	    auth.o auth_null.o auth_tls.o auth_unix.o \
--	    svc.o svcsock.o svcauth.o svcauth_unix.o \
-+	    svc.o svc_lwq.o svcsock.o svcauth.o svcauth_unix.o \
- 	    addr.o rpcb_clnt.o timer.o xdr.o \
- 	    sunrpc_syms.o cache.o rpc_pipe.o sysfs.o \
- 	    svc_xprt.o \
-diff --git a/net/sunrpc/svc_lwq.c b/net/sunrpc/svc_lwq.c
-new file mode 100644
-index 000000000000..528ad7e3abb1
---- /dev/null
-+++ b/net/sunrpc/svc_lwq.c
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Light weight single-linked queue.
-+ *
-+ * Entries are enqueued to the head of an llist, with no blocking.
-+ * This can happen in any context.
-+ *
-+ * Entries are dequeued using a spinlock to protect against
-+ * multiple access.  The llist is staged in reverse order, and refreshed
-+ * from the llist when it exhausts.
-+ */
-+#include <linux/rcupdate.h>
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index dafa362b4fdd..8b2bd034a760 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -17,6 +17,7 @@
+ #include <linux/sunrpc/xdr.h>
+ #include <linux/sunrpc/auth.h>
+ #include <linux/sunrpc/svcauth.h>
 +#include <linux/sunrpc/svc_lwq.h>
+ #include <linux/wait.h>
+ #include <linux/mm.h>
+ #include <linux/pagevec.h>
+@@ -34,7 +35,7 @@
+ struct svc_pool {
+ 	unsigned int		sp_id;	    	/* pool id; also node id on NUMA */
+ 	spinlock_t		sp_lock;	/* protects all fields */
+-	struct list_head	sp_sockets;	/* pending sockets */
++	struct lwq		sp_xprts;	/* pending transports */
+ 	unsigned int		sp_nrthreads;	/* # of threads in pool */
+ 	struct list_head	sp_all_threads;	/* all server threads */
+ 	struct llist_head	sp_idle_threads; /* idle server threads */
+diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
+index fa55d12dc765..8e20cd60e2e7 100644
+--- a/include/linux/sunrpc/svc_xprt.h
++++ b/include/linux/sunrpc/svc_xprt.h
+@@ -54,7 +54,7 @@ struct svc_xprt {
+ 	const struct svc_xprt_ops *xpt_ops;
+ 	struct kref		xpt_ref;
+ 	struct list_head	xpt_list;
+-	struct list_head	xpt_ready;
++	struct lwq_node		xpt_ready;
+ 	unsigned long		xpt_flags;
+ 
+ 	struct svc_serv		*xpt_server;	/* service for transport */
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 3267d740235e..63cddb8cb08d 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -508,7 +508,7 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 				i, serv->sv_name);
+ 
+ 		pool->sp_id = i;
+-		INIT_LIST_HEAD(&pool->sp_sockets);
++		lwq_init(&pool->sp_xprts);
+ 		INIT_LIST_HEAD(&pool->sp_all_threads);
+ 		init_llist_head(&pool->sp_idle_threads);
+ 		spin_lock_init(&pool->sp_lock);
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index b0c5677f7f81..0a0b61809451 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -201,7 +201,6 @@ void svc_xprt_init(struct net *net, struct svc_xprt_class *xcl,
+ 	kref_init(&xprt->xpt_ref);
+ 	xprt->xpt_server = serv;
+ 	INIT_LIST_HEAD(&xprt->xpt_list);
+-	INIT_LIST_HEAD(&xprt->xpt_ready);
+ 	INIT_LIST_HEAD(&xprt->xpt_deferred);
+ 	INIT_LIST_HEAD(&xprt->xpt_users);
+ 	mutex_init(&xprt->xpt_mutex);
+@@ -472,9 +471,7 @@ void svc_xprt_enqueue(struct svc_xprt *xprt)
+ 	pool = svc_pool_for_cpu(xprt->xpt_server);
+ 
+ 	percpu_counter_inc(&pool->sp_sockets_queued);
+-	spin_lock_bh(&pool->sp_lock);
+-	list_add_tail(&xprt->xpt_ready, &pool->sp_sockets);
+-	spin_unlock_bh(&pool->sp_lock);
++	lwq_enqueue(&xprt->xpt_ready, &pool->sp_xprts);
+ 
+ 	svc_pool_wake_idle_thread(pool);
+ }
+@@ -487,18 +484,9 @@ static struct svc_xprt *svc_xprt_dequeue(struct svc_pool *pool)
+ {
+ 	struct svc_xprt	*xprt = NULL;
+ 
+-	if (list_empty(&pool->sp_sockets))
+-		goto out;
+-
+-	spin_lock_bh(&pool->sp_lock);
+-	if (likely(!list_empty(&pool->sp_sockets))) {
+-		xprt = list_first_entry(&pool->sp_sockets,
+-					struct svc_xprt, xpt_ready);
+-		list_del_init(&xprt->xpt_ready);
++	xprt = lwq_dequeue(&pool->sp_xprts, struct svc_xprt, xpt_ready);
++	if (xprt)
+ 		svc_xprt_get(xprt);
+-	}
+-	spin_unlock_bh(&pool->sp_lock);
+-out:
+ 	return xprt;
+ }
+ 
+@@ -708,7 +696,7 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+ 		return false;
+ 
+ 	/* was a socket queued? */
+-	if (!list_empty(&pool->sp_sockets))
++	if (!lwq_empty(&pool->sp_xprts))
+ 		return false;
+ 
+ 	/* are we shutting down? */
+@@ -1055,7 +1043,6 @@ static void svc_delete_xprt(struct svc_xprt *xprt)
+ 
+ 	spin_lock_bh(&serv->sv_lock);
+ 	list_del_init(&xprt->xpt_list);
+-	WARN_ON_ONCE(!list_empty(&xprt->xpt_ready));
+ 	if (test_bit(XPT_TEMP, &xprt->xpt_flags))
+ 		serv->sv_tmpcnt--;
+ 	spin_unlock_bh(&serv->sv_lock);
+@@ -1106,36 +1093,26 @@ static int svc_close_list(struct svc_serv *serv, struct list_head *xprt_list, st
+ 	return ret;
+ }
+ 
+-static struct svc_xprt *svc_dequeue_net(struct svc_serv *serv, struct net *net)
++static void svc_clean_up_xprts(struct svc_serv *serv, struct net *net)
+ {
+-	struct svc_pool *pool;
+ 	struct svc_xprt *xprt;
+-	struct svc_xprt *tmp;
+ 	int i;
+ 
+ 	for (i = 0; i < serv->sv_nrpools; i++) {
+-		pool = &serv->sv_pools[i];
+-
+-		spin_lock_bh(&pool->sp_lock);
+-		list_for_each_entry_safe(xprt, tmp, &pool->sp_sockets, xpt_ready) {
+-			if (xprt->xpt_net != net)
+-				continue;
+-			list_del_init(&xprt->xpt_ready);
+-			spin_unlock_bh(&pool->sp_lock);
+-			return xprt;
++		struct svc_pool *pool = &serv->sv_pools[i];
++		struct llist_node *q, **t1, *t2;
 +
-+struct llist_node *__lwq_dequeue(struct lwq *q)
-+{
-+	struct llist_node *this;
-+
-+	if (lwq_empty(q))
-+		return NULL;
-+	spin_lock(&q->lock);
-+	this = q->ready;
-+	if (!this)
-+		this = llist_reverse_order(llist_del_all(&q->new));
-+	if (this)
-+		q->ready = llist_next(this);
-+	spin_unlock(&q->lock);
-+	return this;
-+}
-+
-+struct llist_node *lwq_dequeue_all(struct lwq *q)
-+{
-+	struct llist_node *r, *t, **ep;
-+
-+	if (lwq_empty(q))
-+		return NULL;
-+
-+	spin_lock(&q->lock);
-+	r = q->ready;
-+	q->ready = NULL;
-+	t = llist_del_all(&q->new);
-+	spin_unlock(&q->lock);
-+	ep = &r;
-+	while (*ep)
-+		ep = &(*ep)->next;
-+	*ep = llist_reverse_order(t);
-+	return r;
-+}
-+
-+#if IS_ENABLED(CONFIG_SUNRPC_LWQ_TEST)
-+
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+#include <linux/wait_bit.h>
-+#include <linux/kthread.h>
-+#include <linux/delay.h>
-+struct tnode {
-+	struct lwq_node n;
-+	int i;
-+	int c;
-+};
-+
-+static int lwq_exercise(void *qv)
-+{
-+	struct lwq *q = qv;
-+	int cnt;
-+	struct tnode *t;
-+
-+	for (cnt = 0; cnt < 10000; cnt++) {
-+		wait_var_event(q, (t = lwq_dequeue(q, struct tnode, n)) != NULL);
-+		t->c++;
-+		if (lwq_enqueue(&t->n, q))
-+			wake_up_var(q);
-+	}
-+	wait_var_event(q, kthread_should_stop());
-+	return 0;
-+}
-+
-+static int lwq_test(void)
-+{
-+	int i;
-+	struct lwq q;
-+	struct llist_node *l, **t1, *t2;
-+	struct tnode *t;
-+	struct task_struct *threads[8];
-+
-+	printk(KERN_INFO "testing lwq....\n");
-+	lwq_init(&q);
-+	printk(KERN_INFO " lwq: run some threads\n");
-+	for (i = 0; i < ARRAY_SIZE(threads); i++)
-+		threads[i] = kthread_run(lwq_exercise, &q, "lwq_test-%d", i);
-+	for (i = 0; i < 100; i++) {
-+		t = kmalloc(sizeof(*t), GFP_KERNEL);
-+		t->i = i;
-+		t->c = 0;
-+		if (lwq_enqueue(&t->n, &q))
-+			wake_up_var(&q);
-+	};
-+	/* wait for threads to exit */
-+	for (i = 0; i < ARRAY_SIZE(threads); i++)
-+		if (!IS_ERR_OR_NULL(threads[i]))
-+			kthread_stop(threads[i]);
-+	printk(KERN_INFO " lwq: dequeue first 50:");
-+	for (i = 0; i < 50 ; i++) {
-+		if (i && (i % 10) == 0) {
-+			printk(KERN_CONT "\n");
-+			printk(KERN_INFO " lwq: ... ");
-+		}
-+		t = lwq_dequeue(&q, struct tnode, n);
-+		printk(KERN_CONT " %d(%d)", t->i, t->c);
-+		kfree(t);
-+	}
-+	printk(KERN_CONT "\n");
-+	l = lwq_dequeue_all(&q);
-+	printk(KERN_INFO " lwq: delete the multiples of 3 (test lwq_for_each_safe())\n");
-+	lwq_for_each_safe(t, t1, t2, &l, n) {
-+		if ((t->i % 3) == 0) {
-+			t->i = -1;
-+			kfree(t);
-+			t = NULL;
-+		}
-+	}
-+	if (l)
-+		lwq_enqueue_batch(l, &q);
-+	printk(KERN_INFO " lwq: dequeue remaining:");
-+	while ((t = lwq_dequeue(&q, struct tnode, n)) != NULL) {
-+		printk(KERN_CONT " %d", t->i);
-+		kfree(t);
-+	}
-+	printk(KERN_CONT "\n");
-+	return 0;
-+}
-+
-+module_init(lwq_test);
-+#endif /* CONFIG_SUNRPC_LWQ_TEST*/
++		q = lwq_dequeue_all(&pool->sp_xprts);
++		lwq_for_each_safe(xprt, t1, t2, &q, xpt_ready) {
++			if (xprt->xpt_net == net) {
++				set_bit(XPT_CLOSE, &xprt->xpt_flags);
++				svc_delete_xprt(xprt);
++				xprt = NULL;
++			}
+ 		}
+-		spin_unlock_bh(&pool->sp_lock);
+-	}
+-	return NULL;
+-}
+ 
+-static void svc_clean_up_xprts(struct svc_serv *serv, struct net *net)
+-{
+-	struct svc_xprt *xprt;
+-
+-	while ((xprt = svc_dequeue_net(serv, net))) {
+-		set_bit(XPT_CLOSE, &xprt->xpt_flags);
+-		svc_delete_xprt(xprt);
++		if (q)
++			lwq_enqueue_batch(q, &pool->sp_xprts);
+ 	}
+ }
+ 
 -- 
 2.40.1
 
