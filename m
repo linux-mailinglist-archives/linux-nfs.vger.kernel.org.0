@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3FBA77E36B
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Aug 2023 16:19:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B540A77E372
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Aug 2023 16:21:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343531AbjHPOTR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Aug 2023 10:19:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52676 "EHLO
+        id S243570AbjHPOV1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Aug 2023 10:21:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343584AbjHPOTD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Aug 2023 10:19:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41EF3271D
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 07:18:59 -0700 (PDT)
+        with ESMTP id S245733AbjHPOUz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Aug 2023 10:20:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD170110
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 07:20:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D390C6562E
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 14:18:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9164C433C8;
-        Wed, 16 Aug 2023 14:18:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 51508617A1
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 14:20:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D28C433C8;
+        Wed, 16 Aug 2023 14:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692195538;
-        bh=sG6yeKDcIHs4k/J2wX3EJVRGEUM/xNcxizxkMEKD6p4=;
+        s=k20201202; t=1692195653;
+        bh=Gv1zS7T59CkLR9MNc3Fd/bZZcfjEWzG/W/anrPP6tYs=;
         h=Subject:From:To:Cc:Date:From;
-        b=Zp7KoHALDpkmFtryFD41L6IqUJWOS0X8sCppNo+R6j5UoQ9722ulTiLebfSXTm1Xh
-         07U1cq4RUegaow+ay3kRltVjNhDw0gjvsRc262W/3L85kFazP8DB7LOZbFAj7/GN9I
-         GLmUBIkkW1JgJ+C4sPYgbUKRnCYAR7VloJUUlFRAugnHoZpTWLRHyt35ij9sbg66V+
-         F0l/qGPwIcHrKk4GvEbf3bmzxPjRqmV+aioNblHzk0NQF1AQDJnDyZGzBNiO8Igu3S
-         m964mjEs7q6db0RakII7Zt6PruaK96n4TyGDfE/K53Cb1WW61Yw6n+5R6ik62KyJb3
-         7msTjoAEQxgwA==
+        b=a43i4Zn5KPZMJDP8bKdKTLNLb/AZmjPyflYQOSeaA7TXD45EWNy7bYhIXKAUVWWwM
+         uqFCq8HzfKjvgFfxgjZBkXnNX4PdM6U9SxNqF3hYSlHnBKHpeWgmHipyILAJVPj89B
+         qJ3JbIxhRFRvyM5DZ7SAFOx28RNHg2fZvMsYTp9gvhBjl1RZXewWOE5AjrX8yPX5xD
+         iSUk3MG+gsa668JDKZmV09uO2gFkkLqIyWUvWFWsaAqMTcazo2HmTLkb5nhYjGVEfq
+         EW4HAJEJRZMRBSL6UqcAH74yBBGIJfHkXKAKCOfBvPB9JPZPc4VyznXvvLOxX/UI8c
+         EaZUTVq2/HPjw==
 Subject: [PATCH] NFSD: da_addr_body missing in some GETDEVICEINFO replies
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>, Tom Haynes <logyr@gmail.com>,
+Cc:     Christoph Hellwig <hch@lst.de>, Tom Haynes <loghyr@gmail.com>,
         Chuck Lever <chuck.lever@oracle.com>
-Date:   Wed, 16 Aug 2023 10:18:56 -0400
-Message-ID: <169219553682.7499.12036179902194342289.stgit@bazille.1015granger.net>
+Date:   Wed, 16 Aug 2023 10:20:52 -0400
+Message-ID: <169219563023.7562.16862946984900949137.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -96,13 +96,16 @@ methods.
 
 Fixes: 9cf514ccfacb ("nfsd: implement pNFS operations")
 Cc: Christoph Hellwig <hch@lst.de>
-Cc: Tom Haynes <logyr@gmail.com>
+Cc: Tom Haynes <loghyr@gmail.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
  fs/nfsd/blocklayoutxdr.c    |    9 +++++++++
  fs/nfsd/flexfilelayoutxdr.c |    9 +++++++++
  fs/nfsd/nfs4xdr.c           |   25 +++++++++++--------------
  3 files changed, 29 insertions(+), 14 deletions(-)
+
+Resending.... I spelled Tom's email address wrong.
+
 
 diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
 index 8e9c1a0f8d38..1ed2f691ebb9 100644
