@@ -2,64 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB16677EEA1
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Aug 2023 03:20:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2869C77EEB2
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Aug 2023 03:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347476AbjHQBUS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Aug 2023 21:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32856 "EHLO
+        id S232919AbjHQBZI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Aug 2023 21:25:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347477AbjHQBUJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Aug 2023 21:20:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4185F2D5E
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 18:19:23 -0700 (PDT)
+        with ESMTP id S1347501AbjHQBYm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Aug 2023 21:24:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 367D92723
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 18:24:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692235162;
+        s=mimecast20190719; t=1692235442;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MdJI8YOWfcspuu/Kis9p/FFOj/Ijn4DHopWgTGqX0p8=;
-        b=GpwV0pbe3DxMMYEDc1i3UtgaPnxrkmXNWbPUqcwDu6RMwaBSUDyieaDCy4ICbBHZoGx/LY
-        z9CeG6MeLe/Jfn+l3zrqXAY19Q/YtLXk4+WB11ZSTK9mE5v/L23ZNK2UjCwMsUSnAZQFgw
-        nEoy17x369SDY/2x/gUXphpUZ5gqRrk=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=XjasKeXZqylsbZptWllQNMerqPBUwmOArgVba6SAq8Q=;
+        b=X7QKrIIvCSRAFpiGjJ7GmdofcovsJW1I2QFOIih+OxxsGEncEE4wS5xKYtrnMjSlPPaXfU
+        rKT7jV6PWSGHM8Tf2CYc0tu3D1J44+QCsBWmy1iLW308F6YuVv05aOX4FORzQzGRoYGaVa
+        GlTqTGYgnT+k1OsJEjn5dKdjso4dZNA=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-213-AOEmmBzoNt-7g5NlZI1pRg-1; Wed, 16 Aug 2023 21:19:21 -0400
-X-MC-Unique: AOEmmBzoNt-7g5NlZI1pRg-1
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-52576448c91so1375512a12.3
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 18:19:20 -0700 (PDT)
+ us-mta-556-W-HjOma_PDyhVr3dFVgv1w-1; Wed, 16 Aug 2023 21:24:00 -0400
+X-MC-Unique: W-HjOma_PDyhVr3dFVgv1w-1
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5254cf38252so2693572a12.0
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 18:23:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692235160; x=1692839960;
+        d=1e100.net; s=20221208; t=1692235439; x=1692840239;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MdJI8YOWfcspuu/Kis9p/FFOj/Ijn4DHopWgTGqX0p8=;
-        b=Fg0EPuc+hymaFuvB1golMdq1+Ea2oG5FK8JkcqfCmNH8jqlM0u92pA+oXhwCl8tRoy
-         xn9w/s5ckp+0Z5DAkY7VSDpo/cajrPdMv0NSbfEfYkUPAOToy0QnJkABjqVtxXeL5kdL
-         BzOWkmuvmvjK41L6TXb0TZjIFhVxXpr1bwtTQJIVpw3gNYcPW2CB0WtlOxseDj0jRCNb
-         3ezt5LkNRB2bFxIkao6a62u+jDtGhyz+EJ6x18mqpihOGhw6DpG0AEhI+Ys210ABoB1D
-         li/i6FvcP2yOO9pJCaM9ggFc3fohvdwjCIKdlXII/75PltiOYsJrTIRquLeh1n/BsIHA
-         ekOQ==
-X-Gm-Message-State: AOJu0YzBDbCJNel/SZTKF9J60qwHbwTtkYAUwsrZPd5QJOe3Htjc2ZGq
-        P7MbXqmW5sI+4qla1Fn+NOk+ftkrjv79cV864R3JJJjdRYtt77FMz/h5+5fypThcClE+9853dyh
-        BueN78wN6WgmZi/bWSRjxt3imnC4J3PtZyWYA
-X-Received: by 2002:a05:6402:2028:b0:523:b665:e494 with SMTP id ay8-20020a056402202800b00523b665e494mr2705181edb.15.1692235159938;
-        Wed, 16 Aug 2023 18:19:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH+3zVWGGEV7pU4ZRS9ZVR7J1WVptyIFU1YawAqPgdGNxY0nrs+srZ1tF1GgXLlWOW6IssVK6QeBhfLu09ErmQ=
-X-Received: by 2002:a05:6402:2028:b0:523:b665:e494 with SMTP id
- ay8-20020a056402202800b00523b665e494mr2705166edb.15.1692235159674; Wed, 16
- Aug 2023 18:19:19 -0700 (PDT)
+        bh=XjasKeXZqylsbZptWllQNMerqPBUwmOArgVba6SAq8Q=;
+        b=bJiJsqpRTzf1bzs7Am/xZ0Datu2iJK6VitPjre+QaxU39K0GicVcXgvMV+5XdE/gqO
+         2NxxHmT+P9p8SFSH5up/F4FD2GoBcvZPAeyr9BmmBvwhbBzEBpn4P3ynZR3Rmj5vuotM
+         caVKtMkD8vUE0HLLhEACNobi3IFvZZrZY7NhJzGh4gFGFqyFLIthmTgbBsH9AGHOBowg
+         DhB5Sm5ykjICbqEDEnvcPeY2e4jgX19lPdsjUoVdGX2FRPgSxrLctD2lk/2nHwwqQrpt
+         hQT7M2k13QULfModELXgTp6kTFDtheGUvnRbBZFrrxFW0fEyqvM71fcufeyQ34P8M7Ub
+         XpVg==
+X-Gm-Message-State: AOJu0YxtkX7jNhXRAfcyrqtOqDK774sEDhjF8qptzhT2sReH66JdulQw
+        nTrF2aW9VCBWBMdGPGt/58FB6zsFElJ8lAPkDOhYkznuqFVHOcLq1V4A0EZHvI8vVgv9rT0TAbC
+        meDLmEBhJVt9sRpAyyMgecdh9ZQ/98w4GykFt
+X-Received: by 2002:aa7:c545:0:b0:524:5e4c:2fa4 with SMTP id s5-20020aa7c545000000b005245e4c2fa4mr2839449edr.14.1692235438944;
+        Wed, 16 Aug 2023 18:23:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGXDmfKQ7ys1l6lXBj07FDJ7WlcIO7oafTPjac90Yx5immK+W1gBVjH7vhGznIaT59kMvjiA8PZ+Qat0vf3KLE=
+X-Received: by 2002:aa7:c545:0:b0:524:5e4c:2fa4 with SMTP id
+ s5-20020aa7c545000000b005245e4c2fa4mr2839440edr.14.1692235438645; Wed, 16 Aug
+ 2023 18:23:58 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230814211116.3224759-1-aahringo@redhat.com> <20230814211116.3224759-7-aahringo@redhat.com>
- <bd76489a6b0d2f56f4a68d48b3736fcaf5b5119b.camel@kernel.org>
-In-Reply-To: <bd76489a6b0d2f56f4a68d48b3736fcaf5b5119b.camel@kernel.org>
+References: <20230814211116.3224759-1-aahringo@redhat.com> <20230814211116.3224759-5-aahringo@redhat.com>
+ <ca18531b54306d27218daf8e90b72ef3a4b8e44f.camel@kernel.org>
+In-Reply-To: <ca18531b54306d27218daf8e90b72ef3a4b8e44f.camel@kernel.org>
 From:   Alexander Aring <aahringo@redhat.com>
-Date:   Wed, 16 Aug 2023 21:19:08 -0400
-Message-ID: <CAK-6q+i3oKN3M_kdoQ99hMnzSZyRH1sPdxZ0MQMwp+vSixUhwg@mail.gmail.com>
-Subject: Re: [RFCv2 6/7] dlm: use FL_SLEEP to check if blocking request
+Date:   Wed, 16 Aug 2023 21:23:47 -0400
+Message-ID: <CAK-6q+iTe86JKqeEsfUanwmu6wOxz=CqL_H_NEiq2vZ8PwcWQA@mail.gmail.com>
+Subject: Re: [RFCv2 4/7] locks: update lock callback documentation
 To:     Jeff Layton <jlayton@kernel.org>
 Cc:     linux-nfs@vger.kernel.org, cluster-devel@redhat.com,
         ocfs2-devel@lists.linux.dev, linux-fsdevel@vger.kernel.org,
@@ -80,108 +80,66 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Hi,
 
-On Wed, Aug 16, 2023 at 9:07=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+On Wed, Aug 16, 2023 at 8:01=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
 ote:
 >
 > On Mon, 2023-08-14 at 17:11 -0400, Alexander Aring wrote:
-> > This patch uses the FL_SLEEP flag in struct file_lock to check if it's =
-a
-> > blocking request in case if the request coming from nfs lockd process
-> > indicated by lm_grant() is set.
-> >
-> > IF FL_SLEEP is set a asynchronous blocking request is being made and
-> > it's waiting for lm_grant() callback being called to signal the lock wa=
-s
-> > granted. If it's not set a synchronous non-blocking request is being ma=
-de.
+> > This patch updates the existing documentation regarding recent changes
+> > to vfs_lock_file() and lm_grant() is set. In case of lm_grant() is set
+> > we only handle FILE_LOCK_DEFERRED in case of FL_SLEEP in fl_flags is no=
+t
+> > set. This is the case of an blocking lock request. Non-blocking lock
+> > requests, when FL_SLEEP is not set, are handled in a synchronized way.
 > >
 > > Signed-off-by: Alexander Aring <aahringo@redhat.com>
 > > ---
-> >  fs/dlm/plock.c | 38 ++++++++++++++++++++++----------------
-> >  1 file changed, 22 insertions(+), 16 deletions(-)
+> >  fs/locks.c | 28 ++++++++++++++--------------
+> >  1 file changed, 14 insertions(+), 14 deletions(-)
 > >
-> > diff --git a/fs/dlm/plock.c b/fs/dlm/plock.c
-> > index 0094fa4004cc..524771002a2f 100644
-> > --- a/fs/dlm/plock.c
-> > +++ b/fs/dlm/plock.c
-> > @@ -140,7 +140,6 @@ int dlm_posix_lock(dlm_lockspace_t *lockspace, u64 =
-number, struct file *file,
-> >       op->info.optype         =3D DLM_PLOCK_OP_LOCK;
-> >       op->info.pid            =3D fl->fl_pid;
-> >       op->info.ex             =3D (fl->fl_type =3D=3D F_WRLCK);
-> > -     op->info.wait           =3D IS_SETLKW(cmd);
-> >       op->info.fsid           =3D ls->ls_global_id;
-> >       op->info.number         =3D number;
-> >       op->info.start          =3D fl->fl_start;
-> > @@ -148,24 +147,31 @@ int dlm_posix_lock(dlm_lockspace_t *lockspace, u6=
-4 number, struct file *file,
-> >       op->info.owner =3D (__u64)(long)fl->fl_owner;
-> >       /* async handling */
-> >       if (fl->fl_lmops && fl->fl_lmops->lm_grant) {
-> > -             op_data =3D kzalloc(sizeof(*op_data), GFP_NOFS);
-> > -             if (!op_data) {
-> > -                     dlm_release_plock_op(op);
-> > -                     rv =3D -ENOMEM;
-> > -                     goto out;
-> > -             }
-> > +             if (fl->fl_flags & FL_SLEEP) {
-> > +                     op_data =3D kzalloc(sizeof(*op_data), GFP_NOFS);
-> > +                     if (!op_data) {
-> > +                             dlm_release_plock_op(op);
-> > +                             rv =3D -ENOMEM;
-> > +                             goto out;
-> > +                     }
-> >
-> > -             op_data->callback =3D fl->fl_lmops->lm_grant;
-> > -             locks_init_lock(&op_data->flc);
-> > -             locks_copy_lock(&op_data->flc, fl);
-> > -             op_data->fl             =3D fl;
-> > -             op_data->file   =3D file;
-> > +                     op->info.wait =3D 1;
-> > +                     op_data->callback =3D fl->fl_lmops->lm_grant;
-> > +                     locks_init_lock(&op_data->flc);
-> > +                     locks_copy_lock(&op_data->flc, fl);
-> > +                     op_data->fl             =3D fl;
-> > +                     op_data->file   =3D file;
-> >
-> > -             op->data =3D op_data;
-> > +                     op->data =3D op_data;
-> >
-> > -             send_op(op);
-> > -             rv =3D FILE_LOCK_DEFERRED;
-> > -             goto out;
-> > +                     send_op(op);
-> > +                     rv =3D FILE_LOCK_DEFERRED;
-> > +                     goto out;
+> > diff --git a/fs/locks.c b/fs/locks.c
+> > index df8b26a42524..a8e51f462b43 100644
+> > --- a/fs/locks.c
+> > +++ b/fs/locks.c
+> > @@ -2255,21 +2255,21 @@ int fcntl_getlk(struct file *filp, unsigned int=
+ cmd, struct flock *flock)
+> >   * To avoid blocking kernel daemons, such as lockd, that need to acqui=
+re POSIX
+> >   * locks, the ->lock() interface may return asynchronously, before the=
+ lock has
+> >   * been granted or denied by the underlying filesystem, if (and only i=
+f)
+> > - * lm_grant is set. Callers expecting ->lock() to return asynchronousl=
+y
+> > - * will only use F_SETLK, not F_SETLKW; they will set FL_SLEEP if (and=
+ only if)
+> > - * the request is for a blocking lock. When ->lock() does return async=
+hronously,
+> > - * it must return FILE_LOCK_DEFERRED, and call ->lm_grant() when the l=
+ock
+> > - * request completes.
+> > - * If the request is for non-blocking lock the file system should retu=
+rn
+> > - * FILE_LOCK_DEFERRED then try to get the lock and call the callback r=
+outine
+> > - * with the result. If the request timed out the callback routine will=
+ return a
+> > + * lm_grant and FL_SLEEP in fl_flags is set. Callers expecting ->lock(=
+) to return
+> > + * asynchronously will only use F_SETLK, not F_SETLKW; When ->lock() d=
+oes return
 >
-> A question...we're returning FILE_LOCK_DEFERRED after the DLM request is
-> sent. If it ends up being blocked, what happens? Does it do a lm_grant
-> downcall with -EAGAIN or something as the result?
+> Isn't the above backward? Shouldn't it say "Callers expecting ->lock()
+> to return asynchronously will only use F_SETLKW, not F_SETLK" ?
 >
 
-no, when info->wait is set then it is a blocked lock request, which
-means lm_grant() will be called when the lock request is granted.
+So far I know lockd will always use F_SETLK only, if it's a blocking
+or non-blocking request you need to evaluate FL_SLEEP. But if
+lm_grant() is not set we are using a check on cmd if it's F_SETLK or
+F_SETLKW to check if it's non-blocking or blocking.
 
->
-> > +             } else {
-> > +                     op->info.wait =3D 0;
-> > +             }
-> > +     } else {
-> > +             op->info.wait =3D IS_SETLKW(cmd);
-> >       }
-> >
-> >       send_op(op);
->
-> Looks reasonable overall.
->
-> Now that I look, we have quite a number of places in the kernel that
-> seem to check for F_SETLKW, when what they really want is to check
-> FL_SLEEP.
-
-Yes, so far I understand FL_SLEEP is F_SETLKW when you get only
-F_SETLK in case of fl->fl_lmops && fl->fl_lmops->lm_grant is true. It
-is confusing but this is how it works... if it's not set we will get
-F_SETLKW and this should imply FL_SLEEP is set.
+If lm_grant() is set and checking on F_SETLKW should never be the
+case, because it will never be true (speaking from lockd point of
+view).
 
 - Alex
 
