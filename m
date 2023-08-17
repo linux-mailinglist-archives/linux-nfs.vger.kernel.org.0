@@ -2,239 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEDB077FA8D
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Aug 2023 17:18:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3479477FB3B
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Aug 2023 17:53:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353076AbjHQPSC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Aug 2023 11:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58748 "EHLO
+        id S1353355AbjHQPxZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Aug 2023 11:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353111AbjHQPRp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Aug 2023 11:17:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468482722
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Aug 2023 08:17:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C3A346743A
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Aug 2023 15:17:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34CCCC433CA
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Aug 2023 15:17:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692285461;
-        bh=kM+qmXOR0I9hFc/lqYsInxLWatGevJgHNrXR7VcGwKA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LbWHAQRYoh08WEl4a8JbOV76uWNF5Mq/qNiFN1cWEoAikPGtSmbB/bSiKeLVxD12e
-         mLsD7KsRHNfs5dfo3+SyQS0cLT7V2sOezbkYgRx1iENBJ/j4yxBl6xn57eTsa5rUu+
-         yuJ3T5S2+we2ctBnujzU8U0sNhzg2aygCvh04of4ElAQesPCw495ALTE/paWpMk+7j
-         IhDk78Lv8OlDJcsssCYCvgEq/2tHpapZdr5YR6nA/u3zFZGfQP/SL2vcnREAw7/DJq
-         y16aSn8Xzsski825bem608b9HfnuMqc/x4r8ddAfKCeUC1FwYaFX/nbnu4N/qsD3Lj
-         oSBPaYN+etUBw==
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4085ee5b1e6so5046771cf.0
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Aug 2023 08:17:41 -0700 (PDT)
-X-Gm-Message-State: AOJu0YzcFb83dSBPlYikW6IaPoKlPDVCRqocNT9b4YwsIiT4l+aAH2aI
-        tW/Kyyw6e47oS21xqIei4rPEVOAGIhZDkJtGs/M=
-X-Google-Smtp-Source: AGHT+IGrvJeQ+z2i4ZyZSrDuIthq4wt0G+C/DcvlNo2Z0s3LHxErxiZTWcw9xZmM1W3Ce9aXK4jQ3MBLEptAlpNGw/U=
-X-Received: by 2002:a05:622a:130a:b0:3f8:2a37:20f with SMTP id
- v10-20020a05622a130a00b003f82a37020fmr3774175qtk.34.1692285460245; Thu, 17
- Aug 2023 08:17:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <9ee56f62652c3d338aff809f70e7941dfc284bf9.camel@kernel.org>
- <7C595ADA-E841-44F7-918A-3A46A55D546B@oracle.com> <2fc1f9bf5fdc25acbcabaf4266584f0857bc4b19.camel@kernel.org>
-In-Reply-To: <2fc1f9bf5fdc25acbcabaf4266584f0857bc4b19.camel@kernel.org>
-From:   Anna Schumaker <anna@kernel.org>
-Date:   Thu, 17 Aug 2023 11:17:24 -0400
-X-Gmail-Original-Message-ID: <CAFX2Jf=gq-U464_SrebSwCMOU+g0Vcx9Us7SPn8JQEoA6s27DQ@mail.gmail.com>
-Message-ID: <CAFX2Jf=gq-U464_SrebSwCMOU+g0Vcx9Us7SPn8JQEoA6s27DQ@mail.gmail.com>
-Subject: Re: xfstests results over NFS
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@gmail.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Neil Brown <neilb@suse.de>,
-        "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
-        Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+        with ESMTP id S242675AbjHQPwx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Aug 2023 11:52:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45C6130D1
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Aug 2023 08:52:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692287527;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=cb3vOuQ+kH0/pSZM4Qtlmw5+LiUYQstAOby+SW+Bxfk=;
+        b=YRtM/J8MCgQoRmUnl5T0pMh6jKmzY7Om5YOA5uBfAid009DRfgqymi0ham0ptvHrYSUqz5
+        fl8xpDaqyuOlVEX7YZxuj7ptfOg9yCbjjT1x3mVNPKj5dwArT+z+fXIqLQbwzgMThayb9i
+        2erQh+FZoyFbTMLDahoV7EEMRwHuWJg=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-569-1cqTbQLfOzqALia7iNZvpg-1; Thu, 17 Aug 2023 11:52:05 -0400
+X-MC-Unique: 1cqTbQLfOzqALia7iNZvpg-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-99c8bbc902eso505345766b.1
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Aug 2023 08:52:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692287524; x=1692892324;
+        h=content-transfer-encoding:mime-version:user-agent:date:cc:to:from
+         :subject:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cb3vOuQ+kH0/pSZM4Qtlmw5+LiUYQstAOby+SW+Bxfk=;
+        b=QzBNAcenfkxfq3hhDW0SKU04yEN0CHPkZNRylnWt6/jqOpWdfpvfrNWlEFEu9/892g
+         g57LdT3BePSynyw8hnMqDL/cWTISmVersaLoj86DB4KSaxyDpCqv01w2j/dhXyrAFFW8
+         +O8qkcveduGveNScjq2VsIGuWsOeQKmkrj5lkA9F3K5WztA7Si6SGPuAJ2UHLEZ95btr
+         N1qD44Lr6gAdxierY4R1h+an2zPRjx6jCSQwW8OTSNx/3+lyJ4Ol8Zkb0MrOxSl3z1/M
+         2dbQ9d+X/1QKmjDfGQqZeNVRObFKtDylXzxLWVTgHh8TLgIZoL9xD2n2qU094b4pGONN
+         BhDQ==
+X-Gm-Message-State: AOJu0Yw9IgorYcJMCC9p49MY6ZCLQMoKsc9/YeyGvETD/X+OAwBA7uzI
+        pfgj54Pp4aLP6eLsJA8QvWvOL1CSRpWcYINJOnd37YW9TjueuehaMqUWIuA3ywf7sVbM7HbgZ7r
+        mF7A2I6LmA3N8R2Aagcy8qnhzzVPVUDoi4NkdjWrb7Z2vwDSXbOhR1zSv8tLOlkXL6DOpBckdAx
+        xPrn5n
+X-Received: by 2002:a17:907:78d6:b0:994:580c:5049 with SMTP id kv22-20020a17090778d600b00994580c5049mr3921262ejc.5.1692287524507;
+        Thu, 17 Aug 2023 08:52:04 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGEYSuhHshTbCW1nXq3/UGD+eEan0fWSN3Vav9nH3UaSvKfRR7o325QMlMkQgHjS9vknG90yw==
+X-Received: by 2002:a17:907:78d6:b0:994:580c:5049 with SMTP id kv22-20020a17090778d600b00994580c5049mr3921251ejc.5.1692287524165;
+        Thu, 17 Aug 2023 08:52:04 -0700 (PDT)
+Received: from starship ([77.137.131.138])
+        by smtp.gmail.com with ESMTPSA id l18-20020a1709065a9200b00991e2b5a27dsm10312068ejq.37.2023.08.17.08.52.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 17 Aug 2023 08:52:03 -0700 (PDT)
+Message-ID: <2d47431decaaf4bba0023c91ef0d7fd51b84333b.camel@redhat.com>
+Subject: Commit 'sunrpc: Use sendmsg(MSG_SPLICE_PAGES) rather then sendpage'
+ broke O_DIRECT over NFS
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Date:   Thu, 17 Aug 2023 18:52:01 +0300
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.36.5 (3.36.5-2.fc32) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 17, 2023 at 10:22=E2=80=AFAM Jeff Layton <jlayton@kernel.org> w=
-rote:
->
-> On Thu, 2023-08-17 at 14:04 +0000, Chuck Lever III wrote:
-> >
-> > > On Aug 17, 2023, at 7:21 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> > >
-> > > I finally got my kdevops (https://github.com/linux-kdevops/kdevops) t=
-est
-> > > rig working well enough to get some publishable results. To run fstes=
-ts,
-> > > kdevops will spin up a server and (in this case) 2 clients to run
-> > > xfstests' auto group. One client mounts with default options, and the
-> > > other uses NFSv3.
-> > >
-> > > I tested 3 kernels:
-> > >
-> > > v6.4.0 (stock release)
-> > > 6.5.0-rc6-g4853c74bd7ab (Linus' tree as of a couple of days ago)
-> > > 6.5.0-rc6-next-20230816-gef66bf8aeb91 (linux-next as of yesterday mor=
-ning)
-> > >
-> > > Here are the results summary of all 3:
-> > >
-> > > KERNEL:    6.4.0
-> > > CPUS:      8
-> > >
-> > > nfs_v3: 727 tests, 12 failures, 569 skipped, 14863 seconds
-> > >  Failures: generic/053 generic/099 generic/105 generic/124
-> > >    generic/193 generic/258 generic/294 generic/318 generic/319
-> > >    generic/444 generic/528 generic/529
-> > > nfs_default: 727 tests, 18 failures, 452 skipped, 21899 seconds
-> > >  Failures: generic/053 generic/099 generic/105 generic/186
-> > >    generic/187 generic/193 generic/294 generic/318 generic/319
-> > >    generic/357 generic/444 generic/486 generic/513 generic/528
-> > >    generic/529 generic/578 generic/675 generic/688
-> > > Totals: 1454 tests, 1021 skipped, 30 failures, 0 errors, 35096s
-> > >
-> > > KERNEL:    6.5.0-rc6-g4853c74bd7ab
-> > > CPUS:      8
-> > >
-> > > nfs_v3: 727 tests, 9 failures, 570 skipped, 14775 seconds
-> > >  Failures: generic/053 generic/099 generic/105 generic/258
-> > >    generic/294 generic/318 generic/319 generic/444 generic/529
-> > > nfs_default: 727 tests, 16 failures, 453 skipped, 22326 seconds
-> > >  Failures: generic/053 generic/099 generic/105 generic/186
-> > >    generic/187 generic/294 generic/318 generic/319 generic/357
-> > >    generic/444 generic/486 generic/513 generic/529 generic/578
-> > >    generic/675 generic/688
-> > > Totals: 1454 tests, 1023 skipped, 25 failures, 0 errors, 35396s
-> > >
-> > > KERNEL:    6.5.0-rc6-next-20230816-gef66bf8aeb91
-> > > CPUS:      8
-> > >
-> > > nfs_v3: 727 tests, 9 failures, 570 skipped, 14657 seconds
-> > >  Failures: generic/053 generic/099 generic/105 generic/258
-> > >    generic/294 generic/318 generic/319 generic/444 generic/529
-> > > nfs_default: 727 tests, 18 failures, 453 skipped, 21757 seconds
-> > >  Failures: generic/053 generic/099 generic/105 generic/186
-> > >    generic/187 generic/294 generic/318 generic/319 generic/357
-> > >    generic/444 generic/486 generic/513 generic/529 generic/578
-> > >    generic/675 generic/683 generic/684 generic/688
-> > > Totals: 1454 tests, 1023 skipped, 27 failures, 0 errors, 34870s
+Hi!
 
-As long as we're sharing results ... here is what I'm seeing with a
-6.5-rc6 client & server:
+I just updated my developement systems to 6.5-rc6 (from 6.4) and now I can't start a VM 
+with a disk which is mounted over the NFS.
 
-anna@gouda ~ % xfstestsdb xunit list --results --runid 1741 --color=3Dnone
-+------+----------------------+---------+----------+------+------+------+--=
------+
-|  run | device               | xunit   | hostname | pass | fail |
-skip |  time |
-+------+----------------------+---------+----------+------+------+------+--=
------+
-| 1741 | server:/srv/xfs/test | tcp-3   | client   |  125 |    4 |
-464 | 447 s |
-| 1741 | server:/srv/xfs/test | tcp-4.0 | client   |  117 |   11 |
-465 | 478 s |
-| 1741 | server:/srv/xfs/test | tcp-4.1 | client   |  119 |   12 |
-462 | 404 s |
-| 1741 | server:/srv/xfs/test | tcp-4.2 | client   |  212 |   18 |
-363 | 564 s |
-+------+----------------------+---------+----------+------+------+------+--=
------+
+The VM has two qcow2 files, one depends on another and qemu opens both.
 
-anna@gouda ~ % xfstestsdb show --failure 1741 --color=3Dnone
-+-------------+---------+---------+---------+---------+
-|    testcase | tcp-3   | tcp-4.0 | tcp-4.1 | tcp-4.2 |
-+-------------+---------+---------+---------+---------+
-| generic/053 | passed  | failure | failure | failure |
-| generic/099 | passed  | failure | failure | failure |
-| generic/105 | passed  | failure | failure | failure |
-| generic/140 | skipped | skipped | skipped | failure |
-| generic/188 | skipped | skipped | skipped | failure |
-| generic/258 | failure | passed  | passed  | failure |
-| generic/294 | failure | failure | failure | failure |
-| generic/318 | passed  | failure | failure | failure |
-| generic/319 | passed  | failure | failure | failure |
-| generic/357 | skipped | skipped | skipped | failure |
-| generic/444 | failure | failure | failure | failure |
-| generic/465 | passed  | failure | failure | failure |
-| generic/513 | skipped | skipped | skipped | failure |
-| generic/529 | passed  | failure | failure | failure |
-| generic/604 | passed  | passed  | failure | passed  |
-| generic/675 | skipped | skipped | skipped | failure |
-| generic/688 | skipped | skipped | skipped | failure |
-| generic/697 | passed  | failure | failure | failure |
-|     nfs/002 | failure | failure | failure | failure |
-+-------------+---------+---------+---------+---------+
+This is the command line of qemu:
+
+-drive if=none,id=os_image,file=./disk_s1.qcow2,aio=native,discard=unmap,cache=none
+
+The disk_s1.qcow2 depends on disk_s0.qcow2
+
+However this is what I get:
+
+qemu-system-x86_64: -drive if=none,id=os_image,file=./disk_s1.qcow2,aio=native,discard=unmap,cache=none: Could not open backing file: Could not open './QFI?': No such file or directory
+
+'QFI?' is qcow2 file signature, which signals that there might be some nasty corruption happening.
+
+The program was supposed to read a field inside the disk_s1.qcow2 file which should read 'disk_s0.qcow2' 
+but instead it seems to read the first 4 bytes of the file.
 
 
-> > >
-> > > With NFSv4.2, v6.4.0 has 2 extra failures that the current mainline
-> > > kernel doesn't:
-> > >
-> > >    generic/193 (some sort of setattr problem)
-> > >    generic/528 (known problem with btime handling in client that has =
-been fixed)
-> > >
-> > > While I haven't investigated, I'm assuming the 193 bug is also someth=
-ing
-> > > that has been fixed in recent kernels. There are also 3 other NFSv3
-> > > tests that started passing since v6.4.0. I haven't looked into those.
-> > >
-> > > With the linux-next kernel there are 2 new regressions:
-> > >
-> > >    generic/683
-> > >    generic/684
-> > >
-> > > Both of these look like problems with setuid/setgid stripping, and st=
-ill
-> > > need to be investigated. I have more verbose result info on the test
-> > > failures if anyone is interested.
+Bisect leads to the above commit. Reverting it was not possible due to many changes.
 
-Interesting that I'm not seeing the 683 & 684 failures. What type of
-filesystem is your server exporting?
+Both the client and the server were tested with the 6.5-rc6 kernel, but once rebooting the server into
+the 6.4, the bug disappeared, thus I did a bisect on the server.
 
-> >
-> > 100% awesome sauce. Out of curiosity:
-> >
-> > Does kdevops have a way of publishing (via an autonomous web site)
-> > and archiving these results?
-> >
->
-> There's nothing much prewritten for this. There is some support for
-> sending emails when you run a "ci" loop. I need to do more investigation
-> here.
+When I tested a version before the offending commit on the server, the 6.5-rc6 client was able to work with it,
+which increases the chances that the bug is in nfsd.
 
-xfstests has an option to generate an xunit file, which can help here.
-I use with my own archiving tool to stick everything into a sqlite
-database (https://git.nowheycreamery.com/anna/xfstestsdb).
+Switching qemu to use write back paging also helps (aio=threads,discard=unmap,cache=writeback)
+The client and the server (both 6.5-rc6) work with this configuration.
 
->
-> Note that there has been some parallel effort toward CI in the SMB space
-> using buildbot. It may worthwhile to consider combining efforts somehow.
+Running the VM on the same machine (also 6.5-rc6) where the VM disk is located (thus avoiding NFS) works as well.
 
-It might be nice to at least see what they're doing. If they have
-something that works well, then setting up something similar might be
-a good idea.
+I tested several VMs that I have, all are affected in the same way.
 
-Anna
+I run somewhat outdated qemu, but running the latest qemu doesn't make a difference.
 
->
-> > Does the "auto" group include tests that require a SCRATCH_DEV?
-> >
->
-> Yes. The nfs server is configured with 2 exported fs', so I have it
-> mounting a directory under one as "test" and the other as "scratch".
-> --
-> Jeff Layton <jlayton@kernel.org>
+I use nfs4.
+
+I can test patches and provide more info if needed.
+
+Best regards,
+	Maxim Levitsky
+
