@@ -2,158 +2,186 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5341B77E7AF
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Aug 2023 19:34:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB16677EEA1
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Aug 2023 03:20:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345191AbjHPRd3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Aug 2023 13:33:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49378 "EHLO
+        id S1347476AbjHQBUS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Aug 2023 21:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345271AbjHPRdI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Aug 2023 13:33:08 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B948273A
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 10:32:48 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-4103cec468fso29821151cf.3
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 10:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692207167; x=1692811967;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PdbNYCD7Z4tPncEehX34U+lgntBsfflyyHG+PTHQbHE=;
-        b=fLqG8TTWv7TvmysVVIpF1/ChitMsm1JzlvkJn7ugnRVwrsoNEWdPLgLKuOPub5yCO0
-         U+bpI+XRchgGtMSRuMic6kcpQqus4XqLTk9pjjk6oyYImIzftnoav+z0EUS8JXEM0OAm
-         dRenlgU2UJ+P6bjsqrDQh+QnRV5hkzPONBnfChoWWpeX2BrIDoybVLeGkXiXCQM7Q/11
-         U8mfs9Bu2xqURD1Z/qi4qXA86l3MNUTUA94IXV6lywNVNEvw1Q+Zn5O7W/gPBiGMShDC
-         LBprkDX+eBFBbOnwO4lW69S5QFATsqS/lOdCHkHqlQcJkXNI7q/jsDgIjgeWNfNbsXqz
-         uteQ==
+        with ESMTP id S1347477AbjHQBUJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Aug 2023 21:20:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4185F2D5E
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 18:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1692235162;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MdJI8YOWfcspuu/Kis9p/FFOj/Ijn4DHopWgTGqX0p8=;
+        b=GpwV0pbe3DxMMYEDc1i3UtgaPnxrkmXNWbPUqcwDu6RMwaBSUDyieaDCy4ICbBHZoGx/LY
+        z9CeG6MeLe/Jfn+l3zrqXAY19Q/YtLXk4+WB11ZSTK9mE5v/L23ZNK2UjCwMsUSnAZQFgw
+        nEoy17x369SDY/2x/gUXphpUZ5gqRrk=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-213-AOEmmBzoNt-7g5NlZI1pRg-1; Wed, 16 Aug 2023 21:19:21 -0400
+X-MC-Unique: AOEmmBzoNt-7g5NlZI1pRg-1
+Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-52576448c91so1375512a12.3
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Aug 2023 18:19:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692207167; x=1692811967;
+        d=1e100.net; s=20221208; t=1692235160; x=1692839960;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=PdbNYCD7Z4tPncEehX34U+lgntBsfflyyHG+PTHQbHE=;
-        b=Ofm3LQae25iCtjvAZCDc8FLa9sjp9ozioAwRJohXd/18VUunnMTaxU5K9qBL/NSdpP
-         07EhAjPpsi1jrvv+jN9Y6DgRUJoui7h2bvHXXqeJ5GZF2LsfRracnKLzUOxwNn8csea6
-         W7DFGVrg6M6/PLJ2ZdQrjA99tcpQxU9PUDjitSJoM4vA7cQ0EHYIN9TIvGl4I4V1cgyn
-         bb3+1wSHvTHywlxOfIv49eaB/X0zlv2WEXkMOZ3zaXJfe/76qXV+wGpoPl0JpDC5Bb14
-         woU7VylrdN0R9W3tFmjou27k0CrlwU1sKPPjjn4zhaMidWDS0pv3x5rU834UySx4Jyus
-         outA==
-X-Gm-Message-State: AOJu0YxRVpoVMHww/Wf74YCfw7PkkKto5UN1VwrCBCcyqAuvqnDZ45W0
-        uQN29MpFokxLJZtfs2mMqMFRlPE/TV7F2IImkXw=
-X-Google-Smtp-Source: AGHT+IFIjYjZf69mJLYWAFE4I3+YuvqqKT6WiaO18r6Kbn9ggtCjUP1ktbxbw5s1Gh46vmDVQ71z0BQTKu0U6Qbzy7k=
-X-Received: by 2002:ac8:7f07:0:b0:400:9b69:7c13 with SMTP id
- f7-20020ac87f07000000b004009b697c13mr3479247qtk.59.1692207167539; Wed, 16 Aug
- 2023 10:32:47 -0700 (PDT)
+        bh=MdJI8YOWfcspuu/Kis9p/FFOj/Ijn4DHopWgTGqX0p8=;
+        b=Fg0EPuc+hymaFuvB1golMdq1+Ea2oG5FK8JkcqfCmNH8jqlM0u92pA+oXhwCl8tRoy
+         xn9w/s5ckp+0Z5DAkY7VSDpo/cajrPdMv0NSbfEfYkUPAOToy0QnJkABjqVtxXeL5kdL
+         BzOWkmuvmvjK41L6TXb0TZjIFhVxXpr1bwtTQJIVpw3gNYcPW2CB0WtlOxseDj0jRCNb
+         3ezt5LkNRB2bFxIkao6a62u+jDtGhyz+EJ6x18mqpihOGhw6DpG0AEhI+Ys210ABoB1D
+         li/i6FvcP2yOO9pJCaM9ggFc3fohvdwjCIKdlXII/75PltiOYsJrTIRquLeh1n/BsIHA
+         ekOQ==
+X-Gm-Message-State: AOJu0YzBDbCJNel/SZTKF9J60qwHbwTtkYAUwsrZPd5QJOe3Htjc2ZGq
+        P7MbXqmW5sI+4qla1Fn+NOk+ftkrjv79cV864R3JJJjdRYtt77FMz/h5+5fypThcClE+9853dyh
+        BueN78wN6WgmZi/bWSRjxt3imnC4J3PtZyWYA
+X-Received: by 2002:a05:6402:2028:b0:523:b665:e494 with SMTP id ay8-20020a056402202800b00523b665e494mr2705181edb.15.1692235159938;
+        Wed, 16 Aug 2023 18:19:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH+3zVWGGEV7pU4ZRS9ZVR7J1WVptyIFU1YawAqPgdGNxY0nrs+srZ1tF1GgXLlWOW6IssVK6QeBhfLu09ErmQ=
+X-Received: by 2002:a05:6402:2028:b0:523:b665:e494 with SMTP id
+ ay8-20020a056402202800b00523b665e494mr2705166edb.15.1692235159674; Wed, 16
+ Aug 2023 18:19:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <b1ae55f1c835ea6b30089a9377ae67c40d43a0fc.camel@kernel.org> <CAN-5tyHejgLNPrF-bybFqrkiEvvFb+SZ9NHne9RiQ0kVwESd5A@mail.gmail.com>
-In-Reply-To: <CAN-5tyHejgLNPrF-bybFqrkiEvvFb+SZ9NHne9RiQ0kVwESd5A@mail.gmail.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Wed, 16 Aug 2023 13:32:31 -0400
-Message-ID: <CAFX2Jfnr2_VCy7EWn7_+GMeD+rsffSX-hY0_n4=CtOdq9Wq+dw@mail.gmail.com>
-Subject: Re: turning on s2s copy by default in knfsd
-To:     Olga Kornievskaia <aglo@umich.edu>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Dai Ngo <dai.ngo@oracle.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Steve Dickson <steved@redhat.com>,
-        Olga Kornieskaia <kolga@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
+References: <20230814211116.3224759-1-aahringo@redhat.com> <20230814211116.3224759-7-aahringo@redhat.com>
+ <bd76489a6b0d2f56f4a68d48b3736fcaf5b5119b.camel@kernel.org>
+In-Reply-To: <bd76489a6b0d2f56f4a68d48b3736fcaf5b5119b.camel@kernel.org>
+From:   Alexander Aring <aahringo@redhat.com>
+Date:   Wed, 16 Aug 2023 21:19:08 -0400
+Message-ID: <CAK-6q+i3oKN3M_kdoQ99hMnzSZyRH1sPdxZ0MQMwp+vSixUhwg@mail.gmail.com>
+Subject: Re: [RFCv2 6/7] dlm: use FL_SLEEP to check if blocking request
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, cluster-devel@redhat.com,
+        ocfs2-devel@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        teigland@redhat.com, rpeterso@redhat.com, agruenba@redhat.com,
+        trond.myklebust@hammerspace.com, anna@kernel.org,
+        chuck.lever@oracle.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 11, 2023 at 10:42=E2=80=AFAM Olga Kornievskaia <aglo@umich.edu>=
- wrote:
+Hi,
+
+On Wed, Aug 16, 2023 at 9:07=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
 >
-> On Fri, Aug 11, 2023 at 10:23=E2=80=AFAM Jeff Layton <jlayton@kernel.org>=
- wrote:
+> On Mon, 2023-08-14 at 17:11 -0400, Alexander Aring wrote:
+> > This patch uses the FL_SLEEP flag in struct file_lock to check if it's =
+a
+> > blocking request in case if the request coming from nfs lockd process
+> > indicated by lm_grant() is set.
 > >
-> > Chuck and I were chatting yesterday about what it will take to make the
-> > inter_copy_offload_enable module option on by default, and I'd like to
-> > start working toward that end.
-> >
-> > I think what we want to aim for is to eventually deprecate the module
-> > option and have this "just work" when the conditions are right.
-> >
-> > It looks like main obstacle is this (from RFC7862 section 4.9):
-> >
-> >    NFSv4 clients and servers supporting the inter-server COPY operation=
+> > IF FL_SLEEP is set a asynchronous blocking request is being made and
+> > it's waiting for lm_grant() callback being called to signal the lock wa=
 s
-> >    described in this section are REQUIRED to implement the mechanism
-> >    described in Section 4.9.1.1 and to support rejecting COPY_NOTIFY
-> >    requests that do not use the RPC security protocol (RPCSEC_GSS)
-> >    [RFC7861] with privacy.  If the server-to-server copy protocol is
-> >    based on ONC RPC, the servers are also REQUIRED to implement
-> >    [RFC7861], including the RPCSEC_GSSv3 "copy_to_auth",
-> >    "copy_from_auth", and "copy_confirm_auth" structured privileges.
-> >    This requirement to implement is not a requirement to use; for
-> >    example, a server may, depending on configuration, also allow
-> >    COPY_NOTIFY requests that use only AUTH_SYS.
+> > granted. If it's not set a synchronous non-blocking request is being ma=
+de.
 > >
-> >    If a server requires the use of an RPCSEC_GSSv3 copy_to_auth,
-> >    copy_from_auth, or copy_confirm_auth privilege and it is not used,
-> >    the server will reject the request with NFS4ERR_PARTNER_NO_AUTH.
+> > Signed-off-by: Alexander Aring <aahringo@redhat.com>
+> > ---
+> >  fs/dlm/plock.c | 38 ++++++++++++++++++++++----------------
+> >  1 file changed, 22 insertions(+), 16 deletions(-)
 > >
-> > We don't (yet) have GSSv3 support, so we'd need to implement that in
-> > order to make this work right with krb5. Has anyone started looking at
-> > GSSv3?
+> > diff --git a/fs/dlm/plock.c b/fs/dlm/plock.c
+> > index 0094fa4004cc..524771002a2f 100644
+> > --- a/fs/dlm/plock.c
+> > +++ b/fs/dlm/plock.c
+> > @@ -140,7 +140,6 @@ int dlm_posix_lock(dlm_lockspace_t *lockspace, u64 =
+number, struct file *file,
+> >       op->info.optype         =3D DLM_PLOCK_OP_LOCK;
+> >       op->info.pid            =3D fl->fl_pid;
+> >       op->info.ex             =3D (fl->fl_type =3D=3D F_WRLCK);
+> > -     op->info.wait           =3D IS_SETLKW(cmd);
+> >       op->info.fsid           =3D ls->ls_global_id;
+> >       op->info.number         =3D number;
+> >       op->info.start          =3D fl->fl_start;
+> > @@ -148,24 +147,31 @@ int dlm_posix_lock(dlm_lockspace_t *lockspace, u6=
+4 number, struct file *file,
+> >       op->info.owner =3D (__u64)(long)fl->fl_owner;
+> >       /* async handling */
+> >       if (fl->fl_lmops && fl->fl_lmops->lm_grant) {
+> > -             op_data =3D kzalloc(sizeof(*op_data), GFP_NOFS);
+> > -             if (!op_data) {
+> > -                     dlm_release_plock_op(op);
+> > -                     rv =3D -ENOMEM;
+> > -                     goto out;
+> > -             }
+> > +             if (fl->fl_flags & FL_SLEEP) {
+> > +                     op_data =3D kzalloc(sizeof(*op_data), GFP_NOFS);
+> > +                     if (!op_data) {
+> > +                             dlm_release_plock_op(op);
+> > +                             rv =3D -ENOMEM;
+> > +                             goto out;
+> > +                     }
+> >
+> > -             op_data->callback =3D fl->fl_lmops->lm_grant;
+> > -             locks_init_lock(&op_data->flc);
+> > -             locks_copy_lock(&op_data->flc, fl);
+> > -             op_data->fl             =3D fl;
+> > -             op_data->file   =3D file;
+> > +                     op->info.wait =3D 1;
+> > +                     op_data->callback =3D fl->fl_lmops->lm_grant;
+> > +                     locks_init_lock(&op_data->flc);
+> > +                     locks_copy_lock(&op_data->flc, fl);
+> > +                     op_data->fl             =3D fl;
+> > +                     op_data->file   =3D file;
+> >
+> > -             op->data =3D op_data;
+> > +                     op->data =3D op_data;
+> >
+> > -             send_op(op);
+> > -             rv =3D FILE_LOCK_DEFERRED;
+> > -             goto out;
+> > +                     send_op(op);
+> > +                     rv =3D FILE_LOCK_DEFERRED;
+> > +                     goto out;
 >
-> Andy Adamson way back when implemented a draft gssv3 implementation
-> and I believe we still have those patches. Anna periodically have been
-> rebasing them but no more than that. I believe there might have been
-> even some patches for the copy piece but I believe those might be
-> lost. I'd have to dig around in my oldest laptop.
+> A question...we're returning FILE_LOCK_DEFERRED after the DLM request is
+> sent. If it ends up being blocked, what happens? Does it do a lm_grant
+> downcall with -EAGAIN or something as the result?
+>
 
-I do still have Andy's gssv3 implementation patches, but it looks like
-it's been longer than I thought since I last rebased them. They apply
-cleanly to Linux 5.0, but not 5.1. I'll see what it takes to get them
-up to date.
-
-Anna
+no, when info->wait is set then it is a blocked lock request, which
+means lm_grant() will be called when the lock request is granted.
 
 >
-> I'd like to address some other questions later as I'm out of the office t=
-oday.
+> > +             } else {
+> > +                     op->info.wait =3D 0;
+> > +             }
+> > +     } else {
+> > +             op->info.wait =3D IS_SETLKW(cmd);
+> >       }
+> >
+> >       send_op(op);
 >
-> > Incidentally, has anyone tried doing this with sec=3Dkrb5 in the curren=
-t
-> > code? Does it actually work? I don't see any place where we return
-> > nfserr_partner_no_auth, so I wonder if we need to fix up the s2s COPY
-> > authentication and error handling?
-> >
-> > Another question: The v4.2 spec was written before the RPC over TLS
-> > spec. Should we aim to allow this to work by default if the client and
-> > both servers are using xprtsec=3Dmtls and are secured by the same CA?
-> >
-> > 1/ the client and servers are all using GSSv3 with krb5p (or some other
-> > encryption)
-> >
-> > ...or...
-> >
-> > 2/ the client and servers are all using mtls with certificates signed b=
-y
-> > the same CA
-> >
-> >
-> > ...I expect we'll probably be able to accomodate #2 before #1.
-> >
-> > Beyond that, we could allow for module or export option that still
-> > allows s2s copy to work and relaxes the above restrictions (to allow
-> > people to use it over plaintext with AUTH_SYS on "secure" networks).
-> >
-> > Anything I've overlooked here, or other thoughts?
-> >
-> > Cheers,
-> > --
-> > Jeff Layton <jlayton@kernel.org>
+> Looks reasonable overall.
+>
+> Now that I look, we have quite a number of places in the kernel that
+> seem to check for F_SETLKW, when what they really want is to check
+> FL_SLEEP.
+
+Yes, so far I understand FL_SLEEP is F_SETLKW when you get only
+F_SETLK in case of fl->fl_lmops && fl->fl_lmops->lm_grant is true. It
+is confusing but this is how it works... if it's not set we will get
+F_SETLKW and this should imply FL_SLEEP is set.
+
+- Alex
+
