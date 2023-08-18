@@ -2,240 +2,436 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2FDC1780DBD
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Aug 2023 16:13:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7156780FA1
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Aug 2023 17:54:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1377660AbjHROND (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Aug 2023 10:13:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34210 "EHLO
+        id S1351286AbjHRPyQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Aug 2023 11:54:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377664AbjHRONB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Aug 2023 10:13:01 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED45170E;
-        Fri, 18 Aug 2023 07:12:57 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37IC9625025678;
-        Fri, 18 Aug 2023 14:12:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=ZPMioYLiLdjb9C9Hq1ER4VdqG8Uxhn1aaKMvj7UMxng=;
- b=VvSrnE4KciyaEGtAWc3zLXOtTjx0TNWPedcxmyrOkzQjW4xwvUy7u3HtqfY/QU7xlid7
- q5jtBCRFNHg6Gemd4RjfqZvlfZXUzfvYpAORT3IhjeQtIsyyYxc61sS0Bg/DXG1/KaGU
- V/6cHzE+sPdQQxhgGoFnqwlugkV+3InWfTE5wBIyO08Ym2mUqLgXLUNpvA9idkXCeSry
- Y1jEBAuTrJUf53QqhWR9KTxIeVLMiUIyW6GHnQeZD8WNWUO375RDpU7blIYVtYR0L2Zt
- rsiRkasNqmo0luux7hulcB7aMm5uMUycadKzaj7TvFAx7S1WWsr/AqLPWSD0Z6C2yELw PQ== 
+        with ESMTP id S1378345AbjHRPxs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Aug 2023 11:53:48 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 854CA270C
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Aug 2023 08:53:46 -0700 (PDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37IEkuvA013564;
+        Fri, 18 Aug 2023 15:53:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-03-30;
+ bh=OZZCwPwv64deI6XNzG9YK1iyXdTkb2XFjrF+QqORBiU=;
+ b=BU599LOSMsmEBAn70UmYr6zPWl3o1qHEL/tb/+SgZE1cfJQkJ51ohGLCpsVoCKK6Juc/
+ xK4wY23hRyfjVypHoAatvwUGStZJE6b+x2KP190nqrPekREEAtlFXxMfPeCAZDaDIoN2
+ Ojbpk47hifqUdrYrjnejZV2Is9NszSjN1VM+o3r+/EM8bzBXjYFR2YgcRUlwVyR1G3D1
+ GJbEWU4d2d2BkCEdSixK/oqKqrRYj4ase0KXh7bC4rNSQm5y4win2mHAd79TLU2kufeT
+ Bi88QN2r55DaK38/IUnQQdu7VwTsk+Cl/xMRvGcDpGYfnKClx1Ice/Egs3izEF1gEUf+ Nw== 
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3se349m01h-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3se30t4b9b-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Aug 2023 14:12:55 +0000
+        Fri, 18 Aug 2023 15:53:39 +0000
 Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37ICE0WO005488;
-        Fri, 18 Aug 2023 14:12:55 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2173.outbound.protection.outlook.com [104.47.57.173])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3sey2h7dhu-1
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37IEIct4006625;
+        Fri, 18 Aug 2023 15:53:38 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3sey2hasqj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 18 Aug 2023 14:12:54 +0000
+        Fri, 18 Aug 2023 15:53:38 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gyj8RpTmZEmBvwioATcf9q6TQp6jtOJLgOLNMK0RqAm/ljpq+HIYIdSdnx8zHr6wWAAxzewju3LNxO6dpFCVxD+1a9TfiDzuqBJBubJonKkPoV/mrIH7yIIrTb7LnqJUp5friKSHFcGeqgLweTj9ivBGDVRsIWyPN8zhSIfnQBt5wXdUS8tANx4/bq0nfWMWQfSLZsPmiHgEXjw5f0/eRwroxYMGXTAODrRHJmEG2JchRXGv1WbxABhbMkzy8VDvryg0lRYU8CyPQZXLEu9VpQpnrsPA9owP4tP+i/sK+1WKKUstIJSE7X3LIoou8+g8BWgwf5vd+SK7ZB4HU5ihHQ==
+ b=WT/4cXiBHs5X/A1/dF1VY+iONrQU5pcfX7uMRTnZiYuafRC5v37pC5w2EToBeIs8RQSUqm2o0aEfYNpdB3RPEgiBvoRGNwQ73HgG5VslaQGnpjImjdbsxPjPGrVlcJydG5/n11W6VeP+axoiu+oql/XMGaCgSVXLEQO4T4ZAcGiBAyGWp6coN4+sF/0ueCceKmng3UNUGLNi1GjNyMbEhjQvQLV0I4FP4wvKRev+vJCj9+WrvWmWjvx6wFejm6HYg7y0Gir/BNyoT9/+k9OtB5OV2nx3YWs0tDDLeiQkuwWroG1IJX5Vs+hjqVgVjdgb16PyrAqHEWRbtMdQffX3iA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZPMioYLiLdjb9C9Hq1ER4VdqG8Uxhn1aaKMvj7UMxng=;
- b=XecDB2p9lLUP9o/IAPI5c1ZBdKrGVDcq5fLUBeMbDzWp0hebJHOV1hga4ObbKEzypZbX/gq0vUL3unpN51reB6YufcDo45qYe/Xr0krmBGSKEmXayivweG+SpDpdYZuh63TybrSWRTwyDY1rownkhjSGWCPMGdi5mDtuWa7cKcNr/ivF0IezMy0uRJLTxKPdXkU6+a/LEub5CpKs6B0pd2w/akfbGiuO4JqeNW/rrHOX+IRu1oHN7ynIXybi/cHxlkBZ9KUelTGDvflKXsHT0zCobhIBoUcggEKdbYSdh5UdzV+C+/rRHIqZLfLnLLwrEGomKXCxmDL/87veXuH/HQ==
+ bh=OZZCwPwv64deI6XNzG9YK1iyXdTkb2XFjrF+QqORBiU=;
+ b=DcsZYOHT84vK9PbgrABGTjoMAVixVf4TLfEN0LTHtDuq3L3g32FMLi1FAdJdMGzSBFh0mKiwx4ApG2V1FEXVpkyQXRlYHnCWd4n7huqr/O5khR0s1NIM/eX3VD+SW9Gzmk7dR46ByEygwC7Sg3/kqSUFD1RRzWf+0/zAqUvHYMAuEU/7hycj21CgdAVu4SUl8Ruz5R2L6VCgh2ow+byZegEb1cXWA2z2/1FsfAYRxi3N7felpwCTB7OKiPfZumUfyjQvETU9Gg9ZibdyjTpG8FYJUc9i5SOCWNLVOHiUsY7Sl7Kuxq/WcuMB+uxJIxjYib9t35wkK2M2BbGT+Rw5Dw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZPMioYLiLdjb9C9Hq1ER4VdqG8Uxhn1aaKMvj7UMxng=;
- b=oDJxUMQN7fi4lnN/nojJtrUj0odXDZ9xEynNs2mGCj2hRTOw5wXnW5BOyyXnPX4uzE6vC3VeGhGMfgpqGAelWeXfeCD/iv488nZz1K3P3PuAV19cmUMA3zTAOY+i4od/RIogfhzkLFZDtWBSqtm/fJBfFvv+e5c6Ao3fnRRaixw=
+ bh=OZZCwPwv64deI6XNzG9YK1iyXdTkb2XFjrF+QqORBiU=;
+ b=xNMUi13e6+1EzvQcuLrb2OsJrQqJkeFu9VbUH0VcVs4o+3xRl4cFiTUfcO+CljZzTRnBr0QX8PG8iAyxz82itfXvwrgd6IUIqRDteNzZwgEXYWwDtfXlppI/GwLh1kBGhtqyyys0b4/zNtaF0JUaJYkdJTa/UB+dbqyDmWr58sk=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CH0PR10MB5228.namprd10.prod.outlook.com (2603:10b6:610:db::5) with
+ by SA1PR10MB5759.namprd10.prod.outlook.com (2603:10b6:806:23d::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.20; Fri, 18 Aug
- 2023 14:12:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6678.31; Fri, 18 Aug
+ 2023 15:53:34 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::2990:c166:9436:40e]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::2990:c166:9436:40e%6]) with mapi id 15.20.6699.020; Fri, 18 Aug 2023
- 14:12:52 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-Subject: Re: Commit 'sunrpc: Use sendmsg(MSG_SPLICE_PAGES) rather then
- sendpage' broke O_DIRECT over NFS
-Thread-Topic: Commit 'sunrpc: Use sendmsg(MSG_SPLICE_PAGES) rather then
- sendpage' broke O_DIRECT over NFS
-Thread-Index: AQHZ0SMM7jGcAll+1kuqtwDJI+Lc8q/upMaAgAAAK4CAAFF7gIABI2eA
-Date:   Fri, 18 Aug 2023 14:12:52 +0000
-Message-ID: <0F6CF5BC-B616-4931-B3C9-08A5691DD822@oracle.com>
-References: <2d47431decaaf4bba0023c91ef0d7fd51b84333b.camel@redhat.com>
- <4DB1C27A-1B89-468A-9103-80DEDBF1A091@oracle.com>
- <617E47EE-77B4-4904-A32B-56F3E50895CA@oracle.com>
- <4a927976cba33e07a765d38ba6291d2d3f55254b.camel@redhat.com>
-In-Reply-To: <4a927976cba33e07a765d38ba6291d2d3f55254b.camel@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3731.700.6)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CH0PR10MB5228:EE_
-x-ms-office365-filtering-correlation-id: 7b60a4ea-b208-4c34-9719-08db9ff5362d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oFPVOh79Dt7jZNjfKoRjDeLbFP+nKq/VcxM1QHOGmkDMkDlfCOfqgpjBcV0VXuFQNflsyNnZfrIky/BI0JX7eXMVcG8YwOCbxyyZUfdMelCre0JOSk9q6eV5BQEtQy3jbOknNpofM7gMc6pHm1p96/qF7vvszZUSMo16q7hmljO1b9tdGJ+7Gov5f3AQt2McfN/d/z/zVc/+9cHmdnm6Fv/1oDzNbNsn7J772r7hLhitwga5MrAbAxr+yVhWBq24L4MBT9bP4uw0yx4xKt83ntzW8TS/ehJydkDOBkWqPnQyOkHcfI+v56peUpp/C+mnZbU2QFeHXkkvo4dkNTTi2byStbasW+xW53iVj8uZ9Ml7CMW2zwOqvKcDPygEaHW2xZGIW9wQoMxN1RzLXSSLDbyrLJmoTOwYQLJny4GfxuHwfnaBjFM01rbEZKUZ/JbtbZwU+s9Hg6YTmqGJb5IWUW5W4yP5HejgvzQKL2JFPMWiJ7lL43IaVX5nVudliatKmkCV+OpkW60CUNoEp1CYPEvy1XceoMkqme3oJwDggJOhJ0ZpKtMcG2p/v6XxrjY+woUSRluHiQR3z9tGK575US2UoJEJ3pg2V2f7P1NPqbY4c3ocahVD83dLF79PCVTluBEC04UUyVY3+PPV+CRFgS56o4gZlsS1TaSUFVaiCGQ=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(39860400002)(366004)(376002)(396003)(186009)(1800799009)(451199024)(6486002)(71200400001)(6506007)(38070700005)(38100700002)(6512007)(122000001)(53546011)(86362001)(26005)(83380400001)(36756003)(2616005)(33656002)(2906002)(54906003)(64756008)(66946007)(66476007)(66446008)(66556008)(316002)(6916009)(41300700001)(91956017)(76116006)(5660300002)(8676002)(4326008)(8936002)(478600001)(966005)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Sk1rcnp3THk2bFVyRnptbDZYL1AxSHJuNEVnM0R2dC9sN3hFRHF3Um4rSG9m?=
- =?utf-8?B?NWZJaGN0czV5M25Ndnl0RVd6WEExVE1JYUxncGNkc01NTGlyb1VLUFdLUHNN?=
- =?utf-8?B?T0tXTGNSL1ZiWVVmT0YzZkQ2ZlRET3BnT3BnMGRsdWM5NmN4VjhhMUorVEpY?=
- =?utf-8?B?ZU5hOWY4MWRjR3BoeTlINUhHNm9uRU12Z045blRMOXFiSHdFOHRTOGFua0R0?=
- =?utf-8?B?VFVTODBsVllZZlBsL0tCNEkrb3FlM3ZvSGY4c1N4bkRDbWdIVFlqelhhSTNy?=
- =?utf-8?B?Zlg2M1hLWnNMcFlqZjluZSsyUG5hRElsU1FLWjZ5VzN6STRSNm83Vm1XQlpY?=
- =?utf-8?B?MkdVVlp2bnpJanlwMVNDTlo4UERiT3ZEN1d4bmt2L2lJQ0pvTkhUeUhLUGgw?=
- =?utf-8?B?VmNRbWt5RGhtYkx6ZmVkcmZ2cWdBdzJjamJicVVmUHpKWVJYa0NNd0dsS0hm?=
- =?utf-8?B?RzFvaUVudW4xRkl1YWQ4WDlrS2lnOGJJd0VkUjBQWmUwUHdaYmNwN2V0eEcr?=
- =?utf-8?B?Z0VMdWd2djh0dDU2OS9hWkRkVEtUZHhmckFOWndUNlVQVjljSUJ5bjkxakRR?=
- =?utf-8?B?N3NWS09UQWw5aVdGNlhIekx1aDR0Tzh6QXBMSGFSSzk2V2I4SUxTRkZaY1lj?=
- =?utf-8?B?RWtxZjdpU3BsNldaQnh6djhlZ2IwY21xK0MxRFN3MkJ2enp6V0NxMmQ0Z3V1?=
- =?utf-8?B?RUhZKzJSU0s4ZnF5YmJLdTJqTnB1b0UxdU9EZVVydzRQL1VCaTZTMWM0K3JP?=
- =?utf-8?B?TGJDb09uN2d3S3RoTmUreTdwOGVZakdxUWd2bWczeXBEa3YzRGNRNW80UktQ?=
- =?utf-8?B?amJzcHF0TE41cHAxWFFselBCazQwekRNNVNNV0RNRElQd3BRWXd3bDVNYVNh?=
- =?utf-8?B?QUNsUW5BTGxRVndjUjAzcGp2OC85ZytMMlpKbk5VaUJ2R1J2UG9Ma1lXaEF0?=
- =?utf-8?B?ZkcwcWdkVEVBK2lIdFk3NjNBSzh2VHpGSjN4eFhtMUQ0cjJIL3pSKzdEZWlr?=
- =?utf-8?B?TGpIV09IbWpVTENUWGsyeEU5OTFzS0I5TWlpRXVKOWdjLzIvQis1bHo3dDhu?=
- =?utf-8?B?anBiemkxWXB3bG1Rb3FDRDV1Qkgxb0lRYncvNG9FTlZQcllvWmRqdks3YXVZ?=
- =?utf-8?B?VEQ0V0JGTjJOWUsxVC8zcVZ2NmZiTEJnS0J2LzNzWkIzbGt4bXNxWTF0OElG?=
- =?utf-8?B?b3pVaXdEdm5pcHpHSW5haEFzL1NNUnJLWWorbXQ5RFYzMFZHakFqdTVTeHlJ?=
- =?utf-8?B?Y0l5MWFCMmxEcFd6Sm8rbDF3U01BZWdYK09UZTJTL0d6SE80RzV3bnJtODVz?=
- =?utf-8?B?Y0xYRkUrc2d1dk5yVnVna3RQdS9WSDRnck5FMWZiS2RsVmVnWWZMUC81WVMz?=
- =?utf-8?B?dUIwRU5oTGx5K2hxZG9oY015alNZa3VBZVVrSUZqbVdTUnZVd2RCZ21ybjZt?=
- =?utf-8?B?d3VBVmNFQUs1MExKSkxXOEpic2JlSTlRdnVEdHcwUTZsUFNCOTBPcnM5SHNk?=
- =?utf-8?B?Y3NrcVI1RXVQNVJrYzRONjU2YXR2dmZKNks5Y2R4cVo5VGtGYU1EaTh2azBu?=
- =?utf-8?B?Qmpjd3Qvb1p0RytBeUJMWUdTeEErODJ6OHpPSENMOHZnUi9BdlFjMFN1MUIw?=
- =?utf-8?B?U3FyejJzRmZEM1NkbEMxRjdLZTRGMmNoZ0JOVnl0YUV4NjBqVDQ5anMrNXBy?=
- =?utf-8?B?QXA4UVE0QWw4UTkzZFlOcDZpb3Bic2lvN3VGNThjRGxhMkRqYnBXL0FtOXBl?=
- =?utf-8?B?WVNUV0VIK21HUll6dzdRTVZzbFNmQ1FJVnV0TDNwNllaYXR0VTNkbHpnbWxP?=
- =?utf-8?B?L2NERkRtWXpVTVBKS09BQTgxVEEwaWtYL2pVN21SeFRDR1dtaGNiVFl6VjVM?=
- =?utf-8?B?cUNvN2p3TGtWV1F5cW5DMXRudCtGek9uVERjK2RBMUNjMUM0S25WRmtQVmlj?=
- =?utf-8?B?M2dRUW5YMmxPVmhxWWlqYmdCSzBxSHJoQzV3OWlqU2ZPS1RpZmluN3hOd0tM?=
- =?utf-8?B?RTBzSmg0QVdwL0ZYVER6dUU3RkZYSTZWWU1MSmhUWVBsQjF2MHIvUUZrV3Fs?=
- =?utf-8?B?aVNLWmI5NG1VWlZ1aXB4K3J5Tk9lM2hTeG15MkZxb003OWpUQ25pNE96U2F0?=
- =?utf-8?B?VFNkcHllYzdwQ1JuandZTUdyNlBSSHUzak1aSU00c3QzaFNkODBnU0hlRm1j?=
- =?utf-8?B?a2c9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E84F988A80FCBE45B7F832C083AD32D8@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ 15:53:34 +0000
+Date:   Fri, 18 Aug 2023 11:53:31 -0400
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/7] SUNRPC: change service idle list to be an llist
+Message-ID: <ZN+T+y+lwQ2XrXLM@tissot.1015granger.net>
+References: <20230818014512.26880-1-neilb@suse.de>
+ <20230818014512.26880-2-neilb@suse.de>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230818014512.26880-2-neilb@suse.de>
+X-ClientProxiedBy: CH0P221CA0028.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:610:11d::10) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB5759:EE_
+X-MS-Office365-Filtering-Correlation-Id: e5c5e7c6-2e25-436d-4839-08dba003472b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: IPD16nnIXbKIgXxEipGzdWcCKm0wHG+K1f6EdLrPuf/4gztplERrRfoXSFtsrWttPRqh/fE6swEedLT4aOv22i/lLVXPEok/Z8mbmAWON/4FJL22vggJ/dnvgZPgSeZ7Dsjmv8Z6nRLD+tRhtANoAvaGwNoheyTnp0RuKzDuzFiB0B/dfqXIfO6n+N4b3H7oQ8/biUtJzK5MjLLijx2paDs8PpujO7JrR9bVVMU71ha7z2LoC+BWRX1gUZpJblW9z3E/xVdJ528L6FoU8aJ+Ugnewtsh3bxWufvty0RZPLvzssS6CIN92PoM0xYbZT7oDef1HSYFCCXBU9lNqTHowELo6bjSE/XPIuD14vLcRAWy0QbnzzikTvAOv7AX+TfAr5qGOOoKniWWXYsZiFe3s6D1SvBoyO7LR1sWMljAeHRi212RpCq6YEspZT0CA9MXhlxUi3TxQXk2Cty2x/KqHq58/qaCR0eiHzBRRh9Vyogu0x5fJDRh4j93/g82pKzVLUUMo+0FGozvgFxJQiY7qZiqfmB1q1z6Klcil8EMnmEmMWlBwzoPvLRQ6ANKJteQ
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(39860400002)(346002)(136003)(396003)(451199024)(186009)(1800799009)(86362001)(83380400001)(30864003)(8936002)(8676002)(4326008)(5660300002)(2906002)(41300700001)(26005)(6666004)(6506007)(44832011)(6512007)(6486002)(9686003)(478600001)(66476007)(316002)(6916009)(38100700002)(66946007)(66556008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RiXIRCCfaBub5lF6HTykw/q3ciBWaVsGs1UiVqROk7u4XUUnXJHHzn9eluVX?=
+ =?us-ascii?Q?ZJQ7i8ttlkSM4MEQDnenCLYKaUg9pDCxyDjg/aU0cKY8dTAFZAYfUfles9lZ?=
+ =?us-ascii?Q?GN6h/QQwSlGT76aavGybNCw02Dr6AW1NnHYFQ5vOhExm0moY9ZsBEpV0oIzn?=
+ =?us-ascii?Q?9fZx3aVdRtmu/PYoO1533M09SFnooYZE0AEFke6VuqHO25YTkC+Q4NNVDAyN?=
+ =?us-ascii?Q?0PUS2ttsv5JTpFa+M1oydHoLddrQrDUvxsjuvfyBtozzoVqgK0nuuq5ybGxD?=
+ =?us-ascii?Q?JqOSw3uu0eX7+VNHoAi+q+tYZfAel4kM1OsaRYALEPFXUn8oEXMqeyU5lzQ6?=
+ =?us-ascii?Q?RjcOF/Sj68L7S4rOEbs4in4BLkdACXMkQRAlyWEZEsCKSt/a0IyEpqLAOQfM?=
+ =?us-ascii?Q?Br8FHEhJdJCpIfESPD2fdxsayfYaFFlcbsiGjHeok1p0gwYc+fmpdBR4wt0T?=
+ =?us-ascii?Q?293Spei1YCLLuUW+T6lILV8lIaxTCHXf54kfpKIYC9AcHF7oS6kzLNadECxo?=
+ =?us-ascii?Q?1Mv6BgW4NGXXjlmjUCUu7g4s+w0yYx+N3Vt8M/Ry2nGoEalVCTV/DUgYNHBE?=
+ =?us-ascii?Q?eM58ZTJQYryJ7dMEyU6SWzips90V8jI7hc9o2ro8p+DW9IXOTCz1h0b+rmbG?=
+ =?us-ascii?Q?IvNajY2uzfbAdlNTIoBby6mJeMuOtzPlvnifJbrLYkCvzKwbMpmJo9Ncgpxm?=
+ =?us-ascii?Q?eieX7WNp8ql97zwhH6bIJtO5tSVz/GiOIneLeYPzP2DQkQEA59abB+VIDu0q?=
+ =?us-ascii?Q?SLLSRFP3EF6hskOOBobKGBdpD8/LluLMKvKHBeyN/IKHr0EXWKtrjb9CP2I3?=
+ =?us-ascii?Q?k6KYdoeeJ+7cGdfzUvgFNH/Qo43GFu4amtUTkrwqHxf6DA6ErlghzHc3K2xl?=
+ =?us-ascii?Q?9LTsJLXdQi5uGCx8cp9dx3KAtHT1woDtuHKL4ZGn9TWqbQmxUDnhDVQhw7Gg?=
+ =?us-ascii?Q?UzUAUylVdn9zjgiYU7os+UkO4ZCKlZ3Ao9DabTTyWyiEwxxcwIJwYiGtXQFh?=
+ =?us-ascii?Q?PKFWIo3zzBmXHImKuUg8SKm4Ctm5/4EHrPxv5ZKy7DKULIp8TvSO1mdJh/Nk?=
+ =?us-ascii?Q?6FcqPDndwaqcwrqTlUWvA8GNzch6AvSLKfkMSQXSO66+jfEgJJNc8kjbaWVh?=
+ =?us-ascii?Q?AUhcTXMFC3vv4zSGfN0pcxIoXLHtQBSD6thH/9ld46Meg/Pd02xKWqIJb3Xo?=
+ =?us-ascii?Q?GSeRWSmP0OucY8qrrc0mv2W0DEw42FrHbxiup3UcMml1keISCXA9BIqHbOMT?=
+ =?us-ascii?Q?XO9pqOMVCSCR0KTuVG1GAZvmddlKZp9Wpz/cVEEcD21ZHW86a1pHooMVUzG6?=
+ =?us-ascii?Q?RTOf6NtRKjw6q9RqK5R5JoTjC/Wos+0kSirtHcKWHGb39TU028aITfkSfF8w?=
+ =?us-ascii?Q?EWHZHY58J/hfV64HhOSir6o1eueWolpZntR/JbhSkBI25Pxe+TOVwlsYm7I/?=
+ =?us-ascii?Q?d1B4xScRWnM65mWcTN4sQ3Z8y9qeD9ZA6hG1vhtifAi/jH3mwYrVUyl8nuQw?=
+ =?us-ascii?Q?XeI9JOV/Ci//DRYEIGMLm+E1M0beVhc0JEts13hoMKnkmeQQR2khGO8lwKaz?=
+ =?us-ascii?Q?8Vhhi/ivuZ4k4v3Z0OZc+L7py0eTdgYjYjIPQ2sZKqN0hZcrkOXdT3Z4qD+x?=
+ =?us-ascii?Q?dw=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 2kuPX1G3NrN7kRoyJCMtR2NclDhKZr0eDpynw26IEGfaxBeVBz9dFHsdmg7b2HQ8w4b2HqlOuhYdxQk+XsVtIjLHME+sS5EnRFio7mJnS52Oi3zRcm/dOk/or9w02XG1zdtxLvqowYDfa1q3v8wsy7+s9QDtfUudH4OlTTQJian//mE/+N22S26Q07MJabwTNqyVlYD3a0CoWOqriaYryK08bTgSexJDGqEaYeKdsqK4Dbl9w+LlaTNuzy3akvM/y9uR6y8y3ywnMI/M6Doqt0ckIGeHUbHMLxIJsUapqWiHhwqRnChZ1LCrrcVJDBq1q8ZvJpsfZV5ZUItQmGxZAdLfyOqPhALOg0SE90jRqksSJaG2FisSFKGBa3X5lMWXCUcjYutbAsNsjoBdV/wP33Q4JKF8bDZYhfGrtg1gWGwZnIuTglfQciDEhqcuHf5eK4JLCraYXImazcRndXQz7pg/emgEDaOBIHrjdoy1OCQVOWrxDEBo+XckzHsuUGiQ9CcqivnlCPf9jemllIMdrVBiJfCrEiM1zIPaMUFXZbWa17u42r4wbERDGavHrJ4YyyFkU2QntbjzMh5uMfdNsBeS2fZmgeQfR/fn/+TEAkDp7sxWH2Mz7ilwPj5U1nEhSkKVgj3EfN5GiCpTRkZVQ17IOI9wYTRhSC6rL4ryrVxJ8pRbiE2kUFXHfbxUIwFk2Zm/9y4qH8ja3jfHmfMPXtIzfKeSC5jz0uCt4QhRFeuKyCnnSkYUGb2vQ/K9MMvweZWD82jmEVHi8HkZVGwYfL3VnKApZr3JFNX+3M8PUxI=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: lE2FMEh8Zt9s4oSM4KfB4/1cCsbA9qxK6n93G75bQ5mP4p6Ja/UvnFlQA58JmB5DDQvzbGXNIBDl+2WHIHC2UWHFe6CMWnPKcykYJQHge49ZgD/E9tQon2lMfUupwDmzw/KsdJ6wUIs+T17lQChGJ+TL/lqt11JaPFP71hLtmPPxCYDou04JEa1soKBMGayK1kxvQPd+XwmpH8JqT2PIeu7L6hzPBdUB6IweGqxQYQZwNy+6BkKHwDEbRFjaaGx49sSl9RiI6aKcTsPGYSjLWK05vXiiHgdTu3U4buXL7+9F7HDz+rUqzwPucbs8VTnQIsCYybPqkSkDDtakDh2+I1O/+41Xq/XHE5adbsArqUbHdHPjh2AvfhXqZ5tiQMeWwtKMjbpssMvGY7ljlExHQp27J/ogVwpLaIjNmlwsp2686f0TJFaBMaLboRmIIJFTZWcC8e9JkK4m5uesN0/yZAcZ2Q1wPs+peOAcKZ5BEaziLeZrIixCP1kWWuGr6a8MjvMgu3W9Vo2bljP7O7GY3R332+Fs9qbNyR3EHjNGHwza28YrvcsfL1eDj5L1G0sWpYWFB/omFJNWyC5xZwgwpF4CgUsP2Dn+LFfeuaGva5Atab+T0lRSAwBYDPpqZ4uwLfGZUr2yKifqsBT3/G/trdjHwhD0zbwhApOU9ow6b2ZPWQhkCrN5+KpMweNCzCZgLn9q6HRhIVKzEJSfsH6eliXKwldiZUqT5LwOQR8wjbIRBjrE53WXgk2zOSP1Dt01HrcN09ANIltL47UIfdWmSsOiAPQ+ljQax6YKDOPZhtDIqZw/zYn4DF0rrsdH/2rj
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-Network-Message-Id: e5c5e7c6-2e25-436d-4839-08dba003472b
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7b60a4ea-b208-4c34-9719-08db9ff5362d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2023 14:12:52.7728
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2023 15:53:34.4292
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0bTYyE2Nn2G/zAuNAq7U+4VCFWerqumkqNmf4ET+zrIP96lUHR4PnXL2xnmAMbEOjOXOPrhP7Ii9rPLesrt7fw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5228
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fyiysQ+n7iCaJiyr11tBvJM63FR397axWQSfalSoJXYKi+tJfHtre9XnpiyvwydvCndL9Kmh+N68svyel/eM4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5759
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-08-18_17,2023-08-18_01,2023-05-22_02
+ definitions=2023-08-18_20,2023-08-18_01,2023-05-22_02
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0
  mlxlogscore=999 bulkscore=0 adultscore=0 spamscore=0 malwarescore=0
  mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2308180129
-X-Proofpoint-GUID: MUQOKQpEvW3CDgtdSmkqTdERfq5asVnA
-X-Proofpoint-ORIG-GUID: MUQOKQpEvW3CDgtdSmkqTdERfq5asVnA
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+ engine=8.12.0-2306200000 definitions=main-2308180145
+X-Proofpoint-GUID: yH4fIJzG3fxO83Dz8aurJgDpgSBg9OXW
+X-Proofpoint-ORIG-GUID: yH4fIJzG3fxO83Dz8aurJgDpgSBg9OXW
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-DQoNCj4gT24gQXVnIDE3LCAyMDIzLCBhdCA0OjQ5IFBNLCBNYXhpbSBMZXZpdHNreSA8bWxldml0
-c2tAcmVkaGF0LmNvbT4gd3JvdGU6DQo+IA0KPiDQoyDRh9GCLCAyMDIzLTA4LTE3INGDIDE1OjU4
-ICswMDAwLCBDaHVjayBMZXZlciBJSUkg0L/QuNGI0LU6DQo+Pj4gT24gQXVnIDE3LCAyMDIzLCBh
-dCAxMTo1NyBBTSwgQ2h1Y2sgTGV2ZXIgPGNodWNrLmxldmVyQG9yYWNsZS5jb20+IHdyb3RlOg0K
-Pj4+IA0KPj4+IA0KPj4+IA0KPj4+PiBPbiBBdWcgMTcsIDIwMjMsIGF0IDExOjUyIEFNLCBNYXhp
-bSBMZXZpdHNreSA8bWxldml0c2tAcmVkaGF0LmNvbT4gd3JvdGU6DQo+Pj4+IA0KPj4+PiBIaSEN
-Cj4+Pj4gDQo+Pj4+IEkganVzdCB1cGRhdGVkIG15IGRldmVsb3BlbWVudCBzeXN0ZW1zIHRvIDYu
-NS1yYzYgKGZyb20gNi40KSBhbmQgbm93IEkgY2FuJ3Qgc3RhcnQgYSBWTSANCj4+Pj4gd2l0aCBh
-IGRpc2sgd2hpY2ggaXMgbW91bnRlZCBvdmVyIHRoZSBORlMuDQo+Pj4+IA0KPj4+PiBUaGUgVk0g
-aGFzIHR3byBxY293MiBmaWxlcywgb25lIGRlcGVuZHMgb24gYW5vdGhlciBhbmQgcWVtdSBvcGVu
-cyBib3RoLg0KPj4+PiANCj4+Pj4gVGhpcyBpcyB0aGUgY29tbWFuZCBsaW5lIG9mIHFlbXU6DQo+
-Pj4+IA0KPj4+PiAtZHJpdmUgaWY9bm9uZSxpZD1vc19pbWFnZSxmaWxlPS4vZGlza19zMS5xY293
-MixhaW89bmF0aXZlLGRpc2NhcmQ9dW5tYXAsY2FjaGU9bm9uZQ0KPj4+PiANCj4+Pj4gVGhlIGRp
-c2tfczEucWNvdzIgZGVwZW5kcyBvbiBkaXNrX3MwLnFjb3cyDQo+Pj4+IA0KPj4+PiBIb3dldmVy
-IHRoaXMgaXMgd2hhdCBJIGdldDoNCj4+Pj4gDQo+Pj4+IHFlbXUtc3lzdGVtLXg4Nl82NDogLWRy
-aXZlIGlmPW5vbmUsaWQ9b3NfaW1hZ2UsZmlsZT0uL2Rpc2tfczEucWNvdzIsYWlvPW5hdGl2ZSxk
-aXNjYXJkPXVubWFwLGNhY2hlPW5vbmU6IENvdWxkIG5vdCBvcGVuIGJhY2tpbmcgZmlsZTogQ291
-bGQgbm90IG9wZW4gJy4vUUZJPyc6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkNCj4+Pj4gDQo+
-Pj4+ICdRRkk/JyBpcyBxY293MiBmaWxlIHNpZ25hdHVyZSwgd2hpY2ggc2lnbmFscyB0aGF0IHRo
-ZXJlIG1pZ2h0IGJlIHNvbWUgbmFzdHkgY29ycnVwdGlvbiBoYXBwZW5pbmcuDQo+Pj4+IA0KPj4+
-PiBUaGUgcHJvZ3JhbSB3YXMgc3VwcG9zZWQgdG8gcmVhZCBhIGZpZWxkIGluc2lkZSB0aGUgZGlz
-a19zMS5xY293MiBmaWxlIHdoaWNoIHNob3VsZCByZWFkICdkaXNrX3MwLnFjb3cyJyANCj4+Pj4g
-YnV0IGluc3RlYWQgaXQgc2VlbXMgdG8gcmVhZCB0aGUgZmlyc3QgNCBieXRlcyBvZiB0aGUgZmls
-ZS4NCj4+Pj4gDQo+Pj4+IA0KPj4+PiBCaXNlY3QgbGVhZHMgdG8gdGhlIGFib3ZlIGNvbW1pdC4g
-UmV2ZXJ0aW5nIGl0IHdhcyBub3QgcG9zc2libGUgZHVlIHRvIG1hbnkgY2hhbmdlcy4NCj4+Pj4g
-DQo+Pj4+IEJvdGggdGhlIGNsaWVudCBhbmQgdGhlIHNlcnZlciB3ZXJlIHRlc3RlZCB3aXRoIHRo
-ZSA2LjUtcmM2IGtlcm5lbCwgYnV0IG9uY2UgcmVib290aW5nIHRoZSBzZXJ2ZXIgaW50bw0KPj4+
-PiB0aGUgNi40LCB0aGUgYnVnIGRpc2FwcGVhcmVkLCB0aHVzIEkgZGlkIGEgYmlzZWN0IG9uIHRo
-ZSBzZXJ2ZXIuDQo+Pj4+IA0KPj4+PiBXaGVuIEkgdGVzdGVkIGEgdmVyc2lvbiBiZWZvcmUgdGhl
-IG9mZmVuZGluZyBjb21taXQgb24gdGhlIHNlcnZlciwgdGhlIDYuNS1yYzYgY2xpZW50IHdhcyBh
-YmxlIHRvIHdvcmsgd2l0aCBpdCwNCj4+Pj4gd2hpY2ggaW5jcmVhc2VzIHRoZSBjaGFuY2VzIHRo
-YXQgdGhlIGJ1ZyBpcyBpbiBuZnNkLg0KPj4+PiANCj4+Pj4gU3dpdGNoaW5nIHFlbXUgdG8gdXNl
-IHdyaXRlIGJhY2sgcGFnaW5nIGFsc28gaGVscHMgKGFpbz10aHJlYWRzLGRpc2NhcmQ9dW5tYXAs
-Y2FjaGU9d3JpdGViYWNrKQ0KPj4+PiBUaGUgY2xpZW50IGFuZCB0aGUgc2VydmVyIChib3RoIDYu
-NS1yYzYpIHdvcmsgd2l0aCB0aGlzIGNvbmZpZ3VyYXRpb24uDQo+Pj4+IA0KPj4+PiBSdW5uaW5n
-IHRoZSBWTSBvbiB0aGUgc2FtZSBtYWNoaW5lIChhbHNvIDYuNS1yYzYpIHdoZXJlIHRoZSBWTSBk
-aXNrIGlzIGxvY2F0ZWQgKHRodXMgYXZvaWRpbmcgTkZTKSB3b3JrcyBhcyB3ZWxsLg0KPj4+PiAN
-Cj4+Pj4gSSB0ZXN0ZWQgc2V2ZXJhbCBWTXMgdGhhdCBJIGhhdmUsIGFsbCBhcmUgYWZmZWN0ZWQg
-aW4gdGhlIHNhbWUgd2F5Lg0KPj4+PiANCj4+Pj4gSSBydW4gc29tZXdoYXQgb3V0ZGF0ZWQgcWVt
-dSwgYnV0IHJ1bm5pbmcgdGhlIGxhdGVzdCBxZW11IGRvZXNuJ3QgbWFrZSBhIGRpZmZlcmVuY2Uu
-DQo+Pj4+IA0KPj4+PiBJIHVzZSBuZnM0Lg0KPj4+PiANCj4+Pj4gSSBjYW4gdGVzdCBwYXRjaGVz
-IGFuZCBwcm92aWRlIG1vcmUgaW5mbyBpZiBuZWVkZWQuDQo+Pj4gDQo+Pj4gTGludXMganVzdCBt
-ZXJnZWQgYSBwb3NzaWJsZSBmaXggZm9yIHRoaXMgaXNzdWUuIFNlZToNCj4+PiANCj4+PiBodHRw
-czovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51
-eC5naXQvIG1hc3Rlcg0KPj4gDQo+PiBJbiBwYXJ0aWN1bGFyOg0KPj4gDQo+PiBodHRwczovL2dp
-dC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQv
-Y29tbWl0Lz9pZD1jOTZlMmE2OTVlMDBiY2E1NDg3ODI0ZDg0Yjg1YWFiNmFhMmMxODkxDQo+IA0K
-PiBJIGp1c3QgdGVzdGVkIGl0LiBJdCBkb2VzIGhlbHAgKHFlbXUgZG9lc24ndCBjcmFzaCBhbnlt
-b3JlKSBidXQgaXQgZG9lc24ndCBlbGltaW5hdGUgdGhlIGlzc3VlIChWTSBzdGlsbCBkb2Vzbid0
-IGJvb3QpDQo+IA0KPiBUaGUgVk0gbm93IHN0YXJ0cyBidXQgaXQgZHJvcHMgaW50byB0aGUgVUVG
-SSBzaGVsbC4NCj4gDQo+IE9uY2UgYWdhaW4sIGRpc2FibGluZyBPX0RJUkVDVCBoZWxwcyAodGhh
-dCBpcyAtYWlvPXRocmVhZHMsY2FjaGU9d3JpdGViYWNrKQ0KPiANCj4gRm9yIHRoZSByZWZlcmVu
-Y2UsIGZldyBrZXJuZWxzIGFnbywgSSBoYWQgYW4gdW5yZWxhdGVkIGJ1ZyAobm90IGV2ZW4gTkZT
-IHJlbGF0ZWQsIGl0IHdhcyBoYXBwZW5pbmcgbG9jYWxseSBhcyB3ZWxsKSwNCj4gd2hpY2ggY2F1
-c2VkIHRoZSBleGFjdCBzYW1lIGRyb3AgdG8gdGhlIFVFRkkgc2hlbGwgd2hlbiB1c2luZyBPX0RJ
-UkVDVDoNCj4gDQo+IGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vcWVtdS1kZXZlbEBub25n
-bnUub3JnL21zZzkxMjU0OS5odG1sDQo+IA0KPiBJdCB3YXMgZGVjaWRlZCB0aGF0IHRoaXMgaXNz
-dWUgaXMgYSBxZW11IGlzc3VlIGJlY2F1c2UgaXQgcmVsaWVkIG9uIHVuZGVmaW5lZCBrZXJuZWwg
-YmVoYXZpb3Igd2hpY2ggaGFzIGNoYW5nZWQsDQo+IHNvIHRoZSBxZW11IGdvdCBwYXRjaGVkIHRv
-IGZpeCB0aGUgaXNzdWUgb24gaXRzIHNpZGUuDQo+IA0KPiBTaW5jZSBzb21ldGltZXMgSSB1c2Ug
-YW4gb2xkZXIgcWVtdSB2ZXJzaW9uLCBJIGhhZCB0aGlzIGtlcm5lbCBjb21taXQgcmV2ZXJ0ZWQg
-Zm9yIG5vdywgYnV0IHRvIGJlIHN1cmUgSSBub3cgaGFkIGJ1aWx0IGEga2VybmVsDQo+IHdpdGhv
-dXQgdGhlIHJldmVydCBvbiBib3RoIHNlcnZlciBhbmQgdGhlIGNsaWVudCwgYW5kIHRlc3RlZCB3
-aXRoIHRoZSBsYXRlc3QgcWVtdSB3aGljaCBoYXMgdGhlIGZpeCBmb3IgdGhlIGJ1Zy4NCj4gDQo+
-IEkgZG9uJ3QgcmVtZW1iZXIgZGV0YWlscyBvZiB0aGlzIHVucmVsYXRlZCBidWcsIGJ1dCBpZiBJ
-IHJlbWVtYmVyIGNvcnJlY3RseSwgcWVtdSBoYWQgdHJvdWJsZSByZWFkaW5nIGZpcnN0IDUxMiBi
-eXRlcyBvZiB0aGUgdmlydHVhbCBkaXNrLCB3aGVuDQo+IHRoZSBWTSB0cmllZCB0byBkbyBzbyB0
-byByZWFkIHRoZSBib290IHNlY3Rvci4NCg0KTGV0J3Mgc3RhcnQgd2l0aCB0aGlzIChvbiB0aGUg
-TkZTIHNlcnZlciB3aXRoIGM5NmUyYTY5NWUwMCBhcHBsaWVkKToNCg0KIyB0cmFjZS1jbWQgcmVj
-b3JkIC1lIHN1bnJwYzpzdmNfeGRyXCogLWUgc3VucnBjOnN2Y3NvY2tcKiAtZSBuZnNkOm5mc2Rf
-cmVhZFwqDQoNCmFuZCBydW4geW91ciBmYWlsaW5nIGRpc2sgYWNjZXNzZXMuIF5DIHRoZSAidHJh
-Y2UtY21kIHJlY29yZCIgd2hlbiB0aGUNCnJlcHJvZHVjZXIgZmluaXNoZXMsIGFuZCBzZW5kIG1l
-IHRoZSB0cmFjZS5kYXQgZmlsZSBpbiBwcml2YXRlIGVtYWlsLg0KDQoNCi0tDQpDaHVjayBMZXZl
-cg0KDQoNCg==
+On Fri, Aug 18, 2023 at 11:45:06AM +1000, NeilBrown wrote:
+> With an llist we don't need to take a lock to add a thread to the list,
+> though we still need a lock to remove it.  That will go in the next
+> patch.
+> 
+> Unlike double-linked lists, a thread cannot reliably remove itself from
+> the list.  Only the first thread can be removed, and that can change
+> asynchronously.  So some care is needed.
+> 
+> We already check if there is pending work to do, so we are unlikely to
+> add ourselves to the idle list and then want to remove ourselves again.
+> 
+> If we DO find something needs to be done after adding ourselves to the
+> list, we simply wake up the first thread on the list.  If that was us,
+> we successfully removed ourselves and can continue.  If it was some
+> other thread, they will do the work that needs to be done.  We can
+> safely sleep until woken.
+> 
+> We also remove the test on freezing() from rqst_should_sleep().  Instead
+> we set TASK_FREEZABLE before scheduling.  This makes is safe to
+> schedule() when a freeze is pending.  As we now loop waiting to be
+> removed from the idle queue, this is a cleaner way to handle freezing.
+> 
+> task_state_index() incorrectly identifies a task with
+>    TASK_IDLE | TASK_FREEZABLE
+> as 'D'.  So fix __task_state_index to ignore extra flags on TASK_IDLE
+> just as it ignores extra flags on other states.
+
+Let's split the task_state_index() change into a separate patch
+that can be sent to the scheduler maintainers for their Review/Ack.
+
+
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  include/linux/sched.h      |  4 +--
+>  include/linux/sunrpc/svc.h | 14 ++++++-----
+>  net/sunrpc/svc.c           | 13 +++++-----
+>  net/sunrpc/svc_xprt.c      | 51 +++++++++++++++++++-------------------
+>  4 files changed, 42 insertions(+), 40 deletions(-)
+> 
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 609bde814cb0..a5f3badcb629 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1666,7 +1666,7 @@ static inline unsigned int __task_state_index(unsigned int tsk_state,
+>  
+>  	BUILD_BUG_ON_NOT_POWER_OF_2(TASK_REPORT_MAX);
+>  
+> -	if (tsk_state == TASK_IDLE)
+> +	if ((tsk_state & TASK_IDLE) == TASK_IDLE)
+>  		state = TASK_REPORT_IDLE;
+>  
+>  	/*
+> @@ -1674,7 +1674,7 @@ static inline unsigned int __task_state_index(unsigned int tsk_state,
+>  	 * to userspace, we can make this appear as if the task has gone through
+>  	 * a regular rt_mutex_lock() call.
+>  	 */
+> -	if (tsk_state == TASK_RTLOCK_WAIT)
+> +	if (tsk_state & TASK_RTLOCK_WAIT)
+>  		state = TASK_UNINTERRUPTIBLE;
+>  
+>  	return fls(state);
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index 22b3018ebf62..5216f95411e3 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -37,7 +37,7 @@ struct svc_pool {
+>  	struct list_head	sp_sockets;	/* pending sockets */
+>  	unsigned int		sp_nrthreads;	/* # of threads in pool */
+>  	struct list_head	sp_all_threads;	/* all server threads */
+> -	struct list_head	sp_idle_threads; /* idle server threads */
+> +	struct llist_head	sp_idle_threads; /* idle server threads */
+>  
+>  	/* statistics on pool operation */
+>  	struct percpu_counter	sp_messages_arrived;
+> @@ -186,7 +186,7 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
+>   */
+>  struct svc_rqst {
+>  	struct list_head	rq_all;		/* all threads list */
+> -	struct list_head	rq_idle;	/* On the idle list */
+> +	struct llist_node	rq_idle;	/* On the idle list */
+>  	struct rcu_head		rq_rcu_head;	/* for RCU deferred kfree */
+>  	struct svc_xprt *	rq_xprt;	/* transport ptr */
+>  
+> @@ -270,22 +270,24 @@ enum {
+>   * svc_thread_set_busy - mark a thread as busy
+>   * @rqstp: the thread which is now busy
+>   *
+> - * If rq_idle is "empty", the thread must be busy.
+> + * By convention a thread is busy if rq_idle.next points to rq_idle.
+> + * This ensures it is not on the idle list.
+>   */
+>  static inline void svc_thread_set_busy(struct svc_rqst *rqstp)
+>  {
+> -	INIT_LIST_HEAD(&rqstp->rq_idle);
+> +	rqstp->rq_idle.next = &rqstp->rq_idle;
+>  }
+
+I don't understand the comment "This ensures it is not on the idle
+list." svc_thread_set_busy() is called in two places: The first
+when an svc_rqst is created, and once directly after an
+llist_del_first() has been done. @rqstp is already not on the
+idle list in either case.
+
+What really needs an explanation here is that there's no
+existing utility to check whether an llist_node is on a list or
+not.
+
+
+>  /**
+>   * svc_thread_busy - check if a thread as busy
+>   * @rqstp: the thread which might be busy
+>   *
+> - * If rq_idle is "empty", the thread must be busy.
+> + * By convention a thread is busy if rq_idle.next points to rq_idle.
+> + * This ensures it is not on the idle list.
+
+This function doesn't modify the thread, so it can't ensure it
+is not on the idle list.
+
+
+>   */
+>  static inline bool svc_thread_busy(struct svc_rqst *rqstp)
+
+const struct svc_rqst *rqstp
+
+>  {
+> -	return list_empty(&rqstp->rq_idle);
+> +	return rqstp->rq_idle.next == &rqstp->rq_idle;
+>  }
+>  
+>  #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 051f08c48418..addbf28ea50a 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -510,7 +510,7 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+>  		pool->sp_id = i;
+>  		INIT_LIST_HEAD(&pool->sp_sockets);
+>  		INIT_LIST_HEAD(&pool->sp_all_threads);
+> -		INIT_LIST_HEAD(&pool->sp_idle_threads);
+> +		init_llist_head(&pool->sp_idle_threads);
+>  		spin_lock_init(&pool->sp_lock);
+>  
+>  		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
+> @@ -701,15 +701,16 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+>  void svc_pool_wake_idle_thread(struct svc_pool *pool)
+>  {
+>  	struct svc_rqst	*rqstp;
+> +	struct llist_node *ln;
+>  
+>  	rcu_read_lock();
+>  	spin_lock_bh(&pool->sp_lock);
+> -	rqstp = list_first_entry_or_null(&pool->sp_idle_threads,
+> -					 struct svc_rqst, rq_idle);
+> -	if (rqstp)
+> -		list_del_init(&rqstp->rq_idle);
+> +	ln = llist_del_first(&pool->sp_idle_threads);
+>  	spin_unlock_bh(&pool->sp_lock);
+> -	if (rqstp) {
+> +	if (ln) {
+> +		rqstp = llist_entry(ln, struct svc_rqst, rq_idle);
+> +		svc_thread_set_busy(rqstp);
+> +
+>  		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
+>  		wake_up_process(rqstp->rq_task);
+>  		rcu_read_unlock();
+> diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+> index fa0d854a5596..81327001e074 100644
+> --- a/net/sunrpc/svc_xprt.c
+> +++ b/net/sunrpc/svc_xprt.c
+> @@ -715,10 +715,6 @@ rqst_should_sleep(struct svc_rqst *rqstp)
+>  	if (svc_thread_should_stop(rqstp))
+>  		return false;
+>  
+> -	/* are we freezing? */
+> -	if (freezing(current))
+> -		return false;
+> -
+>  #if defined(CONFIG_SUNRPC_BACKCHANNEL)
+>  	if (svc_is_backchannel(rqstp)) {
+>  		if (!list_empty(&rqstp->rq_server->sv_cb_list))
+> @@ -734,30 +730,32 @@ static void svc_rqst_wait_for_work(struct svc_rqst *rqstp)
+>  	struct svc_pool *pool = rqstp->rq_pool;
+>  
+>  	if (rqst_should_sleep(rqstp)) {
+> -		set_current_state(TASK_IDLE);
+> -		spin_lock_bh(&pool->sp_lock);
+> -		list_add(&rqstp->rq_idle, &pool->sp_idle_threads);
+> -		spin_unlock_bh(&pool->sp_lock);
+> +		set_current_state(TASK_IDLE | TASK_FREEZABLE);
+
+I'm trying to learn about the semantics of IDLE|FREEZABLE, but there
+isn't another instance of this flag combination in the kernel.
+
+
+> +		llist_add(&rqstp->rq_idle, &pool->sp_idle_threads);
+> +
+> +		if (unlikely(!rqst_should_sleep(rqstp)))
+> +			/* maybe there were no idle threads when some work
+> +			 * became ready and so nothing was woken.  We've just
+> +			 * become idle so someone can to the work - maybe us.
+> +			 * But we cannot reliably remove ourselves from the
+> +			 * idle list - we can only remove the first task which
+> +			 * might be us, and might not.
+> +			 * So remove and wake it, then schedule().  If it was
+> +			 * us, we won't sleep.  If it is some other thread, they
+> +			 * will do the work.
+> +			 */
+
+Large block comments suggest that this code doesn't document itself
+very well.
+
+At least, some of the textual redundancy can be removed, though this
+comment and the next are removed or replaced in later patches. I'll
+leave it up to you to find an approach that is a bit cleaner.
+
+
+> +			svc_pool_wake_idle_thread(pool);
+>  
+> -		/* Need to check should_sleep() again after
+> -		 * setting task state in case a wakeup happened
+> -		 * between testing and setting.
+> +		/* We mustn't continue while on the idle list, and we
+> +		 * cannot remove outselves reliably.  The only "work"
+> +		 * we can do while on the idle list is to freeze.
+> +		 * So loop until someone removes us
+>  		 */
+
+Here and above, the use of "we" obscures the explanation. What is
+"we" in this context? I think it might be "this thread" or @rqstp,
+but I can't be certain. For instance:
+
+		/* Since a thread cannot remove itself from an llist,
+		 * schedule until someone else removes @rqstp from
+		 * the idle list.
+		 */
+
+
+> -		if (rqst_should_sleep(rqstp)) {
+> +		while (!svc_thread_busy(rqstp)) {
+
+I need to convince myself that this while() can't possibly result in
+an infinite loop.
+
+
+>  			schedule();
+> -		} else {
+> -			__set_current_state(TASK_RUNNING);
+> -			cond_resched();
+> -		}
+> -
+> -		/* We *must* be removed from the list before we can continue.
+> -		 * If we were woken, this is already done
+> -		 */
+> -		if (!svc_thread_busy(rqstp)) {
+> -			spin_lock_bh(&pool->sp_lock);
+> -			list_del_init(&rqstp->rq_idle);
+> -			spin_unlock_bh(&pool->sp_lock);
+> +			set_current_state(TASK_IDLE | TASK_FREEZABLE);
+>  		}
+> +		__set_current_state(TASK_RUNNING);
+> 
+>  	} else {
+>  		cond_resched();
+>  	}
+
+There's a try_to_freeze() call just after this hunk. Is there a
+reason to invoke cond_resched(); before freezing?
+
+
+> @@ -870,9 +868,10 @@ void svc_recv(struct svc_rqst *rqstp)
+>  		struct svc_xprt *xprt = rqstp->rq_xprt;
+>  
+>  		/* Normally we will wait up to 5 seconds for any required
+> -		 * cache information to be provided.
+> +		 * cache information to be provided.  When there are no
+> +		 * idle threads, we reduce the wait time.
+>  		 */
+> -		if (!list_empty(&pool->sp_idle_threads))
+> +		if (pool->sp_idle_threads.first)
+>  			rqstp->rq_chandle.thread_wait = 5 * HZ;
+>  		else
+>  			rqstp->rq_chandle.thread_wait = 1 * HZ;
+> -- 
+> 2.40.1
+> 
+
+-- 
+Chuck Lever
