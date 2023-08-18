@@ -2,47 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D60778142E
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Aug 2023 22:13:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52D1678143E
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Aug 2023 22:17:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354823AbjHRUMq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Aug 2023 16:12:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42064 "EHLO
+        id S1352613AbjHRURD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Aug 2023 16:17:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379964AbjHRUMc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Aug 2023 16:12:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 958873C0A;
-        Fri, 18 Aug 2023 13:12:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C7E26111E;
-        Fri, 18 Aug 2023 20:12:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72932C433C7;
-        Fri, 18 Aug 2023 20:12:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692389545;
-        bh=2J9mZCtn5b7jC6cUUud8wEYdOLbQaF+FTWWcksyybP0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Q7nyzk6y/dp4w5fAHbKd7dOd8LkjaNdz0lvBb7SSja6hSN1JrgzEwWfZNW2MQzkzX
-         ej2/aLt+npkuzlbv3WSpKUIL6L3qg0oCDSNNVGIyJbSNQgxiJoHLtCsQeT5NsGxzdw
-         rtxO5t1PBnNs7B1m5aVLXbrWFwggmAT+LtwsyqMJXkt+RIGJCCAVSv1ngFuzP1MVmP
-         RuhKKmA0qzwqYS7YnFeq7ZYCiOswp1dvvURpIZBWnFoLElvKou1qgJtiBRxv6v7JFN
-         7/z+2nFy8IEKmwvq+5nMIETlS4GE/uCMtDWxykymlZG/NjW6vxbO+KkoUE4cVC+yPF
-         7o84cpxiTUb6A==
-Message-ID: <a32e7ee72f47f5e25abd95d4db2fc6d50e32d5a2.camel@kernel.org>
-Subject: Re: [PATCH v2] creds: Convert cred.usage to refcount_t
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Kees Cook <keescook@chromium.org>, linux-hardening@vger.kernel.org
-Cc:     Elena Reshetova <elena.reshetova@intel.com>,
+        with ESMTP id S1380018AbjHRUQ7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Aug 2023 16:16:59 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C457D26A8
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Aug 2023 13:16:57 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1bdbbede5d4so10780825ad.2
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Aug 2023 13:16:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1692389817; x=1692994617;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=B+0NDXVHi3NlSMpHGIebBNg86FuRtmvH4hOGN+BnELk=;
+        b=DEtglTYYGcSHksSA2FN1gDlsR56zI+g/nYhimB696kBmZPBAzlOy75JkBBhM78FxWD
+         oSNsu7vBKQxacSZZS6GIB1wbIFqgWxN1ttYlgzN3NSr44W9CiSm+fZ35PaWWCYGvnm8+
+         6YrmffZmW7gRRwpACCuvTbm29E1nDgHWb/p/8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692389817; x=1692994617;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B+0NDXVHi3NlSMpHGIebBNg86FuRtmvH4hOGN+BnELk=;
+        b=bZjBLIW3OVU2exQCQPjZejRXqINdhqJMDJq3+RymL3mHJ2+N6lhA3a633mJQAp9iNV
+         Cev75pwy/KLCKWgtVgD0efrNXgTmex/Pwjmp8G7TFW7Kueb2qL2gFGnnn0Z0gnrjPAcA
+         SbInBw0+wECC0/qEUrrmT1lzc7lMEpD5v1hzcbkbq1dQrX8WU+kD4KN2vwNj7Qv28kmR
+         5WX4en64XENoBQFvSianqimTmLEP7jk6B5D77r61NDErG1amHuyQ6YRi2c26tCYOYhY2
+         DF/zm3u5JGJXNpm8+NJVDbPfkHdqZqN9uAEivuv+jvs5rm+AbXLgqc91swl2lyPxICHJ
+         gspA==
+X-Gm-Message-State: AOJu0YygFO4dokwwCGwIySgmjfBygrs/Fs1Z8/yGI3MV2QETkE8GWw8z
+        kbI7uocxLYj58skiEIfMNP14Aw==
+X-Google-Smtp-Source: AGHT+IHZo6wrfhDwquWf5UNY2LXx3igOOehSqRlr11vbqJ0GFmbmxugVK09ccVdL+k2/cm6nXXXjeQ==
+X-Received: by 2002:a17:903:41c4:b0:1b8:6a09:9cf9 with SMTP id u4-20020a17090341c400b001b86a099cf9mr310762ple.26.1692389817079;
+        Fri, 18 Aug 2023 13:16:57 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id bi9-20020a170902bf0900b001bd99fd1114sm2140559plb.288.2023.08.18.13.16.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Aug 2023 13:16:56 -0700 (PDT)
+Date:   Fri, 18 Aug 2023 13:16:55 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Jann Horn <jannh@google.com>, linux-hardening@vger.kernel.org,
+        Elena Reshetova <elena.reshetova@intel.com>,
         David Windsor <dwindsor@gmail.com>,
         Hans Liljestrand <ishkamiel@gmail.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna@kernel.org>,
         Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>,
+        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
         Olga Kornievskaia <kolga@netapp.com>,
         Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
         "David S. Miller" <davem@davemloft.net>,
@@ -50,318 +64,119 @@ Cc:     Elena Reshetova <elena.reshetova@intel.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
         Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
         Alexey Gladkov <legion@kernel.org>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Yu Zhao <yuzhao@google.com>, linux-kernel@vger.kernel.org,
         linux-nfs@vger.kernel.org, netdev@vger.kernel.org
-Date:   Fri, 18 Aug 2023 16:12:22 -0400
-In-Reply-To: <20230818041740.gonna.513-kees@kernel.org>
+Subject: Re: [PATCH v2] creds: Convert cred.usage to refcount_t
+Message-ID: <202308181252.C7FF8B65BC@keescook>
 References: <20230818041740.gonna.513-kees@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+ <20230818105542.a6b7c41c47d4c6b9ff2e8839@linux-foundation.org>
+ <CAG48ez3mNk8yryV3XHdWZBHC_4vFswJPx1yww+uDi68J=Lepdg@mail.gmail.com>
+ <202308181146.465B4F85@keescook>
+ <20230818123148.801b446cfdbd932787d47612@linux-foundation.org>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230818123148.801b446cfdbd932787d47612@linux-foundation.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2023-08-17 at 21:17 -0700, Kees Cook wrote:
-> From: Elena Reshetova <elena.reshetova@intel.com>
->=20
-> atomic_t variables are currently used to implement reference counters
-> with the following properties:
->  - counter is initialized to 1 using atomic_set()
->  - a resource is freed upon counter reaching zero
->  - once counter reaches zero, its further
->    increments aren't allowed
->  - counter schema uses basic atomic operations
->    (set, inc, inc_not_zero, dec_and_test, etc.)
->=20
-> Such atomic variables should be converted to a newly provided
-> refcount_t type and API that prevents accidental counter overflows and
-> underflows. This is important since overflows and underflows can lead
-> to use-after-free situation and be exploitable.
->=20
-> The variable cred.usage is used as pure reference counter. Convert it
-> to refcount_t and fix up the operations.
->=20
-> **Important note for maintainers:
->=20
-> Some functions from refcount_t API defined in refcount.h have different
-> memory ordering guarantees than their atomic counterparts. Please check
-> Documentation/core-api/refcount-vs-atomic.rst for more information.
->=20
-> Normally the differences should not matter since refcount_t provides
-> enough guarantees to satisfy the refcounting use cases, but in some
-> rare cases it might matter.  Please double check that you don't have
-> some undocumented memory guarantees for this variable usage.
->=20
-> For the cred.usage it might make a difference in following places:
->  - get_task_cred(): increment in refcount_inc_not_zero() only
->    guarantees control dependency on success vs. fully ordered atomic
->    counterpart
->  - put_cred(): decrement in refcount_dec_and_test() only
->    provides RELEASE ordering and ACQUIRE ordering on success vs. fully
->    ordered atomic counterpart
->=20
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
-> Reviewed-by: David Windsor <dwindsor@gmail.com>
-> Reviewed-by: Hans Liljestrand <ishkamiel@gmail.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
-> v2: rebase
-> v1: https://lore.kernel.org/lkml/20200612183450.4189588-4-keescook@chromi=
-um.org/
-> ---
->  include/linux/cred.h |  8 ++++----
->  kernel/cred.c        | 42 +++++++++++++++++++++---------------------
->  net/sunrpc/auth.c    |  2 +-
->  3 files changed, 26 insertions(+), 26 deletions(-)
->=20
-> diff --git a/include/linux/cred.h b/include/linux/cred.h
-> index 8661f6294ad4..bf1c142afcec 100644
-> --- a/include/linux/cred.h
-> +++ b/include/linux/cred.h
-> @@ -109,7 +109,7 @@ static inline int groups_search(const struct group_in=
-fo *group_info, kgid_t grp)
->   * same context as task->real_cred.
->   */
->  struct cred {
-> -	atomic_t	usage;
-> +	refcount_t	usage;
->  #ifdef CONFIG_DEBUG_CREDENTIALS
->  	atomic_t	subscribers;	/* number of processes subscribed */
->  	void		*put_addr;
-> @@ -229,7 +229,7 @@ static inline bool cap_ambient_invariant_ok(const str=
-uct cred *cred)
->   */
->  static inline struct cred *get_new_cred(struct cred *cred)
->  {
-> -	atomic_inc(&cred->usage);
-> +	refcount_inc(&cred->usage);
->  	return cred;
->  }
-> =20
-> @@ -261,7 +261,7 @@ static inline const struct cred *get_cred_rcu(const s=
-truct cred *cred)
->  	struct cred *nonconst_cred =3D (struct cred *) cred;
->  	if (!cred)
->  		return NULL;
-> -	if (!atomic_inc_not_zero(&nonconst_cred->usage))
-> +	if (!refcount_inc_not_zero(&nonconst_cred->usage))
->  		return NULL;
->  	validate_creds(cred);
->  	nonconst_cred->non_rcu =3D 0;
-> @@ -285,7 +285,7 @@ static inline void put_cred(const struct cred *_cred)
-> =20
->  	if (cred) {
->  		validate_creds(cred);
-> -		if (atomic_dec_and_test(&(cred)->usage))
-> +		if (refcount_dec_and_test(&(cred)->usage))
->  			__put_cred(cred);
->  	}
->  }
-> diff --git a/kernel/cred.c b/kernel/cred.c
-> index bed458cfb812..33090c43bcac 100644
-> --- a/kernel/cred.c
-> +++ b/kernel/cred.c
-> @@ -39,7 +39,7 @@ static struct group_info init_groups =3D { .usage =3D R=
-EFCOUNT_INIT(2) };
->   * The initial credentials for the initial task
->   */
->  struct cred init_cred =3D {
-> -	.usage			=3D ATOMIC_INIT(4),
-> +	.usage			=3D REFCOUNT_INIT(4),
->  #ifdef CONFIG_DEBUG_CREDENTIALS
->  	.subscribers		=3D ATOMIC_INIT(2),
->  	.magic			=3D CRED_MAGIC,
-> @@ -99,17 +99,17 @@ static void put_cred_rcu(struct rcu_head *rcu)
-> =20
->  #ifdef CONFIG_DEBUG_CREDENTIALS
->  	if (cred->magic !=3D CRED_MAGIC_DEAD ||
-> -	    atomic_read(&cred->usage) !=3D 0 ||
-> +	    refcount_read(&cred->usage) !=3D 0 ||
->  	    read_cred_subscribers(cred) !=3D 0)
->  		panic("CRED: put_cred_rcu() sees %p with"
->  		      " mag %x, put %p, usage %d, subscr %d\n",
->  		      cred, cred->magic, cred->put_addr,
-> -		      atomic_read(&cred->usage),
-> +		      refcount_read(&cred->usage),
->  		      read_cred_subscribers(cred));
->  #else
-> -	if (atomic_read(&cred->usage) !=3D 0)
-> +	if (refcount_read(&cred->usage) !=3D 0)
->  		panic("CRED: put_cred_rcu() sees %p with usage %d\n",
-> -		      cred, atomic_read(&cred->usage));
-> +		      cred, refcount_read(&cred->usage));
->  #endif
-> =20
->  	security_cred_free(cred);
-> @@ -135,10 +135,10 @@ static void put_cred_rcu(struct rcu_head *rcu)
->  void __put_cred(struct cred *cred)
->  {
->  	kdebug("__put_cred(%p{%d,%d})", cred,
-> -	       atomic_read(&cred->usage),
-> +	       refcount_read(&cred->usage),
->  	       read_cred_subscribers(cred));
-> =20
-> -	BUG_ON(atomic_read(&cred->usage) !=3D 0);
-> +	BUG_ON(refcount_read(&cred->usage) !=3D 0);
->  #ifdef CONFIG_DEBUG_CREDENTIALS
->  	BUG_ON(read_cred_subscribers(cred) !=3D 0);
->  	cred->magic =3D CRED_MAGIC_DEAD;
-> @@ -162,7 +162,7 @@ void exit_creds(struct task_struct *tsk)
->  	struct cred *cred;
-> =20
->  	kdebug("exit_creds(%u,%p,%p,{%d,%d})", tsk->pid, tsk->real_cred, tsk->c=
-red,
-> -	       atomic_read(&tsk->cred->usage),
-> +	       refcount_read(&tsk->cred->usage),
->  	       read_cred_subscribers(tsk->cred));
-> =20
->  	cred =3D (struct cred *) tsk->real_cred;
-> @@ -221,7 +221,7 @@ struct cred *cred_alloc_blank(void)
->  	if (!new)
->  		return NULL;
-> =20
-> -	atomic_set(&new->usage, 1);
-> +	refcount_set(&new->usage, 1);
->  #ifdef CONFIG_DEBUG_CREDENTIALS
->  	new->magic =3D CRED_MAGIC;
->  #endif
-> @@ -267,7 +267,7 @@ struct cred *prepare_creds(void)
->  	memcpy(new, old, sizeof(struct cred));
-> =20
->  	new->non_rcu =3D 0;
-> -	atomic_set(&new->usage, 1);
-> +	refcount_set(&new->usage, 1);
->  	set_cred_subscribers(new, 0);
->  	get_group_info(new->group_info);
->  	get_uid(new->user);
-> @@ -356,7 +356,7 @@ int copy_creds(struct task_struct *p, unsigned long c=
-lone_flags)
->  		get_cred(p->cred);
->  		alter_cred_subscribers(p->cred, 2);
->  		kdebug("share_creds(%p{%d,%d})",
-> -		       p->cred, atomic_read(&p->cred->usage),
-> +		       p->cred, refcount_read(&p->cred->usage),
->  		       read_cred_subscribers(p->cred));
->  		inc_rlimit_ucounts(task_ucounts(p), UCOUNT_RLIMIT_NPROC, 1);
->  		return 0;
-> @@ -450,7 +450,7 @@ int commit_creds(struct cred *new)
->  	const struct cred *old =3D task->real_cred;
-> =20
->  	kdebug("commit_creds(%p{%d,%d})", new,
-> -	       atomic_read(&new->usage),
-> +	       refcount_read(&new->usage),
->  	       read_cred_subscribers(new));
-> =20
->  	BUG_ON(task->cred !=3D old);
-> @@ -459,7 +459,7 @@ int commit_creds(struct cred *new)
->  	validate_creds(old);
->  	validate_creds(new);
->  #endif
-> -	BUG_ON(atomic_read(&new->usage) < 1);
-> +	BUG_ON(refcount_read(&new->usage) < 1);
-> =20
->  	get_cred(new); /* we will require a ref for the subj creds too */
-> =20
-> @@ -533,13 +533,13 @@ EXPORT_SYMBOL(commit_creds);
->  void abort_creds(struct cred *new)
->  {
->  	kdebug("abort_creds(%p{%d,%d})", new,
-> -	       atomic_read(&new->usage),
-> +	       refcount_read(&new->usage),
->  	       read_cred_subscribers(new));
-> =20
->  #ifdef CONFIG_DEBUG_CREDENTIALS
->  	BUG_ON(read_cred_subscribers(new) !=3D 0);
->  #endif
-> -	BUG_ON(atomic_read(&new->usage) < 1);
-> +	BUG_ON(refcount_read(&new->usage) < 1);
->  	put_cred(new);
->  }
->  EXPORT_SYMBOL(abort_creds);
-> @@ -556,7 +556,7 @@ const struct cred *override_creds(const struct cred *=
-new)
->  	const struct cred *old =3D current->cred;
-> =20
->  	kdebug("override_creds(%p{%d,%d})", new,
-> -	       atomic_read(&new->usage),
-> +	       refcount_read(&new->usage),
->  	       read_cred_subscribers(new));
-> =20
->  	validate_creds(old);
-> @@ -579,7 +579,7 @@ const struct cred *override_creds(const struct cred *=
-new)
->  	alter_cred_subscribers(old, -1);
-> =20
->  	kdebug("override_creds() =3D %p{%d,%d}", old,
-> -	       atomic_read(&old->usage),
-> +	       refcount_read(&old->usage),
->  	       read_cred_subscribers(old));
->  	return old;
->  }
-> @@ -597,7 +597,7 @@ void revert_creds(const struct cred *old)
->  	const struct cred *override =3D current->cred;
-> =20
->  	kdebug("revert_creds(%p{%d,%d})", old,
-> -	       atomic_read(&old->usage),
-> +	       refcount_read(&old->usage),
->  	       read_cred_subscribers(old));
-> =20
->  	validate_creds(old);
-> @@ -728,7 +728,7 @@ struct cred *prepare_kernel_cred(struct task_struct *=
-daemon)
-> =20
->  	*new =3D *old;
->  	new->non_rcu =3D 0;
-> -	atomic_set(&new->usage, 1);
-> +	refcount_set(&new->usage, 1);
->  	set_cred_subscribers(new, 0);
->  	get_uid(new->user);
->  	get_user_ns(new->user_ns);
-> @@ -843,7 +843,7 @@ static void dump_invalid_creds(const struct cred *cre=
-d, const char *label,
->  	printk(KERN_ERR "CRED: ->magic=3D%x, put_addr=3D%p\n",
->  	       cred->magic, cred->put_addr);
->  	printk(KERN_ERR "CRED: ->usage=3D%d, subscr=3D%d\n",
-> -	       atomic_read(&cred->usage),
-> +	       refcount_read(&cred->usage),
->  	       read_cred_subscribers(cred));
->  	printk(KERN_ERR "CRED: ->*uid =3D { %d,%d,%d,%d }\n",
->  		from_kuid_munged(&init_user_ns, cred->uid),
-> @@ -917,7 +917,7 @@ void validate_creds_for_do_exit(struct task_struct *t=
-sk)
->  {
->  	kdebug("validate_creds_for_do_exit(%p,%p{%d,%d})",
->  	       tsk->real_cred, tsk->cred,
-> -	       atomic_read(&tsk->cred->usage),
-> +	       refcount_read(&tsk->cred->usage),
->  	       read_cred_subscribers(tsk->cred));
-> =20
->  	__validate_process_creds(tsk, __FILE__, __LINE__);
-> diff --git a/net/sunrpc/auth.c b/net/sunrpc/auth.c
-> index 2f16f9d17966..f9f406249e7d 100644
-> --- a/net/sunrpc/auth.c
-> +++ b/net/sunrpc/auth.c
-> @@ -39,7 +39,7 @@ static LIST_HEAD(cred_unused);
->  static unsigned long number_cred_unused;
-> =20
->  static struct cred machine_cred =3D {
-> -	.usage =3D ATOMIC_INIT(1),
-> +	.usage =3D REFCOUNT_INIT(1),
->  #ifdef CONFIG_DEBUG_CREDENTIALS
->  	.magic =3D CRED_MAGIC,
->  #endif
+On Fri, Aug 18, 2023 at 12:31:48PM -0700, Andrew Morton wrote:
+> On Fri, 18 Aug 2023 11:48:16 -0700 Kees Cook <keescook@chromium.org> wrote:
+> 
+> > On Fri, Aug 18, 2023 at 08:17:55PM +0200, Jann Horn wrote:
+> > > On Fri, Aug 18, 2023 at 7:56 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+> > > > On Thu, 17 Aug 2023 21:17:41 -0700 Kees Cook <keescook@chromium.org> wrote:
+> > > >
+> > > > > From: Elena Reshetova <elena.reshetova@intel.com>
+> > > > >
+> > > > > atomic_t variables are currently used to implement reference counters
+> > > > > with the following properties:
+> > > > >  - counter is initialized to 1 using atomic_set()
+> > > > >  - a resource is freed upon counter reaching zero
+> > > > >  - once counter reaches zero, its further
+> > > > >    increments aren't allowed
+> > > > >  - counter schema uses basic atomic operations
+> > > > >    (set, inc, inc_not_zero, dec_and_test, etc.)
+> > > > >
+> > > > > Such atomic variables should be converted to a newly provided
+> > > > > refcount_t type and API that prevents accidental counter overflows and
+> > > > > underflows. This is important since overflows and underflows can lead
+> > > > > to use-after-free situation and be exploitable.
+> > > >
+> > > > ie, if we have bugs which we have no reason to believe presently exist,
+> > > > let's bloat and slow down the kernel just in case we add some in the
+> > > > future?
+> > > 
+> > > Yeah. Or in case we currently have some that we missed.
+> > 
+> > Right, or to protect us against the _introduction_ of flaws.
+> 
+> We could cheerfully add vast amounts of code to the kernel to check for
+> the future addition of bugs.  But we don't do that, because it would be
+> insane.
 
-I wonder what sort of bugs this will uncover.
+This is a slippery-slope fallacy and doesn't apply. Yes, we don't add vast
+amounts of code for that and that isn't the case here. This is fixing a
+known weakness of using atomic reference counts, with a long history of
+exploitation, on a struct used for enforcing security boundaries, solved
+with the kernel's standard reference counting type. As I mentioned in
+the other arm[1] of this thread, I think the question is better "Why is
+this NOT refcount_t? What is the benefit, and why does that make struct
+cred special?"
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > > Though really we don't *just* need refcount_t to catch bugs; on a
+> > > system with enough RAM you can also overflow many 32-bit refcounts by
+> > > simply creating 2^32 actual references to an object. Depending on the
+> > > structure of objects that hold such refcounts, that can start
+> > > happening at around 2^32 * 8 bytes = 32 GiB memory usage, and it
+> > > becomes increasingly practical to do this with more objects if you
+> > > have significantly more RAM. I suppose you could avoid such issues by
+> > > putting a hard limit of 32 GiB on the amount of slab memory and
+> > > requiring that kernel object references are stored as pointers in slab
+> > > memory, or by making all the refcounts 64-bit.
+> > 
+> > These problems are a different issue, and yes, the path out of it would
+> > be to crank the size of refcount_t, etc.
+> 
+> Is it possible for such overflows to occur in the cred code?  If so,
+> that's a bug.  Can we fix that cred bug without all this overhead? 
+> With a cc:stable backport.  If not then, again, what is the non
+> handwavy, non cargoculty justification for adding this overhead to
+> the kernel?
+
+The only overhead is on slow-path for the error conditions. There is no
+_known_ bug in the cred code today, but there might be unknown flaws,
+or new flaws or unexpected reachability may be introduced in the future.
+That's the whole point of making kernel code defensive. I've talked about
+this (with lots of data to support it) at length before[2], mainly around
+the lifetime of exploitable flaws: average lifetime is more than 5 years
+and we keep introducing them in code that uses fragile types or ambiguous
+language features. But I _haven't_ had to talk much about reference
+counting since 2016 when we grew a proper type for it. :)
+
+Let's get the stragglers fixed.
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/202308181131.045F806@keescook/
+[2] https://outflux.net/slides/2021/lss/kspp.pdf (see slides 4, 5, 6)
+    https://outflux.net/slides/2019/lss/kspp.pdf (see slides 4, 5, 6)
+    https://outflux.net/slides/2018/lss/kspp.pdf (see slides 3, 4)
+    https://outflux.net/slides/2017/lss/kspp.pdf (see slides 5, 6, 13)
+    https://outflux.net/slides/2017/ks/kspp.pdf (see slides 3, 4, 12)
+    https://outflux.net/slides/2016/lss/kspp.pdf (see slides 5, 6, 12, 20)
+    https://outflux.net/slides/2016/ks/kspp.pdf (see slides 17, 21)
+    https://outflux.net/slides/2015/ks/security.pdf (see slides 4, 13)
+
+-- 
+Kees Cook
