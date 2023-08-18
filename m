@@ -2,205 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DA5B78037C
+	by mail.lfdr.de (Postfix) with ESMTP id 13E8078037B
 	for <lists+linux-nfs@lfdr.de>; Fri, 18 Aug 2023 03:46:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357104AbjHRBqM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1357110AbjHRBqM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Thu, 17 Aug 2023 21:46:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47292 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357106AbjHRBpx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Aug 2023 21:45:53 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1FB2D44
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Aug 2023 18:45:52 -0700 (PDT)
+        with ESMTP id S1357108AbjHRBp6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Aug 2023 21:45:58 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E52B2713
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Aug 2023 18:45:57 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 4BA5A1F88F;
-        Fri, 18 Aug 2023 01:45:51 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 40E4F1F893;
+        Fri, 18 Aug 2023 01:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1692323151; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1692323156; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=izPLmkADcM2Z92ijB9b7MvhqPOjfnP2EKadI+UcMYF8=;
-        b=GUU9DwietbApuRO44C2BWsk2v+snkWiUWzR1pJIknrgffgm5CYY4sx1FHRr8yz1qSNyTSh
-        oaXzc13SK8CsvXYcx80q95ePWYNwhBIMNglTsco4mAgwC4x6dg+kUBRk2wvf12irsoje0/
-        qd8Gf3A0+hOi3ZW8j5lybBQn+Nn8FGU=
+        bh=4OlWDDFDaZiflq5bgrnUx6abHerzIEeI1KMXMH29o4Y=;
+        b=Lc/hHzbhIu8EQlnD8exGjYG3Ojucah4g3A3WerQFuSJuqvjTfFyZrziL8T7RzMW505VR7F
+        HtHYhCCDFoTL/JC47pQmTKo7gqMneZOBwaGA0fpnUnjd6SvkO+axv1mfA2R0PUCkBELWBe
+        8RzDWHiXQ0zRC0uHuJTuoEJKQ4OxnfA=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1692323151;
+        s=susede2_ed25519; t=1692323156;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=izPLmkADcM2Z92ijB9b7MvhqPOjfnP2EKadI+UcMYF8=;
-        b=/I30iKOmkzRx+h+h3MHxCrgyZ8Q+aTwMPS36QEPrFHcJ4uOxxMlCeCGpBtIMx1LXVqXskh
-        DJpMo7jgsHludFBg==
+        bh=4OlWDDFDaZiflq5bgrnUx6abHerzIEeI1KMXMH29o4Y=;
+        b=flLWUqPGzShNEOlErIC5coOcwr0D1Ofr5pSN6Srzj58fABsK6qaabQokEzO/uZ28vwMliL
+        rzeWv6ufPfVhqmCQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0B9031353E;
-        Fri, 18 Aug 2023 01:45:49 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 021D51353E;
+        Fri, 18 Aug 2023 01:45:54 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id FzINLE3N3mSSZAAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 18 Aug 2023 01:45:49 +0000
+        id CKrJKVLN3mSbZAAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 18 Aug 2023 01:45:54 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 5/7] SUNRPC: change sp_nrthreads to atomic_t
-Date:   Fri, 18 Aug 2023 11:45:10 +1000
-Message-Id: <20230818014512.26880-6-neilb@suse.de>
+Subject: [PATCH 6/7] SUNRPC: discard sp_lock
+Date:   Fri, 18 Aug 2023 11:45:11 +1000
+Message-Id: <20230818014512.26880-7-neilb@suse.de>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20230818014512.26880-1-neilb@suse.de>
 References: <20230818014512.26880-1-neilb@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Using an atomic_t avoids the need to take a spinlock (which can soon be
-removed).
-
-Choosing a thread to kill needs to be careful as we cannot set the "die
-now" bit atomically with the test on the count.  Instead we temporarily
-increase the count.
+sp_lock is now only used to protect sp_all_threads.  This isn't needed
+as sp_all_threads is only manipulated through svc_set_num_threads(),
+which must be locked.  Read-acccess only requires rcu_read_lock().  So
+no more locking is needed.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfssvc.c           |  3 ++-
- include/linux/sunrpc/svc.h |  2 +-
- net/sunrpc/svc.c           | 37 ++++++++++++++++++++-----------------
- 3 files changed, 23 insertions(+), 19 deletions(-)
+ include/linux/sunrpc/svc.h |  1 -
+ net/sunrpc/svc.c           | 10 +++++-----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 062f51fe4dfb..5e455ced0711 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -718,7 +718,8 @@ int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
- 
- 	if (nn->nfsd_serv != NULL) {
- 		for (i = 0; i < nn->nfsd_serv->sv_nrpools && i < n; i++)
--			nthreads[i] = nn->nfsd_serv->sv_pools[i].sp_nrthreads;
-+			nthreads[i] =
-+				atomic_read(&nn->nfsd_serv->sv_pools[i].sp_nrthreads);
- 	}
- 
- 	return 0;
 diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 8b2bd034a760..c972561f5ab8 100644
+index c972561f5ab8..b80b698b09c5 100644
 --- a/include/linux/sunrpc/svc.h
 +++ b/include/linux/sunrpc/svc.h
-@@ -36,7 +36,7 @@ struct svc_pool {
+@@ -34,7 +34,6 @@
+  */
+ struct svc_pool {
  	unsigned int		sp_id;	    	/* pool id; also node id on NUMA */
- 	spinlock_t		sp_lock;	/* protects all fields */
+-	spinlock_t		sp_lock;	/* protects all fields */
  	struct lwq		sp_xprts;	/* pending transports */
--	unsigned int		sp_nrthreads;	/* # of threads in pool */
-+	atomic_t		sp_nrthreads;	/* # of threads in pool */
+ 	atomic_t		sp_nrthreads;	/* # of threads in pool */
  	struct list_head	sp_all_threads;	/* all server threads */
- 	struct llist_head	sp_idle_threads; /* idle server threads */
- 
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 63cddb8cb08d..9524af33ace9 100644
+index 9524af33ace9..61ea8ce7975f 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -681,8 +681,8 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- 	serv->sv_nrthreads += 1;
+@@ -511,7 +511,6 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 		lwq_init(&pool->sp_xprts);
+ 		INIT_LIST_HEAD(&pool->sp_all_threads);
+ 		init_llist_head(&pool->sp_idle_threads);
+-		spin_lock_init(&pool->sp_lock);
+ 
+ 		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
+ 		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
+@@ -682,9 +681,12 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
  	spin_unlock_bh(&serv->sv_lock);
  
-+	atomic_inc(&pool->sp_nrthreads);
- 	spin_lock_bh(&pool->sp_lock);
--	pool->sp_nrthreads++;
- 	list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
- 	spin_unlock_bh(&pool->sp_lock);
- 	return rqstp;
-@@ -727,23 +727,24 @@ svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
- }
- 
- static struct svc_pool *
--svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
-+svc_pool_victim(struct svc_serv *serv, struct svc_pool *target_pool,
-+		unsigned int *state)
- {
-+	struct svc_pool *pool;
- 	unsigned int i;
- 
-+retry:
-+	pool = target_pool;
+ 	atomic_inc(&pool->sp_nrthreads);
+-	spin_lock_bh(&pool->sp_lock);
 +
- 	if (pool != NULL) {
--		spin_lock_bh(&pool->sp_lock);
--		if (pool->sp_nrthreads)
-+		if (atomic_inc_not_zero(&pool->sp_nrthreads))
- 			goto found_pool;
--		spin_unlock_bh(&pool->sp_lock);
- 		return NULL;
- 	} else {
- 		for (i = 0; i < serv->sv_nrpools; i++) {
- 			pool = &serv->sv_pools[--(*state) % serv->sv_nrpools];
--			spin_lock_bh(&pool->sp_lock);
--			if (pool->sp_nrthreads)
-+			if (atomic_inc_not_zero(&pool->sp_nrthreads))
- 				goto found_pool;
--			spin_unlock_bh(&pool->sp_lock);
- 		}
- 		return NULL;
- 	}
-@@ -751,8 +752,12 @@ svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *stat
- found_pool:
- 	set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
- 	set_bit(SP_NEED_VICTIM, &pool->sp_flags);
++	/* Protected by whatever lock the service uses when calling
++	 * svc_set_num_threads()
++	 */
+ 	list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
 -	spin_unlock_bh(&pool->sp_lock);
--	return pool;
-+	if (!atomic_dec_and_test(&pool->sp_nrthreads))
-+		return pool;
-+	/* Nothing left in this pool any more */
-+	clear_bit(SP_NEED_VICTIM, &pool->sp_flags);
-+	clear_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
-+	goto retry;
++
+ 	return rqstp;
  }
  
- static int
-@@ -828,13 +833,10 @@ svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- int
- svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- {
--	if (pool == NULL) {
-+	if (!pool)
- 		nrservs -= serv->sv_nrthreads;
--	} else {
--		spin_lock_bh(&pool->sp_lock);
--		nrservs -= pool->sp_nrthreads;
--		spin_unlock_bh(&pool->sp_lock);
--	}
-+	else
-+		nrservs -= atomic_read(&pool->sp_nrthreads);
- 
- 	if (nrservs > 0)
- 		return svc_start_kthreads(serv, pool, nrservs);
-@@ -921,10 +923,11 @@ svc_exit_thread(struct svc_rqst *rqstp)
+@@ -922,9 +924,7 @@ svc_exit_thread(struct svc_rqst *rqstp)
+ 	struct svc_serv	*serv = rqstp->rq_server;
  	struct svc_pool	*pool = rqstp->rq_pool;
  
- 	spin_lock_bh(&pool->sp_lock);
--	pool->sp_nrthreads--;
+-	spin_lock_bh(&pool->sp_lock);
  	list_del_rcu(&rqstp->rq_all);
- 	spin_unlock_bh(&pool->sp_lock);
+-	spin_unlock_bh(&pool->sp_lock);
  
-+	atomic_dec(&pool->sp_nrthreads);
-+
- 	spin_lock_bh(&serv->sv_lock);
- 	serv->sv_nrthreads -= 1;
- 	spin_unlock_bh(&serv->sv_lock);
+ 	atomic_dec(&pool->sp_nrthreads);
+ 
 -- 
 2.40.1
 
