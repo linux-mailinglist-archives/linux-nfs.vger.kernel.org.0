@@ -2,65 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0D92780605
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Aug 2023 08:56:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 851FC78061C
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Aug 2023 09:06:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358086AbjHRGzb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 18 Aug 2023 02:55:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43656 "EHLO
+        id S1358121AbjHRHFu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Aug 2023 03:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358159AbjHRGzZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Aug 2023 02:55:25 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12E3C2713;
-        Thu, 17 Aug 2023 23:55:16 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-68879c7f5easo502413b3a.1;
-        Thu, 17 Aug 2023 23:55:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1692341715; x=1692946515;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=z2dlCcrBqBcGUSz9puYC08uaYiHm3jH93zO50sHybWA=;
-        b=fxVRXcIx9MkYFfp1QWkdHndQWctk0v+7gnYTe1gepuK998MWE6/HIfZLE9TQh3ZT+/
-         PMZK3s8m0xAbT6wY6yg9NDcBw1YczbQrFithT1n5vda0+KgXttmSysVssw1NOYHegjKn
-         8KXkTnNCZIuAV1J1J6EtLaDblxyyRkTY2Jb2gTTxIy2sOq/CQSFst3Si9C6jxUT0pWXP
-         s32jrZJi8DUEGKf9JEOAnW3P44PGdwyvHqLk2RlZkBICDc30OnL0ZSKcDy0e/dLyPvE4
-         8dlhz4mc2heICmG1RGPvUl+KaraNFrYkfYn4K5JftNFZDhZ31CHDFK/jzs5XU1msqaPt
-         tmyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692341715; x=1692946515;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z2dlCcrBqBcGUSz9puYC08uaYiHm3jH93zO50sHybWA=;
-        b=Z22vB6Rwsa9xalakd5TQs8YjHdenhJ4Pdf1M3uwTlNib1fgYYkdnYjr0HRI0SGkdkw
-         FCVtUASqiQFOdPmpyp1+vkfco9IDAsFvAmQU9wliO4A7yn2Ly1zIbvAg4EqCFcLLGTWQ
-         u03hSjtj3qpCAn+sohOIQk1AkJLbT9vRlKBY2i0tkEv0AmBwMz84wduid1tDcDwlVKIa
-         O4rbHubo4IoTIhCT5RCk7iFCXIOAI4yXffdEg7qQTZGhqqwg3Oj6ykdc0tVEgu9DfVpz
-         jfBTHJvIi29Y+xeG+SnAOjay3+n4bWYAHt6RK1+h9jf1rbeiVeAYpW245RbHRscQ0CaI
-         iC9w==
-X-Gm-Message-State: AOJu0YzGKBhjE5n8S97XpzB5hMz3RAyASlreq+xRgZAvrqVN4l9l6Ip9
-        LsRB+DwymsGO38yGeN4gT9s=
-X-Google-Smtp-Source: AGHT+IGnv48CX1thOsyiIzhxcw/gjE7Emd+LTOt3xw+9bqZaa6jvD2NtK1WNyRJ9DiDhjoFeY56lqg==
-X-Received: by 2002:a05:6a00:158a:b0:686:9385:4642 with SMTP id u10-20020a056a00158a00b0068693854642mr1995004pfk.6.1692341715193;
-        Thu, 17 Aug 2023 23:55:15 -0700 (PDT)
-Received: from haodong-Precision.fareast.nevint.com ([140.206.46.75])
-        by smtp.gmail.com with ESMTPSA id a18-20020a62bd12000000b00687dde8ae5dsm817234pff.154.2023.08.17.23.55.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 17 Aug 2023 23:55:14 -0700 (PDT)
-From:   Haodong Wong <haydenw.kernel@gmail.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     haodong.wong@nio.com, "J. Bruce Fields" <bfields@fieldses.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] nfsd: fix race condition in nfsd_file_acquire
-Date:   Fri, 18 Aug 2023 14:55:07 +0800
-Message-Id: <20230818065507.1280625-1-haydenw.kernel@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1358135AbjHRHFf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Aug 2023 03:05:35 -0400
+Received: from out-40.mta0.migadu.com (out-40.mta0.migadu.com [91.218.175.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA2B30D6
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Aug 2023 00:05:34 -0700 (PDT)
+Message-ID: <a1ad6a41-edd0-1201-c537-68693d5b70e6@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1692342329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jv+O91aJKOY8Oa1uiqnwHLxjtat+AR7MEL0TnmE0b24=;
+        b=t2VAUZ/03p433tyvzSI/43v6e2AbSGWAj8MxYeOybMl7YnRaVl2x7cj/71xMqWMRKgtL5v
+        gDTi48YCNm6X+Zx7LdxDdJqLYzdh7lfvVT1qlpkHtDEsYVQFpWK4DfMUfninCzwp/lvXbw
+        99BmTYaes3N1P4mgadXNBtLHpTk2S6Q=
+Date:   Fri, 18 Aug 2023 15:05:14 +0800
 MIME-Version: 1.0
+Subject: Re: [PATCH 03/13] scatterlist: Add sg_set_folio()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        netdev@vger.kernel.org
+References: <20230621164557.3510324-1-willy@infradead.org>
+ <20230621164557.3510324-4-willy@infradead.org>
+ <a2a2180c-62ac-452f-0737-26f01f228c79@linux.dev>
+ <ZMZHH5Xc507OZA1O@casper.infradead.org>
+ <40a3ab47-da3e-0d08-b3fa-b4663f3e727d@linux.dev>
+ <ZMbZVjMaIeI1DSj9@casper.infradead.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Zhu Yanjun <yanjun.zhu@linux.dev>
+In-Reply-To: <ZMbZVjMaIeI1DSj9@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,105 +56,106 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Before Kernel 6.1, we observed the following OOPS in the stress test
-caused by reorder on set bit NFSD_FILE_HASHED and NFSD_FILE_PENDING,
-and smp_mb__after_atomic() should be a paire.
 
-Task A:                         Task B:
+在 2023/7/31 5:42, Matthew Wilcox 写道:
+> On Sun, Jul 30, 2023 at 09:57:06PM +0800, Zhu Yanjun wrote:
+>> 在 2023/7/30 19:18, Matthew Wilcox 写道:
+>>> On Sun, Jul 30, 2023 at 07:01:26PM +0800, Zhu Yanjun wrote:
+>>>> Does the following function have folio version?
+>>>>
+>>>> "
+>>>> int sg_alloc_append_table_from_pages(struct sg_append_table *sgt_append,
+>>>> 		struct page **pages, unsigned int n_pages, unsigned int offset,
+>>>> 		unsigned long size, unsigned int max_segment,
+>>>> 		unsigned int left_pages, gfp_t gfp_mask)
+>>>> "
+>>> No -- I haven't needed to convert anything that uses
+>>> sg_alloc_append_table_from_pages() yet.  It doesn't look like it should
+>>> be _too_ hard to add a folio version.
+>> In many places, this function is used. So this function needs the folio
+>> version.
+> It's not used in very many places.  But the first one that I see it used
+> (drivers/infiniband/core/umem.c), you can't do a straightforward folio
+> conversion:
+>
+>                  pinned = pin_user_pages_fast(cur_base,
+>                                            min_t(unsigned long, npages,
+>                                                  PAGE_SIZE /
+>                                                  sizeof(struct page *)),
+>                                            gup_flags, page_list);
+> ...
+>                  ret = sg_alloc_append_table_from_pages(
+>                          &umem->sgt_append, page_list, pinned, 0,
+>                          pinned << PAGE_SHIFT, ib_dma_max_seg_size(device),
+>                          npages, GFP_KERNEL);
+>
+> That can't be converted to folios.  The GUP might start in the middle of
+> the folio, and we have no way to communicate that.
+>
+> This particular usage really needs the phyr work that Jason is doing so
+> we can efficiently communicate physically contiguous ranges from GUP
+> to sg.
 
-nfsd_file_acquire:
+Hi, Matthew
 
-    new = nfsd_file_alloc()
-    open_file:
-    refcount_inc(&nf->nf_ref);
-                                 nf = nfsd_file_find_locked();
-                                 wait_for_construction:
+Thanks. To the following function, it seems that no folio function 
+replace vmalloc_to_page.
 
-                                 since nf_flags is zero it will not wait
+vmalloc_to_page calls virt_to_page to get page. Finally the followings 
+will be called.
 
-                                 wait_on_bit(&nf->nf_flags,
-                                                    NFSD_FILE_PENDING);
+"
+(mem_map + ((pfn) - ARCH_PFN_OFFSET))
 
-                                if (status == nfs_ok) {
-                                     *pnf = nf;      //OOPS happen!
+"
 
-Unable to handle kernel NULL pointer at virtual address 0000000000000028
-Mem abort info:
-  ESR = 0x96000004
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000004
-  CM = 0, WnR = 0
-user pgtable: 4k pages, 48-bit VAs, pgdp=0000000152546000
-[0000000000000028] pgd=0000000000000000, p4d=0000000000000000
-Internal error: Oops: 96000004 [#1] PREEMPT_RT SMP
-CPU: 7 PID: 1767 Comm: nfsd Not tainted 5.10.104 #1
-pstate: 40c00005 (nZcv daif +PAN +UAO -TCO BTYPE=--)
-pc : nfsd_read+0x78/0x280 [nfsd]
-lr : nfsd_read+0x68/0x280 [nfsd]
-sp : ffff80001c0b3c70
-x29: ffff80001c0b3c70 x28: 0000000000000000
-x27: 0000000000000002 x26: ffff0000c8a3ca70
-x25: ffff0000c8a45180 x24: 0000000000002000
-x23: ffff0000c8a45178 x22: ffff0000c8a45008
-x21: ffff0000c31aac40 x20: ffff0000c8a3c000
-x19: 0000000000000000 x18: 0000000000000001
-x17: 0000000000000007 x16: 00000000b35db681
-x15: 0000000000000156 x14: ffff0000c3f91300
-x13: 0000000000000000 x12: 0000000000000000
-x11: 0000000000000000 x10: 0000000000000000
-x9 : 0000000000000000 x8 : ffff000118014a80
-x7 : 0000000000000002 x6 : ffff0002559142dc
-x5 : ffff0000c31aac40 x4 : 0000000000000004
-x3 : 0000000000000001 x2 : 0000000000000000
-x1 : 0000000000000001 x0 : ffff000255914280
-Call trace:
- nfsd_read+0x78/0x280 [nfsd]
- nfsd3_proc_read+0x98/0xc0 [nfsd]
- nfsd_dispatch+0xc8/0x160 [nfsd]
- svc_process_common+0x440/0x790
- svc_process+0xb0/0xd0
- nfsd+0xfc/0x160 [nfsd]
- kthread+0x17c/0x1a0
- ret_from_fork+0x10/0x18
+And I do not find the related folio functions with vmalloc_to_page.
 
-Signed-off-by: Haodong Wong <haydenw.kernel@gmail.com>
----
- fs/nfsd/filecache.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+And no folio function replaces dma_map_page.
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index e30e1ddc1ace..ba980369e6b4 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -974,8 +974,12 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	nfsd_file_slab_free(&new->nf_rcu);
- 
- wait_for_construction:
-+	/* In case of set bit NFSD_FILE_PENDING and NFSD_FILE_HASHED reorder */
-+	smp_rmb();
- 	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
- 
-+	/* Be a paire of smp_mb after clear bit NFSD_FILE_PENDING */
-+	smp_mb__after_atomic();
- 	/* Did construction of this file fail? */
- 	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
- 		if (!retry) {
-@@ -1018,8 +1022,11 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	nf = new;
- 	/* Take reference for the hashtable */
- 	refcount_inc(&nf->nf_ref);
--	__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
- 	__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
-+	/* Ensure set bit order set NFSD_FILE_HASHED after set NFSD_FILE_PENDING */
-+	smp_wmb();
-+	__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
-+
- 	list_lru_add(&nfsd_file_lru, &nf->nf_lru);
- 	hlist_add_head_rcu(&nf->nf_node, &nfsd_file_hashtbl[hashval].nfb_head);
- 	++nfsd_file_hashtbl[hashval].nfb_count;
--- 
-2.25.1
+dma_map_page will call dma_map_page_attrs.
 
+Or these 2 function should not be replaced with folio functions?
+
+int irdma_map_vm_page_list(struct irdma_hw *hw, void *va, dma_addr_t 
+*pg_dma,
+
+                            u32 pg_cnt)
+{
+         struct page *vm_page;
+         int i;
+         u8 *addr;
+
+         addr = (u8 *)(uintptr_t)va;
+         for (i = 0; i < pg_cnt; i++) {
+                 vm_page = vmalloc_to_page(addr);
+                 if (!vm_page)
+                         goto err;
+
+                 pg_dma[i] = dma_map_page(hw->device, vm_page, 0, PAGE_SIZE,
+                                          DMA_BIDIRECTIONAL);
+                 if (dma_mapping_error(hw->device, pg_dma[i]))
+                         goto err;
+
+                 addr += PAGE_SIZE;
+         }
+
+         return 0;
+
+err:
+         irdma_unmap_vm_page_list(hw, pg_dma, i);
+         return -ENOMEM;
+
+}
+
+Thanks,
+
+Zhu Yanjun
+
+
+>> Another problem, after folio is used, I want to know the performance after
+>> folio is implemented.
+>>
+>> How to make tests to get the performance?
+> You know what you're working on ... I wouldn't know how best to test
+> your code.
