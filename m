@@ -2,142 +2,224 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD080781B9F
-	for <lists+linux-nfs@lfdr.de>; Sun, 20 Aug 2023 02:19:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0EF37820EF
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Aug 2023 02:27:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjHTATD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 19 Aug 2023 20:19:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
+        id S231391AbjHUA1l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 20 Aug 2023 20:27:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbjHTASj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 19 Aug 2023 20:18:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EBCEE28FA
-        for <linux-nfs@vger.kernel.org>; Sat, 19 Aug 2023 14:39:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S231135AbjHUA1k (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 20 Aug 2023 20:27:40 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C836A6;
+        Sun, 20 Aug 2023 17:27:38 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E3FEE60304
-        for <linux-nfs@vger.kernel.org>; Sat, 19 Aug 2023 21:39:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC559C433C8;
-        Sat, 19 Aug 2023 21:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1692481156;
-        bh=9F0mLVE6Px02gqZkud+RH0Oi+Kkcqan4L3icyQXLzm0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=II3K8K4EbnzoAEdVTqeJYtQdyvTpS7tKYA2TtZPpryM3GfO0PJLDKtGhueKsHQNB0
-         9KfE2q/1oAre0iMwbGmB56WNyFtT1MtLAt8WVwQ539bW4TSz1ov4D3TyoDFtXQoDkG
-         hVE75wP6ExGoZjaoTJNImAM8wvxCLdi3ehUeLKkdrCplncoxP56Z95Z46meqaRGdHF
-         6ghwlrmK+XmaiHkvnY1pyh85nLCxZPSfyuPw2RAheOPqm6UyvecTioC+GUQDXGSzE6
-         2CVkJmYDZpF8UZqZQV7Kol9zNQaYmAlQlGqA9qzDU9pkyhOMYlOVdtZErUOQTzVSXl
-         aEaybopBJkqWA==
-From:   trondmy@kernel.org
-To:     Anna Schumaker <Anna.Schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 5/5] NFS/pNFS: Set the connect timeout for the pNFS flexfiles driver
-Date:   Sat, 19 Aug 2023 17:32:25 -0400
-Message-ID: <20230819213225.731214-6-trondmy@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230819213225.731214-5-trondmy@kernel.org>
-References: <20230819213225.731214-1-trondmy@kernel.org>
- <20230819213225.731214-2-trondmy@kernel.org>
- <20230819213225.731214-3-trondmy@kernel.org>
- <20230819213225.731214-4-trondmy@kernel.org>
- <20230819213225.731214-5-trondmy@kernel.org>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 24A6121A81;
+        Mon, 21 Aug 2023 00:27:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1692577657; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AY/1rkFsff3ua8LyvK9x7k/GK7tr57jHaYZvKmjWRhU=;
+        b=0Sm5IAmtq7eH6sUQQXZd/oxwVs+4eZ6LvV+LuGrLE+2QfImPpowfwnywH8fm8+ojIEbX48
+        2cByreO//79B5oJHSg0v/1jJA+xfaSKftCqwt7GKwfCWgZ1SIM8uMTOHpi0zpNDfnTD9+g
+        d1vQdQs7vS1ZKZ6Vc6U4/zHV+RfjnRo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1692577657;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AY/1rkFsff3ua8LyvK9x7k/GK7tr57jHaYZvKmjWRhU=;
+        b=tmnT77nKXVFHiTfZo8W6sHQ22pddg/qFMIYSBVz3mg8nQMGcaCbsPbFN9kWwkdiEEq5MoF
+        HspuenZ2QTDRgLBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A45B813458;
+        Mon, 21 Aug 2023 00:27:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id GnnqFXWv4mQgfQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 21 Aug 2023 00:27:33 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Haodong Wong" <haydenw.kernel@gmail.com>
+Cc:     chuck.lever@oracle.com, jlayton@kernel.org, haodong.wong@nio.com,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nfsd: fix race condition in nfsd_file_acquire
+In-reply-to: <20230818065507.1280625-1-haydenw.kernel@gmail.com>
+References: <20230818065507.1280625-1-haydenw.kernel@gmail.com>
+Date:   Mon, 21 Aug 2023 10:27:23 +1000
+Message-id: <169257764320.11865.9867985815081936092@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Fri, 18 Aug 2023, Haodong Wong wrote:
+> Before Kernel 6.1, we observed the following OOPS in the stress test
+> caused by reorder on set bit NFSD_FILE_HASHED and NFSD_FILE_PENDING,
+> and smp_mb__after_atomic() should be a paire.
 
-Ensure that the connect timeout for the pNFS flexfiles driver is of the
-same order as the I/O timeout, so that we can fail over quickly when
-trying to read from a data server that is down.
+If you saw this "before kernel 6.1" does that mean you don't see it
+after kernel 6.1?  So has it already been fixed?
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/client.c     | 2 ++
- fs/nfs/internal.h   | 2 ++
- fs/nfs/nfs3client.c | 3 +++
- fs/nfs/pnfs_nfs.c   | 3 +++
- 4 files changed, 10 insertions(+)
+What kernel are you targeting with your patch?  It doesn't apply to
+mainline, but looks like it might to 6.0.  The oops message is from
+5.10.104.  Maybe that is where you want a fix?
 
-diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-index e4c5f193ed5e..44eca51b2808 100644
---- a/fs/nfs/client.c
-+++ b/fs/nfs/client.c
-@@ -517,6 +517,8 @@ int nfs_create_rpc_client(struct nfs_client *clp,
- 		.authflavor	= flavor,
- 		.cred		= cl_init->cred,
- 		.xprtsec	= cl_init->xprtsec,
-+		.connect_timeout = cl_init->connect_timeout,
-+		.reconnect_timeout = cl_init->reconnect_timeout,
- 	};
- 
- 	if (test_bit(NFS_CS_DISCRTRY, &clp->cl_flags))
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 0019c7578f9d..4d80925c94f7 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -82,6 +82,8 @@ struct nfs_client_initdata {
- 	const struct rpc_timeout *timeparms;
- 	const struct cred *cred;
- 	struct xprtsec_parms xprtsec;
-+	unsigned long connect_timeout;
-+	unsigned long reconnect_timeout;
- };
- 
- /*
-diff --git a/fs/nfs/nfs3client.c b/fs/nfs/nfs3client.c
-index eff3802c5e03..674c012868b1 100644
---- a/fs/nfs/nfs3client.c
-+++ b/fs/nfs/nfs3client.c
-@@ -86,6 +86,7 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_server *mds_srv,
- 		int ds_proto, unsigned int ds_timeo, unsigned int ds_retrans)
- {
- 	struct rpc_timeout ds_timeout;
-+	unsigned long connect_timeout = ds_timeo * (ds_retrans + 1) * HZ / 10;
- 	struct nfs_client *mds_clp = mds_srv->nfs_client;
- 	struct nfs_client_initdata cl_init = {
- 		.addr = ds_addr,
-@@ -98,6 +99,8 @@ struct nfs_client *nfs3_set_ds_client(struct nfs_server *mds_srv,
- 		.timeparms = &ds_timeout,
- 		.cred = mds_srv->cred,
- 		.xprtsec = mds_clp->cl_xprtsec,
-+		.connect_timeout = connect_timeout,
-+		.reconnect_timeout = connect_timeout,
- 	};
- 	struct nfs_client *clp;
- 	char buf[INET6_ADDRSTRLEN + 1];
-diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
-index a0112ad4937a..a08cfda6fff1 100644
---- a/fs/nfs/pnfs_nfs.c
-+++ b/fs/nfs/pnfs_nfs.c
-@@ -852,6 +852,7 @@ static int _nfs4_pnfs_v3_ds_connect(struct nfs_server *mds_srv,
- {
- 	struct nfs_client *clp = ERR_PTR(-EIO);
- 	struct nfs4_pnfs_ds_addr *da;
-+	unsigned long connect_timeout = timeo * (retrans + 1) * HZ / 10;
- 	int status = 0;
- 
- 	dprintk("--> %s DS %s\n", __func__, ds->ds_remotestr);
-@@ -870,6 +871,8 @@ static int _nfs4_pnfs_v3_ds_connect(struct nfs_server *mds_srv,
- 				.dstaddr = (struct sockaddr *)&da->da_addr,
- 				.addrlen = da->da_addrlen,
- 				.servername = clp->cl_hostname,
-+				.connect_timeout = connect_timeout,
-+				.reconnect_timeout = connect_timeout,
- 			};
- 
- 			if (da->da_transport != clp->cl_proto)
--- 
-2.41.0
+I assume you want this fix to go to a -stable kernel?  It would be good
+to identify which upstream patch fixed the problem, then either backport
+that, or explain why something simpler is needed.
+
+>=20
+> Task A:                         Task B:
+>=20
+> nfsd_file_acquire:
+>=20
+>                           new =3D nfsd_file_alloc()
+>                           open_file:
+>                           refcount_inc(&nf->nf_ref);
+
+The key step in Task A is=20
+	hlist_add_head_rcu(&nf->nf_node,
+		 &nfsd_file_hashtbl[hashval].nfb_head);
+
+Until that completes, nfsd_file_find_locked() cannot find the new file.
+hlist_add_head_rcu() uses "rcu_assign_pointer()" which should include
+all the barriers needed.
+
+>                                  nf =3D nfsd_file_find_locked();
+>                                  wait_for_construction:
+>=20
+>                                  since nf_flags is zero it will not wait
+>=20
+>                                  wait_on_bit(&nf->nf_flags,
+>                                                     NFSD_FILE_PENDING);
+>=20
+>                                 if (status =3D=3D nfs_ok) {
+>                                      *pnf =3D nf;      //OOPS happen!
+
+The oops message suggests that after nfsd_read() calls
+nfsd_file_acquire() there is no error, but nf is NULL.
+So the  nf->nf_file access causes the oops.  nf_file is at offset
+0x28, which is the virtual address mentioned in the oops.
+
+So do you think 'nf' is NULL at this point where you write "OOPS
+happen!" ??=20
+I cannot see how that might happen even if wait_on_bit() didn't
+actually wait.
+
+Maybe if you could explain if a bit more detail what you think is
+happening.  What exactly is NULL which causes the OOPS, and how exactly
+does it end up being NULL.
+I cannot see what might be the cause, but the oops makes it clear that
+it did happen.
+
+Also is this a pure 5.10.104 kernel, or are there other patches on it?
+
+Thanks,
+NeilBrown
+
+
+
+>=20
+> Unable to handle kernel NULL pointer at virtual address 0000000000000028
+> Mem abort info:
+>   ESR =3D 0x96000004
+>   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+>   SET =3D 0, FnV =3D 0
+>   EA =3D 0, S1PTW =3D 0
+> Data abort info:
+>   ISV =3D 0, ISS =3D 0x00000004
+>   CM =3D 0, WnR =3D 0
+> user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000152546000
+> [0000000000000028] pgd=3D0000000000000000, p4d=3D0000000000000000
+> Internal error: Oops: 96000004 [#1] PREEMPT_RT SMP
+> CPU: 7 PID: 1767 Comm: nfsd Not tainted 5.10.104 #1
+> pstate: 40c00005 (nZcv daif +PAN +UAO -TCO BTYPE=3D--)
+> pc : nfsd_read+0x78/0x280 [nfsd]
+> lr : nfsd_read+0x68/0x280 [nfsd]
+> sp : ffff80001c0b3c70
+> x29: ffff80001c0b3c70 x28: 0000000000000000
+> x27: 0000000000000002 x26: ffff0000c8a3ca70
+> x25: ffff0000c8a45180 x24: 0000000000002000
+> x23: ffff0000c8a45178 x22: ffff0000c8a45008
+> x21: ffff0000c31aac40 x20: ffff0000c8a3c000
+> x19: 0000000000000000 x18: 0000000000000001
+> x17: 0000000000000007 x16: 00000000b35db681
+> x15: 0000000000000156 x14: ffff0000c3f91300
+> x13: 0000000000000000 x12: 0000000000000000
+> x11: 0000000000000000 x10: 0000000000000000
+> x9 : 0000000000000000 x8 : ffff000118014a80
+> x7 : 0000000000000002 x6 : ffff0002559142dc
+> x5 : ffff0000c31aac40 x4 : 0000000000000004
+> x3 : 0000000000000001 x2 : 0000000000000000
+> x1 : 0000000000000001 x0 : ffff000255914280
+> Call trace:
+>  nfsd_read+0x78/0x280 [nfsd]
+>  nfsd3_proc_read+0x98/0xc0 [nfsd]
+>  nfsd_dispatch+0xc8/0x160 [nfsd]
+>  svc_process_common+0x440/0x790
+>  svc_process+0xb0/0xd0
+>  nfsd+0xfc/0x160 [nfsd]
+>  kthread+0x17c/0x1a0
+>  ret_from_fork+0x10/0x18
+>=20
+> Signed-off-by: Haodong Wong <haydenw.kernel@gmail.com>
+> ---
+>  fs/nfsd/filecache.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index e30e1ddc1ace..ba980369e6b4 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -974,8 +974,12 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_f=
+h *fhp,
+>  	nfsd_file_slab_free(&new->nf_rcu);
+> =20
+>  wait_for_construction:
+> +	/* In case of set bit NFSD_FILE_PENDING and NFSD_FILE_HASHED reorder */
+> +	smp_rmb();
+>  	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
+> =20
+> +	/* Be a paire of smp_mb after clear bit NFSD_FILE_PENDING */
+> +	smp_mb__after_atomic();
+>  	/* Did construction of this file fail? */
+>  	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+>  		if (!retry) {
+> @@ -1018,8 +1022,11 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>  	nf =3D new;
+>  	/* Take reference for the hashtable */
+>  	refcount_inc(&nf->nf_ref);
+> -	__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+>  	__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
+> +	/* Ensure set bit order set NFSD_FILE_HASHED after set NFSD_FILE_PENDING =
+*/
+> +	smp_wmb();
+> +	__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+> +
+>  	list_lru_add(&nfsd_file_lru, &nf->nf_lru);
+>  	hlist_add_head_rcu(&nf->nf_node, &nfsd_file_hashtbl[hashval].nfb_head);
+>  	++nfsd_file_hashtbl[hashval].nfb_count;
+> --=20
+> 2.25.1
+>=20
+>=20
 
