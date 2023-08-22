@@ -2,55 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9501783D76
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Aug 2023 12:00:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69067784295
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Aug 2023 15:56:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234558AbjHVKAg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 22 Aug 2023 06:00:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51748 "EHLO
+        id S236223AbjHVN4h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 22 Aug 2023 09:56:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234559AbjHVKAb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Aug 2023 06:00:31 -0400
-Received: from esa1.hc1455-7.c3s2.iphmx.com (esa1.hc1455-7.c3s2.iphmx.com [207.54.90.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF4DD1A1
-        for <linux-nfs@vger.kernel.org>; Tue, 22 Aug 2023 03:00:28 -0700 (PDT)
-X-IronPort-AV: E=McAfee;i="6600,9927,10809"; a="128847088"
-X-IronPort-AV: E=Sophos;i="6.01,192,1684767600"; 
-   d="scan'208";a="128847088"
-Received: from unknown (HELO oym-r4.gw.nic.fujitsu.com) ([210.162.30.92])
-  by esa1.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Aug 2023 19:00:26 +0900
-Received: from oym-m2.gw.nic.fujitsu.com (oym-nat-oym-m2.gw.nic.fujitsu.com [192.168.87.59])
-        by oym-r4.gw.nic.fujitsu.com (Postfix) with ESMTP id 48A49DE62D
-        for <linux-nfs@vger.kernel.org>; Tue, 22 Aug 2023 19:00:24 +0900 (JST)
-Received: from kws-ab3.gw.nic.fujitsu.com (kws-ab3.gw.nic.fujitsu.com [192.51.206.21])
-        by oym-m2.gw.nic.fujitsu.com (Postfix) with ESMTP id 6E770BF4A5
-        for <linux-nfs@vger.kernel.org>; Tue, 22 Aug 2023 19:00:23 +0900 (JST)
-Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
-        by kws-ab3.gw.nic.fujitsu.com (Postfix) with ESMTP id C4DB620050190;
-        Tue, 22 Aug 2023 19:00:19 +0900 (JST)
-From:   Chen Hanxiao <chenhx.fnst@fujitsu.com>
-To:     trond.myklebust@hammerspace.com, anna@kernel.org
-Cc:     linux-nfs@vger.kernel.org, Chen Hanxiao <chenhx.fnst@fujitsu.com>
-Subject: [RFC PATCH v1.1] nfs: Add support for the birth time attribute
-Date:   Tue, 22 Aug 2023 18:00:08 +0800
-Message-Id: <20230822100008.1942-1-chenhx.fnst@fujitsu.com>
-X-Mailer: git-send-email 2.37.1.windows.1
+        with ESMTP id S236205AbjHVN42 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Aug 2023 09:56:28 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53F9BCE2
+        for <linux-nfs@vger.kernel.org>; Tue, 22 Aug 2023 06:56:24 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-3175e1bb38cso748746f8f.1
+        for <linux-nfs@vger.kernel.org>; Tue, 22 Aug 2023 06:56:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1692712583; x=1693317383;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LXzMnEM8moHL5KfliVx5cD1lb3aAd5NGNjk14fqFYLY=;
+        b=OvQvaauBf9P71X6OM3iV6zJjVstVKwDXVeR2TcNPjDcJz2f399JP5BZxFUiXHkTWc/
+         r5lP7XQ7vkvpSMptW40PFm8KnzYip/IftCKI/V7U1LWv+OZcsOEZqcqKXDKRf7oBDJOP
+         RNOespNYAQNJ9FavrWx3YuWYiBeKAeIF+XsTA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692712583; x=1693317383;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LXzMnEM8moHL5KfliVx5cD1lb3aAd5NGNjk14fqFYLY=;
+        b=Pa6hEhXS77o9F8yKFzo/BUxd9PXx4jOBPfimgH4N1TqzYH4Ddv2PZiq00Y4+DFDx/J
+         ySCbzhLmSliINDB0YOVedvyqg5wQcrO4m/0KYm3UpkwGOwQCpLyIH7xk3SEqMRaOM5wn
+         NiSj7RPFVELI7cjRWCy5MJxk1JoqCkJPXVhpAGg2yvYyTjV1sAI2zojTefmwhyLKnQhZ
+         Wa1PMR7+m21h99XOhPhCdwDGD7mrg+afxYkuD4k07HwzZVXV8L/OFJaxVDE/CmtupmHU
+         6gacVbCEhA90rzFFo7ilBYS4w3hJVjI5+k/+H3ax5WcZXhXa1XgTIwICF//ptXULqC9R
+         XNfA==
+X-Gm-Message-State: AOJu0YywRa+iinALqSiWJk7QpgBK/dYaLVAc8zGgW1VwHpBND8F7M/df
+        +XMId8CnXbCuSXGu9Dpg7aaZWA==
+X-Google-Smtp-Source: AGHT+IHJQrlSrCu8WgUX5s8XkdDm6/hR/jwfxds8mVBdQgFEL5tBYnuf/oIT+VMpj8Z6S8wRiH/+Kw==
+X-Received: by 2002:a5d:65c5:0:b0:319:8dcf:5c10 with SMTP id e5-20020a5d65c5000000b003198dcf5c10mr6979657wrw.6.1692712582669;
+        Tue, 22 Aug 2023 06:56:22 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id u5-20020a05600c210500b003fc02e8ea68sm19456835wml.13.2023.08.22.06.56.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Aug 2023 06:56:22 -0700 (PDT)
+Date:   Tue, 22 Aug 2023 15:56:19 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Qi Zheng <zhengqi.arch@bytedance.com>
+Cc:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
+        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
+        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
+        steven.price@arm.com, cel@kernel.org, senozhatsky@chromium.org,
+        yujie.liu@intel.com, gregkh@linuxfoundation.org,
+        muchun.song@linux.dev, simon.horman@corigine.com,
+        dlemoal@kernel.org, kvm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        dm-devel@redhat.com, linux-mtd@lists.infradead.org, x86@kernel.org,
+        cluster-devel@redhat.com, xen-devel@lists.xenproject.org,
+        linux-ext4@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        rcu@vger.kernel.org, linux-bcache@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>,
+        linux-raid@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v4 43/48] drm/ttm: introduce pool_shrink_rwsem
+Message-ID: <ZOS+g51Yx9PsYkGU@phenom.ffwll.local>
+Mail-Followup-To: Qi Zheng <zhengqi.arch@bytedance.com>,
+        akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
+        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
+        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
+        steven.price@arm.com, cel@kernel.org, senozhatsky@chromium.org,
+        yujie.liu@intel.com, gregkh@linuxfoundation.org,
+        muchun.song@linux.dev, simon.horman@corigine.com,
+        dlemoal@kernel.org, kvm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        virtualization@lists.linux-foundation.org, linux-mm@kvack.org,
+        dm-devel@redhat.com, linux-mtd@lists.infradead.org, x86@kernel.org,
+        cluster-devel@redhat.com, xen-devel@lists.xenproject.org,
+        linux-ext4@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        rcu@vger.kernel.org, linux-bcache@vger.kernel.org,
+        Muchun Song <songmuchun@bytedance.com>, linux-raid@vger.kernel.org,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-btrfs@vger.kernel.org
+References: <20230807110936.21819-1-zhengqi.arch@bytedance.com>
+ <20230807110936.21819-44-zhengqi.arch@bytedance.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-27828.005
-X-TM-AS-User-Approved-Sender: Yes
-X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-27828.005
-X-TMASE-Result: 10--13.898900-10.000000
-X-TMASE-MatchedRID: ZAkTtSyZ7B4kinkyECdW86oXHZz/dXlx1QQ6Jx/fflZxwW4lAqHnHnw6
-        H06bMgivjx5X3FdI4UDmn3xyPJAJoh2P280ZiGmRupDIC9422DqZIt4iAQN6P8H0F6hf9KOr+oA
-        N6qKcRV/vOPZOIImsUf0bVLkspps2U6K87V98CkTkbaItvRsDdhUgYNic7ed6d2O5KVSlq58l47
-        Z7tpcJi06bXwaM1dBVXZAaaV0ZMrrOjw1+OFXGOfgWrMZvbmeHkKAa/khZ3iT2apmI5+Nrz0+R2
-        5DV/fo6HSfhHeW9DZhl3tpAIdU89B8TzIzimOwPC24oEZ6SpSkj80Za3RRg8JX4RKcG21dOzqyV
-        lh5UgA4EjRr0Mk0ePuDN5fAj/cKp1PYfTfPNTUk=
-X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_PASS,SPF_NONE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230807110936.21819-44-zhengqi.arch@bytedance.com>
+X-Operating-System: Linux phenom 6.3.0-2-amd64 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,181 +107,119 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfsd already support btime by:
-commit e377a3e698fb ("nfsd: Add support for the birth time attribute")
+On Mon, Aug 07, 2023 at 07:09:31PM +0800, Qi Zheng wrote:
+> Currently, the synchronize_shrinkers() is only used by TTM pool. It only
+> requires that no shrinkers run in parallel.
+> 
+> After we use RCU+refcount method to implement the lockless slab shrink,
+> we can not use shrinker_rwsem or synchronize_rcu() to guarantee that all
+> shrinker invocations have seen an update before freeing memory.
+> 
+> So we introduce a new pool_shrink_rwsem to implement a private
+> synchronize_shrinkers(), so as to achieve the same purpose.
+> 
+> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+> Reviewed-by: Muchun Song <songmuchun@bytedance.com>
 
-This patch enable nfs to report btime in nfs_getattr.
-If underlying filesystem supports "btime" timestamp,
-statx will report btime for STATX_BTIME.
+On the 5 drm patches (I counted 2 ttm and 3 drivers) for merging through
+some other tree (since I'm assuming that's how this will land):
 
-Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
----
-1.1:
-	minor fix
+> ---
+>  drivers/gpu/drm/ttm/ttm_pool.c | 15 +++++++++++++++
+>  include/linux/shrinker.h       |  2 --
+>  mm/shrinker.c                  | 15 ---------------
+>  3 files changed, 15 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/ttm/ttm_pool.c b/drivers/gpu/drm/ttm/ttm_pool.c
+> index c9c9618c0dce..38b4c280725c 100644
+> --- a/drivers/gpu/drm/ttm/ttm_pool.c
+> +++ b/drivers/gpu/drm/ttm/ttm_pool.c
+> @@ -74,6 +74,7 @@ static struct ttm_pool_type global_dma32_uncached[MAX_ORDER + 1];
+>  static spinlock_t shrinker_lock;
+>  static struct list_head shrinker_list;
+>  static struct shrinker *mm_shrinker;
+> +static DECLARE_RWSEM(pool_shrink_rwsem);
+>  
+>  /* Allocate pages of size 1 << order with the given gfp_flags */
+>  static struct page *ttm_pool_alloc_page(struct ttm_pool *pool, gfp_t gfp_flags,
+> @@ -317,6 +318,7 @@ static unsigned int ttm_pool_shrink(void)
+>  	unsigned int num_pages;
+>  	struct page *p;
+>  
+> +	down_read(&pool_shrink_rwsem);
+>  	spin_lock(&shrinker_lock);
+>  	pt = list_first_entry(&shrinker_list, typeof(*pt), shrinker_list);
+>  	list_move_tail(&pt->shrinker_list, &shrinker_list);
+> @@ -329,6 +331,7 @@ static unsigned int ttm_pool_shrink(void)
+>  	} else {
+>  		num_pages = 0;
+>  	}
+> +	up_read(&pool_shrink_rwsem);
+>  
+>  	return num_pages;
+>  }
+> @@ -572,6 +575,18 @@ void ttm_pool_init(struct ttm_pool *pool, struct device *dev,
+>  }
+>  EXPORT_SYMBOL(ttm_pool_init);
+>  
+> +/**
+> + * synchronize_shrinkers - Wait for all running shrinkers to complete.
+> + *
+> + * This is useful to guarantee that all shrinker invocations have seen an
+> + * update, before freeing memory, similar to rcu.
+> + */
+> +static void synchronize_shrinkers(void)
+> +{
+> +	down_write(&pool_shrink_rwsem);
+> +	up_write(&pool_shrink_rwsem);
+> +}
+> +
+>  /**
+>   * ttm_pool_fini - Cleanup a pool
+>   *
+> diff --git a/include/linux/shrinker.h b/include/linux/shrinker.h
+> index c55c07c3f0cb..025c8070dd86 100644
+> --- a/include/linux/shrinker.h
+> +++ b/include/linux/shrinker.h
+> @@ -103,8 +103,6 @@ struct shrinker *shrinker_alloc(unsigned int flags, const char *fmt, ...);
+>  void shrinker_register(struct shrinker *shrinker);
+>  void shrinker_free(struct shrinker *shrinker);
+>  
+> -extern void synchronize_shrinkers(void);
+> -
+>  #ifdef CONFIG_SHRINKER_DEBUG
+>  extern int __printf(2, 3) shrinker_debugfs_rename(struct shrinker *shrinker,
+>  						  const char *fmt, ...);
+> diff --git a/mm/shrinker.c b/mm/shrinker.c
+> index 3ab301ff122d..a27779ed3798 100644
+> --- a/mm/shrinker.c
+> +++ b/mm/shrinker.c
+> @@ -650,18 +650,3 @@ void shrinker_free(struct shrinker *shrinker)
+>  	kfree(shrinker);
+>  }
+>  EXPORT_SYMBOL_GPL(shrinker_free);
+> -
+> -/**
+> - * synchronize_shrinkers - Wait for all running shrinkers to complete.
+> - *
+> - * This is equivalent to calling unregister_shrink() and register_shrinker(),
+> - * but atomically and with less overhead. This is useful to guarantee that all
+> - * shrinker invocations have seen an update, before freeing memory, similar to
+> - * rcu.
+> - */
+> -void synchronize_shrinkers(void)
+> -{
+> -	down_write(&shrinker_rwsem);
+> -	up_write(&shrinker_rwsem);
+> -}
+> -EXPORT_SYMBOL(synchronize_shrinkers);
+> -- 
+> 2.30.2
+> 
 
- fs/nfs/inode.c          | 14 +++++++++++++-
- fs/nfs/nfs4proc.c       |  3 +++
- fs/nfs/nfs4xdr.c        | 23 +++++++++++++++++++++++
- include/linux/nfs_fs.h  |  2 ++
- include/linux/nfs_xdr.h |  2 ++
- 5 files changed, 43 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 8172dd4135a1..36e322b993f8 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -835,6 +835,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
- {
- 	struct inode *inode = d_inode(path->dentry);
- 	struct nfs_server *server = NFS_SERVER(inode);
-+	struct nfs_inode *nfsi = NFS_I(inode);
- 	unsigned long cache_validity;
- 	int err = 0;
- 	bool force_sync = query_flags & AT_STATX_FORCE_SYNC;
-@@ -845,7 +846,7 @@ int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
- 
- 	request_mask &= STATX_TYPE | STATX_MODE | STATX_NLINK | STATX_UID |
- 			STATX_GID | STATX_ATIME | STATX_MTIME | STATX_CTIME |
--			STATX_INO | STATX_SIZE | STATX_BLOCKS |
-+			STATX_INO | STATX_SIZE | STATX_BLOCKS | STATX_BTIME |
- 			STATX_CHANGE_COOKIE;
- 
- 	if ((query_flags & AT_STATX_DONT_SYNC) && !force_sync) {
-@@ -911,6 +912,10 @@ int nfs_getattr(struct mnt_idmap *idmap, const struct path *path,
- out_no_revalidate:
- 	/* Only return attributes that were revalidated. */
- 	stat->result_mask = nfs_get_valid_attrmask(inode) | request_mask;
-+	if (nfsi->btime.tv_sec == 0 && nfsi->btime.tv_nsec == 0)
-+		stat->result_mask &= ~STATX_BTIME;
-+	else
-+		stat->btime = nfsi->btime;
- 
- 	generic_fillattr(&nop_mnt_idmap, inode, stat);
- 	stat->ino = nfs_compat_user_ino64(NFS_FILEID(inode));
-@@ -2189,6 +2194,12 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
- 		nfsi->cache_validity |=
- 			save_cache_validity & NFS_INO_INVALID_MTIME;
- 
-+	if (fattr->valid & NFS_ATTR_FATTR_BTIME) {
-+		nfsi->btime = fattr->btime;
-+	} else if (fattr_supported & NFS_ATTR_FATTR_BTIME)
-+		nfsi->cache_validity |=
-+			save_cache_validity & NFS_INO_INVALID_BTIME;
-+
- 	if (fattr->valid & NFS_ATTR_FATTR_CTIME)
- 		inode->i_ctime = fattr->ctime;
- 	else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
-@@ -2332,6 +2343,7 @@ struct inode *nfs_alloc_inode(struct super_block *sb)
- #endif /* CONFIG_NFS_V4 */
- #ifdef CONFIG_NFS_V4_2
- 	nfsi->xattr_cache = NULL;
-+	memset(&nfsi->btime, 0, sizeof(nfsi->btime));
- #endif
- 	nfs_netfs_inode_init(nfsi);
- 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index e1a886b58354..c4717ae4b1b3 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -211,6 +211,7 @@ const u32 nfs4_fattr_bitmap[3] = {
- 	| FATTR4_WORD1_TIME_ACCESS
- 	| FATTR4_WORD1_TIME_METADATA
- 	| FATTR4_WORD1_TIME_MODIFY
-+	| FATTR4_WORD1_TIME_CREATE
- 	| FATTR4_WORD1_MOUNTED_ON_FILEID,
- #ifdef CONFIG_NFS_V4_SECURITY_LABEL
- 	FATTR4_WORD2_SECURITY_LABEL
-@@ -3909,6 +3910,8 @@ static int _nfs4_server_capabilities(struct nfs_server *server, struct nfs_fh *f
- 			server->fattr_valid &= ~NFS_ATTR_FATTR_CTIME;
- 		if (!(res.attr_bitmask[1] & FATTR4_WORD1_TIME_MODIFY))
- 			server->fattr_valid &= ~NFS_ATTR_FATTR_MTIME;
-+		if (!(res.attr_bitmask[1] & FATTR4_WORD1_TIME_CREATE))
-+			server->fattr_valid &= ~NFS_ATTR_FATTR_BTIME;
- 		memcpy(server->attr_bitmask_nl, res.attr_bitmask,
- 				sizeof(server->attr_bitmask));
- 		server->attr_bitmask_nl[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index deec76cf5afe..df3699eb29e8 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -4171,6 +4171,24 @@ static int decode_attr_time_access(struct xdr_stream *xdr, uint32_t *bitmap, str
- 	return status;
- }
- 
-+static int decode_attr_time_create(struct xdr_stream *xdr, uint32_t *bitmap, struct timespec64 *time)
-+{
-+	int status = 0;
-+
-+	time->tv_sec = 0;
-+	time->tv_nsec = 0;
-+	if (unlikely(bitmap[1] & (FATTR4_WORD1_TIME_CREATE - 1U)))
-+		return -EIO;
-+	if (likely(bitmap[1] & FATTR4_WORD1_TIME_CREATE)) {
-+		status = decode_attr_time(xdr, time);
-+		if (status == 0)
-+			status = NFS_ATTR_FATTR_BTIME;
-+		bitmap[1] &= ~FATTR4_WORD1_TIME_CREATE;
-+	}
-+	dprintk("%s: btime=%lld\n", __func__, time->tv_sec);
-+	return status;
-+}
-+
- static int decode_attr_time_metadata(struct xdr_stream *xdr, uint32_t *bitmap, struct timespec64 *time)
- {
- 	int status = 0;
-@@ -4730,6 +4748,11 @@ static int decode_getfattr_attrs(struct xdr_stream *xdr, uint32_t *bitmap,
- 		goto xdr_error;
- 	fattr->valid |= status;
- 
-+	status = decode_attr_time_create(xdr, bitmap, &fattr->btime);
-+	if (status < 0)
-+		goto xdr_error;
-+	fattr->valid |= status;
-+
- 	status = decode_attr_time_metadata(xdr, bitmap, &fattr->ctime);
- 	if (status < 0)
- 		goto xdr_error;
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 279262057a92..ba8c1872494d 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -159,6 +159,7 @@ struct nfs_inode {
- 	unsigned long		read_cache_jiffies;
- 	unsigned long		attrtimeo;
- 	unsigned long		attrtimeo_timestamp;
-+	struct timespec64       btime;
- 
- 	unsigned long		attr_gencount;
- 
-@@ -298,6 +299,7 @@ struct nfs4_copy_state {
- #define NFS_INO_INVALID_XATTR	BIT(15)		/* xattrs are invalid */
- #define NFS_INO_INVALID_NLINK	BIT(16)		/* cached nlinks is invalid */
- #define NFS_INO_INVALID_MODE	BIT(17)		/* cached mode is invalid */
-+#define NFS_INO_INVALID_BTIME	BIT(18)		/* cached btime is invalid */
- 
- #define NFS_INO_INVALID_ATTR	(NFS_INO_INVALID_CHANGE \
- 		| NFS_INO_INVALID_CTIME \
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 12bbb5c63664..8e90c5bbf5e4 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -67,6 +67,7 @@ struct nfs_fattr {
- 	struct timespec64	atime;
- 	struct timespec64	mtime;
- 	struct timespec64	ctime;
-+	struct timespec64	btime;
- 	__u64			change_attr;	/* NFSv4 change attribute */
- 	__u64			pre_change_attr;/* pre-op NFSv4 change attribute */
- 	__u64			pre_size;	/* pre_op_attr.size	  */
-@@ -106,6 +107,7 @@ struct nfs_fattr {
- #define NFS_ATTR_FATTR_OWNER_NAME	(1U << 23)
- #define NFS_ATTR_FATTR_GROUP_NAME	(1U << 24)
- #define NFS_ATTR_FATTR_V4_SECURITY_LABEL (1U << 25)
-+#define NFS_ATTR_FATTR_BTIME		(1U << 26)
- 
- #define NFS_ATTR_FATTR (NFS_ATTR_FATTR_TYPE \
- 		| NFS_ATTR_FATTR_MODE \
 -- 
-2.39.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
