@@ -2,159 +2,324 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43B5E782D29
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Aug 2023 17:24:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D4C4783CF2
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Aug 2023 11:31:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236301AbjHUPYf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Aug 2023 11:24:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38568 "EHLO
+        id S234353AbjHVJb5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 22 Aug 2023 05:31:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233083AbjHUPYe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Aug 2023 11:24:34 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2112.outbound.protection.outlook.com [40.107.237.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82463100;
-        Mon, 21 Aug 2023 08:24:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OiLmVIusx2aenE1DVyN0ZhNQTYlly6rXqgOztB17puZwYfbVqMN2PW4zT4P7vnGY9ZUwqCcyJ5XQFY70PMtRGU6l9P3YJy07N/XfqAHJOnvBnXXfaIPk44LDF/sKJ0XmVie8mca10LxLOG4cfgONM8a3n5sxMDgQ56up5CN1PEdu86apwKB7SnDJ1vTnZkrgeo5dxscX8aqpJpDw27ARBLo6ohWQc4HKojQdnLrdtYqYljucGeID1yfgJ4lU3ScFAK8fE4Y0/DCa5D9zRUDPihV0qdDXxn6hE6jeZ5hJ9WIxO4YOMZyPwK51RmxqGut9kgWGkQ1xhKg8ud7Xaak+qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rLnoWQplv7vrc7oEUHVLe9QwgR2nkRIvZkAye7ScOFk=;
- b=EkO7ujJxhBwKCs3DEFskqg49h0N4aKwYuvIG4qzHnzrf+oIhFibmZIKCncbhioqDMtpf8LpK/RLQT84pkY4GNzJm6IUYgPhkSDqsooeJkTfqqAQ/j1Z0y8BtVq9izXDs5vpA3gN7JcbHD+vB2OoigksoXE68grBQqCM6B+h/TNWajr6OXFgFWh8VQK5REh3UoakSigKP6H/7BPoCjcTKcrrDwFGWLy6Ad1tYca5YdBdJQf0UW+57ScOKXxu+UCz5DKe6Rqaxre0xbAHip10vLnGYGhfIIQfHKVWWsAQxe8JYEwAB/Y3YVZyNkR5DkXJqnyv5xVR6qyGR5ZXzl+1oxg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rLnoWQplv7vrc7oEUHVLe9QwgR2nkRIvZkAye7ScOFk=;
- b=Xs1hyVAy7+ZlfXBcMKjgoz7kiPKVXfOW0jYA4WVpM6dE97d5HiJUKSqTaYv2i2T+hpGNh1uKU70oYjnPsB11jCjehxSz3TrcP+wzAyuFAwyvRIK2itXX9jWzm6uvfo6Z8Y0T38u/dVZ2CbGROYuKdtRXlop7IsYfrfuM+03Qjoc=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by SJ2PR13MB6427.namprd13.prod.outlook.com (2603:10b6:a03:55d::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.20; Mon, 21 Aug
- 2023 15:24:23 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::3fa6:b553:8f2f:6895]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::3fa6:b553:8f2f:6895%7]) with mapi id 15.20.6699.022; Mon, 21 Aug 2023
- 15:24:23 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] Please pull NFS client bugfixes for Linux 6.5
-Thread-Topic: [GIT PULL] Please pull NFS client bugfixes for Linux 6.5
-Thread-Index: AQHZ1EOQ7g8wIu24Jk+KaizdfL6hjQ==
-Date:   Mon, 21 Aug 2023 15:24:23 +0000
-Message-ID: <10efd849aa3c182bae0009523ad9c5fbe3be4e8b.camel@hammerspace.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|SJ2PR13MB6427:EE_
-x-ms-office365-filtering-correlation-id: 10f792cd-0862-4349-923e-08dba25ab2b9
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: oNvNRLuc3Hgac1u48gXMUphaPOYYtpAfaLh8ONzp5uQVYABzF85Jt2ziznp1S9ImITTWDGPWKF1Yl3m70qtttvV6bqO/lCkp9eoJaglaBbOvcWknHqI8TfqnL1BKw4pAWsIInz5ockU/jRtg3WfN/JcPchWMF8XPsHVTWPa1kjeTg4qk9kwc0q6OGR7dLMQIFZHJgR5jXnpPdYtMQfofc4SRKVWDHX6LtL8CoWnYFIWKzYo1vwwTJBnD5gaR8+5HCyUmeeWx1Nbcx/6bBhb+ZdKTM+8ovbuAFse+ZP708F7ooYOJrlVpPpBLQxgW6Q99XDk2bFeY2u26FGJkCvQWKCU3mDlTWKIkRmABaFBOiSQId9GO3x2TQAzEjbDzgGTb/VRkC0mTRuoFaqgoZ+JHYr93gjctq4PDPHMa3FImvDThbWdZI+WqWrYJRwcD38D8C8xavNcOo1cTNUtYtf7eBCDfZlUUV4GQRoFcn97+fW3uy2iluQrPsK8aNVzcVriJM/0XFecf8OFewCcPQK7v6g//2Jdj4xe+lg0fFxUC/pbJbAVrv9fDfL+uzqdgL8JDGbzvnfTKXYMoY1bnYj67Q370yLU9DSl7rUEHgKjAo6+rfmBHLL2YmLYOyI07xc4Lmb7nayFbdyZcdyHMYTtdOnc5VLLO7Lg4WHMvjpnHqiXtBnny9w7k1YiUvmvYelfJ+qQoJYWsH8pkVx6u7cm63Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39840400004)(396003)(136003)(366004)(346002)(186009)(451199024)(1800799009)(2616005)(6506007)(6486002)(6512007)(12101799020)(26005)(83380400001)(8676002)(4326008)(8936002)(36756003)(122000001)(316002)(41300700001)(38070700005)(38100700002)(86362001)(2906002)(5660300002)(71200400001)(478600001)(66446008)(54906003)(64756008)(6916009)(76116006)(66946007)(66476007)(66556008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?MGl3MDlrNjhsSW1oV2R5bXRlb0pIYkd4Qk1sTXFTVGJ1d2hyTlpsWGJYTWFD?=
- =?utf-8?B?YjMwSG5WcWYzTm4rRDlkSk9Ybk96Nk9UeWFaRWNBdk96VUlKZ0RxOVVoelUz?=
- =?utf-8?B?ZmJqY0E4dXlwMVZwTjNTSHlSamh1eGVPRkF4eXBBYmt2bnkwL3JXNmRqRUlh?=
- =?utf-8?B?bDZtRldqNW9RbFhYNGtqVTVUMUpBWk9GQnptd1ZVYVFJdnV6UEpJT1EvNnFP?=
- =?utf-8?B?UmtGeDlZRi9mZERLSmNDcURMQWhGVEYwcHpoWmJhUzFhMy82cjg0TUZPWXRp?=
- =?utf-8?B?bXRmZ0kxbmdQaG1mQkRRblJhT1FvblhCNEEyY0ZWajUyWjk1Q0NEeGp3ajVj?=
- =?utf-8?B?VElLamYrbjNWS0pySnB1K1NvMjdNRmRhSDFJeUIyMThWeXBEcExkbVJTYTJ1?=
- =?utf-8?B?WlN4RUNJZ3RyWDh3OFNvRkdRbWVPLzMwZVVOeFYxVjBoSlJHTERSempJcncv?=
- =?utf-8?B?SGZFTmkzOU1UNEJ0NVpIY0IxVVBzTzhkeFNqU3h0bTNOWHAvL2ZLUThzcHNG?=
- =?utf-8?B?cXNicGtZMzU3eDZOYnV4TDBRMkNBdGtaYk1pQTE5d29zMXZPeDVOcFFNZERs?=
- =?utf-8?B?YnZIQ2tZUWVPcUJIYmQzeUFLWU0xa1k3WDEvMlAyZ3dueHJnMzh3VEZ4aFYv?=
- =?utf-8?B?TEdiODdpNFdMbXBtdlJyWXBBUTN3dzU0Wjgxc0xYam5mK3g5TEd3S3FDeWtq?=
- =?utf-8?B?TXR3NVhuUyswQVRkUjBycTQ4VjhvMUErSVVzNzFSOHplWUtqREx2ZmVEdy9C?=
- =?utf-8?B?R0h5cEREaFNtSUtQQldXK3VIQi9mWWNWUHNQdHg0alZmcm5zM2dWditwUERu?=
- =?utf-8?B?UENqb0hRdyt1eitHUys1WkNHcnR4cGJ0ZituWkNRT0hBaW42SngzdlBjaEJs?=
- =?utf-8?B?ei9kMW50YXBCSjRDQW9xT1JIalI5eUpCL3N6ZVgwWmtHNWZha05ZbmlLN3Bt?=
- =?utf-8?B?bWxjaGZYV3ZPeWxvaGEzRnNYaTRWeW1kbVZmbkZESkEzaTBYeWx0VEVQMk15?=
- =?utf-8?B?VUY5NlFZMFpXTG11czhOdEJ3SjdjaGxJOFMxZUY4OVZkclZtY1lqK2cwaTQ4?=
- =?utf-8?B?d2xicmZaSGZMWnJEdTZtTkwzU245WjBod2lwT25Lb3dxcWIycXYzS2dtZEc0?=
- =?utf-8?B?ZHlKNElUVEx4enhkSDlUOHFYUTJmYy92OGxQa3pkNnc5RDFBRTlXZEZwYUly?=
- =?utf-8?B?ZjF5V3dnd2VkQnBQWlZIR2ZWY1BnbEgvenVBbUI4VU85WDZ0eFBmMWllQkky?=
- =?utf-8?B?dlN4V1EyejNZbUhJTngrcXl0dEw5WUp6TWdkdE1hbldRdkc1ejNkWWJMWUxY?=
- =?utf-8?B?SHB2cFZPL0E0YTJMbjhMb3NncDl4UnVyL09vNnRGRDZZYzdneWdSMys3YUFC?=
- =?utf-8?B?TG9GN3dGUWJUQkR5NXQ0ZUhLblFya0NTaVBZdGtwek9IQ0dZMnA2alJneEdk?=
- =?utf-8?B?M29TeGFCOGpoRWNaeUVFKzVUZlpjNmNHWjVwNE1MWmorTWhUTnRHUm9mRk9v?=
- =?utf-8?B?b0dJRDlyUzFaRHNuQWRRQzF3bEJramZrUy9vMlQwNkVocVRrcVVsdEt2Snhw?=
- =?utf-8?B?TWJrQ0R2bVN5L0IwMUJmaFRQNEZ3ZEpBQWptYW5NRU1ZaWcrdHhJNk4xNTdO?=
- =?utf-8?B?R2Y2NFNEeHd3UzB3WWdiK2UrWURQZjNrY0ZxbzNWNTRTcW9CaXpvTmRWSTl5?=
- =?utf-8?B?Ynpvam9rWEVpTmVPdVUvMkM5emx2V1EwNjRlMzd6TU1UN2J2TmpDeHUzbEwy?=
- =?utf-8?B?TDNGZlJ1M3RIenNKVTAvY1Z5QTNZQmlEY2JVV0VxM1prMjFIeWt4QW5lSDgr?=
- =?utf-8?B?R3ZWbi9NcVQ0VzVtd08yMnVMSlEwUnhwZTlaWU45WVdKcENINkcwM0ZUOUNG?=
- =?utf-8?B?UW82TE1Reks1TVNld2xEVTZJcG9zZ20zd3JkZldLY2s5YkJoeEQyRGRiNGx5?=
- =?utf-8?B?N2o2NjNVSzgwamxUVjVhNjFVVDZOWUZSR28va05DLzBNZE5OMW9HYVUvcGFU?=
- =?utf-8?B?cEphOVBPaUdWNE9uMGRwd1N2dFB5aVJFVmNKSmVsRitiRzRNeE40a2N3MXVH?=
- =?utf-8?B?TFVvUWMvWjU3QmVPQlp1RHlyV0w1WVdteWl2TkVQMVVDdUloa3ZBd0M0UWhl?=
- =?utf-8?B?Zjg3eTFpMDA1OGViaDRmbGtZODlDaXAxWCtqOFc4WWdFRzIyUWpMSDVOek5r?=
- =?utf-8?B?ZUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <5157FC008F750947836A0F8DF4DF873A@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S234348AbjHVJbz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Aug 2023 05:31:55 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F85E1B2;
+        Tue, 22 Aug 2023 02:31:53 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-5280ef23593so5076785a12.3;
+        Tue, 22 Aug 2023 02:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1692696712; x=1693301512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eNX2IV1j4PZK8nopwhCfzUNR+eUalyCnwM/ftlbIWPU=;
+        b=P/UKIOThGf9Fr8sxxWn4TmRAyV5vCNzeOVlZi9tqHfmP+xRuNHVKHGF+JEnw7HqyIb
+         2o5fGm/j7fA4MUJFRfgHcx2qqaBQ+HWDU9Pxg/G4KyOcCJFpd+3Ua/TINQw4TiXmRkxi
+         uGSLjiHm78teUXpgwY06amFBmsQbZdbL1XzWV8ON6okNh6gp9ra8zGehWD3AnZcqkr6e
+         LyP+KoU52S7ajBDOTAedz2j+Ec9Ax9Vip+5VqePqFjaUWYdRjpnGXZVeUMbmUlkwOtwb
+         +I3OE5jdt7TuAeFkA/cjUTFv7jEYg7PAfQgApQwiVFotQWrIIuQ6p9MxfvFhboyntGSf
+         C9Fg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692696712; x=1693301512;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eNX2IV1j4PZK8nopwhCfzUNR+eUalyCnwM/ftlbIWPU=;
+        b=ihZOpsw7gbFyqgoAsbWIajrd5Izcl1T4Ssv8A7KiSRVAwYwFyNGxGKp114AwwtOv0u
+         wcUOZQvILmYg1jYecv8oualQJd89OEB2171RHaTrEN43NyuxzbyFJnUBKr3+yARXW9zD
+         I/V1oibmprKlzAee9rdaypD4Z8wBWKp8GZTbQeIJKMCpfo5wjdbDuUgYBp87ANVoGMVi
+         ZwEeQohsqeLr8qozVopK8ighY6BEN5OUdBKkxl5/Midnr/fKPdevXIXk2jk2lZ2tzUkK
+         CGNk9QfFasKbSG2cz8OebsF8mLK5gqIp/WXPBMMOZSvhQXyAOtDK6Y9boOfUbndnEkbB
+         bDQQ==
+X-Gm-Message-State: AOJu0Yzx59V9VfJMj+8AkivWDQWM4YpVMgSyADVFyWHT+42Bwo8colR4
+        9Rnptds4pjVLUC2nKAW8QOiemSvtI9q/xs8sUHM=
+X-Google-Smtp-Source: AGHT+IF2IUMia1kKiqzsQDG69r4ar2gkcgotjenKtdBb/YR/kaH/G+OFKUkUkxRYpR1ro7OP1NvYU9joOCqfW38LHkE=
+X-Received: by 2002:aa7:dad5:0:b0:523:2847:fb5a with SMTP id
+ x21-20020aa7dad5000000b005232847fb5amr6046620eds.40.1692696711376; Tue, 22
+ Aug 2023 02:31:51 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10f792cd-0862-4349-923e-08dba25ab2b9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2023 15:24:23.2158
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tas9W8gm6WjwdEHeizX+st7Di5GETmWPioGIdc5cQLFbDnHDrOnwvqkK5xXvZ6VNGGQeT+nCJJuUJXAm3q9kxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR13MB6427
+References: <20230818065507.1280625-1-haydenw.kernel@gmail.com> <169257764320.11865.9867985815081936092@noble.neil.brown.name>
+In-Reply-To: <169257764320.11865.9867985815081936092@noble.neil.brown.name>
+From:   Hayden Wong <haydenw.kernel@gmail.com>
+Date:   Tue, 22 Aug 2023 17:31:39 +0800
+Message-ID: <CACjG_2yAFvYu1L3MJ9Q6ZcL2JW0KJzpUXeLKUtiA27V+500sTg@mail.gmail.com>
+Subject: Re: [PATCH] nfsd: fix race condition in nfsd_file_acquire
+To:     NeilBrown <neilb@suse.de>
+Cc:     chuck.lever@oracle.com, jlayton@kernel.org, haodong.wong@nio.com,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgNWI0YTgyYTA3
-MjRhZjFkZmQxMzIwODI2ZTAyNjYxMTdiNmE1N2ZiZDoNCg0KICBSZXZlcnQgIk5GU3Y0OiBSZXRy
-eSBMT0NLIG9uIE9MRF9TVEFURUlEIGR1cmluZyBkZWxlZ2F0aW9uIHJldHVybiIgKDIwMjMtMDYt
-MjkgMTQ6MjU6MzUgLTA0MDApDQoNCmFyZSBhdmFpbGFibGUgaW4gdGhlIEdpdCByZXBvc2l0b3J5
-IGF0Og0KDQogIGdpdDovL2dpdC5saW51eC1uZnMub3JnL3Byb2plY3RzL3Ryb25kbXkvbGludXgt
-bmZzLmdpdCB0YWdzL25mcy1mb3ItNi41LTINCg0KZm9yIHlvdSB0byBmZXRjaCBjaGFuZ2VzIHVw
-IHRvIDg5NWNlZGMxNzkxOTE2ZThhOTg4NjRmMTJiNjU2NzAyZmFkMGJiNjc6DQoNCiAgeHBydHJk
-bWE6IFJlbWFwIFJlY2VpdmUgYnVmZmVycyBhZnRlciBhIHJlY29ubmVjdCAoMjAyMy0wOC0xOSAx
-MDoyNjoyOSAtMDQwMCkNCg0KVGhhbmtzLA0KICBUcm9uZA0KLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KTkZTIGNsaWVudCBm
-aXhlcyBmb3IgTGludXggNi41DQoNCkhpZ2hsaWdodHMgaW5jbHVkZToNCg0KU3RhYmxlIGZpeGVz
-DQogLSBORlM6IEZpeCBhIHVzZSBhZnRlciBmcmVlIGluIG5mc19kaXJlY3Rfam9pbl9ncm91cCgp
-DQoNCkJ1Z2ZpeGVzDQogLSBORlM6IEZpeCBhIHN5c2ZzIHNlcnZlciBuYW1lIG1lbW9yeSBsZWFr
-DQogLSBORlM6IEZpeCBhIGxvY2sgcmVjb3ZlcnkgaGFuZyBpbiBORlN2NC4wDQogLSBORlM6IEZp
-eCBwYWdlIGZyZWUgaW4gdGhlIGVycm9yIHBhdGggZm9yIG5mczQyX3Byb2NfZ2V0eGF0dHINCiAt
-IE5GUzogRml4IHBhZ2UgZnJlZSBpbiB0aGUgZXJyb3IgcGF0aCBmb3IgX19uZnM0X2dldF9hY2xf
-dW5jYWNoZWQNCiAtIFNVTlJQQy9yZG1hOiBGaXggcmVjZWl2ZSBidWZmZXIgZG1hLW1hcHBpbmcg
-YWZ0ZXIgYSBzZXJ2ZXIgZGlzY29ubmVjdA0KDQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQpCZW5qYW1pbiBDb2RkaW5ndG9u
-ICgyKToNCiAgICAgIE5GU3Y0OiBGaXggZHJvcHBlZCBsb2NrIGZvciByYWNpbmcgT1BFTiBhbmQg
-ZGVsZWdhdGlvbiByZXR1cm4NCiAgICAgIE5GUzogRml4IHN5c2ZzIHNlcnZlciBuYW1lIG1lbW9y
-eSBsZWFrDQoNCkNodWNrIExldmVyICgxKToNCiAgICAgIHhwcnRyZG1hOiBSZW1hcCBSZWNlaXZl
-IGJ1ZmZlcnMgYWZ0ZXIgYSByZWNvbm5lY3QNCg0KRmVkb3IgUGNoZWxraW4gKDIpOg0KICAgICAg
-TkZTdjQuMjogZml4IGVycm9yIGhhbmRsaW5nIGluIG5mczQyX3Byb2NfZ2V0eGF0dHINCiAgICAg
-IE5GU3Y0OiBmaXggb3V0IHBhdGggaW4gX19uZnM0X2dldF9hY2xfdW5jYWNoZWQNCg0KVHJvbmQg
-TXlrbGVidXN0ICgxKToNCiAgICAgIE5GUzogRml4IGEgdXNlIGFmdGVyIGZyZWUgaW4gbmZzX2Rp
-cmVjdF9qb2luX2dyb3VwKCkNCg0KIGZzL25mcy9kaXJlY3QuYyAgICAgICAgICAgICB8IDI2ICsr
-KysrKysrKysrKysrKystLS0tLS0tLS0tDQogZnMvbmZzL25mczQycHJvYy5jICAgICAgICAgIHwg
-IDUgKystLS0NCiBmcy9uZnMvbmZzNHByb2MuYyAgICAgICAgICAgfCAxNCArKysrKysrKysrLS0t
-LQ0KIGZzL25mcy9zeXNmcy5jICAgICAgICAgICAgICB8ICA0ICsrKy0NCiBuZXQvc3VucnBjL3hw
-cnRyZG1hL3ZlcmJzLmMgfCAgOSArKysrLS0tLS0NCiA1IGZpbGVzIGNoYW5nZWQsIDM1IGluc2Vy
-dGlvbnMoKyksIDIzIGRlbGV0aW9ucygtKQ0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXgg
-TkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1l
-cnNwYWNlLmNvbQ0KDQoNCg==
+On Mon, Aug 21, 2023 at 8:27=E2=80=AFAM NeilBrown <neilb@suse.de> wrote:
+>
+> On Fri, 18 Aug 2023, Haodong Wong wrote:
+> > Before Kernel 6.1, we observed the following OOPS in the stress test
+> > caused by reorder on set bit NFSD_FILE_HASHED and NFSD_FILE_PENDING,
+> > and smp_mb__after_atomic() should be a paire.
+>
+> If you saw this "before kernel 6.1" does that mean you don't see it
+> after kernel 6.1?  So has it already been fixed?
+>
+I just found after the patched c4c649ab413ba "NFSD: Convert filecache
+to rhltable" ,  this issue should not have .
+It was fixed as below:
+-nfsd_file_alloc(struct nfsd_file_lookup_key *key, unsigned int may)
++nfsd_file_alloc(struct net *net, struct inode *inode, unsigned char need,
++               bool want_gc)
+ {
+        struct nfsd_file *nf;
+
+        nf =3D kmem_cache_alloc(nfsd_file_slab, GFP_KERNEL);
+-       if (nf) {
+-               INIT_LIST_HEAD(&nf->nf_lru);
+-               nf->nf_birthtime =3D ktime_get();
+-               nf->nf_file =3D NULL;
+-               nf->nf_cred =3D get_current_cred();
+-               nf->nf_net =3D key->net;
+-               nf->nf_flags =3D 0;
+-               __set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+-               __set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
+-               if (key->gc)
+-                       __set_bit(NFSD_FILE_GC, &nf->nf_flags);
+-               nf->nf_inode =3D key->inode;
+-               refcount_set(&nf->nf_ref, 1);
+-               nf->nf_may =3D key->need;
+-               nf->nf_mark =3D NULL;
+-       }
++       if (unlikely(!nf))
++               return NULL;
++
++       INIT_LIST_HEAD(&nf->nf_lru);
++       nf->nf_birthtime =3D ktime_get();
++       nf->nf_file =3D NULL;
++       nf->nf_cred =3D get_current_cred();
++       nf->nf_net =3D net;
++       nf->nf_flags =3D want_gc ?
++               BIT(NFSD_FILE_HASHED) | BIT(NFSD_FILE_PENDING) |
+BIT(NFSD_FILE_GC) :
++               BIT(NFSD_FILE_HASHED) | BIT(NFSD_FILE_PENDING);
++       nf->nf_inode =3D inode;
++       refcount_set(&nf->nf_ref, 1);
++       nf->nf_may =3D need;
++       nf->nf_mark =3D NULL;
+        return nf;
+ }
+
+Before above patch, this OOPS happen as below
+
+Task A
+                                  Task B
+
+nfs_read
+                                nfs_read
+      nfsd_file_acquire
+                               nfsd_file_acquire
+          __set_bit(NFSD_FILE_HASHED, &nf->nf_flags)
+             nf =3D nfsd_file_find_locked();
+
+
+
+wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING);
+            since rcu_assign_pointer has barrier in
+hlist_add_head_rcu, but before smp_store_release in which
+            two __set_bit can cross update rcu hlist head pointer
+(first), so Task B wait_on_bit didn't wait, just go below:
+
+
+                                                 *pnf =3D nf;
+
+                                        file =3D nf->nf_file
+
+                                        file->f_op->splice_read  *OOPS
+here in nfs_read!
+
+I also found similar issue at here https://lkml.org/lkml/2023/1/4/880
+
+Since this  patch can fix this issue, I discard my commit
+Very glad to receive your reply.
+Thanks a lot!
+
+Regards,
+Haodong Wong
+
+> What kernel are you targeting with your patch?  It doesn't apply to
+> mainline, but looks like it might to 6.0.  The oops message is from
+> 5.10.104.  Maybe that is where you want a fix?
+>
+The target is before kernel 6.1
+
+> I assume you want this fix to go to a -stable kernel?  It would be good
+> to identify which upstream patch fixed the problem, then either backport
+> that, or explain why something simpler is needed.
+>
+
+
+> >
+> > Task A:                         Task B:
+> >
+> > nfsd_file_acquire:
+> >
+> >                           new =3D nfsd_file_alloc()
+> >                           open_file:
+> >                           refcount_inc(&nf->nf_ref);
+>
+> The key step in Task A is
+>         hlist_add_head_rcu(&nf->nf_node,
+>                  &nfsd_file_hashtbl[hashval].nfb_head);
+>
+> Until that completes, nfsd_file_find_locked() cannot find the new file.
+> hlist_add_head_rcu() uses "rcu_assign_pointer()" which should include
+> all the barriers needed.
+>
+> >                                  nf =3D nfsd_file_find_locked();
+> >                                  wait_for_construction:
+> >
+> >                                  since nf_flags is zero it will not wai=
+t
+> >
+> >                                  wait_on_bit(&nf->nf_flags,
+> >                                                     NFSD_FILE_PENDING);
+> >
+> >                                 if (status =3D=3D nfs_ok) {
+> >                                      *pnf =3D nf;      //OOPS happen!
+>
+> The oops message suggests that after nfsd_read() calls
+> nfsd_file_acquire() there is no error, but nf is NULL.
+> So the  nf->nf_file access causes the oops.  nf_file is at offset
+> 0x28, which is the virtual address mentioned in the oops.
+>
+> So do you think 'nf' is NULL at this point where you write "OOPS
+> happen!" ??
+
+Sorry, something missing, it oops happened in nfs_read after
+nfsd_file_acquire *pnf =3D nf, because it copy nf_file is still NULL as
+above
+
+> I cannot see how that might happen even if wait_on_bit() didn't
+> actually wait.
+>
+> Maybe if you could explain if a bit more detail what you think is
+> happening.  What exactly is NULL which causes the OOPS, and how exactly
+> does it end up being NULL.
+> I cannot see what might be the cause, but the oops makes it clear that
+> it did happen.
+>
+> Also is this a pure 5.10.104 kernel, or are there other patches on it?
+>
+It is applied with PREEMPT_RT Patch
+
+> Thanks,
+> NeilBrown
+
+>
+>
+>
+> >
+> > Unable to handle kernel NULL pointer at virtual address 000000000000002=
+8
+> > Mem abort info:
+> >   ESR =3D 0x96000004
+> >   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
+> >   SET =3D 0, FnV =3D 0
+> >   EA =3D 0, S1PTW =3D 0
+> > Data abort info:
+> >   ISV =3D 0, ISS =3D 0x00000004
+> >   CM =3D 0, WnR =3D 0
+> > user pgtable: 4k pages, 48-bit VAs, pgdp=3D0000000152546000
+> > [0000000000000028] pgd=3D0000000000000000, p4d=3D0000000000000000
+> > Internal error: Oops: 96000004 [#1] PREEMPT_RT SMP
+> > CPU: 7 PID: 1767 Comm: nfsd Not tainted 5.10.104 #1
+> > pstate: 40c00005 (nZcv daif +PAN +UAO -TCO BTYPE=3D--)
+> > pc : nfsd_read+0x78/0x280 [nfsd]
+> > lr : nfsd_read+0x68/0x280 [nfsd]
+> > sp : ffff80001c0b3c70
+> > x29: ffff80001c0b3c70 x28: 0000000000000000
+> > x27: 0000000000000002 x26: ffff0000c8a3ca70
+> > x25: ffff0000c8a45180 x24: 0000000000002000
+> > x23: ffff0000c8a45178 x22: ffff0000c8a45008
+> > x21: ffff0000c31aac40 x20: ffff0000c8a3c000
+> > x19: 0000000000000000 x18: 0000000000000001
+> > x17: 0000000000000007 x16: 00000000b35db681
+> > x15: 0000000000000156 x14: ffff0000c3f91300
+> > x13: 0000000000000000 x12: 0000000000000000
+> > x11: 0000000000000000 x10: 0000000000000000
+> > x9 : 0000000000000000 x8 : ffff000118014a80
+> > x7 : 0000000000000002 x6 : ffff0002559142dc
+> > x5 : ffff0000c31aac40 x4 : 0000000000000004
+> > x3 : 0000000000000001 x2 : 0000000000000000
+> > x1 : 0000000000000001 x0 : ffff000255914280
+> > Call trace:
+> >  nfsd_read+0x78/0x280 [nfsd]
+> >  nfsd3_proc_read+0x98/0xc0 [nfsd]
+> >  nfsd_dispatch+0xc8/0x160 [nfsd]
+> >  svc_process_common+0x440/0x790
+> >  svc_process+0xb0/0xd0
+> >  nfsd+0xfc/0x160 [nfsd]
+> >  kthread+0x17c/0x1a0
+> >  ret_from_fork+0x10/0x18
+> >
+> > Signed-off-by: Haodong Wong <haydenw.kernel@gmail.com>
+> > ---
+> >  fs/nfsd/filecache.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index e30e1ddc1ace..ba980369e6b4 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -974,8 +974,12 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct s=
+vc_fh *fhp,
+> >       nfsd_file_slab_free(&new->nf_rcu);
+> >
+> >  wait_for_construction:
+> > +     /* In case of set bit NFSD_FILE_PENDING and NFSD_FILE_HASHED reor=
+der */
+> > +     smp_rmb();
+> >       wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBL=
+E);
+> >
+> > +     /* Be a paire of smp_mb after clear bit NFSD_FILE_PENDING */
+> > +     smp_mb__after_atomic();
+> >       /* Did construction of this file fail? */
+> >       if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+> >               if (!retry) {
+> > @@ -1018,8 +1022,11 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+> >       nf =3D new;
+> >       /* Take reference for the hashtable */
+> >       refcount_inc(&nf->nf_ref);
+> > -     __set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+> >       __set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
+> > +     /* Ensure set bit order set NFSD_FILE_HASHED after set NFSD_FILE_=
+PENDING */
+> > +     smp_wmb();
+> > +     __set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+> > +
+> >       list_lru_add(&nfsd_file_lru, &nf->nf_lru);
+> >       hlist_add_head_rcu(&nf->nf_node, &nfsd_file_hashtbl[hashval].nfb_=
+head);
+> >       ++nfsd_file_hashtbl[hashval].nfb_count;
+> > --
+> > 2.25.1
+> >
+> >
+>
