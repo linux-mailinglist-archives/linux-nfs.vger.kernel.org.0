@@ -2,193 +2,281 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 33BA87855EF
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Aug 2023 12:49:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F375B78561F
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Aug 2023 12:50:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234148AbjHWKtd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Aug 2023 06:49:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34026 "EHLO
+        id S233617AbjHWKuc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Aug 2023 06:50:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233987AbjHWKt1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Aug 2023 06:49:27 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D141810CC;
-        Wed, 23 Aug 2023 03:49:01 -0700 (PDT)
+        with ESMTP id S232598AbjHWKuW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Aug 2023 06:50:22 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DBCE65;
+        Wed, 23 Aug 2023 03:49:26 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 1F89B21EDA;
-        Wed, 23 Aug 2023 10:48:58 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 2BBEC20753;
+        Wed, 23 Aug 2023 10:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1692787738; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=czbolVCNdiRIhtzRMydBVuDGtNoMVf0uK7rI8VUw4Wg=;
-        b=cea+STFByaV36NWMjg8zifEKP9bUJaVFrhrdsQ1BHrDjc+6YKTyOk0XUYe/aGcn7z1GdBW
-        Sp5Xg8/PcrR30C9G8GkmtNgleVHgoFT9VpO4HmYAD81nOJQ/2ts6Z2GJ97FCPouubZqTfM
-        7Ki5cRwEgj/8O3iByHVAhCDVhrdgZS0=
+        t=1692787739; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=paxukEyoAAv5FkB2kDfTJynj+eHH5ui7CxItFNHAnCo=;
+        b=2UGC0DMiLeOcG+stzpEJHLm+c+cGgB+dy+s/g33T+OY8gmhPyET9a80AdvUIebwzTLMYdD
+        4GHmawzDg0vvxknqvVvLI0ArRBTu7p5TD6164g93NBNKRsxnUhuZR3+PWYsviea1bS+MAg
+        eomFz5xJxDsdEfksQjLOKX9f37SLvYc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1692787738;
+        s=susede2_ed25519; t=1692787739;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=czbolVCNdiRIhtzRMydBVuDGtNoMVf0uK7rI8VUw4Wg=;
-        b=ccloVX/Tox8MPvEstSnU1swyihs7KV2puBqol0j3M4wpbT7Z67JF74RuKmYp8i9zsSQ2aK
-        Q/J06H24OiSZjOBw==
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=paxukEyoAAv5FkB2kDfTJynj+eHH5ui7CxItFNHAnCo=;
+        b=HTqul4jIBiEr7VLvqhgWPNeJ7Qh8Dl/dVPfoCHQF3vP8VmG/O0zl506+Dm0OC6nJCbCGYF
+        JlaDDYTeCkBnUVBQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0486813592;
-        Wed, 23 Aug 2023 10:48:58 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 16F4513458;
+        Wed, 23 Aug 2023 10:48:59 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id hdjcABrk5WQsIAAAMHmgww
-        (envelope-from <jack@suse.cz>); Wed, 23 Aug 2023 10:48:58 +0000
+        id 1juQBRvk5WRyIAAAMHmgww
+        (envelope-from <jack@suse.cz>); Wed, 23 Aug 2023 10:48:59 +0000
 Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 0E216A0774; Wed, 23 Aug 2023 12:48:57 +0200 (CEST)
+        id 99332A079B; Wed, 23 Aug 2023 12:48:57 +0200 (CEST)
 From:   Jan Kara <jack@suse.cz>
 To:     Christian Brauner <brauner@kernel.org>
 Cc:     Jens Axboe <axboe@kernel.dk>, <linux-fsdevel@vger.kernel.org>,
         <linux-block@vger.kernel.org>,
         Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        Alasdair Kergon <agk@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        Joern Engel <joern@lazybastard.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Song Liu <song@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
+        linux-nfs@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        xen-devel@lists.xenproject.org
-Subject: [PATCH v3 0/29] block: Make blkdev_get_by_*() return handle
-Date:   Wed, 23 Aug 2023 12:48:11 +0200
-Message-Id: <20230818123232.2269-1-jack@suse.cz>
+        Anna Schumaker <anna@kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 25/29] nfs/blocklayout: Convert to use bdev_open_by_dev/path()
+Date:   Wed, 23 Aug 2023 12:48:36 +0200
+Message-Id: <20230823104857.11437-25-jack@suse.cz>
 X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20230818123232.2269-1-jack@suse.cz>
+References: <20230818123232.2269-1-jack@suse.cz>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3781; i=jack@suse.cz; h=from:subject:message-id; bh=cMBb8bZk7tVGWo+BW5D78pH+ebOvNFFLsxdd3Uvzd/w=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBk5ePhrEMij+4xGF6e8K//xuADex0OXIFxlpO0VT6g 42vu5BeJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZOXj4QAKCRCcnaoHP2RA2RqoB/ 91nt6Qs4NSStbt9M1WXY1akBbAqu+Bv3ZXdZ6WMy9kKyYwY7zCnyQziikP60M2MjCrud4NP9os4YAr 4uXdyOyVcdJ9TjbciDgTyoYdfkFl7g+rZhj1pyPeep1xmvDMn3QtNJ28EbhLegdC+nkmL6+bxPGEwd IdsuBKGrdIIEryWwhBq0+BWowL3nzmQjs5GoDtXLoHADfHYhgC8RKYK/4FaML1/SsAZRvGJ/C8wFB4 JUGsDGFE4CJx9XgiRx407CSIGNSoCciqBpMaMA7x/dbq9Tu76xcqN4/DZrtT2qyG4I7GZYetndEl3F vWMZMQFPauZmB2S1r30HY+nn2IOCrM
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6181; i=jack@suse.cz; h=from:subject; bh=0IjULVrCIX3jA8XS50OG9gB3t0tQZs/jagbxUdIARmQ=; b=owEBbQGS/pANAwAIAZydqgc/ZEDZAcsmYgBk5eQDDRVrTyNrn3Bld2eVVP3ntq1nPuGH03sBMvBU aaEvSzeJATMEAAEIAB0WIQSrWdEr1p4yirVVKBycnaoHP2RA2QUCZOXkAwAKCRCcnaoHP2RA2f3uB/ 9TApxncDSBqd+ot6pVyTXXe9FrQsQxN8sc66LyI0cYDvAsXbVlplBntvQw6HP7cLIECbB+Aq77cEKO 07B1WlgCQx5Y9jcAUQ05pLw7ShEHLwaB9DyPoWFUnv4bKg8dV3D02BaZv8W3Iorg3jaho4ZwxYHAHv Vlyvp5lGVvMHGGzIxLqzyxouS1j57LwPqOzbaXQRYHh5Kazg19B1ot1tQM6HmbF8drWHrhGcCkG3Np IAA/++uJQ0Pw0XJp3si5rpPXm2OnmlTl5Bkomxc5ZhNot0v/4rC8Pa4kuKUMCZtLAziiuv05YUIv2e pZCXGiawn5aSUtJqo4oESveUSPgB9v
 X-Developer-Key: i=jack@suse.cz; a=openpgp; fpr=93C6099A142276A28BBE35D815BC833443038D8C
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_SOFTFAIL,URIBL_BLOCKED autolearn=no
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+Convert block device handling to use bdev_open_by_dev/path() and pass
+the handle around.
 
-this is a v3 of the patch series which implements the idea of blkdev_get_by_*()
-calls returning bdev_handle which is then passed to blkdev_put() [1]. This
-makes the get and put calls for bdevs more obviously matching and allows us to
-propagate context from get to put without having to modify all the users
-(again!). In particular I need to propagate used open flags to blkdev_put() to
-be able count writeable opens and add support for blocking writes to mounted
-block devices. I'll send that series separately.
-
-The series is based on Christian's vfs tree as of today as there is quite
-some overlap. Patches have passed some reasonable testing - I've tested block
-changes, md, dm, bcache, xfs, btrfs, ext4, swap. More testing or review is
-always welcome. Thanks! I've pushed out the full branch to:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git bdev_handle
-
-to ease review / testing. Since there were not many comments for v2 and
-Christoph has acked the series I think we should start discussing how to merge
-the series. Most collisions with this series seem to happen in the filesystems
-area so VFS tree would seem as the least painful way to merge this. Jens,
-are you OK with that?
-
-Changes since v2:
-* Rebased on top of current vfs tree
-* Added some acks
-* Reflected minor nits from Christoph
-* Added missing conversion of blkdev_put() calls in cramfs and erofs
-* Fixed possible leak of bdev handle in xfs if logdev is the same as fs dev
-
-Changes since v1:
-* Rebased on top of current vfs tree
-* Renamed final functions to bdev_open_by_*() and bdev_release()
-* Fixed detection of exclusive open in blkdev_ioctl() and blkdev_fallocate()
-* Fixed swap conversion to properly reinitialize swap_info->bdev_handle
-* Fixed xfs conversion to not oops with rtdev without logdev
-* Couple other minor fixups
-
-								Honza
-
-[1] https://lore.kernel.org/all/ZJGNsVDhZx0Xgs2H@infradead.org
-
-CC: Alasdair Kergon <agk@redhat.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Anna Schumaker <anna@kernel.org>
-CC: Chao Yu <chao@kernel.org>
-CC: Christian Borntraeger <borntraeger@linux.ibm.com>
-CC: Coly Li <colyli@suse.de
-CC: "Darrick J. Wong" <djwong@kernel.org>
-CC: Dave Kleikamp <shaggy@kernel.org>
-CC: David Sterba <dsterba@suse.com>
-CC: dm-devel@redhat.com
-CC: drbd-dev@lists.linbit.com
-CC: Gao Xiang <xiang@kernel.org>
-CC: Jack Wang <jinpu.wang@ionos.com>
-CC: Jaegeuk Kim <jaegeuk@kernel.org>
-CC: jfs-discussion@lists.sourceforge.net
-CC: Joern Engel <joern@lazybastard.org>
-CC: Joseph Qi <joseph.qi@linux.alibaba.com>
-CC: Kent Overstreet <kent.overstreet@gmail.com>
-CC: linux-bcache@vger.kernel.org
-CC: linux-btrfs@vger.kernel.org
-CC: linux-erofs@lists.ozlabs.org
-CC: <linux-ext4@vger.kernel.org>
-CC: linux-f2fs-devel@lists.sourceforge.net
-CC: linux-mm@kvack.org
-CC: linux-mtd@lists.infradead.org
 CC: linux-nfs@vger.kernel.org
-CC: linux-nilfs@vger.kernel.org
-CC: linux-nvme@lists.infradead.org
-CC: linux-pm@vger.kernel.org
-CC: linux-raid@vger.kernel.org
-CC: linux-s390@vger.kernel.org
-CC: linux-scsi@vger.kernel.org
-CC: linux-xfs@vger.kernel.org
-CC: "Md. Haris Iqbal" <haris.iqbal@ionos.com>
-CC: Mike Snitzer <snitzer@kernel.org>
-CC: Minchan Kim <minchan@kernel.org>
-CC: ocfs2-devel@oss.oracle.com
-CC: reiserfs-devel@vger.kernel.org
-CC: Sergey Senozhatsky <senozhatsky@chromium.org>
-CC: Song Liu <song@kernel.org>
-CC: Sven Schnelle <svens@linux.ibm.com>
-CC: target-devel@vger.kernel.org
-CC: Ted Tso <tytso@mit.edu>
 CC: Trond Myklebust <trond.myklebust@hammerspace.com>
-CC: xen-devel@lists.xenproject.org
+CC: Anna Schumaker <anna@kernel.org>
+Acked-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jan Kara <jack@suse.cz>
+---
+ fs/nfs/blocklayout/blocklayout.h |  2 +-
+ fs/nfs/blocklayout/dev.c         | 76 ++++++++++++++++----------------
+ 2 files changed, 38 insertions(+), 40 deletions(-)
 
-Previous versions:
-Link: http://lore.kernel.org/r/20230629165206.383-1-jack@suse.cz # v1
-Link: http://lore.kernel.org/r/20230810171429.31759-1-jack@suse.cz # v2
+diff --git a/fs/nfs/blocklayout/blocklayout.h b/fs/nfs/blocklayout/blocklayout.h
+index 716bc75e9ed2..b4294a8aa2d4 100644
+--- a/fs/nfs/blocklayout/blocklayout.h
++++ b/fs/nfs/blocklayout/blocklayout.h
+@@ -108,7 +108,7 @@ struct pnfs_block_dev {
+ 	struct pnfs_block_dev		*children;
+ 	u64				chunk_size;
+ 
+-	struct block_device		*bdev;
++	struct bdev_handle		*bdev_handle;
+ 	u64				disk_offset;
+ 
+ 	u64				pr_key;
+diff --git a/fs/nfs/blocklayout/dev.c b/fs/nfs/blocklayout/dev.c
+index 70f5563a8e81..0b57b8a4b7e2 100644
+--- a/fs/nfs/blocklayout/dev.c
++++ b/fs/nfs/blocklayout/dev.c
+@@ -25,17 +25,17 @@ bl_free_device(struct pnfs_block_dev *dev)
+ 	} else {
+ 		if (dev->pr_registered) {
+ 			const struct pr_ops *ops =
+-				dev->bdev->bd_disk->fops->pr_ops;
++				dev->bdev_handle->bdev->bd_disk->fops->pr_ops;
+ 			int error;
+ 
+-			error = ops->pr_register(dev->bdev, dev->pr_key, 0,
+-				false);
++			error = ops->pr_register(dev->bdev_handle->bdev,
++				dev->pr_key, 0, false);
+ 			if (error)
+ 				pr_err("failed to unregister PR key.\n");
+ 		}
+ 
+-		if (dev->bdev)
+-			blkdev_put(dev->bdev, NULL);
++		if (dev->bdev_handle)
++			bdev_release(dev->bdev_handle);
+ 	}
+ }
+ 
+@@ -169,7 +169,7 @@ static bool bl_map_simple(struct pnfs_block_dev *dev, u64 offset,
+ 	map->start = dev->start;
+ 	map->len = dev->len;
+ 	map->disk_offset = dev->disk_offset;
+-	map->bdev = dev->bdev;
++	map->bdev = dev->bdev_handle->bdev;
+ 	return true;
+ }
+ 
+@@ -236,28 +236,26 @@ bl_parse_simple(struct nfs_server *server, struct pnfs_block_dev *d,
+ 		struct pnfs_block_volume *volumes, int idx, gfp_t gfp_mask)
+ {
+ 	struct pnfs_block_volume *v = &volumes[idx];
+-	struct block_device *bdev;
++	struct bdev_handle *bdev_handle;
+ 	dev_t dev;
+ 
+ 	dev = bl_resolve_deviceid(server, v, gfp_mask);
+ 	if (!dev)
+ 		return -EIO;
+ 
+-	bdev = blkdev_get_by_dev(dev, BLK_OPEN_READ | BLK_OPEN_WRITE, NULL,
+-				 NULL);
+-	if (IS_ERR(bdev)) {
++	bdev_handle = bdev_open_by_dev(dev, BLK_OPEN_READ | BLK_OPEN_WRITE,
++				       NULL, NULL);
++	if (IS_ERR(bdev_handle)) {
+ 		printk(KERN_WARNING "pNFS: failed to open device %d:%d (%ld)\n",
+-			MAJOR(dev), MINOR(dev), PTR_ERR(bdev));
+-		return PTR_ERR(bdev);
++			MAJOR(dev), MINOR(dev), PTR_ERR(bdev_handle));
++		return PTR_ERR(bdev_handle);
+ 	}
+-	d->bdev = bdev;
+-
+-
+-	d->len = bdev_nr_bytes(d->bdev);
++	d->bdev_handle = bdev_handle;
++	d->len = bdev_nr_bytes(bdev_handle->bdev);
+ 	d->map = bl_map_simple;
+ 
+ 	printk(KERN_INFO "pNFS: using block device %s\n",
+-		d->bdev->bd_disk->disk_name);
++		bdev_handle->bdev->bd_disk->disk_name);
+ 	return 0;
+ }
+ 
+@@ -302,10 +300,10 @@ bl_validate_designator(struct pnfs_block_volume *v)
+ 	}
+ }
+ 
+-static struct block_device *
++static struct bdev_handle *
+ bl_open_path(struct pnfs_block_volume *v, const char *prefix)
+ {
+-	struct block_device *bdev;
++	struct bdev_handle *bdev_handle;
+ 	const char *devname;
+ 
+ 	devname = kasprintf(GFP_KERNEL, "/dev/disk/by-id/%s%*phN",
+@@ -313,15 +311,15 @@ bl_open_path(struct pnfs_block_volume *v, const char *prefix)
+ 	if (!devname)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	bdev = blkdev_get_by_path(devname, BLK_OPEN_READ | BLK_OPEN_WRITE, NULL,
+-				  NULL);
+-	if (IS_ERR(bdev)) {
++	bdev_handle = bdev_open_by_path(devname, BLK_OPEN_READ | BLK_OPEN_WRITE,
++					NULL, NULL);
++	if (IS_ERR(bdev_handle)) {
+ 		pr_warn("pNFS: failed to open device %s (%ld)\n",
+-			devname, PTR_ERR(bdev));
++			devname, PTR_ERR(bdev_handle));
+ 	}
+ 
+ 	kfree(devname);
+-	return bdev;
++	return bdev_handle;
+ }
+ 
+ static int
+@@ -329,7 +327,7 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
+ 		struct pnfs_block_volume *volumes, int idx, gfp_t gfp_mask)
+ {
+ 	struct pnfs_block_volume *v = &volumes[idx];
+-	struct block_device *bdev;
++	struct bdev_handle *bdev_handle;
+ 	const struct pr_ops *ops;
+ 	int error;
+ 
+@@ -342,32 +340,32 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
+ 	 * On other distributions like Debian, the default SCSI by-id path will
+ 	 * point to the dm-multipath device if one exists.
+ 	 */
+-	bdev = bl_open_path(v, "dm-uuid-mpath-0x");
+-	if (IS_ERR(bdev))
+-		bdev = bl_open_path(v, "wwn-0x");
+-	if (IS_ERR(bdev))
+-		return PTR_ERR(bdev);
+-	d->bdev = bdev;
+-
+-	d->len = bdev_nr_bytes(d->bdev);
++	bdev_handle = bl_open_path(v, "dm-uuid-mpath-0x");
++	if (IS_ERR(bdev_handle))
++		bdev_handle = bl_open_path(v, "wwn-0x");
++	if (IS_ERR(bdev_handle))
++		return PTR_ERR(bdev_handle);
++	d->bdev_handle = bdev_handle;
++
++	d->len = bdev_nr_bytes(d->bdev_handle->bdev);
+ 	d->map = bl_map_simple;
+ 	d->pr_key = v->scsi.pr_key;
+ 
+ 	pr_info("pNFS: using block device %s (reservation key 0x%llx)\n",
+-		d->bdev->bd_disk->disk_name, d->pr_key);
++		d->bdev_handle->bdev->bd_disk->disk_name, d->pr_key);
+ 
+-	ops = d->bdev->bd_disk->fops->pr_ops;
++	ops = d->bdev_handle->bdev->bd_disk->fops->pr_ops;
+ 	if (!ops) {
+ 		pr_err("pNFS: block device %s does not support reservations.",
+-				d->bdev->bd_disk->disk_name);
++				d->bdev_handle->bdev->bd_disk->disk_name);
+ 		error = -EINVAL;
+ 		goto out_blkdev_put;
+ 	}
+ 
+-	error = ops->pr_register(d->bdev, 0, d->pr_key, true);
++	error = ops->pr_register(d->bdev_handle->bdev, 0, d->pr_key, true);
+ 	if (error) {
+ 		pr_err("pNFS: failed to register key for block device %s.",
+-				d->bdev->bd_disk->disk_name);
++				d->bdev_handle->bdev->bd_disk->disk_name);
+ 		goto out_blkdev_put;
+ 	}
+ 
+@@ -375,7 +373,7 @@ bl_parse_scsi(struct nfs_server *server, struct pnfs_block_dev *d,
+ 	return 0;
+ 
+ out_blkdev_put:
+-	blkdev_put(d->bdev, NULL);
++	bdev_release(d->bdev_handle);
+ 	return error;
+ }
+ 
+-- 
+2.35.3
+
