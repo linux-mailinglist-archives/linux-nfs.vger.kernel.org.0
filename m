@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E478786615
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Aug 2023 05:47:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01928786617
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Aug 2023 05:47:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239717AbjHXDrE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Aug 2023 23:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59504 "EHLO
+        id S239754AbjHXDrJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Aug 2023 23:47:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239688AbjHXDqc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Aug 2023 23:46:32 -0400
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290551BFF
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Aug 2023 20:46:05 -0700 (PDT)
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-5657ca46a56so832828a12.0
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Aug 2023 20:46:05 -0700 (PDT)
+        with ESMTP id S239799AbjHXDqu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Aug 2023 23:46:50 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FBC10F7
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Aug 2023 20:46:27 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id 5614622812f47-3a8586813cfso655550b6e.0
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Aug 2023 20:46:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1692848735; x=1693453535;
+        d=bytedance.com; s=google; t=1692848786; x=1693453586;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FXa1LVTr7cMGrveLuEzAv2/sv0TRtu2+M0j9hstuDhg=;
-        b=lVZZLnG2RsmN3a+zFL72bWnUGygaFgRp6akXzveK4gtMYRg/HADgJCRGx9wFYaUoSg
-         pEwNRignomWbz0X2VtgkM5yh9ie22cmsn86JDSYo62UxX8AhnRWbtnxk7vsHU1TuklPr
-         KYYlYgONHvsGMaxaPlnlctmdwx2t9FyKc/SGaBRFpkSfmwi4o4a4q0TloaM6lWreTy6+
-         dPqCqOkffPtxMYCMP0/9PFQmib97nVH3a2mDDsK9c1A1a3EU6i+rHDrFQYI3QbsVHTke
-         t5Tgrl6fQSk6/O0l5wli/mgVVJqfFqz816vNoxt1a6BOYzzKWcqQBOWmo+92YHRVIkpP
-         4QiQ==
+        bh=YqY1sW48iQ+/RBGCoAIbrC2fRJNneg9gualmoKm4Jhk=;
+        b=N0bEBg41B2iY9D35KYwN2/tcoHlZC6rvdfxQ8MjWAAVsJrbSe5QQ1AloOksBp+VCG5
+         ovzTjRjVhwYuCbijaYbBr/NoEX2DBF86HPD3n/LRoilc3AMqFdIYMudsb9GeM0FF8+WD
+         vfzr6oFXwaOrFRMP37o0w+E2VaPjRYmk8vIEBd08PbPCV3/5qCp0ZssMbZGvzPANUGFF
+         l6D1M4RhmrFVV9Agr9KolhbMLgXrKCLvdCdLgkrxKJwEQ6ETcv90MZzzfe8Jv4mnChvc
+         gVqnqZEKx20VOlCNLIRQDT+wJCga0Y5MKoKyPRqMPQvG3t3uAT+WeS34pYjowcn6IWJ/
+         hSaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692848735; x=1693453535;
+        d=1e100.net; s=20221208; t=1692848786; x=1693453586;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FXa1LVTr7cMGrveLuEzAv2/sv0TRtu2+M0j9hstuDhg=;
-        b=gT4X78kPonoPKEjQEhbrLlW8Kms+waX1mkDJNrHeNEDbj20nC7/MyWAKYnPMCNeqlj
-         wfddUcVf+Y36oCGVsqjIrHFzwB39h/ZF19JqU3bT4BCzOyrTpe3uo9emkeA9fXG7hfHU
-         1HXf2efv3KGauxJTS9u8BVrbYrvQPjAdZ78XfpEytAzQ1RX/yiTJ/VClTIgB+KZ0O3WB
-         lRPQDIHlXSiMqNNwTMASJ1CfYNBzuEFjlPsnNuuM5JWGbYGfebrvIXWb0Zqs6NIUK1nB
-         kuaFjuUDaG9T7fR5Xt14OzA+mwJfGIylRWppmOZcyLf7SXFf5i1zHrvTMR6eA2zE+PKx
-         P0Zw==
-X-Gm-Message-State: AOJu0Yzc7Lcs9wWUK9vkZUDC+12gSFw6Zn9tXWOhJarb8Trtrgp0rbBY
-        RohKSlw7V1j+ZABGdBJpyoFlsw==
-X-Google-Smtp-Source: AGHT+IFDQmZdqE5+8g4xA8xE/nPvKPpbbUoiPsHTkmpATNJSbjrISgWKtS3Mjf4jrwQTFGPcO7csaQ==
-X-Received: by 2002:a05:6a00:1f89:b0:68a:33fc:a091 with SMTP id bg9-20020a056a001f8900b0068a33fca091mr13891213pfb.3.1692848735214;
-        Wed, 23 Aug 2023 20:45:35 -0700 (PDT)
+        bh=YqY1sW48iQ+/RBGCoAIbrC2fRJNneg9gualmoKm4Jhk=;
+        b=GhhetEaVPQaOXZk0tD+L2A2g5YqX5h/ef8w09mPgjlfhmowQF9O3f6T0H3uF+HTluY
+         6bWwaPeERC2MnX8z4tAsbIj0F3Y3OrOpWCEsNFbxwDxsspkkXLEOUVsIgvaJz569Pvg5
+         hxHVvP4V9+PjuRa4Oyri2nXF/NbJhI7gT98LL3yhUJGU0+/R04q0O2Mq9Rn31eehD9fC
+         bCrekF63v3Yg3tSKIC9XLKodH8cVoxrdFduU7pNRFLX/PxHxqA3mfnNWCTOKb1XsJHKB
+         Vtx/LL3PRnYGHWlPexm5Ki7NqjvBnIwjxBKQ95jVUV7UnboR36xwu4Imu/j1f/AZk6Ud
+         Qwfg==
+X-Gm-Message-State: AOJu0Yx+1TD451w0j+MUFaxZVNoCluGyXvJF3bvxOiT2yawTHHhGlyEE
+        dRrpxCQB0CsMMzDHbg1HImquDg==
+X-Google-Smtp-Source: AGHT+IFDAy5Zu8VOU9YTeKJefKe6vLUB7EXbKU3yEeM/VZ53vwtmd2t8ca1mHqoiwq14ODWnet2Fmw==
+X-Received: by 2002:a05:6808:180a:b0:3a7:8e1b:9d4f with SMTP id bh10-20020a056808180a00b003a78e1b9d4fmr16975412oib.3.1692848786259;
+        Wed, 23 Aug 2023 20:46:26 -0700 (PDT)
 Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
-        by smtp.gmail.com with ESMTPSA id t6-20020a63b246000000b005579f12a238sm10533157pgo.86.2023.08.23.20.45.25
+        by smtp.gmail.com with ESMTPSA id t6-20020a63b246000000b005579f12a238sm10533157pgo.86.2023.08.23.20.46.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Aug 2023 20:45:34 -0700 (PDT)
+        Wed, 23 Aug 2023 20:46:25 -0700 (PDT)
 From:   Qi Zheng <zhengqi.arch@bytedance.com>
 To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
         vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
@@ -64,10 +64,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
         Olga Kornievskaia <kolga@netapp.com>,
         Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH v5 12/45] nfsd: dynamically allocate the nfsd-filecache shrinker
-Date:   Thu, 24 Aug 2023 11:42:31 +0800
-Message-Id: <20230824034304.37411-13-zhengqi.arch@bytedance.com>
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v5 18/45] sunrpc: dynamically allocate the sunrpc_cred shrinker
+Date:   Thu, 24 Aug 2023 11:42:37 +0800
+Message-Id: <20230824034304.37411-19-zhengqi.arch@bytedance.com>
 X-Mailer: git-send-email 2.24.3 (Apple Git-128)
 In-Reply-To: <20230824034304.37411-1-zhengqi.arch@bytedance.com>
 References: <20230824034304.37411-1-zhengqi.arch@bytedance.com>
@@ -83,7 +85,7 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Use new APIs to dynamically allocate the nfsd-filecache shrinker.
+Use new APIs to dynamically allocate the sunrpc_cred shrinker.
 
 Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 Reviewed-by: Muchun Song <songmuchun@bytedance.com>
@@ -93,69 +95,59 @@ CC: Neil Brown <neilb@suse.de>
 CC: Olga Kornievskaia <kolga@netapp.com>
 CC: Dai Ngo <Dai.Ngo@oracle.com>
 CC: Tom Talpey <tom@talpey.com>
+CC: Trond Myklebust <trond.myklebust@hammerspace.com>
+CC: Anna Schumaker <anna@kernel.org>
 CC: linux-nfs@vger.kernel.org
+CC: netdev@vger.kernel.org
 ---
- fs/nfsd/filecache.c | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ net/sunrpc/auth.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index ee9c923192e0..9c62b4502539 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -521,11 +521,7 @@ nfsd_file_lru_scan(struct shrinker *s, struct shrink_control *sc)
- 	return ret;
+diff --git a/net/sunrpc/auth.c b/net/sunrpc/auth.c
+index 2f16f9d17966..0cc52e39f859 100644
+--- a/net/sunrpc/auth.c
++++ b/net/sunrpc/auth.c
+@@ -861,11 +861,7 @@ rpcauth_uptodatecred(struct rpc_task *task)
+ 		test_bit(RPCAUTH_CRED_UPTODATE, &cred->cr_flags) != 0;
  }
  
--static struct shrinker	nfsd_file_shrinker = {
--	.scan_objects = nfsd_file_lru_scan,
--	.count_objects = nfsd_file_lru_count,
--	.seeks = 1,
+-static struct shrinker rpc_cred_shrinker = {
+-	.count_objects = rpcauth_cache_shrink_count,
+-	.scan_objects = rpcauth_cache_shrink_scan,
+-	.seeks = DEFAULT_SEEKS,
 -};
-+static struct shrinker *nfsd_file_shrinker;
++static struct shrinker *rpc_cred_shrinker;
  
- /**
-  * nfsd_file_cond_queue - conditionally unhash and queue a nfsd_file
-@@ -746,12 +742,19 @@ nfsd_file_cache_init(void)
- 		goto out_err;
- 	}
- 
--	ret = register_shrinker(&nfsd_file_shrinker, "nfsd-filecache");
--	if (ret) {
--		pr_err("nfsd: failed to register nfsd_file_shrinker: %d\n", ret);
-+	nfsd_file_shrinker = shrinker_alloc(0, "nfsd-filecache");
-+	if (!nfsd_file_shrinker) {
-+		ret = -ENOMEM;
-+		pr_err("nfsd: failed to allocate nfsd_file_shrinker\n");
- 		goto out_lru;
- 	}
- 
-+	nfsd_file_shrinker->count_objects = nfsd_file_lru_count;
-+	nfsd_file_shrinker->scan_objects = nfsd_file_lru_scan;
-+	nfsd_file_shrinker->seeks = 1;
+ int __init rpcauth_init_module(void)
+ {
+@@ -874,9 +870,18 @@ int __init rpcauth_init_module(void)
+ 	err = rpc_init_authunix();
+ 	if (err < 0)
+ 		goto out1;
+-	err = register_shrinker(&rpc_cred_shrinker, "sunrpc_cred");
+-	if (err < 0)
++	rpc_cred_shrinker = shrinker_alloc(0, "sunrpc_cred");
++	if (!rpc_cred_shrinker) {
++		err = -ENOMEM;
+ 		goto out2;
++	}
 +
-+	shrinker_register(nfsd_file_shrinker);
++	rpc_cred_shrinker->count_objects = rpcauth_cache_shrink_count;
++	rpc_cred_shrinker->scan_objects = rpcauth_cache_shrink_scan;
++	rpc_cred_shrinker->seeks = DEFAULT_SEEKS;
 +
- 	ret = lease_register_notifier(&nfsd_file_lease_notifier);
- 	if (ret) {
- 		pr_err("nfsd: unable to register lease notifier: %d\n", ret);
-@@ -774,7 +777,7 @@ nfsd_file_cache_init(void)
- out_notifier:
- 	lease_unregister_notifier(&nfsd_file_lease_notifier);
- out_shrinker:
--	unregister_shrinker(&nfsd_file_shrinker);
-+	shrinker_free(nfsd_file_shrinker);
- out_lru:
- 	list_lru_destroy(&nfsd_file_lru);
- out_err:
-@@ -891,7 +894,7 @@ nfsd_file_cache_shutdown(void)
- 		return;
- 
- 	lease_unregister_notifier(&nfsd_file_lease_notifier);
--	unregister_shrinker(&nfsd_file_shrinker);
-+	shrinker_free(nfsd_file_shrinker);
- 	/*
- 	 * make sure all callers of nfsd_file_lru_cb are done before
- 	 * calling nfsd_file_cache_purge
++	shrinker_register(rpc_cred_shrinker);
++
+ 	return 0;
+ out2:
+ 	rpc_destroy_authunix();
+@@ -887,5 +892,5 @@ int __init rpcauth_init_module(void)
+ void rpcauth_remove_module(void)
+ {
+ 	rpc_destroy_authunix();
+-	unregister_shrinker(&rpc_cred_shrinker);
++	shrinker_free(rpc_cred_shrinker);
+ }
 -- 
 2.30.2
 
