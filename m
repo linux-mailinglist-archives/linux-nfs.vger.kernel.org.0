@@ -2,72 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C91897862C2
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Aug 2023 23:53:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3685D786610
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Aug 2023 05:47:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235669AbjHWVxU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Aug 2023 17:53:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57440 "EHLO
+        id S239640AbjHXDqb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Aug 2023 23:46:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237355AbjHWVxT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Aug 2023 17:53:19 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 651C2E52;
-        Wed, 23 Aug 2023 14:53:13 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id EFD92225F0;
-        Wed, 23 Aug 2023 21:53:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1692827591; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MwgnjQes1bT02qBPMda+5vRYMMXvlcEEomPLV8hJEgA=;
-        b=IQQ6adUT4c91A6IV9Gyx3Vtek61l//YkanVph7HKrzXnwmQ37/aaY+rEVJSycEfDAJE7Bm
-        NfxV/r15QxH4hF/4k13En/2Lmvg3qZv0xUXPAhCedz72sxSaf2WievbeKiQ7bnKX2vl2E0
-        RtCYBiyiZItFSYDNQgInbSUBgNuKciY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1692827591;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MwgnjQes1bT02qBPMda+5vRYMMXvlcEEomPLV8hJEgA=;
-        b=8LiIHCtsccAJwTb8GIHRnuaOZ5ux5vlUBcWTCarQQf9nuk3w/JGosYGB1ciK3xOz7Temwd
-        kARtsgiLFXvmDkAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3D5041351F;
-        Wed, 23 Aug 2023 21:53:07 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id F35NOMN/5mSsRwAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 23 Aug 2023 21:53:07 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S239803AbjHXDqW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Aug 2023 23:46:22 -0400
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A786C170F
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Aug 2023 20:45:24 -0700 (PDT)
+Received: by mail-oi1-x231.google.com with SMTP id 5614622812f47-3a751bd3372so714121b6e.0
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Aug 2023 20:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1692848717; x=1693453517;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pHpuYVUzN3jckjN0g3IoL6/kLBn9YHZf3O2ocrsGP0s=;
+        b=O1jFqs/8oc1Zkuuh+RreIT00SzE0RITyrrR0tfPQWf0F03mOW3C+kR183ZUZbV19fg
+         1njT0pQF3MiRhEhbmKFe4hB4nORH/DqQUPz83nIj/BcfeWcOQTDvl3XWmeJPiDdxxNCj
+         aSM8Wiu56btqgYfw8FalFa6mxnERxpSyhXdr0cY8BCFqcfkHplZglvPzfqSpSX5vNiS1
+         5kgWXHBkRzg/0siYnFHX8pUt3JbjLp78Al19cln4RC11Rnj2a0ej4lpfuA1lfNaC1BkD
+         tGwbgv8uKluiKTT9ikc6KjEs76P7r8QiIzHs9sjQ/D2bIVhILICDiu7qdUt3X+KwvMRN
+         y3RQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692848717; x=1693453517;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pHpuYVUzN3jckjN0g3IoL6/kLBn9YHZf3O2ocrsGP0s=;
+        b=Mz/EliW98SIsVsoIM1HaxFJaZ5Rs51SbjVjDq/MlC+xIymLqVT9KUFGN1CMlVGFaJJ
+         i3QEaK4GXebHiEtFtjQfjua9x0ygTqgQ5ameSGZLAKKM2QY+Av7YhAa2Ja/SeCAZ/FDb
+         gpFhSPL7TWhWbvSDbr3nRlVa9vnCmsZQzNvoS6cOcY+k/LdSeWOj6ZSiVotN9n1z66xq
+         qnKzP0SIbeRVBbn+dtk86+XKlILteoKjDT++bFoFAShM4aHDaWAT7QOMKejg+2f+xiA/
+         0bbuDKipuOQlnsXVCDuqEz+Wwo0ZyNWaQY+E+Zz8bi+fjqjZI5JO0ULtx3KfkRm8sP0D
+         0APw==
+X-Gm-Message-State: AOJu0Yy+1FZXJM3S0Deu/AaiB9cG2EkIYimqbBPq2oSSHw5MT4Fm4qox
+        7Qs9HcbEX/QW45D5bQWOKi5+eg==
+X-Google-Smtp-Source: AGHT+IECsy2xziAStlM4iQiBzrpyBsCTGG8fF9NVbEM0k1w/3hIKlU5v5nC6tO+zngn9Mp6S5RbEgA==
+X-Received: by 2002:a05:6808:2e93:b0:3a7:7366:7523 with SMTP id gt19-20020a0568082e9300b003a773667523mr16881965oib.3.1692848716943;
+        Wed, 23 Aug 2023 20:45:16 -0700 (PDT)
+Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
+        by smtp.gmail.com with ESMTPSA id t6-20020a63b246000000b005579f12a238sm10533157pgo.86.2023.08.23.20.45.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 23 Aug 2023 20:45:16 -0700 (PDT)
+From:   Qi Zheng <zhengqi.arch@bytedance.com>
+To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
+        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
+        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
+        steven.price@arm.com, cel@kernel.org, senozhatsky@chromium.org,
+        yujie.liu@intel.com, gregkh@linuxfoundation.org,
+        muchun.song@linux.dev
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH v5 10/45] NFSv4.2: dynamically allocate the nfs-xattr shrinkers
+Date:   Thu, 24 Aug 2023 11:42:29 +0800
+Message-Id: <20230824034304.37411-11-zhengqi.arch@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+In-Reply-To: <20230824034304.37411-1-zhengqi.arch@bytedance.com>
+References: <20230824034304.37411-1-zhengqi.arch@bytedance.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Yue Haibing" <yuehaibing@huawei.com>,
-        trond.myklebust@hammerspace.com, anna@kernel.org,
-        jlayton@kernel.org, kolga@netapp.com, Dai.Ngo@oracle.com,
-        tom@talpey.com, kuba@kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH -next] SUNRPC: Remove unused declaration rpc_modcount()
-In-reply-to: <ZOZyJsV0Qkz8/NhP@tissot.1015granger.net>
-References: <20230809141426.41192-1-yuehaibing@huawei.com>,
- <169161700457.32308.8657894998370155540@noble.neil.brown.name>,
- <ZOZyJsV0Qkz8/NhP@tissot.1015granger.net>
-Date:   Thu, 24 Aug 2023 07:53:04 +1000
-Message-id: <169282758439.11865.1546671583988704052@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,99 +80,177 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 24 Aug 2023, Chuck Lever wrote:
-> On Thu, Aug 10, 2023 at 07:36:44AM +1000, NeilBrown wrote:
-> > On Thu, 10 Aug 2023, Yue Haibing wrote:
-> > > These declarations are never implemented since the beginning of git his=
-tory.
-> > > Remove these, then merge the two #ifdef block for simplification.
-> >=20
-> > For the historically minded, this was added in 2.1.79
-> > https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/diff/=
-net/sunrpc/stats.c?id=3Dae04feb38f319f0d389ea9e41d10986dba22b46d
-> >=20
-> > and removed in 2.3.27.
-> > https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/diff/=
-net/sunrpc/stats.c?id=3D53022f15f8c0381a9b55bbe2893a5f9f6abda6f3
-> >=20
-> > Reviewed-by: NeilBrown <neilb@suse.de>
->=20
-> Thanks, Neil. It isn't yet clear to me which tree this should go
-> through: nfsd or NFS client. I can take it just to get things
-> moving...
+Use new APIs to dynamically allocate the nfs-xattr shrinkers.
 
-It hardly matters.  Once there was a "trivial" tree, and it would be an
-equally good fit there.  I think that if you include it in your next
-submission, no one will complain.
+Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+CC: Trond Myklebust <trond.myklebust@hammerspace.com>
+CC: Anna Schumaker <anna@kernel.org>
+CC: linux-nfs@vger.kernel.org
+---
+ fs/nfs/nfs42xattr.c | 87 +++++++++++++++++++++++----------------------
+ 1 file changed, 44 insertions(+), 43 deletions(-)
 
-Thanks,
-NeilBrown
-
-
->=20
->=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> > >=20
-> > > Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
-> > > ---
-> > >  include/linux/sunrpc/stats.h | 23 +++++++----------------
-> > >  1 file changed, 7 insertions(+), 16 deletions(-)
-> > >=20
-> > > diff --git a/include/linux/sunrpc/stats.h b/include/linux/sunrpc/stats.h
-> > > index d94d4f410507..3ce1550d1beb 100644
-> > > --- a/include/linux/sunrpc/stats.h
-> > > +++ b/include/linux/sunrpc/stats.h
-> > > @@ -43,22 +43,6 @@ struct net;
-> > >  #ifdef CONFIG_PROC_FS
-> > >  int			rpc_proc_init(struct net *);
-> > >  void			rpc_proc_exit(struct net *);
-> > > -#else
-> > > -static inline int rpc_proc_init(struct net *net)
-> > > -{
-> > > -	return 0;
-> > > -}
-> > > -
-> > > -static inline void rpc_proc_exit(struct net *net)
-> > > -{
-> > > -}
-> > > -#endif
-> > > -
-> > > -#ifdef MODULE
-> > > -void			rpc_modcount(struct inode *, int);
-> > > -#endif
-> > > -
-> > > -#ifdef CONFIG_PROC_FS
-> > >  struct proc_dir_entry *	rpc_proc_register(struct net *,struct rpc_stat=
- *);
-> > >  void			rpc_proc_unregister(struct net *,const char *);
-> > >  void			rpc_proc_zero(const struct rpc_program *);
-> > > @@ -69,7 +53,14 @@ void			svc_proc_unregister(struct net *, const char =
-*);
-> > >  void			svc_seq_show(struct seq_file *,
-> > >  				     const struct svc_stat *);
-> > >  #else
-> > > +static inline int rpc_proc_init(struct net *net)
-> > > +{
-> > > +	return 0;
-> > > +}
-> > > =20
-> > > +static inline void rpc_proc_exit(struct net *net)
-> > > +{
-> > > +}
-> > >  static inline struct proc_dir_entry *rpc_proc_register(struct net *net=
-, struct rpc_stat *s) { return NULL; }
-> > >  static inline void rpc_proc_unregister(struct net *net, const char *p)=
- {}
-> > >  static inline void rpc_proc_zero(const struct rpc_program *p) {}
-> > > --=20
-> > > 2.34.1
-> > >=20
-> > >=20
-> >=20
->=20
-> --=20
-> Chuck Lever
->=20
+diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
+index 911f634ba3da..2ad66a8922f4 100644
+--- a/fs/nfs/nfs42xattr.c
++++ b/fs/nfs/nfs42xattr.c
+@@ -796,28 +796,9 @@ static unsigned long nfs4_xattr_cache_scan(struct shrinker *shrink,
+ static unsigned long nfs4_xattr_entry_scan(struct shrinker *shrink,
+ 					   struct shrink_control *sc);
+ 
+-static struct shrinker nfs4_xattr_cache_shrinker = {
+-	.count_objects	= nfs4_xattr_cache_count,
+-	.scan_objects	= nfs4_xattr_cache_scan,
+-	.seeks		= DEFAULT_SEEKS,
+-	.flags		= SHRINKER_MEMCG_AWARE,
+-};
+-
+-static struct shrinker nfs4_xattr_entry_shrinker = {
+-	.count_objects	= nfs4_xattr_entry_count,
+-	.scan_objects	= nfs4_xattr_entry_scan,
+-	.seeks		= DEFAULT_SEEKS,
+-	.batch		= 512,
+-	.flags		= SHRINKER_MEMCG_AWARE,
+-};
+-
+-static struct shrinker nfs4_xattr_large_entry_shrinker = {
+-	.count_objects	= nfs4_xattr_entry_count,
+-	.scan_objects	= nfs4_xattr_entry_scan,
+-	.seeks		= 1,
+-	.batch		= 512,
+-	.flags		= SHRINKER_MEMCG_AWARE,
+-};
++static struct shrinker *nfs4_xattr_cache_shrinker;
++static struct shrinker *nfs4_xattr_entry_shrinker;
++static struct shrinker *nfs4_xattr_large_entry_shrinker;
+ 
+ static enum lru_status
+ cache_lru_isolate(struct list_head *item,
+@@ -943,7 +924,7 @@ nfs4_xattr_entry_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	struct nfs4_xattr_entry *entry;
+ 	struct list_lru *lru;
+ 
+-	lru = (shrink == &nfs4_xattr_large_entry_shrinker) ?
++	lru = (shrink == nfs4_xattr_large_entry_shrinker) ?
+ 	    &nfs4_xattr_large_entry_lru : &nfs4_xattr_entry_lru;
+ 
+ 	freed = list_lru_shrink_walk(lru, sc, entry_lru_isolate, &dispose);
+@@ -971,7 +952,7 @@ nfs4_xattr_entry_count(struct shrinker *shrink, struct shrink_control *sc)
+ 	unsigned long count;
+ 	struct list_lru *lru;
+ 
+-	lru = (shrink == &nfs4_xattr_large_entry_shrinker) ?
++	lru = (shrink == nfs4_xattr_large_entry_shrinker) ?
+ 	    &nfs4_xattr_large_entry_lru : &nfs4_xattr_entry_lru;
+ 
+ 	count = list_lru_shrink_count(lru, sc);
+@@ -991,18 +972,34 @@ static void nfs4_xattr_cache_init_once(void *p)
+ 	INIT_LIST_HEAD(&cache->dispose);
+ }
+ 
+-static int nfs4_xattr_shrinker_init(struct shrinker *shrinker,
+-				    struct list_lru *lru, const char *name)
++typedef unsigned long (*count_objects_cb)(struct shrinker *s,
++					  struct shrink_control *sc);
++typedef unsigned long (*scan_objects_cb)(struct shrinker *s,
++					 struct shrink_control *sc);
++
++static int __init nfs4_xattr_shrinker_init(struct shrinker **shrinker,
++					   struct list_lru *lru, const char *name,
++					   count_objects_cb count,
++					   scan_objects_cb scan, long batch, int seeks)
+ {
+-	int ret = 0;
++	int ret;
+ 
+-	ret = register_shrinker(shrinker, name);
+-	if (ret)
++	*shrinker = shrinker_alloc(SHRINKER_MEMCG_AWARE, name);
++	if (!*shrinker)
++		return -ENOMEM;
++
++	ret = list_lru_init_memcg(lru, *shrinker);
++	if (ret) {
++		shrinker_free(*shrinker);
+ 		return ret;
++	}
+ 
+-	ret = list_lru_init_memcg(lru, shrinker);
+-	if (ret)
+-		unregister_shrinker(shrinker);
++	(*shrinker)->count_objects = count;
++	(*shrinker)->scan_objects = scan;
++	(*shrinker)->batch = batch;
++	(*shrinker)->seeks = seeks;
++
++	shrinker_register(*shrinker);
+ 
+ 	return ret;
+ }
+@@ -1010,7 +1007,7 @@ static int nfs4_xattr_shrinker_init(struct shrinker *shrinker,
+ static void nfs4_xattr_shrinker_destroy(struct shrinker *shrinker,
+ 					struct list_lru *lru)
+ {
+-	unregister_shrinker(shrinker);
++	shrinker_free(shrinker);
+ 	list_lru_destroy(lru);
+ }
+ 
+@@ -1026,27 +1023,31 @@ int __init nfs4_xattr_cache_init(void)
+ 		return -ENOMEM;
+ 
+ 	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_cache_shrinker,
+-				       &nfs4_xattr_cache_lru,
+-				       "nfs-xattr_cache");
++				       &nfs4_xattr_cache_lru, "nfs-xattr_cache",
++				       nfs4_xattr_cache_count,
++				       nfs4_xattr_cache_scan, 0, DEFAULT_SEEKS);
+ 	if (ret)
+ 		goto out1;
+ 
+ 	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_entry_shrinker,
+-				       &nfs4_xattr_entry_lru,
+-				       "nfs-xattr_entry");
++				       &nfs4_xattr_entry_lru, "nfs-xattr_entry",
++				       nfs4_xattr_entry_count,
++				       nfs4_xattr_entry_scan, 512, DEFAULT_SEEKS);
+ 	if (ret)
+ 		goto out2;
+ 
+ 	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_large_entry_shrinker,
+ 				       &nfs4_xattr_large_entry_lru,
+-				       "nfs-xattr_large_entry");
++				       "nfs-xattr_large_entry",
++				       nfs4_xattr_entry_count,
++				       nfs4_xattr_entry_scan, 512, 1);
+ 	if (!ret)
+ 		return 0;
+ 
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_entry_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_entry_shrinker,
+ 				    &nfs4_xattr_entry_lru);
+ out2:
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_cache_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_cache_shrinker,
+ 				    &nfs4_xattr_cache_lru);
+ out1:
+ 	kmem_cache_destroy(nfs4_xattr_cache_cachep);
+@@ -1056,11 +1057,11 @@ int __init nfs4_xattr_cache_init(void)
+ 
+ void nfs4_xattr_cache_exit(void)
+ {
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_large_entry_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_large_entry_shrinker,
+ 				    &nfs4_xattr_large_entry_lru);
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_entry_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_entry_shrinker,
+ 				    &nfs4_xattr_entry_lru);
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_cache_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_cache_shrinker,
+ 				    &nfs4_xattr_cache_lru);
+ 	kmem_cache_destroy(nfs4_xattr_cache_cachep);
+ }
+-- 
+2.30.2
 
