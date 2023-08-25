@@ -2,142 +2,164 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84DFF788B5B
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 16:14:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDEAC788B9F
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 16:24:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235736AbjHYOOG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Aug 2023 10:14:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54360 "EHLO
+        id S242897AbjHYOYC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Aug 2023 10:24:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343709AbjHYONx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 10:13:53 -0400
+        with ESMTP id S1343770AbjHYOXq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 10:23:46 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E2A2682
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 07:12:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6014BD1
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 07:23:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1692972695;
+        s=mimecast20190719; t=1692973380;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=vbKQBDak5hl4LAl/oQgyykEHIqEzzDyXxUCIsWAfmDA=;
-        b=Nn2gMMnXZmOpW0mfRbj8+85NH5cRWGPAljMvik9gVK+YMWEbu8RGUIVTsCTDJFaIQCNzke
-        LK2Iv2tOCX/cQYvH1Zeqw5832XbEhW+p41fm/aUf/z+BqgJpNlOSH+v4c01jriVkWHemhQ
-        poQqBM4SFlIkBmXMdOK7yva+QhvVDQo=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=jW2pKWmiWuGVCpTSPaJ/2vNwmbskt87fODz1wXV/nco=;
+        b=DT0IyPtUmOnbzTYyfWBkg3qI5ekRbwOtRamzvZ2IruYKgpbP5HAMvkB2QJQqBV+C9lvAEx
+        6AEwgf515n5pYKqusZd7SB/NRNH17nLdq4ledjD8yTze0u3T4VkoJhEmZnZUVM8Nj1CcEf
+        EqWkwtwbpLItt9BV948MUVCr7J0CMfQ=
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com
+ [209.85.214.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-uy7Mx6yjP9aKWl79V55IYQ-1; Fri, 25 Aug 2023 10:11:33 -0400
-X-MC-Unique: uy7Mx6yjP9aKWl79V55IYQ-1
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-55afcc54d55so2027655a12.0
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 07:11:33 -0700 (PDT)
+ us-mta-517-lEhHf1amNje3FNZ1HBhqxQ-1; Fri, 25 Aug 2023 10:16:57 -0400
+X-MC-Unique: lEhHf1amNje3FNZ1HBhqxQ-1
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-1bf60f85d78so11188105ad.3
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 07:16:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692972691; x=1693577491;
+        d=1e100.net; s=20221208; t=1692973016; x=1693577816;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vbKQBDak5hl4LAl/oQgyykEHIqEzzDyXxUCIsWAfmDA=;
-        b=Tume5WJNg0YzhtH8qO6tLO0x2IYjp9TqNbOvB9+/fEbq6QL6DhtNM1ZZVlHEBCjWT3
-         6T068/09NJ0LLd8xgnYUOdCUCdNidQFLc/JQ7OeECJqtaVgNJObCCJQG2NvAAycph2nW
-         klB9BWPDS9NdR7unr7rMSVYWVDV/ONQ3vKjdfLBzYQso7UmZzSSjRyocfPdsgrBqxZob
-         0PYb0gq0zGGxilmUO9B9JsapPRN5PcMO360tgEzPjGleAHH30skIcn26PBUNBamu/Rqo
-         MK1aYdIilPisP5jhuoMojJLAeGHGW6LNldfGsT7anxa80dYCJSik4/FPmxzAU5h4mi4I
-         M2RA==
-X-Gm-Message-State: AOJu0YwV4hP7n3fr+A6v9EwLOrT8e44zvjq5iaJrxEubpvRAMWlE6the
-        2PZC8muomUcQsddx5GMXSO0zbjmNHOGWRMpnOIkK5MoYC3m5MF6Zk4PMmn3T9GirSdtX8XLKKNt
-        9EBAOUIxsAbqDEjXw4LxPfNW1sBoJEeY=
-X-Received: by 2002:a17:90b:378f:b0:26b:374f:97c2 with SMTP id mz15-20020a17090b378f00b0026b374f97c2mr27791105pjb.6.1692972689492;
-        Fri, 25 Aug 2023 07:11:29 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF9Zc5uEZF4xZ2onoUZA2BvHZjsLlVtg14k+brKht9HvqHaz/Zv4GjWBRyj/R5XzcIugOYQqg==
-X-Received: by 2002:a17:90b:378f:b0:26b:374f:97c2 with SMTP id mz15-20020a17090b378f00b0026b374f97c2mr27790951pjb.6.1692972687482;
-        Fri, 25 Aug 2023 07:11:27 -0700 (PDT)
+        bh=jW2pKWmiWuGVCpTSPaJ/2vNwmbskt87fODz1wXV/nco=;
+        b=hFHXbsx7W8mUJ9MSp1a9gyGYN8GSoM6X3tt8UZi8JQMc/oey5KMvTCto0iWLLAlLDk
+         21qwZoFLLejEwG0JKk1qZ0AWaalRDpV2T+/dCf1oAXCggySV+do7A/aGhR1mjzMXkDBf
+         An32C+wXDRlqmuqY8hlTQADJi5PI21KyMNPhqgdSSU64jvOapyOBE0GwzHvofsHQxr+2
+         Ec3yhERplkP+ZnnSsst8Oc47bONeE7m546dTux2x5IcPqXg7T7APqWSCHljmPAzXoBxw
+         yathMYljm26BF3jMPhI1mT1V4BcbNNCFNLkpK5ZXzQbe97I2tFNqUys/VD0Xr9wbPCR+
+         GdjA==
+X-Gm-Message-State: AOJu0Yxhr1lDWT7pJERTg0rthf68xHr8WXWgq3sQ2aMjIk+ROJlxII+A
+        y5w29g8jrQoIJZsyNpOzCu0wuAoogT0MtzLsMFFyvDV+xKFEfuNtmDVx7abEUaeAIK9Ii7U3bnm
+        lieBjIwwt6Zyvf9e29/7e
+X-Received: by 2002:a17:903:1cb:b0:1bc:2f17:c628 with SMTP id e11-20020a17090301cb00b001bc2f17c628mr23081277plh.56.1692973015961;
+        Fri, 25 Aug 2023 07:16:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFNyJuRaeG/wD40ZlriJCiVyGeHnbnm97mEEygHS5vOfubfDn6+ZG24ejI/qSeWLcZMOy99Mw==
+X-Received: by 2002:a17:903:1cb:b0:1bc:2f17:c628 with SMTP id e11-20020a17090301cb00b001bc2f17c628mr23081258plh.56.1692973015671;
+        Fri, 25 Aug 2023 07:16:55 -0700 (PDT)
 Received: from zlang-mailbox ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id d24-20020a17090ac25800b00263ba6a248bsm3563040pjx.1.2023.08.25.07.11.25
+        by smtp.gmail.com with ESMTPSA id u14-20020a170902e5ce00b001bd41b70b60sm1759088plf.45.2023.08.25.07.16.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Aug 2023 07:11:27 -0700 (PDT)
-Date:   Fri, 25 Aug 2023 22:11:23 +0800
+        Fri, 25 Aug 2023 07:16:55 -0700 (PDT)
+Date:   Fri, 25 Aug 2023 22:16:51 +0800
 From:   Zorro Lang <zlang@redhat.com>
 To:     Jeff Layton <jlayton@kernel.org>
-Cc:     fstests@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH fstests v2 2/3] generic/513: limit to filesystems that
- support capabilities
-Message-ID: <20230825141123.wexv7kuxk75gr5os@zlang-mailbox>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>, fstests@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH fstests v2 3/3] generic/578: only run on filesystems that
+ support FIEMAP
+Message-ID: <20230825141651.vd6lh3n4ztru5svl@zlang-mailbox>
 References: <20230824-fixes-v2-0-d60c2faf1057@kernel.org>
- <20230824-fixes-v2-2-d60c2faf1057@kernel.org>
+ <20230824-fixes-v2-3-d60c2faf1057@kernel.org>
+ <20230824170931.GC11251@frogsfrogsfrogs>
+ <bc2586e3da8719b98126b22c15645a7951b9c1d9.camel@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230824-fixes-v2-2-d60c2faf1057@kernel.org>
+In-Reply-To: <bc2586e3da8719b98126b22c15645a7951b9c1d9.camel@kernel.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 24, 2023 at 12:44:18PM -0400, Jeff Layton wrote:
-> This test requires being able to set file capabilities which some
-> filesystems (namely NFS) do not support. Add a _require_setcap test
-> and only run it on filesystems that pass it.
+On Thu, Aug 24, 2023 at 01:28:26PM -0400, Jeff Layton wrote:
+> On Thu, 2023-08-24 at 10:09 -0700, Darrick J. Wong wrote:
+> > On Thu, Aug 24, 2023 at 12:44:19PM -0400, Jeff Layton wrote:
+> > > Some filesystems (e.g. NFS) don't support FIEMAP. Limit generic/578 to
+> > > filesystems that do.
+> > > 
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > >  common/rc         | 13 +++++++++++++
+> > >  tests/generic/578 |  1 +
+> > >  2 files changed, 14 insertions(+)
+> > > 
+> > > diff --git a/common/rc b/common/rc
+> > > index 33e74d20c28b..98d27890f6f7 100644
+> > > --- a/common/rc
+> > > +++ b/common/rc
+> > > @@ -3885,6 +3885,19 @@ _require_metadata_journaling()
+> > >  	fi
+> > >  }
+> > >  
+> > > +_require_fiemap()
+> > > +{
+> > > +	local testfile=$TEST_DIR/fiemaptest.$$
+> > > +
+> > > +	touch $testfile
+> > > +	$XFS_IO_PROG -r -c "fiemap" $testfile 1>$testfile.out 2>&1
+> > > +	if grep -q 'Operation not supported' $testfile.out; then
+> > > +	  _notrun "FIEMAP is not supported by this filesystem"
+> > > +	fi
+> > > +
+> > > +	rm -f $testfile $testfile.out
+> > > +}
+> > 
+> > _require_xfs_io_command "fiemap" ?
+> > 
+> > 
 > 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  common/rc         | 13 +++++++++++++
->  tests/generic/513 |  1 +
->  2 files changed, 14 insertions(+)
+> Ok, I figured we'd probably do this test after testing for that
+> separately, but you're correct that we do require it here.
 > 
-> diff --git a/common/rc b/common/rc
-> index 5c4429ed0425..33e74d20c28b 100644
-> --- a/common/rc
-> +++ b/common/rc
-> @@ -5048,6 +5048,19 @@ _require_mknod()
->  	rm -f $TEST_DIR/$seq.null
->  }
+> If we add that, should we also do this, at least in all of the general
+> tests?
+> 
+>     s/_require_xfs_io_command "fiemap"/_require_fiemap/
+> 
+> I think we end up excluding some of those tests on NFS for other
+> reasons, but other filesystems that don't support fiemap might still try
+> to run these tests.
+
+We have lots of cases contains _require_xfs_io_command "fiemap", so I think
+we can keep this "tradition", don't bring a new _require_fiemap for now,
+so ...
+
 >  
-> +_require_setcap()
-> +{
-> +	local testfile=$TEST_DIR/setcaptest.$$
-> +
-> +	touch $testfile
-> +	$SETCAP_PROG "cap_sys_module=p" $testfile > $testfile.out 2>&1
+> > > +
+> > >  _count_extents()
+> > >  {
+> > >  	$XFS_IO_PROG -r -c "fiemap" $1 | tail -n +2 | grep -v hole | wc -l
+> > > diff --git a/tests/generic/578 b/tests/generic/578
+> > > index b024f6ff90b4..903055b2ca58 100755
+> > > --- a/tests/generic/578
+> > > +++ b/tests/generic/578
+> > > @@ -26,6 +26,7 @@ _require_test_program "mmap-write-concurrent"
+> > >  _require_command "$FILEFRAG_PROG" filefrag
+> > >  _require_test_reflink
+> > >  _require_cp_reflink
+> > > +_require_fiemap
 
-Actually we talked about the capabilities checking helper last year, as below:
+_require_xfs_io_command "fiemap"
 
-https://lore.kernel.org/fstests/20220323023845.saj5en74km7aibdx@zlang-mailbox/
-
-As you bring this discussion back, how about the _require_capabilities() in
-above link?
-
-Thanks,
-Zorro
-
-> +	if grep -q 'Operation not supported' $testfile.out; then
-> +	  _notrun "File capabilities are not supported on this filesystem"
-> +	fi
-> +
-> +	rm -f $testfile $testfile.out
-> +}
-> +
->  _getcap()
->  {
->  	$GETCAP_PROG "$@" | _filter_getcap
-> diff --git a/tests/generic/513 b/tests/generic/513
-> index dc082787ae4e..52f9eb916b4a 100755
-> --- a/tests/generic/513
-> +++ b/tests/generic/513
-> @@ -18,6 +18,7 @@ _supported_fs generic
->  _require_scratch_reflink
->  _require_command "$GETCAP_PROG" getcap
->  _require_command "$SETCAP_PROG" setcap
-> +_require_setcap
->  
->  _scratch_mkfs >>$seqres.full 2>&1
->  _scratch_mount
+> > >  
+> > >  compare() {
+> > >  	for i in $(seq 1 8); do
+> > > 
+> > > -- 
+> > > 2.41.0
+> > > 
 > 
 > -- 
-> 2.41.0
+> Jeff Layton <jlayton@kernel.org>
 > 
 
