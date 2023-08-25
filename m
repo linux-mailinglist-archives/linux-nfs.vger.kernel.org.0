@@ -2,121 +2,203 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46B58787D6B
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 03:59:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B16F6788097
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 09:07:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240231AbjHYB72 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Aug 2023 21:59:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43294 "EHLO
+        id S235202AbjHYHHA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Aug 2023 03:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229797AbjHYB6z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Aug 2023 21:58:55 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A012B1BD1;
-        Thu, 24 Aug 2023 18:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=GqmLor0hgV4H3x7IuvuyaB/m3hDiUm8Yzrd7b9keFg8=; b=bxxlNJ96rsx4L2kKszQ8LF6ai5
-        iNtBNOQ6lzvCMPjrA8d2B5SKpMA8ehWy3QlKX8FPouK+kPzVIEZKx+nUetaQRW5JSdDZgZ40B7sUp
-        hz637OO4Su1eEUgn8Gl/dIA4NQM5w6cHamU5x0h4uc+j+8uZ5OMjiX5dOjWaEByfsbwcty7NjoKFy
-        3XYbSKjy+5wYC+oyCRnyAV7fQupk+8Mu6cgtvaubPBjXdneuinMhpNkKRGbKhUYZMh2pnc+qlSq3t
-        /phSE0e2tky2IO5H3c5MgeU2/J9SsgCPwQOsXy7U4/wxiV2850iLaIsQdHEKmyDTGxCmoecJk/YQG
-        iXEtALAQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qZM5z-000dvR-0M;
-        Fri, 25 Aug 2023 01:58:43 +0000
-Date:   Fri, 25 Aug 2023 02:58:43 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        Joern Engel <joern@lazybastard.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Song Liu <song@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v2 0/29] block: Make blkdev_get_by_*() return handle
-Message-ID: <20230825015843.GB95084@ZenIV>
-References: <20230810171429.31759-1-jack@suse.cz>
+        with ESMTP id S241794AbjHYHGd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 03:06:33 -0400
+Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3F52699
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 00:06:11 -0700 (PDT)
+Received: by mail-vs1-xe36.google.com with SMTP id ada2fe7eead31-44d5c49af07so295451137.2
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 00:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1692947157; x=1693551957;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zAyx91j0d1SiPs3sA0vgKNpQ3W+EG6C0ragX4AchNBE=;
+        b=uN2rEaDOxg/pvsgm9icIiIRITysW4eLMBpwqTl6ADtfVuemglwESF1ebt1WQUqa2eH
+         MaMHvubqXFo7kxYZkeKKL9BrOO4FMCgGlWmq1m7t9NpbLsiI6b0JuzPNyIJBCpca6cL5
+         4OLCC6NxZ42tEJYGwDn8Lwzb3xUJsi/IChumX8xNSHvgSPJ2rgYENoMTjDxoV5/KtTZV
+         s2lb9srRDXWRSs+2PE1gvDDqBj9liwPo4ZmjrZXnZxRomZg1R8yPiEQKRyJQbrN6I+MN
+         V0aQR68lzM4EAqwcIQnAyuNR1BIkbZKMKILMmoKgUZL8YXLydFBGa0Yv1jLbaBK5mBUa
+         iRiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1692947157; x=1693551957;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zAyx91j0d1SiPs3sA0vgKNpQ3W+EG6C0ragX4AchNBE=;
+        b=F/OiQdXMUj9kkxzWBKIS3vsZcKHkbr4oXuCUss7JcnvcFOVA6DDRRaadolaFxDl7Bx
+         zWCBAGkTRKTHC+NfTyRqoM7gPqHR+Azq9oh3XVrWPP5taQgehp28imxF+khfZ8dJd9qw
+         l0+u+ERNzqEyeDv+h2vv8Yj9l8NDgxogeOkyqCwymQIMihzELOCISb3rMcTHk0sJbW3E
+         ZP5Qr9tId3BJvinoC3HhRsuGGVySABAPOpJ4oDmVVx7NGHL0mw4wqa5MnVSuH2r70fwe
+         GbsauGOIu87RC2dUW7fFOLY0IJUylYqFdrxzYKv1FkxcD7Y9UV/fc/jnROUBCmXTJU+c
+         1MAQ==
+X-Gm-Message-State: AOJu0YwWjkQo5davsYUMiHI1nP8mg0zjvwLVdI0UqcCus7sN0ACRQyQt
+        faxNVHeLIjaTVcS0jcHWzcmQa6HpT75OKVJeZIwG9w==
+X-Google-Smtp-Source: AGHT+IF2hKbfhy15wte1809kF7Hyk6ONBucrn4iHiZSvthzk5hzVmg8s0lNZHK6urLSSNHhlSLdD3/SCAArIH6tequQ=
+X-Received: by 2002:a67:fe10:0:b0:449:6e24:be74 with SMTP id
+ l16-20020a67fe10000000b004496e24be74mr15745478vsr.0.1692947157287; Fri, 25
+ Aug 2023 00:05:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230810171429.31759-1-jack@suse.cz>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230824141447.155846739@linuxfoundation.org>
+In-Reply-To: <20230824141447.155846739@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Fri, 25 Aug 2023 12:35:46 +0530
+Message-ID: <CA+G9fYsPPpduLzJ4+GZe_18jgYw56=w5bQ2W1jnyWa-8krmOSw@mail.gmail.com>
+Subject: Re: [PATCH 6.1 00/15] 6.1.48-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Cc:     stable@vger.kernel.org, patches@lists.linux.dev,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+        jonathanh@nvidia.com, f.fainelli@gmail.com,
+        sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+        conor@kernel.org, Sherry Yang <sherry.yang@oracle.com>,
+        LTP List <ltp@lists.linux.it>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 11, 2023 at 01:04:31PM +0200, Jan Kara wrote:
-> Hello,
-> 
-> this is a v2 of the patch series which implements the idea of blkdev_get_by_*()
-> calls returning bdev_handle which is then passed to blkdev_put() [1]. This
-> makes the get and put calls for bdevs more obviously matching and allows us to
-> propagate context from get to put without having to modify all the users
-> (again!).  In particular I need to propagate used open flags to blkdev_put() to
-> be able count writeable opens and add support for blocking writes to mounted
-> block devices. I'll send that series separately.
-> 
-> The series is based on Christian's vfs tree as of yesterday as there is quite
-> some overlap. Patches have passed some reasonable testing - I've tested block
-> changes, md, dm, bcache, xfs, btrfs, ext4, swap. This obviously doesn't cover
-> everything so I'd like to ask respective maintainers to review / test their
-> changes. Thanks! I've pushed out the full branch to:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jack/linux-fs.git bdev_handle
-> 
-> to ease review / testing.
++ linux-nfs and more
 
-Hmm...  Completely Insane Idea(tm): how about turning that thing inside out and
-having your bdev_open_by... return an actual opened struct file?
+On Thu, 24 Aug 2023 at 19:45, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.1.48 release.
+> There are 15 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Sat, 26 Aug 2023 14:14:28 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.48-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-After all, we do that for sockets and pipes just fine and that's a whole lot
-hotter area.
 
-Suppose we leave blkdev_open()/blkdev_release() as-is.  No need to mess with
-what we have for normal opened files for block devices.  And have block_open_by_dev()
-that would find bdev, etc., same yours does and shove it into anon file.
+Following test regression found on stable-rc 6.1.
+Rpi4 is using NFS mount rootfs and running LTP syscalls testing.
+chown02 tests creating testfile2 on NFS mounted and validating
+the functionality and found that it was a failure.
 
-Paired with plain fput() - no need to bother with new primitives for closing.
-With a helper returning I_BDEV(bdev_file_inode(file)) to get from those to bdev.
+This is already been reported by others on lore and fix patch merged
+into stable-rc linux-6.4.y [1] and [2].
 
-NOTE: I'm not suggesting replacing ->s_bdev with struct file * if we do that -
-we want that value cached, obviously.  Just store both...
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Not saying it's a good idea, but... might be interesting to look into.
-Comments?
+Test log:
+--------
+chown02.c:46: TPASS: chown(testfile1, 0, 0) passed
+chown02.c:46: TPASS: chown(testfile2, 0, 0) passed
+chown02.c:58: TFAIL: testfile2: wrong mode permissions 0100700, expected 0102700
+
+fchown02.c:57: TPASS: fchown(3, 0, 0) passed
+fchown02.c:57: TPASS: fchown(4, 0, 0) passed
+fchown02.c:67: TFAIL: testfile2: wrong mode permissions 0100700,
+expected 0102700
+
+
+## Build
+* kernel: 6.1.48-rc1
+* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
+* git branch: linux-6.1.y
+* git commit: c079d0dd788ad4fe887ee6349fe89d23d72f7696
+* git describe: v6.1.47-16-gc079d0dd788a
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.47-16-gc079d0dd788a
+
+## Test Regressions (compared to v6.1.46)
+* bcm2711-rpi-4-b, ltp-syscalls
+  - chown02
+  - fchown02
+
+* bcm2711-rpi-4-b-64k_page_size, ltp-syscalls
+  - chown02
+  - fchown02
+
+* bcm2711-rpi-4-b-clang, ltp-syscalls
+  - chown02
+  - fchown02
+
+
+
+
+Do we need the following patch into stable-rc linux-6.1.y ?
+
+I see from mailing thread discussion, says that
+
+the above commit is backported to LTS kernels -- 5.10.y,5.15.y and 6.1.y.
+
+
+----
+
+nfsd: use vfs setgid helper
+commit 2d8ae8c417db284f598dffb178cc01e7db0f1821 upstream.
+
+We've aligned setgid behavior over multiple kernel releases. The details
+can be found in commit cf619f891971 ("Merge tag 'fs.ovl.setgid.v6.2' of
+git://git.kernel.org/pub/scm/linux/kernel/git/vfs/idmapping") and
+commit 426b4ca2d6a5 ("Merge tag 'fs.setgid.v6.0' of
+git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux").
+Consistent setgid stripping behavior is now encapsulated in the
+setattr_should_drop_sgid() helper which is used by all filesystems that
+strip setgid bits outside of vfs proper. Usually ATTR_KILL_SGID is
+raised in e.g., chown_common() and is subject to the
+setattr_should_drop_sgid() check to determine whether the setgid bit can
+be retained. Since nfsd is raising ATTR_KILL_SGID unconditionally it
+will cause notify_change() to strip it even if the caller had the
+necessary privileges to retain it. Ensure that nfsd only raises
+ATR_KILL_SGID if the caller lacks the necessary privileges to retain the
+setgid bit.
+
+Without this patch the setgid stripping tests in LTP will fail:
+
+> As you can see, the problem is S_ISGID (0002000) was dropped on a
+> non-group-executable file while chown was invoked by super-user, while
+
+[...]
+
+> fchown02.c:66: TFAIL: testfile2: wrong mode permissions 0100700, expected 0102700
+
+[...]
+
+> chown02.c:57: TFAIL: testfile2: wrong mode permissions 0100700, expected 0102700
+
+With this patch all tests pass.
+
+Reported-by: Sherry Yang <sherry.yang@oracle.com>
+Signed-off-by: Christian Brauner <brauner@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
+[1] https://lore.kernel.org/linux-nfs/20230502-agenda-regeln-04d2573bd0fd@brauner/
+[2] https://lore.kernel.org/all/202210091600.dbe52cbf-yujie.liu@intel.com/
+--
+Linaro LKFT
+https://lkft.linaro.org
