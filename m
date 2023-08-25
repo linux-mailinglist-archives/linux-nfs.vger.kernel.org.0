@@ -2,56 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE5667882A1
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 10:49:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93FA47883D0
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 11:35:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243922AbjHYItL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Aug 2023 04:49:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59994 "EHLO
+        id S238780AbjHYJfW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Aug 2023 05:35:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244047AbjHYIs6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 04:48:58 -0400
-Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15BE11FFE
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 01:48:53 -0700 (PDT)
-Received: by mail-ua1-x933.google.com with SMTP id a1e0cc1a2514c-7a257fabae5so243827241.2
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 01:48:53 -0700 (PDT)
+        with ESMTP id S244336AbjHYJe4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 05:34:56 -0400
+Received: from mail-vk1-xa31.google.com (mail-vk1-xa31.google.com [IPv6:2607:f8b0:4864:20::a31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85DD213D
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 02:34:27 -0700 (PDT)
+Received: by mail-vk1-xa31.google.com with SMTP id 71dfb90a1353d-4871e5dbe0cso1085457e0c.1
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 02:34:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1692953332; x=1693558132;
+        d=linaro.org; s=google; t=1692956049; x=1693560849;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=sbZ3YR5SOTzvg9ICyWHf0Y3N1R2PQGKPLxJHSDkU0rM=;
-        b=GYyfYLoayqEhg+1OxKxqtm2fRmYulcaLX4TTxSgt21+qkzsk1exT9j6tQjBpc6866n
-         XEyJawRoUgLyEKmHa12McvnPjjYUb7Cd4nGCM8MsADBgoDSOwF/dulMelfLTUyrPluLO
-         paCyyivUdXtYjN3IHnW74ErmR3kRj0s4vWJ+M0aA52GjyjOc2dLGmlJBCNXYd1VMkxDe
-         1U7bfmMswXlUEBtQBDtUetBffAei96AJwh1jlNs5b2UMj4/O0ieJDqcipj5SV3IlDAPC
-         JfHLPwIquqLbAzZDQJw+KPxHYgn+EXchOPo35A/dehuZvaif5wvZmrqEr87FFkkOXyeg
-         h0/w==
+        bh=NkOXDPx/S3uX0LGrWHhqDuzgnalOjRvvuzfXBDquIJE=;
+        b=ukX0Pnuivh/o6xISkXG2MwEK0o1GsQV27v/wL8PCYr3K8rw4rCQ89pL5zDucAFhMcb
+         YskOrO04SlvsfelPwM6wi6bo33kueI9hAzLSHaH+rO3C/KdletWIMPRTOYoAyAI3o5Bb
+         gwe8YbDTEL9VB12BM6LBCliW9FWhwvSr325DZcjSigPSeB9JpebjY5rhdU88q9fnhEcr
+         bO6YXtDqCkq7TIBUj7afnMs8Ik0gKHvbzTGASsEDdGmUvf5tgRjCJeHx7rzEZgS3e+cq
+         5wBCW0y7FKsG5YGqd1KFGnDwwJz8ywHAaQLG/7SL+2BGaFhCrt7m2jYp93piNMTJfTI7
+         5ZGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692953332; x=1693558132;
+        d=1e100.net; s=20221208; t=1692956049; x=1693560849;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sbZ3YR5SOTzvg9ICyWHf0Y3N1R2PQGKPLxJHSDkU0rM=;
-        b=lB2XeN4XYJWSqoQ6Ls34GJ18H13VQMze/LDJetFTV+us9fRx+GCJmxpsIf5D3sGqVu
-         JfiWjrHwAadl8WbEyUEAvNbD7vzE9GhpimaaWldwNIM55Ik7zwO9lZi+h4bh0/8PWq0s
-         iUYO+UoIPh45FidjYH31hyqY4sz801BdqHp+4ZYkyLl62LpHbh04Z6Hn0AwQuJrtsw19
-         oZvp3z19U9p1Kd2yyST6q0D7OrWmEQCyqs3/YhmH/ENoo5nw8PFaCOP8iPd9ajaGbA08
-         d0KjmWnROtP2AdBJ/xxcijK3qXMQU+PHKGrN1kAwfOyQhIhrJpnHL534ad0osPageVWg
-         r/BQ==
-X-Gm-Message-State: AOJu0YxYRIlsWSG0CAskXO6KbS++G7gDzXemuAG8Q61W3C2TWy3RM0TG
-        zi3chIZcVm3bdOS++v+NeKlzPdduWSSny0d71icFbQ==
-X-Google-Smtp-Source: AGHT+IHv9ZXZDpJ4MtbLFtoZRPbeXnm7kBLGoVbXuXoEwFv6MYdMhI1trUVN0f9Wn9gfMN6Tfn8L5YsvCtebNf///wI=
-X-Received: by 2002:a67:f8cf:0:b0:44e:906d:58d with SMTP id
- c15-20020a67f8cf000000b0044e906d058dmr5548304vsp.13.1692953332138; Fri, 25
- Aug 2023 01:48:52 -0700 (PDT)
+        bh=NkOXDPx/S3uX0LGrWHhqDuzgnalOjRvvuzfXBDquIJE=;
+        b=dHFwCog5Tak4lmZqEKrkSNGUcaoRneGaVhqK2hhaHDLcTezizozSd5asiJ1A+FITtj
+         2Z1YZ5DkzX5TMQ/cHSdqJmk+axB0S0WutpM6NolwH/vP/cB2dlFyQpiSoVSXKbAa6vpi
+         Co8V7bdzOt04N7a0D3VGiNj3COq7mrXkdNniZcVYS/e9yqY9FthqvXSnsD2qFBFPXyPE
+         TVuU4i/oscAyh9aGLPOwfjnMBTjvWoxe6Un4+kZqM/HvHu9HQo9cgrtk8cxNfr5wBPZc
+         3y9UBlbUJJxZlqg08EF7kFP759IDZjTJdk5Eh9R7a6r+LUPudwmBHDVRhdvu+VMHb/GN
+         uY2g==
+X-Gm-Message-State: AOJu0YwS9vQtl4AnOjLLxTMHhS6iBlUCfnsIbew0fAnEMMw1F4yWD1ck
+        L5PQtyYhm+/yBusIK2zt6LbMz193pn7vpbcrDt1COA==
+X-Google-Smtp-Source: AGHT+IHYxHlYu/b9jq1hZYwDJBTUYSSDdzBlVxG6txEHWSCkNIMRdBra+qgQir4lLTbNjKOfAbjN9wZa5rm8CXm04BI=
+X-Received: by 2002:a05:6122:2527:b0:48d:969:af8b with SMTP id
+ cl39-20020a056122252700b0048d0969af8bmr10536527vkb.1.1692956049376; Fri, 25
+ Aug 2023 02:34:09 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230824141447.155846739@linuxfoundation.org> <CA+G9fYsPPpduLzJ4+GZe_18jgYw56=w5bQ2W1jnyWa-8krmOSw@mail.gmail.com>
  <2023082512-amusement-luncheon-8d8d@gregkh>
 In-Reply-To: <2023082512-amusement-luncheon-8d8d@gregkh>
 From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 25 Aug 2023 14:18:40 +0530
-Message-ID: <CA+G9fYvVGxm0xOYp4LHepRJqccwmK7Zeg--2AhVk5T+T28Kk6A@mail.gmail.com>
+Date:   Fri, 25 Aug 2023 15:03:58 +0530
+Message-ID: <CA+G9fYsxAgRcvc4G_mU2LW+bw3aUVgTNGd+zmkhkoaXUsWv67Q@mail.gmail.com>
 Subject: Re: [PATCH 6.1 00/15] 6.1.48-rc1 review
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     Christian Brauner <brauner@kernel.org>,
@@ -68,8 +68,9 @@ Cc:     Christian Brauner <brauner@kernel.org>,
         LTP List <ltp@lists.linux.it>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -116,67 +117,11 @@ On Fri, 25 Aug 2023 at 13:57, Greg Kroah-Hartman
 >
 > Odd, it's not a regression in this -rc cycle, so it was missed in the
 > previous ones somehow?
->
-> > Test log:
-> > --------
-> > chown02.c:46: TPASS: chown(testfile1, 0, 0) passed
-> > chown02.c:46: TPASS: chown(testfile2, 0, 0) passed
-> > chown02.c:58: TFAIL: testfile2: wrong mode permissions 0100700, expected 0102700
-> >
-> > fchown02.c:57: TPASS: fchown(3, 0, 0) passed
-> > fchown02.c:57: TPASS: fchown(4, 0, 0) passed
-> > fchown02.c:67: TFAIL: testfile2: wrong mode permissions 0100700,
-> > expected 0102700
-> >
-> >
-> > ## Build
-> > * kernel: 6.1.48-rc1
-> > * git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-> > * git branch: linux-6.1.y
-> > * git commit: c079d0dd788ad4fe887ee6349fe89d23d72f7696
-> > * git describe: v6.1.47-16-gc079d0dd788a
-> > * test details:
-> > https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.1.y/build/v6.1.47-16-gc079d0dd788a
-> >
-> > ## Test Regressions (compared to v6.1.46)
-> > * bcm2711-rpi-4-b, ltp-syscalls
-> >   - chown02
-> >   - fchown02
-> >
-> > * bcm2711-rpi-4-b-64k_page_size, ltp-syscalls
-> >   - chown02
-> >   - fchown02
-> >
-> > * bcm2711-rpi-4-b-clang, ltp-syscalls
-> >   - chown02
-> >   - fchown02
-> >
-> >
-> >
-> >
-> > Do we need the following patch into stable-rc linux-6.1.y ?
-> >
-> > I see from mailing thread discussion, says that
-> >
-> > the above commit is backported to LTS kernels -- 5.10.y,5.15.y and 6.1.y.
->
-> What "above commit"?
 
-Sorry, s/above/below/
-I copied that from another email thread as it is.
+I have re-tested with newers and older versions of the kernel and here
+I confirm that this is not a regression from this round of stable rc review.
 
->
-> And what commit should be backported?
+We have made a couple of changes to our infrastructure and are investigating
+the root cause of these two test cases failures.
 
-
-  nfsd: use vfs setgid helper
-    commit 2d8ae8c417db284f598dffb178cc01e7db0f1821 upstream.
-
-Please refer this link,
- - https://lore.kernel.org/linux-nfs/20230502-agenda-regeln-04d2573bd0fd@brauner/
-
-
->
-> confused,
->
-> greg k-h
+- Naresh
