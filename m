@@ -2,124 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1151788D0A
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 18:14:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A49DD788D10
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 18:17:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343731AbjHYQNn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Aug 2023 12:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
+        id S1343845AbjHYQQ5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Aug 2023 12:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343993AbjHYQN1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 12:13:27 -0400
-Received: from mail.digitalelves.com (mail.digitalelves.com [198.211.96.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4D053270E
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 09:13:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=thebarn.com;
-        s=default; t=1692979960;
-        bh=CFTPtaBuPXYMwSXQVoVdKtZ9bQSC97GxqZ09sZHMaB8=;
-        h=Date:From:Subject:Reply-To:To:References:In-Reply-To:From;
-        b=odsMIX5xUg+qUwO3lFAJ3U551ucaMiW6FoIKdU7MGuGuYvCmp0rzmCGFwn2KuRQKF
-         557xENcq2bIPPES6nO9F2S3C88TcIqu/U0w4iPmx+3VE8vt9ZcJysb+C8+ABH4Wszf
-         PdubuePLpYH7v/tYmWbi9vFCZv1DBmnOwT8OQsJg=
-Received: from [192.168.1.162] (c-73-94-102-169.hsd1.mn.comcast.net [73.94.102.169])
-        by mail.digitalelves.com (Postfix) with ESMTPSA id 93ED213B6F6
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 16:12:39 +0000 (UTC)
-Message-ID: <11a5110b-0769-de07-10a4-d266dbb8c5c0@thebarn.com>
-Date:   Fri, 25 Aug 2023 11:12:38 -0500
+        with ESMTP id S236836AbjHYQQe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 12:16:34 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5265E1BCD;
+        Fri, 25 Aug 2023 09:16:32 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37PDOG22018212;
+        Fri, 25 Aug 2023 16:16:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2023-03-30; bh=TY4XLDkKVe7jkw8ztxfCZAOnfcB0IjZA0SDqh7eFy7E=;
+ b=p7UcrEV+9CE4d9Pi1prsgJqfRDFwlNBLE/7l6OyviqXYAEsQJR7OB2mxU4GcKthFF8Yw
+ 5AH6utmiefVV1CB4foudL/I2HqjjEjWIFVBHShNaFoGWZjG4rHqXUy+i7UBRQf2QrZsD
+ oAT00ltsikOd1whEAi+A8sFubap/+nA0T3H4kb/o5j/zoRlnLlqs6vXK85lY+ukkX4Iy
+ Y4gL1h0XOdyndyOGX6ampvb0xwE5F+7hYIJkTriah0ZRst59311dnktoNSNF1Wmx2ZtK
+ Jw6uzbrNcrYkPNIEbwoSHOSdAtHqaWGyI/ctWsBqWbbPA6EVva7wvBZuiWWYDKVi48gV xA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sn1yxpnnt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Aug 2023 16:16:20 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37PFqN9Y036189;
+        Fri, 25 Aug 2023 16:16:19 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3sn1yxhtff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Aug 2023 16:16:19 +0000
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37PGGILX030021;
+        Fri, 25 Aug 2023 16:16:18 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3sn1yxhtew-1;
+        Fri, 25 Aug 2023 16:16:18 +0000
+From:   Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+To:     brauner@kernel.org, chuck.lever@oracle.com, bfields@fieldses.org,
+        stable@vger.kernel.org, linux-nfs@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org, hch@lst.de, jlayton@kernel.org,
+        vegard.nossum@oracle.com, naresh.kamboju@linaro.org,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Subject: [PATCH 6.1.y 0/2] Address ltp nfs test failure.
+Date:   Fri, 25 Aug 2023 09:16:01 -0700
+Message-ID: <20230825161603.371792-1-harshit.m.mogalapalli@oracle.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.14.0
-From:   Russell Cattelan <cattelan@thebarn.com>
-Subject: Re: Question on RPC_TASK_NO_RETRANS_TIMEOUT /
- NFS_CS_NO_RETRANS_TIMEOUT for NFSv3
-Reply-To: Russell Cattelan <cattelan@thebarn.com>
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-References: <09b207aa-3670-90e8-9a04-1c35c1397a0c@thebarn.com>
-Content-Language: en-US
-In-Reply-To: <09b207aa-3670-90e8-9a04-1c35c1397a0c@thebarn.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-25_14,2023-08-25_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ malwarescore=0 spamscore=0 phishscore=0 mlxlogscore=860 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2308250145
+X-Proofpoint-GUID: BlT1WBCEksa-YmwJXo5QHuRaNkvMkvHv
+X-Proofpoint-ORIG-GUID: BlT1WBCEksa-YmwJXo5QHuRaNkvMkvHv
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> > Hi, there!
-> > 
-> > We have some shares that use NFSv3 with TCP and Kerberos and have
-> > been
-> > hitting an intriguing issue with those. We have noticed that network
-> > instabilities have been causing some 'Permission denied' errors on
-> > files.
-> > 
-> > The current scenario we have is based on NFSv3 over TCP clients,
-> > configured with Kerberos (krb5p) authentication against a NetApp NFS
-> > Server (ONTAP).  This is happening regardless of the Kernel we use
-> > (our main tests bear 4.15 and 5.15 generic Ubuntu Kernels - from
-> > Bionic and Jammy), and we have not found any interesting commits in
-> > either components upstream that would change the behaviour in hand.
-> > 
-> > We tracked those issues down and found out that the 'Permission
-> > denied' happens because our packets are failing the GSS checksum.
-> > We kept investigating and discovered, after some tcpdump, that this
-> > happens because the client retransmits RPC packets, which increases
-> > the GSS sequence number. Meanwhile, the response to the original
-> > packet gets received, but the checksum fails because the client is
-> > expecting a different GSS sequence number.
-> > 
-> > This can be avoided with NFSv4 because the RPC client is created with
-> > a "no retrans timeout" flag. Such a flag is not set and is
-> > impossible to set on NFSv3. We did some investigation and thought
-> > that
-> > setting this flag would fix our problems without the need to move to
-> > NFSv4.
-> > 
-> > Our question is: is there a reason this flag is not being set nor is
-> > it possible to set it for NFSv3? Is there something on NFSv3 that
-> > demands RPC retransmissions even with TCP?  One "hint" we have come
-> > across is that it is *explicitly mentioned* in NFSv4's RFC, and
-> > there is nothing in NFSv3 at all - most likely due to the fact we're
-> > dealing with a stateless protocol.
-> > 
-> > Any comments would be greatly appreciated here!
-> > 
-> > Thank you,
-> > 
-> > [1]
-> > https://github.com/torvalds/linux/blob/v5.15/net/sunrpc/auth_gss/gss_krb5_unseal.c#L194
-> > [2] https://github.com/torvalds/linux/blob/v5.15/fs/nfs/client.c#L521
-> > [3] https://datatracker.ietf.org/doc/html/rfc7530#section-3.1.1
->
-> NFSv3 servers are allowed to drop requests, and NFSv3 clients are
-> expected to retransmit them when this happens. NFSv4 servers may not
-> drop requests, and NFSv4 clients are expected never to retransmit
-> (unless the connection breaks). For that reason we do set
-> RPC_TASK_NO_RETRANS_TIMEOUT on NFSv4 and do not on NFSv3.
->
-We have been doing a bunch of debugging on this issue and the key point / problem we are
-running into is that because this is a kerberos enabled mount when the client does a
-re-transmit it ends up generating a new MIC header / checksum since the krb5 context
-sequence number has moved on.
+These two are backports for 6.1.y. Conflict resolution in done in
+both patches.
 
-If that retrans happens before the original response is received then the mic verification
-fails since the client is now expecting a response to the second packet and not the first.
-mic header verification fails which then results in an EACCES error which ends up as an IO
-error at the application.
+I have tested LTP-nfs fchown02 and chown02 on 6.1.y with below patches
+applied. The tests passed.
 
-What we have found that is it easy to repro in our environment adding an iptables
-rule to drop responses from the nfs server for 55-63 seconds.
-Less than 55 sec and the retrans does not happen things recover
-More than 63 sec and the rpc code goes down the reconnect path before doing the retrans and
-things recover.
+I would like to have a review as I am not familiar with this code.
 
-It seems like kerberos enabled mounts should be using RPC_TASK_NO_RETRANS_TIMEOUT since doing
-a retrans changes the GSS checksum from the original checksum.
+Thanks to Vegard for helping me with this.
 
+Thanks,
+Harshit
 
---Russell Cattelan
+Christian Brauner (2):
+  nfs: use vfs setgid helper
+  nfsd: use vfs setgid helper
 
+ fs/attr.c          | 1 +
+ fs/internal.h      | 2 --
+ fs/nfs/inode.c     | 4 +---
+ fs/nfsd/vfs.c      | 4 +++-
+ include/linux/fs.h | 2 ++
+ 5 files changed, 7 insertions(+), 6 deletions(-)
+
+-- 
+2.34.1
 
