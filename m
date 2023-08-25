@@ -2,29 +2,29 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7FA0788A60
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 16:05:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 490C7788A9C
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Aug 2023 16:06:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245662AbjHYOEj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Aug 2023 10:04:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53046 "EHLO
+        id S245525AbjHYOGH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Aug 2023 10:06:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245753AbjHYOE1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 10:04:27 -0400
-Received: from out-242.mta1.migadu.com (out-242.mta1.migadu.com [95.215.58.242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409EB2D65
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 07:04:07 -0700 (PDT)
+        with ESMTP id S245521AbjHYN5k (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 09:57:40 -0400
+Received: from out-248.mta1.migadu.com (out-248.mta1.migadu.com [IPv6:2001:41d0:203:375::f8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB7B8268A;
+        Fri, 25 Aug 2023 06:57:18 -0700 (PDT)
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1692971737;
+        t=1692971837;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=T0rAQ2m4NCOjyQSS+sDl9LbRcvD63qBgcFke1LvzwG4=;
-        b=FhWBDojlb1xYVHNahPbh8JswlNyJ/7jP1EQwNTm7cO8OehSugwUDArDmc1mbqA0BkMNMvY
-        d5QJXx+UI3kBCUhvBoGQg8tDI16sv1k0yhgjUCPvI7yY9h5j0N5DBUGFQcYH7e2p4/SYF7
-        drCs2jVg1zT9ErcXMBzhoggf+SCjkYU=
+        bh=/w6lIGuCSX5M2SzS7SE+A2P7DaEhoFOZKnfxuRd6M0g=;
+        b=ZBBdmQmn/QswMnMhJaSAfXlf1oUY8DtSqPmmn75d8pDMERuOJJX6J86JCF/c0yd1RLwCFL
+        31gixh9w5LkzzEj2vO8LvkCfQ90DBKrPt5Zp4Wgls4dziWWNaF03qzW9wejmnudGoy1bT6
+        SZd55YvanxvHQ0hgcOptPehal51m0m0=
 From:   Hao Xu <hao.xu@linux.dev>
 To:     io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
 Cc:     Dominique Martinet <asmadeus@codewreck.org>,
@@ -46,9 +46,9 @@ Cc:     Dominique Martinet <asmadeus@codewreck.org>,
         devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
         samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
         Wanpeng Li <wanpengli@tencent.com>
-Subject: [PATCH 02/29] xfs: rename XBF_TRYLOCK to XBF_NOWAIT
-Date:   Fri, 25 Aug 2023 21:54:04 +0800
-Message-Id: <20230825135431.1317785-3-hao.xu@linux.dev>
+Subject: [PATCH 06/29] vfs: add file_pos_unlock() for io_uring usage
+Date:   Fri, 25 Aug 2023 21:54:08 +0800
+Message-Id: <20230825135431.1317785-7-hao.xu@linux.dev>
 In-Reply-To: <20230825135431.1317785-1-hao.xu@linux.dev>
 References: <20230825135431.1317785-1-hao.xu@linux.dev>
 MIME-Version: 1.0
@@ -65,139 +65,31 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Hao Xu <howeyxu@tencent.com>
 
-XBF_TRYLOCK means we need lock but don't block on it, we can use it to
-stand for not waiting for memory allcation. Rename XBF_TRYLOCK to
-XBF_NOWAIT, which is more generic.
+Add a helper to unlock f_pos_lock without any condition. Introduce this
+since io_uring handles f_pos_lock not with a fd struct, thus
+FDPUT_POS_UNLOCK isn't used.
 
 Signed-off-by: Hao Xu <howeyxu@tencent.com>
 ---
- fs/xfs/libxfs/xfs_alloc.c       | 2 +-
- fs/xfs/libxfs/xfs_attr_remote.c | 2 +-
- fs/xfs/libxfs/xfs_btree.c       | 2 +-
- fs/xfs/scrub/repair.c           | 2 +-
- fs/xfs/xfs_buf.c                | 6 +++---
- fs/xfs/xfs_buf.h                | 4 ++--
- fs/xfs/xfs_dquot.c              | 2 +-
- 7 files changed, 10 insertions(+), 10 deletions(-)
+ include/linux/file.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 3069194527dd..a75b9298faa8 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -3183,7 +3183,7 @@ xfs_alloc_read_agf(
- 	ASSERT((flags & (XFS_ALLOC_FLAG_FREEING | XFS_ALLOC_FLAG_TRYLOCK)) !=
- 			(XFS_ALLOC_FLAG_FREEING | XFS_ALLOC_FLAG_TRYLOCK));
- 	error = xfs_read_agf(pag, tp,
--			(flags & XFS_ALLOC_FLAG_TRYLOCK) ? XBF_TRYLOCK : 0,
-+			(flags & XFS_ALLOC_FLAG_TRYLOCK) ? XBF_NOWAIT : 0,
- 			&agfbp);
- 	if (error)
- 		return error;
-diff --git a/fs/xfs/libxfs/xfs_attr_remote.c b/fs/xfs/libxfs/xfs_attr_remote.c
-index d440393b40eb..2ccb0867824c 100644
---- a/fs/xfs/libxfs/xfs_attr_remote.c
-+++ b/fs/xfs/libxfs/xfs_attr_remote.c
-@@ -661,7 +661,7 @@ xfs_attr_rmtval_invalidate(
- 			return error;
- 		if (XFS_IS_CORRUPT(args->dp->i_mount, nmap != 1))
- 			return -EFSCORRUPTED;
--		error = xfs_attr_rmtval_stale(args->dp, &map, XBF_TRYLOCK);
-+		error = xfs_attr_rmtval_stale(args->dp, &map, XBF_NOWAIT);
- 		if (error)
- 			return error;
- 
-diff --git a/fs/xfs/libxfs/xfs_btree.c b/fs/xfs/libxfs/xfs_btree.c
-index 6a6503ab0cd7..77c4f1d83475 100644
---- a/fs/xfs/libxfs/xfs_btree.c
-+++ b/fs/xfs/libxfs/xfs_btree.c
-@@ -1343,7 +1343,7 @@ xfs_btree_read_buf_block(
- 	int			error;
- 
- 	/* need to sort out how callers deal with failures first */
--	ASSERT(!(flags & XBF_TRYLOCK));
-+	ASSERT(!(flags & XBF_NOWAIT));
- 
- 	error = xfs_btree_ptr_to_daddr(cur, ptr, &d);
- 	if (error)
-diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
-index ac6d8803e660..9312cf3b20e2 100644
---- a/fs/xfs/scrub/repair.c
-+++ b/fs/xfs/scrub/repair.c
-@@ -460,7 +460,7 @@ xrep_invalidate_block(
- 
- 	error = xfs_buf_incore(sc->mp->m_ddev_targp,
- 			XFS_FSB_TO_DADDR(sc->mp, fsbno),
--			XFS_FSB_TO_BB(sc->mp, 1), XBF_TRYLOCK, &bp);
-+			XFS_FSB_TO_BB(sc->mp, 1), XBF_NOWAIT, &bp);
- 	if (error)
- 		return 0;
- 
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 15d1e5a7c2d3..9f84bc3b802c 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -228,7 +228,7 @@ _xfs_buf_alloc(
- 	 * We don't want certain flags to appear in b_flags unless they are
- 	 * specifically set by later operations on the buffer.
- 	 */
--	flags &= ~(XBF_UNMAPPED | XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD);
-+	flags &= ~(XBF_UNMAPPED | XBF_NOWAIT | XBF_ASYNC | XBF_READ_AHEAD);
- 
- 	atomic_set(&bp->b_hold, 1);
- 	atomic_set(&bp->b_lru_ref, 1);
-@@ -543,7 +543,7 @@ xfs_buf_find_lock(
- 	struct xfs_buf          *bp,
- 	xfs_buf_flags_t		flags)
- {
--	if (flags & XBF_TRYLOCK) {
-+	if (flags & XBF_NOWAIT) {
- 		if (!xfs_buf_trylock(bp)) {
- 			XFS_STATS_INC(bp->b_mount, xb_busy_locked);
- 			return -EAGAIN;
-@@ -886,7 +886,7 @@ xfs_buf_readahead_map(
- 	struct xfs_buf		*bp;
- 
- 	xfs_buf_read_map(target, map, nmaps,
--		     XBF_TRYLOCK | XBF_ASYNC | XBF_READ_AHEAD, &bp, ops,
-+		     XBF_NOWAIT | XBF_ASYNC | XBF_READ_AHEAD, &bp, ops,
- 		     __this_address);
+diff --git a/include/linux/file.h b/include/linux/file.h
+index bcc6ba0aec50..a179f4794341 100644
+--- a/include/linux/file.h
++++ b/include/linux/file.h
+@@ -81,6 +81,11 @@ static inline void fdput_pos(struct fd f)
+ 	fdput(f);
  }
  
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 549c60942208..8cd307626939 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -45,7 +45,7 @@ struct xfs_buf;
++static inline void file_pos_unlock(struct file *file)
++{
++	__f_unlock_pos(file);
++}
++
+ extern int file_pos_lock_nowait(struct file *file, bool nowait);
  
- /* flags used only as arguments to access routines */
- #define XBF_INCORE	 (1u << 29)/* lookup only, return if found in cache */
--#define XBF_TRYLOCK	 (1u << 30)/* lock requested, but do not wait */
-+#define XBF_NOWAIT	 (1u << 30)/* mem/lock requested, but do not wait */
- #define XBF_UNMAPPED	 (1u << 31)/* do not map the buffer */
- 
- 
-@@ -68,7 +68,7 @@ typedef unsigned int xfs_buf_flags_t;
- 	{ _XBF_DELWRI_Q,	"DELWRI_Q" }, \
- 	/* The following interface flags should never be set */ \
- 	{ XBF_INCORE,		"INCORE" }, \
--	{ XBF_TRYLOCK,		"TRYLOCK" }, \
-+	{ XBF_NOWAIT,		"NOWAIT" }, \
- 	{ XBF_UNMAPPED,		"UNMAPPED" }
- 
- /*
-diff --git a/fs/xfs/xfs_dquot.c b/fs/xfs/xfs_dquot.c
-index 7f071757f278..5bc01ed4b2d7 100644
---- a/fs/xfs/xfs_dquot.c
-+++ b/fs/xfs/xfs_dquot.c
-@@ -1233,7 +1233,7 @@ xfs_qm_dqflush(
- 	 * Get the buffer containing the on-disk dquot
- 	 */
- 	error = xfs_trans_read_buf(mp, NULL, mp->m_ddev_targp, dqp->q_blkno,
--				   mp->m_quotainfo->qi_dqchunklen, XBF_TRYLOCK,
-+				   mp->m_quotainfo->qi_dqchunklen, XBF_NOWAIT,
- 				   &bp, &xfs_dquot_buf_ops);
- 	if (error == -EAGAIN)
- 		goto out_unlock;
+ DEFINE_CLASS(fd, struct fd, fdput(_T), fdget(fd), int fd)
 -- 
 2.25.1
 
