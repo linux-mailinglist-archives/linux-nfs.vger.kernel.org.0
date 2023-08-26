@@ -2,158 +2,233 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1208378936D
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Aug 2023 04:30:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01F51789421
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Aug 2023 09:00:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231745AbjHZC3d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Aug 2023 22:29:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36580 "EHLO
+        id S231583AbjHZG74 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 26 Aug 2023 02:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231722AbjHZC3E (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 22:29:04 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B41A8;
-        Fri, 25 Aug 2023 19:29:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kRz17k12DLtH5ptlx3fiiancvtShyoQwDvuAAOUED4Y=; b=mPm/qZCa7MWW4zdrpIjhXYeIS6
-        8cbIgOvCf/9Y6gIxhhuc7MbOClbX1o3H4gTlXLJmOpOyil1pufLmdD8oxm6VhlxB4x6C/OQmKz1OC
-        9Sg7eN60e8HGn0pn/DtWEZ2zi7uHlJyyQNolWeGdXQEgqn78/62UYsbUB8gsUgOw68YkPTd36+fo0
-        kPzizyM3mKJ55bukbV99w6F1Yx4exn0ELF0EHA2mn4TEClpd2hjjcTiwEbEGv+vsWkEq4IC7ejHjR
-        rO8uE9/3ipL5VpLJjGdd7WJssIdQ5Tj/z+j2E3fQDWI0Qb9TMLDhfRhfBXk5sw2QK4rJI42xn3tDe
-        SBJa1VHw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qZj2i-0010QB-1S;
-        Sat, 26 Aug 2023 02:28:52 +0000
-Date:   Sat, 26 Aug 2023 03:28:52 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
-        Jack Wang <jinpu.wang@ionos.com>,
+        with ESMTP id S229527AbjHZG7f (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 26 Aug 2023 02:59:35 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA2E19AC;
+        Fri, 25 Aug 2023 23:59:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1693033171; x=1724569171;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8m7G2/O7JyDUFzbF1iO3H8x210d51lOyDfQC7OxdN/g=;
+  b=WI6zb700mXULo4R/eC5ZEw4PHz5KSEUKt2l8YgmArviU9ZpoBGlI8QYS
+   1tJ4DQpH4JtLsqrikPswBBjUDlH1f1g5lsjzcOorNhOYQqYJ44jqi4g4G
+   YPzQtzpXh0K7tnlkkoS7GuTdWdHoZ1LUumMftOdsqYEMXTV3V0mYL8Mpw
+   8X4UFosKMbj3SDIZf2pKHGFA9sb9dvbgeaz/SESoUT2VHGXhD1LFmNSiV
+   eAxnTvJSCdT8iLyNvrgXcENxdDwMo5x9nScWaPAtcimz/7PtzBl7e+rND
+   8krlor0mZmOhcV0Q3fJEMT4BVZuvbZz+5YHAltKcsOaOT1SNpDcblMXDH
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="373728847"
+X-IronPort-AV: E=Sophos;i="6.02,203,1688454000"; 
+   d="scan'208";a="373728847"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Aug 2023 23:59:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10813"; a="861291303"
+X-IronPort-AV: E=Sophos;i="6.02,203,1688454000"; 
+   d="scan'208";a="861291303"
+Received: from lkp-server02.sh.intel.com (HELO daf8bb0a381d) ([10.239.97.151])
+  by orsmga004.jf.intel.com with ESMTP; 25 Aug 2023 23:59:23 -0700
+Received: from kbuild by daf8bb0a381d with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qZnGU-0004RR-1I;
+        Sat, 26 Aug 2023 06:59:22 +0000
+Date:   Sat, 26 Aug 2023 14:58:48 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Theodore Y.Ts'o" <tytso@mit.edu>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        Joern Engel <joern@lazybastard.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Song Liu <song@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        xen-devel@lists.xenproject.org, Jens Axboe <axboe@kernel.dk>,
-        Christian Brauner <brauner@kernel.org>
-Subject: Re: [PATCH v2 0/29] block: Make blkdev_get_by_*() return handle
-Message-ID: <20230826022852.GO3390869@ZenIV>
-References: <20230810171429.31759-1-jack@suse.cz>
- <20230825015843.GB95084@ZenIV>
- <20230825134756.o3wpq6bogndukn53@quack3>
+        linux-fscrypt@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        linux-bluetooth@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Xiubo Li <xiubli@redhat.com>, Jeff Layton <jlayton@kernel.org>,
+        ceph-devel@vger.kernel.org,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org,
+        Matthieu Baerts <matthieu.baerts@tessares.net>,
+        Mat Martineau <martineau@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Neil Brown <neilb@suse.de>, linux-nfs@vger.kernel.org,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-inte@web.codeaurora.org, grity@vger.kernel.org,
+        "Jason A.Donenfeld" <Jason@zx2c4.com>,
+        Ayush Sawal <ayush.sawal@chelsio.com>
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 2/12] ubifs: Do not include crypto/algapi.h
+Message-ID: <202308261414.HKw1Mrip-lkp@intel.com>
+References: <E1qYl9s-006vDm-IW@formenos.hmeau.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230825134756.o3wpq6bogndukn53@quack3>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <E1qYl9s-006vDm-IW@formenos.hmeau.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 25, 2023 at 03:47:56PM +0200, Jan Kara wrote:
+Hi Herbert,
 
-> I can see the appeal of not having to introduce the new bdev_handle type
-> and just using struct file which unifies in-kernel and userspace block
-> device opens. But I can see downsides too - the last fput() happening from
-> task work makes me a bit nervous whether it will not break something
-> somewhere with exclusive bdev opens. Getting from struct file to bdev is
-> somewhat harder but I guess a helper like F_BDEV() would solve that just
-> fine.
-> 
-> So besides my last fput() worry about I think this could work and would be
-> probably a bit nicer than what I have. But before going and redoing the whole
-> series let me gather some more feedback so that we don't go back and forth.
-> Christoph, Christian, Jens, any opinion?
+kernel test robot noticed the following build errors:
 
-Redoing is not an issue - it can be done on top of your series just
-as well.  Async behaviour of fput() might be, but...  need to look
-through the actual users; for a lot of them it's perfectly fine.
+[auto build test ERROR on wireless-next/main]
+[also build test ERROR on wireless/main linus/master rw-ubifs/next rw-ubifs/fixes v6.5-rc7 next-20230825]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-FWIW, from a cursory look there appears to be a missing primitive: take
-an opened bdev (or bdev_handle, with your variant, or opened file if we
-go that way eventually) and claim it.
+url:    https://github.com/intel-lab-lkp/linux/commits/Herbert-Xu/fscrypt-Do-not-include-crypto-algapi-h/20230823-183716
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless-next.git main
+patch link:    https://lore.kernel.org/r/E1qYl9s-006vDm-IW%40formenos.hmeau.com
+patch subject: [PATCH 2/12] ubifs: Do not include crypto/algapi.h
+config: x86_64-randconfig-075-20230823 (https://download.01.org/0day-ci/archive/20230826/202308261414.HKw1Mrip-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce: (https://download.01.org/0day-ci/archive/20230826/202308261414.HKw1Mrip-lkp@intel.com/reproduce)
 
-I mean, look at claim_swapfile() for example:
-                p->bdev = blkdev_get_by_dev(inode->i_rdev,
-                                   FMODE_READ | FMODE_WRITE | FMODE_EXCL, p);
-                if (IS_ERR(p->bdev)) {
-                        error = PTR_ERR(p->bdev);
-                        p->bdev = NULL;
-                        return error;
-                }
-                p->old_block_size = block_size(p->bdev);
-                error = set_blocksize(p->bdev, PAGE_SIZE);
-                if (error < 0)
-                        return error;
-we already have the file opened, and we keep it opened all the way until
-the swapoff(2); here we have noticed that it's a block device and we
-	* open the fucker again (by device number), this time claiming
-it with our swap_info_struct as holder, to be closed at swapoff(2) time
-(just before we close the file)
-	* flip the block size to PAGE_SIZE, to be reverted at swapoff(2)
-time That really looks like it ought to be
-	* take the opened file, see that it's a block device
-	* try to claim it with that holder
-	* on success, flip the block size
-with close_filp() in the swapoff(2) (or failure exit path in swapon(2))
-doing what it would've done for an O_EXCL opened block device.
-The only difference from O_EXCL userland open is that here we would
-end up with holder pointing not to struct file in question, but to our
-swap_info_struct.  It will do the right thing.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202308261414.HKw1Mrip-lkp@intel.com/
 
-This extra open is entirely due to "well, we need to claim it and the
-primitive that does that happens to be tied to opening"; feels rather
-counter-intuitive.
+All errors (new ones prefixed by >>):
 
-For that matter, we could add an explicit "unclaim" primitive - might
-be easier to follow.  That would add another example where that could
-be used - in blkdev_bszset() we have an opened block device (it's an
-ioctl, after all), we want to change block size and we *really* don't
-want to have that happen under a mounted filesystem.  So if it's not
-opened exclusive, we do a temporary exclusive open of own and act on
-that instead.   Might as well go for a temporary claim...
+   In file included from fs/ubifs/auth.c:12:
+>> include/linux/verification.h:23:11: error: use of undeclared identifier 'EINVAL'
+                   return -EINVAL;
+                           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:97:11: warning: array index 3 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
+                   return (set->sig[3] | set->sig[2] |
+                           ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:97:25: warning: array index 2 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
+                   return (set->sig[3] | set->sig[2] |
+                                         ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:98:4: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
+                           set->sig[1] | set->sig[0]) == 0;
+                           ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:100:11: warning: array index 1 is past the end of the array (that has type 'unsigned long[1]') [-Warray-bounds]
+                   return (set->sig[1] | set->sig[0]) == 0;
+                           ^        ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:113:11: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
+                   return  (set1->sig[3] == set2->sig[3]) &&
+                            ^         ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:113:27: warning: array index 3 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
+                   return  (set1->sig[3] == set2->sig[3]) &&
+                                            ^         ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:114:5: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
+                           (set1->sig[2] == set2->sig[2]) &&
+                            ^         ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
+   In file included from include/linux/fs.h:33:
+   In file included from include/linux/percpu-rwsem.h:7:
+   In file included from include/linux/rcuwait.h:6:
+   In file included from include/linux/sched/signal.h:6:
+   include/linux/signal.h:114:21: warning: array index 2 is past the end of the array (that has type 'const unsigned long[1]') [-Warray-bounds]
+                           (set1->sig[2] == set2->sig[2]) &&
+                                            ^         ~
+   arch/x86/include/asm/signal.h:24:2: note: array 'sig' declared here
+           unsigned long sig[_NSIG_WORDS];
+           ^
+   In file included from fs/ubifs/auth.c:18:
+   In file included from fs/ubifs/ubifs.h:16:
 
-BTW, what happens if two threads call ioctl(fd, BLKBSZSET, &n)
-for the same descriptor that happens to have been opened O_EXCL?
-Without O_EXCL they would've been unable to claim the sucker at the same
-time - the holder we are using is the address of a function argument,
-i.e. something that points to kernel stack of the caller.  Those would
-conflict and we either get set_blocksize() calls fully serialized, or
-one of the callers would eat -EBUSY.  Not so in "opened with O_EXCL"
-case - they can very well overlap and IIRC set_blocksize() does *not*
-expect that kind of crap...  It's all under CAP_SYS_ADMIN, so it's not
-as if it was a meaningful security hole anyway, but it does look fishy.
+
+vim +/EINVAL +23 include/linux/verification.h
+
+817aef260037f3 Yannik Sembritzki 2018-08-16  19  
+f3cf4134c5c6c4 Roberto Sassu     2022-09-20  20  static inline int system_keyring_id_check(u64 id)
+f3cf4134c5c6c4 Roberto Sassu     2022-09-20  21  {
+f3cf4134c5c6c4 Roberto Sassu     2022-09-20  22  	if (id > (unsigned long)VERIFY_USE_PLATFORM_KEYRING)
+f3cf4134c5c6c4 Roberto Sassu     2022-09-20 @23  		return -EINVAL;
+f3cf4134c5c6c4 Roberto Sassu     2022-09-20  24  
+f3cf4134c5c6c4 Roberto Sassu     2022-09-20  25  	return 0;
+f3cf4134c5c6c4 Roberto Sassu     2022-09-20  26  }
+f3cf4134c5c6c4 Roberto Sassu     2022-09-20  27  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
