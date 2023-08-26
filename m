@@ -2,134 +2,158 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C29B78923D
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Aug 2023 01:12:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1208378936D
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Aug 2023 04:30:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229965AbjHYXL6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Aug 2023 19:11:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58344 "EHLO
+        id S231745AbjHZC3d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Aug 2023 22:29:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230246AbjHYXL5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 19:11:57 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E1AE2118
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 16:11:54 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id 98e67ed59e1d1-26f51625d96so853465a91.1
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Aug 2023 16:11:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1693005114; x=1693609914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kKbdTnaP/s1h+dHX9LHgk8lGsLM5JbGooSkMgQ6xNIE=;
-        b=QYCN9l2u5Gpvi4njDbJSNhp3BJTVMbKFxIhc7OIG/2+s92DYNU9TWo4wg+LmWjpmWY
-         RqQR1ko7NwjsHwEPfAUzB6U4fInmPv1SKMi26hTcek6845GINnmgM+bqF1zJKq/VwJMP
-         r/BWIOM0mXvAdmA+YMioyJsPI1ApVJBHa33xcSsllS9Zj8FxckU7PoNXul0PwpQVAw6f
-         91DlmlqPEy5y+QgoU76ZkPZki1e6+AMiuSvmdw7RH4FC2She6F0gwuxBTAI0jdMjSzCc
-         u/H9ujOpCLFE3M/f3iFAXO8F8oiQ2y1U7vQmv7i6NFjCapj+Ta+9MyIuPpAagmJEkDy4
-         uxkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693005114; x=1693609914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kKbdTnaP/s1h+dHX9LHgk8lGsLM5JbGooSkMgQ6xNIE=;
-        b=SJAOkssfqHhIew0JBj6v7UWujOGKNujoMWZNpAmBTNixx4P1NXVPK4ir9pVSPyZ3xt
-         7WhryXGcvajrQ4Z4Caz7gn2BVqIh2h2qCxcTK4mAUEdIfFA3GLTPJ9lxezpgkfEB2/Ld
-         6DvuOewypbvCYoLuqY0mB+nxNHudvbwyQIfP5tUqM4Px4q6VaiuoPlkQRT4xO5s4n0qS
-         PtZ5S/XfWGKs3Del6trorOsJS0BsWSbLwM0podTksrCpuZF8gBzds8Zlrj/NZWyBGQvO
-         qckXvjasnFpJOPQlA9FqIuHihSn/yeeeY/3vLpDXpjnuNsvu6pjFPW+kZ6m3bEnxFnaE
-         DUqg==
-X-Gm-Message-State: AOJu0YyxlXb0Gs10z9YYs9vjszVG+luuEcWwnIIC9YjPFZ6RuzDZY8xJ
-        T8qQsbaTAGIPtH1q/PjnqU3GAPHZwMeAafXxgB+X/w==
-X-Google-Smtp-Source: AGHT+IE5GlJjhe6XSI+bjx5Hf4kX7Cyp2m8+rAU5r5oCH1MFC8q6DL3qus3eQYhyC0cmUzUutFp1bUoS0y/q29BdMz4=
-X-Received: by 2002:a17:90b:396:b0:26b:6095:bc3f with SMTP id
- ga22-20020a17090b039600b0026b6095bc3fmr16298424pjb.33.1693005113947; Fri, 25
- Aug 2023 16:11:53 -0700 (PDT)
+        with ESMTP id S231722AbjHZC3E (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Aug 2023 22:29:04 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59B41A8;
+        Fri, 25 Aug 2023 19:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kRz17k12DLtH5ptlx3fiiancvtShyoQwDvuAAOUED4Y=; b=mPm/qZCa7MWW4zdrpIjhXYeIS6
+        8cbIgOvCf/9Y6gIxhhuc7MbOClbX1o3H4gTlXLJmOpOyil1pufLmdD8oxm6VhlxB4x6C/OQmKz1OC
+        9Sg7eN60e8HGn0pn/DtWEZ2zi7uHlJyyQNolWeGdXQEgqn78/62UYsbUB8gsUgOw68YkPTd36+fo0
+        kPzizyM3mKJ55bukbV99w6F1Yx4exn0ELF0EHA2mn4TEClpd2hjjcTiwEbEGv+vsWkEq4IC7ejHjR
+        rO8uE9/3ipL5VpLJjGdd7WJssIdQ5Tj/z+j2E3fQDWI0Qb9TMLDhfRhfBXk5sw2QK4rJI42xn3tDe
+        SBJa1VHw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qZj2i-0010QB-1S;
+        Sat, 26 Aug 2023 02:28:52 +0000
+Date:   Sat, 26 Aug 2023 03:28:52 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Alasdair Kergon <agk@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        Joern Engel <joern@lazybastard.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Song Liu <song@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        xen-devel@lists.xenproject.org, Jens Axboe <axboe@kernel.dk>,
+        Christian Brauner <brauner@kernel.org>
+Subject: Re: [PATCH v2 0/29] block: Make blkdev_get_by_*() return handle
+Message-ID: <20230826022852.GO3390869@ZenIV>
+References: <20230810171429.31759-1-jack@suse.cz>
+ <20230825015843.GB95084@ZenIV>
+ <20230825134756.o3wpq6bogndukn53@quack3>
 MIME-Version: 1.0
-References: <20230825161603.371792-1-harshit.m.mogalapalli@oracle.com>
-In-Reply-To: <20230825161603.371792-1-harshit.m.mogalapalli@oracle.com>
-From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
-Date:   Fri, 25 Aug 2023 17:11:42 -0600
-Message-ID: <CAEUSe7_L2UtPi3Lcr4owKC83FO2zhCYDzNaWn-PKgfn9USNPvg@mail.gmail.com>
-Subject: Re: [PATCH 6.1.y 0/2] Address ltp nfs test failure.
-To:     Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc:     brauner@kernel.org, chuck.lever@oracle.com, bfields@fieldses.org,
-        stable@vger.kernel.org, linux-nfs@vger.kernel.org,
-        gregkh@linuxfoundation.org, hch@lst.de, jlayton@kernel.org,
-        vegard.nossum@oracle.com, naresh.kamboju@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230825134756.o3wpq6bogndukn53@quack3>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello!
+On Fri, Aug 25, 2023 at 03:47:56PM +0200, Jan Kara wrote:
 
-On Fri, 25 Aug 2023 at 10:17, Harshit Mogalapalli
-<harshit.m.mogalapalli@oracle.com> wrote:
-> These two are backports for 6.1.y. Conflict resolution in done in
-> both patches.
-> I have tested LTP-nfs fchown02 and chown02 on 6.1.y with below patches
-> applied. The tests passed.
+> I can see the appeal of not having to introduce the new bdev_handle type
+> and just using struct file which unifies in-kernel and userspace block
+> device opens. But I can see downsides too - the last fput() happening from
+> task work makes me a bit nervous whether it will not break something
+> somewhere with exclusive bdev opens. Getting from struct file to bdev is
+> somewhat harder but I guess a helper like F_BDEV() would solve that just
+> fine.
+> 
+> So besides my last fput() worry about I think this could work and would be
+> probably a bit nicer than what I have. But before going and redoing the whole
+> series let me gather some more feedback so that we don't go back and forth.
+> Christoph, Christian, Jens, any opinion?
 
-I have given this a go but did not see better results.
+Redoing is not an issue - it can be done on top of your series just
+as well.  Async behaviour of fput() might be, but...  need to look
+through the actual users; for a lot of them it's perfectly fine.
 
-On 6.1.48-rc1, without any extra patches:
-  https://lkft.validation.linaro.org/scheduler/job/6685964#L3814
-  https://storage.tuxsuite.com/public/linaro/lkft/builds/2UR2OCpseRQ0lu76ph=
-KZBw6l2xf/
+FWIW, from a cursory look there appears to be a missing primitive: take
+an opened bdev (or bdev_handle, with your variant, or opened file if we
+go that way eventually) and claim it.
 
-On 6.1.48-rc1 plus this series of patches:
-  https://lkft.validation.linaro.org/scheduler/job/6692637#L3832
-  https://lkft.validation.linaro.org/scheduler/job/6692642#L3818
-  https://storage.tuxsuite.com/public/linaro/daniel/builds/2UUHtMsTAQeuei3g=
-GM32NWZx82w/
+I mean, look at claim_swapfile() for example:
+                p->bdev = blkdev_get_by_dev(inode->i_rdev,
+                                   FMODE_READ | FMODE_WRITE | FMODE_EXCL, p);
+                if (IS_ERR(p->bdev)) {
+                        error = PTR_ERR(p->bdev);
+                        p->bdev = NULL;
+                        return error;
+                }
+                p->old_block_size = block_size(p->bdev);
+                error = set_blocksize(p->bdev, PAGE_SIZE);
+                if (error < 0)
+                        return error;
+we already have the file opened, and we keep it opened all the way until
+the swapoff(2); here we have noticed that it's a block device and we
+	* open the fucker again (by device number), this time claiming
+it with our swap_info_struct as holder, to be closed at swapoff(2) time
+(just before we close the file)
+	* flip the block size to PAGE_SIZE, to be reverted at swapoff(2)
+time That really looks like it ought to be
+	* take the opened file, see that it's a block device
+	* try to claim it with that holder
+	* on success, flip the block size
+with close_filp() in the swapoff(2) (or failure exit path in swapon(2))
+doing what it would've done for an O_EXCL opened block device.
+The only difference from O_EXCL userland open is that here we would
+end up with holder pointing not to struct file in question, but to our
+swap_info_struct.  It will do the right thing.
 
-In both cases:
-  chown02.c:46: TPASS: chown(testfile1, 0, 0) passed
-  chown02.c:46: TPASS: chown(testfile2, 0, 0) passed
-  chown02.c:58: TFAIL: testfile2: wrong mode permissions 0100700,
-expected 0102700
-[...]
-  fchown02.c:57: TPASS: fchown(3, 0, 0) passed
-  fchown02.c:57: TPASS: fchown(4, 0, 0) passed
-  fchown02.c:67: TFAIL: testfile2: wrong mode permissions 0100700,
-expected 0102700
+This extra open is entirely due to "well, we need to claim it and the
+primitive that does that happens to be tied to opening"; feels rather
+counter-intuitive.
 
-The exact same thing happened with the 5.15 patch series.
+For that matter, we could add an explicit "unclaim" primitive - might
+be easier to follow.  That would add another example where that could
+be used - in blkdev_bszset() we have an opened block device (it's an
+ioctl, after all), we want to change block size and we *really* don't
+want to have that happen under a mounted filesystem.  So if it's not
+opened exclusive, we do a temporary exclusive open of own and act on
+that instead.   Might as well go for a temporary claim...
 
-I'll be glad to test more patches.
-
-Greetings!
-
-Daniel D=C3=ADaz
-daniel.diaz@linaro.org
-
-
-> I would like to have a review as I am not familiar with this code.
->
-> Thanks to Vegard for helping me with this.
->
-> Thanks,
-> Harshit
->
-> Christian Brauner (2):
->   nfs: use vfs setgid helper
->   nfsd: use vfs setgid helper
->
->  fs/attr.c          | 1 +
->  fs/internal.h      | 2 --
->  fs/nfs/inode.c     | 4 +---
->  fs/nfsd/vfs.c      | 4 +++-
->  include/linux/fs.h | 2 ++
->  5 files changed, 7 insertions(+), 6 deletions(-)
->
-> --
-> 2.34.1
->
+BTW, what happens if two threads call ioctl(fd, BLKBSZSET, &n)
+for the same descriptor that happens to have been opened O_EXCL?
+Without O_EXCL they would've been unable to claim the sucker at the same
+time - the holder we are using is the address of a function argument,
+i.e. something that points to kernel stack of the caller.  Those would
+conflict and we either get set_blocksize() calls fully serialized, or
+one of the callers would eat -EBUSY.  Not so in "opened with O_EXCL"
+case - they can very well overlap and IIRC set_blocksize() does *not*
+expect that kind of crap...  It's all under CAP_SYS_ADMIN, so it's not
+as if it was a meaningful security hole anyway, but it does look fishy.
