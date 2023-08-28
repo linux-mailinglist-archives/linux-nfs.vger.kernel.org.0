@@ -2,158 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D415678B33B
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Aug 2023 16:37:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F5F278B362
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Aug 2023 16:43:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbjH1Ogj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Aug 2023 10:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47432 "EHLO
+        id S229526AbjH1OnF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Aug 2023 10:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231860AbjH1Ogc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Aug 2023 10:36:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B781F7
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Aug 2023 07:35:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693233342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fseQpsy0VfGLC0oUmmsTYhYRD4hK2JRI8+6aM8OkWNM=;
-        b=MADAJb10rF8qjL2EC5CTkn8rnyuzKg/efBEODVJdwiOg1BK0lsirPbO9b4aV8wVzWW/uvZ
-        pKnNPoKoFbwTem6P3r1vnZfo4yPITB6x8wIGEvvqr2J3stvAfTIgSCUwrnCIL7VfSFT3+o
-        nD+BIsU2qI+EZcv5uLDvRMuum4fbGYQ=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-178-2Mn5JLb_Oza9cNhQaxgpew-1; Mon, 28 Aug 2023 10:35:41 -0400
-X-MC-Unique: 2Mn5JLb_Oza9cNhQaxgpew-1
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-26fa9963203so2689805a91.1
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Aug 2023 07:35:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693233340; x=1693838140;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fseQpsy0VfGLC0oUmmsTYhYRD4hK2JRI8+6aM8OkWNM=;
-        b=Yw8gch/V08TOt5G9d/574xaeh6leZKKfwubtbXvtRxuIrtS750QWDeEDRbMjN0ryA2
-         a5g8gkfNTobGmBHO4VdjlUe27+Xl1GRwxJX9rSRNEN6Rl48MWasexRwLIsvv8cyugjO4
-         8qyPS3aof2bCf3yVLVgCzbnKqYK7VVC4apll2hUwWcGiR5ZfoQ8K9ZbkAiiq8/z5BABS
-         LcHS/H1QyoXRCC1XKgSK/co2uNrJmfCmQlDKIodMTm3iyvODxUXYj1JN1xKuN+t7kF+B
-         QRJ6Gh03hhuUfj3Xn3wKGkn/WELj5pOPh40kODBAHwJf7fEs040J2yLFs8E31EnrwT+H
-         5xwA==
-X-Gm-Message-State: AOJu0YyeCDb0d0/DWbgmH3Dz0ACJxfvp4KGCCNdG9SC+2o/lY+nrlRJT
-        uBT10vW6XAxu6D/w33sir8MWcYlI6a3VFzqdx+AntThNkJN1wceayOenM9OmLAUCBpqc8m77X3P
-        cMe4KKCSYMb4b/rel5hC9
-X-Received: by 2002:a17:90b:4a02:b0:26b:5205:525e with SMTP id kk2-20020a17090b4a0200b0026b5205525emr17869141pjb.42.1693233340065;
-        Mon, 28 Aug 2023 07:35:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEVbS19uRYDlaiiPTcaLBl0QGZmCnV0XyUvmfp20Gbl9HdoVcc6Bml998WVwCap7gkYsRIoKA==
-X-Received: by 2002:a17:90b:4a02:b0:26b:5205:525e with SMTP id kk2-20020a17090b4a0200b0026b5205525emr17869121pjb.42.1693233339747;
-        Mon, 28 Aug 2023 07:35:39 -0700 (PDT)
-Received: from zlang-mailbox ([43.228.180.230])
-        by smtp.gmail.com with ESMTPSA id 20-20020a17090a199400b00268238583acsm9670672pji.32.2023.08.28.07.35.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Aug 2023 07:35:39 -0700 (PDT)
-Date:   Mon, 28 Aug 2023 22:35:35 +0800
-From:   Zorro Lang <zlang@redhat.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Zorro Lang <zlang@kernel.org>, fstests@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH fstests v2 2/3] generic/513: limit to filesystems that
- support capabilities
-Message-ID: <20230828143535.6x3duax7g43vhg5k@zlang-mailbox>
-References: <20230824-fixes-v2-0-d60c2faf1057@kernel.org>
- <20230824-fixes-v2-2-d60c2faf1057@kernel.org>
- <20230825141123.wexv7kuxk75gr5os@zlang-mailbox>
- <a93ba004a46177c213159878a51c7378536f33ad.camel@kernel.org>
- <20230827124512.23qnfe3keedrf4a2@zlang-mailbox>
- <45e9152ccb8afdced1c1f6887368fec59804c6d9.camel@kernel.org>
+        with ESMTP id S230063AbjH1Omz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Aug 2023 10:42:55 -0400
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4987FF7
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Aug 2023 07:42:49 -0700 (PDT)
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [IPv6:2001:638:700:1038::1:a5])
+        by smtp-o-2.desy.de (Postfix) with ESMTP id 4177E161287
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Aug 2023 16:42:45 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 4177E161287
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1693233765; bh=Ss+KKw/6ru+fAC4zi9EIlkE1nImGETh76aSWk17pqpY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DqE5mmwDMqG5urk+G9kXQpONyFxPQi+a7mqnAr6e1RGy4ZTvt3Lafs/eVBEmcXvdr
+         8EujuG8/tywVgj9+uCIUO+53c+c6ntvUUJtxIIWNi17owxP6j7DUTNoyoTFQFiS13P
+         3uKlw25BiwKoIbofOkaejPM5ez3mMw1mEsTRVlPE=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [131.169.56.130])
+        by smtp-buf-2.desy.de (Postfix) with ESMTP id 384821A0125;
+        Mon, 28 Aug 2023 16:42:45 +0200 (CEST)
+Received: from b1722.mx.srv.dfn.de (b1722.mx.srv.dfn.de [194.95.235.47])
+        by smtp-m-2.desy.de (Postfix) with ESMTP id 2F0A7120043;
+        Mon, 28 Aug 2023 16:42:45 +0200 (CEST)
+Received: from smtp-intra-2.desy.de (smtp-intra-2.desy.de [131.169.56.83])
+        by b1722.mx.srv.dfn.de (Postfix) with ESMTP id B47A8220039;
+        Mon, 28 Aug 2023 16:42:43 +0200 (CEST)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-2.desy.de (Postfix) with ESMTP id 8AAD0100043;
+        Mon, 28 Aug 2023 16:42:43 +0200 (CEST)
+Date:   Mon, 28 Aug 2023 16:42:43 +0200 (CEST)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>
+Message-ID: <2016757990.1241869.1693233763403.JavaMail.zimbra@desy.de>
+Subject: Unnecessary dependecy between nfsv3 and flexfiles modules
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <45e9152ccb8afdced1c1f6887368fec59804c6d9.camel@kernel.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+        boundary="----=_Part_1241874_1909839403.1693233763497"
+X-Mailer: Zimbra 9.0.0_GA_4546 (ZimbraWebClient - FF116 (Linux)/9.0.0_GA_4546)
+Thread-Index: IawCR9AHV7xoX0pIdvW/LjDSBmaxxw==
+Thread-Topic: Unnecessary dependecy between nfsv3 and flexfiles modules
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Aug 27, 2023 at 09:43:41AM -0400, Jeff Layton wrote:
-> On Sun, 2023-08-27 at 20:45 +0800, Zorro Lang wrote:
-> > On Fri, Aug 25, 2023 at 11:02:40AM -0400, Jeff Layton wrote:
-> > > On Fri, 2023-08-25 at 22:11 +0800, Zorro Lang wrote:
-> > > > On Thu, Aug 24, 2023 at 12:44:18PM -0400, Jeff Layton wrote:
-> > > > > This test requires being able to set file capabilities which some
-> > > > > filesystems (namely NFS) do not support. Add a _require_setcap test
-> > > > > and only run it on filesystems that pass it.
-> > > > > 
-> > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > > ---
-> > > > >  common/rc         | 13 +++++++++++++
-> > > > >  tests/generic/513 |  1 +
-> > > > >  2 files changed, 14 insertions(+)
-> > > > > 
-> > > > > diff --git a/common/rc b/common/rc
-> > > > > index 5c4429ed0425..33e74d20c28b 100644
-> > > > > --- a/common/rc
-> > > > > +++ b/common/rc
-> > > > > @@ -5048,6 +5048,19 @@ _require_mknod()
-> > > > >  	rm -f $TEST_DIR/$seq.null
-> > > > >  }
-> > > > >  
-> > > > > +_require_setcap()
-> > > > > +{
-> > > > > +	local testfile=$TEST_DIR/setcaptest.$$
-> > > > > +
-> > > > > +	touch $testfile
-> > > > > +	$SETCAP_PROG "cap_sys_module=p" $testfile > $testfile.out 2>&1
-> > > > 
-> > > > Actually we talked about the capabilities checking helper last year, as below:
-> > > > 
-> > > > https://lore.kernel.org/fstests/20220323023845.saj5en74km7aibdx@zlang-mailbox/
-> > > > 
-> > > > As you bring this discussion back, how about the _require_capabilities() in
-> > > > above link?
-> > > > 
-> > > 
-> > > I was testing a similar patch, but your version looks better. Should I
-> > > drop mine and you re-post yours?
-> > 
-> > Actually we decided to use `_require_attrs security`, rather than a new
-> > _require_capabilities() helper. We need a chance/requirement to add
-> > that helper (when a test case really need it).
-> > 
-> > So I hope know is `_require_attrs security` enough for you? Or you really
-> > need a specific _require_capabilities helper?
-> > 
-> > Thanks,
-> > Zorro
-> > 
-> > 
-> 
-> 
-> Yeah, it looks like that should work:
-> 
->     generic/513       [not run] attr namespace security not supported by this filesystem type: nfs
-> 
-> I'll plan to respin this patch to add that instead.
+------=_Part_1241874_1909839403.1693233763497
+Date: Mon, 28 Aug 2023 16:42:43 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Message-ID: <2016757990.1241869.1693233763403.JavaMail.zimbra@desy.de>
+Subject: Unnecessary dependecy between nfsv3 and flexfiles modules
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 9.0.0_GA_4546 (ZimbraWebClient - FF116 (Linux)/9.0.0_GA_4546)
+Thread-Index: IawCR9AHV7xoX0pIdvW/LjDSBmaxxw==
+Thread-Topic: Unnecessary dependecy between nfsv3 and flexfiles modules
 
-Thanks:) I saw you've sent a V3:
-[PATCH fstests v3 0/2] fstests: add appropriate checks for fs features for some tests
 
-so will you sent a V4 contains 3 patches?
+Dear NFS developers,
 
-Thanks,
-Zorro
+I have noticed an unnecessary dependency between the pNFS flexfiles layout driver and NFSv3 modules:
 
-> 
-> Thanks!
-> -- 
-> Jeff Layton <jlayton@kernel.org>
-> 
+```Kconfig 
+config PNFS_FLEXFILE_LAYOUT
+        tristate
+        depends on NFS_V4_1 && NFS_V3
+        default NFS_V4
 
+```
+
+Thus, by disabling v3 (as one might do if only v4.1+ is needed), the flexfiles
+layout driver is not available anymore.
+
+It looks like, that flexfiles layout doesn't really depend on NFSv3 code and if I remove
+this dependency, that I can build and run a kernel with flexfiles layout driver, but without
+NFSv3 support:
+
+
+```
+[root@os-46-nfs-devel ~]# lsmod
+Module                  Size  Used by
+nfs_layout_flexfiles    61440  1
+nfsv4                1200128  2 nfs_layout_flexfiles
+dns_resolver           12288  1 nfsv4
+[root@os-46-nfs-devel ~]#
+```
+
+But might be there is a non-obvious dependency that I miss. Otherwise I happy to fix that :)
+
+Best regards,
+   Tigran.
+------=_Part_1241874_1909839403.1693233763497
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIF
+vzCCBKegAwIBAgIMJENPm+MXSsxZAQzUMA0GCSqGSIb3DQEBCwUAMIGNMQswCQYDVQQGEwJERTFF
+MEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVpbmVzIERldXRzY2hlbiBGb3JzY2h1bmdz
+bmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUwIwYDVQQDDBxERk4tVmVyZWluIEdsb2Jh
+bCBJc3N1aW5nIENBMB4XDTIxMDIxMDEyMzEwOVoXDTI0MDIxMDEyMzEwOVowWDELMAkGA1UEBhMC
+REUxLjAsBgNVBAoMJURldXRzY2hlcyBFbGVrdHJvbmVuLVN5bmNocm90cm9uIERFU1kxGTAXBgNV
+BAMMEFRpZ3JhbiBNa3J0Y2h5YW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQClVKHU
+er1OiIaoo2MFDgCSzcqRCB8qVjjLJyJwzHWkhKniE6dwY8xHciG0HZFpSQqiRsoakD+BzqINXsqI
+CkVck5n7cUJ6cHBOM1r4pzEBcuuozPrT2tAfnHkFFGTZffOXgjmEITfSh6SD+DYeZH4Dt8kPZmnD
+mzWMDFDyB67WWcWApVC1nPh29yGgJk18UZ+Ut9a+woaovMZlutMbuvLVt/x5rpycMw0z+J1qeK7J
+8F3bKb0o2gg+Mnz9LzpLtJp7E9qJUKOTkZGDua9w9xrlo4XGX9Vn72K5wodu6woahdgNG+sXRcJM
+RH3aWgfdznoi1ORLJCfTbdfjSBpclvt/AgMBAAGjggJRMIICTTA+BgNVHSAENzA1MA8GDSsGAQQB
+ga0hgiwBAQQwEAYOKwYBBAGBrSGCLAEBBAgwEAYOKwYBBAGBrSGCLAIBBAgwCQYDVR0TBAIwADAO
+BgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBQG
+1+t/IHSjHSbbu11uU5Iw7JW92zAfBgNVHSMEGDAWgBRrOpiL+fJTidrgrbIyHgkf6Ko7dDAjBgNV
+HREEHDAagRh0aWdyYW4ubWtydGNoeWFuQGRlc3kuZGUwgY0GA1UdHwSBhTCBgjA/oD2gO4Y5aHR0
+cDovL2NkcDEucGNhLmRmbi5kZS9kZm4tY2EtZ2xvYmFsLWcyL3B1Yi9jcmwvY2FjcmwuY3JsMD+g
+PaA7hjlodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2Rmbi1jYS1nbG9iYWwtZzIvcHViL2NybC9jYWNy
+bC5jcmwwgdsGCCsGAQUFBwEBBIHOMIHLMDMGCCsGAQUFBzABhidodHRwOi8vb2NzcC5wY2EuZGZu
+LmRlL09DU1AtU2VydmVyL09DU1AwSQYIKwYBBQUHMAKGPWh0dHA6Ly9jZHAxLnBjYS5kZm4uZGUv
+ZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwSQYIKwYBBQUHMAKGPWh0dHA6
+Ly9jZHAyLnBjYS5kZm4uZGUvZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQw
+DQYJKoZIhvcNAQELBQADggEBADaFbcKsjBPbw6aRf5vxlJdehkafMy4JIdduMEGB+IjpBRZGmu0Z
+R2FRWNyq0lNRz03holZ8Rew0Ldx58REJmvAEzbwox4LT1wG8gRLEehyasSROajZBFrIHadDja0y4
+1JrfqP2umZFE2XWap8pDFpQk4sZOXW1mEamLzFtlgXtCfalmYmbnrq5DnSVKX8LOt5BZvDWin3r4
+m5v313d5/l0Qz2IrN6v7qNIyqT4peW90DUJHB1MGN60W2qe+VimWIuLJkQXMOpaUQJUlhkHOnhw8
+82g+jWG6kpKBMzIQMMGP0urFlPAia2Iuu2VtCkT7Wr43xyhiVzkZcT6uzR23PLsAADGCApswggKX
+AgEBMIGeMIGNMQswCQYDVQQGEwJERTFFMEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVp
+bmVzIERldXRzY2hlbiBGb3JzY2h1bmdzbmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUw
+IwYDVQQDDBxERk4tVmVyZWluIEdsb2JhbCBJc3N1aW5nIENBAgwkQ0+b4xdKzFkBDNQwDQYJYIZI
+AWUDBAIBBQCggc4wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMw
+ODI4MTQ0MjQzWjAtBgkqhkiG9w0BCTQxIDAeMA0GCWCGSAFlAwQCAQUAoQ0GCSqGSIb3DQEBCwUA
+MC8GCSqGSIb3DQEJBDEiBCAEKrBeZ0Fwlr2kY3XoJsswVde3yp8BnI2ch2ecu0nsyzA0BgkqhkiG
+9w0BCQ8xJzAlMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAHBgUrDgMCBzANBgkqhkiG9w0B
+AQsFAASCAQAh+fgyGX6R1forEYovsGTQ07ANueKhdmm7uAhlgs6Y6vs5GoYF/7BudVFFAB3z08O8
+sL5KijeJ34UO+me9CxXn42zHqeR2cjF4SvRWT5xRLLc+e+zOeI7AvyOn8SW/+q45f2LScuZVp3Qs
+m1Au93mGeqG0th00v6rU/8lzzSCVZyI7kv0djrtoot1iQHsrMrVtQD1HF9IaPmYr9dmQ4mReek9l
+w3/KVL6mE+7Hsq6Ce2FjPIIHgMuos2ANNXDNZ6W6KVjtT0/CJV6af+pk0N11lmt1slU4mPURSsf8
+JSHe8jsOshg7mnYwm/ssOw0hUcUay4BhogsrXw80vDuzr01lAAAAAAAA
+------=_Part_1241874_1909839403.1693233763497--
