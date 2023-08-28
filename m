@@ -2,91 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A58178B1BA
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Aug 2023 15:24:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B0F878B262
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Aug 2023 15:57:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230241AbjH1NXh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Aug 2023 09:23:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52554 "EHLO
+        id S231354AbjH1N5N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Aug 2023 09:57:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjH1NXF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Aug 2023 09:23:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E3811D
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Aug 2023 06:23:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6998A6478C
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Aug 2023 13:23:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84440C433C7;
-        Mon, 28 Aug 2023 13:23:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693228981;
-        bh=eolfdfM7FdyFU8xHf3A0VLjuxhC9mhLGLjxf66QRh0U=;
-        h=Subject:From:To:Cc:Date:From;
-        b=gWGVondqBNPEaNrXLe9p2Ph0TR0gA6+jOyo+Oimwk/PrZCmqYd7udY1J5dTb71Dto
-         M/N3E+zllWEru2/5RA2R5fwOGchkXepjwMyNdXVaZna2mdwR85/rAe/9WHDvCBRxu2
-         kUlnDZ7Fnm5DGpkkyJ7D6bkkDkOS3tl7adwSmpQckFgry5y7L9EzLb2C1hXzzwSpv1
-         K43ThhkDrIsRJRYKw6e/8Rxmon237EGXmyW+Cee+cuvly4d3PRTQafbtzvfcmbDRYF
-         /0ipzeGEW3puVj3vNBEKcFzYZqDiD0O1VB6xa/tN1N+/Pu3OSP6BX2DoLa2+Hl9kCU
-         71dhC8YTFRDLQ==
-Subject: [PATCH v2] SUNRPC: Fix the recent bv_offset fix
-From:   Chuck Lever <cel@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     Maxim Levitsky <mlevitsk@redhat.com>,
-        Maxim Levitsky <mlevitsk@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 28 Aug 2023 09:23:00 -0400
-Message-ID: <169322894408.11188.14223137341540815863.stgit@bazille.1015granger.net>
-User-Agent: StGit/1.5
+        with ESMTP id S231305AbjH1N4l (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Aug 2023 09:56:41 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B73EBA;
+        Mon, 28 Aug 2023 06:56:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=PJ90BdA+8s3qX5y6y0ylNyYbaZuzc0FQ7tGvCVtNYPo=; b=AIKhRmdLChvBh1g3+s6EW46CKf
+        MEbR4fH1pD3IzHz8haDpscNiqgIT1MwygtaGsg0/mJ22nTUE6hhMTmMaXMPK2UFki637fwtT5IR5e
+        NpCkU9lVELANCdo3c4h02AUyKpTFJGcO2Yf8AdjY5H7ThMDg0k1adrBbq/dNvtWwWnE3JjBJPdXc+
+        ZymQQTBtlnb8KZghvPVKQ32cCYcqGFspsFg4ARKclGMJ6roXU/fBsxC40PaksuQ+i2Lrun7tK4Cxw
+        NodllbY3kB+LQ2ImYXlQY7RelX2cS+RJORhfHJhRq6XyXuEQGqfPM8/oHIO2kXnO0q6TWo/qN/Di3
+        04k9P7lQ==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qacj1-001ZTg-1Q;
+        Mon, 28 Aug 2023 13:56:15 +0000
+Date:   Mon, 28 Aug 2023 14:56:15 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Matthew Wilcox <willy@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+        Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, Hannes Reinecke <hare@suse.de>
+Subject: Re: [PATCH 03/12] filemap: update ki_pos in generic_perform_write
+Message-ID: <20230828135615.GW3390869@ZenIV>
+References: <20230601145904.1385409-1-hch@lst.de>
+ <20230601145904.1385409-4-hch@lst.de>
+ <20230827194122.GA325446@ZenIV>
+ <20230827214518.GU3390869@ZenIV>
+ <20230828123259.GB11084@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230828123259.GB11084@lst.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, Aug 28, 2023 at 02:32:59PM +0200, Christoph Hellwig wrote:
+> On Sun, Aug 27, 2023 at 10:45:18PM +0100, Al Viro wrote:
+> > IOW, I suspect that the right thing to do would be something along the lines
+> > of
+> 
+> The idea looks sensible to me, but we'll also need to do it for the
+> filemap_write_and_wait_range failure case.
 
-Jeff confirmed his original fix addressed his pynfs test failure,
-but this same bug also impacted qemu: accessing qcow2 virtual disks
-using direct I/O was failing. Jeff's fix missed that you have to
-shorten the bio_vec element by the same amount as you increased
-the page offset.
+Huh?  That's precisely where this patch is doing that...  That function
+in mainline is
+        if (unlikely(buffered_written < 0)) {
+                if (direct_written)
+                        return direct_written;
+                return buffered_written;
+        }
 
-Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
-Fixes: c96e2a695e00 ("sunrpc: set the bv_offset of first bvec in svc_tcp_sendmsg")
-Tested-by: Maxim Levitsky <mlevitsk@redhat.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/svcsock.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+        /*
+         * We need to ensure that the page cache pages are written to disk and
+         * invalidated to preserve the expected O_DIRECT semantics.
+         */
+        err = filemap_write_and_wait_range(mapping, pos, end);
+        if (err < 0) {
+                /*
+                 * We don't know how much we wrote, so just return the number of
+                 * bytes which were direct-written
+                 */
+                if (direct_written)
+                        return direct_written;
+                return err;
+        }
+        invalidate_mapping_pages(mapping, pos >> PAGE_SHIFT, end >> PAGE_SHIFT);
+        return direct_written + buffered_written;
 
-v2:
-- Correct Maxim's email addresses.
+The first failure exit does not need any work - the caller had not bumped
+->ki_pos; the second one (after that 'if (err < 0) {' line) does and that's
+where the patch upthread adds iocb->ki_pos -= buffered_written.
 
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 2eb8df44f894..589020ed909d 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -1244,8 +1244,10 @@ static int svc_tcp_sendmsg(struct socket *sock, struct xdr_buf *xdr,
- 	if (ret != head->iov_len)
- 		goto out;
- 
--	if (xdr_buf_pagecount(xdr))
-+	if (xdr_buf_pagecount(xdr)) {
- 		xdr->bvec[0].bv_offset = offset_in_page(xdr->page_base);
-+		xdr->bvec[0].bv_len -= offset_in_page(xdr->page_base);
-+	}
- 
- 	msg.msg_flags = MSG_SPLICE_PAGES;
- 	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, xdr->bvec,
-
-
+Or am I completely misparsing what you've written?
