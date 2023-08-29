@@ -2,77 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4575378BC65
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Aug 2023 03:41:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D21C678BFBD
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Aug 2023 09:58:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234904AbjH2Bkm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Aug 2023 21:40:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48376 "EHLO
+        id S231377AbjH2H6B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Aug 2023 03:58:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234999AbjH2Bkk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Aug 2023 21:40:40 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8BFB184
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Aug 2023 18:40:37 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-27183f4ccc1so874423a91.2
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Aug 2023 18:40:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693273237; x=1693878037;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GnFUel+kvd/4R4YZk9qE5FTkZ/UipQUz0fqkdEB46XM=;
-        b=SM4G6KfKrg0+TY2YgkgOk7NaEZzkvZKIsgewtvGBCD8qFQySPjMiXmLOhAsI7XzGVn
-         hDaVKg1w3uhu8CZia2E7vSRO7vcGscXQv4JlP2BIXY3PEPVO9UUVoFR+4lI7Sg3mGBxe
-         4sM0KPSZBUmqciEkVuy7LkHNATYlDXb+Dm1O+6Q+LMzZhrtCc03t1G9EYYNq1URJIKnU
-         lOpuOaApyPDuKisAK4hs1dbvcwB1wCwXBfYfXBLPJLmiHEu6RPNTpL9Tzv7kYj5fGTiv
-         Be67wjhOLGhEP4vQDXnJfL3UGNEzXgveBs1u8b0tMEzlD/oWsRRTfAPo3AXcLjAhHNtw
-         a/vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693273237; x=1693878037;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GnFUel+kvd/4R4YZk9qE5FTkZ/UipQUz0fqkdEB46XM=;
-        b=VwY/p/GOLrYBTEsZ2TnS0UoEiXyXVhFC0cWvafIgZwvGxwv7oEuBnEIIo3pYwpBu3e
-         VkSFZmHSZ2ng9KkYjt16ec97pxvk/tboICitue0UevXRrWl+Kmf+DmrlYRVdGpxO2GnO
-         Cw/2QyM/PYmpOkm5R3HaE3Ns/pN/gXtlFmciIaYZhMQtk1Ifrh9xnMMYRQMoWAo1vAxY
-         X2HIzYUE7trbdnw4YuQ7sptYPklr0Gi0U4lmEwWmB4RqeqVIZVI5FyCwvfrnP/N3GA1x
-         Ay11nwrop2Y5M9wjIbbgBSdfjINNXsFKZ8ztsQBnjWt6z9BqeKlYlC9hnxZCjVVxHJiu
-         JwcA==
-X-Gm-Message-State: AOJu0YxyTGhKGh0kAufNSri2Z2R9BRtyU9OXzeoRe806f9T+gif5mNZ3
-        gEE8Ig2FfOjXi3M3hNF5h4lJyxHM/fQFmZFZvQ==
-X-Google-Smtp-Source: AGHT+IGSEOsIE8/TVhGAkjOdykn59dwTsKl4o47VtRYuHzrJbt7qIJII4WHqFnd6wHQNUy/ZWmWcKKsgJNbjUowVyY4=
-X-Received: by 2002:a17:90a:17af:b0:269:c7d:aac5 with SMTP id
- q44-20020a17090a17af00b002690c7daac5mr19839220pja.3.1693273236988; Mon, 28
- Aug 2023 18:40:36 -0700 (PDT)
+        with ESMTP id S230327AbjH2H5u (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 03:57:50 -0400
+X-Greylist: delayed 913 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 29 Aug 2023 00:57:42 PDT
+Received: from mail.profitpathwaygo.com (mail.profitpathwaygo.com [141.94.21.238])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7886DD2
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 00:57:42 -0700 (PDT)
+Received: by mail.profitpathwaygo.com (Postfix, from userid 1002)
+        id 1F4BF489C6; Tue, 29 Aug 2023 07:31:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=profitpathwaygo.com;
+        s=mail; t=1693294333;
+        bh=qp3Ofokho6Ql+WtI8ZPVilyHYhskXL7fod7u9CWs8W4=;
+        h=Date:From:To:Subject:From;
+        b=hmX10MRa3U69if2ZUm9tgJmiJqBgOtX//fRi323a6eg6iUBnxRvBnPA2B2bqW5AqH
+         nPoaKjivj/K1mJcrrhxGNaVJyHyIJV2RCMGGyaKPvPESu5vj7m1GMWFN4DOKDwsude
+         +mxMyxAtRpfMn0SVhSE8o+TsJlyBnTCROs6BxosXt8xMJLDyBeYZVYuEnWqxwLgHhX
+         tFHjf55DU/2dZ+2R+RLN2QytoSg3Rb11709pJARP60ra5Ky7L8YpTJqdUbcaBL8xyB
+         wtlIdbcRTH2mXyLOyTbB/XJlnUhGfwue2brUuhdbu15aY0Bbs5lGGKJ7ncDRVELJ6k
+         LMWHWSco+n8tQ==
+Received: by mail.profitpathwaygo.com for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 07:31:02 GMT
+Message-ID: <20230829064500-0.1.1f.e1zr.0.5wos9jn9si@profitpathwaygo.com>
+Date:   Tue, 29 Aug 2023 07:31:02 GMT
+From:   "Adam Charachuta" <adam.charachuta@profitpathwaygo.com>
+To:     <linux-nfs@vger.kernel.org>
+Subject: =?UTF-8?Q?S=C5=82owa_kluczowe_do_wypozycjonowania_?=
+X-Mailer: mail.profitpathwaygo.com
 MIME-Version: 1.0
-From:   Rick Macklem <rick.macklem@gmail.com>
-Date:   Mon, 28 Aug 2023 18:40:27 -0700
-Message-ID: <CAM5tNy7Q63k+9+f9zrctZrm-NzCbYn8OjYSirQ8g+g7yLaK9jQ@mail.gmail.com>
-Subject: pNFS/Flexfiles testing at Oct. Bakeathon
-To:     NFSv4 <nfsv4@ietf.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL_CSS,SPF_HELO_NONE,
+        SPF_PASS,URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+Dzie=C5=84 dobry,
 
-Tom has a few IETF drafts describing changes that I believe are
-aimed at improving pNFS Flex Files layout.
+zapozna=C5=82em si=C4=99 z Pa=C5=84stwa ofert=C4=85 i z przyjemno=C5=9Bci=
+=C4=85 przyznaj=C4=99, =C5=BCe przyci=C4=85ga uwag=C4=99 i zach=C4=99ca d=
+o dalszych rozm=C3=B3w.=20
 
-I was wondering if implementations of any of these will be
-available at the Oct. Bakeathon?
+Pomy=C5=9Bla=C5=82em, =C5=BCe mo=C5=BCe m=C3=B3g=C5=82bym mie=C4=87 sw=C3=
+=B3j wk=C5=82ad w Pa=C5=84stwa rozw=C3=B3j i pom=C3=B3c dotrze=C4=87 z t=C4=
+=85 ofert=C4=85 do wi=C4=99kszego grona odbiorc=C3=B3w. Pozycjonuj=C4=99 =
+strony www, dzi=C4=99ki czemu generuj=C4=85 =C5=9Bwietny ruch w sieci.
 
-I have not implemented any of them as yet, but I might have
-time to do an experimental implementation of some of them
-for the Oct. Bakeathon, if there will be implementations to test
-against.
+Mo=C5=BCemy porozmawia=C4=87 w najbli=C5=BCszym czasie?
 
-Thanks for any info, rick
+
+Pozdrawiam serdecznie
+Adam Charachuta
