@@ -2,98 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AAB378CE01
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Aug 2023 23:07:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9913678CEB7
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Aug 2023 23:23:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240658AbjH2VGe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Aug 2023 17:06:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40452 "EHLO
+        id S232776AbjH2VXO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Aug 2023 17:23:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239695AbjH2VGH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 17:06:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0491BC
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 14:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693343118;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uknlgcK/Il++pYk902pIvRt2xWcGPo78nAG730mLyJM=;
-        b=R+Ug+rUe8XMVkNO7Ki62dR1bJ46vHb1zVmL4BIjBoERYLbBP8ynSFo3RXwsyA3Gps8WKXS
-        KUurUPY9HXHYoDCZN+C0vqq97pt2wHqcIXuPUequrei+7XW1jx4n/UO7OMFyaJsrll10Da
-        L+2V+LPhTFukF/omXXa1jIjaidebReM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-683-PJM7hu_LM4mvAAl9WGMAZg-1; Tue, 29 Aug 2023 17:05:16 -0400
-X-MC-Unique: PJM7hu_LM4mvAAl9WGMAZg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S239233AbjH2VXJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 17:23:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 000361BC
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 14:23:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2711F8015AA;
-        Tue, 29 Aug 2023 21:05:16 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 97FE15CC01;
-        Tue, 29 Aug 2023 21:05:15 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: allow setting SEQ4_STATUS_RECALLABLE_STATE_REVOKED
-Date:   Tue, 29 Aug 2023 17:05:14 -0400
-Message-ID: <41574FF3-6559-40D0-BC6D-3CD33410C9F0@redhat.com>
-In-Reply-To: <ZO5Wd7BdgsNMOpfU@tissot.1015granger.net>
-References: <cd03fb7419f886c8c79bb2ee4889dbc0768a1652.1693326366.git.bcodding@redhat.com>
- <ZO5Wd7BdgsNMOpfU@tissot.1015granger.net>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 90E1F611D1
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 21:23:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A196C433C8;
+        Tue, 29 Aug 2023 21:23:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693344185;
+        bh=axgUO/Z+gQt+ODy28e0TXxlDPZ0LOi4DkKA6emrd69c=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ud1EEc3dCYBewHFdkDkvalFqOq8TitfdvHQtbk62ct3vEEEKOvVxHYi6Hqb02XpzR
+         9cS0VpQbQOnOGlPljlfU6FC5okoTMUFUEIngNj6edABh5jfJsvHSvA/ntJl8J7mpNq
+         W0Q4XTXK84FZGXt99w2Ad9v0I8m7VO2KXfPNSOwuQEMVuvNnMpduMKKCVUu2+ifmea
+         4CTpWnwpVyJNTvNNp/zV+4wWU4+/FoUBcbi9kvoVLye/MlVxTQs51BaYNhwl4OpUDl
+         mCcHpyHslKLydmH7TlBfEWyS/wOUZFtV86FAeYacRGZu6BgdssawrlpB6hIhStS5WA
+         qa++nEpD+vatA==
+Message-ID: <65f510cdc17fa3e0d2fce9362dd47ddb8b3d8d9c.camel@kernel.org>
+Subject: Re: [PATCH v2] SUNRPC: Fix the recent bv_offset fix
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Date:   Tue, 29 Aug 2023 17:23:04 -0400
+In-Reply-To: <169322894408.11188.14223137341540815863.stgit@bazille.1015granger.net>
+References: <169322894408.11188.14223137341540815863.stgit@bazille.1015granger.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 29 Aug 2023, at 16:35, Chuck Lever wrote:
+On Mon, 2023-08-28 at 09:23 -0400, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> Jeff confirmed his original fix addressed his pynfs test failure,
+> but this same bug also impacted qemu: accessing qcow2 virtual disks
+> using direct I/O was failing. Jeff's fix missed that you have to
+> shorten the bio_vec element by the same amount as you increased
+> the page offset.
+>=20
+> Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Fixes: c96e2a695e00 ("sunrpc: set the bv_offset of first bvec in svc_tcp_=
+sendmsg")
+> Tested-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  net/sunrpc/svcsock.c |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> v2:
+> - Correct Maxim's email addresses.
+>=20
+> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> index 2eb8df44f894..589020ed909d 100644
+> --- a/net/sunrpc/svcsock.c
+> +++ b/net/sunrpc/svcsock.c
+> @@ -1244,8 +1244,10 @@ static int svc_tcp_sendmsg(struct socket *sock, st=
+ruct xdr_buf *xdr,
+>  	if (ret !=3D head->iov_len)
+>  		goto out;
+> =20
+> -	if (xdr_buf_pagecount(xdr))
+> +	if (xdr_buf_pagecount(xdr)) {
+>  		xdr->bvec[0].bv_offset =3D offset_in_page(xdr->page_base);
+> +		xdr->bvec[0].bv_len -=3D offset_in_page(xdr->page_base);
+> +	}
+> =20
+>  	msg.msg_flags =3D MSG_SPLICE_PAGES;
+>  	iov_iter_bvec(&msg.msg_iter, ITER_SOURCE, xdr->bvec,
+>=20
+>=20
 
-> On Tue, Aug 29, 2023 at 12:26:56PM -0400, Benjamin Coddington wrote:
->> This patch sets the SEQ4_STATUS_RECALLABLE_STATE_REVOKED bit for a single
->> SEQUENCE response after writing "revoke" to the client's ctl file in procfs.
->> It has been generally useful to test various NFS client implementations, so
->> I'm sending it along for others to find and use.
->
-> Intriguing!
->
-> It looks to me like the client would probe its state and
-> find nothing missing... fair enough.
->
-> Would it be even more useful if the server administrator could
-> actually revoke some state, rather than just pretending to?
-> How difficult do you think that might be?
-
-Probably not difficult, we'd just move some state to cl_revoked.  We'd need
-to work out a syntax for it, or add another procfs file, but I don't have
-any need for this.. yet.
-
-> Or, conversely, what exactly can you test with this mechanism?
-
-You can test how well the client performs TEST_STATEID for all its known
-state, looking for unfairness or perhaps skipped state.  Doing a
-TEST_STATEID walk can be a big lift for clients with a lot of delegations.
-
-There's been recent reports of the linux client getting into a live jam
-trying to use TEST_STATEID to satisfy a server that keeps setting this bit.
-Its pretty hard to catch in the wild, and network captures are typically too
-large to handle.  In the process of trying to optimize how the client
-performs TEST_STATEID ops for all its state, this patch made it easier to
-artificially trigger that client behavior.
-
-I'm ambivalent about whether this goes upstream, but here it is if others
-find it useful.
-
-Ben
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
