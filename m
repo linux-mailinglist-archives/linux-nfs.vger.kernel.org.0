@@ -2,81 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8FAB78D23D
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 04:56:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A82978D2B4
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 06:15:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238596AbjH3C4J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Aug 2023 22:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40956 "EHLO
+        id S229490AbjH3EOh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Aug 2023 00:14:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241789AbjH3Cz4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 22:55:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8511FD
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 19:55:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693364111;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cXMQxOZw+4RO1BfknY9LPnO6Mr+W9O/v0m+R+BZEjk4=;
-        b=Fu63drfyJ28gVZPtC80g+2MyfA7yZYdgumCqOJz8pybxWvMSeTR+S9JXPN2x3A1y3qoXNn
-        Suo8wymeyCEtiSYxuDYwfdKeElML62XAxX+QWUi8RBHUgO0w73IwkN2ZRTYdKXWJ2U/WCe
-        i+0U2L3dEYAJgz1euQQj+uNTjilVq5g=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-643-pIhqRxEdNrabUNBWGOjNmg-1; Tue, 29 Aug 2023 22:55:09 -0400
-X-MC-Unique: pIhqRxEdNrabUNBWGOjNmg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S231987AbjH3EOb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 00:14:31 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CBEB193
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 21:14:28 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 52796185A791;
-        Wed, 30 Aug 2023 02:55:09 +0000 (UTC)
-Received: from yoyang-vm.hosts.qa.psi.pek2.redhat.com (yoyang-vm.hosts.qa.psi.pek2.redhat.com [10.73.149.36])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7A5042166B25;
-        Wed, 30 Aug 2023 02:55:07 +0000 (UTC)
-Date:   Wed, 30 Aug 2023 10:55:03 +0800
-From:   Yongcheng Yang <yoyang@redhat.com>
-To:     zlang@redhat.com
-Cc:     fstests@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH fstests v3 2/2] generic/578: add a check to ensure that
- fiemap is supported
-Message-ID: <ZO6vh5+ZLdLSFbB7@yoyang-vm.hosts.qa.psi.pek2.redhat.com>
-References: <20230825-fixes-v3-0-6484c098f8e8@kernel.org>
- <20230825-fixes-v3-2-6484c098f8e8@kernel.org>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 16748216DC;
+        Wed, 30 Aug 2023 04:14:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1693368867; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=xMNuIxoc23yxnObSqbQ5fEUClQfgNmLj9AAIfE039ng=;
+        b=NNYB2LZGp35cAStkRH8JVbPtmw1OTXYQSgQSNDEErPErYNPy6LBP8hHTowARsqGC7tU7mO
+        I0uwWyUK6dZ3n5pOvxXCD75uQ8nBB8vJXSXwbUFolbiT5vVRcCIEnY3xuIq3p8BgxGKcKR
+        rjGtnfpiYz+nIMgVGw2JJ7jRf1YqlEM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1693368867;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=xMNuIxoc23yxnObSqbQ5fEUClQfgNmLj9AAIfE039ng=;
+        b=TFyaTUfzEaYpaJI1+FHKNQOr53W63ZeGC2fyUDWf1MaAn+bGFmcq+0s80UI4Evjg/gygp6
+        zp7CF3YFdwZkOUDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8432B13441;
+        Wed, 30 Aug 2023 04:14:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id /A78DSHC7mQ8AwAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 30 Aug 2023 04:14:25 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230825-fixes-v3-2-6484c098f8e8@kernel.org>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH/RFC] SUNRPC: always clear XPRT_SOCK_CONNECTING before
+ xprt_clear_connecting on TCP xprt
+Date:   Wed, 30 Aug 2023 14:14:21 +1000
+Message-id: <169336886172.5133.14231863738996844866@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Zorro,
 
-Can we assume all the FIEMAP tests need this check first?
-If so, there are some others need the same patch.
+sunrpc/xprtsock.c has an XPRT_SOCK_CONNECTING flag which is used only on
+TCP xprts while connecting.
+The purpose appears to be to protect against delayed TCP_CLOSE
+transitions from calling xprt_clear_connecting() asynchronously.
 
-I.e.
-[yoyang@yoyang-vm xfstests-dev]$ grep url .git/config
-        url = git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
-[yoyang@yoyang-vm xfstests-dev]$ git pl
-Already up to date.
-[yoyang@yoyang-vm xfstests-dev]$ git grep _begin_fstest tests/ | grep fiemap | wc -l
-101
-[yoyang@yoyang-vm xfstests-dev]$ git grep _require_xfs_io_command tests/ | grep fiemap | wc -l
-86
-[yoyang@yoyang-vm xfstests-dev]$
+Normally it is set after calling xprt_set_connecting() and before
+calling kernel_connect(), and cleared before calling
+xprt_clear_connecting().  It is only tested on a state change to
+TCP_CLOSE.
 
-Best Regards,
-Yongcheng
+Unfortunately there is one time that it is *not* explicitly cleared
+before calling xprt_clear_connecting().  I don't know what all to
+consequences of this are.  It may well relate to the underlying problem
+that resulted in
+Commit 3be232f11a3c ("SUNRPC: Prevent immediate close+reconnect")
+That close/reconnect pattern can happen if a TCP_CLOSE is seen
+while XPRT_SOCK_CONNECTING is set but shouldn't be.
+
+local and udp connections don't use XPRT_SOCK_CONNECTING.
+
+tcp_tls connection don't *appear* to set the flag but do sometimes clear
+it.  I don't understand all of the tls code, so I added what might be a
+missing clear of XPRT_SOCK_CONNECTING there.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ net/sunrpc/xprtsock.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 268a2cc61acd..9426b1051b09 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -2425,6 +2425,7 @@ static void xs_tcp_setup_socket(struct work_struct *wor=
+k)
+ 	 */
+ 	xprt_wake_pending_tasks(xprt, status);
+ 	xs_tcp_force_close(xprt);
++	clear_bit(XPRT_SOCK_CONNECTING, &transport->sock_state);
+ out:
+ 	xprt_clear_connecting(xprt);
+ out_unlock:
+@@ -2689,6 +2690,7 @@ static void xs_tcp_tls_setup_socket(struct work_struct =
+*work)
+ 	 */
+ 	xprt_wake_pending_tasks(upper_xprt, status);
+ 	xs_tcp_force_close(upper_xprt);
++	clear_bit(XPRT_SOCK_CONNECTING, &upper_transport->sock_state);
+ 	xprt_clear_connecting(upper_xprt);
+ 	goto out_unlock;
+ }
+--=20
+2.41.0
 
