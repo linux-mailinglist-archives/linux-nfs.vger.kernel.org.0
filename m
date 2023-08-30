@@ -2,633 +2,498 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2837178D817
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C972A78D824
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231280AbjH3S3W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Aug 2023 14:29:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47662 "EHLO
+        id S231847AbjH3S3d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Aug 2023 14:29:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245478AbjH3PRn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 11:17:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A771AE8
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 08:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693408612;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q7hsIBPkyYHcqUeTnPITGjCg9BBLT2UjnH9yjjX+dCQ=;
-        b=CPdd7IM0itn2535Z0wVoFuDp2mry0X2hxJZQFHHjCdzG5GuTtrbaOKFybwt+cuYWL3NlBi
-        5pVOXaFLjrmXaiXnw5c32MYSYxgf4B5rH8lIwFmG+KNTU0vX3i5LIziHEktlf5t0RQib+M
-        eLlsBFxMBNHkJKNiznU3MhWtLHZnYpo=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-253-fnhewD4IO1SyB1USnl1GjA-1; Wed, 30 Aug 2023 11:16:50 -0400
-X-MC-Unique: fnhewD4IO1SyB1USnl1GjA-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-31c470305cfso3427996f8f.3
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 08:16:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693408609; x=1694013409;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q7hsIBPkyYHcqUeTnPITGjCg9BBLT2UjnH9yjjX+dCQ=;
-        b=WY+smsDxoWJ72aQ7joyQJMRBgStn6LebtaqBiEkaJEckRvZYhEkVN5/B9S1UlB255T
-         uwptcRSl3Z6dwvZCksJ6nkmeKE7ncc4sWdure3UHIiKV5uNUF/oqTMgSWdF+qvVHdKcf
-         8ybLJ5FozFj+vRBKBE2jVOVKcvdjT/3zrhp8cWk+uwX0QM2m5sr00K0t1PcPQfHWsHAY
-         s+yznh1hwX36NGwn+9ClyJblzYk06et/iqFibJm5Lcm3g5zdn3svWwdWI4mFqLLJ9GXQ
-         ejOdrFhr0JiQ9+jDf2ZEzfYwYXb6kFTcUyUNfWi3lZho+CfSTA2P/cdw9Eud5WLcai9E
-         cQ/w==
-X-Gm-Message-State: AOJu0YxCPAbnUz5IbqcZayDxO3BOCo7jHarr7vRX1aLxV7z2rntJlXvG
-        gIm97BRDzXDCBz8v9HJ6v8lyAMwQrR5oaJ9inRwcDyv39W3kN3UyIpMC6gRj7X5gTeiU7GNPYv5
-        Qqvv5pANPZa4OZjRm+1dH
-X-Received: by 2002:a5d:4e8e:0:b0:31a:e3ad:f30e with SMTP id e14-20020a5d4e8e000000b0031ae3adf30emr1811319wru.68.1693408609384;
-        Wed, 30 Aug 2023 08:16:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGHdjoYuasucpBLeu6XWHbhWwgnGpAgFG+ePsB8/NfbLi6XuHvZCmXqOSHxdB3lTatA0+icgw==
-X-Received: by 2002:a5d:4e8e:0:b0:31a:e3ad:f30e with SMTP id e14-20020a5d4e8e000000b0031ae3adf30emr1811295wru.68.1693408608974;
-        Wed, 30 Aug 2023 08:16:48 -0700 (PDT)
-Received: from localhost (net-2-34-76-254.cust.vodafonedsl.it. [2.34.76.254])
-        by smtp.gmail.com with ESMTPSA id o15-20020a5d684f000000b003180027d67asm16900102wrw.19.2023.08.30.08.16.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 08:16:48 -0700 (PDT)
-Date:   Wed, 30 Aug 2023 17:16:46 +0200
-From:   Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
-        jlayton@kernel.org, neilb@suse.de
-Subject: Re: [PATCH v7 3/3] NFSD: add rpc_status netlink support
-Message-ID: <ZO9dXruY4GLq8wTS@lore-desk>
-References: <cover.1693400242.git.lorenzo@kernel.org>
- <b750dd468dd3fe4af8febf3a0bf8bc278ca7c05e.1693400242.git.lorenzo@kernel.org>
- <ZO9M27f3+KGQ0/TJ@tissot.1015granger.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="QHp+ZtR/AUTlsaD4"
+        with ESMTP id S245500AbjH3PWL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 11:22:11 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE82AE8
+        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 08:22:07 -0700 (PDT)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37U9jC8i009325;
+        Wed, 30 Aug 2023 15:22:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-03-30;
+ bh=Hbvhzm76Vt8ah+2ImvPpU2iq6Bw0aaKukBYBkGyrIuI=;
+ b=eiwKYl6VpGizSrUcXCYv5ucazBBB+cIIACIEuHNNhN5FBClLEvvIZQSFov5lg+SsqE58
+ LuLS13ShKhYm6pdlCyn3OLyF6kw3oBux9peTNXpPwQCe3ynFZH7WzvQ/2eXG42EHWmpd
+ XuF/iN0Qdgg+y5W00X3ogNDvIgLuYap8T2/lEBLO3F/cXcxh668YTyB6LeJuhwpKqehZ
+ asCpm0oZR4l3OPoTez863f5XDJ6CKhtYQlxzZ6y7sUsn0Q1ieRtanjhlyScml+sMGKF3
+ 1EzE6cE4gN2KHTOqI9Qsq9kbRdZWX0dVAchxzmyK6g1uJd0dPJ8ymdIj3vCesEat88ub bg== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sq9fk7nh3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Aug 2023 15:22:00 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37UFHwDt009179;
+        Wed, 30 Aug 2023 15:22:00 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3ssepy21xx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Aug 2023 15:22:00 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EylRZ+k5KOItlVCyXsh+1bcr7jxayjR+Ja3WvFJrAoFszDuD5wRHngXkH7bVEn7uCWwcxBJyJEvZ2OTue/ro7KlOLpvq71xByZc7rWbNGEaXxYKUQkZmZ25q/KDuRZRsUo3GtC/L8mT9n5YanFcj09Uksjxa0fImiD23uubWCAe6811FqL4fvRuk1Qwuw94t4a7d9+26n6BfQaRn3HiBA1bBhUzxoXo4OiwNSQsiU6K62lU+AORWMbho3FefLk8JC+dhzxOt1Fnvccz8tWuNZgeTLyXpw4GroiMgYa5TxyiweV1T+Vp0sCrlIt/fmTgv+s2R0dvoZzlN0vQtTFhP+A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Hbvhzm76Vt8ah+2ImvPpU2iq6Bw0aaKukBYBkGyrIuI=;
+ b=ZWasz51OUgpZjcLJTW3s584Zpum4F3S14TJawgQ9IspO1qvevBsaIhHJeQHyxo956xZlvdQD7t0Ulj+lfmfN0YVJNKD2s/C/oxFiRiWrvQY7dfA+nlVBJLwpCpY3T9l0dSVhGThyvdSphELf/pXtWhzPDOYSPXcf2clp4P9KckNAooAFTSwI1p7AESmj/YC+GFEa3ZGEDWjWxHGoMzrKwv13BqsJ/3tJGoM+1DiRHgDuo3laoYGx+WlEalNOFCZMtG7YiaM7pDmgdf77e8DxmWWrjX3/hobnxr2gRFoemESZ1MJbQwJppSfu0plL+ayM270rzTlmcsEkFbksAJUjzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Hbvhzm76Vt8ah+2ImvPpU2iq6Bw0aaKukBYBkGyrIuI=;
+ b=lDZ7pIb/fdnGBqeJs9V+XyAOHBqXXIrX84/j/GN78dO7XVpajUk2bxToJApLq2WESk1usMIFtXs8z9MpitYOE7uHxrN7AVHY56flTI82DSmxOhPKrURvljRz4jlFGTsLBcjgy8K15GKMD5jJXwW1ChW4RvlU5+bBrju9/dlQo1Y=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SA1PR10MB6392.namprd10.prod.outlook.com (2603:10b6:806:258::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6699.34; Wed, 30 Aug
+ 2023 15:21:58 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2990:c166:9436:40e]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::2990:c166:9436:40e%6]) with mapi id 15.20.6699.035; Wed, 30 Aug 2023
+ 15:21:58 +0000
+Date:   Wed, 30 Aug 2023 11:21:55 -0400
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 05/10] lib: add light-weight queuing mechanism.
+Message-ID: <ZO9ek4UI8sNETSdr@tissot.1015granger.net>
+References: <20230830025755.21292-1-neilb@suse.de>
+ <20230830025755.21292-6-neilb@suse.de>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZO9M27f3+KGQ0/TJ@tissot.1015granger.net>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230830025755.21292-6-neilb@suse.de>
+X-ClientProxiedBy: CH2PR07CA0064.namprd07.prod.outlook.com
+ (2603:10b6:610:5b::38) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA1PR10MB6392:EE_
+X-MS-Office365-Filtering-Correlation-Id: e923b44b-545e-4adc-60a5-08dba96cd9c0
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mstNtP4jra9kZK7d+80VTH2Q+UQ+YVVLYATAhwIY/vTUcx8pRPnACNq47en7orj0Gyd2kkvjl9Z1QItdAFU936+sqfdNd+sVeh5d5MdxwqyY4fzdMGLyTzX4IdIF3s9i4Du6a2uXV2jRvd7xV1L+sxBFWq5MJ7//fxrYCgq2ha5X5hBJ0AnVBrwwt59B1v3qpfPf3jOMAfMCrCwMoZrgxVb3rJjQDGM0JcZbVeWYbBKoUPs1F2fveacYPW7L3W8B5yH9zP/ziVotgjpKspO60aTuv3XQUlqyuKmOXYhuiR35b8b72vDD3Ghu5msGNomwv1sLT5CSotkumQ1v8Lu7CTNAagqBmsrTui2YVA/ZjvMUG2dtles5/GLyXJiif8Ma69tAEWGZpON8o4Zvb6sma7SrrjbQ8VBmaW25keSHHZbzgxNeFMgiSsbJfRGqZdYj4ZobzH86xo33gSD79FN61Qp1B5DhsjWAVkpPgu1sAUnerhT5TQj8ecAr2yghrO1rTKVNT4NMz8F44RwFuO7xfwt06rdpaU8pS6yrCK6blNdaY03tMZdwn7h/uJneZg1kNqTcDcWK1GM3VFNt2QRtKl/0Lr5alYJf1WXCtXNa8ooKMf8kWVgpV4vxwGzms/LC
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(376002)(136003)(346002)(396003)(451199024)(1800799009)(186009)(6512007)(9686003)(26005)(316002)(38100700002)(6916009)(66899024)(41300700001)(4326008)(2906002)(30864003)(86362001)(5660300002)(44832011)(8676002)(83380400001)(8936002)(6666004)(6506007)(66476007)(6486002)(66556008)(66946007)(478600001)(16393002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?JT5ee/45fzE6gde5SVNQ4E1lwaz0TU2b8nX2jBmHk56b6xjFGL3msFB10U4R?=
+ =?us-ascii?Q?AqSDDBGPL8hlzN/pw3ebOBR2pi+eApyTDmMC35Gk2/jGmq+GlLNVS9dJUxLb?=
+ =?us-ascii?Q?EfTe0R2ESFk/k0p267JKP3UlrqSLMl0HQlhrt+Qih9E9PnR6FD3jbuT4FqFr?=
+ =?us-ascii?Q?Tx690hLUPt1jxtv9c0mCH0mxza8zh9/mCvTSnfH/VflCmUusds3DU2weqJdc?=
+ =?us-ascii?Q?m/qW6zqdNGYnDKc3mj/gGvcZ80JpbT/UoUH9qWWKhvuXmMX+r0xERYDGGFfQ?=
+ =?us-ascii?Q?pBg84Kra8g7FVvy72pxELWbXBltrnD9BPAZUo7VD9Qos7BNo749u2KFF3LR0?=
+ =?us-ascii?Q?x660Tecf2ny7dGOHlnzCJpYGTcwWxJgixAUUzYdCLyrb2EOw53yr1k1+m103?=
+ =?us-ascii?Q?tuSy9kpGq1XHcv5WW3UZhez3YdV2GzZIeLQN2ONClLbURAhuuHnSkCCuiQpr?=
+ =?us-ascii?Q?3mSz0exTE/JAymkz/GADAiCtEu4NJhKbPSILjxNJT2W+w62P8ilaKwFJo0kn?=
+ =?us-ascii?Q?4Qz+pHmyK5jHBQPhNu6GhxERuekGyJjkYHjvVDutkIxzvBNraYxMeAgVZinw?=
+ =?us-ascii?Q?ziRYRWxs69J7VxLiFSTpzyKGaHqgInoEnOFydDpHGQiJaXh/h9JBpfJ/bIO8?=
+ =?us-ascii?Q?xHVWmrlhxcj+8jisg/txl/cNEy0xj/ClRyfKkdgOvQqYi/kvbQdWsR08kd4T?=
+ =?us-ascii?Q?SXVGmdJaKLLS4qww6Bog09rRN6v1Y1rgvEgruQ1xjMyzaCKu3nxV00v2pblo?=
+ =?us-ascii?Q?kmA9TecFPyOYmC8yTqi4NhwelEMc+ze+pIbwbvgyXcUHsQpRLJLJGnf45edI?=
+ =?us-ascii?Q?gNEc48oSmujDaIhNmpn4EKWcEgs/TPJIPm029N85HPXyFvcRmlXQtytPctoh?=
+ =?us-ascii?Q?vaW3HhE4ocFF9ZG/w1Ko3jroVGoUWsP9A2RzGxLIaGvzt0c8dvFarmlCGK29?=
+ =?us-ascii?Q?yisXEwa2t3CO/xuG/WU3wqSaEcwlGLUogso05TaOac/KVG/xOfLE3TAS04jg?=
+ =?us-ascii?Q?79y59OdMq4bSnZFON27eMdXsIhaQO4dKu5DkKkZD7SScPlzi+Wu0Hdv7OTCL?=
+ =?us-ascii?Q?5ZSCwQttaGct8mZhDcwrnH5I9tkJUGCtQ79eu5AE96eyQYi1GSZTk91YjNUx?=
+ =?us-ascii?Q?PBiJcp6lZ51j0W8L3aaeBUwsoj8JtoVwI9Irp+HZvXE0h74MXu9rk8c8jQ+c?=
+ =?us-ascii?Q?y8u3nzJe3nHIoLgAipSrcYdpX+WSsQdL86A3B1I0WOzAP1YSrc+iusLT34xK?=
+ =?us-ascii?Q?3P1tK5D8Z499Yn/0HaEAQA0cibNMOv40Y8mjcAXgzK3cmHPk6goNfLer2Qvc?=
+ =?us-ascii?Q?rzttR8j7GQ5WucTAvrEWudAGlYwkxHSGdBmTuXcpdr2PH96QP2PAoNSEMdnM?=
+ =?us-ascii?Q?3jgFezwEKPGvU7V7Vtfm/P0xe8jpjVCrlKKXsxYenvKDNr61jv2wJ73AmgY6?=
+ =?us-ascii?Q?cOR0l76T+gjTDAt0Nat3xt1mF0cCQvEeVr4Zepul+z8V2qRv1PcArI/BsEvR?=
+ =?us-ascii?Q?4752Uliwihk0LhZJuvaSmOFroOro9idcq5cQDz2OE2NvJ7xZCEQlg866kqKF?=
+ =?us-ascii?Q?t1k/zqn7N96c4dswjDksHNTrUDC/xAXLqxONPRX5QjFokg24x5FUZOXL6Tpo?=
+ =?us-ascii?Q?ZA=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 6OWKWMu/Vi+gpev8w8uvfOIRFr5PlvU2l+rtUDLdyFDhLrk4TXZN8oX+N7qnfhILFs4fKf0tAjIfkbQsgQOGWVpA/mt+dbOPrHsOHilYgoGqewFxzrLVHLdN4qxclj7L+TGsPCGI7hYJwav7UsZ5j7L3pAIy7oraJPU8k+RrO0HR20WJ3hX5gRakzbR8L1dew/HtsCaIBin9cEtPAzd7P6nWZ2t8j1XBvkMHezhFHU5ylirQHz6B7ETu4555KbP7tVla/ypCfBzD1OEmYkAUEmIDxJTgCqk6Jz/dMK0GmekvUMnMgtZxVSV8+ntXUJz9UecJ5dAc5XMsap0mdVRItnHznz7j47ur+lF26R9lH12Y2P/QeA1RAKY8SWDF/OXJp494+Ji6RG92r3g+9LqrXwGGL1u2y7oFmWeSGWrTr1XaGmtKWLlGun94Ld14v0rM3NDSuje3Unmh2FlTAruKXsI5J51p7zca/sbUP2mSybcZfbTpOpTefCpH6POXmYV4vTOQ58YI9abdtPliWGp+YMPIRqDHYbp7l7fTKK0vF6lNzKcFht45b12jqKp3OOi99+PP2NGeUTLXUJaTpm3GZNJH55g6yHCy6HIncHorxae7k23hutQGK79k+7RHv6/7stRTSDBx250OCa6p+j0NM36PB2aEWZ+w8VkJVocjuyphLhKxRgXQXevzoOi5j8SYnKCobdyAGPHnGSkevKp/pAzaGswpwMOtHEf34krBxkc2mN6jgmE85EQEDgCG2RYaLA2u1Un5E8KCn+UbY7mqiMtTGhrbR8afXlU0VhTPGk3VT7IjuXb+w9847KlyPZ5W
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e923b44b-545e-4adc-60a5-08dba96cd9c0
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Aug 2023 15:21:58.0330
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: m65Ax1gs7/xSrtSFe3eAhOElZoXqh4X+wboBw5xfGnkFZeIUmawWrkCiWP3Y2XMbeOhxmymPmut7vyc90jrU/Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6392
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-30_12,2023-08-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
+ phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2308300142
+X-Proofpoint-GUID: DmOviTB0b645-fGFGT_vxiyXw_f7BVet
+X-Proofpoint-ORIG-GUID: DmOviTB0b645-fGFGT_vxiyXw_f7BVet
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, Aug 30, 2023 at 12:54:48PM +1000, NeilBrown wrote:
+> lwq is a FIFO single-linked queue that only requires a spinlock
+> for dequeueing, which happens in process context.  Enqueueing is atomic
+> with no spinlock and can happen in any context.
+> 
+> Include a unit test for basic functionality - runs at boot time.  Does
+> not use kunit framework.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  include/linux/lwq.h | 120 +++++++++++++++++++++++++++++++++++
+>  lib/Kconfig         |   5 ++
+>  lib/Makefile        |   2 +-
+>  lib/lwq.c           | 149 ++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 275 insertions(+), 1 deletion(-)
+>  create mode 100644 include/linux/lwq.h
+>  create mode 100644 lib/lwq.c
 
---QHp+ZtR/AUTlsaD4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've applied and/or squashed the previous four and pushed.
 
-> On Wed, Aug 30, 2023 at 03:05:46PM +0200, Lorenzo Bianconi wrote:
-> > Introduce rpc_status netlink support for NFSD in order to dump pending
-> > RPC requests debugging information from userspace.
->=20
-> Very good to see this update!
->=20
-> netdev has asked that all new netlink protocols start from a yaml
-> spec that resides under Documentation/netlink/specs/  That spec is
-> then used to generate netlink parser code for the kernel and for
-> user space tooling. You can find this all described here:
->=20
-> https://docs.kernel.org/next/userspace-api/netlink/specs.html
->=20
-> and here is a weak example of how this might be done:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/net/=
-handshake?id=3D3b3009ea8abb713b022d94fba95ec270cf6e7eae
->=20
-> I say weak because I did that work while the yaml spec tools were
-> still under development. It might not completely reflect how this
-> needs to be done today.
->=20
-> So the yaml file would be named something like:
->=20
-> Documentation/netlink/specs/nfsd.yaml
->=20
-> and it would generate files "fs/nfsd/netlink.[ch]". It should
-> generate a lot of the parser boiler plate you've written below
-> by hand, so just replace that code with calls to the generated
-> code.
+I don't have any specific complaints on this one, but checkpatch
+throws about 20 warnings. Some of those you might want to deal with
+or just ignore. Up to you, but I'll hold off on applying it until I
+hear from you.
 
-ack, I will look into it for v8
+Also, I'm trying to collect a set of potential reviewers for it:
 
->=20
-> When you post the next revision of the series, cc: netdev.
+[cel@bazille even-releases]$ scripts/get_maintainer.pl lib/
+Andrew Morton <akpm@linux-foundation.org> (commit_signer:206/523=39%)
+"Liam R. Howlett" <Liam.Howlett@oracle.com> (commit_signer:89/523=17%,authored:61/523=12%)
+Kees Cook <keescook@chromium.org> (commit_signer:48/523=9%)
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> (commit_signer:48/523=9%)
+David Gow <davidgow@google.com> (commit_signer:43/523=8%)
+linux-kernel@vger.kernel.org (open list)
+[cel@bazille even-releases]$
 
-ack, will do.
+Is that a reasonable set to add as Cc's?
 
-Regards,
-Lorenzo
 
->=20
->=20
-> > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > ---
-> >  fs/nfsd/nfsctl.c           | 275 +++++++++++++++++++++++++++++++++++++
-> >  fs/nfsd/nfsd.h             |  19 +++
-> >  fs/nfsd/nfssvc.c           |  15 ++
-> >  fs/nfsd/state.h            |   2 -
-> >  include/linux/sunrpc/svc.h |   1 +
-> >  include/uapi/linux/nfs.h   |  54 ++++++++
-> >  6 files changed, 364 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > index 33f80d289d63..4626a0002ceb 100644
-> > --- a/fs/nfsd/nfsctl.c
-> > +++ b/fs/nfsd/nfsctl.c
-> > @@ -17,6 +17,9 @@
-> >  #include <linux/sunrpc/rpc_pipe_fs.h>
-> >  #include <linux/module.h>
-> >  #include <linux/fsnotify.h>
-> > +#include <net/genetlink.h>
-> > +#include <net/ip.h>
-> > +#include <net/ipv6.h>
-> > =20
-> >  #include "idmap.h"
-> >  #include "nfsd.h"
-> > @@ -1495,6 +1498,273 @@ static int create_proc_exports_entry(void)
-> > =20
-> >  unsigned int nfsd_net_id;
-> > =20
-> > +/* the netlink family */
-> > +static struct genl_family nfsd_genl;
-> > +
-> > +static const struct nla_policy
-> > +nfsd_rpc_status_compound_policy[NFS_ATTR_RPC_STATUS_COMPOUND_MAX + 1] =
-=3D {
-> > +	[NFS_ATTR_RPC_STATUS_COMPOUND_OP] =3D { .type =3D NLA_STRING },
-> > +};
-> > +
-> > +static const struct nla_policy
-> > +nfsd_rpc_status_policy[NFS_ATTR_RPC_STATUS_MAX + 1] =3D {
-> > +	[NFS_ATTR_RPC_STATUS_XID] =3D { .type =3D NLA_U32 },
-> > +	[NFS_ATTR_RPC_STATUS_FLAGS] =3D { .type =3D NLA_U32 },
-> > +	[NFS_ATTR_RPC_STATUS_PC_NAME] =3D { .type =3D NLA_STRING },
-> > +	[NFS_ATTR_RPC_STATUS_VERSION] =3D { .type =3D NLA_U8 },
-> > +	[NFS_ATTR_RPC_STATUS_STIME] =3D { .type =3D NLA_S64 },
-> > +	[NFS_ATTR_RPC_STATUS_SADDR4] =3D { .len =3D sizeof_field(struct iphdr=
-, saddr) },
-> > +	[NFS_ATTR_RPC_STATUS_DADDR4] =3D { .len =3D sizeof_field(struct iphdr=
-, daddr) },
-> > +	[NFS_ATTR_RPC_STATUS_SADDR6] =3D { .len =3D sizeof_field(struct ipv6h=
-dr, saddr) },
-> > +	[NFS_ATTR_RPC_STATUS_DADDR6] =3D { .len =3D sizeof_field(struct ipv6h=
-dr, daddr) },
-> > +	[NFS_ATTR_RPC_STATUS_SPORT] =3D { .type =3D NLA_U16 },
-> > +	[NFS_ATTR_RPC_STATUS_DPORT] =3D { .type =3D NLA_U16 },
-> > +	[NFS_ATTR_RPC_STATUS_COMPOUND] =3D
-> > +		NLA_POLICY_NESTED_ARRAY(nfsd_rpc_status_compound_policy),
-> > +};
-> > +
-> > +static const struct nla_policy
-> > +nfsd_genl_policy[NFS_ATTR_MAX + 1] =3D {
-> > +	[NFS_ATTR_RPC_STATUS] =3D NLA_POLICY_NESTED_ARRAY(nfsd_rpc_status_pol=
-icy),
-> > +};
-> > +
-> > +static int nfsd_genl_rpc_status_compose_msg(struct sk_buff *skb, int i=
-ndex,
-> > +					    struct nfsd_genl_rqstp *rqstp)
-> > +{
-> > +	struct nlattr *rq_attr, *comp_attr;
-> > +	int i;
-> > +
-> > +	rq_attr =3D nla_nest_start(skb, index);
-> > +	if (!rq_attr)
-> > +		return -ENOBUFS;
-> > +
-> > +	if (nla_put_be32(skb, NFS_ATTR_RPC_STATUS_XID, rqstp->rq_xid) ||
-> > +	    nla_put_u32(skb, NFS_ATTR_RPC_STATUS_FLAGS, rqstp->rq_flags) ||
-> > +	    nla_put_string(skb, NFS_ATTR_RPC_STATUS_PC_NAME, rqstp->pc_name) =
-||
-> > +	    nla_put_u8(skb, NFS_ATTR_RPC_STATUS_VERSION, rqstp->rq_vers) ||
-> > +	    nla_put_s64(skb, NFS_ATTR_RPC_STATUS_STIME,
-> > +			ktime_to_us(rqstp->rq_stime), NFS_ATTR_RPC_STATUS_PAD))
-> > +		return -ENOBUFS;
-> > +
-> > +	switch (rqstp->saddr.sa_family) {
-> > +	case AF_INET: {
-> > +		const struct sockaddr_in *s_in, *d_in;
-> > +
-> > +		s_in =3D (const struct sockaddr_in *)&rqstp->saddr;
-> > +		d_in =3D (const struct sockaddr_in *)&rqstp->daddr;
-> > +		if (nla_put_in_addr(skb, NFS_ATTR_RPC_STATUS_SADDR4,
-> > +				    s_in->sin_addr.s_addr) ||
-> > +		    nla_put_in_addr(skb, NFS_ATTR_RPC_STATUS_DADDR4,
-> > +				    d_in->sin_addr.s_addr) ||
-> > +		    nla_put_be16(skb, NFS_ATTR_RPC_STATUS_SPORT,
-> > +				 s_in->sin_port) ||
-> > +		    nla_put_be16(skb, NFS_ATTR_RPC_STATUS_DPORT,
-> > +				 d_in->sin_port))
-> > +			return -ENOBUFS;
-> > +		break;
-> > +	}
-> > +	case AF_INET6: {
-> > +		const struct sockaddr_in6 *s_in, *d_in;
-> > +
-> > +		s_in =3D (const struct sockaddr_in6 *)&rqstp->saddr;
-> > +		d_in =3D (const struct sockaddr_in6 *)&rqstp->daddr;
-> > +		if (nla_put_in6_addr(skb, NFS_ATTR_RPC_STATUS_SADDR6,
-> > +				     &s_in->sin6_addr) ||
-> > +		    nla_put_in6_addr(skb, NFS_ATTR_RPC_STATUS_DADDR6,
-> > +				     &d_in->sin6_addr) ||
-> > +		    nla_put_be16(skb, NFS_ATTR_RPC_STATUS_SPORT,
-> > +				 s_in->sin6_port) ||
-> > +		    nla_put_be16(skb, NFS_ATTR_RPC_STATUS_DPORT,
-> > +				 d_in->sin6_port))
-> > +			return -ENOBUFS;
-> > +		break;
-> > +	}
-> > +	default:
-> > +		break;
-> > +	}
-> > +
-> > +	comp_attr =3D nla_nest_start(skb, NFS_ATTR_RPC_STATUS_COMPOUND);
-> > +	if (!comp_attr)
-> > +		return -ENOBUFS;
-> > +
-> > +	for (i =3D 0; i < rqstp->opcnt; i++) {
-> > +		struct nlattr *op_attr;
-> > +
-> > +		op_attr =3D nla_nest_start(skb, i);
-> > +		if (!op_attr)
-> > +			return -ENOBUFS;
-> > +
-> > +		if (nla_put_string(skb, NFS_ATTR_RPC_STATUS_COMPOUND_OP,
-> > +				   nfsd4_op_name(rqstp->opnum[i])))
-> > +			return -ENOBUFS;
-> > +
-> > +		nla_nest_end(skb, op_attr);
-> > +	}
-> > +
-> > +	nla_nest_end(skb, comp_attr);
-> > +	nla_nest_end(skb, rq_attr);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int nfsd_genl_get_rpc_status(struct sk_buff *skb, struct genl_i=
-nfo *info)
-> > +{
-> > +	struct nfsd_net *nn =3D net_generic(genl_info_net(info), nfsd_net_id);
-> > +	struct nlattr *rpc_attr;
-> > +	int i, rqstp_index =3D 0;
-> > +	struct sk_buff *msg;
-> > +	void *hdr;
-> > +
-> > +	msg =3D nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-> > +	if (!msg)
-> > +		return -ENOMEM;
-> > +
-> > +	hdr =3D genlmsg_put(msg, info->snd_portid, info->snd_seq, &nfsd_genl,
-> > +			  0, NFS_CMD_NEW_RPC_STATUS);
-> > +	if (!hdr) {
-> > +		nlmsg_free(msg);
-> > +		return -ENOBUFS;
-> > +	}
-> > +
-> > +	rpc_attr =3D nla_nest_start(msg, NFS_ATTR_RPC_STATUS);
-> > +	if (!rpc_attr)
-> > +		goto nla_put_failure;
-> > +
-> > +	rcu_read_lock();
-> > +
-> > +	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
-> > +		struct svc_rqst *rqstp;
-> > +
-> > +		list_for_each_entry_rcu(rqstp,
-> > +				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
-> > +				rq_all) {
-> > +			struct nfsd_genl_rqstp genl_rqstp;
-> > +			unsigned int status_counter;
-> > +
-> > +			/*
-> > +			 * Acquire rq_status_counter before parsing the rqst
-> > +			 * fields. rq_status_counter is set to an odd value in
-> > +			 * order to notify the consumers the rqstp fields are
-> > +			 * meaningful.
-> > +			 */
-> > +			status_counter =3D
-> > +				smp_load_acquire(&rqstp->rq_status_counter);
-> > +			if (!(status_counter & 1))
-> > +				continue;
-> > +
-> > +			genl_rqstp.rq_xid =3D rqstp->rq_xid;
-> > +			genl_rqstp.rq_flags =3D rqstp->rq_flags;
-> > +			genl_rqstp.rq_vers =3D rqstp->rq_vers;
-> > +			genl_rqstp.pc_name =3D svc_proc_name(rqstp);
-> > +			genl_rqstp.rq_stime =3D rqstp->rq_stime;
-> > +			genl_rqstp.opcnt =3D 0;
-> > +			memcpy(&genl_rqstp.daddr, svc_daddr(rqstp),
-> > +			       sizeof(struct sockaddr));
-> > +			memcpy(&genl_rqstp.saddr, svc_addr(rqstp),
-> > +			       sizeof(struct sockaddr));
-> > +
-> > +#ifdef CONFIG_NFSD_V4
-> > +			if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
-> > +			    rqstp->rq_proc =3D=3D NFSPROC4_COMPOUND) {
-> > +				/* NFSv4 compund */
-> > +				struct nfsd4_compoundargs *args;
-> > +				int j;
-> > +
-> > +				args =3D rqstp->rq_argp;
-> > +				genl_rqstp.opcnt =3D args->opcnt;
-> > +				for (j =3D 0; j < genl_rqstp.opcnt; j++)
-> > +					genl_rqstp.opnum[j] =3D
-> > +						args->ops[j].opnum;
-> > +			}
-> > +#endif /* CONFIG_NFSD_V4 */
-> > +
-> > +			/*
-> > +			 * Acquire rq_status_counter before reporting the rqst
-> > +			 * fields to the user.
-> > +			 */
-> > +			if (smp_load_acquire(&rqstp->rq_status_counter) !=3D
-> > +			    status_counter)
-> > +				continue;
-> > +
-> > +			if (nfsd_genl_rpc_status_compose_msg(msg,
-> > +							     rqstp_index++,
-> > +							     &genl_rqstp))
-> > +				goto nla_put_failure_rcu;
-> > +		}
-> > +	}
-> > +
-> > +	rcu_read_unlock();
-> > +
-> > +	nla_nest_end(msg, rpc_attr);
-> > +	genlmsg_end(msg, hdr);
-> > +
-> > +	return genlmsg_reply(msg, info);
-> > +
-> > +nla_put_failure_rcu:
-> > +	rcu_read_unlock();
-> > +nla_put_failure:
-> > +	genlmsg_cancel(msg, hdr);
-> > +	nlmsg_free(msg);
-> > +
-> > +	return -EMSGSIZE;
-> > +}
-> > +
-> > +static int nfsd_genl_pre_doit(const struct genl_split_ops *ops,
-> > +			      struct sk_buff *skb, struct genl_info *info)
-> > +{
-> > +	struct nfsd_net *nn =3D net_generic(genl_info_net(info), nfsd_net_id);
-> > +
-> > +	if (ops->internal_flags & NFSD_FLAG_NEED_REF_COUNT) {
-> > +		int ret =3D -ENODEV;
-> > +
-> > +		mutex_lock(&nfsd_mutex);
-> > +		if (nn->nfsd_serv) {
-> > +			svc_get(nn->nfsd_serv);
-> > +			ret =3D 0;
-> > +		}
-> > +		mutex_unlock(&nfsd_mutex);
-> > +
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void nfsd_genl_post_doit(const struct genl_split_ops *ops,
-> > +				struct sk_buff *skb, struct genl_info *info)
-> > +{
-> > +	if (ops->internal_flags & NFSD_FLAG_NEED_REF_COUNT) {
-> > +		mutex_lock(&nfsd_mutex);
-> > +		nfsd_put(genl_info_net(info));
-> > +		mutex_unlock(&nfsd_mutex);
-> > +	}
-> > +}
-> > +
-> > +static struct genl_small_ops nfsd_genl_ops[] =3D {
-> > +	{
-> > +		.cmd =3D NFS_CMD_GET_RPC_STATUS,
-> > +		.validate =3D GENL_DONT_VALIDATE_STRICT | GENL_DONT_VALIDATE_DUMP,
-> > +		.doit =3D nfsd_genl_get_rpc_status,
-> > +		.internal_flags =3D NFSD_FLAG_NEED_REF_COUNT,
-> > +	},
-> > +};
-> > +
-> > +static struct genl_family nfsd_genl __ro_after_init =3D {
-> > +	.name =3D "nfsd_server",
-> > +	.version =3D 1,
-> > +	.maxattr =3D NFS_ATTR_MAX,
-> > +	.module =3D THIS_MODULE,
-> > +	.netnsok =3D true,
-> > +	.parallel_ops =3D true,
-> > +	.hdrsize =3D 0,
-> > +	.pre_doit =3D nfsd_genl_pre_doit,
-> > +	.post_doit =3D nfsd_genl_post_doit,
-> > +	.policy =3D nfsd_genl_policy,
-> > +	.small_ops =3D nfsd_genl_ops,
-> > +	.n_small_ops =3D ARRAY_SIZE(nfsd_genl_ops),
-> > +	.resv_start_op =3D NFS_CMD_NEW_RPC_STATUS + 1,
-> > +};
-> > +
-> >  /**
-> >   * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
-> >   * @net: a freshly-created network namespace
-> > @@ -1589,6 +1859,10 @@ static int __init init_nfsd(void)
-> >  	retval =3D register_filesystem(&nfsd_fs_type);
-> >  	if (retval)
-> >  		goto out_free_all;
-> > +	retval =3D genl_register_family(&nfsd_genl);
-> > +	if (retval)
-> > +		goto out_free_all;
-> > +
-> >  	return 0;
-> >  out_free_all:
-> >  	nfsd4_destroy_laundry_wq();
-> > @@ -1613,6 +1887,7 @@ static int __init init_nfsd(void)
-> > =20
-> >  static void __exit exit_nfsd(void)
-> >  {
-> > +	genl_unregister_family(&nfsd_genl);
-> >  	unregister_filesystem(&nfsd_fs_type);
-> >  	nfsd4_destroy_laundry_wq();
-> >  	unregister_cld_notifier();
-> > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> > index e95c3322eb9b..749c871b3291 100644
-> > --- a/fs/nfsd/nfsd.h
-> > +++ b/fs/nfsd/nfsd.h
-> > @@ -62,6 +62,25 @@ struct readdir_cd {
-> >  	__be32			err;	/* 0, nfserr, or nfserr_eof */
-> >  };
-> > =20
-> > +enum nfsd_genl_internal_flag {
-> > +	NFSD_FLAG_NEED_REF_COUNT =3D BIT(0),
-> > +};
-> > +
-> > +/* Maximum number of operations per session compound */
-> > +#define NFSD_MAX_OPS_PER_COMPOUND	50
-> > +
-> > +struct nfsd_genl_rqstp {
-> > +	struct sockaddr daddr;
-> > +	struct sockaddr saddr;
-> > +	unsigned long rq_flags;
-> > +	const char *pc_name;
-> > +	ktime_t rq_stime;
-> > +	__be32 rq_xid;
-> > +	u32 rq_vers;
-> > +	/* NFSv4 compund */
-> > +	u32 opnum[NFSD_MAX_OPS_PER_COMPOUND];
-> > +	u16 opcnt;
-> > +};
-> > =20
-> >  extern struct svc_program	nfsd_program;
-> >  extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_ver=
-sion4;
-> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > index 1582af33e204..fad34a7325b3 100644
-> > --- a/fs/nfsd/nfssvc.c
-> > +++ b/fs/nfsd/nfssvc.c
-> > @@ -998,6 +998,15 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
-> >  	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
-> >  		goto out_decode_err;
-> > =20
-> > +	/*
-> > +	 * Release rq_status_counter setting it to an odd value after the rpc
-> > +	 * request has been properly parsed. rq_status_counter is used to
-> > +	 * notify the consumers if the rqstp fields are stable
-> > +	 * (rq_status_counter is odd) or not meaningful (rq_status_counter
-> > +	 * is even).
-> > +	 */
-> > +	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter=
- | 1);
-> > +
-> >  	rp =3D NULL;
-> >  	switch (nfsd_cache_lookup(rqstp, &rp)) {
-> >  	case RC_DOIT:
-> > @@ -1015,6 +1024,12 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
-> >  	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
-> >  		goto out_encode_err;
-> > =20
-> > +	/*
-> > +	 * Release rq_status_counter setting it to an even value after the rpc
-> > +	 * request has been properly processed.
-> > +	 */
-> > +	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter=
- + 1);
-> > +
-> >  	nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
-> >  out_cached_reply:
-> >  	return 1;
-> > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> > index cbddcf484dba..41bdc913fa71 100644
-> > --- a/fs/nfsd/state.h
-> > +++ b/fs/nfsd/state.h
-> > @@ -174,8 +174,6 @@ static inline struct nfs4_delegation *delegstateid(=
-struct nfs4_stid *s)
-> > =20
-> >  /* Maximum number of slots per session. 160 is useful for long haul TC=
-P */
-> >  #define NFSD_MAX_SLOTS_PER_SESSION     160
-> > -/* Maximum number of operations per session compound */
-> > -#define NFSD_MAX_OPS_PER_COMPOUND	50
-> >  /* Maximum  session per slot cache size */
-> >  #define NFSD_SLOT_CACHE_SIZE		2048
-> >  /* Maximum number of NFSD_SLOT_CACHE_SIZE slots per session */
-> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > index dbf5b21feafe..caa20defd255 100644
-> > --- a/include/linux/sunrpc/svc.h
-> > +++ b/include/linux/sunrpc/svc.h
-> > @@ -251,6 +251,7 @@ struct svc_rqst {
-> >  						 * net namespace
-> >  						 */
-> >  	void **			rq_lease_breaker; /* The v4 client breaking a lease */
-> > +	unsigned int		rq_status_counter; /* RPC processing counter */
-> >  };
-> > =20
-> >  /* bits for rq_flags */
-> > diff --git a/include/uapi/linux/nfs.h b/include/uapi/linux/nfs.h
-> > index 946cb62d64b0..86a5daaaf9d9 100644
-> > --- a/include/uapi/linux/nfs.h
-> > +++ b/include/uapi/linux/nfs.h
-> > @@ -132,4 +132,58 @@ enum nfs_ftype {
-> >  	NFFIFO =3D 8
-> >  };
-> > =20
-> > +enum nfs_commands {
-> > +	NFS_CMD_UNSPEC,
-> > +
-> > +	NFS_CMD_GET_RPC_STATUS,
-> > +	NFS_CMD_NEW_RPC_STATUS,
-> > +
-> > +	/* add new commands above here */
-> > +
-> > +	__NFS_CMD_MAX,
-> > +	NFS_CMD_MAX =3D __NFS_CMD_MAX - 1,
-> > +};
-> > +
-> > +enum nfs_rcp_status_compound_attrs {
-> > +	__NFS_ATTR_RPC_STATUS_COMPOUND_UNSPEC,
-> > +	NFS_ATTR_RPC_STATUS_COMPOUND_OP,
-> > +
-> > +	/* keep it last */
-> > +	NUM_NFS_ATTR_RPC_STATUS_COMPOUND,
-> > +	NFS_ATTR_RPC_STATUS_COMPOUND_MAX =3D NUM_NFS_ATTR_RPC_STATUS_COMPOUND=
- - 1,
-> > +};
-> > +
-> > +enum nfs_rpc_status_attrs {
-> > +	__NFS_ATTR_RPC_STATUS_UNSPEC,
-> > +
-> > +	NFS_ATTR_RPC_STATUS_XID,
-> > +	NFS_ATTR_RPC_STATUS_FLAGS,
-> > +	NFS_ATTR_RPC_STATUS_PC_NAME,
-> > +	NFS_ATTR_RPC_STATUS_VERSION,
-> > +	NFS_ATTR_RPC_STATUS_STIME,
-> > +	NFS_ATTR_RPC_STATUS_SADDR4,
-> > +	NFS_ATTR_RPC_STATUS_DADDR4,
-> > +	NFS_ATTR_RPC_STATUS_SADDR6,
-> > +	NFS_ATTR_RPC_STATUS_DADDR6,
-> > +	NFS_ATTR_RPC_STATUS_SPORT,
-> > +	NFS_ATTR_RPC_STATUS_DPORT,
-> > +	NFS_ATTR_RPC_STATUS_PAD,
-> > +	NFS_ATTR_RPC_STATUS_COMPOUND,
-> > +
-> > +	/* keep it last */
-> > +	NUM_NFS_ATTR_RPC_STATUS,
-> > +	NFS_ATTR_RPC_STATUS_MAX =3D NUM_NFS_ATTR_RPC_STATUS - 1,
-> > +};
-> > +
-> > +enum nfs_attrs {
-> > +	NFS_ATTR_UNSPEC,
-> > +
-> > +	NFS_ATTR_RPC_STATUS,
-> > +
-> > +	/* add new attributes above here */
-> > +
-> > +	__NFS_ATTR_MAX,
-> > +	NFS_ATTR_MAX =3D __NFS_ATTR_MAX - 1
-> > +};
-> > +
-> >  #endif /* _UAPI_LINUX_NFS_H */
-> > --=20
-> > 2.41.0
-> >=20
->=20
-> --=20
-> Chuck Lever
->=20
+> diff --git a/include/linux/lwq.h b/include/linux/lwq.h
+> new file mode 100644
+> index 000000000000..52b9c81b493a
+> --- /dev/null
+> +++ b/include/linux/lwq.h
+> @@ -0,0 +1,120 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +
+> +#ifndef LWQ_H
+> +#define LWQ_H
+> +/*
+> + * light-weight single-linked queue built from llist
+> + *
+> + * Entries can be enqueued from any context with no locking.
+> + * Entries can be dequeued from process context with integrated locking.
+> + */
+> +#include <linux/container_of.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/llist.h>
+> +
+> +struct lwq_node {
+> +	struct llist_node node;
+> +};
+> +
+> +struct lwq {
+> +	spinlock_t		lock;
+> +	struct llist_node	*ready;		/* entries to be dequeued */
+> +	struct llist_head	new;		/* entries being enqueued */
+> +};
+> +
+> +/**
+> + * lwq_init - initialise a lwq
+> + * @q:	the lwq object
+> + */
+> +static inline void lwq_init(struct lwq *q)
+> +{
+> +	spin_lock_init(&q->lock);
+> +	q->ready = NULL;
+> +	init_llist_head(&q->new);
+> +}
+> +
+> +/**
+> + * lwq_empty - test if lwq contains any entry
+> + * @q:	the lwq object
+> + *
+> + * This empty test contains an acquire barrier so that if a wakeup
+> + * is sent when lwq_dequeue returns true, it is safe to go to sleep after
+> + * a test on lwq_empty().
+> + */
+> +static inline bool lwq_empty(struct lwq *q)
+> +{
+> +	/* acquire ensures ordering wrt lwq_enqueue() */
+> +	return smp_load_acquire(&q->ready) == NULL && llist_empty(&q->new);
+> +}
+> +
+> +struct llist_node *__lwq_dequeue(struct lwq *q);
+> +/**
+> + * lwq_dequeue - dequeue first (oldest) entry from lwq
+> + * @q:		the queue to dequeue from
+> + * @type:	the type of object to return
+> + * @member:	them member in returned object which is an lwq_node.
+> + *
+> + * Remove a single object from the lwq and return it.  This will take
+> + * a spinlock and so must always be called in the same context, typcially
+> + * process contet.
+> + */
+> +#define lwq_dequeue(q, type, member)					\
+> +	({ struct llist_node *_n = __lwq_dequeue(q);			\
+> +	  _n ? container_of(_n, type, member.node) : NULL; })
+> +
+> +struct llist_node *lwq_dequeue_all(struct lwq *q);
+> +
+> +/**
+> + * lwq_for_each_safe - iterate over detached queue allowing deletion
+> + * @_n:		iterator variable
+> + * @_t1:	temporary struct llist_node **
+> + * @_t2:	temporary struct llist_node *
+> + * @_l:		address of llist_node pointer from lwq_dequeue_all()
+> + * @_member:	member in _n where lwq_node is found.
+> + *
+> + * Iterate over members in a dequeued list.  If the iterator variable
+> + * is set to NULL, the iterator removes that entry from the queue.
+> + */
+> +#define lwq_for_each_safe(_n, _t1, _t2, _l, _member)			\
+> +	for (_t1 = (_l);						\
+> +	     *(_t1) ? (_n = container_of(*(_t1), typeof(*(_n)), _member.node),\
+> +		       _t2 = ((*_t1)->next),				\
+> +		       true)						\
+> +	     : false;							\
+> +	     (_n) ? (_t1 = &(_n)->_member.node.next, 0)			\
+> +	     : ((*(_t1) = (_t2)),  0))
+> +
+> +/**
+> + * lwq_enqueue - add a new item to the end of the queue
+> + * @n	- the lwq_node embedded in the item to be added
+> + * @q	- the lwq to append to.
+> + *
+> + * No locking is needed to append to the queue so this can
+> + * be called from any context.
+> + * Return %true is the list may have previously been empty.
+> + */
+> +static inline bool lwq_enqueue(struct lwq_node *n, struct lwq *q)
+> +{
+> +	/* acquire enqures ordering wrt lwq_dequeue */
+> +	return llist_add(&n->node, &q->new) &&
+> +		smp_load_acquire(&q->ready) == NULL;
+> +}
+> +
+> +/**
+> + * lwq_enqueue_batch - add a list of new items to the end of the queue
+> + * @n	- the lwq_node embedded in the first item to be added
+> + * @q	- the lwq to append to.
+> + *
+> + * No locking is needed to append to the queue so this can
+> + * be called from any context.
+> + * Return %true is the list may have previously been empty.
+> + */
+> +static inline bool lwq_enqueue_batch(struct llist_node *n, struct lwq *q)
+> +{
+> +	struct llist_node *e = n;
+> +
+> +	/* acquire enqures ordering wrt lwq_dequeue */
+> +	return llist_add_batch(llist_reverse_order(n), e, &q->new) &&
+> +		smp_load_acquire(&q->ready) == NULL;
+> +}
+> +#endif /* LWQ_H */
+> diff --git a/lib/Kconfig b/lib/Kconfig
+> index 5c2da561c516..6620bdba4f94 100644
+> --- a/lib/Kconfig
+> +++ b/lib/Kconfig
+> @@ -763,3 +763,8 @@ config ASN1_ENCODER
+>  
+>  config POLYNOMIAL
+>         tristate
+> +
+> +config LWQ_TEST
+> +	bool "RPC: enable boot-time test for lwq queuing"
+> +	help
+> +          Enable boot-time test of lwq functionality.
+> diff --git a/lib/Makefile b/lib/Makefile
+> index 1ffae65bb7ee..4b67c2d6af62 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -45,7 +45,7 @@ obj-y	+= lockref.o
+>  obj-y += bcd.o sort.o parser.o debug_locks.o random32.o \
+>  	 bust_spinlocks.o kasprintf.o bitmap.o scatterlist.o \
+>  	 list_sort.o uuid.o iov_iter.o clz_ctz.o \
+> -	 bsearch.o find_bit.o llist.o memweight.o kfifo.o \
+> +	 bsearch.o find_bit.o llist.o lwq.o memweight.o kfifo.o \
+>  	 percpu-refcount.o rhashtable.o base64.o \
+>  	 once.o refcount.o rcuref.o usercopy.o errseq.o bucket_locks.o \
+>  	 generic-radix-tree.o
+> diff --git a/lib/lwq.c b/lib/lwq.c
+> new file mode 100644
+> index 000000000000..d6be6dda3867
+> --- /dev/null
+> +++ b/lib/lwq.c
+> @@ -0,0 +1,149 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Light weight single-linked queue.
+> + *
+> + * Entries are enqueued to the head of an llist, with no blocking.
+> + * This can happen in any context.
+> + *
+> + * Entries are dequeued using a spinlock to protect against
+> + * multiple access.  The llist is staged in reverse order, and refreshed
+> + * from the llist when it exhausts.
+> + */
+> +#include <linux/rcupdate.h>
+> +#include <linux/lwq.h>
+> +
+> +struct llist_node *__lwq_dequeue(struct lwq *q)
+> +{
+> +	struct llist_node *this;
+> +
+> +	if (lwq_empty(q))
+> +		return NULL;
+> +	spin_lock(&q->lock);
+> +	this = q->ready;
+> +	if (!this && !llist_empty(&q->new)) {
+> +		/* ensure queue doesn't appear transiently lwq_empty */
+> +		smp_store_release(&q->ready, (void *)1);
+> +		this = llist_reverse_order(llist_del_all(&q->new));
+> +		if (!this)
+> +			q->ready = NULL;
+> +	}
+> +	if (this)
+> +		q->ready = llist_next(this);
+> +	spin_unlock(&q->lock);
+> +	return this;
+> +}
+> +
+> +/**
+> + * lwq_dequeue_all - dequeue all currently enqueued objects
+> + * @q:	the queue to dequeue from
+> + *
+> + * Remove and return a linked list of llist_nodes of all the objects that were
+> + * in the queue. The first on the list will be the object that was least
+> + * recently enqueued.
+> + */
+> +struct llist_node *lwq_dequeue_all(struct lwq *q)
+> +{
+> +	struct llist_node *r, *t, **ep;
+> +
+> +	if (lwq_empty(q))
+> +		return NULL;
+> +
+> +	spin_lock(&q->lock);
+> +	r = q->ready;
+> +	q->ready = NULL;
+> +	t = llist_del_all(&q->new);
+> +	spin_unlock(&q->lock);
+> +	ep = &r;
+> +	while (*ep)
+> +		ep = &(*ep)->next;
+> +	*ep = llist_reverse_order(t);
+> +	return r;
+> +}
+> +
+> +#if IS_ENABLED(CONFIG_LWQ_TEST)
+> +
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/wait_bit.h>
+> +#include <linux/kthread.h>
+> +#include <linux/delay.h>
+> +struct tnode {
+> +	struct lwq_node n;
+> +	int i;
+> +	int c;
+> +};
+> +
+> +static int lwq_exercise(void *qv)
+> +{
+> +	struct lwq *q = qv;
+> +	int cnt;
+> +	struct tnode *t;
+> +
+> +	for (cnt = 0; cnt < 10000; cnt++) {
+> +		wait_var_event(q, (t = lwq_dequeue(q, struct tnode, n)) != NULL);
+> +		t->c++;
+> +		if (lwq_enqueue(&t->n, q))
+> +			wake_up_var(q);
+> +	}
+> +	while (!kthread_should_stop())
+> +		schedule_timeout_idle(1);
+> +	return 0;
+> +}
+> +
+> +static int lwq_test(void)
+> +{
+> +	int i;
+> +	struct lwq q;
+> +	struct llist_node *l, **t1, *t2;
+> +	struct tnode *t;
+> +	struct task_struct *threads[8];
+> +
+> +	printk(KERN_INFO "testing lwq....\n");
+> +	lwq_init(&q);
+> +	printk(KERN_INFO " lwq: run some threads\n");
+> +	for (i = 0; i < ARRAY_SIZE(threads); i++)
+> +		threads[i] = kthread_run(lwq_exercise, &q, "lwq-test-%d", i);
+> +	for (i = 0; i < 100; i++) {
+> +		t = kmalloc(sizeof(*t), GFP_KERNEL);
+> +		t->i = i;
+> +		t->c = 0;
+> +		if (lwq_enqueue(&t->n, &q))
+> +			wake_up_var(&q);
+> +	};
+> +	/* wait for threads to exit */
+> +	for (i = 0; i < ARRAY_SIZE(threads); i++)
+> +		if (!IS_ERR_OR_NULL(threads[i]))
+> +			kthread_stop(threads[i]);
+> +	printk(KERN_INFO " lwq: dequeue first 50:");
+> +	for (i = 0; i < 50 ; i++) {
+> +		if (i && (i % 10) == 0) {
+> +			printk(KERN_CONT "\n");
+> +			printk(KERN_INFO " lwq: ... ");
+> +		}
+> +		t = lwq_dequeue(&q, struct tnode, n);
+> +		printk(KERN_CONT " %d(%d)", t->i, t->c);
+> +		kfree(t);
+> +	}
+> +	printk(KERN_CONT "\n");
+> +	l = lwq_dequeue_all(&q);
+> +	printk(KERN_INFO " lwq: delete the multiples of 3 (test lwq_for_each_safe())\n");
+> +	lwq_for_each_safe(t, t1, t2, &l, n) {
+> +		if ((t->i % 3) == 0) {
+> +			t->i = -1;
+> +			kfree(t);
+> +			t = NULL;
+> +		}
+> +	}
+> +	if (l)
+> +		lwq_enqueue_batch(l, &q);
+> +	printk(KERN_INFO " lwq: dequeue remaining:");
+> +	while ((t = lwq_dequeue(&q, struct tnode, n)) != NULL) {
+> +		printk(KERN_CONT " %d", t->i);
+> +		kfree(t);
+> +	}
+> +	printk(KERN_CONT "\n");
+> +	return 0;
+> +}
+> +
+> +module_init(lwq_test);
+> +#endif /* CONFIG_LWQ_TEST*/
+> -- 
+> 2.41.0
+> 
 
---QHp+ZtR/AUTlsaD4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZO9dXgAKCRA6cBh0uS2t
-rBU3APwPvKY2Z6xY9PUAVMgzUq/8lXc4vfIcozT0DCHmBiWqNwEAnxYaP+naBqZT
-aKOxXUIPpm8GivZd4Z2zzmijk5xhzgo=
-=Rmot
------END PGP SIGNATURE-----
-
---QHp+ZtR/AUTlsaD4--
-
+-- 
+Chuck Lever
