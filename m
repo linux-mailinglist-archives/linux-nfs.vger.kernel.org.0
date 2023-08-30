@@ -2,58 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E52378D341
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 08:18:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90BD978D833
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235154AbjH3GSB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Aug 2023 02:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34700 "EHLO
+        id S230374AbjH3S3U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Aug 2023 14:29:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241267AbjH3GR4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 02:17:56 -0400
-Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 578C1E9
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 23:17:54 -0700 (PDT)
-Received: by mail-ua1-x933.google.com with SMTP id a1e0cc1a2514c-7a0254de2fdso1938039241.1
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 23:17:54 -0700 (PDT)
+        with ESMTP id S241392AbjH3Gxk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 02:53:40 -0400
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6C019A
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 23:53:36 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-7a505727e7eso683729241.0
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 23:53:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693376273; x=1693981073; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bf9C7WofIPLAIqUHKR8HLpDdpIK4sTc8g8feDGjF8c0=;
-        b=RPcKurMW94EpRTbLsTvw0XWZGi7lOxk2P6zQiV6NTIhtX7B25IbG8nAsO8n+saxoez
-         snfxVp1AuCXFpV/xApGcYAxFdATiFHyGDsXkRWvZY83RMnnfoHg0u2UZoo9KzaGL5+M7
-         o9C15OurFd95g5JKVsxOg5/Vi8UU7BtPlEEkty/Sg4Np/ruPkVPglXST7Lj0aPK0RXf3
-         Tf6TXPlPCroVyT91hW/3D1WmJF2XViDKekhHBy47D58b7cRpKLhKQBdof/xzyP77ANLH
-         YOnDi7Qc/O/+J45NrkZ3uRkoaZXNowARha+833PA9NIl940u3ueHGAPFObT6TlFqj+k8
-         3WGg==
+        d=gmail.com; s=20221208; t=1693378415; x=1693983215; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RIMufmcPljVq9B0zYCPDjqzphZzAERPBfQDoanecvZU=;
+        b=mGNAjYyv6BdQS09mLGfq9VPcCMDdYFJOj5FvbtygSu4l1Y4xS/5nblLRfVVV6kJjA1
+         UY2J5LwIdEV7ozQi+EhNBl7/onBHeaaa7coQOWFvEjVlSYgd8OxyWNzwfUxqdVIM5zZx
+         nIFHXiY5JRUfHyw0RN4beuZ7qdN9ouQF23+xudAC1jvc2ahg7+fKPITJZRqCZcUp4vBe
+         XjZNFJ+wZWqo1MGRehQQszV1RBCqZn88yh+QEZ0WmU9CG6pbYk5tEeMmRoB2ZtkCWDKn
+         OAncvvAtO4582jKpKwaNo3sNSWeiX54W34Y88HOFKM7vs7jiqRIlcuxdIi0vj2upcHfi
+         cquA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693376273; x=1693981073;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bf9C7WofIPLAIqUHKR8HLpDdpIK4sTc8g8feDGjF8c0=;
-        b=JJi5Mv3k0zfSQN1hgD47r5ZG8Z2Nht4jtK+6XiIDxsKVBPLlygzruvPwf26fXw632A
-         yuqieEnj6aezSPVcsUriTPTZBJDEYjer/wX6LJMQ6BpcruDxC76EqkH2KOWyfvrERfc2
-         vpx7fNBsmtmUnDmEzbz4psPYLyGlp889RAzcmCLIeVzE+yMtigdVYK36Mgr+pno8wwer
-         Zghi8SJLcE77GQ8ikMgD6Q83th5Sdrm4gN3iF1Jf6YbIfXU+uCI5Hx0vwTlDCyAkInhW
-         GRK2WshvhFCV27VHHrXiERCjj8cMwA0o3RL8SdS6UPtJodHq0skJJcaUHjyhkIKMurgl
-         CXyg==
-X-Gm-Message-State: AOJu0YyAImu3u97L5trC1SUPVuYcD0/dTqvCfa0o6POQOEVbP4pk6Dd2
-        ojVNP0pq9u/FKeWNwUOQooxNeVNgDZFXKshjebTtkWZt5VIgnw==
-X-Google-Smtp-Source: AGHT+IEPz5iXynOgBqkGM3VKMPKMwFz582D26Ml8t0pQ3ayC0KvbRtif+tOikyIBomYrkkvQ2lRfmU2SYttYhCSi/g8=
-X-Received: by 2002:a05:6102:301c:b0:44e:9ee6:b002 with SMTP id
- s28-20020a056102301c00b0044e9ee6b002mr1278915vsa.34.1693376272792; Tue, 29
- Aug 2023 23:17:52 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1693378415; x=1693983215;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RIMufmcPljVq9B0zYCPDjqzphZzAERPBfQDoanecvZU=;
+        b=BXsSMDCsQVIx0OjzOFkKm/Rv6Nhz+jCZbQheZNcWnQwqL8M6MvcCRo1sJuk5YaGof7
+         KjIXwaLztcZEn9jSmJnABVkN1aQKZ+9JiAGzzfXNef0sOUqMnra33wuyalMJfv4j0Y1P
+         9nClk4/Oakxr1YQzjCN5HAnDV7tj60GTURJ6qXlnKlJXma0yFZ9cqKZbGePKMuI5UF2u
+         U+1QI2XCLZsuxJ+bgJgdYxh0GgaO5xLAujNmvMYSKI1WBgMRB0I36+D+LQk6x9QN4bZq
+         njxj00Xhrtr8fkZvDdL49K57AAHduqXesfDTzrPDMDQNMWaN18IY/tKaX15o2b1xAiGX
+         8laQ==
+X-Gm-Message-State: AOJu0YxLoK2vE5vSgF6z8G6jNwen2oYDB9r0WIGlQDGNz9SqBUIg0d40
+        vUrjlkJArd3dXD1Lr3xC3gat9jPkLmzlIR4IcwdzEtXCIiBOSg==
+X-Google-Smtp-Source: AGHT+IEECV6rjlOeKnSVwNrCHgupOWD+W7wojg8CqvIR+FvRkVbnWT5LhNqLlV451Lk0W8TBOT6LxyeRSvtsLwDiqBk=
+X-Received: by 2002:a05:6102:2f5:b0:44d:4a41:8941 with SMTP id
+ j21-20020a05610202f500b0044d4a418941mr1357236vsj.1.1693378415328; Tue, 29 Aug
+ 2023 23:53:35 -0700 (PDT)
 MIME-Version: 1.0
+References: <CABXB=RSMkjoyshFZy5eGbuvAQfoHhFyQvReYNtO_+5f+OM66cA@mail.gmail.com>
+In-Reply-To: <CABXB=RSMkjoyshFZy5eGbuvAQfoHhFyQvReYNtO_+5f+OM66cA@mail.gmail.com>
 From:   J David <j.david.lists@gmail.com>
-Date:   Wed, 30 Aug 2023 02:17:41 -0400
-Message-ID: <CABXB=RSMkjoyshFZy5eGbuvAQfoHhFyQvReYNtO_+5f+OM66cA@mail.gmail.com>
-Subject: Question about different gid management between versions
+Date:   Wed, 30 Aug 2023 02:53:23 -0400
+Message-ID: <CABXB=RR=67b-sksfcrJotivc_9G0vTesP3qtz9T_8G3N3H-15A@mail.gmail.com>
+Subject: Re: Question about different gid management between versions
 To:     linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,62 +66,25 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We have existing NFS servers based on Debian Bookworm that run
-nfs-kernel-server 1.3.4.  We have recently stood up some Debian
-Bullseye fileservers, which come with 2.6.2.
+On Wed, Aug 30, 2023 at 2:17=E2=80=AFAM J David <j.david.lists@gmail.com> w=
+rote:
+> We have existing NFS servers based on Debian Bookworm that run
+> nfs-kernel-server 1.3.4.  We have recently stood up some Debian
+> Bullseye fileservers, which come with 2.6.2.
 
-Apparently, there are some big differences in how users' group
-memberships are handled between the two.
+Of course I got those versions backwards. The old ones are Bullseye,
+the new ones are Bookworm. :-P
 
-For example, on the client machine, my UID is 1000. I am in groups 0,
-106, 181, and 1000.
+Also, for giggles, I tried installing the Bullseye 1.3.4 packages on
+Bookworm.  Somewhat surprisingly, that did work.  But it didn't affect
+the issue at all. I guess that might imply that the change is
+something to do with the bits of NFS built into the kernel, rather
+than the nfs-kernel-server stuff? Operating at the outer limits of my
+knowledge here!
 
-On the server, my UID is 1000, and I am in groups 0, 27, 106, and 1000.
+FWIW, the kernel is 5.10.0-25-amd64 on the old machines and
+6.1.0-11-amd64 on the new ones.
 
-With the 1.3.4 server, the client's set of groups is used. I can
-"chgrp 181 x" but not "chgrp 27 x."
-
-$ touch x
-$ ls -ln x
--rw-rw-r--  1 1000  1000  0 Aug 30 05:47 x
-$ chgrp 181 x
-$ ls -ln x
--rw-rw-r--  1 1000  181  0 Aug 30 05:47 x
-$ chgrp 27 x
-chgrp: you are not a member of group 27
-$ ls -ln x
--rw-rw-r--  1 1000  181  0 Aug 30 05:47 x
-$ rm x
-
-From the same client, with the 2.6.2 server, the server's groups are
-used. I can "chgrp 27 x" but not "chgrp 181 x."
-
-$ touch x
-$ ls -ln x
--rw-rw-r--  1 1000  1000  0 Aug 30 05:50 x
-$ chgrp 181 x
-chgrp: x: Operation not permitted
-$ ls -ln x
--rw-rw-r--  1 1000  1000  0 Aug 30 05:50 x
-$ chgrp 27 x
-$ ls -ln x
--rw-rw-r--  1 1000  27  0 Aug 30 05:50 x
-$ rm x
-
-This change in behavior was quite startling!
-
-We are using sec=sys, and this change in behavior happens with both
-NFSv3 and NFSv4.2 clients, so it doesn't seem to be related to ID
-mapping.
-
-In this case, it's not possible to synchronize users and groups
-between the clients and servers, because Docker is involved and the
-stuff that happens with uids and gids inside docker is chaos.  I can
-control the NFS server configuration.  I have minimal control over
-what happens inside those containers on the client machines.
-
-Is there any way for me to get the old behavior from the new server
-short of downgrading?  My attempts to Google for more information
-about this have been utterly fruitless.
-
-Thanks for any advice!
+This does make me think I'm going to have to reinstall those Bookworm
+servers with Bullseye, at least for now.  Unless maybe somebody here
+who knows a lot more than me has a brilliant idea.
