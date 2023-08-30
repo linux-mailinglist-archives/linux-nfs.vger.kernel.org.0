@@ -2,89 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90BD978D833
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2C0D78D82D
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230374AbjH3S3U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Aug 2023 14:29:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58984 "EHLO
+        id S232055AbjH3S3h convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 30 Aug 2023 14:29:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241392AbjH3Gxk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 02:53:40 -0400
-Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6C019A
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 23:53:36 -0700 (PDT)
-Received: by mail-ua1-x92e.google.com with SMTP id a1e0cc1a2514c-7a505727e7eso683729241.0
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 23:53:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693378415; x=1693983215; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RIMufmcPljVq9B0zYCPDjqzphZzAERPBfQDoanecvZU=;
-        b=mGNAjYyv6BdQS09mLGfq9VPcCMDdYFJOj5FvbtygSu4l1Y4xS/5nblLRfVVV6kJjA1
-         UY2J5LwIdEV7ozQi+EhNBl7/onBHeaaa7coQOWFvEjVlSYgd8OxyWNzwfUxqdVIM5zZx
-         nIFHXiY5JRUfHyw0RN4beuZ7qdN9ouQF23+xudAC1jvc2ahg7+fKPITJZRqCZcUp4vBe
-         XjZNFJ+wZWqo1MGRehQQszV1RBCqZn88yh+QEZ0WmU9CG6pbYk5tEeMmRoB2ZtkCWDKn
-         OAncvvAtO4582jKpKwaNo3sNSWeiX54W34Y88HOFKM7vs7jiqRIlcuxdIi0vj2upcHfi
-         cquA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693378415; x=1693983215;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RIMufmcPljVq9B0zYCPDjqzphZzAERPBfQDoanecvZU=;
-        b=BXsSMDCsQVIx0OjzOFkKm/Rv6Nhz+jCZbQheZNcWnQwqL8M6MvcCRo1sJuk5YaGof7
-         KjIXwaLztcZEn9jSmJnABVkN1aQKZ+9JiAGzzfXNef0sOUqMnra33wuyalMJfv4j0Y1P
-         9nClk4/Oakxr1YQzjCN5HAnDV7tj60GTURJ6qXlnKlJXma0yFZ9cqKZbGePKMuI5UF2u
-         U+1QI2XCLZsuxJ+bgJgdYxh0GgaO5xLAujNmvMYSKI1WBgMRB0I36+D+LQk6x9QN4bZq
-         njxj00Xhrtr8fkZvDdL49K57AAHduqXesfDTzrPDMDQNMWaN18IY/tKaX15o2b1xAiGX
-         8laQ==
-X-Gm-Message-State: AOJu0YxLoK2vE5vSgF6z8G6jNwen2oYDB9r0WIGlQDGNz9SqBUIg0d40
-        vUrjlkJArd3dXD1Lr3xC3gat9jPkLmzlIR4IcwdzEtXCIiBOSg==
-X-Google-Smtp-Source: AGHT+IEECV6rjlOeKnSVwNrCHgupOWD+W7wojg8CqvIR+FvRkVbnWT5LhNqLlV451Lk0W8TBOT6LxyeRSvtsLwDiqBk=
-X-Received: by 2002:a05:6102:2f5:b0:44d:4a41:8941 with SMTP id
- j21-20020a05610202f500b0044d4a418941mr1357236vsj.1.1693378415328; Tue, 29 Aug
- 2023 23:53:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <CABXB=RSMkjoyshFZy5eGbuvAQfoHhFyQvReYNtO_+5f+OM66cA@mail.gmail.com>
-In-Reply-To: <CABXB=RSMkjoyshFZy5eGbuvAQfoHhFyQvReYNtO_+5f+OM66cA@mail.gmail.com>
-From:   J David <j.david.lists@gmail.com>
-Date:   Wed, 30 Aug 2023 02:53:23 -0400
-Message-ID: <CABXB=RR=67b-sksfcrJotivc_9G0vTesP3qtz9T_8G3N3H-15A@mail.gmail.com>
-Subject: Re: Question about different gid management between versions
-To:     linux-nfs@vger.kernel.org
+        with ESMTP id S242764AbjH3JcT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 05:32:19 -0400
+Received: from frasgout12.his.huawei.com (unknown [14.137.139.154])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73DF31A1;
+        Wed, 30 Aug 2023 02:32:16 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.229])
+        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4RbJc43j53z9xFb1;
+        Wed, 30 Aug 2023 17:17:56 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+        by APP1 (Coremail) with SMTP id LxC2BwBH+rl6DO9kg7vMAQ--.28846S2;
+        Wed, 30 Aug 2023 10:31:51 +0100 (CET)
+Message-ID: <9d482f25475a9d9bc0c93a8cbaf8bd4bb67d2cd6.camel@huaweicloud.com>
+Subject: Re: [PATCH 15/28] security: Introduce inode_post_removexattr hook
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     brauner@kernel.org
+Cc:     Mimi Zohar <zohar@linux.ibm.com>, viro@zeniv.linux.org.uk,
+        chuck.lever@oracle.com, jlayton@kernel.org,
+        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stefanb@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Wed, 30 Aug 2023 11:31:35 +0200
+In-Reply-To: <f5a61c0f09c1b8d8aaeb99ad7ba4aab15818c5ed.camel@linux.ibm.com>
+References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
+         <20230303181842.1087717-16-roberto.sassu@huaweicloud.com>
+         <f5a61c0f09c1b8d8aaeb99ad7ba4aab15818c5ed.camel@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4-0ubuntu2 
+MIME-Version: 1.0
+X-CM-TRANSID: LxC2BwBH+rl6DO9kg7vMAQ--.28846S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Zw1DuFW3ur4ftrWxGr1xXwb_yoW8uFy8pF
+        s8t3ZxCF4rXr17Kr93ta1Du39agw4rGrWUJ3y2gw1jvFn7twn2qFWUKr15CFyrurW0gFyq
+        qF9Igr95Cr15ZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZ18PUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAFBF1jj5NN2wAAs0
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
+        PDS_RDNS_DYNAMIC_FP,RCVD_IN_DNSWL_BLOCKED,RDNS_DYNAMIC,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 2:17=E2=80=AFAM J David <j.david.lists@gmail.com> w=
-rote:
-> We have existing NFS servers based on Debian Bookworm that run
-> nfs-kernel-server 1.3.4.  We have recently stood up some Debian
-> Bullseye fileservers, which come with 2.6.2.
+On Wed, 2023-03-08 at 10:43 -0500, Mimi Zohar wrote:
+> Hi Roberto,
+> 
+> On Fri, 2023-03-03 at 19:18 +0100, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> > 
+> > In preparation for moving IMA and EVM to the LSM infrastructure, introduce
+> > the inode_post_removexattr hook.
+> > 
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > ---
+> >  fs/xattr.c                    |  1 +
+> >  include/linux/lsm_hook_defs.h |  2 ++
+> >  include/linux/security.h      |  5 +++++
+> >  security/security.c           | 14 ++++++++++++++
+> >  4 files changed, 22 insertions(+)
+> > 
+> > diff --git a/fs/xattr.c b/fs/xattr.c
+> > index 14a7eb3c8fa..10c959d9fc6 100644
+> > --- a/fs/xattr.c
+> > +++ b/fs/xattr.c
+> > @@ -534,6 +534,7 @@ __vfs_removexattr_locked(struct mnt_idmap *idmap,
+> >  
+> >  	if (!error) {
+> >  		fsnotify_xattr(dentry);
+> > +		security_inode_post_removexattr(dentry, name);
+> >  		evm_inode_post_removexattr(dentry, name);
+> >  	}
+> 
+> Nothing wrong with this, but other places in this function test "if
+> (error) goto ...".   Perhaps it is time to clean this up.
+> 
+> >  
+> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> > index eedefbcdde3..2ae5224d967 100644
+> > --- a/include/linux/lsm_hook_defs.h
+> > +++ b/include/linux/lsm_hook_defs.h
+> > @@ -147,6 +147,8 @@ LSM_HOOK(int, 0, inode_getxattr, struct dentry *dentry, const char *name)
+> >  LSM_HOOK(int, 0, inode_listxattr, struct dentry *dentry)
+> >  LSM_HOOK(int, 0, inode_removexattr, struct mnt_idmap *idmap,
+> >  	 struct dentry *dentry, const char *name)
+> > +LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
+> > +	 const char *name)
+> 
+> @Christian should the security_inode_removexattr() and
+> security_inode_post_removexattr() arguments be the same?
 
-Of course I got those versions backwards. The old ones are Bullseye,
-the new ones are Bookworm. :-P
+Probably this got lost.
 
-Also, for giggles, I tried installing the Bullseye 1.3.4 packages on
-Bookworm.  Somewhat surprisingly, that did work.  But it didn't affect
-the issue at all. I guess that might imply that the change is
-something to do with the bits of NFS built into the kernel, rather
-than the nfs-kernel-server stuff? Operating at the outer limits of my
-knowledge here!
+Christian, should security_inode_post_removexattr() have the idmap
+parameter as well?
 
-FWIW, the kernel is 5.10.0-25-amd64 on the old machines and
-6.1.0-11-amd64 on the new ones.
+Thanks
 
-This does make me think I'm going to have to reinstall those Bookworm
-servers with Bullseye, at least for now.  Unless maybe somebody here
-who knows a lot more than me has a brilliant idea.
+Roberto
+
+> >  LSM_HOOK(int, 0, inode_set_acl, struct mnt_idmap *idmap,
+> >  	 struct dentry *dentry, const char *acl_name, struct posix_acl *kacl)
+> >  LSM_HOOK(int, 0, inode_get_acl, struct mnt_idmap *idmap,
+> 
+
