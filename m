@@ -2,117 +2,154 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D4F0978CFD8
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 01:05:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BCB678D0E0
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 02:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241067AbjH2XFL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Aug 2023 19:05:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56136 "EHLO
+        id S239794AbjH3ADt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Aug 2023 20:03:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240815AbjH2XEi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 19:04:38 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B43471BE;
-        Tue, 29 Aug 2023 16:04:34 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id E2ED91F88D;
-        Tue, 29 Aug 2023 23:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1693350272; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=XGKcOlxSAVAgG3RJ4LeN/UnSyuPJ54+BZFYnVmOyyAM=;
-        b=hbDv47V3yhEvkSS1KfdYBaR46TSVUTLNd8AzlgBttUU6zP1V7Zz6HwZSXwF6kF+NAbSxdu
-        7dINesW5WMsCgQQUw814fymHkY0OSxn6FXn766tVXfO6916nlLmLzYqlJAi64vywyvs/WQ
-        rJXn8tUxeze3ri8JfRq84BR5bxqJ/5A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1693350272;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=XGKcOlxSAVAgG3RJ4LeN/UnSyuPJ54+BZFYnVmOyyAM=;
-        b=n+/TBOM6Okc8IT+SQjTQ+nRWPjsKpd7DECTYyYyK7sMIPI9JpzAu2HxNNFZ1FL9/3+bIRP
-        v7gvqp+balvTRnBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 82A6113301;
-        Tue, 29 Aug 2023 23:04:28 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id oONeDXx57mRqbQAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 29 Aug 2023 23:04:28 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S239708AbjH3ADm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 20:03:42 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B42E01BD;
+        Tue, 29 Aug 2023 17:03:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mhHf9bnOddbdauFdwTiNvB2pCJGntgXJjGP69XrW3To=; b=Bog5SZG0TYg0s2MQQfbUs9uVXk
+        XdtKROAwAGEUaoPB8IuJVEXbl9mZlm0jEhEk3H4E+vKRQyFUUSOp4nTdUWPuxI7Hp4HjDNA443+/y
+        /0fOLJMKC2WIb2tS4b+Rt+QMGMmK7PEfbf7jtUs42sJFP5+vBQdLHF+vLX+GuQ5QG1n3CXTQMflpP
+        3DlTErG3FOwEjKOWr7tFZ3fPuvJ3DhE+vRtnrlv2iBll7kd62LGwN6s1l2hycllZ+6XxX/OrWlMoY
+        fxqTZRWZnCLTwYTWHz4AyRowlDGrc1MtyEFAz5FrKLMLieuTK/6uE/WBBD7mLUNv8cYmrCXKVybDc
+        uCQ9Bpgw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qb8f7-001xNh-0Q;
+        Wed, 30 Aug 2023 00:02:21 +0000
+Date:   Wed, 30 Aug 2023 01:02:21 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tejun Heo <tj@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Steve French <sfrench@samba.org>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Richard Weinberger <richard@nod.at>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Anthony Iliopoulos <ailiop@suse.com>, v9fs@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-afs@lists.infradead.org,
+        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        cluster-devel@redhat.com, linux-nfs@vger.kernel.org,
+        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 1/7] fs: pass the request_mask to generic_fillattr
+Message-ID: <20230830000221.GB3390869@ZenIV>
+References: <20230725-mgctime-v6-0-a794c2b7abca@kernel.org>
+ <20230725-mgctime-v6-1-a794c2b7abca@kernel.org>
+ <20230829224454.GA461907@ZenIV>
+ <e1c4a6d5001d029548542a1f10425c5639ce28e4.camel@kernel.org>
 MIME-Version: 1.0
-From:   NeilBrown <neilb@suse.de>
-Subject: [PATCH] sched: report correct state for TASK_IDLE | TASK_FREEZABLE
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org
-Date:   Wed, 30 Aug 2023 09:04:19 +1000
-Message-id: <169335025927.5133.4781141800413736103@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1c4a6d5001d029548542a1f10425c5639ce28e4.camel@kernel.org>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, Aug 29, 2023 at 06:58:47PM -0400, Jeff Layton wrote:
+> On Tue, 2023-08-29 at 23:44 +0100, Al Viro wrote:
+> > On Tue, Jul 25, 2023 at 10:58:14AM -0400, Jeff Layton wrote:
+> > > generic_fillattr just fills in the entire stat struct indiscriminately
+> > > today, copying data from the inode. There is at least one attribute
+> > > (STATX_CHANGE_COOKIE) that can have side effects when it is reported,
+> > > and we're looking at adding more with the addition of multigrain
+> > > timestamps.
+> > > 
+> > > Add a request_mask argument to generic_fillattr and have most callers
+> > > just pass in the value that is passed to getattr. Have other callers
+> > > (e.g. ksmbd) just pass in STATX_BASIC_STATS. Also move the setting of
+> > > STATX_CHANGE_COOKIE into generic_fillattr.
+> > 
+> > Out of curiosity - how much PITA would it be to put request_mask into
+> > kstat?  Set it in vfs_getattr_nosec() (and those get_file_..._info()
+> > on smbd side) and don't bother with that kind of propagation boilerplate
+> > - just have generic_fillattr() pick it there...
+> > 
+> > Reduces the patchset size quite a bit...
+> 
+> It could be done. To do that right, I think we'd want to drop
+> request_mask from the ->getattr prototype as well and just have
+> everything use the mask in the kstat.
+> 
+> I don't think it'd reduce the size of the patchset in any meaningful
+> way, but it might make for a more sensible API over the long haul.
 
-task_state_index() ignores uninteresting state flags (such as
-TASK_FREEZABLE) for most states, but for TASK_IDLE and TASK_RTLOCK_WAIT
-it does not.
-So if a task is waiting TASK_IDLE|TASK_FREEZABLE it gets incorrectly
-reported as TASK_UNINTERRUPTIBLE or "D".  (it is planned for nfsd to
-change to use this state).
+->getattr() prototype change would be decoupled from that - for your
+patchset you'd only need the field addition + setting in vfs_getattr_nosec()
+(and possibly in ksmbd), with the remainders of both series being
+independent from each other.
 
-Fix this by only testing the interesting bits and not the irrelevant
-bits in __task_state_index()
+What I suggest is
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- include/linux/sched.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+branchpoint -> field addition (trivial commit) -> argument removal
+		|
+		V
+your series, starting with "use stat->request_mask in generic_fillattr()"
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 177b3f3676ef..c0a21a3b106c 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1671,7 +1671,7 @@ static inline unsigned int __task_state_index(unsigned =
-int tsk_state,
-=20
- 	BUILD_BUG_ON_NOT_POWER_OF_2(TASK_REPORT_MAX);
-=20
--	if (tsk_state =3D=3D TASK_IDLE)
-+	if ((tsk_state & TASK_IDLE) =3D=3D TASK_IDLE)
- 		state =3D TASK_REPORT_IDLE;
-=20
- 	/*
-@@ -1679,7 +1679,7 @@ static inline unsigned int __task_state_index(unsigned =
-int tsk_state,
- 	 * to userspace, we can make this appear as if the task has gone through
- 	 * a regular rt_mutex_lock() call.
- 	 */
--	if (tsk_state =3D=3D TASK_RTLOCK_WAIT)
-+	if (tsk_state & TASK_RTLOCK_WAIT)
- 		state =3D TASK_UNINTERRUPTIBLE;
-=20
- 	return fls(state);
---=20
-2.41.0
-
+Total size would be about the same, but it would be easier to follow
+the less trivial part of that.  Nothing in your branch downstream of
+that touches any ->getattr() instances, so it should have no
+conflicts with the argument removal side of things.
