@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F01178D246
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 04:59:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3221978D249
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 04:59:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241793AbjH3C7W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S231800AbjH3C7W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 29 Aug 2023 22:59:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42396 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241799AbjH3C64 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 22:58:56 -0400
+        with ESMTP id S241800AbjH3C7B (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 22:59:01 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23567193
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 19:58:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21DE3185
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 19:58:59 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id DA559211E2;
-        Wed, 30 Aug 2023 02:58:52 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id BDE21211E2;
+        Wed, 30 Aug 2023 02:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1693364332; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1693364337; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=put9AXxrcv+eoyJ+SDrIafBWhaHUsLY7x9zPi5RlRNA=;
-        b=yOQCMKKUV9RyGzP5q7mqD+xggwwkj2mcvny5pcjQbDWKUvn7ZP9gB0A+beagYdoxhh6s4L
-        rJ5mAEfRmdrmzzJG+b0ZLj0d598ZFtMGM/HZJlsKpMr8eOxYgztP8+uYrRuUrU0NvR8bXr
-        wcao79OS8XusrLv0saCPDzoyIqZLQW0=
+        bh=7u/9LoXbnHKQTbn+5IfntA6WpU7iCnvel9gZ/zvF8aY=;
+        b=P35rDTIIMYHLQuJ6gZGLsbhL/GkSQLpMPRNkLpyOIYVDcXsAxGyKdSxXggKI1ArM+RwvYc
+        iDczgsIIwyoFDTFWe+t7HdEEDHWiWIl3q50hMP9LvJeJbMLVRt0ZcZJrQM5gJKIwnui403
+        DksC9PqcGTmPbkCdL4O/s/mNqMFAm+Q=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1693364332;
+        s=susede2_ed25519; t=1693364337;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=put9AXxrcv+eoyJ+SDrIafBWhaHUsLY7x9zPi5RlRNA=;
-        b=YEGyXhh/WsKnr6jI6KWVYtLaQXklSAkkXZwL8MIYHmFVn6TKfmzJI6ZOYJ8CTU0yEHjL6W
-        Mj9YxtmlhUYUZ/Ag==
+        bh=7u/9LoXbnHKQTbn+5IfntA6WpU7iCnvel9gZ/zvF8aY=;
+        b=bMqh0yIUP1rcyGFrtL6IxZrB9kJEb91GcFEoJTBc6f0dQg+9OHapGm0DL14lqKqNhRs/ie
+        h2KdyOtXTpTSQMCA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9B9E013301;
-        Wed, 30 Aug 2023 02:58:51 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 81FAD13301;
+        Wed, 30 Aug 2023 02:58:56 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id k3qZE2uw7mQfZAAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 30 Aug 2023 02:58:51 +0000
+        id +4KKDXCw7mQnZAAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 30 Aug 2023 02:58:56 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 08/10] SUNRPC: change sp_nrthreads to atomic_t
-Date:   Wed, 30 Aug 2023 12:54:51 +1000
-Message-ID: <20230830025755.21292-9-neilb@suse.de>
+Subject: [PATCH 09/10] SUNRPC: discard sp_lock
+Date:   Wed, 30 Aug 2023 12:54:52 +1000
+Message-ID: <20230830025755.21292-10-neilb@suse.de>
 X-Mailer: git-send-email 2.41.0
 In-Reply-To: <20230830025755.21292-1-neilb@suse.de>
 References: <20230830025755.21292-1-neilb@suse.de>
@@ -69,138 +69,66 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Using an atomic_t avoids the need to take a spinlock (which can soon be
-removed).
-
-Choosing a thread to kill needs to be careful as we cannot set the "die
-now" bit atomically with the test on the count.  Instead we temporarily
-increase the count.
+sp_lock is now only used to protect sp_all_threads.  This isn't needed
+as sp_all_threads is only manipulated through svc_set_num_threads(),
+which must be locked.  Read-acccess only requires rcu_read_lock().  So
+no more locking is needed.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfssvc.c           |  3 ++-
- include/linux/sunrpc/svc.h |  2 +-
- net/sunrpc/svc.c           | 37 ++++++++++++++++++++-----------------
- 3 files changed, 23 insertions(+), 19 deletions(-)
+ include/linux/sunrpc/svc.h |  1 -
+ net/sunrpc/svc.c           | 10 +++++-----
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 062f51fe4dfb..5e455ced0711 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -718,7 +718,8 @@ int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
- 
- 	if (nn->nfsd_serv != NULL) {
- 		for (i = 0; i < nn->nfsd_serv->sv_nrpools && i < n; i++)
--			nthreads[i] = nn->nfsd_serv->sv_pools[i].sp_nrthreads;
-+			nthreads[i] =
-+				atomic_read(&nn->nfsd_serv->sv_pools[i].sp_nrthreads);
- 	}
- 
- 	return 0;
 diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 7ff9fe785e49..9d0fcd6148ae 100644
+index 9d0fcd6148ae..8ce1392c1a35 100644
 --- a/include/linux/sunrpc/svc.h
 +++ b/include/linux/sunrpc/svc.h
-@@ -36,7 +36,7 @@ struct svc_pool {
+@@ -34,7 +34,6 @@
+  */
+ struct svc_pool {
  	unsigned int		sp_id;	    	/* pool id; also node id on NUMA */
- 	spinlock_t		sp_lock;	/* protects all fields */
+-	spinlock_t		sp_lock;	/* protects all fields */
  	struct lwq		sp_xprts;	/* pending transports */
--	unsigned int		sp_nrthreads;	/* # of threads in pool */
-+	atomic_t		sp_nrthreads;	/* # of threads in pool */
+ 	atomic_t		sp_nrthreads;	/* # of threads in pool */
  	struct list_head	sp_all_threads;	/* all server threads */
- 	struct llist_head	sp_idle_threads; /* idle server threads */
- 
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 63cddb8cb08d..9524af33ace9 100644
+index 9524af33ace9..61ea8ce7975f 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -681,8 +681,8 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- 	serv->sv_nrthreads += 1;
+@@ -511,7 +511,6 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 		lwq_init(&pool->sp_xprts);
+ 		INIT_LIST_HEAD(&pool->sp_all_threads);
+ 		init_llist_head(&pool->sp_idle_threads);
+-		spin_lock_init(&pool->sp_lock);
+ 
+ 		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
+ 		percpu_counter_init(&pool->sp_sockets_queued, 0, GFP_KERNEL);
+@@ -682,9 +681,12 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
  	spin_unlock_bh(&serv->sv_lock);
  
-+	atomic_inc(&pool->sp_nrthreads);
- 	spin_lock_bh(&pool->sp_lock);
--	pool->sp_nrthreads++;
- 	list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
- 	spin_unlock_bh(&pool->sp_lock);
- 	return rqstp;
-@@ -727,23 +727,24 @@ svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
- }
- 
- static struct svc_pool *
--svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
-+svc_pool_victim(struct svc_serv *serv, struct svc_pool *target_pool,
-+		unsigned int *state)
- {
-+	struct svc_pool *pool;
- 	unsigned int i;
- 
-+retry:
-+	pool = target_pool;
+ 	atomic_inc(&pool->sp_nrthreads);
+-	spin_lock_bh(&pool->sp_lock);
 +
- 	if (pool != NULL) {
--		spin_lock_bh(&pool->sp_lock);
--		if (pool->sp_nrthreads)
-+		if (atomic_inc_not_zero(&pool->sp_nrthreads))
- 			goto found_pool;
--		spin_unlock_bh(&pool->sp_lock);
- 		return NULL;
- 	} else {
- 		for (i = 0; i < serv->sv_nrpools; i++) {
- 			pool = &serv->sv_pools[--(*state) % serv->sv_nrpools];
--			spin_lock_bh(&pool->sp_lock);
--			if (pool->sp_nrthreads)
-+			if (atomic_inc_not_zero(&pool->sp_nrthreads))
- 				goto found_pool;
--			spin_unlock_bh(&pool->sp_lock);
- 		}
- 		return NULL;
- 	}
-@@ -751,8 +752,12 @@ svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *stat
- found_pool:
- 	set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
- 	set_bit(SP_NEED_VICTIM, &pool->sp_flags);
++	/* Protected by whatever lock the service uses when calling
++	 * svc_set_num_threads()
++	 */
+ 	list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
 -	spin_unlock_bh(&pool->sp_lock);
--	return pool;
-+	if (!atomic_dec_and_test(&pool->sp_nrthreads))
-+		return pool;
-+	/* Nothing left in this pool any more */
-+	clear_bit(SP_NEED_VICTIM, &pool->sp_flags);
-+	clear_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
-+	goto retry;
++
+ 	return rqstp;
  }
  
- static int
-@@ -828,13 +833,10 @@ svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- int
- svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- {
--	if (pool == NULL) {
-+	if (!pool)
- 		nrservs -= serv->sv_nrthreads;
--	} else {
--		spin_lock_bh(&pool->sp_lock);
--		nrservs -= pool->sp_nrthreads;
--		spin_unlock_bh(&pool->sp_lock);
--	}
-+	else
-+		nrservs -= atomic_read(&pool->sp_nrthreads);
- 
- 	if (nrservs > 0)
- 		return svc_start_kthreads(serv, pool, nrservs);
-@@ -921,10 +923,11 @@ svc_exit_thread(struct svc_rqst *rqstp)
+@@ -922,9 +924,7 @@ svc_exit_thread(struct svc_rqst *rqstp)
+ 	struct svc_serv	*serv = rqstp->rq_server;
  	struct svc_pool	*pool = rqstp->rq_pool;
  
- 	spin_lock_bh(&pool->sp_lock);
--	pool->sp_nrthreads--;
+-	spin_lock_bh(&pool->sp_lock);
  	list_del_rcu(&rqstp->rq_all);
- 	spin_unlock_bh(&pool->sp_lock);
+-	spin_unlock_bh(&pool->sp_lock);
  
-+	atomic_dec(&pool->sp_nrthreads);
-+
- 	spin_lock_bh(&serv->sv_lock);
- 	serv->sv_nrthreads -= 1;
- 	spin_unlock_bh(&serv->sv_lock);
+ 	atomic_dec(&pool->sp_nrthreads);
+ 
 -- 
 2.41.0
 
