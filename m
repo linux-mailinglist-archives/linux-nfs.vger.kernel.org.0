@@ -2,177 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86F4F78D121
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 02:28:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3168A78D122
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 02:31:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229962AbjH3A15 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Aug 2023 20:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
+        id S241423AbjH3Aal (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Aug 2023 20:30:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241404AbjH3A1g (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 20:27:36 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0CFEA
-        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 17:27:33 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 737702184B;
-        Wed, 30 Aug 2023 00:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1693355252; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AgMKWoooVRPO/np7OpR+6hCDYLJadBKmBVrguQfGlqo=;
-        b=TNSEV82DUgX4lhWfyZkFWRA6ZNpVyi/RusxFJCut2Fp2wKshuIqBvuEVvlITkf+uEH5jR4
-        Eaf/WtxoJDVoOtYR5PsZg1DY9I5cK1hLX0m5vBthZGrytcH91P9aO1NaljUQxds2S1lIuG
-        YJOmNz/5fvHy/q58jHHjrbWsCJmSPAc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1693355252;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AgMKWoooVRPO/np7OpR+6hCDYLJadBKmBVrguQfGlqo=;
-        b=NNMymkxXUfB7WAVgoLkHQPaEWa9ebuTWExfnT8QG1Cnd4ttr12WjqeDZsCIKXSv3siye11
-        2z/Ql53O1Ysd/fCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3323013301;
-        Wed, 30 Aug 2023 00:27:30 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id mu68NfKM7mR3JgAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 30 Aug 2023 00:27:30 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S241404AbjH3Aae (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 20:30:34 -0400
+Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D497FCCA
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 17:30:30 -0700 (PDT)
+Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-1a28de15c8aso3427538fac.2
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 17:30:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693355430; x=1693960230; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JbYpl6ns/62nSAZ+2ZZEQQ6s0NiSU98Apfll0ZDa+tQ=;
+        b=d6uoQzbtbxRqwNGkvo0UAkryvtDGTXCKMSX7BdU6k5PCDF9tjbwcpHYWwH5bCJ00Z7
+         SnI3zZwjogcAgkOptX5ZfuiwfwBOCWJyRoE1JEpvHdF9AmFO49smWVp0qnFCmi69bl1Z
+         WgtE3RXGGCFJf0tHJ7aUhDgeX6yLWB8EhRwyccajIdlCVDXORxIntD0I0uS5wfpi6Icp
+         ePpWvms37wd8wS7YYk0PhOgf3vHEJp0ReOUcTFYZfBwi6RfA4yjMkAxkHwhZJJ76asqB
+         foJ2qaTpG4+wiwuh0LcpPwHsk1+LhvJxH2pWbKKqXlwqicIj1lxUIMkoi3bXLz9U7xeG
+         CvNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693355430; x=1693960230;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JbYpl6ns/62nSAZ+2ZZEQQ6s0NiSU98Apfll0ZDa+tQ=;
+        b=ax7wzzggbLETbrRKHuw+QlvQPbydLme5Jym60EoNLrp44GudOr5l7e/Sqs12pmfMuy
+         ssb+6YLRZDqrk/Ly0JQT1O1W11hUtwm/Ursz/7lslS6z8Mx8425+YLxrf7Gaqq7jera+
+         6LIqJVh4/8Oqxwgu5ts6OX4zuL2Z23zRunzP+QMH01IVvO4Y3CUd1bN15h8SvMO/lHgo
+         uDEcFlY2zTDOUSxSjylmA6zCqR6a2ILYfFCwSG0uhS63NK4RcF6HZExzi9d6FbeOnEiJ
+         aaY21MD5m7T97hOmWZYStE6RXKnc8WZ/CGb/yXXd4uWooVhQorENmcQ3NRY9tiStwR1i
+         wY+w==
+X-Gm-Message-State: AOJu0YwkE1n2ohcqGQxGRcr1cSeqcIFuvTCWH9m9WlWDNXV5Q0OmDYG3
+        aIu8eGrIx5CDL7w/PJTCu8XSIh7FHzFJWbv+WHIA4204rw==
+X-Google-Smtp-Source: AGHT+IFOmREJ2y5u5PefKzemtR5W0nbtmN9XT6Eq3dMhmmY7HrkJOlzQ5YfZz20tuVmhmS2D7UAIKtX5rZugSqFFSrg=
+X-Received: by 2002:a05:6870:32d1:b0:1d0:bd4f:d998 with SMTP id
+ r17-20020a05687032d100b001d0bd4fd998mr929287oac.55.1693355430144; Tue, 29 Aug
+ 2023 17:30:30 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Benjamin Coddington" <bcodding@redhat.com>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: allow setting SEQ4_STATUS_RECALLABLE_STATE_REVOKED
-In-reply-to: <ZO5Wd7BdgsNMOpfU@tissot.1015granger.net>
-References: =?utf-8?q?=3Ccd03fb7419f886c8c79bb2ee4889dbc0768a1652=2E16933263?=
- =?utf-8?q?66=2Egit=2Ebcodding=40redhat=2Ecom=3E=2C?=
- <ZO5Wd7BdgsNMOpfU@tissot.1015granger.net>
-Date:   Wed, 30 Aug 2023 10:27:27 +1000
-Message-id: <169335524735.5133.6421976142558796202@noble.neil.brown.name>
+References: <CAM5tNy7Q63k+9+f9zrctZrm-NzCbYn8OjYSirQ8g+g7yLaK9jQ@mail.gmail.com>
+ <CAMa=BDoUS8ny1X+GjDR1hDGg1h9zjtSzet1Rtu8=GwJfsu-kJQ@mail.gmail.com>
+In-Reply-To: <CAMa=BDoUS8ny1X+GjDR1hDGg1h9zjtSzet1Rtu8=GwJfsu-kJQ@mail.gmail.com>
+From:   Rick Macklem <rick.macklem@gmail.com>
+Date:   Tue, 29 Aug 2023 17:30:20 -0700
+Message-ID: <CAM5tNy6ecGrKToFneMi14MnWP5BhS39kJJpxLCmk4AWgeU6+tg@mail.gmail.com>
+Subject: Re: [nfsv4] pNFS/Flexfiles testing at Oct. Bakeathon
+To:     Tom Haynes <loghyr@gmail.com>
+Cc:     NFSv4 <nfsv4@ietf.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 30 Aug 2023, Chuck Lever wrote:
-> On Tue, Aug 29, 2023 at 12:26:56PM -0400, Benjamin Coddington wrote:
-> > This patch sets the SEQ4_STATUS_RECALLABLE_STATE_REVOKED bit for a single
-> > SEQUENCE response after writing "revoke" to the client's ctl file in proc=
-fs.
-> > It has been generally useful to test various NFS client implementations, =
-so
-> > I'm sending it along for others to find and use.
->=20
-> Intriguing!
->=20
-> It looks to me like the client would probe its state and
-> find nothing missing... fair enough.
->=20
-> Would it be even more useful if the server administrator could
-> actually revoke some state, rather than just pretending to?
-> How difficult do you think that might be?
+On Mon, Aug 28, 2023 at 7:03=E2=80=AFPM Tom Haynes <loghyr@gmail.com> wrote=
+:
+>
+> Hi Rick,
+>
+> I'll have server implementations of all of them.
+>
+> Wait, maybe not the WCC.
+I was thinking that WCC was the interesting one. The FreeBSD pNFS server us=
+es
+v4.2 DSs, so it would be client side only for FreeBSD. (It's too bad
+that NFSv4 DSs
+cannot do this, but I cannot think how they could unless a new
+Write-with-WCC operation
+was added to NFSv4.2.)
 
-I have patches for revoking state.  I sent them some time ago and we
-discussed them, but you wanted to wait for the courteous client code to
-land (which was fair enough) and then I forgot to come back with them.
+Will you know soon if you'd have a server for the Bakeathon?
 
-I'll try to make time to repost them.
+>
+> My clients will also have the implementations, normally they only talk to=
+ my server, but I can bring a standalone client for testing.
+The FreeBSD pNFS server never issues delegations, so delstid wouldn't
+really apply.
+(The non-pNFS server does do delegations. Is delstid generic enough
+that a non-pNFS
+server should do it?)
 
-NeilBrown
+The only other one I recall is the LayoutReturn with an error after the MDS
+reboot. Not something we'd want to test at the Bakeathon, I'd guess?
 
+Thanks for the info, rick
 
->=20
-> Or, conversely, what exactly can you test with this mechanism?
->=20
->=20
-> > Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-> > ---
-> >  fs/nfsd/nfs4state.c | 19 +++++++++++++++----
-> >  fs/nfsd/state.h     |  1 +
-> >  2 files changed, 16 insertions(+), 4 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index daf305daa751..f91e2857df65 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -2830,18 +2830,28 @@ static ssize_t client_ctl_write(struct file *file=
-, const char __user *buf,
-> >  {
-> >  	char *data;
-> >  	struct nfs4_client *clp;
-> > +	ssize_t rc =3D size;
-> > =20
-> >  	data =3D simple_transaction_get(file, buf, size);
-> >  	if (IS_ERR(data))
-> >  		return PTR_ERR(data);
-> > -	if (size !=3D 7 || 0 !=3D memcmp(data, "expire\n", 7))
-> > +
-> > +	if (size !=3D 7)
-> >  		return -EINVAL;
-> > +
-> >  	clp =3D get_nfsdfs_clp(file_inode(file));
-> >  	if (!clp)
-> >  		return -ENXIO;
-> > -	force_expire_client(clp);
-> > +
-> > +	if (!memcmp(data, "revoke\n", 7))
-> > +		set_bit(NFSD4_CLIENT_CL_REVOKED, &clp->cl_flags);
-> > +	else if (!memcmp(data, "expire\n", 7))
-> > +		force_expire_client(clp);
-> > +	else
-> > +		rc =3D -EINVAL;
-> > +
-> >  	drop_client(clp);
-> > -	return 7;
-> > +	return rc;
-> >  }
-> > =20
-> >  static const struct file_operations client_ctl_fops =3D {
-> > @@ -4042,7 +4052,8 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4=
-_compound_state *cstate,
-> >  	default:
-> >  		seq->status_flags =3D 0;
-> >  	}
-> > -	if (!list_empty(&clp->cl_revoked))
-> > +	if (!list_empty(&clp->cl_revoked) ||
-> > +			test_and_clear_bit(NFSD4_CLIENT_CL_REVOKED, &clp->cl_flags))
-> >  		seq->status_flags |=3D SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
-> >  out_no_session:
-> >  	if (conn)
-> > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> > index d49d3060ed4f..a9154b7da022 100644
-> > --- a/fs/nfsd/state.h
-> > +++ b/fs/nfsd/state.h
-> > @@ -369,6 +369,7 @@ struct nfs4_client {
-> >  #define NFSD4_CLIENT_CB_FLAG_MASK	(1 << NFSD4_CLIENT_CB_UPDATE | \
-> >  					 1 << NFSD4_CLIENT_CB_KILL)
-> >  #define NFSD4_CLIENT_CB_RECALL_ANY	(6)
-> > +#define NFSD4_CLIENT_CL_REVOKED (7)
-> >  	unsigned long		cl_flags;
-> >  	const struct cred	*cl_cb_cred;
-> >  	struct rpc_clnt		*cl_cb_client;
-> > --=20
-> > 2.40.1
-> >=20
->=20
-> --=20
-> Chuck Lever
->=20
-
+>
+> Tom
+>
+> On Mon, Aug 28, 2023, 18:40 Rick Macklem <rick.macklem@gmail.com> wrote:
+>>
+>> Hi,
+>>
+>> Tom has a few IETF drafts describing changes that I believe are
+>> aimed at improving pNFS Flex Files layout.
+>>
+>> I was wondering if implementations of any of these will be
+>> available at the Oct. Bakeathon?
+>>
+>> I have not implemented any of them as yet, but I might have
+>> time to do an experimental implementation of some of them
+>> for the Oct. Bakeathon, if there will be implementations to test
+>> against.
+>>
+>> Thanks for any info, rick
+>>
+>> _______________________________________________
+>> nfsv4 mailing list
+>> nfsv4@ietf.org
+>> https://www.ietf.org/mailman/listinfo/nfsv4
