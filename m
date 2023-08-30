@@ -2,106 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FE0D78E240
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 00:21:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8084578E36F
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 01:47:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343738AbjH3WVW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Aug 2023 18:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51148 "EHLO
+        id S1344295AbjH3XrR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Aug 2023 19:47:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343774AbjH3WVL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 18:21:11 -0400
-X-Greylist: delayed 3544 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 30 Aug 2023 15:20:47 PDT
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71234CEC
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 15:20:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3CDF7B81FB1
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 21:14:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54FF7C433C9;
-        Wed, 30 Aug 2023 21:14:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693430077;
-        bh=NWm+iqazdq6J0gVimozaTYaP8WzA44yR7XF7B/Lt9R4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MuC75K495bEoYbE01sFC/2AfmeBk64z/lPQ3bCIFsYd85XjUii+yAskXqpuAqDOEe
-         C+46BCkUtXAOQhgbBQIIuGFe+TrextO7W40bJt/Cf+HK9QvDVNWb965G5Db4WwSWTt
-         ogtEjhOfcKUqNBX9Cc13PqHT9dTlFoFelI/JTdRyb1mmfP/JtdxP1gTXd+gGCbgODN
-         5UjgneS5A7gRQGbAumnlNAKprjpt+4URMmea5hBFSNvLcDnUUOWtZ3+iSXCefFfqiH
-         RAbT3D+54wP+I6lPDMuBI4Cu3nEsUCAZChcT/3Ka+qG2EO7k1IFz7z9O7rUS/F0NhQ
-         DEhFIpTwV0D1A==
-Message-ID: <f4837c30b2faedd6a736a19d93c79b93df230349.camel@kernel.org>
-Subject: Re: [PATCH v2] NFSv4: Always ask for type with READDIR
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "anna@kernel.org" <anna@kernel.org>,
-        "bcodding@redhat.com" <bcodding@redhat.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Date:   Wed, 30 Aug 2023 17:14:35 -0400
-In-Reply-To: <4eb846815a1cdd1a98e064305b57a890b46e2708.camel@hammerspace.com>
-References: <82d1908e4f835a2f16a509a11b62b9d93ccb6cdf.1693424491.git.bcodding@redhat.com>
-         <f793a08ed0db7bbe292c8aa6ec7241178c111cab.camel@kernel.org>
-         <4eb846815a1cdd1a98e064305b57a890b46e2708.camel@hammerspace.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
-MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S242532AbjH3XrQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 19:47:16 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D758CF
+        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 16:47:14 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 37UInbRM026411;
+        Wed, 30 Aug 2023 23:47:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-03-30;
+ bh=Lzxhi1lPVEyokgiwM88QjMkmxPsc01rkpOefrvjHUL8=;
+ b=OPocOCzvOZu76OtkpS1Jp1Pp5ISwYstRVvjvU938cP9yO0jxCysPj08M2Lt4Jk+A65/Z
+ 99cvXXqCsa32isPo6KI5gJ9DGiXeN3whTHgrD0Lhv0ILrGADHoD+CdaSchYkcudETWRI
+ tZDJW560+1ZhwiwkVyG5VWwukOMBJ2IV89DpapP1P0WM4RtMoaNAX97QHHfpnxwnO2pk
+ 9wd+5tqklGDW5DMbsC85ctEVsTXvuGry+vSyiuOdIXwyHXXY66SVO1CDo07iZasaCbf0
+ c3LDFHtkiXeHRu8CFEY+DqoBcrrKikuFsWifb4R1+G0taWT+yTZKBUQ2kTCKAoYNidtg gQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3sq9xt8nvx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Aug 2023 23:47:11 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 37UMCtjP024429;
+        Wed, 30 Aug 2023 23:47:10 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3sr6dq80ct-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 30 Aug 2023 23:47:10 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 37UNlAqv017882;
+        Wed, 30 Aug 2023 23:47:10 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3sr6dq80ce-1;
+        Wed, 30 Aug 2023 23:47:10 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/2] NFSD: initialize copy->cp_clp early in nfsd4_copy for use by trace point
+Date:   Wed, 30 Aug 2023 16:46:58 -0700
+Message-Id: <1693439219-19467-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.957,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-08-30_18,2023-08-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 adultscore=0
+ suspectscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
+ definitions=main-2308300214
+X-Proofpoint-ORIG-GUID: eQKJ9A6agFq5S8VPJaHubNCpPe3ezZiJ
+X-Proofpoint-GUID: eQKJ9A6agFq5S8VPJaHubNCpPe3ezZiJ
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-08-30 at 20:20 +0000, Trond Myklebust wrote:
-> On Wed, 2023-08-30 at 16:10 -0400, Jeff Layton wrote:
-> > On Wed, 2023-08-30 at 15:42 -0400, Benjamin Coddington wrote:
-> > > Again we have claimed regressions for walking a directory tree,
-> > > this time
-> > > with the "find" utility which always tries to optimize away asking
-> > > for any
-> > > attributes until it has a complete list of entries.=A0 This behavior
-> > > makes
-> > > the readdir plus heuristic do the wrong thing, which causes a storm
-> > > of
-> > > GETATTRs to determine each entry's type in order to continue the
-> > > walk.
-> > >=20
-> > > For v4 add the type attribute to each READDIR request to include it
-> > > no
-> > > matter the heuristic.=A0 This allows a simple `find` command to
-> > > proceed
-> > > quickly through a directory tree.
-> > >=20
-> >=20
-> > The important bit here is that with v4, we can fill out d_type even
-> > when
-> > "plus" is false, at little cost. The downside is that non-plus
-> > READDIR
-> > replies will now be a bit larger on the wire. I think it's a
-> > worthwhile
-> > tradeoff though.
->=20
-> The reason why we never did it before is that for many servers, it
-> forces them to go to the inode in order to retrieve the information.
->=20
-> IOW: You might as well just do readdirplus.
->=20
+Prepare for adding server copy trace points.
 
-That makes total sense, given how this code has evolved.
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ fs/nfsd/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-FWIW, the Linux NFS server already calls vfs_getattr for every dentry in
-a v4 READDIR reply regardless of what the client requests. It has to in
-order to detect junctions, so we're bringing in the inode no matter
-what. Fetching the type is trivial, so I don't see this as costing
-anything extra there.
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 5ca748309c26..62f6aba6140b 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1798,6 +1798,7 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	__be32 status;
+ 	struct nfsd4_copy *async_copy = NULL;
+ 
++	copy->cp_clp = cstate->clp;
+ 	if (nfsd4_ssc_is_inter(copy)) {
+ 		if (!inter_copy_offload_enable || nfsd4_copy_is_sync(copy)) {
+ 			status = nfserr_notsupp;
+@@ -1812,7 +1813,6 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 			return status;
+ 	}
+ 
+-	copy->cp_clp = cstate->clp;
+ 	memcpy(&copy->fh, &cstate->current_fh.fh_handle,
+ 		sizeof(struct knfsd_fh));
+ 	if (nfsd4_copy_is_async(copy)) {
+-- 
+2.39.3
 
-Mileage could vary on other servers with more synthetic filesystems, but
-one would hope that most of them can also return the type cheaply.
---=20
-Jeff Layton <jlayton@kernel.org>
