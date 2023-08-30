@@ -2,153 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 712F378D10F
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 02:24:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86F4F78D121
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 02:28:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241410AbjH3AXm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Aug 2023 20:23:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59070 "EHLO
+        id S229962AbjH3A15 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Aug 2023 20:27:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239507AbjH3AX0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 20:23:26 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496C7EA;
-        Tue, 29 Aug 2023 17:23:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zZxZUyqerb7julFXQ03Jti/01WDk420m8vSi4C3S7Zg=; b=C+B8K/E0jwmlP3x0ynEg/wW0oT
-        8W+g7CEhf7EdCVJx+aCWMaLZ8rDm21ORLwQNEzBBlnKI8nSnQEIfBUqrKOBnjUNllXW768GzG3qB7
-        +cpJ/jhntfWbFQ/3QFzCMkG1sg2st+PpzLnPrKtYydQR6EDaMR8Bc+aEbQhcPGU53TF4NXxBCLwrJ
-        Y+Cse/dfbORxx77QJVsCQ4BCKysmxvXtFDzxb882a/rtaocFDwQw24nZDPRB3CytP/MOuWTM+mTfa
-        +8MJ/m4rwupUEXN1Mh5oBPLgZehFHGmgz56mU9Gh95pn90zVDOFdIxrpzwqUqcKtUFnurzTC7a4a3
-        phr8qPBQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qb8vV-001xXV-0L;
-        Wed, 30 Aug 2023 00:19:17 +0000
-Date:   Wed, 30 Aug 2023 01:19:17 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     jk@ozlabs.org, arnd@arndb.de, mpe@ellerman.id.au,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
-        maco@android.com, joel@joelfernandes.org, brauner@kernel.org,
-        cmllamas@google.com, surenb@google.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        leon@kernel.org, bwarrum@linux.ibm.com, rituagar@linux.ibm.com,
-        ericvh@kernel.org, lucho@ionkov.net, asmadeus@codewreck.org,
-        linux_oss@crudebyte.com, dsterba@suse.com, dhowells@redhat.com,
-        marc.dionne@auristor.com, raven@themaw.net, luisbg@kernel.org,
-        salah.triki@gmail.com, aivazian.tigran@gmail.com,
-        ebiederm@xmission.com, keescook@chromium.org, clm@fb.com,
-        josef@toxicpanda.com, xiubli@redhat.com, idryomov@gmail.com,
-        jaharkes@cs.cmu.edu, coda@cs.cmu.edu, jlbec@evilplan.org,
-        hch@lst.de, nico@fluxnic.net, rafael@kernel.org, code@tyhicks.com,
-        ardb@kernel.org, xiang@kernel.org, chao@kernel.org,
-        huyue2@coolpad.com, jefflexu@linux.alibaba.com,
-        linkinjeon@kernel.org, sj1557.seo@samsung.com, jack@suse.com,
-        tytso@mit.edu, adilger.kernel@dilger.ca, jaegeuk@kernel.org,
-        hirofumi@mail.parknet.co.jp, miklos@szeredi.hu,
-        rpeterso@redhat.com, agruenba@redhat.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        mikulas@artax.karlin.mff.cuni.cz, mike.kravetz@oracle.com,
-        muchun.song@linux.dev, dwmw2@infradead.org, shaggy@kernel.org,
-        tj@kernel.org, trond.myklebust@hammerspace.com, anna@kernel.org,
-        chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com,
-        Dai.Ngo@oracle.com, tom@talpey.com, konishi.ryusuke@gmail.com,
-        anton@tuxera.com, almaz.alexandrovich@paragon-software.com,
-        mark@fasheh.com, joseph.qi@linux.alibaba.com, me@bobcopeland.com,
-        hubcap@omnibond.com, martin@omnibond.com, amir73il@gmail.com,
-        mcgrof@kernel.org, yzaikin@google.com, tony.luck@intel.com,
-        gpiccoli@igalia.com, al@alarsen.net, sfrench@samba.org,
-        pc@manguebit.com, lsahlber@redhat.com, sprasad@microsoft.com,
-        senozhatsky@chromium.org, phillip@squashfs.org.uk,
-        rostedt@goodmis.org, mhiramat@kernel.org, dushistov@mail.ru,
-        hdegoede@redhat.com, djwong@kernel.org, dlemoal@kernel.org,
-        naohiro.aota@wdc.com, jth@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
-        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, hughd@google.com, akpm@linux-foundation.org,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, john.johansen@canonical.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        jgross@suse.com, stern@rowland.harvard.edu, lrh2000@pku.edu.cn,
-        sebastian.reichel@collabora.com, wsa+renesas@sang-engineering.com,
-        quic_ugoswami@quicinc.com, quic_linyyuan@quicinc.com,
-        john@keeping.me.uk, error27@gmail.com, quic_uaggarwa@quicinc.com,
-        hayama@lineo.co.jp, jomajm@gmail.com, axboe@kernel.dk,
-        dhavale@google.com, dchinner@redhat.com, hannes@cmpxchg.org,
-        zhangpeng362@huawei.com, slava@dubeyko.com, gargaditya08@live.com,
-        penguin-kernel@i-love.sakura.ne.jp, yifeliu@cs.stonybrook.edu,
-        madkar@cs.stonybrook.edu, ezk@cs.stonybrook.edu,
-        yuzhe@nfschina.com, willy@infradead.org, okanatov@gmail.com,
-        jeffxu@chromium.org, linux@treblig.org, mirimmad17@gmail.com,
-        yijiangshan@kylinos.cn, yang.yang29@zte.com.cn,
-        xu.xin16@zte.com.cn, chengzhihao1@huawei.com, shr@devkernel.io,
-        Liam.Howlett@oracle.com, adobriyan@gmail.com,
-        chi.minghao@zte.com.cn, roberto.sassu@huawei.com,
-        linuszeng@tencent.com, bvanassche@acm.org, zohar@linux.ibm.com,
-        yi.zhang@huawei.com, trix@redhat.com, fmdefrancesco@gmail.com,
-        ebiggers@google.com, princekumarmaurya06@gmail.com,
-        chenzhongjin@huawei.com, riel@surriel.com,
-        shaozhengchao@huawei.com, jingyuwang_vip@163.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-usb@vger.kernel.org, v9fs@lists.linux.dev,
-        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
-        autofs@vger.kernel.org, linux-mm@kvack.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-um@lists.infradead.org,
-        linux-mtd@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org,
-        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: Re: [PATCH v2 08/92] fs: new helper: simple_rename_timestamp
-Message-ID: <20230830001917.GC461907@ZenIV>
-References: <20230705185812.579118-1-jlayton@kernel.org>
- <20230705185812.579118-3-jlayton@kernel.org>
+        with ESMTP id S241404AbjH3A1g (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Aug 2023 20:27:36 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0CFEA
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 17:27:33 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 737702184B;
+        Wed, 30 Aug 2023 00:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1693355252; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AgMKWoooVRPO/np7OpR+6hCDYLJadBKmBVrguQfGlqo=;
+        b=TNSEV82DUgX4lhWfyZkFWRA6ZNpVyi/RusxFJCut2Fp2wKshuIqBvuEVvlITkf+uEH5jR4
+        Eaf/WtxoJDVoOtYR5PsZg1DY9I5cK1hLX0m5vBthZGrytcH91P9aO1NaljUQxds2S1lIuG
+        YJOmNz/5fvHy/q58jHHjrbWsCJmSPAc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1693355252;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AgMKWoooVRPO/np7OpR+6hCDYLJadBKmBVrguQfGlqo=;
+        b=NNMymkxXUfB7WAVgoLkHQPaEWa9ebuTWExfnT8QG1Cnd4ttr12WjqeDZsCIKXSv3siye11
+        2z/Ql53O1Ysd/fCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3323013301;
+        Wed, 30 Aug 2023 00:27:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id mu68NfKM7mR3JgAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 30 Aug 2023 00:27:30 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230705185812.579118-3-jlayton@kernel.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Benjamin Coddington" <bcodding@redhat.com>,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] nfsd: allow setting SEQ4_STATUS_RECALLABLE_STATE_REVOKED
+In-reply-to: <ZO5Wd7BdgsNMOpfU@tissot.1015granger.net>
+References: =?utf-8?q?=3Ccd03fb7419f886c8c79bb2ee4889dbc0768a1652=2E16933263?=
+ =?utf-8?q?66=2Egit=2Ebcodding=40redhat=2Ecom=3E=2C?=
+ <ZO5Wd7BdgsNMOpfU@tissot.1015granger.net>
+Date:   Wed, 30 Aug 2023 10:27:27 +1000
+Message-id: <169335524735.5133.6421976142558796202@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 02:58:11PM -0400, Jeff Layton wrote:
+On Wed, 30 Aug 2023, Chuck Lever wrote:
+> On Tue, Aug 29, 2023 at 12:26:56PM -0400, Benjamin Coddington wrote:
+> > This patch sets the SEQ4_STATUS_RECALLABLE_STATE_REVOKED bit for a single
+> > SEQUENCE response after writing "revoke" to the client's ctl file in proc=
+fs.
+> > It has been generally useful to test various NFS client implementations, =
+so
+> > I'm sending it along for others to find and use.
+>=20
+> Intriguing!
+>=20
+> It looks to me like the client would probe its state and
+> find nothing missing... fair enough.
+>=20
+> Would it be even more useful if the server administrator could
+> actually revoke some state, rather than just pretending to?
+> How difficult do you think that might be?
 
-> + * POSIX mandates that the old and new parent directories have their ctime and
-> + * mtime updated, and that inodes of @old_dentry and @new_dentry (if any), have
-> + * their ctime updated.
+I have patches for revoking state.  I sent them some time ago and we
+discussed them, but you wanted to wait for the courteous client code to
+land (which was fair enough) and then I forgot to come back with them.
 
-APPLICATION USAGE
-Some implementations mark for update the last file status change timestamp
-of renamed files and some do not. Applications which make use of the
-last file status change timestamp may behave differently with respect
-to renamed files unless they are designed to allow for either behavior.
+I'll try to make time to repost them.
 
-So for children POSIX permits rather than mandates.  Doesn't really matter;
-Linux behaviour had been to touch ctime on children since way back, if
-not since the very beginning.
+NeilBrown
+
+
+>=20
+> Or, conversely, what exactly can you test with this mechanism?
+>=20
+>=20
+> > Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> > ---
+> >  fs/nfsd/nfs4state.c | 19 +++++++++++++++----
+> >  fs/nfsd/state.h     |  1 +
+> >  2 files changed, 16 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index daf305daa751..f91e2857df65 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -2830,18 +2830,28 @@ static ssize_t client_ctl_write(struct file *file=
+, const char __user *buf,
+> >  {
+> >  	char *data;
+> >  	struct nfs4_client *clp;
+> > +	ssize_t rc =3D size;
+> > =20
+> >  	data =3D simple_transaction_get(file, buf, size);
+> >  	if (IS_ERR(data))
+> >  		return PTR_ERR(data);
+> > -	if (size !=3D 7 || 0 !=3D memcmp(data, "expire\n", 7))
+> > +
+> > +	if (size !=3D 7)
+> >  		return -EINVAL;
+> > +
+> >  	clp =3D get_nfsdfs_clp(file_inode(file));
+> >  	if (!clp)
+> >  		return -ENXIO;
+> > -	force_expire_client(clp);
+> > +
+> > +	if (!memcmp(data, "revoke\n", 7))
+> > +		set_bit(NFSD4_CLIENT_CL_REVOKED, &clp->cl_flags);
+> > +	else if (!memcmp(data, "expire\n", 7))
+> > +		force_expire_client(clp);
+> > +	else
+> > +		rc =3D -EINVAL;
+> > +
+> >  	drop_client(clp);
+> > -	return 7;
+> > +	return rc;
+> >  }
+> > =20
+> >  static const struct file_operations client_ctl_fops =3D {
+> > @@ -4042,7 +4052,8 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4=
+_compound_state *cstate,
+> >  	default:
+> >  		seq->status_flags =3D 0;
+> >  	}
+> > -	if (!list_empty(&clp->cl_revoked))
+> > +	if (!list_empty(&clp->cl_revoked) ||
+> > +			test_and_clear_bit(NFSD4_CLIENT_CL_REVOKED, &clp->cl_flags))
+> >  		seq->status_flags |=3D SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
+> >  out_no_session:
+> >  	if (conn)
+> > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> > index d49d3060ed4f..a9154b7da022 100644
+> > --- a/fs/nfsd/state.h
+> > +++ b/fs/nfsd/state.h
+> > @@ -369,6 +369,7 @@ struct nfs4_client {
+> >  #define NFSD4_CLIENT_CB_FLAG_MASK	(1 << NFSD4_CLIENT_CB_UPDATE | \
+> >  					 1 << NFSD4_CLIENT_CB_KILL)
+> >  #define NFSD4_CLIENT_CB_RECALL_ANY	(6)
+> > +#define NFSD4_CLIENT_CL_REVOKED (7)
+> >  	unsigned long		cl_flags;
+> >  	const struct cred	*cl_cb_cred;
+> >  	struct rpc_clnt		*cl_cb_client;
+> > --=20
+> > 2.40.1
+> >=20
+>=20
+> --=20
+> Chuck Lever
+>=20
+
