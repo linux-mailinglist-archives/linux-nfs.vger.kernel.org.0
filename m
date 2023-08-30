@@ -2,59 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 699C378D816
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBEC778D804
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231343AbjH3S3Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Aug 2023 14:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58982 "EHLO
+        id S230110AbjH3S3O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Aug 2023 14:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242862AbjH3Jxn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 05:53:43 -0400
+        with ESMTP id S243430AbjH3K7R (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 06:59:17 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F276D1B0;
-        Wed, 30 Aug 2023 02:53:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42B381BF;
+        Wed, 30 Aug 2023 03:59:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 801C260F0C;
-        Wed, 30 Aug 2023 09:53:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B009C433C8;
-        Wed, 30 Aug 2023 09:53:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D52E6627B9;
+        Wed, 30 Aug 2023 10:59:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA506C433C7;
+        Wed, 30 Aug 2023 10:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693389219;
-        bh=nknoL9w3Y4YI7sgEzXEgy31hHjSBtW5t6+EKdvixVT4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PGeSqtlADXPNsSRMnED5y2bc51bStrsRKgRLsG0vFmeuS7ZjsjtBx9snAHe0G8Vr2
-         puIswmGZMwYKKpvbAUG4hgCkBPfAo5LnG+Zqi6zCKquDATicIUaBHr5eqdyzNoLlT+
-         eDLqK7F5l64Ce6vhg3+b1Cyvv77qi6SuOOpM4UfSj8i00ym6zp0iNwdRQNPeW8AsCh
-         s7jTGiZrttnG7dc7MMCLuv2nzzC2OWwW1dpk2JWvAsdtCdcLabRj31KBbnR0Ga2XvP
-         vjAjcw2evRgbmv/HS/X8EAdywyIIJ9VzMleY3re1+0iiynu1XGC3tw9hN+y2/tEsbr
-         Pj2cy6RWLJA5g==
-Date:   Wed, 30 Aug 2023 11:53:32 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Roberto Sassu <roberto.sassu@huaweicloud.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>, viro@zeniv.linux.org.uk,
-        chuck.lever@oracle.com, jlayton@kernel.org,
-        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
-        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stefanb@linux.ibm.com, Roberto Sassu <roberto.sassu@huawei.com>
-Subject: Re: [PATCH 15/28] security: Introduce inode_post_removexattr hook
-Message-ID: <20230830-kultfigur-verrohen-a689c59911d6@brauner>
-References: <20230303181842.1087717-1-roberto.sassu@huaweicloud.com>
- <20230303181842.1087717-16-roberto.sassu@huaweicloud.com>
- <f5a61c0f09c1b8d8aaeb99ad7ba4aab15818c5ed.camel@linux.ibm.com>
- <9d482f25475a9d9bc0c93a8cbaf8bd4bb67d2cd6.camel@huaweicloud.com>
+        s=k20201202; t=1693393154;
+        bh=wYJq4N2YWcxC3zxarH9JteFYm6SgG77yA/UCDOnm3qM=;
+        h=From:Subject:Date:To:Cc:From;
+        b=SP8hXdfwFGAWsl+o+1KC2rwsEwUN9EaDmWRKs+zuH3zbKUeVcaa1KmiU5Et8SVBb4
+         5tHBKWa80W28l5VJy3XN35qFpt2qa2IEDjZiGstjPHMvVsCTV3aQ8rJklDQMpKM46h
+         m4KsmvV4XOK1O9xNj+4P//mF08NUitvradFDE4c2OMA7Mn31u/piDjai31U5JSA+2u
+         w1cL6wfqH5bn7hgPpQJKl8cRvEng+YS+Z7LkZ8BP4MEyXSSqij38pY0d7uZUDd+hY7
+         RimARwtNh0WCzAS9w9AbPuZFU41tnCGndhHoTfSqKJ24PMixbl1soflrWS79On0oQx
+         XC/jZa4Y7W6lQ==
+From:   Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH fstests v4 0/3] fstests: add appropriate checks for fs
+ features for some tests
+Date:   Wed, 30 Aug 2023 06:58:49 -0400
+Message-Id: <20230830-fixes-v4-0-88d7b8572aa3@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9d482f25475a9d9bc0c93a8cbaf8bd4bb67d2cd6.camel@huaweicloud.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOkg72QC/12MQQrCMBBFr1JmbSSdpG3qynuIi5JO2qC0kglBK
+ b27ISCoy8/7723AFDwxnKoNAiXPfl3y0IcK7DwsEwk/5g0oUUmDWjj/JBZ9ra1VrifXIeTvI1A
+ B+XoBx5E4MlwzmD3HNbxKP2HBf6mEQoqxlRbd4GrZdOcbhYXuxzVMJZHUt9Z8NJW1VhttZW+cI
+ fOj7fv+BkvCq2rbAAAA
+To:     fstests@vger.kernel.org
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Darrick Wong <djwong@kernel.org>,
+        Zorro Lang <zlang@redhat.com>, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1417; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=wYJq4N2YWcxC3zxarH9JteFYm6SgG77yA/UCDOnm3qM=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBk7yD8bOeZoKJMFfEptvIwbvbAY687tDs7TVOH3
+ vtJE50rk/mJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZO8g/AAKCRAADmhBGVaC
+ FaN3D/95nz68PF+QEWyKvDmk1rUNczW0Eqb7mnzIVJbUoCk8wwpxZx8v9RZKF4AQ61Wx++n/0Bh
+ JrS8twY63A5EWXM+85i37EISI++toVfdrIVSkf2Wv+8m/GxSUwtKe+GX+ZaSk1EiHw0GuRDlIzd
+ Kn0F61ciHW9S94ptuhZABaHkfOrknrVKRn+h9hTL1YlOypbvQ68jBYqBASkVWmjguQMWqmcnzv/
+ i6RE0YX7jKUCe7N7OglemzDO2Iz2QNUtnqZWHqyP0jYQH0HGZz+mxamr4JLsi96mCkiCo2GkjCs
+ wstp7NIozzH6xDR/tsXvO63XXsNagv4VkC2rR5Dy1ylyYAPvLlksos+xBDrF3zcfOA21REyWj4H
+ VBftbqHLi6vHqpWApSKiS+9J/jSDwZkAp253bI8VwYLcTh+WZOzr2nSNvFpisjxD29uLd5xPnOl
+ 62SqSjhkV3k2TRZNiwJ0ajCZlWojwJC1FdR4XsoYAOzqIB0cT8cOxI77dMmNl3eeU2wjPoML4DX
+ prL0y0giIYyZozB72jR+2EhVj13s9RUgM4Ty7COAXlQzOQHJses0Yx077OhcPEwN1HRUX8vUd+J
+ 3cFIgIY2Qq6Sb/38hFDpT8Rrxrtrfq45mFKoeVOxC4vqC7Z8mR1i14A/5L2Ljh/FHfBFQTEsBWA
+ tCBepxGl+DPC6Ig==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -65,58 +75,45 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 11:31:35AM +0200, Roberto Sassu wrote:
-> On Wed, 2023-03-08 at 10:43 -0500, Mimi Zohar wrote:
-> > Hi Roberto,
-> > 
-> > On Fri, 2023-03-03 at 19:18 +0100, Roberto Sassu wrote:
-> > > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > > 
-> > > In preparation for moving IMA and EVM to the LSM infrastructure, introduce
-> > > the inode_post_removexattr hook.
-> > > 
-> > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > > ---
-> > >  fs/xattr.c                    |  1 +
-> > >  include/linux/lsm_hook_defs.h |  2 ++
-> > >  include/linux/security.h      |  5 +++++
-> > >  security/security.c           | 14 ++++++++++++++
-> > >  4 files changed, 22 insertions(+)
-> > > 
-> > > diff --git a/fs/xattr.c b/fs/xattr.c
-> > > index 14a7eb3c8fa..10c959d9fc6 100644
-> > > --- a/fs/xattr.c
-> > > +++ b/fs/xattr.c
-> > > @@ -534,6 +534,7 @@ __vfs_removexattr_locked(struct mnt_idmap *idmap,
-> > >  
-> > >  	if (!error) {
-> > >  		fsnotify_xattr(dentry);
-> > > +		security_inode_post_removexattr(dentry, name);
-> > >  		evm_inode_post_removexattr(dentry, name);
-> > >  	}
-> > 
-> > Nothing wrong with this, but other places in this function test "if
-> > (error) goto ...".   Perhaps it is time to clean this up.
-> > 
-> > >  
-> > > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-> > > index eedefbcdde3..2ae5224d967 100644
-> > > --- a/include/linux/lsm_hook_defs.h
-> > > +++ b/include/linux/lsm_hook_defs.h
-> > > @@ -147,6 +147,8 @@ LSM_HOOK(int, 0, inode_getxattr, struct dentry *dentry, const char *name)
-> > >  LSM_HOOK(int, 0, inode_listxattr, struct dentry *dentry)
-> > >  LSM_HOOK(int, 0, inode_removexattr, struct mnt_idmap *idmap,
-> > >  	 struct dentry *dentry, const char *name)
-> > > +LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
-> > > +	 const char *name)
-> > 
-> > @Christian should the security_inode_removexattr() and
-> > security_inode_post_removexattr() arguments be the same?
-> 
-> Probably this got lost.
-> 
-> Christian, should security_inode_post_removexattr() have the idmap
-> parameter as well?
+A number of fstests fail on NFS, primarily because it lacks certain
+features that are widely supported on local Linux filesystems. Fix
+up the test for POSIX ACLs and add a new requirement for fiemap support
+in generic/578.
 
-Only if you call anything from any implementers of the hook that needs
-access to the idmap.
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Changes in v4:
+- use "_require_attrs security" instead of special setcap test
+- use '_require_xfs_io_command "fiemap"' instead of special fiemap test
+- Link to v3: https://lore.kernel.org/r/20230825-fixes-v3-0-6484c098f8e8@kernel.org
+
+Changes in v2:
+- add new checks for fiemap and setcap
+- Link to v2: https://lore.kernel.org/r/20230824-fixes-v2-0-d60c2faf1057@kernel.org
+
+Changes in v3:
+- use _require_xfs_io_command "fiemap" in generic/578
+- drop the _require_setcap patch (Zorro has similar that adds a _require_capabilities)
+
+---
+Jeff Layton (3):
+      common/attr: fix the _require_acl test
+      generic/578: add a check to ensure that fiemap is supported
+      generic/*: add a check for security attrs
+
+ common/attr       | 9 ++++-----
+ tests/generic/270 | 2 ++
+ tests/generic/513 | 2 ++
+ tests/generic/578 | 1 +
+ tests/generic/675 | 2 ++
+ tests/generic/688 | 2 ++
+ tests/generic/727 | 2 ++
+ 7 files changed, 15 insertions(+), 5 deletions(-)
+---
+base-commit: 0ca1d4fbb2e9a492968f2951df101f24477f7991
+change-id: 20230824-fixes-914cc3f9ef72
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
