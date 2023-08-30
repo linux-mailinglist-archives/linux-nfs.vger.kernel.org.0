@@ -2,48 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6B6078D831
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE1F278D834
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 20:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232059AbjH3S3k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Aug 2023 14:29:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49694 "EHLO
+        id S229787AbjH3S3S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Aug 2023 14:29:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244373AbjH3NGC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 09:06:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE39E185
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 06:05:58 -0700 (PDT)
+        with ESMTP id S244374AbjH3NGF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 09:06:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF478193
+        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 06:06:02 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 83F5960EEA
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 13:05:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A616C433C7;
-        Wed, 30 Aug 2023 13:05:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 70E8D60EEA
+        for <linux-nfs@vger.kernel.org>; Wed, 30 Aug 2023 13:06:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83663C433C7;
+        Wed, 30 Aug 2023 13:06:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693400758;
-        bh=SajL3ykSEyeKs7KkCsd2SeLPFcq6xM+CIa47dZ5dyWY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZnesuVrPvSumu6/WzKQtZOB9o0FS094VBOfbLybklsjfk1oJ1hheIh31waQDHkrtC
-         NuxjbEBvwx6B+nDQ2stLg8dNfRaQ05wFR9leNEEtjyvfyyjxbZtfLggq4YA4UFHsPg
-         xXFswmpxjXmS31vNPR6nvSFv4tBJoUuRAtKJprQkkm4W3pa0potKniL2XVs8eStJei
-         /9EqI9UOA6igJU9oXJn+tXCkSzbuVlWMnOoC0lCuYt+sKATWM7+2zmNGZ69KgMH+l2
-         K8bmFvkcMvJwVT+aIyi/oh4jXPAJm6VPCI1hdIQykeak4eRN7KJPUs8U6SHwiuiH5R
-         64zTr5rD+W3dA==
+        s=k20201202; t=1693400761;
+        bh=ta/ho+6RL6DjLVonP3LJG0ZtiP54AHXfa2qUFvLlwms=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dnpYMZWsYDRJ+mcCAJXWZsl+yMhl/WBrJqH8L0PNxtTuU9GhhXt4xPTUGsaK+23Nf
+         7Kfiltqi5OsOmNJplbg28qBJ/e1xV8t1IxIUKAGEaqbk5bc/kj0CMk1TpW2QISg2+Z
+         kPDzWD4IWh3iKmHK+dYXQn9STGyBcaoromJNMvHMsVN5oxzWrgYyJLIrbjQ0s6GxmB
+         kL3CFG9FiWhnkAsbUsm3tnqML4xhGooqe2ciBou2dj4sUMH+htMZyUkDvPcb6f4tnE
+         nYTuTZhvQYx/ynC/sg20Y/EHqdSPm1LpcJrdjTU7Ylcm5nBhQtbtFwKJHGCmXsxc21
+         hk2mGBia1pFsQ==
 From:   Lorenzo Bianconi <lorenzo@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     lorenzo.bianconi@redhat.com, chuck.lever@oracle.com,
         jlayton@kernel.org, neilb@suse.de
-Subject: [PATCH v7 0/3] add rpc_status netlink support for NFSD
-Date:   Wed, 30 Aug 2023 15:05:43 +0200
-Message-ID: <cover.1693400242.git.lorenzo@kernel.org>
+Subject: [PATCH v7 1/3] SUNRPC: export nfsd4_op_name utility routine
+Date:   Wed, 30 Aug 2023 15:05:44 +0200
+Message-ID: <a5eefdeedec2b8da34596a9f84a4bfe495591c7f.1693400242.git.lorenzo@kernel.org>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <cover.1693400242.git.lorenzo@kernel.org>
+References: <cover.1693400242.git.lorenzo@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,62 +53,60 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Introduce rpc_status netlink support for NFSD in order to dump pending
-RPC requests debugging information from userspace.
-The new code can be tested with the user-space tool reported below:
-https://github.com/LorenzoBianconi/nfsd-rpc-netlink-monitor/tree/main
+This is a preliminary patch to introduce nfsd_rpc_status netlink info
+in order to dump pending RPC requests debugging information.
 
-Changes since v6:
-- report info to user-space through netlink and get rid of the related
-  entry in the procfs
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+---
+ fs/nfsd/nfs4proc.c | 4 +---
+ fs/nfsd/nfsd.h     | 6 ++++++
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-Changes since v5:
-- add missing delimiters for nfs4 compound ops
-- add a header line for rpc_status handler
-- do not dump rq_prog
-- do not dump rq_flags in hex
-
-Changes since v4:
-- rely on acquire/release APIs and get rid of atomic operation
-- fix kdoc for nfsd_rpc_status_open
-- get rid of ',' as field delimiter in nfsd_rpc_status hanlder
-- move nfsd_rpc_status before nfsd_v4 enum entries
-- fix compilantion error if nfsdv4 is not enabled
-
-Changes since v3:
-- introduce rq_status_counter in order to detect if the RPC request is
-  pending and RPC info are stable
-- rely on __svc_print_addr to dump IP info
-
-Changes since v2:
-- minor changes in nfsd_rpc_status_show output
-
-Changes since v1:
-- rework nfsd_rpc_status_show output
-
-Changes since RFCv1:
-- riduce time holding nfsd_mutex bumping svc_serv refcoung in
-  nfsd_rpc_status_open()
-- dump rqstp->rq_stime
-- add missing kdoc for nfsd_rpc_status_open()
-
-Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D3D366
-
-Lorenzo Bianconi (3):
-  SUNRPC: export nfsd4_op_name utility routine
-  SUNRPC: export svc_proc_name utility routine
-  NFSD: add rpc_status netlink support
-
- fs/nfsd/nfs4proc.c         |   4 +-
- fs/nfsd/nfsctl.c           | 275 +++++++++++++++++++++++++++++++++++++
- fs/nfsd/nfsd.h             |  25 ++++
- fs/nfsd/nfssvc.c           |  15 ++
- fs/nfsd/state.h            |   2 -
- include/linux/sunrpc/svc.h |   1 +
- include/uapi/linux/nfs.h   |  54 ++++++++
- net/sunrpc/svc.c           |   2 +-
- 8 files changed, 372 insertions(+), 6 deletions(-)
-
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 5ca748309c26..074bac13c383 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2485,8 +2485,6 @@ static inline void nfsd4_increment_op_stats(u32 opnum)
+ 
+ static const struct nfsd4_operation nfsd4_ops[];
+ 
+-static const char *nfsd4_op_name(unsigned opnum);
+-
+ /*
+  * Enforce NFSv4.1 COMPOUND ordering rules:
+  *
+@@ -3616,7 +3614,7 @@ void warn_on_nonidempotent_op(struct nfsd4_op *op)
+ 	}
+ }
+ 
+-static const char *nfsd4_op_name(unsigned opnum)
++const char *nfsd4_op_name(unsigned int opnum)
+ {
+ 	if (opnum < ARRAY_SIZE(nfsd4_ops))
+ 		return nfsd4_ops[opnum].op_name;
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 11c14faa6c67..e95c3322eb9b 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -511,12 +511,18 @@ extern void nfsd4_ssc_init_umount_work(struct nfsd_net *nn);
+ 
+ extern void nfsd4_init_leases_net(struct nfsd_net *nn);
+ 
++const char *nfsd4_op_name(unsigned int opnum);
+ #else /* CONFIG_NFSD_V4 */
+ static inline int nfsd4_is_junction(struct dentry *dentry)
+ {
+ 	return 0;
+ }
+ 
++static inline const char *nfsd4_op_name(unsigned int opnum)
++{
++	return "unknown_operation";
++}
++
+ static inline void nfsd4_init_leases_net(struct nfsd_net *nn) { };
+ 
+ #define register_cld_notifier() 0
 -- 
 2.41.0
 
