@@ -2,113 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ADF578D344
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 08:18:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E52378D341
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Aug 2023 08:18:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232489AbjH3GSA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Aug 2023 02:18:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42690 "EHLO
+        id S235154AbjH3GSB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Aug 2023 02:18:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240331AbjH3GRi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 02:17:38 -0400
-X-Greylist: delayed 331 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 29 Aug 2023 23:17:32 PDT
-Received: from out-251.mta0.migadu.com (out-251.mta0.migadu.com [91.218.175.251])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA2D9CEC;
-        Tue, 29 Aug 2023 23:17:32 -0700 (PDT)
-Message-ID: <642de4e6-801d-fcad-a7ce-bfc6dec3b6e5@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1693375918;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JMzOvVHk770qYz+7D4bRM3eiaC0WBb12Z/fuZleaQ2g=;
-        b=n8qZNKHDJ8ZkQN8s6YCFhUc5vlrIehXvAzssrfT4lOFAEgM70y7j9ccF+kTN544/il9mhv
-        /Qwyv0zoAHdwAPeCdmanHqcxV7A/7XcL4G5u9c/o5+tWUqR2xZIKUSlHotdEAwwwHhjWvg
-        KLK2CGyPGmGk32bcLUct3rbhOUMJhk8=
-Date:   Wed, 30 Aug 2023 14:11:31 +0800
+        with ESMTP id S241267AbjH3GR4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Aug 2023 02:17:56 -0400
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 578C1E9
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 23:17:54 -0700 (PDT)
+Received: by mail-ua1-x933.google.com with SMTP id a1e0cc1a2514c-7a0254de2fdso1938039241.1
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Aug 2023 23:17:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693376273; x=1693981073; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=bf9C7WofIPLAIqUHKR8HLpDdpIK4sTc8g8feDGjF8c0=;
+        b=RPcKurMW94EpRTbLsTvw0XWZGi7lOxk2P6zQiV6NTIhtX7B25IbG8nAsO8n+saxoez
+         snfxVp1AuCXFpV/xApGcYAxFdATiFHyGDsXkRWvZY83RMnnfoHg0u2UZoo9KzaGL5+M7
+         o9C15OurFd95g5JKVsxOg5/Vi8UU7BtPlEEkty/Sg4Np/ruPkVPglXST7Lj0aPK0RXf3
+         Tf6TXPlPCroVyT91hW/3D1WmJF2XViDKekhHBy47D58b7cRpKLhKQBdof/xzyP77ANLH
+         YOnDi7Qc/O/+J45NrkZ3uRkoaZXNowARha+833PA9NIl940u3ueHGAPFObT6TlFqj+k8
+         3WGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693376273; x=1693981073;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bf9C7WofIPLAIqUHKR8HLpDdpIK4sTc8g8feDGjF8c0=;
+        b=JJi5Mv3k0zfSQN1hgD47r5ZG8Z2Nht4jtK+6XiIDxsKVBPLlygzruvPwf26fXw632A
+         yuqieEnj6aezSPVcsUriTPTZBJDEYjer/wX6LJMQ6BpcruDxC76EqkH2KOWyfvrERfc2
+         vpx7fNBsmtmUnDmEzbz4psPYLyGlp889RAzcmCLIeVzE+yMtigdVYK36Mgr+pno8wwer
+         Zghi8SJLcE77GQ8ikMgD6Q83th5Sdrm4gN3iF1Jf6YbIfXU+uCI5Hx0vwTlDCyAkInhW
+         GRK2WshvhFCV27VHHrXiERCjj8cMwA0o3RL8SdS6UPtJodHq0skJJcaUHjyhkIKMurgl
+         CXyg==
+X-Gm-Message-State: AOJu0YyAImu3u97L5trC1SUPVuYcD0/dTqvCfa0o6POQOEVbP4pk6Dd2
+        ojVNP0pq9u/FKeWNwUOQooxNeVNgDZFXKshjebTtkWZt5VIgnw==
+X-Google-Smtp-Source: AGHT+IEPz5iXynOgBqkGM3VKMPKMwFz582D26Ml8t0pQ3ayC0KvbRtif+tOikyIBomYrkkvQ2lRfmU2SYttYhCSi/g8=
+X-Received: by 2002:a05:6102:301c:b0:44e:9ee6:b002 with SMTP id
+ s28-20020a056102301c00b0044e9ee6b002mr1278915vsa.34.1693376272792; Tue, 29
+ Aug 2023 23:17:52 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [PATCH 07/11] vfs: add nowait parameter for file_accessed()
-Content-Language: en-US
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stefan Roesch <shr@fb.com>, Clay Harris <bugs@claycon.org>,
-        Dave Chinner <david@fromorbit.com>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
-        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, codalist@coda.cs.cmu.edu,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
-        Wanpeng Li <wanpengli@tencent.com>
-References: <20230827132835.1373581-1-hao.xu@linux.dev>
- <20230827132835.1373581-8-hao.xu@linux.dev>
- <ZOvA5DJDZN0FRymp@casper.infradead.org>
- <c728bf3f-d9db-4865-8473-058b26c11c06@linux.dev>
- <ZO3cI+DkotHQo3md@casper.infradead.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Hao Xu <hao.xu@linux.dev>
-In-Reply-To: <ZO3cI+DkotHQo3md@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+From:   J David <j.david.lists@gmail.com>
+Date:   Wed, 30 Aug 2023 02:17:41 -0400
+Message-ID: <CABXB=RSMkjoyshFZy5eGbuvAQfoHhFyQvReYNtO_+5f+OM66cA@mail.gmail.com>
+Subject: Question about different gid management between versions
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/29/23 19:53, Matthew Wilcox wrote:
-> On Tue, Aug 29, 2023 at 03:46:13PM +0800, Hao Xu wrote:
->> On 8/28/23 05:32, Matthew Wilcox wrote:
->>> On Sun, Aug 27, 2023 at 09:28:31PM +0800, Hao Xu wrote:
->>>> From: Hao Xu <howeyxu@tencent.com>
->>>>
->>>> Add a boolean parameter for file_accessed() to support nowait semantics.
->>>> Currently it is true only with io_uring as its initial caller.
->>>
->>> So why do we need to do this as part of this series?  Apparently it
->>> hasn't caused any problems for filemap_read().
->>>
->>
->> We need this parameter to indicate if nowait semantics should be enforced in
->> touch_atime(), There are locks and maybe IOs in it.
-> 
-> That's not my point.  We currently call file_accessed() and
-> touch_atime() for nowait reads and nowait writes.  You haven't done
-> anything to fix those.
-> 
-> I suspect you can trim this patchset down significantly by avoiding
-> fixing the file_accessed() problem.  And then come back with a later
-> patchset that fixes it for all nowait i/o.  Or do a separate prep series
+We have existing NFS servers based on Debian Bookworm that run
+nfs-kernel-server 1.3.4.  We have recently stood up some Debian
+Bullseye fileservers, which come with 2.6.2.
 
-I'm ok to do that.
+Apparently, there are some big differences in how users' group
+memberships are handled between the two.
 
-> first that fixes it for the existing nowait users, and then a second
-> series to do all the directory stuff.
-> 
-> I'd do the first thing.  Just ignore the problem.  Directory atime
-> updates cause I/O so rarely that you can afford to ignore it.  Almost
-> everyone uses relatime or nodiratime.
+For example, on the client machine, my UID is 1000. I am in groups 0,
+106, 181, and 1000.
 
-Hi Matthew,
-The previous discussion shows this does cause issues in real
-producations: 
-https://lore.kernel.org/io-uring/2785f009-2ebb-028d-8250-d5f3a30510f0@gmail.com/#:~:text=fwiw%2C%20we%27ve%20just%20recently%20had%20similar%20problems%20with%20io_uring%20read/write
+On the server, my UID is 1000, and I am in groups 0, 27, 106, and 1000.
 
+With the 1.3.4 server, the client's set of groups is used. I can
+"chgrp 181 x" but not "chgrp 27 x."
 
+$ touch x
+$ ls -ln x
+-rw-rw-r--  1 1000  1000  0 Aug 30 05:47 x
+$ chgrp 181 x
+$ ls -ln x
+-rw-rw-r--  1 1000  181  0 Aug 30 05:47 x
+$ chgrp 27 x
+chgrp: you are not a member of group 27
+$ ls -ln x
+-rw-rw-r--  1 1000  181  0 Aug 30 05:47 x
+$ rm x
 
+From the same client, with the 2.6.2 server, the server's groups are
+used. I can "chgrp 27 x" but not "chgrp 181 x."
 
+$ touch x
+$ ls -ln x
+-rw-rw-r--  1 1000  1000  0 Aug 30 05:50 x
+$ chgrp 181 x
+chgrp: x: Operation not permitted
+$ ls -ln x
+-rw-rw-r--  1 1000  1000  0 Aug 30 05:50 x
+$ chgrp 27 x
+$ ls -ln x
+-rw-rw-r--  1 1000  27  0 Aug 30 05:50 x
+$ rm x
+
+This change in behavior was quite startling!
+
+We are using sec=sys, and this change in behavior happens with both
+NFSv3 and NFSv4.2 clients, so it doesn't seem to be related to ID
+mapping.
+
+In this case, it's not possible to synchronize users and groups
+between the clients and servers, because Docker is involved and the
+stuff that happens with uids and gids inside docker is chaos.  I can
+control the NFS server configuration.  I have minimal control over
+what happens inside those containers on the client machines.
+
+Is there any way for me to get the old behavior from the new server
+short of downgrading?  My attempts to Google for more information
+about this have been utterly fruitless.
+
+Thanks for any advice!
