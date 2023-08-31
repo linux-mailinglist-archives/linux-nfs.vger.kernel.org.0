@@ -2,213 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE45478F03A
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 17:24:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B94278F036
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 17:24:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244888AbjHaPZA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Aug 2023 11:25:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56542 "EHLO
+        id S231834AbjHaPYg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Aug 2023 11:24:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231510AbjHaPZA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 11:25:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D94310E2
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 08:23:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1693495403;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=3lOqPGeum2Ohan2O+TXrCHEtxJJw1aqkd7sF483hiKc=;
-        b=hG8/3fJfgt2M7Ddr5tRR7idi0RiaueGXndvk2QOTaZZjTdHnp9VzKtkUvNpIDM2Sz4K9jK
-        SGeAp2KrsZoj7rf4NarlqIg4Dtf8u4MLV1i+XYkDhldbN1xc5ACFxYJt0QZ9qEQtqok92E
-        yF23F5COIytzBzkS35Ryk/UtYy2bhsA=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-680-_2dcHVdvN2eC1EaSqY032w-1; Thu, 31 Aug 2023 11:23:22 -0400
-X-MC-Unique: _2dcHVdvN2eC1EaSqY032w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S1346559AbjHaPYg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 11:24:36 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 518C8E64
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 08:24:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B05EB381181F
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 15:23:21 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 63A032166B25
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 15:23:21 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Subject: Re: [RFC PATCH] NFSv4: add sysctl for setting READDIR attrs
-Date:   Thu, 31 Aug 2023 11:23:20 -0400
-Message-ID: <6F5072E7-2C66-4B17-847E-0AA95ED827B0@redhat.com>
-In-Reply-To: <8f752f70daf73016e20c49508f825e8c2c94f5e7.1693494824.git.bcodding@redhat.com>
-References: <8f752f70daf73016e20c49508f825e8c2c94f5e7.1693494824.git.bcodding@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        by ams.source.kernel.org (Postfix) with ESMTPS id E63CFB82338
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 15:24:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21B09C433CD;
+        Thu, 31 Aug 2023 15:24:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693495456;
+        bh=ABJe0LgB6c63oC0SlohD9psbv2Dul4MB3oKtWN8WXL8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=BOot/aH7Bhu/KeYOD+uly1cP9KIJAWJaD5nbOAtTZejDvBjwLHwMxpf8p2F0zq3Ov
+         LQTp+aSYeJOcgfVLJJjd7tbsBbsw5Cqpnhz2LAj5I2Tq0SS+T5Ny3x3ixGgWQiV5Cd
+         N/8U+CEunF+nZGbapv7AZ48chi7sTL9gRVHUA8JjpKcJqWHs8/CVNdsj5xZM/C5Jkm
+         qaoVORQZwFqtW25mC67hzuFgqxQE4YWPCzNdlSSrx648mszgZwiDlajp22FhYjZekY
+         6Dss56Jma8PPvdWeQ9pZonETbu1sTcMbSDVV2oi/XwfHgGjOSkIyN+WZjfL5xhDitw
+         agJV9kVD5kaxQ==
+Message-ID: <21c3596d1ca9bbe6b73532d7b2e0c306871cf4ed.camel@kernel.org>
+Subject: Re: [PATCH v2] NFSv4: Always ask for type with READDIR
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>, anna@kernel.org,
+        linux-nfs@vger.kernel.org
+Date:   Thu, 31 Aug 2023 11:24:14 -0400
+In-Reply-To: <6BE9526F-51FE-4CD9-AE95-EE69F7F0CAA6@redhat.com>
+References: <82d1908e4f835a2f16a509a11b62b9d93ccb6cdf.1693424491.git.bcodding@redhat.com>
+         <f793a08ed0db7bbe292c8aa6ec7241178c111cab.camel@kernel.org>
+         <4eb846815a1cdd1a98e064305b57a890b46e2708.camel@hammerspace.com>
+         <f4837c30b2faedd6a736a19d93c79b93df230349.camel@kernel.org>
+         <6BE9526F-51FE-4CD9-AE95-EE69F7F0CAA6@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+MIME-Version: 1.0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 31 Aug 2023, at 11:15, Benjamin Coddington wrote:
+On Thu, 2023-08-31 at 11:17 -0400, Benjamin Coddington wrote:
+> On 30 Aug 2023, at 17:14, Jeff Layton wrote:
+>=20
+> > On Wed, 2023-08-30 at 20:20 +0000, Trond Myklebust wrote:
+> > > On Wed, 2023-08-30 at 16:10 -0400, Jeff Layton wrote:
+> > > > On Wed, 2023-08-30 at 15:42 -0400, Benjamin Coddington wrote:
+> > > > > Again we have claimed regressions for walking a directory tree,
+> > > > > this time
+> > > > > with the "find" utility which always tries to optimize away askin=
+g
+> > > > > for any
+> > > > > attributes until it has a complete list of entries.=A0 This behav=
+ior
+> > > > > makes
+> > > > > the readdir plus heuristic do the wrong thing, which causes a sto=
+rm
+> > > > > of
+> > > > > GETATTRs to determine each entry's type in order to continue the
+> > > > > walk.
+> > > > >=20
+> > > > > For v4 add the type attribute to each READDIR request to include =
+it
+> > > > > no
+> > > > > matter the heuristic.=A0 This allows a simple `find` command to
+> > > > > proceed
+> > > > > quickly through a directory tree.
+> > > > >=20
+> > > >=20
+> > > > The important bit here is that with v4, we can fill out d_type even
+> > > > when
+> > > > "plus" is false, at little cost. The downside is that non-plus
+> > > > READDIR
+> > > > replies will now be a bit larger on the wire. I think it's a
+> > > > worthwhile
+> > > > tradeoff though.
+> > >=20
+> > > The reason why we never did it before is that for many servers, it
+> > > forces them to go to the inode in order to retrieve the information.
+> > >=20
+> > > IOW: You might as well just do readdirplus.
+> > >=20
+> >=20
+> > That makes total sense, given how this code has evolved.
+> >=20
+> > FWIW, the Linux NFS server already calls vfs_getattr for every dentry i=
+n
+> > a v4 READDIR reply regardless of what the client requests. It has to in
+> > order to detect junctions, so we're bringing in the inode no matter
+> > what. Fetching the type is trivial, so I don't see this as costing
+> > anything extra there.
+> >=20
+> > Mileage could vary on other servers with more synthetic filesystems, bu=
+t
+> > one would hope that most of them can also return the type cheaply.
+>=20
+> It occurred to me that we could let those other server folks ask for
+> whatever attributes they wanted if we make it tunable at runtime:
+>=20
+> https://lore.kernel.org/linux-nfs/8f752f70daf73016e20c49508f825e8c2c94f5e=
+7.1693494824.git.bcodding@redhat.com/T/#u
+>=20
 
-> Expose a knob in sysfs to set the READDIR requested attributes for a
-> non-plus READDIR request.  This allows installations another option for=
-
-> tuning READDIR on v4.  Further work is needed to detect whether enough
-> attributes are being returned to also prime the dcache.
->
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-> ---
->  fs/nfs/client.c           |  2 ++
->  fs/nfs/nfs4client.c       |  3 ++
->  fs/nfs/nfs4proc.c         |  1 +
->  fs/nfs/nfs4xdr.c          |  7 ++---
->  fs/nfs/sysfs.c            | 58 +++++++++++++++++++++++++++++++++++++++=
-
->  include/linux/nfs_fs_sb.h |  1 +
->  include/linux/nfs_xdr.h   |  1 +
->  7 files changed, 69 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> index e4c5f193ed5e..cf23a7c54bf1 100644
-> --- a/fs/nfs/client.c
-> +++ b/fs/nfs/client.c
-> @@ -920,6 +920,8 @@ void nfs_server_copy_userdata(struct nfs_server *ta=
-rget, struct nfs_server *sour
->  	target->options =3D source->options;
->  	target->auth_info =3D source->auth_info;
->  	target->port =3D source->port;
-> +	memcpy(target->readdir_attrs, source->readdir_attrs,
-> +			sizeof(target->readdir_attrs));
->  }
->  EXPORT_SYMBOL_GPL(nfs_server_copy_userdata);
->
-> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-> index d9114a754db7..ba1dffdd25eb 100644
-> --- a/fs/nfs/nfs4client.c
-> +++ b/fs/nfs/nfs4client.c
-> @@ -1108,6 +1108,9 @@ static int nfs4_server_common_setup(struct nfs_se=
-rver *server,
->
->  	nfs4_server_set_init_caps(server);
->
-> +	server->readdir_attrs[0] =3D FATTR4_WORD0_RDATTR_ERROR;
-> +	server->readdir_attrs[1] =3D FATTR4_WORD1_MOUNTED_ON_FILEID;
-> +
->  	/* Probe the root fh to retrieve its FSID and filehandle */
->  	error =3D nfs4_get_rootfh(server, mntfh, auth_probe);
->  	if (error < 0)
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index 832fa226b8f2..12cc9e972f36 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -5109,6 +5109,7 @@ static int _nfs4_proc_readdir(struct nfs_readdir_=
-arg *nr_arg,
->  		.pgbase =3D 0,
->  		.count =3D nr_arg->page_len,
->  		.plus =3D nr_arg->plus,
-> +		.server =3D server,
->  	};
->  	struct nfs4_readdir_res res;
->  	struct rpc_message msg =3D {
-> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-> index deec76cf5afe..1825e3eeb34b 100644
-> --- a/fs/nfs/nfs4xdr.c
-> +++ b/fs/nfs/nfs4xdr.c
-> @@ -1601,16 +1601,15 @@ static void encode_read(struct xdr_stream *xdr,=
- const struct nfs_pgio_args *args
->
->  static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_r=
-eaddir_arg *readdir, struct rpc_rqst *req, struct compound_hdr *hdr)
->  {
-> -	uint32_t attrs[3] =3D {
-> -		FATTR4_WORD0_RDATTR_ERROR,
-> -		FATTR4_WORD1_MOUNTED_ON_FILEID,
-> -	};
-> +	uint32_t attrs[3];
->  	uint32_t dircount =3D readdir->count;
->  	uint32_t maxcount =3D readdir->count;
->  	__be32 *p, verf[2];
->  	uint32_t attrlen =3D 0;
->  	unsigned int i;
->
-> +	memcpy(attrs, readdir->server->readdir_attrs, sizeof(attrs));
-> +
->  	if (readdir->plus) {
->  		attrs[0] |=3D FATTR4_WORD0_TYPE|FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZ=
-E|
->  			FATTR4_WORD0_FSID|FATTR4_WORD0_FILEHANDLE|FATTR4_WORD0_FILEID;
-> diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
-> index bf378ecd5d9f..6bded395df18 100644
-> --- a/fs/nfs/sysfs.c
-> +++ b/fs/nfs/sysfs.c
-> @@ -270,7 +270,59 @@ shutdown_store(struct kobject *kobj, struct kobj_a=
-ttribute *attr,
->  	return count;
->  }
->
-> +static ssize_t
-> +v4_readdir_attrs_show(struct kobject *kobj, struct kobj_attribute *att=
-r,
-> +				char *buf)
-> +{
-> +	struct nfs_server *server;
-> +	server =3D container_of(kobj, struct nfs_server, kobj);
-> +
-> +	return sysfs_emit(buf, "0x%x 0x%x 0x%x\n",
-> +			server->readdir_attrs[0],
-> +			server->readdir_attrs[1],
-> +			server->readdir_attrs[2]);
-> +}
-> +
-> +static ssize_t
-> +v4_readdir_attrs_store(struct kobject *kobj, struct kobj_attribute *at=
-tr,
-> +				const char *buf, size_t count)
-> +{
-> +	struct nfs_server *server;
-> +	u32 attrs[3];
-> +	char p[24], *v;
-> +	size_t token =3D 0;
-> +	int i;
-> +
-> +	if (count > 24)
-> +		return -EINVAL;
-> +
-> +	v =3D strncpy(p, buf, count);
-> +
-> +	for (i =3D 0; i < 3; i++) {
-> +		token +=3D strcspn(v, " ") + 1;
-> +		if (token > 22)
-> +			return -EINVAL;
-> +
-> +		p[token - 1] =3D '\0';
-> +		if (kstrtoint(v, 0, &attrs[i]))
-> +			return -EINVAL;
-> +		v =3D &p[token];
-> +	}
-> +
-> +	server =3D container_of(kobj, struct nfs_server, kobj);
-> +
-> +	if (attrs[0])
-> +		server->readdir_attrs[0] =3D attrs[0];
-> +	if (attrs[1])
-> +		server->readdir_attrs[1] =3D attrs[1];
-> +	if (attrs[2])
-> +		server->readdir_attrs[2] =3D attrs[2];
-
-Eh, this ^^ is obviously wrong - we want to allow setting to 0.  I will f=
-ix
-this if there's interest.
-
-Ben
-
+That's a possibility, but I probably wouldn't add tunables for this
+until the need was more clear.
+--=20
+Jeff Layton <jlayton@kernel.org>
