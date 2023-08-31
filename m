@@ -2,62 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CED278F2BD
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 20:40:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6375878F2BF
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 20:40:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347076AbjHaSkh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Aug 2023 14:40:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43522 "EHLO
+        id S1347079AbjHaSki (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Aug 2023 14:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234565AbjHaSkg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 14:40:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABAEE64;
-        Thu, 31 Aug 2023 11:40:33 -0700 (PDT)
+        with ESMTP id S1347075AbjHaSki (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 14:40:38 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D014AE5D;
+        Thu, 31 Aug 2023 11:40:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 10EE063A78;
-        Thu, 31 Aug 2023 18:40:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 334CDC433C9;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 55128B82344;
+        Thu, 31 Aug 2023 18:40:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E04C433C8;
         Thu, 31 Aug 2023 18:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693507232;
-        bh=dprYPF1VZHCmXuM3H7T70x/zNnsCwEro0wn2qUK90c4=;
+        s=k20201202; t=1693507233;
+        bh=sTbUtU7pe3hLO5cKrjbZHVIkvXTCJz4IN7jaRAjZQnw=;
         h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-        b=Ss2hYmxoawmlmWgeFCfhrfGJXzPETA0SbJ872XWmw68QWUXnS01nXUzks3VKAeYpi
-         VdlYoWNg7QQuptDXjFIPfM8v9SZc2tOyEAIzGkQyrOFmZapR9BgeycyvNMfVbgCCA7
-         vnqk/j3QSqVL0mWklqueRyqdPF79RHqMvZQ+OTFe+GlSTIcqDJmRdkJU/IBNzFe03D
-         IYXrYK9EviYPdKlhZxUmSXCqI/psbk2bGGaNhOhdfoINiy42FW0jjR3Wz0ux9zcJd8
-         Rk7UUHe+42y6zEZIbO8ANDyEljpTv7onz9h51+OOf0C3fNnefIgMX5out32ihfZEC6
-         adNBZwaJUTBJg==
+        b=uKMUinIRj3ctyEjlRmcp83bET50F1X8frlz5+u/ftvjAmuZ1yi5HUmgvXbYO3GQNp
+         7wB+/sm4yPXkPifmIbqltGUKUQ7NUx46UI7ydbyejBNckrKxcDbbDUiVyZPxEBnqaQ
+         XAbsi/fGn/zzCLbnGfFdjQZkYSHLl0FevUumv25k0xCTMbsJSq67oqCKGGcmZCPs+i
+         ushgGaMRbolmmEA9el1VyLPiNXrL79jjYfwBVADM1hRiDsc8/RFNA7mrcE0IM0vL3T
+         RMtEmfJc3IXAY9g14IuLnumX7ZkUbEG+uld9iaKDF26X+w1EvwQJNPeO5/YgieWO5m
+         dJmkQdMV2xitQ==
 From:   Jeff Layton <jlayton@kernel.org>
-Date:   Thu, 31 Aug 2023 14:40:28 -0400
-Subject: [PATCH fstests 1/3] generic/294: don't run this test on NFS
+Date:   Thu, 31 Aug 2023 14:40:29 -0400
+Subject: [PATCH fstests 2/3] generic/357: don't run this test on NFS
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230831-nfs-skip-v1-1-d54c1c6a9af2@kernel.org>
+Message-Id: <20230831-nfs-skip-v1-2-d54c1c6a9af2@kernel.org>
 References: <20230831-nfs-skip-v1-0-d54c1c6a9af2@kernel.org>
 In-Reply-To: <20230831-nfs-skip-v1-0-d54c1c6a9af2@kernel.org>
 To:     fstests@vger.kernel.org
 Cc:     linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=863; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=dprYPF1VZHCmXuM3H7T70x/zNnsCwEro0wn2qUK90c4=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBk8N6fVyTHNgGxTqgqs/t/Y6qwXaDD9ux6TaJ16
- bRz4QTSOBWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZPDenwAKCRAADmhBGVaC
- FWMlD/47o7zxv6uhOJhxGZIQphJue3CUB7rODjPnlljbMxzMYE/fNYjI0zTZX6FAkjzxYkXtCUT
- 8QyL3rpk5Oc2UMG7LMDJyDTKD7FxrRzV09cCHfNunqC49y2ka0yLOhTTbDPl/zsRdwrtYIlwn+p
- 7IGBIu/FWprP5u7oVH1f4dcpImsDrqq+T6zGMSgXY3Fyl0dbTR3ZPNVsMuzcyUNvy9iFgKct80L
- K0g928cg7OhVUirVRDGAohop4QB1q7wd1Z+kMw5z1IyFbM9/OqVx3KPch1jxMFK5y0jreBEuxhi
- qgErKgW+67DDcBVM3vy2NQAwyMNxhFhU2jA2bidwPNurrsjj9gjZXzl2xA/6Tt7Li1O3JvKz38T
- Ztr0MCDoapwMWEDUBn6skQz0mS3B0UMpuH79Qe/OLt/nF6ytTgbrgC1tze9jTTegyxk3kZt8DK+
- Jen+IJR1v/SicKVqzYmdg3Q1PGNPRX5owjObMaXLmtCOLW+WhwPhk7JFjDYhPYNPU1+4z0szzuR
- YFv/1nBHW7/NiIVnKkdnRZ+6l4W6W5YWjePrOt/Te/HY88rCVfNrquXf8sEQg0t/YqmV/gzlL0i
- MBMHP6goEaToP7QX9TwaxFkZXeyMTUIwB1RAuQ0z2WilT17cF/JMT3jDnNb8r6hsf3AOjJn+hEk
- mUmxgHiM+2gVHsg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=794; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=sTbUtU7pe3hLO5cKrjbZHVIkvXTCJz4IN7jaRAjZQnw=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBk8N6f9Bxt+Uut7uAZS43L1HCjDS3B89EjtW8TP
+ 4kRqVGEbmWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZPDenwAKCRAADmhBGVaC
+ FfnrD/oCwPdyHj3pRHpzwlNhXRvdBqgaUT6tmLF12riO7l3RyW1S5UZ6echRnoZzBwepgoRDcNA
+ CZVIiH36pGJMrZ3XAgPDAm/Nu/eT8Xda8qYivOPV40ciwpGL5TqV/fWGpJtnOw3Mvpt5/aTb9YF
+ sKatYB5ry4VTB9Jsds0B7HdQr7b4mx7LVJCtYp2hLwDPmrEbE32qqhxDUnZYq0WXhPGLtKi4JVG
+ Cy2RX8Fb1lkHRzX3uowv+fTfA99rZULpSPZAyPg3bWbrlGJbo29A+OpZtoTdQaoIDFes2JzTk/B
+ yOoH9tMP7Ir6uFnxVGDEBxr62n46sjdpyKHahQVP4FhrhJEi2O0CDakJjTZEzTvT5pKhF6XKIHF
+ Owsm6Qbhb7ZXVRcPboIM5ioIu1+2/OH/lWLeztFDgeiMOKgwZUq7iCrKqVgCtsM5QzHKyPX6OvM
+ tGiwPnDO/5ECqNCj4jZXmYQKSu7FepVUdS7+R/JKIRP4GDIVIHejG55citAMOmtVqUgPKbEgvCR
+ /1Qw5309U0vCRKXJ2nNKLKkhKoy2GQsLKFzC+aeJnDwuWMnHkLT4604POwMeGcybQkFqO3j3tPh
+ X/6hAwTNK8XHnYhCZNSWzOKt2hYNdhBSX57iZ6jTlbyMX1CncIC+gOCvlbL/ruPqIGVSjQ+4kbh
+ UVJzu0A7nxHgX4Q==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -70,31 +70,31 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When creating a new dentry (of any type), NFS will optimize away any
-on-the-wire lookups prior to the create since that means an extra
-round trip to the server. Because of that, it consistently fails this
-test.
+NFS doesn't keep track of whether a file is reflinked or not, so it
+doesn't prevent this behavior. It shouldn't be a problem for NFS anyway,
+so just skip this test there.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- tests/generic/294 | 4 ++++
- 1 file changed, 4 insertions(+)
+ tests/generic/357 | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tests/generic/294 b/tests/generic/294
-index 406b1b3954b9..777b62aec9ad 100755
---- a/tests/generic/294
-+++ b/tests/generic/294
-@@ -15,6 +15,10 @@ _begin_fstest auto quick
+diff --git a/tests/generic/357 b/tests/generic/357
+index ce748f854327..909f0c8c6762 100755
+--- a/tests/generic/357
++++ b/tests/generic/357
+@@ -24,6 +24,11 @@ _cleanup()
+ . ./common/reflink
  
  # real QA test starts here
- 
-+# NFS will optimize away the on-the-wire lookup before attempting to
-+# create a new file (since that means an extra round trip).
-+test $FSTYP = "nfs"  && _notrun "NFS optmizes away lookups on exclusive creates"
 +
- # Modify as appropriate.
- _supported_fs generic
- _require_scratch
++# For NFS, a reflink is just a CLONE operation, and after that
++# point it's dealt with by the server.
++test $FSTYP = "nfs"  && _notrun "NFS allows reflinked swapfiles"
++
+ _require_scratch_swapfile
+ _require_scratch_reflink
+ _require_cp_reflink
 
 -- 
 2.41.0
