@@ -2,180 +2,189 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFC3578F4A2
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 23:33:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7003278F565
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Sep 2023 00:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232586AbjHaVdh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Aug 2023 17:33:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51218 "EHLO
+        id S1347678AbjHaW3G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Aug 2023 18:29:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229795AbjHaVdh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 17:33:37 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A14511B
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 14:33:34 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id B4D28CE221F
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 21:33:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87CEDC433C9;
-        Thu, 31 Aug 2023 21:33:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693517611;
-        bh=VjGI3korpj9jUiyhQ2z87GegPkU8117wBPpDkqSMSZ8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VxHWSjieebecS+Hz6xp8LbKTER8w1fQQTwY5KMj2+H4xVP6uKdmSto4RsTuKQ7MrK
-         ByWO3cGUzAHMbhMVkq+rBRCyZPiv7sg29rS3InA079viJ+Hq66ok/zCb5l5IwbX33a
-         L5MJOb2HmV+nEBmQnKHWU8N4iTTj/R1ybaweUSmWbnPpHvxC4asbJ1mWeFVNhjFB/3
-         0Vz1Kll99v5Q09B/5GvGmG5xurXYCPS8TKLpsHFjySR69SwJ241JrVHdilFDOeNUDi
-         3dVs4SEQEoBWH5WK8ct6ecKEYQ3AsgICT3Gojfo1HE4LIDH8qovtrcALajPPRXJUBp
-         2s1vqJ8RBsrJw==
-Message-ID: <ea9504a8ae53acd504d03f6f4cad20b22df737d5.camel@kernel.org>
-Subject: Re: [PATCH v2] NFSv4: Always ask for type with READDIR
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Rick Macklem <rick.macklem@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Cedric Blancher <cedric.blancher@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Date:   Thu, 31 Aug 2023 17:33:29 -0400
-In-Reply-To: <CAM5tNy5DPqEQ5-dYrii4iWcFmHQV8jYDAe6WiYzxL+LmFZpx4A@mail.gmail.com>
-References: <82d1908e4f835a2f16a509a11b62b9d93ccb6cdf.1693424491.git.bcodding@redhat.com>
-         <f793a08ed0db7bbe292c8aa6ec7241178c111cab.camel@kernel.org>
-         <4eb846815a1cdd1a98e064305b57a890b46e2708.camel@hammerspace.com>
-         <f4837c30b2faedd6a736a19d93c79b93df230349.camel@kernel.org>
-         <CALXu0UekEaGhj6+CHEeq22K3sTxTxMJn=5fg9J0PjKmzB+WVrg@mail.gmail.com>
-         <a596dba822bba0733434fd234d335d01289bd567.camel@kernel.org>
-         <CAM5tNy5DPqEQ5-dYrii4iWcFmHQV8jYDAe6WiYzxL+LmFZpx4A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        with ESMTP id S231372AbjHaW3G (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 18:29:06 -0400
+Received: from sonic309-27.consmr.mail.ne1.yahoo.com (sonic309-27.consmr.mail.ne1.yahoo.com [66.163.184.153])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36322E6A
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 15:29:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1693520942; bh=v6K6x6pP5pq2t8foyzYb/b3yS47OHliT7nnAWOYQZK4=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=H/6BZuBa6IS1rMFu3lNxuwtn4aOnx9SCHth4DH0AW1bBljHZJtl6GxvSd+qwfiROjMlsUrbP+JGoZfHnYL6j/iAynL7lziAYJMGjo3KnbYceZneM8ymMcrl8ES/31CsbMzP5xVNXmroOO1TfxgaGZshvAdjQZdv/JAwpHef+5DctpgYUYam2HzjTFtRO3zfxukQawRk8iVK5o0v0QkoLVxqQE9CCxDRqgvXXi/XpVHNXEmAl0ESb8clYGLxgcUD5Is1wkbjVqfZAxShuyjLhScEdboDQov6JzOk4n76XHpqyb2veRWVsNI8fYG2CT4fFTpPsGaYsXW7je4EQhr8v6A==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1693520942; bh=LmnGU5ZBvK7PZ/p4LDcGtHBehYaGrUjrIRcDXkuk5Y0=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=iQxJWO6kmPZKd31AMamlpPD16Ep8ypo/r+EEe0/5ZkpbZRDSTvar9g6PNFbNkH2XbCNG4jqqjZfBmO9y39rjxixhjX6ZCtufBuQvOxZNhO2BLo+yhbLfrk+KgftlO8KjJVQzdKzO3WRfY2dfTqAEoE3DN514mIW818tPvEcWMd/5bgjNHJ1l0ABiFQv7CHNCOoUP4dzdLdY6X181+dJA2utMpmy3+R5wUUgeg6wKgfw/lNwOPZzq6sGFupNnIxNM3PfQ1OM4bQf/JuoFoSNzAjpJ1x4OtykGxa1Xm3axGoG7w7OGWN31cM8STXdPp7WIseZfzYD8YKx3fm9zK2puog==
+X-YMail-OSG: N73QA7gVM1kWM3D46sz.ItHF7ABxFA.xnYwxa7Nv_Ht2B6LeMAAtJU936IhSeR6
+ A_tOmplW2DGHS2y.JBe1s4fLk_.._XGaTuoI.mpTnQiI6BgdnSihypxgA617bLjgTFCDzUcn.HMm
+ ca8hMizqgrqqU4xJ9YaI2_Q7k2jTCv1CWSBYJZQeXwEpUlUX52igaFm0tnhvkiux8v6xRpr8sQIP
+ GqQohBp0gQiQ6GfL8rKbND4E8x5YDQb8htn68FxWhhw1jzRksXwNAM335pEyU7HS3nUrABhH5GCD
+ tYAOLC7FsYy_hdTHx0kpFfqd3tVv33PAY6JtQck.SWhftgFttzvmVpxinJ3qH_s1LQsZcMMq5LDi
+ 0FwVRQ5GvJLpVd6NXSrohHOObgnudKS7.ZZffquOH3NKtIE8JjPVDVkHi8mKqEicgNWZ2eVKIDCm
+ _iNjj68MZPrySVQqsH1r7tKwevO4jvfLb0QPm4FKDOaZa3qUE_d6vmBFxMhko2jSzNp61noY7oAr
+ E.k30Q8.mX4swJv7ysYJla9QOFbHtUQBBcyW59Jda25kQuT4EMlJHJBWOJOzXiHaHbab0AM7Duqr
+ gOm0leLAmv.o6Rg1.CIY0WGpHq2ze9KD3Y2_vClQAWXQIyMGQELk_OH2lvvKj7TuLpBeveBRvIPe
+ bMhaOdWuIToTUhFFtKLcTddO1UUwZfqGGbk_XIJb9xnv_u2hlVQr7XnxF5XKya0n_LqwfKuxuASo
+ Mbkeij9xxaLOYsXNtb3WbG2LI0zvZUU56X2HO2qQlPQtaIlB6ShOUutKP1ck0W_DMQGSmgThQ1bk
+ 2x.Ga0RyyGk0.Sg0qHK.5lMxQ16cYWifbJwDrE7cX_lcoKn7_Ckou_WIJlC6LodtaMqqEx5hozBc
+ DHFFecu2AgKiskIwqjmgeSWNdZpBP6y.USl6O6_8hQ2Y_B1KcVFRKy.wORp6tgiDxEarU2s6wRKd
+ PgonU4JLtc7WZ8vW0G3sb9Fga04a7xLhID1.Qf0n2sQWZe.FQ4HyDnyj88J2s.iN5Rt.FDt_YIp9
+ TlojaG2zMF8EOH_yZVnCIUDyH0BH_SEokxWw6.RB8NAm72trj_dprYFPCVYMQOviTjDtSULLKbuW
+ p5FqQo7gmStkrKty4P60J6EXrHlqO7sj4a.WXOE9EHHEakOCHWm8HEi4Uzo6r8eGXQ03yZP7etzW
+ 3jeTrLRTARylIkG1CbVRryHcxvSNnMiUhw6wk8NCdKXc0AxN3zh2QBuV_1psA25EL85O4cYRVFNG
+ R2HaF1y9xrEIL_TiPU5rf9xkcw.qZKhvjOxi_bvQ06E_LhCoRhrtgtGoX1p.3xFSWiNhj9yFeWmm
+ UzkQnLf5QhvKL9tj4hibNsWF_ehSXSzGZjyWqTeu8uM1irwW8lEDjadunWLR9nIcpfmQdOT9VBXI
+ 1JupBmYiFgVj1s0NDnwUtlz_G3MapE5U6._zoIMpOkGxmju3QGX0xCN9jLKRqoY9DBsnka3K4ml2
+ vBsbuRdQePlSK6_Y2lKAa1GSHBWeWZc_ygbFlq0ngXbW8HgHrm11PqNptub4Mp4MG68e2GcJ5Aml
+ Y1R8SCUG707U9thtOSkMkkhjKuEJIyoGYXDZYPlXzax_EAda84Om8IO_6VuLC6KNDN4xXDzQve27
+ HZOtjFheehhbUCsGTl4gRuM7k_qJiJKoI6r6tG3iH1T.q4ng13k7B9yFi_pD.zqzCeldN487J00Q
+ th9tSPCLgDuhW_JqT.eLvTqLq7G3JMKwtNRarwxTIveZvUR69tlObCaXh0RLRzHPA8OyxRkizesT
+ Ulfnk_5mmuQSJ7t3gFv8A.y7MJ68Zc72P_mSXGGQkbPY5sH7ziza5vh9F_Au3tH.q_1g_59zdDgT
+ 5aDSrvJoOaoT9EhHfK28eGBpJA4n5j1lkSKEefXWuCvdtrbMp7WSSvbK7oSq9AtR8pEf3P0WdQVZ
+ GI4LmjcF0f1z4BdMT8V13l20sw47mhKdyjYSdoZ0dH0DqQ0yfijjN8V_nqBBNvw.ADK2YLh26AYr
+ KR92JjMdCeXSYHdC9BnvUEQ16CI1_km1PP1qtqdbyVrUOXRMYWWnxWKurA6m7Bx6a0kKItyR62hT
+ swdDYatH_ZUO1hdmQp6Qqyj5Ce0Pzg.iMFwTINLfHclj_Gqf9rvRzts.mF.NjN.BrgOCFuLLg9mX
+ Zy2GQ2AJF1zA9c2U7eTb.TOYd5EJwl4zPBhwSdia8ieDPmoR3qQyVTkBdGW1DQQE5jlL_8FY8UmE
+ LI6Y1TL6N9IvQFCAvGDqyaVShtFZsb5rSe9y9DmZ21MbT3VHm.U2C8.u8HV0V2vFY
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: c31f14af-8255-4d6a-9539-64505abd1b35
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Thu, 31 Aug 2023 22:29:02 +0000
+Received: by hermes--production-bf1-865889d799-cgv22 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 7bed110bc26c66b842d85614bd6f1485;
+          Thu, 31 Aug 2023 22:29:00 +0000 (UTC)
+Message-ID: <473b1279-5b29-9bf7-3609-6da2bd44c84b@schaufler-ca.com>
+Date:   Thu, 31 Aug 2023 15:28:55 -0700
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.14.0
+Subject: Re: [PATCH v2 12/25] security: Introduce inode_post_setattr hook
+Content-Language: en-US
+To:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        viro@zeniv.linux.org.uk, brauner@kernel.org,
+        chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Stefan Berger <stefanb@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>
+References: <20230831104136.903180-1-roberto.sassu@huaweicloud.com>
+ <20230831104136.903180-13-roberto.sassu@huaweicloud.com>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20230831104136.903180-13-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.21763 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2023-08-31 at 13:08 -0700, Rick Macklem wrote:
-> On Thu, Aug 31, 2023 at 11:53=E2=80=AFAM Jeff Layton <jlayton@kernel.org>=
- wrote:
-> >=20
-> > CAUTION: This email originated from outside of the University of Guelph=
-. Do not click links or open attachments unless you recognize the sender an=
-d know the content is safe. If in doubt, forward suspicious emails to IThel=
-p@uoguelph.ca.
-> >=20
-> >=20
-> > On Thu, 2023-08-31 at 20:41 +0200, Cedric Blancher wrote:
-> > > On Thu, 31 Aug 2023 at 02:17, Jeff Layton <jlayton@kernel.org> wrote:
-> > > >=20
-> > > > On Wed, 2023-08-30 at 20:20 +0000, Trond Myklebust wrote:
-> > > > > On Wed, 2023-08-30 at 16:10 -0400, Jeff Layton wrote:
-> > > > > > On Wed, 2023-08-30 at 15:42 -0400, Benjamin Coddington wrote:
-> > > > > > > Again we have claimed regressions for walking a directory tre=
-e,
-> > > > > > > this time
-> > > > > > > with the "find" utility which always tries to optimize away a=
-sking
-> > > > > > > for any
-> > > > > > > attributes until it has a complete list of entries.  This beh=
-avior
-> > > > > > > makes
-> > > > > > > the readdir plus heuristic do the wrong thing, which causes a=
- storm
-> > > > > > > of
-> > > > > > > GETATTRs to determine each entry's type in order to continue =
-the
-> > > > > > > walk.
-> > > > > > >=20
-> > > > > > > For v4 add the type attribute to each READDIR request to incl=
-ude it
-> > > > > > > no
-> > > > > > > matter the heuristic.  This allows a simple `find` command to
-> > > > > > > proceed
-> > > > > > > quickly through a directory tree.
-> > > > > > >=20
-> > > > > >=20
-> > > > > > The important bit here is that with v4, we can fill out d_type =
-even
-> > > > > > when
-> > > > > > "plus" is false, at little cost. The downside is that non-plus
-> > > > > > READDIR
-> > > > > > replies will now be a bit larger on the wire. I think it's a
-> > > > > > worthwhile
-> > > > > > tradeoff though.
-> > > > >=20
-> > > > > The reason why we never did it before is that for many servers, i=
-t
-> > > > > forces them to go to the inode in order to retrieve the informati=
-on.
-> > > > >=20
-> > > > > IOW: You might as well just do readdirplus.
-> > > > >=20
-> > > >=20
-> > > > That makes total sense, given how this code has evolved.
-> > > >=20
-> > > > FWIW, the Linux NFS server already calls vfs_getattr for every dent=
-ry in
-> > > > a v4 READDIR reply regardless of what the client requests. It has t=
-o in
-> > > > order to detect junctions, so we're bringing in the inode no matter
-> > > > what. Fetching the type is trivial, so I don't see this as costing
-> > > > anything extra there.
-> > > >=20
-> > > > Mileage could vary on other servers with more synthetic filesystems=
-, but
-> > > > one would hope that most of them can also return the type cheaply.
-> > >=20
-> > > Do you have examples for such synthetic filesystems?
-> > >=20
-> >=20
-> > Synthetic is probably the wrong distinction here, actually.
-> >=20
-> > If looking up the inode type info is expensive, then you'll feel it her=
-e
-> > more with this change. That's true regardless of whether this is a
-> > "normal" or "synthetic" fs.
-> In case you are interested in an outsider's perspective...
-> I recently patched the FreeBSD server so that it did not need to
-> acquire a vnode to generate a Readdir reply if only the following
-> attributes are requested and the entry is not a directory.
-> (FreeBSD has a d_type field in its "struct dirent".)
-> RDAttr_error, Mounted_on_FileID, FileID, Type
-> --> Adding a requirement for Type to nordirplus would not
->      have any negative effect on the FreeBSD server.
->=20
-> This patch resulted in about a 5% improvement on Readdir RPC
-> response time for Readdirs only asking for the above attributes,
-> for some simple measurements I did using the FreeBSD client.
+On 8/31/2023 3:41 AM, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+>
+> In preparation for moving IMA and EVM to the LSM infrastructure, introduce
+> the inode_post_setattr hook.
 
+Would you please include some explanation of how an LSM would use this hook?
+You might start with a description of how it is used in IMA/EVM, and why that
+could be generally useful.
 
-Very nice!
-
-> I still need to acquire the vnode for directories, to check for
-> server file system mount points. I do not know if what you
-> refer as "junctions" are directory specific?
->=20
-
-The nfsref command looks like it only works on directories, but in the
-kernel code, I don't see where it enforces that it be a directory. You
-can have a file mountpoint in Linux, after all...
-
-Chuck (cc'ed) would know for sure... ;)
-
-> >=20
-> > I wouldn't expect a big performance hit from the Linux NFS server given
-> > that we'll almost certainly have that info in-core, but other servers
-> > (ganesha? some commercial servers?) could take a hit here.
-> > --
-> > Jeff Layton <jlayton@kernel.org>
-> >=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+>
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> ---
+>  fs/attr.c                     |  1 +
+>  include/linux/lsm_hook_defs.h |  2 ++
+>  include/linux/security.h      |  7 +++++++
+>  security/security.c           | 16 ++++++++++++++++
+>  4 files changed, 26 insertions(+)
+>
+> diff --git a/fs/attr.c b/fs/attr.c
+> index 431f667726c7..3c309eb456c6 100644
+> --- a/fs/attr.c
+> +++ b/fs/attr.c
+> @@ -486,6 +486,7 @@ int notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
+>  
+>  	if (!error) {
+>  		fsnotify_change(dentry, ia_valid);
+> +		security_inode_post_setattr(idmap, dentry, ia_valid);
+>  		ima_inode_post_setattr(idmap, dentry, ia_valid);
+>  		evm_inode_post_setattr(idmap, dentry, ia_valid);
+>  	}
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> index fdf075a6b1bb..995d30336cfa 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -136,6 +136,8 @@ LSM_HOOK(int, 0, inode_follow_link, struct dentry *dentry, struct inode *inode,
+>  LSM_HOOK(int, 0, inode_permission, struct inode *inode, int mask)
+>  LSM_HOOK(int, 0, inode_setattr, struct mnt_idmap *idmap, struct dentry *dentry,
+>  	 struct iattr *attr)
+> +LSM_HOOK(void, LSM_RET_VOID, inode_post_setattr, struct mnt_idmap *idmap,
+> +	 struct dentry *dentry, int ia_valid)
+>  LSM_HOOK(int, 0, inode_getattr, const struct path *path)
+>  LSM_HOOK(int, 0, inode_setxattr, struct mnt_idmap *idmap,
+>  	 struct dentry *dentry, const char *name, const void *value,
+> diff --git a/include/linux/security.h b/include/linux/security.h
+> index dcb3604ffab8..820899db5276 100644
+> --- a/include/linux/security.h
+> +++ b/include/linux/security.h
+> @@ -355,6 +355,8 @@ int security_inode_follow_link(struct dentry *dentry, struct inode *inode,
+>  int security_inode_permission(struct inode *inode, int mask);
+>  int security_inode_setattr(struct mnt_idmap *idmap,
+>  			   struct dentry *dentry, struct iattr *attr);
+> +void security_inode_post_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+> +				 int ia_valid);
+>  int security_inode_getattr(const struct path *path);
+>  int security_inode_setxattr(struct mnt_idmap *idmap,
+>  			    struct dentry *dentry, const char *name,
+> @@ -856,6 +858,11 @@ static inline int security_inode_setattr(struct mnt_idmap *idmap,
+>  	return 0;
+>  }
+>  
+> +static inline void
+> +security_inode_post_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+> +			    int ia_valid)
+> +{ }
+> +
+>  static inline int security_inode_getattr(const struct path *path)
+>  {
+>  	return 0;
+> diff --git a/security/security.c b/security/security.c
+> index 2b24d01cf181..764a6f28b3b9 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -2124,6 +2124,22 @@ int security_inode_setattr(struct mnt_idmap *idmap,
+>  }
+>  EXPORT_SYMBOL_GPL(security_inode_setattr);
+>  
+> +/**
+> + * security_inode_post_setattr() - Update the inode after a setattr operation
+> + * @idmap: idmap of the mount
+> + * @dentry: file
+> + * @ia_valid: file attributes set
+> + *
+> + * Update inode security field after successful setting file attributes.
+> + */
+> +void security_inode_post_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+> +				 int ia_valid)
+> +{
+> +	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+> +		return;
+> +	call_void_hook(inode_post_setattr, idmap, dentry, ia_valid);
+> +}
+> +
+>  /**
+>   * security_inode_getattr() - Check if getting file attributes is allowed
+>   * @path: file
