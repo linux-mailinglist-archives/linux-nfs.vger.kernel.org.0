@@ -2,92 +2,190 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFCEC78E779
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 09:59:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ECD478EA5A
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 12:42:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239650AbjHaH7T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Aug 2023 03:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43164 "EHLO
+        id S243656AbjHaKmy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Aug 2023 06:42:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241346AbjHaH7T (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 03:59:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5DF1A4;
-        Thu, 31 Aug 2023 00:59:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E460362B3B;
-        Thu, 31 Aug 2023 07:59:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5DFBC433C8;
-        Thu, 31 Aug 2023 07:59:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693468755;
-        bh=1IDargtq6F+yIc84SteCGwgylhMk1XwO1s/IaQI5xmY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gT5POzm8IpA/aBwRqaRgfXhzV5u+7f+9x8vGVcp4PF8KxEgaySyFBKLfIRZUXWekw
-         1ewxIkIIjVnn3/xN0ZIGIIjpj65f75P+3Vel8WwfGN2UL2KBcQg0m6KjGrLzYN7mfL
-         v89OwXNvNxxRxPTTk8Iu7C+1cK2z0Ow6XPZ49c1pB0QXfTkwypZmePHYrsgkSSRJ5M
-         IWhsBI7ZIWSJDg8qBqQwd18alxtHl1i85QIIcVMYYjhjxkg9JAAYzMqfD9wDm8Z5vF
-         p6nxYOe8HP40JBY/EiL2QAi5uUTOEYofvSXAzVgTphj+8n5JCdYQ+W25i9lAL61Qtg
-         tmzbuFu+kHNqg==
-From:   Christian Brauner <brauner@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        trond.myklebust@hammerspace.com, anna@kernel.org, jack@suse.cz,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] NFS: switch back to using kill_anon_super
-Date:   Thu, 31 Aug 2023 09:59:08 +0200
-Message-Id: <20230831-alphabet-exzess-305e114f6597@brauner>
+        with ESMTP id S230024AbjHaKmx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 06:42:53 -0400
+Received: from frasgout11.his.huawei.com (unknown [14.137.139.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FBFCF4;
+        Thu, 31 Aug 2023 03:42:50 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Rby9c3156z9xrdY;
+        Thu, 31 Aug 2023 18:30:44 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.204.63.22])
+        by APP1 (Coremail) with SMTP id LxC2BwBXC7t9bvBkiGfdAQ--.39787S2;
+        Thu, 31 Aug 2023 11:42:20 +0100 (CET)
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     viro@zeniv.linux.org.uk, brauner@kernel.org,
+        chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v2 00/25] security: Move IMA and EVM to the LSM infrastructure
+Date:   Thu, 31 Aug 2023 12:41:11 +0200
+Message-Id: <20230831104136.903180-1-roberto.sassu@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230831052940.256193-1-hch@lst.de>
-References: <20230831052940.256193-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1471; i=brauner@kernel.org; h=from:subject:message-id; bh=1IDargtq6F+yIc84SteCGwgylhMk1XwO1s/IaQI5xmY=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaR88HDTVnAxPZTV/95vXsWJ4IVa4keuK7zXm9Vo77z5iWhg 8eN1HaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABN50MbIcGXJjAOrazqmf1BLf5f0fc t+G4ZONu6/jbsnZ4Rf8T7f38nI8CDfRS2s4V7zl0/i+qxttYE2jeoqFRW3ZReYBPHk6cfwAgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: LxC2BwBXC7t9bvBkiGfdAQ--.39787S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxKF4xKr18uw15CrWrAr47Arb_yoW7Cr1fpF
+        sIga15JrykJFy7WrWfAF4xuF4SgFWrWrWUJrsxtry0y3Z0yr1FqFWjyryF9ry5GFW8Xr1v
+        q3W2v398ur1qvFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvlb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x
+        0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
+        rVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
+        IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x02
+        62kKe7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s
+        026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_
+        GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20x
+        vEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6xAIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2
+        z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvj
+        DU0xZFpf9x07jzE__UUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAGBF1jj5NcqQADsX
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=1.2 required=5.0 tests=BAYES_00,MAY_BE_FORGED,
+        RCVD_IN_DNSWL_BLOCKED,RDNS_DYNAMIC,SPF_HELO_NONE,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 31 Aug 2023 07:29:40 +0200, Christoph Hellwig wrote:
-> NFS switch to open coding kill_anon_super in 7b14a213890a
-> ("nfs: don't call bdi_unregister") to avoid the extra bdi_unregister
-> call.  At that point bdi_destroy was called in nfs_free_server and
-> thus it required a later freeing of the anon dev_t.  But since
-> 0db10944a76b ("nfs: Convert to separately allocated bdi") the bdi has
-> been free implicitly by the sb destruction, so this isn't needed
-> anymore.
-> 
-> [...]
+From: Roberto Sassu <roberto.sassu@huawei.com>
 
-This fix is needed to account for new changes to the generic super code.
-So I'll put this into the same set of fixes as the mtd superblock changes.
-The plan is to have this all fixed up before -rc1 is out.
+IMA and EVM are not effectively LSMs, especially due the fact that in the
+past they could not provide a security blob while there is another LSM
+active.
 
----
+That changed in the recent years, the LSM stacking feature now makes it
+possible to stack together multiple LSMs, and allows them to provide a
+security blob for most kernel objects. While the LSM stacking feature has
+some limitations being worked out, it is already suitable to make IMA and
+EVM as LSMs.
 
-Applied to the vfs.super branch of the vfs/vfs.git tree.
-Patches in the vfs.super branch should appear in linux-next soon.
+In short, while this patch set is big, it does not make any functional
+change to IMA and EVM. IMA and EVM functions are called by the LSM
+infrastructure in the same places as before (except ima_post_path_mknod()),
+rather being hardcoded calls, and the inode metadata pointer is directly
+stored in the inode security blob rather than in a separate rbtree.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+More specifically, patches 1-11 make IMA and EVM functions suitable to
+be registered to the LSM infrastructure, by aligning function parameters.
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+Patches 12-20 add new LSM hooks in the same places where IMA and EVM
+functions are called, if there is no LSM hook already.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+Patches 21-24 do the bulk of the work, remove hardcoded calls to IMA, EVM
+and integrity functions, register those functions in the LSM
+infrastructure, and let the latter call them. In addition, they also
+reserve one slot for EVM to supply an xattr to the inode_init_security
+hook.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.super
+Finally, patch 25 removes the rbtree used to bind metadata to the inodes,
+and instead reserve a space in the inode security blob to store the pointer
+to metadata. This also brings performance improvements due to retrieving
+metadata in constant time, as opposed to logarithmic.
 
-[1/1] NFS: switch back to using kill_anon_super
-      https://git.kernel.org/vfs/vfs/c/db80f8437753
+The patch set applies on top of lsm/next, commit 8e4672d6f902 ("lsm:
+constify the 'file' parameter in security_binder_transfer_file()")
+
+Changelog:
+
+v1:
+ - Drop 'evm: Complete description of evm_inode_setattr()', 'fs: Fix
+   description of vfs_tmpfile()' and 'security: Introduce LSM_ORDER_LAST',
+   they were sent separately (suggested by Christian Brauner)
+ - Replace dentry with file descriptor parameter for
+   security_inode_post_create_tmpfile()
+ - Introduce mode_stripped and pass it as mode argument to
+   security_path_mknod() and security_path_post_mknod()
+ - Use goto in do_mknodat() and __vfs_removexattr_locked() (suggested by
+   Mimi)
+ - Replace __lsm_ro_after_init with __ro_after_init
+ - Modify short description of security_inode_post_create_tmpfile() and
+   security_inode_post_set_acl() (suggested by Stefan)
+ - Move security_inode_post_setattr() just after security_inode_setattr()
+   (suggested by Mimi)
+ - Modify short description of security_key_post_create_or_update()
+   (suggested by Mimi)
+ - Add back exported functions ima_file_check() and
+   evm_inode_init_security() respectively to ima.h and evm.h (reported by
+   kernel robot)
+ - Remove extern from prototype declarations and fix style issues
+ - Remove unnecessary include of linux/lsm_hooks.h in ima_main.c and
+   ima_appraise.c
+
+Roberto Sassu (25):
+  ima: Align ima_inode_post_setattr() definition with LSM infrastructure
+  ima: Align ima_post_path_mknod() definition with LSM infrastructure
+  ima: Align ima_post_create_tmpfile() definition with LSM
+    infrastructure
+  ima: Align ima_file_mprotect() definition with LSM infrastructure
+  ima: Align ima_inode_setxattr() definition with LSM infrastructure
+  ima: Align ima_inode_removexattr() definition with LSM infrastructure
+  ima: Align ima_post_read_file() definition with LSM infrastructure
+  evm: Align evm_inode_post_setattr() definition with LSM infrastructure
+  evm: Align evm_inode_setxattr() definition with LSM infrastructure
+  evm: Align evm_inode_post_setxattr() definition with LSM
+    infrastructure
+  security: Align inode_setattr hook definition with EVM
+  security: Introduce inode_post_setattr hook
+  security: Introduce inode_post_removexattr hook
+  security: Introduce file_post_open hook
+  security: Introduce file_pre_free_security hook
+  security: Introduce path_post_mknod hook
+  security: Introduce inode_post_create_tmpfile hook
+  security: Introduce inode_post_set_acl hook
+  security: Introduce inode_post_remove_acl hook
+  security: Introduce key_post_create_or_update hook
+  ima: Move to LSM infrastructure
+  ima: Move IMA-Appraisal to LSM infrastructure
+  evm: Move to LSM infrastructure
+  integrity: Move integrity functions to the LSM infrastructure
+  integrity: Switch from rbtree to LSM-managed blob for
+    integrity_iint_cache
+
+ fs/attr.c                             |   5 +-
+ fs/file_table.c                       |   3 +-
+ fs/namei.c                            |  18 +-
+ fs/nfsd/vfs.c                         |   3 +-
+ fs/open.c                             |   1 -
+ fs/posix_acl.c                        |   5 +-
+ fs/xattr.c                            |   9 +-
+ include/linux/evm.h                   | 103 ----------
+ include/linux/ima.h                   | 136 -------------
+ include/linux/integrity.h             |  26 ---
+ include/linux/lsm_hook_defs.h         |  21 +-
+ include/linux/security.h              |  65 +++++++
+ security/integrity/evm/evm_main.c     | 104 ++++++++--
+ security/integrity/iint.c             |  92 +++------
+ security/integrity/ima/ima.h          |  11 ++
+ security/integrity/ima/ima_appraise.c |  37 +++-
+ security/integrity/ima/ima_main.c     |  76 ++++++--
+ security/integrity/integrity.h        |  44 ++++-
+ security/keys/key.c                   |  10 +-
+ security/security.c                   | 265 ++++++++++++++++----------
+ security/selinux/hooks.c              |   3 +-
+ security/smack/smack_lsm.c            |   4 +-
+ 22 files changed, 540 insertions(+), 501 deletions(-)
+
+-- 
+2.34.1
+
