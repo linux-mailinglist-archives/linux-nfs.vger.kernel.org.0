@@ -2,169 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 721A778F2CB
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 20:41:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E2CC78F2D6
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Aug 2023 20:42:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347075AbjHaSlY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Aug 2023 14:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38408 "EHLO
+        id S1345827AbjHaSmM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Aug 2023 14:42:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244547AbjHaSlX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 14:41:23 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B609E5D
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 11:41:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id E900ACE2029
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 18:41:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDAA8C433C8;
-        Thu, 31 Aug 2023 18:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693507277;
-        bh=Yz+WuNtngb7NMAqVAoUYGVR+Xln/kuntD/QGj+CVO2s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mkMmZl1t17ngWRl6G9+YjDmkUh4yFRUCGqYIT4A4XxjEeiJbB4JNWqkVSedM/Uzzq
-         omGopo3BIg8rt+/UByHZ6YSsp41OPCEubM5SrWRfp9o9gxYCUuLW7yPNXUzpTnqcAw
-         4bPbD0X5THCxZkgkJTEf91ouOo5VMJvBD1XOQVNxzeZl5IMY7Zo9el9hs/RRZAydOs
-         M5JFl1+1gz+6Ec+Xm1PiTKVbX1Ewr+UCbv3Jhba9LuxL22MTx5p+h0UrXwWQTezY8L
-         I0Wq9Z0S5+MWaidJvT/qmQ6QaWvQAl7thGr33owjb+KAWnOUqICKcNYJhymDuB7ciW
-         1BNW452MLsSpA==
-From:   Anna Schumaker <anna@kernel.org>
-To:     linux-nfs@vger.kernel.org, torvalds@linux-foundation.org
-Cc:     anna@kernel.org
-Subject: [GIT PULL] Please pull NFS Client changes for 6.6
-Date:   Thu, 31 Aug 2023 14:41:15 -0400
-Message-ID: <20230831184115.811493-1-anna@kernel.org>
-X-Mailer: git-send-email 2.42.0
+        with ESMTP id S1347093AbjHaSmL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Aug 2023 14:42:11 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1301FE6E
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 11:42:07 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-52bcd4db4bdso1562266a12.3
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Aug 2023 11:42:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693507325; x=1694112125; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cClgS35M8nNKct5YatDcxIYLYTKcfc1XrOU9xzcK1Ls=;
+        b=lVGcc5yLSALCBlXbDxSu3I5zFpzEtuU1+RkFzwM0vHCcAejD4tbbFtrfQ0BnhIilEP
+         ktTdVIcp2QzahLCa11b4Ok9d5Mwi8r4Dz+dIseVEWZIxcZ3AMVSiVbCyrUwr5sqCtsXj
+         bN2J3wdQNxRlz7dCq1AbJWXx2Ftx2br6P4IgpI98eFtw2OiWmfLN9NUYPM3UfG0lZo4G
+         sG++7We85tie4BQBNeeCB+hT0qreaXvcMYfGspO+/ZbtA1sbL16CgFTyK8rdCOOvrTPA
+         9Qm03GDcPICN+cBJMXkSDKEWLNxNMk4HEI7NKC+s6gHQBgtADMLwhESqhVlvnd/lbo0r
+         k4pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693507325; x=1694112125;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cClgS35M8nNKct5YatDcxIYLYTKcfc1XrOU9xzcK1Ls=;
+        b=LqQgy5farFS08mWXJLOyABSAkHyK+OKmqAVtHDllj0+KnCliQPMrmCKAb3h+uOx/9+
+         6tlhsiXYRPU7qGPRl3znh2Q/lIZwXseh69hPP0YEv/g9p5ajIc+tyBtxoo2X7UAaqaJl
+         VkD65gILlSYH2u/NDQr7UnLiAn8Xk7v9z6/bSqc/Pu68e+1VY/48CCQElTrJ0NkHSEli
+         LB2eFePcH/1Qqw+ppQXiccvrmRfOQjBMM12CjYzdtdbi7rKb9LLsj90h90uIwt9DlmpO
+         Tn7f7M55SbETfXiz2KBjn8RP9wKmU3FpYPfNPzEKbtkfmeo77gGsOGoRvyBlqtL04O2d
+         VmhQ==
+X-Gm-Message-State: AOJu0YxOmUu8I1dFxA+PmiJ+MVbMkmGxDJT4pk1aNKe6gRwSP7/7DlQV
+        PpO8qlzU0jAKV2p0+q4LyaisZJzJm/gg5sUZ/t/6Fi9JKHqS1Q==
+X-Google-Smtp-Source: AGHT+IG9jnTLzQxJSHszgzv7zeHjXawWgKmGbV7FdX6Z5uGfmn06dEVfPZteavFVfP28hnjV1ulre/Oj8JLRE38PAHE=
+X-Received: by 2002:a05:6402:12d7:b0:51d:d390:143f with SMTP id
+ k23-20020a05640212d700b0051dd390143fmr334436edx.5.1693507325110; Thu, 31 Aug
+ 2023 11:42:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <82d1908e4f835a2f16a509a11b62b9d93ccb6cdf.1693424491.git.bcodding@redhat.com>
+ <f793a08ed0db7bbe292c8aa6ec7241178c111cab.camel@kernel.org>
+ <4eb846815a1cdd1a98e064305b57a890b46e2708.camel@hammerspace.com> <f4837c30b2faedd6a736a19d93c79b93df230349.camel@kernel.org>
+In-Reply-To: <f4837c30b2faedd6a736a19d93c79b93df230349.camel@kernel.org>
+From:   Cedric Blancher <cedric.blancher@gmail.com>
+Date:   Thu, 31 Aug 2023 20:41:26 +0200
+Message-ID: <CALXu0UekEaGhj6+CHEeq22K3sTxTxMJn=5fg9J0PjKmzB+WVrg@mail.gmail.com>
+Subject: Re: [PATCH v2] NFSv4: Always ask for type with READDIR
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+On Thu, 31 Aug 2023 at 02:17, Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Wed, 2023-08-30 at 20:20 +0000, Trond Myklebust wrote:
+> > On Wed, 2023-08-30 at 16:10 -0400, Jeff Layton wrote:
+> > > On Wed, 2023-08-30 at 15:42 -0400, Benjamin Coddington wrote:
+> > > > Again we have claimed regressions for walking a directory tree,
+> > > > this time
+> > > > with the "find" utility which always tries to optimize away asking
+> > > > for any
+> > > > attributes until it has a complete list of entries.  This behavior
+> > > > makes
+> > > > the readdir plus heuristic do the wrong thing, which causes a storm
+> > > > of
+> > > > GETATTRs to determine each entry's type in order to continue the
+> > > > walk.
+> > > >
+> > > > For v4 add the type attribute to each READDIR request to include it
+> > > > no
+> > > > matter the heuristic.  This allows a simple `find` command to
+> > > > proceed
+> > > > quickly through a directory tree.
+> > > >
+> > >
+> > > The important bit here is that with v4, we can fill out d_type even
+> > > when
+> > > "plus" is false, at little cost. The downside is that non-plus
+> > > READDIR
+> > > replies will now be a bit larger on the wire. I think it's a
+> > > worthwhile
+> > > tradeoff though.
+> >
+> > The reason why we never did it before is that for many servers, it
+> > forces them to go to the inode in order to retrieve the information.
+> >
+> > IOW: You might as well just do readdirplus.
+> >
+>
+> That makes total sense, given how this code has evolved.
+>
+> FWIW, the Linux NFS server already calls vfs_getattr for every dentry in
+> a v4 READDIR reply regardless of what the client requests. It has to in
+> order to detect junctions, so we're bringing in the inode no matter
+> what. Fetching the type is trivial, so I don't see this as costing
+> anything extra there.
+>
+> Mileage could vary on other servers with more synthetic filesystems, but
+> one would hope that most of them can also return the type cheaply.
 
-The following changes since commit 53663f4103ff6738e4697004d6f84864d052333d:
+Do you have examples for such synthetic filesystems?
 
-  Merge tag 'nfs-for-6.5-2' of git://git.linux-nfs.org/projects/trondmy/linux-nfs (2023-08-22 10:50:17 -0700)
-
-are available in the Git repository at:
-
-  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.6-1
-
-for you to fetch changes up to c4a123d2e8c4dc91d581ee7d05c0cd51a0273fab:
-
-  pNFS: Fix assignment of xprtdata.cred (2023-08-30 14:31:31 -0400)
-
-----------------------------------------------------------------
-NFS CLient Updates for Linux 6.6
-
-New Features:
-  * Enable the NFS v4.2 READ_PLUS operation by default
-
-Stable Fixes:
-  * NFSv4/pnfs: minor fix for cleanup path in nfs4_get_device_info
-  * NFS: Fix a potential data corruption
-
-Bugfixes:
-  * Fix various READ_PLUS issues including:
-    * smatch warnings
-    * xdr size calculations
-    * scratch buffer handling
-    * 32bit / highmem xdr page handling
-  * Fix checkpatch errors in file.c
-  * Fix redundant readdir request after an EOF
-  * Fix handling of COPY ERR_OFFLOAD_NO_REQ
-  * Fix assignment of xprtdata.cred
-
-Cleanups:
-  * Remove unused xprtrdma function declarations
-  * Clean up an integer overflow check to avoid a warning
-  * Clean up #includes in dns_resolve.c
-  * Clean up nfs4_get_device_info so we don't pass a NULL pointer to __free_page()
-  * Clean up sunrpc TCP socket timeout configuration
-  * Guard against READDIR loops when entry names are too long
-  * Use EXCHID4_FLAG_USE_PNFS_DS for DS servers
-
-Thanks,
-Anna
-
-----------------------------------------------------------------
-Anna Schumaker (6):
-      NFSv4.2: Fix READ_PLUS smatch warnings
-      NFSv4.2: Fix READ_PLUS size calculations
-      NFSv4.2: Rework scratch handling for READ_PLUS (again)
-      SUNRPC: kmap() the xdr pages during decode
-      NFS: Enable the READ_PLUS operation by default
-      pNFS: Fix assignment of xprtdata.cred
-
-Benjamin Coddington (1):
-      NFS: Guard against READDIR loop when entry names exceed MAXNAMELEN
-
-Dan Carpenter (2):
-      SUNRPC: clean up integer overflow check
-      nfs/blocklayout: Use the passed in gfp flags
-
-Fedor Pchelkin (1):
-      NFSv4/pnfs: minor fix for cleanup path in nfs4_get_device_info
-
-GUO Zihua (1):
-      NFS: Move common includes outside ifdef
-
-Kinglong Mee (1):
-      nfs: fix redundant readdir request after get eof
-
-Olga Kornievskaia (2):
-      NFSv4.1: use EXCHGID4_FLAG_USE_PNFS_DS for DS server
-      NFSv4.2: fix handling of COPY ERR_OFFLOAD_NO_REQ
-
-Trond Myklebust (6):
-      NFS: Fix a potential data corruption
-      SUNRPC: Set the TCP_SYNCNT to match the socket timeout
-      SUNRPC: Refactor and simplify connect timeout
-      SUNRPC: Allow specification of TCP client connect timeout at setup
-      SUNRPC: Don't override connect timeouts in rpc_clnt_add_xprt()
-      NFS/pNFS: Set the connect timeout for the pNFS flexfiles driver
-
-Yue Haibing (1):
-      xprtrdma: Remove unused function declaration rpcrdma_bc_post_recv()
-
-huzhi001@208suo.com (1):
-      filemap: Fix errors in file.c
-
- fs/nfs/Kconfig                  |  6 ++---
- fs/nfs/blocklayout/dev.c        |  4 +--
- fs/nfs/client.c                 |  2 ++
- fs/nfs/dir.c                    | 15 ++++++++---
- fs/nfs/direct.c                 | 20 ++++++++++++++-
- fs/nfs/dns_resolve.c            | 14 +++++------
- fs/nfs/file.c                   |  2 +-
- fs/nfs/internal.h               |  3 +++
- fs/nfs/nfs2xdr.c                |  2 +-
- fs/nfs/nfs3client.c             |  3 +++
- fs/nfs/nfs3xdr.c                |  2 +-
- fs/nfs/nfs42.h                  |  1 +
- fs/nfs/nfs42proc.c              |  5 ++--
- fs/nfs/nfs42xdr.c               | 17 ++++++++-----
- fs/nfs/nfs4client.c             |  3 +++
- fs/nfs/nfs4proc.c               | 17 ++++---------
- fs/nfs/pnfs_dev.c               |  2 +-
- fs/nfs/pnfs_nfs.c               |  5 +++-
- fs/nfs/read.c                   | 10 ++++++++
- include/linux/sunrpc/clnt.h     |  2 ++
- include/linux/sunrpc/xdr.h      |  6 ++---
- include/linux/sunrpc/xprt.h     |  2 ++
- net/sunrpc/clnt.c               |  8 ++++++
- net/sunrpc/svc.c                |  2 ++
- net/sunrpc/xdr.c                | 27 +++++++++++++++++++-
- net/sunrpc/xprtrdma/xprt_rdma.h |  1 -
- net/sunrpc/xprtsock.c           | 55 ++++++++++++++++++++++++++++++-----------
- 27 files changed, 172 insertions(+), 64 deletions(-)
+Ced
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
