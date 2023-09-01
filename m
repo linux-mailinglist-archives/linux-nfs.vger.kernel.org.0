@@ -2,102 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF4F5790282
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Sep 2023 21:37:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B5A790305
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Sep 2023 22:59:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244941AbjIAThK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 Sep 2023 15:37:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33924 "EHLO
+        id S230180AbjIAU7Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 Sep 2023 16:59:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229750AbjIAThJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Sep 2023 15:37:09 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C1010E0;
-        Fri,  1 Sep 2023 12:37:06 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id B4F61CE247B;
-        Fri,  1 Sep 2023 19:37:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 849D7C433C7;
-        Fri,  1 Sep 2023 19:37:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693597022;
-        bh=XMuuQBVV2UQRiCaXUEOiDJLqO+1HAaVkGsWD9GVBhz4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=XYuLoXgP5P6LMfKtgfBri0uxpH9dI7GgTzVTH4j3utctNy7PbYKRU+1VjFsEQUBDF
-         DTl1KFh8GDE1qVd9aZ4bTPytR9za0ln4S0TtEetDZlz+AE5GBkiEmpAqkCQA9AmWH7
-         ejWKeQ9N8OyEnhxrMZ7HuC7DAJqb7hkd+NqyfAW49QHmYnBH0C27IpIxvozQrrA2li
-         OWC/EATVuOADyiz0RGA6cSqg7BgbsYbfv8VLdgVOa7ml2mpY2tUoJIOEBAAPZ8bhwx
-         zc9IRGpfXF3x1cQErtiEMGVAPrP+Om5rnRl0T1qoqksJmct3NIT4vlSd8g6r2LzwO1
-         2PBmaElMRtFpA==
-Message-ID: <a00bbc4466a517f81cd02bc1f72dce92a8b14ca2.camel@kernel.org>
-Subject: Re: [PATCH fstests v2 1/3] generic/294: don't run this test on NFS
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Zorro Lang <zlang@redhat.com>
-Cc:     fstests@vger.kernel.org, linux-nfs@vger.kernel.org
-Date:   Fri, 01 Sep 2023 15:37:01 -0400
-In-Reply-To: <20230901191944.lx3b643f2bwmcn3t@zlang-mailbox>
-References: <20230901-nfs-skip-v2-0-9eccd59bc524@kernel.org>
-         <20230901-nfs-skip-v2-1-9eccd59bc524@kernel.org>
-         <20230901191944.lx3b643f2bwmcn3t@zlang-mailbox>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        with ESMTP id S229866AbjIAU7P (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Sep 2023 16:59:15 -0400
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C11CC
+        for <linux-nfs@vger.kernel.org>; Fri,  1 Sep 2023 13:59:13 -0700 (PDT)
+Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-271b102659fso270750a91.0
+        for <linux-nfs@vger.kernel.org>; Fri, 01 Sep 2023 13:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1693601952; x=1694206752; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M7cDGgyfa2Glk635UI1GLZHAac+kZu33Xb540YFX6pY=;
+        b=sbWIn2RSNhA9oKNLMvqo48S9OWcGf51vcvesSsSBmCZuAmh138vLAqb9IN07nMrxkz
+         UzN8i4hYOUVYGHbVoCujc2FxofrdiN+TcjE3T0epM+SBdXk6EDji2wXU2eZhwkx6qyXM
+         G8YUZJm2VWjq9khZa1G/ove53Hr5JBLvoIx5j649EMvpjA33wes131faD/d4LXOPiSct
+         L1Gsw9mFHvt5hLRqOoaB68MUTNqQK5jRkShqmnw/wSqJOkGN2qGF5H3LwYCfpqD6z5kT
+         /XxQJVc1kt6BrC8T2ZN2OABW9mH7SZ595HdoJlIXQkNnG7B93Y7nyrifLYp3TEHgEt3D
+         EbSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693601952; x=1694206752;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M7cDGgyfa2Glk635UI1GLZHAac+kZu33Xb540YFX6pY=;
+        b=VXFUCXnffglmS3yNTVwgxS17IKFRSli+3lfzqffoxIbjRoCkvb2Yk/OL8nHB3kDPpj
+         KQQ4GB2QlCxvdMwoixpugfpTcmLwvWE6fKfAxlnB6CgQ5SjSMCNooaKaFydtTQGGrywd
+         HrOw6iL0AOHivP9AOj1kMX7IBejcx2S162CwmOnXG5UywmEo/x2UDalC0KmypiZr6dBQ
+         tuDYyj/Z/Bxxoj3IvvBvfMhaNIbJNB5B+2itRy6q9HbTO4dMLSyFrzyiqYCU2nfjMBJm
+         IDBbq3L7XEljX3WiCLkV59EUqT9+40bDijvMZaybO0PRAQpRb3N7uacdgHcBq42/RfJF
+         zE0A==
+X-Gm-Message-State: AOJu0YxcUWEPDojxTXUNrjEBCiAVjtq1oKdPP+k0BJyEWbQ9M85t5NOY
+        ehrIxRYhOImbyw+lL81amgvEQmpMkuHHjiNbdTENteM9u6fTOg==
+X-Google-Smtp-Source: AGHT+IHbjzLsVm8QBFSIlmNWesI9/Z/Ub5ErOE3Vo7ZgdYzwHtKeYB0artdOJBT/WZxOXIvcHAGHx9FGp0pWA+JWOgg=
+X-Received: by 2002:a17:90b:4a83:b0:26b:4e40:7be6 with SMTP id
+ lp3-20020a17090b4a8300b0026b4e407be6mr4810477pjb.20.1693601952004; Fri, 01
+ Sep 2023 13:59:12 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <CABXB=RSMkjoyshFZy5eGbuvAQfoHhFyQvReYNtO_+5f+OM66cA@mail.gmail.com>
+ <CABXB=RR=67b-sksfcrJotivc_9G0vTesP3qtz9T_8G3N3H-15A@mail.gmail.com>
+In-Reply-To: <CABXB=RR=67b-sksfcrJotivc_9G0vTesP3qtz9T_8G3N3H-15A@mail.gmail.com>
+From:   J David <j.david.lists@gmail.com>
+Date:   Fri, 1 Sep 2023 16:58:59 -0400
+Message-ID: <CABXB=RRWwQ5gDwC5gocftH9dPMvQLGcTV4jFnVcBZ15t=Sqd-A@mail.gmail.com>
+Subject: Re: Question about different gid management between versions
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 2023-09-02 at 03:19 +0800, Zorro Lang wrote:
-> On Fri, Sep 01, 2023 at 01:39:55PM -0400, Jeff Layton wrote:
-> > When creating a new dentry (of any type), NFS will optimize away any
-> > on-the-wire lookups prior to the create since that means an extra
-> > round trip to the server. Because of that, it consistently fails this
-> > test.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  tests/generic/294 | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/tests/generic/294 b/tests/generic/294
-> > index 406b1b3954b9..46c7001234a5 100755
-> > --- a/tests/generic/294
-> > +++ b/tests/generic/294
-> > @@ -15,8 +15,10 @@ _begin_fstest auto quick
-> > =20
-> >  # real QA test starts here
-> > =20
-> > -# Modify as appropriate.
-> > -_supported_fs generic
-> > +# NFS will optimize away the on-the-wire lookup before attempting to
-> > +# create a new file (since that means an extra round trip).
-> > +_supported_fs ^nfs generic
->=20
-> If we use black list, don't need to use "generic" to specify white list. =
-E.g.
->=20
->   $ grep -rsn _supported_fs tests/generic/|grep \\^
->   tests/generic/699:25:_supported_fs ^overlay
->   tests/generic/631:41:_supported_fs ^overlay
->   tests/generic/679:27:_supported_fs ^xfs
->   tests/generic/500:45:_supported_fs ^btrfs
->=20
-> Anyway, others look good to me, if no objection from nfs list, I can help
-> to merge this patchset without the "generic" :)
->=20
+A helpful person from this list gave me the clue needed to sort this
+out. They suggested summarizing it here for the possible benefit of a
+future person in my situation.
 
-Ok, I was looking at the _support_fs implementation and it looked like
-you needed a "generic" entry on the end or it wouldn't pass for other
-fs, but if you're sure, that sounds good to me.
+The issue was that while our Bullseye servers were fully up-to-date,
+they are also quite old.  They were originally installed back in the
+era when "--manage-gids" was not the default setting in
+/etc/default/nfs-kernel-server, and we have carried that forward ever
+since.  In the case of gid mismatches, that flag essentially governs
+whether an operation will use the client's gids for a uid (if not set)
+or the server's (if set).  Disabling that flag (for newly-installed
+older versions) or using the equivalent "manage-gids=n" in
+/etc/nfs.conf in the new version of nfs-kernel-server gets us the
+behavior we need.
+
+No one who has perfectly synchronized uids & gids between client and
+server would ever notice this, but since that's impossible in the
+workload I have to support, it makes quite a difference to us.
 
 Thanks!
---=20
-Jeff Layton <jlayton@kernel.org>
