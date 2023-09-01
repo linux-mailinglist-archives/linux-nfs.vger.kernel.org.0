@@ -2,60 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23B5A790305
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Sep 2023 22:59:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0236E790320
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Sep 2023 23:46:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230180AbjIAU7Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 Sep 2023 16:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59836 "EHLO
+        id S229994AbjIAVn5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 Sep 2023 17:43:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229866AbjIAU7P (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Sep 2023 16:59:15 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28C11CC
-        for <linux-nfs@vger.kernel.org>; Fri,  1 Sep 2023 13:59:13 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id 98e67ed59e1d1-271b102659fso270750a91.0
-        for <linux-nfs@vger.kernel.org>; Fri, 01 Sep 2023 13:59:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693601952; x=1694206752; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=M7cDGgyfa2Glk635UI1GLZHAac+kZu33Xb540YFX6pY=;
-        b=sbWIn2RSNhA9oKNLMvqo48S9OWcGf51vcvesSsSBmCZuAmh138vLAqb9IN07nMrxkz
-         UzN8i4hYOUVYGHbVoCujc2FxofrdiN+TcjE3T0epM+SBdXk6EDji2wXU2eZhwkx6qyXM
-         G8YUZJm2VWjq9khZa1G/ove53Hr5JBLvoIx5j649EMvpjA33wes131faD/d4LXOPiSct
-         L1Gsw9mFHvt5hLRqOoaB68MUTNqQK5jRkShqmnw/wSqJOkGN2qGF5H3LwYCfpqD6z5kT
-         /XxQJVc1kt6BrC8T2ZN2OABW9mH7SZ595HdoJlIXQkNnG7B93Y7nyrifLYp3TEHgEt3D
-         EbSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693601952; x=1694206752;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M7cDGgyfa2Glk635UI1GLZHAac+kZu33Xb540YFX6pY=;
-        b=VXFUCXnffglmS3yNTVwgxS17IKFRSli+3lfzqffoxIbjRoCkvb2Yk/OL8nHB3kDPpj
-         KQQ4GB2QlCxvdMwoixpugfpTcmLwvWE6fKfAxlnB6CgQ5SjSMCNooaKaFydtTQGGrywd
-         HrOw6iL0AOHivP9AOj1kMX7IBejcx2S162CwmOnXG5UywmEo/x2UDalC0KmypiZr6dBQ
-         tuDYyj/Z/Bxxoj3IvvBvfMhaNIbJNB5B+2itRy6q9HbTO4dMLSyFrzyiqYCU2nfjMBJm
-         IDBbq3L7XEljX3WiCLkV59EUqT9+40bDijvMZaybO0PRAQpRb3N7uacdgHcBq42/RfJF
-         zE0A==
-X-Gm-Message-State: AOJu0YxcUWEPDojxTXUNrjEBCiAVjtq1oKdPP+k0BJyEWbQ9M85t5NOY
-        ehrIxRYhOImbyw+lL81amgvEQmpMkuHHjiNbdTENteM9u6fTOg==
-X-Google-Smtp-Source: AGHT+IHbjzLsVm8QBFSIlmNWesI9/Z/Ub5ErOE3Vo7ZgdYzwHtKeYB0artdOJBT/WZxOXIvcHAGHx9FGp0pWA+JWOgg=
-X-Received: by 2002:a17:90b:4a83:b0:26b:4e40:7be6 with SMTP id
- lp3-20020a17090b4a8300b0026b4e407be6mr4810477pjb.20.1693601952004; Fri, 01
- Sep 2023 13:59:12 -0700 (PDT)
+        with ESMTP id S1350784AbjIAVmj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Sep 2023 17:42:39 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92CFE1FC4
+        for <linux-nfs@vger.kernel.org>; Fri,  1 Sep 2023 14:27:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 88F6CB8263A
+        for <linux-nfs@vger.kernel.org>; Fri,  1 Sep 2023 21:27:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01945C433C8;
+        Fri,  1 Sep 2023 21:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1693603648;
+        bh=2UwLvghTRLYp90etoAHUjh1QPfZfnDpXQaSvdBAmsM0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CFgRtP0wQCusHEwYL3+RaZ4D15zhTOBCIdxA4LBK4QIJFnBSGUVZy3t4vYq9friGm
+         m6c1nGV5wu/e3n7IWEUhbdKjJtJC2ZvfviQT/5bzFcKtXP9Barpv/s9+mzwAzCuTFp
+         uIuTzzUrIyRXELs0oYE/a8PL+tOjtmSc1CD37eKt/z7dGy2nvNemrLgOMq1Bf1ub7q
+         d9JNz2JKGFsBQRA4KNSJs8PLJHgVMK7ugcs2/aQSEahe0mMfcazBoVfDc980U8ubok
+         znVGm9Qu5n5A6vcPypR0ZFVah+uliHFMXdHGZ0D51UlcHMELsLPmWuZInmrverPhw+
+         Wc0jHKJnP6YCA==
+From:   trondmy@kernel.org
+To:     Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Fix error handling for O_DIRECT write scheduling
+Date:   Fri,  1 Sep 2023 17:21:21 -0400
+Message-ID: <20230901212121.3778-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-References: <CABXB=RSMkjoyshFZy5eGbuvAQfoHhFyQvReYNtO_+5f+OM66cA@mail.gmail.com>
- <CABXB=RR=67b-sksfcrJotivc_9G0vTesP3qtz9T_8G3N3H-15A@mail.gmail.com>
-In-Reply-To: <CABXB=RR=67b-sksfcrJotivc_9G0vTesP3qtz9T_8G3N3H-15A@mail.gmail.com>
-From:   J David <j.david.lists@gmail.com>
-Date:   Fri, 1 Sep 2023 16:58:59 -0400
-Message-ID: <CABXB=RRWwQ5gDwC5gocftH9dPMvQLGcTV4jFnVcBZ15t=Sqd-A@mail.gmail.com>
-Subject: Re: Question about different gid management between versions
-To:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -64,23 +51,139 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A helpful person from this list gave me the clue needed to sort this
-out. They suggested summarizing it here for the possible benefit of a
-future person in my situation.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The issue was that while our Bullseye servers were fully up-to-date,
-they are also quite old.  They were originally installed back in the
-era when "--manage-gids" was not the default setting in
-/etc/default/nfs-kernel-server, and we have carried that forward ever
-since.  In the case of gid mismatches, that flag essentially governs
-whether an operation will use the client's gids for a uid (if not set)
-or the server's (if set).  Disabling that flag (for newly-installed
-older versions) or using the equivalent "manage-gids=n" in
-/etc/nfs.conf in the new version of nfs-kernel-server gets us the
-behavior we need.
+If we fail to schedule a request for transmission, there are 2
+possibilities:
+1) Either we hit a fatal error, and we just want to drop the remaining
+   requests on the floor.
+2) We were asked to try again, in which case we should allow the
+   outstanding RPC calls to complete, so that we can recoalesce requests
+   and try again.
 
-No one who has perfectly synchronized uids & gids between client and
-server would ever notice this, but since that's impossible in the
-workload I have to support, it makes quite a difference to us.
+Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/direct.c | 62 ++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 46 insertions(+), 16 deletions(-)
 
-Thanks!
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 47d892a1d363..ee88f0a6e7b8 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -528,10 +528,9 @@ nfs_direct_write_scan_commit_list(struct inode *inode,
+ static void nfs_direct_write_reschedule(struct nfs_direct_req *dreq)
+ {
+ 	struct nfs_pageio_descriptor desc;
+-	struct nfs_page *req, *tmp;
++	struct nfs_page *req;
+ 	LIST_HEAD(reqs);
+ 	struct nfs_commit_info cinfo;
+-	LIST_HEAD(failed);
+ 
+ 	nfs_init_cinfo_from_dreq(&cinfo, dreq);
+ 	nfs_direct_write_scan_commit_list(dreq->inode, &reqs, &cinfo);
+@@ -549,27 +548,36 @@ static void nfs_direct_write_reschedule(struct nfs_direct_req *dreq)
+ 			      &nfs_direct_write_completion_ops);
+ 	desc.pg_dreq = dreq;
+ 
+-	list_for_each_entry_safe(req, tmp, &reqs, wb_list) {
++	while (!list_empty(&reqs)) {
++		req = nfs_list_entry(reqs.next);
+ 		/* Bump the transmission count */
+ 		req->wb_nio++;
+ 		if (!nfs_pageio_add_request(&desc, req)) {
+-			nfs_list_move_request(req, &failed);
+ 			spin_lock(&cinfo.inode->i_lock);
+-			dreq->flags = 0;
+-			if (desc.pg_error < 0)
++			if (dreq->error < 0) {
++				desc.pg_error = dreq->error;
++			} else if (desc.pg_error != -EAGAIN) {
++				dreq->flags = 0;
++				if (!desc.pg_error)
++					desc.pg_error = -EIO;
+ 				dreq->error = desc.pg_error;
+-			else
+-				dreq->error = -EIO;
++			} else
++				dreq->flags = NFS_ODIRECT_RESCHED_WRITES;
+ 			spin_unlock(&cinfo.inode->i_lock);
++			break;
+ 		}
+ 		nfs_release_request(req);
+ 	}
+ 	nfs_pageio_complete(&desc);
+ 
+-	while (!list_empty(&failed)) {
+-		req = nfs_list_entry(failed.next);
++	while (!list_empty(&reqs)) {
++		req = nfs_list_entry(reqs.next);
+ 		nfs_list_remove_request(req);
+ 		nfs_unlock_and_release_request(req);
++		if (desc.pg_error == -EAGAIN)
++			nfs_mark_request_commit(req, NULL, &cinfo, 0);
++		else
++			nfs_release_request(req);
+ 	}
+ 
+ 	if (put_dreq(dreq))
+@@ -794,9 +802,11 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ {
+ 	struct nfs_pageio_descriptor desc;
+ 	struct inode *inode = dreq->inode;
++	struct nfs_commit_info cinfo;
+ 	ssize_t result = 0;
+ 	size_t requested_bytes = 0;
+ 	size_t wsize = max_t(size_t, NFS_SERVER(inode)->wsize, PAGE_SIZE);
++	bool defer = false;
+ 
+ 	trace_nfs_direct_write_schedule_iovec(dreq);
+ 
+@@ -837,17 +847,37 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 				break;
+ 			}
+ 
+-			nfs_lock_request(req);
+-			if (!nfs_pageio_add_request(&desc, req)) {
+-				result = desc.pg_error;
+-				nfs_unlock_and_release_request(req);
+-				break;
+-			}
+ 			pgbase = 0;
+ 			bytes -= req_len;
+ 			requested_bytes += req_len;
+ 			pos += req_len;
+ 			dreq->bytes_left -= req_len;
++
++			if (defer) {
++				nfs_mark_request_commit(req, NULL, &cinfo, 0);
++				continue;
++			}
++
++			nfs_lock_request(req);
++			if (nfs_pageio_add_request(&desc, req))
++				continue;
++
++			/* Exit on hard errors */
++			if (desc.pg_error < 0 && desc.pg_error != -EAGAIN) {
++				result = desc.pg_error;
++				nfs_unlock_and_release_request(req);
++				break;
++			}
++
++			/* If the error is soft, defer remaining requests */
++			nfs_init_cinfo_from_dreq(&cinfo, dreq);
++			spin_lock(&cinfo.inode->i_lock);
++			dreq->flags = NFS_ODIRECT_RESCHED_WRITES;
++			spin_unlock(&cinfo.inode->i_lock);
++			nfs_unlock_request(req);
++			nfs_mark_request_commit(req, NULL, &cinfo, 0);
++			desc.pg_error = 0;
++			defer = true;
+ 		}
+ 		nfs_direct_release_pages(pagevec, npages);
+ 		kvfree(pagevec);
+-- 
+2.41.0
+
