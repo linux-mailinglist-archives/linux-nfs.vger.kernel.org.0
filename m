@@ -2,145 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CC8F790EF6
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Sep 2023 00:31:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD2BB790F4C
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Sep 2023 01:57:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346377AbjICWbG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 3 Sep 2023 18:31:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35224 "EHLO
+        id S241278AbjICX5a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 3 Sep 2023 19:57:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348066AbjICWbF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 3 Sep 2023 18:31:05 -0400
-Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A3210A
-        for <linux-nfs@vger.kernel.org>; Sun,  3 Sep 2023 15:30:56 -0700 (PDT)
-Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-1c4cf775a14so781421fac.3
-        for <linux-nfs@vger.kernel.org>; Sun, 03 Sep 2023 15:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1693780255; x=1694385055; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nv6YpToDNZJcA/Ccz8YHJKQ8zE37n7OYKvDh05ivZ8M=;
-        b=eLvFMZ6HweV3i75Mje3KyiQMHp72f3fVYJp4X8QBR1sUoWt5LbUe2oYe6gz7J03xSV
-         aHsv7iDil4KTnD32vRddboJhyW5dIQThpWZBfmdQlNdU/+SQKnZqTkI+8YNmhDFqSNM4
-         M/5uOEBZigGEpPC3vmfjiwnDFOd47IixsMl044OpUX7QG234XdFYwtba/jPyi6PCo/kZ
-         okP+nX6zzbLjyilv/Ocy1qCe5aC4gkdgDOfyh92JWGe8bVg+DmwjlPuuV3kM/V8mAkRG
-         YMrGVWwsvVs5uRT8A9BN8JD3DAOcyXyqtn49LxBGuGru+09OFjvSzk6tINPlQnplnbJD
-         r/Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693780255; x=1694385055;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nv6YpToDNZJcA/Ccz8YHJKQ8zE37n7OYKvDh05ivZ8M=;
-        b=MKLxHOmyW4Fdi7Gd4UR7Sn/V7UQZEHSJs9ZP6GK2rljyO4AH300qIB4pNv1OGQcSeG
-         67D9uHqq5LI7PmrWvwzCpHGrDRjzBrAkckfJyV0nX/KjMJdwKrTVJztAJxiNSO71qTFv
-         FCNVChWZ+NWy8AhzzrADF8bMMw8elEkcW7llbIL1XO4oZr2RKz0AmHmVDvVpI1V5GvDz
-         8VjyLTGokN8uE6O83wY3P0p8UF4BlDFKTRftJSRzwelaf5k1TmINGkFoRqxfI0sddXZT
-         YbHwZq2x8z8UMLN2HwPLlizwUfYbOi/9PxqjVGk71wlvDMwCmHn8uQR/oZgQCzjIgXre
-         IuIw==
-X-Gm-Message-State: AOJu0YyJAiZWxm4gFoBdMOX4DDkX91pi5ZaBiC7tYVsNZ8Bh+p9NHLwo
-        069Sw5trC+2KNs+uzhS/WhLIIg==
-X-Google-Smtp-Source: AGHT+IGLu9Ypqvz2HQH6Ke2apJHDtGTD5ZHmV6+9u1MT+8XuCmbNG2jkA6AQg79Zc5mY+kWQOWShIA==
-X-Received: by 2002:a05:6870:568d:b0:1be:c8e2:3ec3 with SMTP id p13-20020a056870568d00b001bec8e23ec3mr11536784oao.14.1693780255066;
-        Sun, 03 Sep 2023 15:30:55 -0700 (PDT)
-Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
-        by smtp.gmail.com with ESMTPSA id i15-20020a63bf4f000000b00565e96d9874sm5648132pgo.89.2023.09.03.15.30.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Sep 2023 15:30:54 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qcvcK-00ASFy-0F;
-        Mon, 04 Sep 2023 08:30:52 +1000
-Date:   Mon, 4 Sep 2023 08:30:52 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Hao Xu <hao.xu@linux.dev>
-Cc:     Matthew Wilcox <willy@infradead.org>, io-uring@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stefan Roesch <shr@fb.com>, Clay Harris <bugs@claycon.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
-        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, codalist@coda.cs.cmu.edu,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
-        Wanpeng Li <wanpengli@tencent.com>
-Subject: Re: [PATCH 07/11] vfs: add nowait parameter for file_accessed()
-Message-ID: <ZPUJHAKzxvXiEDYA@dread.disaster.area>
-References: <20230827132835.1373581-1-hao.xu@linux.dev>
- <20230827132835.1373581-8-hao.xu@linux.dev>
- <ZOvA5DJDZN0FRymp@casper.infradead.org>
- <c728bf3f-d9db-4865-8473-058b26c11c06@linux.dev>
- <ZO3cI+DkotHQo3md@casper.infradead.org>
- <642de4e6-801d-fcad-a7ce-bfc6dec3b6e5@linux.dev>
+        with ESMTP id S237477AbjICX53 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 3 Sep 2023 19:57:29 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F109AC4
+        for <linux-nfs@vger.kernel.org>; Sun,  3 Sep 2023 16:57:25 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id AAC2E1F37E;
+        Sun,  3 Sep 2023 23:57:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1693785444; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zDb9dKw2xucCAaJKQcLT6rx5yXErRDek4eb5FNIkiE8=;
+        b=Cjz5l/a+kYv+l4GKKi3ponujL4Roms8NmkzpjQPr+VK5OfqMH5/Wd74kBEEws2q6/njJqb
+        M5JvWdZjGbD+fiSnUMp2Dwp/sb4h1j6hQrb0Sjc6/Q2BuWEwrscn24+jfO2mWK3IoXvshh
+        8rPADlqS2t8y4ARNgUXeh4vOmwlZGKU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1693785444;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zDb9dKw2xucCAaJKQcLT6rx5yXErRDek4eb5FNIkiE8=;
+        b=I/yOMYzYhWrzhUoawXTykIR/K+K9JSjyqoFOXd8wtDRDdGhNiVPauaDHzcLPJcYjBbeeUf
+        5ytFjs4Q35W3fPAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 68B1E13413;
+        Sun,  3 Sep 2023 23:57:23 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 4qEYB2Md9WSoLwAAMHmgww
+        (envelope-from <neilb@suse.de>); Sun, 03 Sep 2023 23:57:23 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <642de4e6-801d-fcad-a7ce-bfc6dec3b6e5@linux.dev>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 05/10] lib: add light-weight queuing mechanism.
+In-reply-to: <ZO9ek4UI8sNETSdr@tissot.1015granger.net>
+References: <20230830025755.21292-1-neilb@suse.de>,
+ <20230830025755.21292-6-neilb@suse.de>,
+ <ZO9ek4UI8sNETSdr@tissot.1015granger.net>
+Date:   Mon, 04 Sep 2023 09:57:20 +1000
+Message-id: <169378544013.27865.12349454505654498043@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Aug 30, 2023 at 02:11:31PM +0800, Hao Xu wrote:
-> On 8/29/23 19:53, Matthew Wilcox wrote:
-> > On Tue, Aug 29, 2023 at 03:46:13PM +0800, Hao Xu wrote:
-> > > On 8/28/23 05:32, Matthew Wilcox wrote:
-> > > > On Sun, Aug 27, 2023 at 09:28:31PM +0800, Hao Xu wrote:
-> > > > > From: Hao Xu <howeyxu@tencent.com>
-> > > > > 
-> > > > > Add a boolean parameter for file_accessed() to support nowait semantics.
-> > > > > Currently it is true only with io_uring as its initial caller.
-> > > > 
-> > > > So why do we need to do this as part of this series?  Apparently it
-> > > > hasn't caused any problems for filemap_read().
-> > > > 
-> > > 
-> > > We need this parameter to indicate if nowait semantics should be enforced in
-> > > touch_atime(), There are locks and maybe IOs in it.
-> > 
-> > That's not my point.  We currently call file_accessed() and
-> > touch_atime() for nowait reads and nowait writes.  You haven't done
-> > anything to fix those.
-> > 
-> > I suspect you can trim this patchset down significantly by avoiding
-> > fixing the file_accessed() problem.  And then come back with a later
-> > patchset that fixes it for all nowait i/o.  Or do a separate prep series
-> 
-> I'm ok to do that.
-> 
-> > first that fixes it for the existing nowait users, and then a second
-> > series to do all the directory stuff.
-> > 
-> > I'd do the first thing.  Just ignore the problem.  Directory atime
-> > updates cause I/O so rarely that you can afford to ignore it.  Almost
-> > everyone uses relatime or nodiratime.
-> 
-> Hi Matthew,
-> The previous discussion shows this does cause issues in real
-> producations: https://lore.kernel.org/io-uring/2785f009-2ebb-028d-8250-d5f3a30510f0@gmail.com/#:~:text=fwiw%2C%20we%27ve%20just%20recently%20had%20similar%20problems%20with%20io_uring%20read/write
-> 
+On Thu, 31 Aug 2023, Chuck Lever wrote:
+> On Wed, Aug 30, 2023 at 12:54:48PM +1000, NeilBrown wrote:
+> > lwq is a FIFO single-linked queue that only requires a spinlock
+> > for dequeueing, which happens in process context.  Enqueueing is atomic
+> > with no spinlock and can happen in any context.
+> >=20
+> > Include a unit test for basic functionality - runs at boot time.  Does
+> > not use kunit framework.
+> >=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  include/linux/lwq.h | 120 +++++++++++++++++++++++++++++++++++
+> >  lib/Kconfig         |   5 ++
+> >  lib/Makefile        |   2 +-
+> >  lib/lwq.c           | 149 ++++++++++++++++++++++++++++++++++++++++++++
+> >  4 files changed, 275 insertions(+), 1 deletion(-)
+> >  create mode 100644 include/linux/lwq.h
+> >  create mode 100644 lib/lwq.c
+>=20
+> I've applied and/or squashed the previous four and pushed.
 
-Then separate it out into it's own patch set so we can have a
-discussion on the merits of requiring using noatime, relatime or
-lazytime for really latency sensitive IO applications. Changing code
-is not always the right solution...
+Thanks.
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>=20
+> I don't have any specific complaints on this one, but checkpatch
+> throws about 20 warnings. Some of those you might want to deal with
+> or just ignore. Up to you, but I'll hold off on applying it until I
+> hear from you.
+
+There are 5 "Avoid logging continuation" warnings that I cannot avoid.
+11 "Prefer FOO_{cont,info}(..) to printk" warnings that I don't think
+are relevant.  There is no "FOO" that is appropriate, and other testing
+code just uses printk.
+There is one "added file - does MAINTAINERS need updating?" warning.
+I don't know that we need a MAINTAINER for each little lib file (??)
+There is one "write a better help paragraph" warning, but I cannot
+think of anything useful to add,
+And 2 "memory barrier without comment" warnings where there *is* a
+comment, but it is one line to far away.
+
+So I don't want to fix any of those warnings. - thanks.
+
+>=20
+> Also, I'm trying to collect a set of potential reviewers for it:
+>=20
+> [cel@bazille even-releases]$ scripts/get_maintainer.pl lib/
+> Andrew Morton <akpm@linux-foundation.org> (commit_signer:206/523=3D39%)
+> "Liam R. Howlett" <Liam.Howlett@oracle.com> (commit_signer:89/523=3D17%,aut=
+hored:61/523=3D12%)
+> Kees Cook <keescook@chromium.org> (commit_signer:48/523=3D9%)
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> (commit_signer:48/523=3D9%)
+> David Gow <davidgow@google.com> (commit_signer:43/523=3D8%)
+> linux-kernel@vger.kernel.org (open list)
+> [cel@bazille even-releases]$
+>=20
+> Is that a reasonable set to add as Cc's?
+
+It would be hard to do better.  I had a look at history and it is mostly
+drive-by stuff.  A few have been funnelled through Andrew Morton because
+he is willing to take most things that don't have any other home.
+I doubt we'll get good review - but I've been surprised before.
+
+Thanks,
+NeilBrown
