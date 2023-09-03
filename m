@@ -2,42 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBBA1790CC0
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 Sep 2023 17:22:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECF8F790CC1
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Sep 2023 17:23:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231415AbjICPWB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 3 Sep 2023 11:22:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37208 "EHLO
+        id S232142AbjICPXB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 3 Sep 2023 11:23:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229970AbjICPWB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 3 Sep 2023 11:22:01 -0400
+        with ESMTP id S229970AbjICPXB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 3 Sep 2023 11:23:01 -0400
 Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67491F1
-        for <linux-nfs@vger.kernel.org>; Sun,  3 Sep 2023 08:21:55 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56596F1
+        for <linux-nfs@vger.kernel.org>; Sun,  3 Sep 2023 08:22:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
-        s=202305; t=1693754513;
-        bh=QMeZnV04dYfGiix7AosDHMUI3cZ6F+Vt4zBwig3niN8=;
-        h=Date:From:To:Subject:From;
-        b=pqk2GZEup8UyGYH4bRlbMqRp3WPaCkgJuGPQvF5Dl4HnYBgyAGsVLbFkKOh6vJgCO
-         pYTH6NRwziCvGqyq9gavF9AJHC1LqjQJ5PKyJrg7RvfKO7X0KAmnqWOpCLTNo42RCv
-         jjHUNvHfenTsGV2AJXidnAhkESqTrIymeoTq0teKrQ56CF7WexCUeccepUyWfrk+ul
-         MY/w/+phxl9YrnQiMmvpoFjNcmbwv2VzNWcYvm8F2OVV3u8NjfD9e/+NVl59T0poXt
-         P67oMmsfEOvJ0sRcU9+UyEnqFYmJBELLspJL7UJZSZLjtBiCOp+okBeloVgQdqwOlo
-         yXmU4rMOcF0GQ==
+        s=202305; t=1693754577;
+        bh=sxo5ccr1lY+PT2swNH9zD9KjzRy2UjHSRv9Vo0OLvIM=;
+        h=Date:From:To:Subject:References:In-Reply-To:From;
+        b=FK4Yus8OQ9k/2XyxDi+3Jn0+TqJQirritZxV3fJHjKoSi/6ZM0ApwzVGyThKlcq40
+         yfVVoeciYldI1qBBu1MccMd5ZE+Qj6PElvyLVQCivM0Ai8b6QWll2ZUxmGKZZLcIm4
+         j9EFKhIKaPTV/FkOZhNG8fVmvpmMtD2P4qCVrhqa1Ejcla+8UMqrV4STzowGJj06i8
+         v6ZfWswBQ1kO68d+c7sAuYUG4vgQejw6MrP4NZv3r8Frg/hZlInOsL/0+P+CIA5hOK
+         xWVi/ZR1kokSbfE23ceS0vHzw30JcZ7enUlBlfnyHwBZH8MPrtBrcuSJlF578Vu/KZ
+         /Q/i0h8ZGFDhg==
 Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
-        by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 9B989B434
-        for <linux-nfs@vger.kernel.org>; Sun,  3 Sep 2023 17:21:53 +0200 (CEST)
-Date:   Sun, 3 Sep 2023 17:21:52 +0200
+        by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id 08CB9B3B0
+        for <linux-nfs@vger.kernel.org>; Sun,  3 Sep 2023 17:22:57 +0200 (CEST)
+Date:   Sun, 3 Sep 2023 17:22:55 +0200
 From:   Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= 
         <nabijaczleweli@nabijaczleweli.xyz>
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH nfs-utils 1/2] fsidd: call anonymous sockets by their name
- only, don't fill with NULs to 108 bytes
-Message-ID: <04f3fe71defa757d518468f04f08334a5d0dfbb9.1693754442.git.nabijaczleweli@nabijaczleweli.xyz>
+Subject: [PATCH nfs-utils 2/2] testlk: format off_t as llong instead of
+ ssize_t
+Message-ID: <44adec629186e220ee5d8fd936980ac4a33dc510.1693754442.git.nabijaczleweli@nabijaczleweli.xyz>
+References: <04f3fe71defa757d518468f04f08334a5d0dfbb9.1693754442.git.nabijaczleweli@nabijaczleweli.xyz>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="aoy7vmz74ya75bx2"
+        protocol="application/pgp-signature"; boundary="7f633dn6vbuj36yp"
 Content-Disposition: inline
+In-Reply-To: <04f3fe71defa757d518468f04f08334a5d0dfbb9.1693754442.git.nabijaczleweli@nabijaczleweli.xyz>
 User-Agent: NeoMutt/20230517
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
@@ -49,137 +51,105 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
---aoy7vmz74ya75bx2
+--7f633dn6vbuj36yp
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Since e00ab3c0616fe6d83ab0710d9e7d989c299088f7, ss -l looks like this:
-  u_seq               LISTEN                0                     5        =
-                            @/run/fsid.sock@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 26989379     =
-                                                  * 0
-with fsidd pushing all the addresses to 108 bytes wide, which is deeply
-egregious if you don't filter it out and recolumnate.
+This, naturally, produces a warning on x32 (and other ILP32 platforms
+with 64-bit off_t, presumably, but you need to ask for it explicitly
+there usually):
+gcc -DHAVE_CONFIG_H -I. -I../../support/include  -D_GNU_SOURCE -Wdate-time =
+-D_FORTIFY_SOURCE=3D2 -D_GNU_SOURCE -g -O2 -ffile-prefix-map=3D/tmp/nfs-uti=
+ls-2.6.3=3D. -specs=3D/usr/share/dpkg/pie-compile.specs -fstack-protector-s=
+trong -Wformat -Werror=3Dformat-security -g -O2 -ffile-prefix-map=3D/tmp/nf=
+s-utils-2.6.3=3D. -specs=3D/usr/share/dpkg/pie-compile.specs -fstack-protec=
+tor-strong -Wformat -Werror=3Dformat-security -c -o testlk-testlk.o `test -=
+f 'testlk.c' || echo './'`testlk.c
+testlk.c: In function =E2=80=98main=E2=80=99:
+testlk.c:84:66: warning: format =E2=80=98%zd=E2=80=99 expects argument of t=
+ype =E2=80=98signed size_t=E2=80=99, but argument 4 has type =E2=80=98__off=
+_t=E2=80=99 {aka =E2=80=98long long int=E2=80=99} [-Wformat=3D]
+   84 |                         printf("%s: conflicting lock by %d on (%zd;=
+%zd)\n",
+      |                                                                ~~^
+      |                                                                  |
+      |                                                                  int
+      |                                                                %lld
+   85 |                                 fname, fl.l_pid, fl.l_start, fl.l_l=
+en);
+      |                                                  ~~~~~~~~~~
+      |                                                    |
+      |                                                    __off_t {aka lon=
+g long int}
+testlk.c:84:70: warning: format =E2=80=98%zd=E2=80=99 expects argument of t=
+ype =E2=80=98signed size_t=E2=80=99, but argument 5 has type =E2=80=98__off=
+_t=E2=80=99 {aka =E2=80=98long long int=E2=80=99} [-Wformat=3D]
+   84 |                         printf("%s: conflicting lock by %d on (%zd;=
+%zd)\n",
+      |                                                                    =
+~~^
+      |                                                                    =
+  |
+      |                                                                    =
+  int
+      |                                                                    =
+%lld
+   85 |                                 fname, fl.l_pid, fl.l_start, fl.l_l=
+en);
+      |                                                              ~~~~~~=
+~~
+      |                                                                |
+      |                                                                __of=
+f_t {aka long long int}
 
-This is because, naturally (unix(7)), "Null bytes in the name have
-no special significance": abstract addresses are binary blobs, but
-paths automatically terminate at the first NUL byte, since paths
-can't contain those.
+Upcast to long long, doesn't really matter.
 
-So just specify the correct address length when we're using the abstract do=
-main:
-unix(7) recommends "offsetof(struct sockaddr_un, sun_path) + strlen(sun_pat=
-h) + 1"
-for paths, but we don't want to include the terminating NUL, so it's just
-"offsetof(struct sockaddr_un, sun_path) + strlen(sun_path)".
-This brings the width back to order:
--- >8 --
-$ ss -la | grep @
-u_str ESTAB     0      0      @45208536ec96909a/bus/systemd-timesyn/bus-api=
--timesync 18500238                            * 18501249
-u_str ESTAB     0      0       @fecc9657d2315eb7/bus/systemd-network/bus-ap=
-i-network 18495452                            * 18494406
-u_seq LISTEN    0      5                                             @/run/=
-fsid.sock 27168796                            * 0
-u_str ESTAB     0      0                 @ac308f35f50797a2/bus/systemd-logi=
-nd/system 19406                               * 15153
-u_str ESTAB     0      0                @b6606e0dfacbae75/bus/systemd/bus-a=
-pi-system 18494353                            * 18495334
-u_str ESTAB     0      0                    @5880653d215718a7/bus/systemd/b=
-us-system 26930876                            * 26930003
--- >8 --
+It does, of course, raise the question of whether other bits of
+nfs-utils do something equally broken that just isn't caught by the
+format validator.
 
-Fixes: e00ab3c0616fe6d83ab0710d9e7d989c299088f7 ("fsidd: provide
- better default socket name.")
 Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
 ---
- support/reexport/fsidd.c    | 8 +++++---
- support/reexport/reexport.c | 7 +++++--
- 2 files changed, 10 insertions(+), 5 deletions(-)
+ tools/locktest/testlk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/support/reexport/fsidd.c b/support/reexport/fsidd.c
-index d4b245e8..4c377415 100644
---- a/support/reexport/fsidd.c
-+++ b/support/reexport/fsidd.c
-@@ -171,10 +171,12 @@ int main(void)
- 	memset(&addr, 0, sizeof(struct sockaddr_un));
- 	addr.sun_family =3D AF_UNIX;
- 	strncpy(addr.sun_path, sock_file, sizeof(addr.sun_path) - 1);
--	if (addr.sun_path[0] =3D=3D '@')
-+	socklen_t addr_len =3D sizeof(struct sockaddr_un);
-+	if (addr.sun_path[0] =3D=3D '@') {
- 		/* "abstract" socket namespace */
-+		addr_len =3D offsetof(struct sockaddr_un, sun_path) + strlen(addr.sun_pa=
-th);
- 		addr.sun_path[0] =3D 0;
--	else
-+	} else
- 		unlink(sock_file);
-=20
- 	srv =3D socket(AF_UNIX, SOCK_SEQPACKET | SOCK_NONBLOCK, 0);
-@@ -183,7 +185,7 @@ int main(void)
- 		return 1;
+diff --git a/tools/locktest/testlk.c b/tools/locktest/testlk.c
+index ea51f788..c9bd6bac 100644
+--- a/tools/locktest/testlk.c
++++ b/tools/locktest/testlk.c
+@@ -81,8 +81,8 @@ main(int argc, char **argv)
+ 		if (fl.l_type =3D=3D F_UNLCK) {
+ 			printf("%s: no conflicting lock\n", fname);
+ 		} else {
+-			printf("%s: conflicting lock by %d on (%zd;%zd)\n",
+-				fname, fl.l_pid, fl.l_start, fl.l_len);
++			printf("%s: conflicting lock by %d on (%lld;%lld)\n",
++				fname, fl.l_pid, (long long)fl.l_start, (long long)fl.l_len);
+ 		}
+ 		return 0;
  	}
-=20
--	if (bind(srv, (const struct sockaddr *)&addr, sizeof(struct sockaddr_un))=
- =3D=3D -1) {
-+	if (bind(srv, (const struct sockaddr *)&addr, addr_len) =3D=3D -1) {
- 		xlog(L_WARNING, "Unable to bind %s: %m\n", sock_file);
- 		return 1;
- 	}
-diff --git a/support/reexport/reexport.c b/support/reexport/reexport.c
-index d9a700af..b7ee6f46 100644
---- a/support/reexport/reexport.c
-+++ b/support/reexport/reexport.c
-@@ -40,9 +40,12 @@ static bool connect_fsid_service(void)
- 	memset(&addr, 0, sizeof(struct sockaddr_un));
- 	addr.sun_family =3D AF_UNIX;
- 	strncpy(addr.sun_path, sock_file, sizeof(addr.sun_path) - 1);
--	if (addr.sun_path[0] =3D=3D '@')
-+	socklen_t addr_len =3D sizeof(struct sockaddr_un);
-+	if (addr.sun_path[0] =3D=3D '@') {
- 		/* "abstract" socket namespace */
-+		addr_len =3D offsetof(struct sockaddr_un, sun_path) + strlen(addr.sun_pa=
-th);
- 		addr.sun_path[0] =3D 0;
-+	}
-=20
- 	s =3D socket(AF_UNIX, SOCK_SEQPACKET, 0);
- 	if (s =3D=3D -1) {
-@@ -50,7 +53,7 @@ static bool connect_fsid_service(void)
- 		return false;
- 	}
-=20
--	ret =3D connect(s, (const struct sockaddr *)&addr, sizeof(struct sockaddr=
-_un));
-+	ret =3D connect(s, (const struct sockaddr *)&addr, addr_len);
- 	if (ret =3D=3D -1) {
- 		xlog(L_WARNING, "Unable to connect %s: %m, is fsidd running?\n", sock_fi=
-le);
- 		return false;
 --=20
 2.40.1
 
-
---aoy7vmz74ya75bx2
+--7f633dn6vbuj36yp
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmT0pI4ACgkQvP0LAY0m
-WPGd2A//elhUHyLHrMXiEfRiLshSMoI1HR+PIShp6YnKL+gc7ZNl8/FogQls0xk/
-57Hlk8Cj9SnhaXnPCCcu70/BlQtAvZfEx4Q3Lj3kI1mk5WiLXVccz1lgteW6Q7/C
-wZBLgwuhPVhl8Gj3Ps7VTLxckGVOmJRDxgc580kngHCIPauDSfNMH9nxlcCJIHTb
-JdJDU7ZXzHq48WqRrbzMiPE0JyHpxQ8LNZ7bgb6qS7UmgADbOAwIVjL3u+LENl17
-PPkx2XtIRx/FPijwPpYYr6/167dBq0vrzJC60NLaDYZr9GHr2PFwx/tAn9mLrh1F
-RkT84ihDtOO9ngziRurV/4Chq5VtZSCQCZp7lijdY4vNUG/zOamPfOrxx72iGyVO
-ZK9FyDojKt6ByggW/6SlOb+iK6XGRj/YhnTUfOfXiZ00KfuC/W1Yxr8DXgrsmbBJ
-EKKLt4AFY9XuHam0uE5qC1Rvbi04aCAZpepY4+oSt84M8GC3PNZB+z+e5TfVr1m7
-dElUW8XZKLVKIpF04cFdANcFB6eUqzxm2zqJpMapH4dAuff4NkHlg/qP604y1y9O
-i3/GU+0Wm3AqVobwFwXGYjONhHS7EqoHEszaY52lfqkNQlR/luy+SX21uh7PW4RR
-KOLfjFIYXds5l/4vW55BYFVm8UwQ4JQXkp6lq64XcipZ6xP3bsM=
-=Tg3r
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmT0pM8ACgkQvP0LAY0m
+WPGlaw//Sp1k5Q9ExR8lPwzh7Ib27boQD7lAWEWRnxombn46j18jxur9dBLcJ6h9
++puyN0X0xih2l30x5FOIlgk4BbJv+2UiwwsYCqZqvc81vbFAMU1qlTUSMIVdHGwI
+edHTxPDuS2j3NBp5nG79Gob9C4TSQdypV1tvw37KCzsiSX52nStU54CoxroisapH
+FN3+wcxP9s9x+Oc7lrUlEgWl6gSvcS5R0+LZ3EL67Dl2h7eEi2wSWxy7eXFePEdo
+Lwcch9+8BJRKDkLgSoiqRH+B3gYbxNdqDgJHutXeQ8nqwmocMgP8gINN2XL0JpCH
+BQZvwvkBqK/SFGmvdhPVYK5Nlh99lnkbSZEckgfb00rL8/eRX+3wp/L7AM9VzQj8
+kq8BByKEOxpJVMERFM75t7Oz3xj8G1CAn5unnC0EvwEugLwDv8cTFGA64KJ6ya3T
+nEeM4wb6YhV3vsm7008F0rIBVLRv+fDfxVuML/2kidk1eZhtOlLI6tTuG1SVOIA+
+J/PIAetAjAcs487iZtW3VJ0v4Sbl6nBiIyHIEfZ9hSA3ymWTYF/fh18ZxuzcoHXj
+EBsztwu4CpNmPcPxsPBQP8V8O+eIyIfBWMkQxqlqkZoZgX+zQKdcid12TbNgCe05
+Ki/gFhzfvAfg2Q3qPePfkvCplNmUPsyetlSEOwikf66TF2IY9DU=
+=rnQW
 -----END PGP SIGNATURE-----
 
---aoy7vmz74ya75bx2--
+--7f633dn6vbuj36yp--
