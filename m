@@ -2,297 +2,390 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0122E790F5C
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Sep 2023 02:35:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E270790F82
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Sep 2023 03:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233500AbjIDAfU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 3 Sep 2023 20:35:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55262 "EHLO
+        id S1350244AbjIDBC6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 3 Sep 2023 21:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231361AbjIDAfU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 3 Sep 2023 20:35:20 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9308D3
-        for <linux-nfs@vger.kernel.org>; Sun,  3 Sep 2023 17:35:16 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id E24041F38C;
-        Mon,  4 Sep 2023 00:35:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1693787714; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SlVxjqftMmNGdp6VRIysAfAuTPdpcXaK8P1eHT6Ei10=;
-        b=cp9XF3CM8E+Whxh462kYPNYsrlB72GodCv36jfsIV5I/gUW7cKCzupnYpAbhiBfHRx0CHy
-        QDC6i4lKo4uXkpE+r0yIkf3yPxS9qiWYQixxsYRZ3x9ZkVboW/1yxa8YQVy72c9EbjT2va
-        sch2ykMcV5IurfhqQ1BoqSk/hAK8oeU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1693787714;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SlVxjqftMmNGdp6VRIysAfAuTPdpcXaK8P1eHT6Ei10=;
-        b=CoK7loiohcfLqnS8J26gh9ZCvwVq8W8O70yhs+DlA+CSZ/kXH4yer1iNei9+wpcY0FBm+v
-        l7wAupyqLhOavLCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A2FFD134B2;
-        Mon,  4 Sep 2023 00:35:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 0ANVFUEm9WToOAAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 04 Sep 2023 00:35:13 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S239882AbjIDBC5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 3 Sep 2023 21:02:57 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E50E91B5
+        for <linux-nfs@vger.kernel.org>; Sun,  3 Sep 2023 18:02:36 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1bf55a81eeaso2041525ad.0
+        for <linux-nfs@vger.kernel.org>; Sun, 03 Sep 2023 18:02:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1693789356; x=1694394156; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7SkjlWpTOnFF4QpgAAxUR7lqv3IHtXsX9Ov+YWVrmXw=;
+        b=qC164uBpiTqMDgXCvRgiQKt4Gh699N5mZOL/vYt7en0Jbwz76nMzEY83UKBVSQIW6l
+         aeb79T1fQrqEYwAnWqEg0BUEVogsLmyDn7Er7QB5MMmb3evyGFkJ31LnyaFbCd66DWcw
+         2rEqHGNd94yLw2873vPlsxfffzMVRPFxi+gQvuhDp/nt+kHeFVOC7RU50NpTqz237x8d
+         0EgVDl7W9L5GKWAUtPLGkVf3nghZNwTKtocs80JusMNZMyy2xNrwPVPtVOWAc9Ov7Ec+
+         l+Jy4wlPaRYKxlaBf+eoyU6yz7sgMqtArlqAkIUtWnDR1tDFWMVYywwL0pwAGBUewBHm
+         OWuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693789356; x=1694394156;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7SkjlWpTOnFF4QpgAAxUR7lqv3IHtXsX9Ov+YWVrmXw=;
+        b=Tp1c63Ziffi3NKg9q39KZDwL1WAYpiOpto/UKkKsiFxfhcij8qa0rDdsAjt1fMRxRf
+         ZQDzUCFD/EqG7h69wYyPrSSnYUtcyXMTr4Q5rtX2T++0RGiE9uhlyZWa4wd9nPaqlvgv
+         xLZs77nAOVsXjytCMG5EBZjpWRW7H7eqLdYOHLlZ+iZgZq3jSJtQbLunft3cCVpOTRxg
+         d5plxECPEUzQVckEzm8ix1a1dOv5Il+qotUAZHTpDMBhLu4eVAVdPyybtnt3xkds2r5L
+         HLik8H5IAYcr42AGoG8htQhn0AJGbo7Yz0+gW1+YDfjFsxEcJ70XmpNefspcetKHSIRL
+         19oQ==
+X-Gm-Message-State: AOJu0YxSDIEIgTQdXXuK7sVjlmwvko3nLscYYqVZWZc7UMasLrkdKDM2
+        Ry6STwF1uueNmgkbkgcZQXPuWQ==
+X-Google-Smtp-Source: AGHT+IGGrky2P+bBuH4AKgWBeYdqXOP6u+qaOJyeKMBTbWb7BRdsdnk0jjxmGVwySX0sZe8eaRNDcw==
+X-Received: by 2002:a17:902:ecc8:b0:1c1:fe97:bf34 with SMTP id a8-20020a170902ecc800b001c1fe97bf34mr8040994plh.24.1693789355853;
+        Sun, 03 Sep 2023 18:02:35 -0700 (PDT)
+Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
+        by smtp.gmail.com with ESMTPSA id d4-20020a170902c18400b001bdcafcf8d3sm6351806pld.69.2023.09.03.18.02.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Sep 2023 18:02:35 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1qcxz6-00AVA9-2L;
+        Mon, 04 Sep 2023 11:02:32 +1000
+Date:   Mon, 4 Sep 2023 11:02:32 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Hao Xu <hao.xu@linux.dev>
+Cc:     io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Roesch <shr@fb.com>, Clay Harris <bugs@claycon.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
+        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-unionfs@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, codalist@coda.cs.cmu.edu,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
+        Wanpeng Li <wanpengli@tencent.com>
+Subject: Re: [PATCH 02/11] xfs: add NOWAIT semantics for readdir
+Message-ID: <ZPUsqGfeUwupdlLE@dread.disaster.area>
+References: <20230827132835.1373581-1-hao.xu@linux.dev>
+ <20230827132835.1373581-3-hao.xu@linux.dev>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 06/10] SUNRPC: only have one thread waking up at a time
-In-reply-to: <ZO9gHCfWzH+kegrw@tissot.1015granger.net>
-References: <20230830025755.21292-1-neilb@suse.de>,
- <20230830025755.21292-7-neilb@suse.de>,
- <ZO9gHCfWzH+kegrw@tissot.1015granger.net>
-Date:   Mon, 04 Sep 2023 10:35:10 +1000
-Message-id: <169378771006.27865.5331797570871156115@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230827132835.1373581-3-hao.xu@linux.dev>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 31 Aug 2023, Chuck Lever wrote:
-> On Wed, Aug 30, 2023 at 12:54:49PM +1000, NeilBrown wrote:
-> > Currently if several items of work become available in quick succession,
-> > that number of threads (if available) will be woken.  By the time some
-> > of them wake up another thread that was already cache-warm might have
-> > come along and completed the work.  Anecdotal evidence suggests as many
-> > as 15% of wakes find nothing to do once they get to the point of
-> > looking.
-> >=20
-> > This patch changes svc_pool_wake_idle_thread() to wake the first thread
-> > on the queue but NOT remove it.  Subsequent calls will wake the same
-> > thread.  Once that thread starts it will dequeue itself and after
-> > dequeueing some work to do, it will wake the next thread if there is more
-> > work ready.  This results in a more orderly increase in the number of
-> > busy threads.
-> >=20
-> > As a bonus, this allows us to reduce locking around the idle queue.
-> > svc_pool_wake_idle_thread() no longer needs to take a lock (beyond
-> > rcu_read_lock()) as it doesn't manipulate the queue, it just looks at
-> > the first item.
-> >=20
-> > The thread itself can avoid locking by using the new
-> > llist_del_first_this() interface.  This will safely remove the thread
-> > itself if it is the head.  If it isn't the head, it will do nothing.
-> > If multiple threads call this concurrently only one will succeed.  The
-> > others will do nothing, so no corruption can result.
-> >=20
-> > If a thread wakes up and finds that it cannot dequeue itself that means
-> > either
-> > - that it wasn't woken because it was the head of the queue.  Maybe the
-> >   freezer woke it.  In that case it can go back to sleep (after trying
-> >   to freeze of course).
-> > - some other thread found there was nothing to do very recently, and
-> >   placed itself on the head of the queue in front of this thread.
-> >   It must check again after placing itself there, so it can be deemed to
-> >   be responsible for any pending work, and this thread can go back to
-> >   sleep until woken.
-> >=20
-> > No code ever tests for busy threads any more.  Only each thread itself
-> > cares if it is busy.  So svc_thread_busy() is no longer needed.
-> >=20
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  include/linux/sunrpc/svc.h | 11 -----------
-> >  net/sunrpc/svc.c           | 14 ++++++--------
-> >  net/sunrpc/svc_xprt.c      | 35 ++++++++++++++++++++++-------------
-> >  3 files changed, 28 insertions(+), 32 deletions(-)
-> >=20
-> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > index ad4572630335..dafa362b4fdd 100644
-> > --- a/include/linux/sunrpc/svc.h
-> > +++ b/include/linux/sunrpc/svc.h
-> > @@ -266,17 +266,6 @@ enum {
-> >  	RQ_DATA,		/* request has data */
-> >  };
-> > =20
-> > -/**
-> > - * svc_thread_busy - check if a thread as busy
-> > - * @rqstp: the thread which might be busy
-> > - *
-> > - * A thread is only busy when it is not an the idle list.
-> > - */
-> > -static inline bool svc_thread_busy(const struct svc_rqst *rqstp)
-> > -{
-> > -	return !llist_on_list(&rqstp->rq_idle);
-> > -}
-> > -
-> >  #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq=
-_bc_net)
-> > =20
-> >  /*
-> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> > index 5673f30db295..3267d740235e 100644
-> > --- a/net/sunrpc/svc.c
-> > +++ b/net/sunrpc/svc.c
-> > @@ -642,7 +642,6 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_pool=
- *pool, int node)
-> > =20
-> >  	folio_batch_init(&rqstp->rq_fbatch);
-> > =20
-> > -	init_llist_node(&rqstp->rq_idle);
-> >  	rqstp->rq_server =3D serv;
-> >  	rqstp->rq_pool =3D pool;
-> > =20
-> > @@ -704,17 +703,16 @@ void svc_pool_wake_idle_thread(struct svc_pool *poo=
-l)
-> >  	struct llist_node *ln;
-> > =20
-> >  	rcu_read_lock();
-> > -	spin_lock_bh(&pool->sp_lock);
-> > -	ln =3D llist_del_first_init(&pool->sp_idle_threads);
-> > -	spin_unlock_bh(&pool->sp_lock);
-> > +	ln =3D READ_ONCE(pool->sp_idle_threads.first);
-> >  	if (ln) {
-> >  		rqstp =3D llist_entry(ln, struct svc_rqst, rq_idle);
-> > -
-> >  		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
-> > -		wake_up_process(rqstp->rq_task);
-> > +		if (!task_is_running(rqstp->rq_task)) {
-> > +			wake_up_process(rqstp->rq_task);
-> > +			trace_svc_wake_up(rqstp->rq_task->pid);
-> > +			percpu_counter_inc(&pool->sp_threads_woken);
-> > +		}
-> >  		rcu_read_unlock();
-> > -		percpu_counter_inc(&pool->sp_threads_woken);
-> > -		trace_svc_wake_up(rqstp->rq_task->pid);
-> >  		return;
-> >  	}
-> >  	rcu_read_unlock();
-> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > index 17c43bde35c9..a51570a4cbf2 100644
-> > --- a/net/sunrpc/svc_xprt.c
-> > +++ b/net/sunrpc/svc_xprt.c
-> > @@ -732,20 +732,16 @@ static void svc_rqst_wait_for_work(struct svc_rqst =
-*rqstp)
-> >  	if (rqst_should_sleep(rqstp)) {
-> >  		set_current_state(TASK_IDLE | TASK_FREEZABLE);
-> >  		llist_add(&rqstp->rq_idle, &pool->sp_idle_threads);
-> > +		if (likely(rqst_should_sleep(rqstp)))
-> > +			schedule();
-> > =20
-> > -		if (unlikely(!rqst_should_sleep(rqstp)))
-> > -			/* Work just became available.  This thread cannot simply
-> > -			 * choose not to sleep as it *must* wait until removed.
-> > -			 * So wake the first waiter - whether it is this
-> > -			 * thread or some other, it will get the work done.
-> > +		while (!llist_del_first_this(&pool->sp_idle_threads,
-> > +					     &rqstp->rq_idle)) {
-> > +			/* Cannot @rqstp from idle list, so some other thread
->=20
-> I was not aware that "@rqstp" was a verb.  ;-)
->=20
-> Maybe the nice new comment that you are deleting just above here
-> would be appropriate to move here.
->=20
->=20
-> > +			 * must have queued itself after finding
-> > +			 * no work to do, so they have taken responsibility
-> > +			 * for any outstanding work.
-> >  			 */
-> > -			svc_pool_wake_idle_thread(pool);
-> > -
-> > -		/* Since a thread cannot remove itself from an llist,
-> > -		 * schedule until someone else removes @rqstp from
-> > -		 * the idle list.
-> > -		 */
-> > -		while (!svc_thread_busy(rqstp)) {
-> >  			schedule();
-> >  			set_current_state(TASK_IDLE | TASK_FREEZABLE);
-> >  		}
-> > @@ -835,6 +831,15 @@ static void svc_handle_xprt(struct svc_rqst *rqstp, =
-struct svc_xprt *xprt)
-> >  	svc_xprt_release(rqstp);
-> >  }
-> > =20
-> > +static void wake_next(struct svc_rqst *rqstp)
->=20
-> Nit: I would prefer a subsystem-specific name for this little guy.
-> Makes it a little easier to distinguish from generic scheduler
-> functions when looking at perf output.
->=20
-> How about "svc_thread_wake_next" ?
->=20
->=20
-> > +{
-> > +	if (!rqst_should_sleep(rqstp))
->=20
-> rqst_should_sleep() should also get a better name IMO, but that
-> helper was added many patches ago. If you agree to a change, I can
-> do that surgery.
+On Sun, Aug 27, 2023 at 09:28:26PM +0800, Hao Xu wrote:
+> From: Hao Xu <howeyxu@tencent.com>
+> 
+> Implement NOWAIT semantics for readdir. Return EAGAIN error to the
+> caller if it would block, like failing to get locks, or going to
+> do IO.
+> 
+> Co-developed-by: Dave Chinner <dchinner@redhat.com>
 
-What new name are you suggesting?  svc_rqst_should_sleep()?
-I'm happy for you to change it to anything that you think is an
-improvement, and to do the surgery.
+Not really.
 
-I'll address the eariler comments and resend at least this patch.
+"Co-developed" implies equal development input between all the
+parties, which is not the case here - this patch is based on
+prototype I wrote, whilst you're doing the refining, testing and
+correctness work.
 
-Thanks,
-NeilBrown
+In these cases with XFS code, we add a line in the commit message to
+say:
+
+"This is based on a patch originally written by Dave Chinner."
 
 
->=20
->=20
-> > +		/* More work pending after I dequeued some,
-> > +		 * wake another worker
-> > +		 */
-> > +		svc_pool_wake_idle_thread(rqstp->rq_pool);
-> > +}
-> > +
-> >  /**
-> >   * svc_recv - Receive and process the next request on any transport
-> >   * @rqstp: an idle RPC service thread
-> > @@ -854,13 +859,16 @@ void svc_recv(struct svc_rqst *rqstp)
-> > =20
-> >  	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
-> > =20
-> > -	if (svc_thread_should_stop(rqstp))
-> > +	if (svc_thread_should_stop(rqstp)) {
-> > +		wake_next(rqstp);
-> >  		return;
-> > +	}
-> > =20
-> >  	rqstp->rq_xprt =3D svc_xprt_dequeue(pool);
-> >  	if (rqstp->rq_xprt) {
-> >  		struct svc_xprt *xprt =3D rqstp->rq_xprt;
-> > =20
-> > +		wake_next(rqstp);
-> >  		/* Normally we will wait up to 5 seconds for any required
-> >  		 * cache information to be provided.  When there are no
-> >  		 * idle threads, we reduce the wait time.
-> > @@ -885,6 +893,7 @@ void svc_recv(struct svc_rqst *rqstp)
-> >  		if (req) {
-> >  			list_del(&req->rq_bc_list);
-> >  			spin_unlock_bh(&serv->sv_cb_lock);
-> > +			wake_next(rqstp);
-> > =20
-> >  			svc_process_bc(req, rqstp);
-> >  			return;
-> > --=20
-> > 2.41.0
-> >=20
->=20
-> --=20
-> Chuck Lever
->=20
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> Signed-off-by: Hao Xu <howeyxu@tencent.com>
+> [fixes deadlock issue, tweak code style]
 
+With a signoff chain like you already have.
+
+In the end you'll also get a RVB from me, which seems rather wrong
+to me if I've apparently been "co-developing" the code....
+
+....
+
+> @@ -156,7 +157,9 @@ xfs_dir2_block_getdents(
+>  	if (xfs_dir2_dataptr_to_db(geo, ctx->pos) > geo->datablk)
+>  		return 0;
+>  
+> -	error = xfs_dir3_block_read(args->trans, dp, &bp);
+> +	if (ctx->flags & DIR_CONTEXT_F_NOWAIT)
+> +		flags |= XFS_DABUF_NOWAIT;
+> +	error = xfs_dir3_block_read(args->trans, dp, flags, &bp);
+>  	if (error)
+>  		return error;
+>  
+
+Given we do this same check in both block and leaf formats to set
+XFS_DABUF_NOWAIT, and we do the DIR_CONTEXT_F_NOWAIT check in
+xfs_readdir() as well, we should probably do this check once at the
+higher level and pass flags down from there with XFS_DABUF_NOWAIT
+already set.
+
+> @@ -240,6 +243,7 @@ xfs_dir2_block_getdents(
+>  STATIC int
+>  xfs_dir2_leaf_readbuf(
+>  	struct xfs_da_args	*args,
+> +	struct dir_context	*ctx,
+>  	size_t			bufsize,
+>  	xfs_dir2_off_t		*cur_off,
+>  	xfs_dablk_t		*ra_blk,
+> @@ -258,10 +262,15 @@ xfs_dir2_leaf_readbuf(
+>  	struct xfs_iext_cursor	icur;
+>  	int			ra_want;
+>  	int			error = 0;
+> -
+> -	error = xfs_iread_extents(args->trans, dp, XFS_DATA_FORK);
+> -	if (error)
+> -		goto out;
+> +	unsigned int		flags = 0;
+> +
+> +	if (ctx->flags & DIR_CONTEXT_F_NOWAIT) {
+> +		flags |= XFS_DABUF_NOWAIT;
+> +	} else {
+> +		error = xfs_iread_extents(args->trans, dp, XFS_DATA_FORK);
+> +		if (error)
+> +			goto out;
+> +	}
+
+Especially as, in hindsight, this doesn't make a whole lot of sense.
+If XFS_DABUF_NOWAIT is set, we keep going until
+xfs_ilock_data_map_shared_nowait() where we call
+xfs_need_iread_extents() to see if we need to read the extents in
+and abort at that point.
+
+So, really, we shouldn't get this far with nowait semantics if
+we haven't read the extents in yet - we're supposed to already have
+the inode locked here and so we should have already checked this
+condition before we bother locking the inode...
+
+i.e. all we should be doing here is this:
+
+	if (!(flags & XFS_DABUF_NOWAIT)) {
+		error = xfs_iread_extents(args->trans, dp, XFS_DATA_FORK);
+		if (error)
+			goto out;
+	}
+
+And then we don't need to pass the VFS dir_context down into low
+level XFS functions unnecessarily.
+
+
+>  
+>  	/*
+>  	 * Look for mapped directory blocks at or above the current offset.
+> @@ -280,7 +289,7 @@ xfs_dir2_leaf_readbuf(
+>  	new_off = xfs_dir2_da_to_byte(geo, map.br_startoff);
+>  	if (new_off > *cur_off)
+>  		*cur_off = new_off;
+> -	error = xfs_dir3_data_read(args->trans, dp, map.br_startoff, 0, &bp);
+> +	error = xfs_dir3_data_read(args->trans, dp, map.br_startoff, flags, &bp);
+>  	if (error)
+>  		goto out;
+>  
+> @@ -360,6 +369,7 @@ xfs_dir2_leaf_getdents(
+>  	int			byteoff;	/* offset in current block */
+>  	unsigned int		offset = 0;
+>  	int			error = 0;	/* error return value */
+> +	int			written = 0;
+>  
+>  	/*
+>  	 * If the offset is at or past the largest allowed value,
+> @@ -391,10 +401,17 @@ xfs_dir2_leaf_getdents(
+>  				bp = NULL;
+>  			}
+>  
+> -			if (*lock_mode == 0)
+> -				*lock_mode = xfs_ilock_data_map_shared(dp);
+> -			error = xfs_dir2_leaf_readbuf(args, bufsize, &curoff,
+> -					&rablk, &bp);
+> +			if (*lock_mode == 0) {
+> +				*lock_mode =
+> +					xfs_ilock_data_map_shared_generic(dp,
+> +					ctx->flags & DIR_CONTEXT_F_NOWAIT);
+> +				if (!*lock_mode) {
+> +					error = -EAGAIN;
+> +					break;
+> +				}
+> +			}
+> +			error = xfs_dir2_leaf_readbuf(args, ctx, bufsize,
+> +					&curoff, &rablk, &bp);
+
+int
+xfs_ilock_readdir(
+	struct xfs_inode	*ip,
+	int			flags)
+{
+	if (flags & XFS_DABUF_NOWAIT) {
+		if (!xfs_ilock_nowait(dp, XFS_ILOCK_SHARED))
+			return -EAGAIN;
+		return XFS_ILOCK_SHARED;
+	}
+	return xfs_ilock_data_map_shared(dp);
+}
+
+And then this code simply becomes:
+
+			if (*lock_mode == 0)
+				*lock_mode = xfs_ilock_readdir(ip, flags);
+
+
+>  			if (error || !bp)
+>  				break;
+>  
+> @@ -479,6 +496,7 @@ xfs_dir2_leaf_getdents(
+>  		 */
+>  		offset += length;
+>  		curoff += length;
+> +		written += length;
+>  		/* bufsize may have just been a guess; don't go negative */
+>  		bufsize = bufsize > length ? bufsize - length : 0;
+>  	}
+> @@ -492,6 +510,8 @@ xfs_dir2_leaf_getdents(
+>  		ctx->pos = xfs_dir2_byte_to_dataptr(curoff) & 0x7fffffff;
+>  	if (bp)
+>  		xfs_trans_brelse(args->trans, bp);
+> +	if (error == -EAGAIN && written > 0)
+> +		error = 0;
+>  	return error;
+>  }
+>  
+> @@ -514,6 +534,7 @@ xfs_readdir(
+>  	unsigned int		lock_mode;
+>  	bool			isblock;
+>  	int			error;
+> +	bool			nowait;
+>  
+>  	trace_xfs_readdir(dp);
+>  
+> @@ -531,7 +552,11 @@ xfs_readdir(
+>  	if (dp->i_df.if_format == XFS_DINODE_FMT_LOCAL)
+>  		return xfs_dir2_sf_getdents(&args, ctx);
+>  
+> -	lock_mode = xfs_ilock_data_map_shared(dp);
+> +	nowait = ctx->flags & DIR_CONTEXT_F_NOWAIT;
+> +	lock_mode = xfs_ilock_data_map_shared_generic(dp, nowait);
+> +	if (!lock_mode)
+> +		return -EAGAIN;
+> +
+
+Given what I said above:
+
+	if (ctx->flags & DIR_CONTEXT_F_NOWAIT) {
+		/*
+		 * If we need to read extents, then we must do IO
+		 * and we must use exclusive locking. We don't want
+		 * to do either of those things, so just bail if we
+		 * have to read extents. Doing this check explicitly
+		 * here means we don't have to do it anywhere else
+		 * in the XFS_DABUF_NOWAIT path.
+		 */
+		if (xfs_need_iread_extents(&ip->i_df))
+			return -EAGAIN;
+		flags |= XFS_DABUF_NOWAIT;
+	}
+	lock_mode = xfs_ilock_readdir(dp, flags);
+
+And with this change, we probably should be marking the entire
+operation as having nowait semantics. i.e. using args->op_flags here
+and only use XFS_DABUF_NOWAIT for the actual IO. ie.
+
+		args->op_flags |= XFS_DA_OP_NOWAIT;
+
+This makes it clear that the entire directory op should run under
+NOWAIT constraints, and it avoids needing to pass an extra flag
+through the stack.  That then makes the readdir locking function
+look like this:
+
+/*
+ * When we are locking an inode for readdir, we need to ensure that
+ * the extents have been read in first. This requires the inode to
+ * be locked exclusively across the extent read, but otherwise we
+ * want to use shared locking.
+ *
+ * For XFS_DA_OP_NOWAIT operations, we do an up-front check to see
+ * if the extents have been read in, so all we need to do in this
+ * case is a shared try-lock as we never need exclusive locking in
+ * this path.
+ */
+static int
+xfs_ilock_readdir(
+	struct xfs_da_args	*args)
+{
+	if (args->op_flags & XFS_DA_OP_NOWAIT) {
+		if (!xfs_ilock_nowait(args->dp, XFS_ILOCK_SHARED))
+			return -EAGAIN;
+		return XFS_ILOCK_SHARED;
+	}
+	return xfs_ilock_data_map_shared(args->dp);
+}
+
+> diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+> index 9e62cc500140..d088f7d0c23a 100644
+> --- a/fs/xfs/xfs_inode.c
+> +++ b/fs/xfs/xfs_inode.c
+> @@ -120,6 +120,33 @@ xfs_ilock_data_map_shared(
+>  	return lock_mode;
+>  }
+>  
+> +/*
+> + * Similar to xfs_ilock_data_map_shared(), except that it will only try to lock
+> + * the inode in shared mode if the extents are already in memory. If it fails to
+> + * get the lock or has to do IO to read the extent list, fail the operation by
+> + * returning 0 as the lock mode.
+> + */
+> +uint
+> +xfs_ilock_data_map_shared_nowait(
+> +	struct xfs_inode	*ip)
+> +{
+> +	if (xfs_need_iread_extents(&ip->i_df))
+> +		return 0;
+> +	if (!xfs_ilock_nowait(ip, XFS_ILOCK_SHARED))
+> +		return 0;
+> +	return XFS_ILOCK_SHARED;
+> +}
+> +
+> +int
+> +xfs_ilock_data_map_shared_generic(
+> +	struct xfs_inode	*dp,
+> +	bool			nowait)
+> +{
+> +	if (nowait)
+> +		return xfs_ilock_data_map_shared_nowait(dp);
+> +	return xfs_ilock_data_map_shared(dp);
+> +}
+
+And all this "generic" locking stuff goes away.
+
+FWIW, IMO, "generic" is a poor name for an XFS function as there's
+nothing "generic" in XFS.  We tend name the functions after what
+they do, not some abstract concept. Leave "generic" as a keyword for
+widely used core infrastructure functions, not niche, one-off use
+cases like this.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
