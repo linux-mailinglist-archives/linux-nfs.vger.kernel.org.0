@@ -2,181 +2,175 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF6A7791C88
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Sep 2023 20:11:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 363A2791ED7
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Sep 2023 23:08:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353477AbjIDSL2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 Sep 2023 14:11:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41170 "EHLO
+        id S235565AbjIDVIz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 4 Sep 2023 17:08:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353418AbjIDSLP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Sep 2023 14:11:15 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F9613E;
-        Mon,  4 Sep 2023 11:11:11 -0700 (PDT)
+        with ESMTP id S229481AbjIDVIy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Sep 2023 17:08:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D421A1B6;
+        Mon,  4 Sep 2023 14:08:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 87420B80EF3;
-        Mon,  4 Sep 2023 18:11:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 22283C433B8;
-        Mon,  4 Sep 2023 18:11:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 704D261708;
+        Mon,  4 Sep 2023 21:08:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CF9C433C8;
+        Mon,  4 Sep 2023 21:08:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1693851069;
-        bh=XLoa47KxRcps38wwidPhLGQHNoTClCg5nlSU2UvnxSI=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=XZUD/xT7QAeS9CwkDxlRqT/gRWQx0TmxhnpK0eSpl5TdmWje1tq2yvGH+3vZ2+BCT
-         jCeZ3PliMwtj4PI/YG14pbxznaZzZiLpm9dwOITxs9QimCVLsdgcY+tXdL8VHHo6Xo
-         yN1Gfw9YZmIyD8m43UuRL17+XTyHWk7a5WXn6oF5ggWXw6RS9S101xrDjQsPd+ZkCx
-         1CnWWAtQSCxTFtksNwHsJ+bzmvgeWVNV2ZHBFMah4WlUviOzbSHDkb9JT06sfaty1l
-         sU4YI09Bt9xI2xASG0RHXL6Mglihp9xk051QekITKNbwSi+f4qbVFzWkXoKrsHAJfp
-         TL/wsjYXrOQBg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C90EDC2BBD7;
-        Mon,  4 Sep 2023 18:11:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v2 00/89] fs: new accessors for inode->i_ctime
-From:   patchwork-bot+f2fs@kernel.org
-Message-Id: <169385106881.19669.3510550425397118597.git-patchwork-notify@kernel.org>
-Date:   Mon, 04 Sep 2023 18:11:08 +0000
-References: <20230705185812.579118-1-jlayton@kernel.org>
-In-Reply-To: <20230705185812.579118-1-jlayton@kernel.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     jk@ozlabs.org, arnd@arndb.de, mpe@ellerman.id.au,
-        npiggin@gmail.com, christophe.leroy@csgroup.eu, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
-        maco@android.com, joel@joelfernandes.org, brauner@kernel.org,
-        cmllamas@google.com, surenb@google.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        leon@kernel.org, bwarrum@linux.ibm.com, rituagar@linux.ibm.com,
-        ericvh@kernel.org, lucho@ionkov.net, asmadeus@codewreck.org,
-        linux_oss@crudebyte.com, dsterba@suse.com, dhowells@redhat.com,
-        marc.dionne@auristor.com, viro@zeniv.linux.org.uk,
-        raven@themaw.net, luisbg@kernel.org, salah.triki@gmail.com,
-        aivazian.tigran@gmail.com, ebiederm@xmission.com,
-        keescook@chromium.org, clm@fb.com, josef@toxicpanda.com,
-        xiubli@redhat.com, idryomov@gmail.com, jaharkes@cs.cmu.edu,
-        coda@cs.cmu.edu, jlbec@evilplan.org, hch@lst.de, nico@fluxnic.net,
-        rafael@kernel.org, code@tyhicks.com, ardb@kernel.org,
-        xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
-        jefflexu@linux.alibaba.com, linkinjeon@kernel.org,
-        sj1557.seo@samsung.com, jack@suse.com, tytso@mit.edu,
-        adilger.kernel@dilger.ca, jaegeuk@kernel.org,
-        hirofumi@mail.parknet.co.jp, miklos@szeredi.hu,
-        rpeterso@redhat.com, agruenba@redhat.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        mikulas@artax.karlin.mff.cuni.cz, mike.kravetz@oracle.com,
-        muchun.song@linux.dev, dwmw2@infradead.org, shaggy@kernel.org,
-        tj@kernel.org, trond.myklebust@hammerspace.com, anna@kernel.org,
-        chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com,
-        Dai.Ngo@oracle.com, tom@talpey.com, konishi.ryusuke@gmail.com,
-        anton@tuxera.com, almaz.alexandrovich@paragon-software.com,
-        mark@fasheh.com, joseph.qi@linux.alibaba.com, me@bobcopeland.com,
-        hubcap@omnibond.com, martin@omnibond.com, amir73il@gmail.com,
-        mcgrof@kernel.org, yzaikin@google.com, tony.luck@intel.com,
-        gpiccoli@igalia.com, al@alarsen.net, sfrench@samba.org,
-        pc@manguebit.com, lsahlber@redhat.com, sprasad@microsoft.com,
-        senozhatsky@chromium.org, phillip@squashfs.org.uk,
-        rostedt@goodmis.org, mhiramat@kernel.org, dushistov@mail.ru,
-        hdegoede@redhat.com, djwong@kernel.org, dlemoal@kernel.org,
-        naohiro.aota@wdc.com, jth@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
-        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, hughd@google.com, akpm@linux-foundation.org,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, john.johansen@canonical.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        jgross@suse.com, stern@rowland.harvard.edu, lrh2000@pku.edu.cn,
-        sebastian.reichel@collabora.com, wsa+renesas@sang-engineering.com,
-        quic_ugoswami@quicinc.com, quic_linyyuan@quicinc.com,
-        john@keeping.me.uk, error27@gmail.com, quic_uaggarwa@quicinc.com,
-        hayama@lineo.co.jp, jomajm@gmail.com, axboe@kernel.dk,
-        dhavale@google.com, dchinner@redhat.com, hannes@cmpxchg.org,
-        zhangpeng362@huawei.com, slava@dubeyko.com, gargaditya08@live.com,
-        penguin-kernel@I-love.SAKURA.ne.jp, yifeliu@cs.stonybrook.edu,
-        madkar@cs.stonybrook.edu, ezk@cs.stonybrook.edu,
-        yuzhe@nfschina.com, willy@infradead.org, okanatov@gmail.com,
-        jeffxu@chromium.org, linux@treblig.org, mirimmad17@gmail.com,
-        yijiangshan@kylinos.cn, yang.yang29@zte.com.cn,
-        xu.xin16@zte.com.cn, chengzhihao1@huawei.com, shr@devkernel.io,
-        Liam.Howlett@Oracle.com, adobriyan@gmail.com,
-        chi.minghao@zte.com.cn, roberto.sassu@huawei.com,
-        linuszeng@tencent.com, bvanassche@acm.org, zohar@linux.ibm.com,
-        yi.zhang@huawei.com, trix@redhat.com, fmdefrancesco@gmail.com,
-        ebiggers@google.com, princekumarmaurya06@gmail.com,
-        chenzhongjin@huawei.com, riel@surriel.com,
-        shaozhengchao@huawei.com, jingyuwang_vip@163.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-usb@vger.kernel.org, v9fs@lists.linux.dev,
-        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
-        autofs@vger.kernel.org, linux-mm@kvack.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-um@lists.infradead.org,
-        linux-mtd@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org,
-        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        s=k20201202; t=1693861729;
+        bh=c/K0v1f1fOXVzFbawIYNQ7qFhq1at121qQ4pgUfYVaU=;
+        h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+        b=q0BatMXZee/hoOID0g6Y+zDdWfb54DoZlDDmyQKupB+mJxT5Q26glReDoLfGI3AU8
+         GG2PAkZBxyEVSgIGMEq7rrKvLqG38c6FNhfSgtCtKY1AcS9V0Mgqya7KVg4d6p1Cbh
+         YipxbCju6etroCrF/7BDJWy+xm65bqKyMlm4wmiExXeV8bOEcJRgpwquvrxRZL/LaY
+         pZ1IKjRk0l9BW30p4tIKLP7IML1F3jzlMkW3gBd4aonK5oZJVDF/PEiV5Hb6bZpDsZ
+         lM6p+nPfSqbOHBvTU41hKVXSj2+fZIcdcxcvDaTw0Ib7VjIKiInwRu2eHAfd7E2mge
+         Mk/WF2xYAlJqg==
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Tue, 05 Sep 2023 00:08:43 +0300
+Message-Id: <CVAFV92MONCH.257Y9YQ3OEU4B@suppilovahvero>
+Cc:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-nfs@vger.kernel.org>, <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <keyrings@vger.kernel.org>, <selinux@vger.kernel.org>,
+        "Roberto Sassu" <roberto.sassu@huawei.com>,
+        "Stefan Berger" <stefanb@linux.ibm.com>
+Subject: Re: [PATCH v2 11/25] security: Align inode_setattr hook definition
+ with EVM
+From:   "Jarkko Sakkinen" <jarkko@kernel.org>
+To:     "Roberto Sassu" <roberto.sassu@huaweicloud.com>,
+        <viro@zeniv.linux.org.uk>, <brauner@kernel.org>,
+        <chuck.lever@oracle.com>, <jlayton@kernel.org>, <neilb@suse.de>,
+        <kolga@netapp.com>, <Dai.Ngo@oracle.com>, <tom@talpey.com>,
+        <zohar@linux.ibm.com>, <dmitry.kasatkin@gmail.com>,
+        <paul@paul-moore.com>, <jmorris@namei.org>, <serge@hallyn.com>,
+        <dhowells@redhat.com>, <stephen.smalley.work@gmail.com>,
+        <eparis@parisplace.org>, <casey@schaufler-ca.com>
+X-Mailer: aerc 0.14.0
+References: <20230831104136.903180-1-roberto.sassu@huaweicloud.com>
+ <20230831104136.903180-12-roberto.sassu@huaweicloud.com>
+In-Reply-To: <20230831104136.903180-12-roberto.sassu@huaweicloud.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello:
+On Thu Aug 31, 2023 at 1:41 PM EEST, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+>
+> Add the idmap parameter to the definition, so that evm_inode_setattr() ca=
+n
+> be registered as this hook implementation.
+>
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Acked-by: Casey Schaufler <casey@schaufler-ca.com>
+> ---
+>  include/linux/lsm_hook_defs.h | 3 ++-
+>  security/security.c           | 2 +-
+>  security/selinux/hooks.c      | 3 ++-
+>  security/smack/smack_lsm.c    | 4 +++-
+>  4 files changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.=
+h
+> index 4bdddb52a8fe..fdf075a6b1bb 100644
+> --- a/include/linux/lsm_hook_defs.h
+> +++ b/include/linux/lsm_hook_defs.h
+> @@ -134,7 +134,8 @@ LSM_HOOK(int, 0, inode_readlink, struct dentry *dentr=
+y)
+>  LSM_HOOK(int, 0, inode_follow_link, struct dentry *dentry, struct inode =
+*inode,
+>  	 bool rcu)
+>  LSM_HOOK(int, 0, inode_permission, struct inode *inode, int mask)
+> -LSM_HOOK(int, 0, inode_setattr, struct dentry *dentry, struct iattr *att=
+r)
+> +LSM_HOOK(int, 0, inode_setattr, struct mnt_idmap *idmap, struct dentry *=
+dentry,
+> +	 struct iattr *attr)
 
-This series was applied to jaegeuk/f2fs.git (dev)
-by Christian Brauner <brauner@kernel.org>:
+LSM_HOOK(int, 0, inode_setattr, struct mnt_idmap *idmap, struct dentry *den=
+try, struct iattr *attr)
 
-On Wed,  5 Jul 2023 14:58:09 -0400 you wrote:
-> v2:
-> - prepend patches to add missing ctime updates
-> - add simple_rename_timestamp helper function
-> - rename ctime accessor functions as inode_get_ctime/inode_set_ctime_*
-> - drop individual inode_ctime_set_{sec,nsec} helpers
-> 
-> I've been working on a patchset to change how the inode->i_ctime is
-> accessed in order to give us conditional, high-res timestamps for the
-> ctime and mtime. struct timespec64 has unused bits in it that we can use
-> to implement this. In order to do that however, we need to wrap all
-> accesses of inode->i_ctime to ensure that bits used as flags are
-> appropriately handled.
-> 
-> [...]
+Only 99 characters, i.e. breaking into two lines is not necessary.
 
-Here is the summary with links:
-  - [f2fs-dev,v2,07/92] fs: add ctime accessors infrastructure
-    https://git.kernel.org/jaegeuk/f2fs/c/9b6304c1d537
-  - [f2fs-dev,v2,08/92] fs: new helper: simple_rename_timestamp
-    https://git.kernel.org/jaegeuk/f2fs/c/0c4767923ed6
-  - [f2fs-dev,v2,92/92] fs: rename i_ctime field to __i_ctime
-    https://git.kernel.org/jaegeuk/f2fs/c/13bc24457850
+>  LSM_HOOK(int, 0, inode_getattr, const struct path *path)
+>  LSM_HOOK(int, 0, inode_setxattr, struct mnt_idmap *idmap,
+>  	 struct dentry *dentry, const char *name, const void *value,
+> diff --git a/security/security.c b/security/security.c
+> index cb6242feb968..2b24d01cf181 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -2117,7 +2117,7 @@ int security_inode_setattr(struct mnt_idmap *idmap,
+> =20
+>  	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+>  		return 0;
+> -	ret =3D call_int_hook(inode_setattr, 0, dentry, attr);
+> +	ret =3D call_int_hook(inode_setattr, 0, idmap, dentry, attr);
+>  	if (ret)
+>  		return ret;
+>  	return evm_inode_setattr(idmap, dentry, attr);
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index ee7c49c2cfd3..bfcc4d9aa5ab 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -3075,7 +3075,8 @@ static int selinux_inode_permission(struct inode *i=
+node, int mask)
+>  	return rc;
+>  }
+> =20
+> -static int selinux_inode_setattr(struct dentry *dentry, struct iattr *ia=
+ttr)
+> +static int selinux_inode_setattr(struct mnt_idmap *idmap, struct dentry =
+*dentry,
+> +				 struct iattr *iattr)
+>  {
+>  	const struct cred *cred =3D current_cred();
+>  	struct inode *inode =3D d_backing_inode(dentry);
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 679156601a10..89f2669d50a9 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -1181,12 +1181,14 @@ static int smack_inode_permission(struct inode *i=
+node, int mask)
+> =20
+>  /**
+>   * smack_inode_setattr - Smack check for setting attributes
+> + * @idmap: idmap of the mount
+>   * @dentry: the object
+>   * @iattr: for the force flag
+>   *
+>   * Returns 0 if access is permitted, an error code otherwise
+>   */
+> -static int smack_inode_setattr(struct dentry *dentry, struct iattr *iatt=
+r)
+> +static int smack_inode_setattr(struct mnt_idmap *idmap, struct dentry *d=
+entry,
+> +			       struct iattr *iattr)
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+static int smack_inode_setattr(struct mnt_idmap *idmap, struct dentry *dent=
+ry, struct iattr *iattr)
+
+Can be still in a single line (100 characters exactly).
 
 
+>  {
+>  	struct smk_audit_info ad;
+>  	int rc;
+> --=20
+> 2.34.1
+
+
+BR, Jarkko
