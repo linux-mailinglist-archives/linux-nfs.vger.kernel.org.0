@@ -2,70 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5F1D79263F
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Sep 2023 18:26:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EAFB87927C1
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Sep 2023 18:37:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238205AbjIEQFi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Sep 2023 12:05:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33602 "EHLO
+        id S235292AbjIEQFb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Sep 2023 12:05:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354080AbjIEJfV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Sep 2023 05:35:21 -0400
-X-Greylist: delayed 4338 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Sep 2023 02:35:18 PDT
-Received: from mail.equinoxrise.pl (mail.equinoxrise.pl [217.61.112.157])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE301A7
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Sep 2023 02:35:18 -0700 (PDT)
-Received: by mail.equinoxrise.pl (Postfix, from userid 1002)
-        id B3D288357F; Mon,  4 Sep 2023 09:41:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=equinoxrise.pl;
-        s=mail; t=1693813368;
-        bh=v6OgBfK5dN7P5dQ0wCu59rOfZaiqziJeLNblJ8dOcGI=;
-        h=Date:From:To:Subject:From;
-        b=kTQbDa2ruxWI8Z5CdIp+R9ZKeqXVFYNh2KdgG7WLfaF+NYggkiFFbm725+zh35I80
-         KAmxLFES18P4GOXAONhum09AxGFbcMZoUDySwFbcPg5Yxt9nQq923TuSA90TMUJOPj
-         opBtTfDt8JYLPW/oms6HYvsuKdfovH5kR/IAiPhi4SjANGbP+lr3RS16x1SYcna/ri
-         dfqzVEHhdFF5sldFLlC46vaDiQ6i27yMtwlViyuD+ILwtLubmbQenII9XwqgHsjcm3
-         kYMRtoVmRwsm4wgCljhs8g3VM6y7DDsUAwuy2Tafm244AVwh6QIqKDOXWX5sEIpYTa
-         ivwOhfd7AddyQ==
-Received: by mail.equinoxrise.pl for <linux-nfs@vger.kernel.org>; Mon,  4 Sep 2023 07:40:34 GMT
-Message-ID: <20230904084500-0.1.7.rif.0.ikdlre2kd3@equinoxrise.pl>
-Date:   Mon,  4 Sep 2023 07:40:34 GMT
-From:   "Mateusz Talaga" <mateusz.talaga@equinoxrise.pl>
-To:     <linux-nfs@vger.kernel.org>
-Subject: Prezentacja
-X-Mailer: mail.equinoxrise.pl
+        with ESMTP id S244968AbjIEBkn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Sep 2023 21:40:43 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B159BCC5
+        for <linux-nfs@vger.kernel.org>; Mon,  4 Sep 2023 18:40:38 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 6C2451F750;
+        Tue,  5 Sep 2023 01:40:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1693878037; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=IfV7ijOl7n4APdARGzwjsy9HIk7+aZScpYTb1rOY40o=;
+        b=QdduR2a5KRo8E3F5OzWkC33IkBlDjxl9rGifzeVrjLoB64LYJVz9sLm1ZPAGJyGUqeLd4M
+        w/uGOcAMNdpgiy5rcCY4tYzKIAM5AU3U6PR9Kq6xO9X9rtB5gxBQhcb5fRLo74ufMYUfqX
+        fdkKtuB9kHuvr4kDcGguUn99SI/QD/I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1693878037;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=IfV7ijOl7n4APdARGzwjsy9HIk7+aZScpYTb1rOY40o=;
+        b=QXMnXoeX68pK3IIUxhH6iN4qOAOdbIMRwBk4zZLMiMM+vKamlnE2mKQi6sMwk3RYYkxDMC
+        TbwGDocAQ5n2HiDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2D61D13499;
+        Tue,  5 Sep 2023 01:40:35 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id yFFONBOH9mSXUwAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 05 Sep 2023 01:40:35 +0000
+From:   NeilBrown <neilb@suse.de>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/3] Revisions for topic-sunrpc-thread-scheduling
+Date:   Tue,  5 Sep 2023 11:38:10 +1000
+Message-ID: <20230905014011.25472-1-neilb@suse.de>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,URIBL_CSS_A,URIBL_DBL_SPAM
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ***
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dzie=C5=84 dobry!
+This a resend of two recently sent patches (1 and 3) with
+review comments addressed, plus a new patch (2) which renames
+some function names for improved consistency.
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
-=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
-zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
+Thanks,
+NeilBrown
 
-Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
-=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
-dostaw.
+ [PATCH 1/3] lib: add light-weight queuing mechanism.
+ [PATCH 2/3] SUNRPC: rename some functions from rqst_ to svc_thread_
+ [PATCH 3/3] SUNRPC: only have one thread waking up at a time
 
-Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
-nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
- co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
-
-Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
-=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
-zania w Pa=C5=84stwa firmie.
-
-
-Pozdrawiam
-Mateusz Talaga
