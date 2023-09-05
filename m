@@ -2,255 +2,191 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE9F7926EC
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Sep 2023 18:34:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 837A679257C
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Sep 2023 18:23:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238323AbjIEQFu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Sep 2023 12:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56122 "EHLO
+        id S238192AbjIEQFi convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Tue, 5 Sep 2023 12:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244980AbjIEBk5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Sep 2023 21:40:57 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F3A8CC6
-        for <linux-nfs@vger.kernel.org>; Mon,  4 Sep 2023 18:40:54 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 8344921850;
-        Tue,  5 Sep 2023 01:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1693878052; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lV5LP+XztS+xUnHadOFZmS0i3CHGnCGHFhK1BP4IOa8=;
-        b=H7+j3MIrc25pz7OpCF+UvUncuh6MMW54ooiGUeOaymPEi0rAl6vZ8E+WFMLcOI4aMQj9B6
-        SCGDuPH6X/38LwGz5puS97YLrNJawpMqYFvztZXtLI0Lv0VS3jWohXaCVpVKTg3/11eIqJ
-        HGRn0LGENHjlKpfSLODTMtmQn1+son4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1693878052;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lV5LP+XztS+xUnHadOFZmS0i3CHGnCGHFhK1BP4IOa8=;
-        b=xfW+yQMRcscEus7nUdBZdh34YXhHSUYnmHUUptBl1SeB0LrZB33NyPCZPd1AWJX//S+fpi
-        R8bwd3QUjywfNuBw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 47FF613499;
-        Tue,  5 Sep 2023 01:40:50 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id TIoIOyKH9mS0UwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 05 Sep 2023 01:40:50 +0000
-From:   NeilBrown <neilb@suse.de>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] SUNRPC: only have one thread waking up at a time
-Date:   Tue,  5 Sep 2023 11:38:13 +1000
-Message-ID: <20230905014011.25472-4-neilb@suse.de>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20230905014011.25472-1-neilb@suse.de>
-References: <20230905014011.25472-1-neilb@suse.de>
+        with ESMTP id S1353608AbjIEGwR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Sep 2023 02:52:17 -0400
+Received: from frasgout13.his.huawei.com (unknown [14.137.139.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52DA1B4;
+        Mon,  4 Sep 2023 23:52:13 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.229])
+        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Rfwq91PZtz9v7ZP;
+        Tue,  5 Sep 2023 14:40:05 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+        by APP2 (Coremail) with SMTP id GxC2BwDX1+_yz_ZkocAiAg--.8435S2;
+        Tue, 05 Sep 2023 07:51:44 +0100 (CET)
+Message-ID: <b4bc9dbb2417dc8afe0bf0a50233d4c2968bfb7a.camel@huaweicloud.com>
+Subject: Re: [PATCH v2 13/25] security: Introduce inode_post_removexattr hook
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     Jarkko Sakkinen <jarkko@kernel.org>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com,
+        tom@talpey.com, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        dhowells@redhat.com, stephen.smalley.work@gmail.com,
+        eparis@parisplace.org, casey@schaufler-ca.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Stefan Berger <stefanb@linux.ibm.com>
+Date:   Tue, 05 Sep 2023 08:51:26 +0200
+In-Reply-To: <CVAFXF2BQ14B.19BO7F9P62WGT@suppilovahvero>
+References: <20230831104136.903180-1-roberto.sassu@huaweicloud.com>
+         <20230831104136.903180-14-roberto.sassu@huaweicloud.com>
+         <CVAFXF2BQ14B.19BO7F9P62WGT@suppilovahvero>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: GxC2BwDX1+_yz_ZkocAiAg--.8435S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr4DAry7AF1kXr4xCFWfZrb_yoWruF47pF
+        s8t3W5Cr4rJFy7WFy8tF17uw4I9ayFgry7A3y2gw12yFn2yrn2qrZxCF1UCryrJr40gFyv
+        qFnFkrs5Cr13J3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQALBF1jj5OFhQACsu
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,RDNS_DYNAMIC,SPF_HELO_NONE,SPF_NONE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently if several items of work become available in quick succession,
-that number of threads (if available) will be woken.  By the time some
-of them wake up another thread that was already cache-warm might have
-come along and completed the work.  Anecdotal evidence suggests as many
-as 15% of wakes find nothing to do once they get to the point of
-looking.
+On Tue, 2023-09-05 at 00:11 +0300, Jarkko Sakkinen wrote:
+> On Thu Aug 31, 2023 at 1:41 PM EEST, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> > 
+> > In preparation for moving IMA and EVM to the LSM infrastructure, introduce
+> > the inode_post_removexattr hook.
+> > 
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> > ---
+> >  fs/xattr.c                    |  9 +++++----
+> >  include/linux/lsm_hook_defs.h |  2 ++
+> >  include/linux/security.h      |  5 +++++
+> >  security/security.c           | 14 ++++++++++++++
+> >  4 files changed, 26 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/fs/xattr.c b/fs/xattr.c
+> > index e7bbb7f57557..4a0280295686 100644
+> > --- a/fs/xattr.c
+> > +++ b/fs/xattr.c
+> > @@ -552,11 +552,12 @@ __vfs_removexattr_locked(struct mnt_idmap *idmap,
+> >  		goto out;
+> >  
+> >  	error = __vfs_removexattr(idmap, dentry, name);
+> > +	if (error)
+> > +		goto out;
+> >  
+> > -	if (!error) {
+> > -		fsnotify_xattr(dentry);
+> > -		evm_inode_post_removexattr(dentry, name);
+> > -	}
+> > +	fsnotify_xattr(dentry);
+> > +	security_inode_post_removexattr(dentry, name);
+> > +	evm_inode_post_removexattr(dentry, name);
+> >  
+> >  out:
+> >  	return error;
+> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> > index 995d30336cfa..1153e7163b8b 100644
+> > --- a/include/linux/lsm_hook_defs.h
+> > +++ b/include/linux/lsm_hook_defs.h
+> > @@ -148,6 +148,8 @@ LSM_HOOK(int, 0, inode_getxattr, struct dentry *dentry, const char *name)
+> >  LSM_HOOK(int, 0, inode_listxattr, struct dentry *dentry)
+> >  LSM_HOOK(int, 0, inode_removexattr, struct mnt_idmap *idmap,
+> >  	 struct dentry *dentry, const char *name)
+> > +LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
+> > +	 const char *name)
+> >  LSM_HOOK(int, 0, inode_set_acl, struct mnt_idmap *idmap,
+> >  	 struct dentry *dentry, const char *acl_name, struct posix_acl *kacl)
+> >  LSM_HOOK(int, 0, inode_get_acl, struct mnt_idmap *idmap,
+> > diff --git a/include/linux/security.h b/include/linux/security.h
+> > index 820899db5276..665bba3e0081 100644
+> > --- a/include/linux/security.h
+> > +++ b/include/linux/security.h
+> > @@ -374,6 +374,7 @@ int security_inode_getxattr(struct dentry *dentry, const char *name);
+> >  int security_inode_listxattr(struct dentry *dentry);
+> >  int security_inode_removexattr(struct mnt_idmap *idmap,
+> >  			       struct dentry *dentry, const char *name);
+> > +void security_inode_post_removexattr(struct dentry *dentry, const char *name);
+> >  int security_inode_need_killpriv(struct dentry *dentry);
+> >  int security_inode_killpriv(struct mnt_idmap *idmap, struct dentry *dentry);
+> >  int security_inode_getsecurity(struct mnt_idmap *idmap,
+> > @@ -919,6 +920,10 @@ static inline int security_inode_removexattr(struct mnt_idmap *idmap,
+> >  	return cap_inode_removexattr(idmap, dentry, name);
+> >  }
+> >  
+> > +static inline void security_inode_post_removexattr(struct dentry *dentry,
+> > +						   const char *name)
+> > +{ }
+> 
+> static inline void security_inode_post_removexattr(struct dentry *dentry, const char *name)
+> {
+> }
+> 
+> > +
+> >  static inline int security_inode_need_killpriv(struct dentry *dentry)
+> >  {
+> >  	return cap_inode_need_killpriv(dentry);
+> > diff --git a/security/security.c b/security/security.c
+> > index 764a6f28b3b9..3947159ba5e9 100644
+> > --- a/security/security.c
+> > +++ b/security/security.c
+> > @@ -2354,6 +2354,20 @@ int security_inode_removexattr(struct mnt_idmap *idmap,
+> >  	return evm_inode_removexattr(idmap, dentry, name);
+> >  }
+> >  
+> > +/**
+> > + * security_inode_post_removexattr() - Update the inode after a removexattr op
+> > + * @dentry: file
+> > + * @name: xattr name
+> > + *
+> > + * Update the inode after a successful removexattr operation.
+> > + */
+> > +void security_inode_post_removexattr(struct dentry *dentry, const char *name)
+> > +{
+> > +	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+> > +		return;
+> > +	call_void_hook(inode_post_removexattr, dentry, name);
+> > +}
+> > +
+> >  /**
+> >   * security_inode_need_killpriv() - Check if security_inode_killpriv() required
+> >   * @dentry: associated dentry
+> > -- 
+> > 2.34.1
+> 
+> 
+> These odd splits are everywhere in the patch set. Just (nit)picking some.
+> 
+> It is huge patch set so I don't really get for addign extra lines for no
+> good reason.
 
-This patch changes svc_pool_wake_idle_thread() to wake the first thread
-on the queue but NOT remove it.  Subsequent calls will wake the same
-thread.  Once that thread starts it will dequeue itself and after
-dequeueing some work to do, it will wake the next thread if there is more
-work ready.  This results in a more orderly increase in the number of
-busy threads.
+Thanks for the review, Jarkko.
 
-As a bonus, this allows us to reduce locking around the idle queue.
-svc_pool_wake_idle_thread() no longer needs to take a lock (beyond
-rcu_read_lock()) as it doesn't manipulate the queue, it just looks at
-the first item.
+I don't know... to be honest I still prefer to stay within 80
+characters.
 
-The thread itself can avoid locking by using the new
-llist_del_first_this() interface.  This will safely remove the thread
-itself if it is the head.  If it isn't the head, it will do nothing.
-If multiple threads call this concurrently only one will succeed.  The
-others will do nothing, so no corruption can result.
-
-If a thread wakes up and finds that it cannot dequeue itself that means
-either
-- that it wasn't woken because it was the head of the queue.  Maybe the
-  freezer woke it.  In that case it can go back to sleep (after trying
-  to freeze of course).
-- some other thread found there was nothing to do very recently, and
-  placed itself on the head of the queue in front of this thread.
-  It must check again after placing itself there, so it can be deemed to
-  be responsible for any pending work, and this thread can go back to
-  sleep until woken.
-
-No code ever tests for busy threads any more.  Only each thread itself
-cares if it is busy.  So svc_thread_busy() is no longer needed.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- include/linux/sunrpc/svc.h | 11 -----------
- net/sunrpc/svc.c           | 14 ++++++--------
- net/sunrpc/svc_xprt.c      | 38 +++++++++++++++++++++++++-------------
- 3 files changed, 31 insertions(+), 32 deletions(-)
-
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index ad4572630335..dafa362b4fdd 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -266,17 +266,6 @@ enum {
- 	RQ_DATA,		/* request has data */
- };
- 
--/**
-- * svc_thread_busy - check if a thread as busy
-- * @rqstp: the thread which might be busy
-- *
-- * A thread is only busy when it is not an the idle list.
-- */
--static inline bool svc_thread_busy(const struct svc_rqst *rqstp)
--{
--	return !llist_on_list(&rqstp->rq_idle);
--}
--
- #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
- 
- /*
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 5673f30db295..3267d740235e 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -642,7 +642,6 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_pool *pool, int node)
- 
- 	folio_batch_init(&rqstp->rq_fbatch);
- 
--	init_llist_node(&rqstp->rq_idle);
- 	rqstp->rq_server = serv;
- 	rqstp->rq_pool = pool;
- 
-@@ -704,17 +703,16 @@ void svc_pool_wake_idle_thread(struct svc_pool *pool)
- 	struct llist_node *ln;
- 
- 	rcu_read_lock();
--	spin_lock_bh(&pool->sp_lock);
--	ln = llist_del_first_init(&pool->sp_idle_threads);
--	spin_unlock_bh(&pool->sp_lock);
-+	ln = READ_ONCE(pool->sp_idle_threads.first);
- 	if (ln) {
- 		rqstp = llist_entry(ln, struct svc_rqst, rq_idle);
--
- 		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
--		wake_up_process(rqstp->rq_task);
-+		if (!task_is_running(rqstp->rq_task)) {
-+			wake_up_process(rqstp->rq_task);
-+			trace_svc_wake_up(rqstp->rq_task->pid);
-+			percpu_counter_inc(&pool->sp_threads_woken);
-+		}
- 		rcu_read_unlock();
--		percpu_counter_inc(&pool->sp_threads_woken);
--		trace_svc_wake_up(rqstp->rq_task->pid);
- 		return;
- 	}
- 	rcu_read_unlock();
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 1b300a7889eb..75f66714e3a7 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -732,20 +732,19 @@ static void svc_thread_wait_for_work(struct svc_rqst *rqstp)
- 	if (svc_thread_should_sleep(rqstp)) {
- 		set_current_state(TASK_IDLE | TASK_FREEZABLE);
- 		llist_add(&rqstp->rq_idle, &pool->sp_idle_threads);
-+		if (likely(svc_thread_should_sleep(rqstp)))
-+			schedule();
- 
--		if (unlikely(!svc_thread_should_sleep(rqstp)))
--			/* Work just became available.  This thread cannot simply
--			 * choose not to sleep as it *must* wait until removed.
--			 * So wake the first waiter - whether it is this
--			 * thread or some other, it will get the work done.
-+		while (!llist_del_first_this(&pool->sp_idle_threads,
-+					     &rqstp->rq_idle)) {
-+			/* Work just became available.  This thread can only
-+			 * handle it after removing rqstp from the idle
-+			 * list. If that attempt failed, some other thread
-+			 * must have queued itself after finding no
-+			 * work to do, so that thread has taken responsibly
-+			 * for this new work.  This thread can safely sleep
-+			 * until woken again.
- 			 */
--			svc_pool_wake_idle_thread(pool);
--
--		/* Since a thread cannot remove itself from an llist,
--		 * schedule until someone else removes @rqstp from
--		 * the idle list.
--		 */
--		while (!svc_thread_busy(rqstp)) {
- 			schedule();
- 			set_current_state(TASK_IDLE | TASK_FREEZABLE);
- 		}
-@@ -835,6 +834,15 @@ static void svc_handle_xprt(struct svc_rqst *rqstp, struct svc_xprt *xprt)
- 	svc_xprt_release(rqstp);
- }
- 
-+static void svc_thread_wake_next(struct svc_rqst *rqstp)
-+{
-+	if (!svc_thread_should_sleep(rqstp))
-+		/* More work pending after I dequeued some,
-+		 * wake another worker
-+		 */
-+		svc_pool_wake_idle_thread(rqstp->rq_pool);
-+}
-+
- /**
-  * svc_recv - Receive and process the next request on any transport
-  * @rqstp: an idle RPC service thread
-@@ -854,13 +862,16 @@ void svc_recv(struct svc_rqst *rqstp)
- 
- 	clear_bit(SP_TASK_PENDING, &pool->sp_flags);
- 
--	if (svc_thread_should_stop(rqstp))
-+	if (svc_thread_should_stop(rqstp)) {
-+		svc_thread_wake_next(rqstp);
- 		return;
-+	}
- 
- 	rqstp->rq_xprt = svc_xprt_dequeue(pool);
- 	if (rqstp->rq_xprt) {
- 		struct svc_xprt *xprt = rqstp->rq_xprt;
- 
-+		svc_thread_wake_next(rqstp);
- 		/* Normally we will wait up to 5 seconds for any required
- 		 * cache information to be provided.  When there are no
- 		 * idle threads, we reduce the wait time.
-@@ -885,6 +896,7 @@ void svc_recv(struct svc_rqst *rqstp)
- 		if (req) {
- 			list_del(&req->rq_bc_list);
- 			spin_unlock_bh(&serv->sv_cb_lock);
-+			svc_thread_wake_next(rqstp);
- 
- 			svc_process_bc(req, rqstp);
- 			return;
--- 
-2.41.0
+Roberto
 
