@@ -2,114 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFA5479263D
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Sep 2023 18:26:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 828557927B2
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Sep 2023 18:37:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232705AbjIEQFe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Sep 2023 12:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50634 "EHLO
+        id S229529AbjIEQFY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Sep 2023 12:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353823AbjIEIT2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Sep 2023 04:19:28 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D7ACD2
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Sep 2023 01:19:25 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id af79cd13be357-76f2843260bso140460385a.3
-        for <linux-nfs@vger.kernel.org>; Tue, 05 Sep 2023 01:19:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1693901964; x=1694506764; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CvUmRYKO5rN5JiKdYLn9/Xxm/soJiVGtQm650JnL3Yc=;
-        b=Rsh1U5LWkGLD60egT4xH0OkFTYAdhZ9PEm8UjiAWZ2Ip5vQRRw1xGx18MGa89HvYT6
-         DHnioG41PeB3MkB8Ft4Wrqqp2kjHic/Vkr/qunTIeMzVwVxM8xASTQz27lIUkjehlemV
-         8hhlmR9WWRNLvf+5DEaOSg8zVsJ6dc1e3o0hPmiekrNR95zn5u2OlTodDzhAW5FoXvst
-         vtI6oie/Go2kADRNvERCwQ/tj5WyItWCvOqaItC7RUWSKHX1Jy68bxHNnuEfs4fh7/gu
-         3DkWJuriwsFIhQtQN+dSHz9r/brcNOoN1uxEnXTsFI93qPjm9f/GoLz132bzGfSth5g7
-         +kXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693901964; x=1694506764;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CvUmRYKO5rN5JiKdYLn9/Xxm/soJiVGtQm650JnL3Yc=;
-        b=eQ8VccHlgLBJrYfL8OF4zUdWxnyNpxJ0IuPwInsQXTMrPLsrhXKj5gXRb8Jp2ghZB7
-         okP1gBDepmEfUMabeTgqOYd0yv8DrKWsFexL2ipQoEjUCwe5Zsj4WC9e7/LGPZn51JKn
-         HdxFNI/XSniiy9sU4SO7nJTsRk3WkCvgyf3edLyudBqzep80hQo4TFLXLATJ8/2mwGy7
-         uMZDh+0FdYAq+ZU4sxJWYC0CZ0a4yrAgHXX8T8G1WM8UZSe5/l0bcmF6u8bR0Zn3kK8j
-         Gatwo8O5W+q8AB+lKrfo+eDdYcU5scqBwVKnnD09DefcKRPAfXTHK7zlwhqlSrEpQHAx
-         Yf0A==
-X-Gm-Message-State: AOJu0YxevFe5Q+E1itxGsj4B3a+MfeqKsuCo844ug+hZ+1fYeTACCu5E
-        6PdrM9s+x5qtymVHyXcUrEo56q+i4kf97ICHm8HnEqDSzsv6ZA==
-X-Google-Smtp-Source: AGHT+IERAX8PQb3+O/VRt2IpdT+B8+AIRhc7TR9qfBXEywqtD/tUeMqNmseulSPs3fS452xIhVN8tbhQYqX1LXl34po=
-X-Received: by 2002:a0c:aa1b:0:b0:653:5736:c0b4 with SMTP id
- d27-20020a0caa1b000000b006535736c0b4mr10412089qvb.54.1693901943569; Tue, 05
- Sep 2023 01:19:03 -0700 (PDT)
+        with ESMTP id S1354776AbjIEOQO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Sep 2023 10:16:14 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2D7B197;
+        Tue,  5 Sep 2023 07:16:10 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 9D9CC6732A; Tue,  5 Sep 2023 16:16:04 +0200 (CEST)
+Date:   Tue, 5 Sep 2023 16:16:04 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Peter Xu <peterx@redhat.com>
+Cc:     Lei Huang <lei.huang@linux.intel.com>, miklos@szeredi.hu,
+        Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Boris Pismenny <borisp@nvidia.com>, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-mm@kvack.org, v9fs@lists.linux.dev, netdev@vger.kernel.org
+Subject: getting rid of the last memory modifitions through gup(FOLL_GET)
+Message-ID: <20230905141604.GA27370@lst.de>
 MIME-Version: 1.0
-Received: by 2002:a0c:de0e:0:b0:634:8588:8dcb with HTTP; Tue, 5 Sep 2023
- 01:19:02 -0700 (PDT)
-Reply-To: wuwumoneytransfer5000@hotmail.com
-From:   "(IMF) SCAM VICTIMS" <smmab4668@gmail.com>
-Date:   Tue, 5 Sep 2023 01:19:02 -0700
-Message-ID: <CAPvhgiGb_xchv+cBfjtNXZbs3T38s2BJRqmONSNBDUeOvUkr=Q@mail.gmail.com>
-Subject: Betrugsopfer
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=4.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Sehr geehrter E-Mail-Besitzer,
+Hi all,
 
+we've made some nice progress on converting code that modifies user
+memory to the pin_user_pages interface, especially though the work
+from David Howells on iov_iter_extract_pages.  This thread tries to
+coordinate on how to finish off this work.
 
+The obvious next step is the remaining users of iov_iter_get_pages2
+and iov_iter_get_pages_alloc2.  We have three file system direct I/O
+users of those left: ceph, fuse and nfs.  Lei Huang has sent patches
+to convert fuse to iov_iter_extract_pages which I'd love to see merged,
+and we'd need equivalent work for ceph and nfs.
 
-Der Internationale W=C3=A4hrungsfonds (IWF) entsch=C3=A4digt alle Betrugsop=
-fer
-und Ihre E-Mail-Adresse wurde auf der Liste der Betrugsopfer gefunden.
+The non-file system uses are in the vmsplice code, which only reads
+from the pages (but would still benefit from an iov_iter_extract_pages
+conversion), and in net.  Out of the users in net, all but the 9p code
+appear to be for reads from memory, so they don't pin even if a
+conversion would be nice to retire iov_iter_get_pages* APIs.
 
-Dieses Western Union-B=C3=BCro wurde vom IWF beauftragt Ihnen Ihre
-Verg=C3=BCtung per Western Union Money Transfer zu =C3=BCberweisen.
+After that we might have to do an audit of the raw get_user_pages APIs,
+but there probably aren't many that modify file backed memory.
 
-Wir haben uns jedoch entschieden Ihre eigene Zahlung =C3=BCber Geldtransfer
-der Westunion in H=C3=B6he von =E2=82=AC5,000, pro Tag vorzunehmen bis die
-Gesamtsumme von =E2=82=AC1,500.000.00, vollst=C3=A4ndig an Sie =C3=BCberwie=
-sen wurde.
-
-Wir k=C3=B6nnen die Zahlung m=C3=B6glicherweise nicht nur mit Ihrer
-E-Mail-Adresse senden daher ben=C3=B6tigen wir Ihre Informationen dar=C3=BC=
-ber
-wohin wir das Geld an Sie senden wie z. B.:
-
-
-Name des Adressaten ________________
-
-Adresse________________
-
-Land__________________
-
-Telefonnummer________________
-
-Angeh=C3=A4ngte Kopie Ihres Ausweises______________
-
-Das Alter ________________________
-
-
-Wir beginnen mit der =C3=9Cbertragung sobald wir Ihre Informationen
-erhalten haben: Kontakt E-Mail: ( wuwumoneytransfer5000@hotmail.com)
-
-
-Getreu,
-
-
-Herr Anthony Duru,
-
-Direktor von Geldtransfer der Westunion
+I'm also wondering what a good debug aid would be for detecting
+writes to file backed memory without a previous reservation, but
+everything either involves a page flag or file system code.  But if
+someone has an idea I'm all ear as something mechanical to catch these
+uses would be quite helpful.
