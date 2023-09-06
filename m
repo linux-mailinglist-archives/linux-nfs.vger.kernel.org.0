@@ -2,166 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F2BC793F26
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Sep 2023 16:43:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 059A5793EEE
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Sep 2023 16:33:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239640AbjIFOnu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Sep 2023 10:43:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39522 "EHLO
+        id S241651AbjIFOd0 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 6 Sep 2023 10:33:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230085AbjIFOnt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Sep 2023 10:43:49 -0400
-X-Greylist: delayed 977 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 06 Sep 2023 07:43:44 PDT
-Received: from antispam-1.ensmp.fr (courriel-3.mines-paristech.fr [77.158.173.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E365172E
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Sep 2023 07:43:44 -0700 (PDT)
-Received: from z-smtp.mines-paristech.fr (z-smtp.mines-paristech.fr [77.158.173.137])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by antispam-1.ensmp.fr (antispam.mines-paristech.fr) with ESMTPS id 4F7B555F6D
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Sep 2023 16:27:25 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by z-smtp.mines-paristech.fr (Postfix) with ESMTP id 4CB7F1C00E2
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Sep 2023 16:27:25 +0200 (CEST)
-Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
-        by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Q4-b-06TYOMy for <linux-nfs@vger.kernel.org>;
-        Wed,  6 Sep 2023 16:27:25 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by z-smtp.mines-paristech.fr (Postfix) with ESMTP id F24AF1C00F2
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Sep 2023 16:27:24 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 z-smtp.mines-paristech.fr F24AF1C00F2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mines-paristech.fr;
-        s=22b35c52-6eac-4abe-ae29-0aba6ae35064; t=1694010445;
-        bh=RRqVqUDYgKnxt1jU6d9dk30v+TC3pEPVp/KIgIzdMKk=;
-        h=Message-ID:From:To:Date:MIME-Version;
-        b=dauEpTUoTl2HGJRijSrooQO8saiwF+36UyGYWGnRFPSIPKmbcrWcGgaUW4s3nOqAc
-         rEs27xGz+iqXjwpBFHnUpHF05CGSMKk4BXZ9g71ABAiXBikD+gngDQ6UUPWyZSAdSg
-         P/GLzUsYtcEEcQ0DC0TqTDfGQ+N+DGMJvVI9HuoqHvwVeE/83FHIYiyEIDq2NPMhXY
-         8hSuvA52nCt+phe4gHvOT3EShCpyKfdo838IrIMAZDJIsWbNDhjY0Ina4qKO8yitOi
-         OPCSTHUtNMQgSJ1SoUw7VEU+Lggvt9TibYMqnFJPVFFfDGadXapbfnPa6DF2rmX1ga
-         X/BXqFmTB+ufg==
-X-Virus-Scanned: amavisd-new at z-smtp.mines-paristech.fr
-Received: from z-smtp.mines-paristech.fr ([127.0.0.1])
-        by localhost (z-smtp.mines-paristech.fr [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id esRXExOwMFCy for <linux-nfs@vger.kernel.org>;
-        Wed,  6 Sep 2023 16:27:24 +0200 (CEST)
-Received: from hive.interne.mines-paristech.fr (nat2-sop.mines-paristech.fr [77.158.181.2])
-        by z-smtp.mines-paristech.fr (Postfix) with ESMTPSA id CB4821C00E2
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Sep 2023 16:27:24 +0200 (CEST)
-Message-ID: <0394bda7dd3e5dd4f1d42b790f736d52c1f01e74.camel@mines-paristech.fr>
-Subject: Unexpected high latency
-From:   Benoit Gschwind <benoit.gschwind@mines-paristech.fr>
-To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Wed, 06 Sep 2023 16:27:24 +0200
+        with ESMTP id S235334AbjIFOdZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Sep 2023 10:33:25 -0400
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B564019AA
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Sep 2023 07:33:10 -0700 (PDT)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-64a5f9a165eso18989186d6.1
+        for <linux-nfs@vger.kernel.org>; Wed, 06 Sep 2023 07:33:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1694010789; x=1694615589;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SKakrlaECmoqu5CUgp0OjDmhylNJMx7Jeao8/Lqwwww=;
+        b=Inup+MypCsmJqLt4TfmnCevArnNOdlW0hjUbGWqDc3XaeO7UvMTnEL5YXwV7vs4Uti
+         8WhrYMDnKNGltaxxCJ2ANWYQaVGKcl+X4D9325UOPSHFtRNGwQIj7HSeUnhDz79WlSiu
+         ac0HdIeRhHhpS/zwL1F8FwDgHimhZa7E4Og9nIcTy8CDArH21cmQAdLvAQbt92ov62f5
+         xY1PrrMhL1HIadcPMCcFrCt4lGsXGlJ7rrsditaZjavbx9RrOIfVlgpp87eFaEwL71DV
+         u9YJOYpdXZsETMP91j/OQtfc5Er3GbKJANAMUmHH8RSAKs3yNWq1RvhwzPwFE1zKd11/
+         Dnqg==
+X-Gm-Message-State: AOJu0Yw6tGMJUvYFKlNm9hzu47VGsrxzJ2EV1oVr6WPtBjbHgMhQhXgh
+        YN3DQV0l0SVw82x7zD7vVw==
+X-Google-Smtp-Source: AGHT+IFlOTbn4HcbheED+y+CBRi87TE4hOM8qmYCgjSORLk8iOLdpod+/N4f7mf28kVBux0XXm2hnw==
+X-Received: by 2002:a0c:b395:0:b0:649:c4f:8d81 with SMTP id t21-20020a0cb395000000b006490c4f8d81mr15458631qve.5.1694010789587;
+        Wed, 06 Sep 2023 07:33:09 -0700 (PDT)
+Received: from [192.168.75.138] (c-68-32-72-208.hsd1.mi.comcast.net. [68.32.72.208])
+        by smtp.gmail.com with ESMTPSA id k16-20020a0cb250000000b006490a9946b6sm5543758qve.119.2023.09.06.07.33.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Sep 2023 07:33:08 -0700 (PDT)
+Message-ID: <2308819c5942088713ae935a53d323d3d604cd8d.camel@kernel.org>
+Subject: Re: [PATCH] Revert "SUNRPC: Fail faster on bad verifier"
+From:   Trond Myklebust <trondmy@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Russell Cattelan <cattelan@thebarn.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Wed, 06 Sep 2023 10:33:07 -0400
+In-Reply-To: <2854B02F-61E7-4AD0-BF7C-0DC132834416@oracle.com>
+References: <20230906010328.54634-1-trondmy@kernel.org>
+         <2854B02F-61E7-4AD0-BF7C-0DC132834416@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.38.3-1+deb11u2 
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-DRWEB-SCAN: disabled
-X-CLAMAV-SCAN: ok
-X-VRSPAM-SCORE: -100
-X-VRSPAM-STATE: legit
-X-VRSPAM-CAUSE: gggruggvucftvghtrhhoucdtuddrgedviedrudehfedgjeejucetufdoteggodetrfcurfhrohhfihhlvgemucggteffgffitefvgfghtegjpdggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkuffhvffftggfggfgsehtqhertddtreejnecuhfhrohhmpeeuvghnohhithcuifhstghhfihinhguuceosggvnhhoihhtrdhgshgthhifihhnugesmhhinhgvshdqphgrrhhishhtvggthhdrfhhrqeenucggtffrrghtthgvrhhnpeeuhfdtfeeghefhteffteevfeelheettdetkeeltdehieejudffieegieejieduffenucfkphepjeejrdduheekrddujeefrddufeejpdejjedrudehkedrudekuddrvdenucfrrghrrghmpehmohguvgepshhmthhpohhuthdpihhnvghtpeejjedrudehkedrudejfedrudefjedphhgvlhhopeiiqdhsmhhtphdrmhhinhgvshdqphgrrhhishhtvggthhdrfhhrpdhmrghilhhfrhhomhepsggvnhhoihhtrdhgshgthhifihhnugesmhhinhgvshdqphgrrhhishhtvggthhdrfhhrpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqnhhfshesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+On Wed, 2023-09-06 at 13:40 +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Sep 5, 2023, at 9:03 PM, trondmy@kernel.org wrote:
+> > 
+> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > 
+> > This reverts commit 0701214cd6e66585a999b132eb72ae0489beb724.
+> > 
+> > The premise of this commit was incorrect. There are exactly 2 cases
+> > where rpcauth_checkverf() will return an error:
+> > 
+> > 1) If there was an XDR decode problem (i.e. garbage data).
+> > 2) If gss_validate() had a problem verifying the RPCSEC_GSS MIC.
+> 
+> There's also the AUTH_TLS probe:
+> 
+> https://www.rfc-editor.org/rfc/rfc9289.html#section-4.1-7
+> 
+> That was the purpose of 0701214cd6e6.
+> 
+> Reverting this commit is likely to cause problems when our
+> TLS-capable client interacts with a server that knows
+> nothing of AUTH_TLS.
 
-I did set up nfs client[1]/server[2] backed by raid6/btrfs filesystem,
-and I get very noticeable latency, i.e. opening/closing files take 5
-seconds.=C2=A0
-To access the issue, I did basic benchmark of the filesystem using
-bonnie++2.00a and when I use it on the server without nfs in the middle
-I get the following results:
+The patch completely broke the semantics of the header validation code.
+There is no discussion about whether or not it needs to be reverted.
 
-Version  2.00       ------Sequential Output------ --Sequential Input- --R=
-andom-
-                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --S=
-eeks--
-Name:Size etc        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /s=
-ec %CP
-SERVER       63808M  200k  98  379m  64  183m  51 1146k  99  1.0g  84 533=
-.8  62
-Latency               162ms   38609us     494ms   25987us     452ms     2=
-04ms
-Version  2.00       ------Sequential Create------ --------Random Create--=
-------
-SERVER              -Create-- --Read--- -Delete-- -Create-- --Read--- -De=
-lete--
-              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /s=
-ec %CP
-                 16 16384  29 +++++ +++ 16384  92 16384  66 +++++ +++ 163=
-84  84
-Latency              1106us     420us     824us     321us      25us    37=
-88us
-1.98,2.00,SERVER,1,1693984997,63808M,,8192,5,200,98,387908,64,187033,51,1=
-146,99,1078676,84,533.8,62,16,,,,,3780,29,+++++,+++,16381,92,15276,66,+++=
-++,+++,13370,84,162ms,38609us,494ms,25987us,452ms,204ms,1106us,420us,824u=
-s,321us,25us,3788us
+If the TLS code needs special treatment, then a separate patch is
+needed to fix tls_validate() to return something that can be caught by
+rpc_decode_header and interpreted differently to the EIO and EACCES
+error codes currently being returned by RPCSEC_GSS, AUTH_SYS and
+others.
 
-In this benchmark, all seems good enoush, even if they are slow legacy di=
-sk (i.e. not SSD).
+> > In the second case, there are again 2 subcases:
+> > 
+> > a) The GSS context expires, in which case gss_validate() will force
+> > a
+> >   new context negotiation on retry by invalidating the cred.
+> > b) The sequence number check failed because an RPC call timed out,
+> > and
+> >   the client retransmitted the request using a new sequence number,
+> >   as required by RFC2203.
+> > 
+> > In neither subcase is this a fatal error.
+> > 
+> > Reported-by: Russell Cattelan <cattelan@thebarn.com>
+> > Fixes: 0701214cd6e6 ("SUNRPC: Fail faster on bad verifier")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > ---
+> > net/sunrpc/clnt.c | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> > index 12c46e129db8..5a7de7e55548 100644
+> > --- a/net/sunrpc/clnt.c
+> > +++ b/net/sunrpc/clnt.c
+> > @@ -2724,7 +2724,7 @@ rpc_decode_header(struct rpc_task *task,
+> > struct xdr_stream *xdr)
+> > 
+> > out_verifier:
+> > trace_rpc_bad_verifier(task);
+> > - goto out_err;
+> > + goto out_garbage;
+> > 
+> > out_msg_denied:
+> > error = -EACCES;
+> > -- 
+> > 2.41.0
+> > 
+> 
+> --
+> Chuck Lever
+> 
+> 
 
-But When I put the nfs + network in the middle with following settings (c=
-at /proc/mount):
-
-X.X.X.X:/m0 /mnt/m0 nfs4 rw,nosuid,nodev,relatime,vers=3D4.2,rsize=3D1048=
-576,wsize=3D1048576,namlen=3D255,hard,proto=3Dtcp,timeo=3D6000,retrans=3D=
-2,sec=3Dkrb5i,clientaddr=3DX.X.X.X,fsc,local_lock=3Dnone,addr=3DX.X.X.X 0=
- 0
-
-I get the following result (from nfs client):
-
-Version  2.00       ------Sequential Output------ --Sequential Input- --R=
-andom-
-                    -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- --S=
-eeks--
-Name:Size etc        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /s=
-ec %CP
-CLIENT         126G  702k  96  111m  18 31.7m  11 1852k  98 47.1m  10 407=
-.8  16
-Latency             27010us   56044us   12422ms   33647us     506ms     2=
-60ms
-Version  2.00       ------Sequential Create------ --------Random Create--=
-------
-CLIENT              -Create-- --Read--- -Delete-- -Create-- --Read--- -De=
-lete--
-              files  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /s=
-ec %CP
-                 16 16384  23 +++++ +++ 16384  16 16384   7 16384  32 163=
-84  18
-Latency             11543us   22772us    1871us    8949ms     840us    36=
-54us
-1.98,2.00,CLIENT,1,1694022898,126G,,8192,5,702,96,113319,18,32419,11,1852=
-,98,48229,10,407.8,16,16,,,,,627,23,+++++,+++,2620,16,587,7,3147,32,2846,=
-18,27010us,56044us,12422ms,33647us,506ms,260ms,11543us,22772us,1871us,894=
-9ms,840us,3654us
-
-In this benchmark I get top speed at 100 MB/s wich is expected because
-I'm using 1Gb/s network link. But for the rewrite benchmark I get an
-unexpected 30 MB/s and more over *12 seconds* of latency. I also get
-the unexpected latency for the create bechmark where I jump from <1ms
-to nearly *9 seconds*.
-
-Did I my setup is wrong ? Does it expected ?
-
-
-Thank you, best regards
-
-[1] client kernel: Linux 5.10.0-23-amd64 #1 SMP Debian 5.10.179-1 (2023-0=
-5-12) x86_64 GNU/Linux
-[2] server kernel: Linux 5.10.0-25-amd64 #1 SMP Debian 5.10.191-1 (2023-0=
-8-16) x86_64 GNU/Linux
-
---
-Benoit Gschwind
-
+-- 
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trond.myklebust@hammerspace.com
 
 
