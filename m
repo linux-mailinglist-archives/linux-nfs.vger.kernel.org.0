@@ -2,280 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3722B7945D4
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Sep 2023 00:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6CEA797672
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Sep 2023 18:09:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235690AbjIFWAT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Sep 2023 18:00:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55226 "EHLO
+        id S233252AbjIGQJl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Sep 2023 12:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232347AbjIFWAT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Sep 2023 18:00:19 -0400
-Received: from mail.digitalelves.com (mail.digitalelves.com [198.211.96.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 078D8172E
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Sep 2023 15:00:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=thebarn.com;
-        s=default; t=1694037584;
-        bh=q+7AG/6dSaS6hjbUrWawlyBcre9SogWM2vc5JgzzO5Y=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=j4RAa57ITaRkhKmjEfLf7S/89ON2QhdLVTwTeoFQH/LNb+mzXfhA0oH+qs95RnJOu
-         mH2BIXSCpBsy1aegsfNXB1yChOs16+WRJWo8puWnou7Z7Xtpmvb/UXdVUXRimUHY65
-         RWrAghSKJnraH3wlPe9DxgglUJW9bijIBe1fxcDQ=
-Received: from [10.0.0.175] (c-66-41-64-138.hsd1.mn.comcast.net [66.41.64.138])
-        by mail.digitalelves.com (Postfix) with ESMTPSA id E4BEF13C21E;
-        Wed,  6 Sep 2023 21:59:38 +0000 (UTC)
-Message-ID: <4750ddd5-ca20-f49a-62f3-07aab70805b2@thebarn.com>
-Date:   Wed, 6 Sep 2023 16:59:38 -0500
+        with ESMTP id S235209AbjIGQIt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Sep 2023 12:08:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DBC7D141
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Sep 2023 09:01:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1694102413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=WOmAueS9mqp0ZzoPfp6HN6djs5DvNfkjb4UeJLLDx04=;
+        b=dnC4Aa9c3DzOvRm29f6XKv3HPA0aCH48lJSXX5kdG9w/E9JxCvEyttYbOOetdgc9xjM+sP
+        V4psq2fr6Mb4SSmfagIYcB8C7cmwGfsp61W+sNOtd8vuenyfDvEvlQFdiA3zO8mQwzfqk+
+        LjhbA/e6OFrjkMQfAuhy2+ru4NfinAE=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-140-tzJbWiqJN8CGd3m3O91PYQ-1; Thu, 07 Sep 2023 08:43:43 -0400
+X-MC-Unique: tzJbWiqJN8CGd3m3O91PYQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B04F03815F6A;
+        Thu,  7 Sep 2023 12:43:42 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.48.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 01ED0403171;
+        Thu,  7 Sep 2023 12:43:41 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     linux-nfs@vger.kernel.org, jlayton@kernel.org
+Subject: Re: [PATCH v2] NFSv4: Always ask for type with READDIR
+Date:   Thu, 07 Sep 2023 08:43:40 -0400
+Message-ID: <202D34A7-61AC-44DA-B2C1-CCE109EC2A76@redhat.com>
+In-Reply-To: <82d1908e4f835a2f16a509a11b62b9d93ccb6cdf.1693424491.git.bcodding@redhat.com>
+References: <82d1908e4f835a2f16a509a11b62b9d93ccb6cdf.1693424491.git.bcodding@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.15.0
-Subject: Re: [PATCH] Revert "SUNRPC: Fail faster on bad verifier"
-Content-Language: en-US
-To:     Chuck Lever III <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@kernel.org>
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20230906010328.54634-1-trondmy@kernel.org>
- <2854B02F-61E7-4AD0-BF7C-0DC132834416@oracle.com>
- <2308819c5942088713ae935a53d323d3d604cd8d.camel@kernel.org>
- <15DC398B-F481-4FD4-8265-603CEE2454B6@oracle.com>
- <453cd9f416164a026e0932778d2bbcaf04dbe572.camel@kernel.org>
- <36A61B31-5D22-480F-979B-82A1B512F555@oracle.com>
-From:   Russell Cattelan <cattelan@thebarn.com>
-In-Reply-To: <36A61B31-5D22-480F-979B-82A1B512F555@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello Trond and Anna - two questions:
 
+Any chance of this going this cycle upon its merits of simplicity outweig=
+hing the lateness?
 
-On 9/6/23 1:05 PM, Chuck Lever III wrote:
-> 
-> 
->> On Sep 6, 2023, at 12:18 PM, Trond Myklebust <trondmy@kernel.org> wrote:
->>
->> On Wed, 2023-09-06 at 15:20 +0000, Chuck Lever III wrote:
->>>
->>>
->>>> On Sep 6, 2023, at 10:33 AM, Trond Myklebust <trondmy@kernel.org>
->>>> wrote:
->>>>
->>>> On Wed, 2023-09-06 at 13:40 +0000, Chuck Lever III wrote:
->>>>>
->>>>>
->>>>>> On Sep 5, 2023, at 9:03 PM, trondmy@kernel.org wrote:
->>>>>>
->>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>>>>
->>>>>> This reverts commit 0701214cd6e66585a999b132eb72ae0489beb724.
->>>>>>
->>>>>> The premise of this commit was incorrect. There are exactly 2
->>>>>> cases
->>>>>> where rpcauth_checkverf() will return an error:
->>>>>>
->>>>>> 1) If there was an XDR decode problem (i.e. garbage data).
->>>>>> 2) If gss_validate() had a problem verifying the RPCSEC_GSS
->>>>>> MIC.
->>>>>
->>>>> There's also the AUTH_TLS probe:
->>>>>
->>>>> https://www.rfc-editor.org/rfc/rfc9289.html#section-4.1-7
->>>>>
->>>>> That was the purpose of 0701214cd6e6.
->>>>>
->>>>> Reverting this commit is likely to cause problems when our
->>>>> TLS-capable client interacts with a server that knows
->>>>> nothing of AUTH_TLS.
->>>>
->>>> The patch completely broke the semantics of the header validation
->>>> code.
->>>
->>> If that were truly the case, it's amazing that the client
->>> has hobbled along for the past 14 months with no-one
->>> noticing the breakage until now.
->>>
->>> Seriously, though, treating a bad verifier as garbage args
->>> is not intuitive. If it's that critical there needs to be
->>> a comment in the code explaining why.
->>>
->>
->> It is necessary because of the peculiarities of RPCSEC_GSS and the
->> session semantics it implements.
->> See https://datatracker.ietf.org/doc/html/rfc2203#section-5.3.3.1 and
->> in particular, the paragraph discussing retransmissions by the client.
-> 
-> Retrying is fine.
-> 
-> But the counter in the client is called "garbage_retries".
-> That's not what is going on the EACCES case, though the
-> behavior is close enough -- it's code re-use (good) without
-> appropriate documentation (bad).
-> 
-> The decoder treats EIO and EACCES exactly the same way.
-> Again, code reuse (good) without appropriate documentation
-> (bad).
-> 
-> I tried to address that in my RFC patch by adding a small
-> explanatory comment and by adding an API contract for
-> rpcauth_checkverf().
-> 
-So this has come out of discussion that Trond and I are having as what 
-should happen when rpcauth_checkverf fails.
+If no - can we expect it on 6.7, or should I continue to look for another=
+ approach that doesn't potentially penalize some servers?
 
-The problem we are running into and fairly easy to repo with iptables 
-drop <server ip> ; sleep 60 ;iptables accept <server ip>
+Ben
 
-Our systems are currently running either ubuntu 18.04 4.15 based or 
-ubutunu 22.04 5.15 based both exhibit problem and neither has the change.
+On 30 Aug 2023, at 15:42, Benjamin Coddington wrote:
 
-The problem happens before xdr_inline_decode and the switch statement
-so I don't think the change has any affect on the problem we trying to 
-sort out where the gss checksum does not match due to the re-trans due 
-to the RPC timeout.
-
---Russell
-
-> 
->>>> There is no discussion about whether or not it needs to be
->>>> reverted.
->>>
->>> The patch description is wrong, though, to exclude AUTH_TLS.
->>>
->>> The reverting patch description claims to be an exhaustive
->>> list of all the cases, but it doesn't mention the AUTH_TLS
->>> case at all.
->>>
->>>
->>>> If the TLS code needs special treatment, then a separate patch is
->>>> needed to fix tls_validate() to return something that can be caught
->>>> by
->>>> rpc_decode_header and interpreted differently to the EIO and EACCES
->>>> error codes currently being returned by RPCSEC_GSS, AUTH_SYS and
->>>> others.
->>>
->>> That could have been brought up when 0701214cd6e6 was first
->>> posted for review. Interesting that the decoder currently
->>> does not distinguish between EIO and EACCES.
->>>
->>> Thanks for the suggestion, I'll have a look.
->>>
->>
->> Now that I look at it, I think your approach to satisfying RFC9289 is
->> not correct.
-> 
-> I'm not following what aspect of the implementation is problematic.
-> I'm going to assume you mean the implementation of opportunism.
-> 
-> 
->> Since this is a transport level issue, why should we not just mark the
->> xprt for disconnection, and then retry? It is entirely possible that
->> some load balancer/floating IP has just moved the connection to some
->> node that was not expecting to do TLS.
-> 
-> Depending on the security policy chosen by the client's administrator,
-> that could either be a security problem or a "don't care" situation.
-> 
-> If the administrator wants the client to _require_ TLS, then
-> connecting to a load balancer where TLS suddenly becomes unavailable
-> after a reconnect is a hard error. This prevents STRIPTLS attacks.
-> That's good security.
-> 
-> If the administrator wants to allow operation to continue even if TLS
-> is not available, then the client can recover by not using TLS. That's
-> rather terrible security, but can be desirable to improve backward
-> compatibility.
-> 
-> 
->> The only case where that should
->> not be assumed is the case where the error happens right at the very
->> beginning of the mount, when disconnecting should normally suffice to
->> trigger the RPC_TASK_SOFTCONN code anyway.
-> 
-> If TLS goes away after a reconnect, that's a problem. Whether
-> further operation should stop depends on the administrator's
-> chosen security policy.
-> 
-> The security policies are NFS-level settings (eg, mount options).
-> RPC just indicates to NFS whether the traffic is protected or not.
-> 
-> When NFS asks RPC to ensure the communication channel is protected,
-> that means every reconnect is protected. Communication with that
-> security policy cannot happen without protection.
-> 
-> Trust me, the security community will have it no other way.
-> 
-> If you need opportunism in this case, then I can add back the
-> "xprtsec=auto" mount option, which you asked me to remove a while
-> back.
-> 
-> 
->>>>>> In the second case, there are again 2 subcases:
->>>>>>
->>>>>> a) The GSS context expires, in which case gss_validate() will
->>>>>> force
->>>>>> a
->>>>>>    new context negotiation on retry by invalidating the cred.
->>>>>> b) The sequence number check failed because an RPC call timed
->>>>>> out,
->>>>>> and
->>>>>>    the client retransmitted the request using a new sequence
->>>>>> number,
->>>>>>    as required by RFC2203.
->>>>>>
->>>>>> In neither subcase is this a fatal error.
->>>>>>
->>>>>> Reported-by: Russell Cattelan <cattelan@thebarn.com>
->>>>>> Fixes: 0701214cd6e6 ("SUNRPC: Fail faster on bad verifier")
->>>>>> Cc: stable@vger.kernel.org
->>>>>> Signed-off-by: Trond Myklebust
->>>>>> <trond.myklebust@hammerspace.com>
->>>>>> ---
->>>>>> net/sunrpc/clnt.c | 2 +-
->>>>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
->>>>>> index 12c46e129db8..5a7de7e55548 100644
->>>>>> --- a/net/sunrpc/clnt.c
->>>>>> +++ b/net/sunrpc/clnt.c
->>>>>> @@ -2724,7 +2724,7 @@ rpc_decode_header(struct rpc_task *task,
->>>>>> struct xdr_stream *xdr)
->>>>>>
->>>>>> out_verifier:
->>>>>> trace_rpc_bad_verifier(task);
->>>>>> - goto out_err;
->>>>>> + goto out_garbage;
->>>>>>
->>>>>> out_msg_denied:
->>>>>> error = -EACCES;
->>>>>> -- 
->>>>>> 2.41.0
->>>>>>
->>>>>
->>>>> --
->>>>> Chuck Lever
->>>>>
->>>>>
->>>>
->>>> -- 
->>>> Trond Myklebust
->>>> Linux NFS client maintainer, Hammerspace
->>>> trond.myklebust@hammerspace.com
->>>
->>>
->>> --
->>> Chuck Lever
-> 
-> 
+> Again we have claimed regressions for walking a directory tree, this ti=
+me
+> with the "find" utility which always tries to optimize away asking for =
+any
+> attributes until it has a complete list of entries.  This behavior make=
+s
+> the readdir plus heuristic do the wrong thing, which causes a storm of
+> GETATTRs to determine each entry's type in order to continue the walk.
+>
+> For v4 add the type attribute to each READDIR request to include it no
+> matter the heuristic.  This allows a simple `find` command to proceed
+> quickly through a directory tree.
+>
+> Suggested-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+>
 > --
-> Chuck Lever
-> 
-> 
+> On v2: Don't add the type attribute twice
+> ---
+>  fs/nfs/nfs4xdr.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+> index deec76cf5afe..7200d6f7cd7b 100644
+> --- a/fs/nfs/nfs4xdr.c
+> +++ b/fs/nfs/nfs4xdr.c
+> @@ -1602,7 +1602,7 @@ static void encode_read(struct xdr_stream *xdr, c=
+onst struct nfs_pgio_args *args
+>  static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_r=
+eaddir_arg *readdir, struct rpc_rqst *req, struct compound_hdr *hdr)
+>  {
+>  	uint32_t attrs[3] =3D {
+> -		FATTR4_WORD0_RDATTR_ERROR,
+> +		FATTR4_WORD0_TYPE|FATTR4_WORD0_RDATTR_ERROR,
+>  		FATTR4_WORD1_MOUNTED_ON_FILEID,
+>  	};
+>  	uint32_t dircount =3D readdir->count;
+> @@ -1612,7 +1612,7 @@ static void encode_readdir(struct xdr_stream *xdr=
+, const struct nfs4_readdir_arg
+>  	unsigned int i;
+>
+>  	if (readdir->plus) {
+> -		attrs[0] |=3D FATTR4_WORD0_TYPE|FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZ=
+E|
+> +		attrs[0] |=3D FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE|
+>  			FATTR4_WORD0_FSID|FATTR4_WORD0_FILEHANDLE|FATTR4_WORD0_FILEID;
+>  		attrs[1] |=3D FATTR4_WORD1_MODE|FATTR4_WORD1_NUMLINKS|FATTR4_WORD1_O=
+WNER|
+>  			FATTR4_WORD1_OWNER_GROUP|FATTR4_WORD1_RAWDEV|
+> -- =
+
+> 2.
+
