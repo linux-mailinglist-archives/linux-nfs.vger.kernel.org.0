@@ -2,280 +2,150 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7616C797EAD
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Sep 2023 00:25:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF274797FBA
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Sep 2023 02:30:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232425AbjIGWZr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Sep 2023 18:25:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49924 "EHLO
+        id S240167AbjIHAab (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Sep 2023 20:30:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230195AbjIGWZr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Sep 2023 18:25:47 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0E891BC6
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Sep 2023 15:25:42 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 698171F747;
-        Thu,  7 Sep 2023 22:25:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1694125541; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s6NUCsx7zjr85OcOsClYrUGJYknP65kimroZB0vKYUE=;
-        b=UM1snRskm3CQT6x2hKgj0qW/rRJyTbDsJSM6jHIEMV6JhyxyGsTREpkV8CXffnykkIZzFZ
-        ll9JX9IAsr0+hZ9le38O1OhSVa1clMOhStHr1VQ2Wa9UXYHx1d+AVX69rfMtw58I7lxpOf
-        BepYbB67pOARI9AESBDnXdtIGb+OkLA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1694125541;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=s6NUCsx7zjr85OcOsClYrUGJYknP65kimroZB0vKYUE=;
-        b=omjRAOAStAD9mH8zbnunrV1AdzYxJ6zJNiM9JFFIPYH/AQUV8P6YT95mRGD0LOzfkSfI9z
-        AtyDx6wajLmQ4UCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D189E138FA;
-        Thu,  7 Sep 2023 22:25:39 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id DE9/IONN+mSANAAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 07 Sep 2023 22:25:39 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229890AbjIHAa3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Sep 2023 20:30:29 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E3B1BD8;
+        Thu,  7 Sep 2023 17:30:23 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-99bc9e3cbf1so319222466b.0;
+        Thu, 07 Sep 2023 17:30:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694133021; x=1694737821; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rWH+VGW4ynUEnqVgfK8Uo5vbTneevGaezyT5mB/sqg4=;
+        b=OiY77u4+0lZZf05zyJjqtXsFEt53gnu17pzSAddazvgmxBSqq/iFfofB+q7WLCDEyU
+         m/fz+w2DjK7ajFwh6Wl5OMnpq2lSnZxhKNITuhb+ArT10qBLF/w3E6hUYLr2Ynr9Uy0L
+         sHeGcXkyahOnjrEnkCzBF3EwG9xF9KIv8UmufrGSjWBO9hDNyInV8+iHy5QYfk82jWye
+         xbFkA6w68il0m14wAmbY3aZ9vJvLyqfqhwJlL2IlVpJJ69odvj++3/+rNIuFZ3ktA/po
+         yf2n1Q3ML2zeCD2E+gfopvnQ7ym8KgJXlk0oJnacR9HwefsoXzYDvWgFTWYeFL/HpkjL
+         rvkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694133021; x=1694737821;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rWH+VGW4ynUEnqVgfK8Uo5vbTneevGaezyT5mB/sqg4=;
+        b=swAuNJCU2T/msM1CDytYscRXwuvHCPjssnrRg+Q6Gn7quYAY71uw8aCdr4KLss/JJi
+         G6KLB7yGgMtpzSEqasgGhnoK9InCJNEld8+zIiBIk6Ib73pTZPE7X04zo7zpkugFhJci
+         FB+wowcPCWOhpTjklmK7ntYr2LOzHNB4AGtrC9b25JIVYeLFsYHwRSAhkJs8WFQWvS4u
+         vQxfHEgY989eWvrIeqsl/qncCGZ2RDh8vKZ5Mk2v5JpUD/f4gpCSG4bq17oZDFtAC9Kv
+         wJHwZCnijNuEHfLVBXqC1a5ybSKNjL6PIh5HcP7KQEar+axr0nPLUVpqEUAJzfRRNzW3
+         rmNw==
+X-Gm-Message-State: AOJu0Ywbm+yLTgh3g27h3+DIFkr+l/LoZwnwZO1VTqKbEQRqI2iKTpej
+        ASdAUdrtewy2vCnIWaRCJoM=
+X-Google-Smtp-Source: AGHT+IHUmcSd3yGn0Yc+fxHKH36GJLlYUzap6qvtcfMqwZgOcAgDOYhbcm3dJF4+eYZ9U6PvPuYQ6g==
+X-Received: by 2002:a17:907:6e87:b0:9a1:c69c:9388 with SMTP id sh7-20020a1709076e8700b009a1c69c9388mr4152809ejc.37.1694133021412;
+        Thu, 07 Sep 2023 17:30:21 -0700 (PDT)
+Received: from [192.168.8.100] ([148.252.141.16])
+        by smtp.gmail.com with ESMTPSA id lz24-20020a170906fb1800b009932337747esm280974ejb.86.2023.09.07.17.30.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 07 Sep 2023 17:30:21 -0700 (PDT)
+Message-ID: <6489b8cb-7d54-1e29-f192-a3449ed87fa1@gmail.com>
+Date:   Fri, 8 Sep 2023 01:29:55 +0100
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Christian Brauner" <brauner@kernel.org>,
-        "Jeff Layton" <jlayton@kernel.org>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: BUG_ON() hit in sunrpc
-In-reply-to: <EA6B6884-C189-4E70-B1C8-1FDE3D982B99@oracle.com>
-References: <20230905-netzzugang-kubikmeter-6437d53204a2@brauner>,
- <615A8DB3-F931-4EFC-A6EC-CC4DA3766D7A@oracle.com>,
- <0B563F93-A30A-4BFD-BBAE-F712F8011E04@oracle.com>,
- <169412075594.22057.580928756094478654@noble.neil.brown.name>,
- <EA6B6884-C189-4E70-B1C8-1FDE3D982B99@oracle.com>
-Date:   Fri, 08 Sep 2023 08:25:36 +1000
-Message-id: <169412553623.22057.2407417994833945901@noble.neil.brown.name>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 07/11] vfs: add nowait parameter for file_accessed()
+To:     Dave Chinner <david@fromorbit.com>, Hao Xu <hao.xu@linux.dev>
+Cc:     Matthew Wilcox <willy@infradead.org>, io-uring@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Roesch <shr@fb.com>, Clay Harris <bugs@claycon.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
+        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-unionfs@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, codalist@coda.cs.cmu.edu,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
+        Wanpeng Li <wanpengli@tencent.com>
+References: <20230827132835.1373581-1-hao.xu@linux.dev>
+ <20230827132835.1373581-8-hao.xu@linux.dev>
+ <ZOvA5DJDZN0FRymp@casper.infradead.org>
+ <c728bf3f-d9db-4865-8473-058b26c11c06@linux.dev>
+ <ZO3cI+DkotHQo3md@casper.infradead.org>
+ <642de4e6-801d-fcad-a7ce-bfc6dec3b6e5@linux.dev>
+ <ZPUJHAKzxvXiEDYA@dread.disaster.area>
+Content-Language: en-US
+From:   Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <ZPUJHAKzxvXiEDYA@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 08 Sep 2023, Chuck Lever III wrote:
->=20
-> > On Sep 7, 2023, at 5:05 PM, NeilBrown <neilb@suse.de> wrote:
-> >=20
-> > On Fri, 08 Sep 2023, Chuck Lever III wrote:
-> >>=20
-> >>> On Sep 5, 2023, at 11:01 AM, Chuck Lever III <chuck.lever@oracle.com> w=
-rote:
-> >>>=20
-> >>>> On Sep 5, 2023, at 10:54 AM, Christian Brauner <brauner@kernel.org> wr=
-ote:
-> >>>>=20
-> >>>> Hey,
-> >>>>=20
-> >>>> I just tried to test some changes which had commit
-> >>>> 99d99825fc07 ("Merge tag 'nfs-for-6.6-1' of git://git.linux-nfs.org/pr=
-ojects/anna/linux-nfs")
-> >>>> as base and when I booted with the appended config I saw a splat right=
- at boot:
-> >>>>=20
-> >>>> [   92.804377][ T5306] kernel BUG at net/sunrpc/svc.c:581!
-> >=20
-> > The most likely cause for this BUG_ON that I can see is if the
-> > svc_set_num_threads() call in nfsd_svc() fails.
-> >=20
-> > Either some listening sockets had previously been created via
-> > write_ports(), or they have just been created in nfsd_startup_net().
-> > ->sv_nrthreads is 0 and this is an attempt to increase that.
-> > However the thread creation fails - presumably ENOMEM.
-> > So we goto out_shutdown, stepping right over the nfsd_shutdown_net()
-> > ca..
-> > Then the svc_put() calls (probably two, as keep_active was probably
-> > set).  result in the kref reaching zero and svc_destroy() being called
-> > even though there are still sockets present (because nfsd_shutdown_net()
-> > was skipped).
-> >=20
-> > I tried
-> > - error =3D svc_set_num_threads(serv, NULL, nrservs);
-> > + error =3D -ENOMEM; //svc_set_num_threads(serv, NULL, nrservs);
-> > if (error)
-> > goto out_shutdown;
-> >=20
-> > and I get exactly the same BUG_ON() as you got.
->=20
-> Christian, can you provide the arguments your system uses for
-> rpc.nfsd? I'm not sure which distribution you're using, so I
-> can't provide the exact steps. /etc/nfs.conf is one place to
-> look.
+On 9/3/23 23:30, Dave Chinner wrote:
+> On Wed, Aug 30, 2023 at 02:11:31PM +0800, Hao Xu wrote:
+>> On 8/29/23 19:53, Matthew Wilcox wrote:
+>>> On Tue, Aug 29, 2023 at 03:46:13PM +0800, Hao Xu wrote:
+>>>> On 8/28/23 05:32, Matthew Wilcox wrote:
+>>>>> On Sun, Aug 27, 2023 at 09:28:31PM +0800, Hao Xu wrote:
+>>>>>> From: Hao Xu <howeyxu@tencent.com>
+>>>>>>
+>>>>>> Add a boolean parameter for file_accessed() to support nowait semantics.
+>>>>>> Currently it is true only with io_uring as its initial caller.
+>>>>>
+>>>>> So why do we need to do this as part of this series?  Apparently it
+>>>>> hasn't caused any problems for filemap_read().
+>>>>>
+>>>>
+>>>> We need this parameter to indicate if nowait semantics should be enforced in
+>>>> touch_atime(), There are locks and maybe IOs in it.
+>>>
+>>> That's not my point.  We currently call file_accessed() and
+>>> touch_atime() for nowait reads and nowait writes.  You haven't done
+>>> anything to fix those.
+>>>
+>>> I suspect you can trim this patchset down significantly by avoiding
+>>> fixing the file_accessed() problem.  And then come back with a later
+>>> patchset that fixes it for all nowait i/o.  Or do a separate prep series
+>>
+>> I'm ok to do that.
+>>
+>>> first that fixes it for the existing nowait users, and then a second
+>>> series to do all the directory stuff.
+>>>
+>>> I'd do the first thing.  Just ignore the problem.  Directory atime
+>>> updates cause I/O so rarely that you can afford to ignore it.  Almost
+>>> everyone uses relatime or nodiratime.
+>>
+>> Hi Matthew,
+>> The previous discussion shows this does cause issues in real
+>> producations: https://lore.kernel.org/io-uring/2785f009-2ebb-028d-8250-d5f3a30510f0@gmail.com/#:~:text=fwiw%2C%20we%27ve%20just%20recently%20had%20similar%20problems%20with%20io_uring%20read/write
+>>
+> 
+> Then separate it out into it's own patch set so we can have a
+> discussion on the merits of requiring using noatime, relatime or
+> lazytime for really latency sensitive IO applications. Changing code
+> is not always the right solution...
 
-I'd also be interested in what the changes you were testing were, and
-whether they might cause a memory allocation failure.  If the BUG_ON
-is reproducible, can you check if the is a memory allocation failure,
-and which one?
+Separation sounds reasonable, but it can hardly be said that only
+latency sensitive apps would care about >1s nowait/async submission
+delays. Presumably, btrfs can improve on that, but it still looks
+like it's perfectly legit for filesystems do heavy stuff in
+timestamping like waiting for IO. Right?
 
->=20
-> Neil, do we really need a BUG_ON for this assertion? I'm
-> considering making it a simple pr_warn(). Interested in
-> opinions.
-
-Maybe replace the BUG_ON() will a call to svc_xprt_destroy_all() and
-maybe svc_rpcb_cleanup().
-
->=20
-> Past that, obviously input checking is missing here, so the
-> error flows in nfsd_svc() need improvement.
-Like:
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 5e455ced0711..f2c4e62e4591 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -819,12 +819,12 @@ nfsd_svc(int nrservs, struct net *net, const struct cre=
-d *cred)
- 	if (error)
- 		goto out_shutdown;
- 	error =3D serv->sv_nrthreads;
--	if (error =3D=3D 0)
--		nfsd_last_thread(net);
- out_shutdown:
- 	if (error < 0 && !nfsd_up_before)
- 		nfsd_shutdown_net(net);
- out_put:
-+	if (serv->sv_nrthreads =3D=3D 0)
-+		nfsd_last_thread(net);
- 	/* Threads now hold service active */
- 	if (xchg(&nn->keep_active, 0))
- 		svc_put(serv);
- ??
-
-NeilBrown
-
-
->=20
->=20
-> > NeilBrown
-> >=20
-> >=20
-> >>>> [   92.811194][ T5306] invalid opcode: 0000 [#1] PREEMPT SMP KASAN
-> >>>> [   92.821472][ T5306] CPU: 6 PID: 5306 Comm: rpc.nfsd Tainted: G
-> >>>> [   92.828578][ T5306] Hardware name: QEMU Standard PC (Q35 + ICH9, 20=
-09)/LXD, BIOS unknown 2/2/2022
-> >>>> [   92.836319][ T5306] RIP: 0010:svc_destroy+0x206/0x270
-> >>>> [   92.852006][ T5306] Code: 72 49 8b bc 24 a0 00 00 00 e8 a6 a3 5e f8=
- 48 8b 3c 24 48 83 c4 10 5b 5d 41 5c 41 5d 41 5e 41 5f e9 8f a3 5e f8 e8 aa d=
-f 1c f8 <0f> 0b e8 a3 df 1c f8 0f 0b 4c 89 ff e8 39 03 79 f8 e9 ae fe ff ff
-> >>>> [   92.867075][ T5306] RSP: 0018:ffffc9000a347b60 EFLAGS: 00010293
-> >>>> [   92.872714][ T5306] RAX: 0000000000000000 RBX: ffff88813abf5c68 RCX=
-: 0000000000000000
-> >>>> [   92.884809][ T5306] RDX: ffff888126c38000 RSI: ffffffff896bcf46 RDI=
-: 0000000000000005
-> >>>> [   92.894190][ T5306] RBP: 00000000fffffff4 R08: 0000000000000005 R09=
-: 0000000000000000
-> >>>> [   92.900512][ T5306] R10: 0000000000000000 R11: 0000000000000000 R12=
-: ffff88813abf5c50
-> >>>> [   92.907935][ T5306] R13: ffff88813abf5c50 R14: ffff88813abf5c00 R15=
-: ffff8881183c8000
-> >>>> [   92.917264][ T5306] FS:  00007fabf0bba740(0000) GS:ffff8883a9100000=
-(0000) knlGS:0000000000000000
-> >>>> [   92.924880][ T5306] CS:  0010 DS: 0000 ES: 0000 CR0: 00000000800500=
-33
-> >>>> [   92.930358][ T5306] CR2: 00005568a27d60e8 CR3: 00000001737c3000 CR4=
-: 0000000000750ee0
-> >>>> [   92.937465][ T5306] DR0: 0000000000000000 DR1: 0000000000000000 DR2=
-: 0000000000000000
-> >>>> [   92.943057][ T5306] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7=
-: 0000000000000400
-> >>>> [   92.948673][ T5306] PKRU: 55555554
-> >>>> [   92.953452][ T5306] Call Trace:
-> >>>> [   92.958082][ T5306]  <TASK>
-> >>>> [   92.962546][ T5306]  ? show_regs+0x94/0xa0
-> >>>> [   92.967221][ T5306]  ? die+0x3b/0xb0
-> >>>> [   92.971702][ T5306]  ? do_trap+0x231/0x410
-> >>>> [   92.976275][ T5306]  ? svc_destroy+0x206/0x270
-> >>>> [   92.980717][ T5306]  ? do_error_trap+0xf9/0x230
-> >>>> [   92.985287][ T5306]  ? svc_destroy+0x206/0x270
-> >>>> [   92.989693][ T5306]  ? handle_invalid_op+0x34/0x40
-> >>>> [   92.994044][ T5306]  ? svc_destroy+0x206/0x270
-> >>>> [   92.998317][ T5306]  ? exc_invalid_op+0x2d/0x40
-> >>>> [   93.002503][ T5306]  ? asm_exc_invalid_op+0x1a/0x20
-> >>>> [   93.006701][ T5306]  ? svc_destroy+0x206/0x270
-> >>>> [   93.010766][ T5306]  ? svc_destroy+0x206/0x270
-> >>>> [   93.014727][ T5306]  nfsd_svc+0x6d4/0xac0
-> >>>> [   93.018510][ T5306]  write_threads+0x296/0x4e0
-> >>>> [   93.022298][ T5306]  ? write_filehandle+0x760/0x760
-> >>>> [   93.026072][ T5306]  ? simple_transaction_get+0xf8/0x140
-> >>>> [   93.029819][ T5306]  ? preempt_count_sub+0x150/0x150
-> >>>> [   93.033456][ T5306]  ? do_raw_spin_lock+0x133/0x2c0
-> >>>> [   93.037013][ T5306]  ? _copy_from_user+0x5d/0xf0
-> >>>> [   93.040385][ T5306]  ? write_filehandle+0x760/0x760
-> >>>> [   93.043610][ T5306]  nfsctl_transaction_write+0x100/0x180
-> >>>> [   93.046900][ T5306]  vfs_write+0x2a9/0xe40
-> >>>> [   93.049930][ T5306]  ? export_features_open+0x60/0x60
-> >>>> [   93.053124][ T5306]  ? kernel_write+0x6c0/0x6c0
-> >>>> [   93.056116][ T5306]  ? do_sys_openat2+0xb6/0x1e0
-> >>>> [   93.059167][ T5306]  ? build_open_flags+0x690/0x690
-> >>>> [   93.062197][ T5306]  ? __fget_light+0x201/0x270
-> >>>> [   93.065020][ T5306]  ksys_write+0x134/0x260
-> >>>> [   93.067775][ T5306]  ? __ia32_sys_read+0xb0/0xb0
-> >>>> [   93.070501][ T5306]  ? rcu_is_watching+0x12/0xb0
-> >>>> [   93.073073][ T5306]  ? trace_irq_enable.constprop.0+0xd0/0x100
-> >>>> [   93.075937][ T5306]  do_syscall_64+0x38/0xb0
-> >>>> [   93.078394][ T5306]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
-> >>>>=20
-> >>>> I haven't spent time debugging this further. Maybe you see the issue r=
-ight
-> >>>> away.
-> >>>=20
-> >>> I don't, unfortunately. A bisect would be appropriate.
-> >>>=20
-> >>> I will pull today's master branch and see if I can reproduce.
-> >>=20
-> >> I wasn't able to reproduce this with yesterday's master. I don't
-> >> recall anything in Anna's NFS client PR that might account for
-> >> this crash.
-> >>=20
-> >> Neil, I think you were the last person to touch the code in and
-> >> around svc_destroy(). Can you have a look at this?
-> >>=20
-> >>=20
-> >>>> This problem is only happening after the nfs merges afaict. I'm
-> >>>> currently using commit 3ef96fcfd50b ("Merge tag 'ext4_for_linus-6.6-rc=
-1'
-> >>>> of git://git.kernel.org/pub/scm/linux/kernel/git/tytso/ext4") as base
-> >>>> and that splat doesn't appear.
-> >>>>=20
-> >>>> Hopefully this is not a red herring.
-> >>>> Christian
-> >>>> <.config.txt>
-> >>>=20
-> >>> --
-> >>> Chuck Lever
-> >>=20
-> >>=20
-> >> --
-> >> Chuck Lever
-> >>=20
-> >>=20
-> >>=20
-> >=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
-
+-- 
+Pavel Begunkov
