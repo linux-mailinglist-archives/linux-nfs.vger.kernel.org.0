@@ -2,209 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2AB6798AD8
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Sep 2023 18:49:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9795279915C
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Sep 2023 23:05:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241858AbjIHQtD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Sep 2023 12:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
+        id S232512AbjIHVFp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Sep 2023 17:05:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232332AbjIHQtC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Sep 2023 12:49:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51D181FCD
-        for <linux-nfs@vger.kernel.org>; Fri,  8 Sep 2023 09:48:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694191691;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HSHaK98jP52OExjU5ccVlB5Izk6T25mAruQGfLMmkDo=;
-        b=R9uwMSk6wBCdWVHg/PHsFS5Nb7+jiizNclohulGlODx3ckEtFkE7jPdltvgeUj/l1TYLUi
-        4QKmnrt6qDESOy0tXYx+IMRZnp9Kyu/pnqmhWN8QY9oWDlNdsNCLyw+MIllJhwJdCMn2L8
-        /tn2h+700zadKwvlvCKT1td8QOJA4Bk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-670-H26vZsohNKKKd_u6HBJugA-1; Fri, 08 Sep 2023 12:48:09 -0400
-X-MC-Unique: H26vZsohNKKKd_u6HBJugA-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4011fa32e99so17167465e9.0
-        for <linux-nfs@vger.kernel.org>; Fri, 08 Sep 2023 09:48:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694191688; x=1694796488;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HSHaK98jP52OExjU5ccVlB5Izk6T25mAruQGfLMmkDo=;
-        b=U6ildL/4Io/ovYc+jV9XRweLFgLNeqaxqOUUYg8PyPMp9/ZF6R+nOoQF/gzTQ2tf53
-         EBI81/nwH2HgY3y4z2WGFW0MnQ6ae7Oon3h1TgAr8sChuGir2fRlpOk81n/VOxPLtitM
-         DVKnbB6P7LSTvCq1AGsIHs8C4xtCnv9EaFFCjCHVzqSEYWzXmbKqCNLQWETbpwf3Sn4H
-         YRzTJ7kuAXcOfflwCBKr3kJG6OVj4R6cLu7gc3qXvQFoU8y6MOxhiEn08nK3CSMazLTl
-         SzmKwoyd86l5+KP6zdzOWjwI4THHPghRhDNE7VSfzJTSmo/kCtpf0M7ziMgAJJb4jetj
-         pKmw==
-X-Gm-Message-State: AOJu0YwFkMaoa2GRjV2R1EZupgpTtU9k0DqK7TSrYbqKLT0aLXo0Wa0b
-        XgAGTHqwPcftsyjRkazaVjGididjhvpENeNNYou/dnVCbU3nQbCdL52LOrOLQ1tKie3fnA1rNd8
-        vlu348LyxQIeZVNAMRBU/
-X-Received: by 2002:a05:600c:3b1e:b0:402:f536:41c5 with SMTP id m30-20020a05600c3b1e00b00402f53641c5mr2466108wms.3.1694191688098;
-        Fri, 08 Sep 2023 09:48:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH6vY3W7GArv4nn32cMyQOaB0I2anFfX3q4OwjsxS4Vyij+Hd9beJRo+Vd7kIAet301I2JQHA==
-X-Received: by 2002:a05:600c:3b1e:b0:402:f536:41c5 with SMTP id m30-20020a05600c3b1e00b00402f53641c5mr2466087wms.3.1694191687701;
-        Fri, 08 Sep 2023 09:48:07 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c720:d00:61ea:eace:637c:3f0f? (p200300cbc7200d0061eaeace637c3f0f.dip0.t-ipconnect.de. [2003:cb:c720:d00:61ea:eace:637c:3f0f])
-        by smtp.gmail.com with ESMTPSA id y9-20020a7bcd89000000b003fed630f560sm2398991wmj.36.2023.09.08.09.48.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Sep 2023 09:48:07 -0700 (PDT)
-Message-ID: <8698ba1f-fc5d-a82e-842b-100dc8957f2f@redhat.com>
-Date:   Fri, 8 Sep 2023 18:48:05 +0200
+        with ESMTP id S229959AbjIHVFo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Sep 2023 17:05:44 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9C7DC;
+        Fri,  8 Sep 2023 14:05:41 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24F6C433C8;
+        Fri,  8 Sep 2023 21:05:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694207140;
+        bh=dxWq3a40k4nq/qHAcdtI8V30AcoMjsEC7R5DUmpbfdg=;
+        h=From:Date:Subject:To:Cc:From;
+        b=odd96rv24s+evSelU7hMhmYgDjmzjTmM8nYKIIHwlmhvivVRQ9KmHGmt1sj2UtCKg
+         Oj01mXLeg+9zD2VIe1S4SeJtxLNbliZeYbh5NY/TejcqmCl+PUGo+9tLoPYglXqrXH
+         Xc7Ep9DC2DipuLQ5/RxejOy1KIMH3f7wgjTEnSQRAOYaNz8X51DUQjalGRvAHm0aNB
+         uAht53f+BR3FWqbrS4Uf3TTEdPzR1ybemvOyBmpxq54QOTJ6W4Jhfib1HNl+lbtbVn
+         kVVj1rROe4kEueEVlOeeok/6MCi9KAa7DnxIbBMB6/QW3mUsgB/EVIiunW5efN/TYB
+         eI6omge8uTszA==
+From:   Jeff Layton <jlayton@kernel.org>
+Date:   Fri, 08 Sep 2023 17:05:27 -0400
+Subject: [PATCH] fs: fix regression querying for ACL on fs's that don't
+ support them
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Content-Language: en-US
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jan Kara <jack@suse.cz>, David Howells <dhowells@redhat.com>,
-        Peter Xu <peterx@redhat.com>,
-        Lei Huang <lei.huang@linux.intel.com>, miklos@szeredi.hu,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230908-acl-fix-v1-1-1e6b76c8dcc8@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAJaM+2QC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDSwML3cTkHN20zApdszSLNAszS2ODNGMjJaDqgqJUoDDYpOjY2loAFB6
+ 0GlkAAAA=
+To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Boris Pismenny <borisp@nvidia.com>, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-mm@kvack.org, v9fs@lists.linux.dev, netdev@vger.kernel.org
-References: <20230905141604.GA27370@lst.de>
- <0240468f-3cc5-157b-9b10-f0cd7979daf0@redhat.com>
- <20230908081544.GB8240@lst.de>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: getting rid of the last memory modifitions through gup(FOLL_GET)
-In-Reply-To: <20230908081544.GB8240@lst.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        Ondrej Valousek <ondrej.valousek.xm@renesas.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1691; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=dxWq3a40k4nq/qHAcdtI8V30AcoMjsEC7R5DUmpbfdg=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBk+4yevlsFLk7zQiTjnLAzT41hSIXwyqtHtuLCH
+ RFYntk2bTKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZPuMngAKCRAADmhBGVaC
+ FWZwEACuuHr6UkgTusVlJX2MpCk/15F3oQnuqNe8rulZLY0t9TxM8lFPNain5C8DP46oHzHXp5g
+ u/FSgjtfZtPpxsOLAMqPVIPU2JLC3H9mYQBaS0vQVPN/z7xdpnJYES0T2yoitsgfwV0ejY/xfKa
+ T/qlYRqBf2EvcS1Wu/Qdm+K1xSkL+A3SQcV+ivJZwpGWmSMkFv6qETAfMx06SkOi/IPM7TmI9pb
+ boVfrUfkRi+QboDVYvdAgwNTObF5nhI2urJp8XiJHX4WonQFCNSahshEl4Q/nJzK/JH5WtcyGNZ
+ jD29Kw0PSdlb+ta4tGKisgqPKokZ8oqyFsuar2kEdYC7nB/lnye6HHd6p8CHFfFArq3ud9dfpBG
+ MynjtLmCpONQUoU6ZGSrNIrD0x7QdVRA3AJJ5juNHtPSHuYlTslnZXVmpFgh886TajYzWeATO7H
+ vrz8CvI0iFlHXuHkJEoEzZ/fZ/V5p7OadpZ9M0a0teSkL5F1eKqIBxC9gBB97uB0G657burAJXN
+ ATeaLm+d+SeHJFGlF7aVLbDfXVlUGBHdkBtmAiif62IO9+AjVRy2xIYa2a3JVg5k5RwI++7xRO0
+ dK6VkZThTTmnU32GDLUez0Pr4TmDWmpEtsRazKf+EAwcI1WJq6riB98XjTIJsVFeNnuBWAPaY8S
+ 3CEVNB4JhDhlWYw==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 08.09.23 10:15, Christoph Hellwig wrote:
-> On Wed, Sep 06, 2023 at 11:42:33AM +0200, David Hildenbrand wrote:
->>> and iov_iter_get_pages_alloc2.  We have three file system direct I/O
->>> users of those left: ceph, fuse and nfs.  Lei Huang has sent patches
->>> to convert fuse to iov_iter_extract_pages which I'd love to see merged,
->>> and we'd need equivalent work for ceph and nfs.
->>>
->>> The non-file system uses are in the vmsplice code, which only reads
->>
->> vmsplice really has to be fixed to specify FOLL_PIN|FOLL_LONGTERM for good;
->> I recall that David Howells had patches for that at one point. (at least to
->> use FOLL_PIN)
-> 
-> Hmm, unless I'm misreading the code vmsplace is only using
-> iov_iter_get_pages2 for reading from the user address space anyway.
-> Or am I missing something?
+In the not too distant past, the VFS ACL infrastructure would return
+-EOPNOTSUPP on filesystems (like NFS) that set SB_POSIXACL but that
+don't supply a get_acl or get_inode_acl method. On more recent kernels
+this returns -ENODATA, which breaks one method of detecting when ACLs
+are supported.
 
-It's not relevant for the case you're describing here ("last memory 
-modifitions through gup(FOLL_GET)").
+Fix __get_acl to also check whether the inode has a "get_(inode_)?acl"
+method and to just return -EOPNOTSUPP if not.
 
-vmsplice_to_pipe() -> iter_to_pipe() -> iov_iter_get_pages2()
+Reported-by: Ondrej Valousek <ondrej.valousek.xm@renesas.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+This patch is another approach to fixing this issue. I don't care too
+much either way which approach we take, but this may fix the problem
+for other filesystems too. Should we take a belt and suspenders
+approach here and fix it in both places?
+---
+ fs/posix_acl.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-So it ends up calling get_user_pages_fast()
+diff --git a/fs/posix_acl.c b/fs/posix_acl.c
+index a05fe94970ce..4c7c62040c43 100644
+--- a/fs/posix_acl.c
++++ b/fs/posix_acl.c
+@@ -130,8 +130,12 @@ static struct posix_acl *__get_acl(struct mnt_idmap *idmap,
+ 	if (!is_uncached_acl(acl))
+ 		return acl;
+ 
+-	if (!IS_POSIXACL(inode))
+-		return NULL;
++	/*
++	 * NB: checking this after checking for a cached ACL allows tmpfs
++	 * (which doesn't specify a get_acl operation) to work properly.
++	 */
++	if (!IS_POSIXACL(inode) || (!inode->i_op->get_acl && !inode->i_op->get_inode_acl))
++		return ERR_PTR(-EOPNOTSUPP);
+ 
+ 	sentinel = uncached_acl_sentinel(current);
+ 	p = acl_by_type(inode, type);
 
-... and not using FOLL_PIN|FOLL_LONGTERM
+---
+base-commit: a48fa7efaf1161c1c898931fe4c7f0070964233a
+change-id: 20230908-acl-fix-6f8f86930f32
 
-Why FOLL_LONGTERM? Because it's a longterm pin, where unprivileged users 
-can grab a reference on a page for all eternity, breaking CMA and memory 
-hotunplug (well, and harming compaction).
-
-Why FOLL_PIN? Well FOLL_LONGTERM only applies to FOLL_PIN. But for 
-anonymous memory, this will also take care of the last remaining hugetlb 
-COW test (trigger COW unsharing) as commented back in:
-
-https://lore.kernel.org/all/02063032-61e7-e1e5-cd51-a50337405159@redhat.com/
-
-
-> 
->>> After that we might have to do an audit of the raw get_user_pages APIs,
->>> but there probably aren't many that modify file backed memory.
->>
->> ptrace should apply that ends up doing a FOLL_GET|FOLL_WRITE.
-> 
-> Yes, if that ends up on file backed shared mappings we also need a pin.
-
-See below.
-
-> 
->> Further, KVM ends up using FOLL_GET|FOLL_WRITE to populate the second-level
->> page tables for VMs, and uses MMU notifiers to synchronize the second-level
->> page tables with process page table changes. So once a PTE goes from
->> writable -> r/o in the process page table, the second level page tables for
->> the VM will get updated. Such MMU users are quite different from ordinary
->> GUP users.
-> 
-> Can KVM page tables use file backed shared mappings?
-
-Yes, usually shmem and hugetlb. But with things like emulated 
-NVDIMMs/virtio-pmem for VMs, easily also ordinary files.
-
-But it's really not ordinary write access through GUP. It's write access 
-via a secondary page table (secondary MMU), that's synchronized to the 
-process page table -- just like if the CPU would be writing to the page 
-using the process page tables (primary MMU).
-
-> 
->> Converting ptrace might not be desired/required as well (the reference is
->> dropped immediately after the read/write access).
-> 
-> But the pin is needed to make sure the file system can account for
-> dirtying the pages.  Something we fundamentally can't do with get.
-
-ptrace will find the pagecache page writable in the page table (PTE 
-write bit set), if it intends to write to the page (FOLL_WRITE). If it 
-is not writable, it will trigger a page fault that informs the file system.
-
-With an FS that wants writenotify, we will not map a page writable (PTE 
-write bit not set) unless it is dirty (PTE dirty bit set) IIRC.
-
-So are we concerned about a race between the filesystem removing the PTE 
-write bit (to catch next write access before it gets dirtied again) and 
-ptrace marking the page dirty?
-
-It's a very, very small race window, staring at __access_remote_vm(). 
-But it should apply if that's the concern.
-
-> 
->> The end goal as discussed a couple of times would be the to limit FOLL_GET
->> in general only to a couple of users that can be audited and keep using it
->> for a good reason. Arbitrary drivers that perform DMA should stop using it
->> (and ideally be prevented from using it) and switch to FOLL_PIN.
-> 
-> Agreed, that's where I'd like to get to.  Preferably with the non-pin
-> API not even beeing epxorted to modules.
-
-Yes. However, secondary MMU users (like KVM) would need some way to keep 
-making use of that; ideally, using a proper separate interface instead 
-of (ab)using plain GUP and confusing people :)
-
-[1] https://lkml.org/lkml/2023/1/24/451
-
+Best regards,
 -- 
-Cheers,
-
-David / dhildenb
+Jeff Layton <jlayton@kernel.org>
 
