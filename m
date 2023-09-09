@@ -2,63 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9795279915C
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Sep 2023 23:05:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5B28799794
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Sep 2023 13:12:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232512AbjIHVFp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Sep 2023 17:05:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33830 "EHLO
+        id S1344652AbjIILMq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 9 Sep 2023 07:12:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229959AbjIHVFo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Sep 2023 17:05:44 -0400
+        with ESMTP id S231315AbjIILMq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 9 Sep 2023 07:12:46 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9C7DC;
-        Fri,  8 Sep 2023 14:05:41 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24F6C433C8;
-        Fri,  8 Sep 2023 21:05:39 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5AB56CF4;
+        Sat,  9 Sep 2023 04:12:39 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07380C433C7;
+        Sat,  9 Sep 2023 11:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694207140;
-        bh=dxWq3a40k4nq/qHAcdtI8V30AcoMjsEC7R5DUmpbfdg=;
+        s=k20201202; t=1694257958;
+        bh=WNxELE4zmDBT1E4H7P0lP6ekrYFVDFSU/OtCPNtAzMg=;
         h=From:Date:Subject:To:Cc:From;
-        b=odd96rv24s+evSelU7hMhmYgDjmzjTmM8nYKIIHwlmhvivVRQ9KmHGmt1sj2UtCKg
-         Oj01mXLeg+9zD2VIe1S4SeJtxLNbliZeYbh5NY/TejcqmCl+PUGo+9tLoPYglXqrXH
-         Xc7Ep9DC2DipuLQ5/RxejOy1KIMH3f7wgjTEnSQRAOYaNz8X51DUQjalGRvAHm0aNB
-         uAht53f+BR3FWqbrS4Uf3TTEdPzR1ybemvOyBmpxq54QOTJ6W4Jhfib1HNl+lbtbVn
-         kVVj1rROe4kEueEVlOeeok/6MCi9KAa7DnxIbBMB6/QW3mUsgB/EVIiunW5efN/TYB
-         eI6omge8uTszA==
+        b=Tg2DOOUemV66FwEkmypwT5dUaooAsnT4A+KW0m3HkZBef4ijKkEgddIUjFC5bwo5C
+         6vQylXoDzhcc3tw4jmVQqF2pCup9vnLltCGHgueUXe+vonwwu0KboJyqpb4EES1KHI
+         CfzYknq/ue3N1JX4BA00+mqlEQifoEkT9dwdbpcqZtlp0e2VDZLJe1CBSUzF/cUeFD
+         nRUWKh8FPk2Xj1dOSd9+pRRqtNiVk85CU3PlHKToaJhTL1VW5QPNAJW/WkV5kG/44b
+         +FKyqkdnc485SnNxWma7hqHE+JGzlmlrL/5tXkANLbNrtOT4763PqH+c/1IopUJNoJ
+         xUUyYdwlpr8Ag==
 From:   Jeff Layton <jlayton@kernel.org>
-Date:   Fri, 08 Sep 2023 17:05:27 -0400
-Subject: [PATCH] fs: fix regression querying for ACL on fs's that don't
- support them
+Date:   Sat, 09 Sep 2023 07:12:30 -0400
+Subject: [PATCH] nfsd: fix change_info in NFSv4 RENAME replies
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230908-acl-fix-v1-1-1e6b76c8dcc8@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAJaM+2QC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2MDSwML3cTkHN20zApdszSLNAszS2ODNGMjJaDqgqJUoDDYpOjY2loAFB6
- 0GlkAAAA=
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Ondrej Valousek <ondrej.valousek.xm@renesas.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+Message-Id: <20230909-nfsd-fixes-v1-1-2ebc659c0cf4@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAB1T/GQC/x2LQQqAIBAAvyJ7TjDFsr4SHTLX2ouFCxGIf086D
+ jNTgDETMsyiQMaHmK7UoO8E7OeWDpQUGoNW2qhJOZkiBxnpRZbR+uDdiIMyFtpwZ/xF65e11g9
+ IoXcfXAAAAA==
+To:     Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Zhi Li <yieli@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1691; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=dxWq3a40k4nq/qHAcdtI8V30AcoMjsEC7R5DUmpbfdg=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBk+4yevlsFLk7zQiTjnLAzT41hSIXwyqtHtuLCH
- RFYntk2bTKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZPuMngAKCRAADmhBGVaC
- FWZwEACuuHr6UkgTusVlJX2MpCk/15F3oQnuqNe8rulZLY0t9TxM8lFPNain5C8DP46oHzHXp5g
- u/FSgjtfZtPpxsOLAMqPVIPU2JLC3H9mYQBaS0vQVPN/z7xdpnJYES0T2yoitsgfwV0ejY/xfKa
- T/qlYRqBf2EvcS1Wu/Qdm+K1xSkL+A3SQcV+ivJZwpGWmSMkFv6qETAfMx06SkOi/IPM7TmI9pb
- boVfrUfkRi+QboDVYvdAgwNTObF5nhI2urJp8XiJHX4WonQFCNSahshEl4Q/nJzK/JH5WtcyGNZ
- jD29Kw0PSdlb+ta4tGKisgqPKokZ8oqyFsuar2kEdYC7nB/lnye6HHd6p8CHFfFArq3ud9dfpBG
- MynjtLmCpONQUoU6ZGSrNIrD0x7QdVRA3AJJ5juNHtPSHuYlTslnZXVmpFgh886TajYzWeATO7H
- vrz8CvI0iFlHXuHkJEoEzZ/fZ/V5p7OadpZ9M0a0teSkL5F1eKqIBxC9gBB97uB0G657burAJXN
- ATeaLm+d+SeHJFGlF7aVLbDfXVlUGBHdkBtmAiif62IO9+AjVRy2xIYa2a3JVg5k5RwI++7xRO0
- dK6VkZThTTmnU32GDLUez0Pr4TmDWmpEtsRazKf+EAwcI1WJq6riB98XjTIJsVFeNnuBWAPaY8S
- 3CEVNB4JhDhlWYw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1557; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=WNxELE4zmDBT1E4H7P0lP6ekrYFVDFSU/OtCPNtAzMg=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBk/FMgt7PjWKsoyFpjqHVUvZl57TYCiMAQdLbHP
+ xARC/EAKGWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZPxTIAAKCRAADmhBGVaC
+ FdYOEADMjm6EEw2gdOyWTo7tdg1WJowtrSh6jBzB9VDA1FGuZP2g+rk6GNp9MgURKGMTzqzQs8I
+ XyzmL137ugLfU/PsYJsSSKyG/wmaRYBhgcRJyt6QN13U9PFPnoczmr5axAcAK208wZIIOXbe3S/
+ lJNVPw0UFeevgAUfKE+ZATF6p+IGkjW6MZ9VGnokdYE4sv/YjVVuKk9N3GJKEIxu1cRatjQE+58
+ 4WRx4lUybsjdtMjeghXw9iUQ0ltgPBsS18/qcVPlyn6x+zJlrf3JJ6nbVUopO8rN/j6PFw51fKT
+ RSeYRKTsXykvhmKnch+Oa/7sz69/Kmx1A4rQBs3ELmjRiw1T57+mkKYNl0wfVH2aCLwZQpnhKsl
+ RYWZLNPWRzg7aHnZKJDxxrz46oQJntXWMLml7zcgU/+bKTF13iC0KRLo1gObqvsXJybeDmF5AhJ
+ HLGiM+rwwThJ6X5msGtDx2P3p7GLe3WAgTCZwetg/IYEzeeSQexHll5LjxVoE+7XntglWDFrDwb
+ BhDmoRNBkTHtqob/hIG8jWG15HduRoD5iXJFSmN0Fe7E7z3/zwOfpp8ZlFet97kfNnAG6gJ3fU8
+ AEtLeWyYpeBLiJ9k3byOZVFTAiBRclI1kkoGOQ6snZ+nB9rg6juAzvWNx5SPqSFMhSlr09mglCL
+ sjMMD44YihJZsKA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -71,49 +70,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In the not too distant past, the VFS ACL infrastructure would return
--EOPNOTSUPP on filesystems (like NFS) that set SB_POSIXACL but that
-don't supply a get_acl or get_inode_acl method. On more recent kernels
-this returns -ENODATA, which breaks one method of detecting when ACLs
-are supported.
+nfsd sends the transposed directory change info in the RENAME reply. The
+source directory is in save_fh and the target is in current_fh.
 
-Fix __get_acl to also check whether the inode has a "get_(inode_)?acl"
-method and to just return -EOPNOTSUPP if not.
-
-Reported-by: Ondrej Valousek <ondrej.valousek.xm@renesas.com>
+Reported-by: Zhi Li <yieli@redhat.com>
+Reported-by: Benjamin Coddington <bcodding@redhat.com>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
-This patch is another approach to fixing this issue. I don't care too
-much either way which approach we take, but this may fix the problem
-for other filesystems too. Should we take a belt and suspenders
-approach here and fix it in both places?
----
- fs/posix_acl.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+This bug predates git, so I can't add a proper Fixes tag. I think this
+is probably appropriate for stable series kernels though.
 
-diff --git a/fs/posix_acl.c b/fs/posix_acl.c
-index a05fe94970ce..4c7c62040c43 100644
---- a/fs/posix_acl.c
-+++ b/fs/posix_acl.c
-@@ -130,8 +130,12 @@ static struct posix_acl *__get_acl(struct mnt_idmap *idmap,
- 	if (!is_uncached_acl(acl))
- 		return acl;
+This bug was largely papered over by the fact that we factored in the
+ctime when generating a change attribute. Since this commit, however:
+
+    638e3e7d9493 nfsd: use the getattr operation to fetch i_version
+
+We stopped doing that for directory inodes and that caused this bug to
+pop up.
+---
+ fs/nfsd/nfs4proc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 5ca748309c26..4199ede0583c 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1058,8 +1058,8 @@ nfsd4_rename(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 			     rename->rn_tname, rename->rn_tnamelen);
+ 	if (status)
+ 		return status;
+-	set_change_info(&rename->rn_sinfo, &cstate->current_fh);
+-	set_change_info(&rename->rn_tinfo, &cstate->save_fh);
++	set_change_info(&rename->rn_sinfo, &cstate->save_fh);
++	set_change_info(&rename->rn_tinfo, &cstate->current_fh);
+ 	return nfs_ok;
+ }
  
--	if (!IS_POSIXACL(inode))
--		return NULL;
-+	/*
-+	 * NB: checking this after checking for a cached ACL allows tmpfs
-+	 * (which doesn't specify a get_acl operation) to work properly.
-+	 */
-+	if (!IS_POSIXACL(inode) || (!inode->i_op->get_acl && !inode->i_op->get_inode_acl))
-+		return ERR_PTR(-EOPNOTSUPP);
- 
- 	sentinel = uncached_acl_sentinel(current);
- 	p = acl_by_type(inode, type);
 
 ---
-base-commit: a48fa7efaf1161c1c898931fe4c7f0070964233a
-change-id: 20230908-acl-fix-6f8f86930f32
+base-commit: dd1386dd3c4f4bc55456c88180f9f39697bb95c0
+change-id: 20230908-nfsd-fixes-f5bdb87e6035
 
 Best regards,
 -- 
