@@ -1,183 +1,165 @@
 Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 263D9799F7F
-	for <lists+linux-nfs@lfdr.de>; Sun, 10 Sep 2023 21:33:21 +0200 (CEST)
+Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id D616379A07B
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Sep 2023 00:01:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231296AbjIJTbL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 10 Sep 2023 15:31:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49192 "EHLO
+        id S231809AbjIJWBh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 10 Sep 2023 18:01:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229973AbjIJTbL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 10 Sep 2023 15:31:11 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01438F5;
-        Sun, 10 Sep 2023 12:31:05 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D595FC433C7;
-        Sun, 10 Sep 2023 19:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694374265;
-        bh=I/kP+37/K+lXfBQv+3hW3TvS0OronJ3WjCcDiC1ontQ=;
-        h=From:Date:Subject:To:Cc:From;
-        b=B6pMg4gAlit/BExol/+r1OCdxqT8SMRltzVW4u9S1Z9bLBOHECHrsi7oS9Jxhud7j
-         f2YCfofwBe1VpYmUJv9m0jcP1Aqav3MQs/QXAGtBRr/UAaZGCCR+TCuy+OrEw6sLe5
-         pwj6zXI2whMfByBRo9E6hj2HIX0YcLS9eGvVMlpHJISA7MSo5ByPCMxgFYtNcnvCvx
-         4bRKjsJQ9qm0qZoTSzmcIFz/XcKD8CW1YzfEgP+elUblfanMwdkO0ekHvOZKhG6Kzl
-         Iz7j1oWb/eEP2AaFTc2q2NES6AaNTjUY2Rl5p3ftrICro3Xd02ewcxiO1IN7szTnY/
-         2o8Etckjfm+dA==
-From:   Jeff Layton <jlayton@kernel.org>
-Date:   Sun, 10 Sep 2023 15:30:48 -0400
-Subject: [PATCH v2] fs: add a new SB_NOUMASK flag
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230910-acl-fix-v2-1-38d6caa81419@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAGcZ/mQC/2WMQQrCMBBFr1JmbSRNIKauvEfpoqaTdrCkMpGgl
- NzdsVv5q/f4vB0yMmGGa7MDY6FMWxIwpwbCMqYZFU3CYLSxutNejWFVkd7KRR+966yO1oC8n4y
- ij1I/CC+UXxt/jnBpf/a/UVolQ3e/uOCnEPztgZxwPW88w1Br/QIxLGcqnwAAAA==
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        with ESMTP id S231205AbjIJWBf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 10 Sep 2023 18:01:35 -0400
+Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FEB518F
+        for <linux-nfs@vger.kernel.org>; Sun, 10 Sep 2023 15:01:28 -0700 (PDT)
+Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-68c576d35feso3658719b3a.2
+        for <linux-nfs@vger.kernel.org>; Sun, 10 Sep 2023 15:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1694383288; x=1694988088; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EyybjuBSw2AsBAibBPVqGccWs6P0JtTeGBB0Kwx90Dw=;
+        b=b1Q+Djrc6DRgK0lSMIXf6OVmm1S98Rb1dJdV/4AjeMobXYoqxa/k4Xb7XAYcmCuvbB
+         T8pFPhiJHk/Ig8CcU4is+jZGfReesXQjqK7ULjc+VZz110Uqhy1NjrWTu4Ej2kgb1UEn
+         ZHgnS7dDfuM0nrDuRkgBy+D/YOBtPecXxWCyUh6h/0/NlsJyyOwKHQwSKYYxfVY7xjkS
+         7I+QxdaDiDVRMV8qekGuV48jZlbOlbc6skR8a29kp5hS8zsrhWfeCv9XIJ/gwMURSkPX
+         Ncgzq9d3+KaDgvRq3XsvmeqBjcqt9Lc7ewxeY00IZtUnccPI4WIduUYqP2aDlo+H2VFl
+         7yRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694383288; x=1694988088;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EyybjuBSw2AsBAibBPVqGccWs6P0JtTeGBB0Kwx90Dw=;
+        b=oUA9kcwbPS83pl2SShyrOmOSdOSS13pGF79Tsl7icFb/MPCFfu3uJOc/OlnsteBhLX
+         N35v2weeZe7jCpurzu88g2mbgmFpV7ysWGM4rxqSoE3Rl+l1ZNofCWHwSTk+tcxCY4SB
+         oGQu1buIr4BYQikY2M2+8AXhqbK3Pa2Xb7P2zVJO0ivwna9L+7Xe1FyyQ6C+dCwJiXTQ
+         8joLnyRimiwKcO8XrzUAx7C16OIqNDbsOgv+1mGKMQxntw7VsnSeFQvi3dKbW6EsHc5O
+         MlaKEeQXT8kYonRSbV+2BPjW/68T56N8iFDOrg2JUeFZUsEmLtCjQ3T+1qw+XQBrqDo3
+         OH8g==
+X-Gm-Message-State: AOJu0Yw+tfrnhmpVZ+HYlCRHyBr1/UvUNwV1TEiWuvsn1FJD+QzWwHDs
+        k+hb0udZJU/PrI4u3NqdZw+nTw==
+X-Google-Smtp-Source: AGHT+IHSYFPf3w2qdTZr9bikkzuSsvPYQjYYZyW+Zfc616rQWXs3Eeo2BzwinmhhOfJVOtnHj1lBTA==
+X-Received: by 2002:a05:6a00:1a0c:b0:68c:57c7:1eb0 with SMTP id g12-20020a056a001a0c00b0068c57c71eb0mr9371853pfv.11.1694383287795;
+        Sun, 10 Sep 2023 15:01:27 -0700 (PDT)
+Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
+        by smtp.gmail.com with ESMTPSA id u10-20020a62ed0a000000b0068a3dd6c1dasm4403641pfh.142.2023.09.10.15.01.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Sep 2023 15:01:27 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1qfSUe-00DWBA-0u;
+        Mon, 11 Sep 2023 08:01:24 +1000
+Date:   Mon, 11 Sep 2023 08:01:24 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Pavel Begunkov <asml.silence@gmail.com>
+Cc:     Hao Xu <hao.xu@linux.dev>, Matthew Wilcox <willy@infradead.org>,
+        io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Dominique Martinet <asmadeus@codewreck.org>,
         Christian Brauner <brauner@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Ondrej Valousek <ondrej.valousek.xm@renesas.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4464; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=I/kP+37/K+lXfBQv+3hW3TvS0OronJ3WjCcDiC1ontQ=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBk/hlyPgcnqzVp4IjuxmkebqY56MJ30B/+4sf9N
- YFs7m/So2mJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZP4ZcgAKCRAADmhBGVaC
- Ffb5EADDQdOcYm7xTa2UNEse4OkFjM6K48Pi7zTQcf0FEQrDqrDsZyT+tDoiOedfg7CJGTCrCrZ
- 3MYC4WYfDVTfdjRKSradTC1TcCmIxNU2o4KXLSYenzeIaDHeq2fDiJQitMKaEbpoUeM/WH/xg3H
- kOyKtnn9BuVIbTpdFmzWmIqw5WWRkyRy+1eN1D1N/8DtDmhzhE20aBu4xWA9uIJER93XDm1GZtN
- p1OUxnvXPjWsnxYl7ORCLPRrS7JfLlokYzNLS+HfI+SU1EjFaQXaZZPLyWgBRcDCAn7set7nnXP
- 1HY5349GlmeB7p2YreJBFGcyqaUQcB6Iglha25NRTrSM53IvMQF0eHz7vIld4WzaggPyu+GMSoz
- m+m5I+l32oM7ooxOkiECWTBu6ILFAHFFaw0JF9ZAuT8b3jpdWFG+VKt4HEawCbZzEwmrqLJQ/Kt
- CSrDD+MQTP5DT0dBNe1659Dj1izmPTk4YysdpJoxFRquyk5ANXSeK2EH0lTGNT9M20dIDr6qLJo
- L4SCKUAI/UnBLKmTibr8pUvzMTAnbgzJOnN1EjYPCYmA/f6VDIlQc9bgk4kdjj68QP4t5hc+LC3
- B8Cm7OHpdEhH8AoA4lwzh+bNgBuH6JF2pYavr3fZQZXTch6aZhPFkEocvNXmmKtQHLEhzIjLgMu
- vDaXsOre8FgsFBQ==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stefan Roesch <shr@fb.com>, Clay Harris <bugs@claycon.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
+        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-unionfs@vger.kernel.org, bpf@vger.kernel.org,
+        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, codalist@coda.cs.cmu.edu,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
+        Wanpeng Li <wanpengli@tencent.com>
+Subject: Re: [PATCH 07/11] vfs: add nowait parameter for file_accessed()
+Message-ID: <ZP48tAg2iS0UzKQf@dread.disaster.area>
+References: <20230827132835.1373581-1-hao.xu@linux.dev>
+ <20230827132835.1373581-8-hao.xu@linux.dev>
+ <ZOvA5DJDZN0FRymp@casper.infradead.org>
+ <c728bf3f-d9db-4865-8473-058b26c11c06@linux.dev>
+ <ZO3cI+DkotHQo3md@casper.infradead.org>
+ <642de4e6-801d-fcad-a7ce-bfc6dec3b6e5@linux.dev>
+ <ZPUJHAKzxvXiEDYA@dread.disaster.area>
+ <6489b8cb-7d54-1e29-f192-a3449ed87fa1@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6489b8cb-7d54-1e29-f192-a3449ed87fa1@gmail.com>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SB_POSIXACL must be set when a filesystem supports POSIX ACLs, but NFSv4
-also sets this flag to prevent the VFS from applying the umask on
-newly-created files. NFSv4 doesn't support POSIX ACLs however, which
-causes confusion when other subsystems try to test for them.
+On Fri, Sep 08, 2023 at 01:29:55AM +0100, Pavel Begunkov wrote:
+> On 9/3/23 23:30, Dave Chinner wrote:
+> > On Wed, Aug 30, 2023 at 02:11:31PM +0800, Hao Xu wrote:
+> > > On 8/29/23 19:53, Matthew Wilcox wrote:
+> > > > On Tue, Aug 29, 2023 at 03:46:13PM +0800, Hao Xu wrote:
+> > > > > On 8/28/23 05:32, Matthew Wilcox wrote:
+> > > > > > On Sun, Aug 27, 2023 at 09:28:31PM +0800, Hao Xu wrote:
+> > > > > > > From: Hao Xu <howeyxu@tencent.com>
+> > > > > > > 
+> > > > > > > Add a boolean parameter for file_accessed() to support nowait semantics.
+> > > > > > > Currently it is true only with io_uring as its initial caller.
+> > > > > > 
+> > > > > > So why do we need to do this as part of this series?  Apparently it
+> > > > > > hasn't caused any problems for filemap_read().
+> > > > > > 
+> > > > > 
+> > > > > We need this parameter to indicate if nowait semantics should be enforced in
+> > > > > touch_atime(), There are locks and maybe IOs in it.
+> > > > 
+> > > > That's not my point.  We currently call file_accessed() and
+> > > > touch_atime() for nowait reads and nowait writes.  You haven't done
+> > > > anything to fix those.
+> > > > 
+> > > > I suspect you can trim this patchset down significantly by avoiding
+> > > > fixing the file_accessed() problem.  And then come back with a later
+> > > > patchset that fixes it for all nowait i/o.  Or do a separate prep series
+> > > 
+> > > I'm ok to do that.
+> > > 
+> > > > first that fixes it for the existing nowait users, and then a second
+> > > > series to do all the directory stuff.
+> > > > 
+> > > > I'd do the first thing.  Just ignore the problem.  Directory atime
+> > > > updates cause I/O so rarely that you can afford to ignore it.  Almost
+> > > > everyone uses relatime or nodiratime.
+> > > 
+> > > Hi Matthew,
+> > > The previous discussion shows this does cause issues in real
+> > > producations: https://lore.kernel.org/io-uring/2785f009-2ebb-028d-8250-d5f3a30510f0@gmail.com/#:~:text=fwiw%2C%20we%27ve%20just%20recently%20had%20similar%20problems%20with%20io_uring%20read/write
+> > > 
+> > 
+> > Then separate it out into it's own patch set so we can have a
+> > discussion on the merits of requiring using noatime, relatime or
+> > lazytime for really latency sensitive IO applications. Changing code
+> > is not always the right solution...
+> 
+> Separation sounds reasonable, but it can hardly be said that only
+> latency sensitive apps would care about >1s nowait/async submission
+> delays. Presumably, btrfs can improve on that, but it still looks
+> like it's perfectly legit for filesystems do heavy stuff in
+> timestamping like waiting for IO. Right?
 
-Split the umask-stripping opt-out into a separate SB_NOUMASK flag, and
-have NFSv4 set that instead of SB_POSIXACL. Fix the appropriate places
-in the VFS to check for that flag (in addition to SB_POSIXACL) when
-stripping the umask.
+Yes, it is, no-one is denying that. And some filesystems are worse
+than others, but none of that means it has to be fixed so getdents
+can be converted to NOWAIT semantics.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-Yet another approach to fixing this issue. I think this way is probably
-the best, since makes the purpose of these flags clearer, and stops NFS
-from relying on SB_POSIXACL to avoid umask stripping.
----
-Changes in v2:
-- new approach: add a new SB_NOUMASK flag that NFSv4 can use instead of
-  SB_POSIXACL
-- Link to v1: https://lore.kernel.org/r/20230908-acl-fix-v1-1-1e6b76c8dcc8@kernel.org
----
- fs/init.c          | 4 ++--
- fs/namei.c         | 2 +-
- fs/nfs/super.c     | 2 +-
- include/linux/fs.h | 4 +++-
- 4 files changed, 7 insertions(+), 5 deletions(-)
+ie. this patchset is about the getdents NOWAIT machinery, and
+fiddling around with timestamps has much, much wider scope than just
+NOWAIT getdents machinery. We'll have this discussion about NOWAIT
+timestamp updates when a RFC is proposed to address the wider
+problem of how timestamp updates should behave in NOWAIT context.
 
-diff --git a/fs/init.c b/fs/init.c
-index 9684406a8416..157404bb7d19 100644
---- a/fs/init.c
-+++ b/fs/init.c
-@@ -153,7 +153,7 @@ int __init init_mknod(const char *filename, umode_t mode, unsigned int dev)
- 	if (IS_ERR(dentry))
- 		return PTR_ERR(dentry);
- 
--	if (!IS_POSIXACL(path.dentry->d_inode))
-+	if (!IS_NOUMASK(path.dentry->d_inode))
- 		mode &= ~current_umask();
- 	error = security_path_mknod(&path, dentry, mode, dev);
- 	if (!error)
-@@ -229,7 +229,7 @@ int __init init_mkdir(const char *pathname, umode_t mode)
- 	dentry = kern_path_create(AT_FDCWD, pathname, &path, LOOKUP_DIRECTORY);
- 	if (IS_ERR(dentry))
- 		return PTR_ERR(dentry);
--	if (!IS_POSIXACL(path.dentry->d_inode))
-+	if (!IS_NOUMASK(path.dentry->d_inode))
- 		mode &= ~current_umask();
- 	error = security_path_mkdir(&path, dentry, mode);
- 	if (!error)
-diff --git a/fs/namei.c b/fs/namei.c
-index 567ee547492b..905fdfec5d26 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3117,7 +3117,7 @@ EXPORT_SYMBOL(unlock_rename);
-  */
- static inline umode_t mode_strip_umask(const struct inode *dir, umode_t mode)
- {
--	if (!IS_POSIXACL(dir))
-+	if (!IS_NOUMASK(dir))
- 		mode &= ~current_umask();
- 	return mode;
- }
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 0d6473cb00cb..81cd11c4db3d 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -1071,7 +1071,7 @@ static void nfs_fill_super(struct super_block *sb, struct nfs_fs_context *ctx)
- 		sb->s_export_op = &nfs_export_ops;
- 		break;
- 	case 4:
--		sb->s_flags |= SB_POSIXACL;
-+		sb->s_flags |= SB_NOUMASK;
- 		sb->s_time_gran = 1;
- 		sb->s_time_min = S64_MIN;
- 		sb->s_time_max = S64_MAX;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 4aeb3fa11927..51ad013ca716 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -1119,13 +1119,14 @@ extern int send_sigurg(struct fown_struct *fown);
- #define SB_NOATIME      BIT(10)	/* Do not update access times. */
- #define SB_NODIRATIME   BIT(11)	/* Do not update directory access times */
- #define SB_SILENT       BIT(15)
--#define SB_POSIXACL     BIT(16)	/* VFS does not apply the umask */
-+#define SB_POSIXACL     BIT(16)	/* POSIX ACLs are supported (implies NOUMASK) */
- #define SB_INLINECRYPT  BIT(17)	/* Use blk-crypto for encrypted files */
- #define SB_KERNMOUNT    BIT(22)	/* this is a kern_mount call */
- #define SB_I_VERSION    BIT(23)	/* Update inode I_version field */
- #define SB_LAZYTIME     BIT(25)	/* Update the on-disk [acm]times lazily */
- 
- /* These sb flags are internal to the kernel */
-+#define SB_NOUMASK	BIT(20)	/* VFS does not apply the umask */
- #define SB_DEAD         BIT(21)
- #define SB_DYING        BIT(24)
- #define SB_SUBMOUNT     BIT(26)
-@@ -2111,6 +2112,7 @@ static inline bool sb_rdonly(const struct super_block *sb) { return sb->s_flags
- #define IS_APPEND(inode)	((inode)->i_flags & S_APPEND)
- #define IS_IMMUTABLE(inode)	((inode)->i_flags & S_IMMUTABLE)
- #define IS_POSIXACL(inode)	__IS_FLG(inode, SB_POSIXACL)
-+#define IS_NOUMASK(inode)	__IS_FLG(inode, SB_POSIXACL|SB_NOUMASK)
- 
- #define IS_DEADDIR(inode)	((inode)->i_flags & S_DEAD)
- #define IS_NOCMTIME(inode)	((inode)->i_flags & S_NOCMTIME)
-
----
-base-commit: a48fa7efaf1161c1c898931fe4c7f0070964233a
-change-id: 20230908-acl-fix-6f8f86930f32
-
-Best regards,
+-Dave.
 -- 
-Jeff Layton <jlayton@kernel.org>
-
+Dave Chinner
+david@fromorbit.com
