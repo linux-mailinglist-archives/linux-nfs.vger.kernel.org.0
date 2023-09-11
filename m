@@ -2,40 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9883479BD1A
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 02:15:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CB5C79B678
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 02:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241167AbjIKV66 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Sep 2023 17:58:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49904 "EHLO
+        id S1355454AbjIKV7l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Sep 2023 17:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240209AbjIKOjE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 10:39:04 -0400
+        with ESMTP id S240216AbjIKOjR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 10:39:17 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 100BBCF0
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 07:39:00 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AE2BC433CB;
-        Mon, 11 Sep 2023 14:38:59 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2194CF0
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 07:39:12 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EFF6C433C8;
+        Mon, 11 Sep 2023 14:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694443139;
-        bh=7WU6i0lHeQzb20klg8dvOfKEisbErnRK/CDZLxLX6gw=;
+        s=k20201202; t=1694443152;
+        bh=tUrYlYpwHMmRYuThBMq9hwTd0RzPf0BWZ7rU/Fj95/g=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=dQ1QGq4NYjMbmbsdp1UFCIt7VsdoWuFW35IBX+EVv0myxwznZ1cAXWxoOw3JLNzap
-         gX3X7b1UPX+wP0ildSJD9kOZsIu/pzI5qDNMprp7ETRqnC6suJqrlENeBZ0kPw0QcX
-         ssz7phWyelVHRj1KRG5EO5/Mj45XbJ1O4XuI5OdA0CHSvpqQrCmquyidu98Wq2PECF
-         NV0KZM7/6xZ35RPvML78s+7zwYOKtdA01pT1kuP5dV6aQWh360aQRr8bh8f8HEjj7K
-         uKPmP8JdOWhISauhOJfr5vs0k1zKPGPOQLRCDWAEtioPWJt2/l1K3t7yxlCS5/41GH
-         NDfrcRU11CfeA==
-Subject: [PATCH v1 04/17] SUNRPC: integrate back-channel processing with
- svc_recv()
+        b=H2vSyNQFgAP7BP4NvqUZghALWdr97Blf9wkKopIKSG2bOiQQWfXQxKRVDAIHnzNYY
+         4RZBg0fGuuehJL9OZZLlM/MRLf9vSIzJCgeHMcXMrpzZ71/yw218OAUx0c43+xkm1i
+         ClogaoOjveMOz5xWnZP0yyf6SZfovr+AZ6a2Po9qWSSfIcGv9ubaE1MYGNX+oC/cr5
+         P//L1WK/5NXI0R6Cv3Wan0Tww7y3ZhuiXf9vX3I0YdXDJrH49n5i5qEZNiL5HbzAnm
+         3B6k9TYqpr5351JBTaZ78VeVRDempoEneGqEQU5eVTQR27KewaHunGeDTzA5wxxeLe
+         +mbnlprprWLUA==
+Subject: [PATCH v1 06/17] SUNRPC: add list of idle threads
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
-Cc:     NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 11 Sep 2023 10:38:58 -0400
-Message-ID: <169444313840.4327.16112579899380992132.stgit@bazille.1015granger.net>
+Cc:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Date:   Mon, 11 Sep 2023 10:39:11 -0400
+Message-ID: <169444315130.4327.68487008717136528.stgit@bazille.1015granger.net>
 In-Reply-To: <169444233785.4327.4365499966926096681.stgit@bazille.1015granger.net>
 References: <169444233785.4327.4365499966926096681.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -54,216 +50,162 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: NeilBrown <neilb@suse.de>
 
-Using svc_recv() for (NFSv4.1) back-channel handling means we have just
-one mechanism for waking threads.
+Rather than searching a list of threads to find an idle one, having a
+list of idle threads allows an idle thread to be found immediately.
 
-Also change kthread_freezable_should_stop() in nfs4_callback_svc() to
-kthread_should_stop() as used elsewhere.
-kthread_freezable_should_stop() effectively adds a try_to_freeze() call,
-and svc_recv() already contains that at an appropriate place.
+This adds some spin_lock calls which is not ideal, but as the hold-time
+is tiny it is still faster than searching a list.  A future patch will
+remove them using llist.h.  This involves some subtlety and so is left
+to a separate patch.
+
+This removes the need for the RQ_BUSY flag.  The rqst is "busy"
+precisely when it is not on the "idle" list.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/callback.c                 |   42 ++-----------------------------------
- include/linux/sunrpc/svc.h        |    2 --
- net/sunrpc/backchannel_rqst.c     |    8 +++----
- net/sunrpc/svc.c                  |    2 +-
- net/sunrpc/svc_xprt.c             |   27 ++++++++++++++++++++++++
- net/sunrpc/xprtrdma/backchannel.c |    2 +-
- 6 files changed, 34 insertions(+), 49 deletions(-)
+ include/linux/sunrpc/svc.h    |   25 ++++++++++++++++++++++++-
+ include/trace/events/sunrpc.h |    1 -
+ net/sunrpc/svc.c              |   14 +++++++++-----
+ net/sunrpc/svc_xprt.c         |   15 +++++++++++----
+ 4 files changed, 44 insertions(+), 11 deletions(-)
 
-diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index 272e6d2bb478..42a0c2f1e785 100644
---- a/fs/nfs/callback.c
-+++ b/fs/nfs/callback.c
-@@ -78,7 +78,7 @@ nfs4_callback_svc(void *vrqstp)
- 
- 	set_freezable();
- 
--	while (!kthread_freezable_should_stop(NULL))
-+	while (!kthread_should_stop())
- 		svc_recv(rqstp);
- 
- 	svc_exit_thread(rqstp);
-@@ -86,41 +86,6 @@ nfs4_callback_svc(void *vrqstp)
- }
- 
- #if defined(CONFIG_NFS_V4_1)
--/*
-- * The callback service for NFSv4.1 callbacks
-- */
--static int
--nfs41_callback_svc(void *vrqstp)
--{
--	struct svc_rqst *rqstp = vrqstp;
--	struct svc_serv *serv = rqstp->rq_server;
--	struct rpc_rqst *req;
--	DEFINE_WAIT(wq);
--
--	set_freezable();
--
--	while (!kthread_freezable_should_stop(NULL)) {
--		prepare_to_wait(&serv->sv_cb_waitq, &wq, TASK_IDLE);
--		spin_lock_bh(&serv->sv_cb_lock);
--		if (!list_empty(&serv->sv_cb_list)) {
--			req = list_first_entry(&serv->sv_cb_list,
--					struct rpc_rqst, rq_bc_list);
--			list_del(&req->rq_bc_list);
--			spin_unlock_bh(&serv->sv_cb_lock);
--			finish_wait(&serv->sv_cb_waitq, &wq);
--			svc_process_bc(req, rqstp);
--		} else {
--			spin_unlock_bh(&serv->sv_cb_lock);
--			if (!kthread_should_stop())
--				schedule();
--			finish_wait(&serv->sv_cb_waitq, &wq);
--		}
--	}
--
--	svc_exit_thread(rqstp);
--	return 0;
--}
--
- static inline void nfs_callback_bc_serv(u32 minorversion, struct rpc_xprt *xprt,
- 		struct svc_serv *serv)
- {
-@@ -233,10 +198,7 @@ static struct svc_serv *nfs_callback_create_svc(int minorversion)
- 			cb_info->users);
- 
- 	threadfn = nfs4_callback_svc;
--#if defined(CONFIG_NFS_V4_1)
--	if (minorversion)
--		threadfn = nfs41_callback_svc;
--#else
-+#if !defined(CONFIG_NFS_V4_1)
- 	if (minorversion)
- 		return ERR_PTR(-ENOTSUPP);
- #endif
 diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 0cdca5960171..acbe1314febd 100644
+index 0ec691070e27..e9c34e99bc88 100644
 --- a/include/linux/sunrpc/svc.h
 +++ b/include/linux/sunrpc/svc.h
-@@ -92,8 +92,6 @@ struct svc_serv {
- 						 * that arrive over the same
- 						 * connection */
- 	spinlock_t		sv_cb_lock;	/* protects the svc_cb_list */
--	wait_queue_head_t	sv_cb_waitq;	/* sleep here if there are no
--						 * entries in the svc_cb_list */
- 	bool			sv_bc_enabled;	/* service uses backchannel */
- #endif /* CONFIG_SUNRPC_BACKCHANNEL */
+@@ -37,6 +37,7 @@ struct svc_pool {
+ 	struct list_head	sp_sockets;	/* pending sockets */
+ 	unsigned int		sp_nrthreads;	/* # of threads in pool */
+ 	struct list_head	sp_all_threads;	/* all server threads */
++	struct list_head	sp_idle_threads; /* idle server threads */
+ 
+ 	/* statistics on pool operation */
+ 	struct percpu_counter	sp_messages_arrived;
+@@ -186,6 +187,7 @@ extern u32 svc_max_payload(const struct svc_rqst *rqstp);
+  */
+ struct svc_rqst {
+ 	struct list_head	rq_all;		/* all threads list */
++	struct list_head	rq_idle;	/* On the idle list */
+ 	struct rcu_head		rq_rcu_head;	/* for RCU deferred kfree */
+ 	struct svc_xprt *	rq_xprt;	/* transport ptr */
+ 
+@@ -262,10 +264,31 @@ enum {
+ 	RQ_SPLICE_OK,		/* turned off in gss privacy to prevent
+ 				 * encrypting page cache pages */
+ 	RQ_VICTIM,		/* Have agreed to shut down */
+-	RQ_BUSY,		/* request is busy */
+ 	RQ_DATA,		/* request has data */
  };
-diff --git a/net/sunrpc/backchannel_rqst.c b/net/sunrpc/backchannel_rqst.c
-index 65a6c6429a53..44b7c89a635f 100644
---- a/net/sunrpc/backchannel_rqst.c
-+++ b/net/sunrpc/backchannel_rqst.c
-@@ -349,10 +349,8 @@ struct rpc_rqst *xprt_lookup_bc_request(struct rpc_xprt *xprt, __be32 xid)
- }
+ 
++/**
++ * svc_thread_set_busy - mark a thread as busy
++ * @rqstp: the thread which is now busy
++ *
++ * If rq_idle is "empty", the thread must be busy.
++ */
++static inline void svc_thread_set_busy(struct svc_rqst *rqstp)
++{
++	INIT_LIST_HEAD(&rqstp->rq_idle);
++}
++
++/**
++ * svc_thread_busy - check if a thread as busy
++ * @rqstp: the thread which might be busy
++ *
++ * If rq_idle is "empty", the thread must be busy.
++ */
++static inline bool svc_thread_busy(struct svc_rqst *rqstp)
++{
++	return list_empty(&rqstp->rq_idle);
++}
++
+ #define SVC_NET(rqst) (rqst->rq_xprt ? rqst->rq_xprt->xpt_net : rqst->rq_bc_net)
  
  /*
-- * Add callback request to callback list.  The callback
-- * service sleeps on the sv_cb_waitq waiting for new
-- * requests.  Wake it up after adding enqueing the
-- * request.
-+ * Add callback request to callback list.  Wake a thread
-+ * on the first pool (usually the only pool) to handle it.
-  */
- void xprt_complete_bc_request(struct rpc_rqst *req, uint32_t copied)
- {
-@@ -371,6 +369,6 @@ void xprt_complete_bc_request(struct rpc_rqst *req, uint32_t copied)
- 	xprt_get(xprt);
- 	spin_lock(&bc_serv->sv_cb_lock);
- 	list_add(&req->rq_bc_list, &bc_serv->sv_cb_list);
--	wake_up(&bc_serv->sv_cb_waitq);
- 	spin_unlock(&bc_serv->sv_cb_lock);
-+	svc_pool_wake_idle_thread(&bc_serv->sv_pools[0]);
- }
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 6beb38c1dcb5..337c90787fb1 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1677,7 +1677,6 @@ DEFINE_SVCXDRBUF_EVENT(sendto);
+ 	svc_rqst_flag(DROPME)						\
+ 	svc_rqst_flag(SPLICE_OK)					\
+ 	svc_rqst_flag(VICTIM)						\
+-	svc_rqst_flag(BUSY)						\
+ 	svc_rqst_flag_end(DATA)
+ 
+ #undef svc_rqst_flag
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index a3d031deb1ec..b98a159eb17f 100644
+index db579bbc0a0a..9d080fe2dcdf 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -440,7 +440,6 @@ __svc_init_bc(struct svc_serv *serv)
- {
- 	INIT_LIST_HEAD(&serv->sv_cb_list);
- 	spin_lock_init(&serv->sv_cb_lock);
--	init_waitqueue_head(&serv->sv_cb_waitq);
- }
- #else
- static void
-@@ -718,6 +717,7 @@ void svc_pool_wake_idle_thread(struct svc_pool *pool)
+@@ -510,6 +510,7 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 		pool->sp_id = i;
+ 		INIT_LIST_HEAD(&pool->sp_sockets);
+ 		INIT_LIST_HEAD(&pool->sp_all_threads);
++		INIT_LIST_HEAD(&pool->sp_idle_threads);
+ 		spin_lock_init(&pool->sp_lock);
  
- 	set_bit(SP_CONGESTED, &pool->sp_flags);
- }
-+EXPORT_SYMBOL_GPL(svc_pool_wake_idle_thread);
+ 		percpu_counter_init(&pool->sp_messages_arrived, 0, GFP_KERNEL);
+@@ -641,7 +642,7 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_pool *pool, int node)
  
- static struct svc_pool *
- svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
+ 	folio_batch_init(&rqstp->rq_fbatch);
+ 
+-	__set_bit(RQ_BUSY, &rqstp->rq_flags);
++	svc_thread_set_busy(rqstp);
+ 	rqstp->rq_server = serv;
+ 	rqstp->rq_pool = pool;
+ 
+@@ -702,10 +703,13 @@ void svc_pool_wake_idle_thread(struct svc_pool *pool)
+ 	struct svc_rqst	*rqstp;
+ 
+ 	rcu_read_lock();
+-	list_for_each_entry_rcu(rqstp, &pool->sp_all_threads, rq_all) {
+-		if (test_and_set_bit(RQ_BUSY, &rqstp->rq_flags))
+-			continue;
+-
++	spin_lock_bh(&pool->sp_lock);
++	rqstp = list_first_entry_or_null(&pool->sp_idle_threads,
++					 struct svc_rqst, rq_idle);
++	if (rqstp)
++		list_del_init(&rqstp->rq_idle);
++	spin_unlock_bh(&pool->sp_lock);
++	if (rqstp) {
+ 		WRITE_ONCE(rqstp->rq_qtime, ktime_get());
+ 		wake_up_process(rqstp->rq_task);
+ 		rcu_read_unlock();
 diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 835160da3ad4..b057f1cbe7a1 100644
+index b8539545fefd..ebfeeb504a79 100644
 --- a/net/sunrpc/svc_xprt.c
 +++ b/net/sunrpc/svc_xprt.c
-@@ -17,6 +17,7 @@
- #include <linux/sunrpc/svc_xprt.h>
- #include <linux/sunrpc/svcsock.h>
- #include <linux/sunrpc/xprt.h>
-+#include <linux/sunrpc/bc_xprt.h>
- #include <linux/module.h>
- #include <linux/netdevice.h>
- #include <trace/events/sunrpc.h>
-@@ -719,6 +720,13 @@ rqst_should_sleep(struct svc_rqst *rqstp)
- 	if (freezing(current))
- 		return false;
+@@ -737,8 +737,9 @@ static void svc_rqst_wait_for_work(struct svc_rqst *rqstp)
+ 		set_current_state(TASK_IDLE);
+ 		smp_mb__before_atomic();
+ 		clear_bit(SP_CONGESTED, &pool->sp_flags);
+-		clear_bit(RQ_BUSY, &rqstp->rq_flags);
+-		smp_mb__after_atomic();
++		spin_lock_bh(&pool->sp_lock);
++		list_add(&rqstp->rq_idle, &pool->sp_idle_threads);
++		spin_unlock_bh(&pool->sp_lock);
  
-+#if defined(CONFIG_SUNRPC_BACKCHANNEL)
-+	if (svc_is_backchannel(rqstp)) {
-+		if (!list_empty(&rqstp->rq_server->sv_cb_list))
-+			return false;
-+	}
-+#endif
-+
- 	return true;
- }
+ 		/* Need to check should_sleep() again after
+ 		 * setting task state in case a wakeup happened
+@@ -751,8 +752,14 @@ static void svc_rqst_wait_for_work(struct svc_rqst *rqstp)
+ 			cond_resched();
+ 		}
  
-@@ -868,6 +876,25 @@ void svc_recv(struct svc_rqst *rqstp)
- 		trace_svc_xprt_dequeue(rqstp);
- 		svc_handle_xprt(rqstp, xprt);
- 	}
-+
-+#if defined(CONFIG_SUNRPC_BACKCHANNEL)
-+	if (svc_is_backchannel(rqstp)) {
-+		struct svc_serv *serv = rqstp->rq_server;
-+		struct rpc_rqst *req;
-+
-+		spin_lock_bh(&serv->sv_cb_lock);
-+		req = list_first_entry_or_null(&serv->sv_cb_list,
-+					       struct rpc_rqst, rq_bc_list);
-+		if (req) {
-+			list_del(&req->rq_bc_list);
-+			spin_unlock_bh(&serv->sv_cb_lock);
-+
-+			svc_process_bc(req, rqstp);
-+			return;
+-		set_bit(RQ_BUSY, &rqstp->rq_flags);
+-		smp_mb__after_atomic();
++		/* We *must* be removed from the list before we can continue.
++		 * If we were woken, this is already done
++		 */
++		if (!svc_thread_busy(rqstp)) {
++			spin_lock_bh(&pool->sp_lock);
++			list_del_init(&rqstp->rq_idle);
++			spin_unlock_bh(&pool->sp_lock);
 +		}
-+		spin_unlock_bh(&serv->sv_cb_lock);
-+	}
-+#endif
- }
- EXPORT_SYMBOL_GPL(svc_recv);
- 
-diff --git a/net/sunrpc/xprtrdma/backchannel.c b/net/sunrpc/xprtrdma/backchannel.c
-index e4d84a13c566..bfc434ec52a7 100644
---- a/net/sunrpc/xprtrdma/backchannel.c
-+++ b/net/sunrpc/xprtrdma/backchannel.c
-@@ -267,7 +267,7 @@ void rpcrdma_bc_receive_call(struct rpcrdma_xprt *r_xprt,
- 	list_add(&rqst->rq_bc_list, &bc_serv->sv_cb_list);
- 	spin_unlock(&bc_serv->sv_cb_lock);
- 
--	wake_up(&bc_serv->sv_cb_waitq);
-+	svc_pool_wake_idle_thread(&bc_serv->sv_pools[0]);
- 
- 	r_xprt->rx_stats.bcall_count++;
- 	return;
+ 	} else {
+ 		cond_resched();
+ 	}
 
 
