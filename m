@@ -2,196 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2492879BAB4
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 02:12:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7986E79BA57
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 02:11:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244439AbjIKWAZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Sep 2023 18:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54108 "EHLO
+        id S240947AbjIKV6y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Sep 2023 17:58:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240269AbjIKOkP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 10:40:15 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9A1DF2
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 07:40:10 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46F14C433CA;
-        Mon, 11 Sep 2023 14:40:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694443210;
-        bh=kNEf5h+FKaz30mccV4GhAxgjeiPK/ymMnsOA8BQjZlo=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=J8u2wmIMnS0yse4HXn+3PAE7chW71wfEDjcCOTI2C16mrsMVStsz2bt7c+QO6tfT+
-         DKSRnsEb800MLAYnKTtP5E9UU72Ry3PGKnlVl728gwABvxxMV9vd6Ti4pIStgQQ17v
-         /TFpJIad/5bXDwO2W81v8tyTODAyhDR9Ol4qdrWB1aXGtRTwM1arBYt5cQRHorjhJi
-         5UAeNgFNcaWkdeRUzGlL/LrJhNLU+/aS6ROS1Nw6Gkl5bqFd0ftBopiF3gtSMQzeSK
-         FpciGgjXk3j7+dkEJeSx7evSxXzZYccUP4uO1XRm6yVtPhaba8CZ6/+i1buE04yW0B
-         xiLJN+bH7fg+w==
-Subject: [PATCH v1 15/17] SUNRPC: change sp_nrthreads to atomic_t
-From:   Chuck Lever <cel@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 11 Sep 2023 10:40:09 -0400
-Message-ID: <169444320932.4327.14002153670307589805.stgit@bazille.1015granger.net>
-In-Reply-To: <169444233785.4327.4365499966926096681.stgit@bazille.1015granger.net>
-References: <169444233785.4327.4365499966926096681.stgit@bazille.1015granger.net>
-User-Agent: StGit/1.5
+        with ESMTP id S240992AbjIKO7L (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 10:59:11 -0400
+Received: from smtp-o-2.desy.de (smtp-o-2.desy.de [131.169.56.155])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A956F1B9
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 07:59:06 -0700 (PDT)
+Received: from smtp-buf-2.desy.de (smtp-buf-2.desy.de [131.169.56.165])
+        by smtp-o-2.desy.de (Postfix) with ESMTP id 0CA8C1611EE
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 16:59:05 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-2.desy.de 0CA8C1611EE
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1694444345; bh=1ROMS8kvUcUhiUc4c+OL2ZSTgs3ivgSt2Uktr1DkDZc=;
+        h=Date:From:To:In-Reply-To:References:Subject:From;
+        b=tappqgFrYCPqC1bDD9+JByRtNq3tgCMfsTUA1QqyTWfLYI2I4k11NuvTm+au/OGnh
+         P2zw75esV96sGBkPPCwGKVfRtLWLbHM4Dm33NMbxdtZT0X2X/JmVqBZR973GbEIg9v
+         WUHuitpWZdVlo9X6iGIVaMTKhur10lsoduGgkSpk=
+Received: from smtp-m-2.desy.de (smtp-m-2.desy.de [131.169.56.130])
+        by smtp-buf-2.desy.de (Postfix) with ESMTP id 0378E1A00C2
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 16:59:05 +0200 (CEST)
+Received: from c1722.mx.srv.dfn.de (c1722.mx.srv.dfn.de [194.95.239.47])
+        by smtp-m-2.desy.de (Postfix) with ESMTP id 065AF120042
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 16:59:05 +0200 (CEST)
+Received: from smtp-intra-3.desy.de (smtp-intra-3.desy.de [131.169.56.69])
+        by c1722.mx.srv.dfn.de (Postfix) with ESMTP id 61C05A003B
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 16:59:04 +0200 (CEST)
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-3.desy.de (Postfix) with ESMTP id 3F63980070
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 16:59:04 +0200 (CEST)
+Date:   Mon, 11 Sep 2023 16:59:04 +0200 (CEST)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <582547008.6087350.1694444344114.JavaMail.zimbra@desy.de>
+In-Reply-To: <20230829110411.8394-1-tigran.mkrtchyan@desy.de>
+References: <20230829110411.8394-1-tigran.mkrtchyan@desy.de>
+Subject: Fwd: [PATCH] nfs41: flexfiles: drop dependency between flexfiles
+ layout driver and NFSv3 modules
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+        boundary="----=_Part_6087351_1006156126.1694444344188"
+X-Mailer: Zimbra 9.0.0_GA_4546 (ZimbraWebClient - FF117 (Linux)/9.0.0_GA_4546)
+Thread-Topic: nfs41: flexfiles: drop dependency between flexfiles layout driver and NFSv3 modules
+Thread-Index: 2LwT7vt/6Sff38egg4bc3bBPV1wzCg==
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: NeilBrown <neilb@suse.de>
+------=_Part_6087351_1006156126.1694444344188
+Date: Mon, 11 Sep 2023 16:59:04 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <582547008.6087350.1694444344114.JavaMail.zimbra@desy.de>
+In-Reply-To: <20230829110411.8394-1-tigran.mkrtchyan@desy.de>
+References: <20230829110411.8394-1-tigran.mkrtchyan@desy.de>
+Subject: Fwd: [PATCH] nfs41: flexfiles: drop dependency between flexfiles
+ layout driver and NFSv3 modules
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 9.0.0_GA_4546 (ZimbraWebClient - FF117 (Linux)/9.0.0_GA_4546)
+Thread-Topic: nfs41: flexfiles: drop dependency between flexfiles layout driver and NFSv3 modules
+Thread-Index: 2LwT7vt/6Sff38egg4bc3bBPV1wzCg==
 
-Using an atomic_t avoids the need to take a spinlock (which can soon be
-removed).
 
-Choosing a thread to kill needs to be careful as we cannot set the "die
-now" bit atomically with the test on the count.  Instead we temporarily
-increase the count.
+Ups. Forwarding to correct list.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+----- On 29 Aug, 2023, at 13:04, Tigran Mkrtchyan tigran.mkrtchyan@desy.de wrote:
+
+The flexfiles layout driver depends on NFSv3 module as data servers
+might be configure to provide nfsv3 only.
+
+Disabling the nfsv3 protocol completely disables the flexfiles layout driver,
+however, the data server still might support v4.1 protocol. Thus the strond
+couling betwwen flexfiles and nfsv3 modules should be relaxed, as layout driver
+will return UNSUPPORTED if not matching protocol is found.
+
+Signed-off-by: Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
 ---
- fs/nfsd/nfssvc.c           |   11 +++++------
- include/linux/sunrpc/svc.h |    2 +-
- net/sunrpc/svc.c           |   37 ++++++++++++++++++++-----------------
- 3 files changed, 26 insertions(+), 24 deletions(-)
+ fs/nfs/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 062f51fe4dfb..fafd2960dfaf 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -713,14 +713,13 @@ int nfsd_nrpools(struct net *net)
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index b6fc169be1b1..ba95246be09e 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -125,7 +125,7 @@ config PNFS_BLOCK
  
- int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
- {
--	int i = 0;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv = nn->nfsd_serv;
-+	int i;
+ config PNFS_FLEXFILE_LAYOUT
+ 	tristate
+-	depends on NFS_V4_1 && NFS_V3
++	depends on NFS_V4_1
+ 	default NFS_V4
  
--	if (nn->nfsd_serv != NULL) {
--		for (i = 0; i < nn->nfsd_serv->sv_nrpools && i < n; i++)
--			nthreads[i] = nn->nfsd_serv->sv_pools[i].sp_nrthreads;
--	}
--
-+	if (serv)
-+		for (i = 0; i < serv->sv_nrpools && i < n; i++)
-+			nthreads[i] = atomic_read(&serv->sv_pools[i].sp_nrthreads);
- 	return 0;
- }
- 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 7ff9fe785e49..9d0fcd6148ae 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -36,7 +36,7 @@ struct svc_pool {
- 	unsigned int		sp_id;	    	/* pool id; also node id on NUMA */
- 	spinlock_t		sp_lock;	/* protects all fields */
- 	struct lwq		sp_xprts;	/* pending transports */
--	unsigned int		sp_nrthreads;	/* # of threads in pool */
-+	atomic_t		sp_nrthreads;	/* # of threads in pool */
- 	struct list_head	sp_all_threads;	/* all server threads */
- 	struct llist_head	sp_idle_threads; /* idle server threads */
- 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 244b5b9eba4d..0928d3f918b0 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -681,8 +681,8 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
- 	serv->sv_nrthreads += 1;
- 	spin_unlock_bh(&serv->sv_lock);
- 
-+	atomic_inc(&pool->sp_nrthreads);
- 	spin_lock_bh(&pool->sp_lock);
--	pool->sp_nrthreads++;
- 	list_add_rcu(&rqstp->rq_all, &pool->sp_all_threads);
- 	spin_unlock_bh(&pool->sp_lock);
- 	return rqstp;
-@@ -727,23 +727,24 @@ svc_pool_next(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
- }
- 
- static struct svc_pool *
--svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *state)
-+svc_pool_victim(struct svc_serv *serv, struct svc_pool *target_pool,
-+		unsigned int *state)
- {
-+	struct svc_pool *pool;
- 	unsigned int i;
- 
-+retry:
-+	pool = target_pool;
-+
- 	if (pool != NULL) {
--		spin_lock_bh(&pool->sp_lock);
--		if (pool->sp_nrthreads)
-+		if (atomic_inc_not_zero(&pool->sp_nrthreads))
- 			goto found_pool;
--		spin_unlock_bh(&pool->sp_lock);
- 		return NULL;
- 	} else {
- 		for (i = 0; i < serv->sv_nrpools; i++) {
- 			pool = &serv->sv_pools[--(*state) % serv->sv_nrpools];
--			spin_lock_bh(&pool->sp_lock);
--			if (pool->sp_nrthreads)
-+			if (atomic_inc_not_zero(&pool->sp_nrthreads))
- 				goto found_pool;
--			spin_unlock_bh(&pool->sp_lock);
- 		}
- 		return NULL;
- 	}
-@@ -751,8 +752,12 @@ svc_pool_victim(struct svc_serv *serv, struct svc_pool *pool, unsigned int *stat
- found_pool:
- 	set_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
- 	set_bit(SP_NEED_VICTIM, &pool->sp_flags);
--	spin_unlock_bh(&pool->sp_lock);
--	return pool;
-+	if (!atomic_dec_and_test(&pool->sp_nrthreads))
-+		return pool;
-+	/* Nothing left in this pool any more */
-+	clear_bit(SP_NEED_VICTIM, &pool->sp_flags);
-+	clear_bit(SP_VICTIM_REMAINS, &pool->sp_flags);
-+	goto retry;
- }
- 
- static int
-@@ -828,13 +833,10 @@ svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- int
- svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- {
--	if (pool == NULL) {
-+	if (!pool)
- 		nrservs -= serv->sv_nrthreads;
--	} else {
--		spin_lock_bh(&pool->sp_lock);
--		nrservs -= pool->sp_nrthreads;
--		spin_unlock_bh(&pool->sp_lock);
--	}
-+	else
-+		nrservs -= atomic_read(&pool->sp_nrthreads);
- 
- 	if (nrservs > 0)
- 		return svc_start_kthreads(serv, pool, nrservs);
-@@ -921,10 +923,11 @@ svc_exit_thread(struct svc_rqst *rqstp)
- 	struct svc_pool	*pool = rqstp->rq_pool;
- 
- 	spin_lock_bh(&pool->sp_lock);
--	pool->sp_nrthreads--;
- 	list_del_rcu(&rqstp->rq_all);
- 	spin_unlock_bh(&pool->sp_lock);
- 
-+	atomic_dec(&pool->sp_nrthreads);
-+
- 	spin_lock_bh(&serv->sv_lock);
- 	serv->sv_nrthreads -= 1;
- 	spin_unlock_bh(&serv->sv_lock);
+ config NFS_V4_1_IMPLEMENTATION_ID_DOMAIN
+-- 
+2.39.1
+------=_Part_6087351_1006156126.1694444344188
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIF
+vzCCBKegAwIBAgIMJENPm+MXSsxZAQzUMA0GCSqGSIb3DQEBCwUAMIGNMQswCQYDVQQGEwJERTFF
+MEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVpbmVzIERldXRzY2hlbiBGb3JzY2h1bmdz
+bmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUwIwYDVQQDDBxERk4tVmVyZWluIEdsb2Jh
+bCBJc3N1aW5nIENBMB4XDTIxMDIxMDEyMzEwOVoXDTI0MDIxMDEyMzEwOVowWDELMAkGA1UEBhMC
+REUxLjAsBgNVBAoMJURldXRzY2hlcyBFbGVrdHJvbmVuLVN5bmNocm90cm9uIERFU1kxGTAXBgNV
+BAMMEFRpZ3JhbiBNa3J0Y2h5YW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQClVKHU
+er1OiIaoo2MFDgCSzcqRCB8qVjjLJyJwzHWkhKniE6dwY8xHciG0HZFpSQqiRsoakD+BzqINXsqI
+CkVck5n7cUJ6cHBOM1r4pzEBcuuozPrT2tAfnHkFFGTZffOXgjmEITfSh6SD+DYeZH4Dt8kPZmnD
+mzWMDFDyB67WWcWApVC1nPh29yGgJk18UZ+Ut9a+woaovMZlutMbuvLVt/x5rpycMw0z+J1qeK7J
+8F3bKb0o2gg+Mnz9LzpLtJp7E9qJUKOTkZGDua9w9xrlo4XGX9Vn72K5wodu6woahdgNG+sXRcJM
+RH3aWgfdznoi1ORLJCfTbdfjSBpclvt/AgMBAAGjggJRMIICTTA+BgNVHSAENzA1MA8GDSsGAQQB
+ga0hgiwBAQQwEAYOKwYBBAGBrSGCLAEBBAgwEAYOKwYBBAGBrSGCLAIBBAgwCQYDVR0TBAIwADAO
+BgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBQG
+1+t/IHSjHSbbu11uU5Iw7JW92zAfBgNVHSMEGDAWgBRrOpiL+fJTidrgrbIyHgkf6Ko7dDAjBgNV
+HREEHDAagRh0aWdyYW4ubWtydGNoeWFuQGRlc3kuZGUwgY0GA1UdHwSBhTCBgjA/oD2gO4Y5aHR0
+cDovL2NkcDEucGNhLmRmbi5kZS9kZm4tY2EtZ2xvYmFsLWcyL3B1Yi9jcmwvY2FjcmwuY3JsMD+g
+PaA7hjlodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2Rmbi1jYS1nbG9iYWwtZzIvcHViL2NybC9jYWNy
+bC5jcmwwgdsGCCsGAQUFBwEBBIHOMIHLMDMGCCsGAQUFBzABhidodHRwOi8vb2NzcC5wY2EuZGZu
+LmRlL09DU1AtU2VydmVyL09DU1AwSQYIKwYBBQUHMAKGPWh0dHA6Ly9jZHAxLnBjYS5kZm4uZGUv
+ZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwSQYIKwYBBQUHMAKGPWh0dHA6
+Ly9jZHAyLnBjYS5kZm4uZGUvZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQw
+DQYJKoZIhvcNAQELBQADggEBADaFbcKsjBPbw6aRf5vxlJdehkafMy4JIdduMEGB+IjpBRZGmu0Z
+R2FRWNyq0lNRz03holZ8Rew0Ldx58REJmvAEzbwox4LT1wG8gRLEehyasSROajZBFrIHadDja0y4
+1JrfqP2umZFE2XWap8pDFpQk4sZOXW1mEamLzFtlgXtCfalmYmbnrq5DnSVKX8LOt5BZvDWin3r4
+m5v313d5/l0Qz2IrN6v7qNIyqT4peW90DUJHB1MGN60W2qe+VimWIuLJkQXMOpaUQJUlhkHOnhw8
+82g+jWG6kpKBMzIQMMGP0urFlPAia2Iuu2VtCkT7Wr43xyhiVzkZcT6uzR23PLsAADGCApswggKX
+AgEBMIGeMIGNMQswCQYDVQQGEwJERTFFMEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVp
+bmVzIERldXRzY2hlbiBGb3JzY2h1bmdzbmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUw
+IwYDVQQDDBxERk4tVmVyZWluIEdsb2JhbCBJc3N1aW5nIENBAgwkQ0+b4xdKzFkBDNQwDQYJYIZI
+AWUDBAIBBQCggc4wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjMw
+OTExMTQ1OTA0WjAtBgkqhkiG9w0BCTQxIDAeMA0GCWCGSAFlAwQCAQUAoQ0GCSqGSIb3DQEBCwUA
+MC8GCSqGSIb3DQEJBDEiBCBxCp0A04a8KwF3/TLdDm4EtEzf243BBEahJE4wYX84/zA0BgkqhkiG
+9w0BCQ8xJzAlMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAHBgUrDgMCBzANBgkqhkiG9w0B
+AQsFAASCAQAubuztIwNLn7dSTjwQe2RGKRhZfrmUpXtAc0yNdI81DHOvdSlWZri37pfPF0HGAGb7
+QgMZQPg5TJzmvxesXf5DIoX1U7oYLvmsUA6G6KK/MS1MFDaNTVCsaQWVvAe1ZLUcSVsRjeNtsQJ2
+YRRdkX0Vm44vdoTK65w2ACzGDkTAACtM+9kdofUE178ZLMu9Vhl1izeIiTzTY05MPM+Hz7PNMO0i
+FHW5XLrywqL6hsqehpUbdHzl5vq4daFR+YYKL6qKhCNg56NMgZsexf0+xdOlsqepuFj5ygu+LxfS
+hAQUyZtVUTyBiV3HMypvDjvJX8F0IWpfFlQ+ABZzAxMghdC1AAAAAAAA
+------=_Part_6087351_1006156126.1694444344188--
