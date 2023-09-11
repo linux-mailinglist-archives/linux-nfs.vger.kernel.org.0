@@ -2,164 +2,254 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D616379A07B
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Sep 2023 00:01:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 180FA79B5E7
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 02:04:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231809AbjIJWBh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 10 Sep 2023 18:01:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46214 "EHLO
+        id S239804AbjIKWAQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Sep 2023 18:00:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231205AbjIJWBf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 10 Sep 2023 18:01:35 -0400
-Received: from mail-pf1-x42f.google.com (mail-pf1-x42f.google.com [IPv6:2607:f8b0:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FEB518F
-        for <linux-nfs@vger.kernel.org>; Sun, 10 Sep 2023 15:01:28 -0700 (PDT)
-Received: by mail-pf1-x42f.google.com with SMTP id d2e1a72fcca58-68c576d35feso3658719b3a.2
-        for <linux-nfs@vger.kernel.org>; Sun, 10 Sep 2023 15:01:28 -0700 (PDT)
+        with ESMTP id S235948AbjIKJqn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 05:46:43 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2378EE4A
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 02:46:39 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1befe39630bso9364795ad.0
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 02:46:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1694383288; x=1694988088; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EyybjuBSw2AsBAibBPVqGccWs6P0JtTeGBB0Kwx90Dw=;
-        b=b1Q+Djrc6DRgK0lSMIXf6OVmm1S98Rb1dJdV/4AjeMobXYoqxa/k4Xb7XAYcmCuvbB
-         T8pFPhiJHk/Ig8CcU4is+jZGfReesXQjqK7ULjc+VZz110Uqhy1NjrWTu4Ej2kgb1UEn
-         ZHgnS7dDfuM0nrDuRkgBy+D/YOBtPecXxWCyUh6h/0/NlsJyyOwKHQwSKYYxfVY7xjkS
-         7I+QxdaDiDVRMV8qekGuV48jZlbOlbc6skR8a29kp5hS8zsrhWfeCv9XIJ/gwMURSkPX
-         Ncgzq9d3+KaDgvRq3XsvmeqBjcqt9Lc7ewxeY00IZtUnccPI4WIduUYqP2aDlo+H2VFl
-         7yRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694383288; x=1694988088;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1694425598; x=1695030398; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EyybjuBSw2AsBAibBPVqGccWs6P0JtTeGBB0Kwx90Dw=;
-        b=oUA9kcwbPS83pl2SShyrOmOSdOSS13pGF79Tsl7icFb/MPCFfu3uJOc/OlnsteBhLX
-         N35v2weeZe7jCpurzu88g2mbgmFpV7ysWGM4rxqSoE3Rl+l1ZNofCWHwSTk+tcxCY4SB
-         oGQu1buIr4BYQikY2M2+8AXhqbK3Pa2Xb7P2zVJO0ivwna9L+7Xe1FyyQ6C+dCwJiXTQ
-         8joLnyRimiwKcO8XrzUAx7C16OIqNDbsOgv+1mGKMQxntw7VsnSeFQvi3dKbW6EsHc5O
-         MlaKEeQXT8kYonRSbV+2BPjW/68T56N8iFDOrg2JUeFZUsEmLtCjQ3T+1qw+XQBrqDo3
-         OH8g==
-X-Gm-Message-State: AOJu0Yw+tfrnhmpVZ+HYlCRHyBr1/UvUNwV1TEiWuvsn1FJD+QzWwHDs
-        k+hb0udZJU/PrI4u3NqdZw+nTw==
-X-Google-Smtp-Source: AGHT+IHSYFPf3w2qdTZr9bikkzuSsvPYQjYYZyW+Zfc616rQWXs3Eeo2BzwinmhhOfJVOtnHj1lBTA==
-X-Received: by 2002:a05:6a00:1a0c:b0:68c:57c7:1eb0 with SMTP id g12-20020a056a001a0c00b0068c57c71eb0mr9371853pfv.11.1694383287795;
-        Sun, 10 Sep 2023 15:01:27 -0700 (PDT)
-Received: from dread.disaster.area (pa49-195-66-88.pa.nsw.optusnet.com.au. [49.195.66.88])
-        by smtp.gmail.com with ESMTPSA id u10-20020a62ed0a000000b0068a3dd6c1dasm4403641pfh.142.2023.09.10.15.01.27
+        bh=pHpuYVUzN3jckjN0g3IoL6/kLBn9YHZf3O2ocrsGP0s=;
+        b=AUApZMqcGQd8TrJkADDa6dJUzK+/H7zZX9sIet7NCPl65LFmMGWXSsf4rvavpEKnFJ
+         Pk5eDuAjPvMEsz2cDZCrBb7tl14hI/RyooRDImYDhjtiLEkCzVjflkgYJ+X0ywooRnCO
+         LHCsBdW3EcEi5n3Hxgtd8cdfdNqtVXZIbtZjmg4zwKCiU2BpTWYY8VyXzovzkos9Z1md
+         VgZlwuLmfpG3zqDOLqolbS9GCae4hUHyI4L5d3HmtwjqqVv4Bd2jNqfBvJ+lR8TNH2oy
+         y14VQG3b7vrSJFdxMGRHidQFUKV0g+iUHOP2Y9Oy7pivmRQ60jL01awVL1IilGuw8nbN
+         PNpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694425598; x=1695030398;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pHpuYVUzN3jckjN0g3IoL6/kLBn9YHZf3O2ocrsGP0s=;
+        b=tpko7oCPVvpWj9MTkM/sSecyVSCpEi/EPIyusX7kqATumk/UdYxKRhgIfNCJ9LFlJ1
+         gmxrjMEUNbme5d3vIg1OYTuGJSxJ6OUvLydlXH7C90ioW5SNiMnHRDi4PwPRqNoMtapu
+         tc/bFcFINyzXl8JiZzqobmPQMdsPTCr3kPUSIbJDz3Nhuz6+3m+gT6QxEkNQv7DN7eTb
+         DPOKHw+kyqGTPtKDot7RnjSy+jq8gI8tieexDgcXClrrgY3z9KvNYVaYxeGIvj00qpnZ
+         igI4Cfs27Pk9+QXZT3M2Ose1TfahsNGB8KKEc3rFkKWURdZCAJmRewM1DuD406SVRyzG
+         7l5w==
+X-Gm-Message-State: AOJu0YxREAWHYWP9imSmyqxc95sgzr1z99EwO+xv7zVhz4P/mMP/NgZg
+        QMb/2N4+YQNG19SCfjjy4dXjoA==
+X-Google-Smtp-Source: AGHT+IE4diKAs4V0ZLkbBcPD23s8Bxj5IuLRqCIy3bQ9Nrv1l59K6Ek3oQa6VjaqyWVA5u0uD7+kGg==
+X-Received: by 2002:a17:903:2843:b0:1c3:a4f2:7cc1 with SMTP id kq3-20020a170903284300b001c3a4f27cc1mr5315057plb.5.1694425598648;
+        Mon, 11 Sep 2023 02:46:38 -0700 (PDT)
+Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
+        by smtp.gmail.com with ESMTPSA id az7-20020a170902a58700b001bdc2fdcf7esm5988188plb.129.2023.09.11.02.46.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Sep 2023 15:01:27 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qfSUe-00DWBA-0u;
-        Mon, 11 Sep 2023 08:01:24 +1000
-Date:   Mon, 11 Sep 2023 08:01:24 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Pavel Begunkov <asml.silence@gmail.com>
-Cc:     Hao Xu <hao.xu@linux.dev>, Matthew Wilcox <willy@infradead.org>,
-        io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Brauner <brauner@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Stefan Roesch <shr@fb.com>, Clay Harris <bugs@claycon.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-cachefs@redhat.com,
-        ecryptfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-unionfs@vger.kernel.org, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, codalist@coda.cs.cmu.edu,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        devel@lists.orangefs.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mtd@lists.infradead.org,
-        Wanpeng Li <wanpengli@tencent.com>
-Subject: Re: [PATCH 07/11] vfs: add nowait parameter for file_accessed()
-Message-ID: <ZP48tAg2iS0UzKQf@dread.disaster.area>
-References: <20230827132835.1373581-1-hao.xu@linux.dev>
- <20230827132835.1373581-8-hao.xu@linux.dev>
- <ZOvA5DJDZN0FRymp@casper.infradead.org>
- <c728bf3f-d9db-4865-8473-058b26c11c06@linux.dev>
- <ZO3cI+DkotHQo3md@casper.infradead.org>
- <642de4e6-801d-fcad-a7ce-bfc6dec3b6e5@linux.dev>
- <ZPUJHAKzxvXiEDYA@dread.disaster.area>
- <6489b8cb-7d54-1e29-f192-a3449ed87fa1@gmail.com>
+        Mon, 11 Sep 2023 02:46:38 -0700 (PDT)
+From:   Qi Zheng <zhengqi.arch@bytedance.com>
+To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
+        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
+        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
+        steven.price@arm.com, cel@kernel.org, senozhatsky@chromium.org,
+        yujie.liu@intel.com, gregkh@linuxfoundation.org,
+        muchun.song@linux.dev
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-fsdevel@vger.kernel.org,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        Muchun Song <songmuchun@bytedance.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH v6 10/45] NFSv4.2: dynamically allocate the nfs-xattr shrinkers
+Date:   Mon, 11 Sep 2023 17:44:09 +0800
+Message-Id: <20230911094444.68966-11-zhengqi.arch@bytedance.com>
+X-Mailer: git-send-email 2.24.3 (Apple Git-128)
+In-Reply-To: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
+References: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6489b8cb-7d54-1e29-f192-a3449ed87fa1@gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Sep 08, 2023 at 01:29:55AM +0100, Pavel Begunkov wrote:
-> On 9/3/23 23:30, Dave Chinner wrote:
-> > On Wed, Aug 30, 2023 at 02:11:31PM +0800, Hao Xu wrote:
-> > > On 8/29/23 19:53, Matthew Wilcox wrote:
-> > > > On Tue, Aug 29, 2023 at 03:46:13PM +0800, Hao Xu wrote:
-> > > > > On 8/28/23 05:32, Matthew Wilcox wrote:
-> > > > > > On Sun, Aug 27, 2023 at 09:28:31PM +0800, Hao Xu wrote:
-> > > > > > > From: Hao Xu <howeyxu@tencent.com>
-> > > > > > > 
-> > > > > > > Add a boolean parameter for file_accessed() to support nowait semantics.
-> > > > > > > Currently it is true only with io_uring as its initial caller.
-> > > > > > 
-> > > > > > So why do we need to do this as part of this series?  Apparently it
-> > > > > > hasn't caused any problems for filemap_read().
-> > > > > > 
-> > > > > 
-> > > > > We need this parameter to indicate if nowait semantics should be enforced in
-> > > > > touch_atime(), There are locks and maybe IOs in it.
-> > > > 
-> > > > That's not my point.  We currently call file_accessed() and
-> > > > touch_atime() for nowait reads and nowait writes.  You haven't done
-> > > > anything to fix those.
-> > > > 
-> > > > I suspect you can trim this patchset down significantly by avoiding
-> > > > fixing the file_accessed() problem.  And then come back with a later
-> > > > patchset that fixes it for all nowait i/o.  Or do a separate prep series
-> > > 
-> > > I'm ok to do that.
-> > > 
-> > > > first that fixes it for the existing nowait users, and then a second
-> > > > series to do all the directory stuff.
-> > > > 
-> > > > I'd do the first thing.  Just ignore the problem.  Directory atime
-> > > > updates cause I/O so rarely that you can afford to ignore it.  Almost
-> > > > everyone uses relatime or nodiratime.
-> > > 
-> > > Hi Matthew,
-> > > The previous discussion shows this does cause issues in real
-> > > producations: https://lore.kernel.org/io-uring/2785f009-2ebb-028d-8250-d5f3a30510f0@gmail.com/#:~:text=fwiw%2C%20we%27ve%20just%20recently%20had%20similar%20problems%20with%20io_uring%20read/write
-> > > 
-> > 
-> > Then separate it out into it's own patch set so we can have a
-> > discussion on the merits of requiring using noatime, relatime or
-> > lazytime for really latency sensitive IO applications. Changing code
-> > is not always the right solution...
-> 
-> Separation sounds reasonable, but it can hardly be said that only
-> latency sensitive apps would care about >1s nowait/async submission
-> delays. Presumably, btrfs can improve on that, but it still looks
-> like it's perfectly legit for filesystems do heavy stuff in
-> timestamping like waiting for IO. Right?
+Use new APIs to dynamically allocate the nfs-xattr shrinkers.
 
-Yes, it is, no-one is denying that. And some filesystems are worse
-than others, but none of that means it has to be fixed so getdents
-can be converted to NOWAIT semantics.
+Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
+Reviewed-by: Muchun Song <songmuchun@bytedance.com>
+CC: Trond Myklebust <trond.myklebust@hammerspace.com>
+CC: Anna Schumaker <anna@kernel.org>
+CC: linux-nfs@vger.kernel.org
+---
+ fs/nfs/nfs42xattr.c | 87 +++++++++++++++++++++++----------------------
+ 1 file changed, 44 insertions(+), 43 deletions(-)
 
-ie. this patchset is about the getdents NOWAIT machinery, and
-fiddling around with timestamps has much, much wider scope than just
-NOWAIT getdents machinery. We'll have this discussion about NOWAIT
-timestamp updates when a RFC is proposed to address the wider
-problem of how timestamp updates should behave in NOWAIT context.
-
--Dave.
+diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
+index 911f634ba3da..2ad66a8922f4 100644
+--- a/fs/nfs/nfs42xattr.c
++++ b/fs/nfs/nfs42xattr.c
+@@ -796,28 +796,9 @@ static unsigned long nfs4_xattr_cache_scan(struct shrinker *shrink,
+ static unsigned long nfs4_xattr_entry_scan(struct shrinker *shrink,
+ 					   struct shrink_control *sc);
+ 
+-static struct shrinker nfs4_xattr_cache_shrinker = {
+-	.count_objects	= nfs4_xattr_cache_count,
+-	.scan_objects	= nfs4_xattr_cache_scan,
+-	.seeks		= DEFAULT_SEEKS,
+-	.flags		= SHRINKER_MEMCG_AWARE,
+-};
+-
+-static struct shrinker nfs4_xattr_entry_shrinker = {
+-	.count_objects	= nfs4_xattr_entry_count,
+-	.scan_objects	= nfs4_xattr_entry_scan,
+-	.seeks		= DEFAULT_SEEKS,
+-	.batch		= 512,
+-	.flags		= SHRINKER_MEMCG_AWARE,
+-};
+-
+-static struct shrinker nfs4_xattr_large_entry_shrinker = {
+-	.count_objects	= nfs4_xattr_entry_count,
+-	.scan_objects	= nfs4_xattr_entry_scan,
+-	.seeks		= 1,
+-	.batch		= 512,
+-	.flags		= SHRINKER_MEMCG_AWARE,
+-};
++static struct shrinker *nfs4_xattr_cache_shrinker;
++static struct shrinker *nfs4_xattr_entry_shrinker;
++static struct shrinker *nfs4_xattr_large_entry_shrinker;
+ 
+ static enum lru_status
+ cache_lru_isolate(struct list_head *item,
+@@ -943,7 +924,7 @@ nfs4_xattr_entry_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	struct nfs4_xattr_entry *entry;
+ 	struct list_lru *lru;
+ 
+-	lru = (shrink == &nfs4_xattr_large_entry_shrinker) ?
++	lru = (shrink == nfs4_xattr_large_entry_shrinker) ?
+ 	    &nfs4_xattr_large_entry_lru : &nfs4_xattr_entry_lru;
+ 
+ 	freed = list_lru_shrink_walk(lru, sc, entry_lru_isolate, &dispose);
+@@ -971,7 +952,7 @@ nfs4_xattr_entry_count(struct shrinker *shrink, struct shrink_control *sc)
+ 	unsigned long count;
+ 	struct list_lru *lru;
+ 
+-	lru = (shrink == &nfs4_xattr_large_entry_shrinker) ?
++	lru = (shrink == nfs4_xattr_large_entry_shrinker) ?
+ 	    &nfs4_xattr_large_entry_lru : &nfs4_xattr_entry_lru;
+ 
+ 	count = list_lru_shrink_count(lru, sc);
+@@ -991,18 +972,34 @@ static void nfs4_xattr_cache_init_once(void *p)
+ 	INIT_LIST_HEAD(&cache->dispose);
+ }
+ 
+-static int nfs4_xattr_shrinker_init(struct shrinker *shrinker,
+-				    struct list_lru *lru, const char *name)
++typedef unsigned long (*count_objects_cb)(struct shrinker *s,
++					  struct shrink_control *sc);
++typedef unsigned long (*scan_objects_cb)(struct shrinker *s,
++					 struct shrink_control *sc);
++
++static int __init nfs4_xattr_shrinker_init(struct shrinker **shrinker,
++					   struct list_lru *lru, const char *name,
++					   count_objects_cb count,
++					   scan_objects_cb scan, long batch, int seeks)
+ {
+-	int ret = 0;
++	int ret;
+ 
+-	ret = register_shrinker(shrinker, name);
+-	if (ret)
++	*shrinker = shrinker_alloc(SHRINKER_MEMCG_AWARE, name);
++	if (!*shrinker)
++		return -ENOMEM;
++
++	ret = list_lru_init_memcg(lru, *shrinker);
++	if (ret) {
++		shrinker_free(*shrinker);
+ 		return ret;
++	}
+ 
+-	ret = list_lru_init_memcg(lru, shrinker);
+-	if (ret)
+-		unregister_shrinker(shrinker);
++	(*shrinker)->count_objects = count;
++	(*shrinker)->scan_objects = scan;
++	(*shrinker)->batch = batch;
++	(*shrinker)->seeks = seeks;
++
++	shrinker_register(*shrinker);
+ 
+ 	return ret;
+ }
+@@ -1010,7 +1007,7 @@ static int nfs4_xattr_shrinker_init(struct shrinker *shrinker,
+ static void nfs4_xattr_shrinker_destroy(struct shrinker *shrinker,
+ 					struct list_lru *lru)
+ {
+-	unregister_shrinker(shrinker);
++	shrinker_free(shrinker);
+ 	list_lru_destroy(lru);
+ }
+ 
+@@ -1026,27 +1023,31 @@ int __init nfs4_xattr_cache_init(void)
+ 		return -ENOMEM;
+ 
+ 	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_cache_shrinker,
+-				       &nfs4_xattr_cache_lru,
+-				       "nfs-xattr_cache");
++				       &nfs4_xattr_cache_lru, "nfs-xattr_cache",
++				       nfs4_xattr_cache_count,
++				       nfs4_xattr_cache_scan, 0, DEFAULT_SEEKS);
+ 	if (ret)
+ 		goto out1;
+ 
+ 	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_entry_shrinker,
+-				       &nfs4_xattr_entry_lru,
+-				       "nfs-xattr_entry");
++				       &nfs4_xattr_entry_lru, "nfs-xattr_entry",
++				       nfs4_xattr_entry_count,
++				       nfs4_xattr_entry_scan, 512, DEFAULT_SEEKS);
+ 	if (ret)
+ 		goto out2;
+ 
+ 	ret = nfs4_xattr_shrinker_init(&nfs4_xattr_large_entry_shrinker,
+ 				       &nfs4_xattr_large_entry_lru,
+-				       "nfs-xattr_large_entry");
++				       "nfs-xattr_large_entry",
++				       nfs4_xattr_entry_count,
++				       nfs4_xattr_entry_scan, 512, 1);
+ 	if (!ret)
+ 		return 0;
+ 
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_entry_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_entry_shrinker,
+ 				    &nfs4_xattr_entry_lru);
+ out2:
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_cache_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_cache_shrinker,
+ 				    &nfs4_xattr_cache_lru);
+ out1:
+ 	kmem_cache_destroy(nfs4_xattr_cache_cachep);
+@@ -1056,11 +1057,11 @@ int __init nfs4_xattr_cache_init(void)
+ 
+ void nfs4_xattr_cache_exit(void)
+ {
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_large_entry_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_large_entry_shrinker,
+ 				    &nfs4_xattr_large_entry_lru);
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_entry_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_entry_shrinker,
+ 				    &nfs4_xattr_entry_lru);
+-	nfs4_xattr_shrinker_destroy(&nfs4_xattr_cache_shrinker,
++	nfs4_xattr_shrinker_destroy(nfs4_xattr_cache_shrinker,
+ 				    &nfs4_xattr_cache_lru);
+ 	kmem_cache_destroy(nfs4_xattr_cache_cachep);
+ }
 -- 
-Dave Chinner
-david@fromorbit.com
+2.30.2
+
