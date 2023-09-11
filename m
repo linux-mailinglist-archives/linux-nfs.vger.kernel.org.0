@@ -2,197 +2,239 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E0DA79BB91
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 02:13:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCFFC79BE33
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 02:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239782AbjIKV7q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Sep 2023 17:59:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56240 "EHLO
+        id S244361AbjIKWAO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Sep 2023 18:00:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236065AbjIKJuR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 05:50:17 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E278116
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 02:50:12 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1c0efe0c4acso7090255ad.0
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 02:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1694425812; x=1695030612; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iZYFEziqHKQTs36ii9IxaHzQyRy7+HnptX1eUkyxsok=;
-        b=WZBENGkSXaOlhHMO5LTxiUcRjhu4geO0M8eetJgadZ9CGfhrcI19ti6aOWT02a9vRm
-         zrXlYh2qg9j1QfwHpRifi/g/K66enkGSJUf7fStZgWMRAasTMKBvhuWzUj0ZB41lrY9F
-         lMjT3MH5zJOwjiBIEI/7xYhZFeS714kq6ci13hhN+O/ftKzbj/Z4ePCgeMqpb6fcKfpn
-         u8JBWiXo94n41UwLigv9QwRhXiKy5v6m42mn2YjeCbgDf2l2jD9/Ev37pAQYF1UROlWy
-         6U1/fJ0/JpEuXYzT5hwoAv4Qw1JggqVi7K2aR2nBquQfcj6Abt78wj0mSZcxz8yAUQYj
-         SQ3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694425812; x=1695030612;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iZYFEziqHKQTs36ii9IxaHzQyRy7+HnptX1eUkyxsok=;
-        b=BROxjJRKtSaLtGfK6GQ1cAfkG0VO70E6TQ3GWgp6SqXvfJxO2nppbfw2AVKbz6tFSL
-         /8WMLc7sh2Kepab9gbWIfM2CROifpaqPUTuUJYkg6HSiJ8M14vuIDWK7jrbQs0MECnmg
-         4ZcvFUvwrUWF95Dhocb4VXzSNADaAasMM//m+tZ+t8He2n1hKqSjVMd1rhjBgeFp3pPk
-         lk/afZDozGoEdN3naBXgtWtN2jQuUyTpdwyflB/xw63XuMcRY+0SMAjE/OSfSs9N6TCy
-         3p0KOUY32pjb5G7mDZi928D6iH7P+MTT56svv+RcVFOC9Mvkc01x43L22dsyBshuxx+e
-         UXUA==
-X-Gm-Message-State: AOJu0Ywbj9q77RwQMXQSECUMsRijLpn9WpWssGe9zN0Ss74c7Cl4datb
-        /3jldkdDCB7pUZn/DUw3uG1GJQ==
-X-Google-Smtp-Source: AGHT+IFx01yGZSAgnlbIN2EmaqAGM45aSzdAGkHUGYMQpSItramkO401wN4MdrY4LUd5pZ7aoS8pCA==
-X-Received: by 2002:a17:902:e84c:b0:1bf:349f:b85c with SMTP id t12-20020a170902e84c00b001bf349fb85cmr11526001plg.1.1694425811998;
-        Mon, 11 Sep 2023 02:50:11 -0700 (PDT)
-Received: from C02DW0BEMD6R.bytedance.net ([203.208.167.146])
-        by smtp.gmail.com with ESMTPSA id az7-20020a170902a58700b001bdc2fdcf7esm5988188plb.129.2023.09.11.02.50.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 02:50:11 -0700 (PDT)
-From:   Qi Zheng <zhengqi.arch@bytedance.com>
-To:     akpm@linux-foundation.org, david@fromorbit.com, tkhai@ya.ru,
-        vbabka@suse.cz, roman.gushchin@linux.dev, djwong@kernel.org,
-        brauner@kernel.org, paulmck@kernel.org, tytso@mit.edu,
-        steven.price@arm.com, cel@kernel.org, senozhatsky@chromium.org,
-        yujie.liu@intel.com, gregkh@linuxfoundation.org,
-        muchun.song@linux.dev
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH v6 33/45] nfsd: dynamically allocate the nfsd-reply shrinker
-Date:   Mon, 11 Sep 2023 17:44:32 +0800
-Message-Id: <20230911094444.68966-34-zhengqi.arch@bytedance.com>
-X-Mailer: git-send-email 2.24.3 (Apple Git-128)
-In-Reply-To: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
-References: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
+        with ESMTP id S237433AbjIKMuW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 08:50:22 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02424CEB
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 05:50:17 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 424DCC433CA;
+        Mon, 11 Sep 2023 12:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694436617;
+        bh=eM4RgsXN8SHM0dqEChvO38xChoopQ1vfWDrIbOQNPt4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=U/wCuXcP/cwCL6xasJhrU0eUDae34Xx6zR1UcUdLsFPoiG30EgeCtfJng7MPXJCaX
+         +P5lkQ6PIUK1stts0F+wJTfKG4TqaI2oDlbQpUXHLY2i/VLdJePUOlxBzNI2BT9rTM
+         anIH4WkTj6/ZGBTefVQNlbOU02JYvmCiM+ZjcRZLQyAIRuqBd5sZ6cOt/l2HSs+nwE
+         9XWYHWu4hRAM8i+zD9tlZWYQRIl7yiORLb0dfpwtHfBXnUN7aRAUc1mFL0Tw9t1hgS
+         sjP/24E1f7/9yIgRZQXvI3ILSMs9Swyu2dTHCIPrUhnC2b1GLzi23QZf0MA1thjBxg
+         iOm8M4oEPXjZQ==
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     linux-nfs@vger.kernel.org
+Cc:     lorenzo.bianconi@redhat.com, chuck.lever@oracle.com,
+        jlayton@kernel.org, neilb@suse.de, netdev@vger.kernel.org
+Subject: [PATCH v8 2/3] NFSD: introduce netlink rpc_status stubs
+Date:   Mon, 11 Sep 2023 14:49:45 +0200
+Message-ID: <ce3bc230e1b8d0c741a240c17d99f5a2072e7ce1.1694436263.git.lorenzo@kernel.org>
+X-Mailer: git-send-email 2.41.0
+In-Reply-To: <cover.1694436263.git.lorenzo@kernel.org>
+References: <cover.1694436263.git.lorenzo@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In preparation for implementing lockless slab shrink, use new APIs to
-dynamically allocate the nfsd-reply shrinker, so that it can be freed
-asynchronously via RCU. Then it doesn't need to wait for RCU read-side
-critical section when releasing the struct nfsd_net.
+Generate empty netlink stubs and uAPI through nfsd_server.yaml specs:
 
-Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-Acked-by: Jeff Layton <jlayton@kernel.org>
-CC: Neil Brown <neilb@suse.de>
-CC: Olga Kornievskaia <kolga@netapp.com>
-CC: Dai Ngo <Dai.Ngo@oracle.com>
-CC: Tom Talpey <tom@talpey.com>
-CC: linux-nfs@vger.kernel.org
+$./tools/net/ynl/ynl-gen-c.py --mode uapi \
+ --spec Documentation/netlink/specs/nfsd_server.yaml \
+ --header -o include/uapi/linux/nfsd_server.h
+$./tools/net/ynl/ynl-gen-c.py --mode kernel \
+ --spec Documentation/netlink/specs/nfsd_server.yaml \
+ --header -o fs/nfsd/nfs_netlink_gen.h
+$./tools/net/ynl/ynl-gen-c.py --mode kernel \
+ --spec Documentation/netlink/specs/nfsd_server.yaml \
+ --source -o fs/nfsd/nfs_netlink_gen.c
+
+Tested-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 ---
- fs/nfsd/netns.h    |  2 +-
- fs/nfsd/nfscache.c | 31 ++++++++++++++++---------------
- 2 files changed, 17 insertions(+), 16 deletions(-)
+ fs/nfsd/Makefile                 |  3 +-
+ fs/nfsd/nfs_netlink_gen.c        | 32 +++++++++++++++++++++
+ fs/nfsd/nfs_netlink_gen.h        | 22 ++++++++++++++
+ fs/nfsd/nfsctl.c                 | 16 +++++++++++
+ include/uapi/linux/nfsd_server.h | 49 ++++++++++++++++++++++++++++++++
+ 5 files changed, 121 insertions(+), 1 deletion(-)
+ create mode 100644 fs/nfsd/nfs_netlink_gen.c
+ create mode 100644 fs/nfsd/nfs_netlink_gen.h
+ create mode 100644 include/uapi/linux/nfsd_server.h
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index f669444d5336..ab303a8b77d5 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -177,7 +177,7 @@ struct nfsd_net {
- 	/* size of cache when we saw the longest hash chain */
- 	unsigned int             longest_chain_cachesize;
+diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
+index 6fffc8f03f74..6ae1d5450bf6 100644
+--- a/fs/nfsd/Makefile
++++ b/fs/nfsd/Makefile
+@@ -12,7 +12,8 @@ nfsd-y			+= trace.o
  
--	struct shrinker		nfsd_reply_cache_shrinker;
-+	struct shrinker		*nfsd_reply_cache_shrinker;
- 
- 	/* tracking server-to-server copy mounts */
- 	spinlock_t              nfsd_ssc_lock;
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 80621a709510..fd56a52aa5fb 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -201,26 +201,29 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
- {
- 	unsigned int hashsize;
- 	unsigned int i;
--	int status = 0;
- 
- 	nn->max_drc_entries = nfsd_cache_size_limit();
- 	atomic_set(&nn->num_drc_entries, 0);
- 	hashsize = nfsd_hashsize(nn->max_drc_entries);
- 	nn->maskbits = ilog2(hashsize);
- 
--	nn->nfsd_reply_cache_shrinker.scan_objects = nfsd_reply_cache_scan;
--	nn->nfsd_reply_cache_shrinker.count_objects = nfsd_reply_cache_count;
--	nn->nfsd_reply_cache_shrinker.seeks = 1;
--	status = register_shrinker(&nn->nfsd_reply_cache_shrinker,
--				   "nfsd-reply:%s", nn->nfsd_name);
--	if (status)
--		return status;
--
- 	nn->drc_hashtbl = kvzalloc(array_size(hashsize,
- 				sizeof(*nn->drc_hashtbl)), GFP_KERNEL);
- 	if (!nn->drc_hashtbl)
-+		return -ENOMEM;
+ nfsd-y 			+= nfssvc.o nfsctl.o nfsfh.o vfs.o \
+ 			   export.o auth.o lockd.o nfscache.o \
+-			   stats.o filecache.o nfs3proc.o nfs3xdr.o
++			   stats.o filecache.o nfs3proc.o nfs3xdr.o \
++			   nfs_netlink_gen.o
+ nfsd-$(CONFIG_NFSD_V2) += nfsproc.o nfsxdr.o
+ nfsd-$(CONFIG_NFSD_V2_ACL) += nfs2acl.o
+ nfsd-$(CONFIG_NFSD_V3_ACL) += nfs3acl.o
+diff --git a/fs/nfsd/nfs_netlink_gen.c b/fs/nfsd/nfs_netlink_gen.c
+new file mode 100644
+index 000000000000..4d71b80bf4a7
+--- /dev/null
++++ b/fs/nfsd/nfs_netlink_gen.c
+@@ -0,0 +1,32 @@
++// SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
++/* Do not edit directly, auto-generated from: */
++/*	Documentation/netlink/specs/nfsd_server.yaml */
++/* YNL-GEN kernel source */
 +
-+	nn->nfsd_reply_cache_shrinker = shrinker_alloc(0, "nfsd-reply:%s",
-+						       nn->nfsd_name);
-+	if (!nn->nfsd_reply_cache_shrinker)
- 		goto out_shrinker;
- 
-+	nn->nfsd_reply_cache_shrinker->scan_objects = nfsd_reply_cache_scan;
-+	nn->nfsd_reply_cache_shrinker->count_objects = nfsd_reply_cache_count;
-+	nn->nfsd_reply_cache_shrinker->seeks = 1;
-+	nn->nfsd_reply_cache_shrinker->private_data = nn;
++#include <net/netlink.h>
++#include <net/genetlink.h>
 +
-+	shrinker_register(nn->nfsd_reply_cache_shrinker);
++#include "nfs_netlink_gen.h"
 +
- 	for (i = 0; i < hashsize; i++) {
- 		INIT_LIST_HEAD(&nn->drc_hashtbl[i].lru_head);
- 		spin_lock_init(&nn->drc_hashtbl[i].cache_lock);
-@@ -229,7 +232,7 @@ int nfsd_reply_cache_init(struct nfsd_net *nn)
++#include <uapi/linux/nfsd_server.h>
++
++/* Ops table for nfsd_server */
++static const struct genl_split_ops nfsd_server_nl_ops[] = {
++	{
++		.cmd	= NFSD_CMD_RPC_STATUS_GET,
++		.start	= nfsd_server_nl_rpc_status_get_start,
++		.dumpit	= nfsd_server_nl_rpc_status_get_dumpit,
++		.done	= nfsd_server_nl_rpc_status_get_done,
++		.flags	= GENL_CMD_CAP_DUMP,
++	},
++};
++
++struct genl_family nfsd_server_nl_family __ro_after_init = {
++	.name		= NFSD_SERVER_FAMILY_NAME,
++	.version	= NFSD_SERVER_FAMILY_VERSION,
++	.netnsok	= true,
++	.parallel_ops	= true,
++	.module		= THIS_MODULE,
++	.split_ops	= nfsd_server_nl_ops,
++	.n_split_ops	= ARRAY_SIZE(nfsd_server_nl_ops),
++};
+diff --git a/fs/nfsd/nfs_netlink_gen.h b/fs/nfsd/nfs_netlink_gen.h
+new file mode 100644
+index 000000000000..f66b29e528c1
+--- /dev/null
++++ b/fs/nfsd/nfs_netlink_gen.h
+@@ -0,0 +1,22 @@
++/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* Do not edit directly, auto-generated from: */
++/*	Documentation/netlink/specs/nfsd_server.yaml */
++/* YNL-GEN kernel header */
++
++#ifndef _LINUX_NFSD_SERVER_GEN_H
++#define _LINUX_NFSD_SERVER_GEN_H
++
++#include <net/netlink.h>
++#include <net/genetlink.h>
++
++#include <uapi/linux/nfsd_server.h>
++
++int nfsd_server_nl_rpc_status_get_start(struct netlink_callback *cb);
++int nfsd_server_nl_rpc_status_get_done(struct netlink_callback *cb);
++
++int nfsd_server_nl_rpc_status_get_dumpit(struct sk_buff *skb,
++					 struct netlink_callback *cb);
++
++extern struct genl_family nfsd_server_nl_family;
++
++#endif /* _LINUX_NFSD_SERVER_GEN_H */
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 33f80d289d63..1be66088849c 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1495,6 +1495,22 @@ static int create_proc_exports_entry(void)
  
- 	return 0;
- out_shrinker:
--	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
-+	kvfree(nn->drc_hashtbl);
- 	printk(KERN_ERR "nfsd: failed to allocate reply cache\n");
- 	return -ENOMEM;
- }
-@@ -239,7 +242,7 @@ void nfsd_reply_cache_shutdown(struct nfsd_net *nn)
- 	struct nfsd_cacherep *rp;
- 	unsigned int i;
+ unsigned int nfsd_net_id;
  
--	unregister_shrinker(&nn->nfsd_reply_cache_shrinker);
-+	shrinker_free(nn->nfsd_reply_cache_shrinker);
- 
- 	for (i = 0; i < nn->drc_hashsize; i++) {
- 		struct list_head *head = &nn->drc_hashtbl[i].lru_head;
-@@ -323,8 +326,7 @@ nfsd_prune_bucket_locked(struct nfsd_net *nn, struct nfsd_drc_bucket *b,
- static unsigned long
- nfsd_reply_cache_count(struct shrinker *shrink, struct shrink_control *sc)
- {
--	struct nfsd_net *nn = container_of(shrink,
--				struct nfsd_net, nfsd_reply_cache_shrinker);
-+	struct nfsd_net *nn = shrink->private_data;
- 
- 	return atomic_read(&nn->num_drc_entries);
- }
-@@ -343,8 +345,7 @@ nfsd_reply_cache_count(struct shrinker *shrink, struct shrink_control *sc)
- static unsigned long
- nfsd_reply_cache_scan(struct shrinker *shrink, struct shrink_control *sc)
- {
--	struct nfsd_net *nn = container_of(shrink,
--				struct nfsd_net, nfsd_reply_cache_shrinker);
-+	struct nfsd_net *nn = shrink->private_data;
- 	unsigned long freed = 0;
- 	LIST_HEAD(dispose);
- 	unsigned int i;
++int nfsd_server_nl_rpc_status_get_start(struct netlink_callback *cb)
++{
++	return 0;
++}
++
++int nfsd_server_nl_rpc_status_get_done(struct netlink_callback *cb)
++{
++	return 0;
++}
++
++int nfsd_server_nl_rpc_status_get_dumpit(struct sk_buff *skb,
++					 struct netlink_callback *cb)
++{
++	return 0;
++}
++
+ /**
+  * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+  * @net: a freshly-created network namespace
+diff --git a/include/uapi/linux/nfsd_server.h b/include/uapi/linux/nfsd_server.h
+new file mode 100644
+index 000000000000..c9ee00ceca3b
+--- /dev/null
++++ b/include/uapi/linux/nfsd_server.h
+@@ -0,0 +1,49 @@
++/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
++/* Do not edit directly, auto-generated from: */
++/*	Documentation/netlink/specs/nfsd_server.yaml */
++/* YNL-GEN uapi header */
++
++#ifndef _UAPI_LINUX_NFSD_SERVER_H
++#define _UAPI_LINUX_NFSD_SERVER_H
++
++#define NFSD_SERVER_FAMILY_NAME		"nfsd_server"
++#define NFSD_SERVER_FAMILY_VERSION	1
++
++enum nfsd_rpc_status_comp_attr {
++	NFSD_ATTR_RPC_STATUS_COMP_UNSPEC,
++	NFSD_ATTR_RPC_STATUS_COMP_OP,
++
++	__NFSD_ATTR_RPC_STATUS_COMP_MAX,
++	NFSD_ATTR_RPC_STATUS_COMP_MAX = (__NFSD_ATTR_RPC_STATUS_COMP_MAX - 1)
++};
++
++enum nfsd_rpc_status_attr {
++	NFSD_ATTR_RPC_STATUS_UNSPEC,
++	NFSD_ATTR_RPC_STATUS_XID,
++	NFSD_ATTR_RPC_STATUS_FLAGS,
++	NFSD_ATTR_RPC_STATUS_PROG,
++	NFSD_ATTR_RPC_STATUS_VERSION,
++	NFSD_ATTR_RPC_STATUS_PROC,
++	NFSD_ATTR_RPC_STATUS_SERVICE_TIME,
++	NFSD_ATTR_RPC_STATUS_PAD,
++	NFSD_ATTR_RPC_STATUS_SADDR4,
++	NFSD_ATTR_RPC_STATUS_DADDR4,
++	NFSD_ATTR_RPC_STATUS_SADDR6,
++	NFSD_ATTR_RPC_STATUS_DADDR6,
++	NFSD_ATTR_RPC_STATUS_SPORT,
++	NFSD_ATTR_RPC_STATUS_DPORT,
++	NFSD_ATTR_RPC_STATUS_COMPOND_OP,
++
++	__NFSD_ATTR_RPC_STATUS_MAX,
++	NFSD_ATTR_RPC_STATUS_MAX = (__NFSD_ATTR_RPC_STATUS_MAX - 1)
++};
++
++enum nfsd_commands {
++	NFSD_CMD_UNSPEC,
++	NFSD_CMD_RPC_STATUS_GET,
++
++	__NFSD_CMD_MAX,
++	NFSD_CMD_MAX = (__NFSD_CMD_MAX - 1)
++};
++
++#endif /* _UAPI_LINUX_NFSD_SERVER_H */
 -- 
-2.30.2
+2.41.0
 
