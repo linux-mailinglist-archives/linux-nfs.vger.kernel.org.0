@@ -2,107 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7124C79C363
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 04:57:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23DEC79C385
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 05:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240883AbjILC5I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Sep 2023 22:57:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36228 "EHLO
+        id S241447AbjILDBb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Sep 2023 23:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240891AbjILC4z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 22:56:55 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D3F114D42B
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Sep 2023 18:25:07 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 3B6401F74C;
-        Tue, 12 Sep 2023 01:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1694481906; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=c+O/x3/K5RK5jgt0Oj1cbCVEObR8so+N3HTFSppsqqk=;
-        b=UEbrb1ENwY4nX5obinaWhjeye8PYQ8136zcZF89tohDHj7+XsIzKsPLi4LeNZCS18jKiGd
-        lPTnCeeMHhed7kj+LbHWsuPIWbkhKovshLcI4oe5TBbQtgHG2N6BbpMINfX0I7AHvGwG6S
-        gX7Ce405fDA+moKtXcIHktkAW9aedCk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1694481906;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=c+O/x3/K5RK5jgt0Oj1cbCVEObR8so+N3HTFSppsqqk=;
-        b=IQiQ2d66lKk49OAnU77ZcIk74eaRzBX4SbwR6aam+Ew/6bgvX5cuVWtCLYz4AnXuFPAkLu
-        Gext7dD6eVDHo6AQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1156713582;
-        Tue, 12 Sep 2023 01:25:03 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id nshqLe+9/2RYaAAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 12 Sep 2023 01:25:03 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     Linux NFS list <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Subject: [PATCH] NFSD: fix possible oops when nfsd/pool_stats is closed.
-Date:   Tue, 12 Sep 2023 11:25:00 +1000
-Message-id: <169448190063.19905.9707641304438290692@noble.neil.brown.name>
+        with ESMTP id S241692AbjILDBV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Sep 2023 23:01:21 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C13C7991;
+        Mon, 11 Sep 2023 18:30:27 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B213C116A1;
+        Tue, 12 Sep 2023 01:30:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+        s=korg; t=1694482226;
+        bh=tT5AR8ExWn/1md74OJRAUxFuwJ+Te4kYQ5KJli+PF+A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=juChOnAnOoct4hJ1ym1PhysnDu87Z5ALN94QFwGTO7F03yuUUZw6tZu4NrcMvp6RN
+         0UIK75W7o3wI3TclaJg7qnC42dsWF8/B0hdGqvjEcJ3DYLOhd1RsUsV+1P3AWkv73O
+         GoFmB7RMqKPxwgkC68jLHtF5k4MSW+k75OlXiUxw=
+Date:   Mon, 11 Sep 2023 18:30:25 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     "NeilBrown" <neilb@suse.de>
+Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
+        "Chuck Lever" <cel@kernel.org>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Liam Howlett" <liam.howlett@oracle.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "David Gow" <davidgow@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 11/17] lib: add light-weight queuing mechanism.
+Message-Id: <20230911183025.5f808a70a62df79a3a1e349e@linux-foundation.org>
+In-Reply-To: <169447439989.19905.9386812394578844629@noble.neil.brown.name>
+References: <169444233785.4327.4365499966926096681.stgit@bazille.1015granger.net>
+        <169444318342.4327.18355944158180782708.stgit@bazille.1015granger.net>
+        <20230911111333.4d1a872330e924a00acb905b@linux-foundation.org>
+        <4D5C2693-40E9-467D-9F2F-59D92CBE9D3B@oracle.com>
+        <20230911140439.b273bf9e120881f038da0de7@linux-foundation.org>
+        <169447439989.19905.9386812394578844629@noble.neil.brown.name>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, 12 Sep 2023 09:19:59 +1000 "NeilBrown" <neilb@suse.de> wrote:
 
-If /proc/fs/nfsd/pool_stats is open when the last nfsd thread exits, then
-when the file is closed a NULL pointer is dereferenced.
-This is because nfsd_pool_stats_release() assumes that the
-pointer to the svc_serv cannot become NULL while a reference is held.
+> Plain old list_heads (which the code currently uses) require a spinlock
+> to be taken to insert something into the queue.  As this is usually in
+> bh context, it needs to be a spin_lock_bh().  My understanding is that
+> the real-time developers don't much like us disabling bh.  It isn't an
+> enormous win switching from a list_head list to a llist_node list, but
+> there are small gains such as object size reduction and less locking.  I
+> particularly wanted an easy-to-use library facility that could be
+> plugged in to two different uses cases in the sunrpc code and there
+> didn't seem to be one.  I could have written one using list_head, but
+> llist seemed a better fix.  I think the code in sunrpc that uses this
+> lwq looks a lot neater after the conversion.
 
-This used to be the case but a recent patch split nfsd_last_thread() out
-from nfsd_put(), and clearing the pointer is done in nfsd_last_thread().
+Thanks.  Could we please get words such as these into the changelog,
+describing why it was felt necessary to add more library code?
 
-This is easily reproduced by running
-   rpc.nfsd 8 ; ( rpc.nfsd 0;true) < /proc/fs/nfsd/pool_stats
-
-Fortunately nfsd_pool_stats_release() has easy access to the svc_serv
-pointer, and so can call svc_put() on it directly.
-
-Fixes: 9f28a971ee9f ("nfsd: separate nfsd_last_thread() from nfsd_put()")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfssvc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 1582af33e204..551c16a72012 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -1082,11 +1082,12 @@ int nfsd_pool_stats_open(struct inode *inode, struct =
-file *file)
-=20
- int nfsd_pool_stats_release(struct inode *inode, struct file *file)
- {
-+	struct svc_serv *serv =3D
-+		((struct seq_file *) file->private_data)->private;
- 	int ret =3D seq_release(inode, file);
--	struct net *net =3D inode->i_sb->s_fs_info;
-=20
- 	mutex_lock(&nfsd_mutex);
--	nfsd_put(net);
-+	svc_put(serv);
- 	mutex_unlock(&nfsd_mutex);
- 	return ret;
- }
---=20
-2.42.0
-
+And also into the .c file, to help people who are looking at it and
+wondering "can I use this".  And to help reviewers who are wondering
+"could they have used Neil's thing".
