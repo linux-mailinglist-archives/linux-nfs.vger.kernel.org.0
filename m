@@ -2,136 +2,281 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E00AE79CC18
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 11:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28A3979CEA7
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 12:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232563AbjILJkp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Sep 2023 05:40:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39652 "EHLO
+        id S234506AbjILKp2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Sep 2023 06:45:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232603AbjILJkp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Sep 2023 05:40:45 -0400
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5C11BE
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Sep 2023 02:40:40 -0700 (PDT)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-594ebdf7bceso53680967b3.2
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Sep 2023 02:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google; t=1694511640; x=1695116440; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/vvgLyYPDhkbWsRRJdRij+x20FAmOn99Wk/F04+9Hkw=;
-        b=RgppV3vcFA49mEn6Ur93/z9EzHpA3JAE96sP9uN0ATYqJkcFt+lWrFvfnUnvizEDBj
-         s/9gtRahq8B4WJeNBL0iGVlRjH8OeLLW/Abrw/yxJfjxO+4t0WpokjJYaaH1oBsBbdLY
-         sx+SsPcKIEXm94YEQcjqBwvfCXKq9tNVbpbmKiXhuZOYFKBT9NaGVOF2R5h3vwCCLSMN
-         GVimHOZbKogqEvl311r2+Z2g6sQAYJsZA07t8Rf+zRJBeg5/z0Sg5kECY8yb2ViakI4u
-         vcFKd+4q5vhVbDHZsZtVlOqeUGZbT1WLI6h2bY8mhsgsKqrGdft8GAZRncPDiHXWvWGZ
-         V3TA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694511640; x=1695116440;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/vvgLyYPDhkbWsRRJdRij+x20FAmOn99Wk/F04+9Hkw=;
-        b=dDc+i3c31ui58nsVL6AbE3y3bAIMsSElKGFJoR0EhqXK5VkKkv4r4+algxHk6pW2x6
-         jNfH7x5N5q5O94XtgWbqO2eXPdRSFx8ZJ+n+HJJ+RxNkSC21ghCt+IekXnZLyh8qYo3u
-         yBVkc2hsAhK+86aNTfG6uwfD+OWrmRu3Ag7raTfuY9C2p+FolZP+gmpboFs4h0mU4ITz
-         aJ2vpo4NPKLiROFAPG6qMzKEf4O/9pyKfv0CcLi5D3M6kg2FFuj4Wlyina2xv2FeUj9J
-         a0eG3PLObPiBqdgu1rV0yhcAMLSuJpC1DQbdzC4HNlm03A4AgOzpiUZYUBS2Ojtn0qxn
-         fyiA==
-X-Gm-Message-State: AOJu0YwLBpyhqFmRHE3eGGrDW0O439V5k+nD3856+wJ8qB3mYBf5XrRb
-        1yKU60hPX50yrKQFI5WayjSP8MAQyhU3ZO2DI+6+apFzoVGtaq8gc5k=
-X-Google-Smtp-Source: AGHT+IHC+QIo+dM0WucjAme/5+WfL+tsV5m7O7VHafEag0N6AIltI5++QCnoLDjsu57f8BL6T1ln/rmRk2uIBZ4tluI=
-X-Received: by 2002:a25:6009:0:b0:d7e:c554:caf0 with SMTP id
- u9-20020a256009000000b00d7ec554caf0mr9667605ybb.50.1694511640125; Tue, 12 Sep
- 2023 02:40:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230911185031.11903-1-trond.myklebust@hammerspace.com>
-In-Reply-To: <20230911185031.11903-1-trond.myklebust@hammerspace.com>
-From:   Daire Byrne <daire@dneg.com>
-Date:   Tue, 12 Sep 2023 10:40:04 +0100
-Message-ID: <CAPt2mGPAjD_227EHZQ58+-HH17KtF7MEOJX3KCvdHcaR3x5VLQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] NFSv4.x client improvements for knfsd re-exporting
-To:     trondmy@gmail.com
+        with ESMTP id S234387AbjILKo4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Sep 2023 06:44:56 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2C1C10F4
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Sep 2023 03:44:42 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0858EC433C7;
+        Tue, 12 Sep 2023 10:44:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694515482;
+        bh=O/a59D5k0hqT+5kyuEbIhBuLQFteeZHXtQ1qFvzFlhQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=hVSWIou+Tr7WWWlYWJfSGnRx6sJSUHGs9eN7NLyyXInrGoU/5382LRSfGPKIeLzgW
+         GPfmCpk5yFS76YYq8Ro/+EHHe9zsQciu40cEqyUgEmMiA3FCcTceuVch2s5Glfext1
+         fAjtfojPedXVuuOC7uQz6DJHVq4SytuRrwIO5KlO9CD1rceSgpyTxV/BSLmqvT9zXZ
+         JgdXxLI2oljRzQFbIltvz6CujdRimwC/4+Na6MkSaoIqmWgWvZWc+1JyxiFZRtmx4i
+         uqvGUg/jmnPau8BK+5hkUFJXtxwe486YA663U2q7v85gyu0hkdqe2BpZ+THuc8OTJC
+         BVO6NjoqjS2uA==
+Message-ID: <eefec1ba89a5b70de5a0964e3d321a22ac86ab2d.camel@kernel.org>
+Subject: Re: [PATCH] nfsd: Handle EOPENSTALE correctly in the filecache
+From:   Jeff Layton <jlayton@kernel.org>
+To:     trondmy@gmail.com, Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Date:   Tue, 12 Sep 2023 06:44:40 -0400
+In-Reply-To: <20230911183027.11372-1-trond.myklebust@hammerspace.com>
+References: <20230911183027.11372-1-trond.myklebust@hammerspace.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+MIME-Version: 1.0
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Just to say, we see similar problems with NFSv3 servers re-exported to
-NFSv3 clients.
-
-In our case we have a single server re-exporting multiple NFSv3 remote
-server mounts. If one of those re-exported mounts goes "bad" (network
-loss, network congestion, server load), the knfsd threads slowly get
-consumed by eager clients of that (hung) mount until there are no
-threads left to serve the clients of all the other mounts/servers
-being re-exported by that single server (that are still good).
-
-The "softerr" mount option on the re-export server does not help with
-this and the svc_rpc_per_connection_limit can make this much worse by
-allowing a handful of clients to lock up all the knfsd threads very
-quickly.
-
-Even when the conditions of that "bad" server improve, there seems to
-be a feedback loop of both the re-export servers retrans and the
-clients of the re-export servers retrans that means many duplicate
-lookups occur for a long time - it is often quicker to just reboot
-that re-export server. Even worse, these duplicate lookups can
-themselves cause high ops load on the original server and so the
-requests timeout and retrans etc etc.
-
-The only thing we have found to make this a little more bearable is to
-increase the timeo (>30 mins) to minimise retrans and set the
-svc_rpc_per_connection_limit=4. This at least reduces the chance that
-a single re-export server that is serving multiple mounts can remain
-responsive for all other mounts it serves. The other option would be
-to just have a unique re-export server for a single mountpoint but
-there are resource constraints when you have 30+ servers and mounts to
-deal with.
-
-We are still unable to use NFSv4 for our workloads because they often
-involve high latency re-export servers 150+ms away and NFSv4 re-export
-server performance is still limited by parallel metadata ops:
-
-https://lore.kernel.org/all/CAPt2mGMZh9=Vwcqjh0J4XoTu3stOnKwswdzApL4wCA_usOFV_g@mail.gmail.com/#t
-https://bugzilla.linux-nfs.org/show_bug.cgi?id=375
-
-Daire
-
-On Mon, 11 Sept 2023 at 23:01, <trondmy@gmail.com> wrote:
->
+On Mon, 2023-09-11 at 14:30 -0400, trondmy@gmail.com wrote:
 > From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> When re-exporting a NFSv4.x filesystem through knfsd, we want to ensure
-> that the individual knfsd threads don't get stuck waiting for the server
-> in a NFS4ERR_DELAY loop. While it may make sense to have the re-exported
-> client retry a few times, particularly when the clients are using NFSv3,
-> ultimately we want to just punt a EAGAIN back to knfsd, so that it can
-> return NFS4ERR_DELAY/NFS3ERR_JUKEBOX, and free up the thread.
->
-> With that in mind, add a client module parameter, 'delay_retrans', that
-> specifies how many times a 'softerr' mounted NFSv4 filesystem should
-> retry before returning EAGAIN.
-> In order to avoid disrupting existing setups, the feature is disabled by
-> default, however it can be enabled by specifying a positive value for
-> the new parameter.
->
-> Trond Myklebust (2):
->   NFSv4: Add a parameter to limit the number of retries after
->     NFS4ERR_DELAY
->   NFSv4/pnfs: Allow layoutget to return EAGAIN for softerr mounts
->
->  .../admin-guide/kernel-parameters.txt         |  7 +++
->  fs/nfs/nfs4_fs.h                              |  2 +
->  fs/nfs/nfs4proc.c                             | 43 +++++++++++++++----
->  fs/nfs/pnfs.c                                 |  8 +++-
->  fs/nfs/pnfs.h                                 |  5 ++-
->  fs/nfs/super.c                                |  8 +++-
->  fs/nfs/write.c                                |  2 +
->  7 files changed, 63 insertions(+), 12 deletions(-)
->
-> --
-> 2.41.0
->
+>=20
+> The nfsd_open code handles EOPENSTALE correctly, by retrying the call to
+> fh_verify() and __nfsd_open(). However the filecache just drops the
+> error on the floor, and immediately returns nfserr_stale to the caller.
+>=20
+> This patch ensures that we propagate the EOPENSTALE code back to
+> nfsd_file_do_acquire, and that we handle it correctly.
+>=20
+> Fixes: 65294c1f2c5e ("nfsd: add a new struct file caching facility to nfs=
+d")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfsd/filecache.c | 27 +++++++++++++++++++--------
+>  fs/nfsd/vfs.c       | 28 +++++++++++++---------------
+>  fs/nfsd/vfs.h       |  2 +-
+>  3 files changed, 33 insertions(+), 24 deletions(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index ee9c923192e0..07bf219f9ae4 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -989,22 +989,21 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  	unsigned char need =3D may_flags & NFSD_FILE_MAY_MASK;
+>  	struct net *net =3D SVC_NET(rqstp);
+>  	struct nfsd_file *new, *nf;
+> -	const struct cred *cred;
+> +	bool stale_retry =3D true;
+>  	bool open_retry =3D true;
+>  	struct inode *inode;
+>  	__be32 status;
+>  	int ret;
+> =20
+> +retry:
+>  	status =3D fh_verify(rqstp, fhp, S_IFREG,
+>  				may_flags|NFSD_MAY_OWNER_OVERRIDE);
+>  	if (status !=3D nfs_ok)
+>  		return status;
+>  	inode =3D d_inode(fhp->fh_dentry);
+> -	cred =3D get_current_cred();
+> =20
+> -retry:
+>  	rcu_read_lock();
+> -	nf =3D nfsd_file_lookup_locked(net, cred, inode, need, want_gc);
+> +	nf =3D nfsd_file_lookup_locked(net, current_cred(), inode, need, want_g=
+c);
+>  	rcu_read_unlock();
+> =20
+>  	if (nf) {
+> @@ -1026,7 +1025,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+> =20
+>  	rcu_read_lock();
+>  	spin_lock(&inode->i_lock);
+> -	nf =3D nfsd_file_lookup_locked(net, cred, inode, need, want_gc);
+> +	nf =3D nfsd_file_lookup_locked(net, current_cred(), inode, need, want_g=
+c);
+>  	if (unlikely(nf)) {
+>  		spin_unlock(&inode->i_lock);
+>  		rcu_read_unlock();
+> @@ -1058,6 +1057,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  			goto construction_err;
+>  		}
+>  		open_retry =3D false;
+> +		fh_put(fhp);
+>  		goto retry;
+>  	}
+>  	this_cpu_inc(nfsd_file_cache_hits);
+> @@ -1074,7 +1074,6 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  		nfsd_file_check_write_error(nf);
+>  		*pnf =3D nf;
+>  	}
+> -	put_cred(cred);
+>  	trace_nfsd_file_acquire(rqstp, inode, may_flags, nf, status);
+>  	return status;
+> =20
+> @@ -1088,8 +1087,20 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
+t svc_fh *fhp,
+>  			status =3D nfs_ok;
+>  			trace_nfsd_file_opened(nf, status);
+>  		} else {
+> -			status =3D nfsd_open_verified(rqstp, fhp, may_flags,
+> -						    &nf->nf_file);
+> +			ret =3D nfsd_open_verified(rqstp, fhp, may_flags,
+> +						 &nf->nf_file);
+> +			if (ret =3D=3D -EOPENSTALE && stale_retry) {
+> +				stale_retry =3D false;
+> +				nfsd_file_unhash(nf);
+> +				clear_and_wake_up_bit(NFSD_FILE_PENDING,
+> +						      &nf->nf_flags);
+> +				if (refcount_dec_and_test(&nf->nf_ref))
+> +					nfsd_file_free(nf);
+> +				nf =3D NULL;
+> +				fh_put(fhp);
+> +				goto retry;
+> +			}
+> +			status =3D nfserrno(ret);
+>  			trace_nfsd_file_open(nf, status);
+>  		}
+>  	} else
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 2c9074ab2315..98fa4fd0556d 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -823,7 +823,7 @@ int nfsd_open_break_lease(struct inode *inode, int ac=
+cess)
+>   * and additional flags.
+>   * N.B. After this call fhp needs an fh_put
+>   */
+> -static __be32
+> +static int
+>  __nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type,
+>  			int may_flags, struct file **filp)
+>  {
+> @@ -831,14 +831,12 @@ __nfsd_open(struct svc_rqst *rqstp, struct svc_fh *=
+fhp, umode_t type,
+>  	struct inode	*inode;
+>  	struct file	*file;
+>  	int		flags =3D O_RDONLY|O_LARGEFILE;
+> -	__be32		err;
+> -	int		host_err =3D 0;
+> +	int		host_err =3D -EPERM;
+> =20
+>  	path.mnt =3D fhp->fh_export->ex_path.mnt;
+>  	path.dentry =3D fhp->fh_dentry;
+>  	inode =3D d_inode(path.dentry);
+> =20
+> -	err =3D nfserr_perm;
+>  	if (IS_APPEND(inode) && (may_flags & NFSD_MAY_WRITE))
+>  		goto out;
+> =20
+> @@ -847,7 +845,7 @@ __nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fh=
+p, umode_t type,
+> =20
+>  	host_err =3D nfsd_open_break_lease(inode, may_flags);
+>  	if (host_err) /* NOMEM or WOULDBLOCK */
+> -		goto out_nfserr;
+> +		goto out;
+> =20
+>  	if (may_flags & NFSD_MAY_WRITE) {
+>  		if (may_flags & NFSD_MAY_READ)
+> @@ -859,13 +857,13 @@ __nfsd_open(struct svc_rqst *rqstp, struct svc_fh *=
+fhp, umode_t type,
+>  	file =3D dentry_open(&path, flags, current_cred());
+>  	if (IS_ERR(file)) {
+>  		host_err =3D PTR_ERR(file);
+> -		goto out_nfserr;
+> +		goto out;
+>  	}
+> =20
+>  	host_err =3D ima_file_check(file, may_flags);
+>  	if (host_err) {
+>  		fput(file);
+> -		goto out_nfserr;
+> +		goto out;
+>  	}
+> =20
+>  	if (may_flags & NFSD_MAY_64BIT_COOKIE)
+> @@ -874,10 +872,8 @@ __nfsd_open(struct svc_rqst *rqstp, struct svc_fh *f=
+hp, umode_t type,
+>  		file->f_mode |=3D FMODE_32BITHASH;
+> =20
+>  	*filp =3D file;
+> -out_nfserr:
+> -	err =3D nfserrno(host_err);
+>  out:
+> -	return err;
+> +	return host_err;
+>  }
+> =20
+>  __be32
+> @@ -885,6 +881,7 @@ nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fhp,=
+ umode_t type,
+>  		int may_flags, struct file **filp)
+>  {
+>  	__be32 err;
+> +	int host_err;
+>  	bool retried =3D false;
+> =20
+>  	validate_process_creds();
+> @@ -904,12 +901,13 @@ nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fh=
+p, umode_t type,
+>  retry:
+>  	err =3D fh_verify(rqstp, fhp, type, may_flags);
+>  	if (!err) {
+> -		err =3D __nfsd_open(rqstp, fhp, type, may_flags, filp);
+> -		if (err =3D=3D nfserr_stale && !retried) {
+> +		host_err =3D __nfsd_open(rqstp, fhp, type, may_flags, filp);
+> +		if (host_err =3D=3D -EOPENSTALE && !retried) {
+>  			retried =3D true;
+>  			fh_put(fhp);
+>  			goto retry;
+>  		}
+> +		err =3D nfserrno(host_err);
+>  	}
+>  	validate_process_creds();
+>  	return err;
+> @@ -922,13 +920,13 @@ nfsd_open(struct svc_rqst *rqstp, struct svc_fh *fh=
+p, umode_t type,
+>   * @may_flags: internal permission flags
+>   * @filp: OUT: open "struct file *"
+>   *
+> - * Returns an nfsstat value in network byte order.
+> + * Returns a posix error.
+>   */
+> -__be32
+> +int
+>  nfsd_open_verified(struct svc_rqst *rqstp, struct svc_fh *fhp, int may_f=
+lags,
+>  		   struct file **filp)
+>  {
+> -	__be32 err;
+> +	int err;
+> =20
+>  	validate_process_creds();
+>  	err =3D __nfsd_open(rqstp, fhp, S_IFREG, may_flags, filp);
+> diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+> index a6890ea7b765..e4b7207ef2e0 100644
+> --- a/fs/nfsd/vfs.h
+> +++ b/fs/nfsd/vfs.h
+> @@ -104,7 +104,7 @@ __be32		nfsd_setxattr(struct svc_rqst *rqstp, struct =
+svc_fh *fhp,
+>  int 		nfsd_open_break_lease(struct inode *, int);
+>  __be32		nfsd_open(struct svc_rqst *, struct svc_fh *, umode_t,
+>  				int, struct file **);
+> -__be32		nfsd_open_verified(struct svc_rqst *, struct svc_fh *,
+> +int		nfsd_open_verified(struct svc_rqst *, struct svc_fh *,
+>  				int, struct file **);
+>  __be32		nfsd_splice_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  				struct file *file, loff_t offset,
+
+Looks reasonable.
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
