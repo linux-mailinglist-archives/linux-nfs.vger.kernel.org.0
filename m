@@ -2,40 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5149179DB2F
+	by mail.lfdr.de (Postfix) with ESMTP id E6DF179DB31
 	for <lists+linux-nfs@lfdr.de>; Tue, 12 Sep 2023 23:54:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235111AbjILVyk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S232018AbjILVyk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 12 Sep 2023 17:54:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37628 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232416AbjILVyi (ORCPT
+        with ESMTP id S234887AbjILVyi (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Sep 2023 17:54:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31B0E10EB
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Sep 2023 14:53:53 -0700 (PDT)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3427110D0
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Sep 2023 14:53:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694555632;
+        s=mimecast20190719; t=1694555630;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=//nek6/ne2ovuV3WtIFZKKv22HdvaTJOJBdTaDhEBYo=;
-        b=GORZkpcG0Qz4jRwnYUlpoU/ygRuP7axnh7fhexVt+9DWbMTzwjW4LXHWcYf6C2kmmgJ5ty
-        f+BX7ib4+6wl/4yvf8I79G3cbpyqWgKnzlOXzSuf9W8H6jLKC+yT+myhZQi5LoAMPep+sc
-        I8dSntA0sjWy0HH9sh9aXX/vgae9Anc=
+        bh=bm5ioigpX2H28oED9HeU/1D9TJk7vRwYC7hWBAcGBxQ=;
+        b=VNvM9saopXzlxojSyBBElAvxvE82z0Bnl+tHINjAcl/sC3c+XI8QoxH+MGp0pRMIFIB6F+
+        HJu5/ld8mHVb9saYnVTag2QBhtyNrFvAaR8ztHaBqaIqxSOLsuSg7ixCnOkJ6r7f9+mckC
+        hq97/xVw80h2gGRH6E7aKkZhISgArk4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-178-nhOZnKV9MfCsXEZtQEdBIQ-1; Tue, 12 Sep 2023 17:53:48 -0400
-X-MC-Unique: nhOZnKV9MfCsXEZtQEdBIQ-1
+ us-mta-323-nnXGloXVPLiYsP6t52r-AQ-1; Tue, 12 Sep 2023 17:53:48 -0400
+X-MC-Unique: nnXGloXVPLiYsP6t52r-AQ-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BA3BC181A6E6;
-        Tue, 12 Sep 2023 21:53:47 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1A4AA181A6E0;
+        Tue, 12 Sep 2023 21:53:48 +0000 (UTC)
 Received: from fs-i40c-03.fs.lab.eng.bos.redhat.com (fs-i40c-03.fs.lab.eng.bos.redhat.com [10.16.224.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D9C940C2009;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C061B40C2009;
         Tue, 12 Sep 2023 21:53:47 +0000 (UTC)
 From:   Alexander Aring <aahringo@redhat.com>
 To:     linux-nfs@vger.kernel.org
@@ -44,9 +44,9 @@ Cc:     gfs2@lists.linux.dev, ocfs2-devel@lists.linux.dev,
         rpeterso@redhat.com, agruenba@redhat.com,
         trond.myklebust@hammerspace.com, anna@kernel.org,
         chuck.lever@oracle.com, jlayton@kernel.org, aahringo@redhat.com
-Subject: [PATCHv2 nfsd/master 2/7] lockd: don't call vfs_lock_file() for pending requests
-Date:   Tue, 12 Sep 2023 17:53:19 -0400
-Message-Id: <20230912215324.3310111-3-aahringo@redhat.com>
+Subject: [PATCHv2 nfsd/master 3/7] lockd: fix race in async lock request handling
+Date:   Tue, 12 Sep 2023 17:53:20 -0400
+Message-Id: <20230912215324.3310111-4-aahringo@redhat.com>
 In-Reply-To: <20230912215324.3310111-1-aahringo@redhat.com>
 References: <20230912215324.3310111-1-aahringo@redhat.com>
 MIME-Version: 1.0
@@ -56,63 +56,73 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This patch returns nlm_lck_blocked in nlmsvc_lock() when an asynchronous
-lock request is pending. During testing I ran into the case with the
-side-effects that lockd is waiting for only one lm_grant() callback
-because it's already part of the nlm_blocked list. If another
-asynchronous for the same nlm_block is triggered two lm_grant()
-callbacks will occur but lockd was only waiting for one.
+This patch fixes a race in async lock request handling between adding
+the relevant struct nlm_block to nlm_blocked list after the request was
+sent by vfs_lock_file() and nlmsvc_grant_deferred() does a lookup of the
+nlm_block in the nlm_blocked list. It could be that the async request is
+completed before the nlm_block was added to the list. This would end
+in a -ENOENT and a kernel log message of "lockd: grant for unknown
+block".
 
-To avoid any change of existing users this handling will only being made
-when export_op_support_safe_async_lock() returns true.
+To solve this issue we add the nlm_block before the vfs_lock_file() call
+to be sure it has been added when a possible nlmsvc_grant_deferred() is
+called. If the vfs_lock_file() results in an case when it wouldn't be
+added to nlm_blocked list, the nlm_block struct will be removed from
+this list again.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Alexander Aring <aahringo@redhat.com>
 ---
- fs/lockd/svclock.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+ fs/lockd/svclock.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index d500e32ebb18..c313622a9578 100644
+index c313622a9578..993999297e31 100644
 --- a/fs/lockd/svclock.c
 +++ b/fs/lockd/svclock.c
-@@ -541,6 +541,22 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+@@ -555,6 +555,9 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+ 		ret = nlm_lck_blocked;
  		goto out;
  	}
- 
-+	spin_lock(&nlm_blocked_lock);
-+	/*
-+	 * If this is a lock request for an already pending
-+	 * lock request we return nlm_lck_blocked without calling
-+	 * vfs_lock_file() again. Otherwise we have two pending
-+	 * requests on the underlaying ->lock() implementation but
-+	 * only one nlm_block to being granted by lm_grant().
-+	 */
-+	if (exportfs_lock_op_is_async(inode->i_sb->s_export_op) &&
-+	    !list_empty(&block->b_list)) {
-+		spin_unlock(&nlm_blocked_lock);
-+		ret = nlm_lck_blocked;
-+		goto out;
-+	}
-+	spin_unlock(&nlm_blocked_lock);
 +
++	/* Append to list of blocked */
++	nlmsvc_insert_block_locked(block, NLM_NEVER);
+ 	spin_unlock(&nlm_blocked_lock);
+ 
  	if (!wait)
- 		lock->fl.fl_flags &= ~FL_SLEEP;
- 	mode = lock_to_openmode(&lock->fl);
-@@ -553,13 +569,6 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+@@ -566,9 +569,12 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+ 	dprintk("lockd: vfs_lock_file returned %d\n", error);
+ 	switch (error) {
+ 		case 0:
++			nlmsvc_remove_block(block);
  			ret = nlm_granted;
  			goto out;
  		case -EAGAIN:
--			/*
--			 * If this is a blocking request for an
--			 * already pending lock request then we need
--			 * to put it back on lockd's block list
--			 */
--			if (wait)
--				break;
++			if (!wait)
++				nlmsvc_remove_block(block);
  			ret = async_block ? nlm_lck_blocked : nlm_lck_denied;
  			goto out;
  		case FILE_LOCK_DEFERRED:
+@@ -579,17 +585,16 @@ nlmsvc_lock(struct svc_rqst *rqstp, struct nlm_file *file,
+ 			ret = nlmsvc_defer_lock_rqst(rqstp, block);
+ 			goto out;
+ 		case -EDEADLK:
++			nlmsvc_remove_block(block);
+ 			ret = nlm_deadlock;
+ 			goto out;
+ 		default:			/* includes ENOLCK */
++			nlmsvc_remove_block(block);
+ 			ret = nlm_lck_denied_nolocks;
+ 			goto out;
+ 	}
+ 
+ 	ret = nlm_lck_blocked;
+-
+-	/* Append to list of blocked */
+-	nlmsvc_insert_block(block, NLM_NEVER);
+ out:
+ 	mutex_unlock(&file->f_mutex);
+ 	nlmsvc_release_block(block);
 -- 
 2.31.1
 
