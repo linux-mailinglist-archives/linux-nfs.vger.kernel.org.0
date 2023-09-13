@@ -2,335 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B178279EBF0
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Sep 2023 17:02:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0888D79EC73
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Sep 2023 17:19:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240679AbjIMPCW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Sep 2023 11:02:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58454 "EHLO
+        id S232321AbjIMPTC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Sep 2023 11:19:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239071AbjIMPCW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Sep 2023 11:02:22 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 211D4AF
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Sep 2023 08:02:18 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38DEkqHV028893;
-        Wed, 13 Sep 2023 15:02:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=GorAD8F/VD2zXlOd289z6Ip/iFeGH7BJACr5sPwhNU0=;
- b=4BWIWRWuk3LRzwMTFn0i65jZztXOcv4eR4fX+DkYuNdXCxo03ARUOusJg0RSMWlKoecd
- JQ8i4gO147Ef6eTN6kF0fkPk4hnHt873n349gqeABeu8SCXpwS+Gr776++br5BoWtHKj
- V1V4sZCDP0SOv+P8fc0mc2OgRbbjUQOz8DZMl9i8d2iq1Ta/q3CX4z4waRowTCqed4Bs
- fFRobesYcMhf5NBvfdLnlUop1DZLROp6PV7C2Q7bn4Kn4F48l7+iDie3HZiJPczWK/j0
- ZrMSdFKqOehhh190V6V0DpOYfC4Ow1X29oQ+cKlANADng6013NfDnvGPrvaZflXKv9Yd ng== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3t2y7kad7c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Sep 2023 15:02:12 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 38DEuwPW032941;
-        Wed, 13 Sep 2023 15:02:12 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3t0wkgn1es-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Sep 2023 15:02:12 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 38DF21QR037651;
-        Wed, 13 Sep 2023 15:02:11 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3t0wkgn1bk-3;
-        Wed, 13 Sep 2023 15:02:11 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFSD: handle GETATTR conflict with write delegation
-Date:   Wed, 13 Sep 2023 08:01:59 -0700
-Message-Id: <1694617319-27455-3-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1694617319-27455-1-git-send-email-dai.ngo@oracle.com>
-References: <1694617319-27455-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
- definitions=2023-09-13_08,2023-09-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 adultscore=0 phishscore=0
- spamscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2308100000
- definitions=main-2309130123
-X-Proofpoint-GUID: 7iQSkeLaAKYNo69RoFjQctFBMnu675YD
-X-Proofpoint-ORIG-GUID: 7iQSkeLaAKYNo69RoFjQctFBMnu675YD
+        with ESMTP id S241155AbjIMPTC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Sep 2023 11:19:02 -0400
+X-Greylist: delayed 321 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Sep 2023 08:18:57 PDT
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E71C6
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Sep 2023 08:18:57 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id BC2DA71A6; Wed, 13 Sep 2023 11:13:34 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BC2DA71A6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1694618014;
+        bh=OPL/0Y/vxQAzebD2PQ1LydlbLX24dsBCXUiDlxXT4kI=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=a1XQPuCPs/GSK3ukjqIszG74Cxe0TsCvhv9UIUVaGDm/ej1YfXNDEV3p5NHB5EUf5
+         YRLbQ8fsaWr6A2zfjCGcDc/NAy0RsJnLqSKaFiFMATpfdSmZpRpqIOr5k/WmhqZSZd
+         x5BE/XloMcplBf1c7fTfLVaEdpDjEvu/SLCP7TNU=
+Date:   Wed, 13 Sep 2023 11:13:34 -0400
+To:     Alexander Zeijlon <alexander.zeijlon@cendio.se>
+Cc:     linux-nfs@vger.kernel.org, Calum Mackay <calum.mackay@oracle.com>
+Subject: Re: [PATCH] Stop using deprecated thread.setDaemon
+Message-ID: <20230913151334.GB3189@fieldses.org>
+References: <20230913104636.2554987-1-alexander.zeijlon@cendio.se>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230913104636.2554987-1-alexander.zeijlon@cendio.se>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If the GETATTR request on a file that has write delegation in effect
-and the request attributes include the change info and size attribute
-then the request is handled as below:
+Adding Calum Mackay.--b.
 
-Server sends CB_GETATTR to client to get the latest change info and file
-size. If these values are the same as the server's cached values then
-the GETATTR proceeds as normal.
-
-If either the change info or file size is different from the server's
-cached values, or the file was already marked as modified, then:
-
-    . update time_modify and time_metadata into file's metadata
-      with current time
-
-    . encode GETATTR as normal except the file size is encoded with
-      the value returned from CB_GETATTR
-
-    . mark the file as modified
-
-If the CB_GETATTR fails for any reasons, the delegation is recalled
-and NFS4ERR_DELAY is returned for the GETATTR.
-
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 106 ++++++++++++++++++++++++++++++++++++++++----
- fs/nfsd/nfs4xdr.c   |  10 ++++-
- fs/nfsd/state.h     |  11 ++++-
- 3 files changed, 115 insertions(+), 12 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 8534693eb6a4..2151b89dfd2a 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -127,6 +127,7 @@ static void free_session(struct nfsd4_session *);
- 
- static const struct nfsd4_callback_ops nfsd4_cb_recall_ops;
- static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops;
-+static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops;
- 
- static struct workqueue_struct *laundry_wq;
- 
-@@ -1187,6 +1188,10 @@ alloc_init_deleg(struct nfs4_client *clp, struct nfs4_file *fp,
- 	dp->dl_recalled = false;
- 	nfsd4_init_cb(&dp->dl_recall, dp->dl_stid.sc_client,
- 		      &nfsd4_cb_recall_ops, NFSPROC4_CLNT_CB_RECALL);
-+	nfsd4_init_cb(&dp->dl_cb_fattr.ncf_getattr, dp->dl_stid.sc_client,
-+			&nfsd4_cb_getattr_ops, NFSPROC4_CLNT_CB_GETATTR);
-+	dp->dl_cb_fattr.ncf_file_modified = false;
-+	dp->dl_cb_fattr.ncf_cb_bmap[0] = FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE;
- 	get_nfs4_file(fp);
- 	dp->dl_stid.sc_file = fp;
- 	return dp;
-@@ -2894,11 +2899,56 @@ nfsd4_cb_recall_any_release(struct nfsd4_callback *cb)
- 	spin_unlock(&nn->client_lock);
- }
- 
-+static int
-+nfsd4_cb_getattr_done(struct nfsd4_callback *cb, struct rpc_task *task)
-+{
-+	struct nfs4_cb_fattr *ncf =
-+			container_of(cb, struct nfs4_cb_fattr, ncf_getattr);
-+
-+	ncf->ncf_cb_status = task->tk_status;
-+	switch (task->tk_status) {
-+	case -NFS4ERR_DELAY:
-+		rpc_delay(task, 2 * HZ);
-+		return 0;
-+	default:
-+		return 1;
-+	}
-+}
-+
-+static void
-+nfsd4_cb_getattr_release(struct nfsd4_callback *cb)
-+{
-+	struct nfs4_cb_fattr *ncf =
-+			container_of(cb, struct nfs4_cb_fattr, ncf_getattr);
-+	struct nfs4_delegation *dp =
-+			container_of(ncf, struct nfs4_delegation, dl_cb_fattr);
-+
-+	nfs4_put_stid(&dp->dl_stid);
-+	clear_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags);
-+	wake_up_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY);
-+}
-+
- static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops = {
- 	.done		= nfsd4_cb_recall_any_done,
- 	.release	= nfsd4_cb_recall_any_release,
- };
- 
-+static const struct nfsd4_callback_ops nfsd4_cb_getattr_ops = {
-+	.done		= nfsd4_cb_getattr_done,
-+	.release	= nfsd4_cb_getattr_release,
-+};
-+
-+void nfs4_cb_getattr(struct nfs4_cb_fattr *ncf)
-+{
-+	struct nfs4_delegation *dp =
-+			container_of(ncf, struct nfs4_delegation, dl_cb_fattr);
-+
-+	if (test_and_set_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags))
-+		return;
-+	refcount_inc(&dp->dl_stid.sc_count);
-+	nfsd4_run_cb(&ncf->ncf_getattr);
-+}
-+
- static struct nfs4_client *create_client(struct xdr_netobj name,
- 		struct svc_rqst *rqstp, nfs4_verifier *verf)
- {
-@@ -5634,6 +5684,8 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	struct svc_fh *parent = NULL;
- 	int cb_up;
- 	int status = 0;
-+	struct kstat stat;
-+	struct path path;
- 
- 	cb_up = nfsd4_cb_channel_good(oo->oo_owner.so_client);
- 	open->op_recall = 0;
-@@ -5671,6 +5723,18 @@ nfs4_open_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 	if (open->op_share_access & NFS4_SHARE_ACCESS_WRITE) {
- 		open->op_delegate_type = NFS4_OPEN_DELEGATE_WRITE;
- 		trace_nfsd_deleg_write(&dp->dl_stid.sc_stateid);
-+		path.mnt = currentfh->fh_export->ex_path.mnt;
-+		path.dentry = currentfh->fh_dentry;
-+		if (vfs_getattr(&path, &stat,
-+				(STATX_SIZE | STATX_CTIME | STATX_CHANGE_COOKIE),
-+				AT_STATX_SYNC_AS_STAT)) {
-+			nfs4_put_stid(&dp->dl_stid);
-+			destroy_delegation(dp);
-+			goto out_no_deleg;
-+		}
-+		dp->dl_cb_fattr.ncf_cur_fsize = stat.size;
-+		dp->dl_cb_fattr.ncf_initial_cinfo =
-+			nfsd4_change_attribute(&stat, d_inode(currentfh->fh_dentry));
- 	} else {
- 		open->op_delegate_type = NFS4_OPEN_DELEGATE_READ;
- 		trace_nfsd_deleg_read(&dp->dl_stid.sc_stateid);
-@@ -8411,21 +8475,21 @@ nfsd4_get_writestateid(struct nfsd4_compound_state *cstate,
-  * delegation before replying to the GETATTR. See RFC 8881 section
-  * 18.7.4.
-  *
-- * The current implementation does not support CB_GETATTR yet. However
-- * this can avoid recalling the delegation could be added in follow up
-- * work.
-- *
-  * Returns 0 if there is no conflict; otherwise an nfs_stat
-  * code is returned.
-  */
- __be32
--nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode)
-+nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
-+				bool *modified, u64 *size)
- {
- 	__be32 status;
- 	struct file_lock_context *ctx;
- 	struct file_lock *fl;
- 	struct nfs4_delegation *dp;
-+	struct iattr attrs;
-+	struct nfs4_cb_fattr *ncf;
- 
-+	*modified = false;
- 	ctx = locks_inode_context(inode);
- 	if (!ctx)
- 		return 0;
-@@ -8452,10 +8516,34 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode)
- break_lease:
- 			spin_unlock(&ctx->flc_lock);
- 			nfsd_stats_wdeleg_getattr_inc();
--			status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
--			if (status != nfserr_jukebox ||
--					!nfsd_wait_for_delegreturn(rqstp, inode))
--				return status;
-+
-+			dp = fl->fl_owner;
-+			ncf = &dp->dl_cb_fattr;
-+			nfs4_cb_getattr(&dp->dl_cb_fattr);
-+			wait_on_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY, TASK_INTERRUPTIBLE);
-+			if (ncf->ncf_cb_status) {
-+				status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
-+				if (status != nfserr_jukebox ||
-+						!nfsd_wait_for_delegreturn(rqstp, inode))
-+					return status;
-+			}
-+			if (!ncf->ncf_file_modified &&
-+					(ncf->ncf_initial_cinfo != ncf->ncf_cb_change ||
-+					ncf->ncf_cur_fsize != ncf->ncf_cb_fsize))
-+				ncf->ncf_file_modified = true;
-+			if (ncf->ncf_file_modified) {
-+				/*
-+				 * The server would not update the file's metadata
-+				 * with the client's modified size.
-+				 */
-+				attrs.ia_mtime = attrs.ia_ctime = current_time(inode);
-+				attrs.ia_valid = ATTR_MTIME | ATTR_CTIME;
-+				setattr_copy(&nop_mnt_idmap, inode, &attrs);
-+				mark_inode_dirty(inode);
-+				ncf->ncf_cur_fsize = ncf->ncf_cb_fsize;
-+				*size = ncf->ncf_cur_fsize;
-+				*modified = true;
-+			}
- 			return 0;
- 		}
- 		break;
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 2e40c74d2f72..69504da6c4d4 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2975,6 +2975,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		.dentry	= dentry,
- 	};
- 	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
-+	bool file_modified;
-+	u64 size = 0;
- 
- 	BUG_ON(bmval1 & NFSD_WRITEONLY_ATTRS_WORD1);
- 	BUG_ON(!nfsd_attrs_supported(minorversion, bmval));
-@@ -2985,7 +2987,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 			goto out;
- 	}
- 	if (bmval0 & (FATTR4_WORD0_CHANGE | FATTR4_WORD0_SIZE)) {
--		status = nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry));
-+		status = nfsd4_deleg_getattr_conflict(rqstp, d_inode(dentry),
-+						&file_modified, &size);
- 		if (status)
- 			goto out;
- 	}
-@@ -3112,7 +3115,10 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 		p = xdr_reserve_space(xdr, 8);
- 		if (!p)
- 			goto out_resource;
--		p = xdr_encode_hyper(p, stat.size);
-+		if (file_modified)
-+			p = xdr_encode_hyper(p, size);
-+		else
-+			p = xdr_encode_hyper(p, stat.size);
- 	}
- 	if (bmval0 & FATTR4_WORD0_LINK_SUPPORT) {
- 		p = xdr_reserve_space(xdr, 4);
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 82718d42f3b2..6bbb1d0276b4 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -125,8 +125,16 @@ struct nfs4_cb_fattr {
- 	/* from CB_GETATTR reply */
- 	u64 ncf_cb_change;
- 	u64 ncf_cb_fsize;
-+
-+	unsigned long ncf_cb_flags;
-+	bool ncf_file_modified;
-+	u64 ncf_initial_cinfo;
-+	u64 ncf_cur_fsize;
- };
- 
-+/* bits for ncf_cb_flags */
-+#define	CB_GETATTR_BUSY		0
-+
- /*
-  * Represents a delegation stateid. The nfs4_client holds references to these
-  * and they are put when it is being destroyed or when the delegation is
-@@ -748,5 +756,6 @@ static inline bool try_to_expire_client(struct nfs4_client *clp)
- }
- 
- extern __be32 nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp,
--				struct inode *inode);
-+		struct inode *inode, bool *file_modified, u64 *size);
-+extern void nfs4_cb_getattr(struct nfs4_cb_fattr *ncf);
- #endif   /* NFSD4_STATE_H */
--- 
-2.39.3
-
+On Wed, Sep 13, 2023 at 12:46:36PM +0200, Alexander Zeijlon wrote:
+> The thread.setDaemon method is deprecated since Python version 3.10, the
+> daemon property should now be set directly.
+> 
+> Signed-off-by: Alexander Zeijlon <alexander.zeijlon@cendio.se>
+> ---
+>  nfs4.0/nfs4lib.py                   | 2 +-
+>  nfs4.0/servertests/st_delegation.py | 4 ++--
+>  nfs4.1/nfs4state.py                 | 2 +-
+>  rpc/rpc.py                          | 4 ++--
+>  4 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
+> index 9b074f0..9a72ec9 100644
+> --- a/nfs4.0/nfs4lib.py
+> +++ b/nfs4.0/nfs4lib.py
+> @@ -297,7 +297,7 @@ class NFS4Client(rpc.RPCClient):
+>          # Start up callback server associated with this client
+>          self.cb_server = CBServer(self)
+>          self.thread = threading.Thread(target=self.cb_server.run, name=name)
+> -        self.thread.setDaemon(True)
+> +        self.thread.daemon = True
+>          self.thread.start()
+>          # Establish callback control socket
+>          self.cb_control = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+> diff --git a/nfs4.0/servertests/st_delegation.py b/nfs4.0/servertests/st_delegation.py
+> index ba49cf9..bcc768a 100644
+> --- a/nfs4.0/servertests/st_delegation.py
+> +++ b/nfs4.0/servertests/st_delegation.py
+> @@ -40,7 +40,7 @@ def _recall(c, thisop, cbid):
+>      if res is not None and res.status != NFS4_OK:
+>          t_error = _handle_error(c, res, ops)
+>          t = threading.Thread(target=t_error.run)
+> -        t.setDaemon(1)
+> +        t.daemon = True
+>          t.start()
+>      return res
+>  
+> @@ -409,7 +409,7 @@ def testChangeDeleg(t, env, funct=_recall):
+>      new_server = CBServer(c)
+>      new_server.set_cb_recall(c.cbid, funct, NFS4_OK);
+>      cb_thread = threading.Thread(target=new_server.run)
+> -    cb_thread.setDaemon(1)
+> +    cb_thread.daemon = True
+>      cb_thread.start()
+>      c.cb_server = new_server
+>      env.sleep(3)
+> diff --git a/nfs4.1/nfs4state.py b/nfs4.1/nfs4state.py
+> index e57b90a..6b4cc81 100644
+> --- a/nfs4.1/nfs4state.py
+> +++ b/nfs4.1/nfs4state.py
+> @@ -308,7 +308,7 @@ class DelegState(FileStateTyped):
+>                  e.status = CB_INIT
+>                  t = threading.Thread(target=e.initiate_recall,
+>                                       args=(dispatcher,))
+> -                t.setDaemon(True)
+> +                t.daemon = True
+>                  t.start()
+>          # We need to release the lock so that delegations can be recalled,
+>          # which can involve operations like WRITE, LOCK, OPEN, etc,
+> diff --git a/rpc/rpc.py b/rpc/rpc.py
+> index 1fe285a..3621c8e 100644
+> --- a/rpc/rpc.py
+> +++ b/rpc/rpc.py
+> @@ -598,7 +598,7 @@ class ConnectionHandler(object):
+>              log_p.log(5, "Received record from %i" % fd)
+>              log_p.log(2, repr(r))
+>              t = threading.Thread(target=self._event_rpc_record, args=(r, s))
+> -            t.setDaemon(True)
+> +            t.daemon = True
+>              t.start()
+>  
+>      def _event_rpc_record(self, record, pipe):
+> @@ -935,7 +935,7 @@ class Client(ConnectionHandler):
+>  
+>          # Start polling
+>          t = threading.Thread(target=self.start, name="PollingThread")
+> -        t.setDaemon(True)
+> +        t.daemon = True
+>          t.start()
+>  
+>      def send_call(self, pipe, procedure, data=b'', credinfo=None,
+> -- 
+> 2.41.0
