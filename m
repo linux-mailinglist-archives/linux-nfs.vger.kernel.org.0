@@ -2,128 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0888D79EC73
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Sep 2023 17:19:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B28AA79EE01
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Sep 2023 18:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232321AbjIMPTC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Sep 2023 11:19:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57050 "EHLO
+        id S230323AbjIMQLC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Sep 2023 12:11:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241155AbjIMPTC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Sep 2023 11:19:02 -0400
-X-Greylist: delayed 321 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 13 Sep 2023 08:18:57 PDT
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E71C6
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Sep 2023 08:18:57 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BC2DA71A6; Wed, 13 Sep 2023 11:13:34 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BC2DA71A6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1694618014;
-        bh=OPL/0Y/vxQAzebD2PQ1LydlbLX24dsBCXUiDlxXT4kI=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=a1XQPuCPs/GSK3ukjqIszG74Cxe0TsCvhv9UIUVaGDm/ej1YfXNDEV3p5NHB5EUf5
-         YRLbQ8fsaWr6A2zfjCGcDc/NAy0RsJnLqSKaFiFMATpfdSmZpRpqIOr5k/WmhqZSZd
-         x5BE/XloMcplBf1c7fTfLVaEdpDjEvu/SLCP7TNU=
-Date:   Wed, 13 Sep 2023 11:13:34 -0400
-To:     Alexander Zeijlon <alexander.zeijlon@cendio.se>
-Cc:     linux-nfs@vger.kernel.org, Calum Mackay <calum.mackay@oracle.com>
-Subject: Re: [PATCH] Stop using deprecated thread.setDaemon
-Message-ID: <20230913151334.GB3189@fieldses.org>
-References: <20230913104636.2554987-1-alexander.zeijlon@cendio.se>
+        with ESMTP id S229437AbjIMQLC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Sep 2023 12:11:02 -0400
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id EC92419BB
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Sep 2023 09:10:57 -0700 (PDT)
+Received: (qmail 960084 invoked by uid 1000); 13 Sep 2023 12:10:56 -0400
+Date:   Wed, 13 Sep 2023 12:10:56 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH 10/19] USB: gadget/legacy: remove sb_mutex
+Message-ID: <7f839be1-4898-41ad-8eda-10d5a0350bdf@rowland.harvard.edu>
+References: <20230913111013.77623-1-hch@lst.de>
+ <20230913111013.77623-11-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230913104636.2554987-1-alexander.zeijlon@cendio.se>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <20230913111013.77623-11-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Adding Calum Mackay.--b.
-
-On Wed, Sep 13, 2023 at 12:46:36PM +0200, Alexander Zeijlon wrote:
-> The thread.setDaemon method is deprecated since Python version 3.10, the
-> daemon property should now be set directly.
+On Wed, Sep 13, 2023 at 08:10:04AM -0300, Christoph Hellwig wrote:
+> Creating new a new super_block vs freeing the old one for single instance
+> file systems is serialized by the wait for SB_DEAD.
 > 
-> Signed-off-by: Alexander Zeijlon <alexander.zeijlon@cendio.se>
+> Remove the superfluous sb_mutex.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  nfs4.0/nfs4lib.py                   | 2 +-
->  nfs4.0/servertests/st_delegation.py | 4 ++--
->  nfs4.1/nfs4state.py                 | 2 +-
->  rpc/rpc.py                          | 4 ++--
->  4 files changed, 6 insertions(+), 6 deletions(-)
+
+You might mention that this is essentially a reversion of commit 
+d18dcfe9860e ("USB: gadgetfs: Fix race between mounting and 
+unmounting").
+
+Alan Stern
+
+>  drivers/usb/gadget/legacy/inode.c | 6 ------
+>  1 file changed, 6 deletions(-)
 > 
-> diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
-> index 9b074f0..9a72ec9 100644
-> --- a/nfs4.0/nfs4lib.py
-> +++ b/nfs4.0/nfs4lib.py
-> @@ -297,7 +297,7 @@ class NFS4Client(rpc.RPCClient):
->          # Start up callback server associated with this client
->          self.cb_server = CBServer(self)
->          self.thread = threading.Thread(target=self.cb_server.run, name=name)
-> -        self.thread.setDaemon(True)
-> +        self.thread.daemon = True
->          self.thread.start()
->          # Establish callback control socket
->          self.cb_control = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-> diff --git a/nfs4.0/servertests/st_delegation.py b/nfs4.0/servertests/st_delegation.py
-> index ba49cf9..bcc768a 100644
-> --- a/nfs4.0/servertests/st_delegation.py
-> +++ b/nfs4.0/servertests/st_delegation.py
-> @@ -40,7 +40,7 @@ def _recall(c, thisop, cbid):
->      if res is not None and res.status != NFS4_OK:
->          t_error = _handle_error(c, res, ops)
->          t = threading.Thread(target=t_error.run)
-> -        t.setDaemon(1)
-> +        t.daemon = True
->          t.start()
->      return res
+> diff --git a/drivers/usb/gadget/legacy/inode.c b/drivers/usb/gadget/legacy/inode.c
+> index ce9e31f3d26bcc..a203266bc0dc82 100644
+> --- a/drivers/usb/gadget/legacy/inode.c
+> +++ b/drivers/usb/gadget/legacy/inode.c
+> @@ -229,7 +229,6 @@ static void put_ep (struct ep_data *data)
+>   */
 >  
-> @@ -409,7 +409,7 @@ def testChangeDeleg(t, env, funct=_recall):
->      new_server = CBServer(c)
->      new_server.set_cb_recall(c.cbid, funct, NFS4_OK);
->      cb_thread = threading.Thread(target=new_server.run)
-> -    cb_thread.setDaemon(1)
-> +    cb_thread.daemon = True
->      cb_thread.start()
->      c.cb_server = new_server
->      env.sleep(3)
-> diff --git a/nfs4.1/nfs4state.py b/nfs4.1/nfs4state.py
-> index e57b90a..6b4cc81 100644
-> --- a/nfs4.1/nfs4state.py
-> +++ b/nfs4.1/nfs4state.py
-> @@ -308,7 +308,7 @@ class DelegState(FileStateTyped):
->                  e.status = CB_INIT
->                  t = threading.Thread(target=e.initiate_recall,
->                                       args=(dispatcher,))
-> -                t.setDaemon(True)
-> +                t.daemon = True
->                  t.start()
->          # We need to release the lock so that delegations can be recalled,
->          # which can involve operations like WRITE, LOCK, OPEN, etc,
-> diff --git a/rpc/rpc.py b/rpc/rpc.py
-> index 1fe285a..3621c8e 100644
-> --- a/rpc/rpc.py
-> +++ b/rpc/rpc.py
-> @@ -598,7 +598,7 @@ class ConnectionHandler(object):
->              log_p.log(5, "Received record from %i" % fd)
->              log_p.log(2, repr(r))
->              t = threading.Thread(target=self._event_rpc_record, args=(r, s))
-> -            t.setDaemon(True)
-> +            t.daemon = True
->              t.start()
+>  static const char *CHIP;
+> -static DEFINE_MUTEX(sb_mutex);		/* Serialize superblock operations */
 >  
->      def _event_rpc_record(self, record, pipe):
-> @@ -935,7 +935,7 @@ class Client(ConnectionHandler):
+>  /*----------------------------------------------------------------------*/
 >  
->          # Start polling
->          t = threading.Thread(target=self.start, name="PollingThread")
-> -        t.setDaemon(True)
-> +        t.daemon = True
->          t.start()
+> @@ -2012,8 +2011,6 @@ gadgetfs_fill_super (struct super_block *sb, struct fs_context *fc)
+>  	struct dev_data	*dev;
+>  	int		rc;
 >  
->      def send_call(self, pipe, procedure, data=b'', credinfo=None,
+> -	mutex_lock(&sb_mutex);
+> -
+>  	if (the_device) {
+>  		rc = -ESRCH;
+>  		goto Done;
+> @@ -2069,7 +2066,6 @@ gadgetfs_fill_super (struct super_block *sb, struct fs_context *fc)
+>  	rc = -ENOMEM;
+>  
+>   Done:
+> -	mutex_unlock(&sb_mutex);
+>  	return rc;
+>  }
+>  
+> @@ -2092,7 +2088,6 @@ static int gadgetfs_init_fs_context(struct fs_context *fc)
+>  static void
+>  gadgetfs_kill_sb (struct super_block *sb)
+>  {
+> -	mutex_lock(&sb_mutex);
+>  	kill_litter_super (sb);
+>  	if (the_device) {
+>  		put_dev (the_device);
+> @@ -2100,7 +2095,6 @@ gadgetfs_kill_sb (struct super_block *sb)
+>  	}
+>  	kfree(CHIP);
+>  	CHIP = NULL;
+> -	mutex_unlock(&sb_mutex);
+>  }
+>  
+>  /*----------------------------------------------------------------------*/
 > -- 
-> 2.41.0
+> 2.39.2
+> 
