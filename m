@@ -2,213 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA71C79E5FD
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Sep 2023 13:13:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5A7879E706
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Sep 2023 13:40:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240343AbjIMLM1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Sep 2023 07:12:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51844 "EHLO
+        id S238945AbjIMLky (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Sep 2023 07:40:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240084AbjIMLMH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Sep 2023 07:12:07 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA78D1BCE;
-        Wed, 13 Sep 2023 04:11:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=S1SFy87Tal1zjTMpG/B1YzaZjyHevEyx/Ud+hlEwuTk=; b=ZAxP4t/djhRJyUxTiB1g1/4wNn
-        Jy/Xo+IIkj7ixqhSE1v83lesrSKtdCY7mtxiQpdDWaA47Ad++ERcNIAoDq2vVNzeVPvQbWXtvvLM6
-        t/UO4IUIIeR8why07hc075q8lHsrKJI7D7mNsK+en+fXUEiPi0sUSYFaYxchkQ79W/EEUGGmwNJ+x
-        DABx1LwgpU4GjE/l8YtCJy55AK2oNY5aPc3B1GTiJgyFJfms8hvozRaT9sViD54yzQ1nCUczSlOb4
-        CHMuF0drthpu+kXBBjg9uc0tJgUiLZA97kWEUVl45SwGmIFrXSS/HTgtHdzV3aMao1S4jWOC29Yio
-        34Xi/lzw==;
-Received: from [190.210.221.22] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qgNmL-005iD3-11;
-        Wed, 13 Sep 2023 11:11:29 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Christian Brauner <brauner@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org
-Subject: [PATCH 19/19] fs: remove ->kill_sb
-Date:   Wed, 13 Sep 2023 08:10:13 -0300
-Message-Id: <20230913111013.77623-20-hch@lst.de>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230913111013.77623-1-hch@lst.de>
-References: <20230913111013.77623-1-hch@lst.de>
+        with ESMTP id S240268AbjIMLkx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Sep 2023 07:40:53 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60AB10E6
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Sep 2023 04:40:49 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04725C433C7;
+        Wed, 13 Sep 2023 11:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694605249;
+        bh=qd5gBiyrK150ugsfoHUQJLyFJ28E/xMTIMNMAIByo8g=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Vqtlaon3HffdVhuKyOCYG6vkEaNLgDbYRjNKl+Zsj7xsFfvB0mk06SVvHRhiUH/Fp
+         hdrM9kaB/o9Dl9gkPw/O27aDlUOyWAHxmohQlDBsm9ZcdJJozRuoIdhQvCg6oP6LlR
+         n1YpyM3g+Rovb/ORmHIHuGhLaj3lzdlw12A3XSNLU+aWJ1d8ASQIVYLpVYL5V2JpyC
+         M5kQELb8zavR1F5ZOYEzD71i8RLd87wWc0H7lM4hcGJIzLXm194zLaOd35WsGqz6kW
+         oBf4K5L9t1lNl3XbWcz3Mh8m54/tcf/56qrObruIbMbr4d2OYgBouIhfWfhqjuIzOe
+         45sdDQbk4RB6Q==
+Message-ID: <1e47cd45f01fc996873387a6021a98874c0ee030.camel@kernel.org>
+Subject: Re: [PATCH] netfs: Only call folio_start_fscache  time for each
+ folio
+From:   Jeff Layton <jlayton@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com, linux-nfs@vger.kernel.org,
+        Dave Wysochanski <dwysocha@redhat.com>
+Date:   Wed, 13 Sep 2023 07:40:47 -0400
+In-Reply-To: <3d7271bdcb81239fac471bdb2c4e4ff63d3a65b3.camel@kernel.org>
+References: <20230608214137.856006-1-dwysocha@redhat.com>
+         <3d7271bdcb81239fac471bdb2c4e4ff63d3a65b3.camel@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Now that no instances are left, remove ->kill_sb and mark
-generic_shutdown_super static.
+On Mon, 2023-09-11 at 13:02 -0400, Jeff Layton wrote:
+> On Thu, 2023-06-08 at 17:41 -0400, Dave Wysochanski wrote:
+> > If a network filesystem using netfs implements a clamp_length()
+> > function, it can set subrequest lengths smaller than a page size.
+> > When we loop through the folios in netfs_rreq_unlock_folios() to
+> > set any folios to be written back, we need to make sure we only
+> > call folio_start_fscache() once for each folio.  Otherwise,
+> > this simple testcase:
+> >   mount -o fsc,rsize=3D1024,wsize=3D1024 127.0.0.1:/export /mnt/nfs
+> >   dd if=3D/dev/zero of=3D/mnt/nfs/file.bin bs=3D4096 count=3D1
+> >   1+0 records in
+> >   1+0 records out
+> >   4096 bytes (4.1 kB, 4.0 KiB) copied, 0.0126359 s, 324 kB/s
+> >   cat /mnt/nfs/file.bin > /dev/null
+> >=20
+> > will trigger an oops similar to the following:
+> > ...
+> >  page dumped because: VM_BUG_ON_FOLIO(folio_test_private_2(folio))
+> >  ------------[ cut here ]------------
+> >  kernel BUG at include/linux/netfs.h:44!
+> > ...
+> >  CPU: 5 PID: 134 Comm: kworker/u16:5 Kdump: loaded Not tainted 6.4.0-rc=
+5
+> > ...
+> >  RIP: 0010:netfs_rreq_unlock_folios+0x68e/0x730 [netfs]
+> > ...
+> >  Call Trace:
+> >   <TASK>
+> >   netfs_rreq_assess+0x497/0x660 [netfs]
+> >   netfs_subreq_terminated+0x32b/0x610 [netfs]
+> >   nfs_netfs_read_completion+0x14e/0x1a0 [nfs]
+> >   nfs_read_completion+0x2f9/0x330 [nfs]
+> >   rpc_free_task+0x72/0xa0 [sunrpc]
+> >   rpc_async_release+0x46/0x70 [sunrpc]
+> >   process_one_work+0x3bd/0x710
+> >   worker_thread+0x89/0x610
+> >   kthread+0x181/0x1c0
+> >   ret_from_fork+0x29/0x50
+> >=20
+> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > ---
+> >  fs/netfs/buffered_read.c | 6 +++++-
+> >  1 file changed, 5 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
+> > index 3404707ddbe7..0dafd970c1b6 100644
+> > --- a/fs/netfs/buffered_read.c
+> > +++ b/fs/netfs/buffered_read.c
+> > @@ -21,6 +21,7 @@ void netfs_rreq_unlock_folios(struct netfs_io_request=
+ *rreq)
+> >  	pgoff_t last_page =3D ((rreq->start + rreq->len) / PAGE_SIZE) - 1;
+> >  	size_t account =3D 0;
+> >  	bool subreq_failed =3D false;
+> > +	bool folio_started;
+>=20
+> nit: I'd move this declaration inside the xas_for_each loop, and just
+> initialize it to false there.
+>=20
+> > =20
+> >  	XA_STATE(xas, &rreq->mapping->i_pages, start_epage);
+> > =20
+> > @@ -53,6 +54,7 @@ void netfs_rreq_unlock_folios(struct netfs_io_request=
+ *rreq)
+> > =20
+> >  		pg_end =3D folio_pos(folio) + folio_size(folio) - 1;
+> > =20
+> > +		folio_started =3D false;
+> >  		for (;;) {
+> >  			loff_t sreq_end;
+> > =20
+> > @@ -60,8 +62,10 @@ void netfs_rreq_unlock_folios(struct netfs_io_reques=
+t *rreq)
+> >  				pg_failed =3D true;
+> >  				break;
+> >  			}
+> > -			if (test_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags))
+> > +			if (!folio_started && test_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->f=
+lags)) {
+> >  				folio_start_fscache(folio);
+> > +				folio_started =3D true;
+> > +			}
+> >  			pg_failed |=3D subreq_failed;
+> >  			sreq_end =3D subreq->start + subreq->len - 1;
+> >  			if (pg_end < sreq_end)
+>=20
+>=20
+> The logic looks correct though.
+>=20
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- Documentation/filesystems/locking.rst |  5 -----
- Documentation/filesystems/vfs.rst     |  5 -----
- fs/super.c                            | 25 +++++++++----------------
- include/linux/fs.h                    |  2 --
- 4 files changed, 9 insertions(+), 28 deletions(-)
+David, can you review/merge this patch? This apparently fixes a panic
+with NFS and fscache.
 
-diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
-index c33e2f03ed1f69..e4ca99c0828d00 100644
---- a/Documentation/filesystems/locking.rst
-+++ b/Documentation/filesystems/locking.rst
-@@ -221,7 +221,6 @@ prototypes::
- 	struct dentry *(*mount) (struct file_system_type *, int,
- 		       const char *, void *);
- 	void (*shutdown_sb) (struct super_block *);
--	void (*kill_sb) (struct super_block *);
- 	void (*free_sb) (struct super_block *);
- 
- locking rules:
-@@ -231,16 +230,12 @@ ops		may block
- =======		=========
- mount		yes
- shutdown_sb	yes
--kill_sb		yes
- free_sb		yes
- =======		=========
- 
- ->mount() returns ERR_PTR or the root dentry; its superblock should be locked
- on return.
- 
--->kill_sb() takes a write-locked superblock, does all shutdown work on it,
--unlocks and drops the reference.
--
- address_space_operations
- ========================
- prototypes::
-diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
-index 1a7c6926c31f34..29513ee1d34ede 100644
---- a/Documentation/filesystems/vfs.rst
-+++ b/Documentation/filesystems/vfs.rst
-@@ -120,7 +120,6 @@ members are defined:
- 		struct dentry *(*mount) (struct file_system_type *, int,
- 			const char *, void *);
- 		void (*shutdown_sb) (struct super_block *);
--		void (*kill_sb) (struct super_block *);
- 		void (*free_sb) (struct super_block *);
- 		struct module *owner;
- 		struct file_system_type * next;
-@@ -164,10 +163,6 @@ members are defined:
- 	Note: dentries and inodes are normally taken care of and do not need
- 	specific handling unless they are pinned by kernel users.
- 
--``kill_sb``
--	the method to call when an instance of this filesystem should be
--	shut down
--
- ``free_sb``
- 	Free file system specific resources like sb->s_fs_info that are
- 	still needed while inodes are freed during umount.
-diff --git a/fs/super.c b/fs/super.c
-index 805ca1dd1e23f2..d9c564e70ffcd5 100644
---- a/fs/super.c
-+++ b/fs/super.c
-@@ -458,6 +458,8 @@ static void kill_super_notify(struct super_block *sb)
- 	super_wake(sb, SB_DEAD);
- }
- 
-+static void generic_shutdown_super(struct super_block *sb);
-+
- /**
-  *	deactivate_locked_super	-	drop an active reference to superblock
-  *	@s: superblock to deactivate
-@@ -480,15 +482,11 @@ void deactivate_locked_super(struct super_block *s)
- 
- 	unregister_shrinker(&s->s_shrink);
- 
--	if (fs->kill_sb) {
--		fs->kill_sb(s);
--	} else {
--		if (fs->shutdown_sb)
--			fs->shutdown_sb(s);
--		generic_shutdown_super(s);
--		if (fs->free_sb)
--			fs->free_sb(s);
--	}
-+	if (fs->shutdown_sb)
-+		fs->shutdown_sb(s);
-+	generic_shutdown_super(s);
-+	if (fs->free_sb)
-+		fs->free_sb(s);
- 
- 	kill_super_notify(s);
- 
-@@ -661,16 +659,13 @@ EXPORT_SYMBOL(retire_super);
-  *	@sb: superblock to kill
-  *
-  *	generic_shutdown_super() does all fs-independent work on superblock
-- *	shutdown.  Typical ->kill_sb() should pick all fs-specific objects
-- *	that need destruction out of superblock, call generic_shutdown_super()
-- *	and release aforementioned objects.  Note: dentries and inodes _are_
-- *	taken care of and do not need specific handling.
-+ *	shutdown. 
-  *
-  *	Upon calling this function, the filesystem may no longer alter or
-  *	rearrange the set of dentries belonging to this super_block, nor may it
-  *	change the attachments of dentries to inodes.
-  */
--void generic_shutdown_super(struct super_block *sb)
-+static void generic_shutdown_super(struct super_block *sb)
- {
- 	const struct super_operations *sop = sb->s_op;
- 
-@@ -743,8 +738,6 @@ void generic_shutdown_super(struct super_block *sb)
- 	}
- }
- 
--EXPORT_SYMBOL(generic_shutdown_super);
--
- bool mount_capable(struct fs_context *fc)
- {
- 	if (!(fc->fs_type->fs_flags & FS_USERNS_MOUNT))
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 302be5dfc1a04a..f57d3a27b488f7 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2340,7 +2340,6 @@ struct file_system_type {
- 	const struct fs_parameter_spec *parameters;
- 	struct dentry *(*mount) (struct file_system_type *, int,
- 		       const char *, void *);
--	void (*kill_sb) (struct super_block *);
- 	void (*shutdown_sb)(struct super_block *sb);
- 	void (*free_sb)(struct super_block *sb);
- 	struct module *owner;
-@@ -2382,7 +2381,6 @@ extern struct dentry *mount_nodev(struct file_system_type *fs_type,
- 	int (*fill_super)(struct super_block *, void *, int));
- extern struct dentry *mount_subtree(struct vfsmount *mnt, const char *path);
- void retire_super(struct super_block *sb);
--void generic_shutdown_super(struct super_block *sb);
- void block_free_sb(struct super_block *sb);
- void litter_shutdown_sb(struct super_block *sb);
- void deactivate_super(struct super_block *sb);
--- 
-2.39.2
-
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
