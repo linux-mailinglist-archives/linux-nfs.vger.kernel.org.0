@@ -2,114 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE1C47A0193
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Sep 2023 12:23:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 298E67A01AE
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Sep 2023 12:29:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237100AbjINKXX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Sep 2023 06:23:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52282 "EHLO
+        id S233511AbjINK3Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Sep 2023 06:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237123AbjINKXU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Sep 2023 06:23:20 -0400
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E9B1BFE;
-        Thu, 14 Sep 2023 03:23:15 -0700 (PDT)
-Received: from [192.168.1.103] (178.176.78.252) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.986.14; Thu, 14 Sep
- 2023 13:23:00 +0300
-Subject: Re: [PATCH 10/19] USB: gadget/legacy: remove sb_mutex
-To:     Christoph Hellwig <hch@lst.de>,
-        Christian Brauner <brauner@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-CC:     Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-nfs@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-        <cgroups@vger.kernel.org>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-11-hch@lst.de>
-From:   Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-Message-ID: <d3935129-2ab9-0341-c606-fabac4a49010@omp.ru>
-Date:   Thu, 14 Sep 2023 13:22:59 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.10.1
+        with ESMTP id S230141AbjINK3Y (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Sep 2023 06:29:24 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A8B61BEB;
+        Thu, 14 Sep 2023 03:29:20 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE54CC433C8;
+        Thu, 14 Sep 2023 10:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694687359;
+        bh=z91D5qbFuL12k1cxFR5HlqLWojF/usGUx8PcTX1Nwlw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=j8cDSiR1AwCFFS/EoQVT3m/7krDtv+Wf5SnH/mUqHhuoVJ5VooX1/KX/4h5Cer3TH
+         yg7DceQc8oqCCX0JC2r5b5QpYHkxjbD51z3y5RvFKfHajqV6ZD1f7GLy7MCpsiyPjz
+         8/jD4w9pEiOA5Na3xuqUyEuc9WAfGR4a4IZualYjaMaYQFcSPClCmnPeqARlwnfoX3
+         lQUPm0+YsTdN6Rl0GrWZP6pN0QpaoRvVRUb+v4fZ0wLcoSzni86X8/BBXKGdyUhvhC
+         HipeFzo787vehWUKgsUogBX6fBMueIf3Os/oatRYVaYjN7OPIBNJRjD1DmTDI5NpV0
+         Sb//XX3Ea5ZLA==
+Message-ID: <fa8ac10aa7c12f344109be815c6e3da480a33137.camel@kernel.org>
+Subject: Re: [PATCHv2 nfsd/master 7/7] dlm: implement EXPORT_OP_ASYNC_LOCK
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Alexander Aring <aahringo@redhat.com>, linux-nfs@vger.kernel.org
+Cc:     gfs2@lists.linux.dev, ocfs2-devel@lists.linux.dev,
+        linux-fsdevel@vger.kernel.org, teigland@redhat.com,
+        rpeterso@redhat.com, agruenba@redhat.com,
+        trond.myklebust@hammerspace.com, anna@kernel.org,
+        chuck.lever@oracle.com
+Date:   Thu, 14 Sep 2023 06:29:17 -0400
+In-Reply-To: <20230912215324.3310111-8-aahringo@redhat.com>
+References: <20230912215324.3310111-1-aahringo@redhat.com>
+         <20230912215324.3310111-8-aahringo@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-In-Reply-To: <20230913111013.77623-11-hch@lst.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [178.176.78.252]
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 5.9.59, Database issued on: 09/14/2023 10:01:12
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 59
-X-KSE-AntiSpam-Info: Lua profiles 179856 [Sep 14 2023]
-X-KSE-AntiSpam-Info: Version: 5.9.59.0
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 530 530 ecb1547b3f72d1df4c71c0b60e67ba6b4aea5432
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {relay has no DNS name}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.78.252 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 178.176.78.252 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info: d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;127.0.0.199:7.1.2;omp.ru:7.1.1
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: {rdns complete}
-X-KSE-AntiSpam-Info: {fromrtbl complete}
-X-KSE-AntiSpam-Info: ApMailHostAddress: 178.176.78.252
-X-KSE-AntiSpam-Info: Rate: 59
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=none header.from=omp.ru;spf=none
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 09/14/2023 10:07:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 9/14/2023 9:01:00 AM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 9/13/23 2:10 PM, Christoph Hellwig wrote:
+On Tue, 2023-09-12 at 17:53 -0400, Alexander Aring wrote:
+> This patch is activating the EXPORT_OP_ASYNC_LOCK export flag to
+> signal lockd that both filesystems are able to handle async lock
+> requests. The cluster filesystems gfs2 and ocfs2 will redirect their
+> lock requests to DLMs plock implementation that can handle async lock
+> requests.
+>=20
+> Signed-off-by: Alexander Aring <aahringo@redhat.com>
+> ---
+>  fs/gfs2/export.c  | 1 +
+>  fs/ocfs2/export.c | 1 +
+>  2 files changed, 2 insertions(+)
+>=20
+> diff --git a/fs/gfs2/export.c b/fs/gfs2/export.c
+> index cf40895233f5..ef1013eff936 100644
+> --- a/fs/gfs2/export.c
+> +++ b/fs/gfs2/export.c
+> @@ -192,5 +192,6 @@ const struct export_operations gfs2_export_ops =3D {
+>  	.fh_to_parent =3D gfs2_fh_to_parent,
+>  	.get_name =3D gfs2_get_name,
+>  	.get_parent =3D gfs2_get_parent,
+> +	.flags =3D EXPORT_OP_ASYNC_LOCK,
+>  };
+> =20
+> diff --git a/fs/ocfs2/export.c b/fs/ocfs2/export.c
+> index eaa8c80ace3c..b8b6a191b5cb 100644
+> --- a/fs/ocfs2/export.c
+> +++ b/fs/ocfs2/export.c
+> @@ -280,4 +280,5 @@ const struct export_operations ocfs2_export_ops =3D {
+>  	.fh_to_dentry	=3D ocfs2_fh_to_dentry,
+>  	.fh_to_parent	=3D ocfs2_fh_to_parent,
+>  	.get_parent	=3D ocfs2_get_parent,
+> +	.flags		=3D EXPORT_OP_ASYNC_LOCK,
+>  };
 
-> Creating new a new super_block vs freeing the old one for single instance
-           ^^^^^^^^^
-   I can't parse that. :-)
-
-> file systems is serialized by the wait for SB_DEAD.
-> 
-> Remove the superfluous sb_mutex.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-[...]
-
-MBR, Sergey
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
