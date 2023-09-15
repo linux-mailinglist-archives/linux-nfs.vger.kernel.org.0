@@ -2,85 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B178A7A0E2D
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Sep 2023 21:23:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41DF77A1353
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Sep 2023 03:55:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241568AbjINTX5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Sep 2023 15:23:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45546 "EHLO
+        id S231907AbjIOBzJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Sep 2023 21:55:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241221AbjINTX5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Sep 2023 15:23:57 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17E2026B3;
-        Thu, 14 Sep 2023 12:23:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=4hr36i5Cv0yOjN7Qm9aK+O+t73F0SaG9UQf71oo3coc=; b=TUQ6R0vfZi/dderGJyPUNMNW1S
-        bGBX6G1t2V5wN0IJDFy3lSyvNLxteUnMS7i8LrmlKHnBX7D/46D3VL1LLp3PmhIcrV8xp75QBNrph
-        uhKRrW8158NAtE6Nld12BbWmWTk6GDXfhxGjKJ9K5AQbTyVr5vCqN6iZU3CFmXLSa9W49CQKDf8JC
-        uvti6ZvkSk3v9U6tCGhbhjUC3u1Cko0dd2WrfufnlEMkfYxRNpLRW3s38xAwwJL3hK3fj7qLAGb4y
-        tqzNWInzV2Fz4nBN2aLW1MikDwXWL39jXoxSvpcwL0QBKsfKL2xUZIlLl6IopWufWXsm7kdFdP6cK
-        o/GMz/RA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qgrw3-0066QM-1t;
-        Thu, 14 Sep 2023 19:23:31 +0000
-Date:   Thu, 14 Sep 2023 20:23:31 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20230914192331.GK800259@ZenIV>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
- <20230913232712.GC800259@ZenIV>
- <20230914023705.GH800259@ZenIV>
- <20230914053843.GI800259@ZenIV>
- <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
- <20230914165805.GJ800259@ZenIV>
+        with ESMTP id S231726AbjIOBy7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Sep 2023 21:54:59 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D11394C3D;
+        Thu, 14 Sep 2023 18:52:08 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 5BF461F74B;
+        Fri, 15 Sep 2023 01:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1694742721; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VfSlGTI78LzrwujVTg1Dy+42n81WkfT7MFhFZD+AQD0=;
+        b=pS2xFeLYt//6VYt6FylnPEa5GnGp1mDfir1JQJy9HTTsu+Zehw0BbdF5fqzQuxMc6a2Ci7
+        R16/zb0GZk1KcxwdG1S4i/+TsUvTIr5+9X7t01i+kioI+zS+Hoviu2G8mysjzDBtmjyeWl
+        ni12+CG7FnOk47TF237ETI59azcTFwE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1694742721;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VfSlGTI78LzrwujVTg1Dy+42n81WkfT7MFhFZD+AQD0=;
+        b=3cMNy0f/HuRqRw45J11T2+bi0J60kVuWqEMJL8CUF4/BuK2H8xg3//FtfywIaLOozZfqik
+        pSQqPGnlRVxBSnCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 42B601358A;
+        Fri, 15 Sep 2023 01:51:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id t12gOb24A2XkEQAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 15 Sep 2023 01:51:57 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230914165805.GJ800259@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Chuck Lever" <cel@kernel.org>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Liam Howlett" <liam.howlett@oracle.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "David Gow" <davidgow@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Andrew Morton" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v1 11/17] lib: add light-weight queuing mechanism.
+In-reply-to: <DB109932-C918-4F1E-BAF2-92D921238D54@oracle.com>
+References: <169444233785.4327.4365499966926096681.stgit@bazille.1015granger.net>,
+ <169444318342.4327.18355944158180782708.stgit@bazille.1015granger.net>,
+ <20230911111333.4d1a872330e924a00acb905b@linux-foundation.org>,
+ <4D5C2693-40E9-467D-9F2F-59D92CBE9D3B@oracle.com>,
+ <20230911140439.b273bf9e120881f038da0de7@linux-foundation.org>,
+ <169447439989.19905.9386812394578844629@noble.neil.brown.name>,
+ <20230911183025.5f808a70a62df79a3a1e349e@linux-foundation.org>,
+ <DB109932-C918-4F1E-BAF2-92D921238D54@oracle.com>
+Date:   Fri, 15 Sep 2023 11:51:54 +1000
+Message-id: <169474271454.8274.2673279792882072455@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 14, 2023 at 05:58:05PM +0100, Al Viro wrote:
+On Fri, 15 Sep 2023, Chuck Lever III wrote:
+>=20
+> > On Sep 11, 2023, at 9:30 PM, Andrew Morton <akpm@linux-foundation.org> wr=
+ote:
+> >=20
+> > On Tue, 12 Sep 2023 09:19:59 +1000 "NeilBrown" <neilb@suse.de> wrote:
+> >=20
+> >> Plain old list_heads (which the code currently uses) require a spinlock
+> >> to be taken to insert something into the queue.  As this is usually in
+> >> bh context, it needs to be a spin_lock_bh().  My understanding is that
+> >> the real-time developers don't much like us disabling bh.  It isn't an
+> >> enormous win switching from a list_head list to a llist_node list, but
+> >> there are small gains such as object size reduction and less locking.  I
+> >> particularly wanted an easy-to-use library facility that could be
+> >> plugged in to two different uses cases in the sunrpc code and there
+> >> didn't seem to be one.  I could have written one using list_head, but
+> >> llist seemed a better fix.  I think the code in sunrpc that uses this
+> >> lwq looks a lot neater after the conversion.
+> >=20
+> > Thanks.  Could we please get words such as these into the changelog,
+> > describing why it was felt necessary to add more library code?
+> >=20
+> > And also into the .c file, to help people who are looking at it and
+> > wondering "can I use this".  And to help reviewers who are wondering
+> > "could they have used Neil's thing".
+>=20
+> Neil, are you planning to send along a replacement for 11/17,
+> or would you like me to fold the above into the patch description
+> I have now?
 
-> Incidentally, I'm going to add a (belated by 10 years) chunk in porting.rst
-> re making sure that anything in superblock that might be needed by methods
-> called in RCU mode should *not* be freed without an RCU delay...  Should've
-> done that back in 3.12 merge window when RCU'd vfsmounts went in; as it
-> is, today we have several filesystems with exact same kind of breakage.
-> hfsplus and affs breakage had been there in 3.13 (missed those two), exfat
-> and ntfs3 - introduced later, by initial merges of filesystems in question.
-> Missed on review...
-> 
-> Hell knows - perhaps Documentation/filesystems/whack-a-mole might be a good
-> idea...
+Sorry I didn't reply sooner - been busy.
+I'll send a patch that can be squashed in to 11/17 which adds some more
+explanatory text.  Hopefully soonish.
 
-Actually, utf8 casefolding stuff also has the same problem, so ext4 and f2fs
-with casefolding are also affected ;-/
+NeilBrown
