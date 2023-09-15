@@ -2,134 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 535637A26B5
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Sep 2023 20:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 31DFD7A271E
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Sep 2023 21:22:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234857AbjIOS6l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 15 Sep 2023 14:58:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36378 "EHLO
+        id S236527AbjIOTVi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 15 Sep 2023 15:21:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237092AbjIOS6c (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Sep 2023 14:58:32 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9A75B30E5
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Sep 2023 11:57:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1694804226;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=y5Z6CVKH3lMmihuARi7BENc6i+HbhVs9+7j72TaugC4=;
-        b=d9obGmMZ1jP57kBfKh8sAb8WRoVApv9Gff3xlhuyssAHsJoiJcK4RLKkst7xEWXgrd35Z/
-        0BIT9XpJwuKLC4AJyvUdZ1aGZnfPwCXlsKNWq0wEI+ejUsphFNE8bJagVSqNz4OUZwt0JZ
-        sYcgnTqoysgvWNjsNEsHq+BbfejmGHE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-41-gucIQATfPrKkMv-A3x-f2w-1; Fri, 15 Sep 2023 14:57:05 -0400
-X-MC-Unique: gucIQATfPrKkMv-A3x-f2w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0FF8785829B
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Sep 2023 18:57:05 +0000 (UTC)
-Received: from dwysocha.rdu.csb (unknown [10.22.32.158])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DEDB240C2009;
-        Fri, 15 Sep 2023 18:57:04 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com, linux-nfs@vger.kernel.org
-Subject: [PATCH v2] netfs: Only call folio_start_fscache() one time for each folio
-Date:   Fri, 15 Sep 2023 14:57:04 -0400
-Message-Id: <20230915185704.1082982-1-dwysocha@redhat.com>
+        with ESMTP id S237067AbjIOTVZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Sep 2023 15:21:25 -0400
+Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 746A31FE0
+        for <linux-nfs@vger.kernel.org>; Fri, 15 Sep 2023 12:21:19 -0700 (PDT)
+Received: by mail-io1-xd29.google.com with SMTP id ca18e2360f4ac-760dff4b701so37511539f.0
+        for <linux-nfs@vger.kernel.org>; Fri, 15 Sep 2023 12:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1694805679; x=1695410479; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cjElj1Y7dyx25+YVDMvYRWaZ4jnIteZwPRcb1817cvU=;
+        b=ISgWbL1IEpe/FQf5ZkKADsaX3fhzIrgn82H5EiM2w5qcGQvl7yHKdz0+TOIq+5lI03
+         YLwUBOsJam7yscvaK2bNFjl3LJAJGPgc/W1Sw12d5X+DYCxkZZHPnbLhwirRmy1szfLJ
+         GS+gurNsIQEZQu/AHeH9XDH1GAnyiIDYgTiv30deZA9+fzuDJibd0aCXT1g5EWE32+mR
+         tI82YekdKFhoBanhfx7OThiSHvuwet+63HcV5RDnndlepMX8KM8xxHjPEXoXNf/M0NLZ
+         /SgAcbi3fgnd2YOOrorSJnTCrJfTT/V7CaxPR40q32HDrM1o/I/qIegMmWKPv2oSR46O
+         zsoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694805679; x=1695410479;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cjElj1Y7dyx25+YVDMvYRWaZ4jnIteZwPRcb1817cvU=;
+        b=dWfOwV+GPLIBs02yHiWgcwCmsEWUltrerjJ+grbYmDqcXj+3eJjtYOvEkOz4T5UfDs
+         7uoPAp10d5vTR/7wS5sOSB+MDLaegQPS0u4pmeGYoMmOVwx8uPb+xPwFkLhOHakJ/Wrr
+         mSY9l/KP/vLiJsOaHISAntxtrDkJzheNZS/LWf5Jpn448sReuE3GIT55xxBDQNYlDagJ
+         OVseNnF2JtfbmJVw3AAELIt4QzeooJoHnB+tyOWZYjWVDkYszXK07DPtAHufEIfm0xnG
+         ElAFk63Db1o9A/MIOfud6LKckM3yPhKMvDjFQrJtYru4uch4m+WTNiqjXAq9syoK+jsv
+         nEPQ==
+X-Gm-Message-State: AOJu0YzQ92O9V+rWBVaOijxpEZsK0RDLCtXTKvaOrTPPTZcmx6Ej57od
+        +py6vFAPx2VYiwFGmF5ICnM=
+X-Google-Smtp-Source: AGHT+IHXzhiazCEV28AS2MNefEkTO4xZW9NGOBkRddL8KjdsoCuEgv8GTfbgQhgfLbTCAf4VWAVs/g==
+X-Received: by 2002:a05:6602:2d86:b0:794:da1e:b249 with SMTP id k6-20020a0566022d8600b00794da1eb249mr3762574iow.1.1694805678794;
+        Fri, 15 Sep 2023 12:21:18 -0700 (PDT)
+Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:a8ce:bd30:447c:d564])
+        by smtp.gmail.com with ESMTPSA id s11-20020a02cf2b000000b0043978165d54sm1250967jar.104.2023.09.15.12.21.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Sep 2023 12:21:18 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] NFSv4.1: fix handling NFS4ERR_DELAY when testing for session trunking
+Date:   Fri, 15 Sep 2023 15:21:16 -0400
+Message-Id: <20230915192116.14484-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If a network filesystem using netfs implements a clamp_length()
-function, it can set subrequest lengths smaller than a page size.
-When we loop through the folios in netfs_rreq_unlock_folios() to
-set any folios to be written back, we need to make sure we only
-call folio_start_fscache() once for each folio.  Otherwise,
-this simple testcase:
-  mount -o fsc,rsize=1024,wsize=1024 127.0.0.1:/export /mnt/nfs
-  dd if=/dev/zero of=/mnt/nfs/file.bin bs=4096 count=1
-  1+0 records in
-  1+0 records out
-  4096 bytes (4.1 kB, 4.0 KiB) copied, 0.0126359 s, 324 kB/s
-  echo 3 > /proc/sys/vm/drop_caches
-  cat /mnt/nfs/file.bin > /dev/null
+From: Olga Kornievskaia <kolga@netapp.com>
 
-will trigger an oops similar to the following:
-...
- page dumped because: VM_BUG_ON_FOLIO(folio_test_private_2(folio))
- ------------[ cut here ]------------
- kernel BUG at include/linux/netfs.h:44!
-...
- CPU: 5 PID: 134 Comm: kworker/u16:5 Kdump: loaded Not tainted 6.4.0-rc5
-...
- RIP: 0010:netfs_rreq_unlock_folios+0x68e/0x730 [netfs]
-...
- Call Trace:
-  <TASK>
-  netfs_rreq_assess+0x497/0x660 [netfs]
-  netfs_subreq_terminated+0x32b/0x610 [netfs]
-  nfs_netfs_read_completion+0x14e/0x1a0 [nfs]
-  nfs_read_completion+0x2f9/0x330 [nfs]
-  rpc_free_task+0x72/0xa0 [sunrpc]
-  rpc_async_release+0x46/0x70 [sunrpc]
-  process_one_work+0x3bd/0x710
-  worker_thread+0x89/0x610
-  kthread+0x181/0x1c0
-  ret_from_fork+0x29/0x50
+Currently when client sends an EXCHANGE_ID for a possible trunked
+connection, for any error that happened, the trunk will be thrown
+out. However, an NFS4ERR_DELAY is a transient error that should be
+retried instead.
 
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=2210612
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Fixes: e818bd085baf ("NFSv4.1 remove xprt from xprt_switch if session trunking test fails")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- fs/netfs/buffered_read.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
-index 3404707ddbe7..2cd3ccf4c439 100644
---- a/fs/netfs/buffered_read.c
-+++ b/fs/netfs/buffered_read.c
-@@ -47,12 +47,14 @@ void netfs_rreq_unlock_folios(struct netfs_io_request *rreq)
- 	xas_for_each(&xas, folio, last_page) {
- 		loff_t pg_end;
- 		bool pg_failed = false;
-+		bool folio_started;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 890ae26006ee..1dafead441c6 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -8936,6 +8936,7 @@ void nfs4_test_session_trunk(struct rpc_clnt *clnt, struct rpc_xprt *xprt,
  
- 		if (xas_retry(&xas, folio))
- 			continue;
+ 	sp4_how = (adata->clp->cl_sp4_flags == 0 ? SP4_NONE : SP4_MACH_CRED);
  
- 		pg_end = folio_pos(folio) + folio_size(folio) - 1;
++try_again:
+ 	/* Test connection for session trunking. Async exchange_id call */
+ 	task = nfs4_run_exchange_id(adata->clp, adata->cred, sp4_how, xprt);
+ 	if (IS_ERR(task))
+@@ -8948,11 +8949,15 @@ void nfs4_test_session_trunk(struct rpc_clnt *clnt, struct rpc_xprt *xprt,
  
-+		folio_started = false;
- 		for (;;) {
- 			loff_t sreq_end;
+ 	if (status == 0)
+ 		rpc_clnt_xprt_switch_add_xprt(clnt, xprt);
+-	else if (rpc_clnt_xprt_switch_has_addr(clnt,
++	else if (status != -NFS4ERR_DELAY && rpc_clnt_xprt_switch_has_addr(clnt,
+ 				(struct sockaddr *)&xprt->addr))
+ 		rpc_clnt_xprt_switch_remove_xprt(clnt, xprt);
  
-@@ -60,8 +62,10 @@ void netfs_rreq_unlock_folios(struct netfs_io_request *rreq)
- 				pg_failed = true;
- 				break;
- 			}
--			if (test_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags))
-+			if (!folio_started && test_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags)) {
- 				folio_start_fscache(folio);
-+				folio_started = true;
-+			}
- 			pg_failed |= subreq_failed;
- 			sreq_end = subreq->start + subreq->len - 1;
- 			if (pg_end < sreq_end)
+ 	rpc_put_task(task);
++	if (status == -NFS4ERR_DELAY) {
++		ssleep(1);
++		goto try_again;
++	}
+ }
+ EXPORT_SYMBOL_GPL(nfs4_test_session_trunk);
+ 
 -- 
-2.39.3
+2.39.1
 
