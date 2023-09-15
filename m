@@ -2,143 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9ECEC7A13CC
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Sep 2023 04:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01D597A179D
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Sep 2023 09:41:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231438AbjIOCYO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Sep 2023 22:24:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60004 "EHLO
+        id S232678AbjIOHlT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 15 Sep 2023 03:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230512AbjIOCYO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Sep 2023 22:24:14 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5131C2130;
-        Thu, 14 Sep 2023 19:24:10 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 889D82183F;
-        Fri, 15 Sep 2023 02:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1694744643; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lRhO5Usk0tWo8ZTx91/qTeniCJK8iZhQwKtez0oWKNI=;
-        b=IEvMveqRwkUSLtnNpuEc/3mI3EuLIDvJkQkS6zRouGGAPbmuTakqQTLTeAGdRIVQ+BCjln
-        RaSxF4GJE47uB6ZBgOnNlTrKfKRywkCawzjEvATxUSUFHDyGQeR9vvPB320LVSXQfiHyhV
-        1KkljTisSXHWaBAfNnhmkTxLGCalNVs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1694744643;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lRhO5Usk0tWo8ZTx91/qTeniCJK8iZhQwKtez0oWKNI=;
-        b=hENIJPQHFR8kj/UMR6GFExr5ladvIWq3xMzpEmaHQAAyO5zfAjp0Dizjh/mLDXGRcPz99M
-        6khArsxN8tpdKcBw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BB9EB1358A;
-        Fri, 15 Sep 2023 02:24:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id eHqfG0DAA2W5HgAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 15 Sep 2023 02:24:00 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S232698AbjIOHlP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Sep 2023 03:41:15 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4664CA1;
+        Fri, 15 Sep 2023 00:41:10 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB267C433C9;
+        Fri, 15 Sep 2023 07:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1694763669;
+        bh=dVfu4w2NiWvgQSrc/fseHwlP/NzWq4M7GMOTKHDsJZQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KXYk3ApLn9hfsQ83Z/yA6JxgIS4oIbIBX57XuMRQSgST503VKG5H48dhCgKwIcbyR
+         OK9J7rZgn6k47BvOuP6sTlgz2Ev5NIXDDt2xIT3tdRt9Sf/+A3ItmVyFs4Y3n5KRWc
+         RB1nL5Hr9+90KR12bQJaTW2uw+9tjzNcHO+akP2BPrvzI/FAReCs9pbsxATiEHEnYu
+         StTeTqQ7By5inCTKASjqvskqPfUL4X4ab1Ru90yUuajA5gmiERdJiMXi/MHler+Zts
+         x9GS0+nYSSjg0n7UbZNR+ipQT4+5rOnSP8BaeZLWKwj4bpm7PylJg0p7v18IHTEtPP
+         y4y7LwClq8iew==
+Date:   Fri, 15 Sep 2023 09:40:57 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@lst.de>, Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        cgroups@vger.kernel.org, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
+Message-ID: <20230915-nieren-bebauen-f5e2e23ac914@brauner>
+References: <20230913111013.77623-1-hch@lst.de>
+ <20230913111013.77623-4-hch@lst.de>
+ <20230913232712.GC800259@ZenIV>
+ <20230914023705.GH800259@ZenIV>
+ <20230914053843.GI800259@ZenIV>
+ <20230914-munkeln-pelzmantel-3e3a761acb72@brauner>
+ <20230914165805.GJ800259@ZenIV>
+ <20230914192331.GK800259@ZenIV>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Andrew Morton" <akpm@linux-foundation.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        "Liam Howlett" <liam.howlett@oracle.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "David Gow" <davidgow@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH 11/17 SQUASH and replace commit message] lib: add light-weight
- queuing mechanism.
-In-reply-to: <20230911183025.5f808a70a62df79a3a1e349e@linux-foundation.org>
-References: <169444233785.4327.4365499966926096681.stgit@bazille.1015granger.net>,
- <169444318342.4327.18355944158180782708.stgit@bazille.1015granger.net>,
- <20230911111333.4d1a872330e924a00acb905b@linux-foundation.org>,
- <4D5C2693-40E9-467D-9F2F-59D92CBE9D3B@oracle.com>,
- <20230911140439.b273bf9e120881f038da0de7@linux-foundation.org>,
- <169447439989.19905.9386812394578844629@noble.neil.brown.name>,
- <20230911183025.5f808a70a62df79a3a1e349e@linux-foundation.org>
-Date:   Fri, 15 Sep 2023 12:22:36 +1000
-Message-id: <169474455669.8274.9157028681960361538@noble.neil.brown.name>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230914192331.GK800259@ZenIV>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, Sep 14, 2023 at 08:23:31PM +0100, Al Viro wrote:
+> On Thu, Sep 14, 2023 at 05:58:05PM +0100, Al Viro wrote:
+> 
+> > Incidentally, I'm going to add a (belated by 10 years) chunk in porting.rst
+> > re making sure that anything in superblock that might be needed by methods
+> > called in RCU mode should *not* be freed without an RCU delay...  Should've
+> > done that back in 3.12 merge window when RCU'd vfsmounts went in; as it
+> > is, today we have several filesystems with exact same kind of breakage.
+> > hfsplus and affs breakage had been there in 3.13 (missed those two), exfat
+> > and ntfs3 - introduced later, by initial merges of filesystems in question.
+> > Missed on review...
+> > 
+> > Hell knows - perhaps Documentation/filesystems/whack-a-mole might be a good
+> > idea...
 
-lwq is a FIFO single-linked queue that only requires a spinlock
-for dequeueing, which happens in process context.  Enqueueing is atomic
-with no spinlock and can happen in any context.
+pitfalls.rst or common-bugs.rst
 
-This is particularly useful when work items are queued from BH or IRQ
-context, and when they are handled one at a time by dedicated threads.
+or something like that.
 
-Avoiding any locking when enqueueing means there is no need to disable
-BH or interrupts, which is generally best avoided (particularly when
-there are any RT tasks on the machine).
+> 
+> Actually, utf8 casefolding stuff also has the same problem, so ext4 and f2fs
+> with casefolding are also affected ;-/
 
-This solution is superior to using "list_head" links because we need
-half as many pointers in the data structures, and because list_head
-lists would need locking to add items to the queue.
-
-This solution is superior to a bespoke solution as all locking and
-container_of casting is integrated, so the interface is simple.
-
-Despite the similar name, this solution meets a distinctly different
-need to kfifo.  kfifo provides a fixed sized circular buffer to which
-data can be added at one end and removed at the other, and does not
-provide any locking.  lwq does not have any size limit and works with
-data structures (objects?) rather than data (bytes).
-
-A unit test for basic functionality, which runs at boot time, is included.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- include/linux/lwq.h | 4 ++++
- lib/lwq.c           | 4 ++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/include/linux/lwq.h b/include/linux/lwq.h
-index 52b9c81b493a..c4148fe1cf72 100644
---- a/include/linux/lwq.h
-+++ b/include/linux/lwq.h
-@@ -7,6 +7,10 @@
-  *
-  * Entries can be enqueued from any context with no locking.
-  * Entries can be dequeued from process context with integrated locking.
-+ *
-+ * This is particularly suitable when work items are queued in
-+ * BH or IRQ context, and where work items are handled one at a time
-+ * by dedicated threads.
-  */
- #include <linux/container_of.h>
- #include <linux/spinlock.h>
-diff --git a/lib/lwq.c b/lib/lwq.c
-index 7fe6c7125357..eb8324225309 100644
---- a/lib/lwq.c
-+++ b/lib/lwq.c
-@@ -8,6 +8,10 @@
-  * Entries are dequeued using a spinlock to protect against
-  * multiple access.  The llist is staged in reverse order, and refreshed
-  * from the llist when it exhausts.
-+ * 
-+ * This is particularly suitable when work items are queued in
-+ * BH or IRQ context, and where work items are handled one at a time
-+ * by dedicated threads.
-  */
- #include <linux/rcupdate.h>
- #include <linux/lwq.h>
--- 
-2.42.0
 
