@@ -2,122 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 197827A2962
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Sep 2023 23:31:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F2E37A2C84
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Sep 2023 02:35:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232692AbjIOVar (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 15 Sep 2023 17:30:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39148 "EHLO
+        id S238878AbjIPAe5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 15 Sep 2023 20:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237730AbjIOVa1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Sep 2023 17:30:27 -0400
+        with ESMTP id S239087AbjIPAeX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Sep 2023 20:34:23 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D907CD3
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Sep 2023 14:30:22 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADBBC433C7;
-        Fri, 15 Sep 2023 21:30:21 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6784BCC1;
+        Fri, 15 Sep 2023 17:33:07 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 06437C43140;
+        Sat, 16 Sep 2023 00:33:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1694813422;
-        bh=IE5p4JSNZrnyQ5NkdKwOkBCLR+K9s6w7E8lMOvmGkbs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F1NeY9/8VUQSHYDjJBNn8tCXWgerij/LLyG3APed862kRhI4C1xLMJlh+UTkqaBvR
-         0SRSr94DRfSHke09mcE1ttBDzbNPkzSUfCAJe5/jTOmOxufcshb9yb/MUViDU5ETxH
-         db0NzEoNEH+iiirOXn4jo1A5IEJo32yG8vR4te9pyA3Zdb05HqpZOWqjkwgEBDN5wj
-         LwI5uAuPqHUrL4sLxBCnj9rYhEOwR5vUf//bYOrqYsVhe0xow3oJG22m93M3O9C8zw
-         zcaNep4e6VQYUXj791AFheQP4F/sHR8ojwkoXCC9b+fpV2k16eY3W3LBsEEjGzieCh
-         FCVcjyLDCgR1Q==
-Date:   Fri, 15 Sep 2023 23:30:18 +0200
-From:   Lorenzo Bianconi <lorenzo@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com,
-        jlayton@kernel.org, neilb@suse.de, netdev@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] add rpc_status netlink support for NFSD
-Message-ID: <ZQTM6l7NrsVHFoR5@lore-desk>
-References: <cover.1694436263.git.lorenzo@kernel.org>
- <ZQSvV/eZOohnQulw@tissot.1015granger.net>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="j3NQQk77BtSnZXGh"
-Content-Disposition: inline
-In-Reply-To: <ZQSvV/eZOohnQulw@tissot.1015granger.net>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        s=k20201202; t=1694824387;
+        bh=asBrAn7ys2esSGzWq/PdthRC+OIxuEjab4MLqUB7vzY=;
+        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+        b=tztiH3OCITBj+TRV0wPzMV/NrDiz/glsjaXcnzD2TQGmWWzmTu84Ce2u57lTBQQg1
+         JiBcs4ySDX1a55FNRtLvVY4UO6Zytu1tTWmWqDqu5leUfs0W0EjpC2j3JCGz3/HUZr
+         2j8CuBU/ZfNOt9XpTllCbDB9yLE1qeKBcip82ilVS+ZHuehGeHIuX6IUapuXLuczSg
+         r9G3u4PL+ju9P33iDZr5E2crG8qDpWnpNVGgAw/mY7jBU0x27O/PkDpNw2T545Xhnq
+         9qjz1xcklmfHxQYEY0YL/Ql454Y8xe/gF3kJmJqrQG0wsVMAJcM5Rd550VDMPU6bPk
+         kmtJXYuo6EHGQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id DDE98E26880;
+        Sat, 16 Sep 2023 00:33:06 +0000 (UTC)
+Subject: Re: [GIT PULL] first round of v6.6 fixes for nfsd
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <63D87D8F-8513-4B12-BA9B-752BD5C7D4FD@oracle.com>
+References: <63D87D8F-8513-4B12-BA9B-752BD5C7D4FD@oracle.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <63D87D8F-8513-4B12-BA9B-752BD5C7D4FD@oracle.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.6-1
+X-PR-Tracked-Commit-Id: 88956eabfdea7d01d550535af120d4ef265b1d02
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: d8d7cd656361529c334e3b90535e81d818fc1157
+Message-Id: <169482438690.16821.88949473678256144.pr-tracker-bot@kernel.org>
+Date:   Sat, 16 Sep 2023 00:33:06 +0000
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+The pull request you sent on Fri, 15 Sep 2023 16:05:16 +0000:
 
---j3NQQk77BtSnZXGh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.6-1
 
-[...]
-> >  Documentation/netlink/specs/nfsd_server.yaml |  97 +++++++++
-> >  fs/nfsd/Makefile                             |   3 +-
-> >  fs/nfsd/nfs_netlink_gen.c                    |  32 +++
-> >  fs/nfsd/nfs_netlink_gen.h                    |  22 ++
-> >  fs/nfsd/nfsctl.c                             | 204 +++++++++++++++++++
-> >  fs/nfsd/nfsd.h                               |  16 ++
-> >  fs/nfsd/nfssvc.c                             |  15 ++
-> >  fs/nfsd/state.h                              |   2 -
-> >  include/linux/sunrpc/svc.h                   |   1 +
-> >  include/uapi/linux/nfsd_server.h             |  49 +++++
-> >  10 files changed, 438 insertions(+), 3 deletions(-)
-> >  create mode 100644 Documentation/netlink/specs/nfsd_server.yaml
-> >  create mode 100644 fs/nfsd/nfs_netlink_gen.c
-> >  create mode 100644 fs/nfsd/nfs_netlink_gen.h
-> >  create mode 100644 include/uapi/linux/nfsd_server.h
->=20
-> Hi Lorenzo -
->=20
-> I've applied these three to nfsd-next with the following changes:
->=20
-> - Renaming as we discussed
-> - Replaced the nested compound_op attribute -- may require some user
->   space tooling changes
-> - Simon's Smatch bug fixed
-> - Squashed 1/3 and 2/3 into one patch
-> - Added Closes/Acked-by etc
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/d8d7cd656361529c334e3b90535e81d818fc1157
 
-Hi Chuck,
+Thank you!
 
-Thanks for addressing the points above.
-
->=20
-> If you spot a bug, send patches against nfsd-next and I can squash
-> them in.
-
-ack, I will do
-
->=20
-> I was wondering if you have a little more time to try adding one or
-> two control cmds. write_threads and v4_end_grace might be simple
-> ones to start with. No problem if you are "done" with this project,
-> I can add these over time.
-
-sure, no worries. I will look into them soon :)
-
-Regards,
-Lorenzo
-
->=20
-> --=20
-> Chuck Lever
-
---j3NQQk77BtSnZXGh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZQTM6gAKCRA6cBh0uS2t
-rOHrAQCVFojQGWe8/TmloGIv2WM6LrjFK5Ah0jd13B7EX4mYkgEA66jlWMccoFRN
-O1vvSPGzoln8cUd0NrEQ5f0l5xZe2g0=
-=kiJ0
------END PGP SIGNATURE-----
-
---j3NQQk77BtSnZXGh--
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
