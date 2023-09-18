@@ -2,36 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BEA9E7A4BD4
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Sep 2023 17:22:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 232D77A4BA7
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Sep 2023 17:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237639AbjIRPWn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Sep 2023 11:22:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45084 "EHLO
+        id S230307AbjIRPUR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 18 Sep 2023 11:20:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233840AbjIRPWl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Sep 2023 11:22:41 -0400
+        with ESMTP id S230227AbjIRPUQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Sep 2023 11:20:16 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBEB110E9
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Sep 2023 08:18:40 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA21DC116AC;
-        Mon, 18 Sep 2023 13:59:21 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F7910DC
+        for <linux-nfs@vger.kernel.org>; Mon, 18 Sep 2023 08:18:39 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BBC3C116AE;
+        Mon, 18 Sep 2023 13:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695045562;
-        bh=M/h82MFHWyr2mUvrs0vB5POUEek15Jg9Mw+pNHvf7mE=;
+        s=k20201202; t=1695045568;
+        bh=Yegaz6cGZwJJsAj6SZEdsba96jxIHs4Vb/e5LSdFc2w=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=fzST+M1STn6w7fw3TImFNXFwAXm9IiZGW0Cd6BFR+9bFrog31OgxHcWATzgY+Wq8S
-         lQR7cqc4H9pkhlUpItgQSwlMXD8gVk8VzFH+wBg+2a/+4+HW1Zg7XXLzDO4JijxnfC
-         g1UKAgJzj58BPHVDwLvpgs1lFwZz+5cOZyJbUtKN6i+7JG3zcOwFc8pW/cRbrHRd2e
-         0F1HAqNWm9JM3zEbFO6hYIza9hpSDAmxNqNyvOGQqcF3R6pVv9GGQfAVJ09h4UJMAF
-         Tj/KrwuXniF9vDqO4qdufnDDNoRmO+EH5gI+tE2Q25otBVdCQLDUpgn9SrKfSzEb++
-         ydyAsyrE6aw+w==
-Subject: [PATCH v1 24/52] NFSD: Add nfsd4_encode_fattr4_maxfilesize()
+        b=LJrxFs/OLvszUeCrNZDBg33LCNZFxzysf7E99ijpNYVjYDiM3WAcf9M3IKIwmIvQ7
+         6t6I2qEEiS+qR9xL+54KClJJFFxhgq1NXTNXXUuUALV0Yc8kg05j4Efa6HrTu4F6Ku
+         nGEQqv3sazGx7XwZFVUzQA6lh/M5TXxdKXIrwVfweNT5FXQ36cz5b5bamo7L+SHeKZ
+         g7e4Kb/OMWriNG6uVxN4YL3nUsfXAnOZkHox8ng4bBO9UhfS08a0Dj5T216IVQIRYM
+         afWii2ofHpexhaL83w/t45l3cSykjYaFoI4Ld513tA7ymnLGRwscvSMO3DVdsoNml2
+         hIvTpydb0uxbA==
+Subject: [PATCH v1 25/52] NFSD: Add nfsd4_encode_fattr4_maxlink()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 18 Sep 2023 09:59:20 -0400
-Message-ID: <169504556094.133720.15381129751899751169.stgit@manet.1015granger.net>
+Date:   Mon, 18 Sep 2023 09:59:27 -0400
+Message-ID: <169504556726.133720.8757481551055565977.stgit@manet.1015granger.net>
 In-Reply-To: <169504501081.133720.4162400017732492854.stgit@manet.1015granger.net>
 References: <169504501081.133720.4162400017732492854.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -50,46 +50,44 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Refactor the encoder for FATTR4_MAXFILESIZE into a helper. In a
+Refactor the encoder for FATTR4_MAXLINK into a helper. In a
 subsequent patch, this helper will be called from a bitmask loop.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs4xdr.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index f247fd6f02f5..eb7bc713f85c 100644
+index eb7bc713f85c..05d3b4409d03 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3150,6 +3150,14 @@ static __be32 nfsd4_encode_fattr4_fs_locations(struct xdr_stream *xdr,
- 	return nfsd4_encode_fs_locations4(xdr, args->rqstp, args->exp);
+@@ -3158,6 +3158,12 @@ static __be32 nfsd4_encode_fattr4_maxfilesize(struct xdr_stream *xdr,
+ 	return nfsd4_encode_uint64_t(xdr, sb->s_maxbytes);
  }
  
-+static __be32 nfsd4_encode_fattr4_maxfilesize(struct xdr_stream *xdr,
-+					      const struct nfsd4_fattr_args *args)
++static __be32 nfsd4_encode_fattr4_maxlink(struct xdr_stream *xdr,
++					  const struct nfsd4_fattr_args *args)
 +{
-+	struct super_block *sb = args->exp->ex_path.mnt->mnt_sb;
-+
-+	return nfsd4_encode_uint64_t(xdr, sb->s_maxbytes);
++	return nfsd4_encode_uint32_t(xdr, 255);
 +}
 +
  /*
   * Note: @fhp can be NULL; in this case, we might have to compose the filehandle
   * ourselves.
-@@ -3399,10 +3407,9 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+@@ -3412,10 +3418,9 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
  			goto out;
  	}
- 	if (bmval0 & FATTR4_WORD0_MAXFILESIZE) {
--		p = xdr_reserve_space(xdr, 8);
+ 	if (bmval0 & FATTR4_WORD0_MAXLINK) {
+-		p = xdr_reserve_space(xdr, 4);
 -		if (!p)
 -			goto out_resource;
--		p = xdr_encode_hyper(p, exp->ex_path.mnt->mnt_sb->s_maxbytes);
-+		status = nfsd4_encode_fattr4_maxfilesize(xdr, &args);
+-		*p++ = cpu_to_be32(255);
++		status = nfsd4_encode_fattr4_maxlink(xdr, &args);
 +		if (status != nfs_ok)
 +			goto out;
  	}
- 	if (bmval0 & FATTR4_WORD0_MAXLINK) {
+ 	if (bmval0 & FATTR4_WORD0_MAXNAME) {
  		p = xdr_reserve_space(xdr, 4);
 
 
