@@ -2,80 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8366E7A4233
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Sep 2023 09:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A08B67A489D
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Sep 2023 13:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238565AbjIRHWi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Sep 2023 03:22:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34434 "EHLO
+        id S241250AbjIRLly (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 18 Sep 2023 07:41:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240190AbjIRHWP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Sep 2023 03:22:15 -0400
-Received: from out-214.mta0.migadu.com (out-214.mta0.migadu.com [IPv6:2001:41d0:1004:224b::d6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75726196
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Sep 2023 00:21:55 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1695021713;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0Kxt8JjteCS5HtTzQZqQ0rRFv62CPGkTEVCfx4Rcug0=;
-        b=ZCoRIWJ1RuEOilrewlCgtkUHhjqb3dy0AiDhJo0+fV27fhCh8qXZLSdAMaajKw0D/f02e4
-        TZXGVHyA7px7AlKSQvjT/2ffRLNhOpVqabw4Z4BCxBZ8gP6SZFCOkkNTQ8t+vzGegB6o+Z
-        d5xuHwQl40loMW7KCeLk3ISVTPzL5Xc=
-Mime-Version: 1.0
-Subject: Re: [PATCH v6 33/45] nfsd: dynamically allocate the nfsd-reply
- shrinker
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Muchun Song <muchun.song@linux.dev>
-In-Reply-To: <20230911094444.68966-34-zhengqi.arch@bytedance.com>
-Date:   Mon, 18 Sep 2023 15:21:17 +0800
-Cc:     Andrew Morton <akpm@linux-foundation.org>, david@fromorbit.com,
-        tkhai@ya.ru, Vlastimil Babka <vbabka@suse.cz>,
-        Roman Gushchin <roman.gushchin@linux.dev>, djwong@kernel.org,
-        Christian Brauner <brauner@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>, tytso@mit.edu,
-        steven.price@arm.com, cel@kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        yujie.liu@intel.com, Greg KH <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, linux-fsdevel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        linux-nfs@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <E9AFD7C1-E6D3-487D-A80C-233E48543F18@linux.dev>
-References: <20230911094444.68966-1-zhengqi.arch@bytedance.com>
- <20230911094444.68966-34-zhengqi.arch@bytedance.com>
-To:     Qi Zheng <zhengqi.arch@bytedance.com>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S241701AbjIRLlj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Sep 2023 07:41:39 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C80DFB3;
+        Mon, 18 Sep 2023 04:41:33 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F2FC433C7;
+        Mon, 18 Sep 2023 11:41:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695037293;
+        bh=k5whRDb703pFSoW6vBuZiC/uLzAA5qCrmwIb0niMTaw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Aq8BDUPTeZUbSi6r80BUN/6MwH1BAmiHYY4SHfZ7onFlzdMGfEKZJql8eJgFd8kcU
+         VSUGCximU6yLeulyz9sCP0KhTKpgfeEuARR1qg4bJb/2c3E2+Aaq/FI7E9KE3mXGPA
+         mMkzDccqY/MfireMOZxTAFoqx04P3/eEENahXkm++IxXno8NknhrffAlyV8usX4nkg
+         fRFkfnnveLguRIcv9+LTO4c7dt1uE+rem3E3BlUrXtrNJpo5JMLyLk57Bw4w+y0H+Q
+         CpPUMugfzFQ2rqTkkxwCEL03tDYtT39/xBNsmqTbEmsL2yuFfD5IL+86z+BlChrW+f
+         YsxfJTuf+MXoQ==
+Date:   Mon, 18 Sep 2023 14:41:29 +0300
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        cgroups@vger.kernel.org
+Subject: Re: [PATCH 06/19] qibfs: use simple_release_fs
+Message-ID: <20230918114129.GA103601@unreal>
+References: <20230913111013.77623-1-hch@lst.de>
+ <20230913111013.77623-7-hch@lst.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230913111013.77623-7-hch@lst.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Sep 11, 2023, at 17:44, Qi Zheng <zhengqi.arch@bytedance.com> wrote:
+On Wed, Sep 13, 2023 at 08:10:00AM -0300, Christoph Hellwig wrote:
+> qibfs currently has convoluted code to allow registering HCAs while qibfs
+> is not mounted and vice versa.  Switch to using simple_release_fs every
+> time an entry is added to pin the fs instance and remove all the boiler
+> plate code.
 > 
-> In preparation for implementing lockless slab shrink, use new APIs to
-> dynamically allocate the nfsd-reply shrinker, so that it can be freed
-> asynchronously via RCU. Then it doesn't need to wait for RCU read-side
-> critical section when releasing the struct nfsd_net.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/infiniband/hw/qib/qib.h      |   4 +-
+>  drivers/infiniband/hw/qib/qib_fs.c   | 105 ++++++---------------------
+>  drivers/infiniband/hw/qib/qib_init.c |  32 +++-----
+>  3 files changed, 36 insertions(+), 105 deletions(-)
 > 
-> Signed-off-by: Qi Zheng <zhengqi.arch@bytedance.com>
 
-Acked-by: Muchun Song <songmuchun@bytedance.com>
-
-Thanks.
-
+Thanks,
+Reviewed-by: Leon Romanovsky <leon@kernel.org>
