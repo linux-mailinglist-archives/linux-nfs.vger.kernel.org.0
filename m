@@ -2,187 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CBE37A3F77
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Sep 2023 04:29:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B23B07A3F86
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Sep 2023 04:56:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235866AbjIRC2c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 17 Sep 2023 22:28:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53554 "EHLO
+        id S233376AbjIRCzp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 17 Sep 2023 22:55:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237425AbjIRC2B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 17 Sep 2023 22:28:01 -0400
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7173C122
-        for <linux-nfs@vger.kernel.org>; Sun, 17 Sep 2023 19:27:51 -0700 (PDT)
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-794e0e8b588so159191439f.1
-        for <linux-nfs@vger.kernel.org>; Sun, 17 Sep 2023 19:27:51 -0700 (PDT)
+        with ESMTP id S235866AbjIRCzf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 17 Sep 2023 22:55:35 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0314B98
+        for <linux-nfs@vger.kernel.org>; Sun, 17 Sep 2023 19:55:30 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2bbbe81185dso13643111fa.0
+        for <linux-nfs@vger.kernel.org>; Sun, 17 Sep 2023 19:55:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1695005728; x=1695610528; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eWwbz6er5l6qhaH/A9pZblQBmyiJ8Sr+FXbslp2z4/E=;
+        b=e2jo/VpqAk9etgq10vdtpHj4aiVlsG0Tf4IHocebkJaZRzOP1qf4TlP3ZkNAgx8GaD
+         fPpmpMi7FgZW5j/mCKfT09wiP82MAGu6l5yOucuFj/++Ywvhjt0zpNsl8+W9/0vljs/9
+         SAS0/8w6GkBAK7lLxxMWqVrBCp6253GknBU8XQAQdcBj70ZBSqnyy7NWefzr5ay0ezef
+         homG2F1wwfDcnoiC7yQgKdbDJmuBWQBc4ECX69ZbRnE1Iyygfn1ji3YE/4P9gFgsUq6M
+         tbEtfTPApARyZkeG5M2HTjYSZPLOdDqBV3YFl8dhJo2y3MnR2zeKLWbuZjuBWJTJshOS
+         BMjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695004070; x=1695608870;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yDQaVVYAItnt+hTohrXFHyIXvvO6FgbfaRGZxjMTYhQ=;
-        b=HCuO8duEM63m8QJ5zSPG+/oy3Zgt51KFp7/K2tG4S1zzSqDOHv8+baNiB+AmR9tRhR
-         SNBGAIGSIc+48N7SoeCqivcROYAHtcT1dTWsQTr08xDs3vI522YZA07IoGJJ6xZMIch0
-         /XPQF6CnXHHB8u0kQbZKCgH8fJuY8cBCjrnchxxkXNcn85FVm6L+6JdHBq5Lg1q2cOk/
-         U2iGGCg2wbX2mlAAH46GVMkIaGiLenTKez95Fx1acsIXSzkRd184DnsM0lWofsDiCbn7
-         9GSjUvnG1RG+9vjkdHduK3RGrUERugznps87EtSVsMAywwsFReRjlrzxcUZ6yr07Ln1Q
-         zNVw==
-X-Gm-Message-State: AOJu0YxhTJOQdZteiuMVLjq4IgKU+xZzZ5i1LN5WPSoGAeiULHDQ+4pQ
-        1Tfc+oEOUSdDv4HZQtaYEg==
-X-Google-Smtp-Source: AGHT+IHukk3AuzezlfxHrOqT7Nwm4cr8d8eXj9ljLtCXpMGLNpxdEABKcAGegpvO/XdgmVnL0zIylg==
-X-Received: by 2002:a05:6e02:1344:b0:345:f28f:cc26 with SMTP id k4-20020a056e02134400b00345f28fcc26mr8111878ilr.24.1695004070560;
-        Sun, 17 Sep 2023 19:27:50 -0700 (PDT)
-Received: from [192.168.75.138] (50-36-86-126.alma.mi.frontiernet.net. [50.36.86.126])
-        by smtp.gmail.com with ESMTPSA id dp32-20020a0566381ca000b00430a69ea278sm2546228jab.167.2023.09.17.19.27.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 17 Sep 2023 19:27:50 -0700 (PDT)
-Message-ID: <cd36fda66e2ef007bcf23dcec25f5bb8cd68dc27.camel@kernel.org>
-Subject: Re: [PATCH 2/2] NFSv4: Fix a state manager thread deadlock
- regression
-From:   Trond Myklebust <trondmy@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org
-Date:   Sun, 17 Sep 2023 22:27:47 -0400
-In-Reply-To: <169500033147.8274.17464264746177119631@noble.neil.brown.name>
-References: <20230917230551.30483-1-trondmy@kernel.org>
-        , <20230917230551.30483-2-trondmy@kernel.org>
-         <169500033147.8274.17464264746177119631@noble.neil.brown.name>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        d=1e100.net; s=20230601; t=1695005728; x=1695610528;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eWwbz6er5l6qhaH/A9pZblQBmyiJ8Sr+FXbslp2z4/E=;
+        b=JbDGQk4CHj5QvgSe4YD8mmqvGseN07aKmU4q882+/XddQ6mhR2bQ2t6nGMrBZg2zqG
+         xApOWL2BLAY94kLtO49mkuyQORKiXqBz03AAGt2+muRYa7iRUFp/dzrGBZQCEvpPBJgI
+         TtI51QiGg0u0wHKuXx7G7Qzo4+heH4UhY7eHHq9xjKpu2ZPw3dd9RddgqmzfDxB6DQ3y
+         hhsxWWq3xtiqAyfajQNJHqLvsNA2OHf9W3tsnIa06jdMITFnhDBpWSL92PEUj2pAHw2b
+         /3B4YzSWqUgpfcsxPvMbHSBd223hzugcbKcELC7kZajTRP5NOKEjybYpUFpuT+Trv6GT
+         Yk7Q==
+X-Gm-Message-State: AOJu0YwxPV+HCpq41AtYoqaq1bWcJJ1mL6srCWC8heg3OVWV0gmlFtKy
+        +3PqogkL2HvbbJKpjL9cWzk+Q0mYb21tAraaKF4=
+X-Google-Smtp-Source: AGHT+IF9D0V5mbpNItygAijn0wAG/+abi/paUxq0VpJXmC/zo83IamzEhiLCfF/XSUfK8Cy1T50/yvsjiejLU6dq1H8=
+X-Received: by 2002:a2e:86d6:0:b0:2c0:7d6:1349 with SMTP id
+ n22-20020a2e86d6000000b002c007d61349mr1414962ljj.0.1695005728112; Sun, 17 Sep
+ 2023 19:55:28 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+References: <20230917232646.30810-1-trondmy@kernel.org>
+In-Reply-To: <20230917232646.30810-1-trondmy@kernel.org>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Sun, 17 Sep 2023 22:55:16 -0400
+Message-ID: <CAN-5tyFFNY30PzjAD58dweDYfLKS04NgkOryF93Pu22adbLr_w@mail.gmail.com>
+Subject: Re: [PATCH] Revert "SUNRPC dont update timeout value on connection reset"
+To:     trondmy@kernel.org
+Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIzLTA5LTE4IGF0IDExOjI1ICsxMDAwLCBOZWlsQnJvd24gd3JvdGU6Cj4gT24g
-TW9uLCAxOCBTZXAgMjAyMywgdHJvbmRteUBrZXJuZWwub3JnwqB3cm90ZToKPiA+IEZyb206IFRy
-b25kIE15a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4KPiA+IAo+ID4g
-Q29tbWl0IDRkYzczYzY3OTExNCByZWludHJvZHVjZXMgdGhlIGRlYWRsb2NrIHRoYXQgd2FzIGZp
-eGVkIGJ5Cj4gPiBjb21taXQKPiA+IGFlYWJiM2M5NjE4NiAoIk5GU3Y0OiBGaXggYSBORlN2NCBz
-dGF0ZSBtYW5hZ2VyIGRlYWRsb2NrIikgYmVjYXVzZQo+ID4gaXQKPiA+IHByZXZlbnRzIHRoZSBz
-ZXR1cCBvZiBuZXcgdGhyZWFkcyB0byBoYW5kbGUgcmVib290IHJlY292ZXJ5LCB3aGlsZQo+ID4g
-dGhlCj4gPiBvbGRlciByZWNvdmVyeSB0aHJlYWQgaXMgc3R1Y2sgcmV0dXJuaW5nIGRlbGVnYXRp
-b25zLgo+IAo+IEkgaGFkbid0IHJlYWxpc2VkIHRoYXQgdGhlIHN0YXRlIG1hbmFnZXIgdGhyZWFk
-IGRpZCB0aGVzZSB0d28KPiBkaXN0aW5jdAo+IHRhc2tzIGFuZCBtaWdodCBuZWVkIHRvIGJlIGRv
-aW5nIGJvdGggYXQgb25jZSAtIHJlcXVpcmluZyB0d28KPiB0aHJlYWRzLgo+IFRoYW5rcyBmb3Ig
-aGlnaGxpZ2h0aW5nIHRoYXQuCj4gCj4gSXQgc2VlbXMgdG8gbWUgdGhhdCBldmVuIHdpdGggdGhl
-IG5ldyBjb2RlLCB3ZSBjYW4gc3RpbGwgZ2V0IGEKPiBkZWFkbG9jawo+IHdoZW4gc3dhcCBpcyBl
-bmFibGVkLCBhcyB3ZSBvbmx5IGV2ZXIgcnVuIG9uZSB0aHJlYWQgaW4gdGhhdCBjYXNlLgo+IElz
-IHRoYXQgY29ycmVjdCwgb3IgZGlkIEkgbWlzcyBzb21ldGhpbmc/CgpUaGF0IGlzIGNvcnJlY3Qu
-IEkgZGlkIHRyeSB0byBwb2ludCB0aGlzIG91dCB3aGVuIHlvdSB3ZXJlIHN1Ym1pdHRpbmcKdGhl
-IHN3YXAgcGF0Y2hlcywgYnV0IG15IHVuZGVyc3RhbmRpbmcgd2FzIHRoYXQgeW91IHdlcmUgYXNz
-dW1pbmcgdGhhdApkZWxlZ2F0aW9ucyB3b3VsZCBub3QgYmUgZW5hYmxlZCB3aGVuIHN3YXAgaXMg
-ZW5hYmxlZC4KCj4gCj4gTWF5YmUgd2UgbmVlZCB0d28gdGhyZWFkcyAtIGEgc3RhdGUgbWFuYWdl
-ciBhbmQgYSBkZWxlZ2F0aW9uIHJlY2FsbAo+IGhhbmRsZXIuwqAgQW5kIHdoZW4gc3dhcCBpcyBl
-bmFibGVkLCBib3RoIG5lZWQgdG8gYmUgcnVubmluZwo+IHBlcm1hbmVudGx5Cj4gPz8KClBvc3Np
-Ymx5LgoKPiAKPiA+IAo+ID4gRml4ZXM6IDRkYzczYzY3OTExNCAoIk5GU3Y0OiBrZWVwIHN0YXRl
-IG1hbmFnZXIgdGhyZWFkIGFjdGl2ZSBpZgo+ID4gc3dhcCBpcyBlbmFibGVkIikKPiA+IENjOiBz
-dGFibGVAdmdlci5rZXJuZWwub3JnCj4gPiBTaWduZWQtb2ZmLWJ5OiBUcm9uZCBNeWtsZWJ1c3Qg
-PHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20+Cj4gPiAtLS0KPiA+IMKgZnMvbmZzL25m
-czRwcm9jLmPCoCB8wqAgNCArKystCj4gPiDCoGZzL25mcy9uZnM0c3RhdGUuYyB8IDM4ICsrKysr
-KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tCj4gPiDCoDIgZmlsZXMgY2hhbmdlZCwg
-MjkgaW5zZXJ0aW9ucygrKSwgMTMgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9m
-cy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5jCj4gPiBpbmRleCA1ZGVlYWVhODAy
-NmUuLmExOWU4MDljYWQxNiAxMDA2NDQKPiA+IC0tLSBhL2ZzL25mcy9uZnM0cHJvYy5jCj4gPiAr
-KysgYi9mcy9uZnMvbmZzNHByb2MuYwo+ID4gQEAgLTEwNjUyLDcgKzEwNjUyLDkgQEAgc3RhdGlj
-IHZvaWQgbmZzNF9kaXNhYmxlX3N3YXAoc3RydWN0IGlub2RlCj4gPiAqaW5vZGUpCj4gPiDCoMKg
-wqDCoMKgwqDCoMKgICovCj4gPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IG5mc19jbGllbnQgKmNs
-cCA9IE5GU19TRVJWRVIoaW5vZGUpLT5uZnNfY2xpZW50Owo+ID4gwqAKPiA+IC3CoMKgwqDCoMKg
-wqDCoG5mczRfc2NoZWR1bGVfc3RhdGVfbWFuYWdlcihjbHApOwo+ID4gK8KgwqDCoMKgwqDCoMKg
-c2V0X2JpdChORlM0Q0xOVF9SVU5fTUFOQUdFUiwgJmNscC0+Y2xfc3RhdGUpOwo+ID4gK8KgwqDC
-oMKgwqDCoMKgY2xlYXJfYml0KE5GUzRDTE5UX01BTkFHRVJfQVZBSUxBQkxFLCAmY2xwLT5jbF9z
-dGF0ZSk7Cj4gPiArwqDCoMKgwqDCoMKgwqB3YWtlX3VwX3ZhcigmY2xwLT5jbF9zdGF0ZSk7Cj4g
-PiDCoH0KPiA+IMKgCj4gPiDCoHN0YXRpYyBjb25zdCBzdHJ1Y3QgaW5vZGVfb3BlcmF0aW9ucyBu
-ZnM0X2Rpcl9pbm9kZV9vcGVyYXRpb25zID0gewo+ID4gZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0
-c3RhdGUuYyBiL2ZzL25mcy9uZnM0c3RhdGUuYwo+ID4gaW5kZXggMGJjMTYwZmJhYmVjLi41NzUx
-YTY4ODZkYTQgMTAwNjQ0Cj4gPiAtLS0gYS9mcy9uZnMvbmZzNHN0YXRlLmMKPiA+ICsrKyBiL2Zz
-L25mcy9uZnM0c3RhdGUuYwo+ID4gQEAgLTEyMDksMTYgKzEyMDksMjYgQEAgdm9pZCBuZnM0X3Nj
-aGVkdWxlX3N0YXRlX21hbmFnZXIoc3RydWN0Cj4gPiBuZnNfY2xpZW50ICpjbHApCj4gPiDCoHsK
-PiA+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2s7Cj4gPiDCoMKgwqDC
-oMKgwqDCoMKgY2hhciBidWZbSU5FVDZfQUREUlNUUkxFTiArIHNpemVvZigiLW1hbmFnZXIiKSAr
-IDFdOwo+ID4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IHJwY19jbG50ICpjbG50ID0gY2xwLT5jbF9y
-cGNjbGllbnQ7Cj4gPiArwqDCoMKgwqDCoMKgwqBib29sIHN3YXBvbiA9IGZhbHNlOwo+ID4gwqAK
-PiA+IC3CoMKgwqDCoMKgwqDCoGlmIChjbHAtPmNsX3JwY2NsaWVudC0+Y2xfc2h1dGRvd24pCj4g
-PiArwqDCoMKgwqDCoMKgwqBpZiAoY2xudC0+Y2xfc2h1dGRvd24pCj4gPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybjsKPiA+IMKgCj4gPiDCoMKgwqDCoMKgwqDCoMKgc2V0
-X2JpdChORlM0Q0xOVF9SVU5fTUFOQUdFUiwgJmNscC0+Y2xfc3RhdGUpOwo+ID4gLcKgwqDCoMKg
-wqDCoMKgaWYgKHRlc3RfYW5kX3NldF9iaXQoTkZTNENMTlRfTUFOQUdFUl9BVkFJTEFCTEUsICZj
-bHAtCj4gPiA+Y2xfc3RhdGUpICE9IDApIHsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqB3YWtlX3VwX3ZhcigmY2xwLT5jbF9zdGF0ZSk7Cj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgcmV0dXJuOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKGF0b21pY19y
-ZWFkKCZjbG50LT5jbF9zd2FwcGVyKSkgewo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoHN3YXBvbiA9Cj4gPiAhdGVzdF9hbmRfc2V0X2JpdChORlM0Q0xOVF9NQU5BR0VSX0FWQUlM
-QUJMRSwKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICZjbHAtPmNsX3N0YXRlKTsKPiA+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoIXN3YXBvbikgewo+ID4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB3YWtlX3VwX3ZhcigmY2xw
-LT5jbF9zdGF0ZSk7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoHJldHVybjsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Cj4gPiDC
-oMKgwqDCoMKgwqDCoMKgfQo+ID4gLcKgwqDCoMKgwqDCoMKgc2V0X2JpdChORlM0Q0xOVF9NQU5B
-R0VSX1JVTk5JTkcsICZjbHAtPmNsX3N0YXRlKTsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqDCoGlm
-ICh0ZXN0X2FuZF9zZXRfYml0KE5GUzRDTE5UX01BTkFHRVJfUlVOTklORywgJmNscC0KPiA+ID5j
-bF9zdGF0ZSkgIT0gMCkKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm47
-Cj4gPiArCj4gPiDCoMKgwqDCoMKgwqDCoMKgX19tb2R1bGVfZ2V0KFRISVNfTU9EVUxFKTsKPiA+
-IMKgwqDCoMKgwqDCoMKgwqByZWZjb3VudF9pbmMoJmNscC0+Y2xfY291bnQpOwo+ID4gwqAKPiA+
-IEBAIC0xMjM1LDggKzEyNDUsOSBAQCB2b2lkIG5mczRfc2NoZWR1bGVfc3RhdGVfbWFuYWdlcihz
-dHJ1Y3QKPiA+IG5mc19jbGllbnQgKmNscCkKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoF9fZnVuY19fLCBQVFJfRVJSKHRhc2spKTsKPiA+IMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKCFuZnNfY2xpZW50X2luaXRfaXNfY29tcGxl
-dGUoY2xwKSkKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoG5mc19tYXJrX2NsaWVudF9yZWFkeShjbHAsIFBUUl9FUlIodGFzaykpOwo+ID4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmIChzd2Fwb24pCj4gPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsZWFyX2JpdChORlM0Q0xOVF9NQU5BR0VS
-X0FWQUlMQUJMRSwgJmNscC0KPiA+ID5jbF9zdGF0ZSk7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoG5mczRfY2xlYXJfc3RhdGVfbWFuYWdlcl9iaXQoY2xwKTsKPiA+IC3CoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbGVhcl9iaXQoTkZTNENMTlRfTUFOQUdFUl9BVkFJ
-TEFCTEUsICZjbHAtCj4gPiA+Y2xfc3RhdGUpOwo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqBuZnNfcHV0X2NsaWVudChjbHApOwo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqBtb2R1bGVfcHV0KFRISVNfTU9EVUxFKTsKPiA+IMKgwqDCoMKgwqDCoMKgwqB9Cj4g
-PiBAQCAtMjc0OCwyMiArMjc1OSwyNSBAQCBzdGF0aWMgaW50IG5mczRfcnVuX3N0YXRlX21hbmFn
-ZXIodm9pZAo+ID4gKnB0cikKPiA+IMKgCj4gPiDCoMKgwqDCoMKgwqDCoMKgYWxsb3dfc2lnbmFs
-KFNJR0tJTEwpOwo+ID4gwqBhZ2FpbjoKPiA+IC3CoMKgwqDCoMKgwqDCoHNldF9iaXQoTkZTNENM
-TlRfTUFOQUdFUl9SVU5OSU5HLCAmY2xwLT5jbF9zdGF0ZSk7Cj4gPiDCoMKgwqDCoMKgwqDCoMKg
-bmZzNF9zdGF0ZV9tYW5hZ2VyKGNscCk7Cj4gPiAtwqDCoMKgwqDCoMKgwqBpZiAoYXRvbWljX3Jl
-YWQoJmNsLT5jbF9zd2FwcGVyKSkgewo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKHRlc3Rf
-Yml0KE5GUzRDTE5UX01BTkFHRVJfQVZBSUxBQkxFLCAmY2xwLT5jbF9zdGF0ZSkgJiYKPiA+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoCAhdGVzdF9hbmRfc2V0X2JpdChORlM0Q0xOVF9NQU5BR0VSX1JV
-Tk5JTkcsICZjbHAtCj4gPiA+Y2xfc3RhdGUpKSB7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoHdhaXRfdmFyX2V2ZW50X2ludGVycnVwdGlibGUoJmNscC0+Y2xfc3RhdGUsCj4g
-PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgCj4gPiB0ZXN0X2JpdChORlM0Q0xOVF9S
-VU5fTUFOQUdFUiwKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgJmNscC0KPiA+ID5jbF9zdGF0ZSkpOwo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoGlmIChhdG9taWNfcmVhZCgmY2wtPmNsX3N3YXBwZXIpICYmCj4gPiAtwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHRlc3RfYml0KE5GUzRDTE5UX1JVTl9NQU5B
-R0VSLCAmY2xwLT5jbF9zdGF0ZSkpCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-aWYgKCFhdG9taWNfcmVhZCgmY2wtPmNsX3N3YXBwZXIpKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbGVhcl9iaXQoTkZTNENMTlRfTUFOQUdFUl9B
-VkFJTEFCTEUsICZjbHAtCj4gPiA+Y2xfc3RhdGUpOwo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoGlmIChyZWZjb3VudF9yZWFkKCZjbHAtPmNsX2NvdW50KSA+IDEgJiYKPiA+ICFz
-aWduYWxsZWQoKSkKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoGdvdG8gYWdhaW47Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8q
-IEVpdGhlciBubyBsb25nZXIgYSBzd2FwcGVyLCBvciB3ZXJlIHNpZ25hbGxlZCAqLwo+ID4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsZWFyX2JpdChORlM0Q0xOVF9NQU5BR0VSX0FW
-QUlMQUJMRSwgJmNscC0KPiA+ID5jbF9zdGF0ZSk7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgbmZzNF9jbGVhcl9zdGF0ZV9tYW5hZ2VyX2JpdChjbHApOwo+ID4gwqDCoMKgwqDC
-oMKgwqDCoH0KPiA+IC3CoMKgwqDCoMKgwqDCoGNsZWFyX2JpdChORlM0Q0xOVF9NQU5BR0VSX0FW
-QUlMQUJMRSwgJmNscC0+Y2xfc3RhdGUpOwo+ID4gwqAKPiA+IMKgwqDCoMKgwqDCoMKgwqBpZiAo
-cmVmY291bnRfcmVhZCgmY2xwLT5jbF9jb3VudCkgPiAxICYmICFzaWduYWxsZWQoKSAmJgo+ID4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0ZXN0X2JpdChORlM0Q0xOVF9SVU5fTUFOQUdFUiwgJmNs
-cC0+Y2xfc3RhdGUpICYmCj4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqAgIXRlc3RfYW5kX3NldF9i
-aXQoTkZTNENMTlRfTUFOQUdFUl9BVkFJTEFCTEUsICZjbHAtCj4gPiA+Y2xfc3RhdGUpKQo+ID4g
-K8KgwqDCoMKgwqDCoMKgwqDCoMKgICF0ZXN0X2FuZF9zZXRfYml0KE5GUzRDTE5UX01BTkFHRVJf
-UlVOTklORywgJmNscC0KPiA+ID5jbF9zdGF0ZSkpCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoGdvdG8gYWdhaW47Cj4gPiDCoAo+ID4gwqDCoMKgwqDCoMKgwqDCoG5mc19wdXRf
-Y2xpZW50KGNscCk7Cj4gPiAtLSAKPiA+IDIuNDEuMAo+ID4gCj4gPiAKPiAKCg==
+On Sun, Sep 17, 2023 at 7:38=E2=80=AFPM <trondmy@kernel.org> wrote:
+>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> This reverts commit 88428cc4ae7abcc879295fbb19373dd76aad2bdd.
+>
+> The problem this commit is intended to fix was comprehensively fixed
+> in commit 7de62bc09fe6 ("SUNRPC dont update timeout value on connection
+> reset").
+> Since then, this commit has been preventing the correct timeout of soft
+> mounted requests.
 
+And if we revert this commit then we get back the problem that when
+the server RSTs the connection between the timeouts then the client
+waits double the time (instead of the correct time).
+
+> Cc: stable@vger.kernel.org # 5.9.x: 09252177d5f9: SUNRPC: Handle major ti=
+meout in xprt_adjust_timeout()
+> Cc: stable@vger.kernel.org # 5.9.x: 7de62bc09fe6: SUNRPC dont update time=
+out value on connection
+> reset
+> Cc: stable@vger.kernel.org # 5.9.x
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  net/sunrpc/clnt.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index 5a7de7e55548..7f533c1041a4 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -2476,8 +2476,7 @@ call_status(struct rpc_task *task)
+>                 goto out_exit;
+>         }
+>         task->tk_action =3D call_encode;
+> -       if (status !=3D -ECONNRESET && status !=3D -ECONNABORTED)
+> -               rpc_check_timeout(task);
+> +       rpc_check_timeout(task);
+>         return;
+>  out_exit:
+>         rpc_call_rpcerror(task, status);
+> --
+> 2.41.0
+>
