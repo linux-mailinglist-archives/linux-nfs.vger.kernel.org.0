@@ -2,171 +2,228 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D5A37A649E
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Sep 2023 15:17:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADC8C7A6764
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Sep 2023 16:56:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231739AbjISNRh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Sep 2023 09:17:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
+        id S233015AbjISO4s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Sep 2023 10:56:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbjISNRg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Sep 2023 09:17:36 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD9C5F5;
-        Tue, 19 Sep 2023 06:17:30 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B97C433C7;
-        Tue, 19 Sep 2023 13:17:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695129450;
-        bh=t2sVUmPLQjVYFiyDF2XzDhODU7D9KtD6ZJuqB23nYaQ=;
-        h=From:Date:Subject:To:Cc:From;
-        b=mhVVhs5mpvQl8aofalhBvnjB7B1Qz3xjvO+tOTNbdRds5O2EGJmoG8e7n0LyvCNyJ
-         t0KenqKE/srwQ04feDWMYlvWvpPJ+Yh68EaUwO9EIIBN+2QGM2gzxX8p43otHI4sOM
-         ug8xXaxsb0zkV50MkjRcqcfhiKIQrEPndooBMGsDakWPftsLtlWUaIlbtqMeRaFjvB
-         22/lE+wZ6Tk9Lv6tU6FOamRnIoMYaJtaB52b564lcQIgh4vksNBjKIjar7VW1dzHmi
-         5ZkWhddAjUrBYoFNcOyWoeHb6EGIC5TM3K+K6U6UyQJMJ+RCi25YcA35q8vdJu42ri
-         T8D7m8SGrVB2w==
-From:   Jeff Layton <jlayton@kernel.org>
-Date:   Tue, 19 Sep 2023 09:17:28 -0400
-Subject: [PATCH] nfs: decrement nrequests counter before releasing the req
+        with ESMTP id S233020AbjISO4m (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Sep 2023 10:56:42 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AE50BC
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Sep 2023 07:56:35 -0700 (PDT)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38JE72Gb000359;
+        Tue, 19 Sep 2023 14:56:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=YhshRMXLryPAPJBEOTcWMF1YhIzxue0M3j43VUkefYk=;
+ b=xXCHkhYY1E7cXuz1Xoxmwkl2qSmTcwJY5Ul+MWglnBbLYg51PnJx0f9A7qPecmIIga3m
+ NVWLfxwdQvspt9AqucoAYralh0CfmypIInwxP6sN4w8pX+jwrfTk5SLsHmkqb9W/pwhV
+ rIo8wKEFnLgnqW93z/N53YZZvp35k/xoTr7eaYjsn+ximOhi115SnJdugILMOivNydHZ
+ XddcH+q1qpnPssV6IRUr0dEIJ2Xz0N8Wf4wfCpaerlTZF+euNeD5uQIe6lBMo27/N05h
+ H55q5ba+WIUzTatSIvFvtl8oH1alLJ/jHdFjqOGM/juN/e6kXFtbTx98u8uVb2sxpeiZ Cg== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3t53yu52qe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Sep 2023 14:56:28 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 38JEmko0016081;
+        Tue, 19 Sep 2023 14:56:27 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2103.outbound.protection.outlook.com [104.47.55.103])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3t52t5gskk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Sep 2023 14:56:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Eh1p6CCDFlvNftCOL3IWVt3GHp7Uln4izTzq51NTQBP3Ng0PJizJyaaH/l0bMqO14XnvREKCQ3aGe9rpR5+Pu0atjU3jYZCHlRorbwCdXpqUYuWwc8gSDX6gquHfLskjzdQatAxJ+Lyh+oyelEs5Qia1zZ97dtBChYTjvDO9Tlnfsl8SeWZ9v7a0aKC/MLNpUz6f7PhtJ7E3OO2xVSVlO4hXAs9msEz2Z/bZnXVgUZez3l83qyJVH9L7/DTZEn9kHoYfQc3zhVz4s2+1mr5+gZINHtgS+NZmZYmGNf1OZIO5v6ADgTf5lyjnYLSlSUmVo4Y6/3/Sm5LMzAjZX1KtjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YhshRMXLryPAPJBEOTcWMF1YhIzxue0M3j43VUkefYk=;
+ b=g6erj7bbqFMzEUCayhlNJG6x++5virnfS/BNQXjDo1jRctySbw0usUYQMRjGB52D8g74cJJoXCs5rBrrXyWdwXv3WRf4K67N0JTjD25UU6tPA2fDUv64yD3b4TcPvtzZ+lYy1wpfoLGvxnJUnwW37jgdlh43CXIs5GkF/jB+hilWEZ/INyniEpdE9IvoELJuCAcJNxBWFSqUtGl7WBZXBTKiauwcsnFlbD0HCys+GF+fMHfByEBW3ML7udtHQxdA2XH9sdZxmSmW728Xds2PQZ3ixXncKxiEhvzGAc/KkBHbzixOFQ9kCF0jALs9cdOp3DEt/Skuhurkte5POlGPLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YhshRMXLryPAPJBEOTcWMF1YhIzxue0M3j43VUkefYk=;
+ b=jxycK0B//gFaUxfbQ1A8q1nj+UVGY4bewBb4MIjY7/6zlNBDiSVyzzFI/tigGQQd3LtcL/4mzM9anQJzk1QTK4MU/zKLaXHy3Fre3eF25agTDY3WxSHhBvFk4IeCkx2ph7BE2T2Im5NNdFH1aXVNXOFn7yO/StdeYcFYfac98NQ=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by IA1PR10MB6784.namprd10.prod.outlook.com (2603:10b6:208:428::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.26; Tue, 19 Sep
+ 2023 14:56:25 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::bffc:4f39:2aa8:6144]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::bffc:4f39:2aa8:6144%4]) with mapi id 15.20.6792.026; Tue, 19 Sep 2023
+ 14:56:24 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Neil Brown <neilb@suse.de>
+CC:     Chuck Lever <cel@kernel.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v1] SUNRPC: Remove BUG_ON call sites
+Thread-Topic: [PATCH v1] SUNRPC: Remove BUG_ON call sites
+Thread-Index: AQHZ6jsnlplyHr80ZkCQVEI22FKIdbAhRJiAgAD5z4A=
+Date:   Tue, 19 Sep 2023 14:56:24 +0000
+Message-ID: <4B0E5D89-B784-4864-9BA8-F7F6C0F02912@oracle.com>
+References: <169504668787.134583.4338728458451666583.stgit@manet.1015granger.net>
+ <169508172758.19404.11033097632795181738@noble.neil.brown.name>
+In-Reply-To: <169508172758.19404.11033097632795181738@noble.neil.brown.name>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.700.6)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|IA1PR10MB6784:EE_
+x-ms-office365-filtering-correlation-id: c1a6725e-eb95-4b27-3d44-08dbb9209860
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Cx2E7bkHYuePEC72YUYvd/Vs8/mxVp0NUsK0OywXj+qVmEEd6o7jknAg19VvDVSBHwaptcRbgpH126J9joRpowaMxyflBb4iV/bL3Cfr5OaX/vNKDlnblX8a1QfggGioj8tI2h7kYKJ2j04oFiGfZ5K8cBn47O9JUBzzVzVplVLJhOThZdgQTXF3g7QY4eL8t7wDSn5Yba9KBJX4264D9Fu/e+Az7ywJ/vonigHMUOGzB5sTOJLG6UOoLiL9l9kUECKfDH1ZwBlMpebwOONICZRCGdeawmp9kUQcB77mDAMy+5qarmo7amBVbxpTwRRHSMM8dZ0qwVPoPYvhygpfWwVWLsM56kUAQVC2yEpLNXLe8FyzNRmzY6nX4Vz+HzwBtSDJA9MPMR3DfjUR+3B7/4RgGXSM4GPxdAJN5drtgj4dv6k+hL7efhUlwQXlvX2lFoYcdUZI/d1XLo/qrpd3KdzAJwPMnKWZMoFkYkW9SS7T8tgOEiIsJXdOOz2EtXBmgfxbiCaKZ9dpq6RjJd56qsi4qVCssV80p03MbVkjCuy01Zp8EOTimoUO6VShJGovGdiw2yc7euTEWHARA+sMyNXjEkjHiYKTcA4lOOVKFb/cdlM8OXvE3J6dcISaSL6i2Z07cTXpatZDqR1pB6VJ5w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39860400002)(376002)(136003)(366004)(346002)(451199024)(186009)(1800799009)(6486002)(5660300002)(6506007)(53546011)(86362001)(6512007)(54906003)(316002)(64756008)(66446008)(38070700005)(66946007)(66476007)(38100700002)(66556008)(41300700001)(76116006)(91956017)(71200400001)(478600001)(6916009)(2616005)(8936002)(26005)(2906002)(33656002)(36756003)(83380400001)(4326008)(8676002)(122000001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/wgL7JMSzDb9F/PyqOPgnWFS+y2exf1aanVoIEyHTww46IS3gKRNvFzqQmc+?=
+ =?us-ascii?Q?XhrhRq1scHi0bMpj0ZlUWRSeRcWW5ejUyw8Kc5UG5D0qmzILSYpfr6A+Tcwy?=
+ =?us-ascii?Q?8pwk+ojQMXLi4naRwxrUwaXJnEW7xrtpFvGce5m3n+2DhwTRPiS6tv2WEhjw?=
+ =?us-ascii?Q?Qr9lU9mJXGCd+rsG2H8qOd8ZGnifwGfSkvhJERlHMEdiGXhfaqYwJDI4RHeE?=
+ =?us-ascii?Q?KwYDzfR7DtrW8gXJ1NHZZ3soqkO3H9Ey2RO2HjjH2YkmtaYMbR8cAOeNOZO4?=
+ =?us-ascii?Q?x4kyujWVd7sO5bkXjCqX8qvMsxg552Yl/q62k6pr3jpTKg2WKJXWyrNVCBkG?=
+ =?us-ascii?Q?aXiKBkQEMictcguoaexaobvWLfrIuYkSWFqxRzZfid1Hd8luweamNa7nIgh/?=
+ =?us-ascii?Q?VNJtyoBt5fk32npbctiHBGfvAaPQbNEHYH0WjNJWJbsmSfeG7fPM+CSXQa+w?=
+ =?us-ascii?Q?qDeXzedu4dYxKAUnNMyUsPI9I5ZNgOl8smMil0wGzYRyfeCkb0SrZnMyyR6m?=
+ =?us-ascii?Q?LhA7+fgt08WpqS/NAZuW7ACXzYGPVYHBtICHMhD/8LtFTghh+ICXIcVumUHO?=
+ =?us-ascii?Q?kXBgjvR42dbZZH10ZtR5ix/Q83o1DrFge7odGtEiWYFhPL9GtsfsbyzorjmW?=
+ =?us-ascii?Q?LsF28VVrgFz/Zlc9ThMNVzAJgKxyXefsVEqa2lSbH9Y6hH/P7Me+ELeC9arE?=
+ =?us-ascii?Q?ObVg4/POfv4OkbEGla2d90k1ZMnI2kYe0mFwi5Rqbh98PXPXLJD+EBTKhxhV?=
+ =?us-ascii?Q?8qmc8zjU+OpmB5d4C9lm2JAwleN+soFvLryATyaw309X9ioR+9x0svYMRROv?=
+ =?us-ascii?Q?1ZLEfE58J4l2GEDfFfERlOjEDbdEChteI/enOXII3SBJIC1AHlzGmq2QgvUy?=
+ =?us-ascii?Q?PyyyCSWJFBBgSUAaZRYlAsgUjIbv4+0o5hdrSxzjmDKsgdWf3i2VTsfddY0J?=
+ =?us-ascii?Q?ODAG/q+X9RL6+pv3xnHqhh9qQaniHfkCuIbWX6dJGvBxW4VLOT1uPnQUY9q/?=
+ =?us-ascii?Q?uc02u29RTzWVR7Dr+GbK8G5jSWadd3ReryhEqlaDFMkFaxlXv17bEbcP1VWk?=
+ =?us-ascii?Q?9UcOFL8xdXeLtVwM0fIajbvzzEstKUHWTgVygTrCphmmHD1Isn9jwUOu5ufe?=
+ =?us-ascii?Q?qrZmXr6cODK2g4qI3l1Czwktgr5DSOwSXzhVj8c3URT+4P1MP4jdztJuQRrN?=
+ =?us-ascii?Q?M0ZXuwcBITEY7Am98hU4s+vvNTgHE24onHtwW8sS6SszO3HRWaQoDxp2Hpso?=
+ =?us-ascii?Q?8poK5ExsihKPorGmhOF+4Etn//rbFVYAAiNF1y7YG1y77NqGxwVa/MqXk/z4?=
+ =?us-ascii?Q?6gkfgiL6PgAO9gtcK+RNrW8AMcCZtapPzma4jbK+h6B8eObtZUPHiAkdODbs?=
+ =?us-ascii?Q?qh16g8dO7fAFj6QUqPmoTpvXEyR96l/QpO0nWEF5/ZSV7CCpUgecAtUp4Z3b?=
+ =?us-ascii?Q?uCGK/oB7DT/7RNtCNAK523c/KnJ4RVY8xtSXXuhjKcMP/q7XSusuIsNlGeYE?=
+ =?us-ascii?Q?hif3yMFz+McohcusXix5IO40fRmTk0QJiidnYvRcqug46CrqnlDfnf/uGMMs?=
+ =?us-ascii?Q?N9om6fiA5EApNwy4iEmvVHCXaBeHKlmaJHd5EA8c2NQ5g2eJVYvEbkUmNxai?=
+ =?us-ascii?Q?PA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D9F5C9BAB11BAE479FF42F8C0B7916E1@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230919-nfs-fixes-v1-1-d22bf72e05ad@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAGefCWUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2MDS0NL3by0Yt20zIrUYl3jVCOjpFQzc4NkA1MloPqColSwBFB5dGxtLQA
- re+ljWwAAAA==
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6015; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=t2sVUmPLQjVYFiyDF2XzDhODU7D9KtD6ZJuqB23nYaQ=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlCZ9pRarj7yhY1aCCyG5d5cVLoGDB6h/B/lGA+
- YbA96sMkpOJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZQmfaQAKCRAADmhBGVaC
- FRvrEAC2MNjR1Eun0zrJ71w87HWPtOWj2GiLm0GPTzeueDcbfgKW0WMAQd2kwNSIhsuvESGZP3+
- OPyRIKkPgPX+jPP8/6IJcp9KBQBUdLmm+Kk7xZgp/3pzRbReFO79MZTqKb4cInQeRmqETMQUZ56
- 5DXDlIsh6vEsbTEBo80qpDIOUeEoAufZpLYg/ZRtiVjpsxKFiyX9d1J6Vsp/py4oR94rSWFMWcx
- K9wv2+JvqggElcWe0GdNWTRkU7Lc/o1PM4Px5taV+BqjSINEuqjbFKum8IZ5zgmql71xAvcP5BD
- 5af2NTvsC3EJY/RkZ2SQXWdgbcVSZqzSOfr6LB2IRYhj4KXw2vzncET91wZpkpoRPDx548ZwNdQ
- wR5+bMW+XdRXBvalh1G+NsV7XHW48K0b2Qryyvb4t3j4SYxATXm7TtBCPPccxcq4y+z5cDY3r3j
- FzykV3PjsrTMN90osmp8R6qIx+DTrpkW+ckDbV7VuC13xwZ0cVmpSLK7iUKuRm1lCOUq7WG8+6r
- KAjRmzFRtYOXDwBd3M+BuBpO3rxwHlQQL24ig3MX2juRwKq4EpxTxFKg3jfAj0XAObnU4ZzbbDK
- 6CaYNAll7f7SSyQUeRCSwGxkPtNACyZ9UeTYB6WjqjbvghhEzVHCSfx+B3+8k8uuky+hMtwecd6
- hqJJuworDKSzJ0w==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 4Nq4N5fjR+bVI2gKTmfCYVA1QvSF+trkopxIiCih88heZxERX4WuzS1kUUGMXRsyq9V0SmJMuotT/AhSAEkJ/ezDbqSlRGmsw2bAS2DMHXKULDG6WebELmF9m5uDx57nZFe8QiV+Zoeh0gae7gUYcoLNTYPlTdEPDM+ySAdb4FgBXGfSS0BhWlrHmT3zafZyuZocikzgf4yRISyu9N0kIh7/RCsckknx9BnKVikH1eq4et2wewtBFtghvC26gHKl/gGZYHXPAMmjCPIsiP2Ttm0owpGtQCwWAdGuRShu/Yc1aPZjPaDEMMxFtVCMRliPj/5wh841NnyuvZOJh2a9UnOJhP8IZPdtXPnaScZP5ugQ70u/J2tvjC7cvMZfrfSxcOSUmcp4xsE+R9fXTe4heo4qBvpHcOzARIwVf+Ed/JdknMjdCArmth5C8tMHXwIC1rRm9ePYBOA0Cc7hd8VEmus4va0LmjkFzXgCK8LAuPsSEydKDofqBiVw9CLyqAdXTRJBSpz/BemttMxUn8m8wznTDBexmW7Vy4vqcwqADQ/QdCFynaoqBBb4aZI5wWGEuWIxwINvQ7TzKrXCxKRhkX3dfpgrr9/4bLlw6I44bEfx+8HJpM2rFlrJFZKYaLO7RROSta+0InH94w2HoaxptO03F1vghOq5lpyXJLBHS88SjTthKzCZ8uQFwFFH2QlbhRfUuvZFAzLvvT0OpLduo/lRIVjNsLCuPBAKiIWQ99b1j/z2Rtwpr6UHO2CedyUWi/1GAGc8aTWeCHzv9R67Ty4/84WKwzioBlhuI9qHNY18Mu4ardqu2hyoPfiseu1H
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1a6725e-eb95-4b27-3d44-08dbb9209860
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Sep 2023 14:56:24.9228
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 0dyeX757LkIno4qZ0KE8l3WquTXpLpQPBA4yVgUL8X9CqCn6K2aq+xU77FZKnjljEmmmIk2zaJgp7KUObRbtnQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6784
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.601,FMLib:17.11.176.26
+ definitions=2023-09-19_06,2023-09-19_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxlogscore=999
+ adultscore=0 mlxscore=0 spamscore=0 malwarescore=0 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2308100000 definitions=main-2309190128
+X-Proofpoint-GUID: eooAYrapNbNbPo2W_hXPrJH91QzQ2RBM
+X-Proofpoint-ORIG-GUID: eooAYrapNbNbPo2W_hXPrJH91QzQ2RBM
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I hit this panic in testing:
 
-[ 6235.500016] run fstests generic/464 at 2023-09-18 22:51:24
-[ 6288.410761] BUG: kernel NULL pointer dereference, address: 0000000000000000
-[ 6288.412174] #PF: supervisor read access in kernel mode
-[ 6288.413160] #PF: error_code(0x0000) - not-present page
-[ 6288.413992] PGD 0 P4D 0
-[ 6288.414603] Oops: 0000 [#1] PREEMPT SMP PTI
-[ 6288.415419] CPU: 0 PID: 340798 Comm: kworker/u18:8 Not tainted 6.6.0-rc1-gdcf620ceebac #95
-[ 6288.416538] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-1.fc38 04/01/2014
-[ 6288.417701] Workqueue: nfsiod rpc_async_release [sunrpc]
-[ 6288.418676] RIP: 0010:nfs_inode_remove_request+0xc8/0x150 [nfs]
-[ 6288.419836] Code: ff ff 48 8b 43 38 48 8b 7b 10 a8 04 74 5b 48 85 ff 74 56 48 8b 07 a9 00 00 08 00 74 58 48 8b 07 f6 c4 10 74 50 e8 c8 44 b3 d5 <48> 8b 00 f0 48 ff 88 30 ff ff ff 5b 5d 41 5c c3 cc cc cc cc 48 8b
-[ 6288.422389] RSP: 0018:ffffbd618353bda8 EFLAGS: 00010246
-[ 6288.423234] RAX: 0000000000000000 RBX: ffff9a29f9a25280 RCX: 0000000000000000
-[ 6288.424351] RDX: ffff9a29f9a252b4 RSI: 000000000000000b RDI: ffffef41448e3840
-[ 6288.425345] RBP: ffffef41448e3840 R08: 0000000000000038 R09: ffffffffffffffff
-[ 6288.426334] R10: 0000000000033f80 R11: ffff9a2a7fffa000 R12: ffff9a29093f98c4
-[ 6288.427353] R13: 0000000000000000 R14: ffff9a29230f62e0 R15: ffff9a29230f62d0
-[ 6288.428358] FS:  0000000000000000(0000) GS:ffff9a2a77c00000(0000) knlGS:0000000000000000
-[ 6288.429513] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 6288.430427] CR2: 0000000000000000 CR3: 0000000264748002 CR4: 0000000000770ef0
-[ 6288.431553] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 6288.432715] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 6288.433698] PKRU: 55555554
-[ 6288.434196] Call Trace:
-[ 6288.434667]  <TASK>
-[ 6288.435132]  ? __die+0x1f/0x70
-[ 6288.435723]  ? page_fault_oops+0x159/0x450
-[ 6288.436389]  ? try_to_wake_up+0x98/0x5d0
-[ 6288.437044]  ? do_user_addr_fault+0x65/0x660
-[ 6288.437728]  ? exc_page_fault+0x7a/0x180
-[ 6288.438368]  ? asm_exc_page_fault+0x22/0x30
-[ 6288.439137]  ? nfs_inode_remove_request+0xc8/0x150 [nfs]
-[ 6288.440112]  ? nfs_inode_remove_request+0xa0/0x150 [nfs]
-[ 6288.440924]  nfs_commit_release_pages+0x16e/0x340 [nfs]
-[ 6288.441700]  ? __pfx_call_transmit+0x10/0x10 [sunrpc]
-[ 6288.442475]  ? _raw_spin_lock_irqsave+0x23/0x50
-[ 6288.443161]  nfs_commit_release+0x15/0x40 [nfs]
-[ 6288.443926]  rpc_free_task+0x36/0x60 [sunrpc]
-[ 6288.444741]  rpc_async_release+0x29/0x40 [sunrpc]
-[ 6288.445509]  process_one_work+0x171/0x340
-[ 6288.446135]  worker_thread+0x277/0x3a0
-[ 6288.446724]  ? __pfx_worker_thread+0x10/0x10
-[ 6288.447376]  kthread+0xf0/0x120
-[ 6288.447903]  ? __pfx_kthread+0x10/0x10
-[ 6288.448500]  ret_from_fork+0x2d/0x50
-[ 6288.449078]  ? __pfx_kthread+0x10/0x10
-[ 6288.449665]  ret_from_fork_asm+0x1b/0x30
-[ 6288.450283]  </TASK>
-[ 6288.450688] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4 dns_resolver nfs lockd grace sunrpc nls_iso8859_1 nls_cp437 vfat fat 9p netfs ext4 kvm_intel crc16 mbcache jbd2 joydev kvm xfs irqbypass virtio_net pcspkr net_failover psmouse failover 9pnet_virtio cirrus drm_shmem_helper virtio_balloon drm_kms_helper button evdev drm loop dm_mod zram zsmalloc crct10dif_pclmul crc32_pclmul ghash_clmulni_intel sha512_ssse3 sha512_generic virtio_blk nvme aesni_intel crypto_simd cryptd nvme_core t10_pi i6300esb crc64_rocksoft_generic crc64_rocksoft crc64 virtio_pci virtio virtio_pci_legacy_dev virtio_pci_modern_dev virtio_ring serio_raw btrfs blake2b_generic libcrc32c crc32c_generic crc32c_intel xor raid6_pq autofs4
-[ 6288.460211] CR2: 0000000000000000
-[ 6288.460787] ---[ end trace 0000000000000000 ]---
-[ 6288.461571] RIP: 0010:nfs_inode_remove_request+0xc8/0x150 [nfs]
-[ 6288.462500] Code: ff ff 48 8b 43 38 48 8b 7b 10 a8 04 74 5b 48 85 ff 74 56 48 8b 07 a9 00 00 08 00 74 58 48 8b 07 f6 c4 10 74 50 e8 c8 44 b3 d5 <48> 8b 00 f0 48 ff 88 30 ff ff ff 5b 5d 41 5c c3 cc cc cc cc 48 8b
-[ 6288.465136] RSP: 0018:ffffbd618353bda8 EFLAGS: 00010246
-[ 6288.465963] RAX: 0000000000000000 RBX: ffff9a29f9a25280 RCX: 0000000000000000
-[ 6288.467035] RDX: ffff9a29f9a252b4 RSI: 000000000000000b RDI: ffffef41448e3840
-[ 6288.468093] RBP: ffffef41448e3840 R08: 0000000000000038 R09: ffffffffffffffff
-[ 6288.469121] R10: 0000000000033f80 R11: ffff9a2a7fffa000 R12: ffff9a29093f98c4
-[ 6288.470109] R13: 0000000000000000 R14: ffff9a29230f62e0 R15: ffff9a29230f62d0
-[ 6288.471106] FS:  0000000000000000(0000) GS:ffff9a2a77c00000(0000) knlGS:0000000000000000
-[ 6288.472216] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 6288.473059] CR2: 0000000000000000 CR3: 0000000264748002 CR4: 0000000000770ef0
-[ 6288.474096] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 6288.475097] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 6288.476148] PKRU: 55555554
-[ 6288.476665] note: kworker/u18:8[340798] exited with irqs disabled
 
-Once we've released "req", it's not safe to dereference it anymore.
-Decrement the nrequests counter before dropping the reference.
+> On Sep 18, 2023, at 8:02 PM, NeilBrown <neilb@suse.de> wrote:
+>=20
+> On Tue, 19 Sep 2023, Chuck Lever wrote:
+>> From: Chuck Lever <chuck.lever@oracle.com>
+>>=20
+>> There is no need to take down the whole system for these assertions.
+>>=20
+>> I'd rather not attempt a heroic save here, as some bug has occurred
+>> that has left the transport data structures in an unknown state.
+>> Just warn and then leak the left-over resources.
+>>=20
+>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>> ---
+>> net/sunrpc/svc.c |   11 +++++++----
+>> 1 file changed, 7 insertions(+), 4 deletions(-)
+>>=20
+>> Let's start here. Comments?
+>>=20
+>>=20
+>> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+>> index 587811a002c9..11a1d5e7f5c7 100644
+>> --- a/net/sunrpc/svc.c
+>> +++ b/net/sunrpc/svc.c
+>> @@ -575,11 +575,14 @@ svc_destroy(struct kref *ref)
+>> timer_shutdown_sync(&serv->sv_temptimer);
+>>=20
+>> /*
+>> -  * The last user is gone and thus all sockets have to be destroyed to
+>> -  * the point. Check this.
+>> +  * Remaining transports at this point are not expected.
+>>  */
+>> - BUG_ON(!list_empty(&serv->sv_permsocks));
+>> - BUG_ON(!list_empty(&serv->sv_tempsocks));
+>> + if (unlikely(!list_empty(&serv->sv_permsocks)))
+>> + pr_warn("SVC: permsocks remain for %s\n",
+>> + serv->sv_program->pg_name);
+>=20
+> I would go with WARN_ON_ONCE() but I agree with the principle.
+> Maybe
+>  WARN_ONCE(!list_empty(&serv->sv_permsocks),=20
+>            "SVC: permsocks remain for %s\n",
+>     serv->sv_program->pg_name);
+> This gives the stack trace which might be helpful.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-I've only hit this once after a lot of testing, so I can't confirm that
-this fixes anything. It seems like the right thing to do, however.
----
- fs/nfs/write.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I couldn't think of any additional value that a stack
+trace would provide over which upper layer protocol
+was calling, which is provided by pg_name.
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 8c1ee1a1a28f..7720b5e43014 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -802,8 +802,8 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 	}
- 
- 	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
--		nfs_release_request(req);
- 		atomic_long_dec(&NFS_I(nfs_page_to_inode(req))->nrequests);
-+		nfs_release_request(req);
- 	}
- }
- 
 
----
-base-commit: 29e400e3ea486bf942b214769fc9778098114113
-change-id: 20230919-nfs-fixes-3e22be670c05
 
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+> But=20
+>=20
+> Reviewed-by: NeilBrown <neilb@suse.de>
+>=20
+> if you prefer it the way it is.
+
+WARN_ONCE is a more conservative change, so let's
+do that.
+
+
+> NeilBrown
+>=20
+>> + if (unlikely(!list_empty(&serv->sv_tempsocks)))
+>> + pr_warn("SVC: tempsocks remain for %s\n",
+>> + serv->sv_program->pg_name);
+>>=20
+>> cache_clean_deferred(serv);
+
+
+--
+Chuck Lever
+
 
