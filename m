@@ -2,237 +2,204 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1BA37A88BF
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Sep 2023 17:45:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B3217A8CFD
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Sep 2023 21:39:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236742AbjITPph (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Sep 2023 11:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55044 "EHLO
+        id S229456AbjITTjN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Sep 2023 15:39:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234533AbjITPpf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Sep 2023 11:45:35 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 224E7A3;
-        Wed, 20 Sep 2023 08:45:29 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id BF6E422037;
-        Wed, 20 Sep 2023 15:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1695224727; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Gw0GfkzEv5qjhmPaYmrLrmVLcBgiouetaUVK1NJf9SE=;
-        b=gDmHlI6XIITA9cWR7273bMWfTaFm79ZWCKV9DUbgwsMsYlQtttv7ABQywrVa7BRoFxk5Vs
-        fY8Ytovd+JgcWaHYYF/cazBOkeQAnuEbAgfy+zWX2EEn3UHUxNv8SLgNC/S16/CAgBAqvG
-        jDzYA0P8qRNq8WfC9VqpMNAjW8ajDQM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1695224727;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Gw0GfkzEv5qjhmPaYmrLrmVLcBgiouetaUVK1NJf9SE=;
-        b=486eKcFxONt6Xlrpd7pWWA685BmUhAvAAZoUWjfk3k5wgXtMAG8bbabr8rPv7UJw6UUY7B
-        IV+4KbXuBo0SdmBw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AA9FC13A64;
-        Wed, 20 Sep 2023 15:45:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id sEc2KZcTC2VITwAAMHmgww
-        (envelope-from <jack@suse.cz>); Wed, 20 Sep 2023 15:45:27 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 33A59A077D; Wed, 20 Sep 2023 17:45:27 +0200 (CEST)
-Date:   Wed, 20 Sep 2023 17:45:27 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Jan Kara <jack@suse.cz>, Christian Brauner <brauner@kernel.org>,
-        Bruno Haible <bruno@clisp.org>,
-        Xi Ruoyao <xry111@linuxfromscratch.org>, bug-gnulib@gnu.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Tyler Hicks <code@tyhicks.com>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bo b Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <ronniesahlberg@gmail.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Richard Weinberger <richard@nod.at>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <l@gmail.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, ntfs3@lists.linux.dev,
-        ocfs2-devel@lists.linux.dev, devel@lists.orangefs.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-mtd@lists.infradead.org, linux-mm@kvack.org,
-        linux-unionfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v7 12/13] ext4: switch to multigrain timestamps
-Message-ID: <20230920154527.pkwot4nu2nzrnamd@quack3>
-References: <20230807-mgctime-v7-0-d1dec143a704@kernel.org>
- <20230919110457.7fnmzo4nqsi43yqq@quack3>
- <1f29102c09c60661758c5376018eac43f774c462.camel@kernel.org>
- <4511209.uG2h0Jr0uP@nimes>
- <08b5c6fd3b08b87fa564bb562d89381dd4e05b6a.camel@kernel.org>
- <20230920-leerung-krokodil-52ec6cb44707@brauner>
- <20230920101731.ym6pahcvkl57guto@quack3>
- <317d84b1b909b6c6519a2406fcb302ce22dafa41.camel@kernel.org>
- <20230920124823.ghl6crb5sh4x2pmt@quack3>
- <ca82af4d6a72d7f83223c0ddd74fd9f7bcfa96b1.camel@kernel.org>
+        with ESMTP id S229518AbjITTjM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Sep 2023 15:39:12 -0400
+Received: from mail-qt1-x82d.google.com (mail-qt1-x82d.google.com [IPv6:2607:f8b0:4864:20::82d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D26959E
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Sep 2023 12:39:06 -0700 (PDT)
+Received: by mail-qt1-x82d.google.com with SMTP id d75a77b69052e-4121f006c30so732471cf.2
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Sep 2023 12:39:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695238746; x=1695843546; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sHLCMF1vXEj24TmdEN8JSlEeio1PK0CHOlPc/bVWwUg=;
+        b=fOlhAzLECkhxTsFu5xxSH5NUsxj5Dg9PT4tBrGyZ7osU4jWOJGp7xK1CDfaPp8XNB5
+         4rCSYDZaHVDGIYt1lemf8Ha/FQik9bI9bQwMfMdB/j5uKUmwt5ruIAATQcJ3qRwxEikw
+         kpl5z1e/5bfwk0LDTlgXCOov9TthB4o5INT78pzG2kq+tiJ4vqk+HZdLUdQgaxPp93cC
+         g+NmkHMBQkFeYc60aELWTDzcj2MDXo4MZigbiDdsnFGc4gx56CilUYDMisUR0arqyTxY
+         bytQ+WJAckdt1vYwiNMiV6j3pq3BiH/NGrI2oZXcao2iO/aTMFhXVn56GCbQ3LrPivcx
+         T0bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695238746; x=1695843546;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sHLCMF1vXEj24TmdEN8JSlEeio1PK0CHOlPc/bVWwUg=;
+        b=QvDsJU5VCKujNV8fyYdokr9FpiaEM78RDPUYLsgPy+W2LQPczCA8k0KlxiGypd1+o2
+         qR0tudpczTlxc64T6JkZsY4hfDEuaIGTARl5duDVZgCVnGlMpS+N6s2X2VrSbSmt3Waw
+         i1eBBS2INU8pdLQm+8GueMRO+IOvB5e5tlVyV05/qr53n1b9rj3XmLlPMwRjvGujZc8r
+         sMqIikfi0OZV0QQhFdi4a3nBSrcqBxeRFqYPwTXOqI0l/nD6hWZMrrtfFzV9pLb7fJdu
+         ji+tHVwV/fjiOsW+v0boCtz0OYd7YyrtosAEx5Q2FcXlPQm8Fxw3CDnh60YWlImD2/MW
+         iBPw==
+X-Gm-Message-State: AOJu0Yy7FMegPTDsE/wjmEhbsgUS81fauHqgvKsb2h9ELfSKa4Ywog/5
+        MHbvXmUNzCVcqpHgsYHX2pxqzYZj0t6Q2wKoU0M=
+X-Google-Smtp-Source: AGHT+IGcahUQFC/JqKZ4OMKFprMLB28DHIRQifnKm1xRSlZXwZUJyT5bytD59+uROJzF1mDJdpNPwHYu/aR2uTVs+aY=
+X-Received: by 2002:a05:622a:190a:b0:403:eb5b:1f6 with SMTP id
+ w10-20020a05622a190a00b00403eb5b01f6mr3904033qtc.63.1695238745794; Wed, 20
+ Sep 2023 12:39:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ca82af4d6a72d7f83223c0ddd74fd9f7bcfa96b1.camel@kernel.org>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+References: <20230917230551.30483-1-trondmy@kernel.org> <20230917230551.30483-2-trondmy@kernel.org>
+In-Reply-To: <20230917230551.30483-2-trondmy@kernel.org>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Wed, 20 Sep 2023 15:38:50 -0400
+Message-ID: <CAFX2Jfn-6J1RAiz7Vjjet+EW4jDFVRcQ9ahsZVp69AW=MC5tpg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] NFSv4: Fix a state manager thread deadlock regression
+To:     trondmy@kernel.org
+Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org, Neil Brown <neilb@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed 20-09-23 10:12:03, Jeff Layton wrote:
-> On Wed, 2023-09-20 at 14:48 +0200, Jan Kara wrote:
-> > On Wed 20-09-23 06:35:18, Jeff Layton wrote:
-> > > On Wed, 2023-09-20 at 12:17 +0200, Jan Kara wrote:
-> > > > If I were a sysadmin, I'd rather opt for something like
-> > > > finegrained timestamps + lazytime (if I needed the finegrained timestamps
-> > > > functionality). That should avoid the IO overhead of finegrained timestamps
-> > > > as well and I'd know I can have problems with timestamps only after a
-> > > > system crash.
-> > > 
-> > > > I've just got another idea how we could solve the problem: Couldn't we
-> > > > always just report coarsegrained timestamp to userspace and provide access
-> > > > to finegrained value only to NFS which should know what it's doing?
-> > > > 
-> > > 
-> > > I think that'd be hard. First of all, where would we store the second
-> > > timestamp? We can't just truncate the fine-grained ones to come up with
-> > > a coarse-grained one. It might also be confusing having nfsd and local
-> > > filesystems present different attributes.
-> > 
-> > So what I had in mind (and I definitely miss all the NFS intricacies so the
-> > idea may be bogus) was that inode->i_ctime would be maintained exactly as
-> > is now. There will be new (kernel internal at least for now) STATX flag
-> > STATX_MULTIGRAIN_TS. fill_mg_cmtime() will return timestamp truncated to
-> > sb->s_time_gran unless STATX_MULTIGRAIN_TS is set. Hence unless you set
-> > STATX_MULTIGRAIN_TS, there is no difference in the returned timestamps
-> > compared to the state before multigrain timestamps were introduced. With
-> > STATX_MULTIGRAIN_TS we return full precision timestamp as stored in the
-> > inode. Then NFS in fh_fill_pre_attrs() and fh_fill_post_attrs() needs to
-> > make sure STATX_MULTIGRAIN_TS is set when calling vfs_getattr() to get
-> > multigrain time.
-> 
-> > I agree nfsd may now be presenting slightly different timestamps than user
-> > is able to see with stat(2) directly on the filesystem. But is that a
-> > problem? Essentially it is a similar solution as the mgtime mount option
-> > but now sysadmin doesn't have to decide on filesystem mount how to report
-> > timestamps but the stat caller knowingly opts into possibly inconsistent
-> > (among files) but high precision timestamps. And in the particular NFS
-> > usecase where stat is called all the time anyway, timestamps will likely
-> > even be consistent among files.
-> > 
-> 
-> I like this idea...
-> 
-> Would we also need to raise sb->s_time_gran to something corresponding
-> to HZ on these filesystems?
+Hi Trond,
 
-I was actually confused a bit about how timestamp_truncate() works. The
-jiffie granularity is just direct consequence of current_time() using
-ktime_get_coarse_real_ts64() and not of timestamp_truncate().
-sb->s_time_gran seems to be more about the on-disk format so it doesn't
-seem like a great idea to touch it. So probably we can just truncate
-timestamps in generic_fillattr() to HZ granularity unconditionally.
+On Sun, Sep 17, 2023 at 7:12=E2=80=AFPM <trondmy@kernel.org> wrote:
+>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> Commit 4dc73c679114 reintroduces the deadlock that was fixed by commit
+> aeabb3c96186 ("NFSv4: Fix a NFSv4 state manager deadlock") because it
+> prevents the setup of new threads to handle reboot recovery, while the
+> older recovery thread is stuck returning delegations.
 
-> If we truncate the timestamps at a granularity corresponding to HZ before
-> presenting them via statx and the like then that should work around the
-> problem with programs that compare timestamps between inodes.
+I'm seeing a possible deadlock with xfstests generic/472 on NFS v4.x
+after applying this patch. The test itself checks for various swapfile
+edge cases, so it seems likely something is going on there.
 
-Exactly.
+Let me know if you need more info
+Anna
 
-> With NFSv4, when a filesystem doesn't report a STATX_CHANGE_COOKIE, nfsd
-> will fake one up using the ctime. It's fine for that to use a full fine-
-> grained timestamp since we don't expect to be able to compare that value
-> with one of a different inode.
-
-Yes.
-
-> I think we'd want nfsd to present the mtime/ctime values as truncated,
-> just like we would with a local fs. We could hit the same problem of an
-> earlier-looking timestamp with NFS if we try to present the actual fine-
-> grained values to the clients. IOW, I'm convinced that we need to avoid
-> this behavior in most situations.
-
-I wasn't sure if there's a way to do this within NFS - i.e., if the value
-communicated via NFSv3 protocol (I know v4 has a special change cookie
-field for it) that gets used for detecting need to revalidate file contents
-isn't the one presented to client's userspace as ctime. If there's a way to
-do this then great, I'm all for presenting truncated timestamps even for
-NFS.
-
-> If we do this, then we technically don't need the mount option either.
-
-Yes, that was my hope.
-
-> We could still add it though, and have it govern whether fill_mg_cmtime
-> truncates the timestamps before storing them in the kstat.
-
-Well, if we decide these timestamps are useful for userspace as well, I'd
-rather make that a userspace visible STATX flag than a mount option. So
-applications aware of the pitfalls can get high precision timestamps
-without possibly breaking unaware applications.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+>
+> Fixes: 4dc73c679114 ("NFSv4: keep state manager thread active if swap is =
+enabled")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/nfs4proc.c  |  4 +++-
+>  fs/nfs/nfs4state.c | 38 ++++++++++++++++++++++++++------------
+>  2 files changed, 29 insertions(+), 13 deletions(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 5deeaea8026e..a19e809cad16 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -10652,7 +10652,9 @@ static void nfs4_disable_swap(struct inode *inode=
+)
+>          */
+>         struct nfs_client *clp =3D NFS_SERVER(inode)->nfs_client;
+>
+> -       nfs4_schedule_state_manager(clp);
+> +       set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+> +       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
+> +       wake_up_var(&clp->cl_state);
+>  }
+>
+>  static const struct inode_operations nfs4_dir_inode_operations =3D {
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 0bc160fbabec..5751a6886da4 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -1209,16 +1209,26 @@ void nfs4_schedule_state_manager(struct nfs_clien=
+t *clp)
+>  {
+>         struct task_struct *task;
+>         char buf[INET6_ADDRSTRLEN + sizeof("-manager") + 1];
+> +       struct rpc_clnt *clnt =3D clp->cl_rpcclient;
+> +       bool swapon =3D false;
+>
+> -       if (clp->cl_rpcclient->cl_shutdown)
+> +       if (clnt->cl_shutdown)
+>                 return;
+>
+>         set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+> -       if (test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state) =
+!=3D 0) {
+> -               wake_up_var(&clp->cl_state);
+> -               return;
+> +
+> +       if (atomic_read(&clnt->cl_swapper)) {
+> +               swapon =3D !test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE,
+> +                                          &clp->cl_state);
+> +               if (!swapon) {
+> +                       wake_up_var(&clp->cl_state);
+> +                       return;
+> +               }
+>         }
+> -       set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state);
+> +
+> +       if (test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state) !=
+=3D 0)
+> +               return;
+> +
+>         __module_get(THIS_MODULE);
+>         refcount_inc(&clp->cl_count);
+>
+> @@ -1235,8 +1245,9 @@ void nfs4_schedule_state_manager(struct nfs_client =
+*clp)
+>                         __func__, PTR_ERR(task));
+>                 if (!nfs_client_init_is_complete(clp))
+>                         nfs_mark_client_ready(clp, PTR_ERR(task));
+> +               if (swapon)
+> +                       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_st=
+ate);
+>                 nfs4_clear_state_manager_bit(clp);
+> -               clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
+>                 nfs_put_client(clp);
+>                 module_put(THIS_MODULE);
+>         }
+> @@ -2748,22 +2759,25 @@ static int nfs4_run_state_manager(void *ptr)
+>
+>         allow_signal(SIGKILL);
+>  again:
+> -       set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state);
+>         nfs4_state_manager(clp);
+> -       if (atomic_read(&cl->cl_swapper)) {
+> +
+> +       if (test_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state) &&
+> +           !test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state)) =
+{
+>                 wait_var_event_interruptible(&clp->cl_state,
+>                                              test_bit(NFS4CLNT_RUN_MANAGE=
+R,
+>                                                       &clp->cl_state));
+> -               if (atomic_read(&cl->cl_swapper) &&
+> -                   test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state))
+> +               if (!atomic_read(&cl->cl_swapper))
+> +                       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_st=
+ate);
+> +               if (refcount_read(&clp->cl_count) > 1 && !signalled())
+>                         goto again;
+>                 /* Either no longer a swapper, or were signalled */
+> +               clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
+> +               nfs4_clear_state_manager_bit(clp);
+>         }
+> -       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
+>
+>         if (refcount_read(&clp->cl_count) > 1 && !signalled() &&
+>             test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state) &&
+> -           !test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state)=
+)
+> +           !test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state))
+>                 goto again;
+>
+>         nfs_put_client(clp);
+> --
+> 2.41.0
+>
