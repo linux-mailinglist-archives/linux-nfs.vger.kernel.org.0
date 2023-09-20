@@ -2,119 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27F127A6E75
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Sep 2023 00:13:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F68B7A7504
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Sep 2023 09:57:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233436AbjISWNo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Sep 2023 18:13:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52870 "EHLO
+        id S232972AbjITH5t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Sep 2023 03:57:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233519AbjISWNm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Sep 2023 18:13:42 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D475F2
-        for <linux-nfs@vger.kernel.org>; Tue, 19 Sep 2023 15:12:43 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 43BAC2294F;
-        Tue, 19 Sep 2023 22:11:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1695161466; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9/m8A3mbKNNH8TvVe+YpAdoQ+p+DLTEaMnupopxinzk=;
-        b=kfYmKLsemNw3gNBY7APuh8Jk4Ivl4JIDsenkARVdP3gtp7YyCR1z7QIavivV9asi+B1ikl
-        GV4oX9S0APLgbRZXcqu717W592jDDaKvJ+41XYy5CJC3Ete3AORRI/vYRKlnObVyjH3Xmu
-        VcxeYUnOJ2xAX1chsffP5xrCazTNZ+A=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1695161466;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9/m8A3mbKNNH8TvVe+YpAdoQ+p+DLTEaMnupopxinzk=;
-        b=qwcrpvksDWa38j6K2sgvOp1vFS0SW1d7bFqfBcdNLKo0xKpDNSHN1ft9I707vZp56/5eUA
-        ZLRzOnxC0a8mkJAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id ADAD613458;
-        Tue, 19 Sep 2023 22:11:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id FLQKGHgcCmUQOAAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 19 Sep 2023 22:11:04 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S232870AbjITH5r (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Sep 2023 03:57:47 -0400
+X-Greylist: delayed 397 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 20 Sep 2023 00:57:42 PDT
+Received: from mail.venturelinkage.com (mail.venturelinkage.com [80.211.143.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59BC99D
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Sep 2023 00:57:42 -0700 (PDT)
+Received: by mail.venturelinkage.com (Postfix, from userid 1002)
+        id C9053826F7; Wed, 20 Sep 2023 09:51:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=venturelinkage.com;
+        s=mail; t=1695196263;
+        bh=7iowqdzve/IIiUUjcEwx8j3uMrVqqiE7R9zbOCKRV9Q=;
+        h=Date:From:To:Subject:From;
+        b=Sw0ooZI3omCFLedKzPRQqo+0gQ15dGVBNggGSct6/Oy5d+zgeBnr1y5tSuDmLhExW
+         zJ8E7Q2FMYsWklbfVMNi3WwLmwAkqTwo6fzxcNr7SremL4SGIX42WvdfhhwIcJsSw3
+         GftiLLd+XZNpaqZ/CsW0QHEiMb0Me4xXPFsisRAHRrdCz3xACTazFJXK2yJQCWri2+
+         SDP4J9RtDouIdxan1Fv09cXc7Hl521ooQsSAcgHWZG3J5bzdje/D4qnfqutIbiNhbl
+         nDdXBqNLF7Q7fWNh6XKtUAlOjBim29jioHv0Ec/9/uCF0aoED7H5noy+zwUlrEADGu
+         NNDMwpEqKsA9A==
+Received: by mail.venturelinkage.com for <linux-nfs@vger.kernel.org>; Wed, 20 Sep 2023 07:51:03 GMT
+Message-ID: <20230920084500-0.1.l.121n.0.mqj7swtxqo@venturelinkage.com>
+Date:   Wed, 20 Sep 2023 07:51:03 GMT
+From:   "Lukas Varga" <lukas.varga@venturelinkage.com>
+To:     <linux-nfs@vger.kernel.org>
+Subject: =?UTF-8?Q?Popt=C3=A1vka?=
+X-Mailer: mail.venturelinkage.com
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever" <cel@kernel.org>
-Cc:     brauner@kernel.org, "Chuck Lever" <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1] SUNRPC: Remove BUG_ON call sites
-In-reply-to: <169513768769.145733.5037542987990908432.stgit@manet.1015granger.net>
-References: <169513768769.145733.5037542987990908432.stgit@manet.1015granger.net>
-Date:   Wed, 20 Sep 2023 08:11:01 +1000
-Message-id: <169516146143.19404.11284116898963519832@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=6.0 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FROM_FMBLA_NEWDOM28,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS,
+        URIBL_CSS_A,URIBL_DBL_SPAM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
+        *      blocklist
+        *      [URIs: venturelinkage.com]
+        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
+        *      [80.211.143.151 listed in zen.spamhaus.org]
+        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
+        *      blocklist
+        *      [URIs: venturelinkage.com]
+        *  0.0 RCVD_IN_DNSWL_BLOCKED RBL: ADMINISTRATOR NOTICE: The query to
+        *      DNSWL was blocked.  See
+        *      http://wiki.apache.org/spamassassin/DnsBlocklists#dnsbl-block
+        *      for more information.
+        *      [80.211.143.151 listed in list.dnswl.org]
+        * -0.5 BAYES_05 BODY: Bayes spam probability is 1 to 5%
+        *      [score: 0.0476]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  0.8 FROM_FMBLA_NEWDOM28 From domain was registered in last 14-28
+        *      days
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 20 Sep 2023, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
-> 
-> There is no need to take down the whole system for these assertions.
-> 
-> I'd rather not attempt a heroic save here, as some bug has occurred
-> that has left the transport data structures in an unknown state.
-> Just warn and then leak the left-over resources.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> Acked-by: Christian Brauner <brauner@kernel.org>
-> ---
->  net/sunrpc/svc.c |    9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> Changes since v1:
-> - Use WARN_ONCE() instead of pr_warn()
-> 
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 587811a002c9..3237f7dfde1e 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -575,11 +575,12 @@ svc_destroy(struct kref *ref)
->  	timer_shutdown_sync(&serv->sv_temptimer);
->  
->  	/*
-> -	 * The last user is gone and thus all sockets have to be destroyed to
-> -	 * the point. Check this.
-> +	 * Remaining transports at this point are not expected.
->  	 */
-> -	BUG_ON(!list_empty(&serv->sv_permsocks));
-> -	BUG_ON(!list_empty(&serv->sv_tempsocks));
-> +	WARN_ONCE(!list_empty(&serv->sv_permsocks),
-> +		  "SVC: permsocks remain for %s\n", serv->sv_program->pg_name);
-> +	WARN_ONCE(!list_empty(&serv->sv_tempsocks),
-> +		  "SVC: tempsocks remain for %s\n", serv->sv_program->pg_name);
->  
->  	cache_clean_deferred(serv);
->  
-> 
+Dobr=C3=A9 r=C3=A1no,
 
-Reviewed-by: NeilBrown <neilb@suse.de>
+Dovolil jsem si V=C3=A1s kontaktovat, proto=C5=BEe m=C3=A1m z=C3=A1jem ov=
+=C4=9B=C5=99it mo=C5=BEnost nav=C3=A1z=C3=A1n=C3=AD spolupr=C3=A1ce.
 
-The stack trace might not be helpful, but this circumstance really
-really shouldn't happen so if it ever does, I think we really want as
-much context as practicable.
+Podporujeme firmy p=C5=99i z=C3=ADsk=C3=A1v=C3=A1n=C3=AD nov=C3=BDch obch=
+odn=C3=ADch z=C3=A1kazn=C3=ADk=C5=AF.
 
-Thanks,
-NeilBrown
+M=C5=AF=C5=BEeme si promluvit a poskytnout podrobnosti?
+
+V p=C5=99=C3=ADpad=C4=9B z=C3=A1jmu V=C3=A1s bude kontaktovat n=C3=A1=C5=A1=
+ anglicky mluv=C3=ADc=C3=AD z=C3=A1stupce.
+
+
+Pozdravy
+Lukas Varga
