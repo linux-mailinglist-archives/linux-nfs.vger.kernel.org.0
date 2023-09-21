@@ -2,248 +2,244 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A54907A901D
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Sep 2023 02:15:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2E627A988F
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Sep 2023 19:50:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjIUAPU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Sep 2023 20:15:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39056 "EHLO
+        id S229826AbjIURuG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Sep 2023 13:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38060 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjIUAPT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Sep 2023 20:15:19 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2136.outbound.protection.outlook.com [40.107.100.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C76CECF
-        for <linux-nfs@vger.kernel.org>; Wed, 20 Sep 2023 17:15:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eVAVb8MFog0oohRkU+26gitpItU8cs/NLur7o9i5O+wRZaTvMvvfSF0MjjbLBZEdmtbjAGrSBhPCR4ZdyigpUpmHN5islKxTZjFUBBd1AzDEKmgBK1iEuP4Mdie2JZeXSTnOcXJpExwRrJPf9yrqo0nFobB3bdXjbH81ddkqDhMcJEODIwIzU8TeINmLdh2BtYR/GT12E/IHd/Fn635okdzcNwCoHDS4QgX5qUwXEVbcoeTTnldnFN+cfKI1X0dxYR4W/dg+asbk0JwKwmQ3Cje+9UyEXVJWTuw11O52icdNINBoUGTkssco60FwCCI3FGAwo3sHpPUx4vfdQXRaag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PXA5AlMbP2cJTeVERR/d5cHJDPHiyrYiyrDedXO7XJI=;
- b=XIsPTX4jiiYD0sOOhtVm4l+aOAva/UCcCNm43GptgbpaFR84fmePwx7CILa9F3PfiigPoXbHzeWD9dfqgeNwHM90XXWTlteulMVJB9lwsDgVR922pdtaZA/YyPdiwTseZl1k0O67shPEsjUvA1t3+8+aL6h1da2s2LVYo1UBmE1J7Z0S7yz6JTw6eecdeOXb2zZc0kzWnKHziz2Ivu0YZvh0Ol9MU/0PSyN0uMETtcIzbUr+UgoS7zq1Xoa6JFV1K4wZA7V7wvLgF2u0XZHE8n2u8FshvrIuWu0YiSqfY4ATmH4atsMSui5YASnCUEV3FB1heb2SC6JCeM9zjF+9cw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PXA5AlMbP2cJTeVERR/d5cHJDPHiyrYiyrDedXO7XJI=;
- b=QuErhoAr+M3VB29fbs+VHrIEgd7coOpmUS4U2UIiYS6PCM18u725Ed9Erm7W1Cd1OZhem14/lNbeMmJmKEzxO48ahYqbfXDH9xPwgzat6qrWxuZCQ7MFjJt6vxhkHvw2xDLMLJ7lL4+ri8aZYOJMKYHZVG8DZmlJBm0HhpMKbS4=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by LV8PR13MB6472.namprd13.prod.outlook.com (2603:10b6:408:18f::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.27; Thu, 21 Sep
- 2023 00:15:09 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::6f5a:139d:2430:b061]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::6f5a:139d:2430:b061%4]) with mapi id 15.20.6792.026; Thu, 21 Sep 2023
- 00:15:08 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "schumaker.anna@gmail.com" <schumaker.anna@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "neilb@suse.de" <neilb@suse.de>
-Subject: Re: [PATCH 2/2] NFSv4: Fix a state manager thread deadlock regression
-Thread-Topic: [PATCH 2/2] NFSv4: Fix a state manager thread deadlock
- regression
-Thread-Index: AQHZ6bx01N78VobVYEyXXSG5Nx3/F7AkIK8AgABNMAA=
-Date:   Thu, 21 Sep 2023 00:15:08 +0000
-Message-ID: <9eda74d7438ee0a82323058b9d4c2b98f4e434cf.camel@hammerspace.com>
-References: <20230917230551.30483-1-trondmy@kernel.org>
-         <20230917230551.30483-2-trondmy@kernel.org>
-         <CAFX2Jfn-6J1RAiz7Vjjet+EW4jDFVRcQ9ahsZVp69AW=MC5tpg@mail.gmail.com>
-In-Reply-To: <CAFX2Jfn-6J1RAiz7Vjjet+EW4jDFVRcQ9ahsZVp69AW=MC5tpg@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|LV8PR13MB6472:EE_
-x-ms-office365-filtering-correlation-id: 0e8f89aa-abc8-4f0d-e6e2-08dbba37d08d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aU8wwV6HzEpsAHteE1iq8+a9gZttln68dPNNJvI0/eH3QYqO8xqI3GhQmXPBma1RPBlwtZfH41A0OmiTQzHqO3O87Vlln9V9tp0ULefUGMv7qCHkn7cDADDQYpBDD/OcDAOGrzL4di2rojTZP/ccSBEz3n/HwYpYorCtpXX+KhuDh97cYGPaqIlJq8uI8p2PpF/FWpNX18hIRh+61BJq6bMtt739xSiH+I4RJwVxgkygC/TEy9VAUYq/xrD5QXg4rVph4A0uiyWCbbc/LsUB2aX8nUWK21ZxsBWDJDGuvvlyp7EulAnICCnMrEnn4JBiP5C0DK25CWKmAwFNrBjgPRnkug+J8SEYWRLsBtqeqV93WwalqQ/+4SDbLIOFhmoZUqAYEmzFKi0OwVxnRwtxE5l5jFf7Na8MdW4QfDZPBQDx5Eo4Ge78Um53dET5oT5c/C8ZqTGcHdDxIK0AX6k6GrV4s9kL6tJzDridWNwxW7bfKtqyiWvRbRa1BiomPAcAsmuc4XD2KujChbDV3xgOWjCi0iIi8WThSl8w+C8wjJSpKTNJYroogtmPdZaJmU4xfdlnrSgYZQORReCERsyiW1i3/0pfq0C5ZwyQICBnA3NfLKQ1dOGRZu8M46Sia0xtNuovTaN7S2drwbA9wDPamenRjxnBsVBydUkhk6/Qrv0=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(136003)(366004)(39850400004)(1800799009)(451199024)(186009)(53546011)(6506007)(6486002)(8936002)(122000001)(38100700002)(36756003)(86362001)(38070700005)(6512007)(2906002)(6916009)(71200400001)(26005)(83380400001)(316002)(4326008)(5660300002)(41300700001)(8676002)(2616005)(66556008)(66476007)(76116006)(64756008)(66446008)(66946007)(54906003)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NlVsajVwRlZJRld5b01oZmRFcXRnSnFmWHJTVFNzWkhMYjJ5YWtWZ3lHTlZv?=
- =?utf-8?B?T3lWak0zK2R6OUdLR2RFVmh0Q3VPeWoyZXBrTHZwRStLWURPbHdnbkZ2Mk80?=
- =?utf-8?B?dVlBd1JxMVczQWJiQ3ZDUzZkNExQeS9kU0l6cUF2TFRoTS9zM0VmR2RBTHJw?=
- =?utf-8?B?a2ZuMy8yUldFajNheDd2QmJCSmFnZERVaXY5ZmsrQ2FmZGcwaHpzYmxGWDRO?=
- =?utf-8?B?d3cvekovWVkyNXowdExvbGsrSmdRemlEOXdWbEFSV1UzV2dwaHJNTlBVNG1I?=
- =?utf-8?B?aERSZDZLV1JIUS9USzJhT1VqNFh5TnV4OGhKd0J1aDhaRWlEN2NBcVdjdUt0?=
- =?utf-8?B?Y01waWpWU3FHcEZHcVQvUVpKcUF2NzRVTVJjT2ZzcHYwaklLNWdhV1pMUzE2?=
- =?utf-8?B?dml1YnlVL3lmUXhwbEh2c29mdEhRU0ptV1VoS3BXRUNJeGRCb1lmMjFjS2xU?=
- =?utf-8?B?SmRzSnRjbGhNOVY1cGtNUkNvZktCT0ZzeG0yRmJQT1UzT3lnWDRDQ3c1Q0Nw?=
- =?utf-8?B?SzlPYXUyVTdnSzZrc1o0Z0dueDFIeVg1US94UFE2U2Q3bHYxVnRaem5RWmo2?=
- =?utf-8?B?WDRIdTl1ZHVwWDBCUVBMdjVyQ2N0eGZLdXNYNGhxUzZqVlE2MWM5MWNGTG9F?=
- =?utf-8?B?RnJZQUY3NndrQjhiOE5XWjUyWXcza3JSaTRXVnhFTUlKTDZHZ0tmbGV6bG5T?=
- =?utf-8?B?QUY2cUpCb2IrVlJIeTdZMEpDQ29ka0hCWW1ja3RYUjJvM2d4Wkprc05SNW5S?=
- =?utf-8?B?dzZ3aE51QWkrd2JYTjJqTFgzdHgwQlRYeGhzenVlbzNGVmZxdHdiWUxVRm1x?=
- =?utf-8?B?cGFDNjhTTUVucCtNUUZ4UmErWm5DWHB0WVREVlAwNEdFNU82ZzFwdE1OUGZs?=
- =?utf-8?B?K2VyMTAxZVdBSmVxK3pmYyszd3VWUHppNTYvKzNqQlZxRHZiTElsMFVwcVJu?=
- =?utf-8?B?UXdwM0xHVnNoK0dSZHM1K1hrM2o4VW85M0FaNWlTZzM5OXdXR3ZPbllTZFVZ?=
- =?utf-8?B?eExmQTVuZ2p2bjdNQ1FBN2xwTnNnNjFuekY3eWkzOTQ5U2pVcCtZS3dHSkE3?=
- =?utf-8?B?QURoOUNzQmd4aVl5T3BBZHdWRmJka2ZVelNTNDVna014K2lhbE41MlkvUW15?=
- =?utf-8?B?dG91WFFkdk9td0ZqYmJlSDBQZTBXN0d1NFowZWdyeFRQcEtRU2FwSzlyOXZ0?=
- =?utf-8?B?OUJ5NVBFUXNPSGtJdzNFNTdaZUJhNmxMZy9zTmJEM3FtenY1VE9NaDBmVGhs?=
- =?utf-8?B?aXh4M1pBVGEyK01hQnpHTTJzWUJXSjc1L2hVZEl5SU9hMmZvVnBUc3B5dndN?=
- =?utf-8?B?bWZ1eG1FZ2d2ekJpa1AzUXIzclRLUzg4UmFrL2pEQ1JCOHF6NlBnR1ZKZnd5?=
- =?utf-8?B?OHFJSVhsa3I4d0E4Sk0xaCs2bjNydy9hM1NhWUpGQkVrNEhsdTI2WXhTMU8v?=
- =?utf-8?B?bHB5cnRjZkkzcFRyNXBXUThtRnVPcFYxbUdBa3k3VDlPT1p3djNzRFluQ1ls?=
- =?utf-8?B?b3M0R1A1Nk1wK2E3WjUzMlo4L1FYUDgwa3lrSDJSaXJ4cU8wVWVKREhRd0RK?=
- =?utf-8?B?Q2QxeWFtV0phWkRaOWNnbkJZZ2FMbGFLYmRUallCY0dBaFd5bkg5eFlqd2k5?=
- =?utf-8?B?M0dPNHYzc0MrTmlPVXpJWXowOS9iRUNNOUNHUzNWZmZrcCsxUEZlZndseUgr?=
- =?utf-8?B?T1hCSkpiTUZiSFd0eTlrYmp2YytPaHVLdWVzcmNaZkltQytMZDRuUUNNOXlx?=
- =?utf-8?B?cVJVTjVyYkNhbXZhVlVDRDlGZDB3QitXalZwNld4WnhOT0NBb1IxbjRlWk1n?=
- =?utf-8?B?MjdacWtsdDVLSHdUSlhDaGw2MTRFam5OTjFDZDJJVFBSNVNSNm5MZ1ozNUVz?=
- =?utf-8?B?T1N6cWFlcjIweDBOYmNsNXgvMS9lVzRFdWljTFJsUmU0blZXMk91WGx0MVZ0?=
- =?utf-8?B?NVVtZFg0TEtUVG8yRWFBc3Q1M2RjaTE1QkZqa05jdkZkSTVpWlN3Wk5tVWN2?=
- =?utf-8?B?ZlBmSVdyUTh2emV1STU2N2ExNzlXd0Z4ME5ERGYxNEtrU2FabjJ0SGdJUUdI?=
- =?utf-8?B?U1E4YW9qRDk3dUNwekRsalBFOEVVcnRGSDZYOHZrNlRNKzY0dCsybURjUTdp?=
- =?utf-8?B?TGRnWkI1TUNraHdGT2YwaExpSVVsZkFDQ0pWckM2UWgxcHNZYTlJczZSZjJ4?=
- =?utf-8?B?QVE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <17CBCBF7054F434686821F6C3EEF92BB@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S229873AbjIURtw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Sep 2023 13:49:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E3330DE
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Sep 2023 10:02:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1695315662;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=y0ax/dHqXYgyiJqtUUajFliIPWSkSwMmazUAOco5xqs=;
+        b=TEI6aqUbVo9sQq1gTJIfRc+NIY4cP8g40/AHd7FwigoBE4RLhn4Ob0A+JoxIRT5cXvBqfE
+        mwDznkVQdE1cJ7fvVgwq59vyWJDoIaAE4//oj9j/V1R2fqOqJwOEQ8Ko3lYn6FBn8ZltVY
+        uoh1X+6q/xigS8bnyPzCSwkllYQabHc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-68-3x0h7vyePY6Brrq1DpIKSA-1; Thu, 21 Sep 2023 09:44:09 -0400
+X-MC-Unique: 3x0h7vyePY6Brrq1DpIKSA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 36D958030CB;
+        Thu, 21 Sep 2023 13:44:09 +0000 (UTC)
+Received: from localhost (yoyang-vm.hosts.qa.psi.pek2.redhat.com [10.73.149.36])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 90286C15BB8;
+        Thu, 21 Sep 2023 13:44:08 +0000 (UTC)
+From:   Yongcheng Yang <yoyang@redhat.com>
+To:     fstests@vger.kernel.org
+Cc:     linux-nfs@vger.kernel.org, zlang@redhat.com,
+        Yongcheng Yang <yoyang@redhat.com>
+Subject: [PATCH] generic/471: add a test to check move in mountpoints of the same export
+Date:   Thu, 21 Sep 2023 21:43:47 +0800
+Message-Id: <20230921134347.839957-1-yoyang@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e8f89aa-abc8-4f0d-e6e2-08dbba37d08d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Sep 2023 00:15:08.7619
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cke4gdYA717W0cKS/LL0LNK9Sbvbzeku+7jRciP2shIin8IWmnfRryUdXMJ66hz1WeTDCgMf3AV342ZJilJ+1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR13MB6472
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIzLTA5LTIwIGF0IDE1OjM4IC0wNDAwLCBBbm5hIFNjaHVtYWtlciB3cm90ZToK
-PiBIaSBUcm9uZCwKPiAKPiBPbiBTdW4sIFNlcCAxNywgMjAyMyBhdCA3OjEy4oCvUE0gPHRyb25k
-bXlAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiAKPiA+IEZyb206IFRyb25kIE15a2xlYnVzdCA8dHJv
-bmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbT4KPiA+IAo+ID4gQ29tbWl0IDRkYzczYzY3OTEx
-NCByZWludHJvZHVjZXMgdGhlIGRlYWRsb2NrIHRoYXQgd2FzIGZpeGVkIGJ5Cj4gPiBjb21taXQK
-PiA+IGFlYWJiM2M5NjE4NiAoIk5GU3Y0OiBGaXggYSBORlN2NCBzdGF0ZSBtYW5hZ2VyIGRlYWRs
-b2NrIikgYmVjYXVzZQo+ID4gaXQKPiA+IHByZXZlbnRzIHRoZSBzZXR1cCBvZiBuZXcgdGhyZWFk
-cyB0byBoYW5kbGUgcmVib290IHJlY292ZXJ5LCB3aGlsZQo+ID4gdGhlCj4gPiBvbGRlciByZWNv
-dmVyeSB0aHJlYWQgaXMgc3R1Y2sgcmV0dXJuaW5nIGRlbGVnYXRpb25zLgo+IAo+IEknbSBzZWVp
-bmcgYSBwb3NzaWJsZSBkZWFkbG9jayB3aXRoIHhmc3Rlc3RzIGdlbmVyaWMvNDcyIG9uIE5GUyB2
-NC54Cj4gYWZ0ZXIgYXBwbHlpbmcgdGhpcyBwYXRjaC4gVGhlIHRlc3QgaXRzZWxmIGNoZWNrcyBm
-b3IgdmFyaW91cwo+IHN3YXBmaWxlCj4gZWRnZSBjYXNlcywgc28gaXQgc2VlbXMgbGlrZWx5IHNv
-bWV0aGluZyBpcyBnb2luZyBvbiB0aGVyZS4KPiAKPiBMZXQgbWUga25vdyBpZiB5b3UgbmVlZCBt
-b3JlIGluZm8KPiBBbm5hCj4gCgpEaWQgeW91IHR1cm4gb2ZmIGRlbGVnYXRpb25zIG9uIHlvdXIg
-c2VydmVyPyBJZiB5b3UgZG9uJ3QsIHRoZW4gc3dhcAp3aWxsIGRlYWRsb2NrIGl0c2VsZiB1bmRl
-ciB2YXJpb3VzIHNjZW5hcmlvcy4KCj4gPiAKPiA+IEZpeGVzOiA0ZGM3M2M2NzkxMTQgKCJORlN2
-NDoga2VlcCBzdGF0ZSBtYW5hZ2VyIHRocmVhZCBhY3RpdmUgaWYKPiA+IHN3YXAgaXMgZW5hYmxl
-ZCIpCj4gPiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZwo+ID4gU2lnbmVkLW9mZi1ieTogVHJv
-bmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tPgo+ID4gLS0tCj4g
-PiDCoGZzL25mcy9uZnM0cHJvYy5jwqAgfMKgIDQgKysrLQo+ID4gwqBmcy9uZnMvbmZzNHN0YXRl
-LmMgfCAzOCArKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLQo+ID4gwqAyIGZp
-bGVzIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKyksIDEzIGRlbGV0aW9ucygtKQo+ID4gCj4gPiBk
-aWZmIC0tZ2l0IGEvZnMvbmZzL25mczRwcm9jLmMgYi9mcy9uZnMvbmZzNHByb2MuYwo+ID4gaW5k
-ZXggNWRlZWFlYTgwMjZlLi5hMTllODA5Y2FkMTYgMTAwNjQ0Cj4gPiAtLS0gYS9mcy9uZnMvbmZz
-NHByb2MuYwo+ID4gKysrIGIvZnMvbmZzL25mczRwcm9jLmMKPiA+IEBAIC0xMDY1Miw3ICsxMDY1
-Miw5IEBAIHN0YXRpYyB2b2lkIG5mczRfZGlzYWJsZV9zd2FwKHN0cnVjdCBpbm9kZQo+ID4gKmlu
-b2RlKQo+ID4gwqDCoMKgwqDCoMKgwqDCoCAqLwo+ID4gwqDCoMKgwqDCoMKgwqAgc3RydWN0IG5m
-c19jbGllbnQgKmNscCA9IE5GU19TRVJWRVIoaW5vZGUpLT5uZnNfY2xpZW50Owo+ID4gCj4gPiAt
-wqDCoMKgwqDCoMKgIG5mczRfc2NoZWR1bGVfc3RhdGVfbWFuYWdlcihjbHApOwo+ID4gK8KgwqDC
-oMKgwqDCoCBzZXRfYml0KE5GUzRDTE5UX1JVTl9NQU5BR0VSLCAmY2xwLT5jbF9zdGF0ZSk7Cj4g
-PiArwqDCoMKgwqDCoMKgIGNsZWFyX2JpdChORlM0Q0xOVF9NQU5BR0VSX0FWQUlMQUJMRSwgJmNs
-cC0+Y2xfc3RhdGUpOwo+ID4gK8KgwqDCoMKgwqDCoCB3YWtlX3VwX3ZhcigmY2xwLT5jbF9zdGF0
-ZSk7Cj4gPiDCoH0KPiA+IAo+ID4gwqBzdGF0aWMgY29uc3Qgc3RydWN0IGlub2RlX29wZXJhdGlv
-bnMgbmZzNF9kaXJfaW5vZGVfb3BlcmF0aW9ucyA9IHsKPiA+IGRpZmYgLS1naXQgYS9mcy9uZnMv
-bmZzNHN0YXRlLmMgYi9mcy9uZnMvbmZzNHN0YXRlLmMKPiA+IGluZGV4IDBiYzE2MGZiYWJlYy4u
-NTc1MWE2ODg2ZGE0IDEwMDY0NAo+ID4gLS0tIGEvZnMvbmZzL25mczRzdGF0ZS5jCj4gPiArKysg
-Yi9mcy9uZnMvbmZzNHN0YXRlLmMKPiA+IEBAIC0xMjA5LDE2ICsxMjA5LDI2IEBAIHZvaWQgbmZz
-NF9zY2hlZHVsZV9zdGF0ZV9tYW5hZ2VyKHN0cnVjdAo+ID4gbmZzX2NsaWVudCAqY2xwKQo+ID4g
-wqB7Cj4gPiDCoMKgwqDCoMKgwqDCoCBzdHJ1Y3QgdGFza19zdHJ1Y3QgKnRhc2s7Cj4gPiDCoMKg
-wqDCoMKgwqDCoCBjaGFyIGJ1ZltJTkVUNl9BRERSU1RSTEVOICsgc2l6ZW9mKCItbWFuYWdlciIp
-ICsgMV07Cj4gPiArwqDCoMKgwqDCoMKgIHN0cnVjdCBycGNfY2xudCAqY2xudCA9IGNscC0+Y2xf
-cnBjY2xpZW50Owo+ID4gK8KgwqDCoMKgwqDCoCBib29sIHN3YXBvbiA9IGZhbHNlOwo+ID4gCj4g
-PiAtwqDCoMKgwqDCoMKgIGlmIChjbHAtPmNsX3JwY2NsaWVudC0+Y2xfc2h1dGRvd24pCj4gPiAr
-wqDCoMKgwqDCoMKgIGlmIChjbG50LT5jbF9zaHV0ZG93bikKPiA+IMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoCByZXR1cm47Cj4gPiAKPiA+IMKgwqDCoMKgwqDCoMKgIHNldF9iaXQoTkZT
-NENMTlRfUlVOX01BTkFHRVIsICZjbHAtPmNsX3N0YXRlKTsKPiA+IC3CoMKgwqDCoMKgwqAgaWYg
-KHRlc3RfYW5kX3NldF9iaXQoTkZTNENMTlRfTUFOQUdFUl9BVkFJTEFCTEUsICZjbHAtCj4gPiA+
-Y2xfc3RhdGUpICE9IDApIHsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHdha2Vf
-dXBfdmFyKCZjbHAtPmNsX3N0YXRlKTsKPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHJldHVybjsKPiA+ICsKPiA+ICvCoMKgwqDCoMKgwqAgaWYgKGF0b21pY19yZWFkKCZjbG50LT5j
-bF9zd2FwcGVyKSkgewo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3dhcG9uID0K
-PiA+ICF0ZXN0X2FuZF9zZXRfYml0KE5GUzRDTE5UX01BTkFHRVJfQVZBSUxBQkxFLAo+ID4gK8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJmNscC0+Y2xfc3RhdGUpOwo+ID4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgaWYgKCFzd2Fwb24pIHsKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB3YWtlX3VwX3ZhcigmY2xwLT5jbF9zdGF0ZSk7Cj4g
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuOwo+
-ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfQo+ID4gwqDCoMKgwqDCoMKgwqAgfQo+
-ID4gLcKgwqDCoMKgwqDCoCBzZXRfYml0KE5GUzRDTE5UX01BTkFHRVJfUlVOTklORywgJmNscC0+
-Y2xfc3RhdGUpOwo+ID4gKwo+ID4gK8KgwqDCoMKgwqDCoCBpZiAodGVzdF9hbmRfc2V0X2JpdChO
-RlM0Q0xOVF9NQU5BR0VSX1JVTk5JTkcsICZjbHAtCj4gPiA+Y2xfc3RhdGUpICE9IDApCj4gPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZXR1cm47Cj4gPiArCj4gPiDCoMKgwqDCoMKg
-wqDCoCBfX21vZHVsZV9nZXQoVEhJU19NT0RVTEUpOwo+ID4gwqDCoMKgwqDCoMKgwqAgcmVmY291
-bnRfaW5jKCZjbHAtPmNsX2NvdW50KTsKPiA+IAo+ID4gQEAgLTEyMzUsOCArMTI0NSw5IEBAIHZv
-aWQgbmZzNF9zY2hlZHVsZV9zdGF0ZV9tYW5hZ2VyKHN0cnVjdAo+ID4gbmZzX2NsaWVudCAqY2xw
-KQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBfX2Z1
-bmNfXywgUFRSX0VSUih0YXNrKSk7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-aWYgKCFuZnNfY2xpZW50X2luaXRfaXNfY29tcGxldGUoY2xwKSkKPiA+IMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbmZzX21hcmtfY2xpZW50X3JlYWR5KGNs
-cCwgUFRSX0VSUih0YXNrKSk7Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAo
-c3dhcG9uKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IGNsZWFyX2JpdChORlM0Q0xOVF9NQU5BR0VSX0FWQUlMQUJMRSwgJmNscC0KPiA+ID5jbF9zdGF0
-ZSk7Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgbmZzNF9jbGVhcl9zdGF0ZV9t
-YW5hZ2VyX2JpdChjbHApOwo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgY2xlYXJf
-Yml0KE5GUzRDTE5UX01BTkFHRVJfQVZBSUxBQkxFLCAmY2xwLQo+ID4gPmNsX3N0YXRlKTsKPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBuZnNfcHV0X2NsaWVudChjbHApOwo+ID4g
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIG1vZHVsZV9wdXQoVEhJU19NT0RVTEUpOwo+
-ID4gwqDCoMKgwqDCoMKgwqAgfQo+ID4gQEAgLTI3NDgsMjIgKzI3NTksMjUgQEAgc3RhdGljIGlu
-dCBuZnM0X3J1bl9zdGF0ZV9tYW5hZ2VyKHZvaWQKPiA+ICpwdHIpCj4gPiAKPiA+IMKgwqDCoMKg
-wqDCoMKgIGFsbG93X3NpZ25hbChTSUdLSUxMKTsKPiA+IMKgYWdhaW46Cj4gPiAtwqDCoMKgwqDC
-oMKgIHNldF9iaXQoTkZTNENMTlRfTUFOQUdFUl9SVU5OSU5HLCAmY2xwLT5jbF9zdGF0ZSk7Cj4g
-PiDCoMKgwqDCoMKgwqDCoCBuZnM0X3N0YXRlX21hbmFnZXIoY2xwKTsKPiA+IC3CoMKgwqDCoMKg
-wqAgaWYgKGF0b21pY19yZWFkKCZjbC0+Y2xfc3dhcHBlcikpIHsKPiA+ICsKPiA+ICvCoMKgwqDC
-oMKgwqAgaWYgKHRlc3RfYml0KE5GUzRDTE5UX01BTkFHRVJfQVZBSUxBQkxFLCAmY2xwLT5jbF9z
-dGF0ZSkgJiYKPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoCAhdGVzdF9hbmRfc2V0X2JpdChORlM0
-Q0xOVF9NQU5BR0VSX1JVTk5JTkcsICZjbHAtCj4gPiA+Y2xfc3RhdGUpKSB7Cj4gPiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgd2FpdF92YXJfZXZlbnRfaW50ZXJydXB0aWJsZSgmY2xw
-LT5jbF9zdGF0ZSwKPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAKPiA+IHRlc3Rf
-Yml0KE5GUzRDTE5UX1JVTl9NQU5BR0VSLAo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAmY2xwLQo+ID4gPmNsX3N0YXRlKSk7Cj4gPiAtwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoYXRvbWljX3JlYWQoJmNsLT5jbF9zd2FwcGVyKSAm
-Jgo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB0ZXN0X2JpdChORlM0
-Q0xOVF9SVU5fTUFOQUdFUiwgJmNscC0+Y2xfc3RhdGUpKQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAgaWYgKCFhdG9taWNfcmVhZCgmY2wtPmNsX3N3YXBwZXIpKQo+ID4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsZWFyX2JpdChORlM0Q0xO
-VF9NQU5BR0VSX0FWQUlMQUJMRSwgJmNscC0KPiA+ID5jbF9zdGF0ZSk7Cj4gPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAocmVmY291bnRfcmVhZCgmY2xwLT5jbF9jb3VudCkgPiAx
-ICYmCj4gPiAhc2lnbmFsbGVkKCkpCj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGdvdG8gYWdhaW47Cj4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAgLyogRWl0aGVyIG5vIGxvbmdlciBhIHN3YXBwZXIsIG9yIHdlcmUgc2lnbmFsbGVkICov
-Cj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjbGVhcl9iaXQoTkZTNENMTlRfTUFO
-QUdFUl9BVkFJTEFCTEUsICZjbHAtCj4gPiA+Y2xfc3RhdGUpOwo+ID4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgbmZzNF9jbGVhcl9zdGF0ZV9tYW5hZ2VyX2JpdChjbHApOwo+ID4gwqDC
-oMKgwqDCoMKgwqAgfQo+ID4gLcKgwqDCoMKgwqDCoCBjbGVhcl9iaXQoTkZTNENMTlRfTUFOQUdF
-Ul9BVkFJTEFCTEUsICZjbHAtPmNsX3N0YXRlKTsKPiA+IAo+ID4gwqDCoMKgwqDCoMKgwqAgaWYg
-KHJlZmNvdW50X3JlYWQoJmNscC0+Y2xfY291bnQpID4gMSAmJiAhc2lnbmFsbGVkKCkgJiYKPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgdGVzdF9iaXQoTkZTNENMTlRfUlVOX01BTkFHRVIsICZj
-bHAtPmNsX3N0YXRlKSAmJgo+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgICF0ZXN0X2FuZF9zZXRf
-Yml0KE5GUzRDTE5UX01BTkFHRVJfQVZBSUxBQkxFLCAmY2xwLQo+ID4gPmNsX3N0YXRlKSkKPiA+
-ICvCoMKgwqDCoMKgwqDCoMKgwqDCoCAhdGVzdF9hbmRfc2V0X2JpdChORlM0Q0xOVF9NQU5BR0VS
-X1JVTk5JTkcsICZjbHAtCj4gPiA+Y2xfc3RhdGUpKQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGdvdG8gYWdhaW47Cj4gPiAKPiA+IMKgwqDCoMKgwqDCoMKgIG5mc19wdXRfY2xp
-ZW50KGNscCk7Cj4gPiAtLQo+ID4gMi40MS4wCj4gPiAKCi0tIApUcm9uZCBNeWtsZWJ1c3QKTGlu
-dXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQp0cm9uZC5teWtsZWJ1c3RAaGFt
-bWVyc3BhY2UuY29tCgoK
+Add a new test to ckeck file move (rename) operation among
+different mount points which are mounting to a same export.
+
+This should be a simple test but it recently unveils an ancient
+nfsd bug. Thus let's make it to be a regresstion check.
+
+Signed-off-by: Yongcheng Yang <yoyang@redhat.com>
+---
+
+Hi,
+
+There is an ancient nfsd problem just pop up and is now resolved by
+the upstream commit [1]. Looks like it's a basic and simple test which
+is probably appropriate for the fstest IMO.
+
+This test in nfs will be failed without patch [1]:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[root@kvm-07-guest24 xfstests]# ./check -nfs generic/471
+FSTYP     	-- nfs
+PLATFORM  	-- Linux/x86_64 kvm-07-guest24 5.14.0-abc.el9.x86_64 #1 SMP PREEMPT_DYNAMIC Wed Sep 13 04:59:08 EDT 2023
+MKFS_OPTIONS  -- localhost:/export_test2
+MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 localhost:/export_test2 /mnt_scratch
+
+generic/471 1s ... - output mismatch (see /root/xfstests/results//generic/471.out.bad)
+	--- tests/generic/471.out    2023-09-21 05:55:28.514673177 -0400
+	+++ /root/xfstests/results//generic/471.out.bad    2023-09-21 08:06:16.935695355 -0400
+	@@ -1,2 +1,3 @@
+ 	QA output created by 471
+ 	Silence is golden
+	+mv: '/mnt_test/mountpoint1-471/A/f' and '/mnt_test/mountpoint1-471/B/f' are the same file
+	...
+	(Run 'diff -u /root/xfstests/tests/generic/471.out /root/xfstests/results//generic/471.out.bad'  to see the entire diff)
+
+HINT: You _MAY_ be missing kernel fix:
+  	fdd2630a739819 nfsd: fix change_info in NFSv4 RENAME replies
+
+Ran: generic/471
+Failures: generic/471
+Failed 1 of 1 tests
+
+[root@kvm-07-guest24 xfstests]#
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+And it can pass after that patch [1] merged:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[root@fsqe-r6515-02 xfstests]# ./check -nfs generic/471
+FSTYP     	-- nfs
+PLATFORM  	-- Linux/x86_64 fsqe-r6515-02 5.14.0-abcd.el9.x86_64 #1 SMP PREEMPT_DYNAMIC Tue Sep 19 08:10:36 EDT 2023
+MKFS_OPTIONS  -- localhost:/export_test1
+MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 localhost:/export_test1 /mnt_scratch
+
+generic/471    	0s
+Ran: generic/471
+Passed all 1 tests
+
+[root@fsqe-r6515-02 xfstests]#
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+Also I have just checked the xfs and overlayfs but the latter get failed:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[root@fsqe-r6515-02 xfstests]# ./check generic/471
+FSTYP         -- xfs (non-debug)
+PLATFORM      -- Linux/x86_64 fsqe-r6515-02 5.14.0-abcd.el9.x86_64 #1 SMP PREEMPT_DYNAMIC Tue Sep 19 08:10:36 EDT 2023
+MKFS_OPTIONS  -- -f /dev/loop1
+MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /dev/loop1 /mnt_scratch
+
+generic/471 0s ...  1s
+Ran: generic/471
+Passed all 1 tests
+
+[root@fsqe-r6515-02 xfstests]#
+[root@fsqe-r6515-02 xfstests]# ./check -overlay generic/471
+FSTYP         -- overlay
+PLATFORM      -- Linux/x86_64 fsqe-r6515-02 5.14.0-abcd.el9.x86_64 #1 SMP PREEMPT_DYNAMIC Tue Sep 19 08:10:36 EDT 2023
+MKFS_OPTIONS  -- /mnt_scratch
+MOUNT_OPTIONS -- -o context=system_u:object_r:root_t:s0 /mnt_scratch /mnt_scratch/ovl-mnt
+
+generic/471 0s ... - output mismatch (see /root/xfstests/results//generic/471.out.bad)
+    --- tests/generic/471.out	2023-09-21 09:02:14.580495256 -0400
+    +++ /root/xfstests/results//generic/471.out.bad	2023-09-21 09:02:51.145345830 -0400
+    @@ -1,2 +1,3 @@
+     QA output created by 471
+     Silence is golden
+    +mv: '/mnt_test/ovl-mnt/mountpoint1-471/A/f' and '/mnt_test/ovl-mnt/mountpoint1-471/B/f' are the same file
+    ...
+    (Run 'diff -u /root/xfstests/tests/generic/471.out /root/xfstests/results//generic/471.out.bad'  to see the entire diff)
+Ran: generic/471
+Failures: generic/471
+Failed 1 of 1 tests
+
+[root@fsqe-r6515-02 xfstests]#
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For now I'm not sure if the overlayfs don't support this operation or
+we just need to fix that.
+
+Thanks,
+Yongcheng
+
+[1] https://lore.kernel.org/linux-nfs/ZPyMyv1nNFV2whKP@tissot.1015granger.net/T/#t
+
+
+ tests/generic/471     | 60 +++++++++++++++++++++++++++++++++++++++++++
+ tests/generic/471.out |  2 ++
+ 2 files changed, 62 insertions(+)
+ create mode 100755 tests/generic/471
+ create mode 100644 tests/generic/471.out
+
+diff --git a/tests/generic/471 b/tests/generic/471
+new file mode 100755
+index 00000000..ada48129
+--- /dev/null
++++ b/tests/generic/471
+@@ -0,0 +1,60 @@
++#! /bin/bash
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (c) 2023 Red Hat, Inc.  All Rights Reserved.
++#
++# FS QA Test 471
++#
++# Mount the same export to different mount points and move (rename)
++# files among those mount points.
++# This simple test recently unveils an ancient nfsd bug that is fixed
++# by fdd2630a739819 ("nfsd: fix change_info in NFSv4 RENAME replies").
++#
++. ./common/preamble
++_begin_fstest auto quick
++
++# Override the default cleanup function.
++_cleanup()
++{
++	$UMOUNT_PROG $testdir1 2>/dev/null
++	$UMOUNT_PROG $testdir2 2>/dev/null
++	cd /
++	rm -r -f $tmp.*
++}
++
++# real QA test starts here
++
++_supported_fs generic
++[ "$FSTYP" = "nfs" ] && \
++	_fixed_by_kernel_commit fdd2630a739819 \
++		"nfsd: fix change_info in NFSv4 RENAME replies"
++
++_require_test
++_require_scratch
++
++echo "Silence is golden"
++
++_scratch_mkfs >> $seqres.full
++testdir1=$TEST_DIR/mountpoint1-$seq
++testdir2=$TEST_DIR/mountpoint2-$seq
++rm -rf $testdir1 $testdir2
++mkdir -p $testdir1 $testdir2
++
++# Don't share the data and attribute caches among mount points for NFS.
++# This caching behavior is necessary to reproduce this issue as we're
++# checking the alignment of each mount point's own unique cache.
++[ "$FSTYP" = "nfs" ] && MOUNT_OPTIONS="-o nosharecache"
++
++SCRATCH_MNT=$testdir1 _scratch_mount
++SCRATCH_MNT=$testdir2 _scratch_mount
++rm -rf $testdir1/{A,B}
++mkdir $testdir1/{A,B}
++touch $testdir1/A/f
++mv $testdir1/A/f $testdir1/B/
++cat $testdir2/B/f
++mv $testdir2/B/f $testdir2/A/
++cat $testdir1/A/f
++mv $testdir1/A/f $testdir1/B/
++
++# success, all done
++status=0
++exit
+diff --git a/tests/generic/471.out b/tests/generic/471.out
+new file mode 100644
+index 00000000..260f629e
+--- /dev/null
++++ b/tests/generic/471.out
+@@ -0,0 +1,2 @@
++QA output created by 471
++Silence is golden
+-- 
+2.31.1
+
