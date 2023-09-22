@@ -2,271 +2,508 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BD727AB721
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Sep 2023 19:23:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0F077AB724
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Sep 2023 19:23:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjIVRXG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Sep 2023 13:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
+        id S231589AbjIVRXa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Sep 2023 13:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229532AbjIVRXF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Sep 2023 13:23:05 -0400
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36AAF1
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Sep 2023 10:22:58 -0700 (PDT)
-Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2c00b877379so9477071fa.1
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Sep 2023 10:22:58 -0700 (PDT)
+        with ESMTP id S231976AbjIVRX3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Sep 2023 13:23:29 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FDF1A1;
+        Fri, 22 Sep 2023 10:23:22 -0700 (PDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 38MGOCf9004678;
+        Fri, 22 Sep 2023 17:23:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=cxa/yOy07tIMi2Ppbx99jVQps1mUKbE8QK9Na7G49Io=;
+ b=LTKOK2EdfMmodUW1Ew9LX9s0Tt/4E/C7dPQLVg+CpzYLf71BK0WSUXU3FgbdCnaHXqOD
+ cB3SEAUxFCK4Wi4Q3GvCmm8OdtQnyAH7cXRkj8wNDB4WyMLuR0fTFMJIiM5YgbplXKEz
+ 83eh7hZNTyQUXk/gnOFrR/5b0lQYj/h1mYnFi6XlVXeDUgXgk6pMiOT/xcRP/4WnzxSS
+ HFhpL9um181MKPstR27gi4WGDgCNd5P3ezI5WKbvDa0tixGm06Y+XiNKbaMVRhU2Cem8
+ K37byHzWCwBFSMTaeILKAno0q0BEIhpSASKJW90PX98YCRw5REuZfNt0VjZxhTXK4173 tA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3t8tsxtaxe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Sep 2023 17:23:12 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 38MH0RW8021318;
+        Fri, 22 Sep 2023 17:23:12 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2100.outbound.protection.outlook.com [104.47.70.100])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3t92vxnpvj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Sep 2023 17:23:12 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WHWKniEMm+XF9UuybbIRxRk8L34WmMiG6wNQG+sXc2lPFzIEKy+YqZYw3P7Ybm8dw7Uw6ZOHiHACb+WUEsF0sgXpEK118Qc44r/RpyjOBHCfVuHayx6+7Gsf6wZA7JWw/dhdVUHnhDnTA4s0pxWVAr9UsIp6imo83aAT8vHdOxwSw5OvevqdS1Vmprpj9dZ/NpAQxz+jo+av1blT1zgUtq2qM7g9/pzH0ZI5hyWoWXypUez4i65N2N/g/vLchcRAAr+W9rnJVPkpg4mdQQe4KlCHar1CHOdrKOTXxJ5/yxkVMmX096rECz4lGi/kT4WHhL+Eq5ieKKlnq1kHDWJBUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cxa/yOy07tIMi2Ppbx99jVQps1mUKbE8QK9Na7G49Io=;
+ b=NsRII4GkgumINz3QyJnRFS+j0naFM2s04cTt4+0oDQh6RV31EzcTUKO0zU8bnJK4d//AQhyzDDSXjyQ9FLPnUx8mWZWFuXU3YhEp47MxM2tg0WTCBMYcuU4+/Hl4hBqkG21YTtHYAYpj1Wda+NeAvOytpmqOUktF9U3kCsxT5wmQsfReESk2VTenhZjGKDAajngEQ3X5shDb3VgUuaFT63QuiJq8dK/ZGOi9Zjr6WVM7vKsZIwTdPnXyZlT21NkVXPPiRX93XpLPOepGY0XwA520tdP2PoJhxNaWt1bNFXqhDBb2scN963PoygQVN7urTesNfYFJ1ZIPoDfZB35oKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1695403377; x=1696008177; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZzBeempfnorpRCWhb2c2UDdkMLUj52zZihmUev7/bak=;
-        b=Qb1mITAhvzr0cNO8zO8hkJ6rHWaSzM8+Gtqj+a24Q7zijxXYKcGqTLIGxqw4R3qWV2
-         3cXcS8fY7V+MvkjfLVT0b6r/6G3SGr5IPpXRe5YkgIjvGl1cp9bAGrlqGscws5JDcCaO
-         KiHSQhIZ5TrrzkqXt93ZfdevtyXlRc8uNcPxL9FlM8aNrzTw6Lm7aKtLFsbJc7HNQ54S
-         g34QFDI9cKhSMCH/R1SJLy5TeyHKxE7BQ6IbxaU6wiog4MxVuUUj5px8Wpdk03I8kRoL
-         1idrApMNIeuN4xn7+y6Q5FBqZaPtDPdCFMVp/DI6XYGVkGw1WI0p7uj39YKK7Xap3129
-         uGGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695403377; x=1696008177;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZzBeempfnorpRCWhb2c2UDdkMLUj52zZihmUev7/bak=;
-        b=Z7PnyZj9flYM21I3OxMoeuwaemuju9YEI15KYGH3COpL4e/e83kNcb/cBUN4z3CPLm
-         pWo48wMtUUOhwjZxOhaAN8RrYKA6C33SpyBFLN7YYUTgpYEAIDxWDhOvX0bfyQeJoBzt
-         +NGAWYxDlNV8G1KdfOu11HPN+MgXDYErnfEfSNtsfLEjtWdB2sLtAhS0d284a5t0WVIw
-         7IO+Q0I/dlOIRJumzrXslmdw8KLZovLtEMWWAJOIb84PZYTeWx/xiwcWwOnrzIk94sF6
-         u7tTiBQGRS3LtVo5VnpghI03PxhVNvVeA4RRD+FsegxSXlzxiPGsDLBABtJY0CsaJEDB
-         v3kw==
-X-Gm-Message-State: AOJu0YxffUYv6Q5z2naj1frwyJx9qMo0Jc6rn+qyCIJITA4p3WN5Cf09
-        luKA7RsyH4Izz/h1i0f8V4lD9G5hI4x0x06++pQ=
-X-Google-Smtp-Source: AGHT+IGIYc60mjV5sAV7MEUZB7CjLA75sTAZefGWUavPfFlohgIhXBEjbTG2s5SfBaAx2bxkgSsLQ2uOhaS65w0OFYE=
-X-Received: by 2002:a2e:a7c8:0:b0:2bf:7908:ae7c with SMTP id
- x8-20020a2ea7c8000000b002bf7908ae7cmr10338689ljp.2.1695403376653; Fri, 22 Sep
- 2023 10:22:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230917230551.30483-1-trondmy@kernel.org> <20230917230551.30483-2-trondmy@kernel.org>
- <CAFX2Jfn-6J1RAiz7Vjjet+EW4jDFVRcQ9ahsZVp69AW=MC5tpg@mail.gmail.com> <9eda74d7438ee0a82323058b9d4c2b98f4e434cf.camel@hammerspace.com>
-In-Reply-To: <9eda74d7438ee0a82323058b9d4c2b98f4e434cf.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 22 Sep 2023 13:22:45 -0400
-Message-ID: <CAN-5tyEvYBr-bqOeO2Umt2DVa_CkKxT8_2Zo8Q1mfa9RN9VxQg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] NFSv4: Fix a state manager thread deadlock regression
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "schumaker.anna@gmail.com" <schumaker.anna@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "neilb@suse.de" <neilb@suse.de>
-Content-Type: text/plain; charset="UTF-8"
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cxa/yOy07tIMi2Ppbx99jVQps1mUKbE8QK9Na7G49Io=;
+ b=yJIk3YdJ3BlLtc+dSF9qc5yok8SwvGst+U3J7yp4etw527gK+Vzz0sZZF1besuXB9cZsxFbamnJ/mp/y8lVZxEkZ8Pcx0yESToaAhWbhNEgt1WR+d3l9InvVZfRzyhsYJQevlrjDVbBk62N9yO3A2huSZqiKiCiwHBGTdf6HbBQ=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by MW4PR10MB6510.namprd10.prod.outlook.com (2603:10b6:303:224::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6792.34; Fri, 22 Sep
+ 2023 17:23:03 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::bffc:4f39:2aa8:6144]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::bffc:4f39:2aa8:6144%5]) with mapi id 15.20.6813.017; Fri, 22 Sep 2023
+ 17:23:02 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+CC:     Jeff Layton <jlayton@kernel.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Neil Brown <neilb@suse.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH] NFSD: convert write_threads and write_v4_end_grace to
+ netlink commands
+Thread-Topic: [PATCH] NFSD: convert write_threads and write_v4_end_grace to
+ netlink commands
+Thread-Index: AQHZ7VKfQ7YihRKqAEKLYXScgapUUbAnAk0AgAAAkQCAAAQSAIAAAL8AgAAQgQA=
+Date:   Fri, 22 Sep 2023 17:23:02 +0000
+Message-ID: <E8ACAD24-BA69-4112-AB75-4AC99461DE6D@oracle.com>
+References: <b7985d6f0708d4a2836e1b488d641cdc11ace61b.1695386483.git.lorenzo@kernel.org>
+ <cc6341a7c5f09b731298236b260c9dfd94a811d8.camel@kernel.org>
+ <ADA8068B-B289-4210-9E28-E69F4EBB9355@oracle.com>
+ <c81b598c24df25cc1f797b8c18340d610fb58f00.camel@kernel.org>
+ <ZQ2/lGSbiNv5zn+Y@lore-desk>
+In-Reply-To: <ZQ2/lGSbiNv5zn+Y@lore-desk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.700.6)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|MW4PR10MB6510:EE_
+x-ms-office365-filtering-correlation-id: 8e37f709-a05c-4961-a0c9-08dbbb909388
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aIFoIFrf25rNUxUHnp35SKUKOOwl90W11PkHNqVkKn8ethuiZ0PW2IXtGvp2IPq6/JCTpDOxbGCsei6IkbfJSQxidKEJh1utzNSMv6S4r2MpjfGRkQXew0t0gjX1B28zhKh/I9Wz6OApsFgbAkWcRRC/iLi1utRxqmoVeEfoY7xnHfU5zlt+QEgPFUpv/74hn+lQ5baLFWPmOdv3uNoUPm1jS/Mbj4NABCvHSTKAhon1TyWkVOSgm7dc1RikZgdSxf7Twcj/DGNgkosQ8c4ZmkoXIdn3xAAZoQXtcWwGGr/tst55Q7gNDepASUjwX541PaqIc6zkUeEskjHdrlXdpyUSTvPAEFQMMGzbU65GaykVqSPjurXBDAEFP2MsFNDhblswugC47oaBkZ/SRR/yuVWBVrK/uBqBRkCGvPDADGMVJCuVj9HM/gvdz5tAYxiM69Pl+vRmhFhtU8wWVP5mcX6GDRLKfTwMiH1zS4fZu81UL3I+nv9sZTJW3w2/ZrHQpEBve29ftPkGlFUM8gvMZSqPuo3umy/pYLHQL1kTasr2JIGFN6lKHlRMoTStXE7MoU2aOY+RT64gZ38F/+hZvHS9g43J/r9EPRshuSeG5YQKqVXR+yAHVXPLGLQkndB8sQOkFVBgLeGEkdb7cep7qg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(39860400002)(366004)(346002)(136003)(186009)(1800799009)(451199024)(6486002)(966005)(71200400001)(478600001)(76116006)(91956017)(6506007)(2616005)(53546011)(6512007)(83380400001)(26005)(30864003)(33656002)(4326008)(8936002)(8676002)(66556008)(316002)(66446008)(54906003)(64756008)(5660300002)(6916009)(66476007)(41300700001)(2906002)(36756003)(66946007)(86362001)(38070700005)(122000001)(38100700002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?a/vUSP51txzawOvuZdDHfHYggdyBKzp5/u760lYzuFvAji2+k94HdmJ5oQMr?=
+ =?us-ascii?Q?RKkfImXaa5oQH2Iiqk02hKKHLYYQUHsBqiLO4DlQ7ZuO58hvMIm9ZPtmyH7a?=
+ =?us-ascii?Q?ReejHP6pi0sRStwQrD5w7QnGTzPcojrpJGOuq3Z3E+CXjjXh2ZLaxAwU/Hc1?=
+ =?us-ascii?Q?Ptqs9WF5ExKh1H3VLB8tP1RMNHodoUFgCTn5mvGTgRFy0kpBO6DPcKaBGNK0?=
+ =?us-ascii?Q?Xo0s2Mw8G61dGtkurgRK1Mt+6yxUwoaOrQcLZmHmc+f9GxFKzyeIl/aQfzOg?=
+ =?us-ascii?Q?7yBn7H6rnr1SV5l3DOozGVYoBkEH7CYs9xeGUHcpTpNhXBYoNmkCfQYD7Xs9?=
+ =?us-ascii?Q?RiKKN62yemwK6+jW/UIZcVFnNPUZjXEHA7AkOzbzxgr0QH4fTjwyQ5wUYerJ?=
+ =?us-ascii?Q?ZrlBcLjwPzCOePnW8SzbG9Clm6goRzw9MHtxIkD9dwcH9doD4NB4sD39D7OJ?=
+ =?us-ascii?Q?DWGg4YS3foK4c6Ptw+6WmovO90a6Uv4puNQhFUmAwBsHllZQDlmX6ORi1yAc?=
+ =?us-ascii?Q?RUCpshRc88oRHOh02Yd27HA41i0Hih9rLl3Kl5+agLwC0oriTS0HREvvz6ex?=
+ =?us-ascii?Q?tZcMkotPMebTseTZ27VffkSRRzJanIRWFVbv0FPXjXSbUD5CC4TKgWjJxch2?=
+ =?us-ascii?Q?NQiTrb/AjgJ4n9rlMCNuHftpDKZUo0dgliQscKN3XPtKAuZw5m7ZXJkjOZEX?=
+ =?us-ascii?Q?wwegZk+QkwcH9yzIy+jEnTIZkuVUSVZEUIfY65/j1O6TTKwzXd2Ixo2OTuey?=
+ =?us-ascii?Q?uowWUDxtZ9lCvr5SCZdiJnENfdVWKSzgvJ82EjEW5pYJLQJoDWrwYh7GHN2i?=
+ =?us-ascii?Q?qMR1MBPWB/70e22Vmh987BZWn3HOyyxoipOQyw/6QOorJqWNy//UTkPywoiE?=
+ =?us-ascii?Q?pkHoFioQlRwQ2z6xv2uYtBxuwitBd/0GtQVixjCC8mw2z3jHmqJrzkNecTqn?=
+ =?us-ascii?Q?Bltd2ikAqhFTAk3tSgAvzPxuG9gLKTLDDUTgxuq1jFVUiL7CQaQ7nXWn6AdH?=
+ =?us-ascii?Q?D8I2nhUhhI3/7xIVBjcdxH5L9xdwn8cSU3Um7Mcbb0PECCMyw9OLer8X3xvZ?=
+ =?us-ascii?Q?AW0kmisAEAzJS8mj8EmIvNG0IFtqoc1Sfw4nEti4wGijvUwovQ2vBAIOLV2u?=
+ =?us-ascii?Q?MVY2DnVYexGgbavR7yzcKanFkwEGItE/aXQdaXCYDXNty8HOHH0zXFkQkL2t?=
+ =?us-ascii?Q?ilTiKXYOMLPmc+U+aEpCQnCbdYtZqrlvM2lXRKwvg7IFXf4XpqP9cyVdxSc6?=
+ =?us-ascii?Q?AyiTabQpGEOz8I5umJEY1AvKCIHxEudGkTcc0Oo6HFUlLspnjK3o9p8SJ2E5?=
+ =?us-ascii?Q?hYKKznEveG23ZsJiP9m605vJTFWxhq4hPh8aOauW7lUHtuNITYq/84K2nm8h?=
+ =?us-ascii?Q?Bn3KUhWaBKVjHt2lcLA6rD8CuSype07Nxjw0lwioioEzKNdqR98jP0f2b3Qk?=
+ =?us-ascii?Q?caMEiFe2rMm+U36Xw/ArNcP8zOPU24vStogyliIRSREyHg4Y7bqgJGGcyJ4w?=
+ =?us-ascii?Q?sAGF2nQ/6S5oVb1Wmf663JZIq5VIIxOPSkfRx/sZgeclXF3SLl6IBPY/IF4h?=
+ =?us-ascii?Q?iV8Psvy1QMrFlh2ZyVVu4NxptI7bCcqwuOKVhcHg7VLZFPY2WGJP6trM+vzx?=
+ =?us-ascii?Q?HA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FE2F9827D0A42D498A9899DD3B16A14B@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: Tw5PPhLtcFyA1tPLcJEdL2bopJHTI34PCrm42qSbtgtx9EYYyTXvyT3Ra512kvhXEKhb7Aon8B5Jkp2WXf29VglWLycU/QduPgEffaJPuKEh9ZXYQPHQ651pQtNo57i/6fFgx2NYmb9WCMODdo4y8DOTie8+ymzZoGpMr35UyIg4YxhpI5q40VgB4LKrGZAexRawbbJcEYdwYi6hMZkI5lpNuVkDILRWmKDyPc5kTK5enPehpGGPvvIC/4LUeUviPqAJvWLgUbL3EI3+cUXGb8UHF+6vLBwOkR5qom/H6q2BWz4KfGm2L4+kM4Iger76btq1eSbxIjcSdKc0UrpH192MmppkOZQ5pAzrMHTJOcn3hhXrDScObVvjMGHuLiGLFqHWIkeMv+M+a9Kor8Xakx+Tf8zF7ntpruJbMTzD2D1kONH/henl1jGtEWk2c2KiksCU6fQjY081A99JEIkKMvV2DZzRKC8f/WDQJk8wcWHndZrOpYf/r/+SCN19IKY862hfP0F+Z6kVfc01qymuaV5kLapGlJ4z7wGP64Ohmq3G9GCEeOAmXoODpc7M2Yi9Wqa2QO/tDGebddM1z46RmGvzt9fU44BnK/5nIApTDpCfJpS9aG3O2eLATOBKJSIoJFj67AWGtRXVIX0s88SQkdD42HN8+R4kbNKjOr/eMU3smk9YTLbfUpZVf7lxK8Y29ZhuRA9f1FgMSpcFJHeooNoM2LE/QUVM+Cfz8Zwj3SmjVS96Awkgq0xN9IypMHICXHsKxMygFjjYxvY52A/qPJTFDxFs1VV/Wrbt+/QTgz2e0ZkwVhdfrk7cSxNr78/uwSsca0itvxSrIgmXqQppQQ==
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8e37f709-a05c-4961-a0c9-08dbbb909388
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Sep 2023 17:23:02.7551
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: izj7JwT7hjBrqDL9/tjtkpNtTFB0YgfU7wBDMOMO3uKr/qcAEd/7vQ1Ild36iLkhRLFAsJCS0CpBzYuVg0Casg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB6510
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.267,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-09-22_16,2023-09-21_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ mlxscore=0 suspectscore=0 adultscore=0 phishscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2309220149
+X-Proofpoint-ORIG-GUID: lIhB_5-nEZf0p1ZN9LxLnH-mk8ERt0pz
+X-Proofpoint-GUID: lIhB_5-nEZf0p1ZN9LxLnH-mk8ERt0pz
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 20, 2023 at 8:27=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
-e.com> wrote:
->
-> On Wed, 2023-09-20 at 15:38 -0400, Anna Schumaker wrote:
-> > Hi Trond,
-> >
-> > On Sun, Sep 17, 2023 at 7:12=E2=80=AFPM <trondmy@kernel.org> wrote:
-> > >
-> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > >
-> > > Commit 4dc73c679114 reintroduces the deadlock that was fixed by
-> > > commit
-> > > aeabb3c96186 ("NFSv4: Fix a NFSv4 state manager deadlock") because
-> > > it
-> > > prevents the setup of new threads to handle reboot recovery, while
-> > > the
-> > > older recovery thread is stuck returning delegations.
-> >
-> > I'm seeing a possible deadlock with xfstests generic/472 on NFS v4.x
-> > after applying this patch. The test itself checks for various
-> > swapfile
-> > edge cases, so it seems likely something is going on there.
-> >
-> > Let me know if you need more info
-> > Anna
-> >
->
-> Did you turn off delegations on your server? If you don't, then swap
-> will deadlock itself under various scenarios.
 
-Is there documentation somewhere that says that delegations must be
-turned off on the server if NFS over swap is enabled?
 
-If the client can't handle delegations + swap, then shouldn't this be
-solved by (1) checking if we are in NFS over swap and then proactively
-setting 'dont want delegation' on open and/or (2) proactively return
-the delegation if received so that we don't get into the deadlock?
+> On Sep 22, 2023, at 12:23 PM, Lorenzo Bianconi <lorenzo.bianconi@redhat.c=
+om> wrote:
+>=20
+>> On Fri, 2023-09-22 at 16:06 +0000, Chuck Lever III wrote:
+>>>=20
+>>>> On Sep 22, 2023, at 12:04 PM, Jeff Layton <jlayton@kernel.org> wrote:
+>>>>=20
+>>>> On Fri, 2023-09-22 at 14:44 +0200, Lorenzo Bianconi wrote:
+>>>>> Introduce write_threads and write_v4_end_grace netlink commands simil=
+ar
+>>>>> to the ones available through the procfs.
+>>>>> Introduce nfsd_nl_server_status_get_dumpit netlink command in order t=
+o
+>>>>> report global server metadata.
+>>>>>=20
+>>>>> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+>>>>> ---
+>>>>> This patch can be tested with user-space tool reported below:
+>>>>> https://github.com/LorenzoBianconi/nfsd-netlink.git
+>>>>> ---
+>>>>> Documentation/netlink/specs/nfsd.yaml | 33 +++++++++
+>>>>> fs/nfsd/netlink.c                     | 30 ++++++++
+>>>>> fs/nfsd/netlink.h                     |  5 ++
+>>>>> fs/nfsd/nfsctl.c                      | 98 ++++++++++++++++++++++++++=
++
+>>>>> include/uapi/linux/nfsd_netlink.h     | 11 +++
+>>>>> 5 files changed, 177 insertions(+)
+>>>>>=20
+>>>>> diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/ne=
+tlink/specs/nfsd.yaml
+>>>>> index 403d3e3a04f3..fa1204892703 100644
+>>>>> --- a/Documentation/netlink/specs/nfsd.yaml
+>>>>> +++ b/Documentation/netlink/specs/nfsd.yaml
+>>>>> @@ -62,6 +62,15 @@ attribute-sets:
+>>>>>        name: compound-ops
+>>>>>        type: u32
+>>>>>        multi-attr: true
+>>>>> +  -
+>>>>> +    name: server-attr
+>>>>> +    attributes:
+>>>>> +      -
+>>>>> +        name: threads
+>>>>> +        type: u16
+>>>>=20
+>>>> 65k threads ought to be enough for anybody!
+>>>=20
+>>> No argument.
+>>>=20
+>>> But I thought you could echo a negative number of threads in /proc/fs/n=
+fsd/threads
+>>> to reduce the thread count. Maybe this field should be an s32?
+>>>=20
+>>=20
+>> Yuck! I think I'd rather see this implemented as a declarative field.
+>>=20
+>> Let's have this specify an explicit number of threads with 0 meaning
+>> shutdown. If someone wants to reduce the number, they can do the math in
+>> userland. That also jives better with the SERVICE_STATUS_GET...
+>=20
+> ack, I agree.
 
-I think this is similar to Anna's. With this patch, I'm running into a
-problem running against an ONTAP server using xfstests (no problems
-without the patch). During the run two stuck threads are:
-[root@unknown000c291be8aa aglo]# cat /proc/3724/stack
-[<0>] nfs4_run_state_manager+0x1c0/0x1f8 [nfsv4]
-[<0>] kthread+0x100/0x110
-[<0>] ret_from_fork+0x10/0x20
-[root@unknown000c291be8aa aglo]# cat /proc/3725/stack
-[<0>] nfs_wait_bit_killable+0x1c/0x88 [nfs]
-[<0>] nfs4_wait_clnt_recover+0xb4/0xf0 [nfsv4]
-[<0>] nfs4_client_recover_expired_lease+0x34/0x88 [nfsv4]
-[<0>] _nfs4_do_open.isra.0+0x94/0x408 [nfsv4]
-[<0>] nfs4_do_open+0x9c/0x238 [nfsv4]
-[<0>] nfs4_atomic_open+0x100/0x118 [nfsv4]
-[<0>] nfs4_file_open+0x11c/0x240 [nfsv4]
-[<0>] do_dentry_open+0x140/0x528
-[<0>] vfs_open+0x30/0x38
-[<0>] do_open+0x14c/0x360
-[<0>] path_openat+0x104/0x250
-[<0>] do_filp_open+0x84/0x138
-[<0>] file_open_name+0x134/0x190
-[<0>] __do_sys_swapoff+0x58/0x6e8
-[<0>] __arm64_sys_swapoff+0x18/0x28
-[<0>] invoke_syscall.constprop.0+0x7c/0xd0
-[<0>] do_el0_svc+0xb4/0xd0
-[<0>] el0_svc+0x50/0x228
-[<0>] el0t_64_sync_handler+0x134/0x150
-[<0>] el0t_64_sync+0x17c/0x180
+The positive / negative value is actually nailed into some of the
+thread infrastructure. Changing that might be more of schlep.
 
->
-> > >
-> > > Fixes: 4dc73c679114 ("NFSv4: keep state manager thread active if
-> > > swap is enabled")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > ---
-> > >  fs/nfs/nfs4proc.c  |  4 +++-
-> > >  fs/nfs/nfs4state.c | 38 ++++++++++++++++++++++++++------------
-> > >  2 files changed, 29 insertions(+), 13 deletions(-)
-> > >
-> > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> > > index 5deeaea8026e..a19e809cad16 100644
-> > > --- a/fs/nfs/nfs4proc.c
-> > > +++ b/fs/nfs/nfs4proc.c
-> > > @@ -10652,7 +10652,9 @@ static void nfs4_disable_swap(struct inode
-> > > *inode)
-> > >          */
-> > >         struct nfs_client *clp =3D NFS_SERVER(inode)->nfs_client;
-> > >
-> > > -       nfs4_schedule_state_manager(clp);
-> > > +       set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
-> > > +       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
-> > > +       wake_up_var(&clp->cl_state);
-> > >  }
-> > >
-> > >  static const struct inode_operations nfs4_dir_inode_operations =3D {
-> > > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> > > index 0bc160fbabec..5751a6886da4 100644
-> > > --- a/fs/nfs/nfs4state.c
-> > > +++ b/fs/nfs/nfs4state.c
-> > > @@ -1209,16 +1209,26 @@ void nfs4_schedule_state_manager(struct
-> > > nfs_client *clp)
-> > >  {
-> > >         struct task_struct *task;
-> > >         char buf[INET6_ADDRSTRLEN + sizeof("-manager") + 1];
-> > > +       struct rpc_clnt *clnt =3D clp->cl_rpcclient;
-> > > +       bool swapon =3D false;
-> > >
-> > > -       if (clp->cl_rpcclient->cl_shutdown)
-> > > +       if (clnt->cl_shutdown)
-> > >                 return;
-> > >
-> > >         set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
-> > > -       if (test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
-> > > >cl_state) !=3D 0) {
-> > > -               wake_up_var(&clp->cl_state);
-> > > -               return;
-> > > +
-> > > +       if (atomic_read(&clnt->cl_swapper)) {
-> > > +               swapon =3D
-> > > !test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE,
-> > > +                                          &clp->cl_state);
-> > > +               if (!swapon) {
-> > > +                       wake_up_var(&clp->cl_state);
-> > > +                       return;
-> > > +               }
-> > >         }
-> > > -       set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state);
-> > > +
-> > > +       if (test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp-
-> > > >cl_state) !=3D 0)
-> > > +               return;
-> > > +
-> > >         __module_get(THIS_MODULE);
-> > >         refcount_inc(&clp->cl_count);
-> > >
-> > > @@ -1235,8 +1245,9 @@ void nfs4_schedule_state_manager(struct
-> > > nfs_client *clp)
-> > >                         __func__, PTR_ERR(task));
-> > >                 if (!nfs_client_init_is_complete(clp))
-> > >                         nfs_mark_client_ready(clp, PTR_ERR(task));
-> > > +               if (swapon)
-> > > +                       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
-> > > >cl_state);
-> > >                 nfs4_clear_state_manager_bit(clp);
-> > > -               clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
-> > > >cl_state);
-> > >                 nfs_put_client(clp);
-> > >                 module_put(THIS_MODULE);
-> > >         }
-> > > @@ -2748,22 +2759,25 @@ static int nfs4_run_state_manager(void
-> > > *ptr)
-> > >
-> > >         allow_signal(SIGKILL);
-> > >  again:
-> > > -       set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state);
-> > >         nfs4_state_manager(clp);
-> > > -       if (atomic_read(&cl->cl_swapper)) {
-> > > +
-> > > +       if (test_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state) &&
-> > > +           !test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp-
-> > > >cl_state)) {
-> > >                 wait_var_event_interruptible(&clp->cl_state,
-> > >
-> > > test_bit(NFS4CLNT_RUN_MANAGER,
-> > >                                                       &clp-
-> > > >cl_state));
-> > > -               if (atomic_read(&cl->cl_swapper) &&
-> > > -                   test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state))
-> > > +               if (!atomic_read(&cl->cl_swapper))
-> > > +                       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
-> > > >cl_state);
-> > > +               if (refcount_read(&clp->cl_count) > 1 &&
-> > > !signalled())
-> > >                         goto again;
-> > >                 /* Either no longer a swapper, or were signalled */
-> > > +               clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
-> > > >cl_state);
-> > > +               nfs4_clear_state_manager_bit(clp);
-> > >         }
-> > > -       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
-> > >
-> > >         if (refcount_read(&clp->cl_count) > 1 && !signalled() &&
-> > >             test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state) &&
-> > > -           !test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
-> > > >cl_state))
-> > > +           !test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp-
-> > > >cl_state))
-> > >                 goto again;
-> > >
-> > >         nfs_put_client(clp);
-> > > --
-> > > 2.41.0
-> > >
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+I'm curious how Neil feels about this.
+
+
+> Regards,
+> Lorenzo
+>=20
+>>=20
+>>>=20
+>>>>> +      -
+>>>>> +        name: v4-grace
+>>>>> +        type: u8
+>>>>>=20
+>>>>> operations:
+>>>>>  list:
+>>>>> @@ -72,3 +81,27 @@ operations:
+>>>>>      dump:
+>>>>>        pre: nfsd-nl-rpc-status-get-start
+>>>>>        post: nfsd-nl-rpc-status-get-done
+>>>>> +    -
+>>>>> +      name: threads-set
+>>>>> +      doc: set the number of running threads
+>>>>> +      attribute-set: server-attr
+>>>>> +      flags: [ admin-perm ]
+>>>>> +      do:
+>>>>> +        request:
+>>>>> +          attributes:
+>>>>> +            - threads
+>>>>> +    -
+>>>>> +      name: v4-grace-release
+>>>>> +      doc: release the grace period for nfsd's v4 lock manager
+>>>>> +      attribute-set: server-attr
+>>>>> +      flags: [ admin-perm ]
+>>>>> +      do:
+>>>>> +        request:
+>>>>> +          attributes:
+>>>>> +            - v4-grace
+>>>>> +    -
+>>>>> +      name: server-status-get
+>>>>> +      doc: dump server status info
+>>>>> +      attribute-set: server-attr
+>>>>> +      dump:
+>>>>> +        pre: nfsd-nl-server-status-get-start
+>>>>> diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+>>>>> index 0e1d635ec5f9..783a34e69354 100644
+>>>>> --- a/fs/nfsd/netlink.c
+>>>>> +++ b/fs/nfsd/netlink.c
+>>>>> @@ -10,6 +10,16 @@
+>>>>>=20
+>>>>> #include <uapi/linux/nfsd_netlink.h>
+>>>>>=20
+>>>>> +/* NFSD_CMD_THREADS_SET - do */
+>>>>> +static const struct nla_policy nfsd_threads_set_nl_policy[NFSD_A_SER=
+VER_ATTR_THREADS + 1] =3D {
+>>>>> + [NFSD_A_SERVER_ATTR_THREADS] =3D { .type =3D NLA_U16, },
+>>>>> +};
+>>>>> +
+>>>>> +/* NFSD_CMD_V4_GRACE_RELEASE - do */
+>>>>> +static const struct nla_policy nfsd_v4_grace_release_nl_policy[NFSD_=
+A_SERVER_ATTR_V4_GRACE + 1] =3D {
+>>>>> + [NFSD_A_SERVER_ATTR_V4_GRACE] =3D { .type =3D NLA_U8, },
+>>>>> +};
+>>>>> +
+>>>>> /* Ops table for nfsd */
+>>>>> static const struct genl_split_ops nfsd_nl_ops[] =3D {
+>>>>> {
+>>>>> @@ -19,6 +29,26 @@ static const struct genl_split_ops nfsd_nl_ops[] =
+=3D {
+>>>>> .done =3D nfsd_nl_rpc_status_get_done,
+>>>>> .flags =3D GENL_CMD_CAP_DUMP,
+>>>>> },
+>>>>> + {
+>>>>> + .cmd =3D NFSD_CMD_THREADS_SET,
+>>>>> + .doit =3D nfsd_nl_threads_set_doit,
+>>>>> + .policy =3D nfsd_threads_set_nl_policy,
+>>>>> + .maxattr =3D NFSD_A_SERVER_ATTR_THREADS,
+>>>>> + .flags =3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+>>>>> + },
+>>>>> + {
+>>>>> + .cmd =3D NFSD_CMD_V4_GRACE_RELEASE,
+>>>>> + .doit =3D nfsd_nl_v4_grace_release_doit,
+>>>>> + .policy =3D nfsd_v4_grace_release_nl_policy,
+>>>>> + .maxattr =3D NFSD_A_SERVER_ATTR_V4_GRACE,
+>>>>> + .flags =3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+>>>>> + },
+>>>>> + {
+>>>>> + .cmd =3D NFSD_CMD_SERVER_STATUS_GET,
+>>>>> + .start =3D nfsd_nl_server_status_get_start,
+>>>>> + .dumpit =3D nfsd_nl_server_status_get_dumpit,
+>>>>> + .flags =3D GENL_CMD_CAP_DUMP,
+>>>>> + },
+>>>>> };
+>>>>>=20
+>>>>> struct genl_family nfsd_nl_family __ro_after_init =3D {
+>>>>> diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+>>>>> index d83dd6bdee92..2e98061fbb0a 100644
+>>>>> --- a/fs/nfsd/netlink.h
+>>>>> +++ b/fs/nfsd/netlink.h
+>>>>> @@ -12,10 +12,15 @@
+>>>>> #include <uapi/linux/nfsd_netlink.h>
+>>>>>=20
+>>>>> int nfsd_nl_rpc_status_get_start(struct netlink_callback *cb);
+>>>>> +int nfsd_nl_server_status_get_start(struct netlink_callback *cb);
+>>>>> int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb);
+>>>>>=20
+>>>>> int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+>>>>>  struct netlink_callback *cb);
+>>>>> +int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *=
+info);
+>>>>> +int nfsd_nl_v4_grace_release_doit(struct sk_buff *skb, struct genl_i=
+nfo *info);
+>>>>> +int nfsd_nl_server_status_get_dumpit(struct sk_buff *skb,
+>>>>> +      struct netlink_callback *cb);
+>>>>>=20
+>>>>> extern struct genl_family nfsd_nl_family;
+>>>>>=20
+>>>>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+>>>>> index b71744e355a8..c631b59b7a4f 100644
+>>>>> --- a/fs/nfsd/nfsctl.c
+>>>>> +++ b/fs/nfsd/nfsctl.c
+>>>>> @@ -1694,6 +1694,104 @@ int nfsd_nl_rpc_status_get_done(struct netlin=
+k_callback *cb)
+>>>>> return 0;
+>>>>> }
+>>>>>=20
+>>>>> +/**
+>>>>> + * nfsd_nl_threads_set_doit - set the number of running threads
+>>>>> + * @skb: reply buffer
+>>>>> + * @info: netlink metadata and command arguments
+>>>>> + *
+>>>>> + * Return 0 on success or a negative errno.
+>>>>> + */
+>>>>> +int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *=
+info)
+>>>>> +{
+>>>>> + u16 nthreads;
+>>>>> + int ret;
+>>>>> +
+>>>>> + if (!info->attrs[NFSD_A_SERVER_ATTR_THREADS])
+>>>>> + return -EINVAL;
+>>>>> +
+>>>>> + nthreads =3D nla_get_u16(info->attrs[NFSD_A_SERVER_ATTR_THREADS]);
+>>>>> +
+>>>>> + ret =3D nfsd_svc(nthreads, genl_info_net(info), get_current_cred())=
+;
+>>>>> + return ret =3D=3D nthreads ? 0 : ret;
+>>>>> +}
+>>>>> +
+>>>>> +/**
+>>>>> + * nfsd_nl_v4_grace_release_doit - release the nfs4 grace period
+>>>>> + * @skb: reply buffer
+>>>>> + * @info: netlink metadata and command arguments
+>>>>> + *
+>>>>> + * Return 0 on success or a negative errno.
+>>>>> + */
+>>>>> +int nfsd_nl_v4_grace_release_doit(struct sk_buff *skb, struct genl_i=
+nfo *info)
+>>>>> +{
+>>>>> +#ifdef CONFIG_NFSD_V4
+>>>>> + struct nfsd_net *nn =3D net_generic(genl_info_net(info), nfsd_net_i=
+d);
+>>>>> +
+>>>>> + if (!info->attrs[NFSD_A_SERVER_ATTR_V4_GRACE])
+>>>>> + return -EINVAL;
+>>>>> +
+>>>>> + if (nla_get_u8(info->attrs[NFSD_A_SERVER_ATTR_V4_GRACE]))
+>>>>> + nfsd4_end_grace(nn);
+>>>>> +
+>>>>=20
+>>>> To be clear here. Issuing this with anything but 0 will end the grace
+>>>> period. A value of 0 is ignored. It might be best to make the value no=
+t
+>>>> matter at all. Do we have to send down a value at all?
+>>>>=20
+>>>>> + return 0;
+>>>>> +#else
+>>>>> + return -EOPNOTSUPP;
+>>>>> +#endif /* CONFIG_NFSD_V4 */
+>>>>> +}
+>>>>> +
+>>>>> +/**
+>>>>> + * nfsd_nl_server_status_get_start - Prepare server_status_get dumpi=
+t
+>>>>> + * @cb: netlink metadata and command arguments
+>>>>> + *
+>>>>> + * Return values:
+>>>>> + *   %0: The server_status_get command may proceed
+>>>>> + *   %-ENODEV: There is no NFSD running in this namespace
+>>>>> + */
+>>>>> +int nfsd_nl_server_status_get_start(struct netlink_callback *cb)
+>>>>> +{
+>>>>> + struct nfsd_net *nn =3D net_generic(sock_net(cb->skb->sk), nfsd_net=
+_id);
+>>>>> +
+>>>>> + return nn->nfsd_serv ? 0 : -ENODEV;
+>>>>> +}
+>>>>> +
+>>>>> +/**
+>>>>> + * nfsd_nl_server_status_get_dumpit - dump server status info
+>>>>> + * @skb: reply buffer
+>>>>> + * @cb: netlink metadata and command arguments
+>>>>> + *
+>>>>> + * Returns the size of the reply or a negative errno.
+>>>>> + */
+>>>>> +int nfsd_nl_server_status_get_dumpit(struct sk_buff *skb,
+>>>>> +      struct netlink_callback *cb)
+>>>>> +{
+>>>>> + struct net *net =3D sock_net(skb->sk);
+>>>>> +#ifdef CONFIG_NFSD_V4
+>>>>> + struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
+>>>>> +#endif /* CONFIG_NFSD_V4 */
+>>>>> + void *hdr;
+>>>>> +
+>>>>> + if (cb->args[0]) /* already consumed */
+>>>>> + return 0;
+>>>>> +
+>>>>> + hdr =3D genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg=
+_seq,
+>>>>> +   &nfsd_nl_family, NLM_F_MULTI,
+>>>>> +   NFSD_CMD_SERVER_STATUS_GET);
+>>>>> + if (!hdr)
+>>>>> + return -ENOBUFS;
+>>>>> +
+>>>>> + if (nla_put_u16(skb, NFSD_A_SERVER_ATTR_THREADS, nfsd_nrthreads(net=
+)))
+>>>>> + return -ENOBUFS;
+>>>>> +#ifdef CONFIG_NFSD_V4
+>>>>> + if (nla_put_u8(skb, NFSD_A_SERVER_ATTR_V4_GRACE, !nn->grace_ended))
+>>>>> + return -ENOBUFS;
+>>>>> +#endif /* CONFIG_NFSD_V4 */
+>>>>> +
+>>>>> + genlmsg_end(skb, hdr);
+>>>>> + cb->args[0] =3D 1;
+>>>>> +
+>>>>> + return skb->len;
+>>>>> +}
+>>>>> +
+>>>>> /**
+>>>>> * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+>>>>> * @net: a freshly-created network namespace
+>>>>> diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/n=
+fsd_netlink.h
+>>>>> index c8ae72466ee6..b82fbc53d336 100644
+>>>>> --- a/include/uapi/linux/nfsd_netlink.h
+>>>>> +++ b/include/uapi/linux/nfsd_netlink.h
+>>>>> @@ -29,8 +29,19 @@ enum {
+>>>>> NFSD_A_RPC_STATUS_MAX =3D (__NFSD_A_RPC_STATUS_MAX - 1)
+>>>>> };
+>>>>>=20
+>>>>> +enum {
+>>>>> + NFSD_A_SERVER_ATTR_THREADS =3D 1,
+>>>>> + NFSD_A_SERVER_ATTR_V4_GRACE,
+>>>>> +
+>>>>> + __NFSD_A_SERVER_ATTR_MAX,
+>>>>> + NFSD_A_SERVER_ATTR_MAX =3D (__NFSD_A_SERVER_ATTR_MAX - 1)
+>>>>> +};
+>>>>> +
+>>>>> enum {
+>>>>> NFSD_CMD_RPC_STATUS_GET =3D 1,
+>>>>> + NFSD_CMD_THREADS_SET,
+>>>>> + NFSD_CMD_V4_GRACE_RELEASE,
+>>>>> + NFSD_CMD_SERVER_STATUS_GET,
+>>>>>=20
+>>>>> __NFSD_CMD_MAX,
+>>>>> NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
+>>>>=20
+>>>> --=20
+>>>> Jeff Layton <jlayton@kernel.org>
+>>>=20
+>>>=20
+>>> --
+>>> Chuck Lever
+>>>=20
+>>>=20
+>>=20
+>> --=20
+>> Jeff Layton <jlayton@kernel.org>
+>>=20
+
+--
+Chuck Lever
+
+
