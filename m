@@ -2,185 +2,271 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EBB87AB704
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Sep 2023 19:15:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BD727AB721
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Sep 2023 19:23:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232931AbjIVRPL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Sep 2023 13:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35046 "EHLO
+        id S229576AbjIVRXG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Sep 2023 13:23:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232919AbjIVRPJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Sep 2023 13:15:09 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99ACB1AC;
-        Fri, 22 Sep 2023 10:14:57 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC254C43391;
-        Fri, 22 Sep 2023 17:14:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695402897;
-        bh=+R/VqH2Y/BEqxszA0QoLfX//cyFS9olgivR+kesE1J4=;
-        h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-        b=iGdFCLfI45oIdGjAhse2hgGufxXf/0O9SoobCZ6Kp6qHR1lsFNhsfggdoO1vAEJvZ
-         j0GX5+d9ed6zhcWBLoAl5hu3jSIRsO8inXCWlLV0lmUbmhiC9eCtC76g6Etga6E+Ie
-         Nrf2E1UFJMh5ywRWYITq/jmTTOfrNOn5eQKSSD0NDEm5KOUmkp8tGQ0PFY2uSX/o90
-         x+VDNzKOXIf0sA590jm77bZHd3kXVDR72243VI9CHIinaVCHFk6+Km85a7m3OmUXho
-         K74Rhs19YyfibVFsrRX7Owth2bWG1g0PJfI77BB5GgROv30noUCzMzgaOT80BrnheI
-         fFmak1i1pLV/A==
-From:   Jeff Layton <jlayton@kernel.org>
-Date:   Fri, 22 Sep 2023 13:14:44 -0400
-Subject: [PATCH v8 5/5] xfs: switch to multigrain timestamps
+        with ESMTP id S229532AbjIVRXF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Sep 2023 13:23:05 -0400
+Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A36AAF1
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Sep 2023 10:22:58 -0700 (PDT)
+Received: by mail-lj1-x22c.google.com with SMTP id 38308e7fff4ca-2c00b877379so9477071fa.1
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Sep 2023 10:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1695403377; x=1696008177; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZzBeempfnorpRCWhb2c2UDdkMLUj52zZihmUev7/bak=;
+        b=Qb1mITAhvzr0cNO8zO8hkJ6rHWaSzM8+Gtqj+a24Q7zijxXYKcGqTLIGxqw4R3qWV2
+         3cXcS8fY7V+MvkjfLVT0b6r/6G3SGr5IPpXRe5YkgIjvGl1cp9bAGrlqGscws5JDcCaO
+         KiHSQhIZ5TrrzkqXt93ZfdevtyXlRc8uNcPxL9FlM8aNrzTw6Lm7aKtLFsbJc7HNQ54S
+         g34QFDI9cKhSMCH/R1SJLy5TeyHKxE7BQ6IbxaU6wiog4MxVuUUj5px8Wpdk03I8kRoL
+         1idrApMNIeuN4xn7+y6Q5FBqZaPtDPdCFMVp/DI6XYGVkGw1WI0p7uj39YKK7Xap3129
+         uGGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695403377; x=1696008177;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZzBeempfnorpRCWhb2c2UDdkMLUj52zZihmUev7/bak=;
+        b=Z7PnyZj9flYM21I3OxMoeuwaemuju9YEI15KYGH3COpL4e/e83kNcb/cBUN4z3CPLm
+         pWo48wMtUUOhwjZxOhaAN8RrYKA6C33SpyBFLN7YYUTgpYEAIDxWDhOvX0bfyQeJoBzt
+         +NGAWYxDlNV8G1KdfOu11HPN+MgXDYErnfEfSNtsfLEjtWdB2sLtAhS0d284a5t0WVIw
+         7IO+Q0I/dlOIRJumzrXslmdw8KLZovLtEMWWAJOIb84PZYTeWx/xiwcWwOnrzIk94sF6
+         u7tTiBQGRS3LtVo5VnpghI03PxhVNvVeA4RRD+FsegxSXlzxiPGsDLBABtJY0CsaJEDB
+         v3kw==
+X-Gm-Message-State: AOJu0YxffUYv6Q5z2naj1frwyJx9qMo0Jc6rn+qyCIJITA4p3WN5Cf09
+        luKA7RsyH4Izz/h1i0f8V4lD9G5hI4x0x06++pQ=
+X-Google-Smtp-Source: AGHT+IGIYc60mjV5sAV7MEUZB7CjLA75sTAZefGWUavPfFlohgIhXBEjbTG2s5SfBaAx2bxkgSsLQ2uOhaS65w0OFYE=
+X-Received: by 2002:a2e:a7c8:0:b0:2bf:7908:ae7c with SMTP id
+ x8-20020a2ea7c8000000b002bf7908ae7cmr10338689ljp.2.1695403376653; Fri, 22 Sep
+ 2023 10:22:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230922-ctime-v8-5-45f0c236ede1@kernel.org>
-References: <20230922-ctime-v8-0-45f0c236ede1@kernel.org>
-In-Reply-To: <20230922-ctime-v8-0-45f0c236ede1@kernel.org>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-        Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3811; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=+R/VqH2Y/BEqxszA0QoLfX//cyFS9olgivR+kesE1J4=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlDcuGzq6LFTw1GidIFjabFRhWirpLN8lq0xa2T
- gnnQgk9RM6JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZQ3LhgAKCRAADmhBGVaC
- FfNoEACpYILGJNZCCiYdPFl9vpwrP0Gd3cZHvHbgH4D15ySNal9OtCw43Yy73I2bXKZswiSHYpw
- JOa3X5lqXVv1WBBqS6prbYRFyHwXFNiSVsaR0m2bqI4e1tDPXih3ZsGi4KXxOYlZ0ZpLYXH9NTG
- 1IQropOz8tvmWj6k17+FkE8SxnJnObC4MQlqXNnf4CJazo0XbR/Qwrka5nJYSwChIinIFAm9u3D
- nhJgi4sqE3dFSgqRbwsijCHLwMjr32mOL+hMQflJcNmAvFheM6Dj2h3c3e6Zyjt1J58b3anm8io
- qYGmBD8mxoFehTM2MRdF/1qpy+kfOefCJUWSIeZq6TTI+4eWMaHA9PfKeEPyLAzMp5tn6rMOQ5R
- bOLyDLKlzLzGVJdJOUJmbxt0JBpxzPq2o5e5eDhvn0JYS5ddIY1uBzuM4/y98SvT1HIPCXrM+4a
- XYJMrnwA2ppdom2a6MyFjjFPDT5QbfUPDKV6zk/IJFH4+dLyV2054kvF2JfhE7agsvixgpLbSaD
- WbCGhhfbuRKVKhPXqWkYmx5lPrGxzwKVcXnBFtYMn5W7r0TCQ6g7mnPJ/hiecqTkfov5NGm/dWh
- XbL4Z2/MFMT2nwD37eOzM5dtLPlEgC3iCqDJZtAD8h2W/xBIlSxI8uCODGbBPj/klSDQZdM+Y2P
- DH6+jV6szK/A5XA==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230917230551.30483-1-trondmy@kernel.org> <20230917230551.30483-2-trondmy@kernel.org>
+ <CAFX2Jfn-6J1RAiz7Vjjet+EW4jDFVRcQ9ahsZVp69AW=MC5tpg@mail.gmail.com> <9eda74d7438ee0a82323058b9d4c2b98f4e434cf.camel@hammerspace.com>
+In-Reply-To: <9eda74d7438ee0a82323058b9d4c2b98f4e434cf.camel@hammerspace.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Fri, 22 Sep 2023 13:22:45 -0400
+Message-ID: <CAN-5tyEvYBr-bqOeO2Umt2DVa_CkKxT8_2Zo8Q1mfa9RN9VxQg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] NFSv4: Fix a state manager thread deadlock regression
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "schumaker.anna@gmail.com" <schumaker.anna@gmail.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
+        "neilb@suse.de" <neilb@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Enable multigrain timestamps, which should ensure that there is an
-apparent change to the internal ctime value whenever a file has been
-written after being actively observed via getattr.
+On Wed, Sep 20, 2023 at 8:27=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
+e.com> wrote:
+>
+> On Wed, 2023-09-20 at 15:38 -0400, Anna Schumaker wrote:
+> > Hi Trond,
+> >
+> > On Sun, Sep 17, 2023 at 7:12=E2=80=AFPM <trondmy@kernel.org> wrote:
+> > >
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > >
+> > > Commit 4dc73c679114 reintroduces the deadlock that was fixed by
+> > > commit
+> > > aeabb3c96186 ("NFSv4: Fix a NFSv4 state manager deadlock") because
+> > > it
+> > > prevents the setup of new threads to handle reboot recovery, while
+> > > the
+> > > older recovery thread is stuck returning delegations.
+> >
+> > I'm seeing a possible deadlock with xfstests generic/472 on NFS v4.x
+> > after applying this patch. The test itself checks for various
+> > swapfile
+> > edge cases, so it seems likely something is going on there.
+> >
+> > Let me know if you need more info
+> > Anna
+> >
+>
+> Did you turn off delegations on your server? If you don't, then swap
+> will deadlock itself under various scenarios.
 
-Anytime the mtime changes, the ctime must also change, and those are the
-only two options for xfs_trans_ichgtime. Have that function
-unconditionally bump the ctime, and ASSERT that XFS_ICHGTIME_CHG is
-always set.
+Is there documentation somewhere that says that delegations must be
+turned off on the server if NFS over swap is enabled?
 
-In getattr, truncate the mtime and ctime at the number of nanoseconds
-per jiffy, which should ensure that ordering is preserved. Use the fine
-grained ctime to fake up a STATX_CHANGE_COOKIE if one was requested.
+If the client can't handle delegations + swap, then shouldn't this be
+solved by (1) checking if we are in NFS over swap and then proactively
+setting 'dont want delegation' on open and/or (2) proactively return
+the delegation if received so that we don't get into the deadlock?
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/xfs/libxfs/xfs_trans_inode.c |  6 +++---
- fs/xfs/xfs_iops.c               | 26 +++++++++++++++++++-------
- fs/xfs/xfs_super.c              |  2 +-
- 3 files changed, 23 insertions(+), 11 deletions(-)
+I think this is similar to Anna's. With this patch, I'm running into a
+problem running against an ONTAP server using xfstests (no problems
+without the patch). During the run two stuck threads are:
+[root@unknown000c291be8aa aglo]# cat /proc/3724/stack
+[<0>] nfs4_run_state_manager+0x1c0/0x1f8 [nfsv4]
+[<0>] kthread+0x100/0x110
+[<0>] ret_from_fork+0x10/0x20
+[root@unknown000c291be8aa aglo]# cat /proc/3725/stack
+[<0>] nfs_wait_bit_killable+0x1c/0x88 [nfs]
+[<0>] nfs4_wait_clnt_recover+0xb4/0xf0 [nfsv4]
+[<0>] nfs4_client_recover_expired_lease+0x34/0x88 [nfsv4]
+[<0>] _nfs4_do_open.isra.0+0x94/0x408 [nfsv4]
+[<0>] nfs4_do_open+0x9c/0x238 [nfsv4]
+[<0>] nfs4_atomic_open+0x100/0x118 [nfsv4]
+[<0>] nfs4_file_open+0x11c/0x240 [nfsv4]
+[<0>] do_dentry_open+0x140/0x528
+[<0>] vfs_open+0x30/0x38
+[<0>] do_open+0x14c/0x360
+[<0>] path_openat+0x104/0x250
+[<0>] do_filp_open+0x84/0x138
+[<0>] file_open_name+0x134/0x190
+[<0>] __do_sys_swapoff+0x58/0x6e8
+[<0>] __arm64_sys_swapoff+0x18/0x28
+[<0>] invoke_syscall.constprop.0+0x7c/0xd0
+[<0>] do_el0_svc+0xb4/0xd0
+[<0>] el0_svc+0x50/0x228
+[<0>] el0t_64_sync_handler+0x134/0x150
+[<0>] el0t_64_sync+0x17c/0x180
 
-diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
-index 6b2296ff248a..ad22656376d3 100644
---- a/fs/xfs/libxfs/xfs_trans_inode.c
-+++ b/fs/xfs/libxfs/xfs_trans_inode.c
-@@ -62,12 +62,12 @@ xfs_trans_ichgtime(
- 	ASSERT(tp);
- 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
- 
--	tv = current_time(inode);
-+	/* If the mtime changes, then ctime must also change */
-+	ASSERT(flags & XFS_ICHGTIME_CHG);
- 
-+	tv = inode_set_ctime_current(inode);
- 	if (flags & XFS_ICHGTIME_MOD)
- 		inode->i_mtime = tv;
--	if (flags & XFS_ICHGTIME_CHG)
--		inode_set_ctime_to_ts(inode, tv);
- 	if (flags & XFS_ICHGTIME_CREATE)
- 		ip->i_crtime = tv;
- }
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index 1c1e6171209d..af4a54756113 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -559,6 +559,7 @@ xfs_vn_getattr(
- 	struct xfs_mount	*mp = ip->i_mount;
- 	vfsuid_t		vfsuid = i_uid_into_vfsuid(idmap, inode);
- 	vfsgid_t		vfsgid = i_gid_into_vfsgid(idmap, inode);
-+	struct timespec64	ctime;
- 
- 	trace_xfs_getattr(ip);
- 
-@@ -573,8 +574,23 @@ xfs_vn_getattr(
- 	stat->gid = vfsgid_into_kgid(vfsgid);
- 	stat->ino = ip->i_ino;
- 	stat->atime = inode->i_atime;
--	stat->mtime = inode->i_mtime;
--	stat->ctime = inode_get_ctime(inode);
-+	stat->mtime = timestamp_truncate_to_gran(inode->i_mtime, NSEC_PER_SEC/HZ);
-+
-+	/*
-+	 * Don't bother flagging the inode for a fine-grained update unless
-+	 * STATX_CHANGE_COOKIE is set, in which case, use the fine-grained
-+	 * value to fake up a change_cookie.
-+	 */
-+	if (request_mask & STATX_CHANGE_COOKIE) {
-+		ctime = inode_query_ctime(inode);
-+		stat->change_cookie = time_to_chattr(&ctime);
-+		stat->result_mask |= STATX_CHANGE_COOKIE;
-+	} else {
-+		ctime = inode_get_ctime(inode);
-+	}
-+
-+	stat->ctime = timestamp_truncate_to_gran(ctime, NSEC_PER_SEC/HZ);
-+
- 	stat->blocks = XFS_FSB_TO_BB(mp, ip->i_nblocks + ip->i_delayed_blks);
- 
- 	if (xfs_has_v3inodes(mp)) {
-@@ -914,12 +930,8 @@ xfs_setattr_size(
- 	 * these flags set.  For all other operations the VFS set these flags
- 	 * explicitly if it wants a timestamp update.
- 	 */
--	if (newsize != oldsize &&
--	    !(iattr->ia_valid & (ATTR_CTIME | ATTR_MTIME))) {
--		iattr->ia_ctime = iattr->ia_mtime =
--			current_time(inode);
-+	if (newsize != oldsize)
- 		iattr->ia_valid |= ATTR_CTIME | ATTR_MTIME;
--	}
- 
- 	/*
- 	 * The first thing we do is set the size to new_size permanently on
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index b5c202f5d96c..1f77014c6e1a 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -2065,7 +2065,7 @@ static struct file_system_type xfs_fs_type = {
- 	.init_fs_context	= xfs_init_fs_context,
- 	.parameters		= xfs_fs_parameters,
- 	.kill_sb		= xfs_kill_sb,
--	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
-+	.fs_flags		= FS_REQUIRES_DEV | FS_ALLOW_IDMAP | FS_MGTIME,
- };
- MODULE_ALIAS_FS("xfs");
- 
-
--- 
-2.41.0
-
+>
+> > >
+> > > Fixes: 4dc73c679114 ("NFSv4: keep state manager thread active if
+> > > swap is enabled")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > ---
+> > >  fs/nfs/nfs4proc.c  |  4 +++-
+> > >  fs/nfs/nfs4state.c | 38 ++++++++++++++++++++++++++------------
+> > >  2 files changed, 29 insertions(+), 13 deletions(-)
+> > >
+> > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > > index 5deeaea8026e..a19e809cad16 100644
+> > > --- a/fs/nfs/nfs4proc.c
+> > > +++ b/fs/nfs/nfs4proc.c
+> > > @@ -10652,7 +10652,9 @@ static void nfs4_disable_swap(struct inode
+> > > *inode)
+> > >          */
+> > >         struct nfs_client *clp =3D NFS_SERVER(inode)->nfs_client;
+> > >
+> > > -       nfs4_schedule_state_manager(clp);
+> > > +       set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+> > > +       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
+> > > +       wake_up_var(&clp->cl_state);
+> > >  }
+> > >
+> > >  static const struct inode_operations nfs4_dir_inode_operations =3D {
+> > > diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> > > index 0bc160fbabec..5751a6886da4 100644
+> > > --- a/fs/nfs/nfs4state.c
+> > > +++ b/fs/nfs/nfs4state.c
+> > > @@ -1209,16 +1209,26 @@ void nfs4_schedule_state_manager(struct
+> > > nfs_client *clp)
+> > >  {
+> > >         struct task_struct *task;
+> > >         char buf[INET6_ADDRSTRLEN + sizeof("-manager") + 1];
+> > > +       struct rpc_clnt *clnt =3D clp->cl_rpcclient;
+> > > +       bool swapon =3D false;
+> > >
+> > > -       if (clp->cl_rpcclient->cl_shutdown)
+> > > +       if (clnt->cl_shutdown)
+> > >                 return;
+> > >
+> > >         set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
+> > > -       if (test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
+> > > >cl_state) !=3D 0) {
+> > > -               wake_up_var(&clp->cl_state);
+> > > -               return;
+> > > +
+> > > +       if (atomic_read(&clnt->cl_swapper)) {
+> > > +               swapon =3D
+> > > !test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE,
+> > > +                                          &clp->cl_state);
+> > > +               if (!swapon) {
+> > > +                       wake_up_var(&clp->cl_state);
+> > > +                       return;
+> > > +               }
+> > >         }
+> > > -       set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state);
+> > > +
+> > > +       if (test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp-
+> > > >cl_state) !=3D 0)
+> > > +               return;
+> > > +
+> > >         __module_get(THIS_MODULE);
+> > >         refcount_inc(&clp->cl_count);
+> > >
+> > > @@ -1235,8 +1245,9 @@ void nfs4_schedule_state_manager(struct
+> > > nfs_client *clp)
+> > >                         __func__, PTR_ERR(task));
+> > >                 if (!nfs_client_init_is_complete(clp))
+> > >                         nfs_mark_client_ready(clp, PTR_ERR(task));
+> > > +               if (swapon)
+> > > +                       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
+> > > >cl_state);
+> > >                 nfs4_clear_state_manager_bit(clp);
+> > > -               clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
+> > > >cl_state);
+> > >                 nfs_put_client(clp);
+> > >                 module_put(THIS_MODULE);
+> > >         }
+> > > @@ -2748,22 +2759,25 @@ static int nfs4_run_state_manager(void
+> > > *ptr)
+> > >
+> > >         allow_signal(SIGKILL);
+> > >  again:
+> > > -       set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state);
+> > >         nfs4_state_manager(clp);
+> > > -       if (atomic_read(&cl->cl_swapper)) {
+> > > +
+> > > +       if (test_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state) &&
+> > > +           !test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp-
+> > > >cl_state)) {
+> > >                 wait_var_event_interruptible(&clp->cl_state,
+> > >
+> > > test_bit(NFS4CLNT_RUN_MANAGER,
+> > >                                                       &clp-
+> > > >cl_state));
+> > > -               if (atomic_read(&cl->cl_swapper) &&
+> > > -                   test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state))
+> > > +               if (!atomic_read(&cl->cl_swapper))
+> > > +                       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
+> > > >cl_state);
+> > > +               if (refcount_read(&clp->cl_count) > 1 &&
+> > > !signalled())
+> > >                         goto again;
+> > >                 /* Either no longer a swapper, or were signalled */
+> > > +               clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
+> > > >cl_state);
+> > > +               nfs4_clear_state_manager_bit(clp);
+> > >         }
+> > > -       clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
+> > >
+> > >         if (refcount_read(&clp->cl_count) > 1 && !signalled() &&
+> > >             test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state) &&
+> > > -           !test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp-
+> > > >cl_state))
+> > > +           !test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp-
+> > > >cl_state))
+> > >                 goto again;
+> > >
+> > >         nfs_put_client(clp);
+> > > --
+> > > 2.41.0
+> > >
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
