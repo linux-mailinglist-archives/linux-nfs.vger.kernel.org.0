@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB7487AC06A
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Sep 2023 12:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EC077AC0C9
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Sep 2023 12:46:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231284AbjIWKXE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 23 Sep 2023 06:23:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48474 "EHLO
+        id S230257AbjIWKqt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 23 Sep 2023 06:46:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231276AbjIWKXD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 23 Sep 2023 06:23:03 -0400
+        with ESMTP id S229848AbjIWKqs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 23 Sep 2023 06:46:48 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 816849E;
-        Sat, 23 Sep 2023 03:22:57 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D74AC433C8;
-        Sat, 23 Sep 2023 10:22:55 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 078A6194;
+        Sat, 23 Sep 2023 03:46:43 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12512C433C7;
+        Sat, 23 Sep 2023 10:46:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695464576;
-        bh=3v19yAZ2HhM+OXJVje2cfaZSmXd2NDrwoIrXd/QY1q4=;
+        s=k20201202; t=1695466002;
+        bh=Fgx42TGJn4SqLTc7ScZeuLRx1lxOlKBCJxp1VQ2ncDI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=F6phXQHDr6CMA3hk3upNihCkyDQ/7Op0BuqKEq3zxriC5oyCn1miExZpRcyqp2Aj4
-         jI8MGE2LeoA3LMM42AuVaKAqF6zBO0xx1EI6iYwu8QGjYBabMCqhEtjOgbNvr0eAtW
-         Qac3FDAZqfvSfvUgcJO0i+dZxgkcy/wD6cDfGle6I1O+VEIXd7VM6+Iv5S94RKksFL
-         Youj5QH5bj7PZOhvLwaoJgAsWzi0ys9ie2eDeZ3QCvHdUw28KC83yBI9MwV2g3aSD2
-         zELaNPivLbtgjPmrXEnPe2K2sumK6yAWXQSlldoDWvrDNlkvgw+ThfjnBlEavtS2o1
-         02g+rVw63PinQ==
-Message-ID: <4b106847d5202aec0e14fdbbe93b070b7ea97477.camel@kernel.org>
+        b=n8wR7GtcQlt+Y6uw/B6vII1a/XDIbqd0UdQTMcjBUz2g0/VsKjSwI8inZLq+sX8Js
+         ULXksUYHaRuq9sM6QZPqSeyfnv0+rUOLLpb3XQKnjBMkWnvk4waz4wbOzT3zAXsVM6
+         EpduFXU6dZSt62GUp0tVVT0Q6bNAwKte47YP3GE+uRNnbkovxlOv4VhAPaUGLhlguS
+         EZRee95FVgikS3rPUEhLMdHe8BOnKlzpRssERL4H9tWHU26Xr4cvy0hjbGQx1rmsFJ
+         K6rLlE4tGLEMaoshPe4L/ksS9Qpa6YtO2ji7zAGAC7LoVMMHIHcPyb+gMN/+Qn87oS
+         HVwwCUdISOQAw==
+Message-ID: <5e3b8a365160344f1188ff13afb0a26103121f99.camel@kernel.org>
 Subject: Re: [PATCH v8 0/5] fs: multigrain timestamps for XFS's change_cookie
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Amir Goldstein <amir73il@gmail.com>
@@ -43,7 +43,7 @@ Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
         Kent Overstreet <kent.overstreet@linux.dev>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Date:   Sat, 23 Sep 2023 06:22:54 -0400
+Date:   Sat, 23 Sep 2023 06:46:39 -0400
 In-Reply-To: <CAOQ4uxiNfPoPiX0AERywqjaBH30MHQPxaZepnKeyEjJgTv8hYg@mail.gmail.com>
 References: <20230922-ctime-v8-0-45f0c236ede1@kernel.org>
          <CAOQ4uxiNfPoPiX0AERywqjaBH30MHQPxaZepnKeyEjJgTv8hYg@mail.gmail.com>
@@ -93,47 +93,15 @@ s
 > the observed timestamps of files.
 >=20
 
-That's a very good point.
+Thinking about this some more, I think the first problem is easily
+addressable:
 
-> > which allows us to smooth over the fuzz that causes
-> > ordering problems.
-> >=20
->=20
-> The reported ordering problems (i.e. cp -u) is not even limited to the
-> scope of a single fs, right?
->=20
+The ctime isn't explicitly settable and with this set, we're already not
+truncating the atime. We haven't used any of the extra bits in the mtime
+yet, so we could just carve out a flag in there that says "this mtime
+was explicitly set and shouldn't be truncated before presentation".
 
-It isn't. Most of the tools we're concerned with don't generally care
-about filesystem boundaries.
-
-> Thinking out loud - if the QERIED bit was not per inode timestamp
-> but instead in a global fs_multigrain_ts variable, then all the inodes
-> of all the mgtime fs would be using globally ordered timestamps
->
-> That should eliminate the reported issues with time reorder for
-> fine vs coarse grained timestamps.
->=20
-> The risk of extra unneeded "change cookie" updates compared to
-> per inode QUERIED bit may exist, but I think it is a rather small overhea=
-d
-> and maybe worth the tradeoff of having to maintain a real per inode
-> "change cookie" in addition to a "globally ordered mgtime"?
->=20
-> If this idea is acceptable, you may still be able to salvage the reverted
-> ctime series for 6.7, because the change to use global mgtime should
-> be quite trivial?
->=20
-
-This is basically the idea I was going to look at next once I got some
-other stuff settled here: Basically, when we apply a fine-grained
-timestamp to an inode, we'd advance the coarse-grained clock that
-filesystems use to that value.
-
-It could cause some write amplification: if you are streaming writes to
-a bunch of files at the same time and someone stats one of them, then
-they'd all end up getting an extra inode transaction. That doesn't sound
-_too_ bad on its face, but I probably need to implement it and then run
-some numbers to see.
-
+The second problem (booting to older kernel) is a bit tougher to deal
+with however. I'll have to think about that one a bit more.
 --=20
 Jeff Layton <jlayton@kernel.org>
