@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3C017AC2E6
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Sep 2023 16:59:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F2FC7AC518
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Sep 2023 22:43:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231755AbjIWO7F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 23 Sep 2023 10:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49686 "EHLO
+        id S229460AbjIWUnY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 23 Sep 2023 16:43:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231603AbjIWO7E (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 23 Sep 2023 10:59:04 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238ABD3;
-        Sat, 23 Sep 2023 07:58:58 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-76d846a4b85so1301915241.1;
-        Sat, 23 Sep 2023 07:58:58 -0700 (PDT)
+        with ESMTP id S229456AbjIWUnY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 23 Sep 2023 16:43:24 -0400
+Received: from mail-oi1-x233.google.com (mail-oi1-x233.google.com [IPv6:2607:f8b0:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F23B11B;
+        Sat, 23 Sep 2023 13:43:18 -0700 (PDT)
+Received: by mail-oi1-x233.google.com with SMTP id 5614622812f47-3ae31be5ee9so703560b6e.2;
+        Sat, 23 Sep 2023 13:43:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1695481137; x=1696085937; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1695501797; x=1696106597; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=r98I0fZ1wJbdSD3JMwSiiPBmbA+sefSlclinhcfpiEo=;
-        b=acGnbekDRyUQrnuqGWpQR6OcY5ZJRFeBy1DTH/DMYRFFzD6ZJW8WktXsm2sWqh2/Po
-         5QDgkc9lEJ7bpjjlaZmb01PpuHvyo8EGiGmbp11rTZ+JPbA996/j135H9ela+Qmlvcfw
-         lypBv8wbIvUUqWgvfZc87lOwSHi3UbzXI8lpvNqALDHoHxc5A/WRVaG66+zmwcfHWPqv
-         mbw+yceDtgMkKw5toPDq1DWJVYbidv9xw2ktm+d/WuSTDtve0mompHYrQZBpHJdAEle/
-         LWnDsQHe1K3QO7XYUo5G7wM6/2M0LlIXh4odSN07Q32W76+UnQu/T6+L7uscy0+qupEN
-         iylQ==
+        bh=N5fh3KTYudy9uf30WQHLYoA6WKrTKy0P0fUHqm5/Lms=;
+        b=ltFotPsVYDAf/sIAjYkeCoMf1OKvvdQ5atbusBNuJqlFU9iHbT3sbo5Zs+ynd9kGmI
+         OHScMeCB16Mb+U7hk3/Cd5q7uZhz1eiXdL4iPztN7ADQCGACrhZp2/OFzTdBEIOTd/sm
+         jN7A/B1k3eV92DtqsIFLy68d/9NPo1DUYqfRKWFlJN05cY3W8otlKdDtHWXdFlJIT5ZG
+         eY3ls7tM4YQOtx6chVwZp7qhsXABm0Hoc345j+OIAAwGc3Paa3q2vdU6GMfaSt2MQbih
+         eVKsBm0h1Z63LxsTBgGlefx/e0uUGQf1utprMvCzUZq4Ag4u2OksPWmufm1RU5EVbySK
+         NUhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695481137; x=1696085937;
+        d=1e100.net; s=20230601; t=1695501797; x=1696106597;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=r98I0fZ1wJbdSD3JMwSiiPBmbA+sefSlclinhcfpiEo=;
-        b=L+mUleMJc3WXamUgMtYdh6RJ0V0bLLzp5nPMZiIgGEMhzzk6yYEclzCeFyefHycHnV
-         /SGnOr32VRa0jtmtnJOtBlsEkN1po6Duzz6VjZ8qtvNOqnqbThR/1gRCpS6NrHsJiyCT
-         o4Pu6YVhBYDtgr77RdxW+GSrcauiAeDDuOS+kbndjGbaU469EiFjG1j5oKNB5ohpo0U4
-         tuQ4xyFZJs7lPsd4VHueRpUC+BglZShWh1TF6H9h9D9QJcjOd3uAvftB4LXutxYN8P8m
-         Ct1mEV08V8fDt33ovtXEeDqLM8XYfcZQ0JFarJUa9hw1Ez/OEkODv6o6ME7U7J/X+HJA
-         yd5Q==
-X-Gm-Message-State: AOJu0YxRLtkCe4L13LrMl682Z9MfcA5R6DT0Vwzjdc0/zxK1Z+vPwCkw
-        RJ5VWtPQmss2FU3fFGr6PMAt4+yMOUg0V2BEW8Q=
-X-Google-Smtp-Source: AGHT+IG5ZvcNAkNBWJkc33wC7vFLVTly0S1g7Q8j7KrbOK4fdGdSfTWVOk1jqhV7Tm+3T7uLwadkGnYhL1ncI1eoS6g=
-X-Received: by 2002:a67:f842:0:b0:452:5c6d:78c9 with SMTP id
- b2-20020a67f842000000b004525c6d78c9mr1535362vsp.12.1695481137204; Sat, 23 Sep
- 2023 07:58:57 -0700 (PDT)
+        bh=N5fh3KTYudy9uf30WQHLYoA6WKrTKy0P0fUHqm5/Lms=;
+        b=kqiznan2vdFG67xb3scscUWj7rphEGR+FieUpiBRbHIvYPjPDqfcq1CTupWO2s1H/S
+         ffMJy1pt68vcm2LWVBxS4xV1b3pnMlYGGteoEe58vsTDd93+VXoLsaI9A1fOiu36LQ+V
+         X5bmGq4pEIiWF+r1aLwpVDxKpz1WLEzFQTuNeVpl+haQl7hoMcHWSwXscaRNMbrwz+nW
+         FCDtcadjFZ4VyV0PIuKic4yTMN9wHPQnR1jYtcL2KcFHn3r7GHO6Q6GfY3O7ds98JYYE
+         +4TOi1WQ+o2TqngImd0gXXA4ZeZlF3p9AQKOVp/VyZopT4LDLQFfsWfQeTAtX0JyfkvN
+         kjmw==
+X-Gm-Message-State: AOJu0Yxhn4sWcmoZdI16Bcu91tsN/4bNY84k80L2uusUp2Cmn/H8N+1t
+        7kWj4RM54W4ylefX9zPiAvZeH0Q/+SUgTX5wAmk=
+X-Google-Smtp-Source: AGHT+IGN/Glws95UsE4NgepBit03p5QHyayACy2aU/ZsaLEGKSY9pUo9lFqpFX/kbc8EpF+yjvBA4bQYzs1Xby88p10=
+X-Received: by 2002:a05:6808:199f:b0:3a8:4d1f:9dd0 with SMTP id
+ bj31-20020a056808199f00b003a84d1f9dd0mr4316251oib.30.1695501797512; Sat, 23
+ Sep 2023 13:43:17 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230922-ctime-v8-0-45f0c236ede1@kernel.org> <CAOQ4uxiNfPoPiX0AERywqjaBH30MHQPxaZepnKeyEjJgTv8hYg@mail.gmail.com>
- <4b106847d5202aec0e14fdbbe93b070b7ea97477.camel@kernel.org>
-In-Reply-To: <4b106847d5202aec0e14fdbbe93b070b7ea97477.camel@kernel.org>
+ <5e3b8a365160344f1188ff13afb0a26103121f99.camel@kernel.org>
+In-Reply-To: <5e3b8a365160344f1188ff13afb0a26103121f99.camel@kernel.org>
 From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 23 Sep 2023 17:58:46 +0300
-Message-ID: <CAOQ4uxjfbq=u3PYi_+ZiiAjub92o0-KeNT__ZRKSmRogLtF75Q@mail.gmail.com>
+Date:   Sat, 23 Sep 2023 23:43:06 +0300
+Message-ID: <CAOQ4uxjGofKT2LcM_YmoMYsH42ETpB5kxQkh+21nCbYc=w1nEg@mail.gmail.com>
 Subject: Re: [PATCH v8 0/5] fs: multigrain timestamps for XFS's change_cookie
 To:     Jeff Layton <jlayton@kernel.org>
 Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
@@ -80,7 +80,7 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Sep 23, 2023 at 1:22=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
+On Sat, Sep 23, 2023 at 1:46=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wr=
 ote:
 >
 > On Sat, 2023-09-23 at 10:15 +0300, Amir Goldstein wrote:
@@ -124,59 +124,20 @@ er
 > > the observed timestamps of files.
 > >
 >
-> That's a very good point.
+> Thinking about this some more, I think the first problem is easily
+> addressable:
 >
-> > > which allows us to smooth over the fuzz that causes
-> > > ordering problems.
-> > >
-> >
-> > The reported ordering problems (i.e. cp -u) is not even limited to the
-> > scope of a single fs, right?
-> >
+> The ctime isn't explicitly settable and with this set, we're already not
+> truncating the atime. We haven't used any of the extra bits in the mtime
+> yet, so we could just carve out a flag in there that says "this mtime
+> was explicitly set and shouldn't be truncated before presentation".
 >
-> It isn't. Most of the tools we're concerned with don't generally care
-> about filesystem boundaries.
->
-> > Thinking out loud - if the QERIED bit was not per inode timestamp
-> > but instead in a global fs_multigrain_ts variable, then all the inodes
-> > of all the mgtime fs would be using globally ordered timestamps
-> >
-> > That should eliminate the reported issues with time reorder for
-> > fine vs coarse grained timestamps.
-> >
-> > The risk of extra unneeded "change cookie" updates compared to
-> > per inode QUERIED bit may exist, but I think it is a rather small overh=
-ead
-> > and maybe worth the tradeoff of having to maintain a real per inode
-> > "change cookie" in addition to a "globally ordered mgtime"?
-> >
-> > If this idea is acceptable, you may still be able to salvage the revert=
-ed
-> > ctime series for 6.7, because the change to use global mgtime should
-> > be quite trivial?
-> >
->
-> This is basically the idea I was going to look at next once I got some
-> other stuff settled here: Basically, when we apply a fine-grained
-> timestamp to an inode, we'd advance the coarse-grained clock that
-> filesystems use to that value.
->
-> It could cause some write amplification: if you are streaming writes to
-> a bunch of files at the same time and someone stats one of them, then
-> they'd all end up getting an extra inode transaction. That doesn't sound
-> _too_ bad on its face, but I probably need to implement it and then run
-> some numbers to see.
->
+> The second problem (booting to older kernel) is a bit tougher to deal
+> with however. I'll have to think about that one a bit more.
 
-Several journal transactions within a single jiffie tick?
-If ctime/change_cookie of an inode is updated once within the scope
-of a single running transaction, I don't think it matters how many
-times it would be updated, but maybe I am missing something.
-
-The problem is probably going to be that the seqlock of the coarse
-grained clock is going to be invalidated way too frequently to be
-"read mostly" in the presence of ls -lR workload, but again, I did
-not study the implementation, so I may be way off.
+There is a straightforward solution to both these problems -
+opt in with a mount option to truncate user visible timestamps to 100ns
+(and not jiffy) resolution as Linus is trying to promote.
 
 Thanks,
 Amir.
