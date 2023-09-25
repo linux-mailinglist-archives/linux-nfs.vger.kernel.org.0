@@ -2,36 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF9AC7AD90C
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Sep 2023 15:27:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1ECBC7AD90D
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Sep 2023 15:27:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231160AbjIYN1l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Sep 2023 09:27:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33450 "EHLO
+        id S231537AbjIYN1u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Sep 2023 09:27:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230260AbjIYN1k (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Sep 2023 09:27:40 -0400
+        with ESMTP id S231615AbjIYN1t (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Sep 2023 09:27:49 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3984510A
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Sep 2023 06:27:34 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C060C433C7;
-        Mon, 25 Sep 2023 13:27:33 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 856BF11D
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Sep 2023 06:27:40 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A98C433C8;
+        Mon, 25 Sep 2023 13:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695648453;
-        bh=bR891B5H/TkKkuMjA9M1E1ueoc1jMi59saEQfL1YZWs=;
-        h=Subject:From:To:Cc:Date:From;
-        b=ep7NivGTDy+yePWBb8aGjiVSgDoOBaF5lNNWGeFezHsn/kKWAvfc3ABNFyuc5a7xC
-         6lC4GrDAW48nnQaOeW7n9/CNaQs1FpYj4fsRIDmnlgmnsEAprrc6xG8tQs7aKP0bDb
-         7O1bkZNTme74gInS6ETqXFkanmZNwvbZzJUCGebc51H60IEWr6GA2JszQ4MY5N4E8t
-         Bd/jgx5VZ3Uvfy2Nw+/9+w1Q9xb3O8XlwCr98V2db5S15bFkEw2K5qP7uabIsJKNw5
-         4I+ykYoHVJB4lnWWjxDYqYWjKCOwoO8mqum27twkM6IyUd/3aXqrY4/rYMPJ1XSLOP
-         RKR6VJw9+s1Kg==
-Subject: [PATCH v1 0/8] Clean up XDR encoders for pNFS operations
+        s=k20201202; t=1695648460;
+        bh=XKYbn3+oFkvQmfmcaZJt0QnJKjTwoXQBRD8QhYLaoEM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=VhEEkhxMEp19yHn3UgN/b5030yN9YKCwQK57680Z/oDXEZZZkxFuLK83Qd++mVPp7
+         J6/YAUztVefYWtJjO8i5QUUtevvJBRcvG1Hqtx//eX3cUvQ2VMCdRKkup+D8HMcgG1
+         f/ptWsYFMNYV1Md6BSVs1dlKYVtXEMwuSQZrY2xCiiNsOpWgHVgveUG05bqoVSHtjk
+         ThYuTYh62+7aCOJKTULLhZxqIjzWNLvRb5Bvwelumqd3lh+P+bALC9e3QpC4gG8E7c
+         FMItkszO+BINhSdgM57efigGTIyTHAefOt55hB5ev6nHoliROTYhVhoJGKZqFA+1pC
+         ov1B2BqNKZkwg==
+Subject: [PATCH v1 1/8] NFSD: Add nfsd4_encode_count4()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 25 Sep 2023 09:27:32 -0400
-Message-ID: <169564827064.6013.5014460767978657478.stgit@klimt.1015granger.net>
+Date:   Mon, 25 Sep 2023 09:27:38 -0400
+Message-ID: <169564845894.6013.1502101691833380449.stgit@klimt.1015granger.net>
+In-Reply-To: <169564827064.6013.5014460767978657478.stgit@klimt.1015granger.net>
+References: <169564827064.6013.5014460767978657478.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -45,39 +47,55 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Tidy up the server-side XDR encoders for pNFS-related operations.
-Note that this does not touch the layout driver code; that can be
-done later.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Series applies to nfsd-next. See topic branch
-"nfsd4-encoder-overhaul" in this repo:
+This is a synonym for nfsd4_encode_uint32_t() that matches the
+name of the XDR type. It will get at least one more use in a
+subsequent patch.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
-
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ fs/nfsd/nfs4xdr.c |   13 +++++++++----
+ fs/nfsd/xdr4.h    |    1 +
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-Chuck Lever (8):
-      NFSD: Add nfsd4_encode_count4()
-      NFSD: Clean up nfsd4_encode_stateid()
-      NFSD: Make @lgp parameter of ->encode_layoutget a const pointer
-      NFSD: Clean up nfsd4_encode_layoutget()
-      NFSD: Clean up nfsd4_encode_layoutcommit()
-      NFSD: Clean up nfsd4_encode_layoutreturn()
-      NFSD: Make @gdev parameter of ->encode_getdeviceinfo a const pointer
-      NFSD: Clean up nfsd4_encode_getdeviceinfo()
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 2356c56ef4c4..bc802f187c63 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4615,12 +4615,17 @@ nfsd4_encode_write(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 		   union nfsd4_op_u *u)
+ {
+ 	struct nfsd4_write *write = &u->write;
++	struct xdr_stream *xdr = resp->xdr;
+ 
+-	if (xdr_stream_encode_u32(resp->xdr, write->wr_bytes_written) < 0)
+-		return nfserr_resource;
+-	if (xdr_stream_encode_u32(resp->xdr, write->wr_how_written) < 0)
++	/* count */
++	nfserr = nfsd4_encode_count4(xdr, write->wr_bytes_written);
++	if (nfserr)
++		return nfserr;
++	/* committed */
++	if (xdr_stream_encode_u32(xdr, write->wr_how_written) != XDR_UNIT)
+ 		return nfserr_resource;
+-	return nfsd4_encode_verifier4(resp->xdr, &write->wr_verifier);
++	/* writeverf */
++	return nfsd4_encode_verifier4(xdr, &write->wr_verifier);
+ }
+ 
+ static __be32
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 52322acc1e9f..43b9c53b7795 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -93,6 +93,7 @@ nfsd4_encode_uint32_t(struct xdr_stream *xdr, u32 val)
+ #define nfsd4_encode_aceflag4(x, v)	nfsd4_encode_uint32_t(x, v)
+ #define nfsd4_encode_acemask4(x, v)	nfsd4_encode_uint32_t(x, v)
+ #define nfsd4_encode_acetype4(x, v)	nfsd4_encode_uint32_t(x, v)
++#define nfsd4_encode_count4(x, v)	nfsd4_encode_uint32_t(x, v)
+ #define nfsd4_encode_mode4(x, v)	nfsd4_encode_uint32_t(x, v)
+ #define nfsd4_encode_nfs_lease4(x, v)	nfsd4_encode_uint32_t(x, v)
+ 
 
-
- fs/nfsd/blocklayoutxdr.c    |   6 +-
- fs/nfsd/blocklayoutxdr.h    |   4 +-
- fs/nfsd/flexfilelayoutxdr.c |   6 +-
- fs/nfsd/flexfilelayoutxdr.h |   4 +-
- fs/nfsd/nfs4layouts.c       |   6 +-
- fs/nfsd/nfs4proc.c          |   4 +-
- fs/nfsd/nfs4xdr.c           | 206 ++++++++++++++++++++----------------
- fs/nfsd/pnfs.h              |   6 +-
- fs/nfsd/xdr4.h              |   7 +-
- 9 files changed, 135 insertions(+), 114 deletions(-)
-
---
-Chuck Lever
 
