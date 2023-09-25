@@ -2,36 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 854217AD90E
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Sep 2023 15:27:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 998CE7AD90F
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Sep 2023 15:28:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231809AbjIYN14 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Sep 2023 09:27:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49806 "EHLO
+        id S230431AbjIYN2E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Sep 2023 09:28:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230260AbjIYN1y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Sep 2023 09:27:54 -0400
+        with ESMTP id S230510AbjIYN17 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Sep 2023 09:27:59 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D878E19A
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Sep 2023 06:27:46 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 526EFC433C7;
-        Mon, 25 Sep 2023 13:27:46 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5328410C
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Sep 2023 06:27:53 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB691C433C7;
+        Mon, 25 Sep 2023 13:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695648466;
-        bh=sp3knqrgg+GEcrgpg88qx/bZFtD9+90BJA4NhkCaoRg=;
+        s=k20201202; t=1695648472;
+        bh=1k80C0uIrVKZKcMe5vFSypyJGsRR0SMMKu9LX5+FOXg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Zv/ez8TBqojET4vznCVxUmOhKatknhoxktr/S0IGWXjLhOW6n6Xy4LEEFCNKs0LF0
-         YGMwyehEasNA3R+OOYeACwS6DIhreyXrfeyjfWy/ni0WOguEbpgDEgTlGyaKNLO+/S
-         YdR3BY9zNMyQaMwKJGAZ36LavSCqZUbtkGzQy4GgSjjgRwaneaogAcVC/JoNnhc3uV
-         PHlXKabe6qR5x9KiAPBtG6tZi6seqBBPBROJ7Wg5fMv/m2G5dNlSQKB9xEpDBlGbCx
-         FGYB2t02x8pHXIQnycqnZDQ1NtgxClomR3z4LvYCkcW+23b3KU/Q/TChF9qe4obVqN
-         Eb47C6SvbTt2g==
-Subject: [PATCH v1 2/8] NFSD: Clean up nfsd4_encode_stateid()
+        b=kVXlJLQvX4Wd1sojMDnEPVrjeXGtWO+u28udnVuB3pA0ktTLoGTk/dskq9wZapC64
+         GERKlPeo958Axcu9OaScDkKK1fesIwG8GgFnukeQt5wITmFo2OhvnAwdSd5QLfQkbM
+         jb4sxbOQdnjP/ANrU1slhTDn0aW2FfSwyOHI94VRs0JLbJerAj+HrFm4o2BFoXWDnf
+         vah1azc/MQr86fkPy18zeEY+EC/HvkHgQGHLcgc123ZXfqyEP3ddT5+v3UCKGenyoR
+         jaGE9hFoC0mOWcT5Zub3Agmykfha8bqbHqXfgXfBlh8ReWwtC/uo1ibc1W3GJY7Tzz
+         c9A9xlKBFlbJw==
+Subject: [PATCH v1 3/8] NFSD: Make @lgp parameter of ->encode_layoutget a
+ const pointer
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 25 Sep 2023 09:27:45 -0400
-Message-ID: <169564846537.6013.13509404725060635727.stgit@klimt.1015granger.net>
+Date:   Mon, 25 Sep 2023 09:27:51 -0400
+Message-ID: <169564847171.6013.1770752570260963034.stgit@klimt.1015granger.net>
 In-Reply-To: <169564827064.6013.5014460767978657478.stgit@klimt.1015granger.net>
 References: <169564827064.6013.5014460767978657478.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5
@@ -49,152 +50,88 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Update the encoder function name to match the type name, as is the
-convention with other such encoder utility functions, and with
-nfsd4_decode_stateid4().
-
-Make the @stateid argument a const so that callers of
-nfsd4_encode_stateid4() in the future can be passed const pointers
-to structures.
-
-Since the compiler is allowed to add padding to structs, use the
-wire (spec-defined) size when reserving buffer space.
+This enables callers to be passed const pointer parameters.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   36 ++++++++++++++++++++----------------
- 1 file changed, 20 insertions(+), 16 deletions(-)
+ fs/nfsd/blocklayoutxdr.c    |    4 ++--
+ fs/nfsd/blocklayoutxdr.h    |    2 +-
+ fs/nfsd/flexfilelayoutxdr.c |    4 ++--
+ fs/nfsd/flexfilelayoutxdr.h |    2 +-
+ fs/nfsd/pnfs.h              |    4 ++--
+ 5 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index bc802f187c63..24caa1c5613b 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -3867,18 +3867,18 @@ nfsd4_encode_clientid4(struct xdr_stream *xdr, const clientid_t *clientid)
- 	return nfs_ok;
- }
+diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
+index 1ed2f691ebb9..f8469348e06e 100644
+--- a/fs/nfsd/blocklayoutxdr.c
++++ b/fs/nfsd/blocklayoutxdr.c
+@@ -16,9 +16,9 @@
  
-+/* This is a frequently-encoded item; open-coded for speed */
- static __be32
--nfsd4_encode_stateid(struct xdr_stream *xdr, stateid_t *sid)
-+nfsd4_encode_stateid4(struct xdr_stream *xdr, const stateid_t *sid)
+ __be32
+ nfsd4_block_encode_layoutget(struct xdr_stream *xdr,
+-		struct nfsd4_layoutget *lgp)
++		const struct nfsd4_layoutget *lgp)
  {
+-	struct pnfs_block_extent *b = lgp->lg_content;
++	const struct pnfs_block_extent *b = lgp->lg_content;
+ 	int len = sizeof(__be32) + 5 * sizeof(__be64) + sizeof(__be32);
  	__be32 *p;
  
--	p = xdr_reserve_space(xdr, sizeof(stateid_t));
-+	p = xdr_reserve_space(xdr, NFS4_STATEID_SIZE);
- 	if (!p)
- 		return nfserr_resource;
- 	*p++ = cpu_to_be32(sid->si_generation);
--	p = xdr_encode_opaque_fixed(p, &sid->si_opaque,
--					sizeof(stateid_opaque_t));
--	return 0;
-+	memcpy(p, &sid->si_opaque, sizeof(sid->si_opaque));
-+	return nfs_ok;
- }
+diff --git a/fs/nfsd/blocklayoutxdr.h b/fs/nfsd/blocklayoutxdr.h
+index bc5166bfe46b..5f88539e81a1 100644
+--- a/fs/nfsd/blocklayoutxdr.h
++++ b/fs/nfsd/blocklayoutxdr.h
+@@ -53,7 +53,7 @@ struct pnfs_block_deviceaddr {
+ __be32 nfsd4_block_encode_getdeviceinfo(struct xdr_stream *xdr,
+ 		struct nfsd4_getdeviceinfo *gdp);
+ __be32 nfsd4_block_encode_layoutget(struct xdr_stream *xdr,
+-		struct nfsd4_layoutget *lgp);
++		const struct nfsd4_layoutget *lgp);
+ int nfsd4_block_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+ 		u32 block_size);
+ int nfsd4_scsi_decode_layoutupdate(__be32 *p, u32 len, struct iomap **iomapp,
+diff --git a/fs/nfsd/flexfilelayoutxdr.c b/fs/nfsd/flexfilelayoutxdr.c
+index bb205328e043..5319cb97d8a7 100644
+--- a/fs/nfsd/flexfilelayoutxdr.c
++++ b/fs/nfsd/flexfilelayoutxdr.c
+@@ -17,9 +17,9 @@ struct ff_idmap {
  
- static __be32
-@@ -3922,7 +3922,8 @@ nfsd4_encode_close(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	struct nfsd4_close *close = &u->close;
- 	struct xdr_stream *xdr = resp->xdr;
- 
--	return nfsd4_encode_stateid(xdr, &close->cl_stateid);
-+	/* open_stateid */
-+	return nfsd4_encode_stateid4(xdr, &close->cl_stateid);
- }
- 
- 
-@@ -4022,7 +4023,7 @@ nfsd4_encode_lock(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	struct xdr_stream *xdr = resp->xdr;
- 
- 	if (!nfserr)
--		nfserr = nfsd4_encode_stateid(xdr, &lock->lk_resp_stateid);
-+		nfserr = nfsd4_encode_stateid4(xdr, &lock->lk_resp_stateid);
- 	else if (nfserr == nfserr_denied)
- 		nfserr = nfsd4_encode_lock_denied(xdr, &lock->lk_denied);
- 
-@@ -4048,7 +4049,8 @@ nfsd4_encode_locku(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	struct nfsd4_locku *locku = &u->locku;
- 	struct xdr_stream *xdr = resp->xdr;
- 
--	return nfsd4_encode_stateid(xdr, &locku->lu_stateid);
-+	/* lock_stateid */
-+	return nfsd4_encode_stateid4(xdr, &locku->lu_stateid);
- }
- 
- 
-@@ -4071,7 +4073,7 @@ nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	struct xdr_stream *xdr = resp->xdr;
+ __be32
+ nfsd4_ff_encode_layoutget(struct xdr_stream *xdr,
+-		struct nfsd4_layoutget *lgp)
++		const struct nfsd4_layoutget *lgp)
+ {
+-	struct pnfs_ff_layout *fl = lgp->lg_content;
++	const struct pnfs_ff_layout *fl = lgp->lg_content;
+ 	int len, mirror_len, ds_len, fh_len;
  	__be32 *p;
  
--	nfserr = nfsd4_encode_stateid(xdr, &open->op_stateid);
-+	nfserr = nfsd4_encode_stateid4(xdr, &open->op_stateid);
- 	if (nfserr)
- 		return nfserr;
- 	nfserr = nfsd4_encode_change_info4(xdr, &open->op_cinfo);
-@@ -4094,7 +4096,7 @@ nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	case NFS4_OPEN_DELEGATE_NONE:
- 		break;
- 	case NFS4_OPEN_DELEGATE_READ:
--		nfserr = nfsd4_encode_stateid(xdr, &open->op_delegate_stateid);
-+		nfserr = nfsd4_encode_stateid4(xdr, &open->op_delegate_stateid);
- 		if (nfserr)
- 			return nfserr;
- 		p = xdr_reserve_space(xdr, 20);
-@@ -4111,7 +4113,7 @@ nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr,
- 		*p++ = cpu_to_be32(0);   /* XXX: is NULL principal ok? */
- 		break;
- 	case NFS4_OPEN_DELEGATE_WRITE:
--		nfserr = nfsd4_encode_stateid(xdr, &open->op_delegate_stateid);
-+		nfserr = nfsd4_encode_stateid4(xdr, &open->op_delegate_stateid);
- 		if (nfserr)
- 			return nfserr;
+diff --git a/fs/nfsd/flexfilelayoutxdr.h b/fs/nfsd/flexfilelayoutxdr.h
+index 8e195aeca023..a447efb7759b 100644
+--- a/fs/nfsd/flexfilelayoutxdr.h
++++ b/fs/nfsd/flexfilelayoutxdr.h
+@@ -45,6 +45,6 @@ struct pnfs_ff_layout {
+ __be32 nfsd4_ff_encode_getdeviceinfo(struct xdr_stream *xdr,
+ 		struct nfsd4_getdeviceinfo *gdp);
+ __be32 nfsd4_ff_encode_layoutget(struct xdr_stream *xdr,
+-		struct nfsd4_layoutget *lgp);
++		const struct nfsd4_layoutget *lgp);
  
-@@ -4169,7 +4171,8 @@ nfsd4_encode_open_confirm(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	struct nfsd4_open_confirm *oc = &u->open_confirm;
- 	struct xdr_stream *xdr = resp->xdr;
+ #endif /* _NFSD_FLEXFILELAYOUTXDR_H */
+diff --git a/fs/nfsd/pnfs.h b/fs/nfsd/pnfs.h
+index 4f4282d4eeca..d8e1a333fa0a 100644
+--- a/fs/nfsd/pnfs.h
++++ b/fs/nfsd/pnfs.h
+@@ -31,8 +31,8 @@ struct nfsd4_layout_ops {
  
--	return nfsd4_encode_stateid(xdr, &oc->oc_resp_stateid);
-+	/* open_stateid */
-+	return nfsd4_encode_stateid4(xdr, &oc->oc_resp_stateid);
- }
+ 	__be32 (*proc_layoutget)(struct inode *, const struct svc_fh *fhp,
+ 			struct nfsd4_layoutget *lgp);
+-	__be32 (*encode_layoutget)(struct xdr_stream *,
+-			struct nfsd4_layoutget *lgp);
++	__be32 (*encode_layoutget)(struct xdr_stream *xdr,
++			const struct nfsd4_layoutget *lgp);
  
- static __be32
-@@ -4179,7 +4182,8 @@ nfsd4_encode_open_downgrade(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	struct nfsd4_open_downgrade *od = &u->open_downgrade;
- 	struct xdr_stream *xdr = resp->xdr;
- 
--	return nfsd4_encode_stateid(xdr, &od->od_stateid);
-+	/* open_stateid */
-+	return nfsd4_encode_stateid4(xdr, &od->od_stateid);
- }
- 
- /*
-@@ -4919,7 +4923,7 @@ nfsd4_encode_layoutreturn(struct nfsd4_compoundres *resp, __be32 nfserr,
- 		return nfserr_resource;
- 	*p++ = cpu_to_be32(lrp->lrs_present);
- 	if (lrp->lrs_present)
--		return nfsd4_encode_stateid(xdr, &lrp->lr_sid);
-+		return nfsd4_encode_stateid4(xdr, &lrp->lr_sid);
- 	return 0;
- }
- #endif /* CONFIG_NFSD_PNFS */
-@@ -4938,7 +4942,7 @@ nfsd42_encode_write_res(struct nfsd4_compoundres *resp,
- 	else {
- 		__be32 nfserr;
- 		*p++ = cpu_to_be32(1);
--		nfserr = nfsd4_encode_stateid(resp->xdr, &write->cb_stateid);
-+		nfserr = nfsd4_encode_stateid4(resp->xdr, &write->cb_stateid);
- 		if (nfserr)
- 			return nfserr;
- 	}
-@@ -5122,7 +5126,7 @@ nfsd4_encode_copy_notify(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	*p++ = cpu_to_be32(cn->cpn_nsec);
- 
- 	/* cnr_stateid */
--	nfserr = nfsd4_encode_stateid(xdr, &cn->cpn_cnr_stateid);
-+	nfserr = nfsd4_encode_stateid4(xdr, &cn->cpn_cnr_stateid);
- 	if (nfserr)
- 		return nfserr;
- 
+ 	__be32 (*proc_layoutcommit)(struct inode *inode,
+ 			struct nfsd4_layoutcommit *lcp);
 
 
