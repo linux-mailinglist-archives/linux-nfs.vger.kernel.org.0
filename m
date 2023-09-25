@@ -2,104 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D54767AD851
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Sep 2023 14:56:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 00A0E7AD892
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Sep 2023 15:06:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231124AbjIYM4U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Sep 2023 08:56:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45702 "EHLO
+        id S229450AbjIYNGc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Sep 2023 09:06:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjIYM4T (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Sep 2023 08:56:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5DC6FC
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Sep 2023 05:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1695646525;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IWebPD/uKB34xJmGvJW4lS2xamPS27xaa673BfP5oZw=;
-        b=jItUBm/TCgX9K7o6uodRRoffgacT6rhC/PwywO9GLD85zR50ML3S70A9dCazFF44hJcRLY
-        HJqB46gbSd3BHxnkMj3P2cOoPKONv25CAJQpuv4jL1f6CDnKCXJifyD82snvX6SXaTHHt+
-        +jWvEK8Iz9yo54E4QmM5QfgFs1yeSTU=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-326-0Zc-kBL9OXOMfxlWgw5h6g-1; Mon, 25 Sep 2023 08:55:23 -0400
-X-MC-Unique: 0Zc-kBL9OXOMfxlWgw5h6g-1
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-77422b20b13so163861185a.1
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Sep 2023 05:55:23 -0700 (PDT)
+        with ESMTP id S231565AbjIYNGb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Sep 2023 09:06:31 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7CBA10C
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Sep 2023 06:06:23 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-578a3069f1eso4019334a12.1
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Sep 2023 06:06:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1695647183; x=1696251983; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mXglc8opTBOxqxBVnbKKZEfOjkArzaJ5mbcscFyV/Wo=;
+        b=E9p/DdAhQv/UcBbrSHqMLXHKKFmTmAEugjpfcAaJIi0oAhHW91Fn3L148iHyI9tq6y
+         1AXxdfTrMhS72Zy9gDH3x6BZX047nWgHv5SIYLenoGYIxmyhv/3Z0OHCspeSEWUjv/Dr
+         5v3ZlzF9MCgA6c4GY0EVCOxSXAvWL66AAIUVTzUcrOiHt1xQuSXO/meOJiZwKRblOuuE
+         cKIGL6pARcFlHbPhB2iJsp7kw3Bog0Y/ZW5yTM9A3tyq5lZSSMxCvErvB3dVJ9fa+G8q
+         yvN079Vrw4bkbbYAlPNEYfEE1Ty6s7Y2UpwRLImeV4hkPd1Mji5zfoNrzlvslblzeye5
+         9Qew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695646523; x=1696251323;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1695647183; x=1696251983;
+        h=to:subject:message-id:date:from:sender:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IWebPD/uKB34xJmGvJW4lS2xamPS27xaa673BfP5oZw=;
-        b=GR8bGwKLJ9udcKUUcuqoVHyETP8qDkZC8TcGgS/HDv5SDzP3wn4DlVxksz6KNlfli7
-         6vFG+tyVY581QOlqcxpFIZugYTfE27o3/yoJtD1OuqJKttrJcZqxDOqgsqtIqkR5kPa6
-         wuuKwh9NW85mE9G2RWFUIourlpYvCDgRN/n11RYPSQUg/kK7CLUM6a9LoK1X4lseUvUu
-         7q4BbQ3Dr3D3B7lr7sbvSpFju94AzXrv6VqOcRvmchezm5UGUNio6y0rlTLYZ4zvL6GV
-         ZH87zxIMS6Ks2M90WzyhK9Ig0etUxptMZZYKQ52VVDlscoD4nIgxYnaqn9hrn0pTyvp5
-         Bjdw==
-X-Gm-Message-State: AOJu0Yy5l42elZ2g1l5/wt6vU7aG+H1uuuBeTlfNznFbnkyXXW6dMdvO
-        maTSm4Bn30aWDYTBss2IUL+s52rdNm6B3b5gooetVRig+EsHk/pC/LJxlhAG/GtpskBFutKgQuH
-        eCYDYE2LpHF8RvUM8GysecWBHRich
-X-Received: by 2002:a05:620a:2992:b0:76d:95d3:800f with SMTP id r18-20020a05620a299200b0076d95d3800fmr8498362qkp.3.1695646522832;
-        Mon, 25 Sep 2023 05:55:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG7LSZsNCzQ8VNM4jFsUaoxcHONiFUEtwgLDrIHe37YEksdGmOv+mCO7cepmDyjfeICT9JMPw==
-X-Received: by 2002:a05:620a:2992:b0:76d:95d3:800f with SMTP id r18-20020a05620a299200b0076d95d3800fmr8498345qkp.3.1695646522474;
-        Mon, 25 Sep 2023 05:55:22 -0700 (PDT)
-Received: from [172.31.1.12] ([70.109.164.53])
-        by smtp.gmail.com with ESMTPSA id ou2-20020a05620a620200b0076768dfe53esm3752584qkn.105.2023.09.25.05.55.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 25 Sep 2023 05:55:22 -0700 (PDT)
-Message-ID: <732e6116-94c2-d246-256a-fac4f26ad504@redhat.com>
-Date:   Mon, 25 Sep 2023 08:55:21 -0400
+        bh=mXglc8opTBOxqxBVnbKKZEfOjkArzaJ5mbcscFyV/Wo=;
+        b=jwfYZW7MRxFv1Yrn6FbsonD51r+6W+pWubXoIFex4tpThBSUkYST4E6sOhBIuBPyFB
+         70uTf87nGJ2UiTi0iQ2jrBMgaZJwCmvJmDeN4Y7VWkAIL7jPP/7jQuuHnMhN6Ierpn4Z
+         npM/okeWqO2vU5p7eml8Q6f7hDxMn+8UNxpGRPr+kTV/qf3MyuoQWIh9eQSPeVCCDtSR
+         K/FU8xHFTeUv4uQL2rptLgvUwaybth6A2uLkp4t6Fi/f2ubUjEuXfff4cc0+wJK8HdO1
+         /btJClpTOA4bXd/BQu8911BKCXaYxveFke2YTPF83eWY5FMPlLHx13F4GCj93zqIdXFl
+         prPw==
+X-Gm-Message-State: AOJu0YwaSbvF90YCOS4HUEUI0BdlxwBREaXCnXWV+hGzPIIbux9Bph+6
+        m6n5ygrxhVEOQalmIzeSV7+AaXolV2fITtbDpQ4=
+X-Google-Smtp-Source: AGHT+IFXiu+hIuGpbMGnryBZPI9zrQcfgcwULkxd1ATRGTszst7B+kzsc3FXYgt1Oi/EhIFKc10wDAE9O22h3BLnnC4=
+X-Received: by 2002:a17:90b:33cc:b0:268:553f:1938 with SMTP id
+ lk12-20020a17090b33cc00b00268553f1938mr4364657pjb.4.1695647182818; Mon, 25
+ Sep 2023 06:06:22 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH] Remove extraneous words left behind by commit 522837f.
-Content-Language: en-US
-To:     James Youngman <james@youngman.org>, linux-nfs@vger.kernel.org
-Cc:     1051088@bugs.debian.org
-References: <20230904085047.1053192-1-james@youngman.org>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20230904085047.1053192-1-james@youngman.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Sender: mr.isaiahnwabudike01@gmail.com
+Received: by 2002:a05:6a10:4410:b0:4e6:519f:124c with HTTP; Mon, 25 Sep 2023
+ 06:06:22 -0700 (PDT)
+From:   "Mrs. Rita Hassan" <ritahassan02@gmail.com>
+Date:   Mon, 25 Sep 2023 06:06:22 -0700
+X-Google-Sender-Auth: yeq3_xtuipO1P77d2qeKwPgsd4c
+Message-ID: <CAN0kuD_Mb6r_ybPEbbHkv8BKeKwvyedgB_EOczj0YvEYjcG2ZQ@mail.gmail.com>
+Subject: Please I need your help,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=3.7 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,LOTS_OF_MONEY,MONEY_FRAUD_5,MONEY_NOHTML,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_FM_MR_MRS,
+        T_MONEY_PERCENT,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Please I need your help,
 
 
-On 9/4/23 4:50 AM, James Youngman wrote:
-> ---
->   utils/mount/nfs.man | 1 -
->   1 file changed, 1 deletion(-)
-Committed...
+Please forgive me for stressing you with my predicaments as I know
+that this letter may come to you as big surprise. Actually, I came
+across your E-mail from my personal search afterward I decided to
+email you directly believing that you will be honest to fulfill my
+final wish before i die.
 
-steved.
+Meanwhile, I Am Mrs. Rita, 62 years old,I am suffering from a long
+time cancer and from all indication my condition is really
+deteriorating as my doctors have confirmed and courageously advised me
+that I may not live beyond two months from now for the reason that my
+tumor has reached a critical stage which has defiled all forms of
+medical treatment.
 
-> 
-> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-> index 7a410422..c9850f29 100644
-> --- a/utils/mount/nfs.man
-> +++ b/utils/mount/nfs.man
-> @@ -986,7 +986,6 @@ file. See
->   .BR nfsmount.conf(5)
->   for details.
->   .SH EXAMPLES
-> -mount option.
->   To mount using NFS version 3,
->   use the
->   .B nfs
+As a matter of fact, registered nurse by profession while my husband
+was dealing on Gold Dust and Gold Dory Bars till his sudden death the
+year 2019 then I took over his business till date. In fact, at this
+moment I have a deposit sum of $5.5million dollars with one of the
+leading bank  but unfortunately I cannot visit the bank since I am
+critically sick and powerless to do anything myself but my bank
+account officer advised me to assign any of my trustworthy relative,
+friends or partner with authorization letter to stand as the recipient
+of my money but sorrowfully I don t have any reliable relative and no
+child.
 
+Therefore, I want you to receive the money and take 30% to take care
+of yourself and family while 70% should be use basically on
+humanitarian purposes mostly to orphanages home, Motherless babies
+home, less privileged and disable citizens and widows around the
+world. and as soon as I receive your respond I shall send you my
+pictures, banking records and with full contacts of my banking
+institution If you are interested in carrying out this task please
+contact me for more details on this email. ( ritahassan02@gmail.com )
+
+Hope to hear from you soon.
+
+Yours Faithfully
+
+Mrs. Rita Hassan
