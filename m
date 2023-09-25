@@ -2,64 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26BD37ACEA9
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Sep 2023 05:20:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE7C27AD561
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Sep 2023 12:08:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjIYDUy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 24 Sep 2023 23:20:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47274 "EHLO
+        id S231233AbjIYKJD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Sep 2023 06:09:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbjIYDUy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 24 Sep 2023 23:20:54 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6B09BC
-        for <linux-nfs@vger.kernel.org>; Sun, 24 Sep 2023 20:20:47 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id B3D401F38D;
-        Mon, 25 Sep 2023 03:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1695612042; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=1TRcZ9yifw7ha6jD31r/ImdnT+rk3eyXm34yOVcNa7U=;
-        b=o9+9InczZ52LfBnSGCvVGhqTdDSxc5rkiS7k/HlpfdOSk5BZK7p5cy/Yy3ZUHDf9j3d6i5
-        94NK7dVJkC/WGOqsslaMB68zCw649HZoo0Z06kq5YeENM6ZViWYY5p0ptok4QeTM5GPHBx
-        MbYmL1eDMXgXancOUkKtVrYLWUDi8tI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1695612042;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=1TRcZ9yifw7ha6jD31r/ImdnT+rk3eyXm34yOVcNa7U=;
-        b=OWXh5BIQEDYheQ7hADLZtOlLUKYYaMwzjXQi7zE9iKuDeAM2ioPpz1wPW9d6oyZ4OtL5+G
-        qDr0iSVsb3fr1AAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 863ED1391E;
-        Mon, 25 Sep 2023 03:20:40 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id jiWFDoj8EGUOTgAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 25 Sep 2023 03:20:40 +0000
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S231367AbjIYKIs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Sep 2023 06:08:48 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B001610D2;
+        Mon, 25 Sep 2023 03:08:30 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6DA1C433C7;
+        Mon, 25 Sep 2023 10:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695636510;
+        bh=kxFWm43ha+iaMtKtdh9+7qL4ORfLUkSkxjSaqF2iXTY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=XRMieSHePX0qiMEQ+iiyuoyWKuHG9sbzQvoCJyJCudiqnD7IygDQr6JeqptkMUmwJ
+         pidxSPVgZQs78KC0SatMWiRydCaSEXuGgBkNmryFSAf9zuSZ9Wi99ESAGz7a5dC+dj
+         u6iYA+jxph+GT/H0GALbdb6IBjsYj/tpGYy46P0O9wT3GXRmA/UbHbjdJe+D7UjAr9
+         yizphXtHsVb/WcwZJI47tLy/wm89V/bkx+CodQmkZa8QemVjirDBZsg7BwmOnATro5
+         urz+iNfVtp3DtWmOUUfr2ND3Nj1TiJkHEHb2oGSNR/mJptjdFnAiFOMJEMj0Z6zaDJ
+         XyjoY5W9VnYxw==
+Message-ID: <fca8b636ba66f9a4c3eccb41af7bd95801799292.camel@kernel.org>
+Subject: Re: [PATCH v8 0/5] fs: multigrain timestamps for XFS's change_cookie
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org
+Date:   Mon, 25 Sep 2023 06:08:27 -0400
+In-Reply-To: <CAOQ4uxjfbq=u3PYi_+ZiiAjub92o0-KeNT__ZRKSmRogLtF75Q@mail.gmail.com>
+References: <20230922-ctime-v8-0-45f0c236ede1@kernel.org>
+         <CAOQ4uxiNfPoPiX0AERywqjaBH30MHQPxaZepnKeyEjJgTv8hYg@mail.gmail.com>
+         <4b106847d5202aec0e14fdbbe93b070b7ea97477.camel@kernel.org>
+         <CAOQ4uxjfbq=u3PYi_+ZiiAjub92o0-KeNT__ZRKSmRogLtF75Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>,
-        Linux NFS list <linux-nfs@vger.kernel.org>
-Subject: [PATCH nfsd-next] NFSD: simplify error paths in nfsd_svc()
-Date:   Mon, 25 Sep 2023 12:06:44 +1000
-Message-id: <169561203735.19404.6014131036692240448@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,84 +62,116 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Sat, 2023-09-23 at 17:58 +0300, Amir Goldstein wrote:
+> On Sat, Sep 23, 2023 at 1:22=E2=80=AFPM Jeff Layton <jlayton@kernel.org> =
+wrote:
+> >=20
+> > On Sat, 2023-09-23 at 10:15 +0300, Amir Goldstein wrote:
+> > > On Fri, Sep 22, 2023 at 8:15=E2=80=AFPM Jeff Layton <jlayton@kernel.o=
+rg> wrote:
+> > > >=20
+> > > > My initial goal was to implement multigrain timestamps on most majo=
+r
+> > > > filesystems, so we could present them to userland, and use them for
+> > > > NFSv3, etc.
+> > > >=20
+> > > > With the current implementation however, we can't guarantee that a =
+file
+> > > > with a coarse grained timestamp modified after one with a fine grai=
+ned
+> > > > timestamp will always appear to have a later value. This could conf=
+use
+> > > > some programs like make, rsync, find, etc. that depend on strict
+> > > > ordering requirements for timestamps.
+> > > >=20
+> > > > The goal of this version is more modest: fix XFS' change attribute.
+> > > > XFS's change attribute is bumped on atime updates in addition to ot=
+her
+> > > > deliberate changes. This makes it unsuitable for export via nfsd.
+> > > >=20
+> > > > Jan Kara suggested keeping this functionality internal-only for now=
+ and
+> > > > plumbing the fine grained timestamps through getattr [1]. This set =
+takes
+> > > > a slightly different approach and has XFS use the fine-grained attr=
+ to
+> > > > fake up STATX_CHANGE_COOKIE in its getattr routine itself.
+> > > >=20
+> > > > While we keep fine-grained timestamps in struct inode, when present=
+ing
+> > > > the timestamps via getattr, we truncate them at a granularity of nu=
+mber
+> > > > of ns per jiffy,
+> > >=20
+> > > That's not good, because user explicitly set granular mtime would be
+> > > truncated too and booting with different kernels (HZ) would change
+> > > the observed timestamps of files.
+> > >=20
+> >=20
+> > That's a very good point.
+> >=20
+> > > > which allows us to smooth over the fuzz that causes
+> > > > ordering problems.
+> > > >=20
+> > >=20
+> > > The reported ordering problems (i.e. cp -u) is not even limited to th=
+e
+> > > scope of a single fs, right?
+> > >=20
+> >=20
+> > It isn't. Most of the tools we're concerned with don't generally care
+> > about filesystem boundaries.
+> >=20
+> > > Thinking out loud - if the QERIED bit was not per inode timestamp
+> > > but instead in a global fs_multigrain_ts variable, then all the inode=
+s
+> > > of all the mgtime fs would be using globally ordered timestamps
+> > >=20
+> > > That should eliminate the reported issues with time reorder for
+> > > fine vs coarse grained timestamps.
+> > >=20
+> > > The risk of extra unneeded "change cookie" updates compared to
+> > > per inode QUERIED bit may exist, but I think it is a rather small ove=
+rhead
+> > > and maybe worth the tradeoff of having to maintain a real per inode
+> > > "change cookie" in addition to a "globally ordered mgtime"?
+> > >=20
+> > > If this idea is acceptable, you may still be able to salvage the reve=
+rted
+> > > ctime series for 6.7, because the change to use global mgtime should
+> > > be quite trivial?
+> > >=20
+> >=20
+> > This is basically the idea I was going to look at next once I got some
+> > other stuff settled here: Basically, when we apply a fine-grained
+> > timestamp to an inode, we'd advance the coarse-grained clock that
+> > filesystems use to that value.
+> >=20
+> > It could cause some write amplification: if you are streaming writes to
+> > a bunch of files at the same time and someone stats one of them, then
+> > they'd all end up getting an extra inode transaction. That doesn't soun=
+d
+> > _too_ bad on its face, but I probably need to implement it and then run
+> > some numbers to see.
+> >=20
+>=20
+> Several journal transactions within a single jiffie tick?
+> If ctime/change_cookie of an inode is updated once within the scope
+> of a single running transaction, I don't think it matters how many
+> times it would be updated, but maybe I am missing something.
+>=20
+> The problem is probably going to be that the seqlock of the coarse
+> grained clock is going to be invalidated way too frequently to be
+> "read mostly" in the presence of ls -lR workload, but again, I did
+> not study the implementation, so I may be way off.
+>=20
 
-The error paths in nfsd_svc() are needlessly complex and can result in a
-final call to svc_put() without nfsd_last_thread() being called.  This
-results in the listening sockets not being closed properly.
+That may end up being the case, but I think if we can minimize the
+number of fine-grained updates, then the number of invalidations will be
+minimal too. I haven't rolled an implementation of this yet. This is all
+very much still in the "waving of hands" stage anyway.
 
-The per-netns setup provided by nfsd_startup_new() and removed by
-nfsd_shutdown_net() is needed precisely when there are running threads.
-So we don't need nfsd_up_before.  We don't need to know if it *was* up.
-We only need to know if any threads are left.  If none are, then we must
-call nfsd_shutdown_net().  But we don't need to do that explicitly as
-nfsd_last_thread() does that for us.
-
-So simply call nfsd_last_thread() before the last svc_put() if there are
-no running threads.  That will always do the right thing.
-
-Also discard:
- pr_info("nfsd: last server has exited, flushing export cache\n");
-It may not be true if an attempt to start the first server failed, and
-it isn't particularly helpful and it simply reports normal behaviour.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfssvc.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
-
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index c5890cdfe97b..d6122bb2d167 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -572,7 +572,6 @@ static void nfsd_last_thread(struct net *net)
- 		return;
-=20
- 	nfsd_shutdown_net(net);
--	pr_info("nfsd: last server has exited, flushing export cache\n");
- 	nfsd_export_flush(net);
- }
-=20
-@@ -786,7 +785,6 @@ int
- nfsd_svc(int nrservs, struct net *net, const struct cred *cred)
- {
- 	int	error;
--	bool	nfsd_up_before;
- 	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
- 	struct svc_serv *serv;
-=20
-@@ -806,8 +804,6 @@ nfsd_svc(int nrservs, struct net *net, const struct cred =
-*cred)
- 	error =3D nfsd_create_serv(net);
- 	if (error)
- 		goto out;
--
--	nfsd_up_before =3D nn->nfsd_net_up;
- 	serv =3D nn->nfsd_serv;
-=20
- 	error =3D nfsd_startup_net(net, cred);
-@@ -815,17 +811,15 @@ nfsd_svc(int nrservs, struct net *net, const struct cre=
-d *cred)
- 		goto out_put;
- 	error =3D svc_set_num_threads(serv, NULL, nrservs);
- 	if (error)
--		goto out_shutdown;
-+		goto out_put;
- 	error =3D serv->sv_nrthreads;
--	if (error =3D=3D 0)
--		nfsd_last_thread(net);
--out_shutdown:
--	if (error < 0 && !nfsd_up_before)
--		nfsd_shutdown_net(net);
- out_put:
- 	/* Threads now hold service active */
- 	if (xchg(&nn->keep_active, 0))
- 		svc_put(serv);
-+
-+	if (serv->sv_nrthreads =3D=3D 0)
-+		nfsd_last_thread(net);
- 	svc_put(serv);
- out:
- 	mutex_unlock(&nfsd_mutex);
+Once the dust settles from the atime and mtime API rework, I may still
+take a stab at doing this.
 --=20
-2.42.0
-
+Jeff Layton <jlayton@kernel.org>
