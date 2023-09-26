@@ -2,123 +2,419 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB6DF7AF675
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Sep 2023 00:52:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D30487AF697
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Sep 2023 01:13:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230159AbjIZWwB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 26 Sep 2023 18:52:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56298 "EHLO
+        id S230422AbjIZXN4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 26 Sep 2023 19:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231808AbjIZWuA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Sep 2023 18:50:00 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A76A2900F;
-        Tue, 26 Sep 2023 14:25:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WccGIMN5Qv0lQD3hgxuM1vcIL4JfsNLSXHYfA6JcKbA=; b=OsDkrrtpZVXrV5cPooFVpQ+DsW
-        efu7lcfWUFBZQaHC0VFHyjjlC9IDm/yz/ZSlLHkS56BIBF1rqS35BSa4iOCFAMWKpcXpAAhZiLrpb
-        /5MwxV8qJttJgFtRzaN+w6Z85LOr7HVhGxkZL88Sv5A/SkYZv7JMKEyrCWFeL2Yf9rWDNOyHisFva
-        qNGTFJp2isj0JVlKyHCS19X3cR12y4OMvncSwP7i60r/thlVuHEHxR25fZSDXn83II/AWC7INUFn6
-        8+uAPErM2QG6BrRdCCZ6OQ8tCEmDrSMgrY6TSaupVewWlaEaPlhNXIhz6JXLVcFKp8/OKJhckJeHZ
-        DAUjL3zQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qlFYR-00Bljq-2w;
-        Tue, 26 Sep 2023 21:25:16 +0000
-Date:   Tue, 26 Sep 2023 22:25:15 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        cgroups@vger.kernel.org
-Subject: Re: [PATCH 03/19] fs: release anon dev_t in deactivate_locked_super
-Message-ID: <20230926212515.GN800259@ZenIV>
-References: <20230913111013.77623-1-hch@lst.de>
- <20230913111013.77623-4-hch@lst.de>
- <20230913232712.GC800259@ZenIV>
- <20230926093834.GB13806@lst.de>
+        with ESMTP id S232180AbjIZXLz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Sep 2023 19:11:55 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED418685
+        for <linux-nfs@vger.kernel.org>; Tue, 26 Sep 2023 15:13:45 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 210E7C07618;
+        Tue, 26 Sep 2023 22:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695766424;
+        bh=a5Z2neTdugVmg7K1HhjX6bASrU1Jyg72MbNWHLTI7Xs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ifx44+vt+ujNB4+kNP85xRzvAfLGzzZn8upPJhq31eNwfm314biho9Z3wUF3MGzFK
+         tYo4XHJHpBXV8NkXUwfM7yJA6qMT+7HXdCAUXy5g0cn/JtQL6Bu2lNjZZa9Ln3MEZ9
+         fPQkRbP/x8Rv3ziLdp5RUFt6CngwiIlyOy4QmUy4x94pyt6KEvkaUfklBQKtt1NAXf
+         MDvrimZ+W/0JN2SfziPaZmBv9aAKj/Ld4kBw8WYTS9BlSvM4iFyGJGI1xRn4uPzr3V
+         i5/rZ2yOkAiqNXhO36AO5F83MrWfc4/jp9D/M0+xHj+e9HgkGAEmmAt0Ugt/3D/zyk
+         lk2p9a54CnZZw==
+From:   Lorenzo Bianconi <lorenzo@kernel.org>
+To:     linux-nfs@vger.kernel.org
+Cc:     lorenzo.bianconi@redhat.com, jlayton@kernel.org, neilb@suse.de,
+        chuck.lever@oracle.com, netdev@vger.kernel.org
+Subject: [PATCH v3] NFSD: convert write_threads, write_maxblksize and write_maxconn to netlink commands
+Date:   Wed, 27 Sep 2023 00:13:15 +0200
+Message-ID: <27646a34a3ddac3e0b0ad9b49aaf66b3cee5844f.1695766257.git.lorenzo@kernel.org>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230926093834.GB13806@lst.de>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 11:38:34AM +0200, Christoph Hellwig wrote:
+Introduce write_threads, write_maxblksize and write_maxconn netlink
+commands similar to the ones available through the procfs.
 
-> How?
-> 
-> Old sequence before his patch:
-> 
-> 	deactivate_locked_super()
-> 	  -> kill_anon_super()
-> 	    -> generic_shutdown_super()
-> 	    -> kill_super_notify()
-> 	    -> free_anon_bdev()
-> 	  -> kill_super_notify()
-> 
-> New sequence with this patch:
-> 
-> 	deactivate_locked_super()
-> 	  -> generic_shutdown_super()
-> 	    -> kill_super_notify()
-> 	    -> free_anon_bdev()
-> 
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+---
+Changes since v2:
+- use u32 to store nthreads in nfsd_nl_threads_set_doit
+- rename server-attr in control-plane in nfsd.yaml specs
+Changes since v1:
+- remove write_v4_end_grace command
+- add write_maxblksize and write_maxconn netlink commands
 
-Before your patch: foo_kill_super() calls kill_anon_super(),
-which calls kill_super_notify(), which removes the sucker from
-the list, then frees ->s_fs_info.  After your patch:
-removal from the lists happens via the call of kill_super_notify()
-*after* both of your methods had been called, while freeing
-->s_fs_info happens from the method call.  IOW, you've restored
-the situation prior to "super: ensure valid info".  The whole
-point of that commit had been to make sure that we have nothing
-in the lists with ->s_fs_info pointing to a freed object.
+This patch can be tested with user-space tool reported below:
+https://github.com/LorenzoBianconi/nfsd-netlink.git
+---
+ Documentation/netlink/specs/nfsd.yaml |  63 ++++++++++++
+ fs/nfsd/netlink.c                     |  51 ++++++++++
+ fs/nfsd/netlink.h                     |   9 ++
+ fs/nfsd/nfsctl.c                      | 141 ++++++++++++++++++++++++++
+ include/uapi/linux/nfsd_netlink.h     |  15 +++
+ 5 files changed, 279 insertions(+)
 
-It's not about free_anon_bdev(); that part is fine - it's the
-"we can drop the weird second call site of kill_super_notify()"
-thing that is broken.
+diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
+index 403d3e3a04f3..c6af1653bc1d 100644
+--- a/Documentation/netlink/specs/nfsd.yaml
++++ b/Documentation/netlink/specs/nfsd.yaml
+@@ -62,6 +62,18 @@ attribute-sets:
+         name: compound-ops
+         type: u32
+         multi-attr: true
++  -
++    name: control-plane
++    attributes:
++      -
++        name: threads
++        type: u32
++      -
++        name: max-blksize
++        type: u32
++      -
++        name: max-conn
++        type: u32
+ 
+ operations:
+   list:
+@@ -72,3 +84,54 @@ operations:
+       dump:
+         pre: nfsd-nl-rpc-status-get-start
+         post: nfsd-nl-rpc-status-get-done
++    -
++      name: threads-set
++      doc: set the number of running threads
++      attribute-set: control-plane
++      flags: [ admin-perm ]
++      do:
++        request:
++          attributes:
++            - threads
++    -
++      name: threads-get
++      doc: dump the number of running threads
++      attribute-set: control-plane
++      dump:
++        reply:
++          attributes:
++            - threads
++    -
++      name: max-blksize-set
++      doc: set the nfs block size
++      attribute-set: control-plane
++      flags: [ admin-perm ]
++      do:
++        request:
++          attributes:
++            - max-blksize
++    -
++      name: max-blksize-get
++      doc: dump the nfs block size
++      attribute-set: control-plane
++      dump:
++        reply:
++          attributes:
++            - max-blksize
++    -
++      name: max-conn-set
++      doc: set the max number of connections
++      attribute-set: control-plane
++      flags: [ admin-perm ]
++      do:
++        request:
++          attributes:
++            - max-conn
++    -
++      name: max-conn-get
++      doc: dump the max number of connections
++      attribute-set: control-plane
++      dump:
++        reply:
++          attributes:
++            - max-conn
+diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+index 0e1d635ec5f9..8f7d72ae60d6 100644
+--- a/fs/nfsd/netlink.c
++++ b/fs/nfsd/netlink.c
+@@ -10,6 +10,21 @@
+ 
+ #include <uapi/linux/nfsd_netlink.h>
+ 
++/* NFSD_CMD_THREADS_SET - do */
++static const struct nla_policy nfsd_threads_set_nl_policy[NFSD_A_CONTROL_PLANE_THREADS + 1] = {
++	[NFSD_A_CONTROL_PLANE_THREADS] = { .type = NLA_U32, },
++};
++
++/* NFSD_CMD_MAX_BLKSIZE_SET - do */
++static const struct nla_policy nfsd_max_blksize_set_nl_policy[NFSD_A_CONTROL_PLANE_MAX_BLKSIZE + 1] = {
++	[NFSD_A_CONTROL_PLANE_MAX_BLKSIZE] = { .type = NLA_U32, },
++};
++
++/* NFSD_CMD_MAX_CONN_SET - do */
++static const struct nla_policy nfsd_max_conn_set_nl_policy[NFSD_A_CONTROL_PLANE_MAX_CONN + 1] = {
++	[NFSD_A_CONTROL_PLANE_MAX_CONN] = { .type = NLA_U32, },
++};
++
+ /* Ops table for nfsd */
+ static const struct genl_split_ops nfsd_nl_ops[] = {
+ 	{
+@@ -19,6 +34,42 @@ static const struct genl_split_ops nfsd_nl_ops[] = {
+ 		.done	= nfsd_nl_rpc_status_get_done,
+ 		.flags	= GENL_CMD_CAP_DUMP,
+ 	},
++	{
++		.cmd		= NFSD_CMD_THREADS_SET,
++		.doit		= nfsd_nl_threads_set_doit,
++		.policy		= nfsd_threads_set_nl_policy,
++		.maxattr	= NFSD_A_CONTROL_PLANE_THREADS,
++		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
++	},
++	{
++		.cmd	= NFSD_CMD_THREADS_GET,
++		.dumpit	= nfsd_nl_threads_get_dumpit,
++		.flags	= GENL_CMD_CAP_DUMP,
++	},
++	{
++		.cmd		= NFSD_CMD_MAX_BLKSIZE_SET,
++		.doit		= nfsd_nl_max_blksize_set_doit,
++		.policy		= nfsd_max_blksize_set_nl_policy,
++		.maxattr	= NFSD_A_CONTROL_PLANE_MAX_BLKSIZE,
++		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
++	},
++	{
++		.cmd	= NFSD_CMD_MAX_BLKSIZE_GET,
++		.dumpit	= nfsd_nl_max_blksize_get_dumpit,
++		.flags	= GENL_CMD_CAP_DUMP,
++	},
++	{
++		.cmd		= NFSD_CMD_MAX_CONN_SET,
++		.doit		= nfsd_nl_max_conn_set_doit,
++		.policy		= nfsd_max_conn_set_nl_policy,
++		.maxattr	= NFSD_A_CONTROL_PLANE_MAX_CONN,
++		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
++	},
++	{
++		.cmd	= NFSD_CMD_MAX_CONN_GET,
++		.dumpit	= nfsd_nl_max_conn_get_dumpit,
++		.flags	= GENL_CMD_CAP_DUMP,
++	},
+ };
+ 
+ struct genl_family nfsd_nl_family __ro_after_init = {
+diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+index d83dd6bdee92..41b95651c638 100644
+--- a/fs/nfsd/netlink.h
++++ b/fs/nfsd/netlink.h
+@@ -16,6 +16,15 @@ int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb);
+ 
+ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+ 				  struct netlink_callback *cb);
++int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info);
++int nfsd_nl_threads_get_dumpit(struct sk_buff *skb,
++			       struct netlink_callback *cb);
++int nfsd_nl_max_blksize_set_doit(struct sk_buff *skb, struct genl_info *info);
++int nfsd_nl_max_blksize_get_dumpit(struct sk_buff *skb,
++				   struct netlink_callback *cb);
++int nfsd_nl_max_conn_set_doit(struct sk_buff *skb, struct genl_info *info);
++int nfsd_nl_max_conn_get_dumpit(struct sk_buff *skb,
++				struct netlink_callback *cb);
+ 
+ extern struct genl_family nfsd_nl_family;
+ 
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index b71744e355a8..07e7a09e28e3 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1694,6 +1694,147 @@ int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb)
+ 	return 0;
+ }
+ 
++/**
++ * nfsd_nl_threads_set_doit - set the number of running threads
++ * @skb: reply buffer
++ * @info: netlink metadata and command arguments
++ *
++ * Return 0 on success or a negative errno.
++ */
++int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info)
++{
++	u32 nthreads;
++	int ret;
++
++	if (!info->attrs[NFSD_A_CONTROL_PLANE_THREADS])
++		return -EINVAL;
++
++	nthreads = nla_get_u32(info->attrs[NFSD_A_CONTROL_PLANE_THREADS]);
++
++	ret = nfsd_svc(nthreads, genl_info_net(info), get_current_cred());
++	return ret == nthreads ? 0 : ret;
++}
++
++static int nfsd_nl_get_dump(struct sk_buff *skb, struct netlink_callback *cb,
++			    int cmd, int attr, u32 val)
++{
++	void *hdr;
++
++	if (cb->args[0]) /* already consumed */
++		return 0;
++
++	hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
++			  &nfsd_nl_family, NLM_F_MULTI, cmd);
++	if (!hdr)
++		return -ENOBUFS;
++
++	if (nla_put_u32(skb, attr, val))
++		return -ENOBUFS;
++
++	genlmsg_end(skb, hdr);
++	cb->args[0] = 1;
++
++	return skb->len;
++}
++
++/**
++ * nfsd_nl_threads_get_dumpit - dump the number of running threads
++ * @skb: reply buffer
++ * @cb: netlink metadata and command arguments
++ *
++ * Returns the size of the reply or a negative errno.
++ */
++int nfsd_nl_threads_get_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
++{
++	return nfsd_nl_get_dump(skb, cb, NFSD_CMD_THREADS_GET,
++				NFSD_A_CONTROL_PLANE_THREADS,
++				nfsd_nrthreads(sock_net(skb->sk)));
++}
++
++/**
++ * nfsd_nl_max_blksize_set_doit - set the nfs block size
++ * @skb: reply buffer
++ * @info: netlink metadata and command arguments
++ *
++ * Return 0 on success or a negative errno.
++ */
++int nfsd_nl_max_blksize_set_doit(struct sk_buff *skb, struct genl_info *info)
++{
++	struct nfsd_net *nn = net_generic(genl_info_net(info), nfsd_net_id);
++	struct nlattr *attr = info->attrs[NFSD_A_CONTROL_PLANE_MAX_BLKSIZE];
++	int ret = 0;
++
++	if (!attr)
++		return -EINVAL;
++
++	mutex_lock(&nfsd_mutex);
++	if (nn->nfsd_serv) {
++		ret = -EBUSY;
++		goto out;
++	}
++
++	nfsd_max_blksize = nla_get_u32(attr);
++	nfsd_max_blksize = max_t(int, nfsd_max_blksize, 1024);
++	nfsd_max_blksize = min_t(int, nfsd_max_blksize, NFSSVC_MAXBLKSIZE);
++	nfsd_max_blksize &= ~1023;
++out:
++	mutex_unlock(&nfsd_mutex);
++
++	return ret;
++}
++
++/**
++ * nfsd_nl_max_blksize_get_dumpit - dump the nfs block size
++ * @skb: reply buffer
++ * @cb: netlink metadata and command arguments
++ *
++ * Returns the size of the reply or a negative errno.
++ */
++int nfsd_nl_max_blksize_get_dumpit(struct sk_buff *skb,
++				   struct netlink_callback *cb)
++{
++	return nfsd_nl_get_dump(skb, cb, NFSD_CMD_MAX_BLKSIZE_GET,
++				NFSD_A_CONTROL_PLANE_MAX_BLKSIZE,
++				nfsd_max_blksize);
++}
++
++/**
++ * nfsd_nl_max_conn_set_doit - set the max number of connections
++ * @skb: reply buffer
++ * @info: netlink metadata and command arguments
++ *
++ * Return 0 on success or a negative errno.
++ */
++int nfsd_nl_max_conn_set_doit(struct sk_buff *skb, struct genl_info *info)
++{
++	struct nfsd_net *nn = net_generic(genl_info_net(info), nfsd_net_id);
++	struct nlattr *attr = info->attrs[NFSD_A_CONTROL_PLANE_MAX_CONN];
++
++	if (!attr)
++		return -EINVAL;
++
++	nn->max_connections = nla_get_u32(attr);
++
++	return 0;
++}
++
++/**
++ * nfsd_nl_max_conn_get_dumpit - dump the max number of connections
++ * @skb: reply buffer
++ * @cb: netlink metadata and command arguments
++ *
++ * Returns the size of the reply or a negative errno.
++ */
++int nfsd_nl_max_conn_get_dumpit(struct sk_buff *skb,
++				struct netlink_callback *cb)
++{
++	struct nfsd_net *nn = net_generic(sock_net(cb->skb->sk), nfsd_net_id);
++
++	return nfsd_nl_get_dump(skb, cb, NFSD_CMD_MAX_CONN_GET,
++				NFSD_A_CONTROL_PLANE_MAX_CONN,
++				nn->max_connections);
++}
++
+ /**
+  * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+  * @net: a freshly-created network namespace
+diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_netlink.h
+index c8ae72466ee6..145f4811f3d9 100644
+--- a/include/uapi/linux/nfsd_netlink.h
++++ b/include/uapi/linux/nfsd_netlink.h
+@@ -29,8 +29,23 @@ enum {
+ 	NFSD_A_RPC_STATUS_MAX = (__NFSD_A_RPC_STATUS_MAX - 1)
+ };
+ 
++enum {
++	NFSD_A_CONTROL_PLANE_THREADS = 1,
++	NFSD_A_CONTROL_PLANE_MAX_BLKSIZE,
++	NFSD_A_CONTROL_PLANE_MAX_CONN,
++
++	__NFSD_A_CONTROL_PLANE_MAX,
++	NFSD_A_CONTROL_PLANE_MAX = (__NFSD_A_CONTROL_PLANE_MAX - 1)
++};
++
+ enum {
+ 	NFSD_CMD_RPC_STATUS_GET = 1,
++	NFSD_CMD_THREADS_SET,
++	NFSD_CMD_THREADS_GET,
++	NFSD_CMD_MAX_BLKSIZE_SET,
++	NFSD_CMD_MAX_BLKSIZE_GET,
++	NFSD_CMD_MAX_CONN_SET,
++	NFSD_CMD_MAX_CONN_GET,
+ 
+ 	__NFSD_CMD_MAX,
+ 	NFSD_CMD_MAX = (__NFSD_CMD_MAX - 1)
+-- 
+2.41.0
 
-Al, still slogging through the rcu pathwalk races in the methods...
-The latest catch: nfs_set_verifier() can get called on a dentry
-that had just been seen to have positive parent, but is not
-pinned down.
-	grab ->d_lock; OK, we know that dentry won't get freed under us
-	fetch ->d_parent->d_inode
-	pass that to nfs_verify_change_attribute()
-... which assumes that inode it's been given is not NULL.  Normally it
-would've been - ->d_lock stabilizes ->d_parent, and negative dentries
-obviously have no children.  Except that we might've been just hit
-by dentry_kill() due to eviction on memory pressure, got ->d_lock
-right after that and proceeded to play with ->d_parent, just as
-that parent is going through dentry_kill() from the same eviction on
-memory pressure...  If it gets to dentry_unlink_inode() before we get to
-fetching ->d_parent->d_inode, nfs_verify_change_attribute(NULL, whatever)
-is going to oops...
