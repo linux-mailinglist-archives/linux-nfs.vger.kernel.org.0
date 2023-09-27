@@ -2,185 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 778557B06EA
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Sep 2023 16:33:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B12657B09DA
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Sep 2023 18:21:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232123AbjI0OdS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 Sep 2023 10:33:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58198 "EHLO
+        id S230496AbjI0QVg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 27 Sep 2023 12:21:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232119AbjI0OdS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Sep 2023 10:33:18 -0400
+        with ESMTP id S229901AbjI0QVe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Sep 2023 12:21:34 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD343F3
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Sep 2023 07:33:16 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B3B4C433C8
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Sep 2023 14:33:16 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E702DD;
+        Wed, 27 Sep 2023 09:21:31 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF3E3C433C7;
+        Wed, 27 Sep 2023 16:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695825196;
-        bh=uFg/UcDHVkoMxvpMof+HKq4HJucI4BiOWXTAqDLc8g0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=khK13IZYGs7CYNG2g9IrgnlmjyHt9p6ESl4Ba/fqBHve1gDo1QtHP2KdDkgTlMMrh
-         rSqImMxvbASB7aDovvz6ynTlZ7vzjrXTo+3Ul6cYztqeB2LTpqdRLqCweqKlvU7rS/
-         lZogwVMqT84ScO++rUP6xD4e1mQ73jtwMhulR6JbF+FSRAZZDhNhxbY7x4WBuyV+Of
-         2U17eQb3AugVN2yTg6ppILdq/I0hSh00wc8zxZcdmxzOu8JA6i3wIjQBNxjY5hsjbz
-         FQB7pP82SBk7vskO2ncnkkp+97jvpc22EDSGdyjEME53jzpRVJgkknbla/DL9AQF3v
-         ArHdwDKEGVX2w==
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-41808baf6abso58591541cf.3
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Sep 2023 07:33:16 -0700 (PDT)
-X-Gm-Message-State: AOJu0YxD94gPInKQLtnoQEtddWy4m1HrGSaivCg40n/UEIcdsP1q4Gci
-        H3q3tEBqZTCqFU4yPr7PDRBy4J3IcdK6m+fQt7I=
-X-Google-Smtp-Source: AGHT+IEEZ7Nr/b6g+gxBaXAtjDadHghrDu7twWIpbeFYQQ++Z6Ci3TuslIIsIPoZUR5dOLnDENtaZEf9BlYyjiOaJyU=
-X-Received: by 2002:a05:622a:296:b0:417:a095:60ab with SMTP id
- z22-20020a05622a029600b00417a09560abmr2290492qtw.50.1695825195549; Wed, 27
- Sep 2023 07:33:15 -0700 (PDT)
+        s=k20201202; t=1695831690;
+        bh=5fVqTod0fsU3D85/NgpH5eX11yWtVW2s8jme29QI3SA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K+SdxwDZhx8uxbb5abeHgPolVgmwSiIBL6/AzX/eEpmg7s5Jd1TwEPpueT17Z+y1i
+         r/3aJFhGZoIRaqB+ADboLRaAQZpJm6SMvyfu5jpdUX9fmjLLqHrtdJHSnoHaBHBoNB
+         1Ras0NDOeGzjZ5rjoNJ7hj3RFSgjPFHQeOCu0doiR1ZFlmc7Dtn7+Tg4yFYE5HRxY7
+         FflbgLOEB1zCas3wjtrhbqXfzlZd6DZqKcBXDoRDLeETsNHRLxD2cXgjOH7guvx0ma
+         AufPlRnLwdi+pMqoWiBGk6SGa+Snjtz53w/pXkwTjOc2fDnSaUxFN105snuKm+T14u
+         FBsBAdYo6oMFA==
+Date:   Wed, 27 Sep 2023 18:21:19 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Alasdair Kergon <agk@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Kleikamp <shaggy@kernel.org>,
+        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
+        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        jfs-discussion@lists.sourceforge.net,
+        Joern Engel <joern@lazybastard.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
+        Mike Snitzer <snitzer@kernel.org>,
+        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
+        reiserfs-devel@vger.kernel.org,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Song Liu <song@kernel.org>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        xen-devel@lists.xenproject.org
+Subject: Re: [PATCH v4 0/29] block: Make blkdev_get_by_*() return handle
+Message-ID: <20230927-prahlen-reintreten-93706074e58d@brauner>
+References: <20230818123232.2269-1-jack@suse.cz>
 MIME-Version: 1.0
-References: <20230926210322.184335-1-anna@kernel.org> <188347CB-B870-4C6B-8E16-4D9C854A5CCC@oracle.com>
-In-Reply-To: <188347CB-B870-4C6B-8E16-4D9C854A5CCC@oracle.com>
-From:   Anna Schumaker <anna@kernel.org>
-Date:   Wed, 27 Sep 2023 10:32:59 -0400
-X-Gmail-Original-Message-ID: <CAFX2Jfm8sJk2QkY9T7KLM9HnhTdUo9ij5uxeZ8GqHbwGtuct0w@mail.gmail.com>
-Message-ID: <CAFX2Jfm8sJk2QkY9T7KLM9HnhTdUo9ij5uxeZ8GqHbwGtuct0w@mail.gmail.com>
-Subject: Re: [PATCH] SUNRPC/TLS: Lock the lower_xprt during the tls handshake
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230818123232.2269-1-jack@suse.cz>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 5:17=E2=80=AFPM Chuck Lever III <chuck.lever@oracle=
-.com> wrote:
->
->
->
-> > On Sep 26, 2023, at 5:03 PM, Anna Schumaker <anna@kernel.org> wrote:
-> >
-> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >
-> > Otherwise we run the risk of having the lower_xprt freed from underneat=
-h
-> > us, causing an oops that looks like this:
-> >
-> > [  224.150698] BUG: kernel NULL pointer dereference, address: 000000000=
-0000018
-> > [  224.150951] #PF: supervisor read access in kernel mode
-> > [  224.151117] #PF: error_code(0x0000) - not-present page
-> > [  224.151278] PGD 0 P4D 0
-> > [  224.151361] Oops: 0000 [#1] PREEMPT SMP NOPTI
-> > [  224.151499] CPU: 2 PID: 99 Comm: kworker/u10:6 Not tainted 6.6.0-rc3=
--g6465e260f487 #41264 a00b0960990fb7bc6d6a330ee03588b67f08a47b
-> > [  224.151977] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS=
- unknown 2/2/2022
-> > [  224.152216] Workqueue: xprtiod xs_tcp_tls_setup_socket [sunrpc]
-> > [  224.152434] RIP: 0010:xs_tcp_tls_setup_socket+0x3cc/0x7e0 [sunrpc]
-> > [  224.152643] Code: 00 00 48 8b 7c 24 08 e9 f3 01 00 00 48 83 7b c0 00=
- 0f 85 d2 01 00 00 49 8d 84 24 f8 05 00 00 48 89 44 24 10 48 8b 00 48 89 c5=
- <4c> 8b 68 18 66 41 83 3f 0a 75 71 45 31 ff 4c 89 ef 31 f6 e8 5c 76
-> > [  224.153246] RSP: 0018:ffffb00ec060fd18 EFLAGS: 00010246
-> > [  224.153427] RAX: 0000000000000000 RBX: ffff8c06c2e53e40 RCX: 0000000=
-000000001
-> > [  224.153652] RDX: ffff8c073bca2408 RSI: 0000000000000282 RDI: ffff8c0=
-6c259ee00
-> > [  224.153868] RBP: 0000000000000000 R08: ffffffff9da55aa0 R09: 0000000=
-000000001
-> > [  224.154084] R10: 00000034306c30f1 R11: 0000000000000002 R12: ffff8c0=
-6c2e51800
-> > [  224.154300] R13: ffff8c06c355d400 R14: 0000000004208160 R15: ffff8c0=
-6c2e53820
-> > [  224.154521] FS:  0000000000000000(0000) GS:ffff8c073bd00000(0000) kn=
-lGS:0000000000000000
-> > [  224.154763] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  224.154940] CR2: 0000000000000018 CR3: 0000000062c1e000 CR4: 0000000=
-000750ee0
-> > [  224.155157] PKRU: 55555554
-> > [  224.155244] Call Trace:
-> > [  224.155325]  <TASK>
-> > [  224.155395]  ? __die_body+0x68/0xb0
-> > [  224.155507]  ? page_fault_oops+0x34c/0x3a0
-> > [  224.155635]  ? _raw_spin_unlock_irqrestore+0xe/0x40
-> > [  224.155793]  ? exc_page_fault+0x7a/0x1b0
-> > [  224.155916]  ? asm_exc_page_fault+0x26/0x30
-> > [  224.156047]  ? xs_tcp_tls_setup_socket+0x3cc/0x7e0 [sunrpc ae3a15912=
-ae37fd51dafbdbc2dbd069117f8f5c8]
-> > [  224.156367]  ? xs_tcp_tls_setup_socket+0x2fe/0x7e0 [sunrpc ae3a15912=
-ae37fd51dafbdbc2dbd069117f8f5c8]
-> > [  224.156697]  ? __pfx_xs_tls_handshake_done+0x10/0x10 [sunrpc ae3a159=
-12ae37fd51dafbdbc2dbd069117f8f5c8]
-> > [  224.157013]  process_scheduled_works+0x24e/0x450
-> > [  224.157158]  worker_thread+0x21c/0x2d0
-> > [  224.157275]  ? __pfx_worker_thread+0x10/0x10
-> > [  224.157409]  kthread+0xe8/0x110
-> > [  224.157510]  ? __pfx_kthread+0x10/0x10
-> > [  224.157628]  ret_from_fork+0x37/0x50
-> > [  224.157741]  ? __pfx_kthread+0x10/0x10
-> > [  224.157859]  ret_from_fork_asm+0x1b/0x30
-> > [  224.157983]  </TASK>
-> >
-> > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
->
-> I don't have any quibbles with this. Thanks!
+On Wed, 27 Sep 2023 11:34:07 +0200, Jan Kara wrote:
+> Create struct bdev_handle that contains all parameters that need to be
+> passed to blkdev_put() and provide bdev_open_* functions that return
+> this structure instead of plain bdev pointer. This will eventually allow
+> us to pass one more argument to blkdev_put() (renamed to bdev_release())
+> without too much hassle.
+> 
+> 
+> [...]
 
-Great! I'm putting together another client bugfixes pull request for
-6.6, so I'll plan to include it in that!
+> to ease review / testing. Christian, can you pull the patches to your tree
+> to get some exposure in linux-next as well? Thanks!
 
-Anna
+Yep. So I did it slighly differently. I pulled in the btrfs prereqs and
+then applied your series on top of it so we get all the Link: tags right.
+I'm running tests right now. Please double-check.
 
->
-> Reviewed-by: Chuck Lever <chuck.lever@oracle.com <mailto:chuck.lever@orac=
-le.com>>
->
->
-> > ---
-> > net/sunrpc/xprtsock.c | 6 ++++++
-> > 1 file changed, 6 insertions(+)
-> >
-> > diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> > index 71cd916e384f..a15bf2ede89b 100644
-> > --- a/net/sunrpc/xprtsock.c
-> > +++ b/net/sunrpc/xprtsock.c
-> > @@ -2672,6 +2672,10 @@ static void xs_tcp_tls_setup_socket(struct work_=
-struct *work)
-> > rcu_read_lock();
-> > lower_xprt =3D rcu_dereference(lower_clnt->cl_xprt);
-> > rcu_read_unlock();
-> > +
-> > + if (wait_on_bit_lock(&lower_xprt->state, XPRT_LOCKED, TASK_KILLABLE))
-> > + goto out_unlock;
-> > +
-> > status =3D xs_tls_handshake_sync(lower_xprt, &upper_xprt->xprtsec);
-> > if (status) {
-> > trace_rpc_tls_not_started(upper_clnt, upper_xprt);
-> > @@ -2681,6 +2685,7 @@ static void xs_tcp_tls_setup_socket(struct work_s=
-truct *work)
-> > status =3D xs_tcp_tls_finish_connecting(lower_xprt, upper_transport);
-> > if (status)
-> > goto out_close;
-> > + xprt_release_write(lower_xprt, NULL);
-> >
-> > trace_rpc_socket_connect(upper_xprt, upper_transport->sock, 0);
-> > if (!xprt_test_and_set_connected(upper_xprt)) {
-> > @@ -2702,6 +2707,7 @@ static void xs_tcp_tls_setup_socket(struct work_s=
-truct *work)
-> > return;
-> >
-> > out_close:
-> > + xprt_release_write(lower_xprt, NULL);
-> > rpc_shutdown_client(lower_clnt);
-> >
-> > /* xprt_force_disconnect() wakes tasks with a fixed tk_status code.
-> > --
-> > 2.42.0
-> >
->
-> --
-> Chuck Lever
->
->
+---
+
+Applied to the vfs.super branch of the vfs/vfs.git tree.
+Patches in the vfs.super branch should appear in linux-next soon.
+
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
+
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
+
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs.super
+
+[01/29] block: Provide bdev_open_* functions
+       https://git.kernel.org/vfs/vfs/c/b7c828aa0b3c
+[02/29] block: Use bdev_open_by_dev() in blkdev_open()
+        https://git.kernel.org/vfs/vfs/c/d4e36f27b45a
+[03/29] block: Use bdev_open_by_dev() in disk_scan_partitions() and blkdev_bszset()
+        https://git.kernel.org/vfs/vfs/c/5f9bd6764c7a
+[04/29] drdb: Convert to use bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/0220ca8e443d
+[05/29] pktcdvd: Convert to bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/7af10b889789
+[06/29] rnbd-srv: Convert to use bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/3d27892a4be7
+[07/29] xen/blkback: Convert to bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/26afb0ed10b3
+[08/29] zram: Convert to use bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/efc8e3f4c6dc
+[09/29] bcache: Convert to bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/dc893f51d24a
+[10/29] dm: Convert to bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/80c2267c6d07
+[11/29] md: Convert to bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/15db36126ca6
+[12/29] mtd: block2mtd: Convert to bdev_open_by_dev/path()
+        https://git.kernel.org/vfs/vfs/c/4c27234bf3ce
+[13/29] nvmet: Convert to bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/70cffddcc300
+[14/29] s390/dasd: Convert to bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/5581d03457f8
+[15/29] scsi: target: Convert to bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/43de7d844d47
+[16/29] PM: hibernate: Convert to bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/105ea4a2fd18
+[17/29] PM: hibernate: Drop unused snapshot_test argument
+        https://git.kernel.org/vfs/vfs/c/b589a66e3688
+[18/29] mm/swap: Convert to use bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/615af8e29233
+[19/29] fs: Convert to bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/5173192bcfe6
+[20/29] btrfs: Convert to bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/8cf64782764f
+[21/29] erofs: Convert to use bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/4d41880bf249
+[22/29] ext4: Convert to bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/f7507612395e
+[23/29] f2fs: Convert to bdev_open_by_dev/path()
+        https://git.kernel.org/vfs/vfs/c/d9ff8e3b6498
+[24/29] jfs: Convert to bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/459dc6376338
+[25/29] nfs/blocklayout: Convert to use bdev_open_by_dev/path()
+        https://git.kernel.org/vfs/vfs/c/5b1df9a40929
+[26/29] ocfs2: Convert to use bdev_open_by_dev()
+        https://git.kernel.org/vfs/vfs/c/b6b95acbd943
+[27/29] reiserfs: Convert to bdev_open_by_dev/path()
+        https://git.kernel.org/vfs/vfs/c/7e3615ff6119
+[28/29] xfs: Convert to bdev_open_by_path()
+        https://git.kernel.org/vfs/vfs/c/176ccb99e207
+[29/29] block: Remove blkdev_get_by_*() functions
+        https://git.kernel.org/vfs/vfs/c/953863a5a2ff
