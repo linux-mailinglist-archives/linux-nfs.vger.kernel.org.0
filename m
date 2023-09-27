@@ -2,126 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E23947B0C6A
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Sep 2023 21:13:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07D187B0C79
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Sep 2023 21:25:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjI0TNh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 Sep 2023 15:13:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41398 "EHLO
+        id S229542AbjI0TZf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 27 Sep 2023 15:25:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjI0TNg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Sep 2023 15:13:36 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2126.outbound.protection.outlook.com [40.107.94.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0CD8DD;
-        Wed, 27 Sep 2023 12:13:33 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YtpaOiTt1k6AYnAiraLE1Lm2T24ZA7OMIuadT0Y04/clbJaHnitKl3SOuJy4wvHjTnz71Wmya7X4O6YviE6TsSjEjwKzYMu4VRDg6xH65oQU7Dxt7veVNgd+EPab+pPb/aNmbODTG3utubSsA9VTUeL0zV/ArZmjX1C2vMbNJ13wpkBKpV74oBMurXWPqfJDjLK5jiKf2su8pp84fJd6sVjU5cL3vygZtTcSpQhJotfuPG+YZcU/igoJwow3lTWHj8kYQ3G+ybMYIrsRaWZYNzVe0DmOZZBsR61pit9FIibsSyDLYZbnXwLs3ikgk191sjXLuLwJS7m9u/Vb4ZDLCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fXDyEjaNWc31ahoJOGoK0DbMPi20RurHzJeKHrQeUyg=;
- b=iQ2Y6q4Z2VCoANqEaCMtCiS/Zv4w4o0mdxKRZ8Sd8tRZW7mv6xjg0Q+2kYedaFbFSBXqFt5R95qtO636zoU0NezNBzcwV02d28oqDytVwNNPyhsGVTaEJq2r6ZpZVTf2MdNqYNvmBFwri31bQZuk0dXmoYfZwyoo+ndKaYPvhjblrpViUXAJlR+GvcJpSNewXCnlUntrNGx+sklFSMuZKxNKuHLDpxdulR4xdBoaO/8/2zyyqG6p5zybv++SmhgeaEEgtz/YjrIp34lEUV047Qwyqax01WaKmvMzewc06pshlQ/j6KGq5Yde1uAogP17b7xvsk1BTPR66PIry9oQ3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fXDyEjaNWc31ahoJOGoK0DbMPi20RurHzJeKHrQeUyg=;
- b=OOQByZXVPkEHuQE3shtXjwQqdB4ao+R4MC8Fu756gAIrDr4W2/i57IiAqB40hKf+PH2wPtrtNJ1whn+NVWskAw2nGm2seOeRxlN3PEOqbiH/m1llCoC5Pd+KEaCTLy0APubSs0O4Yj51WztyM5EOPflinISqWMF1kmfMxIcTqnY=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by BN0PR13MB4662.namprd13.prod.outlook.com (2603:10b6:408:123::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6813.30; Wed, 27 Sep
- 2023 19:13:29 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::28e0:7264:5057:7b20]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::28e0:7264:5057:7b20%7]) with mapi id 15.20.6838.016; Wed, 27 Sep 2023
- 19:13:29 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "anna@kernel.org" <anna@kernel.org>,
-        "smayhew@redhat.com" <smayhew@redhat.com>,
-        "jlayton@kernel.org" <jlayton@kernel.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] nfs: decrement nrequests counter before releasing the req
-Thread-Topic: [PATCH] nfs: decrement nrequests counter before releasing the
+        with ESMTP id S229459AbjI0TZe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Sep 2023 15:25:34 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A368DD;
+        Wed, 27 Sep 2023 12:25:33 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C707C433C8;
+        Wed, 27 Sep 2023 19:25:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1695842732;
+        bh=0GOLssQsX/3eU3TpQaInVoVKgf9m/1g7lmT9pGTykdc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=RyfbZC9GN/EwlNDBVqow24OIEA7IFXtfkAG7b2EZGfb22ejD4remkztWZg0TMathd
+         OGxCOdUVjV0HT4n/9Mga/Dq32+gFuuliT5imbG3ylEaBhmqBxA3NhI6H8jYzWxDBSm
+         +GQTcS8mObBehjiHkKc1GPoffq4I2wGpXAMlp8zHUDTYIONjyVdWbGUz6An5WvlnNS
+         Ext5VUAhTIfDIv/QdQ5pxEsDA6ODNjRPxuHCDxO/ipU8BXPb9Q9fWRX/svP6syJHuG
+         U7c5gEQLVlCm55pSE0YmI+hj81DJsb/CY00e7yo4im37rvJdNuH2ilZRwblyNtipuL
+         HdgWUJVULIoCw==
+Message-ID: <b574d3d6afd8eec6b13ca3b3928d8194b8c405e2.camel@kernel.org>
+Subject: Re: [PATCH] nfs: decrement nrequests counter before releasing the
  req
-Thread-Index: AQHZ6vuozQ1jGHNiyE+tQQequHHMj7AvF2uA
-Date:   Wed, 27 Sep 2023 19:13:29 +0000
-Message-ID: <69c748d58f834b80abda5dcd291ee29ea1cafaf7.camel@hammerspace.com>
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "anna@kernel.org" <anna@kernel.org>,
+        "smayhew@redhat.com" <smayhew@redhat.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Date:   Wed, 27 Sep 2023 15:25:30 -0400
+In-Reply-To: <69c748d58f834b80abda5dcd291ee29ea1cafaf7.camel@hammerspace.com>
 References: <20230919-nfs-fixes-v1-1-d22bf72e05ad@kernel.org>
-In-Reply-To: <20230919-nfs-fixes-v1-1-d22bf72e05ad@kernel.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|BN0PR13MB4662:EE_
-x-ms-office365-filtering-correlation-id: 73df1b6b-b8bd-4f4d-0a62-08dbbf8dd557
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: jQF3Zd2r0ZKluM0qiERgXI4GthG4ysKXJ1cWttvn/4+owqFcaLD3VXAibTXQ20y/pQBoU2kpH72gOKU6EHYiCxNzJfMcrEHBsE+vVCt0saRdx1qHx/GVCtFmB8e2HtYcdhm3ouwrDKNc/g1O3kY6IScRCrSGtkmi/onX/NqebkFyy4Ttw16n/E+A2Kpyo8qxthcBakax1Ljyhga8Tgwt4lv9v4Ps6BocDEb/3hA0Pzb5ZILAIHyJt1s/FcLLoITOAGq8I4FCTZvmu/xZFp7bI+iMPeCJnC/5leMy3/2qfeojacUbphIF6qz5iMbjyz6Esd2t2Zr9O39yb6HpuUwVQppLPizHr6Lq0SR8UPVOWGnEiOGND89ehWt+EfFbHZ/zhdi9ZVpLIKAEdevpgkeVW8DdxnLiDn899IlRNrzkbgXpwf5lBU23kXnyNMfP35MpkMyAMDE1z9nNByGkRyb4/XZIRN03M9+MFNTp2U3HyidId1UiESnWALfyBGrxhjavcnbLZp9lpbqKhhS+2lIZ4cVbEkujVaA6mlWYONMRiogGFUjVPC+2xERvcPC98lib7QTQCNNb9+QpzFcagSutsUM0GK3lBy/YLFoGFK9MZ3MRnPZZzkI17iFYZc/OqkIYdT1YHWIbBWn3RJtmzKrhG58YTqBVUkgOkOxkDDlWDx4=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(39840400004)(346002)(366004)(376002)(136003)(230922051799003)(451199024)(186009)(1800799009)(2906002)(86362001)(8936002)(4326008)(5660300002)(8676002)(41300700001)(122000001)(478600001)(83380400001)(38100700002)(38070700005)(45080400002)(71200400001)(54906003)(36756003)(26005)(64756008)(6506007)(6486002)(316002)(66946007)(76116006)(110136005)(66476007)(66556008)(66446008)(2616005)(6512007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bzlhbUliWXo5VXNHdC9wN01Za2dwZ2RXQ09lUk5mVjhEcjFJRkRHWDlpZ1pK?=
- =?utf-8?B?QnpxdkhKdElCQXFNNGhYb1BJS1l4OUVPUUNUeHNBTDhLNW14ZjZNT0l3TVFZ?=
- =?utf-8?B?THRPMFp3ejRGOGhSZ0w2VWNUTlgzSk1tZWRoSWRKOG1uK0FxZUpPSkptNWlL?=
- =?utf-8?B?L1JPQ0dhb0VsbVBwL21ZNWM3UzNKc2xRTWZ1WnNGVFlwcEkxeVNsTU0vdyth?=
- =?utf-8?B?Ym4yMEh5SEdZbFhoajFJMVRibmRlMFBtb3FoT0thbk0rQlFUY1JycnlwTlNJ?=
- =?utf-8?B?MlpLY1kvMXgyT2pYQWVIcFVNNW9xWWxkSEFuTkFRU012N2JtTUpNMkROQWcv?=
- =?utf-8?B?NUhoL0ZVV0xBb052bTNmcnVZK3hERnFVdTNYN1VYTjRueThUOWp4U2tkTEZB?=
- =?utf-8?B?cFRzbEhYMVJIdmFYTG4venlxaktBK3l3ekJSalNrUmdzdjFpVWFnSHEyUG1J?=
- =?utf-8?B?ajFpT2tSMmF0SlJGd2Z4RGRlV1A3NUpNOE1IRTdxL1g3UlkyVFZncER5TG1I?=
- =?utf-8?B?TUpNc1g0cGwwWGlNaTZQdDlDalQyd3VNRzM2ZXM1aWZpM1lmcTNiWmRta0sr?=
- =?utf-8?B?bmUwRHZSYVdaVkEzbEcvZEtWbEdJRGltcmkrZWhobzRQOXBJdm5mY2VuSWlG?=
- =?utf-8?B?NG5ySVQxSmE0UWNwNEpSWVRvWGFxUkpkUVpnVnVpUDJBandFS0NQbDhvUmRZ?=
- =?utf-8?B?SVZuVlhjZnJWcjBxQnNkTFRnQUs2VWloaHdvVzZrMW4xaHFCMmFmck5NQzBN?=
- =?utf-8?B?Z09nUjNOTFVwWHFvSWFUNkp5azVyVUNXM0toVGJYZitrUkFraVlpOGdTa1Nq?=
- =?utf-8?B?M3VPRUw3bzAzVVpDTWZLVklmOEFCRVU5ejNubnM5dTFlT1JEVXRMYzVyZWxC?=
- =?utf-8?B?a2hDRWJERzRZbEswTkxLb1RCUUo5a3dyeTRxeXl5ZzVvVVAwa1JqYmtjOHR0?=
- =?utf-8?B?YWxHVU1BcDFROGs2Yjl0WGVyZFpGNU5UUFhXSW9Yako3TFNWZkV5VkpTYTVj?=
- =?utf-8?B?eDMycVoxd2lqU21nc1ZOUEczTTZTUU9Qc0MwSmc0aUt6LzNtaVFFVitYY2Z3?=
- =?utf-8?B?Q1RkdmVRSHRlQ3BDY0JRWnJZdHFvYWgzdGRUYU9FWnRkcEJ2ZjlxS25kU3k2?=
- =?utf-8?B?SEYzSGxWSzVBZUw5U3BXeVp1L29INHFzaUlNWCtmVFNmVE5YSU44aXF5di9r?=
- =?utf-8?B?RXZOOG1MWnNPL1BOOWxkZng3Nm45RmRoQTVMNmtFQzMzZnRsdDczMUs1WTJ0?=
- =?utf-8?B?Z1FRK1E5VGl5WWo0ZkJxK2JHQUcyUEYwQzZ5czF4WHRMMTFrUUF4MDRkd1Ny?=
- =?utf-8?B?ZjcwdUFjY25tQkZPcGROcFUybC90S2loOTIvUHlESFNPMnd2MXQ5ZkJCR0dq?=
- =?utf-8?B?VmkzbFNnU21yMEROb1Y4RmMvU2dSblllYnRyQzRUUURFMngvR2c2NkJKR2hI?=
- =?utf-8?B?L2twM2lGZmVvMnliWFZtMnNhWlVFek4rUGdINlJWdjNKb3Jtb2VuaVlIbFpT?=
- =?utf-8?B?ZHpFSWoyWXNpWUV0ODUzbGtpYm9hV2twSUNJejMyNzRTUHFtYXBQanNwMmVY?=
- =?utf-8?B?VDZOOVgrRjhkMERkenVHbG1hMlJwTHV6b1o5ZjRXcFVUYkhYT3hJRy9LNFl4?=
- =?utf-8?B?bExkWGRDeXY0V1Rmb0NhZ2dJbC85UFBwR211d2h5UllKYlV6SHJWMUozNm9z?=
- =?utf-8?B?UVBUbjNzbENTVnFrWW1kdUMvdnlWOG1ESmtjMmtsVVROSTN3QkliQ2hmTE4x?=
- =?utf-8?B?c3BZemJhNWVOR2hFcWJsdFdQcUlUYkNIdjVIMkJVYmpUNDdzVkd4UzhaTjFG?=
- =?utf-8?B?MkNlTlF1c0p5dGNXYUZYamswZ3EreGQ4M0ZibTRYTXUrSkpYRisvdGEyWWp4?=
- =?utf-8?B?RTV2TW0rL0E1cDJFcnJQOVNySTZMbkNyeVlHMlJZVlR3V00vYUM2OTg2aU1D?=
- =?utf-8?B?Z0pDSmVFMWtvdUxvWUxFMzBHazlFTVdRdEwvRWJ6bWp0eDFZcll5SUloWk9Z?=
- =?utf-8?B?YmxXSmFoMnZYK1ZmYXo2cmRCN3JXcmJYd2hGeEQwYXAyQ2s5ZFhYZHlRL21j?=
- =?utf-8?B?dnJNVzkya0JndkMvWXRZRmtFN01LVnc1bjdlSnFiRmNUTThqZ2JzYUMrWFZn?=
- =?utf-8?B?M3F6NytDSStvaVFScDVtbStFZS9CVC9naEZpcHNNTmhDZ2I1bHpMbXBwazBO?=
- =?utf-8?B?QUE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <8013B60CDC8B9541926048A19E8F0E33@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+         <69c748d58f834b80abda5dcd291ee29ea1cafaf7.camel@hammerspace.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 73df1b6b-b8bd-4f4d-0a62-08dbbf8dd557
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2023 19:13:29.3556
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2AjllIkQwfcYfMqwUtfkdd9gY5aMFqX2FfopE275dySfQM69H9GKXIb7Ee1gvPt4KrIsK3DDiy3jYpBcIqkmlA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR13MB4662
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -129,123 +53,160 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIzLTA5LTE5IGF0IDA5OjE3IC0wNDAwLCBKZWZmIExheXRvbiB3cm90ZToNCj4g
-SSBoaXQgdGhpcyBwYW5pYyBpbiB0ZXN0aW5nOg0KPiANCj4gWyA2MjM1LjUwMDAxNl0gcnVuIGZz
-dGVzdHMgZ2VuZXJpYy80NjQgYXQgMjAyMy0wOS0xOCAyMjo1MToyNA0KPiBbIDYyODguNDEwNzYx
-XSBCVUc6IGtlcm5lbCBOVUxMIHBvaW50ZXIgZGVyZWZlcmVuY2UsIGFkZHJlc3M6DQo+IDAwMDAw
-MDAwMDAwMDAwMDANCj4gWyA2Mjg4LjQxMjE3NF0gI1BGOiBzdXBlcnZpc29yIHJlYWQgYWNjZXNz
-IGluIGtlcm5lbCBtb2RlDQo+IFsgNjI4OC40MTMxNjBdICNQRjogZXJyb3JfY29kZSgweDAwMDAp
-IC0gbm90LXByZXNlbnQgcGFnZQ0KPiBbIDYyODguNDEzOTkyXSBQR0QgMCBQNEQgMA0KPiBbIDYy
-ODguNDE0NjAzXSBPb3BzOiAwMDAwIFsjMV0gUFJFRU1QVCBTTVAgUFRJDQo+IFsgNjI4OC40MTU0
-MTldIENQVTogMCBQSUQ6IDM0MDc5OCBDb21tOiBrd29ya2VyL3UxODo4IE5vdCB0YWludGVkDQo+
-IDYuNi4wLXJjMS1nZGNmNjIwY2VlYmFjICM5NQ0KPiBbIDYyODguNDE2NTM4XSBIYXJkd2FyZSBu
-YW1lOiBRRU1VIFN0YW5kYXJkIFBDIChRMzUgKyBJQ0g5LCAyMDA5KSwNCj4gQklPUyAxLjE2LjIt
-MS5mYzM4IDA0LzAxLzIwMTQNCj4gWyA2Mjg4LjQxNzcwMV0gV29ya3F1ZXVlOiBuZnNpb2QgcnBj
-X2FzeW5jX3JlbGVhc2UgW3N1bnJwY10NCj4gWyA2Mjg4LjQxODY3Nl0gUklQOiAwMDEwOm5mc19p
-bm9kZV9yZW1vdmVfcmVxdWVzdCsweGM4LzB4MTUwIFtuZnNdDQo+IFsgNjI4OC40MTk4MzZdIENv
-ZGU6IGZmIGZmIDQ4IDhiIDQzIDM4IDQ4IDhiIDdiIDEwIGE4IDA0IDc0IDViIDQ4IDg1DQo+IGZm
-IDc0IDU2IDQ4IDhiIDA3IGE5IDAwIDAwIDA4IDAwIDc0IDU4IDQ4IDhiIDA3IGY2IGM0IDEwIDc0
-IDUwIGU4IGM4DQo+IDQ0IGIzIGQ1IDw0OD4gOGIgMDAgZjAgNDggZmYgODggMzAgZmYgZmYgZmYg
-NWIgNWQgNDEgNWMgYzMgY2MgY2MgY2MNCj4gY2MgNDggOGINCj4gWyA2Mjg4LjQyMjM4OV0gUlNQ
-OiAwMDE4OmZmZmZiZDYxODM1M2JkYTggRUZMQUdTOiAwMDAxMDI0Ng0KPiBbIDYyODguNDIzMjM0
-XSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiBmZmZmOWEyOWY5YTI1MjgwIFJDWDoNCj4gMDAw
-MDAwMDAwMDAwMDAwMA0KPiBbIDYyODguNDI0MzUxXSBSRFg6IGZmZmY5YTI5ZjlhMjUyYjQgUlNJ
-OiAwMDAwMDAwMDAwMDAwMDBiIFJESToNCj4gZmZmZmVmNDE0NDhlMzg0MA0KPiBbIDYyODguNDI1
-MzQ1XSBSQlA6IGZmZmZlZjQxNDQ4ZTM4NDAgUjA4OiAwMDAwMDAwMDAwMDAwMDM4IFIwOToNCj4g
-ZmZmZmZmZmZmZmZmZmZmZg0KPiBbIDYyODguNDI2MzM0XSBSMTA6IDAwMDAwMDAwMDAwMzNmODAg
-UjExOiBmZmZmOWEyYTdmZmZhMDAwIFIxMjoNCj4gZmZmZjlhMjkwOTNmOThjNA0KPiBbIDYyODgu
-NDI3MzUzXSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiBmZmZmOWEyOTIzMGY2MmUwIFIxNToN
-Cj4gZmZmZjlhMjkyMzBmNjJkMA0KPiBbIDYyODguNDI4MzU4XSBGUzrCoCAwMDAwMDAwMDAwMDAw
-MDAwKDAwMDApIEdTOmZmZmY5YTJhNzdjMDAwMDAoMDAwMCkNCj4ga25sR1M6MDAwMDAwMDAwMDAw
-MDAwMA0KPiBbIDYyODguNDI5NTEzXSBDUzrCoCAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDog
-MDAwMDAwMDA4MDA1MDAzMw0KPiBbIDYyODguNDMwNDI3XSBDUjI6IDAwMDAwMDAwMDAwMDAwMDAg
-Q1IzOiAwMDAwMDAwMjY0NzQ4MDAyIENSNDoNCj4gMDAwMDAwMDAwMDc3MGVmMA0KPiBbIDYyODgu
-NDMxNTUzXSBEUjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAwMDAwMDAwMDAwMDAwIERSMjoN
-Cj4gMDAwMDAwMDAwMDAwMDAwMA0KPiBbIDYyODguNDMyNzE1XSBEUjM6IDAwMDAwMDAwMDAwMDAw
-MDAgRFI2OiAwMDAwMDAwMGZmZmUwZmYwIERSNzoNCj4gMDAwMDAwMDAwMDAwMDQwMA0KPiBbIDYy
-ODguNDMzNjk4XSBQS1JVOiA1NTU1NTU1NA0KPiBbIDYyODguNDM0MTk2XSBDYWxsIFRyYWNlOg0K
-PiBbIDYyODguNDM0NjY3XcKgIDxUQVNLPg0KPiBbIDYyODguNDM1MTMyXcKgID8gX19kaWUrMHgx
-Zi8weDcwDQo+IFsgNjI4OC40MzU3MjNdwqAgPyBwYWdlX2ZhdWx0X29vcHMrMHgxNTkvMHg0NTAN
-Cj4gWyA2Mjg4LjQzNjM4OV3CoCA/IHRyeV90b193YWtlX3VwKzB4OTgvMHg1ZDANCj4gWyA2Mjg4
-LjQzNzA0NF3CoCA/IGRvX3VzZXJfYWRkcl9mYXVsdCsweDY1LzB4NjYwDQo+IFsgNjI4OC40Mzc3
-MjhdwqAgPyBleGNfcGFnZV9mYXVsdCsweDdhLzB4MTgwDQo+IFsgNjI4OC40MzgzNjhdwqAgPyBh
-c21fZXhjX3BhZ2VfZmF1bHQrMHgyMi8weDMwDQo+IFsgNjI4OC40MzkxMzddwqAgPyBuZnNfaW5v
-ZGVfcmVtb3ZlX3JlcXVlc3QrMHhjOC8weDE1MCBbbmZzXQ0KPiBbIDYyODguNDQwMTEyXcKgID8g
-bmZzX2lub2RlX3JlbW92ZV9yZXF1ZXN0KzB4YTAvMHgxNTAgW25mc10NCj4gWyA2Mjg4LjQ0MDky
-NF3CoCBuZnNfY29tbWl0X3JlbGVhc2VfcGFnZXMrMHgxNmUvMHgzNDAgW25mc10NCj4gWyA2Mjg4
-LjQ0MTcwMF3CoCA/IF9fcGZ4X2NhbGxfdHJhbnNtaXQrMHgxMC8weDEwIFtzdW5ycGNdDQo+IFsg
-NjI4OC40NDI0NzVdwqAgPyBfcmF3X3NwaW5fbG9ja19pcnFzYXZlKzB4MjMvMHg1MA0KPiBbIDYy
-ODguNDQzMTYxXcKgIG5mc19jb21taXRfcmVsZWFzZSsweDE1LzB4NDAgW25mc10NCj4gWyA2Mjg4
-LjQ0MzkyNl3CoCBycGNfZnJlZV90YXNrKzB4MzYvMHg2MCBbc3VucnBjXQ0KPiBbIDYyODguNDQ0
-NzQxXcKgIHJwY19hc3luY19yZWxlYXNlKzB4MjkvMHg0MCBbc3VucnBjXQ0KPiBbIDYyODguNDQ1
-NTA5XcKgIHByb2Nlc3Nfb25lX3dvcmsrMHgxNzEvMHgzNDANCj4gWyA2Mjg4LjQ0NjEzNV3CoCB3
-b3JrZXJfdGhyZWFkKzB4Mjc3LzB4M2EwDQo+IFsgNjI4OC40NDY3MjRdwqAgPyBfX3BmeF93b3Jr
-ZXJfdGhyZWFkKzB4MTAvMHgxMA0KPiBbIDYyODguNDQ3Mzc2XcKgIGt0aHJlYWQrMHhmMC8weDEy
-MA0KPiBbIDYyODguNDQ3OTAzXcKgID8gX19wZnhfa3RocmVhZCsweDEwLzB4MTANCj4gWyA2Mjg4
-LjQ0ODUwMF3CoCByZXRfZnJvbV9mb3JrKzB4MmQvMHg1MA0KPiBbIDYyODguNDQ5MDc4XcKgID8g
-X19wZnhfa3RocmVhZCsweDEwLzB4MTANCj4gWyA2Mjg4LjQ0OTY2NV3CoCByZXRfZnJvbV9mb3Jr
-X2FzbSsweDFiLzB4MzANCj4gWyA2Mjg4LjQ1MDI4M13CoCA8L1RBU0s+DQo+IFsgNjI4OC40NTA2
-ODhdIE1vZHVsZXMgbGlua2VkIGluOiBycGNzZWNfZ3NzX2tyYjUgYXV0aF9ycGNnc3MgbmZzdjQN
-Cj4gZG5zX3Jlc29sdmVyIG5mcyBsb2NrZCBncmFjZSBzdW5ycGMgbmxzX2lzbzg4NTlfMSBubHNf
-Y3A0MzcgdmZhdCBmYXQNCj4gOXAgbmV0ZnMgZXh0NCBrdm1faW50ZWwgY3JjMTYgbWJjYWNoZSBq
-YmQyIGpveWRldiBrdm0geGZzIGlycWJ5cGFzcw0KPiB2aXJ0aW9fbmV0IHBjc3BrciBuZXRfZmFp
-bG92ZXIgcHNtb3VzZSBmYWlsb3ZlciA5cG5ldF92aXJ0aW8gY2lycnVzDQo+IGRybV9zaG1lbV9o
-ZWxwZXIgdmlydGlvX2JhbGxvb24gZHJtX2ttc19oZWxwZXIgYnV0dG9uIGV2ZGV2IGRybSBsb29w
-DQo+IGRtX21vZCB6cmFtIHpzbWFsbG9jIGNyY3QxMGRpZl9wY2xtdWwgY3JjMzJfcGNsbXVsDQo+
-IGdoYXNoX2NsbXVsbmlfaW50ZWwgc2hhNTEyX3Nzc2UzIHNoYTUxMl9nZW5lcmljIHZpcnRpb19i
-bGsgbnZtZQ0KPiBhZXNuaV9pbnRlbCBjcnlwdG9fc2ltZCBjcnlwdGQgbnZtZV9jb3JlIHQxMF9w
-aSBpNjMwMGVzYg0KPiBjcmM2NF9yb2Nrc29mdF9nZW5lcmljIGNyYzY0X3JvY2tzb2Z0IGNyYzY0
-IHZpcnRpb19wY2kgdmlydGlvDQo+IHZpcnRpb19wY2lfbGVnYWN5X2RldiB2aXJ0aW9fcGNpX21v
-ZGVybl9kZXYgdmlydGlvX3Jpbmcgc2VyaW9fcmF3DQo+IGJ0cmZzIGJsYWtlMmJfZ2VuZXJpYyBs
-aWJjcmMzMmMgY3JjMzJjX2dlbmVyaWMgY3JjMzJjX2ludGVsIHhvcg0KPiByYWlkNl9wcSBhdXRv
-ZnM0DQo+IFsgNjI4OC40NjAyMTFdIENSMjogMDAwMDAwMDAwMDAwMDAwMA0KPiBbIDYyODguNDYw
-Nzg3XSAtLS1bIGVuZCB0cmFjZSAwMDAwMDAwMDAwMDAwMDAwIF0tLS0NCj4gWyA2Mjg4LjQ2MTU3
-MV0gUklQOiAwMDEwOm5mc19pbm9kZV9yZW1vdmVfcmVxdWVzdCsweGM4LzB4MTUwIFtuZnNdDQo+
-IFsgNjI4OC40NjI1MDBdIENvZGU6IGZmIGZmIDQ4IDhiIDQzIDM4IDQ4IDhiIDdiIDEwIGE4IDA0
-IDc0IDViIDQ4IDg1DQo+IGZmIDc0IDU2IDQ4IDhiIDA3IGE5IDAwIDAwIDA4IDAwIDc0IDU4IDQ4
-IDhiIDA3IGY2IGM0IDEwIDc0IDUwIGU4IGM4DQo+IDQ0IGIzIGQ1IDw0OD4gOGIgMDAgZjAgNDgg
-ZmYgODggMzAgZmYgZmYgZmYgNWIgNWQgNDEgNWMgYzMgY2MgY2MgY2MNCj4gY2MgNDggOGINCj4g
-WyA2Mjg4LjQ2NTEzNl0gUlNQOiAwMDE4OmZmZmZiZDYxODM1M2JkYTggRUZMQUdTOiAwMDAxMDI0
-Ng0KPiBbIDYyODguNDY1OTYzXSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiBmZmZmOWEyOWY5
-YTI1MjgwIFJDWDoNCj4gMDAwMDAwMDAwMDAwMDAwMA0KPiBbIDYyODguNDY3MDM1XSBSRFg6IGZm
-ZmY5YTI5ZjlhMjUyYjQgUlNJOiAwMDAwMDAwMDAwMDAwMDBiIFJESToNCj4gZmZmZmVmNDE0NDhl
-Mzg0MA0KPiBbIDYyODguNDY4MDkzXSBSQlA6IGZmZmZlZjQxNDQ4ZTM4NDAgUjA4OiAwMDAwMDAw
-MDAwMDAwMDM4IFIwOToNCj4gZmZmZmZmZmZmZmZmZmZmZg0KPiBbIDYyODguNDY5MTIxXSBSMTA6
-IDAwMDAwMDAwMDAwMzNmODAgUjExOiBmZmZmOWEyYTdmZmZhMDAwIFIxMjoNCj4gZmZmZjlhMjkw
-OTNmOThjNA0KPiBbIDYyODguNDcwMTA5XSBSMTM6IDAwMDAwMDAwMDAwMDAwMDAgUjE0OiBmZmZm
-OWEyOTIzMGY2MmUwIFIxNToNCj4gZmZmZjlhMjkyMzBmNjJkMA0KPiBbIDYyODguNDcxMTA2XSBG
-UzrCoCAwMDAwMDAwMDAwMDAwMDAwKDAwMDApIEdTOmZmZmY5YTJhNzdjMDAwMDAoMDAwMCkNCj4g
-a25sR1M6MDAwMDAwMDAwMDAwMDAwMA0KPiBbIDYyODguNDcyMjE2XSBDUzrCoCAwMDEwIERTOiAw
-MDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1MDAzMw0KPiBbIDYyODguNDczMDU5XSBDUjI6
-IDAwMDAwMDAwMDAwMDAwMDAgQ1IzOiAwMDAwMDAwMjY0NzQ4MDAyIENSNDoNCj4gMDAwMDAwMDAw
-MDc3MGVmMA0KPiBbIDYyODguNDc0MDk2XSBEUjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAw
-MDAwMDAwMDAwMDAwIERSMjoNCj4gMDAwMDAwMDAwMDAwMDAwMA0KPiBbIDYyODguNDc1MDk3XSBE
-UjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2OiAwMDAwMDAwMGZmZmUwZmYwIERSNzoNCj4gMDAwMDAw
-MDAwMDAwMDQwMA0KPiBbIDYyODguNDc2MTQ4XSBQS1JVOiA1NTU1NTU1NA0KPiBbIDYyODguNDc2
-NjY1XSBub3RlOiBrd29ya2VyL3UxODo4WzM0MDc5OF0gZXhpdGVkIHdpdGggaXJxcyBkaXNhYmxl
-ZA0KPiANCj4gT25jZSB3ZSd2ZSByZWxlYXNlZCAicmVxIiwgaXQncyBub3Qgc2FmZSB0byBkZXJl
-ZmVyZW5jZSBpdCBhbnltb3JlLg0KPiBEZWNyZW1lbnQgdGhlIG5yZXF1ZXN0cyBjb3VudGVyIGJl
-Zm9yZSBkcm9wcGluZyB0aGUgcmVmZXJlbmNlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogSmVmZiBM
-YXl0b24gPGpsYXl0b25Aa2VybmVsLm9yZz4NCj4gLS0tDQo+IEkndmUgb25seSBoaXQgdGhpcyBv
-bmNlIGFmdGVyIGEgbG90IG9mIHRlc3RpbmcsIHNvIEkgY2FuJ3QgY29uZmlybQ0KPiB0aGF0DQo+
-IHRoaXMgZml4ZXMgYW55dGhpbmcuIEl0IHNlZW1zIGxpa2UgdGhlIHJpZ2h0IHRoaW5nIHRvIGRv
-LCBob3dldmVyLg0KPiAtLS0NCj4gwqBmcy9uZnMvd3JpdGUuYyB8IDIgKy0NCj4gwqAxIGZpbGUg
-Y2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQg
-YS9mcy9uZnMvd3JpdGUuYyBiL2ZzL25mcy93cml0ZS5jDQo+IGluZGV4IDhjMWVlMWExYTI4Zi4u
-NzcyMGI1ZTQzMDE0IDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvd3JpdGUuYw0KPiArKysgYi9mcy9u
-ZnMvd3JpdGUuYw0KPiBAQCAtODAyLDggKzgwMiw4IEBAIHN0YXRpYyB2b2lkIG5mc19pbm9kZV9y
-ZW1vdmVfcmVxdWVzdChzdHJ1Y3QNCj4gbmZzX3BhZ2UgKnJlcSkNCj4gwqDCoMKgwqDCoMKgwqDC
-oH0NCj4gwqANCj4gwqDCoMKgwqDCoMKgwqDCoGlmICh0ZXN0X2FuZF9jbGVhcl9iaXQoUEdfSU5P
-REVfUkVGLCAmcmVxLT53Yl9mbGFncykpIHsNCj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoG5mc19yZWxlYXNlX3JlcXVlc3QocmVxKTsNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqBhdG9taWNfbG9uZ19kZWMoJk5GU19JKG5mc19wYWdlX3RvX2lub2RlKHJlcSkpLQ0K
-PiA+bnJlcXVlc3RzKTsNCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG5mc19yZWxl
-YXNlX3JlcXVlc3QocmVxKTsNCj4gwqDCoMKgwqDCoMKgwqDCoH0NCj4gwqB9DQo+IA0KDQpJc24n
-dCB0aGlzIHRoZSBzYW1lIGlzc3VlIHRoYXQgU2NvdHQgTWF5aGV3IHBvc3RlZCBhIHBhdGNoICgi
-TkZTOiBGaXgNCnBvdGVudGlhbCBvb3BzIGluIG5mc19pbm9kZV9yZW1vdmVfcmVxdWVzdCgpIikg
-b24gSnVseSAyNXRoPw0KDQpBdCB0aGUgdGltZSBJIGFyZ3VlZCBmb3Igc29tZXRoaW5nIGxpa2Ug
-dGhlIGFib3ZlIHBhdGNoLCBidXQgYm90aCBTY290dA0KYW5kIHlvdSBhcmd1ZWQgdGhhdCBpdCB3
-YXMgaW5zdWZmaWNpZW50IHRvIGZpeCB0aGUgcHJvYmxlbS4NCg0KU28gd2hpY2ggcGF0Y2ggaXMg
-dGhlIG9uZSB3ZSBzaG91bGQgYXBwbHk/DQoNCkNoZWVycywNCiAgVHJvbmQNCi0tIA0KVHJvbmQg
-TXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9u
-ZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On Wed, 2023-09-27 at 19:13 +0000, Trond Myklebust wrote:
+> On Tue, 2023-09-19 at 09:17 -0400, Jeff Layton wrote:
+> > I hit this panic in testing:
+> >=20
+> > [ 6235.500016] run fstests generic/464 at 2023-09-18 22:51:24
+> > [ 6288.410761] BUG: kernel NULL pointer dereference, address:
+> > 0000000000000000
+> > [ 6288.412174] #PF: supervisor read access in kernel mode
+> > [ 6288.413160] #PF: error_code(0x0000) - not-present page
+> > [ 6288.413992] PGD 0 P4D 0
+> > [ 6288.414603] Oops: 0000 [#1] PREEMPT SMP PTI
+> > [ 6288.415419] CPU: 0 PID: 340798 Comm: kworker/u18:8 Not tainted
+> > 6.6.0-rc1-gdcf620ceebac #95
+> > [ 6288.416538] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+> > BIOS 1.16.2-1.fc38 04/01/2014
+> > [ 6288.417701] Workqueue: nfsiod rpc_async_release [sunrpc]
+> > [ 6288.418676] RIP: 0010:nfs_inode_remove_request+0xc8/0x150 [nfs]
+> > [ 6288.419836] Code: ff ff 48 8b 43 38 48 8b 7b 10 a8 04 74 5b 48 85
+> > ff 74 56 48 8b 07 a9 00 00 08 00 74 58 48 8b 07 f6 c4 10 74 50 e8 c8
+> > 44 b3 d5 <48> 8b 00 f0 48 ff 88 30 ff ff ff 5b 5d 41 5c c3 cc cc cc
+> > cc 48 8b
+> > [ 6288.422389] RSP: 0018:ffffbd618353bda8 EFLAGS: 00010246
+> > [ 6288.423234] RAX: 0000000000000000 RBX: ffff9a29f9a25280 RCX:
+> > 0000000000000000
+> > [ 6288.424351] RDX: ffff9a29f9a252b4 RSI: 000000000000000b RDI:
+> > ffffef41448e3840
+> > [ 6288.425345] RBP: ffffef41448e3840 R08: 0000000000000038 R09:
+> > ffffffffffffffff
+> > [ 6288.426334] R10: 0000000000033f80 R11: ffff9a2a7fffa000 R12:
+> > ffff9a29093f98c4
+> > [ 6288.427353] R13: 0000000000000000 R14: ffff9a29230f62e0 R15:
+> > ffff9a29230f62d0
+> > [ 6288.428358] FS:=A0 0000000000000000(0000) GS:ffff9a2a77c00000(0000)
+> > knlGS:0000000000000000
+> > [ 6288.429513] CS:=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [ 6288.430427] CR2: 0000000000000000 CR3: 0000000264748002 CR4:
+> > 0000000000770ef0
+> > [ 6288.431553] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> > 0000000000000000
+> > [ 6288.432715] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> > 0000000000000400
+> > [ 6288.433698] PKRU: 55555554
+> > [ 6288.434196] Call Trace:
+> > [ 6288.434667]=A0 <TASK>
+> > [ 6288.435132]=A0 ? __die+0x1f/0x70
+> > [ 6288.435723]=A0 ? page_fault_oops+0x159/0x450
+> > [ 6288.436389]=A0 ? try_to_wake_up+0x98/0x5d0
+> > [ 6288.437044]=A0 ? do_user_addr_fault+0x65/0x660
+> > [ 6288.437728]=A0 ? exc_page_fault+0x7a/0x180
+> > [ 6288.438368]=A0 ? asm_exc_page_fault+0x22/0x30
+> > [ 6288.439137]=A0 ? nfs_inode_remove_request+0xc8/0x150 [nfs]
+> > [ 6288.440112]=A0 ? nfs_inode_remove_request+0xa0/0x150 [nfs]
+> > [ 6288.440924]=A0 nfs_commit_release_pages+0x16e/0x340 [nfs]
+> > [ 6288.441700]=A0 ? __pfx_call_transmit+0x10/0x10 [sunrpc]
+> > [ 6288.442475]=A0 ? _raw_spin_lock_irqsave+0x23/0x50
+> > [ 6288.443161]=A0 nfs_commit_release+0x15/0x40 [nfs]
+> > [ 6288.443926]=A0 rpc_free_task+0x36/0x60 [sunrpc]
+> > [ 6288.444741]=A0 rpc_async_release+0x29/0x40 [sunrpc]
+> > [ 6288.445509]=A0 process_one_work+0x171/0x340
+> > [ 6288.446135]=A0 worker_thread+0x277/0x3a0
+> > [ 6288.446724]=A0 ? __pfx_worker_thread+0x10/0x10
+> > [ 6288.447376]=A0 kthread+0xf0/0x120
+> > [ 6288.447903]=A0 ? __pfx_kthread+0x10/0x10
+> > [ 6288.448500]=A0 ret_from_fork+0x2d/0x50
+> > [ 6288.449078]=A0 ? __pfx_kthread+0x10/0x10
+> > [ 6288.449665]=A0 ret_from_fork_asm+0x1b/0x30
+> > [ 6288.450283]=A0 </TASK>
+> > [ 6288.450688] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4
+> > dns_resolver nfs lockd grace sunrpc nls_iso8859_1 nls_cp437 vfat fat
+> > 9p netfs ext4 kvm_intel crc16 mbcache jbd2 joydev kvm xfs irqbypass
+> > virtio_net pcspkr net_failover psmouse failover 9pnet_virtio cirrus
+> > drm_shmem_helper virtio_balloon drm_kms_helper button evdev drm loop
+> > dm_mod zram zsmalloc crct10dif_pclmul crc32_pclmul
+> > ghash_clmulni_intel sha512_ssse3 sha512_generic virtio_blk nvme
+> > aesni_intel crypto_simd cryptd nvme_core t10_pi i6300esb
+> > crc64_rocksoft_generic crc64_rocksoft crc64 virtio_pci virtio
+> > virtio_pci_legacy_dev virtio_pci_modern_dev virtio_ring serio_raw
+> > btrfs blake2b_generic libcrc32c crc32c_generic crc32c_intel xor
+> > raid6_pq autofs4
+> > [ 6288.460211] CR2: 0000000000000000
+> > [ 6288.460787] ---[ end trace 0000000000000000 ]---
+> > [ 6288.461571] RIP: 0010:nfs_inode_remove_request+0xc8/0x150 [nfs]
+> > [ 6288.462500] Code: ff ff 48 8b 43 38 48 8b 7b 10 a8 04 74 5b 48 85
+> > ff 74 56 48 8b 07 a9 00 00 08 00 74 58 48 8b 07 f6 c4 10 74 50 e8 c8
+> > 44 b3 d5 <48> 8b 00 f0 48 ff 88 30 ff ff ff 5b 5d 41 5c c3 cc cc cc
+> > cc 48 8b
+> > [ 6288.465136] RSP: 0018:ffffbd618353bda8 EFLAGS: 00010246
+> > [ 6288.465963] RAX: 0000000000000000 RBX: ffff9a29f9a25280 RCX:
+> > 0000000000000000
+> > [ 6288.467035] RDX: ffff9a29f9a252b4 RSI: 000000000000000b RDI:
+> > ffffef41448e3840
+> > [ 6288.468093] RBP: ffffef41448e3840 R08: 0000000000000038 R09:
+> > ffffffffffffffff
+> > [ 6288.469121] R10: 0000000000033f80 R11: ffff9a2a7fffa000 R12:
+> > ffff9a29093f98c4
+> > [ 6288.470109] R13: 0000000000000000 R14: ffff9a29230f62e0 R15:
+> > ffff9a29230f62d0
+> > [ 6288.471106] FS:=A0 0000000000000000(0000) GS:ffff9a2a77c00000(0000)
+> > knlGS:0000000000000000
+> > [ 6288.472216] CS:=A0 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [ 6288.473059] CR2: 0000000000000000 CR3: 0000000264748002 CR4:
+> > 0000000000770ef0
+> > [ 6288.474096] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> > 0000000000000000
+> > [ 6288.475097] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> > 0000000000000400
+> > [ 6288.476148] PKRU: 55555554
+> > [ 6288.476665] note: kworker/u18:8[340798] exited with irqs disabled
+> >=20
+> > Once we've released "req", it's not safe to dereference it anymore.
+> > Decrement the nrequests counter before dropping the reference.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > I've only hit this once after a lot of testing, so I can't confirm
+> > that
+> > this fixes anything. It seems like the right thing to do, however.
+> > ---
+> > =A0fs/nfs/write.c | 2 +-
+> > =A01 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> > index 8c1ee1a1a28f..7720b5e43014 100644
+> > --- a/fs/nfs/write.c
+> > +++ b/fs/nfs/write.c
+> > @@ -802,8 +802,8 @@ static void nfs_inode_remove_request(struct
+> > nfs_page *req)
+> > =A0=A0=A0=A0=A0=A0=A0=A0}
+> > =A0
+> > =A0=A0=A0=A0=A0=A0=A0=A0if (test_and_clear_bit(PG_INODE_REF, &req->wb_f=
+lags)) {
+> > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0nfs_release_request(req);
+> > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0atomic_long_dec(&NFS_I(=
+nfs_page_to_inode(req))-
+> > > nrequests);
+> > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0nfs_release_request(req);
+> > =A0=A0=A0=A0=A0=A0=A0=A0}
+> > =A0}
+> >=20
+>=20
+> Isn't this the same issue that Scott Mayhew posted a patch ("NFS: Fix
+> potential oops in nfs_inode_remove_request()") on July 25th?
+>=20
+> At the time I argued for something like the above patch, but both Scott
+> and you argued that it was insufficient to fix the problem.
+>=20
+> So which patch is the one we should apply?
+>=20
+
+It is the same bug, I had paged that discussion out, and forgotten about
+it when I sent the patch (though it did seem vaguely familiar). Now that
+I've looked over the code more, I think you're correct and that that is
+the best solution. It's possible that there may be some other bug
+involved here too, but it seems clearly wrong to be referencing the req
+after releasing it.
+--=20
+Jeff Layton <jlayton@kernel.org>
