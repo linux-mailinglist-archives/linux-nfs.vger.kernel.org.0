@@ -2,152 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FC247AF73B
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Sep 2023 02:16:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3E7E7AF8D5
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Sep 2023 05:50:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231634AbjI0AQl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 26 Sep 2023 20:16:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42470 "EHLO
+        id S229493AbjI0DuY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 26 Sep 2023 23:50:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231676AbjI0AOk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Sep 2023 20:14:40 -0400
-Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0A31BE4
-        for <linux-nfs@vger.kernel.org>; Tue, 26 Sep 2023 16:33:34 -0700 (PDT)
-Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1c44c0f9138so72596825ad.2
-        for <linux-nfs@vger.kernel.org>; Tue, 26 Sep 2023 16:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1695771214; x=1696376014; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fzAFOkzwhGAtezwb7Q8ZYaVN+d4jFFOQUeui0g8VHkA=;
-        b=sBnAWOGFYan30AwkwAHVHA6/L+FTM1f/NiupNKpc3STfRpE0HsEJ/8KrYtkJUY2XB9
-         XIqjUXsKH6CYscchdDYRZLYqTe0wGS1AshaM6+gjWx6550Q98rRBhWfPPkW0qZP2EY3o
-         IanCzpnqgH5eLtSPPUwk+0hB33CqjAyKaSr7O4yCesVE6EM6E39/BmkTEinl0RPiSWNj
-         cEPvY8zu2JCHuiFNwPlYiyhAj1ACFpsvEukkleY4Dwmi29a18ey97pEfEqp+4sYsoeKT
-         2mw6kl9KXR/aEbrr08UGYsMDsg5DXXxVU8X0EIiFHt6G9C40j2R51+Tipoc0oWn4w/zJ
-         kt5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695771214; x=1696376014;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fzAFOkzwhGAtezwb7Q8ZYaVN+d4jFFOQUeui0g8VHkA=;
-        b=T+jX/qnwmK7AZvBDeKfSmtC8QBV5x/l+0vUmmn5QgBj6IRWc0JtEOCoaNs/I0iRIF4
-         3powzATvKU8wkZRm7wmCMPaOa3frqPcUWiE24DfM7ZmfmBXSROk4NRNErN/u/ZsgXtjO
-         ind8wU3A6qR5TF6Qi1d+NXw4PA+7GcvlBoJystBKO+1I6/cX39BRqEPqHqTp7pYc55Y1
-         M7YxHnQhTfasTfRgno9sTrKGSgVaYo2qcyC64YziuC29kWrRQCDE+wqrL8pCz3/Z7tyN
-         hhxMSDLT40IDiZcxPGRnKEvp3am6v6rKN6mv8TemsRsJMSAiT6qGdZxh9CSutlxekkPx
-         Movw==
-X-Gm-Message-State: AOJu0YzLSDdX0gLhUQ+y9EWivM6TZwnY07SJFY3spZlZI/VI5jW3PN3G
-        YBxxUptcEiuBYCCS8qUtr1WzQA==
-X-Google-Smtp-Source: AGHT+IGNDTgPnX9/61UW1DFLe1t2ekDtE9xmnNxExg0YxAsa8gYAb5Jp9QJLDjbnQrHCfTGC0cwTTQ==
-X-Received: by 2002:a17:903:246:b0:1bf:6ad7:2286 with SMTP id j6-20020a170903024600b001bf6ad72286mr239913plh.43.1695771214349;
-        Tue, 26 Sep 2023 16:33:34 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
-        by smtp.gmail.com with ESMTPSA id d12-20020a170902cecc00b001c42d4b3675sm4138030plg.309.2023.09.26.16.33.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Sep 2023 16:33:33 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qlHYY-0062Td-3C;
-        Wed, 27 Sep 2023 09:33:31 +1000
-Date:   Wed, 27 Sep 2023 09:33:30 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>, Jan Kara <jack@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v8 0/5] fs: multigrain timestamps for XFS's change_cookie
-Message-ID: <ZRNqSvHwkmQoynOc@dread.disaster.area>
-References: <20230922-ctime-v8-0-45f0c236ede1@kernel.org>
- <CAOQ4uxiNfPoPiX0AERywqjaBH30MHQPxaZepnKeyEjJgTv8hYg@mail.gmail.com>
- <5e3b8a365160344f1188ff13afb0a26103121f99.camel@kernel.org>
- <CAOQ4uxjrt6ca4VDvPAL7USr6_SspCv0rkRkMJ4_W2S6vzV738g@mail.gmail.com>
- <ZRC1pjwKRzLiD6I3@dread.disaster.area>
- <77d33282068035a3b42ace946b1be57457d2b60b.camel@kernel.org>
- <ZRIKj0E8P46kerqa@dread.disaster.area>
- <54e79ca9adfd52a8d39e158bc246173768a0aa0d.camel@kernel.org>
+        with ESMTP id S229780AbjI0DsW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Sep 2023 23:48:22 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D16C5B9D
+        for <linux-nfs@vger.kernel.org>; Tue, 26 Sep 2023 19:10:17 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id B1F1921879;
+        Wed, 27 Sep 2023 02:10:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1695780616; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6LJFYurvIBEdjZxWj6Q1GmsxiUMP/0yEOrmCGdQ4HiY=;
+        b=ZYdIWpZUlFO89tlvKNP8L9PRRwL3Aao0c8/IonWvmFDhow9DBh77wD47FexeNDflpTU2Gd
+        Qm8YmztDzcQvt4VSAZkJOCm2FOE+m4Q9QUG46naSlEetjjhCekBWTX9Mbk69PUCkDoC1Qx
+        gFSvbIBFtOuTtLzLLqDxckLFdtimsgs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1695780616;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6LJFYurvIBEdjZxWj6Q1GmsxiUMP/0yEOrmCGdQ4HiY=;
+        b=oWBCybsnze2ByHpSW6WDBtK+7+wMH4goHOYsjKSpukE3vatWul86qm3MzJRkrsz9Pw87m0
+        LsSN//qeU3a0LaCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 741D61390B;
+        Wed, 27 Sep 2023 02:10:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id Fz0KCgePE2VULQAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 27 Sep 2023 02:10:15 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <54e79ca9adfd52a8d39e158bc246173768a0aa0d.camel@kernel.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Steve Dickson <steved@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: help with understanding match_fsid() errors in nfs-utils
+Date:   Wed, 27 Sep 2023 12:10:11 +1000
+Message-id: <169578061136.5939.6687963921006986794@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 26, 2023 at 07:31:55AM -0400, Jeff Layton wrote:
-> On Tue, 2023-09-26 at 08:32 +1000, Dave Chinner wrote:
-> > We also must not lose sight of the fact that the lazytime mount
-> > option makes atime updates on XFS behave exactly as the nfsd/NFS
-> > client application wants. That is, XFS will do in-memory atime
-> > updates unless the atime update also sets S_VERSION to explicitly
-> > bump the i_version counter if required. That leads to another
-> > potential nfsd specific solution without requiring filesystems to
-> > change on disk formats: the nfsd explicitly asks operations for lazy
-> > atime updates...
-> > 
-> 
-> Not exactly. The problem with XFS's i_version is that it also bumps it
-> on atime updates. lazytime reduces the number of atime updates to
-> ~1/day. To be exactly what nfsd wants, you'd need to make that 0.
 
-As long as there are future modifications going to those files,
-lazytime completely elides the visibility of atime updates as they
-get silently aggregated into future modifications and so there are
-0 i_version changes as a resutl of pure atime updates in those cases.
+hi Trond,
+ I'm trying to understand
 
-If there are no future modifications, then just like relatime, there
-is a timestamp update every 24hrs. That's no big deal, nobody is
-complaining about this being a problem.
+ Commit 76c21e3f70a8 ("mountd: Check the stat() return values in match_fsid()=
+")
 
-It's the "persistent atime update after modification" heuristic
-implemented by relatime that is causing all the problems here. If
-that behaviour is elided on the server side, then most of the client
-side invalidation problems with these workloads go away.
+ in nfs-utils.
 
-IOWs, nfsd needs direct control over how atime updates should be
-treated by the VFS/filesystem (i.e. as pure in-memory updates)
-rather than leaving it to some heuristic that may do the exact
-opposite of what the nfsd application needs.
+ The effect of this patch is that if a 'stat' of any path in
+ /etc/exports or any mountpoint below any path marked crossmnt fails
+ with an error other than one of a small set, then the fsid to path
+ lookup aborts without reporting anything to the kernel, so the kernel
+ doesn't reply to the client and the mount attempt blocks indefinitely.
 
-That's the point I was making: we have emerging requirements for
-per-operation timestamp update behaviour control with io_uring and
-other non-blocking applications. The nfsd application also has
-specific semantics it wants the VFS/filesystem to implement
-(non-persistent atime unless something else changes)....
+ I have seen this happen when "/" is exported crossmnt, and when a stat
+ of /run/user/1000/doc returns EACCES.  This is a "fuse" mount for user
+ 1000, and presumably it rejects any access from any other user.
 
-My point is that we've now failed a couple of times now to implement
-what NFSD requires via trying to change VFS and/or filesystem
-infrastructure to provide i_version or ctime semantics the nfsd
-requires. That's a fairly good sign that we might not be approaching
-this problem from the right direction, and so doubling down and
-considering changing the timestamp infrastructure from the ground up
-just to solve a relatively niche, filesystem specific issue doesn't
-seem like the best approach.
+ Could you please help me understand what this patch was trying to
+ achieve?  What sorts of errors were you expecting this to catch?
+ Would it make sense to silently ignore the stat failure for paths that
+ were found when scanning the mount table, and only take the more
+ drastic action for paths explicitly listed in /etc/exports ??
 
-OTOH, having the application actually tell the timestamp updates
-exactly what semantics it needs (non blocking, persistent vs in
-memory, etc) will allow the VFS and filesystems can do the right
-thing for the application without having to worry about general
-heuristics that sometimes do exactly the wrong thing....
+Thanks,
+NeilBrown
 
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
