@@ -2,36 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECD647B3411
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Sep 2023 15:58:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D293C7B3412
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Sep 2023 15:59:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232779AbjI2N64 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Sep 2023 09:58:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40348 "EHLO
+        id S232911AbjI2N7E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Sep 2023 09:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232748AbjI2N6z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Sep 2023 09:58:55 -0400
+        with ESMTP id S232954AbjI2N7D (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Sep 2023 09:59:03 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD411B0
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Sep 2023 06:58:54 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BED0C433C8;
-        Fri, 29 Sep 2023 13:58:54 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F711B0
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Sep 2023 06:59:01 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78F25C433C8;
+        Fri, 29 Sep 2023 13:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695995934;
-        bh=DUPbf/xlMIpfvHuuYT+QR/z03K4DtvB2bU5gqBWPjvc=;
+        s=k20201202; t=1695995940;
+        bh=yPahKrR9TAHt9lHlZNVcdj/Q6M2DJ2Hdtm+1ETErYxo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=NS01UTXxZMO4gNpSS1PLSEr1wynU3/tLPF7heNzGHSieoz3CTu8NGgf/DmZJkWZCq
-         1gcCfXHqykVjhk63kVcZRDCUi9jI2uQlOqTN4gBRl1nR4TrcWV1mA6+lKv2nPCZf0Z
-         CvPeEnZJyNLDAP679YRc9LZMD+M83ysWxLnLFKQP3KXEbbrHl2xaPxkZ7Esm6JWkMf
-         FFnNJgXE+WSXq9RNhMY7JgiwNZyl1Y6Ye/k+cGH9DJYa6PJLsdg0/Yy33ccyZHdlFC
-         NTUvJSeCYAsUBGqD58Q7dEikrgnZ8jFFJWqzwLRfa8QycBQDW/PpDQQWxkcsVRWbVS
-         brUZA2iE2QaxA==
-Subject: [PATCH v1 1/7] NFSD: Add nfsd4_encode_lock_owner4()
+        b=XZ8sh3lIa7hWThVs8jRym3snQwaCA6v+1ttM70IsgIM8KqV4lViPbQ8a3TtA6l9un
+         JkHMBPqJ+0z6NsOreuhLaZMEiuKYO6ChNp0U/I/1CxmEVEg/84ybacf6uulSh+TXJZ
+         lj7E+FdJcX51qt622ntN1fjTBmFnsPc6r1Q2afakevTW5bPN75AGlXqfRvXYdVsfS2
+         k8J7y4QPbIFFM+sBrGTsldik6kZuMZzGPfZwXDnbgFJYHEQwdGMcPxR3ilLyyzxtW9
+         q2woKF8jSo/nkjRYNGPQqs5SudQwk7sx3Yl6gY5w0KjkDAUZji6Ll9jHlApz4Azb2F
+         ZN/mEw89dh0/A==
+Subject: [PATCH v1 2/7] NFSD: Refactor nfsd4_encode_lock_denied()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Fri, 29 Sep 2023 09:58:53 -0400
-Message-ID: <169599593304.5622.7690388304950965120.stgit@manet.1015granger.net>
+Date:   Fri, 29 Sep 2023 09:58:59 -0400
+Message-ID: <169599593949.5622.9721527655525429301.stgit@manet.1015granger.net>
 In-Reply-To: <169599581942.5622.15965175797823365235.stgit@manet.1015granger.net>
 References: <169599581942.5622.15965175797823365235.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -49,80 +49,120 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-To improve readability and better align the LOCK encoders with the
-XDR specification, add an explicit encoder named for the lock_owner4
-type.
+Use the modern XDR utility functions.
 
-In particular, to avoid code duplication, use
-nfsd4_encode_clientid4() to encode the clientid in the lock owner
-rather than open-coding it.
-
-It looks to me like nfs4_set_lock_denied() already clears the
-clientid if it won't return an owner (cf: the nevermind: label). The
-code in the XDR encoder appears to be redundant and can safely be
-removed.
+The LOCK and LOCKT encoder functions need to return nfserr_denied
+when a lock is denied, but nfsd4_encode_lock4denied() should return
+a status code that is consistent with other XDR encoders.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   31 +++++++++++++++++++++----------
- 1 file changed, 21 insertions(+), 10 deletions(-)
+ fs/nfsd/nfs4xdr.c |   73 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 36 insertions(+), 37 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index d21aaa56c49a..9f7a6924ef5f 100644
+index 9f7a6924ef5f..ee8a7989f54f 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3976,6 +3976,20 @@ nfsd4_encode_getfh(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	return nfsd4_encode_nfs_fh4(xdr, &fhp->fh_handle);
+@@ -3990,40 +3990,26 @@ nfsd4_encode_lock_owner4(struct xdr_stream *xdr, const clientid_t *clientid,
+ 	return nfsd4_encode_opaque(xdr, owner->data, owner->len);
  }
  
-+static __be32
-+nfsd4_encode_lock_owner4(struct xdr_stream *xdr, const clientid_t *clientid,
-+			 const struct xdr_netobj *owner)
-+{
-+	__be32 status;
-+
-+	/* clientid */
-+	status = nfsd4_encode_clientid4(xdr, clientid);
-+	if (status != nfs_ok)
-+		return status;
-+	/* owner */
-+	return nfsd4_encode_opaque(xdr, owner->data, owner->len);
-+}
-+
- /*
- * Including all fields other than the name, a LOCK4denied structure requires
- *   8(clientid) + 4(namelen) + 8(offset) + 8(length) + 4(type) = 32 bytes.
-@@ -3984,10 +3998,10 @@ static __be32
- nfsd4_encode_lock_denied(struct xdr_stream *xdr, struct nfsd4_lock_denied *ld)
+-/*
+-* Including all fields other than the name, a LOCK4denied structure requires
+-*   8(clientid) + 4(namelen) + 8(offset) + 8(length) + 4(type) = 32 bytes.
+-*/
+ static __be32
+-nfsd4_encode_lock_denied(struct xdr_stream *xdr, struct nfsd4_lock_denied *ld)
++nfsd4_encode_lock4denied(struct xdr_stream *xdr,
++			 const struct nfsd4_lock_denied *ld)
  {
- 	struct xdr_netobj *conf = &ld->ld_owner;
--	__be32 *p;
-+	__be32 *p, status;
+-	struct xdr_netobj *conf = &ld->ld_owner;
+-	__be32 *p, status;
++	__be32 status;
  
- again:
--	p = xdr_reserve_space(xdr, 32 + XDR_LEN(conf->len));
-+	p = xdr_reserve_space(xdr, XDR_UNIT * 5);
- 	if (!p) {
- 		/*
- 		 * Don't fail to return the result just because we can't
-@@ -4004,14 +4018,11 @@ nfsd4_encode_lock_denied(struct xdr_stream *xdr, struct nfsd4_lock_denied *ld)
- 	p = xdr_encode_hyper(p, ld->ld_start);
- 	p = xdr_encode_hyper(p, ld->ld_length);
- 	*p++ = cpu_to_be32(ld->ld_type);
--	if (conf->len) {
--		p = xdr_encode_opaque_fixed(p, &ld->ld_clientid, 8);
--		p = xdr_encode_opaque(p, conf->data, conf->len);
--		kfree(conf->data);
--	}  else {  /* non - nfsv4 lock in conflict, no clientid nor owner */
--		p = xdr_encode_hyper(p, (u64)0); /* clientid */
--		*p++ = cpu_to_be32(0); /* length of owner name */
+-again:
+-	p = xdr_reserve_space(xdr, XDR_UNIT * 5);
+-	if (!p) {
+-		/*
+-		 * Don't fail to return the result just because we can't
+-		 * return the conflicting open:
+-		 */
+-		if (conf->len) {
+-			kfree(conf->data);
+-			conf->len = 0;
+-			conf->data = NULL;
+-			goto again;
+-		}
+-		return nfserr_resource;
 -	}
-+	status = nfsd4_encode_lock_owner4(xdr, &ld->ld_clientid,
-+					  &ld->ld_owner);
+-	p = xdr_encode_hyper(p, ld->ld_start);
+-	p = xdr_encode_hyper(p, ld->ld_length);
+-	*p++ = cpu_to_be32(ld->ld_type);
+-	status = nfsd4_encode_lock_owner4(xdr, &ld->ld_clientid,
+-					  &ld->ld_owner);
++	/* offset */
++	status = nfsd4_encode_offset4(xdr, ld->ld_start);
+ 	if (status != nfs_ok)
+ 		return status;
+-
+-	return nfserr_denied;
++	/* length */
++	status = nfsd4_encode_length4(xdr, ld->ld_length);
 +	if (status != nfs_ok)
 +		return status;
-+
- 	return nfserr_denied;
++	/* locktype */
++	if (xdr_stream_encode_u32(xdr, ld->ld_type) != XDR_UNIT)
++		return nfserr_resource;
++	/* owner */
++	return nfsd4_encode_lock_owner4(xdr, &ld->ld_clientid,
++					&ld->ld_owner);
+ }
+ 
+ static __be32
+@@ -4032,13 +4018,21 @@ nfsd4_encode_lock(struct nfsd4_compoundres *resp, __be32 nfserr,
+ {
+ 	struct nfsd4_lock *lock = &u->lock;
+ 	struct xdr_stream *xdr = resp->xdr;
++	__be32 status;
+ 
+-	if (!nfserr)
+-		nfserr = nfsd4_encode_stateid4(xdr, &lock->lk_resp_stateid);
+-	else if (nfserr == nfserr_denied)
+-		nfserr = nfsd4_encode_lock_denied(xdr, &lock->lk_denied);
+-
+-	return nfserr;
++	switch (nfserr) {
++	case nfs_ok:
++		/* resok4 */
++		status = nfsd4_encode_stateid4(xdr, &lock->lk_resp_stateid);
++		break;
++	case nfserr_denied:
++		/* denied */
++		status = nfsd4_encode_lock4denied(xdr, &lock->lk_denied);
++		break;
++	default:
++		return nfserr;
++	}
++	return status != nfs_ok ? status : nfserr;
+ }
+ 
+ static __be32
+@@ -4047,9 +4041,14 @@ nfsd4_encode_lockt(struct nfsd4_compoundres *resp, __be32 nfserr,
+ {
+ 	struct nfsd4_lockt *lockt = &u->lockt;
+ 	struct xdr_stream *xdr = resp->xdr;
++	__be32 status;
+ 
+-	if (nfserr == nfserr_denied)
+-		nfsd4_encode_lock_denied(xdr, &lockt->lt_denied);
++	if (nfserr == nfserr_denied) {
++		/* denied */
++		status = nfsd4_encode_lock4denied(xdr, &lockt->lt_denied);
++		if (status != nfs_ok)
++			return status;
++	}
+ 	return nfserr;
  }
  
 
