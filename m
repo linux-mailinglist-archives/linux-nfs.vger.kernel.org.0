@@ -2,36 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A6C17B3414
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Sep 2023 15:59:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA4527B3415
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Sep 2023 15:59:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232859AbjI2N7Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Sep 2023 09:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55600 "EHLO
+        id S232878AbjI2N7W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Sep 2023 09:59:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232630AbjI2N7P (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Sep 2023 09:59:15 -0400
+        with ESMTP id S232630AbjI2N7W (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Sep 2023 09:59:22 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF7F6DB
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Sep 2023 06:59:13 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E722C433C7;
-        Fri, 29 Sep 2023 13:59:13 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BE8DB
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Sep 2023 06:59:20 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A7BAC433C8;
+        Fri, 29 Sep 2023 13:59:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1695995953;
-        bh=5OcLGyi8ZK+P310haybX1H+5u659zCcIaFCGHdeV/RM=;
+        s=k20201202; t=1695995959;
+        bh=fEBBG4q4GozGuS1hCXvCLt/QF3UHt39MO0o77fthVGg=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Srtcgo8rhjwzVAc+gSf/4isxjMLtWPQZi3rp/rxHkRL7AXzg++56Ur4caJ+DkclJx
-         hsfFFnNVkP6E3MAERGr+nOx6WpH6xgxOt3VBYETdRcytzUfEEM1Xzze5gYQS8mf6kB
-         IRY2KRqfPqr+lHr0sIq/R6O/FrWk/+OJOni0H3w8MVzOS/3NWdVWHNo6uoA3+hqRbv
-         THtmrrRlr8uxnA0f7pDwBPmzWuB4RPteXNx2pzHuMjmA4C238RqRAa/hoDqAJ9z83q
-         CKCBu1K42Nm5q5YgwykXz0rgIubtWRU892XOanWerIyqY0/wsWD/d4PT6/fWv49bhZ
-         2BTfEmJl65yqw==
-Subject: [PATCH v1 4/7] NFSD: Add nfsd4_encode_open_write_delegation4()
+        b=A6fHInVWrRmAkBGc7ULOiMSLBB/ebcBUeUfdWBfPywekh+7b6vGihQogHa26WoOJJ
+         Se7rTC/2+7m0vAcwf0369r2lnclMCvL7wWG2VNBWainwdIcNUHfiu0kG7nCWBI/Kq+
+         fCcocZ9/S3NF1SR4eXSaZGVdf9sw7UmSYvu8LkUUVwGPQz5o/9QqiQXwTHR+z5PxuV
+         vb+zPozxT3nkgFak8o4LXiTebTKpW6mrqEOqe37kvL51/LKPy+OIYY1mMPkzMPHXw6
+         eYT5LwIJoHeXhfRpV1mjKSeDM6nMFPiPKQBVOGRcNlogXagpsnD3sUk/wY+iqefxu8
+         HszY897u0AxGQ==
+Subject: [PATCH v1 5/7] NFSD: Add nfsd4_encode_open_none_delegation4()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Fri, 29 Sep 2023 09:59:12 -0400
-Message-ID: <169599595225.5622.1769103727125659736.stgit@manet.1015granger.net>
+Date:   Fri, 29 Sep 2023 09:59:18 -0400
+Message-ID: <169599595863.5622.6210947146670583905.stgit@manet.1015granger.net>
 In-Reply-To: <169599581942.5622.15965175797823365235.stgit@manet.1015granger.net>
 References: <169599581942.5622.15965175797823365235.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -49,90 +49,74 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Make it easier to adjust the XDR encoder to handle new features
-related to write delegations.
+To better align our implementation with the XDR specification,
+refactor the part of nfsd4_encode_open() that encodes the
+open_none_delegation4 type.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   59 ++++++++++++++++++++++++++++++-----------------------
- 1 file changed, 33 insertions(+), 26 deletions(-)
+ fs/nfsd/nfs4xdr.c |   42 ++++++++++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 18 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index f411fcc435f6..f7e5f54fda00 100644
+index f7e5f54fda00..b6c5ccb9351f 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -4118,6 +4118,37 @@ nfsd4_encode_open_read_delegation4(struct xdr_stream *xdr, struct nfsd4_open *op
+@@ -4149,6 +4149,27 @@ nfsd4_encode_open_write_delegation4(struct xdr_stream *xdr,
  	return nfsd4_encode_open_nfsace4(xdr);
  }
  
 +static __be32
-+nfsd4_encode_nfs_space_limit4(struct xdr_stream *xdr, u64 filesize)
++nfsd4_encode_open_none_delegation4(struct xdr_stream *xdr,
++				   struct nfsd4_open *open)
 +{
-+	/* limitby */
-+	if (xdr_stream_encode_u32(xdr, NFS4_LIMIT_SIZE) != XDR_UNIT)
++	__be32 status = nfs_ok;
++
++	/* ond_why */
++	if (xdr_stream_encode_u32(xdr, open->op_why_no_deleg) != XDR_UNIT)
 +		return nfserr_resource;
-+	/* filesize */
-+	return nfsd4_encode_uint64_t(xdr, filesize);
-+}
-+
-+static __be32
-+nfsd4_encode_open_write_delegation4(struct xdr_stream *xdr,
-+				    struct nfsd4_open *open)
-+{
-+	__be32 status;
-+
-+	/* stateid */
-+	status = nfsd4_encode_stateid4(xdr, &open->op_delegate_stateid);
-+	if (status != nfs_ok)
-+		return status;
-+	/* recall */
-+	status = nfsd4_encode_bool(xdr, open->op_recall);
-+	if (status != nfs_ok)
-+		return status;
-+	/* space_limit */
-+	status = nfsd4_encode_nfs_space_limit4(xdr, 0);
-+	if (status != nfs_ok)
-+		return status;
-+	return nfsd4_encode_open_nfsace4(xdr);
++	switch (open->op_why_no_deleg) {
++	case WND4_CONTENTION:
++		/* ond_server_will_push_deleg */
++		status = nfsd4_encode_bool(xdr, false);
++		break;
++	case WND4_RESOURCE:
++		/* ond_server_will_signal_avail */
++		status = nfsd4_encode_bool(xdr, false);
++	}
++	return status;
 +}
 +
  static __be32
  nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr,
  		  union nfsd4_op_u *u)
-@@ -4152,32 +4183,8 @@ nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr,
- 		/* read */
- 		return nfsd4_encode_open_read_delegation4(xdr, open);
+@@ -4185,24 +4206,9 @@ nfsd4_encode_open(struct nfsd4_compoundres *resp, __be32 nfserr,
  	case NFS4_OPEN_DELEGATE_WRITE:
--		nfserr = nfsd4_encode_stateid4(xdr, &open->op_delegate_stateid);
--		if (nfserr)
--			return nfserr;
--
--		p = xdr_reserve_space(xdr, XDR_UNIT * 8);
--		if (!p)
--			return nfserr_resource;
--		*p++ = cpu_to_be32(open->op_recall);
--
--		/*
--		 * Always flush on close
--		 *
--		 * TODO: space_limit's in delegations
--		 */
--		*p++ = cpu_to_be32(NFS4_LIMIT_SIZE);
--		*p++ = xdr_zero;
--		*p++ = xdr_zero;
--
--		/*
--		 * TODO: ACE's in delegations
--		 */
--		*p++ = cpu_to_be32(NFS4_ACE_ACCESS_ALLOWED_ACE_TYPE);
--		*p++ = cpu_to_be32(0);
--		*p++ = cpu_to_be32(0);
--		*p++ = cpu_to_be32(0);   /* XXX: is NULL principal ok? */
+ 		/* write */
+ 		return nfsd4_encode_open_write_delegation4(xdr, open);
+-	case NFS4_OPEN_DELEGATE_NONE_EXT: /* 4.1 */
+-		switch (open->op_why_no_deleg) {
+-		case WND4_CONTENTION:
+-		case WND4_RESOURCE:
+-			p = xdr_reserve_space(xdr, 8);
+-			if (!p)
+-				return nfserr_resource;
+-			*p++ = cpu_to_be32(open->op_why_no_deleg);
+-			/* deleg signaling not supported yet: */
+-			*p++ = cpu_to_be32(0);
+-			break;
+-		default:
+-			p = xdr_reserve_space(xdr, 4);
+-			if (!p)
+-				return nfserr_resource;
+-			*p++ = cpu_to_be32(open->op_why_no_deleg);
+-		}
 -		break;
-+		/* write */
-+		return nfsd4_encode_open_write_delegation4(xdr, open);
- 	case NFS4_OPEN_DELEGATE_NONE_EXT: /* 4.1 */
- 		switch (open->op_why_no_deleg) {
- 		case WND4_CONTENTION:
++	case NFS4_OPEN_DELEGATE_NONE_EXT:
++		/* od_whynone */
++		return nfsd4_encode_open_none_delegation4(xdr, open);
+ 	default:
+ 		BUG();
+ 	}
 
 
