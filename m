@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80ECC7B37E2
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Sep 2023 18:26:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80CB27B3805
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Sep 2023 18:34:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233147AbjI2Q0h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Sep 2023 12:26:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57128 "EHLO
+        id S233215AbjI2QeP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Sep 2023 12:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232878AbjI2Q0g (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Sep 2023 12:26:36 -0400
+        with ESMTP id S233620AbjI2QeP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Sep 2023 12:34:15 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 274E0BE
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Sep 2023 09:26:35 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61548C433C7;
-        Fri, 29 Sep 2023 16:26:34 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C001B5
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Sep 2023 09:34:12 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C007C433C7;
+        Fri, 29 Sep 2023 16:34:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696004794;
-        bh=+LM5lynOwSdMYigCH0vK3oPoPdpzQuEK8V83/IU7Wls=;
+        s=k20201202; t=1696005252;
+        bh=TlNGAaBCPbTElfLlWIMLwpUz4LmP3mv+vFhbaU7emaM=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=iW5WkSUQ/5wi0ob6NbsyAIj+XuY8Kb/FRvORysw6DY+jY8ZFIXhodLERT9sdcSid+
-         pzcoXgS45WR7WGNV39bwJuztv1r8HeQ7D3lvk++BosqFUZYD+Hi2wV4A8RhKcAvayI
-         Lo5FgqRiOhyluw9i44gi9r8tUrTAp7N0VAl1l3CPuOSwfje4H/du2fkchvVzxjxtBK
-         NE5QBxGwY8XcZFXTtvcBTABKekoEGyxEA1kTHC7TogGZdmpqwElFY9y+0YSSJ+IEp/
-         XyhHX7PVYzasreERqn7iE2e9TWyVmjBk/bt1TWWIpKtlU1ZXWgtKRrnU0PPwkA18e6
-         r8qNxkCbX9ztQ==
-Message-ID: <c6ed1c23c7d2ff4b7e1422458c28a44e25599fb7.camel@kernel.org>
-Subject: Re: [PATCH v1 0/7] Clean up XDR encoders for NFSv4 OPEN and LOCK
+        b=t3MgS8m/XdIK+zcgQ9lom8Ei9aluKjBRxOxxuomtPWr2pie/G8cE/DvtO5EgGvoRa
+         yc0fEgS/mzf33TrjUTkHr2twBD0gWr0lbXubKGPtNYE1mHu3gbptmNUVTr57VGvp1f
+         0MKzntIKOxNZgZ+K4dr1XzwMZPUu+XBdTxaBd9B6wAQ+VvWEvf4y+ZQofzZXq6BoO6
+         s7Z3SZuQEoYH4tMOQfn2j4xxKf6q1sc3kJhdqpWGa+eGoYOrE7tlssfH86EdaI6yIy
+         SM6u2EJvpwF8kRc817XNmC7mg1JX89T8WAhh4zB4Wu5Nf57d+FuzWJv80ORU0sSVzC
+         OuZbIiDDvybqA==
+Message-ID: <01ac6657423d6f3a28aca457c5651c8bda12cd68.camel@kernel.org>
+Subject: Re: [PATCH v1 0/8] Clean up XDR encoders for pNFS operations
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Fri, 29 Sep 2023 12:26:33 -0400
-In-Reply-To: <169599581942.5622.15965175797823365235.stgit@manet.1015granger.net>
-References: <169599581942.5622.15965175797823365235.stgit@manet.1015granger.net>
+Date:   Fri, 29 Sep 2023 12:34:11 -0400
+In-Reply-To: <169564827064.6013.5014460767978657478.stgit@klimt.1015granger.net>
+References: <169564827064.6013.5014460767978657478.stgit@klimt.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
@@ -48,35 +48,45 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-09-29 at 09:58 -0400, Chuck Lever wrote:
-> Tidy up the server-side XDR encoders for NFSv4 OPEN and LOCK
-> results. Series applies to nfsd-next. See topic branch
+On Mon, 2023-09-25 at 09:27 -0400, Chuck Lever wrote:
+> Tidy up the server-side XDR encoders for pNFS-related operations.
+> Note that this does not touch the layout driver code; that can be
+> done later.
+>=20
+> Series applies to nfsd-next. See topic branch
 > "nfsd4-encoder-overhaul" in this repo:
 >=20
 > https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
 >=20
 > ---
 >=20
-> Chuck Lever (7):
->       NFSD: Add nfsd4_encode_lock_owner4()
->       NFSD: Refactor nfsd4_encode_lock_denied()
->       NFSD: Add nfsd4_encode_open_read_delegation4()
->       NFSD: Add nfsd4_encode_open_write_delegation4()
->       NFSD: Add nfsd4_encode_open_none_delegation4()
->       NFSD: Add nfsd4_encode_open_delegation4()
->       NFSD: Clean up nfsd4_encode_open()
+> Chuck Lever (8):
+>       NFSD: Add nfsd4_encode_count4()
+>       NFSD: Clean up nfsd4_encode_stateid()
+>       NFSD: Make @lgp parameter of ->encode_layoutget a const pointer
+>       NFSD: Clean up nfsd4_encode_layoutget()
+>       NFSD: Clean up nfsd4_encode_layoutcommit()
+>       NFSD: Clean up nfsd4_encode_layoutreturn()
+>       NFSD: Make @gdev parameter of ->encode_getdeviceinfo a const pointe=
+r
+>       NFSD: Clean up nfsd4_encode_getdeviceinfo()
 >=20
 >=20
->  fs/nfsd/nfs4state.c |   6 +-
->  fs/nfsd/nfs4xdr.c   | 305 +++++++++++++++++++++++++++-----------------
->  fs/nfsd/xdr4.h      |   2 +-
->  3 files changed, 189 insertions(+), 124 deletions(-)
+>  fs/nfsd/blocklayoutxdr.c    |   6 +-
+>  fs/nfsd/blocklayoutxdr.h    |   4 +-
+>  fs/nfsd/flexfilelayoutxdr.c |   6 +-
+>  fs/nfsd/flexfilelayoutxdr.h |   4 +-
+>  fs/nfsd/nfs4layouts.c       |   6 +-
+>  fs/nfsd/nfs4proc.c          |   4 +-
+>  fs/nfsd/nfs4xdr.c           | 206 ++++++++++++++++++++----------------
+>  fs/nfsd/pnfs.h              |   6 +-
+>  fs/nfsd/xdr4.h              |   7 +-
+>  9 files changed, 135 insertions(+), 114 deletions(-)
 >=20
 > --
 > Chuck Lever
 >=20
 
-Looks pretty straightforward. I had one minor nit about the struct
-packing but the rest looks fine. You can add:
+Looks good. Nice cleanup.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
