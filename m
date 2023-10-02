@@ -2,206 +2,273 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 537BF7B4CF0
-	for <lists+linux-nfs@lfdr.de>; Mon,  2 Oct 2023 09:57:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B78037B541A
+	for <lists+linux-nfs@lfdr.de>; Mon,  2 Oct 2023 15:37:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235802AbjJBH5k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 2 Oct 2023 03:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42866 "EHLO
+        id S235717AbjJBNZy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 2 Oct 2023 09:25:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36068 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjJBH5h (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Oct 2023 03:57:37 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E755BC;
-        Mon,  2 Oct 2023 00:57:34 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id AB8121F459;
-        Mon,  2 Oct 2023 07:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1696233452; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HRtvvsbDRmaIGA2qlEwuFNnN4SG9to1RwhMyTnDS1Ek=;
-        b=AelUG9FSlQyUcQTA9I9qRJmPzMA6mvk2OLx4Qv2PacqmgU2FkeI54uQfwuwk8GDISDrHf1
-        K6okkr5Yua+jK8r2TTOukY7745vay4e4z1caiTsHAigkH18O5VWdMY9s+0PKMe8/Ta1ITc
-        H4lySULw9TgNQsjwAFd513U/tj8Iifc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1696233452;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HRtvvsbDRmaIGA2qlEwuFNnN4SG9to1RwhMyTnDS1Ek=;
-        b=4yX5F6ZD5YaXQ1SgLuHClpbWfxc1xKg7esoSW59wSh/oO7HSeTROmd590v4TgEevJu81R5
-        RAceDQWhH8NjA0AQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 83FA513434;
-        Mon,  2 Oct 2023 07:57:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id JLsgIOx3GmUuEgAAMHmgww
-        (envelope-from <jack@suse.cz>); Mon, 02 Oct 2023 07:57:32 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 27D44A07C9; Mon,  2 Oct 2023 09:57:32 +0200 (CEST)
-Date:   Mon, 2 Oct 2023 09:57:32 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
-        linux-block@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
-        Alasdair Kergon <agk@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Anna Schumaker <anna@kernel.org>, Chao Yu <chao@kernel.org>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        David Sterba <dsterba@suse.com>, dm-devel@redhat.com,
-        drbd-dev@lists.linbit.com, Gao Xiang <xiang@kernel.org>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        jfs-discussion@lists.sourceforge.net,
-        Joern Engel <joern@lazybastard.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        linux-bcache@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-mm@kvack.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pm@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-xfs@vger.kernel.org,
-        "Md. Haris Iqbal" <haris.iqbal@ionos.com>,
-        Mike Snitzer <snitzer@kernel.org>,
-        Minchan Kim <minchan@kernel.org>, ocfs2-devel@oss.oracle.com,
-        reiserfs-devel@vger.kernel.org,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Song Liu <song@kernel.org>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        target-devel@vger.kernel.org, Ted Tso <tytso@mit.edu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        xen-devel@lists.xenproject.org
-Subject: Re: [PATCH v4 0/29] block: Make blkdev_get_by_*() return handle
-Message-ID: <20231002075732.4c5oslpabrmw3niz@quack3>
-References: <20230818123232.2269-1-jack@suse.cz>
- <20230927-prahlen-reintreten-93706074e58d@brauner>
+        with ESMTP id S237249AbjJBNZx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 2 Oct 2023 09:25:53 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3C8FAD
+        for <linux-nfs@vger.kernel.org>; Mon,  2 Oct 2023 06:25:50 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC6BC433C8;
+        Mon,  2 Oct 2023 13:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696253150;
+        bh=rC5LeS/E4y7Ju4SRFC7Yoq5dzRfnMvaFKthqPf/GKKw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=OHnPp5R+SinZuqXQNR2a9IPhKIQlMPRPsI8/i7JFqRC836Lby+OGZ/EA8R2YRJCGc
+         VQxCTtIupC991CghzoCNgzVUvxG0LXtAJupj6hzo+21II4fEGPl8juIDcabeU7qmfZ
+         onONKkiLflxyTPHrp/o5MbsjzcCYhq5GoJpDd+RcILupZbW/G8JQT1hf8YfCbNHI6h
+         +QCmYxBJgB2dKcAiSve96QrejGMh0xff2193DNkRya+WpDbrlJcxjIr8D5Eeowg3tE
+         8iJiGeT/f6H8E2oZ7/otWu/La6dWIiXILTMN5YFYSMEJuv8KggiuiAU0290x4F+1D7
+         pbcvfatywn+0Q==
+Message-ID: <a1ab72d41a502906ea31b983f147ae75f6b0e3a2.camel@kernel.org>
+Subject: Re: [PATCH v3] NFSD: convert write_threads, write_maxblksize and
+ write_maxconn to netlink commands
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>, NeilBrown <neilb@suse.de>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org,
+        lorenzo.bianconi@redhat.com, netdev@vger.kernel.org
+Date:   Mon, 02 Oct 2023 09:25:48 -0400
+In-Reply-To: <ZRbUp0gsLv9PqriL@tissot.1015granger.net>
+References: <27646a34a3ddac3e0b0ad9b49aaf66b3cee5844f.1695766257.git.lorenzo@kernel.org>
+         <169576951041.19404.9298873670065778737@noble.neil.brown.name>
+         <ZRbUp0gsLv9PqriL@tissot.1015granger.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230927-prahlen-reintreten-93706074e58d@brauner>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed 27-09-23 18:21:19, Christian Brauner wrote:
-> On Wed, 27 Sep 2023 11:34:07 +0200, Jan Kara wrote:
-> > Create struct bdev_handle that contains all parameters that need to be
-> > passed to blkdev_put() and provide bdev_open_* functions that return
-> > this structure instead of plain bdev pointer. This will eventually allow
-> > us to pass one more argument to blkdev_put() (renamed to bdev_release())
-> > without too much hassle.
-> > 
-> > 
-> > [...]
-> 
-> > to ease review / testing. Christian, can you pull the patches to your tree
-> > to get some exposure in linux-next as well? Thanks!
-> 
-> Yep. So I did it slighly differently. I pulled in the btrfs prereqs and
-> then applied your series on top of it so we get all the Link: tags right.
-> I'm running tests right now. Please double-check.
+On Fri, 2023-09-29 at 09:44 -0400, Chuck Lever wrote:
+> On Wed, Sep 27, 2023 at 09:05:10AM +1000, NeilBrown wrote:
+> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> > > index b71744e355a8..07e7a09e28e3 100644
+> > > --- a/fs/nfsd/nfsctl.c
+> > > +++ b/fs/nfsd/nfsctl.c
+> > > @@ -1694,6 +1694,147 @@ int nfsd_nl_rpc_status_get_done(struct netlin=
+k_callback *cb)
+> > >  	return 0;
+> > >  }
+> > > =20
+> > > +/**
+> > > + * nfsd_nl_threads_set_doit - set the number of running threads
+> > > + * @skb: reply buffer
+> > > + * @info: netlink metadata and command arguments
+> > > + *
+> > > + * Return 0 on success or a negative errno.
+> > > + */
+> > > +int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *=
+info)
+> > > +{
+> > > +	u32 nthreads;
+> > > +	int ret;
+> > > +
+> > > +	if (!info->attrs[NFSD_A_CONTROL_PLANE_THREADS])
+> > > +		return -EINVAL;
+> > > +
+> > > +	nthreads =3D nla_get_u32(info->attrs[NFSD_A_CONTROL_PLANE_THREADS])=
+;
+> > > +
+> > > +	ret =3D nfsd_svc(nthreads, genl_info_net(info), get_current_cred())=
+;
+> > > +	return ret =3D=3D nthreads ? 0 : ret;
+> > > +}
+> > > +
+> > > +static int nfsd_nl_get_dump(struct sk_buff *skb, struct netlink_call=
+back *cb,
+> > > +			    int cmd, int attr, u32 val)
+> > > +{
+> > > +	void *hdr;
+> > > +
+> > > +	if (cb->args[0]) /* already consumed */
+> > > +		return 0;
+> > > +
+> > > +	hdr =3D genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg=
+_seq,
+> > > +			  &nfsd_nl_family, NLM_F_MULTI, cmd);
+> > > +	if (!hdr)
+> > > +		return -ENOBUFS;
+> > > +
+> > > +	if (nla_put_u32(skb, attr, val))
+> > > +		return -ENOBUFS;
+> > > +
+> > > +	genlmsg_end(skb, hdr);
+> > > +	cb->args[0] =3D 1;
+> > > +
+> > > +	return skb->len;
+> > > +}
+> > > +
+> > > +/**
+> > > + * nfsd_nl_threads_get_dumpit - dump the number of running threads
+> > > + * @skb: reply buffer
+> > > + * @cb: netlink metadata and command arguments
+> > > + *
+> > > + * Returns the size of the reply or a negative errno.
+> > > + */
+> > > +int nfsd_nl_threads_get_dumpit(struct sk_buff *skb, struct netlink_c=
+allback *cb)
+> > > +{
+> > > +	return nfsd_nl_get_dump(skb, cb, NFSD_CMD_THREADS_GET,
+> > > +				NFSD_A_CONTROL_PLANE_THREADS,
+> > > +				nfsd_nrthreads(sock_net(skb->sk)));
+> > > +}
+> > > +
+> > > +/**
+> > > + * nfsd_nl_max_blksize_set_doit - set the nfs block size
+> > > + * @skb: reply buffer
+> > > + * @info: netlink metadata and command arguments
+> > > + *
+> > > + * Return 0 on success or a negative errno.
+> > > + */
+> > > +int nfsd_nl_max_blksize_set_doit(struct sk_buff *skb, struct genl_in=
+fo *info)
+> > > +{
+> > > +	struct nfsd_net *nn =3D net_generic(genl_info_net(info), nfsd_net_i=
+d);
+> > > +	struct nlattr *attr =3D info->attrs[NFSD_A_CONTROL_PLANE_MAX_BLKSIZ=
+E];
+> > > +	int ret =3D 0;
+> > > +
+> > > +	if (!attr)
+> > > +		return -EINVAL;
+> > > +
+> > > +	mutex_lock(&nfsd_mutex);
+> > > +	if (nn->nfsd_serv) {
+> > > +		ret =3D -EBUSY;
+> > > +		goto out;
+> > > +	}
+> >=20
+> > This code is wrong... but then the original in write_maxblksize is wron=
+g
+> > to, so you can't be blamed.
+> > nfsd_max_blksize applies to nfsd in ALL network namespaces.  So if we
+> > need to check there are no active services in one namespace, we need to
+> > check the same for *all* namespaces.
+>=20
+> Yes, the original code does look strange and is probably incorrect
+> with regard to its handling of the mutex. Shall we explore and fix
+> that issue in the nfsctl code first so that it can be backported to
+> stable kernels?
+>=20
+>=20
+> > I think we should make nfsd_max_blksize a per-namespace value.
+>=20
+> That is a different conversation.
+>=20
+> First, the current name of this tunable is incongruent with its
+> actual function, which is to specify the maximum network buffer size
+> that is allocated when the NFSD service pool is created. We should
+> find a more descriptive and specific name for this element in the
+> netlink protocol.
+>=20
+> Second, it does seem like a candidate for becoming namespace-
+> specific, but TBH I'm not familiar enough with its current user
+> space consumers to know if that change would be welcome or fraught.
+>=20
+> Since more discussion, research, and possibly a fix are needed, we
+> might drop max_blksize from this round and look for one or two
+> other tunables to convert for the first round.
+>=20
+>=20
 
-Thanks for picking patches up! I've checked the branch and it looks good to
-me. 
+I think we need to step back a bit further even, and consider what we
+want this to look like for users. How do we expect users to interact
+with these new interfaces in the future?
 
-								Honza
+Most of these settings are things that are "set and forget" and things
+that we'd want to set up before we ever start any nfsd threads. I think
+as an initial goal here, we ought to aim to replace the guts of
+rpc.nfsd(8). Make it (preferentially) use the netlink interfaces for
+setting everything instead of writing to files under /proc/fs/nfsd.
 
-> 
-> ---
-> 
-> Applied to the vfs.super branch of the vfs/vfs.git tree.
-> Patches in the vfs.super branch should appear in linux-next soon.
-> 
-> Please report any outstanding bugs that were missed during review in a
-> new review to the original patch series allowing us to drop it.
-> 
-> It's encouraged to provide Acked-bys and Reviewed-bys even though the
-> patch has now been applied. If possible patch trailers will be updated.
-> 
-> Note that commit hashes shown below are subject to change due to rebase,
-> trailer updates or similar. If in doubt, please check the listed branch.
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> branch: vfs.super
-> 
-> [01/29] block: Provide bdev_open_* functions
->        https://git.kernel.org/vfs/vfs/c/b7c828aa0b3c
-> [02/29] block: Use bdev_open_by_dev() in blkdev_open()
->         https://git.kernel.org/vfs/vfs/c/d4e36f27b45a
-> [03/29] block: Use bdev_open_by_dev() in disk_scan_partitions() and blkdev_bszset()
->         https://git.kernel.org/vfs/vfs/c/5f9bd6764c7a
-> [04/29] drdb: Convert to use bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/0220ca8e443d
-> [05/29] pktcdvd: Convert to bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/7af10b889789
-> [06/29] rnbd-srv: Convert to use bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/3d27892a4be7
-> [07/29] xen/blkback: Convert to bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/26afb0ed10b3
-> [08/29] zram: Convert to use bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/efc8e3f4c6dc
-> [09/29] bcache: Convert to bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/dc893f51d24a
-> [10/29] dm: Convert to bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/80c2267c6d07
-> [11/29] md: Convert to bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/15db36126ca6
-> [12/29] mtd: block2mtd: Convert to bdev_open_by_dev/path()
->         https://git.kernel.org/vfs/vfs/c/4c27234bf3ce
-> [13/29] nvmet: Convert to bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/70cffddcc300
-> [14/29] s390/dasd: Convert to bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/5581d03457f8
-> [15/29] scsi: target: Convert to bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/43de7d844d47
-> [16/29] PM: hibernate: Convert to bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/105ea4a2fd18
-> [17/29] PM: hibernate: Drop unused snapshot_test argument
->         https://git.kernel.org/vfs/vfs/c/b589a66e3688
-> [18/29] mm/swap: Convert to use bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/615af8e29233
-> [19/29] fs: Convert to bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/5173192bcfe6
-> [20/29] btrfs: Convert to bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/8cf64782764f
-> [21/29] erofs: Convert to use bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/4d41880bf249
-> [22/29] ext4: Convert to bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/f7507612395e
-> [23/29] f2fs: Convert to bdev_open_by_dev/path()
->         https://git.kernel.org/vfs/vfs/c/d9ff8e3b6498
-> [24/29] jfs: Convert to bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/459dc6376338
-> [25/29] nfs/blocklayout: Convert to use bdev_open_by_dev/path()
->         https://git.kernel.org/vfs/vfs/c/5b1df9a40929
-> [26/29] ocfs2: Convert to use bdev_open_by_dev()
->         https://git.kernel.org/vfs/vfs/c/b6b95acbd943
-> [27/29] reiserfs: Convert to bdev_open_by_dev/path()
->         https://git.kernel.org/vfs/vfs/c/7e3615ff6119
-> [28/29] xfs: Convert to bdev_open_by_path()
->         https://git.kernel.org/vfs/vfs/c/176ccb99e207
-> [29/29] block: Remove blkdev_get_by_*() functions
->         https://git.kernel.org/vfs/vfs/c/953863a5a2ff
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+That gives us a clear set of interfaces that need to be replaced as a
+first step, and gives us a start on integrating this change into nfs-
+utils.
+
+> > > +
+> > > +	nfsd_max_blksize =3D nla_get_u32(attr);
+> > > +	nfsd_max_blksize =3D max_t(int, nfsd_max_blksize, 1024);
+> > > +	nfsd_max_blksize =3D min_t(int, nfsd_max_blksize, NFSSVC_MAXBLKSIZE=
+);
+> > > +	nfsd_max_blksize &=3D ~1023;
+> > > +out:
+> > > +	mutex_unlock(&nfsd_mutex);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +/**
+> > > + * nfsd_nl_max_blksize_get_dumpit - dump the nfs block size
+> > > + * @skb: reply buffer
+> > > + * @cb: netlink metadata and command arguments
+> > > + *
+> > > + * Returns the size of the reply or a negative errno.
+> > > + */
+> > > +int nfsd_nl_max_blksize_get_dumpit(struct sk_buff *skb,
+> > > +				   struct netlink_callback *cb)
+> > > +{
+> > > +	return nfsd_nl_get_dump(skb, cb, NFSD_CMD_MAX_BLKSIZE_GET,
+> > > +				NFSD_A_CONTROL_PLANE_MAX_BLKSIZE,
+> > > +				nfsd_max_blksize);
+> > > +}
+> > > +
+> > > +/**
+> > > + * nfsd_nl_max_conn_set_doit - set the max number of connections
+> > > + * @skb: reply buffer
+> > > + * @info: netlink metadata and command arguments
+> > > + *
+> > > + * Return 0 on success or a negative errno.
+> > > + */
+> > > +int nfsd_nl_max_conn_set_doit(struct sk_buff *skb, struct genl_info =
+*info)
+> > > +{
+> > > +	struct nfsd_net *nn =3D net_generic(genl_info_net(info), nfsd_net_i=
+d);
+> > > +	struct nlattr *attr =3D info->attrs[NFSD_A_CONTROL_PLANE_MAX_CONN];
+> > > +
+> > > +	if (!attr)
+> > > +		return -EINVAL;
+> > > +
+> > > +	nn->max_connections =3D nla_get_u32(attr);
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +/**
+> > > + * nfsd_nl_max_conn_get_dumpit - dump the max number of connections
+> > > + * @skb: reply buffer
+> > > + * @cb: netlink metadata and command arguments
+> > > + *
+> > > + * Returns the size of the reply or a negative errno.
+> > > + */
+> > > +int nfsd_nl_max_conn_get_dumpit(struct sk_buff *skb,
+> > > +				struct netlink_callback *cb)
+> > > +{
+> > > +	struct nfsd_net *nn =3D net_generic(sock_net(cb->skb->sk), nfsd_net=
+_id);
+> > > +
+> > > +	return nfsd_nl_get_dump(skb, cb, NFSD_CMD_MAX_CONN_GET,
+> > > +				NFSD_A_CONTROL_PLANE_MAX_CONN,
+> > > +				nn->max_connections);
+> > > +}
+> > > +
+> > >  /**
+> > >   * nfsd_net_init - Prepare the nfsd_net portion of a new net namespa=
+ce
+> > >   * @net: a freshly-created network namespace
+
+--=20
+Jeff Layton <jlayton@kernel.org>
