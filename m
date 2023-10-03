@@ -2,49 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81FFD7B7176
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 Oct 2023 21:03:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3661A7B7182
+	for <lists+linux-nfs@lfdr.de>; Tue,  3 Oct 2023 21:05:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231376AbjJCTDE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Oct 2023 15:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49618 "EHLO
+        id S231406AbjJCTFX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 Oct 2023 15:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231262AbjJCTDD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Oct 2023 15:03:03 -0400
+        with ESMTP id S231262AbjJCTFW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Oct 2023 15:05:22 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22332AB
-        for <linux-nfs@vger.kernel.org>; Tue,  3 Oct 2023 12:03:01 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59B56C433C7;
-        Tue,  3 Oct 2023 19:03:00 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEAAFAB
+        for <linux-nfs@vger.kernel.org>; Tue,  3 Oct 2023 12:05:18 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 216D8C433C7;
+        Tue,  3 Oct 2023 19:05:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696359780;
-        bh=suZXgFxQ4zV1QYIU40dPflLZY9Mx9HOz24DVnFy6DRc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U1jHvBUY9yOEnlptDs42Z3K9NHB0aPr83aH4+gx+5K1pXzP7/+o6Xo4P2osWReDjJ
-         Fk9ghuW7MemB3U0NphT0aUa4inxB8Rzu8R6rP7r6MHApF2w9pyrfJfSnbjZZoTClKc
-         mC2IaxmoFPmUNQZGPTDDhTDuxj9jWxeLgLbzJ7hXXL3Ub6+jjAQLqaSUtCakDnG009
-         XQKOWv6m06boHpwTgyUHQj+4T0OJwhKbJwZDwELwYPwuB5/UQhRLERfCK0jrVQwB03
-         3EFpnGmdciEwTITQMDRYM9QGXX05dDlzTdZGOdGnnr7p8gIgK2GeC5HPK+/0TK0N9B
-         /3bVeGhH7jR5w==
-Date:   Tue, 3 Oct 2023 12:02:59 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v8 1/3] Documentation: netlink: add a YAML spec for
- nfsd_server
-Message-ID: <20231003120259.39c6609a@kernel.org>
-In-Reply-To: <F39762FD-DFE3-4F17-9947-48A0EF67B07F@oracle.com>
-References: <cover.1694436263.git.lorenzo@kernel.org>
-        <47c144cfa1859ab089527e67c8540eb920427c64.1694436263.git.lorenzo@kernel.org>
-        <20231003105540.75a3e652@kernel.org>
-        <F39762FD-DFE3-4F17-9947-48A0EF67B07F@oracle.com>
+        s=k20201202; t=1696359918;
+        bh=V+v7NLGKkdXEfY0BHeRyx+FLZpg0mjPZwGNRoOVcg7o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MaDbeYLqVD0Ng3Ll6fzTzziPydWzvFcltD+9b2iCIahrHDVrhwh/6JTB+lmAUXMfK
+         JcW0XUc40ygB1nvV05tI6GIcK2up9Yb1t8p8e2VoFAa0VaGS5FaynmiBtsckwHXnYO
+         rUxVI3ZqIQbgrV/UK750OpN4HYjUbtCohHZFkHs3rxwMtR9HnbBxjZLdlRwb3PZNss
+         fSsWAJ/anN7fX8kfjsmMuzitYn76pf6jWKJsAjBDMguPQ4pMhmFqBuCzdHUhkI3Lyw
+         bKhfhQDW6pyR+e9Lreiyz9u5KQ8ko/j59VG3RlOdwZgr9zYm6s2n7JT2Jd5MR5HPAC
+         3Xq+MqvFGE01g==
+From:   Anna Schumaker <anna@kernel.org>
+To:     linux-nfs@vger.kernel.org, torvalds@linux-foundation.org
+Cc:     anna@kernel.org
+Subject: [GIT PULL] More NFS Client Bugfixes for Linux 6.6-rc
+Date:   Tue,  3 Oct 2023 15:05:16 -0400
+Message-ID: <20231003190516.117507-1-anna@kernel.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -54,12 +44,56 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 3 Oct 2023 18:40:29 +0000 Chuck Lever III wrote:
-> I've made similar modifications to Lorenzo's original
-> contribution. The current updated version of this spec
-> is here:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=nfsd-next&id=55f55c77f624066895470306898190f090e00cda
+Hi Linus,
 
-Great! I noticed too late :)
-Just the attr listing is missing in the spec, then.
+The following changes since commit 6465e260f48790807eef06b583b38ca9789b6072:
+
+  Linux 6.6-rc3 (2023-09-24 14:31:13 -0700)
+
+are available in the Git repository at:
+
+  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.6-3
+
+for you to fetch changes up to dd1b2026323a2d075ac553cecfd7a0c23c456c59:
+
+  nfs: decrement nrequests counter before releasing the req (2023-09-28 12:22:25 -0400)
+
+----------------------------------------------------------------
+More NFS Client Bugfixes for Linux 6.6-rc
+
+Stable Fix:
+  * Revert "SUNRPC dont update timeout value on connection reset"
+  * NFSv4: Fix a state manager thread deadlock regression
+
+Bugfixes:
+  * Fix a potential NULL pointer dereference in nfs_inode_remove_request()
+  * Fix a rare NULL pointer dereference in xs_tcp_tls_setup_socket()
+  * Fix long delay before failing a TLS mount when server does not support TLS
+  * Fix various NFS state manager issues
+
+Thanks,
+Anna
+
+----------------------------------------------------------------
+Anna Schumaker (1):
+      SUNRPC/TLS: Lock the lower_xprt during the tls handshake
+
+Chuck Lever (1):
+      SUNRPC: Fail quickly when server does not recognize TLS
+
+Jeff Layton (1):
+      nfs: decrement nrequests counter before releasing the req
+
+Trond Myklebust (3):
+      NFSv4: Fix a nfs4_state_manager() race
+      NFSv4: Fix a state manager thread deadlock regression
+      Revert "SUNRPC dont update timeout value on connection reset"
+
+ fs/nfs/nfs4proc.c     |  4 +++-
+ fs/nfs/nfs4state.c    | 45 +++++++++++++++++++++++++++++++++------------
+ fs/nfs/write.c        |  2 +-
+ net/sunrpc/auth.c     | 11 ++++++++---
+ net/sunrpc/auth_tls.c |  4 ++--
+ net/sunrpc/clnt.c     | 13 ++++++++++---
+ net/sunrpc/xprtsock.c |  6 ++++++
+ 7 files changed, 63 insertions(+), 22 deletions(-)
