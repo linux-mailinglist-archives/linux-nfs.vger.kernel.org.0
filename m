@@ -2,36 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C71C07B812E
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 15:41:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFA007B8131
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 15:42:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233368AbjJDNl4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Oct 2023 09:41:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
+        id S233338AbjJDNmC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Oct 2023 09:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233328AbjJDNlz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Oct 2023 09:41:55 -0400
+        with ESMTP id S233328AbjJDNmB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Oct 2023 09:42:01 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE530BD
-        for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 06:41:52 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C712C433C8;
-        Wed,  4 Oct 2023 13:41:52 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE7F8A9
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 06:41:58 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8E8C433CA;
+        Wed,  4 Oct 2023 13:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696426912;
-        bh=3QfietrAj3DTSx1qAZKGOWQZTTO2iq8xFKdPuQhHQ0Y=;
+        s=k20201202; t=1696426918;
+        bh=QsxiiP8P1LIewrRuytc8A8q6Tv7U/XL9DsRPg4me2aI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Du5ClrtbOYHPy3rsCydG3n/89TanY7uM5h/jEtIrn4TQn6vKz+aAgjITnq4Gqg70l
-         f2T++7HsnO6217VJ5gk/cL8eMH7cBC75DY9b9tcE2lTltAWXxf8rxPYL7ovzkXj+3N
-         zU8u6JvJjKcnpN7UYNjU5MkujpbIYJ+WKddHy9qBWGbYdF+spzO0nsgp979qNPb+q1
-         ZT97/7qg4UuM5AXeWkkc8pMA1gMmTLk/Fb2k6Oj6jBEqGCCvQeuVX2NegcR52DRb5r
-         kfinbGFjEDybjGerfU2qNBYke1TUcrccTtLJodNyB6yUzuJX0O5BRoH0eQgUZEdLej
-         8plwUqT/qOyxA==
-Subject: [PATCH v1 2/5] NFSD: Clean up nfsd4_encode_rdattr_error()
+        b=m1zJmBL1UYwE920Ds09sUYCysWqw8CQb/7uX8bRjjlb46Qc5eCncSdFT+iT23fuuo
+         1FelI8gw85v/3U4LDHfzlxin7+dQitNHNh/WoK2LDGuKs4EpoKZewiGLCYLM5Ed8Sc
+         rGMHPjExCdeh50PrH5dqWxpruSPXMV13AFN+o0Bs3v8OM44fdMz0j18+Gi4XB2hVs2
+         UREnODEZrKSvFqnvJizP8z/KGh8aY0N7iQOzm/jbiU3Pi1VopreUkySQbPRIo3cCJd
+         iZ8ebBW/I/+oA0nn+Kb8d15NwPcNIRp3jhqy0T2R8BEcADOuo1c9UYaFPcQnFCSQnw
+         v7fm33fyHgB8w==
+Subject: [PATCH v1 3/5] NFSD: Add an nfsd4_encode_nfs_cookie4() helper
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Wed, 04 Oct 2023 09:41:51 -0400
-Message-ID: <169642691116.7503.5603118483366668621.stgit@klimt.1015granger.net>
+Date:   Wed, 04 Oct 2023 09:41:57 -0400
+Message-ID: <169642691755.7503.7423015225006996766.stgit@klimt.1015granger.net>
 In-Reply-To: <169642681764.7503.2925922561588558142.stgit@klimt.1015granger.net>
 References: <169642681764.7503.2925922561588558142.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5
@@ -50,64 +50,84 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-No need for specialized code here, as this function is invoked only
-rarely. Convert it to encode to xdr_stream using conventional XDR
-helpers.
+De-duplicate the entry4 cookie encoder, similar to the arrangement
+for the NFSv2 and NFSv3 directory entry encoders.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   30 +++++++++++++++---------------
- 1 file changed, 15 insertions(+), 15 deletions(-)
+ fs/nfsd/nfs4xdr.c |   32 ++++++++++++++++++++------------
+ 1 file changed, 20 insertions(+), 12 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index a6b6ff5819e9..26a9391d7766 100644
+index 26a9391d7766..3eba3f316d97 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3722,21 +3722,22 @@ nfsd4_encode_entry4_fattr(struct nfsd4_readdir *cd, const char *name,
- 	return nfserr;
+@@ -3660,6 +3660,22 @@ __be32 nfsd4_encode_fattr_to_buf(__be32 **p, int words,
+ 	return ret;
  }
  
--static __be32 *
--nfsd4_encode_rdattr_error(struct xdr_stream *xdr, __be32 nfserr)
-+static __be32
-+nfsd4_encode_entry4_rdattr_error(struct xdr_stream *xdr, __be32 nfserr)
++/*
++ * The buffer space for this field was reserved during a previous
++ * call to nfsd4_encode_entry4().
++ */
++static void nfsd4_encode_entry4_nfs_cookie4(const struct nfsd4_readdir *readdir,
++					    u64 offset)
++{
++	__be64 cookie = cpu_to_be64(offset);
++	struct xdr_stream *xdr = readdir->xdr;
++
++	if (!readdir->cookie_offset)
++		return;
++	write_bytes_to_xdr_buf(xdr->buf, readdir->cookie_offset, &cookie,
++			       sizeof(cookie));
++}
++
+ static inline int attributes_need_mount(u32 *bmval)
  {
--	__be32 *p;
--
--	p = xdr_reserve_space(xdr, 20);
--	if (!p)
--		return NULL;
--	*p++ = htonl(2);
--	*p++ = htonl(FATTR4_WORD0_RDATTR_ERROR); /* bmval0 */
--	*p++ = htonl(0);			 /* bmval1 */
-+	__be32 status;
+ 	if (bmval[0] & ~(FATTR4_WORD0_RDATTR_ERROR | FATTR4_WORD0_LEASE_TIME))
+@@ -3752,7 +3768,6 @@ nfsd4_encode_entry4(void *ccdv, const char *name, int namlen,
+ 	u32 name_and_cookie;
+ 	int entry_bytes;
+ 	__be32 nfserr = nfserr_toosmall;
+-	__be64 wire_offset;
+ 	__be32 *p;
  
--	*p++ = htonl(4);     /* attribute length */
--	*p++ = nfserr;       /* no htonl */
--	return p;
-+	/* attrmask */
-+	status = nfsd4_encode_bitmap4(xdr, FATTR4_WORD0_RDATTR_ERROR, 0, 0);
-+	if (status != nfs_ok)
-+		return status;
-+	/* attr_vals */
-+	if (xdr_stream_encode_u32(xdr, XDR_UNIT) != XDR_UNIT)
-+		return nfserr_resource;
-+	/* rdattr_error */
-+	if (xdr_stream_encode_be32(xdr, nfserr) != XDR_UNIT)
-+		return nfserr_resource;
-+	return nfs_ok;
- }
+ 	/* In nfsv4, "." and ".." never make it onto the wire.. */
+@@ -3761,11 +3776,8 @@ nfsd4_encode_entry4(void *ccdv, const char *name, int namlen,
+ 		return 0;
+ 	}
  
- static int
-@@ -3808,8 +3809,7 @@ nfsd4_encode_entry4(void *ccdv, const char *name, int namlen,
- 		 */
- 		if (!(cd->rd_bmval[0] & FATTR4_WORD0_RDATTR_ERROR))
- 			goto fail;
--		p = nfsd4_encode_rdattr_error(xdr, nfserr);
--		if (p == NULL) {
-+		if (nfsd4_encode_entry4_rdattr_error(xdr, nfserr)) {
- 			nfserr = nfserr_toosmall;
- 			goto fail;
- 		}
+-	if (cd->cookie_offset) {
+-		wire_offset = cpu_to_be64(offset);
+-		write_bytes_to_xdr_buf(xdr->buf, cd->cookie_offset,
+-							&wire_offset, 8);
+-	}
++	/* Encode the previous entry's cookie value */
++	nfsd4_encode_entry4_nfs_cookie4(cd, offset);
+ 
+ 	p = xdr_reserve_space(xdr, 4);
+ 	if (!p)
+@@ -4447,7 +4459,6 @@ nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	int maxcount;
+ 	int bytes_left;
+ 	loff_t offset;
+-	__be64 wire_offset;
+ 	struct xdr_stream *xdr = resp->xdr;
+ 	int starting_len = xdr->buf->len;
+ 	__be32 *p;
+@@ -4505,11 +4516,8 @@ nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	if (nfserr)
+ 		goto err_no_verf;
+ 
+-	if (readdir->cookie_offset) {
+-		wire_offset = cpu_to_be64(offset);
+-		write_bytes_to_xdr_buf(xdr->buf, readdir->cookie_offset,
+-							&wire_offset, 8);
+-	}
++	/* Encode the final entry's cookie value */
++	nfsd4_encode_entry4_nfs_cookie4(readdir, offset);
+ 
+ 	p = xdr_reserve_space(xdr, 8);
+ 	if (!p) {
 
 
