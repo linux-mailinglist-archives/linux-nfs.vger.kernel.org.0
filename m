@@ -2,36 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE4667B8132
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 15:42:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E6B07B8133
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 15:42:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233328AbjJDNmK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Oct 2023 09:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52416 "EHLO
+        id S233329AbjJDNmP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Oct 2023 09:42:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233381AbjJDNmJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Oct 2023 09:42:09 -0400
+        with ESMTP id S233345AbjJDNmP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Oct 2023 09:42:15 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57488C4
-        for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 06:42:05 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF589C433C7;
-        Wed,  4 Oct 2023 13:42:04 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1829CC
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 06:42:11 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CAEDC433C7;
+        Wed,  4 Oct 2023 13:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696426925;
-        bh=jGIIFqsFyWBFrl7eSU/+kAyOvRi7vHJXfbgImCUAHsE=;
+        s=k20201202; t=1696426931;
+        bh=7bdhWdU/hZv4YE1RRzOgpa/HAfERUY0aI2bNaGaycEI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hfMdm+p0dOoL+AZwOClHPzZ+2LJzSF9+ukzgddmnVaH51l2m3X5vuL1ZFEcXkta5q
-         +BPd0+WeMQZ0lg6DHBwnJd+1ozzkicaqGqFMNmfSf1QyqEUbabny+A+dR5bE6PrKTl
-         AnLYHqoXpuwQbdROsaMk/IeDi90lxi/XfVNHyqgiRD3fmqpUEoEpf4sjGFqg5fDBZd
-         JrZhYXLqS8EF5GNjvIexOKsvM7RlwHhuc7NWILu6fSw3QN/4itKNjaaPdmu/DzgOkc
-         yb9hM3VyCK4RTZvikHiLkA1Q8nwhsQn4XAU8zIwlA8OGQ/+0uqz6qruMljpgKICFao
-         7O5KUda0se+0Q==
-Subject: [PATCH v1 4/5] NFSD: Clean up nfsd4_encode_entry4()
+        b=LesEWZXriHhXQRq95XtQ4rJZXywe+4IaSEZ6ZAs4Q+R2+GsiUQ/Lg5wd3B9LnrsqT
+         WLwxVkqdoiK0W6BtbGhnAKUcP8atQ2oSgM7AgQG+PVpNyManqsIUl5yxSrRi4LbwLI
+         3Q9ftNNhGgznFKx5cmcXwXST3p8Eu8/4ET/qV0aLHsZVWvLkjlnWmYrZUa6zVfuxpT
+         6qpUy6LCnY6nDDCKgfPVx4Rt8mpfUv1GeGCGs7UGl9mAwmRb9MxgPnSUNVrY2mhdsL
+         tOsO97crrbZvCl1F0HSRCZGK5IwL4fddZADROXnjuGTWfRyVavmZf0Bo9wLOQzICJL
+         0BrD5Nn9FEsbw==
+Subject: [PATCH v1 5/5] NFSD: Clean up nfsd4_encode_readdir()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Wed, 04 Oct 2023 09:42:03 -0400
-Message-ID: <169642692381.7503.16200002695655143315.stgit@klimt.1015granger.net>
+Date:   Wed, 04 Oct 2023 09:42:10 -0400
+Message-ID: <169642693016.7503.11226063374751505918.stgit@klimt.1015granger.net>
 In-Reply-To: <169642681764.7503.2925922561588558142.stgit@klimt.1015granger.net>
 References: <169642681764.7503.2925922561588558142.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5
@@ -50,71 +50,158 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Reshape nfsd4_encode_entry4() to be more like the legacy dirent
-encoders, which were recently rewritten to use xdr_stream.
+Untangle nfsd4_encode_readdir() so it is more clear what XDR data
+item is being encoded by which piece of code.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   15 ++++++---------
- fs/nfsd/xdr4.h    |    3 +++
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ fs/nfsd/nfs4xdr.c |  112 ++++++++++++++++++++++++++---------------------------
+ 1 file changed, 55 insertions(+), 57 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 3eba3f316d97..cfc8e241e8fb 100644
+index cfc8e241e8fb..5efcd9691e5d 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3768,7 +3768,6 @@ nfsd4_encode_entry4(void *ccdv, const char *name, int namlen,
- 	u32 name_and_cookie;
- 	int entry_bytes;
- 	__be32 nfserr = nfserr_toosmall;
+@@ -4448,85 +4448,83 @@ nfsd4_encode_readlink(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	return nfserr;
+ }
+ 
+-static __be32
+-nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr,
+-		     union nfsd4_op_u *u)
++static __be32 nfsd4_encode_dirlist4(struct xdr_stream *xdr,
++				    struct nfsd4_readdir *readdir,
++				    u32 max_payload)
+ {
+-	struct nfsd4_readdir *readdir = &u->readdir;
+-	int maxcount;
+-	int bytes_left;
++	int bytes_left, maxcount, starting_len = xdr->buf->len;
+ 	loff_t offset;
+-	struct xdr_stream *xdr = resp->xdr;
+-	int starting_len = xdr->buf->len;
 -	__be32 *p;
- 
- 	/* In nfsv4, "." and ".." never make it onto the wire.. */
- 	if (name && isdotent(name, namlen)) {
-@@ -3779,17 +3778,15 @@ nfsd4_encode_entry4(void *ccdv, const char *name, int namlen,
- 	/* Encode the previous entry's cookie value */
- 	nfsd4_encode_entry4_nfs_cookie4(cd, offset);
- 
--	p = xdr_reserve_space(xdr, 4);
--	if (!p)
-+	if (xdr_stream_encode_item_present(xdr) != XDR_UNIT)
- 		goto fail;
--	*p++ = xdr_one;                             /* mark entry present */
-+
-+	/* Reserve send buffer space for this entry's cookie value. */
- 	cookie_offset = xdr->buf->len;
--	p = xdr_reserve_space(xdr, 3*4 + namlen);
--	if (!p)
-+	if (nfsd4_encode_nfs_cookie4(xdr, OFFSET_MAX) != nfs_ok)
-+		goto fail;
-+	if (nfsd4_encode_component4(xdr, name, namlen) != nfs_ok)
- 		goto fail;
--	p = xdr_encode_hyper(p, OFFSET_MAX);        /* offset of next entry */
--	p = xdr_encode_array(p, name, namlen);      /* name length & name */
 -
- 	nfserr = nfsd4_encode_entry4_fattr(cd, name, namlen);
- 	switch (nfserr) {
- 	case nfs_ok:
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index cd124969589e..6f5c3f4b4ca3 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -120,6 +120,7 @@ nfsd4_encode_uint64_t(struct xdr_stream *xdr, u64 val)
- }
+-	nfserr = nfsd4_encode_verifier4(xdr, &readdir->rd_verf);
+-	if (nfserr != nfs_ok)
+-		return nfserr;
++	__be32 status;
  
- #define nfsd4_encode_changeid4(x, v)	nfsd4_encode_uint64_t(x, v)
-+#define nfsd4_encode_nfs_cookie4(x, v)	nfsd4_encode_uint64_t(x, v)
- #define nfsd4_encode_length4(x, v)	nfsd4_encode_uint64_t(x, v)
- #define nfsd4_encode_offset4(x, v)	nfsd4_encode_uint64_t(x, v)
- 
-@@ -174,6 +175,8 @@ nfsd4_encode_opaque(struct xdr_stream *xdr, const void *data, size_t size)
- 	return nfs_ok;
- }
- 
-+#define nfsd4_encode_component4(x, d, s)	nfsd4_encode_opaque(x, d, s)
+ 	/*
+ 	 * Number of bytes left for directory entries allowing for the
+-	 * final 8 bytes of the readdir and a following failed op:
++	 * final 8 bytes of the readdir and a following failed op.
+ 	 */
+-	bytes_left = xdr->buf->buflen - xdr->buf->len
+-			- COMPOUND_ERR_SLACK_SPACE - 8;
+-	if (bytes_left < 0) {
+-		nfserr = nfserr_resource;
+-		goto err_no_verf;
+-	}
+-	maxcount = svc_max_payload(resp->rqstp);
+-	maxcount = min_t(u32, readdir->rd_maxcount, maxcount);
++	bytes_left = xdr->buf->buflen - xdr->buf->len -
++		COMPOUND_ERR_SLACK_SPACE - XDR_UNIT * 2;
++	if (bytes_left < 0)
++		return nfserr_resource;
++	maxcount = min_t(u32, readdir->rd_maxcount, max_payload);
 +
- struct nfsd4_compound_state {
- 	struct svc_fh		current_fh;
- 	struct svc_fh		save_fh;
+ 	/*
+-	 * Note the rfc defines rd_maxcount as the size of the
+-	 * READDIR4resok structure, which includes the verifier above
+-	 * and the 8 bytes encoded at the end of this function:
++	 * The RFC defines rd_maxcount as the size of the
++	 * READDIR4resok structure, which includes the verifier
++	 * and the 8 bytes encoded at the end of this function.
+ 	 */
+-	if (maxcount < 16) {
+-		nfserr = nfserr_toosmall;
+-		goto err_no_verf;
+-	}
+-	maxcount = min_t(int, maxcount-16, bytes_left);
++	if (maxcount < XDR_UNIT * 4)
++		return nfserr_toosmall;
++	maxcount = min_t(int, maxcount - XDR_UNIT * 4, bytes_left);
+ 
+-	/* RFC 3530 14.2.24 allows us to ignore dircount when it's 0: */
++	/* RFC 3530 14.2.24 allows us to ignore dircount when it's 0 */
+ 	if (!readdir->rd_dircount)
+-		readdir->rd_dircount = svc_max_payload(resp->rqstp);
++		readdir->rd_dircount = max_payload;
+ 
++	/* *entries */
+ 	readdir->xdr = xdr;
+ 	readdir->rd_maxcount = maxcount;
+ 	readdir->common.err = 0;
+ 	readdir->cookie_offset = 0;
+-
+ 	offset = readdir->rd_cookie;
+-	nfserr = nfsd_readdir(readdir->rd_rqstp, readdir->rd_fhp, &offset,
++	status = nfsd_readdir(readdir->rd_rqstp, readdir->rd_fhp, &offset,
+ 			      &readdir->common, nfsd4_encode_entry4);
+-	if (nfserr == nfs_ok &&
+-	    readdir->common.err == nfserr_toosmall &&
+-	    xdr->buf->len == starting_len + 8) {
+-		/* nothing encoded; which limit did we hit?: */
+-		if (maxcount - 16 < bytes_left)
+-			/* It was the fault of rd_maxcount: */
+-			nfserr = nfserr_toosmall;
+-		else
+-			/* We ran out of buffer space: */
+-			nfserr = nfserr_resource;
++	if (status)
++		return status;
++	if (readdir->common.err == nfserr_toosmall &&
++	    xdr->buf->len == starting_len) {
++		/* No entries were encoded. Which limit did we hit? */
++		if (maxcount - XDR_UNIT * 4 < bytes_left)
++			/* It was the fault of rd_maxcount */
++			return nfserr_toosmall;
++		/* We ran out of buffer space */
++		return nfserr_resource;
+ 	}
+-	if (nfserr)
+-		goto err_no_verf;
+-
+ 	/* Encode the final entry's cookie value */
+ 	nfsd4_encode_entry4_nfs_cookie4(readdir, offset);
++	/* No entries follow */
++	if (xdr_stream_encode_item_absent(xdr) != XDR_UNIT)
++		return nfserr_resource;
+ 
+-	p = xdr_reserve_space(xdr, 8);
+-	if (!p) {
+-		WARN_ON_ONCE(1);
+-		goto err_no_verf;
+-	}
+-	*p++ = 0;	/* no more entries */
+-	*p++ = htonl(readdir->common.err == nfserr_eof);
++	/* eof */
++	return nfsd4_encode_bool(xdr, readdir->common.err == nfserr_eof);
++}
+ 
+-	return 0;
+-err_no_verf:
+-	xdr_truncate_encode(xdr, starting_len);
++static __be32
++nfsd4_encode_readdir(struct nfsd4_compoundres *resp, __be32 nfserr,
++		     union nfsd4_op_u *u)
++{
++	struct nfsd4_readdir *readdir = &u->readdir;
++	struct xdr_stream *xdr = resp->xdr;
++	int starting_len = xdr->buf->len;
++
++	/* cookieverf */
++	nfserr = nfsd4_encode_verifier4(xdr, &readdir->rd_verf);
++	if (nfserr != nfs_ok)
++		return nfserr;
++
++	/* reply */
++	nfserr = nfsd4_encode_dirlist4(xdr, readdir, svc_max_payload(resp->rqstp));
++	if (nfserr != nfs_ok)
++		xdr_truncate_encode(xdr, starting_len);
+ 	return nfserr;
+ }
+ 
 
 
