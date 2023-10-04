@@ -2,86 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4A3C7B75CA
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 02:24:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 298F87B791E
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 09:54:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239212AbjJDAYW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 Oct 2023 20:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48758 "EHLO
+        id S241515AbjJDHyJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Oct 2023 03:54:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239117AbjJDAYU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 Oct 2023 20:24:20 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FA21B4
-        for <linux-nfs@vger.kernel.org>; Tue,  3 Oct 2023 17:24:17 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60D6BC433C9;
-        Wed,  4 Oct 2023 00:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696379056;
-        bh=2plxz5SQQWtyDsNuzZaxJwb6zktWu0J8CUTGSOkbtDs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RPV8usbpRHhtbtaLn4K3PRJZiI8GwSp7EOi6vhp842wHdZdujbyEQip/lGayR/HlL
-         XpQpupXKjAf+Lo5yPkf+56u9hJ/qcY5Kb6tLLNwNJpjWPpThnmimxCMfvRzoDSbXdP
-         YCc5hF9mmT7y9Au4JprUJHYQeCrDC9K7bAvQj9yjsTZQbYZ/CXykVjamxAlbYy743N
-         d4+UJWIBdcxyEZ9SvylMr1mmijL5mzn0k+k37hZ/46xMy07NqCv/2fYTjOfDixR9Q/
-         WNvZpa7HUJ74wRe4r3cC08L8VvQyRS2XUullVy2TYFr3ECujtp0cbuxhO3bpWHVkTL
-         PvTkwy2xYf6sA==
-Date:   Tue, 3 Oct 2023 17:24:15 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH v8 1/3] Documentation: netlink: add a YAML spec for
- nfsd_server
-Message-ID: <20231003172415.13c44667@kernel.org>
-In-Reply-To: <8631D22A-8050-4403-B03E-06F33C709184@oracle.com>
-References: <cover.1694436263.git.lorenzo@kernel.org>
-        <47c144cfa1859ab089527e67c8540eb920427c64.1694436263.git.lorenzo@kernel.org>
-        <20231003105540.75a3e652@kernel.org>
-        <F39762FD-DFE3-4F17-9947-48A0EF67B07F@oracle.com>
-        <20231003120259.39c6609a@kernel.org>
-        <8631D22A-8050-4403-B03E-06F33C709184@oracle.com>
+        with ESMTP id S241516AbjJDHyJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Oct 2023 03:54:09 -0400
+X-Greylist: delayed 486 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 04 Oct 2023 00:54:06 PDT
+Received: from mail.citycodes.pl (mail.citycodes.pl [158.255.215.195])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570ECAF
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 00:54:06 -0700 (PDT)
+Received: by mail.citycodes.pl (Postfix, from userid 1001)
+        id E04821F5BC; Wed,  4 Oct 2023 09:45:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=citycodes.pl; s=mail;
+        t=1696405558; bh=mMhfBvhM53FtUQl1P3lyeSY5aDBQYiR8qQBy6YFQHi0=;
+        h=Date:From:To:Subject:From;
+        b=TVNax0m5t0gVKYrSlwSmn3C9XxNdqcQpbhaDs5XR0/8ozeoR2fX8qwAZHrS3Z5C6D
+         85NGbm8O7HHOHBF4KYtrJCFGkV4IfwS5Z/9nFk0Uv8J5eJFD0NFgyEuBPeZX8yNVnA
+         2jK8Ng455A4pXpMo7kZaJyPavR9MFyidV7v1yR4GZJWr6H/GWw6o3BjiqtAaB5T5VY
+         JLMoxcOZqxE5XDEOJBYImrJmgE6G8eQXzDVe1Vc5uPNiZYsMEkaznorpGADf7Y1e6M
+         gRzYUu/cBHLDJ7Pf28x6jUuB0e8KwHBJH6hvJRZIPOESNL88Lb/xOHRulq9Rzlkk0I
+         hBRYjiyAMTDBQ==
+Received: by mail.citycodes.pl for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 07:45:38 GMT
+Message-ID: <20231004084500-0.1.7v.j13c.0.56esil3mvn@citycodes.pl>
+Date:   Wed,  4 Oct 2023 07:45:38 GMT
+From:   "Kamil Lasek" <kamil.lasek@citycodes.pl>
+To:     <linux-nfs@vger.kernel.org>
+Subject: =?UTF-8?Q?Rozszerzenie_Programu_M=C3=B3j_Pr=C4=85d_5.0?=
+X-Mailer: mail.citycodes.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 3 Oct 2023 23:00:09 +0000 Chuck Lever III wrote:
-> To ensure that I understand you correctly:
-> 
-> diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
-> index 403d3e3a04f3..f6a9f3da6291 100644
-> --- a/Documentation/netlink/specs/nfsd.yaml
-> +++ b/Documentation/netlink/specs/nfsd.yaml
-> @@ -72,3 +72,19 @@ operations:
->        dump:
->          pre: nfsd-nl-rpc-status-get-start
->          post: nfsd-nl-rpc-status-get-done
-> +        reply:
-> +          attributes:
-> +            - xid
-> +            - flags
-> +            - prog
-> +            - version
-> +            - proc
-> +            - service_time
-> +            - pad
-> +            - saddr4
-> +            - daddr4
-> +            - saddr6
-> +            - daddr6
-> +            - sport
-> +            - dport
-> +            - compound-ops
+Szanowni Pa=C5=84stwo!
 
-Yup! (the pad can be skipped since it's not rendered, anyway).
+W ramach nowej edycji programu M=C3=B3j Pr=C4=85d mog=C4=85 otrzyma=C4=87=
+ Pa=C5=84stwo dofinansowanie na zakup i monta=C5=BC fotowoltaiki i/lub ma=
+gazynu energii. Maksymalna kwota dofinansowania wynosi 58 tys. z=C5=82.=20
+
+Jako firma wyspecjalizowana w tym zakresie zajmiemy si=C4=99 Pa=C5=84stwa=
+ wnioskiem o dofinansowanie oraz instalacj=C4=85 i serwisem dopasowanych =
+do Pa=C5=84stwa budynku paneli s=C5=82onecznych.
+
+B=C4=99d=C4=99 wdzi=C4=99czny za informacj=C4=99 czy s=C4=85 Pa=C5=84stwo=
+ zainteresowani.
+
+
+Pozdrawiam,
+Kamil Lasek
