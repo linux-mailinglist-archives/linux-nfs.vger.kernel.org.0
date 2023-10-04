@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47C117B86A0
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 19:32:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85B9D7B869F
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 19:32:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243438AbjJDRcv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Oct 2023 13:32:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46682 "EHLO
+        id S243549AbjJDRcu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Oct 2023 13:32:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243498AbjJDRcu (ORCPT
+        with ESMTP id S243438AbjJDRcu (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Oct 2023 13:32:50 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2950A9
-        for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 10:32:45 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-35264dff796so136885ab.0
-        for <linux-nfs@vger.kernel.org>; Wed, 04 Oct 2023 10:32:45 -0700 (PDT)
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD5C59E
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 10:32:46 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id e9e14a558f8ab-35291dbf7efso104195ab.1
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Oct 2023 10:32:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1696440765; x=1697045565; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1696440766; x=1697045566; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2vtD2wllK/RrJHf1gxhgLPe7cHGISOLeuFKmzdk1jsI=;
-        b=GPOeQARu/5CgaEuCHDGme+X9MN0xXwusofyUjupHdbvIZXf2oUVGVaA7hzCLK5AtVx
-         sdzb7PAN6qeWtgH+8ds5cHxBsvdtJDjSRP5+cPIyPpu6Xo3VofFHHS4raJlj9kziCeLr
-         G2e8qRTcD2X5FeLziRXfpO7FjIGZqWpTyV4p392HHQFlRA6cxOrV5oQtYI3f7jwPqp/b
-         AEP3HCbk1rCtPrbut5NjO0ZbGgTFJjP7QaxzgdIkFNILix8zK7A5m0JBnclng0mtFHZm
-         Hig5xV/WiGfEl8kZKWQjZmODPSLFgGM9SqNA84yW4AYB34pIyM6yzgTf+PVGNWGZdaXl
-         HpWg==
+        bh=bl8UvEFzSDdHBI7XcST/rpUAGk6LYVE5cYQ1boOklMo=;
+        b=FK1aAJKSYx949TeDa861to6cxdb+OCBuIg5H8ZZ6OZz3abfaqb6LRD81aozHnfVuoI
+         KB6g05V6iAPXFrzQ2ES0+sUITVqqjZRgqtHsC6AQ7t/iPrpR92sejT1zqhS8TNaIVlcO
+         WeNQydW8Axj3n2u0tWjf0Owcj3z1kWXpk3ccdosrDjZp5pHbZPYwrEwPbPmvOvAai233
+         4BLeu4Up1d9LbPEQsDlZ8JjqYHV/a5vY+VRej4Z6si7FbMY+FqHYgXZhFhSTtPvnAorC
+         O7P2RaQpYU+MwJAbJattx+aTlkPOt1MV75ayWz73UO1EWTFMxajpSuBK88VJDvAvbK32
+         nFrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696440765; x=1697045565;
+        d=1e100.net; s=20230601; t=1696440766; x=1697045566;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=2vtD2wllK/RrJHf1gxhgLPe7cHGISOLeuFKmzdk1jsI=;
-        b=beyXW70flMRLdEkypaEJ0HLcXwWUzy4WerCsdxQ+Of3zzyjK45K0agXWWD0cY5/s5E
-         Pc+t9f/tzXPa+iMfLMeBMmHfEhphkrFXnRGAn53/RroHld39wPk4HcMRIQwoxg28gxtn
-         sidqVL/4YbrnPbxkky4rsARTzFIx0IYpQsYdNxtJ1v/a0FBfl48IshlfFk95GiVOjHrn
-         iIIYUaahFdAKX1LCyrboDCK61KM5U1HNw20RF1bVLWSE7En9ZPSuZje9Q2sGIFF7Arut
-         0DYUGuRpLemG2XN/AtXqHigCeZ6a4Ab7mBITUAvTjZipdrEROa4i/eeYgXx4sRbo4o2n
-         KGxA==
-X-Gm-Message-State: AOJu0YyKurBmK4jBUrynijiwLf81UvuvU+Uhh18I4bK0MyziQt9oZ3Q8
-        /WeZa5qShMulVMyCfcfSd2LhRu1dZrI=
-X-Google-Smtp-Source: AGHT+IHyVE34PTrKSzvE6KZQMrN7H3m4/bjIP6EanDB+ihsyk9C2koyFKEPIau8trGapZvzeWxvoOQ==
-X-Received: by 2002:a05:6602:2e03:b0:792:6068:dcc8 with SMTP id o3-20020a0566022e0300b007926068dcc8mr3851138iow.2.1696440764919;
-        Wed, 04 Oct 2023 10:32:44 -0700 (PDT)
+        bh=bl8UvEFzSDdHBI7XcST/rpUAGk6LYVE5cYQ1boOklMo=;
+        b=vzWD16V3NnNMKeeagE6Ogd9KEfxwmeYylrRZ/jT7DvCrrTNsVOqkPNpHZdsvnwPTxS
+         oWK62S/DovIarUnqhp5izKTtIrAFO6RSXi0Y6k+JAmx8AOUAckpV5TKVgjWfYpbRjD6/
+         9V/0RJQAtbdmCySpKqUWB5ISsIGjVIcb/K+/yZfCMJYxjd0ih4urJWD9UReB2BLs4GxM
+         H/EeVWnT2n0APi25raQWahmepMmabTtEUfA2IKF3bwxkzGoEKnCVbuu4ku2pzF43/3Pu
+         R90xdZqcI3jDLFlFyYg5Ur4/FiATjzVkv18NxraVEXA/RC8SmXgNT7ddt2gNAj1H137R
+         5jYg==
+X-Gm-Message-State: AOJu0Yz/muD2J+5sG4uV5W+qsCgt7U+3om6L18E1iAcH8jiXMWyqqYbQ
+        /rztRsdNgpTKiDpKQs2jNCD23dnGv/k=
+X-Google-Smtp-Source: AGHT+IHqk+uQNzKhXIsE0W+4/5gMBWdFLKxHs5OQWd4bAUcdq4YguCx16H7jDIga7/3LXF2lN8xWyA==
+X-Received: by 2002:a05:6602:2e03:b0:792:6068:dcc8 with SMTP id o3-20020a0566022e0300b007926068dcc8mr3851227iow.2.1696440766063;
+        Wed, 04 Oct 2023 10:32:46 -0700 (PDT)
 Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:d99c:94dd:ccd6:fb22])
-        by smtp.gmail.com with ESMTPSA id u23-20020a6be417000000b007870289f4fdsm1066598iog.51.2023.10.04.10.32.43
+        by smtp.gmail.com with ESMTPSA id u23-20020a6be417000000b007870289f4fdsm1066598iog.51.2023.10.04.10.32.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Oct 2023 10:32:44 -0700 (PDT)
+        Wed, 04 Oct 2023 10:32:45 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     steved@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/3] nfs-utils: gssd: enable forcing cred renewal using the keytab
-Date:   Wed,  4 Oct 2023 13:32:37 -0400
-Message-Id: <20231004173240.46924-3-olga.kornievskaia@gmail.com>
+Subject: [PATCH 1/1] gssd: fix handling DNS lookup failure
+Date:   Wed,  4 Oct 2023 13:32:38 -0400
+Message-Id: <20231004173240.46924-4-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20231004173240.46924-1-olga.kornievskaia@gmail.com>
 References: <20231004173240.46924-1-olga.kornievskaia@gmail.com>
@@ -72,122 +72,113 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Add a new function parameter "force_renewal" that callers could
-set to force service ticket renewal even if one exists already.
+When the kernel does its first ever lookup for a given server ip it
+sends down info for server, protocol, etc. On the gssd side as it
+scans the pipefs structure and sees a new entry it reads that info
+and creates a clp_info structure. At that time it also does
+a DNS lookup of the provided ip to name using getnameinfo(),
+this is saved in clp->servername for all other upcalls that is
+down under that directory.
 
-This is needed in preparation for handling
-KRB5_AP_ERR_BAD_INTEGRITY when service's keytab changes while
-the client holds valid service ticket in the cache.
+IF this 1st getnameinfo() results in a failed resolution for
+whatever reason (a temporary DNS resolution problem), this cause
+of all other future upcalls to fail.
+
+As a fix, this patch proposed to (1) save the server info that's
+passed only in the initial pipefs new entry creation in the
+clp_info structure, then (2) for the upcalls, if clp->servername
+is NULL, then do the DNS lookup again and set all the needed
+clp_info fields upon successful resolution.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- utils/gssd/gssd_proc.c |  2 +-
- utils/gssd/krb5_util.c | 20 ++++++++++++--------
- utils/gssd/krb5_util.h |  3 ++-
- 3 files changed, 15 insertions(+), 10 deletions(-)
+ utils/gssd/gssd.c | 41 +++++++++++++++++++++++++++++++++++++++++
+ utils/gssd/gssd.h |  6 ++++++
+ 2 files changed, 47 insertions(+)
 
-diff --git a/utils/gssd/gssd_proc.c b/utils/gssd/gssd_proc.c
-index ae568f15..4fb6b72d 100644
---- a/utils/gssd/gssd_proc.c
-+++ b/utils/gssd/gssd_proc.c
-@@ -571,7 +571,7 @@ krb5_use_machine_creds(struct clnt_info *clp, uid_t uid,
+diff --git a/utils/gssd/gssd.c b/utils/gssd/gssd.c
+index 833d8e01..ca9b3267 100644
+--- a/utils/gssd/gssd.c
++++ b/utils/gssd/gssd.c
+@@ -365,6 +365,12 @@ gssd_read_service_info(int dirfd, struct clnt_info *clp)
  
- 	do {
- 		gssd_refresh_krb5_machine_credential(clp->servername,
--						     service, srchost);
-+						     service, srchost, 0);
- 	/*
- 	 * Get a list of credential cache names and try each
- 	 * of them until one works or we've tried them all
-diff --git a/utils/gssd/krb5_util.c b/utils/gssd/krb5_util.c
-index e3f270e9..f6ce1fec 100644
---- a/utils/gssd/krb5_util.c
-+++ b/utils/gssd/krb5_util.c
-@@ -165,7 +165,7 @@ static int select_krb5_ccache(const struct dirent *d);
- static int gssd_find_existing_krb5_ccache(uid_t uid, char *dirname,
- 		const char **cctype, struct dirent **d);
- static int gssd_get_single_krb5_cred(krb5_context context,
--		krb5_keytab kt, struct gssd_k5_kt_princ *ple);
-+		krb5_keytab kt, struct gssd_k5_kt_princ *ple, int force_renew);
- static int query_krb5_ccache(const char* cred_cache, char **ret_princname,
- 		char **ret_realm);
- 
-@@ -391,7 +391,8 @@ gssd_check_if_cc_exists(struct gssd_k5_kt_princ *ple)
- static int
- gssd_get_single_krb5_cred(krb5_context context,
- 			  krb5_keytab kt,
--			  struct gssd_k5_kt_princ *ple)
-+			  struct gssd_k5_kt_princ *ple,
-+			  int force_renew)
- {
- #ifdef HAVE_KRB5_GET_INIT_CREDS_OPT_SET_ADDRESSLESS
- 	krb5_get_init_creds_opt *init_opts = NULL;
-@@ -421,7 +422,7 @@ gssd_get_single_krb5_cred(krb5_context context,
- 	 */
- 	now += 300;
- 	pthread_mutex_lock(&ple_lock);
--	if (ple->ccname && ple->endtime > now && !nocache) {
-+	if (ple->ccname && ple->endtime > now && !nocache && !force_renew) {
- 		printerr(3, "%s(0x%lx): Credentials in CC '%s' are good until %s",
- 			 __func__, tid, ple->ccname, ctime((time_t *)&ple->endtime));
- 		code = 0;
-@@ -1155,7 +1156,8 @@ err_cache:
- static int
- gssd_refresh_krb5_machine_credential_internal(char *hostname,
- 				     struct gssd_k5_kt_princ *ple,
--				     char *service, char *srchost)
-+				     char *service, char *srchost,
-+				     int force_renew)
- {
- 	krb5_error_code code = 0;
- 	krb5_context context;
-@@ -1221,7 +1223,7 @@ gssd_refresh_krb5_machine_credential_internal(char *hostname,
- 			goto out_free_kt;
- 		}
- 	}
--	retval = gssd_get_single_krb5_cred(context, kt, ple);
-+	retval = gssd_get_single_krb5_cred(context, kt, ple, force_renew);
- out_free_kt:
- 	krb5_kt_close(context, kt);
- out_free_context:
-@@ -1344,7 +1346,7 @@ gssd_get_krb5_machine_cred_list(char ***list)
- 		pthread_mutex_unlock(&ple_lock);
- 		/* Make sure cred is up-to-date before returning it */
- 		retval = gssd_refresh_krb5_machine_credential_internal(NULL, ple,
--								       NULL, NULL);
-+								       NULL, NULL, 0);
- 		pthread_mutex_lock(&ple_lock);
- 		if (gssd_k5_kt_princ_list == NULL) {
- 			/* Looks like we did shutdown... abort */
-@@ -1456,10 +1458,12 @@ gssd_destroy_krb5_principals(int destroy_machine_creds)
-  */
- int
- gssd_refresh_krb5_machine_credential(char *hostname,
--				     char *service, char *srchost)
-+				     char *service, char *srchost,
-+				     int force_renew)
- {
-     return gssd_refresh_krb5_machine_credential_internal(hostname, NULL,
--							 service, srchost);
-+							 service, srchost,
-+							 force_renew);
+ fail:
+ 	printerr(0, "ERROR: failed to parse %s/info\n", clp->relpath);
++	clp->upcall_address = strdup(address);
++	clp->upcall_port = strdup(port);
++	clp->upcall_program = program;
++	clp->upcall_vers = version;
++	clp->upcall_protoname = strdup(protoname);
++	clp->upcall_service = strdup(service);
+ 	free(servername);
+ 	free(protoname);
+ 	clp->servicename = NULL;
+@@ -408,6 +414,16 @@ gssd_free_client(struct clnt_info *clp)
+ 	free(clp->servicename);
+ 	free(clp->servername);
+ 	free(clp->protocol);
++	if (!clp->servername) {
++		if (clp->upcall_address)
++			free(clp->upcall_address);
++		if (clp->upcall_port)
++			free(clp->upcall_port);
++		if (clp->upcall_protoname)
++			free(clp->upcall_protoname);
++		if (clp->upcall_service)
++			free(clp->upcall_service);
++	}
+ 	free(clp);
  }
  
- /*
-diff --git a/utils/gssd/krb5_util.h b/utils/gssd/krb5_util.h
-index 2415205a..62c91a0e 100644
---- a/utils/gssd/krb5_util.h
-+++ b/utils/gssd/krb5_util.h
-@@ -16,7 +16,8 @@ int  gssd_get_krb5_machine_cred_list(char ***list);
- void gssd_free_krb5_machine_cred_list(char **list);
- void gssd_destroy_krb5_principals(int destroy_machine_creds);
- int  gssd_refresh_krb5_machine_credential(char *hostname,
--					  char *service, char *srchost);
-+					  char *service, char *srchost,
-+					  int force_renew);
- char *gssd_k5_err_msg(krb5_context context, krb5_error_code code);
- void gssd_k5_get_default_realm(char **def_realm);
+@@ -446,6 +462,31 @@ gssd_clnt_gssd_cb(int UNUSED(fd), short UNUSED(which), void *data)
+ {
+ 	struct clnt_info *clp = data;
  
++	/* if there was a failure to translate IP to name for this server,
++	 * try again
++	 */
++	if (!clp->servername) {
++	        if (!gssd_addrstr_to_sockaddr((struct sockaddr *)&clp->addr,
++                                 clp->upcall_address, clp->upcall_port ?
++				 clp->upcall_port : "")) {
++			goto do_upcall;
++		}
++		clp->servername = gssd_get_servername(clp->upcall_address,
++				(struct sockaddr *)&clp->addr, clp->upcall_address);
++		if (!clp->servername)
++			goto do_upcall;
++
++		if (asprintf(&clp->servicename, "%s@%s", clp->upcall_service,
++					clp->servername) < 0) {
++			free(clp->servername);
++			clp->servername = NULL;
++			goto do_upcall;
++		}
++		clp->prog = clp->upcall_program;
++		clp->vers = clp->upcall_vers;
++		clp->protocol = strdup(clp->upcall_protoname);
++	}
++do_upcall:
+ 	handle_gssd_upcall(clp);
+ }
+ 
+diff --git a/utils/gssd/gssd.h b/utils/gssd/gssd.h
+index 519dc431..4e070ed6 100644
+--- a/utils/gssd/gssd.h
++++ b/utils/gssd/gssd.h
+@@ -86,6 +86,12 @@ struct clnt_info {
+ 	int			gssd_fd;
+ 	struct event		*gssd_ev;
+ 	struct			sockaddr_storage addr;
++	char			*upcall_address;
++	char			*upcall_port;
++	int			upcall_program;
++	int			upcall_vers;
++	char			*upcall_protoname;
++	char			*upcall_service;
+ };
+ 
+ struct clnt_upcall_info {
 -- 
 2.39.1
 
