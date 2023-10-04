@@ -2,75 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F67C7B8CDC
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 21:21:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA1497B8BE8
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 Oct 2023 20:56:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245406AbjJDTIR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 Oct 2023 15:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
+        id S244799AbjJDSyp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 Oct 2023 14:54:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245402AbjJDTHo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Oct 2023 15:07:44 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24E4A1FF7;
-        Wed,  4 Oct 2023 11:55:27 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2DFAC433C7;
-        Wed,  4 Oct 2023 18:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696445726;
-        bh=n26ifruBeSupq+s8VbXmEVZ3lXfdrda3ueK60gXr4l0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FnESdMYEgrhZH/Almr6hVPT2D1Y98Eg1F6ZKbQWwtmrxCM5IbA7uJn1QExRntQ/P0
-         G9h7myryxeaizxYalsCBYgujn0WIpTw/OINL1z3VDKzaIxevvF3gtRF2oPzdT8l6HJ
-         tkZGwPFD80GYnBN5dPrzeijaeUY1ApsADEYTl2ODNEnlTRVUhGCqhQaJMIIkRHRp3j
-         4W4ueSWil/CVMUfUJD3ijzoLZuXOCuPRPQI1MwDdvmuB0bw1wjMginzccTDfIWerj3
-         304/17y5qcgV0iZ0HBCljj/rKxlHHW+qsacX/5QHApITia8gigeaixxZW+MKo32QGO
-         yydDcmb/0rRPg==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH v2 83/89] sunrpc: convert to new timestamp accessors
-Date:   Wed,  4 Oct 2023 14:53:08 -0400
-Message-ID: <20231004185347.80880-81-jlayton@kernel.org>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20231004185347.80880-1-jlayton@kernel.org>
-References: <20231004185221.80802-1-jlayton@kernel.org>
- <20231004185347.80880-1-jlayton@kernel.org>
+        with ESMTP id S244618AbjJDSye (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 Oct 2023 14:54:34 -0400
+Received: from mail-lj1-x235.google.com (mail-lj1-x235.google.com [IPv6:2a00:1450:4864:20::235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2601B8
+        for <linux-nfs@vger.kernel.org>; Wed,  4 Oct 2023 11:53:58 -0700 (PDT)
+Received: by mail-lj1-x235.google.com with SMTP id 38308e7fff4ca-2c29d23bee2so263661fa.0
+        for <linux-nfs@vger.kernel.org>; Wed, 04 Oct 2023 11:53:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1696445636; x=1697050436; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0KzDJRS7KxkkZ6Oh0+MnmsXHFeSbYVpjE5bfzb8MwZM=;
+        b=Ws4qCUkDzsKhsOn+heD62DOk+zU6uH2oy9wkshi+mlDUHsfnDtnXPlzXrojsH8zFlb
+         dCf8QESSowRixpMsMkYTxDr8Nh9S+83WJDGy0/1MPG8girIF58TT0KnwtLnhM4flQ8Lf
+         AESVHr4Cen7GR9fS51XrjldqKP6MBS0PDw0t4rwY1rv7A9mSIOOnMsD1gAW8yJb1r1ne
+         ArByjJJ6JboBXCgWPhLHkpWFFn8TPwDn/svKvooMRki7k7w+69H2HFhfb7fHGcpJIyPZ
+         2Gpoc90EunM+8ncdocZtVw4SFjMAGJbKuYNMkNXqisOm0uY3C9GBgdcqZSKMXfr/0sL4
+         6l8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696445636; x=1697050436;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0KzDJRS7KxkkZ6Oh0+MnmsXHFeSbYVpjE5bfzb8MwZM=;
+        b=eXJRBoQUVWGlIXfE4eA6sDLjuE1G6Qfxu+9JvCh/OjtbNIfmNzLrfu4CPBJAXix1S2
+         lOLLhJ4AVi5COwJqJOwWuSo0EcIypow1zXFqZj+PkArwUBCqJnIeVVWhfqCQZV3xmu08
+         OtZMhrznbnP7zUP5SLMWxaDdZ8fW/jIW8luKN9TBp2RP2P9K47YAMzXMoS73AtzvM1/Q
+         /ND/zcKENozfqmiYbMR3N8jw7mhAn8Vf1SCzsj7lWNnZq7QvEb0q8aGJT6VXzZfd7Vqw
+         ezK9YFMf//KbDpMnaJFahSnLrmCtUhhh1P8CKurZv3RhxuBO3yzf9/hUQcr7Wl6NTnbT
+         4fkg==
+X-Gm-Message-State: AOJu0YztzJfy0K0WRJm3QpKcCrxZ3rNsz9aCU9jppH+MCHxqjRuXmqIM
+        ajXfdY1rkGyK3/VtxbhkHRrmDaTwx2pJ8UdsbnA2Geg1
+X-Google-Smtp-Source: AGHT+IHxMII9E+vZVP07wA14i9ESof8uSHDbdaJohu/0MosOxS8pMOVqtNoNcLxfcQzjOIemgvPAy+EsTmvPTMpcL94=
+X-Received: by 2002:a2e:b53a:0:b0:2bc:e36a:9e32 with SMTP id
+ z26-20020a2eb53a000000b002bce36a9e32mr2723977ljm.5.1696445636362; Wed, 04 Oct
+ 2023 11:53:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <93929ecf62e79670f1e3a1878757fc9fa443aa7c.1688210094.git.bcodding@redhat.com>
+In-Reply-To: <93929ecf62e79670f1e3a1878757fc9fa443aa7c.1688210094.git.bcodding@redhat.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Wed, 4 Oct 2023 14:53:44 -0400
+Message-ID: <CAN-5tyGf6txJpoJBSzEh75BgZAQ1f4TbZF10Dw25GjeE4Pz=7w@mail.gmail.com>
+Subject: Re: [PATCH v3] NFSv4: Fix dropped lock for racing OPEN and delegation return
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     trond.myklebust@hammerspace.com, anna@kernel.org,
+        Olga.Kornievskaia@netapp.com, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Convert to using the new inode timestamp accessor functions.
+Hi Trond/Ben,
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- net/sunrpc/rpc_pipe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Did this ever go to stable? I don't know if I missed a mail from Greg
+that it was picked up or it never got picked up because it wasn't
+marked for stable?
 
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index f420d8457345..dcc2b4f49e77 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -472,7 +472,7 @@ rpc_get_inode(struct super_block *sb, umode_t mode)
- 		return NULL;
- 	inode->i_ino = get_next_ino();
- 	inode->i_mode = mode;
--	inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
-+	simple_inode_init_ts(inode);
- 	switch (mode & S_IFMT) {
- 	case S_IFDIR:
- 		inode->i_fop = &simple_dir_operations;
--- 
-2.41.0
+Thank you.
 
+On Sat, Jul 1, 2023 at 8:13=E2=80=AFAM Benjamin Coddington <bcodding@redhat=
+.com> wrote:
+>
+> Commmit f5ea16137a3f ("NFSv4: Retry LOCK on OLD_STATEID during delegation
+> return") attempted to solve this problem by using nfs4's generic async er=
+ror
+> handling, but introduced a regression where v4.0 lock recovery would hang=
+.
+> The additional complexity introduced by overloading that error handling i=
+s
+> not necessary for this case.  This patch expects that commit to be
+> reverted.
+>
+> The problem as originally explained in the above commit is:
+>
+>     There's a small window where a LOCK sent during a delegation return c=
+an
+>     race with another OPEN on client, but the open stateid has not yet be=
+en
+>     updated.  In this case, the client doesn't handle the OLD_STATEID err=
+or
+>     from the server and will lose this lock, emitting:
+>     "NFS: nfs4_handle_delegation_recall_error: unhandled error -10024".
+>
+> Fix this by using the old_stateid refresh helpers if the server replies
+> with OLD_STATEID.
+>
+> Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> ---
+>  fs/nfs/nfs4proc.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 6bb14f6cfbc0..f350f41e1967 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -7180,8 +7180,15 @@ static void nfs4_lock_done(struct rpc_task *task, =
+void *calldata)
+>                 } else if (!nfs4_update_lock_stateid(lsp, &data->res.stat=
+eid))
+>                         goto out_restart;
+>                 break;
+> -       case -NFS4ERR_BAD_STATEID:
+>         case -NFS4ERR_OLD_STATEID:
+> +               if (data->arg.new_lock_owner !=3D 0 &&
+> +                       nfs4_refresh_open_old_stateid(&data->arg.open_sta=
+teid,
+> +                                       lsp->ls_state))
+> +                       goto out_restart;
+> +               else if (nfs4_refresh_lock_old_stateid(&data->arg.lock_st=
+ateid, lsp))
+> +                       goto out_restart;
+> +               fallthrough;
+> +       case -NFS4ERR_BAD_STATEID:
+>         case -NFS4ERR_STALE_STATEID:
+>         case -NFS4ERR_EXPIRED:
+>                 if (data->arg.new_lock_owner !=3D 0) {
+> --
+> 2.40.1
+>
