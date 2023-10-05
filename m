@@ -2,131 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AAC77BA9EF
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Oct 2023 21:21:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E19947BAB8C
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Oct 2023 22:40:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230317AbjJETVK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Oct 2023 15:21:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32858 "EHLO
+        id S229852AbjJEUkS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Oct 2023 16:40:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbjJETVJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Oct 2023 15:21:09 -0400
-Received: from mail-ua1-x932.google.com (mail-ua1-x932.google.com [IPv6:2607:f8b0:4864:20::932])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AADA8E7
-        for <linux-nfs@vger.kernel.org>; Thu,  5 Oct 2023 12:21:07 -0700 (PDT)
-Received: by mail-ua1-x932.google.com with SMTP id a1e0cc1a2514c-7b07719089aso880190241.0
-        for <linux-nfs@vger.kernel.org>; Thu, 05 Oct 2023 12:21:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1696533667; x=1697138467; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V3YAwa7B2OJPRUP59nwxn3A11jwk1jGLcSNDbqpCUEs=;
-        b=I1tuKsyYs8KLTCBbO4XyPQD4vMYyicmH4C2pUL5fy9jhjOafmCKS8+sCGScEMItApK
-         Lvp9GFIMpce5ZLEN1gEMVDTta2pLi8OToRgguuIS74ZMZQTwxA8jP/r3gs9QvdzU2gjN
-         7uKt8otiw7vbK7e4ChAZH5MYKTmNXBq01j+R3ZowgBLXKvUAYJg1NVPRsQqT+0nLw7YS
-         oKcnxe5pZlPQsOTIzATCDelznHj57UJavzTLLMBto0Ik+rNIiVApVUKysFz+t5U9zm21
-         PcB2UeSDZrW1Rh5hN9/O4DxIYl5CUooWecyEQh/iKFShYjX8U/w4iE9DmVEyiOkYg3pd
-         hupA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1696533667; x=1697138467;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V3YAwa7B2OJPRUP59nwxn3A11jwk1jGLcSNDbqpCUEs=;
-        b=DFTsGS3JNfur9zmRJ+hHhC4qT3jVeoo9YgBdsy/LIR2v05ccou61Xp86hMfW4brU1v
-         ItA7DNused0a9cOUVO8LTi8fyL+yu4cMsf3NIeuFq+zoh9D0bUoTWVrFT9riahiRUrZr
-         DQcT/nw+AA2i83AV2gFTFQsW108kiruXJ/hgwfkBv/89fRRKapGcIE+Rq5cVsVp6KDBu
-         2VdyhRrU6T5Q17Ved3bJV69Z9R8HHaZiLGm5tmRtPIaB6PNMxkedS/oYJ9GfYqVX+tge
-         QTfFr2Es+BjsktQQD24BOtYQSltLBRSqnjyBlCv8QaPYnVZEiEqPAVOPxiHvkkxNgl32
-         Dgug==
-X-Gm-Message-State: AOJu0YxmwTOugifaYW1jO469ft11tWB1ki6vHdRs5Dz2kydLr+1WeW8v
-        wlq/gqR4x6mT9+8pgy8KXo0k9VvkJXkokIqcW+aPZA==
-X-Google-Smtp-Source: AGHT+IFhEXUCf6hg0p0VkgiUHPuy9O4n5JiWEsbvC4N0pJ6GZCevj6BKaE5f4ZMr3qR2O1q/atILq+7gURY5Qemu1P4=
-X-Received: by 2002:a05:6122:4201:b0:49a:b587:ab79 with SMTP id
- cm1-20020a056122420100b0049ab587ab79mr1292189vkb.8.1696533666626; Thu, 05 Oct
- 2023 12:21:06 -0700 (PDT)
+        with ESMTP id S229687AbjJEUkR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Oct 2023 16:40:17 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2791B95;
+        Thu,  5 Oct 2023 13:40:16 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACBEDC433CB;
+        Thu,  5 Oct 2023 20:40:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1696538415;
+        bh=mW1UI3u88BsWwD9VAiLaVyhING6a02v02PCJjmQjewU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=X6QRxBkmmaBoBQTnjkrSp2OKJSiQaqShHMBq8TeHmoq1VhIQNvfFw+JyazjaOaVIm
+         aD2ZLI5p/7+fftlhO/ZjJOdeHFeH1rxeuHDfAf8PMLROFmctwtkOTzpfTGC10lueYe
+         Tr3HlgtXg3lViFrx1/5tRnfV8BL2FAST0G0KO/bZJ/Ft3L8TsH/xBzNYx3r1mEAev4
+         O1dCSRfEqi43ip4N9d7gX0RXSd6NrvJrFP0/jo2geCivuDX7QvqVYaCz7Lp4346Hv8
+         aZsY6oG5uZH8+hTtqHUjMe1YQkptddTzT2rUcD+Lf+viLGo/sD7ekLwHbyBtyz6gcg
+         cnc+YPijfsYoQ==
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-419cc494824so6905131cf.2;
+        Thu, 05 Oct 2023 13:40:15 -0700 (PDT)
+X-Gm-Message-State: AOJu0Yx3h0TBQgNHVhkHWPU7uuE3N6buDSRU7WgeE+Wgasrfx9BLngeh
+        eCntkqaCTblT3k/mAKzDbNMgWQJwTWSp4emNUQ8=
+X-Google-Smtp-Source: AGHT+IEvfeeB4HFpxRNoDCCpQmy0Icz9w0ozf2ZiyWAdtBaFEI4oE2spkokMMY0Ne7h5qDzKkOvdyQiEmCGipWZYl9Q=
+X-Received: by 2002:a05:622a:104e:b0:419:51db:5c with SMTP id
+ f14-20020a05622a104e00b0041951db005cmr7546095qte.32.1696538414712; Thu, 05
+ Oct 2023 13:40:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <20231004175217.404851126@linuxfoundation.org> <CA+G9fYsqbZhSQnEi-qSc7n+4d7nPap8HWcdbZGWLfo3mTH-L7A@mail.gmail.com>
- <20231005172448.GA161140@pevik>
-In-Reply-To: <20231005172448.GA161140@pevik>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Fri, 6 Oct 2023 00:50:55 +0530
-Message-ID: <CA+G9fYuyXgWvsRhznP2x2VE5CvSyCCgcvxPz2J=dbvg6YW2iUA@mail.gmail.com>
-Subject: Re: [PATCH 6.1 000/259] 6.1.56-rc1 review
-To:     Petr Vorel <pvorel@suse.cz>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-nfs@vger.kernel.org, stable@vger.kernel.org,
-        patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-        srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        LTP List <ltp@lists.linux.it>,
-        Richard Palethorpe <rpalethorpe@suse.com>,
-        Eryu Guan <eguan@redhat.com>, chrubis <chrubis@suse.cz>
+References: <5577791deaa898578c8e8f86336eaca053d9efdd.1687890438.git.bcodding@redhat.com>
+In-Reply-To: <5577791deaa898578c8e8f86336eaca053d9efdd.1687890438.git.bcodding@redhat.com>
+From:   Anna Schumaker <anna@kernel.org>
+Date:   Thu, 5 Oct 2023 16:39:58 -0400
+X-Gmail-Original-Message-ID: <CAFX2JfknBFfB-Ef96DdfiC5wAKp5BJXXoXai+Tz4TxtsbASo2g@mail.gmail.com>
+Message-ID: <CAFX2JfknBFfB-Ef96DdfiC5wAKp5BJXXoXai+Tz4TxtsbASo2g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] Revert "NFSv4: Retry LOCK on OLD_STATEID during
+ delegation return"
+To:     stable@vger.kernel.org
+Cc:     trond.myklebust@hammerspace.com, Olga.Kornievskaia@netapp.com,
+        linux-nfs@vger.kernel.org,
+        Benjamin Coddington <bcodding@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 5 Oct 2023 at 22:54, Petr Vorel <pvorel@suse.cz> wrote:
+Hi Stable Kernel Team,
+
+Can this patch be backported to v6.1+ kernels? The commit id is
+5b4a82a0724a and has been upstream since v6.5. As was mentioned in the
+original patch description (below), the commit being reverted by this
+patch breaks state recovery in a way that is worse than the initial
+bug that it was attempting to fix.
+
+Thanks,
+Anna
+
+On Tue, Jun 27, 2023 at 2:31=E2=80=AFPM Benjamin Coddington <bcodding@redha=
+t.com> wrote:
 >
-> Hi Naresh,
->
-> > On Wed, 4 Oct 2023 at 23:41, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
->
-> > > This is the start of the stable review cycle for the 6.1.56 release.
-> > > There are 259 patches in this series, all will be posted as a respons=
+> Olga Kornievskaia reports that this patch breaks NFSv4.0 state recovery.
+> It also introduces additional complexity in the error paths for cases not
+> related to the original problem.  Let's revert it for now, and address th=
 e
-> > > to this one.  If anyone has any issues with these being applied, plea=
-se
-> > > let me know.
+> original problem in another manner.
 >
-> > > Responses should be made by Fri, 06 Oct 2023 17:51:12 +0000.
-> > > Anything received after that time might be too late.
+> This reverts commit f5ea16137a3fa2858620dc9084466491c128535f.
 >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/pa=
-tch-6.1.56-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
-able-rc.git linux-6.1.y
-> > > and the diffstat can be found below.
+> Fixes: f5ea16137a3f ("NFSv4: Retry LOCK on OLD_STATEID during delegation =
+return")
+> Reported-by: Kornievskaia, Olga <Olga.Kornievskaia@netapp.com>
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> ---
+>  fs/nfs/nfs4proc.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 >
-> > > thanks,
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index d3665390c4cb..6bb14f6cfbc0 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -7159,7 +7159,6 @@ static void nfs4_lock_done(struct rpc_task *task, v=
+oid *calldata)
+>  {
+>         struct nfs4_lockdata *data =3D calldata;
+>         struct nfs4_lock_state *lsp =3D data->lsp;
+> -       struct nfs_server *server =3D NFS_SERVER(d_inode(data->ctx->dentr=
+y));
 >
-> > > greg k-h
+>         if (!nfs4_sequence_done(task, &data->res.seq_res))
+>                 return;
+> @@ -7167,7 +7166,8 @@ static void nfs4_lock_done(struct rpc_task *task, v=
+oid *calldata)
+>         data->rpc_status =3D task->tk_status;
+>         switch (task->tk_status) {
+>         case 0:
+> -               renew_lease(server, data->timestamp);
+> +               renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
+> +                               data->timestamp);
+>                 if (data->arg.new_lock && !data->cancelled) {
+>                         data->fl.fl_flags &=3D ~(FL_SLEEP | FL_ACCESS);
+>                         if (locks_lock_inode_wait(lsp->ls_state->inode, &=
+data->fl) < 0)
+> @@ -7188,8 +7188,6 @@ static void nfs4_lock_done(struct rpc_task *task, v=
+oid *calldata)
+>                         if (!nfs4_stateid_match(&data->arg.open_stateid,
+>                                                 &lsp->ls_state->open_stat=
+eid))
+>                                 goto out_restart;
+> -                       else if (nfs4_async_handle_error(task, server, ls=
+p->ls_state, NULL) =3D=3D -EAGAIN)
+> -                               goto out_restart;
+>                 } else if (!nfs4_stateid_match(&data->arg.lock_stateid,
+>                                                 &lsp->ls_stateid))
+>                                 goto out_restart;
+> --
+> 2.40.1
 >
-> > Results from Linaro=E2=80=99s test farm.
-> > Regressions on arm64 bcm2711-rpi-4-b device running LTP dio tests on
-> Could you please note in your reports also LTP version?
-
-Sure.
-We are running LTP Version: 20230516 for our testing.
-
-We will update the latest LTP release (20230929) next week.
-
-> FYI the best LTP release is always the latest release or git master branc=
-h.
-
-We have two threads here.
-1) LTP release tag testing on all stable-rc branches
-2) LTP master testing on a given specific kernel version [a]
-
-[a] https://qa-reports.linaro.org/lkft/ltp-master/
-
-- Naresh
