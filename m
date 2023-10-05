@@ -2,40 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C3487BA148
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Oct 2023 16:53:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 910B57BA066
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 Oct 2023 16:41:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240179AbjJEOsF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Oct 2023 10:48:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55378 "EHLO
+        id S237084AbjJEOi2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 5 Oct 2023 10:38:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236547AbjJEOpp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Oct 2023 10:45:45 -0400
+        with ESMTP id S235404AbjJEOgJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Oct 2023 10:36:09 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897382C292
-        for <linux-nfs@vger.kernel.org>; Thu,  5 Oct 2023 07:27:32 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9786C3279E;
-        Thu,  5 Oct 2023 13:10:39 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F357144873
+        for <linux-nfs@vger.kernel.org>; Thu,  5 Oct 2023 07:00:34 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB4CC43215;
+        Thu,  5 Oct 2023 13:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696511440;
-        bh=LxKcAbPkS1cN5cY1R9jQZD6PER+7X5ZwZdPa6n8vJGg=;
-        h=Subject:From:To:Cc:Date:From;
-        b=Ju6KwXVz3gkwfKkmEA3JF3RM+/2VRh1g1trHhqI0As4yUigUHpPWgpwcJBsZ6isKm
-         ew2AN+WZ150cZNuv7SPIoqxDV6TNCVT9aOnQhM2BiQB04A89TRPBXW15majKXBdd1U
-         Mzlv1OdMSCmt7NCfug/NvCk2Wf4ncl2XtgZl1MK/nuoiH6raasAI7A0Z1j0ywpxcuk
-         WE0MhJuj/ES+eXZ0U4R1P13sjnMO8jKsDSeEuYmjCXfKbYm1Ed+FHb2ePp1NmXYNgU
-         K00wiM4HO4Tz2YVQWHx+VREZKU82u1DMnynnwyay/tU1TZiAGTw1bPKed10iRNCIj9
-         jazG71SlqTDBA==
-Subject: [PATCH RFC] tools: ynl: Add source files for nfsd netlink protocol
-From:   Chuck Lever <cel@kernel.org>
-To:     kuba@kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>, netdev@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Date:   Thu, 05 Oct 2023 09:10:38 -0400
-Message-ID: <169651139213.16787.3812644920847558917.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5
+        s=k20201202; t=1696514360;
+        bh=5SmXWapcJyPZQUeif7XTx8G5LatpZwA1DoGJ9KZSHH0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=j1EsiQvZxi2OzCy8jzXh6IS84qtfOMBw8ea/qT3HyImvMlI0vOqtnTEOEgkV1P2Ms
+         R7P6JWNUOcdaI4Qesf6+uZDVvs+InTeBeX/wpk87kXHfchAnovr1SuqU8Mox36MkFd
+         Kv5Dk3n0rJWhKgkZR19XGzBEsZzHZpbYfRlg8zWRHxcUc7hnx3a5RvW9ivEydQgi6Z
+         nCX6GVX4qGa3br/NzpchHu0lvpujd6ArQEPIRd6qRCwjgXXvN3BG9ShxWnnElIR73a
+         o4qyfknOt5jVovGnPZubtlee+WMfnfcB0MqW6kVk5YMJVOhNzRrnNLf4QsgYDQEHxL
+         cc96rJPwY9IEg==
+Date:   Thu, 5 Oct 2023 06:59:19 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Lorenzo Bianconi <lorenzo@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+        neilb@suse.de, chuck.lever@oracle.com, netdev@vger.kernel.org
+Subject: Re: [PATCH] NFSD: convert write_threads and write_v4_end_grace to
+ netlink commands
+Message-ID: <20231005065919.6001b7ca@kernel.org>
+In-Reply-To: <ZR55TnN4Sr/O5z4a@lore-desk>
+References: <b7985d6f0708d4a2836e1b488d641cdc11ace61b.1695386483.git.lorenzo@kernel.org>
+        <cc6341a7c5f09b731298236b260c9dfd94a811d8.camel@kernel.org>
+        <ZQ2+1NhagxR5bZF+@lore-desk>
+        <20231004100428.3ca993aa@kernel.org>
+        <ZR55TnN4Sr/O5z4a@lore-desk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
@@ -47,175 +54,109 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Thu, 5 Oct 2023 10:52:30 +0200 Lorenzo Bianconi wrote:
+> running ynl-regen.sh, I got the following error for the get method:
+> 
+> $ ./tools/net/ynl/ynl-regen.sh
+>         GEN kernel      fs/nfsd/netlink.h
+> Traceback (most recent call last):
+>   File "/home/lorenzo/workspace/nfsd-next/tools/net/ynl/ynl-gen-c.py", line 2609, in <module>
+>     main()
+>   File "/home/lorenzo/workspace/nfsd-next/tools/net/ynl/ynl-gen-c.py", line 2445, in main
+>     print_req_policy_fwd(cw, ri.struct['request'], ri=ri)
+>                              ~~~~~~~~~^^^^^^^^^^^
+> KeyError: 'request'
+> 
+> am I missing something?
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- tools/net/ynl/generated/Makefile    |    2 -
- tools/net/ynl/generated/nfsd-user.c |   95 +++++++++++++++++++++++++++++++++++
- tools/net/ynl/generated/nfsd-user.h |   33 ++++++++++++
- 3 files changed, 129 insertions(+), 1 deletion(-)
- create mode 100644 tools/net/ynl/generated/nfsd-user.c
- create mode 100644 tools/net/ynl/generated/nfsd-user.h
+Not at all, the codegen was only handling dumps with no ops.
+This change seems to make it a little happier, at least it
+doesn't throw any exceptions. Will it work for your case?
 
-Hi Jakub-
-
-Should I include this with the nfsd netlink protocol patches already
-in nfsd-next, or do you want to take it after those have been merged?
-
-
-diff --git a/tools/net/ynl/generated/Makefile b/tools/net/ynl/generated/Makefile
-index f8817d2e56e4..c1935b01902e 100644
---- a/tools/net/ynl/generated/Makefile
-+++ b/tools/net/ynl/generated/Makefile
-@@ -14,7 +14,7 @@ YNL_GEN_ARG_ethtool:=--user-header linux/ethtool_netlink.h \
+diff --git a/tools/net/ynl/ynl-gen-c.py b/tools/net/ynl/ynl-gen-c.py
+index 168fe612b029..593be2632f23 100755
+--- a/tools/net/ynl/ynl-gen-c.py
++++ b/tools/net/ynl/ynl-gen-c.py
+@@ -645,6 +645,33 @@ from lib import SpecFamily, SpecAttrSet, SpecAttr, SpecOperation, SpecEnumSet, S
+         self.inherited = [c_lower(x) for x in sorted(self._inherited)]
  
- TOOL:=../ynl-gen-c.py
  
--GENS:=ethtool devlink handshake fou netdev
-+GENS:=ethtool devlink handshake fou netdev nfsd
- SRCS=$(patsubst %,%-user.c,${GENS})
- HDRS=$(patsubst %,%-user.h,${GENS})
- OBJS=$(patsubst %,%-user.o,${GENS})
-diff --git a/tools/net/ynl/generated/nfsd-user.c b/tools/net/ynl/generated/nfsd-user.c
-new file mode 100644
-index 000000000000..fec6828680ce
---- /dev/null
-+++ b/tools/net/ynl/generated/nfsd-user.c
-@@ -0,0 +1,95 @@
-+// SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause)
-+/* Do not edit directly, auto-generated from: */
-+/*	Documentation/netlink/specs/nfsd.yaml */
-+/* YNL-GEN user source */
++class StructNone:
++    def __init__(self, family, space_name):
++        self.family = family
++        self.space_name = space_name
++        self.attr_set = family.attr_sets[space_name]
 +
-+#include <stdlib.h>
-+#include <string.h>
-+#include "nfsd-user.h"
-+#include "ynl.h"
-+#include <linux/nfsd_netlink.h>
++        if family.name == c_lower(space_name):
++            self.render_name = f"{family.name}"
++        else:
++            self.render_name = f"{family.name}_{c_lower(space_name)}"
 +
-+#include <libmnl/libmnl.h>
-+#include <linux/genetlink.h>
++        self.request = False
++        self.reply = False
 +
-+/* Enums */
-+static const char * const nfsd_op_strmap[] = {
-+	[NFSD_CMD_RPC_STATUS_GET] = "rpc-status-get",
-+};
++        self.attr_list = []
++        self.attrs = dict()
 +
-+const char *nfsd_op_str(int op)
-+{
-+	if (op < 0 || op >= (int)MNL_ARRAY_SIZE(nfsd_op_strmap))
-+		return NULL;
-+	return nfsd_op_strmap[op];
-+}
++    def __iter__(self):
++        yield from self.attrs
 +
-+/* Policies */
-+struct ynl_policy_attr nfsd_rpc_status_policy[NFSD_A_RPC_STATUS_MAX + 1] = {
-+	[NFSD_A_RPC_STATUS_XID] = { .name = "xid", .type = YNL_PT_U32, },
-+	[NFSD_A_RPC_STATUS_FLAGS] = { .name = "flags", .type = YNL_PT_U32, },
-+	[NFSD_A_RPC_STATUS_PROG] = { .name = "prog", .type = YNL_PT_U32, },
-+	[NFSD_A_RPC_STATUS_VERSION] = { .name = "version", .type = YNL_PT_U8, },
-+	[NFSD_A_RPC_STATUS_PROC] = { .name = "proc", .type = YNL_PT_U32, },
-+	[NFSD_A_RPC_STATUS_SERVICE_TIME] = { .name = "service_time", .type = YNL_PT_U64, },
-+	[NFSD_A_RPC_STATUS_PAD] = { .name = "pad", .type = YNL_PT_IGNORE, },
-+	[NFSD_A_RPC_STATUS_SADDR4] = { .name = "saddr4", .type = YNL_PT_U32, },
-+	[NFSD_A_RPC_STATUS_DADDR4] = { .name = "daddr4", .type = YNL_PT_U32, },
-+	[NFSD_A_RPC_STATUS_SADDR6] = { .name = "saddr6", .type = YNL_PT_BINARY,},
-+	[NFSD_A_RPC_STATUS_DADDR6] = { .name = "daddr6", .type = YNL_PT_BINARY,},
-+	[NFSD_A_RPC_STATUS_SPORT] = { .name = "sport", .type = YNL_PT_U16, },
-+	[NFSD_A_RPC_STATUS_DPORT] = { .name = "dport", .type = YNL_PT_U16, },
-+	[NFSD_A_RPC_STATUS_COMPOUND_OPS] = { .name = "compound-ops", .type = YNL_PT_U32, },
-+};
++    def __getitem__(self, key):
++        return self.attrs[key]
 +
-+struct ynl_policy_nest nfsd_rpc_status_nest = {
-+	.max_attr = NFSD_A_RPC_STATUS_MAX,
-+	.table = nfsd_rpc_status_policy,
-+};
++    def member_list(self):
++        return self.attr_list
 +
-+/* Common nested types */
-+/* ============== NFSD_CMD_RPC_STATUS_GET ============== */
-+/* NFSD_CMD_RPC_STATUS_GET - dump */
-+void nfsd_rpc_status_get_list_free(struct nfsd_rpc_status_get_list *rsp)
-+{
-+	struct nfsd_rpc_status_get_list *next = rsp;
 +
-+	while ((void *)next != YNL_LIST_END) {
-+		rsp = next;
-+		next = rsp->next;
-+
-+		free(rsp->obj.saddr6);
-+		free(rsp->obj.daddr6);
-+		free(rsp->obj.compound_ops);
-+		free(rsp);
-+	}
-+}
-+
-+struct nfsd_rpc_status_get_list *nfsd_rpc_status_get_dump(struct ynl_sock *ys)
-+{
-+	struct ynl_dump_state yds = {};
-+	struct nlmsghdr *nlh;
-+	int err;
-+
-+	yds.ys = ys;
-+	yds.alloc_sz = sizeof(struct nfsd_rpc_status_get_list);
-+	yds.cb = nfsd_rpc_status_get_rsp_parse;
-+	yds.rsp_cmd = NFSD_CMD_RPC_STATUS_GET;
-+	yds.rsp_policy = &nfsd_rpc_status_nest;
-+
-+	nlh = ynl_gemsg_start_dump(ys, ys->family_id, NFSD_CMD_RPC_STATUS_GET, 1);
-+
-+	err = ynl_exec_dump(ys, nlh, &yds);
-+	if (err < 0)
-+		goto free_list;
-+
-+	return yds.first;
-+
-+free_list:
-+	nfsd_rpc_status_get_list_free(yds.first);
-+	return NULL;
-+}
-+
-+const struct ynl_family ynl_nfsd_family =  {
-+	.name		= "nfsd",
-+};
-diff --git a/tools/net/ynl/generated/nfsd-user.h b/tools/net/ynl/generated/nfsd-user.h
-new file mode 100644
-index 000000000000..b6b69501031a
---- /dev/null
-+++ b/tools/net/ynl/generated/nfsd-user.h
-@@ -0,0 +1,33 @@
-+/* SPDX-License-Identifier: ((GPL-2.0 WITH Linux-syscall-note) OR BSD-3-Clause) */
-+/* Do not edit directly, auto-generated from: */
-+/*	Documentation/netlink/specs/nfsd.yaml */
-+/* YNL-GEN user header */
-+
-+#ifndef _LINUX_NFSD_GEN_H
-+#define _LINUX_NFSD_GEN_H
-+
-+#include <stdlib.h>
-+#include <string.h>
-+#include <linux/types.h>
-+#include <linux/nfsd_netlink.h>
-+
-+struct ynl_sock;
-+
-+extern const struct ynl_family ynl_nfsd_family;
-+
-+/* Enums */
-+const char *nfsd_op_str(int op);
-+
-+/* Common nested types */
-+/* ============== NFSD_CMD_RPC_STATUS_GET ============== */
-+/* NFSD_CMD_RPC_STATUS_GET - dump */
-+struct nfsd_rpc_status_get_list {
-+	struct nfsd_rpc_status_get_list *next;
-+	struct nfsd_rpc_status_get_rsp obj __attribute__ ((aligned (8)));
-+};
-+
-+void nfsd_rpc_status_get_list_free(struct nfsd_rpc_status_get_list *rsp);
-+
-+struct nfsd_rpc_status_get_list *nfsd_rpc_status_get_dump(struct ynl_sock *ys);
-+
-+#endif /* _LINUX_NFSD_GEN_H */
-
+ class EnumEntry(SpecEnumEntry):
+     def __init__(self, enum_set, yaml, prev, value_start):
+         super().__init__(enum_set, yaml, prev, value_start)
+@@ -1041,9 +1068,12 @@ from lib import SpecFamily, SpecAttrSet, SpecAttr, SpecOperation, SpecEnumSet, S
+         if op_mode == 'notify':
+             op_mode = 'do'
+         for op_dir in ['request', 'reply']:
+-            if op and op_dir in op[op_mode]:
+-                self.struct[op_dir] = Struct(family, self.attr_set,
+-                                             type_list=op[op_mode][op_dir]['attributes'])
++            if op:
++                if op_dir in op[op_mode]:
++                    self.struct[op_dir] = Struct(family, self.attr_set,
++                                                 type_list=op[op_mode][op_dir]['attributes'])
++                else:
++                    self.struct[op_dir] = StructNone(family, self.attr_set)
+         if op_mode == 'event':
+             self.struct['reply'] = Struct(family, self.attr_set, type_list=op['event']['attributes'])
+ 
+@@ -1752,6 +1782,8 @@ _C_KW = {
+ 
+ 
+ def print_req_type_helpers(ri):
++    if isinstance(ri.struct["request"], StructNone):
++        return
+     print_alloc_wrapper(ri, "request")
+     print_type_helpers(ri, "request")
+ 
+@@ -1773,6 +1805,8 @@ _C_KW = {
+ 
+ 
+ def print_req_type(ri):
++    if isinstance(ri.struct["request"], StructNone):
++        return
+     print_type(ri, "request")
+ 
+ 
+@@ -2515,9 +2549,8 @@ _C_KW = {
+                 if 'dump' in op:
+                     cw.p(f"/* {op.enum_name} - dump */")
+                     ri = RenderInfo(cw, parsed, args.mode, op, 'dump')
+-                    if 'request' in op['dump']:
+-                        print_req_type(ri)
+-                        print_req_type_helpers(ri)
++                    print_req_type(ri)
++                    print_req_type_helpers(ri)
+                     if not ri.type_consistent:
+                         print_rsp_type(ri)
+                     print_wrapped_type(ri)
+-- 
+2.41.0
 
