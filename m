@@ -2,130 +2,146 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E19947BAB8C
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 Oct 2023 22:40:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E1F8A7BB19F
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 Oct 2023 08:41:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbjJEUkS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 5 Oct 2023 16:40:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32888 "EHLO
+        id S230206AbjJFGlt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 Oct 2023 02:41:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229687AbjJEUkR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 5 Oct 2023 16:40:17 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2791B95;
-        Thu,  5 Oct 2023 13:40:16 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACBEDC433CB;
-        Thu,  5 Oct 2023 20:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1696538415;
-        bh=mW1UI3u88BsWwD9VAiLaVyhING6a02v02PCJjmQjewU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=X6QRxBkmmaBoBQTnjkrSp2OKJSiQaqShHMBq8TeHmoq1VhIQNvfFw+JyazjaOaVIm
-         aD2ZLI5p/7+fftlhO/ZjJOdeHFeH1rxeuHDfAf8PMLROFmctwtkOTzpfTGC10lueYe
-         Tr3HlgtXg3lViFrx1/5tRnfV8BL2FAST0G0KO/bZJ/Ft3L8TsH/xBzNYx3r1mEAev4
-         O1dCSRfEqi43ip4N9d7gX0RXSd6NrvJrFP0/jo2geCivuDX7QvqVYaCz7Lp4346Hv8
-         aZsY6oG5uZH8+hTtqHUjMe1YQkptddTzT2rUcD+Lf+viLGo/sD7ekLwHbyBtyz6gcg
-         cnc+YPijfsYoQ==
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-419cc494824so6905131cf.2;
-        Thu, 05 Oct 2023 13:40:15 -0700 (PDT)
-X-Gm-Message-State: AOJu0Yx3h0TBQgNHVhkHWPU7uuE3N6buDSRU7WgeE+Wgasrfx9BLngeh
-        eCntkqaCTblT3k/mAKzDbNMgWQJwTWSp4emNUQ8=
-X-Google-Smtp-Source: AGHT+IEvfeeB4HFpxRNoDCCpQmy0Icz9w0ozf2ZiyWAdtBaFEI4oE2spkokMMY0Ne7h5qDzKkOvdyQiEmCGipWZYl9Q=
-X-Received: by 2002:a05:622a:104e:b0:419:51db:5c with SMTP id
- f14-20020a05622a104e00b0041951db005cmr7546095qte.32.1696538414712; Thu, 05
- Oct 2023 13:40:14 -0700 (PDT)
+        with ESMTP id S230194AbjJFGls (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 Oct 2023 02:41:48 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E666EA;
+        Thu,  5 Oct 2023 23:41:46 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id B62D51F45F;
+        Fri,  6 Oct 2023 06:41:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1696574503;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AHPegFj7wYRBnWo4iJfVnNBssSPMttVzktBNWxsaxJY=;
+        b=RPqzfKv4gZGmUZdxYmP2RazsngprG/807/v2Of1+KBo5sUqo9JSFupq8mGvNz6LrSpyLHC
+        qoqJVH8IWZF4iVQ7uGKPcp2MOF2HAqeK2AYYUXY0Nn57WS3JfpE/hSCm86/po3CzryejT2
+        7T2n4g1+hMUPCYmGifNU1lOhdwZT6OE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1696574503;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AHPegFj7wYRBnWo4iJfVnNBssSPMttVzktBNWxsaxJY=;
+        b=t5N6hNk50AuI+4qPPg4glFprLLTrJyOMPg25eEz33RGUSTueo0on1yxzZmg9dTdscRqq9O
+        AZRSUM7ZJwsJjfDg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4608913A2E;
+        Fri,  6 Oct 2023 06:41:42 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 2t+vCCasH2UZWgAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Fri, 06 Oct 2023 06:41:42 +0000
+Date:   Fri, 6 Oct 2023 08:41:40 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-nfs@vger.kernel.org, stable@vger.kernel.org,
+        patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+        srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        LTP List <ltp@lists.linux.it>,
+        Richard Palethorpe <rpalethorpe@suse.com>,
+        Eryu Guan <eguan@redhat.com>, chrubis <chrubis@suse.cz>
+Subject: Re: [PATCH 6.1 000/259] 6.1.56-rc1 review
+Message-ID: <20231006064140.GA178316@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20231004175217.404851126@linuxfoundation.org>
+ <CA+G9fYsqbZhSQnEi-qSc7n+4d7nPap8HWcdbZGWLfo3mTH-L7A@mail.gmail.com>
+ <20231005172448.GA161140@pevik>
+ <CA+G9fYuyXgWvsRhznP2x2VE5CvSyCCgcvxPz2J=dbvg6YW2iUA@mail.gmail.com>
 MIME-Version: 1.0
-References: <5577791deaa898578c8e8f86336eaca053d9efdd.1687890438.git.bcodding@redhat.com>
-In-Reply-To: <5577791deaa898578c8e8f86336eaca053d9efdd.1687890438.git.bcodding@redhat.com>
-From:   Anna Schumaker <anna@kernel.org>
-Date:   Thu, 5 Oct 2023 16:39:58 -0400
-X-Gmail-Original-Message-ID: <CAFX2JfknBFfB-Ef96DdfiC5wAKp5BJXXoXai+Tz4TxtsbASo2g@mail.gmail.com>
-Message-ID: <CAFX2JfknBFfB-Ef96DdfiC5wAKp5BJXXoXai+Tz4TxtsbASo2g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Revert "NFSv4: Retry LOCK on OLD_STATEID during
- delegation return"
-To:     stable@vger.kernel.org
-Cc:     trond.myklebust@hammerspace.com, Olga.Kornievskaia@netapp.com,
-        linux-nfs@vger.kernel.org,
-        Benjamin Coddington <bcodding@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYuyXgWvsRhznP2x2VE5CvSyCCgcvxPz2J=dbvg6YW2iUA@mail.gmail.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Stable Kernel Team,
+> On Thu, 5 Oct 2023 at 22:54, Petr Vorel <pvorel@suse.cz> wrote:
 
-Can this patch be backported to v6.1+ kernels? The commit id is
-5b4a82a0724a and has been upstream since v6.5. As was mentioned in the
-original patch description (below), the commit being reverted by this
-patch breaks state recovery in a way that is worse than the initial
-bug that it was attempting to fix.
+> > Hi Naresh,
 
-Thanks,
-Anna
+> > > On Wed, 4 Oct 2023 at 23:41, Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
 
-On Tue, Jun 27, 2023 at 2:31=E2=80=AFPM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
->
-> Olga Kornievskaia reports that this patch breaks NFSv4.0 state recovery.
-> It also introduces additional complexity in the error paths for cases not
-> related to the original problem.  Let's revert it for now, and address th=
-e
-> original problem in another manner.
->
-> This reverts commit f5ea16137a3fa2858620dc9084466491c128535f.
->
-> Fixes: f5ea16137a3f ("NFSv4: Retry LOCK on OLD_STATEID during delegation =
-return")
-> Reported-by: Kornievskaia, Olga <Olga.Kornievskaia@netapp.com>
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-> ---
->  fs/nfs/nfs4proc.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index d3665390c4cb..6bb14f6cfbc0 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -7159,7 +7159,6 @@ static void nfs4_lock_done(struct rpc_task *task, v=
-oid *calldata)
->  {
->         struct nfs4_lockdata *data =3D calldata;
->         struct nfs4_lock_state *lsp =3D data->lsp;
-> -       struct nfs_server *server =3D NFS_SERVER(d_inode(data->ctx->dentr=
-y));
->
->         if (!nfs4_sequence_done(task, &data->res.seq_res))
->                 return;
-> @@ -7167,7 +7166,8 @@ static void nfs4_lock_done(struct rpc_task *task, v=
-oid *calldata)
->         data->rpc_status =3D task->tk_status;
->         switch (task->tk_status) {
->         case 0:
-> -               renew_lease(server, data->timestamp);
-> +               renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
-> +                               data->timestamp);
->                 if (data->arg.new_lock && !data->cancelled) {
->                         data->fl.fl_flags &=3D ~(FL_SLEEP | FL_ACCESS);
->                         if (locks_lock_inode_wait(lsp->ls_state->inode, &=
-data->fl) < 0)
-> @@ -7188,8 +7188,6 @@ static void nfs4_lock_done(struct rpc_task *task, v=
-oid *calldata)
->                         if (!nfs4_stateid_match(&data->arg.open_stateid,
->                                                 &lsp->ls_state->open_stat=
-eid))
->                                 goto out_restart;
-> -                       else if (nfs4_async_handle_error(task, server, ls=
-p->ls_state, NULL) =3D=3D -EAGAIN)
-> -                               goto out_restart;
->                 } else if (!nfs4_stateid_match(&data->arg.lock_stateid,
->                                                 &lsp->ls_stateid))
->                                 goto out_restart;
-> --
-> 2.40.1
->
+> > > > This is the start of the stable review cycle for the 6.1.56 release.
+> > > > There are 259 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+
+> > > > Responses should be made by Fri, 06 Oct 2023 17:51:12 +0000.
+> > > > Anything received after that time might be too late.
+
+> > > > The whole patch series can be found in one patch at:
+> > > >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.56-rc1.gz
+> > > > or in the git tree and branch at:
+> > > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
+> > > > and the diffstat can be found below.
+
+> > > > thanks,
+
+> > > > greg k-h
+
+> > > Results from Linaro’s test farm.
+> > > Regressions on arm64 bcm2711-rpi-4-b device running LTP dio tests on
+> > Could you please note in your reports also LTP version?
+
+> Sure.
+> We are running LTP Version: 20230516 for our testing.
+
+> We will update the latest LTP release (20230929) next week.
+
+Great, thank you.
+
+> > FYI the best LTP release is always the latest release or git master branch.
+
+> We have two threads here.
+> 1) LTP release tag testing on all stable-rc branches
+> 2) LTP master testing on a given specific kernel version [a]
+
+Great, this makes sense.
+
+BTW from looking in the log [b] ("INFO: ltp-pan reported some tests FAIL")
+I see you use runltp. We recommend to switch to kirk [c]. And we definitely
+appreciate your feedback from it.
+
+Kind regards,
+Petr
+
+> [a] https://qa-reports.linaro.org/lkft/ltp-master/
+[b] https://qa-reports.linaro.org/lkft/ltp-master/build/v6.5.3_20230929-2-g48a150bfd/testrun/20223790/suite/ltp-cve/test/cve-2017-8890/log
+[c] https://github.com/linux-test-project/kirk/#readme
+
+> - Naresh
