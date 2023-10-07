@@ -2,117 +2,264 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D0867BC645
-	for <lists+linux-nfs@lfdr.de>; Sat,  7 Oct 2023 10:58:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B07EF7BC6F8
+	for <lists+linux-nfs@lfdr.de>; Sat,  7 Oct 2023 13:00:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234152AbjJGI6a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 7 Oct 2023 04:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35398 "EHLO
+        id S1343782AbjJGLAh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 7 Oct 2023 07:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbjJGI63 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 7 Oct 2023 04:58:29 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4EB5B9;
-        Sat,  7 Oct 2023 01:58:28 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A3BDC433C7;
-        Sat,  7 Oct 2023 08:58:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1696669107;
-        bh=63/dX8Mo5xru8ooy9lCm1E4eme6V3fkD4TYeT7/GxT8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l1i/NIDAMmZft2wxUCk+uo6l9YM0hOIgb4Ksq3nEmXl7j8swBvb1Th5UI1cO+oYFi
-         Mgc3JIhYrOjNZIIjl/JaMbWo7w5X+M7j/N9LdJ3OWL3toXnmtH2hC/t3/sP57Rit/R
-         g7QNjJ1hxzMZrMDUM8TmaY7ZVatkHKPDyQsOCEAk=
-Date:   Sat, 7 Oct 2023 10:58:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-nfs@vger.kernel.org, stable@vger.kernel.org,
-        patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-        srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        LTP List <ltp@lists.linux.it>, Petr Vorel <pvorel@suse.cz>,
-        Richard Palethorpe <rpalethorpe@suse.com>,
-        Eryu Guan <eguan@redhat.com>, chrubis <chrubis@suse.cz>
-Subject: Re: [PATCH 6.1 000/259] 6.1.56-rc1 review
-Message-ID: <2023100755-livestock-barcode-fe41@gregkh>
-References: <20231004175217.404851126@linuxfoundation.org>
- <CA+G9fYsqbZhSQnEi-qSc7n+4d7nPap8HWcdbZGWLfo3mTH-L7A@mail.gmail.com>
- <CAEUSe78O-Ho=22nTeioT4eqPRoDNfcWCpc=5O=B59eaMvOkzpg@mail.gmail.com>
+        with ESMTP id S1343826AbjJGLAg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 7 Oct 2023 07:00:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8725093
+        for <linux-nfs@vger.kernel.org>; Sat,  7 Oct 2023 03:59:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1696676394;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eDApa3RrBksKMdjY+xMBuKyfAdJZDq83gDf1xJlW1ko=;
+        b=dAOTJewqjHF9U/BR0CulXpRF72hdBdJw3qij5KGju/vBm+Zdc/35qmBmn4tY5M0WJMz6+o
+        osV+lV5OdkoNCLiTOyhI5HcPb4gwJef5ltwNlBulNeUagvBTAgfwFUfpOWqDNcxUfOcqcf
+        IxGasE5uBWIyBj2lHqzFoQtvOZcbDzg=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-197-AsDo3tNBMLu9aH8wSdcEiw-1; Sat, 07 Oct 2023 06:59:46 -0400
+X-MC-Unique: AsDo3tNBMLu9aH8wSdcEiw-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-775842dc945so54471585a.0
+        for <linux-nfs@vger.kernel.org>; Sat, 07 Oct 2023 03:59:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696676386; x=1697281186;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eDApa3RrBksKMdjY+xMBuKyfAdJZDq83gDf1xJlW1ko=;
+        b=J0FQnTWIUuEuNFZ90uQCdCV7ubpLSZosegeqNJRI4ms+5/yxR23kUmZTKUlcOAfLC3
+         BH8e2HpdIR+bCgtjkydXcXhvbASfipu/C5MQervWYmERaIfbfR4cFMt13nugRJOpHAtn
+         7SLt2kOgfWCqzJCtDTSaE3bds/WaM0zmcg0UhvpL4py2m/U4RalWeXEDiYV/d+P8s0ce
+         Qd2H4vymn+nXGq0HdpRMq5FLkWBv0MkI4ZhJOGbFFA22csEN2Dqml5BAmJwCYZ32TiOj
+         wlQW3uTyyehzoxnUAQp6hhhhZ085Xf+Q+9FjCtbfzPWixXmZev2ZF108IkIURy2u+re5
+         8mwQ==
+X-Gm-Message-State: AOJu0YyVc9l6Erh0ExKSUR9Feoob32rMKBPp5QAsOlC80+RATYZ1PgjX
+        35JD6ER6Tzcd+c92gNJJeQtVTMeat+o6M13bTtMFlZwfoNIJO6ixjYYVsXriv4PEVLh7CVc796b
+        MaBZ9p1W11XGNNa42Wqgr
+X-Received: by 2002:a05:620a:268d:b0:776:f188:eee6 with SMTP id c13-20020a05620a268d00b00776f188eee6mr6253524qkp.2.1696676385955;
+        Sat, 07 Oct 2023 03:59:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEQEuoz0+jzxL40mnytK273UhHoINe+CgmqDGb5IyB1cpf1H4xhEIig7OQE9xZKI+hnwN/OtQ==
+X-Received: by 2002:a05:620a:268d:b0:776:f188:eee6 with SMTP id c13-20020a05620a268d00b00776f188eee6mr6253512qkp.2.1696676385535;
+        Sat, 07 Oct 2023 03:59:45 -0700 (PDT)
+Received: from [172.31.1.12] ([70.109.164.53])
+        by smtp.gmail.com with ESMTPSA id p4-20020a05620a112400b007684220a08csm1974690qkk.70.2023.10.07.03.59.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 07 Oct 2023 03:59:45 -0700 (PDT)
+Message-ID: <8e69cfca-0329-2ca4-5368-b78e1d55b6db@redhat.com>
+Date:   Sat, 7 Oct 2023 06:59:43 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEUSe78O-Ho=22nTeioT4eqPRoDNfcWCpc=5O=B59eaMvOkzpg@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH] binddynport.c honor ip_local_reserved_ports
+To:     Otto Hollmann <ohollmann@suse.cz>,
+        libtirpc-devel@lists.sourceforge.net
+Cc:     linux-nfs@vger.kernel.org, Thomas Blume <thomas.blume@suse.com>
+References: <1654766776.2720.14.camel@suse.cz>
+Content-Language: en-US
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <1654766776.2720.14.camel@suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 06, 2023 at 12:42:04PM -0600, Daniel Díaz wrote:
-> Hello!
+
+
+On 6/9/22 5:26 AM, Otto Hollmann wrote:
+> Read reserved ports from /proc/sys/net/ipv4/ip_local_reserved_ports,
+> store them into bit-wise array and before binding to random port check
+> if port is not reserved.
 > 
-> On Thu, 5 Oct 2023 at 10:40, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> > On Wed, 4 Oct 2023 at 23:41, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > This is the start of the stable review cycle for the 6.1.56 release.
-> > > There are 259 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > >
-> > > Responses should be made by Fri, 06 Oct 2023 17:51:12 +0000.
-> > > Anything received after that time might be too late.
-> > >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.1.56-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.1.y
-> > > and the diffstat can be found below.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > Results from Linaro’s test farm.
-> > Regressions on arm64 bcm2711-rpi-4-b device running LTP dio tests on
-> > NFS mounted rootfs.
-> > and LTP hugetlb hugemmap11 test case failed on x86 and arm64 bcm2711-rpi-4-b.
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> > LTP hugetlb tests failed log
-> >   tst_hugepage.c:83: TINFO: 1 hugepage(s) reserved
-> >   tst_test.c:1558: TINFO: Timeout per run is 0h 05m 00s
-> >   hugemmap11.c:47: TFAIL: Memory mismatch after Direct-IO write
-> >
-> > LTP dio tests failed log
-> >   compare_file: char mismatch: infile offset 4096: 0x01 .   outfile
-> > offset 4096: 0x00 .
-> >   diotest01    1  TFAIL  :  diotest1.c:158: file compare failed for
-> > infile and outfile
 > 
-> Bisection led to "NFS: Fix O_DIRECT locking issues" (upstream commit
-> 7c6339322ce0c6128acbe36aacc1eeb986dd7bf1). Reverting that patch and
-> "NFS: Fix error handling for O_DIRECT write scheduling" (upstream
-> commit 954998b60caa8f2a3bf3abe490de6f08d283687a) (not a clean revert
-> this one) made ltp-dio pass again.
+> Currently, there is no way how to reserve ports so then will not be
+> used by rpcbind.
+> 
+> Random ports are opened by rpcbind because of rmtcalls. There is
+> compile-time flag for disabling them, but in some cases we can not
+> simply disable them.
+> 
+> One solution would be run time option --enable-rmtcalls as already
+> discussed, but it was rejected. So if we want to keep rmtcalls enabled
+> and also be able to reserve some ports, there is no other way than
+> filtering available ports. The easiest and clearest way seems to be
+> just respect kernel list of ip_reserved_ports.
+> 
+> Unfortunately there is one known disadvantage/side effect - it affects
+> probability of ports which are right after reserved ones. The bigger
+> reserved block is, the higher is probability of selecting following
+> unreserved port. But if there is no reserved port, impact of this patch
+> is minimal/none.
+> 
+> Signed-off-by: Otto Hollmann <otto.hollmann@suse.com>
+Committed... (tag libtirpc-1-3-4-rc4)
 
-So this is also an issue in Linus's tree?  Or is it only on the 6.1.y
-tree.
+steved
+> ---
+>   src/binddynport.c | 107 ++++++++++++++++++++++++++++++++++++++++++----
+>   1 file changed, 99 insertions(+), 8 deletions(-)
+> 
+> diff --git a/src/binddynport.c b/src/binddynport.c
+> index 062629a..6f78ebe 100644
+> --- a/src/binddynport.c
+> +++ b/src/binddynport.c
+> @@ -37,6 +37,7 @@
+>   #include <unistd.h>
+>   #include <errno.h>
+>   #include <string.h>
+> +#include <syslog.h>
+>   
+>   #include <rpc/rpc.h>
+>   
+> @@ -56,6 +57,84 @@ enum {
+>   	NPORTS		= ENDPORT - LOWPORT + 1,
+>   };
+>   
+> +/*
+> + * This function decodes information about given port from provided array and
+> + * return if port is reserved or not.
+> + *
+> + * @reserved_ports an array of size at least "NPORTS / (8*sizeof(char)) + 1".
+> + * @port port number within range LOWPORT and ENDPORT
+> + *
+> + * Returns 0 if port is not reserved, non-negative if port is reserved.
+> + */
+> +int is_reserved(char *reserved_ports, int port) {
+> +	port -= LOWPORT;
+> +	if (port < 0 || port >= NPORTS)
+> +		return 0;
+> +	return reserved_ports[port/(8*sizeof(char))] & 1<<(port%(8*sizeof(char)));
+> +}
+> +
+> +/*
+> + * This function encodes information about given *reserved* port into provided
+> + * array. Don't call this function for ports which are not reserved.
+> + *
+> + * @reserved_ports array TODO .
+> + * @port port number within range LOWPORT and ENDPORT
+> + *
+> + */
+> +void set_reserved(char *reserved_ports, int port) {
+> +	port -= LOWPORT;
+> +	if (port < 0 || port >= NPORTS)
+> +		return;
+> +	reserved_ports[port/(8*sizeof(char))] |= 1<<(port%(8*sizeof(char)));
+> +}
+> +
+> +/*
+> + * Parse local reserved ports obtained from
+> + * /proc/sys/net/ipv4/ip_local_reserved_ports into bit array.
+> + *
+> + * @reserved_ports a zeroed array of size at least
+> + * "NPORTS / (8*sizeof(char)) + 1". Will be used for bit-wise encoding of
+> + * reserved ports.
+> + *
+> + * On each call, reserved ports are read from /proc and bit-wise stored into
+> + * provided array
+> + *
+> + * Returns 0 on success, -1 on failure.
+> + */
+> +
+> +int parse_reserved_ports(char *reserved_ports) {
+> +	int from, to;
+> +	char delimiter = ',';
+> +	int res;
+> +	FILE * file_ptr = fopen("/proc/sys/net/ipv4/ip_local_reserved_ports","r");
+> +	if (file_ptr == NULL) {
+> +		(void) syslog(LOG_ERR,
+> +			"Unable to open open /proc/sys/net/ipv4/ip_local_reserved_ports.");
+> +		return -1;
+> +	}
+> +	do {
+> +		if ((res = fscanf(file_ptr, "%d", &to)) != 1) {
+> +			if (res == EOF) break;
+> +			goto err;
+> +		}
+> +		if (delimiter != '-') {
+> +			from = to;
+> +		}
+> +		for (int i = from; i <= to; ++i) {
+> +			set_reserved(reserved_ports, i);
+> +		}
+> +	} while ((res = fscanf(file_ptr, "%c", &delimiter)) == 1);
+> +	if (res != EOF)
+> +		goto err;
+> +	fclose(file_ptr);
+> +	return 0;
+> +err:
+> +	(void) syslog(LOG_ERR,
+> +		"An error occurred while parsing ip_local_reserved_ports.");
+> +	fclose(file_ptr);
+> +	return -1;
+> +}
+> +
+>   /*
+>    * Bind a socket to a dynamically-assigned IP port.
+>    *
+> @@ -81,7 +160,8 @@ int __binddynport(int fd)
+>   	in_port_t port, *portp;
+>   	struct sockaddr *sap;
+>   	socklen_t salen;
+> -	int i, res;
+> +	int i, res, array_size;
+> +	char *reserved_ports;
+>   
+>   	if (__rpc_sockisbound(fd))
+>   		return 0;
+> @@ -119,21 +199,32 @@ int __binddynport(int fd)
+>   		gettimeofday(&tv, NULL);
+>   		seed = tv.tv_usec * getpid();
+>   	}
+> +	array_size = NPORTS / (8*sizeof(char)) + 1;
+> +	reserved_ports = malloc(array_size);
+> +	if (!reserved_ports) {
+> +		goto out;
+> +	}
+> +	memset(reserved_ports, 0, array_size);
+> +	parse_reserved_ports(reserved_ports);
+> +
+>   	port = (rand_r(&seed) % NPORTS) + LOWPORT;
+>   	for (i = 0; i < NPORTS; ++i) {
+> -		*portp = htons(port++);
+> -		res = bind(fd, sap, salen);
+> -		if (res >= 0) {
+> -			res = 0;
+> -			break;
+> +		*portp = htons(port);
+> +		if (!is_reserved(reserved_ports, port++)) {
+> +			res = bind(fd, sap, salen);
+> +			if (res >= 0) {
+> +				res = 0;
+> +				break;
+> +			}
+> +			if (errno != EADDRINUSE)
+> +				break;
+>   		}
+> -		if (errno != EADDRINUSE)
+> -			break;
+>   		if (port > ENDPORT)
+>   			port = LOWPORT;
+>   	}
+>   
+>   out:
+> +	free(reserved_ports);
+>   	mutex_unlock(&port_lock);
+>   	return res;
+>   }
 
-thanks,
-
-greg k-h
