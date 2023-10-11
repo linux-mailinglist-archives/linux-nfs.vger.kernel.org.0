@@ -2,47 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C351F7C54F2
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Oct 2023 15:09:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E81D7C55F3
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Oct 2023 15:55:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234952AbjJKNJn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Oct 2023 09:09:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47528 "EHLO
+        id S232402AbjJKNzx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Oct 2023 09:55:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232308AbjJKNJn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Oct 2023 09:09:43 -0400
+        with ESMTP id S232539AbjJKNzt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Oct 2023 09:55:49 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B762D3;
-        Wed, 11 Oct 2023 06:09:41 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCDF0C433C8;
-        Wed, 11 Oct 2023 13:09:39 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56669A7
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Oct 2023 06:55:48 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1A87C433C8
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Oct 2023 13:55:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697029780;
-        bh=KxOJWQx0gCXD+pvd94GVAroIZnfAUS0u3K1gpuBGf6o=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=aRAi+5McYCClvfpkyuLVNSRKObTbg5YMEbrvQb/UgBgTLvPbVNBb6+AOfyZHAgEk2
-         YbG3EkDYiO+3E0fJpfAGKfP9Vgs+Q3kSfIO3PNipLfGn7iiH1TSCAE2QD16f2uYtgX
-         dwe2+ItGt/iKUP5+rxK5WOIJ+br55O6zAvW0z9id4qSDKfes+LylDqmUOY4UB5FK4w
-         hgAtuWaUwtv4nHJ8/HYhA0R5LuodFiVSDJkf7B+YEQF6NRDPm1m/0n01Pb93QEKCH6
-         plXcvPfw8jvC0o+IFYcXU9l445hjfrTcMFEfP7UpMt7m4MQQHmIicj/eHzUfAIyC41
-         aHb2RdWpamXkg==
-Message-ID: <b4136500fe6c49ee689dba139ce25824684719f2.camel@kernel.org>
-Subject: Re: [PATCH] xfs: reinstate the old i_version counter as
- STATX_CHANGE_COOKIE
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        brauner@kernel.org
-Date:   Wed, 11 Oct 2023 09:09:38 -0400
-In-Reply-To: <20230929-xfs-iversion-v1-1-38587d7b5a52@kernel.org>
-References: <20230929-xfs-iversion-v1-1-38587d7b5a52@kernel.org>
+        s=k20201202; t=1697032548;
+        bh=MlLI9YwVA+uJErzuQ0ejL2MpIZij4Dnxb2brjDwLnoA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Y+27LBcV+Mtm40sAKx4DBUNq6fuP/t3Qx6b05pCrYgaSVNgdg6LuXWiYOFIpHr1H0
+         0wD1T+yDe8a8vPXWjMZhgS9ZQ4w4sUvZroZHSoVX6Yx32aqeaUEm70bvDW8LfpDivV
+         ZVpl7xv0TKeNb3Mj4ouU6YaSal2fUqO+3attRTkkbl1+5AGyrV+D9rgCv+BBhnWp6X
+         MrYgGYie2AOX0pTf45OOA+5b3XQxt7KJDbr5/Kx8n5YYLWT2nVf7ge87KHhm9hkguq
+         LWHDZwOOBAx04x56MOig0SsaUqUjFapeLy6RwmYw7qSxJZOVNcuh6StGT12skq395o
+         nACu7cKD8tPhA==
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-41810cfc569so44029381cf.2
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Oct 2023 06:55:47 -0700 (PDT)
+X-Gm-Message-State: AOJu0YwIGU0jMUsuhbFHQNpaCutG1YI+dR5/T5Lg92VBwrl2Qp41EfVa
+        DGqTLCIcP4jJS5jsPFYziAGYzdk3JXXBbNK5Jns=
+X-Google-Smtp-Source: AGHT+IECfodI6tijTIcF6CJywrqh7UGLc/LZyxZdR58T6WPyL1fm3x1gVmTQriTscQpX78GE4WJPYShfxagKZU6FCVM=
+X-Received: by 2002:a05:622a:144d:b0:40d:6219:d813 with SMTP id
+ v13-20020a05622a144d00b0040d6219d813mr27425117qtx.68.1697032547194; Wed, 11
+ Oct 2023 06:55:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <2e840ad028869edeb4238869eca81593820688b1.camel@kernel.org>
+In-Reply-To: <2e840ad028869edeb4238869eca81593820688b1.camel@kernel.org>
+From:   Anna Schumaker <anna@kernel.org>
+Date:   Wed, 11 Oct 2023 09:55:30 -0400
+X-Gmail-Original-Message-ID: <CAFX2Jfmrh1YVtf_G1pSsORnF5qVMBjrgMBsS4BWTmx+vLdoAZw@mail.gmail.com>
+Message-ID: <CAFX2Jfmrh1YVtf_G1pSsORnF5qVMBjrgMBsS4BWTmx+vLdoAZw@mail.gmail.com>
+Subject: Re: missing patches for v6.6-rc
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, Dai Ngo <dai.ngo@oracle.com>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.module_f38+17164+63eeee4a) 
-MIME-Version: 1.0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -53,56 +58,30 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-09-29 at 14:43 -0400, Jeff Layton wrote:
-> The handling of STATX_CHANGE_COOKIE was moved into generic_fillattr in
-> commit 0d72b92883c6 (fs: pass the request_mask to generic_fillattr), but
-> we didn't account for the fact that xfs doesn't call generic_fillattr at
-> all.
->=20
-> Make XFS report its i_version as the STATX_CHANGE_COOKIE.
->=20
-> Fixes: 0d72b92883c6 (fs: pass the request_mask to generic_fillattr)
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
-> I had hoped to fix this in a better way with the multigrain patches, but
-> it's taking longer than expected (if it even pans out at this point).
->=20
-> Until then, make sure we use XFS's i_version as the STATX_CHANGE_COOKIE,
-> even if it's bumped due to atime updates. Too many invalidations is
-> preferable to not enough.
-> ---
->  fs/xfs/xfs_iops.c | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-> index 1c1e6171209d..2b3b05c28e9e 100644
-> --- a/fs/xfs/xfs_iops.c
-> +++ b/fs/xfs/xfs_iops.c
-> @@ -584,6 +584,11 @@ xfs_vn_getattr(
->  		}
->  	}
-> =20
-> +	if ((request_mask & STATX_CHANGE_COOKIE) && IS_I_VERSION(inode)) {
-> +		stat->change_cookie =3D inode_query_iversion(inode);
-> +		stat->result_mask |=3D STATX_CHANGE_COOKIE;
-> +	}
-> +
->  	/*
->  	 * Note: If you add another clause to set an attribute flag, please
->  	 * update attributes_mask below.
->=20
-> ---
-> base-commit: df964ce9ef9fea10cf131bf6bad8658fde7956f6
-> change-id: 20230929-xfs-iversion-819fa2c18591
->=20
-> Best regards,
+Hi Jeff,
 
-Ping?
+On Tue, Oct 10, 2023 at 8:49=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
+ote:
+>
+> Hi Anna,
+>
+> There are a couple of client side patches that I think we want in v6.6,
+> but that haven't shown up in linux-next yet. Do you still plan to take
+> these from Dai and Scott?
 
-This patch is needed in v6.6 to prevent a regression when serving XFS
-via NFSD. I'd prefer this go in via the xfs tree, but let me know if
-you need me to get this merged this via a different one.
+I've pushed out Dai's patch to my linux-next branch, and I can do
+another pull request before the end of the 6.6 cycle. Is Scott's patch
+still needed after your patch "nfs: decrement nrequests counter before
+releasing the req" which went into 6.6-rc5? If so, it doesn't apply
+cleanly on top of the current code so I'll need to fix it up.
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+Anna
+
+>
+>     [PATCH 1/1] NFS: Fix potential oops in nfs_inode_remove_request()
+>     [PATCH v3 1/1] nfs42: client needs to strip file mode's suid/sgid bit=
+ after ALLOCATE op
+>
+> Thanks,
+> --
+> Jeff Layton <jlayton@kernel.org>
