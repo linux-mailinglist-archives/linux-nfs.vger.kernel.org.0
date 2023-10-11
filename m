@@ -2,90 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C96477C4CC5
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Oct 2023 10:15:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 811597C4FA6
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Oct 2023 12:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229977AbjJKIPE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Oct 2023 04:15:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43312 "EHLO
+        id S234812AbjJKKIs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Oct 2023 06:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229899AbjJKIPC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Oct 2023 04:15:02 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C059D
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Oct 2023 01:15:00 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-32d849cc152so374400f8f.1
-        for <linux-nfs@vger.kernel.org>; Wed, 11 Oct 2023 01:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1697012099; x=1697616899; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vtpagy2FOAC+A5GQkeyxkxyJtI+owSgz6W8MfKmR89U=;
-        b=pz4t2y1UiskQpLcGhsbTsrF16V7Kyf1HXEd56nBXlVdKfmGiI06BaByidA1HhhokTV
-         r8wxkysmhnyCxIdaEgOJtI9AeTp3kR37I99Iqoze9TENa+L4ldSOsaiV8VX9/awiiWJf
-         Ms1NuqqrVK1GKVZ5t/tmOqHTV+MZUbyP6Y6pdvJ4BUJ7nCARXiQM4+Ce9ITD17XDKBTj
-         cP2mV9h5KFayo9zKGfyQQbmEkK4w4O0sD4O/V2k/FhWGG2s8YfDq3Ciq2qyTAORv2qxB
-         1ebmbjGbWpKczc9+nPmiZIWpy6zCoZJtXkW/y/lEFqEaIE1hp46X1+GwFkZ6d03y9X73
-         8QYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697012099; x=1697616899;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vtpagy2FOAC+A5GQkeyxkxyJtI+owSgz6W8MfKmR89U=;
-        b=do8xeGUThT2+nhqRV137bh+WJ/2E2TT4fiBKMBeER+kV/bHHws2g7L9g4mqy6lctCD
-         wtL1ARb2QEzcPs+NuNdZ7IEj4EfCvwJPrK+4ieq7o43Nr2WBuQ+0D6i4oTZwENgwQtD0
-         ydB8d9xA1VR637lAFadOxTLG54jbXRVbdX9wgBe6ITpUi1Sc8QBhCjRP0Q/P8IVla4a/
-         bHq1jQOuJajphAPnXbwdN6dzdStqA5ZYo5ZgAdwbUU29K5CU2SGmQ3yVVltGbI48BFGS
-         sB2rowl341+tEKotwbM6MtZYf8vULH5pvxvI3B29Bmo+YbzRfOkzi9fR8cZCPP1h8+7+
-         sfeA==
-X-Gm-Message-State: AOJu0YyKHwUNr/Tx2/mC++h93AJtPa9SIO/fntCUxuP9l14HmxJxm7BF
-        Y5Poy4SFO9VK1d1XmEx4v3Wt5A==
-X-Google-Smtp-Source: AGHT+IH+nFbUIrVmTEv6gMfTbmCrdI4fJezaJJy9xkJMds1ntqxtbKt+3p2wLJX84bwnz9RfZSqaUg==
-X-Received: by 2002:adf:f641:0:b0:31f:b6ea:af48 with SMTP id x1-20020adff641000000b0031fb6eaaf48mr17486391wrp.49.1697012098954;
-        Wed, 11 Oct 2023 01:14:58 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id v6-20020adff686000000b0031980294e9fsm14561839wrp.116.2023.10.11.01.14.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Oct 2023 01:14:57 -0700 (PDT)
-Date:   Wed, 11 Oct 2023 11:14:55 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        with ESMTP id S1346078AbjJKKId (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Oct 2023 06:08:33 -0400
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5283171B
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Oct 2023 03:07:25 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:b72e:818:7fe2:593d])
+        by xavier.telenet-ops.be with bizsmtp
+        id wa7L2A00W56sUls01a7LSi; Wed, 11 Oct 2023 12:07:22 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1qqW7a-00648i-RP;
+        Wed, 11 Oct 2023 12:07:20 +0200
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1qqW7c-00HQrM-DG;
+        Wed, 11 Oct 2023 12:07:20 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
         Olga Kornievskaia <kolga@netapp.com>,
         Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Xin Tan <tanxin.ctf@gmail.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH net-XXX] SUNRPC: Add an IS_ERR() check back to where it
- was
-Message-ID: <38b1b94c-3ab1-4fb5-ad8c-946756262bdb@kadam.mountain>
-References: <356fb42c-9cf1-45cd-9233-ac845c507fb7@moroto.mountain>
+        Anna Schumaker <anna@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] sunrpc: Use no_printk() in dfprintk*() dummies
+Date:   Wed, 11 Oct 2023 12:07:19 +0200
+Message-Id: <707e5e6dd0db9a663cf443564d1f8ee1c10a0086.1697018818.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <356fb42c-9cf1-45cd-9233-ac845c507fb7@moroto.mountain>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Obviously net-XXX is not what I intended.  This applies to the nfs tree
-I think.
+When building NFS with W=1 and CONFIG_WERROR=y, but
+CONFIG_SUNRPC_DEBUG=n:
 
-regards,
-dan carpenter
+    fs/nfs/nfs4proc.c: In function ‘nfs4_proc_create_session’:
+    fs/nfs/nfs4proc.c:9276:19: error: variable ‘ptr’ set but not used [-Werror=unused-but-set-variable]
+     9276 |         unsigned *ptr;
+	  |                   ^~~
+      CC      fs/nfs/callback.o
+    fs/nfs/callback.c: In function ‘nfs41_callback_svc’:
+    fs/nfs/callback.c:98:13: error: variable ‘error’ set but not used [-Werror=unused-but-set-variable]
+       98 |         int error;
+	  |             ^~~~~
+      CC      fs/nfs/flexfilelayout/flexfilelayout.o
+    fs/nfs/flexfilelayout/flexfilelayout.c: In function ‘ff_layout_io_track_ds_error’:
+    fs/nfs/flexfilelayout/flexfilelayout.c:1230:13: error: variable ‘err’ set but not used [-Werror=unused-but-set-variable]
+     1230 |         int err;
+	  |             ^~~
+      CC      fs/nfs/flexfilelayout/flexfilelayoutdev.o
+    fs/nfs/flexfilelayout/flexfilelayoutdev.c: In function ‘nfs4_ff_alloc_deviceid_node’:
+    fs/nfs/flexfilelayout/flexfilelayoutdev.c:55:16: error: variable ‘ret’ set but not used [-Werror=unused-but-set-variable]
+       55 |         int i, ret = -ENOMEM;
+	  |                ^~~
+
+All these are due to variables that are set uncontionally, but are used
+only when debugging is enabled.
+
+Fix this by changing the dfprintk*() dummy macros from empty loops to
+calls to the no_printk() helper.  This informs the compiler that the
+passed debug parameters are actually used, and enables format specifier
+checking as a bonus.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ include/linux/sunrpc/debug.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
+index f6aeed07fe04e3d5..76539c6673f2fb15 100644
+--- a/include/linux/sunrpc/debug.h
++++ b/include/linux/sunrpc/debug.h
+@@ -67,9 +67,9 @@ do {									\
+ # define RPC_IFDEBUG(x)		x
+ #else
+ # define ifdebug(fac)		if (0)
+-# define dfprintk(fac, fmt, ...)	do {} while (0)
+-# define dfprintk_cont(fac, fmt, ...)	do {} while (0)
+-# define dfprintk_rcu(fac, fmt, ...)	do {} while (0)
++# define dfprintk(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
++# define dfprintk_cont(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
++# define dfprintk_rcu(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
+ # define RPC_IFDEBUG(x)
+ #endif
+ 
+-- 
+2.34.1
 
