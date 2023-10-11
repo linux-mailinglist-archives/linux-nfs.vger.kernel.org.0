@@ -2,140 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 892827C4923
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Oct 2023 07:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2FC77C4C84
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Oct 2023 10:00:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229703AbjJKFQZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Oct 2023 01:16:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60210 "EHLO
+        id S1345436AbjJKIAc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Oct 2023 04:00:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229815AbjJKFQY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Oct 2023 01:16:24 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2069E
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Oct 2023 22:16:21 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 598B31F8D9;
-        Wed, 11 Oct 2023 05:16:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1697001380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cp8y+48CpcA8VGo+HHNY1HR+kEbRsXE0VzkyNJUs+yI=;
-        b=rbVDH1UdqveAwJ1XvCftRc8J0vZ1pz67ssOTIqxw7gp9tzwVpsVs4ApRebX3By0uvb5Yq3
-        TBEMpQbN7To5sVUOsHK4iZbkhW/rbNYcAvlrkO6d8yi9Asco6GVqGOWOvLmiFVOGWQuCwJ
-        EhM8nF9aejo/4Jvb3sqTcr3dpNCIymY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1697001380;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cp8y+48CpcA8VGo+HHNY1HR+kEbRsXE0VzkyNJUs+yI=;
-        b=YDu01gQ6HrR6znwkyb5eB9BMWSk12L0p4U2FftZTaOuV3IQJznigJR7DN61Co0p1wEXhEE
-        AhP9dcLwfJuBobDQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1814313586;
-        Wed, 11 Oct 2023 05:16:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 0y8yL6IvJmWGQgAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 11 Oct 2023 05:16:18 +0000
-From:   NeilBrown <neilb@suse.de>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     linux-nfs@vger.kernel.org,
-        Trond Myklebust <trondmy@hammerspace.com>
-Subject: [PATCH 3/3 RFC] export: nfsd_fh - always an answer to a well-formed question.
-Date:   Wed, 11 Oct 2023 15:58:02 +1100
-Message-ID: <20231011051131.24667-4-neilb@suse.de>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231011051131.24667-1-neilb@suse.de>
-References: <20231011051131.24667-1-neilb@suse.de>
+        with ESMTP id S1345428AbjJKIAb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Oct 2023 04:00:31 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF18AC
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Oct 2023 01:00:28 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-40675f06f1fso3534545e9.1
+        for <linux-nfs@vger.kernel.org>; Wed, 11 Oct 2023 01:00:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1697011226; x=1697616026; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qz8ZijtXypgZfgGaNG42ozEudQwZ/S4uYiYC3qrkT4w=;
+        b=InioOG/MLYTDZA2VHIziYLynQlDASgEG+NsTSePgf3hOroOP5kj0NKANmiB5gbdz12
+         aIqTEaXK9XQNielWD5T8+sDPokI4KknFTR4RhtYHpUTFyXbbWiNwjL10mDh9FayHngzC
+         iJGDxFBD7rnAKMz+WEndq+J7kc7cBGiF5fDYBTf2+oVPrZO15w3ZR5yfLEuDhGzahH8U
+         LfhzXgdZtv2kBprW7uywpeluZ/vBjFoqKC1uTHr3QECeMV0y4DLIzLAgUc04sQ9XLjH1
+         cz7aU9n/QBmMqNQ0w07ct+mqhcyCzgq6shmHSr2+LjQZth2g0ux3L12ooRYkqFohFRUj
+         YgHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697011226; x=1697616026;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qz8ZijtXypgZfgGaNG42ozEudQwZ/S4uYiYC3qrkT4w=;
+        b=tylzlpJEak/4htkm46DzkRziaKBCpcH8cGizYjIsQ0JGQYrv1N++ggUAFpj9JvbZGQ
+         nC5kh/XB/uR7JQaji1ILBvPzeeCtB8UJxp+8O+i+rNZ3/9Yv4h+VqPshbEzCmvRjHvdL
+         MiQYVNnf07GtKw01/87FACETGSxQc2rwBWvUCBACJIK3fS9RC8aGwoaMabTvyU304mbC
+         RngL8jigbBNBofsbxTemnf4WnxJOkwwEOG9DbKIFi17mlLb+/8NOxN2z5NOOUEX9Ok5B
+         5Eyh9/s5s4PeWylMTz0IlWlFQmZWDUarEgSimpUEJB1RzNLBzB4uSLTSna3jdYrBeV5p
+         PLeA==
+X-Gm-Message-State: AOJu0YzHJOivFoN3beXKPuC1O+Tb+noxUeU8sj1XISuefVTuqSPEpiIT
+        fkv/Ju8aOuTNQgHoi8WCYsE1CQ==
+X-Google-Smtp-Source: AGHT+IFZXX0jarvpNDfAJY2TbuzWh9WTigeX7sMPpWABOvC6Pd2KQOBcSrlU0uwBWQ3W4y5pUCkMbg==
+X-Received: by 2002:a05:6000:243:b0:329:6b53:e3ad with SMTP id m3-20020a056000024300b003296b53e3admr12254266wrz.34.1697011226548;
+        Wed, 11 Oct 2023 01:00:26 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id l9-20020a1c7909000000b00401b242e2e6sm18282714wme.47.2023.10.11.01.00.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Oct 2023 01:00:26 -0700 (PDT)
+Date:   Wed, 11 Oct 2023 11:00:22 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     Xiyu Yang <xiyuyang19@fudan.edu.cn>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Xin Tan <tanxin.ctf@gmail.com>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH net-XXX] SUNRPC: Add an IS_ERR() check back to where it was
+Message-ID: <356fb42c-9cf1-45cd-9233-ac845c507fb7@moroto.mountain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When the kernel asks mountd for some information it is important that
-mountd reply as the kernel will not ask again.
-When we don't have a useful reply we want the kernel to see this
-as a transient failure.  This not currently (v6.6) any way to
-communicate a transient failure.  The best we can do is give a
-negative answer which is already expired.  This will at least
-allow the kernel to ask again.
+This IS_ERR() check was deleted during in a cleanup because, at the time,
+the rpcb_call_async() function could not return an error pointer.  That
+changed in commit 25cf32ad5dba ("SUNRPC: Handle allocation failure in
+rpc_new_task()") and now it can return an error pointer.  Put the check
+back.
 
-The kernel needs to be enhanced to not treat an entry that is already
-expired as ever reliable.
+A related revert was done in commit 13bd90141804 ("Revert "SUNRPC:
+Remove unreachable error condition"").
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+Fixes: 037e910b52b0 ("SUNRPC: Remove unreachable error condition in rpcb_getport_async()")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- support/export/cache.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+It's possible Smatch was responsible for generating the original warning
+because it warns for unnecessary NULL checks.  But generally, there was
+a future error pointer implied.  Those warnings are just a hint, not a
+command.
 
-diff --git a/support/export/cache.c b/support/export/cache.c
-index 5307f6c8d872..74cacea9f0cc 100644
---- a/support/export/cache.c
-+++ b/support/export/cache.c
-@@ -894,7 +894,7 @@ static void nfsd_fh(int f)
- 		 * quiet rather than returning stale yet
- 		 */
- 		if (dev_missing)
--			goto out;
-+			goto out_delay;
- 	} else if (found->e_mountpoint &&
- 	    !is_mountpoint(found->e_mountpoint[0]?
- 			   found->e_mountpoint:
-@@ -904,8 +904,7 @@ static void nfsd_fh(int f)
- 		   xlog(L_WARNING, "%s not exported as %d not a mountpoint",
- 		   found->e_path, found->e_mountpoint);
- 		 */
--		/* FIXME we need to make sure we re-visit this later */
--		goto out;
-+		goto out_delay;
- 	}
+ net/sunrpc/rpcb_clnt.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/net/sunrpc/rpcb_clnt.c b/net/sunrpc/rpcb_clnt.c
+index 5988a5c5ff3f..102c3818bc54 100644
+--- a/net/sunrpc/rpcb_clnt.c
++++ b/net/sunrpc/rpcb_clnt.c
+@@ -769,6 +769,10 @@ void rpcb_getport_async(struct rpc_task *task)
  
- 	bp = buf; blen = sizeof(buf);
-@@ -934,6 +933,26 @@ out:
- 	nfs_freeaddrinfo(ai);
- 	free(dom);
- 	xlog(D_CALL, "nfsd_fh: found %p path %s", found, found ? found->e_path : NULL);
-+	return;
-+
-+out_delay:
-+	/* We don't have a definitely answer to give the kernel - maybe we will later.
-+	 * This could be because an export marked "mountpoint" isn't a mountpoint, or
-+	 * because a mountpoint fails with a strange error like ETIMEDOUT as is possible
-+	 * with an NFS mount marked "softerr" which is being re-exported.
-+	 * If we tell the kernel nothing, it will never ask again, so we have
-+	 * to give some answer.  A negative answer that has already expired
-+	 * is the best we can do.
-+	 */
-+	bp = buf; blen = sizeof(buf);
-+	qword_add(&bp, &blen, dom);
-+	qword_addint(&bp, &blen, fsidtype);
-+	qword_addhex(&bp, &blen, fsid, fsidlen);
-+	qword_addint(&bp, &blen, time(NULL) - 1);
-+	qword_addeol(&bp, &blen);
-+	if (blen <= 0 || cache_write(f, buf, bp - buf) != bp - buf)
-+		xlog(L_ERROR, "nfsd_fh: error writing reply");
-+	xlog(D_AUTH, "unknown access to %s", *dom == '$' ? dom+1 : dom);
- }
+ 	child = rpcb_call_async(rpcb_clnt, map, proc);
+ 	rpc_release_client(rpcb_clnt);
++	if (IS_ERR(child)) {
++		/* rpcb_map_release() has freed the arguments */
++		return;
++	}
  
- #ifdef HAVE_JUNCTION_SUPPORT
+ 	xprt->stat.bind_count++;
+ 	rpc_put_task(child);
 -- 
-2.42.0
+2.39.2
 
