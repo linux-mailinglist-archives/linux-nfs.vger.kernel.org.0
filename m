@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A3C07C4922
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 Oct 2023 07:16:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 892827C4923
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 Oct 2023 07:16:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229808AbjJKFQT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 Oct 2023 01:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60132 "EHLO
+        id S229703AbjJKFQZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 Oct 2023 01:16:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbjJKFQS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Oct 2023 01:16:18 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6F698
-        for <linux-nfs@vger.kernel.org>; Tue, 10 Oct 2023 22:16:16 -0700 (PDT)
+        with ESMTP id S229815AbjJKFQY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 Oct 2023 01:16:24 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2069E
+        for <linux-nfs@vger.kernel.org>; Tue, 10 Oct 2023 22:16:21 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 6D22421847;
-        Wed, 11 Oct 2023 05:16:15 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 598B31F8D9;
+        Wed, 11 Oct 2023 05:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1697001375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1697001380; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LL7tWXUl7A3RdvdqOHiqksj0Bp6yAXgIslcHvnRez98=;
-        b=iZc+FzWRu9jEM2SVav498qBP4q28g2d5sKfhHk0csAEr9GTHvz1891MJV0GlZTroKqxnv/
-        14Jwty3pHt3TpwsxxoSUqIpsRqVcJ4nBuY29ifvY4oRR6Zm8m5n2WMyhgZqcCm8xkbTM+2
-        sDe7eQCsMt/XOHYWLEzR2SSnUOuojuo=
+        bh=Cp8y+48CpcA8VGo+HHNY1HR+kEbRsXE0VzkyNJUs+yI=;
+        b=rbVDH1UdqveAwJ1XvCftRc8J0vZ1pz67ssOTIqxw7gp9tzwVpsVs4ApRebX3By0uvb5Yq3
+        TBEMpQbN7To5sVUOsHK4iZbkhW/rbNYcAvlrkO6d8yi9Asco6GVqGOWOvLmiFVOGWQuCwJ
+        EhM8nF9aejo/4Jvb3sqTcr3dpNCIymY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1697001375;
+        s=susede2_ed25519; t=1697001380;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=LL7tWXUl7A3RdvdqOHiqksj0Bp6yAXgIslcHvnRez98=;
-        b=5GW+ZeT81ahjpSc6qR0EMZfrbuKFn64rhQ9c0FSlm8doWcil5Q1XE8TUwX7RqOLpiP5evl
-        HWspVRgToZkkJCBQ==
+        bh=Cp8y+48CpcA8VGo+HHNY1HR+kEbRsXE0VzkyNJUs+yI=;
+        b=YDu01gQ6HrR6znwkyb5eB9BMWSk12L0p4U2FftZTaOuV3IQJznigJR7DN61Co0p1wEXhEE
+        AhP9dcLwfJuBobDQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 315BB13586;
-        Wed, 11 Oct 2023 05:16:13 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1814313586;
+        Wed, 11 Oct 2023 05:16:18 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 4zOONZ0vJmWCQgAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 11 Oct 2023 05:16:13 +0000
+        id 0y8yL6IvJmWGQgAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 11 Oct 2023 05:16:18 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <steved@redhat.com>
 Cc:     linux-nfs@vger.kernel.org,
         Trond Myklebust <trondmy@hammerspace.com>
-Subject: [PATCH 2/3] export: add EACCES to the list of known path_lookup_error() errors.
-Date:   Wed, 11 Oct 2023 15:58:01 +1100
-Message-ID: <20231011051131.24667-3-neilb@suse.de>
+Subject: [PATCH 3/3 RFC] export: nfsd_fh - always an answer to a well-formed question.
+Date:   Wed, 11 Oct 2023 15:58:02 +1100
+Message-ID: <20231011051131.24667-4-neilb@suse.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231011051131.24667-1-neilb@suse.de>
 References: <20231011051131.24667-1-neilb@suse.de>
@@ -70,29 +70,72 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If a 'stat' results in EACCES (for root), then it is likely a permanent
-problem.  One possible cause is a 'fuser' filesystem which only gives
-any access to the user which mounted it.
+When the kernel asks mountd for some information it is important that
+mountd reply as the kernel will not ask again.
+When we don't have a useful reply we want the kernel to see this
+as a transient failure.  This not currently (v6.6) any way to
+communicate a transient failure.  The best we can do is give a
+negative answer which is already expired.  This will at least
+allow the kernel to ask again.
 
-So it is reasonable for EACCES to be a "path lookup error"
+The kernel needs to be enhanced to not treat an entry that is already
+expired as ever reliable.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- support/export/cache.c | 1 +
- 1 file changed, 1 insertion(+)
+ support/export/cache.c | 25 ++++++++++++++++++++++---
+ 1 file changed, 22 insertions(+), 3 deletions(-)
 
 diff --git a/support/export/cache.c b/support/export/cache.c
-index e4595020f43f..5307f6c8d872 100644
+index 5307f6c8d872..74cacea9f0cc 100644
 --- a/support/export/cache.c
 +++ b/support/export/cache.c
-@@ -77,6 +77,7 @@ static bool path_lookup_error(int err)
- 	case ENAMETOOLONG:
- 	case ENOENT:
- 	case ENOTDIR:
-+	case EACCES:
- 		return 1;
+@@ -894,7 +894,7 @@ static void nfsd_fh(int f)
+ 		 * quiet rather than returning stale yet
+ 		 */
+ 		if (dev_missing)
+-			goto out;
++			goto out_delay;
+ 	} else if (found->e_mountpoint &&
+ 	    !is_mountpoint(found->e_mountpoint[0]?
+ 			   found->e_mountpoint:
+@@ -904,8 +904,7 @@ static void nfsd_fh(int f)
+ 		   xlog(L_WARNING, "%s not exported as %d not a mountpoint",
+ 		   found->e_path, found->e_mountpoint);
+ 		 */
+-		/* FIXME we need to make sure we re-visit this later */
+-		goto out;
++		goto out_delay;
  	}
- 	return 0;
+ 
+ 	bp = buf; blen = sizeof(buf);
+@@ -934,6 +933,26 @@ out:
+ 	nfs_freeaddrinfo(ai);
+ 	free(dom);
+ 	xlog(D_CALL, "nfsd_fh: found %p path %s", found, found ? found->e_path : NULL);
++	return;
++
++out_delay:
++	/* We don't have a definitely answer to give the kernel - maybe we will later.
++	 * This could be because an export marked "mountpoint" isn't a mountpoint, or
++	 * because a mountpoint fails with a strange error like ETIMEDOUT as is possible
++	 * with an NFS mount marked "softerr" which is being re-exported.
++	 * If we tell the kernel nothing, it will never ask again, so we have
++	 * to give some answer.  A negative answer that has already expired
++	 * is the best we can do.
++	 */
++	bp = buf; blen = sizeof(buf);
++	qword_add(&bp, &blen, dom);
++	qword_addint(&bp, &blen, fsidtype);
++	qword_addhex(&bp, &blen, fsid, fsidlen);
++	qword_addint(&bp, &blen, time(NULL) - 1);
++	qword_addeol(&bp, &blen);
++	if (blen <= 0 || cache_write(f, buf, bp - buf) != bp - buf)
++		xlog(L_ERROR, "nfsd_fh: error writing reply");
++	xlog(D_AUTH, "unknown access to %s", *dom == '$' ? dom+1 : dom);
+ }
+ 
+ #ifdef HAVE_JUNCTION_SUPPORT
 -- 
 2.42.0
 
