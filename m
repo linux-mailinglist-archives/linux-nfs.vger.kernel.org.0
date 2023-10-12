@@ -2,138 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6A107C6A77
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 Oct 2023 12:08:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E8F57C6A9E
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 Oct 2023 12:11:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343760AbjJLKIR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Oct 2023 06:08:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        id S235399AbjJLKLW convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 12 Oct 2023 06:11:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235457AbjJLKIQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Oct 2023 06:08:16 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7C869D
-        for <linux-nfs@vger.kernel.org>; Thu, 12 Oct 2023 03:08:13 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:b72e:818:7fe2:593d])
-        by albert.telenet-ops.be with bizsmtp
-        id wy872A00A56sUls06y87rb; Thu, 12 Oct 2023 12:08:10 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qqsbs-0068cO-Ox;
-        Thu, 12 Oct 2023 12:08:07 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qqsbv-001VAj-0c;
-        Thu, 12 Oct 2023 12:08:07 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Chuck Lever <chuck.lever@oracle.com>,
+        with ESMTP id S234179AbjJLKLU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Oct 2023 06:11:20 -0400
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66ECFD6;
+        Thu, 12 Oct 2023 03:11:19 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-d8168d08bebso768193276.0;
+        Thu, 12 Oct 2023 03:11:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697105478; x=1697710278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ayB48oEye0wkJNGcHILedrEPe86Z+o0FK5cblcxwBu4=;
+        b=g20YNoiuUp3PJTtfneu/AAO3H6wREHiWkB19bYFIpP2L5qldrlaH0xB5mXOwOMG0bK
+         rL0G7yOknP2XiUygWDvig3HyzyvaPK3DIHvtL1X+dsKugmYjdhutGAvNqnHLYdh4ffKU
+         Cdjsv/VX7smfFBhAtCZIHoEz1SDQ85OgBaNMb81DPkiXQNJuxlvN9xOehdMuTWoOBy1y
+         mPb+tGq0zS/MtuZ+OwQvstBPDBZZ56iynwUqBcI/B1GEnBD8jDpiANDiVR8njxqtt0yj
+         Qzhip8FLdvPMPyC9TWbrIj6ybM9FXrcBFurx+UDT4mTI78Ghsn7ctCwtyrrlxeJSLwk0
+         Oo2Q==
+X-Gm-Message-State: AOJu0YxKSFPBClWODZz7s+lrMSSDSkBABySa0HGMbSF6BM0lUx99vnrP
+        gdaKHigxOd2JK9de4YB2HhAcXOXzDVjacg==
+X-Google-Smtp-Source: AGHT+IEL6O04651O106gAWi3QIrD9tCqu2hdglNn0tUAZClFZ/j8vJg0JK/yr/Fc5o+0D2oHUmphiw==
+X-Received: by 2002:a25:c286:0:b0:d99:3a41:abec with SMTP id s128-20020a25c286000000b00d993a41abecmr12335661ybf.11.1697105478350;
+        Thu, 12 Oct 2023 03:11:18 -0700 (PDT)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id 85-20020a250d58000000b00d9a54e9b742sm1822370ybn.55.2023.10.12.03.11.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 12 Oct 2023 03:11:18 -0700 (PDT)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-d9a64ca9cedso754644276.1;
+        Thu, 12 Oct 2023 03:11:18 -0700 (PDT)
+X-Received: by 2002:a25:d345:0:b0:d9a:5d69:54b with SMTP id
+ e66-20020a25d345000000b00d9a5d69054bmr7743541ybf.25.1697105477970; Thu, 12
+ Oct 2023 03:11:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <707e5e6dd0db9a663cf443564d1f8ee1c10a0086.1697018818.git.geert+renesas@glider.be>
+ <202310121404.FMC1T6FF-lkp@intel.com>
+In-Reply-To: <202310121404.FMC1T6FF-lkp@intel.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 12 Oct 2023 12:11:06 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWszZnozVi7cj7SH4R0Cv1SD7KrLOwze2xwKULtOGzQCA@mail.gmail.com>
+Message-ID: <CAMuHMdWszZnozVi7cj7SH4R0Cv1SD7KrLOwze2xwKULtOGzQCA@mail.gmail.com>
+Subject: Re: [PATCH] sunrpc: Use no_printk() in dfprintk*() dummies
+To:     kernel test robot <lkp@intel.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
         Olga Kornievskaia <kolga@netapp.com>,
         Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH -next v2] sunrpc: Use no_printk() in dfprintk*() dummies
-Date:   Thu, 12 Oct 2023 12:08:05 +0200
-Message-Id: <a93de2e8afa826745746b00fc5f64e513df5d52f.1697104757.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
+        Anna Schumaker <anna@kernel.org>,
+        oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When building NFS with W=1 and CONFIG_WERROR=y, but
-CONFIG_SUNRPC_DEBUG=n:
+On Thu, Oct 12, 2023 at 9:09 AM kernel test robot <lkp@intel.com> wrote:
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on trondmy-nfs/linux-next]
+> [also build test ERROR on linus/master v6.6-rc5 next-20231011]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Geert-Uytterhoeven/sunrpc-Use-no_printk-in-dfprintk-dummies/20231011-181013
+> base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+> patch link:    https://lore.kernel.org/r/707e5e6dd0db9a663cf443564d1f8ee1c10a0086.1697018818.git.geert%2Brenesas%40glider.be
+> patch subject: [PATCH] sunrpc: Use no_printk() in dfprintk*() dummies
+> config: alpha-defconfig (https://download.01.org/0day-ci/archive/20231012/202310121404.FMC1T6FF-lkp@intel.com/config)
+> compiler: alpha-linux-gcc (GCC) 13.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231012/202310121404.FMC1T6FF-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202310121404.FMC1T6FF-lkp@intel.com/
+>
+> All error/warnings (new ones prefixed by >>):
+>
+>    In file included from include/asm-generic/bug.h:22,
+>                     from arch/alpha/include/asm/bug.h:23,
+>                     from include/linux/bug.h:5,
+>                     from include/linux/thread_info.h:13,
+>                     from include/asm-generic/preempt.h:5,
+>                     from ./arch/alpha/include/generated/asm/preempt.h:1,
+>                     from include/linux/preempt.h:79,
+>                     from include/linux/spinlock.h:56,
+>                     from include/linux/mmzone.h:8,
+>                     from include/linux/gfp.h:7,
+>                     from include/linux/slab.h:16,
+>                     from fs/lockd/svclock.c:25:
+>    fs/lockd/svclock.c: In function 'nlmsvc_lookup_block':
+> >> fs/lockd/svclock.c:164:33: error: implicit declaration of function 'nlmdbg_cookie2a' [-Werror=implicit-function-declaration]
+>      164 |                                 nlmdbg_cookie2a(&block->b_call->a_args.cookie));
+>          |                                 ^~~~~~~~~~~~~~~
+>    include/linux/printk.h:427:33: note: in definition of macro 'printk_index_wrap'
+>      427 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+>          |                                 ^~~~~~~~~~~
+>    include/linux/printk.h:129:17: note: in expansion of macro 'printk'
+>      129 |                 printk(fmt, ##__VA_ARGS__);             \
+>          |                 ^~~~~~
+>    include/linux/sunrpc/debug.h:70:41: note: in expansion of macro 'no_printk'
+>       70 | # define dfprintk(fac, fmt, ...)        no_printk(fmt, ##__VA_ARGS__)
+>          |                                         ^~~~~~~~~
+>    include/linux/sunrpc/debug.h:25:9: note: in expansion of macro 'dfprintk'
+>       25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+>          |         ^~~~~~~~
+>    fs/lockd/svclock.c:160:17: note: in expansion of macro 'dprintk'
+>      160 |                 dprintk("lockd: check f=%p pd=%d %Ld-%Ld ty=%d cookie=%s\n",
+>          |                 ^~~~~~~
+> >> fs/lockd/svclock.c:160:25: warning: format '%s' expects argument of type 'char *', but argument 7 has type 'int' [-Wformat=]
 
-    fs/nfs/nfs4proc.c: In function ‘nfs4_proc_create_session’:
-    fs/nfs/nfs4proc.c:9276:19: error: variable ‘ptr’ set but not used [-Werror=unused-but-set-variable]
-     9276 |         unsigned *ptr;
-	  |                   ^~~
-      CC      fs/nfs/callback.o
-    fs/nfs/callback.c: In function ‘nfs41_callback_svc’:
-    fs/nfs/callback.c:98:13: error: variable ‘error’ set but not used [-Werror=unused-but-set-variable]
-       98 |         int error;
-	  |             ^~~~~
-      CC      fs/nfs/flexfilelayout/flexfilelayout.o
-    fs/nfs/flexfilelayout/flexfilelayout.c: In function ‘ff_layout_io_track_ds_error’:
-    fs/nfs/flexfilelayout/flexfilelayout.c:1230:13: error: variable ‘err’ set but not used [-Werror=unused-but-set-variable]
-     1230 |         int err;
-	  |             ^~~
-      CC      fs/nfs/flexfilelayout/flexfilelayoutdev.o
-    fs/nfs/flexfilelayout/flexfilelayoutdev.c: In function ‘nfs4_ff_alloc_deviceid_node’:
-    fs/nfs/flexfilelayout/flexfilelayoutdev.c:55:16: error: variable ‘ret’ set but not used [-Werror=unused-but-set-variable]
-       55 |         int i, ret = -ENOMEM;
-	  |                ^~~
+Thanks already fixed in v2.
 
-All these are due to variables that are set unconditionally, but are
-used only when debugging is enabled.
+Gr{oetje,eeting}s,
 
-Fix this by changing the dfprintk*() dummy macros from empty loops to
-calls to the no_printk() helper.  This informs the compiler that the
-passed debug parameters are actually used, and enables format specifier
-checking as a bonus.
+                        Geert
 
-This requires removing the protection by CONFIG_SUNRPC_DEBUG of the
-declaration of nlmdbg_cookie2a(), as its reference is now visible to the
-compiler, but optimized away.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - s/uncontionally/unconditionally/,
-  - Drop CONFIG_SUNRPC_DEBUG check in fs/lockd/svclock.c to fix build
-    failure.
----
- fs/lockd/svclock.c           | 2 --
- include/linux/sunrpc/debug.h | 6 +++---
- 2 files changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index 43aeba9de55cbbc5..119a0c31d30eed4f 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -55,7 +55,6 @@ static const struct rpc_call_ops nlmsvc_grant_ops;
- static LIST_HEAD(nlm_blocked);
- static DEFINE_SPINLOCK(nlm_blocked_lock);
- 
--#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
- {
- 	/*
-@@ -82,7 +81,6 @@ static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
- 
- 	return buf;
- }
--#endif
- 
- /*
-  * Insert a blocked lock into the global list
-diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
-index f6aeed07fe04e3d5..76539c6673f2fb15 100644
---- a/include/linux/sunrpc/debug.h
-+++ b/include/linux/sunrpc/debug.h
-@@ -67,9 +67,9 @@ do {									\
- # define RPC_IFDEBUG(x)		x
- #else
- # define ifdebug(fac)		if (0)
--# define dfprintk(fac, fmt, ...)	do {} while (0)
--# define dfprintk_cont(fac, fmt, ...)	do {} while (0)
--# define dfprintk_rcu(fac, fmt, ...)	do {} while (0)
-+# define dfprintk(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
-+# define dfprintk_cont(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
-+# define dfprintk_rcu(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
- # define RPC_IFDEBUG(x)
- #endif
- 
 -- 
-2.34.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
