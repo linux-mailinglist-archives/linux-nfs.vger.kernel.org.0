@@ -2,83 +2,151 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 348147C8C48
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 19:28:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 900C77C8DE3
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 21:46:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230469AbjJMR2X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Oct 2023 13:28:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39476 "EHLO
+        id S229958AbjJMTqC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Oct 2023 15:46:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229697AbjJMR2W (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 13:28:22 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AC10A9;
-        Fri, 13 Oct 2023 10:28:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Imrv7hD55Mkc+SEoB4XVFrWjYvya+wwXsMRtGt0H5rA=; b=LfICwqNBIzNu3ioIqF7lzF8PE1
-        DNNDcUO+WN6s+RP2OMkJT/qU5k3RBo3ANrYkhAsydqGKT4ioL2RtakBCc/WjI9nTOwQif69iGoPrM
-        LIItLhrydjykR5FjKmttU+4/HwxH3uPMKcW4OygWjeOzbFRQPkvG/O43/t6okeN2/i09crXEZFKzi
-        k8D4OvY2OQU2yIehhAKYO9ouGdyvJ4MFCcMfiy3X2M3RigM5HJi6BJl951Sd53Ypx8tChN8KFZLHk
-        lxrVWGWMbWdDCC0v6yBYd6sAPv/6oLJTbIGWhm8cJL7F7vnRHhJQBHkL0w7AwREstcKxvFjdi2A5A
-        So6VZ8xg==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qrLwx-006d2F-Oz; Fri, 13 Oct 2023 17:27:47 +0000
-Date:   Fri, 13 Oct 2023 18:27:47 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Steve French <smfrench@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-cachefs@redhat.com
-Subject: Re: [RFC PATCH 12/53] netfs: Provide tools to create a buffer in an
- xarray
-Message-ID: <ZSl+Ezh3Av3LLyEf@casper.infradead.org>
-References: <20231013160423.2218093-1-dhowells@redhat.com>
- <20231013160423.2218093-13-dhowells@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231013160423.2218093-13-dhowells@redhat.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229830AbjJMTqB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 15:46:01 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B8DAD;
+        Fri, 13 Oct 2023 12:46:00 -0700 (PDT)
+Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39DJgHCq011983;
+        Fri, 13 Oct 2023 19:45:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=Pc0KhaMZjt1JJ8BTzzbAY2PLqOgVWSZXPMggq2UpqC4=;
+ b=oNakhZdhqyiBB1xeneH9eObxYi6grzwt2PDYW492vVwRxRHgvoQ4Syn9r9QPmjAYIaTP
+ 6aKFPreFl3Yp9g31WJWZvNEcbbD4/UuZ238sO1vfk6vrhXcrc7ds24k3ugEI1rGJrgIZ
+ KPrd7F0Vljj/fqcs80mDqn6AHRCyivlWACao6vOPeXQjaf8OXIoG3LlbGWw6i1nEDfVV
+ 7tGi264DEu0LvW8MdjleOwBT44b+/tIluYg2nsH2wmZvDndITs0RoqvP9z+mK+rJD81O
+ Y/Ww8GD1Twmteqk/oZTZ8T4kZFtlTRyhnJ6+naZx+yLRRvKo/g5SgJmy6fK3rOUAbsmF pg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tqc9gr3q0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 19:45:19 +0000
+Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39DJhCV3014636;
+        Fri, 13 Oct 2023 19:45:19 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tqc9gr3ja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 19:45:18 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39DJHpjQ008837;
+        Fri, 13 Oct 2023 19:45:13 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tpt57p9ef-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 19:45:13 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+        by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39DJjDH564029094
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Oct 2023 19:45:13 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1013E58061;
+        Fri, 13 Oct 2023 19:45:13 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C56A58057;
+        Fri, 13 Oct 2023 19:45:11 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.129.99])
+        by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Oct 2023 19:45:11 +0000 (GMT)
+Message-ID: <ea1de829cec76d7e20efa305df0b0758fc986aac.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 00/25] security: Move IMA and EVM to the LSM
+ infrastructure
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        viro@zeniv.linux.org.uk, brauner@kernel.org,
+        chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Fri, 13 Oct 2023 15:45:10 -0400
+In-Reply-To: <20230904133415.1799503-1-roberto.sassu@huaweicloud.com>
+References: <20230904133415.1799503-1-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: vFTp2Ee0JeBQOP1vrgvHIBWFlp1Y_sdO
+X-Proofpoint-ORIG-GUID: iQnGzuzPyAealHWZ8tc09AvVLAvGFvSP
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-13_11,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 spamscore=0 suspectscore=0 mlxlogscore=999 clxscore=1015
+ mlxscore=0 adultscore=0 priorityscore=1501 bulkscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310130170
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 13, 2023 at 05:03:41PM +0100, David Howells wrote:
-> +int netfs_xa_store_and_mark(struct xarray *xa, unsigned long index,
-> +			    struct folio *folio, bool put_mark,
-> +			    bool pagecache_mark, gfp_t gfp_mask);
+On Mon, 2023-09-04 at 15:33 +0200, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> IMA and EVM are not effectively LSMs, especially due the fact that in the
+> past they could not provide a security blob while there is another LSM
+> active.
+> 
+> That changed in the recent years, the LSM stacking feature now makes it
+> possible to stack together multiple LSMs, and allows them to provide a
+> security blob for most kernel objects. While the LSM stacking feature has
+> some limitations being worked out, it is already suitable to make IMA and
+> EVM as LSMs.
+> 
+> In short, while this patch set is big, it does not make any functional
+> change to IMA and EVM. IMA and EVM functions are called by the LSM
+> infrastructure in the same places as before (except ima_post_path_mknod()),
+> rather being hardcoded calls, and the inode metadata pointer is directly
+> stored in the inode security blob rather than in a separate rbtree.
+> 
+> More specifically, patches 1-11 make IMA and EVM functions suitable to
+> be registered to the LSM infrastructure, by aligning function parameters.
+> 
+> Patches 12-20 add new LSM hooks in the same places where IMA and EVM
+> functions are called, if there is no LSM hook already.
+> 
+> Patches 21-24 do the bulk of the work, remove hardcoded calls to IMA, EVM
+> and integrity functions, register those functions in the LSM
+> infrastructure, and let the latter call them. In addition, they also
+> reserve one slot for EVM to supply an xattr with the inode_init_security
+> hook.
+> 
+> Finally, patch 25 removes the rbtree used to bind metadata to the inodes,
+> and instead reserves a space in the inode security blob to store the
+> pointer to metadata. This also brings performance improvements due to
+> retrieving metadata in constant time, as opposed to logarithmic.
+> 
+> The patch set applies on top of lsm/next, commit 8e4672d6f902 ("lsm:
+> constify the 'file' parameter in security_binder_transfer_file()")
 
-Linus has been unhappy recently with functions that take two bools.
-When you're reading the caller, you see:
+Thanks, Roberto!   There were just a few suggestions/changes, which
+though minor, will result in some patch churn.   Other than that, there
+were some suggestions patch description suggestions.
 
-	netfs_xa_store_and_mark(xa, index, true, false, GFP_FOO);
+-- 
+thanks,
 
-and you don't know instantly what true and false mean.  He prefers
+Mimi
 
-#define NETFS_FLAG_PUT		(1 << 0)
-#define NETFS_FLAG_PAGECACHE	(1 << 1)
 
-and then the caller looks like:
-
-	netfs_xa_store_and_mark(xa, index, NETFS_FLAG_PUT, GFP_FOO);
-
-and you know exactly what it's doing.
 
