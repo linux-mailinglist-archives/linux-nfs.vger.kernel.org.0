@@ -2,29 +2,29 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E71B7C7D9E
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 08:20:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE6A7C7DCC
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 08:41:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbjJMGUX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Oct 2023 02:20:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47692 "EHLO
+        id S229697AbjJMGlj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Oct 2023 02:41:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjJMGUX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 02:20:23 -0400
+        with ESMTP id S229688AbjJMGli (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 02:41:38 -0400
 Received: from jari.cn (unknown [218.92.28.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A980195;
-        Thu, 12 Oct 2023 23:20:21 -0700 (PDT)
-Received: from chenguohua$jari.cn ( [182.148.14.172] ) by
- ajax-webmail-localhost.localdomain (Coremail) ; Fri, 13 Oct 2023 14:18:36
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DED05BC;
+        Thu, 12 Oct 2023 23:41:36 -0700 (PDT)
+Received: from wangkailong$jari.cn ( [182.148.14.172] ) by
+ ajax-webmail-localhost.localdomain (Coremail) ; Fri, 13 Oct 2023 14:39:51
  +0800 (GMT+08:00)
 X-Originating-IP: [182.148.14.172]
-Date:   Fri, 13 Oct 2023 14:18:36 +0800 (GMT+08:00)
+Date:   Fri, 13 Oct 2023 14:39:51 +0800 (GMT+08:00)
 X-CM-HeaderCharset: UTF-8
-From:   chenguohua@jari.cn
+From:   "KaiLong Wang" <wangkailong@jari.cn>
 To:     chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
         kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com
 Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NFSD: Clean up errors in nfssvc.c
+Subject: [PATCH] NFSD: Clean up errors in nfs4xdr.c
 X-Priority: 3
 X-Mailer: Coremail Webmail Server Version 2023.1-cmXT6 build
  20230419(ff23bf83) Copyright (c) 2002-2023 www.mailtech.cn
@@ -32,10 +32,10 @@ X-Mailer: Coremail Webmail Server Version 2023.1-cmXT6 build
 Content-Transfer-Encoding: base64
 Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Message-ID: <5cdd6c2.959.18b27afd349.Coremail.chenguohua@jari.cn>
+Message-ID: <116353ed.95a.18b27c347d9.Coremail.wangkailong@jari.cn>
 X-Coremail-Locale: zh_CN
-X-CM-TRANSID: AQAAfwDHZD884ShlzdvBAA--.686W
-X-CM-SenderInfo: xfkh0w5xrk3tw6md2xgofq/1tbiAQADEWUnvzMAJgAIsz
+X-CM-TRANSID: AQAAfwD3lD835ihlId7BAA--.750W
+X-CM-SenderInfo: 5zdqwypdlo00nj6mt2flof0/1tbiAQABB2UlHDMAlgAEs6
 X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
         CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
         daVFxhVjvjDU=
@@ -50,23 +50,25 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 Rml4IHRoZSBmb2xsb3dpbmcgZXJyb3JzIHJlcG9ydGVkIGJ5IGNoZWNrcGF0Y2g6CgpFUlJPUjog
-c3BhY2UgcmVxdWlyZWQgYmVmb3JlIHRoZSBvcGVuIHBhcmVudGhlc2lzICcoJwpFUlJPUjogZG8g
-bm90IGluaXRpYWxpc2Ugc3RhdGljcyB0byAwCgpTaWduZWQtb2ZmLWJ5OiBHdW9IdWEgQ2hlbmcg
-PGNoZW5ndW9odWFAamFyaS5jbj4KLS0tCiBmcy9uZnNkL25mc3N2Yy5jIHwgNiArKystLS0KIDEg
-ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0
-IGEvZnMvbmZzZC9uZnNzdmMuYyBiL2ZzL25mc2QvbmZzc3ZjLmMKaW5kZXggY2UyNzNjNDA5YWI2
-Li42YWVlZDBhMzlhODcgMTAwNjQ0Ci0tLSBhL2ZzL25mc2QvbmZzc3ZjLmMKKysrIGIvZnMvbmZz
-ZC9uZnNzdmMuYwpAQCAtMjA4LDcgKzIwOCw3IEBAIGludCBuZnNkX3ZlcnMoc3RydWN0IG5mc2Rf
-bmV0ICpubiwgaW50IHZlcnMsIGVudW0gdmVyc19vcCBjaGFuZ2UpCiB7CiAJaWYgKHZlcnMgPCBO
-RlNEX01JTlZFUlMgfHwgdmVycyA+PSBORlNEX05SVkVSUykKIAkJcmV0dXJuIDA7Ci0Jc3dpdGNo
-KGNoYW5nZSkgeworCXN3aXRjaCAoY2hhbmdlKSB7CiAJY2FzZSBORlNEX1NFVDoKIAkJaWYgKG5u
-LT5uZnNkX3ZlcnNpb25zKQogCQkJbm4tPm5mc2RfdmVyc2lvbnNbdmVyc10gPSBuZnNkX3N1cHBv
-cnRfdmVyc2lvbih2ZXJzKTsKQEAgLTI0Niw3ICsyNDYsNyBAQCBpbnQgbmZzZF9taW5vcnZlcnNp
-b24oc3RydWN0IG5mc2RfbmV0ICpubiwgdTMyIG1pbm9ydmVyc2lvbiwgZW51bSB2ZXJzX29wIGNo
-YW5nZQogCSAgICBjaGFuZ2UgIT0gTkZTRF9BVkFJTCkKIAkJcmV0dXJuIC0xOwogCi0Jc3dpdGNo
-KGNoYW5nZSkgeworCXN3aXRjaCAoY2hhbmdlKSB7CiAJY2FzZSBORlNEX1NFVDoKIAkJaWYgKG5u
-LT5uZnNkNF9taW5vcnZlcnNpb25zKSB7CiAJCQluZnNkX3ZlcnMobm4sIDQsIE5GU0RfU0VUKTsK
-QEAgLTMxMCw3ICszMTAsNyBAQCBzdGF0aWMgaW50IG5mc2RfaW5pdF9zb2NrcyhzdHJ1Y3QgbmV0
-ICpuZXQsIGNvbnN0IHN0cnVjdCBjcmVkICpjcmVkKQogCXJldHVybiAwOwogfQogCi1zdGF0aWMg
-aW50IG5mc2RfdXNlcnMgPSAwOworc3RhdGljIGludCBuZnNkX3VzZXJzOwogCiBzdGF0aWMgaW50
-IG5mc2Rfc3RhcnR1cF9nZW5lcmljKHZvaWQpCiB7Ci0tIAoyLjE3LjEK
+c3BhY2VzIHJlcXVpcmVkIGFyb3VuZCB0aGF0ICc9JyAoY3R4OlZ4VikKRVJST1I6IGVsc2Ugc2hv
+dWxkIGZvbGxvdyBjbG9zZSBicmFjZSAnfScKClNpZ25lZC1vZmYtYnk6IEthaUxvbmcgV2FuZyA8
+d2FuZ2thaWxvbmdAamFyaS5jbj4KLS0tCiBmcy9uZnNkL25mczR4ZHIuYyB8IDcgKysrLS0tLQog
+MSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
+aXQgYS9mcy9uZnNkL25mczR4ZHIuYyBiL2ZzL25mc2QvbmZzNHhkci5jCmluZGV4IDFjYmQyYTM5
+MjMwMi4uOGI5NzA3OTU3NjQ5IDEwMDY0NAotLS0gYS9mcy9uZnNkL25mczR4ZHIuYworKysgYi9m
+cy9uZnNkL25mczR4ZHIuYwpAQCAtMjQzMiw3ICsyNDMyLDcgQEAgbmZzZDRfZGVjb2RlX2NvbXBv
+dW5kKHN0cnVjdCBuZnNkNF9jb21wb3VuZGFyZ3MgKmFyZ3ApCiB7CiAJc3RydWN0IG5mc2Q0X29w
+ICpvcDsKIAlib29sIGNhY2hldGhpcyA9IGZhbHNlOwotCWludCBhdXRoX3NsYWNrPSBhcmdwLT5y
+cXN0cC0+cnFfYXV0aF9zbGFjazsKKwlpbnQgYXV0aF9zbGFjayA9IGFyZ3AtPnJxc3RwLT5ycV9h
+dXRoX3NsYWNrOwogCWludCBtYXhfcmVwbHkgPSBhdXRoX3NsYWNrICsgODsgLyogb3BjbnQsIHN0
+YXR1cyAqLwogCWludCByZWFkY291bnQgPSAwOwogCWludCByZWFkYnl0ZXMgPSAwOwpAQCAtMjU4
+NSw3ICsyNTg1LDcgQEAgc3RhdGljIF9fYmUzMiBuZnNkNF9lbmNvZGVfY29tcG9uZW50c19lc2Mo
+c3RydWN0IHhkcl9zdHJlYW0gKnhkciwgY2hhciBzZXAsCiAJX19iZTMyICpwOwogCV9fYmUzMiBw
+YXRobGVuOwogCWludCBwYXRobGVuX29mZnNldDsKLQlpbnQgc3RybGVuLCBjb3VudD0wOworCWlu
+dCBzdHJsZW4sIGNvdW50ID0gMDsKIAljaGFyICpzdHIsICplbmQsICpuZXh0OwogCiAJZHByaW50
+aygibmZzZDRfZW5jb2RlX2NvbXBvbmVudHMoJXMpXG4iLCBjb21wb25lbnRzKTsKQEAgLTI2MjIs
+OCArMjYyMiw3IEBAIHN0YXRpYyBfX2JlMzIgbmZzZDRfZW5jb2RlX2NvbXBvbmVudHNfZXNjKHN0
+cnVjdCB4ZHJfc3RyZWFtICp4ZHIsIGNoYXIgc2VwLAogCQkJCXJldHVybiBuZnNlcnJfcmVzb3Vy
+Y2U7CiAJCQlwID0geGRyX2VuY29kZV9vcGFxdWUocCwgc3RyLCBzdHJsZW4pOwogCQkJY291bnQr
+KzsKLQkJfQotCQllbHNlCisJCX0gZWxzZQogCQkJZW5kKys7CiAJCWlmIChmb3VuZF9lc2MpCiAJ
+CQllbmQgPSBuZXh0OwotLSAKMi4xNy4xCg==
