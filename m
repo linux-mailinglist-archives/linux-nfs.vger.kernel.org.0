@@ -2,48 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15CB47C8653
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 15:04:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9A857C8676
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 15:14:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231802AbjJMNEF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Oct 2023 09:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
+        id S231867AbjJMNOK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Oct 2023 09:14:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231557AbjJMNEE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 09:04:04 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C1991;
-        Fri, 13 Oct 2023 06:04:02 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EC66C433C7;
-        Fri, 13 Oct 2023 13:04:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697202241;
-        bh=8nV6dBADutP2rbdZShK89tiZpnEuWT1YAWAXR11xvt4=;
-        h=From:Date:Subject:To:Cc:From;
-        b=KD+sGzEhIa/zEyS/erdFd/KzWY/v3EWEp6hXdXiYDyvmtAg8qZ2WrkHEiiKTkkRsy
-         O12YsF5+FzDz9OkTIANIrMGn4Wnf41i9t5wXLFNn3m8EXS75yvANljf3uuXBHg9xo7
-         SNW7D7wJ/QQA+Wc1bkNyUIC3wbGL4+Z05kC1u1ygFnprC+aF+HaL7sE+AANWVPk+if
-         xBeqGN/5vYRMw21jJIuOEU5EDNkbPO6T1T8GWVolfh74IUrHblldmbmvTPpTYRzWBb
-         yZ0SUTjEQsRoe1YXRWPTOg/vPZJfJAvBgBGJUBW+oWzk/1arBF5WbbMxSSGDPD/M8l
-         q8io/TN6bmcSg==
-From:   Jeff Layton <jlayton@kernel.org>
-Date:   Fri, 13 Oct 2023 09:03:53 -0400
-Subject: [PATCH] nfsd: new Kconfig option for legacy client tracking
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S230006AbjJMNOJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 09:14:09 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC8D691;
+        Fri, 13 Oct 2023 06:14:07 -0700 (PDT)
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39DDAFWl007578;
+        Fri, 13 Oct 2023 13:13:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=Q4Ru+IN6t10itKohqSPNoQRasHDcTJjERh8NX9i3fWE=;
+ b=BTaJ358Lewkatyn604ewHMWz7JU1VD9C668cv1sfGqgm6sJLYe5BQ1gjSaVSFJNjf0m8
+ PGCstScAfS3/5Q3lwCae6EeRVSKAduf8xe0ZlWTsPoYsfYI/9Pc7sBBhikbx6BjIRNyh
+ REXJpkVVU7fKK0HCGx7tsnFMOgrp1TFoPkZYVLWcT869mqGRoHF6JNsL36LidEnFHf9x
+ NcPTH9y2atjEYxXpqPz1hqa12nOgNcp2zMK4J7mD5p2NMRmhbnyX3gbnvOCWHEurfXme
+ yMMRYtGQKUO55Y9cZqBAFvTuUbHwYf1VThczOtVj47gIOGhYbDKUMnporhZpUB8XOYiV CQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tq6akrs63-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 13:13:29 +0000
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39DCtVvq008312;
+        Fri, 13 Oct 2023 13:12:45 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tq6akrrmm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 13:12:45 +0000
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+        by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39DBP87J026010;
+        Fri, 13 Oct 2023 13:12:37 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+        by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3tpt54v28r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 13:12:37 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+        by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39DDCalT9306856
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Oct 2023 13:12:36 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87C465805C;
+        Fri, 13 Oct 2023 13:12:36 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D7F3B58054;
+        Fri, 13 Oct 2023 13:12:33 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.129.99])
+        by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Oct 2023 13:12:33 +0000 (GMT)
+Message-ID: <6dbb864d2611c58230e3392df0c3bd2e9a700ec8.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 16/25] security: Introduce path_post_mknod hook
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        viro@zeniv.linux.org.uk, brauner@kernel.org,
+        chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Fri, 13 Oct 2023 09:12:33 -0400
+In-Reply-To: <20230904133415.1799503-17-roberto.sassu@huaweicloud.com>
+References: <20230904133415.1799503-1-roberto.sassu@huaweicloud.com>
+         <20230904133415.1799503-17-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20231013-nfsd-cltrack-v1-1-5d8a3a6a39af@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADhAKWUC/3XMQQ6DIBCF4auYWZeGoWiwq96jcYE4KtFAMxjTx
- nD3Uvdd/i953wGJ2FOCe3UA0+6Tj6EEXipwsw0TCT+UBiXVDSUqEcY0CLdubN0iGmyNQW2JagP
- l8mIa/fvknl3p2act8ufUd/ytf6AdBQpNirSse9W3zWMhDrReI0/Q5Zy/JIj5yKkAAAA=
-To:     Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WxY_RMohtsYTL9VcKPMDtKL-3ibCw4pC
+X-Proofpoint-GUID: _Tqw34oiStwkfV_t2O3EVxzJuQn3EkdI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-13_04,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ impostorscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=691 malwarescore=0 spamscore=0 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310130109
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,325 +100,43 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We've had a number of attempts at different NFSv4 client tracking
-methods over the years, but now nfsdcld has emerged as the clear winner
-since the others (recoverydir and the usermodehelper upcall) are
-problematic.
+On Mon, 2023-09-04 at 15:34 +0200, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> In preparation for moving IMA and EVM to the LSM infrastructure, introduce
+> the path_post_mknod hook.
+> 
+> It is useful for IMA to let new empty files be subsequently opened for
+> further modification.
 
-As a case in point, the recoverydir backend uses MD5 hashes to encode
-long form clientid strings, which means that nfsd repeatedly gets dinged
-on FIPS audits, since MD5 isn't considered secure. Its use of MD5 is not
-cryptographically significant, so there is no danger there, but allowing
-us to compile that out allows us to sidestep the issue entirely.
+(Please remove "It is useful for"  here and in other patch
+descriptions.  Will not repeat this again.)
 
-As a prelude to eventually removing support for these client tracking
-methods, add a new Kconfig option that enables them. Mark it deprecated
-and make it default to N.
+Possible wording:
+IMA-appraisal requires all existing files in policy to have a file
+hash/signature stored in security.ima.  An exception is made for empty
+files created by mknod, by tagging them as new files.
 
-Acked-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
-Now that we've really settled on nfsdcld being the way forward for
-NFSv4 client tracking, put the legacy methods under a new Kconfig option
-that defaults to off.
+> 
+> LSMs can benefit from this hook to update the inode state after a file has
+> been successfully created. 
 
-This should make it easier to eventually deprecate this code and remove
-it in the future (maybe in v6.10 or so)?
----
- fs/nfsd/Kconfig       | 16 +++++++++
- fs/nfsd/nfs4recover.c | 97 +++++++++++++++++++++++++++++++++------------------
- fs/nfsd/nfsctl.c      |  6 ++++
- 3 files changed, 85 insertions(+), 34 deletions(-)
+(Please remove "LSMs can benefit from" here and in other patch
+descriptions.)
 
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index 43b88eaf0673..272ab8d5c4d7 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -158,3 +158,19 @@ config NFSD_V4_SECURITY_LABEL
- 
- 	If you do not wish to enable fine-grained security labels SELinux or
- 	Smack policies on NFSv4 files, say N.
-+
-+config NFSD_LEGACY_CLIENT_TRACKING
-+	bool "Support legacy NFSv4 client tracking methods (DEPRECATED)"
-+	depends on NFSD_V4
-+	default n
-+	help
-+	  The NFSv4 server needs to store a small amount of information on
-+	  stable storage in order to handle state recovery after reboot. Most
-+	  modern deployments upcall to a userland daemon for this (nfsdcld),
-+	  but older NFS servers may store information directly in a
-+	  recoverydir, or spawn a process directly using a usermodehelper
-+	  upcall.
-+
-+	  These legacy client tracking methods have proven to be probelmatic
-+	  and will be removed in the future. Say Y here if you need support
-+	  for them in the interim.
-diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-index 3509e73abe1f..2c060e0b1604 100644
---- a/fs/nfsd/nfs4recover.c
-+++ b/fs/nfsd/nfs4recover.c
-@@ -66,6 +66,7 @@ struct nfsd4_client_tracking_ops {
- static const struct nfsd4_client_tracking_ops nfsd4_cld_tracking_ops;
- static const struct nfsd4_client_tracking_ops nfsd4_cld_tracking_ops_v2;
- 
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- /* Globals */
- static char user_recovery_dirname[PATH_MAX] = "/var/lib/nfs/v4recovery";
- 
-@@ -720,6 +721,7 @@ static const struct nfsd4_client_tracking_ops nfsd4_legacy_tracking_ops = {
- 	.version	= 1,
- 	.msglen		= 0,
- };
-+#endif /* CONFIG_NFSD_LEGACY_CLIENT_TRACKING */
- 
- /* Globals */
- #define NFSD_PIPE_DIR		"nfsd"
-@@ -731,8 +733,10 @@ struct cld_net {
- 	spinlock_t		 cn_lock;
- 	struct list_head	 cn_list;
- 	unsigned int		 cn_xid;
--	bool			 cn_has_legacy;
- 	struct crypto_shash	*cn_tfm;
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
-+	bool			 cn_has_legacy;
-+#endif
- };
- 
- struct cld_upcall {
-@@ -793,7 +797,6 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_v2 __user *cmsg,
- 	uint8_t cmd, princhashlen;
- 	struct xdr_netobj name, princhash = { .len = 0, .data = NULL };
- 	uint16_t namelen;
--	struct cld_net *cn = nn->cld_net;
- 
- 	if (get_user(cmd, &cmsg->cm_cmd)) {
- 		dprintk("%s: error when copying cmd from userspace", __func__);
-@@ -833,11 +836,15 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_v2 __user *cmsg,
- 				return PTR_ERR(name.data);
- 			name.len = namelen;
- 		}
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- 		if (name.len > 5 && memcmp(name.data, "hash:", 5) == 0) {
-+			struct cld_net *cn = nn->cld_net;
-+
- 			name.len = name.len - 5;
- 			memmove(name.data, name.data + 5, name.len);
- 			cn->cn_has_legacy = true;
- 		}
-+#endif
- 		if (!nfs4_client_to_reclaim(name, princhash, nn)) {
- 			kfree(name.data);
- 			kfree(princhash.data);
-@@ -1010,7 +1017,9 @@ __nfsd4_init_cld_pipe(struct net *net)
- 	}
- 
- 	cn->cn_pipe->dentry = dentry;
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- 	cn->cn_has_legacy = false;
-+#endif
- 	nn->cld_net = cn;
- 	return 0;
- 
-@@ -1282,10 +1291,6 @@ nfsd4_cld_check(struct nfs4_client *clp)
- {
- 	struct nfs4_client_reclaim *crp;
- 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
--	struct cld_net *cn = nn->cld_net;
--	int status;
--	char dname[HEXDIR_LEN];
--	struct xdr_netobj name;
- 
- 	/* did we already find that this client is stable? */
- 	if (test_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags))
-@@ -1296,7 +1301,12 @@ nfsd4_cld_check(struct nfs4_client *clp)
- 	if (crp)
- 		goto found;
- 
--	if (cn->cn_has_legacy) {
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
-+	if (nn->cld_net->cn_has_legacy) {
-+		int status;
-+		char dname[HEXDIR_LEN];
-+		struct xdr_netobj name;
-+
- 		status = nfs4_make_rec_clidname(dname, &clp->cl_name);
- 		if (status)
- 			return -ENOENT;
-@@ -1314,6 +1324,7 @@ nfsd4_cld_check(struct nfs4_client *clp)
- 			goto found;
- 
- 	}
-+#endif
- 	return -ENOENT;
- found:
- 	crp->cr_clp = clp;
-@@ -1327,8 +1338,6 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
- 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
- 	struct cld_net *cn = nn->cld_net;
- 	int status;
--	char dname[HEXDIR_LEN];
--	struct xdr_netobj name;
- 	struct crypto_shash *tfm = cn->cn_tfm;
- 	struct xdr_netobj cksum;
- 	char *principal = NULL;
-@@ -1342,7 +1351,11 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
- 	if (crp)
- 		goto found;
- 
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- 	if (cn->cn_has_legacy) {
-+		struct xdr_netobj name;
-+		char dname[HEXDIR_LEN];
-+
- 		status = nfs4_make_rec_clidname(dname, &clp->cl_name);
- 		if (status)
- 			return -ENOENT;
-@@ -1360,6 +1373,7 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
- 			goto found;
- 
- 	}
-+#endif
- 	return -ENOENT;
- found:
- 	if (crp->cr_princhash.len) {
-@@ -1663,6 +1677,7 @@ static const struct nfsd4_client_tracking_ops nfsd4_cld_tracking_ops_v2 = {
- 	.msglen		= sizeof(struct cld_msg_v2),
- };
- 
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- /* upcall via usermodehelper */
- static char cltrack_prog[PATH_MAX] = "/sbin/nfsdcltrack";
- module_param_string(cltrack_prog, cltrack_prog, sizeof(cltrack_prog),
-@@ -2007,28 +2022,10 @@ static const struct nfsd4_client_tracking_ops nfsd4_umh_tracking_ops = {
- 	.msglen		= 0,
- };
- 
--int
--nfsd4_client_tracking_init(struct net *net)
-+static inline int check_for_legacy_methods(int status, struct net *net)
- {
--	int status;
--	struct path path;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
--
--	/* just run the init if it the method is already decided */
--	if (nn->client_tracking_ops)
--		goto do_init;
--
--	/* First, try to use nfsdcld */
--	nn->client_tracking_ops = &nfsd4_cld_tracking_ops;
--	status = nn->client_tracking_ops->init(net);
--	if (!status)
--		return status;
--	if (status != -ETIMEDOUT) {
--		nn->client_tracking_ops = &nfsd4_cld_tracking_ops_v0;
--		status = nn->client_tracking_ops->init(net);
--		if (!status)
--			return status;
--	}
-+	struct path path;
- 
- 	/*
- 	 * Next, try the UMH upcall.
-@@ -2045,14 +2042,46 @@ nfsd4_client_tracking_init(struct net *net)
- 	nn->client_tracking_ops = &nfsd4_legacy_tracking_ops;
- 	status = kern_path(nfs4_recoverydir(), LOOKUP_FOLLOW, &path);
- 	if (!status) {
--		status = d_is_dir(path.dentry);
-+		status = !d_is_dir(path.dentry);
- 		path_put(&path);
--		if (!status) {
--			status = -EINVAL;
--			goto out;
--		}
-+		if (status)
-+			return -ENOTDIR;
-+		status = nn->client_tracking_ops->init(net);
-+	}
-+	return status;
-+}
-+#else
-+static inline int check_for_legacy_methods(int status, struct net *net)
-+{
-+	return status;
-+}
-+#endif /* CONFIG_LEGACY_NFSD_CLIENT_TRACKING */
-+
-+int
-+nfsd4_client_tracking_init(struct net *net)
-+{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	int status;
-+
-+	/* just run the init if it the method is already decided */
-+	if (nn->client_tracking_ops)
-+		goto do_init;
-+
-+	/* First, try to use nfsdcld */
-+	nn->client_tracking_ops = &nfsd4_cld_tracking_ops;
-+	status = nn->client_tracking_ops->init(net);
-+	if (!status)
-+		return status;
-+	if (status != -ETIMEDOUT) {
-+		nn->client_tracking_ops = &nfsd4_cld_tracking_ops_v0;
-+		status = nn->client_tracking_ops->init(net);
-+		if (!status)
-+			return status;
- 	}
- 
-+	status = check_for_legacy_methods(status, net);
-+	if (status)
-+		goto out;
- do_init:
- 	status = nn->client_tracking_ops->init(net);
- out:
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 7ed02fb88a36..48d1dc9cccfb 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -75,7 +75,9 @@ static ssize_t write_maxconn(struct file *file, char *buf, size_t size);
- #ifdef CONFIG_NFSD_V4
- static ssize_t write_leasetime(struct file *file, char *buf, size_t size);
- static ssize_t write_gracetime(struct file *file, char *buf, size_t size);
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- static ssize_t write_recoverydir(struct file *file, char *buf, size_t size);
-+#endif
- static ssize_t write_v4_end_grace(struct file *file, char *buf, size_t size);
- #endif
- 
-@@ -92,7 +94,9 @@ static ssize_t (*const write_op[])(struct file *, char *, size_t) = {
- #ifdef CONFIG_NFSD_V4
- 	[NFSD_Leasetime] = write_leasetime,
- 	[NFSD_Gracetime] = write_gracetime,
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- 	[NFSD_RecoveryDir] = write_recoverydir,
-+#endif
- 	[NFSD_V4EndGrace] = write_v4_end_grace,
- #endif
- };
-@@ -1012,6 +1016,7 @@ static ssize_t write_gracetime(struct file *file, char *buf, size_t size)
- 	return nfsd4_write_time(file, buf, size, &nn->nfsd4_grace, nn);
- }
- 
-+#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
- static ssize_t __write_recoverydir(struct file *file, char *buf, size_t size,
- 				   struct nfsd_net *nn)
- {
-@@ -1072,6 +1077,7 @@ static ssize_t write_recoverydir(struct file *file, char *buf, size_t size)
- 	mutex_unlock(&nfsd_mutex);
- 	return rv;
- }
-+#endif
- 
- /*
-  * write_v4_end_grace - release grace period for nfsd's v4.x lock manager
+Please make sure that the patch description is in sync with the LSM
+hook kernel doc. 
 
----
-base-commit: 401644852d0b2a278811de38081be23f74b5bb04
-change-id: 20231012-nfsd-cltrack-6198814aee58
+> The new hook cannot return an error and cannot
+> cause the operation to be canceled.
 
-Best regards,
+(Separate paragaraph)
+
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+
 -- 
-Jeff Layton <jlayton@kernel.org>
+thanks,
+
+Mimi
 
