@@ -2,107 +2,298 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 922677C883D
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 17:04:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 068307C8957
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 17:58:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232166AbjJMPER (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Oct 2023 11:04:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48522 "EHLO
+        id S232448AbjJMP63 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Oct 2023 11:58:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230373AbjJMPEQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 11:04:16 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB04DBB
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Oct 2023 08:04:13 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-79fb8f60374so25987239f.1
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Oct 2023 08:04:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697209453; x=1697814253; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7FnhPlDSkttEslOg6pHODca2/QQj3CdN2jPPZpj5bTE=;
-        b=Sq/xcQXS/VEnxHo8REv8ynKbDvRZ/l7qeJt5WXDf2x5XUzrXz72XBU07hxHCYese1j
-         oXoAYmTHQ3VVRZm2f6cWrOlAwmOYA9UK0hXxvu9xpomakSE1+DDM2pxc5rJGG/m3Tz+T
-         /Zy3srDn4ziEks062J2CYLz+OaOrU2aryGNQykrl1SNcm6cWiyZEdjolELinEXytDTEv
-         ybOXMVKGCflZO6YQPhCNFSNOUdoSEmVymdTVqQohCkM/rRHDNVGak1G10/b97Gf/Vauv
-         ouzl7Ny7l9hfI9BOOSvkE1hR01ZZ3mP54sA3BoGiz+fFhIFTobyVbjT8TMJmn0leeH5u
-         wOWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697209453; x=1697814253;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7FnhPlDSkttEslOg6pHODca2/QQj3CdN2jPPZpj5bTE=;
-        b=eX1Xp3ZwOa6yZFKQCDnjwUr78R5WNIcY95qtmU21Qs4h+1ocSEWnktywDllS2Y0f0z
-         TbmH3fdyqpNkCW9dVEp1HGygNoEdwM5swmwO/IL38Q2wl0BHebegllSkqWDmrUpWsvwq
-         j/nuCcmD0jcb3sXNgNqydDzFJzDGa08CBU1vlu71f5cjCCvkDtcqsVNG7kJqvilWe6Pi
-         Dmr/KyGOoDC7E0tW+FKrV5v2ifOBNP+TFh87SS8sF79Gb7RVcat1mn7TVJDAioFB69K2
-         RcZd8Nj1ZlqPMn37iEOz/FHUTLKoF0AeMYP+SlteP6HaiM4r1klibC57YuCkETugKbri
-         SoGQ==
-X-Gm-Message-State: AOJu0YzaKHDWmhEOB0rqwnOzdR0LuYwv6C5U/rb78jqdgxEXGBUHYBQ6
-        kvJZAawo6iX8VAJMvfAkeG3lSkfNXmA=
-X-Google-Smtp-Source: AGHT+IFh8mJUarDTk1ontnwVxznLAZq3z9zIiHxLQ/MoXRCcfMrxNerdE1H4T3Gvj0ZtIlDcuIbM4g==
-X-Received: by 2002:a05:6602:3a05:b0:792:6be4:3dcb with SMTP id by5-20020a0566023a0500b007926be43dcbmr28299818iob.2.1697209453011;
-        Fri, 13 Oct 2023 08:04:13 -0700 (PDT)
-Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:85eb:d471:596b:a98b])
-        by smtp.gmail.com with ESMTPSA id v11-20020a5ec10b000000b0076c569c7a48sm4656896iol.39.2023.10.13.08.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Oct 2023 08:04:12 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFSv4.1: fix SP4_MACH_CRED protection for pnfs IO
-Date:   Fri, 13 Oct 2023 11:04:10 -0400
-Message-Id: <20231013150410.42385-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+        with ESMTP id S232041AbjJMP62 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 11:58:28 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 114E1C2
+        for <linux-nfs@vger.kernel.org>; Fri, 13 Oct 2023 08:57:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1697212659;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/T7Rb4XZnpB8qQGskLxctbykFhIHLiOhPwndRDZOESw=;
+        b=gNc0FIVXh8u6QMSRUCcEd/Nhw2og7Id9nEdiuwqy807BHlUbG9HHt0ZqcuYK1TpX6G9QZp
+        Dx/vK5heZdul6DEiFUnY5dF5kKNW/AdXSLtJmcicuAnqhUzUtE4l/DAHMxFq6FIIzDPR6J
+        gKTqeKedPu6w4LeRw9Y2c3sJVnvi6Zs=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-282-jy3E8PpCNZu0_NJPMc52lw-1; Fri, 13 Oct 2023 11:57:33 -0400
+X-MC-Unique: jy3E8PpCNZu0_NJPMc52lw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3112B1E441DD;
+        Fri, 13 Oct 2023 15:57:32 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 67D181C06535;
+        Fri, 13 Oct 2023 15:57:29 +0000 (UTC)
+From:   David Howells <dhowells@redhat.com>
+To:     Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 00/53] netfs, afs, cifs: Delegate high-level I/O to netfslib
+Date:   Fri, 13 Oct 2023 16:56:33 +0100
+Message-ID: <20231013155727.2217781-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+Hi Jeff, Steve,
 
-If the client is doing pnfs IO and Kerberos is configured and EXCHANGEID
-successfully negotiated SP4_MACH_CRED and WRITE/COMMIT are on the
-list of state protected operations, then we need to make sure to
-choose the DS's rpc_client structure instead of the MDS's one.
+I have been working on my netfslib helpers to the point that I can run
+xfstests on AFS to completion (both with write-back buffering and, with a
+small patch, write-through buffering in the pagecache).  I can also run a
+certain amount of xfstests on CIFS, though that requires some more
+debugging.  However, this seems like a good time to post a preview of the
+patches.
 
-Fixes: fb91fb0ee7b2 ("NFS: Move call to nfs4_state_protect_write() to nfs4_write_setup()")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- fs/nfs/nfs4proc.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+The patches remove a little over 800 lines from AFS and over 2000 from
+CIFS, albeit with around 3000 lines added to netfs.  Hopefully, I will be
+able to remove a bunch of lines from 9P and Ceph too.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 5ee283eb9660..19708c89f049 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -5622,7 +5622,7 @@ static void nfs4_proc_write_setup(struct nfs_pgio_header *hdr,
- 
- 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_WRITE];
- 	nfs4_init_sequence(&hdr->args.seq_args, &hdr->res.seq_res, 0, 0);
--	nfs4_state_protect_write(server->nfs_client, clnt, msg, hdr);
-+	nfs4_state_protect_write(hdr->ds_clp ? hdr->ds_clp : server->nfs_client, clnt, msg, hdr);
- }
- 
- static void nfs4_proc_commit_rpc_prepare(struct rpc_task *task, struct nfs_commit_data *data)
-@@ -5663,7 +5663,8 @@ static void nfs4_proc_commit_setup(struct nfs_commit_data *data, struct rpc_mess
- 	data->res.server = server;
- 	msg->rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_COMMIT];
- 	nfs4_init_sequence(&data->args.seq_args, &data->res.seq_res, 1, 0);
--	nfs4_state_protect(server->nfs_client, NFS_SP4_MACH_CRED_COMMIT, clnt, msg);
-+	nfs4_state_protect(data->ds_clp ? data->ds_clp : server->nfs_client,
-+			NFS_SP4_MACH_CRED_COMMIT, clnt, msg);
- }
- 
- static int _nfs4_proc_commit(struct file *dst, struct nfs_commitargs *args,
--- 
-2.39.1
+The main aims of these patches are to get high-level I/O and knowledge of
+the pagecache out of the filesystem drivers as much as possible and to get
+rid, as much of possible, of the knowledge that pages/folios exist.
+
+Further, I would like to see ->write_begin, ->write_end and ->launder_folio
+go away.
+
+Features that are added by these patches to that which is already there in
+netfslib:
+
+ (1) NFS-style (and Ceph-style) locking around DIO vs buffered I/O calls to
+     prevent these from happening at the same time.  mmap'd I/O can, of
+     necessity, happen at any time ignoring these locks.
+
+ (2) Support for unbuffered I/O.  The data is kept in the bounce buffer and
+     the pagecache is not used.  This can be turned on with an inode flag.
+
+ (3) Support for direct I/O.  This is basically unbuffered I/O with some
+     extra restrictions and no RMW.
+
+ (4) Support for using a bounce buffer in an operation.  The bounce buffer
+     may be bigger than the target data/buffer, allowing for crypto
+     rounding.
+
+ (5) Support for content encryption.  This isn't supported yet by AFS/CIFS
+     but is aimed initially at Ceph.
+
+ (6) ->write_begin() and ->write_end() are ignored in favour of merging all
+     of that into one function, netfs_perform_write(), thereby avoiding the
+     function pointer traversals.
+
+ (7) Support for write-through caching in the pagecache.
+     netfs_perform_write() adds the pages is modifies to an I/O operation
+     as it goes and directly marks them writeback rather than dirty.  When
+     writing back from write-through, it limits the range written back.
+     This should allow CIFS to deal with byte-range mandatory locks
+     correctly.
+
+ (8) O_*SYNC and RWF_*SYNC writes use write-through rather than writing to
+     the pagecache and then flushing afterwards.  An AIO O_*SYNC write will
+     notify of completion when the sub-writes all complete.
+
+ (9) Support for write-streaming where modifed data is held in !uptodate
+     folios, with a private struct attached indicating the range that is
+     valid.
+
+(10) Support for write grouping, multiplexing a pointer to a group in the
+     folio private data with the write-streaming data.  The writepages
+     algorithm only writes stuff back that's in the nominated group.  This
+     is intended for use by Ceph to write is snaps in order.
+
+(11) Skipping reads for which we know the server could only supply zeros or
+     EOF (for instance if we've done a local write that leaves a hole in
+     the file and extends the local inode size).
+
+
+General notes:
+
+ (1) netfslib now makes use of folio->private, which means the filesystem
+     can't use it.
+
+ (2) Use of fscache is not yet tested.  I'm not sure whether to allow a
+     cache to be used with a write-through write.
+
+ (3) The filesystem provides wrappers to call the write helpers, allowing
+     it to do pre-validation, oplock/capability fetching and the passing in
+     of write group info.
+
+ (4) I want to try flushing the data when tearing down an inode before
+     invalidating it to try and render launder_folio unnecessary.
+
+ (5) Write-through caching will generate and dispatch write subrequests as
+     it gathers enough data to hit wsize and has whole pages that at least
+     span that size.  This needs to be a bit more flexible, allowing for a
+     filesystem such as CIFS to have a variable wsize.
+
+ (6) The filesystem driver is just given read and write calls with an
+     iov_iter describing the data/buffer to use.  Ideally, they don't see
+     pages or folios at all.  A function, extract_iter_to_sg(), is already
+     available to decant part of an iterator into a scatterlist for crypto
+     purposes.
+
+
+CIFS notes:
+
+ (1) CIFS is made to use unbuffered I/O for unbuffered caching modes and
+     write-through caching for cache=strict.
+
+ (2) cifs_init_request() occasionally throws an error that it can't get a
+     writable file when trying to do writeback.
+
+ (3) Apparent file corruption frequently appears in the target file when
+     cifs_copy_file_range(), even though it doesn't use any netfslib
+     helpers and even if it doesn't overlap with any pages in the
+     pagecache.
+
+ (4) I should be able to turn multipage folio support on in CIFS now.
+
+ (5) The then-unused CIFS code is removed in three patches, not one, to
+     avoid the git patch generator from producing confusing patches in
+     which it thinks code is being moved around rather than just being
+     removed.
+
+David
+
+David Howells (53):
+  netfs: Add a procfile to list in-progress requests
+  netfs: Track the fpos above which the server has no data
+  netfs: Note nonblockingness in the netfs_io_request struct
+  netfs: Allow the netfs to make the io (sub)request alloc larger
+  netfs: Add a ->free_subrequest() op
+  afs: Don't use folio->private to record partial modification
+  netfs: Provide invalidate_folio and release_folio calls
+  netfs: Add rsize to netfs_io_request
+  netfs: Implement unbuffered/DIO vs buffered I/O locking
+  netfs: Add iov_iters to (sub)requests to describe various buffers
+  netfs: Add support for DIO buffering
+  netfs: Provide tools to create a buffer in an xarray
+  netfs: Add bounce buffering support
+  netfs: Add func to calculate pagecount/size-limited span of an
+    iterator
+  netfs: Limit subrequest by size or number of segments
+  netfs: Export netfs_put_subrequest() and some tracepoints
+  netfs: Extend the netfs_io_*request structs to handle writes
+  netfs: Add a hook to allow tell the netfs to update its i_size
+  netfs: Make netfs_put_request() handle a NULL pointer
+  fscache: Add a function to begin an cache op from a netfslib request
+  netfs: Make the refcounting of netfs_begin_read() easier to use
+  netfs: Prep to use folio->private for write grouping and streaming
+    write
+  netfs: Dispatch write requests to process a writeback slice
+  netfs: Provide func to copy data to pagecache for buffered write
+  netfs: Make netfs_read_folio() handle streaming-write pages
+  netfs: Allocate multipage folios in the writepath
+  netfs: Implement support for unbuffered/DIO read
+  netfs: Implement unbuffered/DIO write support
+  netfs: Implement buffered write API
+  netfs: Allow buffered shared-writeable mmap through
+    netfs_page_mkwrite()
+  netfs: Provide netfs_file_read_iter()
+  netfs: Provide a writepages implementation
+  netfs: Provide minimum blocksize parameter
+  netfs: Make netfs_skip_folio_read() take account of blocksize
+  netfs: Perform content encryption
+  netfs: Decrypt encrypted content
+  netfs: Support decryption on ubuffered/DIO read
+  netfs: Support encryption on Unbuffered/DIO write
+  netfs: Provide a launder_folio implementation
+  netfs: Implement a write-through caching option
+  netfs: Rearrange netfs_io_subrequest to put request pointer first
+  afs: Use the netfs write helpers
+  cifs: Replace cifs_readdata with a wrapper around netfs_io_subrequest
+  cifs: Share server EOF pos with netfslib
+  cifs: Replace cifs_writedata with a wrapper around netfs_io_subrequest
+  cifs: Use more fields from netfs_io_subrequest
+  cifs: Make wait_mtu_credits take size_t args
+  cifs: Implement netfslib hooks
+  cifs: Move cifs_loose_read_iter() and cifs_file_write_iter() to file.c
+  cifs: Cut over to using netfslib
+  cifs: Remove some code that's no longer used, part 1
+  cifs: Remove some code that's no longer used, part 2
+  cifs: Remove some code that's no longer used, part 3
+
+ fs/9p/vfs_addr.c             |   51 +-
+ fs/afs/file.c                |  206 +--
+ fs/afs/inode.c               |   15 +-
+ fs/afs/internal.h            |   66 +-
+ fs/afs/write.c               |  816 +---------
+ fs/ceph/addr.c               |   28 +-
+ fs/ceph/cache.h              |   12 -
+ fs/fscache/io.c              |   42 +
+ fs/netfs/Makefile            |    9 +-
+ fs/netfs/buffered_read.c     |  245 ++-
+ fs/netfs/buffered_write.c    | 1223 ++++++++++++++
+ fs/netfs/crypto.c            |  148 ++
+ fs/netfs/direct_read.c       |  263 +++
+ fs/netfs/direct_write.c      |  359 +++++
+ fs/netfs/internal.h          |  121 ++
+ fs/netfs/io.c                |  325 +++-
+ fs/netfs/iterator.c          |   97 ++
+ fs/netfs/locking.c           |  209 +++
+ fs/netfs/main.c              |  101 ++
+ fs/netfs/misc.c              |  237 +++
+ fs/netfs/objects.c           |   64 +-
+ fs/netfs/output.c            |  485 ++++++
+ fs/netfs/stats.c             |   22 +-
+ fs/smb/client/Kconfig        |    1 +
+ fs/smb/client/cifsfs.c       |   65 +-
+ fs/smb/client/cifsfs.h       |   10 +-
+ fs/smb/client/cifsglob.h     |   59 +-
+ fs/smb/client/cifsproto.h    |   10 +-
+ fs/smb/client/cifssmb.c      |  111 +-
+ fs/smb/client/file.c         | 2905 ++++++----------------------------
+ fs/smb/client/fscache.c      |  109 --
+ fs/smb/client/fscache.h      |   54 -
+ fs/smb/client/inode.c        |   25 +-
+ fs/smb/client/smb2ops.c      |   20 +-
+ fs/smb/client/smb2pdu.c      |  168 +-
+ fs/smb/client/smb2proto.h    |    5 +-
+ fs/smb/client/trace.h        |  144 +-
+ fs/smb/client/transport.c    |   17 +-
+ include/linux/fscache.h      |    6 +
+ include/linux/netfs.h        |  173 +-
+ include/trace/events/afs.h   |   31 -
+ include/trace/events/netfs.h |  158 +-
+ 42 files changed, 5136 insertions(+), 4079 deletions(-)
+ create mode 100644 fs/netfs/buffered_write.c
+ create mode 100644 fs/netfs/crypto.c
+ create mode 100644 fs/netfs/direct_read.c
+ create mode 100644 fs/netfs/direct_write.c
+ create mode 100644 fs/netfs/locking.c
+ create mode 100644 fs/netfs/misc.c
+ create mode 100644 fs/netfs/output.c
 
