@@ -2,436 +2,154 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACCFC7C7A59
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 01:22:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8963F7C7ACF
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 02:23:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1443053AbjJLXWd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 Oct 2023 19:22:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46522 "EHLO
+        id S234205AbjJMAXl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 Oct 2023 20:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1443006AbjJLXWc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Oct 2023 19:22:32 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83952A9;
-        Thu, 12 Oct 2023 16:22:30 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 91C3D21220;
-        Thu, 12 Oct 2023 23:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1697152948; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7jh/n4J9VYawVOoGC8PbIeXicDNe+C9ekZxTBgsYjvc=;
-        b=Pr9hxM+ccVHAs+7Umz3gtcSLk/JZ5K1eXXXGh4olGRJiDNjUzu5UVjGs6uOF5kgp0z/hFL
-        f7qWCLCu0qw8vI+BSHiaFRcnHcagQWZFGwdwAf6VSjrtnTtlTyDCL9vkBF2DM+Cxvx5Heu
-        LV4lY4/TKb06MWMUZ2GA9jWqHO1mA0w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1697152948;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7jh/n4J9VYawVOoGC8PbIeXicDNe+C9ekZxTBgsYjvc=;
-        b=cCop0C063lQCg5MOVE+kD2sOtSyjZ/nVxg4M913Jpd6dXb9xDNw6x7mj6Sb6SRRWO/wr0n
-        XHme6PmNNBi/gqCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1B692139ED;
-        Thu, 12 Oct 2023 23:22:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id F5gGMLF/KGUlCwAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 12 Oct 2023 23:22:25 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229840AbjJMAXl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 Oct 2023 20:23:41 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2058.outbound.protection.outlook.com [40.107.244.58])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69005B7;
+        Thu, 12 Oct 2023 17:23:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OwwU7MFYN105X6zkuJRMW3l74FH86Dz0PCrJnqLXvH10Y+QQr/BA7Sgme+EtDXbZFy77awbwHhn0jhST8RjNbiXpRgxJJBCM2KGAF8Fc7SVtQ6jy4BG5egxYNrEm7bcXfybQTZWMtPviUWJcqjdf1aHuX46ut333906GOo5KMA5wTkGLaLv80o1F7XDSUQLe8zi2AxyVKouyENBkBCg794Fe9ncCadNnlhW9eFSysjUzwUCJ+GTeo3IkmQySWbZH4cKc4iwmHX1UOzArpDKU8H5+lkFthqW10ojvYe40WoFj29Dk+NUNP9ULqfdNCO49nfowzO0+HrPQRkjqKwnwIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tS0cv5gb1MJ2b54oclGWQaautNSCuGBqoWIxVNl8rNY=;
+ b=bebYS8YLpG2peSwIOH00shFQi+EURDZWV8rleZnSJ1XMR+pRR7JqwsIRaqKjbNxOPnfVAyitWT2H8GhDSiCwyXjo50hVkOcwEJehhrwezRHHQrIx1ob5JiLQvcfthY3ZShI3ehjeRZo6LilSteMLRM0OJmMWIk6tNNPQfX/eNGelT8ThCXL5oi015ruB3HCUFGCr87j6+TNewaHU4xR5r437twOxxPJaiDHggQxAXG+i+aPJk0S3jjg/A1cAsTOSidQqvxKkgo8arMNR8kkfprlHq24kaJiexH+OlJt9QlNhqxWXQECwFZvuPNpzLXhdgzrgvs54QkyN2y8lmekgvA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
+ dkim=pass header.d=talpey.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=talpey.com;
+Received: from SN6PR01MB4445.prod.exchangelabs.com (2603:10b6:805:e2::33) by
+ SA1PR01MB7325.prod.exchangelabs.com (2603:10b6:806:1f4::5) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6863.44; Fri, 13 Oct 2023 00:23:34 +0000
+Received: from SN6PR01MB4445.prod.exchangelabs.com
+ ([fe80::28cd:b4e1:d64b:7160]) by SN6PR01MB4445.prod.exchangelabs.com
+ ([fe80::28cd:b4e1:d64b:7160%4]) with mapi id 15.20.6863.040; Fri, 13 Oct 2023
+ 00:23:33 +0000
+Message-ID: <d2ecff1e-1404-4f9a-8550-b211ff5f7410@talpey.com>
+Date:   Thu, 12 Oct 2023 20:23:29 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] svcrdma: Drop connection after an RDMA Read error
+Content-Language: en-US
+To:     Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
+Cc:     stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+References: <169695862158.5083.6004887085023503434.stgit@oracle-102.nfsv4bat.org>
+From:   Tom Talpey <tom@talpey.com>
+In-Reply-To: <169695862158.5083.6004887085023503434.stgit@oracle-102.nfsv4bat.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BL0PR0102CA0062.prod.exchangelabs.com
+ (2603:10b6:208:25::39) To SN6PR01MB4445.prod.exchangelabs.com
+ (2603:10b6:805:e2::33)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     "Chuck Lever" <chuck.lever@oracle.com>,
-        "Olga Kornievskaia" <kolga@netapp.com>,
-        "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Jeff Layton" <jlayton@kernel.org>
-Subject: Re: [PATCH RFC] nfsd: new Kconfig option for legacy client tracking
-In-reply-to: <20231012-nfsd-cltrack-v1-1-4e2e405b2b96@kernel.org>
-References: <20231012-nfsd-cltrack-v1-1-4e2e405b2b96@kernel.org>
-Date:   Fri, 13 Oct 2023 10:22:21 +1100
-Message-id: <169715294196.26263.8724135216623551852@noble.neil.brown.name>
-Authentication-Results: smtp-out1.suse.de;
-        none
-X-Spam-Level: 
-X-Spam-Score: -11.10
-X-Spamd-Result: default: False [-11.10 / 50.00];
-         ARC_NA(0.00)[];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         NEURAL_HAM_LONG(-3.00)[-1.000];
-         MIME_GOOD(-0.10)[text/plain];
-         REPLY(-4.00)[];
-         DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-         NEURAL_HAM_SHORT(-1.00)[-1.000];
-         RCPT_COUNT_SEVEN(0.00)[8];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         RCVD_TLS_ALL(0.00)[];
-         BAYES_HAM(-3.00)[100.00%]
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR01MB4445:EE_|SA1PR01MB7325:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e81196a-62ba-4142-98c0-08dbcb82a238
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: sEeu2BaRoglkufk6QLnOAvd5OOvkwK2kbJqI6gbfwJSgORxwo2jdTGh2MP1OT/d4J0KCc6tR9uIdERN74S7s+KG9IvQ5M/wSRaNxHn2s8PBX147sLrsMgmsFipsZfrTe0+wfBMKR3CCReBDSxZTQshFam0DvaudFjTKXvm7/MgFtRgVkJty9OsAWsEBDWJrKlpisenmxXxD5QqeH2yPUFF949WeZIPNk54nwCi5iPPPrFiqX9Xq93BkpmitPP8hxwDKYZdyf2dogrr3soAZuOxfOJMdsrTH35yFUcdPjjgPZPjQd8zZbm/K9Fh7W5AzhWWXB0aP/XYE8DQM22a2rXnaHIOX/jszn/zovmlQ/ZdSFWV6Q8eBjHFjJu2n7fFGZgWBcf515m+lPcCKEt66EOaMW65MXtqQ9wohzYwztMmouwfCWYFVYHtqJtQyHdi14G7riSb9r9POej2pbUUjrZb5GnBt1/b8LUhP5+90KhGMYbEk6LiqguS5H1vKHUVyVtAFpS1Hjjpj7lB7F9WnizRP66bAZTXhgvxJW8eMSZh5As2oG933PlzdNb9runNaFu+nbOgrA86kO2zbgdeW4JmyjLGtvCwAGSMZcCSCoBLc=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB4445.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39830400003)(366004)(136003)(346002)(396003)(230922051799003)(64100799003)(451199024)(1800799009)(186009)(6512007)(26005)(316002)(8676002)(53546011)(6506007)(83380400001)(31696002)(86362001)(2906002)(2616005)(31686004)(478600001)(6486002)(38100700002)(5660300002)(36756003)(8936002)(41300700001)(4326008)(6666004)(66476007)(66556008)(66946007)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NG1MOFhGUWFGVWV3ZGJwVmRDbXdFQ3VPb2pVVkNseUFaN2o2RTQrRUNpRmQw?=
+ =?utf-8?B?dE9CY2xVcjFyM2E2eFNMTUozc1hNY3VBVS9kRlcxSi9JdndNYkRHalkzVjIz?=
+ =?utf-8?B?YkVUWk9ycjZlTUdZa3lwNk1UaG9wc0tGcWd0c20zaEV5WkoxNFhrNWJwRFZl?=
+ =?utf-8?B?M1RISUQ1dWdQZEpROC95UVcvY1FVVWhXY2VHUGNwWGxVcHpsMWJsdHl6ZUYr?=
+ =?utf-8?B?UE9lZ2s0dVVlaTI0U0M0NGZnUjRlZ3RHQWhYTENhdkJERkoxdXM2TjUrTUZV?=
+ =?utf-8?B?VHN1QzJsWWlFcHVmTVR2WnJTSzhQNmI2OXFTZkNtZlpzcWxCcnE2S3YydlFN?=
+ =?utf-8?B?TGRqc1FVdGxkcjMwUjlKUmo4MVRvZVNTSkJPUEpJVUU2b1habUUzYmlUMzBl?=
+ =?utf-8?B?TU8rYzR3QkJNUlVaRkJjc3ZEMDlPeklsWENidk1vc1FWZG8vaGJvaTZJNmNm?=
+ =?utf-8?B?Tjlibm5YdVVDT3QzZXBQWDl1dlRjUjcramZXWkZpNVg3WDRWRmlpcDRpZnFi?=
+ =?utf-8?B?QlRuRHYxU3B6bURnKzFJeHhLTVg5TWYyM3lCSlkwNmEzaUVkSUNPRjFVKy9G?=
+ =?utf-8?B?YW0xTGxIYTZsSjhuRys2S0dvTkk5TkVrNzBRSXNQTmNGNHpRSWd4SnJTTzda?=
+ =?utf-8?B?WkFNWTI3LzFlSVBTMCtVbFg4Mk5PVkpta09DZjFmZklMdXB5Wi9Vc1RkQ2Vi?=
+ =?utf-8?B?N1NqZ0hoZmJmSmZPMUFlU2JjcFlab1BCTjdpWi9jVk1zdnV2QW5kWkxCOXll?=
+ =?utf-8?B?SHoyVDBLQW02T1lYVGlrMHlWdVlnNDN3WGZKZzlZVjU2d2lLcGhEK3FYT3BT?=
+ =?utf-8?B?ZWJ5LzY3WXV4d3o5UUxFejUrdXdmSXpPbU9QM0t0L2plcG5SVTc5QU5qZmQ5?=
+ =?utf-8?B?OWxRcHdoYWdUTTlKdkxQTTlyTVp5N21PcHZ1bzNRVktNYkQvcWwrNDZXZ0NB?=
+ =?utf-8?B?eHBBbGdjUVlGMHpxZm5jOWRyQmx0OUxabTNHZ1pOUkdJSWx0cW8zd2lhUUtM?=
+ =?utf-8?B?Rm0xS0RFZjY1c3Y3ZkkzZFZFWGFiOGRrbHVXQS8zRjJFMlFZYlJyK0lKMjBW?=
+ =?utf-8?B?QnlIbW11ZGNkMks4azduT0NkK2pkSnNCNjBac1JOK2JJYTBldHZzNzlzQXZR?=
+ =?utf-8?B?KzVwWTFhRVVXVXI2elM3amVtMCtQU2hVcmN6TFJTTXVDU3BNRTZDNzJEL3Zp?=
+ =?utf-8?B?R29zbVlHVWt1NS82TndpUnIvMjVXR1YwdXhtMXQzYXlBRW0rZUZjdnVVeUZh?=
+ =?utf-8?B?WUl6VWZGRE9PeW1KZ28yZGloT3c2NDVIb2owOGE4MWlxTjZoa1RuYTN0R1dN?=
+ =?utf-8?B?SGRMUlNNcDlISWFnYUpSSmRHRklGKzZwb2czNmgvTkYwMnNEQWJ1VzFuOUlE?=
+ =?utf-8?B?YlRFamxxMWZpZElab2QzM2xoUjN3MmNveHcrT2ZWR0trWml3Lzgra2hlaDJC?=
+ =?utf-8?B?T2JZSkNBZjFBMzhMTmVhNTFHOHZQZlRlRnUvUXlJTGJmakQzR0dvcU1tN254?=
+ =?utf-8?B?VXVEVVd6ZHlhU0QvcVlkL0I1eG9tSFhIQURoL2tDRzc3ZmZ5cnF5UGpjb0Ja?=
+ =?utf-8?B?Mm13ckwvZDRsWlhOVWRMeitzTlJuSVNxcGZWdVpWOFQyaFNBd3JITXNvek1q?=
+ =?utf-8?B?NEN4YTk0dFFoY3pEa0lkQWN5K1ZOeGRvUW14dmZ5UEI2TGgvSkhxZHVmQUtG?=
+ =?utf-8?B?RXU4dlJOWnZoTVRrdUc4ejM4WHRDQk1pMGZWakVkWjhaQ2dJMVNKZnR5VmFv?=
+ =?utf-8?B?MWhzTTVWZHN6Z0g2S3Q1QUdqOUI0VnhNUFM2NVFrMUY5bUxCV2NpbUJVaTBY?=
+ =?utf-8?B?TU9MNFRnT3lvOWk0UUEwRkNnWHdnbkVUbWdQZDNWOEludDJzemFRUXZud2Jl?=
+ =?utf-8?B?Ly8vRk0ycDFoVkhwTVlaMVBjdENGZ0NzUXVVS2ZGZzFIWXNiTkZNQ0V6dWM4?=
+ =?utf-8?B?bTNuUkpROFhJcFJtNm9JbC9Ga3RKQzBmejZhWnAvRkpVSnROREJVQlJWMU5j?=
+ =?utf-8?B?bVQrL296Qk9lRmJKc2c1aCtGMUQ1YUFGK1ByL3dDNFg1VWRyWHppUWs0T1kv?=
+ =?utf-8?B?ZzA5QXQ4V1g5ZFAvNDgrUDcyQndIWThGN3VkYmNGNXR5MVdnREV5bmZGcWI4?=
+ =?utf-8?Q?hXvk4d0yxYHX/6oCWODsGX9yx?=
+X-OriginatorOrg: talpey.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e81196a-62ba-4142-98c0-08dbcb82a238
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB4445.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Oct 2023 00:23:33.3027
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: x/kS/2z9owFkSlKlWeiR0x/Z/mlt2NIoE+RyXtf6bKcYlApVMA5cOQR3WaHmEdSl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB7325
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 13 Oct 2023, Jeff Layton wrote:
-> We've had a number of attempts at different NFSv4 client tracking
-> methods over the years, but now nfsdcld has emerged as the clear winner
-> since the others (recoverydir and the usermodehelper upcall) are
-> problematic.
->=20
-> As a prelude to eventually removing support for these client tracking
-> methods, add a new Kconfig option that enables them. Mark it deprecated
-> and make it default to N.
+On 10/10/2023 1:23 PM, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+> 
+> When an RPC Call message cannot be pulled from the client, that
+> is a message loss, by definition. Close the connection to trigger
+> the client to resend.
 
-This is an excellent idea - thanks.  I haven't looked closely at the
-patch, but if it builds then I suspect it is correct.
+This looks correct, but it seems there are actually two changes here,
+it's initiating the close but it's also unconditionally returning
+-ENOTCONN. Other similar code paths do this so it's ok but the
+altered return value is a bit mysterious.
 
-Acked-by: NeilBrown <neilb@suse.de>
+Reviewed-by: Tom Talpey <tom@talpey.com>
 
-Thanks,
-NeilBrown
-
-
-
->=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> 
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
-> Now that we've really settled on nfsdcld being the way forward for
-> NFSv4 client tracking, put the legacy methods under a new Kconfig option
-> that defaults to off.
->=20
-> This should make it easier to eventually deprecate this code and remove
-> it in the future (maybe in v6.10 or so)?
-> ---
->  fs/nfsd/Kconfig       | 16 +++++++++
->  fs/nfsd/nfs4recover.c | 97 +++++++++++++++++++++++++++++++++--------------=
-----
->  fs/nfsd/nfsctl.c      |  6 ++++
->  3 files changed, 85 insertions(+), 34 deletions(-)
->=20
-> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-> index 43b88eaf0673..2d21fbf154c6 100644
-> --- a/fs/nfsd/Kconfig
-> +++ b/fs/nfsd/Kconfig
-> @@ -158,3 +158,19 @@ config NFSD_V4_SECURITY_LABEL
-> =20
->  	If you do not wish to enable fine-grained security labels SELinux or
->  	Smack policies on NFSv4 files, say N.
-> +
-> +config NFSD_LEGACY_CLIENT_TRACKING
-> +	bool "Support legacy NFSv4 client tracking methods (deprecated)"
-> +	depends on NFSD_V4
-> +	default n
-> +	help
-> +	  The NFSv4 server needs to store a small amount of information on
-> +	  stable storage in order to handle state recovery after reboot. Most
-> +	  modern deployments upcall to a userland daemon for this (nfsdcld),
-> +	  but older NFS servers may store information directly in a
-> +	  recoverydir, or spawn a process directly using a usermodehelper
-> +	  upcall.
-> +
-> +	  These legacy client tracking methods have proven to be probelmatic
-> +	  and will be removed in the future. Say Y here if you need support
-> +	  for them in the interim.
-> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> index 3509e73abe1f..2c060e0b1604 100644
-> --- a/fs/nfsd/nfs4recover.c
-> +++ b/fs/nfsd/nfs4recover.c
-> @@ -66,6 +66,7 @@ struct nfsd4_client_tracking_ops {
->  static const struct nfsd4_client_tracking_ops nfsd4_cld_tracking_ops;
->  static const struct nfsd4_client_tracking_ops nfsd4_cld_tracking_ops_v2;
-> =20
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
->  /* Globals */
->  static char user_recovery_dirname[PATH_MAX] =3D "/var/lib/nfs/v4recovery";
-> =20
-> @@ -720,6 +721,7 @@ static const struct nfsd4_client_tracking_ops nfsd4_leg=
-acy_tracking_ops =3D {
->  	.version	=3D 1,
->  	.msglen		=3D 0,
->  };
-> +#endif /* CONFIG_NFSD_LEGACY_CLIENT_TRACKING */
-> =20
->  /* Globals */
->  #define NFSD_PIPE_DIR		"nfsd"
-> @@ -731,8 +733,10 @@ struct cld_net {
->  	spinlock_t		 cn_lock;
->  	struct list_head	 cn_list;
->  	unsigned int		 cn_xid;
-> -	bool			 cn_has_legacy;
->  	struct crypto_shash	*cn_tfm;
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
-> +	bool			 cn_has_legacy;
-> +#endif
->  };
-> =20
->  struct cld_upcall {
-> @@ -793,7 +797,6 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_v2 =
-__user *cmsg,
->  	uint8_t cmd, princhashlen;
->  	struct xdr_netobj name, princhash =3D { .len =3D 0, .data =3D NULL };
->  	uint16_t namelen;
-> -	struct cld_net *cn =3D nn->cld_net;
-> =20
->  	if (get_user(cmd, &cmsg->cm_cmd)) {
->  		dprintk("%s: error when copying cmd from userspace", __func__);
-> @@ -833,11 +836,15 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_v=
-2 __user *cmsg,
->  				return PTR_ERR(name.data);
->  			name.len =3D namelen;
->  		}
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
->  		if (name.len > 5 && memcmp(name.data, "hash:", 5) =3D=3D 0) {
-> +			struct cld_net *cn =3D nn->cld_net;
-> +
->  			name.len =3D name.len - 5;
->  			memmove(name.data, name.data + 5, name.len);
->  			cn->cn_has_legacy =3D true;
->  		}
-> +#endif
->  		if (!nfs4_client_to_reclaim(name, princhash, nn)) {
->  			kfree(name.data);
->  			kfree(princhash.data);
-> @@ -1010,7 +1017,9 @@ __nfsd4_init_cld_pipe(struct net *net)
->  	}
-> =20
->  	cn->cn_pipe->dentry =3D dentry;
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
->  	cn->cn_has_legacy =3D false;
-> +#endif
->  	nn->cld_net =3D cn;
->  	return 0;
-> =20
-> @@ -1282,10 +1291,6 @@ nfsd4_cld_check(struct nfs4_client *clp)
->  {
->  	struct nfs4_client_reclaim *crp;
->  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
-> -	struct cld_net *cn =3D nn->cld_net;
-> -	int status;
-> -	char dname[HEXDIR_LEN];
-> -	struct xdr_netobj name;
-> =20
->  	/* did we already find that this client is stable? */
->  	if (test_bit(NFSD4_CLIENT_STABLE, &clp->cl_flags))
-> @@ -1296,7 +1301,12 @@ nfsd4_cld_check(struct nfs4_client *clp)
->  	if (crp)
->  		goto found;
-> =20
-> -	if (cn->cn_has_legacy) {
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
-> +	if (nn->cld_net->cn_has_legacy) {
-> +		int status;
-> +		char dname[HEXDIR_LEN];
-> +		struct xdr_netobj name;
-> +
->  		status =3D nfs4_make_rec_clidname(dname, &clp->cl_name);
->  		if (status)
->  			return -ENOENT;
-> @@ -1314,6 +1324,7 @@ nfsd4_cld_check(struct nfs4_client *clp)
->  			goto found;
-> =20
->  	}
-> +#endif
->  	return -ENOENT;
->  found:
->  	crp->cr_clp =3D clp;
-> @@ -1327,8 +1338,6 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
->  	struct nfsd_net *nn =3D net_generic(clp->net, nfsd_net_id);
->  	struct cld_net *cn =3D nn->cld_net;
->  	int status;
-> -	char dname[HEXDIR_LEN];
-> -	struct xdr_netobj name;
->  	struct crypto_shash *tfm =3D cn->cn_tfm;
->  	struct xdr_netobj cksum;
->  	char *principal =3D NULL;
-> @@ -1342,7 +1351,11 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
->  	if (crp)
->  		goto found;
-> =20
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
->  	if (cn->cn_has_legacy) {
-> +		struct xdr_netobj name;
-> +		char dname[HEXDIR_LEN];
-> +
->  		status =3D nfs4_make_rec_clidname(dname, &clp->cl_name);
->  		if (status)
->  			return -ENOENT;
-> @@ -1360,6 +1373,7 @@ nfsd4_cld_check_v2(struct nfs4_client *clp)
->  			goto found;
-> =20
->  	}
-> +#endif
->  	return -ENOENT;
->  found:
->  	if (crp->cr_princhash.len) {
-> @@ -1663,6 +1677,7 @@ static const struct nfsd4_client_tracking_ops nfsd4_c=
-ld_tracking_ops_v2 =3D {
->  	.msglen		=3D sizeof(struct cld_msg_v2),
->  };
-> =20
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
->  /* upcall via usermodehelper */
->  static char cltrack_prog[PATH_MAX] =3D "/sbin/nfsdcltrack";
->  module_param_string(cltrack_prog, cltrack_prog, sizeof(cltrack_prog),
-> @@ -2007,28 +2022,10 @@ static const struct nfsd4_client_tracking_ops nfsd4=
-_umh_tracking_ops =3D {
->  	.msglen		=3D 0,
->  };
-> =20
-> -int
-> -nfsd4_client_tracking_init(struct net *net)
-> +static inline int check_for_legacy_methods(int status, struct net *net)
->  {
-> -	int status;
-> -	struct path path;
->  	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> -
-> -	/* just run the init if it the method is already decided */
-> -	if (nn->client_tracking_ops)
-> -		goto do_init;
-> -
-> -	/* First, try to use nfsdcld */
-> -	nn->client_tracking_ops =3D &nfsd4_cld_tracking_ops;
-> -	status =3D nn->client_tracking_ops->init(net);
-> -	if (!status)
-> -		return status;
-> -	if (status !=3D -ETIMEDOUT) {
-> -		nn->client_tracking_ops =3D &nfsd4_cld_tracking_ops_v0;
-> -		status =3D nn->client_tracking_ops->init(net);
-> -		if (!status)
-> -			return status;
-> -	}
-> +	struct path path;
-> =20
->  	/*
->  	 * Next, try the UMH upcall.
-> @@ -2045,14 +2042,46 @@ nfsd4_client_tracking_init(struct net *net)
->  	nn->client_tracking_ops =3D &nfsd4_legacy_tracking_ops;
->  	status =3D kern_path(nfs4_recoverydir(), LOOKUP_FOLLOW, &path);
->  	if (!status) {
-> -		status =3D d_is_dir(path.dentry);
-> +		status =3D !d_is_dir(path.dentry);
->  		path_put(&path);
-> -		if (!status) {
-> -			status =3D -EINVAL;
-> -			goto out;
-> -		}
-> +		if (status)
-> +			return -ENOTDIR;
-> +		status =3D nn->client_tracking_ops->init(net);
-> +	}
-> +	return status;
-> +}
-> +#else
-> +static inline int check_for_legacy_methods(int status, struct net *net)
-> +{
-> +	return status;
-> +}
-> +#endif /* CONFIG_LEGACY_NFSD_CLIENT_TRACKING */
-> +
-> +int
-> +nfsd4_client_tracking_init(struct net *net)
-> +{
-> +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> +	int status;
-> +
-> +	/* just run the init if it the method is already decided */
-> +	if (nn->client_tracking_ops)
-> +		goto do_init;
-> +
-> +	/* First, try to use nfsdcld */
-> +	nn->client_tracking_ops =3D &nfsd4_cld_tracking_ops;
-> +	status =3D nn->client_tracking_ops->init(net);
-> +	if (!status)
-> +		return status;
-> +	if (status !=3D -ETIMEDOUT) {
-> +		nn->client_tracking_ops =3D &nfsd4_cld_tracking_ops_v0;
-> +		status =3D nn->client_tracking_ops->init(net);
-> +		if (!status)
-> +			return status;
->  	}
-> =20
-> +	status =3D check_for_legacy_methods(status, net);
-> +	if (status)
-> +		goto out;
->  do_init:
->  	status =3D nn->client_tracking_ops->init(net);
->  out:
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 7ed02fb88a36..48d1dc9cccfb 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -75,7 +75,9 @@ static ssize_t write_maxconn(struct file *file, char *buf=
-, size_t size);
->  #ifdef CONFIG_NFSD_V4
->  static ssize_t write_leasetime(struct file *file, char *buf, size_t size);
->  static ssize_t write_gracetime(struct file *file, char *buf, size_t size);
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
->  static ssize_t write_recoverydir(struct file *file, char *buf, size_t size=
-);
-> +#endif
->  static ssize_t write_v4_end_grace(struct file *file, char *buf, size_t siz=
-e);
->  #endif
-> =20
-> @@ -92,7 +94,9 @@ static ssize_t (*const write_op[])(struct file *, char *,=
- size_t) =3D {
->  #ifdef CONFIG_NFSD_V4
->  	[NFSD_Leasetime] =3D write_leasetime,
->  	[NFSD_Gracetime] =3D write_gracetime,
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
->  	[NFSD_RecoveryDir] =3D write_recoverydir,
-> +#endif
->  	[NFSD_V4EndGrace] =3D write_v4_end_grace,
->  #endif
->  };
-> @@ -1012,6 +1016,7 @@ static ssize_t write_gracetime(struct file *file, cha=
-r *buf, size_t size)
->  	return nfsd4_write_time(file, buf, size, &nn->nfsd4_grace, nn);
->  }
-> =20
-> +#ifdef CONFIG_NFSD_LEGACY_CLIENT_TRACKING
->  static ssize_t __write_recoverydir(struct file *file, char *buf, size_t si=
-ze,
->  				   struct nfsd_net *nn)
->  {
-> @@ -1072,6 +1077,7 @@ static ssize_t write_recoverydir(struct file *file, c=
-har *buf, size_t size)
->  	mutex_unlock(&nfsd_mutex);
->  	return rv;
->  }
-> +#endif
-> =20
->  /*
->   * write_v4_end_grace - release grace period for nfsd's v4.x lock manager
->=20
-> ---
-> base-commit: 401644852d0b2a278811de38081be23f74b5bb04
-> change-id: 20231012-nfsd-cltrack-6198814aee58
->=20
-> Best regards,
-> --=20
-> Jeff Layton <jlayton@kernel.org>
->=20
->=20
-
+>   net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |    3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> index 85c8bcaebb80..3b05f90a3e50 100644
+> --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+> @@ -852,7 +852,8 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
+>   	if (ret == -EINVAL)
+>   		svc_rdma_send_error(rdma_xprt, ctxt, ret);
+>   	svc_rdma_recv_ctxt_put(rdma_xprt, ctxt);
+> -	return ret;
+> +	svc_xprt_deferred_close(xprt);
+> +	return -ENOTCONN;
+>   
+>   out_backchannel:
+>   	svc_rdma_handle_bc_reply(rqstp, ctxt);
+> 
+> 
+> 
