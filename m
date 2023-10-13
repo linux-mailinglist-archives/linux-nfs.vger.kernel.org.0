@@ -2,29 +2,29 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C31B07C7D51
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 07:57:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 713157C7D62
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 08:02:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjJMF5p (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Oct 2023 01:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47184 "EHLO
+        id S229695AbjJMGCn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Oct 2023 02:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbjJMF5o (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 01:57:44 -0400
+        with ESMTP id S229671AbjJMGCl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 02:02:41 -0400
 Received: from jari.cn (unknown [218.92.28.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A43ECB7;
-        Thu, 12 Oct 2023 22:57:40 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A7E58DD;
+        Thu, 12 Oct 2023 23:02:39 -0700 (PDT)
 Received: from chenguohua$jari.cn ( [182.148.14.172] ) by
- ajax-webmail-localhost.localdomain (Coremail) ; Fri, 13 Oct 2023 13:55:42
+ ajax-webmail-localhost.localdomain (Coremail) ; Fri, 13 Oct 2023 14:00:53
  +0800 (GMT+08:00)
 X-Originating-IP: [182.148.14.172]
-Date:   Fri, 13 Oct 2023 13:55:42 +0800 (GMT+08:00)
+Date:   Fri, 13 Oct 2023 14:00:53 +0800 (GMT+08:00)
 X-CM-HeaderCharset: UTF-8
 From:   chenguohua@jari.cn
 To:     chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
         kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com
-Cc:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: [PATCH] NFSD: Clean up errors in lockd.c
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] nfsd: Clean up errors in filecache.c
 X-Priority: 3
 X-Mailer: Coremail Webmail Server Version 2023.1-cmXT6 build
  20230419(ff23bf83) Copyright (c) 2002-2023 www.mailtech.cn
@@ -32,10 +32,10 @@ X-Mailer: Coremail Webmail Server Version 2023.1-cmXT6 build
 Content-Transfer-Encoding: base64
 Content-Type: text/plain; charset=UTF-8
 MIME-Version: 1.0
-Message-ID: <96b90fc.952.18b279add15.Coremail.chenguohua@jari.cn>
+Message-ID: <3265d6da.955.18b279f9aa9.Coremail.chenguohua@jari.cn>
 X-Coremail-Locale: zh_CN
-X-CM-TRANSID: AQAAfwBn+D3e2yhlSdvBAA--.687W
-X-CM-SenderInfo: xfkh0w5xrk3tw6md2xgofq/1tbiAQADEWUnvzMAGQAfsb
+X-CM-TRANSID: AQAAfwD3lD8V3ShldtvBAA--.749W
+X-CM-SenderInfo: xfkh0w5xrk3tw6md2xgofq/1tbiAQADEWUnvzMAGQAksg
 X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
         CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
         daVFxhVjvjDU=
@@ -50,22 +50,16 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 Rml4IHRoZSBmb2xsb3dpbmcgZXJyb3JzIHJlcG9ydGVkIGJ5IGNoZWNrcGF0Y2g6CgpFUlJPUjog
-c3BhY2UgcmVxdWlyZWQgYWZ0ZXIgdGhhdCAnLCcgKGN0eDpWeFYpCkVSUk9SOiBjb2RlIGluZGVu
-dCBzaG91bGQgdXNlIHRhYnMgd2hlcmUgcG9zc2libGUKClNpZ25lZC1vZmYtYnk6IEd1b0h1YSBD
-aGVuZyA8Y2hlbmd1b2h1YUBqYXJpLmNuPgotLS0KIGZzL25mc2QvbG9ja2QuYyB8IDQgKystLQog
-MSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1n
-aXQgYS9mcy9uZnNkL2xvY2tkLmMgYi9mcy9uZnNkL2xvY2tkLmMKaW5kZXggNDZhN2Y5YjgxM2U1
-Li5hY2ZlZDIyODIyZmEgMTAwNjQ0Ci0tLSBhL2ZzL25mc2QvbG9ja2QuYworKysgYi9mcy9uZnNk
-L2xvY2tkLmMKQEAgLTMzLDcgKzMzLDcgQEAgbmxtX2ZvcGVuKHN0cnVjdCBzdmNfcnFzdCAqcnFz
-dHAsIHN0cnVjdCBuZnNfZmggKmYsIHN0cnVjdCBmaWxlICoqZmlscCwKIAlzdHJ1Y3Qgc3ZjX2Zo
-CWZoOwogCiAJLyogbXVzdCBpbml0aWFsaXplIGJlZm9yZSB1c2luZyEgYnV0IG1heHNpemUgZG9l
-c24ndCBtYXR0ZXIgKi8KLQlmaF9pbml0KCZmaCwwKTsKKwlmaF9pbml0KCZmaCwgMCk7CiAJZmgu
-ZmhfaGFuZGxlLmZoX3NpemUgPSBmLT5zaXplOwogCW1lbWNweSgmZmguZmhfaGFuZGxlLmZoX3Jh
-dywgZi0+ZGF0YSwgZi0+c2l6ZSk7CiAJZmguZmhfZXhwb3J0ID0gTlVMTDsKQEAgLTQyLDcgKzQy
-LDcgQEAgbmxtX2ZvcGVuKHN0cnVjdCBzdmNfcnFzdCAqcnFzdHAsIHN0cnVjdCBuZnNfZmggKmYs
-IHN0cnVjdCBmaWxlICoqZmlscCwKIAlhY2Nlc3MgfD0gTkZTRF9NQVlfTE9DSzsKIAluZnNlcnIg
-PSBuZnNkX29wZW4ocnFzdHAsICZmaCwgU19JRlJFRywgYWNjZXNzLCBmaWxwKTsKIAlmaF9wdXQo
-JmZoKTsKLSAJLyogV2UgcmV0dXJuIG5sbSBlcnJvciBjb2RlcyBhcyBubG0gZG9lc24ndCBrbm93
-CisJLyogV2UgcmV0dXJuIG5sbSBlcnJvciBjb2RlcyBhcyBubG0gZG9lc24ndCBrbm93CiAJICog
-YWJvdXQgbmZzZCwgYnV0IG5mc2QgZG9lcyBrbm93IGFib3V0IG5sbS4uCiAJICovCiAJc3dpdGNo
-IChuZnNlcnIpIHsKLS0gCjIuMTcuMQo=
+c3BhY2UgcmVxdWlyZWQgYmVmb3JlIHRoZSBvcGVuIHBhcmVudGhlc2lzICcoJwoKU2lnbmVkLW9m
+Zi1ieTogR3VvSHVhIENoZW5nIDxjaGVuZ3VvaHVhQGphcmkuY24+Ci0tLQogZnMvbmZzZC9maWxl
+Y2FjaGUuYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlv
+bigtKQoKZGlmZiAtLWdpdCBhL2ZzL25mc2QvZmlsZWNhY2hlLmMgYi9mcy9uZnNkL2ZpbGVjYWNo
+ZS5jCmluZGV4IGVmMDYzZjkzZmRlOS4uZjNhYWJjNmE5Zjk4IDEwMDY0NAotLS0gYS9mcy9uZnNk
+L2ZpbGVjYWNoZS5jCisrKyBiL2ZzL25mc2QvZmlsZWNhY2hlLmMKQEAgLTQxMiw3ICs0MTIsNyBA
+QCBuZnNkX2ZpbGVfZGlzcG9zZV9saXN0KHN0cnVjdCBsaXN0X2hlYWQgKmRpc3Bvc2UpCiBzdGF0
+aWMgdm9pZAogbmZzZF9maWxlX2Rpc3Bvc2VfbGlzdF9kZWxheWVkKHN0cnVjdCBsaXN0X2hlYWQg
+KmRpc3Bvc2UpCiB7Ci0Jd2hpbGUoIWxpc3RfZW1wdHkoZGlzcG9zZSkpIHsKKwl3aGlsZSAoIWxp
+c3RfZW1wdHkoZGlzcG9zZSkpIHsKIAkJc3RydWN0IG5mc2RfZmlsZSAqbmYgPSBsaXN0X2ZpcnN0
+X2VudHJ5KGRpc3Bvc2UsCiAJCQkJCQlzdHJ1Y3QgbmZzZF9maWxlLCBuZl9scnUpOwogCQlzdHJ1
+Y3QgbmZzZF9uZXQgKm5uID0gbmV0X2dlbmVyaWMobmYtPm5mX25ldCwgbmZzZF9uZXRfaWQpOwot
+LSAKMi4xNy4xCg==
