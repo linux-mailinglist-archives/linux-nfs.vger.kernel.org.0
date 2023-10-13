@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B59AE7C83B2
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 12:50:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 047F07C83B6
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 12:50:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229930AbjJMKuW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Oct 2023 06:50:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41070 "EHLO
+        id S230053AbjJMKuy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Oct 2023 06:50:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229903AbjJMKuV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 06:50:21 -0400
+        with ESMTP id S230380AbjJMKux (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 06:50:53 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808F983;
-        Fri, 13 Oct 2023 03:50:19 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27083C433C7;
-        Fri, 13 Oct 2023 10:50:18 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9376EDA;
+        Fri, 13 Oct 2023 03:50:50 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73864C433C7;
+        Fri, 13 Oct 2023 10:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697194219;
-        bh=DzSNKGUIOplO8sJNh8KxYOTCM0wZruRzV+sDINeuiuw=;
+        s=k20201202; t=1697194250;
+        bh=G0w/pjBqGRKdZRG8VaIdtW8Ioqlty+xWHEkwpiG8Pcs=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WIYBIrWqt+1m2hEQ5p/ex1u9HHp76dZN75gyHctuMJR7bTbhuf8TE1VZ2NNjFfI+1
-         Zh5eSQTkzmuyrjYpqM/M+qk4pxyMfqcq/VyjFQNH7VYBV6b37wHHx7yzqZBqf30v5C
-         H2I9Ce0dt6YYxOl4xxQgsg5DRpewUn+WW309WOB3fZUeYaeTWYh0M8WO2FrQ7fjoqT
-         7vxps82CdzE4DmbAX+jsYUQwL4j20dXnD2YLHBj/d5QXDZcfWkVf6us/i8XW4Hm02N
-         /5m+YEW6b92BiF8WkYl7mUPPznNw+md4+VO7lEh1broEBkSJehnKGCawgFqp4pu2h6
-         SyevNkm15J2JQ==
-Message-ID: <5258379d69957db51c5db6f3175898f41be67fc5.camel@kernel.org>
-Subject: Re: [PATCH] NFS: Clean up errors in nfs_page.h
+        b=Er9v7lTfNlC1TycUGJ4Naag7upz4ME9td+nOkzR8zjwvT5Y9sQWHi/IllzVOaNBOo
+         1bLoSL6tVyjBJCd+0FrwoOHQQOV8qh9UJFEkDayXYRCxuVrdmfZKApgos7GGISXDkU
+         546vqYCSbUQNUX8q64RBMhvspIEdLfWwWWAZcXtZlIbBzDrbBHimwU1jrp0c7LeKCv
+         q906FSS0ZFo4BvLIPckc3d5i/QCioMewkn7PiHBRU7Jhis7k5UBeiaGVNzJITb42bi
+         G+WMk+b6GCfwKXVRr4BukntC/wh/oGF5P70vbUVjcjPeIN7NVGEuQiu+B72jZZ+DFH
+         PMfc9gXnB4JNw==
+Message-ID: <ae78fe72c2ea0bc631d50ef33313b3913d48f396.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: Clean up errors in nfs4xdr.c
 From:   Jeff Layton <jlayton@kernel.org>
-To:     chenguohua@jari.cn, trond.myklebust@hammerspace.com,
-        anna@kernel.org
+To:     KaiLong Wang <wangkailong@jari.cn>, chuck.lever@oracle.com,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com
 Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 13 Oct 2023 06:50:16 -0400
-In-Reply-To: <2f52e71b.943.18b2705b8cb.Coremail.chenguohua@jari.cn>
-References: <2f52e71b.943.18b2705b8cb.Coremail.chenguohua@jari.cn>
+Date:   Fri, 13 Oct 2023 06:50:48 -0400
+In-Reply-To: <116353ed.95a.18b27c347d9.Coremail.wangkailong@jari.cn>
+References: <116353ed.95a.18b27c347d9.Coremail.wangkailong@jari.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.module_f38+17164+63eeee4a) 
@@ -49,30 +49,52 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-10-13 at 11:12 +0800, chenguohua@jari.cn wrote:
+On Fri, 2023-10-13 at 14:39 +0800, KaiLong Wang wrote:
 > Fix the following errors reported by checkpatch:
 >=20
-> ERROR: space required after that ',' (ctx:VxO)
+> ERROR: spaces required around that '=3D' (ctx:VxV)
+> ERROR: else should follow close brace '}'
 >=20
-> Signed-off-by: JiangHui Xu <xujianghui@cdjrlc.com>
+> Signed-off-by: KaiLong Wang <wangkailong@jari.cn>
 > ---
->  include/linux/nfs_page.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/nfsd/nfs4xdr.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 >=20
-> diff --git a/include/linux/nfs_page.h b/include/linux/nfs_page.h
-> index 1c315f854ea8..6a3c54bd2c40 100644
-> --- a/include/linux/nfs_page.h
-> +++ b/include/linux/nfs_page.h
-> @@ -122,7 +122,7 @@ struct nfs_pageio_descriptor {
->  /* arbitrarily selected limit to number of mirrors */
->  #define NFS_PAGEIO_DESCRIPTOR_MIRROR_MAX 16
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 1cbd2a392302..8b9707957649 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -2432,7 +2432,7 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *ar=
+gp)
+>  {
+>  	struct nfsd4_op *op;
+>  	bool cachethis =3D false;
+> -	int auth_slack=3D argp->rqstp->rq_auth_slack;
+> +	int auth_slack =3D argp->rqstp->rq_auth_slack;
+>  	int max_reply =3D auth_slack + 8; /* opcnt, status */
+>  	int readcount =3D 0;
+>  	int readbytes =3D 0;
+> @@ -2585,7 +2585,7 @@ static __be32 nfsd4_encode_components_esc(struct xd=
+r_stream *xdr, char sep,
+>  	__be32 *p;
+>  	__be32 pathlen;
+>  	int pathlen_offset;
+> -	int strlen, count=3D0;
+> +	int strlen, count =3D 0;
+>  	char *str, *end, *next;
 > =20
-> -#define NFS_WBACK_BUSY(req)	(test_bit(PG_BUSY,&(req)->wb_flags))
-> +#define NFS_WBACK_BUSY(req)	(test_bit(PG_BUSY, &(req)->wb_flags))
-> =20
->  extern struct nfs_page *nfs_page_create_from_page(struct nfs_open_contex=
-t *ctx,
->  						  struct page *page,
+>  	dprintk("nfsd4_encode_components(%s)\n", components);
+> @@ -2622,8 +2622,7 @@ static __be32 nfsd4_encode_components_esc(struct xd=
+r_stream *xdr, char sep,
+>  				return nfserr_resource;
+>  			p =3D xdr_encode_opaque(p, str, strlen);
+>  			count++;
+> -		}
+> -		else
+> +		} else
+>  			end++;
+>  		if (found_esc)
+>  			end =3D next;
 
 In general, we don't usually take patches that just clean up whitespace
 damage or stylistic problems. Doing so makes backporting harder as you
