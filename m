@@ -2,1122 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 196107C8AA0
-	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 18:16:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 41D8F7C8BD8
+	for <lists+linux-nfs@lfdr.de>; Fri, 13 Oct 2023 18:56:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231731AbjJMQOf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 13 Oct 2023 12:14:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33592 "EHLO
+        id S230175AbjJMQ4k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 13 Oct 2023 12:56:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233631AbjJMQOd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 12:14:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C034EC4
-        for <linux-nfs@vger.kernel.org>; Fri, 13 Oct 2023 09:09:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697213268;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=no01PhpuRaBQ8id/gpjbA75BSmmT1V2g2hg7J1K3AS0=;
-        b=gGPo+y+gIXBY6z2Ff8/3s3AKXo6dGH+Ugr3Q/YAkEHtAb9hk22mqs05Ef9stElB3/5jEFv
-        PxpSHCy+baJtUTHE9UsjHz51psRDX60CyiwI28sA54Zh7dbUSQZFPfW9Ac065bbZBvudUY
-        fXdujqiw800HCXdjK1063P5MWAe/zp8=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-590-0pt9ng49MX2OtLESz_RCMQ-1; Fri, 13 Oct 2023 12:07:36 -0400
-X-MC-Unique: 0pt9ng49MX2OtLESz_RCMQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 65DB63C0DDBE;
-        Fri, 13 Oct 2023 16:07:35 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.226])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5CA9A1C060DF;
-        Fri, 13 Oct 2023 16:07:32 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>
-Cc:     David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Christian Brauner <christian@brauner.io>,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Rohith Surabattula <rohiths.msft@gmail.com>,
-        linux-cachefs@redhat.com
-Subject: [RFC PATCH 53/53] cifs: Remove some code that's no longer used, part 3
-Date:   Fri, 13 Oct 2023 17:04:22 +0100
-Message-ID: <20231013160423.2218093-54-dhowells@redhat.com>
-In-Reply-To: <20231013160423.2218093-1-dhowells@redhat.com>
-References: <20231013160423.2218093-1-dhowells@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229683AbjJMQ4j (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 13 Oct 2023 12:56:39 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FBB8A9;
+        Fri, 13 Oct 2023 09:56:36 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 39DGqKOC024192;
+        Fri, 13 Oct 2023 16:55:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=KvcxPRXQT8z860vA5hg/tsLyh50B3/HpjRrU1QQJ8xI=;
+ b=aRyGFJSh+SLsZmP2gF94tKa+RhNvw2DTpxNxbMGzS0lqn4KBjf7ffTdilYFucYAho2GY
+ y2MfrPXmrUgUw0H2fyveW8E/KbTUhz/YXPMZ2nukxK2KSemKk0DnEltEAXVgzzD2c1sR
+ 4d1KjYgcwqEvkRT9AGVCgOm5Jkore8dupnBAfgxzS+kIvgR7SNksDajKAvs6zbq3n0Zk
+ a/qNrZ5gL1EQi11bRSrNQkLrASX6svl2HNHIaeq4ix7xMlelG4M57KFdYEJBulpy+LyW
+ Mm5bIqZM8i/2SGuRdZVxv2dirghpgbJn6DVpXgdnCY5R+xA3jFcAENW2/DWQ0R4WQCAP jA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tq9sx05et-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 16:55:52 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 39DGqTfr024518;
+        Fri, 13 Oct 2023 16:55:51 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3tq9sx05du-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 16:55:51 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 39DGmj3S008868;
+        Fri, 13 Oct 2023 16:55:49 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3tpt57nb08-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Oct 2023 16:55:49 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+        by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 39DGtnoB27656848
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Oct 2023 16:55:49 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 397F158060;
+        Fri, 13 Oct 2023 16:55:49 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E158B5805E;
+        Fri, 13 Oct 2023 16:55:47 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.129.99])
+        by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 13 Oct 2023 16:55:47 +0000 (GMT)
+Message-ID: <d24bfa5752f751cbd36070838508fde26a4e0625.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 21/25] ima: Move to LSM infrastructure
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        viro@zeniv.linux.org.uk, brauner@kernel.org,
+        chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
+        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        dmitry.kasatkin@gmail.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Fri, 13 Oct 2023 12:55:47 -0400
+In-Reply-To: <20230904134049.1802006-2-roberto.sassu@huaweicloud.com>
+References: <20230904133415.1799503-1-roberto.sassu@huaweicloud.com>
+         <20230904134049.1802006-2-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 0Yl2JA_HcM8CzbBM_Hj9g2VYlGlJP-Cj
+X-Proofpoint-ORIG-GUID: BrWDdS3j3a8JQM-mkSYfvS6gTLhas4ap
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.980,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-10-13_08,2023-10-12_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2309180000 definitions=main-2310130144
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Remove some code that was #if'd out with the netfslib conversion.  This is
-split into parts for file.c as the diff generator otherwise produces a hard
-to read diff for part of it where a big chunk is cut out.
+On Mon, 2023-09-04 at 15:40 +0200, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> Remove hardcoded IMA function calls (not for appraisal) from the LSM
+> infrastructure, the VFS, NFS and the key subsystem.
+> 
+> Make those functions as static (except for ima_file_check() which is
+> exported, and ima_post_key_create_or_update(), which is not in ima_main.c),
+> and register them as implementation of the respective hooks in the new
+> function init_ima_lsm().
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Shyam Prasad N <nspmangalore@gmail.com>
-cc: Rohith Surabattula <rohiths.msft@gmail.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cifs@vger.kernel.org
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
----
- fs/smb/client/file.c | 1003 ------------------------------------------
- 1 file changed, 1003 deletions(-)
+ima_post_path_mknod() is currently enabled whether or not
+CONFIG_SECURITY_PATH is enabled.  Now it will only be enabled when
+CONFIG_SECURITY_PATH is confiured.  Changes like this need to be
+mentioned.
 
-diff --git a/fs/smb/client/file.c b/fs/smb/client/file.c
-index f6b148aa184c..be2c786e7c52 100644
---- a/fs/smb/client/file.c
-+++ b/fs/smb/client/file.c
-@@ -2700,470 +2700,6 @@ int cifs_flush(struct file *file, fl_owner_t id)
- 	return rc;
- }
- 
--#if 0 // TODO remove 3594
--static void collect_uncached_write_data(struct cifs_aio_ctx *ctx);
--
--static void
--cifs_uncached_writev_complete(struct work_struct *work)
--{
--	struct cifs_io_subrequest *wdata = container_of(work,
--					struct cifs_io_subrequest, work);
--	struct inode *inode = d_inode(wdata->cfile->dentry);
--	struct cifsInodeInfo *cifsi = CIFS_I(inode);
--
--	spin_lock(&inode->i_lock);
--	cifs_update_eof(cifsi, wdata->subreq.start, wdata->subreq.len);
--	if (cifsi->netfs.remote_i_size > inode->i_size)
--		i_size_write(inode, cifsi->netfs.remote_i_size);
--	spin_unlock(&inode->i_lock);
--
--	complete(&wdata->done);
--	collect_uncached_write_data(wdata->ctx);
--	/* the below call can possibly free the last ref to aio ctx */
--	cifs_put_writedata(wdata);
--}
--
--static int
--cifs_resend_wdata(struct cifs_io_subrequest *wdata, struct list_head *wdata_list,
--	struct cifs_aio_ctx *ctx)
--{
--	size_t wsize;
--	struct cifs_credits credits;
--	int rc;
--	struct TCP_Server_Info *server = wdata->server;
--
--	do {
--		if (wdata->cfile->invalidHandle) {
--			rc = cifs_reopen_file(wdata->cfile, false);
--			if (rc == -EAGAIN)
--				continue;
--			else if (rc)
--				break;
--		}
--
--
--		/*
--		 * Wait for credits to resend this wdata.
--		 * Note: we are attempting to resend the whole wdata not in
--		 * segments
--		 */
--		do {
--			rc = server->ops->wait_mtu_credits(server, wdata->subreq.len,
--						&wsize, &credits);
--			if (rc)
--				goto fail;
--
--			if (wsize < wdata->subreq.len) {
--				add_credits_and_wake_if(server, &credits, 0);
--				msleep(1000);
--			}
--		} while (wsize < wdata->subreq.len);
--		wdata->credits = credits;
--
--		rc = adjust_credits(server, &wdata->credits, wdata->subreq.len);
--
--		if (!rc) {
--			if (wdata->cfile->invalidHandle)
--				rc = -EAGAIN;
--			else {
--#ifdef CONFIG_CIFS_SMB_DIRECT
--				if (wdata->mr) {
--					wdata->mr->need_invalidate = true;
--					smbd_deregister_mr(wdata->mr);
--					wdata->mr = NULL;
--				}
--#endif
--				rc = server->ops->async_writev(wdata);
--			}
--		}
--
--		/* If the write was successfully sent, we are done */
--		if (!rc) {
--			list_add_tail(&wdata->list, wdata_list);
--			return 0;
--		}
--
--		/* Roll back credits and retry if needed */
--		add_credits_and_wake_if(server, &wdata->credits, 0);
--	} while (rc == -EAGAIN);
--
--fail:
--	cifs_put_writedata(wdata);
--	return rc;
--}
--
--/*
-- * Select span of a bvec iterator we're going to use.  Limit it by both maximum
-- * size and maximum number of segments.
-- */
--static size_t cifs_limit_bvec_subset(const struct iov_iter *iter, size_t max_size,
--				     size_t max_segs, unsigned int *_nsegs)
--{
--	const struct bio_vec *bvecs = iter->bvec;
--	unsigned int nbv = iter->nr_segs, ix = 0, nsegs = 0;
--	size_t len, span = 0, n = iter->count;
--	size_t skip = iter->iov_offset;
--
--	if (WARN_ON(!iov_iter_is_bvec(iter)) || n == 0)
--		return 0;
--
--	while (n && ix < nbv && skip) {
--		len = bvecs[ix].bv_len;
--		if (skip < len)
--			break;
--		skip -= len;
--		n -= len;
--		ix++;
--	}
--
--	while (n && ix < nbv) {
--		len = min3(n, bvecs[ix].bv_len - skip, max_size);
--		span += len;
--		max_size -= len;
--		nsegs++;
--		ix++;
--		if (max_size == 0 || nsegs >= max_segs)
--			break;
--		skip = 0;
--		n -= len;
--	}
--
--	*_nsegs = nsegs;
--	return span;
--}
--
--static int
--cifs_write_from_iter(loff_t fpos, size_t len, struct iov_iter *from,
--		     struct cifsFileInfo *open_file,
--		     struct cifs_sb_info *cifs_sb, struct list_head *wdata_list,
--		     struct cifs_aio_ctx *ctx)
--{
--	int rc = 0;
--	size_t cur_len, max_len;
--	struct cifs_io_subrequest *wdata;
--	pid_t pid;
--	struct TCP_Server_Info *server;
--	unsigned int xid, max_segs = INT_MAX;
--
--	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_RWPIDFORWARD)
--		pid = open_file->pid;
--	else
--		pid = current->tgid;
--
--	server = cifs_pick_channel(tlink_tcon(open_file->tlink)->ses);
--	xid = get_xid();
--
--#ifdef CONFIG_CIFS_SMB_DIRECT
--	if (server->smbd_conn)
--		max_segs = server->smbd_conn->max_frmr_depth;
--#endif
--
--	do {
--		struct cifs_credits credits_on_stack;
--		struct cifs_credits *credits = &credits_on_stack;
--		unsigned int nsegs = 0;
--		size_t wsize;
--
--		if (signal_pending(current)) {
--			rc = -EINTR;
--			break;
--		}
--
--		if (open_file->invalidHandle) {
--			rc = cifs_reopen_file(open_file, false);
--			if (rc == -EAGAIN)
--				continue;
--			else if (rc)
--				break;
--		}
--
--		rc = server->ops->wait_mtu_credits(server, cifs_sb->ctx->wsize,
--						   &wsize, credits);
--		if (rc)
--			break;
--
--		max_len = min_t(const size_t, len, wsize);
--		if (!max_len) {
--			rc = -EAGAIN;
--			add_credits_and_wake_if(server, credits, 0);
--			break;
--		}
--
--		cur_len = cifs_limit_bvec_subset(from, max_len, max_segs, &nsegs);
--		cifs_dbg(FYI, "write_from_iter len=%zx/%zx nsegs=%u/%lu/%u\n",
--			 cur_len, max_len, nsegs, from->nr_segs, max_segs);
--		if (cur_len == 0) {
--			rc = -EIO;
--			add_credits_and_wake_if(server, credits, 0);
--			break;
--		}
--
--		wdata = cifs_writedata_alloc(cifs_uncached_writev_complete);
--		if (!wdata) {
--			rc = -ENOMEM;
--			add_credits_and_wake_if(server, credits, 0);
--			break;
--		}
--
--		wdata->uncached	= true;
--		wdata->sync_mode = WB_SYNC_ALL;
--		wdata->subreq.start	= (__u64)fpos;
--		wdata->cfile	= cifsFileInfo_get(open_file);
--		wdata->server	= server;
--		wdata->pid	= pid;
--		wdata->subreq.len	= cur_len;
--		wdata->credits	= credits_on_stack;
--		wdata->subreq.io_iter	= *from;
--		wdata->ctx	= ctx;
--		kref_get(&ctx->refcount);
--
--		iov_iter_truncate(&wdata->subreq.io_iter, cur_len);
--
--		rc = adjust_credits(server, &wdata->credits, wdata->subreq.len);
--
--		if (!rc) {
--			if (wdata->cfile->invalidHandle)
--				rc = -EAGAIN;
--			else
--				rc = server->ops->async_writev(wdata);
--		}
--
--		if (rc) {
--			add_credits_and_wake_if(server, &wdata->credits, 0);
--			cifs_put_writedata(wdata);
--			if (rc == -EAGAIN)
--				continue;
--			break;
--		}
--
--		list_add_tail(&wdata->list, wdata_list);
--		iov_iter_advance(from, cur_len);
--		fpos += cur_len;
--		len -= cur_len;
--	} while (len > 0);
--
--	free_xid(xid);
--	return rc;
--}
--
--static void collect_uncached_write_data(struct cifs_aio_ctx *ctx)
--{
--	struct cifs_io_subrequest *wdata, *tmp;
--	struct cifs_tcon *tcon;
--	struct cifs_sb_info *cifs_sb;
--	struct dentry *dentry = ctx->cfile->dentry;
--	ssize_t rc;
--
--	tcon = tlink_tcon(ctx->cfile->tlink);
--	cifs_sb = CIFS_SB(dentry->d_sb);
--
--	mutex_lock(&ctx->aio_mutex);
--
--	if (list_empty(&ctx->list)) {
--		mutex_unlock(&ctx->aio_mutex);
--		return;
--	}
--
--	rc = ctx->rc;
--	/*
--	 * Wait for and collect replies for any successful sends in order of
--	 * increasing offset. Once an error is hit, then return without waiting
--	 * for any more replies.
--	 */
--restart_loop:
--	list_for_each_entry_safe(wdata, tmp, &ctx->list, list) {
--		if (!rc) {
--			if (!try_wait_for_completion(&wdata->done)) {
--				mutex_unlock(&ctx->aio_mutex);
--				return;
--			}
--
--			if (wdata->result)
--				rc = wdata->result;
--			else
--				ctx->total_len += wdata->subreq.len;
--
--			/* resend call if it's a retryable error */
--			if (rc == -EAGAIN) {
--				struct list_head tmp_list;
--				struct iov_iter tmp_from = ctx->iter;
--
--				INIT_LIST_HEAD(&tmp_list);
--				list_del_init(&wdata->list);
--
--				if (ctx->direct_io)
--					rc = cifs_resend_wdata(
--						wdata, &tmp_list, ctx);
--				else {
--					iov_iter_advance(&tmp_from,
--						 wdata->subreq.start - ctx->pos);
--
--					rc = cifs_write_from_iter(wdata->subreq.start,
--						wdata->subreq.len, &tmp_from,
--						ctx->cfile, cifs_sb, &tmp_list,
--						ctx);
--
--					cifs_put_writedata(wdata);
--				}
--
--				list_splice(&tmp_list, &ctx->list);
--				goto restart_loop;
--			}
--		}
--		list_del_init(&wdata->list);
--		cifs_put_writedata(wdata);
--	}
--
--	cifs_stats_bytes_written(tcon, ctx->total_len);
--	set_bit(CIFS_INO_INVALID_MAPPING, &CIFS_I(dentry->d_inode)->flags);
--
--	ctx->rc = (rc == 0) ? ctx->total_len : rc;
--
--	mutex_unlock(&ctx->aio_mutex);
--
--	if (ctx->iocb && ctx->iocb->ki_complete)
--		ctx->iocb->ki_complete(ctx->iocb, ctx->rc);
--	else
--		complete(&ctx->done);
--}
--
--static ssize_t __cifs_writev(
--	struct kiocb *iocb, struct iov_iter *from, bool direct)
--{
--	struct file *file = iocb->ki_filp;
--	ssize_t total_written = 0;
--	struct cifsFileInfo *cfile;
--	struct cifs_tcon *tcon;
--	struct cifs_sb_info *cifs_sb;
--	struct cifs_aio_ctx *ctx;
--	int rc;
--
--	rc = generic_write_checks(iocb, from);
--	if (rc <= 0)
--		return rc;
--
--	cifs_sb = CIFS_FILE_SB(file);
--	cfile = file->private_data;
--	tcon = tlink_tcon(cfile->tlink);
--
--	if (!tcon->ses->server->ops->async_writev)
--		return -ENOSYS;
--
--	ctx = cifs_aio_ctx_alloc();
--	if (!ctx)
--		return -ENOMEM;
--
--	ctx->cfile = cifsFileInfo_get(cfile);
--
--	if (!is_sync_kiocb(iocb))
--		ctx->iocb = iocb;
--
--	ctx->pos = iocb->ki_pos;
--	ctx->direct_io = direct;
--	ctx->nr_pinned_pages = 0;
--
--	if (user_backed_iter(from)) {
--		/*
--		 * Extract IOVEC/UBUF-type iterators to a BVEC-type iterator as
--		 * they contain references to the calling process's virtual
--		 * memory layout which won't be available in an async worker
--		 * thread.  This also takes a pin on every folio involved.
--		 */
--		rc = netfs_extract_user_iter(from, iov_iter_count(from),
--					     &ctx->iter, 0);
--		if (rc < 0) {
--			kref_put(&ctx->refcount, cifs_aio_ctx_release);
--			return rc;
--		}
--
--		ctx->nr_pinned_pages = rc;
--		ctx->bv = (void *)ctx->iter.bvec;
--		ctx->bv_need_unpin = iov_iter_extract_will_pin(from);
--	} else if ((iov_iter_is_bvec(from) || iov_iter_is_kvec(from)) &&
--		   !is_sync_kiocb(iocb)) {
--		/*
--		 * If the op is asynchronous, we need to copy the list attached
--		 * to a BVEC/KVEC-type iterator, but we assume that the storage
--		 * will be pinned by the caller; in any case, we may or may not
--		 * be able to pin the pages, so we don't try.
--		 */
--		ctx->bv = (void *)dup_iter(&ctx->iter, from, GFP_KERNEL);
--		if (!ctx->bv) {
--			kref_put(&ctx->refcount, cifs_aio_ctx_release);
--			return -ENOMEM;
--		}
--	} else {
--		/*
--		 * Otherwise, we just pass the iterator down as-is and rely on
--		 * the caller to make sure the pages referred to by the
--		 * iterator don't evaporate.
--		 */
--		ctx->iter = *from;
--	}
--
--	ctx->len = iov_iter_count(&ctx->iter);
--
--	/* grab a lock here due to read response handlers can access ctx */
--	mutex_lock(&ctx->aio_mutex);
--
--	rc = cifs_write_from_iter(iocb->ki_pos, ctx->len, &ctx->iter,
--				  cfile, cifs_sb, &ctx->list, ctx);
--
--	/*
--	 * If at least one write was successfully sent, then discard any rc
--	 * value from the later writes. If the other write succeeds, then
--	 * we'll end up returning whatever was written. If it fails, then
--	 * we'll get a new rc value from that.
--	 */
--	if (!list_empty(&ctx->list))
--		rc = 0;
--
--	mutex_unlock(&ctx->aio_mutex);
--
--	if (rc) {
--		kref_put(&ctx->refcount, cifs_aio_ctx_release);
--		return rc;
--	}
--
--	if (!is_sync_kiocb(iocb)) {
--		kref_put(&ctx->refcount, cifs_aio_ctx_release);
--		return -EIOCBQUEUED;
--	}
--
--	rc = wait_for_completion_killable(&ctx->done);
--	if (rc) {
--		mutex_lock(&ctx->aio_mutex);
--		ctx->rc = rc = -EINTR;
--		total_written = ctx->total_len;
--		mutex_unlock(&ctx->aio_mutex);
--	} else {
--		rc = ctx->rc;
--		total_written = ctx->total_len;
--	}
--
--	kref_put(&ctx->refcount, cifs_aio_ctx_release);
--
--	if (unlikely(!total_written))
--		return rc;
--
--	iocb->ki_pos += total_written;
--	return total_written;
--}
--
--ssize_t cifs_direct_writev(struct kiocb *iocb, struct iov_iter *from)
--{
--	struct file *file = iocb->ki_filp;
--
--	cifs_revalidate_mapping(file->f_inode);
--	return __cifs_writev(iocb, from, true);
--}
--
--ssize_t cifs_user_writev(struct kiocb *iocb, struct iov_iter *from)
--{
--	return __cifs_writev(iocb, from, false);
--}
--#endif // TODO remove 3594
--
- static ssize_t
- cifs_writev(struct kiocb *iocb, struct iov_iter *from)
- {
-@@ -3252,450 +2788,6 @@ cifs_strict_writev(struct kiocb *iocb, struct iov_iter *from)
- 	return written;
- }
- 
--#if 0 // TODO remove 4143
--static struct cifs_io_subrequest *cifs_readdata_alloc(work_func_t complete)
--{
--	struct cifs_io_subrequest *rdata;
--
--	rdata = kzalloc(sizeof(*rdata), GFP_KERNEL);
--	if (rdata) {
--		refcount_set(&rdata->subreq.ref, 1);
--		INIT_LIST_HEAD(&rdata->list);
--		init_completion(&rdata->done);
--		INIT_WORK(&rdata->work, complete);
--	}
--
--	return rdata;
--}
--
--void
--cifs_readdata_release(struct cifs_io_subrequest *rdata)
--{
--	if (rdata->ctx)
--		kref_put(&rdata->ctx->refcount, cifs_aio_ctx_release);
--#ifdef CONFIG_CIFS_SMB_DIRECT
--	if (rdata->mr) {
--		smbd_deregister_mr(rdata->mr);
--		rdata->mr = NULL;
--	}
--#endif
--	if (rdata->cfile)
--		cifsFileInfo_put(rdata->cfile);
--
--	kfree(rdata);
--}
--
--static void collect_uncached_read_data(struct cifs_aio_ctx *ctx);
--
--static void
--cifs_uncached_readv_complete(struct work_struct *work)
--{
--	struct cifs_io_subrequest *rdata =
--		container_of(work, struct cifs_io_subrequest, work);
--
--	complete(&rdata->done);
--	collect_uncached_read_data(rdata->ctx);
--	/* the below call can possibly free the last ref to aio ctx */
--	cifs_put_readdata(rdata);
--}
--
--static int cifs_resend_rdata(struct cifs_io_subrequest *rdata,
--			struct list_head *rdata_list,
--			struct cifs_aio_ctx *ctx)
--{
--	size_t rsize;
--	struct cifs_credits credits;
--	int rc;
--	struct TCP_Server_Info *server;
--
--	/* XXX: should we pick a new channel here? */
--	server = rdata->server;
--
--	do {
--		if (rdata->cfile->invalidHandle) {
--			rc = cifs_reopen_file(rdata->cfile, true);
--			if (rc == -EAGAIN)
--				continue;
--			else if (rc)
--				break;
--		}
--
--		/*
--		 * Wait for credits to resend this rdata.
--		 * Note: we are attempting to resend the whole rdata not in
--		 * segments
--		 */
--		do {
--			rc = server->ops->wait_mtu_credits(server, rdata->subreq.len,
--						&rsize, &credits);
--
--			if (rc)
--				goto fail;
--
--			if (rsize < rdata->subreq.len) {
--				add_credits_and_wake_if(server, &credits, 0);
--				msleep(1000);
--			}
--		} while (rsize < rdata->subreq.len);
--		rdata->credits = credits;
--
--		rc = adjust_credits(server, &rdata->credits, rdata->subreq.len);
--		if (!rc) {
--			if (rdata->cfile->invalidHandle)
--				rc = -EAGAIN;
--			else {
--#ifdef CONFIG_CIFS_SMB_DIRECT
--				if (rdata->mr) {
--					rdata->mr->need_invalidate = true;
--					smbd_deregister_mr(rdata->mr);
--					rdata->mr = NULL;
--				}
--#endif
--				rc = server->ops->async_readv(rdata);
--			}
--		}
--
--		/* If the read was successfully sent, we are done */
--		if (!rc) {
--			/* Add to aio pending list */
--			list_add_tail(&rdata->list, rdata_list);
--			return 0;
--		}
--
--		/* Roll back credits and retry if needed */
--		add_credits_and_wake_if(server, &rdata->credits, 0);
--	} while (rc == -EAGAIN);
--
--fail:
--	cifs_put_readdata(rdata);
--	return rc;
--}
--
--static int
--cifs_send_async_read(loff_t fpos, size_t len, struct cifsFileInfo *open_file,
--		     struct cifs_sb_info *cifs_sb, struct list_head *rdata_list,
--		     struct cifs_aio_ctx *ctx)
--{
--	struct cifs_io_subrequest *rdata;
--	unsigned int nsegs, max_segs = INT_MAX;
--	struct cifs_credits credits_on_stack;
--	struct cifs_credits *credits = &credits_on_stack;
--	size_t cur_len, max_len, rsize;
--	int rc;
--	pid_t pid;
--	struct TCP_Server_Info *server;
--
--	server = cifs_pick_channel(tlink_tcon(open_file->tlink)->ses);
--
--#ifdef CONFIG_CIFS_SMB_DIRECT
--	if (server->smbd_conn)
--		max_segs = server->smbd_conn->max_frmr_depth;
--#endif
--
--	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_RWPIDFORWARD)
--		pid = open_file->pid;
--	else
--		pid = current->tgid;
--
--	do {
--		if (open_file->invalidHandle) {
--			rc = cifs_reopen_file(open_file, true);
--			if (rc == -EAGAIN)
--				continue;
--			else if (rc)
--				break;
--		}
--
--		if (cifs_sb->ctx->rsize == 0)
--			cifs_sb->ctx->rsize =
--				server->ops->negotiate_rsize(tlink_tcon(open_file->tlink),
--							     cifs_sb->ctx);
--
--		rc = server->ops->wait_mtu_credits(server, cifs_sb->ctx->rsize,
--						   &rsize, credits);
--		if (rc)
--			break;
--
--		max_len = min_t(size_t, len, rsize);
--
--		cur_len = cifs_limit_bvec_subset(&ctx->iter, max_len,
--						 max_segs, &nsegs);
--		cifs_dbg(FYI, "read-to-iter len=%zx/%zx nsegs=%u/%lu/%u\n",
--			 cur_len, max_len, nsegs, ctx->iter.nr_segs, max_segs);
--		if (cur_len == 0) {
--			rc = -EIO;
--			add_credits_and_wake_if(server, credits, 0);
--			break;
--		}
--
--		rdata = cifs_readdata_alloc(cifs_uncached_readv_complete);
--		if (!rdata) {
--			add_credits_and_wake_if(server, credits, 0);
--			rc = -ENOMEM;
--			break;
--		}
--
--		rdata->server	= server;
--		rdata->cfile	= cifsFileInfo_get(open_file);
--		rdata->subreq.start	= fpos;
--		rdata->subreq.len	= cur_len;
--		rdata->pid	= pid;
--		rdata->credits	= credits_on_stack;
--		rdata->ctx	= ctx;
--		kref_get(&ctx->refcount);
--
--		rdata->subreq.io_iter = ctx->iter;
--		iov_iter_truncate(&rdata->subreq.io_iter, cur_len);
--
--		rc = adjust_credits(server, &rdata->credits, rdata->subreq.len);
--
--		if (!rc) {
--			if (rdata->cfile->invalidHandle)
--				rc = -EAGAIN;
--			else
--				rc = server->ops->async_readv(rdata);
--		}
--
--		if (rc) {
--			add_credits_and_wake_if(server, &rdata->credits, 0);
--			cifs_put_readdata(rdata);
--			if (rc == -EAGAIN)
--				continue;
--			break;
--		}
--
--		list_add_tail(&rdata->list, rdata_list);
--		iov_iter_advance(&ctx->iter, cur_len);
--		fpos += cur_len;
--		len -= cur_len;
--	} while (len > 0);
--
--	return rc;
--}
--
--static void
--collect_uncached_read_data(struct cifs_aio_ctx *ctx)
--{
--	struct cifs_io_subrequest *rdata, *tmp;
--	struct cifs_sb_info *cifs_sb;
--	int rc;
--
--	cifs_sb = CIFS_SB(ctx->cfile->dentry->d_sb);
--
--	mutex_lock(&ctx->aio_mutex);
--
--	if (list_empty(&ctx->list)) {
--		mutex_unlock(&ctx->aio_mutex);
--		return;
--	}
--
--	rc = ctx->rc;
--	/* the loop below should proceed in the order of increasing offsets */
--again:
--	list_for_each_entry_safe(rdata, tmp, &ctx->list, list) {
--		if (!rc) {
--			if (!try_wait_for_completion(&rdata->done)) {
--				mutex_unlock(&ctx->aio_mutex);
--				return;
--			}
--
--			if (rdata->result == -EAGAIN) {
--				/* resend call if it's a retryable error */
--				struct list_head tmp_list;
--				unsigned int got_bytes = rdata->got_bytes;
--
--				list_del_init(&rdata->list);
--				INIT_LIST_HEAD(&tmp_list);
--
--				if (ctx->direct_io) {
--					/*
--					 * Re-use rdata as this is a
--					 * direct I/O
--					 */
--					rc = cifs_resend_rdata(
--						rdata,
--						&tmp_list, ctx);
--				} else {
--					rc = cifs_send_async_read(
--						rdata->subreq.start + got_bytes,
--						rdata->subreq.len - got_bytes,
--						rdata->cfile, cifs_sb,
--						&tmp_list, ctx);
--
--					cifs_put_readdata(rdata);
--				}
--
--				list_splice(&tmp_list, &ctx->list);
--
--				goto again;
--			} else if (rdata->result)
--				rc = rdata->result;
--
--			/* if there was a short read -- discard anything left */
--			if (rdata->got_bytes && rdata->got_bytes < rdata->subreq.len)
--				rc = -ENODATA;
--
--			ctx->total_len += rdata->got_bytes;
--		}
--		list_del_init(&rdata->list);
--		cifs_put_readdata(rdata);
--	}
--
--	/* mask nodata case */
--	if (rc == -ENODATA)
--		rc = 0;
--
--	ctx->rc = (rc == 0) ? (ssize_t)ctx->total_len : rc;
--
--	mutex_unlock(&ctx->aio_mutex);
--
--	if (ctx->iocb && ctx->iocb->ki_complete)
--		ctx->iocb->ki_complete(ctx->iocb, ctx->rc);
--	else
--		complete(&ctx->done);
--}
--
--static ssize_t __cifs_readv(
--	struct kiocb *iocb, struct iov_iter *to, bool direct)
--{
--	size_t len;
--	struct file *file = iocb->ki_filp;
--	struct cifs_sb_info *cifs_sb;
--	struct cifsFileInfo *cfile;
--	struct cifs_tcon *tcon;
--	ssize_t rc, total_read = 0;
--	loff_t offset = iocb->ki_pos;
--	struct cifs_aio_ctx *ctx;
--
--	len = iov_iter_count(to);
--	if (!len)
--		return 0;
--
--	cifs_sb = CIFS_FILE_SB(file);
--	cfile = file->private_data;
--	tcon = tlink_tcon(cfile->tlink);
--
--	if (!tcon->ses->server->ops->async_readv)
--		return -ENOSYS;
--
--	if ((file->f_flags & O_ACCMODE) == O_WRONLY)
--		cifs_dbg(FYI, "attempting read on write only file instance\n");
--
--	ctx = cifs_aio_ctx_alloc();
--	if (!ctx)
--		return -ENOMEM;
--
--	ctx->pos	= offset;
--	ctx->direct_io	= direct;
--	ctx->len	= len;
--	ctx->cfile	= cifsFileInfo_get(cfile);
--	ctx->nr_pinned_pages = 0;
--
--	if (!is_sync_kiocb(iocb))
--		ctx->iocb = iocb;
--
--	if (user_backed_iter(to)) {
--		/*
--		 * Extract IOVEC/UBUF-type iterators to a BVEC-type iterator as
--		 * they contain references to the calling process's virtual
--		 * memory layout which won't be available in an async worker
--		 * thread.  This also takes a pin on every folio involved.
--		 */
--		rc = netfs_extract_user_iter(to, iov_iter_count(to),
--					     &ctx->iter, 0);
--		if (rc < 0) {
--			kref_put(&ctx->refcount, cifs_aio_ctx_release);
--			return rc;
--		}
--
--		ctx->nr_pinned_pages = rc;
--		ctx->bv = (void *)ctx->iter.bvec;
--		ctx->bv_need_unpin = iov_iter_extract_will_pin(to);
--		ctx->should_dirty = true;
--	} else if ((iov_iter_is_bvec(to) || iov_iter_is_kvec(to)) &&
--		   !is_sync_kiocb(iocb)) {
--		/*
--		 * If the op is asynchronous, we need to copy the list attached
--		 * to a BVEC/KVEC-type iterator, but we assume that the storage
--		 * will be retained by the caller; in any case, we may or may
--		 * not be able to pin the pages, so we don't try.
--		 */
--		ctx->bv = (void *)dup_iter(&ctx->iter, to, GFP_KERNEL);
--		if (!ctx->bv) {
--			kref_put(&ctx->refcount, cifs_aio_ctx_release);
--			return -ENOMEM;
--		}
--	} else {
--		/*
--		 * Otherwise, we just pass the iterator down as-is and rely on
--		 * the caller to make sure the pages referred to by the
--		 * iterator don't evaporate.
--		 */
--		ctx->iter = *to;
--	}
--
--	if (direct) {
--		rc = filemap_write_and_wait_range(file->f_inode->i_mapping,
--						  offset, offset + len - 1);
--		if (rc) {
--			kref_put(&ctx->refcount, cifs_aio_ctx_release);
--			return -EAGAIN;
--		}
--	}
--
--	/* grab a lock here due to read response handlers can access ctx */
--	mutex_lock(&ctx->aio_mutex);
--
--	rc = cifs_send_async_read(offset, len, cfile, cifs_sb, &ctx->list, ctx);
--
--	/* if at least one read request send succeeded, then reset rc */
--	if (!list_empty(&ctx->list))
--		rc = 0;
--
--	mutex_unlock(&ctx->aio_mutex);
--
--	if (rc) {
--		kref_put(&ctx->refcount, cifs_aio_ctx_release);
--		return rc;
--	}
--
--	if (!is_sync_kiocb(iocb)) {
--		kref_put(&ctx->refcount, cifs_aio_ctx_release);
--		return -EIOCBQUEUED;
--	}
--
--	rc = wait_for_completion_killable(&ctx->done);
--	if (rc) {
--		mutex_lock(&ctx->aio_mutex);
--		ctx->rc = rc = -EINTR;
--		total_read = ctx->total_len;
--		mutex_unlock(&ctx->aio_mutex);
--	} else {
--		rc = ctx->rc;
--		total_read = ctx->total_len;
--	}
--
--	kref_put(&ctx->refcount, cifs_aio_ctx_release);
--
--	if (total_read) {
--		iocb->ki_pos += total_read;
--		return total_read;
--	}
--	return rc;
--}
--
--ssize_t cifs_direct_readv(struct kiocb *iocb, struct iov_iter *to)
--{
--	return __cifs_readv(iocb, to, true);
--}
--
--ssize_t cifs_user_readv(struct kiocb *iocb, struct iov_iter *to)
--{
--	return __cifs_readv(iocb, to, false);
--
--}
--#endif // end netfslib removal 4143
--
- ssize_t cifs_loose_read_iter(struct kiocb *iocb, struct iov_iter *iter)
- {
- 	ssize_t rc;
-@@ -3794,101 +2886,6 @@ cifs_strict_readv(struct kiocb *iocb, struct iov_iter *to)
- 	return rc;
- }
- 
--#if 0 // TODO remove 4633
--static ssize_t
--cifs_read(struct file *file, char *read_data, size_t read_size, loff_t *offset)
--{
--	int rc = -EACCES;
--	unsigned int bytes_read = 0;
--	unsigned int total_read;
--	unsigned int current_read_size;
--	unsigned int rsize;
--	struct cifs_sb_info *cifs_sb;
--	struct cifs_tcon *tcon;
--	struct TCP_Server_Info *server;
--	unsigned int xid;
--	char *cur_offset;
--	struct cifsFileInfo *open_file;
--	struct cifs_io_parms io_parms = {0};
--	int buf_type = CIFS_NO_BUFFER;
--	__u32 pid;
--
--	xid = get_xid();
--	cifs_sb = CIFS_FILE_SB(file);
--
--	/* FIXME: set up handlers for larger reads and/or convert to async */
--	rsize = min_t(unsigned int, cifs_sb->ctx->rsize, CIFSMaxBufSize);
--
--	if (file->private_data == NULL) {
--		rc = -EBADF;
--		free_xid(xid);
--		return rc;
--	}
--	open_file = file->private_data;
--	tcon = tlink_tcon(open_file->tlink);
--	server = cifs_pick_channel(tcon->ses);
--
--	if (!server->ops->sync_read) {
--		free_xid(xid);
--		return -ENOSYS;
--	}
--
--	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_RWPIDFORWARD)
--		pid = open_file->pid;
--	else
--		pid = current->tgid;
--
--	if ((file->f_flags & O_ACCMODE) == O_WRONLY)
--		cifs_dbg(FYI, "attempting read on write only file instance\n");
--
--	for (total_read = 0, cur_offset = read_data; read_size > total_read;
--	     total_read += bytes_read, cur_offset += bytes_read) {
--		do {
--			current_read_size = min_t(uint, read_size - total_read,
--						  rsize);
--			/*
--			 * For windows me and 9x we do not want to request more
--			 * than it negotiated since it will refuse the read
--			 * then.
--			 */
--			if (!(tcon->ses->capabilities &
--				tcon->ses->server->vals->cap_large_files)) {
--				current_read_size = min_t(uint,
--					current_read_size, CIFSMaxBufSize);
--			}
--			if (open_file->invalidHandle) {
--				rc = cifs_reopen_file(open_file, true);
--				if (rc != 0)
--					break;
--			}
--			io_parms.pid = pid;
--			io_parms.tcon = tcon;
--			io_parms.offset = *offset;
--			io_parms.length = current_read_size;
--			io_parms.server = server;
--			rc = server->ops->sync_read(xid, &open_file->fid, &io_parms,
--						    &bytes_read, &cur_offset,
--						    &buf_type);
--		} while (rc == -EAGAIN);
--
--		if (rc || (bytes_read == 0)) {
--			if (total_read) {
--				break;
--			} else {
--				free_xid(xid);
--				return rc;
--			}
--		} else {
--			cifs_stats_bytes_read(tcon, total_read);
--			*offset += bytes_read;
--		}
--	}
--	free_xid(xid);
--	return total_read;
--}
--#endif // end netfslib remove 4633
--
--
- static vm_fault_t cifs_page_mkwrite(struct vm_fault *vmf)
- {
- 	return netfs_page_mkwrite(vmf, NULL);
+> Call init_ima_lsm() from integrity_lsm_init() (renamed from
+> integrity_iintcache_init()), to make sure that the integrity subsystem is
+> ready at the time IMA hooks are registered. The same will be done for EVM,
+> by calling init_evm_lsm() just after init_ima_lsm().
+
+Instead of creating separate IMA and EVM LSMs, the hooks are being
+added to "integrity".  Some sort of (brief) explanation should be
+provided.
+
+    security_add_hooks(ima_hooks, ARRAY_SIZE(ima_hooks), "integrity");
+
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Acked-by: Chuck Lever <chuck.lever@oracle.com>
+> Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+
+-- 
+thanks,
+
+Mimi
 
