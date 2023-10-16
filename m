@@ -2,145 +2,280 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E771B7CA8D6
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Oct 2023 15:09:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B7157CABC8
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Oct 2023 16:44:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232059AbjJPNJ1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Oct 2023 09:09:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54614 "EHLO
+        id S230343AbjJPOoa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Oct 2023 10:44:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231569AbjJPNJ0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Oct 2023 09:09:26 -0400
-Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D20B4
-        for <linux-nfs@vger.kernel.org>; Mon, 16 Oct 2023 06:09:24 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:ce84:d8c0:f79a:fa0])
-        by xavier.telenet-ops.be with bizsmtp
-        id yd9M2A0010pDX7N01d9Mei; Mon, 16 Oct 2023 15:09:23 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qsNLR-006jYw-EV;
-        Mon, 16 Oct 2023 15:09:20 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1qsNLU-00A9nZ-SG;
-        Mon, 16 Oct 2023 15:09:20 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH -next v3 2/2] sunrpc: Use no_printk() in dfprintk*() dummies
-Date:   Mon, 16 Oct 2023 15:09:19 +0200
-Message-Id: <180fd042261dcd4243fad90660b114b8f0a78dcd.1697460614.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1697460614.git.geert+renesas@glider.be>
-References: <cover.1697460614.git.geert+renesas@glider.be>
+        with ESMTP id S229459AbjJPOo3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Oct 2023 10:44:29 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8017A2;
+        Mon, 16 Oct 2023 07:44:27 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65C62C433C7;
+        Mon, 16 Oct 2023 14:44:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697467467;
+        bh=EosIPRQRkZS/m8fRSYLf1GF9E5dQpYw/H0GO2FrhMzU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=pbL0JENlz5RnGYP4I9kBXyy7y5PAbYeNgIvdEtdEfV+6JtSnYAgZxXfj6QS0OTvnq
+         7EQLcIfg5sdun4AKj6ILT0f9Sn+Lj6uvsAiodPVGiYDgFZBItlIo32ZAZ94e+7xhcC
+         EzgeCAxFRNF1lIZMxpTdwOblh/UZLmbq4cioT65oxIZDzZFXQX7uvm9EQBD1jalFt1
+         7JjsKBkOkgur951+Esn3xom0VBOBX9uF/8bVz6kjKcDLzBtDl8aS9RlYKjQ/3DdqNd
+         U2gH58YxGzyynaLl9ZTOovVYCLIQjHNnnlfnqltpw7WhZQlr1WcoivXsWgUIsn7mNI
+         RHCnJAlJeYfQA==
+Message-ID: <bd10b3e5a826d8658a2ee6bba510d25b27c35b50.camel@kernel.org>
+Subject: Re: [RFC PATCH 01/53] netfs: Add a procfile to list in-progress
+ requests
+From:   Jeff Layton <jlayton@kernel.org>
+To:     David Howells <dhowells@redhat.com>,
+        Steve French <smfrench@gmail.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Christian Brauner <christian@brauner.io>,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-cachefs@redhat.com
+Date:   Mon, 16 Oct 2023 10:44:24 -0400
+In-Reply-To: <20231013155727.2217781-2-dhowells@redhat.com>
+References: <20231013155727.2217781-1-dhowells@redhat.com>
+         <20231013155727.2217781-2-dhowells@redhat.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When building NFS with W=1 and CONFIG_WERROR=y, but
-CONFIG_SUNRPC_DEBUG=n:
+On Fri, 2023-10-13 at 16:56 +0100, David Howells wrote:
+> Add a procfile, /proc/fs/netfs/requests, to list in-progress netfslib I/O
+> requests.
+>=20
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Jeff Layton <jlayton@kernel.org>
+> cc: linux-cachefs@redhat.com
+> cc: linux-fsdevel@vger.kernel.org
+> cc: linux-mm@kvack.org
+> ---
+>  fs/netfs/internal.h   | 22 +++++++++++
+>  fs/netfs/main.c       | 91 +++++++++++++++++++++++++++++++++++++++++++
+>  fs/netfs/objects.c    |  4 +-
+>  include/linux/netfs.h |  6 ++-
+>  4 files changed, 121 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+> index 43fac1b14e40..1f067aa96c50 100644
+> --- a/fs/netfs/internal.h
+> +++ b/fs/netfs/internal.h
+> @@ -29,6 +29,28 @@ int netfs_begin_read(struct netfs_io_request *rreq, bo=
+ol sync);
+>   * main.c
+>   */
+>  extern unsigned int netfs_debug;
+> +extern struct list_head netfs_io_requests;
+> +extern spinlock_t netfs_proc_lock;
+> +
+> +#ifdef CONFIG_PROC_FS
+> +static inline void netfs_proc_add_rreq(struct netfs_io_request *rreq)
+> +{
+> +	spin_lock(&netfs_proc_lock);
+> +	list_add_tail_rcu(&rreq->proc_link, &netfs_io_requests);
+> +	spin_unlock(&netfs_proc_lock);
+> +}
+> +static inline void netfs_proc_del_rreq(struct netfs_io_request *rreq)
+> +{
+> +	if (!list_empty(&rreq->proc_link)) {
+> +		spin_lock(&netfs_proc_lock);
+> +		list_del_rcu(&rreq->proc_link);
+> +		spin_unlock(&netfs_proc_lock);
+> +	}
+> +}
+> +#else
+> +static inline void netfs_proc_add_rreq(struct netfs_io_request *rreq) {}
+> +static inline void netfs_proc_del_rreq(struct netfs_io_request *rreq) {}
+> +#endif
+> =20
+>  /*
+>   * objects.c
+> diff --git a/fs/netfs/main.c b/fs/netfs/main.c
+> index 068568702957..21f814eee6af 100644
+> --- a/fs/netfs/main.c
+> +++ b/fs/netfs/main.c
+> @@ -7,6 +7,8 @@
+> =20
+>  #include <linux/module.h>
+>  #include <linux/export.h>
+> +#include <linux/proc_fs.h>
+> +#include <linux/seq_file.h>
+>  #include "internal.h"
+>  #define CREATE_TRACE_POINTS
+>  #include <trace/events/netfs.h>
+> @@ -18,3 +20,92 @@ MODULE_LICENSE("GPL");
+>  unsigned netfs_debug;
+>  module_param_named(debug, netfs_debug, uint, S_IWUSR | S_IRUGO);
+>  MODULE_PARM_DESC(netfs_debug, "Netfs support debugging mask");
+> +
+> +#ifdef CONFIG_PROC_FS
+> +LIST_HEAD(netfs_io_requests);
+> +DEFINE_SPINLOCK(netfs_proc_lock);
+> +
+> +static const char *netfs_origins[] =3D {
+> +	[NETFS_READAHEAD]	=3D "RA",
+> +	[NETFS_READPAGE]	=3D "RP",
+> +	[NETFS_READ_FOR_WRITE]	=3D "RW",
+> +};
+> +
+> +/*
+> + * Generate a list of I/O requests in /proc/fs/netfs/requests
+> + */
+> +static int netfs_requests_seq_show(struct seq_file *m, void *v)
+> +{
+> +	struct netfs_io_request *rreq;
+> +
+> +	if (v =3D=3D &netfs_io_requests) {
+> +		seq_puts(m,
+> +			 "REQUEST  OR REF FL ERR  OPS COVERAGE\n"
+> +			 "=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D =3D=3D=3D =3D=3D =3D=3D=3D=3D =3D=
+=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D\n"
+> +			 );
+> +		return 0;
+> +	}
+> +
+> +	rreq =3D list_entry(v, struct netfs_io_request, proc_link);
+> +	seq_printf(m,
+> +		   "%08x %s %3d %2lx %4d %3d @%04llx %zx/%zx",
+> +		   rreq->debug_id,
+> +		   netfs_origins[rreq->origin],
+> +		   refcount_read(&rreq->ref),
+> +		   rreq->flags,
+> +		   rreq->error,
+> +		   atomic_read(&rreq->nr_outstanding),
+> +		   rreq->start, rreq->submitted, rreq->len);
+> +	seq_putc(m, '\n');
+> +	return 0;
+> +}
+> +
+> +static void *netfs_requests_seq_start(struct seq_file *m, loff_t *_pos)
+> +	__acquires(rcu)
+> +{
+> +	rcu_read_lock();
+> +	return seq_list_start_head(&netfs_io_requests, *_pos);
+> +}
+> +
+> +static void *netfs_requests_seq_next(struct seq_file *m, void *v, loff_t=
+ *_pos)
+> +{
+> +	return seq_list_next(v, &netfs_io_requests, _pos);
+> +}
+> +
+> +static void netfs_requests_seq_stop(struct seq_file *m, void *v)
+> +	__releases(rcu)
+> +{
+> +	rcu_read_unlock();
+> +}
+> +
+> +static const struct seq_operations netfs_requests_seq_ops =3D {
+> +	.start  =3D netfs_requests_seq_start,
+> +	.next   =3D netfs_requests_seq_next,
+> +	.stop   =3D netfs_requests_seq_stop,
+> +	.show   =3D netfs_requests_seq_show,
+> +};
+> +#endif /* CONFIG_PROC_FS */
+> +
+> +static int __init netfs_init(void)
+> +{
+> +	if (!proc_mkdir("fs/netfs", NULL))
+> +		goto error;
+> +
 
-    fs/nfs/nfs4proc.c: In function ‘nfs4_proc_create_session’:
-    fs/nfs/nfs4proc.c:9276:19: error: variable ‘ptr’ set but not used [-Werror=unused-but-set-variable]
-     9276 |         unsigned *ptr;
-	  |                   ^~~
-      CC      fs/nfs/callback.o
-    fs/nfs/callback.c: In function ‘nfs41_callback_svc’:
-    fs/nfs/callback.c:98:13: error: variable ‘error’ set but not used [-Werror=unused-but-set-variable]
-       98 |         int error;
-	  |             ^~~~~
-      CC      fs/nfs/flexfilelayout/flexfilelayout.o
-    fs/nfs/flexfilelayout/flexfilelayout.c: In function ‘ff_layout_io_track_ds_error’:
-    fs/nfs/flexfilelayout/flexfilelayout.c:1230:13: error: variable ‘err’ set but not used [-Werror=unused-but-set-variable]
-     1230 |         int err;
-	  |             ^~~
-      CC      fs/nfs/flexfilelayout/flexfilelayoutdev.o
-    fs/nfs/flexfilelayout/flexfilelayoutdev.c: In function ‘nfs4_ff_alloc_deviceid_node’:
-    fs/nfs/flexfilelayout/flexfilelayoutdev.c:55:16: error: variable ‘ret’ set but not used [-Werror=unused-but-set-variable]
-       55 |         int i, ret = -ENOMEM;
-	  |                ^~~
+It seems like this should go under debugfs instead.
 
-All these are due to variables that are set unconditionally, but are
-used only when debugging is enabled.
+> +	if (!proc_create_seq("fs/netfs/requests", S_IFREG | 0444, NULL,
+> +			     &netfs_requests_seq_ops))
+> +		goto error_proc;
+> +
+> +	return 0;
+> +
+> +error_proc:
+> +	remove_proc_entry("fs/netfs", NULL);
+> +error:
+> +	return -ENOMEM;
+> +}
+> +fs_initcall(netfs_init);
+> +
+> +static void __exit netfs_exit(void)
+> +{
+> +	remove_proc_entry("fs/netfs", NULL);
+> +}
+> +module_exit(netfs_exit);
+> diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+> index e17cdf53f6a7..85f428fc52e6 100644
+> --- a/fs/netfs/objects.c
+> +++ b/fs/netfs/objects.c
+> @@ -45,6 +45,7 @@ struct netfs_io_request *netfs_alloc_request(struct add=
+ress_space *mapping,
+>  		}
+>  	}
+> =20
+> +	netfs_proc_add_rreq(rreq);
+>  	netfs_stat(&netfs_n_rh_rreq);
+>  	return rreq;
+>  }
+> @@ -76,12 +77,13 @@ static void netfs_free_request(struct work_struct *wo=
+rk)
+>  		container_of(work, struct netfs_io_request, work);
+> =20
+>  	trace_netfs_rreq(rreq, netfs_rreq_trace_free);
+> +	netfs_proc_del_rreq(rreq);
+>  	netfs_clear_subrequests(rreq, false);
+>  	if (rreq->netfs_ops->free_request)
+>  		rreq->netfs_ops->free_request(rreq);
+>  	if (rreq->cache_resources.ops)
+>  		rreq->cache_resources.ops->end_operation(&rreq->cache_resources);
+> -	kfree(rreq);
+> +	kfree_rcu(rreq, rcu);
+>  	netfs_stat_d(&netfs_n_rh_rreq);
+>  }
+> =20
+> diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+> index b11a84f6c32b..b447cb67f599 100644
+> --- a/include/linux/netfs.h
+> +++ b/include/linux/netfs.h
+> @@ -175,10 +175,14 @@ enum netfs_io_origin {
+>   * operations to a variety of data stores and then stitch the result tog=
+ether.
+>   */
+>  struct netfs_io_request {
+> -	struct work_struct	work;
+> +	union {
+> +		struct work_struct work;
+> +		struct rcu_head rcu;
+> +	};
+>  	struct inode		*inode;		/* The file being accessed */
+>  	struct address_space	*mapping;	/* The mapping being accessed */
+>  	struct netfs_cache_resources cache_resources;
+> +	struct list_head	proc_link;	/* Link in netfs_iorequests */
+>  	struct list_head	subrequests;	/* Contributory I/O operations */
+>  	void			*netfs_priv;	/* Private data for the netfs */
+>  	unsigned int		debug_id;
+>=20
 
-Fix this by changing the dfprintk*() dummy macros from empty loops to
-calls to the no_printk() helper.  This informs the compiler that the
-passed debug parameters are actually used, and enables format specifier
-checking as a bonus.
-
-This requires removing the protection by CONFIG_SUNRPC_DEBUG of the
-declaration of nlmdbg_cookie2a() in fs/lockd/svclock.c, as its reference
-is now visible to the compiler, but optimized away.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Jeff Layton <jlayton@kernel.org>
----
-v3:
-  - Add Acked-by,
-
-v2:
-  - s/uncontionally/unconditionally/,
-  - Drop CONFIG_SUNRPC_DEBUG check in fs/lockd/svclock.c to fix build
-    failure.
----
- fs/lockd/svclock.c           | 2 --
- include/linux/sunrpc/debug.h | 6 +++---
- 2 files changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index 43aeba9de55cbbc5..b80e0e143c5db16a 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -55,7 +55,6 @@ static const struct rpc_call_ops nlmsvc_grant_ops;
- static LIST_HEAD(nlm_blocked);
- static DEFINE_SPINLOCK(nlm_blocked_lock);
- 
--#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
- static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
- {
- 	/*
-@@ -82,7 +81,6 @@ static const char *nlmdbg_cookie2a(const struct nlm_cookie *cookie)
- 
- 	return buf;
- }
--#endif
- 
- /*
-  * Insert a blocked lock into the global list
-diff --git a/include/linux/sunrpc/debug.h b/include/linux/sunrpc/debug.h
-index f6aeed07fe04e3d5..76539c6673f2fb15 100644
---- a/include/linux/sunrpc/debug.h
-+++ b/include/linux/sunrpc/debug.h
-@@ -67,9 +67,9 @@ do {									\
- # define RPC_IFDEBUG(x)		x
- #else
- # define ifdebug(fac)		if (0)
--# define dfprintk(fac, fmt, ...)	do {} while (0)
--# define dfprintk_cont(fac, fmt, ...)	do {} while (0)
--# define dfprintk_rcu(fac, fmt, ...)	do {} while (0)
-+# define dfprintk(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
-+# define dfprintk_cont(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
-+# define dfprintk_rcu(fac, fmt, ...)	no_printk(fmt, ##__VA_ARGS__)
- # define RPC_IFDEBUG(x)
- #endif
- 
--- 
-2.34.1
-
+ACK on the general concept however. This is useful debugging info.
+--=20
+Jeff Layton <jlayton@kernel.org>
