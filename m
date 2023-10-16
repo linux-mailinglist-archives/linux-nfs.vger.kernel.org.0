@@ -2,52 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E85A27CAFDA
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 Oct 2023 18:39:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5817E7CB010
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 Oct 2023 18:42:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233969AbjJPQjU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 Oct 2023 12:39:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52836 "EHLO
+        id S234254AbjJPQmS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 Oct 2023 12:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234578AbjJPQhv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Oct 2023 12:37:51 -0400
+        with ESMTP id S234427AbjJPQl6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 Oct 2023 12:41:58 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC1593855
-        for <linux-nfs@vger.kernel.org>; Mon, 16 Oct 2023 09:20:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976001FEC
+        for <linux-nfs@vger.kernel.org>; Mon, 16 Oct 2023 09:31:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697473215;
+        s=mimecast20190719; t=1697473880;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=63Rq1KcfOTDhlc8whKkbAUCIQI+yHNiEHhPiU2TPE3M=;
-        b=HRNQytnv7Y6pZMpjuu1yAzzjcGGzFjvfIthtsY5oQ5g821gtGns5wa5M3wZ0g2CRosNoft
-        6HXCqRzz2ihMxC6sEjTMKmhfTI40wSxRJSOtiSFm/56k/DoTRYUvGbU2QXNWm/S3/ok9FR
-        ehkS4nK9I8ATQAV9O9T+/nBGGHFQhpg=
+        bh=rbzg7U/87dJSaK89YmTgCyu23XfU1BhnpwaB496FV9g=;
+        b=BOBTuB52y0K0wAR6s5CX7xgG1BncSFYX1sn3YfPs1bk0qfe7Wa4BiskcwpkSPMKCQ0r5U/
+        qo3DAlcGX3nEFEsVMLh67Lhri50sAV56zmTQJH+qGWU/NuxQHOGhVU/F+wXFR+fgxvIuAe
+        Y8Zf8lhtAI+B+rmlKFxv+LPgw34oOKQ=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-27-bJAGqS1LPQevnpXDvvjhEQ-1; Mon, 16 Oct 2023 12:19:55 -0400
-X-MC-Unique: bJAGqS1LPQevnpXDvvjhEQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+ us-mta-613-g1DVukGdOg29WJloZ1VP1g-1; Mon, 16 Oct 2023 12:31:16 -0400
+X-MC-Unique: g1DVukGdOg29WJloZ1VP1g-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1E3DE862F4E;
-        Mon, 16 Oct 2023 16:19:54 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 523CF81D9E2;
+        Mon, 16 Oct 2023 16:31:15 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.42.28.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A802825C8;
-        Mon, 16 Oct 2023 16:19:51 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B7B49492BEE;
+        Mon, 16 Oct 2023 16:31:12 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
 From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <be2434a2d51900b9e51d8bf0fe5a8b82e3f1a879.camel@kernel.org>
-References: <be2434a2d51900b9e51d8bf0fe5a8b82e3f1a879.camel@kernel.org> <20231013160423.2218093-1-dhowells@redhat.com> <20231013160423.2218093-9-dhowells@redhat.com>
+In-Reply-To: <11ec6f637698feb04963c6a7c39a5ca80af95464.camel@kernel.org>
+References: <11ec6f637698feb04963c6a7c39a5ca80af95464.camel@kernel.org> <20231013155727.2217781-1-dhowells@redhat.com> <20231013155727.2217781-3-dhowells@redhat.com>
 To:     Jeff Layton <jlayton@kernel.org>
 Cc:     dhowells@redhat.com, Steve French <smfrench@gmail.com>,
         Matthew Wilcox <willy@infradead.org>,
         Marc Dionne <marc.dionne@auristor.com>,
         Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
         Shyam Prasad N <sprasad@microsoft.com>,
         Tom Talpey <tom@talpey.com>,
         Dominique Martinet <asmadeus@codewreck.org>,
@@ -58,13 +59,13 @@ Cc:     dhowells@redhat.com, Steve French <smfrench@gmail.com>,
         v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
         linux-mm@kvack.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-cachefs@redhat.com
-Subject: Re: [RFC PATCH 08/53] netfs: Add rsize to netfs_io_request
+Subject: Re: [RFC PATCH 02/53] netfs: Track the fpos above which the server has no data
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2840973.1697473191.1@warthog.procyon.org.uk>
-Date:   Mon, 16 Oct 2023 17:19:51 +0100
-Message-ID: <2840974.1697473191@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+Content-ID: <2841425.1697473872.1@warthog.procyon.org.uk>
+Date:   Mon, 16 Oct 2023 17:31:12 +0100
+Message-ID: <2841426.1697473872@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
@@ -78,33 +79,49 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Jeff Layton <jlayton@kernel.org> wrote:
 
-> > +	rreq->rsize = 4 * 1024 * 1024;
-> >  	return 0;
-> ...
-> > +	rreq->rsize = 1024 * 1024;
-> > +
+> >  (7) If stored data is culled from the local cache, we must set zero_point
+> >      above that if the data also got written to the server.
 > 
-> Holy magic numbers, batman! I think this deserves a comment that
-> explains how you came up with these values.
+> When you say culled here, it sounds like you're just throwing out the
+> dirty cache without writing the data back. That shouldn't be allowed
+> though, so I must be misunderstanding what you mean here. Can you
+> explain?
 
-Actually, that should be set to something like the object size for ceph.
+I meant fscache specifically.  Too many caches - and some of them with the
+same names!
 
-> Also, do 9p and cifs not need this for some reason?
+> >  (8) If dirty data is written back to the server, but not the local cache,
+> >      we must set zero_point above that.
+> 
+> How do you write back without writing to the local cache? I'm guessing
+> this means you're doing a non-buffered write?
 
-At this point, cifs doesn't use netfslib, so that's implemented in a later
-patch in this series.
+I meant fscache.  fscache can decline to honour a request to store data.
 
-9p does need setting, but I haven't tested that yet.  It probably needs
-setting to 1MiB as I think that's the maximum the 9p transport can handle.
+> > +		if (size != i_size) {
+> > +			truncate_pagecache(&vnode->netfs.inode, size);
+> > +			netfs_resize_file(&vnode->netfs, size);
+> > +			fscache_resize_cookie(afs_vnode_cache(vnode), size);
+> > +		}
+> 
+> Isn't this an existing bug? AFS is not setting remote_i_size in the
+> setattr path currently? I think this probably ought to be done in a
+> preliminary AFS patch.
 
-But in the case of cifs, this is actually dynamic, depending on how many
-credits we can obtain.  The same may be true of ceph, though I'm not entirely
-clear on that as yet.
+It is being set.  afs_apply_status() sets it.  This is called by
+afs_vnode_commit_status() which is called from afs_setattr_success().  The
+value isn't updated until we get the return status from the server that
+includes the new value.
 
-For afs, the maximum [rw]size the protocol supports is actually something like
-281350422593565 (ie. (65535-28) * (2^32-1)) minus a few bytes, but that's
-probably not a good idea.  I might be best setting it at something like 256KiB
-as that's what OpenAFS uses.
+> > +	loff_t			zero_point;	/* Size after which we assume there's no data
+> > +						 * on the server */
+> 
+> While I understand the concept, I'm not yet sure I understand how this
+> new value will be used. It might be better to merge this patch in with
+> the patch that adds the first user of this data.
+
+I'll consider it.  At least it might make sense to move them adjacent to each
+other in the series.
 
 David
 
