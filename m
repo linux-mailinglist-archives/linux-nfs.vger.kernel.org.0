@@ -2,89 +2,169 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 875227CE787
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Oct 2023 21:18:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28D497CE78F
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Oct 2023 21:19:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbjJRTSY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Oct 2023 15:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57940 "EHLO
+        id S229688AbjJRTTI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Oct 2023 15:19:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjJRTSX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Oct 2023 15:18:23 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11899114
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Oct 2023 12:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697656653;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=lu437WjNSu6i//MOAAY7wGRxXw17gbmp66hPzlAp+CE=;
-        b=Ergq/z9H5Wr4wtAuvciLw7k/4K7Wx9lz3h6zFaKa+qZdkFTo9RGmvsCRM1iXVemonkiXFX
-        eIlT9ssi2yytwdP2iObH7UIELU2ZoN26iWWjuYAYa81xh+18hNxSD4ird1GKNBog0sxoSp
-        ekafPWGHwCGWoffSmRT/ae4W4gwLIlY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-683-SgZ5bKLINf6J-EJQ5RI2KA-1; Wed, 18 Oct 2023 15:17:24 -0400
-X-MC-Unique: SgZ5bKLINf6J-EJQ5RI2KA-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4FF0710201F0;
-        Wed, 18 Oct 2023 19:17:24 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 57AC2492BFA;
-        Wed, 18 Oct 2023 19:17:23 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Anna Schumaker <anna@kernel.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        trond.myklebust@hammerspace.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] NFSv4: Allow per-mount tuning of READDIR attrs
-Date:   Wed, 18 Oct 2023 15:17:22 -0400
-Message-ID: <5468EC9F-A80B-4F63-90AB-1E27B9E8C227@redhat.com>
-In-Reply-To: <CAFX2JfkON+5MsYuw-SsvSg04M6Fy=BY_v7RZ9aAs35P7fD15Gw@mail.gmail.com>
-References: <cover.1697577945.git.bcodding@redhat.com>
- <bd900de1d19bc56e6df5b44379f373617acc894e.1697577945.git.bcodding@redhat.com>
- <ZS/V+4Cuzox7erqz@tissot.1015granger.net>
- <6157b73e380e5b625cd8ed0133ef392d0dd4bd8b.camel@kernel.org>
- <ZS/qwYzQvrgJNEv6@tissot.1015granger.net>
- <CAFX2JfkON+5MsYuw-SsvSg04M6Fy=BY_v7RZ9aAs35P7fD15Gw@mail.gmail.com>
+        with ESMTP id S230421AbjJRTTG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Oct 2023 15:19:06 -0400
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0157119
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Oct 2023 12:19:03 -0700 (PDT)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-507962561adso8700106e87.0
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Oct 2023 12:19:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1697656741; x=1698261541; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Ne6XlZkvrqbgYXFwibkwS6QVtHojWCVkTUV60CnBXA=;
+        b=BunhL8vEinbtMzTobkYonStJky9F0F3H6gr/fGEhsF7xRMQV8NYr666XLtr22jPNbU
+         J9pqRBLYmrFEs0bSbQfVJOe8VwBUFC676HMshHaKGBBNymcdZNEEuQwEN2R7+f51F3p9
+         fXevfbvD2dqSNXU6J0CS+IeTc7Z3zrrUh9kTY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1697656741; x=1698261541;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5Ne6XlZkvrqbgYXFwibkwS6QVtHojWCVkTUV60CnBXA=;
+        b=VAgKyXHluJQCBROj3Mpqi5dj7hAIxsFiZZHqEMw8qVWBLtI9AP+9nMDNX1sze/dSwd
+         PhRzNzCezwSIemxKaHrNEFLO1GxBVXAMlx3OQ4jm7oB9Bph5fdnZWQWl1/PdvAyyLI6T
+         TUXAgkc6WjKctWkYFCMXHPF0cVtNe5yzkEVGD0I17m2+SwkX/6IJhy8XXcJNM/qUuTdE
+         sjFOnMKKcaRne5j8cDgvCc6vlknKAWXdFtCtKzYMyHi9f7AqqzYOMJe9zvcCFyq37hBL
+         +/FYgJuUNjuVmEWgdGjJc3o5Go7GJLl2W7ZFcEKafqfbaYdSXNebKb9Ky673cF9gNsfx
+         lTPQ==
+X-Gm-Message-State: AOJu0Yx4xGh+fHSBuQRIT7Lh+VdMW07CW/Zb9IzYPhvcE2wYR3o/Oaks
+        KhAYbIVIdRntyRyxnyuVdPzwAJQCES71plJ1C18XG7H+
+X-Google-Smtp-Source: AGHT+IFhhcEIrBMYWe48A+vO2cTKz1ntx1V+ig0UG4HW8Nfe6eIGoeeycSEjQeZCIbcXSu8zGnRtcA==
+X-Received: by 2002:a05:6512:33d0:b0:507:aa44:28fc with SMTP id d16-20020a05651233d000b00507aa4428fcmr5572335lfg.53.1697656741587;
+        Wed, 18 Oct 2023 12:19:01 -0700 (PDT)
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com. [209.85.167.50])
+        by smtp.gmail.com with ESMTPSA id r14-20020ac25f8e000000b00503fb2e5594sm800381lfe.211.2023.10.18.12.19.01
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Oct 2023 12:19:01 -0700 (PDT)
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-507c78d258fso1763597e87.2
+        for <linux-nfs@vger.kernel.org>; Wed, 18 Oct 2023 12:19:01 -0700 (PDT)
+X-Received: by 2002:a17:906:99c4:b0:9bd:a662:c066 with SMTP id
+ s4-20020a17090699c400b009bda662c066mr149569ejn.76.1697656719721; Wed, 18 Oct
+ 2023 12:18:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20231018-mgtime-v1-0-4a7a97b1f482@kernel.org> <20231018-mgtime-v1-2-4a7a97b1f482@kernel.org>
+In-Reply-To: <20231018-mgtime-v1-2-4a7a97b1f482@kernel.org>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 18 Oct 2023 12:18:22 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wixObEhBXM22JDopRdt7Z=tGGuizq66g4RnUmG9toA2DA@mail.gmail.com>
+Message-ID: <CAHk-=wixObEhBXM22JDopRdt7Z=tGGuizq66g4RnUmG9toA2DA@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 18 Oct 2023, at 14:38, Anna Schumaker wrote:
->> It's not yet clear sysadmins will even need a switch like this, so I
->> would go further and say you should hold off on merging anything
->> like it until there is an actual reported need for it.
->>
->> Now, full control over that bitmap is still very neat thing for
->> experimentation by NFS developers. Hiding this behind a Kconfig
->> option would let you merge it but then turn it off in production
->> kernels.
+On Wed, 18 Oct 2023 at 10:41, Jeff Layton <jlayton@kernel.org> wrote:
 >
-> Definitely a neat thing to have, but I'm also in favor of hiding it
-> behind a kconfig option to start.
+> One way to prevent this is to ensure that when we stamp a file with a
+> fine-grained timestamp, that we use that value to establish a floor for
+> any later timestamp update.
 
-Ah, missed replying to this part in the last message:
+I'm very leery of this.
 
-Ok, if my last message isn't convicing enough, are we talking about
-something like CONFIG_NFS_EXPERT_SYSFS?
+I don't like how it's using a global time - and a global fine-grained
+offset - when different filesystems will very naturally have different
+granularities. I also don't like how it's no using that global lock.
 
-I'm worried that trying to make NFS nicer/safer in sysfs just means we're
-gatekeeping what's already a complex and breakable set of technologies in
-the one place (sysfs) where we can actually expose some complexity.
+Yes, yes, since the use of this all is then gated by the 'is_mgtime()'
+thing, any filesystem with big granularities will presumably never set
+FS_MGTIME in the first time, and that hides the worst pointless cases.
+But it still feels iffy to me.
 
-Ben
+Also, the whole current_ctime() logic seems wrong. Later (in 4/9), you do this:
 
+ static struct timespec64 current_ctime(struct inode *inode)
+ {
+        if (is_mgtime(inode))
+                return current_mgtime(inode);
+
+and current_mgtime() does
+
+        if (nsec & I_CTIME_QUERIED) {
+                ktime_get_real_ts64(&now);
+                return timestamp_truncate(now, inode);
+        }
+
+so once the code has set I_CTIME_QUERIED, it will now use the
+expensive fine-grained time - even when it makes no sense.
+
+As far as I can tell, there is *never* a reason to get the
+fine-grained time if the old inode ctime is already sufficiently far
+away.
+
+IOW, my gut feel is that all this logic should always not only be
+guarded by FS_MGTIME (like you do seem to do), *and* by "has anybody
+even queried this time" - it should *also* always be guarded by "if I
+get the coarse-grained time, is that sufficient?"
+
+So I think the current_ctime() logic should be something along the lines of
+
+    static struct timespec64 current_ctime(struct inode *inode)
+    {
+        struct timespec64 ts64 = current_time(inode);
+        unsigned long old_ctime_sec = inode->i_ctime_sec;
+        unsigned int old_ctime_nsec = inode->i_ctime_nsec;
+
+        if (ts64.tv_sec != old_ctime_sec)
+                return ts64;
+
+        /*
+         * No need to check is_mgtime(inode) - the I_CTIME_QUERIED
+         * flag is only set for mgtime filesystems
+         */
+        if (!(old_ctime_nsec & I_CTIME_QUERIED))
+                return ts64;
+        old_ctime_nsec &= ~I_CTIME_QUERIED;
+        if (ts64.tv_nsec > old_ctime_nsec + inode->i_sb->s_time_gran)
+                return ts64;
+
+        /* Ok, only *now* do we do a finegrained value */
+        ktime_get_real_ts64(&ts64);
+        return timestamp_truncate(ts64);
+    }
+
+or whatever. Make it *very* clear that the finegrained timestamp is
+the absolute last option, after we have checked that the regular one
+isn't possible.
+
+I dunno.
+
+            Linus
