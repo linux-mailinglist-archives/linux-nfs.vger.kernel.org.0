@@ -2,153 +2,214 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B39D87CE48B
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Oct 2023 19:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFF3C7CE4CC
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Oct 2023 19:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230396AbjJRR3s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Oct 2023 13:29:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
+        id S230444AbjJRRle (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Oct 2023 13:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231341AbjJRR3J (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Oct 2023 13:29:09 -0400
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C0D73273;
-        Wed, 18 Oct 2023 10:19:57 -0700 (PDT)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-5a7dafb659cso86416707b3.0;
-        Wed, 18 Oct 2023 10:19:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1697649596; x=1698254396; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kEhYXwKlNRKuJG2R6Sj8ITboKE4QxjoJsQDvPN3BEP4=;
-        b=AhDYq/j+T35q4IEIhHwPURM4QIxDpKxRxFWZ7LlEjMa5AHU1zdAwuItfn7wte0lXn7
-         BVSIx6bbH4l5rPcivyP5Nxg06MMvn+gXtBxTXLoQwT0ew+sVc6ctZufE8NCe4d8zv/Pg
-         1EGjTvApUSNs3YsxWIoX4WFQ0qte5R2OMBIGEaHfZqGjUVd6v9/qU/vvbCGky3VaRKsw
-         ZR1W/iHHH25Mi0gSGjfo01soqJEDfWSmAF6lJ1Say2F7+EDScdnwgRU1tRcwm00B8F3m
-         KbFq8+bs/TrHT1U1nyQ80Lco6tTnLcMdEGQUYSRptgM+UekSyh5kFeaKx/fRqaarF1rB
-         xYYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697649596; x=1698254396;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kEhYXwKlNRKuJG2R6Sj8ITboKE4QxjoJsQDvPN3BEP4=;
-        b=vU9x9nfozOUK56s3SkbWbdejyc7h+X1Y90ncsDJKgtg5O39nSteVCHkwDTxGkoR8KQ
-         D31mcPXhXSWoOX1f4PeuApZtpL9AEcvlUDt7uyPhvr1Rw9ssjdhcCfMcXtCTiRoCEjWR
-         tVQof9DjdEmQS1gC79kn0XXqjvDGwGkWXRVPOVLJk5hpsL1Ou+fiMyVQDtvDGT+vifQo
-         ezhqHTJ6MNuRITC+Uz7cXYHiVxe1znaI/oy91YPq09ZqJ6Ilm9XtFAzh8SawuI2oSs8Y
-         IfRoho7t/eTK3sVtm4gbe9I6xZWRekkCFbRPILG+/pTaLa6D1ow5T+r3MaMMdSVBAIvW
-         k4rg==
-X-Gm-Message-State: AOJu0YyWk32mk0utloWizYfvvM/37gm1VSJnjnIgYqUybcUfRIj1mQsT
-        w2stnueAfQ3Bjzv3YoyBMZg3yT3rRLUWDeSJSV1PQcLe
-X-Google-Smtp-Source: AGHT+IF10FRb/5w3eMY+ixdibeePFD8DKC4yRtWqEmPPJwmX0wfE2re6wpOMo5JAKPbZarPPNgMFf3mSxGwQ1aDfLlI=
-X-Received: by 2002:a81:b40f:0:b0:583:f5fe:d73e with SMTP id
- h15-20020a81b40f000000b00583f5fed73emr5903683ywi.30.1697649595953; Wed, 18
- Oct 2023 10:19:55 -0700 (PDT)
+        with ESMTP id S229998AbjJRRld (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Oct 2023 13:41:33 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E45116;
+        Wed, 18 Oct 2023 10:41:32 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76D2FC433C8;
+        Wed, 18 Oct 2023 17:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697650891;
+        bh=kOWxubIvgkUuX1LHF9Uvd3PXOcCevsiFIHXsUMPyfII=;
+        h=From:Subject:Date:To:Cc:From;
+        b=HmbULKUSdAVTYh0NKXFEKevWhFCUwYFMuL4ZE6MnHrMRc//1huWLlflMoK0S8D7HT
+         RpsmiCca/5mXfeyTb19e8+kl8UJFzEghrdotH3KvXYHZLUsXcKKlbUVfvdQyMx62z6
+         34Xsrh7WT/00XDtz5t6InI84zeLOx7tPeu8rJA9Rwn1Zx9HeCyi0I3fC4LOiYur/fE
+         JDN4Vyc3XcT+ERm/aUw1zN6TI4Le3vB5HM60CU8WN2sV4b/rcSCzdsY2aZvIqYa99Z
+         sjX65S2Oku9xYqAVYGzUC0sAqceFqJ82GaotgiDmurcJyHeCgtRQvu9Ale3NAijBbP
+         rOv1uoNIL4Tnw==
+From:   Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH RFC 0/9] fs: multigrain timestamps (redux)
+Date:   Wed, 18 Oct 2023 13:41:07 -0400
+Message-Id: <20231018-mgtime-v1-0-4a7a97b1f482@kernel.org>
 MIME-Version: 1.0
-References: <20231018100000.2453965-1-amir73il@gmail.com> <20231018100000.2453965-6-amir73il@gmail.com>
- <ZS/5fp4XL4D49q9T@tissot.1015granger.net>
-In-Reply-To: <ZS/5fp4XL4D49q9T@tissot.1015granger.net>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 18 Oct 2023 20:19:44 +0300
-Message-ID: <CAOQ4uxhaoup7OCTCcbV-uqZF8SaLWppqN8tM3svZsfAf022Jsw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] exportfs: support encoding non-decodeable file
- handles by default
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Jan Kara <jack@suse.cz>, Jeff Layton <jlayton@kernel.org>,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALMYMGUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2NDA0Mz3dz0kszcVN20VOPURHPTZLM0U0sloOKCotS0zAqwQdFKQW7OSrG
+ 1tQAHBm97XQAAAA==
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
         Christian Brauner <brauner@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
+        David Howells <dhowells@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5629; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=kOWxubIvgkUuX1LHF9Uvd3PXOcCevsiFIHXsUMPyfII=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlMBjAuucpyDoopVPNBPSV5kIUK51y3+JkIuJbJ
+ MfA0arDDZaJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZTAYwAAKCRAADmhBGVaC
+ FRcGD/4gWTfDUlUYR99pZVwm1+RHd3+PX9zlbEqYbvDvs6/aA8B9q7koy4wlyncLKHzM5nrgYHf
+ rFzENOpzsSadkGkDajVLKfFaQ7akLUv8uZiji9WsSoT+e1AyWZj0DskG0JKmYteynPzh30YyJL0
+ KHzsJ7pfrumiZBtdXtMJAa8Skoueq0gWV/7oshhybg6JEOMLOQ+4ANJDMsIfpb6+sHdFitMACRF
+ q4gKZPjsX7FZIx1dd0SQdMlRjw4An+JYEwgjP3bkdy7XTjz6sW5sitQstxEDS/JaxZ6XIIL7xqB
+ OO/Jkxmo5/vSa05/4RVeplhTkAh1uV5n4LuWsjuh+Q8bON7Zv4VKdYJP8r9WBL/5zQwCPpHM2SO
+ c5eE9cT+BmXGcJIzAw52UsXAbp0LO+gYHlR+G7q+I5GEVg2+g6LFRoxL0+OpYvIWcycfYQps5NH
+ XnbuDRwrAVg96y3GpdKaOGuEzu1Sm5CLNXS0jYorIwAossaz50WdaaVRJxMjPRinrp+sP8fv7+l
+ h2X/0Yla61mKX6fZZArxV7sA9uEGbMcZPQcXRw5DW7EhjKh1QbyGwF46sawjrX93/UoxFvWEHso
+ iVcm5rVdVOTBwEy9iFhY241oVCW3E7NtCZ/SNf/hiaRQFTl/Sn7Q3aluI/ogOfLPa0eG+eRYdo8
+ H373khRmD98lzxQ==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 18, 2023 at 6:28=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
-> wrote:
->
-> On Wed, Oct 18, 2023 at 01:00:00PM +0300, Amir Goldstein wrote:
-> > AT_HANDLE_FID was added as an API for name_to_handle_at() that request
-> > the encoding of a file id, which is not intended to be decoded.
-> >
-> > This file id is used by fanotify to describe objects in events.
-> >
-> > So far, overlayfs is the only filesystem that supports encoding
-> > non-decodeable file ids, by providing export_operations with an
-> > ->encode_fh() method and without a ->decode_fh() method.
-> >
-> > Add support for encoding non-decodeable file ids to all the filesystems
-> > that do not provide export_operations, by encoding a file id of type
-> > FILEID_INO64_GEN from { i_ino, i_generation }.
-> >
-> > A filesystem may that does not support NFS export, can opt-out of
-> > encoding non-decodeable file ids for fanotify by defining an empty
-> > export_operations struct (i.e. with a NULL ->encode_fh() method).
-> >
-> > This allows the use of fanotify events with file ids on filesystems
-> > like 9p which do not support NFS export to bring fanotify in feature
-> > parity with inotify on those filesystems.
-> >
-> > Note that fanotify also requires that the filesystems report a non-null
-> > fsid.  Currently, many simple filesystems that have support for inotify
-> > (e.g. debugfs, tracefs, sysfs) report a null fsid, so can still not be
-> > used with fanotify in file id reporting mode.
-> >
-> > Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> > ---
-> >  fs/exportfs/expfs.c      | 30 +++++++++++++++++++++++++++---
-> >  include/linux/exportfs.h | 10 +++++++---
-> >  2 files changed, 34 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-> > index 30da4539e257..34e7d835d4ef 100644
-> > --- a/fs/exportfs/expfs.c
-> > +++ b/fs/exportfs/expfs.c
-> > @@ -383,6 +383,30 @@ int generic_encode_ino32_fh(struct inode *inode, _=
-_u32 *fh, int *max_len,
-> >  }
-> >  EXPORT_SYMBOL_GPL(generic_encode_ino32_fh);
-> >
-> > +/**
-> > + * exportfs_encode_ino64_fid - encode non-decodeable 64bit ino file id
-> > + * @inode:   the object to encode
-> > + * @fid:     where to store the file handle fragment
-> > + * @max_len: maximum length to store there
->
-> Length in what units? Is the 3 below in units of bytes or
-> sizeof(__be32) ? I'm guessing it's the latter; if so, it should
-> be mentioned here. (We have XDR_UNIT for this purpose, btw).
->
-> export_encode_fh() isn't exactly clear about that either, sadly.
->
->
+The VFS always uses coarse-grained timestamps when updating the
+ctime and mtime after a change. This has the benefit of allowing
+filesystems to optimize away a lot metadata updates, down to around 1
+per jiffy, even when a file is under heavy writes.
 
-Yeh, it's the same all over the place including in filesystem
-implementations.
+Unfortunately, this coarseness has always been an issue when we're
+exporting via NFSv3, which relies on timestamps to validate caches. A
+lot of changes can happen in a jiffy, so timestamps aren't sufficient to
+help the client decide to invalidate the cache.
 
-> > + *
-> > + * This generic function is used to encode a non-decodeable file id fo=
-r
-> > + * fanotify for filesystems that do not support NFS export.
-> > + */
-> > +static int exportfs_encode_ino64_fid(struct inode *inode, struct fid *=
-fid,
-> > +                                  int *max_len)
-> > +{
-> > +     if (*max_len < 3) {
-> > +             *max_len =3D 3;
->
-> Let's make this a symbolic constant rather than a naked integer.
->
+Even with NFSv4, a lot of exported filesystems don't properly support a
+change attribute and are subject to the same problems with timestamp
+granularity. Other applications have similar issues with timestamps (e.g
+backup applications).
 
-Sure, no problem.
+If we were to always use fine-grained timestamps, that would improve the
+situation, but that becomes rather expensive, as the underlying
+filesystem would have to log a lot more metadata updates.
 
-Thanks for the review.
-Amir.
+What we need is a way to only use fine-grained timestamps when they are
+being actively queried. The idea is to use an unused bit in the ctime's
+tv_nsec field to mark when the mtime or ctime has been queried via
+getattr. Once that has been marked, the next m/ctime update will use a
+fine-grained timestamp.
+
+The original merge of multigrain timestamps for v6.6 had to be reverted,
+as a file with a coarse-grained timestamp could incorrectly appear to be
+modified before a file with a fine-grained timestamp, when that wasn't
+the case.
+
+This revision solves that problem by making it so that when a
+fine-grained timespec64 is handed out, that that value becomes the floor
+for further coarse-grained timespec64 fetches. This requires new
+timekeeper interfaces with a potential downside: when a file is
+stamped with a fine-grained timestamp, it has to (briefly) take the
+global timekeeper spinlock.
+
+Because of that, this set takes greater pains to avoid issuing new
+fine-grained timestamps when possible. A fine-grained timestamp is now
+only required if the current mtime or ctime have been fetched for a
+getattr, and the next coarse-grained tick has not happened yet. For any
+other case, a coarse-grained timestamp is fine, and that is done using
+the seqcount.
+
+In order to get some hard numbers about how often the lock would be
+taken, I've added a couple of percpu counters and a debugfs file for
+tracking both types of multigrain timekeeper fetches.
+
+With this, I did a kdevops fstests run on xfs (CRC mode). I ran "make
+fstests-baseline" and then immediately grabbed the counter values, and
+calcuated the percentage:
+
+$ time make fstests-baseline
+real    324m17.337s
+user    27m23.213s
+sys     2m40.313s
+
+fine            3059498
+coarse          383848171
+pct fine        .79075661
+
+Next I did a kdevops fstests run with NFS. One server serving 3 clients
+(v4.2, v4.0 and v3). Again, timed "make fstests-baseline" and then
+grabbed the multigrain counters from the NFS server:
+
+$ time make fstests-baseline
+real    181m57.585s
+user    16m8.266s
+sys     1m45.864s
+
+fine            8137657
+coarse          44726007
+pct fine        15.393668
+
+We can't run as many tests on nfs as xfs, so the run is shorter. nfsd is
+a very getattr-heavy workload, and the clients aggressively coalesce
+writes, so this is probably something of a pessimal case for number of
+fine-grained timestamps over time.
+
+At this point I'm mainly wondering whether (briefly) taking the
+timekeeper spinlock in this codepath is unreasonable. It does very
+little work under it, so I'm hoping the impact would be unmeasurable for
+most workloads.
+
+Side Q: what's the best tool for measuring spinlock contention? It'd be
+interesting to see how often (and how long) we end up spinning on this
+lock under different workloads.
+
+Note that some of the patches in the series are virtually identical to
+the ones before. I stripped the prior Reviewed-by/Acked-by tags though
+since the underlying infrastructure has changed a bit.
+
+Comments and suggestions welcome.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (9):
+      fs: switch timespec64 fields in inode to discrete integers
+      timekeeping: new interfaces for multigrain timestamp handing
+      timekeeping: add new debugfs file to count multigrain timestamps
+      fs: add infrastructure for multigrain timestamps
+      fs: have setattr_copy handle multigrain timestamps appropriately
+      xfs: switch to multigrain timestamps
+      ext4: switch to multigrain timestamps
+      btrfs: convert to multigrain timestamps
+      tmpfs: add support for multigrain timestamps
+
+ fs/attr.c                           |  52 ++++++++++++++--
+ fs/btrfs/file.c                     |  25 ++------
+ fs/btrfs/super.c                    |   5 +-
+ fs/ext4/super.c                     |   2 +-
+ fs/inode.c                          |  70 ++++++++++++++++++++-
+ fs/stat.c                           |  41 ++++++++++++-
+ fs/xfs/libxfs/xfs_trans_inode.c     |   6 +-
+ fs/xfs/xfs_iops.c                   |  10 +--
+ fs/xfs/xfs_super.c                  |   2 +-
+ include/linux/fs.h                  |  85 ++++++++++++++++++--------
+ include/linux/timekeeper_internal.h |   2 +
+ include/linux/timekeeping.h         |   4 ++
+ kernel/time/timekeeping.c           | 117 ++++++++++++++++++++++++++++++++++++
+ mm/shmem.c                          |   2 +-
+ 14 files changed, 352 insertions(+), 71 deletions(-)
+---
+base-commit: 12cd44023651666bd44baa36a5c999698890debb
+change-id: 20231016-mgtime-fe3ea75c6f59
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
