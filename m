@@ -2,92 +2,193 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA4817CE7F4
-	for <lists+linux-nfs@lfdr.de>; Wed, 18 Oct 2023 21:42:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C14427CE95D
+	for <lists+linux-nfs@lfdr.de>; Wed, 18 Oct 2023 22:47:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231390AbjJRTmo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 18 Oct 2023 15:42:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39548 "EHLO
+        id S232008AbjJRUrq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 18 Oct 2023 16:47:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231653AbjJRTmn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Oct 2023 15:42:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3579F114
-        for <linux-nfs@vger.kernel.org>; Wed, 18 Oct 2023 12:41:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697658114;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IkXC7VDaoQK3RUozAAkGDOpsoWCmtz0VTHzkQBX3IBg=;
-        b=glDlVjy2E+xv4AP/axZmCILMD60OjknO6Hmn5yE1Q9f1BeqJ2cfbDszYf1Y6xb3paXBHEp
-        ib9Y/OxFbJqyOg3zv0Ah9Bxglcejf8lQiadZXmBxqJR5n8+DDwKaqErQ1iHblo60ihh2pZ
-        3GswMw/lexk1SbP/mwMKcKRGDk/JeV0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-316-_2QbrvH6N5uQX1yWoB85nA-1; Wed, 18 Oct 2023 15:41:50 -0400
-X-MC-Unique: _2QbrvH6N5uQX1yWoB85nA-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B54ED10201FE;
-        Wed, 18 Oct 2023 19:41:49 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 18E05492BFA;
-        Wed, 18 Oct 2023 19:41:48 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-Cc:     Cedric Blancher <cedric.blancher@gmail.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: NFSv4.2: READ_PLUS - when safe to use?
-Date:   Wed, 18 Oct 2023 15:41:47 -0400
-Message-ID: <CCC3D7FC-BC0E-414D-A9CA-545EFC9AFC10@redhat.com>
-In-Reply-To: <CAFX2JfkRpfRe6-T3MELWsAX_V5xyZoiv0Prq_1qq4-5Pi4PCag@mail.gmail.com>
-References: <CALXu0Ufzu8FMdH=-_35tHNqu3c6ewf4d6a379=fUMwNvGq_rgQ@mail.gmail.com>
- <CAFX2JfkRpfRe6-T3MELWsAX_V5xyZoiv0Prq_1qq4-5Pi4PCag@mail.gmail.com>
+        with ESMTP id S232216AbjJRUrn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 18 Oct 2023 16:47:43 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39705FE;
+        Wed, 18 Oct 2023 13:47:41 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AB2EC433C8;
+        Wed, 18 Oct 2023 20:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697662060;
+        bh=ur7fcft+INev6z8sCndtms845O1A1/aPF0TIAWbDkS0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=fr/C19MvlG9QXl+vWS+SXplZgTRgBQJ3oLvKh1kARFT7tBHh79vH1tQShLD9PgLut
+         yPZrIF6BgYRMGKSa+4ap23iDicA29QlHgzuc9wqzo0Nftd/kvOQdbsaY6bOG1qheYd
+         Y9a+XBPDNkWWvKeE21tf85ThZM1Yvzaxd6qJkorN/EjBNO6hEAj1453J1cA1zPxRg8
+         d73AoURNDxaS06VsO2r0Ebq1GKLSGcS8s+x9s7VDua0bPXIME2bPgCmGsdgY5GC1n0
+         728Bvsyu5URh5eysAXOVYsTdp1fk/mIc49hpShHVLnYnU22T1HYUNgKffNe2HDOjRA
+         oYHiZjfKG+3KQ==
+Message-ID: <d6162230b83359d3ed1ee706cc1cb6eacfb12a4f.camel@kernel.org>
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org
+Date:   Wed, 18 Oct 2023 16:47:37 -0400
+In-Reply-To: <CAHk-=wixObEhBXM22JDopRdt7Z=tGGuizq66g4RnUmG9toA2DA@mail.gmail.com>
+References: <20231018-mgtime-v1-0-4a7a97b1f482@kernel.org>
+         <20231018-mgtime-v1-2-4a7a97b1f482@kernel.org>
+         <CAHk-=wixObEhBXM22JDopRdt7Z=tGGuizq66g4RnUmG9toA2DA@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 18 Oct 2023, at 15:32, Anna Schumaker wrote:
+On Wed, 2023-10-18 at 12:18 -0700, Linus Torvalds wrote:
+> On Wed, 18 Oct 2023 at 10:41, Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > One way to prevent this is to ensure that when we stamp a file with a
+> > fine-grained timestamp, that we use that value to establish a floor for
+> > any later timestamp update.
+>=20
+> I'm very leery of this.
+>=20
+> I don't like how it's using a global time - and a global fine-grained
+> offset - when different filesystems will very naturally have different
+> granularities. I also don't like how it's no using that global lock.
+>=20
+> Yes, yes, since the use of this all is then gated by the 'is_mgtime()'
+> thing, any filesystem with big granularities will presumably never set
+> FS_MGTIME in the first time, and that hides the worst pointless cases.
+> But it still feels iffy to me.
+>=20
 
-> Hi Ced,
+Thanks for taking a look!
+
+I'm not too crazy about the global lock either, but the global fine
+grained value ensures that when we have mtime changes that occur across
+filesystems that they appear to be in the correct order.
+
+We could (hypothetically) track an offset per superblock or something,
+but then you could see out-of-order timestamps in inodes across
+different filesystems (even of the same type). I think it'd better not
+to do that if we can get away with it.
+
+
+> Also, the whole current_ctime() logic seems wrong. Later (in 4/9), you do=
+ this:
+>=20
+>  static struct timespec64 current_ctime(struct inode *inode)
+>  {
+>         if (is_mgtime(inode))
+>                 return current_mgtime(inode);
+>=20
+> and current_mgtime() does
+>=20
+>         if (nsec & I_CTIME_QUERIED) {
+>                 ktime_get_real_ts64(&now);
+>                 return timestamp_truncate(now, inode);
+>         }
+>=20
+> so once the code has set I_CTIME_QUERIED, it will now use the
+> expensive fine-grained time - even when it makes no sense.
+>=20
+> As far as I can tell, there is *never* a reason to get the
+> fine-grained time if the old inode ctime is already sufficiently far
+> away.
+>=20
+> IOW, my gut feel is that all this logic should always not only be
+> guarded by FS_MGTIME (like you do seem to do), *and* by "has anybody
+> even queried this time" - it should *also* always be guarded by "if I
+> get the coarse-grained time, is that sufficient?"
+>=20
+> So I think the current_ctime() logic should be something along the lines =
+of
+>=20
+>     static struct timespec64 current_ctime(struct inode *inode)
+>     {
+>         struct timespec64 ts64 =3D current_time(inode);
+>         unsigned long old_ctime_sec =3D inode->i_ctime_sec;
+>         unsigned int old_ctime_nsec =3D inode->i_ctime_nsec;
+>=20
+>         if (ts64.tv_sec !=3D old_ctime_sec)
+>                 return ts64;
+>=20
+>         /*
+>          * No need to check is_mgtime(inode) - the I_CTIME_QUERIED
+>          * flag is only set for mgtime filesystems
+>          */
+>         if (!(old_ctime_nsec & I_CTIME_QUERIED))
+>                 return ts64;
+>         old_ctime_nsec &=3D ~I_CTIME_QUERIED;
+>         if (ts64.tv_nsec > old_ctime_nsec + inode->i_sb->s_time_gran)
+>                 return ts64;
+>=20
+
+Does that really do what you expect here? current_time will return a
+value that has already been through timestamp_truncate. Regardless, I
+don't think this function makes as big a difference as you might think.
+
 >
-> On Sat, Oct 14, 2023 at 9:08 AM Cedric Blancher
-> <cedric.blancher@gmail.com> wrote:
->>
->> Good afternoon!
->>
->> Since which kernel versions (NFS server, NFS client) is NFSv4.2
->> READ_PLUS safely usable?
->
-> Linux 6.2 for the server side and 6.6 for the client.
->
->>
->> Also, could you make this a mount option, so people can turn this
->> on/off per mount, instead of using a kernel build option for this?
->
-> The eventual plan is to remove the kernel build option entirely. We
-> probably won't do a mount option, and just have it enabled by default
-> when using NFS v4.2.
+>         /* Ok, only *now* do we do a finegrained value */
+>         ktime_get_real_ts64(&ts64);
+>         return timestamp_truncate(ts64);
+>     }
+>=20
+> or whatever. Make it *very* clear that the finegrained timestamp is
+> the absolute last option, after we have checked that the regular one
+> isn't possible.
 
-Anna, I'm still planning on either re-sending the patch you wrote to
-enable/disable optional features per-mount, or re-work it to make it
-file-per-feature as the sysfs creators intended.
+current_mgtime is calling ktime_get_real_ts64, which is an existing
+interface that does not take the global spinlock and won't advance the
+global offset. That call should be quite cheap.
 
-We need the option to toggle client's default per-server or per-mount.
+The reason we can use that call here is because current_ctime and
+current_mgtime are only called from  inode_needs_update_time, which is
+only called to check whether we need to get write access to the
+inode.=A0What we do is look at the current clock and see whether the
+timestamps would perceivably change if we were to do the update right
+then.
 
-Ben
+If so, we get write access and then call inode_set_ctime_current(). That
+will fetch its own timestamps and reevaluate what sort of update to do.
+That's the only place that fetches an expensive fine-grained timestamp
+that advances the offset.
 
+So, I think this set already is only getting the expensive fine-grained
+timestamps as a last resort.
+
+This is probably an indicator that I need to document this code better
+though. It may also be a good idea to reorganize
+inode_needs_update_time, current_ctime and current_mgtime for better
+clarity.
+
+Many thanks for the comments!
+--=20
+Jeff Layton <jlayton@kernel.org>
