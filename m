@@ -2,75 +2,137 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE1737D0091
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Oct 2023 19:32:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ADDC7D0493
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Oct 2023 00:00:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235482AbjJSRc2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Oct 2023 13:32:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        id S235570AbjJSWAu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Oct 2023 18:00:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235472AbjJSRc2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Oct 2023 13:32:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7028C106
-        for <linux-nfs@vger.kernel.org>; Thu, 19 Oct 2023 10:31:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697736700;
+        with ESMTP id S235556AbjJSWAt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Oct 2023 18:00:49 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D683115;
+        Thu, 19 Oct 2023 15:00:46 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1697752844;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bqwVYrA5zY7g/jU/ZPx2G6lru7BCsrJ2bs4lTzgzsU0=;
-        b=DVsNnagHuqSMAFKPhDt2eyBzUQrX7MYxpBZmKhRysK8GYOgcSOKMh/E4Zex9BjkTBqRQMe
-        R4OTvYmoSMID0eQEV4RGyrweaViIQFmGlDTUGaFbAh2/Yemj1icyshWDd93CdW2nmo6kXK
-        KFQqGjRzweFzqF0FjHP4rn3QkXVlXPI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-44-yDo58ZhGMuqWAtVHi2u5XQ-1; Thu, 19 Oct 2023 13:31:38 -0400
-X-MC-Unique: yDo58ZhGMuqWAtVHi2u5XQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8E4531C0652E;
-        Thu, 19 Oct 2023 17:31:37 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B0737C15BB8;
-        Thu, 19 Oct 2023 17:31:36 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     trond.myklebust@hammerspace.com, anna@kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] NFSv4: Allow per-mount tuning of READDIR attrs
-Date:   Thu, 19 Oct 2023 13:31:35 -0400
-Message-ID: <957A3D2C-2313-4D21-B166-20DA5F754A07@redhat.com>
-In-Reply-To: <12d7225becae370a923bec807a140f8e87c0eca0.camel@kernel.org>
-References: <cover.1697722160.git.bcodding@redhat.com>
- <fbd3cd01c28e8c132058ae16b22eeae5ddaa8178.1697722160.git.bcodding@redhat.com>
- <12d7225becae370a923bec807a140f8e87c0eca0.camel@kernel.org>
+         in-reply-to:in-reply-to; bh=o2kQGRnjkpW8NV5UEGIjy6i2Lw5zLDk1wI9xtQ0It5Y=;
+        b=OFtLhVmdGAGajfdsQU77o4un/tVAdYcM7cfwt20W9su0nN9zUiglcL5C4pDEb4q88MJzLO
+        x5HDKpnT1/1lsSU8vKySCq1RLS7VJye3ei4+VMtw0uCD0w7qgUgZRlBSUcaicBnbHq4OQM
+        mqC4nMnW3ootEGH3Z7j1ETk8ZUrXdgmgAMC4DzuoxhllzQY4nnoXxM5gbzdAXXNXSWD5Sa
+        lHnIfI/VC1YvapORPfXS8oxP8OeBmd70rwTvUJoTfYU3S+x3sfwVydywAwIgsgZgP0p9N5
+        3FVR3vXv1ON8t+fn6QllxjFsOKixj4rzsRVi/dN/W6MmEfKFJhO4iRcGMvCxFA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1697752844;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to; bh=o2kQGRnjkpW8NV5UEGIjy6i2Lw5zLDk1wI9xtQ0It5Y=;
+        b=WY4r1ywqpIX7pjSgKhtd/YMTG9q7nuDraudwOpgvLzXDgf0mNyLuwtbpuWmgdtYAMHYJV3
+        PfofEjkkaGKIMBCg==
+To:     Jeff Layton <jlayton@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        John Stultz <jstultz@google.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
+        David Howells <dhowells@redhat.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+In-Reply-To: <20231018-mgtime-v1-2-4a7a97b1f482@kernel.org>
+Date:   Fri, 20 Oct 2023 00:00:43 +0200
+Message-ID: <87o7gu2rxw.ffs@tglx>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 19 Oct 2023, at 12:55, Jeff Layton wrote:
+Jeff!
 
-> If you are going to add this, then I think the consensus from
-> yesterday's comments was to put it behind a new Kconfig option. Maybe
-> there could be a new CONFIG_NFS_TWEAKS or something that exposes this
-> interface (and other stuff we're not sure about making generally
-> available).
+On Wed, Oct 18 2023 at 13:41, Jeff Layton wrote:
+> +void ktime_get_mg_fine_ts64(struct timespec64 *ts)
+> +{
+> +	struct timekeeper *tk = &tk_core.timekeeper;
+> +	unsigned long flags;
+> +	u32 nsecs;
+> +
+> +	WARN_ON(timekeeping_suspended);
+> +
+> +	raw_spin_lock_irqsave(&timekeeper_lock, flags);
+> +	write_seqcount_begin(&tk_core.seq);
 
-Right.  I was hoping the discussion would continue, and this version was
-just to make the robot happy.  I'll send it again with it config-ed out in a
-few days if there's no other discussion.
+Depending on the usage scenario, this will end up as a scalability issue
+which affects _all_ of timekeeping.
 
-Ben
+The usage of timekeeper_lock and the sequence count has been carefully
+crafted to be as non-contended as possible. We went a great length to
+optimize that because the ktime_get*() functions are really hotpath all
+over the place.
 
+Exposing such an interface which wreckages that is a recipe for disaster
+down the road. It might be a non-issue today, but once we hit the
+bottleneck of that global lock, we are up the creek without a
+paddle. Well not really, but all we can do then is fall back to
+ktime_get_real(). So let me ask the obvious question:
+
+     Why don't we do that right away?
+
+Many moons ago when we added ktime_get_real_coarse() the main reason was
+that reading the time from the underlying hardware was insanely
+expensive.
+
+Many moons later this is not true anymore, except for the stupid case
+where the BIOS wreckaged the TSC, but that's a hopeless case for
+performance no matter what. Optimizing for that would be beyond stupid.
+
+I'm well aware that ktime_get_real_coarse() is still faster than
+ktime_get_real() in micro-benchmarks, i.e. 5ns vs. 15ns on the four
+years old laptop I'm writing this.
+
+Many moons ago it was in the ballpark of 40ns vs. 5us due to TSC being
+useless and even TSC read was way more expensive (factor 8-10x IIRC) in
+comparison. That really mattered for FS, but does todays overhead still
+make a difference in the real FS use case scenario?
+
+I'm not in the position of running meaningful FS benchmarks to analyze
+that, but I think the delta between ktime_get_real_coarse() and
+ktime_get_real() on contemporary hardware is small enough that it
+justifies this question.
+
+The point is that both functions have pretty much the same D-cache
+pattern because they access the same data in the very same
+cacheline. The only difference is the actual TSC read and the extra
+conversion, but that's it. The TSC read has been massively optimized by
+the CPU vendors. I know that the ARM64 counter has been optimized too,
+though I have no idea about PPC64 and S390, but I would be truly
+surprised if they didn't optimize the hell out of it because time read
+is really used heavily both in kernel and user space.
+
+Does anyone have numbers on contemporary hardware to shed some light on
+that in the context of FS and the problem at hand?
+
+Thanks,
+
+        tglx
