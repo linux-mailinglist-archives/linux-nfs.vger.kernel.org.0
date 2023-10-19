@@ -2,140 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32C0E7CF1CC
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Oct 2023 09:56:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F32B37CF40E
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Oct 2023 11:29:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232799AbjJSH4e convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 19 Oct 2023 03:56:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35954 "EHLO
+        id S1345043AbjJSJ3Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Oct 2023 05:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235283AbjJSH4X (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Oct 2023 03:56:23 -0400
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A81D918F;
-        Thu, 19 Oct 2023 00:56:20 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5a877e0f0d8so4131977b3.1;
-        Thu, 19 Oct 2023 00:56:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697702179; x=1698306979;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ILA4o27dVPsrTvX39+vJ0cM2vmBOHexNEBZq7C7F7Q4=;
-        b=vkqwqUniFC7sHrHyeBnoLDG5xu3k0+4HgdrqzlT3kkwKs7bPqa9tx5bDjK+nbJ5bNG
-         ttfftdb60tEpNzPW/0K1fmEiDwCCTBk95n1LdpMnKC2Oormn7h4X4jgOr1OK71tchw1f
-         YmFUHsGN9yS/xi4RNldCttQ5Z0LxcIZiFLpHhBNIoFngYF1mB06zj+56hGruWuo2hiPY
-         WIBvp+d8GdQoTh0aMz2PeF7/u40PPFSn5SYWV9TSzRBC/d23qo7OHu9FZvV+Ofy0wgM0
-         irGeOelCzjbA7vUs1qtlAf5EgV2qJd16YdsbbS5M03CE+F98QObV21cGUKNMqEXl0UE3
-         U7TA==
-X-Gm-Message-State: AOJu0Yyi8d2S/vjBl3NE55uzryfuia5okf7k9nVLybVvDXmoq0kXAvaH
-        tYxu8H6zp1C1bR4+tuiVMga7LJ/M9PYDww==
-X-Google-Smtp-Source: AGHT+IG21ROdISrPbCBLp5cWx5y/1gsWfelir/oiXSoqjVmIxzGmkckdwAlHEmmxbYvw6iliPtcUYQ==
-X-Received: by 2002:a05:6902:1346:b0:d9a:c54d:6fbb with SMTP id g6-20020a056902134600b00d9ac54d6fbbmr850072ybu.0.1697702179595;
-        Thu, 19 Oct 2023 00:56:19 -0700 (PDT)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com. [209.85.219.180])
-        by smtp.gmail.com with ESMTPSA id u66-20020a25ab48000000b00d9c7bf8f32fsm1154360ybi.42.2023.10.19.00.56.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Oct 2023 00:56:19 -0700 (PDT)
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-d9ac3b4f42cso441396276.0;
-        Thu, 19 Oct 2023 00:56:18 -0700 (PDT)
-X-Received: by 2002:a05:690c:dcb:b0:5a7:b892:b299 with SMTP id
- db11-20020a05690c0dcb00b005a7b892b299mr897843ywb.19.1697702177865; Thu, 19
- Oct 2023 00:56:17 -0700 (PDT)
+        with ESMTP id S1344979AbjJSJ3X (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Oct 2023 05:29:23 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68E0298;
+        Thu, 19 Oct 2023 02:29:22 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8202C433C8;
+        Thu, 19 Oct 2023 09:29:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1697707761;
+        bh=pxF/qlOAYAx3vhRa3N2z4pQJEwL4Rx1j8JuRrkeWQ9Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Akk8XbjDzYlsS3LMaveazcyIGPYT4DucacgiYEdLUsG9DE37MYww77gNzF8oD0aIz
+         ivYs6S62MDqSkKZ2FSGs0EmDEo8tocNJK8foS47nkvwPPrwXEYbvlmNJREcl85jaSo
+         W2BVMZYKsVeUTLgaD8Glg3bCDKmcsXMB4TQ+drVb8NJMw3lHm496br86KHTQZ/8Zyb
+         g/RsWsns1nYNpbj9jPm/YNq9u/5F+tr6mqZODsyxp9EIv/pRppQ674gaTd+0b+V+Cj
+         snsoxrWMyEcUDbEv+U6dRWrQlgFx/kgAx8uWCE3zgeH8LlxfATd2AlTC/m2t5XRPaa
+         Uokex6cURRqGw==
+Date:   Thu, 19 Oct 2023 11:29:11 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Jeff Layton <jlayton@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+Message-ID: <20231019-fluor-skifahren-ec74ceb6c63e@brauner>
+References: <20231018-mgtime-v1-0-4a7a97b1f482@kernel.org>
+ <20231018-mgtime-v1-2-4a7a97b1f482@kernel.org>
+ <CAHk-=wixObEhBXM22JDopRdt7Z=tGGuizq66g4RnUmG9toA2DA@mail.gmail.com>
+ <d6162230b83359d3ed1ee706cc1cb6eacfb12a4f.camel@kernel.org>
+ <CAHk-=wiKJgOg_3z21Sy9bu+3i_34S86r8fd6ngvJpZDwa-ww8Q@mail.gmail.com>
+ <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
 MIME-Version: 1.0
-References: <cover.1697460614.git.geert+renesas@glider.be> <180fd042261dcd4243fad90660b114b8f0a78dcd.1697460614.git.geert+renesas@glider.be>
-In-Reply-To: <180fd042261dcd4243fad90660b114b8f0a78dcd.1697460614.git.geert+renesas@glider.be>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 19 Oct 2023 09:56:05 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXnnr0cH66nwtk1Tj7odMKSQyAWCezQFMzVe+xa+0Kx1w@mail.gmail.com>
-Message-ID: <CAMuHMdXnnr0cH66nwtk1Tj7odMKSQyAWCezQFMzVe+xa+0Kx1w@mail.gmail.com>
-Subject: Re: [PATCH -next v3 2/2] sunrpc: Use no_printk() in dfprintk*() dummies
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <dai.ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Oct 16, 2023 at 3:09 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> When building NFS with W=1 and CONFIG_WERROR=y, but
-> CONFIG_SUNRPC_DEBUG=n:
->
->     fs/nfs/nfs4proc.c: In function ‘nfs4_proc_create_session’:
->     fs/nfs/nfs4proc.c:9276:19: error: variable ‘ptr’ set but not used [-Werror=unused-but-set-variable]
->      9276 |         unsigned *ptr;
->           |                   ^~~
->       CC      fs/nfs/callback.o
->     fs/nfs/callback.c: In function ‘nfs41_callback_svc’:
->     fs/nfs/callback.c:98:13: error: variable ‘error’ set but not used [-Werror=unused-but-set-variable]
->        98 |         int error;
->           |             ^~~~~
->       CC      fs/nfs/flexfilelayout/flexfilelayout.o
->     fs/nfs/flexfilelayout/flexfilelayout.c: In function ‘ff_layout_io_track_ds_error’:
->     fs/nfs/flexfilelayout/flexfilelayout.c:1230:13: error: variable ‘err’ set but not used [-Werror=unused-but-set-variable]
->      1230 |         int err;
->           |             ^~~
->       CC      fs/nfs/flexfilelayout/flexfilelayoutdev.o
->     fs/nfs/flexfilelayout/flexfilelayoutdev.c: In function ‘nfs4_ff_alloc_deviceid_node’:
->     fs/nfs/flexfilelayout/flexfilelayoutdev.c:55:16: error: variable ‘ret’ set but not used [-Werror=unused-but-set-variable]
->        55 |         int i, ret = -ENOMEM;
->           |                ^~~
->
-> All these are due to variables that are set unconditionally, but are
-> used only when debugging is enabled.
->
-> Fix this by changing the dfprintk*() dummy macros from empty loops to
-> calls to the no_printk() helper.  This informs the compiler that the
-> passed debug parameters are actually used, and enables format specifier
-> checking as a bonus.
->
-> This requires removing the protection by CONFIG_SUNRPC_DEBUG of the
-> declaration of nlmdbg_cookie2a() in fs/lockd/svclock.c, as its reference
-> is now visible to the compiler, but optimized away.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Acked-by: Jeff Layton <jlayton@kernel.org>
+> Back to your earlier point though:
+> 
+> Is a global offset really a non-starter? I can see about doing something
+> per-superblock, but ktime_get_mg_coarse_ts64 should be roughly as cheap
+> as ktime_get_coarse_ts64. I don't see the downside there for the non-
+> multigrain filesystems to call that.
 
-> --- a/include/linux/sunrpc/debug.h
-> +++ b/include/linux/sunrpc/debug.h
-> @@ -67,9 +67,9 @@ do {                                                                  \
->  # define RPC_IFDEBUG(x)                x
->  #else
->  # define ifdebug(fac)          if (0)
-> -# define dfprintk(fac, fmt, ...)       do {} while (0)
-> -# define dfprintk_cont(fac, fmt, ...)  do {} while (0)
-> -# define dfprintk_rcu(fac, fmt, ...)   do {} while (0)
-> +# define dfprintk(fac, fmt, ...)       no_printk(fmt, ##__VA_ARGS__)
-> +# define dfprintk_cont(fac, fmt, ...)  no_printk(fmt, ##__VA_ARGS__)
-> +# define dfprintk_rcu(fac, fmt, ...)   no_printk(fmt, ##__VA_ARGS__)
->  # define RPC_IFDEBUG(x)
->  #endif
+I have to say that this doesn't excite me. This whole thing feels a bit
+hackish. I think that a change version is the way more sane way to go.
 
-I discovered a new build issue related to the use of RPC_IFDEBUG()
-in fs/nfsd/nfsfh.c. So there will be a v4...
+> 
+> On another note: maybe I need to put this behind a Kconfig option
+> initially too?
 
-Gr{oetje,eeting}s,
+So can we for a second consider not introducing fine-grained timestamps
+at all. We let NFSv3 live with the cache problem it's been living with
+forever.
 
-                        Geert
+And for NFSv4 we actually do introduce a proper i_version for all
+filesystems that matter to it.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+What filesystems exactly don't expose a proper i_version and what does
+prevent them from adding one or fixing it?
