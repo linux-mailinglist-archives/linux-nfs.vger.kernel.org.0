@@ -2,52 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4394C7CFB31
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 Oct 2023 15:34:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1A227CFB33
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 Oct 2023 15:35:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345990AbjJSNe4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Oct 2023 09:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34434 "EHLO
+        id S1345991AbjJSNfB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Oct 2023 09:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345979AbjJSNe4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Oct 2023 09:34:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67EACB6
-        for <linux-nfs@vger.kernel.org>; Thu, 19 Oct 2023 06:34:08 -0700 (PDT)
+        with ESMTP id S1345997AbjJSNfA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Oct 2023 09:35:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A480115
+        for <linux-nfs@vger.kernel.org>; Thu, 19 Oct 2023 06:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1697722447;
+        s=mimecast20190719; t=1697722452;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=sQBsXb/cdSmnkTR3Xz2B7T66YuT+o+RY1Du6wnMbFqk=;
-        b=SHQgxFADpH8keaPsNbNs4xQOXShKN3DBdLrTFEFDAylXb0Lp2aSVZWdLr7mWGGmHLYU9Ta
-        PjBZRx0zSSYq0gRIlgQknNxT/Y7HkmQXvnmZhsEIXhvFebTUaA+qXwaQL+HCwKe+Wq2Dnd
-        daoET3ykij1NPbzbOE3eijQ1N80Wqb0=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-553-xuBHKOFRPS-W5Go3sWSIJA-1; Thu, 19 Oct 2023 09:34:02 -0400
-X-MC-Unique: xuBHKOFRPS-W5Go3sWSIJA-1
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Oa3tZ8nEmTQ7g03CpQabtkzzRCmD2YRrHZ3zkA1/K5k=;
+        b=XrwVCwgOWgnToUI9HNRw1LDBPR9pUaFvfZOBcL7AqKDiVXaHx3fR1afliNJjaK58LriW8e
+        0xBS2pBdwsdk6tNNe10DRn5CxxDfmmEiz/ECEPHT322v0Ion8rGdrFVboDqboUIe+1tAjU
+        Ystu0y6+YG+7i93ZSWB1b7PYbfdIjPU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-318-dq82Kc1lPTWwn7pHRHAOhQ-1; Thu, 19 Oct 2023 09:34:04 -0400
+X-MC-Unique: dq82Kc1lPTWwn7pHRHAOhQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4E3DF1C0782B;
-        Thu, 19 Oct 2023 13:34:02 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0A08A88B777;
+        Thu, 19 Oct 2023 13:34:03 +0000 (UTC)
 Received: from bcodding.csb.redhat.com (unknown [10.22.48.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CA6C340C6F7B;
-        Thu, 19 Oct 2023 13:34:01 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8108340C6F7B;
+        Thu, 19 Oct 2023 13:34:02 +0000 (UTC)
 From:   Benjamin Coddington <bcodding@redhat.com>
 To:     trond.myklebust@hammerspace.com, anna@kernel.org
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 0/2] NFSv4 READDIR d_type fixup
-Date:   Thu, 19 Oct 2023 09:33:59 -0400
-Message-ID: <cover.1697722160.git.bcodding@redhat.com>
+Subject: [PATCH v2 1/2] NFSv4: Always ask for type with READDIR
+Date:   Thu, 19 Oct 2023 09:34:00 -0400
+Message-ID: <badc4f7fbd63c19a9f50a7c5c17968db16bebf5f.1697722160.git.bcodding@redhat.com>
+In-Reply-To: <cover.1697722160.git.bcodding@redhat.com>
+References: <cover.1697722160.git.bcodding@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,47 +58,45 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This is a combined posting of two previously posted patches.  The first
-unconditionally adds the type attribute to the list of requested attributes
-for v4 READDIR.  The second patch enables a per-mount modification via sysfs
-of any of the attributes the client will currently decode for v4 READDIR.
+Again we have claimed regressions for walking a directory tree, this time
+with the "find" utility which always tries to optimize away asking for any
+attributes until it has a complete list of entries.  This behavior makes
+the readdir plus heuristic do the wrong thing, which causes a storm of
+GETATTRs to determine each entry's type in order to continue the walk.
 
-The first patch solves a real problem but may cause a performance regression
-for some servers that require extra processing to return inode information
-along with the namespace.  We performed an informal survey of most of the
-major NFSv4 server vendors and although we did not learn of any that may be
-impacted, the potential remains.
+For v4 add the type attribute to each READDIR request to include it no
+matter the heuristic.  This allows a simple `find` command to proceed
+quickly through a directory tree.
 
-The second patch gives us a way to disable this new READDIR behavior should
-we find a serious impact in an existing setup.  I would appreciate serious
-consideration of this patch in light of the number of claimed performance
-regressions that have been reported almost every time we touch this
-sensitive operation on the client.
+Suggested-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfs/nfs4xdr.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-For example:
-
-echo 0x800 0x800000 0x0 > /sys/fs/nfs/0\:57/v4_readdir_attrs
-
-.. will revert the behavior change from patch 1.
-
-Changes on v2:
-	- fix patch 2/2 to compile without CONFIG_NFS_4
-
-Benjamin Coddington (2):
-  NFSv4: Always ask for type with READDIR
-  NFSv4: Allow per-mount tuning of READDIR attrs
-
- fs/nfs/client.c           |  4 ++
- fs/nfs/nfs4client.c       |  4 ++
- fs/nfs/nfs4proc.c         |  1 +
- fs/nfs/nfs4xdr.c          |  9 ++--
- fs/nfs/sysfs.c            | 86 +++++++++++++++++++++++++++++++++++++++
- include/linux/nfs_fs_sb.h |  1 +
- include/linux/nfs_xdr.h   |  1 +
- 7 files changed, 101 insertions(+), 5 deletions(-)
-
-
-base-commit: 401644852d0b2a278811de38081be23f74b5bb04
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index deec76cf5afe..7200d6f7cd7b 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -1602,7 +1602,7 @@ static void encode_read(struct xdr_stream *xdr, const struct nfs_pgio_args *args
+ static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_readdir_arg *readdir, struct rpc_rqst *req, struct compound_hdr *hdr)
+ {
+ 	uint32_t attrs[3] = {
+-		FATTR4_WORD0_RDATTR_ERROR,
++		FATTR4_WORD0_TYPE|FATTR4_WORD0_RDATTR_ERROR,
+ 		FATTR4_WORD1_MOUNTED_ON_FILEID,
+ 	};
+ 	uint32_t dircount = readdir->count;
+@@ -1612,7 +1612,7 @@ static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_readdir_arg
+ 	unsigned int i;
+ 
+ 	if (readdir->plus) {
+-		attrs[0] |= FATTR4_WORD0_TYPE|FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE|
++		attrs[0] |= FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE|
+ 			FATTR4_WORD0_FSID|FATTR4_WORD0_FILEHANDLE|FATTR4_WORD0_FILEID;
+ 		attrs[1] |= FATTR4_WORD1_MODE|FATTR4_WORD1_NUMLINKS|FATTR4_WORD1_OWNER|
+ 			FATTR4_WORD1_OWNER_GROUP|FATTR4_WORD1_RAWDEV|
 -- 
 2.41.0
 
