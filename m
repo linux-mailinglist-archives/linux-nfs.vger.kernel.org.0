@@ -2,55 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 223707D16C0
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Oct 2023 22:06:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F31B07D16D6
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Oct 2023 22:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229723AbjJTUG4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 20 Oct 2023 16:06:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
+        id S230196AbjJTUVm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 20 Oct 2023 16:21:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbjJTUGz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Oct 2023 16:06:55 -0400
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D388ED53
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Oct 2023 13:06:53 -0700 (PDT)
-Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-507962561adso1706936e87.0
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Oct 2023 13:06:53 -0700 (PDT)
+        with ESMTP id S229659AbjJTUVm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 20 Oct 2023 16:21:42 -0400
+Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 185181A4
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Oct 2023 13:21:40 -0700 (PDT)
+Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-99c1c66876aso189595966b.2
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Oct 2023 13:21:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1697832412; x=1698437212; darn=vger.kernel.org;
+        d=linux-foundation.org; s=google; t=1697833298; x=1698438098; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FJwcfh7XT4p/d8xdEQd3o4yb8QA8P7Clkcjdf6k/CEg=;
-        b=EfK/H/GLHx0/aqNqd/ehf8SerD5bueKNAIIvBIi/aGQCOt1XlGC78879l7Zp7buCuL
-         t2CV3kMlUg1OVKtRm9uNuIoRI+jylsojzmhVpdG7jt/RF28GUQkpJqfmQYQpuga5Npo8
-         yLM/mZfrOpsTh504cehZyfwfrx15cTdPW5KAA=
+        bh=XP/w2rcRgohzEDCbF3zAswI8lw4+mMJo52iF5/bT45w=;
+        b=hqc7ea0COAmFv5MZPwSBclL6NfgTYs+tcpUPSzzToCUZ/TwOo0hu4g8a7FGMseXNsd
+         NyABRTQUYO3pBlR8m58SHKKix/tS2Kbetb/DHV2SUb1E2yfgMlnbb6fsD4tQ6kvq4agG
+         rYfEk8Cp6+fRvYnrlk4hLH6JfDTVzKAvswqRg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697832412; x=1698437212;
+        d=1e100.net; s=20230601; t=1697833298; x=1698438098;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FJwcfh7XT4p/d8xdEQd3o4yb8QA8P7Clkcjdf6k/CEg=;
-        b=l8iq9gz4miHja7Uz0pgqvDrELK7TFoDCUsYfQZtqdeiL4prjl1YBehH9taqNuT1Ni+
-         Sf7CIpBUv1NV3S7Vyhty8eD+FpR+T10UCrDrxcyQAy5a8dUWQBAG571jYsFXZ5syV+B5
-         uD2e0rzQqIM1atFKTs/4fn2Iq7kSo98giQsFd/kmuK5wsnzK6wHEptI+joyYiZzlPIR0
-         ju4hZ34xk+qwd4woeCbdPnoiAnoGiyAk9yVvrGYTsmwxgjg+zLlJFu++Nvz+Fgpt0Xmg
-         NDJ3GCWMgGO7HeSBGORZ2DD8kszB7pe7ncuaVv7SCXY2RWnGAWLylx+K3ilEUAjnkzCx
-         VnEA==
-X-Gm-Message-State: AOJu0YwprHtXPqo5o8WtPvv/RjBAfLhhVFwM5Kemee8z7qSP+Nj2ry70
-        q3H2OO7cxp3Ug0c2/Rv6aKEIzIhDDTHB/DcrtIsEoMOx
-X-Google-Smtp-Source: AGHT+IF782Ika21ICove0XiE/1AQXcrV53AylTqhsL7lNZNuU8+BYJwt4n3TlJ511m+EzLn0/9ZOuQ==
-X-Received: by 2002:a05:6512:2098:b0:4fe:ecd:4950 with SMTP id t24-20020a056512209800b004fe0ecd4950mr1728876lfr.1.1697832411949;
-        Fri, 20 Oct 2023 13:06:51 -0700 (PDT)
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com. [209.85.167.44])
-        by smtp.gmail.com with ESMTPSA id m14-20020a056512358e00b00501c673e773sm508173lfr.39.2023.10.20.13.06.51
+        bh=XP/w2rcRgohzEDCbF3zAswI8lw4+mMJo52iF5/bT45w=;
+        b=OEY16AauJGLiB5oN67avStuigNF1XFjZZdnvowPop1HVRad89/ZDIiJpTrmFU78L0V
+         Svx0w/HM92Bbpg6w/hReaBhMuAbAnZSpOPaiwj4W1YQdyjzRzf1HrI4kd1l5UrcQAU5H
+         iVpQ/DWRFM32GmvlwRSDoOMyyXNg+cqCA+6kiG32eouk8IcLa9EpvVDr2NByTqtYkbn6
+         8L5IqLtYzswmvQmqgIyO3hagiblUlU8IH68vQ57B+3qctvdBVTSg1XAt4eDK5xqFTycG
+         q3we/wscVxneILhRiH37SKujI2mmM9hcSW//odMh1dh5407nPTE/BvtaQM0J3xJlvKVq
+         5s/Q==
+X-Gm-Message-State: AOJu0YydbzBZpZ0cxwk9vdHyjBtfSvIxvdvvaMP8nuK2YXrKU2/2jqoG
+        zL5MjyL/AjlUQtkFb/ux0w7gbN52VQS5Ef24T5UPv3+e
+X-Google-Smtp-Source: AGHT+IGczATG+ewhSJ8yx7OBsgekZgwyUakCZoG0ool7fgnY2jXysi1cWEnKsyKsLXk/91YIJTDyNg==
+X-Received: by 2002:a17:907:9495:b0:9a5:b878:7336 with SMTP id dm21-20020a170907949500b009a5b8787336mr2098616ejc.7.1697833298431;
+        Fri, 20 Oct 2023 13:21:38 -0700 (PDT)
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com. [209.85.208.42])
+        by smtp.gmail.com with ESMTPSA id i26-20020a17090671da00b0098e34446464sm2149414ejk.25.2023.10.20.13.21.38
         for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 20 Oct 2023 13:06:51 -0700 (PDT)
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-507962561adso1706895e87.0
-        for <linux-nfs@vger.kernel.org>; Fri, 20 Oct 2023 13:06:51 -0700 (PDT)
-X-Received: by 2002:a17:907:c1f:b0:9ba:65e:752b with SMTP id
- ga31-20020a1709070c1f00b009ba065e752bmr2061794ejc.39.1697832390868; Fri, 20
- Oct 2023 13:06:30 -0700 (PDT)
+        Fri, 20 Oct 2023 13:21:38 -0700 (PDT)
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-522bd411679so1837595a12.0
+        for <linux-nfs@vger.kernel.org>; Fri, 20 Oct 2023 13:21:38 -0700 (PDT)
+X-Received: by 2002:a17:907:7e9e:b0:9ae:50e3:7e40 with SMTP id
+ qb30-20020a1709077e9e00b009ae50e37e40mr2195962ejc.52.1697833276793; Fri, 20
+ Oct 2023 13:21:16 -0700 (PDT)
 MIME-Version: 1.0
 References: <20231018-mgtime-v1-0-4a7a97b1f482@kernel.org> <20231018-mgtime-v1-2-4a7a97b1f482@kernel.org>
  <CAHk-=wixObEhBXM22JDopRdt7Z=tGGuizq66g4RnUmG9toA2DA@mail.gmail.com>
@@ -59,11 +59,12 @@ References: <20231018-mgtime-v1-0-4a7a97b1f482@kernel.org> <20231018-mgtime-v1-2
  <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
  <20231019-fluor-skifahren-ec74ceb6c63e@brauner> <0a1a847af4372e62000b259e992850527f587205.camel@kernel.org>
  <ZTGncMVw19QVJzI6@dread.disaster.area> <eb3b9e71ee9c6d8e228b0927dec3ac9177b06ec6.camel@kernel.org>
-In-Reply-To: <eb3b9e71ee9c6d8e228b0927dec3ac9177b06ec6.camel@kernel.org>
+ <CAHk-=wjma9_TSwXosG7GBXQaZ465VH1t4a4iQ8J=PFpE=4bhVA@mail.gmail.com>
+In-Reply-To: <CAHk-=wjma9_TSwXosG7GBXQaZ465VH1t4a4iQ8J=PFpE=4bhVA@mail.gmail.com>
 From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 20 Oct 2023 13:06:13 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjma9_TSwXosG7GBXQaZ465VH1t4a4iQ8J=PFpE=4bhVA@mail.gmail.com>
-Message-ID: <CAHk-=wjma9_TSwXosG7GBXQaZ465VH1t4a4iQ8J=PFpE=4bhVA@mail.gmail.com>
+Date:   Fri, 20 Oct 2023 13:20:59 -0700
+X-Gmail-Original-Message-ID: <CAHk-=whrB++OBZ9nO72QjLnWuSQxee69JQp7mo3cwDiaS6tTLw@mail.gmail.com>
+Message-ID: <CAHk-=whrB++OBZ9nO72QjLnWuSQxee69JQp7mo3cwDiaS6tTLw@mail.gmail.com>
 Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
  timestamp handing
 To:     Jeff Layton <jlayton@kernel.org>
@@ -99,27 +100,25 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 20 Oct 2023 at 05:12, Jeff Layton <jlayton@kernel.org> wrote:.
+On Fri, 20 Oct 2023 at 13:06, Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
 >
-> I'd _really_ like to see a proper change counter added before it's
-> merged, or at least space in the on-disk inode reserved for one until we
-> can get it plumbed in.
+> So on reboot, the inode would count as "changed" as far any remote
+> user is concerned. [..]
 
-Hmm. Can we not perhaps just do an in-memory change counter, and try
-to initialize it to a random value when instantiating an inode? Do we
-even *require* on-disk format changes?
+Obviously, not just reboot would do that. Any kind of "it's no longer
+cached on the server and gets read back from disk" would do the same
+thing.
 
-So on reboot, the inode would count as "changed" as far any remote
-user is concerned. It would flush client caches, but isn't that what
-you'd want anyway? I'd hate to waste lots of memory, but maybe people
-would be ok with just a 32-bit random value. And if not...
+Again, that may not work for the intended purpose, but if the use-case
+is a "same version number means no changes", it might be acceptable?
+Even if you then could get spurious version changes when the file
+hasn't been accessed in a long time?
 
-But I actually came into this whole discussion purely through the
-inode timestamp side, so I may *entirely* miss what the change counter
-requirements for NFSd actually are. If it needs to be stable across
-reboots, my idea is clearly complete garbage.
+Maybe all this together with with some ctime filtering ("old ctime
+clealy means that the version number is irrelevant"). After all, the
+whole point of fine-grained timestamps was to distinguish *frequent*
+changes. An in-memory counter certainly does that even without any
+on-disk representation..
 
-You can now all jump on me and point out my severe intellectual
-limitations. Please use small words when you do ;)
-
-              Linus
+               Linus
