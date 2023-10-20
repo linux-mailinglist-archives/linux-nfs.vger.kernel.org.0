@@ -2,174 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B0CA7D04F7
-	for <lists+linux-nfs@lfdr.de>; Fri, 20 Oct 2023 00:41:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DD277D05BC
+	for <lists+linux-nfs@lfdr.de>; Fri, 20 Oct 2023 02:16:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346641AbjJSWlQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 Oct 2023 18:41:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58110 "EHLO
+        id S1346734AbjJTAQs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 Oct 2023 20:16:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233286AbjJSWlP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Oct 2023 18:41:15 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88482FA;
-        Thu, 19 Oct 2023 15:41:13 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBA01C433C7;
-        Thu, 19 Oct 2023 22:41:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1697755273;
-        bh=QrXcJSvkmaQhGlxDlCzTaTqOEgDsZKKUGEg6yjmzxzg=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=tr1q75UNywUIX/G6rnqagELNuFJwsL6pDbS6FlXWZlik9RgUeQusLFYc5diqKK9ql
-         mPjhMDQEuo8T1/QLme8z+3R0ZkNkPifdGSSwtsihpkHyjk8zrZ4bs4nfZMqb+RYomH
-         XCkUotEhvIKc70pvPqo7Hn7c9pK+iaGc8QakV7aEv9AkvvYxFRdoJPJC08VvICsx7O
-         wI8hLrYDRlOYjC4B7ldOO0oIL1GWcH7h16/zWoqPqjyZPVhwwvj37JF480Bx7XLNLq
-         eMckjH8mw2HavbZ1wfJqhXhq/euFpxU2lvg6uyIVp1VQNmfOE2UgS+b6AWTZyRGyjS
-         FrUgtEfZHaF+w==
-Message-ID: <69b627f565d6ca92182b7100cd1178a28646eef0.camel@kernel.org>
-Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
- timestamp handing
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        John Stultz <jstultz@google.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
-        David Howells <dhowells@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org
-Date:   Thu, 19 Oct 2023 18:41:09 -0400
-In-Reply-To: <87o7gu2rxw.ffs@tglx>
-References: <87o7gu2rxw.ffs@tglx>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        with ESMTP id S1346721AbjJTAQr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 Oct 2023 20:16:47 -0400
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDC3126;
+        Thu, 19 Oct 2023 17:16:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1697761004; x=1729297004;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BqX6CmbZGsKDvvqm0PW9nz8RCwYq9ztprkqxDl3ZOck=;
+  b=LJhyPxuxztWMU4N4fFVzKQQT97LJfdhAgDFjAnq5xwy+e7XE0kJnE4BZ
+   Lluna8QPyda37PE2IpiVB6UeN1PlJCGvte1mrY42xDHodSpVCT2q880PL
+   JnUY63ZYhMECDI5TA7lRnWUkdIweBD2T+78KHNXk4cywUGwRownkHrCAT
+   jvgCVtoxvy8xD9mJdmuTynTRKnUZxoqnnail3C7UFaO589i3AW+0/R6En
+   6Ij/wMxhVUL0NPgULX49jxOvzZAN0z/tiqlPLBmRuOOuqRhXTPi2svPgY
+   PB3QueYOlDQ6Bo5SZxHIggtTjVK/EnhcSDprPzzAI44jXrYPzJbDBAtdy
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10868"; a="389260753"
+X-IronPort-AV: E=Sophos;i="6.03,238,1694761200"; 
+   d="scan'208";a="389260753"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Oct 2023 17:16:44 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10868"; a="847897226"
+X-IronPort-AV: E=Sophos;i="6.03,238,1694761200"; 
+   d="scan'208";a="847897226"
+Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Oct 2023 17:16:36 -0700
+Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qtdBq-0002lg-27;
+        Fri, 20 Oct 2023 00:16:34 +0000
+Date:   Fri, 20 Oct 2023 08:15:44 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: Re: [PATCH -next v2] sunrpc: Use no_printk() in dfprintk*() dummies
+Message-ID: <202310200734.I6x6UCe1-lkp@intel.com>
+References: <a93de2e8afa826745746b00fc5f64e513df5d52f.1697104757.git.geert+renesas@glider.be>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a93de2e8afa826745746b00fc5f64e513df5d52f.1697104757.git.geert+renesas@glider.be>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-10-20 at 00:00 +0200, Thomas Gleixner wrote:
-> Jeff!
->=20
-> On Wed, Oct 18 2023 at 13:41, Jeff Layton wrote:
-> > +void ktime_get_mg_fine_ts64(struct timespec64 *ts)
-> > +{
-> > +	struct timekeeper *tk =3D &tk_core.timekeeper;
-> > +	unsigned long flags;
-> > +	u32 nsecs;
-> > +
-> > +	WARN_ON(timekeeping_suspended);
-> > +
-> > +	raw_spin_lock_irqsave(&timekeeper_lock, flags);
-> > +	write_seqcount_begin(&tk_core.seq);
->=20
-> Depending on the usage scenario, this will end up as a scalability issue
-> which affects _all_ of timekeeping.
->=20
-> The usage of timekeeper_lock and the sequence count has been carefully
-> crafted to be as non-contended as possible. We went a great length to
-> optimize that because the ktime_get*() functions are really hotpath all
-> over the place.
->=20
+Hi Geert,
 
-> Exposing such an interface which wreckages that is a recipe for disaster
-> down the road. It might be a non-issue today, but once we hit the
-> bottleneck of that global lock, we are up the creek without a
-> paddle.
->=20
+kernel test robot noticed the following build errors:
 
-Thanks for taking the explanation, Thomas. That's understandable, and
-that was my main worry with this set. I'll look at doing this another
-way given your feedback. I just started by plumbing this into the
-timekeeping code since that seemed like the most obvious place to do it.
+[auto build test ERROR on next-20231016]
 
-I think it's probably still possible to do this by caching the values
-returned by the timekeeper at the vfs layer, but there seems to be some
-reticence to the basic idea that I don't quite understand yet.
+url:    https://github.com/intel-lab-lkp/linux/commits/Geert-Uytterhoeven/sunrpc-Use-no_printk-in-dfprintk-dummies/20231017-104813
+base:   next-20231016
+patch link:    https://lore.kernel.org/r/a93de2e8afa826745746b00fc5f64e513df5d52f.1697104757.git.geert%2Brenesas%40glider.be
+patch subject: [PATCH -next v2] sunrpc: Use no_printk() in dfprintk*() dummies
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20231020/202310200734.I6x6UCe1-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231020/202310200734.I6x6UCe1-lkp@intel.com/reproduce)
 
-> Well not really, but all we can do then is fall back to
-> ktime_get_real(). So let me ask the obvious question:
->=20
->      Why don't we do that right away?
->=20
-> Many moons ago when we added ktime_get_real_coarse() the main reason was
-> that reading the time from the underlying hardware was insanely
-> expensive.
->=20
-> Many moons later this is not true anymore, except for the stupid case
-> where the BIOS wreckaged the TSC, but that's a hopeless case for
-> performance no matter what. Optimizing for that would be beyond stupid.
->=20
-> I'm well aware that ktime_get_real_coarse() is still faster than
-> ktime_get_real() in micro-benchmarks, i.e. 5ns vs. 15ns on the four
-> years old laptop I'm writing this.
->=20
-> Many moons ago it was in the ballpark of 40ns vs. 5us due to TSC being
-> useless and even TSC read was way more expensive (factor 8-10x IIRC) in
-> comparison. That really mattered for FS, but does todays overhead still
-> make a difference in the real FS use case scenario?
->=20
-> I'm not in the position of running meaningful FS benchmarks to analyze
-> that, but I think the delta between ktime_get_real_coarse() and
-> ktime_get_real() on contemporary hardware is small enough that it
-> justifies this question.
->=20
-> The point is that both functions have pretty much the same D-cache
-> pattern because they access the same data in the very same
-> cacheline. The only difference is the actual TSC read and the extra
-> conversion, but that's it. The TSC read has been massively optimized by
-> the CPU vendors. I know that the ARM64 counter has been optimized too,
-> though I have no idea about PPC64 and S390, but I would be truly
-> surprised if they didn't optimize the hell out of it because time read
-> is really used heavily both in kernel and user space.
->=20
-> Does anyone have numbers on contemporary hardware to shed some light on
-> that in the context of FS and the problem at hand?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202310200734.I6x6UCe1-lkp@intel.com/
 
-That was sort of my suspicion and it's good to have confirmation that
-fetching a fine-grained timespec64 from the timekeeper is cheap. It
-looked that way when I was poking around in there, but I wasn't sure
-whether it was always the case.
+All errors (new ones prefixed by >>):
 
-It turns out however that the main benefit of using a coarse-grained
-timestamp is that it allows the file system to skip a lot of inode
-metadata updates.
+   In file included from include/linux/kernel.h:31,
+                    from arch/x86/include/asm/percpu.h:27,
+                    from arch/x86/include/asm/current.h:10,
+                    from include/linux/sched.h:12,
+                    from include/linux/sunrpc/svcauth_gss.h:12,
+                    from fs/nfsd/nfsfh.c:13:
+   fs/nfsd/nfsfh.c: In function 'nfsd_setuser_and_check_port':
+>> fs/nfsd/nfsfh.c:111:47: error: 'buf' undeclared (first use in this function)
+     111 |                         svc_print_addr(rqstp, buf, sizeof(buf)));
+         |                                               ^~~
+   include/linux/printk.h:427:33: note: in definition of macro 'printk_index_wrap'
+     427 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                                 ^~~~~~~~~~~
+   include/linux/printk.h:129:17: note: in expansion of macro 'printk'
+     129 |                 printk(fmt, ##__VA_ARGS__);             \
+         |                 ^~~~~~
+   include/linux/sunrpc/debug.h:70:41: note: in expansion of macro 'no_printk'
+      70 | # define dfprintk(fac, fmt, ...)        no_printk(fmt, ##__VA_ARGS__)
+         |                                         ^~~~~~~~~
+   include/linux/sunrpc/debug.h:25:9: note: in expansion of macro 'dfprintk'
+      25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+         |         ^~~~~~~~
+   fs/nfsd/nfsfh.c:110:17: note: in expansion of macro 'dprintk'
+     110 |                 dprintk("nfsd: request from insecure port %s!\n",
+         |                 ^~~~~~~
+   fs/nfsd/nfsfh.c:111:47: note: each undeclared identifier is reported only once for each function it appears in
+     111 |                         svc_print_addr(rqstp, buf, sizeof(buf)));
+         |                                               ^~~
+   include/linux/printk.h:427:33: note: in definition of macro 'printk_index_wrap'
+     427 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
+         |                                 ^~~~~~~~~~~
+   include/linux/printk.h:129:17: note: in expansion of macro 'printk'
+     129 |                 printk(fmt, ##__VA_ARGS__);             \
+         |                 ^~~~~~
+   include/linux/sunrpc/debug.h:70:41: note: in expansion of macro 'no_printk'
+      70 | # define dfprintk(fac, fmt, ...)        no_printk(fmt, ##__VA_ARGS__)
+         |                                         ^~~~~~~~~
+   include/linux/sunrpc/debug.h:25:9: note: in expansion of macro 'dfprintk'
+      25 |         dfprintk(FACILITY, fmt, ##__VA_ARGS__)
+         |         ^~~~~~~~
+   fs/nfsd/nfsfh.c:110:17: note: in expansion of macro 'dprintk'
+     110 |                 dprintk("nfsd: request from insecure port %s!\n",
+         |                 ^~~~~~~
 
-The way it works today is that when we go to update the timestamp on an
-inode, we check whether they have made any visible change, and we dirty
-the inode metadata if so. This means that we only really update the
-inode on disk once per jiffy or so when an inode is under heavy writes.
 
-The idea with this set is to only use fine-grained timestamps when
-someone is actively fetching them via getattr. When the mtime or ctime
-is viewed via getattr, we mark the inode and then the following
-timestamp update will get a fine-grained timestamp (unless the coarse-
-grained clock has already ticked).
+vim +/buf +111 fs/nfsd/nfsfh.c
 
-That allows us to keep the number of inode updates down to a bare
-minimum, but still allows an observer to always see a change in the
-timestamp when there have been changes to the inode.
+9d7ed1355db5b0 J. Bruce Fields 2018-03-08  101  
+6fa02839bf9412 J. Bruce Fields 2007-11-12  102  static __be32 nfsd_setuser_and_check_port(struct svc_rqst *rqstp,
+6fa02839bf9412 J. Bruce Fields 2007-11-12  103  					  struct svc_export *exp)
+6fa02839bf9412 J. Bruce Fields 2007-11-12  104  {
+12045a6ee9908b J. Bruce Fields 2009-12-08  105  	int flags = nfsexp_flags(rqstp, exp);
+12045a6ee9908b J. Bruce Fields 2009-12-08  106  
+6fa02839bf9412 J. Bruce Fields 2007-11-12  107  	/* Check if the request originated from a secure port. */
+9d7ed1355db5b0 J. Bruce Fields 2018-03-08  108  	if (!nfsd_originating_port_ok(rqstp, flags)) {
+5216a8e70e25b0 Pavel Emelyanov 2008-02-21  109  		RPC_IFDEBUG(char buf[RPC_MAX_ADDRBUFLEN]);
+a48fd0f9f77b6e Kinglong Mee    2014-05-29  110  		dprintk("nfsd: request from insecure port %s!\n",
+6fa02839bf9412 J. Bruce Fields 2007-11-12 @111  		        svc_print_addr(rqstp, buf, sizeof(buf)));
+6fa02839bf9412 J. Bruce Fields 2007-11-12  112  		return nfserr_perm;
+6fa02839bf9412 J. Bruce Fields 2007-11-12  113  	}
+6fa02839bf9412 J. Bruce Fields 2007-11-12  114  
+6fa02839bf9412 J. Bruce Fields 2007-11-12  115  	/* Set user creds for this exportpoint */
+6fa02839bf9412 J. Bruce Fields 2007-11-12  116  	return nfserrno(nfsd_setuser(rqstp, exp));
+6fa02839bf9412 J. Bruce Fields 2007-11-12  117  }
+6fa02839bf9412 J. Bruce Fields 2007-11-12  118  
 
-Thanks again for the review! For the next iteration I (probably) won't
-need to touch the timekeeper.
---=20
-Jeff Layton <jlayton@kernel.org>
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
