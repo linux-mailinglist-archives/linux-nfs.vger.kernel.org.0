@@ -2,63 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B8DCC7D284A
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 04:11:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 49E467D284B
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 04:11:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233005AbjJWCLk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 22 Oct 2023 22:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
+        id S233046AbjJWCLp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 22 Oct 2023 22:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjJWCLk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Oct 2023 22:11:40 -0400
+        with ESMTP id S229470AbjJWCLo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Oct 2023 22:11:44 -0400
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C907F13E
-        for <linux-nfs@vger.kernel.org>; Sun, 22 Oct 2023 19:11:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6032490
+        for <linux-nfs@vger.kernel.org>; Sun, 22 Oct 2023 19:11:42 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 68F9F1FE03;
-        Mon, 23 Oct 2023 02:11:36 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 0DD7E1FE03;
+        Mon, 23 Oct 2023 02:11:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1698027096; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=L+2DbS9ETwwn4kXdY99WXBjEX7pvEjn4ZAWI1SxyffE=;
-        b=cGs1hvJkO0Rncsf89ifZNLhwlV4k1WqUDCTzRtOA9QwspkqjqqpCVh6ARMIj94yDGm0WP2
-        DyNZ9KbsrZkGNg6rs5VyZqcc3dKzePSe3PfRHj9E3upuG1OXovFs7nPtkIVj6+mOierDq2
-        KyMbIUE1t//0UozOj4KC9182awBUT6k=
+        t=1698027101; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wp0WlWrHsij9v1ELwAOMtktOa0wyT2s2v9GtDArTVP8=;
+        b=tRzQYpmkqRky2iLdpRQRafeL0vw6T7w4MZ0BrNA41vsptrowCs2PwrE0/lXSARc8p4mtax
+        86hI09OpWhtre2UwDq3tl2Q4a0o1NVJbbCBdvVinFkaPDG45ncEVnooo/eiw58hZzyY0R8
+        93APs1kjT0OUemI0P4+GuGqYymnBLe4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1698027096;
+        s=susede2_ed25519; t=1698027101;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=L+2DbS9ETwwn4kXdY99WXBjEX7pvEjn4ZAWI1SxyffE=;
-        b=5FDuoDE6fgIG1fFtfVTm7vX/Je5gVZAHppdtK62w7W3Pa/41bdzgTtqXwD9MEjMg2aVN1x
-        47wG0K+6wZU6oCAg==
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wp0WlWrHsij9v1ELwAOMtktOa0wyT2s2v9GtDArTVP8=;
+        b=yyiBD8YPpZBz6SUWp1FV1Y3THe+YmuMrENDjgA9BUk5d56HMo/5OKs1RDPMM9h8SX4/4w6
+        IoqCBfHAvLXk9zBQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3EB10132FD;
-        Mon, 23 Oct 2023 02:11:34 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D5638132FD;
+        Mon, 23 Oct 2023 02:11:39 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id SSrHOVbWNWVebwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 23 Oct 2023 02:11:34 +0000
+        id 5UARI1vWNWVlbwAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 23 Oct 2023 02:11:39 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <steved@redhat.com>
 Cc:     linux-nfs@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 0/6 nfs-utils v2] fixes for error handling in nfsd_fh
-Date:   Mon, 23 Oct 2023 12:58:30 +1100
-Message-ID: <20231023021052.5258-1-neilb@suse.de>
+Subject: [PATCH 1/6] export: fix handling of error from match_fsid()
+Date:   Mon, 23 Oct 2023 12:58:31 +1100
+Message-ID: <20231023021052.5258-2-neilb@suse.de>
 X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20231023021052.5258-1-neilb@suse.de>
+References: <20231023021052.5258-1-neilb@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Authentication-Results: smtp-out2.suse.de;
         none
 X-Spam-Level: 
-X-Spam-Score: -2.10
-X-Spamd-Result: default: False [-2.10 / 50.00];
+X-Spam-Score: 0.79
+X-Spamd-Result: default: False [0.79 / 50.00];
          ARC_NA(0.00)[];
          RCVD_VIA_SMTP_AUTH(0.00)[];
          FROM_HAS_DN(0.00)[];
@@ -76,7 +82,7 @@ X-Spamd-Result: default: False [-2.10 / 50.00];
          MIME_TRACE(0.00)[0:+];
          RCVD_COUNT_TWO(0.00)[2];
          RCVD_TLS_ALL(0.00)[];
-         BAYES_HAM(-3.00)[100.00%]
+         BAYES_HAM(-0.11)[66.16%]
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -86,47 +92,37 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
- this is a revised version of my previous series with the same name.
- This first two patches are unchanged.
- The third patch, which was an RFC, has been replaced with the last
- patch which actually addresses the issue rather than skirting 
- around it.
+If match_fsid() returns -1 we shouldn't assume that the path definitely
+doesn't match the fsid, though it might not.
+This is a similar situation to where an export is expected to be a mount
+point, but is found not to be one.  So it can be handled the same way,
+by setting 'dev_missing'.
+This will only have an effect if no other path matched the fsid, which
+is what we want.
 
- Patch 3 here is a revert of a change I noticed while exploring the
- code.  cache_open() must be called BEFORE forking workers, as explained
- in that patch.
- Patches 4 and 5 factor our common code which makes the final patch
- simpler.
+The current code results in nothing being exported if any export point,
+or any mount point beneath a crossmnt export point, fails a 'stat'
+request, which is too harsh.
 
- The core issue is that sometimes mountd (or exportd) cannot give a
- definitey "yes" or "no" to a request to map an fsid to a path name.
- In these cases the only safe option is to delay and try again.
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ support/export/cache.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- This only becomes relevant if a filesystem is mounted by a client, then
- the server restarts (or the export cache is flushed) and the client
- tries to use a filehandle that it already has, but that server cannot
- find it and cannot be sure it doesn't exist.  This can happen when an
- export is marked "mountpoint" or when a re-exported NFS filesystem
- cannot contact the server and reports an ETIMEDOUT error.  In these
- cases we want the client to continue waiting (which it does) and also
- want mountd/exportd to periodically check if the target filesystem has
- come back (which it currently does not).  
- With the current code, once this situation happens and the client is
- waiting, the client will continue to wait indefintely even if the
- target filesytem becomes available.  The client can only continue if
- the NFS server is restarted or the export cache is flushed.  After the
- ptsch, then within 2 minutes of the target filesystem becoming
- available again, mountd will tell the kernel and when the client asks
- again it will get be allowed to proceed.
-
-NeilBrown
-
-
- [PATCH 1/6] export: fix handling of error from match_fsid()
- [PATCH 2/6] export: add EACCES to the list of known
- [PATCH 3/6] export: move cache_open() before workers are forked.
- [PATCH 4/6] Move fork_workers() and wait_for_workers() in cache.c
- [PATCH 5/6] Share process_loop code between mountd and exportd.
- [PATCH 6/6] cache: periodically retry requests that couldn't be
+diff --git a/support/export/cache.c b/support/export/cache.c
+index 19bbba556060..e4595020f43f 100644
+--- a/support/export/cache.c
++++ b/support/export/cache.c
+@@ -858,7 +858,8 @@ static void nfsd_fh(int f)
+ 			case 0:
+ 				continue;
+ 			case -1:
+-				goto out;
++				dev_missing ++;
++				continue;
+ 			}
+ 			if (is_ipaddr_client(dom)
+ 					&& !ipaddr_client_matches(exp, ai))
+-- 
+2.42.0
 
