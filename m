@@ -2,160 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 540E27D2813
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 03:40:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8DCC7D284A
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 04:11:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232989AbjJWBkZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 22 Oct 2023 21:40:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53746 "EHLO
+        id S233005AbjJWCLk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 22 Oct 2023 22:11:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjJWBkY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Oct 2023 21:40:24 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21035F7;
-        Sun, 22 Oct 2023 18:40:22 -0700 (PDT)
-Received: from dggpemm500014.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4SDHqv27F1z15Nhw;
-        Mon, 23 Oct 2023 09:37:31 +0800 (CST)
-Received: from huawei.com (10.67.108.248) by dggpemm500014.china.huawei.com
- (7.185.36.153) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.31; Mon, 23 Oct
- 2023 09:40:19 +0800
-From:   felix <fuzhen5@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>,
-        <chuck.lever@oracle.com>
-CC:     <jlayton@kernel.org>, <neilb@suse.de>, <kolga@netapp.com>,
-        <Dai.Ngo@oracle.com>, <davem@davemloft.net>, <tom@talpey.com>,
-        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-        <skinsbursky@parallels.com>, <linux-nfs@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-Subject: [PATCH -next] SUNRPC: Fix RPC client cleaned up the freed pipefs dentries
-Date:   Mon, 23 Oct 2023 09:40:19 +0800
-Message-ID: <20231023014019.886496-1-fuzhen5@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229470AbjJWCLk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Oct 2023 22:11:40 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C907F13E
+        for <linux-nfs@vger.kernel.org>; Sun, 22 Oct 2023 19:11:37 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 68F9F1FE03;
+        Mon, 23 Oct 2023 02:11:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1698027096; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=L+2DbS9ETwwn4kXdY99WXBjEX7pvEjn4ZAWI1SxyffE=;
+        b=cGs1hvJkO0Rncsf89ifZNLhwlV4k1WqUDCTzRtOA9QwspkqjqqpCVh6ARMIj94yDGm0WP2
+        DyNZ9KbsrZkGNg6rs5VyZqcc3dKzePSe3PfRHj9E3upuG1OXovFs7nPtkIVj6+mOierDq2
+        KyMbIUE1t//0UozOj4KC9182awBUT6k=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1698027096;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=L+2DbS9ETwwn4kXdY99WXBjEX7pvEjn4ZAWI1SxyffE=;
+        b=5FDuoDE6fgIG1fFtfVTm7vX/Je5gVZAHppdtK62w7W3Pa/41bdzgTtqXwD9MEjMg2aVN1x
+        47wG0K+6wZU6oCAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3EB10132FD;
+        Mon, 23 Oct 2023 02:11:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id SSrHOVbWNWVebwAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 23 Oct 2023 02:11:34 +0000
+From:   NeilBrown <neilb@suse.de>
+To:     Steve Dickson <steved@redhat.com>
+Cc:     linux-nfs@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Subject: [PATCH 0/6 nfs-utils v2] fixes for error handling in nfsd_fh
+Date:   Mon, 23 Oct 2023 12:58:30 +1100
+Message-ID: <20231023021052.5258-1-neilb@suse.de>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.108.248]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500014.china.huawei.com (7.185.36.153)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out2.suse.de;
+        none
+X-Spam-Level: 
+X-Spam-Score: -2.10
+X-Spamd-Result: default: False [-2.10 / 50.00];
+         ARC_NA(0.00)[];
+         RCVD_VIA_SMTP_AUTH(0.00)[];
+         FROM_HAS_DN(0.00)[];
+         RCPT_COUNT_THREE(0.00)[3];
+         TO_DN_SOME(0.00)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         MIME_GOOD(-0.10)[text/plain];
+         R_MISSING_CHARSET(2.50)[];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_HAM_LONG(-3.00)[-1.000];
+         DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+         NEURAL_HAM_SHORT(-1.00)[-1.000];
+         MID_CONTAINS_FROM(1.00)[];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         RCVD_COUNT_TWO(0.00)[2];
+         RCVD_TLS_ALL(0.00)[];
+         BAYES_HAM(-3.00)[100.00%]
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-RPC client pipefs dentries cleanup is in separated rpc_remove_pipedir()
-workqueue,which takes care about pipefs superblock locking.
-In some special scenarios, when kernel frees the pipefs sb of the
-current client and immediately alloctes a new pipefs sb,
-rpc_remove_pipedir function would misjudge the existence of pipefs
-sb which is not the one it used to hold. As a result,
-the rpc_remove_pipedir would clean the released freed pipefs dentries.
+Hi,
+ this is a revised version of my previous series with the same name.
+ This first two patches are unchanged.
+ The third patch, which was an RFC, has been replaced with the last
+ patch which actually addresses the issue rather than skirting 
+ around it.
 
-To fix this issue, rpc_remove_pipedir should check whether the
-current pipefs sb is consistent with the original pipefs sb.
+ Patch 3 here is a revert of a change I noticed while exploring the
+ code.  cache_open() must be called BEFORE forking workers, as explained
+ in that patch.
+ Patches 4 and 5 factor our common code which makes the final patch
+ simpler.
 
-This error can be catched by KASAN:
-=========================================================
-[  250.497700] BUG: KASAN: slab-use-after-free in dget_parent+0x195/0x200
-[  250.498315] Read of size 4 at addr ffff88800a2ab804 by task kworker/0:18/106503
-[  250.500549] Workqueue: events rpc_free_client_work
-[  250.501001] Call Trace:
-[  250.502880]  kasan_report+0xb6/0xf0
-[  250.503209]  ? dget_parent+0x195/0x200
-[  250.503561]  dget_parent+0x195/0x200
-[  250.503897]  ? __pfx_rpc_clntdir_depopulate+0x10/0x10
-[  250.504384]  rpc_rmdir_depopulate+0x1b/0x90
-[  250.504781]  rpc_remove_client_dir+0xf5/0x150
-[  250.505195]  rpc_free_client_work+0xe4/0x230
-[  250.505598]  process_one_work+0x8ee/0x13b0
-...
-[   22.039056] Allocated by task 244:
-[   22.039390]  kasan_save_stack+0x22/0x50
-[   22.039758]  kasan_set_track+0x25/0x30
-[   22.040109]  __kasan_slab_alloc+0x59/0x70
-[   22.040487]  kmem_cache_alloc_lru+0xf0/0x240
-[   22.040889]  __d_alloc+0x31/0x8e0
-[   22.041207]  d_alloc+0x44/0x1f0
-[   22.041514]  __rpc_lookup_create_exclusive+0x11c/0x140
-[   22.041987]  rpc_mkdir_populate.constprop.0+0x5f/0x110
-[   22.042459]  rpc_create_client_dir+0x34/0x150
-[   22.042874]  rpc_setup_pipedir_sb+0x102/0x1c0
-[   22.043284]  rpc_client_register+0x136/0x4e0
-[   22.043689]  rpc_new_client+0x911/0x1020
-[   22.044057]  rpc_create_xprt+0xcb/0x370
-[   22.044417]  rpc_create+0x36b/0x6c0
-...
-[   22.049524] Freed by task 0:
-[   22.049803]  kasan_save_stack+0x22/0x50
-[   22.050165]  kasan_set_track+0x25/0x30
-[   22.050520]  kasan_save_free_info+0x2b/0x50
-[   22.050921]  __kasan_slab_free+0x10e/0x1a0
-[   22.051306]  kmem_cache_free+0xa5/0x390
-[   22.051667]  rcu_core+0x62c/0x1930
-[   22.051995]  __do_softirq+0x165/0x52a
-[   22.052347]
-[   22.052503] Last potentially related work creation:
-[   22.052952]  kasan_save_stack+0x22/0x50
-[   22.053313]  __kasan_record_aux_stack+0x8e/0xa0
-[   22.053739]  __call_rcu_common.constprop.0+0x6b/0x8b0
-[   22.054209]  dentry_free+0xb2/0x140
-[   22.054540]  __dentry_kill+0x3be/0x540
-[   22.054900]  shrink_dentry_list+0x199/0x510
-[   22.055293]  shrink_dcache_parent+0x190/0x240
-[   22.055703]  do_one_tree+0x11/0x40
-[   22.056028]  shrink_dcache_for_umount+0x61/0x140
-[   22.056461]  generic_shutdown_super+0x70/0x590
-[   22.056879]  kill_anon_super+0x3a/0x60
-[   22.057234]  rpc_kill_sb+0x121/0x200
+ The core issue is that sometimes mountd (or exportd) cannot give a
+ definitey "yes" or "no" to a request to map an fsid to a path name.
+ In these cases the only safe option is to delay and try again.
 
-Fixes: 0157d021d23a ("SUNRPC: handle RPC client pipefs dentries by network namespace aware routines")
-Signed-off-by: felix <fuzhen5@huawei.com>
----
- include/linux/sunrpc/clnt.h | 1 +
- net/sunrpc/clnt.c           | 5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+ This only becomes relevant if a filesystem is mounted by a client, then
+ the server restarts (or the export cache is flushed) and the client
+ tries to use a filehandle that it already has, but that server cannot
+ find it and cannot be sure it doesn't exist.  This can happen when an
+ export is marked "mountpoint" or when a re-exported NFS filesystem
+ cannot contact the server and reports an ETIMEDOUT error.  In these
+ cases we want the client to continue waiting (which it does) and also
+ want mountd/exportd to periodically check if the target filesystem has
+ come back (which it currently does not).  
+ With the current code, once this situation happens and the client is
+ waiting, the client will continue to wait indefintely even if the
+ target filesytem becomes available.  The client can only continue if
+ the NFS server is restarted or the export cache is flushed.  After the
+ ptsch, then within 2 minutes of the target filesystem becoming
+ available again, mountd will tell the kernel and when the client asks
+ again it will get be allowed to proceed.
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index af7358277f1c..e9d4377d03c6 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -92,6 +92,7 @@ struct rpc_clnt {
- 	};
- 	const struct cred	*cl_cred;
- 	unsigned int		cl_max_connect; /* max number of transports not to the same IP */
-+	struct super_block *pipefs_sb;
- };
- 
- /*
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 9c210273d06b..f035cf0d138d 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -111,7 +111,8 @@ static void rpc_clnt_remove_pipedir(struct rpc_clnt *clnt)
- 
- 	pipefs_sb = rpc_get_sb_net(net);
- 	if (pipefs_sb) {
--		__rpc_clnt_remove_pipedir(clnt);
-+		if (pipefs_sb == clnt->pipefs_sb)
-+			__rpc_clnt_remove_pipedir(clnt);
- 		rpc_put_sb_net(net);
- 	}
- }
-@@ -151,6 +152,8 @@ rpc_setup_pipedir(struct super_block *pipefs_sb, struct rpc_clnt *clnt)
- {
- 	struct dentry *dentry;
- 
-+	clnt->pipefs_sb = pipefs_sb;
-+
- 	if (clnt->cl_program->pipe_dir_name != NULL) {
- 		dentry = rpc_setup_pipedir_sb(pipefs_sb, clnt);
- 		if (IS_ERR(dentry))
--- 
-2.34.1
+NeilBrown
+
+
+ [PATCH 1/6] export: fix handling of error from match_fsid()
+ [PATCH 2/6] export: add EACCES to the list of known
+ [PATCH 3/6] export: move cache_open() before workers are forked.
+ [PATCH 4/6] Move fork_workers() and wait_for_workers() in cache.c
+ [PATCH 5/6] Share process_loop code between mountd and exportd.
+ [PATCH 6/6] cache: periodically retry requests that couldn't be
 
