@@ -2,228 +2,247 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 267DD7D3954
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 16:31:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4E9C7D3A00
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 16:46:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233365AbjJWObA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Oct 2023 10:31:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39806 "EHLO
+        id S234030AbjJWOqT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Oct 2023 10:46:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233373AbjJWObA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Oct 2023 10:31:00 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 427BAD7D;
-        Mon, 23 Oct 2023 07:30:57 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-32dc918d454so2166257f8f.2;
-        Mon, 23 Oct 2023 07:30:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698071455; x=1698676255; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8uwT+INyfSEhUg8urPKaaeAxSI9K09w0usUEfl77gdI=;
-        b=nKQ771sX5m7t0+E/QZ69PXcEjyj80kbrIr1abYJ9Mi8Pv/lqqxr6tyhOyw+1lY9vGG
-         76rT950UfjfB0VgHF4g3rjMSZ4BPSsQT9nZ5LaJYmSsU95xEnnEsZyWEY7CHBWhtOi9L
-         YeecInt9/ferdssdgMx6d+uK21iEzDMxjljWPgv+EAtsYGbWxsJRcaXDHCNv9gFQsifX
-         r3TD+DtsupsJMQtGUoZ+s2+QGGwDYOGze0AqakGgH+saXMFg4Y5lPUjy31bGXcy+ZjvS
-         4bqz1+LqfMkYlaZqr/nk8V0J3T67q1iZBqDhrawFSO+DQjH+Bfxc8dLQefIKT4WYWixz
-         VGEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698071455; x=1698676255;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8uwT+INyfSEhUg8urPKaaeAxSI9K09w0usUEfl77gdI=;
-        b=TCO5lnUChGleBA+YyESCPONRV32orrKmUYXZvWV68nzw/9KTasBfPIoWtu/6LDV499
-         wCmaSLVk85JL24r9BmoLk/Bx7ta/K8VLM273RPJOyJGOw8anDHdStouuq0iXO/u6blP9
-         k7t9EUOIelEBtNNRjhTSZ2L3urwBbE8GmKDn0QwarX9AoYJbRVCVhdlDNRDF6ggQvZ4L
-         WNogExQTT2tszxUAfLU80D8+pyaD8Mi2/nl0jVXZSO00iDefyV5TS551TFCBgTTNLLCc
-         6GzBOZKxyeR7g1xHuFmzSTOySewaSm7QtPikSWJkWUTAocne/hx3T5euZWHmKTtmFbPx
-         cbLg==
-X-Gm-Message-State: AOJu0Yz+ZGvjwerEKI0RPk6JfmMDRdOOWWa3T+YnlU7mzxrLgVVALe99
-        SoiqNRnsPmZtbtcsxQQhCKo=
-X-Google-Smtp-Source: AGHT+IEjDkVly3YZ2IksWBbnieMRKmSsB81SGeuDejCUCrtn9Fh79CTXmeBjVuLRRD6ITnP248WjTg==
-X-Received: by 2002:adf:ea88:0:b0:32d:8961:d864 with SMTP id s8-20020adfea88000000b0032d8961d864mr6074731wrm.48.1698071455338;
-        Mon, 23 Oct 2023 07:30:55 -0700 (PDT)
-Received: from amir-ThinkPad-T480.lan ([5.29.249.86])
-        by smtp.gmail.com with ESMTPSA id v5-20020a5d43c5000000b0031c6e1ea4c7sm7929892wrr.90.2023.10.23.07.30.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 07:30:54 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
+        with ESMTP id S233929AbjJWOqD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Oct 2023 10:46:03 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBF719BF;
+        Mon, 23 Oct 2023 07:45:25 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF8D9C433C8;
+        Mon, 23 Oct 2023 14:45:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698072325;
+        bh=91a8VTs5JN9FYOXvxMQyestaa0PVYwRW42Ibsjs911E=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=lw4U4lAm7e7JjW7Twvx7dgnksnYjCafBZjdBtHp7UbNsZHBlltPUjwfAD3JJFobKK
+         YIclYbYbnUXV5wDd2QspXHH9j3ucue+ZaTh8WNKSNUeTT/zLjHvLj66WkoBv8ulyOf
+         /Qv0AVua2uCdW5bGV8Cx4N0ZBEiJ+F4c4V294klGZ4ucUjKrlazSO4ZiZLDV/8FzNB
+         yLpgjO9W+9YWCxRVa7jC03OI5RCnXRFtulL6oqaHgwpyiygr5K7T2jXwtye9F11REE
+         kyv23w34L5LNcObGEo7dvTpRRTVoq1aV70DkpmXFK+3I1AVp4x103QxLNAhdlZnnU/
+         zeSwwb9tkPHlA==
+Message-ID: <61b32a4093948ae1ae8603688793f07de764430f.camel@kernel.org>
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
         Christian Brauner <brauner@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        Jeremy Kerr <jk@ozlabs.org>, Ard Biesheuvel <ardb@kernel.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <muchun.song@linux.dev>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tejun Heo <tj@kernel.org>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>
-Subject: [PATCH] fs: report f_fsid from s_dev for "simple" filesystems
-Date:   Mon, 23 Oct 2023 17:30:49 +0300
-Message-Id: <20231023143049.2944970-1-amir73il@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org
+Date:   Mon, 23 Oct 2023 10:45:21 -0400
+In-Reply-To: <ZTWfX3CqPy9yCddQ@dread.disaster.area>
+References: <20231018-mgtime-v1-0-4a7a97b1f482@kernel.org>
+         <20231018-mgtime-v1-2-4a7a97b1f482@kernel.org>
+         <CAHk-=wixObEhBXM22JDopRdt7Z=tGGuizq66g4RnUmG9toA2DA@mail.gmail.com>
+         <d6162230b83359d3ed1ee706cc1cb6eacfb12a4f.camel@kernel.org>
+         <CAHk-=wiKJgOg_3z21Sy9bu+3i_34S86r8fd6ngvJpZDwa-ww8Q@mail.gmail.com>
+         <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
+         <20231019-fluor-skifahren-ec74ceb6c63e@brauner>
+         <0a1a847af4372e62000b259e992850527f587205.camel@kernel.org>
+         <ZTGncMVw19QVJzI6@dread.disaster.area>
+         <eb3b9e71ee9c6d8e228b0927dec3ac9177b06ec6.camel@kernel.org>
+         <ZTWfX3CqPy9yCddQ@dread.disaster.area>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-There are many "simple" filesystems (*) that report null f_fsid in
-statfs(2).  Those "simple" filesystems report sb->s_dev as the st_dev
-field of the stat syscalls for all inodes of the filesystem (**).
+On Mon, 2023-10-23 at 09:17 +1100, Dave Chinner wrote:
+> On Fri, Oct 20, 2023 at 08:12:45AM -0400, Jeff Layton wrote:
+> > On Fri, 2023-10-20 at 09:02 +1100, Dave Chinner wrote:
+> > > On Thu, Oct 19, 2023 at 07:28:48AM -0400, Jeff Layton wrote:
+> > > > On Thu, 2023-10-19 at 11:29 +0200, Christian Brauner wrote:
+> > > > > > Back to your earlier point though:
+> > > > > >=20
+> > > > > > Is a global offset really a non-starter? I can see about doing =
+something
+> > > > > > per-superblock, but ktime_get_mg_coarse_ts64 should be roughly =
+as cheap
+> > > > > > as ktime_get_coarse_ts64. I don't see the downside there for th=
+e non-
+> > > > > > multigrain filesystems to call that.
+> > > > >=20
+> > > > > I have to say that this doesn't excite me. This whole thing feels=
+ a bit
+> > > > > hackish. I think that a change version is the way more sane way t=
+o go.
+> > > > >=20
+> > > >=20
+> > > > What is it about this set that feels so much more hackish to you? M=
+ost
+> > > > of this set is pretty similar to what we had to revert. Is it just =
+the
+> > > > timekeeper changes? Why do you feel those are a problem?
+> > > >=20
+> > > > > >=20
+> > > > > > On another note: maybe I need to put this behind a Kconfig opti=
+on
+> > > > > > initially too?
+> > > > >=20
+> > > > > So can we for a second consider not introducing fine-grained time=
+stamps
+> > > > > at all. We let NFSv3 live with the cache problem it's been living=
+ with
+> > > > > forever.
+> > > > >=20
+> > > > > And for NFSv4 we actually do introduce a proper i_version for all
+> > > > > filesystems that matter to it.
+> > > > >=20
+> > > > > What filesystems exactly don't expose a proper i_version and what=
+ does
+> > > > > prevent them from adding one or fixing it?
+> > > >=20
+> > > > Certainly we can drop this series altogether if that's the consensu=
+s.
+> > > >=20
+> > > > The main exportable filesystem that doesn't have a suitable change
+> > > > counter now is XFS. Fixing it will require an on-disk format change=
+ to
+> > > > accommodate a new version counter that doesn't increment on atime
+> > > > updates. This is something the XFS folks were specifically looking =
+to
+> > > > avoid, but maybe that's the simpler option.
+> > >=20
+> > > And now we have travelled the full circle.
+> > >=20
+> >=20
+> > LOL, yes!
+> >=20
+> > > The problem NFS has with atime updates on XFS is a result of
+> > > the default behaviour of relatime - it *always* forces a persistent
+> > > atime update after mtime has changed. Hence a read-after-write
+> > > operation will trigger an atime update because atime is older than
+> > > mtime. This is what causes XFS to run a transaction (i.e. a
+> > > persistent atime update) and that bumps iversion.
+> > >=20
+> >=20
+> > Those particular atime updates are not a problem. If we're updating the
+> > mtime and ctime anyway, then bumping the change attribute is OK.
+> >=20
+> > The problem is that relatime _also_ does an on-disk update once a day
+> > for just an atime update. On XFS, this means that the change attribute
+> > also gets bumped and the clients invalidate their caches all at once.
+> >=20
+> > That doesn't sound like a big problem at first, but what if you're
+> > sharing a multi-gigabyte r/o file between multiple clients? This sort o=
+f
+> > thing is fairly common on render-farm workloads, and all of your client=
+s
+> > will end up invalidating their caches once once a day if you're serving
+> > from XFS.
+>=20
+> So we have noatime inode and mount options for such specialised
+> workloads that cannot tolerate cached ever being invalidated, yes?
+>=20
+> > > lazytime does not behave this way - it delays all persistent
+> > > timestamp updates until the next persistent change or until the
+> > > lazytime aggregation period expires (24 hours). Hence with lazytime,
+> > > read-after-write operations do not trigger a persistent atime
+> > > update, and so XFS does not run a transaction to update atime. Hence
+> > > i_version does not get bumped, and NFS behaves as expected.
+> > >=20
+> >=20
+> > Similar problem here. Once a day, NFS clients will invalidate the cache
+> > on any static content served from XFS.
+>=20
+> Lazytime has /proc/sys/vm/dirtytime_expire_seconds to change the
+> interval that triggers persistent time changes. That could easily be
+> configured to be longer than a day for workloads that care about
+> this sort of thing. Indeed, we could just set up timestamps that NFS
+> says "do not make persistent" to only be persisted when the inode is
+> removed from server memory rather than be timed out by background
+> writeback....
+>=20
+> -----
+>=20
+> All I'm suggesting is that rather than using mount options for
+> noatime-like behaviour for NFSD accesses, we actually have the nfsd
+> accesses say "we'd like pure atime updates without iversion, please".
+>=20
+> Keep in mind that XFS does actually try to avoid bumping i_version
+> on pure timestamp updates - we carved that out a long time ago (see
+> the difference in XFS_ILOG_CORE vs XFS_ILOG_TIMESTAMP in
+> xfs_vn_update_time() and xfs_trans_log_inode()) so that we could
+> optimise fdatasync() to ignore timestamp updates that occur as a
+> result of pure data overwrites.
+>=20
+> Hence XFS only bumps i_version for pure timestamp updates if the
+> iversion queried flag is set. IOWs, XFS it is actually doing exactly
+> what the VFS iversion implementation is telling it to do with
+> timestamp updates for non-core inode metadata updates.
+>=20
+> That's the fundamental issue here: nfsd has set VFS state that tells
+> the filesystem to "bump iversion on next persistent inode change",
+> but the nfsd then runs operations that can change non-critical
+> persistent inode state in "query-only" operations. It then expects
+> filesystems to know that it should ignore the iversion queried state
+> within this context.  However, without external behavioural control
+> flags, filesystems cannot know that an isolated metadata update has
+> context specific iversion behavioural constraints.
 
-In order to enable fanotify reporting of events with fsid on those
-"simple" filesystems, report the sb->s_dev number in f_fsid field of
-statfs(2).
+> Hence fixing this is purely a VFS/nfsd i_version implementation
+> problem - if the nfsd is running a querying operation, it should
+> tell the filesystem that it should ignore iversion query state. If
+> nothing the application level cache cares about is being changed
+> during the query operation, it should tell the filesystem to ignore
+> iversion query state because it is likely the nfsd query itself will
+> set it (or have already set it itself in the case of compound
+> operations).
+>=20
+> This does not need XFS on-disk format changes to fix. This does not
+> need changes to timestamp infrastructure to fix. We just need the
+> nfsd application to tell us that we should ignore the vfs i_version
+> query state when we update non-core inode metadata within query
+> operation contexts.
+>=20
 
-(*) For most of the "simple" filesystem refered to in this commit, the
-->statfs() operation is simple_statfs(). Some of those fs assign the
-simple_statfs() method directly in their ->s_op struct and some assign it
-indirectly via a call to simple_fill_super() or to pseudo_fs_fill_super()
-with either custom or "simple" s_op.
-We also make the same change to efivarfs and hugetlbfs, although they do
-not use simple_statfs(), because they use the simple_* inode opreations
-(e.g. simple_lookup()).
 
-(**) For most of the "simple" filesystems, the ->getattr() method is not
-assigned, so stat() is implemented by generic_fillattr().  A few "simple"
-filesystem use the simple_getattr() method which also calls
-generic_fillattr() to fill most of the stat struct.
+I think you're missing the point of the problem I'm trying to solve.
+I'm not necessarily trying to guard nfsd against its own accesses. The
+reads that trigger an eventual atime update could come from anywhere --
+nfsd, userland accesses, etc.
 
-The two exceptions are procfs and 9p. procfs implements several different
-->getattr() methods, but they all end up calling generic_fillattr() to
-fill the st_dev field from sb->s_dev.
+If you are serving an XFS filesystem, with the (default) relatime mount
+option, then you are guaranteed that the clients will invalidate their
+cache of a file once per day, assuming that at least one read was issued
+against the file during that day.
 
-9p has more complicated ->getattr() methods, but they too, end up calling
-generic_fillattr() to fill the st_dev field from sb->s_dev.
+That read will cause an eventual atime bump to be logged, at which point
+the change attribute will change. The client will then assume that it
+needs to invalidate its cache when it sees that change.
 
-Note that 9p and kernfs also call simple_statfs() from custom ->statfs()
-methods which already fill the f_fsid field, but v9fs_statfs() calls
-simple_statfs() only in case f_fsid was not filled and kenrfs_statfs()
-overwrites f_fsid after calling simple_statfs().
-
-Link: https://lore.kernel.org/r/20230919094820.g5bwharbmy2dq46w@quack3/
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
-
-Jan,
-
-This is a variant of the approach that you suggested in the Link above.
-The two variations from your suggestion are:
-
-1. I chose to use s_dev instead of s_uuid - I see no point in generating
-   s_uuid for those simple filesystems. IMO, for the simple filesystems
-   without open_by_handle_at() support, fanotify fid doesn't need to be
-   more unique than {st_dev,st_ino}, because the inode mark pins the
-   inode and prevent st_dev,st_ino collisions.
-
-2. f_fsid is not filled by vfs according to fstype flag, but by
-   ->statfs() implementations (simple_statfs() for the majority).
-
-When applied together with the generic AT_HANDLE_FID support patches [1],
-all of those simple filesystems can be watches with FAN_ERPORT_FID.
-
-According to your audit of filesystems in the Link above, this leaves:
-"afs, coda, nfs - networking filesystems where inotify and fanotify have
-                  dubious value anyway.
-
- freevxfs - the only real filesystem without f_fsid. Trivial to handle one
-            way or the other.
-"
-
-There are two other filesystems that I found in my audit which also don't
-fill f_fsid: fuse and gfs2.
-
-fuse is also a sort of a networking filesystems. Also, fuse supports NFS
-export (as does nfs in some configurations) and I would like to stick to
-the rule that filesystems the support decodable file handles, use an fsid
-that is more unique than s_dev.
-
-gfs2 already has s_uuid, so we know what f_fsid should be.
-BTW, afs also has a server uuid, it just doesn't set s_uuid.
-
-For btrfs, which fills a non-null, but non-uniform fsid, I already have
-patches for inode_get_fsid [2] per your suggestion.
-
-IMO, we can defer dealing with all those remaining cases for later and
-solve the "simple" cases first.
-
-Do you agree?
-
-So far, there were no objections to the generic AT_HANDLE_FID support
-patches [1], although I am still waiting on an ACK from you on the last
-patch. If this fsid patch is also aaceptable, do you think they could
-be candidated for upcoming 6.7?
-
-Thanks,
-Amir.
-
-[1] https://lore.kernel.org/r/20231018100000.2453965-1-amir73il@gmail.com/
-[2] https://github.com/amir73il/linux/commits/inode_fsid
-
- fs/efivarfs/super.c  | 2 ++
- fs/hugetlbfs/inode.c | 2 ++
- fs/libfs.c           | 3 +++
- 3 files changed, 7 insertions(+)
-
-diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
-index 996271473609..2933090ad11f 100644
---- a/fs/efivarfs/super.c
-+++ b/fs/efivarfs/super.c
-@@ -30,6 +30,7 @@ static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
- 			 EFI_VARIABLE_BOOTSERVICE_ACCESS |
- 			 EFI_VARIABLE_RUNTIME_ACCESS;
- 	u64 storage_space, remaining_space, max_variable_size;
-+	u64 id = huge_encode_dev(dentry->d_sb->s_dev);
- 	efi_status_t status;
- 
- 	/* Some UEFI firmware does not implement QueryVariableInfo() */
-@@ -53,6 +54,7 @@ static int efivarfs_statfs(struct dentry *dentry, struct kstatfs *buf)
- 	buf->f_blocks	= storage_space;
- 	buf->f_bfree	= remaining_space;
- 	buf->f_type	= dentry->d_sb->s_magic;
-+	buf->f_fsid	= u64_to_fsid(id);
- 
- 	/*
- 	 * In f_bavail we declare the free space that the kernel will allow writing
-diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
-index 316c4cebd3f3..c003a27be6fe 100644
---- a/fs/hugetlbfs/inode.c
-+++ b/fs/hugetlbfs/inode.c
-@@ -1204,7 +1204,9 @@ static int hugetlbfs_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
- 	struct hugetlbfs_sb_info *sbinfo = HUGETLBFS_SB(dentry->d_sb);
- 	struct hstate *h = hstate_inode(d_inode(dentry));
-+	u64 id = huge_encode_dev(dentry->d_sb->s_dev);
- 
-+	buf->f_fsid = u64_to_fsid(id);
- 	buf->f_type = HUGETLBFS_MAGIC;
- 	buf->f_bsize = huge_page_size(h);
- 	if (sbinfo) {
-diff --git a/fs/libfs.c b/fs/libfs.c
-index 37f2d34ee090..8117b24b929d 100644
---- a/fs/libfs.c
-+++ b/fs/libfs.c
-@@ -41,6 +41,9 @@ EXPORT_SYMBOL(simple_getattr);
- 
- int simple_statfs(struct dentry *dentry, struct kstatfs *buf)
- {
-+	u64 id = huge_encode_dev(dentry->d_sb->s_dev);
-+
-+	buf->f_fsid = u64_to_fsid(id);
- 	buf->f_type = dentry->d_sb->s_magic;
- 	buf->f_bsize = PAGE_SIZE;
- 	buf->f_namelen = NAME_MAX;
--- 
-2.34.1
-
+Changing how nfsd does its own accesses won't fix anything, because the
+problematic atime bump can come from any sort of read access.
+--=20
+Jeff Layton <jlayton@kernel.org>
