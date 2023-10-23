@@ -2,197 +2,222 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1E497D3E98
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 20:08:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BD9A7D432C
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 01:26:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231159AbjJWSIV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Oct 2023 14:08:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59792 "EHLO
+        id S229441AbjJWX0f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 Oct 2023 19:26:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232563AbjJWSIT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Oct 2023 14:08:19 -0400
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D5F10D;
-        Mon, 23 Oct 2023 11:08:17 -0700 (PDT)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-4083cd39188so27974375e9.2;
-        Mon, 23 Oct 2023 11:08:17 -0700 (PDT)
+        with ESMTP id S229568AbjJWX0e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Oct 2023 19:26:34 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 733B7D79
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Oct 2023 16:26:31 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-694ed847889so3196550b3a.2
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Oct 2023 16:26:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698084495; x=1698689295; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+tOR1AnPiV86SfZe4OnAbQ+ckmKrdHU3txk2iNYjBpc=;
-        b=I4MTG7lQUC60oLvJSZYAPoViBBRpUNmXjWUiSsMB0RvUBljuJy6fQKF9xYJcI2b1c6
-         WZhDwvdmfbGRgZ3v2C16YFQfxosIi1YOgs3AW2kkqkE8l2fxcEvdXoxPq0H2eZPL1UH8
-         iaR3VpHYa1PpTiw5EgWpB8NRofAXG4p3E/lfZiBurNDWDYky2cOeUdf2p8ZNxaMYxsfi
-         fLb+LZSZBn0lMW0u0vn8sTVTCqT9HgJdh9ZYXWJWqt23OQ08V5aNARtyNLF7BCEN+EAn
-         6u663wozmT9f2wED4egtllQlRO9t39fPKz51fgGFMK7G4qghecCuJWIc6KKArCXB6UTd
-         SRHw==
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698103591; x=1698708391; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G+Gux9V9VrIJG9Key4Kir8qGYfaDp/xU9ex2KP3eXys=;
+        b=xkP1DwakmW2tHqe6HTIXjHePDfPnnKpC1IDOmDHfYMUyG/Eq2lT9idN9Ef8z7tpdNi
+         TxgflPTKOf04PI0ONXMpfCKpZtNzGLNjlbctIakID0bLpGqjJp/SgentVqPuIBejZpVn
+         EE+RaJC59adi7tTabh95D/t26ZhNFY4YOYOj/xkVe/wxgW2HlkRK6ipnqGUzTC/W05cY
+         9Ra4J0t8lQwULEflPkMnk0IcOXv5eKo1oCWgq1s/kTBPNNfo6RbWF4PuD+U4nbCaFL+G
+         4fZgYWNjcB4lKHB0+sd6Eg39LTkm7QDzbAlg/CVKo1l9WZnK+RGvfZxUt2mq1eBCqzC1
+         zxGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698084495; x=1698689295;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+tOR1AnPiV86SfZe4OnAbQ+ckmKrdHU3txk2iNYjBpc=;
-        b=tPaF1GKNegelm0MkF3aRrTVVfmGwrms8kkhwcoJyU8E3caF7Pz/W1k0l50Cs6Gw2JB
-         ejMj8AIFH9OD1MEawazM8LpbSLSlgCokiYu8AIkaH0E+0qRcYPWIDyMlr5GAA7vYyF/D
-         QnF1rR4H7iczu0ZEqC00rx5Cjs5TssRnnTQQszclLOj+muXh9NsKr8LhTvg91XsLzaqr
-         nx45M0IaM7pUG1LdvJZ4c8+St+dKNU2lp4Mo8H824tHOVItVSOZh26WU5pj22FCWFLGn
-         sgIDcCQ/mKwAIdQSqOKba+rQ3wO8GFravjyxDcQNQJSqNhUG1ZT4JSRkVQM7QmnCpBHW
-         9SPA==
-X-Gm-Message-State: AOJu0YzmowV4m6RKFqZk+PbjzYK08ol7y19DWCLevtVh55padcXsVirY
-        L3NZIBno6GAML1gso6KFxPQ=
-X-Google-Smtp-Source: AGHT+IHwlhC0sZ9nz37LUDcS8funTiaT0lHXr+R6Uu/ceSORkpBYOEHtXDyRJ4ejVmnMWNubXmY3Pg==
-X-Received: by 2002:a05:600c:1546:b0:3fe:4cbc:c345 with SMTP id f6-20020a05600c154600b003fe4cbcc345mr7394278wmg.41.1698084495437;
-        Mon, 23 Oct 2023 11:08:15 -0700 (PDT)
-Received: from amir-ThinkPad-T480.lan ([5.29.249.86])
-        by smtp.gmail.com with ESMTPSA id c39-20020a05600c4a2700b0040588d85b3asm14391492wmp.15.2023.10.23.11.08.14
+        d=1e100.net; s=20230601; t=1698103591; x=1698708391;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G+Gux9V9VrIJG9Key4Kir8qGYfaDp/xU9ex2KP3eXys=;
+        b=vXqWlzRi7uUpemaDUQTNJw9L+GNRzjOECRyiT0x5zw4ueYososO6bcnRsx/FqcPRvo
+         elpt706mPhWoDZ6nOzPTlok4kesoUbOb1HFB9+ReSeDHn+RztHk1eq0eEy2Pp10X3ik8
+         cFvKZl+4FwbBUbJPsbr2WgXFnuFkCwajzo8TGPpvJ125OUftpAaLa299EbeE+Q7POuQV
+         kqZii+YH7otWPk7yLhlC5fGFnNUrdlb+aW8vCMfc51gxffHTBNmZOnvAz01PTzhxaFAN
+         ejqu2e0wTWqYwuLvBlywbXtuB/9K1neYc2Xvk4faX+Xkxrx+YwRWbnX0HyIMMGiX/lyg
+         WtHA==
+X-Gm-Message-State: AOJu0YzDn/tL7n3T+rNspCpk0dj1YqjWVpIkIRzDBvz+LfwO8t6j6gdy
+        Onn/91A4hEhA13fvFs3snSnO2Q==
+X-Google-Smtp-Source: AGHT+IFbvK8ZgyXM/nA60wNancq6H/LuRCiF/m3G0/gTTq4ADSx4A3l6pnfh9u5eBcKsHipLBdZx2g==
+X-Received: by 2002:a05:6a00:18a9:b0:692:780a:de90 with SMTP id x41-20020a056a0018a900b00692780ade90mr9935913pfh.30.1698103590604;
+        Mon, 23 Oct 2023 16:26:30 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
+        by smtp.gmail.com with ESMTPSA id w18-20020aa78592000000b006bee5ad4efasm6715066pfn.67.2023.10.23.16.26.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 11:08:15 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 4/4] exportfs: support encoding non-decodeable file handles by default
-Date:   Mon, 23 Oct 2023 21:08:01 +0300
-Message-Id: <20231023180801.2953446-5-amir73il@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231023180801.2953446-1-amir73il@gmail.com>
-References: <20231023180801.2953446-1-amir73il@gmail.com>
+        Mon, 23 Oct 2023 16:26:29 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1qv4JX-0034Zl-06;
+        Tue, 24 Oct 2023 10:26:27 +1100
+Date:   Tue, 24 Oct 2023 10:26:27 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
+        Christian Brauner <brauner@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+Message-ID: <ZTcBI2xaZz1GdMjX@dread.disaster.area>
+References: <CAHk-=wixObEhBXM22JDopRdt7Z=tGGuizq66g4RnUmG9toA2DA@mail.gmail.com>
+ <d6162230b83359d3ed1ee706cc1cb6eacfb12a4f.camel@kernel.org>
+ <CAHk-=wiKJgOg_3z21Sy9bu+3i_34S86r8fd6ngvJpZDwa-ww8Q@mail.gmail.com>
+ <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
+ <20231019-fluor-skifahren-ec74ceb6c63e@brauner>
+ <0a1a847af4372e62000b259e992850527f587205.camel@kernel.org>
+ <ZTGncMVw19QVJzI6@dread.disaster.area>
+ <eb3b9e71ee9c6d8e228b0927dec3ac9177b06ec6.camel@kernel.org>
+ <ZTWfX3CqPy9yCddQ@dread.disaster.area>
+ <61b32a4093948ae1ae8603688793f07de764430f.camel@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61b32a4093948ae1ae8603688793f07de764430f.camel@kernel.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-AT_HANDLE_FID was added as an API for name_to_handle_at() that request
-the encoding of a file id, which is not intended to be decoded.
+On Mon, Oct 23, 2023 at 10:45:21AM -0400, Jeff Layton wrote:
+> On Mon, 2023-10-23 at 09:17 +1100, Dave Chinner wrote:
+> > All I'm suggesting is that rather than using mount options for
+> > noatime-like behaviour for NFSD accesses, we actually have the nfsd
+> > accesses say "we'd like pure atime updates without iversion, please".
+> > 
+> > Keep in mind that XFS does actually try to avoid bumping i_version
+> > on pure timestamp updates - we carved that out a long time ago (see
+> > the difference in XFS_ILOG_CORE vs XFS_ILOG_TIMESTAMP in
+> > xfs_vn_update_time() and xfs_trans_log_inode()) so that we could
+> > optimise fdatasync() to ignore timestamp updates that occur as a
+> > result of pure data overwrites.
+> > 
+> > Hence XFS only bumps i_version for pure timestamp updates if the
+> > iversion queried flag is set. IOWs, XFS it is actually doing exactly
+> > what the VFS iversion implementation is telling it to do with
+> > timestamp updates for non-core inode metadata updates.
+> > 
+> > That's the fundamental issue here: nfsd has set VFS state that tells
+> > the filesystem to "bump iversion on next persistent inode change",
+> > but the nfsd then runs operations that can change non-critical
+> > persistent inode state in "query-only" operations. It then expects
+> > filesystems to know that it should ignore the iversion queried state
+> > within this context.  However, without external behavioural control
+> > flags, filesystems cannot know that an isolated metadata update has
+> > context specific iversion behavioural constraints.
+> 
+> > Hence fixing this is purely a VFS/nfsd i_version implementation
+> > problem - if the nfsd is running a querying operation, it should
+> > tell the filesystem that it should ignore iversion query state. If
+> > nothing the application level cache cares about is being changed
+> > during the query operation, it should tell the filesystem to ignore
+> > iversion query state because it is likely the nfsd query itself will
+> > set it (or have already set it itself in the case of compound
+> > operations).
+> > 
+> > This does not need XFS on-disk format changes to fix. This does not
+> > need changes to timestamp infrastructure to fix. We just need the
+> > nfsd application to tell us that we should ignore the vfs i_version
+> > query state when we update non-core inode metadata within query
+> > operation contexts.
+> > 
+> 
+> I think you're missing the point of the problem I'm trying to solve.
+> I'm not necessarily trying to guard nfsd against its own accesses. The
+> reads that trigger an eventual atime update could come from anywhere --
+> nfsd, userland accesses, etc.
+>
+> If you are serving an XFS filesystem, with the (default) relatime mount
+> option, then you are guaranteed that the clients will invalidate their
+> cache of a file once per day, assuming that at least one read was issued
+> against the file during that day.
+>
+> That read will cause an eventual atime bump to be logged, at which point
+> the change attribute will change. The client will then assume that it
+> needs to invalidate its cache when it sees that change.
+>
+> Changing how nfsd does its own accesses won't fix anything, because the
+> problematic atime bump can come from any sort of read access.
 
-This file id is used by fanotify to describe objects in events.
+I'm not missing the point at all - as I've said in the past I don't
+think local vs remote access is in any way relevant to the original
+problem that needs to be solved. If the local access is within the
+relatime window, it won't cause any persistent metadata change at
+all. If it's outside the window, then it's no different to the NFS
+client reading data from the server outside the window. If it's the
+first access after a NFS client side modification, then it's just
+really bad timing but it isn't likely to be a common issue.
 
-So far, overlayfs is the only filesystem that supports encoding
-non-decodeable file ids, by providing export_operations with an
-->encode_fh() method and without a ->decode_fh() method.
+Hence I just don't think it matters on bit, and we can address the
+24 hour problem separately to the original problem that still needs
+to be fixed.
 
-Add support for encoding non-decodeable file ids to all the filesystems
-that do not provide export_operations, by encoding a file id of type
-FILEID_INO64_GEN from { i_ino, i_generation }.
+The problem is the first read request after a modification has been
+made. That is causing relatime to see mtime > atime and triggering
+an atime update. XFS sees this, does an atime update, and in
+committing that persistent inode metadata update, it calls
+inode_maybe_inc_iversion(force = false) to check if an iversion
+update is necessary. The VFS sees I_VERSION_QUERIED, and so it bumps
+i_version and tells XFS to persist it.
 
-A filesystem may that does not support NFS export, can opt-out of
-encoding non-decodeable file ids for fanotify by defining an empty
-export_operations struct (i.e. with a NULL ->encode_fh() method).
+IOWs, XFS is doing exactly what the VFS is telling it to do with
+i_version during the persistent inode metadata update that the VFS
+told it to make.
 
-This allows the use of fanotify events with file ids on filesystems
-like 9p which do not support NFS export to bring fanotify in feature
-parity with inotify on those filesystems.
+This, however, is not the semantics that the *nfsd application*
+wants. It does not want i_version to be updated when it is running a
+data read operation despite the fact the VFS is telling the
+filesystem it needs to be updated.
 
-Note that fanotify also requires that the filesystems report a non-null
-fsid.  Currently, many simple filesystems that have support for inotify
-(e.g. debugfs, tracefs, sysfs) report a null fsid, so can still not be
-used with fanotify in file id reporting mode.
+What we need to know is when the inode is being accessed by the nfsd
+so we can change the in-memory timestamp update behaviour
+appropriately.  We really don't need on-disk format changes - we
+just need to know that we're supposed to do something special with
+pure timestamp updates because i_version needs to be behave in a
+manner compatible with the new NFS requirements....
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
- fs/exportfs/expfs.c      | 32 +++++++++++++++++++++++++++++---
- include/linux/exportfs.h | 10 +++++++---
- 2 files changed, 36 insertions(+), 6 deletions(-)
+We also don't need generic timestamp infrastructure changes to do
+this - the multi-grained timestamp was a neat idea for generic
+filesystem support of the nfsd i_version requirements, but it's
+collapsed under the weight of complexity.
 
-diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-index 8f883c4758f5..7d9fdcc187b7 100644
---- a/fs/exportfs/expfs.c
-+++ b/fs/exportfs/expfs.c
-@@ -383,6 +383,32 @@ int generic_encode_ino32_fh(struct inode *inode, __u32 *fh, int *max_len,
- }
- EXPORT_SYMBOL_GPL(generic_encode_ino32_fh);
- 
-+#define FILEID_INO64_GEN_LEN 3
-+
-+/**
-+ * exportfs_encode_ino64_fid - encode non-decodeable 64bit ino file id
-+ * @inode:   the object to encode
-+ * @fid:     where to store the file handle fragment
-+ * @max_len: maximum length to store there (in 4 byte units)
-+ *
-+ * This generic function is used to encode a non-decodeable file id for
-+ * fanotify for filesystems that do not support NFS export.
-+ */
-+static int exportfs_encode_ino64_fid(struct inode *inode, struct fid *fid,
-+				     int *max_len)
-+{
-+	if (*max_len < FILEID_INO64_GEN_LEN) {
-+		*max_len = FILEID_INO64_GEN_LEN;
-+		return FILEID_INVALID;
-+	}
-+
-+	fid->i64.ino = inode->i_ino;
-+	fid->i64.gen = inode->i_generation;
-+	*max_len = FILEID_INO64_GEN_LEN;
-+
-+	return FILEID_INO64_GEN;
-+}
-+
- /**
-  * exportfs_encode_inode_fh - encode a file handle from inode
-  * @inode:   the object to encode
-@@ -401,10 +427,10 @@ int exportfs_encode_inode_fh(struct inode *inode, struct fid *fid,
- 	if (!exportfs_can_encode_fh(nop, flags))
- 		return -EOPNOTSUPP;
- 
--	if (nop && nop->encode_fh)
--		return nop->encode_fh(inode, fid->raw, max_len, parent);
-+	if (!nop && (flags & EXPORT_FH_FID))
-+		return exportfs_encode_ino64_fid(inode, fid, max_len);
- 
--	return -EOPNOTSUPP;
-+	return nop->encode_fh(inode, fid->raw, max_len, parent);
- }
- EXPORT_SYMBOL_GPL(exportfs_encode_inode_fh);
- 
-diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
-index 4119d3ee72eb..21bae8bfeef1 100644
---- a/include/linux/exportfs.h
-+++ b/include/linux/exportfs.h
-@@ -134,7 +134,11 @@ struct fid {
- 			u32 parent_ino;
- 			u32 parent_gen;
- 		} i32;
-- 		struct {
-+		struct {
-+			u64 ino;
-+			u32 gen;
-+		} __packed i64;
-+		struct {
-  			u32 block;
-  			u16 partref;
-  			u16 parent_partref;
-@@ -246,7 +250,7 @@ extern int exportfs_encode_fh(struct dentry *dentry, struct fid *fid,
- 
- static inline bool exportfs_can_encode_fid(const struct export_operations *nop)
- {
--	return nop && nop->encode_fh;
-+	return !nop || nop->encode_fh;
- }
- 
- static inline bool exportfs_can_decode_fh(const struct export_operations *nop)
-@@ -259,7 +263,7 @@ static inline bool exportfs_can_encode_fh(const struct export_operations *nop,
- {
- 	/*
- 	 * If a non-decodeable file handle was requested, we only need to make
--	 * sure that filesystem can encode file handles.
-+	 * sure that filesystem did not opt-out of encoding fid.
- 	 */
- 	if (fh_flags & EXPORT_FH_FID)
- 		return exportfs_can_encode_fid(nop);
+There are simpler ways individual filesystems can do the right
+thing, but to do that we need to know that nfsd has actively
+referenced the inode. How we get that information is what I want to
+resolve, the filesystem should be able to handle everything else in
+memory....
+
+Perhaps we can extract I_VERSION_QUERIED as a proxy for nfsd
+activity on the inode rather than need a per-operation context? Is
+that going to be reliable enough? Will that cause problems for other
+applications that want to use i_version for their own purposes?
+
+Cheers,
+
+Dave.
 -- 
-2.34.1
-
+Dave Chinner
+david@fromorbit.com
