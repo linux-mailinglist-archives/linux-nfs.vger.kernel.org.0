@@ -2,69 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C45507D284F
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 04:12:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01E5D7D2850
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 Oct 2023 04:12:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229470AbjJWCMB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 22 Oct 2023 22:12:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
+        id S229489AbjJWCMG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 22 Oct 2023 22:12:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233057AbjJWCMA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Oct 2023 22:12:00 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9EF8E
-        for <linux-nfs@vger.kernel.org>; Sun, 22 Oct 2023 19:11:57 -0700 (PDT)
+        with ESMTP id S233097AbjJWCMF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 22 Oct 2023 22:12:05 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89654135
+        for <linux-nfs@vger.kernel.org>; Sun, 22 Oct 2023 19:12:02 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id DF85E1FE05;
-        Mon, 23 Oct 2023 02:11:55 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 26F1E21A7F;
+        Mon, 23 Oct 2023 02:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1698027115; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1698027121; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k+tJrpWVDJJ7KETSa91IT4Yko+pzXy4M/FqN16u/imA=;
-        b=s5LsyowArzqA8jhivPkChCZo47Ziif6yhlsjuYRwbsSaSV1PQx9dworgojmvuu1oHSrsK/
-        rDKhoDv4kHEcmaCGsY7lzNxDF05YzdUY6HPgHaV5zn8efU3psM5+SqAwAZNZmCUmCqSgyC
-        U+BwDJR8bsIvaWrfgZmmiJa329kMjOc=
+        bh=dzwlzp/M6AhoIJULxUZ0rApD1agxj3RFV36T21E6jWo=;
+        b=js/bYquh0SKd8RYixV17Wr23vmY62P3NO+N3BOki2JQTeWq7i+ZdiwtRGDMy4LfpELBrdL
+        ato60a+9NV48ZOM2VDPE7C6A8InyB3a6BTdrI9KRwZZrecQSfdKtUWx2XaP/f8NlwQEsy7
+        iHhpIGcXcHVk/fj17vvXnhMMwCnBit4=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1698027115;
+        s=susede2_ed25519; t=1698027121;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=k+tJrpWVDJJ7KETSa91IT4Yko+pzXy4M/FqN16u/imA=;
-        b=9LY8056gLdOPZckx/ThPj7qOa7rcXyTMj9p6Iv9QcEvVDKisdvBCchyE162cxWlTab9cSX
-        57mZlbYlpeHL7lBA==
+        bh=dzwlzp/M6AhoIJULxUZ0rApD1agxj3RFV36T21E6jWo=;
+        b=wYphfpHlfRJBHSzxyeYijKioz1HOcxpZm3vwqFyuwun4RoBGclMmZ34hG+yEu+S900l0CL
+        6a++kpmreG08IaBQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6C925132FD;
-        Mon, 23 Oct 2023 02:11:54 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EEABF132FD;
+        Mon, 23 Oct 2023 02:11:59 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id QpwwCWrWNWV2bwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 23 Oct 2023 02:11:54 +0000
+        id jfIMKW/WNWWHbwAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 23 Oct 2023 02:11:59 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Steve Dickson <steved@redhat.com>
 Cc:     linux-nfs@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: [PATCH 4/6] Move fork_workers() and wait_for_workers() in cache.c
-Date:   Mon, 23 Oct 2023 12:58:34 +1100
-Message-ID: <20231023021052.5258-5-neilb@suse.de>
+Subject: [PATCH 5/6] Share process_loop code between mountd and exportd.
+Date:   Mon, 23 Oct 2023 12:58:35 +1100
+Message-ID: <20231023021052.5258-6-neilb@suse.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231023021052.5258-1-neilb@suse.de>
 References: <20231023021052.5258-1-neilb@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out2.suse.de;
+Authentication-Results: smtp-out1.suse.de;
         none
 X-Spam-Level: 
-X-Spam-Score: -2.10
-X-Spamd-Result: default: False [-2.10 / 50.00];
+X-Spam-Score: 0.61
+X-Spamd-Result: default: False [0.61 / 50.00];
          ARC_NA(0.00)[];
          RCVD_VIA_SMTP_AUTH(0.00)[];
          FROM_HAS_DN(0.00)[];
@@ -82,7 +82,7 @@ X-Spamd-Result: default: False [-2.10 / 50.00];
          MIME_TRACE(0.00)[0:+];
          RCVD_COUNT_TWO(0.00)[2];
          RCVD_TLS_ALL(0.00)[];
-         BAYES_HAM(-3.00)[100.00%]
+         BAYES_HAM(-0.29)[74.73%]
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -92,425 +92,158 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Both mountd and exported have fork_workers() and wait_for_workers()
-which are nearly identical.
-Move this code into cache.c (adding a cache_ prefix to the function
-names) and leave the minor differences in the two callers.
+There is substantial commonality between cache_process_loop() used by
+exportd and my_svc_run() used by mountd.
 
-Also remove duplicate declarations from mountd.h.
+Remove the looping from cache_process_loop() renaming it to
+cache_process() and call it in a loop from exportd.
+my_svc_run() now calls cache_process() for all the common functionality
+and adds code specific to being an RPC server.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- support/export/cache.c  | 75 ++++++++++++++++++++++++++++++++-
- support/export/export.h |  2 +
- utils/exportd/exportd.c | 90 ++++++----------------------------------
- utils/mountd/mountd.c   | 91 ++++++-----------------------------------
- utils/mountd/mountd.h   |  9 ----
- 5 files changed, 99 insertions(+), 168 deletions(-)
+ support/export/cache.c  | 49 +++++++++++++++++++++--------------------
+ support/export/export.h |  1 +
+ utils/exportd/exportd.c |  5 +++--
+ utils/mountd/svc_run.c  | 23 ++++---------------
+ 4 files changed, 33 insertions(+), 45 deletions(-)
 
 diff --git a/support/export/cache.c b/support/export/cache.c
-index 5307f6c8d872..1874156af5e5 100644
+index 1874156af5e5..a01eba4f6619 100644
 --- a/support/export/cache.c
 +++ b/support/export/cache.c
-@@ -1,10 +1,9 @@
+@@ -1602,40 +1602,41 @@ int cache_process_req(fd_set *readfds)
+ }
+ 
+ /**
+- * cache_process_loop - process incoming upcalls
++ * cache_process - process incoming upcalls
++ * Returns -ve on error, or number of fds in svc_fds
++ * that might need processing.
+  */
+-void cache_process_loop(void)
++int cache_process(fd_set *readfds)
+ {
+-	fd_set	readfds;
++	fd_set fdset;
+ 	int	selret;
+ 
+-	FD_ZERO(&readfds);
+-
+-	for (;;) {
+-
+-		cache_set_fds(&readfds);
+-		v4clients_set_fds(&readfds);
+-
+-		selret = select(FD_SETSIZE, &readfds,
+-				(void *) 0, (void *) 0, (struct timeval *) 0);
++	if (!readfds) {
++		FD_ZERO(&fdset);
++		readfds = &fdset;
++	}
++	cache_set_fds(readfds);
++	v4clients_set_fds(readfds);
+ 
++	selret = select(FD_SETSIZE, readfds,
++			(void *) 0, (void *) 0, (struct timeval *) 0);
+ 
+-		switch (selret) {
+-		case -1:
+-			if (errno == EINTR || errno == ECONNREFUSED
+-			 || errno == ENETUNREACH || errno == EHOSTUNREACH)
+-				continue;
+-			xlog(L_ERROR, "my_svc_run() - select: %m");
+-			return;
++	switch (selret) {
++	case -1:
++		if (errno == EINTR || errno == ECONNREFUSED
++		    || errno == ENETUNREACH || errno == EHOSTUNREACH)
++			return 0;
++		return -1;
+ 
+-		default:
+-			cache_process_req(&readfds);
+-			v4clients_process(&readfds);
+-		}
++	default:
++		selret -= cache_process_req(readfds);
++		selret -= v4clients_process(readfds);
++		if (selret < 0)
++			selret = 0;
+ 	}
++	return selret;
+ }
+ 
 -
  /*
-  * Handle communication with knfsd internal cache
-  *
-  * We open /proc/net/rpc/{auth.unix.ip,nfsd.export,nfsd.fh}/channel
-  * and listen for requests (using my_svc_run)
-- * 
-+ *
-  */
- 
- #ifdef HAVE_CONFIG_H
-@@ -16,6 +15,7 @@
- #include <sys/select.h>
- #include <sys/stat.h>
- #include <sys/vfs.h>
-+#include <sys/wait.h>
- #include <time.h>
- #include <netinet/in.h>
- #include <arpa/inet.h>
-@@ -1775,3 +1775,74 @@ cache_get_filehandle(nfs_export *exp, int len, char *p)
- 	fh.fh_size = qword_get(&bp, (char *)fh.fh_handle, NFS3_FHSIZE);
- 	return &fh;
- }
-+
-+/* Wait for all worker child processes to exit and reap them */
-+void
-+cache_wait_for_workers(char *prog)
-+{
-+	int status;
-+	pid_t pid;
-+
-+	for (;;) {
-+
-+		pid = waitpid(0, &status, 0);
-+
-+		if (pid < 0) {
-+			if (errno == ECHILD)
-+				return; /* no more children */
-+			xlog(L_FATAL, "%s: can't wait: %s\n", prog,
-+					strerror(errno));
-+		}
-+
-+		/* Note: because we SIG_IGN'd SIGCHLD earlier, this
-+		 * does not happen on 2.6 kernels, and waitpid() blocks
-+		 * until all the children are dead then returns with
-+		 * -ECHILD.  But, we don't need to do anything on the
-+		 * death of individual workers, so we don't care. */
-+		xlog(L_NOTICE, "%s: reaped child %d, status %d\n",
-+		     prog, (int)pid, status);
-+	}
-+}
-+
-+/* Fork num_threads worker children and wait for them */
-+int
-+cache_fork_workers(char *prog, int num_threads)
-+{
-+	int i;
-+	pid_t pid;
-+
-+	if (num_threads <= 1)
-+		return 1;
-+
-+	xlog(L_NOTICE, "%s: starting %d threads\n", prog, num_threads);
-+
-+	for (i = 0 ; i < num_threads ; i++) {
-+		pid = fork();
-+		if (pid < 0) {
-+			xlog(L_FATAL, "%s: cannot fork: %s\n", prog,
-+					strerror(errno));
-+		}
-+		if (pid == 0) {
-+			/* worker child */
-+
-+			/* Re-enable the default action on SIGTERM et al
-+			 * so that workers die naturally when sent them.
-+			 * Only the parent unregisters with pmap and
-+			 * hence needs to do special SIGTERM handling. */
-+			struct sigaction sa;
-+			sa.sa_handler = SIG_DFL;
-+			sa.sa_flags = 0;
-+			sigemptyset(&sa.sa_mask);
-+			sigaction(SIGHUP, &sa, NULL);
-+			sigaction(SIGINT, &sa, NULL);
-+			sigaction(SIGTERM, &sa, NULL);
-+
-+			/* fall into my_svc_run in caller */
-+			return 1;
-+		}
-+	}
-+
-+	/* in parent */
-+	cache_wait_for_workers(prog);
-+	return 0;
-+}
+  * Give IP->domain and domain+path->options to kernel
+  * % echo nfsd $IP  $[now+DEFAULT_TTL] $domain > /proc/net/rpc/auth.unix.ip/channel
 diff --git a/support/export/export.h b/support/export/export.h
-index 8d5a0d3004ef..ce561f9fbd3e 100644
+index ce561f9fbd3e..e2009ccdc443 100644
 --- a/support/export/export.h
 +++ b/support/export/export.h
-@@ -29,6 +29,8 @@ int		v4clients_process(fd_set *fdset);
- struct nfs_fh_len *
- 		cache_get_filehandle(nfs_export *exp, int len, char *p);
+@@ -31,6 +31,7 @@ struct nfs_fh_len *
  int		cache_export(nfs_export *exp, char *path);
-+int		cache_fork_workers(char *prog, int num_threads);
-+void		cache_wait_for_workers(char *prog);
+ int		cache_fork_workers(char *prog, int num_threads);
+ void		cache_wait_for_workers(char *prog);
++int		cache_process(fd_set *readfds);
  
  bool ipaddr_client_matches(nfs_export *exp, struct addrinfo *ai);
  bool namelist_client_matches(nfs_export *exp, char *dom);
 diff --git a/utils/exportd/exportd.c b/utils/exportd/exportd.c
-index 6f866445efc2..d07a885c6763 100644
+index d07a885c6763..a2e370ac506f 100644
 --- a/utils/exportd/exportd.c
 +++ b/utils/exportd/exportd.c
-@@ -16,7 +16,6 @@
- #include <string.h>
- #include <getopt.h>
- #include <errno.h>
--#include <wait.h>
- 
- #include "nfslib.h"
- #include "conffile.h"
-@@ -54,90 +53,19 @@ static char shortopts[] = "d:fghs:t:liT:";
-  */
- inline static void set_signals(void);
- 
--/* Wait for all worker child processes to exit and reap them */
--static void
--wait_for_workers (void)
--{
--	int status;
--	pid_t pid;
--
--	for (;;) {
--
--		pid = waitpid(0, &status, 0);
--
--		if (pid < 0) {
--			if (errno == ECHILD)
--				return; /* no more children */
--			xlog(L_FATAL, "mountd: can't wait: %s\n",
--					strerror(errno));
--		}
--
--		/* Note: because we SIG_IGN'd SIGCHLD earlier, this
--		 * does not happen on 2.6 kernels, and waitpid() blocks
--		 * until all the children are dead then returns with
--		 * -ECHILD.  But, we don't need to do anything on the
--		 * death of individual workers, so we don't care. */
--		xlog(L_NOTICE, "mountd: reaped child %d, status %d\n",
--				(int)pid, status);
--	}
--}
--
- inline void
- cleanup_lockfiles (void)
- {
- 	unlink(etab.lockfn);
- }
- 
--/* Fork num_threads worker children and wait for them */
- static void
--fork_workers(void)
--{
--	int i;
--	pid_t pid;
--
--	xlog(L_NOTICE, "mountd: starting %d threads\n", num_threads);
--
--	for (i = 0 ; i < num_threads ; i++) {
--		pid = fork();
--		if (pid < 0) {
--			xlog(L_FATAL, "mountd: cannot fork: %s\n",
--					strerror(errno));
--		}
--		if (pid == 0) {
--			/* worker child */
--
--			/* Re-enable the default action on SIGTERM et al
--			 * so that workers die naturally when sent them.
--			 * Only the parent unregisters with pmap and
--			 * hence needs to do special SIGTERM handling. */
--			struct sigaction sa;
--			sa.sa_handler = SIG_DFL;
--			sa.sa_flags = 0;
--			sigemptyset(&sa.sa_mask);
--			sigaction(SIGHUP, &sa, NULL);
--			sigaction(SIGINT, &sa, NULL);
--			sigaction(SIGTERM, &sa, NULL);
--
--			/* fall into my_svc_run in caller */
--			return;
--		}
--	}
--
--	/* in parent */
--	wait_for_workers();
--	cleanup_lockfiles();
--	free_state_path_names(&etab);
--	xlog(L_NOTICE, "exportd: no more workers, exiting\n");
--	exit(0);
--}
--
--static void 
- killer (int sig)
- {
- 	if (num_threads > 1) {
- 		/* play Kronos and eat our children */
- 		kill(0, SIGTERM);
--		wait_for_workers();
-+		cache_wait_for_workers("exportd");
- 	}
- 	cleanup_lockfiles();
- 	free_state_path_names(&etab);
-@@ -145,6 +73,7 @@ killer (int sig)
- 
- 	exit(0);
- }
-+
- static void
- sig_hup (int UNUSED(sig))
- {
-@@ -152,8 +81,9 @@ sig_hup (int UNUSED(sig))
- 	xlog (L_NOTICE, "Received SIGHUP... Ignoring.\n");
- 	return;
- }
--inline static void 
--set_signals(void) 
-+
-+inline static void
-+set_signals(void)
- {
- 	struct sigaction sa;
- 
-@@ -295,9 +225,13 @@ main(int argc, char **argv)
- 	 */
- 	cache_open();
- 
--	if (num_threads > 1)
--		fork_workers();
--
-+	if (cache_fork_workers(progname, num_threads) == 0) {
-+		/* We forked, waited, and now need to clean up */
-+		cleanup_lockfiles();
-+		free_state_path_names(&etab);
-+		xlog(L_NOTICE, "%s: no more workers, exiting\n", progname);
-+		exit(0);
-+	}
- 
+@@ -236,9 +236,10 @@ main(int argc, char **argv)
  	v4clients_init();
  
-diff --git a/utils/mountd/mountd.c b/utils/mountd/mountd.c
-index f9c62cded66c..dbd5546df61c 100644
---- a/utils/mountd/mountd.c
-+++ b/utils/mountd/mountd.c
-@@ -21,7 +21,6 @@
- #include <errno.h>
- #include <fcntl.h>
- #include <sys/resource.h>
--#include <sys/wait.h>
+ 	/* Process incoming upcalls */
+-	cache_process_loop();
++	while (cache_process(NULL) >= 0)
++		;
  
- #include "conffile.h"
- #include "xmalloc.h"
-@@ -119,90 +118,17 @@ cleanup_lockfiles (void)
- 	unlink(rmtab.lockfn);
- }
+-	xlog(L_ERROR, "%s: process loop terminated unexpectedly. Exiting...\n",
++	xlog(L_ERROR, "%s: process loop terminated unexpectedly(%m). Exiting...\n",
+ 		progname);
  
--/* Wait for all worker child processes to exit and reap them */
--static void
--wait_for_workers (void)
--{
--	int status;
--	pid_t pid;
--
--	for (;;) {
--
--		pid = waitpid(0, &status, 0);
--
--		if (pid < 0) {
--			if (errno == ECHILD)
--				return; /* no more children */
--			xlog(L_FATAL, "mountd: can't wait: %s\n",
--					strerror(errno));
--		}
--
--		/* Note: because we SIG_IGN'd SIGCHLD earlier, this
--		 * does not happen on 2.6 kernels, and waitpid() blocks
--		 * until all the children are dead then returns with
--		 * -ECHILD.  But, we don't need to do anything on the
--		 * death of individual workers, so we don't care. */
--		xlog(L_NOTICE, "mountd: reaped child %d, status %d\n",
--				(int)pid, status);
--	}
--}
--
--/* Fork num_threads worker children and wait for them */
--static void
--fork_workers(void)
--{
--	int i;
--	pid_t pid;
--
--	xlog(L_NOTICE, "mountd: starting %d threads\n", num_threads);
--
--	for (i = 0 ; i < num_threads ; i++) {
--		pid = fork();
--		if (pid < 0) {
--			xlog(L_FATAL, "mountd: cannot fork: %s\n",
--					strerror(errno));
--		}
--		if (pid == 0) {
--			/* worker child */
--
--			/* Re-enable the default action on SIGTERM et al
--			 * so that workers die naturally when sent them.
--			 * Only the parent unregisters with pmap and
--			 * hence needs to do special SIGTERM handling. */
--			struct sigaction sa;
--			sa.sa_handler = SIG_DFL;
--			sa.sa_flags = 0;
--			sigemptyset(&sa.sa_mask);
--			sigaction(SIGHUP, &sa, NULL);
--			sigaction(SIGINT, &sa, NULL);
--			sigaction(SIGTERM, &sa, NULL);
--
--			/* fall into my_svc_run in caller */
--			return;
--		}
--	}
--
--	/* in parent */
--	wait_for_workers();
--	unregister_services();
--	cleanup_lockfiles();
--	free_state_path_names(&etab);
--	free_state_path_names(&rmtab);
--	xlog(L_NOTICE, "mountd: no more workers, exiting\n");
--	exit(0);
--}
--
- /*
-  * Signal handler.
-  */
--static void 
-+static void
- killer (int sig)
- {
- 	unregister_services();
- 	if (num_threads > 1) {
- 		/* play Kronos and eat our children */
- 		kill(0, SIGTERM);
--		wait_for_workers();
-+		cache_wait_for_workers("mountd");
- 	}
- 	cleanup_lockfiles();
  	free_state_path_names(&etab);
-@@ -220,7 +146,7 @@ sig_hup (int UNUSED(sig))
+diff --git a/utils/mountd/svc_run.c b/utils/mountd/svc_run.c
+index 167b9757bde2..2aaf3756bbb1 100644
+--- a/utils/mountd/svc_run.c
++++ b/utils/mountd/svc_run.c
+@@ -97,28 +97,13 @@ my_svc_run(void)
+ 	int	selret;
+ 
+ 	for (;;) {
+-
+ 		readfds = svc_fdset;
+-		cache_set_fds(&readfds);
+-		v4clients_set_fds(&readfds);
+-
+-		selret = select(FD_SETSIZE, &readfds,
+-				(void *) 0, (void *) 0, (struct timeval *) 0);
+-
+-
+-		switch (selret) {
+-		case -1:
+-			if (errno == EINTR || errno == ECONNREFUSED
+-			 || errno == ENETUNREACH || errno == EHOSTUNREACH)
+-				continue;
++		selret = cache_process(&readfds);
++		if (selret < 0) {
+ 			xlog(L_ERROR, "my_svc_run() - select: %m");
+ 			return;
+-
+-		default:
+-			selret -= cache_process_req(&readfds);
+-			selret -= v4clients_process(&readfds);
+-			if (selret)
+-				svc_getreqset(&readfds);
+ 		}
++		if (selret)
++			svc_getreqset(&readfds);
+ 	}
  }
- 
- bool_t
--mount_null_1_svc(struct svc_req *rqstp, void *UNUSED(argp), 
-+mount_null_1_svc(struct svc_req *rqstp, void *UNUSED(argp),
- 	void *UNUSED(resp))
- {
- 	struct sockaddr *sap = nfs_getrpccaller(rqstp->rq_xprt);
-@@ -922,8 +848,15 @@ main(int argc, char **argv)
- 	 */
- 	cache_open();
- 
--	if (num_threads > 1)
--		fork_workers();
-+	if (cache_fork_workers("mountd", num_threads) == 0) {
-+		/* We forked, waited, and now need to clean up */
-+		unregister_services();
-+		cleanup_lockfiles();
-+		free_state_path_names(&etab);
-+		free_state_path_names(&rmtab);
-+		xlog(L_NOTICE, "mountd: no more workers, exiting\n");
-+		exit(0);
-+	}
- 
- 	nfsd_path_init();
- 	v4clients_init();
-diff --git a/utils/mountd/mountd.h b/utils/mountd/mountd.h
-index d30775313f66..bd5c9576d8ad 100644
---- a/utils/mountd/mountd.h
-+++ b/utils/mountd/mountd.h
-@@ -51,13 +51,4 @@ void		mountlist_del(char *host, const char *path);
- void		mountlist_del_all(const struct sockaddr *sap);
- mountlist	mountlist_list(void);
- 
--void		cache_open(void);
--struct nfs_fh_len *
--		cache_get_filehandle(nfs_export *exp, int len, char *p);
--int		cache_export(nfs_export *exp, char *path);
--
--bool ipaddr_client_matches(nfs_export *exp, struct addrinfo *ai);
--bool namelist_client_matches(nfs_export *exp, char *dom);
--bool client_matches(nfs_export *exp, char *dom, struct addrinfo *ai);
--
- #endif /* MOUNTD_H */
 -- 
 2.42.0
 
