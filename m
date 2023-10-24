@@ -2,66 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F58A7D4E79
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 13:01:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 760B77D4EA7
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 13:16:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232073AbjJXLBW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Oct 2023 07:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57256 "EHLO
+        id S229583AbjJXLQ5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Oct 2023 07:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230331AbjJXLBS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 07:01:18 -0400
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBEF123;
-        Tue, 24 Oct 2023 04:01:16 -0700 (PDT)
-Received: by mail-wr1-x42d.google.com with SMTP id ffacd0b85a97d-32d9effe314so2999377f8f.3;
-        Tue, 24 Oct 2023 04:01:16 -0700 (PDT)
+        with ESMTP id S229487AbjJXLQ4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 07:16:56 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4431E109;
+        Tue, 24 Oct 2023 04:16:54 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id d75a77b69052e-41cd58eb037so29260531cf.1;
+        Tue, 24 Oct 2023 04:16:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698145274; x=1698750074; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=k/Hy9mjKVZEp592T+CI4HCA7TuFfPuvSuvsA6aj3cwg=;
-        b=jQaHMRlf+a2eRckLdvetdSv1C/2tA+o/brpu6mLUnwCNjKRaCjaOj2YXOfiwR/f2uG
-         soJK5q5DXU9+gUgRHgr53CFVLJEX9ZN/ZQ0a1rtAMD6ldULG1ymdz4RKADQVj5Pzwcy5
-         b9VPDx18EjEpZXRbntbtho6iv5QWa4XLl4ELDY4j7jPumxmzXhUP83WJ84SwJ4RQUIRi
-         OiSYMcyKbtjM3tfD2Z+UfNY0sjOdJ74eYT5KKSMKQ4aGwH3R9l47o40lYzLmpg5o3vNN
-         DSkg0MCFvNVLTBQ17cFwJA7P72vfezyVkmSfkqrhUw/iSsuJ6AVRAd/Up0sUIIqL/62X
-         E/Lg==
+        d=gmail.com; s=20230601; t=1698146213; x=1698751013; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pd6V6Jktu3VSf20KYTHeFxqavSYZjPV8TOLjpTyte4w=;
+        b=TDDs837ButdFB1iENbbYlpMq82Oy4FUeoxJSMT+JpNabuOId3PiaGKlDjUSV5EFckO
+         BeNvT8cmoUwHIu+8h6CCeYxEpUD2aEoDE9IDmCGINqJUxVTXvNxHhGnmMAqjNhBe570W
+         bcOtVVkSULYMSzaoFdTmAFPMhrkroheAZXmLnNMNR6rXmrHGYTso8qYod4leGka+RhKu
+         3Z2/ByASoSivEOHpsj4WwLetbpMWGKHGfyfTNz2Vag+E0NTMIOPBjEq2S5CZqCLcm02g
+         /0DaDJ6X8+G5eYDkQpplXanQsntJR3l2vaRFk5/B2DvA3W4hHv0b1iEeyH7vxg7qi2eR
+         zYJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698145274; x=1698750074;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=k/Hy9mjKVZEp592T+CI4HCA7TuFfPuvSuvsA6aj3cwg=;
-        b=lA2QRHKtrZIUO7iuJZNnD7ZNw6wM1V+eDVs1FfPz16Jp1nnpPoBYFysFibIAMKAOSs
-         ckaRI6Xo5fgnKyxclPWtDWsoeJY2wHZgfuhTNqt8l6eFczdXR8axr595Gqvldl+vnFZL
-         GFU7vO1vmYoC3NguWo2AMtgpDGiWMzIZmYKiQgz+Ae6ZlA9kT8Ks6WeHlU3Sx0k2u28m
-         rT779GWhxqH3yLNYJWdlSddXhM/Va6fvYPJOsC5FBwT+h7MTVo6KmcIHK1K2kRcrV6rh
-         5FypbBd2MU/5+U6F73om49KPfc47RNRRlp0Usbv09AJgEe7RhOodAXWDg4/d7Qq56IZk
-         t34g==
-X-Gm-Message-State: AOJu0YzmKRBOcbmvcYo9PvfwxaNO74qW82XxWbeYNQ1eYd5ntPW9Qctf
-        N8PP3Uvm2MUNT0gXDA/PYyM=
-X-Google-Smtp-Source: AGHT+IEU1jutgb9sVKgdnyuesST+oIr997jElQQEBnEoqERofOMlH9lBASsXRPh6FHq5zA9+MkhWyg==
-X-Received: by 2002:a05:6000:b41:b0:32d:8f4c:a70b with SMTP id dk1-20020a0560000b4100b0032d8f4ca70bmr9844603wrb.9.1698145274217;
-        Tue, 24 Oct 2023 04:01:14 -0700 (PDT)
-Received: from amir-ThinkPad-T480.lan ([5.29.249.86])
-        by smtp.gmail.com with ESMTPSA id o12-20020a05600c4fcc00b0040775501256sm11707312wmq.16.2023.10.24.04.01.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 04:01:13 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH] nfs: derive f_fsid from server's fsid
-Date:   Tue, 24 Oct 2023 14:01:09 +0300
-Message-Id: <20231024110109.3007794-1-amir73il@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1698146213; x=1698751013;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pd6V6Jktu3VSf20KYTHeFxqavSYZjPV8TOLjpTyte4w=;
+        b=G/fpXVKrqwp6X8bG+tUMzXQkK1FHWx4ltfmps8Nzt7nfEv+E1f/nTazRopTXUuuV8W
+         wxNw8z9niIhaWdcG3CyO7xN75sl6LY6n4D/w0q8OA1cCkc9PeSINKY/CcGwJHQvbeeGi
+         E7yZxxo6qPACQhRsY0p6A5uM8E77wPH4oIcymFkekxTOgFTfyDWTapkOmEVxTfObcAcQ
+         INCFj5o6TEVnq3QBvopstrB62ePl5eHENWL4vCJoZh3U+/J9ZOMKWOqvkvP6jllreoqg
+         QJjbOq+9X8IF7WRmVjVvMQHmVCFhCunHHdQLKpPOfv0lv1aF8EBHN0HNrrX24AOt3bfr
+         suRg==
+X-Gm-Message-State: AOJu0Yy9d5CcyCpfsC+bMgw/psr1jhAjFIsaarJ8841vP39yMqTAOKyA
+        qOMhLmRzLW1o4DV1yRMjlMiikJCmwloH0OMFHFc=
+X-Google-Smtp-Source: AGHT+IFgrd4HqraG2XaFg+FK4H39PNi6n3wXGwWfMIaSQ9aGrpdTdfiK9cFdtv3AFHRqRx6gRCrwV9wouG1ofS4pFLE=
+X-Received: by 2002:a05:6214:2629:b0:658:708c:4d56 with SMTP id
+ gv9-20020a056214262900b00658708c4d56mr18526196qvb.17.1698146213329; Tue, 24
+ Oct 2023 04:16:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231023180801.2953446-1-amir73il@gmail.com>
+In-Reply-To: <20231023180801.2953446-1-amir73il@gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 24 Oct 2023 14:16:41 +0300
+Message-ID: <CAOQ4uxiHi=6jvkRZj_GZ6VFSeJOsqm_+5bAjM3TL1pkZFYqJ9g@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Support more filesystems with FAN_REPORT_FID
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -72,57 +70,103 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fold the server's 128bit fsid to report f_fsid in statfs(2).
-This is similar to how uuid is folded for f_fsid of ext2/ext4/zonefs.
+On Mon, Oct 23, 2023 at 9:08=E2=80=AFPM Amir Goldstein <amir73il@gmail.com>=
+ wrote:
+>
+> Christian,
+>
+> The grand plan is to be able to use fanotify with FAN_REPORT_FID as a
+> drop-in replacement for inotify, but with current upstream, inotify is
+> supported on all the filesystems and FAN_REPORT_FID only on a few.
+>
+> Making all filesystem support FAN_REPORT_FID requires that all
+> filesystems will:
+> 1. Support for AT_HANDLE_FID file handles
+> 2. Report non-zero f_fsid
+>
+> This patch set takes care of the first requirement.
+> Patches were reviewed by Jan and the nfsd maintainers.
+>
+> I have another patch in review [2] for adding non-zero f_fsid to many
+> simple filesystems, but it is independent of this patch set, so no
+> reason to couple them together.
 
-This allows nfs client to be monitored by fanotify filesystem watch
-for local client access if nfs supports re-export.
+Christian,
 
-For example, with inotify-tools 4.23.8.0, the following command can be
-used to watch local client access over entire nfs filesystem:
+Jan has reviewed the independent f_fsid vfs patch [2], so if you
+pick up this patch set, please also apply the f_fsid vfs patch.
 
-  fsnotifywatch --filesystem /mnt/nfs
+This would allow changing "more" in the subject of this cover letter
+(and possible PR subject) to "most" (i.e. all the simple filesystems
+and all the filesystems that already report a non-zero f_fsid).
 
-Note that fanotify filesystem watch does not report remote changes on
-server.  It provides the same notifications as inotify, but it watches
-over the entire filesystem and reports file handle of objects and fsid
-with events.
-
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
-
-Anna, Trond,
-
-I realize that the value of watching local changes without getting
-notifications on remote changes is questionable, but still, we want
-fanotify to be on-par with inotify in that regard.
-
-Remote notification via fanotify has been requested in the past for fuse
-and for smb3. If we ever implement those, they will most likely require
-a new opt-in flag to fanotify.
-
-I think that exporting a digest of the server's fsid via statfs(2) on the
-client mounts is useful regardless of fanotify, so please consider this
-change to NFS client.
+For the few remaining filesystems that still report zero f_fsid,
+I will be sending independent patches to individual maintainers.
+I had already posted f_fsid patches for gfs2 [3] and nfs [4].
 
 Thanks,
 Amir.
 
- fs/nfs/super.c | 1 +
- 1 file changed, 1 insertion(+)
+>
+> Note that patch #2 touches many filesystems due to vfs API change,
+> requiring an explicit ->encode_fh() method. I did not gets ACKs from
+> all filesystem maintainers, but the change is trivial and does not
+> change any logic.
+>
+> Thanks,
+> Amir.
+>
+> Changes since v1 [1]:
+> - Patch #1 already merged into v6.6-rc7
+> - Fix build without CONFIG_EXPORTFS
+> - Fix checkpatch warnings
+> - Define symbolic constant for FILEID_INO64_GEN_LEN
+> - Clarify documentation (units of) max_len argument
+>
+> [1] https://lore.kernel.org/r/20231018100000.2453965-1-amir73il@gmail.com=
+/
+> [2] https://lore.kernel.org/r/20231023143049.2944970-1-amir73il@gmail.com=
+/
 
-diff --git a/fs/nfs/super.c b/fs/nfs/super.c
-index 0d6473cb00cb..d0f41f53b795 100644
---- a/fs/nfs/super.c
-+++ b/fs/nfs/super.c
-@@ -295,6 +295,7 @@ int nfs_statfs(struct dentry *dentry, struct kstatfs *buf)
- 	buf->f_ffree = res.afiles;
- 
- 	buf->f_namelen = server->namelen;
-+	buf->f_fsid = u64_to_fsid(server->fsid.major ^ server->fsid.minor);
- 
- 	return 0;
- 
--- 
-2.34.1
+[3] https://lore.kernel.org/linux-fsdevel/20231024075535.2994553-1-amir73il=
+@gmail.com/
+[4] https://lore.kernel.org/linux-fsdevel/20231024110109.3007794-1-amir73il=
+@gmail.com/
 
+>
+> Amir Goldstein (4):
+>   exportfs: add helpers to check if filesystem can encode/decode file
+>     handles
+>   exportfs: make ->encode_fh() a mandatory method for NFS export
+>   exportfs: define FILEID_INO64_GEN* file handle types
+>   exportfs: support encoding non-decodeable file handles by default
+>
+>  Documentation/filesystems/nfs/exporting.rst |  7 +--
+>  Documentation/filesystems/porting.rst       |  9 ++++
+>  fs/affs/namei.c                             |  1 +
+>  fs/befs/linuxvfs.c                          |  1 +
+>  fs/efs/super.c                              |  1 +
+>  fs/erofs/super.c                            |  1 +
+>  fs/exportfs/expfs.c                         | 54 +++++++++++++++------
+>  fs/ext2/super.c                             |  1 +
+>  fs/ext4/super.c                             |  1 +
+>  fs/f2fs/super.c                             |  1 +
+>  fs/fat/nfs.c                                |  1 +
+>  fs/fhandle.c                                |  6 +--
+>  fs/fuse/inode.c                             |  7 +--
+>  fs/jffs2/super.c                            |  1 +
+>  fs/jfs/super.c                              |  1 +
+>  fs/nfsd/export.c                            |  3 +-
+>  fs/notify/fanotify/fanotify_user.c          |  4 +-
+>  fs/ntfs/namei.c                             |  1 +
+>  fs/ntfs3/super.c                            |  1 +
+>  fs/overlayfs/util.c                         |  2 +-
+>  fs/smb/client/export.c                      | 11 ++---
+>  fs/squashfs/export.c                        |  1 +
+>  fs/ufs/super.c                              |  1 +
+>  include/linux/exportfs.h                    | 51 ++++++++++++++++++-
+>  24 files changed, 128 insertions(+), 40 deletions(-)
+>
+> --
+> 2.34.1
+>
