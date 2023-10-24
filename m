@@ -2,93 +2,215 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83EDF7D5394
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 16:02:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 018007D53D7
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 16:24:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234664AbjJXOCE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Oct 2023 10:02:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
+        id S1343633AbjJXOYc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Oct 2023 10:24:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234582AbjJXOCD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 10:02:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10999110
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Oct 2023 07:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1698156080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xWzuQlELGbL+gCIg4u/+SkfNkN3ZnZ0/znjFII22yfs=;
-        b=DQlo+nzfv2GCqQlKPbe8d6+oRUm3jJagBKFWoAVXOOP8nA8z3++qp2vEm4ab8XpqisJUyP
-        GW1tO9RBnz3nUEW/1NKK+ln8a+2IP87YogpuXtZrOR8dl72AFKLuErivVERuxMJQVgUF78
-        twUr5kZdXaN534ME8nHK7nh0kgIOnk4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-483-ce_wB_DZMKCIlrTetlG3ow-1; Tue, 24 Oct 2023 10:01:11 -0400
-X-MC-Unique: ce_wB_DZMKCIlrTetlG3ow-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BBD5D918571;
-        Tue, 24 Oct 2023 14:01:10 +0000 (UTC)
-Received: from [100.85.132.103] (unknown [10.22.48.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 176F92026D4C;
-        Tue, 24 Oct 2023 14:01:08 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
+        with ESMTP id S1343562AbjJXOYb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 10:24:31 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4E83B6;
+        Tue, 24 Oct 2023 07:24:28 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161ECC433C7;
+        Tue, 24 Oct 2023 14:24:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698157468;
+        bh=7s4owhTS2KWdPLIBnSmPESiU6Lmlr9CBB23zaMiuKo8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=HIcNEkomyOMSom+TIflQWtM1yj31IzKvSV99wsuAM9Ems2egxYGi+XMdfPwJYutrD
+         GYeOu78X4F5rTATUVir3ssZR4gFcryc0oPeTydpOPsrU3LN+eOOp0xhO6DZYTjds+7
+         BN0YVN0YKh8LhIykqaw8RiwxQ+sMOByx7ypNDLqRAk5Tcmr3xnjiuD6whzGD8Czxvi
+         CB+4O2pvEK2XXx/vp7vEkV4OzMUDtNLCgUIlAtMH6G20hZ5nTK4HXE9iGcGtyNzdk/
+         QfNAxAAcWjNWVoYhKL7AYJgOeODO/rA3atgoHqxvRcgpEDFC+9uOB0vnTz1lWMSiB/
+         OMX51ENDmTLRw==
+Message-ID: <01ecb2b7876a4562570658b92f4c12cbc7ad2518.camel@kernel.org>
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Dave Chinner <david@fromorbit.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
         Christian Brauner <brauner@kernel.org>,
-        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.de>,
+        David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
         linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfs: derive f_fsid from server's fsid
-Date:   Tue, 24 Oct 2023 10:01:07 -0400
-Message-ID: <1CFE0178-CE91-4C99-B43E-33EF78D0BEBF@redhat.com>
-In-Reply-To: <20231024110109.3007794-1-amir73il@gmail.com>
-References: <20231024110109.3007794-1-amir73il@gmail.com>
+Date:   Tue, 24 Oct 2023 10:24:24 -0400
+In-Reply-To: <ZTc8tClCRkfX3kD7@dread.disaster.area>
+References: <CAHk-=wiKJgOg_3z21Sy9bu+3i_34S86r8fd6ngvJpZDwa-ww8Q@mail.gmail.com>
+         <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
+         <20231019-fluor-skifahren-ec74ceb6c63e@brauner>
+         <0a1a847af4372e62000b259e992850527f587205.camel@kernel.org>
+         <ZTGncMVw19QVJzI6@dread.disaster.area>
+         <eb3b9e71ee9c6d8e228b0927dec3ac9177b06ec6.camel@kernel.org>
+         <ZTWfX3CqPy9yCddQ@dread.disaster.area>
+         <61b32a4093948ae1ae8603688793f07de764430f.camel@kernel.org>
+         <ZTcBI2xaZz1GdMjX@dread.disaster.area>
+         <CAHk-=whphyjjLwDcEthOOFXXfgwGrtrMnW2iyjdQioV6YSMEPw@mail.gmail.com>
+         <ZTc8tClCRkfX3kD7@dread.disaster.area>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 24 Oct 2023, at 7:01, Amir Goldstein wrote:
+On Tue, 2023-10-24 at 14:40 +1100, Dave Chinner wrote:
+> On Mon, Oct 23, 2023 at 02:18:12PM -1000, Linus Torvalds wrote:
+> > On Mon, 23 Oct 2023 at 13:26, Dave Chinner <david@fromorbit.com> wrote:
+> > >=20
+> > > The problem is the first read request after a modification has been
+> > > made. That is causing relatime to see mtime > atime and triggering
+> > > an atime update. XFS sees this, does an atime update, and in
+> > > committing that persistent inode metadata update, it calls
+> > > inode_maybe_inc_iversion(force =3D false) to check if an iversion
+> > > update is necessary. The VFS sees I_VERSION_QUERIED, and so it bumps
+> > > i_version and tells XFS to persist it.
+> >=20
+> > Could we perhaps just have a mode where we don't increment i_version
+> > for just atime updates?
+> >=20
+> > Maybe we don't even need a mode, and could just decide that atime
+> > updates aren't i_version updates at all?
+>=20
+> We do that already - in memory atime updates don't bump i_version at
+> all. The issue is the rare persistent atime update requests that
+> still happen - they are the ones that trigger an i_version bump on
+> XFS, and one of the relatime heuristics tickle this specific issue.
+>=20
+> If we push the problematic persistent atime updates to be in-memory
+> updates only, then the whole problem with i_version goes away....
+>=20
 
-> Fold the server's 128bit fsid to report f_fsid in statfs(2).
-> This is similar to how uuid is folded for f_fsid of ext2/ext4/zonefs.
->
-> This allows nfs client to be monitored by fanotify filesystem watch
-> for local client access if nfs supports re-export.
->
-> For example, with inotify-tools 4.23.8.0, the following command can be
-> used to watch local client access over entire nfs filesystem:
->
->   fsnotifywatch --filesystem /mnt/nfs
->
-> Note that fanotify filesystem watch does not report remote changes on
-> server.  It provides the same notifications as inotify, but it watches
-> over the entire filesystem and reports file handle of objects and fsid
-> with events.
+POSIX (more or less) states that if you're updating the inode for any
+reason other than an atime update, then you need to update the ctime.
+The NFSv4 spec (more or less) defines the change attribute as something
+that should show a change any time the ctime would change.
 
-I think this will run into trouble where an NFSv4 will report both
-fsid.major and fsid.minor as zero for the special root filesystem.   We can
-expect an NFSv4 client to have one of these per server.
+Now, from mount(8) manpage, in the section on lazytime:
 
-Could use s_dev from nfs_server for a unique major/minor for each mount on
-the client, but these values won't be stable against a particular server
-export.
+           The on-disk timestamps are updated only when:
 
-Ben
+           =E2=80=A2   the inode needs to be updated for some change unrela=
+ted to file timestamps
 
+           =E2=80=A2   the application employs fsync(2), syncfs(2), or sync=
+(2)
+
+           =E2=80=A2   an undeleted inode is evicted from memory
+
+           =E2=80=A2   more than 24 hours have passed since the inode was w=
+ritten to disk.
+
+
+The first is not a problem for NFS. If we're updating the ctime or mtime
+or other attributes, then we _need_ to bump the change attribute
+(assuming that something has queried it and can tell a difference).
+
+The second is potentially an issue. If a file has an in-memory atime
+update and them someone calls sync(2), XFS will end up bumping the
+change attribute.
+
+Ditto for the third. If someone does a getattr and brings an inode back
+into core, then you're looking at a cache invalidation on the client.
+
+The fourth is also a problem, once a day your clients will end up
+invaliding their caches.
+
+You might think "so what? Once a day is no big deal!", but there are
+places that have built up cascading fscache setups across WANs to
+distribute large, read-mostly files. This is quite problematic in these
+sorts of setups as they end up seeing cache invalidations all over the
+place.
+
+noatime is a workaround, but it has its own problems and ugliness, and
+it sucks that XFS doesn't "just work" when served by NFS.
+
+
+> > Yes, yes, it's obviously technically a "inode modification", but does
+> > anybody actually *want* atime updates with no actual other changes to
+> > be version events?
+>=20
+> Well, yes, there was. That's why we defined i_version in the on disk
+> format this way well over a decade ago. It was part of some deep
+> dark magical HSM beans that allowed the application to combine
+> multiple scans for different inode metadata changes into a single
+> pass. atime changes was one of the things it needed to know about
+> for tiering and space scavenging purposes....
+>=20
+
+As Amir points out, is this still behavior that you're required to
+preserve? NFS serving is a bit more common than weird HSM stuff.=20
+
+Maybe newly created XFS filesystems could be made to update i_version in
+a way that nfsd expects? We could add a mkfs.xfs option to allow for the
+legacy behavior if required.
+
+> > Or maybe i_version can update, but callers of getattr() could have two
+> > bits for that STATX_CHANGE_COOKIE, one for "I care about atime" and
+> > one for others, and we'd pass that down to inode_query_version, and
+> > we'd have a I_VERSION_QUERIED and a I_VERSION_QUERIED_STRICT, and the
+> > "I care about atime" case ould set the strict one.
+>=20
+> This makes correct behaviour reliant on the applicaiton using the
+> query mechanism correctly. I have my doubts that userspace
+> developers will be able to understand the subtle difference between
+> the two options and always choose correctly....
+>=20
+> And then there's always the issue that we might end up with both
+> flags set and we get conflicting bug reports about how atime is not
+> behaving the way the applications want it to behave.
+>=20
+> > Then inode_maybe_inc_iversion() could - for atome updates - skip the
+> > version update *unless* it sees that I_VERSION_QUERIED_STRICT bit.
+> >=20
+> > Does that sound sane to people?
+>=20
+> I'd much prefer we just do the right thing transparently at the
+> filesystem level; all we need is for the inode to be flagged that it
+> should be doing in memory atime updates rather than persistent
+> updates.
+>=20
+> Perhaps the nfs server should just set a new S_LAZYTIME flag on
+> inodes it accesses similar to how we can set S_NOATIME on inodes to
+> elide atime updates altogether. Once set, the inode will behave that
+> way until it is reclaimed from memory....
+>=20
+
+
+Yeah, I think adding this sort of extra complexity on the query side is
+probably not what's needed.
+
+I'm also not crazy about trying to treat nfsd's accesses as special in
+some way. nfsd is really not doing anything special at all, other than
+querying for STATX_CHANGE_COOKIE.=20
+
+The problem is on the update side: nfsd expects the STATX_CHANGE_COOKIE
+to conform to certain behavior, and XFS simply does not (specifically
+around updates to the inode that only change the atime).
+
+--=20
+Jeff Layton <jlayton@kernel.org>
