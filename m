@@ -2,51 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B22627D5766
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 18:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD4A57D5983
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 19:12:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234605AbjJXQIW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Oct 2023 12:08:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33750 "EHLO
+        id S234423AbjJXRMf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Oct 2023 13:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjJXQIW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 12:08:22 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADFDB83
-        for <linux-nfs@vger.kernel.org>; Tue, 24 Oct 2023 09:08:19 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 600DDC433C7;
-        Tue, 24 Oct 2023 16:08:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698163699;
-        bh=DmTXuUzm5yWar7gyoWLtzIUd1urJOVtYQp3q4zQCSoQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D22AxvDSYehp1KvkIyyFRiCqJNz7qrUq7z69fwjpKeQhlQusRHVhEMYxkEfxi4wRW
-         vbie+4vmPibYgjq2DeVaNC2wr3KGjMg1YA/1xIPzAfC9Z8Bhjvune/dWekIMrROtXR
-         xwEZC/ma54fwcHjKdrrc2b6axIdZaLFvE8AucCXfjVvpz5nQ5LTIQqCqq5uulYhnAU
-         JonZDOfFbCjFyJ1IAKC+FnbtSdILv2zrypC8OHfp1l3VbqKqXfw/S5W6LtDBWTDkRT
-         wfSKKWd6XNCrxQbj42hHFHq465MI945OAssC8xCGJlaXkFTqDqM1GA+rTXIjAGsG25
-         uGHt1r+1qpEkQ==
-From:   Christian Brauner <brauner@kernel.org>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        with ESMTP id S234841AbjJXRMe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 13:12:34 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFE86129;
+        Tue, 24 Oct 2023 10:12:32 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id af79cd13be357-77784edc2edso292355285a.1;
+        Tue, 24 Oct 2023 10:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698167552; x=1698772352; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0APWsN9sAkS47gK58kM+OT6Zez1NqQFELwGD0pR6lhY=;
+        b=bUwq3TU0SS3UnH/imwup379EfXrD+G67Y3/4sLZEJVBrA6NV5Ai/isGtBMc4GY667Y
+         bTDJu9klfgF007MFRMm4RB6loNjz9UwXAC20QLQEsddP8hO/3V6oEympeHkcMFruV47r
+         NATeydlvT93kBOTz5yM8GXh9H2dtwUzDvPhMwC7jsWIwbpizecaKJpKLqV6kaYOcjWzq
+         eAxIJ+ddf+f0DXeun3IATj4VuBDRfki3Yp7hg5i2IUV7QFyyAWJpu0P9jK9j6+tBqcah
+         u/znxa/Tj362RDyroywXNXjJNbLGWvek4btha0B3PsK/XO6kjzK8dWKrzyfz5A5Ne9GU
+         aLmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698167552; x=1698772352;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0APWsN9sAkS47gK58kM+OT6Zez1NqQFELwGD0pR6lhY=;
+        b=U6uYOaKxHPt1qVTsHl1tWDxZBEZf01YkkuD4y3JdRhHz4efsZbjsuwTSCqoKYUn29B
+         dOtX1OuviIFRoTSlUIJmuJCD9I7DJa7GvzsqxawRZexRrWFx/HQMtgPOhg5UcFqq6DMj
+         obtxI6zdtH0EAMtzQYkF4F3ScNrx/EGI/p9Yv5E/rVLBZg312h7mUxouxxRDSiHWZFmJ
+         7KUiWF9N2AQLJv3A1WYMCz1g/YgcJQ8M+sYA0R+m8rtyFu0QsZ60M9Rrn0+8RKH5V4t+
+         4pxVqXFt0Ww9uJW/Q3CSfupZ3MVI5VQ4LJ9ZVqVKBceuThQiJzYmVOpYzuDkQV2QCTjm
+         phjQ==
+X-Gm-Message-State: AOJu0YyL3lDhITs59UOKrH6+RBJEU742Ad5BVPOk9Bau0p4iGx4iFyr6
+        5hbuBXNpn0+xXFHCQtefjpMM4Tn20bMTkGtULe0=
+X-Google-Smtp-Source: AGHT+IHWpT0cXScMuorbJL6/7AyuCzj6Atd8wVIC/dTA/Wd8jG1ZNaY8YBuDB/lGDjNkA4d7X38K0XoiKWglBveRMCg=
+X-Received: by 2002:a05:6214:ca6:b0:649:8f20:5528 with SMTP id
+ s6-20020a0562140ca600b006498f205528mr17988802qvs.60.1698167551591; Tue, 24
+ Oct 2023 10:12:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20231024110109.3007794-1-amir73il@gmail.com> <1CFE0178-CE91-4C99-B43E-33EF78D0BEBF@redhat.com>
+ <CAOQ4uxhe5pH3yRxFS_8pvtCgbXspKB6r9aacRJ8FysGQE2Hu9g@mail.gmail.com> <2382DA9B-D66B-41D9-8413-1C5319C01165@redhat.com>
+In-Reply-To: <2382DA9B-D66B-41D9-8413-1C5319C01165@redhat.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 24 Oct 2023 20:12:19 +0300
+Message-ID: <CAOQ4uxho0ryGuq7G+LaoTvqHRR_kg2fCNL2sGMLvNujODA8YPQ@mail.gmail.com>
+Subject: Re: [PATCH] nfs: derive f_fsid from server's fsid
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
         Jeff Layton <jlayton@kernel.org>,
         Chuck Lever <chuck.lever@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/4] Support more filesystems with FAN_REPORT_FID
-Date:   Tue, 24 Oct 2023 18:08:11 +0200
-Message-Id: <20231024-filmwelt-wegbegleiter-08412bcf1388@brauner>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231023180801.2953446-1-amir73il@gmail.com>
-References: <20231023180801.2953446-1-amir73il@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1732; i=brauner@kernel.org; h=from:subject:message-id; bh=zl9/HcJXzP0yG7d5KWmasNM+q31vAecbKVWYY1+DH8k=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSav74Rp7f/0iquBKEHM1UvBX76tednjal26LIuSZMID81P Gh2pHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABNRlmb4Z+nUJJGw4ejlh3+mX/qbdu zn7Tsx1tvDkn/efjQvNGbXDy1Ghhs3Hn2TPt6RVKVe6JF8Yu5UJcOsp3dlf9d7Vzt+PhvXwwUA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        Christian Brauner <brauner@kernel.org>,
+        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,45 +74,135 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 23 Oct 2023 21:07:57 +0300, Amir Goldstein wrote:
-> Christian,
-> 
-> The grand plan is to be able to use fanotify with FAN_REPORT_FID as a
-> drop-in replacement for inotify, but with current upstream, inotify is
-> supported on all the filesystems and FAN_REPORT_FID only on a few.
-> 
-> Making all filesystem support FAN_REPORT_FID requires that all
-> filesystems will:
-> 1. Support for AT_HANDLE_FID file handles
-> 2. Report non-zero f_fsid
-> 
-> [...]
+On Tue, Oct 24, 2023 at 6:32=E2=80=AFPM Benjamin Coddington <bcodding@redha=
+t.com> wrote:
+>
+> On 24 Oct 2023, at 10:58, Amir Goldstein wrote:
+>
+> > On Tue, Oct 24, 2023 at 5:01=E2=80=AFPM Benjamin Coddington <bcodding@r=
+edhat.com> wrote:
+> >>
+> >> On 24 Oct 2023, at 7:01, Amir Goldstein wrote:
+> >>
+> >>> Fold the server's 128bit fsid to report f_fsid in statfs(2).
+> >>> This is similar to how uuid is folded for f_fsid of ext2/ext4/zonefs.
+> >>>
+> >>> This allows nfs client to be monitored by fanotify filesystem watch
+> >>> for local client access if nfs supports re-export.
+> >>>
+> >>> For example, with inotify-tools 4.23.8.0, the following command can b=
+e
+> >>> used to watch local client access over entire nfs filesystem:
+> >>>
+> >>>   fsnotifywatch --filesystem /mnt/nfs
+> >>>
+> >>> Note that fanotify filesystem watch does not report remote changes on
+> >>> server.  It provides the same notifications as inotify, but it watche=
+s
+> >>> over the entire filesystem and reports file handle of objects and fsi=
+d
+> >>> with events.
+> >>
+> >> I think this will run into trouble where an NFSv4 will report both
+> >> fsid.major and fsid.minor as zero for the special root filesystem.   W=
+e can
+> >> expect an NFSv4 client to have one of these per server.
+> >>
+> >> Could use s_dev from nfs_server for a unique major/minor for each moun=
+t on
+> >> the client, but these values won't be stable against a particular serv=
+er
+> >> export.
+> >>
+> >
+> > That's a good point.
+> > Not sure I understand the relation between mount/server/export.
+> >
+> > If the client mounts the special NFSv4 root filesystem at /mnt/nfs,
+> > are the rest of the server exports going to be accessible via the same
+> > mount/sb or via new auto mounts of different nfs sb?
+>
+> If we cross into a new filesystem on the server, then the client will als=
+o
+> cross and leave the "root" and have a new sb with non-zero fsid.
+>
+> > In any case, f_fsid does not have to be uniform across all inodes
+> > of the same sb. This is the case with btrfs, where the the btrfs sb
+> > has inodes from the root volume and from sub-volumes.
+> > inodes from btrfs sub-volumes have a different f_fsid than inodes
+> > in the root btrfs volume.
+>
+> This isn't what I'm worried about.  I'm worried about the case where an n=
+fs
+> client will have multiple mounts with fsid's of 0:0, and those are
+> distinctly different mounts of the "root" of NFSv4 on different servers.
+>
 
-"Late is the hour in which this patchset chooses to appear."
-Let's give it some -next exposure.
+fanotify_mark() fails with -ENODEV when trying to watch an sb with
+zero f_fsid. This is the current state with nfs, so there is no concern
+for a problem - it just means that fanotify will not be able to watch
+those mounts. It's not great.
 
----
+> > We try to detect this case in fanotify, which currently does not
+> > support watching btrfs sub-volume for that reason.
+> > I have a WIP branch [1] for handling non-uniform f_fsid in
+> > fanotify by introducing the s_op->get_fsid(inode) method.
+> >
+> > Anyway, IIUC, my proposed f_fsid change is going to be fine for
+> > NFSv2/3 and best effort for NFSv4:
+> > - For NFSv2/3 mount, f_fsid is a good identifier?
+>
+> Yes, it should represent the same filesystem on the server.  You could st=
+ill
+> get duplicates between servers. What's returned in the protocol's u64 fsi=
+d
+> goes into major with minor always zero.
+>
+> I'm sure there was discussion about what implementations should use long
+> ago, but that predates me.
+>
 
-Applied to the vfs.f_fsid branch of the vfs/vfs.git tree.
-Patches in the vfs.f_fsid branch should appear in linux-next soon.
+Yeh, duplicates aren't great when watching two different sb with same
+f_fsid, it is not possible to know which sb the events came from.
+However, the process setting the sb watches can know that in advance.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
+> > - For NFSv4 mount of a specific export, f_fsid is a good identifier?
+>
+> Yes, but if the specific export is on the same server's filesystem as the
+> "root", you'll still get zero.  There are various ways to set fsid on
+> exports for linux servers, but the fsid will be the same for all exports =
+of
+> the same filesystem on the server.
+>
 
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
+OK. good to know. I thought zero fsid was only for the root itself.
 
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
+> > - For the NFSv4 root export mount, f_fsid remains zero as it is now
+>
+> Yes.
+>
+> > Am I understanding this correctly?
+>
+> I think so.
+>
+> > Do you see a reason not to make this change?
+> > Do you see a reason to limit this change for NFSv2/3?
+>
+> I'm not familiar with fanotify enough to know if having multiple fsid 0
+> mounts of different filesystems on different servers will do the right
+> thing.  I wanted to point out that very real possibility for v4.
+>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.f_fsid
+The fact that fsid 0 would be very common for many nfs mounts
+makes this patch much less attractive.
 
-[1/4] exportfs: add helpers to check if filesystem can encode/decode file handles
-      https://git.kernel.org/vfs/vfs/c/66c62769bcf6
-[2/4] exportfs: make ->encode_fh() a mandatory method for NFS export
-      https://git.kernel.org/vfs/vfs/c/dfaf653dc415
-[3/4] exportfs: define FILEID_INO64_GEN* file handle types
-      https://git.kernel.org/vfs/vfs/c/2560fa66d2ac
-[4/4] exportfs: support encoding non-decodeable file handles by default
-      https://git.kernel.org/vfs/vfs/c/950f27681add
+Because we only get events for local client changes, we do not
+have to tie the fsid with the server's fsid, we could just use a local
+volatile fsid, as we do in other non-blockdev fs (tmpfs, kernfs).
+
+I am not decisive about the best way to tackle this and since
+Jan was not sure about the value of local-only notifications
+for network filesystems, I am going to put this one on hold.
+
+Thanks for the useful feedback!
+Amir.
