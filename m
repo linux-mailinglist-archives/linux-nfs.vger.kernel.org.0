@@ -2,68 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69D1D7D47B8
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 08:50:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 544507D47F5
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 09:08:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232806AbjJXGuK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Oct 2023 02:50:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56582 "EHLO
+        id S232499AbjJXHIn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Oct 2023 03:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232705AbjJXGuH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 02:50:07 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9812ED68;
-        Mon, 23 Oct 2023 23:50:05 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 32C55C433C7;
-        Tue, 24 Oct 2023 06:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698130205;
-        bh=PRXhVx10/FrjA7p2MGMU9DorqGW2Xn/JzzYNkmVXj2k=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=mbEAN1wIsezVUNK4++FZtKNNauljLzZUs7jP7V0tZAhM5k2e43Qhi7MLqdG3XtE00
-         HApA3MkfUe0atLqaVrfNAgfKf9o7MXequ1avpiACLgkEMBlx4rhCi+y7acOSWyofpi
-         x4xHBEgJE9i8gk3IcP07aJT8mr6gXDuSXKul4zBaOs5d653fRnwSe/9V7ib70Y9wj2
-         /e4tZHU2KiPiOooGvWTeeIAWHfF69xcCXmng+O24NI5uJyWGezfw7oGj4EYOGYOpP3
-         DnRX+B+kyVbHEB0/5X3EDp6Ucv0GkgZM+B8UiyUzfqyDxPlejCW7eQoQplWKvZWt8Q
-         qmUO/i1rZEelQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 05A8BC595CE;
-        Tue, 24 Oct 2023 06:50:05 +0000 (UTC)
-Subject: Re: [git pull] nfsd fix
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20231024061853.GG800259@ZenIV>
-References: <20231024061853.GG800259@ZenIV>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20231024061853.GG800259@ZenIV>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git tags/pull-nfsd-fix
-X-PR-Tracked-Commit-Id: 1aee9158bc978f91701c5992e395efbc6da2de3c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: d88520ad73b79e71e3ddf08de335b8520ae41c5c
-Message-Id: <169813020491.9837.3700927031871789177.pr-tracker-bot@kernel.org>
-Date:   Tue, 24 Oct 2023 06:50:04 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
+        with ESMTP id S232398AbjJXHIm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 03:08:42 -0400
+Received: from mail-qv1-xf30.google.com (mail-qv1-xf30.google.com [IPv6:2607:f8b0:4864:20::f30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60402118;
+        Tue, 24 Oct 2023 00:08:40 -0700 (PDT)
+Received: by mail-qv1-xf30.google.com with SMTP id 6a1803df08f44-66d0ea3e5b8so28240466d6.0;
+        Tue, 24 Oct 2023 00:08:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698131319; x=1698736119; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SqdvkUsqWd4zu3IEIRbwUNktCPDbd/gk6A5nLT4VIeM=;
+        b=FkuzKWGPgKu23f7MQ6y7O95S5s8tdJxnEbTm32ctOfOzqfZw7wYlQ2m+cQebQCvLmI
+         QdA81shifDt2PODrds6dL+fS7CXobtOJCrjpR6bG7dbnqTbba20b86rafCdcSTgR/Yyi
+         KzSHzflOfAjLM2oAOpuInTpgoRIjN73+gB70dH5KP1MKe/mVp8Smo8dLW+Vl/yJcO+tw
+         x3qxY8+uEOiMj50y9K1UEbNMMdyd7u0+YttX0ItYMBsV9yKRN/Tkedh1b/9VeZK5b99n
+         He/6UcX91drwZ24+2yQtdX/e1Wv5PULL+1PepPdkeFoREss0CjJrH3ThxhlylPut3C+j
+         ZTVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698131319; x=1698736119;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SqdvkUsqWd4zu3IEIRbwUNktCPDbd/gk6A5nLT4VIeM=;
+        b=NkEpQjSoPD02q96gAuiLXCwVsdB03WrXXvWt/qHtUYGeWVvS2Bam1So3U1/5ingnnE
+         MViCUCkh/KACYZodogDDXXtIEdxr793RkFpEi3WIjMAlKGagpq7br7iFApD14Htz4wbC
+         sIgT0eZJbNtXprhehOU/aZOnCuKyCESJpLETvndw5OUtg/lodN0SXWO0J+3UyzSyEfzJ
+         jicRp82Ox19E+35RtfgT+ke9gdjMJLDvzrwpNxs69o84ZsudXimUaGyH8XWuIyMTe6Fq
+         piwtM24i5NI39wmAuYESGr0FRvb1sE7RqGRbe6gM1DRz5vOJ4pqqozKNRwsTq7jtvHTm
+         TOOQ==
+X-Gm-Message-State: AOJu0YyG7MvE0y3hL5cdKABpm48QPrTnT6hVCTG2qoAOdUeNh3TSJg2n
+        dVnZM2byIrYgctYY8om2S5gHu0XtNmHRZBrpzp4=
+X-Google-Smtp-Source: AGHT+IE3cbJpQKZFd6RGOof+Net59golChwN9iI+4rus52ve4TnU6zTtzWsEuc24BZZmeNAApernLLkRejdVGhlj2/w=
+X-Received: by 2002:a05:6214:224c:b0:658:7441:ff1b with SMTP id
+ c12-20020a056214224c00b006587441ff1bmr14513785qvc.45.1698131319478; Tue, 24
+ Oct 2023 00:08:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHk-=wiKJgOg_3z21Sy9bu+3i_34S86r8fd6ngvJpZDwa-ww8Q@mail.gmail.com>
+ <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
+ <20231019-fluor-skifahren-ec74ceb6c63e@brauner> <0a1a847af4372e62000b259e992850527f587205.camel@kernel.org>
+ <ZTGncMVw19QVJzI6@dread.disaster.area> <eb3b9e71ee9c6d8e228b0927dec3ac9177b06ec6.camel@kernel.org>
+ <ZTWfX3CqPy9yCddQ@dread.disaster.area> <61b32a4093948ae1ae8603688793f07de764430f.camel@kernel.org>
+ <ZTcBI2xaZz1GdMjX@dread.disaster.area> <CAHk-=whphyjjLwDcEthOOFXXfgwGrtrMnW2iyjdQioV6YSMEPw@mail.gmail.com>
+ <ZTc8tClCRkfX3kD7@dread.disaster.area>
+In-Reply-To: <ZTc8tClCRkfX3kD7@dread.disaster.area>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 24 Oct 2023 10:08:28 +0300
+Message-ID: <CAOQ4uxhJGkZrUdUJ72vjRuLec0g8VqgRXRH=x7W9ogMU6rBxcQ@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+To:     Dave Chinner <david@fromorbit.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Jeff Layton <jlayton@kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Christian Brauner <brauner@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.de>, David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
         linux-nfs@vger.kernel.org
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Tue, 24 Oct 2023 07:18:53 +0100:
+On Tue, Oct 24, 2023 at 6:40=E2=80=AFAM Dave Chinner <david@fromorbit.com> =
+wrote:
+>
+> On Mon, Oct 23, 2023 at 02:18:12PM -1000, Linus Torvalds wrote:
+> > On Mon, 23 Oct 2023 at 13:26, Dave Chinner <david@fromorbit.com> wrote:
+> > >
+> > > The problem is the first read request after a modification has been
+> > > made. That is causing relatime to see mtime > atime and triggering
+> > > an atime update. XFS sees this, does an atime update, and in
+> > > committing that persistent inode metadata update, it calls
+> > > inode_maybe_inc_iversion(force =3D false) to check if an iversion
+> > > update is necessary. The VFS sees I_VERSION_QUERIED, and so it bumps
+> > > i_version and tells XFS to persist it.
+> >
+> > Could we perhaps just have a mode where we don't increment i_version
+> > for just atime updates?
+> >
+> > Maybe we don't even need a mode, and could just decide that atime
+> > updates aren't i_version updates at all?
+>
+> We do that already - in memory atime updates don't bump i_version at
+> all. The issue is the rare persistent atime update requests that
+> still happen - they are the ones that trigger an i_version bump on
+> XFS, and one of the relatime heuristics tickle this specific issue.
+>
+> If we push the problematic persistent atime updates to be in-memory
+> updates only, then the whole problem with i_version goes away....
+>
+> > Yes, yes, it's obviously technically a "inode modification", but does
+> > anybody actually *want* atime updates with no actual other changes to
+> > be version events?
+>
+> Well, yes, there was. That's why we defined i_version in the on disk
+> format this way well over a decade ago. It was part of some deep
+> dark magical HSM beans that allowed the application to combine
+> multiple scans for different inode metadata changes into a single
+> pass. atime changes was one of the things it needed to know about
+> for tiering and space scavenging purposes....
+>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git tags/pull-nfsd-fix
+But if this is such an ancient mystical program, why do we have to
+keep this XFS behavior in the present?
+BTW, is this the same HSM whose DMAPI ioctls were deprecated
+a few years back?
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/d88520ad73b79e71e3ddf08de335b8520ae41c5c
+I mean, I understand that you do not want to change the behavior of
+i_version update without an opt-in config or mount option - let the distro
+make that choice.
+But calling this an "on-disk format change" is a very long stretch.
 
-Thank you!
+Does xfs_repair guarantee that changes of atime, or any inode changes
+for that matter, update i_version? No, it does not.
+So IMO, "atime does not update i_version" is not an "on-disk format change"=
+,
+it is a runtime behavior change, just like lazytime is.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Thanks,
+Amir.
