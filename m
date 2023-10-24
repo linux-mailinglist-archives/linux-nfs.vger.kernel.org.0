@@ -2,59 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E807D4610
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 05:40:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8520A7D46A3
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 Oct 2023 06:11:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232156AbjJXDkq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 Oct 2023 23:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41810 "EHLO
+        id S232051AbjJXELD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 Oct 2023 00:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230213AbjJXDko (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 Oct 2023 23:40:44 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A69CFD6
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Oct 2023 20:40:40 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1cab2c24ecdso24555925ad.0
-        for <linux-nfs@vger.kernel.org>; Mon, 23 Oct 2023 20:40:40 -0700 (PDT)
+        with ESMTP id S232006AbjJXEK7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 00:10:59 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1959810C
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Oct 2023 21:10:56 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-9c603e235d1so611427966b.3
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Oct 2023 21:10:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698118840; x=1698723640; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oWeGYZJ7Zqr0SZ51s3Tlaj8JTzPWhfxnA67l062INq8=;
-        b=Yka22y6GudilGqFN93hZ3gwUjSZ7fiAGVB18y4YS4VOx58FRysiSaOTltq7hIkbDBd
-         HPXEDh59iJ3MMQ96QGEDnefC0uQijgkyObUH9MU4SVox2nSN+nx8v13NOTjz8p3rnxMY
-         jD8H5GanpdTZOGT+9uo9YTlYuv2KagQsVwNsOG3qC3oci8YOhcZRYJ7jn0lz/Q/P6e27
-         PLsZyIvvJ5kJ+BVqjs3Gpf3tuW9rtUzbWudkY7Z16SUUP/5epPAtS32tHEwpdoAZO2rj
-         OZ5NlqtIiGQTPibS/tUMx/VVSgXuisk/853Fpn45b9rUTefWXD6Zy7yMeU/+HbSKPCG8
-         H4Ug==
+        d=linux-foundation.org; s=google; t=1698120654; x=1698725454; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=R/DnLkXKcbtHeIdj2lNteiEcRFjQW0/FCeNT137Lkzs=;
+        b=Aw95fEiSWtFcR8obn3vjO/5M5aj1EuPgR5uJJkCqlvJnxOXShvYCdyhamojVfrIQpi
+         XDba13gNYmYGH0jiEeB8bDWs8chBIA8q/RfnAUFtqd+zRDiwEnVk235aoAUB8uQBnUNo
+         +/9a+5m38Q6YGXKdQ3OdZcrhH1ryorDounMfE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698118840; x=1698723640;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oWeGYZJ7Zqr0SZ51s3Tlaj8JTzPWhfxnA67l062INq8=;
-        b=Kszpda93K9ulHFtfQQBkXV1GipHcZqdgW6D4i1buI/o/YHtW4In57orwEAdYeHctsw
-         tXyx0/OVZTYyRSF5mIY7TXAoLFfxUkh2iWcTo9A6g/W8gKTdqY2TCAs25RH5kaJZrgOp
-         S8sHImoaBfvM5cgZbhC2bKbgYeA96usXjoUydc9jqnm0JN+yp+9PcUlmshssCJSk0+jT
-         OE63lmYw93bQV/pD9h3DHh1HH+H9hT6b6xFfpEF5h6gcwlkf4ddxSKbp2urPVkPa4UGC
-         Olz50DI5ySNX9zwW0Gjnv0SOtMaW/Q+70SO/vmyWzgkMbS22xy5kyZyiViBx2rww6m4f
-         j9yg==
-X-Gm-Message-State: AOJu0Yywh2GIbaunLR6sBS0tQvKY3rDhmnZavPbMUn8fdKq81BUXgck6
-        2LTrBERBp7WPuKWyukGN8tE/rw==
-X-Google-Smtp-Source: AGHT+IHBoF+8WS2RfetzLDwdufPuai+lmlctVilCrpXxsuy5LNKEo/W+GvWNVlLVD0/hEfe7bag85w==
-X-Received: by 2002:a17:903:84f:b0:1c9:d25c:17c6 with SMTP id ks15-20020a170903084f00b001c9d25c17c6mr8511411plb.1.1698118840059;
-        Mon, 23 Oct 2023 20:40:40 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
-        by smtp.gmail.com with ESMTPSA id n14-20020a170902d2ce00b001c739768214sm6668917plc.92.2023.10.23.20.40.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Oct 2023 20:40:39 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qv8HU-0039F0-1Z;
-        Tue, 24 Oct 2023 14:40:36 +1100
-Date:   Tue, 24 Oct 2023 14:40:36 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        d=1e100.net; s=20230601; t=1698120654; x=1698725454;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R/DnLkXKcbtHeIdj2lNteiEcRFjQW0/FCeNT137Lkzs=;
+        b=xB/6fLD1GISm11MaF9JLvl8+PKi+4v3rNKnBMC9IjE/iZzZrLo/ad9wZzvENtTpJzF
+         B8+zr7LRBqJ3gpE/mu0CMSaR+nm1bOEEadLNqoIFFynm7bLYa5qvoO/RvQnuN+PvTlKm
+         ma4q1kRZ4j75Xq4vq3LN1djifrUNJPN+3lRnzTH1pqLZgZ0pw5/2eskL4WSrDN5x83Fe
+         ITDBEzBFxDvFQzdL6/jxK/OcivEF+NOJsVVOqFDeelshzhAy4WvCeSbBZ2n/88PKV2NA
+         RPozO/1aGglch2PW/o8L51Lw9vlXqWG8w6F14Gmy22kmofepQpYFNVzfRUyoMLVsoPyy
+         MRBw==
+X-Gm-Message-State: AOJu0YwWjG2QIG96AZ6MZMdcTNH1zBFDbWYDSQ9Y2I3/+qxwKvIdxrO6
+        DMZF3Il8PO9L6s24pQxBFDOGyp6etrlIjr8eGBu2GRT/
+X-Google-Smtp-Source: AGHT+IHnYZKe/zWcoxzexEZn51eYaHuKNl64mjqh2HqbtIK17IXGnuFuVejPYONGOH65o09uMkHJqQ==
+X-Received: by 2002:a17:907:e8b:b0:9c3:e66e:2006 with SMTP id ho11-20020a1709070e8b00b009c3e66e2006mr9527497ejc.9.1698120654219;
+        Mon, 23 Oct 2023 21:10:54 -0700 (PDT)
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com. [209.85.128.51])
+        by smtp.gmail.com with ESMTPSA id q6-20020a1709060e4600b009b28ad521f4sm7480851eji.4.2023.10.23.21.10.53
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Oct 2023 21:10:53 -0700 (PDT)
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40853c639abso28355375e9.0
+        for <linux-nfs@vger.kernel.org>; Mon, 23 Oct 2023 21:10:53 -0700 (PDT)
+X-Received: by 2002:a05:6402:274e:b0:53e:8e09:524d with SMTP id
+ z14-20020a056402274e00b0053e8e09524dmr2329463edd.5.1698120632873; Mon, 23 Oct
+ 2023 21:10:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHk-=wiKJgOg_3z21Sy9bu+3i_34S86r8fd6ngvJpZDwa-ww8Q@mail.gmail.com>
+ <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
+ <20231019-fluor-skifahren-ec74ceb6c63e@brauner> <0a1a847af4372e62000b259e992850527f587205.camel@kernel.org>
+ <ZTGncMVw19QVJzI6@dread.disaster.area> <eb3b9e71ee9c6d8e228b0927dec3ac9177b06ec6.camel@kernel.org>
+ <ZTWfX3CqPy9yCddQ@dread.disaster.area> <61b32a4093948ae1ae8603688793f07de764430f.camel@kernel.org>
+ <ZTcBI2xaZz1GdMjX@dread.disaster.area> <CAHk-=whphyjjLwDcEthOOFXXfgwGrtrMnW2iyjdQioV6YSMEPw@mail.gmail.com>
+ <ZTc8tClCRkfX3kD7@dread.disaster.area>
+In-Reply-To: <ZTc8tClCRkfX3kD7@dread.disaster.area>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 23 Oct 2023 18:10:15 -1000
+X-Gmail-Original-Message-ID: <CAHk-=wjUWM8VVJxUYb=XfqvrS38ACS8RxK2ac9qGp9FDT=USkw@mail.gmail.com>
+Message-ID: <CAHk-=wjUWM8VVJxUYb=XfqvrS38ACS8RxK2ac9qGp9FDT=USkw@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+To:     Dave Chinner <david@fromorbit.com>
 Cc:     Jeff Layton <jlayton@kernel.org>,
         Kent Overstreet <kent.overstreet@linux.dev>,
         Christian Brauner <brauner@kernel.org>,
@@ -64,7 +76,7 @@ Cc:     Jeff Layton <jlayton@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Chandan Babu R <chandan.babu@oracle.com>,
         "Darrick J. Wong" <djwong@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
+        "Theodore Ts'o" <tytso@mit.edu>,
         Andreas Dilger <adilger.kernel@dilger.ca>,
         Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
         David Sterba <dsterba@suse.com>,
@@ -76,101 +88,68 @@ Cc:     Jeff Layton <jlayton@kernel.org>,
         linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
         linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
         linux-nfs@vger.kernel.org
-Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
- timestamp handing
-Message-ID: <ZTc8tClCRkfX3kD7@dread.disaster.area>
-References: <CAHk-=wiKJgOg_3z21Sy9bu+3i_34S86r8fd6ngvJpZDwa-ww8Q@mail.gmail.com>
- <5f96e69d438ab96099bb67d16b77583c99911caa.camel@kernel.org>
- <20231019-fluor-skifahren-ec74ceb6c63e@brauner>
- <0a1a847af4372e62000b259e992850527f587205.camel@kernel.org>
- <ZTGncMVw19QVJzI6@dread.disaster.area>
- <eb3b9e71ee9c6d8e228b0927dec3ac9177b06ec6.camel@kernel.org>
- <ZTWfX3CqPy9yCddQ@dread.disaster.area>
- <61b32a4093948ae1ae8603688793f07de764430f.camel@kernel.org>
- <ZTcBI2xaZz1GdMjX@dread.disaster.area>
- <CAHk-=whphyjjLwDcEthOOFXXfgwGrtrMnW2iyjdQioV6YSMEPw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whphyjjLwDcEthOOFXXfgwGrtrMnW2iyjdQioV6YSMEPw@mail.gmail.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Oct 23, 2023 at 02:18:12PM -1000, Linus Torvalds wrote:
-> On Mon, 23 Oct 2023 at 13:26, Dave Chinner <david@fromorbit.com> wrote:
+On Mon, 23 Oct 2023 at 17:40, Dave Chinner <david@fromorbit.com> wrote:
 > >
-> > The problem is the first read request after a modification has been
-> > made. That is causing relatime to see mtime > atime and triggering
-> > an atime update. XFS sees this, does an atime update, and in
-> > committing that persistent inode metadata update, it calls
-> > inode_maybe_inc_iversion(force = false) to check if an iversion
-> > update is necessary. The VFS sees I_VERSION_QUERIED, and so it bumps
-> > i_version and tells XFS to persist it.
-> 
-> Could we perhaps just have a mode where we don't increment i_version
-> for just atime updates?
+> > Maybe we don't even need a mode, and could just decide that atime
+> > updates aren't i_version updates at all?
 >
-> Maybe we don't even need a mode, and could just decide that atime
-> updates aren't i_version updates at all?
+> We do that already - in memory atime updates don't bump i_version at
+> all. The issue is the rare persistent atime update requests that
+> still happen - they are the ones that trigger an i_version bump on
+> XFS, and one of the relatime heuristics tickle this specific issue.
 
-We do that already - in memory atime updates don't bump i_version at
-all. The issue is the rare persistent atime update requests that
-still happen - they are the ones that trigger an i_version bump on
-XFS, and one of the relatime heuristics tickle this specific issue.
+Yes, yes, but that's what I kind of allude to - maybe people still
+want the on-disk atime updates, but do they actually want the
+i_version updates just because they want more aggressive atime
+updates?
 
-If we push the problematic persistent atime updates to be in-memory
-updates only, then the whole problem with i_version goes away....
+> > Or maybe i_version can update, but callers of getattr() could have two
+> > bits for that STATX_CHANGE_COOKIE, one for "I care about atime" and
+> > one for others, and we'd pass that down to inode_query_version, and
+> > we'd have a I_VERSION_QUERIED and a I_VERSION_QUERIED_STRICT, and the
+> > "I care about atime" case ould set the strict one.
+>
+> This makes correct behaviour reliant on the applicaiton using the
+> query mechanism correctly. I have my doubts that userspace
+> developers will be able to understand the subtle difference between
+> the two options and always choose correctly....
 
-> Yes, yes, it's obviously technically a "inode modification", but does
-> anybody actually *want* atime updates with no actual other changes to
-> be version events?
+I don't think we _have_ a user space interface.
 
-Well, yes, there was. That's why we defined i_version in the on disk
-format this way well over a decade ago. It was part of some deep
-dark magical HSM beans that allowed the application to combine
-multiple scans for different inode metadata changes into a single
-pass. atime changes was one of the things it needed to know about
-for tiering and space scavenging purposes....
+At least the STATX_CHANGE_COOKIE bit isn't exposed to user space at
+all. Not in the uapi headers, but not even in xstat():
 
-> Or maybe i_version can update, but callers of getattr() could have two
-> bits for that STATX_CHANGE_COOKIE, one for "I care about atime" and
-> one for others, and we'd pass that down to inode_query_version, and
-> we'd have a I_VERSION_QUERIED and a I_VERSION_QUERIED_STRICT, and the
-> "I care about atime" case ould set the strict one.
+        /* STATX_CHANGE_COOKIE is kernel-only for now */
+        tmp.stx_mask = stat->result_mask & ~STATX_CHANGE_COOKIE;
 
-This makes correct behaviour reliant on the applicaiton using the
-query mechanism correctly. I have my doubts that userspace
-developers will be able to understand the subtle difference between
-the two options and always choose correctly....
+So the *only* users of STATX_CHANGE_COOKIE seem to be entirely
+in-kernel, unless there is something I'm missing where somebody uses
+i_version through some other interface (random ioctl?).
 
-And then there's always the issue that we might end up with both
-flags set and we get conflicting bug reports about how atime is not
-behaving the way the applications want it to behave.
+End result: splitting STATX_CHANGE_COOKIE into a "I don't care about
+atime" and a "give me all change events" shouldn't possibly break
+anything that I can see.
 
-> Then inode_maybe_inc_iversion() could - for atome updates - skip the
-> version update *unless* it sees that I_VERSION_QUERIED_STRICT bit.
-> 
-> Does that sound sane to people?
+The only other uses of inode_query_iversion() seem to be the explicit
+directory optimizations (ie the "I'm caching the offset and don't want
+to re-check that it's valid unless required, so give me the inode
+version for the directory as a way to decide if I need to re-check"
+thing).
 
-I'd much prefer we just do the right thing transparently at the
-filesystem level; all we need is for the inode to be flagged that it
-should be doing in memory atime updates rather than persistent
-updates.
+And those *definitely* don't want i_version updates on any atime updates.
 
-Perhaps the nfs server should just set a new S_LAZYTIME flag on
-inodes it accesses similar to how we can set S_NOATIME on inodes to
-elide atime updates altogether. Once set, the inode will behave that
-way until it is reclaimed from memory....
+There might be some other use of inode_query_iversion() that I missed,
+of course.  But from a quick look, it really looks to me like we can
+relax our i_version updates.
 
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+              Linus
