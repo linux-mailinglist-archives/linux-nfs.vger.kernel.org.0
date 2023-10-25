@@ -2,70 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A12BC7D6076
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Oct 2023 05:20:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85CEF7D617B
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Oct 2023 08:11:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232076AbjJYDUS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 Oct 2023 23:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49518 "EHLO
+        id S231732AbjJYGL1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Oct 2023 02:11:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232323AbjJYDUR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 Oct 2023 23:20:17 -0400
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE15112F;
-        Tue, 24 Oct 2023 20:20:14 -0700 (PDT)
-Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-66cfd0b2d58so34144866d6.2;
-        Tue, 24 Oct 2023 20:20:14 -0700 (PDT)
+        with ESMTP id S231776AbjJYGL0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Oct 2023 02:11:26 -0400
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E9E2A6;
+        Tue, 24 Oct 2023 23:11:23 -0700 (PDT)
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2c59a4dcdacso16035621fa.1;
+        Tue, 24 Oct 2023 23:11:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698204014; x=1698808814; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oQ0kHwYcA3WBYxuA4qFv7+Oyd4eJP2fjd8A3g9tIxhw=;
-        b=bZGzhejLt7jg78IJNPuTK43iZCXtA4jy+tL1AEXHYwnWQlGnQMrnlZtytj8JtsrXKl
-         rsRigOrGadqRYGwExsqHHFn/49y9nrAxDujBX4/Q67q5GSUOiSeYBj8cZMgoWHCNUpZ2
-         mo9ugV1oHSSrKJ2yeP8/f2RiG+bemyr03qsMOG+rieS4MChTrHBYcgFMyVOILdmvYp8D
-         sSwRmId/ReTgVQtLT+oqc3ZBTsqqDch/s5tMNWTl3/pp25JLNXDW203IZXfZ17SWkc2r
-         6R6I7hXs+jkSsuvX/8RGK3MhxCi/U5MTwtmn0oQzWPGm2q6stlt8IiRM6MEPtip2FK0x
-         cWpw==
+        d=gmail.com; s=20230601; t=1698214282; x=1698819082; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GjREnK1xDi9U0NJUrdaQZ7C6GoivK/F80JCHW1qci0s=;
+        b=DmCrEewMY9MuAujOQU96YsLMPmhvng+gsymauH0S4IeIUf17RrlDv9UsCc3f+gYJWD
+         HAxNICHS22ec39uzrc6U5/ggZF65YrUcLK077dQd41qVlMbZbywkdJthpTHv5ai8zSH9
+         2wxMmXxd1ys5KBzfD3ZZHZ5xA9ZHN5mpL5pmmaZdeST7D1gn3GV1XrKjP8uAxDNBAI31
+         4wOlTsGKfF9bcJ741QB2dLfyCcqHSa4qtlnt3W2le5Qak/nEfZc4X4NFNFPJX/DwM2gA
+         A6pB8WgJioPwL+yubDUTenbmM+xhUGcybmMU1qzAuOJtzZY/Zngmi8KmdU2TA2lAHEIP
+         JvYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698204014; x=1698808814;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oQ0kHwYcA3WBYxuA4qFv7+Oyd4eJP2fjd8A3g9tIxhw=;
-        b=ZjZQPVCt8dfId5J9x3RKc4Ow1SKzNvEBuxkxMCksweS2HW2wvrulkWfD+hmCIFLb/s
-         5bBVzlwdd2nvUGLtCCpmzxtcIJue1d7tdITI3hRx0DLWdFu33//iXvGzU2TR5JOsd1Hm
-         hukQct83PmwJ2/0w1UFEiIG/7f6VD7Q3S+GTta8RhvT+5TzxCLaR34UcjNraeyN5vEqd
-         TTmr3QhsCeNnjKpxixIrCOpEZ8oIGNn+yKwCSgEX2ZrGdysCKVWsUohn9fpNzMCD82+n
-         lUsUoVNYvoEJAhmIVtVfo//7Zr7cZMYcwCJjPg4TFeJQWBf5EixFIOiLGYTkHllWVoq6
-         BsIA==
-X-Gm-Message-State: AOJu0YzfRBOQ4Ca6r7e8SHbXeHkoqbS/7+F2VFoUrG5tt+SvC2yPjFy2
-        Rj/0zy7EEEf5lGJDDJ/iJkYpJDVUe0W1Uk1d+sC14B87mTJJSA==
-X-Google-Smtp-Source: AGHT+IEBUnKyzIyof/7vwEwP7XOYFrnkk2dHmI/XBzZUr++4DPzQnC6/+UDVAZVlxP0ATTrrPct/uoHc/qAm8kbn7h4=
-X-Received: by 2002:a05:6214:224c:b0:658:7441:ff1b with SMTP id
- c12-20020a056214224c00b006587441ff1bmr17972681qvc.45.1698204014008; Tue, 24
- Oct 2023 20:20:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20231024110109.3007794-1-amir73il@gmail.com> <1CFE0178-CE91-4C99-B43E-33EF78D0BEBF@redhat.com>
- <CAOQ4uxhe5pH3yRxFS_8pvtCgbXspKB6r9aacRJ8FysGQE2Hu9g@mail.gmail.com>
- <2382DA9B-D66B-41D9-8413-1C5319C01165@redhat.com> <CAOQ4uxho0ryGuq7G+LaoTvqHRR_kg2fCNL2sGMLvNujODA8YPQ@mail.gmail.com>
- <41F5B54F-0345-4C44-99FB-6E2A6C9F365C@redhat.com>
-In-Reply-To: <41F5B54F-0345-4C44-99FB-6E2A6C9F365C@redhat.com>
+        d=1e100.net; s=20230601; t=1698214282; x=1698819082;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GjREnK1xDi9U0NJUrdaQZ7C6GoivK/F80JCHW1qci0s=;
+        b=w9EoquK/TrA7bSKXU0CBTIsnro+HzHtH74sq60yKCu9eefx60YyYCIr2kaDggkqniL
+         TxGb12UurCjSCr7B6Hy3yoHyM9rrGXYKn6HLRPquOglqqmGO442uc7tXRxh4EyUIuYIH
+         Sr82g+1tNKfSqnDatdjL+FWthy30l1ksnV7jQZDHckU0Tet2DB31AYJj0I7XUxSTqa4+
+         qHT4THzj98Xa3dCbBHC8c+vVaTOjYv80xh9kTN9hVxxr8mpGiK+bO7i7YVMCxWC+VfeH
+         BxP8lI7vYt9j3v6mQvT+TlAzDEVc8uVL8+hLlxUP5XEMojPSQLN3Q2aT2Gf6rKeQT7DC
+         P4TQ==
+X-Gm-Message-State: AOJu0YxNlwy1CT9OniM3Z8vLSAoeaznZg1orGWnDCSTYsqFckbsXevVQ
+        r1VhQjw8y60xcarUW39+9fA=
+X-Google-Smtp-Source: AGHT+IH9OwCRFt1pqzmRWheSzpG/QU4mVEMac9+bClSl1skqD+sciZ6amKAQf/982cz0Ffk+uQUAiA==
+X-Received: by 2002:a2e:8899:0:b0:2bc:c650:81b with SMTP id k25-20020a2e8899000000b002bcc650081bmr9828416lji.15.1698214281551;
+        Tue, 24 Oct 2023 23:11:21 -0700 (PDT)
+Received: from amir-ThinkPad-T480.lan ([5.29.249.86])
+        by smtp.gmail.com with ESMTPSA id v19-20020a05600c471300b00405959bbf4fsm13851112wmo.19.2023.10.24.23.11.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Oct 2023 23:11:21 -0700 (PDT)
 From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Wed, 25 Oct 2023 06:20:02 +0300
-Message-ID: <CAOQ4uxgFybKV5WG5fQtzG0HD3TkxcGD-+CuwU7DBwNG4HOvQNQ@mail.gmail.com>
-Subject: Re: [PATCH] nfs: derive f_fsid from server's fsid
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
         Jeff Layton <jlayton@kernel.org>,
         Chuck Lever <chuck.lever@oracle.com>,
         Christian Brauner <brauner@kernel.org>,
         Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
         linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH v2] nfs: derive f_fsid from s_dev and server's fsid
+Date:   Wed, 25 Oct 2023 09:11:17 +0300
+Message-Id: <20231025061117.3068417-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
@@ -76,62 +73,79 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Oct 24, 2023 at 9:01=E2=80=AFPM Benjamin Coddington <bcodding@redha=
-t.com> wrote:
->
-> On 24 Oct 2023, at 13:12, Amir Goldstein wrote:
-> > On Tue, Oct 24, 2023 at 6:32=E2=80=AFPM Benjamin Coddington <bcodding@r=
-edhat.com> wrote:
-> >> Yes, but if the specific export is on the same server's filesystem as =
-the
-> >> "root", you'll still get zero.  There are various ways to set fsid on
-> >> exports for linux servers, but the fsid will be the same for all expor=
-ts of
-> >> the same filesystem on the server.
-> >>
-> >
-> > OK. good to know. I thought zero fsid was only for the root itself.
->
-> Yes, but by "root" here I always mean the special NFSv4 root - the specia=
-l
-> per-server global root filehandle.
->
-> ...
->
-> >> I'm not familiar with fanotify enough to know if having multiple fsid =
-0
-> >> mounts of different filesystems on different servers will do the right
-> >> thing.  I wanted to point out that very real possibility for v4.
-> >>
-> >
-> > The fact that fsid 0 would be very common for many nfs mounts
-> > makes this patch much less attractive.
-> >
-> > Because we only get events for local client changes, we do not
-> > have to tie the fsid with the server's fsid, we could just use a local
-> > volatile fsid, as we do in other non-blockdev fs (tmpfs, kernfs).
->
-> A good way to do this would be to use the nfs_server->s_dev's major:minor=
- -
-> this represents the results of nfs_compare_super(), so it should be the s=
-ame
-> value if NFS is treating it as the same filesystem.
->
+Use s_dev number and the server's fsid to report f_fsid in statfs(2).
 
-Yes, that would avoid local collisions and this is what we are going
-to do for most of the simple fs with anon_bdev [1].
+The server's fsid could be zero for NFSv4 root export and is not unique
+across different servers, so we use the s_dev number to avoid local
+f_fsid collisions.
 
-But anon_bdev major is 0 and minor is quickly recyclable.
-fanotify identified objects by {f_fsid, f_handle} pair.
-Since nfs client encodes persistent file handles, I would like to try to ho=
-ld
-its f_fsid to higher standards than those of the simple fs.
+The s_dev number could be easily recycled, so we use a 32bit hash of the
+server's fsid to try to avoid the recycling of same local f_fsid for
+different remote fs.  The anon bdev number is only 20 bits (major is 0),
+so we could use more bits for the server's fsid hash, but avoiding f_fsid
+recycling is not critical, so 32bit hash is enough.
 
-You say that server->fsid.minor is always 0.
-Perhaps we should mix server->fsid.major with server->s_dev's minor?
+This allows nfs client to be monitored by fanotify filesystem watch
+for local client access if nfs supports re-export.
+
+For example, with inotify-tools 4.23.8.0, the following command can be
+used to watch local client access over entire nfs filesystem:
+
+  fsnotifywatch --filesystem /mnt/nfs
+
+Note that fanotify filesystem watch does not report remote changes on
+server.  It provides the same notifications as inotify, but it watches
+over the entire filesystem and reports file handle of objects and fsid
+with events.
+
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
+
+Anna, Trond,
+
+I have changed v2 according to feedback from Ben.
+
+I would like to refer you to the documentation of f_fsid in statfs(2):
+
+"Nobody knows what f_fsid is supposed to contain...
+ The general idea is that f_fsid contains some random stuff such that the
+ pair (f_fsid,ino) uniquely determines a file.  Some operating systems use
+ (a variation on) the device number, or the device number combined with the
+ filesystem type..."
+
+This definition leaves a lot of room for interpretations.
+I chose f_fsid format {dev_num, fsid_hash}, because I think that it nicely
+extends f_fsid format {dev_num, 0}, used by many fs without persistent fsid.
 
 Thanks,
 Amir.
 
-[1] https://lore.kernel.org/linux-fsdevel/20231023143049.2944970-1-amir73il=
-@gmail.com/
+Changes since v1:
+- Use d_sev number to avoid collisions (bcodding)
+
+ fs/nfs/super.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 0d6473cb00cb..30bcd53da3bc 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -295,6 +295,15 @@ int nfs_statfs(struct dentry *dentry, struct kstatfs *buf)
+ 	buf->f_ffree = res.afiles;
+ 
+ 	buf->f_namelen = server->namelen;
++	/*
++	 * Using the anon bdev number to avoid local f_fsid collisions.
++	 * Server's fsid could be zero for NFSv4 root export and is not unique
++	 * across different servers, but we use it as best effort to try to
++	 * avoid the recycling of same local f_fsid for different remote fs.
++	 */
++	buf->f_fsid.val[0] = new_encode_dev(server->s_dev);
++	buf->f_fsid.val[1] = hash_64(server->fsid.major, 32) ^
++			     hash_64(server->fsid.minor, 32);
+ 
+ 	return 0;
+ 
+-- 
+2.34.1
+
