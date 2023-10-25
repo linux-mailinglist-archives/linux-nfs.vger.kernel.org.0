@@ -2,131 +2,202 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A2937D7279
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Oct 2023 19:38:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D99CB7D7282
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Oct 2023 19:41:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231539AbjJYRiS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Oct 2023 13:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
+        id S233821AbjJYRle (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Oct 2023 13:41:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233153AbjJYRiS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Oct 2023 13:38:18 -0400
+        with ESMTP id S229485AbjJYRla (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Oct 2023 13:41:30 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14348137
-        for <linux-nfs@vger.kernel.org>; Wed, 25 Oct 2023 10:37:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E5619D
+        for <linux-nfs@vger.kernel.org>; Wed, 25 Oct 2023 10:40:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1698255454;
+        s=mimecast20190719; t=1698255641;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=eCYXuE+ic68JHfPyC3JB6qdd9v4hyNArwD2Pmj+LJTw=;
-        b=FlVnQX6CKsHYgfQ1hFwR44QYSMVuCf91FfjEBtIegpSdRvlWCaL//kfMH9Q28oUdzlz+Dl
-        q1fAYSdqN/YF/QgQ0TCupVB/qwHX+55RIQATEsBDxT259mld5cKXWrrZjJakKBFfcNQYuF
-        1efzqZIw9M/DzKvKQDhvJxu0+H2VsV8=
-Received: from mail-oo1-f72.google.com (mail-oo1-f72.google.com
- [209.85.161.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=UkGSArifVcPZ7lZ367bjkLWFmP8Ugc7BI10JCKWK7ek=;
+        b=V1UtJC7fU3hbh6XK1Jyuqu43SFEl8em5e38OiixocFQIC8SOoEZ741vFHVtLl8KcOrRMSS
+        yBbXDpaA0/Xqk+SC/voKC/TEl/+ahG8+QUrrcEN+hcNCN+ctNHfzWK61cDmmJyS+J7v1yj
+        qRRW0b8KZ8gWS/Z82V2KxrzONQ8eAww=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-534-EovN-OqZOaCla4-UenA4oA-1; Wed, 25 Oct 2023 13:37:32 -0400
-X-MC-Unique: EovN-OqZOaCla4-UenA4oA-1
-Received: by mail-oo1-f72.google.com with SMTP id 006d021491bc7-584102dd90bso12909eaf.0
-        for <linux-nfs@vger.kernel.org>; Wed, 25 Oct 2023 10:37:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698255452; x=1698860252;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eCYXuE+ic68JHfPyC3JB6qdd9v4hyNArwD2Pmj+LJTw=;
-        b=kYrmPlZrCz+j24LJr7V28fYkwYUO7DHvcjHID3PMHtn2EyRMuEjT9MNXcZT7wDLLgC
-         kq90PCs/S6YSee+dbyhlPMr1bPjXb/rFz6KjMp8fyxAttgJjyGfy7wGARRmyKrUBgRcs
-         Khm58otBSbj9iYOEZepK0NtKh27T/UMopD59MHFFQu1WkN5FiIdzvWBeNA1AWYEC2YdG
-         nIa+6gI0ACvZ1Mu0mZ0UnenRFdm4M9AKYCrsuQCmrgYjTv9JpIaHMpk5q7xZQk/rwMwn
-         9rSq/3HlGt2K/GGRg4KpHtBU+XnScAvEMIdjD9/aUeSojSImymV77avF1FWQQODtN+rX
-         3GTQ==
-X-Gm-Message-State: AOJu0YzHe1Q+fsBAH0Xc7AKLF4pABPL5sXRYWPwR3XIg7x6WkB2+dtGv
-        quKIGnz4Rfoa3NIweQgdVs8YJgA5wm6l/ZT9Y/dLJhT18FNjWItJv8UfBe5F8zLaT80dlFhmzN3
-        U4k/LGHgqoZ1PzCwGWOJ/8pvolTXY
-X-Received: by 2002:a05:6359:3209:b0:168:c1c5:2a8e with SMTP id rj9-20020a056359320900b00168c1c52a8emr10623042rwb.3.1698255451875;
-        Wed, 25 Oct 2023 10:37:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF11cKHjbDyWrnHZLWesp+b8ALEq19SCvpEoRRvEmUuh01oXLYP3vDdgpvzOzwsrffO09c71g==
-X-Received: by 2002:a05:6359:3209:b0:168:c1c5:2a8e with SMTP id rj9-20020a056359320900b00168c1c52a8emr10623032rwb.3.1698255451508;
-        Wed, 25 Oct 2023 10:37:31 -0700 (PDT)
-Received: from ?IPV6:2603:6000:d605:db00:9455:9167:2a44:f7c6? (2603-6000-d605-db00-9455-9167-2a44-f7c6.res6.spectrum.com. [2603:6000:d605:db00:9455:9167:2a44:f7c6])
-        by smtp.gmail.com with ESMTPSA id t16-20020a0cef10000000b0065afbb39b2dsm4548020qvr.47.2023.10.25.10.37.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Oct 2023 10:37:31 -0700 (PDT)
-Message-ID: <055f76be-226f-4b15-8e7b-13f78dba10c5@redhat.com>
-Date:   Wed, 25 Oct 2023 13:37:30 -0400
+ us-mta-576-ES4kaKGwPp2CW3tKmHRYRw-1; Wed, 25 Oct 2023 13:40:35 -0400
+X-MC-Unique: ES4kaKGwPp2CW3tKmHRYRw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1FDB08F5DA0;
+        Wed, 25 Oct 2023 17:40:35 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.21])
+        by smtp.corp.redhat.com (Postfix) with SMTP id ED2152166B26;
+        Wed, 25 Oct 2023 17:40:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 25 Oct 2023 19:39:34 +0200 (CEST)
+Date:   Wed, 25 Oct 2023 19:39:31 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: nfsd_copy_write_verifier: wrong usage of read_seqbegin_or_lock()
+Message-ID: <20231025173931.GA29779@redhat.com>
+References: <20231025163006.GA8279@redhat.com>
+ <ZTlJmuDpGE+U3pEF@tissot.1015granger.net>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/6 nfs-utils v2] fixes for error handling in nfsd_fh
-Content-Language: en-US
-To:     NeilBrown <neilb@suse.de>
-Cc:     linux-nfs@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-References: <20231023021052.5258-1-neilb@suse.de>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20231023021052.5258-1-neilb@suse.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZTlJmuDpGE+U3pEF@tissot.1015granger.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Chuck,
 
+Thanks for your reply. But I am already sleeping and I can't understand it.
+So let me ask a couple of questions.
 
-On 10/22/23 9:58 PM, NeilBrown wrote:
-> Hi,
->   this is a revised version of my previous series with the same name.
->   This first two patches are unchanged.
->   The third patch, which was an RFC, has been replaced with the last
->   patch which actually addresses the issue rather than skirting
->   around it.
-> 
->   Patch 3 here is a revert of a change I noticed while exploring the
->   code.  cache_open() must be called BEFORE forking workers, as explained
->   in that patch.
->   Patches 4 and 5 factor our common code which makes the final patch
->   simpler.
-> 
->   The core issue is that sometimes mountd (or exportd) cannot give a
->   definitey "yes" or "no" to a request to map an fsid to a path name.
->   In these cases the only safe option is to delay and try again.
-> 
->   This only becomes relevant if a filesystem is mounted by a client, then
->   the server restarts (or the export cache is flushed) and the client
->   tries to use a filehandle that it already has, but that server cannot
->   find it and cannot be sure it doesn't exist.  This can happen when an
->   export is marked "mountpoint" or when a re-exported NFS filesystem
->   cannot contact the server and reports an ETIMEDOUT error.  In these
->   cases we want the client to continue waiting (which it does) and also
->   want mountd/exportd to periodically check if the target filesystem has
->   come back (which it currently does not).
->   With the current code, once this situation happens and the client is
->   waiting, the client will continue to wait indefintely even if the
->   target filesytem becomes available.  The client can only continue if
->   the NFS server is restarted or the export cache is flushed.  After the
->   ptsch, then within 2 minutes of the target filesystem becoming
->   available again, mountd will tell the kernel and when the client asks
->   again it will get be allowed to proceed.
-> 
-> NeilBrown
-> 
-> 
->   [PATCH 1/6] export: fix handling of error from match_fsid()
->   [PATCH 2/6] export: add EACCES to the list of known
->   [PATCH 3/6] export: move cache_open() before workers are forked.
->   [PATCH 4/6] Move fork_workers() and wait_for_workers() in cache.c
->   [PATCH 5/6] Share process_loop code between mountd and exportd.
->   [PATCH 6/6] cache: periodically retry requests that couldn't be
-> 
-Committed... (tag: nfs-utils-2-6-4-rc5)
+1. Do you agree that the current nfsd_copy_write_verifier() code makes no sense?
 
-steved.
+   I mean, the usage of read_seqbegin_or_lock() suggests that if the lockless
+   pass fails it should take writeverf_lock for writing. But this can't happen,
+   and thus this code doesn't look right no matter what. None of the
+   read_seqbegin_or_lock/need_seqretry/done_seqretry helpers make any sense
+   because "seq" is alway even.
+
+2. If yes, which change do you prefer? I'd prefer the patch at the end.
+
+Oleg.
+
+On 10/25, Chuck Lever wrote:
+>
+> On Wed, Oct 25, 2023 at 06:30:06PM +0200, Oleg Nesterov wrote:
+> > Hello,
+> >
+> > The usage of writeverf_lock is wrong and misleading no matter what and
+> > I can not understand the intent.
+>
+> The structure of the seqlock was introduced in commit 27c438f53e79
+> ("nfsd: Support the server resetting the boot verifier").
+>
+> The NFS write verifier is an 8-byte cookie that is supposed to
+> indicate the boot epoch of the server -- simply put, when the server
+> restarts, the epoch (and this verifier) changes.
+>
+> NFSv3 and later have a two-phase write scheme where the client
+> sends data to the server (known as an UNSTABLE WRITE), then later
+> asks the server to commit that data (a COMMIT). Before the COMMIT,
+> that data is not durable and the client must hold onto it until
+> the server's COMMIT Reply indicates it's safe for the client to
+> discard that data and move on.
+>
+> When an UNSTABLE WRITE is done, the server reports its current
+> epoch as part of each WRITE Reply. If this verifier cookie changes,
+> the client knows that the server might have lost previously
+> written written-but-uncommitted data, so it must send the WRITEs
+> again in that (rare) case.
+>
+> NFSD abuses this slightly by changing the write verifier whenever
+> there is an underlying local write error that might have occurred in
+> the background (ie, there was no WRITE or COMMIT operation at the
+> time that the server could use to convey the error back to the
+> client). This is supposed to trigger clients to send UNSTABLE WRITEs
+> again to ensure that data is properly committed to durable storage.
+>
+> The point of the seqlock is to ensure that
+>
+> a) a write verifier update does not tear the verifier
+> b) a write verifier read does not see a torn verifier
+>
+> This is a hot path, so we don't want a full spinlock to achieve
+> a) and b).
+>
+> Way back when, the verifier was updated by two separate 32-bit
+> stores; hence the risk of tearing.
+>
+>
+> > nfsd_copy_write_verifier() uses read_seqbegin_or_lock() incorrectly.
+> > "seq" is always even, so read_seqbegin_or_lock() can never take the
+> > lock for writing. We need to make the counter odd for the 2nd round:
+> >
+> > 	--- a/fs/nfsd/nfssvc.c
+> > 	+++ b/fs/nfsd/nfssvc.c
+> > 	@@ -359,11 +359,14 @@ static bool nfsd_needs_lockd(struct nfsd_net *nn)
+> > 	  */
+> > 	 void nfsd_copy_write_verifier(__be32 verf[2], struct nfsd_net *nn)
+> > 	 {
+> > 	-	int seq = 0;
+> > 	+	int seq, nextseq = 0;
+> >
+> > 		do {
+> > 	+		seq = nextseq;
+> > 			read_seqbegin_or_lock(&nn->writeverf_lock, &seq);
+> > 			memcpy(verf, nn->writeverf, sizeof(nn->writeverf));
+> > 	+		/* If lockless access failed, take the lock. */
+> > 	+		nextseq = 1;
+> > 		} while (need_seqretry(&nn->writeverf_lock, seq));
+> > 		done_seqretry(&nn->writeverf_lock, seq);
+> > 	 }
+> >
+> > OTOH. This function just copies 8 bytes, this makes me think that it doesn't
+> > need the conditional locking and read_seqbegin_or_lock() at all. So perhaps
+> > the (untested) patch below makes more sense? Please note that it should not
+> > change the current behaviour, it just makes the code look correct (and more
+> > optimal but this is minor).
+> >
+> > Another question is why we can't simply turn nn->writeverf into seqcount_t.
+> > I guess we can't because nfsd_reset_write_verifier() needs spin_lock() to
+> > serialise with itself, right?
+>
+> "reset" is supposed to be very rare operation. Using a lock in that
+> case is probably quite acceptable, as long as reading the verifier
+> is wait-free and guaranteed to be untorn.
+>
+> But a seqcount_t is only 32 bits.
+>
+>
+> > Oleg.
+> > ---
+> >
+> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > index c7af1095f6b5..094b765c5397 100644
+> > --- a/fs/nfsd/nfssvc.c
+> > +++ b/fs/nfsd/nfssvc.c
+> > @@ -359,13 +359,12 @@ static bool nfsd_needs_lockd(struct nfsd_net *nn)
+> >   */
+> >  void nfsd_copy_write_verifier(__be32 verf[2], struct nfsd_net *nn)
+> >  {
+> > -	int seq = 0;
+> > +	unsigned seq;
+> >
+> >  	do {
+> > -		read_seqbegin_or_lock(&nn->writeverf_lock, &seq);
+> > +		seq = read_seqbegin(&nn->writeverf_lock);
+> >  		memcpy(verf, nn->writeverf, sizeof(nn->writeverf));
+> > -	} while (need_seqretry(&nn->writeverf_lock, seq));
+> > -	done_seqretry(&nn->writeverf_lock, seq);
+> > +	} while (read_seqretry(&nn->writeverf_lock, seq));
+> >  }
+> >
+> >  static void nfsd_reset_write_verifier_locked(struct nfsd_net *nn)
+> >
+>
+> --
+> Chuck Lever
+>
 
