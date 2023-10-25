@@ -2,93 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDF797D71BD
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 Oct 2023 18:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED2BA7D71B7
+	for <lists+linux-nfs@lfdr.de>; Wed, 25 Oct 2023 18:28:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232262AbjJYQ3Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 Oct 2023 12:29:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56924 "EHLO
+        id S232695AbjJYQ2e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 25 Oct 2023 12:28:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234524AbjJYQ3W (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Oct 2023 12:29:22 -0400
-Received: from out203-205-221-202.mail.qq.com (out203-205-221-202.mail.qq.com [203.205.221.202])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FE3F9C
-        for <linux-nfs@vger.kernel.org>; Wed, 25 Oct 2023 09:29:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-        s=s201512; t=1698251354;
-        bh=fdURGibl0c7gXJtCTDzqXqgfXp0ppJMBARCaqiarhkY=;
-        h=From:To:Cc:Subject:Date;
-        b=ULVGRX5eIzOF3WaXBlmJVBt08PhRmRyGA1vM+6+w9pP/pKZkYHAAylfMDUNyvf2Bs
-         rPus8NpvdqNVO2p42iZurJ+WmVEzkFeAmQ9xTGaeCDJ5PBw6iyoEnYHLWK+VBogaA5
-         51Jxpqc7BYP5I5fDI/bSVByVgi1L2NtSnjL87l0s=
-Received: from localhost.localdomain ([36.142.182.134])
-        by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-        id 6EA22473; Thu, 26 Oct 2023 00:27:42 +0800
-X-QQ-mid: xmsmtpt1698251262thnyghwih
-Message-ID: <tencent_E6816C9AF53E61BA5E0A313BBE5E1D19B00A@qq.com>
-X-QQ-XMAILINFO: NwwvG5JPXID4Vv4OMA6iDAAbWOI6QoDZISgFNtYzKhfw8PNs4mdSfVokkfPFE+
-         IwvrCd4xzS4lj707ZFgTEKgzOnpZG/1YRfupB0Z6lRFKJhPHdQG7UfATP3LpYs0ZidCaNkW4PuAV
-         gvHBGeL/MsuE5joODf6eNbn+pxyYsYSIXTtrnPN+7AmTquo+AAXG+skSh8LkLDARVTeFL+XUaoFT
-         s8nDtOBzqKVZY1B685X9L2r3g3X+yk+w8FkY1k6cLz01hx93/HXb6Aeu/OZIdIWBMhGfq7CGeM1J
-         Nl+ERNP07bpm2tn7vOIqlZfgdlU3EkXiUHjFPYQa1B7mV/3ssBYntFgmV7COrNc0ExlE1mbXiO9w
-         yNZ8bnvv48L4F4uJB1n5ZnD9YFwLA+CqOiSrD6y44vsA/kXe4k0WSJ01Eyrxm0WQO+MjYFqsli1O
-         AcVL8l45gwIENVh1f3T+pGssUXhu5wZof0oBCK90CnNiZx0b6FumQDzsV7gt5iMjtXNITeXK/MvQ
-         nIrhGvQgYFBfKy1iMKNezzE5dvxYr96mwu/ZToRHho8bJl8sP3ZtCVUoziiSMPIxGMCIKv/YLDf8
-         TZwtcUFhM3WuqCf1UEBd2Zwq+aXBPkwjsJNApHIXmc3qvcANsnYRZ/k1O3ruoSrKDNfMmi+3V7Xh
-         MwFZP2ioSfa6esjSngZn/5alUGcgGxnnzaejVyShrT7sdT2isOi2Be9ggi3Lba//SJsfr9e5GYi7
-         xE4vVyGWdr0Wk8K8sOk7jQkV20aCg35/yQk6WS65Llm6YX/9mB/4jpCkxkyrPrhLz/crvKpjiz2j
-         QF0RHe7HF9t+uOuz5KaD4kOQBu6MxzIcxNHD5dLs6n1t4IZx6+0HEwpW/p9f39gbORzlW5Qp3TMS
-         lHx1fnV+G6+D7DAzbdtVodbdhTCUEvY78xGs9d9ZF1EcIhV8dv+LfD7GdaQzmjY7I0CnhKx39m9y
-         15IPxVOyewKYCeOo+Rdly3rw5/nowGZ/kSgDWmWmvQzYclIYDkiIY0u9pIpMAV2eCVjwN1dMxCpO
-         u+gahPvzwo+fwmHGK3mkjSb1yxRC0/BkDi+q9YZgpD6EiQ/ifuopv/pPZqO76K/jWiHj3lHOKiJ5
-         HZ5eW+EkmqUZ2TBUQIBC2cLIl6/i02QI0S04ZYUEGqahuPPLhqz8GkyrNAv89p/JjI5d6M
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From:   Zhuohao Bai <zhuohao_bai@foxmail.com>
-To:     steved@redhat.com
-Cc:     falcon@tinylab.org, forrestniu@foxmail.com, baizhh21@lzu.edu.cn,
-        tanyuan@tinylab.org, linux-nfs@vger.kernel.org,
-        libtirpc-devel@lists.sourceforge.net,
-        Zhuohao Bai <zhuohao_bai@foxmail.com>
-Subject: [RFC PATCH] _rpc_dtablesize: Decrease the value of size.
-Date:   Thu, 26 Oct 2023 00:27:16 +0800
-X-OQ-MSGID: <20231025162716.1551-1-zhuohao_bai@foxmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229630AbjJYQ2d (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 Oct 2023 12:28:33 -0400
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F3791;
+        Wed, 25 Oct 2023 09:28:31 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F301C433C9;
+        Wed, 25 Oct 2023 16:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1698251311;
+        bh=mrHjaT4q6kssAF2OM/Fu1vwtXIetFcoYLYr87oCTnHU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UwEshaNTsjGOW9nwZ9mfu5KgLNKpJljF1eNcXgynlUeRTVQOwPwf7ZBAYIhm6NXHr
+         6bRa/OUqNpS77MRwzLMaaOEretgcaxpYAHt/ehWFlcRPlJ5EJnGbqqfTvGv/gG3tsA
+         UsSs4CQ7atMJytcQWwYO9Jbp+OMlBOyvOP7X0ei15D2ratX65XbMJGKZXKDrq48mlT
+         wQTpWexmD4oOtE6+ZOZmRfPlYTCXC+0wfT6IMF625aS0HepBhmoC9SwMLJfVbP1b8c
+         VKo7I50Zm/xwKz8qBkW3ENU+buxDspUnznjC+2g0V2nGYqImKVOmY7JZfc1ncfX/Tp
+         JRqx8Jo7glB3g==
+Date:   Wed, 25 Oct 2023 09:28:29 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        jlayton@kernel.org, neilb@suse.de, kolga@netapp.com,
+        Dai.Ngo@oracle.com, tom@talpey.com,
+        trond.myklebust@hammerspace.com, anna@kernel.org,
+        davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH net v2] net: sunrpc: Fix an off by one in
+ rpc_sockaddr2uaddr()
+Message-ID: <20231025092829.6034bfcd@kernel.org>
+In-Reply-To: <ZTkmm/clAvIdr+6W@tissot.1015granger.net>
+References: <31b27c8e54f131b7eabcbd78573f0b5bfe380d8c.1698184674.git.christophe.jaillet@wanadoo.fr>
+        <ZTkmm/clAvIdr+6W@tissot.1015granger.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_BLOCKED,RDNS_DYNAMIC,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In the client code, the function _rpc_dtablesize() is used to determine the memory allocation for the __svc_xports array.
+On Wed, 25 Oct 2023 10:30:51 -0400 Chuck Lever wrote:
+> Should these two be taken via the NFS client tree or do you intend
+> to include them in some other tree?
 
-However, some operating systems (including the recent Manjaro OS) can have _SC_OPEN_MAX values as high as 1073741816, which can cause the __svc_xports array to become too large. This results in the process being killed.
-
-There is a limit to the maximum number of files. To avoid this problem, a possible solution is to set the size to the lesser of 1024 and this value to ensure that the array space for open files is not too large, thus preventing the process from terminating.
-
-Signed-off-by: Zhuohao Bai <zhuohao_bai@foxmail.com>
----
- src/rpc_dtablesize.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/src/rpc_dtablesize.c b/src/rpc_dtablesize.c
-index bce97e8..2027af4 100644
---- a/src/rpc_dtablesize.c
-+++ b/src/rpc_dtablesize.c
-@@ -41,7 +41,7 @@ _rpc_dtablesize(void)
- 	static int size;
- 
- 	if (size == 0) {
--		size = sysconf(_SC_OPEN_MAX);
-+		size = min(1024, sysconf(_SC_OPEN_MAX));
- 	}
- 	return (size);
- }
--- 
-2.25.1
-
+FWIW we're not intending to take these. If only get_maintainer
+understood tree designations :(
