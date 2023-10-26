@@ -2,125 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6382B7D89DF
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Oct 2023 22:56:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 593F67D8A26
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Oct 2023 23:18:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbjJZU4C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Oct 2023 16:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38186 "EHLO
+        id S229501AbjJZVSJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Oct 2023 17:18:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbjJZU4B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Oct 2023 16:56:01 -0400
-Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B54461A5;
-        Thu, 26 Oct 2023 13:55:59 -0700 (PDT)
-Received: by mail-wr1-x431.google.com with SMTP id ffacd0b85a97d-31c5cac3ae2so978474f8f.3;
-        Thu, 26 Oct 2023 13:55:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698353758; x=1698958558; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tMi4W6YmVE9+Uq6mWL07obv28BYYpRn7XsezstwpvPc=;
-        b=FCY+V4e9Nu28Ff3jvJv18Bvn7DOnCxH3PJH08wJ7l/M7pOIEBv9DFczYqqY3JPGVBB
-         PQIQfQAGTbW8xnOqc/qjIORx+woRzFT1x/FWEfLSVgV4bffEB1c+Gq7IqHSeSAn8na/z
-         nVBpvi94FJ42o/bYm7PYS82X1mCBRoxXdtS7ANhgBElos803XbWPGIdhbCtbywe6aq5k
-         TZtSCKYRLDvKVwIsQsVhH5oHaRXaqo6+9debQuZZGisf/PWzGbrdAmAOzF4oepn3MK07
-         OmILVNVmkfTXIpWBQhVJEPHEkzmH1UYw8IadI8Wbizcl1ZW70b64W0MfwlMd3mhyi0Rk
-         F/hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698353758; x=1698958558;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tMi4W6YmVE9+Uq6mWL07obv28BYYpRn7XsezstwpvPc=;
-        b=XwbWDICgnbldHkj8ftTCmmgrxr7GtoJkmoGXkytVqxmYB0egltaT1g72g1zFEmHK60
-         hAFGJUkdLII1e8G6Bk02rhVFzt+S9ellwpEpSo3t/UmE7/t4020q17ivLl8PmFZJx2Zd
-         cHTL3WfAs565pzy0NBJdmmP1RwCyJm9wBDLwjeAhPZWf9XtOfqJ0LjSLIAQ7nFDk64yj
-         XQmEmRpqokGOstVQ/bvmmoKB3IwdEwd41BbZuywUK6A6imOYd8ugSEzHulFx28TKL+jj
-         Sqh++tKuGwpPUbYavy/SBFZqPg2eqWAH+a2CCvdRJkxbLELqI1IBFsKHGVMz1TTmHRsu
-         AVhA==
-X-Gm-Message-State: AOJu0Yy9YkwCx2DGz0bBfysOXTtf/TmDqrMl8rJ88Jf7+ftx9PvOsHtg
-        5mNQwvw+Iu8GZrmt/75ANx3zhhVQcuo=
-X-Google-Smtp-Source: AGHT+IHBLiRPdgBqiFtvORwvUa5V9+HHK7oJlw9WyRfDtBywXdUoY85Tc0OjIp60hOu/hTF/voryRQ==
-X-Received: by 2002:a5d:6b92:0:b0:32d:9a26:4d57 with SMTP id n18-20020a5d6b92000000b0032d9a264d57mr598765wrx.20.1698353757878;
-        Thu, 26 Oct 2023 13:55:57 -0700 (PDT)
-Received: from amir-ThinkPad-T480.lan ([5.29.249.86])
-        by smtp.gmail.com with ESMTPSA id j15-20020adfb30f000000b0032d8eecf901sm250278wrd.3.2023.10.26.13.55.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Oct 2023 13:55:57 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Christian Brauner <brauner@kernel.org>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        Jeff Layton <jlayton@redhat.com>
-Subject: [PATCH] MAINTAINERS: create an entry for exportfs
-Date:   Thu, 26 Oct 2023 23:55:53 +0300
-Message-Id: <20231026205553.143556-1-amir73il@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S232090AbjJZVSI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Oct 2023 17:18:08 -0400
+Received: from smtpdh19-1.aruba.it (smtpdh19-1.aruba.it [62.149.155.148])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58964C0
+        for <linux-nfs@vger.kernel.org>; Thu, 26 Oct 2023 14:18:05 -0700 (PDT)
+Received: from [192.168.50.162] ([146.241.115.208])
+        by Aruba Outgoing Smtp  with ESMTPSA
+        id w7jtq9wTFpgXYw7jtqRs3p; Thu, 26 Oct 2023 23:18:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+        t=1698355082; bh=eht8FEhvlldvOSlASsfNKWy1iy3jx+JBUvRnwz6XsKA=;
+        h=Date:MIME-Version:Subject:To:From:Content-Type;
+        b=FvlaRswReG9ksDQ24akMalcaGTla8n6MureyfOVgKFslzpl/dQqpQzz9+Luh/aFt3
+         M6iX3dplmOf530L+Cf4RNZ22oz8dB/ibR8XyuFg396ermLqqRshkhfyHuoiOKSAeLF
+         Uo1RCbuCbiNDLrIWASNt7hRj+t5QznU8yygYyvYyuYjXj/4Gf5iUnN2KDW2TbOlmu5
+         WT4Q8OQrI0N0Y4ox2NqPPgEgVvSM73VMYF55qJDTK9z9JwLCVFOM1rJmgezpZqrhew
+         +PNCwolCOtOqPTaQRohb926gjLzMXPiJIvcT14wSSntijzmT52h3tm8QpW67HY4vQT
+         2pvrCuWCpeI7Q==
+Message-ID: <98066647-bcc8-4231-b6d8-2eff4a1d48fe@benettiengineering.com>
+Date:   Thu, 26 Oct 2023 23:18:00 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla Thunderbird
+Subject: Re: [nfs-utils 1/2] Fix build failure due to glibc <= 2.24 and check
+ for Linux 3.17+
+To:     Petr Vorel <pvorel@suse.cz>
+Cc:     linux-nfs@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        Steve Dickson <steved@redhat.com>
+References: <20231026114522.567140-1-giulio.benetti@benettiengineering.com>
+ <20231026194712.615384-1-pvorel@suse.cz>
+Content-Language: en-US
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+In-Reply-To: <20231026194712.615384-1-pvorel@suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfKX+IqL4nFlag5lKRTEKos5w7sg2/5/4BexnBaU3VRvaOZY5fuRWywUzHibzOCjDHgQkk38IqM0dN44/CoUZJiokhvmTzOTV3BDCPVa5qYZGb1KpkP/m
+ d1QSQ3P4QEzEUDhuePmjyxQLFh/7Qyu15oj8xEdrOdDwbZXFCGK2BZCpbCgxvCHxPDFyWn/PWUpDzI35R8YMTte3T3y6IwWa01TFTVn6ygEmmI7p9FvXSZMA
+ 8u1UE3GIO2i76bU4UP31jVpeJcAd8nDcgUMHHfYsml4gUHjhoZYvWlzsdyTcu4cPCkjTtUCTjPJeykAiaW+hCw==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Split the exportfs entry from the nfsd entry and add myself as reviewer.
+Hi Petr,
 
-Suggested-by: Chuck Lever <chuck.lever@oracle.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-Acked-by: Jeff Layton <jlayton@redhat.com>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
+On 26/10/23 21:47, Petr Vorel wrote:
+> interesting, I yesterday sent patch [1] solving the same problem (although it
+> might not be that obvious from the patchset name). Let's see which one will be
+> taken.
+> 
+> Kind regards,
+> Petr
+> 
+> [1] https://lore.kernel.org/linux-nfs/20231025205720.GB460410@pevik/T/#m4c02286afae09318f6b95ff837750708d5065cd5
 
-Christian,
+I totally forgotten to check Patchwork before working on it. Your patch
+looks good, better than mine. Maybe you can improve the part of the
+syscall because it's not always available. You can then send a patch for
+Buildroot too with the patch you've pointed since there you're
+nfs-utils package Maintainer too.
 
-Chuck has suggested that I send this patch to you.
-If you prefer that Chuck merges this patch though his tree
-that's fine by me.
-
-Thanks,
-Amir.
-
- MAINTAINERS | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2894f0777537..a194e6b0bcd1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8051,6 +8051,18 @@ F:	include/linux/fs_types.h
- F:	include/uapi/linux/fs.h
- F:	include/uapi/linux/openat2.h
- 
-+FILESYSTEMS [EXPORTFS]
-+M:	Chuck Lever <chuck.lever@oracle.com>
-+M:	Jeff Layton <jlayton@kernel.org>
-+R:	Amir Goldstein <amir73il@gmail.com>
-+L:	linux-fsdevel@vger.kernel.org
-+L:	linux-nfs@vger.kernel.org
-+S:	Supported
-+F:	Documentation/filesystems/nfs/exporting.rst
-+F:	fs/exportfs/
-+F:	fs/fhandle.c
-+F:	include/linux/exportfs.h
-+
- FINTEK F75375S HARDWARE MONITOR AND FAN CONTROLLER DRIVER
- M:	Riku Voipio <riku.voipio@iki.fi>
- L:	linux-hwmon@vger.kernel.org
-@@ -11420,7 +11432,6 @@ S:	Supported
- W:	http://nfs.sourceforge.net/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
- F:	Documentation/filesystems/nfs/
--F:	fs/exportfs/
- F:	fs/lockd/
- F:	fs/nfs_common/
- F:	fs/nfsd/
 -- 
-2.34.1
-
+Giulio Benetti
+CEO&CTO@Benetti Engineering sas
