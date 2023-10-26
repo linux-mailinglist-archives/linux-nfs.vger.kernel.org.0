@@ -2,64 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C9007D8559
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 Oct 2023 16:57:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 866CF7D88E5
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 Oct 2023 21:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231477AbjJZO5c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 Oct 2023 10:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50150 "EHLO
+        id S229668AbjJZT2i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 Oct 2023 15:28:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231324AbjJZO5b (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Oct 2023 10:57:31 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A876693;
-        Thu, 26 Oct 2023 07:57:29 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA795C433C7;
-        Thu, 26 Oct 2023 14:57:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698332249;
-        bh=xFnrK/hYymR3dfz8jx8fav5cyj+9R1dn8SkXsqL4fWU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ggiYUmgKY6ENHDjAVtmLaip5NluFzVyIwYaHAMfn8f9qujFJ9uMk02EcWnmmCdumC
-         0H7U3gAk6FFMrHw4WOmERYzAJFLOsFEvXr6h4cgP7Wauq1QdXKReshzxxJ5+9op3ZU
-         OoON7cV0ZvvGdDHM1O7cG4P9g3XQa23A/jJchbL1XdYXysz4liFuAyeLZe32RUMyFx
-         TTtFeseZCeHTvWtlJzc2Jfl4v1u8l4A6HBBPBlFTGPG5+ReRUtW35W9Juz6OqHQnnx
-         JHWwKBZcTT6oqjE6BBh+S2GuRQtp3QfxcxRWdDEuMaTvS9tUhr9BDuFTYbYF6W/KhT
-         QVPoht0R37Wyw==
-Date:   Thu, 26 Oct 2023 15:57:20 +0100
-From:   Simon Horman <horms@kernel.org>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
-        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
-        trond.myklebust@hammerspace.com, anna@kernel.org,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] net: sunrpc: Fix an off by one in root_nfs_cat()
-Message-ID: <20231026145720.GB225043@kernel.org>
-References: <856a652a7e28dde246b00025da7d4115978ae75f.1698184400.git.christophe.jaillet@wanadoo.fr>
+        with ESMTP id S229649AbjJZT2h (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 Oct 2023 15:28:37 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F23C12A;
+        Thu, 26 Oct 2023 12:28:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=ToUeE8jlH67uNaR3XjokfMyr/EVi5kLp33HH0pq5Mw8=; b=iqcIoqmmABN4vQb9TcuI7xO06L
+        +9xFV3rGU763GNNot3CgGUyn+WkmnlNbr8mbozea7ydt8jdiXQZ0m+tYOky12mTbafLqqsjlHEzoF
+        BnwOn8xyLYr5TM8zvHVJynk3A3Hz7uVKEwC8RZ1Qted1xgFfh60qyd6BlIO2TLZBNptCCKDlLzTIV
+        Mh7GknNMLRGBx63gZKP0GlpFbeqLLx6ItYgSMSeDPuXPFnGnrLmcjv+DPnTYL9jWp41KLhDX6gwIn
+        +SHh/XfQTlejFP/Fwt8I8WT602eJMks6DMO+Wx0Y+kiPRge6nYQFeIfj66G15thQ3kdI75NWJAwiA
+        9oQfp6KQ==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qw61v-00F3QG-00;
+        Thu, 26 Oct 2023 19:28:31 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+        Amir Goldstein <amir73il@gmail.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH] exportfs: handle CONFIG_EXPORTFS=m also
+Date:   Thu, 26 Oct 2023 12:28:30 -0700
+Message-ID: <20231026192830.21288-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <856a652a7e28dde246b00025da7d4115978ae75f.1698184400.git.christophe.jaillet@wanadoo.fr>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Oct 24, 2023 at 11:55:30PM +0200, Christophe JAILLET wrote:
-> The intent is to check if the strings' are truncated or not. So, >= should
-> be used instead of >, because strlcat() and snprintf() return the length of
-> the output, excluding the trailing NULL.
-> 
-> Fixes: a02d69261134 ("SUNRPC: Provide functions for managing universal addresses")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+When CONFIG_EXPORTFS=m, there are multiple build errors due to
+the header <linux/exportfs.h> not handling the =m setting correctly.
+Change the header file to check for CONFIG_EXPORTFS enabled at all
+instead of just set =y.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Fixes: dfaf653dc415 ("exportfs: make ->encode_fh() a mandatory method for NFS export")
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Cc: Amir Goldstein <amir73il@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: linux-fsdevel@vger.kernel.org
 
+---
+ include/linux/exportfs.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff -- a/include/linux/exportfs.h b/include/linux/exportfs.h
+--- a/include/linux/exportfs.h
++++ b/include/linux/exportfs.h
+@@ -314,7 +314,7 @@ extern struct dentry *exportfs_decode_fh
+ /*
+  * Generic helpers for filesystems.
+  */
+-#ifdef CONFIG_EXPORTFS
++#if IS_ENABLED(CONFIG_EXPORTFS)
+ int generic_encode_ino32_fh(struct inode *inode, __u32 *fh, int *max_len,
+ 			    struct inode *parent);
+ #else
