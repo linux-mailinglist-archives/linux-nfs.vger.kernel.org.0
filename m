@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 476BB7D9220
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Oct 2023 10:41:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10A367D922B
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Oct 2023 10:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235195AbjJ0IlM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Oct 2023 04:41:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
+        id S1345670AbjJ0Ild (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Oct 2023 04:41:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235194AbjJ0Ikp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Oct 2023 04:40:45 -0400
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 212A71B1;
-        Fri, 27 Oct 2023 01:40:22 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4SGwgW4XnLz9xxnN;
-        Fri, 27 Oct 2023 16:24:23 +0800 (CST)
+        with ESMTP id S235156AbjJ0IlK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Oct 2023 04:41:10 -0400
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC8A010EB;
+        Fri, 27 Oct 2023 01:40:35 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.228])
+        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4SGwl252M7z9yKWt;
+        Fri, 27 Oct 2023 16:27:26 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwCX8JGqdjtlDvIBAw--.29710S15;
-        Fri, 27 Oct 2023 09:39:54 +0100 (CET)
+        by APP1 (Coremail) with SMTP id LxC2BwCX8JGqdjtlDvIBAw--.29710S16;
+        Fri, 27 Oct 2023 09:40:06 +0100 (CET)
 From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
 To:     viro@zeniv.linux.org.uk, brauner@kernel.org,
         chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
@@ -33,18 +33,18 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
         linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
         selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v4 13/23] security: Introduce file_pre_free_security hook
-Date:   Fri, 27 Oct 2023 10:35:48 +0200
-Message-Id: <20231027083558.484911-14-roberto.sassu@huaweicloud.com>
+Subject: [PATCH v4 14/23] security: Introduce path_post_mknod hook
+Date:   Fri, 27 Oct 2023 10:35:49 +0200
+Message-Id: <20231027083558.484911-15-roberto.sassu@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231027083558.484911-1-roberto.sassu@huaweicloud.com>
 References: <20231027083558.484911-1-roberto.sassu@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: LxC2BwCX8JGqdjtlDvIBAw--.29710S15
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFW7CF1xAr4Utw4xJFWDArb_yoW5uF1fpr
-        Z8t3W5GFW5GF12grn3Aanrua4ft393KrWUWrZ5u34rtFnrJryvgFZ8CFy5CF15JrWkJry0
-        qw12grW3Gr4DArJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: LxC2BwCX8JGqdjtlDvIBAw--.29710S16
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr43Xr48uryrGF43Gw4xtFb_yoWrGF1Upa
+        1rtFn3Gr4rGFy3Wr1kAanrCa4SvrW5u34UJFZ0gwnIyFnxtr15XF4SvryYkr9xGrWUKryI
+        va17tr43Gr4jqr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
         9KBjDU0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
         6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
         Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -58,7 +58,7 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxAFW7CF1xAr4Utw4xJFWDArb_yoW5uF1fpr
         AIcVC0I7IYx2IY67AKxVW8JVW5JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI
         42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
         80aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZo7tUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgADBF1jj5GTnwABso
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgADBF1jj5GTnwACsr
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -72,93 +72,102 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 From: Roberto Sassu <roberto.sassu@huawei.com>
 
 In preparation for moving IMA and EVM to the LSM infrastructure, introduce
-the file_pre_free_security hook.
+the path_post_mknod hook.
 
-IMA calculates at file close the new digest of the file content and writes
-it to security.ima, so that appraisal at next file access succeeds.
+IMA-appraisal requires all existing files in policy to have a file
+hash/signature stored in security.ima. An exception is made for empty files
+created by mknod, by tagging them as new files.
 
-LSMs could also take some action before the last reference of a file is
-released.
+LSMs could also take some action after files are created.
 
 The new hook cannot return an error and cannot cause the operation to be
 reverted.
 
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 ---
- fs/file_table.c               |  1 +
- include/linux/lsm_hook_defs.h |  1 +
- include/linux/security.h      |  4 ++++
- security/security.c           | 11 +++++++++++
- 4 files changed, 17 insertions(+)
+ fs/namei.c                    |  5 +++++
+ include/linux/lsm_hook_defs.h |  2 ++
+ include/linux/security.h      |  5 +++++
+ security/security.c           | 14 ++++++++++++++
+ 4 files changed, 26 insertions(+)
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index ee21b3da9d08..ca36679adaa4 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -375,6 +375,7 @@ static void __fput(struct file *file)
- 	eventpoll_release(file);
- 	locks_remove_file(file);
- 
-+	security_file_pre_free(file);
- 	ima_file_free(file);
- 	if (unlikely(file->f_flags & FASYNC)) {
- 		if (file->f_op->fasync)
+diff --git a/fs/namei.c b/fs/namei.c
+index 4b1c86934637..955a03aa51b7 100644
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -4061,6 +4061,11 @@ static int do_mknodat(int dfd, struct filename *name, umode_t mode,
+ 					  dentry, mode, 0);
+ 			break;
+ 	}
++
++	if (error)
++		goto out2;
++
++	security_path_post_mknod(idmap, dentry);
+ out2:
+ 	done_path_create(&path, dentry);
+ 	if (retry_estale(error, lookup_flags)) {
 diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index cab9c1265f4e..21da4cadcad3 100644
+index 21da4cadcad3..0163c781f950 100644
 --- a/include/linux/lsm_hook_defs.h
 +++ b/include/linux/lsm_hook_defs.h
-@@ -173,6 +173,7 @@ LSM_HOOK(int, 0, kernfs_init_security, struct kernfs_node *kn_dir,
- 	 struct kernfs_node *kn)
- LSM_HOOK(int, 0, file_permission, struct file *file, int mask)
- LSM_HOOK(int, 0, file_alloc_security, struct file *file)
-+LSM_HOOK(void, LSM_RET_VOID, file_pre_free_security, struct file *file)
- LSM_HOOK(void, LSM_RET_VOID, file_free_security, struct file *file)
- LSM_HOOK(int, 0, file_ioctl, struct file *file, unsigned int cmd,
- 	 unsigned long arg)
+@@ -94,6 +94,8 @@ LSM_HOOK(int, 0, path_mkdir, const struct path *dir, struct dentry *dentry,
+ LSM_HOOK(int, 0, path_rmdir, const struct path *dir, struct dentry *dentry)
+ LSM_HOOK(int, 0, path_mknod, const struct path *dir, struct dentry *dentry,
+ 	 umode_t mode, unsigned int dev)
++LSM_HOOK(void, LSM_RET_VOID, path_post_mknod, struct mnt_idmap *idmap,
++	 struct dentry *dentry)
+ LSM_HOOK(int, 0, path_truncate, const struct path *path)
+ LSM_HOOK(int, 0, path_symlink, const struct path *dir, struct dentry *dentry,
+ 	 const char *old_name)
 diff --git a/include/linux/security.h b/include/linux/security.h
-index e0812da7f24d..47c3502d8600 100644
+index 47c3502d8600..9673a7f45bf0 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -395,6 +395,7 @@ int security_kernfs_init_security(struct kernfs_node *kn_dir,
- 				  struct kernfs_node *kn);
- int security_file_permission(struct file *file, int mask);
- int security_file_alloc(struct file *file);
-+void security_file_pre_free(struct file *file);
- void security_file_free(struct file *file);
- int security_file_ioctl(struct file *file, unsigned int cmd, unsigned long arg);
- int security_mmap_file(struct file *file, unsigned long prot,
-@@ -1006,6 +1007,9 @@ static inline int security_file_alloc(struct file *file)
+@@ -1883,6 +1883,7 @@ int security_path_mkdir(const struct path *dir, struct dentry *dentry, umode_t m
+ int security_path_rmdir(const struct path *dir, struct dentry *dentry);
+ int security_path_mknod(const struct path *dir, struct dentry *dentry, umode_t mode,
+ 			unsigned int dev);
++void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry);
+ int security_path_truncate(const struct path *path);
+ int security_path_symlink(const struct path *dir, struct dentry *dentry,
+ 			  const char *old_name);
+@@ -1917,6 +1918,10 @@ static inline int security_path_mknod(const struct path *dir, struct dentry *den
  	return 0;
  }
  
-+static inline void security_file_pre_free(struct file *file)
++static inline void security_path_post_mknod(struct mnt_idmap *idmap,
++					    struct dentry *dentry)
 +{ }
 +
- static inline void security_file_free(struct file *file)
- { }
- 
+ static inline int security_path_truncate(const struct path *path)
+ {
+ 	return 0;
 diff --git a/security/security.c b/security/security.c
-index d24a8f92d641..e3586a37d62c 100644
+index e3586a37d62c..35e5b5d901ac 100644
 --- a/security/security.c
 +++ b/security/security.c
-@@ -2717,6 +2717,17 @@ int security_file_alloc(struct file *file)
- 	return rc;
+@@ -1793,6 +1793,20 @@ int security_path_mknod(const struct path *dir, struct dentry *dentry,
  }
+ EXPORT_SYMBOL(security_path_mknod);
  
 +/**
-+ * security_file_pre_free() - Perform actions before releasing the file ref
-+ * @file: the file
++ * security_path_post_mknod() - Update inode security field after file creation
++ * @idmap: idmap of the mount
++ * @dentry: new file
 + *
-+ * Perform actions before releasing the last reference to a file.
++ * Update inode security field after a file has been created.
 + */
-+void security_file_pre_free(struct file *file)
++void security_path_post_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
 +{
-+	call_void_hook(file_pre_free_security, file);
++	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
++		return;
++	call_void_hook(path_post_mknod, idmap, dentry);
 +}
 +
  /**
-  * security_file_free() - Free a file's LSM blob
-  * @file: the file
+  * security_path_mkdir() - Check if creating a new directory is allowed
+  * @dir: parent directory
 -- 
 2.34.1
 
