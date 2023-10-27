@@ -2,288 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72E047D927E
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 Oct 2023 10:44:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FC6D7D9366
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 Oct 2023 11:20:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345773AbjJ0Io6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 Oct 2023 04:44:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41468 "EHLO
+        id S231340AbjJ0JUh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 Oct 2023 05:20:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235203AbjJ0Iob (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Oct 2023 04:44:31 -0400
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A6C01FD8;
-        Fri, 27 Oct 2023 01:44:24 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.229])
-        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4SGwm92lp8z9xGYP;
-        Fri, 27 Oct 2023 16:28:25 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwDnP5EaeDtl3AMCAw--.27269S5;
-        Fri, 27 Oct 2023 09:43:55 +0100 (CET)
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     viro@zeniv.linux.org.uk, brauner@kernel.org,
-        chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
-        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
-        dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, mic@digikod.net
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v4 23/23] integrity: Switch from rbtree to LSM-managed blob for integrity_iint_cache
-Date:   Fri, 27 Oct 2023 10:42:34 +0200
-Message-Id: <20231027084234.485243-4-roberto.sassu@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231027083558.484911-1-roberto.sassu@huaweicloud.com>
-References: <20231027083558.484911-1-roberto.sassu@huaweicloud.com>
+        with ESMTP id S229503AbjJ0JUg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 Oct 2023 05:20:36 -0400
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E49C0
+        for <linux-nfs@vger.kernel.org>; Fri, 27 Oct 2023 02:20:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+        s=s201512; t=1698398429;
+        bh=FGwyJmx88ElAYWqHpOihsHWE/4m3vOJOJL+g4l6mZOI=;
+        h=From:To:Cc:Subject:Date;
+        b=c9UQqkbB5cIPWbTTFfgoS2VZtRyiZpToh1zyCGd1aXckCXFNsjtt4hhE9C7RDoT/Q
+         qG8O9dIZXgtnozybNMNLaDzOo2BItilr6TNCk/2E291cQSWhsJACAzxGZmCcFDl53k
+         Eoog5D4mve5DPjgdP53auSBX5XZOY1uAv+GVyRqM=
+Received: from linux-lab.localdomain ([202.201.11.22])
+        by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+        id 4EA14ABB; Fri, 27 Oct 2023 17:19:42 +0800
+X-QQ-mid: xmsmtpt1698398382to9n9dan5
+Message-ID: <tencent_51EEC8890D6DB3A4370173F4B28839F41505@qq.com>
+X-QQ-XMAILINFO: MW5hkHoBpWXyN1T7Ml7xDijEmGyoynBYDD8OzkrwA/0U02WevA9tEdSVGMKoei
+         0csvu4T+UMM8Rw3HtSnn+9Z67UN8EeT0jr+CtUvzXguw8O2G7JjKXpMqkZKnKp4w5TVrpCWPLwLf
+         ukOUqofD4e5PzqgzsZg/S4aQDPN0v51icwEQU/dcFfEZ2cyI3ioZbHT6fvQ40ncxHEqRn2t4kOdx
+         75eDU3ZxcCaVkWiTwrjzntG6eSBdFI7+Y3M6D1QVVZkedSDCcn2qJ1UDxX89dbS5pHmuDKOyyfnf
+         E2oWx5gp5PDoWWg/SGAJplZWIejth3Dx4I/POrWgPht5qgsE4GUjJvzVQGN3YacagCZSId8s5Cqo
+         4wYTtDUznXT9oyR4nj+6U4zZ6szuxz28GQP/XeTdk4nldiYhl9CcSweLnssGY4N6fG7S3uDhbOnV
+         4MvLYEgAOOBQja3rcdWxYGCoiu7rcSM4K5g76Q3qIfaGm/R6mbl4Tz3glU67BeqFibq4UlcUDr7L
+         tS+zgL45p63xnN9RuWZD2LNErs+9bKKVnEvnFzYbxq7qMpzJTT4SOrnUH2QEsrFO6R15skyCZHAO
+         YR7EGCZGWvKf/NlqgE5g10+2HesI0/iQhn4D22JedVf2eoD9Fm+uOyt4Wd/a6lYong0COWsjdH8q
+         IluV0ern1OoVWNPw6d3vUF/TiVMHFi/PZZ4lcg4fMqZhPO+FKuEvMu8NHTGlvvF88koeR9fY8sdo
+         WIt0Yj9TVD2aUe9pEcqQC2A9seHQyN4FaAgYjQHGCbi5giMXeR6fGabQhoyubDHpmJ/Gz9YVgqR2
+         bxCOenVjMUkTXPV9l0NA+7R9bM/lZZQ2KXtkHVKAsZl9aBQ20eg/s9CwR9ae2TXLMqxiji5qm5Bd
+         HZYD7RXVZLyAfhORgb98iCSLKQFs0/0EJmvkjMLzlWYReNm9N3KYs55uzevIrfQ+kyc0H1asuPoJ
+         op6hd1s3Ntq2QQaBHiv2yUrFdOc3fSpFqSR3bHX2/jcczEREV4UjYzj+weDba7
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+From:   Zhuohao Bai <zhuohao_bai@foxmail.com>
+To:     baizhh21@lzu.edu.cn
+Cc:     falcon@tinylab.org, forrestniu@foxmail.com,
+        libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        steved@redhat.com, tanyuan@tinylab.org, zhuohao_bai@foxmail.com
+Subject: Re: [RFC PATCH] _rpc_dtablesize: Decrease the value of size.
+Date:   Fri, 27 Oct 2023 17:19:41 +0800
+X-OQ-MSGID: <20231027091941.660-1-zhuohao_bai@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: LxC2BwDnP5EaeDtl3AMCAw--.27269S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxKryfJr4xZFyxGr4fCF17KFg_yoWxuF1kpF
-        42gay8Jws8ZFWq9F4vyFW5Zr4fKFyqgFZ7W34Ykw1kAFyvvr1YqFs8AryUZF15GrW5t34I
-        qr1Ykr4UuF1qyrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBYb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWw
-        A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-        w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-        WxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-        Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
-        Ij6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
-        Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij64
-        vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8G
-        jcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2I
-        x0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4UJVW0owCI42IY6xAI
-        w20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x
-        0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7IUbHa0PUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQADBF1jj5WUfgABsJ
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,SORTED_RECIPS,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Roberto Sassu <roberto.sassu@huawei.com>
+On 26 Oct 2023, at 09:08, Benjamin Coddington wrote:
 
-Before the security field of kernel objects could be shared among LSMs with
-the LSM stacking feature, IMA and EVM had to rely on an alternative storage
-of inode metadata. The association between inode metadata and inode is
-maintained through an rbtree.
+> This is addressed by several users of rpc_dtablesize() already, which all=
+>  seem to do:
+> 
+>     setsize = _rpc_dtablesize();
+>     if (setsize > FD_SETSIZE)
+>         setsize = FD_SETSIZE;
+> 
+> Does it make sense to try to fix it for everyone, and should we clean up the users?
 
-Because of this alternative storage mechanism, there was no need to use
-disjoint inode metadata, so IMA and EVM today still share them.
+I apologize for not realizing that some users have addressed this issue beforehand. Nonetheless, I think it is necessary to modify the _rpc_dtablesize() function. I suggest modifying the _rpc_dtablesize() function.
 
-With the reservation mechanism offered by the LSM infrastructure, the
-rbtree is no longer necessary, as each LSM could reserve a space in the
-security blob for each inode. However, since IMA and EVM share the
-inode metadata, they cannot directly reserve the space for them.
+        if (size == 0) {
+                size = sysconf(_SC_OPEN_MAX);
+                if (size > FD_SETSIZE)
+                        size = FD_SETSIZE;
+        }
 
-Instead, request from the 'integrity' LSM a space in the security blob for
-the pointer of inode metadata (integrity_iint_cache structure). The other
-reason for keeping the 'integrity' LSM is to preserve the original ordering
-of IMA and EVM functions as when they were hardcoded.
-
-Prefer reserving space for a pointer to allocating the integrity_iint_cache
-structure directly, as IMA would require it only for a subset of inodes.
-Always allocating it would cause a waste of memory.
-
-Introduce two primitives for getting and setting the pointer of
-integrity_iint_cache in the security blob, respectively
-integrity_inode_get_iint() and integrity_inode_set_iint(). This would make
-the code more understandable, as they directly replace rbtree operations.
-
-Locking is not needed, as access to inode metadata is not shared, it is per
-inode.
-
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
----
- security/integrity/iint.c      | 71 +++++-----------------------------
- security/integrity/integrity.h | 20 +++++++++-
- 2 files changed, 29 insertions(+), 62 deletions(-)
-
-diff --git a/security/integrity/iint.c b/security/integrity/iint.c
-index 31a0fda3f1a1..0ce4b38c6b7d 100644
---- a/security/integrity/iint.c
-+++ b/security/integrity/iint.c
-@@ -14,56 +14,25 @@
- #include <linux/slab.h>
- #include <linux/init.h>
- #include <linux/spinlock.h>
--#include <linux/rbtree.h>
- #include <linux/file.h>
- #include <linux/uaccess.h>
- #include <linux/security.h>
- #include <linux/lsm_hooks.h>
- #include "integrity.h"
- 
--static struct rb_root integrity_iint_tree = RB_ROOT;
--static DEFINE_RWLOCK(integrity_iint_lock);
- static struct kmem_cache *iint_cache __read_mostly;
- 
- struct dentry *integrity_dir;
- 
--/*
-- * __integrity_iint_find - return the iint associated with an inode
-- */
--static struct integrity_iint_cache *__integrity_iint_find(struct inode *inode)
--{
--	struct integrity_iint_cache *iint;
--	struct rb_node *n = integrity_iint_tree.rb_node;
--
--	while (n) {
--		iint = rb_entry(n, struct integrity_iint_cache, rb_node);
--
--		if (inode < iint->inode)
--			n = n->rb_left;
--		else if (inode > iint->inode)
--			n = n->rb_right;
--		else
--			return iint;
--	}
--
--	return NULL;
--}
--
- /*
-  * integrity_iint_find - return the iint associated with an inode
-  */
- struct integrity_iint_cache *integrity_iint_find(struct inode *inode)
- {
--	struct integrity_iint_cache *iint;
--
- 	if (!IS_IMA(inode))
- 		return NULL;
- 
--	read_lock(&integrity_iint_lock);
--	iint = __integrity_iint_find(inode);
--	read_unlock(&integrity_iint_lock);
--
--	return iint;
-+	return integrity_inode_get_iint(inode);
- }
- 
- #define IMA_MAX_NESTING (FILESYSTEM_MAX_STACK_DEPTH+1)
-@@ -123,9 +92,7 @@ static void iint_free(struct integrity_iint_cache *iint)
-  */
- struct integrity_iint_cache *integrity_inode_get(struct inode *inode)
- {
--	struct rb_node **p;
--	struct rb_node *node, *parent = NULL;
--	struct integrity_iint_cache *iint, *test_iint;
-+	struct integrity_iint_cache *iint;
- 
- 	iint = integrity_iint_find(inode);
- 	if (iint)
-@@ -137,31 +104,10 @@ struct integrity_iint_cache *integrity_inode_get(struct inode *inode)
- 
- 	iint_init_always(iint, inode);
- 
--	write_lock(&integrity_iint_lock);
--
--	p = &integrity_iint_tree.rb_node;
--	while (*p) {
--		parent = *p;
--		test_iint = rb_entry(parent, struct integrity_iint_cache,
--				     rb_node);
--		if (inode < test_iint->inode) {
--			p = &(*p)->rb_left;
--		} else if (inode > test_iint->inode) {
--			p = &(*p)->rb_right;
--		} else {
--			write_unlock(&integrity_iint_lock);
--			kmem_cache_free(iint_cache, iint);
--			return test_iint;
--		}
--	}
--
- 	iint->inode = inode;
--	node = &iint->rb_node;
- 	inode->i_flags |= S_IMA;
--	rb_link_node(node, parent, p);
--	rb_insert_color(node, &integrity_iint_tree);
-+	integrity_inode_set_iint(inode, iint);
- 
--	write_unlock(&integrity_iint_lock);
- 	return iint;
- }
- 
-@@ -178,10 +124,8 @@ static void integrity_inode_free(struct inode *inode)
- 	if (!IS_IMA(inode))
- 		return;
- 
--	write_lock(&integrity_iint_lock);
--	iint = __integrity_iint_find(inode);
--	rb_erase(&iint->rb_node, &integrity_iint_tree);
--	write_unlock(&integrity_iint_lock);
-+	iint = integrity_iint_find(inode);
-+	integrity_inode_set_iint(inode, NULL);
- 
- 	iint_free(iint);
- }
-@@ -231,6 +175,10 @@ static int __init integrity_lsm_init(void)
- 	return 0;
- }
- 
-+struct lsm_blob_sizes integrity_blob_sizes __ro_after_init = {
-+	.lbs_inode = sizeof(struct integrity_iint_cache *),
-+};
-+
- /*
-  * Keep it until IMA and EVM can use disjoint integrity metadata, and their
-  * initialization order can be swapped without change in their behavior.
-@@ -239,6 +187,7 @@ DEFINE_LSM(integrity) = {
- 	.name = "integrity",
- 	.init = integrity_lsm_init,
- 	.order = LSM_ORDER_LAST,
-+	.blobs = &integrity_blob_sizes,
- };
- 
- /*
-diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-index e4df82d6f6e7..ef2689b5264d 100644
---- a/security/integrity/integrity.h
-+++ b/security/integrity/integrity.h
-@@ -158,7 +158,6 @@ struct ima_file_id {
- 
- /* integrity data associated with an inode */
- struct integrity_iint_cache {
--	struct rb_node rb_node;	/* rooted in integrity_iint_tree */
- 	struct mutex mutex;	/* protects: version, flags, digest */
- 	struct inode *inode;	/* back pointer to inode in question */
- 	u64 version;		/* track inode changes */
-@@ -192,6 +191,25 @@ int integrity_kernel_read(struct file *file, loff_t offset,
- #define INTEGRITY_KEYRING_MAX		4
- 
- extern struct dentry *integrity_dir;
-+extern struct lsm_blob_sizes integrity_blob_sizes;
-+
-+static inline struct integrity_iint_cache *
-+integrity_inode_get_iint(const struct inode *inode)
-+{
-+	struct integrity_iint_cache **iint_sec;
-+
-+	iint_sec = inode->i_security + integrity_blob_sizes.lbs_inode;
-+	return *iint_sec;
-+}
-+
-+static inline void integrity_inode_set_iint(const struct inode *inode,
-+					    struct integrity_iint_cache *iint)
-+{
-+	struct integrity_iint_cache **iint_sec;
-+
-+	iint_sec = inode->i_security + integrity_blob_sizes.lbs_inode;
-+	*iint_sec = iint;
-+}
- 
- struct modsig;
- 
--- 
-2.34.1
+In the meantime we need to clean up the existing user code.
 
