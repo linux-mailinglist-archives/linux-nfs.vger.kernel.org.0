@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B5A7DAF21
-	for <lists+linux-nfs@lfdr.de>; Sun, 29 Oct 2023 23:56:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FAFA7DB10A
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Oct 2023 00:29:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231210AbjJ2W4d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 29 Oct 2023 18:56:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45444 "EHLO
+        id S231131AbjJ2X3I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 29 Oct 2023 19:29:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231307AbjJ2Wz7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 Oct 2023 18:55:59 -0400
+        with ESMTP id S232185AbjJ2X2c (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 Oct 2023 19:28:32 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDFF2170A;
-        Sun, 29 Oct 2023 15:55:19 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A051C433C8;
-        Sun, 29 Oct 2023 22:55:14 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58BD349C2;
+        Sun, 29 Oct 2023 15:58:48 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E830C43142;
+        Sun, 29 Oct 2023 22:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698620115;
-        bh=2ML0ItDxpS8Pwcv0Qvcs/7csJFshPgMf0DqbMXXRlxA=;
+        s=k20201202; t=1698620283;
+        bh=JzhV2baKjYJKCG7HB3w3U5IgTexqNb1Lzeevsg8VPaw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYKeDBSzDRf9As/02zl6apvUuzKaWqvLWmOsLWtSf2EmrEvAn8rN+JkeFTjq37kYu
-         qjBw3aygqMGBKNq/Tm8YjnRHtWN5XgEXp1aFWopdvW3VgNvXsgIFB2QdLQBse26Fh+
-         cYH6cRrbRW2MopiYSrtK4YB2IjpfbaY5mSFCeJwSihjbMCE0FBi6BxYVxtyeYp5YqD
-         5Kh+sOQnbYEUXS3gqNJ3qfZi7fftZ4aQHZzkNolNLaHBOu9mVzpN/NKGuFUOLE48kT
-         TEj2kdIPYGF97oK6J1GgAeqKNvN01749F3xRSwZZvSgFGFEfkG+DiVwVYFpPQrHLvD
-         AYZBJpXgdeJXg==
+        b=kQRcw+uso8/gLDYFWEHYhj6oI1KqZTM2nNluKqubiQY40yuyJH1Rn/vpsfgxM4zwY
+         h3mEjDwM5SK61eZvejGEwJmRdWPBNav+6S+vh6YG4A//3MtX3lcBkg/J0O2HSkF6aX
+         hv43Ibx+aGGcccj7KhBM2Gt8DVVKDVqHnRZ7VcxWG8zhAl0xyQxNQA6UJhgF8sW4za
+         6mdonCfM/PoLiEWEhWdkyst+PB3cuMWEXNLUPrpAKwu+DMho6RMjM+l2bwA29iwSoX
+         iA42OmI/G9UaxgEoarH8Gk8p9u6FwPcnabUMdFTpRSX5H3Z1Umgvis60aGjD42b8kt
+         WKG4N9t0pQ6Sw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Dai Ngo <dai.ngo@oracle.com>,
@@ -35,23 +35,17 @@ Cc:     Dai Ngo <dai.ngo@oracle.com>,
         Sasha Levin <sashal@kernel.org>,
         trond.myklebust@hammerspace.com, anna@kernel.org,
         linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.5 22/52] nfs42: client needs to strip file mode's suid/sgid bit after ALLOCATE op
-Date:   Sun, 29 Oct 2023 18:53:09 -0400
-Message-ID: <20231029225441.789781-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 16/39] nfs42: client needs to strip file mode's suid/sgid bit after ALLOCATE op
+Date:   Sun, 29 Oct 2023 18:56:48 -0400
+Message-ID: <20231029225740.790936-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231029225441.789781-1-sashal@kernel.org>
-References: <20231029225441.789781-1-sashal@kernel.org>
+In-Reply-To: <20231029225740.790936-1-sashal@kernel.org>
+References: <20231029225740.790936-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.5.9
+X-stable-base: Linux 6.1.60
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -78,7 +72,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 063e00aff87ed..28704f924612c 100644
+index d903ea10410c2..5a8fe0e57a3d3 100644
 --- a/fs/nfs/nfs42proc.c
 +++ b/fs/nfs/nfs42proc.c
 @@ -81,7 +81,8 @@ static int _nfs42_proc_fallocate(struct rpc_message *msg, struct file *filep,
