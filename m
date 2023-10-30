@@ -2,66 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 352097DB1C9
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Oct 2023 02:13:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D1DE47DB1CA
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Oct 2023 02:13:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231243AbjJ3BNQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 29 Oct 2023 21:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35494 "EHLO
+        id S229470AbjJ3BNW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 29 Oct 2023 21:13:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjJ3BNP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 Oct 2023 21:13:15 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 016ACBD
-        for <linux-nfs@vger.kernel.org>; Sun, 29 Oct 2023 18:13:12 -0700 (PDT)
+        with ESMTP id S231298AbjJ3BNV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 Oct 2023 21:13:21 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAECCBD
+        for <linux-nfs@vger.kernel.org>; Sun, 29 Oct 2023 18:13:18 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 0854C21D49;
-        Mon, 30 Oct 2023 01:13:11 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 5D7301FE9E;
+        Mon, 30 Oct 2023 01:13:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1698628391; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1698628397; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ir/oKdWT5yWoguGc69Er8xsopccGYxcZPrPNiCKowpM=;
-        b=BV/q7XX3YbL6bhQAfEH5DWvKZEGaRqDZqeH1hWcV+/yBTRwzy+maSgAU8gMBcoyfxIQV0M
-        v5de0gT12ob15NcjfraYQm1b8DvzIheBj/l8Dp1I6bx2YrgaFrJKz/f4ocx2WJAmQijGKO
-        nnw+XlSVZ9n3sKXNRe5yGOMRp10hxoY=
+        bh=jCo7VgihP+DB3cpAG6qtLT+OVGESU5LvlqGZWV2Rs1E=;
+        b=tSpXZyqj70V+lAp6tbNz59Icd96dO6rt8eYe5HiasRiuuti6RhE+Ni8X/CilyoHDjIFnIT
+        pX4+g+c3v+vO3NgYSqeegtTDL/tGyPmifZyEHSNtZowZpGPVm03Wreu5hmsuH8xwYJzJeT
+        PzlnrsQOtfkqY80RCR3HdKASpDWrfPw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1698628391;
+        s=susede2_ed25519; t=1698628397;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Ir/oKdWT5yWoguGc69Er8xsopccGYxcZPrPNiCKowpM=;
-        b=4As9qFDFuKDtm0320L9Uoz7htUslgHNwbFSOGZtPGMeFyF24a0e1OaQk52hK6gKRkqkWwI
-        WHU52WM/PeOBfDAw==
+        bh=jCo7VgihP+DB3cpAG6qtLT+OVGESU5LvlqGZWV2Rs1E=;
+        b=TGWt2YdTPZja+UdkxbaZHOYey2Cj0g/CWpdygECsOikintlGTXLS/Qc7bkkiGWeMCqUQwF
+        vh6IMjoALGYXUTBQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 95B5713460;
-        Mon, 30 Oct 2023 01:13:08 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1174013460;
+        Mon, 30 Oct 2023 01:13:14 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id jgFaEiQDP2VZRwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 30 Oct 2023 01:13:08 +0000
+        id vLJ8LSoDP2VkRwAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 30 Oct 2023 01:13:14 +0000
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>
 Cc:     linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
         Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Subject: [PATCH 1/5] nfsd: call nfsd_last_thread() before final nfsd_put()
-Date:   Mon, 30 Oct 2023 12:08:34 +1100
-Message-ID: <20231030011247.9794-2-neilb@suse.de>
+Subject: [PATCH 2/5] svc: don't hold reference for poolstats, only mutex.
+Date:   Mon, 30 Oct 2023 12:08:35 +1100
+Message-ID: <20231030011247.9794-3-neilb@suse.de>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20231030011247.9794-1-neilb@suse.de>
 References: <20231030011247.9794-1-neilb@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
+Authentication-Results: smtp-out2.suse.de;
         none
 X-Spam-Level: 
 X-Spam-Score: -2.10
@@ -93,72 +93,195 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If write_ports_addfd or write_ports_addxprt fail, they call nfsD_put()
-without calling nfsd_last_thread().  This leaves nn->nfsd_serv pointing
-to a structure that has been freed.
-
-So export nfsd_last_thread() and call it when the nfsd_serv is about to
-be destroy.
+A future patch will remove refcounting on svc_serv as it is of little
+use.
+It is currently used to keep the svc around while the pool_stats file is
+open.
+Change this to get the pointer, protected by the mutex, only in
+seq_start, and the release the mutex in seq_stop.
+This means that if the nfsd server is stopped and restarted while the
+pool_stats file it open, then some pool stats info could be from the
+first instance and some from the second.  This might appear odd, but is
+unlikely to be a problem in practice.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfsctl.c | 9 +++++++--
- fs/nfsd/nfsd.h   | 1 +
- fs/nfsd/nfssvc.c | 2 +-
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ fs/nfsd/nfsctl.c           |  2 +-
+ fs/nfsd/nfssvc.c           | 30 ++++++++---------------
+ include/linux/sunrpc/svc.h |  5 +++-
+ net/sunrpc/svc_xprt.c      | 49 ++++++++++++++++++++++++++++++++------
+ 4 files changed, 57 insertions(+), 29 deletions(-)
 
 diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 739ed5bf71cd..79efb1075f38 100644
+index 79efb1075f38..d78ae4452946 100644
 --- a/fs/nfsd/nfsctl.c
 +++ b/fs/nfsd/nfsctl.c
-@@ -705,8 +705,10 @@ static ssize_t __write_ports_addfd(char *buf, struct net *net, const struct cred
+@@ -179,7 +179,7 @@ static const struct file_operations pool_stats_operations = {
+ 	.open		= nfsd_pool_stats_open,
+ 	.read		= seq_read,
+ 	.llseek		= seq_lseek,
+-	.release	= nfsd_pool_stats_release,
++	.release	= svc_pool_stats_release,
+ };
  
- 	err = svc_addsock(nn->nfsd_serv, net, fd, buf, SIMPLE_TRANSACTION_LIMIT, cred);
- 
--	if (err >= 0 &&
--	    !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
-+	if (err < 0 && !nn->nfsd_serv->sv_nrthreads && !nn->keep_active)
-+		nfsd_last_thread(net);
-+	else if (err >= 0 &&
-+		 !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
- 		svc_get(nn->nfsd_serv);
- 
- 	nfsd_put(net);
-@@ -757,6 +759,9 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
- 		svc_xprt_put(xprt);
- 	}
- out_err:
-+	if (!nn->nfsd_serv->sv_nrthreads && !nn->keep_active)
-+		nfsd_last_thread(net);
-+
- 	nfsd_put(net);
- 	return err;
- }
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index f5ff42f41ee7..3286ffacbc56 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -155,6 +155,7 @@ int nfsd_vers(struct nfsd_net *nn, int vers, enum vers_op change);
- int nfsd_minorversion(struct nfsd_net *nn, u32 minorversion, enum vers_op change);
- void nfsd_reset_versions(struct nfsd_net *nn);
- int nfsd_create_serv(struct net *net);
-+void nfsd_last_thread(struct net *net);
- 
- extern int nfsd_max_blksize;
- 
+ DEFINE_SHOW_ATTRIBUTE(nfsd_reply_cache_stats);
 diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index d6122bb2d167..6c968c02cc29 100644
+index 6c968c02cc29..203e1cfc1cad 100644
 --- a/fs/nfsd/nfssvc.c
 +++ b/fs/nfsd/nfssvc.c
-@@ -542,7 +542,7 @@ static struct notifier_block nfsd_inet6addr_notifier = {
- /* Only used under nfsd_mutex, so this atomic may be overkill: */
- static atomic_t nfsd_notifier_refcount = ATOMIC_INIT(0);
+@@ -1072,30 +1072,20 @@ bool nfssvc_encode_voidres(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ 	return true;
+ }
  
--static void nfsd_last_thread(struct net *net)
-+void nfsd_last_thread(struct net *net)
+-int nfsd_pool_stats_open(struct inode *inode, struct file *file)
++static struct svc_serv *nfsd_get_serv(struct seq_file *s, bool start)
  {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	struct svc_serv *serv = nn->nfsd_serv;
+-	int ret;
+-	struct nfsd_net *nn = net_generic(inode->i_sb->s_fs_info, nfsd_net_id);
+-
+-	mutex_lock(&nfsd_mutex);
+-	if (nn->nfsd_serv == NULL) {
++	struct nfsd_net *nn = net_generic(file_inode(s->file)->i_sb->s_fs_info,
++					  nfsd_net_id);
++	if (start) {
++		mutex_lock(&nfsd_mutex);
++		return nn->nfsd_serv;
++	} else {
+ 		mutex_unlock(&nfsd_mutex);
+-		return -ENODEV;
++		return NULL;
+ 	}
+-	svc_get(nn->nfsd_serv);
+-	ret = svc_pool_stats_open(nn->nfsd_serv, file);
+-	mutex_unlock(&nfsd_mutex);
+-	return ret;
+ }
+ 
+-int nfsd_pool_stats_release(struct inode *inode, struct file *file)
++int nfsd_pool_stats_open(struct inode *inode, struct file *file)
+ {
+-	struct seq_file *seq = file->private_data;
+-	struct svc_serv *serv = seq->private;
+-	int ret = seq_release(inode, file);
+-
+-	mutex_lock(&nfsd_mutex);
+-	svc_put(serv);
+-	mutex_unlock(&nfsd_mutex);
+-	return ret;
++	return svc_pool_stats_open(nfsd_get_serv, file);
+ }
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index b10f987509cc..11acad6988a2 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -433,7 +433,10 @@ void		   svc_exit_thread(struct svc_rqst *);
+ struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned int,
+ 				     int (*threadfn)(void *data));
+ int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int);
+-int		   svc_pool_stats_open(struct svc_serv *serv, struct file *file);
++int		   svc_pool_stats_open(struct svc_serv *(*get_serv)(struct seq_file *, bool),
++				       struct file *file);
++int		   svc_pool_stats_release(struct inode *inode,
++					  struct file *file);
+ void		   svc_process(struct svc_rqst *rqstp);
+ void		   svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp);
+ int		   svc_register(const struct svc_serv *, struct net *, const int,
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index fee83d1024bc..2f99f7475b7b 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -1366,26 +1366,38 @@ EXPORT_SYMBOL_GPL(svc_xprt_names);
+ 
+ /*----------------------------------------------------------------------------*/
+ 
++struct pool_private {
++	struct svc_serv *(*get_serv)(struct seq_file *, bool);
++	struct svc_serv *serv;
++};
++
+ static void *svc_pool_stats_start(struct seq_file *m, loff_t *pos)
+ {
+ 	unsigned int pidx = (unsigned int)*pos;
+-	struct svc_serv *serv = m->private;
++	struct pool_private *pp = m->private;
+ 
+ 	dprintk("svc_pool_stats_start, *pidx=%u\n", pidx);
+ 
++	pp->serv = pp->get_serv(m, true);
++
+ 	if (!pidx)
+ 		return SEQ_START_TOKEN;
+-	return (pidx > serv->sv_nrpools ? NULL : &serv->sv_pools[pidx-1]);
++	if (!pp->serv)
++		return NULL;
++	return (pidx > pp->serv->sv_nrpools ? NULL : &pp->serv->sv_pools[pidx-1]);
+ }
+ 
+ static void *svc_pool_stats_next(struct seq_file *m, void *p, loff_t *pos)
+ {
+ 	struct svc_pool *pool = p;
+-	struct svc_serv *serv = m->private;
++	struct pool_private *pp = m->private;
++	struct svc_serv *serv = pp->serv;
+ 
+ 	dprintk("svc_pool_stats_next, *pos=%llu\n", *pos);
+ 
+-	if (p == SEQ_START_TOKEN) {
++	if (!serv) {
++		pool = NULL;
++	} else if (p == SEQ_START_TOKEN) {
+ 		pool = &serv->sv_pools[0];
+ 	} else {
+ 		unsigned int pidx = (pool - &serv->sv_pools[0]);
+@@ -1400,6 +1412,9 @@ static void *svc_pool_stats_next(struct seq_file *m, void *p, loff_t *pos)
+ 
+ static void svc_pool_stats_stop(struct seq_file *m, void *p)
+ {
++	struct pool_private *pp = m->private;
++
++	pp->get_serv(m, false);
+ }
+ 
+ static int svc_pool_stats_show(struct seq_file *m, void *p)
+@@ -1427,15 +1442,35 @@ static const struct seq_operations svc_pool_stats_seq_ops = {
+ 	.show	= svc_pool_stats_show,
+ };
+ 
+-int svc_pool_stats_open(struct svc_serv *serv, struct file *file)
++int svc_pool_stats_open(struct svc_serv *(*get_serv)(struct seq_file *, bool),
++			struct file *file)
+ {
++	struct pool_private *pp;
+ 	int err;
+ 
++	pp = kmalloc(sizeof(*pp), GFP_KERNEL);
++	if (!pp)
++		return -ENOMEM;
++
+ 	err = seq_open(file, &svc_pool_stats_seq_ops);
+-	if (!err)
+-		((struct seq_file *) file->private_data)->private = serv;
++	if (!err) {
++		pp->get_serv = get_serv;
++		((struct seq_file *) file->private_data)->private = pp;
++	} else
++		kfree(pp);
++
+ 	return err;
+ }
+ EXPORT_SYMBOL(svc_pool_stats_open);
+ 
++int svc_pool_stats_release(struct inode *inode, struct file *file)
++{
++	struct seq_file *seq = file->private_data;
++
++	kfree(seq->private);
++	seq->private = NULL;
++	return seq_release(inode, file);
++}
++EXPORT_SYMBOL(svc_pool_stats_release);
++
+ /*----------------------------------------------------------------------------*/
 -- 
 2.42.0
 
