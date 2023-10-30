@@ -2,181 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 777437DB1CD
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Oct 2023 02:13:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E8057DB547
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Oct 2023 09:39:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231319AbjJ3BNt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 29 Oct 2023 21:13:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
+        id S231789AbjJ3IjX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Oct 2023 04:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229891AbjJ3BNt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 Oct 2023 21:13:49 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0602EBF
-        for <linux-nfs@vger.kernel.org>; Sun, 29 Oct 2023 18:13:47 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id AD16B218B5;
-        Mon, 30 Oct 2023 01:13:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1698628425; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dto3+UrACrlCcXsljWYZDaMqE4bcBMsE2PC5UCt+H3g=;
-        b=GsOXJ/4GgjynA+8y/1UyFYlL2ECOB5yDvx8kH3hMa5/IxV6BsnVU/l067hPi+Qf98KekAo
-        PsoWDjwZgTtJAwTk5hvw7VlwKy0ykUmbawfd7cW5rHgy21DEBp3eDlv3XV9u3x/Jbmrl7m
-        aZIf2YHAJ/Un+ouNpYiDpkxZZ7YcCr0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1698628425;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dto3+UrACrlCcXsljWYZDaMqE4bcBMsE2PC5UCt+H3g=;
-        b=NFoZL/okV9SpJ9139DneU0jbtY+g6vqTZAwbxyqSbvHNhoPRQTBeu+nWFgio4j23wNfayF
-        7+yWAv8FRhDtOBDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C9BD513460;
-        Mon, 30 Oct 2023 01:13:41 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 9VcAH0UDP2WWRwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 30 Oct 2023 01:13:41 +0000
-From:   NeilBrown <neilb@suse.de>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Subject: [PATCH 5/5] nfsd: rename nfsd_last_thread() to nfsd_destroy_serv()
-Date:   Mon, 30 Oct 2023 12:08:38 +1100
-Message-ID: <20231030011247.9794-6-neilb@suse.de>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20231030011247.9794-1-neilb@suse.de>
-References: <20231030011247.9794-1-neilb@suse.de>
+        with ESMTP id S229517AbjJ3IjW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Oct 2023 04:39:22 -0400
+Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34107A7
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Oct 2023 01:39:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+        s=s201512; t=1698655155;
+        bh=W8G5j9YhA2I2eRk3M6nv4DdkaLiBeUrHLN00MhMD31Q=;
+        h=Date:To:Cc:From:Subject;
+        b=QG9UnVkFwwH1XC3Ovx446jHVERTLDF+B/GHWGtldwBLjcvjNaz0RzObeOdVTR8HPG
+         VitaOLti6YQs+oD/kDXI6pifsMe5dRnhxtt1fWCv+a29QDTJ9HYko63OJPgxI4ccPk
+         GHVBMxcMdwi8eZzSwWOkF/ZPRr9xMPV9f/9yQDr8=
+Received: from [192.168.31.137] ([116.128.244.171])
+        by newxmesmtplogicsvrszc2-0.qq.com (NewEsmtp) with SMTP
+        id 9CB92A0B; Mon, 30 Oct 2023 16:39:11 +0800
+X-QQ-mid: xmsmtpt1698655151t2dqeblop
+Message-ID: <tencent_BEDA418B8BD86995FBF3E92D4F9F5D342C0A@qq.com>
+X-QQ-XMAILINFO: N26DAMVpW7UE1TRfKdo6eHcsxFwLL98nLeAI/pEurbf74ZhutHLWVTVWaTsqjU
+         jrFgNtY2wtOX6BDGB7GXAPHbCK7hGBZSRFwMDSstJR+1Jf6i15Fad08SmCfmu5D4UEx24fWqmzkO
+         DWcSC5bXjk/ORj8IMylxT80bgV6fFhyHpkt7m/akpW96AE107jWpuQ/+X1Pl9bGiFsQ23ujC4uak
+         5NbHgy7MINE5WOSrcA/IxKQ/SNTMMUbVuO8hU0iBERf3VUuLreNR3IPIuwdhc5fuuxwdFRx0NASJ
+         SzBXAjL6RIIeeqxOet5YWm0B2a4nra0nkoTkbLwgtYy3TxLmCZxcMr9jvfS1M/OpX5iVsVxm/BKo
+         NdAiyovIMxBwAKdcVk2Fwj7YDTwB3PFuzgKx24ivg+xw2AWIVh+jEbT4z4Zcshjp1DmyPw+J0/Fz
+         ZGN39TTXr3dRTCV5zMfrzfq1aaw/fcGxec99GjKRbeXV/OpfXqE6g0CYLsBjDSGvDTc0LUXlggdk
+         sJdGvzYHbxvc5cNX26yX7iDEZ377oHxd1yn1+TKtG82zCBhGVzKXTw7igmviDaoSqoe6rajjI8U0
+         VWmdSGHT7+b8uF5J9LDZgBJ3pKc9UwpD7pP1IxuE/TaZ9rbDQGOUOq7MwuxnWzX4gn6M9R8Frf9M
+         2PihA480TEPPhW+b5rF38DooUOae9bmLEeoYAIg9T1CTngF1K3HjvE6mvuqSElg73SD4W8V8cbha
+         rhJO/OrygQRkNvsal5tqQ1gYDL60m7b6fr4Fjl2sewNzpWM5ZAdNbOzzOMtwRaBSR5qXEdZEm7ev
+         hJDygZKr7TgMocEJ9WKnVwWDiuNsMSUhoH7lzXuVBpm73WcbqBtS2etcGI3j/vrb7r9FHxHIBpft
+         EinB9bSkIxu84yHkomCL11Ile2jqR/kikZIXq5UmD5krckqDlUlhDSQxt4JRe+AV+66RkiEZdHIm
+         B3a9LpeoMe/ImUq5Cf8bYFIp6x7WIk2ovL7kfcO8UHh9yXZHF4yB8s76t7j/kNWIDgQ4elk8luDR
+         2ubmq6tnQqCSa28DCD/czzIKLGAGU=
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-OQ-MSGID: <9b161a5b-201a-4f82-b9ef-5f9d7eba4529@foxmail.com>
+Date:   Mon, 30 Oct 2023 16:39:11 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To:     gregkh@linuxfoundation.org, trond.myklebust@hammerspace.com,
+        chenxiaosong@kylinos.cn
+Cc:     Anna.Schumaker@Netapp.com, sashal@kernel.org,
+        liuzhengyuan@kylinos.cn, huangjinhui@kylinos.cn,
+        liuyun01@kylinos.cn, huhai@kylinos.cn, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+From:   ChenXiaoSong <chenxiaosongemail@foxmail.com>
+Subject: Question about LTS 4.19 patch "89047634f5ce NFS: Don't interrupt file
+ writeout due to fatal errors"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-        none
-X-Spam-Level: 
-X-Spam-Score: -2.10
-X-Spamd-Result: default: False [-2.10 / 50.00];
-         ARC_NA(0.00)[];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         RCPT_COUNT_FIVE(0.00)[6];
-         NEURAL_HAM_LONG(-3.00)[-1.000];
-         DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-         NEURAL_HAM_SHORT(-1.00)[-1.000];
-         MID_CONTAINS_FROM(1.00)[];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         RCVD_COUNT_TWO(0.00)[2];
-         RCVD_TLS_ALL(0.00)[];
-         BAYES_HAM(-3.00)[100.00%]
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_MUA_MOZILLA,
+        FREEMAIL_FROM,HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-As this function now destroys the svc_serv, this is a better name.
+Hi Trond and Greg:
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfsctl.c | 4 ++--
- fs/nfsd/nfsd.h   | 2 +-
- fs/nfsd/nfssvc.c | 8 ++++----
- 3 files changed, 7 insertions(+), 7 deletions(-)
+LTS 4.19 reported null-ptr-deref BUG as follows:
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 86cab5281fd2..d603e672d568 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -707,7 +707,7 @@ static ssize_t __write_ports_addfd(char *buf, struct net *net, const struct cred
- 
- 	if (!nn->nfsd_serv->sv_nrthreads &&
- 	    list_empty(&nn->nfsd_serv->sv_permsocks))
--		nfsd_last_thread(net);
-+		nfsd_destroy_serv(net);
- 
- 	return err;
- }
-@@ -754,7 +754,7 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
- out_err:
- 	if (!nn->nfsd_serv->sv_nrthreads &&
- 	    list_empty(&nn->nfsd_serv->sv_permsocks))
--		nfsd_last_thread(net);
-+		nfsd_destroy_serv(net);
- 
- 	return err;
- }
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 9ed0e08d16c2..304e9728b929 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -148,7 +148,7 @@ int nfsd_vers(struct nfsd_net *nn, int vers, enum vers_op change);
- int nfsd_minorversion(struct nfsd_net *nn, u32 minorversion, enum vers_op change);
- void nfsd_reset_versions(struct nfsd_net *nn);
- int nfsd_create_serv(struct net *net);
--void nfsd_last_thread(struct net *net);
-+void nfsd_destroy_serv(struct net *net);
- 
- extern int nfsd_max_blksize;
- 
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 61a1d966ca48..88c2e2c94829 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -533,7 +533,7 @@ static struct notifier_block nfsd_inet6addr_notifier = {
- /* Only used under nfsd_mutex, so this atomic may be overkill: */
- static atomic_t nfsd_notifier_refcount = ATOMIC_INIT(0);
- 
--void nfsd_last_thread(struct net *net)
-+void nfsd_destroy_serv(struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	struct svc_serv *serv = nn->nfsd_serv;
-@@ -555,7 +555,7 @@ void nfsd_last_thread(struct net *net)
- 	/*
- 	 * write_ports can create the server without actually starting
- 	 * any threads--if we get shut down before any threads are
--	 * started, then nfsd_last_thread will be run before any of this
-+	 * started, then nfsd_destroy_serv will be run before any of this
- 	 * other initialization has been done except the rpcb information.
- 	 */
- 	svc_rpcb_cleanup(serv, net);
-@@ -641,7 +641,7 @@ void nfsd_shutdown_threads(struct net *net)
- 
- 	/* Kill outstanding nfsd threads */
- 	svc_set_num_threads(serv, NULL, 0);
--	nfsd_last_thread(net);
-+	nfsd_destroy_serv(net);
- 	mutex_unlock(&nfsd_mutex);
- }
- 
-@@ -802,7 +802,7 @@ nfsd_svc(int nrservs, struct net *net, const struct cred *cred)
- 	error = serv->sv_nrthreads;
- out_put:
- 	if (serv->sv_nrthreads == 0)
--		nfsd_last_thread(net);
-+		nfsd_destroy_serv(net);
- out:
- 	mutex_unlock(&nfsd_mutex);
- 	return error;
--- 
-2.42.0
+BUG: unable to handle kernel NULL pointer dereference at 0000000000000080
+Call Trace:
+  nfs_inode_add_request+0x1cc/0x5b8
+  nfs_setup_write_request+0x1fa/0x1fc
+  nfs_writepage_setup+0x2d/0x7d
+  nfs_updatepage+0x8b8/0x936
+  nfs_write_end+0x61d/0xd45
+  generic_perform_write+0x19a/0x3f0
+  nfs_file_write+0x2cc/0x6e5
+  new_sync_write+0x442/0x560
+  __vfs_write+0xda/0xef
+  vfs_write+0x176/0x48b
+  ksys_write+0x10a/0x1e9
+  __se_sys_write+0x24/0x29
+  __x64_sys_write+0x79/0x93
+  do_syscall_64+0x16d/0x4bb
+  entry_SYSCALL_64_after_hwframe+0x5c/0xc1
+
+The reason is: generic_error_remove_page set page->mapping to NULL when 
+nfs server have a fatal error:
+
+nfs_updatepage
+   nfs_writepage_setup
+     nfs_setup_write_request
+       nfs_try_to_update_request // return NULL
+         nfs_wb_page // return 0
+           nfs_writepage_locked // return 0
+             nfs_do_writepage // return 0
+               nfs_page_async_flush // return 0
+                 nfs_error_is_fatal_on_server
+                 generic_error_remove_page
+                   truncate_inode_page
+                     delete_from_page_cache
+                       __delete_from_page_cache
+                         page_cache_tree_delete
+                           page->mapping = NULL // this is point
+       nfs_create_request
+         req->wb_page    = page // the page is freed
+       nfs_inode_add_request
+         mapping = page_file_mapping(req->wb_page)
+           return page->mapping
+         spin_lock(&mapping->private_lock) // mapping is NULL
+
+It is reasonable by reverting the patch "89047634f5ce NFS: Don't 
+interrupt file writeout due to fatal errors" to fix this bug?
+
+
+This patch is one patch of patchset [Fix up soft mounts for 
+NFSv4.x](https://lore.kernel.org/all/20190407175912.23528-1-trond.myklebust@hammerspace.com/), 
+the patchset replace custom error reporting mechanism. it seams that we 
+should merge all the patchset to LTS 4.19, or all patchs should not be 
+merged. And the "Fixes:" label is not correct, this patch is a 
+refactoring patch, not for fixing bugs.
 
