@@ -2,312 +2,204 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF3DD7DC217
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 Oct 2023 22:49:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F318F7DC287
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 Oct 2023 23:37:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbjJ3VtG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Oct 2023 17:49:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51258 "EHLO
+        id S232213AbjJ3WhT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 Oct 2023 18:37:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjJ3VtG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Oct 2023 17:49:06 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1934BED
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Oct 2023 14:49:03 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id CC057218F0;
-        Mon, 30 Oct 2023 21:49:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1698702541; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cr0WBwk8hf7QcBmJ2fH0jLejDklF1+doi1JWqh1kL3E=;
-        b=U+ndjDscHSG6ac54Kg8MsCT0dh71f3rpqki+uI1vW8O4OB75EI/3sDrPmeL6LAtnDivMgT
-        DrIXrTx5/EPJGaKa6jnJ1T3GxghlZvSpgbeYaWcWIg6YIZtLT+SHlD0Y2D8UiX8/GIq72j
-        Jpc1DP4r23fU4VMVqo0tCihuL6jSZds=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1698702541;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Cr0WBwk8hf7QcBmJ2fH0jLejDklF1+doi1JWqh1kL3E=;
-        b=5QN2808hGsr/fsszttE3J+ZLF1XadEv4r57oR4PUVrBgqh33WKV5+N+R8a+sH75icx3oPr
-        Wv7OUNa/5JMBzyAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C3F36138EF;
-        Mon, 30 Oct 2023 21:48:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id OMLUHsskQGXmKQAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 30 Oct 2023 21:48:59 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S232214AbjJ3WhS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Oct 2023 18:37:18 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45DAA113
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Oct 2023 15:37:15 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-6b5cac99cfdso4444857b3a.2
+        for <linux-nfs@vger.kernel.org>; Mon, 30 Oct 2023 15:37:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698705434; x=1699310234; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=s3l/lL5wYf4n3GthHM0NoG2tR/ievkKXd51rX7QyzCg=;
+        b=YZJJRKmpYSheU+R2mseNAMbeGSdPJLFe40wCupbHYAd3o4QvZNI/n7SGn2r5cooFgq
+         2TEcO78mRTQJBTq7k2LqUtVvJres5aMQhj3nULXOrrdnw3Gj9/WT+z7z2ABtzED7KsbV
+         ekC9YAJYeG7FVFi/CvzzPWQPOAWd7xX/xs+NjEVXTta0c+tu9fOv2E6WvTvGDYo0G3A3
+         nk/n2nXjoAIwMY394rKnbmnbD9xeR0wGUW/4HzwyTv9RhbV1nF/lk2rhXLia5gW1lDor
+         Xwl91GIsakdFQ/xOsemb/k2wPINm34d+665mfEqcz2YTJlkO8PHNhrdA0s286qBDrOO7
+         /l3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698705434; x=1699310234;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s3l/lL5wYf4n3GthHM0NoG2tR/ievkKXd51rX7QyzCg=;
+        b=qXiicKM89QGH71VZ/j7sgwI3/MTwnzPQQA1xkWKNlXAISCbbEPjcOnNypqVVOQGkND
+         LYrQZDw3MSGDqiepqUQEyq13kGExAUuWaJIGwbknUBEbKjlP3Gi3859kZdU6UmZqRUhu
+         63QGzFn2XgUkb1kE4vCUkuZ4ZbLWoGP+871LdzNSBFxrYrM0jJ613SQFzabwOVwdjU0+
+         eahjMU1y0jtOLHdSndhXawxuVyuP1dJQMkP3denbtGe//Jv97wqE8zFx9xbt4vWNH53o
+         XnNxak5h9qIEk2EgzOOGtySdttZAX+4n0DkeM6MtLaX3DbDgF8nM5GELaBVQAV8L9eQx
+         ROmA==
+X-Gm-Message-State: AOJu0YwiLeSevRMxALrDxEjTM4fGhbX95Wctn5d+L+WtU6ul9xzxEGMf
+        UGcaJD1RCfEekDUS7uw2mG7iKA==
+X-Google-Smtp-Source: AGHT+IH220teegvrDu5BQvWXj+pfKEIBe9mpI/qNDn7XBuC5Q1LlqBFVtPwA3Li0K8x18IiaaOOLaQ==
+X-Received: by 2002:a05:6a21:6da1:b0:175:7085:ba18 with SMTP id wl33-20020a056a216da100b001757085ba18mr9996599pzb.58.1698705434041;
+        Mon, 30 Oct 2023 15:37:14 -0700 (PDT)
+Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
+        by smtp.gmail.com with ESMTPSA id p11-20020a17090a2d8b00b002774d7e2fefsm2932pjd.36.2023.10.30.15.37.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Oct 2023 15:37:13 -0700 (PDT)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+        (envelope-from <david@fromorbit.com>)
+        id 1qxasg-0066We-2r;
+        Tue, 31 Oct 2023 09:37:10 +1100
+Date:   Tue, 31 Oct 2023 09:37:10 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Christian Brauner <brauner@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.de>, David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+Message-ID: <ZUAwFkAizH1PrIZp@dread.disaster.area>
+References: <61b32a4093948ae1ae8603688793f07de764430f.camel@kernel.org>
+ <ZTcBI2xaZz1GdMjX@dread.disaster.area>
+ <CAHk-=whphyjjLwDcEthOOFXXfgwGrtrMnW2iyjdQioV6YSMEPw@mail.gmail.com>
+ <ZTc8tClCRkfX3kD7@dread.disaster.area>
+ <CAOQ4uxhJGkZrUdUJ72vjRuLec0g8VqgRXRH=x7W9ogMU6rBxcQ@mail.gmail.com>
+ <d539804a2a73ad70265c5fa599ecd663cd235843.camel@kernel.org>
+ <ZTjMRRqmlJ+fTys2@dread.disaster.area>
+ <2ef9ac6180e47bc9cc8edef20648a000367c4ed2.camel@kernel.org>
+ <ZTnNCytHLGoJY9ds@dread.disaster.area>
+ <6df5ea54463526a3d898ed2bd8a005166caa9381.camel@kernel.org>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        "Olga Kornievskaia" <kolga@netapp.com>,
-        "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH 2/5] svc: don't hold reference for poolstats, only mutex.
-In-reply-to: <84354fd30d4b4a162b008067ad4e0d35a7d223da.camel@kernel.org>
-References: <20231030011247.9794-1-neilb@suse.de>,
- <20231030011247.9794-3-neilb@suse.de>,
- <84354fd30d4b4a162b008067ad4e0d35a7d223da.camel@kernel.org>
-Date:   Tue, 31 Oct 2023 08:48:56 +1100
-Message-id: <169870253672.24305.8926736855317017757@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6df5ea54463526a3d898ed2bd8a005166caa9381.camel@kernel.org>
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 31 Oct 2023, Jeff Layton wrote:
-> On Mon, 2023-10-30 at 12:08 +1100, NeilBrown wrote:
-> > A future patch will remove refcounting on svc_serv as it is of little
-> > use.
-> > It is currently used to keep the svc around while the pool_stats file is
-> > open.
-> > Change this to get the pointer, protected by the mutex, only in
-> > seq_start, and the release the mutex in seq_stop.
-> > This means that if the nfsd server is stopped and restarted while the
-> > pool_stats file it open, then some pool stats info could be from the
-> > first instance and some from the second.  This might appear odd, but is
-> > unlikely to be a problem in practice.
-> >=20
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/nfsd/nfsctl.c           |  2 +-
-> >  fs/nfsd/nfssvc.c           | 30 ++++++++---------------
-> >  include/linux/sunrpc/svc.h |  5 +++-
-> >  net/sunrpc/svc_xprt.c      | 49 ++++++++++++++++++++++++++++++++------
-> >  4 files changed, 57 insertions(+), 29 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > index 79efb1075f38..d78ae4452946 100644
-> > --- a/fs/nfsd/nfsctl.c
-> > +++ b/fs/nfsd/nfsctl.c
-> > @@ -179,7 +179,7 @@ static const struct file_operations pool_stats_operat=
-ions =3D {
-> >  	.open		=3D nfsd_pool_stats_open,
-> >  	.read		=3D seq_read,
-> >  	.llseek		=3D seq_lseek,
-> > -	.release	=3D nfsd_pool_stats_release,
-> > +	.release	=3D svc_pool_stats_release,
-> >  };
-> > =20
-> >  DEFINE_SHOW_ATTRIBUTE(nfsd_reply_cache_stats);
-> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > index 6c968c02cc29..203e1cfc1cad 100644
-> > --- a/fs/nfsd/nfssvc.c
-> > +++ b/fs/nfsd/nfssvc.c
-> > @@ -1072,30 +1072,20 @@ bool nfssvc_encode_voidres(struct svc_rqst *rqstp=
-, struct xdr_stream *xdr)
-> >  	return true;
-> >  }
-> > =20
-> > -int nfsd_pool_stats_open(struct inode *inode, struct file *file)
-> > +static struct svc_serv *nfsd_get_serv(struct seq_file *s, bool start)
-> >  {
-> > -	int ret;
-> > -	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_net_id=
-);
-> > -
-> > -	mutex_lock(&nfsd_mutex);
-> > -	if (nn->nfsd_serv =3D=3D NULL) {
-> > +	struct nfsd_net *nn =3D net_generic(file_inode(s->file)->i_sb->s_fs_inf=
-o,
-> > +					  nfsd_net_id);
-> > +	if (start) {
-> > +		mutex_lock(&nfsd_mutex);
-> > +		return nn->nfsd_serv;
-> > +	} else {
-> >  		mutex_unlock(&nfsd_mutex);
-> > -		return -ENODEV;
-> > +		return NULL;
-> >  	}
-> > -	svc_get(nn->nfsd_serv);
-> > -	ret =3D svc_pool_stats_open(nn->nfsd_serv, file);
-> > -	mutex_unlock(&nfsd_mutex);
-> > -	return ret;
-> >  }
-> > =20
-> > -int nfsd_pool_stats_release(struct inode *inode, struct file *file)
-> > +int nfsd_pool_stats_open(struct inode *inode, struct file *file)
-> >  {
-> > -	struct seq_file *seq =3D file->private_data;
-> > -	struct svc_serv *serv =3D seq->private;
-> > -	int ret =3D seq_release(inode, file);
-> > -
-> > -	mutex_lock(&nfsd_mutex);
-> > -	svc_put(serv);
-> > -	mutex_unlock(&nfsd_mutex);
-> > -	return ret;
-> > +	return svc_pool_stats_open(nfsd_get_serv, file);
-> >  }
-> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > index b10f987509cc..11acad6988a2 100644
-> > --- a/include/linux/sunrpc/svc.h
-> > +++ b/include/linux/sunrpc/svc.h
-> > @@ -433,7 +433,10 @@ void		   svc_exit_thread(struct svc_rqst *);
-> >  struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned int,
-> >  				     int (*threadfn)(void *data));
-> >  int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int);
-> > -int		   svc_pool_stats_open(struct svc_serv *serv, struct file *file);
-> > +int		   svc_pool_stats_open(struct svc_serv *(*get_serv)(struct seq_file=
- *, bool),
-> > +				       struct file *file);
-> > +int		   svc_pool_stats_release(struct inode *inode,
-> > +					  struct file *file);
-> >  void		   svc_process(struct svc_rqst *rqstp);
-> >  void		   svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp);
-> >  int		   svc_register(const struct svc_serv *, struct net *, const int,
-> > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > index fee83d1024bc..2f99f7475b7b 100644
-> > --- a/net/sunrpc/svc_xprt.c
-> > +++ b/net/sunrpc/svc_xprt.c
-> > @@ -1366,26 +1366,38 @@ EXPORT_SYMBOL_GPL(svc_xprt_names);
-> > =20
-> >  /*----------------------------------------------------------------------=
-------*/
-> > =20
-> > +struct pool_private {
-> > +	struct svc_serv *(*get_serv)(struct seq_file *, bool);
->=20
-> This bool is pretty ugly. I think I'd rather see two operations here
-> (get_serv/put_serv). Also, this could use a kerneldoc comment.
+On Fri, Oct 27, 2023 at 06:35:58AM -0400, Jeff Layton wrote:
+> On Thu, 2023-10-26 at 13:20 +1100, Dave Chinner wrote:
+> > On Wed, Oct 25, 2023 at 08:25:35AM -0400, Jeff Layton wrote:
+> > > On Wed, 2023-10-25 at 19:05 +1100, Dave Chinner wrote:
+> > > > On Tue, Oct 24, 2023 at 02:40:06PM -0400, Jeff Layton wrote:
+> > > In earlier discussions you alluded to some repair and/or analysis tools
+> > > that depended on this counter.
+> > 
+> > Yes, and one of those "tools" is *me*.
+> > 
+> > I frequently look at the di_changecount when doing forensic and/or
+> > failure analysis on filesystem corpses.  SOE analysis, relative
+> > modification activity, etc all give insight into what happened to
+> > the filesystem to get it into the state it is currently in, and
+> > di_changecount provides information no other metadata in the inode
+> > contains.
+> > 
+> > > I took a quick look in xfsprogs, but I
+> > > didn't see anything there. Is there a library or something that these
+> > > tools use to get at this value?
+> > 
+> > xfs_db is the tool I use for this, such as:
+> > 
+> > $ sudo xfs_db -c "sb 0" -c "a rootino" -c "p v3.change_count" /dev/mapper/fast
+> > v3.change_count = 35
+> > $
+> > 
+> > The root inode in this filesystem has a change count of 35. The root
+> > inode has 32 dirents in it, which means that no entries have ever
+> > been removed or renamed. This sort of insight into the past history
+> > of inode metadata is largely impossible to get any other way, and
+> > it's been the difference between understanding failure and having no
+> > clue more than once.
+> > 
+> > Most block device parsing applications simply write their own
+> > decoder that walks the on-disk format. That's pretty trivial to do,
+> > developers can get all the information needed to do this from the
+> > on-disk format specification documentation we keep on kernel.org...
+> > 
+> 
+> Fair enough. I'm not here to tell you that you guys that you need to
+> change how di_changecount works. If it's too valuable to keep it
+> counting atime-only updates, then so be it.
+> 
+> If that's the case however, and given that the multigrain timestamp work
+> is effectively dead, then I don't see an alternative to growing the on-
+> disk inode. Do you?
 
-I agree that bool is ugly, but two function pointers as function args
-seemed ugly, and stashing them in 'struct svc_serv' seemed ugly.
-So I picked one.  I'd be keen to find an approach that didn't require a
-function pointer.
+Yes, I do see alternatives. That's what I've been trying
+(unsuccessfully) to describe and get consensus on. I feel like I'm
+being ignored and rail-roaded here, because nobody is even
+acknowledging that I'm proposing alternatives and keeps insisting
+that the only solution is a change of on-disk format.
 
-Maybe sunrpc could declare
+So, I'll summarise the situation *yet again* in the hope that this
+time I won't get people arguing about atime vs i-version and what
+constitutes an on-disk format change because that goes nowhere and
+does nothing to determine which solution might be acceptible.
 
-   struct svc_ref {
-         struct mutex mutex;
-         struct svc_serv *serv;
-   }
+The basic situation is this:
 
-and nfsd could use one of those instead of nfsd_mutex and nfsd_serv, and
-pass a pointer to it to the open function.
+If XFS can ignore relatime or lazytime persistent updates for given
+situations, then *we don't need to make periodic on-disk updates of
+atime*. This makes the whole problem of "persistent atime update bumps
+i_version" go away because then we *aren't making persistent atime
+updates* except when some other persistent modification that bumps
+[cm]time occurs.
 
-But then the mutex would have to be in the per-net structure.  And maybe
-that isn't a bad idea, but it is a change...
+But I don't want to do this unconditionally - for systems not
+running anything that samples i_version we want relatime/lazytime
+to behave as they are supposed to and do periodic persistent updates
+as per normal. Principle of least surprise and all that jazz.
 
-I guess I could pass pointers to nfsd_mutex and nn->nfsd_serv to the
-open function....
+So we really need an indication for inodes that we should enable this
+mode for the inode. I have asked if we can have per-operation
+context flag to trigger this given the needs for io_uring to have
+context flags for timestamp updates to be added. 
 
-Any other ideas?
+I have asked if we can have an inode flag set by the VFS or
+application code for this. e.g. a flag set by nfsd whenever it accesses a
+given inode.
 
-Thanks,
-NeilBrown
+I have asked if this inode flag can just be triggered if we ever see
+I_VERSION_QUERIED set or statx is used to retrieve a change cookie,
+and whether this is a reliable mechanism for setting such a flag.
 
->=20
-> > +	struct svc_serv *serv;
-> > +};
-> > +
-> >  static void *svc_pool_stats_start(struct seq_file *m, loff_t *pos)
-> >  {
-> >  	unsigned int pidx =3D (unsigned int)*pos;
-> > -	struct svc_serv *serv =3D m->private;
-> > +	struct pool_private *pp =3D m->private;
-> > =20
-> >  	dprintk("svc_pool_stats_start, *pidx=3D%u\n", pidx);
-> > =20
-> > +	pp->serv =3D pp->get_serv(m, true);
-> > +
-> >  	if (!pidx)
-> >  		return SEQ_START_TOKEN;
-> > -	return (pidx > serv->sv_nrpools ? NULL : &serv->sv_pools[pidx-1]);
-> > +	if (!pp->serv)
-> > +		return NULL;
-> > +	return (pidx > pp->serv->sv_nrpools ? NULL : &pp->serv->sv_pools[pidx-1=
-]);
-> >  }
-> > =20
-> >  static void *svc_pool_stats_next(struct seq_file *m, void *p, loff_t *po=
-s)
-> >  {
-> >  	struct svc_pool *pool =3D p;
-> > -	struct svc_serv *serv =3D m->private;
-> > +	struct pool_private *pp =3D m->private;
-> > +	struct svc_serv *serv =3D pp->serv;
-> > =20
-> >  	dprintk("svc_pool_stats_next, *pos=3D%llu\n", *pos);
-> > =20
-> > -	if (p =3D=3D SEQ_START_TOKEN) {
-> > +	if (!serv) {
-> > +		pool =3D NULL;
-> > +	} else if (p =3D=3D SEQ_START_TOKEN) {
-> >  		pool =3D &serv->sv_pools[0];
-> >  	} else {
-> >  		unsigned int pidx =3D (pool - &serv->sv_pools[0]);
-> > @@ -1400,6 +1412,9 @@ static void *svc_pool_stats_next(struct seq_file *m=
-, void *p, loff_t *pos)
-> > =20
-> >  static void svc_pool_stats_stop(struct seq_file *m, void *p)
-> >  {
-> > +	struct pool_private *pp =3D m->private;
-> > +
-> > +	pp->get_serv(m, false);
-> >  }
-> > =20
-> >  static int svc_pool_stats_show(struct seq_file *m, void *p)
-> > @@ -1427,15 +1442,35 @@ static const struct seq_operations svc_pool_stats=
-_seq_ops =3D {
-> >  	.show	=3D svc_pool_stats_show,
-> >  };
-> > =20
-> > -int svc_pool_stats_open(struct svc_serv *serv, struct file *file)
-> > +int svc_pool_stats_open(struct svc_serv *(*get_serv)(struct seq_file *, =
-bool),
-> > +			struct file *file)
-> >  {
-> > +	struct pool_private *pp;
-> >  	int err;
-> > =20
-> > +	pp =3D kmalloc(sizeof(*pp), GFP_KERNEL);
-> > +	if (!pp)
-> > +		return -ENOMEM;
-> > +
-> >  	err =3D seq_open(file, &svc_pool_stats_seq_ops);
-> > -	if (!err)
-> > -		((struct seq_file *) file->private_data)->private =3D serv;
-> > +	if (!err) {
-> > +		pp->get_serv =3D get_serv;
-> > +		((struct seq_file *) file->private_data)->private =3D pp;
-> > +	} else
-> > +		kfree(pp);
-> > +
-> >  	return err;
-> >  }
-> >  EXPORT_SYMBOL(svc_pool_stats_open);
-> > =20
-> > +int svc_pool_stats_release(struct inode *inode, struct file *file)
-> > +{
-> > +	struct seq_file *seq =3D file->private_data;
-> > +
-> > +	kfree(seq->private);
-> > +	seq->private =3D NULL;
-> > +	return seq_release(inode, file);
-> > +}
-> > +EXPORT_SYMBOL(svc_pool_stats_release);
-> > +
-> >  /*----------------------------------------------------------------------=
-------*/
->=20
-> --=20
-> Jeff Layton <jlayton@kernel.org>
->=20
+I have suggested mechanisms for using masked off bits of timestamps
+to encode sub-timestamp granularity change counts and keep them
+invisible to userspace and then not using i_version at all for XFS.
+This avoids all the problems that the multi-grain timestamp
+infrastructure exposed due to variable granularity of user visible
+timestamps and ordering across inodes with different granularity.
+This is potentially a general solution, too.
 
+So, yeah, there are *lots* of ways we can solve this problem without
+needing to change on-disk formats.
+
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
