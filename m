@@ -2,147 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAC797DCCDF
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Oct 2023 13:22:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC88B7DCD0B
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Oct 2023 13:37:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344044AbjJaMWH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Oct 2023 08:22:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33234 "EHLO
+        id S1344246AbjJaMde (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Oct 2023 08:33:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbjJaMWG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 08:22:06 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0925D98;
-        Tue, 31 Oct 2023 05:22:02 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 9FB961F38C;
-        Tue, 31 Oct 2023 12:22:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1698754921; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LxFJRcgKBrTkwCYk/XtrM2vfD36eMy9uV2KLQkafOhY=;
-        b=stIqHE18hi2qK54I3U59vf2hwUprwpecHKfDAQl0BfZhfY9q7vOh7VQOvfyRIjXKcuCKic
-        KzxtNU5bDMp3XfdhMrN/PHoUj5JOtUvbLJw1Z1SqneYw14oLKXB5dXYyn7z9vA2N6wH7ST
-        4OCFQZPjOT/CJctCbnuDY/fSgPBEEfM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1698754921;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LxFJRcgKBrTkwCYk/XtrM2vfD36eMy9uV2KLQkafOhY=;
-        b=ezvTsNdnRqRV9+SjqugsQVNOwztieZlM3AEVPM4DYQWa5mL9YeU3DWOSCLoXuxS8MGnhK2
-        d4woXKVGLv2zv/CQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8BBDD1391B;
-        Tue, 31 Oct 2023 12:22:01 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id dhoQImnxQGV9SgAAMHmgww
-        (envelope-from <jack@suse.cz>); Tue, 31 Oct 2023 12:22:01 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 1A429A06E5; Tue, 31 Oct 2023 13:22:01 +0100 (CET)
-Date:   Tue, 31 Oct 2023 13:22:01 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        Christian Brauner <brauner@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        John Stultz <jstultz@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jan Kara <jack@suse.de>, David Howells <dhowells@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
- timestamp handing
-Message-ID: <20231031122201.kmxzttzfbearu6iu@quack3>
-References: <CAHk-=whphyjjLwDcEthOOFXXfgwGrtrMnW2iyjdQioV6YSMEPw@mail.gmail.com>
- <ZTc8tClCRkfX3kD7@dread.disaster.area>
- <CAOQ4uxhJGkZrUdUJ72vjRuLec0g8VqgRXRH=x7W9ogMU6rBxcQ@mail.gmail.com>
- <d539804a2a73ad70265c5fa599ecd663cd235843.camel@kernel.org>
- <ZTjMRRqmlJ+fTys2@dread.disaster.area>
- <2ef9ac6180e47bc9cc8edef20648a000367c4ed2.camel@kernel.org>
- <ZTnNCytHLGoJY9ds@dread.disaster.area>
- <6df5ea54463526a3d898ed2bd8a005166caa9381.camel@kernel.org>
- <ZUAwFkAizH1PrIZp@dread.disaster.area>
- <d5965ba7ed012433a9914ba38a6046f2ddb015ac.camel@kernel.org>
+        with ESMTP id S1344044AbjJaMde (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 08:33:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7295E6
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 05:32:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1698755542;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=3DnaCdie6hqZryBnxfeM3IpTCv2hUsxvT+f5bpebJE4=;
+        b=HgD3EUrL/pAg6OLadMT8bwsO8UL1mJXA/ai/aa7UmBTp1B2BUZbZ43V3chTyXMRQv+eM4T
+        E/e5jZOrBqNuAXhOmzcpBep563aH63aOGzMOQzuyUptTMLYZ1ypIvom0tFbgA4SGWJXEpO
+        bpZMH8muq9WednsNmQ92FqiQvsD4hpU=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-457-8zwiqXe8NVS8IUmCraT4yQ-1; Tue, 31 Oct 2023 08:32:10 -0400
+X-MC-Unique: 8zwiqXe8NVS8IUmCraT4yQ-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7789577b4e0so696267585a.2
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 05:32:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698755530; x=1699360330;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3DnaCdie6hqZryBnxfeM3IpTCv2hUsxvT+f5bpebJE4=;
+        b=JdiVCtzY75N/v5k+oMHOX6LgG0jjNnkP97Wv5M1RGGLsh2RB6nEciA3EStublmk6rB
+         kQ04QTyGR0N/8YGc8FJQ8rAtDpbs6SSWxgTFYoGrk7ZgE5Kmox6hUNViLXv0b3E0GttK
+         rewN3MnvQ++OjsUvj2hCab6qQj1Kwbja0yCD6Dpq5xqn/q3Xvlh9ILTQ6mH/UO//1OXR
+         9yUkHe9fq0mq5hbt0I+1lTV5VxZu5sJaAsPJOvJp0q1PeuRLRnajzH0iqyuM0hW894Bn
+         I62VbNobqPvn9/nLZ0132uay0fDoG7jmiaEB+lkRaJzhCdRtvZ4PLWbvPIYLDfQVkiB6
+         o6aQ==
+X-Gm-Message-State: AOJu0YwnuXgg5pIGDlzSGHqhJM2YUSJ0J3ttskVKJv53DVKAvvnrj9W4
+        dNcTlc+IVl2+rhnXIQ7KC5up7NysjYk1lJ4NILx/0gv9v61ux/E1FQS6/pp9ip3NySPjYHTFEjE
+        6nj5JjTiVFW5El1got6D7
+X-Received: by 2002:a05:620a:371a:b0:774:11c4:45cb with SMTP id de26-20020a05620a371a00b0077411c445cbmr15316848qkb.53.1698755530349;
+        Tue, 31 Oct 2023 05:32:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGRF2hQntJG+GwSak9Gg0Fe+r97U8evGxvH+rsbr7bRKRAzBo2stdiR75AFPLvChPFBieDyLw==
+X-Received: by 2002:a05:620a:371a:b0:774:11c4:45cb with SMTP id de26-20020a05620a371a00b0077411c445cbmr15316823qkb.53.1698755530070;
+        Tue, 31 Oct 2023 05:32:10 -0700 (PDT)
+Received: from localhost.localdomain (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id g23-20020a05620a13d700b00777063b89casm457697qkl.5.2023.10.31.05.32.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Oct 2023 05:32:09 -0700 (PDT)
+From:   Ondrej Mosnacek <omosnace@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     linux-security-module@vger.kernel.org,
+        Benjamin Coddington <bcodding@redhat.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] lsm: fix default return values for some hooks
+Date:   Tue, 31 Oct 2023 13:32:05 +0100
+Message-ID: <20231031123207.758655-1-omosnace@redhat.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d5965ba7ed012433a9914ba38a6046f2ddb015ac.camel@kernel.org>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue 31-10-23 07:04:53, Jeff Layton wrote:
-> On Tue, 2023-10-31 at 09:37 +1100, Dave Chinner wrote:
-> > I have suggested mechanisms for using masked off bits of timestamps
-> > to encode sub-timestamp granularity change counts and keep them
-> > invisible to userspace and then not using i_version at all for XFS.
-> > This avoids all the problems that the multi-grain timestamp
-> > infrastructure exposed due to variable granularity of user visible
-> > timestamps and ordering across inodes with different granularity.
-> > This is potentially a general solution, too.
-> 
-> I don't really understand this at all, but trying to do anything with
-> fine-grained timestamps will just run into a lot of the same problems we
-> hit with the multigrain work. If you still see this as a path forward,
-> maybe you can describe it more detail?
+Some of the default return values listed in <linux/lsm_hook_defs.h>
+don't match the actual no-op value and can be trivially fixed.
 
-Dave explained a bit more details here [1] like:
+Ondrej Mosnacek (2):
+  lsm: fix default return value for vm_enough_memory
+  lsm: fix default return value for inode_getsecctx
 
-Another options is for XFS to play it's own internal tricks with
-[cm]time granularity and turn off i_version. e.g. limit external
-timestamp visibility to 1us and use the remaining dozen bits of the
-ns field to hold a change counter for updates within a single coarse
-timer tick. This guarantees the timestamp changes within a coarse
-tick for the purposes of change detection, but we don't expose those
-bits to applications so applications that compare timestamps across
-inodes won't get things back to front like was happening with the
-multi-grain timestamps....
--
-
-So as far as I understand Dave wants to effectively persist counter in low
-bits of ctime and expose ctime+counter as its change cookie. I guess that
-could work and what makes the complexity manageable compared to full
-multigrain timestamps is the fact that we have one filesystem, one on-disk
-format etc. The only slight trouble could be that if we previously handed
-out something in low bits of ctime for XFS, we need to keep handing the
-same thing out until the inode changes (i.e., no rounding until the moment
-inode changes) as the old timestamp could be stored somewhere externally
-and compared.
-
-								Honza
-
-[1] https://lore.kernel.org/all/ZTjMRRqmlJ+fTys2@dread.disaster.area/
-
+ include/linux/lsm_hook_defs.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.41.0
+
