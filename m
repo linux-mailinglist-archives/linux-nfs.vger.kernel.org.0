@@ -2,315 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AC687DCD8A
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Oct 2023 14:08:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0BB47DCD9C
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Oct 2023 14:18:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344439AbjJaNI2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Oct 2023 09:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37704 "EHLO
+        id S1344449AbjJaNNs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Oct 2023 09:13:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344427AbjJaNI1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 09:08:27 -0400
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1180FDA
-        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 06:08:25 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1728FC433C7;
-        Tue, 31 Oct 2023 13:08:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698757704;
-        bh=PLXwDkb2k+FmakeYOfull3j8aso7S/7tsBeudwB7iAw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=O7I4d31c7QxbTKMUgdC1/u34sZvCtkkPsYYxUSQ4oDzp1se4X9K8qeq8idg6YeW9X
-         1dcZPYT+29UctvMtu6N/Ssolx/CT4MvWlWvFX6E0fGgCKfvN7G61r+WuHlQPBWEekf
-         p8yoGsQBYWkAw8rdIf8Jo/MSOBE2dhhFOxwN7bKhmeNKo1JC2/1Kv6MfdGDPRQlSTm
-         BLxgmKI7SknwCwCk+hAFjch9VQqiI4fctug1Ke/xwNkU1Ev8FqwoqpyOJ4/WagNrrV
-         k8bgIgUNnpeBNdnSGo+zF0JK61ap3HZcFUz1EE9Ck3iB8WrpvjFatuHgAQEaFpPOGK
-         ng7Ms64Oxy3eQ==
-Message-ID: <58189d5e93dc724bf241014e26193e271ba3e304.camel@kernel.org>
-Subject: Re: [PATCH 2/5] svc: don't hold reference for poolstats, only mutex.
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date:   Tue, 31 Oct 2023 09:08:22 -0400
-In-Reply-To: <169870253672.24305.8926736855317017757@noble.neil.brown.name>
-References: <20231030011247.9794-1-neilb@suse.de>
-        , <20231030011247.9794-3-neilb@suse.de>
-        , <84354fd30d4b4a162b008067ad4e0d35a7d223da.camel@kernel.org>
-         <169870253672.24305.8926736855317017757@noble.neil.brown.name>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+        with ESMTP id S1344463AbjJaNNr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 09:13:47 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6A1DA
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 06:13:44 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6bd96cfb99cso4943244b3a.2
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 06:13:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698758024; x=1699362824; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=STEHsHIqCUS5Ww93H+YyBG0a4C6l1Az+Q+2cl36FOyY=;
+        b=Vi4nQr79x21H+NOrEEDXR+A3zKL+7q1+spUG3gE4tXzaoRSkuxa94wAqGYAQt+4zTV
+         aM0OB+EcJAvUPAHREvg2lp9lYF4s6cxaQJKfr6ODqRm4TCnwWt/6XGcXJ9nTBOqWcEHs
+         2K7lPjtWIB6ZXj2r6hz8FyuvgbFOUFwDq0dZ5YMUENafsdxHzfrIiJbfpgHoWuSy1Nme
+         LnXXXyUa/UizmuNNe6uVd17A9vD5KyVJbsCMcG+/NXv5u/dlyZ/5YwsFFFitM8wZ6LsM
+         3HRy5sQc6HteBOXywQICbdgm5MUXLIHgU/fA0cEkWlSRK7TILGhGgZZQ9ltkGqEoTwe6
+         3qSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698758024; x=1699362824;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=STEHsHIqCUS5Ww93H+YyBG0a4C6l1Az+Q+2cl36FOyY=;
+        b=t9ei8m33ekDni9AYYDIQi07i8yyNq44+uqPnDVp7ihTJrsbRr/tFmqhJUq8NXT97ny
+         6Uaio6P3T4QPjWg+UaREqwq4rp4SuqomfP8T/wRs7N2f9nWnjnsOy6p4RKf8bHbqo/MY
+         mUMa3v1UdSgK5N3fHRJtmlUZFWP4R60vNsh37i7Nm00g3uHjHHrJfI9dSswbXspEGgtz
+         gZN4sDPg1UW9WC5Cp3dmn6bBa4GKbxNyYTdvN7iObwYWLhGfbPyBEBvvPFWTSYBh2Cv/
+         QMNFRgDi7KJkUhWcmGsuThTC30ZOimxcmjHaiJoeElvBKqJDr9snsPGjETce5sVTYNQK
+         DNCA==
+X-Gm-Message-State: AOJu0YywuzNkS1S1QY5LAXq3gdLanM1qbvyUnml8XydbsU2yM1AwMNm3
+        He0STmqFPQQ5mG9lwwXaaOQ=
+X-Google-Smtp-Source: AGHT+IGkKzzygpVefR//IpiRX1xjnE0bcmpoZs4MqpcjUnHIDfoR/EawR/F0AGpHxM9XIbMV5T4Brg==
+X-Received: by 2002:a05:6a21:a106:b0:181:1d71:7e27 with SMTP id aq6-20020a056a21a10600b001811d717e27mr668298pzc.43.1698758024119;
+        Tue, 31 Oct 2023 06:13:44 -0700 (PDT)
+Received: from localhost.localdomain ([36.142.182.171])
+        by smtp.gmail.com with ESMTPSA id h18-20020aa786d2000000b006c031c6c200sm1223746pfo.88.2023.10.31.06.13.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 31 Oct 2023 06:13:43 -0700 (PDT)
+From:   Zhuohao Bai <wcwfta@gmail.com>
+X-Google-Original-From: Zhuohao Bai <zhuohao_bai@foxmail.com>
+To:     steved@redhat.com
+Cc:     libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        tanyuan@tinylab.org, forrestniu@foxmail.com, falcon@tinylab.org,
+        zhuohao_bai@foxmail.com
+Subject: [PATCH v1 0/2]  _rpc_dtablesize: decrease to fix excessive memory usage
+Date:   Tue, 31 Oct 2023 21:13:08 +0800
+Message-Id: <cover.1698751763.git.zhuohao_bai@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-10-31 at 08:48 +1100, NeilBrown wrote:
-> On Tue, 31 Oct 2023, Jeff Layton wrote:
-> > On Mon, 2023-10-30 at 12:08 +1100, NeilBrown wrote:
-> > > A future patch will remove refcounting on svc_serv as it is of little
-> > > use.
-> > > It is currently used to keep the svc around while the pool_stats file=
- is
-> > > open.
-> > > Change this to get the pointer, protected by the mutex, only in
-> > > seq_start, and the release the mutex in seq_stop.
-> > > This means that if the nfsd server is stopped and restarted while the
-> > > pool_stats file it open, then some pool stats info could be from the
-> > > first instance and some from the second.  This might appear odd, but =
-is
-> > > unlikely to be a problem in practice.
-> > >=20
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > ---
-> > >  fs/nfsd/nfsctl.c           |  2 +-
-> > >  fs/nfsd/nfssvc.c           | 30 ++++++++---------------
-> > >  include/linux/sunrpc/svc.h |  5 +++-
-> > >  net/sunrpc/svc_xprt.c      | 49 ++++++++++++++++++++++++++++++++----=
---
-> > >  4 files changed, 57 insertions(+), 29 deletions(-)
-> > >=20
-> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > > index 79efb1075f38..d78ae4452946 100644
-> > > --- a/fs/nfsd/nfsctl.c
-> > > +++ b/fs/nfsd/nfsctl.c
-> > > @@ -179,7 +179,7 @@ static const struct file_operations pool_stats_op=
-erations =3D {
-> > >  	.open		=3D nfsd_pool_stats_open,
-> > >  	.read		=3D seq_read,
-> > >  	.llseek		=3D seq_lseek,
-> > > -	.release	=3D nfsd_pool_stats_release,
-> > > +	.release	=3D svc_pool_stats_release,
-> > >  };
-> > > =20
-> > >  DEFINE_SHOW_ATTRIBUTE(nfsd_reply_cache_stats);
-> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > > index 6c968c02cc29..203e1cfc1cad 100644
-> > > --- a/fs/nfsd/nfssvc.c
-> > > +++ b/fs/nfsd/nfssvc.c
-> > > @@ -1072,30 +1072,20 @@ bool nfssvc_encode_voidres(struct svc_rqst *r=
-qstp, struct xdr_stream *xdr)
-> > >  	return true;
-> > >  }
-> > > =20
-> > > -int nfsd_pool_stats_open(struct inode *inode, struct file *file)
-> > > +static struct svc_serv *nfsd_get_serv(struct seq_file *s, bool start=
-)
-> > >  {
-> > > -	int ret;
-> > > -	struct nfsd_net *nn =3D net_generic(inode->i_sb->s_fs_info, nfsd_ne=
-t_id);
-> > > -
-> > > -	mutex_lock(&nfsd_mutex);
-> > > -	if (nn->nfsd_serv =3D=3D NULL) {
-> > > +	struct nfsd_net *nn =3D net_generic(file_inode(s->file)->i_sb->s_fs=
-_info,
-> > > +					  nfsd_net_id);
-> > > +	if (start) {
-> > > +		mutex_lock(&nfsd_mutex);
-> > > +		return nn->nfsd_serv;
-> > > +	} else {
-> > >  		mutex_unlock(&nfsd_mutex);
-> > > -		return -ENODEV;
-> > > +		return NULL;
-> > >  	}
-> > > -	svc_get(nn->nfsd_serv);
-> > > -	ret =3D svc_pool_stats_open(nn->nfsd_serv, file);
-> > > -	mutex_unlock(&nfsd_mutex);
-> > > -	return ret;
-> > >  }
-> > > =20
-> > > -int nfsd_pool_stats_release(struct inode *inode, struct file *file)
-> > > +int nfsd_pool_stats_open(struct inode *inode, struct file *file)
-> > >  {
-> > > -	struct seq_file *seq =3D file->private_data;
-> > > -	struct svc_serv *serv =3D seq->private;
-> > > -	int ret =3D seq_release(inode, file);
-> > > -
-> > > -	mutex_lock(&nfsd_mutex);
-> > > -	svc_put(serv);
-> > > -	mutex_unlock(&nfsd_mutex);
-> > > -	return ret;
-> > > +	return svc_pool_stats_open(nfsd_get_serv, file);
-> > >  }
-> > > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > > index b10f987509cc..11acad6988a2 100644
-> > > --- a/include/linux/sunrpc/svc.h
-> > > +++ b/include/linux/sunrpc/svc.h
-> > > @@ -433,7 +433,10 @@ void		   svc_exit_thread(struct svc_rqst *);
-> > >  struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned =
-int,
-> > >  				     int (*threadfn)(void *data));
-> > >  int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, in=
-t);
-> > > -int		   svc_pool_stats_open(struct svc_serv *serv, struct file *file=
-);
-> > > +int		   svc_pool_stats_open(struct svc_serv *(*get_serv)(struct seq_=
-file *, bool),
-> > > +				       struct file *file);
-> > > +int		   svc_pool_stats_release(struct inode *inode,
-> > > +					  struct file *file);
-> > >  void		   svc_process(struct svc_rqst *rqstp);
-> > >  void		   svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp=
-);
-> > >  int		   svc_register(const struct svc_serv *, struct net *, const in=
-t,
-> > > diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-> > > index fee83d1024bc..2f99f7475b7b 100644
-> > > --- a/net/sunrpc/svc_xprt.c
-> > > +++ b/net/sunrpc/svc_xprt.c
-> > > @@ -1366,26 +1366,38 @@ EXPORT_SYMBOL_GPL(svc_xprt_names);
-> > > =20
-> > >  /*------------------------------------------------------------------=
-----------*/
-> > > =20
-> > > +struct pool_private {
-> > > +	struct svc_serv *(*get_serv)(struct seq_file *, bool);
-> >=20
-> > This bool is pretty ugly. I think I'd rather see two operations here
-> > (get_serv/put_serv). Also, this could use a kerneldoc comment.
->=20
-> I agree that bool is ugly, but two function pointers as function args
-> seemed ugly, and stashing them in 'struct svc_serv' seemed ugly.
-> So I picked one.  I'd be keen to find an approach that didn't require a
-> function pointer.
->=20
-> Maybe sunrpc could declare
->=20
->    struct svc_ref {
->          struct mutex mutex;
->          struct svc_serv *serv;
->    }
->=20
-> and nfsd could use one of those instead of nfsd_mutex and nfsd_serv, and
-> pass a pointer to it to the open function.
->=20
-> But then the mutex would have to be in the per-net structure.  And maybe
-> that isn't a bad idea, but it is a change...
->=20
-> I guess I could pass pointers to nfsd_mutex and nn->nfsd_serv to the
-> open function....
->=20
-> Any other ideas?
->=20
->=20
+In the client code, the function _rpc_dtablesize() is used to determine the
+memory allocation for the __svc_xports array.
 
-I think just passing two function pointers to svc_pool_stats_open, and
-storing them both in the serv is the best solution (for now). Like you
-said, there are no clean options here. That function only has one caller
-though, so at least the nastiness will be confined to that.
+However, some operating systems (including the recent Manjaro OS) can have
+_SC_OPEN_MAX values as high as 1073741816, which can cause the __svc_xports
+array to become too large. This results in the process being killed.
 
-Moving the mutex to be per-net does make a lot of sense, but I think
-that's a separate project. If you decide to do that and it allows you to
-make a simpler interface for handling the get/put_serv pointers, then
-the interface can be reworked at that point.
+There is a limit to the maximum number of files. To avoid this problem, a
+possible solution is to set the size to the lesser of 1024 and this value to
+ensure that the array space for open files is not too large, thus preventing
+the process from terminating.
 
-> >=20
-> > > +	struct svc_serv *serv;
-> > > +};
-> > > +
-> > >  static void *svc_pool_stats_start(struct seq_file *m, loff_t *pos)
-> > >  {
-> > >  	unsigned int pidx =3D (unsigned int)*pos;
-> > > -	struct svc_serv *serv =3D m->private;
-> > > +	struct pool_private *pp =3D m->private;
-> > > =20
-> > >  	dprintk("svc_pool_stats_start, *pidx=3D%u\n", pidx);
-> > > =20
-> > > +	pp->serv =3D pp->get_serv(m, true);
-> > > +
-> > >  	if (!pidx)
-> > >  		return SEQ_START_TOKEN;
-> > > -	return (pidx > serv->sv_nrpools ? NULL : &serv->sv_pools[pidx-1]);
-> > > +	if (!pp->serv)
-> > > +		return NULL;
-> > > +	return (pidx > pp->serv->sv_nrpools ? NULL : &pp->serv->sv_pools[pi=
-dx-1]);
-> > >  }
-> > > =20
-> > >  static void *svc_pool_stats_next(struct seq_file *m, void *p, loff_t=
- *pos)
-> > >  {
-> > >  	struct svc_pool *pool =3D p;
-> > > -	struct svc_serv *serv =3D m->private;
-> > > +	struct pool_private *pp =3D m->private;
-> > > +	struct svc_serv *serv =3D pp->serv;
-> > > =20
-> > >  	dprintk("svc_pool_stats_next, *pos=3D%llu\n", *pos);
-> > > =20
-> > > -	if (p =3D=3D SEQ_START_TOKEN) {
-> > > +	if (!serv) {
-> > > +		pool =3D NULL;
-> > > +	} else if (p =3D=3D SEQ_START_TOKEN) {
-> > >  		pool =3D &serv->sv_pools[0];
-> > >  	} else {
-> > >  		unsigned int pidx =3D (pool - &serv->sv_pools[0]);
-> > > @@ -1400,6 +1412,9 @@ static void *svc_pool_stats_next(struct seq_fil=
-e *m, void *p, loff_t *pos)
-> > > =20
-> > >  static void svc_pool_stats_stop(struct seq_file *m, void *p)
-> > >  {
-> > > +	struct pool_private *pp =3D m->private;
-> > > +
-> > > +	pp->get_serv(m, false);
-> > >  }
-> > > =20
-> > >  static int svc_pool_stats_show(struct seq_file *m, void *p)
-> > > @@ -1427,15 +1442,35 @@ static const struct seq_operations svc_pool_s=
-tats_seq_ops =3D {
-> > >  	.show	=3D svc_pool_stats_show,
-> > >  };
-> > > =20
-> > > -int svc_pool_stats_open(struct svc_serv *serv, struct file *file)
-> > > +int svc_pool_stats_open(struct svc_serv *(*get_serv)(struct seq_file=
- *, bool),
-> > > +			struct file *file)
-> > >  {
-> > > +	struct pool_private *pp;
-> > >  	int err;
-> > > =20
-> > > +	pp =3D kmalloc(sizeof(*pp), GFP_KERNEL);
-> > > +	if (!pp)
-> > > +		return -ENOMEM;
-> > > +
-> > >  	err =3D seq_open(file, &svc_pool_stats_seq_ops);
-> > > -	if (!err)
-> > > -		((struct seq_file *) file->private_data)->private =3D serv;
-> > > +	if (!err) {
-> > > +		pp->get_serv =3D get_serv;
-> > > +		((struct seq_file *) file->private_data)->private =3D pp;
-> > > +	} else
-> > > +		kfree(pp);
-> > > +
-> > >  	return err;
-> > >  }
-> > >  EXPORT_SYMBOL(svc_pool_stats_open);
-> > > =20
-> > > +int svc_pool_stats_release(struct inode *inode, struct file *file)
-> > > +{
-> > > +	struct seq_file *seq =3D file->private_data;
-> > > +
-> > > +	kfree(seq->private);
-> > > +	seq->private =3D NULL;
-> > > +	return seq_release(inode, file);
-> > > +}
-> > > +EXPORT_SYMBOL(svc_pool_stats_release);
-> > > +
-> > >  /*------------------------------------------------------------------=
-----------*/
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
-> >=20
->=20
+Also discovered that some users have taken action on the issue. It is necessary
+to address this for all users. Ultimately, we determined that adjusting the
+size value of _rpc_dtablesize() and streamlining the existing user code would
+be the most effective solution.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+
+---
+Changes in v1:
+Clean up the existing code in user
+
+---
+Links: 
+RFC:https://lore.kernel.org/linux-nfs/tencent_E6816C9AF53E61BA5E0A313BBE5E1D19B00A@qq.com/T/#u
+
+
+Zhuohao Bai (2):
+  _rpc_dtablesize: Decrease the value of size.
+  _rpc_dtablesize: Cleaning up the existing code
+
+ src/rpc_dtablesize.c | 2 ++
+ src/svc.c            | 2 --
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+-- 
+2.25.1
+
