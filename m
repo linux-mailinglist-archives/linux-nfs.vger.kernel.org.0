@@ -2,62 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0BB47DCD9C
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Oct 2023 14:18:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA3A97DCD9F
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Oct 2023 14:18:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344449AbjJaNNs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Oct 2023 09:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50264 "EHLO
+        id S1344458AbjJaNN4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Oct 2023 09:13:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344463AbjJaNNr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 09:13:47 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF6A1DA
-        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 06:13:44 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-6bd96cfb99cso4943244b3a.2
-        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 06:13:44 -0700 (PDT)
+        with ESMTP id S1344452AbjJaNNz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 09:13:55 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BC8DE
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 06:13:53 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6b20577ef7bso4933897b3a.3
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 06:13:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698758024; x=1699362824; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=STEHsHIqCUS5Ww93H+YyBG0a4C6l1Az+Q+2cl36FOyY=;
-        b=Vi4nQr79x21H+NOrEEDXR+A3zKL+7q1+spUG3gE4tXzaoRSkuxa94wAqGYAQt+4zTV
-         aM0OB+EcJAvUPAHREvg2lp9lYF4s6cxaQJKfr6ODqRm4TCnwWt/6XGcXJ9nTBOqWcEHs
-         2K7lPjtWIB6ZXj2r6hz8FyuvgbFOUFwDq0dZ5YMUENafsdxHzfrIiJbfpgHoWuSy1Nme
-         LnXXXyUa/UizmuNNe6uVd17A9vD5KyVJbsCMcG+/NXv5u/dlyZ/5YwsFFFitM8wZ6LsM
-         3HRy5sQc6HteBOXywQICbdgm5MUXLIHgU/fA0cEkWlSRK7TILGhGgZZQ9ltkGqEoTwe6
-         3qSQ==
+        d=gmail.com; s=20230601; t=1698758033; x=1699362833; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BD8VWPASmmhS2IhXP01B8qSPpw2IJI2K/JZ8p09kfNo=;
+        b=QIUAG4GbBjE0ZxOMR7+IuEaV0jAzfuv9JB4Y5cdXnDxsyigJG0oWrZscPm1AgpkbdW
+         DC/G4UwKvMlgc8tf3PI9Emzx/ZyjTveRfKL0M2FmsIwcOBLzfgCVOONh80DuwfTtXfSf
+         NSjb2RefmdYcYhmpdC9p9pjZYJh5XLyC6ADeD97zsN8syR1OijAiGcD8RiQP7E/jva87
+         k+NNbTAEAckupKCJ/A/9jaUq53zvgWGyUBpgJhX8VMnkj1UvcwNoKxpawqpP+7klXxPc
+         gwJHWsaW40oz2s67+oUpR1FXrQyuy5NDTYtNpE/TfbLZwzoU4SQHi2GkKBxLojQT7M+C
+         Yi9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698758024; x=1699362824;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=STEHsHIqCUS5Ww93H+YyBG0a4C6l1Az+Q+2cl36FOyY=;
-        b=t9ei8m33ekDni9AYYDIQi07i8yyNq44+uqPnDVp7ihTJrsbRr/tFmqhJUq8NXT97ny
-         6Uaio6P3T4QPjWg+UaREqwq4rp4SuqomfP8T/wRs7N2f9nWnjnsOy6p4RKf8bHbqo/MY
-         mUMa3v1UdSgK5N3fHRJtmlUZFWP4R60vNsh37i7Nm00g3uHjHHrJfI9dSswbXspEGgtz
-         gZN4sDPg1UW9WC5Cp3dmn6bBa4GKbxNyYTdvN7iObwYWLhGfbPyBEBvvPFWTSYBh2Cv/
-         QMNFRgDi7KJkUhWcmGsuThTC30ZOimxcmjHaiJoeElvBKqJDr9snsPGjETce5sVTYNQK
-         DNCA==
-X-Gm-Message-State: AOJu0YywuzNkS1S1QY5LAXq3gdLanM1qbvyUnml8XydbsU2yM1AwMNm3
-        He0STmqFPQQ5mG9lwwXaaOQ=
-X-Google-Smtp-Source: AGHT+IGkKzzygpVefR//IpiRX1xjnE0bcmpoZs4MqpcjUnHIDfoR/EawR/F0AGpHxM9XIbMV5T4Brg==
-X-Received: by 2002:a05:6a21:a106:b0:181:1d71:7e27 with SMTP id aq6-20020a056a21a10600b001811d717e27mr668298pzc.43.1698758024119;
-        Tue, 31 Oct 2023 06:13:44 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1698758033; x=1699362833;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BD8VWPASmmhS2IhXP01B8qSPpw2IJI2K/JZ8p09kfNo=;
+        b=ZCfEOc5hM7x2lTFkZdY4yQEAfIui3zy7QBuM3Dyl8A9V53133XO0Py5WFSY6RGSTaM
+         c1mMKxFy6qqX6HERc3/xl9HU9YMXv5loT5TRMGyt770r9FG2xmSvK+TaDAeRy3NEmGiD
+         kQX5zqSGqZI3gxhQ1hizDQec288/naoBU0KzOD0ldTGiu4buq2Pt0ZMd8iRn41Kd4utM
+         6Sszr3L0XRp4LiSvVXjiCQfw6t1T+fAjmACr0YGamjJszzRmiMHJj/zO8M/JZ6cRZ3WL
+         Jt+t21noVtSkEcwwSGSoN3BSzdM9K0W0qjGOHIFne5PmNcDvODyERf8SL/Qt8R0Zuj3K
+         V3mQ==
+X-Gm-Message-State: AOJu0YzgTtIaNO7wCNzdznm9zmyO+dF86hQ2vVh6UjOhm5EX6+ec1nM2
+        naX8QD69awMUmpk687rfc94=
+X-Google-Smtp-Source: AGHT+IGsY8dmV4/7tg+ScTj8Rvz9OYv+dBfUsAday/opVNolVKLDCJT+bjp+/SnbDUDHhnNNBiK8qQ==
+X-Received: by 2002:a05:6a00:2d94:b0:6be:4228:698b with SMTP id fb20-20020a056a002d9400b006be4228698bmr11020883pfb.20.1698758032731;
+        Tue, 31 Oct 2023 06:13:52 -0700 (PDT)
 Received: from localhost.localdomain ([36.142.182.171])
-        by smtp.gmail.com with ESMTPSA id h18-20020aa786d2000000b006c031c6c200sm1223746pfo.88.2023.10.31.06.13.40
+        by smtp.gmail.com with ESMTPSA id h18-20020aa786d2000000b006c031c6c200sm1223746pfo.88.2023.10.31.06.13.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Oct 2023 06:13:43 -0700 (PDT)
+        Tue, 31 Oct 2023 06:13:52 -0700 (PDT)
 From:   Zhuohao Bai <wcwfta@gmail.com>
 X-Google-Original-From: Zhuohao Bai <zhuohao_bai@foxmail.com>
 To:     steved@redhat.com
 Cc:     libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
         tanyuan@tinylab.org, forrestniu@foxmail.com, falcon@tinylab.org,
         zhuohao_bai@foxmail.com
-Subject: [PATCH v1 0/2]  _rpc_dtablesize: decrease to fix excessive memory usage
-Date:   Tue, 31 Oct 2023 21:13:08 +0800
-Message-Id: <cover.1698751763.git.zhuohao_bai@foxmail.com>
+Subject: [PATCH v1 1/2] _rpc_dtablesize: Decrease the value of size.
+Date:   Tue, 31 Oct 2023 21:13:09 +0800
+Message-Id: <724549cc2342aaa4b3832967e086252134528d3f.1698751763.git.zhuohao_bai@foxmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1698751763.git.zhuohao_bai@foxmail.com>
+References: <cover.1698751763.git.zhuohao_bai@foxmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -70,41 +73,28 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In the client code, the function _rpc_dtablesize() is used to determine the
-memory allocation for the __svc_xports array.
+To fix the bug caused by a Size value that is too large and leads to an array
+that requires excessive memory, which subsequently results in the failure of
+rpcbind to start properly.
 
-However, some operating systems (including the recent Manjaro OS) can have
-_SC_OPEN_MAX values as high as 1073741816, which can cause the __svc_xports
-array to become too large. This results in the process being killed.
-
-There is a limit to the maximum number of files. To avoid this problem, a
-possible solution is to set the size to the lesser of 1024 and this value to
-ensure that the array space for open files is not too large, thus preventing
-the process from terminating.
-
-Also discovered that some users have taken action on the issue. It is necessary
-to address this for all users. Ultimately, we determined that adjusting the
-size value of _rpc_dtablesize() and streamlining the existing user code would
-be the most effective solution.
-
-
+Signed-off-by: Zhuohao Bai <zhuohao_bai@foxmail.com>
 ---
-Changes in v1:
-Clean up the existing code in user
+ src/rpc_dtablesize.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
----
-Links: 
-RFC:https://lore.kernel.org/linux-nfs/tencent_E6816C9AF53E61BA5E0A313BBE5E1D19B00A@qq.com/T/#u
-
-
-Zhuohao Bai (2):
-  _rpc_dtablesize: Decrease the value of size.
-  _rpc_dtablesize: Cleaning up the existing code
-
- src/rpc_dtablesize.c | 2 ++
- src/svc.c            | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
+diff --git a/src/rpc_dtablesize.c b/src/rpc_dtablesize.c
+index bce97e8..12f80c1 100644
+--- a/src/rpc_dtablesize.c
++++ b/src/rpc_dtablesize.c
+@@ -41,7 +41,7 @@ _rpc_dtablesize(void)
+ 	static int size;
+ 
+ 	if (size == 0) {
+-		size = sysconf(_SC_OPEN_MAX);
++		size = min(1024, sysconf(_SC_OPEN_MAX));
+ 	}
+ 	return (size);
+ }
 -- 
 2.25.1
 
