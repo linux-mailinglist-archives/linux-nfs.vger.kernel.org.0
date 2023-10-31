@@ -2,64 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00F747DC4CD
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 Oct 2023 04:18:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99FA17DC6DC
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 Oct 2023 08:04:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231258AbjJaDSF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 30 Oct 2023 23:18:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38392 "EHLO
+        id S1343556AbjJaHEN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Oct 2023 03:04:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230084AbjJaDSF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 Oct 2023 23:18:05 -0400
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFED798
-        for <linux-nfs@vger.kernel.org>; Mon, 30 Oct 2023 20:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1698722282; x=1730258282;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KhUyFYNfZFh/v81qiplfJb7+C9WjHlLSGl/6XH9ssqo=;
-  b=TGB4Rl66DFoU4De0t9KHxGN82iu1Td9/8sgj7PvkdIEejuARFPUikun8
-   K3gXIsJwF+NjquRZAv50gW4bSwfITKIGfqw0MdoAbeI6VgKPFXir0t+Cd
-   UcLxCiJoSDqpF1qB3BDXkVmpn0fMhYNUSA+Pkwgev60Oo7Ixw98D8nhwC
-   x2q73zErAC7kPN26V1OkAnMm8XoueYmo/sn5lWVzEQ5jhJVfc5AnSPDIg
-   hIXNQGktmMA0Z6OXxNJY4d3luHJZsf3FeMVqs4CN99let8yIpYTH4Q45n
-   NwdYk13GiV3wffOUDiXGpZV9J72QfU7zItmtXe2c7l1FZOv7bWefwfjbk
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="474446125"
-X-IronPort-AV: E=Sophos;i="6.03,264,1694761200"; 
-   d="scan'208";a="474446125"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Oct 2023 20:18:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10879"; a="826262180"
-X-IronPort-AV: E=Sophos;i="6.03,264,1694761200"; 
-   d="scan'208";a="826262180"
-Received: from lkp-server01.sh.intel.com (HELO 8917679a5d3e) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Oct 2023 20:18:00 -0700
-Received: from kbuild by 8917679a5d3e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qxfGQ-000Dml-0v;
-        Tue, 31 Oct 2023 03:17:58 +0000
-Date:   Tue, 31 Oct 2023 11:17:31 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Subject: Re: [PATCH 1/6] nfsd: prepare for supporting admin-revocation of
- state
-Message-ID: <202310311114.Ym5PyQ5Z-lkp@intel.com>
-References: <20231027015613.26247-2-neilb@suse.de>
+        with ESMTP id S1343495AbjJaHEM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 03:04:12 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33BCBC1;
+        Tue, 31 Oct 2023 00:04:10 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id 5614622812f47-3b2ec9a79bdso3722468b6e.3;
+        Tue, 31 Oct 2023 00:04:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698735849; x=1699340649; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/QHIvEcmJ0urypIUJ4I1hXriZ0FhrfT5zBc+eZq8EH4=;
+        b=RGu8sDMnVECcxZipxda9i97yZ/pIfwDsIIb+3b2zZq56s1BY6VCn5HmyXldhnmvzzc
+         8i+fmOuZk8f1KZ7pxAxYYHVN6qyrkTRGZt8l6IOZV7GR3wn36jluzhJ0rUp0fZTnHKyv
+         X0d4u+vJ7i7/t3zxhEjrujgwrdgeS4FgJj8pTAWnAXStlVFmJQ8JxezRreBusixqW1bm
+         YHWEb2hFmdozsss/cKJeMpdQuCyNw5PFL6w6wPXHPFVqJE7DsLZuHODdvnnvroLwpMsZ
+         7e2zybt171UfnePSC2axUVAIuWPT0+6GppjANhk0UtiLtWf8NIYUO1LiubYQlyl9gCSx
+         T8sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698735849; x=1699340649;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/QHIvEcmJ0urypIUJ4I1hXriZ0FhrfT5zBc+eZq8EH4=;
+        b=dHYIGGMJrnxtshFvdGVFK2mx96a31Mwt4br4T3G/JZ3SrvbXvl5wxrA8u6OAuALP+x
+         zZg/2wvFtwz9+qV7daNCkB6JMBfB4JQpeozEPKZGWv1doK2/30PyXOEgWDigUlkZati3
+         Ty/rztRD3pW17Inpv5cXYfC1Z8R+AcapClWxfc7pJG5CFt4Y7H4UlMR3NsCy9mmGcOn1
+         GI7NTDOyGak1xNK4NiuLwdqXnOhO87hzz3W0FwkMG6rsKFgMsDPzz/+WwbDBemKZctaP
+         /ShDX4VHsLvg0bXi/STdMzsfb3qWygDKK9siHAEBR4fVCOLtgHCPkF9eDyw884UPvyjo
+         Batg==
+X-Gm-Message-State: AOJu0Yx5ImwNhoFQ2lZRM2zNZWHGZwerLDD2uIXQCqw4/FUsIY75oPBW
+        GLkrhi/NCfUt35O+Ie3nL4qgAO+iuxe9sxzoCbQ=
+X-Google-Smtp-Source: AGHT+IFJczJ9Y/Gta2VEUUZlMPlc/e+BEvHoooShDS3IUryTcj10C5j9NWzQ+H0qQ0tSno1kZ94fcMD7UWyA5SIWMGk=
+X-Received: by 2002:aca:909:0:b0:3b0:da4a:4823 with SMTP id
+ 9-20020aca0909000000b003b0da4a4823mr12874300oij.56.1698735849512; Tue, 31 Oct
+ 2023 00:04:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231027015613.26247-2-neilb@suse.de>
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+References: <CAHk-=whphyjjLwDcEthOOFXXfgwGrtrMnW2iyjdQioV6YSMEPw@mail.gmail.com>
+ <ZTc8tClCRkfX3kD7@dread.disaster.area> <CAOQ4uxhJGkZrUdUJ72vjRuLec0g8VqgRXRH=x7W9ogMU6rBxcQ@mail.gmail.com>
+ <d539804a2a73ad70265c5fa599ecd663cd235843.camel@kernel.org>
+ <ZTjMRRqmlJ+fTys2@dread.disaster.area> <2ef9ac6180e47bc9cc8edef20648a000367c4ed2.camel@kernel.org>
+ <ZTnNCytHLGoJY9ds@dread.disaster.area> <6df5ea54463526a3d898ed2bd8a005166caa9381.camel@kernel.org>
+ <ZUAwFkAizH1PrIZp@dread.disaster.area> <CAHk-=wg4jyTxO8WWUc1quqSETGaVsPHh8UeFUROYNwU-fEbkJg@mail.gmail.com>
+ <ZUBbj8XsA6uW8ZDK@dread.disaster.area>
+In-Reply-To: <ZUBbj8XsA6uW8ZDK@dread.disaster.area>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 31 Oct 2023 09:03:57 +0200
+Message-ID: <CAOQ4uxgSRw26J+MPK-zhysZX9wBkXFRNx+n1bwnQwykCJ1=F4Q@mail.gmail.com>
+Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
+ timestamp handing
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Christian Brauner <brauner@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        John Stultz <jstultz@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.de>, David Howells <dhowells@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,34 +94,85 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi NeilBrown,
+On Tue, Oct 31, 2023 at 3:42=E2=80=AFAM Dave Chinner <david@fromorbit.com> =
+wrote:
+>
+[...]
+> .... and what is annoying is that that the new i_version just a
+> glorified ctime change counter. What we should be fixing is ctime -
+> integrating this change counting into ctime would allow us to make
+> i_version go away entirely. i.e. We don't need a persistent ctime
+> change counter if the ctime has sufficient resolution or persistent
+> encoding that it does not need an external persistent change
+> counter.
+>
+> That was reasoning behind the multi-grain timestamps. While the mgts
+> implementation was flawed, the reasoning behind it certainly isn't.
+> We should be trying to get rid of i_version by integrating it into
+> ctime updates, not arguing how atime vs i_version should work.
+>
+> > So I don't think the issue here is "i_version" per se. I think in a
+> > vacuum, the best option of i_version is pretty obvious.  But if you
+> > want i_version to track di_changecount, *then* you end up with that
+> > situation where the persistence of atime matters, and i_version needs
+> > to update whenever a (persistent) atime update happens.
+>
+> Yet I don't want i_version to track di_changecount.
+>
+> I want to *stop supporting i_version altogether* in XFS.
+>
+> I want i_version as filesystem internal metadata to die completely.
+>
+> I don't want to change the on disk format to add a new i_version
+> field because we'll be straight back in this same siutation when the
+> next i_version bug is found and semantics get changed yet again.
+>
+> Hence if we can encode the necessary change attributes into ctime,
+> we can drop VFS i_version support altogether.  Then the "atime bumps
+> i_version" problem also goes away because then we *don't use
+> i_version*.
+>
+> But if we can't get the VFS to do this with ctime, at least we have
+> the abstractions available to us (i.e. timestamp granularity and
+> statx change cookie) to allow XFS to implement this sort of
+> ctime-with-integrated-change-counter internally to the filesystem
+> and be able to drop i_version support....
+>
 
-kernel test robot noticed the following build errors:
+I don't know if it was mentioned before in one of the many threads,
+but there is another benefit of ctime-with-integrated-change-counter
+approach - it is the ability to extend the solution with some adaptations
+also to mtime.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.6 next-20231030]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+The "change cookie" is used to know if inode metadata cache should
+be invalidated and mtime is often used to know if data cache should
+be invalidated, or if data comparison could be skipped (e.g. rsync).
 
-url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/nfsd-prepare-for-supporting-admin-revocation-of-state/20231027-095832
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20231027015613.26247-2-neilb%40suse.de
-patch subject: [PATCH 1/6] nfsd: prepare for supporting admin-revocation of state
-config: mips-maltaup_xpa_defconfig (https://download.01.org/0day-ci/archive/20231031/202310311114.Ym5PyQ5Z-lkp@intel.com/config)
-compiler: mipsel-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231031/202310311114.Ym5PyQ5Z-lkp@intel.com/reproduce)
+The difference is that mtime can be set by user, so using lower nsec
+bits for modification counter would require to truncate the user set
+time granularity to 100ns - that is probably acceptable, but only as
+an opt-in behavior.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202310311114.Ym5PyQ5Z-lkp@intel.com/
+The special value 0 for mtime-change-counter could be reserved for
+mtime that was set by the user or for upgrade of existing inode,
+where 0 counter means that mtime cannot be trusted as an accurate
+data modification-cookie.
 
-All errors (new ones prefixed by >>):
+This feature is going to be useful for the vfs HSM implementation [1]
+that I am working on and it actually rhymes with the XFS DMAPI
+patches that were never fully merged upstream.
 
-   mipsel-linux-ld: fs/nfsd/nfsctl.o: in function `write_unlock_fs':
->> nfsctl.c:(.text+0x4cc): undefined reference to `nfsd4_revoke_states'
+Speaking on behalf of my employer, we would love to see the data
+modification-cookie feature implemented, whether in vfs or in xfs.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+*IF* the result on this thread is that the chosen solution is
+ctime-with-change-counter in XFS
+*AND* if there is agreement among XFS developers to extend it with
+an opt-in mkfs/mount option to 100ns-mtime-with-change-counter in XFS
+*THEN* I think I will be able to allocate resources to drive this xfs work.
+
+Thanks,
+Amir.
+
+[1] https://github.com/amir73il/fsnotify-utils/wiki/Hierarchical-Storage-Ma=
+nagement-API
