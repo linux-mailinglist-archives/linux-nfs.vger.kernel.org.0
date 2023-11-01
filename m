@@ -2,141 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A085C7DE19D
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Nov 2023 14:34:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC5CE7DE191
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Nov 2023 14:34:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343846AbjKANVj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Nov 2023 09:21:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56914 "EHLO
+        id S1344209AbjKANaY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Nov 2023 09:30:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343851AbjKANVi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Nov 2023 09:21:38 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CF1DFC
-        for <linux-nfs@vger.kernel.org>; Wed,  1 Nov 2023 06:20:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1698844850;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xThp48OO5GzIlur7YkP4GgzDT8B7pPmZBQECo2sOWgY=;
-        b=Rf4cA1cs/rg8BJyy7ha7d9zsM9oDf3ozZmcqBVpC/RSKkzHee00rXHAFHKBOOpYs8ytuXG
-        fs9K3I3PtrRSEHPtdZoKa5G5HQ60qzly395hVSNr170KmDXucDpXQprEHeOX0QR54cLJR7
-        +1YNQxBu/ykCMI/tpBIM4h1CUy5w1Yc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-633-zNXRGIp_P0Oe5Uw6LTZQ7Q-1; Wed, 01 Nov 2023 09:20:47 -0400
-X-MC-Unique: zNXRGIp_P0Oe5Uw6LTZQ7Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5A88F185A780;
-        Wed,  1 Nov 2023 13:20:47 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.50.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 563781121308;
-        Wed,  1 Nov 2023 13:20:46 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     trondmy@kernel.org
-Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>
-Subject: Re: [PATCH] pNFS: Fix a hang in nfs4_evict_inode()
-Date:   Wed, 01 Nov 2023 09:20:45 -0400
-Message-ID: <92B7CF2E-26C4-412A-AAED-B06F6B9B4383@redhat.com>
-In-Reply-To: <20231008182019.12842-1-trondmy@kernel.org>
-References: <20231008182019.12842-1-trondmy@kernel.org>
+        with ESMTP id S1344200AbjKANaY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Nov 2023 09:30:24 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAA86F7
+        for <linux-nfs@vger.kernel.org>; Wed,  1 Nov 2023 06:30:19 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-41b7fd8f458so41762211cf.0
+        for <linux-nfs@vger.kernel.org>; Wed, 01 Nov 2023 06:30:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1698845419; x=1699450219; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7MltogKM6IUsqM04IbU0F9CuqeIvuc4jUoShaBCvvcY=;
+        b=IZcl6PQQ+gJCVDit0Tp9gRk1Vv+duqcyQFlNr5Jg57W2oBm/SlQrJTfsrsSCXC+UMO
+         S0UID7X6jxUMDcpcJn5rvSh+FFv3g32chEHlyUmoDP3zP0FOR+X8GvmVB5FzSk5H5WvO
+         SmBo/rvc6Ji0+5rN9LfI58ezf0JwTxlBIRV4H4SYZen3lho27ywvyCppbpEXv0T84DWX
+         KThlFebmhRldWa0vlw2NKZDHL/4QhSnuUb4+EsM4xczF9wstFwbv/qxcV2OpouhB2Txe
+         mPS83A8R4JQtwrRAsq0V0AF6woJHSulHRWg+u1SbEyShFL4dnE4Puea1OsUMi6+oEfT4
+         28Jw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1698845419; x=1699450219;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7MltogKM6IUsqM04IbU0F9CuqeIvuc4jUoShaBCvvcY=;
+        b=jMlK88vSukn489S6ZfKu4v4ES65Pb7wMt91m6NmcDdY4DWQ58E0D4pJ211ZH0BQ3v3
+         I/fPfBA1eQ8ZJa4br/FmMVxhndvGF0dqKbzbTPKlhno6/obweiu75roORREnnPtpWX7b
+         4CvYVoFNWZ2atG7PT4a8dBdIeYqrdpUTyLfV+EiYbDpRYjUBfO6wuL2iSt7JYKflUdIy
+         Tvrtn5yKFYXxYZpWrbyhN1ioJOF4nX9qlS1AYRX2xji5940fbMfGy8A+S2cOPXxYqQE4
+         qEkxuRiMqMuyaxoejHDrmjKKU3ptCL57WYYa/c6+CeiwZ4XavR9MoxWLaiktYomlg9et
+         mOLg==
+X-Gm-Message-State: AOJu0Ywe+P1bS1WUdYqiRnVZUSvxHUqD5k07aJs9BQkWBJT0dQ0thCqM
+        gHsrvcPRtHqPtukAVFJm4UYDZU0yYBJ1o+zRYgsGEJ29gyY=
+X-Google-Smtp-Source: AGHT+IGiF5T101Tr1R1tGMY41jjBn/+6uKcycS62ECxhICdQbVRKxjVixmW7rsSjA0kiEsGXiN7hZxjtYnKPCDUaGA0=
+X-Received: by 2002:a05:622a:34b:b0:41e:2523:da45 with SMTP id
+ r11-20020a05622a034b00b0041e2523da45mr20171387qtw.31.1698845418716; Wed, 01
+ Nov 2023 06:30:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CANH4o6POxEyCYW0dY1FAEk518b3aGwVp5qogMMHqHR1Ukfg8yw@mail.gmail.com>
+In-Reply-To: <CANH4o6POxEyCYW0dY1FAEk518b3aGwVp5qogMMHqHR1Ukfg8yw@mail.gmail.com>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Wed, 1 Nov 2023 09:30:02 -0400
+Message-ID: <CAFX2Jfm7LApk2nu3==0BbLdUwN_Z13vfxxJC_Tk=5eYgiij-ww@mail.gmail.com>
+Subject: Re: Status of READPLUS support in Linux 6.5 kernel?
+To:     Martin Wege <martin.l.wege@gmail.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond,
+Hi Martin,
 
-On 8 Oct 2023, at 14:20, trondmy@kernel.org wrote:
-
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, Nov 1, 2023 at 5:09=E2=80=AFAM Martin Wege <martin.l.wege@gmail.com=
+> wrote:
 >
-> We are not allowed to call pnfs_mark_matching_lsegs_return() without
-> also holding a reference to the layout header, since doing so could lea=
-d
-> to the reference count going to zero when we call
-> pnfs_layout_remove_lseg(). This again can lead to a hang when we get to=
-
-> nfs4_evict_inode() and are unable to clear the layout pointer.
+> Good morning!
 >
-> pnfs_layout_return_unused_byserver() is guilty of this behaviour, and
-> has been seen to trigger the refcount warning prior to a hang.
+> Is NFSv4 READPLUS usable in a Linux 6.5 kernel, for a NFSv4 client and
+> NFSv4 sever?
+
+Linux 6.5 has a useable READ_PLUS server implementation, but the
+client only uses it if you enable a Kconfig option. I'd recommend
+using Linux 6.6 on the client, since it contains some important
+READ_PLUS bugfixes. Linux 6.6 also defaults to compiling in the
+READ_PLUS operation, so you only need to change kconfig options if you
+want it turned off.
+
+I hope this helps!
+Anna
+
 >
-> Fixes: b6d49ecd1081 ("NFSv4: Fix a pNFS layout related use-after-free r=
-ace when freeing the inode")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/pnfs.c | 33 +++++++++++++++++++++++----------
->  1 file changed, 23 insertions(+), 10 deletions(-)
->
-> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-> index 63904a372b2f..21a365357629 100644
-> --- a/fs/nfs/pnfs.c
-> +++ b/fs/nfs/pnfs.c
-> @@ -2638,31 +2638,44 @@ pnfs_should_return_unused_layout(struct pnfs_la=
-yout_hdr *lo,
->  	return mode =3D=3D 0;
->  }
->
-> -static int
-> -pnfs_layout_return_unused_byserver(struct nfs_server *server, void *da=
-ta)
-> +static int pnfs_layout_return_unused_byserver(struct nfs_server *serve=
-r,
-> +					      void *data)
->  {
->  	const struct pnfs_layout_range *range =3D data;
-> +	const struct cred *cred;
->  	struct pnfs_layout_hdr *lo;
->  	struct inode *inode;
-> +	nfs4_stateid stateid;
-> +	enum pnfs_iomode iomode;
-> +
->  restart:
->  	rcu_read_lock();
->  	list_for_each_entry_rcu(lo, &server->layouts, plh_layouts) {
-> -		if (!pnfs_layout_can_be_returned(lo) ||
-> +		inode =3D lo->plh_inode;
-> +		if (!inode || !pnfs_layout_can_be_returned(lo) ||
->  		    test_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags))
->  			continue;
-> -		inode =3D lo->plh_inode;
->  		spin_lock(&inode->i_lock);
-> -		if (!pnfs_should_return_unused_layout(lo, range)) {
-> +		if (!lo->plh_inode ||
-> +		    !pnfs_should_return_unused_layout(lo, range)) {
->  			spin_unlock(&inode->i_lock);
->  			continue;
->  		}
-> +		pnfs_get_layout_hdr(lo);
-
-We're getting a crash with the nfs_inode.layout =3D=3D NULL in writeback.=
-
-
-We haven't bisected to this yet, but I think this change is exposing the
-case where the pnfs_layout_hdr refcount goes to zero, but we can still fi=
-nd
-it here on server->layouts, and bump the refcount incorrectly.
-
-Plausible?  We can send a fix or test one..
-
-Ben
-
+> Thanks,
+> Martin
