@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B4117DDB21
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Nov 2023 03:50:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FBD77DDB4D
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Nov 2023 04:03:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345140AbjKACuG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Oct 2023 22:50:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54536 "EHLO
+        id S1346237AbjKADBr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Oct 2023 23:01:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345105AbjKACuF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 22:50:05 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1AFA4
-        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 19:49:59 -0700 (PDT)
+        with ESMTP id S1345437AbjKADBp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 23:01:45 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B06BFA4
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 20:01:39 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 4CE751F74A;
-        Wed,  1 Nov 2023 02:49:58 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 50CA72184E;
+        Wed,  1 Nov 2023 03:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1698806998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1698807698; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NvQ2Wh6B6EcokJBMWdAQEi7dVx3oWf8LexKoaJWDdlQ=;
-        b=HnmYFgmSF5oTpiSoQDyaweUTMeNU+XMIwaJcRbaoiq/8BGSpm7cu1/B86uHn2Mpe1dIua9
-        lkXuoSIXHBZDv+fJgA0wwsJVoLZMAxTd5IrflxD5jU5xxnW0fJh6xnoQep9bYlGvtZROMo
-        tYPrmgZqm8WzXbilZKG1mUTtLK/q8R8=
+        bh=Y8GRcTqTiS/dLllUCp3Rt95yASrb17PLxHKDPTOR59k=;
+        b=LSydD/RJCcCx7sq89n5BHD5RSd/BM1j0/ZtJF/Qy4ed5lvoTVYZhfMd5TDcP5tppun2Ab+
+        tR/5z8BqsE1TYJltaQJX5Wl+2rDUCpF+SfemiyiLqnCRn0XTbWj1R59SVUsTPa6DuGQNry
+        /xpE+pNAEyPZ4ayYjLxXtpTU3/PpnZo=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1698806998;
+        s=susede2_ed25519; t=1698807698;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NvQ2Wh6B6EcokJBMWdAQEi7dVx3oWf8LexKoaJWDdlQ=;
-        b=CLd09mOQ2o7riD1L6r9I+q04waM1+KyR8m2tRkIOPp3p7Cjix4WbaoHB1Bq76LcNNpQ2XD
-        s1EQlkbq9iD82mBA==
+        bh=Y8GRcTqTiS/dLllUCp3Rt95yASrb17PLxHKDPTOR59k=;
+        b=izESZvafx7ObgWp0PscfR8xtfMtyFKAvlnwpVJMO/hi5Dy54j/XIvbcgJ30VP7d/Jnyehy
+        Sz+Ih8U7FanIbECg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3C048138EC;
-        Wed,  1 Nov 2023 02:49:55 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 45B19138EC;
+        Wed,  1 Nov 2023 03:01:35 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id n9OuONO8QWU1ZAAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 01 Nov 2023 02:49:55 +0000
+        id HbphO4+/QWX8aAAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 01 Nov 2023 03:01:35 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
@@ -57,17 +57,17 @@ Cc:     "Jeff Layton" <jlayton@kernel.org>,
         "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
         "Olga Kornievskaia" <kolga@netapp.com>,
         "Dai Ngo" <dai.ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH 1/6] nfsd: prepare for supporting admin-revocation of state
-In-reply-to: <E8637B0D-B026-4835-A8D4-946B9542965B@oracle.com>
+Subject: Re: [PATCH 6/6] nfsd: allow delegation state ids to be revoked and then freed
+In-reply-to: <4C3DBAFF-4C83-4DB4-A6C6-D9C4387BF1F4@oracle.com>
 References: <20231101010049.27315-1-neilb@suse.de>,
- <20231101010049.27315-2-neilb@suse.de>,
- <E8637B0D-B026-4835-A8D4-946B9542965B@oracle.com>
-Date:   Wed, 01 Nov 2023 13:49:52 +1100
-Message-id: <169880699287.24305.9894523784673960041@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+ <20231101010049.27315-7-neilb@suse.de>,
+ <4C3DBAFF-4C83-4DB4-A6C6-D9C4387BF1F4@oracle.com>
+Date:   Wed, 01 Nov 2023 14:01:33 +1100
+Message-id: <169880769331.24305.7672914147957308642@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -75,120 +75,45 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Wed, 01 Nov 2023, Chuck Lever III wrote:
+> Howdy Neil-
 > 
 > > On Oct 31, 2023, at 5:57 PM, NeilBrown <neilb@suse.de> wrote:
 > > 
-> > The NFSv4 protocol allows state to be revoked by the admin and has error
-> > codes which allow this to be communicated to the client.
-> > 
-> > This patch
-> > - introduces 3 new state-id types for revoked open, lock, and
-> >   delegation state.  This requires the bitmask to be 'short',
-> >   not 'char'
-> > - reports NFS4ERR_ADMIN_REVOKED when these are accessed
-> > - introduces a per-client counter of these states and returns
-> >   SEQ4_STATUS_ADMIN_STATE_REVOKED when the counter is not zero.
-> >   Decrement this when freeing any admin-revoked state.
-> > - introduces stub code to find all interesting states for a given
-> >   superblock so they can be revoked via the 'unlock_filesystem'
-> >   file in /proc/fs/nfsd/
-> >   No actual states are handled yet.
-> > 
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> > fs/nfsd/nfs4layouts.c |  2 +-
-> > fs/nfsd/nfs4state.c   | 93 +++++++++++++++++++++++++++++++++++++++----
-> > fs/nfsd/nfsctl.c      |  1 +
-> > fs/nfsd/nfsd.h        |  1 +
-> > fs/nfsd/state.h       | 35 +++++++++++-----
-> > fs/nfsd/trace.h       |  8 +++-
-> > 6 files changed, 120 insertions(+), 20 deletions(-)
+> > Revoking state through 'unlock_filesystem' now revokes any delegation
+> > states found.  When the stateids are then freed by the client, the
+> > revoked stateids will be cleaned up correctly.
 > 
->  ....
+> Here's my derpy question of the day.
 > 
-> > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> > index f96eaa8e9413..3af5ab55c978 100644
-> > --- a/fs/nfsd/state.h
-> > +++ b/fs/nfsd/state.h
-> > @@ -88,17 +88,23 @@ struct nfsd4_callback_ops {
-> >  */
-> > struct nfs4_stid {
-> > refcount_t sc_count;
-> > -#define NFS4_OPEN_STID 1
-> > -#define NFS4_LOCK_STID 2
-> > -#define NFS4_DELEG_STID 4
-> > + struct list_head sc_cp_list;
-> > + unsigned short sc_type;
-> > +#define NFS4_OPEN_STID BIT(0)
-> > +#define NFS4_LOCK_STID BIT(1)
-> > +#define NFS4_DELEG_STID BIT(2)
-> > /* For an open stateid kept around *only* to process close replays: */
-> > -#define NFS4_CLOSED_STID 8
-> > +#define NFS4_CLOSED_STID BIT(3)
-> > /* For a deleg stateid kept around only to process free_stateid's: */
-> > -#define NFS4_REVOKED_DELEG_STID 16
-> > -#define NFS4_CLOSED_DELEG_STID 32
-> > -#define NFS4_LAYOUT_STID 64
-> > - struct list_head sc_cp_list;
-> > - unsigned char sc_type;
-> > +#define NFS4_REVOKED_DELEG_STID BIT(4)
-> > +#define NFS4_CLOSED_DELEG_STID BIT(5)
-> > +#define NFS4_LAYOUT_STID BIT(6)
-> > +#define NFS4_ADMIN_REVOKED_STID BIT(7)
-> > +#define NFS4_ADMIN_REVOKED_LOCK_STID BIT(8)
-> > +#define NFS4_ADMIN_REVOKED_DELEG_STID BIT(9)
-> > +#define NFS4_ALL_ADMIN_REVOKED_STIDS (NFS4_ADMIN_REVOKED_STID | \
-> > +     NFS4_ADMIN_REVOKED_LOCK_STID | \
-> > +     NFS4_ADMIN_REVOKED_DELEG_STID)
-> > stateid_t sc_stateid;
-> > spinlock_t sc_lock;
-> > struct nfs4_client *sc_client;
-> > 
-> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> > index fbc0ccb40424..e359d531402c 100644
-> > --- a/fs/nfsd/trace.h
-> > +++ b/fs/nfsd/trace.h
-> > @@ -648,6 +648,9 @@ TRACE_DEFINE_ENUM(NFS4_CLOSED_STID);
-> > TRACE_DEFINE_ENUM(NFS4_REVOKED_DELEG_STID);
-> > TRACE_DEFINE_ENUM(NFS4_CLOSED_DELEG_STID);
-> > TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
-> > +TRACE_DEFINE_ENUM(NFS4_ADMIN_REVOKED_STID);
-> > +TRACE_DEFINE_ENUM(NFS4_ADMIN_REVOKED_LOCK_STID);
-> > +TRACE_DEFINE_ENUM(NFS4_ADMIN_REVOKED_DELEG_STID);
+> "When the stateids are then freed by the client" seems to be
+> a repeating trope, and it concerns me a bit (probably because
+> I haven't yet learned how this mechanism /currently/ works)...
 > 
-> This is a bug that pre-dates your change in this patch...
-> 
-> Since the NFS4_ flags are C macros and not enum symbols,
-> TRACE_DEFINE_ENUM() is not necessary. All these can be
-> removed, rather than adding three new ones.
-> 
-> I can fix this up when I apply the series, or if you
-> happen to send a v3, you can fix it up first.
+> In the case when the client has actually vanished (eg, was
+> destroyed by an orchestrator), it's not going to be around
+> to actively free revoked state. Doesn't that situation result
+> in pinned state on the server? I would expect that's a primary
+> use case for "unlock_filesystem."
 
-OK, thanks.  I guess this use of "ENUM" for things that aren't enums
-should have been a red flags :-)
+If a client is de-orchestrated then it will stop renewing its lease, and
+regular cleanup of expired state will kick in after one lease period.
+So for NFSv4 we don't need to worry about disappearing clients.
+For NFSv3 (or more specifically for NLM) we did and locks could hang
+around indefinitely if the client died.
+For that reason we have /proc/fs/nfsd/unlock_ip which discards all NFSv3
+lock state for a given client.  Extending that to NFSv4 is not needed
+because of leases, and not meaningful because of trunking - a client
+might have several IP's.
+
+unlock_filesystem is for when the client is still active and we want to
+let it (them) continue accessing some filesystems, but not all.
 
 NeilBrown
 
+
 > 
+> Maybe I've misunderstood something fundamental.
 > 
-> > #define show_stid_type(x) \
-> > __print_flags(x, "|", \
-> > @@ -657,7 +660,10 @@ TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
-> > { NFS4_CLOSED_STID, "CLOSED" }, \
-> > { NFS4_REVOKED_DELEG_STID, "REVOKED" }, \
-> > { NFS4_CLOSED_DELEG_STID, "CLOSED_DELEG" }, \
-> > - { NFS4_LAYOUT_STID, "LAYOUT" })
-> > + { NFS4_LAYOUT_STID, "LAYOUT" }, \
-> > + { NFS4_ADMIN_REVOKED_STID, "ADMIN_REVOKED" }, \
-> > + { NFS4_ADMIN_REVOKED_LOCK_STID, "ADMIN_REVOKED_LOCK" }, \
-> > + { NFS4_ADMIN_REVOKED_DELEG_STID,"ADMIN_REVOKED_DELEG" })
-> > 
-> > DECLARE_EVENT_CLASS(nfsd_stid_class,
-> > TP_PROTO(
-> > -- 
-> > 2.42.0
-> > 
 > 
 > --
 > Chuck Lever
