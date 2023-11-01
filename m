@@ -2,56 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BBC47DDE29
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Nov 2023 10:08:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C587DDE96
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Nov 2023 10:40:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231570AbjKAJI6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Nov 2023 05:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40680 "EHLO
+        id S231225AbjKAJk3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Nov 2023 05:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232624AbjKAJI5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Nov 2023 05:08:57 -0400
-Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 802CCB9
-        for <linux-nfs@vger.kernel.org>; Wed,  1 Nov 2023 02:08:55 -0700 (PDT)
-Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1dceb2b8823so346981fac.1
-        for <linux-nfs@vger.kernel.org>; Wed, 01 Nov 2023 02:08:55 -0700 (PDT)
+        with ESMTP id S231220AbjKAJk3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Nov 2023 05:40:29 -0400
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6966DB
+        for <linux-nfs@vger.kernel.org>; Wed,  1 Nov 2023 02:40:26 -0700 (PDT)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-1dc9c2b2b79so2977977fac.0
+        for <linux-nfs@vger.kernel.org>; Wed, 01 Nov 2023 02:40:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1698829734; x=1699434534; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1698831626; x=1699436426; darn=vger.kernel.org;
         h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=UNUIBClrAKcRYro4PH0vXCj2G1DvHhZIqV9/mvOOKAQ=;
-        b=es7o3Ku3noA20UlcadUebuQx1yaRJtnejNV2V16Ng6I958ZgJAFB5mXJri7vBJKwrr
-         MIn1wICLRd+ta77RkxyEpEyNvxjWaa1JYoclpnIjvX77mC2CjAyrEn0AInvdhq+CsX5O
-         oKrCJgXk5gv0OVJPE5q8etSycha5QkHtGUZsKDy++jp9hhFaArQvVmH6pEZNarZZ7zff
-         QZi37ul5BfhzJhibtlbeZWGx2evYeQmgliR6HSpbLp4HDIx4Z5Ttr+twI0X5gUL8E2Lm
-         SyJhDa8T9g9nkJFy8749WTUngHGkkvXF1mNx4LzyOZxfCL9YoOkt7g8HE+hec5eQ/WsM
-         llwg==
+        bh=azeGzuh7l1LOuR52v7MVURnLEuWp8lU2DGqNMX3vXsY=;
+        b=K9OSTJjlJMfroA5lSsbPs8XHLrM+xsWQFJ4ukL75lGcJnRfGgQIfxgVCXrficeK4l7
+         H0OWnXzru8Axp3M3keAhGIT6imjjs58X1v9X3fbZmuQ3/6yUmSMlWQWQ5cxskRsBoNWv
+         BmQDJ4+zqFbc2ckP8NJK+mkHH8mXk6zVdVgy+X4zHxXmxMFso+P9vr6jS6btffVWrYp+
+         EWgKheUeXM571Vh+6uISYgMJ1KgAJ+r+XCIoDBY4KpCrtVQuq8aN8B07bTGPM+3LVh/q
+         G1aPzDx/3C0ukqKpDH/BkExflEd3YhF3KuyjpNBMjtVFH3cDA6G2W3KGDoNOjQidKsQg
+         MDEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698829734; x=1699434534;
+        d=1e100.net; s=20230601; t=1698831626; x=1699436426;
         h=to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=UNUIBClrAKcRYro4PH0vXCj2G1DvHhZIqV9/mvOOKAQ=;
-        b=FFC5IRy95D+hIBhbq90RxeioIUu2NSW2S6tXFFZTvOB9ZiuTq7SdjM6Rg7y1LxxaKG
-         dV624bHp0ZY8c8SDItJWkxRXFzEO1eAQ9zDe8/e1s2Lx+oVhER3p/mrvxMqSXgG5a+6t
-         4EEPXRZ6ghbqJoYFaWPKQZFxiQkyd3ZYHy2pW071WNdcuCtmfEbtDkMwVDEShH2M6+P6
-         YMrYjKPNsveZHOa1mmShF7NqyKGkc7bn2Ne+SixHSWZNO0VeCgI86+K2kQj2Up0DEY/7
-         jUO4Qd5A4NwM07BCrsCYFdTvRTLb65xO9D2DxYGPetPfQjJ1E3VdsxgivsZMORjABWvm
-         kwvw==
-X-Gm-Message-State: AOJu0YwBqaQqK8kmgL/4o4K2WMGct9PpgXirKyxOh73UtHJJ0DTAYJUW
-        vWhDY0rd3YrPw9WWryDS9LbENP0Mjup9UPBpRUGBw49F
-X-Google-Smtp-Source: AGHT+IETK3JacYqeVdqZqYgLlkkK/oYOmq/HRoiJoNkdfF3eNaUjlifS8vQ7pCofnCcaELd0haltsWRTzPybZhjOj5M=
-X-Received: by 2002:a05:6871:50a:b0:1e9:cc21:295f with SMTP id
- s10-20020a056871050a00b001e9cc21295fmr3205718oal.16.1698829734621; Wed, 01
- Nov 2023 02:08:54 -0700 (PDT)
+        bh=azeGzuh7l1LOuR52v7MVURnLEuWp8lU2DGqNMX3vXsY=;
+        b=XCC9IFDPofavgYfNErBWDCF4wbQkvFQwHBUMldluzS+kPpZ/Nyy4335z0mu8p1U3ca
+         GhoNUHiBbbVS26op3pFz6oyGJ2Z5sdTzrrMUQXB/OwNVPnczzRl/q209VPGVKLg1sXx8
+         C1jxrN5/zzP7W+xcXymlnUCErNdnv80eUGxh91U7ZFh7k5LDYEaqTYNILQEU5siLmG2R
+         GbHuMD3uYeqjti9STBpW62UYkxO1rV5erVNTMYaNeVefu+qKisojvWq6HdSKq5Quil/v
+         n9oPTZjGvxgjYqxsoQpt0WRxuHo4QV++icZ11y7b6/nYyikar7E1PEnBGW/vyA7IXCKG
+         CUaA==
+X-Gm-Message-State: AOJu0YzciQ3mzGp5dTw83NFPtXxdVO55rWyrzVLIne1zrM1uDlHamRwM
+        GTEdnQ/FDcNlKvKaZUlvQsCWbY7ltsowkNVICAqraqbs
+X-Google-Smtp-Source: AGHT+IGMGbR9MYNEoXegIkZpoNP9TrEWQOIK/s8Gp+IDz1+kdvH0KpL/pduNqhJjwO8nmeu9+zzZtLRrB/n+isqYDjo=
+X-Received: by 2002:a05:6870:10cf:b0:1ea:f1a5:51f6 with SMTP id
+ 15-20020a05687010cf00b001eaf1a551f6mr13164333oar.0.1698831625687; Wed, 01 Nov
+ 2023 02:40:25 -0700 (PDT)
 MIME-Version: 1.0
 From:   Martin Wege <martin.l.wege@gmail.com>
-Date:   Wed, 1 Nov 2023 10:08:43 +0100
-Message-ID: <CANH4o6POxEyCYW0dY1FAEk518b3aGwVp5qogMMHqHR1Ukfg8yw@mail.gmail.com>
-Subject: Status of READPLUS support in Linux 6.5 kernel?
+Date:   Wed, 1 Nov 2023 10:40:14 +0100
+Message-ID: <CANH4o6MYtA60MJ6=4Gg3ApzpZ42TzQiD13g1EE9OXkyM+8_Ssg@mail.gmail.com>
+Subject: Linux NFSv4 client maintainer?
 To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_40,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
@@ -63,8 +63,7 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Good morning!
 
-Is NFSv4 READPLUS usable in a Linux 6.5 kernel, for a NFSv4 client and
-NFSv4 sever?
+Who is the NFSv4 client maintainer these days?
 
 Thanks,
 Martin
