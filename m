@@ -2,119 +2,197 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B8267DDAE8
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Nov 2023 03:22:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B4117DDB21
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Nov 2023 03:50:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231434AbjKACWk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 Oct 2023 22:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48348 "EHLO
+        id S1345140AbjKACuG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 Oct 2023 22:50:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231197AbjKACWj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 22:22:39 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E651BD;
-        Tue, 31 Oct 2023 19:22:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=JRqdH2fizDsBYPvMPFQiM0vq8GiCsccwLoqoTrgrqA0=; b=dc4P3nBQgWr/FHMoug+nwATvGb
-        90bIq8+kJSnouDjEZwieMIJd+znyV5vW/jdzM8FxEfqMXeymkxosSmPAM9dsBySOIjciGREifI/8O
-        BtDzDXUtHFd4N2M+s81ji5PN4DUbtg3ciPEXwL407h/TGxVfwr9CBJaXvwjPNyFHN2HSNJ/6E/jQH
-        /SuudGB28uUuKka/acPuHAKS0f4DuGsXXESsPU2i577Cc2elKoEqnUMH5Q1QumMY1cs55xvJ4eLP/
-        Mt6KnvdeRtGIqv8NOBYG0kZtu8jqXQ8WEevUNb5JG1eqGQDbhh84VigSVmrfG6Cf6jXMbq/uE/5BR
-        ypwD5zaQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1qy0sF-008knz-1k;
-        Wed, 01 Nov 2023 02:22:27 +0000
-Date:   Wed, 1 Nov 2023 02:22:27 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        Olga Kornievskaia <kolga@netapp.com>
-Subject: Re: [RFC] simplifying fast_dput(), dentry_kill() et.al.
-Message-ID: <20231101022227.GD1957730@ZenIV>
-References: <20231030003759.GW800259@ZenIV>
- <20231030215315.GA1941809@ZenIV>
- <CAHk-=wjGv_rgc8APiBRBAUpNsisPdUV3Jwco+hp3=M=-9awrjQ@mail.gmail.com>
- <20231031001848.GX800259@ZenIV>
+        with ESMTP id S1345105AbjKACuF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 Oct 2023 22:50:05 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F1AFA4
+        for <linux-nfs@vger.kernel.org>; Tue, 31 Oct 2023 19:49:59 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 4CE751F74A;
+        Wed,  1 Nov 2023 02:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1698806998; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NvQ2Wh6B6EcokJBMWdAQEi7dVx3oWf8LexKoaJWDdlQ=;
+        b=HnmYFgmSF5oTpiSoQDyaweUTMeNU+XMIwaJcRbaoiq/8BGSpm7cu1/B86uHn2Mpe1dIua9
+        lkXuoSIXHBZDv+fJgA0wwsJVoLZMAxTd5IrflxD5jU5xxnW0fJh6xnoQep9bYlGvtZROMo
+        tYPrmgZqm8WzXbilZKG1mUTtLK/q8R8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1698806998;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NvQ2Wh6B6EcokJBMWdAQEi7dVx3oWf8LexKoaJWDdlQ=;
+        b=CLd09mOQ2o7riD1L6r9I+q04waM1+KyR8m2tRkIOPp3p7Cjix4WbaoHB1Bq76LcNNpQ2XD
+        s1EQlkbq9iD82mBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3C048138EC;
+        Wed,  1 Nov 2023 02:49:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id n9OuONO8QWU1ZAAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 01 Nov 2023 02:49:55 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231031001848.GX800259@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Jeff Layton" <jlayton@kernel.org>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Olga Kornievskaia" <kolga@netapp.com>,
+        "Dai Ngo" <dai.ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>
+Subject: Re: [PATCH 1/6] nfsd: prepare for supporting admin-revocation of state
+In-reply-to: <E8637B0D-B026-4835-A8D4-946B9542965B@oracle.com>
+References: <20231101010049.27315-1-neilb@suse.de>,
+ <20231101010049.27315-2-neilb@suse.de>,
+ <E8637B0D-B026-4835-A8D4-946B9542965B@oracle.com>
+Date:   Wed, 01 Nov 2023 13:49:52 +1100
+Message-id: <169880699287.24305.9894523784673960041@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-[NFS folks Cc'd]
-
-On Tue, Oct 31, 2023 at 12:18:48AM +0000, Al Viro wrote:
-> On Mon, Oct 30, 2023 at 12:18:28PM -1000, Linus Torvalds wrote:
-> > On Mon, 30 Oct 2023 at 11:53, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > >
-> > > After fixing a couple of brainos, it seems to work.
+On Wed, 01 Nov 2023, Chuck Lever III wrote:
+> 
+> > On Oct 31, 2023, at 5:57 PM, NeilBrown <neilb@suse.de> wrote:
 > > 
-> > This all makes me unnaturally nervous, probably because it;s overly
-> > subtle, and I have lost the context for some of the rules.
+> > The NFSv4 protocol allows state to be revoked by the admin and has error
+> > codes which allow this to be communicated to the client.
+> > 
+> > This patch
+> > - introduces 3 new state-id types for revoked open, lock, and
+> >   delegation state.  This requires the bitmask to be 'short',
+> >   not 'char'
+> > - reports NFS4ERR_ADMIN_REVOKED when these are accessed
+> > - introduces a per-client counter of these states and returns
+> >   SEQ4_STATUS_ADMIN_STATE_REVOKED when the counter is not zero.
+> >   Decrement this when freeing any admin-revoked state.
+> > - introduces stub code to find all interesting states for a given
+> >   superblock so they can be revoked via the 'unlock_filesystem'
+> >   file in /proc/fs/nfsd/
+> >   No actual states are handled yet.
+> > 
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> > fs/nfsd/nfs4layouts.c |  2 +-
+> > fs/nfsd/nfs4state.c   | 93 +++++++++++++++++++++++++++++++++++++++----
+> > fs/nfsd/nfsctl.c      |  1 +
+> > fs/nfsd/nfsd.h        |  1 +
+> > fs/nfsd/state.h       | 35 +++++++++++-----
+> > fs/nfsd/trace.h       |  8 +++-
+> > 6 files changed, 120 insertions(+), 20 deletions(-)
 > 
-> A bit of context: I started to look at the possibility of refcount overflows.
-> Writing the current rules for dentry refcounting and lifetime down was the
-> obvious first step, and that immediately turned into an awful mess.
+>  ....
 > 
-> It is overly subtle.  Even more so when you throw the shrink lists into
-> the mix - shrink_lock_dentry() got too smart for its own good, and that
-> leads to really awful correctness proofs.
+> > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> > index f96eaa8e9413..3af5ab55c978 100644
+> > --- a/fs/nfsd/state.h
+> > +++ b/fs/nfsd/state.h
+> > @@ -88,17 +88,23 @@ struct nfsd4_callback_ops {
+> >  */
+> > struct nfs4_stid {
+> > refcount_t sc_count;
+> > -#define NFS4_OPEN_STID 1
+> > -#define NFS4_LOCK_STID 2
+> > -#define NFS4_DELEG_STID 4
+> > + struct list_head sc_cp_list;
+> > + unsigned short sc_type;
+> > +#define NFS4_OPEN_STID BIT(0)
+> > +#define NFS4_LOCK_STID BIT(1)
+> > +#define NFS4_DELEG_STID BIT(2)
+> > /* For an open stateid kept around *only* to process close replays: */
+> > -#define NFS4_CLOSED_STID 8
+> > +#define NFS4_CLOSED_STID BIT(3)
+> > /* For a deleg stateid kept around only to process free_stateid's: */
+> > -#define NFS4_REVOKED_DELEG_STID 16
+> > -#define NFS4_CLOSED_DELEG_STID 32
+> > -#define NFS4_LAYOUT_STID 64
+> > - struct list_head sc_cp_list;
+> > - unsigned char sc_type;
+> > +#define NFS4_REVOKED_DELEG_STID BIT(4)
+> > +#define NFS4_CLOSED_DELEG_STID BIT(5)
+> > +#define NFS4_LAYOUT_STID BIT(6)
+> > +#define NFS4_ADMIN_REVOKED_STID BIT(7)
+> > +#define NFS4_ADMIN_REVOKED_LOCK_STID BIT(8)
+> > +#define NFS4_ADMIN_REVOKED_DELEG_STID BIT(9)
+> > +#define NFS4_ALL_ADMIN_REVOKED_STIDS (NFS4_ADMIN_REVOKED_STID | \
+> > +     NFS4_ADMIN_REVOKED_LOCK_STID | \
+> > +     NFS4_ADMIN_REVOKED_DELEG_STID)
+> > stateid_t sc_stateid;
+> > spinlock_t sc_lock;
+> > struct nfs4_client *sc_client;
+> > 
+> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > index fbc0ccb40424..e359d531402c 100644
+> > --- a/fs/nfsd/trace.h
+> > +++ b/fs/nfsd/trace.h
+> > @@ -648,6 +648,9 @@ TRACE_DEFINE_ENUM(NFS4_CLOSED_STID);
+> > TRACE_DEFINE_ENUM(NFS4_REVOKED_DELEG_STID);
+> > TRACE_DEFINE_ENUM(NFS4_CLOSED_DELEG_STID);
+> > TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
+> > +TRACE_DEFINE_ENUM(NFS4_ADMIN_REVOKED_STID);
+> > +TRACE_DEFINE_ENUM(NFS4_ADMIN_REVOKED_LOCK_STID);
+> > +TRACE_DEFINE_ENUM(NFS4_ADMIN_REVOKED_DELEG_STID);
+> 
+> This is a bug that pre-dates your change in this patch...
+> 
+> Since the NFS4_ flags are C macros and not enum symbols,
+> TRACE_DEFINE_ENUM() is not necessary. All these can be
+> removed, rather than adding three new ones.
+> 
+> I can fix this up when I apply the series, or if you
+> happen to send a v3, you can fix it up first.
 
-... and for another example of subtle shit, consider DCACHE_NORCU.  Recall
-c0eb027e5aef "vfs: don't do RCU lookup of empty pathnames" and note that
-it relies upon never getting results of alloc_file_pseudo() with directory
-inode anywhere near descriptor tables.
+OK, thanks.  I guess this use of "ENUM" for things that aren't enums
+should have been a red flags :-)
 
-Back then I basically went "fine, nobody would ever use alloc_file_pseudo()
-for that anyway", but... there's a call in __nfs42_ssc_open() that doesn't
-have any obvious protection against ending up with directory inode.
-That does not end up anywhere near descriptor tables, as far as I can tell,
-fortunately.
+NeilBrown
 
-Unfortunately, it is quite capable of fucking the things up in different
-ways, even if it's promptly closed.  d_instantiate() on directory inode
-is a really bad thing; a plenty of places expect to have only one alias
-for those, and would be very unhappy with that kind of crap without any
-RCU considerations.
+> 
+> 
+> > #define show_stid_type(x) \
+> > __print_flags(x, "|", \
+> > @@ -657,7 +660,10 @@ TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
+> > { NFS4_CLOSED_STID, "CLOSED" }, \
+> > { NFS4_REVOKED_DELEG_STID, "REVOKED" }, \
+> > { NFS4_CLOSED_DELEG_STID, "CLOSED_DELEG" }, \
+> > - { NFS4_LAYOUT_STID, "LAYOUT" })
+> > + { NFS4_LAYOUT_STID, "LAYOUT" }, \
+> > + { NFS4_ADMIN_REVOKED_STID, "ADMIN_REVOKED" }, \
+> > + { NFS4_ADMIN_REVOKED_LOCK_STID, "ADMIN_REVOKED_LOCK" }, \
+> > + { NFS4_ADMIN_REVOKED_DELEG_STID,"ADMIN_REVOKED_DELEG" })
+> > 
+> > DECLARE_EVENT_CLASS(nfsd_stid_class,
+> > TP_PROTO(
+> > -- 
+> > 2.42.0
+> > 
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
 
-I'm pretty sure that this NFS code really does not want to use that for
-directories; the simplest solution would be to refuse alloc_file_pseudo()
-for directory inodes.  NFS folks - do you have a problem with the
-following patch?
-
-======
-Make sure we never feed a directory to alloc_file_pseudo()
-
-That would be broken in a lot of ways, from UAF in pathwalk if
-that thing ever gets into descriptor tables, to royally screwing
-every place that relies upon the lack of aliases for directory
-inodes (i.e. quite a bit of VFS).
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
-diff --git a/fs/file_table.c b/fs/file_table.c
-index ee21b3da9d08..5331a696896e 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -326,6 +326,9 @@ struct file *alloc_file_pseudo(struct inode *inode, struct vfsmount *mnt,
- 	struct path path;
- 	struct file *file;
- 
-+	if (WARN_ON_ONCE(S_ISDIR(inode->i_mode)))
-+		return ERR_PTR(-EISDIR);
-+
- 	path.dentry = d_alloc_pseudo(mnt->mnt_sb, &this);
- 	if (!path.dentry)
- 		return ERR_PTR(-ENOMEM);
