@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C4F7DF076
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Nov 2023 11:46:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AA937DF11A
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Nov 2023 12:26:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347230AbjKBKqb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Nov 2023 06:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58912 "EHLO
+        id S1347360AbjKBL0A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Nov 2023 07:26:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347208AbjKBKqa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Nov 2023 06:46:30 -0400
+        with ESMTP id S1347339AbjKBLZ7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Nov 2023 07:25:59 -0400
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 350E7131
-        for <linux-nfs@vger.kernel.org>; Thu,  2 Nov 2023 03:46:27 -0700 (PDT)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3A5C433C9;
-        Thu,  2 Nov 2023 10:46:26 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 576E0137
+        for <linux-nfs@vger.kernel.org>; Thu,  2 Nov 2023 04:25:56 -0700 (PDT)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64F6DC433C7;
+        Thu,  2 Nov 2023 11:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1698921986;
-        bh=pTenvSQ5OMwjEaGddRiZ7V1AAwz0EcvphORvrTzomuE=;
+        s=k20201202; t=1698924356;
+        bh=zjnfkjvm+MhA640KFMpUCjD/ixLHzL/dfZNjEllMP40=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nP/XRz6dSeRGfa7y0XXSb5wWYqsa4d+bTy0yOviodlrGIJQVmgOhW4McdrqufrA3/
-         vjxuytjCUap9SdPe3vVKnwV3RLitgsVK3XCmIGA1e9MgQiWpCngYs8geyaPGKrzuCu
-         iLvc5+kP2f67dyw2ip4+VbCzB94ykztLzeu7E/aDeaLJz9Q7FROu00P6Pg3ijl9RTc
-         kGrA0w5h4sHqyLaJqyd5nDjD3UyVApP0J+0320SiGrdpV3A2F2hIMiH2MWbmrwlLdW
-         P56jQG+X/iVn5JvAEmJqWihpHgXjUgTEAABH0hoSJRMucqwK1Afo8d6lhNN9eOnFeR
-         1IWYCuEXDlexA==
-Message-ID: <171568f8371932f66429b4557bce7aaf959215ec.camel@kernel.org>
+        b=B5CznCPetxzQTmLjC4plTWGB26g/6zP+hy18BG+2H/DtZP0Zki+DMG7JD0H/urDZx
+         WSE2g55Hgjc1yAL6cPheEn4qyjcBN+tWOs08pJEIqBT/gimZtzzzD65pWG8IRUQQSM
+         6bE4suB09GnqitZtdw1ob34+e2IjOfQDaTGdlWnGYWznZ5O0f62fQrLyttPD+cnEFc
+         suugUJo4Mvpq+ZR87Ee0YbiS3dqm9OX/jVm2TrYwcUBcpUqg87JUGJg4bihDqoMWJn
+         7arkMJ4IVJA6snd/JBSsIO3dWwjr/uXHQlnA0c2ZnoqXT7dicbu/v9gdXvKdmQ+ciE
+         UNT2Fy2qaT5kw==
+Message-ID: <3b5d0e59d3889339c263b284a5663c6264c47da8.camel@kernel.org>
 Subject: Re: [PATCH 1/6] nfsd: prepare for supporting admin-revocation of
  state
 From:   Jeff Layton <jlayton@kernel.org>
 To:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>,
         Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Date:   Thu, 02 Nov 2023 06:46:24 -0400
+Date:   Thu, 02 Nov 2023 07:25:54 -0400
 In-Reply-To: <20231101010049.27315-2-neilb@suse.de>
 References: <20231101010049.27315-1-neilb@suse.de>
          <20231101010049.27315-2-neilb@suse.de>
@@ -41,10 +41,10 @@ Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -108,6 +108,14 @@ fs4_file *fp,
 > +	s->sc_type =3D 0;
 > +}
 > +
+
+Another thing that would be helpful to clarify here is the locking (if
+any) around sc_type. Currently, it's just a bare non-atomic variable,
+but we do change it occasionally and it has never been clear whether and
+how it should be protected.
+
+Any thoughts?
+
 >  void
 >  nfs4_put_stid(struct nfs4_stid *s)
 >  {
@@ -339,11 +347,6 @@ r *buf, size_t size)
 > -#define NFS4_DELEG_STID 4
 > +	struct list_head	sc_cp_list;
 > +	unsigned short		sc_type;
-
-Should we just go ahead and make this a full 32-bit word? We seem to
-keep adding flags to this field, and I doubt we're saving anything by
-making this a short.
-
 > +#define NFS4_OPEN_STID			BIT(0)
 > +#define NFS4_LOCK_STID			BIT(1)
 > +#define NFS4_DELEG_STID			BIT(2)
@@ -365,23 +368,6 @@ making this a short.
 > +#define NFS4_ALL_ADMIN_REVOKED_STIDS (NFS4_ADMIN_REVOKED_STID |		\
 > +				     NFS4_ADMIN_REVOKED_LOCK_STID |	\
 > +				     NFS4_ADMIN_REVOKED_DELEG_STID)
-
-Not a specific criticism of these patches, since this problem preexists
-them, but I really dislike the way that sc_type is used as a bitmask,
-but also sort of like an enum. In some cases, we test for specific flags
-in the mask, and in other cases (e.g. states_show), we treat them as
-discrete values to feed it to a switch().
-
-Personally, I'd find this less confusing if we just treat this as a set
-of flags full-stop. We could leave the low-order bits to show the real
-type (open, lock, deleg, etc.) and just mask off the high-order bits
-when we need to feed it to a switch statement.
-
-For instance above, we're adding 3 new NFS4_ADMIN_REVOKED values, but we
-could (in theory) just have a flag in there that says NFS4_ADMIN_REVOKED
-and leave the old type bit in place instead of changing it to a new
-discrete sc_type value.
-
 >  	stateid_t		sc_stateid;
 >  	spinlock_t		sc_lock;
 >  	struct nfs4_client	*sc_client;
