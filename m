@@ -2,63 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9495F7DEDB0
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Nov 2023 08:51:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DD097DEF38
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Nov 2023 10:52:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344042AbjKBHvb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Nov 2023 03:51:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
+        id S1345914AbjKBJwb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Nov 2023 05:52:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344449AbjKBHvb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Nov 2023 03:51:31 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEDF128
-        for <linux-nfs@vger.kernel.org>; Thu,  2 Nov 2023 00:51:24 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9db6cf8309cso65209666b.0
-        for <linux-nfs@vger.kernel.org>; Thu, 02 Nov 2023 00:51:24 -0700 (PDT)
+        with ESMTP id S1345500AbjKBJwa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Nov 2023 05:52:30 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23884F7
+        for <linux-nfs@vger.kernel.org>; Thu,  2 Nov 2023 02:52:28 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-53f9af41444so1223435a12.1
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Nov 2023 02:52:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1698911483; x=1699516283; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kK27iD0504TSFCEw7zK3v4YbKXhTfAzhD46cIV4aUI0=;
-        b=mFWKfPyKPEo1odfu8+pfX20ySijORg2Q0fkh4J5+gV6wQkh9reFLb6muWeCtfyiej2
-         aSDtCpfCRsUAvTttEltFQolnuDrb+GzjVug8x4rX8ODo5eIGOnVG9aSRLuerO6AcmV6G
-         chBlDbJtRa4nXz6GyC31MnFWLqhqozJsw+snIiZ2ywHCBHAlaRfgN1b42Lbue+v/+IhF
-         s0Twsr609/Zl+sSS/c8CqB2rncUKDlcgq/yV6Jel+umiYwzslIL3P3sCEGVdljPiuAME
-         NR+HRutrmXYbDPJjnshNld61D50I+3eBY7aFCV3qnechUJfQTmU8V0aIR4qsWNkflUTl
-         uAaw==
+        d=gmail.com; s=20230601; t=1698918746; x=1699523546; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=xFYaL9TO1Q/V3qSIoxlqaFJhGjawJMl80rZJX7vvyXs=;
+        b=KidX53qg8yJ7RkGtUWottQpgllW2CZz8oi3c9hfo4pQw4vYjPvY8VFo3BPgiVUSpyj
+         dpSRH7BaMkG/ILSv+HPdn3IqL0zFazeuMUX9lgR4Iic1Ap493hMeavJ+HvsP7q1hN60J
+         7su2bb6L/9SRZHhrFozlpLhH2EiHn0QbnzH3mo3aqgsstbqZI2kkXG4d905td1AU5rCX
+         uY41hCpJGqUy1AdFokShCd55iBcpAigNW6W2PlYhDx3HgQjniyKqMHgp+a1GpX5osy7e
+         a5K0Kgwofij6BBd32x8wFTLPReeira+eQK5DAFXDkfSrVTVbAjlr5NQSzaqWyYv+mMnJ
+         lKlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698911483; x=1699516283;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kK27iD0504TSFCEw7zK3v4YbKXhTfAzhD46cIV4aUI0=;
-        b=BzRADFncT7WQ8YkTn8M7X/pemokkB08BB9eeI51BRqN5nkhKDyLKEdj91u2g3O2mwJ
-         jgvf0aQm7rJN8T/Izs2Q+I6U272pzK2TnGnfu8yTWS25Dm5j80DUpXoeG8rTg3AdNPmO
-         G4IFDMJ58t9+hJ3UvNxKpIhJ5uN/ZwtTapcSq0Z8F4kjAzdO+m93Z7Jgz5fASTwHq3DF
-         etCtKIQov0qoyT7YKZUHRSF79ZkZuNEgcjw6MPsNoNReHG1CZn/ne/rZd1sjUdjnIktF
-         wUEqVh8vLqbDewPo9zYlBnPIlhi1QpizhrpaumryYHCrRyL0dMYlSLQSaOJnE9bAd0Z8
-         uEww==
-X-Gm-Message-State: AOJu0Yw57SwRay0cVp0Oh1JVqDj4GPwlrdUZVkp5dZ5u2x2RXnRLovlX
-        RhoVa80ZM98GeSydA6o7T4cCiA==
-X-Google-Smtp-Source: AGHT+IGrXKmYmu7CN/Yk/E4yPiDCUbMNzHDYulVKHMaxEcs97WXRMP5F86Uy8JABL6mSfG9S/V2QTA==
-X-Received: by 2002:a17:907:84c:b0:9d4:55b1:924e with SMTP id ww12-20020a170907084c00b009d455b1924emr3819622ejb.74.1698911483032;
-        Thu, 02 Nov 2023 00:51:23 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id j8-20020a170906278800b009be14e5cd54sm795453ejc.57.2023.11.02.00.51.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Nov 2023 00:51:22 -0700 (PDT)
-Date:   Thu, 2 Nov 2023 10:51:19 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     kent.overstreet@gmail.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [bug report] bcachefs: Update export_operations for snapshots
-Message-ID: <40509a12-fe60-4ba4-af51-ba11b522156f@moroto.mountain>
+        d=1e100.net; s=20230601; t=1698918746; x=1699523546;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xFYaL9TO1Q/V3qSIoxlqaFJhGjawJMl80rZJX7vvyXs=;
+        b=Wo94nTt/qGk4HFM7vpgq2n/RLnKcL5HK5PXhBTImLuNLMy7Vfsfx0GJ/VACt7Gn3Og
+         OnMjErr0o85dnPgKa8Vk4hlnZqUXc7csE2F1UdVBmxkTV3YjsDD5OncJnZneU2aKKvwM
+         xrgF9fql0lZy52ub215+sAT57lmk7HD//yGffIWMQlZeRKy4RaK1TRQG4Jp6djZpmMHS
+         ARtBN/KiMn3VCPfEvy4AMKgkMvW2Xr8cH0NVp/izeUhsTr+Pwr/+1AuJ1tsgPUMQxUaR
+         6zfzgskjkS6vgUgvTrHHQA+FJPxWRPh+4RLKDO1IzvqcfeMaogjSTAoMwmahgYEOpaPy
+         UUBg==
+X-Gm-Message-State: AOJu0Yw0W6hqlUjRtytUGlSOzXfjkJBdSIqPKVKUMl5MJP8NYzY3RGUs
+        DPs7vZxPKiuFBdw5l5LxdDx6xugv/OtjXZPuK7hWyoZMl4o=
+X-Google-Smtp-Source: AGHT+IFLdymJwBUxMYpiYRoCsoUH6odcm7zcT8fJckV4PQGOcxQonG2oyLH9Yg7QaGhYny5d83x+Rr/GbIa9l1ld/yQ=
+X-Received: by 2002:a50:9f82:0:b0:53d:e139:64a5 with SMTP id
+ c2-20020a509f82000000b0053de13964a5mr17308138edf.27.1698918746218; Thu, 02
+ Nov 2023 02:52:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+From:   Cedric Blancher <cedric.blancher@gmail.com>
+Date:   Thu, 2 Nov 2023 10:51:50 +0100
+Message-ID: <CALXu0UeGr80OzF7abqxwR5KFJFhpCuomy2_tdFESAKSiW70jfA@mail.gmail.com>
+Subject: Examples for refer= in /etc/exports?
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.7 required=5.0 tests=BAYES_05,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,51 +61,12 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello Kent Overstreet,
+Good morning!
 
-The patch 85e95ca7cc48: "bcachefs: Update export_operations for
-snapshots" from Nov 13, 2021 (linux-next), leads to the following
-Smatch static checker warning:
+Does anyone have examples of how to use the refer= option in /etc/exports?
 
-	fs/exportfs/expfs.c:140 reconnect_one()
-	warn: 'parent' can also be NULL
-
-fs/exportfs/expfs.c
-    121 static struct dentry *reconnect_one(struct vfsmount *mnt,
-    122                 struct dentry *dentry, char *nbuf)
-    123 {
-    124         struct dentry *parent;
-    125         struct dentry *tmp;
-    126         int err;
-    127 
-    128         parent = ERR_PTR(-EACCES);
-    129         inode_lock(dentry->d_inode);
-    130         if (mnt->mnt_sb->s_export_op->get_parent)
-    131                 parent = mnt->mnt_sb->s_export_op->get_parent(dentry);
-
-Smatch is complaining that bch2_get_parent() returns NULL:
-
-85e95ca7cc48c (Kent Overstreet  2021-11-13 19:49:14 -0500 1216)         if (!parent_inum.inum)
-85e95ca7cc48c (Kent Overstreet  2021-11-13 19:49:14 -0500 1217)                 return NULL;
-
-I think it should be an error pointer?
-
-    132         inode_unlock(dentry->d_inode);
-    133 
-    134         if (IS_ERR(parent)) {
-    135                 dprintk("get_parent of %lu failed, err %ld\n",
-    136                         dentry->d_inode->i_ino, PTR_ERR(parent));
-    137                 return parent;
-    138         }
-    139 
---> 140         dprintk("%s: find name of %lu in %lu\n", __func__,
-    141                 dentry->d_inode->i_ino, parent->d_inode->i_ino);
-                                                ^^^^^^^^
-
-    142         err = exportfs_get_name(mnt, parent, nbuf, dentry);
-    143         if (err == -ENOENT)
-    144                 goto out_reconnected;
-    145         if (err)
-
-regards,
-dan carpenter
+Ced
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
