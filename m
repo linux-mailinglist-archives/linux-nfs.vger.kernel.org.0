@@ -2,203 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7EC877DE8D8
-	for <lists+linux-nfs@lfdr.de>; Thu,  2 Nov 2023 00:29:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9495F7DEDB0
+	for <lists+linux-nfs@lfdr.de>; Thu,  2 Nov 2023 08:51:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346274AbjKAX3N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Nov 2023 19:29:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33418 "EHLO
+        id S1344042AbjKBHvb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 2 Nov 2023 03:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235095AbjKAX3N (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Nov 2023 19:29:13 -0400
-Received: from mail-oo1-xc2a.google.com (mail-oo1-xc2a.google.com [IPv6:2607:f8b0:4864:20::c2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B2011C
-        for <linux-nfs@vger.kernel.org>; Wed,  1 Nov 2023 16:29:10 -0700 (PDT)
-Received: by mail-oo1-xc2a.google.com with SMTP id 006d021491bc7-586f1db1a83so169962eaf.2
-        for <linux-nfs@vger.kernel.org>; Wed, 01 Nov 2023 16:29:10 -0700 (PDT)
+        with ESMTP id S1344449AbjKBHvb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Nov 2023 03:51:31 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AEDF128
+        for <linux-nfs@vger.kernel.org>; Thu,  2 Nov 2023 00:51:24 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-9db6cf8309cso65209666b.0
+        for <linux-nfs@vger.kernel.org>; Thu, 02 Nov 2023 00:51:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1698881349; x=1699486149; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=m9D9sfHhqQD//T+0joi06c/klbHPqB5VbxNysl+FPJQ=;
-        b=fmz9lDrcEy9qvklbrlhwcESMkHH26/plwaFv3FU3SQeTusQd019nZ5zniomKzC7ckE
-         N33FdONRvAs9mnVMNnWec9f0CRx19io3sIMZj5J41GFJjT6VDkF6jpiaR2dfpSrWi7hm
-         MwO9EMy3nlvfHxGEi6db7KffY5UObsVcL7uOk1WSokU1o8eHaQ0Em+rtEjEzYTJ9286h
-         Zx8i/hD/wc/blYLZlli48qoPbpCkdzjyCuZE3ypVqGQmwPI2dPu9pfK9Drm/1u/wv5nU
-         L1QD8EMORxFCxBfaX9hQRplK6kgoKQcOU1iM6lQRLfT9lgznbndkxLgqkh5WABxeoewt
-         oqKg==
+        d=linaro.org; s=google; t=1698911483; x=1699516283; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kK27iD0504TSFCEw7zK3v4YbKXhTfAzhD46cIV4aUI0=;
+        b=mFWKfPyKPEo1odfu8+pfX20ySijORg2Q0fkh4J5+gV6wQkh9reFLb6muWeCtfyiej2
+         aSDtCpfCRsUAvTttEltFQolnuDrb+GzjVug8x4rX8ODo5eIGOnVG9aSRLuerO6AcmV6G
+         chBlDbJtRa4nXz6GyC31MnFWLqhqozJsw+snIiZ2ywHCBHAlaRfgN1b42Lbue+v/+IhF
+         s0Twsr609/Zl+sSS/c8CqB2rncUKDlcgq/yV6Jel+umiYwzslIL3P3sCEGVdljPiuAME
+         NR+HRutrmXYbDPJjnshNld61D50I+3eBY7aFCV3qnechUJfQTmU8V0aIR4qsWNkflUTl
+         uAaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698881349; x=1699486149;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=m9D9sfHhqQD//T+0joi06c/klbHPqB5VbxNysl+FPJQ=;
-        b=rsihPmQgxD8etnzMLvJ5oWgctnWXSjVPGt5ZnceAl0E2OZbkR0k3/O1CZ6fmEpQzyX
-         +8MoearCo+odoZEXrtdPohNdCpgPqfVhrKZdXNXw5LVde/JMzfpA62Cgz95kldOi/75e
-         47pqlWWdD+fhUPG5UobFiTeOP2feQjyyxB5uu2j6bXVwvcqd++TpJ/nLlpkkBPTHpcR2
-         +XdsJp5SnPIUmQtQGfeGQ4jJGj3s6cVQEP2T0a1gG29JmSmVSxoSyaaJahZsYmczO+GL
-         rrI4GDc3/x+5IIV3wn2qCdPs8Nr7venS6lqXz7VJIq3xM59NbVwXbtX3liB5zrrmvcwT
-         HpFg==
-X-Gm-Message-State: AOJu0YxfReZQMKWK/B7T/49+2el5FT2QxBK0w6ZcTwxN94mGiMPI+HfB
-        yk+r38xojY/hZbBqRiS2DLnkKw==
-X-Google-Smtp-Source: AGHT+IHBbuuxoCvj122hy4w+Q5lkHRxzDKw2Hawu2bpMvdgl9pcfnhSlloOBc2uNwlUNFzkm4O5+rA==
-X-Received: by 2002:a05:6358:724d:b0:169:845b:3417 with SMTP id i13-20020a056358724d00b00169845b3417mr10842702rwa.25.1698881349037;
-        Wed, 01 Nov 2023 16:29:09 -0700 (PDT)
-Received: from dread.disaster.area (pa49-180-20-59.pa.nsw.optusnet.com.au. [49.180.20.59])
-        by smtp.gmail.com with ESMTPSA id e22-20020a637456000000b0058a9621f583sm354653pgn.44.2023.11.01.16.29.08
+        d=1e100.net; s=20230601; t=1698911483; x=1699516283;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kK27iD0504TSFCEw7zK3v4YbKXhTfAzhD46cIV4aUI0=;
+        b=BzRADFncT7WQ8YkTn8M7X/pemokkB08BB9eeI51BRqN5nkhKDyLKEdj91u2g3O2mwJ
+         jgvf0aQm7rJN8T/Izs2Q+I6U272pzK2TnGnfu8yTWS25Dm5j80DUpXoeG8rTg3AdNPmO
+         G4IFDMJ58t9+hJ3UvNxKpIhJ5uN/ZwtTapcSq0Z8F4kjAzdO+m93Z7Jgz5fASTwHq3DF
+         etCtKIQov0qoyT7YKZUHRSF79ZkZuNEgcjw6MPsNoNReHG1CZn/ne/rZd1sjUdjnIktF
+         wUEqVh8vLqbDewPo9zYlBnPIlhi1QpizhrpaumryYHCrRyL0dMYlSLQSaOJnE9bAd0Z8
+         uEww==
+X-Gm-Message-State: AOJu0Yw57SwRay0cVp0Oh1JVqDj4GPwlrdUZVkp5dZ5u2x2RXnRLovlX
+        RhoVa80ZM98GeSydA6o7T4cCiA==
+X-Google-Smtp-Source: AGHT+IGrXKmYmu7CN/Yk/E4yPiDCUbMNzHDYulVKHMaxEcs97WXRMP5F86Uy8JABL6mSfG9S/V2QTA==
+X-Received: by 2002:a17:907:84c:b0:9d4:55b1:924e with SMTP id ww12-20020a170907084c00b009d455b1924emr3819622ejb.74.1698911483032;
+        Thu, 02 Nov 2023 00:51:23 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id j8-20020a170906278800b009be14e5cd54sm795453ejc.57.2023.11.02.00.51.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Nov 2023 16:29:08 -0700 (PDT)
-Received: from dave by dread.disaster.area with local (Exim 4.96)
-        (envelope-from <david@fromorbit.com>)
-        id 1qyKe0-006zm8-39;
-        Thu, 02 Nov 2023 10:29:05 +1100
-Date:   Thu, 2 Nov 2023 10:29:04 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "jack@suse.cz" <jack@suse.cz>, "clm@fb.com" <clm@fb.com>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "jstultz@google.com" <jstultz@google.com>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "brauner@kernel.org" <brauner@kernel.org>,
-        "chandan.babu@oracle.com" <chandan.babu@oracle.com>,
-        "hughd@google.com" <hughd@google.com>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "dsterba@suse.com" <dsterba@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "tytso@mit.edu" <tytso@mit.edu>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "amir73il@gmail.com" <amir73il@gmail.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "dhowells@redhat.com" <dhowells@redhat.com>,
-        "jack@suse.de" <jack@suse.de>
-Subject: Re: [PATCH RFC 2/9] timekeeping: new interfaces for multigrain
- timestamp handing
-Message-ID: <ZULfQIdN146eZodE@dread.disaster.area>
-References: <6df5ea54463526a3d898ed2bd8a005166caa9381.camel@kernel.org>
- <ZUAwFkAizH1PrIZp@dread.disaster.area>
- <CAHk-=wg4jyTxO8WWUc1quqSETGaVsPHh8UeFUROYNwU-fEbkJg@mail.gmail.com>
- <ZUBbj8XsA6uW8ZDK@dread.disaster.area>
- <CAOQ4uxgSRw26J+MPK-zhysZX9wBkXFRNx+n1bwnQwykCJ1=F4Q@mail.gmail.com>
- <3d6a4c21626e6bbb86761a6d39e0fafaf30a4a4d.camel@kernel.org>
- <ZUF4NTxQXpkJADxf@dread.disaster.area>
- <20231101101648.zjloqo5su6bbxzff@quack3>
- <CAHk-=wj6wy6tNUQm6EtgxfE_J229y1DthpCguqQfTej71yiJXw@mail.gmail.com>
- <3ae88800184f03b152aba6e4a95ebf26e854dd63.camel@hammerspace.com>
+        Thu, 02 Nov 2023 00:51:22 -0700 (PDT)
+Date:   Thu, 2 Nov 2023 10:51:19 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     kent.overstreet@gmail.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [bug report] bcachefs: Update export_operations for snapshots
+Message-ID: <40509a12-fe60-4ba4-af51-ba11b522156f@moroto.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3ae88800184f03b152aba6e4a95ebf26e854dd63.camel@hammerspace.com>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 01, 2023 at 09:34:57PM +0000, Trond Myklebust wrote:
-> On Wed, 2023-11-01 at 10:10 -1000, Linus Torvalds wrote:
-> > The above does not expose *any* changes to timestamps to users, and
-> > should work across a wide variety of filesystems, without requiring
-> > any special code from the filesystem itself.
-> > 
-> > And now please all jump on me and say "No, Linus, that won't work,
-> > because XYZ".
-> > 
-> > Because it is *entirely* possible that I missed something truly
-> > fundamental, and the above is completely broken for some obvious
-> > reason that I just didn't think of.
-> > 
-> 
-> My client writes to the file and immediately reads the ctime. A 3rd
-> party client then writes immediately after my ctime read.
-> A reboot occurs (maybe minutes later), then I re-read the ctime, and
-> get the same value as before the 3rd party write.
->
-> Yes, most of the time that is better than the naked ctime, but not
-> across a reboot.
+Hello Kent Overstreet,
 
-This sort of "crash immediately after 3rd party data write" scenario
-has never worked properly, even with i_version.
+The patch 85e95ca7cc48: "bcachefs: Update export_operations for
+snapshots" from Nov 13, 2021 (linux-next), leads to the following
+Smatch static checker warning:
 
-The issue is that 3rd party (local) buffered writes or metadata
-changes do not require any integrity or metadata stability
-operations to be performed by the filesystem unless O_[D]SYNC is set
-on the fd, RWF_[D]SYNC is set on the IO, or f{data}sync() is
-performed on the file.
+	fs/exportfs/expfs.c:140 reconnect_one()
+	warn: 'parent' can also be NULL
 
-Hence no local filesystem currently persists i_version or ctime
-outside of operations with specific data integrity semantics.
+fs/exportfs/expfs.c
+    121 static struct dentry *reconnect_one(struct vfsmount *mnt,
+    122                 struct dentry *dentry, char *nbuf)
+    123 {
+    124         struct dentry *parent;
+    125         struct dentry *tmp;
+    126         int err;
+    127 
+    128         parent = ERR_PTR(-EACCES);
+    129         inode_lock(dentry->d_inode);
+    130         if (mnt->mnt_sb->s_export_op->get_parent)
+    131                 parent = mnt->mnt_sb->s_export_op->get_parent(dentry);
 
-nfsd based modifications have application specific persistence
-requirements and that is triggered by the nfsd calling
-->commit_metadata prior to returning the operation result to the
-client. This is what persists i_version/timestamp changes that were
-made during the nfsd operation - this persistence behaviour is not
-driven by the local filesystem.
+Smatch is complaining that bch2_get_parent() returns NULL:
 
-IOWs, this "change attribute failure" scenario is an existing
-problem with the current i_version implementation.  It has always
-been flawed in this way but this didn't matter a decade ago because
-it's only purpose (and user) was nfsd and that had the required
-persistence semantics to hide these flaws within the application's
-context.
+85e95ca7cc48c (Kent Overstreet  2021-11-13 19:49:14 -0500 1216)         if (!parent_inum.inum)
+85e95ca7cc48c (Kent Overstreet  2021-11-13 19:49:14 -0500 1217)                 return NULL;
 
-Now that we are trying to expose i_version as a "generic change
-attribute", these persistence flaws get exposed because local
-filesystem operations do not have the same enforced persistence
-semantics as the NFS server.
+I think it should be an error pointer?
 
-This is another reason I want i_version to die.
+    132         inode_unlock(dentry->d_inode);
+    133 
+    134         if (IS_ERR(parent)) {
+    135                 dprintk("get_parent of %lu failed, err %ld\n",
+    136                         dentry->d_inode->i_ino, PTR_ERR(parent));
+    137                 return parent;
+    138         }
+    139 
+--> 140         dprintk("%s: find name of %lu in %lu\n", __func__,
+    141                 dentry->d_inode->i_ino, parent->d_inode->i_ino);
+                                                ^^^^^^^^
 
-What we need is a clear set of well defined semantics around statx
-change attribute sampling. Correct crash-recovery/integrity behaviour
-requires this rule:
+    142         err = exportfs_get_name(mnt, parent, nbuf, dentry);
+    143         if (err == -ENOENT)
+    144                 goto out_reconnected;
+    145         if (err)
 
-  If the change attribute has been sampled, then the next
-  modification to the filesystem that bumps change attribute *must*
-  persist the change attribute modification atomically with the
-  modification that requires it to change, or submit and complete
-  persistence of the change attribute modification before the
-  modification that requires it starts.
-
-e.g. a truncate can bump the change attribute atomically with the
-metadata changes in a transaction-based filesystem (ext4, XFS,
-btrfs, bcachefs, etc).
-
-Data writes are much harder, though. Some filesysetm structures can
-write data and metadata in a single update e.g. log structured or
-COW filesystems that can mix data and metadata like btrfs.
-Journalling filesystems require ordering between journal writes and
-the data writes to guarantee the change attribute is persistent
-before we write the data. Non-journalling filesystems require inode
-vs data write ordering.
-
-Hence I strongly doubt that a persistent change attribute is best
-implemented at the VFS - optimal, efficient implementations are
-highly filesystem specific regardless of how the change attribute is
-encoded in filesysetm metadata.
-
-This is another reason I want to change how the inode timestamp code
-is structured to call into the filesystem first rather than last.
-Different filesystems will need to do different things to persist
-a "ctime change counter" attribute correctly and efficiently -
-it's not a one-size fits all situation....
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+regards,
+dan carpenter
