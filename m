@@ -2,71 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD547DFDAE
-	for <lists+linux-nfs@lfdr.de>; Fri,  3 Nov 2023 02:09:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A9F47E00AB
+	for <lists+linux-nfs@lfdr.de>; Fri,  3 Nov 2023 11:30:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344910AbjKCBIU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 2 Nov 2023 21:08:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34564 "EHLO
+        id S1347238AbjKCJl2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 Nov 2023 05:41:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344429AbjKCBIT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 2 Nov 2023 21:08:19 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C8CE0
-        for <linux-nfs@vger.kernel.org>; Thu,  2 Nov 2023 18:08:13 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id E2A23219FF;
-        Fri,  3 Nov 2023 01:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1698973690; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=thch4sk4XM5dQb9Hmv6+zAsX6VatGGWlCFiOS9aleXA=;
-        b=AoJmCG7jYsq9XWXsC3XHusLDL/k9uOK1hg3TKiYVDcd77nvUXfw+kgPwgruuvJm9be7dOA
-        E9ihK9KZkdZ9UJiSETlVfvtQ02B+pXyyxA49CoFXGn1jeAZjgd1NTpmFwoFQFDkiv0ESxu
-        rUI+jIevdToAY63atcR8prMQS/H5QF4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1698973690;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=thch4sk4XM5dQb9Hmv6+zAsX6VatGGWlCFiOS9aleXA=;
-        b=MHTxpUoup4inl+JT8IElgVbrc9xXuxGGycu05sT4GBQLhLHtAOJgAE9cFSv/9j6fZ9TBVc
-        Ic415/n5CeNgCHBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5281C13592;
-        Fri,  3 Nov 2023 01:08:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 1tTlAPhHRGWeKQAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 03 Nov 2023 01:08:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S1347156AbjKCJl1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Nov 2023 05:41:27 -0400
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43CBB1BD
+        for <linux-nfs@vger.kernel.org>; Fri,  3 Nov 2023 02:41:21 -0700 (PDT)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-5a7c011e113so22522197b3.1
+        for <linux-nfs@vger.kernel.org>; Fri, 03 Nov 2023 02:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google; t=1699004480; x=1699609280; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Bb+WAsmU3lZ7yuKWHjH5niNuFTepOFprQ1V4XLarmGM=;
+        b=GoMdei38gSqCYFoH+wEboi5+YLUWa/Dh23el4PWjQvdjJSjn++yOudf2m1+SYCg66R
+         golSu1oRsuvcXclVUX6vaO3MlBTslWKBC/4tP95c1+1aFjfCWbtw+fYwWbz/yOD2Lujr
+         AqVsB8HPs7TQaUX35GGXHZlDKXDsDka228JtAjUfyo48M7F4DICK+5sbzKBlII0PQ4rj
+         OFpl0878mnUyB1EWQooxfFOyQm+2X7oJrsv52Zc88z5PLvxkn1YaR4T63cVUJ4OJVO87
+         9g61awQOfSJdThMUb21jhTK+0++puuFu8TM2Hb6DXr3YE9QRLP00cvfG03pP66P1z/WR
+         OpRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699004480; x=1699609280;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Bb+WAsmU3lZ7yuKWHjH5niNuFTepOFprQ1V4XLarmGM=;
+        b=F14FzFwg/lFpnHWHC75/7BI5zg1axTk7oXW0s5y4b1VlW9qxPY/5WuRSX++BySY8tB
+         eEAueHn6+aLcqqB7ZCm5UvMxSm42CJb1Kz6/NIYRXYAU7dsQKbJJUI/41AozxIk1YGCY
+         HHZq31kmOvZLoTsphWngsITT1l3hczDTQxvvxcr0/IMpFUtk726mVFhhnZh0cIzEQjiK
+         kgxrZfC4tXJove9maMfHa55XrZtps3FzgLvhBPij/SFwUEHndF3s5PBNdY3w82RkjZvx
+         fOWioUNaTE0fxjtqpA3M+9t+pHj4tLaWYJI0AOrkqJ4zdhkC1tSJcqkHxq3aTPcRm8R3
+         EqiQ==
+X-Gm-Message-State: AOJu0YzOEiKaRTKnDgltBtNeuHM83J9ArMCcTKaUXWfe7Dj/qpswupW9
+        O11PSJAZgeK+oV09jCVkvdh+aj03uiSLt3Ck51RdZDGeX/npfCzdM4U=
+X-Google-Smtp-Source: AGHT+IFS7e03ds3wiV9jYtdrOzyXtMlbOudf2prR10cbc3YpsDVqKmGAiKExiy40w87a/CxONpItqLaJLOeBIfiXl6o=
+X-Received: by 2002:a81:5290:0:b0:59b:f8da:ffdb with SMTP id
+ g138-20020a815290000000b0059bf8daffdbmr2224862ywb.29.1699004480205; Fri, 03
+ Nov 2023 02:41:20 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Jeff Layton" <jlayton@kernel.org>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        "Olga Kornievskaia" <kolga@netapp.com>,
-        "Dai Ngo" <dai.ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH 1/6] nfsd: prepare for supporting admin-revocation of state
-In-reply-to: <E792C97F-BB0F-46DD-828F-113F95270464@oracle.com>
-References: <20231101010049.27315-1-neilb@suse.de>,
- <20231101010049.27315-2-neilb@suse.de>,
- <171568f8371932f66429b4557bce7aaf959215ec.camel@kernel.org>,
- <169895539002.24305.2542985743958570903@noble.neil.brown.name>,
- <83c7ff4f3166c5780ce803e43eaa65e9d9e2f6bb.camel@kernel.org>,
- <E792C97F-BB0F-46DD-828F-113F95270464@oracle.com>
-Date:   Fri, 03 Nov 2023 12:08:04 +1100
-Message-id: <169897368475.24305.2294425791696451143@noble.neil.brown.name>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Fri, 3 Nov 2023 09:40:44 +0000
+Message-ID: <CAPt2mGNPSi-+3WdeMsOjkJ2vOqZcRE2S6i=eqi+UA2RmzywAyg@mail.gmail.com>
+Subject: autofs mount/umount hangs with recent kernel?
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -77,1117 +61,145 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 03 Nov 2023, Chuck Lever III wrote:
->=20
-> > On Nov 2, 2023, at 1:24 PM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > On Fri, 2023-11-03 at 07:03 +1100, NeilBrown wrote:
-> >> On Thu, 02 Nov 2023, Jeff Layton wrote:
-> >>> On Wed, 2023-11-01 at 11:57 +1100, NeilBrown wrote:
-> >>>> The NFSv4 protocol allows state to be revoked by the admin and has err=
-or
-> >>>> codes which allow this to be communicated to the client.
-> >>>>=20
-> >>>> This patch
-> >>>> - introduces 3 new state-id types for revoked open, lock, and
-> >>>>   delegation state.  This requires the bitmask to be 'short',
-> >>>>   not 'char'
-> >>>> - reports NFS4ERR_ADMIN_REVOKED when these are accessed
-> >>>> - introduces a per-client counter of these states and returns
-> >>>>   SEQ4_STATUS_ADMIN_STATE_REVOKED when the counter is not zero.
-> >>>>   Decrement this when freeing any admin-revoked state.
-> >>>> - introduces stub code to find all interesting states for a given
-> >>>>   superblock so they can be revoked via the 'unlock_filesystem'
-> >>>>   file in /proc/fs/nfsd/
-> >>>>   No actual states are handled yet.
-> >>>>=20
-> >>>> Signed-off-by: NeilBrown <neilb@suse.de>
-> >>>> ---
-> >>>> fs/nfsd/nfs4layouts.c |  2 +-
-> >>>> fs/nfsd/nfs4state.c   | 93 +++++++++++++++++++++++++++++++++++++++----
-> >>>> fs/nfsd/nfsctl.c      |  1 +
-> >>>> fs/nfsd/nfsd.h        |  1 +
-> >>>> fs/nfsd/state.h       | 35 +++++++++++-----
-> >>>> fs/nfsd/trace.h       |  8 +++-
-> >>>> 6 files changed, 120 insertions(+), 20 deletions(-)
-> >>>>=20
-> >>>> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-> >>>> index 5e8096bc5eaa..09d0363bfbc4 100644
-> >>>> --- a/fs/nfsd/nfs4layouts.c
-> >>>> +++ b/fs/nfsd/nfs4layouts.c
-> >>>> @@ -269,7 +269,7 @@ nfsd4_preprocess_layout_stateid(struct svc_rqst *r=
-qstp,
-> >>>> {
-> >>>> struct nfs4_layout_stateid *ls;
-> >>>> struct nfs4_stid *stid;
-> >>>> - unsigned char typemask =3D NFS4_LAYOUT_STID;
-> >>>> + unsigned short typemask =3D NFS4_LAYOUT_STID;
-> >>>> __be32 status;
-> >>>>=20
-> >>>> if (create)
-> >>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> >>>> index 65fd5510323a..f3ba53a16105 100644
-> >>>> --- a/fs/nfsd/nfs4state.c
-> >>>> +++ b/fs/nfsd/nfs4state.c
-> >>>> @@ -1202,6 +1202,13 @@ alloc_init_deleg(struct nfs4_client *clp, struc=
-t nfs4_file *fp,
-> >>>> return NULL;
-> >>>> }
-> >>>>=20
-> >>>> +void nfs4_unhash_stid(struct nfs4_stid *s)
-> >>>> +{
-> >>>> + if (s->sc_type & NFS4_ALL_ADMIN_REVOKED_STIDS)
-> >>>> + atomic_dec(&s->sc_client->cl_admin_revoked);
-> >>>> + s->sc_type =3D 0;
-> >>>> +}
-> >>>> +
-> >>>> void
-> >>>> nfs4_put_stid(struct nfs4_stid *s)
-> >>>> {
-> >>>> @@ -1215,6 +1222,7 @@ nfs4_put_stid(struct nfs4_stid *s)
-> >>>> return;
-> >>>> }
-> >>>> idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> >>>> + nfs4_unhash_stid(s);
-> >>>> nfs4_free_cpntf_statelist(clp->net, s);
-> >>>> spin_unlock(&clp->cl_lock);
-> >>>> s->sc_free(s);
-> >>>> @@ -1265,11 +1273,6 @@ static void destroy_unhashed_deleg(struct nfs4_=
-delegation *dp)
-> >>>> nfs4_put_stid(&dp->dl_stid);
-> >>>> }
-> >>>>=20
-> >>>> -void nfs4_unhash_stid(struct nfs4_stid *s)
-> >>>> -{
-> >>>> - s->sc_type =3D 0;
-> >>>> -}
-> >>>> -
-> >>>> /**
-> >>>>  * nfs4_delegation_exists - Discover if this delegation already exists
-> >>>>  * @clp:     a pointer to the nfs4_client we're granting a delegation =
-to
-> >>>> @@ -1536,6 +1539,7 @@ static void put_ol_stateid_locked(struct nfs4_ol=
-_stateid *stp,
-> >>>> }
-> >>>>=20
-> >>>> idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> >>>> + nfs4_unhash_stid(s);
-> >>>> list_add(&stp->st_locks, reaplist);
-> >>>> }
-> >>>>=20
-> >>>> @@ -1680,6 +1684,53 @@ static void release_openowner(struct nfs4_openo=
-wner *oo)
-> >>>> nfs4_put_stateowner(&oo->oo_owner);
-> >>>> }
-> >>>>=20
-> >>>> +static struct nfs4_stid *find_one_sb_stid(struct nfs4_client *clp,
-> >>>> +   struct super_block *sb,
-> >>>> +   unsigned short sc_types)
-> >>>> +{
-> >>>> + unsigned long id, tmp;
-> >>>> + struct nfs4_stid *stid;
-> >>>> +
-> >>>> + spin_lock(&clp->cl_lock);
-> >>>> + idr_for_each_entry_ul(&clp->cl_stateids, stid, tmp, id)
-> >>>> + if ((stid->sc_type & sc_types) &&
-> >>>> +     stid->sc_file->fi_inode->i_sb =3D=3D sb) {
-> >>>> + refcount_inc(&stid->sc_count);
-> >>>> + break;
-> >>>> + }
-> >>>> + spin_unlock(&clp->cl_lock);
-> >>>> + return stid;
-> >>>> +}
-> >>>> +
-> >>>> +void nfsd4_revoke_states(struct net *net, struct super_block *sb)
-> >>>> +{
-> >>>> + struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> >>>> + unsigned int idhashval;
-> >>>> + unsigned short sc_types;
-> >>>> +
-> >>>> + sc_types =3D 0;
-> >>>> +
-> >>>> + spin_lock(&nn->client_lock);
-> >>>> + for (idhashval =3D 0; idhashval < CLIENT_HASH_MASK; idhashval++) {
-> >>>> + struct list_head *head =3D &nn->conf_id_hashtbl[idhashval];
-> >>>> + struct nfs4_client *clp;
-> >>>> + retry:
-> >>>> + list_for_each_entry(clp, head, cl_idhash) {
-> >>>> + struct nfs4_stid *stid =3D find_one_sb_stid(clp, sb,
-> >>>> +   sc_types);
-> >>>> + if (stid) {
-> >>>> + spin_unlock(&nn->client_lock);
-> >>>> + switch (stid->sc_type) {
-> >>>> + }
-> >>>> + nfs4_put_stid(stid);
-> >>>> + spin_lock(&nn->client_lock);
-> >>>> + goto retry;
-> >>>> + }
-> >>>> + }
-> >>>> + }
-> >>>> + spin_unlock(&nn->client_lock);
-> >>>> +}
-> >>>> +
-> >>>> static inline int
-> >>>> hash_sessionid(struct nfs4_sessionid *sessionid)
-> >>>> {
-> >>>> @@ -2465,7 +2516,8 @@ find_stateid_locked(struct nfs4_client *cl, stat=
-eid_t *t)
-> >>>> }
-> >>>>=20
-> >>>> static struct nfs4_stid *
-> >>>> -find_stateid_by_type(struct nfs4_client *cl, stateid_t *t, char typem=
-ask)
-> >>>> +find_stateid_by_type(struct nfs4_client *cl, stateid_t *t,
-> >>>> +      unsigned short typemask)
-> >>>> {
-> >>>> struct nfs4_stid *s;
-> >>>>=20
-> >>>> @@ -2549,6 +2601,8 @@ static int client_info_show(struct seq_file *m, =
-void *v)
-> >>>> }
-> >>>> seq_printf(m, "callback state: %s\n", cb_state2str(clp->cl_cb_state));
-> >>>> seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
-> >>>> + seq_printf(m, "admin-revoked states: %d\n",
-> >>>> +    atomic_read(&clp->cl_admin_revoked));
-> >>>> drop_client(clp);
-> >>>>=20
-> >>>> return 0;
-> >>>> @@ -4108,6 +4162,8 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nf=
-sd4_compound_state *cstate,
-> >>>> }
-> >>>> if (!list_empty(&clp->cl_revoked))
-> >>>> seq->status_flags |=3D SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
-> >>>> + if (atomic_read(&clp->cl_admin_revoked))
-> >>>> + seq->status_flags |=3D SEQ4_STATUS_ADMIN_STATE_REVOKED;
-> >>>> out_no_session:
-> >>>> if (conn)
-> >>>> free_conn(conn);
-> >>>> @@ -5200,6 +5256,11 @@ nfs4_check_deleg(struct nfs4_client *cl, struct=
- nfsd4_open *open,
-> >>>> status =3D nfserr_deleg_revoked;
-> >>>> goto out;
-> >>>> }
-> >>>> + if (deleg->dl_stid.sc_type =3D=3D NFS4_ADMIN_REVOKED_DELEG_STID) {
-> >>>> + nfs4_put_stid(&deleg->dl_stid);
-> >>>> + status =3D nfserr_admin_revoked;
-> >>>> + goto out;
-> >>>> + }
-> >>>> flags =3D share_access_to_flags(open->op_share_access);
-> >>>> status =3D nfs4_check_delegmode(deleg, flags);
-> >>>> if (status) {
-> >>>> @@ -6478,6 +6539,11 @@ static __be32 nfsd4_validate_stateid(struct nfs=
-4_client *cl, stateid_t *stateid)
-> >>>> case NFS4_REVOKED_DELEG_STID:
-> >>>> status =3D nfserr_deleg_revoked;
-> >>>> break;
-> >>>> + case NFS4_ADMIN_REVOKED_STID:
-> >>>> + case NFS4_ADMIN_REVOKED_LOCK_STID:
-> >>>> + case NFS4_ADMIN_REVOKED_DELEG_STID:
-> >>>> + status =3D nfserr_admin_revoked;
-> >>>> + break;
-> >>>> case NFS4_OPEN_STID:
-> >>>> case NFS4_LOCK_STID:
-> >>>> status =3D nfsd4_check_openowner_confirmed(openlockstateid(s));
-> >>>> @@ -6496,7 +6562,7 @@ static __be32 nfsd4_validate_stateid(struct nfs4=
-_client *cl, stateid_t *stateid)
-> >>>>=20
-> >>>> __be32
-> >>>> nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
-> >>>> -      stateid_t *stateid, unsigned char typemask,
-> >>>> +      stateid_t *stateid, unsigned short typemask,
-> >>>>      struct nfs4_stid **s, struct nfsd_net *nn)
-> >>>> {
-> >>>> __be32 status;
-> >>>> @@ -6512,6 +6578,13 @@ nfsd4_lookup_stateid(struct nfsd4_compound_stat=
-e *cstate,
-> >>>> else if (typemask & NFS4_DELEG_STID)
-> >>>> typemask |=3D NFS4_REVOKED_DELEG_STID;
-> >>>>=20
-> >>>> + if (typemask & NFS4_OPEN_STID)
-> >>>> + typemask |=3D NFS4_ADMIN_REVOKED_STID;
-> >>>> + if (typemask & NFS4_LOCK_STID)
-> >>>> + typemask |=3D NFS4_ADMIN_REVOKED_LOCK_STID;
-> >>>> + if (typemask & NFS4_DELEG_STID)
-> >>>> + typemask |=3D NFS4_ADMIN_REVOKED_DELEG_STID;
-> >>>> +
-> >>>> if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
-> >>>> CLOSE_STATEID(stateid))
-> >>>> return nfserr_bad_stateid;
-> >>>> @@ -6532,6 +6605,10 @@ nfsd4_lookup_stateid(struct nfsd4_compound_stat=
-e *cstate,
-> >>>> return nfserr_deleg_revoked;
-> >>>> return nfserr_bad_stateid;
-> >>>> }
-> >>>> + if (stid->sc_type & NFS4_ALL_ADMIN_REVOKED_STIDS) {
-> >>>> + nfs4_put_stid(stid);
-> >>>> + return nfserr_admin_revoked;
-> >>>> + }
-> >>>> *s =3D stid;
-> >>>> return nfs_ok;
-> >>>> }
-> >>>> @@ -6899,7 +6976,7 @@ static __be32 nfs4_seqid_op_checks(struct nfsd4_=
-compound_state *cstate, stateid_
-> >>>>  */
-> >>>> static __be32
-> >>>> nfs4_preprocess_seqid_op(struct nfsd4_compound_state *cstate, u32 seqi=
-d,
-> >>>> -  stateid_t *stateid, char typemask,
-> >>>> +  stateid_t *stateid, unsigned short typemask,
-> >>>>  struct nfs4_ol_stateid **stpp,
-> >>>>  struct nfsd_net *nn)
-> >>>> {
-> >>>> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> >>>> index 739ed5bf71cd..50368eec86b0 100644
-> >>>> --- a/fs/nfsd/nfsctl.c
-> >>>> +++ b/fs/nfsd/nfsctl.c
-> >>>> @@ -281,6 +281,7 @@ static ssize_t write_unlock_fs(struct file *file, =
-char *buf, size_t size)
-> >>>>  * 3.  Is that directory the root of an exported file system?
-> >>>>  */
-> >>>> error =3D nlmsvc_unlock_all_by_sb(path.dentry->d_sb);
-> >>>> + nfsd4_revoke_states(netns(file), path.dentry->d_sb);
-> >>>>=20
-> >>>> path_put(&path);
-> >>>> return error;
-> >>>> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> >>>> index f5ff42f41ee7..d46203eac3c8 100644
-> >>>> --- a/fs/nfsd/nfsd.h
-> >>>> +++ b/fs/nfsd/nfsd.h
-> >>>> @@ -280,6 +280,7 @@ void nfsd_lockd_shutdown(void);
-> >>>> #define nfserr_no_grace cpu_to_be32(NFSERR_NO_GRACE)
-> >>>> #define nfserr_reclaim_bad cpu_to_be32(NFSERR_RECLAIM_BAD)
-> >>>> #define nfserr_badname cpu_to_be32(NFSERR_BADNAME)
-> >>>> +#define nfserr_admin_revoked cpu_to_be32(NFS4ERR_ADMIN_REVOKED)
-> >>>> #define nfserr_cb_path_down cpu_to_be32(NFSERR_CB_PATH_DOWN)
-> >>>> #define nfserr_locked cpu_to_be32(NFSERR_LOCKED)
-> >>>> #define nfserr_wrongsec cpu_to_be32(NFSERR_WRONGSEC)
-> >>>> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> >>>> index f96eaa8e9413..3af5ab55c978 100644
-> >>>> --- a/fs/nfsd/state.h
-> >>>> +++ b/fs/nfsd/state.h
-> >>>> @@ -88,17 +88,23 @@ struct nfsd4_callback_ops {
-> >>>>  */
-> >>>> struct nfs4_stid {
-> >>>> refcount_t sc_count;
-> >>>> -#define NFS4_OPEN_STID 1
-> >>>> -#define NFS4_LOCK_STID 2
-> >>>> -#define NFS4_DELEG_STID 4
-> >>>> + struct list_head sc_cp_list;
-> >>>> + unsigned short sc_type;
-> >>>=20
-> >>> Should we just go ahead and make this a full 32-bit word? We seem to
-> >>> keep adding flags to this field, and I doubt we're saving anything by
-> >>> making this a short.
-> >>>=20
-> >>>> +#define NFS4_OPEN_STID BIT(0)
-> >>>> +#define NFS4_LOCK_STID BIT(1)
-> >>>> +#define NFS4_DELEG_STID BIT(2)
-> >>>> /* For an open stateid kept around *only* to process close replays: */
-> >>>> -#define NFS4_CLOSED_STID 8
-> >>>> +#define NFS4_CLOSED_STID BIT(3)
-> >>>> /* For a deleg stateid kept around only to process free_stateid's: */
-> >>>> -#define NFS4_REVOKED_DELEG_STID 16
-> >>>> -#define NFS4_CLOSED_DELEG_STID 32
-> >>>> -#define NFS4_LAYOUT_STID 64
-> >>>> - struct list_head sc_cp_list;
-> >>>> - unsigned char sc_type;
-> >>>> +#define NFS4_REVOKED_DELEG_STID BIT(4)
-> >>>> +#define NFS4_CLOSED_DELEG_STID BIT(5)
-> >>>> +#define NFS4_LAYOUT_STID BIT(6)
-> >>>> +#define NFS4_ADMIN_REVOKED_STID BIT(7)
-> >>>> +#define NFS4_ADMIN_REVOKED_LOCK_STID BIT(8)
-> >>>> +#define NFS4_ADMIN_REVOKED_DELEG_STID BIT(9)
-> >>>> +#define NFS4_ALL_ADMIN_REVOKED_STIDS (NFS4_ADMIN_REVOKED_STID | \
-> >>>> +      NFS4_ADMIN_REVOKED_LOCK_STID | \
-> >>>> +      NFS4_ADMIN_REVOKED_DELEG_STID)
-> >>>=20
-> >>> Not a specific criticism of these patches, since this problem preexists
-> >>> them, but I really dislike the way that sc_type is used as a bitmask,
-> >>> but also sort of like an enum. In some cases, we test for specific flags
-> >>> in the mask, and in other cases (e.g. states_show), we treat them as
-> >>> discrete values to feed it to a switch().
-> >>>=20
-> >>> Personally, I'd find this less confusing if we just treat this as a set
-> >>> of flags full-stop. We could leave the low-order bits to show the real
-> >>> type (open, lock, deleg, etc.) and just mask off the high-order bits
-> >>> when we need to feed it to a switch statement.
-> >>>=20
-> >>> For instance above, we're adding 3 new NFS4_ADMIN_REVOKED values, but we
-> >>> could (in theory) just have a flag in there that says NFS4_ADMIN_REVOKED
-> >>> and leave the old type bit in place instead of changing it to a new
-> >>> discrete sc_type value.
-> >>=20
-> >> I agree.
-> >> Bits might be:
-> >>    OPEN
-> >>    LOCK
-> >>    DELEG
-> >>    LAYOUT
-> >>    CLOSED (combines with OPEN or DELEG)
-> >>    REVOKED (combines with DELEG)
-> >>    ADMIN_REVOKED (combined with OPEN, LOCK, DELEG.  Sets REVOKED when
-> >>                   with DELEG)
-> >>=20
-> >> so we could go back to a char :-)  Probably sensible to use unsigned int
-> >> though.
-> >>=20
-> >=20
-> > Yeah, a u32 would be best I think. It'll just fill an existing hole on
-> > my box (x86_64), according to pahole:
-> >=20
-> > unsigned char              sc_type;              /*    24     1 */
-> >=20
-> > /* XXX 3 bytes hole, try to pack */
-> >=20
-> >> For updates the rule would be that bits can be set but never cleared so
-> >> you don't need locking to read unless you care about a bit that can be
-> >> changed.
-> >>=20
-> >=20
-> > Probably for the low order OPEN/LOCK/DELEG bits, the rule should be that
-> > they never change. We can never convert from one to another since they
-> > come out of different slabcaches. It's probably worthwhile to leave a
-> > few low order bits carved out for new types in the future too. e.g.
-> > directory delegations...
-> >=20
-> > Maybe we should rename the field too? How about "sc_mode" since this is
-> > starting to resemble the i_mode field in some ways (type and permissions
-> > squashed together).
->=20
-> In that case, two separate u16 fields might be better.
->=20
+Hi,
 
-Here is a first attempt.  It compiles but I haven't tried running or
-thought about what testing would be appropriate.
-I'll be working on other things next week but I hope to pick this up
-again the following week and process any feedback, then see how my
-admin-revoke patch set fits on this new code.
+We have large compute clusters that, amongst other things, spend their
+day mounting & unounting lots of Linux NFS servers via autofs. This
+has worked fine for many years and client kernel versions and was
+working without incident even with our current v6.3.x production
+kernels.
 
-All comments most welcome.
+During the v6.6-rc cycle while testing that kernel, I noticed that
+every now and then, the umount/mount would hang randomly and the
+compute host would get stuck and not complete it's work until a
+reboot. I thought I'd wait until v6.6 was released and check again -
+the issue persists.
 
-Thanks,
-NeilBrown
+I have not had the opportunity to test the v6.4 & v6.5 kernels in
+between yet. The stack traces look something like this:
 
+[202752.264187] INFO: task umount.nfs:58118 blocked for more than 245 seconds.
+[202752.264237]       Tainted: G            E      6.6.0-1.dneg.x86_64 #1
+[202752.264267] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[202752.264296] task:umount.nfs      state:D stack:0     pid:58118
+ppid:1      flags:0x00004002
+[202752.264304] Call Trace:
+[202752.264308]  <TASK>
+[202752.264313]  __schedule+0x30b/0xa10
+[202752.264327]  schedule+0x68/0xf0
+[202752.264332]  io_schedule+0x16/0x40
+[202752.264337]  __folio_lock+0xfc/0x220
+[202752.264346]  ? srso_alias_return_thunk+0x5/0x7f
+[202752.264353]  ? __pfx_wake_page_function+0x10/0x10
+[202752.264361]  truncate_inode_pages_range+0x441/0x460
+[202752.264411]  truncate_inode_pages_final+0x41/0x50
+[202752.264425]  nfs_evict_inode+0x1a/0x40 [nfs]
+[202752.264476]  evict+0xdc/0x190
+[202752.264485]  dispose_list+0x4d/0x70
+[202752.264491]  evict_inodes+0x16b/0x1b0
+[202752.264499]  generic_shutdown_super+0x3e/0x160
+[202752.264507]  kill_anon_super+0x17/0x50
+[202752.264513]  nfs_kill_super+0x27/0x50 [nfs]
+[202752.264556]  deactivate_locked_super+0x35/0x90
+[202752.264562]  deactivate_super+0x42/0x50
+[202752.264568]  cleanup_mnt+0x109/0x170
+[202752.264574]  __cleanup_mnt+0x12/0x20
+[202752.264580]  task_work_run+0x61/0x90
+[202752.264588]  exit_to_user_mode_prepare+0x1d8/0x200
+[202752.264596]  syscall_exit_to_user_mode+0x1c/0x40
+[202752.264603]  do_syscall_64+0x48/0x90
+[202752.264609]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+[202752.264617] RIP: 0033:0x7fcb9befeba7
+[202752.264622] RSP: 002b:00007ffdd63ef348 EFLAGS: 00000246 ORIG_RAX:
+00000000000000a6
+[202752.264628] RAX: 0000000000000000 RBX: 00005561e35da010 RCX:
+00007fcb9befeba7
+[202752.264632] RDX: 0000000000000001 RSI: 0000000000000000 RDI:
+00005561e35da1e0
+[202752.264634] RBP: 00005561e35da1e0 R08: 00005561e35dbfa0 R09:
+00005561e35db790
+[202752.264637] R10: 00007ffdd63eeda0 R11: 0000000000000246 R12:
+00007fcb9c442d78
+[202752.264640] R13: 0000000000000000 R14: 00005561e35db2c0 R15:
+00007ffdd63f0dcb
+[202752.264648]  </TASK>
 
-From: NeilBrown <neilb@suse.de>
-Date: Fri, 3 Nov 2023 11:43:55 +1100
-Subject: [PATCH] nfsd: tidy up sc_type
+[202752.264658] INFO: task mount.nfs:60827 blocked for more than 122 seconds.
+[202752.264686]       Tainted: G            E      6.6.0-1.dneg.x86_64 #1
+[202752.264713] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+[202752.264743] task:mount.nfs       state:D stack:0     pid:60827
+ppid:60826  flags:0x00004000
+[202752.264751] Call Trace:
+[202752.264753]  <TASK>
+[202752.264757]  __schedule+0x30b/0xa10
+[202752.264763]  ? srso_alias_return_thunk+0x5/0x7f
+[202752.264771]  schedule+0x68/0xf0
+[202752.264776]  schedule_preempt_disabled+0x15/0x30
+[202752.264782]  rwsem_down_write_slowpath+0x2b3/0x640
+[202752.264788]  ? try_to_wake_up+0x242/0x5f0
+[202752.264797]  ? __x86_indirect_jump_thunk_r15+0x20/0x20
+[202752.264803]  ? wake_up_q+0x50/0x90
+[202752.264809]  down_write+0x55/0x70
+[202752.264815]  super_lock+0x44/0x130
+[202752.264821]  ? kernfs_activate+0x54/0x60
+[202752.264828]  ? srso_alias_return_thunk+0x5/0x7f
+[202752.264833]  ? kernfs_add_one+0x11f/0x160
+[202752.264841]  grab_super+0x2e/0x80
+[202752.264847]  grab_super_dead+0x31/0xe0
+[202752.264855]  ? srso_alias_return_thunk+0x5/0x7f
+[202752.264860]  ? sysfs_create_link_nowarn+0x22/0x40
+[202752.264865]  ? srso_alias_return_thunk+0x5/0x7f
+[202752.264871]  ? __pfx_nfs_compare_super+0x10/0x10 [nfs]
+[202752.264915]  sget_fc+0xd4/0x280
+[202752.264921]  ? __pfx_nfs_set_super+0x10/0x10 [nfs]
+[202752.264965]  nfs_get_tree_common+0x86/0x520 [nfs]
+[202752.265009]  nfs_try_get_tree+0x5c/0x2e0 [nfs]
+[202752.265052]  ? srso_alias_return_thunk+0x5/0x7f
+[202752.265058]  ? try_module_get+0x1d/0x30
+[202752.265064]  ? srso_alias_return_thunk+0x5/0x7f
+[202752.265068]  ? get_nfs_version+0x29/0x90 [nfs]
+[202752.265111]  ? srso_alias_return_thunk+0x5/0x7f
+[202752.265116]  ? nfs_fs_context_validate+0x4fe/0x710 [nfs]
+[202752.265163]  nfs_get_tree+0x38/0x60 [nfs]
+[202752.265202]  vfs_get_tree+0x2a/0xe0
+[202752.265207]  ? capable+0x19/0x20
+[202752.265213]  path_mount+0x2fe/0xa90
+[202752.265219]  ? putname+0x55/0x70
+[202752.265226]  do_mount+0x80/0xa0
+[202752.265233]  __x64_sys_mount+0x8b/0xe0
+[202752.265240]  do_syscall_64+0x3b/0x90
+[202752.265245]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+[202752.265250] RIP: 0033:0x7fbf5d4ff26a
+[202752.265253] RSP: 002b:00007ffeb24fdd98 EFLAGS: 00000202 ORIG_RAX:
+00000000000000a5
+[202752.265258] RAX: ffffffffffffffda RBX: 0000000000000000 RCX:
+00007fbf5d4ff26a
+[202752.265261] RDX: 000055c814e78100 RSI: 000055c814e771e0 RDI:
+000055c814e77320
+[202752.265264] RBP: 00007ffeb24fdfb0 R08: 000055c814e85510 R09:
+000000000000006d
+[202752.265266] R10: 0000000000000004 R11: 0000000000000202 R12:
+00007fbf5e2307e0
+[202752.265269] R13: 00007ffeb24fdfb0 R14: 00007ffeb24fde90 R15:
+000055c814e855a0
+[202752.265277]  </TASK>
 
-sc_type identifies the type of a state - open, lock, deleg, layout - and
-also the status of a state - closed or revoked.
+And like I said, the mount/umount against the server hangs
+indefinitely on the client. It is somewhat interesting that autofs
+still tries to trigger a subsequent mount even though the umount has
+not completed.
 
-This is a bit untidy and could get worse when "admin-revoked" states are
-added.  So try to clean it up.
+The NFS servers are running RHEL8.5 and we are using NFSv3. I also
+reproduced it with a fairly recent nfs-utils-2.6.2 on the client
+compute hosts.
 
-The type is now all that is stored in sc_type.  This is zero when the
-state is first added to the idr (causing it to be ignored), and if then
-set appropriately once it is fully initialised.  It is set under
-->cl_lock to ensure atomicity w.r.t lookup.  It is (now) never cleared.
+Because these happen quite rarely, it takes time and many clients and
+mount/umount cycles to reproduce, so I thought I'd post here before
+working through the bisect testing. If you think this is better as a
+kernel.org bugzilla ticket, I'm happy to do that too.
 
-This is still a bit-set even though at most one bit is set.  This allows
-lookup functions to be given a bitmap of acceptable types.
+Cheers,
 
-cl_type is now an unsigned short rather than char.  There is no value in
-restricting to just 8 bits.
-
-The status is stored in a separate short named "cl_status".  It has two
-flags: NFS4_STID_CLOSED and NFS4_STID_REVOKED.
-CLOSED combines NFS4_CLOSED_STID, NFS4_CLOSED_DELEG_STID, and is used
-for LOCK_STID instead of setting the sc_type to zero.
-These flags are only ever set, never cleared.
-For deleg stateids they are set under the global state_lock.
-For open and lock stateids they are set under ->cl_lock.
-
-Other changes here - some of which could be split out...
-
-- When a delegation is revoked, the type was previously set to
-   NFS4_CLOSED_DELEG_STID and then NFS4_REVOKED_DELEG_STID.
-  This might open a race window.  That window no longer exists.
-
-- NFS4_STID_REVOKED (previously NFS4_REVOKED_DELEG_STID) is only set
-  for ->minorversion>0, so I removed all the tests on minorversion when
-  that status has been detected.
-
-- nfs4_unhash_stid() has been removed, and we never set sc_type =3D 0.
-  This was only used for LOCK stids and they now use NFS4_STID_CLOSED
-
-- ->cl_lock is now hel when hash_delegation_locked() is called, so
-  that the locking rules for setting ->sc_type are followed.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfs4layouts.c |   4 +-
- fs/nfsd/nfs4state.c   | 165 ++++++++++++++++++++----------------------
- fs/nfsd/state.h       |  37 +++++++---
- fs/nfsd/trace.h       |  25 +++----
- 4 files changed, 119 insertions(+), 112 deletions(-)
-
-diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-index 5e8096bc5eaa..678bef3a7f15 100644
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -269,13 +269,13 @@ nfsd4_preprocess_layout_stateid(struct svc_rqst *rqstp,
- {
- 	struct nfs4_layout_stateid *ls;
- 	struct nfs4_stid *stid;
--	unsigned char typemask =3D NFS4_LAYOUT_STID;
-+	unsigned short typemask =3D NFS4_LAYOUT_STID;
- 	__be32 status;
-=20
- 	if (create)
- 		typemask |=3D (NFS4_OPEN_STID | NFS4_LOCK_STID | NFS4_DELEG_STID);
-=20
--	status =3D nfsd4_lookup_stateid(cstate, stateid, typemask, &stid,
-+	status =3D nfsd4_lookup_stateid(cstate, stateid, typemask, 0, &stid,
- 			net_generic(SVC_NET(rqstp), nfsd_net_id));
- 	if (status)
- 		goto out;
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 65fd5510323a..551a86a796ed 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1265,11 +1265,6 @@ static void destroy_unhashed_deleg(struct nfs4_delegat=
-ion *dp)
- 	nfs4_put_stid(&dp->dl_stid);
- }
-=20
--void nfs4_unhash_stid(struct nfs4_stid *s)
--{
--	s->sc_type =3D 0;
--}
--
- /**
-  * nfs4_delegation_exists - Discover if this delegation already exists
-  * @clp:     a pointer to the nfs4_client we're granting a delegation to
-@@ -1317,6 +1312,7 @@ hash_delegation_locked(struct nfs4_delegation *dp, stru=
-ct nfs4_file *fp)
-=20
- 	lockdep_assert_held(&state_lock);
- 	lockdep_assert_held(&fp->fi_lock);
-+	lockdep_assert_held(&clp->cl_lock);
-=20
- 	if (nfs4_delegation_exists(clp, fp))
- 		return -EAGAIN;
-@@ -1333,7 +1329,7 @@ static bool delegation_hashed(struct nfs4_delegation *d=
-p)
- }
-=20
- static bool
--unhash_delegation_locked(struct nfs4_delegation *dp)
-+unhash_delegation_locked(struct nfs4_delegation *dp, unsigned short state)
- {
- 	struct nfs4_file *fp =3D dp->dl_stid.sc_file;
-=20
-@@ -1342,7 +1338,10 @@ unhash_delegation_locked(struct nfs4_delegation *dp)
- 	if (!delegation_hashed(dp))
- 		return false;
-=20
--	dp->dl_stid.sc_type =3D NFS4_CLOSED_DELEG_STID;
-+	if (dp->dl_stid.sc_client->cl_minorversion =3D=3D 0)
-+		state =3D NFS4_STID_CLOSED;
-+	dp->dl_stid.sc_status |=3D state | NFS4_STID_CLOSED;
-+
- 	/* Ensure that deleg break won't try to requeue it */
- 	++dp->dl_time;
- 	spin_lock(&fp->fi_lock);
-@@ -1358,7 +1357,7 @@ static void destroy_delegation(struct nfs4_delegation *=
-dp)
- 	bool unhashed;
-=20
- 	spin_lock(&state_lock);
--	unhashed =3D unhash_delegation_locked(dp);
-+	unhashed =3D unhash_delegation_locked(dp, NFS4_STID_CLOSED);
- 	spin_unlock(&state_lock);
- 	if (unhashed)
- 		destroy_unhashed_deleg(dp);
-@@ -1372,9 +1371,8 @@ static void revoke_delegation(struct nfs4_delegation *d=
-p)
-=20
- 	trace_nfsd_stid_revoke(&dp->dl_stid);
-=20
--	if (clp->cl_minorversion) {
-+	if (dp->dl_stid.sc_status & NFS4_STID_REVOKED) {
- 		spin_lock(&clp->cl_lock);
--		dp->dl_stid.sc_type =3D NFS4_REVOKED_DELEG_STID;
- 		refcount_inc(&dp->dl_stid.sc_count);
- 		list_add(&dp->dl_recall_lru, &clp->cl_revoked);
- 		spin_unlock(&clp->cl_lock);
-@@ -1382,8 +1380,8 @@ static void revoke_delegation(struct nfs4_delegation *d=
-p)
- 	destroy_unhashed_deleg(dp);
- }
-=20
--/*=20
-- * SETCLIENTID state=20
-+/*
-+ * SETCLIENTID state
-  */
-=20
- static unsigned int clientid_hashval(u32 id)
-@@ -1546,7 +1544,6 @@ static bool unhash_lock_stateid(struct nfs4_ol_stateid =
-*stp)
- 	if (!unhash_ol_stateid(stp))
- 		return false;
- 	list_del_init(&stp->st_locks);
--	nfs4_unhash_stid(&stp->st_stid);
- 	return true;
- }
-=20
-@@ -1557,6 +1554,7 @@ static void release_lock_stateid(struct nfs4_ol_stateid=
- *stp)
-=20
- 	spin_lock(&clp->cl_lock);
- 	unhashed =3D unhash_lock_stateid(stp);
-+	stp->st_stid.sc_status |=3D NFS4_STID_CLOSED;
- 	spin_unlock(&clp->cl_lock);
- 	if (unhashed)
- 		nfs4_put_stid(&stp->st_stid);
-@@ -1625,6 +1623,7 @@ static void release_open_stateid(struct nfs4_ol_stateid=
- *stp)
- 	LIST_HEAD(reaplist);
-=20
- 	spin_lock(&stp->st_stid.sc_client->cl_lock);
-+	stp->st_stid.sc_status |=3D NFS4_STID_CLOSED;
- 	if (unhash_open_stateid(stp, &reaplist))
- 		put_ol_stateid_locked(stp, &reaplist);
- 	spin_unlock(&stp->st_stid.sc_client->cl_lock);
-@@ -2233,7 +2232,7 @@ __destroy_client(struct nfs4_client *clp)
- 	spin_lock(&state_lock);
- 	while (!list_empty(&clp->cl_delegations)) {
- 		dp =3D list_entry(clp->cl_delegations.next, struct nfs4_delegation, dl_per=
-clnt);
--		WARN_ON(!unhash_delegation_locked(dp));
-+		WARN_ON(!unhash_delegation_locked(dp, NFS4_STID_CLOSED));
- 		list_add(&dp->dl_recall_lru, &reaplist);
- 	}
- 	spin_unlock(&state_lock);
-@@ -2465,14 +2464,16 @@ find_stateid_locked(struct nfs4_client *cl, stateid_t=
- *t)
- }
-=20
- static struct nfs4_stid *
--find_stateid_by_type(struct nfs4_client *cl, stateid_t *t, char typemask)
-+find_stateid_by_type(struct nfs4_client *cl, stateid_t *t,
-+		     unsigned short typemask, unsigned short ok_states)
- {
- 	struct nfs4_stid *s;
-=20
- 	spin_lock(&cl->cl_lock);
- 	s =3D find_stateid_locked(cl, t);
- 	if (s !=3D NULL) {
--		if (typemask & s->sc_type)
-+		if ((s->sc_status & ~ok_states) =3D=3D 0 &&
-+		    (typemask & s->sc_type))
- 			refcount_inc(&s->sc_count);
- 		else
- 			s =3D NULL;
-@@ -4582,7 +4583,8 @@ nfsd4_find_existing_open(struct nfs4_file *fp, struct n=
-fsd4_open *open)
- 			continue;
- 		if (local->st_stateowner !=3D &oo->oo_owner)
- 			continue;
--		if (local->st_stid.sc_type =3D=3D NFS4_OPEN_STID) {
-+		if (local->st_stid.sc_type =3D=3D NFS4_OPEN_STID &&
-+		    !(local->st_stid.sc_status & NFS4_STID_CLOSED)) {
- 			ret =3D local;
- 			refcount_inc(&ret->st_stid.sc_count);
- 			break;
-@@ -4596,17 +4598,10 @@ nfsd4_verify_open_stid(struct nfs4_stid *s)
- {
- 	__be32 ret =3D nfs_ok;
-=20
--	switch (s->sc_type) {
--	default:
--		break;
--	case 0:
--	case NFS4_CLOSED_STID:
--	case NFS4_CLOSED_DELEG_STID:
--		ret =3D nfserr_bad_stateid;
--		break;
--	case NFS4_REVOKED_DELEG_STID:
-+	if (s->sc_status & NFS4_STID_REVOKED)
- 		ret =3D nfserr_deleg_revoked;
--	}
-+	else if (s->sc_status & NFS4_STID_CLOSED)
-+		ret =3D nfserr_bad_stateid;
- 	return ret;
- }
-=20
-@@ -4919,9 +4914,9 @@ static int nfsd4_cb_recall_done(struct nfsd4_callback *=
-cb,
-=20
- 	trace_nfsd_cb_recall_done(&dp->dl_stid.sc_stateid, task);
-=20
--	if (dp->dl_stid.sc_type =3D=3D NFS4_CLOSED_DELEG_STID ||
--	    dp->dl_stid.sc_type =3D=3D NFS4_REVOKED_DELEG_STID)
--	        return 1;
-+	if (dp->dl_stid.sc_status)
-+		/* CLOSED or REVOKED */
-+		return 1;
-=20
- 	switch (task->tk_status) {
- 	case 0:
-@@ -5170,8 +5165,7 @@ static struct nfs4_delegation *find_deleg_stateid(struc=
-t nfs4_client *cl, statei
- {
- 	struct nfs4_stid *ret;
-=20
--	ret =3D find_stateid_by_type(cl, s,
--				NFS4_DELEG_STID|NFS4_REVOKED_DELEG_STID);
-+	ret =3D find_stateid_by_type(cl, s, NFS4_DELEG_STID, 0);
- 	if (!ret)
- 		return NULL;
- 	return delegstateid(ret);
-@@ -5194,10 +5188,9 @@ nfs4_check_deleg(struct nfs4_client *cl, struct nfsd4_=
-open *open,
- 	deleg =3D find_deleg_stateid(cl, &open->op_delegate_stateid);
- 	if (deleg =3D=3D NULL)
- 		goto out;
--	if (deleg->dl_stid.sc_type =3D=3D NFS4_REVOKED_DELEG_STID) {
-+	if (deleg->dl_stid.sc_status & NFS4_STID_REVOKED) {
- 		nfs4_put_stid(&deleg->dl_stid);
--		if (cl->cl_minorversion)
--			status =3D nfserr_deleg_revoked;
-+		status =3D nfserr_deleg_revoked;
- 		goto out;
- 	}
- 	flags =3D share_access_to_flags(open->op_share_access);
-@@ -5609,12 +5602,14 @@ nfs4_set_delegation(struct nfsd4_open *open, struct n=
-fs4_ol_stateid *stp,
- 		goto out_unlock;
-=20
- 	spin_lock(&state_lock);
-+	spin_lock(&clp->cl_lock);
- 	spin_lock(&fp->fi_lock);
- 	if (fp->fi_had_conflict)
- 		status =3D -EAGAIN;
- 	else
- 		status =3D hash_delegation_locked(dp, fp);
- 	spin_unlock(&fp->fi_lock);
-+	spin_unlock(&clp->cl_lock);
- 	spin_unlock(&state_lock);
-=20
- 	if (status)
-@@ -5840,7 +5835,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_=
-fh *current_fh, struct nf
- 	} else {
- 		status =3D nfs4_get_vfs_file(rqstp, fp, current_fh, stp, open, true);
- 		if (status) {
--			stp->st_stid.sc_type =3D NFS4_CLOSED_STID;
- 			release_open_stateid(stp);
- 			mutex_unlock(&stp->st_mutex);
- 			goto out;
-@@ -6232,7 +6226,7 @@ nfs4_laundromat(struct nfsd_net *nn)
- 		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
- 		if (!state_expired(&lt, dp->dl_time))
- 			break;
--		WARN_ON(!unhash_delegation_locked(dp));
-+		WARN_ON(!unhash_delegation_locked(dp, NFS4_STID_REVOKED));
- 		list_add(&dp->dl_recall_lru, &reaplist);
- 	}
- 	spin_unlock(&state_lock);
-@@ -6471,22 +6465,20 @@ static __be32 nfsd4_validate_stateid(struct nfs4_clie=
-nt *cl, stateid_t *stateid)
- 	status =3D nfsd4_stid_check_stateid_generation(stateid, s, 1);
- 	if (status)
- 		goto out_unlock;
-+	status =3D nfsd4_verify_open_stid(s);
-+	if (status)
-+		goto out_unlock;
-+
- 	switch (s->sc_type) {
- 	case NFS4_DELEG_STID:
- 		status =3D nfs_ok;
- 		break;
--	case NFS4_REVOKED_DELEG_STID:
--		status =3D nfserr_deleg_revoked;
--		break;
- 	case NFS4_OPEN_STID:
- 	case NFS4_LOCK_STID:
- 		status =3D nfsd4_check_openowner_confirmed(openlockstateid(s));
- 		break;
- 	default:
- 		printk("unknown stateid type %x\n", s->sc_type);
--		fallthrough;
--	case NFS4_CLOSED_STID:
--	case NFS4_CLOSED_DELEG_STID:
- 		status =3D nfserr_bad_stateid;
- 	}
- out_unlock:
-@@ -6496,7 +6488,8 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client=
- *cl, stateid_t *stateid)
-=20
- __be32
- nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
--		     stateid_t *stateid, unsigned char typemask,
-+		     stateid_t *stateid,
-+		     unsigned short typemask, unsigned short statemask,
- 		     struct nfs4_stid **s, struct nfsd_net *nn)
- {
- 	__be32 status;
-@@ -6507,10 +6500,8 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *csta=
-te,
- 	 *  only return revoked delegations if explicitly asked.
- 	 *  otherwise we report revoked or bad_stateid status.
- 	 */
--	if (typemask & NFS4_REVOKED_DELEG_STID)
-+	if (statemask & NFS4_STID_REVOKED)
- 		return_revoked =3D true;
--	else if (typemask & NFS4_DELEG_STID)
--		typemask |=3D NFS4_REVOKED_DELEG_STID;
-=20
- 	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
- 		CLOSE_STATEID(stateid))
-@@ -6523,14 +6514,13 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cst=
-ate,
- 	}
- 	if (status)
- 		return status;
--	stid =3D find_stateid_by_type(cstate->clp, stateid, typemask);
-+	stid =3D find_stateid_by_type(cstate->clp, stateid,
-+				    typemask, statemask & NFS4_STID_CLOSED);
- 	if (!stid)
- 		return nfserr_bad_stateid;
--	if ((stid->sc_type =3D=3D NFS4_REVOKED_DELEG_STID) && !return_revoked) {
-+	if ((stid->sc_status & NFS4_STID_REVOKED) && !return_revoked) {
- 		nfs4_put_stid(stid);
--		if (cstate->minorversion)
--			return nfserr_deleg_revoked;
--		return nfserr_bad_stateid;
-+		return nfserr_deleg_revoked;
- 	}
- 	*s =3D stid;
- 	return nfs_ok;
-@@ -6541,7 +6531,7 @@ nfs4_find_file(struct nfs4_stid *s, int flags)
- {
- 	struct nfsd_file *ret =3D NULL;
-=20
--	if (!s)
-+	if (!s || s->sc_status)
- 		return NULL;
-=20
- 	switch (s->sc_type) {
-@@ -6664,7 +6654,8 @@ static __be32 find_cpntf_state(struct nfsd_net *nn, sta=
-teid_t *st,
- 		goto out;
-=20
- 	*stid =3D find_stateid_by_type(found, &cps->cp_p_stateid,
--			NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID);
-+				     NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID,
-+				     0);
- 	if (*stid)
- 		status =3D nfs_ok;
- 	else
-@@ -6722,7 +6713,7 @@ nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
-=20
- 	status =3D nfsd4_lookup_stateid(cstate, stateid,
- 				NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID,
--				&s, nn);
-+				0, &s, nn);
- 	if (status =3D=3D nfserr_bad_stateid)
- 		status =3D find_cpntf_state(nn, stateid, &s);
- 	if (status)
-@@ -6740,9 +6731,6 @@ nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
- 	case NFS4_LOCK_STID:
- 		status =3D nfs4_check_olstateid(openlockstateid(s), flags);
- 		break;
--	default:
--		status =3D nfserr_bad_stateid;
--		break;
- 	}
- 	if (status)
- 		goto out;
-@@ -6821,11 +6809,20 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfs=
-d4_compound_state *cstate,
-=20
- 	spin_lock(&cl->cl_lock);
- 	s =3D find_stateid_locked(cl, stateid);
--	if (!s)
-+	if (!s || s->sc_status & NFS4_STID_CLOSED)
- 		goto out_unlock;
- 	spin_lock(&s->sc_lock);
- 	switch (s->sc_type) {
- 	case NFS4_DELEG_STID:
-+		if (s->sc_status & NFS4_STID_REVOKED) {
-+			spin_unlock(&s->sc_lock);
-+			dp =3D delegstateid(s);
-+			list_del_init(&dp->dl_recall_lru);
-+			spin_unlock(&cl->cl_lock);
-+			nfs4_put_stid(s);
-+			ret =3D nfs_ok;
-+			goto out;
-+		}
- 		ret =3D nfserr_locks_held;
- 		break;
- 	case NFS4_OPEN_STID:
-@@ -6840,14 +6837,6 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd=
-4_compound_state *cstate,
- 		spin_unlock(&cl->cl_lock);
- 		ret =3D nfsd4_free_lock_stateid(stateid, s);
- 		goto out;
--	case NFS4_REVOKED_DELEG_STID:
--		spin_unlock(&s->sc_lock);
--		dp =3D delegstateid(s);
--		list_del_init(&dp->dl_recall_lru);
--		spin_unlock(&cl->cl_lock);
--		nfs4_put_stid(s);
--		ret =3D nfs_ok;
--		goto out;
- 	/* Default falls through and returns nfserr_bad_stateid */
- 	}
- 	spin_unlock(&s->sc_lock);
-@@ -6890,6 +6879,7 @@ static __be32 nfs4_seqid_op_checks(struct nfsd4_compoun=
-d_state *cstate, stateid_
-  * @seqid: seqid (provided by client)
-  * @stateid: stateid (provided by client)
-  * @typemask: mask of allowable types for this operation
-+ * @statemask: mask of allowed states: 0 or STID_CLOSED
-  * @stpp: return pointer for the stateid found
-  * @nn: net namespace for request
-  *
-@@ -6899,7 +6889,8 @@ static __be32 nfs4_seqid_op_checks(struct nfsd4_compoun=
-d_state *cstate, stateid_
-  */
- static __be32
- nfs4_preprocess_seqid_op(struct nfsd4_compound_state *cstate, u32 seqid,
--			 stateid_t *stateid, char typemask,
-+			 stateid_t *stateid,
-+			 unsigned short typemask, unsigned short statemask,
- 			 struct nfs4_ol_stateid **stpp,
- 			 struct nfsd_net *nn)
- {
-@@ -6910,7 +6901,8 @@ nfs4_preprocess_seqid_op(struct nfsd4_compound_state *c=
-state, u32 seqid,
- 	trace_nfsd_preprocess(seqid, stateid);
-=20
- 	*stpp =3D NULL;
--	status =3D nfsd4_lookup_stateid(cstate, stateid, typemask, &s, nn);
-+	status =3D nfsd4_lookup_stateid(cstate, stateid,
-+				      typemask, statemask, &s, nn);
- 	if (status)
- 		return status;
- 	stp =3D openlockstateid(s);
-@@ -6932,7 +6924,7 @@ static __be32 nfs4_preprocess_confirmed_seqid_op(struct=
- nfsd4_compound_state *cs
- 	struct nfs4_ol_stateid *stp;
-=20
- 	status =3D nfs4_preprocess_seqid_op(cstate, seqid, stateid,
--						NFS4_OPEN_STID, &stp, nn);
-+					  NFS4_OPEN_STID, 0, &stp, nn);
- 	if (status)
- 		return status;
- 	oo =3D openowner(stp->st_stateowner);
-@@ -6963,8 +6955,8 @@ nfsd4_open_confirm(struct svc_rqst *rqstp, struct nfsd4=
-_compound_state *cstate,
- 		return status;
-=20
- 	status =3D nfs4_preprocess_seqid_op(cstate,
--					oc->oc_seqid, &oc->oc_req_stateid,
--					NFS4_OPEN_STID, &stp, nn);
-+					  oc->oc_seqid, &oc->oc_req_stateid,
-+					  NFS4_OPEN_STID, 0, &stp, nn);
- 	if (status)
- 		goto out;
- 	oo =3D openowner(stp->st_stateowner);
-@@ -7094,18 +7086,20 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_comp=
-ound_state *cstate,
- 	struct net *net =3D SVC_NET(rqstp);
- 	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-=20
--	dprintk("NFSD: nfsd4_close on file %pd\n",=20
-+	dprintk("NFSD: nfsd4_close on file %pd\n",
- 			cstate->current_fh.fh_dentry);
-=20
- 	status =3D nfs4_preprocess_seqid_op(cstate, close->cl_seqid,
--					&close->cl_stateid,
--					NFS4_OPEN_STID|NFS4_CLOSED_STID,
--					&stp, nn);
-+					  &close->cl_stateid,
-+					  NFS4_OPEN_STID, NFS4_STID_CLOSED,
-+					  &stp, nn);
- 	nfsd4_bump_seqid(cstate, status);
- 	if (status)
--		goto out;=20
-+		goto out;
-=20
--	stp->st_stid.sc_type =3D NFS4_CLOSED_STID;
-+	spin_lock(&stp->st_stid.sc_client->cl_lock);
-+	stp->st_stid.sc_status |=3D NFS4_STID_CLOSED;
-+	spin_unlock(&stp->st_stid.sc_client->cl_lock);
-=20
- 	/*
- 	 * Technically we don't _really_ have to increment or copy it, since
-@@ -7147,7 +7141,7 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nfsd4_=
-compound_state *cstate,
- 	if ((status =3D fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0)))
- 		return status;
-=20
--	status =3D nfsd4_lookup_stateid(cstate, stateid, NFS4_DELEG_STID, &s, nn);
-+	status =3D nfsd4_lookup_stateid(cstate, stateid, NFS4_DELEG_STID, 0, &s, nn=
-);
- 	if (status)
- 		goto out;
- 	dp =3D delegstateid(s);
-@@ -7601,9 +7595,10 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compou=
-nd_state *cstate,
- 							&lock_stp, &new);
- 	} else {
- 		status =3D nfs4_preprocess_seqid_op(cstate,
--				       lock->lk_old_lock_seqid,
--				       &lock->lk_old_lock_stateid,
--				       NFS4_LOCK_STID, &lock_stp, nn);
-+						  lock->lk_old_lock_seqid,
-+						  &lock->lk_old_lock_stateid,
-+						  NFS4_LOCK_STID, 0, &lock_stp,
-+						  nn);
- 	}
- 	if (status)
- 		goto out;
-@@ -7916,8 +7911,8 @@ nfsd4_locku(struct svc_rqst *rqstp, struct nfsd4_compou=
-nd_state *cstate,
- 		 return nfserr_inval;
-=20
- 	status =3D nfs4_preprocess_seqid_op(cstate, locku->lu_seqid,
--					&locku->lu_stateid, NFS4_LOCK_STID,
--					&stp, nn);
-+					  &locku->lu_stateid, NFS4_LOCK_STID, 0,
-+					  &stp, nn);
- 	if (status)
- 		goto out;
- 	nf =3D find_any_file(stp->st_stid.sc_file);
-@@ -8347,7 +8342,7 @@ nfs4_state_shutdown_net(struct net *net)
- 	spin_lock(&state_lock);
- 	list_for_each_safe(pos, next, &nn->del_recall_lru) {
- 		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
--		WARN_ON(!unhash_delegation_locked(dp));
-+		WARN_ON(!unhash_delegation_locked(dp, NFS4_STID_CLOSED));
- 		list_add(&dp->dl_recall_lru, &reaplist);
- 	}
- 	spin_unlock(&state_lock);
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index f96eaa8e9413..cf89fb6be9e1 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -88,17 +88,31 @@ struct nfsd4_callback_ops {
-  */
- struct nfs4_stid {
- 	refcount_t		sc_count;
--#define NFS4_OPEN_STID 1
--#define NFS4_LOCK_STID 2
--#define NFS4_DELEG_STID 4
--/* For an open stateid kept around *only* to process close replays: */
--#define NFS4_CLOSED_STID 8
-+
-+	/* A new stateid is added to the idr early before it is
-+	 * fully initialised.  Its sc_type is then zero.
-+	 * After initialisation the sc_type it set under cl_lock,
-+	 * and then never changes.
-+	 */
-+#define NFS4_OPEN_STID		BIT(0)
-+#define NFS4_LOCK_STID		BIT(1)
-+#define NFS4_DELEG_STID		BIT(2)
-+#define NFS4_LAYOUT_STID	BIT(3)
-+	unsigned short		sc_type;
-+/* state_lock protects sc_status for delegation stateids.
-+ * ->cl_lock protects sc_status for open and lock stateids.
-+ * ->st_mutex also protect sc_status for open stateids.
-+ */
-+/*
-+ * For an open stateid kept around *only* to process close replays.
-+ * For deleg stateid, kept in idr until last reference is dropped.
-+ */
-+#define NFS4_STID_CLOSED	BIT(0)
- /* For a deleg stateid kept around only to process free_stateid's: */
--#define NFS4_REVOKED_DELEG_STID 16
--#define NFS4_CLOSED_DELEG_STID 32
--#define NFS4_LAYOUT_STID 64
-+#define NFS4_STID_REVOKED	BIT(1)
-+	unsigned short		sc_status;
-+
- 	struct list_head	sc_cp_list;
--	unsigned char		sc_type;
- 	stateid_t		sc_stateid;
- 	spinlock_t		sc_lock;
- 	struct nfs4_client	*sc_client;
-@@ -694,8 +708,9 @@ extern __be32 nfs4_preprocess_stateid_op(struct svc_rqst =
-*rqstp,
- 		stateid_t *stateid, int flags, struct nfsd_file **filp,
- 		struct nfs4_stid **cstid);
- __be32 nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
--		     stateid_t *stateid, unsigned char typemask,
--		     struct nfs4_stid **s, struct nfsd_net *nn);
-+			    stateid_t *stateid, unsigned short typemask,
-+			    unsigned short statemask,
-+			    struct nfs4_stid **s, struct nfsd_net *nn);
- struct nfs4_stid *nfs4_alloc_stid(struct nfs4_client *cl, struct kmem_cache =
-*slab,
- 				  void (*sc_free)(struct nfs4_stid *));
- int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_copy *copy);
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index fbc0ccb40424..668b352faaea 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -641,31 +641,26 @@ DEFINE_EVENT(nfsd_stateseqid_class, nfsd_##name, \
- DEFINE_STATESEQID_EVENT(preprocess);
- DEFINE_STATESEQID_EVENT(open_confirm);
-=20
--TRACE_DEFINE_ENUM(NFS4_OPEN_STID);
--TRACE_DEFINE_ENUM(NFS4_LOCK_STID);
--TRACE_DEFINE_ENUM(NFS4_DELEG_STID);
--TRACE_DEFINE_ENUM(NFS4_CLOSED_STID);
--TRACE_DEFINE_ENUM(NFS4_REVOKED_DELEG_STID);
--TRACE_DEFINE_ENUM(NFS4_CLOSED_DELEG_STID);
--TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
--
- #define show_stid_type(x)						\
- 	__print_flags(x, "|",						\
- 		{ NFS4_OPEN_STID,		"OPEN" },		\
- 		{ NFS4_LOCK_STID,		"LOCK" },		\
- 		{ NFS4_DELEG_STID,		"DELEG" },		\
--		{ NFS4_CLOSED_STID,		"CLOSED" },		\
--		{ NFS4_REVOKED_DELEG_STID,	"REVOKED" },		\
--		{ NFS4_CLOSED_DELEG_STID,	"CLOSED_DELEG" },	\
- 		{ NFS4_LAYOUT_STID,		"LAYOUT" })
-=20
-+#define show_stid_status(x)						\
-+	__print_flags(x, "|",						\
-+		{ NFS4_STID_CLOSED,		"CLOSED" },		\
-+		{ NFS4_STID_REVOKED,		"REVOKED" })		\
-+
- DECLARE_EVENT_CLASS(nfsd_stid_class,
- 	TP_PROTO(
- 		const struct nfs4_stid *stid
- 	),
- 	TP_ARGS(stid),
- 	TP_STRUCT__entry(
--		__field(unsigned long, sc_type)
-+		__field(unsigned short, sc_type)
-+		__field(unsigned short, sc_status)
- 		__field(int, sc_count)
- 		__field(u32, cl_boot)
- 		__field(u32, cl_id)
-@@ -676,16 +671,18 @@ DECLARE_EVENT_CLASS(nfsd_stid_class,
- 		const stateid_t *stp =3D &stid->sc_stateid;
-=20
- 		__entry->sc_type =3D stid->sc_type;
-+		__entry->sc_status =3D stid->sc_status;
- 		__entry->sc_count =3D refcount_read(&stid->sc_count);
- 		__entry->cl_boot =3D stp->si_opaque.so_clid.cl_boot;
- 		__entry->cl_id =3D stp->si_opaque.so_clid.cl_id;
- 		__entry->si_id =3D stp->si_opaque.so_id;
- 		__entry->si_generation =3D stp->si_generation;
- 	),
--	TP_printk("client %08x:%08x stateid %08x:%08x ref=3D%d type=3D%s",
-+	TP_printk("client %08x:%08x stateid %08x:%08x ref=3D%d type=3D%s state=3D%s=
-",
- 		__entry->cl_boot, __entry->cl_id,
- 		__entry->si_id, __entry->si_generation,
--		__entry->sc_count, show_stid_type(__entry->sc_type)
-+		__entry->sc_count, show_stid_type(__entry->sc_type),
-+		show_stid_status(__entry->sc_status)
- 	)
- );
-=20
---=20
-2.42.0
-
+Daire
