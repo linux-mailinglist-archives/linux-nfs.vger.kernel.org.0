@@ -2,63 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE9F67E29DA
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Nov 2023 17:34:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B9D97E29E1
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Nov 2023 17:34:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231792AbjKFQeo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Nov 2023 11:34:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56832 "EHLO
+        id S232837AbjKFQe5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Nov 2023 11:34:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229974AbjKFQen (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Nov 2023 11:34:43 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6282F3;
-        Mon,  6 Nov 2023 08:34:40 -0800 (PST)
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A6GFXWL031665;
-        Mon, 6 Nov 2023 16:33:51 GMT
+        with ESMTP id S231785AbjKFQe4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Nov 2023 11:34:56 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22077D45;
+        Mon,  6 Nov 2023 08:34:53 -0800 (PST)
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3A6GBDot016609;
+        Mon, 6 Nov 2023 16:34:10 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
  from : to : cc : date : in-reply-to : references : content-type :
  mime-version : content-transfer-encoding; s=pp1;
- bh=pZJyqFbl59bkZ161bZWrxQkthrJNgakp9QGEaCBeqX8=;
- b=Sz7FUgtcN3kRvlUygKYVDJIrYSgBaFBt7wvpkzv85Vy0w1N+rNLhS74XySDfmtIf0ckb
- u/XNhPJGRszF4wjqpeDjCRJms84NqR8qYaKIeIwm5TRB+yJYzCRIDiB7nDl8WTOlSuOU
- jD4R36YGZLZLz6K2gMYCYAC48a6TAIRZHtgKbBDYgvKS6gwhp+AdEUavH9lFwyRJVuID
- 83CgnEf8Gb436E8r7NhEdCxvduVM3ECKpyawJp1dxj9PbAWqRUp59MHdTcgCPgXQ9DAp
- hkwI+tAtcLmYD/Ow1mdrD57NGxlQ6etTu/WjWKD7MqqCdZHWA7xjbkmC3NhJaffjmHmH NA== 
+ bh=NeVOO3ag7WZ3PYhehXzcfy7HBo0MGidQ4RFYCFImuHo=;
+ b=Ti5KhQ4cYjY6Lhp90ZbA9+NBrI2uy2L1eMEjA1rgCSRKlVSSzC7OMyah/wKBDMVTDZ6d
+ HJeK9Zh7c9lN/bxud+2t5R++JWhvtkrSoT1qQx86wXVtH1cP6JAeBi5+siEtajgzsVz7
+ nu3cvirrlN+9jRsCBWMy+37aJo2Q2JdT/SnusPK7zSuITU7Nzd9XNMbHU3fuSORVHsDU
+ 6ws19BbAK137zcyxURKAKCoGPWb6CVX+kQa3X7PKUt/Mzn/Yz+kChCikKrAAV1FMxNbm
+ iB9TYcgVZ/laKohbIlcuc7CgzanWKETFKOvv9tjC8WhpDtvgFg/w/SVteBdxGhU26DFi bA== 
 Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u73gh8nbh-1
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u71sgmfy3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Nov 2023 16:33:51 +0000
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A6GI1Ta009967;
-        Mon, 6 Nov 2023 16:33:50 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u73gh8nb2-1
+        Mon, 06 Nov 2023 16:34:09 +0000
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3A6GBO2I017071;
+        Mon, 6 Nov 2023 16:34:09 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3u71sgmfwx-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Nov 2023 16:33:50 +0000
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-        by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3A6Fw4Jj007918;
-        Mon, 6 Nov 2023 16:33:49 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
-        by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3u60nyark9-1
+        Mon, 06 Nov 2023 16:34:08 +0000
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+        by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3A6EQYKC007930;
+        Mon, 6 Nov 2023 16:34:07 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+        by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3u61skaf3w-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Nov 2023 16:33:49 +0000
-Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
-        by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3A6GXn5e9831006
+        Mon, 06 Nov 2023 16:34:07 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+        by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3A6GY67t11928278
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Nov 2023 16:33:49 GMT
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 646B15805A;
-        Mon,  6 Nov 2023 16:33:49 +0000 (GMT)
-Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87C2C5805F;
-        Mon,  6 Nov 2023 16:33:46 +0000 (GMT)
+        Mon, 6 Nov 2023 16:34:06 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7618458059;
+        Mon,  6 Nov 2023 16:34:06 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF4E55805D;
+        Mon,  6 Nov 2023 16:34:04 +0000 (GMT)
 Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.58.168])
-        by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Nov 2023 16:33:46 +0000 (GMT)
-Message-ID: <d64394f62a4453cd9be96a69ca46286489148365.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 20/23] ima: Move IMA-Appraisal to LSM infrastructure
+        by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Nov 2023 16:34:04 +0000 (GMT)
+Message-ID: <3fe38f02c23bca8c516d6cdbbd85a1f748f64547.camel@linux.ibm.com>
+Subject: Re: [PATCH v4 17/23] security: Introduce inode_post_remove_acl hook
 From:   Mimi Zohar <zohar@linux.ibm.com>
 To:     Roberto Sassu <roberto.sassu@huaweicloud.com>,
         viro@zeniv.linux.org.uk, brauner@kernel.org,
@@ -73,25 +73,25 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
         selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
         Stefan Berger <stefanb@linux.ibm.com>
-Date:   Mon, 06 Nov 2023 11:33:45 -0500
-In-Reply-To: <20231027084234.485243-1-roberto.sassu@huaweicloud.com>
+Date:   Mon, 06 Nov 2023 11:34:03 -0500
+In-Reply-To: <20231027083558.484911-18-roberto.sassu@huaweicloud.com>
 References: <20231027083558.484911-1-roberto.sassu@huaweicloud.com>
-         <20231027084234.485243-1-roberto.sassu@huaweicloud.com>
+         <20231027083558.484911-18-roberto.sassu@huaweicloud.com>
 Content-Type: text/plain; charset="ISO-8859-15"
 X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 07Is1uPsVwvO7ug3J8NGrMQbHoFfeH5y
-X-Proofpoint-GUID: Oa1kOHQLNNefYUsVOYHe4V_BcB24nS7w
+X-Proofpoint-ORIG-GUID: x7u-W5Kl1lCEs0TlOvocnSxfIWeQ3iCj
+X-Proofpoint-GUID: KAmYFfYLsGGXq8Y3wRs7SPWQOTkhpKZe
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-11-06_12,2023-11-02_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- clxscore=1011 lowpriorityscore=0 phishscore=0 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2310240000 definitions=main-2311060133
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 clxscore=1015 malwarescore=0 spamscore=0
+ mlxlogscore=999 suspectscore=0 priorityscore=1501 adultscore=0 bulkscore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2310240000 definitions=main-2311060134
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,
         RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -102,21 +102,44 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2023-10-27 at 10:42 +0200, Roberto Sassu wrote:
-> Do the registration of IMA-Appraisal functions separately from the rest of
-> IMA functions, as appraisal is a separate feature not necessarily enabled
-> in the kernel configuration.
+On Fri, 2023-10-27 at 10:35 +0200, Roberto Sassu wrote:
+> diff --git a/security/security.c b/security/security.c
+> index 622c24cbfbb6..6ca8fdd1f037 100644
+> --- a/security/security.c
+> +++ b/security/security.c
+> @@ -2406,6 +2406,23 @@ int security_inode_remove_acl(struct mnt_idmap *idmap,
+>         return evm_inode_remove_acl(idmap, dentry, acl_name);
+>  }
+>  
+> +/**
+> + * security_inode_post_remove_acl() - Update inode sec after remove_acl op
 
-Add "only" -> of IMA-Apparaisal only functions ...
+"remove_acl op" doesn't add any additional information.   Both here and
+in "security: Introduce inode_post_set_acl hook" the comment should be
+the same. 
 
-> Reuse the same approach as for other IMA functions, move hardcoded calls
-> from various places in the kernel to the LSM infrastructure. Declare the
-> functions as static and register them as hook implementations in
-> init_ima_appraise_lsm(), called by init_ima_lsm().
-> 
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> + * @idmap: idmap of the mount
+> + * @dentry: file
+> + * @acl_name: acl name
+> + *
+> + * Update inode security field after successful remove_acl operation on @dentry
+> + * in @idmap. The posix acls are identified by @acl_name.
+> + */
+> +void security_inode_post_remove_acl(struct mnt_idmap *idmap,
+> +                                   struct dentry *dentry, const char *acl_name)
+> +{
+> +       if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+> +               return;
+> +       call_void_hook(inode_post_remove_acl, idmap, dentry, acl_name);
+> +}
+> +
+>  /**
+>   * security_inode_post_setxattr() - Update the inode after a setxattr operation
+>   * @dentry: file
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+-- 
+thanks,
+
+Mimi
 
 
