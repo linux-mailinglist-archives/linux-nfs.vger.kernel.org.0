@@ -2,291 +2,478 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF74E7E417F
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Nov 2023 15:06:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3731A7E45F5
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Nov 2023 17:26:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230523AbjKGOGf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Tue, 7 Nov 2023 09:06:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48806 "EHLO
+        id S235725AbjKGQ0u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Nov 2023 11:26:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229643AbjKGOGe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Nov 2023 09:06:34 -0500
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5EFFA;
-        Tue,  7 Nov 2023 06:06:31 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.228])
-        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4SPqRl5HJjz9xrp2;
-        Tue,  7 Nov 2023 21:53:07 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwAXBXU7REpltbY3AA--.54899S2;
-        Tue, 07 Nov 2023 15:06:02 +0100 (CET)
-Message-ID: <563820b8fd57deb99e6247b6cdb416c4c3af3091.camel@huaweicloud.com>
-Subject: Re: [PATCH v5 00/23] security: Move IMA and EVM to the LSM
- infrastructure
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     viro@zeniv.linux.org.uk, brauner@kernel.org,
-        chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
-        kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
-        dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, mic@digikod.net
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Tue, 07 Nov 2023 15:05:44 +0100
-In-Reply-To: <20231107134012.682009-1-roberto.sassu@huaweicloud.com>
-References: <20231107134012.682009-1-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4-0ubuntu2 
+        with ESMTP id S1343887AbjKGQ0e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Nov 2023 11:26:34 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AA32D51;
+        Tue,  7 Nov 2023 08:22:52 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0E9EC433C8;
+        Tue,  7 Nov 2023 16:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1699374172;
+        bh=oEEeVwYnDflAWQUdmWxA+uKK5d3q1w1QuqPhPVZtnfs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lkVp3FgFUTez6P2DY2BpCXkx+JapuOkwl82+e40NbKzKXp93H6P88ljygV+OSy812
+         uRLnVQ/lMoA+5/3HWioXucF3YWJmgzPfXVpFkDmVt5bl7EPDJLWysCxeduGzRkFfQP
+         w21Zg4x/JSXtIRlfvRqKGfasoCEDx6TUKjB8D5X7vfdW2TBFWWgdQeP4vNfhYt6m+q
+         SOt52vdG+xLEsA99fawA/zjBjuWdaQpyxN/JKc6hfQHNaP+v/00s3PJSeilEt4p11i
+         +tp+CLA6tRe9GdslazMcWtIb05Rdn60OX3ZAPZnB8YJS+8vyA/6hHbWrzK7KXMp0ys
+         DEHeaM2ASRrmA==
+Date:   Tue, 7 Nov 2023 08:22:51 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     j.granados@samsung.com
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
+        josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Benjamin LaHaise <bcrl@kvack.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
+        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Matthew Bobrowski <repnop@google.com>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Chandan Babu R <chandan.babu@oracle.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        linux-cachefs@redhat.com, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@lists.linux.dev,
+        fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
+        codalist@coda.cs.cmu.edu
+Subject: Re: [PATCH 2/4] aio: Remove the now superfluous sentinel elements
+ from ctl_table array
+Message-ID: <20231107162251.GL1205143@frogsfrogsfrogs>
+References: <20231107-jag-sysctl_remove_empty_elem_fs-v1-0-7176632fea9f@samsung.com>
+ <20231107-jag-sysctl_remove_empty_elem_fs-v1-2-7176632fea9f@samsung.com>
 MIME-Version: 1.0
-X-CM-TRANSID: LxC2BwAXBXU7REpltbY3AA--.54899S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Jr43Aw43trWkGFWrAFWUurg_yoWDJFWrpF
-        4kKa15A34kJFy2k393AF4xua1S9ayrWrWUXr9xKry8Z3W5tr1FqFWSkrWY9ry5GrWrXw1I
-        q3ZFy3s8ur1qyFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-        xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv
-        6xkF7I0E14v26F4UJVW0obIYCTnIWIevJa73UjIFyTuYvjxUFYFCUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAOBF1jj5YblQABsj
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_fs-v1-2-7176632fea9f@samsung.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2023-11-07 at 14:39 +0100, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
-
-Hi everyone
-
-I kindly ask your support to add the missing reviewed-by/acked-by. I
-summarize what is missing below:
-
-- @Mimi: patches 1, 2, 4, 5, 6, 19, 21, 22, 23 (IMA/EVM-specific
-         patches)
-- @Al/@Christian: patches 10-17 (VFS-specific patches)
-- @Paul: patches 10-23 (VFS-specific patches/new LSM hooks/new LSMs)
-- @David Howells/@Jarkko: patch 18 (new LSM hook in the key subsystem)
-- @Chuck Lever: patch 12 (new LSM hook in nfsd/vfs.c)
-
-Paul, as I mentioned I currently based the patch set on lsm/dev-
-staging, which include the following dependencies:
-
-8f79e425c140 lsm: don't yet account for IMA in LSM_CONFIG_COUNT calculation
-3c91a124f23d lsm: drop LSM_ID_IMA
-
-I know you wanted to wait until at least rc1 to make lsm/dev. I will
-help for rebasing my patch set, if needed.
-
-Chuck, Mimi, there were two conflicts during the latest rebase:
-
-d59b3515ab021 - nfsd: Handle EOPENSTALE correctly in the filecache
-68279f9c9f59 - treewide: mark stuff as __ro_after_init
-
-The first one required to change from 'goto out_nfserr' to 'goto out'
-in the error path of patch 12.
-
-The second one was automatically solved by kdiff3. It was because of
-this change:
-
---- a/security/integrity/iint.c
-+++ b/security/integrity/iint.c
-@@ -23,7 +23,7 @@
- 
- static struct rb_root integrity_iint_tree = RB_ROOT;
- static DEFINE_RWLOCK(integrity_iint_lock);
--static struct kmem_cache *iint_cache __read_mostly;
-+static struct kmem_cache *iint_cache __ro_after_init;
-
-I'm running the IMA tests for every patch set version. So far, no
-issues detected:
-
-https://github.com/robertosassu/ima-evm-utils/actions/runs/6774439916
-
-Please let me know if I can help with the process.
-
-Thanks
-
-Roberto
-
-> IMA and EVM are not effectively LSMs, especially due to the fact that in
-> the past they could not provide a security blob while there is another LSM
-> active.
+On Tue, Nov 07, 2023 at 02:44:21PM +0100, Joel Granados via B4 Relay wrote:
+> From: Joel Granados <j.granados@samsung.com>
 > 
-> That changed in the recent years, the LSM stacking feature now makes it
-> possible to stack together multiple LSMs, and allows them to provide a
-> security blob for most kernel objects. While the LSM stacking feature has
-> some limitations being worked out, it is already suitable to make IMA and
-> EVM as LSMs.
+> This commit comes at the tail end of a greater effort to remove the
+> empty elements at the end of the ctl_table arrays (sentinels) which
+> will reduce the overall build time size of the kernel and run time
+> memory bloat by ~64 bytes per sentinel (further information Link :
+> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 > 
-> In short, while this patch set is big, it does not make any functional
-> change to IMA and EVM. IMA and EVM functions are called by the LSM
-> infrastructure in the same places as before (except ima_post_path_mknod()),
-> rather being hardcoded calls, and the inode metadata pointer is directly
-> stored in the inode security blob rather than in a separate rbtree.
+> Remove sentinel elements ctl_table struct. Special attention was placed in
+> making sure that an empty directory for fs/verity was created when
+> CONFIG_FS_VERITY_BUILTIN_SIGNATURES is not defined. In this case we use the
+> register sysctl call that expects a size.
 > 
-> To avoid functional changes, it was necessary to keep the 'integrity' LSM
-> in addition to the newly introduced 'ima' and 'evm' LSMs, despite there is
-> no LSM ID assigned to it. There are two reasons: first, IMA and EVM still
-> share the same inode metadata, and thus cannot directly reserve space in
-> the security blob for it; second, someone needs to initialize 'ima' and
-> 'evm' exactly in this order, as the LSM infrastructure cannot guarantee
-> that.
-> 
-> The patch set is organized as follows.
-> 
-> Patches 1-9 make IMA and EVM functions suitable to be registered to the LSM
-> infrastructure, by aligning function parameters.
-> 
-> Patches 10-18 add new LSM hooks in the same places where IMA and EVM
-> functions are called, if there is no LSM hook already.
-> 
-> Patches 19-22 do the bulk of the work, introduce the new LSMs 'ima' and
-> 'evm', and move hardcoded calls to IMA, EVM and integrity functions to
-> those LSMs. In addition, they reserve one slot for the 'evm' LSM to supply
-> an xattr with the inode_init_security hook.
-> 
-> Finally, patch 23 removes the rbtree used to bind integrity metadata to the
-> inodes, and instead reserves a space in the inode security blob to store
-> the pointer to that metadata. This also brings performance improvements due
-> to retrieving metadata in constant time, as opposed to logarithmic.
-> 
-> The patch set applies on top of lsm/dev-staging, commit ba7ce019d3e9 ("lsm:
-> convert security_setselfattr() to use memdup_user()"). No need to merge
-> linux-integrity/next-integrity-testing.
-> 
-> Changelog:
-> 
-> v4:
->  - Improve short and long description of
->    security_inode_post_create_tmpfile(), security_inode_post_set_acl(),
->    security_inode_post_remove_acl() and security_file_post_open()
->    (suggested by Mimi)
->  - Improve commit message of 'ima: Move to LSM infrastructure' (suggested
->    by Mimi)
-> 
-> v3:
->  - Drop 'ima: Align ima_post_path_mknod() definition with LSM
->    infrastructure' and 'ima: Align ima_post_create_tmpfile() definition
->    with LSM infrastructure', define the new LSM hooks with the same
->    IMA parameters instead (suggested by Mimi)
->  - Do IS_PRIVATE() check in security_path_post_mknod() and
->    security_inode_post_create_tmpfile() on the new inode rather than the
->    parent directory (in the post method it is available)
->  - Don't export ima_file_check() (suggested by Stefan)
->  - Remove redundant check of file mode in ima_post_path_mknod() (suggested
->    by Mimi)
->  - Mention that ima_post_path_mknod() is now conditionally invoked when
->    CONFIG_SECURITY_PATH=y (suggested by Mimi)
->  - Mention when a LSM hook will be introduced in the IMA/EVM alignment
->    patches (suggested by Mimi)
->  - Simplify the commit messages when introducing a new LSM hook
->  - Still keep the 'extern' in the function declaration, until the
->    declaration is removed (suggested by Mimi)
->  - Improve documentation of security_file_pre_free()
->  - Register 'ima' and 'evm' as standalone LSMs (suggested by Paul)
->  - Initialize the 'ima' and 'evm' LSMs from 'integrity', to keep the
->    original ordering of IMA and EVM functions as when they were hardcoded
->  - Return the IMA and EVM LSM IDs to 'integrity' for registration of the
->    integrity-specific hooks
->  - Reserve an xattr slot from the 'evm' LSM instead of 'integrity'
->  - Pass the LSM ID to init_ima_appraise_lsm()
-> 
-> v2:
->  - Add description for newly introduced LSM hooks (suggested by Casey)
->  - Clarify in the description of security_file_pre_free() that actions can
->    be performed while the file is still open
-> 
-> v1:
->  - Drop 'evm: Complete description of evm_inode_setattr()', 'fs: Fix
->    description of vfs_tmpfile()' and 'security: Introduce LSM_ORDER_LAST',
->    they were sent separately (suggested by Christian Brauner)
->  - Replace dentry with file descriptor parameter for
->    security_inode_post_create_tmpfile()
->  - Introduce mode_stripped and pass it as mode argument to
->    security_path_mknod() and security_path_post_mknod()
->  - Use goto in do_mknodat() and __vfs_removexattr_locked() (suggested by
->    Mimi)
->  - Replace __lsm_ro_after_init with __ro_after_init
->  - Modify short description of security_inode_post_create_tmpfile() and
->    security_inode_post_set_acl() (suggested by Stefan)
->  - Move security_inode_post_setattr() just after security_inode_setattr()
->    (suggested by Mimi)
->  - Modify short description of security_key_post_create_or_update()
->    (suggested by Mimi)
->  - Add back exported functions ima_file_check() and
->    evm_inode_init_security() respectively to ima.h and evm.h (reported by
->    kernel robot)
->  - Remove extern from prototype declarations and fix style issues
->  - Remove unnecessary include of linux/lsm_hooks.h in ima_main.c and
->    ima_appraise.c
-> 
-> Roberto Sassu (23):
->   ima: Align ima_inode_post_setattr() definition with LSM infrastructure
->   ima: Align ima_file_mprotect() definition with LSM infrastructure
->   ima: Align ima_inode_setxattr() definition with LSM infrastructure
->   ima: Align ima_inode_removexattr() definition with LSM infrastructure
->   ima: Align ima_post_read_file() definition with LSM infrastructure
->   evm: Align evm_inode_post_setattr() definition with LSM infrastructure
->   evm: Align evm_inode_setxattr() definition with LSM infrastructure
->   evm: Align evm_inode_post_setxattr() definition with LSM
->     infrastructure
->   security: Align inode_setattr hook definition with EVM
->   security: Introduce inode_post_setattr hook
->   security: Introduce inode_post_removexattr hook
->   security: Introduce file_post_open hook
->   security: Introduce file_pre_free_security hook
->   security: Introduce path_post_mknod hook
->   security: Introduce inode_post_create_tmpfile hook
->   security: Introduce inode_post_set_acl hook
->   security: Introduce inode_post_remove_acl hook
->   security: Introduce key_post_create_or_update hook
->   ima: Move to LSM infrastructure
->   ima: Move IMA-Appraisal to LSM infrastructure
->   evm: Move to LSM infrastructure
->   integrity: Move integrity functions to the LSM infrastructure
->   integrity: Switch from rbtree to LSM-managed blob for
->     integrity_iint_cache
-> 
->  fs/attr.c                             |   5 +-
->  fs/file_table.c                       |   3 +-
->  fs/namei.c                            |  12 +-
->  fs/nfsd/vfs.c                         |   3 +-
->  fs/open.c                             |   1 -
->  fs/posix_acl.c                        |   5 +-
->  fs/xattr.c                            |   9 +-
->  include/linux/evm.h                   | 103 ----------
->  include/linux/ima.h                   | 142 --------------
->  include/linux/integrity.h             |  26 ---
->  include/linux/lsm_hook_defs.h         |  20 +-
->  include/linux/security.h              |  59 ++++++
->  include/uapi/linux/lsm.h              |   2 +
->  security/integrity/evm/evm_main.c     | 138 ++++++++++++--
->  security/integrity/iint.c             | 113 +++++------
->  security/integrity/ima/ima.h          |  11 ++
->  security/integrity/ima/ima_appraise.c |  37 +++-
->  security/integrity/ima/ima_main.c     |  96 ++++++++--
->  security/integrity/integrity.h        |  58 +++++-
->  security/keys/key.c                   |  10 +-
->  security/security.c                   | 261 ++++++++++++++++----------
->  security/selinux/hooks.c              |   3 +-
->  security/smack/smack_lsm.c            |   4 +-
->  23 files changed, 614 insertions(+), 507 deletions(-)
-> 
+> Signed-off-by: Joel Granados <j.granados@samsung.com>
+> ---
+>  fs/aio.c                           | 1 -
+>  fs/coredump.c                      | 1 -
+>  fs/dcache.c                        | 1 -
+>  fs/devpts/inode.c                  | 1 -
+>  fs/eventpoll.c                     | 1 -
+>  fs/exec.c                          | 1 -
+>  fs/file_table.c                    | 1 -
+>  fs/inode.c                         | 1 -
+>  fs/lockd/svc.c                     | 1 -
+>  fs/locks.c                         | 1 -
+>  fs/namei.c                         | 1 -
+>  fs/namespace.c                     | 1 -
+>  fs/nfs/nfs4sysctl.c                | 1 -
+>  fs/nfs/sysctl.c                    | 1 -
+>  fs/notify/dnotify/dnotify.c        | 1 -
+>  fs/notify/fanotify/fanotify_user.c | 1 -
+>  fs/notify/inotify/inotify_user.c   | 1 -
+>  fs/ntfs/sysctl.c                   | 1 -
+>  fs/ocfs2/stackglue.c               | 1 -
+>  fs/pipe.c                          | 1 -
+>  fs/proc/proc_sysctl.c              | 1 -
+>  fs/quota/dquot.c                   | 1 -
+>  fs/sysctls.c                       | 1 -
+>  fs/userfaultfd.c                   | 1 -
+>  fs/verity/fsverity_private.h       | 2 +-
+>  fs/verity/init.c                   | 8 +++++---
+>  fs/xfs/xfs_sysctl.c                | 2 --
 
+Not sure why an xfs change came in on a patch tagged "aio:"; I would
+have expected "fs:" or "vfs:" or something.  For the XFS part:
+
+Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+
+--D
+
+>  27 files changed, 6 insertions(+), 30 deletions(-)
+> 
+> diff --git a/fs/aio.c b/fs/aio.c
+> index a4c2a6bac72c..da069d6b6c66 100644
+> --- a/fs/aio.c
+> +++ b/fs/aio.c
+> @@ -239,7 +239,6 @@ static struct ctl_table aio_sysctls[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_doulongvec_minmax,
+>  	},
+> -	{}
+>  };
+>  
+>  static void __init aio_sysctl_init(void)
+> diff --git a/fs/coredump.c b/fs/coredump.c
+> index 9d235fa14ab9..f258c17c1841 100644
+> --- a/fs/coredump.c
+> +++ b/fs/coredump.c
+> @@ -981,7 +981,6 @@ static struct ctl_table coredump_sysctls[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dointvec,
+>  	},
+> -	{ }
+>  };
+>  
+>  static int __init init_fs_coredump_sysctls(void)
+> diff --git a/fs/dcache.c b/fs/dcache.c
+> index 25ac74d30bff..bafdd455b0fe 100644
+> --- a/fs/dcache.c
+> +++ b/fs/dcache.c
+> @@ -191,7 +191,6 @@ static struct ctl_table fs_dcache_sysctls[] = {
+>  		.mode		= 0444,
+>  		.proc_handler	= proc_nr_dentry,
+>  	},
+> -	{ }
+>  };
+>  
+>  static int __init init_fs_dcache_sysctls(void)
+> diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
+> index 299c295a27a0..a4de1612b1db 100644
+> --- a/fs/devpts/inode.c
+> +++ b/fs/devpts/inode.c
+> @@ -69,7 +69,6 @@ static struct ctl_table pty_table[] = {
+>  		.data		= &pty_count,
+>  		.proc_handler	= proc_dointvec,
+>  	},
+> -	{}
+>  };
+>  
+>  struct pts_mount_opts {
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index 1d9a71a0c4c1..975fc5623102 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -322,7 +322,6 @@ static struct ctl_table epoll_table[] = {
+>  		.extra1		= &long_zero,
+>  		.extra2		= &long_max,
+>  	},
+> -	{ }
+>  };
+>  
+>  static void __init epoll_sysctls_init(void)
+> diff --git a/fs/exec.c b/fs/exec.c
+> index 6518e33ea813..7a18bde22f25 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -2167,7 +2167,6 @@ static struct ctl_table fs_exec_sysctls[] = {
+>  		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_TWO,
+>  	},
+> -	{ }
+>  };
+>  
+>  static int __init init_fs_exec_sysctls(void)
+> diff --git a/fs/file_table.c b/fs/file_table.c
+> index ee21b3da9d08..544f7d4f166f 100644
+> --- a/fs/file_table.c
+> +++ b/fs/file_table.c
+> @@ -137,7 +137,6 @@ static struct ctl_table fs_stat_sysctls[] = {
+>  		.extra1		= &sysctl_nr_open_min,
+>  		.extra2		= &sysctl_nr_open_max,
+>  	},
+> -	{ }
+>  };
+>  
+>  static int __init init_fs_stat_sysctls(void)
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 35fd688168c5..ce16e3cda7bf 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -129,7 +129,6 @@ static struct ctl_table inodes_sysctls[] = {
+>  		.mode		= 0444,
+>  		.proc_handler	= proc_nr_inodes,
+>  	},
+> -	{ }
+>  };
+>  
+>  static int __init init_fs_inode_sysctls(void)
+> diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+> index 6579948070a4..f784ff58bfd3 100644
+> --- a/fs/lockd/svc.c
+> +++ b/fs/lockd/svc.c
+> @@ -474,7 +474,6 @@ static struct ctl_table nlm_sysctls[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dointvec,
+>  	},
+> -	{ }
+>  };
+>  
+>  #endif	/* CONFIG_SYSCTL */
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 76ad05f8070a..6ecfc422fb37 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -111,7 +111,6 @@ static struct ctl_table locks_sysctls[] = {
+>  		.proc_handler	= proc_dointvec,
+>  	},
+>  #endif /* CONFIG_MMU */
+> -	{}
+>  };
+>  
+>  static int __init init_fs_locks_sysctls(void)
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 567ee547492b..fb552161c981 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -1070,7 +1070,6 @@ static struct ctl_table namei_sysctls[] = {
+>  		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_TWO,
+>  	},
+> -	{ }
+>  };
+>  
+>  static int __init init_fs_namei_sysctls(void)
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index e157efc54023..e95d4328539d 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -5008,7 +5008,6 @@ static struct ctl_table fs_namespace_sysctls[] = {
+>  		.proc_handler	= proc_dointvec_minmax,
+>  		.extra1		= SYSCTL_ONE,
+>  	},
+> -	{ }
+>  };
+>  
+>  static int __init init_fs_namespace_sysctls(void)
+> diff --git a/fs/nfs/nfs4sysctl.c b/fs/nfs/nfs4sysctl.c
+> index e776200e9a11..886a7c4c60b3 100644
+> --- a/fs/nfs/nfs4sysctl.c
+> +++ b/fs/nfs/nfs4sysctl.c
+> @@ -34,7 +34,6 @@ static struct ctl_table nfs4_cb_sysctls[] = {
+>  		.mode = 0644,
+>  		.proc_handler = proc_dointvec,
+>  	},
+> -	{ }
+>  };
+>  
+>  int nfs4_register_sysctl(void)
+> diff --git a/fs/nfs/sysctl.c b/fs/nfs/sysctl.c
+> index f39e2089bc4c..e645be1a3381 100644
+> --- a/fs/nfs/sysctl.c
+> +++ b/fs/nfs/sysctl.c
+> @@ -29,7 +29,6 @@ static struct ctl_table nfs_cb_sysctls[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dointvec,
+>  	},
+> -	{ }
+>  };
+>  
+>  int nfs_register_sysctl(void)
+> diff --git a/fs/notify/dnotify/dnotify.c b/fs/notify/dnotify/dnotify.c
+> index ebdcc25df0f7..8151ed5ddefc 100644
+> --- a/fs/notify/dnotify/dnotify.c
+> +++ b/fs/notify/dnotify/dnotify.c
+> @@ -29,7 +29,6 @@ static struct ctl_table dnotify_sysctls[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dointvec,
+>  	},
+> -	{}
+>  };
+>  static void __init dnotify_sysctl_init(void)
+>  {
+> diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
+> index f69c451018e3..80539839af0c 100644
+> --- a/fs/notify/fanotify/fanotify_user.c
+> +++ b/fs/notify/fanotify/fanotify_user.c
+> @@ -86,7 +86,6 @@ static struct ctl_table fanotify_table[] = {
+>  		.proc_handler	= proc_dointvec_minmax,
+>  		.extra1		= SYSCTL_ZERO
+>  	},
+> -	{ }
+>  };
+>  
+>  static void __init fanotify_sysctls_init(void)
+> diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
+> index 1c4bfdab008d..3e222a271da6 100644
+> --- a/fs/notify/inotify/inotify_user.c
+> +++ b/fs/notify/inotify/inotify_user.c
+> @@ -85,7 +85,6 @@ static struct ctl_table inotify_table[] = {
+>  		.proc_handler	= proc_dointvec_minmax,
+>  		.extra1		= SYSCTL_ZERO
+>  	},
+> -	{ }
+>  };
+>  
+>  static void __init inotify_sysctls_init(void)
+> diff --git a/fs/ntfs/sysctl.c b/fs/ntfs/sysctl.c
+> index 174fe536a1c0..4e980170d86a 100644
+> --- a/fs/ntfs/sysctl.c
+> +++ b/fs/ntfs/sysctl.c
+> @@ -28,7 +28,6 @@ static struct ctl_table ntfs_sysctls[] = {
+>  		.mode		= 0644,			/* Mode, proc handler. */
+>  		.proc_handler	= proc_dointvec
+>  	},
+> -	{}
+>  };
+>  
+>  /* Storage for the sysctls header. */
+> diff --git a/fs/ocfs2/stackglue.c b/fs/ocfs2/stackglue.c
+> index a8d5ca98fa57..20aa37b67cfb 100644
+> --- a/fs/ocfs2/stackglue.c
+> +++ b/fs/ocfs2/stackglue.c
+> @@ -658,7 +658,6 @@ static struct ctl_table ocfs2_nm_table[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_dostring,
+>  	},
+> -	{ }
+>  };
+>  
+>  static struct ctl_table_header *ocfs2_table_header;
+> diff --git a/fs/pipe.c b/fs/pipe.c
+> index 6c1a9b1db907..6bc1c4ae81d5 100644
+> --- a/fs/pipe.c
+> +++ b/fs/pipe.c
+> @@ -1492,7 +1492,6 @@ static struct ctl_table fs_pipe_sysctls[] = {
+>  		.mode		= 0644,
+>  		.proc_handler	= proc_doulongvec_minmax,
+>  	},
+> -	{ }
+>  };
+>  #endif
+>  
+> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> index de484195f49f..4e06c4d69906 100644
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -71,7 +71,6 @@ static struct ctl_table root_table[] = {
+>  		.procname = "",
+>  		.mode = S_IFDIR|S_IRUGO|S_IXUGO,
+>  	},
+> -	{ }
+>  };
+>  static struct ctl_table_root sysctl_table_root = {
+>  	.default_set.dir.header = {
+> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+> index 9e72bfe8bbad..69b03e13e6f2 100644
+> --- a/fs/quota/dquot.c
+> +++ b/fs/quota/dquot.c
+> @@ -2949,7 +2949,6 @@ static struct ctl_table fs_dqstats_table[] = {
+>  		.proc_handler	= proc_dointvec,
+>  	},
+>  #endif
+> -	{ },
+>  };
+>  
+>  static int __init dquot_init(void)
+> diff --git a/fs/sysctls.c b/fs/sysctls.c
+> index 76a0aee8c229..8dbde9a802fa 100644
+> --- a/fs/sysctls.c
+> +++ b/fs/sysctls.c
+> @@ -26,7 +26,6 @@ static struct ctl_table fs_shared_sysctls[] = {
+>  		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_MAXOLDUID,
+>  	},
+> -	{ }
+>  };
+>  
+>  static int __init init_fs_sysctls(void)
+> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> index 56eaae9dac1a..7668285779c1 100644
+> --- a/fs/userfaultfd.c
+> +++ b/fs/userfaultfd.c
+> @@ -45,7 +45,6 @@ static struct ctl_table vm_userfaultfd_table[] = {
+>  		.extra1		= SYSCTL_ZERO,
+>  		.extra2		= SYSCTL_ONE,
+>  	},
+> -	{ }
+>  };
+>  #endif
+>  
+> diff --git a/fs/verity/fsverity_private.h b/fs/verity/fsverity_private.h
+> index d071a6e32581..8191bf7ad706 100644
+> --- a/fs/verity/fsverity_private.h
+> +++ b/fs/verity/fsverity_private.h
+> @@ -122,8 +122,8 @@ void __init fsverity_init_info_cache(void);
+>  
+>  /* signature.c */
+>  
+> -#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
+>  extern int fsverity_require_signatures;
+> +#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
+>  int fsverity_verify_signature(const struct fsverity_info *vi,
+>  			      const u8 *signature, size_t sig_size);
+>  
+> diff --git a/fs/verity/init.c b/fs/verity/init.c
+> index a29f062f6047..e31045dd4f6c 100644
+> --- a/fs/verity/init.c
+> +++ b/fs/verity/init.c
+> @@ -13,7 +13,6 @@
+>  static struct ctl_table_header *fsverity_sysctl_header;
+>  
+>  static struct ctl_table fsverity_sysctl_table[] = {
+> -#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
+>  	{
+>  		.procname       = "require_signatures",
+>  		.data           = &fsverity_require_signatures,
+> @@ -23,14 +22,17 @@ static struct ctl_table fsverity_sysctl_table[] = {
+>  		.extra1         = SYSCTL_ZERO,
+>  		.extra2         = SYSCTL_ONE,
+>  	},
+> -#endif
+> -	{ }
+>  };
+>  
+>  static void __init fsverity_init_sysctl(void)
+>  {
+> +#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
+>  	fsverity_sysctl_header = register_sysctl("fs/verity",
+>  						 fsverity_sysctl_table);
+> +#else
+> +	fsverity_sysctl_header = register_sysctl_sz("fs/verity",
+> +						 fsverity_sysctl_table, 0);
+> +#endif
+>  	if (!fsverity_sysctl_header)
+>  		panic("fsverity sysctl registration failed");
+>  }
+> diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
+> index fade33735393..a191f6560f98 100644
+> --- a/fs/xfs/xfs_sysctl.c
+> +++ b/fs/xfs/xfs_sysctl.c
+> @@ -206,8 +206,6 @@ static struct ctl_table xfs_table[] = {
+>  		.extra2		= &xfs_params.stats_clear.max
+>  	},
+>  #endif /* CONFIG_PROC_FS */
+> -
+> -	{}
+>  };
+>  
+>  int
+> 
+> -- 
+> 2.30.2
+> 
