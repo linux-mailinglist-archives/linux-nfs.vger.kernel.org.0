@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0E537E4066
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Nov 2023 14:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D5B77E406E
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Nov 2023 14:43:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234520AbjKGNnL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Nov 2023 08:43:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44280 "EHLO
+        id S234653AbjKGNnZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Nov 2023 08:43:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234555AbjKGNnG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Nov 2023 08:43:06 -0500
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00381B2;
-        Tue,  7 Nov 2023 05:43:02 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.229])
-        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4SPpwg68lbz9v7gZ;
-        Tue,  7 Nov 2023 21:29:39 +0800 (CST)
+        with ESMTP id S234691AbjKGNnU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Nov 2023 08:43:20 -0500
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 437CB10C0;
+        Tue,  7 Nov 2023 05:43:16 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4SPpwy4Lzjz9y1BQ;
+        Tue,  7 Nov 2023 21:29:54 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwDHdmBmPkplW202AA--.56782S9;
-        Tue, 07 Nov 2023 14:42:34 +0100 (CET)
+        by APP2 (Coremail) with SMTP id GxC2BwDHdmBmPkplW202AA--.56782S10;
+        Tue, 07 Nov 2023 14:42:47 +0100 (CET)
 From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
 To:     viro@zeniv.linux.org.uk, brauner@kernel.org,
         chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
@@ -34,18 +34,18 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
         selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
         Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v5 07/23] evm: Align evm_inode_setxattr() definition with LSM infrastructure
-Date:   Tue,  7 Nov 2023 14:39:56 +0100
-Message-Id: <20231107134012.682009-8-roberto.sassu@huaweicloud.com>
+Subject: [PATCH v5 08/23] evm: Align evm_inode_post_setxattr() definition with LSM infrastructure
+Date:   Tue,  7 Nov 2023 14:39:57 +0100
+Message-Id: <20231107134012.682009-9-roberto.sassu@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231107134012.682009-1-roberto.sassu@huaweicloud.com>
 References: <20231107134012.682009-1-roberto.sassu@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: GxC2BwDHdmBmPkplW202AA--.56782S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxGryfXF4ktFy8trWrJFWxXrb_yoW5Ar4kpF
-        Z8Ka48Gw1FqFyUWrykCF47ua9Y93yrWryjk3yDK3WvyF9xJrn2qFyxKFWjkryrCr48Krn0
-        qanFvrs0vw15X3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: GxC2BwDHdmBmPkplW202AA--.56782S10
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw4rCrWDuF4fAFy8XF1xAFb_yoW5urWkpF
+        Z8Ka4DCw1rAFyUWryvyF48u3sY9ayrWryjy3yDKw1IyFnxtr92qrWxJr1j9ryrJr48GrnY
+        qa1avrs5K3W3X3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
         9KBjDU0xBIdaVrnRJUUUBvb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
         6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
         Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -59,7 +59,7 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxGryfXF4ktFy8trWrJFWxXrb_yoW5Ar4kpF
         AIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI
         42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z2
         80aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UZo7tUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAOBF1jj5YbdgAAsB
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAOBF1jj5IbcAAAsA
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -72,71 +72,83 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Roberto Sassu <roberto.sassu@huawei.com>
 
-Change evm_inode_setxattr() definition, so that it can be registered as
-implementation of the inode_setxattr hook.
+Change evm_inode_post_setxattr() definition, so that it can be registered
+as implementation of the inode_post_setxattr hook.
 
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
 Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 ---
- include/linux/evm.h               | 4 ++--
- security/integrity/evm/evm_main.c | 3 ++-
+ include/linux/evm.h               | 8 +++++---
+ security/integrity/evm/evm_main.c | 4 +++-
  security/security.c               | 2 +-
- 3 files changed, 5 insertions(+), 4 deletions(-)
+ 3 files changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/include/linux/evm.h b/include/linux/evm.h
-index cf976d8dbd7a..7c6a74dbc093 100644
+index 7c6a74dbc093..437d4076a3b3 100644
 --- a/include/linux/evm.h
 +++ b/include/linux/evm.h
-@@ -27,7 +27,7 @@ extern void evm_inode_post_setattr(struct mnt_idmap *idmap,
- 				   struct dentry *dentry, int ia_valid);
- extern int evm_inode_setxattr(struct mnt_idmap *idmap,
- 			      struct dentry *dentry, const char *name,
--			      const void *value, size_t size);
-+			      const void *value, size_t size, int flags);
+@@ -31,7 +31,8 @@ extern int evm_inode_setxattr(struct mnt_idmap *idmap,
  extern void evm_inode_post_setxattr(struct dentry *dentry,
  				    const char *xattr_name,
  				    const void *xattr_value,
-@@ -106,7 +106,7 @@ static inline void evm_inode_post_setattr(struct mnt_idmap *idmap,
- 
- static inline int evm_inode_setxattr(struct mnt_idmap *idmap,
- 				     struct dentry *dentry, const char *name,
--				     const void *value, size_t size)
-+				     const void *value, size_t size, int flags)
+-				    size_t xattr_value_len);
++				    size_t xattr_value_len,
++				    int flags);
+ extern int evm_inode_removexattr(struct mnt_idmap *idmap,
+ 				 struct dentry *dentry, const char *xattr_name);
+ extern void evm_inode_post_removexattr(struct dentry *dentry,
+@@ -55,7 +56,7 @@ static inline void evm_inode_post_set_acl(struct dentry *dentry,
+ 					  const char *acl_name,
+ 					  struct posix_acl *kacl)
  {
- 	return 0;
+-	return evm_inode_post_setxattr(dentry, acl_name, NULL, 0);
++	return evm_inode_post_setxattr(dentry, acl_name, NULL, 0, 0);
+ }
+ 
+ int evm_inode_init_security(struct inode *inode, struct inode *dir,
+@@ -114,7 +115,8 @@ static inline int evm_inode_setxattr(struct mnt_idmap *idmap,
+ static inline void evm_inode_post_setxattr(struct dentry *dentry,
+ 					   const char *xattr_name,
+ 					   const void *xattr_value,
+-					   size_t xattr_value_len)
++					   size_t xattr_value_len,
++					   int flags)
+ {
+ 	return;
  }
 diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-index d452d469c503..7fc083d53fdf 100644
+index 7fc083d53fdf..ea84a6f835ff 100644
 --- a/security/integrity/evm/evm_main.c
 +++ b/security/integrity/evm/evm_main.c
-@@ -558,6 +558,7 @@ static int evm_protect_xattr(struct mnt_idmap *idmap,
+@@ -730,6 +730,7 @@ bool evm_revalidate_status(const char *xattr_name)
   * @xattr_name: pointer to the affected extended attribute name
   * @xattr_value: pointer to the new extended attribute value
   * @xattr_value_len: pointer to the new extended attribute value length
 + * @flags: flags to pass into filesystem operations
   *
-  * Before allowing the 'security.evm' protected xattr to be updated,
-  * verify the existing value is valid.  As only the kernel should have
-@@ -567,7 +568,7 @@ static int evm_protect_xattr(struct mnt_idmap *idmap,
+  * Update the HMAC stored in 'security.evm' to reflect the change.
+  *
+@@ -738,7 +739,8 @@ bool evm_revalidate_status(const char *xattr_name)
+  * i_mutex lock.
   */
- int evm_inode_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 		       const char *xattr_name, const void *xattr_value,
--		       size_t xattr_value_len)
-+		       size_t xattr_value_len, int flags)
+ void evm_inode_post_setxattr(struct dentry *dentry, const char *xattr_name,
+-			     const void *xattr_value, size_t xattr_value_len)
++			     const void *xattr_value, size_t xattr_value_len,
++			     int flags)
  {
- 	const struct evm_ima_xattr_data *xattr_data = xattr_value;
- 
+ 	if (!evm_revalidate_status(xattr_name))
+ 		return;
 diff --git a/security/security.c b/security/security.c
-index 358ec01a5492..ae3625198c9f 100644
+index ae3625198c9f..53793f3cb36a 100644
 --- a/security/security.c
 +++ b/security/security.c
-@@ -2272,7 +2272,7 @@ int security_inode_setxattr(struct mnt_idmap *idmap,
- 	ret = ima_inode_setxattr(idmap, dentry, name, value, size, flags);
- 	if (ret)
- 		return ret;
--	return evm_inode_setxattr(idmap, dentry, name, value, size);
-+	return evm_inode_setxattr(idmap, dentry, name, value, size, flags);
+@@ -2367,7 +2367,7 @@ void security_inode_post_setxattr(struct dentry *dentry, const char *name,
+ 	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+ 		return;
+ 	call_void_hook(inode_post_setxattr, dentry, name, value, size, flags);
+-	evm_inode_post_setxattr(dentry, name, value, size);
++	evm_inode_post_setxattr(dentry, name, value, size, flags);
  }
  
  /**
