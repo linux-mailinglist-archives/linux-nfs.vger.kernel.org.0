@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DAE37E4042
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Nov 2023 14:42:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 85C7F7E404A
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Nov 2023 14:42:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234244AbjKGNmG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Nov 2023 08:42:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51744 "EHLO
+        id S234345AbjKGNmW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Nov 2023 08:42:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbjKGNmF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Nov 2023 08:42:05 -0500
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF463EA;
-        Tue,  7 Nov 2023 05:42:01 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.228])
-        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4SPpvX4hrWz9y1BH;
-        Tue,  7 Nov 2023 21:28:40 +0800 (CST)
+        with ESMTP id S234404AbjKGNmT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Nov 2023 08:42:19 -0500
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EFF119B;
+        Tue,  7 Nov 2023 05:42:13 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4SPprM5Xkzz9v7HG;
+        Tue,  7 Nov 2023 21:25:55 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwDHdmBmPkplW202AA--.56782S4;
-        Tue, 07 Nov 2023 14:41:33 +0100 (CET)
+        by APP2 (Coremail) with SMTP id GxC2BwDHdmBmPkplW202AA--.56782S5;
+        Tue, 07 Nov 2023 14:41:45 +0100 (CET)
 From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
 To:     viro@zeniv.linux.org.uk, brauner@kernel.org,
         chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
@@ -34,36 +34,36 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
         selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
         Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v5 02/23] ima: Align ima_file_mprotect() definition with LSM infrastructure
-Date:   Tue,  7 Nov 2023 14:39:51 +0100
-Message-Id: <20231107134012.682009-3-roberto.sassu@huaweicloud.com>
+Subject: [PATCH v5 03/23] ima: Align ima_inode_setxattr() definition with LSM infrastructure
+Date:   Tue,  7 Nov 2023 14:39:52 +0100
+Message-Id: <20231107134012.682009-4-roberto.sassu@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231107134012.682009-1-roberto.sassu@huaweicloud.com>
 References: <20231107134012.682009-1-roberto.sassu@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: GxC2BwDHdmBmPkplW202AA--.56782S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxAryDKr1xWF1UZr15uw1xXwb_yoW5Cw1fpa
-        n8KasrGrWxJFy09r97XFW7ua43K3yIgw1UXa93W340y3Z0qFnYqr13AFy8ur1rZr9YyFn2
-        y3y7trW5A3WDtrJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
+X-CM-TRANSID: GxC2BwDHdmBmPkplW202AA--.56782S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxJFyDGF1DCryftr43tr48Crg_yoW5CrWfpF
+        s5Ga48Gw1FqFy7WryFya17u39Y93y8WryUurWDK3Z2yFnxJr1xtFyfAr1j9ry5Zr48Kr1v
+        qa1aqrs0kw13trJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUWw
         A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
         w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUJVWUCwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-        WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-        Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ew
-        Av7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY
-        6r1j6r4UM4x0Y48IcxkI7VAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI7V
-        AKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCj
-        r7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY6x
-        IIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcVCF
-        04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
-        CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UC9aPUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAOBF1jj5IbaQAAsZ
+        W8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4UJVWxJr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2
+        WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkE
+        bVWUJVW8JwACjcxG0xvY0x0EwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY0x
+        0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+        7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcV
+        C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY
+        6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aV
+        CY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAOBF1jj5IbaQABsY
 X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -72,77 +72,78 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Roberto Sassu <roberto.sassu@huawei.com>
 
-Change ima_file_mprotect() definition, so that it can be registered
-as implementation of the file_mprotect hook.
+Change ima_inode_setxattr() definition, so that it can be registered as
+implementation of the inode_setxattr hook.
 
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 ---
- include/linux/ima.h               | 5 +++--
- security/integrity/ima/ima_main.c | 6 ++++--
- security/security.c               | 2 +-
- 3 files changed, 8 insertions(+), 5 deletions(-)
+ include/linux/ima.h                   | 11 +++++++----
+ security/integrity/ima/ima_appraise.c |  5 +++--
+ security/security.c                   |  2 +-
+ 3 files changed, 11 insertions(+), 7 deletions(-)
 
 diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 910a2f11a906..b66353f679e8 100644
+index b66353f679e8..077324309c11 100644
 --- a/include/linux/ima.h
 +++ b/include/linux/ima.h
-@@ -23,7 +23,8 @@ extern void ima_post_create_tmpfile(struct mnt_idmap *idmap,
- extern void ima_file_free(struct file *file);
- extern int ima_file_mmap(struct file *file, unsigned long reqprot,
- 			 unsigned long prot, unsigned long flags);
--extern int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot);
-+extern int ima_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
-+			     unsigned long prot);
- extern int ima_load_data(enum kernel_load_data_id id, bool contents);
- extern int ima_post_load_data(char *buf, loff_t size,
- 			      enum kernel_load_data_id id, char *description);
-@@ -84,7 +85,7 @@ static inline int ima_file_mmap(struct file *file, unsigned long reqprot,
+@@ -188,8 +188,9 @@ static inline void ima_post_key_create_or_update(struct key *keyring,
+ extern bool is_ima_appraise_enabled(void);
+ extern void ima_inode_post_setattr(struct mnt_idmap *idmap,
+ 				   struct dentry *dentry, int ia_valid);
+-extern int ima_inode_setxattr(struct dentry *dentry, const char *xattr_name,
+-		       const void *xattr_value, size_t xattr_value_len);
++extern int ima_inode_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
++			      const char *xattr_name, const void *xattr_value,
++			      size_t xattr_value_len, int flags);
+ extern int ima_inode_set_acl(struct mnt_idmap *idmap,
+ 			     struct dentry *dentry, const char *acl_name,
+ 			     struct posix_acl *kacl);
+@@ -212,10 +213,12 @@ static inline void ima_inode_post_setattr(struct mnt_idmap *idmap,
+ 	return;
  }
  
- static inline int ima_file_mprotect(struct vm_area_struct *vma,
--				    unsigned long prot)
-+				    unsigned long reqprot, unsigned long prot)
+-static inline int ima_inode_setxattr(struct dentry *dentry,
++static inline int ima_inode_setxattr(struct mnt_idmap *idmap,
++				     struct dentry *dentry,
+ 				     const char *xattr_name,
+ 				     const void *xattr_value,
+-				     size_t xattr_value_len)
++				     size_t xattr_value_len,
++				     int flags)
  {
  	return 0;
  }
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index cc1217ac2c6f..b3f5e8401056 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -455,7 +455,8 @@ int ima_file_mmap(struct file *file, unsigned long reqprot,
- /**
-  * ima_file_mprotect - based on policy, limit mprotect change
-  * @vma: vm_area_struct protection is set to
-- * @prot: contains the protection that will be applied by the kernel.
-+ * @reqprot: protection requested by the application
-+ * @prot: protection that will be applied by the kernel
-  *
-  * Files can be mmap'ed read/write and later changed to execute to circumvent
-  * IMA's mmap appraisal policy rules.  Due to locking issues (mmap semaphore
-@@ -465,7 +466,8 @@ int ima_file_mmap(struct file *file, unsigned long reqprot,
-  *
-  * On mprotect change success, return 0.  On failure, return -EACESS.
-  */
--int ima_file_mprotect(struct vm_area_struct *vma, unsigned long prot)
-+int ima_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
-+		      unsigned long prot)
- {
- 	struct ima_template_desc *template = NULL;
- 	struct file *file;
-diff --git a/security/security.c b/security/security.c
-index d7b15ea67c3f..c87ba1bbd7dc 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2819,7 +2819,7 @@ int security_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
- 	ret = call_int_hook(file_mprotect, 0, vma, reqprot, prot);
- 	if (ret)
- 		return ret;
--	return ima_file_mprotect(vma, prot);
-+	return ima_file_mprotect(vma, reqprot, prot);
+diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+index 36c2938a5c69..cb2d0d11aa77 100644
+--- a/security/integrity/ima/ima_appraise.c
++++ b/security/integrity/ima/ima_appraise.c
+@@ -750,8 +750,9 @@ static int validate_hash_algo(struct dentry *dentry,
+ 	return -EACCES;
  }
  
- /**
+-int ima_inode_setxattr(struct dentry *dentry, const char *xattr_name,
+-		       const void *xattr_value, size_t xattr_value_len)
++int ima_inode_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
++		       const char *xattr_name, const void *xattr_value,
++		       size_t xattr_value_len, int flags)
+ {
+ 	const struct evm_ima_xattr_data *xvalue = xattr_value;
+ 	int digsig = 0;
+diff --git a/security/security.c b/security/security.c
+index c87ba1bbd7dc..ec5c8065ea36 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -2269,7 +2269,7 @@ int security_inode_setxattr(struct mnt_idmap *idmap,
+ 		ret = cap_inode_setxattr(dentry, name, value, size, flags);
+ 	if (ret)
+ 		return ret;
+-	ret = ima_inode_setxattr(dentry, name, value, size);
++	ret = ima_inode_setxattr(idmap, dentry, name, value, size, flags);
+ 	if (ret)
+ 		return ret;
+ 	return evm_inode_setxattr(idmap, dentry, name, value, size);
 -- 
 2.34.1
 
