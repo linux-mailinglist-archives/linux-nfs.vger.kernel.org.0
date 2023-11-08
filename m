@@ -2,506 +2,184 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E7FA7E52EC
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Nov 2023 10:56:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DF9C7E5F17
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Nov 2023 21:23:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231674AbjKHJ4j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Nov 2023 04:56:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52698 "EHLO
+        id S229551AbjKHUXZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Nov 2023 15:23:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbjKHJ4i (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Nov 2023 04:56:38 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2981BB;
-        Wed,  8 Nov 2023 01:56:36 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 2AC2C1F45A;
-        Wed,  8 Nov 2023 09:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1699437394; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=haSY/yaIV/fqYTZuzHRwE6iFrXPdX6sCOgCYcYIKygU=;
-        b=RasriPX17pB635D8dXsKwR06/JxRrmOsKBDaPJyRJLetV+VEbuQey9uAYZwsa7GqsZz1Eh
-        VFlVNKj4jCMe+54JDQMCjtdI+Es8g4oizMrpjeX4YnNACbz/rLXEHhI+FgYRJFZclW6v65
-        xNsxvs2zWz0Yz0XUBWPTwrHmYcLVLsE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1699437394;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=haSY/yaIV/fqYTZuzHRwE6iFrXPdX6sCOgCYcYIKygU=;
-        b=uvkiSVTfUaO2euHnE8o6Rp1Q3WTapY4QB6I/bsm0zkvjqLGP2+33vDahjFSCFlZsyVoCBM
-        exavwRnnW842XEBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 12DEE133F5;
-        Wed,  8 Nov 2023 09:56:34 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 04+OBFJbS2VLXwAAMHmgww
-        (envelope-from <jack@suse.cz>); Wed, 08 Nov 2023 09:56:34 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 9D4ECA07C0; Wed,  8 Nov 2023 10:56:33 +0100 (CET)
-Date:   Wed, 8 Nov 2023 10:56:33 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     j.granados@samsung.com
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
-        josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
-        David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Benjamin LaHaise <bcrl@kvack.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
-        Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Matthew Bobrowski <repnop@google.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        linux-cachefs@redhat.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@lists.linux.dev,
-        fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-        codalist@coda.cs.cmu.edu
-Subject: Re: [PATCH 2/4] aio: Remove the now superfluous sentinel elements
- from ctl_table array
-Message-ID: <20231108095633.ec6im6btx7hprl6o@quack3>
-References: <20231107-jag-sysctl_remove_empty_elem_fs-v1-0-7176632fea9f@samsung.com>
- <20231107-jag-sysctl_remove_empty_elem_fs-v1-2-7176632fea9f@samsung.com>
+        with ESMTP id S229460AbjKHUXY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Nov 2023 15:23:24 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2091.outbound.protection.outlook.com [40.107.237.91])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AF22213B;
+        Wed,  8 Nov 2023 12:23:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=biQFNoOS5JEwVsIJlwchmitVaRCJsHPXikD1ndLcxLS6jQahgp4weoYGp3jgVfLgbVUkyBS4OefNkZvscDe8S9eLUHMUp0EEtSHhmHhM0CnVb+xfOfpa2dzkeh+Z6gBNlfH3GrIwe7LbUOwJSC5Vtaxrc9KwagogbXtLdw5hVRqJnBIKx1H397lq60x5ocibN8ceI0g/aeDmIbd07AE9KS3L8zO8+2XdqafIc48wo6RtQGBT5Vd0sZiujBmQljzHXr7NTM2xIMMPBQ6KAW+RHbPd0y9i2GP764KnYoxy2RXsqmNWOm8LiqZ2OUQzqOrWgFo/nwLYJ12IeDyij3iw8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=y+uJYQFYv6ngmRkqHH2FlVKSinl9KohhiS71MnKOF6I=;
+ b=XMIbM5LCPc6eH7PRrpJCgQNcqyeKu16JW4yz/Yt5xGi85l+8h+3M7CP/wPfVFw9HYJ/PCndomfouSy88VwiXNpjAQ4Br0n0JdR9gnXQ32RRL+O5NGgGgVrU1XNNKRGp0ldASsRtygvphcNeJgDUIhpEyChwZkUL/mqZIrYeetUF3bQ5fqS00HN8ePAbdZrsQVRU0DyC5pQY9OnhlOFrOnY4IE/gedenHynQmoI7P/Ft1LxifAYN7+KZQ3yE+5MYHyjK09ZOYrCp4VOv270B2q0Tp13JufmXWy+8FC5NEvC9j/LQVcVWNd1nvVe8X0vpvaSJeDzcasCvaQOe0hhCLKQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=y+uJYQFYv6ngmRkqHH2FlVKSinl9KohhiS71MnKOF6I=;
+ b=IWbSoPV29fFz+Y/DFeEqY4EVw6wfUl568ACIA1wwaDJ/46BsDrVWhslgK98PC37wF3w8mTdDKZx27FOjwwOpqshgxUPHD6kl8usAjvB6c6//1U+PKsSsmhTdF6OSKqxOpruvvNUmlwO8q3pVzdP3HDM32MRqwZmx+Q9hhdC0eTw=
+Received: from DM8PR13MB5079.namprd13.prod.outlook.com (2603:10b6:8:22::9) by
+ MW3PR13MB4155.namprd13.prod.outlook.com (2603:10b6:303:55::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6977.18; Wed, 8 Nov 2023 20:23:19 +0000
+Received: from DM8PR13MB5079.namprd13.prod.outlook.com
+ ([fe80::50ca:9941:2396:90f0]) by DM8PR13MB5079.namprd13.prod.outlook.com
+ ([fe80::50ca:9941:2396:90f0%5]) with mapi id 15.20.6954.029; Wed, 8 Nov 2023
+ 20:23:18 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFS client updates for Linux 6.7
+Thread-Topic: [GIT PULL] Please pull NFS client updates for Linux 6.7
+Thread-Index: AQHaEoFpyS/snDsZsE26fh9RUP8jmw==
+Date:   Wed, 8 Nov 2023 20:23:18 +0000
+Message-ID: <0c5dc383d262d49f842a76893b1efc2545cfe9ce.camel@hammerspace.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR13MB5079:EE_|MW3PR13MB4155:EE_
+x-ms-office365-filtering-correlation-id: fed9bf53-6492-4493-7dbb-08dbe0988bcf
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: QLNukj0se1rmvfa88hbcUpxLzYMAwT6vuf03Qf4tHjQwSI5tnSdf+QJhL9xSrg2Yco0KEfqNjecROsBp3o95HP0KkV4hciJa4lc3CHe8pyU+FH9b6kEmUMlAIQxS+1fi3miB2OVRBeauWfohUqPTc2OkPDQymWKFno4Ctnm4v1luf/GNjinay7IOZTqXS8Uu1ezSoThEXqK5bVeqBiOQZYUqYROKkOTOvFeMoB5y+7YNf4f3FKzAWGhk05cxKUONMe3zU/osN5/3mCN//jCqEgtRQQNfjPpM7JNFiWmlk5G+XDNdstwJihBi02w4XAJAMyGjMApy9g56lyqKcH8yImRPQpmDTUMegXGWFV3bD+0ia24JmSqzUcRj3KwdS7BIfFUQyaYoREFXaHo6ubIqjBtan71EZuOGHp/yatJ/DMza/AjtueJMQAs/B5M+OV/a4YmbTlXPxUjz+VLkB/eP+P7if/UBbTyFa1psHNzVYfzWnRcJSZswGxM0EA2Ku5unMNvzbSjO+Q707M8LcQvqyD1z/6ePStCfuPbU4QFqElJonl/9mqgaxRxlXFNVqqc33O0VF6ZsCIUnMrBytuXPaD+6oH0h1OyBKzMOphkhsEzcGI5WJ1ZSP5KyvsmfYFqUzRkwbuIXz47IRzEuy89zQ5bV0Szx4MqPUQGmWaTKFBU=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR13MB5079.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(376002)(39840400004)(396003)(346002)(230922051799003)(451199024)(1800799009)(186009)(64100799003)(2906002)(15650500001)(41300700001)(4001150100001)(8676002)(8936002)(4326008)(5660300002)(66556008)(6916009)(316002)(54906003)(64756008)(66476007)(66446008)(66946007)(76116006)(38070700009)(91956017)(6486002)(26005)(478600001)(38100700002)(6512007)(71200400001)(36756003)(2616005)(6506007)(122000001)(83380400001)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VHNTYnRVNDg2MVJCUjVTcGs5eERUV25sTXlQNHdKSm43Mk43ZnFQUEttOGJD?=
+ =?utf-8?B?S2h3Um95aDkxdnNEbUorRjZlaWhwNnU5bTNuemI5a2ozQkFXWGxFNGFkQkhV?=
+ =?utf-8?B?NVNKbnMyZERWZ3l0WmhDMGtDUFdGbVpoczBGTVlGalBzT1hTTEdwSmNrVjNU?=
+ =?utf-8?B?SHZDeXlqRmxBMHFSeDMvcWlzWmU3ZkxTTkVlWlZCWnlVaXI2bTJ1MnBsd01P?=
+ =?utf-8?B?K3lYTytwVW9CNzFsV21QcXpTbWV4UnpNVTNORmdyRnRuTlkwcWpKcUp4OU9w?=
+ =?utf-8?B?TXg5NENwMmxZRWlLZXRPVm5OVjVGWFZVaGxFMTNwK1Q3K081c2JVTFFmbEdm?=
+ =?utf-8?B?bU9zdUdUK1hrQjdqRzNtdTBQckpFdUhVOEVrM1VLbFlQNVlIQ1dndElZYVhm?=
+ =?utf-8?B?VWJSdkc4RmhIeUhoamU1b0l2c0t0QVV6ckprS0pKb3hGQlcrMVNTSVUrVm1i?=
+ =?utf-8?B?SmxPTGVBcVo5cGhKTHNFZjJCa0Jpays3eS80UVFCZk5GQ3hYVHdNWFFlWnNP?=
+ =?utf-8?B?U3VsNUNabG5vRlBTQnR3Z2RlQTBEaGNZMmRrTTg4d2hraXM5SHpnL005bGQy?=
+ =?utf-8?B?RnU2TnRiVlk3R0w0VWVSaUxWdDgrMHFaZ0RLYnFnR2dqTEM1MlBDeHMvTGhN?=
+ =?utf-8?B?d0RreFNqbXpmRkJIb3VLYUtwaGFqS1liZHIrNVRsdmZlWk1pUE1DRU8wS0ts?=
+ =?utf-8?B?V0s0RTFIQlE5Sk1BZnRueE5iNU1IclBNYktWbE5ja01NMTJIbHAyRG8wSUsy?=
+ =?utf-8?B?MTM4MG1jSUc3ZGZtYk83RzRGVzJCNXBxTlpPL3dnRVJxY2c5b1hGbG5zYWZL?=
+ =?utf-8?B?TmFFTjRValNrSkF0ZVJiSWlZWVZHcmZJWlhxbGhYTnk0UDJjSDJNdkNsNHlE?=
+ =?utf-8?B?UlVOdXZFc2VabVdnSytkWmZoY1Z3dmFXeHNnempnYUhQd1I4dUwrcDFQTkJH?=
+ =?utf-8?B?RFdFbGJBZWoyc3pFbkVFbVpod3lvWnRZcWlwZlVVMHFlOVNnV1hKMVJPUnpO?=
+ =?utf-8?B?aFZOSGtuY1VXVmZJZnlqcGJiM3lwMlVGQWRtVzZKWFJQVDQwc3ZWbVp3Yi8v?=
+ =?utf-8?B?Rk51bUZaaWFxQWthR0RJZ3FYdjFNSTVDVHh1bDlNZnZSTHdobjhkTFFUMExn?=
+ =?utf-8?B?MStuajJnUkNJejJOQzdPOFlmb3NBSE95a2YvTjZjdHl4NXQ5SGZ0MjROYytV?=
+ =?utf-8?B?OFoxcnBSaG9aeGI1dTR3NDJXeDJmR2orblZKMWo0YjNqSjE4bytjL1NLcVho?=
+ =?utf-8?B?OEZ5dzUwb0x6Z3pBSzFnaUtvSVJqelpKMlowdVdFQmEwUHdaeTFMUTZyL3RV?=
+ =?utf-8?B?Z2RPSWRQTEN5Qk53WVZhbmNid2NvQ1FrT0VFb2tzL245ZmdNUGNrb3h2ZTVw?=
+ =?utf-8?B?OVN5NmprbUpLSTN2NTRUdm80WnhJUzdaNDB5TXZiM3JiN0dkd3QzY2JVZDRp?=
+ =?utf-8?B?L2VpS0FYamFNUWl6bEhHVUY1R3RHTlNvcTArbVkweXVvV1hHbHBnUC8xZmFW?=
+ =?utf-8?B?Um9XS3NZbC9nUml0WTlKdnkycDJ2aTJFQkFhUFdNZVFJM0NaRVQvaGtmTlY1?=
+ =?utf-8?B?bGEwOXNKUGUrbkU5dXNlcjZNK3dZck0xTk54N1JUZHQ5ZC9Xb1g5T25ObWg1?=
+ =?utf-8?B?dmR1V2t0R2ZzMHRReWVySEdrdmRxSmhCK0NUYlN6dXd5SmJQWjZuNFFvNUFB?=
+ =?utf-8?B?bWNyRXlTK2ZGdXFWUjhueEJhQ0NOUFNGQ21nUGQ1WUFTRi96TUFEbjFpUEt5?=
+ =?utf-8?B?b2R6SU9SSW1jNnV2aVVLQ1RhdHVQN1p6M0lNSTJKZG5xWDV6ZHFjWGY4amVR?=
+ =?utf-8?B?YS92TXdkNU14NVo1ZndwSEJqQStPWFlxR0FIUVJlZzJIaW5NL3pCNTg2MFRn?=
+ =?utf-8?B?SXU4K1M0dUs5UFdaMnovdVZob1hJaHEwamRkaTBSZDM4U0ZyWk5XbjZQVkc1?=
+ =?utf-8?B?Mm1zMEpxU1hxbzYzbFBrdUlzaWcvbUswOGFUQWtsUzN0YmVNa1hMSm9CMFZl?=
+ =?utf-8?B?VW4vOGdMWjhWRzdYdmtNdFl6VVllczY0WGJhRWFJckx3OUpEbndaNlRrdjQr?=
+ =?utf-8?B?ZFpybWpyTXY3dFQ4WTNZSFlHaHpwYW16clkwYjNjMndrVStpOTg4ODhlNE9F?=
+ =?utf-8?B?MlF3WHhFQ0ltbk5qTDNycDd2ZHBmOGw4VU1VSlExVmRZV0tTZVJYTDl0djFY?=
+ =?utf-8?B?a1E9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1B87237D574AF848A66320E5BE9A13E5@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231107-jag-sysctl_remove_empty_elem_fs-v1-2-7176632fea9f@samsung.com>
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR13MB5079.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fed9bf53-6492-4493-7dbb-08dbe0988bcf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2023 20:23:18.7979
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: k4y4ziIWQkDf/yIZ+CO2qvH/d+iKgkB+VLfpRCnaAzFLBu48Ux+wsMm3HtPSnYA1M38k2o3lMnirGKs9KnH7mg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR13MB4155
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue 07-11-23 14:44:21, Joel Granados via B4 Relay wrote:
-> From: Joel Granados <j.granados@samsung.com>
-> 
-> This commit comes at the tail end of a greater effort to remove the
-> empty elements at the end of the ctl_table arrays (sentinels) which
-> will reduce the overall build time size of the kernel and run time
-> memory bloat by ~64 bytes per sentinel (further information Link :
-> https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
-> 
-> Remove sentinel elements ctl_table struct. Special attention was placed in
-> making sure that an empty directory for fs/verity was created when
-> CONFIG_FS_VERITY_BUILTIN_SIGNATURES is not defined. In this case we use the
-> register sysctl call that expects a size.
-> 
-> Signed-off-by: Joel Granados <j.granados@samsung.com>
-
-For fs/*.c, fs/quota/, fs/notify/, fs/ocfs2/ feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-Other bits look good to me as well besides fsverify changes which looks odd
-and Eric already commented on that.
-
-								Honza
-
-> ---
->  fs/aio.c                           | 1 -
->  fs/coredump.c                      | 1 -
->  fs/dcache.c                        | 1 -
->  fs/devpts/inode.c                  | 1 -
->  fs/eventpoll.c                     | 1 -
->  fs/exec.c                          | 1 -
->  fs/file_table.c                    | 1 -
->  fs/inode.c                         | 1 -
->  fs/lockd/svc.c                     | 1 -
->  fs/locks.c                         | 1 -
->  fs/namei.c                         | 1 -
->  fs/namespace.c                     | 1 -
->  fs/nfs/nfs4sysctl.c                | 1 -
->  fs/nfs/sysctl.c                    | 1 -
->  fs/notify/dnotify/dnotify.c        | 1 -
->  fs/notify/fanotify/fanotify_user.c | 1 -
->  fs/notify/inotify/inotify_user.c   | 1 -
->  fs/ntfs/sysctl.c                   | 1 -
->  fs/ocfs2/stackglue.c               | 1 -
->  fs/pipe.c                          | 1 -
->  fs/proc/proc_sysctl.c              | 1 -
->  fs/quota/dquot.c                   | 1 -
->  fs/sysctls.c                       | 1 -
->  fs/userfaultfd.c                   | 1 -
->  fs/verity/fsverity_private.h       | 2 +-
->  fs/verity/init.c                   | 8 +++++---
->  fs/xfs/xfs_sysctl.c                | 2 --
->  27 files changed, 6 insertions(+), 30 deletions(-)
-> 
-> diff --git a/fs/aio.c b/fs/aio.c
-> index a4c2a6bac72c..da069d6b6c66 100644
-> --- a/fs/aio.c
-> +++ b/fs/aio.c
-> @@ -239,7 +239,6 @@ static struct ctl_table aio_sysctls[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_doulongvec_minmax,
->  	},
-> -	{}
->  };
->  
->  static void __init aio_sysctl_init(void)
-> diff --git a/fs/coredump.c b/fs/coredump.c
-> index 9d235fa14ab9..f258c17c1841 100644
-> --- a/fs/coredump.c
-> +++ b/fs/coredump.c
-> @@ -981,7 +981,6 @@ static struct ctl_table coredump_sysctls[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_dointvec,
->  	},
-> -	{ }
->  };
->  
->  static int __init init_fs_coredump_sysctls(void)
-> diff --git a/fs/dcache.c b/fs/dcache.c
-> index 25ac74d30bff..bafdd455b0fe 100644
-> --- a/fs/dcache.c
-> +++ b/fs/dcache.c
-> @@ -191,7 +191,6 @@ static struct ctl_table fs_dcache_sysctls[] = {
->  		.mode		= 0444,
->  		.proc_handler	= proc_nr_dentry,
->  	},
-> -	{ }
->  };
->  
->  static int __init init_fs_dcache_sysctls(void)
-> diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
-> index 299c295a27a0..a4de1612b1db 100644
-> --- a/fs/devpts/inode.c
-> +++ b/fs/devpts/inode.c
-> @@ -69,7 +69,6 @@ static struct ctl_table pty_table[] = {
->  		.data		= &pty_count,
->  		.proc_handler	= proc_dointvec,
->  	},
-> -	{}
->  };
->  
->  struct pts_mount_opts {
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index 1d9a71a0c4c1..975fc5623102 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -322,7 +322,6 @@ static struct ctl_table epoll_table[] = {
->  		.extra1		= &long_zero,
->  		.extra2		= &long_max,
->  	},
-> -	{ }
->  };
->  
->  static void __init epoll_sysctls_init(void)
-> diff --git a/fs/exec.c b/fs/exec.c
-> index 6518e33ea813..7a18bde22f25 100644
-> --- a/fs/exec.c
-> +++ b/fs/exec.c
-> @@ -2167,7 +2167,6 @@ static struct ctl_table fs_exec_sysctls[] = {
->  		.extra1		= SYSCTL_ZERO,
->  		.extra2		= SYSCTL_TWO,
->  	},
-> -	{ }
->  };
->  
->  static int __init init_fs_exec_sysctls(void)
-> diff --git a/fs/file_table.c b/fs/file_table.c
-> index ee21b3da9d08..544f7d4f166f 100644
-> --- a/fs/file_table.c
-> +++ b/fs/file_table.c
-> @@ -137,7 +137,6 @@ static struct ctl_table fs_stat_sysctls[] = {
->  		.extra1		= &sysctl_nr_open_min,
->  		.extra2		= &sysctl_nr_open_max,
->  	},
-> -	{ }
->  };
->  
->  static int __init init_fs_stat_sysctls(void)
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 35fd688168c5..ce16e3cda7bf 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -129,7 +129,6 @@ static struct ctl_table inodes_sysctls[] = {
->  		.mode		= 0444,
->  		.proc_handler	= proc_nr_inodes,
->  	},
-> -	{ }
->  };
->  
->  static int __init init_fs_inode_sysctls(void)
-> diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-> index 6579948070a4..f784ff58bfd3 100644
-> --- a/fs/lockd/svc.c
-> +++ b/fs/lockd/svc.c
-> @@ -474,7 +474,6 @@ static struct ctl_table nlm_sysctls[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_dointvec,
->  	},
-> -	{ }
->  };
->  
->  #endif	/* CONFIG_SYSCTL */
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 76ad05f8070a..6ecfc422fb37 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -111,7 +111,6 @@ static struct ctl_table locks_sysctls[] = {
->  		.proc_handler	= proc_dointvec,
->  	},
->  #endif /* CONFIG_MMU */
-> -	{}
->  };
->  
->  static int __init init_fs_locks_sysctls(void)
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 567ee547492b..fb552161c981 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -1070,7 +1070,6 @@ static struct ctl_table namei_sysctls[] = {
->  		.extra1		= SYSCTL_ZERO,
->  		.extra2		= SYSCTL_TWO,
->  	},
-> -	{ }
->  };
->  
->  static int __init init_fs_namei_sysctls(void)
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index e157efc54023..e95d4328539d 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -5008,7 +5008,6 @@ static struct ctl_table fs_namespace_sysctls[] = {
->  		.proc_handler	= proc_dointvec_minmax,
->  		.extra1		= SYSCTL_ONE,
->  	},
-> -	{ }
->  };
->  
->  static int __init init_fs_namespace_sysctls(void)
-> diff --git a/fs/nfs/nfs4sysctl.c b/fs/nfs/nfs4sysctl.c
-> index e776200e9a11..886a7c4c60b3 100644
-> --- a/fs/nfs/nfs4sysctl.c
-> +++ b/fs/nfs/nfs4sysctl.c
-> @@ -34,7 +34,6 @@ static struct ctl_table nfs4_cb_sysctls[] = {
->  		.mode = 0644,
->  		.proc_handler = proc_dointvec,
->  	},
-> -	{ }
->  };
->  
->  int nfs4_register_sysctl(void)
-> diff --git a/fs/nfs/sysctl.c b/fs/nfs/sysctl.c
-> index f39e2089bc4c..e645be1a3381 100644
-> --- a/fs/nfs/sysctl.c
-> +++ b/fs/nfs/sysctl.c
-> @@ -29,7 +29,6 @@ static struct ctl_table nfs_cb_sysctls[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_dointvec,
->  	},
-> -	{ }
->  };
->  
->  int nfs_register_sysctl(void)
-> diff --git a/fs/notify/dnotify/dnotify.c b/fs/notify/dnotify/dnotify.c
-> index ebdcc25df0f7..8151ed5ddefc 100644
-> --- a/fs/notify/dnotify/dnotify.c
-> +++ b/fs/notify/dnotify/dnotify.c
-> @@ -29,7 +29,6 @@ static struct ctl_table dnotify_sysctls[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_dointvec,
->  	},
-> -	{}
->  };
->  static void __init dnotify_sysctl_init(void)
->  {
-> diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fanotify_user.c
-> index f69c451018e3..80539839af0c 100644
-> --- a/fs/notify/fanotify/fanotify_user.c
-> +++ b/fs/notify/fanotify/fanotify_user.c
-> @@ -86,7 +86,6 @@ static struct ctl_table fanotify_table[] = {
->  		.proc_handler	= proc_dointvec_minmax,
->  		.extra1		= SYSCTL_ZERO
->  	},
-> -	{ }
->  };
->  
->  static void __init fanotify_sysctls_init(void)
-> diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inotify_user.c
-> index 1c4bfdab008d..3e222a271da6 100644
-> --- a/fs/notify/inotify/inotify_user.c
-> +++ b/fs/notify/inotify/inotify_user.c
-> @@ -85,7 +85,6 @@ static struct ctl_table inotify_table[] = {
->  		.proc_handler	= proc_dointvec_minmax,
->  		.extra1		= SYSCTL_ZERO
->  	},
-> -	{ }
->  };
->  
->  static void __init inotify_sysctls_init(void)
-> diff --git a/fs/ntfs/sysctl.c b/fs/ntfs/sysctl.c
-> index 174fe536a1c0..4e980170d86a 100644
-> --- a/fs/ntfs/sysctl.c
-> +++ b/fs/ntfs/sysctl.c
-> @@ -28,7 +28,6 @@ static struct ctl_table ntfs_sysctls[] = {
->  		.mode		= 0644,			/* Mode, proc handler. */
->  		.proc_handler	= proc_dointvec
->  	},
-> -	{}
->  };
->  
->  /* Storage for the sysctls header. */
-> diff --git a/fs/ocfs2/stackglue.c b/fs/ocfs2/stackglue.c
-> index a8d5ca98fa57..20aa37b67cfb 100644
-> --- a/fs/ocfs2/stackglue.c
-> +++ b/fs/ocfs2/stackglue.c
-> @@ -658,7 +658,6 @@ static struct ctl_table ocfs2_nm_table[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_dostring,
->  	},
-> -	{ }
->  };
->  
->  static struct ctl_table_header *ocfs2_table_header;
-> diff --git a/fs/pipe.c b/fs/pipe.c
-> index 6c1a9b1db907..6bc1c4ae81d5 100644
-> --- a/fs/pipe.c
-> +++ b/fs/pipe.c
-> @@ -1492,7 +1492,6 @@ static struct ctl_table fs_pipe_sysctls[] = {
->  		.mode		= 0644,
->  		.proc_handler	= proc_doulongvec_minmax,
->  	},
-> -	{ }
->  };
->  #endif
->  
-> diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
-> index de484195f49f..4e06c4d69906 100644
-> --- a/fs/proc/proc_sysctl.c
-> +++ b/fs/proc/proc_sysctl.c
-> @@ -71,7 +71,6 @@ static struct ctl_table root_table[] = {
->  		.procname = "",
->  		.mode = S_IFDIR|S_IRUGO|S_IXUGO,
->  	},
-> -	{ }
->  };
->  static struct ctl_table_root sysctl_table_root = {
->  	.default_set.dir.header = {
-> diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
-> index 9e72bfe8bbad..69b03e13e6f2 100644
-> --- a/fs/quota/dquot.c
-> +++ b/fs/quota/dquot.c
-> @@ -2949,7 +2949,6 @@ static struct ctl_table fs_dqstats_table[] = {
->  		.proc_handler	= proc_dointvec,
->  	},
->  #endif
-> -	{ },
->  };
->  
->  static int __init dquot_init(void)
-> diff --git a/fs/sysctls.c b/fs/sysctls.c
-> index 76a0aee8c229..8dbde9a802fa 100644
-> --- a/fs/sysctls.c
-> +++ b/fs/sysctls.c
-> @@ -26,7 +26,6 @@ static struct ctl_table fs_shared_sysctls[] = {
->  		.extra1		= SYSCTL_ZERO,
->  		.extra2		= SYSCTL_MAXOLDUID,
->  	},
-> -	{ }
->  };
->  
->  static int __init init_fs_sysctls(void)
-> diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-> index 56eaae9dac1a..7668285779c1 100644
-> --- a/fs/userfaultfd.c
-> +++ b/fs/userfaultfd.c
-> @@ -45,7 +45,6 @@ static struct ctl_table vm_userfaultfd_table[] = {
->  		.extra1		= SYSCTL_ZERO,
->  		.extra2		= SYSCTL_ONE,
->  	},
-> -	{ }
->  };
->  #endif
->  
-> diff --git a/fs/verity/fsverity_private.h b/fs/verity/fsverity_private.h
-> index d071a6e32581..8191bf7ad706 100644
-> --- a/fs/verity/fsverity_private.h
-> +++ b/fs/verity/fsverity_private.h
-> @@ -122,8 +122,8 @@ void __init fsverity_init_info_cache(void);
->  
->  /* signature.c */
->  
-> -#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
->  extern int fsverity_require_signatures;
-> +#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
->  int fsverity_verify_signature(const struct fsverity_info *vi,
->  			      const u8 *signature, size_t sig_size);
->  
-> diff --git a/fs/verity/init.c b/fs/verity/init.c
-> index a29f062f6047..e31045dd4f6c 100644
-> --- a/fs/verity/init.c
-> +++ b/fs/verity/init.c
-> @@ -13,7 +13,6 @@
->  static struct ctl_table_header *fsverity_sysctl_header;
->  
->  static struct ctl_table fsverity_sysctl_table[] = {
-> -#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
->  	{
->  		.procname       = "require_signatures",
->  		.data           = &fsverity_require_signatures,
-> @@ -23,14 +22,17 @@ static struct ctl_table fsverity_sysctl_table[] = {
->  		.extra1         = SYSCTL_ZERO,
->  		.extra2         = SYSCTL_ONE,
->  	},
-> -#endif
-> -	{ }
->  };
->  
->  static void __init fsverity_init_sysctl(void)
->  {
-> +#ifdef CONFIG_FS_VERITY_BUILTIN_SIGNATURES
->  	fsverity_sysctl_header = register_sysctl("fs/verity",
->  						 fsverity_sysctl_table);
-> +#else
-> +	fsverity_sysctl_header = register_sysctl_sz("fs/verity",
-> +						 fsverity_sysctl_table, 0);
-> +#endif
->  	if (!fsverity_sysctl_header)
->  		panic("fsverity sysctl registration failed");
->  }
-> diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
-> index fade33735393..a191f6560f98 100644
-> --- a/fs/xfs/xfs_sysctl.c
-> +++ b/fs/xfs/xfs_sysctl.c
-> @@ -206,8 +206,6 @@ static struct ctl_table xfs_table[] = {
->  		.extra2		= &xfs_params.stats_clear.max
->  	},
->  #endif /* CONFIG_PROC_FS */
-> -
-> -	{}
->  };
->  
->  int
-> 
-> -- 
-> 2.30.2
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgMDVkM2VmOGJi
+YTc3YzFiNWY5OGQ5NDFkOGIyZDRhZWFiODExOGVmMToNCg0KICBMaW51eCA2LjYtcmM3ICgyMDIz
+LTEwLTIyIDEyOjExOjIxIC0xMDAwKQ0KDQphcmUgYXZhaWxhYmxlIGluIHRoZSBHaXQgcmVwb3Np
+dG9yeSBhdDoNCg0KICBnaXQ6Ly9naXQubGludXgtbmZzLm9yZy9wcm9qZWN0cy90cm9uZG15L2xp
+bnV4LW5mcy5naXQgdGFncy9uZnMtZm9yLTYuNy0xDQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdl
+cyB1cCB0byBmMDAzYTcxN2FlOTA4NmIxZThhNDY2MzEyNGE5Njg2MmRmNzI4MmU3Og0KDQogIG5m
+czogQ29udmVydCBuZnNfc3ltbGluaygpIHRvIHVzZSBhIGZvbGlvICgyMDIzLTExLTAxIDE1OjQw
+OjQ0IC0wNDAwKQ0KDQpUaGFua3MNCiAgVHJvbmQNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KTkZTIGNsaWVudCB1cGRh
+dGVzIGZvciBMaW51eCA2LjcNCg0KSGlnaGxpZ2h0cyBpbmNsdWRlOg0KDQpCdWdmaXhlczoNCiAt
+IFNVTlJQQzogQSBmaXggdG8gcmUtcHJvYmUgdGhlIHRhcmdldCBSUEMgcG9ydCBhZnRlciBhbiBF
+Q09OTlJFU0VUIGVycm9yDQogLSBTVU5SUEM6IEhhbmRsZSBhbGxvY2F0aW9uIGVycm9ycyBmcm9t
+IHJwY2JfY2FsbF9hc3luYygpDQogLSBTVU5SUEM6IEZpeCBhIHVzZS1hZnRlci1mcmVlIGNvbmRp
+dGlvbiBpbiBycGNfcGlwZWZzDQogLSBTVU5SUEM6IGZpeCB1cCB2YXJpb3VzIGNoZWNrcyBmb3Ig
+dGltZW91dHMNCiAtIE5GU3Y0LjE6IEhhbmRsZSBORlM0RVJSX0RFTEFZIGVycm9ycyBkdXJpbmcg
+c2Vzc2lvbiB0cnVua2luZw0KIC0gTkZTdjQuMTogZml4IFNQNF9NQUNIX0NSRUQgcHJvdGVjdGlv
+biBmb3IgcG5mcyBJTw0KIC0gTkZTdjQ6IEVuc3VyZSB0aGF0IHdlIHRlc3QgYWxsIGRlbGVnYXRp
+b25zIHdoZW4gdGhlIHNlcnZlciBub3RpZmllcw0KICAgdXMgdGhhdCBpdCBtYXkgaGF2ZSByZXZv
+a2VkIHNvbWUgb2YgdGhlbQ0KDQpGZWF0dXJlczoNCiAtIEFsbG93IGtuZnNkIHByb2Nlc3NlcyB0
+byBicmVhayBvdXQgb2YgTkZTNEVSUl9ERUxBWSBsb29wcyB3aGVuDQogICByZS1leHBvcnRpbmcg
+TkZTdjQueCBieSBzZXR0aW5nIGFwcHJvcHJpYXRlIHZhbHVlcyBmb3IgdGhlDQogICAnZGVsYXlf
+cmV0cmFucycgbW9kdWxlIHBhcmFtZXRlci4NCiAtIG5mczogQ29udmVydCBuZnNfc3ltbGluaygp
+IHRvIHVzZSBhIGZvbGlvDQoNCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCkJlbmphbWluIENvZGRpbmd0b24gKDEpOg0KICAg
+ICAgTkZTdjQ6IGZhaXJseSB0ZXN0IGFsbCBkZWxlZ2F0aW9ucyBvbiBhIFNFUTRfIHJldm9jYXRp
+b24NCg0KRGFuIENhcnBlbnRlciAoMSk6DQogICAgICBTVU5SUEM6IEFkZCBhbiBJU19FUlIoKSBj
+aGVjayBiYWNrIHRvIHdoZXJlIGl0IHdhcw0KDQpNYXR0aGV3IFdpbGNveCAoT3JhY2xlKSAoMSk6
+DQogICAgICBuZnM6IENvbnZlcnQgbmZzX3N5bWxpbmsoKSB0byB1c2UgYSBmb2xpbw0KDQpNa3J0
+Y2h5YW4sIFRpZ3JhbiAoMSk6DQogICAgICBuZnM0MTogZHJvcCBkZXBlbmRlbmN5IGJldHdlZW4g
+ZmxleGZpbGVzIGxheW91dCBkcml2ZXIgYW5kIE5GU3YzIG1vZHVsZXMNCg0KT2xnYSBLb3JuaWV2
+c2thaWEgKDIpOg0KICAgICAgTkZTdjQuMTogZml4IGhhbmRsaW5nIE5GUzRFUlJfREVMQVkgd2hl
+biB0ZXN0aW5nIGZvciBzZXNzaW9uIHRydW5raW5nDQogICAgICBORlN2NC4xOiBmaXggU1A0X01B
+Q0hfQ1JFRCBwcm90ZWN0aW9uIGZvciBwbmZzIElPDQoNClRyb25kIE15a2xlYnVzdCAoNik6DQog
+ICAgICBORlN2NDogQWRkIGEgcGFyYW1ldGVyIHRvIGxpbWl0IHRoZSBudW1iZXIgb2YgcmV0cmll
+cyBhZnRlciBORlM0RVJSX0RFTEFZDQogICAgICBORlN2NC9wbmZzOiBBbGxvdyBsYXlvdXRnZXQg
+dG8gcmV0dXJuIEVBR0FJTiBmb3Igc29mdGVyciBtb3VudHMNCiAgICAgIFNVTlJQQzogRUNPTk5S
+RVNFVCBtaWdodCByZXF1aXJlIGEgcmViaW5kDQogICAgICBTVU5SUEM6IERvbid0IHNraXAgdGlt
+ZW91dCBjaGVja3MgaW4gY2FsbF9jb25uZWN0X3N0YXR1cygpDQogICAgICBTVU5SUEM6IEZvcmNl
+IGNsb3NlIHRoZSBzb2NrZXQgd2hlbiBhIGhhcmQgZXJyb3IgaXMgcmVwb3J0ZWQNCiAgICAgIFNV
+TlJQQzogU09GVENPTk4gdGFza3Mgc2hvdWxkIHRpbWUgb3V0IHdoZW4gb24gdGhlIHNlbmRpbmcg
+bGlzdA0KDQpmZWxpeCAoMSk6DQogICAgICBTVU5SUEM6IEZpeCBSUEMgY2xpZW50IGNsZWFuZWQg
+dXAgdGhlIGZyZWVkIHBpcGVmcyBkZW50cmllcw0KDQogRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlk
+ZS9rZXJuZWwtcGFyYW1ldGVycy50eHQgfCAgNyArKysNCiBmcy9uZnMvS2NvbmZpZyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICstDQogZnMvbmZzL2RlbGVnYXRpb24uYyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgNyArKy0NCiBmcy9uZnMvZGVsZWdhdGlvbi5o
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxICsNCiBmcy9uZnMvZGlyLmMgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDI5ICsrKysrLS0tLS0tLQ0KIGZzL25mcy9u
+ZnMzcHJvYy5jICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDMgKy0NCiBmcy9uZnMv
+bmZzNF9mcy5oICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAyICsNCiBmcy9uZnMv
+bmZzNHByb2MuYyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYyICsrKysrKysrKysr
+KysrKysrKystLS0tLS0NCiBmcy9uZnMvcG5mcy5jICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICA4ICsrKy0NCiBmcy9uZnMvcG5mcy5oICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICA1ICstDQogZnMvbmZzL3Byb2MuYyAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgfCAgMyArLQ0KIGZzL25mcy9zdXBlci5jICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIHwgIDggKysrLQ0KIGZzL25mcy93cml0ZS5jICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgIDIgKw0KIGluY2x1ZGUvbGludXgvbmZzX2ZzX3NiLmggICAgICAg
+ICAgICAgICAgICAgICAgIHwgIDEgKw0KIGluY2x1ZGUvbGludXgvbmZzX3hkci5oICAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgIDIgKy0NCiBpbmNsdWRlL2xpbnV4L3N1bnJwYy9jbG50LmggICAg
+ICAgICAgICAgICAgICAgICB8ICAxICsNCiBuZXQvc3VucnBjL2NsbnQuYyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDEwICsrLS0NCiBuZXQvc3VucnBjL3JwY2JfY2xudC5jICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8ICA0ICsrDQogbmV0L3N1bnJwYy94cHJ0LmMgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgNCArLQ0KIG5ldC9zdW5ycGMveHBydHNvY2suYyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgMTQgKystLS0tDQogMjAgZmlsZXMgY2hhbmdlZCwgMTIx
+IGluc2VydGlvbnMoKyksIDU0IGRlbGV0aW9ucygtKQ0KDQotLSANClRyb25kIE15a2xlYnVzdA0K
+TGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0
+QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
