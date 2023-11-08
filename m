@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60D737E51F1
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Nov 2023 09:26:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 00DAA7E51F7
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Nov 2023 09:28:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbjKHI06 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Nov 2023 03:26:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
+        id S235136AbjKHI2j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Nov 2023 03:28:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231397AbjKHI05 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Nov 2023 03:26:57 -0500
+        with ESMTP id S232606AbjKHI2i (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Nov 2023 03:28:38 -0500
 Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A3B10DA;
-        Wed,  8 Nov 2023 00:26:55 -0800 (PST)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231108082651euoutp01322a31e30a1949a58485448ad136f3ee~VmGkvKJK-1292912929euoutp01S;
-        Wed,  8 Nov 2023 08:26:51 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231108082651euoutp01322a31e30a1949a58485448ad136f3ee~VmGkvKJK-1292912929euoutp01S
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD52F170A;
+        Wed,  8 Nov 2023 00:28:35 -0800 (PST)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20231108082834euoutp0189dd510b70738062471ec931c2ba57e9~VmIEOKno61176811768euoutp01g;
+        Wed,  8 Nov 2023 08:28:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20231108082834euoutp0189dd510b70738062471ec931c2ba57e9~VmIEOKno61176811768euoutp01g
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1699432012;
-        bh=eMo1TU5p3NXnSXpc6X1V4mK9zZsurYCuwe1XJ0Pu4Pk=;
+        s=mail20170921; t=1699432114;
+        bh=D7nTEhKxxoPR3KSL5fDC8KjdNN6ncouOX5FUB916ulg=;
         h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=uwECrOZYFI5jFdAU0t1qbP0QvYCIRinqIPlTTisFdWjCJC8PSwgECKcBl+ZsH6MV0
-         RVT+W4Ih3xJaXQbIE83w06j0PYNLbidpPo6W4/PjwpDYNCmj6qhwzENO/CjU4h21W1
-         bBH9Vu+ZugsS550igy4H9zVrKaZyRYU7tBsHEzJ0=
+        b=MC7T4kfheCs+i0yHEuDpcTJM55ZgtaXJ7N945/Qv8xwK+v21Hhq9uOPuWHPF76Uot
+         tHJcyKy0v6xfjkd2yN7EcAuTvNkrreBAv4ciat0on2seTpPTGHCkPKcZs556sTpD0O
+         r9D/tPU0QSIcOrEW0PuWQDJ6lzMLZRgQsqez/Pzo=
 Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20231108082651eucas1p2c4f8104c585a909712d9bda5c0a07e4e~VmGkcUxwv1343713437eucas1p2L;
-        Wed,  8 Nov 2023 08:26:51 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20231108082834eucas1p1f240d828ab1cfafe595054d67529e070~VmID-oXYD2116521165eucas1p1_;
+        Wed,  8 Nov 2023 08:28:34 +0000 (GMT)
 Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id C0.03.11320.B464B456; Wed,  8
-        Nov 2023 08:26:51 +0000 (GMT)
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id FE.63.11320.1B64B456; Wed,  8
+        Nov 2023 08:28:34 +0000 (GMT)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
         eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20231108082650eucas1p112dd45481f2cea4037e10dd0f78b3b33~VmGj3dXLl2116521165eucas1p1e;
-        Wed,  8 Nov 2023 08:26:50 +0000 (GMT)
+        20231108082833eucas1p1611d66cce2ef830b348b27d580ac6b55~VmIDYy0Gu2307623076eucas1p1c;
+        Wed,  8 Nov 2023 08:28:33 +0000 (GMT)
 Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20231108082650eusmtrp27043ee302523962dd6adc1db39206447~VmGj0u9lQ0509305093eusmtrp2U;
-        Wed,  8 Nov 2023 08:26:50 +0000 (GMT)
-X-AuditID: cbfec7f4-97dff70000022c38-5e-654b464b4a1d
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 33.5D.10549.A464B456; Wed,  8
-        Nov 2023 08:26:50 +0000 (GMT)
+        20231108082833eusmtrp2273c28d0e7e9b65047612a9e83dc87da~VmIDXa4dq0657206572eusmtrp2V;
+        Wed,  8 Nov 2023 08:28:33 +0000 (GMT)
+X-AuditID: cbfec7f4-97dff70000022c38-c7-654b46b1a532
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 9D.9D.10549.1B64B456; Wed,  8
+        Nov 2023 08:28:33 +0000 (GMT)
 Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20231108082650eusmtip2bceb4048c302fc101d6873288cb4c03a~VmGjfQ1VV0818708187eusmtip2-;
-        Wed,  8 Nov 2023 08:26:50 +0000 (GMT)
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20231108082833eusmtip11d33afe59e3ace4e741845504db5ad63~VmIC9q2Sg1310013100eusmtip1C;
+        Wed,  8 Nov 2023 08:28:33 +0000 (GMT)
 Received: from localhost (106.110.32.133) by CAMSVWEXC02.scsc.local
         (2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-        Wed, 8 Nov 2023 08:26:49 +0000
-Date:   Wed, 8 Nov 2023 09:26:48 +0100
+        Wed, 8 Nov 2023 08:28:32 +0000
+Date:   Wed, 8 Nov 2023 09:28:31 +0100
 From:   Joel Granados <j.granados@samsung.com>
-To:     Eric Biggers <ebiggers@kernel.org>
+To:     "Darrick J. Wong" <djwong@kernel.org>
 CC:     Luis Chamberlain <mcgrof@kernel.org>, <willy@infradead.org>,
         <josh@joshtriplett.org>, Kees Cook <keescook@chromium.org>,
         David Howells <dhowells@redhat.com>,
@@ -75,9 +75,9 @@ CC:     Luis Chamberlain <mcgrof@kernel.org>, <willy@infradead.org>,
         Joel Becker <jlbec@evilplan.org>,
         Joseph Qi <joseph.qi@linux.alibaba.com>,
         Iurii Zaikin <yzaikin@google.com>,
+        Eric Biggers <ebiggers@kernel.org>,
         "Theodore Y. Ts'o" <tytso@mit.edu>,
         Chandan Babu R <chandan.babu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
         Jan Harkes <jaharkes@cs.cmu.edu>, <coda@cs.cmu.edu>,
         <linux-cachefs@redhat.com>, <linux-kernel@vger.kernel.org>,
         <linux-fsdevel@vger.kernel.org>, <linux-aio@kvack.org>,
@@ -87,92 +87,428 @@ CC:     Luis Chamberlain <mcgrof@kernel.org>, <willy@infradead.org>,
         <linux-xfs@vger.kernel.org>, <codalist@telemann.coda.cs.cmu.edu>
 Subject: Re: [PATCH 2/4] aio: Remove the now superfluous sentinel elements
  from ctl_table array
-Message-ID: <20231108082648.nne6k2unowzhhg5m@localhost>
+Message-ID: <20231108082831.ch2nw22fk5ki66fq@localhost>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="qdy4sfallzzqrze5"
+        protocol="application/pgp-signature"; boundary="tnwrscd4kofkwoer"
 Content-Disposition: inline
-In-Reply-To: <20231108034231.GB2482@sol.localdomain>
+In-Reply-To: <20231107162251.GL1205143@frogsfrogsfrogs>
 X-Originating-IP: [106.110.32.133]
 X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
         CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTf1CTdRzu++7d3gGNexkefp0a1wLKH2ERnd8uDEjTN/XI9LrOOKqdvAHF
-        NtlYYHcUESQMUFghMLEtlKGAiBsh48cBQyB+nPzSnPzYKYIUkMjP48dkMV8s7/rveZ7P83zv
-        ef74cln8UkLAjZBE0zKJKFLIccQrmhdvvHpg7wH6tf7+DairtBigJKMNR0Z9ORspV8pxNN44
-        DVBP0wvINjiKofkSM4aqSx9iSJNv4KCHCcs46h12RraKRAJdrrGyUMqQjYPOZv+AoYL+FDZa
-        1BURqPXGPI4u6RYIZNNKUUeqGFUODuMo80wBC/18JgGgqQttBKqpbV19rCqPgywlNjbqqm9n
-        o5PJeQBVWSsJlJqZTSBzxghAtZp4HJkst9go4VwdG7UttWHIZvZHSWmLBOp83MJGywurj+iM
-        QQHbqLPx3TilvX6QGuk+TF25o+JQRvUgQWn1CspqukpQhotbqb7xXZS+KIVD6adVBGW89xb1
-        pyEXUNXaGYxK6GhiUTnTs5xDgk8c/ULpyIivadmOdz53DO98dJk4fsc9tqhpmBMPcgVK4MCF
-        pC9szLuKK4Ejl09eBHClU8VhyCyAy/VZGENmADQOqPCnkeGSkTVXIYAZjefZ/7qS1SlrxADg
-        qK6HsEdw0gOeyukBdswht8POiQGWEnC560gv2Fzwgd3PIg1OUDnUgNl1V1IENQ1edjuP3AlH
-        cjIJBrvA1tzhJy1YZCysUC2x7XYWuREWrnDtssNqub4LZYApKoRzE+lsBsfBtvK+J2sgedsJ
-        an6fYDGHPVAzdh9jsCscayknGLwJ2oyatcBPANatPCIYUgyg7vu5tcTbMPHm8FoiEGYqT+P2
-        RpB0hua/XZiizlBVkc1iZB5M/pHPuL1gsWUCzwAvqZ+Zpn5mmvq/aYy8HWqrpzn/k7dB3a/j
-        LAbvgqWlk7gWEEVgPa2Qi8NouY+EjvGWi8RyhSTM+5hUrAer36h9pWW2EhSOTXmbAMYFJuCx
-        Gh4qK+4CAlwildDCdbzH/hTN54WKTnxDy6SfyRSRtNwENnJx4XqeZ6g7zSfDRNH0VzR9nJY9
-        vWJcB0E8ZkgX7pXetWzYUXbkoNuHLwe4djxI+CVIEXX92LniQ6Z7IaalgORRd0n20dQp979C
-        90U1u4z+oUmq3/+cb+t9hWmuN+5LrOZ06Amxnvfubr/iEMkRtW/EYa3fkvANeqT9TYnYrXYm
-        2vnSHvM+n/mGsOUVT6fN7dK+nUPBSc13358LnJRbv9is6tnS2a8dS/z2vMLtRfBA+tHkplf2
-        O81mhXl8pwytjuHnx3QHX8uzDqRmnYoNPLnQULDbxzf+Y92n4/lRHK9bgvEC/zqx52zaleW4
-        wOcn0oIWZFaLf0BIekbVTcw7q22LydzdS4f/VmRlW5oypyyuVjLGcNTU/J4VWINvXxPi8nDR
-        61tZMrnoH1QLzKDBBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTVxzHPbe3vQXDuLQYj51OVp3bYBbKy1MG6LJsu6JjBF1iXAg2cgdE
-        aKGloMYZVsRRQCKPABaEagS1vKRlrEVUZDwGGEEWZn3QbUJ1ikN5jPHuWuoyk/33zff3+37O
-        73dyDpvB6WHx2PGSFFomESfwWc5433K3eWvYp7toH0OdLxqorwEo02jFkVHXxETZy004Gvtx
-        EqDBzreQdfgJhmZqTRi6Wj+OocrzehYaVy7g6OfRN5C1+QSB6loXGUj1yMpCZSUZGKp6oGKi
-        uWotgXpuz+DocvUsgawaKbqVk4gMw6M4yi+uYqCiYiVAExd6CdR6rccGaylnIXOtlYkG2vqY
-        6LuscoBaFg0EyskvIZDptAWga5XpOGo3DzGR8uwNJuqd78WQ1bQdZebOEah/qZuJFmZtkGpj
-        +A4vqiz9Dk5pOnZTljuRVMO9AhZlVA8TlEanoBbbGwlKf8mTuj8WQum0KhalmywgKOPvIuoP
-        /RlAXdVMYZTyVieDKp2cZkXw9guCZVJFCu0RJ5WnhPC/EiJfgVCEBL7+IoHQb1tUkG8A3zs0
-        OIZOiE+lZd6hBwRxyzmnmEl3Nx5W/d2ApYMSXjZwYkPSH47WWljZwJnNIasA1H1fjTkK62Hj
-        9BDToblw8ZfsV00TAJqG5nF7gUPqAeycW2fXOLkZ5pUOArtmkR/A/ucPGdmAzXYnt8Cuqi/s
-        WQapXw2LfjWu+FxSDCtvbrG3u5DboKU0n3Dwz2KwOeMu01Fwgz1nRlfOYpCpMP1b5UqWQb4J
-        Ly6z7baTbYH7F64Ax5x8+NfzU69m/gZOLT0GpwFX/RpJ/RpJ/R/JYXtC0/JT7H+2F6w+N8Zw
-        6BBYX/8C1wBCC9xphTwxNlEuFMjFiXKFJFZwUJqoA7Z33Nw1pzeAimcTgnaAsUE72GxLPrpS
-        MwB4uEQqofnuLkvbKZrjEiM+cpSWSaNligRa3g4CbJeYz+CtOSi1fQpJSrQw0CdA6B8o8gkQ
-        Bfrx17rsTMoSc8hYcQp9iKaTaNm/OYztxEvHvvYAnL2d7yZ8PpKX25hQyJvXYHuvB1uoxfLZ
-        ix/HHFp1buFGcv9xXZv8oyepvVFfDiZ/MjuvXiq7PCdd3xrJyezymzcc1lpUPwwfD9og2bP/
-        3nR3UZvZ7bdVq28a1GkROx5jL7m9Xmk7+8K2RnwWzPEuHOBSFQXBD7oD9l13mQqJP2pqfP/k
-        UyeqheVKKVzXfRgzHZ3n5he057bzO8SSJHpDUfhu9oJ6xjUW+QX1c8OPZYQfyHJ/+Oz8e3Vr
-        Rio2mSnE6RvpmDkCJ4c8IlXKtfvM6pqXUdrOnpywE2k+2tym1LcVG0OLO06q8/9six3nYsf6
-        LmWBZFEDapQqXuhyfirk4/I4sdCTIZOL/wENyV5RXAQAAA==
-X-CMS-MailID: 20231108082650eucas1p112dd45481f2cea4037e10dd0f78b3b33
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxzeufe2t8Cq10L0DAgkTFjGcxs6jhEBs0UvmXFGk829cI1ckA1a
+        0oJTF7LKRN5LZUxGwVEmD6GArgXGowgUgfEYojKoaNkGOAkPGU8pLe2A1miy/77zPX75vj8O
+        B+dVkY6cKEEcIxLwo93YtkRth77PR3ngPeYNUypA/VUKgJLqzQSqV1azUJqpmkBTbfMA3W13
+        QWbdYwwtV2gx1Fj1BEMFP6vY6EmigUD3xrcgc+0FElWqjThKHTWzUV7OtxgqfpDKQvqSchJ1
+        9S0TqKxkhURmuRD1psegOt04gS5dLsZR9uVEgOaKukmkbupaP9aQz0YjFWYW6m/pYaHklHyA
+        Gox1JEq/lEMirfQRQE0FEgJpRv5gocQrzSzUvdqNIbM2GCVl6El0e62ThQwr60dK6g+HeNF5
+        kjsELb91iH505yh9/X4Wm66X6UharoynjZpfSFp1zZMentpHK8tT2bRyPouk6//eQ0+ocgHd
+        KF/A6MTedpz+cX6RfcTxY9vAcCY66jQj8gv63PbUokrGis2PO/PD2ApbApaOpwEbDqR2wfHk
+        KTIN2HJ41DUAm9K1hOWxCODMULNVWQBQPnoTexa5P3YTWIRSABV96c9dycmPrYoKwAF1K74R
+        IaidcEam3sRsyhvenn64iR2o1+Gt5cHNszh1ww6azA5pgMOxp/iwoNVjg+ZSAXChZwRY8DbY
+        lTtOWOxnoK5fh2/YccoJlpo4G7TNut2UWUNairrBpelMlgUnwO7qYWyjGqSG7GDp1T6r8C6s
+        rKy1LrOHk53V1rAzNNcXWAPfA9hs+pe0PBQAlpxfsib2wgsD49bEfvi0VIptNILUFqid2WYp
+        ugVm1ebgFpoLUy7yLG4PqBiZJqTgVdkL02QvTJM9n2ahvaG8cZ79P9oLlhRO4Ra8D1ZVzRJy
+        QJaDHUy8OCaSEb8lYL7yFfNjxPGCSN+TwhglWP9GPabOxTpQOjnnqwEYB2jAzvXw6A1FP3Ak
+        BEIB4+bAXQumGR43nH/2HCMSnhDFRzNiDXDiEG47uO7hrgyPiuTHMV8yTCwjeqZiHBtHCRZg
+        kO4eS8Lbhjq0NezaVyqyGe7W11wmUlxn5a3q4ff9/nI68GGWMbGzxceY4P3T0x7D9oqhgYO5
+        L2Gr7tDAPvZB/lUfXlHogDC0t4Fs6W+/nhYY+7AqzGXNb7eiKChm0HPSpSyoxfBdRdf4hP/F
+        wCS0a3g0w47652zdgm/Nfq8Hhxe28k/bvHzFY8w49RvHtj3/7e6jZv9vXD4q7NHfbXMuVKND
+        0SGDi5+elORV2ueGfS3QdxT/6n0vKnRV5CmN/CziyBcNrjPv+GcUOp//88TxsE9a3SU+e5aa
+        I34PmBPw9woaNbMDUn61vY/6mI1KOi0s0wWvnIvQO49k+maHqbYnhDS5EeJT/Dc9cZGY/x8Q
+        3xsAwQQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA2VTe0xTVxzOuff23uLAldd27MzmGt0DWKFQ4LCAmhHlDtziUHSBLdjJpTCh
+        rX0wJnsQHlFeKohFK0K3CdsAebTAaIFNEOZ4ZOAmpiiQoDB1IIyHDKTQFeoyk/33ne/3fd/v
+        y8k5bNyph+Sy4yVKRi4RJfDIDUTP6rXhN+p2hzFeJ5tdUH91JUCZBguBDLp6FsperSfQxNVZ
+        gH7rfBFZhu9haKHKhKHm6ikMlX6tJ9FU2jKBfh/biCyNGRS63GLGUdYdC4kuFKVjqOx2Fgst
+        lVdQqOvXBQJ9X75IIYtWinpzElHT8BiB8tVlOCpUpwE0c6mbQi2tXdYwYzGJRqosLNR/pYeF
+        jp8oBshobqJQTn4RhUynxwFqLU0lUPvIAAulXfyJhbofd2PIYtqBMnOXKNS3co2FlhetIeWG
+        d3e60xdSrxO0tmMPPX49nK4ZLCBpg2aYorU6FW1ur6No/Xdu9K2JIFpXkUXSutkCijaMBtD3
+        9ecB3aydw+i03k6cPjc7T+7lRvID5VKVktkSJ1Uog3hRAuTNFwQgvrcwgC/w8f/wTW9fnuf2
+        wBgmIT6JkXtuP8SPG6tqIGUaZbJ65T6VCubezwZ2bMgRwsG7P4JssIHtxCkD0FTbC2yDzbBu
+        foBlw87QfDObtIlmAGw6eQ6zHfQAzjQeJ9ZUBGcrfKhpwdcwyfGAfZND69iF8zrsWLi5bsA5
+        tc/AIU2F1cBmO3NEsLTtlTWNA8cfzvWMPKmhxeCtfhNuGzjCrvNj6wtwThIsSNdja16c8wL8
+        dpW9RttZvat5DZStKQ8+msx70vpzOLfyBzgNnDVPJWmeStL8l2Sj3aBp9cH/aXdY/tUEbsNB
+        sLp6mtACqgK4MCpFojhRIeArRIkKlUTMPyxN1AHrS278eUnfBEr+nOG3A4wN2sFWq/NObWU/
+        4BISqYThuTis7KAZJ4cY0afHGLk0Wq5KYBTtwNd6i/k41/Ww1PotJMpogZ+Xr0DoF+DlG+Dn
+        w3ve4W3ZCZETRyxSMkcYRsbI//VhbDtuKiYbyovdu/HloMoDGH4q3t8nxSMsIdsceaCuInnp
+        722Xa3rnRwqDWRkMFeEYm/MFTzYQmfvBO1exG7vC5ETPwTPFTMLO1pdyvXerHxZsulK56Yxh
+        X/Klt0qmjSmlqt6j4915/rLgjm1q7rOPM0OCUVuD8dh4YfpZzDN0f/S9vvw9n5mLPZMuhnkk
+        RST9Jf9h2b5hPO5UiM+geMuD10p0o68yg3GhXre/nAo/1OEw2tZWiFztQxvH5j86mOW4YFw0
+        xu4vFG+uvGFybdrXf1Ttynx899H0c9+U+gmEKxn8iChhZqe92PKLThieMilVukcFnpVo3tPU
+        f+JKc4+c8AsuiqkJyQziEYo4kcANlytE/wCAMOowXgQAAA==
+X-CMS-MailID: 20231108082833eucas1p1611d66cce2ef830b348b27d580ac6b55
 X-Msg-Generator: CA
-X-RootMTR: 20231108034239eucas1p2e5dacae548e47694184df217ee168da9
+X-RootMTR: 20231107162257eucas1p15a82c78ef55c1e6864627fb213fd1522
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20231108034239eucas1p2e5dacae548e47694184df217ee168da9
+X-CMS-RootMailID: 20231107162257eucas1p15a82c78ef55c1e6864627fb213fd1522
 References: <20231107-jag-sysctl_remove_empty_elem_fs-v1-0-7176632fea9f@samsung.com>
         <20231107-jag-sysctl_remove_empty_elem_fs-v1-2-7176632fea9f@samsung.com>
-        <CGME20231108034239eucas1p2e5dacae548e47694184df217ee168da9@eucas1p2.samsung.com>
-        <20231108034231.GB2482@sol.localdomain>
+        <CGME20231107162257eucas1p15a82c78ef55c1e6864627fb213fd1522@eucas1p1.samsung.com>
+        <20231107162251.GL1205143@frogsfrogsfrogs>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---qdy4sfallzzqrze5
+--tnwrscd4kofkwoer
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 07, 2023 at 07:42:31PM -0800, Eric Biggers wrote:
+On Tue, Nov 07, 2023 at 08:22:51AM -0800, Darrick J. Wong wrote:
 > On Tue, Nov 07, 2023 at 02:44:21PM +0100, Joel Granados via B4 Relay wrot=
 e:
-> > [PATCH 2/4] aio: Remove the now superfluous sentinel elements from ctl_=
-table array
->=20
-> The commit prefix should be "fs:".
-Will do
-
->=20
+> > From: Joel Granados <j.granados@samsung.com>
+> >=20
+> > This commit comes at the tail end of a greater effort to remove the
+> > empty elements at the end of the ctl_table arrays (sentinels) which
+> > will reduce the overall build time size of the kernel and run time
+> > memory bloat by ~64 bytes per sentinel (further information Link :
+> > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> >=20
 > > Remove sentinel elements ctl_table struct. Special attention was placed=
  in
 > > making sure that an empty directory for fs/verity was created when
 > > CONFIG_FS_VERITY_BUILTIN_SIGNATURES is not defined. In this case we use=
  the
 > > register sysctl call that expects a size.
-> [...]
+> >=20
+> > Signed-off-by: Joel Granados <j.granados@samsung.com>
+> > ---
+> >  fs/aio.c                           | 1 -
+> >  fs/coredump.c                      | 1 -
+> >  fs/dcache.c                        | 1 -
+> >  fs/devpts/inode.c                  | 1 -
+> >  fs/eventpoll.c                     | 1 -
+> >  fs/exec.c                          | 1 -
+> >  fs/file_table.c                    | 1 -
+> >  fs/inode.c                         | 1 -
+> >  fs/lockd/svc.c                     | 1 -
+> >  fs/locks.c                         | 1 -
+> >  fs/namei.c                         | 1 -
+> >  fs/namespace.c                     | 1 -
+> >  fs/nfs/nfs4sysctl.c                | 1 -
+> >  fs/nfs/sysctl.c                    | 1 -
+> >  fs/notify/dnotify/dnotify.c        | 1 -
+> >  fs/notify/fanotify/fanotify_user.c | 1 -
+> >  fs/notify/inotify/inotify_user.c   | 1 -
+> >  fs/ntfs/sysctl.c                   | 1 -
+> >  fs/ocfs2/stackglue.c               | 1 -
+> >  fs/pipe.c                          | 1 -
+> >  fs/proc/proc_sysctl.c              | 1 -
+> >  fs/quota/dquot.c                   | 1 -
+> >  fs/sysctls.c                       | 1 -
+> >  fs/userfaultfd.c                   | 1 -
+> >  fs/verity/fsverity_private.h       | 2 +-
+> >  fs/verity/init.c                   | 8 +++++---
+> >  fs/xfs/xfs_sysctl.c                | 2 --
+>=20
+> Not sure why an xfs change came in on a patch tagged "aio:"; I would
+> have expected "fs:" or "vfs:" or something.  For the XFS part:
+This was the same comment as Eric. will address it in my V2 and add your
+reviewed tag.
+
+Thx
+
+>=20
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+>=20
+> --D
+>=20
+> >  27 files changed, 6 insertions(+), 30 deletions(-)
+> >=20
+> > diff --git a/fs/aio.c b/fs/aio.c
+> > index a4c2a6bac72c..da069d6b6c66 100644
+> > --- a/fs/aio.c
+> > +++ b/fs/aio.c
+> > @@ -239,7 +239,6 @@ static struct ctl_table aio_sysctls[] =3D {
+> >  		.mode		=3D 0644,
+> >  		.proc_handler	=3D proc_doulongvec_minmax,
+> >  	},
+> > -	{}
+> >  };
+> > =20
+> >  static void __init aio_sysctl_init(void)
+> > diff --git a/fs/coredump.c b/fs/coredump.c
+> > index 9d235fa14ab9..f258c17c1841 100644
+> > --- a/fs/coredump.c
+> > +++ b/fs/coredump.c
+> > @@ -981,7 +981,6 @@ static struct ctl_table coredump_sysctls[] =3D {
+> >  		.mode		=3D 0644,
+> >  		.proc_handler	=3D proc_dointvec,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static int __init init_fs_coredump_sysctls(void)
+> > diff --git a/fs/dcache.c b/fs/dcache.c
+> > index 25ac74d30bff..bafdd455b0fe 100644
+> > --- a/fs/dcache.c
+> > +++ b/fs/dcache.c
+> > @@ -191,7 +191,6 @@ static struct ctl_table fs_dcache_sysctls[] =3D {
+> >  		.mode		=3D 0444,
+> >  		.proc_handler	=3D proc_nr_dentry,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static int __init init_fs_dcache_sysctls(void)
+> > diff --git a/fs/devpts/inode.c b/fs/devpts/inode.c
+> > index 299c295a27a0..a4de1612b1db 100644
+> > --- a/fs/devpts/inode.c
+> > +++ b/fs/devpts/inode.c
+> > @@ -69,7 +69,6 @@ static struct ctl_table pty_table[] =3D {
+> >  		.data		=3D &pty_count,
+> >  		.proc_handler	=3D proc_dointvec,
+> >  	},
+> > -	{}
+> >  };
+> > =20
+> >  struct pts_mount_opts {
+> > diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> > index 1d9a71a0c4c1..975fc5623102 100644
+> > --- a/fs/eventpoll.c
+> > +++ b/fs/eventpoll.c
+> > @@ -322,7 +322,6 @@ static struct ctl_table epoll_table[] =3D {
+> >  		.extra1		=3D &long_zero,
+> >  		.extra2		=3D &long_max,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static void __init epoll_sysctls_init(void)
+> > diff --git a/fs/exec.c b/fs/exec.c
+> > index 6518e33ea813..7a18bde22f25 100644
+> > --- a/fs/exec.c
+> > +++ b/fs/exec.c
+> > @@ -2167,7 +2167,6 @@ static struct ctl_table fs_exec_sysctls[] =3D {
+> >  		.extra1		=3D SYSCTL_ZERO,
+> >  		.extra2		=3D SYSCTL_TWO,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static int __init init_fs_exec_sysctls(void)
+> > diff --git a/fs/file_table.c b/fs/file_table.c
+> > index ee21b3da9d08..544f7d4f166f 100644
+> > --- a/fs/file_table.c
+> > +++ b/fs/file_table.c
+> > @@ -137,7 +137,6 @@ static struct ctl_table fs_stat_sysctls[] =3D {
+> >  		.extra1		=3D &sysctl_nr_open_min,
+> >  		.extra2		=3D &sysctl_nr_open_max,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static int __init init_fs_stat_sysctls(void)
+> > diff --git a/fs/inode.c b/fs/inode.c
+> > index 35fd688168c5..ce16e3cda7bf 100644
+> > --- a/fs/inode.c
+> > +++ b/fs/inode.c
+> > @@ -129,7 +129,6 @@ static struct ctl_table inodes_sysctls[] =3D {
+> >  		.mode		=3D 0444,
+> >  		.proc_handler	=3D proc_nr_inodes,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static int __init init_fs_inode_sysctls(void)
+> > diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+> > index 6579948070a4..f784ff58bfd3 100644
+> > --- a/fs/lockd/svc.c
+> > +++ b/fs/lockd/svc.c
+> > @@ -474,7 +474,6 @@ static struct ctl_table nlm_sysctls[] =3D {
+> >  		.mode		=3D 0644,
+> >  		.proc_handler	=3D proc_dointvec,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  #endif	/* CONFIG_SYSCTL */
+> > diff --git a/fs/locks.c b/fs/locks.c
+> > index 76ad05f8070a..6ecfc422fb37 100644
+> > --- a/fs/locks.c
+> > +++ b/fs/locks.c
+> > @@ -111,7 +111,6 @@ static struct ctl_table locks_sysctls[] =3D {
+> >  		.proc_handler	=3D proc_dointvec,
+> >  	},
+> >  #endif /* CONFIG_MMU */
+> > -	{}
+> >  };
+> > =20
+> >  static int __init init_fs_locks_sysctls(void)
+> > diff --git a/fs/namei.c b/fs/namei.c
+> > index 567ee547492b..fb552161c981 100644
+> > --- a/fs/namei.c
+> > +++ b/fs/namei.c
+> > @@ -1070,7 +1070,6 @@ static struct ctl_table namei_sysctls[] =3D {
+> >  		.extra1		=3D SYSCTL_ZERO,
+> >  		.extra2		=3D SYSCTL_TWO,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static int __init init_fs_namei_sysctls(void)
+> > diff --git a/fs/namespace.c b/fs/namespace.c
+> > index e157efc54023..e95d4328539d 100644
+> > --- a/fs/namespace.c
+> > +++ b/fs/namespace.c
+> > @@ -5008,7 +5008,6 @@ static struct ctl_table fs_namespace_sysctls[] =
+=3D {
+> >  		.proc_handler	=3D proc_dointvec_minmax,
+> >  		.extra1		=3D SYSCTL_ONE,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static int __init init_fs_namespace_sysctls(void)
+> > diff --git a/fs/nfs/nfs4sysctl.c b/fs/nfs/nfs4sysctl.c
+> > index e776200e9a11..886a7c4c60b3 100644
+> > --- a/fs/nfs/nfs4sysctl.c
+> > +++ b/fs/nfs/nfs4sysctl.c
+> > @@ -34,7 +34,6 @@ static struct ctl_table nfs4_cb_sysctls[] =3D {
+> >  		.mode =3D 0644,
+> >  		.proc_handler =3D proc_dointvec,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  int nfs4_register_sysctl(void)
+> > diff --git a/fs/nfs/sysctl.c b/fs/nfs/sysctl.c
+> > index f39e2089bc4c..e645be1a3381 100644
+> > --- a/fs/nfs/sysctl.c
+> > +++ b/fs/nfs/sysctl.c
+> > @@ -29,7 +29,6 @@ static struct ctl_table nfs_cb_sysctls[] =3D {
+> >  		.mode		=3D 0644,
+> >  		.proc_handler	=3D proc_dointvec,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  int nfs_register_sysctl(void)
+> > diff --git a/fs/notify/dnotify/dnotify.c b/fs/notify/dnotify/dnotify.c
+> > index ebdcc25df0f7..8151ed5ddefc 100644
+> > --- a/fs/notify/dnotify/dnotify.c
+> > +++ b/fs/notify/dnotify/dnotify.c
+> > @@ -29,7 +29,6 @@ static struct ctl_table dnotify_sysctls[] =3D {
+> >  		.mode		=3D 0644,
+> >  		.proc_handler	=3D proc_dointvec,
+> >  	},
+> > -	{}
+> >  };
+> >  static void __init dnotify_sysctl_init(void)
+> >  {
+> > diff --git a/fs/notify/fanotify/fanotify_user.c b/fs/notify/fanotify/fa=
+notify_user.c
+> > index f69c451018e3..80539839af0c 100644
+> > --- a/fs/notify/fanotify/fanotify_user.c
+> > +++ b/fs/notify/fanotify/fanotify_user.c
+> > @@ -86,7 +86,6 @@ static struct ctl_table fanotify_table[] =3D {
+> >  		.proc_handler	=3D proc_dointvec_minmax,
+> >  		.extra1		=3D SYSCTL_ZERO
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static void __init fanotify_sysctls_init(void)
+> > diff --git a/fs/notify/inotify/inotify_user.c b/fs/notify/inotify/inoti=
+fy_user.c
+> > index 1c4bfdab008d..3e222a271da6 100644
+> > --- a/fs/notify/inotify/inotify_user.c
+> > +++ b/fs/notify/inotify/inotify_user.c
+> > @@ -85,7 +85,6 @@ static struct ctl_table inotify_table[] =3D {
+> >  		.proc_handler	=3D proc_dointvec_minmax,
+> >  		.extra1		=3D SYSCTL_ZERO
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static void __init inotify_sysctls_init(void)
+> > diff --git a/fs/ntfs/sysctl.c b/fs/ntfs/sysctl.c
+> > index 174fe536a1c0..4e980170d86a 100644
+> > --- a/fs/ntfs/sysctl.c
+> > +++ b/fs/ntfs/sysctl.c
+> > @@ -28,7 +28,6 @@ static struct ctl_table ntfs_sysctls[] =3D {
+> >  		.mode		=3D 0644,			/* Mode, proc handler. */
+> >  		.proc_handler	=3D proc_dointvec
+> >  	},
+> > -	{}
+> >  };
+> > =20
+> >  /* Storage for the sysctls header. */
+> > diff --git a/fs/ocfs2/stackglue.c b/fs/ocfs2/stackglue.c
+> > index a8d5ca98fa57..20aa37b67cfb 100644
+> > --- a/fs/ocfs2/stackglue.c
+> > +++ b/fs/ocfs2/stackglue.c
+> > @@ -658,7 +658,6 @@ static struct ctl_table ocfs2_nm_table[] =3D {
+> >  		.mode		=3D 0644,
+> >  		.proc_handler	=3D proc_dostring,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static struct ctl_table_header *ocfs2_table_header;
+> > diff --git a/fs/pipe.c b/fs/pipe.c
+> > index 6c1a9b1db907..6bc1c4ae81d5 100644
+> > --- a/fs/pipe.c
+> > +++ b/fs/pipe.c
+> > @@ -1492,7 +1492,6 @@ static struct ctl_table fs_pipe_sysctls[] =3D {
+> >  		.mode		=3D 0644,
+> >  		.proc_handler	=3D proc_doulongvec_minmax,
+> >  	},
+> > -	{ }
+> >  };
+> >  #endif
+> > =20
+> > diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+> > index de484195f49f..4e06c4d69906 100644
+> > --- a/fs/proc/proc_sysctl.c
+> > +++ b/fs/proc/proc_sysctl.c
+> > @@ -71,7 +71,6 @@ static struct ctl_table root_table[] =3D {
+> >  		.procname =3D "",
+> >  		.mode =3D S_IFDIR|S_IRUGO|S_IXUGO,
+> >  	},
+> > -	{ }
+> >  };
+> >  static struct ctl_table_root sysctl_table_root =3D {
+> >  	.default_set.dir.header =3D {
+> > diff --git a/fs/quota/dquot.c b/fs/quota/dquot.c
+> > index 9e72bfe8bbad..69b03e13e6f2 100644
+> > --- a/fs/quota/dquot.c
+> > +++ b/fs/quota/dquot.c
+> > @@ -2949,7 +2949,6 @@ static struct ctl_table fs_dqstats_table[] =3D {
+> >  		.proc_handler	=3D proc_dointvec,
+> >  	},
+> >  #endif
+> > -	{ },
+> >  };
+> > =20
+> >  static int __init dquot_init(void)
+> > diff --git a/fs/sysctls.c b/fs/sysctls.c
+> > index 76a0aee8c229..8dbde9a802fa 100644
+> > --- a/fs/sysctls.c
+> > +++ b/fs/sysctls.c
+> > @@ -26,7 +26,6 @@ static struct ctl_table fs_shared_sysctls[] =3D {
+> >  		.extra1		=3D SYSCTL_ZERO,
+> >  		.extra2		=3D SYSCTL_MAXOLDUID,
+> >  	},
+> > -	{ }
+> >  };
+> > =20
+> >  static int __init init_fs_sysctls(void)
+> > diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
+> > index 56eaae9dac1a..7668285779c1 100644
+> > --- a/fs/userfaultfd.c
+> > +++ b/fs/userfaultfd.c
+> > @@ -45,7 +45,6 @@ static struct ctl_table vm_userfaultfd_table[] =3D {
+> >  		.extra1		=3D SYSCTL_ZERO,
+> >  		.extra2		=3D SYSCTL_ONE,
+> >  	},
+> > -	{ }
+> >  };
+> >  #endif
+> > =20
 > > diff --git a/fs/verity/fsverity_private.h b/fs/verity/fsverity_private.h
 > > index d071a6e32581..8191bf7ad706 100644
 > > --- a/fs/verity/fsverity_private.h
@@ -219,50 +555,45 @@ Will do
 > > +#endif
 > >  	if (!fsverity_sysctl_header)
 > >  		panic("fsverity sysctl registration failed");
->=20
-> This does not make sense, and it causes a build error when CONFIG_FS_VERI=
-TY=3Dy
-> and CONFIG_FS_VERITY_BUILTIN_SIGNATURES=3Dn.
->=20
-> I think all you need to do is delete the sentinel element, the same as
-> everywhere else.  I just tested it, and it works fine.
-Indeed. good catch and thx for testing. I'll adjust it on my V2.
-
->=20
-> BTW, the comments for register_sysctl_sz() and __register_sysctl_table() =
-are
-> outdated, as they still say "A completely 0 filled entry terminates the t=
-able."
-For now this is still "technically" correct. However, this will be
-removed on the last patchset when we actually delete the check for the
-sentinel element.
-For now I'll leave it like it is, but I'll double check to make sure
-that I remove it at the end.
-
-Best
->=20
-> - Eric
+> >  }
+> > diff --git a/fs/xfs/xfs_sysctl.c b/fs/xfs/xfs_sysctl.c
+> > index fade33735393..a191f6560f98 100644
+> > --- a/fs/xfs/xfs_sysctl.c
+> > +++ b/fs/xfs/xfs_sysctl.c
+> > @@ -206,8 +206,6 @@ static struct ctl_table xfs_table[] =3D {
+> >  		.extra2		=3D &xfs_params.stats_clear.max
+> >  	},
+> >  #endif /* CONFIG_PROC_FS */
+> > -
+> > -	{}
+> >  };
+> > =20
+> >  int
+> >=20
+> > --=20
+> > 2.30.2
+> >=20
 
 --=20
 
 Joel Granados
 
---qdy4sfallzzqrze5
+--tnwrscd4kofkwoer
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmVLRjsACgkQupfNUreW
-QU/+QQv+JAZ2egwDryj1fBPctk+jcFkv5AFT95mMW0Hy10yYejq2clAC6/4VpFPL
-Zw7EKmOW7gx/ZH4lLvjKbK0w9MZyUigYGBml+WQjyHoVFnm9Lij3PZ2nUEbZHMbC
-xYYt3TfWlMd9EKSsZu248QyT1QYUqdVsPadtMciHeLOHJUKwbq16BUgkIQ2uL7yw
-+rNN7XjYxwwdHhOdOW9+CaqzKkTTxYm3jwCUB1g/Lb01yhky+pgOlnKSGRj11WSo
-mVOSdQmMiN90KkTYfqF8pXi7snELIRo6Bjfp2v3pa6ea6DFkj4IA8Eh0SMu9eDOL
-yffPi1tzs7GHx87Rz4Xw3HL+PGsKwE5jVh+WI/NOR3ECMieTEHyeBP0b6CctG1Qz
-Y1cX1rzSae8Y+NfQ/uML6S+L6d++SbVUuNFim3hAslWjQzSfp6OxsD/3YJpQvWNU
-H6yInkAYVBv9kXJdpylR0tiRthbrKul+NEjL1/FvJVi2460ZC3QzEThsT/wNhLJ2
-cXMro6Zk
-=sgbZ
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmVLRq8ACgkQupfNUreW
+QU/Jqwv+K1w0FpZcv0HBnAeHLCtveM9mAFkL+qQUZS2GWzB569sbdbxsz2+0lZWo
+ljmdA0ou2wA6i4MrM8gYJD7PjhOEeN6VNQU1K9bHbQGyTeS1CelsRNgeyXzGXaC6
+KOc1zigE06aC3K+QYZ2lfHpp/Q+qNWi6tapj7Wu0Vc4e/tZdK0FVlrNxrVQRe2vY
+ISD+PsJ6QoykDDU0KMah+RmwSX8KS0mowyGrpuCIqz2OswophDo3TXT0/vQbefL8
+B29eRO/wWCon08adSAkpY4wAsEQOHyjFb8ScfCUn57AokDe8QBi89HHjjl5WPE0v
+P/NN3SFcFBN4LgKAi6cmyj//P453KLzvFPonnwQy7LymWqKTbHvG9+cIgZToRZfW
+JPdRfF3tjVVxFs6US+wAFd9DHsESz1jbNCkOm8V+0/FUow86JiCV6vCSupagYgxk
+TfcFQpQkhy8SnaetutCFAC0GtFz+GI24CKMdNAqpLj3hTY3x0IMd90g8YuCkUU4G
++Ti8Dg9U
+=/8dn
 -----END PGP SIGNATURE-----
 
---qdy4sfallzzqrze5--
+--tnwrscd4kofkwoer--
