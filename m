@@ -2,58 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94B417E80E1
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Nov 2023 19:19:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53F347E7E55
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Nov 2023 18:43:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345730AbjKJSTb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Nov 2023 13:19:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37594 "EHLO
+        id S1345953AbjKJRny (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Nov 2023 12:43:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345205AbjKJSRa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Nov 2023 13:17:30 -0500
-Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD86A93D6
-        for <linux-nfs@vger.kernel.org>; Fri, 10 Nov 2023 00:19:27 -0800 (PST)
-Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-1ea82246069so929551fac.3
-        for <linux-nfs@vger.kernel.org>; Fri, 10 Nov 2023 00:19:27 -0800 (PST)
+        with ESMTP id S1344168AbjKJRnb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Nov 2023 12:43:31 -0500
+Received: from mail-oa1-x29.google.com (mail-oa1-x29.google.com [IPv6:2001:4860:4864:20::29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084439EDE
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Nov 2023 00:30:25 -0800 (PST)
+Received: by mail-oa1-x29.google.com with SMTP id 586e51a60fabf-1f00b95dc43so989317fac.3
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Nov 2023 00:30:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1699604367; x=1700209167; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=3uaZA57uGarLIh4qs7s1mKoog9vNfRfAaoACzrHIoY8=;
-        b=h56c9/bBJwtAO1CVNCg283HJOTYc6jJFimk5Mf5UDcuTIY1Bc2/mJHuNFydHB+kNWa
-         Qc7JmwUrB/Te+zTk4v4xkC7BEqDKq0NfoibfZFCl4Btua8Dwjcngj5U+MZJzvktgT9CP
-         WUA4BuSpWQs5qOjrylZ3AGr0Gbmn4V9B/DGVd+E8ga40bmYP9YKfRt/P2GzKyE8J7Z0G
-         F3SIn0wTYvzdjcJiwkzO09zRNkyXQSLHpB0Zm/w/Oz1eptHNtrrT2xWYXqfincn/eQpb
-         eR8KMSRJKFeQ7zs0pGfjl9zFFxOIqlvOJftUxa8AzvSORWm1l539fHLrKPJpA0AJSdXx
-         1Ziw==
+        d=gmail.com; s=20230601; t=1699605024; x=1700209824; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t5GrnlX3g1MjaWruiwBKs1huqws5/+qo9PrFjIDL1Q0=;
+        b=MB4OUaZhJqlkdabEPyk5aKbCCuc3fzkFTOFTaD9A8m8/dTmhdQP9vsjGkZaDgZmtAS
+         wscasqFXj6iymRG97SrjnPW0hNdCrURGDragO+qG8sdUxFg8E0QhMHW4Hww7ij3ZQD/u
+         BfoCeTYivKRS6O9AI0apy5OAiCMBvpvt1oelbvmNiKhVkidE6QNOOHQRiCZ9WEHOTumm
+         XV/686IsEj/7DeG40xKxq9pCjK91eF8GFsymaCPasxEEURX3yzYyOPeuxw74dPFE2iUs
+         dNsvLqD2IfJssE59wjGoZqldbWQ+0OHVvv0Nm8vcQEZ7+SA3/TMhbKSV3Z4/6LBxoXAj
+         0+Bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699604367; x=1700209167;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3uaZA57uGarLIh4qs7s1mKoog9vNfRfAaoACzrHIoY8=;
-        b=aKLcb574rlR16MffkzEIRR3e2eQwdUMI7UjlfnpB0SszHgv7qAgg9eYq4uKBWcMcJn
-         P2QcImVPWQjNSX959aXaZd4LTFoDTwPasGDCzbUptlO1TGbhrV+4m3j1XtcNDftMwTPM
-         uC6H5akdbp0fr4LqdViA8NT2lkJYdoiQ1XGHxMgomceuQzNbB1f2OxooY6HBn5ihIFmV
-         wFA/Fk6Ie1vFeV/P1JQ6eZeY0iWJpt4NRl4Htgqr2HdMEljJV9aKGGl+jZpLDoRej9AN
-         SvsX+nj1fFhKwKU5XyG6P539jEoi+E05urCLpR0X/iCaPg8LXuFV/c7a+DznipJTnJn9
-         4Tww==
-X-Gm-Message-State: AOJu0YyiR3HN0m2e7JZAnPvRhuykqetTEl09pYve/BRtCQIhCNjhQQNO
-        OA0pTsdZomssEaXQHVB0NL34HtgdKvvHBPEuIzWwnVX0eI0=
-X-Google-Smtp-Source: AGHT+IGOAETbWdzXhS1xpJVHyFt3L4ktb5Ry+YOquz1ZVoQh6uAzvF6AdKxDTpZWs6N7i59UGTGT9ogF+LhxoG3b3HQ=
-X-Received: by 2002:a05:6870:c68b:b0:1e9:c28f:45b9 with SMTP id
- cv11-20020a056870c68b00b001e9c28f45b9mr8070955oab.19.1699604366848; Fri, 10
- Nov 2023 00:19:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1699605024; x=1700209824;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t5GrnlX3g1MjaWruiwBKs1huqws5/+qo9PrFjIDL1Q0=;
+        b=VYEB9QRlyBfzUZXhJWfsMjPLtCoYZZs+uGNcxTXtiL8+DOqYh5/W3nxv4tUcLN5rUf
+         kWraU/W+0Jk9l6GbJcqqlPmlgcnhKxsO542ThSj8vdUjAqlziW0fiPI6N295O1XwqbRX
+         8R/ZGOzs7MVGB+fDXGP9YWPv9zC1GUZieqKpgrtRsq9CScrRE/AreF7+F7/V83sg6gDN
+         Ye9xrjaPc7BzR6shOnv0+opcp7P1zN+4TyNpgvWlDqVaw5mh36nQC1a3iZ8uxKyPqiWT
+         1NmuU1El876F8ub21xlUE4uijbAvxmMwCS8rNKxWBmgRI3450RgDJbQCTMRh3sHeIdNT
+         wF3A==
+X-Gm-Message-State: AOJu0YzHdpegxMiQKHl0MS33rg7YrPN5xS1qlYuXTwDUd3HTkRiQsJbk
+        6WdHFZAIRYnGoe70EnfbFqBKzPoMfZvBXrc2vdZg73Cy
+X-Google-Smtp-Source: AGHT+IGOD+FxZySfAKEaJjz38iDSpiE8Rp8BkXH/SDpT0NPaSpxT3EW8FHtLSJ9yd/lqjbo37LLzvoaHahaVvIlj4RA=
+X-Received: by 2002:a05:6871:7244:b0:1f0:5543:6048 with SMTP id
+ ml4-20020a056871724400b001f055436048mr10094724oac.49.1699605023941; Fri, 10
+ Nov 2023 00:30:23 -0800 (PST)
 MIME-Version: 1.0
+References: <CALXu0UeGr80OzF7abqxwR5KFJFhpCuomy2_tdFESAKSiW70jfA@mail.gmail.com>
+ <CALXu0UcT4gG8xEVOvK1mshMDa_hKYu7rJK2biq8==ySOXdA3+w@mail.gmail.com>
+ <4F5C3573-2962-4072-ACB1-1CB8236866D5@oracle.com> <CALXu0Uf2z3um+kh=tgnqskr-ZdY2gU=185K3Amr=F_GJpb2_UQ@mail.gmail.com>
+ <FD981B2C-5C24-4349-A279-C70F640C0A01@oracle.com>
+In-Reply-To: <FD981B2C-5C24-4349-A279-C70F640C0A01@oracle.com>
 From:   Martin Wege <martin.l.wege@gmail.com>
-Date:   Fri, 10 Nov 2023 09:18:00 +0100
-Message-ID: <CANH4o6PDTLSVbMOm=oRLhuupRSkQ9bZ8NGBAmgAa5i6PNCm6Ag@mail.gmail.com>
-Subject: BUG: nfsref(8) has no means to set a non-2049 port number for referrals
+Date:   Fri, 10 Nov 2023 09:30:00 +0100
+Message-ID: <CANH4o6O=ihW7ENc-BTBXR4d4JL0QJjZa5YdYaKAdoHdq9vwGcA@mail.gmail.com>
+Subject: Re: BUG in exports(5), no example for refer= Re: Examples for refer=
+ in /etc/exports?
 To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,18 +70,118 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+On Fri, Nov 10, 2023 at 3:20=E2=80=AFAM Chuck Lever III <chuck.lever@oracle=
+.com> wrote:
+>
+>
+>
+> > On Nov 9, 2023, at 7:47 PM, Cedric Blancher <cedric.blancher@gmail.com>=
+ wrote:
+> >
+> > On Fri, 10 Nov 2023 at 01:37, Chuck Lever III <chuck.lever@oracle.com> =
+wrote:
+> >>
+> >>> On Nov 9, 2023, at 7:05 PM, Cedric Blancher <cedric.blancher@gmail.co=
+m> wrote:
+> >>>
+> >>> On Thu, 2 Nov 2023 at 10:51, Cedric Blancher <cedric.blancher@gmail.c=
+om> wrote:
+> >>>>
+> >>>> Good morning!
+> >>>>
+> >>>> Does anyone have examples of how to use the refer=3D option in /etc/=
+exports?
+> >>>
+> >>> Short answer:
+> >>> To redirect an NFS mount from local machine /ref/baguette to
+> >>> /export/home/baguette on host 134.49.22.111 add this to Linux
+> >>> /etc/exports:
+> >>>
+> >>> /ref *(no_root_squash,refer=3D/export/home@134.49.22.111)
+> >>>
+> >>> This is basically an exports(5) manpage bug, which does not provide
+> >>> ANY examples.
+> >>
+> >> That's because setting up a referral this way is deprecated.
+> >
+> > Why did you do that?
+>
+> The nfsref command on Linux matches the same command on Solaris.
+>
+> nfsref was added years ago to manage junctions, as part of FedFS.
+> The "refer=3D" export option can't do that...
 
-simple bug report:
-nfsref(8) has no means to set a non-2049 port number for referrals.
+Where in the kernel is the code for the refer=3D option? I'd like to get
+some of my students to contribute support for custom NFS ports.
 
-Expected behaviour:
-nfsref(8) should be able to define a non-standard TCP port for
-referrals, for example in case the NFSD port is going through a
-firewall, or is tunneled via ssh or other means.
+I would seriously suggest keeping it for "simple" use cases. nfsref(8)
+has ZERO deployment outside RHEL&RHEL clones
 
-Actually behaviour.
-No custom TCP port can be specified for referrals.
+> and FedFS has gone
+> the way of the dodo.
+
+Why did that happen? ;(
+
+>
+> >> The
+> >> preferred way to do it is to use nfsref(8).
+> >
+> > nfsref(8) is not shipped by ANY Linux distribution.
+>
+> It is installed on all of my Fedora systems, and it's on my
+> only RHEL 8 system. That suggests, though I can't immediately
+> confirm it, that nfsref is packaged also for CentOS, Oracle
+> Linux, and any other distro that is based on RedHat Enterprise.
+
+That are all RHEL clones...
+
+>
+> > The configure switch in nfs-utils to build it is OFF by default,
+>
+> You're talking about
+>
+>   --enable-junction       enable support for NFS junctions [default=3Dno]
+>
+> Perhaps that default should change -- it's been part of
+> nfs-utils for five years now. However, that drags in
+> dependencies for the xml libraries... maybe someone thinks
+> that's a hazard?
+
+I would consider it a hazard when the kernel support code drags in XML.
+>
+>
+> > and the
+> > distribution maintainers refuse to enable it because it can be
+> > "dangerous", or may be "experimental". I got many excuses why they
+> > dont want to enable that damn configure option.
+> >
+> > Also, stable and oldstable Debian do not have it enabled either.
+>
+> This is an upstream mailing list. We can't answer for what
+> Linux distributors decide to enable or not.
+>
+> I've never heard that it was a dangerous feature. If a
+> distro maintainer has a concern, they should bring it to
+> upstream.
+>
+>
+> > Seriously, why was refer=3D in exports(5) depreciated? There is no
+> > realistic replacement, unless you fix every damn Linux distro first.
+>
+> Again, all the RHEL based distros package nfsref, as far
+> as I am aware. And as you found, refer=3D still works. It's
+> simply not documented.
+
+Then please document it. You have real world users for that one, who
+would be grateful if you don't pull away the floor under their feet.
+
+>
+> If your distro has decided not to support referrals, there's
+> not much we can do about that except gently suggest that you
+> switch to a distro that properly supports them.
+
+You could turn on --enable-junctions by default. And maybe get rid of
+the XML dependencies.
 
 Thanks,
 Martin
