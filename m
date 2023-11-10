@@ -2,68 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 035BE7E8969
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Nov 2023 07:06:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D54987E8513
+	for <lists+linux-nfs@lfdr.de>; Fri, 10 Nov 2023 22:32:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbjKKGF7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 11 Nov 2023 01:05:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36294 "EHLO
+        id S229713AbjKJVcF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Nov 2023 16:32:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjKKGF6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 11 Nov 2023 01:05:58 -0500
-Received: from mail.maprial.com (mail.maprial.com [190.181.35.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED05BD55;
-        Fri, 10 Nov 2023 22:05:55 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.maprial.com (Postfix) with ESMTP id A0EBD770D558;
-        Fri, 10 Nov 2023 21:40:45 -0400 (-04)
-Received: from mail.maprial.com ([127.0.0.1])
-        by localhost (mail.maprial.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id RB_uTYF-93E9; Fri, 10 Nov 2023 21:40:44 -0400 (-04)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.maprial.com (Postfix) with ESMTP id 9DCC286AF358;
-        Fri, 10 Nov 2023 17:46:54 -0400 (-04)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.maprial.com 9DCC286AF358
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maprial.com;
-        s=8A254412-65B9-11ED-A564-8B9C10001A2B; t=1699652814;
-        bh=WOZURJ77pkiMUL2pPLC14ifVPRvyTQIBEQmxuN1ezAA=;
-        h=MIME-Version:To:From:Date:Message-Id;
-        b=Q9o5jmhrqmyfI35czERUmaqiTTqj9pv49Z4vXP0210gEnRlfrTu0CwLJh8uEPLfuJ
-         3SOePbnqu9gSEjNYtTYX1c7lFjvbOUbkrDOuDyyV/9P4wZZ1zcAQOFUX4aRI3R5hEo
-         cDTKmwKAtTuL5PZJUl3YcbyZLD+4DdhAs+mJu0cU=
-X-Virus-Scanned: amavisd-new at mail.maprial.com
-Received: from mail.maprial.com ([127.0.0.1])
-        by localhost (mail.maprial.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id BY64IEt4fuqH; Fri, 10 Nov 2023 17:46:54 -0400 (-04)
-Received: from [192.168.1.152] (unknown [51.179.104.230])
-        by mail.maprial.com (Postfix) with ESMTPSA id B36D580845C4;
-        Fri, 10 Nov 2023 17:04:19 -0400 (-04)
+        with ESMTP id S229436AbjKJVcE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Nov 2023 16:32:04 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 979864205
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Nov 2023 13:32:01 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id ACA63219B1;
+        Fri, 10 Nov 2023 21:31:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1699651919; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FXyG5uDLChD237NsUXX+2k/SyeNCA4ud8TUO89CgYAY=;
+        b=uYsOedeAioAaOzz4I3j4jVF3Lim2P76Fc0hpvxmNAScDb4EtOmGKJKAvf6zTldzi7JiecT
+        dmt4nr/ekFwl0wIQ7hJcLb2ttrHpchdo/yJe9recLCVygeBpE96tuId3AQfBUbQAYfA9cb
+        kyzeWjMCZBrpNMO7fC5ykVAmbyjsNTo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1699651919;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FXyG5uDLChD237NsUXX+2k/SyeNCA4ud8TUO89CgYAY=;
+        b=n2BQmdqbldBjPuMF697ocOsIeX5PFU9qZqbF+rvAos6khoat/IJviBVBtksTDoyKSsJmF7
+        bSAAU03Q7DxvG+AQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 631A6138FC;
+        Fri, 10 Nov 2023 21:31:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 7o6uBk2hTmVfCwAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 10 Nov 2023 21:31:57 +0000
 Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?b?4oKsIDEwMC4wMDAuMDAwPw==?=
-To:     Recipients <gvalencia@maprial.com>
-From:   gvalencia@maprial.com
-Date:   Fri, 10 Nov 2023 22:04:11 +0100
-Reply-To: joliushk@gmail.com
-Message-Id: <20231110210420.B36D580845C4@mail.maprial.com>
-X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_50,DKIM_INVALID,
-        DKIM_SIGNED,FREEMAIL_FORGED_REPLYTO,RCVD_IN_DNSWL_BLOCKED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Mahmoud Adam" <mngyadam@amazon.com>
+Cc:     chuck.lever@oracle.com, jlayton@kernel.org, kolga@netapp.com,
+        Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+        "Mahmoud Adam" <mngyadam@amazon.com>
+Subject: Re: [PATCH] nfsd: fix file memleak on client_opens_relaese
+In-reply-to: <20231110182104.23039-1-mngyadam@amazon.com>
+References: <20231110182104.23039-1-mngyadam@amazon.com>
+Date:   Sat, 11 Nov 2023 08:31:52 +1100
+Message-id: <169965191274.27227.708763777533834603@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
-X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Goededag,
-Ik ben mevrouw Joanna Liu en een medewerker van Citi Bank Hong Kong.
-Kan ik =E2=82=AC 100.000.000 aan u overmaken? Kan ik je vertrouwen
+On Sat, 11 Nov 2023, Mahmoud Adam wrote:
+> seq_release should be called to free the allocated seq_file
+>=20
+> Cc: stable@vger.kernel.org # v5.3+
+> Signed-off-by: Mahmoud Adam <mngyadam@amazon.com>
 
+Fixes: 78599c42ae3c ("nfsd4: add file to display list of client's opens")
+Reviewed-by: NeilBrown <neilb@suse.de>
 
-Ik wacht op jullie reacties
-Met vriendelijke groeten
-mevrouw Joanna Liu
+Thanks,
+NeilBrown
+=20
+
+> ---
+>  fs/nfsd/nfs4state.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 4045c852a450..40415929e2ae 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -2804,7 +2804,7 @@ static int client_opens_release(struct inode *inode, =
+struct file *file)
+>=20
+>  	/* XXX: alternatively, we could get/drop in seq start/stop */
+>  	drop_client(clp);
+> -	return 0;
+> +	return seq_release(inode, file);
+>  }
+>=20
+>  static const struct file_operations client_states_fops =3D {
+> --
+> 2.40.1
+>=20
+
