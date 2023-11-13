@@ -2,37 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6B547E9D72
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Nov 2023 14:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 418D67E9D73
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Nov 2023 14:43:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231400AbjKMNnM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Nov 2023 08:43:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45822 "EHLO
+        id S231423AbjKMNnR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Nov 2023 08:43:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231428AbjKMNnL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Nov 2023 08:43:11 -0500
+        with ESMTP id S231389AbjKMNnQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Nov 2023 08:43:16 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34799D44;
-        Mon, 13 Nov 2023 05:43:07 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82CAAC433C9;
-        Mon, 13 Nov 2023 13:43:06 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83247D51;
+        Mon, 13 Nov 2023 05:43:13 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5CB1C433C7;
+        Mon, 13 Nov 2023 13:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699882986;
-        bh=gP95Sc36yJ8h7pqWWj5NO6WoubKWQ2vmxgltLbLReaI=;
+        s=k20201202; t=1699882993;
+        bh=8/KpESZhH8UUTgiENVB0Cw+EDjoA/5tTwqj4bDbduF0=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=JoNqYE9X8ZIJnF+JKB/mYrzcWHJVi9UcXKayLMgqqZqCcjDUuIWLlDaSazQyJSMap
-         MjkuD3ks91F50jHwEPxhC++riPjXOKFhYf738X4vJdgn8K4q47oIuZgpr57rV+tfXk
-         zgFyxlFQzE53lndWN+jG9nRDpSn/pt4QhmxlZ+2Z48KpTCkVAmiswRgl2VzKTJlCEX
-         XsYrYwf/owFxzXp6PcdcYFgh3ZYk31iYBToZYHp7xLx2RJnB/LODi4IxIaXzIM65U6
-         5Q7TKOqaPlMGkdO2jGsF2pjjcPxRFzSq1LU5VANDk2HV949dU49/hG4Ak1DDO7K3np
-         F+UXvUUral+PA==
-Subject: [PATCH v1 1/7] svcrdma: Eliminate allocation of recv_ctxt objects in
- backchannel
+        b=kfdAAHii3Ht7fPYes3OEbir4ajZ1mH5aqZ0DB6X3Ctp3+ihgxnIzqPalaaUc02Re6
+         p6CUINrSKmh879ZyBNZx2chJ3BNFzpfHHpnWlOONpkHlGa7tkn2c5zHfHdsS75plNH
+         hT7jyKMg2KEUdtqlT+La9brlpUB00h8nc3aOYBDKbKFvsOPmf4AZj9aqo9RMZnKxb1
+         OGJa/1SXAg2rKJTaNvY8ElbVBmm6us0lg8IoQvHCW/9Zs63XmVbtcPFpNB4/fmc4OY
+         txu/EBCMv2RRka1P+XAw7khITFYr01mOx0kDS5jrpLhc2OhCwjzJes2JNx2R3n6e9f
+         JoPVIfLI7ZxSw==
+Subject: [PATCH v1 2/7] svcrdma: Clean up use of rdma->sc_pd->device in
+ Receive paths
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
 Cc:     tom@talpey.com
-Date:   Mon, 13 Nov 2023 08:43:05 -0500
-Message-ID: <169988298547.6417.6947965014611566854.stgit@bazille.1015granger.net>
+Date:   Mon, 13 Nov 2023 08:43:12 -0500
+Message-ID: <169988299199.6417.2235443204829287810.stgit@bazille.1015granger.net>
 In-Reply-To: <169988267843.6417.17927133323277523958.stgit@bazille.1015granger.net>
 References: <169988267843.6417.17927133323277523958.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -51,187 +51,68 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-The svc_rdma_recv_ctxt free list uses a lockless list to avoid the
-need for a spin lock in the fast path. llist_del_first(), which is
-used by svc_rdma_recv_ctxt_get(), requires serialization, however,
-when there are multiple list producers that are unserialized.
+I can't think of a reason why svcrdma is using the PD's device. Most
+other consumers of the IB DMA API use the ib_device pointer from the
+connection's rdma_cm_id.
 
-I mistakenly thought there was only one caller of
-svc_rdma_recv_ctxt_get() (svc_rdma_refresh_recvs()), thus explicit
-serialization would not be necessary. But there is another caller:
-svc_rdma_bc_sendto(), and these two are not serialized against each
-other. I haven't seen ill effects that I could directly ascribe to
-a lack of serialization. It's just an observation based on code
-audit.
-
-When DMA-mapping before sending a Reply, the passed-in struct
-svc_rdma_recv_ctxt is used only for its write and reply PCLs. These
-are currently always empty in the backchannel case. So, instead of
-passing a full svc_rdma_recv_ctxt object to
-svc_rdma_map_reply_msg(), let's pass in just the Write and Reply
-PCLs.
-
-This change makes it unnecessary for the backchannel to acquire a
-dummy svc_rdma_recv_ctxt object when sending an RPC Call. The need
-for svc_rdma_recv_ctxt free list serialization is now completely
-avoided.
+I don't belive there's any functional difference between the two,
+but it is a little confusing to see some uses of rdma_cm_id->device
+and some of ib_pd->device.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_rdma.h            |    3 ++-
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   11 ++++------
- net/sunrpc/xprtrdma/svc_rdma_sendto.c      |   31 +++++++++++++++-------------
- 3 files changed, 23 insertions(+), 22 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index a5ee0af2a310..4ac32895a058 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -200,7 +200,8 @@ extern int svc_rdma_send(struct svcxprt_rdma *rdma,
- 			 struct svc_rdma_send_ctxt *ctxt);
- extern int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
- 				  struct svc_rdma_send_ctxt *sctxt,
--				  const struct svc_rdma_recv_ctxt *rctxt,
-+				  const struct svc_rdma_pcl *write_pcl,
-+				  const struct svc_rdma_pcl *reply_pcl,
- 				  const struct xdr_buf *xdr);
- extern void svc_rdma_send_error_msg(struct svcxprt_rdma *rdma,
- 				    struct svc_rdma_send_ctxt *sctxt,
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index 7420a2c990c7..c9be6778643b 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -76,15 +76,12 @@ static int svc_rdma_bc_sendto(struct svcxprt_rdma *rdma,
- 			      struct rpc_rqst *rqst,
- 			      struct svc_rdma_send_ctxt *sctxt)
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+index 3b05f90a3e50..69cc21654365 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
+@@ -125,20 +125,21 @@ static void svc_rdma_recv_cid_init(struct svcxprt_rdma *rdma,
+ static struct svc_rdma_recv_ctxt *
+ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
  {
--	struct svc_rdma_recv_ctxt *rctxt;
-+	struct svc_rdma_pcl empty_pcl;
- 	int ret;
+-	int node = ibdev_to_node(rdma->sc_cm_id->device);
++	struct ib_device *device = rdma->sc_cm_id->device;
+ 	struct svc_rdma_recv_ctxt *ctxt;
+ 	dma_addr_t addr;
+ 	void *buffer;
  
--	rctxt = svc_rdma_recv_ctxt_get(rdma);
--	if (!rctxt)
--		return -EIO;
--
--	ret = svc_rdma_map_reply_msg(rdma, sctxt, rctxt, &rqst->rq_snd_buf);
--	svc_rdma_recv_ctxt_put(rdma, rctxt);
-+	pcl_init(&empty_pcl);
-+	ret = svc_rdma_map_reply_msg(rdma, sctxt, &empty_pcl, &empty_pcl,
-+				     &rqst->rq_snd_buf);
- 	if (ret < 0)
- 		return -EIO;
+-	ctxt = kmalloc_node(sizeof(*ctxt), GFP_KERNEL, node);
++	ctxt = kmalloc_node(sizeof(*ctxt), GFP_KERNEL, ibdev_to_node(device));
+ 	if (!ctxt)
+ 		goto fail0;
+-	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
++	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL,
++			      ibdev_to_node(device));
+ 	if (!buffer)
+ 		goto fail1;
+-	addr = ib_dma_map_single(rdma->sc_pd->device, buffer,
+-				 rdma->sc_max_req_size, DMA_FROM_DEVICE);
+-	if (ib_dma_mapping_error(rdma->sc_pd->device, addr))
++	addr = ib_dma_map_single(device, buffer, rdma->sc_max_req_size,
++				 DMA_FROM_DEVICE);
++	if (ib_dma_mapping_error(device, addr))
+ 		goto fail2;
  
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index c6644cca52c5..45735f74eb86 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -653,7 +653,7 @@ static int svc_rdma_xb_count_sges(const struct xdr_buf *xdr,
-  * svc_rdma_pull_up_needed - Determine whether to use pull-up
-  * @rdma: controlling transport
-  * @sctxt: send_ctxt for the Send WR
-- * @rctxt: Write and Reply chunks provided by client
-+ * @write_pcl: Write chunk list provided by client
-  * @xdr: xdr_buf containing RPC message to transmit
-  *
-  * Returns:
-@@ -662,7 +662,7 @@ static int svc_rdma_xb_count_sges(const struct xdr_buf *xdr,
-  */
- static bool svc_rdma_pull_up_needed(const struct svcxprt_rdma *rdma,
- 				    const struct svc_rdma_send_ctxt *sctxt,
--				    const struct svc_rdma_recv_ctxt *rctxt,
-+				    const struct svc_rdma_pcl *write_pcl,
- 				    const struct xdr_buf *xdr)
+ 	svc_rdma_recv_cid_init(rdma, &ctxt->rc_cid);
+@@ -169,7 +170,7 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ static void svc_rdma_recv_ctxt_destroy(struct svcxprt_rdma *rdma,
+ 				       struct svc_rdma_recv_ctxt *ctxt)
  {
- 	/* Resources needed for the transport header */
-@@ -672,7 +672,7 @@ static bool svc_rdma_pull_up_needed(const struct svcxprt_rdma *rdma,
- 	};
- 	int ret;
- 
--	ret = pcl_process_nonpayloads(&rctxt->rc_write_pcl, xdr,
-+	ret = pcl_process_nonpayloads(write_pcl, xdr,
- 				      svc_rdma_xb_count_sges, &args);
- 	if (ret < 0)
- 		return false;
-@@ -728,7 +728,7 @@ static int svc_rdma_xb_linearize(const struct xdr_buf *xdr,
-  * svc_rdma_pull_up_reply_msg - Copy Reply into a single buffer
-  * @rdma: controlling transport
-  * @sctxt: send_ctxt for the Send WR; xprt hdr is already prepared
-- * @rctxt: Write and Reply chunks provided by client
-+ * @write_pcl: Write chunk list provided by client
-  * @xdr: prepared xdr_buf containing RPC message
-  *
-  * The device is not capable of sending the reply directly.
-@@ -743,7 +743,7 @@ static int svc_rdma_xb_linearize(const struct xdr_buf *xdr,
-  */
- static int svc_rdma_pull_up_reply_msg(const struct svcxprt_rdma *rdma,
- 				      struct svc_rdma_send_ctxt *sctxt,
--				      const struct svc_rdma_recv_ctxt *rctxt,
-+				      const struct svc_rdma_pcl *write_pcl,
- 				      const struct xdr_buf *xdr)
- {
- 	struct svc_rdma_pullup_data args = {
-@@ -751,7 +751,7 @@ static int svc_rdma_pull_up_reply_msg(const struct svcxprt_rdma *rdma,
- 	};
- 	int ret;
- 
--	ret = pcl_process_nonpayloads(&rctxt->rc_write_pcl, xdr,
-+	ret = pcl_process_nonpayloads(write_pcl, xdr,
- 				      svc_rdma_xb_linearize, &args);
- 	if (ret < 0)
- 		return ret;
-@@ -764,7 +764,8 @@ static int svc_rdma_pull_up_reply_msg(const struct svcxprt_rdma *rdma,
- /* svc_rdma_map_reply_msg - DMA map the buffer holding RPC message
-  * @rdma: controlling transport
-  * @sctxt: send_ctxt for the Send WR
-- * @rctxt: Write and Reply chunks provided by client
-+ * @write_pcl: Write chunk list provided by client
-+ * @reply_pcl: Reply chunk provided by client
-  * @xdr: prepared xdr_buf containing RPC message
-  *
-  * Returns:
-@@ -776,7 +777,8 @@ static int svc_rdma_pull_up_reply_msg(const struct svcxprt_rdma *rdma,
-  */
- int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
- 			   struct svc_rdma_send_ctxt *sctxt,
--			   const struct svc_rdma_recv_ctxt *rctxt,
-+			   const struct svc_rdma_pcl *write_pcl,
-+			   const struct svc_rdma_pcl *reply_pcl,
- 			   const struct xdr_buf *xdr)
- {
- 	struct svc_rdma_map_data args = {
-@@ -789,18 +791,18 @@ int svc_rdma_map_reply_msg(struct svcxprt_rdma *rdma,
- 	sctxt->sc_sges[0].length = sctxt->sc_hdrbuf.len;
- 
- 	/* If there is a Reply chunk, nothing follows the transport
--	 * header, and we're done here.
-+	 * header, so there is nothing to map.
- 	 */
--	if (!pcl_is_empty(&rctxt->rc_reply_pcl))
-+	if (!pcl_is_empty(reply_pcl))
+-	ib_dma_unmap_single(rdma->sc_pd->device, ctxt->rc_recv_sge.addr,
++	ib_dma_unmap_single(rdma->sc_cm_id->device, ctxt->rc_recv_sge.addr,
+ 			    ctxt->rc_recv_sge.length, DMA_FROM_DEVICE);
+ 	kfree(ctxt->rc_recv_buf);
+ 	kfree(ctxt);
+@@ -814,7 +815,7 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
  		return 0;
  
- 	/* For pull-up, svc_rdma_send() will sync the transport header.
- 	 * No additional DMA mapping is necessary.
- 	 */
--	if (svc_rdma_pull_up_needed(rdma, sctxt, rctxt, xdr))
--		return svc_rdma_pull_up_reply_msg(rdma, sctxt, rctxt, xdr);
-+	if (svc_rdma_pull_up_needed(rdma, sctxt, write_pcl, xdr))
-+		return svc_rdma_pull_up_reply_msg(rdma, sctxt, write_pcl, xdr);
- 
--	return pcl_process_nonpayloads(&rctxt->rc_write_pcl, xdr,
-+	return pcl_process_nonpayloads(write_pcl, xdr,
- 				       svc_rdma_xb_dma_map, &args);
- }
- 
-@@ -848,7 +850,8 @@ static int svc_rdma_send_reply_msg(struct svcxprt_rdma *rdma,
- {
- 	int ret;
- 
--	ret = svc_rdma_map_reply_msg(rdma, sctxt, rctxt, &rqstp->rq_res);
-+	ret = svc_rdma_map_reply_msg(rdma, sctxt, &rctxt->rc_write_pcl,
-+				     &rctxt->rc_reply_pcl, &rqstp->rq_res);
- 	if (ret < 0)
- 		return ret;
- 
+ 	percpu_counter_inc(&svcrdma_stat_recv);
+-	ib_dma_sync_single_for_cpu(rdma_xprt->sc_pd->device,
++	ib_dma_sync_single_for_cpu(rdma_xprt->sc_cm_id->device,
+ 				   ctxt->rc_recv_sge.addr, ctxt->rc_byte_len,
+ 				   DMA_FROM_DEVICE);
+ 	svc_rdma_build_arg_xdr(rqstp, ctxt);
 
 
