@@ -2,153 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 947EA7EA30E
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Nov 2023 19:49:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C429E7EA630
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Nov 2023 23:57:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230141AbjKMStU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Nov 2023 13:49:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        id S230351AbjKMW5p (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Nov 2023 17:57:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbjKMStT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Nov 2023 13:49:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E458010E2
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Nov 2023 10:48:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1699901331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NngWT0kzCoGFN4QlS8k8mPScf3kiilywOIlG1/GqBxM=;
-        b=QixTlTnBJrDpe1gW/7+c2YZnQGD6naqqi9COKNvcKfoqRmI26CrDC2jKme8/hUzL3ezFd/
-        Kk/oKwCoTKGaPySWX4pPGVr3s4x9kyh1FGGbDifKFRpLvPvlH0AHmKlu7GziHhYX9H2cXm
-        JIE32D3cV407/GqG7/vOK4xtAVAuPsA=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-471-Mk_VAvfsNSuAGuTx2ccWBw-1; Mon, 13 Nov 2023 13:48:49 -0500
-X-MC-Unique: Mk_VAvfsNSuAGuTx2ccWBw-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6755f01ca7dso9340546d6.1
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Nov 2023 10:48:49 -0800 (PST)
+        with ESMTP id S229696AbjKMW5p (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Nov 2023 17:57:45 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3221B5
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Nov 2023 14:57:41 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-5441ba3e53cso7449474a12.1
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Nov 2023 14:57:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1699916260; x=1700521060; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iZ2W2huUmfaLUjGKY5af5fkFKDTlXtrKqV0nLw+bC/o=;
+        b=gQrZebJhk1QywTHd7hKfN0iBGDhhiOGRwFudWAmq0dtH7L4QOpYumysu98BHK2Jjrz
+         zp4WZRAlkTTVessgHMdGcTpfRJuOI3UTWRs4t1f/6GtylfCgrXBs+drP0C//0Xgje4jB
+         n6JmZ3adIxZbEwxnfT56EIM7Z6iQg3PJBROwgW0It7vlRngoSV9iM0wqBLeQW8LUGFVo
+         fiCSR+OLp9rN09HE12cD+Tsfwx1L18nE6AaMvQmNU7u0ywwwW/jyfe+G+q2TRtew4Y7h
+         KV2YBKOuHp2SPki5Vvcu+SdPje8HNa9bGwg/26E2sjvFS5+oi6NssNpF1/oo6sh+Vuup
+         UP9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699901329; x=1700506129;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NngWT0kzCoGFN4QlS8k8mPScf3kiilywOIlG1/GqBxM=;
-        b=ITk/4x3QGOsqjXdBJ+hFxfMpho30LLo8bUYp6vyWB3wYCp9gbYNtXCnIk8p0L/nkBD
-         NYY4NjwUg5IvJA3EQ1tiHduHD/OVtZIRYdtPC+54s5CXJqCMzZXeP3fKofxBdmeM5/Yz
-         sUJDLSJs1XPJajo1W5JCQJaq5tbVWcEzHAUPNu9zfAm0LhnNCIMdvu/VMkcc7rCGql3X
-         aag85FjOQdID9YlvN6k+JcVQ9045Stre54o8THxK+u00g30z3csoMross1Bcz4aohZxu
-         f0EH+8FC5rw6j43cCeDIxPrY5S0xeUDGhR1Gk6lrfV5AU1idjZCJXukQ/3YiYTS9zy5r
-         6Rcg==
-X-Gm-Message-State: AOJu0Yyrn03JsU89rwkM04JCxNgP10iwP7sDZaqccU+v2FNECiN3sy83
-        jxZ3UTy8cUnMUd4WUkpF+J3lLVlvW2CFlIeCvD3EfRLgKijqZgFRntUxd6wsmtNdIZ+OQiWSXAR
-        zdEo0q//toUrdtvCYAaCyTAw/4n+v
-X-Received: by 2002:ad4:4f13:0:b0:675:592c:67f9 with SMTP id fb19-20020ad44f13000000b00675592c67f9mr47226qvb.5.1699901328853;
-        Mon, 13 Nov 2023 10:48:48 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEbzE1bim09XwLP9U55MdQPC6T5UtdbW6WYmAZDgK5d+4wvB9WAZ2xvAQsL95oyUSJLmbqU+w==
-X-Received: by 2002:ad4:4f13:0:b0:675:592c:67f9 with SMTP id fb19-20020ad44f13000000b00675592c67f9mr47216qvb.5.1699901328559;
-        Mon, 13 Nov 2023 10:48:48 -0800 (PST)
-Received: from [172.31.1.12] ([70.105.251.235])
-        by smtp.gmail.com with ESMTPSA id d3-20020a0cc683000000b0066d1e20455bsm2266481qvj.96.2023.11.13.10.48.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Nov 2023 10:48:48 -0800 (PST)
-Message-ID: <c99d03fc-27de-41b0-bf10-087f650117a5@redhat.com>
-Date:   Mon, 13 Nov 2023 13:48:47 -0500
+        d=1e100.net; s=20230601; t=1699916260; x=1700521060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iZ2W2huUmfaLUjGKY5af5fkFKDTlXtrKqV0nLw+bC/o=;
+        b=qrU48xgJIOeQGB+varGNhr0tT0hyYEwPSVmQ/ljRAA2OMT2Fi4UgNfQtU0aEoYcF7m
+         Scos7YNSjUVGCE07o0lxIUQKoFkZhBbrkBTEVLk84m2hWQP5zIfY1uddkkS1pLDfxHgH
+         u/GE3dCY3fS4XLDeMFL5JVJWmOHdXkGY0q08feuZTUNjf3zD1W9uQJguWKSNvAK3s4JA
+         L/cmTYNlwLAnTvJ1UEDd7Xdgp+eozV6RlYmmvlcx32wRqUbdOIGdgXcI/8b6it/8X5EY
+         dDHoJaEUE5s2xOrr7aEa51zwscM67ArUlRtvhBsd1pdpj6CY9yDmwgDGrZuxPOWRqmwB
+         x6Mw==
+X-Gm-Message-State: AOJu0Yw2HltG1w6JIOxhBLcmyk8FpBLAuz29gbF1crY9KJixO7kFODaH
+        FdscxAJmFvdNFy4+P+BXMQTgh/daIWolc3zdwKs=
+X-Google-Smtp-Source: AGHT+IGKP4CrpV3LZfgii7HyTE7NQx3QKNhrejVFYHjSTeivW9C7ZxvTB2fmjjO5Ug8gGYl5hASbGDVXOw4fuYNxVYg=
+X-Received: by 2002:aa7:d587:0:b0:540:b0ec:bcc7 with SMTP id
+ r7-20020aa7d587000000b00540b0ecbcc7mr5740640edq.5.1699916259733; Mon, 13 Nov
+ 2023 14:57:39 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] libtirpc: Add detection for new rpc_gss_sec members
-Content-Language: en-US
-To:     Petr Vorel <pvorel@suse.cz>
-Cc:     linux-nfs@vger.kernel.org, Petr Vorel <petr.vorel@gmail.com>,
-        Olga Kornievskaia <kolga@netapp.com>
-References: <20231025180141.416189-1-pvorel@suse.cz>
- <900689ef-3f63-4c54-b986-f612c4b2109c@redhat.com>
- <20231113183011.GA2247997@pevik>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20231113183011.GA2247997@pevik>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <CANH4o6Md0+56y0ZYtNj1ViF2WGYqusCmjOB6mLeu+nOtC5DPTw@mail.gmail.com>
+ <DD47B60A-E188-49BC-9254-6C032BA9776E@redhat.com> <CANH4o6NzV2_u-G0dA=hPSTvOTKe+RMy357CFRk7fw-VRNc4=Og@mail.gmail.com>
+ <5ED71FE7-B933-44AC-A180-C19EC426CBF8@oracle.com>
+In-Reply-To: <5ED71FE7-B933-44AC-A180-C19EC426CBF8@oracle.com>
+From:   Cedric Blancher <cedric.blancher@gmail.com>
+Date:   Mon, 13 Nov 2023 23:57:03 +0100
+Message-ID: <CALXu0UeZgnWbMScdW+69a_jvRxM2Aou0fPvt0PG6eBR3wHt++Q@mail.gmail.com>
+Subject: Re: NFSv4 referrals - custom (non-2049) port numbers in fs_locations?
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Martin Wege <martin.l.wege@gmail.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, 13 Nov 2023 at 17:19, Chuck Lever III <chuck.lever@oracle.com> wrot=
+e:
+>
+>
+>
+> > On Nov 10, 2023, at 2:54=E2=80=AFAM, Martin Wege <martin.l.wege@gmail.c=
+om> wrote:
+> >
+> > On Wed, Nov 1, 2023 at 3:42=E2=80=AFPM Benjamin Coddington <bcodding@re=
+dhat.com> wrote:
+> >>
+> >> On 1 Nov 2023, at 5:06, Martin Wege wrote:
+> >>
+> >>> Good morning!
+> >>>
+> >>> We have questions about NFSv4 referrals:
+> >>> 1. Is there a way to test them in Debian Linux?
+> >>>
+> >>> 2. How does a fs_locations attribute look like when a nonstandard por=
+t
+> >>> like 6666 is used?
+> >>> RFC5661 says this:
+> >>>
+> >>> * http://tools.ietf.org/html/rfc5661#section-11.9
+> >>> * 11.9. The Attribute fs_locations
+> >>> * An entry in the server array is a UTF-8 string and represents one o=
+f a
+> >>> * traditional DNS host name, IPv4 address, IPv6 address, or a zero-le=
+ngth
+> >>> * string.  An IPv4 or IPv6 address is represented as a universal addr=
+ess
+> >>> * (see Section 3.3.9 and [15]), minus the netid, and either with or w=
+ithout
+> >>> * the trailing ".p1.p2" suffix that represents the port number.  If t=
+he
+> >>> * suffix is omitted, then the default port, 2049, SHOULD be assumed. =
+ A
+> >>> * zero-length string SHOULD be used to indicate the current address b=
+eing
+> >>> * used for the RPC call.
+> >>>
+> >>> Does anyone have an example of how the content of fs_locations should
+> >>> look like with a custom port number?
+> >>
+> >> If you keep following the references, you end up with the example in
+> >> rfc5665, which gives an example for IPv4:
+> >>
+> >> https://datatracker.ietf.org/doc/html/rfc5665#section-5.2.3.3
+> >
+> > So just <address>.<upper-byte-of-port-number>.<lower-byte-of-port-numbe=
+r>?
+>
+> > How can I test that with the refer=3D option in /etc/exports? nfsref
+> > does not seem to have a ports option...
+>
+> Neither refer=3D nor nfsref support alternate ports for exactly the
+> same reason: The mountd upcall/downcall, which is how the kernel
+> learns of referral target locations, needs to be fixed first. Then
+> support for alternate ports can be implemented in both refer=3D and
+> nfsref.
 
+Just turn "hostname" into "hostport", i.e. the "hostname" string in
+the mountd protocol gets the port number encoded into it. Problem
+done. This is seriously a non-brainer, and can be repeated for autofs,
+which does not do port number either,
 
-On 11/13/23 1:30 PM, Petr Vorel wrote:
-> Hi Steve,
-> 
-> Thanks for having a look.
-> 
->> Hello,
-> 
->> On 10/25/23 2:01 PM, Petr Vorel wrote:
->>> From: Petr Vorel<petr.vorel@gmail.com>
-> 
->>> 4b272471 started to use struct rpc_gss_sec member minor_status, which
->>> was added in new libtirpc 1.3.4. Add check for the member to prevent
->>> failure on older libtirpc headers.
-> 
->>> Fixes: 4b272471 ("gssd: handle KRB5_AP_ERR_BAD_INTEGRITY for machine credentials")
->>> Signed-off-by: Petr Vorel<pvorel@suse.cz>
->>> ---
->>>    aclocal/libtirpc.m4 | 4 ++++
->>>    1 file changed, 4 insertions(+)
-> 
->>> diff --git a/aclocal/libtirpc.m4 b/aclocal/libtirpc.m4
->>> index bddae022..dd351722 100644
->>> --- a/aclocal/libtirpc.m4
->>> +++ b/aclocal/libtirpc.m4
->>> @@ -25,6 +25,10 @@ AC_DEFUN([AC_LIBTIRPC], [
->>>                             [AC_DEFINE([HAVE_LIBTIRPC_SET_DEBUG], [1],
->>>                                        [Define to 1 if your tirpc library provides libtirpc_set_debug])],,
->>>                             [${LIBS}])])
->>> +     AS_IF([test "$enable_gss" = "yes"],
->>> +           [AC_CHECK_MEMBER(struct rpc_gss_sec.minor_status,,
->>> +                         [AC_MSG_ERROR([Missing rpc_gss_sec.minor_status in <rpc/auth_gss.h>, update libtirpc or run with --disable-gss])],
->>> +                         [#include <rpc/auth_gss.h>])])
->>>      AC_SUBST([AM_CPPFLAGS])
->>>      AC_SUBST(LIBTIRPC)
->>> -- 2.42.0
-> 
->> This does not work... since it is looking at that gssrpc/auth_gss.h
->> instead of the tirpc/rpc/auth_gss.h so the check fails
-> Is it? There is no <gssrpc/auth_gss.h>. I suppose you test on some recent
-> Fedora, I'll retest it.
-Yes... this is both an
-/usr/include/tirpc/rpc/auth_gss.h owned by krb5-devel
-and
-/usr/include/tirpc/rpc/auth_gss.h owned by libtirpc-devel
-
-> 
-> I tested it on openSUSE Tumbleweed, where libtirpc-devel is
-> installed into /usr/include/rpc/, thus /usr/include/rpc/auth_gss.h exists.
-> But on Debian (and likely on RHEL/Fedora as you noticed it) is on
-> /usr/include/tirpc/rpc/auth_gss.h.
-Maybe krb5-devel was not installed??
-
-> 
-> I hoped that this is handled elsewhere via -I/usr/include/tirpc.
-> So, I'm really confused why would have look at <gssrpc/auth_gss.h>.
-True, but I think -I only works during compilation, not configuration.
-
-steved.
-
-> 
-> Kind regards,
-> Petr
-> 
->> I like the idea of having the check, but I'm not sure on
->> how to point it in the right direction.
-> 
->> steved.
-> 
-
+Ced
+--=20
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
