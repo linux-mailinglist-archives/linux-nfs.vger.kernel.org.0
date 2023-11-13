@@ -2,35 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4F147E9DE4
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Nov 2023 14:54:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C2327E9DE5
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Nov 2023 14:54:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230397AbjKMNym (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Nov 2023 08:54:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36390 "EHLO
+        id S230337AbjKMNyt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Nov 2023 08:54:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230337AbjKMNym (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Nov 2023 08:54:42 -0500
+        with ESMTP id S230443AbjKMNyt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Nov 2023 08:54:49 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38A62D5C
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Nov 2023 05:54:39 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC5CBC433C7
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Nov 2023 13:54:38 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E263D63
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Nov 2023 05:54:45 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A3DEC433C8
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Nov 2023 13:54:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1699883678;
-        bh=e41lVKVi3vmuz/tF2RDv8Hn4jPCw/zPOiP7cooKnJJE=;
+        s=k20201202; t=1699883685;
+        bh=Rp9TVcpXba2368iPXgufI/Nj9Hri4vnuWp5nRa9Nt4o=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=eyNurGzG3zBCtLLYWbXCdG17FhmjBwScPAcu0GzerKF8saFYVWgu/YssAyU68INGY
-         Ramkzr9gZ2ka/5MvTHvxouD5u7r6MveVvOtEAXesisAudCoAH9QVF4ozfWC8IZQF92
-         lOdY4Q0nasw/jkk0eMccRR4VcmUnruCQKaJ9sEAeCs+1SD718TWLycAz+rYKq5ghC8
-         fIJh/ADqW8FcVIQrcUPqMyA8DQpJBR5FpzLFN6V9Y/z1RW72avoyLEGCMOZsi231hW
-         99xTq/huoMa12QVSoUyfgFdILmridGPuXdlxWgRosZZ74ghWNmi0+WauMxxfkwA/3U
-         vycizufL0kcdQ==
-Subject: [PATCH v1 1/3] NFSD: Replace RQ_SPLICE_OK in nfsd_read()
+        b=jLuv5EJQsTFJxdCMhfv1190WCiVT2CvOCPvoM+PJTx3F1dayuACagEiBsAXw07Wi0
+         COzAZpErR8VL9GRcqaS8FRJGpFk6oMvvQhkxy5QQGZLOX88b4K4ao7gvLsmRObmYYI
+         bvga2DvGIcv0CgFiJM388jzlxA3XMYsVEYBkSv6EnI07Oy8vH722kC3yx5MZ8c4HTd
+         QaU/BDZLtttfTHsQK7aB5FdG/YQFzmZ3vOG4jBMN0xBSzo8CRoTqyTavCkm7mXfJcq
+         fDdbXSsT4CeZkt4NdiC/gD5usn30p3wijXc2hGgrkzK898Lmb8t7rGFn+fXu/vqSHy
+         3GGTl+/hEFleA==
+Subject: [PATCH v1 2/3] NFSD: Modify NFSv4 to use nfsd_read_splice_ok()
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 13 Nov 2023 08:54:37 -0500
-Message-ID: <169988367779.6844.7373759612199164974.stgit@bazille.1015granger.net>
+Date:   Mon, 13 Nov 2023 08:54:44 -0500
+Message-ID: <169988368407.6844.13056486620945070032.stgit@bazille.1015granger.net>
 In-Reply-To: <169988319025.6844.14300255016413760826.stgit@bazille.1015granger.net>
 References: <169988319025.6844.14300255016413760826.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -49,89 +49,89 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-RQ_SPLICE_OK is a bit of a layering violation. Also, a subsequent
-patch is going to provide a mechanism for always disabling splice
-reads.
-
-Splicing is an issue only for NFS READs, so refactor nfsd_read() to
-check the auth type directly instead of relying on an rq_flag
-setting.
-
-The new helper will be added into the NFSv4 read path in a
-subsequent patch.
+Avoid the use of an atomic bitop, and prepare for adding a run-time
+switch for using splice reads.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/vfs.c |   30 +++++++++++++++++++++++++++++-
- fs/nfsd/vfs.h |    1 +
- 2 files changed, 30 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c |    7 +++++--
+ fs/nfsd/nfs4xdr.c  |   13 ++++++++-----
+ fs/nfsd/xdr4.h     |    1 +
+ 3 files changed, 14 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index fbbea7498f02..9ddfc223047e 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -32,6 +32,7 @@
- #include <linux/exportfs.h>
- #include <linux/writeback.h>
- #include <linux/security.h>
-+#include <linux/sunrpc/svcauth_gss.h>
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 6f2d4aa4970d..14712fa08f76 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -970,8 +970,11 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	 * To ensure proper ordering, we therefore turn off zero copy if
+ 	 * the client wants us to do more in this compound:
+ 	 */
+-	if (!nfsd4_last_compound_op(rqstp))
+-		clear_bit(RQ_SPLICE_OK, &rqstp->rq_flags);
++	if (!nfsd4_last_compound_op(rqstp)) {
++		struct nfsd4_compoundargs *argp = rqstp->rq_argp;
++
++		argp->splice_ok = false;
++	}
  
- #include "xdr3.h"
+ 	/* check stateid */
+ 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index ec4ed6206df1..ea7c8e32d3ba 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -2524,8 +2524,9 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
+ 	svc_reserve(argp->rqstp, max_reply + readbytes);
+ 	argp->rqstp->rq_cachetype = cachethis ? RC_REPLBUFF : RC_NOCACHE;
  
-@@ -1216,6 +1217,33 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
- 	return nfserr;
++	argp->splice_ok = nfsd_read_splice_ok(argp->rqstp);
+ 	if (readcount > 1 || max_reply > PAGE_SIZE - auth_slack)
+-		clear_bit(RQ_SPLICE_OK, &argp->rqstp->rq_flags);
++		argp->splice_ok = false;
+ 
+ 	return true;
  }
+@@ -4378,12 +4379,13 @@ static __be32
+ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 		  union nfsd4_op_u *u)
+ {
++	struct nfsd4_compoundargs *argp = resp->rqstp->rq_argp;
+ 	struct nfsd4_read *read = &u->read;
+-	bool splice_ok = test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags);
+-	unsigned long maxcount;
+ 	struct xdr_stream *xdr = resp->xdr;
+-	struct file *file;
+ 	int starting_len = xdr->buf->len;
++	bool splice_ok = argp->splice_ok;
++	unsigned long maxcount;
++	struct file *file;
+ 	__be32 *p;
  
-+/**
-+ * nfsd_read_splice_ok - check if spliced reading is supported
-+ * @rqstp: RPC transaction context
-+ *
-+ * Return values:
-+ *   %true: nfsd_splice_read() may be used
-+ *   %false: nfsd_splice_read() must not be used
-+ *
-+ * NFS READ normally uses splice to send data in-place. However the
-+ * data in cache can change after the reply's MIC is computed but
-+ * before the RPC reply is sent. To prevent the client from
-+ * rejecting the server-computed MIC in this somewhat rare case, do
-+ * not use splice with the GSS integrity and privacy services.
-+ */
-+bool nfsd_read_splice_ok(struct svc_rqst *rqstp)
-+{
-+	struct auth_domain *domain = rqstp->rq_gssclient;
-+
-+	if (domain)
-+		switch (svcauth_gss_flavor(domain)) {
-+		case RPC_AUTH_GSS_KRB5I:
-+		case RPC_AUTH_GSS_KRB5P:
-+			return false;
-+		}
-+	return true;
-+}
-+
- /**
-  * nfsd_read - Read data from a file
-  * @rqstp: RPC transaction context
-@@ -1245,7 +1273,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		return err;
+ 	if (nfserr)
+@@ -5204,9 +5206,10 @@ static __be32
+ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+ 			    struct nfsd4_read *read)
+ {
+-	bool splice_ok = test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags);
++	struct nfsd4_compoundargs *argp = resp->rqstp->rq_argp;
+ 	struct file *file = read->rd_nf->nf_file;
+ 	struct xdr_stream *xdr = resp->xdr;
++	bool splice_ok = argp->splice_ok;
+ 	unsigned long maxcount;
+ 	__be32 nfserr, *p;
  
- 	file = nf->nf_file;
--	if (file->f_op->splice_read && test_bit(RQ_SPLICE_OK, &rqstp->rq_flags))
-+	if (file->f_op->splice_read && nfsd_read_splice_ok(rqstp))
- 		err = nfsd_splice_read(rqstp, fhp, file, offset, count, eof);
- 	else
- 		err = nfsd_iter_read(rqstp, fhp, file, offset, count, 0, eof);
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index e3c29596f4df..702fbc4483bf 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -114,6 +114,7 @@ __be32		nfsd_iter_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				struct file *file, loff_t offset,
- 				unsigned long *count, unsigned int base,
- 				u32 *eof);
-+bool		nfsd_read_splice_ok(struct svc_rqst *rqstp);
- __be32		nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				loff_t offset, unsigned long *count,
- 				u32 *eof);
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 80e859dc84d8..415516c1b27e 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -840,6 +840,7 @@ struct nfsd4_compoundargs {
+ 	u32				minorversion;
+ 	u32				client_opcnt;
+ 	u32				opcnt;
++	bool				splice_ok;
+ 	struct nfsd4_op			*ops;
+ 	struct nfsd4_op			iops[8];
+ };
 
 
