@@ -2,36 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 743587ECAEE
+	by mail.lfdr.de (Postfix) with ESMTP id D37857ECAEF
 	for <lists+linux-nfs@lfdr.de>; Wed, 15 Nov 2023 20:02:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbjKOTCV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S231856AbjKOTCV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Wed, 15 Nov 2023 14:02:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33460 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231438AbjKOTCU (ORCPT
+        with ESMTP id S231745AbjKOTCU (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Nov 2023 14:02:20 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7428C19E
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B841A7
         for <linux-nfs@vger.kernel.org>; Wed, 15 Nov 2023 11:02:16 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C573BC433C7
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Nov 2023 19:02:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F99CC433C8
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Nov 2023 19:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1700074936;
-        bh=St3CybL7wd/LaFAt8FmnsE4d4EpjuxX938p2qLC2Xu0=;
-        h=From:To:Subject:Date:From;
-        b=YrXfpiAIhi+ub3dl9K7bxIGP/W7vhq+NfJCARV76aaJ0tU/lH1Ggqggoz+8tGHj6H
-         6j+Hnl40SJ+8U6GcOoRYs8T/9Li7IAyyQhGHS9H++JU9Ct+z3Awb9XIRmhYAfjMOQ3
-         VCTqirFIg+32HhkefSPc7vW4wFcEpM1fSkmfLFD9+xOUqe3RXxeZNr9MksmqpiPzOp
-         GWg92WhygaS0wyiq5pDjmXCngeh4wetnpZ6OvXSKR+8/dD1h3lq2MVxDopsEAj85GJ
-         HRJrgPFcVsdxEVioHY1JwEEjtuQqOSpft+XKNbLI5W1etsPwcexRPY4Dxsg7j1S/ol
-         axErQO7wYEkZg==
+        bh=pcGqBYEcZv927P60bgaSDCGjf4eY9PCdOTg1NKfq5ew=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=XVRcLmRgnH9LAYXrJmtI0Aj6tE+Awi3qL6j0p4ZsN5rnYgp0HmLcN7CdvLNsk3qvS
+         F/ZmlydCU0hYglgZ1jpUZFyM4JhOfOOGPcFtwwujvqvyrqUMn8qY9dIgMy1f4vum98
+         4eQ6f+Wb83x58ZVS1FvPEenaEDDoyuwyrHGCHjejEXgvE/WZM73VfX7qNkf/W6wmOD
+         Kb5PhPK2RxFwvRIYHn70EYynRIC7lUBx9qhOMwzDAImvsO9HOZ8d0jRij+aXDiRwtF
+         SXYbutZjcKsy0JPA4q7uk8TfNxrxBzjlViij8za9Vwk16XCj2b2KNx0wgwyi4O2tYZ
+         I9r0sLk6hjyWg==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/3] NFSv4: Track the number of referring calls in struct cb_process_state
-Date:   Wed, 15 Nov 2023 13:55:27 -0500
-Message-ID: <20231115185529.303842-1-trondmy@kernel.org>
+Subject: [PATCH 2/3] NFSv4.1: if referring calls are complete, trust the stateid argument
+Date:   Wed, 15 Nov 2023 13:55:28 -0500
+Message-ID: <20231115185529.303842-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.41.0
+In-Reply-To: <20231115185529.303842-1-trondmy@kernel.org>
+References: <20231115185529.303842-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -46,87 +48,128 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-When the server gives us a set of referring calls, to tell us that the
-NFSv4.1 callback needs to be ordered with respect to those calls, then
-we may want to make that information available to the operations. In
-certain cases, it may allow them to optimise their behaviour due to the
-extra knowledge.
+If the server is recalling a layout, and sends us a list of referring
+calls that we can see are complete, then we should just trust that the
+stateid argument is correct, even if the sequence id doesn't match the
+one we hold.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/callback.h      |  5 +++--
- fs/nfs/callback_proc.c | 11 ++++++++---
- 2 files changed, 11 insertions(+), 5 deletions(-)
+ fs/nfs/callback_proc.c | 44 +++++++++++++++++++++++-------------------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
 
-diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
-index ccd4f245cae2..cc1b6620a0c2 100644
---- a/fs/nfs/callback.h
-+++ b/fs/nfs/callback.h
-@@ -40,11 +40,12 @@ enum nfs4_callback_opnum {
- 
- struct nfs4_slot;
- struct cb_process_state {
--	__be32			drc_status;
- 	struct nfs_client	*clp;
- 	struct nfs4_slot	*slot;
--	u32			minorversion;
- 	struct net		*net;
-+	u32			minorversion;
-+	__be32			drc_status;
-+	unsigned int		referring_calls;
- };
- 
- struct cb_compound_hdr_arg {
 diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index 6bed1394d748..ebecd1f6409e 100644
+index ebecd1f6409e..c0d16ed3c3c5 100644
 --- a/fs/nfs/callback_proc.c
 +++ b/fs/nfs/callback_proc.c
-@@ -450,6 +450,7 @@ static int referring_call_exists(struct nfs_client *clp,
- 	__acquires(lock)
+@@ -207,7 +207,8 @@ static struct inode *nfs_layout_find_inode(struct nfs_client *clp,
+  * Enforce RFC5661 section 12.5.5.2.1. (Layout Recall and Return Sequencing)
+  */
+ static u32 pnfs_check_callback_stateid(struct pnfs_layout_hdr *lo,
+-					const nfs4_stateid *new)
++					const nfs4_stateid *new,
++					struct cb_process_state *cps)
  {
- 	int status = 0;
-+	int found = 0;
- 	int i, j;
- 	struct nfs4_session *session;
- 	struct nfs4_slot_table *tbl;
-@@ -478,11 +479,12 @@ static int referring_call_exists(struct nfs_client *clp,
- 			spin_lock(lock);
- 			if (status)
- 				goto out;
-+			found++;
- 		}
- 	}
+ 	u32 oldseq, newseq;
  
- out:
--	return status;
-+	return status < 0 ? status : found;
+@@ -221,28 +222,29 @@ static u32 pnfs_check_callback_stateid(struct pnfs_layout_hdr *lo,
+ 
+ 	newseq = be32_to_cpu(new->seqid);
+ 	/* Are we already in a layout recall situation? */
+-	if (test_bit(NFS_LAYOUT_RETURN_REQUESTED, &lo->plh_flags) &&
+-	    lo->plh_return_seq != 0) {
+-		if (newseq < lo->plh_return_seq)
+-			return NFS4ERR_OLD_STATEID;
+-		if (newseq > lo->plh_return_seq)
+-			return NFS4ERR_DELAY;
+-		goto out;
+-	}
++	if (test_bit(NFS_LAYOUT_RETURN, &lo->plh_flags))
++		return NFS4ERR_DELAY;
+ 
+-	/* Check that the stateid matches what we think it should be. */
++	/*
++	 * Check that the stateid matches what we think it should be.
++	 * Note that if the server sent us a list of referring calls,
++	 * and we know that those have completed, then we trust the
++	 * stateid argument is correct.
++	 */
+ 	oldseq = be32_to_cpu(lo->plh_stateid.seqid);
+-	if (newseq > oldseq + 1)
++	if (newseq > oldseq + 1 && !cps->referring_calls)
+ 		return NFS4ERR_DELAY;
++
+ 	/* Crazy server! */
+ 	if (newseq <= oldseq)
+ 		return NFS4ERR_OLD_STATEID;
+-out:
++
+ 	return NFS_OK;
  }
  
- __be32 nfs4_callback_sequence(void *argp, void *resp,
-@@ -493,6 +495,7 @@ __be32 nfs4_callback_sequence(void *argp, void *resp,
- 	struct nfs4_slot_table *tbl;
- 	struct nfs4_slot *slot;
- 	struct nfs_client *clp;
-+	int ret;
- 	int i;
- 	__be32 status = htonl(NFS4ERR_BADSESSION);
- 
-@@ -552,11 +555,13 @@ __be32 nfs4_callback_sequence(void *argp, void *resp,
- 	 * related callback was received before the response to the original
- 	 * call.
- 	 */
--	if (referring_call_exists(clp, args->csa_nrclists, args->csa_rclists,
--				&tbl->slot_tbl_lock) < 0) {
-+	ret = referring_call_exists(clp, args->csa_nrclists, args->csa_rclists,
-+				    &tbl->slot_tbl_lock);
-+	if (ret < 0) {
- 		status = htonl(NFS4ERR_DELAY);
- 		goto out_unlock;
+ static u32 initiate_file_draining(struct nfs_client *clp,
+-				  struct cb_layoutrecallargs *args)
++				  struct cb_layoutrecallargs *args,
++				  struct cb_process_state *cps)
+ {
+ 	struct inode *ino;
+ 	struct pnfs_layout_hdr *lo;
+@@ -266,7 +268,7 @@ static u32 initiate_file_draining(struct nfs_client *clp,
+ 		goto out;
  	}
-+	cps->referring_calls = ret;
+ 	pnfs_get_layout_hdr(lo);
+-	rv = pnfs_check_callback_stateid(lo, &args->cbl_stateid);
++	rv = pnfs_check_callback_stateid(lo, &args->cbl_stateid, cps);
+ 	if (rv != NFS_OK)
+ 		goto unlock;
  
- 	/*
- 	 * RFC5661 20.9.3
+@@ -326,10 +328,11 @@ static u32 initiate_bulk_draining(struct nfs_client *clp,
+ }
+ 
+ static u32 do_callback_layoutrecall(struct nfs_client *clp,
+-				    struct cb_layoutrecallargs *args)
++				    struct cb_layoutrecallargs *args,
++				    struct cb_process_state *cps)
+ {
+ 	if (args->cbl_recall_type == RETURN_FILE)
+-		return initiate_file_draining(clp, args);
++		return initiate_file_draining(clp, args, cps);
+ 	return initiate_bulk_draining(clp, args);
+ }
+ 
+@@ -340,11 +343,12 @@ __be32 nfs4_callback_layoutrecall(void *argp, void *resp,
+ 	u32 res = NFS4ERR_OP_NOT_IN_SESSION;
+ 
+ 	if (cps->clp)
+-		res = do_callback_layoutrecall(cps->clp, args);
++		res = do_callback_layoutrecall(cps->clp, args, cps);
+ 	return cpu_to_be32(res);
+ }
+ 
+-static void pnfs_recall_all_layouts(struct nfs_client *clp)
++static void pnfs_recall_all_layouts(struct nfs_client *clp,
++				    struct cb_process_state *cps)
+ {
+ 	struct cb_layoutrecallargs args;
+ 
+@@ -352,7 +356,7 @@ static void pnfs_recall_all_layouts(struct nfs_client *clp)
+ 	memset(&args, 0, sizeof(args));
+ 	args.cbl_recall_type = RETURN_ALL;
+ 	/* FIXME we ignore errors, what should we do? */
+-	do_callback_layoutrecall(clp, &args);
++	do_callback_layoutrecall(clp, &args, cps);
+ }
+ 
+ __be32 nfs4_callback_devicenotify(void *argp, void *resp,
+@@ -622,7 +626,7 @@ __be32 nfs4_callback_recallany(void *argp, void *resp,
+ 		nfs_expire_unused_delegation_types(cps->clp, flags);
+ 
+ 	if (args->craa_type_mask & BIT(RCA4_TYPE_MASK_FILE_LAYOUT))
+-		pnfs_recall_all_layouts(cps->clp);
++		pnfs_recall_all_layouts(cps->clp, cps);
+ 
+ 	if (args->craa_type_mask & BIT(PNFS_FF_RCA4_TYPE_MASK_READ)) {
+ 		set_bit(NFS4CLNT_RECALL_ANY_LAYOUT_READ, &cps->clp->cl_state);
 -- 
 2.41.0
 
