@@ -2,188 +2,157 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0A7E7EDE2C
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Nov 2023 11:08:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D97CC7EDED8
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Nov 2023 11:48:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230254AbjKPKI1 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 16 Nov 2023 05:08:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55188 "EHLO
+        id S1345043AbjKPKsj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Nov 2023 05:48:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229749AbjKPKI1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Nov 2023 05:08:27 -0500
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FC2519E;
-        Thu, 16 Nov 2023 02:08:22 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.227])
-        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4SWFkc5w27z9ybvb;
-        Thu, 16 Nov 2023 17:54:48 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwDHtXXq6VVl8pvFAA--.44935S2;
-        Thu, 16 Nov 2023 11:07:53 +0100 (CET)
-Message-ID: <49a7fd0a1f89188fa92f258e88c50eaeca0f4ac9.camel@huaweicloud.com>
-Subject: Re: [PATCH v5 22/23] integrity: Move integrity functions to the LSM
-  infrastructure
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Paul Moore <paul@paul-moore.com>, viro@zeniv.linux.org.uk,
-        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
-        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com,
-        tom@talpey.com, jmorris@namei.org, serge@hallyn.com,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
-        dhowells@redhat.com, jarkko@kernel.org,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        casey@schaufler-ca.com, mic@digikod.net
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Thu, 16 Nov 2023 11:07:34 +0100
-In-Reply-To: <f529266a02533411e72d706b908924e8.paul@paul-moore.com>
-References: <20231107134012.682009-23-roberto.sassu@huaweicloud.com>
-         <f529266a02533411e72d706b908924e8.paul@paul-moore.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4-0ubuntu2 
+        with ESMTP id S1345023AbjKPKsi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Nov 2023 05:48:38 -0500
+X-Greylist: delayed 587 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Nov 2023 02:48:33 PST
+Received: from fw.sz-a.kwebs.cloud (fw.sz-a.kwebs.cloud [109.61.102.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE091B3
+        for <linux-nfs@vger.kernel.org>; Thu, 16 Nov 2023 02:48:33 -0800 (PST)
+Received: from webmail.srv.kwebs.cloud (unknown [172.16.36.101])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (secp384r1) server-digest SHA384)
+        (No client certificate requested)
+        (Authenticated sender: richard@kojedz.in)
+        by mx.kwebs.cloud (Postfix) with ESMTPSA id AC28A14388
+        for <linux-nfs@vger.kernel.org>; Thu, 16 Nov 2023 10:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s02;
+        t=1700131122; bh=A1fuKc8p4y4svbHp/BbF2AuON58ba7xcCwozEX3px6k=;
+        h=Date:From:To:Subject;
+        b=i1WmWgVNUNc5+aDoWXoJvw5qMQJ+EImpVaBRi5a1ZRqCT0R8Re5wg2LFQF6qvhRIb
+         xYVo/qtN4YIsppPCbp2QXqFEqoXohKtDcFH43lX65iHEWKvmQYBjC6TJkqi5sH49Y1
+         6XTkCEn+eQE8PiqiAPs2DR0CzXmY3swNS9QSzRQCfbtD7sKf4w7AOzD8hXitl26Nvx
+         OBkE17WYtVTGT2fXTBKxGhFQZ8BSriHJoLFtP++9joLmMECTzSsZp7us/+ZIwzVT9/
+         K73JKGI+ROQhWFo65CIzqG6hx4toVoCGfxnbB7blftHI556KP7dE3cgn/AHWnelgoJ
+         pLNYpjgNfjrvg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kojedz.in; s=s01;
+        t=1700131122; bh=A1fuKc8p4y4svbHp/BbF2AuON58ba7xcCwozEX3px6k=;
+        h=Date:From:To:Subject;
+        b=bR6SX8mQMRf4W/lCZrO16QobHygANd0HcPFyBErvPZyFx1+dg8P1nhJ8Jb2drOYJ0
+         yBMFTtRQ7YP+jjmDRsm4awKLTXaIx5Z8vpfWv5E6W5Ohm3gM/DFIfBvPC1eRUBHdBF
+         XXOE090B4fbF57hgwsT8eVV/3Y3aKD56m+O4yrC6LTcNRGKiQweB0P9OHAnNPNcYp6
+         XKwgVzcCpPuDvWP/jwCuR4YB8IR6/Ffe545MGaHi02ByF7KO+oGYQ4iDm1qJ96GurA
+         GWNjW3o8tgDL8fC8HfYvH3UIe5QrUM4qxdFkrc6LlEeLpnauxzhNyjFC+3/wGBAeBa
+         54CXA94zKCyFAGBlnoiiagpdHK2XqZwkfIpzGrZnGvTa7wSa3qBDCJn9HK9PQp3PtK
+         Vf5DdNVwszupyzoqC5BX0XouuejFZ6NF8hgMoGK6s35NxfGbVfgyLBph89KcURcZMb
+         SQ8AyadJNSAm+/rrLPPtBttv0fD47uqIu78zr6WtqtOIS4dIXC1
 MIME-Version: 1.0
-X-CM-TRANSID: LxC2BwDHtXXq6VVl8pvFAA--.44935S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGr43Kr4fGFyxJrW8Jw4ruFg_yoWrZF1xpF
-        W3Ka43Grn5ZFy2kF1vvF45ua1Sg392gFyUWr13Kw10yas8Zr10qF18AryruF98CrWrtw1r
-        tF4a9r4UC3Wqy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-        7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_Wr1j6rW3Jr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-        aVCY1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgADBF1jj5KGhAAAsk
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Date:   Thu, 16 Nov 2023 11:38:42 +0100
+From:   richard@kojedz.in
+To:     linux-nfs@vger.kernel.org
+Subject: nfs client caching issues
+Message-ID: <c1091755f4df062e32ffd78674ac3646@kojedz.in>
+X-Sender: richard@kojedz.in
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2023-11-15 at 23:33 -0500, Paul Moore wrote:
-> On Nov  7, 2023 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
-> > 
-> > Remove hardcoded calls to integrity functions from the LSM infrastructure
-> > and, instead, register them in integrity_lsm_init() with the IMA or EVM
-> > LSM ID (the first non-NULL returned by ima_get_lsm_id() and
-> > evm_get_lsm_id()).
-> > 
-> > Also move the global declaration of integrity_inode_get() to
-> > security/integrity/integrity.h, so that the function can be still called by
-> > IMA.
-> > 
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
-> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> > ---
-> >  include/linux/integrity.h      | 26 --------------------------
-> >  security/integrity/iint.c      | 30 +++++++++++++++++++++++++++++-
-> >  security/integrity/integrity.h |  7 +++++++
-> >  security/security.c            |  9 +--------
-> >  4 files changed, 37 insertions(+), 35 deletions(-)
-> 
-> ...
-> 
-> > diff --git a/security/integrity/iint.c b/security/integrity/iint.c
-> > index 0b0ac71142e8..882fde2a2607 100644
-> > --- a/security/integrity/iint.c
-> > +++ b/security/integrity/iint.c
-> > @@ -171,7 +171,7 @@ struct integrity_iint_cache *integrity_inode_get(struct inode *inode)
-> >   *
-> >   * Free the integrity information(iint) associated with an inode.
-> >   */
-> > -void integrity_inode_free(struct inode *inode)
-> > +static void integrity_inode_free(struct inode *inode)
-> >  {
-> >  	struct integrity_iint_cache *iint;
-> >  
-> > @@ -193,11 +193,39 @@ static void iint_init_once(void *foo)
-> >  	memset(iint, 0, sizeof(*iint));
-> >  }
-> >  
-> > +static struct security_hook_list integrity_hooks[] __ro_after_init = {
-> > +	LSM_HOOK_INIT(inode_free_security, integrity_inode_free),
-> > +#ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
-> > +	LSM_HOOK_INIT(kernel_module_request, integrity_kernel_module_request),
-> > +#endif
-> > +};
-> > +
-> > +/*
-> > + * Perform the initialization of the 'integrity', 'ima' and 'evm' LSMs to
-> > + * ensure that the management of integrity metadata is working at the time
-> > + * IMA and EVM hooks are registered to the LSM infrastructure, and to keep
-> > + * the original ordering of IMA and EVM functions as when they were hardcoded.
-> > + */
-> >  static int __init integrity_lsm_init(void)
-> >  {
-> > +	const struct lsm_id *lsmid;
-> > +
-> >  	iint_cache =
-> >  	    kmem_cache_create("iint_cache", sizeof(struct integrity_iint_cache),
-> >  			      0, SLAB_PANIC, iint_init_once);
-> > +	/*
-> > +	 * Obtain either the IMA or EVM LSM ID to register integrity-specific
-> > +	 * hooks under that LSM, since there is no LSM ID assigned to the
-> > +	 * 'integrity' LSM.
-> > +	 */
-> > +	lsmid = ima_get_lsm_id();
-> > +	if (!lsmid)
-> > +		lsmid = evm_get_lsm_id();
-> > +	/* No point in continuing, since both IMA and EVM are disabled. */
-> > +	if (!lsmid)
-> > +		return 0;
-> > +
-> > +	security_add_hooks(integrity_hooks, ARRAY_SIZE(integrity_hooks), lsmid);
-> 
-> Ooof.  I understand, or at least I think I understand, why the above
-> hack is needed, but I really don't like the idea of @integrity_hooks
-> jumping between IMA and EVM depending on how the kernel is configured.
-> 
-> Just to make sure I'm understanding things correctly, the "integrity"
-> LSM exists to ensure the proper hook ordering between IMA/EVM, shared
-> metadata management for IMA/EVM, and a little bit of a hack to solve
-> some kernel module loading issues with signatures.  Is that correct?
-> 
-> I see that patch 23/23 makes some nice improvements to the metadata
-> management, moving them into LSM security blobs, but it appears that
-> they are still shared, and thus the requirement is still there for
-> an "integrity" LSM to manage the shared blobs.
+Dear nfs developers,
 
-Yes, all is correct.
+We are running gitea in k8s in two pods, the two pods are running on 
+different vms. Gitea datadir is mounted as an nfs share, and we 
+periodically experience a caching issue, where one of the pods is 
+out-of-sync with directory entries:
 
-> I'd like to hear everyone's honest opinion on this next question: do
-> we have any hope of separating IMA and EVM so they are independent
-> (ignore the ordering issues for a moment), or are we always going to
-> need to have the "integrity" LSM to manage shared resources, hooks,
-> etc.?
+# kubectl -n ci-cd exec -it gitea-546489b89b-c8j5j -- sh -c 'cd 
+git/repositories/.../objects/pack && ls -la'
+total 32627
+drwxr-xr-x    2 git      git              5 Nov 16 08:59 .
+drwxr-xr-x    4 git      git              4 Nov 16 08:59 ..
+-r--r--r--    1 git      git          28634 Nov 16 08:59 
+pack-f3648f5e8e42d671dee4868d08fe24fa50b47fac.bitmap
+-r--r--r--    1 git      git         134744 Nov 16 08:59 
+pack-f3648f5e8e42d671dee4868d08fe24fa50b47fac.idx
+-r--r--r--    1 git      git       33191104 Nov 16 08:59 
+pack-f3648f5e8e42d671dee4868d08fe24fa50b47fac.pack
 
-I think it should not be technically difficult to do it. But, it would
-be very important to understand all the implications of doing those
-changes.
+# kubectl -n ci-cd exec -it gitea-546489b89b-d7lcn -- sh -c 'cd 
+git/repositories/.../objects/pack && ls -la'
+ls: ./pack-249aee1788eeaca050d1c083e6598d675ba1017e.pack: No such file 
+or directory
+ls: ./pack-249aee1788eeaca050d1c083e6598d675ba1017e.bitmap: No such file 
+or directory
+ls: ./pack-249aee1788eeaca050d1c083e6598d675ba1017e.idx: No such file or 
+directory
+total 25
+drwxr-xr-x    2 git      git              5 Nov 16 08:59 .
+drwxr-xr-x    4 git      git              4 Nov 16 08:59 ..
+command terminated with exit code 1
 
-Sorry, for now I don't see an immediate need to do that, other than
-solving this LSM naming issue. I tried to find the best solution I
-could.
+The second pod has cached directory entries, howewer, they are not 
+present. But, if I stat the existing files on the failing pod, it 
+succeeds:
+# kubectl -n ci-cd exec -it gitea-546489b89b-d7lcn -- sh -c 'cd 
+git/repositories/.../objects/pack && stat 
+pack-f3648f5e8e42d671dee4868d08fe24fa50b47fac.bitmap'
+   File: pack-f3648f5e8e42d671dee4868d08fe24fa50b47fac.bitmap
+   Size: 28634     	Blocks: 41         IO Block: 131072 regular file
+Device: c0h/192d	Inode: 98069       Links: 1
+Access: (0444/-r--r--r--)  Uid: ( 1000/     git)   Gid: ( 1000/     git)
+Access: 2023-11-16 08:59:38.176448632 +0000
+Modify: 2023-11-16 08:59:38.177839293 +0000
+Change: 2023-11-16 08:59:38.203249724 +0000
 
-Thanks
+Seems that the directory metadata is the same on the nodes:
+# kubectl -n ci-cd exec -it gitea-546489b89b-c8j5j -- sh -c 'cd 
+git/repositories/.../objects/pack && stat .'
+   File: .
+   Size: 5         	Blocks: 49         IO Block: 131072 directory
+Device: 87h/135d	Inode: 15013       Links: 2
+Access: (0755/drwxr-xr-x)  Uid: ( 1000/     git)   Gid: ( 1000/     git)
+Access: 2023-11-16 09:06:02.594066258 +0000
+Modify: 2023-11-16 08:59:38.232154965 +0000
+Change: 2023-11-16 08:59:38.232154965 +0000
 
-Roberto
+# kubectl -n ci-cd exec -it gitea-546489b89b-d7lcn -- sh -c 'cd 
+git/repositories/.../objects/pack && stat .'
+   File: .
+   Size: 5         	Blocks: 49         IO Block: 131072 directory
+Device: c0h/192d	Inode: 15013       Links: 2
+Access: (0755/drwxr-xr-x)  Uid: ( 1000/     git)   Gid: ( 1000/     git)
+Access: 2023-11-16 09:06:02.594066258 +0000
+Modify: 2023-11-16 08:59:38.232154965 +0000
+Change: 2023-11-16 08:59:38.232154965 +0000
 
-> >  	init_ima_lsm();
-> >  	init_evm_lsm();
-> >  	return 0;
-> 
-> --
-> paul-moore.com
+Issuing ls on the failing generates getattr for the directory. I assume 
+it receives the already cached metadata, then assumes there were no 
+changes, and then tries to stat() the cached 3 files with no success.
 
+It is enough to just touch the affected directory even on the other 
+node, this makes the failing node to recover, get in sync again.
+
+Both nodes are running Debian stable kernel:
+# uname -a
+Linux node 6.1.0-13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.55-1 
+(2023-09-29) x86_64 GNU/Linux
+
+The nfs server is a TrueNAS server (FreeBSD).
+
+We have default mount options:
+
+# mount | grep nfs4
+x.x.x.x:/mnt/main/e-sz-k8s/csi/rgbcpj4nw9tywroxrqw8bpw1zmzyu5mg on 
+/var/lib/kubelet/pods/69d3e536-d0a9-4c02-9461-8f14d058ea60/volumes/kubernetes.io~csi/pvc-c76ad5da-9c1b-4692-b768-5469a9517d57/mount 
+type nfs4 
+(rw,relatime,vers=4.2,rsize=131072,wsize=131072,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=c.c.c.c,local_lock=none,addr=x.x.x.x)
+
+Is it cache configuration issue, or a bug in linux nfs client or freebsd 
+nfs server code?
+
+Thanks in advance,
+Richard
