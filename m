@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DD077EFA08
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 22:19:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A7067EFABA
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 22:27:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235763AbjKQVTu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Nov 2023 16:19:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38654 "EHLO
+        id S1346300AbjKQV1v (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Nov 2023 16:27:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235757AbjKQVTa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Nov 2023 16:19:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C913435AD
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 13:18:03 -0800 (PST)
+        with ESMTP id S235790AbjKQV1s (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Nov 2023 16:27:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E49E19A6
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 13:18:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1700255883;
+        s=mimecast20190719; t=1700255885;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yJ0EH3j50U389igBFANhTwAFPV4cR9SbiJMpaWBP0sQ=;
-        b=bu4Zirihs7GfRFfk2vBXQkErWL7u7xNx+HlTLJU6vusxb7vWR7u9brB4J7sKdHshhRnyn7
-        A8zVO07bmWSI48u5IJUtUZuSuK0frfPVZAQorucFrwnO+VaibxbSb+5yNvGLODI3RY/UK1
-        5xaVO0AT39lnnpmJ93320DYVgVF3sKw=
+        bh=vexZJLzBIyyLPeX5Ek0LXizOmJkCJIbOd7D7U7LHKH0=;
+        b=Asepmo+EK22KCl1diWuaR/Skv45FNaeaf6Y1EWvh/WROH96ahV3dF3srddH7pZF07JfAeY
+        WkiGBwNbRRznYE7BGx/NfdgUyWnkxY59jZxK1+Non8ZWu9e9bPlSNfRRVlU8KPJTps4VdY
+        sXJoAzS/ckvuqTUTDjoewxNkTE8pxvE=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-124-2tVkcOLeNIK64W8EMhC0KA-1; Fri, 17 Nov 2023 16:17:57 -0500
-X-MC-Unique: 2tVkcOLeNIK64W8EMhC0KA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-41-DTQdvzYOMMuT2PyT53z6MA-1; Fri, 17 Nov 2023 16:18:01 -0500
+X-MC-Unique: DTQdvzYOMMuT2PyT53z6MA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BC7B8101B045;
-        Fri, 17 Nov 2023 21:17:56 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 13BC4811E8E;
+        Fri, 17 Nov 2023 21:18:00 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B871C15882;
-        Fri, 17 Nov 2023 21:17:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 73A471121307;
+        Fri, 17 Nov 2023 21:17:57 +0000 (UTC)
 From:   David Howells <dhowells@redhat.com>
 To:     Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>
 Cc:     David Howells <dhowells@redhat.com>,
@@ -54,17 +54,17 @@ Cc:     David Howells <dhowells@redhat.com>,
         ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 32/51] netfs: Make netfs_skip_folio_read() take account of blocksize
-Date:   Fri, 17 Nov 2023 21:15:24 +0000
-Message-ID: <20231117211544.1740466-33-dhowells@redhat.com>
+Subject: [PATCH v2 33/51] netfs: Perform content encryption
+Date:   Fri, 17 Nov 2023 21:15:25 +0000
+Message-ID: <20231117211544.1740466-34-dhowells@redhat.com>
 In-Reply-To: <20231117211544.1740466-1-dhowells@redhat.com>
 References: <20231117211544.1740466-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -73,8 +73,19 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Make netfs_skip_folio_read() take account of blocksize such as crypto
-blocksize.
+When dealing with an encrypted file, we gather together sufficient pages
+from the pagecache to constitute a logical crypto block, allocate a bounce
+buffer and then ask the filesystem to encrypt between the buffers.  The
+bounce buffer is then passed to the filesystem to upload.
+
+The network filesystem must set a flag to indicate what service is desired
+and what the logical blocksize will be.
+
+The netfs library iterates through each block to be processed, providing a
+pair of scatterlists to describe the start and end buffers.
+
+Note that it should be possible in future to encrypt DIO writes also by
+this same mechanism.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Jeff Layton <jlayton@kernel.org>
@@ -82,80 +93,261 @@ cc: linux-cachefs@redhat.com
 cc: linux-fsdevel@vger.kernel.org
 cc: linux-mm@kvack.org
 ---
- fs/netfs/buffered_read.c | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ fs/netfs/Makefile            |  1 +
+ fs/netfs/buffered_write.c    |  3 +-
+ fs/netfs/crypto.c            | 89 ++++++++++++++++++++++++++++++++++++
+ fs/netfs/internal.h          |  5 ++
+ fs/netfs/objects.c           |  2 +
+ fs/netfs/output.c            |  7 ++-
+ include/linux/netfs.h        | 11 +++++
+ include/trace/events/netfs.h |  2 +
+ 8 files changed, 118 insertions(+), 2 deletions(-)
+ create mode 100644 fs/netfs/crypto.c
 
-diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
-index e06461ef0bfa..de696aaaefbd 100644
---- a/fs/netfs/buffered_read.c
-+++ b/fs/netfs/buffered_read.c
-@@ -337,6 +337,7 @@ EXPORT_SYMBOL(netfs_read_folio);
+diff --git a/fs/netfs/Makefile b/fs/netfs/Makefile
+index d5c2809fc029..5ea852ac276c 100644
+--- a/fs/netfs/Makefile
++++ b/fs/netfs/Makefile
+@@ -3,6 +3,7 @@
+ netfs-y := \
+ 	buffered_read.o \
+ 	buffered_write.o \
++	crypto.o \
+ 	direct_read.o \
+ 	direct_write.o \
+ 	io.o \
+diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
+index 4f0feedb357a..93e16f7caf67 100644
+--- a/fs/netfs/buffered_write.c
++++ b/fs/netfs/buffered_write.c
+@@ -77,7 +77,8 @@ static enum netfs_how_to_modify netfs_how_to_modify(struct netfs_inode *ctx,
+ 	if (!maybe_trouble && offset == 0 && len >= flen)
+ 		return NETFS_WHOLE_FOLIO_MODIFY;
  
- /*
-  * Prepare a folio for writing without reading first
-+ * @ctx: File context
-  * @folio: The folio being prepared
-  * @pos: starting position for the write
-  * @len: length of write
-@@ -350,32 +351,41 @@ EXPORT_SYMBOL(netfs_read_folio);
-  * If any of these criteria are met, then zero out the unwritten parts
-  * of the folio and return true. Otherwise, return false.
-  */
--static bool netfs_skip_folio_read(struct folio *folio, loff_t pos, size_t len,
--				 bool always_fill)
-+static bool netfs_skip_folio_read(struct netfs_inode *ctx, struct folio *folio,
-+				  loff_t pos, size_t len, bool always_fill)
- {
- 	struct inode *inode = folio_inode(folio);
--	loff_t i_size = i_size_read(inode);
-+	loff_t i_size = i_size_read(inode), low, high;
- 	size_t offset = offset_in_folio(folio, pos);
- 	size_t plen = folio_size(folio);
-+	size_t min_bsize = 1UL << ctx->min_bshift;
+-	if (file->f_mode & FMODE_READ)
++	if (file->f_mode & FMODE_READ ||
++	    test_bit(NETFS_ICTX_ENCRYPTED, &ctx->flags))
+ 		return NETFS_JUST_PREFETCH;
+ 
+ 	if (netfs_is_cache_enabled(ctx) ||
+diff --git a/fs/netfs/crypto.c b/fs/netfs/crypto.c
+new file mode 100644
+index 000000000000..943d01f430e2
+--- /dev/null
++++ b/fs/netfs/crypto.c
+@@ -0,0 +1,89 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Network filesystem content encryption support.
++ *
++ * Copyright (C) 2023 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ */
 +
-+	if (likely(min_bsize == 1)) {
-+		low = folio_file_pos(folio);
-+		high = low + plen;
-+	} else {
-+		low = round_down(pos, min_bsize);
-+		high = round_up(pos + len, min_bsize);
++#include <linux/fs.h>
++#include <linux/mm.h>
++#include <linux/pagemap.h>
++#include <linux/slab.h>
++#include <linux/scatterlist.h>
++#include "internal.h"
++
++/*
++ * Populate a scatterlist from the next bufferage of an I/O iterator.
++ */
++static int netfs_iter_to_sglist(const struct iov_iter *iter, size_t len,
++				struct scatterlist *sg, unsigned int n_sg)
++{
++	struct iov_iter tmp_iter = *iter;
++	struct sg_table sgtable = { .sgl = sg };
++	ssize_t ret;
++
++	_enter("%zx/%zx", len, iov_iter_count(iter));
++
++	sg_init_table(sg, n_sg);
++	ret = extract_iter_to_sg(&tmp_iter, len, &sgtable, n_sg, 0);
++	if (ret < 0)
++		return ret;
++	sg_mark_end(&sg[sgtable.nents - 1]);
++	return sgtable.nents;
++}
++
++/*
++ * Prepare a write request for writing.  We encrypt in/into the bounce buffer.
++ */
++bool netfs_encrypt(struct netfs_io_request *wreq)
++{
++	struct netfs_inode *ctx = netfs_inode(wreq->inode);
++	struct scatterlist source_sg[16], dest_sg[16];
++	unsigned int n_dest;
++	size_t n, chunk, bsize = 1UL << ctx->crypto_bshift;
++	loff_t pos;
++	int ret;
++
++	_enter("");
++
++	trace_netfs_rreq(wreq, netfs_rreq_trace_encrypt);
++
++	pos = wreq->start;
++	n = wreq->len;
++	_debug("ENCRYPT %llx-%llx", pos, pos + n - 1);
++
++	for (; n > 0; n -= chunk, pos += chunk) {
++		chunk = min(n, bsize);
++
++		ret = netfs_iter_to_sglist(&wreq->io_iter, chunk,
++					   dest_sg, ARRAY_SIZE(dest_sg));
++		if (ret < 0)
++			goto error;
++		n_dest = ret;
++
++		if (test_bit(NETFS_RREQ_CRYPT_IN_PLACE, &wreq->flags)) {
++			ret = ctx->ops->encrypt_block(wreq, pos, chunk,
++						      dest_sg, n_dest,
++						      dest_sg, n_dest);
++		} else {
++			ret = netfs_iter_to_sglist(&wreq->iter, chunk,
++						   source_sg, ARRAY_SIZE(source_sg));
++			if (ret < 0)
++				goto error;
++			ret = ctx->ops->encrypt_block(wreq, pos, chunk,
++						      source_sg, ret,
++						      dest_sg, n_dest);
++		}
++
++		if (ret < 0)
++			goto error_failed;
++	}
++
++	return true;
++
++error_failed:
++	trace_netfs_failure(wreq, NULL, ret, netfs_fail_encryption);
++error:
++	wreq->error = ret;
++	return false;
++}
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index edb94c437793..d3e74ad478ce 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -22,6 +22,11 @@ void netfs_rreq_unlock_folios(struct netfs_io_request *rreq);
+ int netfs_prefetch_for_write(struct file *file, struct folio *folio,
+ 			     size_t offset, size_t len);
+ 
++/*
++ * crypto.c
++ */
++bool netfs_encrypt(struct netfs_io_request *wreq);
++
+ /*
+  * direct_write.c
+  */
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index c1218b183197..6bf3b3f51499 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -44,6 +44,8 @@ struct netfs_io_request *netfs_alloc_request(struct address_space *mapping,
+ 	refcount_set(&rreq->ref, 1);
+ 
+ 	__set_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
++	if (test_bit(NETFS_ICTX_ENCRYPTED, &ctx->flags))
++		__set_bit(NETFS_RREQ_CONTENT_ENCRYPTION, &rreq->flags);
+ 	if (cached)
+ 		__set_bit(NETFS_RREQ_WRITE_TO_CACHE, &rreq->flags);
+ 	if (file && file->f_flags & O_NONBLOCK)
+diff --git a/fs/netfs/output.c b/fs/netfs/output.c
+index bb42789c7a24..2d2530dc9507 100644
+--- a/fs/netfs/output.c
++++ b/fs/netfs/output.c
+@@ -366,7 +366,11 @@ int netfs_begin_write(struct netfs_io_request *wreq, bool may_wait,
+ 	 * background whilst we generate a list of write ops that we want to
+ 	 * perform.
+ 	 */
+-	// TODO: Encrypt or compress the region as appropriate
++	if (test_bit(NETFS_RREQ_CONTENT_ENCRYPTION, &wreq->flags) &&
++	    !netfs_encrypt(wreq)) {
++		may_wait = true;
++		goto out;
 +	}
  
- 	if (unlikely(always_fill)) {
--		if (pos - offset + len <= i_size)
--			return false; /* Page entirely before EOF */
-+		if (low < i_size)
-+			return false; /* Some part of the block before EOF */
- 		zero_user_segment(&folio->page, 0, plen);
- 		folio_mark_uptodate(folio);
- 		return true;
- 	}
+ 	/* We need to write all of the region to the cache */
+ 	if (test_bit(NETFS_RREQ_WRITE_TO_CACHE, &wreq->flags))
+@@ -378,6 +382,7 @@ int netfs_begin_write(struct netfs_io_request *wreq, bool may_wait,
+ 	if (test_bit(NETFS_RREQ_UPLOAD_TO_SERVER, &wreq->flags))
+ 		ctx->ops->create_write_requests(wreq, wreq->start, wreq->len);
  
--	/* Full folio write */
--	if (offset == 0 && len >= plen)
-+	/* Full page write */
-+	if (pos == low && high == pos + len)
- 		return true;
++out:
+ 	if (atomic_dec_and_test(&wreq->nr_outstanding))
+ 		netfs_write_terminated(wreq, false);
  
--	/* Page entirely beyond the end of the file */
--	if (pos - offset >= i_size)
-+	/* pos beyond last page in the file */
-+	if (low >= i_size)
- 		goto zero_out;
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index cb80de66d165..639f1f9cb7e0 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -19,6 +19,7 @@
+ #include <linux/pagemap.h>
+ #include <linux/uio.h>
  
- 	/* Write that covers from the start of the folio to EOF or beyond */
--	if (offset == 0 && (pos + len) >= i_size)
-+	if (pos == low && (pos + len) >= i_size)
- 		goto zero_out;
++struct scatterlist;
+ enum netfs_sreq_ref_trace;
  
- 	return false;
-@@ -454,7 +464,7 @@ int netfs_write_begin(struct netfs_inode *ctx,
- 	 * to preload the granule.
- 	 */
- 	if (!netfs_is_cache_enabled(ctx) &&
--	    netfs_skip_folio_read(folio, pos, len, false)) {
-+	    netfs_skip_folio_read(ctx, folio, pos, len, false)) {
- 		netfs_stat(&netfs_n_rh_write_zskip);
- 		goto have_folio_no_wait;
- 	}
+ /*
+@@ -141,7 +142,9 @@ struct netfs_inode {
+ 	unsigned long		flags;
+ #define NETFS_ICTX_ODIRECT	0		/* The file has DIO in progress */
+ #define NETFS_ICTX_UNBUFFERED	1		/* I/O should not use the pagecache */
++#define NETFS_ICTX_ENCRYPTED	2		/* The file contents are encrypted */
+ 	unsigned char		min_bshift;	/* log2 min block size for bounding box or 0 */
++	unsigned char		crypto_bshift;	/* log2 of crypto block size */
+ };
+ 
+ /*
+@@ -286,6 +289,8 @@ struct netfs_io_request {
+ #define NETFS_RREQ_UPLOAD_TO_SERVER	8	/* Need to write to the server */
+ #define NETFS_RREQ_NONBLOCK		9	/* Don't block if possible (O_NONBLOCK) */
+ #define NETFS_RREQ_BLOCKED		10	/* We blocked */
++#define NETFS_RREQ_CONTENT_ENCRYPTION	11	/* Content encryption is in use */
++#define NETFS_RREQ_CRYPT_IN_PLACE	12	/* Enc/dec in place in ->io_iter */
+ 	const struct netfs_request_ops *netfs_ops;
+ 	void (*cleanup)(struct netfs_io_request *req);
+ };
+@@ -317,6 +322,11 @@ struct netfs_request_ops {
+ 	void (*create_write_requests)(struct netfs_io_request *wreq,
+ 				      loff_t start, size_t len);
+ 	void (*invalidate_cache)(struct netfs_io_request *wreq);
++
++	/* Content encryption */
++	int (*encrypt_block)(struct netfs_io_request *wreq, loff_t pos, size_t len,
++			     struct scatterlist *source_sg, unsigned int n_source,
++			     struct scatterlist *dest_sg, unsigned int n_dest);
+ };
+ 
+ /*
+@@ -465,6 +475,7 @@ static inline void netfs_inode_init(struct netfs_inode *ctx,
+ 	ctx->zero_point = ctx->remote_i_size;
+ 	ctx->flags = 0;
+ 	ctx->min_bshift = 0;
++	ctx->crypto_bshift = 0;
+ #if IS_ENABLED(CONFIG_FSCACHE)
+ 	ctx->cache = NULL;
+ #endif
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index 60f98c99fe21..70e2f9a48f24 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -41,6 +41,7 @@
+ 	EM(netfs_rreq_trace_assess,		"ASSESS ")	\
+ 	EM(netfs_rreq_trace_copy,		"COPY   ")	\
+ 	EM(netfs_rreq_trace_done,		"DONE   ")	\
++	EM(netfs_rreq_trace_encrypt,		"ENCRYPT")	\
+ 	EM(netfs_rreq_trace_free,		"FREE   ")	\
+ 	EM(netfs_rreq_trace_redirty,		"REDIRTY")	\
+ 	EM(netfs_rreq_trace_resubmit,		"RESUBMT")	\
+@@ -76,6 +77,7 @@
+ 	EM(netfs_fail_copy_to_cache,		"copy-to-cache")	\
+ 	EM(netfs_fail_dio_read_short,		"dio-read-short")	\
+ 	EM(netfs_fail_dio_read_zero,		"dio-read-zero")	\
++	EM(netfs_fail_encryption,		"encryption")		\
+ 	EM(netfs_fail_read,			"read")			\
+ 	EM(netfs_fail_short_read,		"short-read")		\
+ 	EM(netfs_fail_prepare_write,		"prep-write")		\
 
