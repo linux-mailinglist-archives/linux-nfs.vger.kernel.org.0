@@ -2,185 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B2237EEB3D
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 03:53:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F9B97EEB6C
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 04:28:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbjKQCxd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Nov 2023 21:53:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38232 "EHLO
+        id S1345656AbjKQD2u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Nov 2023 22:28:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjKQCxc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Nov 2023 21:53:32 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1147F1AD;
-        Thu, 16 Nov 2023 18:53:29 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 2C52120509;
-        Fri, 17 Nov 2023 02:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1700189607; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NB0T88Bz1NkBEV9ckcMVtoKdeQngpB+JyIHTJiYvV70=;
-        b=jHAdBLIRbfzQq8Gmlqm/J6T+Mauv7ot6uVBlU/wWNcDnrxV6j0H3firPzLMPvXbQ//jmN3
-        MxQoa0Hf2+o+lxlaWWNCSs8JpifnxjF7kmUfEqEuJevtxOrXJW5riSSe5AVN+Mm2RehFxW
-        dKwR3OCllt5mjtQ6JkBqIo99Fs3gYAg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1700189607;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NB0T88Bz1NkBEV9ckcMVtoKdeQngpB+JyIHTJiYvV70=;
-        b=2AKk8dTdSP/fjn1Wn9gMYObr7YOoz30ARm724J07GUv2q0qWecZOtfdANO+DYYQKWxudNa
-        aMQmjZ2R1zWo8tCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C87F61341F;
-        Fri, 17 Nov 2023 02:53:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id blGFGZ/VVmWSHwAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 17 Nov 2023 02:53:19 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229790AbjKQD2t (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Nov 2023 22:28:49 -0500
+Received: from out203-205-221-235.mail.qq.com (out203-205-221-235.mail.qq.com [203.205.221.235])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBA2B0;
+        Thu, 16 Nov 2023 19:28:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+        s=s201512; t=1700191722;
+        bh=t1QptpHB+j2hjtkZxMW66dbJO4vcH9gktTNMOo4SZM8=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=endsVjoD/yjsuV0gPrvweXz68xdycKohLRDSx8f+mEL2URPffLmCRjs+fS5slelfg
+         jWcWNeE10wZYVgBm1c7dIufnDvUEdGt7WRH+8lHxKIawSew/Qmu09glu9B3esF8CJ5
+         zf9E4zBoXh7pzLK0vBHLFSyQJ6bEBUS+Z5FgJQ9g=
+Received: from [192.168.31.137] ([116.128.244.171])
+        by newxmesmtplogicsvrsza12-0.qq.com (NewEsmtp) with SMTP
+        id 7243DE1E; Fri, 17 Nov 2023 11:28:36 +0800
+X-QQ-mid: xmsmtpt1700191716tu68o2yw3
+Message-ID: <tencent_7081EC6CCB41F8B0966FCEB01B7AED66C409@qq.com>
+X-QQ-XMAILINFO: MX+1SEN3H+wAZ8oLfd06aJMpam71+X3o79wb4d4a3ttV8WyaYYa10p5AmZRBVD
+         zJuOWN3vKJFxXxc/yyZPPLXsY0CKTd117/GCz6d05d5xrKsi7VEXfjCU1tKrQk4G11uoyqiIwFpf
+         hwI5BxxXgdpNlT9dwCDLj65GmdsiwWQCEqKonaMfxZBVX34JBEYEiR1TiQCA3xuaESwj+iI48kaF
+         sIfe+0eACZ65KaBr4/AQ5MkERyo8Z6mjaq3jBYHMjszTrSwxlDhks3c02CEuhRqxTP0osKFFEVlv
+         YoOQ87g6hU9om2cq352Emev8o9nJCFreKRvqrHsxuW51wtIByQ0bzkisDHs03BC0MSIpMgWq0Nxc
+         s7rKv+OJJYeN3OeyU2kd+v32A9WXfS0SKDVOofuWW2z8xsH2rRs8VyAtGTui0wKl3IK1xkiKGZOx
+         PQCqhqvPYtRf5pl4bCB2cWLYyBSz2wHaKmhmahnQdl2sNzlOOvisqEeMt/zsND2thXgicrEw/Izn
+         Ui6Fv8lBrSKKVroUB2rCKiLg4trmXFySMb9c3Lkj7wmFWRWQy971UUELcRh9pX1kVh8D/uQ2zMzS
+         9P2fUhHt1PZ+twZdKxO2Vk7uI2/+dfxyDXHDnvW+f1JH4baptALWagHxP+WpyCPqRcgrzYJ4SbCF
+         uYSd8K/+gFnVtq/Bs2dnd6nNwuXSBNe4/PraG/eaRTUCvU4LoEzSflD/5skCTsGvHzfYwGJ3fhdX
+         CrkKd1AKuMEkDhQRtjjy0PTr9DfCmKEt33E9s/7241Dcx1UPnlZbFoT6Jxt58Ev9V+IYlE+tzlcA
+         GY0fmfYCYwGOSWiAWvPyD0AvwoAji0S3mE1SCalWi456hFjMhLUfGykkLyCcDpXq1Q6vT9Ls79nL
+         vOF9WgNTWJRLqn7jCbBju2oUwJzDlPo3hZ5SzbAVkIJ1MhanfNS8zVDF5iTenZJM11dXqQrxRK
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-OQ-MSGID: <835b2d65-0124-436f-9d31-21f0fb3bb48d@foxmail.com>
+Date:   Fri, 17 Nov 2023 11:28:30 +0800
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Kees Cook" <keescook@chromium.org>
-Cc:     "Trond Myklebust" <trond.myklebust@hammerspace.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Anna Schumaker" <anna@kernel.org>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        "Jeff Layton" <jlayton@kernel.org>,
-        "Olga Kornievskaia" <kolga@netapp.com>,
-        "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        "Paolo Abeni" <pabeni@redhat.com>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, "Azeem Shaikh" <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] SUNRPC: Replace strlcpy() with strscpy()
-In-reply-to: <20231114175407.work.410-kees@kernel.org>
-References: <20231114175407.work.410-kees@kernel.org>
-Date:   Fri, 17 Nov 2023 13:53:15 +1100
-Message-id: <170018959595.19300.7615621918111285329@noble.neil.brown.name>
-Authentication-Results: smtp-out2.suse.de;
-        none
-X-Spam-Level: 
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-         ARC_NA(0.00)[];
-         RCVD_VIA_SMTP_AUTH(0.00)[];
-         BAYES_HAM(-3.00)[100.00%];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         FREEMAIL_ENVRCPT(0.00)[gmail.com];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         MIME_GOOD(-0.10)[text/plain];
-         NEURAL_HAM_LONG(-1.00)[-1.000];
-         DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-         NEURAL_HAM_SHORT(-0.20)[-1.000];
-         RCPT_COUNT_TWELVE(0.00)[18];
-         FUZZY_BLOCKED(0.00)[rspamd.com];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         FREEMAIL_CC(0.00)[hammerspace.com,chromium.org,kernel.org,oracle.com,netapp.com,talpey.com,davemloft.net,google.com,redhat.com,vger.kernel.org,gmail.com];
-         RCVD_COUNT_TWO(0.00)[2];
-         RCVD_TLS_ALL(0.00)[]
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+User-Agent: Mozilla Thunderbird
+Subject: Re: Question about LTS 4.19 patch "89047634f5ce NFS: Don't interrupt
+ file writeout due to fatal errors"
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "chenxiaosong@kylinos.cn" <chenxiaosong@kylinos.cn>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "huangjinhui@kylinos.cn" <huangjinhui@kylinos.cn>,
+        "liuzhengyuan@kylinos.cn" <liuzhengyuan@kylinos.cn>,
+        "liuyun01@kylinos.cn" <liuyun01@kylinos.cn>,
+        "huhai@kylinos.cn" <huhai@kylinos.cn>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>
+References: <tencent_BEDA418B8BD86995FBF3E92D4F9F5D342C0A@qq.com>
+ <2023103055-anaerobic-childhood-c1f1@gregkh>
+ <tencent_4CA081DD6E435CDA2EAB9C826F7899F78C05@qq.com>
+ <2023103055-saddled-payer-bd26@gregkh>
+ <tencent_21E20176E2E5AB7C33CB5E67F10D02763508@qq.com>
+ <3b8caab5918d06f436a889bc1dba09686fc0fad5.camel@hammerspace.com>
+Content-Language: en-US
+From:   ChenXiaoSong <chenxiaosongemail@foxmail.com>
+In-Reply-To: <3b8caab5918d06f436a889bc1dba09686fc0fad5.camel@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_MUA_MOZILLA,
+        FREEMAIL_FROM,HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_BLOCKED,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 15 Nov 2023, Kees Cook wrote:
-> strlcpy() reads the entire source buffer first. This read may exceed
-> the destination size limit. This is both inefficient and can lead
-> to linear read overflows if a source string is not NUL-terminated[1].
-> Additionally, it returns the size of the source string, not the
-> resulting size of the destination string. In an effort to remove strlcpy()
-> completely[2], replace strlcpy() here with strscpy().
->=20
-> Explicitly handle the truncation case by returning the size of the
-> resulting string.
->=20
-> If "nodename" was ever longer than sizeof(clnt->cl_nodename) - 1, this
-> change will fix a bug where clnt->cl_nodelen would end up thinking there
-> were more characters in clnt->cl_nodename than there actually were,
-> which might have lead to kernel memory content exposures.
->=20
-> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Cc: Anna Schumaker <anna@kernel.org>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: Neil Brown <neilb@suse.de>
-> Cc: Olga Kornievskaia <kolga@netapp.com>
-> Cc: Dai Ngo <Dai.Ngo@oracle.com>
-> Cc: Tom Talpey <tom@talpey.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: linux-nfs@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcp=
-y [1]
-> Link: https://github.com/KSPP/linux/issues/89 [2]
-> Co-developed-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  net/sunrpc/clnt.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->=20
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index daa9582ec861..7afe02bdea4a 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -287,8 +287,14 @@ static struct rpc_xprt *rpc_clnt_set_transport(struct =
-rpc_clnt *clnt,
-> =20
->  static void rpc_clnt_set_nodename(struct rpc_clnt *clnt, const char *noden=
-ame)
->  {
-> -	clnt->cl_nodelen =3D strlcpy(clnt->cl_nodename,
-> -			nodename, sizeof(clnt->cl_nodename));
-> +	ssize_t copied;
-> +
-> +	copied =3D strscpy(clnt->cl_nodename,
-> +			 nodename, sizeof(clnt->cl_nodename));
-> +
-> +	clnt->cl_nodelen =3D copied < 0
-> +				? sizeof(clnt->cl_nodename) - 1
-> +				: copied;
->  }
+On 2023/10/30 22:56, Trond Myklebust wrote:
+> A refactoring is by definition a change that does not affect code
+> behaviour. It is obvious that this was never intended to be such a
+> patch.
+>
+> The reason that the bug is occurring in 4.19.x, and not in the latest
+> kernels, is because the former is missing another bugfix (one which
+> actually is missing a "Fixes:" tag).
+>
+> Can you therefore please check if applying commit 22876f540bdf ("NFS:
+> Don't call generic_error_remove_page() while holding locks") fixes the
+> issue.
+>
+> Note that the latter patch is needed in any case in order to fix a read
+> deadlock (as indicated on the label).
+>
+> Thanks,
+>    Trond
+>
+After applying commit 22876f540bdf ("NFS: Don't call 
+generic_error_remove_page() while holding locks"), I encountered an 
+issue of infinite loop:
 
-Reviewed-by: NeilBrown <neilb@suse.de>
+write ... nfs_updatepage nfs_writepage_setup nfs_setup_write_request 
+nfs_try_to_update_request nfs_wb_page if (clear_page_dirty_for_io(page)) 
+// true nfs_writepage_locked // return 0 nfs_do_writepage // return 0 
+nfs_page_async_flush // return 0 nfs_error_is_fatal_on_server 
+nfs_write_error_remove_page SetPageError // instead of 
+generic_error_remove_page // loop begin if 
+(clear_page_dirty_for_io(page)) // false if (!PagePrivate(page)) // 
+false ret = nfs_commit_inode = 0 // loop again, never quit
 
-If it were "copied =3D=3D -E2BIG" instead of "copied < 0" it would be more
-obvious why sizeof(...) is used in that case.
-But we really want to do something sensible for *any* error message that
-might be added in the future.. I guess.
+before applying commit 22876f540bdf ("NFS: Don't call 
+generic_error_remove_page() while holding locks"), 
+generic_error_remove_page() will clear PG_private, and infinite loop 
+will never happen:
 
-Thanks,
-NeilBrown
+generic_error_remove_page truncate_inode_page truncate_cleanup_page 
+do_invalidatepage nfs_invalidate_page nfs_wb_page_cancel 
+nfs_inode_remove_request ClearPagePrivate(head->wb_page)
 
-
-> =20
->  static int rpc_client_register(struct rpc_clnt *clnt,
-> --=20
-> 2.34.1
->=20
->=20
+If applying this patch, are other patches required? And I cannot 
+reproducethe read deadlock bug that the patch want to fix, are there 
+specific conditions required to reproduce this read deadlock bug?
 
