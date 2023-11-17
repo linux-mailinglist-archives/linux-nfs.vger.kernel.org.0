@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 29AE47EF9C2
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 22:18:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 492D17EF9C5
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 22:18:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235788AbjKQVSL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Nov 2023 16:18:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
+        id S1346273AbjKQVSN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Nov 2023 16:18:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346255AbjKQVRq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Nov 2023 16:17:46 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 605DE1988
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 13:17:01 -0800 (PST)
+        with ESMTP id S1346394AbjKQVRu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Nov 2023 16:17:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9CAC1BF9
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 13:17:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1700255820;
+        s=mimecast20190719; t=1700255824;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=H+1i5F1S+6wxwGtTBxUYE1F0fETWm68EZav8/D9/C4o=;
-        b=Ro8YOVu0/2wlKrSsuvGjwvSIhlQidy0goUPQe9xVdGmABa4UAqqo4sE9HvIRE3IjT4obqw
-        wEnKbQ6ty6n+gsz5zCHqsz4T9KJFUkqelZd4uELKj1jIxOCNgyKrNOpCTzMatqyGpShSj8
-        2Q/SuT26Y2pTbp543ILw+VT1vIP7afI=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-102-hM-_k96HPC-zHn82lYIZxg-1; Fri,
- 17 Nov 2023 16:16:54 -0500
-X-MC-Unique: hM-_k96HPC-zHn82lYIZxg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        bh=7zlrtVP9gWNmRGnOn7f2uvsEAwv8V6n9Qv48gmz1Paw=;
+        b=igrXSgC/klbJxcDoc+OQuOgVYNAgIK3M/Ol2Rl2yYR7nojJo7x6hZJN3rPpn1xYowWpTFI
+        y1l0yhTogD9yBXuatc0tbm0mansU3V3Fd/F2IKI1m0iwA6A9jHyRQ0bLpByHDvPEUGGfiE
+        kJIuGuOjZZaYtDtb4FT+XMuJ+kuJCWM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-395-F6Eax_ooO3yYyyyQdtRgzQ-1; Fri, 17 Nov 2023 16:16:57 -0500
+X-MC-Unique: F6Eax_ooO3yYyyyQdtRgzQ-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63E081C03DA8;
-        Fri, 17 Nov 2023 21:16:53 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D0F4782193E;
+        Fri, 17 Nov 2023 21:16:56 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B83BCC15881;
-        Fri, 17 Nov 2023 21:16:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1A2AD492BE0;
+        Fri, 17 Nov 2023 21:16:53 +0000 (UTC)
 From:   David Howells <dhowells@redhat.com>
 To:     Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>
 Cc:     David Howells <dhowells@redhat.com>,
@@ -54,17 +54,17 @@ Cc:     David Howells <dhowells@redhat.com>,
         ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
         linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 19/51] netfs: Make the refcounting of netfs_begin_read() easier to use
-Date:   Fri, 17 Nov 2023 21:15:11 +0000
-Message-ID: <20231117211544.1740466-20-dhowells@redhat.com>
+Subject: [PATCH v2 20/51] netfs: Prep to use folio->private for write grouping and streaming write
+Date:   Fri, 17 Nov 2023 21:15:12 +0000
+Message-ID: <20231117211544.1740466-21-dhowells@redhat.com>
 In-Reply-To: <20231117211544.1740466-1-dhowells@redhat.com>
 References: <20231117211544.1740466-1-dhowells@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -73,9 +73,29 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Make the refcounting of netfs_begin_read() easier to use by not eating the
-caller's ref on the netfs_io_request it's given.  This makes it easier to
-use when we need to look in the request struct after.
+Prepare to use folio->private to hold information write grouping and
+streaming write.  These are implemented in the same commit as they both
+make use of folio->private and will be both checked at the same time in
+several places.
+
+"Write grouping" involves ordering the writeback of groups of writes, such
+as is needed for ceph snaps.  A group is represented by a
+filesystem-supplied object which must contain a netfs_group struct.  This
+contains just a refcount and a pointer to a destructor.
+
+"Streaming write" is the storage of data in folios that are marked dirty,
+but not uptodate, to avoid unnecessary reads of data.  This is represented
+by a netfs_folio struct.  This contains the offset and length of the
+modified region plus the otherwise displaced write grouping pointer.
+
+The way folio->private is multiplexed is:
+
+ (1) If private is NULL then neither is in operation on a dirty folio.
+
+ (2) If private is set, with bit 0 clear, then this points to a group.
+
+ (3) If private is set, with bit 0 set, then this points to a netfs_folio
+     struct (with bit 0 AND'ed out).
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Jeff Layton <jlayton@kernel.org>
@@ -83,143 +103,160 @@ cc: linux-cachefs@redhat.com
 cc: linux-fsdevel@vger.kernel.org
 cc: linux-mm@kvack.org
 ---
- fs/netfs/buffered_read.c     |  6 +++++-
- fs/netfs/io.c                | 28 +++++++++++++---------------
- include/trace/events/netfs.h |  9 +++++----
- 3 files changed, 23 insertions(+), 20 deletions(-)
+ fs/netfs/internal.h   | 28 ++++++++++++++++++++++++++
+ fs/netfs/misc.c       | 46 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/netfs.h | 41 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 115 insertions(+)
 
-diff --git a/fs/netfs/buffered_read.c b/fs/netfs/buffered_read.c
-index 3b7eb706f2fe..05824f73cfc7 100644
---- a/fs/netfs/buffered_read.c
-+++ b/fs/netfs/buffered_read.c
-@@ -217,6 +217,7 @@ void netfs_readahead(struct readahead_control *ractl)
- 		;
+diff --git a/fs/netfs/internal.h b/fs/netfs/internal.h
+index 3a920377b01f..985647c4648a 100644
+--- a/fs/netfs/internal.h
++++ b/fs/netfs/internal.h
+@@ -144,6 +144,34 @@ static inline bool netfs_is_cache_enabled(struct netfs_inode *ctx)
+ #endif
+ }
  
- 	netfs_begin_read(rreq, false);
-+	netfs_put_request(rreq, false, netfs_rreq_trace_put_return);
- 	return;
- 
- cleanup_free:
-@@ -267,7 +268,9 @@ int netfs_read_folio(struct file *file, struct folio *folio)
- 	iov_iter_xarray(&rreq->iter, ITER_DEST, &mapping->i_pages,
- 			rreq->start, rreq->len);
- 
--	return netfs_begin_read(rreq, true);
-+	ret = netfs_begin_read(rreq, true);
-+	netfs_put_request(rreq, false, netfs_rreq_trace_put_return);
-+	return ret;
- 
- discard:
- 	netfs_put_request(rreq, false, netfs_rreq_trace_put_discard);
-@@ -436,6 +439,7 @@ int netfs_write_begin(struct netfs_inode *ctx,
- 	ret = netfs_begin_read(rreq, true);
- 	if (ret < 0)
- 		goto error;
-+	netfs_put_request(rreq, false, netfs_rreq_trace_put_return);
- 
- have_folio:
- 	ret = folio_wait_fscache_killable(folio);
-diff --git a/fs/netfs/io.c b/fs/netfs/io.c
-index c80b8eed1209..1795f8679be9 100644
---- a/fs/netfs/io.c
-+++ b/fs/netfs/io.c
-@@ -362,6 +362,7 @@ static void netfs_rreq_assess(struct netfs_io_request *rreq, bool was_async)
- 
- 	netfs_rreq_unlock_folios(rreq);
- 
-+	trace_netfs_rreq(rreq, netfs_rreq_trace_wake_ip);
- 	clear_bit_unlock(NETFS_RREQ_IN_PROGRESS, &rreq->flags);
- 	wake_up_bit(&rreq->flags, NETFS_RREQ_IN_PROGRESS);
- 
-@@ -657,7 +658,6 @@ int netfs_begin_read(struct netfs_io_request *rreq, bool sync)
- 
- 	if (rreq->len == 0) {
- 		pr_err("Zero-sized read [R=%x]\n", rreq->debug_id);
--		netfs_put_request(rreq, false, netfs_rreq_trace_put_zero_len);
- 		return -EIO;
- 	}
- 
-@@ -669,12 +669,10 @@ int netfs_begin_read(struct netfs_io_request *rreq, bool sync)
- 
- 	INIT_WORK(&rreq->work, netfs_rreq_work);
- 
--	if (sync)
--		netfs_get_request(rreq, netfs_rreq_trace_get_hold);
--
- 	/* Chop the read into slices according to what the cache and the netfs
- 	 * want and submit each one.
- 	 */
-+	netfs_get_request(rreq, netfs_rreq_trace_get_for_outstanding);
- 	atomic_set(&rreq->nr_outstanding, 1);
- 	io_iter = rreq->io_iter;
- 	do {
-@@ -684,25 +682,25 @@ int netfs_begin_read(struct netfs_io_request *rreq, bool sync)
- 	} while (rreq->submitted < rreq->len);
- 
- 	if (sync) {
--		/* Keep nr_outstanding incremented so that the ref always belongs to
--		 * us, and the service code isn't punted off to a random thread pool to
--		 * process.
-+		/* Keep nr_outstanding incremented so that the ref always
-+		 * belongs to us, and the service code isn't punted off to a
-+		 * random thread pool to process.  Note that this might start
-+		 * further work, such as writing to the cache.
- 		 */
--		for (;;) {
--			wait_var_event(&rreq->nr_outstanding,
--				       atomic_read(&rreq->nr_outstanding) == 1);
-+		wait_var_event(&rreq->nr_outstanding,
-+			       atomic_read(&rreq->nr_outstanding) == 1);
-+		if (atomic_dec_and_test(&rreq->nr_outstanding))
- 			netfs_rreq_assess(rreq, false);
--			if (!test_bit(NETFS_RREQ_IN_PROGRESS, &rreq->flags))
--				break;
--			cond_resched();
--		}
++/*
++ * Get a ref on a netfs group attached to a dirty page (e.g. a ceph snap).
++ */
++static inline struct netfs_group *netfs_get_group(struct netfs_group *netfs_group)
++{
++	if (netfs_group)
++		refcount_inc(&netfs_group->ref);
++	return netfs_group;
++}
 +
-+		trace_netfs_rreq(rreq, netfs_rreq_trace_wait_ip);
-+		wait_on_bit(&rreq->flags, NETFS_RREQ_IN_PROGRESS,
-+			    TASK_UNINTERRUPTIBLE);
++/*
++ * Dispose of a netfs group attached to a dirty page (e.g. a ceph snap).
++ */
++static inline void netfs_put_group(struct netfs_group *netfs_group)
++{
++	if (netfs_group && refcount_dec_and_test(&netfs_group->ref))
++		netfs_group->free(netfs_group);
++}
++
++/*
++ * Dispose of a netfs group attached to a dirty page (e.g. a ceph snap).
++ */
++static inline void netfs_put_group_many(struct netfs_group *netfs_group, int nr)
++{
++	if (netfs_group && refcount_sub_and_test(nr, &netfs_group->ref))
++		netfs_group->free(netfs_group);
++}
++
+ /*****************************************************************************/
+ /*
+  * debug tracing
+diff --git a/fs/netfs/misc.c b/fs/netfs/misc.c
+index 106f2fbdccd8..219d04013486 100644
+--- a/fs/netfs/misc.c
++++ b/fs/netfs/misc.c
+@@ -100,9 +100,55 @@ void netfs_clear_buffer(struct xarray *buffer)
+  */
+ void netfs_invalidate_folio(struct folio *folio, size_t offset, size_t length)
+ {
++	struct netfs_folio *finfo = NULL;
++	size_t flen = folio_size(folio);
++
+ 	_enter("{%lx},%zx,%zx", folio_index(folio), offset, length);
  
- 		ret = rreq->error;
- 		if (ret == 0 && rreq->submitted < rreq->len) {
- 			trace_netfs_failure(rreq, NULL, ret, netfs_fail_short_read);
- 			ret = -EIO;
- 		}
--		netfs_put_request(rreq, false, netfs_rreq_trace_put_hold);
- 	} else {
- 		/* If we decrement nr_outstanding to 0, the ref belongs to us. */
- 		if (atomic_dec_and_test(&rreq->nr_outstanding))
-diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
-index 4ea4e34d279f..6daadf2aac8a 100644
---- a/include/trace/events/netfs.h
-+++ b/include/trace/events/netfs.h
-@@ -34,7 +34,9 @@
- 	EM(netfs_rreq_trace_free,		"FREE   ")	\
- 	EM(netfs_rreq_trace_resubmit,		"RESUBMT")	\
- 	EM(netfs_rreq_trace_unlock,		"UNLOCK ")	\
--	E_(netfs_rreq_trace_unmark,		"UNMARK ")
-+	EM(netfs_rreq_trace_unmark,		"UNMARK ")	\
-+	EM(netfs_rreq_trace_wait_ip,		"WAIT-IP")	\
-+	E_(netfs_rreq_trace_wake_ip,		"WAKE-IP")
+ 	folio_wait_fscache(folio);
++
++	if (!folio_test_private(folio))
++		return;
++
++	finfo = netfs_folio_info(folio);
++
++	if (offset == 0 && length >= flen)
++		goto erase_completely;
++
++	if (finfo) {
++		/* We have a partially uptodate page from a streaming write. */
++		unsigned int fstart = finfo->dirty_offset;
++		unsigned int fend = fstart + finfo->dirty_len;
++		unsigned int end = offset + length;
++
++		if (offset >= fend)
++			return;
++		if (end <= fstart)
++			return;
++		if (offset <= fstart && end >= fend)
++			goto erase_completely;
++		if (offset <= fstart && end > fstart)
++			goto reduce_len;
++		if (offset > fstart && end >= fend)
++			goto move_start;
++		/* A partial write was split.  The caller has already zeroed
++		 * it, so just absorb the hole.
++		 */
++	}
++	return;
++
++erase_completely:
++	netfs_put_group(netfs_folio_group(folio));
++	folio_detach_private(folio);
++	folio_clear_uptodate(folio);
++	kfree(finfo);
++	return;
++reduce_len:
++	finfo->dirty_len = offset + length - finfo->dirty_offset;
++	return;
++move_start:
++	finfo->dirty_len -= offset - finfo->dirty_offset;
++	finfo->dirty_offset = offset;
+ }
+ EXPORT_SYMBOL(netfs_invalidate_folio);
  
- #define netfs_sreq_sources					\
- 	EM(NETFS_FILL_WITH_ZEROES,		"ZERO")		\
-@@ -65,14 +67,13 @@
- 	E_(netfs_fail_prepare_write,		"prep-write")
+diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+index 21650db7da54..6f4e24da27e2 100644
+--- a/include/linux/netfs.h
++++ b/include/linux/netfs.h
+@@ -142,6 +142,47 @@ struct netfs_inode {
+ #define NETFS_ICTX_ODIRECT	0		/* The file has DIO in progress */
+ };
  
- #define netfs_rreq_ref_traces					\
--	EM(netfs_rreq_trace_get_hold,		"GET HOLD   ")	\
-+	EM(netfs_rreq_trace_get_for_outstanding,"GET OUTSTND")	\
- 	EM(netfs_rreq_trace_get_subreq,		"GET SUBREQ ")	\
- 	EM(netfs_rreq_trace_put_complete,	"PUT COMPLT ")	\
- 	EM(netfs_rreq_trace_put_discard,	"PUT DISCARD")	\
- 	EM(netfs_rreq_trace_put_failed,		"PUT FAILED ")	\
--	EM(netfs_rreq_trace_put_hold,		"PUT HOLD   ")	\
-+	EM(netfs_rreq_trace_put_return,		"PUT RETURN ")	\
- 	EM(netfs_rreq_trace_put_subreq,		"PUT SUBREQ ")	\
--	EM(netfs_rreq_trace_put_zero_len,	"PUT ZEROLEN")	\
- 	E_(netfs_rreq_trace_new,		"NEW        ")
- 
- #define netfs_sreq_ref_traces					\
++/*
++ * A netfs group - for instance a ceph snap.  This is marked on dirty pages and
++ * pages marked with a group must be flushed before they can be written under
++ * the domain of another group.
++ */
++struct netfs_group {
++	refcount_t		ref;
++	void (*free)(struct netfs_group *netfs_group);
++};
++
++/*
++ * Information about a dirty page (attached only if necessary).
++ * folio->private
++ */
++struct netfs_folio {
++	struct netfs_group	*netfs_group;	/* Filesystem's grouping marker (or NULL). */
++	unsigned int		dirty_offset;	/* Write-streaming dirty data offset */
++	unsigned int		dirty_len;	/* Write-streaming dirty data length */
++};
++#define NETFS_FOLIO_INFO	0x1UL	/* OR'd with folio->private. */
++
++static inline struct netfs_folio *netfs_folio_info(struct folio *folio)
++{
++	void *priv = folio_get_private(folio);
++
++	if ((unsigned long)priv & NETFS_FOLIO_INFO)
++		return (struct netfs_folio *)((unsigned long)priv & ~NETFS_FOLIO_INFO);
++	return NULL;
++}
++
++static inline struct netfs_group *netfs_folio_group(struct folio *folio)
++{
++	struct netfs_folio *finfo;
++	void *priv = folio_get_private(folio);
++
++	finfo = netfs_folio_info(folio);
++	if (finfo)
++		return finfo->netfs_group;
++	return priv;
++}
++
+ /*
+  * Resources required to do operations on a cache.
+  */
 
