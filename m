@@ -2,47 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC1037EF33B
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 14:00:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFDE17EF346
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 14:04:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346049AbjKQNAr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Nov 2023 08:00:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56964 "EHLO
+        id S229543AbjKQNEW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Nov 2023 08:04:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235706AbjKQNAg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Nov 2023 08:00:36 -0500
+        with ESMTP id S229436AbjKQNEW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Nov 2023 08:04:22 -0500
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81FB4D6A
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 05:00:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AF10D52
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 05:04:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=92EM5xD3/y6vRocEo33waLmBWQM6YZ2esZ+B1IvkENU=; b=YNcY8DFEV0N5PiQHr3IWOIyPPI
-        DWQu8jrwhxiH/gvX5PoSkb3Ufc1bfTjLOS6UdRP/rXhNE0lXIujsGZaG4kQpwJhYYXcFwxza68NZ9
-        fYJ57JMVT4L2ThoRIKiRH/hEE4/KMEvJIGH3g0frSgwyVrikZQ7UnIKu0zngmK1qj3vdIAAc5l0U/
-        VNbF9yvU8Biuz9rtqFqbVncYFsjYuAH6Pe/3ycJhIIRKKV4ycBwkQ92SHk/ucOBeYV5btwfIx6rEL
-        5RC5+0bDZes4moSQGA1jGZqdqOxsAB4MTQ5KrUNtDAMjDhqW1Q9vLD22a+w0DL3p0nF0lwf6lTmDt
-        YGXGTg8g==;
+        bh=uo1kgCdkTwrjI5cP4C8NMzcAVl9mOmCA57e+hhUGPNI=; b=TgVlPpQQByy/XyxLQIz1sSL8yI
+        h1BLFP1QHaAESKWCNiw2IzXRLAPh5r58TPFJNjdSsnlvyXndC3cT8iGfoUCycWJWM9rRNM7/PENTY
+        IXYtXfOj4E3okbw3iHtvAma3cBgGfYjExIgV4KjceRCVipNLmhFbE3t/dqQcfptXxrYA+/AQR/5Cr
+        lPprRK6J1GiiDstvtvnijqwWU3l83Fs3xBRN7Fql8WszOKjybAiqRqAV50ctc9TLcnkbtOJABuMbl
+        i4PlKlCOJRbvIUWKNb2ZumbFsYLMWhtuQ85DlGB4o/Sq7b0arZezOE5kbCx5pCbSKj9b7Q7EA/R4C
+        oFjf8IxQ==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1r3yS9-006b5Z-2f;
-        Fri, 17 Nov 2023 13:00:09 +0000
-Date:   Fri, 17 Nov 2023 05:00:09 -0800
+        id 1r3yW9-006bQv-0K;
+        Fri, 17 Nov 2023 13:04:17 +0000
+Date:   Fri, 17 Nov 2023 05:04:17 -0800
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: Blocklayoutdriver deadlock with knfsd
-Message-ID: <ZVdj2U+kJ7DlI22g@infradead.org>
-References: <1CC82EC5-6120-4EE4-A7F0-019CF7BC762C@redhat.com>
- <787DAC8F-5294-4876-9725-096D639B3D9C@oracle.com>
- <465037c9585f910c2192bf896139e7bf01d587d4.camel@kernel.org>
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     trond.myklebust@hammerspace.com, anna@kernel.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] pNFS: Fix the pnfs block driver's calculation of
+ layoutget size
+Message-ID: <ZVdk0WTHcaYf7kKa@infradead.org>
+References: <21a1f2a6155398965f79ed64f0bd23bf38a50367.1700220277.git.bcodding@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <465037c9585f910c2192bf896139e7bf01d587d4.camel@kernel.org>
+In-Reply-To: <21a1f2a6155398965f79ed64f0bd23bf38a50367.1700220277.git.bcodding@redhat.com>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
@@ -54,46 +51,65 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Nov 16, 2023 at 03:32:34PM -0500, Jeff Layton wrote:
-> One thing that might help would be make the nfsd threadpool more
-> dynamic. If it could just spin up another thread, we'd be OK.
+On Fri, Nov 17, 2023 at 06:25:13AM -0500, Benjamin Coddington wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
 > 
-> Maybe the server could keep an emergency thread around that is just for
-> processing LAYOUTRETURN/DELEGRETURN (maybe also CLOSE, etc.) calls?
-> Sometimes these ops are mixed into compounds with other sorts of calls
-> though, so we'd need to deal with that somehow.
+> Instead of relying on the value of the 'bytes_left' field, we should
+> calculate the layout size based on the offset of the request that is
+> being written out.
+> 
+> Reported-by: Benjamin Coddington <bcodding@redhat.com>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Fixes: 954998b60caa ("NFS: Fix error handling for O_DIRECT write scheduling")
+> Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+> Tested-by: Benjamin Coddington <bcodding@redhat.com>
+> ---
+>  fs/nfs/blocklayout/blocklayout.c | 5 ++---
+>  fs/nfs/direct.c                  | 5 +++--
+>  fs/nfs/internal.h                | 2 +-
+>  fs/nfs/pnfs.c                    | 3 ++-
+>  4 files changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/fs/nfs/blocklayout/blocklayout.c b/fs/nfs/blocklayout/blocklayout.c
+> index 943aeea1eb16..c1cc9fe93dd4 100644
+> --- a/fs/nfs/blocklayout/blocklayout.c
+> +++ b/fs/nfs/blocklayout/blocklayout.c
+> @@ -893,10 +893,9 @@ bl_pg_init_write(struct nfs_pageio_descriptor *pgio, struct nfs_page *req)
+>  	}
+>  
+>  	if (pgio->pg_dreq == NULL)
+> -		wb_size = pnfs_num_cont_bytes(pgio->pg_inode,
+> -					      req->wb_index);
+> +		wb_size = pnfs_num_cont_bytes(pgio->pg_inode, req->wb_index);
+>  	else
+> -		wb_size = nfs_dreq_bytes_left(pgio->pg_dreq);
+> +		wb_size = nfs_dreq_bytes_left(pgio->pg_dreq, req_offset(req));
+>  
+>  	pnfs_generic_pg_init_write(pgio, req, wb_size);
+>  
+> diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+> index f6c74f424691..5918c67dae0d 100644
+> --- a/fs/nfs/direct.c
+> +++ b/fs/nfs/direct.c
+> @@ -205,9 +205,10 @@ static void nfs_direct_req_release(struct nfs_direct_req *dreq)
+>  	kref_put(&dreq->kref, nfs_direct_req_free);
+>  }
+>  
+> -ssize_t nfs_dreq_bytes_left(struct nfs_direct_req *dreq)
+> +ssize_t nfs_dreq_bytes_left(struct nfs_direct_req *dreq, loff_t offset)
+>  {
+> -	return dreq->bytes_left;
+> +	loff_t start = offset - dreq->io_start;
+> +	return dreq->max_count - start;
 
-I think having an extra thread just for LAYOUTRETURN/DELEGRETURN is
-fundamentally the right thing to do, as they need to be processed
-to allow everyone else to progress.
+We normally put an empty line after the variable declarations.  But
+looking at this, thee local variables seems a bit pointless to me,
+as does not simply making this an inline function.
 
-> > If nfsd threads are waiting indefinitely, that's a potential DoS
-> > vector. Ideally the thread should preserve the waiting request
-> > somehow (or return NFS4ERR_DELAY, maybe?). At some later point
-> > when the lease conflict is resolved, the requests can be reprocessed.
-> > 
-> > That's my naive 800,000 ft view.
-> > 
+> +extern ssize_t nfs_dreq_bytes_left(struct nfs_direct_req *dreq, loff_t offset);
 
-That is probably a good idea on top of the above.
+and you might as well drop the pointless extern here while you're at it.
 
-> So you can always get stuck in that inner break_layout call. We could
-> try to use IOCB_NOWAIT for I/Os coming from nfsd, which would prevent
-> that, but that seems like it could change the I/O behavior in other ways
-> we don't want. It's not clear to me how that would work alongside
-> IOCB_SYNC anyway.
+Otherwise this looks good to me:
 
-So I definitively think using IOCB_NOWAIT from nfsd and not block
-the thread for trivial I/O is a good thing.  This might even enable
-not offloading I/O to threads until the IOCB_NOWAIT failed.  But any
-IOCB_NOWAIT that returned -EAGAIN needs to eventually fall back to
-doing blocking I/O as there is no progress guarantee for IOCB_NOWAIT,
-and some I/O simply is entirely impossible with IOCB_NOWAIT.
-
-> It's not immediately clear to me how we'd do this with the existing
-> IOCB_* flags, so we might need a new one (IOCB_NFSD?). Then, we could
-> just make sure that break_layout call is always nonblocking if that flag
-> is set.
-
-I'd name it about the behavior that it controls and not the callers,
-but otherwise this too seems like a good idea.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
