@@ -2,385 +2,157 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 345FA7EF81A
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 20:59:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7D997EF830
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 21:11:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbjKQT72 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Nov 2023 14:59:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53090 "EHLO
+        id S232170AbjKQULd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Nov 2023 15:11:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjKQT71 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Nov 2023 14:59:27 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B17D5C
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 11:59:23 -0800 (PST)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AHINwSu016703;
-        Fri, 17 Nov 2023 19:59:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-03-30;
- bh=43DxBEoNBuyzNlFL5xRZFR5qCLWtk+LYUcuHrBF0Rcs=;
- b=dNqxpqG5oWCM1dhmiZ7h/wP0q3834yGz3Rr1KYWIXR2QiASj7bLTnhw1aITU+J0Yx7Wh
- mmZ1Ey3GCzXr9e3kcPp+R0KvVDOKr1V1kDwhxAmVpOqOv3HS5pBldLF/iNN9oT+DmjcB
- rxyUmhrtSoPCnG5qQJlezxDEgtmv9HeQCkLORhhmL4uEo2ReYcBYIIbrvcGdoKBP4hsU
- gmzT6HvQ6T2QW5cimMD9cdiSggY/uz1+hBs59Wj7lB1qYfwWw8DnLgKmOgk/jpVSunPg
- Qvk7FxX4jigXm59MJ2XKn3s2WIve+lI0z9rlTUDK4qtmTe2xlAwqaK1F2gf5LKrxHdmm kw== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ua2qde14w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Nov 2023 19:59:14 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3AHIVex7038444;
-        Fri, 17 Nov 2023 19:59:13 GMT
-Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2040.outbound.protection.outlook.com [104.47.56.40])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3uaxj7t8vv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Nov 2023 19:59:13 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=U3lGmoHPxUlM0PT6b+Q5po1j4VD1wKa0cSziEjNDfNnHLX8H2T/kmIrLJcNx2DSc2EBeNeI7n+OneKTpQ3sVUlZx4ubDtD80Msx6ti9DQfhI7UJxkkUJJOkL8GM5yH2AgIrYkXWmAOpjbmNXghbhfjrmMuR+GE7d68WlWs1h+cdUl8lPLDz9Mcww0AUHKrxa1RZC/p/It/dyORGH9HMK0BKVWfHcDDWftcchYh1/KCsqvbn2Wu7gck7WiiBjSWfYZWLzV9Lk80eZICXWcEddAgxUfwyvhhoHxwDhchLqni7cXhtcT0ah+HBywhplGcV5yAaKaXcbrGXgHi22qZoCDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=43DxBEoNBuyzNlFL5xRZFR5qCLWtk+LYUcuHrBF0Rcs=;
- b=VbSjcLz/ycXIiE1oTG86Pwa69HoSR3FiMa47X3SK408YZfXLwY7hhlQfcDIZloOhy459mkyZP94j/1zHo67LJ0/TcfZiKi5xysOl4JpCMvl9YPvP4OhHMkNqQD/0TlqYNVCrSVXfoh6UVlK+Ewn9aea622HkttoMkFuQOwWPzYA6dzFUpCr6cvpQbqeu4HDqnOe0TLEJlNsVEjt/AlcZygQ9mArYbPom3MaP0seSIwXFhmjHb0uZmTKRYyAvcYQnRUDvSC5Pti+xlBjkBIwx+u2nybSqnBjZLaX40R4fI/+jCS/Yk1EKEFza+LAmVbeR8owGrtBoLLY7rRcrTNn7Aw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=43DxBEoNBuyzNlFL5xRZFR5qCLWtk+LYUcuHrBF0Rcs=;
- b=ofPq3WlGfH6HodZM6mfNcvy+07gpBAt1WIgcWRIaMz1i9Y1aTqot8lNRtuuRYFlSksOPr4cBqsbNokh5lChBDYF0yigUDAmBtCidF8kKqKuq+F6olUcd6xP5MrR2CS/RTRBmL95w9RB+VOIJhwBEmmh5sS2ocF7Gi4Gt71oWkjs=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SN7PR10MB6288.namprd10.prod.outlook.com (2603:10b6:806:26c::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7002.21; Fri, 17 Nov
- 2023 19:58:44 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::360b:b3c0:c5a9:3b3c]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::360b:b3c0:c5a9:3b3c%4]) with mapi id 15.20.7002.021; Fri, 17 Nov 2023
- 19:58:44 +0000
-Date:   Fri, 17 Nov 2023 14:58:41 -0500
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>
-Subject: Re: [PATCH 6/9] nfsd: allow admin-revoked NFSv4.0 state to be freed.
-Message-ID: <ZVfF8R2t3WH7FqVd@tissot.1015granger.net>
-References: <20231117022121.23310-1-neilb@suse.de>
- <20231117022121.23310-7-neilb@suse.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231117022121.23310-7-neilb@suse.de>
-X-ClientProxiedBy: CH0P223CA0020.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:610:116::10) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+        with ESMTP id S231954AbjKQULc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Nov 2023 15:11:32 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E2CFD57
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 12:11:29 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9CCBC433C8;
+        Fri, 17 Nov 2023 20:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1700251889;
+        bh=4iYKaV9CoP5Ui2HonlcsMOzJh2bEbE+mVErH/3su1rY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=qZtOf+BlvaZJJUs9wl3kxG9yX9FEAgMFn2kifVdAhz3BuGYgXyCGJ1hlrlis1wPoD
+         OGmmENnj1SCJHJ3ChMvxMcAQf1JnpiVm89/n08GvYvMYFi11II6cuF8m1Z6NSooZ7C
+         5ro4mdYYiC87H3o8ILTuPx1LIwqHjh0+BqPMJZILlJMcM5O4F3fTeudzZnDhTSgjXy
+         QP3UoTqnsU5lhGXJuQVGTNrm+1ZLSFnOApVhucGYucClEXixmZfyKrxyjXifQ4vvC1
+         LHh81URUK3VfaDw64F+iXdAioeZhpl4ZjmQbE9Wp2sx7XhC0hphcbKiPEcdVZF4JTy
+         ROUjUVuFmbyDA==
+Message-ID: <994914d4f34ee810edd1b79939a5bc136a31144c.camel@kernel.org>
+Subject: Re: [PATCH v2 1/3] NFSD: Fix "start of NFS reply" pointer passed to
+ nfsd_cache_update()
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Chuck Lever <cel@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Fri, 17 Nov 2023 15:11:27 -0500
+In-Reply-To: <89371272-28FB-4549-AEBB-56CA6641F1C3@oracle.com>
+References: <169963305585.5404.9796036538735192053.stgit@bazille.1015granger.net>
+         <169963371324.5404.3057239228897633466.stgit@bazille.1015granger.net>
+         <ec54d81630f78c764c930a50b4ba75b26e4b8ff0.camel@kernel.org>
+         <ZVeB5kfH6YAzgwd1@tissot.1015granger.net>
+         <89371272-28FB-4549-AEBB-56CA6641F1C3@oracle.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+        kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.1 (3.50.1-1.fc39) 
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SN7PR10MB6288:EE_
-X-MS-Office365-Filtering-Correlation-Id: 632831dd-5914-4c61-fa29-08dbe7a79a74
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5/Ui+WBLk1auKkxGQ+KIX5GmOwTpPmIiBIBoNZESqjIx8ai1jmSsmWgcYMSd8KlDYhMWsGYBeCVbw1st5SLGYgpkQWHUKissFAlCKYYnAFVFAWWLxhv6uWVPjpdnKEREQF2rd/fV5ndMq3daunYvqnb3SdgeT3Fs+vU+/vqPJQb/FviKtPEqgHkxyZvDq01PMcxMJWmSpMarWW7gOzCi1VAi9tswsYTQtfZQ+FFt+magKzbLzoP3kvrHkeBuMQ29SlJl6XnTWpVjyPnekzNgNnslMSc6KYFintRhfjhdplJqDjZhQezp6vc+gMUi9Xoung0h+U+Ghw2msc8itm8UISDbtW66nHepJoOIGIhvXHATQtHbg68IXjcFLCFCTUrI3Ntuhv5Ta2a5mYbWORPh3X7afpMz992ZsYY/jaQpLula7KKOYRM4BLtm2tDm3HntavckGqVaOmFXp+kLuRg3oyFOFNmWxEPocYbwW8octD39xaITTtwhxTTor8d5hTbyqjcgNofLSVzikT6eOYX0oX7nA4R9df5x0IjfCluzKSAdNZJEIoh9nWhQBIaycejp
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(366004)(136003)(39860400002)(396003)(230922051799003)(64100799003)(1800799009)(186009)(451199024)(6506007)(26005)(6512007)(6666004)(9686003)(83380400001)(4326008)(5660300002)(44832011)(8676002)(478600001)(8936002)(41300700001)(6486002)(316002)(2906002)(6916009)(66556008)(54906003)(66476007)(66946007)(86362001)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?4GcF75YMzfCnaHkdrLHfPLGS6aTV9ObydK/YF89G67IjRWpV6jGGpxAyZikw?=
- =?us-ascii?Q?lqFikGqdepZH4ActSP5tVI46hdi0SqSg50xkMZn3YW+uPyxn/1DxzS9ZuPkd?=
- =?us-ascii?Q?99/I32k7m+fy1oJpFKN5j3TzeaN8Gc6R0dC+yoJwDsi+YBbmAmrk6VZHzjUK?=
- =?us-ascii?Q?grSM/kqd1p9H+YbKLfZREuElSVK+4MAhg0rFXhGhtctTEFV9hYZqo6evm5m7?=
- =?us-ascii?Q?KsdawEu5usi/Bk6usZ8vr9NxruWv5WXtCyzGrQuWo3a8E+itdxJWomI2Hwuv?=
- =?us-ascii?Q?9VlYC95zSY6YALpZaggfgYyqJ2+no+KvxFGg3qhsst5rzawQ+Pi46aqQpsMI?=
- =?us-ascii?Q?VIubAGr54dKtukvE3cJEQIdorBou1fGYFcjEVtUc8aZjjW4WbLUvxjInOqsz?=
- =?us-ascii?Q?A5TDmsIFWWHPD2xszX/JGX7j8TD2BUnZy5QvONVSLtmQZ9XSR8R8PV29L+4E?=
- =?us-ascii?Q?9NWsjXCA+whoiOfEkBvHs5ffC1kunsDZPvge8KiTNtWlFOt+RGY+J0bhB9+s?=
- =?us-ascii?Q?Dx/7f/NLKLeI3PQQaNbaZShxu/JH6OBrznN3QFcY/44xO5AVp1xduLiYoJ+4?=
- =?us-ascii?Q?vzUmGZmoKAra3FfntDyA9Re2EGyGP7oiRBm5k9+AAwoAJge2UqM9XZ+Mqcyz?=
- =?us-ascii?Q?ifV+VHWaYvArZLcwPuHwy0QxGjx6UVFTXJ+dix5il+6B3FtFaYXqhIsuRqFr?=
- =?us-ascii?Q?OyvyBYbnnDAqoZ5YccaSnxH5WYTX+dnBIbzPf3d3shUwbPau5cOOUqFsyOL7?=
- =?us-ascii?Q?Zv9kcgG82GaqmBIO8gqS/EXjMgo3Nt0fWxKKFPh+D6ao8nedqDGA6klYkzPo?=
- =?us-ascii?Q?RrDrrjZ9ETNQr70QEjtfkM17jDvvmtnVgXWNXNmlPW/7sb71clFM3Q3UTXOC?=
- =?us-ascii?Q?Pk30MBxeu3gHeawtuaDrbrHUX2uLyu37z1VCfIyNVbNaBBHJaubbaYpuG6Dk?=
- =?us-ascii?Q?aWfFHhwPw2H/3Yxnd2fLTTcH77VGXqbPT3F2VJkVpJWxnAy63Q09t96Pgiaz?=
- =?us-ascii?Q?SQdAwMC4AAJLXSToDHvAnh/vZgvSgX1ysANIDhE/gvMgN08oYiW+aBVc3y4c?=
- =?us-ascii?Q?wpSthvY0kHFVwI99MmvQpXWgHTaoBYn6SlVu9LVGkzT2dxUH0cwfMTW5ELq6?=
- =?us-ascii?Q?WVP8wWBkrJswaeFJ8xSyd3vK1qEbwKkOtvwRWxjUvcaljjTMdjVpB7mRV/Tr?=
- =?us-ascii?Q?OjRC6JYgRlYCdF8XEqrLyICUik5uitbNs1uYfR+M7QL7Utbkm3O5BMNQDc9j?=
- =?us-ascii?Q?7kQDgMXopuX/Nj8pMmaTiK5rsjVD/H722Mm1NN6RNqM2aJbfyfMTcXVIXJJ+?=
- =?us-ascii?Q?RgSrB+2OBz3Av28ZdPrj3QUCHx5Xo3UGDDX9KLJhHtCY/jFkU3JUVgAUHTvp?=
- =?us-ascii?Q?QcZQgA3PyJU+dtDR/V9DbXX430LepBJQFtgRRp/Nv81EF4cwf0tr0ur58Ptn?=
- =?us-ascii?Q?qoM1dmYTGe7rfy5tPgtblFyKs/gk5kp/fd0mcwH1TPxP0vTUM2dEWgU9oGyP?=
- =?us-ascii?Q?JjMEvPsUyvdlTIkgoNROGcvjn/v8GtQ1vbED5MGrhgA3Tme71hlT6M3UMyZm?=
- =?us-ascii?Q?gqwSIquTtYKKleR6GxoSjGlVh0fduuh2fx4hc/UYGXi6LgR68oKysvWWpKgO?=
- =?us-ascii?Q?Tw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: BLWsgda7jdSQsJRHnlktN5NpKnom8JQ0xGVXAdl0NpINMyZJ4DViJz5kxFgHgkektJ0WRcDtNad4Pgv9flIShJEr56B/9wx89X/ovSMnNwDyVfm0e0WqPVqyqoiM6E0o4t30/a7VgS2/PeqoyZc/B47GKoGUAQ6TVIHn1d+RWFIqDtVXPGww/5H1qnAj2XviQIhAV+mMsfloTwTK/Ej6Xp+UvX9PT4dJBfJXKR+bF6fO+s8bsWzMuG24QQcPw+vPbTfLa/ug5/de2vOLojfIsEx7/iW3PI61aZNNd/GDpJRx18ai3aMBef8UjO8IQ9PWdLnanU7w5+0weqwHD942F/vsd2l+Jibxyc8t+4LEj7MjcZpuPclqfFsfL1Z+6MGKB2xMCKfVySku5/g1RgcKHsUEtbXvop7RtlSgldJdvhdhmymfsC175AilCvthgLNpNKLXpeaKKzw49NgdrPg2PBsGOoG3vd1p10kD68F6gxqCLxv0VZWIho+si6NdRqPR+wzeAAECmhX3nFve9Mmg5yMn0QpJFmU1r96O3WCDM+ncBMD5MqXl4cvsmAhptqY8k6xUXdeyZD+DNwzK9S1sRP+WM+tV2sXYuYgDe1qT4kW8TiRVW+JLL2C5hlhcENaLBrL4UwG/2AeaCc9CLGNga7PJSo4EUGMTCpNeVCPgowQP48KzJUGEz57EGtMU1Uzspoa7Pwa6VKvpSUc7ccT144FUPeyhht8n+pIDjVsfWe0mEgSfW0aq0XPtRenYH+PHistoOr5JBhHg+E4y8EO8QIIEWsfZzvlFqIUU/L8lq5zhQDez6bZkwCjSW3u8COc6+cUoVIOAMpkzaGwkDrZw0dKcIgLij4efyypdKHu1H0dwfaUIhmo6R7REE/RniiWI
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 632831dd-5914-4c61-fa29-08dbe7a79a74
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2023 19:58:44.1717
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VqsyzQ3lGpyFfrVcPl0gu6aSXDiEo5/uMrb+YRAdiWyC8K4c8b18TJJywrfqIKF5wr72S3HQEHfFN+4W/lVhVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB6288
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-17_19,2023-11-17_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=952 mlxscore=0 malwarescore=0 phishscore=0 suspectscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311170152
-X-Proofpoint-ORIG-GUID: IlxdEXI45hDycs965JmtUu4RLIjvTb2T
-X-Proofpoint-GUID: IlxdEXI45hDycs965JmtUu4RLIjvTb2T
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Nov 17, 2023 at 01:18:52PM +1100, NeilBrown wrote:
-> For NFSv4.1 and later the client easily discovers if there is any
-> admin-revoked state and will then find and explicitly free it.
-> 
-> For NFSv4.0 there is no such mechanism.  The client can only find that
-> state is admin-revoked if it tries to use that state, and there is no
-> way for it to explicitly free the state.  So the server must hold on to
-> the stateid (at least) for an indefinite amount of time.  A
-> RELEASE_LOCKOWNER request might justify forgetting some of these
-> stateids, as would the whole clients lease lapsing, but these are not
-> reliable.
-> 
-> This patch takes two approaches.
-> 
-> Whenever a client uses an revoked stateid, that stateid is then
-> discarded and will not be recognised again.  This might confuse a client
-> which expect to get NFS4ERR_ADMIN_REVOKED consistently once it get it at
-> all, but should mostly work.  Hopefully one error will lead to other
-> resources being closed (e.g.  process exits), which will result in more
-> stateid being freed when a CLOSE attempt gets NFS4ERR_ADMIN_REVOKED.
-> 
-> Also, any admin-revoked stateids that have been that way for more than
-> one lease time are periodically revoke.
-> 
-> No actual freeing of state happens in this patch.  That will come in
-> future patches which handle the different sorts of revoked state.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/netns.h     |  4 ++
->  fs/nfsd/nfs4state.c | 97 ++++++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 100 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-> index ec49b200b797..02f8fa095b0f 100644
-> --- a/fs/nfsd/netns.h
-> +++ b/fs/nfsd/netns.h
-> @@ -197,6 +197,10 @@ struct nfsd_net {
->  	atomic_t		nfsd_courtesy_clients;
->  	struct shrinker		nfsd_client_shrinker;
->  	struct work_struct	nfsd_shrinker_work;
-> +
-> +	/* last time an admin-revoke happened for NFSv4.0 */
-> +	time64_t		nfs40_last_revoke;
-> +
->  };
+On Fri, 2023-11-17 at 18:58 +0000, Chuck Lever III wrote:
+>=20
+> > On Nov 17, 2023, at 10:08=E2=80=AFAM, Chuck Lever <chuck.lever@oracle.c=
+om> wrote:
+> >=20
+> > On Fri, Nov 17, 2023 at 09:57:49AM -0500, Jeff Layton wrote:
+> > > On Fri, 2023-11-10 at 11:28 -0500, Chuck Lever wrote:
+> > > > From: Chuck Lever <chuck.lever@oracle.com>
+> > > >=20
+> > > > The "statp + 1" pointer that is passed to nfsd_cache_update() is
+> > > > supposed to point to the start of the egress NFS Reply header. In
+> > > > fact, it does point there for AUTH_SYS and RPCSEC_GSS_KRB5 requests=
+.
+> > > >=20
+> > > > But both krb5i and krb5p add fields between the RPC header's
+> > > > accept_stat field and the start of the NFS Reply header. In those
+> > > > cases, "statp + 1" points at the extra fields instead of the Reply.
+> > > > The result is that nfsd_cache_update() caches what looks to the
+> > > > client like garbage.
+> > > >=20
+> > > > A connection break can occur for a number of reasons, but the most
+> > > > common reason when using krb5i/p is a GSS sequence number window
+> > > > underrun. When an underrun is detected, the server is obliged to
+> > > > drop the RPC and the connection to force a retransmit with a fresh
+> > > > GSS sequence number. The client presents the same XID, it hits in
+> > > > the server's DRC, and the server returns the garbage cache entry.
+> > > >=20
+> > > > The "statp + 1" argument has been used since the oldest changeset
+> > > > in the kernel history repo, so it has been in nfsd_dispatch()
+> > > > literally since before history began. The problem arose only when
+> > > > the server-side GSS implementation was added twenty years ago.
+> > > >=20
+> > > > This particular patch applies cleanly to v6.5 and later, but needs
+> > > > some context adjustment to apply to earlier kernels. Before v5.16,
+> > > > nfsd_dispatch() does not use xdr_stream, so saving the NFS header
+> > > > pointer before calling ->pc_encode is still an appropriate fix
+> > > > but it needs to be implemented differently.
+> > > >=20
+> > > > Cc: <stable@vger.kernel.org> # v5.16+
+> > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > > > ---
+> > > > fs/nfsd/nfssvc.c |    4 +++-
+> > > > 1 file changed, 3 insertions(+), 1 deletion(-)
+> > > >=20
+> > > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > > > index d6122bb2d167..60aacca2bca6 100644
+> > > > --- a/fs/nfsd/nfssvc.c
+> > > > +++ b/fs/nfsd/nfssvc.c
+> > > > @@ -981,6 +981,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+> > > > const struct svc_procedure *proc =3D rqstp->rq_procinfo;
+> > > > __be32 *statp =3D rqstp->rq_accept_statp;
+> > > > struct nfsd_cacherep *rp;
+> > > > + __be32 *nfs_reply;
+> > > >=20
+> > > > /*
+> > > >  * Give the xdr decoder a chance to change this if it wants
+> > > > @@ -1014,6 +1015,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+> > > > if (test_bit(RQ_DROPME, &rqstp->rq_flags))
+> > > > goto out_update_drop;
+> > > >=20
+> > > > + nfs_reply =3D xdr_inline_decode(&rqstp->rq_res_stream, 0);
+> > > > if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
+> > > > goto out_encode_err;
+> > > >=20
+> > > > @@ -1023,7 +1025,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
+> > > >  */
+> > > > smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_count=
+er + 1);
+> > > >=20
+> > > > - nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
+> > > > + nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, nfs_reply);
+> > > > out_cached_reply:
+> > > > return 1;
+> > > >=20
+> > > >=20
+> > > >=20
+> > >=20
+> > > With this patch, I'm seeing a regression in pynfs RPLY14. In the
+> > > attached capture the client sends a replay of an earlier call, and th=
+e
+> > > server responds (frame #97) with a reply that is truncated just after
+> > > the RPC accept state.
+> >=20
+> > I've reproduced it. Looking now.
+>=20
+> One line fix was squashed into "NFSD: Fix "start of NFS reply"
+> pointer passed to nfsd_cache_update()". The new series is in
+> the nfsd-fixes branch of my repo on kernel.org <http://kernel.org/>.
+>=20
 
-This hunk doesn't apply to nfsd-next due to v6.7-rc changes to NFSD
-to implement a dynamic shrinker. So I stopped my review here for
-now.
+LGTM. You can add this to the pile:
 
-
->  /* Simple check to find out if a given net was properly initialized */
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 8debd148840f..8a1b8376ff08 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1724,6 +1724,14 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
->  				}
->  				nfs4_put_stid(stid);
->  				spin_lock(&nn->client_lock);
-> +				if (clp->cl_minorversion == 0)
-> +					/* Allow cleanup after a lease period.
-> +					 * store_release ensures cleanup will
-> +					 * see any newly revoked states if it
-> +					 * sees the time updated.
-> +					 */
-> +					nn->nfs40_last_revoke =
-> +						ktime_get_boottime_seconds();
->  				goto retry;
->  			}
->  		}
-> @@ -4650,6 +4658,39 @@ nfsd4_find_existing_open(struct nfs4_file *fp, struct nfsd4_open *open)
->  	return ret;
->  }
->  
-> +static void nfsd_drop_revoked_stid(struct nfs4_stid *s)
-> +{
-> +	struct nfs4_client *cl = s->sc_client;
-> +
-> +	switch (s->sc_type) {
-> +	default:
-> +		spin_unlock(&cl->cl_lock);
-> +	}
-> +}
-> +
-> +static void nfs40_drop_revoked_stid(struct nfs4_client *cl,
-> +				    stateid_t *stid)
-> +{
-> +	/* NFSv4.0 has no way for the client to tell the server
-> +	 * that it can forget an admin-revoked stateid.
-> +	 * So we keep it around until the first time that the
-> +	 * client uses it, and drop it the first time
-> +	 * nfserr_admin_revoked is returned.
-> +	 * For v4.1 and later we wait until explicitly told
-> +	 * to free the stateid.
-> +	 */
-> +	if (cl->cl_minorversion == 0) {
-> +		struct nfs4_stid *st;
-> +
-> +		spin_lock(&cl->cl_lock);
-> +		st = find_stateid_locked(cl, stid);
-> +		if (st)
-> +			nfsd_drop_revoked_stid(st);
-> +		else
-> +			spin_unlock(&cl->cl_lock);
-> +	}
-> +}
-> +
->  static __be32
->  nfsd4_verify_open_stid(struct nfs4_stid *s)
->  {
-> @@ -4672,6 +4713,10 @@ nfsd4_lock_ol_stateid(struct nfs4_ol_stateid *stp)
->  
->  	mutex_lock_nested(&stp->st_mutex, LOCK_STATEID_MUTEX);
->  	ret = nfsd4_verify_open_stid(&stp->st_stid);
-> +	if (ret == nfserr_admin_revoked)
-> +		nfs40_drop_revoked_stid(stp->st_stid.sc_client,
-> +					&stp->st_stid.sc_stateid);
-> +
->  	if (ret != nfs_ok)
->  		mutex_unlock(&stp->st_mutex);
->  	return ret;
-> @@ -5255,6 +5300,7 @@ nfs4_check_deleg(struct nfs4_client *cl, struct nfsd4_open *open,
->  	}
->  	if (deleg->dl_stid.sc_status & NFS4_STID_REVOKED) {
->  		nfs4_put_stid(&deleg->dl_stid);
-> +		nfs40_drop_revoked_stid(cl, &open->op_delegate_stateid);
->  		status = nfserr_deleg_revoked;
->  		goto out;
->  	}
-> @@ -6253,6 +6299,43 @@ nfs4_process_client_reaplist(struct list_head *reaplist)
->  	}
->  }
->  
-> +static void nfs40_clean_admin_revoked(struct nfsd_net *nn,
-> +				      struct laundry_time *lt)
-> +{
-> +	struct nfs4_client *clp;
-> +
-> +	spin_lock(&nn->client_lock);
-> +	if (nn->nfs40_last_revoke == 0 ||
-> +	    nn->nfs40_last_revoke > lt->cutoff) {
-> +		spin_unlock(&nn->client_lock);
-> +		return;
-> +	}
-> +	nn->nfs40_last_revoke = 0;
-> +
-> +retry:
-> +	list_for_each_entry(clp, &nn->client_lru, cl_lru) {
-> +		unsigned long id, tmp;
-> +		struct nfs4_stid *stid;
-> +
-> +		if (atomic_read(&clp->cl_admin_revoked) == 0)
-> +			continue;
-> +
-> +		spin_lock(&clp->cl_lock);
-> +		idr_for_each_entry_ul(&clp->cl_stateids, stid, tmp, id)
-> +			if (stid->sc_status & NFS4_STID_ADMIN_REVOKED) {
-> +				refcount_inc(&stid->sc_count);
-> +				spin_unlock(&nn->client_lock);
-> +				/* this function drops ->cl_lock */
-> +				nfsd_drop_revoked_stid(stid);
-> +				nfs4_put_stid(stid);
-> +				spin_lock(&nn->client_lock);
-> +				goto retry;
-> +			}
-> +		spin_unlock(&clp->cl_lock);
-> +	}
-> +	spin_unlock(&nn->client_lock);
-> +}
-> +
->  static time64_t
->  nfs4_laundromat(struct nfsd_net *nn)
->  {
-> @@ -6286,6 +6369,8 @@ nfs4_laundromat(struct nfsd_net *nn)
->  	nfs4_get_client_reaplist(nn, &reaplist, &lt);
->  	nfs4_process_client_reaplist(&reaplist);
->  
-> +	nfs40_clean_admin_revoked(nn, &lt);
-> +
->  	spin_lock(&state_lock);
->  	list_for_each_safe(pos, next, &nn->del_recall_lru) {
->  		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-> @@ -6504,6 +6589,9 @@ static __be32 nfsd4_stid_check_stateid_generation(stateid_t *in, struct nfs4_sti
->  	if (ret == nfs_ok)
->  		ret = check_stateid_generation(in, &s->sc_stateid, has_session);
->  	spin_unlock(&s->sc_lock);
-> +	if (ret == nfserr_admin_revoked)
-> +		nfs40_drop_revoked_stid(s->sc_client,
-> +					&s->sc_stateid);
->  	return ret;
->  }
->  
-> @@ -6548,6 +6636,8 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
->  	}
->  out_unlock:
->  	spin_unlock(&cl->cl_lock);
-> +	if (status == nfserr_admin_revoked)
-> +		nfs40_drop_revoked_stid(cl, stateid);
->  	return status;
->  }
->  
-> @@ -6594,6 +6684,7 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
->  		return nfserr_deleg_revoked;
->  	}
->  	if (stid->sc_type & NFS4_STID_ADMIN_REVOKED) {
-> +		nfs40_drop_revoked_stid(cstate->clp, stateid);
->  		nfs4_put_stid(stid);
->  		return nfserr_admin_revoked;
->  	}
-> @@ -6886,6 +6977,11 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	s = find_stateid_locked(cl, stateid);
->  	if (!s || s->sc_status & NFS4_STID_CLOSED)
->  		goto out_unlock;
-> +	if (s->sc_status & NFS4_STID_ADMIN_REVOKED) {
-> +		nfsd_drop_revoked_stid(s);
-> +		ret = nfs_ok;
-> +		goto out;
-> +	}
->  	spin_lock(&s->sc_lock);
->  	switch (s->sc_type) {
->  	case NFS4_DELEG_STID:
-> @@ -6912,7 +7008,6 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  		spin_unlock(&cl->cl_lock);
->  		ret = nfsd4_free_lock_stateid(stateid, s);
->  		goto out;
-> -	/* Default falls through and returns nfserr_bad_stateid */
->  	}
->  	spin_unlock(&s->sc_lock);
->  out_unlock:
-> -- 
-> 2.42.0
-> 
-
--- 
-Chuck Lever
+Tested-by: Jeff Layton <jlayton@kernel.org>
