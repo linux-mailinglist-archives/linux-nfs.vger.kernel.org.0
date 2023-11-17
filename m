@@ -2,50 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F9B97EEB6C
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 04:28:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D05867EEB8F
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Nov 2023 05:09:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345656AbjKQD2u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Nov 2023 22:28:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38126 "EHLO
+        id S1345690AbjKQEJx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Nov 2023 23:09:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229790AbjKQD2t (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Nov 2023 22:28:49 -0500
-Received: from out203-205-221-235.mail.qq.com (out203-205-221-235.mail.qq.com [203.205.221.235])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FBA2B0;
-        Thu, 16 Nov 2023 19:28:44 -0800 (PST)
+        with ESMTP id S1345676AbjKQEJw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Nov 2023 23:09:52 -0500
+Received: from out203-205-221-240.mail.qq.com (out203-205-221-240.mail.qq.com [203.205.221.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC7E98;
+        Thu, 16 Nov 2023 20:09:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-        s=s201512; t=1700191722;
-        bh=t1QptpHB+j2hjtkZxMW66dbJO4vcH9gktTNMOo4SZM8=;
+        s=s201512; t=1700194181;
+        bh=At520qKDeX3E1KIIClRLx//A2/xcILPB3gnDlw8ZE08=;
         h=Date:Subject:To:Cc:References:From:In-Reply-To;
-        b=endsVjoD/yjsuV0gPrvweXz68xdycKohLRDSx8f+mEL2URPffLmCRjs+fS5slelfg
-         jWcWNeE10wZYVgBm1c7dIufnDvUEdGt7WRH+8lHxKIawSew/Qmu09glu9B3esF8CJ5
-         zf9E4zBoXh7pzLK0vBHLFSyQJ6bEBUS+Z5FgJQ9g=
+        b=XnS3s2tB46u8ds19DN1mFA7F9oJDpJT8FkQaexibm0OWrikkRylgktBHiTtnjUYmO
+         zrpEfD2+5uuncvtxW7SoQh1bBlYxHUlh87HvqiDok4CR2J3YbWQ8Nh2jOaNXfUhLFN
+         dOfUODhb5J/gtkLWQCmDmqeFvvsSpcJkyWwEy8/Y=
 Received: from [192.168.31.137] ([116.128.244.171])
-        by newxmesmtplogicsvrsza12-0.qq.com (NewEsmtp) with SMTP
-        id 7243DE1E; Fri, 17 Nov 2023 11:28:36 +0800
-X-QQ-mid: xmsmtpt1700191716tu68o2yw3
-Message-ID: <tencent_7081EC6CCB41F8B0966FCEB01B7AED66C409@qq.com>
-X-QQ-XMAILINFO: MX+1SEN3H+wAZ8oLfd06aJMpam71+X3o79wb4d4a3ttV8WyaYYa10p5AmZRBVD
-         zJuOWN3vKJFxXxc/yyZPPLXsY0CKTd117/GCz6d05d5xrKsi7VEXfjCU1tKrQk4G11uoyqiIwFpf
-         hwI5BxxXgdpNlT9dwCDLj65GmdsiwWQCEqKonaMfxZBVX34JBEYEiR1TiQCA3xuaESwj+iI48kaF
-         sIfe+0eACZ65KaBr4/AQ5MkERyo8Z6mjaq3jBYHMjszTrSwxlDhks3c02CEuhRqxTP0osKFFEVlv
-         YoOQ87g6hU9om2cq352Emev8o9nJCFreKRvqrHsxuW51wtIByQ0bzkisDHs03BC0MSIpMgWq0Nxc
-         s7rKv+OJJYeN3OeyU2kd+v32A9WXfS0SKDVOofuWW2z8xsH2rRs8VyAtGTui0wKl3IK1xkiKGZOx
-         PQCqhqvPYtRf5pl4bCB2cWLYyBSz2wHaKmhmahnQdl2sNzlOOvisqEeMt/zsND2thXgicrEw/Izn
-         Ui6Fv8lBrSKKVroUB2rCKiLg4trmXFySMb9c3Lkj7wmFWRWQy971UUELcRh9pX1kVh8D/uQ2zMzS
-         9P2fUhHt1PZ+twZdKxO2Vk7uI2/+dfxyDXHDnvW+f1JH4baptALWagHxP+WpyCPqRcgrzYJ4SbCF
-         uYSd8K/+gFnVtq/Bs2dnd6nNwuXSBNe4/PraG/eaRTUCvU4LoEzSflD/5skCTsGvHzfYwGJ3fhdX
-         CrkKd1AKuMEkDhQRtjjy0PTr9DfCmKEt33E9s/7241Dcx1UPnlZbFoT6Jxt58Ev9V+IYlE+tzlcA
-         GY0fmfYCYwGOSWiAWvPyD0AvwoAji0S3mE1SCalWi456hFjMhLUfGykkLyCcDpXq1Q6vT9Ls79nL
-         vOF9WgNTWJRLqn7jCbBju2oUwJzDlPo3hZ5SzbAVkIJ1MhanfNS8zVDF5iTenZJM11dXqQrxRK
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-OQ-MSGID: <835b2d65-0124-436f-9d31-21f0fb3bb48d@foxmail.com>
-Date:   Fri, 17 Nov 2023 11:28:30 +0800
+        by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+        id 265B9673; Fri, 17 Nov 2023 12:09:37 +0800
+X-QQ-mid: xmsmtpt1700194177t86eil4p2
+Message-ID: <tencent_F89651CE8E1BFCEC42C4BFEDD0CA77F82609@qq.com>
+X-QQ-XMAILINFO: ObFHHlrAm440315lOe38z+J5oFMziPtveeFGLU4JO6UI+h6J+5+9Z5cJ7VyZvS
+         B9Un2LhVR5Mrg0CngHtiRKUVkncFNCQtMqZ7DGfLFZ7hJNfMugz9j7vLBZDLDI2t/MQjzoo8yQXX
+         1TGkcO0cfiKJGxor6bGsknrXcIAGWlFKxwMpsklZGuE2VkDhGBaaNUISCPh3aDIDiDel21u8lrln
+         swagzSLrNc5wb/ttRAbPjEmN7qBwXa0GVbxnufbzOirTTWT0tTHLYHfXqc0twvHf0djQ1jm70ZVf
+         Ehhrkjj4whBDYigT6WyHhPxQ9LDZOHtHrewsqDl4gW3aEIVZ0i8DyaU3MVkjjbe+UITyfTjkucxN
+         HhVns2OF2EhlxT3xeqO7QOCCqThE0AbBIHmAR9pk2uE/wZjy+uvjgYAeFtKqK+VKqTIqSroTyxUZ
+         +uDkrGDr7iy10NYFAzLtbanIDtfAbridyk/xfULMq4wtF3qFcWv/6Qf0qsPluaBgEuXuL4jpd3oJ
+         a+yOryWdWb4IxwtpQVqwx8y/nl/XRcxraHju1Vv8fit0HCOvtuDELTyJcBE5S+hYNXbbkRYU0EFV
+         pouQVo5FGy6mNP47vRGtJPmlH/PmV6rNjFd5NZKOibWwZ/g+vOmFhJd+dmwyvHYuW4WmR06NjUrX
+         EB50gJALYlxZ8gEnXxyLbYkUyw3Y/cUVUFno/lq6e/+QvsEqvVKadXxifTaAACUxTBROuAjF+k0U
+         194aapbdGHSfgnWyssSgsEpAOEBmMLpP1BIrFL9TriBJT3m/1WJFE/8IReTfa4zwkyIIqKWc2vph
+         wmBGA/YkIlIBTERSwmvE1WqlPZOrWA5B1TY7d0mvvDLQOrJkHVfG+Jd1gL6kZSjM+FGdtNSJyw9j
+         2rAf2QaTHVQjalLzjH7OyTFaRN/AqiZtvefe0+TDFDhI0EQt0rLRXO9zWfuF2Hfh+Fo8OJvvBdzZ
+         maNcVKbPNNkS0nstAjVljRzlO6rKZ7
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-OQ-MSGID: <22e31dd3-6557-4019-b46f-32ac56cffa48@foxmail.com>
+Date:   Fri, 17 Nov 2023 12:09:37 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: Question about LTS 4.19 patch "89047634f5ce NFS: Don't interrupt
  file writeout due to fatal errors"
+Content-Language: en-US
 To:     Trond Myklebust <trondmy@hammerspace.com>,
         "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
 Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
@@ -64,16 +66,14 @@ References: <tencent_BEDA418B8BD86995FBF3E92D4F9F5D342C0A@qq.com>
  <2023103055-saddled-payer-bd26@gregkh>
  <tencent_21E20176E2E5AB7C33CB5E67F10D02763508@qq.com>
  <3b8caab5918d06f436a889bc1dba09686fc0fad5.camel@hammerspace.com>
-Content-Language: en-US
 From:   ChenXiaoSong <chenxiaosongemail@foxmail.com>
 In-Reply-To: <3b8caab5918d06f436a889bc1dba09686fc0fad5.camel@hammerspace.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_MUA_MOZILLA,
-        FREEMAIL_FROM,HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_BLOCKED,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        FREEMAIL_FROM,HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_BLOCKED,RDNS_DYNAMIC,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -100,30 +100,52 @@ On 2023/10/30 22:56, Trond Myklebust wrote:
 >
 > Thanks,
 >    Trond
->
+
+Sorry, the previous email had formatting issues. I'll resend it.
+
+
 After applying commit 22876f540bdf ("NFS: Don't call 
 generic_error_remove_page() while holding locks"), I encountered an 
 issue of infinite loop:
 
-write ... nfs_updatepage nfs_writepage_setup nfs_setup_write_request 
-nfs_try_to_update_request nfs_wb_page if (clear_page_dirty_for_io(page)) 
-// true nfs_writepage_locked // return 0 nfs_do_writepage // return 0 
-nfs_page_async_flush // return 0 nfs_error_is_fatal_on_server 
-nfs_write_error_remove_page SetPageError // instead of 
-generic_error_remove_page // loop begin if 
-(clear_page_dirty_for_io(page)) // false if (!PagePrivate(page)) // 
-false ret = nfs_commit_inode = 0 // loop again, never quit
+write
+   ...
+   nfs_updatepage
+     nfs_writepage_setup
+       nfs_setup_write_request
+         nfs_try_to_update_request
+           nfs_wb_page
+             if (clear_page_dirty_for_io(page)) // true
+             nfs_writepage_locked // return 0
+               nfs_do_writepage // return 0
+                 nfs_page_async_flush // return 0
+                   nfs_error_is_fatal_on_server
+                   nfs_write_error_remove_page
+                     SetPageError // instead of generic_error_remove_page
+             // loop begin
+             if (clear_page_dirty_for_io(page)) // false
+             if (!PagePrivate(page)) // false
+             ret = nfs_commit_inode = 0
+             // loop again, never quit
+
 
 before applying commit 22876f540bdf ("NFS: Don't call 
 generic_error_remove_page() while holding locks"), 
 generic_error_remove_page() will clear PG_private, and infinite loop 
 will never happen:
 
-generic_error_remove_page truncate_inode_page truncate_cleanup_page 
-do_invalidatepage nfs_invalidate_page nfs_wb_page_cancel 
-nfs_inode_remove_request ClearPagePrivate(head->wb_page)
+generic_error_remove_page
+   truncate_inode_page
+     truncate_cleanup_page
+       do_invalidatepage
+         nfs_invalidate_page
+           nfs_wb_page_cancel
+             nfs_inode_remove_request
+               ClearPagePrivate(head->wb_page)
+
 
 If applying this patch, are other patches required? And I cannot 
 reproducethe read deadlock bug that the patch want to fix, are there 
 specific conditions required to reproduce this read deadlock bug?
+
 
