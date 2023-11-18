@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20C997EFF5E
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Nov 2023 13:01:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F08337EFF62
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Nov 2023 13:10:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229842AbjKRMBR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 18 Nov 2023 07:01:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53946 "EHLO
+        id S229510AbjKRMKA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 18 Nov 2023 07:10:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjKRMBQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Nov 2023 07:01:16 -0500
+        with ESMTP id S229469AbjKRMKA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Nov 2023 07:10:00 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E38E5
-        for <linux-nfs@vger.kernel.org>; Sat, 18 Nov 2023 04:01:13 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80B83C433C8;
-        Sat, 18 Nov 2023 12:01:12 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F77ED49
+        for <linux-nfs@vger.kernel.org>; Sat, 18 Nov 2023 04:09:57 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 873DCC433C7;
+        Sat, 18 Nov 2023 12:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700308872;
-        bh=1zhhwa1ybC7HrDvnLpCpHLmoYrtPf+wR1N9qxMBbNzg=;
+        s=k20201202; t=1700309396;
+        bh=sL1RxC3VjWP6Sqi47IxdjCcrcrGJFGxzWBeBCVC6xcc=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=PhFkLK0JhllXIWlW7jkbF+p5y0TcmnaOX8Cyac2BTBbUOby+HYFAl7PfH/Ed79iH0
-         3QfRf06Xm2ErIGUBuxUc1jv/s5ouOpakPnywE/JkClpYFAc6UNc7V3fHknn/auuvgs
-         Wl/sUoqmvBrVyZecVklG7MHjMUG00W3RXhMaiBsB0ohYrUk+OkuPuHo8efOUyPtIHf
-         gNzlOcs0a+yaV2wV4GFadxqceVrwdxL2Lbla9EGQeMeWWJWwHExRZ+bhiA5ZJEqxug
-         e2NrofNWpTDvQcyLc4Q4bci6da/yQw3xu5/nALdBMJEa0jGJpeHSUag9lUGC56sTO/
-         Z2T2iwOj4z4Vg==
-Message-ID: <d6c218f85f314f28ba94726038782ffada3a2e01.camel@kernel.org>
-Subject: Re: NFSv4.1 --> NFSv4.2 client implementation?
+        b=Wu4hNli8JCKrWTEXzrntF3SuYSBNNdyiHUXtlcKzmjSVEel43M4kV6EM6J8skuTM7
+         0tNBIX67M6XlPQdW0RgAJpdTwE9txtjzGpeNTzh/x8MsX9c6RkDQHmz+ur6wd3K+E5
+         hjkTq1bKYSyY8mxXVLMFHtY/0OOlJ3JnttbBFJlvXI6odVQKf8G1VgyurCLUIG4/TA
+         0CqejDsnN69A0ZBXlEplxxJJLFCAKWN0KGnlg41rkLs50OGHk0GN8w9NU4iLqWtI63
+         I/SIEcNeN8C4+ZiYEoTth+GQL3/vC0pazVyQDCflV0XKLREaYnzZ9S0DtQnaJtztGa
+         tStuNxm06jBGQ==
+Message-ID: <4fd6a706b7dbc626ebb5b8b0779e9f8bd4319518.camel@kernel.org>
+Subject: Re: NFSv4-over-TLS, info?
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Cedric Blancher <cedric.blancher@gmail.com>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Sat, 18 Nov 2023 07:01:11 -0500
-In-Reply-To: <CALXu0UcwVRxbG9HD_0U2oK5Le53F3NKQz_H4P4nEesnoWM=BRw@mail.gmail.com>
-References: <CALXu0UcwVRxbG9HD_0U2oK5Le53F3NKQz_H4P4nEesnoWM=BRw@mail.gmail.com>
+Date:   Sat, 18 Nov 2023 07:09:55 -0500
+In-Reply-To: <CALXu0UfhH7AQ=sqDkGAukYPDN-HYGkwfsLuswkmYeDRgcgJ1XA@mail.gmail.com>
+References: <CALXu0UfhH7AQ=sqDkGAukYPDN-HYGkwfsLuswkmYeDRgcgJ1XA@mail.gmail.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
         r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -57,17 +57,18 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 2023-11-18 at 08:53 +0100, Cedric Blancher wrote:
+On Sat, 2023-11-18 at 09:02 +0100, Cedric Blancher wrote:
 > Good morning!
 >=20
-> What are the differences between NFSv4.1 and NFSv4.2 for a NFSv4
-> client, if we ignore server-side copy and READ_PLUS support?
-> Can a NFSv4.1 client then identify itself als NFSv4.2 client?
+> Where can we get more information about NFSv4-over-TLS? How will it be
+> implemented? In libtirpc?
 >=20
 
-Yes. I believe that NFSv4.2 consists entirely of optional features over
-NFSv4.1, so it's legitimate for a client or server to advertise itself
-as a v4.2 capable, but support none of the features.
+It's available today in several distros (Fedora, Debian, etc.). You'll
+need the ktls-utils package. The only docs are currently the manpages,
+AFAIK. I don't think anyone has written a HOWTO or anything yet, if
+you're interested in writing one after setting it up.
 
+Cheers,
 --=20
 Jeff Layton <jlayton@kernel.org>
