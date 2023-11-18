@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 217E87EFDF6
-	for <lists+linux-nfs@lfdr.de>; Sat, 18 Nov 2023 07:02:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EAC47EFDFA
+	for <lists+linux-nfs@lfdr.de>; Sat, 18 Nov 2023 07:25:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbjKRGCO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 18 Nov 2023 01:02:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
+        id S231902AbjKRGZ0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 18 Nov 2023 01:25:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229844AbjKRGCO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Nov 2023 01:02:14 -0500
+        with ESMTP id S231783AbjKRGZZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 18 Nov 2023 01:25:25 -0500
 Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF36E0
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 22:02:10 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-9df8d0c2505so511889766b.0
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 22:02:10 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55DD710C4
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 22:25:22 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-9d2e7726d5bso354103666b.0
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Nov 2023 22:25:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700287329; x=1700892129; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1700288720; x=1700893520; darn=vger.kernel.org;
         h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=QZ169hcoPBYCYEM8w6hjzzCiGaHW49GXo+FdoPWoHjs=;
-        b=bUo12TmrhKPG3nhWrQg5kvo0eLD0B8w2ALja2fGxP6LWglEUJTD99LlhxvmaZYV70O
-         pl3Pgs2Nik9pHTsGquLBb5PIm5jNzDzWElCEBW398Sd6nZYtqRRsPMrBDcvOLK9vPfcD
-         Gtr1175U6Ku97zR4RY9jLMYekLooABVnamj3wCwT4F3AIVE7/ypH85wlW9x9fVb+w5su
-         lArK24l6aEgInW/2o2PGb4no/ujOoyBBerwhGarCms9a/Lo0I0t6KNY0eVX5UJNrBNZS
-         yMy3cW4ExdRXdsiQMGFOhdjEQB69E9XIYGByz9dWlFG8kE8avjK+yry+cW4CZESrcOrs
-         u4nA==
+        bh=z6C64t2VJ8UOBBCZlTgMFqiFe+Kb8NN48a6QSMAdoP8=;
+        b=JDP9eRBaPgpYQwdPIU0vU686qBij9ZzQREm+lUKHFVBNLczZvGuxEmMImz+YdlzETH
+         3bg5SXgGA59j0J3H2FFIVTZXS2HVgl/1vLMN3zsReI76poBrKtwj5aNR1h6MBDfO+evf
+         F/+ua+QF9wPa7pOjJ/ST24kbcfoFIJ1G9eQRS2kxGBx8lnMt+SelPrCMYPp+5lZfYnOf
+         ArHVNccJc0orL+r8F0nYE5M7GU++ZrSbvFpLufxHiyNiuHG6b7dx4SstLpvUmO2JchH8
+         SklxMeXY89DAu3M/7ivH7SyDvbxMsIcNnBaWnYzdFXedzNWb0UzU8sYThcK/bjKS3do5
+         UPHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700287329; x=1700892129;
+        d=1e100.net; s=20230601; t=1700288720; x=1700893520;
         h=to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=QZ169hcoPBYCYEM8w6hjzzCiGaHW49GXo+FdoPWoHjs=;
-        b=sKrh6dFVtSB5JuPZ/vIz85QPDKyQNtREUz9Oo5PZKb08CUfwvRlhbuPU8clG4HO4U4
-         Fl1GlmwxOLULVKocD7KGuUhksTnyT/Xd8EUKWWYpO2vvcgHNobPOscwvfyrVOmd4x1k/
-         aqHzcS0slZ4bClNUG2XmhZCLPQRTk7gaM2zRpALPy/CSytBGRiefEzJNbb3Infng4CEf
-         UD+xzR9t5xFK9wBxCAv0mKa3LWjeHY8f24OtsiPufDOZBqnW9+Gf2D0h4or0zx1+w2+7
-         2Ggv6MolMUBuqTWE76yxPBg5MdW5QWDEu2+sPGZK+oYG03HtySfz1VYoEsXW+roJL1g9
-         Fmvw==
-X-Gm-Message-State: AOJu0YwNsGkmTFO8NsQnjE6fVZXL6wlesGypDxuuLZoIWkTml1QmhkW9
-        zqih+IWhgJQfhVFRuaua7BMoRtHxtAFUrVZnqgiDbMJC
-X-Google-Smtp-Source: AGHT+IE+gtb3B2NL0r0qRHCQPeQT9MpdSKbKXhGZZglDyTqigY4/DxGj3P5ozF//vYF52Arg2rzbFBnfFkxmoamrcxs=
-X-Received: by 2002:a17:906:f188:b0:9b2:b80d:da87 with SMTP id
- gs8-20020a170906f18800b009b2b80dda87mr6412059ejb.16.1700287328997; Fri, 17
- Nov 2023 22:02:08 -0800 (PST)
+        bh=z6C64t2VJ8UOBBCZlTgMFqiFe+Kb8NN48a6QSMAdoP8=;
+        b=OlCBsjIFi2J15iJcBFN54/JQz6fwSu+Tw/08oQ2DnKtc/oGobSRBA6K80iNTz4jQPn
+         4920BCqpJXdQX459ODdXDkPCIXoTF4XavF6ea3zAAL7qSKgCbtpb4rakjzveUWh0G72+
+         jhPTkDOcHob5+D1y7oihrk2R12mJOuXVjA8C59UlRgQ4NG5egmEvz0bwiw5kaZ30q/M/
+         XrLpAkrP11/ZUe3yl113mgIqQRxB/tTbGxsYZ0xy/XqpYbCIoP/fYKASli/eWjPUmu+f
+         vB/la4ub8FLpCnnmnRpJTqBgSVzJRvaesdLjWf5W7OXEIFFxN0PA8j51xwwEAt+ZKAuT
+         dwaA==
+X-Gm-Message-State: AOJu0YwqSPHz8IH/yWiYBDdIb2qrsTBItvoHH9uytSrArkrUivBBbe8b
+        IJsPNQnHpDdwJ3qCHcRR44emyF3OwigOb4YR3SGZg1cf
+X-Google-Smtp-Source: AGHT+IHBNjiMnvLI9SxO/iAgZ+Kv5mLdLn0FhJ6HXFUXah1J3K2CzKMQsIHL2prX/jhl66WxHH/Mx1KUdRxpa+UHUiA=
+X-Received: by 2002:a17:906:a014:b0:9e8:de5e:911a with SMTP id
+ p20-20020a170906a01400b009e8de5e911amr1041720ejy.73.1700288720387; Fri, 17
+ Nov 2023 22:25:20 -0800 (PST)
 MIME-Version: 1.0
 From:   Cedric Blancher <cedric.blancher@gmail.com>
-Date:   Sat, 18 Nov 2023 07:01:32 +0100
-Message-ID: <CALXu0Uc7zHasg2damr4nhRZZF7xBbFc0ghdjop87+5vHa8bBHg@mail.gmail.com>
-Subject: TCP_KEEPALIVE for Linux NFS client?
+Date:   Sat, 18 Nov 2023 07:24:44 +0100
+Message-ID: <CALXu0UdcCKBGR8FUSEeEMngKqwz98Xc2HFXnhX5i_1ioEiuaQg@mail.gmail.com>
+Subject: How to set the NFSv4 "HIDDEN" attribute on Linux?
 To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -63,9 +63,9 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Good morning!
 
-Why does the Linux NFS client not use TCP_KEEPALIVE for its TCP
-connections? What are the pro and cons of using that for NFS TCP
-connections?
+NFSv4 has a "hidden" filesystem object attribute. How can I set that
+on a Linux NFSv4 server, or in a filesystem exported on Linux via
+NFSv4, so that the NFSv4 client gets this attribute for a file?
 
 Ced
 -- 
