@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DCAF7F0949
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 23:07:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83A5A7F0969
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 23:23:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231390AbjKSWHw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Nov 2023 17:07:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33648 "EHLO
+        id S231534AbjKSWXz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Nov 2023 17:23:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230456AbjKSWHw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 17:07:52 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A3B136
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 14:07:48 -0800 (PST)
+        with ESMTP id S229770AbjKSWXy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 17:23:54 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13BC812D
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 14:23:51 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 019521F381;
-        Sun, 19 Nov 2023 22:07:47 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id EB15A21852;
+        Sun, 19 Nov 2023 22:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1700431667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1700432628; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=seU1cGDLq3xypSaM+C5k6FGNvKJei/YH+vW1GQsp4/M=;
-        b=T6EsVNlWYzLwT2jncEZbDA1151MLhICvJcgugEcnshJctioRcd6tGckUIC3GzHfO0Kc4K0
-        8JQczoUxBj4P1tu41eYFRPiBaRPTlL7RUnRtriMYM97jzpYZbgKvEnqM27QOJxRaKhNt5L
-        MU7t8/SbliJz3NE9rRZGzDZnxlYQStw=
+        bh=isUaUvNLPrV3fFbSfi6mBBRuWcEdI0ASUYoB+qW7228=;
+        b=GndNlKl+rudM336rQBMMrHwK8sjwyEcQgnYvLEtGV9UAeNXjwiB8I6KtuEGG+Inx9wlHdI
+        DL+g+P3qoveqHCUTn9cUP7pjLv6RugSD7Z1qH+VaZwQjwSlPkpII14CmCRd+fNbWh3kKgw
+        QWImBQ1URbXXk966F0O4ZSq6AINLYKE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1700431667;
+        s=susede2_ed25519; t=1700432628;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=seU1cGDLq3xypSaM+C5k6FGNvKJei/YH+vW1GQsp4/M=;
-        b=Z5dw9LRNIjMAiSxc0aPaulHsB1OmPJfqaA3up0h2nurlHxUAoaY44vyBAwD20s3ax5jzUH
-        lub7bjEKEPwTJuAA==
+        bh=isUaUvNLPrV3fFbSfi6mBBRuWcEdI0ASUYoB+qW7228=;
+        b=whVpzlLPdK78Y1tcqdzbP8RAq1VWhFlbShRQT67q7fLP8zj5tqT7cmIC8DCdYH41yk9jEz
+        K5mMh06ChnmttVBg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C6BFA139B7;
-        Sun, 19 Nov 2023 22:07:44 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B1944139B7;
+        Sun, 19 Nov 2023 22:23:46 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id LbjoHTCHWmWOVAAAMHmgww
-        (envelope-from <neilb@suse.de>); Sun, 19 Nov 2023 22:07:44 +0000
+        id qrbWGPKKWmXcWgAAMHmgww
+        (envelope-from <neilb@suse.de>); Sun, 19 Nov 2023 22:23:46 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
@@ -56,14 +56,15 @@ To:     "Chuck Lever" <chuck.lever@oracle.com>
 Cc:     "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
         "Olga Kornievskaia" <kolga@netapp.com>,
         "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>
-Subject: Re: [PATCH 1/9] nfsd: hold ->cl_lock for hash_delegation_locked()
-In-reply-to: <ZVeA82rMFJL27OoN@tissot.1015granger.net>
+Subject: Re: [PATCH 2/9] nfsd: avoid race after unhash_delegation_locked()
+In-reply-to: <ZVfCTVTmNd0cgqcY@tissot.1015granger.net>
 References: <20231117022121.23310-1-neilb@suse.de>,
- <20231117022121.23310-2-neilb@suse.de>,
- <ZVeA82rMFJL27OoN@tissot.1015granger.net>
-Date:   Mon, 20 Nov 2023 09:07:41 +1100
-Message-id: <170043166163.19300.15300340757194691794@noble.neil.brown.name>
-Authentication-Results: smtp-out2.suse.de;
+ <20231117022121.23310-3-neilb@suse.de>,
+ <40e3c09538c58818e5ab0c713a49d62304c4c4a0.camel@kernel.org>,
+ <ZVfCTVTmNd0cgqcY@tissot.1015granger.net>
+Date:   Mon, 20 Nov 2023 09:23:43 +1100
+Message-id: <170043262319.19300.1603901477254585695@noble.neil.brown.name>
+Authentication-Results: smtp-out1.suse.de;
         none
 X-Spam-Score: 3.40
 X-Spamd-Result: default: False [3.40 / 50.00];
@@ -94,133 +95,189 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Sat, 18 Nov 2023, Chuck Lever wrote:
-> On Fri, Nov 17, 2023 at 01:18:47PM +1100, NeilBrown wrote:
-> > The protocol for creating a new state in nfsd is to allocated the state
-> > leaving it largely uninitialised, add that state to the ->cl_stateids
-> > idr so as to reserve a state id, then complete initialisation of the
-> > state and only set ->sc_type to non-zero once the state is fully
-> > initialised.
-> >=20
-> > If a state is found in the idr with ->sc_type =3D=3D 0, it is ignored.
-> > The ->cl_lock list is used to avoid races - it is held while checking
+> On Fri, Nov 17, 2023 at 06:41:37AM -0500, Jeff Layton wrote:
+> > On Fri, 2023-11-17 at 13:18 +1100, NeilBrown wrote:
+> > > NFS4_CLOSED_DELEG_STID and NFS4_REVOKED_DELEG_STID are similar in
+> > > purpose.
+> > > REVOKED is used for NFSv4.1 states which have been revoked because the
+> > > lease has expired.  CLOSED is used in other cases.
+> > > The difference has two practical effects.
+> > > 1/ REVOKED states are on the ->cl_revoked list
+> > > 2/ REVOKED states result in nfserr_deleg_revoked from
+> > >    nfsd4_verify_open_stid() asnd nfsd4_validate_stateid while
+> > >    CLOSED states result in nfserr_bad_stid.
+> > >=20
+> > > Currently a state that is being revoked is first set to "CLOSED" in
+> > > unhash_delegation_locked(), then possibly to "REVOKED" in
+> > > revoke_delegation(), at which point it is added to the cl_revoked list.
+> > >=20
+> > > It is possible that a stateid test could see the CLOSED state
+> > > which really should be REVOKED, and so return the wrong error code.  So
+> > > it is safest to remove this window of inconsistency.
+> > >=20
+> > > With this patch, unhash_delegation_locked() always set the state
+> > > correctly, and revoke_delegation() no longer changes the state.
+> > >=20
+> > > Also remove a redundant test on minorversion when
+> > > NFS4_REVOKED_DELEG_STID is seen - it can only be seen when minorversion
+> > > is non-zero.
+> > >=20
+> > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > ---
+> > >  fs/nfsd/nfs4state.c | 20 ++++++++++----------
+> > >  1 file changed, 10 insertions(+), 10 deletions(-)
+> > >=20
+> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > index 6368788a7d4e..7469583382fb 100644
+> > > --- a/fs/nfsd/nfs4state.c
+> > > +++ b/fs/nfsd/nfs4state.c
+> > > @@ -1334,7 +1334,7 @@ static bool delegation_hashed(struct nfs4_delegat=
+ion *dp)
+> > >  }
+> > > =20
+> > >  static bool
+> > > -unhash_delegation_locked(struct nfs4_delegation *dp)
+> > > +unhash_delegation_locked(struct nfs4_delegation *dp, unsigned char typ=
+e)
 >=20
-> s/->cl_lock list/->cl_lock lock
->=20
->=20
-> > sc_type during lookup,
->=20
-> In particular, find_stateid_locked(), but yet, not in nfs4_find_file()
->=20
-> Can you help me understand why it's not needed in the latter case?
+> unsigned short type ?
 
-nfs4_find_file() is called from nfs4_check_file() which is called from
-nfs4_preprocess_stateid_op(), which gets the nfs4_stid from
-nfsd4_lookup_stateid().
-That in turn gets the stateid from find_stateid_by_type() which gets it
-from find_stateid_locked().
-
-If find_stateid_locked() returns a stateid, then ->sc_type is not 0, and
-it can never be set to zero (At least after subsequent patches land).
-
-Or, more succinctly, nfs4_find_file() does not do lookup, so it doesn't
-check sc_type against zero, so it doesn't need a lock.
-
->=20
->=20
-> > and held when a non-zero value is stored in  ->sc_type.
->=20
-> I see a few additional spots where an sc_type value is set and
-> cl_lock is not held:
->=20
-> init_open_stateid
-
- ->cl_lock is taken 9 lines before NFS4_OPEN_STID is assigned to
-  >sc_type, and it is dropped 13 lines later.
-
-> nfsd4_process_open2
-
-This assignment does not change from zero to non-zero.  So it cannot
-race with lookup, which tests for zero.
-A later patch changes this assignment to be a change to the new
-sc_status.
-
->=20
->=20
-> > ... except... hash_delegation_locked() finalises the initialisation of a
-> > delegation state, but does NOT hold ->cl_lock.
-> >=20
-> > So this patch takes ->cl_lock at the appropriate time w.r.t other locks,
-> > and so ensures there are no races (which are extremely unlikely in any
-> > case).
->=20
-> I would have expected that cl_lock should be taken first. Can the
-> patch description provide some rationale for the lock ordering
-> you chose?
-
-I've added
-
-As ->fi_lock is often taken when ->cl_lock is held, we need to take
-->cl_lock first of those two.
-Currently ->cl_lock and state_lock are never both taken at the same time.
-We need both for this patch so an arbitrary choice is needed concerning
-which to take first.  As state_lock is more global, it might be more
-contended, so take it first.
-
-
-I'm happy to choose a different ordering for ->cl_lock and state_lock if
-you have a different justification - I accept that mine isn't
-particularly strong.
+At this stage in the series 'type' is still an unsigned char.  I don't
+want to get ahead of myself.
 
 >=20
-> Jeff asks in another email whether this fix should get copied to
-> stable. Since the race is unlikely, I'm inclined to wait for an
-> explicit problem report.
+>=20
+> > >  {
+> > >  	struct nfs4_file *fp =3D dp->dl_stid.sc_file;
+> > > =20
+> > > @@ -1343,7 +1343,9 @@ unhash_delegation_locked(struct nfs4_delegation *=
+dp)
+> > >  	if (!delegation_hashed(dp))
+> > >  		return false;
+> > > =20
+> > > -	dp->dl_stid.sc_type =3D NFS4_CLOSED_DELEG_STID;
+> > > +	if (dp->dl_stid.sc_client->cl_minorversion =3D=3D 0)
+> > > +		type =3D NFS4_CLOSED_DELEG_STID;
+> > > +	dp->dl_stid.sc_type =3D type;
+> > >  	/* Ensure that deleg break won't try to requeue it */
+> > >  	++dp->dl_time;
+> > >  	spin_lock(&fp->fi_lock);
+> > > @@ -1359,7 +1361,7 @@ static void destroy_delegation(struct nfs4_delega=
+tion *dp)
+> > >  	bool unhashed;
+> > > =20
+> > >  	spin_lock(&state_lock);
+> > > -	unhashed =3D unhash_delegation_locked(dp);
+> > > +	unhashed =3D unhash_delegation_locked(dp, NFS4_CLOSED_DELEG_STID);
+> > >  	spin_unlock(&state_lock);
+> > >  	if (unhashed)
+> > >  		destroy_unhashed_deleg(dp);
+> > > @@ -1373,9 +1375,8 @@ static void revoke_delegation(struct nfs4_delegat=
+ion *dp)
+> > > =20
+> > >  	trace_nfsd_stid_revoke(&dp->dl_stid);
+> > > =20
+> > > -	if (clp->cl_minorversion) {
+> > > +	if (dp->dl_stid.sc_type =3D=3D NFS4_REVOKED_DELEG_STID) {
+> > >  		spin_lock(&clp->cl_lock);
+> > > -		dp->dl_stid.sc_type =3D NFS4_REVOKED_DELEG_STID;
+> > >  		refcount_inc(&dp->dl_stid.sc_count);
+> > >  		list_add(&dp->dl_recall_lru, &clp->cl_revoked);
+> > >  		spin_unlock(&clp->cl_lock);
+> > > @@ -2234,7 +2235,7 @@ __destroy_client(struct nfs4_client *clp)
+> > >  	spin_lock(&state_lock);
+> > >  	while (!list_empty(&clp->cl_delegations)) {
+> > >  		dp =3D list_entry(clp->cl_delegations.next, struct nfs4_delegation, =
+dl_perclnt);
+> > > -		WARN_ON(!unhash_delegation_locked(dp));
+> > > +		WARN_ON(!unhash_delegation_locked(dp, NFS4_CLOSED_DELEG_STID));
+> > >  		list_add(&dp->dl_recall_lru, &reaplist);
+> > >  	}
+> > >  	spin_unlock(&state_lock);
+> > > @@ -5197,8 +5198,7 @@ nfs4_check_deleg(struct nfs4_client *cl, struct n=
+fsd4_open *open,
+> > >  		goto out;
+> > >  	if (deleg->dl_stid.sc_type =3D=3D NFS4_REVOKED_DELEG_STID) {
+> > >  		nfs4_put_stid(&deleg->dl_stid);
+> > > -		if (cl->cl_minorversion)
+> > > -			status =3D nfserr_deleg_revoked;
+> > > +		status =3D nfserr_deleg_revoked;
+> > >  		goto out;
+> > >  	}
+> > >  	flags =3D share_access_to_flags(open->op_share_access);
+> > > @@ -6235,7 +6235,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+> > >  		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+> > >  		if (!state_expired(&lt, dp->dl_time))
+> > >  			break;
+> > > -		WARN_ON(!unhash_delegation_locked(dp));
+> > > +		WARN_ON(!unhash_delegation_locked(dp, NFS4_REVOKED_DELEG_STID));
+> > >  		list_add(&dp->dl_recall_lru, &reaplist);
+> > >  	}
+> > >  	spin_unlock(&state_lock);
+> > > @@ -8350,7 +8350,7 @@ nfs4_state_shutdown_net(struct net *net)
+> > >  	spin_lock(&state_lock);
+> > >  	list_for_each_safe(pos, next, &nn->del_recall_lru) {
+> > >  		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+> > > -		WARN_ON(!unhash_delegation_locked(dp));
+> > > +		WARN_ON(!unhash_delegation_locked(dp, NFS4_CLOSED_DELEG_STID));
+>=20
+> Neil, what say we get rid of these WARN_ONs?
+>=20
 
-I agree.
+I've added a patch with this intro:
+Author: NeilBrown <neilb@suse.de>
+Date:   Mon Nov 20 09:15:46 2023 +1100
+
+    nfsd: don't call functions with side-effecting inside WARN_ON()
+   =20
+    Code like:
+   =20
+        WARN_ON(foo())
+   =20
+    looks like an assertion and might not be expected to have any side
+    effects.
+    When testing if a function with side-effects fails a construct like
+   =20
+        if (foo())
+           WARN_ON(1);
+   =20
+    makes the intent more obvious.
+   =20
+    nfsd has several WARN_ON calls where the test has side effects, so it
+    would be good to change them.  These cases don't really need the
+    WARN_ON.  They have never failed in 8 years of usage so let's just
+    remove the WARN_ON wrapper.
+   =20
+    Suggested-by: Chuck Lever <chuck.lever@oracle.com>
+    Signed-off-by: NeilBrown <neilb@suse.de>
+
+it removes 5 WARN_ONs from unhash_delegation_locked() calls.
+They were added by
+ Commit 3fcbbd244ed1 ("nfsd: ensure that delegation stateid hash references a=
+re only put once")
+in 4.3
 
 Thanks,
 NeilBrown
 
-
+>=20
+> > >  		list_add(&dp->dl_recall_lru, &reaplist);
+> > >  	}
+> > >  	spin_unlock(&state_lock);
+> >=20
+> > Same question here. Should this go to stable? I guess the race is not
+> > generally fatal...
+>=20
+> Again, there's no existing bug report, so no urgency to get this
+> backported. I would see these changes soak in upstream rather than
+> pull them into stable quickly only to discover another bug has been
+> introduced.
+>=20
+> We don't have a failing test or a data corruption risk, as far as
+> I can tell.
 >=20
 >=20
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/nfsd/nfs4state.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >=20
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 65fd5510323a..6368788a7d4e 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -1317,6 +1317,7 @@ hash_delegation_locked(struct nfs4_delegation *dp, =
-struct nfs4_file *fp)
-> > =20
-> >  	lockdep_assert_held(&state_lock);
-> >  	lockdep_assert_held(&fp->fi_lock);
-> > +	lockdep_assert_held(&clp->cl_lock);
-> > =20
-> >  	if (nfs4_delegation_exists(clp, fp))
-> >  		return -EAGAIN;
-> > @@ -5609,12 +5610,14 @@ nfs4_set_delegation(struct nfsd4_open *open, stru=
-ct nfs4_ol_stateid *stp,
-> >  		goto out_unlock;
-> > =20
-> >  	spin_lock(&state_lock);
-> > +	spin_lock(&clp->cl_lock);
-> >  	spin_lock(&fp->fi_lock);
-> >  	if (fp->fi_had_conflict)
-> >  		status =3D -EAGAIN;
-> >  	else
-> >  		status =3D hash_delegation_locked(dp, fp);
-> >  	spin_unlock(&fp->fi_lock);
-> > +	spin_unlock(&clp->cl_lock);
-> >  	spin_unlock(&state_lock);
-> > =20
-> >  	if (status)
-> > --=20
-> > 2.42.0
-> >=20
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
 >=20
 > --=20
 > Chuck Lever
