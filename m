@@ -2,61 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDA017F07A6
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 17:51:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AA63C7F07CB
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 17:58:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjKSQva (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Nov 2023 11:51:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
+        id S231603AbjKSQ6l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Nov 2023 11:58:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231434AbjKSQv3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 11:51:29 -0500
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8037E12D
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 08:51:23 -0800 (PST)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-5440f25dcc7so5146561a12.0
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 08:51:23 -0800 (PST)
+        with ESMTP id S231608AbjKSQ6e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 11:58:34 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56DAE10DC
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 08:58:21 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-548a2c20f50so693328a12.1
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 08:58:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700412681; x=1701017481; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1700413099; x=1701017899; darn=vger.kernel.org;
         h=to:subject:message-id:date:from:in-reply-to:references:mime-version
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PP/M4wJQZfNwddnWRuTNmC4AHPQUPyO343/OyqIvP88=;
-        b=jlQy3zOm+sE1vYxd1nl/EG9d4r7k6Mdvq8LOqNTMxaQiiawdkNECTnksr6P2ACHOZM
-         9tCq/aAj2xBD56srzpYpunZqihgh5mZo4/90UJLhdMXmT6TmXWmkEfF2mnmF+RtRVeHu
-         FReSR/CZ5Q4hMBIyqxoWWr+OiXH7HT8yZMzpMsujls0Czxqbl2bcrfMYCC7lFLxPcfmO
-         XYYOJpqWfuqID84URQpdw9DGKfDxFCEG+ArVqP2EBp2YsazDGIdOus+62yNuxQdqGUmz
-         8PopDKIpRageSKzaagTDXumI3LI4SQ040T2Sqcx0T+aaqpFY2XNPrNwPOUTM9hHm+Hmb
-         RNuQ==
+        bh=mEcbxEQEfBpl3+bHkXssJgEzvMmhKKWZFxHarqxi6xw=;
+        b=iHS53xU3H1SYoOjkAscbLKrS70NqtmRMWnp/eDiMQ8Xyij5mKwkkNTYJTN+RM5Yadx
+         GddNj2wPIekT+4qyucuFTlu98isD5YSBk3qnrGfoliHb6C7A9JHzgFVw8XO8JNdd/Xtg
+         TJ/u5OZMZUMux9fWuMWmBwBjqDy/Vf9Dmi/msqd+H/+wjvqcQ4yAOjcsIeNpd4riQY2L
+         Ldbqrn3hvkDBWp39Y9/GulEwqEUYX3Yh/NOiHyuSEDJoChEZA9NDD4t++Z0f59F6a84J
+         aKsvqNLnwx90jzKvju66rc6FxUOPl4ote+wu8m18VKfcfntkUG9dSSzREr0KXO9vV/9c
+         ezMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700412681; x=1701017481;
+        d=1e100.net; s=20230601; t=1700413099; x=1701017899;
         h=to:subject:message-id:date:from:in-reply-to:references:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PP/M4wJQZfNwddnWRuTNmC4AHPQUPyO343/OyqIvP88=;
-        b=UW/ytc9BP6GoYmUGHHdvUibI9jSlV1tjdlOe/8yULuYIVTCYywwFPT94EE6RPYlP72
-         dSVQcbrmzNf8yMtIvqL1GfCqlM5ljiZKpsTvsxhCC3siqginyUWT1Y24aChsb8/eRsqt
-         MKP5yTUIzcvwA4J6nuoH0z4/vEeqzAIU+pugEXQePSZKW/9i1KB02mvrjEHa2/cCKtnd
-         I7vQF84z5XNzneJRdYJRDZA7MoSruPGkeEheMyFpJ0YjraRMIkWfsrVNsR5CnbR0D0UD
-         mhMV371XKaFISzGOxex9WkuHezeIHcBzxe71+JR+Qss3uW0mqpD2RjK0fgX+y2ytz75i
-         x2QQ==
-X-Gm-Message-State: AOJu0Yyj22YxBbj3peJlZmMahda/iJlYOtwBo7VjLRfX3ljMakcpzOFF
-        RHDxv0S6ySHAIlNSVHctKNAlIMi0bZ2hKAE1RyFU6Mcn
-X-Google-Smtp-Source: AGHT+IElKs+IeGBYDX05rDBbqtGf6LAgsghZD9VLAFliX/jm5wrE7DZGOdlPYumQalY4K4YjaflvQ5QvdjwhsVK9qpI=
-X-Received: by 2002:aa7:d454:0:b0:53d:bdd2:3d62 with SMTP id
- q20-20020aa7d454000000b0053dbdd23d62mr4062290edr.30.1700412681476; Sun, 19
- Nov 2023 08:51:21 -0800 (PST)
+        bh=mEcbxEQEfBpl3+bHkXssJgEzvMmhKKWZFxHarqxi6xw=;
+        b=ZjpULeZQUjharBuyAPyqi1cqlZB9yj921UdauRzQ+16CzvFogjWobo3fDtdx7mE+fL
+         vNn0Ir+19spQ84nvah+iVKuIE6Vjzg4lHtAHngSfKzmXv51HaQUnWfFNVHkOZv3bh4Mu
+         IumferQ8RyOv2eNp50beiwquZOREjEbL8YSDh32uzfA3pof6bT1PVFGuZbWiKpT+TSNb
+         ha1j8HZITBz14rpYupVvj4quadjzKwLPX8p6tf4iB0DRZCGizbE+Fdlm+hkwjOfFTpvY
+         HODyJuT3bXTelueqjrOqSQf9qQlOpAxNSBXqcz1I9Hhs4GShLnRvoMMoDK/MT/Gl5u24
+         n+Lg==
+X-Gm-Message-State: AOJu0YzYxl4OkRCm30yKY5dGcZDQ31ifDPW/W1kfEpb6AkYy+Qs2mR8s
+        nWc9rGTy8di/kTfuS/wIMeyoSn20X4Q4OgZXNcMFYxNV
+X-Google-Smtp-Source: AGHT+IE55TLyhA7GKoXitxFvbAZtBB1GW9ki9lLkYjkULGYXR3jXMnPH355W/nN7oKgWrGZHXygLD0cfj3iblhn07jk=
+X-Received: by 2002:aa7:c308:0:b0:542:e844:5c9b with SMTP id
+ l8-20020aa7c308000000b00542e8445c9bmr4164739edq.13.1700413099299; Sun, 19 Nov
+ 2023 08:58:19 -0800 (PST)
 MIME-Version: 1.0
-References: <CALXu0UdcCKBGR8FUSEeEMngKqwz98Xc2HFXnhX5i_1ioEiuaQg@mail.gmail.com>
- <83a30ef92afa05d50232bd3c933f8eb45ed8f98b.camel@kernel.org>
-In-Reply-To: <83a30ef92afa05d50232bd3c933f8eb45ed8f98b.camel@kernel.org>
+References: <CALXu0UcwVRxbG9HD_0U2oK5Le53F3NKQz_H4P4nEesnoWM=BRw@mail.gmail.com>
+ <d6c218f85f314f28ba94726038782ffada3a2e01.camel@kernel.org>
+In-Reply-To: <d6c218f85f314f28ba94726038782ffada3a2e01.camel@kernel.org>
 From:   Cedric Blancher <cedric.blancher@gmail.com>
-Date:   Sun, 19 Nov 2023 17:51:00 +0100
-Message-ID: <CALXu0UerMnjs9y4gQTvy-v-gqSgO2imFbMAZ87LFj1tQqvfjiQ@mail.gmail.com>
-Subject: Re: How to set the NFSv4 "HIDDEN" attribute on Linux?
+Date:   Sun, 19 Nov 2023 17:58:00 +0100
+Message-ID: <CALXu0Ud2-nrnTLazGXhkvQW+PPuo1xePxG0D51aQDv5BXFaUfQ@mail.gmail.com>
+Subject: Re: NFSv4.1 --> NFSv4.2 client implementation?
 To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,24 +64,22 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 18 Nov 2023 at 12:56, Jeff Layton <jlayton@kernel.org> wrote:
+On Sat, 18 Nov 2023 at 13:01, Jeff Layton <jlayton@kernel.org> wrote:
 >
-> On Sat, 2023-11-18 at 07:24 +0100, Cedric Blancher wrote:
+> On Sat, 2023-11-18 at 08:53 +0100, Cedric Blancher wrote:
 > > Good morning!
 > >
-> > NFSv4 has a "hidden" filesystem object attribute. How can I set that
-> > on a Linux NFSv4 server, or in a filesystem exported on Linux via
-> > NFSv4, so that the NFSv4 client gets this attribute for a file?
+> > What are the differences between NFSv4.1 and NFSv4.2 for a NFSv4
+> > client, if we ignore server-side copy and READ_PLUS support?
+> > Can a NFSv4.1 client then identify itself als NFSv4.2 client?
 > >
 >
-> You can't. RFC 8881 defines that as "TRUE, if the file is considered
-> hidden with respect to the Windows API." There is no analogous Linux
-> inode attribute.
+> Yes. I believe that NFSv4.2 consists entirely of optional features over
+> NFSv4.1, so it's legitimate for a client or server to advertise itself
+> as a v4.2 capable, but support none of the features.
 
-Can we use setfattr and getfattr to set/get the NFSv4.1 HIDDEN and
-ARCHIVE? We have Windows NFSv4 clients (and kofemann/Roland's codebase
-supports this), and that means we need to be able to set/get and
-backup/restore these flags on the NFSv4 server side.
+Can anyone confirm this? So NFSv4.2 does not require protocol minor
+version negotiation, or how does it work?
 
 Ced
 -- 
