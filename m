@@ -2,69 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F15C7F0815
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 18:28:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8769C7F0816
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 18:31:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231420AbjKSR2H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Nov 2023 12:28:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49986 "EHLO
+        id S231417AbjKSRbB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Nov 2023 12:31:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231417AbjKSR2G (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 12:28:06 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44F76D5
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 09:28:01 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-53e08e439c7so5190777a12.0
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 09:28:01 -0800 (PST)
+        with ESMTP id S231479AbjKSRbA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 12:31:00 -0500
+Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4221115
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 09:30:55 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-53e751aeb3cso5131979a12.2
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 09:30:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700414880; x=1701019680; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1700415054; x=1701019854; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dJclnnvO364Ul/z3XiHp93+uNxkJ9WWs1ZTGdIp2q44=;
-        b=U/FOZyvKD6Wx/AyIk3N79KzZJCeK8yew3tlTTp2BIl0b3f7rbDaWWFN9Hwo8vc6J8o
-         /tQIfsnUaFjQ0C3HQGPfbBStvrh9i9HVNssX0pLUTCLmGPpr6ZaLK3NXbYNSmy/Jo0c7
-         rDiCyHpqzn5Q60OaDAy6P59+2b9crkEnyXi8QH9+ROTwss9AG8wDDUPFgOWyFkhpl41n
-         mxS2/i6eaJjf1rk8fEbLqqq/l4OjeB+Yj06Kcpw9DeJYtYa7qtt2fFmtf9tH6LNYT2CF
-         X57AEuYJvCxj9OUEniO2xZSK9KxNGeV8yK1r8twdmVeuiR1rJWuHAHaOwh4Z/tXYVG+c
-         TUjA==
+        bh=S/0w8ZVmeVuxipmOpQjg3At4ZEHHmHhARnR4o8GI2l8=;
+        b=PsEFD63CglY/GSCK061z32zsNpNT7Wr4agG7l/CXPiMkpN9CjxmH5251Pv5/Hpfg3l
+         PVRqw3n1P9fwo+j4rqj6hxvqdR5YKrA4PwWjL51/yt9ndLMHfMIAAvLyU66nAY1mbUvM
+         aqtMFj/uoRTNaWmkpUqIjX+I0uB/i5VxCvwNASfS6Qil1mGFJIzI5nSFzaKaz4B813Zs
+         Ymp5IgzH3n4vyesdv6D8qkC/SnfaSBdjAG9jb/ygrtqsrOR7hvkTD9RZHX38zPFO1HZA
+         iu4A/HQGORWEsK3yhhOCgsd55j/0dMdfOADZ4ZIB6QL4bLEUlDmysi3hc4Hu6Q079Y3T
+         HIlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700414880; x=1701019680;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1700415054; x=1701019854;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dJclnnvO364Ul/z3XiHp93+uNxkJ9WWs1ZTGdIp2q44=;
-        b=eau8LjWAsRIAP811c1cWh7vB/9CW82+dedfZ3FA7o/Lopkl1tHuNMFRKkrZSzdY7Za
-         Nue+ShIQyr+aBDP7ZJpW47AUyfFwFEEiWl2Fkpy0/wsHXIL+KM5Ba0SUigvZp9qH8b7T
-         b5i86wLAvGjq/qZ0a+WudUM8S0RVvb2WIT769GKC3XmrPExUfszHO+3PoA2U27r8n0gD
-         7uadzR0IsrmWXpkwOcOFFFiNE1bDJ/4ZGnvEwSWVRUgrk/dm1YMX2wLhpwNvW4EopxLw
-         FE9dY59DJwCsNhCE5SsrRWan/NlacxJhnWBUB0c4Yjh7fL2UKaCT0zF6JSWOh+UNjhlg
-         t1eA==
-X-Gm-Message-State: AOJu0Yz7wk4fNTgQBViBJMSMdFXHhcex0Z6fKZxdCMWlnrkxHYn+RVoW
-        jQyWCshP25sUUrqsFbbECsmHy3Yjj6V0okMRXH0=
-X-Google-Smtp-Source: AGHT+IGoHh5C+6RFr8g7OnPTee+DKAycq8q+d8S/tYVy9CfQWYbQg/QW9F09EHvdFXHmYe2OD/rAZnrjJ/RQA1j7F0g=
-X-Received: by 2002:a50:ec82:0:b0:543:8498:fda5 with SMTP id
- e2-20020a50ec82000000b005438498fda5mr3359046edr.14.1700414879686; Sun, 19 Nov
- 2023 09:27:59 -0800 (PST)
+        bh=S/0w8ZVmeVuxipmOpQjg3At4ZEHHmHhARnR4o8GI2l8=;
+        b=mnNIXTuqUnh2qMptRxKJGkHcJg62hEsNS/Y4PbupE8ygSHmTcZj9hfWlpF/KjIrTO7
+         hPl6MyRhdXev9yli+rCzsS8aR8U4mgZ7pFGyhNI2fzO902M0zdGmbEmlDiuOaoZU7ZX8
+         u0FENXaE8rT6q7EIUjI2lPUWi9JvLUlSFjmCHjfOM3s95wyoGDiLbFD+J1dGs0dzReQ8
+         sVC1rpyCyPiSWgsx0D04Tnw/O4tAUfQSjRaUJseIG462wYHlZd92DEUCsMGZuYy9QqyJ
+         Dla1p/4GD3k+8xCycJwh91KpRAqrTDNBDrbvM+JymSf5H/rZ/QqiVsrGRj4jkmKqVmit
+         vLBg==
+X-Gm-Message-State: AOJu0Yx/+KiHDLsmnFnC7T+XbNiF6EHyk6cjPw7jOcQSZofLsm3DQth7
+        T5OTXgWrq4dt0AFrGSFdSn/ZdSu5f2LV58NJC2Xlga/b
+X-Google-Smtp-Source: AGHT+IE/hwHeCma/Vd9J9RslMRtSQM95ruk/vCAsJJQruE4V5r7XxYpo/AvACIBjV3mUuZWIqEtactrfx0JXCOXJ4k4=
+X-Received: by 2002:aa7:cd52:0:b0:545:5601:414e with SMTP id
+ v18-20020aa7cd52000000b005455601414emr3739920edw.5.1700415053962; Sun, 19 Nov
+ 2023 09:30:53 -0800 (PST)
 MIME-Version: 1.0
 References: <bug-218138-226593@https.bugzilla.kernel.org/> <bug-218138-226593-fRCLxzGk3u@https.bugzilla.kernel.org/>
  <CALXu0Ucz2MGCYdMw74ZKGUj_hpGcLP-pxC=MSgpUFGU58=jc=g@mail.gmail.com>
  <CALXu0UdY=ZgcAqvC6Y-X6htxPQ9=XWemt8V4dxTA99wQmHKz=w@mail.gmail.com>
  <959BB15F-5B91-4413-BCFC-EDAC78EE32F6@oracle.com> <d8bb0bf43c8fe38ef83248fb55a9549919530cf2.camel@hammerspace.com>
  <095736A1-C749-4B8C-900C-C0471D8F8422@oracle.com> <9bb44f33-9900-44e1-813d-df1c60d8307c@redhat.com>
- <CAFX2JfmrWONe9UO2_qpbgdJRWuG+BXa3-ivcr4wTuWwBg4Oe+w@mail.gmail.com>
-In-Reply-To: <CAFX2JfmrWONe9UO2_qpbgdJRWuG+BXa3-ivcr4wTuWwBg4Oe+w@mail.gmail.com>
+ <CAFX2JfmrWONe9UO2_qpbgdJRWuG+BXa3-ivcr4wTuWwBg4Oe+w@mail.gmail.com> <CALXu0Uene5F9A1Cn7suksxEpH_O9zTEs86KOYe2iVM_mieTWTg@mail.gmail.com>
+In-Reply-To: <CALXu0Uene5F9A1Cn7suksxEpH_O9zTEs86KOYe2iVM_mieTWTg@mail.gmail.com>
 From:   Cedric Blancher <cedric.blancher@gmail.com>
-Date:   Sun, 19 Nov 2023 18:27:23 +0100
-Message-ID: <CALXu0Uene5F9A1Cn7suksxEpH_O9zTEs86KOYe2iVM_mieTWTg@mail.gmail.com>
-Subject: Re: Who owns bugzilla.linux-nfs.org - account creation broken? Re:
- How owns bugzilla.linux-nfs.org? Fwd: [Bug 218138] NFSv4 referrals - no way
- to define custom (non-2049) port numbers for referrals
-To:     Anna Schumaker <schumaker.anna@gmail.com>
-Cc:     Steve Dickson <steved@redhat.com>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Sun, 19 Nov 2023 18:30:17 +0100
+Message-ID: <CALXu0Ud40w-a-N17zN-vVRfE9NwFqY0K1U-kX_+W73UVS5vQBg@mail.gmail.com>
+Subject: Who owns nfs.org, nfsv4.org?
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -76,6 +70,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
+
+Who owns nfs.org, nfsv4.org? Maybe we can host the nfs utils, spec
+stuff, libtitpc, the Windows driver  source there?
+
+Ced
+
+---------- Forwarded message ---------
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Sun, 19 Nov 2023 at 18:27
+Subject: Re: Who owns bugzilla.linux-nfs.org - account creation
+broken? Re: How owns bugzilla.linux-nfs.org? Fwd: [Bug 218138] NFSv4
+referrals - no way to define custom (non-2049) port numbers for
+referrals
+To: Anna Schumaker <schumaker.anna@gmail.com>
+Cc: Steve Dickson <steved@redhat.com>, Chuck Lever III
+<chuck.lever@oracle.com>, Trond Myklebust <trondmy@hammerspace.com>,
+Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+
 
 On Sun, 19 Nov 2023 at 15:49, Anna Schumaker <schumaker.anna@gmail.com> wro=
 te:
@@ -149,6 +161,12 @@ Maybe we create www.nfs.org or www.nfsv4.org, and host a bugzilla for
 Linux NFSv4, Windows NFSv4 etc?
 
 Ced
+--
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
+
+
 --=20
 Cedric Blancher <cedric.blancher@gmail.com>
 [https://plus.google.com/u/0/+CedricBlancher/]
