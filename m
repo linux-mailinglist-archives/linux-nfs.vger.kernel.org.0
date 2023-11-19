@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B11147F081D
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 18:34:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CACB37F0829
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 18:38:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231547AbjKSRe4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Nov 2023 12:34:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36322 "EHLO
+        id S231593AbjKSRic (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Nov 2023 12:38:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231521AbjKSRez (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 12:34:55 -0500
-Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E04CB3
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 09:34:52 -0800 (PST)
-Received: by mail-lf1-x133.google.com with SMTP id 2adb3069b0e04-50930f126b1so4627541e87.3
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 09:34:52 -0800 (PST)
+        with ESMTP id S231553AbjKSRib (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 12:38:31 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BD6311A
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 09:38:27 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-5440f25dcc7so5179224a12.0
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 09:38:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700415290; x=1701020090; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1700415505; x=1701020305; darn=vger.kernel.org;
         h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=KMbTF0ikKUWGovaV133hZZX7Cm578fZD8/RNI19NobU=;
-        b=J3MACyUIzCx4iLHMqtho4BvJRcmeMtixWfTxzrKJ7rRCryVaayTv2QI1P17Rk7LCQ8
-         M1uF8HnCnqofGi7FkmMrkMr94VsuzFveO5UvgOGP9CY9SMwCtldlGNH5mxwuJvEc6hYD
-         vrW/IzzR8kwyOOSHbayipyOJLNy5XHYTHNtn+EXAXi/37eDRDQWko2moRzveVXTPyUrX
-         gWeiot9BDvnsLxMr/WtmJH8R5uL8O5qt4kS/5ihmwA9URYEq9wlqsk7XBRKu+0PNRgpy
-         DjeqpLiYKeRfXWlWnzl91WlM+wE8biAWO1ElC0+oGq4Cch/ADMqzRlRAMpBYXzGoVTZq
-         pmwA==
+        bh=rLNEOgya0tLef8peYQm5o//Xh/5RPh6e0mHQzjAPOf0=;
+        b=MAxN10TLR18vwZoLBKy6PU3LJTwBPmEVcSPgNJH4f+/18wQRtxT8ixWXj7zt0u3GjH
+         j5jIYSY6yBIe+y/z5jKbxv7NuksumRKbIUU5mFW0gQgk/HE3YPprcg0+Bhlb0h56ZKMX
+         +eUfCTD3iD/lUUbgetGuoe+Qz1WHg+9M1A550pT0lgnbk7/71cMM/Qd15menRBjoNQF0
+         7liFQi1Af4OzI2nOukvt9TBBK5BdmDQ17llwCoSi4cdD1xe9NhcTXrJb6mnYfhfz27Eh
+         H8Arjsb7Xc1/6FLW0SAAoe5E6I61kM1fbO/POJmgoUXvSR4uTKYURqN1w8P2Ao6xWhej
+         xwBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700415290; x=1701020090;
+        d=1e100.net; s=20230601; t=1700415505; x=1701020305;
         h=to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=KMbTF0ikKUWGovaV133hZZX7Cm578fZD8/RNI19NobU=;
-        b=TqT391/g93DJwG10vQrrz8wG0BoEB/3xZCNJdD2ll/gWG90eTBNoUVXPxsCdtLzjwh
-         3EXFMtTr5Va83ET6UCWnWJSKuGJ7y9o0GCZ980avJgRGSYgnP4E9jmRsIYOEctcKDgbV
-         40T8Y1SC59qzvwjrdIzyHlHgiaHiIqSomcwkua1mmOqWIGVTLjP3lXBZx827+FGZkP7J
-         sb3s1lZVjyjAGdzX4Z9Mm6TLRqGfccNZwPvIyVBf7Q2DuNQ6ViA0revaoA4oLuiPDVd/
-         bwnJ1Qih951VUBwCC3H1musvULoP1EduC+/a58F864iWYzXPQ9eO5GaYJB/wX6Uq4sQ3
-         UdRg==
-X-Gm-Message-State: AOJu0YxCNQuLKWJL5XPVznk4khEca5iEjAZwl3Vffzcpt4+HVZ5NwhAL
-        0ngeMADELOmAc3nR6KnthvtimAYo/Bt6WPW+8mk6w0zhkxM=
-X-Google-Smtp-Source: AGHT+IGlr73/pW6yzRjteMlIzaXifqNFkjxrWaHun9vI5olaMsuaUyQeVKuAb8wlHf91pwJeeRxkp/ekBJrMHlu2Bek=
-X-Received: by 2002:a19:ae17:0:b0:507:9f4c:b72 with SMTP id
- f23-20020a19ae17000000b005079f4c0b72mr3830018lfc.15.1700415289803; Sun, 19
- Nov 2023 09:34:49 -0800 (PST)
+        bh=rLNEOgya0tLef8peYQm5o//Xh/5RPh6e0mHQzjAPOf0=;
+        b=LvJqrwLF8okf8oGb2RIk/KFey5HmPrbgg3yHhwlAs/p0gQmqJp3PvUXXmrHs6bh4RX
+         9moHL9E0RN+22+N5grLMBJSPadwwK4LeIQeNubT1ftLm6y3Y3dFOmaKmZo55sxk1tFlx
+         GwVqs7QnB0bBdkUfRTcGkSqXJYsR3NSRT5n9uuJJJmPQm0y17OToVftWtw476rV5leCC
+         i3EHKG2lN3axCzvDCIdhFy8kIcLPV/BEp6110i18pSyn9wD5ovORN/yeTX2IAOdQP1DE
+         6F9o2whg17Z0NLSpFGeuLzwa5tCQBi95eIv8gHxYxtzEoRa3fSo6+RB9NmOP/pZdOUtD
+         8N0w==
+X-Gm-Message-State: AOJu0Yydf0u810k3ppTbS/Aa5lZ9ncTKh4Iz7tYLhkqSGkCmZORie8rE
+        AwjDnEDNy/gmue8/o533XBoNBJlvdsgK5BnCBQqJfvmAPac=
+X-Google-Smtp-Source: AGHT+IHbDnjOHfwNJkqq5VdUNxBPucmGXVZfuAWKZDXT/9jJyWd10eGpsK+F5v4izKtMwa5RDzje1e3R769THU7rG7c=
+X-Received: by 2002:a05:6402:1484:b0:548:63bf:1123 with SMTP id
+ e4-20020a056402148400b0054863bf1123mr3377554edv.40.1700415505587; Sun, 19 Nov
+ 2023 09:38:25 -0800 (PST)
 MIME-Version: 1.0
 From:   Cedric Blancher <cedric.blancher@gmail.com>
-Date:   Sun, 19 Nov 2023 18:34:13 +0100
-Message-ID: <CALXu0UeicRDxKCS9n3NJR6jGu-4E7AS-vC3g=hRAtuw6g=vf=g@mail.gmail.com>
-Subject: List archives gone?
+Date:   Sun, 19 Nov 2023 18:37:49 +0100
+Message-ID: <CALXu0UeGnSvBbrfgnRNqdNGjDTag5Lz8uWOvuy_n57RHO3CRqw@mail.gmail.com>
+Subject: How does READ_PLUS differ from READ?
 To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -63,8 +63,8 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Good evening!
 
-"defunct nfsv4 list archive" at https://linux-nfs.org/pipermail/nfsv4/
-linked on the main page is gone. Why did that happen?
+How does READ_PLUS differ from READ? Has anyone made a simpler
+presentation (PowerPoint slides) than the RFCs?
 
 Ced
 -- 
