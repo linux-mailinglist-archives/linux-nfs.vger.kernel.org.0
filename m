@@ -2,69 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BA937F06F1
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 15:49:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDA017F07A6
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Nov 2023 17:51:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbjKSOs7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Nov 2023 09:48:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33124 "EHLO
+        id S229508AbjKSQva (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Nov 2023 11:51:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjKSOs6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 09:48:58 -0500
-Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04A66A4
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 06:48:55 -0800 (PST)
-Received: by mail-qk1-x734.google.com with SMTP id af79cd13be357-77ba6d5123fso401176785a.0
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 06:48:54 -0800 (PST)
+        with ESMTP id S231434AbjKSQv3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 11:51:29 -0500
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8037E12D
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 08:51:23 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-5440f25dcc7so5146561a12.0
+        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 08:51:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700405334; x=1701010134; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r6iTVrj8wsbTvLJhAgCKG2+9Qt52zaT0EaOdajgKQVE=;
-        b=hUazCELhoppDvjE+5nSV09q2A1Z5pSZcfWOAjxa4+Ga2DlEBg3MLy07H4KpSckqdYz
-         5vV9I7x8Iram+WAdMQvHTcELdpQNHJUaDBn3YG4MZ5JgTnqiVx6Uwso1k5LYK4BTnOVx
-         2Lr74VSRZTQ47GbeAt9Gp/eo5bvW2bNfXZKPLVVdwjd6p/7rZqMbf8kXrPLvOE2FQ/iR
-         tA8glo+AnD5hhgRBEgxMexRcX+Bt8vNn24R+j7VKx82KsKvls8iVdi0KrYLOiIt+ZmBR
-         dZa/tUmW7RXY8wade5rayy2CsnrXCtd+VniHRFtJlbTnyo2OIHySCmkea52GVM9dN45G
-         Qmqg==
+        d=gmail.com; s=20230601; t=1700412681; x=1701017481; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PP/M4wJQZfNwddnWRuTNmC4AHPQUPyO343/OyqIvP88=;
+        b=jlQy3zOm+sE1vYxd1nl/EG9d4r7k6Mdvq8LOqNTMxaQiiawdkNECTnksr6P2ACHOZM
+         9tCq/aAj2xBD56srzpYpunZqihgh5mZo4/90UJLhdMXmT6TmXWmkEfF2mnmF+RtRVeHu
+         FReSR/CZ5Q4hMBIyqxoWWr+OiXH7HT8yZMzpMsujls0Czxqbl2bcrfMYCC7lFLxPcfmO
+         XYYOJpqWfuqID84URQpdw9DGKfDxFCEG+ArVqP2EBp2YsazDGIdOus+62yNuxQdqGUmz
+         8PopDKIpRageSKzaagTDXumI3LI4SQ040T2Sqcx0T+aaqpFY2XNPrNwPOUTM9hHm+Hmb
+         RNuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700405334; x=1701010134;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r6iTVrj8wsbTvLJhAgCKG2+9Qt52zaT0EaOdajgKQVE=;
-        b=oO/qMHuPnbTblFzNuZMDQTUKXe1WhSnqs28BuDe+LdWcNiDV1ACKsav2hYPYk+pDoO
-         ymTmchlUAy3U4N+swQ3Iybh9w5pLPAcLgFKJ7Jd5kmwgPHGFSMF+S8UtB0+tBrLO+2nH
-         ProZ9iq6B28qUWoREzn/u9PuVIYuk2gM5Waz0lcYG4EmNuMcu//NVtDnUm/MOXT+uyYK
-         r9N7xm5WqPjYsGDULDUnjKXg6/ZR8gULGQ0fajFrueQ0kTtXmsaU0IWKAQFeCuA5vAKG
-         pe9LvgZuA6pH7lvIcPFR8PVaaNgTL74l8p/Yxt9BwMMeuwpybbOAw+0eEAQ+Xpt1u4lc
-         HCZg==
-X-Gm-Message-State: AOJu0YwWCvRYPX3p/Tr1yKbZmKrVvh7r1qZO9mDguxFfb0vNpmCWsLtl
-        XQhTWyROda5p5P4xhTHTMaF7MGoZye8BZPXYeeo=
-X-Google-Smtp-Source: AGHT+IEx/N8VtYLxYMHp/qdaI1h1985411zroLF3R3Ar6Womb6e5UZZMPlY53/PPcenqQ7W4ZSMQxlg3cahOKm1hkgQ=
-X-Received: by 2002:a05:622a:1746:b0:421:f6ef:36a1 with SMTP id
- l6-20020a05622a174600b00421f6ef36a1mr14087550qtk.8.1700405333980; Sun, 19 Nov
- 2023 06:48:53 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700412681; x=1701017481;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PP/M4wJQZfNwddnWRuTNmC4AHPQUPyO343/OyqIvP88=;
+        b=UW/ytc9BP6GoYmUGHHdvUibI9jSlV1tjdlOe/8yULuYIVTCYywwFPT94EE6RPYlP72
+         dSVQcbrmzNf8yMtIvqL1GfCqlM5ljiZKpsTvsxhCC3siqginyUWT1Y24aChsb8/eRsqt
+         MKP5yTUIzcvwA4J6nuoH0z4/vEeqzAIU+pugEXQePSZKW/9i1KB02mvrjEHa2/cCKtnd
+         I7vQF84z5XNzneJRdYJRDZA7MoSruPGkeEheMyFpJ0YjraRMIkWfsrVNsR5CnbR0D0UD
+         mhMV371XKaFISzGOxex9WkuHezeIHcBzxe71+JR+Qss3uW0mqpD2RjK0fgX+y2ytz75i
+         x2QQ==
+X-Gm-Message-State: AOJu0Yyj22YxBbj3peJlZmMahda/iJlYOtwBo7VjLRfX3ljMakcpzOFF
+        RHDxv0S6ySHAIlNSVHctKNAlIMi0bZ2hKAE1RyFU6Mcn
+X-Google-Smtp-Source: AGHT+IElKs+IeGBYDX05rDBbqtGf6LAgsghZD9VLAFliX/jm5wrE7DZGOdlPYumQalY4K4YjaflvQ5QvdjwhsVK9qpI=
+X-Received: by 2002:aa7:d454:0:b0:53d:bdd2:3d62 with SMTP id
+ q20-20020aa7d454000000b0053dbdd23d62mr4062290edr.30.1700412681476; Sun, 19
+ Nov 2023 08:51:21 -0800 (PST)
 MIME-Version: 1.0
-References: <bug-218138-226593@https.bugzilla.kernel.org/> <bug-218138-226593-fRCLxzGk3u@https.bugzilla.kernel.org/>
- <CALXu0Ucz2MGCYdMw74ZKGUj_hpGcLP-pxC=MSgpUFGU58=jc=g@mail.gmail.com>
- <CALXu0UdY=ZgcAqvC6Y-X6htxPQ9=XWemt8V4dxTA99wQmHKz=w@mail.gmail.com>
- <959BB15F-5B91-4413-BCFC-EDAC78EE32F6@oracle.com> <d8bb0bf43c8fe38ef83248fb55a9549919530cf2.camel@hammerspace.com>
- <095736A1-C749-4B8C-900C-C0471D8F8422@oracle.com> <9bb44f33-9900-44e1-813d-df1c60d8307c@redhat.com>
-In-Reply-To: <9bb44f33-9900-44e1-813d-df1c60d8307c@redhat.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Sun, 19 Nov 2023 09:48:37 -0500
-Message-ID: <CAFX2JfmrWONe9UO2_qpbgdJRWuG+BXa3-ivcr4wTuWwBg4Oe+w@mail.gmail.com>
-Subject: Re: Who owns bugzilla.linux-nfs.org - account creation broken? Re:
- How owns bugzilla.linux-nfs.org? Fwd: [Bug 218138] NFSv4 referrals - no way
- to define custom (non-2049) port numbers for referrals
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <CALXu0UdcCKBGR8FUSEeEMngKqwz98Xc2HFXnhX5i_1ioEiuaQg@mail.gmail.com>
+ <83a30ef92afa05d50232bd3c933f8eb45ed8f98b.camel@kernel.org>
+In-Reply-To: <83a30ef92afa05d50232bd3c933f8eb45ed8f98b.camel@kernel.org>
+From:   Cedric Blancher <cedric.blancher@gmail.com>
+Date:   Sun, 19 Nov 2023 17:51:00 +0100
+Message-ID: <CALXu0UerMnjs9y4gQTvy-v-gqSgO2imFbMAZ87LFj1tQqvfjiQ@mail.gmail.com>
+Subject: Re: How to set the NFSv4 "HIDDEN" attribute on Linux?
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -75,66 +64,27 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Nov 18, 2023 at 3:46=E2=80=AFPM Steve Dickson <steved@redhat.com> w=
-rote:
+On Sat, 18 Nov 2023 at 12:56, Jeff Layton <jlayton@kernel.org> wrote:
 >
->
->
-> On 11/18/23 12:03 PM, Chuck Lever III wrote:
+> On Sat, 2023-11-18 at 07:24 +0100, Cedric Blancher wrote:
+> > Good morning!
 > >
-> >> On Nov 18, 2023, at 11:49=E2=80=AFAM, Trond Myklebust <trondmy@hammers=
-pace.com> wrote:
-> >>
-> >> On Sat, 2023-11-18 at 16:41 +0000, Chuck Lever III wrote:
-> >>>
-> >>>> On Nov 18, 2023, at 1:42=E2=80=AFAM, Cedric Blancher
-> >>>> <cedric.blancher@gmail.com> wrote:
-> >>>>
-> >>>> On Fri, 17 Nov 2023 at 08:42, Cedric Blancher
-> >>>> <cedric.blancher@gmail.com> wrote:
-> >>>>>
-> >>>>> How owns bugzilla.linux-nfs.org?
-> >>>>
-> >>>> Apologies for the type, it should be "who", not "how".
-> >>>>
-> >>>> But the problem remains, I still did not get an account creation
-> >>>> token
-> >>>> via email for *ANY* of my email addresses. It appears account
-> >>>> creation
-> >>>> is broken.
-> >>>
-> >>> Trond owns it. But he's already showed me the SMTP log from
-> >>> Sunday night: a token was sent out. Have you checked your
-> >>> spam folders?
-> >>
-> >> I'm closing it down. It has been run and paid for by me, but I don't
-> >> have time or resources to keep doing so.
+> > NFSv4 has a "hidden" filesystem object attribute. How can I set that
+> > on a Linux NFSv4 server, or in a filesystem exported on Linux via
+> > NFSv4, so that the NFSv4 client gets this attribute for a file?
 > >
-> > Understood about lack of resources, but is there no-one who can
-> > take over for you, at least in the short term? Yanking it out
-> > without warning is not cool.
-> >
-> > Does this announcement include git.linux-nfs.org <http://git.linux-nfs.=
-org/> and
-> > wiki.linux-nfs.org <http://wiki.linux-nfs.org/> as well?
-> >
-> > As this site is a long-time community-used resource, it would
-> > be fair if we could come up with a transition plan if it truly
-> > needs to go away.
 >
-> If you need resources and time... Please reach out...
->
-> This is a community... I'm sure we can figure something out.
-> But please turn it back on.
+> You can't. RFC 8881 defines that as "TRUE, if the file is considered
+> hidden with respect to the Windows API." There is no analogous Linux
+> inode attribute.
 
-I wonder if something like a gitlab / gitea instance would suit our
-needs? That would get us a combined git hosting, wiki, and issue
-tracker in one web application which might make overall maintenance
-easier (once we get through what I assume would be a tedious initial
-migration).
+Can we use setfattr and getfattr to set/get the NFSv4.1 HIDDEN and
+ARCHIVE? We have Windows NFSv4 clients (and kofemann/Roland's codebase
+supports this), and that means we need to be able to set/get and
+backup/restore these flags on the NFSv4 server side.
 
-Anna
-
->
-> steved.
->
+Ced
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
