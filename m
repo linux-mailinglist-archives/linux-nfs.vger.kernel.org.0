@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD8617F1A61
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 18:35:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7947F7F1A6C
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 18:36:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233917AbjKTRfu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Nov 2023 12:35:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47152 "EHLO
+        id S234120AbjKTRgF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Nov 2023 12:36:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233926AbjKTRfa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 12:35:30 -0500
-Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A14DCF5;
-        Mon, 20 Nov 2023 09:35:26 -0800 (PST)
+        with ESMTP id S234169AbjKTRfn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 12:35:43 -0500
+Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E550A116;
+        Mon, 20 Nov 2023 09:35:38 -0800 (PST)
 Received: from mail02.huawei.com (unknown [172.18.147.229])
-        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4SYvSW1yNWz9xvhC;
-        Tue, 21 Nov 2023 01:21:47 +0800 (CST)
+        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4SYvSq0392z9yMKh;
+        Tue, 21 Nov 2023 01:22:03 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwAXU3NimFtlBH8KAQ--.51496S8;
-        Mon, 20 Nov 2023 18:34:57 +0100 (CET)
+        by APP1 (Coremail) with SMTP id LxC2BwAXU3NimFtlBH8KAQ--.51496S9;
+        Mon, 20 Nov 2023 18:35:10 +0100 (CET)
 From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
 To:     viro@zeniv.linux.org.uk, brauner@kernel.org,
         chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
@@ -34,18 +34,18 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
         selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
         Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v6 06/25] evm: Align evm_inode_post_setattr() definition with LSM infrastructure
-Date:   Mon, 20 Nov 2023 18:32:59 +0100
-Message-Id: <20231120173318.1132868-7-roberto.sassu@huaweicloud.com>
+Subject: [PATCH v6 07/25] evm: Align evm_inode_setxattr() definition with LSM infrastructure
+Date:   Mon, 20 Nov 2023 18:33:00 +0100
+Message-Id: <20231120173318.1132868-8-roberto.sassu@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231120173318.1132868-1-roberto.sassu@huaweicloud.com>
 References: <20231120173318.1132868-1-roberto.sassu@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: LxC2BwAXU3NimFtlBH8KAQ--.51496S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxuF4fuFy5GFWkXry7uFWrGrg_yoW5Aw4kpF
-        Z5K3WkCw1ruryUWr95GF48ZayFgFyrWryUX3yFgw1YyFnrtrnIqFn7K3yUAry5GrW8Grn0
-        qFnFvrn5Cr15A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: LxC2BwAXU3NimFtlBH8KAQ--.51496S9
+X-Coremail-Antispam: 1UD129KBjvJXoWxGryfXF4ktFy8trWrJFWxXrb_yoW5AFykpF
+        Z8Ka48Gw1FqFyUWrykCF47uay0g3yrWryjk3yDK3WvyF9xJrn2qFyxKF4jkry5Cr48Krn0
+        qanFvrs0yw15X3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
         9KBjDU0xBIdaVrnRJUUUPqb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
         6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
         Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -60,7 +60,7 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxuF4fuFy5GFWkXry7uFWrGrg_yoW5Aw4kpF
         1x0267AKxVWxJr0_GcWlIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14
         v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdYxBIdaVFxhVjvjDU0xZFpf9x
         07jxWrAUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAHBF1jj5apcwABs+
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgAHBF1jj5KqaQAAsh
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -73,78 +73,75 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Roberto Sassu <roberto.sassu@huawei.com>
 
-Change evm_inode_post_setattr() definition, so that it can be registered as
-implementation of the inode_post_setattr hook (to be introduced).
+Change evm_inode_setxattr() definition, so that it can be registered as
+implementation of the inode_setxattr hook.
 
 Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
 Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
 ---
- fs/attr.c                         | 2 +-
- include/linux/evm.h               | 6 ++++--
- security/integrity/evm/evm_main.c | 4 +++-
- 3 files changed, 8 insertions(+), 4 deletions(-)
+ include/linux/evm.h               | 4 ++--
+ security/integrity/evm/evm_main.c | 3 ++-
+ security/security.c               | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/fs/attr.c b/fs/attr.c
-index 9bddc0a6352c..498e673bdf06 100644
---- a/fs/attr.c
-+++ b/fs/attr.c
-@@ -503,7 +503,7 @@ int notify_change(struct mnt_idmap *idmap, struct dentry *dentry,
- 	if (!error) {
- 		fsnotify_change(dentry, ia_valid);
- 		ima_inode_post_setattr(idmap, dentry, ia_valid);
--		evm_inode_post_setattr(dentry, ia_valid);
-+		evm_inode_post_setattr(idmap, dentry, ia_valid);
- 	}
- 
- 	return error;
 diff --git a/include/linux/evm.h b/include/linux/evm.h
-index 01fc495a83e2..cf976d8dbd7a 100644
+index cf976d8dbd7a..7c6a74dbc093 100644
 --- a/include/linux/evm.h
 +++ b/include/linux/evm.h
-@@ -23,7 +23,8 @@ extern enum integrity_status evm_verifyxattr(struct dentry *dentry,
- 					     struct integrity_iint_cache *iint);
- extern int evm_inode_setattr(struct mnt_idmap *idmap,
- 			     struct dentry *dentry, struct iattr *attr);
--extern void evm_inode_post_setattr(struct dentry *dentry, int ia_valid);
-+extern void evm_inode_post_setattr(struct mnt_idmap *idmap,
-+				   struct dentry *dentry, int ia_valid);
+@@ -27,7 +27,7 @@ extern void evm_inode_post_setattr(struct mnt_idmap *idmap,
+ 				   struct dentry *dentry, int ia_valid);
  extern int evm_inode_setxattr(struct mnt_idmap *idmap,
  			      struct dentry *dentry, const char *name,
- 			      const void *value, size_t size);
-@@ -97,7 +98,8 @@ static inline int evm_inode_setattr(struct mnt_idmap *idmap,
+-			      const void *value, size_t size);
++			      const void *value, size_t size, int flags);
+ extern void evm_inode_post_setxattr(struct dentry *dentry,
+ 				    const char *xattr_name,
+ 				    const void *xattr_value,
+@@ -106,7 +106,7 @@ static inline void evm_inode_post_setattr(struct mnt_idmap *idmap,
+ 
+ static inline int evm_inode_setxattr(struct mnt_idmap *idmap,
+ 				     struct dentry *dentry, const char *name,
+-				     const void *value, size_t size)
++				     const void *value, size_t size, int flags)
+ {
  	return 0;
  }
- 
--static inline void evm_inode_post_setattr(struct dentry *dentry, int ia_valid)
-+static inline void evm_inode_post_setattr(struct mnt_idmap *idmap,
-+					  struct dentry *dentry, int ia_valid)
- {
- 	return;
- }
 diff --git a/security/integrity/evm/evm_main.c b/security/integrity/evm/evm_main.c
-index 894570fe39bc..d452d469c503 100644
+index d452d469c503..7fc083d53fdf 100644
 --- a/security/integrity/evm/evm_main.c
 +++ b/security/integrity/evm/evm_main.c
-@@ -840,6 +840,7 @@ int evm_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -558,6 +558,7 @@ static int evm_protect_xattr(struct mnt_idmap *idmap,
+  * @xattr_name: pointer to the affected extended attribute name
+  * @xattr_value: pointer to the new extended attribute value
+  * @xattr_value_len: pointer to the new extended attribute value length
++ * @flags: flags to pass into filesystem operations
+  *
+  * Before allowing the 'security.evm' protected xattr to be updated,
+  * verify the existing value is valid.  As only the kernel should have
+@@ -567,7 +568,7 @@ static int evm_protect_xattr(struct mnt_idmap *idmap,
+  */
+ int evm_inode_setxattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 		       const char *xattr_name, const void *xattr_value,
+-		       size_t xattr_value_len)
++		       size_t xattr_value_len, int flags)
+ {
+ 	const struct evm_ima_xattr_data *xattr_data = xattr_value;
+ 
+diff --git a/security/security.c b/security/security.c
+index 358ec01a5492..ae3625198c9f 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -2272,7 +2272,7 @@ int security_inode_setxattr(struct mnt_idmap *idmap,
+ 	ret = ima_inode_setxattr(idmap, dentry, name, value, size, flags);
+ 	if (ret)
+ 		return ret;
+-	return evm_inode_setxattr(idmap, dentry, name, value, size);
++	return evm_inode_setxattr(idmap, dentry, name, value, size, flags);
+ }
  
  /**
-  * evm_inode_post_setattr - update 'security.evm' after modifying metadata
-+ * @idmap: idmap of the idmapped mount
-  * @dentry: pointer to the affected dentry
-  * @ia_valid: for the UID and GID status
-  *
-@@ -849,7 +850,8 @@ int evm_inode_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-  * This function is called from notify_change(), which expects the caller
-  * to lock the inode's i_mutex.
-  */
--void evm_inode_post_setattr(struct dentry *dentry, int ia_valid)
-+void evm_inode_post_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
-+			    int ia_valid)
- {
- 	if (!evm_revalidate_status(NULL))
- 		return;
 -- 
 2.34.1
 
