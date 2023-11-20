@@ -2,24 +2,24 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BF727F1AE2
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 18:39:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBA5F7F1AED
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 18:39:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234113AbjKTRjj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Nov 2023 12:39:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59022 "EHLO
+        id S234350AbjKTRjy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Nov 2023 12:39:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234123AbjKTRjN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 12:39:13 -0500
+        with ESMTP id S234255AbjKTRjc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 12:39:32 -0500
 Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2235B19A;
-        Mon, 20 Nov 2023 09:38:46 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.228])
-        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4SYvSs3rfpz9xxmv;
-        Tue, 21 Nov 2023 01:22:05 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C8F170F;
+        Mon, 20 Nov 2023 09:38:59 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.18.147.229])
+        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4SYvT709P2z9xvrC;
+        Tue, 21 Nov 2023 01:22:19 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.204.63.22])
-        by APP2 (Coremail) with SMTP id GxC2BwAHuGEqmVtlz4kHAQ--.4148S8;
-        Mon, 20 Nov 2023 18:38:18 +0100 (CET)
+        by APP2 (Coremail) with SMTP id GxC2BwAHuGEqmVtlz4kHAQ--.4148S9;
+        Mon, 20 Nov 2023 18:38:31 +0100 (CET)
 From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
 To:     viro@zeniv.linux.org.uk, brauner@kernel.org,
         chuck.lever@oracle.com, jlayton@kernel.org, neilb@suse.de,
@@ -34,18 +34,18 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
         selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
         Stefan Berger <stefanb@linux.ibm.com>
-Subject: [PATCH v6 16/25] security: Introduce inode_post_set_acl hook
-Date:   Mon, 20 Nov 2023 18:33:09 +0100
-Message-Id: <20231120173318.1132868-17-roberto.sassu@huaweicloud.com>
+Subject: [PATCH v6 17/25] security: Introduce inode_post_remove_acl hook
+Date:   Mon, 20 Nov 2023 18:33:10 +0100
+Message-Id: <20231120173318.1132868-18-roberto.sassu@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20231120173318.1132868-1-roberto.sassu@huaweicloud.com>
 References: <20231120173318.1132868-1-roberto.sassu@huaweicloud.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: GxC2BwAHuGEqmVtlz4kHAQ--.4148S8
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDCFWrXr1UXr15Gw18Grg_yoWrWw4kpF
-        4ft3Za93yrXFy7WryvyF4DC34SqFW5Kry7J392gw1SyFn7tr1jqFsIkFyYkFyrArW8GF1v
-        gF4a9rsxC345Jr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID: GxC2BwAHuGEqmVtlz4kHAQ--.4148S9
+X-Coremail-Antispam: 1UD129KBjvJXoWxuryDCFW3JF48AF4rArWfAFb_yoWrCr1UpF
+        s3K3Z8Ww4rXFy2gryktFWDuw1SvFWFgry7A3y2gw1IyFn2yr1jqFsxKFyjkry5ArW8KF1q
+        qF1aqrsxC343Jr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
         9KBjDU0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
         6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
         Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -60,7 +60,7 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxuryDCFWrXr1UXr15Gw18Grg_yoWrWw4kpF
         7I0E14v26F4UJVW0owCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI
         0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW0oVCq3bIYCTnIWIevJa73UjIFyTuYvjxU
         IrWFUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAHBF1jj5apfgAAsy
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAHBF1jj5apfgABsz
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
         RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -74,14 +74,14 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 From: Roberto Sassu <roberto.sassu@huawei.com>
 
 In preparation for moving IMA and EVM to the LSM infrastructure, introduce
-the inode_post_set_acl hook.
+the inode_post_remove_acl hook.
 
-At inode_set_acl hook, EVM verifies the file's existing HMAC value. At
-inode_post_set_acl, EVM re-calculates the file's HMAC based on the modified
-POSIX ACL and other file metadata.
+At inode_remove_acl hook, EVM verifies the file's existing HMAC value. At
+inode_post_remove_acl, EVM re-calculates the file's HMAC with the passed
+POSIX ACL removed and other file metadata.
 
 Other LSMs could similarly take some action after successful POSIX ACL
-change.
+removal.
 
 The new hook cannot return an error and cannot cause the operation to be
 reverted.
@@ -93,88 +93,89 @@ Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 ---
  fs/posix_acl.c                |  1 +
  include/linux/lsm_hook_defs.h |  2 ++
- include/linux/security.h      |  7 +++++++
+ include/linux/security.h      |  8 ++++++++
  security/security.c           | 17 +++++++++++++++++
- 4 files changed, 27 insertions(+)
+ 4 files changed, 28 insertions(+)
 
 diff --git a/fs/posix_acl.c b/fs/posix_acl.c
-index a05fe94970ce..58e3c1e2fbbc 100644
+index 58e3c1e2fbbc..e3fbe1a9f3f5 100644
 --- a/fs/posix_acl.c
 +++ b/fs/posix_acl.c
-@@ -1137,6 +1137,7 @@ int vfs_set_acl(struct mnt_idmap *idmap, struct dentry *dentry,
+@@ -1246,6 +1246,7 @@ int vfs_remove_acl(struct mnt_idmap *idmap, struct dentry *dentry,
  		error = -EIO;
  	if (!error) {
  		fsnotify_xattr(dentry);
-+		security_inode_post_set_acl(dentry, acl_name, kacl);
- 		evm_inode_post_set_acl(dentry, acl_name, kacl);
++		security_inode_post_remove_acl(idmap, dentry, acl_name);
+ 		evm_inode_post_remove_acl(idmap, dentry, acl_name);
  	}
  
 diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 4b195996f848..5133dd88b5fb 100644
+index 5133dd88b5fb..bfb10a1e6a44 100644
 --- a/include/linux/lsm_hook_defs.h
 +++ b/include/linux/lsm_hook_defs.h
-@@ -157,6 +157,8 @@ LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
- 	 const char *name)
- LSM_HOOK(int, 0, inode_set_acl, struct mnt_idmap *idmap,
- 	 struct dentry *dentry, const char *acl_name, struct posix_acl *kacl)
-+LSM_HOOK(void, LSM_RET_VOID, inode_post_set_acl, struct dentry *dentry,
-+	 const char *acl_name, struct posix_acl *kacl)
- LSM_HOOK(int, 0, inode_get_acl, struct mnt_idmap *idmap,
+@@ -163,6 +163,8 @@ LSM_HOOK(int, 0, inode_get_acl, struct mnt_idmap *idmap,
  	 struct dentry *dentry, const char *acl_name)
  LSM_HOOK(int, 0, inode_remove_acl, struct mnt_idmap *idmap,
+ 	 struct dentry *dentry, const char *acl_name)
++LSM_HOOK(void, LSM_RET_VOID, inode_post_remove_acl, struct mnt_idmap *idmap,
++	 struct dentry *dentry, const char *acl_name)
+ LSM_HOOK(int, 0, inode_need_killpriv, struct dentry *dentry)
+ LSM_HOOK(int, 0, inode_killpriv, struct mnt_idmap *idmap,
+ 	 struct dentry *dentry)
 diff --git a/include/linux/security.h b/include/linux/security.h
-index d77b717b5a45..948aaddf0edd 100644
+index 948aaddf0edd..7b753460f09d 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -372,6 +372,8 @@ int security_inode_setxattr(struct mnt_idmap *idmap,
- int security_inode_set_acl(struct mnt_idmap *idmap,
- 			   struct dentry *dentry, const char *acl_name,
- 			   struct posix_acl *kacl);
-+void security_inode_post_set_acl(struct dentry *dentry, const char *acl_name,
-+				 struct posix_acl *kacl);
- int security_inode_get_acl(struct mnt_idmap *idmap,
+@@ -378,6 +378,9 @@ int security_inode_get_acl(struct mnt_idmap *idmap,
  			   struct dentry *dentry, const char *acl_name);
  int security_inode_remove_acl(struct mnt_idmap *idmap,
-@@ -913,6 +915,11 @@ static inline int security_inode_set_acl(struct mnt_idmap *idmap,
+ 			      struct dentry *dentry, const char *acl_name);
++void security_inode_post_remove_acl(struct mnt_idmap *idmap,
++				    struct dentry *dentry,
++				    const char *acl_name);
+ void security_inode_post_setxattr(struct dentry *dentry, const char *name,
+ 				  const void *value, size_t size, int flags);
+ int security_inode_getxattr(struct dentry *dentry, const char *name);
+@@ -934,6 +937,11 @@ static inline int security_inode_remove_acl(struct mnt_idmap *idmap,
  	return 0;
  }
  
-+static inline void security_inode_post_set_acl(struct dentry *dentry,
-+					       const char *acl_name,
-+					       struct posix_acl *kacl)
++static inline void security_inode_post_remove_acl(struct mnt_idmap *idmap,
++						  struct dentry *dentry,
++						  const char *acl_name)
 +{ }
 +
- static inline int security_inode_get_acl(struct mnt_idmap *idmap,
- 					 struct dentry *dentry,
- 					 const char *acl_name)
+ static inline void security_inode_post_setxattr(struct dentry *dentry,
+ 		const char *name, const void *value, size_t size, int flags)
+ { }
 diff --git a/security/security.c b/security/security.c
-index a1bdf4859448..5d25bbd18d66 100644
+index 5d25bbd18d66..a722d5db0a2c 100644
 --- a/security/security.c
 +++ b/security/security.c
-@@ -2350,6 +2350,23 @@ int security_inode_set_acl(struct mnt_idmap *idmap,
- 	return evm_inode_set_acl(idmap, dentry, acl_name, kacl);
+@@ -2413,6 +2413,23 @@ int security_inode_remove_acl(struct mnt_idmap *idmap,
+ 	return evm_inode_remove_acl(idmap, dentry, acl_name);
  }
  
 +/**
-+ * security_inode_post_set_acl() - Update inode security from posix acls set
++ * security_inode_post_remove_acl() - Update inode security after rm posix acls
++ * @idmap: idmap of the mount
 + * @dentry: file
 + * @acl_name: acl name
-+ * @kacl: acl struct
 + *
-+ * Update inode security data after successfully setting posix acls on @dentry.
-+ * The posix acls in @kacl are identified by @acl_name.
++ * Update inode security data after successfully removing posix acls on
++ * @dentry in @idmap. The posix acls are identified by @acl_name.
 + */
-+void security_inode_post_set_acl(struct dentry *dentry, const char *acl_name,
-+				 struct posix_acl *kacl)
++void security_inode_post_remove_acl(struct mnt_idmap *idmap,
++				    struct dentry *dentry, const char *acl_name)
 +{
 +	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
 +		return;
-+	call_void_hook(inode_post_set_acl, dentry, acl_name, kacl);
++	call_void_hook(inode_post_remove_acl, idmap, dentry, acl_name);
 +}
 +
  /**
-  * security_inode_get_acl() - Check if reading posix acls is allowed
-  * @idmap: idmap of the mount
+  * security_inode_post_setxattr() - Update the inode after a setxattr operation
+  * @dentry: file
 -- 
 2.34.1
 
