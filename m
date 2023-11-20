@@ -2,88 +2,158 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4600B7F0ABF
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 03:57:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BCC47F0D51
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 09:17:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231769AbjKTC5S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Nov 2023 21:57:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51742 "EHLO
+        id S232168AbjKTIRC convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Mon, 20 Nov 2023 03:17:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231714AbjKTC5R (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Nov 2023 21:57:17 -0500
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72DD812D
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 18:57:14 -0800 (PST)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2c6eac9c053so11532161fa.1
-        for <linux-nfs@vger.kernel.org>; Sun, 19 Nov 2023 18:57:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1700449033; x=1701053833; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kEwo5TnWwj4z7rW/hk01zG7pXRzlHOHfm0+nkZUAB+Y=;
-        b=sDOoepdaX9BeHnjRBpGfVMdyWVwvTwIBXjTSSryBzckRTut+IS5iPi7nhfPptsg7kX
-         ObucCVrCvcsjQfemN5/Ons8ooHlK1TxywfDYHyyJN+cXRrklAxq8gPXegh36nrO9PYf+
-         RBdt6vYtQLrhzO2UF8kimD7/bfGBxSDj2YYWfvvGVpdoee4HzeXRJRM3kBh1aV8PwfeQ
-         yKhhLR8pNtu8d57K/pcedmgDIMTv06rPMDGdxUHhCkhYbuH4bgnpNSscOGlqCcvJAEUt
-         LFlclvfAbJJYuUOL+BwrrkkVRczopsNuv3CyrjMCNbQYSlrTb00961Lsk5M2ony+u91a
-         B3Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700449033; x=1701053833;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kEwo5TnWwj4z7rW/hk01zG7pXRzlHOHfm0+nkZUAB+Y=;
-        b=bpq8FzK09UNZXoNITbv27E82hgptu53vLy5z3VoU2NdEc6s3n9Vvi7gQXiJksIOd1y
-         gtDfieTXoguCPsMsO19rEvXwG/PTwMffkWmVaky5X+mgqgm8ZngyFeF575RlT9+johdh
-         LudIcXKJMWDpxoNdtOKBZU7I7cGK3YLmRMKFhhT6l2KHYd12eriKZoOUaMaXEdTc7q6s
-         ISSfFt3qO2cRHKkQ1d4Qq7ov4ofX3FX3+s7BJvCsFOfaNRfEmxEryi3F8gdmBKluY48F
-         HxWfAl8kzBtqR4s3E7kqIvMgAwcMCXV+K55wtPWJu2/hUpSWHofs6zR0yMBNEnM9kytW
-         Q35Q==
-X-Gm-Message-State: AOJu0YyiN8setP4E0VhzAKR9VTrVVmaU5lyihQw7JNml6hdvrgnkjLMs
-        m5lYvUwjcEOe+OAXDU5EgIR/2+i2FQGhWYpaKOKnhvhP
-X-Google-Smtp-Source: AGHT+IGMctzMU6HzIqsywvzQPAbKRRmjXHMv6z1QIpueSGRxIllkWnc/kTwOm6rvc3F+4BK+YjonZl8nZn/SZQjhJYs=
-X-Received: by 2002:a2e:b809:0:b0:2c8:38b2:2c33 with SMTP id
- u9-20020a2eb809000000b002c838b22c33mr3086501ljo.3.1700449032436; Sun, 19 Nov
- 2023 18:57:12 -0800 (PST)
-MIME-Version: 1.0
-References: <CALXu0Uc7zHasg2damr4nhRZZF7xBbFc0ghdjop87+5vHa8bBHg@mail.gmail.com>
-In-Reply-To: <CALXu0Uc7zHasg2damr4nhRZZF7xBbFc0ghdjop87+5vHa8bBHg@mail.gmail.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Sun, 19 Nov 2023 16:57:00 -1000
-Message-ID: <CAN-5tyFBZibge52iZtjnz5j6S2GrTXTWdzaDxLVQcr+G8HegvQ@mail.gmail.com>
-Subject: Re: TCP_KEEPALIVE for Linux NFS client?
-To:     Cedric Blancher <cedric.blancher@gmail.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        with ESMTP id S232183AbjKTIRA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 03:17:00 -0500
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E9EE3;
+        Mon, 20 Nov 2023 00:16:56 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4SYg0Z1Pc1z9v7GV;
+        Mon, 20 Nov 2023 16:00:14 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+        by APP2 (Coremail) with SMTP id GxC2BwDHxV_LFVtlN1ABAQ--.398S2;
+        Mon, 20 Nov 2023 09:16:26 +0100 (CET)
+Message-ID: <2084adba3c27a606cbc5ed7b3214f61427a829dd.camel@huaweicloud.com>
+Subject: Re: [PATCH v5 23/23] integrity: Switch from rbtree to LSM-managed
+ blob  for integrity_iint_cache
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     Paul Moore <paul@paul-moore.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com,
+        tom@talpey.com, jmorris@namei.org, serge@hallyn.com,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, mic@digikod.net
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Mon, 20 Nov 2023 09:16:09 +0100
+In-Reply-To: <17befa132379d37977fc854a8af25f6d.paul@paul-moore.com>
+References: <20231107134012.682009-24-roberto.sassu@huaweicloud.com>
+         <17befa132379d37977fc854a8af25f6d.paul@paul-moore.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4-0ubuntu2 
+MIME-Version: 1.0
+X-CM-TRANSID: GxC2BwDHxV_LFVtlN1ABAQ--.398S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF17Kw1kuFWrWr45ur1kGrg_yoWrJr43pF
+        W3Ka47Jr1kXFyI9rn2vF45uFWSgFWSgFWUGwn0kr1kAF98ur1Ygr15CryUuFyUGr98tw10
+        qr1a9ryUZ3Wqy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+        2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+        xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
+        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAHBF1jj5ahSwACsN
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Ced,
+On Fri, 2023-11-17 at 15:57 -0500, Paul Moore wrote:
+> On Nov  7, 2023 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
+> > 
+> > Before the security field of kernel objects could be shared among LSMs with
+> > the LSM stacking feature, IMA and EVM had to rely on an alternative storage
+> > of inode metadata. The association between inode metadata and inode is
+> > maintained through an rbtree.
+> > 
+> > Because of this alternative storage mechanism, there was no need to use
+> > disjoint inode metadata, so IMA and EVM today still share them.
+> > 
+> > With the reservation mechanism offered by the LSM infrastructure, the
+> > rbtree is no longer necessary, as each LSM could reserve a space in the
+> > security blob for each inode. However, since IMA and EVM share the
+> > inode metadata, they cannot directly reserve the space for them.
+> > 
+> > Instead, request from the 'integrity' LSM a space in the security blob for
+> > the pointer of inode metadata (integrity_iint_cache structure). The other
+> > reason for keeping the 'integrity' LSM is to preserve the original ordering
+> > of IMA and EVM functions as when they were hardcoded.
+> > 
+> > Prefer reserving space for a pointer to allocating the integrity_iint_cache
+> > structure directly, as IMA would require it only for a subset of inodes.
+> > Always allocating it would cause a waste of memory.
+> > 
+> > Introduce two primitives for getting and setting the pointer of
+> > integrity_iint_cache in the security blob, respectively
+> > integrity_inode_get_iint() and integrity_inode_set_iint(). This would make
+> > the code more understandable, as they directly replace rbtree operations.
+> > 
+> > Locking is not needed, as access to inode metadata is not shared, it is per
+> > inode.
+> > 
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> > ---
+> >  security/integrity/iint.c      | 71 +++++-----------------------------
+> >  security/integrity/integrity.h | 20 +++++++++-
+> >  2 files changed, 29 insertions(+), 62 deletions(-)
+> > 
+> > diff --git a/security/integrity/iint.c b/security/integrity/iint.c
+> > index 882fde2a2607..a5edd3c70784 100644
+> > --- a/security/integrity/iint.c
+> > +++ b/security/integrity/iint.c
+> > @@ -231,6 +175,10 @@ static int __init integrity_lsm_init(void)
+> >  	return 0;
+> >  }
+> >  
+> > +struct lsm_blob_sizes integrity_blob_sizes __ro_after_init = {
+> > +	.lbs_inode = sizeof(struct integrity_iint_cache *),
+> > +};
+> 
+> I'll admit that I'm likely missing an important detail, but is there
+> a reason why you couldn't stash the integrity_iint_cache struct
+> directly in the inode's security blob instead of the pointer?  For
+> example:
+> 
+>   struct lsm_blob_sizes ... = {
+>     .lbs_inode = sizeof(struct integrity_iint_cache),
+>   };
+> 
+>   struct integrity_iint_cache *integrity_inode_get(inode)
+>   {
+>     if (unlikely(!inode->isecurity))
+>       return NULL;
+>     return inode->i_security + integrity_blob_sizes.lbs_inode;
+>   }
 
-Why do you think it doesn't use it? Have you looked at a network trace
-of an idle connection? I seem to recall seeing keep-alive being used.
+It would increase memory occupation. Sometimes the IMA policy
+encompasses a small subset of the inodes. Allocating the full
+integrity_iint_cache would be a waste of memory, I guess?
 
-On Fri, Nov 17, 2023 at 8:02=E2=80=AFPM Cedric Blancher
-<cedric.blancher@gmail.com> wrote:
->
-> Good morning!
->
-> Why does the Linux NFS client not use TCP_KEEPALIVE for its TCP
-> connections? What are the pro and cons of using that for NFS TCP
-> connections?
->
-> Ced
-> --
-> Cedric Blancher <cedric.blancher@gmail.com>
-> [https://plus.google.com/u/0/+CedricBlancher/]
-> Institute Pasteur
+On the other hand... (did not think fully about that) if we embed the
+full structure in the security blob, we already have a mutex available
+to use, and we don't need to take the inode lock (?).
+
+I'm fully convinced that we can improve the implementation
+significantly. I just was really hoping to go step by step and not
+accumulating improvements as dependency for moving IMA and EVM to the
+LSM infrastructure.
+
+Thanks
+
+Roberto
+
