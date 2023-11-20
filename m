@@ -2,188 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C61E77F182F
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 17:09:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BD7D07F1A0B
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 18:32:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233675AbjKTQJQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Nov 2023 11:09:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41016 "EHLO
+        id S232156AbjKTRca convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Mon, 20 Nov 2023 12:32:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbjKTQJN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 11:09:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0BAF100
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Nov 2023 08:09:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1700496548;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Spiqq2OL+vnRzgcrZCHUUFIJjFBih8BTqYCaDysHueY=;
-        b=b6V4E+dw4o7h2e2nPgI5AeoJjvb1B+NayAJ0gh4o3BMxLgvf75z4F1gjDtIObnD4mspDjv
-        tzHgBCrqrN/brrxqOq/EUizqoVvchBkEQywpub+WmrmcQPLUcxURYS1YZpNeA4Y0bRSyMW
-        xS+Bt9ItUgv0xbKB7tLxLhn7RKSPLXw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-571-r8n0efjUPweyOWrPLQybVg-1; Mon, 20 Nov 2023 11:09:03 -0500
-X-MC-Unique: r8n0efjUPweyOWrPLQybVg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 621C9101A550;
-        Mon, 20 Nov 2023 16:09:03 +0000 (UTC)
-Received: from [100.85.132.103] (unknown [10.22.48.5])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9139F1C060AE;
-        Mon, 20 Nov 2023 16:09:02 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        steved@redhat.com
-Subject: Re: Who owns bugzilla.linux-nfs.org - account creation broken? Re:
- How owns bugzilla.linux-nfs.org? Fwd: [Bug 218138] NFSv4 referrals - no way
- to define custom (non-2049) port numbers for referrals
-Date:   Mon, 20 Nov 2023 11:09:01 -0500
-Message-ID: <C8F0DC72-BBB0-4D2C-A4DF-770B65CE0FAF@redhat.com>
-In-Reply-To: <ec326d7e13d12c02fabf8a5fe46f2ad8bf66d368.camel@hammerspace.com>
-References: <bug-218138-226593@https.bugzilla.kernel.org/>
- <bug-218138-226593-fRCLxzGk3u@https.bugzilla.kernel.org/>
- <CALXu0Ucz2MGCYdMw74ZKGUj_hpGcLP-pxC=MSgpUFGU58=jc=g@mail.gmail.com>
- <CALXu0UdY=ZgcAqvC6Y-X6htxPQ9=XWemt8V4dxTA99wQmHKz=w@mail.gmail.com>
- <959BB15F-5B91-4413-BCFC-EDAC78EE32F6@oracle.com>
- <d8bb0bf43c8fe38ef83248fb55a9549919530cf2.camel@hammerspace.com>
- <095736A1-C749-4B8C-900C-C0471D8F8422@oracle.com>
- <9bb44f33-9900-44e1-813d-df1c60d8307c@redhat.com>
- <35ffafefb1596f4941513bc8dd51470fbee842d4.camel@hammerspace.com>
- <F12175F2-9CA3-4C6A-9089-BF5E62A196D0@oracle.com>
- <ec326d7e13d12c02fabf8a5fe46f2ad8bf66d368.camel@hammerspace.com>
+        with ESMTP id S233710AbjKTRc2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 12:32:28 -0500
+Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99DDABA;
+        Mon, 20 Nov 2023 09:32:24 -0800 (PST)
+Received: from mail02.huawei.com (unknown [172.18.147.227])
+        by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4SYvKW1Jf5z9xvrJ;
+        Tue, 21 Nov 2023 01:15:43 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+        by APP2 (Coremail) with SMTP id GxC2BwDHxV_8l1tllXsHAQ--.3416S2;
+        Mon, 20 Nov 2023 18:31:55 +0100 (CET)
+Message-ID: <1999ed6f77100d9d2adc613c9748f15ab8fcf432.camel@huaweicloud.com>
+Subject: Re: [PATCH v5 11/23] security: Introduce inode_post_removexattr hook
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com,
+        tom@talpey.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, zohar@linux.ibm.com, dmitry.kasatkin@gmail.com,
+        dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        mic@digikod.net
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
+        Stefan Berger <stefanb@linux.ibm.com>
+Date:   Mon, 20 Nov 2023 18:31:37 +0100
+In-Reply-To: <85c5dda2-5a2f-4c73-82ae-8a333b69b4a7@schaufler-ca.com>
+References: <20231107134012.682009-1-roberto.sassu@huaweicloud.com>
+         <20231107134012.682009-12-roberto.sassu@huaweicloud.com>
+         <85c5dda2-5a2f-4c73-82ae-8a333b69b4a7@schaufler-ca.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        RCVD_IN_DNSWL_BLOCKED,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-CM-TRANSID: GxC2BwDHxV_8l1tllXsHAQ--.3416S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCryfur1DZr4xWrW7XF48Crg_yoWrKFyfpF
+        s8K3Z0kr4rJFy7Wry8tF1UCw4I9ayFgry7A3y2gw12vFn2yr1IqrWakF15C34rJrWjgF1q
+        q3ZFkrs5Cr15Ja7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUk2b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x
+        0267AKxVW8Jr0_Cr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02
+        F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4I
+        kC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IY
+        c2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s
+        026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF
+        0xvE2Ix0cI8IcVAFwI0_Xr0_Ar1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIx
+        AIcVCF04k26cxKx2IYs7xG6r1I6r4UMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2
+        jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjxUrfOzDUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAHBF1jj5apagAAsm
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,
+        RCVD_IN_DNSWL_BLOCKED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 19 Nov 2023, at 21:03, Trond Myklebust wrote:
+On Tue, 2023-11-07 at 09:33 -0800, Casey Schaufler wrote:
+> On 11/7/2023 5:40 AM, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
+> > 
+> > In preparation for moving IMA and EVM to the LSM infrastructure, introduce
+> > the inode_post_removexattr hook.
+> > 
+> > At inode_removexattr hook, EVM verifies the file's existing HMAC value. At
+> > inode_post_removexattr, EVM re-calculates the file's HMAC with the passed
+> > xattr removed and other file metadata.
+> > 
+> > Other LSMs could similarly take some action after successful xattr removal.
+> > 
+> > The new hook cannot return an error and cannot cause the operation to be
+> > reverted.
+> > 
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> > ---
+> >  fs/xattr.c                    |  9 +++++----
+> >  include/linux/lsm_hook_defs.h |  2 ++
+> >  include/linux/security.h      |  5 +++++
+> >  security/security.c           | 14 ++++++++++++++
+> >  4 files changed, 26 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/fs/xattr.c b/fs/xattr.c
+> > index 09d927603433..84a4aa566c02 100644
+> > --- a/fs/xattr.c
+> > +++ b/fs/xattr.c
+> > @@ -552,11 +552,12 @@ __vfs_removexattr_locked(struct mnt_idmap *idmap,
+> >  		goto out;
+> >  
+> >  	error = __vfs_removexattr(idmap, dentry, name);
+> > +	if (error)
+> > +		goto out;
+> 
+> Shouldn't this be simply "return error" rather than a goto to nothing
+> but "return error"?
 
-> On Mon, 2023-11-20 at 01:07 +0000, Chuck Lever III wrote:
->>
->>
->>> On Nov 19, 2023, at 7:16 PM, Trond Myklebust
->>> <trondmy@hammerspace.com> wrote:
->>>
->>> On Sat, 2023-11-18 at 15:45 -0500, Steve Dickson wrote:
->>>>
->>>>
->>>> On 11/18/23 12:03 PM, Chuck Lever III wrote:
->>>>>
->>>>>> On Nov 18, 2023, at 11:49 AM, Trond Myklebust
->>>>>> <trondmy@hammerspace.com> wrote:
->>>>>>
->>>>>> On Sat, 2023-11-18 at 16:41 +0000, Chuck Lever III wrote:
->>>>>>>
->>>>>>>> On Nov 18, 2023, at 1:42 AM, Cedric Blancher
->>>>>>>> <cedric.blancher@gmail.com> wrote:
->>>>>>>>
->>>>>>>> On Fri, 17 Nov 2023 at 08:42, Cedric Blancher
->>>>>>>> <cedric.blancher@gmail.com> wrote:
->>>>>>>>>
->>>>>>>>> How owns bugzilla.linux-nfs.org?
->>>>>>>>
->>>>>>>> Apologies for the type, it should be "who", not "how".
->>>>>>>>
->>>>>>>> But the problem remains, I still did not get an account
->>>>>>>> creation
->>>>>>>> token
->>>>>>>> via email for *ANY* of my email addresses. It appears
->>>>>>>> account
->>>>>>>> creation
->>>>>>>> is broken.
->>>>>>>
->>>>>>> Trond owns it. But he's already showed me the SMTP log from
->>>>>>> Sunday night: a token was sent out. Have you checked your
->>>>>>> spam folders?
->>>>>>
->>>>>> I'm closing it down. It has been run and paid for by me, but
->>>>>> I
->>>>>> don't
->>>>>> have time or resources to keep doing so.
->>>>>
->>>>> Understood about lack of resources, but is there no-one who can
->>>>> take over for you, at least in the short term? Yanking it out
->>>>> without warning is not cool.
->>>>>
->>>>> Does this announcement include git.linux-nfs.org
->>>>> <http://git.linux-nfs.org/> and
->>>>> wiki.linux-nfs.org <http://wiki.linux-nfs.org/> as well?
->>>>>
->>>>> As this site is a long-time community-used resource, it would
->>>>> be fair if we could come up with a transition plan if it truly
->>>>> needs to go away.
->>>>
->>>> If you need resources and time... Please reach out...
->>>>
->>>> This is a community... I'm sure we can figure something out.
->>>> But please turn it back on.
->>>>
->>>
->>> So far, I've heard a lot of 'we should', and a lot of 'we could'.
->>>
->>> What I have yet to hear are the magic words "I volunteer to help
->>> maintain these services".
->>
->> I volunteer to help. I can do as much or as little as you prefer.
->> And I volunteer to lead an effort to either:
->>
->> a) find a replacement issue tracking service, or
->>
->> b) find a way to archive the content of the bugzilla if we agree
->> there is no more need for a bugzilla.linux-nfs.
->>
->> Or both.
->>
->> There is no way for us to know how much effort it takes if you
->> suffer in silence, my friend.
->
-> The point is that email has evolved over the 18 years since I set up
-> the very first linux-nfs.org. I have not had time to keep up with the
-> requirements of adding support for DMARC, SPF, etc. which is why
-> Cedric's account setup email is probably in his spam folder, assuming
-> that the gmail server even accepted it at all.
->
-> Furthermore, both the wikimedia and bugzilla instances are far from
-> running the most recent code versions and I'm sure there are plenty of
-> well known security holes etc to exploit. So both code bases have been
-> needing an upgrade for a while now.
->
-> Finally, the VM itself is still running RHEL/CentOS 7, and I'd like to
-> see it migrated to a platform that is is still maintained.
->
-> All these tasks would need help from the person (or people?) who
-> volunteers to maintain the bugzilla + wiki services. Some of them would
-> need to be 100% owned by that person, and others (like the platform
-> upgrade) would need a lot of coordination with me.
->
-> IOW: I'm not advocating either way. I can understand wanting to migrate
-> away from the current setup to something that is maintained by someone
-> else. However if anyone does wants to take on the job of helping to
-> maintain the current setup, then they need to know that it will involve
-> real work.
+I got a review from Andrew Morton. His argument seems convincing, that
+having less return places makes the code easier to handle.
 
-I'm late to this thread, but I also volunteer to help with this work.
+Thanks
 
-The nfsv4.dev infra uses mailgun for SMTP delivery, the flex plan is free
-for up to 1000 msg/month, +1$US for +1001, at $.001/msg.
+Roberto
 
-Ben
+> > -	if (!error) {
+> > -		fsnotify_xattr(dentry);
+> > -		evm_inode_post_removexattr(dentry, name);
+> > -	}
+> > +	fsnotify_xattr(dentry);
+> > +	security_inode_post_removexattr(dentry, name);
+> > +	evm_inode_post_removexattr(dentry, name);
+> >  
+> >  out:
+> >  	return error;
+> > diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+> > index 67410e085205..88452e45025c 100644
+> > --- a/include/linux/lsm_hook_defs.h
+> > +++ b/include/linux/lsm_hook_defs.h
+> > @@ -149,6 +149,8 @@ LSM_HOOK(int, 0, inode_getxattr, struct dentry *dentry, const char *name)
+> >  LSM_HOOK(int, 0, inode_listxattr, struct dentry *dentry)
+> >  LSM_HOOK(int, 0, inode_removexattr, struct mnt_idmap *idmap,
+> >  	 struct dentry *dentry, const char *name)
+> > +LSM_HOOK(void, LSM_RET_VOID, inode_post_removexattr, struct dentry *dentry,
+> > +	 const char *name)
+> >  LSM_HOOK(int, 0, inode_set_acl, struct mnt_idmap *idmap,
+> >  	 struct dentry *dentry, const char *acl_name, struct posix_acl *kacl)
+> >  LSM_HOOK(int, 0, inode_get_acl, struct mnt_idmap *idmap,
+> > diff --git a/include/linux/security.h b/include/linux/security.h
+> > index 664df46b22a9..922ea7709bae 100644
+> > --- a/include/linux/security.h
+> > +++ b/include/linux/security.h
+> > @@ -380,6 +380,7 @@ int security_inode_getxattr(struct dentry *dentry, const char *name);
+> >  int security_inode_listxattr(struct dentry *dentry);
+> >  int security_inode_removexattr(struct mnt_idmap *idmap,
+> >  			       struct dentry *dentry, const char *name);
+> > +void security_inode_post_removexattr(struct dentry *dentry, const char *name);
+> >  int security_inode_need_killpriv(struct dentry *dentry);
+> >  int security_inode_killpriv(struct mnt_idmap *idmap, struct dentry *dentry);
+> >  int security_inode_getsecurity(struct mnt_idmap *idmap,
+> > @@ -940,6 +941,10 @@ static inline int security_inode_removexattr(struct mnt_idmap *idmap,
+> >  	return cap_inode_removexattr(idmap, dentry, name);
+> >  }
+> >  
+> > +static inline void security_inode_post_removexattr(struct dentry *dentry,
+> > +						   const char *name)
+> > +{ }
+> > +
+> >  static inline int security_inode_need_killpriv(struct dentry *dentry)
+> >  {
+> >  	return cap_inode_need_killpriv(dentry);
+> > diff --git a/security/security.c b/security/security.c
+> > index ce3bc7642e18..8aa6e9f316dd 100644
+> > --- a/security/security.c
+> > +++ b/security/security.c
+> > @@ -2452,6 +2452,20 @@ int security_inode_removexattr(struct mnt_idmap *idmap,
+> >  	return evm_inode_removexattr(idmap, dentry, name);
+> >  }
+> >  
+> > +/**
+> > + * security_inode_post_removexattr() - Update the inode after a removexattr op
+> > + * @dentry: file
+> > + * @name: xattr name
+> > + *
+> > + * Update the inode after a successful removexattr operation.
+> > + */
+> > +void security_inode_post_removexattr(struct dentry *dentry, const char *name)
+> > +{
+> > +	if (unlikely(IS_PRIVATE(d_backing_inode(dentry))))
+> > +		return;
+> > +	call_void_hook(inode_post_removexattr, dentry, name);
+> > +}
+> > +
+> >  /**
+> >   * security_inode_need_killpriv() - Check if security_inode_killpriv() required
+> >   * @dentry: associated dentry
 
