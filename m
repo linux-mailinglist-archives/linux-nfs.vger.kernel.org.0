@@ -2,36 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C62F7F1CF6
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 19:53:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6142B7F1CF7
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Nov 2023 19:53:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230229AbjKTSxv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Nov 2023 13:53:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51026 "EHLO
+        id S229676AbjKTSx6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Nov 2023 13:53:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbjKTSxu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 13:53:50 -0500
+        with ESMTP id S232057AbjKTSx5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Nov 2023 13:53:57 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C37BC8
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Nov 2023 10:53:47 -0800 (PST)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EBE5C433C8;
-        Mon, 20 Nov 2023 18:53:47 +0000 (UTC)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B32C8
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Nov 2023 10:53:54 -0800 (PST)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C840C433C7;
+        Mon, 20 Nov 2023 18:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1700506427;
-        bh=My3stO6oFd/9rUFAB5HQqsIZaehpceYJCE0n7ue6+Z0=;
+        s=k20201202; t=1700506433;
+        bh=eGyIrNTj7pbOO2tlVeH6Wc8JZexBe7MgisoSTCCEAJw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=VNk3X4rUaTsIE4vtFNDaYxx5AB+OLre6frEn3k7K5pUBQDP7+4IHBzAPSg9xNXQy2
-         f3XREFMuWJc25k85clbwApX1pDwUAUpY6MZTSr/Cc9W3pEfed8on3OMKT6BWGaRxFh
-         w94gXMUXbsttLFpDRpL9z7kw6rHRNjkqW0WKQGszztxv9NUEl1od3z2Vz7vG6BlZwW
-         NhGHLs2avpcv8B3d7fmxhj/JaPOE1In4DW4FHRo1n6+9ZdQBadOfUI88YDntOuqYto
-         10r+2etsTY2SWElN1b0sczFcD4GNRZUUXQCz5aAYlpqqB8S6Re5BdpgCU3Y9eNCJ+d
-         +PQjpR8/2n78w==
-Subject: [PATCH RFC 2/5] junction: Remove xmlIndentTreeOutput
+        b=QFpxbFrMwhDnLBkp46leVaankL73P1Zih9x7iJo4WVr5aUffOF2/b0XOos7Fg941n
+         HNGVPxUAyshjrTo9J9QlrVf3Ty+iIhWRqwLJtr9jjfcj6yIfRirq9hBHS6pB17DD17
+         +y7Uk8/wENPpMLnvrfSh9zY0ihlYWMaWf+aGZ1R2Xmil49EuzrTEfGGQqXOZ4YmFuM
+         kdE/TCXiYXwqNjy9bxqY8CDAjbTL/CMgRfxvR2WMoi65zTr8tsH88xzEcPUZi4OBO7
+         /5mrILosPOp5pPTgKRP/MBotJ1QTj7d3QWAZjwm6Qi8ULzI0pZ9BS7Tt/oiQ3hqQK9
+         JIo6Vefwal4Rw==
+Subject: [PATCH RFC 3/5] nfsref: Remove unneeded #include in
+ utils/nfsref/nfsref.c
 From:   Chuck Lever <cel@kernel.org>
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>
-Date:   Mon, 20 Nov 2023 13:53:46 -0500
-Message-ID: <170050642602.123525.1034811730816028179.stgit@manet.1015granger.net>
+Date:   Mon, 20 Nov 2023 13:53:52 -0500
+Message-ID: <170050643249.123525.7457995133948275163.stgit@manet.1015granger.net>
 In-Reply-To: <170050610386.123525.8429348635736141592.stgit@manet.1015granger.net>
 References: <170050610386.123525.8429348635736141592.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5
@@ -50,30 +51,38 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Though it doesn't seem to be marked deprecated, xmlIndentTreeOutput
-does not appear in recent versions of libxml2. Since
-
-  xmlIndentTreeOutput = 1;
-
-should be the default behavior now, we can remove this statement
-without a behavior change.
+Neil Brown says:
+> The only thing that was interesting is that nfsref.c includes
+> sys/capability.h, and I didn't have libcap declared as BuildRequires.
+> The ./configure script didn't complain that libcap was missing - instead
+> the build failed.
+>
+> Other places in nfs-utils that include capability.h protect it with
+> #ifdef HAVE_SYS_CAPABILITY_H
+>
+> If nfsref.c followed that pattern I wouldn't have received an error.
+> But then I wouldn't have added a dependency on libcap.
+> Do I really want libcap??  I don't know.
+> But I cannot see where nfsref.c uses libcap or prctl.  So maybe
+> those includes aren't needed.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- support/junction/xml.c |    1 -
- 1 file changed, 1 deletion(-)
+ utils/nfsref/nfsref.c |    2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/support/junction/xml.c b/support/junction/xml.c
-index ec9586528cc9..aef1cbbd74d3 100644
---- a/support/junction/xml.c
-+++ b/support/junction/xml.c
-@@ -387,7 +387,6 @@ junction_xml_write(const char *pathname, const char *name, xmlDocPtr doc)
- 		return retval;
+diff --git a/utils/nfsref/nfsref.c b/utils/nfsref/nfsref.c
+index 7f97d01f55ca..aa8414b425fb 100644
+--- a/utils/nfsref/nfsref.c
++++ b/utils/nfsref/nfsref.c
+@@ -24,8 +24,6 @@
+  */
  
- 	retval = FEDFS_ERR_SVRFAULT;
--	xmlIndentTreeOutput = 1;
- 	xmlDocDumpFormatMemoryEnc(doc, &buf, &len, "UTF-8", 1);
- 	if (len < 0)
- 		goto out;
+ #include <sys/types.h>
+-#include <sys/capability.h>
+-#include <sys/prctl.h>
+ #include <sys/stat.h>
+ 
+ #include <stdbool.h>
 
 
