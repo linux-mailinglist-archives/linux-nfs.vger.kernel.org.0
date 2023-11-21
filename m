@@ -1,139 +1,180 @@
-Return-Path: <linux-nfs+bounces-19-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-20-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BDA47F36EC
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 20:48:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DAFC7F36FD
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 20:59:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6CA12818A6
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 19:48:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EB57C282610
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 19:58:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C5034205B;
-	Tue, 21 Nov 2023 19:48:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B68F042040;
+	Tue, 21 Nov 2023 19:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=debian.org header.i=@debian.org header.b="V7yNrwOZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W95RzzQB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from stravinsky.debian.org (stravinsky.debian.org [IPv6:2001:41b8:202:deb::311:108])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56274197
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Nov 2023 11:48:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-	s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ge7gY6O2uZN2HTf9u5kTM3qGLDAdhKQje5WyGcm+Izo=; b=V7yNrwOZbkDVU/lgoFU3Fif+a/
-	bx55adSS8wijE3sB0y8r9ak7/q1WNPpBlg2BBBGnYyplQULsFxjjNthFRvYPUONbJWkrehrFRizwU
-	A0pfTaytUHgfU35yxCejl0o+CTSIh9xo8NQcsFsHe+uOdd7DCPiArTKN7NfABmHhOWJcs8lx5sfcb
-	mg+g27rgAq49NWw+vzG9czuQOKPmEkwlJ++8qeM/yN39uqAFWk/DnqysJS5AHc2WZ0QfS2iiUkkZd
-	sZQhqW6KVEPZ4oLMVnqKhwOdRX1U0SgIJq0O8Z0p5s7Ny2e6KwsNdlNGhRPk3lPU9TLWFlhDVRm/F
-	chnXEsuw==;
-Received: from authenticated user
-	by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.94.2)
-	(envelope-from <carnil@debian.org>)
-	id 1r5WjM-0055jz-4h; Tue, 21 Nov 2023 19:48:22 +0000
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7A3919B
+	for <linux-nfs@vger.kernel.org>; Tue, 21 Nov 2023 11:58:48 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-40842752c6eso28935425e9.1
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Nov 2023 11:58:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700596727; x=1701201527; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h5O6IyjwQ6tDFoUe9ncZX5gyGu7dxoekurLBVZVo18M=;
+        b=W95RzzQBoEU9Ri9lrpaeAsJayOIVSB46U2epGCljHQExATwYydWrxUVPXEZ1WubE9r
+         GqPyOVWlQ+wy5K5KrHGjCfiFLueKGr2EGbvwvD4R3LKZUicHN7qR8o2nVQX7/b5RN7DG
+         eIbKaX8BAwZU2dG21ZY/KXks7bLjuYHt7psWLa6Vg5y3OnpZyWu4YULBckYE27zkYODt
+         KD0d1FMeeOu7kfX9mcNPhlyd/5DzCxzJa4AimGQBr5AuSRgoiWVbjsWThPXAiSl1urtX
+         1b7tfsTodn23iF9Cg71hunDg71orQF6DBBmF/ZeOmyRgjmYOtqb5+ozt2QIZHEMm9+NS
+         hxEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700596727; x=1701201527;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h5O6IyjwQ6tDFoUe9ncZX5gyGu7dxoekurLBVZVo18M=;
+        b=qZNbeq5DN2VQYN7YAkPOzQhdwKXvR2vsiUOP4tE3s/Ge9S018EwJn/Rr1biXjqJoXe
+         PQqMK1PKT8L2jEW5dwNbDWu+NF4tedW6OftB8rvqn6NyUToHoReatZMkM4UJ01q69bd0
+         +BFMzF+mxkkbJ5jX/Jco2UPPUPgvN7EXLjoHLsWdAz7fSm+Ja06Y7ogw0P/o6SMB7zHJ
+         lgIu+bvw7hnDO08ZzGSncX6Q58oAqZEMdRJ6YjpsI53rpQ/olL7q1GicEdrDky5kZSfn
+         P/k8ClkqyWNTAyz7AwTWr8lRuZllCbot8W9Ziasr6veB2Bh/3m+/+dgOqFCjzlAFM1IK
+         mKXw==
+X-Gm-Message-State: AOJu0YxooAS2Ln/5r4ljuo5fEuRLkkj5MlT0GBp4w77K1Euj+0ZLJRk+
+	GkFCKjhjr9Scz/KCVUnB2IoJyXNhSr3C7g==
+X-Google-Smtp-Source: AGHT+IHsF9saWQ4v4iggMAHs2K14vr3abFn+WoeEmdCwWItzTbvRa8nxYBjwsyLxJY9v1hY84EZRcw==
+X-Received: by 2002:adf:fe88:0:b0:332:d152:5e63 with SMTP id l8-20020adffe88000000b00332d1525e63mr39891wrr.21.1700596726993;
+        Tue, 21 Nov 2023 11:58:46 -0800 (PST)
+Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
+        by smtp.gmail.com with ESMTPSA id t8-20020a5d49c8000000b0031984b370f2sm15270365wrs.47.2023.11.21.11.58.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Nov 2023 11:58:46 -0800 (PST)
+Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
 Received: by eldamar.lan (Postfix, from userid 1000)
-	id 820B4BE2DE0; Tue, 21 Nov 2023 20:48:18 +0100 (CET)
-Date: Tue, 21 Nov 2023 20:48:18 +0100
+	id 969F6BE2DE0; Tue, 21 Nov 2023 20:58:45 +0100 (CET)
+Date: Tue, 21 Nov 2023 20:58:45 +0100
 From: Salvatore Bonaccorso <carnil@debian.org>
-To: Andreas Hasenack <andreas@canonical.com>, NeilBrown <neilb@suse.de>,
+To: NeilBrown <neilb@suse.de>, Richard Weinberger <richard@nod.at>,
 	Steve Dickson <steved@redhat.com>
-Cc: linux-nfs@vger.kernel.org, Scott Mayhew <smayhew@redhat.com>,
-	Benjamin Coddington <bcodding@redhat.com>,
-	Ben Hutchings <benh@debian.org>
-Subject: Re: [PATCH 0/2] Prefer generator to static systemd units
-Message-ID: <ZV0Jgs71NmIiUAVQ@eldamar.lan>
-References: <CANYNYEEy2vf2rxLFeQ0hkstPrvF=eeA-joc0imGZt96Q+_r44w@mail.gmail.com>
- <ZPdErauSK2sXuh1T@eldamar.lan>
+Cc: Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH nfs-utils 1/2] fsidd: call anonymous sockets by their
+ name only, don't fill with NULs to 108 bytes
+Message-ID: <ZV0L9Y5bRxfWPRus@eldamar.lan>
+References: <04f3fe71defa757d518468f04f08334a5d0dfbb9.1693754442.git.nabijaczleweli@nabijaczleweli.xyz>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZPdErauSK2sXuh1T@eldamar.lan>
-X-Debian-User: carnil
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <04f3fe71defa757d518468f04f08334a5d0dfbb9.1693754442.git.nabijaczleweli@nabijaczleweli.xyz>
 
-Hi Steve, Neil,
+Hi,
 
-On Tue, Sep 05, 2023 at 05:09:33PM +0200, Salvatore Bonaccorso wrote:
-> Hi Steve, Neil,
-> 
-> On Fri, Jul 28, 2023 at 01:06:49PM -0300, Andreas Hasenack wrote:
-> > Hi,
-> > 
-> > in Debian and Ubuntu, the configuration file /etc/nfs.conf is only
-> > placed on disk in the postinst script[1]. In this scenario it's possible
-> > to have the nfs-common generators run before /etc/nfs.conf exists[2],
-> > via another package's postinst calling systemctl daemon-reload. Since
-> > there is no /etc/nfs.conf yet, defaults are assumed and the generators
-> > exit silently, and the corresponding static units are used.
-> > 
-> > But in Debian/Ubuntu, the rpc_pipefs directory is /run/rpc_pipefs, and
-> > not the one specified in the static units, and thus we get it mounted in
-> > the wrong directory.
-> > 
-> > It seems best to always rely on the generators, as they will always be
-> > able to produce the correct target and mount units.
-> > 
-> > For reference, this was first brought up in this thread[3].
-> > 
-> > Producing an upstream set of patches was a bit confusing, since these
-> > systemd units are highly distro dependent. They are not even installed
-> > via `make install` because of this, so I have more confidence in the
-> > first patch of the series.
-> > 
-> > I produced a Debian package with these two patches applied on top of
-> > Debian's 2.6.3[6], and ran the DEP8 tests of nfs-utils[4] and autofs[5],
-> > which exercise some simple v3 and v4 mounts, with and without kerberos.
-> > These tests passed[7][8] (ephemeral links, will be gone once the PPA is
-> > destroyed).
-> > 
-> > 1. https://git.launchpad.net/ubuntu/+source/nfs-utils/tree/debian/nfs-common.postinst?h=applied/ubuntu/devel#n6
-> > 2. https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/1971935/comments/22
-> > 3. https://marc.info/?l=linux-nfs&m=165729895515639&w=4
-> > 4. https://git.launchpad.net/ubuntu/+source/nfs-utils/tree/debian/tests?h=applied/ubuntu/lunar-devel
-> > 5. https://git.launchpad.net/ubuntu/+source/autofs/tree/debian/tests?h=applied/ubuntu/lunar-devel
-> > 6. https://code.launchpad.net/~ahasenack/ubuntu/+source/nfs-utils/+git/nfs-utils/+ref/upstream-nfs-utils-test
-> > 7. https://autopkgtest.ubuntu.com/results/autopkgtest-mantic-ahasenack-nfs-upstream-test/mantic/amd64/a/autofs/20230728_135149_0895b@/log.gz
-> > 8. https://autopkgtest.ubuntu.com/results/autopkgtest-mantic-ahasenack-nfs-upstream-test/mantic/amd64/n/nfs-utils/20230728_150122_3ef18@/log.gz
-> > 
-> > Andreas Hasenack (2):
-> >   Always run the rpc_pipefs generator
-> >   Use the generated units instead of static ones
-> > 
-> >  configure.ac                            |  8 +-------
-> >  systemd/Makefile.am                     |  5 -----
-> >  systemd/rpc-pipefs-generator.c          |  3 ---
-> >  systemd/rpc_pipefs.target               |  3 ---
-> >  systemd/rpc_pipefs.target.in            |  3 ---
-> >  systemd/var-lib-nfs-rpc_pipefs.mount    | 10 ----------
-> >  systemd/var-lib-nfs-rpc_pipefs.mount.in | 10 ----------
-> >  7 files changed, 1 insertion(+), 41 deletions(-)
-> >  delete mode 100644 systemd/rpc_pipefs.target
-> >  delete mode 100644 systemd/rpc_pipefs.target.in
-> >  delete mode 100644 systemd/var-lib-nfs-rpc_pipefs.mount
-> >  delete mode 100644 systemd/var-lib-nfs-rpc_pipefs.mount.in
-> 
-> Is this patch series as prposed by Andreas acceptable upstream?
-> 
-> We have this change in Debian since the 1:2.6.3-1 upload,
-> https://tracker.debian.org/news/1442835/accepted-nfs-utils-1263-1-source-into-unstable/,
-> with no regression reported TTBOMK.
-> 
-> For reference, the patch series is here in the linux-nfs archives
-> (referencing it here explicitly as b4 mbox seems not to get all the 3
-> mails when requesting the cover letter):
-> https://lore.kernel.org/linux-nfs/CANYNYEEy2vf2rxLFeQ0hkstPrvF=eeA-joc0imGZt96Q+_r44w@mail.gmail.com/
-> https://lore.kernel.org/linux-nfs/CANYNYEFKtw+_Y-NrOoQt9G9eund2C0=XMrXBj8mt1L=ebrSkLQ@mail.gmail.com/
-> https://lore.kernel.org/linux-nfs/CANYNYEHETbcqmEhE7BB57bCH03J-XT986Bb+DucdpbV8KHeZug@mail.gmail.com/
+Explicitly CC'ing people involved for the e00ab3c0616f ("fsidd:
+provide better default socket name.") change:
 
-Anything we can do here, to have this upstreamed? 
+On Sun, Sep 03, 2023 at 05:21:52PM +0200, Ahelenia Ziemiańska wrote:
+> Since e00ab3c0616fe6d83ab0710d9e7d989c299088f7, ss -l looks like this:
+>   u_seq               LISTEN                0                     5                                    @/run/fsid.sock@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 26989379                                                       * 0
+> with fsidd pushing all the addresses to 108 bytes wide, which is deeply
+> egregious if you don't filter it out and recolumnate.
+> 
+> This is because, naturally (unix(7)), "Null bytes in the name have
+> no special significance": abstract addresses are binary blobs, but
+> paths automatically terminate at the first NUL byte, since paths
+> can't contain those.
+> 
+> So just specify the correct address length when we're using the abstract domain:
+> unix(7) recommends "offsetof(struct sockaddr_un, sun_path) + strlen(sun_path) + 1"
+> for paths, but we don't want to include the terminating NUL, so it's just
+> "offsetof(struct sockaddr_un, sun_path) + strlen(sun_path)".
+> This brings the width back to order:
+> -- >8 --
+> $ ss -la | grep @
+> u_str ESTAB     0      0      @45208536ec96909a/bus/systemd-timesyn/bus-api-timesync 18500238                            * 18501249
+> u_str ESTAB     0      0       @fecc9657d2315eb7/bus/systemd-network/bus-api-network 18495452                            * 18494406
+> u_seq LISTEN    0      5                                             @/run/fsid.sock 27168796                            * 0
+> u_str ESTAB     0      0                 @ac308f35f50797a2/bus/systemd-logind/system 19406                               * 15153
+> u_str ESTAB     0      0                @b6606e0dfacbae75/bus/systemd/bus-api-system 18494353                            * 18495334
+> u_str ESTAB     0      0                    @5880653d215718a7/bus/systemd/bus-system 26930876                            * 26930003
+> -- >8 --
+> 
+> Fixes: e00ab3c0616fe6d83ab0710d9e7d989c299088f7 ("fsidd: provide
+>  better default socket name.")
+> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
+> ---
+>  support/reexport/fsidd.c    | 8 +++++---
+>  support/reexport/reexport.c | 7 +++++--
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/support/reexport/fsidd.c b/support/reexport/fsidd.c
+> index d4b245e8..4c377415 100644
+> --- a/support/reexport/fsidd.c
+> +++ b/support/reexport/fsidd.c
+> @@ -171,10 +171,12 @@ int main(void)
+>  	memset(&addr, 0, sizeof(struct sockaddr_un));
+>  	addr.sun_family = AF_UNIX;
+>  	strncpy(addr.sun_path, sock_file, sizeof(addr.sun_path) - 1);
+> -	if (addr.sun_path[0] == '@')
+> +	socklen_t addr_len = sizeof(struct sockaddr_un);
+> +	if (addr.sun_path[0] == '@') {
+>  		/* "abstract" socket namespace */
+> +		addr_len = offsetof(struct sockaddr_un, sun_path) + strlen(addr.sun_path);
+>  		addr.sun_path[0] = 0;
+> -	else
+> +	} else
+>  		unlink(sock_file);
+>  
+>  	srv = socket(AF_UNIX, SOCK_SEQPACKET | SOCK_NONBLOCK, 0);
+> @@ -183,7 +185,7 @@ int main(void)
+>  		return 1;
+>  	}
+>  
+> -	if (bind(srv, (const struct sockaddr *)&addr, sizeof(struct sockaddr_un)) == -1) {
+> +	if (bind(srv, (const struct sockaddr *)&addr, addr_len) == -1) {
+>  		xlog(L_WARNING, "Unable to bind %s: %m\n", sock_file);
+>  		return 1;
+>  	}
+> diff --git a/support/reexport/reexport.c b/support/reexport/reexport.c
+> index d9a700af..b7ee6f46 100644
+> --- a/support/reexport/reexport.c
+> +++ b/support/reexport/reexport.c
+> @@ -40,9 +40,12 @@ static bool connect_fsid_service(void)
+>  	memset(&addr, 0, sizeof(struct sockaddr_un));
+>  	addr.sun_family = AF_UNIX;
+>  	strncpy(addr.sun_path, sock_file, sizeof(addr.sun_path) - 1);
+> -	if (addr.sun_path[0] == '@')
+> +	socklen_t addr_len = sizeof(struct sockaddr_un);
+> +	if (addr.sun_path[0] == '@') {
+>  		/* "abstract" socket namespace */
+> +		addr_len = offsetof(struct sockaddr_un, sun_path) + strlen(addr.sun_path);
+>  		addr.sun_path[0] = 0;
+> +	}
+>  
+>  	s = socket(AF_UNIX, SOCK_SEQPACKET, 0);
+>  	if (s == -1) {
+> @@ -50,7 +53,7 @@ static bool connect_fsid_service(void)
+>  		return false;
+>  	}
+>  
+> -	ret = connect(s, (const struct sockaddr *)&addr, sizeof(struct sockaddr_un));
+> +	ret = connect(s, (const struct sockaddr *)&addr, addr_len);
+>  	if (ret == -1) {
+>  		xlog(L_WARNING, "Unable to connect %s: %m, is fsidd running?\n", sock_file);
+>  		return false;
+> -- 
+> 2.40.1
 
-Or is there something missing to make it possible?
+Did this one felt trough the cracks?
 
 Regards,
 Salvatore
