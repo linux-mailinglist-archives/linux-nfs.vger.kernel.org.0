@@ -1,44 +1,45 @@
-Return-Path: <linux-nfs+bounces-14-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-15-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 478A37F3403
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 17:40:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0CAD7F3405
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 17:40:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F5F3B21EFB
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 16:40:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 713AAB20F23
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 16:40:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D739418E02;
-	Tue, 21 Nov 2023 16:40:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A28B25674F;
+	Tue, 21 Nov 2023 16:40:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f/CDkUia"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nQ+JUjaY"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ECB45381E;
-	Tue, 21 Nov 2023 16:40:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6193C433C8;
-	Tue, 21 Nov 2023 16:40:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3591E5674C;
+	Tue, 21 Nov 2023 16:40:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E69CC433C7;
+	Tue, 21 Nov 2023 16:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1700584828;
-	bh=V5p4QcoTWlqaRgyxr3UOZ7FpMjsdBlIqka6QOEOm4co=;
+	s=k20201202; t=1700584834;
+	bh=KPCgMf2paQU2vKeZS8AWyTHoe4qDFS5TCSe1Qrn8r0c=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=f/CDkUiadnS1Y9lxRTgLGfYUv4HwMhIVzau/uHYjxFtgcnOeg5duBfjTQaB/EQunI
-	 q1b4/dgsOM8+R25aZ5IDVM05ArRaSxg2R8pJdf+nlpi1nOKyzmVwLJiXDup4Qya7zp
-	 6SYW6nNPLEAMs/UQoeL2uJmajztbIimyB8jEOhhYtQymL0fNd16tBtIZTOakgJ1Nta
-	 kFEZcTQX7oPyn4RPCYT/dTWvUHyc6NhBb7TuZQ/eXU98EyNGQDXh4gVmJGuwDjE1LO
-	 3JC5mwGcNE8dSbTG9kp0KJNsl5yWV/kfnW5t+OYzPOfyjHJml6cF0c+QVanhiWppZ6
-	 0KfrikJNJYegQ==
-Subject: [PATCH v2 3/6] svcrdma: Add a utility workqueue to svcrdma
+	b=nQ+JUjaYGUcACT9S3ZqGxPD7fJWR5XQuVaa73TC4yY2hxICanHSAGffbNaqMhCGDP
+	 pDucciTfQiCj1W41vImNNnduMJVEVGn97S4URvEJEr4RdZpLws3ZQlWNh0fad1cm9Y
+	 BVC9XmKhL3vm/QKvMl5g9WBpByPWwZNeJmwHA4mpOKp3kwKYy3wlYTV4dKn1SezbSp
+	 L3RE/LIkVf0znux1VWMhWtL+qA6pE22SaZZxD1Ekec1FBhMRBljGLYm8TRm6VTH+S0
+	 exRQdKKbBpT/V5mXKV8qo9zo+IXPydbEW1v+KXKhov7Gh0R3T2imAJqAQSOey9wmvv
+	 XjYtgJVEeguVQ==
+Subject: [PATCH v2 4/6] svcrdma: Add an async version of
+ svc_rdma_send_ctxt_put()
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
 Cc: Chuck Lever <chuck.lever@oracle.com>, tom@talpey.com
-Date: Tue, 21 Nov 2023 11:40:26 -0500
+Date: Tue, 21 Nov 2023 11:40:33 -0500
 Message-ID: 
- <170058482674.4504.5617536262259718863.stgit@bazille.1015granger.net>
+ <170058483320.4504.14961094296267468100.stgit@bazille.1015granger.net>
 In-Reply-To: 
  <170058462629.4504.17663192195815644972.stgit@bazille.1015granger.net>
 References: 
@@ -55,97 +56,92 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-To handle work in the background, set up an UNBOUND workqueue for
-svcrdma. Subsequent patches will make use of it.
+DMA unmapping can take quite some time, so it should not be handled
+in a single-threaded completion handler. Defer releasing send_ctxts
+to the recently-added workqueue.
+
+With this patch, DMA unmapping can be handled in parallel, and it
+does not cause head-of-queue blocking of Send completions.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_rdma.h          |    1 +
- net/sunrpc/xprtrdma/svc_rdma.c           |   32 +++++++++++++++++++++++-------
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    1 +
- 3 files changed, 26 insertions(+), 8 deletions(-)
+ include/linux/sunrpc/svc_rdma.h       |    2 ++
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c |   34 ++++++++++++++++++++++++---------
+ 2 files changed, 27 insertions(+), 9 deletions(-)
 
 diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index 4ac32895a058..e18c94e816b3 100644
+index e18c94e816b3..ab250017b99f 100644
 --- a/include/linux/sunrpc/svc_rdma.h
 +++ b/include/linux/sunrpc/svc_rdma.h
-@@ -65,6 +65,7 @@ extern unsigned int svcrdma_ord;
- extern unsigned int svcrdma_max_requests;
- extern unsigned int svcrdma_max_bc_requests;
- extern unsigned int svcrdma_max_req_size;
-+extern struct workqueue_struct *svcrdma_wq;
+@@ -152,7 +152,9 @@ struct svc_rdma_recv_ctxt {
+ struct svc_rdma_send_ctxt {
+ 	struct llist_node	sc_node;
+ 	struct rpc_rdma_cid	sc_cid;
++	struct work_struct	sc_work;
  
- extern struct percpu_counter svcrdma_stat_read;
- extern struct percpu_counter svcrdma_stat_recv;
-diff --git a/net/sunrpc/xprtrdma/svc_rdma.c b/net/sunrpc/xprtrdma/svc_rdma.c
-index f0d5eeed4c88..f86970733eb0 100644
---- a/net/sunrpc/xprtrdma/svc_rdma.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma.c
-@@ -256,28 +256,44 @@ static int svc_rdma_proc_init(void)
- 	return rc;
++	struct svcxprt_rdma	*sc_rdma;
+ 	struct ib_send_wr	sc_send_wr;
+ 	struct ib_cqe		sc_cqe;
+ 	struct xdr_buf		sc_hdrbuf;
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index 45735f74eb86..22c39ba923d2 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -143,6 +143,7 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
+ 
+ 	svc_rdma_send_cid_init(rdma, &ctxt->sc_cid);
+ 
++	ctxt->sc_rdma = rdma;
+ 	ctxt->sc_send_wr.next = NULL;
+ 	ctxt->sc_send_wr.wr_cqe = &ctxt->sc_cqe;
+ 	ctxt->sc_send_wr.sg_list = ctxt->sc_sges;
+@@ -223,15 +224,8 @@ struct svc_rdma_send_ctxt *svc_rdma_send_ctxt_get(struct svcxprt_rdma *rdma)
+ 	goto out;
  }
  
-+struct workqueue_struct *svcrdma_wq;
-+
- void svc_rdma_cleanup(void)
+-/**
+- * svc_rdma_send_ctxt_put - Return send_ctxt to free list
+- * @rdma: controlling svcxprt_rdma
+- * @ctxt: object to return to the free list
+- *
+- * Pages left in sc_pages are DMA unmapped and released.
+- */
+-void svc_rdma_send_ctxt_put(struct svcxprt_rdma *rdma,
+-			    struct svc_rdma_send_ctxt *ctxt)
++static void svc_rdma_send_ctxt_release(struct svcxprt_rdma *rdma,
++				       struct svc_rdma_send_ctxt *ctxt)
  {
--	dprintk("SVCRDMA Module Removed, deregister RPC RDMA transport\n");
- 	svc_unreg_xprt_class(&svc_rdma_class);
- 	svc_rdma_proc_cleanup();
-+	if (svcrdma_wq) {
-+		struct workqueue_struct *wq = svcrdma_wq;
-+
-+		svcrdma_wq = NULL;
-+		destroy_workqueue(wq);
-+	}
-+
-+	dprintk("SVCRDMA Module Removed, deregister RPC RDMA transport\n");
+ 	struct ib_device *device = rdma->sc_cm_id->device;
+ 	unsigned int i;
+@@ -255,6 +249,28 @@ void svc_rdma_send_ctxt_put(struct svcxprt_rdma *rdma,
+ 	llist_add(&ctxt->sc_node, &rdma->sc_send_ctxts);
  }
  
- int svc_rdma_init(void)
- {
-+	struct workqueue_struct *wq;
- 	int rc;
- 
--	dprintk("SVCRDMA Module Init, register RPC RDMA transport\n");
--	dprintk("\tsvcrdma_ord      : %d\n", svcrdma_ord);
--	dprintk("\tmax_requests     : %u\n", svcrdma_max_requests);
--	dprintk("\tmax_bc_requests  : %u\n", svcrdma_max_bc_requests);
--	dprintk("\tmax_inline       : %d\n", svcrdma_max_req_size);
-+	wq = alloc_workqueue("svcrdma", WQ_UNBOUND, 0);
-+	if (!wq)
-+		return -ENOMEM;
- 
- 	rc = svc_rdma_proc_init();
--	if (rc)
-+	if (rc) {
-+		destroy_workqueue(wq);
- 		return rc;
-+	}
- 
--	/* Register RDMA with the SVC transport switch */
-+	svcrdma_wq = wq;
- 	svc_reg_xprt_class(&svc_rdma_class);
++static void svc_rdma_send_ctxt_put_async(struct work_struct *work)
++{
++	struct svc_rdma_send_ctxt *ctxt;
 +
-+	dprintk("SVCRDMA Module Init, register RPC RDMA transport\n");
-+	dprintk("\tsvcrdma_ord      : %d\n", svcrdma_ord);
-+	dprintk("\tmax_requests     : %u\n", svcrdma_max_requests);
-+	dprintk("\tmax_bc_requests  : %u\n", svcrdma_max_bc_requests);
-+	dprintk("\tmax_inline       : %d\n", svcrdma_max_req_size);
- 	return 0;
- }
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 2abd895046ee..c046916df007 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -547,6 +547,7 @@ static void __svc_rdma_free(struct work_struct *work)
- 	/* This blocks until the Completion Queues are empty */
- 	if (rdma->sc_qp && !IS_ERR(rdma->sc_qp))
- 		ib_drain_qp(rdma->sc_qp);
-+	flush_workqueue(svcrdma_wq);
- 
- 	svc_rdma_flush_recv_queues(rdma);
- 
++	ctxt = container_of(work, struct svc_rdma_send_ctxt, sc_work);
++	svc_rdma_send_ctxt_release(ctxt->sc_rdma, ctxt);
++}
++
++/**
++ * svc_rdma_send_ctxt_put - Return send_ctxt to free list
++ * @rdma: controlling svcxprt_rdma
++ * @ctxt: object to return to the free list
++ *
++ * Pages left in sc_pages are DMA unmapped and released.
++ */
++void svc_rdma_send_ctxt_put(struct svcxprt_rdma *rdma,
++			    struct svc_rdma_send_ctxt *ctxt)
++{
++	INIT_WORK(&ctxt->sc_work, svc_rdma_send_ctxt_put_async);
++	queue_work(svcrdma_wq, &ctxt->sc_work);
++}
++
+ /**
+  * svc_rdma_wake_send_waiters - manage Send Queue accounting
+  * @rdma: controlling transport
 
 
 
