@@ -1,862 +1,375 @@
-Return-Path: <linux-nfs+bounces-4-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-6-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD9CB7F26E7
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 09:03:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D98837F2BCD
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 12:35:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F21521C21083
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 08:03:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7593D28159F
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Nov 2023 11:35:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7594F328D4;
-	Tue, 21 Nov 2023 08:03:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30441487AA;
+	Tue, 21 Nov 2023 11:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JuwTgTPp"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B8FC1;
-	Tue, 21 Nov 2023 00:03:26 -0800 (PST)
-Received: from mail02.huawei.com (unknown [172.18.147.229])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTP id 4SZGfX3kqzz9xwwV;
-	Tue, 21 Nov 2023 15:46:44 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP2 (Coremail) with SMTP id GxC2BwDHxF4lZFxlaQoRAQ--.59449S2;
-	Tue, 21 Nov 2023 09:02:58 +0100 (CET)
-Message-ID: <ce13d72a471af5049e538620fb5e9051e94fe32b.camel@huaweicloud.com>
-Subject: Re: [PATCH v6 19/25] ima: Move to LSM infrastructure
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com, 
-	jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, 
-	tom@talpey.com, paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, 
-	zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, dhowells@redhat.com, 
-	jarkko@kernel.org, stephen.smalley.work@gmail.com, eparis@parisplace.org, 
-	casey@schaufler-ca.com, mic@digikod.net
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
-	selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
-Date: Tue, 21 Nov 2023 09:02:42 +0100
-In-Reply-To: <20231120173318.1132868-20-roberto.sassu@huaweicloud.com>
-References: <20231120173318.1132868-1-roberto.sassu@huaweicloud.com>
-	 <20231120173318.1132868-20-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08851A5B7;
+	Tue, 21 Nov 2023 11:35:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 5ED4FC433C7;
+	Tue, 21 Nov 2023 11:35:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700566534;
+	bh=67+DSJqXxA2UA336zXwDJ/QssykzMEvCiGED8qs+5oo=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=JuwTgTPpdtMpveppX5TgUAmP4Ks+/fq1j6Fpd1vV0apmSN+YFJ46W3lni/f05H3Iu
+	 qd68cMxx5keE8z74jB+tK5oePbRJAH4RgZ4FR2uZzLtWla9LJEzR4jFkyu7QRGbick
+	 cEkyMJ+YizC8zMU1pmzuPRw24vEcTOZcXe3KSjiUySI9WNuk8qOSPxWLfpo0q8ysBu
+	 9WmCjl9uzmvd3UCdQprj9PSIohzfFmdMzsKV822bJ7i2Nzu/R0WsBu0VaROFhUvEtr
+	 cOgg0lbhtX5i51nTt6O3cEpdHqd92fXnK2x0uQ3NdXrqF5o/fnq1QCur+P83wJYK75
+	 lJsOX7JOG4M5g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B10BC54FB9;
+	Tue, 21 Nov 2023 11:35:34 +0000 (UTC)
+From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+Subject: [PATCH v2 0/4] sysctl: Remove sentinel elements from fs dir
+Date: Tue, 21 Nov 2023 12:35:10 +0100
+Message-Id:
+ <20231121-jag-sysctl_remove_empty_elem_fs-v2-0-39eab723a034@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:GxC2BwDHxF4lZFxlaQoRAQ--.59449S2
-X-Coremail-Antispam: 1UD129KBjvAXoWfuFWfZw18GFyrGr1rtF48Crg_yoW5GF4kCo
-	WIqwsxJr4FqF13GayakF1SyFsxWws8K3yrArWa9rZ8W3W2yw1Ut34jvF47Aa4UXF4fK3WU
-	G3s7J3yFva1ktw1rn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYj7kC6x804xWl14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK
-	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
-	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF
-	7I0E14v26F4j6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4j6F4UM28EF7xvwVC2z280aVCY1x
-	0267AKxVW8JVW8Jr1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCF04k20xvY
-	0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0x
-	vE42xK8VAvwI8IcIk0rVW3JVWrJr1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280
-	aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IUbHa0PUUUUU==
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAIBF1jj5atQAABsG
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO6VXGUC/42NQQ6DIBAAv2L2XBrBVNue+o/GEMRFaQQMa0mN8
+ e+lvqDHmcPMBoTRIsG92CBismSDzyBOBehR+QGZ7TODKEXFedmwlxoYraSXSUZ0IaFENy+rxAm
+ dNMT6rtemvly56RByZY5o7Oc4PNvMo6UlxPUYJv6z/7cTZyVreFPXlTCobuZBytHbD2cdHLT7v
+ n8BFJmDm9AAAAA=
+To: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org, 
+ josh@joshtriplett.org, Kees Cook <keescook@chromium.org>, 
+ David Howells <dhowells@redhat.com>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Christian Brauner <brauner@kernel.org>, Benjamin LaHaise <bcrl@kvack.org>, 
+ Eric Biederman <ebiederm@xmission.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, 
+ Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+ Tom Talpey <tom@talpey.com>, Jan Kara <jack@suse.cz>, 
+ Amir Goldstein <amir73il@gmail.com>, Matthew Bobrowski <repnop@google.com>, 
+ Anton Altaparmakov <anton@tuxera.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+ Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>, 
+ Joseph Qi <joseph.qi@linux.alibaba.com>, Iurii Zaikin <yzaikin@google.com>, 
+ Eric Biggers <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, 
+ Chandan Babu R <chandan.babu@oracle.com>, 
+ "Darrick J. Wong" <djwong@kernel.org>, Jan Harkes <jaharkes@cs.cmu.edu>, 
+ coda@cs.cmu.edu
+Cc: linux-cachefs@redhat.com, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-aio@kvack.org, linux-mm@kvack.org, 
+ linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, 
+ ocfs2-devel@lists.linux.dev, fsverity@lists.linux.dev, 
+ linux-xfs@vger.kernel.org, codalist@coda.cs.cmu.edu, 
+ Joel Granados <j.granados@samsung.com>
+X-Mailer: b4 0.13-dev-86aa5
+X-Developer-Signature: v=1; a=openpgp-sha256; l=11974;
+ i=j.granados@samsung.com; h=from:subject:message-id;
+ bh=RgpU80zlwXRyPTcs9gNHkDrh5022I2wJtp3ZI7/hHhA=;
+ b=owEB7QES/pANAwAKAbqXzVK3lkFPAcsmYgBlXJYDgW3DTViMxHmZA5TpZABdyD+uwRpu7xH28
+ 6jLZDKLLz+JAbMEAAEKAB0WIQSuRwlXJeYxJc7LJ5C6l81St5ZBTwUCZVyWAwAKCRC6l81St5ZB
+ T0adC/wIGmSaf3rE0+DRrmLRTJ19zKO7UuwcMEVz/sEENR0KZo7GjSEpEkm81VTqfjNSpPhOHfK
+ QmhMHX0QWFlIlF1Ot0S1gLD0q2l3/FCGrZ0Pfj9RaUGA/GL7lqyoX5gpBYZh7Ut9LOxLWzWSZhf
+ V/9JPSzZXhpQeaPO1R0wABfHqHnFNPA1IO7unVa/XlEaXZSmgiD7tmpxRKc+thnjvF/z2Xf5obi
+ ZHj66xGko55jJJ5FDsQ+S/GZIcjW5DfFOq3HR1X4l1WIfp0yp81qwfWylD3YgbtxiFSmaOiRr/k
+ urnhTjtJh9yh2k1htKhucXCg7GnjEjWqhUWC8aI2nZYOgtfaA1Pqy5fizRtMH9lE9heXZwlXOzj
+ jxsK8o2AbY6RAML3NhSzZX18x9uy+l4/zCgBxlb7S3QrK2+/La07iI0bA2rtJOcNRRRz/S48DMM
+ VjhyT8ceub8b2x/oRM6XxG6VekSHmTZLtSE1shfy+fsuUkgzAVCAZkae2sT4e/NRbDIeM=
+X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
+ fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
+X-Endpoint-Received:
+ by B4 Relay for j.granados@samsung.com/default with auth_id=70
+X-Original-From: Joel Granados <j.granados@samsung.com>
+Reply-To: <j.granados@samsung.com>
 
-On Mon, 2023-11-20 at 18:33 +0100, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
->=20
-> Move hardcoded IMA function calls (not appraisal-specific functions) from
-> various places in the kernel to the LSM infrastructure, by introducing a
-> new LSM named 'ima' (at the end of the LSM list and always enabled like
-> 'integrity').
->=20
-> Make moved functions as static (except ima_post_key_create_or_update(),
-> which is not in ima_main.c), and register them as implementation of the
-> respective hooks in the new function init_ima_lsm(). Conditionally regist=
-er
-> ima_post_path_mknod() if CONFIG_SECURITY_PATH is enabled, otherwise the
-> path_post_mknod hook won't be available.
->=20
-> Move integrity_kernel_module_request() to IMA (renamed to
-> ima_kernel_module_request()), and conditionally register it as
-> implementation of the kernel_module_request LSM hook (if
-> CONFIG_INTEGRITY_ASYMMETRIC_KEYS is enabled).
->=20
-> Define the 'ima' LSM, and initialize it with init_ima_lsm(). Consequently=
-,
-> assign the LSM_ID_IMA ID to IMA in include/uapi/linux/lsm.h.
->=20
-> Still rely on the existing 'integrity' subsystem to be enabled and to
-> manage integrity metadata.
->=20
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Acked-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/file_table.c                        |   2 -
->  fs/namei.c                             |   6 --
->  fs/nfsd/vfs.c                          |   7 --
->  fs/open.c                              |   1 -
->  include/linux/ima.h                    |  94 ---------------------
->  include/linux/integrity.h              |  13 ---
->  include/uapi/linux/lsm.h               |   1 +
->  security/integrity/digsig_asymmetric.c |  22 -----
->  security/integrity/iint.c              |   2 +-
->  security/integrity/ima/ima.h           |   6 ++
->  security/integrity/ima/ima_main.c      | 108 ++++++++++++++++++++-----
->  security/integrity/integrity.h         |   1 +
->  security/keys/key.c                    |   9 +--
->  security/security.c                    |  63 +++------------
->  14 files changed, 110 insertions(+), 225 deletions(-)
->=20
-> diff --git a/fs/file_table.c b/fs/file_table.c
-> index c72dc75f2bd3..0401ac98281c 100644
-> --- a/fs/file_table.c
-> +++ b/fs/file_table.c
-> @@ -26,7 +26,6 @@
->  #include <linux/percpu_counter.h>
->  #include <linux/percpu.h>
->  #include <linux/task_work.h>
-> -#include <linux/ima.h>
->  #include <linux/swap.h>
->  #include <linux/kmemleak.h>
-> =20
-> @@ -386,7 +385,6 @@ static void __fput(struct file *file)
->  	locks_remove_file(file);
-> =20
->  	security_file_release(file);
-> -	ima_file_free(file);
->  	if (unlikely(file->f_flags & FASYNC)) {
->  		if (file->f_op->fasync)
->  			file->f_op->fasync(-1, file, 0);
-> diff --git a/fs/namei.c b/fs/namei.c
-> index adb3ab27951a..37cc0988308f 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -27,7 +27,6 @@
->  #include <linux/fsnotify.h>
->  #include <linux/personality.h>
->  #include <linux/security.h>
-> -#include <linux/ima.h>
->  #include <linux/syscalls.h>
->  #include <linux/mount.h>
->  #include <linux/audit.h>
-> @@ -3622,8 +3621,6 @@ static int do_open(struct nameidata *nd,
->  		error =3D vfs_open(&nd->path, file);
->  	if (!error)
->  		error =3D security_file_post_open(file, op->acc_mode);
-> -	if (!error)
-> -		error =3D ima_file_check(file, op->acc_mode);
->  	if (!error && do_truncate)
->  		error =3D handle_truncate(idmap, file);
->  	if (unlikely(error > 0)) {
-> @@ -3687,7 +3684,6 @@ static int vfs_tmpfile(struct mnt_idmap *idmap,
->  		spin_unlock(&inode->i_lock);
->  	}
->  	security_inode_post_create_tmpfile(idmap, inode);
-> -	ima_post_create_tmpfile(idmap, inode);
->  	return 0;
->  }
-> =20
-> @@ -4036,8 +4032,6 @@ static int do_mknodat(int dfd, struct filename *nam=
-e, umode_t mode,
->  		case 0: case S_IFREG:
->  			error =3D vfs_create(idmap, path.dentry->d_inode,
->  					   dentry, mode, true);
-> -			if (!error)
-> -				ima_post_path_mknod(idmap, dentry);
->  			break;
->  		case S_IFCHR: case S_IFBLK:
->  			error =3D vfs_mknod(idmap, path.dentry->d_inode,
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index b0c3f07a8bba..e491392a1243 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -25,7 +25,6 @@
->  #include <linux/posix_acl_xattr.h>
->  #include <linux/xattr.h>
->  #include <linux/jhash.h>
-> -#include <linux/ima.h>
->  #include <linux/pagemap.h>
->  #include <linux/slab.h>
->  #include <linux/uaccess.h>
-> @@ -883,12 +882,6 @@ __nfsd_open(struct svc_rqst *rqstp, struct svc_fh *f=
-hp, umode_t type,
->  		goto out;
->  	}
-> =20
-> -	host_err =3D ima_file_check(file, may_flags);
-> -	if (host_err) {
-> -		fput(file);
-> -		goto out;
-> -	}
-> -
->  	if (may_flags & NFSD_MAY_64BIT_COOKIE)
->  		file->f_mode |=3D FMODE_64BITHASH;
->  	else
-> diff --git a/fs/open.c b/fs/open.c
-> index 02dc608d40d8..c8bb9bd5259f 100644
-> --- a/fs/open.c
-> +++ b/fs/open.c
-> @@ -29,7 +29,6 @@
->  #include <linux/audit.h>
->  #include <linux/falloc.h>
->  #include <linux/fs_struct.h>
-> -#include <linux/ima.h>
->  #include <linux/dnotify.h>
->  #include <linux/compat.h>
->  #include <linux/mnt_idmapping.h>
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 31ef6c3c3207..23ae24b60ecf 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -16,24 +16,6 @@ struct linux_binprm;
-> =20
->  #ifdef CONFIG_IMA
->  extern enum hash_algo ima_get_current_hash_algo(void);
-> -extern int ima_bprm_check(struct linux_binprm *bprm);
-> -extern int ima_file_check(struct file *file, int mask);
-> -extern void ima_post_create_tmpfile(struct mnt_idmap *idmap,
-> -				    struct inode *inode);
-> -extern void ima_file_free(struct file *file);
-> -extern int ima_file_mmap(struct file *file, unsigned long reqprot,
-> -			 unsigned long prot, unsigned long flags);
-> -extern int ima_file_mprotect(struct vm_area_struct *vma, unsigned long r=
-eqprot,
-> -			     unsigned long prot);
-> -extern int ima_load_data(enum kernel_load_data_id id, bool contents);
-> -extern int ima_post_load_data(char *buf, loff_t size,
-> -			      enum kernel_load_data_id id, char *description);
-> -extern int ima_read_file(struct file *file, enum kernel_read_file_id id,
-> -			 bool contents);
-> -extern int ima_post_read_file(struct file *file, char *buf, loff_t size,
-> -			      enum kernel_read_file_id id);
-> -extern void ima_post_path_mknod(struct mnt_idmap *idmap,
-> -				struct dentry *dentry);
->  extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
->  extern int ima_inode_hash(struct inode *inode, char *buf, size_t buf_siz=
-e);
->  extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
-> @@ -58,68 +40,6 @@ static inline enum hash_algo ima_get_current_hash_algo=
-(void)
->  	return HASH_ALGO__LAST;
->  }
-> =20
-> -static inline int ima_bprm_check(struct linux_binprm *bprm)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int ima_file_check(struct file *file, int mask)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline void ima_post_create_tmpfile(struct mnt_idmap *idmap,
-> -					   struct inode *inode)
-> -{
-> -}
-> -
-> -static inline void ima_file_free(struct file *file)
-> -{
-> -	return;
-> -}
-> -
-> -static inline int ima_file_mmap(struct file *file, unsigned long reqprot=
-,
-> -				unsigned long prot, unsigned long flags)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int ima_file_mprotect(struct vm_area_struct *vma,
-> -				    unsigned long reqprot, unsigned long prot)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int ima_load_data(enum kernel_load_data_id id, bool conten=
-ts)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int ima_post_load_data(char *buf, loff_t size,
-> -				     enum kernel_load_data_id id,
-> -				     char *description)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int ima_read_file(struct file *file, enum kernel_read_file=
-_id id,
-> -				bool contents)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline int ima_post_read_file(struct file *file, char *buf, loff_=
-t size,
-> -				     enum kernel_read_file_id id)
-> -{
-> -	return 0;
-> -}
-> -
-> -static inline void ima_post_path_mknod(struct mnt_idmap *idmap,
-> -				       struct dentry *dentry)
-> -{
-> -	return;
-> -}
-> -
->  static inline int ima_file_hash(struct file *file, char *buf, size_t buf=
-_size)
->  {
->  	return -EOPNOTSUPP;
-> @@ -170,20 +90,6 @@ static inline void ima_add_kexec_buffer(struct kimage=
- *image)
->  {}
->  #endif
-> =20
-> -#ifdef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
-> -extern void ima_post_key_create_or_update(struct key *keyring,
-> -					  struct key *key,
-> -					  const void *payload, size_t plen,
-> -					  unsigned long flags, bool create);
-> -#else
-> -static inline void ima_post_key_create_or_update(struct key *keyring,
-> -						 struct key *key,
-> -						 const void *payload,
-> -						 size_t plen,
-> -						 unsigned long flags,
-> -						 bool create) {}
-> -#endif  /* CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS */
-> -
->  #ifdef CONFIG_IMA_APPRAISE
->  extern bool is_ima_appraise_enabled(void);
->  extern void ima_inode_post_setattr(struct mnt_idmap *idmap,
-> diff --git a/include/linux/integrity.h b/include/linux/integrity.h
-> index 2ea0f2f65ab6..ef0f63ef5ebc 100644
-> --- a/include/linux/integrity.h
-> +++ b/include/linux/integrity.h
-> @@ -42,17 +42,4 @@ static inline void integrity_load_keys(void)
->  }
->  #endif /* CONFIG_INTEGRITY */
-> =20
-> -#ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
-> -
-> -extern int integrity_kernel_module_request(char *kmod_name);
-> -
-> -#else
-> -
-> -static inline int integrity_kernel_module_request(char *kmod_name)
-> -{
-> -	return 0;
-> -}
-> -
-> -#endif /* CONFIG_INTEGRITY_ASYMMETRIC_KEYS */
-> -
->  #endif /* _LINUX_INTEGRITY_H */
-> diff --git a/include/uapi/linux/lsm.h b/include/uapi/linux/lsm.h
-> index f0386880a78e..ee7d034255a9 100644
-> --- a/include/uapi/linux/lsm.h
-> +++ b/include/uapi/linux/lsm.h
-> @@ -61,6 +61,7 @@ struct lsm_ctx {
->  #define LSM_ID_LOCKDOWN		108
->  #define LSM_ID_BPF		109
->  #define LSM_ID_LANDLOCK		110
-> +#define LSM_ID_IMA		111
-> =20
->  /*
->   * LSM_ATTR_XXX definitions identify different LSM attributes
-> diff --git a/security/integrity/digsig_asymmetric.c b/security/integrity/=
-digsig_asymmetric.c
-> index 895f4b9ce8c6..4d11c622fabd 100644
-> --- a/security/integrity/digsig_asymmetric.c
-> +++ b/security/integrity/digsig_asymmetric.c
-> @@ -133,25 +133,3 @@ int asymmetric_verify(struct key *keyring, const cha=
-r *sig,
->  	return ret;
->  }
-> =20
-> -/**
-> - * integrity_kernel_module_request - prevent crypto-pkcs1pad(rsa,*) requ=
-ests
-> - * @kmod_name: kernel module name
-> - *
-> - * We have situation, when public_key_verify_signature() in case of RSA
-> - * algorithm use alg_name to store internal information in order to
-> - * construct an algorithm on the fly, but crypto_larval_lookup() will tr=
-y
-> - * to use alg_name in order to load kernel module with same name.
-> - * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
-> - * we are safe to fail such module request from crypto_larval_lookup().
-> - *
-> - * In this way we prevent modprobe execution during digsig verification
-> - * and avoid possible deadlock if modprobe and/or it's dependencies
-> - * also signed with digsig.
-> - */
-> -int integrity_kernel_module_request(char *kmod_name)
-> -{
-> -	if (strncmp(kmod_name, "crypto-pkcs1pad(rsa,", 20) =3D=3D 0)
-> -		return -EINVAL;
-> -
-> -	return 0;
-> -}
-> diff --git a/security/integrity/iint.c b/security/integrity/iint.c
-> index d4419a2a1e24..6cbf2aa5540e 100644
-> --- a/security/integrity/iint.c
-> +++ b/security/integrity/iint.c
-> @@ -200,13 +200,13 @@ static int __init integrity_iintcache_init(void)
->  			      0, SLAB_PANIC, iint_init_once);
->  	return 0;
->  }
-> +
->  DEFINE_LSM(integrity) =3D {
->  	.name =3D "integrity",
->  	.init =3D integrity_iintcache_init,
->  	.order =3D LSM_ORDER_LAST,
->  };
-> =20
-> -
->  /*
->   * integrity_kernel_read - read data from the file
->   *
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index c29db699c996..c0412100023e 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -127,6 +127,12 @@ void ima_load_kexec_buffer(void);
->  static inline void ima_load_kexec_buffer(void) {}
->  #endif /* CONFIG_HAVE_IMA_KEXEC */
-> =20
-> +#ifdef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
-> +void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-> +				   const void *payload, size_t plen,
-> +				   unsigned long flags, bool create);
-> +#endif
-> +
->  /*
->   * The default binary_runtime_measurements list format is defined as the
->   * platform native format.  The canonical format is defined as little-en=
-dian.
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/i=
-ma_main.c
-> index 02021ee467d3..af213bece9b8 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -189,7 +189,7 @@ static void ima_check_last_writer(struct integrity_ii=
-nt_cache *iint,
->   *
->   * Flag files that changed, based on i_version
->   */
-> -void ima_file_free(struct file *file)
-> +static void ima_file_free(struct file *file)
->  {
->  	struct inode *inode =3D file_inode(file);
->  	struct integrity_iint_cache *iint;
-> @@ -427,8 +427,8 @@ static int process_measurement(struct file *file, con=
-st struct cred *cred,
->   * On success return 0.  On integrity appraisal error, assuming the file
->   * is in policy and IMA-appraisal is in enforcing mode, return -EACCES.
->   */
-> -int ima_file_mmap(struct file *file, unsigned long reqprot,
-> -		  unsigned long prot, unsigned long flags)
-> +static int ima_file_mmap(struct file *file, unsigned long reqprot,
-> +			 unsigned long prot, unsigned long flags)
->  {
->  	u32 secid;
->  	int ret;
-> @@ -466,8 +466,8 @@ int ima_file_mmap(struct file *file, unsigned long re=
-qprot,
->   *
->   * On mprotect change success, return 0.  On failure, return -EACESS.
->   */
-> -int ima_file_mprotect(struct vm_area_struct *vma, unsigned long reqprot,
-> -		      unsigned long prot)
-> +static int ima_file_mprotect(struct vm_area_struct *vma, unsigned long r=
-eqprot,
-> +			     unsigned long prot)
->  {
->  	struct ima_template_desc *template =3D NULL;
->  	struct file *file;
-> @@ -525,7 +525,7 @@ int ima_file_mprotect(struct vm_area_struct *vma, uns=
-igned long reqprot,
->   * On success return 0.  On integrity appraisal error, assuming the file
->   * is in policy and IMA-appraisal is in enforcing mode, return -EACCES.
->   */
-> -int ima_bprm_check(struct linux_binprm *bprm)
-> +static int ima_bprm_check(struct linux_binprm *bprm)
->  {
->  	int ret;
->  	u32 secid;
-> @@ -551,7 +551,7 @@ int ima_bprm_check(struct linux_binprm *bprm)
->   * On success return 0.  On integrity appraisal error, assuming the file
->   * is in policy and IMA-appraisal is in enforcing mode, return -EACCES.
->   */
-> -int ima_file_check(struct file *file, int mask)
-> +static int ima_file_check(struct file *file, int mask)
->  {
->  	u32 secid;
-> =20
-> @@ -560,7 +560,6 @@ int ima_file_check(struct file *file, int mask)
->  				   mask & (MAY_READ | MAY_WRITE | MAY_EXEC |
->  					   MAY_APPEND), FILE_CHECK);
->  }
-> -EXPORT_SYMBOL_GPL(ima_file_check);
-> =20
->  static int __ima_inode_hash(struct inode *inode, struct file *file, char=
- *buf,
->  			    size_t buf_size)
-> @@ -685,8 +684,9 @@ EXPORT_SYMBOL_GPL(ima_inode_hash);
->   * Skip calling process_measurement(), but indicate which newly, created
->   * tmpfiles are in policy.
->   */
-> -void ima_post_create_tmpfile(struct mnt_idmap *idmap,
-> -			     struct inode *inode)
-> +static void ima_post_create_tmpfile(struct mnt_idmap *idmap,
-> +				    struct inode *inode)
-> +
->  {
->  	struct integrity_iint_cache *iint;
->  	int must_appraise;
-> @@ -717,8 +717,8 @@ void ima_post_create_tmpfile(struct mnt_idmap *idmap,
->   * Mark files created via the mknodat syscall as new, so that the
->   * file data can be written later.
->   */
-> -void ima_post_path_mknod(struct mnt_idmap *idmap,
-> -			 struct dentry *dentry)
-> +static void __maybe_unused
-> +ima_post_path_mknod(struct mnt_idmap *idmap, struct dentry *dentry)
->  {
->  	struct integrity_iint_cache *iint;
->  	struct inode *inode =3D dentry->d_inode;
-> @@ -753,8 +753,8 @@ void ima_post_path_mknod(struct mnt_idmap *idmap,
->   *
->   * For permission return 0, otherwise return -EACCES.
->   */
-> -int ima_read_file(struct file *file, enum kernel_read_file_id read_id,
-> -		  bool contents)
-> +static int ima_read_file(struct file *file, enum kernel_read_file_id rea=
-d_id,
-> +			 bool contents)
->  {
->  	enum ima_hooks func;
->  	u32 secid;
-> @@ -803,8 +803,8 @@ const int read_idmap[READING_MAX_ID] =3D {
->   * On success return 0.  On integrity appraisal error, assuming the file
->   * is in policy and IMA-appraisal is in enforcing mode, return -EACCES.
->   */
-> -int ima_post_read_file(struct file *file, char *buf, loff_t size,
-> -		       enum kernel_read_file_id read_id)
-> +static int ima_post_read_file(struct file *file, char *buf, loff_t size,
-> +			      enum kernel_read_file_id read_id)
->  {
->  	enum ima_hooks func;
->  	u32 secid;
-> @@ -837,7 +837,7 @@ int ima_post_read_file(struct file *file, char *buf, =
-loff_t size,
->   *
->   * For permission return 0, otherwise return -EACCES.
->   */
-> -int ima_load_data(enum kernel_load_data_id id, bool contents)
-> +static int ima_load_data(enum kernel_load_data_id id, bool contents)
->  {
->  	bool ima_enforce, sig_enforce;
-> =20
-> @@ -891,9 +891,9 @@ int ima_load_data(enum kernel_load_data_id id, bool c=
-ontents)
->   * On success return 0.  On integrity appraisal error, assuming the file
->   * is in policy and IMA-appraisal is in enforcing mode, return -EACCES.
->   */
-> -int ima_post_load_data(char *buf, loff_t size,
-> -		       enum kernel_load_data_id load_id,
-> -		       char *description)
-> +static int ima_post_load_data(char *buf, loff_t size,
-> +			      enum kernel_load_data_id load_id,
-> +			      char *description)
->  {
->  	if (load_id =3D=3D LOADING_FIRMWARE) {
->  		if ((ima_appraise & IMA_APPRAISE_FIRMWARE) &&
-> @@ -1122,4 +1122,72 @@ static int __init init_ima(void)
->  	return error;
->  }
-> =20
-> +/**
-> + * ima_kernel_module_request - prevent crypto-pkcs1pad(rsa,*) requests
-> + * @kmod_name: kernel module name
-> + *
-> + * We have situation, when public_key_verify_signature() in case of RSA
-> + * algorithm use alg_name to store internal information in order to
-> + * construct an algorithm on the fly, but crypto_larval_lookup() will tr=
-y
-> + * to use alg_name in order to load kernel module with same name.
-> + * Since we don't have any real "crypto-pkcs1pad(rsa,*)" kernel modules,
-> + * we are safe to fail such module request from crypto_larval_lookup().
-> + *
-> + * In this way we prevent modprobe execution during digsig verification
-> + * and avoid possible deadlock if modprobe and/or it's dependencies
-> + * also signed with digsig.
-> + */
-> +static int __maybe_unused ima_kernel_module_request(char *kmod_name)
-> +{
-> +	if (strncmp(kmod_name, "crypto-pkcs1pad(rsa,", 20) =3D=3D 0)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static struct security_hook_list ima_hooks[] __ro_after_init =3D {
-> +	LSM_HOOK_INIT(bprm_check_security, ima_bprm_check),
-> +	LSM_HOOK_INIT(file_post_open, ima_file_check),
-> +	LSM_HOOK_INIT(inode_post_create_tmpfile, ima_post_create_tmpfile),
-> +	LSM_HOOK_INIT(file_release, ima_file_free),
-> +	LSM_HOOK_INIT(mmap_file, ima_file_mmap),
-> +	LSM_HOOK_INIT(file_mprotect, ima_file_mprotect),
-> +	LSM_HOOK_INIT(kernel_load_data, ima_load_data),
-> +	LSM_HOOK_INIT(kernel_post_load_data, ima_post_load_data),
-> +	LSM_HOOK_INIT(kernel_read_file, ima_read_file),
-> +	LSM_HOOK_INIT(kernel_post_read_file, ima_post_read_file),
-> +#ifdef CONFIG_SECURITY_PATH
-> +	LSM_HOOK_INIT(path_post_mknod, ima_post_path_mknod),
-> +#endif
-> +#ifdef CONFIG_IMA_MEASURE_ASYMMETRIC_KEYS
-> +	LSM_HOOK_INIT(key_post_create_or_update, ima_post_key_create_or_update)=
-,
-> +#endif
-> +#ifdef CONFIG_INTEGRITY_ASYMMETRIC_KEYS
-> +	LSM_HOOK_INIT(kernel_module_request, ima_kernel_module_request),
-> +#endif
-> +};
-> +
-> +static const struct lsm_id ima_lsmid =3D {
-> +	.name =3D "ima",
-> +	.id =3D LSM_ID_IMA,
-> +};
-> +
-> +/*
-> + * Since with the LSM_ORDER_LAST there is no guarantee about the orderin=
-g
-> + * within the .lsm_info.init section, ensure that IMA hooks are before E=
-VM
-> + * ones, by letting the 'integrity' LSM call init_ima_lsm() to initializ=
-e the
-> + * 'ima' and 'evm' LSMs in this sequence.
-> + */
+From: Joel Granados <j.granados@samsung.com>
 
-Sorry, leftover from the previous version (also for EVM).
+What?
+These commits remove the sentinel element (last empty element) from the
+sysctl arrays of all the files under the "fs/" directory that use a
+sysctl array for registration. The merging of the preparation patches
+(in https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+to mainline allows us to just remove sentinel elements without changing
+behavior (more info here [1]).
 
-> +int __init init_ima_lsm(void)
+These commits are part of a bigger set (here
+https://github.com/Joelgranados/linux/tree/tag/sysctl_remove_empty_elem_V5)
+that remove the ctl_table sentinel. We make the review process easier by
+chunking the commits into manageable pieces. Each chunk can be reviewed
+separately without noise from parallel sets.
 
-Will make this as static (reported by kernel robot).
+Sending the "fs/*" chunk now that the "drivers/" has been mostly
+reviewed [6]. After this and the "kernel/*" are reviewed we only have 2 more
+chunks ("net/*" and miscellaneous) to complete the sentinel removal.
+Hurray!!!
 
-Roberto
+Why?
+By removing the sysctl sentinel elements we avoid kernel bloat as
+ctl_table arrays get moved out of kernel/sysctl.c into their own
+respective subsystems. This move was started long ago to avoid merge
+conflicts; the sentinel removal bit came after Mathew Wilcox suggested
+it to avoid bloating the kernel by one element as arrays moved out. This
+patchset will reduce the overall build time size of the kernel and run
+time memory bloat by about ~64 bytes per declared ctl_table array. I
+have consolidated some links that shed light on the history of this
+effort [2].
 
-> +{
-> +	security_add_hooks(ima_hooks, ARRAY_SIZE(ima_hooks), &ima_lsmid);
-> +	return 0;
-> +}
-> +
-> +DEFINE_LSM(ima) =3D {
-> +	.name =3D "ima",
-> +	.init =3D init_ima_lsm,
-> +	.order =3D LSM_ORDER_LAST,
-> +};
-> +
->  late_initcall(init_ima);	/* Start IMA after the TPM is available */
-> diff --git a/security/integrity/integrity.h b/security/integrity/integrit=
-y.h
-> index 9561db7cf6b4..59eaddd84434 100644
-> --- a/security/integrity/integrity.h
-> +++ b/security/integrity/integrity.h
-> @@ -18,6 +18,7 @@
->  #include <crypto/hash.h>
->  #include <linux/key.h>
->  #include <linux/audit.h>
-> +#include <linux/lsm_hooks.h>
-> =20
->  /* iint action cache flags */
->  #define IMA_MEASURE		0x00000001
-> diff --git a/security/keys/key.c b/security/keys/key.c
-> index f75fe66c2f03..80fc2f203a0c 100644
-> --- a/security/keys/key.c
-> +++ b/security/keys/key.c
-> @@ -13,7 +13,6 @@
->  #include <linux/security.h>
->  #include <linux/workqueue.h>
->  #include <linux/random.h>
-> -#include <linux/ima.h>
->  #include <linux/err.h>
->  #include "internal.h"
-> =20
-> @@ -937,8 +936,6 @@ static key_ref_t __key_create_or_update(key_ref_t key=
-ring_ref,
-> =20
->  	security_key_post_create_or_update(keyring, key, payload, plen, flags,
->  					   true);
-> -	ima_post_key_create_or_update(keyring, key, payload, plen,
-> -				      flags, true);
-> =20
->  	key_ref =3D make_key_ref(key, is_key_possessed(keyring_ref));
-> =20
-> @@ -970,13 +967,9 @@ static key_ref_t __key_create_or_update(key_ref_t ke=
-yring_ref,
-> =20
->  	key_ref =3D __key_update(key_ref, &prep);
-> =20
-> -	if (!IS_ERR(key_ref)) {
-> +	if (!IS_ERR(key_ref))
->  		security_key_post_create_or_update(keyring, key, payload, plen,
->  						   flags, false);
-> -		ima_post_key_create_or_update(keyring, key,
-> -					      payload, plen,
-> -					      flags, false);
-> -	}
-> =20
->  	goto error_free_prep;
->  }
-> diff --git a/security/security.c b/security/security.c
-> index 423d53092604..e18953ee4a97 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -50,7 +50,8 @@
->  	(IS_ENABLED(CONFIG_SECURITY_SAFESETID) ? 1 : 0) + \
->  	(IS_ENABLED(CONFIG_SECURITY_LOCKDOWN_LSM) ? 1 : 0) + \
->  	(IS_ENABLED(CONFIG_BPF_LSM) ? 1 : 0) + \
-> -	(IS_ENABLED(CONFIG_SECURITY_LANDLOCK) ? 1 : 0))
-> +	(IS_ENABLED(CONFIG_SECURITY_LANDLOCK) ? 1 : 0) + \
-> +	(IS_ENABLED(CONFIG_IMA) ? 1 : 0))
-> =20
->  /*
->   * These are descriptions of the reasons that can be passed to the
-> @@ -1182,12 +1183,7 @@ int security_bprm_creds_from_file(struct linux_bin=
-prm *bprm, const struct file *
->   */
->  int security_bprm_check(struct linux_binprm *bprm)
->  {
-> -	int ret;
-> -
-> -	ret =3D call_int_hook(bprm_check_security, 0, bprm);
-> -	if (ret)
-> -		return ret;
-> -	return ima_bprm_check(bprm);
-> +	return call_int_hook(bprm_check_security, 0, bprm);
->  }
-> =20
->  /**
-> @@ -2883,13 +2879,8 @@ static inline unsigned long mmap_prot(struct file =
-*file, unsigned long prot)
->  int security_mmap_file(struct file *file, unsigned long prot,
->  		       unsigned long flags)
->  {
-> -	unsigned long prot_adj =3D mmap_prot(file, prot);
-> -	int ret;
-> -
-> -	ret =3D call_int_hook(mmap_file, 0, file, prot, prot_adj, flags);
-> -	if (ret)
-> -		return ret;
-> -	return ima_file_mmap(file, prot, prot_adj, flags);
-> +	return call_int_hook(mmap_file, 0, file, prot, mmap_prot(file, prot),
-> +			     flags);
->  }
-> =20
->  /**
-> @@ -2918,12 +2909,7 @@ int security_mmap_addr(unsigned long addr)
->  int security_file_mprotect(struct vm_area_struct *vma, unsigned long req=
-prot,
->  			   unsigned long prot)
->  {
-> -	int ret;
-> -
-> -	ret =3D call_int_hook(file_mprotect, 0, vma, reqprot, prot);
-> -	if (ret)
-> -		return ret;
-> -	return ima_file_mprotect(vma, reqprot, prot);
-> +	return call_int_hook(file_mprotect, 0, vma, reqprot, prot);
->  }
-> =20
->  /**
-> @@ -3232,12 +3218,7 @@ int security_kernel_create_files_as(struct cred *n=
-ew, struct inode *inode)
->   */
->  int security_kernel_module_request(char *kmod_name)
->  {
-> -	int ret;
-> -
-> -	ret =3D call_int_hook(kernel_module_request, 0, kmod_name);
-> -	if (ret)
-> -		return ret;
-> -	return integrity_kernel_module_request(kmod_name);
-> +	return call_int_hook(kernel_module_request, 0, kmod_name);
->  }
-> =20
->  /**
-> @@ -3253,12 +3234,7 @@ int security_kernel_module_request(char *kmod_name=
-)
->  int security_kernel_read_file(struct file *file, enum kernel_read_file_i=
-d id,
->  			      bool contents)
->  {
-> -	int ret;
-> -
-> -	ret =3D call_int_hook(kernel_read_file, 0, file, id, contents);
-> -	if (ret)
-> -		return ret;
-> -	return ima_read_file(file, id, contents);
-> +	return call_int_hook(kernel_read_file, 0, file, id, contents);
->  }
->  EXPORT_SYMBOL_GPL(security_kernel_read_file);
-> =20
-> @@ -3278,12 +3254,7 @@ EXPORT_SYMBOL_GPL(security_kernel_read_file);
->  int security_kernel_post_read_file(struct file *file, char *buf, loff_t =
-size,
->  				   enum kernel_read_file_id id)
->  {
-> -	int ret;
-> -
-> -	ret =3D call_int_hook(kernel_post_read_file, 0, file, buf, size, id);
-> -	if (ret)
-> -		return ret;
-> -	return ima_post_read_file(file, buf, size, id);
-> +	return call_int_hook(kernel_post_read_file, 0, file, buf, size, id);
->  }
->  EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
-> =20
-> @@ -3298,12 +3269,7 @@ EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
->   */
->  int security_kernel_load_data(enum kernel_load_data_id id, bool contents=
-)
->  {
-> -	int ret;
-> -
-> -	ret =3D call_int_hook(kernel_load_data, 0, id, contents);
-> -	if (ret)
-> -		return ret;
-> -	return ima_load_data(id, contents);
-> +	return call_int_hook(kernel_load_data, 0, id, contents);
->  }
->  EXPORT_SYMBOL_GPL(security_kernel_load_data);
-> =20
-> @@ -3325,13 +3291,8 @@ int security_kernel_post_load_data(char *buf, loff=
-_t size,
->  				   enum kernel_load_data_id id,
->  				   char *description)
->  {
-> -	int ret;
-> -
-> -	ret =3D call_int_hook(kernel_post_load_data, 0, buf, size, id,
-> -			    description);
-> -	if (ret)
-> -		return ret;
-> -	return ima_post_load_data(buf, size, id, description);
-> +	return call_int_hook(kernel_post_load_data, 0, buf, size, id,
-> +			     description);
->  }
->  EXPORT_SYMBOL_GPL(security_kernel_post_load_data);
-> =20
+Testing:
+* Ran sysctl selftests (./tools/testing/selftests/sysctl/sysctl.sh)
+* Ran this through 0-day with no errors or warnings
+
+Size saving after this patchset:
+    * bloat-o-meter
+        - The "yesall" config saves 1920 bytes [4]
+        - The "tiny" config saves 576 bytes [5]
+    * If you want to know how many bytes are saved after all the chunks
+      are merged see [3]
+
+Base commit:
+tag: sysctl-6.7-rc1 (8b793bcda61f)
+
+Comments/feedback greatly appreciated
+
+Best
+
+Joel
+
+---
+Changes in v2:
+- changed commit message from "aio: *" to "fs: *"
+- We now register fsverity_sysctl_table with one call instead of
+  selecting a call based CONFIG_FS_VERITY_BUILTIN_SIGNATURES
+- Link to v1: https://lore.kernel.org/r/20231107-jag-sysctl_remove_empty_elem_fs-v1-0-7176632fea9f@samsung.com
+
+[1]
+We are able to remove a sentinel table without behavioral change by
+introducing a table_size argument in the same place where procname is
+checked for NULL. The idea is for it to keep stopping when it hits
+->procname == NULL, while the sentinel is still present. And when the
+sentinel is removed, it will stop on the table_size. You can go to 
+(https://lore.kernel.org/all/20230809105006.1198165-1-j.granados@samsung.com/)
+for more information.
+
+[2]
+Links Related to the ctl_table sentinel removal:
+* E-mail threads that summarize the sentinel effort
+  https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/
+  https://lore.kernel.org/all/ZMFizKFkVxUFtSqa@bombadil.infradead.org/
+* Replacing the register functions:
+  https://lore.kernel.org/all/20230302204612.782387-1-mcgrof@kernel.org/
+  https://lore.kernel.org/all/20230302202826.776286-1-mcgrof@kernel.org/
+* E-mail threads discussing prposal
+  https://lore.kernel.org/all/20230321130908.6972-1-frank.li@vivo.com
+  https://lore.kernel.org/all/20220220060626.15885-1-tangmeng@uniontech.com
+
+[3]
+Size saving after removing all sentinels:
+  These are the bytes that we save after removing all the sentinels
+  (this plus all the other chunks). I included them to get an idea of
+  how much memory we are talking about.
+    * bloat-o-meter:
+        - The "yesall" configuration results save 9158 bytes
+          https://lore.kernel.org/all/20230621091000.424843-1-j.granados@samsung.com/
+        - The "tiny" config + CONFIG_SYSCTL save 1215 bytes
+          https://lore.kernel.org/all/20230809105006.1198165-1-j.granados@samsung.com/
+    * memory usage:
+        In memory savings are measured to be 7296 bytes. (here is how to
+        measure [7])
+
+[4]
+add/remove: 0/0 grow/shrink: 0/30 up/down: 0/-1920 (-1920)
+Function                                     old     new   delta
+xfs_table                                   1024     960     -64
+vm_userfaultfd_table                         128      64     -64
+test_table_unregister                        128      64     -64
+test_table                                   576     512     -64
+root_table                                   128      64     -64
+pty_table                                    256     192     -64
+ocfs2_nm_table                               128      64     -64
+ntfs_sysctls                                 128      64     -64
+nlm_sysctls                                  448     384     -64
+nfs_cb_sysctls                               192     128     -64
+nfs4_cb_sysctls                              192     128     -64
+namei_sysctls                                320     256     -64
+locks_sysctls                                192     128     -64
+inotify_table                                256     192     -64
+inodes_sysctls                               192     128     -64
+fsverity_sysctl_table                        128      64     -64
+fs_stat_sysctls                              256     192     -64
+fs_shared_sysctls                            192     128     -64
+fs_pipe_sysctls                              256     192     -64
+fs_namespace_sysctls                         128      64     -64
+fs_exec_sysctls                              128      64     -64
+fs_dqstats_table                             576     512     -64
+fs_dcache_sysctls                            128      64     -64
+fanotify_table                               256     192     -64
+epoll_table                                  128      64     -64
+dnotify_sysctls                              128      64     -64
+coredump_sysctls                             256     192     -64
+coda_table                                   256     192     -64
+cachefiles_sysctls                           128      64     -64
+aio_sysctls                                  192     128     -64
+Total: Before=429912331, After=429910411, chg -0.00%
+
+[5]
+add/remove: 0/0 grow/shrink: 0/9 up/down: 0/-576 (-576)
+Function                                     old     new   delta
+root_table                                   128      64     -64
+namei_sysctls                                320     256     -64
+inodes_sysctls                               192     128     -64
+fs_stat_sysctls                              256     192     -64
+fs_shared_sysctls                            192     128     -64
+fs_pipe_sysctls                              256     192     -64
+fs_namespace_sysctls                         128      64     -64
+fs_exec_sysctls                              128      64     -64
+fs_dcache_sysctls                            128      64     -64
+Total: Before=1886645, After=1886069, chg -0.03%
+
+[6]
+https://lore.kernel.org/all/20231002-jag-sysctl_remove_empty_elem_drivers-v2-0-02dd0d46f71e@samsung.com
+
+[7]
+To measure the in memory savings apply this on top of this patchset.
+
+"
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index c88854df0b62..e0073a627bac 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -976,6 +976,8 @@ static struct ctl_dir *new_dir(struct ctl_table_set *set,
+        table[0].procname = new_name;
+        table[0].mode = S_IFDIR|S_IRUGO|S_IXUGO;
+        init_header(&new->header, set->dir.header.root, set, node, table, 1);
++       // Counts additional sentinel used for each new dir.
++       printk("%ld sysctl saved mem kzalloc \n", sizeof(struct ctl_table));
+
+        return new;
+ }
+@@ -1199,6 +1201,9 @@ static struct ctl_table_header *new_links(struct ctl_dir *dir, struct ctl_table_
+                link_name += len;
+                link++;
+        }
++       // Counts additional sentinel used for each new registration
++       //
++               printk("%ld sysctl saved mem kzalloc \n", sizeof(struct ctl_table));
+        init_header(links, dir->header.root, dir->header.set, node, link_table,
+                    head->ctl_table_size);
+        links->nreg = nr_entries;
+"
+and then run the following bash script in the kernel:
+
+accum=0
+for n in $(dmesg | grep kzalloc | awk '{print $3}') ; do
+    echo $n
+    accum=$(calc "$accum + $n")
+done
+echo $accum
+
+To: Luis Chamberlain <mcgrof@kernel.org>
+To: willy@infradead.org
+To: josh@joshtriplett.org
+To: Kees Cook <keescook@chromium.org>
+To: David Howells <dhowells@redhat.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>
+To: Christian Brauner <brauner@kernel.org>
+To: Benjamin LaHaise <bcrl@kvack.org>
+To: Eric Biederman <ebiederm@xmission.com>
+To: Trond Myklebust <trond.myklebust@hammerspace.com>
+To: Anna Schumaker <anna@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+To: Jeff Layton <jlayton@kernel.org>
+To: Neil Brown <neilb@suse.de>
+To: Olga Kornievskaia <kolga@netapp.com>
+To: Dai Ngo <Dai.Ngo@oracle.com>
+To: Tom Talpey <tom@talpey.com>
+To: Jan Kara <jack@suse.cz>
+To: Amir Goldstein <amir73il@gmail.com>
+To: Matthew Bobrowski <repnop@google.com>
+To: Anton Altaparmakov <anton@tuxera.com>
+To: Namjae Jeon <linkinjeon@kernel.org>
+To: Mark Fasheh <mark@fasheh.com>
+To: Joel Becker <jlbec@evilplan.org>
+To: Joseph Qi <joseph.qi@linux.alibaba.com>
+To: Iurii Zaikin <yzaikin@google.com>
+To: Eric Biggers <ebiggers@kernel.org>
+To: "Theodore Y. Ts'o" <tytso@mit.edu>
+To: Chandan Babu R <chandan.babu@oracle.com>
+To: "Darrick J. Wong" <djwong@kernel.org>
+To: Jan Harkes <jaharkes@cs.cmu.edu>
+To: coda@cs.cmu.edu
+Cc: linux-cachefs@redhat.com
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-aio@kvack.org
+Cc: linux-mm@kvack.org
+Cc: linux-nfs@vger.kernel.org
+Cc: linux-ntfs-dev@lists.sourceforge.net
+Cc: ocfs2-devel@lists.linux.dev
+Cc: fsverity@lists.linux.dev
+Cc: linux-xfs@vger.kernel.org
+Cc: codalist@coda.cs.cmu.edu
+---
+
+Signed-off-by: Joel Granados <j.granados@samsung.com>
+
+---
+Joel Granados (4):
+      cachefiles: Remove the now superfluous sentinel element from ctl_table array
+      fs: Remove the now superfluous sentinel elements from ctl_table array
+      sysctl:  Remove the now superfluous sentinel elements from ctl_table array
+      coda:  Remove the now superfluous sentinel elements from ctl_table array
+
+ fs/aio.c                           | 1 -
+ fs/cachefiles/error_inject.c       | 1 -
+ fs/coda/sysctl.c                   | 1 -
+ fs/coredump.c                      | 1 -
+ fs/dcache.c                        | 1 -
+ fs/devpts/inode.c                  | 1 -
+ fs/eventpoll.c                     | 1 -
+ fs/exec.c                          | 1 -
+ fs/file_table.c                    | 1 -
+ fs/inode.c                         | 1 -
+ fs/lockd/svc.c                     | 1 -
+ fs/locks.c                         | 1 -
+ fs/namei.c                         | 1 -
+ fs/namespace.c                     | 1 -
+ fs/nfs/nfs4sysctl.c                | 1 -
+ fs/nfs/sysctl.c                    | 1 -
+ fs/notify/dnotify/dnotify.c        | 1 -
+ fs/notify/fanotify/fanotify_user.c | 1 -
+ fs/notify/inotify/inotify_user.c   | 1 -
+ fs/ntfs/sysctl.c                   | 1 -
+ fs/ocfs2/stackglue.c               | 1 -
+ fs/pipe.c                          | 1 -
+ fs/proc/proc_sysctl.c              | 1 -
+ fs/quota/dquot.c                   | 1 -
+ fs/sysctls.c                       | 1 -
+ fs/userfaultfd.c                   | 1 -
+ fs/verity/init.c                   | 1 -
+ fs/xfs/xfs_sysctl.c                | 2 --
+ lib/test_sysctl.c                  | 2 --
+ 29 files changed, 31 deletions(-)
+---
+base-commit: 8b793bcda61f6c3ed4f5b2ded7530ef6749580cb
+change-id: 20231107-jag-sysctl_remove_empty_elem_fs-dbdcf6581fbe
+
+Best regards,
+-- 
+Joel Granados <j.granados@samsung.com>
 
 
