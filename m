@@ -1,147 +1,132 @@
-Return-Path: <linux-nfs+bounces-36-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-37-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94E837F5451
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 00:11:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10FA27F5462
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 00:19:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C6FAA1C203B7
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 23:11:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB5621F20C9E
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 23:19:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2E6F1D559;
-	Wed, 22 Nov 2023 23:11:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E277D200AE;
+	Wed, 22 Nov 2023 23:19:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RWYY1L0x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnDaCsOb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C2521AB
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Nov 2023 15:10:59 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-544455a4b56so422585a12.1
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Nov 2023 15:10:59 -0800 (PST)
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D64D8
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Nov 2023 15:19:15 -0800 (PST)
+Received: by mail-pj1-x1029.google.com with SMTP id 98e67ed59e1d1-2839cf9ea95so264979a91.1
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Nov 2023 15:19:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700694657; x=1701299457; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1700695154; x=1701299954; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=umYZG4o4asl5GTSKUOet+bFf4MSEtCJAXeDIEtwaNTU=;
-        b=RWYY1L0xcEZXYkKRaSPeFD4KvqFFuobhvvs9cMC2vjZvqXRYwrpomKLU4LgYj9gSQm
-         xJaKWPnDcu1eKTtMaFLwl0YZucEz4TWODYtNNGPpjscOa9Bv+uUK8gtRtuZt/ooIHKbK
-         C155NpKJNrrBiGuhbTksHAOVCGWYdR9/gewqIyGEUAxmaCEnIU2U7Tnnm3zSVUCoUxnU
-         Ew9lXiiVz8fJqH9Bh6zPwVhoblZSWSLCm+8xFITGMlFMZPEakwd+O0JxKe6VOh0XqOTS
-         ArW2TA+rFNkY6atYYIpRr4/VTYv3/6XRN/L7HMzofOtESIn8Vgtp8oU/mewJQE77xOmL
-         9fAQ==
+        bh=UmaKjoVHsabulBFjO/QcZHUFy3Uac19UbPRk+g7uSUk=;
+        b=nnDaCsObcbdRkufYxQUe6G/GlVQ2Xj3vEtFPHJF9m680kImQEnbhEa+NN0rBkg5FTR
+         8IthjdgphQmWuLn2S8cpZzMIBe1B5IJY7vvRna3jtHwEOaU8FUBtGRiUXexY9D+i4lbm
+         aQJZiwX5kDEijHwLVnsq/C7E5XZeBnHcCmU9Dsa86Hxjl+ALvimEMkV9i4SQmSHIR3jZ
+         vZeaIrTDd+j6GCyS9gBJxwJsOoW/bPNUjuTWLYI91i9Iau7DLsZah0UO6JRZykU/X2g4
+         wf3SIjPy5YYqbrEYJypPIbQVkvBsFv5I2Kq51dCyAl/Kl8S95mSDcr9BjGjTR6bkXMi9
+         4iqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700694657; x=1701299457;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1700695154; x=1701299954;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=umYZG4o4asl5GTSKUOet+bFf4MSEtCJAXeDIEtwaNTU=;
-        b=LDZ88Fp+AHkRuqt9rJqFUAyAef8OM+ExkBKStLG78ybPBJbW56tANB3VxCsn1Q9KQ8
-         h4tw7eJRzs+QkVbQjDY9INqUXnsKyPy/ASs4w68Pnj5DI9KqGqcIVzG3BdGpiuSV210s
-         cfAyQ+ZsfekrD7CewhLt8QZft5rwqDCcFyDr7gP82mpBBhLLkweJeKIwt8Oks4rkRDF9
-         B/x2DPNBiOmF9IG5FxfmyS57YG2qEF88wQ35NwNMx0ZzucgbzgCXXKPd1Us/HBkGyghM
-         w4E9kAhd+dR9Lz3Gw9+TnkK1lzmGQzRbbA9a4yewIQm/HLsI/7MpE4baFK/GRRFummN6
-         nYOg==
-X-Gm-Message-State: AOJu0YyewCX/JTclePQ5OLev6ZS4CcfxDcUo1XStwADw+a+PTemh14Ny
-	e+6myvgtSI8BxhIVzOa4k5aE9M7mE7S34hW8phw9ejxd87E=
-X-Google-Smtp-Source: AGHT+IGRvHdydVHUD+P2B0LoTwpfBDCK7hlOE6TJyBcJLzTZ51mJm4PqtsmS9Xtd1RifpfsM2Hb/Xfd/vTHC8NQNgZc=
-X-Received: by 2002:a50:ef05:0:b0:53e:4762:9373 with SMTP id
- m5-20020a50ef05000000b0053e47629373mr2857726eds.18.1700694657343; Wed, 22 Nov
- 2023 15:10:57 -0800 (PST)
+        bh=UmaKjoVHsabulBFjO/QcZHUFy3Uac19UbPRk+g7uSUk=;
+        b=cNdpRiLnA+q7yariWJForFVmP9LVB7mkaUo3bD+S1DwyQd89AL2c/qPzXbigQMmAto
+         0eyPH0XqafNS1cI++gulI1u2IiYPVubJ9jesmY/1NTX8DOm28uMZGnKiXepmu/0uir14
+         OxEVOiNk6W5MZ0tLDpSLZpUFUqYeA/xqy79FY6inVBR7UaQOkH+32brBn7HUpUNuSRKH
+         VVZTnuB176W+kHZMp+6LFMSS2U9RmiqBb0I0P0k/iy7/7dx0KbzhNauVfXXM2Pc8Mtan
+         xdv6+gxN4moA+KJUSTxgtRRVmTpUyhNhomy0/7nOy/c54s41CxPF8iSEo3iWWVYiE9jU
+         TosA==
+X-Gm-Message-State: AOJu0Yz4b+7cjsRxllcgjY4JyC7av5KV50Ca1RdPMtoR40MctIjRpvtt
+	ctphQ5euVvVplUJ9uaGpZI0OQslvKlEpbPbMQg==
+X-Google-Smtp-Source: AGHT+IGXZFyX9vBUoP1kExsqOUqAh5VH12lH+3KEMeni5ChhakbgywfFTvuyrXlgenSrX0xeOXExC9DFv5FA+TbSdd4=
+X-Received: by 2002:a17:90b:1c89:b0:280:c98f:2092 with SMTP id
+ oo9-20020a17090b1c8900b00280c98f2092mr4017373pjb.33.1700695154517; Wed, 22
+ Nov 2023 15:19:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALXu0Uc7zHasg2damr4nhRZZF7xBbFc0ghdjop87+5vHa8bBHg@mail.gmail.com>
- <CAN-5tyFBZibge52iZtjnz5j6S2GrTXTWdzaDxLVQcr+G8HegvQ@mail.gmail.com>
- <CALXu0UfiCrcDciLX5A1tvG0DiPwAXPg=GikPakKW16UhZ4X-Nw@mail.gmail.com> <d18ee0e1-c52d-48af-acc0-366bd27764c1@oracle.com>
-In-Reply-To: <d18ee0e1-c52d-48af-acc0-366bd27764c1@oracle.com>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Thu, 23 Nov 2023 00:10:21 +0100
-Message-ID: <CALXu0Ucy4qK1T9-WMssYaxSvhSBSyyxiwP2sjLgMD_wXQs43Qw@mail.gmail.com>
-Subject: Re: TCP_KEEPALIVE for Linux NFS client?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <CALXu0UeGnSvBbrfgnRNqdNGjDTag5Lz8uWOvuy_n57RHO3CRqw@mail.gmail.com>
+ <CAFX2JfnzDczbegELv3GMCYb3CEKZ+5WfgVotdoA3CyjUprGpTQ@mail.gmail.com>
+ <CALXu0UebE2oGgWLMn-NkfGq5n+2dEFnqrOy617SRMmKF-dGOXg@mail.gmail.com>
+ <CAFX2JfnDC1xZvuuUiHe8_RpBehwCZriZ13yYPk6pQSPSV4V-qQ@mail.gmail.com> <CALXu0UevOCU0dm-0WUEZZFCV=V8jQxmy2OQYhtptVyVAZeWs3g@mail.gmail.com>
+In-Reply-To: <CALXu0UevOCU0dm-0WUEZZFCV=V8jQxmy2OQYhtptVyVAZeWs3g@mail.gmail.com>
+From: Rick Macklem <rick.macklem@gmail.com>
+Date: Wed, 22 Nov 2023 15:19:04 -0800
+Message-ID: <CAM5tNy7QYgMUo_tTSPQ6hqxO8WrscBn1O2XpeJVK67OCQMu+2w@mail.gmail.com>
+Subject: Re: How does READ_PLUS differ from READ?
+To: Cedric Blancher <cedric.blancher@gmail.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 23 Nov 2023 at 00:03, Calum Mackay <calum.mackay@oracle.com> wrote:
+On Wed, Nov 22, 2023 at 2:48=E2=80=AFPM Cedric Blancher
+<cedric.blancher@gmail.com> wrote:
 >
-> hi Ced,
->
-> On 22/11/2023 10:48 pm, Cedric Blancher wrote:
-> > On Mon, 20 Nov 2023 at 03:57, Olga Kornievskaia <aglo@umich.edu> wrote:
-> >>
-> >> Hi Ced,
-> >>
-> >> Why do you think it doesn't use it? Have you looked at a network trace
-> >> of an idle connection? I seem to recall seeing keep-alive being used.
+> On Sun, 19 Nov 2023 at 19:02, Anna Schumaker <schumaker.anna@gmail.com> w=
+rote:
 > >
-> > Well, I don't see a setsockopt(TCP_KEEPALIVE) in the libtirpc code?
->
-> We have this, in the kernel RPC code:
->
->         https://elixir.bootlin.com/linux/latest/source/net/sunrpc/xprtsoc=
-k.c#L2257
->
-> which might be it.
-
-Yay, But how does the kernel get the fd from libtirpc?
-
-Also, how can I turn this:
-
-/* TCP Keepalive options */
-sock_set_keepalive(sock->sk);
-tcp_sock_set_keepidle(sock->sk, keepidle);
-tcp_sock_set_keepintvl(sock->sk, keepidle);
-tcp_sock_set_keepcnt(sock->sk, keepcnt);
-
-/* TCP user timeout (see RFC5482) */
-tcp_sock_set_user_timeout(sock->sk, timeo);
-
-into setsockopt() from userland code? Does the BSD socket library have
-such options?
-
-Ced
-
->
-> cheers,
-> calum.
->
+> > On Sun, Nov 19, 2023 at 12:59=E2=80=AFPM Cedric Blancher
+> > <cedric.blancher@gmail.com> wrote:
+> > >
+> > > On Sun, 19 Nov 2023 at 18:48, Anna Schumaker <schumaker.anna@gmail.co=
+m> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Sun, Nov 19, 2023 at 12:38=E2=80=AFPM Cedric Blancher
+> > > > <cedric.blancher@gmail.com> wrote:
+> > > > >
+> > > > > Good evening!
+> > > > >
+> > > > > How does READ_PLUS differ from READ? Has anyone made a simpler
+> > > > > presentation (PowerPoint slides) than the RFCs?
+> > > >
+> > > > No slides, but at a high level READ_PLUS can compress out long rang=
+es
+> > > > of zeroes in a read reply by returning a HOLE segment instead of th=
+e
+> > > > actual zeroes. It's perfectly valid for the server to skip the zero
+> > > > detection and return everything as a data segment, however.
+> > >
+> > > So how do you differ between
+> > > 1. a hole, aka no filesystem blocks allocated
+> > > 2. a long sequence of valid data with all zero bytes in them
 > >
-> > Ced
-> >
-> >>
-> >> On Fri, Nov 17, 2023 at 8:02=E2=80=AFPM Cedric Blancher
-> >> <cedric.blancher@gmail.com> wrote:
-> >>>
-> >>> Good morning!
-> >>>
-> >>> Why does the Linux NFS client not use TCP_KEEPALIVE for its TCP
-> >>> connections? What are the pro and cons of using that for NFS TCP
-> >>> connections?
-> >>>
-> >>> Ced
-> >>> --
-> >>> Cedric Blancher <cedric.blancher@gmail.com>
-> >>> [https://plus.google.com/u/0/+CedricBlancher/]
-> >>> Institute Pasteur
-> >
-> >
-> >
+> > That's up to the server! It could use something like fiemap or lseek
+> > with SEEK_HOLE or SEEK_DATA. It could also scan the data to see if
+> > there are any zeroes that could be compressed out.
 >
+> How can the client figure out whether the data in a READ_PLUS reply
+> are zeros of data, or zeros from a hole?
+As I understand the RFC, it cannot. Or put another way "a hole is a
+region that reads as all 0s, which may or may not have allocated blocks
+on the server file system".
+
+Although SEEK_HOLE typically returns the offset of an unallocated
+region, I don't think either the POSIX draft (was it ever ratified?) nor
+RFC7862 actually define a "hole" as an unallocated region.
+
+On a similar vein, Deallocate can simply write 0s to the region.
+(It does not actually have to "deallocate data blocks".)
+
+At least that is my understanding of POSIX and RFC7862, rick
+
+>
+> Ced
 > --
-> Calum Mackay
-> Linux Kernel Engineering
-> Oracle Linux and Virtualisation
+> Cedric Blancher <cedric.blancher@gmail.com>
+> [https://plus.google.com/u/0/+CedricBlancher/]
+> Institute Pasteur
 >
-
-
---=20
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
 
