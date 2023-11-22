@@ -1,102 +1,110 @@
-Return-Path: <linux-nfs+bounces-32-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-33-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CC357F538A
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 23:43:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B52BA7F53AE
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 23:48:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70FE7B20D94
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 22:43:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 19BD1B20D78
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 22:48:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 183E61C686;
-	Wed, 22 Nov 2023 22:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5D5D1D53A;
+	Wed, 22 Nov 2023 22:48:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k5UpMt6y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKVRWO7k"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB121BF
-	for <linux-nfs@vger.kernel.org>; Wed, 22 Nov 2023 14:43:21 -0800 (PST)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-547e7de7b6fso632552a12.0
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Nov 2023 14:43:21 -0800 (PST)
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A02B71B9
+	for <linux-nfs@vger.kernel.org>; Wed, 22 Nov 2023 14:47:55 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-5440f25dcc7so415572a12.0
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Nov 2023 14:47:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700693000; x=1701297800; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=glZd7CIizrcnFVarqS4XLSw3nlB05Khtm3RISDTzB1Y=;
-        b=k5UpMt6yglESw1pMMn8tAgq6QMQijxj1I1IOmxYrtUVKP5g9YewP1wewjaAF7kqfwB
-         PekKk6QkJddHfA7jcInPUU1x0VXWq1ELocvzgskTkSSm0WneS1lediN9pRaX8tQ0zL83
-         XIEhtJORzAchC/qRHmwZIZyZwUh3N1bqE1nG5axeFhB1escaSBBiOnqWPutOCHkFMDRO
-         l69+u88b+E3Cjsr7bM+vXAC8QF4xAZMLVz6Vw71qJvCSgilUcc3EiQdfY5GG0rhip4nQ
-         wswlJjocYRLsL8wsR2kURttA4Nm1SOp7jErd8oq1V+D099mOk8lJRtyPxg9iib3KvISX
-         InTQ==
+        d=gmail.com; s=20230601; t=1700693273; x=1701298073; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NrBIHfC+5zBb9zzXQFkmIwWER0SS5u3tXBvXWaeWwjU=;
+        b=DKVRWO7koXaLKP2wzZrUSIsv7qd6aPuXV7rC6alxDLZRHGPbkAL/O3CSrwSE4mFzlK
+         vD74NwaP7HX4bGbSXb3ZlYHcuDB0xTi/3sHVWFz77s7OfcSc9gGGmcs7cSj2tsOXMzVP
+         HjXKvfyjDnWjDjVd7qcr6kLkA/REUvSUNlzhVczlVI0WF4DT62HiOK0z/tccCHmkGFyU
+         knwfTFw7iRLNRSxfkgzI0heQ63Qx7JGdIBz/pZQGyV+iG++UpxUt/YYBnC6dDknuhjr0
+         cnMxZTNKIg9XWKRDFFcoIQdBjfZAfkFtaE23J6csKOGjDTYnGNRUHAQOnfCqHReHaXSH
+         6uWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700693000; x=1701297800;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=glZd7CIizrcnFVarqS4XLSw3nlB05Khtm3RISDTzB1Y=;
-        b=J208sE9Yy7HgLy9Yud+CEBPdm//W/wELz0GMCw31M0/Ka4xdDT65+OCD4m/Ff7vKqt
-         +UxeRSLBOj+IiFGz3GNWx/UBfo8WU0EQyCW74NrxY5pHEa4JMQYLszEou41zZc5OSsN6
-         G8ismW7Q3b/uOFhXJ1SNwP5pzkE/CiMvwsPo9dNTetpmmIYL1DieyDckWAXl6O7btM31
-         kMnJcSfzgtGXU4KE31Sg0rhBQ6LZa6QDnqd1t3pIkYENxOrirAae1BALwKVLpc23bbWS
-         dyzWFo67Nx6P87avJHWApQqkkskdf9YdfTo7+Xss73vbidYn2JRIUF8icHcVWR9rF4SQ
-         iJ+Q==
-X-Gm-Message-State: AOJu0Yygyl0zc5L+8H6QshIOFugIGQOH0pTlTiFMOGFhYCzdo3spEzQA
-	cryActchpL3ElIjeoISXQlbZJC36bCcHqXT3oXKwm4Qp
-X-Google-Smtp-Source: AGHT+IEkcT0CEIRUStJDW0WHOTXCoVm6pcPWFj0FsymIs54h9IVv9hR2X6abnSiMqbek4+6JzoXen99kIPcI1AO3hPQ=
-X-Received: by 2002:a05:6402:31ee:b0:52e:3ce8:e333 with SMTP id
- dy14-20020a05640231ee00b0052e3ce8e333mr781338edb.18.1700692999979; Wed, 22
- Nov 2023 14:43:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1700693273; x=1701298073;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NrBIHfC+5zBb9zzXQFkmIwWER0SS5u3tXBvXWaeWwjU=;
+        b=EymrxMUwsWFo7AQOUWu3Lt8KRN9Q5soCpJ1d7Ue4ny+vzuiAbiUTMyXaxIH6gHe1H5
+         rlR3hiYKC4e40s47N1dqbUWlMyxmcNKUSXDw6iJiI85VjTObWvgMxlD77pCOxuRJOz6p
+         VUyhLtQnM118Bm5koYBfSJkdlsaphxXWEqJnKYTS8AaZhIAfaOfny59wAydis47dzChA
+         1Bwn9klw6otfBdWLzeTzUQ3DE4oabimgS4dQooiBaaqa2gWyVb7z8LjRuSN67YaUWSRT
+         m79UvSLfCBW4ToekosK0LUxA6PpT4uu8+cuBLUFr33WN47czqeKYZaExu7KGKdv6sSp8
+         irGg==
+X-Gm-Message-State: AOJu0YwvIXHPVkMOedI+Fmti9+voEGx0kLRasPcQg2nFA7PkfXZuXOYL
+	KmZB3PnoidTzYINSec8kMDJ0G7g7ZlG4PkMYSqtxmFwr
+X-Google-Smtp-Source: AGHT+IH086isblgiYfxpwihjpq3w2ho+ZUdxuMwwM+3aqGIpA5r+PuJZa6EqvRblhRFC9ZzPJOVF+ZfbdVqkNrClnwc=
+X-Received: by 2002:aa7:c2d1:0:b0:540:3286:d2e8 with SMTP id
+ m17-20020aa7c2d1000000b005403286d2e8mr2609913edp.18.1700693273430; Wed, 22
+ Nov 2023 14:47:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALXu0UdcCKBGR8FUSEeEMngKqwz98Xc2HFXnhX5i_1ioEiuaQg@mail.gmail.com>
- <83a30ef92afa05d50232bd3c933f8eb45ed8f98b.camel@kernel.org>
- <CALXu0UerMnjs9y4gQTvy-v-gqSgO2imFbMAZ87LFj1tQqvfjiQ@mail.gmail.com> <0d7966163db13d71cb4679d51db5cacf91f42b6b.camel@kernel.org>
-In-Reply-To: <0d7966163db13d71cb4679d51db5cacf91f42b6b.camel@kernel.org>
+References: <CALXu0UeGnSvBbrfgnRNqdNGjDTag5Lz8uWOvuy_n57RHO3CRqw@mail.gmail.com>
+ <CAFX2JfnzDczbegELv3GMCYb3CEKZ+5WfgVotdoA3CyjUprGpTQ@mail.gmail.com>
+ <CALXu0UebE2oGgWLMn-NkfGq5n+2dEFnqrOy617SRMmKF-dGOXg@mail.gmail.com> <CAFX2JfnDC1xZvuuUiHe8_RpBehwCZriZ13yYPk6pQSPSV4V-qQ@mail.gmail.com>
+In-Reply-To: <CAFX2JfnDC1xZvuuUiHe8_RpBehwCZriZ13yYPk6pQSPSV4V-qQ@mail.gmail.com>
 From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Wed, 22 Nov 2023 23:42:43 +0100
-Message-ID: <CALXu0Uf9LiNL7SA57vSq5pMBVBZESWexcRwDR0XMc9fFpPiNkQ@mail.gmail.com>
-Subject: Re: How to set the NFSv4 "HIDDEN" attribute on Linux?
+Date: Wed, 22 Nov 2023 23:47:17 +0100
+Message-ID: <CALXu0UevOCU0dm-0WUEZZFCV=V8jQxmy2OQYhtptVyVAZeWs3g@mail.gmail.com>
+Subject: Re: How does READ_PLUS differ from READ?
 To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 20 Nov 2023 at 12:46, Jeff Layton <jlayton@kernel.org> wrote:
+On Sun, 19 Nov 2023 at 19:02, Anna Schumaker <schumaker.anna@gmail.com> wro=
+te:
 >
-> On Sun, 2023-11-19 at 17:51 +0100, Cedric Blancher wrote:
-> > On Sat, 18 Nov 2023 at 12:56, Jeff Layton <jlayton@kernel.org> wrote:
-> > >
-> > > On Sat, 2023-11-18 at 07:24 +0100, Cedric Blancher wrote:
-> > > > Good morning!
-> > > >
-> > > > NFSv4 has a "hidden" filesystem object attribute. How can I set that
-> > > > on a Linux NFSv4 server, or in a filesystem exported on Linux via
-> > > > NFSv4, so that the NFSv4 client gets this attribute for a file?
-> > > >
-> > >
-> > > You can't. RFC 8881 defines that as "TRUE, if the file is considered
-> > > hidden with respect to the Windows API." There is no analogous Linux
-> > > inode attribute.
+> On Sun, Nov 19, 2023 at 12:59=E2=80=AFPM Cedric Blancher
+> <cedric.blancher@gmail.com> wrote:
 > >
-> > Can we use setfattr and getfattr to set/get the NFSv4.1 HIDDEN and
-> > ARCHIVE? We have Windows NFSv4 clients (and kofemann/Roland's codebase
-> > supports this), and that means we need to be able to set/get and
-> > backup/restore these flags on the NFSv4 server side.
+> > On Sun, 19 Nov 2023 at 18:48, Anna Schumaker <schumaker.anna@gmail.com>=
+ wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Sun, Nov 19, 2023 at 12:38=E2=80=AFPM Cedric Blancher
+> > > <cedric.blancher@gmail.com> wrote:
+> > > >
+> > > > Good evening!
+> > > >
+> > > > How does READ_PLUS differ from READ? Has anyone made a simpler
+> > > > presentation (PowerPoint slides) than the RFCs?
+> > >
+> > > No slides, but at a high level READ_PLUS can compress out long ranges
+> > > of zeroes in a read reply by returning a HOLE segment instead of the
+> > > actual zeroes. It's perfectly valid for the server to skip the zero
+> > > detection and return everything as a data segment, however.
 > >
+> > So how do you differ between
+> > 1. a hole, aka no filesystem blocks allocated
+> > 2. a long sequence of valid data with all zero bytes in them
 >
-> No. They would need to be stored in the inode on the server somehow and
-> there is no place to store them. These attributes are simply not
-> supported by the Linux NFS server.
+> That's up to the server! It could use something like fiemap or lseek
+> with SEEK_HOLE or SEEK_DATA. It could also scan the data to see if
+> there are any zeroes that could be compressed out.
 
-Linux has xattrs, which are per inode, and can be backuped and
-restored via tar --xattrs. That would be good enough
+How can the client figure out whether the data in a READ_PLUS reply
+are zeros of data, or zeros from a hole?
 
 Ced
--- 
+--=20
 Cedric Blancher <cedric.blancher@gmail.com>
 [https://plus.google.com/u/0/+CedricBlancher/]
 Institute Pasteur
