@@ -1,105 +1,83 @@
-Return-Path: <linux-nfs+bounces-28-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-29-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 706157F3DED
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 07:07:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B08A7F486A
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 15:00:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D62522827C3
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 06:07:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9DDD2813B3
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Nov 2023 14:00:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96A76BA24;
-	Wed, 22 Nov 2023 06:07:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B15272576D;
+	Wed, 22 Nov 2023 14:00:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="dl1hxa1y"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BfQB384h"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A1CB9
-	for <linux-nfs@vger.kernel.org>; Tue, 21 Nov 2023 22:07:50 -0800 (PST)
-Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2c6eac9c053so18590081fa.1
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Nov 2023 22:07:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1700633268; x=1701238068; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZuJ+FGqFAIqsPH6/f+SFWhtOihZa8pB1zGedGnXzVdE=;
-        b=dl1hxa1yGsf1Ywa0F9egrWEiNocGB+fHtmquRgC0D2iQJDOGhPVSicV0SZrc+fFH5d
-         0H/5g91ENKuASFSklRXyEXgm+veKxuUP3x7FAcIoM2kogH/qhErIJMGLCcrXZVCilAup
-         H81y8RV8jdm9AuBciDHmgYCS4nAtkoFQ7eKbiZFscyGu0dXL6rtCGc1y0BfJhHifvu59
-         sf+QX/PvAzO4Tdp32TCfN3G0z6IrF7EeRUIJEcdfgMTaZKW9KLZKTrj8cotU2plKDmIC
-         L7JHmtOOSaS/UyiY7rl2lbc/GUv6Yy1E/q0F0c0ssJEPVcq3/ylX2ggJCEHMJSBLrmnu
-         vY8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700633268; x=1701238068;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZuJ+FGqFAIqsPH6/f+SFWhtOihZa8pB1zGedGnXzVdE=;
-        b=TlrzCv//AVfaueY9XLYv2I4U1UBYFjvX3Ihbbxb89oyQWdBVbI95b3M3UyADKuZNw0
-         0FCZTJ9KttU9HUBWhv//9hf7PrQx30eu3F4tvaB36K68YUcljqOT3BmsXuBqbNjGNP77
-         sX4CDt4wGn+Q9ZiVbr9gtAXRQ8k0/a47jKWmPjoXUlyOLHT73dbuqea3AV7tYv4cn6EG
-         5cxvyx976OMjh7SLWW0BWGKPhQw9AM1B6IPwZI2TeZQ/lC92Q0ttMAHS65pTRg7B1JiA
-         qc4YGkiM9msTYzVRSkpUXmcd4U323cXUh3deixAdLNTxLDIgeViEZSmFgfvzNL+FMtDN
-         IUwA==
-X-Gm-Message-State: AOJu0Yxy9dbSkXLZNFdt5Kq4wG8ZAr23J6Ma3HO5F0JAaF9/DbqsJJ8i
-	c+3/E9iv5tyWqJEEW/2cZhmsGlT6mheG56Ou+9E=
-X-Google-Smtp-Source: AGHT+IHgSONCr17pTwTgzaDVuHVUs5t0gDR+QNqpoD2yq/xxUWpps6di6e1sPoWKoB2sKvbrMKnarGWsAkMM5hqE+5Y=
-X-Received: by 2002:a2e:720d:0:b0:2c8:38b2:2c33 with SMTP id
- n13-20020a2e720d000000b002c838b22c33mr772499ljc.3.1700633268205; Tue, 21 Nov
- 2023 22:07:48 -0800 (PST)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC591CFBF;
+	Wed, 22 Nov 2023 14:00:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE673C433C8;
+	Wed, 22 Nov 2023 14:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1700661641;
+	bh=CKpWtcakXU6WLfkLUYMnK2MftqPDlyVQofJh5L4ipog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BfQB384hXCtGbDq3OEp+k+dC8Y95OtcvnToRFARS3SDWJ6KN61NI6F7znWBpzVRZy
+	 blYNyv3BkMn8/fMRiDzO1wyob3LYygCpQVnZmCWxpglAOIy6qZeHz6EWpbcx6oEnOQ
+	 ZD1UymrrTktDwQAdyHxQf0fDGf8zTfossoLSeTUZ6pjaVE/PjBDNbDLRKOPWYc+CRb
+	 2hKNctjCDvzK9jCLYwIjwa14u6LOKRZpaQ5fRQhowQWJhI4nHVL83nQSoBQmUEpRzJ
+	 XLCy/aOL44CWepHZTKNk0rkoBdAVTaeY3706+7M2UJUp/16I81Xi0ZCKrlm+l+vLC9
+	 NR+fFXfKYY1/g==
+Date: Wed, 22 Nov 2023 15:00:29 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: j.granados@samsung.com
+Cc: Luis Chamberlain <mcgrof@kernel.org>, willy@infradead.org,
+	josh@joshtriplett.org, Kees Cook <keescook@chromium.org>,
+	David Howells <dhowells@redhat.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Benjamin LaHaise <bcrl@kvack.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>, Jan Kara <jack@suse.cz>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Matthew Bobrowski <repnop@google.com>,
+	Anton Altaparmakov <anton@tuxera.com>,
+	Namjae Jeon <linkinjeon@kernel.org>, Mark Fasheh <mark@fasheh.com>,
+	Joel Becker <jlbec@evilplan.org>,
+	Joseph Qi <joseph.qi@linux.alibaba.com>,
+	Iurii Zaikin <yzaikin@google.com>,
+	Eric Biggers <ebiggers@kernel.org>,
+	"Theodore Y. Ts'o" <tytso@mit.edu>,
+	Chandan Babu R <chandan.babu@oracle.com>,
+	"Darrick J. Wong" <djwong@kernel.org>,
+	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+	linux-cachefs@redhat.com, linux-kernel@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
+	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+	linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@lists.linux.dev,
+	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
+	codalist@coda.cs.cmu.edu
+Subject: Re: [PATCH v2 0/4] sysctl: Remove sentinel elements from fs dir
+Message-ID: <20231122-undifferenziert-weitschuss-a5d8cc56fbd1@brauner>
+References: <20231121-jag-sysctl_remove_empty_elem_fs-v2-0-39eab723a034@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <97AE695C-8F9F-4E9C-9460-427C284FBD32@oracle.com>
-In-Reply-To: <97AE695C-8F9F-4E9C-9460-427C284FBD32@oracle.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Tue, 21 Nov 2023 20:07:36 -1000
-Message-ID: <CAN-5tyHxvTevgM38q94W4e+rBzYu7tWqDHVMNcFQ5GT3uNArCw@mail.gmail.com>
-Subject: Re: changes to struct rpc_gss_sec
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Olga Kornievskaia <kolga@netapp.com>, Steve Dickson <SteveD@redhat.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231121-jag-sysctl_remove_empty_elem_fs-v2-0-39eab723a034@samsung.com>
 
-Hi Chuck,
-
-A quick reply as I'm on vacation but I can take a look when I get
-back. I'm just thinking there must be a reason why gssd is using the
-authgss api and not calling the rpc_gss one.
-
-On Tue, Nov 21, 2023 at 6:59=E2=80=AFAM Chuck Lever III <chuck.lever@oracle=
-.com> wrote:
->
-> Hey Olga-
->
-> I see that f5b6e6fdb1e6 ("gss-api: expose gss major/minor error in
-> authgss_refresh()") added a couple of fields in structure rpc_gss_sec.
-> Later, there are some nfs-utils changes that start using those fields.
->
-> That breaks building the latest upstream nfs-utils on Fedora 38, whose
-> current libtirpc doesn't have those new fields.
->
-> IMO struct rpc_gss_sec is part of the libtirpc API/ABI, thus we really
-> shouldn't change it.
->
-> Instead, if gssd needs GSS status codes, can't it call
-> rpc_gss_seccreate(3), which explicitly takes a struct
-> rpc_gss_options_ret_t * argument?
->
-> ie, just replace the authgss_create_default() call with a call to
-> rpc_gss_seccreate(3) ....
->
->
-> --
-> Chuck Lever
->
->
->
+Looks fine,
+Acked-by: Christian Brauner <brauner@kernel.org>
 
