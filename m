@@ -1,173 +1,133 @@
-Return-Path: <linux-nfs+bounces-42-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-43-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F4007F6915
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 23:42:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BF707F691B
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 23:47:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1948C2811AC
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 22:42:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 070E628197B
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 22:47:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1A56179BF;
-	Thu, 23 Nov 2023 22:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3C6A11C8F;
+	Thu, 23 Nov 2023 22:47:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnW2LDum"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DrpSyCdx"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06EC61B2
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 14:42:19 -0800 (PST)
-Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6cbe5b6ec62so913293b3a.1
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 14:42:19 -0800 (PST)
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8760ED47
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 14:47:01 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-2857670af8cso520548a91.0
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 14:47:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1700779338; x=1701384138; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1700779621; x=1701384421; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sN6oiXJBkSzY08hCjgjfEshPABMkCrQmo3pI9rTbniI=;
-        b=nnW2LDumsr8y+QiRDeIlDURu+/aQm4dC0PBTXjv1Kvl/wa+5GN6pXALg6S0dh9kBU+
-         MrgCcD8/Kgu2/rgjpHwYIHYvCzQjxTOb1mPh46SQD+1ka8NxPqhWffne92k8YSJhQGED
-         gMXyUlhppIyJdX4d+rFZI/+Fbi/wqZypHabSvfCgPLUtCYi94bI3/Euok6kNaf/YCnoW
-         SH8MHGFlp6Vuek7wPNlqKzExA0009TiINvJVwXfVzrqHMLMNygrYGTFX2clpJBAoz80J
-         nX/uAzRhlqwvgbtXpNAmUk8wSYGU/30E6N/4dMV9WWzd59U10x656SJ5EYcM4wW/3IQD
-         hvYw==
+        bh=QlQd4U9NgPxSge5CIcK2S1J3HNMym0rUtGC+zT+w7Mo=;
+        b=DrpSyCdxNaILtcesSBkRk1gnmKIBNG923LZ+9BC0po6fWElIM4rR9ZrY4svLfXChgD
+         kHiZZHl8LM6kjSgpSXtV+aropA9elNrQETbGkBb5q1K/gBH1Sg90V9dX67CYRyMBdh0s
+         gNI9NVcTpR/GVJsXjGcYcMjzcmuihC6zySKdBBvt1PRZWtWNS9CO56Zy2K5tyoQ0Ttim
+         EAf9owPZ+SjNJv+Ft2wznfB4TJaW4ZKmWnXGE3UUUy6K57ueOegqS4XsqfqPOJPC8xjy
+         yK1tNOnVZ3oMMU2OQPfNKJsoIBJddss2qf6Zn+qCjuHBvevbJV7dhBRZXLwDtC4fQzsp
+         V03w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700779338; x=1701384138;
+        d=1e100.net; s=20230601; t=1700779621; x=1701384421;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sN6oiXJBkSzY08hCjgjfEshPABMkCrQmo3pI9rTbniI=;
-        b=pRDArH/ia/rUxsgu6LNkPllU86bbRiL2MrZm81ecPFN6nPwGc15bsHzZLq2FRFLofY
-         tswRVgGPRae1a73rfhs5IwgyVSGWOawvZ6oJbjpr94BbZpxON01YW1fed0nxSozhfvj2
-         1/wYmTCzk8ztPX7w8HHSJBvWri2FKTvTvvfFHo2/areqO9gyLUf0qMEIuSZUmp8L8f0/
-         HzjCR/PHxJtzTvR9H7rJAkdban8dU6/jrC9ETGP40AU5qDJnP/48RrQPaRXbQEnjLw3u
-         4vWVT8Gml4L8Tvd+w8/dBVKmotdrqmR+RSE+uLRpvF6dodKRML548EXNoTTgfLDE9X3j
-         mYqQ==
-X-Gm-Message-State: AOJu0YxX3cNHQoWgI8VIyQY4pcF2Un45x4HsccBZDTHehv8vyJ4C7GdL
-	Vgng4aj1Nb8vdtWqkDPz2LpPT8k6J44YrVo746TRUiOsqg==
-X-Google-Smtp-Source: AGHT+IHxu3yA5Oy/Xy8vZIY8rArZag8pCGalLkNGnapNh/LQR/nUKmDuANy9+vM9raQQ8LCKAS4AbeUF+kLe0SsV4v8=
-X-Received: by 2002:a05:6a20:8f19:b0:188:39e:9054 with SMTP id
- b25-20020a056a208f1900b00188039e9054mr1215301pzk.6.1700779338264; Thu, 23 Nov
- 2023 14:42:18 -0800 (PST)
+        bh=QlQd4U9NgPxSge5CIcK2S1J3HNMym0rUtGC+zT+w7Mo=;
+        b=FvKN9VNfUKEdClJ3vyJvVFLhoL8qif0kiMgyW8txtka5h8PcAXX+whTiStQwZ9XrUS
+         JEhsUm+PIxL4CgXygIsKcw0kHPGmGwOeqCH9LwWXCEPWFlW6oNky2V3vW5o147+nHkKn
+         Eo97LdhNRyW5AvDAIgnOh73PMTRJ12zHf2cs4Slg9wn3GbxCrXSQ+18UKoBuy+Q/AcoV
+         ASu43pDsmi1Knh4Lm61TiXMbeMy7rRRamg9BJeDKvJc6tK5h1ckq6Bqte4NrDghp3B6h
+         8Y0ah19VyLg1bUvWQFiROg0SFn00PP0pUBVQ1l94kXlF6rmBAxfq4Fmv5axkpO8IQUu1
+         E+eg==
+X-Gm-Message-State: AOJu0YzymRV+/0eus1t+kWRDq30Qc+OXVujORssiQYcNCbkx9EkwROLD
+	TEzo6bfg/5oISTsBA3geXL8iZRkML2lyrQOF63hUYPc=
+X-Google-Smtp-Source: AGHT+IFS/ZHUTenetFbyWv2eGMvULuAyCdpHUK3Ww4T713pThqf5QE4jffdcYgNvjy8J92jkuXOeGEH4cAvp3hO+IEc=
+X-Received: by 2002:a17:90b:1c8b:b0:285:6943:eca2 with SMTP id
+ oo11-20020a17090b1c8b00b002856943eca2mr763399pjb.29.1700779620906; Thu, 23
+ Nov 2023 14:47:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALXu0UeGnSvBbrfgnRNqdNGjDTag5Lz8uWOvuy_n57RHO3CRqw@mail.gmail.com>
- <CAFX2JfnzDczbegELv3GMCYb3CEKZ+5WfgVotdoA3CyjUprGpTQ@mail.gmail.com>
- <CALXu0UebE2oGgWLMn-NkfGq5n+2dEFnqrOy617SRMmKF-dGOXg@mail.gmail.com>
- <CAFX2JfnDC1xZvuuUiHe8_RpBehwCZriZ13yYPk6pQSPSV4V-qQ@mail.gmail.com>
- <CALXu0UevOCU0dm-0WUEZZFCV=V8jQxmy2OQYhtptVyVAZeWs3g@mail.gmail.com>
- <CAM5tNy7QYgMUo_tTSPQ6hqxO8WrscBn1O2XpeJVK67OCQMu+2w@mail.gmail.com> <CALXu0Ue6d7Z+gh5VS_64scjUwPA_-PVKmsv0W+uEx93vbf6dgw@mail.gmail.com>
-In-Reply-To: <CALXu0Ue6d7Z+gh5VS_64scjUwPA_-PVKmsv0W+uEx93vbf6dgw@mail.gmail.com>
+References: <CALXu0UdcCKBGR8FUSEeEMngKqwz98Xc2HFXnhX5i_1ioEiuaQg@mail.gmail.com>
+ <83a30ef92afa05d50232bd3c933f8eb45ed8f98b.camel@kernel.org>
+ <CALXu0UerMnjs9y4gQTvy-v-gqSgO2imFbMAZ87LFj1tQqvfjiQ@mail.gmail.com>
+ <0d7966163db13d71cb4679d51db5cacf91f42b6b.camel@kernel.org>
+ <CALXu0Uf9LiNL7SA57vSq5pMBVBZESWexcRwDR0XMc9fFpPiNkQ@mail.gmail.com> <CALXu0UccoNs0A4MjQH7gPboarWyZcRQzsy2zJRxk51LR0hGDVQ@mail.gmail.com>
+In-Reply-To: <CALXu0UccoNs0A4MjQH7gPboarWyZcRQzsy2zJRxk51LR0hGDVQ@mail.gmail.com>
 From: Rick Macklem <rick.macklem@gmail.com>
-Date: Thu, 23 Nov 2023 14:42:07 -0800
-Message-ID: <CAM5tNy4h8__9Xu1nEx3akLb_qZo-5XfgoT9M=fRYfZt6N2AcrQ@mail.gmail.com>
-Subject: Re: How does READ_PLUS differ from READ?
+Date: Thu, 23 Nov 2023 14:46:50 -0800
+Message-ID: <CAM5tNy7TvGgNRjdyo+hYMvOM4PCEMbEfO+T7M1QCOv+OMx6dUQ@mail.gmail.com>
+Subject: Re: <DOT>foo gets NFSv4 HIDDEN attribute by default by nfsd? Re: How
+ to set the NFSv4 "HIDDEN" attribute on Linux?
 To: Cedric Blancher <cedric.blancher@gmail.com>
 Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 23, 2023 at 2:14=E2=80=AFPM Cedric Blancher
+On Thu, Nov 23, 2023 at 2:24=E2=80=AFPM Cedric Blancher
 <cedric.blancher@gmail.com> wrote:
 >
-> On Thu, 23 Nov 2023 at 00:19, Rick Macklem <rick.macklem@gmail.com> wrote=
-:
+> On Wed, 22 Nov 2023 at 23:42, Cedric Blancher <cedric.blancher@gmail.com>=
+ wrote:
 > >
-> > On Wed, Nov 22, 2023 at 2:48=E2=80=AFPM Cedric Blancher
-> > <cedric.blancher@gmail.com> wrote:
+> > On Mon, 20 Nov 2023 at 12:46, Jeff Layton <jlayton@kernel.org> wrote:
 > > >
-> > > On Sun, 19 Nov 2023 at 19:02, Anna Schumaker <schumaker.anna@gmail.co=
-m> wrote:
-> > > >
-> > > > On Sun, Nov 19, 2023 at 12:59=E2=80=AFPM Cedric Blancher
-> > > > <cedric.blancher@gmail.com> wrote:
+> > > On Sun, 2023-11-19 at 17:51 +0100, Cedric Blancher wrote:
+> > > > On Sat, 18 Nov 2023 at 12:56, Jeff Layton <jlayton@kernel.org> wrot=
+e:
 > > > > >
-> > > > > On Sun, 19 Nov 2023 at 18:48, Anna Schumaker <schumaker.anna@gmai=
-l.com> wrote:
+> > > > > On Sat, 2023-11-18 at 07:24 +0100, Cedric Blancher wrote:
+> > > > > > Good morning!
 > > > > > >
-> > > > > > Hi,
+> > > > > > NFSv4 has a "hidden" filesystem object attribute. How can I set=
+ that
+> > > > > > on a Linux NFSv4 server, or in a filesystem exported on Linux v=
+ia
+> > > > > > NFSv4, so that the NFSv4 client gets this attribute for a file?
 > > > > > >
-> > > > > > On Sun, Nov 19, 2023 at 12:38=E2=80=AFPM Cedric Blancher
-> > > > > > <cedric.blancher@gmail.com> wrote:
-> > > > > > >
-> > > > > > > Good evening!
-> > > > > > >
-> > > > > > > How does READ_PLUS differ from READ? Has anyone made a simple=
-r
-> > > > > > > presentation (PowerPoint slides) than the RFCs?
-> > > > > >
-> > > > > > No slides, but at a high level READ_PLUS can compress out long =
-ranges
-> > > > > > of zeroes in a read reply by returning a HOLE segment instead o=
-f the
-> > > > > > actual zeroes. It's perfectly valid for the server to skip the =
-zero
-> > > > > > detection and return everything as a data segment, however.
 > > > > >
-> > > > > So how do you differ between
-> > > > > 1. a hole, aka no filesystem blocks allocated
-> > > > > 2. a long sequence of valid data with all zero bytes in them
+> > > > > You can't. RFC 8881 defines that as "TRUE, if the file is conside=
+red
+> > > > > hidden with respect to the Windows API." There is no analogous Li=
+nux
+> > > > > inode attribute.
 > > > >
-> > > > That's up to the server! It could use something like fiemap or lsee=
-k
-> > > > with SEEK_HOLE or SEEK_DATA. It could also scan the data to see if
-> > > > there are any zeroes that could be compressed out.
+> > > > Can we use setfattr and getfattr to set/get the NFSv4.1 HIDDEN and
+> > > > ARCHIVE? We have Windows NFSv4 clients (and kofemann/Roland's codeb=
+ase
+> > > > supports this), and that means we need to be able to set/get and
+> > > > backup/restore these flags on the NFSv4 server side.
+> > > >
 > > >
-> > > How can the client figure out whether the data in a READ_PLUS reply
-> > > are zeros of data, or zeros from a hole?
-> > As I understand the RFC, it cannot. Or put another way "a hole is a
-> > region that reads as all 0s, which may or may not have allocated blocks
-> > on the server file system".
+> > > No. They would need to be stored in the inode on the server somehow a=
+nd
+> > > there is no place to store them. These attributes are simply not
+> > > supported by the Linux NFS server.
 > >
-> > Although SEEK_HOLE typically returns the offset of an unallocated
-> > region, I don't think either the POSIX draft (was it ever ratified?) no=
-r
-> > RFC7862 actually define a "hole" as an unallocated region.
+> > Linux has xattrs, which are per inode, and can be backuped and
+> > restored via tar --xattrs. That would be good enough
 >
-> Opengroup ratified that one. See https://austingroupbugs.net/view.php?id=
-=3D415
->
-> >
-> > On a similar vein, Deallocate can simply write 0s to the region.
-> > (It does not actually have to "deallocate data blocks".)
-> >
-> > At least that is my understanding of POSIX and RFC7862, rick
->
-> Can anyone please confirm that RFC7862 and READPLUS cannot distinguish
-> between allocated and unallocated regions in a file?
-The best place to ask this is the nfsv4@ietf.org mailing list.
-Alternately, you just read the words yourself...
-Having said that, here are a few snippets of RFC7862 (neither of which are
-in the READ_PLUS section):
-In definitions...
-   Hole:  A byte range within a sparse file that contains all zeros.  A
-      hole might or might not have space allocated or reserved to it.
+> Also, it is legal for a nfsd to give the DOT files (/.foo) the HIDDEN
+> attribute by default? Right now on Windows they show up because NFSv4
+> HIDDEN is not set, and it is annoying.
+First, just to let you know, I am not a Linux developer. I work on the Free=
+BSD
+NFS code...
 
-And in the section on DEALLOCATE...
-   All further READs from
-   the region passed to DEALLOCATE MUST return zeros until overwritten.
-   [irrelevant stuff snipped]
-   Situations may arise where da_offset and/or da_offset + da_length
-   will not be aligned to a boundary for which the server does
-   allocations or deallocations.  For most file systems, this is the
-   block size of the file system.  In such a case, the server can
-   deallocate as many bytes as it can in the region.  The blocks that
-   cannot be deallocated MUST be zeroed.
-
-Now, if the above is not enough to convince you that "hole" does not
-necessarily imply "unallocated", then I suggest you read it and then
-ask on nfsv4@ietf.org.
-(Btw, the DEALLOCATE section uses the term "unreserved" and not
-"unallocated".)
-
-I'll also admit I do not understand why you care?
-Is there a Windows API that specifically returns unallocated regions
-of files?
+To be honest, you can do just about anything you want in the client. The RF=
+Cs
+basically define what goes "on the wire".
+Now, having said that, you might run into difficulties doing this
+because "hidden"
+is defined as a RW attribute and to set it would require renaming the file.
 
 rick
 
