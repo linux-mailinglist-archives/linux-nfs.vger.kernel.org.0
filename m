@@ -1,89 +1,140 @@
-Return-Path: <linux-nfs+bounces-39-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-40-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EBE27F661B
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 19:21:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 33A637F68EC
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 23:14:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 787F81C20C85
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 18:21:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B7C8FB20E20
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Nov 2023 22:14:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F4F54B5C8;
-	Thu, 23 Nov 2023 18:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BCA81401C;
+	Thu, 23 Nov 2023 22:14:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=epfl.ch header.i=@epfl.ch header.b="doe7THtQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PWqYnAI2"
 X-Original-To: linux-nfs@vger.kernel.org
-X-Greylist: delayed 398 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Nov 2023 10:21:36 PST
-Received: from smtp0.epfl.ch (smtp0.epfl.ch [IPv6:2001:620:618:1e0:1:80b2:e058:1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B596F9
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 10:21:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=epfl.ch;
-      s=epfl; t=1700763294;
-      h=From:To:Subject:Date:Message-ID:Content-Type:Content-Transfer-Encoding:MIME-Version;
-      bh=LKE7a7WUe5YoK/V5zT/ELU27eBfC14QgGED0o0vh5iw=;
-      b=doe7THtQIUJ7bgQ3mfiQjwseRN+hFiIRY0w8W865v4rN1UDVoBNYUWufhYojR/jTn
-        SXZlHy+Srh6NtvYyI7PJP5LjOLl64mgf7sWWMclIFVPbaEisbRKIWV98V4PEeOGq5
-        5C8uQ+zJ3nAf/ilhKEkDBhXkXVfP4GOCsxdwPX9e8=
-Received: (qmail 2029 invoked by uid 107); 23 Nov 2023 18:14:54 -0000
-Received: from ax-snat-224-177.epfl.ch (HELO ewa06.intranet.epfl.ch) (192.168.224.177) (TLS, ECDHE-RSA-AES256-GCM-SHA384 (P-256 curve) cipher)
-  by mail.epfl.ch (AngelmatoPhylax SMTP proxy) with ESMTPS; Thu, 23 Nov 2023 19:14:54 +0100
-X-EPFL-Auth: rOfTDiA50tYiPU4849FIMcDLqLac6pRoBE0IZhcfKia8Nd0e6T0=
-Received: from ewa07.intranet.epfl.ch (128.178.224.178) by
- ewa06.intranet.epfl.ch (128.178.224.177) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.34; Thu, 23 Nov 2023 19:14:51 +0100
-Received: from ewa07.intranet.epfl.ch ([fe80::f470:9b62:7382:7f3a]) by
- ewa07.intranet.epfl.ch ([fe80::f470:9b62:7382:7f3a%4]) with mapi id
- 15.01.2507.034; Thu, 23 Nov 2023 19:14:51 +0100
-From: Tao Lyu <tao.lyu@epfl.ch>
-To: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Question about O_APPEND | O_DIRECT
-Thread-Topic: Question about O_APPEND | O_DIRECT
-Thread-Index: AQHaHjflhODFfyeMXUSkxSGiPt/2HA==
-Date: Thu, 23 Nov 2023 18:14:51 +0000
-Message-ID: <c609e5f9df75438dbfe3810859935d58@epfl.ch>
-Accept-Language: en-US, fr-CH
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3246310F8
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 14:14:21 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-547e7de7b6fso2544925a12.0
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 14:14:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1700777659; x=1701382459; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t5vSTfYWkE/phKODgcMUMbJYSZMT8h+eiNWLJmZM51g=;
+        b=PWqYnAI2AjA3dXy+//sh0YpMLMafr1mh40EZokyr586lUts5UpmTkP5InHGpT9nPiM
+         HikzXXGYKimrrAts5GkuxbdmGWUQioigebPrpWYwRb5rgTL9mv6d70x6sUS9GV59F6Jt
+         sT6WfWrwAv3HSo4bycPgRloaOLe9Y7OYKlGWyyn7xNYA8RYbAkY+MDDfhLgmSgtZORFg
+         AEg4lZrEdI4RlSkLW4vuvvcJyKYGByUjYWODcFO57wZ7knD+3R5j+2W0NFZh1N1jenTc
+         XZWmL9G0jd0e+IjcbvkMGnGtDDJRgmjNWT8BSK4V32SN0Up/yNNujLJUft8gbuwKdcH1
+         JDlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1700777659; x=1701382459;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t5vSTfYWkE/phKODgcMUMbJYSZMT8h+eiNWLJmZM51g=;
+        b=Eq2o0w3hq7rNK67zH7SbUTPiJJQbVhcfwDtseygE4ZXHaeHmwoMZhqbokHeZOID1Pe
+         Ncfhvvr7Ew/jgn2vvfsAXrmvBbdVVHWmjj2eWG8ZHJkRRaT/OFbIA0bNwwxtSZk77XxZ
+         JqQRfnS3cIRh9aQKnOWMVewHX/CE9GwOkTDSeGBwQfz0k41yvCHM7vaEjWWsbl0U6fIE
+         Wmo6VGOFr6RCrqAp/abC9v4zRgSQ5293y9aJl3ioPL6gc2VuqdN3ebs+M9BpCOvj0NB0
+         f1NgUzH8k2sqaonkYZ36X1kPeXtU/n73/FSvYDbCmGq6aSY/FvFKXPyHXJPjh3ChIg/6
+         dFkA==
+X-Gm-Message-State: AOJu0YwR+Ddncz7PDwpeHiT/Nk13QJAxJtsBTSQxgvo2qLqaDhVO5Jun
+	KQWPqntqGkVWECaXDzuYse4RIUTmPgs2xh8VYcFU6nhhpiw=
+X-Google-Smtp-Source: AGHT+IFgDHmN+1rTmFo7T6vJymoJaHMBLumHulpQf0/JaJy6Kz7K4uOI17gl2Db+WEDVmNU12gNfEHh0rm274/aagD8=
+X-Received: by 2002:aa7:d795:0:b0:548:aca1:b15f with SMTP id
+ s21-20020aa7d795000000b00548aca1b15fmr3581811edq.17.1700777659168; Thu, 23
+ Nov 2023 14:14:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <CALXu0UeGnSvBbrfgnRNqdNGjDTag5Lz8uWOvuy_n57RHO3CRqw@mail.gmail.com>
+ <CAFX2JfnzDczbegELv3GMCYb3CEKZ+5WfgVotdoA3CyjUprGpTQ@mail.gmail.com>
+ <CALXu0UebE2oGgWLMn-NkfGq5n+2dEFnqrOy617SRMmKF-dGOXg@mail.gmail.com>
+ <CAFX2JfnDC1xZvuuUiHe8_RpBehwCZriZ13yYPk6pQSPSV4V-qQ@mail.gmail.com>
+ <CALXu0UevOCU0dm-0WUEZZFCV=V8jQxmy2OQYhtptVyVAZeWs3g@mail.gmail.com> <CAM5tNy7QYgMUo_tTSPQ6hqxO8WrscBn1O2XpeJVK67OCQMu+2w@mail.gmail.com>
+In-Reply-To: <CAM5tNy7QYgMUo_tTSPQ6hqxO8WrscBn1O2XpeJVK67OCQMu+2w@mail.gmail.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Thu, 23 Nov 2023 23:13:42 +0100
+Message-ID: <CALXu0Ue6d7Z+gh5VS_64scjUwPA_-PVKmsv0W+uEx93vbf6dgw@mail.gmail.com>
+Subject: Re: How does READ_PLUS differ from READ?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Thu, 23 Nov 2023 at 00:19, Rick Macklem <rick.macklem@gmail.com> wrote:
+>
+> On Wed, Nov 22, 2023 at 2:48=E2=80=AFPM Cedric Blancher
+> <cedric.blancher@gmail.com> wrote:
+> >
+> > On Sun, 19 Nov 2023 at 19:02, Anna Schumaker <schumaker.anna@gmail.com>=
+ wrote:
+> > >
+> > > On Sun, Nov 19, 2023 at 12:59=E2=80=AFPM Cedric Blancher
+> > > <cedric.blancher@gmail.com> wrote:
+> > > >
+> > > > On Sun, 19 Nov 2023 at 18:48, Anna Schumaker <schumaker.anna@gmail.=
+com> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > On Sun, Nov 19, 2023 at 12:38=E2=80=AFPM Cedric Blancher
+> > > > > <cedric.blancher@gmail.com> wrote:
+> > > > > >
+> > > > > > Good evening!
+> > > > > >
+> > > > > > How does READ_PLUS differ from READ? Has anyone made a simpler
+> > > > > > presentation (PowerPoint slides) than the RFCs?
+> > > > >
+> > > > > No slides, but at a high level READ_PLUS can compress out long ra=
+nges
+> > > > > of zeroes in a read reply by returning a HOLE segment instead of =
+the
+> > > > > actual zeroes. It's perfectly valid for the server to skip the ze=
+ro
+> > > > > detection and return everything as a data segment, however.
+> > > >
+> > > > So how do you differ between
+> > > > 1. a hole, aka no filesystem blocks allocated
+> > > > 2. a long sequence of valid data with all zero bytes in them
+> > >
+> > > That's up to the server! It could use something like fiemap or lseek
+> > > with SEEK_HOLE or SEEK_DATA. It could also scan the data to see if
+> > > there are any zeroes that could be compressed out.
+> >
+> > How can the client figure out whether the data in a READ_PLUS reply
+> > are zeros of data, or zeros from a hole?
+> As I understand the RFC, it cannot. Or put another way "a hole is a
+> region that reads as all 0s, which may or may not have allocated blocks
+> on the server file system".
+>
+> Although SEEK_HOLE typically returns the offset of an unallocated
+> region, I don't think either the POSIX draft (was it ever ratified?) nor
+> RFC7862 actually define a "hole" as an unallocated region.
 
-Sorry to bother you here.
+Opengroup ratified that one. See https://austingroupbugs.net/view.php?id=3D=
+415
 
-I'm using NFS and realize it doesn't support opening a file with "O_DIRECT =
-| O_APPEND".
+>
+> On a similar vein, Deallocate can simply write 0s to the region.
+> (It does not actually have to "deallocate data blocks".)
+>
+> At least that is my understanding of POSIX and RFC7862, rick
 
-After checking the source code,=20
-I found it has one function that checks explicitly whether there is a combi=
-nation flag of "O_APPEND | O_DIRECT".
-If so, it will return invalid arguments.
+Can anyone please confirm that RFC7862 and READPLUS cannot distinguish
+between allocated and unallocated regions in a file?
 
-int nfs_check_flags(int flags)
-{
-=A0=A0=A0 if ((flags & (O_APPEND | O_DIRECT)) =3D=3D (O_APPEND | O_DIRECT))
-=A0=A0=A0=A0=A0=A0=A0 return -EINVAL;
-
-=A0=A0=A0 return 0;
-}
-
-But I don't understand why NFS doesn't support this flag combination.
-I'd appreciate it if someone could explain this to me.
-
-Thanks in advance.
-
-Best,
-Tao
-
-
+Ced
+--=20
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
