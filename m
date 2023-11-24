@@ -1,38 +1,38 @@
-Return-Path: <linux-nfs+bounces-64-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-44-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91DFE7F6B6C
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Nov 2023 05:33:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62D977F6B3F
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Nov 2023 05:20:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C2F8280E08
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Nov 2023 04:33:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 93F711C209F6
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Nov 2023 04:20:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB5785699;
-	Fri, 24 Nov 2023 04:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D3652104;
+	Fri, 24 Nov 2023 04:20:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C297DD59
-	for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 20:33:19 -0800 (PST)
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3AC1BE
+	for <linux-nfs@vger.kernel.org>; Thu, 23 Nov 2023 20:20:10 -0800 (PST)
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id D486720C7D;
-	Fri, 24 Nov 2023 00:30:33 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 70B1D22CA3;
+	Fri, 24 Nov 2023 00:30:39 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BA5361340B;
-	Fri, 24 Nov 2023 00:30:31 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4F47B1340B;
+	Fri, 24 Nov 2023 00:30:37 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IU3EG6fuX2V4egAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 24 Nov 2023 00:30:31 +0000
+	id /XscAa3uX2WEegAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 24 Nov 2023 00:30:37 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -40,9 +40,9 @@ Cc: linux-nfs@vger.kernel.org,
 	Olga Kornievskaia <kolga@netapp.com>,
 	Dai Ngo <Dai.Ngo@oracle.com>,
 	Tom Talpey <tom@talpey.com>
-Subject: [PATCH 08/11] nfsd: allow lock state ids to be revoked and then freed
-Date: Fri, 24 Nov 2023 11:23:20 +1100
-Message-ID: <20231124002504.19515-9-neilb@suse.de>
+Subject: [PATCH 09/11] nfsd: allow open state ids to be revoked and then freed
+Date: Fri, 24 Nov 2023 11:23:21 +1100
+Message-ID: <20231124002504.19515-10-neilb@suse.de>
 X-Mailer: git-send-email 2.42.1
 In-Reply-To: <20231124002504.19515-1-neilb@suse.de>
 References: <20231124002504.19515-1-neilb@suse.de>
@@ -56,12 +56,11 @@ Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: +++++++++++
 X-Spam-Score: 11.65
 X-Rspamd-Server: rspamd1
-X-Spam-Level: *
-X-Rspamd-Queue-Id: D486720C7D
-Authentication-Results: smtp-out2.suse.de;
+X-Rspamd-Queue-Id: 70B1D22CA3
+Authentication-Results: smtp-out1.suse.de;
 	dkim=none;
 	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.de (policy=none);
-	spf=softfail (smtp-out2.suse.de: 2a07:de40:b281:104:10:150:64:97 is neither permitted nor denied by domain of neilb@suse.de) smtp.mailfrom=neilb@suse.de
+	spf=softfail (smtp-out1.suse.de: 2a07:de40:b281:104:10:150:64:97 is neither permitted nor denied by domain of neilb@suse.de) smtp.mailfrom=neilb@suse.de
 X-Spamd-Result: default: False [11.65 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
@@ -86,84 +85,68 @@ X-Spamd-Result: default: False [11.65 / 50.00];
 	 RCVD_TLS_ALL(0.00)[];
 	 DMARC_POLICY_SOFTFAIL(0.10)[suse.de : No valid SPF, No valid DKIM,none]
 
-Revoking state through 'unlock_filesystem' now revokes any lock states
+Revoking state through 'unlock_filesystem' now revokes any open states
 found.  When the stateids are then freed by the client, the revoked
 stateids will be cleaned up correctly.
 
+Possibly the related lock states should be revoked too, but a
+subsequent patch will do that for all lock state on the superblock.
+
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4state.c | 40 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c57f2ff954cb..0f52e10fbdfb 100644
+index 0f52e10fbdfb..8712eb81123f 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
 @@ -1708,7 +1708,7 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
  	unsigned int idhashval;
  	unsigned int sc_types;
  
--	sc_types = 0;
-+	sc_types = NFS4_LOCK_STID;
+-	sc_types = NFS4_LOCK_STID;
++	sc_types = NFS4_OPEN_STID | NFS4_LOCK_STID;
  
  	spin_lock(&nn->client_lock);
  	for (idhashval = 0; idhashval < CLIENT_HASH_MASK; idhashval++) {
-@@ -1719,8 +1719,36 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
- 			struct nfs4_stid *stid = find_one_sb_stid(clp, sb,
- 								  sc_types);
- 			if (stid) {
-+				struct nfs4_ol_stateid *stp;
-+
+@@ -1723,6 +1723,22 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
+ 
  				spin_unlock(&nn->client_lock);
  				switch (stid->sc_type) {
-+				case NFS4_LOCK_STID:
++				case NFS4_OPEN_STID:
 +					stp = openlockstateid(stid);
 +					mutex_lock_nested(&stp->st_mutex,
-+							  LOCK_STATEID_MUTEX);
++							  OPEN_STATEID_MUTEX);
++
 +					spin_lock(&clp->cl_lock);
 +					if (stid->sc_status == 0) {
-+						struct nfs4_lockowner *lo =
-+							lockowner(stp->st_stateowner);
-+						struct nfsd_file *nf;
-+
 +						stid->sc_status |=
 +							NFS4_STID_ADMIN_REVOKED;
 +						atomic_inc(&clp->cl_admin_revoked);
 +						spin_unlock(&clp->cl_lock);
-+						nf = find_any_file(stp->st_stid.sc_file);
-+						if (nf) {
-+							get_file(nf->nf_file);
-+							filp_close(nf->nf_file,
-+								   (fl_owner_t)lo);
-+							nfsd_file_put(nf);
-+						}
 +						release_all_access(stp);
 +					} else
 +						spin_unlock(&clp->cl_lock);
 +					mutex_unlock(&stp->st_mutex);
 +					break;
- 				}
- 				nfs4_put_stid(stid);
- 				spin_lock(&nn->client_lock);
-@@ -4659,8 +4687,18 @@ nfsd4_find_existing_open(struct nfs4_file *fp, struct nfsd4_open *open)
- static void nfsd_drop_revoked_stid(struct nfs4_stid *s)
- {
- 	struct nfs4_client *cl = s->sc_client;
-+	LIST_HEAD(reaplist);
-+	struct nfs4_ol_stateid *stp;
-+	bool unhashed;
+ 				case NFS4_LOCK_STID:
+ 					stp = openlockstateid(stid);
+ 					mutex_lock_nested(&stp->st_mutex,
+@@ -4692,6 +4708,13 @@ static void nfsd_drop_revoked_stid(struct nfs4_stid *s)
+ 	bool unhashed;
  
  	switch (s->sc_type) {
-+	case NFS4_LOCK_STID:
++	case NFS4_OPEN_STID:
 +		stp = openlockstateid(s);
-+		unhashed = unhash_lock_stateid(stp);
++		if (unhash_open_stateid(stp, &reaplist))
++			put_ol_stateid_locked(stp, &reaplist);
 +		spin_unlock(&cl->cl_lock);
-+		if (unhashed)
-+			nfs4_put_stid(s);
++		free_ol_stateid_reaplist(&reaplist);
 +		break;
- 	default:
- 		spin_unlock(&cl->cl_lock);
- 	}
+ 	case NFS4_LOCK_STID:
+ 		stp = openlockstateid(s);
+ 		unhashed = unhash_lock_stateid(stp);
 -- 
 2.42.1
 
