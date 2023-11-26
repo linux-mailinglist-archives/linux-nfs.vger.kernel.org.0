@@ -1,88 +1,87 @@
-Return-Path: <linux-nfs+bounces-77-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-78-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 382F87F94A1
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Nov 2023 18:37:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 306A97F94A5
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Nov 2023 18:41:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A38E6B20B96
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Nov 2023 17:36:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D9AE4280FA5
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Nov 2023 17:41:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7A27DF6B;
-	Sun, 26 Nov 2023 17:36:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73F1ADF60;
+	Sun, 26 Nov 2023 17:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XSqsa7BT";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="a8UffQEU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="CyiX5WYn";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cqLuDA5M"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B130FB
-	for <linux-nfs@vger.kernel.org>; Sun, 26 Nov 2023 09:36:51 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA4E4D9
+	for <linux-nfs@vger.kernel.org>; Sun, 26 Nov 2023 09:41:27 -0800 (PST)
 Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AQHYugR030693;
-	Sun, 26 Nov 2023 17:36:32 GMT
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AQHa2wk002735;
+	Sun, 26 Nov 2023 17:41:16 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
  : subject : message-id : references : content-type : in-reply-to :
  mime-version; s=corp-2023-11-20;
- bh=tIwM0CIZgi3hq5TsjsBaWexQ72PWfz2vXnslLijLIfA=;
- b=XSqsa7BTRsQh+eK/Q8HQ2hh0HClsdBR3K6m8w4NowliequC8uKKDCEftavqEdEdfpywa
- 9wlKQ1FMLrmpZwqXPxIgP4ZE8XrC2akKPzRA+Wf+Imkc16EB1uN3DPGY5g/KOWUPRiLT
- /g9vjQb+2kcew54EaA8cfsqsszxeEUuaZQzXnYoupHSvCutuH2f+EtM7x5HXJI4dPCtJ
- UsncU3CFkFn1/JzTCeTMCkL7WcqAFeFfQjekEXP5HAob6S8Kz9svog7RDDdag2Ro/JSX
- wzqyGIsGeXJT/NaozoDfLfOa0+Hvbzj8tHeDUQyrh5QXJzgdwsTEyNHKV4zDMjLqFLZg dQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3uk8yd1gbb-1
+ bh=BpMwi2NLxGuxlLQ4zCULDpERF5I1pK7QzwboEpPz4EE=;
+ b=CyiX5WYnrBtBJhmiOHvXW13REPSPWPyd5pBi8fs7IboGt3ve6txJ0cYr9ObEy6zghSzE
+ beZO+v2SXLQKiZEylrGkXanR3qmV6xgyhcA5mRSZV8b6ZWbpteJrlZ5RYxAOFjBPg+T4
+ TVKuScMhSNKffWjdMVRu0yXTIclsNIsk1Cxr5XqYlUWYdc8uVrTQgtth3EMAiNmiTcJJ
+ QQesHl7CLevaevclQrOxrJzmb90nfxMOlfpqZY6hUViM53RbMBNYGU6j0rPb+BBDpNvy
+ u1zvC/xZKC9k0dROZmIB+Gg2ki5i/yqDILzajt6i/W9dYSK1v7AJGbRjlEESjjLtKphF Fw== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3uk8yd1gdj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 26 Nov 2023 17:36:31 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3AQGXNU3001389;
-	Sun, 26 Nov 2023 17:36:31 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3uk7camenp-1
+	Sun, 26 Nov 2023 17:41:15 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3AQFRXJL009333;
+	Sun, 26 Nov 2023 17:41:14 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam04lp2169.outbound.protection.outlook.com [104.47.73.169])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3uk7c462a1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 26 Nov 2023 17:36:30 +0000
+	Sun, 26 Nov 2023 17:41:14 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WgI1/jceSakc1kftadXolqB/Rs6ot2YhsJzJvph8qXl7sfKlYWv6T9qtjGg4t3cJSLttWSbveGo/KON7Ix2p5cseQ/fYl0+49TsjTsVqCARoQ6l/IAPPNA+dTlgObVesMqps6BgnLkyLtfGdq3pQww50lWx4ss9B5UCvGLsLOIAD3MAVBhrsm1zMQaAflSOYfnBRP2lzjEsdlL+efbjQvL6Bejm/cwM2Q6PopB4jurQlDefOnybGXUjjWgPJIMxAKcP1wKJLlimlebVkOriVDY+Yj0+Bts1g8IsxgUzmfFGOH1Ud/E1ai0HTpG76QKYPAPDPP8QGwVGE+YaIiYJ5BA==
+ b=S678coX48gUlNUzeVSszr/7WX5ZophFJtPjBypkkG2iGxryMvQsBSHt3agGdypP2fzMnNnQzjW3zEWCO5sFPZ6bxFUzwrJNhdHdkegpOS0rmnCkDEvSQNvA52irtGFp8N2sTBgCNp3NlGEXAQae7vjO4T8y5RiYPU1tOJQpo2M80mqa0R3WoF18KDxRq5ArS+WsGwYa4iCYKg+0MGbgWWp7v4wOvVbAo7PKHqUXOubuHj/B7i2IjlZM3eJHqxpjhZQmRuZau1RrNSPgV/cEFKdolXPB/Rd3ddLCe4GAwXc5vjLP+qU0AVBwRD1IeExtXEsYx0BUn3ssMUEuRA5V2UQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tIwM0CIZgi3hq5TsjsBaWexQ72PWfz2vXnslLijLIfA=;
- b=S/e43nEYqdtFbQ55SzbNHT3zbz7OEVcYhqrmuOGVjoXy885BQhR8l5/PTK1F9siKWT8Sx6if3VVIFPndLMtUhviXb4cEFp3NLNTTWpGlTvG5oheUYPkZlY6nkDj8Y6Bmpf1DenM0DB0TAPkKxR0Nw8QGG5bryI9dm+fFtZC7wQsEXMWqxdYXsLYWoGEmO571kBWV3j+7H5TVMz5s2qqG8OuwRIh5nW0dYPSXyjtApV2vyTLMy45qOwwiqjDAppGYpRYYT4BBPlWJATxwdl/5XH2fAPPg62BfXlQlHekkdncMSbJI7l3EoQSePEeRydk6fcap5thJkFjKGuaYBqMQnA==
+ bh=BpMwi2NLxGuxlLQ4zCULDpERF5I1pK7QzwboEpPz4EE=;
+ b=WgjulLtYlDTKgWFMDtnnYn1luj8dyY0WhUKRHPSJHyuLlmWtKjAR1lifeelANyzWToB3The9LZTvzoaF4zqeWCgmNq0WU6KVXNdLH27CffTvdG8jj4XQnol9iszwdAVVOi5Y9dA9OTxbHDvta09xYFExsSkCNEf7Zik2xRqoGqcz2+G3MPqzYpoCUjGBSOPQdZCP+MdRy1vjD1FT0crbUnlKwy3DBLx/CsrJMFLLGb5VPK8+gGQppdAG4pzu1VcUYJ/Ij0r+5VOnvW1oHDlIyp8p7Oido6X8U8p2nAb7BqceFKqWXvtkbGadALI5qtr/JxtrDNU6xWEHViBl+YrrxQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tIwM0CIZgi3hq5TsjsBaWexQ72PWfz2vXnslLijLIfA=;
- b=a8UffQEU5bsfxooDAdM9IhinVeaYmWkzlcbyjOouRcBvG4MaK8qmayzSAOfU6zO7DuG1PICMeKhUUs0ltgFycoX4hTvx6Xn4PAOs5djtx/WUQlYMBU7Uwfvd0UoJvytUKMYISAmmfqE7OtO5eUR/nsr/ebyiutqwi8ZWERyuAwk=
+ bh=BpMwi2NLxGuxlLQ4zCULDpERF5I1pK7QzwboEpPz4EE=;
+ b=cqLuDA5MocP2/tYcPFpRnfh0Zar7sam0Z5YlmYNAnft7gO4kcw/sKmcFn6W+BFYsmnVL5BUJtA0ZyRBejfJUUEm4xDrMM3NS1VCgWVPgFk59e9SUNEd7/OzNNBWwGsDBeGp0AU88RzVMV7ViMtwps9eH8ZsdnWQxWXZbHuvYBec=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
  by BLAPR10MB5106.namprd10.prod.outlook.com (2603:10b6:208:30c::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.27; Sun, 26 Nov
- 2023 17:36:25 +0000
+ 2023 17:41:12 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::360b:b3c0:c5a9:3b3c]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::360b:b3c0:c5a9:3b3c%4]) with mapi id 15.20.7025.022; Sun, 26 Nov 2023
- 17:36:25 +0000
-Date: Sun, 26 Nov 2023 12:36:22 -0500
+ 17:41:12 +0000
+Date: Sun, 26 Nov 2023 12:41:09 -0500
 From: Chuck Lever <chuck.lever@oracle.com>
 To: NeilBrown <neilb@suse.de>
 Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
         Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
         Tom Talpey <tom@talpey.com>
-Subject: Re: [PATCH 05/11] nfsd: prepare for supporting admin-revocation of
- state
-Message-ID: <ZWOCFjELHrc7sTil@tissot.1015granger.net>
+Subject: Re: [PATCH 06/11] nfsd: allow admin-revoked state to appear in
+ /proc/fs/nfsd/clients/*/states
+Message-ID: <ZWODNaH7TLLJFvQB@tissot.1015granger.net>
 References: <20231124002925.1816-1-neilb@suse.de>
- <20231124002925.1816-6-neilb@suse.de>
+ <20231124002925.1816-7-neilb@suse.de>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231124002925.1816-6-neilb@suse.de>
-X-ClientProxiedBy: CH5P222CA0016.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:610:1ee::23) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+In-Reply-To: <20231124002925.1816-7-neilb@suse.de>
+X-ClientProxiedBy: CH2PR05CA0014.namprd05.prod.outlook.com (2603:10b6:610::27)
+ To BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -91,324 +90,234 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|BLAPR10MB5106:EE_
-X-MS-Office365-Filtering-Correlation-Id: cd780c0e-bac8-477f-0699-08dbeea636b8
+X-MS-Office365-Filtering-Correlation-Id: 25c5de68-28a1-4b34-e7df-08dbeea6e1b1
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	bPmRbhHHcxZlwG3WcdFrQkQ3ZfgjDdD9Gb6N4jH6vgez8nggXNPpGvGoSGv2Ee91e8eCsqT4Ls/vALWauPdrsa1ZZJXzxDSTm0SULjfNPLvPiAChZ1l4cBrJA2HAmVXgQF8uLu5Km4Qj4BpS2M9urdA8/5KhQeDs0NbVUPgpe4P2H1yTHZa2qegrQFjc/DUzNtW9En/fUhBqANPlc5eYplXdYsIUqz8EZRDYhu7PJbcsPaPXByTuDL4WBIlp91GIVsVkHX1A9/WU6Ibmk8OKV+i7Ci4gHrVXKkHhfV8AojP+FZ5OpFCGqjcc2JiLCqlVSc3FeTXzp+7TVhQwhJ6qC26YTFrAsdmUQXC2G6SBmiGP6IGeIpkrnNzkhdo2bJGaYdOzn7hXV15C6TNwjzQ3qASWbetIkWoEY4QeaXQq9EcKyAvrWrwqSOFSBBigygRN5nWxw//cQ1lzpT/2LX5pulnsYEfMW5rA2gOaYVaBkLv1C3Jwxw+UUratVDv25vpiFynfV2G9ka3Jm4+vc+/NMXrj8zFWYMR4bdtVFP+GvWTHhWjUcMXBqiMJqn4aTsKn
+	vewv86o5it1m+KkfU0N609FzUx4ShpTTJHRa2FrqjkZb8AVWDjE0/cB0z+xtDOJ79Is6Z2ViMxKgVGrKsUeb7aWOW3m53I1HmCsd/HZCpHFmGGaVg9ga0lUmUfquD+VPZ7BwPRAuC2tX/14r0k6Qg73Vik+qN3UFYwL1FcY6a9EjCpnimd3SyUvc6v9uB+FiyinUYSoVWGZikYZqIBAqgkFpGOdNNrndlz+/xHD8qRDOY9ZvYYtFrAU/0k0NRMKN8q/vjzWkB/jraC0+Ltg6C/TMIbmU4KHl5Gg9KQkWWkL1z2DSJaMU6ibN5N10HxeV1lal9kwEDke4eB2d4KUG/bfxN4+C8Am70gSIPjVkQcyzkkIwdMi2YQedj14RBFIm/fnlDIoywsI9OCnV6jqZ2UFvdZMEmRtyMlywXsnsmsnG4ha1CqYazvWCvort9aHouT2ntvR+wK6qBGplo3lKucA2RWrV/5LB+kc3t7LeFZTwrZVhRi0Mvndn7XXhRfaktVlYJ1BNRo2dil/USdzmqejMXatxdal0V0K/gbqURPTUjuNsS6KWPsrS6tV9x6ZMlogeEg3krc4owcvNYEZQOgmUJVuz0Qgkq+JL+X6TZCc=
 X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(136003)(396003)(346002)(366004)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(6666004)(4326008)(8676002)(8936002)(6512007)(9686003)(6506007)(66476007)(66946007)(54906003)(66556008)(6916009)(316002)(6486002)(478600001)(2906002)(38100700002)(41300700001)(86362001)(26005)(44832011)(83380400001)(5660300002);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(376002)(136003)(396003)(346002)(366004)(230922051799003)(451199024)(1800799012)(64100799003)(186009)(6666004)(4326008)(8676002)(8936002)(6512007)(9686003)(6506007)(66476007)(66946007)(54906003)(66556008)(6916009)(316002)(6486002)(478600001)(2906002)(38100700002)(41300700001)(86362001)(26005)(44832011)(83380400001)(5660300002)(21314003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?jCIWZXKxjHj4OkICXGsMTM/4TBliZrN7LnITdupFfLdsd8SNCSHFMdUkQWMY?=
- =?us-ascii?Q?YgyxX1ZYWuNND2A0bwmrbOcQpLbh/fNJuuMKnni9A3s1U8cY5zkLrjUW0/Sl?=
- =?us-ascii?Q?cDwNCUXVVaRXRBY59poMf24HlzY6sIZv9gUASa462nxIsEDcyo0WqhaNWpEh?=
- =?us-ascii?Q?ySDAULqL1QARpeLL/nNZB15rCYzPzjwZzLKU/51JVmJK0LqKR6CgFOKamovM?=
- =?us-ascii?Q?0PTl+zv3iJLsH2Damq3rLP9YyZsBI7V9PVBQBIr9nTyQlpIiTS1j1qGM0htR?=
- =?us-ascii?Q?sbpxA9FNM5L9nBBrJffvbI4TS0eJx8TxO+cz4DOI2G/aap0O4M+SJU35bWLe?=
- =?us-ascii?Q?tytDng/Bm2sT8cKiHzaLDvGgaknae1rMWqpOYvX5c+YbzRvBaLPw6pxIcI0W?=
- =?us-ascii?Q?/VExhtcH+Q909kxI953QvPGB1amiK7htGrWuxOXBplgDXmZGWlmRneII3SFk?=
- =?us-ascii?Q?Jl53z5sWLhWbRfWN15TyEC7dANVyj+r334oeCt739npexvAOCFmmQm0BsxCq?=
- =?us-ascii?Q?TDu8jHc0duWCZ4hwB46/uhRGDZ/ZpTrNQVhCQIjkeSv1QZV4tSFBlXLu+b4+?=
- =?us-ascii?Q?EnDmuBWKQeNr4MB0rbxFoWxS5+HIz9cWg4n0DdHn5pc++NAlfZamfQRtA6yM?=
- =?us-ascii?Q?CYjT5z8xupXM4pxsQdId5HOFVIWtVUkPJ5ycJdRqOZnRDSEPZewBteq2HcHd?=
- =?us-ascii?Q?u76pwCLZZEaNd4v1DplqaPT730ZUgOObgInPgpkyZHzPl4zmzDBF2AuYxEwV?=
- =?us-ascii?Q?BlJCWgRn+9QOBWj3Nha0jD47ZLZWPVmlStiOU5UWpzssGy3W/LUVVE81/Ind?=
- =?us-ascii?Q?3FjPmrO+qCehOymlr/6FH35DegqwUlMdJ8Z+TWEM+VU1QKfjkpygvoYuUjLD?=
- =?us-ascii?Q?6jpc40KmNWSw5JNvQW8zHkX59CFBXun4j+9NkoP+x2qpX4WV7ZLt/v3rTpN4?=
- =?us-ascii?Q?4WSzU9ohN4Iv6L3+FyeLCOAYp1HatgrNmYGYsjc17rZ17NqRC8a88wFD4ae7?=
- =?us-ascii?Q?rUuTidDLQ7YuP52oSJhpFaJzxqQsuKpn1i0ACfkULudUvbioEZ78n9fRG545?=
- =?us-ascii?Q?CXWe5YF/WumciEyCHyLmrc3Q8hEXC/ZfSBdv820vvHlPpRauhu+eirCNIXho?=
- =?us-ascii?Q?YEZqpYrNmdzE0JD9/ijdo+b3evJuLsS/PXdVOIvfb7KvxQ4Y5mj65w+ki6oZ?=
- =?us-ascii?Q?8VY9Y3IZq0NC7yKuLyODdYlS2sa6KZvMSO7XHOSobjwW6DwQAzgaUoFP+GFo?=
- =?us-ascii?Q?MmgQTGpsHC7qDgvfUXtbeo1dok91UJvy4s4Gupy33Kj08rHtcBw7SyCdp7Rl?=
- =?us-ascii?Q?wU6ULvzdKgFlRt3I/NWXyJWhKOM15AjRRiWuMIVA4gUf+YmfQphX4mMP3G9v?=
- =?us-ascii?Q?05LPx5mBAzRqOD1Y6jWU6NCaaeBB/+9Ntys5oUkfc31Ol3PD7XUNxAhEpx5Y?=
- =?us-ascii?Q?QhH+hBg7eSrMSxcr/iy/nLjSuuCUlfq3Qfb+E4HofNPohWUe3BLkZbkOpBCE?=
- =?us-ascii?Q?W1ZgoZ1K+R3k94lLimGMQD5MEZysyfVrJlrfXYCUMzWCWbXfd9o+3Rh9GO2q?=
- =?us-ascii?Q?reAWH0b0uxQGAo4uZ5GsHDYQeNYV50MDkq03gIp7+E/MRdFk4C3GsQ0WcmkD?=
- =?us-ascii?Q?eQ=3D=3D?=
+	=?us-ascii?Q?2638QF+OcH467zuvcN4boHNake0kLaW90jVAALoAUHcEzaC1q69znEgCD5Yc?=
+ =?us-ascii?Q?96b7U1K9WvbvSaFrJHTWJ3kWXR6ekZif0xNKG67FaWRF2PIWgJpw9hkQKZrV?=
+ =?us-ascii?Q?bBtbFdJHQEPIQIWPGzAhaugUUUKwPrFusuOuuNqXvFBkAppSHnk6b5fSw6Rt?=
+ =?us-ascii?Q?y9mSulJwj6ph3v5wJZNGuAxWc1rH8aUux277SCPJrZ+dEHMLaseIBaFSWid4?=
+ =?us-ascii?Q?V9rO1vwO+SVaaXF9/rhUehSde+v9tl5C7nnecbNDollkI+Np4KxIMk12WF2y?=
+ =?us-ascii?Q?aRAU1pyJhWZlRbiq5ZRWaHEZ9J8zXxpLXcIqzGAHqCCeGYQ1NuaIDWBRgRn2?=
+ =?us-ascii?Q?cA+1MxWHVbcsYmtHN24Cg1Fnm3SpbI4YH9Y5ZGbAMdc+7ll5c0NM2VXbSRo7?=
+ =?us-ascii?Q?WMeeHE8S9iOre611jTtG7RGL7uPcqDt5YDnE6hmv/zfRHrFkG6+3U/dRvDEg?=
+ =?us-ascii?Q?kHoUIRebJp15bfMrMvXPBtnavLhyTCeiprsLeksKz4thYuXbZKKOzt5HJgvq?=
+ =?us-ascii?Q?WgmleBOVzpy0xORpB5KQdo7OnTsagaBAJYV+J5aF16haE0JYd/z30jGH7n0m?=
+ =?us-ascii?Q?BB6XD6gIW0OAQKnr7jKknRqtM53kMrFFNH0R8SEfjJKMHQyY9f0FR3yxSMf7?=
+ =?us-ascii?Q?Ma3IE1Ww16X9J4cTXyybwYhOoG3lsHDJSSM5XSk/+o4SI5OytJUcu5w9TwAr?=
+ =?us-ascii?Q?j9uJfbuQAiRWT0IwaILaqY7jhlXMr9K06EjGVE82n7yxSiOmtc6mbErp/nFc?=
+ =?us-ascii?Q?1v4awMj6Qu7FAzH2OVoqnzwDxLYjuMboNFEkLqfUhfo3V92XKGJHzDShf2PW?=
+ =?us-ascii?Q?kv7iuTltcT5mVY6JQCLI5TPh+h7czdcgVoLACco0MOhSQlisfT9Y/5XVjuY+?=
+ =?us-ascii?Q?gyX8xqpQ1x7ENC+h9EA098PTF56DkIkSxd4s8exNj8r5SXWfyUXNx/epIiaV?=
+ =?us-ascii?Q?8hMTEK1uLGcXTiVv8HI0MKyKaoN9rDPMXmB5I2UVDM1fbYz3JKqJyATari7u?=
+ =?us-ascii?Q?NBOosRQG27u8EaMby304QdXmLL7LhcDIc/7plcwpSeyYTVvGlK0ScjpjWudJ?=
+ =?us-ascii?Q?Q1WVEYDldpg7ztBh+UELpq/+cszBYxd7tYva7H/Fz2YD19bnLASKL1cUtOrw?=
+ =?us-ascii?Q?gEWVyEUTqSRLj6/nMocE+ZTx8hXXcv5ciN3P0FZ7pqy4yWYWQOw9LUKb8P6Q?=
+ =?us-ascii?Q?vKhJuwZyrmhh3ryGUvENYVtOqPov4qLliTxslGjK8ebn6/FAUKhjNfzQXNPM?=
+ =?us-ascii?Q?L0uRN8krwpR6ruRC1JMO1N6rCB5cYJ5+Qm3bp5idQrPdxnM5pL7woLGZKzMf?=
+ =?us-ascii?Q?3/+I+c/QDwQjYeIDkQf6C6BrL9kTUYMwjuY5SOL9njcSVb9Fu5cTD+5OO/5x?=
+ =?us-ascii?Q?OGBpnsX5uuTTl0N8hwNJ9pAdvr85AmNGZFp4cAE0hX5JBb8SmzQTqbeZDama?=
+ =?us-ascii?Q?AKQM5YMdT6UKxjq9qYk4O5/fGydgyJ5Fj2DO51a/h7bXDqKAJ+e1veljsH86?=
+ =?us-ascii?Q?M1U8GbwRFCsO17u2G99rowVhx+Zt99FOkjMQ+nzTrEZuUwcX74+zuO/DGRh1?=
+ =?us-ascii?Q?6gNbvgfre3AKzH1GhJiWdEXPBSx0I5ZJ57H7+xGmZlA6M1v7lEONd0w/sFfm?=
+ =?us-ascii?Q?bw=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	KLpBIb25sP4lrDPH3Q8kLbPvuJOCAx8rAwNSSB2lWUu5D+HUuuhdIA7kk7pXiba2BZLW5QrG6QL31lj6mkqoqOt/4vVh5rOO2kryEZJTmBBalqId8SoiT00XN0s32JS8UI5qS9gxxC2TkaZh+zoBiRMDjCbOA55pBTjimWJr06Q+LUwcQkjf4TBR2NdIByyY/HzAeVpqrHuk8hmeXG6MjBDtsSYQNI3aMZC3P5uwAYttNXW0gsI5Qjsm1OqlNRhzcBrYFOBjZalpyTOjdpPsfGbcNW8rNlQdJ4JF6zmIjTQ4+mG0s6GklHlbi8pVgtsLelmzDABjbmuCd4m2/VvqGyZzOiWwQSwE8dx5DPyfcEjA3L6x6+FzN/8618CL/p+ZAUlZoIKyCkGLTrpdJZ+49B7tAakrPYFpysu9idvF/j/E0+tgXIvs5dLFyPVrZ+472ysLkCjExFxgLe+G8KjPPI+gcUbumn7HjqBedTmKLI7qEdw03O+zNtWvZ/PmgrIw+EEo+xrEnLkXYAI4HFnyYiwGPUffuK8zXdb/+a802kZdUM0NdTAWNr5CN4Q7MxyqO8SbA00Xh4woPUuTwKFbd93h5n4Dvx52xckXNAmxJs1CqELCQAZSqXrSnHt/BXG+eyHKTvCkS7SiOHxauoMBnQrKrWdBlfSZPQoG+I/xiWQZu43s1gbUHSlnkoF1Rvw42M9VHRhqKtW/D2ERt3ztIsw0sBtCl9ULbC76+D2Y8dmjpjaRkz9g7oqkc6hVcPniK1s7PEQvrz7n8/u4WvGe1i0jxJEx+sfVYR4vUn3DgNCMhHfRKp1h7Gms1ys/2iWuuxy62Rd2S9oFirgrinxSsy2gncvCWsgCqStqs9//sDYKt3tPijkb2omGsLNe7oYB
+	8x1DWUyQXeOFLlg1Vtxs5vAiyrQA0Jd6womXg9pGl00AyktsIKeUOqiovcV0Nz0FoRyOBq7TBQDFGDuT/npH0uV4Fu4qD17uwjbzRz/bZhk+YV0Iyykay2jE04jyiorfkqNcwPSsL4mHwNycEuFpXSSFaQ3R7JkhaGj+++4QZPpOsnoJp2bWDKcegf/kkPKyfvEzuxKhMuxF3IzuD40hv8F99JgS1PK8YIYWgOEkHqweTgJKE6CUeEu21i3yAmLlj84I+PhOWHW3onAzeMfFcHMFwRdhK6B3kK1W7l7x7+3c8C3NNq5PDDfM4/IA5qdHIW/oZMLJydOvrNGmk5l29vUC1u35e5GDyvfo6xDaQ7dSXaRGMQ/GV+HdWFuXAu9/hoe+DEyCv7WqTmKPW6WKpS6FUQIZlBBicYUV9e54VbftMT9WQsL+unSQUeR3V3ew4ugzoXYYTZN+MwfzWQ38QFcNWdL3TMICL6pRP6r/59nIZhLtx2vX41Y4CAOJcLSNkZyvRf6/vNhgYEsHH7h0M0a6b0Cqr3R2Rv1yHt1cVvgxJV2TSyWYkUzkakWOtUgruDpPJQha7rsHew8d838QBuatqrHwf/bTCXhFqpxK1b0BTJc4NC1eGDfxliiKkaZJrnwV3fdA0qutn3nuWEpnhnxEUWSyNzOiqM60GQQ2oiAflFsL8i1sU6/OBIiWa3asNoLhWcISOLWTdTWmYmUpVVJIHP9WTU6zcSyH8qp71TWASGakAM/lhLsuUGouYPl1nsm6kvPamtN0aGEBIr3+mKE16B6YP0rcX6aLDI3gb001WkR0fYZI7696Eid4d/dt0fJXFkaklQ2fWLPSJfyfoRBLEk54Wdh9foKbRG6GlKVJFZ7Q/cyiUauz2IrRjQpX
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd780c0e-bac8-477f-0699-08dbeea636b8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25c5de68-28a1-4b34-e7df-08dbeea6e1b1
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2023 17:36:25.4765
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Nov 2023 17:41:12.3202
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xAsSng0zK50toGDUUZ6eg5jdMteFyE5x+iPIkGvN2q0Gscm9YavF0bRg6zRZlfHFsBCgju//6+x/tIYGqXrQEQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: Lp2Q5IMe6MRZ3AO1hTkrOSDUDJEpqyJHKXun20TtgLaK10k6eVwBt7yf9DmoPzElI3yoRbbw4hrOhRXj3zXASg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5106
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.987,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-11-26_17,2023-11-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 bulkscore=0
- mlxlogscore=523 adultscore=0 malwarescore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
- definitions=main-2311260130
-X-Proofpoint-ORIG-GUID: 713fWefjUVZieYrHalehfkd84qjIGHGN
-X-Proofpoint-GUID: 713fWefjUVZieYrHalehfkd84qjIGHGN
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=876 spamscore=0
+ adultscore=0 suspectscore=0 phishscore=0 bulkscore=0 malwarescore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2311260131
+X-Proofpoint-ORIG-GUID: j4pNujm-cpc11jnStzi5NH3XIEuKR_EX
+X-Proofpoint-GUID: j4pNujm-cpc11jnStzi5NH3XIEuKR_EX
 
-On Fri, Nov 24, 2023 at 11:28:40AM +1100, NeilBrown wrote:
-> The NFSv4 protocol allows state to be revoked by the admin and has error
-> codes which allow this to be communicated to the client.
+On Fri, Nov 24, 2023 at 11:28:41AM +1100, NeilBrown wrote:
+> Change the "show" functions to show some content even if a file cannot
+> be found.
+> This is primarily useful for debugging - to ensure states are being
+> removed eventually.
 > 
-> This patch
->  - introduces a new state-id status NFS4_STID_ADMIN_REVOKE
->    which can be set on open, lock, or delegation state.
->  - reports NFS4ERR_ADMIN_REVOKED when these are accessed
->  - introduces a per-client counter of these states and returns
->    SEQ4_STATUS_ADMIN_STATE_REVOKED when the counter is not zero.
->    Decrements this when freeing any admin-revoked state.
->  - introduces stub code to find all interesting states for a given
->    superblock so they can be revoked via the 'unlock_filesystem'
->    file in /proc/fs/nfsd/
->    No actual states are handled yet.
-> 
+> Also remove a "Kinda dead" comment which is no longer correct as we
+> now support write delegations.
+
+Nit: I know it's in the same piece of code, but the "Kinda dead"
+clean-up is perhaps not relevant to the purpose of this patch. Maybe
+do it as a separate patch?
+
+
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/nfs4state.c | 71 ++++++++++++++++++++++++++++++++++++++++++++-
->  fs/nfsd/nfsctl.c    |  1 +
->  fs/nfsd/nfsd.h      |  1 +
->  fs/nfsd/state.h     | 10 +++++++
->  fs/nfsd/trace.h     |  3 +-
->  5 files changed, 84 insertions(+), 2 deletions(-)
+>  fs/nfsd/nfs4state.c | 82 ++++++++++++++++++++++-----------------------
+>  1 file changed, 41 insertions(+), 41 deletions(-)
 > 
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index b9239f2ebc79..477a9e9aebbd 100644
+> index 477a9e9aebbd..52e680235afe 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -1215,6 +1215,8 @@ nfs4_put_stid(struct nfs4_stid *s)
->  		return;
->  	}
->  	idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> +	if (s->sc_status & NFS4_STID_ADMIN_REVOKED)
-> +		atomic_dec(&s->sc_client->cl_admin_revoked);
->  	nfs4_free_cpntf_statelist(clp->net, s);
->  	spin_unlock(&clp->cl_lock);
->  	s->sc_free(s);
-> @@ -1534,6 +1536,8 @@ static void put_ol_stateid_locked(struct nfs4_ol_stateid *stp,
->  	}
+> @@ -2680,17 +2680,10 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
+>  	struct nfs4_stateowner *oo;
+>  	unsigned int access, deny;
 >  
->  	idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> +	if (s->sc_status & NFS4_STID_ADMIN_REVOKED)
-> +		atomic_dec(&s->sc_client->cl_admin_revoked);
->  	list_add(&stp->st_locks, reaplist);
->  }
+> -	if (st->sc_type != NFS4_OPEN_STID && st->sc_type != NFS4_LOCK_STID)
+> -		return 0; /* XXX: or SEQ_SKIP? */
+>  	ols = openlockstateid(st);
+>  	oo = ols->st_stateowner;
+>  	nf = st->sc_file;
 >  
-> @@ -1679,6 +1683,54 @@ static void release_openowner(struct nfs4_openowner *oo)
->  	nfs4_put_stateowner(&oo->oo_owner);
->  }
+> -	spin_lock(&nf->fi_lock);
+> -	file = find_any_file_locked(nf);
+> -	if (!file)
+> -		goto out;
+> -
+>  	seq_printf(s, "- ");
+>  	nfs4_show_stateid(s, &st->sc_stateid);
+>  	seq_printf(s, ": { type: open, ");
+> @@ -2705,14 +2698,19 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
+>  		deny & NFS4_SHARE_ACCESS_READ ? "r" : "-",
+>  		deny & NFS4_SHARE_ACCESS_WRITE ? "w" : "-");
 >  
-> +static struct nfs4_stid *find_one_sb_stid(struct nfs4_client *clp,
-> +					  struct super_block *sb,
-> +					  unsigned int sc_types)
-> +{
-> +	unsigned long id, tmp;
-> +	struct nfs4_stid *stid;
-> +
-> +	spin_lock(&clp->cl_lock);
-> +	idr_for_each_entry_ul(&clp->cl_stateids, stid, tmp, id)
-> +		if ((stid->sc_type & sc_types) &&
-> +		    stid->sc_status == 0 &&
-> +		    stid->sc_file->fi_inode->i_sb == sb) {
-> +			refcount_inc(&stid->sc_count);
-> +			break;
-> +		}
-> +	spin_unlock(&clp->cl_lock);
-> +	return stid;
-> +}
-> +
-
-nfsd4_revoke_states() needs a kdoc comment.
-
-
-> +void nfsd4_revoke_states(struct net *net, struct super_block *sb)
-> +{
-> +	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-> +	unsigned int idhashval;
-> +	unsigned int sc_types;
-> +
-> +	sc_types = 0;
-> +
-> +	spin_lock(&nn->client_lock);
-> +	for (idhashval = 0; idhashval < CLIENT_HASH_MASK; idhashval++) {
-> +		struct list_head *head = &nn->conf_id_hashtbl[idhashval];
-> +		struct nfs4_client *clp;
-> +	retry:
-> +		list_for_each_entry(clp, head, cl_idhash) {
-> +			struct nfs4_stid *stid = find_one_sb_stid(clp, sb,
-> +								  sc_types);
-> +			if (stid) {
-> +				spin_unlock(&nn->client_lock);
-> +				switch (stid->sc_type) {
-
-This is "dead" code, for now. Does this stub really need to be
-introduced in this patch?
-
-
-> +				}
-> +				nfs4_put_stid(stid);
-> +				spin_lock(&nn->client_lock);
-> +				goto retry;
-> +			}
-> +		}
+> -	nfs4_show_superblock(s, file);
+> -	seq_printf(s, ", ");
+> -	nfs4_show_fname(s, file);
+> -	seq_printf(s, ", ");
+> +	spin_lock(&nf->fi_lock);
+> +	file = find_any_file_locked(nf);
+> +	if (file) {
+> +		nfs4_show_superblock(s, file);
+> +		seq_puts(s, ", ");
+> +		nfs4_show_fname(s, file);
+> +		seq_puts(s, ", ");
 > +	}
-> +	spin_unlock(&nn->client_lock);
-> +}
-> +
->  static inline int
->  hash_sessionid(struct nfs4_sessionid *sessionid)
->  {
-> @@ -2550,6 +2602,8 @@ static int client_info_show(struct seq_file *m, void *v)
->  	}
->  	seq_printf(m, "callback state: %s\n", cb_state2str(clp->cl_cb_state));
->  	seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
-> +	seq_printf(m, "admin-revoked states: %d\n",
-> +		   atomic_read(&clp->cl_admin_revoked));
->  	drop_client(clp);
->  
+> +	spin_unlock(&nf->fi_lock);
+>  	nfs4_show_owner(s, oo);
+> +	if (st->sc_status & NFS4_STID_ADMIN_REVOKED)
+> +		seq_puts(s, ", admin-revoked");
+
+Wondering if this addition (and the other similar additions below)
+would be more appropriately done in the previous patch. These
+additions seem to have a different purpose than the purpose stated
+in the patch description: "Change the 'show' functions to show some
+content even if a file cannot be found."
+
+Just a thought.
+
+
+>  	seq_printf(s, " }\n");
+> -out:
+> -	spin_unlock(&nf->fi_lock);
 >  	return 0;
-> @@ -4109,6 +4163,8 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	}
->  	if (!list_empty(&clp->cl_revoked))
->  		seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
-> +	if (atomic_read(&clp->cl_admin_revoked))
-> +		seq->status_flags |= SEQ4_STATUS_ADMIN_STATE_REVOKED;
->  out_no_session:
->  	if (conn)
->  		free_conn(conn);
-> @@ -4597,7 +4653,9 @@ nfsd4_verify_open_stid(struct nfs4_stid *s)
->  {
->  	__be32 ret = nfs_ok;
->  
-> -	if (s->sc_status & NFS4_STID_REVOKED)
-> +	if (s->sc_status & NFS4_STID_ADMIN_REVOKED)
-> +		ret = nfserr_admin_revoked;
-> +	else if (s->sc_status & NFS4_STID_REVOKED)
->  		ret = nfserr_deleg_revoked;
->  	else if (s->sc_status & NFS4_STID_CLOSED)
->  		ret = nfserr_bad_stateid;
-> @@ -5188,6 +5246,11 @@ nfs4_check_deleg(struct nfs4_client *cl, struct nfsd4_open *open,
->  	deleg = find_deleg_stateid(cl, &open->op_delegate_stateid);
->  	if (deleg == NULL)
->  		goto out;
-> +	if (deleg->dl_stid.sc_status & NFS4_STID_ADMIN_REVOKED) {
-> +		nfs4_put_stid(&deleg->dl_stid);
-> +		status = nfserr_admin_revoked;
-> +		goto out;
-> +	}
->  	if (deleg->dl_stid.sc_status & NFS4_STID_REVOKED) {
->  		nfs4_put_stid(&deleg->dl_stid);
->  		status = nfserr_deleg_revoked;
-> @@ -6508,6 +6571,8 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
->  		 */
->  		statusmask |= NFS4_STID_REVOKED;
->  
-> +	statusmask |= NFS4_STID_ADMIN_REVOKED;
-> +
->  	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
->  		CLOSE_STATEID(stateid))
->  		return nfserr_bad_stateid;
-> @@ -6526,6 +6591,10 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
->  		nfs4_put_stid(stid);
->  		return nfserr_deleg_revoked;
->  	}
-> +	if (stid->sc_type & NFS4_STID_ADMIN_REVOKED) {
-> +		nfs4_put_stid(stid);
-> +		return nfserr_admin_revoked;
-> +	}
->  	*s = stid;
->  	return nfs_ok;
 >  }
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index d6eeee149370..a622d773f428 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -285,6 +285,7 @@ static ssize_t write_unlock_fs(struct file *file, char *buf, size_t size)
->  	 * 3.  Is that directory the root of an exported file system?
->  	 */
->  	error = nlmsvc_unlock_all_by_sb(path.dentry->d_sb);
-> +	nfsd4_revoke_states(netns(file), path.dentry->d_sb);
 >  
->  	path_put(&path);
->  	return error;
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index f5ff42f41ee7..d46203eac3c8 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -280,6 +280,7 @@ void		nfsd_lockd_shutdown(void);
->  #define	nfserr_no_grace		cpu_to_be32(NFSERR_NO_GRACE)
->  #define	nfserr_reclaim_bad	cpu_to_be32(NFSERR_RECLAIM_BAD)
->  #define	nfserr_badname		cpu_to_be32(NFSERR_BADNAME)
-> +#define	nfserr_admin_revoked	cpu_to_be32(NFS4ERR_ADMIN_REVOKED)
->  #define	nfserr_cb_path_down	cpu_to_be32(NFSERR_CB_PATH_DOWN)
->  #define	nfserr_locked		cpu_to_be32(NFSERR_LOCKED)
->  #define	nfserr_wrongsec		cpu_to_be32(NFSERR_WRONGSEC)
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index bb00dcd4c1ba..584378c43e0a 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -112,6 +112,7 @@ struct nfs4_stid {
->  #define NFS4_STID_CLOSED	BIT(0)
->  /* For a deleg stateid kept around only to process free_stateid's: */
->  #define NFS4_STID_REVOKED	BIT(1)
-> +#define NFS4_STID_ADMIN_REVOKED	BIT(2)
-
-The names of these mask bits are now getting to be visually
-indistinguishable from the stateid type names. The subtlety of
-where the _STID_ falls in the name makes me blink a few times when
-reading this code.
-
-It would be a little more friendly to add _STATUS_ or some other
-infix that makes it easy to tell these are not stateid types. I
-know that makes the names longer and more unwieldy.
-
-
->  	unsigned short		sc_status;
+> @@ -2726,30 +2724,31 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
+>  	ols = openlockstateid(st);
+>  	oo = ols->st_stateowner;
+>  	nf = st->sc_file;
+> -	spin_lock(&nf->fi_lock);
+> -	file = find_any_file_locked(nf);
+> -	if (!file)
+> -		goto out;
 >  
->  	struct list_head	sc_cp_list;
-> @@ -388,6 +389,7 @@ struct nfs4_client {
->  	clientid_t		cl_clientid;	/* generated by server */
->  	nfs4_verifier		cl_confirm;	/* generated by server */
->  	u32			cl_minorversion;
-> +	atomic_t		cl_admin_revoked; /* count of admin-revoked states */
->  	/* NFSv4.1 client implementation id: */
->  	struct xdr_netobj	cl_nii_domain;
->  	struct xdr_netobj	cl_nii_name;
-> @@ -752,6 +754,14 @@ static inline void get_nfs4_file(struct nfs4_file *fi)
+>  	seq_printf(s, "- ");
+>  	nfs4_show_stateid(s, &st->sc_stateid);
+>  	seq_printf(s, ": { type: lock, ");
+>  
+> -	/*
+> -	 * Note: a lock stateid isn't really the same thing as a lock,
+> -	 * it's the locking state held by one owner on a file, and there
+> -	 * may be multiple (or no) lock ranges associated with it.
+> -	 * (Same for the matter is true of open stateids.)
+> -	 */
+> +	spin_lock(&nf->fi_lock);
+> +	file = find_any_file_locked(nf);
+> +	if (file) {
+> +		/*
+> +		 * Note: a lock stateid isn't really the same thing as a lock,
+> +		 * it's the locking state held by one owner on a file, and there
+> +		 * may be multiple (or no) lock ranges associated with it.
+> +		 * (Same for the matter is true of open stateids.)
+> +		 */
+>  
+> -	nfs4_show_superblock(s, file);
+> -	/* XXX: open stateid? */
+> -	seq_printf(s, ", ");
+> -	nfs4_show_fname(s, file);
+> -	seq_printf(s, ", ");
+> +		nfs4_show_superblock(s, file);
+> +		/* XXX: open stateid? */
+> +		seq_puts(s, ", ");
+> +		nfs4_show_fname(s, file);
+> +		seq_puts(s, ", ");
+> +	}
+>  	nfs4_show_owner(s, oo);
+> +	if (st->sc_status & NFS4_STID_ADMIN_REVOKED)
+> +		seq_puts(s, ", admin-revoked");
+>  	seq_printf(s, " }\n");
+> -out:
+>  	spin_unlock(&nf->fi_lock);
+>  	return 0;
 >  }
->  struct nfsd_file *find_any_file(struct nfs4_file *f);
+> @@ -2762,27 +2761,28 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
 >  
-> +#ifdef CONFIG_NFSD_V4
-> +void nfsd4_revoke_states(struct net *net, struct super_block *sb);
-> +#else
-> +static inline void nfsd4_revoke_states(struct net *net, struct super_block *sb)
-> +{
-> +}
-> +#endif
-> +
->  /* grace period management */
->  void nfsd4_end_grace(struct nfsd_net *nn);
+>  	ds = delegstateid(st);
+>  	nf = st->sc_file;
+> -	spin_lock(&nf->fi_lock);
+> -	file = nf->fi_deleg_file;
+> -	if (!file)
+> -		goto out;
 >  
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index 568b4ec9a2af..281aeb42c9eb 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -651,7 +651,8 @@ DEFINE_STATESEQID_EVENT(open_confirm);
->  #define show_stid_status(x)						\
->  	__print_flags(x, "|",						\
->  		{ NFS4_STID_CLOSED,		"CLOSED" },		\
-> -		{ NFS4_STID_REVOKED,		"REVOKED" })		\
-> +		{ NFS4_STID_REVOKED,		"REVOKED" },		\
-> +		{ NFS4_STID_ADMIN_REVOKED,	"ADMIN_REVOKED" })
+>  	seq_printf(s, "- ");
+>  	nfs4_show_stateid(s, &st->sc_stateid);
+>  	seq_printf(s, ": { type: deleg, ");
 >  
->  DECLARE_EVENT_CLASS(nfsd_stid_class,
->  	TP_PROTO(
+> -	/* Kinda dead code as long as we only support read delegs: */
+> -	seq_printf(s, "access: %s, ",
+> -		ds->dl_type == NFS4_OPEN_DELEGATE_READ ? "r" : "w");
+> +	seq_printf(s, "access: %s",
+> +		   ds->dl_type == NFS4_OPEN_DELEGATE_READ ? "r" : "w");
+>  
+>  	/* XXX: lease time, whether it's being recalled. */
+>  
+> -	nfs4_show_superblock(s, file);
+> -	seq_printf(s, ", ");
+> -	nfs4_show_fname(s, file);
+> -	seq_printf(s, " }\n");
+> -out:
+> +	spin_lock(&nf->fi_lock);
+> +	file = nf->fi_deleg_file;
+> +	if (file) {
+> +		seq_puts(s, ", ");
+> +		nfs4_show_superblock(s, file);
+> +		seq_puts(s, ", ");
+> +		nfs4_show_fname(s, file);
+> +	}
+>  	spin_unlock(&nf->fi_lock);
+> +	if (st->sc_status & NFS4_STID_ADMIN_REVOKED)
+> +		seq_puts(s, ", admin-revoked");
+> +	seq_puts(s, " }\n");
+>  	return 0;
+>  }
+>  
 > -- 
 > 2.42.1
 > 
