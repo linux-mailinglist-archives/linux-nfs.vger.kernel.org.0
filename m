@@ -1,142 +1,247 @@
-Return-Path: <linux-nfs+bounces-110-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-111-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D886A7FACB4
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 22:42:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AE197FACF2
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 23:05:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10E621C20B7D
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 21:42:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DE3C1B20EB5
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 22:05:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 717EE4644B;
-	Mon, 27 Nov 2023 21:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="lOqfYwr2"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3132946547;
+	Mon, 27 Nov 2023 22:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9380010E6
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 13:42:21 -0800 (PST)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2c87acba73fso9983791fa.1
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 13:42:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03; t=1701121340; x=1701726140; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OOFXhZdzaB6KiLH9zP3fxZacibeihuFcTAirqutJ1lM=;
-        b=lOqfYwr2sQX1Co4knN8Hmh29C3rP4jkkKfKEOV058R+V/SczRZvCEwMqAE09kyWadC
-         gv1gFDJAaT54VXZI6gg9//ghWe4wMUJEUTSo67g+HXV0pNqEh+psBBNRUz+BVabIVn9j
-         Cpy3LS16vWBzOwh0pMxc0xl585Fv6UEEI3TiD87YM851JzCk91ld9UG0N6Fb8DTS9rJG
-         Rz83UNMPrG8HAp72aMI7G2U3Qr1fJlAtUTRaJXUXYz5KOSZJBrsKemBQ3LowNW0YqAGE
-         Mp/L2jFg2tQ/0pkrBaKzyuyXxemFNPVY1/UgE9JIUgCw3ZCGZjZ+XwM8d2qQ/j2OSF6y
-         sO+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701121340; x=1701726140;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OOFXhZdzaB6KiLH9zP3fxZacibeihuFcTAirqutJ1lM=;
-        b=vmumeWmnzEmNbCspgUTu8DGl7ND7HSk9DmBK68oeaRpcuWkmZDjSabXUhgienpuNg5
-         bORs9AEEqfnDQVkhrS0/6A+9+VYmQ3ZA0byPe3Go7I8ULg4HS2WbBZgQ3337lYz+6esE
-         S+/EoCgQqvz1BGjijX4D4c5W8FgcMQuZbOXSWTuitHNRlMcJSeFL7bNIOlVkTyVkgHPP
-         TCGynneyd+2lUsGwndaK6naGYN3hSysrHuQhIvC85i2YgmQbHWirONdOT3RcrIWDNkpG
-         3qel0APTFmN7RUB5t8CZfhuzMjkjP/8bI0LSK6WPV8EflqXNxXqS5rD7MBl0B9of5d6l
-         1WzA==
-X-Gm-Message-State: AOJu0YxA2kF2ajaFrNGi+ik5UUwv1IuNJcvYMKpoSPq6hArr6eW1vUe/
-	5dIGNd5mdce/IyQ5UsU1k21az4WZKcbo9bwvgI5oTsaE+ic=
-X-Google-Smtp-Source: AGHT+IH6hRojZ2Ot0RNEnvDcIobGwcQTU42s9EhqQKwod7caC4JeV/sq6I16qPKnvmjtotV4neIq80yFO5DGXi0lbvc=
-X-Received: by 2002:a2e:5301:0:b0:2c6:f97c:cf21 with SMTP id
- h1-20020a2e5301000000b002c6f97ccf21mr7505224ljb.2.1701121339563; Mon, 27 Nov
- 2023 13:42:19 -0800 (PST)
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2a07:de40:b251:101:10:150:64:2])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CC210F0;
+	Mon, 27 Nov 2023 14:05:31 -0800 (PST)
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 8C3601F388;
+	Mon, 27 Nov 2023 22:05:29 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 020361367B;
+	Mon, 27 Nov 2023 22:05:24 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 1znWJ6QSZWU6OwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 27 Nov 2023 22:05:24 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <97AE695C-8F9F-4E9C-9460-427C284FBD32@oracle.com>
- <CAN-5tyHxvTevgM38q94W4e+rBzYu7tWqDHVMNcFQ5GT3uNArCw@mail.gmail.com> <6F0CCBAF-29E1-4720-A7DC-9F43751B56E7@oracle.com>
-In-Reply-To: <6F0CCBAF-29E1-4720-A7DC-9F43751B56E7@oracle.com>
-From: Olga Kornievskaia <aglo@umich.edu>
-Date: Mon, 27 Nov 2023 11:42:08 -1000
-Message-ID: <CAN-5tyGqSXyeu+LXWVu_J=A8CLW01c2wDKSfBeqFaaWLxnOAyw@mail.gmail.com>
-Subject: Re: changes to struct rpc_gss_sec
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Olga Kornievskaia <kolga@netapp.com>, Steve Dickson <SteveD@redhat.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: "NeilBrown" <neilb@suse.de>
+To: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Jens Axboe <axboe@kernel.dk>, Oleg Nesterov <oleg@redhat.com>,
+ Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Juri Lelli <juri.lelli@redhat.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-nfs@vger.kernel.org
+Subject: [PATCH/RFC] core/nfsd: allow kernel threads to use task_work.
+Date: Tue, 28 Nov 2023 09:05:21 +1100
+Message-id: <170112272125.7109.6245462722883333440@noble.neil.brown.name>
+X-Spamd-Bar: ++
+Authentication-Results: smtp-out2.suse.de;
+	dkim=none;
+	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.de (policy=none);
+	spf=softfail (smtp-out2.suse.de: 2a07:de40:b281:104:10:150:64:97 is neither permitted nor denied by domain of neilb@suse.de) smtp.mailfrom=neilb@suse.de
+X-Rspamd-Server: rspamd2
+X-Spamd-Result: default: False [2.81 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-0.98)[-0.979];
+	 MIME_GOOD(-0.10)[text/plain];
+	 R_SPF_SOFTFAIL(4.60)[~all:c];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[13];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(2.20)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%];
+	 DMARC_POLICY_SOFTFAIL(0.10)[suse.de : No valid SPF, No valid DKIM,none]
+X-Spam-Score: 2.81
+X-Rspamd-Queue-Id: 8C3601F388
 
-Hi Chuck,
 
-Given that rpc_gss_secreate() was written by you I hope you dont mind
-questions. I believe gssd can't use the new api because it is
-insufficient. Specifically, authgss_create_default() takes in a
-structure which is populated with the correct (kerberos) credential we
-need to be using for the gss context establishment.
-rpc_gss_seccreate() sets the sec.cred =3D GSS_C_NO_CREDENTIAL. If you
-believe I'm incorrect in my assessment that rpc_gss_secreate please
-let me know.
+I have evidence from a customer site of 256 nfsd threads adding files to
+delayed_fput_lists nearly twice as fast they are retired by a single
+work-queue thread running delayed_fput().  As you might imagine this
+does not end well (20 million files in the queue at the time a snapshot
+was taken for analysis).
 
-As far as I can see, current libtirpc needs to be modified no matter
-what. Perhaps there needs to be some config magic to demand the use of
-higher version of libtirpc for the new code but it would be just a
-different way an upstream nfs-utils won't build without an appropriate
-libtirpc version. I would imagine distros would build matching
-libtirpc and nfs-utils that would either both not have the fix or have
-the fix.
+While this might point to a problem with the filesystem not handling the
+final close efficiently, such problems should only hurt throughput, not
+lead to memory exhaustion.
 
+For normal threads, the thread that closes the file also calls the
+final fput so there is natural rate limiting preventing excessive growth
+in the list of delayed fputs.  For kernel threads, and particularly for
+nfsd, delayed in the final fput do not impose any throttling to prevent
+the thread from closing more files.
 
-On Wed, Nov 22, 2023 at 4:31=E2=80=AFAM Chuck Lever III <chuck.lever@oracle=
-.com> wrote:
->
-> Possibly because authgss_create_default() was the API
-> available to gssd back in the day. rpc_gss_seccreate(3t)
-> is newer. That would be my guess.
->
->
-> > On Nov 22, 2023, at 1:07=E2=80=AFAM, Olga Kornievskaia <aglo@umich.edu>=
- wrote:
-> >
-> > Hi Chuck,
-> >
-> > A quick reply as I'm on vacation but I can take a look when I get
-> > back. I'm just thinking there must be a reason why gssd is using the
-> > authgss api and not calling the rpc_gss one.
-> >
-> > On Tue, Nov 21, 2023 at 6:59=E2=80=AFAM Chuck Lever III <chuck.lever@or=
-acle.com> wrote:
-> >>
-> >> Hey Olga-
-> >>
-> >> I see that f5b6e6fdb1e6 ("gss-api: expose gss major/minor error in
-> >> authgss_refresh()") added a couple of fields in structure rpc_gss_sec.
-> >> Later, there are some nfs-utils changes that start using those fields.
-> >>
-> >> That breaks building the latest upstream nfs-utils on Fedora 38, whose
-> >> current libtirpc doesn't have those new fields.
-> >>
-> >> IMO struct rpc_gss_sec is part of the libtirpc API/ABI, thus we really
-> >> shouldn't change it.
-> >>
-> >> Instead, if gssd needs GSS status codes, can't it call
-> >> rpc_gss_seccreate(3), which explicitly takes a struct
-> >> rpc_gss_options_ret_t * argument?
-> >>
-> >> ie, just replace the authgss_create_default() call with a call to
-> >> rpc_gss_seccreate(3) ....
-> >>
-> >>
-> >> --
-> >> Chuck Lever
-> >>
-> >>
-> >>
->
-> --
-> Chuck Lever
->
->
+A simple way to fix this is to treat nfsd threads like normal processes
+for task_work.  Thus the pending files are queued for the thread, and
+the same thread finishes the work.
+
+Currently KTHREADs are assumed never to call task_work_run().  With this
+patch that it still the default but it is implemented by storing the
+magic value TASK_WORKS_DISABLED in ->task_works.  If a kthread, such as
+nfsd, will call task_work_run() periodically, it sets ->task_works
+to NULL to indicate this.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+
+I wonder which tree this should go through assuming everyone likes it.
+VFS maybe??
+
+Thanks.
+
+ fs/file_table.c           | 2 +-
+ fs/nfsd/nfssvc.c          | 4 ++++
+ include/linux/sched.h     | 1 +
+ include/linux/task_work.h | 4 +++-
+ kernel/fork.c             | 2 +-
+ kernel/task_work.c        | 7 ++++---
+ 6 files changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/fs/file_table.c b/fs/file_table.c
+index de4a2915bfd4..e79351df22be 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -445,7 +445,7 @@ void fput(struct file *file)
+ 	if (atomic_long_dec_and_test(&file->f_count)) {
+ 		struct task_struct *task =3D current;
+=20
+-		if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
++		if (likely(!in_interrupt())) {
+ 			init_task_work(&file->f_rcuhead, ____fput);
+ 			if (!task_work_add(task, &file->f_rcuhead, TWA_RESUME))
+ 				return;
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 66ca50b38b27..c047961262ca 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -13,6 +13,7 @@
+ #include <linux/fs_struct.h>
+ #include <linux/swap.h>
+ #include <linux/siphash.h>
++#include <linux/task_work.h>
+=20
+ #include <linux/sunrpc/stats.h>
+ #include <linux/sunrpc/svcsock.h>
+@@ -941,6 +942,7 @@ nfsd(void *vrqstp)
+ 	}
+=20
+ 	current->fs->umask =3D 0;
++	current->task_works =3D NULL; /* Declare that I will call task_work_run() */
+=20
+ 	atomic_inc(&nfsdstats.th_cnt);
+=20
+@@ -955,6 +957,8 @@ nfsd(void *vrqstp)
+=20
+ 		svc_recv(rqstp);
+ 		validate_process_creds();
++		if (task_work_pending(current))
++			task_work_run();
+ 	}
+=20
+ 	atomic_dec(&nfsdstats.th_cnt);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 292c31697248..c63c2bedbf71 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1117,6 +1117,7 @@ struct task_struct {
+ 	unsigned int			sas_ss_flags;
+=20
+ 	struct callback_head		*task_works;
++#define	TASK_WORKS_DISABLED	((void*)1)
+=20
+ #ifdef CONFIG_AUDIT
+ #ifdef CONFIG_AUDITSYSCALL
+diff --git a/include/linux/task_work.h b/include/linux/task_work.h
+index 795ef5a68429..3c74e3de81ed 100644
+--- a/include/linux/task_work.h
++++ b/include/linux/task_work.h
+@@ -22,7 +22,9 @@ enum task_work_notify_mode {
+=20
+ static inline bool task_work_pending(struct task_struct *task)
+ {
+-	return READ_ONCE(task->task_works);
++	struct callback_head *works =3D READ_ONCE(task->task_works);
++
++	return works && works !=3D TASK_WORKS_DISABLED;
+ }
+=20
+ int task_work_add(struct task_struct *task, struct callback_head *twork,
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 10917c3e1f03..903b29804fe1 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2577,7 +2577,7 @@ __latent_entropy struct task_struct *copy_process(
+ 	p->dirty_paused_when =3D 0;
+=20
+ 	p->pdeath_signal =3D 0;
+-	p->task_works =3D NULL;
++	p->task_works =3D args->kthread ? TASK_WORKS_DISABLED : NULL;
+ 	clear_posix_cputimers_work(p);
+=20
+ #ifdef CONFIG_KRETPROBES
+diff --git a/kernel/task_work.c b/kernel/task_work.c
+index 95a7e1b7f1da..ffdf4b0d7a0e 100644
+--- a/kernel/task_work.c
++++ b/kernel/task_work.c
+@@ -49,7 +49,8 @@ int task_work_add(struct task_struct *task, struct callback=
+_head *work,
+=20
+ 	head =3D READ_ONCE(task->task_works);
+ 	do {
+-		if (unlikely(head =3D=3D &work_exited))
++		if (unlikely(head =3D=3D &work_exited ||
++			     head =3D=3D TASK_WORKS_DISABLED))
+ 			return -ESRCH;
+ 		work->next =3D head;
+ 	} while (!try_cmpxchg(&task->task_works, &head, work));
+@@ -157,7 +158,7 @@ void task_work_run(void)
+ 		work =3D READ_ONCE(task->task_works);
+ 		do {
+ 			head =3D NULL;
+-			if (!work) {
++			if (!work || work =3D=3D TASK_WORKS_DISABLED) {
+ 				if (task->flags & PF_EXITING)
+ 					head =3D &work_exited;
+ 				else
+@@ -165,7 +166,7 @@ void task_work_run(void)
+ 			}
+ 		} while (!try_cmpxchg(&task->task_works, &work, head));
+=20
+-		if (!work)
++		if (!work || work =3D=3D TASK_WORKS_DISABLED)
+ 			break;
+ 		/*
+ 		 * Synchronize with task_work_cancel(). It can not remove
+--=20
+2.42.1
+
 
