@@ -1,247 +1,128 @@
-Return-Path: <linux-nfs+bounces-111-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-112-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AE197FACF2
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 23:05:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81C587FAD72
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 23:26:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DE3C1B20EB5
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 22:05:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C49A28181E
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 22:26:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3132946547;
-	Mon, 27 Nov 2023 22:05:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE064596F;
+	Mon, 27 Nov 2023 22:26:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="fh8FgCi5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2a07:de40:b251:101:10:150:64:2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CC210F0;
-	Mon, 27 Nov 2023 14:05:31 -0800 (PST)
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 8C3601F388;
-	Mon, 27 Nov 2023 22:05:29 +0000 (UTC)
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 020361367B;
-	Mon, 27 Nov 2023 22:05:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1znWJ6QSZWU6OwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 27 Nov 2023 22:05:24 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75527D4B
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 14:26:20 -0800 (PST)
+Received: by mail-lj1-x22d.google.com with SMTP id 38308e7fff4ca-2c9ace45341so320481fa.0
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 14:26:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1701123979; x=1701728779; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RXHR+iFkNdk8OOqg7ZpMKPqXb0ziWcVCp/LPoi0m+2w=;
+        b=fh8FgCi5FVDmDsfiqDYGmMWLDObMlk6LgCrBuzGo9z1oA1rf2TyXHZx5/KAC8RJYlB
+         NdDHwnmXhslagi+spnR7TNxRuBO7xQCvwLeuoOJuyODiGmfA0wVDw9TNgfssHyluIef2
+         k7MML+HyatwUz7QrHTymNQMLfBrc0Ckf8wyIDfvGe77XFQSxcRbslxtbrBt+DIs/MG3t
+         xt2qi9iQW3IkxXpwvWLRAbS0xIK7z5zHyaB32o/cEjK7/X+NtvUw7lkvfZ4ZazfbwyhI
+         LpDDIhYKBXnwjlhGBYG6uWdAR9s+2+BtbCBp4TZ/mY83UNsOHEq7a9XY8QOz6CUGCcrV
+         6awQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701123979; x=1701728779;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RXHR+iFkNdk8OOqg7ZpMKPqXb0ziWcVCp/LPoi0m+2w=;
+        b=sgeeq2M6qk/3euEHwiqHs210fbWcnpRmIj+33Q/T7y/wy0tvOwsRD1/gYrO9OSl0y+
+         G6RvipiYt7/n6i477JAbqreiuezTjalc1IpG2o7CJRddEI1wdLtL62hT22wWx8J/Xvsy
+         Pc3zyXKkMZ09pYgjabNJvXWgVsf8G3VDSxbQw9unLDDijLrmYjqvHrl34e8GCYbyHkcs
+         Z6xCIYxx5DI3MZ9DL0lE2Npe2blW8JuDMQ5pTqIo4aaLFPnl1BpeEZlN+Dejbw8WBSEF
+         xRbkZeRKZpjCol2l64774RhXNFt+MoYLEbXrFkIoQrmtHn9OtuzV/7R9cQUo0jzRTXKY
+         UV7w==
+X-Gm-Message-State: AOJu0YzqegIzbvOXmJuVKofpBSNON7gzhE6Ernn7vSXtHEVn/tXMUBCn
+	jAGFWYUamZki1EH+0DjEk5s9nT2PYYctajomluA=
+X-Google-Smtp-Source: AGHT+IFOrjN3YVF8/Pz5qPPM4pE3wyi2PW0PeGv90rt+n0yfviU26Om8ZCq7vnpdmOtXqLLuGu6Qf4MX0BCDLnZqI7c=
+X-Received: by 2002:a2e:5404:0:b0:2c8:38b2:2c33 with SMTP id
+ i4-20020a2e5404000000b002c838b22c33mr7637023ljb.3.1701123978531; Mon, 27 Nov
+ 2023 14:26:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Oleg Nesterov <oleg@redhat.com>,
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org
-Subject: [PATCH/RFC] core/nfsd: allow kernel threads to use task_work.
-Date: Tue, 28 Nov 2023 09:05:21 +1100
-Message-id: <170112272125.7109.6245462722883333440@noble.neil.brown.name>
-X-Spamd-Bar: ++
-Authentication-Results: smtp-out2.suse.de;
-	dkim=none;
-	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.de (policy=none);
-	spf=softfail (smtp-out2.suse.de: 2a07:de40:b281:104:10:150:64:97 is neither permitted nor denied by domain of neilb@suse.de) smtp.mailfrom=neilb@suse.de
-X-Rspamd-Server: rspamd2
-X-Spamd-Result: default: False [2.81 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-0.98)[-0.979];
-	 MIME_GOOD(-0.10)[text/plain];
-	 R_SPF_SOFTFAIL(4.60)[~all:c];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_TWELVE(0.00)[13];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(2.20)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 DMARC_POLICY_SOFTFAIL(0.10)[suse.de : No valid SPF, No valid DKIM,none]
-X-Spam-Score: 2.81
-X-Rspamd-Queue-Id: 8C3601F388
+References: <20231127153959.2067-1-thfeathers@sina.cn> <aa9e250a966c47782f79d258ea9818ae4fcbdbc5.camel@hammerspace.com>
+ <170112068218.7109.1172633879607916557@noble.neil.brown.name>
+In-Reply-To: <170112068218.7109.1172633879607916557@noble.neil.brown.name>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Mon, 27 Nov 2023 12:26:06 -1000
+Message-ID: <CAN-5tyHKddhV4OKL+ZhKKTXwoPiSug6rzRtv=Fq9KsY2wH0iPw@mail.gmail.com>
+Subject: Re: [PATCH] SUNRPC: _xprt_switch_find_current_entry return xprt with
+ condition find_active
+To: NeilBrown <neilb@suse.de>
+Cc: Trond Myklebust <trondmy@hammerspace.com>, "jlayton@kernel.org" <jlayton@kernel.org>, 
+	"thfeathers@sina.cn" <thfeathers@sina.cn>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>, 
+	"tom@talpey.com" <tom@talpey.com>, "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>, 
+	"kolga@netapp.com" <kolga@netapp.com>, "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Nov 27, 2023 at 11:31=E2=80=AFAM NeilBrown <neilb@suse.de> wrote:
+>
+> On Tue, 28 Nov 2023, Trond Myklebust wrote:
+> > On Mon, 2023-11-27 at 23:39 +0800, jsq wrote:
+> > > [You don't often get email from thfeathers@sina.cn. Learn why this is
+> > > important at https://aka.ms/LearnAboutSenderIdentification ]
+> > >
+> > > current function always return a active xprt or NULL no matter what
+> > > find_active
+> >
+> >
+> > This patch clearly breaks xprt_switch_find_current_entry_offline().
+>
+> I think it actually fixes xprt_switch_find_current_entry_offline().
+>
+> Looking closely at _xprt_switch_find_current_entry:
+>
+>                 if (found && ((find_active && xprt_is_active(pos)) ||
+>                               (!find_active && xprt_is_active(pos))))
+>
+> and comparing with similar code in xprt_switch_find_next_entry:
+>
+>                 if (found && ((check_active && xprt_is_active(pos)) ||
+>                               (!check_active && !xprt_is_active(pos))))
+>
+> There is a difference in the number of '!'.  I suspect the former is
+> wrong.
+> If the former is correct, then "find_active" is irrelevant.
 
-I have evidence from a customer site of 256 nfsd threads adding files to
-delayed_fput_lists nearly twice as fast they are retired by a single
-work-queue thread running delayed_fput().  As you might imagine this
-does not end well (20 million files in the queue at the time a snapshot
-was taken for analysis).
+Thanks Neil for pointing it out. We need the "find_active", otherwise
+as Trond pointed out it breaks the offline function. But I do believe
+I missed the "!" in the logic. I believe the reason this hasn't caused
+problems is because for the offline transports we never use the
+xprt_iter_xprt(). We only iterate thru the get_next when we iterate
+offline transports. But I should fix the function that adds the "!".
 
-While this might point to a problem with the filesystem not handling the
-final close efficiently, such problems should only hurt throughput, not
-lead to memory exhaustion.
-
-For normal threads, the thread that closes the file also calls the
-final fput so there is natural rate limiting preventing excessive growth
-in the list of delayed fputs.  For kernel threads, and particularly for
-nfsd, delayed in the final fput do not impose any throttling to prevent
-the thread from closing more files.
-
-A simple way to fix this is to treat nfsd threads like normal processes
-for task_work.  Thus the pending files are queued for the thread, and
-the same thread finishes the work.
-
-Currently KTHREADs are assumed never to call task_work_run().  With this
-patch that it still the default but it is implemented by storing the
-magic value TASK_WORKS_DISABLED in ->task_works.  If a kthread, such as
-nfsd, will call task_work_run() periodically, it sets ->task_works
-to NULL to indicate this.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
-
-I wonder which tree this should go through assuming everyone likes it.
-VFS maybe??
-
-Thanks.
-
- fs/file_table.c           | 2 +-
- fs/nfsd/nfssvc.c          | 4 ++++
- include/linux/sched.h     | 1 +
- include/linux/task_work.h | 4 +++-
- kernel/fork.c             | 2 +-
- kernel/task_work.c        | 7 ++++---
- 6 files changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/fs/file_table.c b/fs/file_table.c
-index de4a2915bfd4..e79351df22be 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -445,7 +445,7 @@ void fput(struct file *file)
- 	if (atomic_long_dec_and_test(&file->f_count)) {
- 		struct task_struct *task =3D current;
-=20
--		if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
-+		if (likely(!in_interrupt())) {
- 			init_task_work(&file->f_rcuhead, ____fput);
- 			if (!task_work_add(task, &file->f_rcuhead, TWA_RESUME))
- 				return;
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 66ca50b38b27..c047961262ca 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -13,6 +13,7 @@
- #include <linux/fs_struct.h>
- #include <linux/swap.h>
- #include <linux/siphash.h>
-+#include <linux/task_work.h>
-=20
- #include <linux/sunrpc/stats.h>
- #include <linux/sunrpc/svcsock.h>
-@@ -941,6 +942,7 @@ nfsd(void *vrqstp)
- 	}
-=20
- 	current->fs->umask =3D 0;
-+	current->task_works =3D NULL; /* Declare that I will call task_work_run() */
-=20
- 	atomic_inc(&nfsdstats.th_cnt);
-=20
-@@ -955,6 +957,8 @@ nfsd(void *vrqstp)
-=20
- 		svc_recv(rqstp);
- 		validate_process_creds();
-+		if (task_work_pending(current))
-+			task_work_run();
- 	}
-=20
- 	atomic_dec(&nfsdstats.th_cnt);
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 292c31697248..c63c2bedbf71 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1117,6 +1117,7 @@ struct task_struct {
- 	unsigned int			sas_ss_flags;
-=20
- 	struct callback_head		*task_works;
-+#define	TASK_WORKS_DISABLED	((void*)1)
-=20
- #ifdef CONFIG_AUDIT
- #ifdef CONFIG_AUDITSYSCALL
-diff --git a/include/linux/task_work.h b/include/linux/task_work.h
-index 795ef5a68429..3c74e3de81ed 100644
---- a/include/linux/task_work.h
-+++ b/include/linux/task_work.h
-@@ -22,7 +22,9 @@ enum task_work_notify_mode {
-=20
- static inline bool task_work_pending(struct task_struct *task)
- {
--	return READ_ONCE(task->task_works);
-+	struct callback_head *works =3D READ_ONCE(task->task_works);
-+
-+	return works && works !=3D TASK_WORKS_DISABLED;
- }
-=20
- int task_work_add(struct task_struct *task, struct callback_head *twork,
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 10917c3e1f03..903b29804fe1 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2577,7 +2577,7 @@ __latent_entropy struct task_struct *copy_process(
- 	p->dirty_paused_when =3D 0;
-=20
- 	p->pdeath_signal =3D 0;
--	p->task_works =3D NULL;
-+	p->task_works =3D args->kthread ? TASK_WORKS_DISABLED : NULL;
- 	clear_posix_cputimers_work(p);
-=20
- #ifdef CONFIG_KRETPROBES
-diff --git a/kernel/task_work.c b/kernel/task_work.c
-index 95a7e1b7f1da..ffdf4b0d7a0e 100644
---- a/kernel/task_work.c
-+++ b/kernel/task_work.c
-@@ -49,7 +49,8 @@ int task_work_add(struct task_struct *task, struct callback=
-_head *work,
-=20
- 	head =3D READ_ONCE(task->task_works);
- 	do {
--		if (unlikely(head =3D=3D &work_exited))
-+		if (unlikely(head =3D=3D &work_exited ||
-+			     head =3D=3D TASK_WORKS_DISABLED))
- 			return -ESRCH;
- 		work->next =3D head;
- 	} while (!try_cmpxchg(&task->task_works, &head, work));
-@@ -157,7 +158,7 @@ void task_work_run(void)
- 		work =3D READ_ONCE(task->task_works);
- 		do {
- 			head =3D NULL;
--			if (!work) {
-+			if (!work || work =3D=3D TASK_WORKS_DISABLED) {
- 				if (task->flags & PF_EXITING)
- 					head =3D &work_exited;
- 				else
-@@ -165,7 +166,7 @@ void task_work_run(void)
- 			}
- 		} while (!try_cmpxchg(&task->task_works, &work, head));
-=20
--		if (!work)
-+		if (!work || work =3D=3D TASK_WORKS_DISABLED)
- 			break;
- 		/*
- 		 * Synchronize with task_work_cancel(). It can not remove
---=20
-2.42.1
-
+>
+> NeilBrown
+>
+> > Furthermore, we do not accept patches without a real name on a Signed-
+> > off-by: line.
+> >
+> > So NACK on two accounts.
+> >
+> > --
+> > Trond Myklebust
+> > Linux NFS client maintainer, Hammerspace
+> > trond.myklebust@hammerspace.com
+> >
+> >
+> >
+>
+>
 
