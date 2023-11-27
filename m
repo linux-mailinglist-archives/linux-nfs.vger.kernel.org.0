@@ -1,44 +1,45 @@
-Return-Path: <linux-nfs+bounces-95-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-96-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D3AD37FA688
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 17:33:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E9347FA68B
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 17:33:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 034711C20AD9
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 16:33:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6ACE1F20F36
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 16:33:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 302E9364D0;
-	Mon, 27 Nov 2023 16:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13D29364DB;
+	Mon, 27 Nov 2023 16:33:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4bgn5xJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IrNQby2T"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08926381B8;
-	Mon, 27 Nov 2023 16:33:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82869C433C9;
-	Mon, 27 Nov 2023 16:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62F036B0A;
+	Mon, 27 Nov 2023 16:33:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144E0C433CA;
+	Mon, 27 Nov 2023 16:33:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701102811;
-	bh=juU6fnl4PfxG24GSF7q6GNBCMl+rBTJajn8+8aZpaCo=;
+	s=k20201202; t=1701102818;
+	bh=5YOVMxDLVsAZTaK+Wm4nPQTpbOkeewHjzw0Q0J8RWy8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=k4bgn5xJv6TRuHOTEstdMEkySE+eI2Paa6k34C0410c3NKHN9QAcE53dMZ5UrV/SY
-	 s0Nl+iFoHgoiF2+2x6uy3O6ue2ovJQ0u0RsBPZE5TZt7OzZGhqjlgr9VB26vyViNTn
-	 wsZ2hJoEtM07YP2uY44sXU0ixi/BZiti3ePCtly45cZPFi/c5m/mG3b2cLL5NdgxbT
-	 Jon4UM29FdqQlcj5JyaRo90DhCe0x7yadyf0p1RTb3zjM8Q9ozQsNv5NKPnUqHkCpO
-	 G+dQn3RQAFvhWAhn5JIBr+O/IZ7pxd4uEsZx/rsVO0/vBIA9B87ilSm2Nh3CyBeu8g
-	 I+/wMpKsOgDGw==
-Subject: [PATCH v1 2/5] rpcrdma: Introduce a simple cid tracepoint class
+	b=IrNQby2TFsWjVTVNb9g19mauh+jZuEpaU+TzP0vgaP3GzQquvBrUI0Z/91+HCXpQs
+	 RwWe0ujfLaDSKelrC93PiQSAcoxYUuztewM3yCNqR3lfEOc2kktpkbPLApuDiJjdN5
+	 RX9IaKh8SaGloOhqmUculPQkiSdVmgXOFKgEkdk1RZdzoDeCzhNYQt+jmaDFPu+cB1
+	 OAIZtzYrSwGREuP46js8602/GHWay7TZ9BYEAAvSSR1wlqtmKMZfEDBcg8x8SLoLJs
+	 7V/xsa4QOMJu2Sh4dZfUNQyCy7pM5Jv2m4qEfIO9/HBWjpEt09HK48osmXwb3zL+D0
+	 RsVixEogXo5vA==
+Subject: [PATCH v1 3/5] svcrdma: SQ error tracepoints should report completion
+ IDs
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
 Cc: Chuck Lever <chuck.lever@oracle.com>, tom@talpey.com
-Date: Mon, 27 Nov 2023 11:33:30 -0500
+Date: Mon, 27 Nov 2023 11:33:37 -0500
 Message-ID: 
- <170110281051.49524.8827985545385062428.stgit@bazille.1015granger.net>
+ <170110281706.49524.12668997627474561777.stgit@bazille.1015granger.net>
 In-Reply-To: 
  <170110267835.49524.14512830016966273991.stgit@bazille.1015granger.net>
 References: 
@@ -55,237 +56,168 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-De-duplicate some code, making it easier to add new tracepoints that
-report only a completion ID.
+Update the Send Queue's error flow tracepoints to report the
+completion ID of the waiting or failing context. This ties the
+wait/failure to a particular operation or request, which is a little
+more useful than knowing only the transport that is about to close.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/rpcrdma.h          |   93 +++++++++----------------------
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |    2 -
- net/sunrpc/xprtrdma/svc_rdma_rw.c       |    2 -
- net/sunrpc/xprtrdma/svc_rdma_sendto.c   |    2 -
- net/sunrpc/xprtrdma/verbs.c             |    2 -
- 5 files changed, 30 insertions(+), 71 deletions(-)
+ include/trace/events/rpcrdma.h        |   49 ++++++++++++++++++++-------------
+ net/sunrpc/xprtrdma/svc_rdma_rw.c     |    6 ++--
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c |    6 ++--
+ 3 files changed, 35 insertions(+), 26 deletions(-)
 
 diff --git a/include/trace/events/rpcrdma.h b/include/trace/events/rpcrdma.h
-index 718df1d9b834..b3445e07c151 100644
+index b3445e07c151..f1c2022d39ca 100644
 --- a/include/trace/events/rpcrdma.h
 +++ b/include/trace/events/rpcrdma.h
-@@ -22,47 +22,37 @@
-  ** Event classes
-  **/
- 
--DECLARE_EVENT_CLASS(rpcrdma_completion_class,
-+DECLARE_EVENT_CLASS(rpcrdma_simple_cid_class,
- 	TP_PROTO(
--		const struct ib_wc *wc,
- 		const struct rpc_rdma_cid *cid
- 	),
- 
--	TP_ARGS(wc, cid),
-+	TP_ARGS(cid),
- 
- 	TP_STRUCT__entry(
- 		__field(u32, cq_id)
- 		__field(int, completion_id)
--		__field(unsigned long, status)
--		__field(unsigned int, vendor_err)
- 	),
- 
- 	TP_fast_assign(
- 		__entry->cq_id = cid->ci_queue_id;
- 		__entry->completion_id = cid->ci_completion_id;
--		__entry->status = wc->status;
--		if (wc->status)
--			__entry->vendor_err = wc->vendor_err;
--		else
--			__entry->vendor_err = 0;
- 	),
- 
--	TP_printk("cq.id=%u cid=%d status=%s (%lu/0x%x)",
--		__entry->cq_id, __entry->completion_id,
--		rdma_show_wc_status(__entry->status),
--		__entry->status, __entry->vendor_err
-+	TP_printk("cq.id=%d cid=%d",
-+		__entry->cq_id, __entry->completion_id
+@@ -2143,65 +2143,74 @@ TRACE_EVENT(svcrdma_qp_error,
  	)
  );
  
--#define DEFINE_COMPLETION_EVENT(name)					\
--		DEFINE_EVENT(rpcrdma_completion_class, name,		\
-+#define DEFINE_SIMPLE_CID_EVENT(name)					\
-+		DEFINE_EVENT(rpcrdma_simple_cid_class, name,		\
- 				TP_PROTO(				\
--					const struct ib_wc *wc,		\
- 					const struct rpc_rdma_cid *cid	\
- 				),					\
--				TP_ARGS(wc, cid))
-+				TP_ARGS(cid)				\
+-DECLARE_EVENT_CLASS(svcrdma_sendqueue_event,
++DECLARE_EVENT_CLASS(svcrdma_sendqueue_class,
+ 	TP_PROTO(
+-		const struct svcxprt_rdma *rdma
++		const struct svcxprt_rdma *rdma,
++		const struct rpc_rdma_cid *cid
+ 	),
+ 
+-	TP_ARGS(rdma),
++	TP_ARGS(rdma, cid),
+ 
+ 	TP_STRUCT__entry(
++		__field(u32, cq_id)
++		__field(int, completion_id)
+ 		__field(int, avail)
+ 		__field(int, depth)
+-		__string(addr, rdma->sc_xprt.xpt_remotebuf)
+ 	),
+ 
+ 	TP_fast_assign(
++		__entry->cq_id = cid->ci_queue_id;
++		__entry->completion_id = cid->ci_completion_id;
+ 		__entry->avail = atomic_read(&rdma->sc_sq_avail);
+ 		__entry->depth = rdma->sc_sq_depth;
+-		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
+ 	),
+ 
+-	TP_printk("addr=%s sc_sq_avail=%d/%d",
+-		__get_str(addr), __entry->avail, __entry->depth
++	TP_printk("cq.id=%u cid=%d sc_sq_avail=%d/%d",
++		__entry->cq_id, __entry->completion_id,
++		__entry->avail, __entry->depth
+ 	)
+ );
+ 
+ #define DEFINE_SQ_EVENT(name)						\
+-		DEFINE_EVENT(svcrdma_sendqueue_event, svcrdma_sq_##name,\
+-				TP_PROTO(				\
+-					const struct svcxprt_rdma *rdma \
+-				),					\
+-				TP_ARGS(rdma))
++		DEFINE_EVENT(svcrdma_sendqueue_class, name,		\
++			TP_PROTO(					\
++				const struct svcxprt_rdma *rdma,	\
++				const struct rpc_rdma_cid *cid		\
++			),						\
++			TP_ARGS(rdma, cid)				\
 +		)
  
--DECLARE_EVENT_CLASS(rpcrdma_send_completion_class,
-+DECLARE_EVENT_CLASS(rpcrdma_completion_class,
+-DEFINE_SQ_EVENT(full);
+-DEFINE_SQ_EVENT(retry);
++DEFINE_SQ_EVENT(svcrdma_sq_full);
++DEFINE_SQ_EVENT(svcrdma_sq_retry);
+ 
+ TRACE_EVENT(svcrdma_sq_post_err,
  	TP_PROTO(
- 		const struct ib_wc *wc,
- 		const struct rpc_rdma_cid *cid
-@@ -73,20 +63,29 @@ DECLARE_EVENT_CLASS(rpcrdma_send_completion_class,
+ 		const struct svcxprt_rdma *rdma,
++		const struct rpc_rdma_cid *cid,
+ 		int status
+ 	),
+ 
+-	TP_ARGS(rdma, status),
++	TP_ARGS(rdma, cid, status),
+ 
  	TP_STRUCT__entry(
- 		__field(u32, cq_id)
- 		__field(int, completion_id)
-+		__field(unsigned long, status)
-+		__field(unsigned int, vendor_err)
++		__field(u32, cq_id)
++		__field(int, completion_id)
+ 		__field(int, avail)
+ 		__field(int, depth)
+ 		__field(int, status)
+-		__string(addr, rdma->sc_xprt.xpt_remotebuf)
  	),
  
  	TP_fast_assign(
- 		__entry->cq_id = cid->ci_queue_id;
- 		__entry->completion_id = cid->ci_completion_id;
-+		__entry->status = wc->status;
-+		if (wc->status)
-+			__entry->vendor_err = wc->vendor_err;
-+		else
-+			__entry->vendor_err = 0;
++		__entry->cq_id = cid->ci_queue_id;
++		__entry->completion_id = cid->ci_completion_id;
+ 		__entry->avail = atomic_read(&rdma->sc_sq_avail);
+ 		__entry->depth = rdma->sc_sq_depth;
+ 		__entry->status = status;
+-		__assign_str(addr, rdma->sc_xprt.xpt_remotebuf);
  	),
  
--	TP_printk("cq.id=%u cid=%d",
--		__entry->cq_id, __entry->completion_id
-+	TP_printk("cq.id=%u cid=%d status=%s (%lu/0x%x)",
+-	TP_printk("addr=%s sc_sq_avail=%d/%d status=%d",
+-		__get_str(addr), __entry->avail, __entry->depth,
+-		__entry->status
++	TP_printk("cq.id=%u cid=%d sc_sq_avail=%d/%d status=%d",
 +		__entry->cq_id, __entry->completion_id,
-+		rdma_show_wc_status(__entry->status),
-+		__entry->status, __entry->vendor_err
++		__entry->avail, __entry->depth, __entry->status
  	)
  );
  
--#define DEFINE_SEND_COMPLETION_EVENT(name)				\
--		DEFINE_EVENT(rpcrdma_send_completion_class, name,	\
-+#define DEFINE_COMPLETION_EVENT(name)					\
-+		DEFINE_EVENT(rpcrdma_completion_class, name,		\
- 				TP_PROTO(				\
- 					const struct ib_wc *wc,		\
- 					const struct rpc_rdma_cid *cid	\
-@@ -978,27 +977,7 @@ TRACE_EVENT(xprtrdma_post_send_err,
- 	)
- );
- 
--TRACE_EVENT(xprtrdma_post_recv,
--	TP_PROTO(
--		const struct rpcrdma_rep *rep
--	),
--
--	TP_ARGS(rep),
--
--	TP_STRUCT__entry(
--		__field(u32, cq_id)
--		__field(int, completion_id)
--	),
--
--	TP_fast_assign(
--		__entry->cq_id = rep->rr_cid.ci_queue_id;
--		__entry->completion_id = rep->rr_cid.ci_completion_id;
--	),
--
--	TP_printk("cq.id=%d cid=%d",
--		__entry->cq_id, __entry->completion_id
--	)
--);
-+DEFINE_SIMPLE_CID_EVENT(xprtrdma_post_recv);
- 
- TRACE_EVENT(xprtrdma_post_recvs,
- 	TP_PROTO(
-@@ -2020,31 +1999,11 @@ TRACE_EVENT(svcrdma_post_send,
- 	)
- );
- 
--DEFINE_SEND_COMPLETION_EVENT(svcrdma_wc_send);
-+DEFINE_SIMPLE_CID_EVENT(svcrdma_wc_send);
- DEFINE_SEND_FLUSH_EVENT(svcrdma_wc_send_flush);
- DEFINE_SEND_FLUSH_EVENT(svcrdma_wc_send_err);
- 
--TRACE_EVENT(svcrdma_post_recv,
--	TP_PROTO(
--		const struct svc_rdma_recv_ctxt *ctxt
--	),
--
--	TP_ARGS(ctxt),
--
--	TP_STRUCT__entry(
--		__field(u32, cq_id)
--		__field(int, completion_id)
--	),
--
--	TP_fast_assign(
--		__entry->cq_id = ctxt->rc_cid.ci_queue_id;
--		__entry->completion_id = ctxt->rc_cid.ci_completion_id;
--	),
--
--	TP_printk("cq.id=%d cid=%d",
--		__entry->cq_id, __entry->completion_id
--	)
--);
-+DEFINE_SIMPLE_CID_EVENT(svcrdma_post_recv);
- 
- DEFINE_RECEIVE_SUCCESS_EVENT(svcrdma_wc_recv);
- DEFINE_RECEIVE_FLUSH_EVENT(svcrdma_wc_recv_flush);
-@@ -2153,7 +2112,7 @@ TRACE_EVENT(svcrdma_wc_read,
- DEFINE_SEND_FLUSH_EVENT(svcrdma_wc_read_flush);
- DEFINE_SEND_FLUSH_EVENT(svcrdma_wc_read_err);
- 
--DEFINE_SEND_COMPLETION_EVENT(svcrdma_wc_write);
-+DEFINE_SIMPLE_CID_EVENT(svcrdma_wc_write);
- DEFINE_SEND_FLUSH_EVENT(svcrdma_wc_write_flush);
- DEFINE_SEND_FLUSH_EVENT(svcrdma_wc_write_err);
- 
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index c8c1c534070b..72374033bb2b 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -264,7 +264,7 @@ static bool svc_rdma_refresh_recvs(struct svcxprt_rdma *rdma,
- 		if (!ctxt)
- 			break;
- 
--		trace_svcrdma_post_recv(ctxt);
-+		trace_svcrdma_post_recv(&ctxt->rc_cid);
- 		ctxt->rc_recv_wr.next = recv_chain;
- 		recv_chain = &ctxt->rc_recv_wr;
- 		rdma->sc_pending_recvs++;
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index de1ec3220aab..db2a4bd2f7ad 100644
+index db2a4bd2f7ad..b06e49cc55fb 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -282,7 +282,7 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
- 
- 	switch (wc->status) {
- 	case IB_WC_SUCCESS:
--		trace_svcrdma_wc_write(wc, &cc->cc_cid);
-+		trace_svcrdma_wc_write(&cc->cc_cid);
- 		break;
- 	case IB_WC_WR_FLUSH_ERR:
- 		trace_svcrdma_wc_write_flush(wc, &cc->cc_cid);
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index 09f5d0570bc9..31b711deab5e 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -305,7 +305,7 @@ static void svc_rdma_wc_send(struct ib_cq *cq, struct ib_wc *wc)
- 	if (unlikely(wc->status != IB_WC_SUCCESS))
- 		goto flushed;
- 
--	trace_svcrdma_wc_send(wc, &ctxt->sc_cid);
-+	trace_svcrdma_wc_send(&ctxt->sc_cid);
- 	svc_rdma_send_ctxt_put(rdma, ctxt);
- 	return;
- 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 28c0771c4e8c..4f8d7efa469f 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -1364,7 +1364,7 @@ void rpcrdma_post_recvs(struct rpcrdma_xprt *r_xprt, int needed, bool temp)
+@@ -406,14 +406,14 @@ static int svc_rdma_post_chunk_ctxt(struct svc_rdma_chunk_ctxt *cc)
  		}
  
- 		rep->rr_cid.ci_queue_id = ep->re_attr.recv_cq->res.id;
--		trace_xprtrdma_post_recv(rep);
-+		trace_xprtrdma_post_recv(&rep->rr_cid);
- 		rep->rr_recv_wr.next = wr;
- 		wr = &rep->rr_recv_wr;
- 		--needed;
+ 		percpu_counter_inc(&svcrdma_stat_sq_starve);
+-		trace_svcrdma_sq_full(rdma);
++		trace_svcrdma_sq_full(rdma, &cc->cc_cid);
+ 		atomic_add(cc->cc_sqecount, &rdma->sc_sq_avail);
+ 		wait_event(rdma->sc_send_wait,
+ 			   atomic_read(&rdma->sc_sq_avail) > cc->cc_sqecount);
+-		trace_svcrdma_sq_retry(rdma);
++		trace_svcrdma_sq_retry(rdma, &cc->cc_cid);
+ 	} while (1);
+ 
+-	trace_svcrdma_sq_post_err(rdma, ret);
++	trace_svcrdma_sq_post_err(rdma, &cc->cc_cid, ret);
+ 	svc_xprt_deferred_close(&rdma->sc_xprt);
+ 
+ 	/* If even one was posted, there will be a completion. */
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+index 31b711deab5e..2ee691c45b85 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
+@@ -343,13 +343,13 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct svc_rdma_send_ctxt *ctxt)
+ 	while (1) {
+ 		if ((atomic_dec_return(&rdma->sc_sq_avail) < 0)) {
+ 			percpu_counter_inc(&svcrdma_stat_sq_starve);
+-			trace_svcrdma_sq_full(rdma);
++			trace_svcrdma_sq_full(rdma, &ctxt->sc_cid);
+ 			atomic_inc(&rdma->sc_sq_avail);
+ 			wait_event(rdma->sc_send_wait,
+ 				   atomic_read(&rdma->sc_sq_avail) > 1);
+ 			if (test_bit(XPT_CLOSE, &rdma->sc_xprt.xpt_flags))
+ 				return -ENOTCONN;
+-			trace_svcrdma_sq_retry(rdma);
++			trace_svcrdma_sq_retry(rdma, &ctxt->sc_cid);
+ 			continue;
+ 		}
+ 
+@@ -360,7 +360,7 @@ int svc_rdma_send(struct svcxprt_rdma *rdma, struct svc_rdma_send_ctxt *ctxt)
+ 		return 0;
+ 	}
+ 
+-	trace_svcrdma_sq_post_err(rdma, ret);
++	trace_svcrdma_sq_post_err(rdma, &ctxt->sc_cid, ret);
+ 	svc_xprt_deferred_close(&rdma->sc_xprt);
+ 	wake_up(&rdma->sc_send_wait);
+ 	return ret;
 
 
 
