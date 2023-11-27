@@ -1,45 +1,45 @@
-Return-Path: <linux-nfs+bounces-82-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-83-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A3E47F9FA0
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 13:37:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBE727F9FBA
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 13:38:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB1941C20D54
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 12:37:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 148881C20D5B
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 12:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 085CC18C09;
-	Mon, 27 Nov 2023 12:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67FB62D7AE;
+	Mon, 27 Nov 2023 12:38:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbHOubl+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1FvDMSj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE54A15EB6
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 12:37:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 717D0C433C7;
-	Mon, 27 Nov 2023 12:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AEF12D7AA
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 12:38:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0885C433C8;
+	Mon, 27 Nov 2023 12:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701088633;
-	bh=i3cqTZD3HH4FNj2w5S5Wg2hsTd3rTjPvNKskpmXHcCI=;
+	s=k20201202; t=1701088737;
+	bh=72dy0Gd2fvQwIKbEQa/aSldG/bYdezyyc0LW8X7Qzao=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=mbHOubl+XIM41finYvT7ceXQyDWb/w2jw8tJw6ccKvYOszB+XoDL45RTi0eTqVU9p
-	 s+SQ3G6JeubsrvhjSorp6AypDokBTl3MecGl3kMEgcdibwkYJOQ9IgZsii7dxI9yLF
-	 v+nWaKQrbUsGsW/e/VdlTK/ow+n1QoKpQ3eP/BKg7JMB+NcBZMjInDnFe3/DHiIaUO
-	 PmoSj2ES+YPgL3BWWEKohgBBOsPsTRxhIbrtkCo2fAGDJUGrBXekIOl46eIqz5IIAa
-	 umV/+2JIVAF3XJHESKpoDPSvaIY7J9lTpO3dO7/+hzA23kzav+sJB/FRl29yI9Jtpz
-	 F6kdt5dxPAX7A==
-Message-ID: <2c63fcb62411ce907e95118f623833ab5f3c4209.camel@kernel.org>
-Subject: Re: [PATCH] NFSD: Remove nfsd_drc_gc() tracepoint
+	b=W1FvDMSj99lKIthYOYWDD7gESVFuSLR3I58jqeo0DphpmzHmrWlU65DVmUQD5ct2o
+	 vqkK7z8g1mg6CzhPenECzoY83/2XKspn86xNfBna7udQJM9zI+4ITorC5/0/BQwzt/
+	 io2LOifB9jWyr5hI6M7+GFeLTmt4/5dn/3WVCEZzhZQR5mwOpur+ocxRvUEj3YufZp
+	 7JILkiiifZ/MCL098ZnZYdqSKzfqhYpqoXPUNYHcvPoCEpxcr6gL8ESwMC256+oAa+
+	 XeRXL5AuJy19R5a1KkTD0VBqWd1qX6DF0nEzRBN65B8Kc9U51zjW9d/1R++BlFsUZY
+	 TKX6cA/L/AEGA==
+Message-ID: <fc4f940398da439282eb508dafe9dfabc18f609c.camel@kernel.org>
+Subject: Re: [PATCH v1 0/3] Eliminate the RQ_SPLICE_OK flag
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
-Date: Mon, 27 Nov 2023 07:37:12 -0500
-In-Reply-To: <169988310782.6735.4291667629997514072.stgit@bazille.1015granger.net>
+Date: Mon, 27 Nov 2023 07:38:55 -0500
+In-Reply-To: <169988319025.6844.14300255016413760826.stgit@bazille.1015granger.net>
 References: 
-	<169988310782.6735.4291667629997514072.stgit@bazille.1015granger.net>
+	<169988319025.6844.14300255016413760826.stgit@bazille.1015granger.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -59,87 +59,44 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2023-11-13 at 08:45 -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, 2023-11-13 at 08:54 -0500, Chuck Lever wrote:
+> The server's splice read path is used by the majority of exported
+> filesystems. At last month's bake-a-thon, we tossed around some
+> ideas about how to improve benchmarking and test coverage of the NFS
+> server's vectored-read path, which is a fallback.
 >=20
-> This trace point was for debugging the DRC's garbage collection. In
-> the field it's just noise.
+> One way to do this would be to expose a switch that can be set by
+> test harnesses to disable splice reads.
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> As an initial step, hoist RQ_SPLICE_OK out of the RPC layer. Later,
+> I'll add a netlink command to as a switch between "use splice if
+> possible" and "always use vectored reads". (I don't want to collide
+> with the work Lorenzo is doing).
+>=20
 > ---
->  fs/nfsd/nfscache.c |    6 +-----
->  fs/nfsd/trace.h    |   22 ----------------------
->  2 files changed, 1 insertion(+), 27 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-> index fd56a52aa5fb..4d2055c7898a 100644
-> --- a/fs/nfsd/nfscache.c
-> +++ b/fs/nfsd/nfscache.c
-> @@ -364,8 +364,6 @@ nfsd_reply_cache_scan(struct shrinker *shrink, struct=
- shrink_control *sc)
->  		if (freed > sc->nr_to_scan)
->  			break;
->  	}
-> -
-> -	trace_nfsd_drc_gc(nn, freed);
->  	return freed;
->  }
-> =20
-> @@ -486,7 +484,6 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, struct =
-nfsd_cacherep **cacherep)
->  	__wsum			csum;
->  	struct nfsd_drc_bucket	*b;
->  	int type =3D rqstp->rq_cachetype;
-> -	unsigned long freed;
->  	LIST_HEAD(dispose);
->  	int rtn =3D RC_DOIT;
-> =20
-> @@ -516,8 +513,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, struct =
-nfsd_cacherep **cacherep)
->  	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
->  	spin_unlock(&b->cache_lock);
-> =20
-> -	freed =3D nfsd_cacherep_dispose(&dispose);
-> -	trace_nfsd_drc_gc(nn, freed);
-> +	nfsd_cacherep_dispose(&dispose);
-> =20
->  	nfsd_stats_rc_misses_inc();
->  	atomic_inc(&nn->num_drc_entries);
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index fbc0ccb40424..d1e8cf079b0f 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -1262,28 +1262,6 @@ TRACE_EVENT(nfsd_drc_mismatch,
->  		__entry->ingress)
->  );
-> =20
-> -TRACE_EVENT_CONDITION(nfsd_drc_gc,
-> -	TP_PROTO(
-> -		const struct nfsd_net *nn,
-> -		unsigned long freed
-> -	),
-> -	TP_ARGS(nn, freed),
-> -	TP_CONDITION(freed > 0),
-> -	TP_STRUCT__entry(
-> -		__field(unsigned long long, boot_time)
-> -		__field(unsigned long, freed)
-> -		__field(int, total)
-> -	),
-> -	TP_fast_assign(
-> -		__entry->boot_time =3D nn->boot_time;
-> -		__entry->freed =3D freed;
-> -		__entry->total =3D atomic_read(&nn->num_drc_entries);
-> -	),
-> -	TP_printk("boot_time=3D%16llx total=3D%d freed=3D%lu",
-> -		__entry->boot_time, __entry->total, __entry->freed
-> -	)
-> -);
-> -
->  TRACE_EVENT(nfsd_cb_args,
->  	TP_PROTO(
->  		const struct nfs4_client *clp,
+> Chuck Lever (3):
+>       NFSD: Replace RQ_SPLICE_OK in nfsd_read()
+>       NFSD: Modify NFSv4 to use nfsd_read_splice_ok()
+>       SUNRPC: Remove RQ_SPLICE_OK
 >=20
 >=20
+>  fs/nfsd/nfs4proc.c                |  7 +++++--
+>  fs/nfsd/nfs4xdr.c                 | 13 ++++++++-----
+>  fs/nfsd/vfs.c                     | 30 +++++++++++++++++++++++++++++-
+>  fs/nfsd/vfs.h                     |  1 +
+>  fs/nfsd/xdr4.h                    |  1 +
+>  include/linux/sunrpc/svc.h        |  2 --
+>  include/trace/events/sunrpc.h     |  1 -
+>  net/sunrpc/auth_gss/svcauth_gss.c | 10 ----------
+>  net/sunrpc/svc.c                  |  2 --
+>  9 files changed, 44 insertions(+), 23 deletions(-)
+>=20
+> --
+> Chuck Lever
+>=20
+
+Nice cleanup
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
