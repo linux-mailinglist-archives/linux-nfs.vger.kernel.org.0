@@ -1,146 +1,142 @@
-Return-Path: <linux-nfs+bounces-109-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-110-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1659B7FAC8E
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 22:31:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D886A7FACB4
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 22:42:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C501C281BA1
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 21:31:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 10E621C20B7D
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Nov 2023 21:42:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 530EF4644C;
-	Mon, 27 Nov 2023 21:31:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 717EE4644B;
+	Mon, 27 Nov 2023 21:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="EnNWv26X";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qRU0ejNa"
+	dkim=pass (2048-bit key) header.d=umich.edu header.i=@umich.edu header.b="lOqfYwr2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2a07:de40:b251:101:10:150:64:2])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5563D131
-	for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 13:31:36 -0800 (PST)
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 4973F1F37E;
-	Mon, 27 Nov 2023 21:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1701120692; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xWfjt8/gO2fghOO4GO1l3lIEc+p4zh7B/MoHkClRzYw=;
-	b=EnNWv26XlHFZ6bE3nFGSJTSQFaSuBcGin9ukqPjA73f+OnQEmZsydWTpJsza7cDQvpjU+4
-	NDA1PNCo0MblP+woDramAHaSRk4B3NBVCTvdUWi2g6js6VvHI5d87d0S0wyMRtggjGeq0p
-	K2WadKnZSSg2kxrZdZM087qGOK5LCAo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1701120692;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xWfjt8/gO2fghOO4GO1l3lIEc+p4zh7B/MoHkClRzYw=;
-	b=qRU0ejNaFHRd2YbxtRhPDQ+Bg45oxI7kxASy1Hs7qSZtNLpfm2EbYtNcFXuh22Ea4A5scG
-	Bj6Ax/YN56EomLAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 61AA51367B;
-	Mon, 27 Nov 2023 21:31:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id OzIFBbEKZWUwMgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 27 Nov 2023 21:31:29 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9380010E6
+	for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 13:42:21 -0800 (PST)
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2c87acba73fso9983791fa.1
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Nov 2023 13:42:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03; t=1701121340; x=1701726140; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OOFXhZdzaB6KiLH9zP3fxZacibeihuFcTAirqutJ1lM=;
+        b=lOqfYwr2sQX1Co4knN8Hmh29C3rP4jkkKfKEOV058R+V/SczRZvCEwMqAE09kyWadC
+         gv1gFDJAaT54VXZI6gg9//ghWe4wMUJEUTSo67g+HXV0pNqEh+psBBNRUz+BVabIVn9j
+         Cpy3LS16vWBzOwh0pMxc0xl585Fv6UEEI3TiD87YM851JzCk91ld9UG0N6Fb8DTS9rJG
+         Rz83UNMPrG8HAp72aMI7G2U3Qr1fJlAtUTRaJXUXYz5KOSZJBrsKemBQ3LowNW0YqAGE
+         Mp/L2jFg2tQ/0pkrBaKzyuyXxemFNPVY1/UgE9JIUgCw3ZCGZjZ+XwM8d2qQ/j2OSF6y
+         sO+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701121340; x=1701726140;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OOFXhZdzaB6KiLH9zP3fxZacibeihuFcTAirqutJ1lM=;
+        b=vmumeWmnzEmNbCspgUTu8DGl7ND7HSk9DmBK68oeaRpcuWkmZDjSabXUhgienpuNg5
+         bORs9AEEqfnDQVkhrS0/6A+9+VYmQ3ZA0byPe3Go7I8ULg4HS2WbBZgQ3337lYz+6esE
+         S+/EoCgQqvz1BGjijX4D4c5W8FgcMQuZbOXSWTuitHNRlMcJSeFL7bNIOlVkTyVkgHPP
+         TCGynneyd+2lUsGwndaK6naGYN3hSysrHuQhIvC85i2YgmQbHWirONdOT3RcrIWDNkpG
+         3qel0APTFmN7RUB5t8CZfhuzMjkjP/8bI0LSK6WPV8EflqXNxXqS5rD7MBl0B9of5d6l
+         1WzA==
+X-Gm-Message-State: AOJu0YxA2kF2ajaFrNGi+ik5UUwv1IuNJcvYMKpoSPq6hArr6eW1vUe/
+	5dIGNd5mdce/IyQ5UsU1k21az4WZKcbo9bwvgI5oTsaE+ic=
+X-Google-Smtp-Source: AGHT+IH6hRojZ2Ot0RNEnvDcIobGwcQTU42s9EhqQKwod7caC4JeV/sq6I16qPKnvmjtotV4neIq80yFO5DGXi0lbvc=
+X-Received: by 2002:a2e:5301:0:b0:2c6:f97c:cf21 with SMTP id
+ h1-20020a2e5301000000b002c6f97ccf21mr7505224ljb.2.1701121339563; Mon, 27 Nov
+ 2023 13:42:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Trond Myklebust" <trondmy@hammerspace.com>
-Cc: "jlayton@kernel.org" <jlayton@kernel.org>,
- "thfeathers@sina.cn" <thfeathers@sina.cn>,
- "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
- "tom@talpey.com" <tom@talpey.com>, "Dai.Ngo@oracle.com" <Dai.Ngo@oracle.com>,
- "kolga@netapp.com" <kolga@netapp.com>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] SUNRPC: _xprt_switch_find_current_entry return xprt with
- condition find_active
-In-reply-to: <aa9e250a966c47782f79d258ea9818ae4fcbdbc5.camel@hammerspace.com>
-References: <20231127153959.2067-1-thfeathers@sina.cn>,
- <aa9e250a966c47782f79d258ea9818ae4fcbdbc5.camel@hammerspace.com>
-Date: Tue, 28 Nov 2023 08:31:22 +1100
-Message-id: <170112068218.7109.1172633879607916557@noble.neil.brown.name>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -3.85
-X-Spamd-Result: default: False [-3.85 / 50.00];
-	 TO_DN_EQ_ADDR_SOME(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 RCPT_COUNT_SEVEN(0.00)[8];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-2.75)[98.93%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[sina.cn];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[aka.ms:url,hammerspace.com:email,sina.cn:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[kernel.org,sina.cn,oracle.com,talpey.com,netapp.com,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[]
+References: <97AE695C-8F9F-4E9C-9460-427C284FBD32@oracle.com>
+ <CAN-5tyHxvTevgM38q94W4e+rBzYu7tWqDHVMNcFQ5GT3uNArCw@mail.gmail.com> <6F0CCBAF-29E1-4720-A7DC-9F43751B56E7@oracle.com>
+In-Reply-To: <6F0CCBAF-29E1-4720-A7DC-9F43751B56E7@oracle.com>
+From: Olga Kornievskaia <aglo@umich.edu>
+Date: Mon, 27 Nov 2023 11:42:08 -1000
+Message-ID: <CAN-5tyGqSXyeu+LXWVu_J=A8CLW01c2wDKSfBeqFaaWLxnOAyw@mail.gmail.com>
+Subject: Re: changes to struct rpc_gss_sec
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Olga Kornievskaia <kolga@netapp.com>, Steve Dickson <SteveD@redhat.com>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 28 Nov 2023, Trond Myklebust wrote:
-> On Mon, 2023-11-27 at 23:39 +0800, jsq wrote:
-> > [You don't often get email from thfeathers@sina.cn. Learn why this is
-> > important at https://aka.ms/LearnAboutSenderIdentification ]
-> > 
-> > current function always return a active xprt or NULL no matter what
-> > find_active
-> 
-> 
-> This patch clearly breaks xprt_switch_find_current_entry_offline().
+Hi Chuck,
 
-I think it actually fixes xprt_switch_find_current_entry_offline().
+Given that rpc_gss_secreate() was written by you I hope you dont mind
+questions. I believe gssd can't use the new api because it is
+insufficient. Specifically, authgss_create_default() takes in a
+structure which is populated with the correct (kerberos) credential we
+need to be using for the gss context establishment.
+rpc_gss_seccreate() sets the sec.cred =3D GSS_C_NO_CREDENTIAL. If you
+believe I'm incorrect in my assessment that rpc_gss_secreate please
+let me know.
 
-Looking closely at _xprt_switch_find_current_entry:
+As far as I can see, current libtirpc needs to be modified no matter
+what. Perhaps there needs to be some config magic to demand the use of
+higher version of libtirpc for the new code but it would be just a
+different way an upstream nfs-utils won't build without an appropriate
+libtirpc version. I would imagine distros would build matching
+libtirpc and nfs-utils that would either both not have the fix or have
+the fix.
 
-		if (found && ((find_active && xprt_is_active(pos)) ||
-			      (!find_active && xprt_is_active(pos))))
 
-and comparing with similar code in xprt_switch_find_next_entry:
-
-		if (found && ((check_active && xprt_is_active(pos)) ||
-			      (!check_active && !xprt_is_active(pos))))
-
-There is a difference in the number of '!'.  I suspect the former is
-wrong.
-If the former is correct, then "find_active" is irrelevant.
-
-NeilBrown
-
-> Furthermore, we do not accept patches without a real name on a Signed-
-> off-by: line.
-> 
-> So NACK on two accounts.
-> 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-> 
-> 
-> 
-
+On Wed, Nov 22, 2023 at 4:31=E2=80=AFAM Chuck Lever III <chuck.lever@oracle=
+.com> wrote:
+>
+> Possibly because authgss_create_default() was the API
+> available to gssd back in the day. rpc_gss_seccreate(3t)
+> is newer. That would be my guess.
+>
+>
+> > On Nov 22, 2023, at 1:07=E2=80=AFAM, Olga Kornievskaia <aglo@umich.edu>=
+ wrote:
+> >
+> > Hi Chuck,
+> >
+> > A quick reply as I'm on vacation but I can take a look when I get
+> > back. I'm just thinking there must be a reason why gssd is using the
+> > authgss api and not calling the rpc_gss one.
+> >
+> > On Tue, Nov 21, 2023 at 6:59=E2=80=AFAM Chuck Lever III <chuck.lever@or=
+acle.com> wrote:
+> >>
+> >> Hey Olga-
+> >>
+> >> I see that f5b6e6fdb1e6 ("gss-api: expose gss major/minor error in
+> >> authgss_refresh()") added a couple of fields in structure rpc_gss_sec.
+> >> Later, there are some nfs-utils changes that start using those fields.
+> >>
+> >> That breaks building the latest upstream nfs-utils on Fedora 38, whose
+> >> current libtirpc doesn't have those new fields.
+> >>
+> >> IMO struct rpc_gss_sec is part of the libtirpc API/ABI, thus we really
+> >> shouldn't change it.
+> >>
+> >> Instead, if gssd needs GSS status codes, can't it call
+> >> rpc_gss_seccreate(3), which explicitly takes a struct
+> >> rpc_gss_options_ret_t * argument?
+> >>
+> >> ie, just replace the authgss_create_default() call with a call to
+> >> rpc_gss_seccreate(3) ....
+> >>
+> >>
+> >> --
+> >> Chuck Lever
+> >>
+> >>
+> >>
+>
+> --
+> Chuck Lever
+>
+>
 
