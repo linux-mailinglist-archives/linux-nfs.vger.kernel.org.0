@@ -1,77 +1,143 @@
-Return-Path: <linux-nfs+bounces-124-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-125-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE6E77FBAEC
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Nov 2023 14:09:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64E7A7FBBDC
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Nov 2023 14:52:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8922DB21799
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Nov 2023 13:09:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B729B21394
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Nov 2023 13:52:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C67F356442;
-	Tue, 28 Nov 2023 13:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B3F258AC7;
+	Tue, 28 Nov 2023 13:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NwnXKNMq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OGHKluY9"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F332BD4B
-	for <linux-nfs@vger.kernel.org>; Tue, 28 Nov 2023 05:09:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=pshlG/ligFC3SogVXAgvzFoPKpHGsgj01FPvrJM8Hhs=; b=NwnXKNMqKbb8/6H93AE5QmyPwH
-	g7NPryLcu+hKXy3t/13Pg5jnNGom3SxJqHClWJ/g5xx6ShQGezXr/7IOE3ypItBHSrb2DiFQJNLrA
-	XChUQcCcYcuvk/Jo2CPsf+/xUZGhkff8jGJrIeZt37F0jzH4Exgm5bGpw4igrPvvqpcIqBFT2ER6S
-	K14f4G2+vddICFFuovGIAilwb/MCw0XZebTd1Joe1X582pqztSxPny1ncTm0H5ZawdNTJzLVDw1k0
-	WNjXk+UdhNPcHhrNne4n2ji2GdnVBvi9FJ1zrmgYxUZoLLR3E00QAS/yXq2KYsk3WwhgQkbrPAs5z
-	tgG08Rcw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1r7xpp-005MHD-0L;
-	Tue, 28 Nov 2023 13:09:05 +0000
-Date: Tue, 28 Nov 2023 05:09:05 -0800
-From: Christoph Hellwig <hch@infradead.org>
-To: Rick Macklem <rick.macklem@gmail.com>
-Cc: Chuck Lever III <chuck.lever@oracle.com>,
-	Christoph Hellwig <hch@infradead.org>, Tao Lyu <tao.lyu@epfl.ch>,
-	Trond Myklebust <trondmy@hammerspace.com>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: Question about O_APPEND | O_DIRECT
-Message-ID: <ZWXmcYy8NElP0FC2@infradead.org>
-References: <c609e5f9df75438dbfe3810859935d58@epfl.ch>
- <2d948b43fa625952e50589e4bedf9551df7ee112.camel@hammerspace.com>
- <7d2d17e4d3904d29b75fadcfd916b2a3@epfl.ch>
- <ZWTFn0/FtJ5WuQGc@infradead.org>
- <7E2914D2-B9AB-4280-9A44-875DA8B58328@oracle.com>
- <CAM5tNy4qVXXS3sHqx7Y3Ndt2YNnd1hrj32iJdo9KMi+ByMfEuQ@mail.gmail.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5892F54FA3;
+	Tue, 28 Nov 2023 13:51:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9031C433C7;
+	Tue, 28 Nov 2023 13:51:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701179517;
+	bh=rRHGMp9xXOAGGVSwGEsG0ggDC2+rM4ak/KiHR+RJz6k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OGHKluY9aEh9DLcNCDsk9AcqCzGUsloN7wkWESGS0oUMS7ZhqFgbIoY8awX6Z0xIv
+	 tq1mFJnetfJHZlM1woL46zq7RxuTtTEfABXMq0wX4k7zNK4wxxYIZXHJptmN5/P96S
+	 K7Bl37s9DDkpYp6LsfZuY7w0XBkx2d8BbkUl+l+Y0dWJaqTtolv3oAmr56X8YkOE5l
+	 7dAutAj0ljiaezGnoGbcWOKC6K7fD+MCK4QAvI9FeEXD5wkiU60gVDgz5TNUfnvJEy
+	 yN6LpP3zYTBTPeglF0ci0ZRg0gQb7X/Y76N//J3s9HxuteiEVwJBuW693R5Gx3Tz02
+	 3AFAMQXy/5kKA==
+Date: Tue, 28 Nov 2023 14:51:52 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH/RFC] core/nfsd: allow kernel threads to use task_work.
+Message-ID: <20231128-blumig-anreichern-b9d8d1dc49b3@brauner>
+References: <170112272125.7109.6245462722883333440@noble.neil.brown.name>
+ <ZWUfNyO6OG/+aFuo@tissot.1015granger.net>
+ <170113056683.7109.13851405274459689039@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAM5tNy4qVXXS3sHqx7Y3Ndt2YNnd1hrj32iJdo9KMi+ByMfEuQ@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <170113056683.7109.13851405274459689039@noble.neil.brown.name>
 
-On Mon, Nov 27, 2023 at 05:50:49PM -0800, Rick Macklem wrote:
-> > > Well, it does support O_RDWR|O_APPEND, just not with O_DIRECT?
-> > >
-> > > Btw, I think an APPEND operation in NFS would be a very good idea, and
-> > > I'd love to work with interested parties in the IETF on it.
-> It is not easy to deal with w.r.t. RPC retries.
+[Reusing the trimmed Cc]
 
-Indeed.
+On Tue, Nov 28, 2023 at 11:16:06AM +1100, NeilBrown wrote:
+> On Tue, 28 Nov 2023, Chuck Lever wrote:
+> > On Tue, Nov 28, 2023 at 09:05:21AM +1100, NeilBrown wrote:
+> > > 
+> > > I have evidence from a customer site of 256 nfsd threads adding files to
+> > > delayed_fput_lists nearly twice as fast they are retired by a single
+> > > work-queue thread running delayed_fput().  As you might imagine this
+> > > does not end well (20 million files in the queue at the time a snapshot
+> > > was taken for analysis).
+> > > 
+> > > While this might point to a problem with the filesystem not handling the
+> > > final close efficiently, such problems should only hurt throughput, not
+> > > lead to memory exhaustion.
+> > 
+> > I have this patch queued for v6.8:
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?h=nfsd-next&id=c42661ffa58acfeaf73b932dec1e6f04ce8a98c0
+> > 
+> 
+> Thanks....
+> I think that change is good, but I don't think it addresses the problem
+> mentioned in the description, and it is not directly relevant to the
+> problem I saw ... though it is complicated.
+> 
+> The problem "workqueue ...  hogged cpu..." probably means that
+> nfsd_file_dispose_list() needs a cond_resched() call in the loop.
+> That will stop it from hogging the CPU whether it is tied to one CPU or
+> free to roam.
+> 
+> Also that work is calling filp_close() which primarily calls
+> filp_flush().
+> It also calls fput() but that does minimal work.  If there is much work
+> to do then that is offloaded to another work-item.  *That* is the
+> workitem that I had problems with.
+> 
+> The problem I saw was with an older kernel which didn't have the nfsd
+> file cache and so probably is calling filp_close more often.  So maybe
+> my patch isn't so important now.  Particularly as nfsd now isn't closing
+> most files in-task but instead offloads that to another task.  So the
+> final fput will not be handled by the nfsd task either.
+> 
+> But I think there is room for improvement.  Gathering lots of files
+> together into a list and closing them sequentially is not going to be as
+> efficient as closing them in parallel.
+> 
+> > 
+> > > For normal threads, the thread that closes the file also calls the
+> > > final fput so there is natural rate limiting preventing excessive growth
+> > > in the list of delayed fputs.  For kernel threads, and particularly for
+> > > nfsd, delayed in the final fput do not impose any throttling to prevent
+> > > the thread from closing more files.
+> > 
+> > I don't think we want to block nfsd threads waiting for files to
+> > close. Won't that be a potential denial of service?
+> 
+> Not as much as the denial of service caused by memory exhaustion due to
+> an indefinitely growing list of files waiting to be closed by a single
+> thread of workqueue.
 
-> I suppose a NFSv4.2 extension that either requires (or strongly
-> recommends) persistent sessions might work?
-> (Persistent sessions should pretty well guarantee an RPC is not
-> redone on the server.)
+It seems less likely that you run into memory exhausting than a DOS
+because nfsd() is busy closing fds. Especially because you default to
+single nfsd thread afaict.
 
-I guess so.  That of course actually means we rely on a viable
-implementation of persistent sessions.  The Linux server doesn't
-support them, and I'm not sure which servers actually do.
+> I think it is perfectly reasonable that when handling an NFSv4 CLOSE,
+> the nfsd thread should completely handle that request including all the
+> flush and ->release etc.  If that causes any denial of service, then
+> simple increase the number of nfsd threads.
+
+But isn't that a significant behavioral change? So I would expect to
+make this at configurable via a module- or Kconfig option?
+
+> For NFSv3 it is more complex.  On the kernel where I saw a problem the
+> filp_close happen after each READ or WRITE (though I think the customer
+> was using NFSv4...).  With the file cache there is no thread that is
+> obviously responsible for the close.
+> To get the sort of throttling that I think is need, we could possibly
+> have each "nfsd_open" check if there are pending closes, and to wait for
+> some small amount of progress.
+> 
+> But don't think it is reasonable for the nfsd threads to take none of
+> the burden of closing files as that can result in imbalance.
+
+It feels that this really needs to be tested under a similar workload in
+question to see whether this is a viable solution.
 
