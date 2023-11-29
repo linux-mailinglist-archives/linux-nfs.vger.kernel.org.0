@@ -1,218 +1,96 @@
-Return-Path: <linux-nfs+bounces-162-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-163-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4280C7FD6C4
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 13:28:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D5467FD6CE
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 13:33:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96F61B217E0
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 12:28:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 675771C2116B
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 12:33:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 487511DDCE;
-	Wed, 29 Nov 2023 12:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9A5D1DDEE;
+	Wed, 29 Nov 2023 12:33:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ffq39r5W"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6B31707;
-	Wed, 29 Nov 2023 04:28:19 -0800 (PST)
-Received: from mail.maildlp.com (unknown [172.18.186.29])
-	by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4SgJCq3X9czB01N3;
-	Wed, 29 Nov 2023 20:14:31 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 6AE2C1400CA;
-	Wed, 29 Nov 2023 20:28:15 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwAXBXVKLmdlCSKXAQ--.11947S2;
-	Wed, 29 Nov 2023 13:28:14 +0100 (CET)
-Message-ID: <b6c51351be3913be197492469a13980ab379e412.camel@huaweicloud.com>
-Subject: Re: [PATCH v5 23/23] integrity: Switch from rbtree to LSM-managed
- blob for integrity_iint_cache
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Paul Moore <paul@paul-moore.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com, 
- jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, 
- tom@talpey.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
- dmitry.kasatkin@gmail.com, dhowells@redhat.com, jarkko@kernel.org, 
- stephen.smalley.work@gmail.com, eparis@parisplace.org,
- casey@schaufler-ca.com,  mic@digikod.net, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-nfs@vger.kernel.org,
- linux-security-module@vger.kernel.org,  linux-integrity@vger.kernel.org,
- keyrings@vger.kernel.org,  selinux@vger.kernel.org, Roberto Sassu
- <roberto.sassu@huawei.com>
-Date: Wed, 29 Nov 2023 13:27:51 +0100
-In-Reply-To: <CAHC9VhTTKac1o=RnQadu2xqdeKH8C_F+Wh4sY=HkGbCArwc8JQ@mail.gmail.com>
-References: <20231107134012.682009-24-roberto.sassu@huaweicloud.com>
-	 <17befa132379d37977fc854a8af25f6d.paul@paul-moore.com>
-	 <2084adba3c27a606cbc5ed7b3214f61427a829dd.camel@huaweicloud.com>
-	 <CAHC9VhTTKac1o=RnQadu2xqdeKH8C_F+Wh4sY=HkGbCArwc8JQ@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0E710D4
+	for <linux-nfs@vger.kernel.org>; Wed, 29 Nov 2023 04:32:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701261178;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SwCqOTf3dEX+ns8utCOAM3X7WuFZpTgJfDMGymXxBec=;
+	b=Ffq39r5WCJK2d96fhxfNHbXE6BI2S8YL8+5iwi8fZWdfHKMQGcQGXFS0rC/DQRoNhtuCvt
+	lLL77Jop1lXjGvXcuROUGmf6rfj53BbOyOpHC9Op6RdSveM/XdnCbUDC6O2dKxiIC3yK16
+	XUutOTc2lGurE15i74Yx5yXoV+FL/A4=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-679-KDv3ErCIN-OjHypyZMSlWQ-1; Wed, 29 Nov 2023 07:32:56 -0500
+X-MC-Unique: KDv3ErCIN-OjHypyZMSlWQ-1
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-67a0921b293so17116146d6.1
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Nov 2023 04:32:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701261176; x=1701865976;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SwCqOTf3dEX+ns8utCOAM3X7WuFZpTgJfDMGymXxBec=;
+        b=eTr93Fuxqz3OSyA4dRheEFw+jKLjx0C1I8XvS4CGCd8iQb9omT9HZ2Dv34waeQueuX
+         HVTyAp8fQ0C+WyS8yCNbIHE5v5SM3o7L2fZ/sg4ovvQclhuc7GuFIjDB4Qr2lrj1BmNw
+         IDOwfefqc3fQkrIfzGYyW+md4K9tGvTVNTOf1IjmRbFlZIkYH4Hm1GIrktmfqUYpN1oB
+         VsoUicPeEZGxgdnx+i0gEcTKyW1C6/JkTAYVomMHuHpPKgQd4J+RiW8btAYrX739XEsl
+         vzvmcekYyiDGSSN6u2SzMzBU4rP9sQTUcbRh8mPvdFFuwsIezMr9MTRrD+BKNXQlYO0f
+         EHIw==
+X-Gm-Message-State: AOJu0YwTEnt6UC4gKbbFWKyWbCRv10eq1VUfpQrBHCyJrEEvc9B4hZFZ
+	psT3hkZLDltBEhoQfg0RW9tMcvfAgyaMnXWUPJIXwtIjemgz1YVGvL5722tx7XvThsN/lRFZbnm
+	WuDIJXzj3b63J88ee2jhVNPXuDqvy
+X-Received: by 2002:a05:6214:2f02:b0:67a:1458:aacd with SMTP id od2-20020a0562142f0200b0067a1458aacdmr18851309qvb.1.1701261176299;
+        Wed, 29 Nov 2023 04:32:56 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFW3gLvMJ8BAE58PJtXHIFugBFFAyHudzkmngz07O2tEVRsLo7tig6Y5mV7hRcqnXGsMBx4ZA==
+X-Received: by 2002:a05:6214:2f02:b0:67a:1458:aacd with SMTP id od2-20020a0562142f0200b0067a1458aacdmr18851295qvb.1.1701261176043;
+        Wed, 29 Nov 2023 04:32:56 -0800 (PST)
+Received: from [172.31.1.12] ([70.109.186.209])
+        by smtp.gmail.com with ESMTPSA id z20-20020a0cda94000000b0067266b7b903sm6098546qvj.5.2023.11.29.04.32.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Nov 2023 04:32:55 -0800 (PST)
+Message-ID: <b3cb8631-97ca-4ca3-ac15-b499d6768eaa@redhat.com>
+Date: Wed, 29 Nov 2023 07:32:54 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwAXBXVKLmdlCSKXAQ--.11947S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxKryfJr4xZFy7JF1rCr17ZFb_yoW7Aw4rpF
-	W3KayxGw1kAry29rn2vF45urWfKrW8WFyUWrn8Cr1kAas0vr10qr4UCryUuFyUGrWDJw1j
-	qF1a9ry7u3Wqy3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07UAkuxUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQAQBF1jj5cNmwAFsg
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2 nfs-utils] conffile: use /usr/etc aswell
+Content-Language: en-US
+To: NeilBrown <neilb@suse.de>
+Cc: linux-nfs@vger.kernel.org
+References: <20231120025354.17511-1-neilb@suse.de>
+From: Steve Dickson <steved@redhat.com>
+In-Reply-To: <20231120025354.17511-1-neilb@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2023-11-20 at 16:06 -0500, Paul Moore wrote:
-> On Mon, Nov 20, 2023 at 3:16=E2=80=AFAM Roberto Sassu
-> <roberto.sassu@huaweicloud.com> wrote:
-> > On Fri, 2023-11-17 at 15:57 -0500, Paul Moore wrote:
-> > > On Nov  7, 2023 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
-> > > >=20
-> > > > Before the security field of kernel objects could be shared among L=
-SMs with
-> > > > the LSM stacking feature, IMA and EVM had to rely on an alternative=
- storage
-> > > > of inode metadata. The association between inode metadata and inode=
- is
-> > > > maintained through an rbtree.
-> > > >=20
-> > > > Because of this alternative storage mechanism, there was no need to=
- use
-> > > > disjoint inode metadata, so IMA and EVM today still share them.
-> > > >=20
-> > > > With the reservation mechanism offered by the LSM infrastructure, t=
-he
-> > > > rbtree is no longer necessary, as each LSM could reserve a space in=
- the
-> > > > security blob for each inode. However, since IMA and EVM share the
-> > > > inode metadata, they cannot directly reserve the space for them.
-> > > >=20
-> > > > Instead, request from the 'integrity' LSM a space in the security b=
-lob for
-> > > > the pointer of inode metadata (integrity_iint_cache structure). The=
- other
-> > > > reason for keeping the 'integrity' LSM is to preserve the original =
-ordering
-> > > > of IMA and EVM functions as when they were hardcoded.
-> > > >=20
-> > > > Prefer reserving space for a pointer to allocating the integrity_ii=
-nt_cache
-> > > > structure directly, as IMA would require it only for a subset of in=
-odes.
-> > > > Always allocating it would cause a waste of memory.
-> > > >=20
-> > > > Introduce two primitives for getting and setting the pointer of
-> > > > integrity_iint_cache in the security blob, respectively
-> > > > integrity_inode_get_iint() and integrity_inode_set_iint(). This wou=
-ld make
-> > > > the code more understandable, as they directly replace rbtree opera=
-tions.
-> > > >=20
-> > > > Locking is not needed, as access to inode metadata is not shared, i=
-t is per
-> > > > inode.
-> > > >=20
-> > > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > > > Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
-> > > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> > > > ---
-> > > >  security/integrity/iint.c      | 71 +++++-------------------------=
-----
-> > > >  security/integrity/integrity.h | 20 +++++++++-
-> > > >  2 files changed, 29 insertions(+), 62 deletions(-)
-> > > >=20
-> > > > diff --git a/security/integrity/iint.c b/security/integrity/iint.c
-> > > > index 882fde2a2607..a5edd3c70784 100644
-> > > > --- a/security/integrity/iint.c
-> > > > +++ b/security/integrity/iint.c
-> > > > @@ -231,6 +175,10 @@ static int __init integrity_lsm_init(void)
-> > > >     return 0;
-> > > >  }
-> > > >=20
-> > > > +struct lsm_blob_sizes integrity_blob_sizes __ro_after_init =3D {
-> > > > +   .lbs_inode =3D sizeof(struct integrity_iint_cache *),
-> > > > +};
-> > >=20
-> > > I'll admit that I'm likely missing an important detail, but is there
-> > > a reason why you couldn't stash the integrity_iint_cache struct
-> > > directly in the inode's security blob instead of the pointer?  For
-> > > example:
-> > >=20
-> > >   struct lsm_blob_sizes ... =3D {
-> > >     .lbs_inode =3D sizeof(struct integrity_iint_cache),
-> > >   };
-> > >=20
-> > >   struct integrity_iint_cache *integrity_inode_get(inode)
-> > >   {
-> > >     if (unlikely(!inode->isecurity))
-> > >       return NULL;
-> > >     return inode->i_security + integrity_blob_sizes.lbs_inode;
-> > >   }
-> >=20
-> > It would increase memory occupation. Sometimes the IMA policy
-> > encompasses a small subset of the inodes. Allocating the full
-> > integrity_iint_cache would be a waste of memory, I guess?
->=20
-> Perhaps, but if it allows us to remove another layer of dynamic memory
-> I would argue that it may be worth the cost.  It's also worth
-> considering the size of integrity_iint_cache, while it isn't small, it
-> isn't exactly huge either.
->=20
-> > On the other hand... (did not think fully about that) if we embed the
-> > full structure in the security blob, we already have a mutex available
-> > to use, and we don't need to take the inode lock (?).
->=20
-> That would be excellent, getting rid of a layer of locking would be signi=
-ficant.
->=20
-> > I'm fully convinced that we can improve the implementation
-> > significantly. I just was really hoping to go step by step and not
-> > accumulating improvements as dependency for moving IMA and EVM to the
-> > LSM infrastructure.
->=20
-> I understand, and I agree that an iterative approach is a good idea, I
-> just want to make sure we keep things tidy from a user perspective,
-> i.e. not exposing the "integrity" LSM when it isn't required.
 
-Ok, I went back to it again.
 
-I think trying to separate integrity metadata is premature now, too
-many things at the same time.
+On 11/19/23 9:52 PM, NeilBrown wrote:
+> The first patch it just a little cleanup.
+> The second is the important one.  It follows a trend of deprecating / in favour of /usr
+> 
+> NeilBrown
+> 
+>   [PATCH 1/2] conffile: don't report error from conf_init_file()
+>   [PATCH 2/2] conffile: allow /usr/etc to provide any config files
+> 
+Committed... (tag: nfs-utils-2-7-1-rc1)
 
-I started to think, does EVM really need integrity metadata or it can
-work without?
-
-The fact is that CONFIG_IMA=3Dn and CONFIG_EVM=3Dy is allowed, so we have
-the same problem now. What if we make IMA the one that manages
-integrity metadata, so that we can remove the 'integrity' LSM?
-
-So, no embedding the full structure in the security blob now, move
-integrity_inode_free() and integrity_kernel_module_request() to IMA,
-call integrity_iintcache_init() from IMA.
-
-EVM verification of new files would fail without IMA, but it would be
-the same now.
-
-Also, evm_verifyxattr() would only work with IMA, as it assumes that
-the latter creates integrity metadata and passes them as argument.
-
-Regarding the LSM order, I would take Casey's suggestion of introducing
-LSM_ORDER_REALLY_LAST, for EVM.
-
-Thanks
-
-Roberto
+steved
 
 
