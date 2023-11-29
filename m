@@ -1,144 +1,107 @@
-Return-Path: <linux-nfs+bounces-166-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-167-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C5F87FD6D7
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 13:35:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1BC27FD7D1
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 14:20:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0833028356E
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 12:35:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E6EBB20F1C
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 13:20:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A4781DFD4;
-	Wed, 29 Nov 2023 12:35:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CD8F1C6B4;
+	Wed, 29 Nov 2023 13:20:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KLOqq2Kb"
+	dkim=pass (2048-bit key) header.d=vastdata.com header.i=@vastdata.com header.b="V4PnKbYe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E44510DD
-	for <linux-nfs@vger.kernel.org>; Wed, 29 Nov 2023 04:34:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701261298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B/bZ9ZBWg15LQLGLKG2SKBUNpg6Kagay6sKA6tid+bE=;
-	b=KLOqq2KbnoNTv/OSuhxDiQCGeAY4rbwUNinHwwpS/k5eUrmki8feLQEnZwWRD+VHLB8uoo
-	2kP9ocBIvO8V0fKZGWUQHYOtYKcijgwI01Mn5NE4JYZ8rdys1iF1YZp3rSI6IihD5UgWyV
-	JewqNSrFn3mrOiEauJZrzbqJvjD1EcM=
-Received: from mail-oo1-f71.google.com (mail-oo1-f71.google.com
- [209.85.161.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-138-eMEOXQXtMveIdzq2ArJ1MQ-1; Wed, 29 Nov 2023 07:34:56 -0500
-X-MC-Unique: eMEOXQXtMveIdzq2ArJ1MQ-1
-Received: by mail-oo1-f71.google.com with SMTP id 006d021491bc7-58d7fcec894so689719eaf.1
-        for <linux-nfs@vger.kernel.org>; Wed, 29 Nov 2023 04:34:56 -0800 (PST)
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DDF1A8
+	for <linux-nfs@vger.kernel.org>; Wed, 29 Nov 2023 05:20:38 -0800 (PST)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-332e56363adso4199246f8f.3
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Nov 2023 05:20:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google; t=1701264037; x=1701868837; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bI7/hNZ9e1tpW01zgQ49/HXuDNIAppbOEVGuA1GaKAo=;
+        b=V4PnKbYeSQL5IfFKeOeJ7RhhPjxu6ItvDFNghvFpL3Tv39CEV5brgY3qoMEMc782Ik
+         IJ60/hjyvJJhR1UGjspbyXEKesQvjYYUVRCbv8DuoTrQoweXA96iXjZ6jxIDoTxhbE34
+         7SH2zOqE8JQ/WjCskxjWaeH4da8JY1LxwQeQNpK8+3EbwXjHCyJtSFKKFCyrjDg25W+e
+         8YGFJUFZzRJBEIU0fBFL+8Udisu8nvppcsCoxvfzcnQGXomW/3H0kBTtiMITMcrS46gb
+         p4+yLPHyiWaRU/ChO5G/Le0xI8d7YLwN9Ry47AewqG0usHLlczjCaj2A5kIuQUF51ARg
+         j8HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701261296; x=1701866096;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B/bZ9ZBWg15LQLGLKG2SKBUNpg6Kagay6sKA6tid+bE=;
-        b=n9Tr2gEayrUoJ9tFIHsqxSSm6UVGQIwGHnAX030VZqGPUb0uYr3vPg9OGIxzhQxjB3
-         AOwOewqyK3mMTlp2OuXeRoh7qpPNWgWsoz0xyw0jb9vj/AuPLCpaYn1y+4HhXeByoavy
-         n5cdryg3zTci93uf5QXmKjvFo2JaScEvwQCleqkCp/HkslTtmZ972rtqYi1NnXz50W7C
-         AUc+btbnbS4X2rPCjT7duhrm6hKsqZKh8qs6ZH2W0INySz2zxzxAKhTB72Y54hHmXG90
-         Wjm0hScPUWQENoqyaSPKtGJ8ZGoJlETIsFNoRytUCtT981BkJ+w4KqrOZ9IqtqABzEyA
-         33Tg==
-X-Gm-Message-State: AOJu0YyMuHMIqrH3+lMmCqAJCV5FYXK7Dt9rIH0MJbwkY8Kxj4iliJvd
-	OG1NDD3kJTAhv6EszXjiNR0/+1qc7q/G5Z1+6jQ9oqKLg0DoWBOOVZAmxEtNVTOSnZYupco6LyH
-	gJsJmxC7P68KszQjCt1PO
-X-Received: by 2002:a4a:c691:0:b0:584:1080:f0a5 with SMTP id m17-20020a4ac691000000b005841080f0a5mr17779370ooq.1.1701261295844;
-        Wed, 29 Nov 2023 04:34:55 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEnraxXZ2mmN5qoGrB45O0k2KEpLhbVpyzxtUXUSzAlJbCJ8y1snkFRRJigMGCOlvKE7nq8mg==
-X-Received: by 2002:a4a:c691:0:b0:584:1080:f0a5 with SMTP id m17-20020a4ac691000000b005841080f0a5mr17779352ooq.1.1701261295435;
-        Wed, 29 Nov 2023 04:34:55 -0800 (PST)
-Received: from [172.31.1.12] ([70.109.186.209])
-        by smtp.gmail.com with ESMTPSA id z20-20020a0cda94000000b0067266b7b903sm6098546qvj.5.2023.11.29.04.34.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Nov 2023 04:34:55 -0800 (PST)
-Message-ID: <863c8d38-5c80-4dd3-9332-2a4139000d83@redhat.com>
-Date: Wed, 29 Nov 2023 07:34:54 -0500
+        d=1e100.net; s=20230601; t=1701264037; x=1701868837;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bI7/hNZ9e1tpW01zgQ49/HXuDNIAppbOEVGuA1GaKAo=;
+        b=GmmqFSI2lvDWPxIz8Rw3WMYHikG3ueOtHKQrdIzScDss2BCPQQ0YNpI0ngA7RDB34d
+         6dN2SsGN10JwokfKZmdvxiULr/yvODLDRp1NITH1T3pgJLJKwfsRh0TR6fqZKAZXK2vU
+         CMJDhRh+iUDu+F8azqvsifjJcvAmxqPAwAfD0MGE2ssh5vy0Fl1K7uDn/PjfoRitkBT9
+         7KRUagXvjrXdt6p/N4Ov/ys92t4r0b2k0iU3NlyaIPO+x7pUjvFqdMj3QqkR1a3LqvCR
+         9IxNA7tDZ0zuTw2we/fk2Hcm5ll3bxouPuPBeVRYyA/3W3pLRNzC9umgDQHFRi44r4va
+         ejQg==
+X-Gm-Message-State: AOJu0YznMB0wvCo4jt9niWJPO3XiQJmLaOTgSKyWJ8H107b3fgGe4EOb
+	V2vBTcnAwNG3O54ljjnzEV67jGhrCqDo4mF96n0=
+X-Google-Smtp-Source: AGHT+IGwxzmHgxCJa4tFCVNlHYiBQ1eWaN4Z4JJoDrCqROn8Y1id3a5o5lWECQQIaYnf11jsz3jHAw==
+X-Received: by 2002:adf:e0cc:0:b0:333:f07:334e with SMTP id m12-20020adfe0cc000000b003330f07334emr3186977wri.25.1701264036700;
+        Wed, 29 Nov 2023 05:20:36 -0800 (PST)
+Received: from gmail.com ([2a0d:6fc2:6ab0:a900:32d9:b4ff:10c8:b4a5])
+        by smtp.gmail.com with ESMTPSA id c9-20020adfef49000000b00331698cb263sm18027080wrp.103.2023.11.29.05.20.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Nov 2023 05:20:36 -0800 (PST)
+Date: Wed, 29 Nov 2023 15:20:34 +0200
+From: Dan Aloni <dan.aloni@vastdata.com>
+To: Benjamin Coddington <bcodding@redhat.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: mount options not propagating to NFSACL and NSM RPC clients
+Message-ID: <20231129132034.lz3hag5xy2oaojwq@gmail.com>
+References: <20231105154857.ryakhmgaptq3hb6b@gmail.com>
+ <80B8993C-645D-4748-93B3-88415E165B87@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH nfs-utils v2 2/2] testlk: format off_t as llong instead of
- ssize_t
-Content-Language: en-US
-To: =?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
- linux-nfs@vger.kernel.org, NeilBrown <neilb@suse.de>
-References: <b38ecca96762d939d377c381bf34521ee5945129.1700601199.git.nabijaczleweli@nabijaczleweli.xyz>
- <9d2b8bdc146a1fb48b391ae1adda0b6249ba9c5b.1700601199.git.nabijaczleweli@nabijaczleweli.xyz>
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <9d2b8bdc146a1fb48b391ae1adda0b6249ba9c5b.1700601199.git.nabijaczleweli@nabijaczleweli.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <80B8993C-645D-4748-93B3-88415E165B87@redhat.com>
 
+On 2023-11-07 08:46:54, Benjamin Coddington wrote:
+> Hi Dan,
+> 
+> On 5 Nov 2023, at 10:48, Dan Aloni wrote:
+> 
+> > Hi,
+> >
+> > On Linux v6.6-14500-g1c41041124bd, I added a sysfs file for debugging
+> > `/sys/kernel/debug/sunrpc/rpc_clnt/*/info`, and noticed that when
+> > passing the following mount options: `soft,timeo=50,retrans=16,vers=3`,
+> > NFSACL and NSM seem to take the defaults from somewhere else (xprt).
+> > Specifically, locking operation behave as if in a hard mount with
+> > these mount options.
+> >
+> > Is it intentional?
+> 
+> Yes, it usually is intentional.  The various rpc clients that make parts of
+> NFS work don't all inherit the mount flags due to reasons about how the
+> system should behave as a whole.  I think that you can find usually find the
+> reasoning the git logs around "struct rpc_create_args".
+> 
+> Are you getting a system hung up in a lock operation?
 
+Actually my concern is the NFSACL prog. With `cl_softrtrt == 1` and
+`to_initval == to_maxval`, does it mean retires will not happen
+regardless of `to_retries` and `to_increment`?
 
-On 11/21/23 4:15 PM, Ahelenia Ziemiańska wrote:
-> This, naturally, produces a warning on x32 (and other ILP32 platforms
-> with 64-bit off_t, presumably, but you need to ask for it explicitly
-> there usually):
-> gcc -DHAVE_CONFIG_H -I. -I../../support/include  -D_GNU_SOURCE -Wdate-time -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -g -O2 -ffile-prefix-map=/tmp/nfs-utils-2.6.3=. -specs=/usr/share/dpkg/pie-compile.specs -fstack-protector-strong -Wformat -Werror=format-security -g -O2 -ffile-prefix-map=/tmp/nfs-utils-2.6.3=. -specs=/usr/share/dpkg/pie-compile.specs -fstack-protector-strong -Wformat -Werror=format-security -c -o testlk-testlk.o `test -f 'testlk.c' || echo './'`testlk.c
-> testlk.c: In function ‘main’:
-> testlk.c:84:66: warning: format ‘%zd’ expects argument of type ‘signed size_t’, but argument 4 has type ‘__off_t’ {aka ‘long long int’} [-Wformat=]
->     84 |                         printf("%s: conflicting lock by %d on (%zd;%zd)\n",
->        |                                                                ~~^
->        |                                                                  |
->        |                                                                  int
->        |                                                                %lld
->     85 |                                 fname, fl.l_pid, fl.l_start, fl.l_len);
->        |                                                  ~~~~~~~~~~
->        |                                                    |
->        |                                                    __off_t {aka long long int}
-> testlk.c:84:70: warning: format ‘%zd’ expects argument of type ‘signed size_t’, but argument 5 has type ‘__off_t’ {aka ‘long long int’} [-Wformat=]
->     84 |                         printf("%s: conflicting lock by %d on (%zd;%zd)\n",
->        |                                                                    ~~^
->        |                                                                      |
->        |                                                                      int
->        |                                                                    %lld
->     85 |                                 fname, fl.l_pid, fl.l_start, fl.l_len);
->        |                                                              ~~~~~~~~
->        |                                                                |
->        |                                                                __off_t {aka long long int}
-> 
-> Upcast to long long, doesn't really matter.
-> 
-> It does, of course, raise the question of whether other bits of
-> nfs-utils do something equally broken that just isn't caught by the
-> format validator.
-> 
-> Signed-off-by: Ahelenia Ziemiańska <nabijaczleweli@nabijaczleweli.xyz>
-Committed... (tag: nfs-utils-2-7-1-rc1)
+I encountered a situation where the NFSACL program did not retry but
+could have had, whereas NFS3 did successfully. Not sure regarding NSM,
+but it seems to me that it would make sense at least for NFSACL to
+behave the same as NFS3.
 
-steved
-> ---
-> Same as v1: <44adec629186e220ee5d8fd936980ac4a33dc510.1693754442.git.nabijaczleweli@nabijaczleweli.xyz>
-> 
->   tools/locktest/testlk.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/locktest/testlk.c b/tools/locktest/testlk.c
-> index ea51f788..c9bd6bac 100644
-> --- a/tools/locktest/testlk.c
-> +++ b/tools/locktest/testlk.c
-> @@ -81,8 +81,8 @@ main(int argc, char **argv)
->   		if (fl.l_type == F_UNLCK) {
->   			printf("%s: no conflicting lock\n", fname);
->   		} else {
-> -			printf("%s: conflicting lock by %d on (%zd;%zd)\n",
-> -				fname, fl.l_pid, fl.l_start, fl.l_len);
-> +			printf("%s: conflicting lock by %d on (%lld;%lld)\n",
-> +				fname, fl.l_pid, (long long)fl.l_start, (long long)fl.l_len);
->   		}
->   		return 0;
->   	}
-
+-- 
+Dan Aloni
 
