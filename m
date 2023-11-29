@@ -1,47 +1,47 @@
-Return-Path: <linux-nfs+bounces-176-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-177-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECE537FDF24
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 19:13:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC8C07FDF43
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 19:23:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9493A282AB8
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 18:13:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46DDE282E33
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Nov 2023 18:23:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72BB548CE2;
-	Wed, 29 Nov 2023 18:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B911C5CD2C;
+	Wed, 29 Nov 2023 18:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cKgjzLDe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HU5MSakA"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5193532C87;
-	Wed, 29 Nov 2023 18:13:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38CB3C433C7;
-	Wed, 29 Nov 2023 18:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D8948CE2;
+	Wed, 29 Nov 2023 18:23:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44CC2C433C8;
+	Wed, 29 Nov 2023 18:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701281616;
-	bh=BR6bMeSMLVUQcqnoNJeJ/gzKsyIxmNEVW2nozCx9DHk=;
+	s=k20201202; t=1701282219;
+	bh=HOS1zZsp3eaySfQj7a8RFRJp0grudMM2qZTCZvAV/7c=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cKgjzLDeDTLbTIzc3E1O7IbR/IgO3dnobKgKjclpAtM5SShRVyfm8FrDlxiEQI9Zs
-	 KKrQF30NNCMm8sFG9tfr9gqbn715VSPFgjoyeZatpWc8WAV9WAWinaAjZqtb9WJbO5
-	 i5NcV72c71BERGhx+2diz/22H8C/SpBxa8MAvj8pjhgJjKspEJ6URDkViFU8Y7hV3E
-	 9WGcRxoJ0W39n6M6Ari+0zWbZ5X0AQ1pd2SB3MN60czIX+DqIBCvywWBS3UDMrWdnH
-	 MWtFNP5LYKB6QYfq7uAm7+SeJMwf4JEXzYqCtGb/VsfQdMfQ+IQnRyp11s8qdIoEWK
-	 hCEUBGwg32CEw==
-Message-ID: <ffbbdd1ce7c87b02f75095f0146924d996268957.camel@kernel.org>
-Subject: Re: [PATCH v5 1/3] NFSD: convert write_threads to netlink command
+	b=HU5MSakAETyOOe+923c7q6mkI/m7geW9JxtH3tkgrXKaJnx3NGkZvdUjC1dr3ltSa
+	 zQ4JDsgHkvenXCo0NUs746dBmu5xn+eFpM1iG+YgVaafH8hK30C94oOiOCWW44gyAs
+	 NDCBsLytuntWH0KyFQXJhmMTCpgmbboTI8JVehqro2to84RcGZ5CGjy7hRmbNnRI+i
+	 US8yHLeosfDkNBRioQ3TIaHS89kTxWZYta3R1N8rhyRKTnXmy3rBSGHN8wakNwf8E/
+	 AseRYfld3hogWnNWMC8m/LHgHGmbNl4PH1f4UYekfdJUk68n3kOaWuvtHc8BtBttZs
+	 MtQsw0rYEkkCQ==
+Message-ID: <88d91863e36a1e36f7770aa8a7f42853250e3d55.camel@kernel.org>
+Subject: Re: [PATCH v5 2/3] NFSD: convert write_version to netlink command
 From: Jeff Layton <jlayton@kernel.org>
 To: Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org
 Cc: lorenzo.bianconi@redhat.com, neilb@suse.de, netdev@vger.kernel.org, 
 	kuba@kernel.org
-Date: Wed, 29 Nov 2023 13:13:34 -0500
-In-Reply-To: <d9461e660b5f47df7b869f0f809485c9b4bf60ea.1701277475.git.lorenzo@kernel.org>
+Date: Wed, 29 Nov 2023 13:23:37 -0500
+In-Reply-To: <8b47d2e3f704066204149653fd1bd86a64188f61.1701277475.git.lorenzo@kernel.org>
 References: <cover.1701277475.git.lorenzo@kernel.org>
-	 <d9461e660b5f47df7b869f0f809485c9b4bf60ea.1701277475.git.lorenzo@kernel.org>
+	 <8b47d2e3f704066204149653fd1bd86a64188f61.1701277475.git.lorenzo@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -62,178 +62,238 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Wed, 2023-11-29 at 18:12 +0100, Lorenzo Bianconi wrote:
-> Introduce write_threads netlink command similar to the ones available
+> Introduce write_version netlink command similar to the ones available
 > through the procfs.
 >=20
 > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 > ---
->  Documentation/netlink/specs/nfsd.yaml | 23 +++++++
->  fs/nfsd/netlink.c                     | 17 +++++
->  fs/nfsd/netlink.h                     |  2 +
->  fs/nfsd/nfsctl.c                      | 58 +++++++++++++++++
->  include/uapi/linux/nfsd_netlink.h     |  9 +++
->  tools/net/ynl/generated/nfsd-user.c   | 92 +++++++++++++++++++++++++++
->  tools/net/ynl/generated/nfsd-user.h   | 47 ++++++++++++++
->  7 files changed, 248 insertions(+)
+>  Documentation/netlink/specs/nfsd.yaml |  32 ++++++++
+>  fs/nfsd/netlink.c                     |  19 +++++
+>  fs/nfsd/netlink.h                     |   3 +
+>  fs/nfsd/nfsctl.c                      | 105 ++++++++++++++++++++++++++
+>  include/uapi/linux/nfsd_netlink.h     |  11 +++
+>  tools/net/ynl/generated/nfsd-user.c   |  81 ++++++++++++++++++++
+>  tools/net/ynl/generated/nfsd-user.h   |  55 ++++++++++++++
+>  7 files changed, 306 insertions(+)
 >=20
 > diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlin=
 k/specs/nfsd.yaml
-> index 05acc73e2e33..c92e1425d316 100644
+> index c92e1425d316..6c5e42bb20f6 100644
 > --- a/Documentation/netlink/specs/nfsd.yaml
 > +++ b/Documentation/netlink/specs/nfsd.yaml
-> @@ -62,6 +62,12 @@ attribute-sets:
->          name: compound-ops
+> @@ -68,6 +68,18 @@ attribute-sets:
+>        -
+>          name: threads
 >          type: u32
->          multi-attr: true
 > +  -
-> +    name: server-worker
+> +    name: server-version
 > +    attributes:
 > +      -
-> +        name: threads
+> +        name: major
 > +        type: u32
+> +      -
+> +        name: minor
+> +        type: u32
+> +      -
+> +        name: status
+> +        type: u8
 > =20
 >  operations:
 >    list:
-> @@ -87,3 +93,20 @@ operations:
->              - sport
->              - dport
->              - compound-ops
+> @@ -110,3 +122,23 @@ operations:
+>          reply:
+>            attributes:
+>              - threads
 > +    -
-> +      name: threads-set
-> +      doc: set the number of running threads
-> +      attribute-set: server-worker
+> +      name: version-set
+> +      doc: enable/disable server version
+> +      attribute-set: server-version
 > +      flags: [ admin-perm ]
 > +      do:
 > +        request:
 > +          attributes:
-> +            - threads
+> +            - major
+> +            - minor
+> +            - status
 > +    -
-> +      name: threads-get
-> +      doc: get the number of running threads
-> +      attribute-set: server-worker
-> +      do:
+> +      name: version-get
+> +      doc: dump server versions
+> +      attribute-set: server-version
+> +      dump:
 > +        reply:
 > +          attributes:
-> +            - threads
+> +            - major
+> +            - minor
 > diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-> index 0e1d635ec5f9..1a59a8e6c7e2 100644
+> index 1a59a8e6c7e2..0608a7bd193b 100644
 > --- a/fs/nfsd/netlink.c
 > +++ b/fs/nfsd/netlink.c
-> @@ -10,6 +10,11 @@
+> @@ -15,6 +15,13 @@ static const struct nla_policy nfsd_threads_set_nl_pol=
+icy[NFSD_A_SERVER_WORKER_T
+>  	[NFSD_A_SERVER_WORKER_THREADS] =3D { .type =3D NLA_U32, },
+>  };
 > =20
->  #include <uapi/linux/nfsd_netlink.h>
-> =20
-> +/* NFSD_CMD_THREADS_SET - do */
-> +static const struct nla_policy nfsd_threads_set_nl_policy[NFSD_A_SERVER_=
-WORKER_THREADS + 1] =3D {
-> +	[NFSD_A_SERVER_WORKER_THREADS] =3D { .type =3D NLA_U32, },
+> +/* NFSD_CMD_VERSION_SET - do */
+> +static const struct nla_policy nfsd_version_set_nl_policy[NFSD_A_SERVER_=
+VERSION_STATUS + 1] =3D {
+> +	[NFSD_A_SERVER_VERSION_MAJOR] =3D { .type =3D NLA_U32, },
+> +	[NFSD_A_SERVER_VERSION_MINOR] =3D { .type =3D NLA_U32, },
+> +	[NFSD_A_SERVER_VERSION_STATUS] =3D { .type =3D NLA_U8, },
 > +};
 > +
 >  /* Ops table for nfsd */
 >  static const struct genl_split_ops nfsd_nl_ops[] =3D {
 >  	{
-> @@ -19,6 +24,18 @@ static const struct genl_split_ops nfsd_nl_ops[] =3D {
->  		.done	=3D nfsd_nl_rpc_status_get_done,
->  		.flags	=3D GENL_CMD_CAP_DUMP,
+> @@ -36,6 +43,18 @@ static const struct genl_split_ops nfsd_nl_ops[] =3D {
+>  		.doit	=3D nfsd_nl_threads_get_doit,
+>  		.flags	=3D GENL_CMD_CAP_DO,
 >  	},
 > +	{
-> +		.cmd		=3D NFSD_CMD_THREADS_SET,
-> +		.doit		=3D nfsd_nl_threads_set_doit,
-> +		.policy		=3D nfsd_threads_set_nl_policy,
-> +		.maxattr	=3D NFSD_A_SERVER_WORKER_THREADS,
+> +		.cmd		=3D NFSD_CMD_VERSION_SET,
+> +		.doit		=3D nfsd_nl_version_set_doit,
+> +		.policy		=3D nfsd_version_set_nl_policy,
+> +		.maxattr	=3D NFSD_A_SERVER_VERSION_STATUS,
 > +		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
 > +	},
 > +	{
-> +		.cmd	=3D NFSD_CMD_THREADS_GET,
-> +		.doit	=3D nfsd_nl_threads_get_doit,
-> +		.flags	=3D GENL_CMD_CAP_DO,
+> +		.cmd	=3D NFSD_CMD_VERSION_GET,
+> +		.dumpit	=3D nfsd_nl_version_get_dumpit,
+> +		.flags	=3D GENL_CMD_CAP_DUMP,
 > +	},
 >  };
 > =20
 >  struct genl_family nfsd_nl_family __ro_after_init =3D {
 > diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-> index d83dd6bdee92..4137fac477e4 100644
+> index 4137fac477e4..7d203cec08e4 100644
 > --- a/fs/nfsd/netlink.h
 > +++ b/fs/nfsd/netlink.h
-> @@ -16,6 +16,8 @@ int nfsd_nl_rpc_status_get_done(struct netlink_callback=
- *cb);
-> =20
->  int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+> @@ -18,6 +18,9 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
 >  				  struct netlink_callback *cb);
-> +int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info=
+>  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info=
 );
-> +int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info=
+>  int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info=
 );
+> +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info *info=
+);
+> +int nfsd_nl_version_get_dumpit(struct sk_buff *skb,
+> +			       struct netlink_callback *cb);
 > =20
 >  extern struct genl_family nfsd_nl_family;
 > =20
 > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index d6eeee149370..130b3d937a79 100644
+> index 130b3d937a79..f04430f79687 100644
 > --- a/fs/nfsd/nfsctl.c
 > +++ b/fs/nfsd/nfsctl.c
-> @@ -1699,6 +1699,64 @@ int nfsd_nl_rpc_status_get_done(struct netlink_cal=
-lback *cb)
->  	return 0;
+> @@ -1757,6 +1757,111 @@ int nfsd_nl_threads_get_doit(struct sk_buff *skb,=
+ struct genl_info *info)
+>  	return err;
 >  }
 > =20
 > +/**
-> + * nfsd_nl_threads_set_doit - set the number of running threads
+> + * nfsd_nl_version_set_doit - enable/disable the provided nfs server ver=
+sion
 > + * @skb: reply buffer
 > + * @info: netlink metadata and command arguments
 > + *
 > + * Return 0 on success or a negative errno.
 > + */
-> +int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_info *info=
+> +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info *info=
 )
 > +{
-> +	u32 nthreads;
+> +	struct nfsd_net *nn =3D net_generic(genl_info_net(info), nfsd_net_id);
+> +	enum vers_op cmd;
+> +	u32 major, minor;
+> +	u8 status;
 > +	int ret;
 > +
-> +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_WORKER_THREADS))
+> +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_VERSION_MAJOR) ||
+> +	    GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_VERSION_MINOR) ||
+> +	    GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_VERSION_STATUS))
 > +		return -EINVAL;
 > +
-> +	nthreads =3D nla_get_u32(info->attrs[NFSD_A_SERVER_WORKER_THREADS]);
-> +	ret =3D nfsd_svc(nthreads, genl_info_net(info), get_current_cred());
+> +	major =3D nla_get_u32(info->attrs[NFSD_A_SERVER_VERSION_MAJOR]);
+> +	minor =3D nla_get_u32(info->attrs[NFSD_A_SERVER_VERSION_MINOR]);
 > +
-> +	return ret =3D=3D nthreads ? 0 : ret;
+> +	status =3D nla_get_u32(info->attrs[NFSD_A_SERVER_VERSION_STATUS]);
+> +	cmd =3D !!status ? NFSD_SET : NFSD_CLEAR;
+> +
+> +	mutex_lock(&nfsd_mutex);
+> +	switch (major) {
+> +	case 4:
+> +		ret =3D nfsd_minorversion(nn, minor, cmd);
+> +		break;
+> +	case 2:
+> +	case 3:
+> +		if (!minor) {
+> +			ret =3D nfsd_vers(nn, major, cmd);
+> +			break;
+> +		}
+> +		fallthrough;
+> +	default:
+> +		ret =3D -EINVAL;
+> +		break;
+> +	}
+> +	mutex_unlock(&nfsd_mutex);
+> +
+> +	return ret;
 > +}
 > +
 > +/**
-> + * nfsd_nl_threads_get_doit - get the number of running threads
+> + * nfsd_nl_version_get_doit - Handle verion_get dumpit
 > + * @skb: reply buffer
-> + * @info: netlink metadata and command arguments
+> + * @cb: netlink metadata and command arguments
 > + *
-> + * Return 0 on success or a negative errno.
+> + * Returns the size of the reply or a negative errno.
 > + */
-> +int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info *info=
-)
+> +int nfsd_nl_version_get_dumpit(struct sk_buff *skb,
+> +			       struct netlink_callback *cb)
 > +{
-> +	void *hdr;
-> +	int err;
+> +	struct nfsd_net *nn =3D net_generic(sock_net(skb->sk), nfsd_net_id);
+> +	int i, ret =3D -ENOMEM;
 > +
-> +	skb =3D genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-> +	if (!skb)
-> +		return -ENOMEM;
+> +	mutex_lock(&nfsd_mutex);
 > +
-> +	hdr =3D genlmsg_iput(skb, info);
-> +	if (!hdr) {
-> +		err =3D -EMSGSIZE;
-> +		goto err_free_msg;
+> +	for (i =3D 2; i <=3D 4; i++) {
+> +		int j;
+> +
+> +		if (i < cb->args[0]) /* already consumed */
+> +			continue;
+> +
+> +		if (!nfsd_vers(nn, i, NFSD_AVAIL))
+> +			continue;
+> +
+> +		for (j =3D 0; j <=3D NFSD_SUPPORTED_MINOR_VERSION; j++) {
+> +			void *hdr;
+> +
+> +			if (!nfsd_vers(nn, i, NFSD_TEST))
+> +				continue;
+> +
+> +			/* NFSv{2,3} does not support minor numbers */
+> +			if (i < 4 && j)
+> +				continue;
+> +
+> +			if (i =3D=3D 4 && !nfsd_minorversion(nn, j, NFSD_TEST))
+> +				continue;
+> +
+> +			hdr =3D genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
+> +					  cb->nlh->nlmsg_seq, &nfsd_nl_family,
+> +					  0, NFSD_CMD_VERSION_GET);
+> +			if (!hdr)
+> +				goto out;
+> +
+> +			if (nla_put_u32(skb, NFSD_A_SERVER_VERSION_MAJOR, i) ||
+> +			    nla_put_u32(skb, NFSD_A_SERVER_VERSION_MINOR, j))
+> +				goto out;
+> +
+> +			genlmsg_end(skb, hdr);
+> +		}
 > +	}
+> +	cb->args[0] =3D i;
+> +	ret =3D skb->len;
+> +out:
+> +	mutex_unlock(&nfsd_mutex);
 > +
-> +	if (nla_put_u32(skb, NFSD_A_SERVER_WORKER_THREADS,
-> +			nfsd_nrthreads(genl_info_net(info)))) {
-> +		err =3D -EINVAL;
-> +		goto err_free_msg;
-> +	}
-> +
-> +	genlmsg_end(skb, hdr);
-> +
-> +	return genlmsg_reply(skb, info);
-> +
-> +err_free_msg:
-> +	nlmsg_free(skb);
-> +	return err;
+> +	return ret;
 > +}
 > +
 >  /**
@@ -241,84 +301,97 @@ lback *cb)
 >   * @net: a freshly-created network namespace
 > diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_=
 netlink.h
-> index 3cd044edee5d..1b6fe1f9ed0e 100644
+> index 1b6fe1f9ed0e..1b3340f31baa 100644
 > --- a/include/uapi/linux/nfsd_netlink.h
 > +++ b/include/uapi/linux/nfsd_netlink.h
-> @@ -29,8 +29,17 @@ enum {
->  	NFSD_A_RPC_STATUS_MAX =3D (__NFSD_A_RPC_STATUS_MAX - 1)
+> @@ -36,10 +36,21 @@ enum {
+>  	NFSD_A_SERVER_WORKER_MAX =3D (__NFSD_A_SERVER_WORKER_MAX - 1)
 >  };
 > =20
 > +enum {
-> +	NFSD_A_SERVER_WORKER_THREADS =3D 1,
+> +	NFSD_A_SERVER_VERSION_MAJOR =3D 1,
+> +	NFSD_A_SERVER_VERSION_MINOR,
+> +	NFSD_A_SERVER_VERSION_STATUS,
 > +
-> +	__NFSD_A_SERVER_WORKER_MAX,
-> +	NFSD_A_SERVER_WORKER_MAX =3D (__NFSD_A_SERVER_WORKER_MAX - 1)
+> +	__NFSD_A_SERVER_VERSION_MAX,
+> +	NFSD_A_SERVER_VERSION_MAX =3D (__NFSD_A_SERVER_VERSION_MAX - 1)
 > +};
 > +
 >  enum {
 >  	NFSD_CMD_RPC_STATUS_GET =3D 1,
-> +	NFSD_CMD_THREADS_SET,
-> +	NFSD_CMD_THREADS_GET,
+>  	NFSD_CMD_THREADS_SET,
+>  	NFSD_CMD_THREADS_GET,
+> +	NFSD_CMD_VERSION_SET,
+> +	NFSD_CMD_VERSION_GET,
 > =20
 >  	__NFSD_CMD_MAX,
 >  	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
 > diff --git a/tools/net/ynl/generated/nfsd-user.c b/tools/net/ynl/generate=
 d/nfsd-user.c
-> index 360b6448c6e9..9768328a7751 100644
+> index 9768328a7751..4cb71c3cd18d 100644
 > --- a/tools/net/ynl/generated/nfsd-user.c
 > +++ b/tools/net/ynl/generated/nfsd-user.c
-> @@ -15,6 +15,8 @@
->  /* Enums */
->  static const char * const nfsd_op_strmap[] =3D {
+> @@ -17,6 +17,8 @@ static const char * const nfsd_op_strmap[] =3D {
 >  	[NFSD_CMD_RPC_STATUS_GET] =3D "rpc-status-get",
-> +	[NFSD_CMD_THREADS_SET] =3D "threads-set",
-> +	[NFSD_CMD_THREADS_GET] =3D "threads-get",
+>  	[NFSD_CMD_THREADS_SET] =3D "threads-set",
+>  	[NFSD_CMD_THREADS_GET] =3D "threads-get",
+> +	[NFSD_CMD_VERSION_SET] =3D "version-set",
+> +	[NFSD_CMD_VERSION_GET] =3D "version-get",
 >  };
 > =20
 >  const char *nfsd_op_str(int op)
-> @@ -47,6 +49,15 @@ struct ynl_policy_nest nfsd_rpc_status_nest =3D {
->  	.table =3D nfsd_rpc_status_policy,
+> @@ -58,6 +60,17 @@ struct ynl_policy_nest nfsd_server_worker_nest =3D {
+>  	.table =3D nfsd_server_worker_policy,
 >  };
 > =20
-> +struct ynl_policy_attr nfsd_server_worker_policy[NFSD_A_SERVER_WORKER_MA=
-X + 1] =3D {
-> +	[NFSD_A_SERVER_WORKER_THREADS] =3D { .name =3D "threads", .type =3D YNL=
-_PT_U32, },
+> +struct ynl_policy_attr nfsd_server_version_policy[NFSD_A_SERVER_VERSION_=
+MAX + 1] =3D {
+> +	[NFSD_A_SERVER_VERSION_MAJOR] =3D { .name =3D "major", .type =3D YNL_PT=
+_U32, },
+> +	[NFSD_A_SERVER_VERSION_MINOR] =3D { .name =3D "minor", .type =3D YNL_PT=
+_U32, },
+> +	[NFSD_A_SERVER_VERSION_STATUS] =3D { .name =3D "status", .type =3D YNL_=
+PT_U8, },
 > +};
 > +
-> +struct ynl_policy_nest nfsd_server_worker_nest =3D {
-> +	.max_attr =3D NFSD_A_SERVER_WORKER_MAX,
-> +	.table =3D nfsd_server_worker_policy,
+> +struct ynl_policy_nest nfsd_server_version_nest =3D {
+> +	.max_attr =3D NFSD_A_SERVER_VERSION_MAX,
+> +	.table =3D nfsd_server_version_policy,
 > +};
 > +
 >  /* Common nested types */
 >  /* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_RPC_STATUS_GET =
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
 >  /* NFSD_CMD_RPC_STATUS_GET - dump */
-> @@ -198,6 +209,87 @@ nfsd_rpc_status_get_dump(struct ynl_sock *ys)
+> @@ -290,6 +303,74 @@ struct nfsd_threads_get_rsp *nfsd_threads_get(struct=
+ ynl_sock *ys)
 >  	return NULL;
 >  }
 > =20
-> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_THREADS_SET =3D=
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_VERSION_SET =3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> +/* NFSD_CMD_THREADS_SET - do */
-> +void nfsd_threads_set_req_free(struct nfsd_threads_set_req *req)
+> +/* NFSD_CMD_VERSION_SET - do */
+> +void nfsd_version_set_req_free(struct nfsd_version_set_req *req)
 > +{
 > +	free(req);
 > +}
 > +
-> +int nfsd_threads_set(struct ynl_sock *ys, struct nfsd_threads_set_req *r=
+> +int nfsd_version_set(struct ynl_sock *ys, struct nfsd_version_set_req *r=
 eq)
 > +{
 > +	struct nlmsghdr *nlh;
 > +	int err;
 > +
-> +	nlh =3D ynl_gemsg_start_req(ys, ys->family_id, NFSD_CMD_THREADS_SET, 1)=
+> +	nlh =3D ynl_gemsg_start_req(ys, ys->family_id, NFSD_CMD_VERSION_SET, 1)=
 ;
-> +	ys->req_policy =3D &nfsd_server_worker_nest;
+> +	ys->req_policy =3D &nfsd_server_version_nest;
 > +
-> +	if (req->_present.threads)
-> +		mnl_attr_put_u32(nlh, NFSD_A_SERVER_WORKER_THREADS, req->threads);
+> +	if (req->_present.major)
+> +		mnl_attr_put_u32(nlh, NFSD_A_SERVER_VERSION_MAJOR, req->major);
+> +	if (req->_present.minor)
+> +		mnl_attr_put_u32(nlh, NFSD_A_SERVER_VERSION_MINOR, req->minor);
+> +	if (req->_present.status)
+> +		mnl_attr_put_u8(nlh, NFSD_A_SERVER_VERSION_STATUS, req->status);
 > +
 > +	err =3D ynl_exec(ys, nlh, NULL);
 > +	if (err < 0)
@@ -327,61 +400,44 @@ eq)
 > +	return 0;
 > +}
 > +
-> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_THREADS_GET =3D=
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_VERSION_GET =3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> +/* NFSD_CMD_THREADS_GET - do */
-> +void nfsd_threads_get_rsp_free(struct nfsd_threads_get_rsp *rsp)
+> +/* NFSD_CMD_VERSION_GET - dump */
+> +void nfsd_version_get_list_free(struct nfsd_version_get_list *rsp)
 > +{
-> +	free(rsp);
-> +}
+> +	struct nfsd_version_get_list *next =3D rsp;
 > +
-> +int nfsd_threads_get_rsp_parse(const struct nlmsghdr *nlh, void *data)
-> +{
-> +	struct ynl_parse_arg *yarg =3D data;
-> +	struct nfsd_threads_get_rsp *dst;
-> +	const struct nlattr *attr;
+> +	while ((void *)next !=3D YNL_LIST_END) {
+> +		rsp =3D next;
+> +		next =3D rsp->next;
 > +
-> +	dst =3D yarg->data;
-> +
-> +	mnl_attr_for_each(attr, nlh, sizeof(struct genlmsghdr)) {
-> +		unsigned int type =3D mnl_attr_get_type(attr);
-> +
-> +		if (type =3D=3D NFSD_A_SERVER_WORKER_THREADS) {
-> +			if (ynl_attr_validate(yarg, attr))
-> +				return MNL_CB_ERROR;
-> +			dst->_present.threads =3D 1;
-> +			dst->threads =3D mnl_attr_get_u32(attr);
-> +		}
+> +		free(rsp);
 > +	}
-> +
-> +	return MNL_CB_OK;
 > +}
 > +
-> +struct nfsd_threads_get_rsp *nfsd_threads_get(struct ynl_sock *ys)
+> +struct nfsd_version_get_list *nfsd_version_get_dump(struct ynl_sock *ys)
 > +{
-> +	struct ynl_req_state yrs =3D { .yarg =3D { .ys =3D ys, }, };
-> +	struct nfsd_threads_get_rsp *rsp;
+> +	struct ynl_dump_state yds =3D {};
 > +	struct nlmsghdr *nlh;
 > +	int err;
 > +
-> +	nlh =3D ynl_gemsg_start_req(ys, ys->family_id, NFSD_CMD_THREADS_GET, 1)=
-;
-> +	ys->req_policy =3D &nfsd_server_worker_nest;
-> +	yrs.yarg.rsp_policy =3D &nfsd_server_worker_nest;
+> +	yds.ys =3D ys;
+> +	yds.alloc_sz =3D sizeof(struct nfsd_version_get_list);
+> +	yds.cb =3D nfsd_version_get_rsp_parse;
+> +	yds.rsp_cmd =3D NFSD_CMD_VERSION_GET;
+> +	yds.rsp_policy =3D &nfsd_server_version_nest;
 > +
-> +	rsp =3D calloc(1, sizeof(*rsp));
-> +	yrs.yarg.data =3D rsp;
-> +	yrs.cb =3D nfsd_threads_get_rsp_parse;
-> +	yrs.rsp_cmd =3D NFSD_CMD_THREADS_GET;
+> +	nlh =3D ynl_gemsg_start_dump(ys, ys->family_id, NFSD_CMD_VERSION_GET, 1=
+);
 > +
-> +	err =3D ynl_exec(ys, nlh, &yrs);
+> +	err =3D ynl_exec_dump(ys, nlh, &yds);
 > +	if (err < 0)
-> +		goto err_free;
+> +		goto free_list;
 > +
-> +	return rsp;
+> +	return yds.first;
 > +
-> +err_free:
-> +	nfsd_threads_get_rsp_free(rsp);
+> +free_list:
+> +	nfsd_version_get_list_free(yds.first);
 > +	return NULL;
 > +}
 > +
@@ -390,69 +446,96 @@ eq)
 >  };
 > diff --git a/tools/net/ynl/generated/nfsd-user.h b/tools/net/ynl/generate=
 d/nfsd-user.h
-> index 989c6e209ced..e162a4f20d91 100644
+> index e162a4f20d91..e61c5a9e46fb 100644
 > --- a/tools/net/ynl/generated/nfsd-user.h
 > +++ b/tools/net/ynl/generated/nfsd-user.h
-> @@ -64,4 +64,51 @@ nfsd_rpc_status_get_rsp_list_free(struct nfsd_rpc_stat=
-us_get_rsp_list *rsp);
->  struct nfsd_rpc_status_get_rsp_list *
->  nfsd_rpc_status_get_dump(struct ynl_sock *ys);
+> @@ -111,4 +111,59 @@ void nfsd_threads_get_rsp_free(struct nfsd_threads_g=
+et_rsp *rsp);
+>   */
+>  struct nfsd_threads_get_rsp *nfsd_threads_get(struct ynl_sock *ys);
 > =20
-> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_THREADS_SET =3D=
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_VERSION_SET =3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> +/* NFSD_CMD_THREADS_SET - do */
-> +struct nfsd_threads_set_req {
+> +/* NFSD_CMD_VERSION_SET - do */
+> +struct nfsd_version_set_req {
 > +	struct {
-> +		__u32 threads:1;
+> +		__u32 major:1;
+> +		__u32 minor:1;
+> +		__u32 status:1;
 > +	} _present;
 > +
-> +	__u32 threads;
+> +	__u32 major;
+> +	__u32 minor;
+> +	__u8 status;
 > +};
 > +
-> +static inline struct nfsd_threads_set_req *nfsd_threads_set_req_alloc(vo=
+
+This more or less mirrors how the "versions" file works today, but that
+interface is quite klunky.=A0 We don't have a use case that requires that
+we do this piecemeal like this. I think we'd be better served with a
+more declarative interface that reconfigures the supported versions in
+one shot:
+
+Instead of having "major,minor,status" and potentially having to call
+this command several times from userland, it seems like it would be
+nicer to just have userland send down a list "major,minor" that should
+be enabled, and then just let the kernel figure out whether to enable or
+disable each. An empty list could mean "disable everything".
+
+That's simpler to reason out as an interface from userland too. Trying
+to keep track of the enabled and disabled versions and twiddle it is
+really tricky in rpc.nfsd today.
+=20
+> +static inline struct nfsd_version_set_req *nfsd_version_set_req_alloc(vo=
 id)
 > +{
-> +	return calloc(1, sizeof(struct nfsd_threads_set_req));
+> +	return calloc(1, sizeof(struct nfsd_version_set_req));
 > +}
-> +void nfsd_threads_set_req_free(struct nfsd_threads_set_req *req);
+> +void nfsd_version_set_req_free(struct nfsd_version_set_req *req);
 > +
 > +static inline void
-> +nfsd_threads_set_req_set_threads(struct nfsd_threads_set_req *req,
-> +				 __u32 threads)
+> +nfsd_version_set_req_set_major(struct nfsd_version_set_req *req, __u32 m=
+ajor)
 > +{
-> +	req->_present.threads =3D 1;
-> +	req->threads =3D threads;
+> +	req->_present.major =3D 1;
+> +	req->major =3D major;
+> +}
+> +static inline void
+> +nfsd_version_set_req_set_minor(struct nfsd_version_set_req *req, __u32 m=
+inor)
+> +{
+> +	req->_present.minor =3D 1;
+> +	req->minor =3D minor;
+> +}
+> +static inline void
+> +nfsd_version_set_req_set_status(struct nfsd_version_set_req *req, __u8 s=
+tatus)
+> +{
+> +	req->_present.status =3D 1;
+> +	req->status =3D status;
 > +}
 > +
 > +/*
-> + * set the number of running threads
+> + * enable/disable server version
 > + */
-> +int nfsd_threads_set(struct ynl_sock *ys, struct nfsd_threads_set_req *r=
+> +int nfsd_version_set(struct ynl_sock *ys, struct nfsd_version_set_req *r=
 eq);
 > +
-> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_THREADS_GET =3D=
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_VERSION_GET =3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> +/* NFSD_CMD_THREADS_GET - do */
-> +
-> +struct nfsd_threads_get_rsp {
-> +	struct {
-> +		__u32 threads:1;
-> +	} _present;
-> +
-> +	__u32 threads;
+> +/* NFSD_CMD_VERSION_GET - dump */
+> +struct nfsd_version_get_list {
+> +	struct nfsd_version_get_list *next;
+> +	struct nfsd_version_get_rsp obj __attribute__ ((aligned (8)));
 > +};
 > +
-> +void nfsd_threads_get_rsp_free(struct nfsd_threads_get_rsp *rsp);
+> +void nfsd_version_get_list_free(struct nfsd_version_get_list *rsp);
 > +
-> +/*
-> + * get the number of running threads
-> + */
-> +struct nfsd_threads_get_rsp *nfsd_threads_get(struct ynl_sock *ys);
+> +struct nfsd_version_get_list *nfsd_version_get_dump(struct ynl_sock *ys)=
+;
 > +
 >  #endif /* _LINUX_NFSD_GEN_H */
 
-Ok, Uncle! I'll relent on the quest for a single netlink command to
-start the server. This patch looks reasonable to me.
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+--=20
+Jeff Layton <jlayton@kernel.org>
 
