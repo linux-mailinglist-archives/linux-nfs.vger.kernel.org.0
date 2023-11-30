@@ -1,81 +1,68 @@
-Return-Path: <linux-nfs+bounces-200-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-201-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 523B17FEF6D
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 13:45:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97B007FF00E
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 14:25:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 839F01C20B76
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 12:45:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6C00B20DE4
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 13:25:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD85F4779B;
-	Thu, 30 Nov 2023 12:45:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 338B647A45;
+	Thu, 30 Nov 2023 13:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NB+UsUdg"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="f6pStc0F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E53D50
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Nov 2023 04:45:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701348322;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FfOHqHrZHg6fuXwcB8+TtsQGiSGk/Jw3citxF2dQTww=;
-	b=NB+UsUdgdCpPRNsXTOOOaoU3GX6ObWToGhQafh3I79HEpSoDJkoNGWP0/wgmMWsybDcsYZ
-	KMHx2rftF6zqCwCBjjWI1MxMfk2HLIND81qynA9X8naGErFGSn4BBym7nLCPzy85y/J2g2
-	hrlKtCPvDjIcIwXjUwWO9U71xHCZhNY=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-266-D1pLCYxFO6yV6x_dC3JFUg-1; Thu,
- 30 Nov 2023 07:45:21 -0500
-X-MC-Unique: D1pLCYxFO6yV6x_dC3JFUg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F013C3C02769;
-	Thu, 30 Nov 2023 12:45:20 +0000 (UTC)
-Received: from [192.168.37.1] (unknown [10.22.48.3])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 781D310E46;
-	Thu, 30 Nov 2023 12:45:20 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Cedric Blancher <cedric.blancher@gmail.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: NFSv4.2: How to deallocate a range of bytes in a file, aka
- "punch a hole"?
-Date: Thu, 30 Nov 2023 07:45:19 -0500
-Message-ID: <2F13FCCD-8450-43DA-8C2D-0554BAA32037@redhat.com>
-In-Reply-To: <CALXu0Uc9Q-i4TPVP4LQGfHcbpp-vwSL4a1xEzVuFxqDQwfbUCw@mail.gmail.com>
-References: <CALXu0Uc9Q-i4TPVP4LQGfHcbpp-vwSL4a1xEzVuFxqDQwfbUCw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121B93E47A;
+	Thu, 30 Nov 2023 13:25:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21CF3C433C7;
+	Thu, 30 Nov 2023 13:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1701350728;
+	bh=B50Myp2r8oz0ilW83tUjs4TPl/03BrY19uVzt55r0H0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=f6pStc0F1sdfa1tWHkWUNhb18QGGUsryuBFjcteidqrabLK3qyNf0RjiHBP0Seumv
+	 GO6nhYdK1Tc2eyERnpwVs9vwl/jU+FbG5JHhswZab9DPO5Qq1eXgrU3SFZZpQvH8la
+	 3V0Umi2JaiZHsWaM2pfPGPA0jY/z+jpnwO7c5zEI=
+Date: Thu, 30 Nov 2023 13:25:25 +0000
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Chuck Lever <cel@kernel.org>, linux-stable <stable@vger.kernel.org>,
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/8] nfsd fixes for 6.5.y
+Message-ID: <2023113013-fanning-esophagus-787f@gregkh>
+References: <170120874713.1515.13712791731008720729.stgit@klimt.1015granger.net>
+ <3C2A1F40-C0F3-412E-87ED-66AC1A2CA0F4@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <3C2A1F40-C0F3-412E-87ED-66AC1A2CA0F4@oracle.com>
 
-On 30 Nov 2023, at 5:18, Cedric Blancher wrote:
+On Tue, Nov 28, 2023 at 10:07:11PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Nov 28, 2023, at 4:59 PM, Chuck Lever <cel@kernel.org> wrote:
+> > 
+> > Backport of upstream fixes to NFSD's duplicate reply cache. These 
+> > have been hand-applied and tested with the same reproducer as was 
+> > used to create the upstream fixes.
+> 
+> After applying patches 1 through 6 cleanly, these applied with fuzz
+> and offset but no rejection -- the same as the 6.6.y patch set.
+> The context changes were due to Lorenzo's new nfsd netlink protocol.
 
-> Good morning!
->
-> Linux has fallocate(fd, FALLOC_FL_PUNCH_HOLE|FALLOC_FL_KEEP_SIZE, ...)
-> to punch a hole into a file, i.e. deallocate the blocks given and make
-> the file a "sparse file".
->
-> But how is this implemented on NFSv4.2 COMPOUND level? How does a
-> NFSv4 compound look like to punch a hole say from position 30000 to
-> position 35721?
+6.5.y is now end-of-life, sorry.
 
-Are you interested in the current linux client's implementation?  You could
-look at a wire capture of the operation to find out.
-
-Its going to be something like PUTFH, DEALLOCATE, GETATTR..
-
-Ben
-
+greg k-h
 
