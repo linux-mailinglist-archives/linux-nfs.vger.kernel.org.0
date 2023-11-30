@@ -1,614 +1,315 @@
-Return-Path: <linux-nfs+bounces-219-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-220-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 724787FF5E2
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 17:32:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AB1C7FF61C
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 17:34:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C0A51B21190
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 16:32:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4A252819A0
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 16:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D272051C3E;
-	Thu, 30 Nov 2023 16:32:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D84E51C3E;
+	Thu, 30 Nov 2023 16:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qs4NKLU3"
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="PZ5jLWuT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2C0C482DC;
-	Thu, 30 Nov 2023 16:32:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3320AC433C7;
-	Thu, 30 Nov 2023 16:32:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701361953;
-	bh=3fiBePA2SQ87pfXqNznKtUGmW2YvCJSsuFR11L1S668=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qs4NKLU3lVTIJkT2uUEhvLB7t0cN2o+1N9AvfieAH8pCpVdqc2VuL8S1EA4wDkSsP
-	 CRudP8ZRheDLPWPXQCpTq/dGnFSEG3v2N/ep/5uLIv53AiA4n1GEknmUyJjeoPn/ge
-	 TgU9ZEvtVY9ZtyJ5yI/kzOvSh7K9vKfRjjSJysBLjpwM5/PpLYWbLhdwYbEIroaG6b
-	 i21F9qAIDz7vMJiCyW4rgzuf5qfhyd7wfBRfW3rMc7L4sIDGdc3zWA1qFRs8o+L4RJ
-	 vVoOQ/runlk4xTRoxsuihQmIbVsEImamtbB+8b5BkxKmOqr1k/2P/0KxRt5Lv3tmAG
-	 oadBuO1pNRElQ==
-Date: Thu, 30 Nov 2023 17:32:29 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-	lorenzo.bianconi@redhat.com, neilb@suse.de, netdev@vger.kernel.org,
-	kuba@kernel.org
-Subject: Re: [PATCH v5 2/3] NFSD: convert write_version to netlink command
-Message-ID: <ZWi5HXStptUgeLrX@lore-desk>
-References: <cover.1701277475.git.lorenzo@kernel.org>
- <8b47d2e3f704066204149653fd1bd86a64188f61.1701277475.git.lorenzo@kernel.org>
- <88d91863e36a1e36f7770aa8a7f42853250e3d55.camel@kernel.org>
- <ZWi0OkrOsv8j6ev3@tissot.1015granger.net>
- <ZWi3kO5nOXqzC5mS@lore-desk>
- <ZWi4am03iXb6LY01@tissot.1015granger.net>
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9764D48
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Nov 2023 08:34:27 -0800 (PST)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-5d3aafa1342so4383697b3.2
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Nov 2023 08:34:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1701362067; x=1701966867; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UtFno+LwQ2GzDnhBeUDiSKJsjmjd4ts8+ULAaW82MMY=;
+        b=PZ5jLWuTODNkPYXVwRoLdgCgs1RiXX0CB+ozc2Zis6xwGi6Avw+oKhPD/zvoxOU5CT
+         InOMJrWqPHMWGf9AyKnk822BxpH77SdKVepUZQilsxzmIKeKLKusqgZRBHlB9pwdahCc
+         FcwGgvoVMSl172uYRwCmkufUZl1E4tzH2rQbVzH9gHcv3+pNlSczMmFsY+2JnCyZHwkR
+         3VK14HibDOdwrVgkvSQ9cytJ+mmOziLMMT5tm/recPgdqTWot++t6Qocds1dstZA0I9F
+         0XVm+tV13w6Uq87Lx6N0Prfq85+SVpBM38edUKIdMlPsNxJGTCxR2kUbvqPjL7Iixn46
+         2RZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701362067; x=1701966867;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UtFno+LwQ2GzDnhBeUDiSKJsjmjd4ts8+ULAaW82MMY=;
+        b=BO8G46t7+u2AmXI6rv4A32Kc9OY4wSW1TEW6jn277QP3Q3MHpbG+6BHEkSe7KMr+5z
+         MtDEMNdd9YJAod7lWD82ucZY71NXLCmbh5MGcomeVN4MeVvsj9jXyoXfj8f++b/jo9uX
+         exyj42gghV11V8Ym3A/pZRJd3J54FzHzhl7g+aZRh8AJTVBetS2Ktvp3PQH8AOALIrKZ
+         aMY11JOE1u6CcbGYsHKeisnRrtDvpmrZIpH8eqtRl+GQIC1kS6V9AaZO+rLcTUn6RvH5
+         QsOPmhVJrUYzz8NU/21Ib7I9+E44S2Fu/EU76Vsa1KrUwpm/Tk0Ce3xVcJ7PJGDfx/oi
+         ye/g==
+X-Gm-Message-State: AOJu0Yw86wmuN58nHxw9rRU075btvi3nTYQ5WsGl+2y1GnVfGg3wyde4
+	eEOP9OL1HhPf/6yqDqqN0V8sZNw0kmZu3NDDCysX
+X-Google-Smtp-Source: AGHT+IHeHdpK2ZUS6oWXFVUCJZ09doGArKmA7HaDqW1eGm3Lnoqt9TFrtxWh2usWvQXHN2dvVLQzpflDEM/jaG+E5BI=
+X-Received: by 2002:a25:8d0b:0:b0:da0:cbff:4e20 with SMTP id
+ n11-20020a258d0b000000b00da0cbff4e20mr20087394ybl.56.1701362066812; Thu, 30
+ Nov 2023 08:34:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="agUwACALdI3DEFIQ"
-Content-Disposition: inline
-In-Reply-To: <ZWi4am03iXb6LY01@tissot.1015granger.net>
-
-
---agUwACALdI3DEFIQ
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20231107134012.682009-24-roberto.sassu@huaweicloud.com>
+ <17befa132379d37977fc854a8af25f6d.paul@paul-moore.com> <2084adba3c27a606cbc5ed7b3214f61427a829dd.camel@huaweicloud.com>
+ <CAHC9VhTTKac1o=RnQadu2xqdeKH8C_F+Wh4sY=HkGbCArwc8JQ@mail.gmail.com>
+ <b6c51351be3913be197492469a13980ab379e412.camel@huaweicloud.com>
+ <CAHC9VhSAryQSeFy0ZMexOiwBG-YdVGRzvh58=heH916DftcmWA@mail.gmail.com> <90eb8e9d-c63e-42d6-b951-f856f31590db@huaweicloud.com>
+In-Reply-To: <90eb8e9d-c63e-42d6-b951-f856f31590db@huaweicloud.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 30 Nov 2023 11:34:16 -0500
+Message-ID: <CAHC9VhROnfBoaOy2MurdSpcE_poo_6Qy9d2U3g6m2NRRHaqz4Q@mail.gmail.com>
+Subject: Re: [PATCH v5 23/23] integrity: Switch from rbtree to LSM-managed
+ blob for integrity_iint_cache
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com, 
+	jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, 
+	tom@talpey.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
+	dmitry.kasatkin@gmail.com, dhowells@redhat.com, jarkko@kernel.org, 
+	stephen.smalley.work@gmail.com, eparis@parisplace.org, casey@schaufler-ca.com, 
+	mic@digikod.net, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org, 
+	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org, 
+	selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Nov 30, Chuck Lever wrote:
-> On Thu, Nov 30, 2023 at 05:25:52PM +0100, Lorenzo Bianconi wrote:
-> > > On Wed, Nov 29, 2023 at 01:23:37PM -0500, Jeff Layton wrote:
-> > > > On Wed, 2023-11-29 at 18:12 +0100, Lorenzo Bianconi wrote:
-> > > > > Introduce write_version netlink command similar to the ones avail=
-able
-> > > > > through the procfs.
-> > > > >=20
-> > > > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > > > > ---
-> > > > >  Documentation/netlink/specs/nfsd.yaml |  32 ++++++++
-> > > > >  fs/nfsd/netlink.c                     |  19 +++++
-> > > > >  fs/nfsd/netlink.h                     |   3 +
-> > > > >  fs/nfsd/nfsctl.c                      | 105 ++++++++++++++++++++=
-++++++
-> > > > >  include/uapi/linux/nfsd_netlink.h     |  11 +++
-> > > > >  tools/net/ynl/generated/nfsd-user.c   |  81 ++++++++++++++++++++
-> > > > >  tools/net/ynl/generated/nfsd-user.h   |  55 ++++++++++++++
-> > > > >  7 files changed, 306 insertions(+)
-> > > > >=20
-> > > > > diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentatio=
-n/netlink/specs/nfsd.yaml
-> > > > > index c92e1425d316..6c5e42bb20f6 100644
-> > > > > --- a/Documentation/netlink/specs/nfsd.yaml
-> > > > > +++ b/Documentation/netlink/specs/nfsd.yaml
-> > > > > @@ -68,6 +68,18 @@ attribute-sets:
-> > > > >        -
-> > > > >          name: threads
-> > > > >          type: u32
-> > > > > +  -
-> > > > > +    name: server-version
-> > > > > +    attributes:
-> > > > > +      -
-> > > > > +        name: major
-> > > > > +        type: u32
-> > > > > +      -
-> > > > > +        name: minor
-> > > > > +        type: u32
-> > > > > +      -
-> > > > > +        name: status
-> > > > > +        type: u8
-> > > > > =20
-> > > > >  operations:
-> > > > >    list:
-> > > > > @@ -110,3 +122,23 @@ operations:
-> > > > >          reply:
-> > > > >            attributes:
-> > > > >              - threads
-> > > > > +    -
-> > > > > +      name: version-set
-> > > > > +      doc: enable/disable server version
-> > > > > +      attribute-set: server-version
-> > > > > +      flags: [ admin-perm ]
-> > > > > +      do:
-> > > > > +        request:
-> > > > > +          attributes:
-> > > > > +            - major
-> > > > > +            - minor
-> > > > > +            - status
-> > > > > +    -
-> > > > > +      name: version-get
-> > > > > +      doc: dump server versions
-> > > > > +      attribute-set: server-version
-> > > > > +      dump:
-> > > > > +        reply:
-> > > > > +          attributes:
-> > > > > +            - major
-> > > > > +            - minor
-> > > > > diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-> > > > > index 1a59a8e6c7e2..0608a7bd193b 100644
-> > > > > --- a/fs/nfsd/netlink.c
-> > > > > +++ b/fs/nfsd/netlink.c
-> > > > > @@ -15,6 +15,13 @@ static const struct nla_policy nfsd_threads_se=
-t_nl_policy[NFSD_A_SERVER_WORKER_T
-> > > > >  	[NFSD_A_SERVER_WORKER_THREADS] =3D { .type =3D NLA_U32, },
-> > > > >  };
-> > > > > =20
-> > > > > +/* NFSD_CMD_VERSION_SET - do */
-> > > > > +static const struct nla_policy nfsd_version_set_nl_policy[NFSD_A=
-_SERVER_VERSION_STATUS + 1] =3D {
-> > > > > +	[NFSD_A_SERVER_VERSION_MAJOR] =3D { .type =3D NLA_U32, },
-> > > > > +	[NFSD_A_SERVER_VERSION_MINOR] =3D { .type =3D NLA_U32, },
-> > > > > +	[NFSD_A_SERVER_VERSION_STATUS] =3D { .type =3D NLA_U8, },
-> > > > > +};
-> > > > > +
-> > > > >  /* Ops table for nfsd */
-> > > > >  static const struct genl_split_ops nfsd_nl_ops[] =3D {
-> > > > >  	{
-> > > > > @@ -36,6 +43,18 @@ static const struct genl_split_ops nfsd_nl_ops=
-[] =3D {
-> > > > >  		.doit	=3D nfsd_nl_threads_get_doit,
-> > > > >  		.flags	=3D GENL_CMD_CAP_DO,
-> > > > >  	},
-> > > > > +	{
-> > > > > +		.cmd		=3D NFSD_CMD_VERSION_SET,
-> > > > > +		.doit		=3D nfsd_nl_version_set_doit,
-> > > > > +		.policy		=3D nfsd_version_set_nl_policy,
-> > > > > +		.maxattr	=3D NFSD_A_SERVER_VERSION_STATUS,
-> > > > > +		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
-> > > > > +	},
-> > > > > +	{
-> > > > > +		.cmd	=3D NFSD_CMD_VERSION_GET,
-> > > > > +		.dumpit	=3D nfsd_nl_version_get_dumpit,
-> > > > > +		.flags	=3D GENL_CMD_CAP_DUMP,
-> > > > > +	},
-> > > > >  };
-> > > > > =20
-> > > > >  struct genl_family nfsd_nl_family __ro_after_init =3D {
-> > > > > diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-> > > > > index 4137fac477e4..7d203cec08e4 100644
-> > > > > --- a/fs/nfsd/netlink.h
-> > > > > +++ b/fs/nfsd/netlink.h
-> > > > > @@ -18,6 +18,9 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buf=
-f *skb,
-> > > > >  				  struct netlink_callback *cb);
-> > > > >  int nfsd_nl_threads_set_doit(struct sk_buff *skb, struct genl_in=
-fo *info);
-> > > > >  int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_in=
-fo *info);
-> > > > > +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_in=
-fo *info);
-> > > > > +int nfsd_nl_version_get_dumpit(struct sk_buff *skb,
-> > > > > +			       struct netlink_callback *cb);
-> > > > > =20
-> > > > >  extern struct genl_family nfsd_nl_family;
-> > > > > =20
-> > > > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > > > > index 130b3d937a79..f04430f79687 100644
-> > > > > --- a/fs/nfsd/nfsctl.c
-> > > > > +++ b/fs/nfsd/nfsctl.c
-> > > > > @@ -1757,6 +1757,111 @@ int nfsd_nl_threads_get_doit(struct sk_bu=
-ff *skb, struct genl_info *info)
-> > > > >  	return err;
-> > > > >  }
-> > > > > =20
-> > > > > +/**
-> > > > > + * nfsd_nl_version_set_doit - enable/disable the provided nfs se=
-rver version
-> > > > > + * @skb: reply buffer
-> > > > > + * @info: netlink metadata and command arguments
-> > > > > + *
-> > > > > + * Return 0 on success or a negative errno.
-> > > > > + */
-> > > > > +int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_in=
-fo *info)
-> > > > > +{
-> > > > > +	struct nfsd_net *nn =3D net_generic(genl_info_net(info), nfsd_n=
-et_id);
-> > > > > +	enum vers_op cmd;
-> > > > > +	u32 major, minor;
-> > > > > +	u8 status;
-> > > > > +	int ret;
-> > > > > +
-> > > > > +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_VERSION_MAJOR) ||
-> > > > > +	    GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_VERSION_MINOR) ||
-> > > > > +	    GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_VERSION_STATUS))
-> > > > > +		return -EINVAL;
-> > > > > +
-> > > > > +	major =3D nla_get_u32(info->attrs[NFSD_A_SERVER_VERSION_MAJOR]);
-> > > > > +	minor =3D nla_get_u32(info->attrs[NFSD_A_SERVER_VERSION_MINOR]);
-> > > > > +
-> > > > > +	status =3D nla_get_u32(info->attrs[NFSD_A_SERVER_VERSION_STATUS=
-]);
-> > > > > +	cmd =3D !!status ? NFSD_SET : NFSD_CLEAR;
-> > > > > +
-> > > > > +	mutex_lock(&nfsd_mutex);
-> > > > > +	switch (major) {
-> > > > > +	case 4:
-> > > > > +		ret =3D nfsd_minorversion(nn, minor, cmd);
-> > > > > +		break;
-> > > > > +	case 2:
-> > > > > +	case 3:
-> > > > > +		if (!minor) {
-> > > > > +			ret =3D nfsd_vers(nn, major, cmd);
-> > > > > +			break;
-> > > > > +		}
-> > > > > +		fallthrough;
-> > > > > +	default:
-> > > > > +		ret =3D -EINVAL;
-> > > > > +		break;
-> > > > > +	}
-> > > > > +	mutex_unlock(&nfsd_mutex);
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > > +/**
-> > > > > + * nfsd_nl_version_get_doit - Handle verion_get dumpit
-> > > > > + * @skb: reply buffer
-> > > > > + * @cb: netlink metadata and command arguments
-> > > > > + *
-> > > > > + * Returns the size of the reply or a negative errno.
-> > > > > + */
-> > > > > +int nfsd_nl_version_get_dumpit(struct sk_buff *skb,
-> > > > > +			       struct netlink_callback *cb)
-> > > > > +{
-> > > > > +	struct nfsd_net *nn =3D net_generic(sock_net(skb->sk), nfsd_net=
-_id);
-> > > > > +	int i, ret =3D -ENOMEM;
-> > > > > +
-> > > > > +	mutex_lock(&nfsd_mutex);
-> > > > > +
-> > > > > +	for (i =3D 2; i <=3D 4; i++) {
-> > > > > +		int j;
-> > > > > +
-> > > > > +		if (i < cb->args[0]) /* already consumed */
-> > > > > +			continue;
-> > > > > +
-> > > > > +		if (!nfsd_vers(nn, i, NFSD_AVAIL))
-> > > > > +			continue;
-> > > > > +
-> > > > > +		for (j =3D 0; j <=3D NFSD_SUPPORTED_MINOR_VERSION; j++) {
-> > > > > +			void *hdr;
-> > > > > +
-> > > > > +			if (!nfsd_vers(nn, i, NFSD_TEST))
-> > > > > +				continue;
-> > > > > +
-> > > > > +			/* NFSv{2,3} does not support minor numbers */
-> > > > > +			if (i < 4 && j)
-> > > > > +				continue;
-> > > > > +
-> > > > > +			if (i =3D=3D 4 && !nfsd_minorversion(nn, j, NFSD_TEST))
-> > > > > +				continue;
-> > > > > +
-> > > > > +			hdr =3D genlmsg_put(skb, NETLINK_CB(cb->skb).portid,
-> > > > > +					  cb->nlh->nlmsg_seq, &nfsd_nl_family,
-> > > > > +					  0, NFSD_CMD_VERSION_GET);
-> > > > > +			if (!hdr)
-> > > > > +				goto out;
-> > > > > +
-> > > > > +			if (nla_put_u32(skb, NFSD_A_SERVER_VERSION_MAJOR, i) ||
-> > > > > +			    nla_put_u32(skb, NFSD_A_SERVER_VERSION_MINOR, j))
-> > > > > +				goto out;
-> > > > > +
-> > > > > +			genlmsg_end(skb, hdr);
-> > > > > +		}
-> > > > > +	}
-> > > > > +	cb->args[0] =3D i;
-> > > > > +	ret =3D skb->len;
-> > > > > +out:
-> > > > > +	mutex_unlock(&nfsd_mutex);
-> > > > > +
-> > > > > +	return ret;
-> > > > > +}
-> > > > > +
-> > > > >  /**
-> > > > >   * nfsd_net_init - Prepare the nfsd_net portion of a new net nam=
-espace
-> > > > >   * @net: a freshly-created network namespace
-> > > > > diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/lin=
-ux/nfsd_netlink.h
-> > > > > index 1b6fe1f9ed0e..1b3340f31baa 100644
-> > > > > --- a/include/uapi/linux/nfsd_netlink.h
-> > > > > +++ b/include/uapi/linux/nfsd_netlink.h
-> > > > > @@ -36,10 +36,21 @@ enum {
-> > > > >  	NFSD_A_SERVER_WORKER_MAX =3D (__NFSD_A_SERVER_WORKER_MAX - 1)
-> > > > >  };
-> > > > > =20
-> > > > > +enum {
-> > > > > +	NFSD_A_SERVER_VERSION_MAJOR =3D 1,
-> > > > > +	NFSD_A_SERVER_VERSION_MINOR,
-> > > > > +	NFSD_A_SERVER_VERSION_STATUS,
-> > > > > +
-> > > > > +	__NFSD_A_SERVER_VERSION_MAX,
-> > > > > +	NFSD_A_SERVER_VERSION_MAX =3D (__NFSD_A_SERVER_VERSION_MAX - 1)
-> > > > > +};
-> > > > > +
-> > > > >  enum {
-> > > > >  	NFSD_CMD_RPC_STATUS_GET =3D 1,
-> > > > >  	NFSD_CMD_THREADS_SET,
-> > > > >  	NFSD_CMD_THREADS_GET,
-> > > > > +	NFSD_CMD_VERSION_SET,
-> > > > > +	NFSD_CMD_VERSION_GET,
-> > > > > =20
-> > > > >  	__NFSD_CMD_MAX,
-> > > > >  	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
-> > > > > diff --git a/tools/net/ynl/generated/nfsd-user.c b/tools/net/ynl/=
-generated/nfsd-user.c
-> > > > > index 9768328a7751..4cb71c3cd18d 100644
-> > > > > --- a/tools/net/ynl/generated/nfsd-user.c
-> > > > > +++ b/tools/net/ynl/generated/nfsd-user.c
-> > > > > @@ -17,6 +17,8 @@ static const char * const nfsd_op_strmap[] =3D {
-> > > > >  	[NFSD_CMD_RPC_STATUS_GET] =3D "rpc-status-get",
-> > > > >  	[NFSD_CMD_THREADS_SET] =3D "threads-set",
-> > > > >  	[NFSD_CMD_THREADS_GET] =3D "threads-get",
-> > > > > +	[NFSD_CMD_VERSION_SET] =3D "version-set",
-> > > > > +	[NFSD_CMD_VERSION_GET] =3D "version-get",
-> > > > >  };
-> > > > > =20
-> > > > >  const char *nfsd_op_str(int op)
-> > > > > @@ -58,6 +60,17 @@ struct ynl_policy_nest nfsd_server_worker_nest=
- =3D {
-> > > > >  	.table =3D nfsd_server_worker_policy,
-> > > > >  };
-> > > > > =20
-> > > > > +struct ynl_policy_attr nfsd_server_version_policy[NFSD_A_SERVER_=
-VERSION_MAX + 1] =3D {
-> > > > > +	[NFSD_A_SERVER_VERSION_MAJOR] =3D { .name =3D "major", .type =
-=3D YNL_PT_U32, },
-> > > > > +	[NFSD_A_SERVER_VERSION_MINOR] =3D { .name =3D "minor", .type =
-=3D YNL_PT_U32, },
-> > > > > +	[NFSD_A_SERVER_VERSION_STATUS] =3D { .name =3D "status", .type =
-=3D YNL_PT_U8, },
-> > > > > +};
-> > > > > +
-> > > > > +struct ynl_policy_nest nfsd_server_version_nest =3D {
-> > > > > +	.max_attr =3D NFSD_A_SERVER_VERSION_MAX,
-> > > > > +	.table =3D nfsd_server_version_policy,
-> > > > > +};
-> > > > > +
-> > > > >  /* Common nested types */
-> > > > >  /* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_RPC_STATU=
-S_GET =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > > >  /* NFSD_CMD_RPC_STATUS_GET - dump */
-> > > > > @@ -290,6 +303,74 @@ struct nfsd_threads_get_rsp *nfsd_threads_ge=
-t(struct ynl_sock *ys)
-> > > > >  	return NULL;
-> > > > >  }
-> > > > > =20
-> > > > > +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_VERSION_S=
-ET =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > > > +/* NFSD_CMD_VERSION_SET - do */
-> > > > > +void nfsd_version_set_req_free(struct nfsd_version_set_req *req)
-> > > > > +{
-> > > > > +	free(req);
-> > > > > +}
-> > > > > +
-> > > > > +int nfsd_version_set(struct ynl_sock *ys, struct nfsd_version_se=
-t_req *req)
-> > > > > +{
-> > > > > +	struct nlmsghdr *nlh;
-> > > > > +	int err;
-> > > > > +
-> > > > > +	nlh =3D ynl_gemsg_start_req(ys, ys->family_id, NFSD_CMD_VERSION=
-_SET, 1);
-> > > > > +	ys->req_policy =3D &nfsd_server_version_nest;
-> > > > > +
-> > > > > +	if (req->_present.major)
-> > > > > +		mnl_attr_put_u32(nlh, NFSD_A_SERVER_VERSION_MAJOR, req->major);
-> > > > > +	if (req->_present.minor)
-> > > > > +		mnl_attr_put_u32(nlh, NFSD_A_SERVER_VERSION_MINOR, req->minor);
-> > > > > +	if (req->_present.status)
-> > > > > +		mnl_attr_put_u8(nlh, NFSD_A_SERVER_VERSION_STATUS, req->status=
-);
-> > > > > +
-> > > > > +	err =3D ynl_exec(ys, nlh, NULL);
-> > > > > +	if (err < 0)
-> > > > > +		return -1;
-> > > > > +
-> > > > > +	return 0;
-> > > > > +}
-> > > > > +
-> > > > > +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_VERSION_G=
-ET =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > > > +/* NFSD_CMD_VERSION_GET - dump */
-> > > > > +void nfsd_version_get_list_free(struct nfsd_version_get_list *rs=
-p)
-> > > > > +{
-> > > > > +	struct nfsd_version_get_list *next =3D rsp;
-> > > > > +
-> > > > > +	while ((void *)next !=3D YNL_LIST_END) {
-> > > > > +		rsp =3D next;
-> > > > > +		next =3D rsp->next;
-> > > > > +
-> > > > > +		free(rsp);
-> > > > > +	}
-> > > > > +}
-> > > > > +
-> > > > > +struct nfsd_version_get_list *nfsd_version_get_dump(struct ynl_s=
-ock *ys)
-> > > > > +{
-> > > > > +	struct ynl_dump_state yds =3D {};
-> > > > > +	struct nlmsghdr *nlh;
-> > > > > +	int err;
-> > > > > +
-> > > > > +	yds.ys =3D ys;
-> > > > > +	yds.alloc_sz =3D sizeof(struct nfsd_version_get_list);
-> > > > > +	yds.cb =3D nfsd_version_get_rsp_parse;
-> > > > > +	yds.rsp_cmd =3D NFSD_CMD_VERSION_GET;
-> > > > > +	yds.rsp_policy =3D &nfsd_server_version_nest;
-> > > > > +
-> > > > > +	nlh =3D ynl_gemsg_start_dump(ys, ys->family_id, NFSD_CMD_VERSIO=
-N_GET, 1);
-> > > > > +
-> > > > > +	err =3D ynl_exec_dump(ys, nlh, &yds);
-> > > > > +	if (err < 0)
-> > > > > +		goto free_list;
-> > > > > +
-> > > > > +	return yds.first;
-> > > > > +
-> > > > > +free_list:
-> > > > > +	nfsd_version_get_list_free(yds.first);
-> > > > > +	return NULL;
-> > > > > +}
-> > > > > +
-> > > > >  const struct ynl_family ynl_nfsd_family =3D  {
-> > > > >  	.name		=3D "nfsd",
-> > > > >  };
-> > > > > diff --git a/tools/net/ynl/generated/nfsd-user.h b/tools/net/ynl/=
-generated/nfsd-user.h
-> > > > > index e162a4f20d91..e61c5a9e46fb 100644
-> > > > > --- a/tools/net/ynl/generated/nfsd-user.h
-> > > > > +++ b/tools/net/ynl/generated/nfsd-user.h
-> > > > > @@ -111,4 +111,59 @@ void nfsd_threads_get_rsp_free(struct nfsd_t=
-hreads_get_rsp *rsp);
-> > > > >   */
-> > > > >  struct nfsd_threads_get_rsp *nfsd_threads_get(struct ynl_sock *y=
-s);
-> > > > > =20
-> > > > > +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_VERSION_S=
-ET =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > > > +/* NFSD_CMD_VERSION_SET - do */
-> > > > > +struct nfsd_version_set_req {
-> > > > > +	struct {
-> > > > > +		__u32 major:1;
-> > > > > +		__u32 minor:1;
-> > > > > +		__u32 status:1;
-> > > > > +	} _present;
-> > > > > +
-> > > > > +	__u32 major;
-> > > > > +	__u32 minor;
-> > > > > +	__u8 status;
-> > > > > +};
-> > > > > +
-> > > >=20
-> > > > This more or less mirrors how the "versions" file works today, but =
-that
-> > > > interface is quite klunky.=A0 We don't have a use case that require=
-s that
-> > > > we do this piecemeal like this. I think we'd be better served with a
-> > > > more declarative interface that reconfigures the supported versions=
- in
-> > > > one shot:
-> > > >=20
-> > > > Instead of having "major,minor,status" and potentially having to ca=
-ll
-> > > > this command several times from userland, it seems like it would be
-> > > > nicer to just have userland send down a list "major,minor" that sho=
-uld
-> > > > be enabled, and then just let the kernel figure out whether to enab=
-le or
-> > > > disable each. An empty list could mean "disable everything".
-> > > >=20
-> > > > That's simpler to reason out as an interface from userland too. Try=
-ing
-> > > > to keep track of the enabled and disabled versions and twiddle it is
-> > > > really tricky in rpc.nfsd today.
-> > >=20
-> > > Jeff and Lorenzo, this sounds to me like a useful and narrow
-> > > improvement to this interface, one that should be implemented as
-> > > part of this patch series.
-> >=20
-> > ack, I am fine with it, I will work on patch 2/3 and 3/3.
-> > @Chuck: am I suppose to respin patch 1/3 too?
->=20
-> I assumed there might be minor changes to 1/3 after Jakub's second
-> review, so I have not applied it yet. You can resend all three to
-> me.
+On Wed, Nov 29, 2023 at 1:47=E2=80=AFPM Roberto Sassu
+<roberto.sassu@huaweicloud.com> wrote:
+> On 11/29/2023 6:22 PM, Paul Moore wrote:
+> > On Wed, Nov 29, 2023 at 7:28=E2=80=AFAM Roberto Sassu
+> > <roberto.sassu@huaweicloud.com> wrote:
+> >>
+> >> On Mon, 2023-11-20 at 16:06 -0500, Paul Moore wrote:
+> >>> On Mon, Nov 20, 2023 at 3:16=E2=80=AFAM Roberto Sassu
+> >>> <roberto.sassu@huaweicloud.com> wrote:
+> >>>> On Fri, 2023-11-17 at 15:57 -0500, Paul Moore wrote:
+> >>>>> On Nov  7, 2023 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote=
+:
+> >>>>>>
+> >>>>>> Before the security field of kernel objects could be shared among =
+LSMs with
+> >>>>>> the LSM stacking feature, IMA and EVM had to rely on an alternativ=
+e storage
+> >>>>>> of inode metadata. The association between inode metadata and inod=
+e is
+> >>>>>> maintained through an rbtree.
+> >>>>>>
+> >>>>>> Because of this alternative storage mechanism, there was no need t=
+o use
+> >>>>>> disjoint inode metadata, so IMA and EVM today still share them.
+> >>>>>>
+> >>>>>> With the reservation mechanism offered by the LSM infrastructure, =
+the
+> >>>>>> rbtree is no longer necessary, as each LSM could reserve a space i=
+n the
+> >>>>>> security blob for each inode. However, since IMA and EVM share the
+> >>>>>> inode metadata, they cannot directly reserve the space for them.
+> >>>>>>
+> >>>>>> Instead, request from the 'integrity' LSM a space in the security =
+blob for
+> >>>>>> the pointer of inode metadata (integrity_iint_cache structure). Th=
+e other
+> >>>>>> reason for keeping the 'integrity' LSM is to preserve the original=
+ ordering
+> >>>>>> of IMA and EVM functions as when they were hardcoded.
+> >>>>>>
+> >>>>>> Prefer reserving space for a pointer to allocating the integrity_i=
+int_cache
+> >>>>>> structure directly, as IMA would require it only for a subset of i=
+nodes.
+> >>>>>> Always allocating it would cause a waste of memory.
+> >>>>>>
+> >>>>>> Introduce two primitives for getting and setting the pointer of
+> >>>>>> integrity_iint_cache in the security blob, respectively
+> >>>>>> integrity_inode_get_iint() and integrity_inode_set_iint(). This wo=
+uld make
+> >>>>>> the code more understandable, as they directly replace rbtree oper=
+ations.
+> >>>>>>
+> >>>>>> Locking is not needed, as access to inode metadata is not shared, =
+it is per
+> >>>>>> inode.
+> >>>>>>
+> >>>>>> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> >>>>>> Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+> >>>>>> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> >>>>>> ---
+> >>>>>>   security/integrity/iint.c      | 71 +++++-----------------------=
+------
+> >>>>>>   security/integrity/integrity.h | 20 +++++++++-
+> >>>>>>   2 files changed, 29 insertions(+), 62 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/security/integrity/iint.c b/security/integrity/iint.c
+> >>>>>> index 882fde2a2607..a5edd3c70784 100644
+> >>>>>> --- a/security/integrity/iint.c
+> >>>>>> +++ b/security/integrity/iint.c
+> >>>>>> @@ -231,6 +175,10 @@ static int __init integrity_lsm_init(void)
+> >>>>>>      return 0;
+> >>>>>>   }
+> >>>>>>
+> >>>>>> +struct lsm_blob_sizes integrity_blob_sizes __ro_after_init =3D {
+> >>>>>> +   .lbs_inode =3D sizeof(struct integrity_iint_cache *),
+> >>>>>> +};
+> >>>>>
+> >>>>> I'll admit that I'm likely missing an important detail, but is ther=
+e
+> >>>>> a reason why you couldn't stash the integrity_iint_cache struct
+> >>>>> directly in the inode's security blob instead of the pointer?  For
+> >>>>> example:
+> >>>>>
+> >>>>>    struct lsm_blob_sizes ... =3D {
+> >>>>>      .lbs_inode =3D sizeof(struct integrity_iint_cache),
+> >>>>>    };
+> >>>>>
+> >>>>>    struct integrity_iint_cache *integrity_inode_get(inode)
+> >>>>>    {
+> >>>>>      if (unlikely(!inode->isecurity))
+> >>>>>        return NULL;
+> >>>>>      return inode->i_security + integrity_blob_sizes.lbs_inode;
+> >>>>>    }
+> >>>>
+> >>>> It would increase memory occupation. Sometimes the IMA policy
+> >>>> encompasses a small subset of the inodes. Allocating the full
+> >>>> integrity_iint_cache would be a waste of memory, I guess?
+> >>>
+> >>> Perhaps, but if it allows us to remove another layer of dynamic memor=
+y
+> >>> I would argue that it may be worth the cost.  It's also worth
+> >>> considering the size of integrity_iint_cache, while it isn't small, i=
+t
+> >>> isn't exactly huge either.
+> >>>
+> >>>> On the other hand... (did not think fully about that) if we embed th=
+e
+> >>>> full structure in the security blob, we already have a mutex availab=
+le
+> >>>> to use, and we don't need to take the inode lock (?).
+> >>>
+> >>> That would be excellent, getting rid of a layer of locking would be s=
+ignificant.
+> >>>
+> >>>> I'm fully convinced that we can improve the implementation
+> >>>> significantly. I just was really hoping to go step by step and not
+> >>>> accumulating improvements as dependency for moving IMA and EVM to th=
+e
+> >>>> LSM infrastructure.
+> >>>
+> >>> I understand, and I agree that an iterative approach is a good idea, =
+I
+> >>> just want to make sure we keep things tidy from a user perspective,
+> >>> i.e. not exposing the "integrity" LSM when it isn't required.
+> >>
+> >> Ok, I went back to it again.
+> >>
+> >> I think trying to separate integrity metadata is premature now, too
+> >> many things at the same time.
+> >
+> > I'm not bothered by the size of the patchset, it is more important
+> > that we do The Right Thing.  I would like to hear in more detail why
+> > you don't think this will work, I'm not interested in hearing about
+> > difficult it may be, I'm interested in hearing about what challenges
+> > we need to solve to do this properly.
+>
+> The right thing in my opinion is to achieve the goal with the minimal
+> set of changes, in the most intuitive way.
 
-iirc jakub's review was just for patch 2/3, anyway up to you.
+Once again, I want to stress that I don't care about the size of the
+change, the number of patches in a patchset, etc.  While it's always
+nice to be able to minimize the number of changes in a patch/patchset,
+that is secondary to making sure we are doing the right thing over the
+long term.  This is especially important when we are talking about
+things that are user visible.
 
-Regards,
-Lorenzo
+> Until now, there was no solution that could achieve the primary goal of
+> this patch set (moving IMA and EVM to the LSM infrastructure) and, at
+> the same time, achieve the additional goal you set of removing the
+> 'integrity' LSM.
 
->=20
->=20
-> > Regards,
-> > Lorenzo
-> >=20
-> > >=20
-> > > Ditto for Jeff's review comment on 3/3.
-> > >=20
-> > >=20
-> > > > > +static inline struct nfsd_version_set_req *nfsd_version_set_req_=
-alloc(void)
-> > > > > +{
-> > > > > +	return calloc(1, sizeof(struct nfsd_version_set_req));
-> > > > > +}
-> > > > > +void nfsd_version_set_req_free(struct nfsd_version_set_req *req);
-> > > > > +
-> > > > > +static inline void
-> > > > > +nfsd_version_set_req_set_major(struct nfsd_version_set_req *req,=
- __u32 major)
-> > > > > +{
-> > > > > +	req->_present.major =3D 1;
-> > > > > +	req->major =3D major;
-> > > > > +}
-> > > > > +static inline void
-> > > > > +nfsd_version_set_req_set_minor(struct nfsd_version_set_req *req,=
- __u32 minor)
-> > > > > +{
-> > > > > +	req->_present.minor =3D 1;
-> > > > > +	req->minor =3D minor;
-> > > > > +}
-> > > > > +static inline void
-> > > > > +nfsd_version_set_req_set_status(struct nfsd_version_set_req *req=
-, __u8 status)
-> > > > > +{
-> > > > > +	req->_present.status =3D 1;
-> > > > > +	req->status =3D status;
-> > > > > +}
-> > > > > +
-> > > > > +/*
-> > > > > + * enable/disable server version
-> > > > > + */
-> > > > > +int nfsd_version_set(struct ynl_sock *ys, struct nfsd_version_se=
-t_req *req);
-> > > > > +
-> > > > > +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_VERSION_G=
-ET =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > > > +/* NFSD_CMD_VERSION_GET - dump */
-> > > > > +struct nfsd_version_get_list {
-> > > > > +	struct nfsd_version_get_list *next;
-> > > > > +	struct nfsd_version_get_rsp obj __attribute__ ((aligned (8)));
-> > > > > +};
-> > > > > +
-> > > > > +void nfsd_version_get_list_free(struct nfsd_version_get_list *rs=
-p);
-> > > > > +
-> > > > > +struct nfsd_version_get_list *nfsd_version_get_dump(struct ynl_s=
-ock *ys);
-> > > > > +
-> > > > >  #endif /* _LINUX_NFSD_GEN_H */
-> > > >=20
-> > > > --=20
-> > > > Jeff Layton <jlayton@kernel.org>
-> > > >=20
-> > >=20
-> > > --=20
-> > > Chuck Lever
->=20
->=20
->=20
-> --=20
-> Chuck Lever
+We need to stop thinking about the "integrity" code as a LSM, it isn't
+a LSM.  It's a vestigial implementation detail that was necessary back
+when there could only be one LSM active at a time and there was a
+desire to have IMA/EVM active in conjunction with one of the LSMs,
+i.e. Smack, SELinux, etc.
 
---agUwACALdI3DEFIQ
-Content-Type: application/pgp-signature; name="signature.asc"
+IMA and EVM are (or will be) LSMs, "integrity" is not.  I recognize
+that eliminating the need for the "integrity" code is a relatively new
+addition to this effort, but that is only because I didn't properly
+understand the relationship between IMA, EVM, and the "integrity" code
+until recently.  The elimination of the shared "integrity" code is
+consistent with promoting IMA and EVM as full LSMs, if there is core
+functionality that cannot be split up into the IMA and/or EVM LSMs
+then we need to look at how to support that without exposing that
+implementation detail/hack to userspace.  Maybe that means direct
+calls between IMA and EVM, maybe that means preserving some of the
+common integrity code hidden from userspace, maybe that means adding
+functionality to the LSM layer, maybe that means something else?
+Let's think on this to come up with something that we can all accept
+as a long term solution instead of just doing the quick and easy
+option.
 
------BEGIN PGP SIGNATURE-----
+> If you see the diff, the changes compared to v5 that was already
+> accepted by Mimi are very straightforward. If the assumption I made that
+> in the end the 'ima' LSM could take over the role of the 'integrity'
+> LSM, that for me is the preferable option.
 
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZWi5HQAKCRA6cBh0uS2t
-rJHpAQDbSymuvpMhaIfDzwgot/evboYQ574jqEN8QRCpI5IIHwD+P7R+G/Edo0BM
-a/sUcrQDu47mNOq789cA1lgo1J1VWwM=
-=191l
------END PGP SIGNATURE-----
+I looked at it quickly, but my workflow isn't well suited for patches
+as attachments; inline patches (the kernel standard) is preferable.
 
---agUwACALdI3DEFIQ--
+> Given that the patch set is not doing any design change, but merely
+> moving calls and storing pointers elsewhere, that leaves us with the
+> option of thinking better what to do next, including like you suggested
+> to make IMA and EVM use disjoint metadata.
+>
+> >> I started to think, does EVM really need integrity metadata or it can
+> >> work without?
+> >>
+> >> The fact is that CONFIG_IMA=3Dn and CONFIG_EVM=3Dy is allowed, so we h=
+ave
+> >> the same problem now. What if we make IMA the one that manages
+> >> integrity metadata, so that we can remove the 'integrity' LSM?
+> >
+> > I guess we should probably revisit the basic idea of if it even makes
+> > sense to enable EVM without IMA?  Should we update the Kconfig to
+> > require IMA when EVM is enabled?
+>
+> That would be up to Mimi. Also this does not seem the main focus of the
+> patch set.
+
+Yes, it is not part of the original main focus, but it is definitely
+relevant to the discussion we are having now.  Once again, the most
+important thing to me is that we do The Right Thing for the long term
+maintenance of the code base; if that means scope creep, I've got no
+problem with that.
+
+> >> Regarding the LSM order, I would take Casey's suggestion of introducin=
+g
+> >> LSM_ORDER_REALLY_LAST, for EVM.
+> >
+> > Please understand that I really dislike that we have imposed ordering
+> > constraints at the LSM layer, but I do understand the necessity (the
+> > BPF LSM ordering upsets me the most).  I really don't want to see us
+> > make things worse by adding yet another ordering bucket, I would
+> > rather that we document it well and leave it alone ... basically treat
+> > it like the BPF LSM (grrrrrr).
+>
+> Uhm, that would not be possible right away (the BPF LSM is mutable),
+> remember that we defined LSM_ORDER_LAST so that an LSM can be always
+> enable and placed as last (requested by Mimi)?
+
+To be clear, I can both dislike the bpf-always-last and LSM_ORDER_LAST
+concepts while accepting them as necessary evils.  I'm willing to
+tolerate LSM_ORDER_LAST, but I'm not currently willing to tolerate
+LSM_ORDER_REALLY_LAST; that is one step too far right now.  I brought
+up the BPF LSM simply as an example of ordering that is not enforced
+by code, but rather by documentation and convention.
+
+--=20
+paul-moore.com
 
