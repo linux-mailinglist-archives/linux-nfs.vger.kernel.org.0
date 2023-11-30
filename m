@@ -1,143 +1,108 @@
-Return-Path: <linux-nfs+bounces-207-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-208-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 630F67FF184
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 15:17:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A10F7FF1CB
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 15:31:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27A9228264C
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 14:17:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B4F9B2825FC
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Nov 2023 14:31:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E3B0495F9;
-	Thu, 30 Nov 2023 14:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE30251013;
+	Thu, 30 Nov 2023 14:30:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fX2Ft1Dp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VB/Fi7lu"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F14196
+	for <linux-nfs@vger.kernel.org>; Thu, 30 Nov 2023 06:30:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1701354655;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=eH1uAsr5gAnwGewp1TOhwVdbzJf7CgIkTtIcj/A2xpU=;
+	b=VB/Fi7luZ8HbnQBgcSAinmQ/9IBByIMtqsiHAN4wnjmWY3BNu5U5eJWKcvt7XtO6KVNqHU
+	85csosSaggFyLGsCOr1jvPyCXUtuNfASd8jMqzu/vnQxsDz5uraI3/wEOGoBC3ElNTXypP
+	DAll3PxKiKbFPYmeIUmnCpJslPK4TmA=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-639-AD48WHvFNquUIaEMxfI6tw-1; Thu,
+ 30 Nov 2023 09:30:54 -0500
+X-MC-Unique: AD48WHvFNquUIaEMxfI6tw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E486C495F3
-	for <linux-nfs@vger.kernel.org>; Thu, 30 Nov 2023 14:17:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C567C433C7;
-	Thu, 30 Nov 2023 14:17:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701353847;
-	bh=or6WM/1uDWPPFJO9/ccIwZwBDVXhj+m4g0sDnK6XC9U=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=fX2Ft1DpnvIfIaaWxd7gvvnVoW5in5ZICYBTHrpWy96lC9b8Tx5Ut5HkDBa/ixcpn
-	 Hy5Z0x8Br+uAjlnov4eJBEZN+PrNrUaKPgRcY8NZhEtv48PwRNKar3adkmB74AbXRX
-	 YShcvtxav69K6iTl5PJb3f2+YlreGxWHaHfaXcdEXCF60E1fd8gxf+oGH33uP2X/i2
-	 3JjwDnNCTHPOpmxEeTdw1zOZW0hiXRDXBWKpYamHQVgQZSyoiqN+NA1XSNoG/LqqAM
-	 wYhS+65LXLF37lO16K0dPEqJUA0TK2BdYdHz26VxbwivDLOfqPM/WstuEWJI3pwBIX
-	 Bam9ms2fp/9Ug==
-Message-ID: <8de50013a13ff68d76a7ca471100f77c433efe06.camel@kernel.org>
-Subject: Re: <DOT>foo gets NFSv4 HIDDEN attribute by default by nfsd? Re:
- How to set the NFSv4 "HIDDEN" attribute on Linux?
-From: Jeff Layton <jlayton@kernel.org>
-To: Cedric Blancher <cedric.blancher@gmail.com>, Linux NFS Mailing List
-	 <linux-nfs@vger.kernel.org>
-Date: Thu, 30 Nov 2023 09:17:25 -0500
-In-Reply-To: <CALXu0UcCzV1g0z6Uka3tKEhJc0MFVj89TzWKeT7upXuOVYWE0Q@mail.gmail.com>
-References: 
-	<CALXu0UdcCKBGR8FUSEeEMngKqwz98Xc2HFXnhX5i_1ioEiuaQg@mail.gmail.com>
-	 <83a30ef92afa05d50232bd3c933f8eb45ed8f98b.camel@kernel.org>
-	 <CALXu0UerMnjs9y4gQTvy-v-gqSgO2imFbMAZ87LFj1tQqvfjiQ@mail.gmail.com>
-	 <0d7966163db13d71cb4679d51db5cacf91f42b6b.camel@kernel.org>
-	 <CALXu0Uf9LiNL7SA57vSq5pMBVBZESWexcRwDR0XMc9fFpPiNkQ@mail.gmail.com>
-	 <CALXu0UccoNs0A4MjQH7gPboarWyZcRQzsy2zJRxk51LR0hGDVQ@mail.gmail.com>
-	 <ZWDgvFfkAF8e3MFj@tissot.1015granger.net>
-	 <afb9281a81c2001588dbaf46e0ac13fc99ffbb41.camel@kernel.org>
-	 <CALXu0UcCzV1g0z6Uka3tKEhJc0MFVj89TzWKeT7upXuOVYWE0Q@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.1 (3.50.1-1.fc39) 
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 03BDC29ABA04;
+	Thu, 30 Nov 2023 14:30:54 +0000 (UTC)
+Received: from [192.168.37.1] (unknown [10.22.48.3])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8FFB7492BFE;
+	Thu, 30 Nov 2023 14:30:53 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Dan Aloni <dan.aloni@vastdata.com>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: mount options not propagating to NFSACL and NSM RPC clients
+Date: Thu, 30 Nov 2023 09:30:52 -0500
+Message-ID: <8FDECCA5-80E0-4CB4-B790-4039102916F0@redhat.com>
+In-Reply-To: <20231129132034.lz3hag5xy2oaojwq@gmail.com>
+References: <20231105154857.ryakhmgaptq3hb6b@gmail.com>
+ <80B8993C-645D-4748-93B3-88415E165B87@redhat.com>
+ <20231129132034.lz3hag5xy2oaojwq@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
-On Thu, 2023-11-30 at 11:28 +0100, Cedric Blancher wrote:
-> On Sat, 25 Nov 2023 at 15:52, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > On Fri, 2023-11-24 at 12:43 -0500, Chuck Lever wrote:
-> > > On Thu, Nov 23, 2023 at 11:24:10PM +0100, Cedric Blancher wrote:
-> > > > Also, it is legal for a nfsd to give the DOT files (/.foo) the HIDD=
-EN
-> > > > attribute by default? Right now on Windows they show up because NFS=
-v4
-> > > > HIDDEN is not set, and it is annoying.
-> > >=20
-> > > I suppose an NFS server could do this, but I'm not aware of any
-> > > other multi-protocol file server (eg, Oracle ZFS or NetApp) that
-> > > does.
-> > >=20
-> > > Dot-files are obscured on POSIX systems by the NFS clients and their
-> > > user space (ls and graphical file navigators). I don't see why the
-> > > Windows NFS client can't be similarly architected. Or perhaps it
-> > > could fabricate the HIDDEN attribute for such files itself.
-> > >=20
-> > >=20
-> >=20
-> > Question. GETATTR operates on filehandles, which are roughly analogous
-> > to inode with Linux nfsd:
-> >=20
-> > $ touch visible
-> > $ ln visible .hidden
-> >=20
-> > Is the resulting inode and filehandle now considered HIDDEN or not?
-> >=20
-> > These kinds of issues are endemic when trying to map MS Windows concept=
-s
-> > onto Linux (and vice-versa)
->=20
-> No, this is actually a good example to show that it *WORKS*.
->=20
-> 1. Assuming Linux adds support for a user.xattr to set the NFSv4 HIDDEN f=
-lag
-> 2. Assuming nfsd can give the flag on a per extended regular
-> expression basis depending on the filename, which would default to
-> "^\..+$" (all files starting with DOT get the NFSv4 HIDDEN flag)
->=20
-> Then of course [1] overrides [2], which means that the eregex is only
-> used if no user.xattr sets the flag.
->=20
-> In your example the file "visible" does not have the HIDDEN flag set
-> (no eregex match), but the hardlink would have that flag set.
+On 29 Nov 2023, at 8:20, Dan Aloni wrote:
 
+> On 2023-11-07 08:46:54, Benjamin Coddington wrote:
+>> Hi Dan,
+>>
+>> On 5 Nov 2023, at 10:48, Dan Aloni wrote:
+>>
+>>> Hi,
+>>>
+>>> On Linux v6.6-14500-g1c41041124bd, I added a sysfs file for debugging
+>>> `/sys/kernel/debug/sunrpc/rpc_clnt/*/info`, and noticed that when
+>>> passing the following mount options: `soft,timeo=50,retrans=16,vers=3`,
+>>> NFSACL and NSM seem to take the defaults from somewhere else (xprt).
+>>> Specifically, locking operation behave as if in a hard mount with
+>>> these mount options.
+>>>
+>>> Is it intentional?
+>>
+>> Yes, it usually is intentional.  The various rpc clients that make parts of
+>> NFS work don't all inherit the mount flags due to reasons about how the
+>> system should behave as a whole.  I think that you can find usually find the
+>> reasoning the git logs around "struct rpc_create_args".
+>>
+>> Are you getting a system hung up in a lock operation?
+>
+> Actually my concern is the NFSACL prog. With `cl_softrtrt == 1` and
+> `to_initval == to_maxval`, does it mean retires will not happen
+> regardless of `to_retries` and `to_increment`?
 
-Those are some big assumptions.
+Possibly?  I'm not exactly certain of what should happen in that case.
 
-With #1, we generally don't do this sort of hacky carveout of user
-xattrs in nfsd. That sort of thing is fine for a NFS appliance with a
-hidden backend filesystem, but ours is a general-purpose server that
-serves filesystems that may be locally accessible. We can't know whether
-it's safe to use _any_ xattr on any given generic inode.
+> I encountered a situation where the NFSACL program did not retry but
+> could have had, whereas NFS3 did successfully. Not sure regarding NSM,
+> but it seems to me that it would make sense at least for NFSACL to
+> behave the same as NFS3.
 
-#2 is not even possible: Consider that we may need to satisfy a GETATTR
-request after the server has rebooted. In that case, we may only have
-the filehandle for the inode, and may not know any of its filenames yet.
+I agree, but I could be missing something -- maybe its a bug.  There's the
+sunrpc:rpc_timeout_status tracepoint that might be helpful.  If you turn
+that up can you see rpc_check_timeout() getting called from
+call_transmit_status()?
 
-The bottom line is that visibility in Unix/Linux is a property of the
-_dentry_, but GETATTR is done against an inode which can be connected to
-multiple dentries (some visible and some not). This is different from
-Windows where it is a per-inode property (and hardlinks are mostly never
-used).
+Sorry, I know this isn't a lot of help so far.
 
-I don't believe we'll ever be able to properly support this flag since
-it conceptually just doesn't map onto the Linux filesystem.
---=20
-Jeff Layton <jlayton@kernel.org>
+Ben
+
 
