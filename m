@@ -1,189 +1,111 @@
-Return-Path: <linux-nfs+bounces-251-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-252-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05E4D801508
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Dec 2023 22:16:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0DA82801830
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 Dec 2023 00:55:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3BDC281D11
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Dec 2023 21:16:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE0C4281C27
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Dec 2023 23:54:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B9EF59B4F;
-	Fri,  1 Dec 2023 21:15:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jh/VzueX"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A0B458AA0;
+	Fri,  1 Dec 2023 23:54:55 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E95F59B4D
-	for <linux-nfs@vger.kernel.org>; Fri,  1 Dec 2023 21:15:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46863C433CC;
-	Fri,  1 Dec 2023 21:15:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701465353;
-	bh=RLEWD5yeDkl4if9sODWEtebgsIuLd5/aJ6xRMPYX15k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jh/VzueXwYR3+kufPB5f63miLkuGvY1PubVnKYmWDNpqcLMqSRy95+UsyAgft6zzr
-	 A5tySu3b/fMe0GJdkSCbOKYb2C+vtWVZeg9gbDdhm29PGLnQs4ok1ugJfBGLlEbL9Z
-	 9h6OpjXIkUqJWwRsicD34lfTqbRdr7fzLX030dra1JXMBwmqdiy4ERB0nq/S6rDENq
-	 wDGrSb6Mh8tXuei+0zL07FQlb5Hj94Uvl3VviZ8gfDwpZphKjs364Hd9qKIJmn1wTl
-	 qm/wJ5jO8407/KpziVhG8XEUKshYBekGbnheXhB3H/Tr1aOh1ZU2JhckgzVu13nxi1
-	 OHIj+9kCtqliQ==
-From: Anna Schumaker <anna@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	trond.myklebust@hammerspace.com
-Cc: anna@kernel.org
-Subject: [PATCH 4/4] SUNRPC: Fix a suspicious RCU usage warning
-Date: Fri,  1 Dec 2023 16:15:49 -0500
-Message-ID: <20231201211549.126941-5-anna@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231201211549.126941-1-anna@kernel.org>
-References: <20231201211549.126941-1-anna@kernel.org>
+Received: from wind.enjellic.com (wind.enjellic.com [76.10.64.91])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTP id A186B9A;
+	Fri,  1 Dec 2023 15:54:50 -0800 (PST)
+Received: from wind.enjellic.com (localhost [127.0.0.1])
+	by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id 3B1NrZqS019545;
+	Fri, 1 Dec 2023 17:53:35 -0600
+Received: (from greg@localhost)
+	by wind.enjellic.com (8.15.2/8.15.2/Submit) id 3B1NrW9C019544;
+	Fri, 1 Dec 2023 17:53:32 -0600
+Date: Fri, 1 Dec 2023 17:53:32 -0600
+From: "Dr. Greg" <greg@enjellic.com>
+To: Casey Schaufler <casey@schaufler-ca.com>
+Cc: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        Paul Moore <paul@paul-moore.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
+        dmitry.kasatkin@gmail.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org, mic@digikod.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [PATCH v5 23/23] integrity: Switch from rbtree to LSM-managed blob for integrity_iint_cache
+Message-ID: <20231201235332.GA19345@wind.enjellic.com>
+Reply-To: "Dr. Greg" <greg@enjellic.com>
+References: <20231107134012.682009-24-roberto.sassu@huaweicloud.com> <17befa132379d37977fc854a8af25f6d.paul@paul-moore.com> <2084adba3c27a606cbc5ed7b3214f61427a829dd.camel@huaweicloud.com> <CAHC9VhTTKac1o=RnQadu2xqdeKH8C_F+Wh4sY=HkGbCArwc8JQ@mail.gmail.com> <b6c51351be3913be197492469a13980ab379e412.camel@huaweicloud.com> <CAHC9VhSAryQSeFy0ZMexOiwBG-YdVGRzvh58=heH916DftcmWA@mail.gmail.com> <90eb8e9d-c63e-42d6-b951-f856f31590db@huaweicloud.com> <20231201010549.GA8923@wind.enjellic.com> <660e8516-ec1b-41b4-9e04-2b9fabbe59ca@schaufler-ca.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <660e8516-ec1b-41b4-9e04-2b9fabbe59ca@schaufler-ca.com>
+User-Agent: Mutt/1.4i
+X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Fri, 01 Dec 2023 17:53:35 -0600 (CST)
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On Fri, Dec 01, 2023 at 10:54:54AM -0800, Casey Schaufler wrote:
 
-I received the following warning while running cthon against an ontap
-server running pNFS:
+Good evening Casey, thanks for taking the time to respond.
 
-[   57.202521] =============================
-[   57.202522] WARNING: suspicious RCU usage
-[   57.202523] 6.7.0-rc3-g2cc14f52aeb7 #41492 Not tainted
-[   57.202525] -----------------------------
-[   57.202525] net/sunrpc/xprtmultipath.c:349 RCU-list traversed in non-reader section!!
-[   57.202527]
-               other info that might help us debug this:
+> On 11/30/2023 5:05 PM, Dr. Greg wrote:
+> > A suggestion has been made in this thread that there needs to be broad
+> > thinking on this issue, and by extension, other tough problems.  On
+> > that note, we would be interested in any thoughts regarding the notion
+> > of a long term solution for this issue being the migration of EVM to a
+> > BPF based implementation?
+> >
+> > There appears to be consensus that the BPF LSM will always go last, a
+> > BPF implementation would seem to address the EVM ordering issue.
+> >
+> > In a larger context, there have been suggestions in other LSM threads
+> > that BPF is the future for doing LSM's.  Coincident with that has come
+> > some disagreement about whether or not BPF embodies sufficient
+> > functionality for this role.
+> >
+> > The EVM codebase is reasonably modest with a very limited footprint of
+> > hooks that it handles.  A BPF implementation on this scale would seem
+> > to go a long ways in placing BPF sufficiency concerns to rest.
+> >
+> > Thoughts/issues?
 
-[   57.202528]
-               rcu_scheduler_active = 2, debug_locks = 1
-[   57.202529] no locks held by test5/3567.
-[   57.202530]
-               stack backtrace:
-[   57.202532] CPU: 0 PID: 3567 Comm: test5 Not tainted 6.7.0-rc3-g2cc14f52aeb7 #41492 5b09971b4965c0aceba19f3eea324a4a806e227e
-[   57.202534] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 2/2/2022
-[   57.202536] Call Trace:
-[   57.202537]  <TASK>
-[   57.202540]  dump_stack_lvl+0x77/0xb0
-[   57.202551]  lockdep_rcu_suspicious+0x154/0x1a0
-[   57.202556]  rpc_xprt_switch_has_addr+0x17c/0x190 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202596]  rpc_clnt_setup_test_and_add_xprt+0x50/0x180 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202621]  ? rpc_clnt_add_xprt+0x254/0x300 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202646]  rpc_clnt_add_xprt+0x27a/0x300 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202671]  ? __pfx_rpc_clnt_setup_test_and_add_xprt+0x10/0x10 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202696]  nfs4_pnfs_ds_connect+0x345/0x760 [nfsv4 c716d88496ded0ea6d289bbea684fa996f9b57a9]
-[   57.202728]  ? __pfx_nfs4_test_session_trunk+0x10/0x10 [nfsv4 c716d88496ded0ea6d289bbea684fa996f9b57a9]
-[   57.202754]  nfs4_fl_prepare_ds+0x75/0xc0 [nfs_layout_nfsv41_files e3a4187f18ae8a27b630f9feae6831b584a9360a]
-[   57.202760]  filelayout_write_pagelist+0x4a/0x200 [nfs_layout_nfsv41_files e3a4187f18ae8a27b630f9feae6831b584a9360a]
-[   57.202765]  pnfs_generic_pg_writepages+0xbe/0x230 [nfsv4 c716d88496ded0ea6d289bbea684fa996f9b57a9]
-[   57.202788]  __nfs_pageio_add_request+0x3fd/0x520 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202813]  nfs_pageio_add_request+0x18b/0x390 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202831]  nfs_do_writepage+0x116/0x1e0 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202849]  nfs_writepages_callback+0x13/0x30 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202866]  write_cache_pages+0x265/0x450
-[   57.202870]  ? __pfx_nfs_writepages_callback+0x10/0x10 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202891]  nfs_writepages+0x141/0x230 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202913]  do_writepages+0xd2/0x230
-[   57.202917]  ? filemap_fdatawrite_wbc+0x5c/0x80
-[   57.202921]  filemap_fdatawrite_wbc+0x67/0x80
-[   57.202924]  filemap_write_and_wait_range+0xd9/0x170
-[   57.202930]  nfs_wb_all+0x49/0x180 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202947]  nfs4_file_flush+0x72/0xb0 [nfsv4 c716d88496ded0ea6d289bbea684fa996f9b57a9]
-[   57.202969]  __se_sys_close+0x46/0xd0
-[   57.202972]  do_syscall_64+0x68/0x100
-[   57.202975]  ? do_syscall_64+0x77/0x100
-[   57.202976]  ? do_syscall_64+0x77/0x100
-[   57.202979]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-[   57.202982] RIP: 0033:0x7fe2b12e4a94
-[   57.202985] Code: 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 80 3d d5 18 0e 00 00 74 13 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 44 c3 0f 1f 00 48 83 ec 18 89 7c 24 0c e8 c3
-[   57.202987] RSP: 002b:00007ffe857ddb38 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
-[   57.202989] RAX: ffffffffffffffda RBX: 00007ffe857dfd68 RCX: 00007fe2b12e4a94
-[   57.202991] RDX: 0000000000002000 RSI: 00007ffe857ddc40 RDI: 0000000000000003
-[   57.202992] RBP: 00007ffe857dfc50 R08: 7fffffffffffffff R09: 0000000065650f49
-[   57.202993] R10: 00007fe2b11f8300 R11: 0000000000000202 R12: 0000000000000000
-[   57.202994] R13: 00007ffe857dfd80 R14: 00007fe2b1445000 R15: 0000000000000000
-[   57.202999]  </TASK>
+> Converting EVM to BPF looks like a 5 to 10 year process. Creating a
+> EVM design description to work from, building all the support functions
+> required, then getting sufficient reviews and testing isn't going to be
+> a walk in the park. That leaves out the issue of distribution of the
+> EVM-BPF programs. Consider how the rush to convert kernel internals to
+> Rust is progressing. EVM isn't huge, but it isn't trivial, either. Tetsuo
+> had a good hard look at converting TOMOYO to BPF, and concluded that it
+> wasn't practical. TOMOYO is considerably less complicated than EVM.
 
-The problem seems to be that two out of three callers aren't taking the
-rcu_read_lock() before calling the list_for_each_entry_rcu() function in
-rpc_xprt_switch_has_addr(). I fix this by making a new variant of the
-function that takes the lock when necessary, and provide a bypass path
-for the one function that was doing this already.
+Interesting, thanks for the reflections.
 
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
- include/linux/sunrpc/xprtmultipath.h |  2 ++
- net/sunrpc/clnt.c                    |  2 +-
- net/sunrpc/xprtmultipath.c           | 14 +++++++++++++-
- 3 files changed, 16 insertions(+), 2 deletions(-)
+On a functional line basis, EVM is 14% of the TOMOYO codebase, not
+counting the IMA code.
 
-diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunrpc/xprtmultipath.h
-index c0514c684b2c..0598552e7ccc 100644
---- a/include/linux/sunrpc/xprtmultipath.h
-+++ b/include/linux/sunrpc/xprtmultipath.h
-@@ -78,6 +78,8 @@ extern struct rpc_xprt *xprt_iter_xprt(struct rpc_xprt_iter *xpi);
- extern struct rpc_xprt *xprt_iter_get_xprt(struct rpc_xprt_iter *xpi);
- extern struct rpc_xprt *xprt_iter_get_next(struct rpc_xprt_iter *xpi);
- 
-+extern bool __rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-+		const struct sockaddr *sap);
- extern bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
- 		const struct sockaddr *sap);
- 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 0b2c4b5484f5..b2a81c26da32 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -3299,7 +3299,7 @@ bool rpc_clnt_xprt_switch_has_addr(struct rpc_clnt *clnt,
- 
- 	rcu_read_lock();
- 	xps = rcu_dereference(clnt->cl_xpi.xpi_xpswitch);
--	ret = rpc_xprt_switch_has_addr(xps, sap);
-+	ret = __rpc_xprt_switch_has_addr(xps, sap);
- 	rcu_read_unlock();
- 	return ret;
- }
-diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index 701250b305db..20f9dc220383 100644
---- a/net/sunrpc/xprtmultipath.c
-+++ b/net/sunrpc/xprtmultipath.c
-@@ -336,7 +336,7 @@ struct rpc_xprt *xprt_iter_current_entry_offline(struct rpc_xprt_iter *xpi)
- 			xprt_switch_find_current_entry_offline);
- }
- 
--bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-+bool __rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
- 			      const struct sockaddr *sap)
- {
- 	struct list_head *head;
-@@ -356,6 +356,18 @@ bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
- 	return false;
- }
- 
-+bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-+			      const struct sockaddr *sap)
-+{
-+	bool res;
-+
-+	rcu_read_lock();
-+	res = __rpc_xprt_switch_has_addr(xps, sap);
-+	rcu_read_unlock();
-+
-+	return res;
-+}
-+
- static
- struct rpc_xprt *xprt_switch_find_next_entry(struct list_head *head,
- 		const struct rpc_xprt *cur, bool check_active)
--- 
-2.43.0
+Given your observations, one would than presume around a decade of
+development effort to deliver a full featured LSM, ie. SELINUX, SMACK,
+APPARMOR, TOMOYO in BPF form.
 
+Very useful information, we can now return the thread to what appears
+is going to be the vexing implementation of:
+
+lsm_set_order(LSM_ORDER_FU_I_REALLY_AM_GOING_TO_BE_THE_LAST_ONE_TO_RUN);
+
+:-)
+
+Have a good weekend.
+
+As always,
+Dr. Greg
+
+The Quixote Project - Flailing at the Travails of Cybersecurity
 
