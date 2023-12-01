@@ -1,65 +1,45 @@
-Return-Path: <linux-nfs+bounces-246-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-247-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 733698013A3
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Dec 2023 20:42:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A715B801504
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Dec 2023 22:15:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12F2FB20DF8
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Dec 2023 19:42:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BDAB1F20FA1
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Dec 2023 21:15:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59CE04F8B6;
-	Fri,  1 Dec 2023 19:42:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE0DC584FA;
+	Fri,  1 Dec 2023 21:15:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQnP2VPq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KggkrY5B"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6239A
-	for <linux-nfs@vger.kernel.org>; Fri,  1 Dec 2023 11:42:05 -0800 (PST)
-Received: by mail-il1-x12c.google.com with SMTP id e9e14a558f8ab-35d374bebe3so1861985ab.1
-        for <linux-nfs@vger.kernel.org>; Fri, 01 Dec 2023 11:42:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701459725; x=1702064525; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ErTBYvi7SZGb4GfuMjTtkAdp5NyG4fmuiIlOwg3jEyQ=;
-        b=JQnP2VPqhFR7rSRmsKQLd5n0thfxcGGeLHu//ZNG9RRysupC+O+ioZ8993+RYOwdaR
-         Kom1IHV0OoPqIUiiPcRjGzRDkKvZ7xSsYgjQTH8yjXbH8pQVOYS78783xS+Yel60ujUW
-         qtlyq+HloU0vbF9qJPnwtpPjoUhcefVMLSugrjaVjz3wh69VBxoN1ZKx5B0rh2ClXgJa
-         ABkX95Z0fcfk7rJYGXHKRK2pf1z+tcD2UmITgfwkk1XrG7M57pCgPcf1MUrbMA2hnesl
-         CWl2e1nKZFbO0uL3uoTKYna1CPLg7Rvmp2ymXah+FUKmnsW4OSEaInuFIH6Hesc0F45H
-         rG9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701459725; x=1702064525;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ErTBYvi7SZGb4GfuMjTtkAdp5NyG4fmuiIlOwg3jEyQ=;
-        b=WzkfaCT1Q0Qyrpc06kOu8IiCawWtJEYdS3iOk5ITszEqDGMQRIL8Oq1v/JZg2bPLd1
-         HJ2bwEnhNfPCsfOaRfk2a7Uhmpru+ANwe0+37SL4o09HYTLRaChRHjGyrgKwphkUR5et
-         1TVM5GpNhouGJlK34VuEPPMwhBifQYe0i5y2VuxGEWdP0kEbJmpWJq8l7cLnnBFFW+dS
-         xJvZxHGIl+7+GRCzv3UD8zVuvBoDN7EMk1J0hUfBh1ITfOCrW+1NNF+vN//tyMzRE37E
-         btHNAF3WTuElIh+BbxAtf966ky3mUJ5X50i4fUZZayB0QXnwxuxHPnKcO0EXlUICTViS
-         FAjA==
-X-Gm-Message-State: AOJu0YxvphtuyLMbnvelk+lmmG1k//NgtYrSpXpHyqjzhsz4UeblZmXt
-	nj2UQHeYlfqqGQS0gk50vzBhy0dUswU=
-X-Google-Smtp-Source: AGHT+IHnHIR6XaB7wbflXZRiQ0JFmqivizpUdC2Lhwhth1eOHfuxYZPnavXHEde2JoCBJyWwXr/Kdw==
-X-Received: by 2002:a05:6e02:1907:b0:35d:5779:4a5 with SMTP id w7-20020a056e02190700b0035d577904a5mr1160095ilu.0.1701459724709;
-        Fri, 01 Dec 2023 11:42:04 -0800 (PST)
-Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:d571:8cad:241d:7d80])
-        by smtp.gmail.com with ESMTPSA id h3-20020a056e021d8300b0034fd4562accsm1262917ila.28.2023.12.01.11.42.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Dec 2023 11:42:04 -0800 (PST)
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To: trond.myklebust@hammerspace.com,
-	anna.schumaker@netapp.com
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] SUNRPC: fix _xprt_switch_find_current_entry logic
-Date: Fri,  1 Dec 2023 14:42:03 -0500
-Message-Id: <20231201194203.20444-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F2826ACF
+	for <linux-nfs@vger.kernel.org>; Fri,  1 Dec 2023 21:15:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE737C433C9;
+	Fri,  1 Dec 2023 21:15:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701465351;
+	bh=O0N/1Fp9WeNI30M76VGot24755Op55Dq6Ku1TaPg3ps=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KggkrY5BfL+DqstYcd7bo3n9MTTK+eKQzMjjjT0skcyoLSaDevrQjEws6vyCSs339
+	 JY5xpc1wEFaYs9biMnD41HtrNdGiJzOseAKzn1ril6pUDQc/QKnJuWBcDkhGjgWZyl
+	 s2jGxreSNDJaUGremxyJF0JVljFnWvqORFzLqmDgbyQysQtX/lblEt6FK5Z2QNtW69
+	 sIr+GbQxf1h6Xm2omKT98Knn+yZ8aI73F7VW/IITfNHeYoWtNg9nQ6w5lWJM5pALva
+	 LefSdj3E24zCv+6c5/6bH/cthbtupn4lYlUVpqCA9nriAIS9GpN8m6WJmpcA8vcXQA
+	 HiS7MXepQ+LDg==
+From: Anna Schumaker <anna@kernel.org>
+To: linux-nfs@vger.kernel.org,
+	trond.myklebust@hammerspace.com
+Cc: anna@kernel.org
+Subject: [PATCH 0/4] SUNRPC: Various RCU fixes
+Date: Fri,  1 Dec 2023 16:15:45 -0500
+Message-ID: <20231201211549.126941-1-anna@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -68,30 +48,34 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Olga Kornievskaia <kolga@netapp.com>
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Fix the logic for picking current transport entry.
+These are various fixes that I found after turning on CONFIG_LOCKDEP,
+CONFIG_PROVE_RCU, and CONFIG_DEBUG_ATOMIC_SLEEP. I didn't hit any issues
+when testing against a Linux server, but running against Netapp with pNFS
+had several different lockdep & rcu related spews show up in my dmesg
+(and that's just from running cthon, not even xfstests). These patches fix
+all the issues that I found, and have a couple extra cleanups that I noticed
+along the way.
 
-Fixes: 95d0d30c66b8 ("SUNRPC create an iterator to list only OFFLINE xprts")
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- net/sunrpc/xprtmultipath.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thoughts?
+Anna
 
-diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index 701250b305db..74ee2271251e 100644
---- a/net/sunrpc/xprtmultipath.c
-+++ b/net/sunrpc/xprtmultipath.c
-@@ -284,7 +284,7 @@ struct rpc_xprt *_xprt_switch_find_current_entry(struct list_head *head,
- 		if (cur == pos)
- 			found = true;
- 		if (found && ((find_active && xprt_is_active(pos)) ||
--			      (!find_active && xprt_is_active(pos))))
-+			      (!find_active && !xprt_is_active(pos))))
- 			return pos;
- 	}
- 	return NULL;
+
+Anna Schumaker (4):
+  SUNRPC: Clean up unused variable in rpc_xprt_probe_trunked()
+  SUNRPC: Remove unused function rpc_clnt_xprt_switch_put()
+  SUNRPC: Create a helper function for accessing the rpc_clnt's
+    xprt_switch
+  SUNRPC: Fix a suspicious RCU usage warning
+
+ include/linux/sunrpc/clnt.h          |  1 -
+ include/linux/sunrpc/xprtmultipath.h |  2 ++
+ net/sunrpc/clnt.c                    | 47 +++++++++++++---------------
+ net/sunrpc/xprtmultipath.c           | 14 ++++++++-
+ 4 files changed, 37 insertions(+), 27 deletions(-)
+
 -- 
-2.39.1
+2.43.0
 
 
