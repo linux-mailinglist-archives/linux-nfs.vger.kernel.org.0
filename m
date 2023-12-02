@@ -1,80 +1,196 @@
-Return-Path: <linux-nfs+bounces-255-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-256-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id ED33C801AF8
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 Dec 2023 07:14:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66DE2801E8F
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 Dec 2023 22:07:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0B431F21143
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 Dec 2023 06:14:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CFDD5280FBC
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 Dec 2023 21:07:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4185BBE58;
-	Sat,  2 Dec 2023 06:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72A3321112;
+	Sat,  2 Dec 2023 21:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="eTNUBpMi"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 291AE1B3
-	for <linux-nfs@vger.kernel.org>; Fri,  1 Dec 2023 22:14:15 -0800 (PST)
-Received: from dggpemd200001.china.huawei.com (unknown [172.30.72.57])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Sj03m2DBQzWhpP;
-	Sat,  2 Dec 2023 14:13:24 +0800 (CST)
-Received: from [10.174.178.209] (10.174.178.209) by
- dggpemd200001.china.huawei.com (7.185.36.224) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1258.28; Sat, 2 Dec 2023 14:14:12 +0800
-Message-ID: <f658a8b4-e762-51d4-1735-c0e79f22e9a9@huawei.com>
-Date: Sat, 2 Dec 2023 14:14:11 +0800
+Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8C0107;
+	Sat,  2 Dec 2023 13:07:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1701551252;
+	bh=VWfb+Oof5K+/qAsblEllhoGVJptKMJhsPx5j7DgelbA=;
+	h=From:To:Cc:Subject:Date;
+	b=eTNUBpMirTPOzb168hbFitzXTV0rCuYP3RNp7TQ699xf/TP0G149xq/fh+TzEhw2W
+	 ttoSB1Wu/Voo1l05NZAU4hLpE2r9S5maaUD3aRE5V1/nue6H9Jv9SO/Yl/b5tGlj7f
+	 FmpG1Gn9nyPAss5b7GFryhRqSwcj2RuVW8XZBrF4=
+Received: from rm-workspace.. ([116.128.244.171])
+	by newxmesmtplogicsvrszc5-0.qq.com (NewEsmtp) with SMTP
+	id 1DBA2603; Sun, 03 Dec 2023 05:07:27 +0800
+X-QQ-mid: xmsmtpt1701551247thbhr8aak
+Message-ID: <tencent_03EDD0CAFBF93A9667CFCA1B68EDB4C4A109@qq.com>
+X-QQ-XMAILINFO: MmPNY57tR1XnAJhBNiCUAVr9YIJBvy1yMV2dHgPMD1aC0rNbkcD/tg5g7ycdRu
+	 0mHJ7BGScmA71+pO1OwAngMhGWsaOXnWSxo+r4wg71Zgy8KUwOp/rwr8ty/ACUvltuOBciBk0PKy
+	 nXhP5DcExj+LrbechxpBcb1T+8+ZgQnFeE+TkZt92z43sZD5a5DCS8OrjMdpAzWmfPjZVQQ4tyfG
+	 VuHwz2QO3zoTUipwD6YVud2a9rXkleFS1hHCm7U2/jUgdZFVpAX4h8MyhfTdKQkr+V5i+mTYPZ3D
+	 tPOKDnjGt/huw9eGT8FPYKXJNYHu8tRaZXNbFpbPb8aDHMloxOojPaasdi8moPTGTYj3r/iR0f32
+	 VJBbtCenwpGwtxngQGZ+q8Is5DOrWTFCz+eWl36wR3/LHisef6LhIn3/4Tqi0Be/xLp/IJVi1h7i
+	 ZjejXM7M/QXvl77i721HncndbuIyIUYWMxfgFv99BnXnBdi9suHIE+R6xWLcPgWYjuYExvKVj5fO
+	 sF5a8ePLTV5KpczPzTsfrF1Sug+79Ba6n6DKiyBUzAfdL2eV0FLhkWdFXnIBtsFOsJFLKGhQxmCw
+	 tGduW+ME3Eg/lEOW1jYQrhHG9+USxxiFkmsUsK64F2qQuRiHVX9/He4sxm1j4YQQuqdZN8yFmlGA
+	 n7heHIrj/gf/xPR7XdcH+WV0iwVv4a46Z01tPWElvxZU2sQpwurZhqb1cBDa5vfOoGPiZyhjWLbj
+	 DodoSyTJtiBnqu7Sa8Ko4aXeToHOLsOTFUUOcNddYdgx/u6h1/EgPEvL8OQKnOZnMkZWNsMvbqru
+	 csVo/mKA670PsRZVQwxfEmHerPHWL2gkJAYLW+0lE34bd1cOAIvM90l9KQQQq4P8QcOkp/+Futd+
+	 J3MY6Kfh64dyVjuEWgLYb3cpBUjiiHhzvrnzVdVx8DK3pTEZkP7mG9DawYTBKYBkLGNONyYTWCpX
+	 rr+yFjaqCdcvTo9iuekP3KTNtGqD9lUIqg8DizK6ZndwSh0ZRnAeobrvaA+NW8
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: chenxiaosongemail@foxmail.com
+To: trond.myklebust@hammerspace.com,
+	anna@kernel.org,
+	chuck.lever@oracle.com,
+	jlayton@kernel.org,
+	neilb@suse.de,
+	kolga@netapp.com,
+	Dai.Ngo@oracle.com,
+	tom@talpey.com
+Cc: linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	chenxiaosongemail@foxmail.com,
+	chenxiaosong@kylinos.cn,
+	liuzhengyuan@kylinos.cn,
+	huhai@kylinos.cn,
+	liuyun01@kylinos.cn
+Subject: [PATCH] NFSv4, NFSD: move enum nfs_cb_opnum4 to include/linux/nfs4.h
+Date: Sat,  2 Dec 2023 21:07:25 +0000
+X-OQ-MSGID: <20231202210725.706925-1-chenxiaosongemail@foxmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-To: <linux-nfs@vger.kernel.org>, <trondmy@gmail.com>,
-	<Anna.Schumaker@Netapp.com>, <sashal@kernel.org>
-From: ZhaoLong Wang <wangzhaolong1@huawei.com>
-Subject: Inquiry about NFS Patch "NFS: Don't call generic_error_remove_page()
- while holding locks"
-CC: yangerkun <yangerkun@huawei.com>, <zhangxiaoxu5@huawei.com>, yi zhang
-	<yi.zhang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemd200001.china.huawei.com (7.185.36.224)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 
-Dear Developers,
+From: ChenXiaoSong <chenxiaosong@kylinos.cn>
 
-I hope this message finds you well. I've recently been examining an NFS
-patch (linux-stable-v4.19.298 commit ID: fecb9d534dee) that I find
-intriguing, and I was hoping to gain some clarity on a few of its
-details.
+Callback operations enum is defined in client and server, move it to
+common header file.
 
-The commit message states, "The NFS read code can trigger writeback
-while holding the page lock. If an error then triggers a call to
-nfs_write_error_remove_page(), we can deadlock." In the context as I
-understand it, I'm having trouble conceptualizing the specific scenario
-where this could lead to a deadlock.
+Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+---
+ fs/nfs/callback.h      | 19 -------------------
+ fs/nfsd/nfs4callback.c | 26 +-------------------------
+ include/linux/nfs4.h   | 22 ++++++++++++++++++++++
+ 3 files changed, 23 insertions(+), 44 deletions(-)
 
-I've scrutinized the relevant functions and code, including nfs_readpage
-and generic_error_remove_page(), but I can't seem to pinpoint the exact
-scenario where lock contention could lead to a deadlock.
+diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
+index ccd4f245cae2..0279b78b5fc9 100644
+--- a/fs/nfs/callback.h
++++ b/fs/nfs/callback.h
+@@ -19,25 +19,6 @@ enum nfs4_callback_procnum {
+ 	CB_COMPOUND = 1,
+ };
+ 
+-enum nfs4_callback_opnum {
+-	OP_CB_GETATTR = 3,
+-	OP_CB_RECALL  = 4,
+-/* Callback operations new to NFSv4.1 */
+-	OP_CB_LAYOUTRECALL  = 5,
+-	OP_CB_NOTIFY        = 6,
+-	OP_CB_PUSH_DELEG    = 7,
+-	OP_CB_RECALL_ANY    = 8,
+-	OP_CB_RECALLABLE_OBJ_AVAIL = 9,
+-	OP_CB_RECALL_SLOT   = 10,
+-	OP_CB_SEQUENCE      = 11,
+-	OP_CB_WANTS_CANCELLED = 12,
+-	OP_CB_NOTIFY_LOCK   = 13,
+-	OP_CB_NOTIFY_DEVICEID = 14,
+-/* Callback operations new to NFSv4.2 */
+-	OP_CB_OFFLOAD = 15,
+-	OP_CB_ILLEGAL = 10044,
+-};
+-
+ struct nfs4_slot;
+ struct cb_process_state {
+ 	__be32			drc_status;
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 92bc109dabe6..30aa241038eb 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -31,6 +31,7 @@
+  *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+ 
++#include <linux/nfs4.h>
+ #include <linux/sunrpc/clnt.h>
+ #include <linux/sunrpc/xprt.h>
+ #include <linux/sunrpc/svc_xprt.h>
+@@ -101,31 +102,6 @@ static int decode_cb_fattr4(struct xdr_stream *xdr, uint32_t *bitmap,
+ 	return 0;
+ }
+ 
+-/*
+- *	nfs_cb_opnum4
+- *
+- *	enum nfs_cb_opnum4 {
+- *		OP_CB_GETATTR		= 3,
+- *		  ...
+- *	};
+- */
+-enum nfs_cb_opnum4 {
+-	OP_CB_GETATTR			= 3,
+-	OP_CB_RECALL			= 4,
+-	OP_CB_LAYOUTRECALL		= 5,
+-	OP_CB_NOTIFY			= 6,
+-	OP_CB_PUSH_DELEG		= 7,
+-	OP_CB_RECALL_ANY		= 8,
+-	OP_CB_RECALLABLE_OBJ_AVAIL	= 9,
+-	OP_CB_RECALL_SLOT		= 10,
+-	OP_CB_SEQUENCE			= 11,
+-	OP_CB_WANTS_CANCELLED		= 12,
+-	OP_CB_NOTIFY_LOCK		= 13,
+-	OP_CB_NOTIFY_DEVICEID		= 14,
+-	OP_CB_OFFLOAD			= 15,
+-	OP_CB_ILLEGAL			= 10044
+-};
+-
+ static void encode_nfs_cb_opnum4(struct xdr_stream *xdr, enum nfs_cb_opnum4 op)
+ {
+ 	__be32 *p;
+diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+index c11c4db34639..ef8d2d618d5b 100644
+--- a/include/linux/nfs4.h
++++ b/include/linux/nfs4.h
+@@ -869,4 +869,26 @@ enum {
+ 	RCA4_TYPE_MASK_OTHER_LAYOUT_MAX	= 15,
+ };
+ 
++enum nfs_cb_opnum4 {
++	OP_CB_GETATTR = 3,
++	OP_CB_RECALL  = 4,
++
++	/* Callback operations new to NFSv4.1 */
++	OP_CB_LAYOUTRECALL  = 5,
++	OP_CB_NOTIFY        = 6,
++	OP_CB_PUSH_DELEG    = 7,
++	OP_CB_RECALL_ANY    = 8,
++	OP_CB_RECALLABLE_OBJ_AVAIL = 9,
++	OP_CB_RECALL_SLOT   = 10,
++	OP_CB_SEQUENCE      = 11,
++	OP_CB_WANTS_CANCELLED = 12,
++	OP_CB_NOTIFY_LOCK   = 13,
++	OP_CB_NOTIFY_DEVICEID = 14,
++
++	/* Callback operations new to NFSv4.2 */
++	OP_CB_OFFLOAD = 15,
++
++	OP_CB_ILLEGAL = 10044,
++};
++
+ #endif
+-- 
+2.34.1
 
-I would greatly appreciate if you could help me understand this issue
-and how this patch addresses it. What were the specific workloads or
-system states you encountered in this process? Was this problem
-discovered under specific hardware or configurations? Or does the
-problem trigger under a certain sequence of operations?
-
-Thank you for your assistance in advance, and I look forward to your
-response.
-
-Link: 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=linux-4.19.y&id=fecb9d534deed3680bfaff0b86ac83470946b710
-
-Best regards,
-ZhaoLong Wang
 
