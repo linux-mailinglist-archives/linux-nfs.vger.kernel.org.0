@@ -1,242 +1,307 @@
-Return-Path: <linux-nfs+bounces-261-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-262-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D66D98023BA
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 13:30:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C4C548025FD
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 18:32:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91711280D95
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 12:30:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78621280D96
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 17:32:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9035156C9;
-	Sun,  3 Dec 2023 12:30:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA02A168B6;
+	Sun,  3 Dec 2023 17:32:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d46xAec2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="JkMJQvDu";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="SN1LJ0S6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A3F156C5
-	for <linux-nfs@vger.kernel.org>; Sun,  3 Dec 2023 12:30:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00618C433C7;
-	Sun,  3 Dec 2023 12:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701606641;
-	bh=YOwK8eYUU78twAJCF4uGJY71Qgvj1f+R0gcVgpIkMvA=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=d46xAec23ZDXAkMJNt7+8I+R6PfD9NNEGyX6jqXU9q9JBW9VyifRTWXCE2YcfeD6D
-	 JkNOzgIa31qVyk3Fe8wPARwxOSwQy1P+kfparmyhwbjsDs3oJOdjjEkZ4AMGy5YxhH
-	 u7b5xWIADUuxqlP9jfyooAVhWV43T8twS2KscgqO+K1CpNv54rem4egCWRZgqB7jFH
-	 SpkZWS9d3os0uD5LvrzX0LM6ZPc7FnwPvD/JexMhrnzE1W0WRZKrpZeO33ma3x8u4P
-	 kMyUEdwlpFpTx6JnkY4hvJvLhxvjFuAAlfHZOBDVCoISsRxxCDaqFV3gnVXEYCEfad
-	 wuQWJ8M7VRmZg==
-Message-ID: <89064b882a9e67fadc03520b99e9e52fa94094c9.camel@kernel.org>
-Subject: Re: [PATCH 4/4] SUNRPC: Fix a suspicious RCU usage warning
-From: Jeff Layton <jlayton@kernel.org>
-To: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
-	trond.myklebust@hammerspace.com
-Date: Sun, 03 Dec 2023 07:30:39 -0500
-In-Reply-To: <20231201211549.126941-5-anna@kernel.org>
-References: <20231201211549.126941-1-anna@kernel.org>
-	 <20231201211549.126941-5-anna@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.1 (3.50.1-1.fc39) 
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D7FB6;
+	Sun,  3 Dec 2023 09:32:44 -0800 (PST)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B3HEntV013841;
+	Sun, 3 Dec 2023 17:32:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=znYH7snNbK+SzcTrUI8CY1p78VVhQKtgUG6KTjNNRNU=;
+ b=JkMJQvDuLOi+8D52bbMBywMfciLZt2RGdyiqrd6gNofL1xJJrDplWdBVWijNFeVS09hI
+ B4/IOuZ98VK9Tj7RRqto0j4+1NRtjRNgVB8p91QDyBSl8d9+mBSPb7k3gpH6AWgmxQtD
+ 8mpZa0YLKVJxaaIgWNH0BNqdw1uoJKxwILXTo6t3Njo7Mpx8IJ9ZWESJFt3Yup3YTQ/V
+ Wt8IqtmagAu+mvLxvMw9hOPlM1/6n05/mZdmBUAB+nn0vUYmIfOkq8YaZZPsDCCpNvWl
+ cA7a6nVj3iaQWNUTwAcPBxzI+rPpPz2sJw4nP7W4OyQ+gz9XZfT52h0FlDZHh2IMW1Ku dw== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3urvmd82xp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 03 Dec 2023 17:32:25 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3B3F0xc7034400;
+	Sun, 3 Dec 2023 17:32:23 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2040.outbound.protection.outlook.com [104.47.73.40])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3uqu14t62j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 03 Dec 2023 17:32:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WLoCcwH4GVP4EClqBa5BQeYw3CNeadYuS62NvQGCtBPqFLYzcRgDmwgb7/FIAzyOWOF0KK8PWo+qfobPH2cwhkWAkFVAx19wFqBERI+xc5EDewAsM5dfotG4IWOw7EWcRWkqSwz696X3lNmzhpaUqURchZEGUjHdS3px3waKvuJCuIgDBJUQRA6qiTUHQpO0Qufx79srErixG0RrBe3Dxe9y84CfxUiOhQFZF1tYPQlToJEuw2wdm3LOBBLyITQiz10mxRJaeIaIQsPj0sknzIAQMmaVlMKdJ8+uXyB0KQkysHbyY0WmDDX4Oh+2zAlkpmth+c7Udwo7AAIZOquZ4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=znYH7snNbK+SzcTrUI8CY1p78VVhQKtgUG6KTjNNRNU=;
+ b=TrUnBKf/WVoYnbmDIkd+DcM0rPeawTx/93oAZEQf+mUmbyI+tTFCMDaEgS25J2lfsx/dMP7ymXPFOjeuoAx1CNCIbGavuo3G+YRsEkfwESeOi7XS9eIIRFvNJmuc79xsVgQZH2I3SppjtTkhhHpWLZ7QQUoFhsEcf2O7FDCq1beorVpPp3DOItXJUB59A3e/ICNamqmPj4fmH14zGT3UNyvwlK0A+2QYjdWMA+FYvph+olvHdVRxB12f6hvcCLCdhhOA57rj9D2tPjOhihmKWvGhMcSGBaQ07uRQZxE4tLKn1YuQbtNgCAMcnJt8D8lP3PMxYqThvtCUso8EZGdWHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=znYH7snNbK+SzcTrUI8CY1p78VVhQKtgUG6KTjNNRNU=;
+ b=SN1LJ0S6dQ1LzS6Cf3OeWhVGLuF2P4q7WQazJOQlyCll+6dU7w8ImVG12EjQiM6oJyvOLLSZ9U1mfICBrYsr0b2d7uDLfk/zJBhYevtdNeUjElWqhUqJKJI5WycwXqM0ZdaFxq9Oee14AteEUYtIWInRXpZ5DNs7C2PTvLpDZCk=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH8PR10MB6480.namprd10.prod.outlook.com (2603:10b6:510:22c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.32; Sun, 3 Dec
+ 2023 17:32:21 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::360b:b3c0:c5a9:3b3c]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::360b:b3c0:c5a9:3b3c%4]) with mapi id 15.20.7046.033; Sun, 3 Dec 2023
+ 17:32:21 +0000
+Date: Sun, 3 Dec 2023 12:32:17 -0500
+From: Chuck Lever <chuck.lever@oracle.com>
+To: chenxiaosongemail@foxmail.com
+Cc: trond.myklebust@hammerspace.com, anna@kernel.org, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        chenxiaosong@kylinos.cn, liuzhengyuan@kylinos.cn, huhai@kylinos.cn,
+        liuyun01@kylinos.cn
+Subject: Re: [PATCH] NFSv4, NFSD: move enum nfs_cb_opnum4 to
+ include/linux/nfs4.h
+Message-ID: <ZWy7ob2HhNRX7Z1b@tissot.1015granger.net>
+References: <tencent_03EDD0CAFBF93A9667CFCA1B68EDB4C4A109@qq.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_03EDD0CAFBF93A9667CFCA1B68EDB4C4A109@qq.com>
+X-ClientProxiedBy: CH0PR03CA0031.namprd03.prod.outlook.com
+ (2603:10b6:610:b3::6) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|PH8PR10MB6480:EE_
+X-MS-Office365-Filtering-Correlation-Id: 434b12ae-1d73-44a1-dada-08dbf425cdac
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Dbk3IjO1n7NBw3t675L1ryKG9b72a2/3rN3OMFBs5v7MGXAaqPYR9R1FDrJ8Mwsb/C4C5givxigE9FMyVWhXYjGpR3QxAVZL/hVPKFFjQTjBNZUeIwmYpVx9u5T9Sn1Ns4RQtOdDOJmIieL1Q4blI6+zVu8MI69xjlDEctzBvENuDc3p33Irrk7ncDYXSQ7sRwijg5mdjGrIxcpcys5CPyBHDk7VoE6Xj20sMIgqkgY5sJ/KPvWA5BtP7m3izrxDiJS8lpSy+uR8qyhi6kOXUilLwUXBSTP2cwzr138ngWVVGa7B9C67gh7RsTv+BdYyZ91z+/+spUOp2DUsI8U9cGiR1OslWkqNvbyhWCZx+vCZ9pokn4JVoU+5sMg0PMUHbuBQgOOxxCvxv08CHKy3t3PQCg3EOf1TSFtS57+yUqIEBp8H92Y1/DqBpe+tSPa/DKDZ2OlVH8UkQ1aB9RYruW6UaDf9rO7woPlYiydD1gNPqHaSe0g6A9Szwx3a9/YnoYanjP+huWn++GCvTfX2/OLBXBB2yzGr0ECa2FBasfh8wzxu3JgB5op8L9baO1nd4mYQaQWhw2HQXWjYo3K2rs7OJnhqlZLWfxYVaPRxQ5XOIVlCqdyEt5y3JbeajIMK
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(39860400002)(346002)(136003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(38100700002)(26005)(66946007)(66556008)(66476007)(6916009)(316002)(6506007)(6512007)(9686003)(83380400001)(41300700001)(2906002)(478600001)(6486002)(6666004)(7416002)(4326008)(8936002)(8676002)(5660300002)(86362001)(44832011)(48020200002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?GNfAFjJXzjoW8yGHYXa6IrLjFYhi1GkaImlko+rd5EZ2PDqZ2wbM3yqRsdbD?=
+ =?us-ascii?Q?BSiYmFd+LdsZkDbpbVbVhJX6iqRpYK4OuAswqM/hax3gORkrz1U8efnvBhda?=
+ =?us-ascii?Q?sMeKBFLadBf7FQz3zSQzIpXAtQyoIVNpZ/p4irQIsDCpEBsKgpj/sB18RAuq?=
+ =?us-ascii?Q?mtKAa9Hk5kTkk9WnBQkvX/ifbdp/QMIay4XMVBIKs/aCkj/fNkKIp5YELCTb?=
+ =?us-ascii?Q?0Ibck/E9dJw+wueozDS+Z9cB3Fp7Sm7VMK3zfGZNaiotOOt5qSJ/gHQSFpAb?=
+ =?us-ascii?Q?n14yOYyPgv7M6KqTEK+vB4L2PtednpjcSd69yO42XsHIqLuDdoyRCEsLlj2N?=
+ =?us-ascii?Q?JZg8kMBF6uAWfy7LBWEY08lvI9nbheu9KUQH/HKNSPDTglNYdpMf3a1LcQWx?=
+ =?us-ascii?Q?lUfZtF4YBtIsFseelXKneP8XUVEXplfCE2KaqYn3bFcwzhOS/WMNaLN2kk+U?=
+ =?us-ascii?Q?Wear2TIPdb/WbBBTFKgUuiiMCVQwyJqGmPXAHSAcZcneuItr4sw/v/hG0jIg?=
+ =?us-ascii?Q?NkKcwysgvSKUEJvONsJdO9+5nFmOzm2kkuxvfHnfZt3IMyAUDfl7G3nfjbvH?=
+ =?us-ascii?Q?RfhtwU0o8Za9M03A+dLwj2JrOJSq/G9t95NHqpBXjlLrzYMFwzWqUyyHOw1a?=
+ =?us-ascii?Q?mZh4Fle+glf7Uivpa8dgCByEHrCaKraXX6FYxSJxZVWSyKALXQJMByY3X6k1?=
+ =?us-ascii?Q?KoZstigO/M2XPvdCKhxjhpHsXdry9K6CUWvEeHEZziPWDnoYel68VX5FORij?=
+ =?us-ascii?Q?xj2sKB94VdWxN6/DarJIgmkr5WwaiA7jLVhduiR7UjpxqjKoHHXeB/GSOyY7?=
+ =?us-ascii?Q?nUHvHz1K3r4XsfF4o7SkihmimjeneGDZAHHAhnUbWniI0JyXnkpLoP+3p+/m?=
+ =?us-ascii?Q?3d+Th+y50sD2QdC4mPgp2WQqrTadHJhMCucQ4JXlOViVv7kDDYYK14Z08zcw?=
+ =?us-ascii?Q?/fbCihaoWKDBFM+E27XHn4fuLYDeFGyNFl0IdYIIZ+XbpYNgcYt37dPor4gX?=
+ =?us-ascii?Q?5QOCPDOhB1dIRTByBKp5AtWqa49KuFHk5IBVfRH+KeB0siwM8EXMtLdCvGPd?=
+ =?us-ascii?Q?7D2Hu9pWc99hlsCxnwtVWCO0VfH62nkjY7aTAxgNZl1Yf134TbF3O5D7ZVYB?=
+ =?us-ascii?Q?amnDbXYZwSXmBUnhPUQLHBk75EVQhMtdf/8wltr4oj8IY8DqP/xjRSxfxGy2?=
+ =?us-ascii?Q?S4pck4rkdBS1NrCjlUQ8Z7xqaE01yMfBavbrEJvRWVsAmnY3fxjvL+QKtpya?=
+ =?us-ascii?Q?/yI8LB5WwF10vkNR5Yr5jSwSexlT0J+IBnbH9JBp6sJvcI8eZaIEfKawSKHt?=
+ =?us-ascii?Q?LH/lfzRC3QN3IawxKustgjMEpT9EsaqHEdyNWrXnjbSqBO8UG5aIVYKv/UVA?=
+ =?us-ascii?Q?ut3DGtrTOO7Z7P2gg8/l0pAdyHSAu9OzD8pVoCoBPq8UJXzmh0jGC9CgMkXJ?=
+ =?us-ascii?Q?TuVcFyDf9fIjws8OHD9skIAC3g2i5yDUZVYRkb2CHfKjtc6MWCtGfqUWGdSj?=
+ =?us-ascii?Q?dbO1EnntexR2iXkP8rJNjdu37GIXU8jKuX2PyivA/2RiGjn0DorPDSuPSpbJ?=
+ =?us-ascii?Q?NF4NwdkAGhbt/nKNgvDgxwBT+O3X736M/tn6lCpu2lpJFaefSeQf0rvmaSHz?=
+ =?us-ascii?Q?DQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	=?us-ascii?Q?wLZKEf/LEMMsOOBM9P178z/Hq24Cd89rxh/Ifi5X2g7kHPL0QAASJvlCeFCf?=
+ =?us-ascii?Q?or547dlnGoqT5a450LiyyBvJoCzHVRR5loPsxcEVxGvO1Qhk+h5EoK5+Ow0u?=
+ =?us-ascii?Q?GK8+wgjQOzagLswkSwO1Qms5jxw4R4gv+q17wzRX8zTOf1lkVEWvj7x6iow7?=
+ =?us-ascii?Q?bCZfugR8ZtjmX2B94yNRDaaFoJ/3KRUguaoxzrMzZAudPyjxQAx2YKVQh9Xu?=
+ =?us-ascii?Q?NPtMPBNIneKmii04+/KTi8yuZJTSJ6tVfMrU7+/Kg5J1Zw/KUMk3llcBEXUF?=
+ =?us-ascii?Q?Fd92lGD+VdvuA0mp8XMrqEDqZmaLUCot8jEmazqzLOXTcdLbhC0sTPiRjHVn?=
+ =?us-ascii?Q?BZamQPE6jB+ltsToT4zdJ3zEoXiGc2mGHFQFomxmummRIE8wqJxCkT1z//ZI?=
+ =?us-ascii?Q?lw/6LQPaC91FNTHXwjRKgBCPvLTYAdXsolnW8gf0Dco85wwHdz5Uo4NB2gr/?=
+ =?us-ascii?Q?t3iVok48ZYQySElnmGm6gRzczbHOKGVsQPikPj23D1B386pgG3O/TqYNRATh?=
+ =?us-ascii?Q?73V9zXA9ljq48yFJpPbRaFPSEKduZpd4s/0WiMAfWGPayeTYwo+YlNonBs4A?=
+ =?us-ascii?Q?waOVOVO3Hk6g0SuoweVM5Y2vxuUctJfcvHtIJZaoFbytimQUsGl8tSoam2RF?=
+ =?us-ascii?Q?CU9y8sjeIM7tU8CDItD4O1/xv0VuUoxIe/PbQ7ZRpbc3cxlIi/hnzOtWvXNL?=
+ =?us-ascii?Q?B3k8TaBYrCRpNoTpfX10rEQphnTXfdWnzmYJXEexCwgeEIN1bIB5jZSW5czd?=
+ =?us-ascii?Q?Euevlff+et/94s52i0RADTAtrwRrxRiuGFb4dHrSrqlCGVzkfIuLgAD05GhL?=
+ =?us-ascii?Q?01S9fK7ebxjwycZ9BbCouFdnK/rJIwV1/FJf8XDlzenAq85ss5ZQh+XrIA4H?=
+ =?us-ascii?Q?14y7uuhuRPTu/M52aAsejS6NU+KGlXYakF0fzVxxbyNDxTYIMrEf2U+UhZij?=
+ =?us-ascii?Q?NnPDo9KjRZVaixg72b/JL49lZZ6bTnACvdodqMtKttw=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 434b12ae-1d73-44a1-dada-08dbf425cdac
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2023 17:32:20.5976
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bDX0udI3AhKEo32kJaBGgCFeces/Tr/MoR3vzq/Kq8TNAmL5gIqjA6PpWpHvUJX1l0JqH4JTwKuFLh9THrj2nA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR10MB6480
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-03_15,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=867 mlxscore=0
+ bulkscore=0 malwarescore=0 phishscore=0 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2312030138
+X-Proofpoint-ORIG-GUID: QSMAtLXo3fFRsVfhxpXDb1HsYUThUuhZ
+X-Proofpoint-GUID: QSMAtLXo3fFRsVfhxpXDb1HsYUThUuhZ
 
-On Fri, 2023-12-01 at 16:15 -0500, Anna Schumaker wrote:
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->=20
-> I received the following warning while running cthon against an ontap
-> server running pNFS:
->=20
-> [   57.202521] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [   57.202522] WARNING: suspicious RCU usage
-> [   57.202523] 6.7.0-rc3-g2cc14f52aeb7 #41492 Not tainted
-> [   57.202525] -----------------------------
-> [   57.202525] net/sunrpc/xprtmultipath.c:349 RCU-list traversed in non-r=
-eader section!!
-> [   57.202527]
->                other info that might help us debug this:
->=20
-> [   57.202528]
->                rcu_scheduler_active =3D 2, debug_locks =3D 1
-> [   57.202529] no locks held by test5/3567.
-> [   57.202530]
->                stack backtrace:
-> [   57.202532] CPU: 0 PID: 3567 Comm: test5 Not tainted 6.7.0-rc3-g2cc14f=
-52aeb7 #41492 5b09971b4965c0aceba19f3eea324a4a806e227e
-> [   57.202534] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS u=
-nknown 2/2/2022
-> [   57.202536] Call Trace:
-> [   57.202537]  <TASK>
-> [   57.202540]  dump_stack_lvl+0x77/0xb0
-> [   57.202551]  lockdep_rcu_suspicious+0x154/0x1a0
-> [   57.202556]  rpc_xprt_switch_has_addr+0x17c/0x190 [sunrpc ebe02571b9a8=
-ceebf7d98e71675af20c19bdb1f6]
-> [   57.202596]  rpc_clnt_setup_test_and_add_xprt+0x50/0x180 [sunrpc ebe02=
-571b9a8ceebf7d98e71675af20c19bdb1f6]
-> [   57.202621]  ? rpc_clnt_add_xprt+0x254/0x300 [sunrpc ebe02571b9a8ceebf=
-7d98e71675af20c19bdb1f6]
-> [   57.202646]  rpc_clnt_add_xprt+0x27a/0x300 [sunrpc ebe02571b9a8ceebf7d=
-98e71675af20c19bdb1f6]
-> [   57.202671]  ? __pfx_rpc_clnt_setup_test_and_add_xprt+0x10/0x10 [sunrp=
-c ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-> [   57.202696]  nfs4_pnfs_ds_connect+0x345/0x760 [nfsv4 c716d88496ded0ea6=
-d289bbea684fa996f9b57a9]
-> [   57.202728]  ? __pfx_nfs4_test_session_trunk+0x10/0x10 [nfsv4 c716d884=
-96ded0ea6d289bbea684fa996f9b57a9]
-> [   57.202754]  nfs4_fl_prepare_ds+0x75/0xc0 [nfs_layout_nfsv41_files e3a=
-4187f18ae8a27b630f9feae6831b584a9360a]
-> [   57.202760]  filelayout_write_pagelist+0x4a/0x200 [nfs_layout_nfsv41_f=
-iles e3a4187f18ae8a27b630f9feae6831b584a9360a]
-> [   57.202765]  pnfs_generic_pg_writepages+0xbe/0x230 [nfsv4 c716d88496de=
-d0ea6d289bbea684fa996f9b57a9]
-> [   57.202788]  __nfs_pageio_add_request+0x3fd/0x520 [nfs 6c976fa593a7c29=
-76f5a0aeb4965514a828e6902]
-> [   57.202813]  nfs_pageio_add_request+0x18b/0x390 [nfs 6c976fa593a7c2976=
-f5a0aeb4965514a828e6902]
-> [   57.202831]  nfs_do_writepage+0x116/0x1e0 [nfs 6c976fa593a7c2976f5a0ae=
-b4965514a828e6902]
-> [   57.202849]  nfs_writepages_callback+0x13/0x30 [nfs 6c976fa593a7c2976f=
-5a0aeb4965514a828e6902]
-> [   57.202866]  write_cache_pages+0x265/0x450
-> [   57.202870]  ? __pfx_nfs_writepages_callback+0x10/0x10 [nfs 6c976fa593=
-a7c2976f5a0aeb4965514a828e6902]
-> [   57.202891]  nfs_writepages+0x141/0x230 [nfs 6c976fa593a7c2976f5a0aeb4=
-965514a828e6902]
-> [   57.202913]  do_writepages+0xd2/0x230
-> [   57.202917]  ? filemap_fdatawrite_wbc+0x5c/0x80
-> [   57.202921]  filemap_fdatawrite_wbc+0x67/0x80
-> [   57.202924]  filemap_write_and_wait_range+0xd9/0x170
-> [   57.202930]  nfs_wb_all+0x49/0x180 [nfs 6c976fa593a7c2976f5a0aeb496551=
-4a828e6902]
-> [   57.202947]  nfs4_file_flush+0x72/0xb0 [nfsv4 c716d88496ded0ea6d289bbe=
-a684fa996f9b57a9]
-> [   57.202969]  __se_sys_close+0x46/0xd0
-> [   57.202972]  do_syscall_64+0x68/0x100
-> [   57.202975]  ? do_syscall_64+0x77/0x100
-> [   57.202976]  ? do_syscall_64+0x77/0x100
-> [   57.202979]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-> [   57.202982] RIP: 0033:0x7fe2b12e4a94
-> [   57.202985] Code: 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 0=
-0 00 00 00 90 f3 0f 1e fa 80 3d d5 18 0e 00 00 74 13 b8 03 00 00 00 0f 05 <=
-48> 3d 00 f0 ff ff 77 44 c3 0f 1f 00 48 83 ec 18 89 7c 24 0c e8 c3
-> [   57.202987] RSP: 002b:00007ffe857ddb38 EFLAGS: 00000202 ORIG_RAX: 0000=
-000000000003
-> [   57.202989] RAX: ffffffffffffffda RBX: 00007ffe857dfd68 RCX: 00007fe2b=
-12e4a94
-> [   57.202991] RDX: 0000000000002000 RSI: 00007ffe857ddc40 RDI: 000000000=
-0000003
-> [   57.202992] RBP: 00007ffe857dfc50 R08: 7fffffffffffffff R09: 000000006=
-5650f49
-> [   57.202993] R10: 00007fe2b11f8300 R11: 0000000000000202 R12: 000000000=
-0000000
-> [   57.202994] R13: 00007ffe857dfd80 R14: 00007fe2b1445000 R15: 000000000=
-0000000
-> [   57.202999]  </TASK>
->=20
-> The problem seems to be that two out of three callers aren't taking the
-> rcu_read_lock() before calling the list_for_each_entry_rcu() function in
-> rpc_xprt_switch_has_addr(). I fix this by making a new variant of the
-> function that takes the lock when necessary, and provide a bypass path
-> for the one function that was doing this already.
->=20
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On Sat, Dec 02, 2023 at 09:07:25PM +0000, chenxiaosongemail@foxmail.com wrote:
+> From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+> 
+> Callback operations enum is defined in client and server, move it to
+> common header file.
+> 
+> Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+
+LGTM.
+
+I can take this through the nfsd-next tree if I get an Acked-by:
+from the NFS client maintainers. If they would like to take this
+through the NFS client tree, let me know, and I will send my
+Acked-by.
+
+
 > ---
->  include/linux/sunrpc/xprtmultipath.h |  2 ++
->  net/sunrpc/clnt.c                    |  2 +-
->  net/sunrpc/xprtmultipath.c           | 14 +++++++++++++-
->  3 files changed, 16 insertions(+), 2 deletions(-)
->=20
-> diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunrpc/=
-xprtmultipath.h
-> index c0514c684b2c..0598552e7ccc 100644
-> --- a/include/linux/sunrpc/xprtmultipath.h
-> +++ b/include/linux/sunrpc/xprtmultipath.h
-> @@ -78,6 +78,8 @@ extern struct rpc_xprt *xprt_iter_xprt(struct rpc_xprt_=
-iter *xpi);
->  extern struct rpc_xprt *xprt_iter_get_xprt(struct rpc_xprt_iter *xpi);
->  extern struct rpc_xprt *xprt_iter_get_next(struct rpc_xprt_iter *xpi);
-> =20
-> +extern bool __rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-> +		const struct sockaddr *sap);
->  extern bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
->  		const struct sockaddr *sap);
-> =20
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index 0b2c4b5484f5..b2a81c26da32 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -3299,7 +3299,7 @@ bool rpc_clnt_xprt_switch_has_addr(struct rpc_clnt =
-*clnt,
-> =20
->  	rcu_read_lock();
->  	xps =3D rcu_dereference(clnt->cl_xpi.xpi_xpswitch);
-> -	ret =3D rpc_xprt_switch_has_addr(xps, sap);
-> +	ret =3D __rpc_xprt_switch_has_addr(xps, sap);
->  	rcu_read_unlock();
->  	return ret;
+>  fs/nfs/callback.h      | 19 -------------------
+>  fs/nfsd/nfs4callback.c | 26 +-------------------------
+>  include/linux/nfs4.h   | 22 ++++++++++++++++++++++
+>  3 files changed, 23 insertions(+), 44 deletions(-)
+> 
+> diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
+> index ccd4f245cae2..0279b78b5fc9 100644
+> --- a/fs/nfs/callback.h
+> +++ b/fs/nfs/callback.h
+> @@ -19,25 +19,6 @@ enum nfs4_callback_procnum {
+>  	CB_COMPOUND = 1,
+>  };
+>  
+> -enum nfs4_callback_opnum {
+> -	OP_CB_GETATTR = 3,
+> -	OP_CB_RECALL  = 4,
+> -/* Callback operations new to NFSv4.1 */
+> -	OP_CB_LAYOUTRECALL  = 5,
+> -	OP_CB_NOTIFY        = 6,
+> -	OP_CB_PUSH_DELEG    = 7,
+> -	OP_CB_RECALL_ANY    = 8,
+> -	OP_CB_RECALLABLE_OBJ_AVAIL = 9,
+> -	OP_CB_RECALL_SLOT   = 10,
+> -	OP_CB_SEQUENCE      = 11,
+> -	OP_CB_WANTS_CANCELLED = 12,
+> -	OP_CB_NOTIFY_LOCK   = 13,
+> -	OP_CB_NOTIFY_DEVICEID = 14,
+> -/* Callback operations new to NFSv4.2 */
+> -	OP_CB_OFFLOAD = 15,
+> -	OP_CB_ILLEGAL = 10044,
+> -};
+> -
+>  struct nfs4_slot;
+>  struct cb_process_state {
+>  	__be32			drc_status;
+> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> index 92bc109dabe6..30aa241038eb 100644
+> --- a/fs/nfsd/nfs4callback.c
+> +++ b/fs/nfsd/nfs4callback.c
+> @@ -31,6 +31,7 @@
+>   *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+>   */
+>  
+> +#include <linux/nfs4.h>
+>  #include <linux/sunrpc/clnt.h>
+>  #include <linux/sunrpc/xprt.h>
+>  #include <linux/sunrpc/svc_xprt.h>
+> @@ -101,31 +102,6 @@ static int decode_cb_fattr4(struct xdr_stream *xdr, uint32_t *bitmap,
+>  	return 0;
 >  }
-> diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-> index 701250b305db..20f9dc220383 100644
-> --- a/net/sunrpc/xprtmultipath.c
-> +++ b/net/sunrpc/xprtmultipath.c
-> @@ -336,7 +336,7 @@ struct rpc_xprt *xprt_iter_current_entry_offline(stru=
-ct rpc_xprt_iter *xpi)
->  			xprt_switch_find_current_entry_offline);
->  }
-> =20
-> -bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-> +bool __rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
->  			      const struct sockaddr *sap)
+>  
+> -/*
+> - *	nfs_cb_opnum4
+> - *
+> - *	enum nfs_cb_opnum4 {
+> - *		OP_CB_GETATTR		= 3,
+> - *		  ...
+> - *	};
+> - */
+> -enum nfs_cb_opnum4 {
+> -	OP_CB_GETATTR			= 3,
+> -	OP_CB_RECALL			= 4,
+> -	OP_CB_LAYOUTRECALL		= 5,
+> -	OP_CB_NOTIFY			= 6,
+> -	OP_CB_PUSH_DELEG		= 7,
+> -	OP_CB_RECALL_ANY		= 8,
+> -	OP_CB_RECALLABLE_OBJ_AVAIL	= 9,
+> -	OP_CB_RECALL_SLOT		= 10,
+> -	OP_CB_SEQUENCE			= 11,
+> -	OP_CB_WANTS_CANCELLED		= 12,
+> -	OP_CB_NOTIFY_LOCK		= 13,
+> -	OP_CB_NOTIFY_DEVICEID		= 14,
+> -	OP_CB_OFFLOAD			= 15,
+> -	OP_CB_ILLEGAL			= 10044
+> -};
+> -
+>  static void encode_nfs_cb_opnum4(struct xdr_stream *xdr, enum nfs_cb_opnum4 op)
 >  {
->  	struct list_head *head;
-> @@ -356,6 +356,18 @@ bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch=
- *xps,
->  	return false;
->  }
-> =20
-> +bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-> +			      const struct sockaddr *sap)
-> +{
-> +	bool res;
+>  	__be32 *p;
+> diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+> index c11c4db34639..ef8d2d618d5b 100644
+> --- a/include/linux/nfs4.h
+> +++ b/include/linux/nfs4.h
+> @@ -869,4 +869,26 @@ enum {
+>  	RCA4_TYPE_MASK_OTHER_LAYOUT_MAX	= 15,
+>  };
+>  
+> +enum nfs_cb_opnum4 {
+> +	OP_CB_GETATTR = 3,
+> +	OP_CB_RECALL  = 4,
 > +
-> +	rcu_read_lock();
-> +	res =3D __rpc_xprt_switch_has_addr(xps, sap);
-> +	rcu_read_unlock();
+> +	/* Callback operations new to NFSv4.1 */
+> +	OP_CB_LAYOUTRECALL  = 5,
+> +	OP_CB_NOTIFY        = 6,
+> +	OP_CB_PUSH_DELEG    = 7,
+> +	OP_CB_RECALL_ANY    = 8,
+> +	OP_CB_RECALLABLE_OBJ_AVAIL = 9,
+> +	OP_CB_RECALL_SLOT   = 10,
+> +	OP_CB_SEQUENCE      = 11,
+> +	OP_CB_WANTS_CANCELLED = 12,
+> +	OP_CB_NOTIFY_LOCK   = 13,
+> +	OP_CB_NOTIFY_DEVICEID = 14,
 > +
-> +	return res;
-> +}
+> +	/* Callback operations new to NFSv4.2 */
+> +	OP_CB_OFFLOAD = 15,
 > +
->  static
->  struct rpc_xprt *xprt_switch_find_next_entry(struct list_head *head,
->  		const struct rpc_xprt *cur, bool check_active)
+> +	OP_CB_ILLEGAL = 10044,
+> +};
+> +
+>  #endif
+> -- 
+> 2.34.1
+> 
+> 
 
-Adding an new wrapper here is probably more trouble than it's worth.
-
-Why not have rpc_xprt_switch_has_addr take and drop the rcu_read_lock
-itself? It is safe (and reasonably cheap) to take it recursively, so
-that should be fine from existing callers that already hold it.
-
-Either way, this patch fixes a real bug, so if you choose go to with it:
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+-- 
+Chuck Lever
 
