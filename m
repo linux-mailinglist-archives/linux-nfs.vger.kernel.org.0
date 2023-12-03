@@ -1,50 +1,47 @@
-Return-Path: <linux-nfs+bounces-257-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-258-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB8B98022F5
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 12:27:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F4DD8023AD
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 13:18:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73182B209C6
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 11:27:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 74573280DD4
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 12:18:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A54D59479;
-	Sun,  3 Dec 2023 11:27:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9943C148;
+	Sun,  3 Dec 2023 12:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DAC53tRM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BeGcIKwl"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 868429477
-	for <linux-nfs@vger.kernel.org>; Sun,  3 Dec 2023 11:27:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C43CDC433C9;
-	Sun,  3 Dec 2023 11:27:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A83AABE60
+	for <linux-nfs@vger.kernel.org>; Sun,  3 Dec 2023 12:18:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBCE0C433C7;
+	Sun,  3 Dec 2023 12:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701602842;
-	bh=/EM54K8s27OaCsVnR06jw2j/01j/ETiFhut3tIaak2c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=DAC53tRMXeh6kLVJg8nKKICV/V/plh5i7Vbm6C8BYCvt+I3/T9Sb1F8rj/cGxOuuv
-	 +o86HdixMoUDniIScAqD9geHmox2N/Mxy9fk14jq3fEvuExXox+nR1K40DL6oUB9Pa
-	 kWGRTQb0VUSwKGt4DTdF6ZwnHV4oYjm5j4skdmhIG7m1pWe/qov90Q0iYr77mrdNYA
-	 e8+jPnHOooV6C5kQ3SdEN5sHl2qKnpxYMallqSzeE74cB+Eg0GFrNG5BTP5wEKNucR
-	 u/r2fQiwBlGG2lwWB1SYhZs3GCP4qyznTPVJsie4V5fIt9c7aTsLpFxd6BADYyylfF
-	 D3QODX9NIA/eg==
-Message-ID: <1a0cd72ff08cfa8d6b26015cced677751f4c15f5.camel@kernel.org>
-Subject: Re: [PATCH] NFSv4, NFSD: move enum nfs_cb_opnum4 to
- include/linux/nfs4.h
+	s=k20201202; t=1701605889;
+	bh=YIw51XwZtzuhxlJaUiX188P1ZCpCiLr8RjnFJ4mJSPU=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=BeGcIKwlONsW+AXPM9SB1J7YOUCTn21K5DoFOj7DQ+401wRiMYzo7St4lDBmBrmN8
+	 +/hg7W84TXoFQJ2b4DKiR/PAGJJ31kldNJbBwCIxtmjuJqNbhrrDUaDpz65yfCZkqf
+	 u196Wl23JrMJO+eIuoQtKSQvOXnZLrCDeOGyVYgm5VBx4sr1kG+kicFvE5mEGLLwLX
+	 PL2US7EFHFSFyrwpXa/36ded58b9Q5KU9d9R3/Y7x5VZxzlQv7Eqqz1WY+mme6Nngw
+	 1dKNA/VILjQJ9s/VZZATXPqXKbOBZE86DatXk4AKtJMA5Gsxc+FUhkI7B18BcK7yyl
+	 1pLlKaolDo21Q==
+Message-ID: <ae03288f501335ee5d6534a91cc2c6313a14d663.camel@kernel.org>
+Subject: Re: [PATCH 1/4] SUNRPC: Clean up unused variable in
+ rpc_xprt_probe_trunked()
 From: Jeff Layton <jlayton@kernel.org>
-To: chenxiaosongemail@foxmail.com, trond.myklebust@hammerspace.com, 
-	anna@kernel.org, chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com, 
-	Dai.Ngo@oracle.com, tom@talpey.com
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	chenxiaosong@kylinos.cn, liuzhengyuan@kylinos.cn, huhai@kylinos.cn, 
-	liuyun01@kylinos.cn
-Date: Sun, 03 Dec 2023 06:27:19 -0500
-In-Reply-To: <tencent_03EDD0CAFBF93A9667CFCA1B68EDB4C4A109@qq.com>
-References: <tencent_03EDD0CAFBF93A9667CFCA1B68EDB4C4A109@qq.com>
+To: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
+	trond.myklebust@hammerspace.com
+Date: Sun, 03 Dec 2023 07:18:07 -0500
+In-Reply-To: <20231201211549.126941-2-anna@kernel.org>
+References: <20231201211549.126941-1-anna@kernel.org>
+	 <20231201211549.126941-2-anna@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -64,126 +61,51 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Sat, 2023-12-02 at 21:07 +0000, chenxiaosongemail@foxmail.com wrote:
-> From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+On Fri, 2023-12-01 at 16:15 -0500, Anna Schumaker wrote:
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 >=20
-> Callback operations enum is defined in client and server, move it to
-> common header file.
+> We don't use the rpc_xprt_switch anywhere in this function, so let's not
+> take an extra reference to in unnecessarily.
 >=20
-> Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 > ---
->  fs/nfs/callback.h      | 19 -------------------
->  fs/nfsd/nfs4callback.c | 26 +-------------------------
->  include/linux/nfs4.h   | 22 ++++++++++++++++++++++
->  3 files changed, 23 insertions(+), 44 deletions(-)
+>  net/sunrpc/clnt.c | 3 ---
+>  1 file changed, 3 deletions(-)
 >=20
-> diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
-> index ccd4f245cae2..0279b78b5fc9 100644
-> --- a/fs/nfs/callback.h
-> +++ b/fs/nfs/callback.h
-> @@ -19,25 +19,6 @@ enum nfs4_callback_procnum {
->  	CB_COMPOUND =3D 1,
->  };
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index daa9582ec861..4aa838543f79 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -3116,7 +3116,6 @@ static int rpc_xprt_probe_trunked(struct rpc_clnt *=
+clnt,
+>  				  struct rpc_xprt *xprt,
+>  				  struct rpc_add_xprt_test *data)
+>  {
+> -	struct rpc_xprt_switch *xps;
+>  	struct rpc_xprt *main_xprt;
+>  	int status =3D 0;
 > =20
-> -enum nfs4_callback_opnum {
-> -	OP_CB_GETATTR =3D 3,
-> -	OP_CB_RECALL  =3D 4,
-> -/* Callback operations new to NFSv4.1 */
-> -	OP_CB_LAYOUTRECALL  =3D 5,
-> -	OP_CB_NOTIFY        =3D 6,
-> -	OP_CB_PUSH_DELEG    =3D 7,
-> -	OP_CB_RECALL_ANY    =3D 8,
-> -	OP_CB_RECALLABLE_OBJ_AVAIL =3D 9,
-> -	OP_CB_RECALL_SLOT   =3D 10,
-> -	OP_CB_SEQUENCE      =3D 11,
-> -	OP_CB_WANTS_CANCELLED =3D 12,
-> -	OP_CB_NOTIFY_LOCK   =3D 13,
-> -	OP_CB_NOTIFY_DEVICEID =3D 14,
-> -/* Callback operations new to NFSv4.2 */
-> -	OP_CB_OFFLOAD =3D 15,
-> -	OP_CB_ILLEGAL =3D 10044,
-> -};
-> -
->  struct nfs4_slot;
->  struct cb_process_state {
->  	__be32			drc_status;
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 92bc109dabe6..30aa241038eb 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -31,6 +31,7 @@
->   *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->   */
+> @@ -3124,7 +3123,6 @@ static int rpc_xprt_probe_trunked(struct rpc_clnt *=
+clnt,
 > =20
-> +#include <linux/nfs4.h>
->  #include <linux/sunrpc/clnt.h>
->  #include <linux/sunrpc/xprt.h>
->  #include <linux/sunrpc/svc_xprt.h>
-> @@ -101,31 +102,6 @@ static int decode_cb_fattr4(struct xdr_stream *xdr, =
-uint32_t *bitmap,
->  	return 0;
+>  	rcu_read_lock();
+>  	main_xprt =3D xprt_get(rcu_dereference(clnt->cl_xprt));
+> -	xps =3D xprt_switch_get(rcu_dereference(clnt->cl_xpi.xpi_xpswitch));
+>  	status =3D rpc_cmp_addr_port((struct sockaddr *)&xprt->addr,
+>  				   (struct sockaddr *)&main_xprt->addr);
+>  	rcu_read_unlock();
+> @@ -3135,7 +3133,6 @@ static int rpc_xprt_probe_trunked(struct rpc_clnt *=
+clnt,
+>  	status =3D rpc_clnt_add_xprt_helper(clnt, xprt, data);
+>  out:
+>  	xprt_put(xprt);
+> -	xprt_switch_put(xps);
+>  	return status;
 >  }
 > =20
-> -/*
-> - *	nfs_cb_opnum4
-> - *
-> - *	enum nfs_cb_opnum4 {
-> - *		OP_CB_GETATTR		=3D 3,
-> - *		  ...
-> - *	};
-> - */
-> -enum nfs_cb_opnum4 {
-> -	OP_CB_GETATTR			=3D 3,
-> -	OP_CB_RECALL			=3D 4,
-> -	OP_CB_LAYOUTRECALL		=3D 5,
-> -	OP_CB_NOTIFY			=3D 6,
-> -	OP_CB_PUSH_DELEG		=3D 7,
-> -	OP_CB_RECALL_ANY		=3D 8,
-> -	OP_CB_RECALLABLE_OBJ_AVAIL	=3D 9,
-> -	OP_CB_RECALL_SLOT		=3D 10,
-> -	OP_CB_SEQUENCE			=3D 11,
-> -	OP_CB_WANTS_CANCELLED		=3D 12,
-> -	OP_CB_NOTIFY_LOCK		=3D 13,
-> -	OP_CB_NOTIFY_DEVICEID		=3D 14,
-> -	OP_CB_OFFLOAD			=3D 15,
-> -	OP_CB_ILLEGAL			=3D 10044
-> -};
-> -
->  static void encode_nfs_cb_opnum4(struct xdr_stream *xdr, enum nfs_cb_opn=
-um4 op)
->  {
->  	__be32 *p;
-> diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
-> index c11c4db34639..ef8d2d618d5b 100644
-> --- a/include/linux/nfs4.h
-> +++ b/include/linux/nfs4.h
-> @@ -869,4 +869,26 @@ enum {
->  	RCA4_TYPE_MASK_OTHER_LAYOUT_MAX	=3D 15,
->  };
-> =20
-> +enum nfs_cb_opnum4 {
-> +	OP_CB_GETATTR =3D 3,
-> +	OP_CB_RECALL  =3D 4,
-> +
-> +	/* Callback operations new to NFSv4.1 */
-> +	OP_CB_LAYOUTRECALL  =3D 5,
-> +	OP_CB_NOTIFY        =3D 6,
-> +	OP_CB_PUSH_DELEG    =3D 7,
-> +	OP_CB_RECALL_ANY    =3D 8,
-> +	OP_CB_RECALLABLE_OBJ_AVAIL =3D 9,
-> +	OP_CB_RECALL_SLOT   =3D 10,
-> +	OP_CB_SEQUENCE      =3D 11,
-> +	OP_CB_WANTS_CANCELLED =3D 12,
-> +	OP_CB_NOTIFY_LOCK   =3D 13,
-> +	OP_CB_NOTIFY_DEVICEID =3D 14,
-> +
-> +	/* Callback operations new to NFSv4.2 */
-> +	OP_CB_OFFLOAD =3D 15,
-> +
-> +	OP_CB_ILLEGAL =3D 10044,
-> +};
-> +
->  #endif
+
+Seems right to me. If there is some hidden reason that we need to take
+that reference here, then that needs to be documented in a comment.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
