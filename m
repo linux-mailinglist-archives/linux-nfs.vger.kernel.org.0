@@ -1,47 +1,47 @@
-Return-Path: <linux-nfs+bounces-259-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-260-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B38508023AE
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 13:19:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4D3C8023B7
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 13:25:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 134D91C203BA
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 12:19:20 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8B143280DF3
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Dec 2023 12:24:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DACFCC148;
-	Sun,  3 Dec 2023 12:19:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A763C154;
+	Sun,  3 Dec 2023 12:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSemCr/B"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xk+Lq49p"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35B5BE60
-	for <linux-nfs@vger.kernel.org>; Sun,  3 Dec 2023 12:19:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF1FFC433C7;
-	Sun,  3 Dec 2023 12:19:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A133BE60
+	for <linux-nfs@vger.kernel.org>; Sun,  3 Dec 2023 12:24:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E210C433C7;
+	Sun,  3 Dec 2023 12:24:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701605955;
-	bh=wApF2Ga42toOkHfYFDHNJyW6C8ss6jO9yqWiZaDnKzc=;
+	s=k20201202; t=1701606295;
+	bh=OmHRak5rgj87xpW/gdEzFhakXymCOxp2pGH3g4mI+dg=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=hSemCr/BFgiZOhLRoBP7l1jRYXMJNPqwkk4fD9JJ4beAgbSICwoY5iAAq0lIi2MwG
-	 1xn0HCb0T8X+e8JWDPy9gc1E/VoEw5BBJsKNJxzWzHwHpi/jkVhPRQV+grCHrlGsSV
-	 jHmj5Bs5A+foT4NdrnGuAU4V6vUohgpEUoTPSy6CBLzlX06A5YwHXfQ1ZBi+O2w3uQ
-	 ul81jLOmK7tj6hB0H7FNEiCUXQZpZmoVoDubAJr4hQuMRTzvlzmcA1GU8YL0E8Sg29
-	 E8rXnhw3iQwbOsrQ3r3VbxNtfGEeHHByI1WWrOPD3HuLEaUhhtUdi5weV9jPq8Kl9O
-	 Iu7ufzLsRcwWg==
-Message-ID: <822a8f840faf4b46714f500a825c8fcde8a93241.camel@kernel.org>
-Subject: Re: [PATCH 2/4] SUNRPC: Remove unused function
- rpc_clnt_xprt_switch_put()
+	b=Xk+Lq49p2/dyD6w5PDP5JoUiNKXF4fEbekbV/TGaLWd6zIbOPqAjVkKAtI/NYyLmK
+	 bMcGZO68rS0N9q/oLK88XXNBiCAqw7312ODjOVJ97SPeA3n8Nmk1jRrHJal2oKgh3U
+	 tdJ8f9BrnzbDGMtEaAatzdFCwt/4yd5x+msJsHnsgBjwQ/+YcbI2cRZ4JJfNrYCZZ/
+	 laW3D9f3J3U2UaJrI4AZs+66omv00pyKOvr12Bq2+eGV00zM5v1pvtmbiQDoJCRVqv
+	 ueBj8aELg7egSaiKEEWga5zlzOjussmCPnYg2JvgEiWc9oyuUerxmBuv+/6mOLIQGx
+	 ZKcDkWt+Y4OmA==
+Message-ID: <79944d1c5e20173de5e3b818816a1c3ce172968a.camel@kernel.org>
+Subject: Re: [PATCH 3/4] SUNRPC: Create a helper function for accessing the
+ rpc_clnt's xprt_switch
 From: Jeff Layton <jlayton@kernel.org>
 To: Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org, 
 	trond.myklebust@hammerspace.com
-Date: Sun, 03 Dec 2023 07:19:13 -0500
-In-Reply-To: <20231201211549.126941-3-anna@kernel.org>
+Date: Sun, 03 Dec 2023 07:24:54 -0500
+In-Reply-To: <20231201211549.126941-4-anna@kernel.org>
 References: <20231201211549.126941-1-anna@kernel.org>
-	 <20231201211549.126941-3-anna@kernel.org>
+	 <20231201211549.126941-4-anna@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -64,48 +64,101 @@ MIME-Version: 1.0
 On Fri, 2023-12-01 at 16:15 -0500, Anna Schumaker wrote:
 > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 >=20
+> This function takes the necessary rcu read lock to dereference the
+> client's rpc_xprt_switch and bump the reference count so it doesn't
+> disappear underneath us before returning. This does mean that callers
+> are responsible for calling xprt_switch_put() on the returned object
+> when they are done with it.
+>=20
 > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 > ---
->  include/linux/sunrpc/clnt.h | 1 -
->  net/sunrpc/clnt.c           | 8 --------
->  2 files changed, 9 deletions(-)
+>  net/sunrpc/clnt.c | 34 +++++++++++++++++++++-------------
+>  1 file changed, 21 insertions(+), 13 deletions(-)
 >=20
-> diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-> index e9d4377d03c6..5e9d1469c6fa 100644
-> --- a/include/linux/sunrpc/clnt.h
-> +++ b/include/linux/sunrpc/clnt.h
-> @@ -252,7 +252,6 @@ void		rpc_clnt_probe_trunked_xprts(struct rpc_clnt *,
-> =20
->  const char *rpc_proc_name(const struct rpc_task *task);
-> =20
-> -void rpc_clnt_xprt_switch_put(struct rpc_clnt *);
->  void rpc_clnt_xprt_switch_add_xprt(struct rpc_clnt *, struct rpc_xprt *)=
-;
->  void rpc_clnt_xprt_switch_remove_xprt(struct rpc_clnt *, struct rpc_xprt=
- *);
->  bool rpc_clnt_xprt_switch_has_addr(struct rpc_clnt *clnt,
 > diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index 4aa838543f79..8df944444e9b 100644
+> index 8df944444e9b..0b2c4b5484f5 100644
 > --- a/net/sunrpc/clnt.c
 > +++ b/net/sunrpc/clnt.c
-> @@ -3247,14 +3247,6 @@ rpc_set_connect_timeout(struct rpc_clnt *clnt,
+> @@ -797,15 +797,24 @@ int rpc_switch_client_transport(struct rpc_clnt *cl=
+nt,
 >  }
->  EXPORT_SYMBOL_GPL(rpc_set_connect_timeout);
+>  EXPORT_SYMBOL_GPL(rpc_switch_client_transport);
 > =20
-> -void rpc_clnt_xprt_switch_put(struct rpc_clnt *clnt)
-> -{
-> -	rcu_read_lock();
-> -	xprt_switch_put(rcu_dereference(clnt->cl_xpi.xpi_xpswitch));
-> -	rcu_read_unlock();
-> -}
-> -EXPORT_SYMBOL_GPL(rpc_clnt_xprt_switch_put);
-> -
->  void rpc_clnt_xprt_set_online(struct rpc_clnt *clnt, struct rpc_xprt *xp=
-rt)
+> +static struct rpc_xprt_switch *rpc_clnt_xprt_switch_get(struct rpc_clnt =
+*clnt)
+> +{
+> +	struct rpc_xprt_switch *xps;
+> +
+> +	rcu_read_lock();
+> +	xps =3D xprt_switch_get(rcu_dereference(clnt->cl_xpi.xpi_xpswitch));
+> +	rcu_read_unlock();
+> +
+> +	return xps;
+> +}
+> +
+>  static
+>  int _rpc_clnt_xprt_iter_init(struct rpc_clnt *clnt, struct rpc_xprt_iter=
+ *xpi,
+>  			     void func(struct rpc_xprt_iter *xpi, struct rpc_xprt_switch *xps=
+))
 >  {
 >  	struct rpc_xprt_switch *xps;
+> =20
+> -	rcu_read_lock();
+> -	xps =3D xprt_switch_get(rcu_dereference(clnt->cl_xpi.xpi_xpswitch));
+> -	rcu_read_unlock();
+> +	xps =3D rpc_clnt_xprt_switch_get(clnt);
+>  	if (xps =3D=3D NULL)
+>  		return -EAGAIN;
+>  	func(xpi, xps);
+> @@ -2206,9 +2215,7 @@ call_connect_status(struct rpc_task *task)
+>  			struct rpc_xprt *saved =3D task->tk_xprt;
+>  			struct rpc_xprt_switch *xps;
+> =20
+> -			rcu_read_lock();
+> -			xps =3D xprt_switch_get(rcu_dereference(clnt->cl_xpi.xpi_xpswitch));
+> -			rcu_read_unlock();
+> +			xps =3D rpc_clnt_xprt_switch_get(clnt);
+>  			if (xps->xps_nxprts > 1) {
+>  				long value;
+> =20
+> @@ -3251,22 +3258,23 @@ void rpc_clnt_xprt_set_online(struct rpc_clnt *cl=
+nt, struct rpc_xprt *xprt)
+>  {
+>  	struct rpc_xprt_switch *xps;
+> =20
+> -	rcu_read_lock();
+> -	xps =3D rcu_dereference(clnt->cl_xpi.xpi_xpswitch);
+> -	rcu_read_unlock();
+> +	xps =3D rpc_clnt_xprt_switch_get(clnt);
+>  	xprt_set_online_locked(xprt, xps);
+> +	xprt_switch_put(xps);
+>  }
 
-Nice catch.
+FWIW, it looks like the above fixes a real bug. It's almost certainly
+not safe to dereference xps once you drop the rcu_read_lock there.
+
+> =20
+>  void rpc_clnt_xprt_switch_add_xprt(struct rpc_clnt *clnt, struct rpc_xpr=
+t *xprt)
+>  {
+> +	struct rpc_xprt_switch *xps;
+> +
+>  	if (rpc_clnt_xprt_switch_has_addr(clnt,
+>  		(const struct sockaddr *)&xprt->addr)) {
+>  		return rpc_clnt_xprt_set_online(clnt, xprt);
+>  	}
+> -	rcu_read_lock();
+> -	rpc_xprt_switch_add_xprt(rcu_dereference(clnt->cl_xpi.xpi_xpswitch),
+> -				 xprt);
+> -	rcu_read_unlock();
+> +
+> +	xps =3D rpc_clnt_xprt_switch_get(clnt);
+> +	rpc_xprt_switch_add_xprt(xps, xprt);
+> +	xprt_switch_put(xps);
+>  }
+>  EXPORT_SYMBOL_GPL(rpc_clnt_xprt_switch_add_xprt);
+> =20
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
