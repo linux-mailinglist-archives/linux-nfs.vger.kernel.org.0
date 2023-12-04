@@ -1,45 +1,44 @@
-Return-Path: <linux-nfs+bounces-294-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-295-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D090F8037E7
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 15:58:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41F578037E8
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 15:58:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 736F3B20A88
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 14:58:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72D721C20A37
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 14:58:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6C3128E1F;
-	Mon,  4 Dec 2023 14:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DB7728E1F;
+	Mon,  4 Dec 2023 14:58:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNUeJoPI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nsu5i2Oi"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7C2528DD7;
-	Mon,  4 Dec 2023 14:58:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432CEC433C7;
-	Mon,  4 Dec 2023 14:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E38728DD7;
+	Mon,  4 Dec 2023 14:58:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB254C433C8;
+	Mon,  4 Dec 2023 14:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701701901;
-	bh=woHSLUIDXPWenqv8VoyQP+GxisT4jOzpskvsGkDI57U=;
+	s=k20201202; t=1701701908;
+	bh=2L76mplY80DLWCf4bPGxzP+lyPyCrwDI53bdxXSivOg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=kNUeJoPIbG0Qv2R99+q+E7oVefzLvTm4S8xoxUJhUPJtQ3oxsO8I5Kdshdy6RzpDw
-	 uMNEzHwyEClYxqxp+/hXCI622TZ0FUE93uY0Nt8ti+89focSny1jCQrVQh6pKPIm2G
-	 0WtOuG8gl8QQLxln6bZW0hiAxjUxrjsafzPBsvdUMha8DJQf5w/GDd1dSCqP0Ql0ba
-	 27xzws4OoH90E6ultxThaLK9Y74Y5rENnEaaATGWuN5aPTeSlVKKPgaAG7p1pcs4ze
-	 97GI+/HqZnKwsPvCq4t92nRYI0zs8W5CUXt0C65UZCzICq9p3odaVF8DCX+OLLjWRJ
-	 UPX/DnMWehnTw==
-Subject: [PATCH v1 19/21] svcrdma: Update the synopsis of
- svc_rdma_read_special()
+	b=Nsu5i2Oisx56RJpHvSGUtcDywWJMAAeyeOCwJR3NhXl/O0JeiDUtme4qlOSienMU5
+	 vkGpgyWuBh0RMpW0/8KTsIe24lUqtDs0afpNEhItl3bk6Ra7BQm9LOj7Pu4gn3Z6QF
+	 uPdQPh3Myn+CaEqEC7H/XS2kqnIraXyKURDboJj4sK63NzkR3oDq+yBbcyiP31yWLv
+	 FtiHzdv2ASiLzeqvIKTGJcqoUunQOCYzNLT9Y8PBremnHJF0UZ454+mXt68a7HAjT3
+	 gXWTYqO86pUIhMfUDi2EGNIdNZn8y6DcOz0O1gT/XWKs+T5uT6ThY/80ORu8f4L2+t
+	 LDECf7fPtRTqg==
+Subject: [PATCH v1 20/21] svcrdma: Remove struct svc_rdma_read_info
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
 Cc: tom@talpey.com
-Date: Mon, 04 Dec 2023 09:58:20 -0500
+Date: Mon, 04 Dec 2023 09:58:26 -0500
 Message-ID: 
- <170170190032.54779.14702452194868869890.stgit@bazille.1015granger.net>
+ <170170190672.54779.14081619193481067719.stgit@bazille.1015granger.net>
 In-Reply-To: 
  <170170144201.54779.9877683240030806819.stgit@bazille.1015granger.net>
 References: 
@@ -56,71 +55,69 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Since the RDMA Read I/O state is now contained in the recv_ctxt,
-svc_rdma_read_special() can use that recv_ctxt to derive the
-read_info rather than the other way around. This removes another
-usage of the ri_readctxt field, enabling its removal in a
-subsequent patch.
+The remaining fields of struct svc_rdma_read_info are no longer
+referenced.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_rw.c |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_rw.c |   29 -----------------------------
+ 1 file changed, 29 deletions(-)
 
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index f9d1b0463282..a3003c2dc0a2 100644
+index a3003c2dc0a2..0ccb21f1089e 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -1054,8 +1054,8 @@ static int svc_rdma_read_call_chunk(struct svc_rqst *rqstp,
+@@ -287,28 +287,6 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
+ 	svc_rdma_write_info_free(info);
+ }
  
+-/* State for pulling a Read chunk.
+- */
+-struct svc_rdma_read_info {
+-	struct svc_rqst			*ri_rqst;
+-	struct svc_rdma_recv_ctxt	*ri_readctxt;
+-};
+-
+-static struct svc_rdma_read_info *
+-svc_rdma_read_info_alloc(struct svcxprt_rdma *rdma)
+-{
+-	struct svc_rdma_read_info *info;
+-
+-	return kmalloc_node(sizeof(*info), GFP_KERNEL,
+-			    ibdev_to_node(rdma->sc_cm_id->device));
+-}
+-
+-static void svc_rdma_read_info_free(struct svcxprt_rdma *rdma,
+-				    struct svc_rdma_read_info *info)
+-{
+-	kfree(info);
+-}
+-
  /**
-  * svc_rdma_read_special - Build RDMA Read WQEs to pull a Long Message
-- * @rdma: controlling transport
-- * @info: context for RDMA Reads
-+ * @rqstp: RPC transaction context
-+ * @head: context for ongoing I/O
-  *
-  * The start of the data lands in the first page just after the
-  * Transport header, and the rest lands in rqstp->rq_arg.pages.
-@@ -1071,23 +1071,22 @@ static int svc_rdma_read_call_chunk(struct svc_rqst *rqstp,
-  *   %-ENOTCONN: posting failed (connection is lost),
-  *   %-EIO: rdma_rw initialization failed (DMA mapping, etc).
-  */
--static noinline int svc_rdma_read_special(struct svcxprt_rdma *rdma,
--					  struct svc_rdma_read_info *info)
-+static noinline int svc_rdma_read_special(struct svc_rqst *rqstp,
-+					  struct svc_rdma_recv_ctxt *head)
+  * svc_rdma_wc_read_done - Handle completion of an RDMA Read ctx
+  * @cq: controlling Completion Queue
+@@ -1121,14 +1099,8 @@ int svc_rdma_process_read_list(struct svcxprt_rdma *rdma,
+ 			       struct svc_rdma_recv_ctxt *head)
  {
--	struct svc_rdma_recv_ctxt *head = info->ri_readctxt;
--	struct xdr_buf *buf = &info->ri_rqst->rq_arg;
-+	struct xdr_buf *buf = &rqstp->rq_arg;
+ 	struct svc_rdma_chunk_ctxt *cc = &head->rc_cc;
+-	struct svc_rdma_read_info *info;
  	int ret;
  
--	ret = svc_rdma_read_call_chunk(info->ri_rqst, info->ri_readctxt);
-+	ret = svc_rdma_read_call_chunk(rqstp, head);
- 	if (ret < 0)
- 		goto out;
+-	info = svc_rdma_read_info_alloc(rdma);
+-	if (!info)
+-		return -ENOMEM;
+-	info->ri_rqst = rqstp;
+-	info->ri_readctxt = head;
+ 	svc_rdma_cc_init(rdma, cc);
+ 	cc->cc_cqe.done = svc_rdma_wc_read_done;
+ 	head->rc_pageoff = 0;
+@@ -1165,6 +1137,5 @@ int svc_rdma_process_read_list(struct svcxprt_rdma *rdma,
  
- 	buf->len += head->rc_readbytes;
- 	buf->buflen += head->rc_readbytes;
- 
--	buf->head[0].iov_base = page_address(info->ri_rqst->rq_pages[0]);
-+	buf->head[0].iov_base = page_address(rqstp->rq_pages[0]);
- 	buf->head[0].iov_len = min_t(size_t, PAGE_SIZE, head->rc_readbytes);
--	buf->pages = &info->ri_rqst->rq_pages[1];
-+	buf->pages = &rqstp->rq_pages[1];
- 	buf->page_len = head->rc_readbytes - buf->head[0].iov_len;
- 
- out:
-@@ -1142,7 +1141,7 @@ int svc_rdma_process_read_list(struct svcxprt_rdma *rdma,
- 		else
- 			ret = svc_rdma_read_multiple_chunks(rqstp, head);
- 	} else
--		ret = svc_rdma_read_special(rdma, info);
-+		ret = svc_rdma_read_special(rqstp, head);
- 	if (ret < 0)
- 		goto out_err;
- 
+ out_err:
+ 	svc_rdma_cc_release(rdma, cc, DMA_FROM_DEVICE);
+-	svc_rdma_read_info_free(rdma, info);
+ 	return ret;
+ }
 
 
 
