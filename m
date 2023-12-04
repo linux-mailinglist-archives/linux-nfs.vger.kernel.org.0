@@ -1,89 +1,64 @@
-Return-Path: <linux-nfs+bounces-268-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-269-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A986802A30
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 03:14:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85E71802A43
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 03:25:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A32B1C203BB
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 02:14:25 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0F164B2079A
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 02:25:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88DD3186C;
-	Mon,  4 Dec 2023 02:14:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E95015A7;
+	Mon,  4 Dec 2023 02:25:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="I6I3HXCK"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CVVlyVrJ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C16A0C0
-	for <linux-nfs@vger.kernel.org>; Sun,  3 Dec 2023 18:14:15 -0800 (PST)
-Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-5b4e3284e68so5185637b3.1
-        for <linux-nfs@vger.kernel.org>; Sun, 03 Dec 2023 18:14:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1701656055; x=1702260855; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=388DnSOOl0dwCbXab02Ex4X5WwZLrBD/+hKfrfZ6LKo=;
-        b=I6I3HXCKIyKq8eZyLsdgMqlcab3at3QRIDnOisTcfBigDotD30CBJJent1GrVw1FzO
-         96BTl0n79ToD2MASNnU9aJitDqB9LknN3YboGn9hYn+xEaTI0Ne0aH8MlY/u13r35kcW
-         /dXinOp/K0CEMN2xOFYS5dRKo657MXl1wPMwHDIbcc9lxH8Pc9LolYjR5XG3FpZWGPIE
-         jRA9P27orVYj0S6dmshwGcy30dRb85tUCDENQT/h7vpi4d/NcUD6QUR496LSqH/cKFlI
-         83ZztWc1wyawn5pFe+Qh0UHc3mbkRo+EhYf3PxFU3LQIHOjdq5CfnddtHfFv15tfyo6W
-         V6tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701656055; x=1702260855;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=388DnSOOl0dwCbXab02Ex4X5WwZLrBD/+hKfrfZ6LKo=;
-        b=glrqESsZCNrBxMltuRmBh6u7u5jbQrA888u6mGmKeTQi+Z5eFwgkaq5JUdARm+bxx+
-         3M5qYAXmAWRAg6ak+V7ja7n+ylRLu2xOaokOzHSTbLPD9rLgoVyyZdld6FWxxoQCN+Fj
-         ZENNTuAnqvC/VmmvZJFa+NcCOo7dimUPD7GrfB0gtkJJFgNKGCN2KQV7Ixs7AyhbVAHT
-         0pkl7us9bCpd6c88EOTtsniwy77Cllix6+G2ftW0PoevWAg3jkxGuir/RRy/Z1pP5Xjz
-         BGAVBGiEQUVlBIMxDMLacYVFb3nuWfciWDuPKtmyZiHnqCwcXRn0amPGpw2w+ZNaWi0G
-         IWIQ==
-X-Gm-Message-State: AOJu0YxZxoawF/MP25QplU9pvTskRp7FS+zVe6sIUKA1HV0Bvz+H3G4S
-	H4Dl9QufrrfIGVf6FT3eYmcxYg==
-X-Google-Smtp-Source: AGHT+IFcNWA+eNuaKGM1iJBwEifJAMmJ6R7Kp8kjw7jQPXUFTpog7ShcxdvqW3FEv8diKT/ZtjkVHg==
-X-Received: by 2002:a0d:d68d:0:b0:5d4:1d55:b677 with SMTP id y135-20020a0dd68d000000b005d41d55b677mr5218306ywd.5.1701656054802;
-        Sun, 03 Dec 2023 18:14:14 -0800 (PST)
-Received: from [172.19.131.145] ([216.250.210.88])
-        by smtp.gmail.com with ESMTPSA id w20-20020a0ce114000000b0067ac5a570aesm620392qvk.109.2023.12.03.18.14.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Dec 2023 18:14:14 -0800 (PST)
-Message-ID: <e9a1cfed-42e9-4174-bbb3-1a3680cf6a5c@kernel.dk>
-Date: Sun, 3 Dec 2023 19:13:56 -0700
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1013101;
+	Sun,  3 Dec 2023 18:25:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SsyO4lSpIna9nQlHkHCb+VcH3551LY+52acm9hFhGCc=; b=CVVlyVrJxEBg2Dlyh4y8vfflT7
+	q2uxs8LdAfB6rw6+ZOUhBW5EvZn+htCaCeLPtnK64sYUfOf+boOrTzgABjSap5FtNXKTXTqs01pH+
+	TteMtKPJeELKRGpg42mJ1yP65XdMsC/4XIhEPKtku+cCgt/US+Bko0Xzrk4MZicvNpAMZywDWn/1J
+	HnUOfGuX+rc/YAojLqIB/NX/oTh7cMZsT5t0u32JYN5OxAhBuzl4DxNfx2MfCbDJAUw0/jNoh1wp1
+	unuFQeip7ehpmpPjhFWgewImA3jCgKuYneeAcdfLvj+lg9OgbpWsxqSKiNnnv9d3Ol6YlcLB4TA4w
+	60Qae1vw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1r9ye0-000FhU-Fi; Mon, 04 Dec 2023 02:25:12 +0000
+Date: Mon, 4 Dec 2023 02:25:12 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: NeilBrown <neilb@suse.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Oleg Nesterov <oleg@redhat.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] Allow a kthread to declare that it calls
+ task_work_run()
+Message-ID: <ZW04iGENbNm3A/Ki@casper.infradead.org>
+References: <20231204014042.6754-1-neilb@suse.de>
+ <20231204014042.6754-2-neilb@suse.de>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] Allow a kthread to declare that it calls
- task_work_run()
-Content-Language: en-US
-To: NeilBrown <neilb@suse.de>, Al Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Juri Lelli <juri.lelli@redhat.com>,
- Vincent Guittot <vincent.guittot@linaro.org>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org
-References: <20231204014042.6754-1-neilb@suse.de>
- <20231204014042.6754-2-neilb@suse.de>
-From: Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20231204014042.6754-2-neilb@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 12/3/23 6:36 PM, NeilBrown wrote:
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index e157efc54023..46d640b70ca9 100644
-> --- a/fs/namespace.c
+On Mon, Dec 04, 2023 at 12:36:41PM +1100, NeilBrown wrote:
 > +++ b/fs/namespace.c
 > @@ -1328,7 +1328,7 @@ static void mntput_no_expire(struct mount *mnt)
 >  
@@ -92,7 +67,17 @@ On 12/3/23 6:36 PM, NeilBrown wrote:
 > -		if (likely(!(task->flags & PF_KTHREAD))) {
 > +		if (likely((task->flags & PF_RUNS_TASK_WORK))) {
 
-Extraneous parens here.
+You could lose one set of parens here ...
+
+		if (likely(task->flags & PF_RUNS_TASK_WORK)) {
+
+>  #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+> -#define PF__HOLE__00800000	0x00800000
+> +#define PF_RUNS_TASK_WORK	0x00800000	/* Will call task_work_run() periodically */
+
+And you could lose "Will" here:
+
+#define PF_RUNS_TASK_WORK    0x00800000      /* Calls task_work_run() periodically */
 
 > diff --git a/kernel/task_work.c b/kernel/task_work.c
 > index 95a7e1b7f1da..aec19876e121 100644
@@ -104,11 +89,5 @@ Extraneous parens here.
 >  }
 > +EXPORT_SYMBOL(task_work_run);
 
-If we're exporting this, then I think that function needs a big
-disclaimer on exactly when it is safe to call it. And it most certainly
-needs to be a _GPL export.
-
--- 
-Jens Axboe
-
+_GPL?
 
