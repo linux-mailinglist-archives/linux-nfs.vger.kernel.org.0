@@ -1,205 +1,300 @@
-Return-Path: <linux-nfs+bounces-298-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-297-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 142E480388F
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 16:19:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08395803840
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 16:04:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD5601F2119B
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 15:19:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 77858B20B88
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 15:04:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D0E02C1A0;
-	Mon,  4 Dec 2023 15:19:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E50B628E3A;
+	Mon,  4 Dec 2023 15:03:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NMPFt0LU";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="cOKSaxLK"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mRF4r2OC"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CD1F127;
-	Mon,  4 Dec 2023 07:19:25 -0800 (PST)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B4FCemN026172;
-	Mon, 4 Dec 2023 15:19:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=7NGrsRTS4ftuaA/q1WKt7/JGxR+bWcAzLaNNvldnFi4=;
- b=NMPFt0LUyBjvguokHuYOg/dxY1QpCJI9SRqGpwS5REJdvOVmKalPMRxLeotmjoQwz5Eq
- XiBxtUOfE4S31S7+piT9yyUQhGwXxYbPBYRksQl2HyjxezM1XO778FCiKCS1xP2d68tt
- 292r/ip8/1Vvcrkw+/oPNNpOXcAbJsTHyDuaKEzmiJsa+lL7IFHfTby9U0Gxsg4k2qm5
- GSviKC+82nrEtgRSnkvYT3YnAzojAB1BERl6VCvEF/HJDdfD/AuHvIkG7LATUQTzii7V
- USkIUTVtg0Z+f42cxOtkKTrjJrvkjLie9ycz5EbXuddzq3yNWGZc78QfRAA4aaVrprhU aw== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3usfher9v2-6
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 04 Dec 2023 15:19:19 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3B4EE0fj003977;
-	Mon, 4 Dec 2023 15:00:44 GMT
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2041.outbound.protection.outlook.com [104.47.57.41])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3uqu15xs7w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 04 Dec 2023 15:00:44 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fyNdBhLQhWRkaed7JfyHiTpIYiQHPhL/9YHi8yw/prOEFqYfmSsGnkoetdVLKFAgNOpQCeQ+8rhmW5xuAl4s+Ch5C2zMnkCxy6ccl4tWSSri1+ZWis6RPH1jruA0bG+k1YdATDFB6xGrFkbVOgP5E+9cy4OPt/q73kHY4Kcb3Hc2mOexr2yZ9M9wY6emMsn2UzkDk6kycu+vlNefxquP094T8z24GU8H0RBKQkkIf/IcMjJfJSjydUCoExP5VEf7m2isE6bKItTYeUBCTdkRdtS8tj9UD7oiRiwpp/yQcG2cAf+SC4MObGeS8SSLX+CDFsW0JQO+FnLi7NEkitx+IA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7NGrsRTS4ftuaA/q1WKt7/JGxR+bWcAzLaNNvldnFi4=;
- b=ZyJJQ+pHidj7h1L0Fy/AoBPvE+2SWaTYnmlWjUXaiXvC4d4Vsae88J21bXXw7iqllOJnmBG8VdJP3JOM8vqTXhtbbASshIKMH6RxpHxyRCsc+6fUbhbQebzRvxPhcEjPDQonfKFohaCHSiBqzCfyD3iy2TzBflt8ja42BVYXfsYN2msW/ODg71wJXJRyCznUFqqtvqrcmxPDUEuGupG0RMfxrRoMfKOgt0Gus6E6M/LOgVs76Knkb6gtCnxNniaGrvAjOYMgs/GRdUCJwlRNmYCHgLAN+19y6KWNDmV5najYx8VS9XGFhH68iCh6jyfj62KhnUNHPQME5UnDDG5Zmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7NGrsRTS4ftuaA/q1WKt7/JGxR+bWcAzLaNNvldnFi4=;
- b=cOKSaxLKVvEtvQcfhNMI2WUedDhf9JzThh1FybbGvRghha79FawbEULdjtCADYnMu50T9TWoSFlBZqpyKCiR0cMxod0Ne3/OVtkfoA1zXXRgo2V9SOZcaherx63Q7WiDgY0bbaeBqhMU8scXsIwTLsX/48yKQhrBeIh0Yv/M54s=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CH0PR10MB5180.namprd10.prod.outlook.com (2603:10b6:610:db::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.33; Mon, 4 Dec
- 2023 15:00:42 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::360b:b3c0:c5a9:3b3c]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::360b:b3c0:c5a9:3b3c%4]) with mapi id 15.20.7046.034; Mon, 4 Dec 2023
- 15:00:42 +0000
-Date: Mon, 4 Dec 2023 10:00:39 -0500
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Chuck Lever <cel@kernel.org>
-Cc: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org, tom@talpey.com
-Subject: Re: [PATCH v1 00/21] svc_rdma_read_info clean ups
-Message-ID: <ZW3plwcQjBYowR0d@tissot.1015granger.net>
-References: <170170144201.54779.9877683240030806819.stgit@bazille.1015granger.net>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <170170144201.54779.9877683240030806819.stgit@bazille.1015granger.net>
-X-ClientProxiedBy: CH0PR03CA0104.namprd03.prod.outlook.com
- (2603:10b6:610:cd::19) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CEDAC4;
+	Mon,  4 Dec 2023 07:03:51 -0800 (PST)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B4Exrmi003821;
+	Mon, 4 Dec 2023 15:02:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=1M+Lb7RENQgWWhXI/S8gGx7CVn38cCrH9gi8fM6ANxk=;
+ b=mRF4r2OCNy2A3Q36eSmIFv+fGgfC9k6w0Z53J0FiB9WvOJvflQA/5EGTKe8kqv16IyN7
+ 9SsQL8wx670mRgkFNiNW3bFss2Zy0ZRV5QVvk7XkcE5K7zOCcfeOcUpD/VsDvWjP1lk1
+ u48AIIdoUJbJ56R9xW+Y87T9IFnMHdCii/WvWwPugqFpqW9SjgG+fPzn/WDboDhea2TR
+ bE87HNx6QaFADbj1UD8YgNnOjcJCUPMn3+Sk9HeChQAWkooBJXsv52i/82IHm6KVIRq5
+ UINrSGEXdlxYeUZVSjA0MXaEfHX8t1hvyZAASEI4ScB+sZqcxofgtFXoxrRcfglCqSoE OA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ush1602tm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 15:02:03 +0000
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3B4F0Nt2005079;
+	Mon, 4 Dec 2023 15:02:03 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ush1602sh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 15:02:03 +0000
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3B4EJf6O017843;
+	Mon, 4 Dec 2023 15:02:01 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3urv8awk6g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 15:02:01 +0000
+Received: from smtpav06.wdc07v.mail.ibm.com (smtpav06.wdc07v.mail.ibm.com [10.39.53.233])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3B4F20MM31392126
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 4 Dec 2023 15:02:01 GMT
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D247D58055;
+	Mon,  4 Dec 2023 15:02:00 +0000 (GMT)
+Received: from smtpav06.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 59CD85803F;
+	Mon,  4 Dec 2023 15:01:58 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.81.193])
+	by smtpav06.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Mon,  4 Dec 2023 15:01:58 +0000 (GMT)
+Message-ID: <99c92965c2b2c49253967d56f2a4e5f1d2c881f2.camel@linux.ibm.com>
+Subject: Re: [PATCH v5 23/23] integrity: Switch from rbtree to LSM-managed
+ blob for integrity_iint_cache
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>,
+        Paul Moore
+	 <paul@paul-moore.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com,
+        jlayton@kernel.org, neilb@suse.de, kolga@netapp.com,
+        Dai.Ngo@oracle.com, tom@talpey.com, jmorris@namei.org,
+        serge@hallyn.com, dmitry.kasatkin@gmail.com, dhowells@redhat.com,
+        jarkko@kernel.org, stephen.smalley.work@gmail.com,
+        eparis@parisplace.org, casey@schaufler-ca.com, mic@digikod.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, Roberto Sassu
+ <roberto.sassu@huawei.com>
+Date: Mon, 04 Dec 2023 10:01:57 -0500
+In-Reply-To: <5f441267b6468b98e51a08d247a7ae066a60ff0c.camel@huaweicloud.com>
+References: <20231107134012.682009-24-roberto.sassu@huaweicloud.com>
+	 <17befa132379d37977fc854a8af25f6d.paul@paul-moore.com>
+	 <2084adba3c27a606cbc5ed7b3214f61427a829dd.camel@huaweicloud.com>
+	 <CAHC9VhTTKac1o=RnQadu2xqdeKH8C_F+Wh4sY=HkGbCArwc8JQ@mail.gmail.com>
+	 <b6c51351be3913be197492469a13980ab379e412.camel@huaweicloud.com>
+	 <CAHC9VhSAryQSeFy0ZMexOiwBG-YdVGRzvh58=heH916DftcmWA@mail.gmail.com>
+	 <90eb8e9d-c63e-42d6-b951-f856f31590db@huaweicloud.com>
+	 <CAHC9VhROnfBoaOy2MurdSpcE_poo_6Qy9d2U3g6m2NRRHaqz4Q@mail.gmail.com>
+	 <5f441267b6468b98e51a08d247a7ae066a60ff0c.camel@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH0PR10MB5180:EE_
-X-MS-Office365-Filtering-Correlation-Id: ba9e1164-4d87-4cc2-f716-08dbf4d9c904
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	wWSR45XaZH9mJsqTXSfvvskkrBJ8MozLivXCur3styNUlqDoOEE80QB5cTj6XAzSScc/E7YBJ7a/wO4QtyYC9ESayuj4aQH4XTWCflZLqIcOY1gIgVFyWE4J19kONfSSCTgbsk3+R7TVXkRmHRSMruJFTBAwvT0Bs74LEzymv4gwqmuediFcpJvNwFDbpqKrE/G4qZW7+xzXoJvTjuLJqoxVnMRMIOMSd9N5q3aYh+bTIcRjHbNDDYJRrVuRbDdQ1E2N86iIchSlMcUSNwtL06DIOl3EdH7WGnG8SJA8gcaSiM5cYvDbvf4m1hsnzCkNVcOHm++j1pEGWLlW/nXg1mmWGQ4fV2jzvqN+xOO7ur4eigKPlODn79qmsJkbB0DkEiPDFmVrjEQkeghHm+kFRspTXQXePrl3EEW1kA1omMDkACAzn82ALQq/oowQU9kK0ldATpEVm1NtkC5yQvK6QqPn6Zr8G6XueJD2y5MSceGP7JOePVbpzIsWFBVyh29npL/6nLS9cbFhZfq5C5S0qCT8iVljbtanIN5gae7y95hNmXPtegX9p3UpaPEdv5PaNCIJIB8foL5PJ7Dh8ocr0Ef9q5U/EED5lLN17nELiEU=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(376002)(396003)(136003)(366004)(230922051799003)(230273577357003)(230173577357003)(1800799012)(186009)(451199024)(64100799003)(8676002)(4326008)(8936002)(9686003)(6512007)(6506007)(83380400001)(26005)(6486002)(966005)(478600001)(6666004)(66476007)(66946007)(66556008)(316002)(6916009)(2906002)(41300700001)(38100700002)(44832011)(86362001)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?eE/qIqA7HMeflE3uQgYvKnabs3mAXrn46oiWvVA01+2U6lM70T4ESk6Zbxmb?=
- =?us-ascii?Q?TWd3p/1zK2EPXve0aLvYqDLAKSfytQFfM0do/VzCURPWA8Oz6VLr/2PymHb6?=
- =?us-ascii?Q?5U1LK7RypBk8SfwlZXeNMzeDFHBcZfQyU28JXOZBZhd7h1NXP/r+9V5nF2KD?=
- =?us-ascii?Q?fTyDcYN9UlFT1qCf9u8erqxAXT8zywMLpTA/PHw++AwA4n8gH03Vf+QsobzC?=
- =?us-ascii?Q?JZ+gbtlLgccNVfrfMIFWDfIUsVDqj603z0JC9yIhhGYNKuCc6SPnRFEaj6gc?=
- =?us-ascii?Q?0aTSM7b+cKBwNsE2/E7avJ3+ZGkrK4fn8TxOhnbAGKUNZPrmAT65NRXNn1d8?=
- =?us-ascii?Q?whiFYgqeZBHms+5DTL/DxQOJAAQhQG5sHZBE5w8u6tKN27SFIrswMzrbaL61?=
- =?us-ascii?Q?NiTS8LDqdgscFupO5DDuEz5jBl/jLAujwjtKHBJTQuLtH4DMorucOuzJ7ipO?=
- =?us-ascii?Q?kS6URKz9zOYeC02yPMj/BsY9FpEYyJxrgWPOpv5ND7Bgi81TSd7wW2rNoyX0?=
- =?us-ascii?Q?IUjm5JX9vgCNxMDKZYlIOw0dZgueDPvKbsEplzracJpYaUG2+oXQ/QVnzm/Z?=
- =?us-ascii?Q?ewq+jMiISiMUPRUBlmWH3ubfKmr7ik6mxWO1L2EIZe3DDGx/IJ2lyiXolbZp?=
- =?us-ascii?Q?8oK/T1BUEkjMygc6dHPoteSA1XSB9EEhXnXI8z6sUUZsfHgLGuv8Cjbbt7Df?=
- =?us-ascii?Q?pY+974bs+7zmLzsaAeAkt4IwrW+Cd5g224t8LquC7vSjcItSZHLkEVQxcFmh?=
- =?us-ascii?Q?tzrUbtMsKKeG3CJnSFVdaQ0QyyfxxCYVH6UvoFTYGsvTJnF9eLMfehZo6RWW?=
- =?us-ascii?Q?FG8sTB5mq3wN8WWwhOY4xFcdkVSI9zY1/UFrnKEyN4cBaKzLWrPrEw/Gjrg1?=
- =?us-ascii?Q?hb+XlkcDqT7WhEG0fFotfJAro+Nn4JW+dmns5NVQVTH457m7t3X3UuZTg+iH?=
- =?us-ascii?Q?7dUHLQDXOURPTkLjkw2AOJEJUWwQgSSLzIc28X9N3hI+IuAFsY+yLC0kd2ir?=
- =?us-ascii?Q?oKrskaJ8ZLTM+iZ8YlWIXj4E3uMCSvhkFDz5Bgtj7ATgD8hhTQGCJEbmlFOs?=
- =?us-ascii?Q?fBTYdqa/NO8WlZI1bddGobZtANKkTkHHOhSYlbdnJiYBMwQpH8gNCpXcKYzM?=
- =?us-ascii?Q?PjBbOjBNBJCfCb8XY2gFKHlyeHEksCgEsg3juYAUusXYuVk5p2FZi9B7Ct3W?=
- =?us-ascii?Q?w03LfEYWLB53nBiPlz0el+RU5bUPwDEJqNNhmClJw42ZpOwUXaeXROIZ0lYY?=
- =?us-ascii?Q?vIceVITA3H4b8voL723DwXC04lcsfrw3/Bt6R3m9kf3WAbNnpdqW1f3/9KsW?=
- =?us-ascii?Q?C2Tx0SjYveBORqyslBPG9szkSBGw35vPToKWFY8HAxEN76YKXO/ErMO9B+5p?=
- =?us-ascii?Q?SBcIIe6oriCmTIZ52cakBUj9FM7T1e9PM55a+ApOBf+0dzEcqsY4RuJgHiJI?=
- =?us-ascii?Q?yJkRQ+529ALy22pymG4Xj6K1XGIl+Z51xOpMM3pQm2V3sKRk+DgpupZi2UjO?=
- =?us-ascii?Q?HKSarIRXLpLdDC1RVi+q5uHXnL3byR9RJb51dDG2K7Y+H6p1uEmxthvru7Am?=
- =?us-ascii?Q?WaixbnqrFBe5QvOmfsMNjQa+1P7WkfwgtPa/wkp5Pjk4gdBPTyhfwHDzcXKm?=
- =?us-ascii?Q?VA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	8S1P7bjXFCk/WDSsrAfUc73JyNqsabhKVillcMSthiaDOUFWQzaax/BZzoF4yA0PinKgC5MaEvTFJwTU1VedR5jRfIHhpvL2RWyBE8iMqAuLGUJPv2/GyDlrxJfrwa/3V+6M4L9nqMYQstfTy4BbgB+8b7YO7shwZlH3VaNQ3DJTqKiclHEteZglYnYGOgL3yXv8kRYuTzm2Bfu+aNhnLlIYfcjrTOVhb9gkkJq634HtUMtiBm4bCnXZtSL5VSHVL3Wktapj0yiqBqNcUBp1/3TMyqPXk/oi0Q+0OHUK75Cycp3wH/W+cnDdJnDPsM7Zlcxt6tcpCGIkmCiUdMFB6fbyIOSRJeXEWVtHFIRethF0Nuu4lkZhBLUoysEuSraBA6gDGDUru+GZfrHCrwjV1CJQteoT7sRkPV4F6A1DO+xyTcMMBuvhHggmQKz3qhy7nqWBrZpbbXXGcYJa+t6J2DgwG9cyZ5xEVTnqs+aC8fq39zO5lkTUAATMCLl785/tlSDkkvmhhy0kbr2ZrLzyExe85wbBzYNQUbkEPfSBQjbBhvHLkmwqMWtWE8mBU5L3NXq5LBGOlXNIFaIcSLL3hIIkCbdQc0JcE0TDCO88WdzwuRBzCJK2OMhstRLR6CfoTLo6YqfkILOxAD2E5jwagpOxJU3ArwPVZ/VdbWcAyaRyCghnPgoOzw3YiAHMJlAywEaSR68f2sjP4PmVqtTemuzL7RcPPnM36LYKCl9LJPS746QYWHV5Vt8NFgskAP70PIRYUoZUcfAq6Gl/C4Q1fMaCAbuA2Kqjncx3UAakFdgpAIuUElccaQ8kqr5KFQKg
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba9e1164-4d87-4cc2-f716-08dbf4d9c904
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Dec 2023 15:00:42.2267
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TfrvGSkl7qO4B4csNUcpiq105kF2JR6WQlr/ioXoz1rPnxtzdIMNX67Jo9YZCqHqJFwcElo4rkncPq7tqVAPPg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5180
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WLTcmefykaHbDOEIiLJwsS3WymVSyxpp
+X-Proofpoint-GUID: xRtCrWQrHAe-uEV4KEeAH2kUbps7vgkn
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2023-12-04_13,2023-12-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=655
- suspectscore=0 malwarescore=0 adultscore=0 phishscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2312040113
-X-Proofpoint-ORIG-GUID: 1s6FYiEscnc2tKAyHoyyxhqoQ3oc3co0
-X-Proofpoint-GUID: 1s6FYiEscnc2tKAyHoyyxhqoQ3oc3co0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
+ spamscore=0 bulkscore=0 suspectscore=0 lowpriorityscore=0 mlxlogscore=999
+ malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2312040112
 
-On Mon, Dec 04, 2023 at 09:56:18AM -0500, Chuck Lever wrote:
-> These patches are in preparation for more substantial changes to how
-> Read chunks are managed by svcrdma. There are a lot of patches in
-> this series, but each change is narrow and no external behavior
-> changes are expected.
+On Mon, 2023-12-04 at 14:26 +0100, Roberto Sassu wrote:
+> On Thu, 2023-11-30 at 11:34 -0500, Paul Moore wrote:
+> > On Wed, Nov 29, 2023 at 1:47 PM Roberto Sassu
+> > <roberto.sassu@huaweicloud.com> wrote:
+> > > On 11/29/2023 6:22 PM, Paul Moore wrote:
+> > > > On Wed, Nov 29, 2023 at 7:28 AM Roberto Sassu
+> > > > <roberto.sassu@huaweicloud.com> wrote:
+> > > > > 
+> > > > > On Mon, 2023-11-20 at 16:06 -0500, Paul Moore wrote:
+> > > > > > On Mon, Nov 20, 2023 at 3:16 AM Roberto Sassu
+> > > > > > <roberto.sassu@huaweicloud.com> wrote:
+> > > > > > > On Fri, 2023-11-17 at 15:57 -0500, Paul Moore wrote:
+> > > > > > > > On Nov  7, 2023 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
+> > > > > > > > > 
+> > > > > > > > > Before the security field of kernel objects could be shared among LSMs with
+> > > > > > > > > the LSM stacking feature, IMA and EVM had to rely on an alternative storage
+> > > > > > > > > of inode metadata. The association between inode metadata and inode is
+> > > > > > > > > maintained through an rbtree.
+> > > > > > > > > 
+> > > > > > > > > Because of this alternative storage mechanism, there was no need to use
+> > > > > > > > > disjoint inode metadata, so IMA and EVM today still share them.
+> > > > > > > > > 
+> > > > > > > > > With the reservation mechanism offered by the LSM infrastructure, the
+> > > > > > > > > rbtree is no longer necessary, as each LSM could reserve a space in the
+> > > > > > > > > security blob for each inode. However, since IMA and EVM share the
+> > > > > > > > > inode metadata, they cannot directly reserve the space for them.
+> > > > > > > > > 
+> > > > > > > > > Instead, request from the 'integrity' LSM a space in the security blob for
+> > > > > > > > > the pointer of inode metadata (integrity_iint_cache structure). The other
+> > > > > > > > > reason for keeping the 'integrity' LSM is to preserve the original ordering
+> > > > > > > > > of IMA and EVM functions as when they were hardcoded.
+> > > > > > > > > 
+> > > > > > > > > Prefer reserving space for a pointer to allocating the integrity_iint_cache
+> > > > > > > > > structure directly, as IMA would require it only for a subset of inodes.
+> > > > > > > > > Always allocating it would cause a waste of memory.
+> > > > > > > > > 
+> > > > > > > > > Introduce two primitives for getting and setting the pointer of
+> > > > > > > > > integrity_iint_cache in the security blob, respectively
+> > > > > > > > > integrity_inode_get_iint() and integrity_inode_set_iint(). This would make
+> > > > > > > > > the code more understandable, as they directly replace rbtree operations.
+> > > > > > > > > 
+> > > > > > > > > Locking is not needed, as access to inode metadata is not shared, it is per
+> > > > > > > > > inode.
+> > > > > > > > > 
+> > > > > > > > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > > > > > > > > Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+> > > > > > > > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> > > > > > > > > ---
+> > > > > > > > >   security/integrity/iint.c      | 71 +++++-----------------------------
+> > > > > > > > >   security/integrity/integrity.h | 20 +++++++++-
+> > > > > > > > >   2 files changed, 29 insertions(+), 62 deletions(-)
+> > > > > > > > > 
+> > > > > > > > > diff --git a/security/integrity/iint.c b/security/integrity/iint.c
+> > > > > > > > > index 882fde2a2607..a5edd3c70784 100644
+> > > > > > > > > --- a/security/integrity/iint.c
+> > > > > > > > > +++ b/security/integrity/iint.c
+> > > > > > > > > @@ -231,6 +175,10 @@ static int __init integrity_lsm_init(void)
+> > > > > > > > >      return 0;
+> > > > > > > > >   }
+> > > > > > > > > 
+> > > > > > > > > +struct lsm_blob_sizes integrity_blob_sizes __ro_after_init = {
+> > > > > > > > > +   .lbs_inode = sizeof(struct integrity_iint_cache *),
+> > > > > > > > > +};
+> > > > > > > > 
+> > > > > > > > I'll admit that I'm likely missing an important detail, but is there
+> > > > > > > > a reason why you couldn't stash the integrity_iint_cache struct
+> > > > > > > > directly in the inode's security blob instead of the pointer?  For
+> > > > > > > > example:
+> > > > > > > > 
+> > > > > > > >    struct lsm_blob_sizes ... = {
+> > > > > > > >      .lbs_inode = sizeof(struct integrity_iint_cache),
+> > > > > > > >    };
+> > > > > > > > 
+> > > > > > > >    struct integrity_iint_cache *integrity_inode_get(inode)
+> > > > > > > >    {
+> > > > > > > >      if (unlikely(!inode->isecurity))
+> > > > > > > >        return NULL;
+> > > > > > > >      return inode->i_security + integrity_blob_sizes.lbs_inode;
+> > > > > > > >    }
+> > > > > > > 
+> > > > > > > It would increase memory occupation. Sometimes the IMA policy
+> > > > > > > encompasses a small subset of the inodes. Allocating the full
+> > > > > > > integrity_iint_cache would be a waste of memory, I guess?
+> > > > > > 
+> > > > > > Perhaps, but if it allows us to remove another layer of dynamic memory
+> > > > > > I would argue that it may be worth the cost.  It's also worth
+> > > > > > considering the size of integrity_iint_cache, while it isn't small, it
+> > > > > > isn't exactly huge either.
+> > > > > > 
+> > > > > > > On the other hand... (did not think fully about that) if we embed the
+> > > > > > > full structure in the security blob, we already have a mutex available
+> > > > > > > to use, and we don't need to take the inode lock (?).
+> > > > > > 
+> > > > > > That would be excellent, getting rid of a layer of locking would be significant.
+> > > > > > 
+> > > > > > > I'm fully convinced that we can improve the implementation
+> > > > > > > significantly. I just was really hoping to go step by step and not
+> > > > > > > accumulating improvements as dependency for moving IMA and EVM to the
+> > > > > > > LSM infrastructure.
+> > > > > > 
+> > > > > > I understand, and I agree that an iterative approach is a good idea, I
+> > > > > > just want to make sure we keep things tidy from a user perspective,
+> > > > > > i.e. not exposing the "integrity" LSM when it isn't required.
+> > > > > 
+> > > > > Ok, I went back to it again.
+> > > > > 
+> > > > > I think trying to separate integrity metadata is premature now, too
+> > > > > many things at the same time.
+> > > > 
+> > > > I'm not bothered by the size of the patchset, it is more important
+> > > > that we do The Right Thing.  I would like to hear in more detail why
+> > > > you don't think this will work, I'm not interested in hearing about
+> > > > difficult it may be, I'm interested in hearing about what challenges
+> > > > we need to solve to do this properly.
+> > > 
+> > > The right thing in my opinion is to achieve the goal with the minimal
+> > > set of changes, in the most intuitive way.
+> > 
+> > Once again, I want to stress that I don't care about the size of the
+> > change, the number of patches in a patchset, etc.  While it's always
+> > nice to be able to minimize the number of changes in a patch/patchset,
+> > that is secondary to making sure we are doing the right thing over the
+> > long term.  This is especially important when we are talking about
+> > things that are user visible.
+> > 
+> > > Until now, there was no solution that could achieve the primary goal of
+> > > this patch set (moving IMA and EVM to the LSM infrastructure) and, at
+> > > the same time, achieve the additional goal you set of removing the
+> > > 'integrity' LSM.
+> > 
+> > We need to stop thinking about the "integrity" code as a LSM, it isn't
+> > a LSM.  It's a vestigial implementation detail that was necessary back
+> > when there could only be one LSM active at a time and there was a
+> > desire to have IMA/EVM active in conjunction with one of the LSMs,
+> > i.e. Smack, SELinux, etc.
+> > 
+> > IMA and EVM are (or will be) LSMs, "integrity" is not.  I recognize
+> > that eliminating the need for the "integrity" code is a relatively new
+> > addition to this effort, but that is only because I didn't properly
+> > understand the relationship between IMA, EVM, and the "integrity" code
+> > until recently.  The elimination of the shared "integrity" code is
+> > consistent with promoting IMA and EVM as full LSMs, if there is core
+> > functionality that cannot be split up into the IMA and/or EVM LSMs
+> > then we need to look at how to support that without exposing that
+> > implementation detail/hack to userspace.  Maybe that means direct
+> > calls between IMA and EVM, maybe that means preserving some of the
+> > common integrity code hidden from userspace, maybe that means adding
+> > functionality to the LSM layer, maybe that means something else?
+> > Let's think on this to come up with something that we can all accept
+> > as a long term solution instead of just doing the quick and easy
+> > option.
 > 
-> The main benefit of this series is that svc_rdma_read_info is no
-> longer dynamically allocated.
+> If the result of this patch set should be that IMA and EVM become
+> proper LSMs without the shared integrity layer, instead of collapsing
+> all changes in this patch set, I think we should first verify if IMA
+> and EVM can be really independent. Once we guarantee that, we can
+> proceed making the proper LSMs.
+> 
+> These are the changes I have in mind:
+> 
+> 1) Fix evm_verifyxattr(), and make it work without integrity_iint_cache
+> 2) Remove the integrity_iint_cache parameter from evm_verifyxattr(),
+>    since the other callers are not going to use it
+> 3) Create an internal function with the original parameters to be used
+>    by IMA
+> 4) Introduce evm_post_path_mknod(), which similarly to
+>    ima_post_path_mknod(), sets IMA_NEW_FILE for new files
+> 5) Add hardcoded call to evm_post_path_mknod() after
+>    ima_post_path_mknod() in security.c
+> 
+> If we think that this is good enough, we proceed with the move of IMA
+> and EVM functions to the LSM infrastructure (patches v7 19-21).
+> 
+> The next patches are going to be similar to patches v6 22-23, but
+> unlike those, their goal would be simply to split metadata, not to make
+> IMA and EVM independent, which at this point has been addressed
+> separately in the prerequisite patches.
+> 
+> The final patch is to remove the 'integrity' LSM and the integrity
+> metadata management code, which now is not used anymore.
+> 
+> Would that work?
 
-Note that the full series is available in the svcrdma-next branch
-in this repo:
+Sounds good to me.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+Mimi
 
-
-> ---
-> 
-> Chuck Lever (21):
->       svcrdma: Reduce size of struct svc_rdma_rw_ctxt
->       svcrdma: Acquire the svcxprt_rdma pointer from the CQ context
->       svcrdma: Explicitly pass the transport into Write chunk I/O paths
->       svcrdma: Explicitly pass the transport into Read chunk I/O paths
->       svcrdma: Explicitly pass the transport to svc_rdma_post_chunk_ctxt()
->       svcrdma: Pass a pointer to the transport to svc_rdma_cc_release()
->       svcrdma: Remove the svc_rdma_chunk_ctxt::cc_rdma field
->       svcrdma: Move struct svc_rdma_chunk_ctxt to svc_rdma.h
->       svcrdma: Start moving fields out of struct svc_rdma_read_info
->       svcrdma: Move svc_rdma_read_info::ri_pageno to struct svc_rdma_recv_ctxt
->       svcrdma: Move read_info::ri_pageoff into struct svc_rdma_recv_ctxt
->       svcrdma: Update synopsis of svc_rdma_build_read_segment()
->       svcrdma: Update synopsis of svc_rdma_build_read_chunk()
->       svcrdma: Update synopsis of svc_rdma_read_chunk_range()
->       svcrdma: Update the synopsis of svc_rdma_read_data_item()
->       svcrdma: Update synopsis of svc_rdma_copy_inline_range()
->       svcrdma: Update synopsis of svc_rdma_read_multiple_chunks()
->       svcrdma: Update the synopsis of svc_rdma_read_call_chunk()
->       svcrdma: Update the synopsis of svc_rdma_read_special()
->       svcrdma: Remove struct svc_rdma_read_info
->       svcrdma: Move the svc_rdma_cc_init() call
-> 
-> 
->  include/linux/sunrpc/svc_rdma.h         |  30 +++
->  net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   1 +
->  net/sunrpc/xprtrdma/svc_rdma_rw.c       | 310 +++++++++++-------------
->  3 files changed, 169 insertions(+), 172 deletions(-)
-> 
-> --
-> Chuck Lever
-> 
-> 
-
--- 
-Chuck Lever
 
