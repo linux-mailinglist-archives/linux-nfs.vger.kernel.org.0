@@ -1,93 +1,362 @@
-Return-Path: <linux-nfs+bounces-272-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-273-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D9A2803406
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 14:10:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E7748034D7
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 14:27:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E7F71C20A67
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 13:10:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8D30280A46
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 13:27:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2881624A19;
-	Mon,  4 Dec 2023 13:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ssy/MoZl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7928525101;
+	Mon,  4 Dec 2023 13:27:39 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 018E52421D;
-	Mon,  4 Dec 2023 13:10:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A799BC433C7;
-	Mon,  4 Dec 2023 13:10:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701695409;
-	bh=4c5STem0/SOMPvsbXCCmd2m4mDfp4H3FteANVpexOFs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Ssy/MoZlkSQF1jfOKAE7g6R+NXQmQY+SXRBu25q1ob+2W9VmTZ9zOMYLVmzpxIFiK
-	 qrD0fz6Xvk/cL6r4MvbFcands0h7LP/7t1z7qH1FNY6xzxlttlLY/P7mTCbNLGH2ZD
-	 kKZG6FqpBXAEavyvWWLE4NtKH0h4eY2w4Kr3VutIV3NY/K7Mzqu7mMBt5UHBQVUxPL
-	 xBdUpGNeI+qR8rLUtMOggaBblf+e3u4uqiFROvGj63ZD7i6URo0M9a+qobuGVjotdl
-	 9zAQQG55NE/7wBvVNZeqmqiM7LzKFuwHttpWziUj87o4fvqrX2fsx5b7UbHaIfYpi5
-	 idfJSkKAfvYXw==
-Message-ID: <afb785edd639f9645b4b3fcf098bdcf1e31d82b8.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: remove unnecessary NULL check
-From: Jeff Layton <jlayton@kernel.org>
-To: Dan Carpenter <dan.carpenter@linaro.org>, Chuck Lever
-	 <chuck.lever@oracle.com>
-Cc: Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai
- Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- linux-nfs@vger.kernel.org,  linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Date: Mon, 04 Dec 2023 08:10:07 -0500
-In-Reply-To: <0cce4257-6c22-4c0a-b769-b946990413fe@moroto.mountain>
-References: <0cce4257-6c22-4c0a-b769-b946990413fe@moroto.mountain>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
+Received: from frasgout11.his.huawei.com (frasgout11.his.huawei.com [14.137.139.23])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13F3D26A0;
+	Mon,  4 Dec 2023 05:27:21 -0800 (PST)
+Received: from mail.maildlp.com (unknown [172.18.186.29])
+	by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4SkPHP09SJz9yMVd;
+	Mon,  4 Dec 2023 21:13:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [7.182.16.27])
+	by mail.maildlp.com (Postfix) with ESMTP id 19FB114011D;
+	Mon,  4 Dec 2023 21:27:13 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+	by APP2 (Coremail) with SMTP id GxC2BwCHN2Gi021lB5XiAQ--.42467S2;
+	Mon, 04 Dec 2023 14:27:12 +0100 (CET)
+Message-ID: <5f441267b6468b98e51a08d247a7ae066a60ff0c.camel@huaweicloud.com>
+Subject: Re: [PATCH v5 23/23] integrity: Switch from rbtree to LSM-managed
+ blob for integrity_iint_cache
+From: Roberto Sassu <roberto.sassu@huaweicloud.com>
+To: Paul Moore <paul@paul-moore.com>
+Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, chuck.lever@oracle.com, 
+ jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, 
+ tom@talpey.com, jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com, 
+ dmitry.kasatkin@gmail.com, dhowells@redhat.com, jarkko@kernel.org, 
+ stephen.smalley.work@gmail.com, eparis@parisplace.org,
+ casey@schaufler-ca.com,  mic@digikod.net, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org,  linux-nfs@vger.kernel.org,
+ linux-security-module@vger.kernel.org,  linux-integrity@vger.kernel.org,
+ keyrings@vger.kernel.org,  selinux@vger.kernel.org, Roberto Sassu
+ <roberto.sassu@huawei.com>
+Date: Mon, 04 Dec 2023 14:26:55 +0100
+In-Reply-To: <CAHC9VhROnfBoaOy2MurdSpcE_poo_6Qy9d2U3g6m2NRRHaqz4Q@mail.gmail.com>
+References: <20231107134012.682009-24-roberto.sassu@huaweicloud.com>
+	 <17befa132379d37977fc854a8af25f6d.paul@paul-moore.com>
+	 <2084adba3c27a606cbc5ed7b3214f61427a829dd.camel@huaweicloud.com>
+	 <CAHC9VhTTKac1o=RnQadu2xqdeKH8C_F+Wh4sY=HkGbCArwc8JQ@mail.gmail.com>
+	 <b6c51351be3913be197492469a13980ab379e412.camel@huaweicloud.com>
+	 <CAHC9VhSAryQSeFy0ZMexOiwBG-YdVGRzvh58=heH916DftcmWA@mail.gmail.com>
+	 <90eb8e9d-c63e-42d6-b951-f856f31590db@huaweicloud.com>
+	 <CAHC9VhROnfBoaOy2MurdSpcE_poo_6Qy9d2U3g6m2NRRHaqz4Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.1 (3.50.1-1.fc39) 
+User-Agent: Evolution 3.44.4-0ubuntu2 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-CM-TRANSID:GxC2BwCHN2Gi021lB5XiAQ--.42467S2
+X-Coremail-Antispam: 1UD129KBjvJXoWfJF1rAw4rWryfJF17tr4UXFb_yoWkur1xpF
+	W7Ka1UKr4kJry2krn2vF45ZrWIkrWrXFyUXrn8Kr18Zas0vF10qr40krWUuFyUGrWkKw1j
+	qr1Ygry7Z3WDZaUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
+	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42
+	xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+	6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFYFCUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAgABBF1jj5M5CgAAsW
 
-On Mon, 2023-12-04 at 15:30 +0300, Dan Carpenter wrote:
-> We check "state" for NULL on the previous line so it can't be NULL here.
-> No need to check again.
+On Thu, 2023-11-30 at 11:34 -0500, Paul Moore wrote:
+> On Wed, Nov 29, 2023 at 1:47=E2=80=AFPM Roberto Sassu
+> <roberto.sassu@huaweicloud.com> wrote:
+> > On 11/29/2023 6:22 PM, Paul Moore wrote:
+> > > On Wed, Nov 29, 2023 at 7:28=E2=80=AFAM Roberto Sassu
+> > > <roberto.sassu@huaweicloud.com> wrote:
+> > > >=20
+> > > > On Mon, 2023-11-20 at 16:06 -0500, Paul Moore wrote:
+> > > > > On Mon, Nov 20, 2023 at 3:16=E2=80=AFAM Roberto Sassu
+> > > > > <roberto.sassu@huaweicloud.com> wrote:
+> > > > > > On Fri, 2023-11-17 at 15:57 -0500, Paul Moore wrote:
+> > > > > > > On Nov  7, 2023 Roberto Sassu <roberto.sassu@huaweicloud.com>=
+ wrote:
+> > > > > > > >=20
+> > > > > > > > Before the security field of kernel objects could be shared=
+ among LSMs with
+> > > > > > > > the LSM stacking feature, IMA and EVM had to rely on an alt=
+ernative storage
+> > > > > > > > of inode metadata. The association between inode metadata a=
+nd inode is
+> > > > > > > > maintained through an rbtree.
+> > > > > > > >=20
+> > > > > > > > Because of this alternative storage mechanism, there was no=
+ need to use
+> > > > > > > > disjoint inode metadata, so IMA and EVM today still share t=
+hem.
+> > > > > > > >=20
+> > > > > > > > With the reservation mechanism offered by the LSM infrastru=
+cture, the
+> > > > > > > > rbtree is no longer necessary, as each LSM could reserve a =
+space in the
+> > > > > > > > security blob for each inode. However, since IMA and EVM sh=
+are the
+> > > > > > > > inode metadata, they cannot directly reserve the space for =
+them.
+> > > > > > > >=20
+> > > > > > > > Instead, request from the 'integrity' LSM a space in the se=
+curity blob for
+> > > > > > > > the pointer of inode metadata (integrity_iint_cache structu=
+re). The other
+> > > > > > > > reason for keeping the 'integrity' LSM is to preserve the o=
+riginal ordering
+> > > > > > > > of IMA and EVM functions as when they were hardcoded.
+> > > > > > > >=20
+> > > > > > > > Prefer reserving space for a pointer to allocating the inte=
+grity_iint_cache
+> > > > > > > > structure directly, as IMA would require it only for a subs=
+et of inodes.
+> > > > > > > > Always allocating it would cause a waste of memory.
+> > > > > > > >=20
+> > > > > > > > Introduce two primitives for getting and setting the pointe=
+r of
+> > > > > > > > integrity_iint_cache in the security blob, respectively
+> > > > > > > > integrity_inode_get_iint() and integrity_inode_set_iint(). =
+This would make
+> > > > > > > > the code more understandable, as they directly replace rbtr=
+ee operations.
+> > > > > > > >=20
+> > > > > > > > Locking is not needed, as access to inode metadata is not s=
+hared, it is per
+> > > > > > > > inode.
+> > > > > > > >=20
+> > > > > > > > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > > > > > > > Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+> > > > > > > > Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> > > > > > > > ---
+> > > > > > > >   security/integrity/iint.c      | 71 +++++----------------=
+-------------
+> > > > > > > >   security/integrity/integrity.h | 20 +++++++++-
+> > > > > > > >   2 files changed, 29 insertions(+), 62 deletions(-)
+> > > > > > > >=20
+> > > > > > > > diff --git a/security/integrity/iint.c b/security/integrity=
+/iint.c
+> > > > > > > > index 882fde2a2607..a5edd3c70784 100644
+> > > > > > > > --- a/security/integrity/iint.c
+> > > > > > > > +++ b/security/integrity/iint.c
+> > > > > > > > @@ -231,6 +175,10 @@ static int __init integrity_lsm_init(v=
+oid)
+> > > > > > > >      return 0;
+> > > > > > > >   }
+> > > > > > > >=20
+> > > > > > > > +struct lsm_blob_sizes integrity_blob_sizes __ro_after_init=
+ =3D {
+> > > > > > > > +   .lbs_inode =3D sizeof(struct integrity_iint_cache *),
+> > > > > > > > +};
+> > > > > > >=20
+> > > > > > > I'll admit that I'm likely missing an important detail, but i=
+s there
+> > > > > > > a reason why you couldn't stash the integrity_iint_cache stru=
+ct
+> > > > > > > directly in the inode's security blob instead of the pointer?=
+  For
+> > > > > > > example:
+> > > > > > >=20
+> > > > > > >    struct lsm_blob_sizes ... =3D {
+> > > > > > >      .lbs_inode =3D sizeof(struct integrity_iint_cache),
+> > > > > > >    };
+> > > > > > >=20
+> > > > > > >    struct integrity_iint_cache *integrity_inode_get(inode)
+> > > > > > >    {
+> > > > > > >      if (unlikely(!inode->isecurity))
+> > > > > > >        return NULL;
+> > > > > > >      return inode->i_security + integrity_blob_sizes.lbs_inod=
+e;
+> > > > > > >    }
+> > > > > >=20
+> > > > > > It would increase memory occupation. Sometimes the IMA policy
+> > > > > > encompasses a small subset of the inodes. Allocating the full
+> > > > > > integrity_iint_cache would be a waste of memory, I guess?
+> > > > >=20
+> > > > > Perhaps, but if it allows us to remove another layer of dynamic m=
+emory
+> > > > > I would argue that it may be worth the cost.  It's also worth
+> > > > > considering the size of integrity_iint_cache, while it isn't smal=
+l, it
+> > > > > isn't exactly huge either.
+> > > > >=20
+> > > > > > On the other hand... (did not think fully about that) if we emb=
+ed the
+> > > > > > full structure in the security blob, we already have a mutex av=
+ailable
+> > > > > > to use, and we don't need to take the inode lock (?).
+> > > > >=20
+> > > > > That would be excellent, getting rid of a layer of locking would =
+be significant.
+> > > > >=20
+> > > > > > I'm fully convinced that we can improve the implementation
+> > > > > > significantly. I just was really hoping to go step by step and =
+not
+> > > > > > accumulating improvements as dependency for moving IMA and EVM =
+to the
+> > > > > > LSM infrastructure.
+> > > > >=20
+> > > > > I understand, and I agree that an iterative approach is a good id=
+ea, I
+> > > > > just want to make sure we keep things tidy from a user perspectiv=
+e,
+> > > > > i.e. not exposing the "integrity" LSM when it isn't required.
+> > > >=20
+> > > > Ok, I went back to it again.
+> > > >=20
+> > > > I think trying to separate integrity metadata is premature now, too
+> > > > many things at the same time.
+> > >=20
+> > > I'm not bothered by the size of the patchset, it is more important
+> > > that we do The Right Thing.  I would like to hear in more detail why
+> > > you don't think this will work, I'm not interested in hearing about
+> > > difficult it may be, I'm interested in hearing about what challenges
+> > > we need to solve to do this properly.
+> >=20
+> > The right thing in my opinion is to achieve the goal with the minimal
+> > set of changes, in the most intuitive way.
 >=20
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/r/202312031425.LffZTarR-lkp@intel.com/
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> ---
->  fs/nfsd/nfs4state.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Once again, I want to stress that I don't care about the size of the
+> change, the number of patches in a patchset, etc.  While it's always
+> nice to be able to minimize the number of changes in a patch/patchset,
+> that is secondary to making sure we are doing the right thing over the
+> long term.  This is especially important when we are talking about
+> things that are user visible.
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 40415929e2ae..fb551a3db1dc 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -6639,7 +6639,7 @@ __be32 manage_cpntf_state(struct nfsd_net *nn, stat=
-eid_t *st,
->  	spin_unlock(&nn->s2s_cp_lock);
->  	if (!state)
->  		return nfserr_bad_stateid;
-> -	if (!clp && state)
-> +	if (!clp)
->  		*cps =3D state;
->  	return 0;
->  }
+> > Until now, there was no solution that could achieve the primary goal of
+> > this patch set (moving IMA and EVM to the LSM infrastructure) and, at
+> > the same time, achieve the additional goal you set of removing the
+> > 'integrity' LSM.
+>=20
+> We need to stop thinking about the "integrity" code as a LSM, it isn't
+> a LSM.  It's a vestigial implementation detail that was necessary back
+> when there could only be one LSM active at a time and there was a
+> desire to have IMA/EVM active in conjunction with one of the LSMs,
+> i.e. Smack, SELinux, etc.
+>=20
+> IMA and EVM are (or will be) LSMs, "integrity" is not.  I recognize
+> that eliminating the need for the "integrity" code is a relatively new
+> addition to this effort, but that is only because I didn't properly
+> understand the relationship between IMA, EVM, and the "integrity" code
+> until recently.  The elimination of the shared "integrity" code is
+> consistent with promoting IMA and EVM as full LSMs, if there is core
+> functionality that cannot be split up into the IMA and/or EVM LSMs
+> then we need to look at how to support that without exposing that
+> implementation detail/hack to userspace.  Maybe that means direct
+> calls between IMA and EVM, maybe that means preserving some of the
+> common integrity code hidden from userspace, maybe that means adding
+> functionality to the LSM layer, maybe that means something else?
+> Let's think on this to come up with something that we can all accept
+> as a long term solution instead of just doing the quick and easy
+> option.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+If the result of this patch set should be that IMA and EVM become
+proper LSMs without the shared integrity layer, instead of collapsing
+all changes in this patch set, I think we should first verify if IMA
+and EVM can be really independent. Once we guarantee that, we can
+proceed making the proper LSMs.
+
+These are the changes I have in mind:
+
+1) Fix evm_verifyxattr(), and make it work without integrity_iint_cache
+2) Remove the integrity_iint_cache parameter from evm_verifyxattr(),
+   since the other callers are not going to use it
+3) Create an internal function with the original parameters to be used
+   by IMA
+4) Introduce evm_post_path_mknod(), which similarly to
+   ima_post_path_mknod(), sets IMA_NEW_FILE for new files
+5) Add hardcoded call to evm_post_path_mknod() after
+   ima_post_path_mknod() in security.c
+
+If we think that this is good enough, we proceed with the move of IMA
+and EVM functions to the LSM infrastructure (patches v7 19-21).
+
+The next patches are going to be similar to patches v6 22-23, but
+unlike those, their goal would be simply to split metadata, not to make
+IMA and EVM independent, which at this point has been addressed
+separately in the prerequisite patches.
+
+The final patch is to remove the 'integrity' LSM and the integrity
+metadata management code, which now is not used anymore.
+
+Would that work?
+
+Thanks
+
+Roberto
+
+> > If you see the diff, the changes compared to v5 that was already
+> > accepted by Mimi are very straightforward. If the assumption I made tha=
+t
+> > in the end the 'ima' LSM could take over the role of the 'integrity'
+> > LSM, that for me is the preferable option.
+>=20
+> I looked at it quickly, but my workflow isn't well suited for patches
+> as attachments; inline patches (the kernel standard) is preferable.
+>=20
+> > Given that the patch set is not doing any design change, but merely
+> > moving calls and storing pointers elsewhere, that leaves us with the
+> > option of thinking better what to do next, including like you suggested
+> > to make IMA and EVM use disjoint metadata.
+> >=20
+> > > > I started to think, does EVM really need integrity metadata or it c=
+an
+> > > > work without?
+> > > >=20
+> > > > The fact is that CONFIG_IMA=3Dn and CONFIG_EVM=3Dy is allowed, so w=
+e have
+> > > > the same problem now. What if we make IMA the one that manages
+> > > > integrity metadata, so that we can remove the 'integrity' LSM?
+> > >=20
+> > > I guess we should probably revisit the basic idea of if it even makes
+> > > sense to enable EVM without IMA?  Should we update the Kconfig to
+> > > require IMA when EVM is enabled?
+> >=20
+> > That would be up to Mimi. Also this does not seem the main focus of the
+> > patch set.
+>=20
+> Yes, it is not part of the original main focus, but it is definitely
+> relevant to the discussion we are having now.  Once again, the most
+> important thing to me is that we do The Right Thing for the long term
+> maintenance of the code base; if that means scope creep, I've got no
+> problem with that.
+>=20
+> > > > Regarding the LSM order, I would take Casey's suggestion of introdu=
+cing
+> > > > LSM_ORDER_REALLY_LAST, for EVM.
+> > >=20
+> > > Please understand that I really dislike that we have imposed ordering
+> > > constraints at the LSM layer, but I do understand the necessity (the
+> > > BPF LSM ordering upsets me the most).  I really don't want to see us
+> > > make things worse by adding yet another ordering bucket, I would
+> > > rather that we document it well and leave it alone ... basically trea=
+t
+> > > it like the BPF LSM (grrrrrr).
+> >=20
+> > Uhm, that would not be possible right away (the BPF LSM is mutable),
+> > remember that we defined LSM_ORDER_LAST so that an LSM can be always
+> > enable and placed as last (requested by Mimi)?
+>=20
+> To be clear, I can both dislike the bpf-always-last and LSM_ORDER_LAST
+> concepts while accepting them as necessary evils.  I'm willing to
+> tolerate LSM_ORDER_LAST, but I'm not currently willing to tolerate
+> LSM_ORDER_REALLY_LAST; that is one step too far right now.  I brought
+> up the BPF LSM simply as an example of ordering that is not enforced
+> by code, but rather by documentation and convention.
+>=20
+
 
