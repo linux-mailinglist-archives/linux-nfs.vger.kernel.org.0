@@ -1,168 +1,210 @@
-Return-Path: <linux-nfs+bounces-311-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-312-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5823D803F3B
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 21:25:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 8070E803F54
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 21:32:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA9EC1F212C5
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 20:25:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 310101F212E6
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 20:32:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 557B735EE6;
-	Mon,  4 Dec 2023 20:25:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A24635EEF;
+	Mon,  4 Dec 2023 20:32:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CrA7zzKC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2txz6VT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382CB35EE2
-	for <linux-nfs@vger.kernel.org>; Mon,  4 Dec 2023 20:25:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F8A8C433C7;
-	Mon,  4 Dec 2023 20:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1EEE35EF0
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Dec 2023 20:32:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74239C433C7;
+	Mon,  4 Dec 2023 20:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701721517;
-	bh=1+uLgjUj8mo3vcDuc2K/87whBVPRhQL7CjQQXZ8wM/M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CrA7zzKCYDLJWMBtqXs2zAtvhPuyOlSGNkRkLlPjTTtXPCaK38LiLmbFU5H3MPpp6
-	 C6wAostrl4ngClJaPDZO772blO+z9o88mYObou8ohDjfkKoKVZYB0Hvyec6H8K6Z+H
-	 yWgz6wHv0jr8oINz85vLK0T6Xkk9XOX6OauGXnAA064SActP7ElXjyeo72VKDCqkqw
-	 OG5oLfGBigpJ+lLvyDpLxYIoDBRb4DzR6j+RQaaPYvUoGx5KrkiRKSB8VKnvyS9ktJ
-	 qQvgGv4PmB00x9q+RLaCaJiiOKHjbmWchDHcXS9bVa7OOftD8JDt0AjClD36L/RXVY
-	 dYn7h7s78Yzmw==
-From: Anna Schumaker <anna@kernel.org>
-To: linux-nfs@vger.kernel.org,
-	trond.myklebust@hammerspace.com
-Cc: anna@kernel.org
-Subject: [PATCH v2 4/4] SUNRPC: Fix a suspicious RCU usage warning
-Date: Mon,  4 Dec 2023 15:25:12 -0500
-Message-ID: <20231204202512.108047-5-anna@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231204202512.108047-1-anna@kernel.org>
-References: <20231204202512.108047-1-anna@kernel.org>
+	s=k20201202; t=1701721921;
+	bh=vAm568BRd8IC8spgStz9HEYW5+zfw1VvtEJXuqXZs0w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=W2txz6VTc+5hwhE7CPsVoxkrL44nwF4mkrMlGMA/TgSwJOXpFydcZcX0wLK0Qa94x
+	 ILCtggIXNV2MH48+JqKyhIqXfSBUCs3LKKkoxl0wA5rsFYb/4iqicG6YRjf6GRsTUZ
+	 Z8FjUo4dg7dKn8zbtYsJlG8s1Y5xvS1P42t/pufoJ4ze1F+J/bciGvCawHDl2ekxnl
+	 tsEpkvYMqo+sUJsahVD9kQYou7M5yeOdo/z5glYokqMYBiVusRoSyZ/E+degyr8Cr0
+	 V9jFTTBnZCf9MSjpH+gyIJzk5ReYXOkPALfGsM8azSBTqyVnTPxnDdfwj8iPkVz1B/
+	 Xqbcl7XJJPgXw==
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-423e6615f24so38495191cf.2;
+        Mon, 04 Dec 2023 12:32:01 -0800 (PST)
+X-Gm-Message-State: AOJu0YwLCJnW0AKQrLA1VDS0eYsv8ZDEhpQtWCsbvrSEuI2qrHpOFss1
+	rvp2RTQ/7gZO7BJ7onPqFcYX5ElMfBI3LR5wP6M=
+X-Google-Smtp-Source: AGHT+IE5oJMjzAguWLZfOfPhWuhPSkviWDjHBMJQZvTH0L7iq90tzCC99NDNKm/EKgIRem9LHP1PMtHXwybJdTlYA3o=
+X-Received: by 2002:a05:622a:58a:b0:425:4e22:b7c8 with SMTP id
+ c10-20020a05622a058a00b004254e22b7c8mr171053qtb.45.1701721920707; Mon, 04 Dec
+ 2023 12:32:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <tencent_03EDD0CAFBF93A9667CFCA1B68EDB4C4A109@qq.com> <ZWy7ob2HhNRX7Z1b@tissot.1015granger.net>
+In-Reply-To: <ZWy7ob2HhNRX7Z1b@tissot.1015granger.net>
+From: Anna Schumaker <anna@kernel.org>
+Date: Mon, 4 Dec 2023 15:31:44 -0500
+X-Gmail-Original-Message-ID: <CAFX2JfmrGLmEsXccUGZ5drAJ9oxaqjTUxO0tPVgz_mf9YXZN+Q@mail.gmail.com>
+Message-ID: <CAFX2JfmrGLmEsXccUGZ5drAJ9oxaqjTUxO0tPVgz_mf9YXZN+Q@mail.gmail.com>
+Subject: Re: [PATCH] NFSv4, NFSD: move enum nfs_cb_opnum4 to include/linux/nfs4.h
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: chenxiaosongemail@foxmail.com, trond.myklebust@hammerspace.com, 
+	jlayton@kernel.org, neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, 
+	tom@talpey.com, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	chenxiaosong@kylinos.cn, liuzhengyuan@kylinos.cn, huhai@kylinos.cn, 
+	liuyun01@kylinos.cn
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+On Sun, Dec 3, 2023 at 12:32=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com=
+> wrote:
+>
+> On Sat, Dec 02, 2023 at 09:07:25PM +0000, chenxiaosongemail@foxmail.com w=
+rote:
+> > From: ChenXiaoSong <chenxiaosong@kylinos.cn>
+> >
+> > Callback operations enum is defined in client and server, move it to
+> > common header file.
+> >
+> > Signed-off-by: ChenXiaoSong <chenxiaosong@kylinos.cn>
+>
+> LGTM.
+>
+> I can take this through the nfsd-next tree if I get an Acked-by:
+> from the NFS client maintainers. If they would like to take this
+> through the NFS client tree, let me know, and I will send my
+> Acked-by.
 
-I received the following warning while running cthon against an ontap
-server running pNFS:
+Looks fine to me, and I'm okay with you taking it:
 
-[   57.202521] =============================
-[   57.202522] WARNING: suspicious RCU usage
-[   57.202523] 6.7.0-rc3-g2cc14f52aeb7 #41492 Not tainted
-[   57.202525] -----------------------------
-[   57.202525] net/sunrpc/xprtmultipath.c:349 RCU-list traversed in non-reader section!!
-[   57.202527]
-               other info that might help us debug this:
+Acked-by: Anna Schumaker <Anna.Schumaker@netapp.com>
 
-[   57.202528]
-               rcu_scheduler_active = 2, debug_locks = 1
-[   57.202529] no locks held by test5/3567.
-[   57.202530]
-               stack backtrace:
-[   57.202532] CPU: 0 PID: 3567 Comm: test5 Not tainted 6.7.0-rc3-g2cc14f52aeb7 #41492 5b09971b4965c0aceba19f3eea324a4a806e227e
-[   57.202534] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS unknown 2/2/2022
-[   57.202536] Call Trace:
-[   57.202537]  <TASK>
-[   57.202540]  dump_stack_lvl+0x77/0xb0
-[   57.202551]  lockdep_rcu_suspicious+0x154/0x1a0
-[   57.202556]  rpc_xprt_switch_has_addr+0x17c/0x190 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202596]  rpc_clnt_setup_test_and_add_xprt+0x50/0x180 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202621]  ? rpc_clnt_add_xprt+0x254/0x300 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202646]  rpc_clnt_add_xprt+0x27a/0x300 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202671]  ? __pfx_rpc_clnt_setup_test_and_add_xprt+0x10/0x10 [sunrpc ebe02571b9a8ceebf7d98e71675af20c19bdb1f6]
-[   57.202696]  nfs4_pnfs_ds_connect+0x345/0x760 [nfsv4 c716d88496ded0ea6d289bbea684fa996f9b57a9]
-[   57.202728]  ? __pfx_nfs4_test_session_trunk+0x10/0x10 [nfsv4 c716d88496ded0ea6d289bbea684fa996f9b57a9]
-[   57.202754]  nfs4_fl_prepare_ds+0x75/0xc0 [nfs_layout_nfsv41_files e3a4187f18ae8a27b630f9feae6831b584a9360a]
-[   57.202760]  filelayout_write_pagelist+0x4a/0x200 [nfs_layout_nfsv41_files e3a4187f18ae8a27b630f9feae6831b584a9360a]
-[   57.202765]  pnfs_generic_pg_writepages+0xbe/0x230 [nfsv4 c716d88496ded0ea6d289bbea684fa996f9b57a9]
-[   57.202788]  __nfs_pageio_add_request+0x3fd/0x520 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202813]  nfs_pageio_add_request+0x18b/0x390 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202831]  nfs_do_writepage+0x116/0x1e0 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202849]  nfs_writepages_callback+0x13/0x30 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202866]  write_cache_pages+0x265/0x450
-[   57.202870]  ? __pfx_nfs_writepages_callback+0x10/0x10 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202891]  nfs_writepages+0x141/0x230 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202913]  do_writepages+0xd2/0x230
-[   57.202917]  ? filemap_fdatawrite_wbc+0x5c/0x80
-[   57.202921]  filemap_fdatawrite_wbc+0x67/0x80
-[   57.202924]  filemap_write_and_wait_range+0xd9/0x170
-[   57.202930]  nfs_wb_all+0x49/0x180 [nfs 6c976fa593a7c2976f5a0aeb4965514a828e6902]
-[   57.202947]  nfs4_file_flush+0x72/0xb0 [nfsv4 c716d88496ded0ea6d289bbea684fa996f9b57a9]
-[   57.202969]  __se_sys_close+0x46/0xd0
-[   57.202972]  do_syscall_64+0x68/0x100
-[   57.202975]  ? do_syscall_64+0x77/0x100
-[   57.202976]  ? do_syscall_64+0x77/0x100
-[   57.202979]  entry_SYSCALL_64_after_hwframe+0x6e/0x76
-[   57.202982] RIP: 0033:0x7fe2b12e4a94
-[   57.202985] Code: 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 80 3d d5 18 0e 00 00 74 13 b8 03 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 44 c3 0f 1f 00 48 83 ec 18 89 7c 24 0c e8 c3
-[   57.202987] RSP: 002b:00007ffe857ddb38 EFLAGS: 00000202 ORIG_RAX: 0000000000000003
-[   57.202989] RAX: ffffffffffffffda RBX: 00007ffe857dfd68 RCX: 00007fe2b12e4a94
-[   57.202991] RDX: 0000000000002000 RSI: 00007ffe857ddc40 RDI: 0000000000000003
-[   57.202992] RBP: 00007ffe857dfc50 R08: 7fffffffffffffff R09: 0000000065650f49
-[   57.202993] R10: 00007fe2b11f8300 R11: 0000000000000202 R12: 0000000000000000
-[   57.202994] R13: 00007ffe857dfd80 R14: 00007fe2b1445000 R15: 0000000000000000
-[   57.202999]  </TASK>
-
-The problem seems to be that two out of three callers aren't taking the
-rcu_read_lock() before calling the list_for_each_entry_rcu() function in
-rpc_xprt_switch_has_addr(). I fix this by having
-rpc_xprt_switch_has_addr() unconditionaly take the rcu_read_lock(),
-which is okay to do recursively in the case that the lock has already
-been taken by a caller.
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
----
-v2: Don't provide a function bypass to skip taking the rcu_read_lock()
----
- net/sunrpc/xprtmultipath.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index 701250b305db..0706575d9392 100644
---- a/net/sunrpc/xprtmultipath.c
-+++ b/net/sunrpc/xprtmultipath.c
-@@ -336,8 +336,9 @@ struct rpc_xprt *xprt_iter_current_entry_offline(struct rpc_xprt_iter *xpi)
- 			xprt_switch_find_current_entry_offline);
- }
- 
--bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
--			      const struct sockaddr *sap)
-+static
-+bool __rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-+				const struct sockaddr *sap)
- {
- 	struct list_head *head;
- 	struct rpc_xprt *pos;
-@@ -356,6 +357,18 @@ bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
- 	return false;
- }
- 
-+bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-+			      const struct sockaddr *sap)
-+{
-+	bool res;
-+
-+	rcu_read_lock();
-+	res = __rpc_xprt_switch_has_addr(xps, sap);
-+	rcu_read_unlock();
-+
-+	return res;
-+}
-+
- static
- struct rpc_xprt *xprt_switch_find_next_entry(struct list_head *head,
- 		const struct rpc_xprt *cur, bool check_active)
--- 
-2.43.0
-
+>
+>
+> > ---
+> >  fs/nfs/callback.h      | 19 -------------------
+> >  fs/nfsd/nfs4callback.c | 26 +-------------------------
+> >  include/linux/nfs4.h   | 22 ++++++++++++++++++++++
+> >  3 files changed, 23 insertions(+), 44 deletions(-)
+> >
+> > diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
+> > index ccd4f245cae2..0279b78b5fc9 100644
+> > --- a/fs/nfs/callback.h
+> > +++ b/fs/nfs/callback.h
+> > @@ -19,25 +19,6 @@ enum nfs4_callback_procnum {
+> >       CB_COMPOUND =3D 1,
+> >  };
+> >
+> > -enum nfs4_callback_opnum {
+> > -     OP_CB_GETATTR =3D 3,
+> > -     OP_CB_RECALL  =3D 4,
+> > -/* Callback operations new to NFSv4.1 */
+> > -     OP_CB_LAYOUTRECALL  =3D 5,
+> > -     OP_CB_NOTIFY        =3D 6,
+> > -     OP_CB_PUSH_DELEG    =3D 7,
+> > -     OP_CB_RECALL_ANY    =3D 8,
+> > -     OP_CB_RECALLABLE_OBJ_AVAIL =3D 9,
+> > -     OP_CB_RECALL_SLOT   =3D 10,
+> > -     OP_CB_SEQUENCE      =3D 11,
+> > -     OP_CB_WANTS_CANCELLED =3D 12,
+> > -     OP_CB_NOTIFY_LOCK   =3D 13,
+> > -     OP_CB_NOTIFY_DEVICEID =3D 14,
+> > -/* Callback operations new to NFSv4.2 */
+> > -     OP_CB_OFFLOAD =3D 15,
+> > -     OP_CB_ILLEGAL =3D 10044,
+> > -};
+> > -
+> >  struct nfs4_slot;
+> >  struct cb_process_state {
+> >       __be32                  drc_status;
+> > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > index 92bc109dabe6..30aa241038eb 100644
+> > --- a/fs/nfsd/nfs4callback.c
+> > +++ b/fs/nfsd/nfs4callback.c
+> > @@ -31,6 +31,7 @@
+> >   *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> >   */
+> >
+> > +#include <linux/nfs4.h>
+> >  #include <linux/sunrpc/clnt.h>
+> >  #include <linux/sunrpc/xprt.h>
+> >  #include <linux/sunrpc/svc_xprt.h>
+> > @@ -101,31 +102,6 @@ static int decode_cb_fattr4(struct xdr_stream *xdr=
+, uint32_t *bitmap,
+> >       return 0;
+> >  }
+> >
+> > -/*
+> > - *   nfs_cb_opnum4
+> > - *
+> > - *   enum nfs_cb_opnum4 {
+> > - *           OP_CB_GETATTR           =3D 3,
+> > - *             ...
+> > - *   };
+> > - */
+> > -enum nfs_cb_opnum4 {
+> > -     OP_CB_GETATTR                   =3D 3,
+> > -     OP_CB_RECALL                    =3D 4,
+> > -     OP_CB_LAYOUTRECALL              =3D 5,
+> > -     OP_CB_NOTIFY                    =3D 6,
+> > -     OP_CB_PUSH_DELEG                =3D 7,
+> > -     OP_CB_RECALL_ANY                =3D 8,
+> > -     OP_CB_RECALLABLE_OBJ_AVAIL      =3D 9,
+> > -     OP_CB_RECALL_SLOT               =3D 10,
+> > -     OP_CB_SEQUENCE                  =3D 11,
+> > -     OP_CB_WANTS_CANCELLED           =3D 12,
+> > -     OP_CB_NOTIFY_LOCK               =3D 13,
+> > -     OP_CB_NOTIFY_DEVICEID           =3D 14,
+> > -     OP_CB_OFFLOAD                   =3D 15,
+> > -     OP_CB_ILLEGAL                   =3D 10044
+> > -};
+> > -
+> >  static void encode_nfs_cb_opnum4(struct xdr_stream *xdr, enum nfs_cb_o=
+pnum4 op)
+> >  {
+> >       __be32 *p;
+> > diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+> > index c11c4db34639..ef8d2d618d5b 100644
+> > --- a/include/linux/nfs4.h
+> > +++ b/include/linux/nfs4.h
+> > @@ -869,4 +869,26 @@ enum {
+> >       RCA4_TYPE_MASK_OTHER_LAYOUT_MAX =3D 15,
+> >  };
+> >
+> > +enum nfs_cb_opnum4 {
+> > +     OP_CB_GETATTR =3D 3,
+> > +     OP_CB_RECALL  =3D 4,
+> > +
+> > +     /* Callback operations new to NFSv4.1 */
+> > +     OP_CB_LAYOUTRECALL  =3D 5,
+> > +     OP_CB_NOTIFY        =3D 6,
+> > +     OP_CB_PUSH_DELEG    =3D 7,
+> > +     OP_CB_RECALL_ANY    =3D 8,
+> > +     OP_CB_RECALLABLE_OBJ_AVAIL =3D 9,
+> > +     OP_CB_RECALL_SLOT   =3D 10,
+> > +     OP_CB_SEQUENCE      =3D 11,
+> > +     OP_CB_WANTS_CANCELLED =3D 12,
+> > +     OP_CB_NOTIFY_LOCK   =3D 13,
+> > +     OP_CB_NOTIFY_DEVICEID =3D 14,
+> > +
+> > +     /* Callback operations new to NFSv4.2 */
+> > +     OP_CB_OFFLOAD =3D 15,
+> > +
+> > +     OP_CB_ILLEGAL =3D 10044,
+> > +};
+> > +
+> >  #endif
+> > --
+> > 2.34.1
+> >
+> >
+>
+> --
+> Chuck Lever
 
