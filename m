@@ -1,43 +1,47 @@
-Return-Path: <linux-nfs+bounces-275-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-276-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 586958037AC
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 15:56:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C0018037AE
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 15:56:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 13518281157
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 14:56:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B4CAB1F21236
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Dec 2023 14:56:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59A93286B3;
-	Mon,  4 Dec 2023 14:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB680286B3;
+	Mon,  4 Dec 2023 14:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oE6cMbPy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXvI/0pQ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A05B22EEE;
-	Mon,  4 Dec 2023 14:56:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7816AC433C8;
-	Mon,  4 Dec 2023 14:56:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADE422EEE;
+	Mon,  4 Dec 2023 14:56:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB3E9C433C7;
+	Mon,  4 Dec 2023 14:56:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701701779;
-	bh=M/LsVaErmnRZLQ1DWNk6syN2GlSq1DE/S8OHoXQ883U=;
-	h=Subject:From:To:Cc:Date:From;
-	b=oE6cMbPyjR/lg5sY+LD8dXqvfeX0YEeT6Gh/mwkfE7/YGyd4blchKhckzx5jASNih
-	 ZyKyVsoSrZoNJguUnuVs5rGdW68jsWT/4Ryb6bWj4wd9HS7dDZCBjlZ+03js4rSizS
-	 f2UeTdqZwzHBrSBsfiZXBZ+3YyJMBo6Fp4dyT6voLONADuLIoTrtzlvK5j7fjcHuGg
-	 e1TFU7xolyyrXWnHxvP+3YfXZfHktzDl0esWPmkbEo3jlT+Nj413IWa3muvcwndxXa
-	 44h8+tqVyK1T6ZoBEpRxHCok2E35NVHYgIE0STb7GuWgBBpJlG5qKv8KB0i81mFIDt
-	 3w7Oy0GXwGG+w==
-Subject: [PATCH v1 00/21] svc_rdma_read_info clean ups
+	s=k20201202; t=1701701786;
+	bh=hOWTxUDjA+zelWg+rXMPFmZj3aTXBB7jCFyHmHc2LFQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=gXvI/0pQRwvNR8oq2oAeYR0JWT+U213ehTldb0foyrsW6+vANphRKJmtJVi5mNvig
+	 GVCXrxOEnDb7YiQrXmHZTNDj/PrfEsKKBgGKEc7Oalgz7/xYJphZ3+Ob1g3hj1L1lg
+	 8FAonkJjSD5qnpYmoVZYZpq9cNOaGpjzygVXk2rmb7laM43uaaqkzUXnD6J7/NaggX
+	 ywlSysJJ1vbtCTWGhNh8s5bNKoYoOQm10Me14hYP6B0auaKb0gknqT5rk4huudAVSC
+	 GRWDI7uJ6okDFTa80O0vnEaLsJ5KQvdIiTzXWK62tgGJ3XpksPTias/P0qf3AIuwji
+	 /f5lrVNs5G35Q==
+Subject: [PATCH v1 01/21] svcrdma: Reduce size of struct svc_rdma_rw_ctxt
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
 Cc: tom@talpey.com
-Date: Mon, 04 Dec 2023 09:56:18 -0500
+Date: Mon, 04 Dec 2023 09:56:24 -0500
 Message-ID: 
+ <170170178494.54779.7160706939335739704.stgit@bazille.1015granger.net>
+In-Reply-To: 
+ <170170144201.54779.9877683240030806819.stgit@bazille.1015granger.net>
+References: 
  <170170144201.54779.9877683240030806819.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
 Precedence: bulk
@@ -49,46 +53,74 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-These patches are in preparation for more substantial changes to how
-Read chunks are managed by svcrdma. There are a lot of patches in
-this series, but each change is narrow and no external behavior
-changes are expected.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-The main benefit of this series is that svc_rdma_read_info is no
-longer dynamically allocated.
+SG_CHUNK_SIZE is 128, making struct svc_rdma_rw_ctxt + the first
+SGL array more than 4200 bytes in length, pushing the memory
+allocation well into order 1.
 
+Even so, the RDMA rw core doesn't seem to use more than max_send_sge
+entries in that array (typically 32 or less), so that is all wasted
+space.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ net/sunrpc/xprtrdma/svc_rdma_rw.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-Chuck Lever (21):
-      svcrdma: Reduce size of struct svc_rdma_rw_ctxt
-      svcrdma: Acquire the svcxprt_rdma pointer from the CQ context
-      svcrdma: Explicitly pass the transport into Write chunk I/O paths
-      svcrdma: Explicitly pass the transport into Read chunk I/O paths
-      svcrdma: Explicitly pass the transport to svc_rdma_post_chunk_ctxt()
-      svcrdma: Pass a pointer to the transport to svc_rdma_cc_release()
-      svcrdma: Remove the svc_rdma_chunk_ctxt::cc_rdma field
-      svcrdma: Move struct svc_rdma_chunk_ctxt to svc_rdma.h
-      svcrdma: Start moving fields out of struct svc_rdma_read_info
-      svcrdma: Move svc_rdma_read_info::ri_pageno to struct svc_rdma_recv_ctxt
-      svcrdma: Move read_info::ri_pageoff into struct svc_rdma_recv_ctxt
-      svcrdma: Update synopsis of svc_rdma_build_read_segment()
-      svcrdma: Update synopsis of svc_rdma_build_read_chunk()
-      svcrdma: Update synopsis of svc_rdma_read_chunk_range()
-      svcrdma: Update the synopsis of svc_rdma_read_data_item()
-      svcrdma: Update synopsis of svc_rdma_copy_inline_range()
-      svcrdma: Update synopsis of svc_rdma_read_multiple_chunks()
-      svcrdma: Update the synopsis of svc_rdma_read_call_chunk()
-      svcrdma: Update the synopsis of svc_rdma_read_special()
-      svcrdma: Remove struct svc_rdma_read_info
-      svcrdma: Move the svc_rdma_cc_init() call
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+index c06676714417..69010ab7f0c3 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
+@@ -39,6 +39,7 @@ struct svc_rdma_rw_ctxt {
+ 	struct list_head	rw_list;
+ 	struct rdma_rw_ctx	rw_ctx;
+ 	unsigned int		rw_nents;
++	unsigned int		rw_first_sgl_nents;
+ 	struct sg_table		rw_sg_table;
+ 	struct scatterlist	rw_first_sgl[];
+ };
+@@ -53,6 +54,8 @@ svc_rdma_next_ctxt(struct list_head *list)
+ static struct svc_rdma_rw_ctxt *
+ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
+ {
++	struct ib_device *dev = rdma->sc_cm_id->device;
++	unsigned int first_sgl_nents = dev->attrs.max_send_sge;
+ 	struct svc_rdma_rw_ctxt *ctxt;
+ 	struct llist_node *node;
+ 
+@@ -62,18 +65,19 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
+ 	if (node) {
+ 		ctxt = llist_entry(node, struct svc_rdma_rw_ctxt, rw_node);
+ 	} else {
+-		ctxt = kmalloc_node(struct_size(ctxt, rw_first_sgl, SG_CHUNK_SIZE),
+-				    GFP_KERNEL, ibdev_to_node(rdma->sc_cm_id->device));
++		ctxt = kmalloc_node(struct_size(ctxt, rw_first_sgl, first_sgl_nents),
++				    GFP_KERNEL, ibdev_to_node(dev));
+ 		if (!ctxt)
+ 			goto out_noctx;
+ 
+ 		INIT_LIST_HEAD(&ctxt->rw_list);
++		ctxt->rw_first_sgl_nents = first_sgl_nents;
+ 	}
+ 
+ 	ctxt->rw_sg_table.sgl = ctxt->rw_first_sgl;
+ 	if (sg_alloc_table_chained(&ctxt->rw_sg_table, sges,
+ 				   ctxt->rw_sg_table.sgl,
+-				   SG_CHUNK_SIZE))
++				   first_sgl_nents))
+ 		goto out_free;
+ 	return ctxt;
+ 
+@@ -87,7 +91,7 @@ svc_rdma_get_rw_ctxt(struct svcxprt_rdma *rdma, unsigned int sges)
+ static void __svc_rdma_put_rw_ctxt(struct svc_rdma_rw_ctxt *ctxt,
+ 				   struct llist_head *list)
+ {
+-	sg_free_table_chained(&ctxt->rw_sg_table, SG_CHUNK_SIZE);
++	sg_free_table_chained(&ctxt->rw_sg_table, ctxt->rw_first_sgl_nents);
+ 	llist_add(&ctxt->rw_node, list);
+ }
+ 
 
-
- include/linux/sunrpc/svc_rdma.h         |  30 +++
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |   1 +
- net/sunrpc/xprtrdma/svc_rdma_rw.c       | 310 +++++++++++-------------
- 3 files changed, 169 insertions(+), 172 deletions(-)
-
---
-Chuck Lever
 
 
