@@ -1,51 +1,45 @@
-Return-Path: <linux-nfs+bounces-340-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-341-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8532A805E9E
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 20:29:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01D0B805F3D
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 21:16:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FA08281F27
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 19:29:35 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72DA7B20F59
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 20:16:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4746D1DE;
-	Tue,  5 Dec 2023 19:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7sY13Z1"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43C026DCF7;
+	Tue,  5 Dec 2023 20:16:06 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B4FAB
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 11:29:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701804567;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2eq2DMq1WO4X/Xd7+NI5PjO+TbnA8mrc7ic+TXsok6c=;
-	b=X7sY13Z1jJD6HvD4JTMxYSBPQwL24pCw44IMOKkpXTfk5xJQJNIWAa3CpWDuLE+rytuYv0
-	eLKuAFn2xGS7PO9qcWPHuIOzqHuJdC17RIbJyM6T+ZkZSX1vXqcZQC8wkaAm5xHPBjL2uz
-	LMyuiBhwV6RW8IDE8mF6JDF9/3mnRx0=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-73-HF3KbUiRNSOz1lJTjwlbPg-1; Tue, 05 Dec 2023 14:29:25 -0500
-X-MC-Unique: HF3KbUiRNSOz1lJTjwlbPg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C9C183
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 12:16:01 -0800 (PST)
+Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A63E2890FC2
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 19:29:25 +0000 (UTC)
-Received: from bighat.boston.devel.redhat.com (bighat.boston.devel.redhat.com [10.19.60.48])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9375F2166B35
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 19:29:25 +0000 (UTC)
-From: Steve Dickson <steved@redhat.com>
-To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] conf_init_file: Fixed warn_unused_result error
-Date: Tue,  5 Dec 2023 14:29:24 -0500
-Message-ID: <20231205192924.99320-1-steved@redhat.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id DED1A21FA2;
+	Tue,  5 Dec 2023 20:15:59 +0000 (UTC)
+Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6129C13924;
+	Tue,  5 Dec 2023 20:15:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap2.dmz-prg2.suse.org with ESMTPSA
+	id cOkwEf+Eb2VjcAAAn2gu4w
+	(envelope-from <pvorel@suse.cz>); Tue, 05 Dec 2023 20:15:59 +0000
+From: Petr Vorel <pvorel@suse.cz>
+To: linux-nfs@vger.kernel.org
+Cc: Petr Vorel <pvorel@suse.cz>,
+	Steve Dickson <steved@redhat.com>
+Subject: [PATCH 1/1] reexport/{fsidd,reexport}.c: Add missing <unistd.h>
+Date: Tue,  5 Dec 2023 21:15:55 +0100
+Message-ID: <20231205201556.5477-1-pvorel@suse.cz>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,42 +47,77 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
+X-Spam-Score: 4.96
+X-Spamd-Result: default: False [4.96 / 50.00];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 ARC_NA(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 RCPT_COUNT_THREE(0.00)[3];
+	 R_MISSING_CHARSET(2.50)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 DMARC_NA(0.00)[suse.cz];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 TO_DN_SOME(0.00)[];
+	 R_SPF_SOFTFAIL(0.00)[~all];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 NEURAL_SPAM_SHORT(0.07)[0.022];
+	 MX_GOOD(-0.01)[];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-0.00)[19.79%]
+X-Spamd-Bar: ++++
+X-Rspamd-Server: rspamd1
+Authentication-Results: smtp-out1.suse.de;
+	dkim=none;
+	dmarc=none;
+	spf=softfail (smtp-out1.suse.de: 2a07:de40:b281:104:10:150:64:98 is neither permitted nor denied by domain of pvorel@suse.cz) smtp.mailfrom=pvorel@suse.cz
+X-Rspamd-Queue-Id: DED1A21FA2
 
-conffile.c: In function 'conf_init_file':
-conffile.c:776:17: error: ignoring return value of 'asprintf' declared with attribute 'warn_unused_result' [-Werror=unused-result]
-  776 |                 asprintf(&usrconf, "/usr%s", conf_file);
-      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+uClibc-ng requires this header for close(2), unlink(2) and write(2).
 
-Signed-off-by: Steve Dickson <steved@redhat.com>
+Fixes: 1a4edb2a ("reexport/fsidd.c: Remove unused headers")
+Fixes: bdc79f02 ("support/reexport.c: Remove unused headers")
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
 ---
- support/nfs/conffile.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Hi Steve,
 
-diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
-index 884eca9..1e9c22b 100644
---- a/support/nfs/conffile.c
-+++ b/support/nfs/conffile.c
-@@ -754,6 +754,7 @@ void
- conf_init_file(const char *conf_file)
- {
- 	unsigned int i;
-+	int j;
+I'm sorry to introduce a regression. Here is a fix, tested on glibc,
+musl and uClibc-ng.
+
+ support/reexport/fsidd.c    | 1 +
+ support/reexport/reexport.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/support/reexport/fsidd.c b/support/reexport/fsidd.c
+index 8a70b78f..307e73e5 100644
+--- a/support/reexport/fsidd.c
++++ b/support/reexport/fsidd.c
+@@ -7,6 +7,7 @@
+ #include <dlfcn.h>
+ #endif
+ #include <event2/event.h>
++#include <unistd.h>
  
- 	for (i = 0; i < sizeof conf_bindings / sizeof conf_bindings[0]; i++)
- 		LIST_INIT (&conf_bindings[i]);
-@@ -773,8 +774,8 @@ conf_init_file(const char *conf_file)
- 	if (strncmp(conf_file, "/etc/", 5) == 0) {
- 		char *usrconf = NULL;
+ #include "conffile.h"
+ #include "reexport_backend.h"
+diff --git a/support/reexport/reexport.c b/support/reexport/reexport.c
+index 0fb49a46..c7bff6a3 100644
+--- a/support/reexport/reexport.c
++++ b/support/reexport/reexport.c
+@@ -7,6 +7,7 @@
+ #endif
+ #include <sys/types.h>
+ #include <sys/vfs.h>
++#include <unistd.h>
+ #include <errno.h>
  
--		asprintf(&usrconf, "/usr%s", conf_file);
--		if (usrconf) {
-+		j = asprintf(&usrconf, "/usr%s", conf_file);
-+		if (usrconf && j > 0) {
- 			conf_load_file(usrconf);
- 			conf_init_dir(usrconf);
- 			free(usrconf);
+ #include "nfsd_path.h"
 -- 
-2.41.0
+2.43.0
 
 
