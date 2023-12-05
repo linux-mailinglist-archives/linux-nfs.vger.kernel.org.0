@@ -1,73 +1,81 @@
-Return-Path: <linux-nfs+bounces-324-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-325-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23FC6804970
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 06:45:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4E5D804A0D
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 07:27:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C46731F2147D
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 05:45:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57EC51C20D41
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 06:27:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1862CD2E9;
-	Tue,  5 Dec 2023 05:45:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8319DDF5E;
+	Tue,  5 Dec 2023 06:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qOb9FyCp"
+	dkim=pass (2048-bit key) header.d=fromorbit-com.20230601.gappssmtp.com header.i=@fromorbit-com.20230601.gappssmtp.com header.b="VDe5+ovG"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640B910F;
-	Mon,  4 Dec 2023 21:45:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=Q4Xwwf+R6mg0IVTeK/i6oqCoh3sFn0GWCi0J13JBtfc=; b=qOb9FyCpYK/4KobvP2uwty+RVC
-	aKcs8RCIM1GaB+jEVQmkuGJdy+OoBGLcX1doQi0if7JBzag9665/MK5OtORAivTDbIIcdyUq2OKzV
-	Xx9UbaJnUzGeeh5RsPVPgY4YqT0DJlxUw1VN1F2mTNvBjhpShrX42o5RXnUV/cXjSQUrRLToGUZSE
-	FmCu84mXqdwf31dZ+O2oxaY3dpe0YxR2cKwZT0rDW7WEmsffmHSRy5nKQqPyOJ72usqptScFFNBh6
-	rYGN3D8F7qyjExbcouVqdX/XtjSmjlnWSxIY2bpgheRYBytg9CEj+V1w3MZOcvh3sPXc3Hqk7855F
-	MMIPMB3g==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rAOEM-006KRP-0r;
-	Tue, 05 Dec 2023 05:44:26 +0000
-Date: Mon, 4 Dec 2023 21:44:26 -0800
-From: Luis Chamberlain <mcgrof@kernel.org>
-To: Christian Brauner <brauner@kernel.org>
-Cc: j.granados@samsung.com, willy@infradead.org, josh@joshtriplett.org,
-	Kees Cook <keescook@chromium.org>,
-	David Howells <dhowells@redhat.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Benjamin LaHaise <bcrl@kvack.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A031FA
+	for <linux-nfs@vger.kernel.org>; Mon,  4 Dec 2023 22:27:32 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1d076ebf79cso12310975ad.1
+        for <linux-nfs@vger.kernel.org>; Mon, 04 Dec 2023 22:27:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fromorbit-com.20230601.gappssmtp.com; s=20230601; t=1701757651; x=1702362451; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bhXYhRtk/KY/XHQgM/c3wDRTe8PmVUkWLPFRhdkev5c=;
+        b=VDe5+ovG8apuH9dXqs7gsMH9oPS5VeZljXRRqfAjOh2gxR7byrpmJBz8ho6pfbKHwj
+         qOQueLGVaKVco4VFZRtCC3urwX7rrqenY+YpYgYxCLlpClPkSJH0xmSYE3BeRS9oLQuk
+         rL6H1uJbzrwFyzUTAfBYsQvJZxkBcjymMIx5M/QYqN1BOvG9AEOiADt3hAIdSJY+5yHb
+         uxk8ARsAojkzwMwWN+ZbGr9H+HSetccLBaaK5uXCR5bONn87bPUp4cFUc7fjI+EVf4uL
+         of3qfum9sd2ESOS3hGv6ksMK4/wPitekuefp+H7TRUs/GZsktGX+ozYqhed46pnSZjiE
+         zGdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701757651; x=1702362451;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bhXYhRtk/KY/XHQgM/c3wDRTe8PmVUkWLPFRhdkev5c=;
+        b=WDmcfPHcYto5KHY8anXUfM8xs3JtAPi2KTx/S1blLso8DwbFG+4Ib1gM7Jx7Uldln8
+         /ZcCuS7AQGoscvv0SPEmOqp5wAGgwYSqUe2AmtiyOtjcKref+JOCFFhk5bmgqmT7Istq
+         rfwPaelmMbWGELNae1aTmgcAHpkVs7NfltOPqsLTSRaXsvsvnBl2O8iTMwiunO0t+QrT
+         0r06GoZHBaxJrp0GE7YMFGFnRbc6nVNJsTZ/XM/+uyrgAABcXPNxPVgQJuqSbZMGe22f
+         JjYr53jouZrx1RQfe4yUgM45CKxsclBFJtSh4dovA2fwaRHoeXZp2MMLQJS8n0OuHdc+
+         Nvxg==
+X-Gm-Message-State: AOJu0YxYWUnHEspdU+4CxNZouANivkJZMRJN4T5PjB3zf/EjQ8DLTdoi
+	aOJa9pJAS+dKkem85LcpbBR0GwmzleeVGIzGCJo=
+X-Google-Smtp-Source: AGHT+IEUis2isZKyvLiufA2OSYo4xSVBLvpOU4Mj0HrgxtGTqwJ5IEKmqVKYaMx9UVf4tDFqmIy5mw==
+X-Received: by 2002:a17:902:c40d:b0:1cf:6ac3:81c2 with SMTP id k13-20020a170902c40d00b001cf6ac381c2mr3414170plk.47.1701757651517;
+        Mon, 04 Dec 2023 22:27:31 -0800 (PST)
+Received: from dread.disaster.area (pa49-180-125-5.pa.nsw.optusnet.com.au. [49.180.125.5])
+        by smtp.gmail.com with ESMTPSA id k10-20020a170902c40a00b001d087f68ef8sm543248plk.37.2023.12.04.22.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Dec 2023 22:27:31 -0800 (PST)
+Received: from dave by dread.disaster.area with local (Exim 4.96)
+	(envelope-from <david@fromorbit.com>)
+	id 1rAOu0-00449x-2P;
+	Tue, 05 Dec 2023 17:27:28 +1100
+Date: Tue, 5 Dec 2023 17:27:28 +1100
+From: Dave Chinner <david@fromorbit.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>, Oleg Nesterov <oleg@redhat.com>,
 	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, Jan Kara <jack@suse.cz>,
-	Amir Goldstein <amir73il@gmail.com>,
-	Matthew Bobrowski <repnop@google.com>,
-	Anton Altaparmakov <anton@tuxera.com>,
-	Namjae Jeon <linkinjeon@kernel.org>, Mark Fasheh <mark@fasheh.com>,
-	Joel Becker <jlbec@evilplan.org>,
-	Joseph Qi <joseph.qi@linux.alibaba.com>,
-	Iurii Zaikin <yzaikin@google.com>,
-	Eric Biggers <ebiggers@kernel.org>,
-	"Theodore Y. Ts'o" <tytso@mit.edu>,
-	Chandan Babu R <chandan.babu@oracle.com>,
-	"Darrick J. Wong" <djwong@kernel.org>,
-	Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-	linux-cachefs@redhat.com, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-aio@kvack.org,
-	linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-	linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@lists.linux.dev,
-	fsverity@lists.linux.dev, linux-xfs@vger.kernel.org,
-	codalist@coda.cs.cmu.edu
-Subject: Re: [PATCH v2 0/4] sysctl: Remove sentinel elements from fs dir
-Message-ID: <ZW64um8/nJaxBw5i@bombadil.infradead.org>
-References: <20231121-jag-sysctl_remove_empty_elem_fs-v2-0-39eab723a034@samsung.com>
- <20231122-undifferenziert-weitschuss-a5d8cc56fbd1@brauner>
+	Jeff Layton <jlayton@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] Allow a kthread to declare that it calls
+ task_work_run()
+Message-ID: <ZW7C0Cq+WZz+fnaS@dread.disaster.area>
+References: <20231204014042.6754-1-neilb@suse.de>
+ <20231204014042.6754-2-neilb@suse.de>
+ <20231204024031.GV38156@ZenIV>
+ <170172483155.7109.15983228851050210918@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -76,14 +84,35 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231122-undifferenziert-weitschuss-a5d8cc56fbd1@brauner>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+In-Reply-To: <170172483155.7109.15983228851050210918@noble.neil.brown.name>
 
-On Wed, Nov 22, 2023 at 03:00:29PM +0100, Christian Brauner wrote:
-> Looks fine,
-> Acked-by: Christian Brauner <brauner@kernel.org>
+On Tue, Dec 05, 2023 at 08:20:31AM +1100, NeilBrown wrote:
+> On Mon, 04 Dec 2023, Al Viro wrote:
+> > On Mon, Dec 04, 2023 at 12:36:41PM +1100, NeilBrown wrote:
+> > 
+> > > This means that any cost for doing the work is not imposed on the kernel
+> > > thread, and importantly excessive amounts of work cannot apply
+> > > back-pressure to reduce the amount of new work queued.
+> > 
+> > It also means that a stuck ->release() won't end up with stuck
+> > kernel thread...
+> 
+> Is a stuck kernel thread any worse than a stuck user-space thread?
+> 
+> > 
+> > > earlier than would be ideal.  When __dput (from the workqueue) calls
+> > 
+> > WTF is that __dput thing?  __fput, perhaps?
+> 
+> Either __fput or dput :-)
+> ->release isn't the problem that I am seeing.
+> The call trace that I see causing problems is
+> __fput -> dput -> dentry_kill -> destroy_inode -> xfs_fs_destroy_inode
 
-Series applied, thanks!
+What problem, exactly, are you having with xfs_fs_destroy_inode()?
 
-  Luis
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
 
