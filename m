@@ -1,123 +1,77 @@
-Return-Path: <linux-nfs+bounces-341-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-342-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01D0B805F3D
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 21:16:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86C71805F7B
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 21:33:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72DA7B20F59
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 20:16:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 30A211F2172D
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 20:33:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43C026DCF7;
-	Tue,  5 Dec 2023 20:16:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6994668B8A;
+	Tue,  5 Dec 2023 20:33:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VE20jbLb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11C9C183
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 12:16:01 -0800 (PST)
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:98])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id DED1A21FA2;
-	Tue,  5 Dec 2023 20:15:59 +0000 (UTC)
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id 6129C13924;
-	Tue,  5 Dec 2023 20:15:59 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id cOkwEf+Eb2VjcAAAn2gu4w
-	(envelope-from <pvorel@suse.cz>); Tue, 05 Dec 2023 20:15:59 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: linux-nfs@vger.kernel.org
-Cc: Petr Vorel <pvorel@suse.cz>,
-	Steve Dickson <steved@redhat.com>
-Subject: [PATCH 1/1] reexport/{fsidd,reexport}.c: Add missing <unistd.h>
-Date: Tue,  5 Dec 2023 21:15:55 +0100
-Message-ID: <20231205201556.5477-1-pvorel@suse.cz>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452EA3D98C;
+	Tue,  5 Dec 2023 20:33:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C9D0C433C8;
+	Tue,  5 Dec 2023 20:33:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701808397;
+	bh=ct9NsTNEDirO8IhjablbfPQ/GBvefxGEDEkJ9VZbwD4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VE20jbLbAdpt1MC4bCEJdWA8Q5jrShzmQ+rAobBQIwZtv7+CCA//LFaw4pmN6Uzo6
+	 pQXCosWg0Ghx5lfSFoqGd3fjbSt4k8UgDxF+LdJ4MG0+hJWY5sgSMC9wRK4KigBUr+
+	 kleyc3JCu8ACQD3hSgNcZ4UguuMu6A+66vG+iAmK4GMJsirSrrlILoNLNqCWWffT0x
+	 jSW8nePOcRt/jde0bpqKC9t2C56YcoKJAuz5wVJKRTL/8hFSlpBnqFgQWCRiWPHTSd
+	 uYk6sDXoC4uxxIUf6n3atvMy7bdJujK51WRYGFQQvRyJ5w0j8M3zrBGjGIcVhAqCjG
+	 2uECMLppd5cQQ==
+Date: Tue, 5 Dec 2023 20:33:12 +0000
+From: Simon Horman <horms@kernel.org>
+To: Lorenzo Bianconi <lorenzo@kernel.org>
+Cc: linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com, neilb@suse.de,
+	netdev@vger.kernel.org, jlayton@kernel.org, kuba@kernel.org
+Subject: Re: [PATCH v5 2/3] NFSD: convert write_version to netlink command
+Message-ID: <20231205203312.GV50400@kernel.org>
+References: <cover.1701277475.git.lorenzo@kernel.org>
+ <8b47d2e3f704066204149653fd1bd86a64188f61.1701277475.git.lorenzo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Score: 4.96
-X-Spamd-Result: default: False [4.96 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[3];
-	 R_MISSING_CHARSET(2.50)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DMARC_NA(0.00)[suse.cz];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 TO_DN_SOME(0.00)[];
-	 R_SPF_SOFTFAIL(0.00)[~all];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_SPAM_SHORT(0.07)[0.022];
-	 MX_GOOD(-0.01)[];
-	 MID_CONTAINS_FROM(1.00)[];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 R_DKIM_NA(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[19.79%]
-X-Spamd-Bar: ++++
-X-Rspamd-Server: rspamd1
-Authentication-Results: smtp-out1.suse.de;
-	dkim=none;
-	dmarc=none;
-	spf=softfail (smtp-out1.suse.de: 2a07:de40:b281:104:10:150:64:98 is neither permitted nor denied by domain of pvorel@suse.cz) smtp.mailfrom=pvorel@suse.cz
-X-Rspamd-Queue-Id: DED1A21FA2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8b47d2e3f704066204149653fd1bd86a64188f61.1701277475.git.lorenzo@kernel.org>
 
-uClibc-ng requires this header for close(2), unlink(2) and write(2).
+On Wed, Nov 29, 2023 at 06:12:44PM +0100, Lorenzo Bianconi wrote:
+> Introduce write_version netlink command similar to the ones available
+> through the procfs.
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 
-Fixes: 1a4edb2a ("reexport/fsidd.c: Remove unused headers")
-Fixes: bdc79f02 ("support/reexport.c: Remove unused headers")
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
-Hi Steve,
+...
 
-I'm sorry to introduce a regression. Here is a fix, tested on glibc,
-musl and uClibc-ng.
+> +/**
+> + * nfsd_nl_version_get_doit - Handle verion_get dumpit
 
- support/reexport/fsidd.c    | 1 +
- support/reexport/reexport.c | 1 +
- 2 files changed, 2 insertions(+)
+Hi Lorenzo,
 
-diff --git a/support/reexport/fsidd.c b/support/reexport/fsidd.c
-index 8a70b78f..307e73e5 100644
---- a/support/reexport/fsidd.c
-+++ b/support/reexport/fsidd.c
-@@ -7,6 +7,7 @@
- #include <dlfcn.h>
- #endif
- #include <event2/event.h>
-+#include <unistd.h>
- 
- #include "conffile.h"
- #include "reexport_backend.h"
-diff --git a/support/reexport/reexport.c b/support/reexport/reexport.c
-index 0fb49a46..c7bff6a3 100644
---- a/support/reexport/reexport.c
-+++ b/support/reexport/reexport.c
-@@ -7,6 +7,7 @@
- #endif
- #include <sys/types.h>
- #include <sys/vfs.h>
-+#include <unistd.h>
- #include <errno.h>
- 
- #include "nfsd_path.h"
--- 
-2.43.0
+a minor nit: this function is nfsd_nl_version_get_dumpit
 
+> + * @skb: reply buffer
+> + * @cb: netlink metadata and command arguments
+> + *
+> + * Returns the size of the reply or a negative errno.
+> + */
+> +int nfsd_nl_version_get_dumpit(struct sk_buff *skb,
+
+...
 
