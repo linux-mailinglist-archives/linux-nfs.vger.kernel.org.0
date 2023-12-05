@@ -1,137 +1,224 @@
-Return-Path: <linux-nfs+bounces-350-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-351-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 306B48061C8
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 23:35:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 646678062E6
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Dec 2023 00:23:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A4F99B211C2
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 22:35:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1FC572820E5
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 23:23:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AED16EB5A;
-	Tue,  5 Dec 2023 22:35:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ka4C13ss";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="FzOixefS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E4934120F;
+	Tue,  5 Dec 2023 23:23:51 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A2D196
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 14:35:49 -0800 (PST)
-Received: from imap2.dmz-prg2.suse.org (imap2.dmz-prg2.suse.org [10.150.64.98])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F4B2AC;
+	Tue,  5 Dec 2023 15:23:47 -0800 (PST)
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1AB741FBEF;
-	Tue,  5 Dec 2023 22:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1701815748; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HpcMQxURZMSxKL2GbAyCHw1cQtJ0fdfi7l5T0BEriVY=;
-	b=ka4C13ssZ9kDTfAKeRRrRu7qyXVR2IC9sYEoXqryIur1qnzVtzbN5OmeCr1fuJueXvWmdm
-	4dUYsDbpVbVwzZry8bKnFgc9jnpjp8A7U9j14Et344hyDwjMHt+DlpR9eEUDR5PCuPJzJS
-	P1ysoDxkFAJw2sPn1ZicjG8UN6m4AXw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1701815748;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HpcMQxURZMSxKL2GbAyCHw1cQtJ0fdfi7l5T0BEriVY=;
-	b=FzOixefSUsuRIz8hzzwzsoIOgs9jNAGHd3k1lNyCfHDeLln8WuxaGkNY+PlZu2lb/iE4Tu
-	5u7QRojzDA4Og4CA==
-Received: from imap2.dmz-prg2.suse.org (localhost [127.0.0.1])
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 016D322015;
+	Tue,  5 Dec 2023 23:23:45 +0000 (UTC)
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap2.dmz-prg2.suse.org (Postfix) with ESMTPS id E87A413A3D;
-	Tue,  5 Dec 2023 22:35:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap2.dmz-prg2.suse.org with ESMTPSA
-	id gLcEN8Olb2UnEgAAn2gu4w
-	(envelope-from <pvorel@suse.cz>); Tue, 05 Dec 2023 22:35:47 +0000
-From: Petr Vorel <pvorel@suse.cz>
-To: linux-nfs@vger.kernel.org
-Cc: Petr Vorel <petr.vorel@gmail.com>,
-	Steve Dickson <steved@redhat.com>,
-	Giulio Benetti <giulio.benetti@benettiengineering.com>,
-	Petr Vorel <pvorel@suse.cz>
-Subject: [PATCH v2] support/backend_sqlite.c: Add missing <sys/syscall.h>
-Date: Tue,  5 Dec 2023 23:35:43 +0100
-Message-ID: <20231205223543.31443-2-pvorel@suse.cz>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231205223543.31443-1-pvorel@suse.cz>
-References: <20231205223543.31443-1-pvorel@suse.cz>
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 65ED4136CF;
+	Tue,  5 Dec 2023 23:23:41 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 3ZQQBf2wb2UQCQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 05 Dec 2023 23:23:41 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Score: 2.24
-X-Spamd-Result: default: False [2.24 / 50.00];
+From: "NeilBrown" <neilb@suse.de>
+To: "Jens Axboe" <axboe@kernel.dk>
+Cc: "Christian Brauner" <brauner@kernel.org>,
+ "Al Viro" <viro@zeniv.linux.org.uk>, "Oleg Nesterov" <oleg@redhat.com>,
+ "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
+ "Ingo Molnar" <mingo@redhat.com>, "Peter Zijlstra" <peterz@infradead.org>,
+ "Juri Lelli" <juri.lelli@redhat.com>,
+ "Vincent Guittot" <vincent.guittot@linaro.org>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject:
+ Re: [PATCH 1/2] Allow a kthread to declare that it calls task_work_run()
+In-reply-to: <170181458198.7109.790647899711986334@noble.neil.brown.name>
+References: <20231204014042.6754-1-neilb@suse.de>,
+ <20231204014042.6754-2-neilb@suse.de>,
+ <e9a1cfed-42e9-4174-bbb3-1a3680cf6a5c@kernel.dk>,
+ <170172377302.7109.11739406555273171485@noble.neil.brown.name>,
+ <a070b6bd-0092-405e-99d2-00002596c0bc@kernel.dk>,
+ <20231205-altbacken-umbesetzen-e5c0c021ab98@brauner>,
+ <170181169515.7109.11121482729257102758@noble.neil.brown.name>,
+ <fb713388-661a-46e0-8925-6d169b46ff9c@kernel.dk>,
+ <3609267c-3fcd-43d6-9b43-9f84bef029a2@kernel.dk>,
+ <170181458198.7109.790647899711986334@noble.neil.brown.name>
+Date: Wed, 06 Dec 2023 10:23:37 +1100
+Message-id: <170181861776.7109.6396373836638614121@noble.neil.brown.name>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-0.04 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-0.00)[19.04%];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 R_MISSING_CHARSET(2.50)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 REPLY(-4.00)[];
-	 BROKEN_CONTENT_TYPE(1.50)[];
-	 RCPT_COUNT_FIVE(0.00)[5];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.16)[-0.821];
-	 MID_CONTAINS_FROM(1.00)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_SPAM_SHORT(2.97)[0.989];
+	 MIME_GOOD(-0.10)[text/plain];
+	 R_SPF_SOFTFAIL(0.00)[~all:c];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[13];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
+	 R_DKIM_NA(0.00)[];
 	 MIME_TRACE(0.00)[0:+];
-	 FREEMAIL_CC(0.00)[gmail.com,redhat.com,benettiengineering.com,suse.cz];
 	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
+	 BAYES_HAM(-3.00)[100.00%];
+	 DMARC_POLICY_SOFTFAIL(0.10)[suse.de : No valid SPF, No valid DKIM,none]
+X-Spamd-Bar: /
+X-Spam-Score: -0.04
+X-Rspamd-Server: rspamd1
+Authentication-Results: smtp-out1.suse.de;
+	dkim=none;
+	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.de (policy=none);
+	spf=softfail (smtp-out1.suse.de: 2a07:de40:b281:104:10:150:64:97 is neither permitted nor denied by domain of neilb@suse.de) smtp.mailfrom=neilb@suse.de
+X-Rspamd-Queue-Id: 016D322015
 
-From: Petr Vorel <petr.vorel@gmail.com>
+On Wed, 06 Dec 2023, NeilBrown wrote:
+> On Wed, 06 Dec 2023, Jens Axboe wrote:
+> > On 12/5/23 2:58 PM, Jens Axboe wrote:
+> > > On 12/5/23 2:28 PM, NeilBrown wrote:
+> > >> On Tue, 05 Dec 2023, Christian Brauner wrote:
+> > >>> On Mon, Dec 04, 2023 at 03:09:44PM -0700, Jens Axboe wrote:
+> > >>>> On 12/4/23 2:02 PM, NeilBrown wrote:
+> > >>>>> It isn't clear to me what _GPL is appropriate, but maybe the rules
+> > >>>>> changed since last I looked..... are there rules?
+> > >>>>>
+> > >>>>> My reasoning was that the call is effectively part of the user-space
+> > >>>>> ABI.  A user-space process can call this trivially by invoking any
+> > >>>>> system call.  The user-space ABI is explicitly a boundary which the=
+ GPL
+> > >>>>> does not cross.  So it doesn't seem appropriate to prevent non-GPL
+> > >>>>> kernel code from doing something that non-GPL user-space code can
+> > >>>>> trivially do.
+> > >>>>
+> > >>>> By that reasoning, basically everything in the kernel should be non-=
+GPL
+> > >>>> marked. And while task_work can get used by the application, it happ=
+ens
+> > >>>> only indirectly or implicitly. So I don't think this reasoning is so=
+und
+> > >>>> at all, it's not an exported ABI or API by itself.
+> > >>>>
+> > >>>> For me, the more core of an export it is, the stronger the reason it
+> > >>>> should be GPL. FWIW, I don't think exporting task_work functionality=
+ is
+> > >=20
+> > >>>
+> > >>> Yeah, I'm not too fond of that part as well. I don't think we want to
+> > >>> give modules the ability to mess with task work. This is just asking =
+for
+> > >>> trouble.
+> > >>>
+> > >>
+> > >> Ok, maybe we need to reframe the problem then.
+> > >>
+> > >> Currently fput(), and hence filp_close(), take control away from kernel
+> > >> threads in that they cannot be sure that a "close" has actually
+> > >> completed.
+> > >>
+> > >> This is already a problem for nfsd.  When renaming a file, nfsd needs =
+to
+> > >> ensure any cached "open" that it has on the file is closed (else when
+> > >> re-exporting an NFS filesystem it can result in a silly-rename).
+> > >>
+> > >> nfsd currently handles this case by calling flush_delayed_fput().  I
+> > >> suspect you are no more happy about exporting that than you are about
+> > >> exporting task_work_run(), but this solution isn't actually 100%
+> > >> reliable.  If some other thread calls flush_delayed_fput() between nfsd
+> > >> calling filp_close() and that same nfsd calling flush_delayed_fput(),
+> > >> then the second flush can return before the first flush (in the other
+> > >> thread) completes all the work it took on.
+> > >>
+> > >> What we really need - both for handling renames and for avoiding
+> > >> possible memory exhaustion - is for nfsd to be able to reliably wait f=
+or
+> > >> any fput() that it initiated to complete.
+> > >>
+> > >> How would you like the VFS to provide that service?
+> > >=20
+> > > Since task_work happens in the context of your task already, why not
+> > > just have a way to get it stashed into a list when final fput is done?
+> > > This avoids all of this "let's expose task_work" and using the task list
+> > > for that, which seems kind of pointless as you're just going to run it
+> > > later on manually anyway.
+> > >=20
+> > > In semi pseudo code:
+> > >=20
+> > > bool fput_put_ref(struct file *file)
+> > > {
+> > > 	return atomic_dec_and_test(&file->f_count);
+> > > }
+> > >=20
+> > > void fput(struct file *file)
+> > > {
+> > > 	if (fput_put_ref(file)) {
+> > > 		...
+> > > 	}
+> > > }
+> > >=20
+> > > and then your nfsd_file_free() could do:
+> > >=20
+> > > ret =3D filp_flush(file, id);
+> > > if (fput_put_ref(file))
+> > > 	llist_add(&file->f_llist, &l->to_free_llist);
+> > >=20
+> > > or something like that, where l->to_free_llist is where ever you'd
+> > > otherwise punt the actual freeing to.
+> >=20
+> > Should probably have the put_ref or whatever helper also init the
+> > task_work, and then reuse the list in the callback_head there. Then
+> > whoever flushes it has to call ->func() and avoid exposing ____fput() to
+> > random users. But you get the idea.
+>=20
+> Interesting ideas - thanks.
+>=20
+> So maybe the new API would be
+>=20
+>  fput_queued(struct file *f, struct llist_head *q)
+> and
+>  flush_fput_queue(struct llist_head *q)
+>=20
+> with the meaning being that fput_queued() is just like fput() except
+> that any file needing __fput() is added to the 'q'; and that
+> flush_fput_queue() calls __fput() on any files in 'q'.
+>=20
+> So to close a file nfsd would:
+>=20
+>   fget(f);
+>   flip_close(f);
+>   fput_queued(f, &my_queue);
+>=20
+> though possibly we could have a
+>   filp_close_queued(f, q)
+> as well.
+>=20
+> I'll try that out - but am happy to hear alternate suggestions for names :-)
+>=20
 
-This fixes build on systems which actually needs getrandom()
-(to get SYS_getrandom).
+Actually ....  I'm beginning to wonder if we should just use
+__fput_sync() in nfsd.
+It has a big warning about not doing that blindly, but the detail in the
+warning doesn't seem to apply to nfsd...
 
-Fixes: f92fd6ca ("support/backend_sqlite.c: Add getrandom() fallback")
-Fixes: http://autobuild.buildroot.net/results/c5fde6099a8b228a8bdc3154d1e47dfa192e94ed/
-Reported-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
-Signed-off-by: Petr Vorel <pvorel@suse.cz>
----
-Changes v1->v2:
-* New commit
-
-I'm sorry for these errors.
-
- support/reexport/backend_sqlite.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/support/reexport/backend_sqlite.c b/support/reexport/backend_sqlite.c
-index 0eb5ea37..54dfe447 100644
---- a/support/reexport/backend_sqlite.c
-+++ b/support/reexport/backend_sqlite.c
-@@ -7,6 +7,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <sys/syscall.h>
- #include <unistd.h>
- 
- #ifdef HAVE_GETRANDOM
--- 
-2.43.0
-
+NeilBrown
 
