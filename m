@@ -1,53 +1,51 @@
-Return-Path: <linux-nfs+bounces-339-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-340-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EC39805845
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 16:10:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8532A805E9E
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 20:29:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 16907B20C14
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 15:10:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FA08281F27
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Dec 2023 19:29:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9442B67E8F;
-	Tue,  5 Dec 2023 15:10:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4746D1DE;
+	Tue,  5 Dec 2023 19:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CMPNH0oh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X7sY13Z1"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097B5BA
-	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 07:10:17 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88B4FAB
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 11:29:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701789017;
+	s=mimecast20190719; t=1701804567;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=QtFs7NsVU7SVJ5MjsiLt5FmizdYLVvWHRBit2OFQ/58=;
-	b=CMPNH0oh+gU4MKyDo62t2MBSMwWDvjLCDUY6Hg5AN1inzpRSbR3sQbxzTggo9sOKrONZA9
-	GrWZvK8Y9RCK0TMKlpMjzmEAvo3bsJMP0OqqQTcQ5FIZLE2Rvm3efy6OfqhMfdIXTxFCSq
-	xTozymNoLXKfLu35Q/aYD6UFdFZC9YQ=
+	bh=2eq2DMq1WO4X/Xd7+NI5PjO+TbnA8mrc7ic+TXsok6c=;
+	b=X7sY13Z1jJD6HvD4JTMxYSBPQwL24pCw44IMOKkpXTfk5xJQJNIWAa3CpWDuLE+rytuYv0
+	eLKuAFn2xGS7PO9qcWPHuIOzqHuJdC17RIbJyM6T+ZkZSX1vXqcZQC8wkaAm5xHPBjL2uz
+	LMyuiBhwV6RW8IDE8mF6JDF9/3mnRx0=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-59-gFsE1sNvMzaJUTzwLZaBtQ-1; Tue, 05 Dec 2023 10:08:49 -0500
-X-MC-Unique: gFsE1sNvMzaJUTzwLZaBtQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+ us-mta-73-HF3KbUiRNSOz1lJTjwlbPg-1; Tue, 05 Dec 2023 14:29:25 -0500
+X-MC-Unique: HF3KbUiRNSOz1lJTjwlbPg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2D1DE102F141;
-	Tue,  5 Dec 2023 15:08:46 +0000 (UTC)
-Received: from bcodding.csb.redhat.com (unknown [10.22.48.3])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B5E5151E3;
-	Tue,  5 Dec 2023 15:08:45 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: trond.myklebust@hammerspace.com,
-	anna@kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [RESEND PATCH] NFSv4: Always ask for type with READDIR
-Date: Tue,  5 Dec 2023 10:08:45 -0500
-Message-ID: <badc4f7fbd63c19a9f50a7c5c17968db16bebf5f.1701788866.git.bcodding@redhat.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A63E2890FC2
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 19:29:25 +0000 (UTC)
+Received: from bighat.boston.devel.redhat.com (bighat.boston.devel.redhat.com [10.19.60.48])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9375F2166B35
+	for <linux-nfs@vger.kernel.org>; Tue,  5 Dec 2023 19:29:25 +0000 (UTC)
+From: Steve Dickson <steved@redhat.com>
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] conf_init_file: Fixed warn_unused_result error
+Date: Tue,  5 Dec 2023 14:29:24 -0500
+Message-ID: <20231205192924.99320-1-steved@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -55,48 +53,42 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Again we have claimed regressions for walking a directory tree, this time
-with the "find" utility which always tries to optimize away asking for any
-attributes until it has a complete list of entries.  This behavior makes
-the readdir plus heuristic do the wrong thing, which causes a storm of
-GETATTRs to determine each entry's type in order to continue the walk.
+conffile.c: In function 'conf_init_file':
+conffile.c:776:17: error: ignoring return value of 'asprintf' declared with attribute 'warn_unused_result' [-Werror=unused-result]
+  776 |                 asprintf(&usrconf, "/usr%s", conf_file);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For v4 add the type attribute to each READDIR request to include it no
-matter the heuristic.  This allows a simple `find` command to proceed
-quickly through a directory tree.
-
-Suggested-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Steve Dickson <steved@redhat.com>
 ---
- fs/nfs/nfs4xdr.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ support/nfs/conffile.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index deec76cf5afe..7200d6f7cd7b 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -1602,7 +1602,7 @@ static void encode_read(struct xdr_stream *xdr, const struct nfs_pgio_args *args
- static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_readdir_arg *readdir, struct rpc_rqst *req, struct compound_hdr *hdr)
+diff --git a/support/nfs/conffile.c b/support/nfs/conffile.c
+index 884eca9..1e9c22b 100644
+--- a/support/nfs/conffile.c
++++ b/support/nfs/conffile.c
+@@ -754,6 +754,7 @@ void
+ conf_init_file(const char *conf_file)
  {
- 	uint32_t attrs[3] = {
--		FATTR4_WORD0_RDATTR_ERROR,
-+		FATTR4_WORD0_TYPE|FATTR4_WORD0_RDATTR_ERROR,
- 		FATTR4_WORD1_MOUNTED_ON_FILEID,
- 	};
- 	uint32_t dircount = readdir->count;
-@@ -1612,7 +1612,7 @@ static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_readdir_arg
  	unsigned int i;
++	int j;
  
- 	if (readdir->plus) {
--		attrs[0] |= FATTR4_WORD0_TYPE|FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE|
-+		attrs[0] |= FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE|
- 			FATTR4_WORD0_FSID|FATTR4_WORD0_FILEHANDLE|FATTR4_WORD0_FILEID;
- 		attrs[1] |= FATTR4_WORD1_MODE|FATTR4_WORD1_NUMLINKS|FATTR4_WORD1_OWNER|
- 			FATTR4_WORD1_OWNER_GROUP|FATTR4_WORD1_RAWDEV|
+ 	for (i = 0; i < sizeof conf_bindings / sizeof conf_bindings[0]; i++)
+ 		LIST_INIT (&conf_bindings[i]);
+@@ -773,8 +774,8 @@ conf_init_file(const char *conf_file)
+ 	if (strncmp(conf_file, "/etc/", 5) == 0) {
+ 		char *usrconf = NULL;
+ 
+-		asprintf(&usrconf, "/usr%s", conf_file);
+-		if (usrconf) {
++		j = asprintf(&usrconf, "/usr%s", conf_file);
++		if (usrconf && j > 0) {
+ 			conf_load_file(usrconf);
+ 			conf_init_dir(usrconf);
+ 			free(usrconf);
 -- 
-2.43.0
+2.41.0
 
 
