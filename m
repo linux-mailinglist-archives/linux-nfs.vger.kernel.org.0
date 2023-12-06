@@ -1,65 +1,68 @@
-Return-Path: <linux-nfs+bounces-368-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-369-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D147807A76
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Dec 2023 22:31:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 18E00807A77
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Dec 2023 22:31:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F63D1C20944
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Dec 2023 21:31:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB0141F21A25
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Dec 2023 21:31:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0EC57096A;
-	Wed,  6 Dec 2023 21:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D3BF70960;
+	Wed,  6 Dec 2023 21:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gZuQeIVh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jScgeA/J"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF89A98
-	for <linux-nfs@vger.kernel.org>; Wed,  6 Dec 2023 13:31:29 -0800 (PST)
-Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-5906cf5bfdfso10556eaf.1
-        for <linux-nfs@vger.kernel.org>; Wed, 06 Dec 2023 13:31:29 -0800 (PST)
+Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46A89A
+	for <linux-nfs@vger.kernel.org>; Wed,  6 Dec 2023 13:31:31 -0800 (PST)
+Received: by mail-qk1-x736.google.com with SMTP id af79cd13be357-77f3c8fb126so1103885a.0
+        for <linux-nfs@vger.kernel.org>; Wed, 06 Dec 2023 13:31:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701898289; x=1702503089; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wjK5E7wswGGMerNY3eRIuU0/2VyPOWk5Ega1EB/QSJk=;
-        b=gZuQeIVh+CJNE6cWMXm1juiujWa3LgFBQ8gqFhqBC9zhO3EilbZ25KwDyXfZWyTuDm
-         9XwOCrinUmtx2eIyh1JlrCmdRCMmLY5QRF7gVOquEml2FzdikBp4EeVRcH/26hpZ2Y8n
-         PgHWkJZKTfE8FqdtP2UICOew/KwgQZOBdrm7o2dhYJzhk0kguywPJZEwAjw3nq+N3gyT
-         urNkzHYBJELnr8nEGmWLpLMn/gHDUpkVQyPttguQkeVDFjjrZsD7YbeH31dnb4uK/sxm
-         VtMuOz4Kf4V9/NxsDJnlpOrdHI6KEwzIxWXdjLnvkwCyswk/fklZlLmjHrGyaOpaVJc0
-         VpTA==
+        d=gmail.com; s=20230601; t=1701898291; x=1702503091; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KczilCBZWauIaSy25zpHduAVisqXJc50tSTdQbX/6D4=;
+        b=jScgeA/JJp64RTzq2pMBkPmXmU/+yEO/0/XI+hXxvJ0yn9oXfNkhiGySq1zscwftkk
+         6rxHr+ynmjAHYM/RkdljLWcLmlMOHhYvYKcJWXdnXRXXpfXUf9+zZZpUjSHX6xYaK/33
+         5itJFOkjXov0aMCwMQBmiOaebOQv51KYaD6JG5TULUWeS2PTjb/IHxLvSi9YyCXp9uov
+         k0e1EO0GDQheFat7b54aaMf0fS6rUIwXKkQKVDPRJvknxR+DNpKMErgB1yI0ksM8Q94r
+         w7/qdjoeLgcSmuPrlIS+O866VZxHiRh5LbfrgjU+XQMq4p3+mfGXuw3ZQMY7olQzZjzr
+         JShw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701898289; x=1702503089;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wjK5E7wswGGMerNY3eRIuU0/2VyPOWk5Ega1EB/QSJk=;
-        b=uDSElwaas7sYFgDGGww3owN5C12cwm4oV9F1H0NoSuWute+mpKc0qkje+FvVolsBBC
-         fRTNasTdv71M4hGgONfYlSAMngoDG655ziJPz/d41K4G3i8gWej5JTQvMxrHVA4hXQS4
-         v2waNpJXO0kf9hDOR2cUpO0OvMa4gtrX+4EmXB6ylBICjGpies+whIOXuMJZ8V5Wg+72
-         yAjxCtttj/X+vZJWgW1D8Z0eE9ek8nEQ8345HOUwZasoFnGXlXB7uwSwkwhY/7aMviMW
-         D//c5z9TIfPiy7qn5Dn+yOtXw+VJy2Ih/pXdK6JxvY5H34nuY8BNk7kOILglJ3IjEoF9
-         WUjw==
-X-Gm-Message-State: AOJu0YxM9LeB6QpeyZI85uFcfDnqdoapiVu6J5h65lTOr8NOWAdCrjbT
-	IdU96y2avXVeJTaSaGPuo+A=
-X-Google-Smtp-Source: AGHT+IHhByI6NNteUjWE9J6px1AJ12gBvx6G1h1HSqZ8CxYR0hClsWXymcLCDqraaHKwzHADCgon6Q==
-X-Received: by 2002:a05:6820:1f90:b0:584:1080:f0a5 with SMTP id eq16-20020a0568201f9000b005841080f0a5mr2987290oob.1.1701898288907;
-        Wed, 06 Dec 2023 13:31:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701898291; x=1702503091;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KczilCBZWauIaSy25zpHduAVisqXJc50tSTdQbX/6D4=;
+        b=qiLGWhxRoUB8qY9Stg0x9upx0+p713C9Jz6WUq7Pvgy6/734HPwt0XC8H+8xB5O98L
+         vR6aSbf1k0Zp0YYQZ0CuDBAyEHH6ucADO5q8VUulruy1J7/GvHgGOkMGAYMyjUiw2c9x
+         /DtUH0jlIpr+QwWyAUv4rZUWGuCNY2PEOKjImTqts+A0NuF6MXJW+N3Hau4I8ckK7j4A
+         3LbBKOou5P350x7OtrmIzYx5kq9mv9cnqNBy7oZjm84+owYKEVFaRsgSWMGHnI7Bdouv
+         Ia3pQ5HCXhZHiMEKSj/1vpHzqf6Wvp8vaMyZS2CBgMRjwAYMwJxuweEBymFrZtNsQmby
+         DRgA==
+X-Gm-Message-State: AOJu0YxUT6Upe15FpBbOtPcUAjmPHvauaNzDd1JLlHvgsmNd+hU8+BoT
+	4WM6mXXG8ej+yuKH6hHLT9e9y0JXKUQ=
+X-Google-Smtp-Source: AGHT+IGkfHhiNiM9qu+m4drWjMVo+VVQuHq/xgB01FDSg+rvrbdIaSqPm+y7rbq98ZAKhfzwcCPF3w==
+X-Received: by 2002:a05:620a:199b:b0:77d:9704:89fb with SMTP id bm27-20020a05620a199b00b0077d970489fbmr3349150qkb.3.1701898290615;
+        Wed, 06 Dec 2023 13:31:30 -0800 (PST)
 Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:b4ac:108b:be40:79b])
-        by smtp.gmail.com with ESMTPSA id bn36-20020a05620a2ae400b00767e2668536sm253900qkb.17.2023.12.06.13.31.27
+        by smtp.gmail.com with ESMTPSA id bn36-20020a05620a2ae400b00767e2668536sm253900qkb.17.2023.12.06.13.31.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 13:31:28 -0800 (PST)
+        Wed, 06 Dec 2023 13:31:29 -0800 (PST)
 From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To: steved@redhat.com
 Cc: linux-nfs@vger.kernel.org,
 	chuck.lever@oracle.com
-Subject: [PATCH 1/2] gssapi: revert commit f5b6e6fdb1e6
-Date: Wed,  6 Dec 2023 16:31:26 -0500
-Message-Id: <20231206213127.55310-1-olga.kornievskaia@gmail.com>
+Subject: [PATCH 2/2] gssapi: fix rpc_gss_seccreate passed in cred
+Date: Wed,  6 Dec 2023 16:31:27 -0500
+Message-Id: <20231206213127.55310-2-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+In-Reply-To: <20231206213127.55310-1-olga.kornievskaia@gmail.com>
+References: <20231206213127.55310-1-olga.kornievskaia@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -70,72 +73,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Revert commit f5b6e6fdb1e6 "gss-api: expose gss major/minor error in
-authgss_refresh()".
+Fix rpc_gss_seccreate() usage of the passed in gss credential.
 
-Instead of modifying existing api, use rpc_gss_seccreate() which exposes
-the error values.
-
-Signed-off-by: Olga Kornievskaia <kolga@netapp.umich>
+Fixes: 5f1fe4dde861 ("Pass time_req and input_channel_bindings through to init_sec_context")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- src/auth_gss.c       | 14 ++++++--------
- tirpc/rpc/auth_gss.h |  2 --
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ src/auth_gss.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/auth_gss.c b/src/auth_gss.c
-index 3127b92..e317664 100644
+index e317664..9d18f96 100644
 --- a/src/auth_gss.c
 +++ b/src/auth_gss.c
-@@ -184,7 +184,6 @@ authgss_create(CLIENT *clnt, gss_name_t name, struct rpc_gss_sec *sec)
- 	AUTH			*auth, *save_auth;
- 	struct rpc_gss_data	*gd;
- 	OM_uint32		min_stat = 0;
--	rpc_gss_options_ret_t	ret;
+@@ -842,9 +842,9 @@ rpc_gss_seccreate(CLIENT *clnt, char *principal, char *mechanism,
+ 	gd->sec = sec;
  
- 	gss_log_debug("in authgss_create()");
+ 	if (req) {
+-		sec.req_flags = req->req_flags;
++		gd->sec.req_flags = req->req_flags;
+ 		gd->time_req = req->time_req;
+-		sec.cred = req->my_cred;
++		gd->sec.cred = req->my_cred;
+ 		gd->icb = req->input_channel_bindings;
+ 	}
  
-@@ -230,12 +229,8 @@ authgss_create(CLIENT *clnt, gss_name_t name, struct rpc_gss_sec *sec)
- 	save_auth = clnt->cl_auth;
- 	clnt->cl_auth = auth;
- 
--	memset(&ret, 0, sizeof(rpc_gss_options_ret_t));
--	if (!authgss_refresh(auth, &ret)) {
-+	if (!authgss_refresh(auth, NULL))
- 		auth = NULL;
--		sec->major_status = ret.major_status;
--		sec->minor_status = ret.minor_status;
--	}
- 	else
- 		authgss_auth_get(auth); /* Reference for caller */
- 
-@@ -624,9 +619,12 @@ _rpc_gss_refresh(AUTH *auth, rpc_gss_options_ret_t *options_ret)
- }
- 
- static bool_t
--authgss_refresh(AUTH *auth, void *ret)
-+authgss_refresh(AUTH *auth, void *dummy)
- {
--	return _rpc_gss_refresh(auth, (rpc_gss_options_ret_t *)ret);
-+	rpc_gss_options_ret_t ret;
-+
-+	memset(&ret, 0, sizeof(ret));
-+	return _rpc_gss_refresh(auth, &ret);
- }
- 
- bool_t
-diff --git a/tirpc/rpc/auth_gss.h b/tirpc/rpc/auth_gss.h
-index a530d42..f2af6e9 100644
---- a/tirpc/rpc/auth_gss.h
-+++ b/tirpc/rpc/auth_gss.h
-@@ -64,8 +64,6 @@ struct rpc_gss_sec {
- 	rpc_gss_svc_t	svc;		/* service */
- 	gss_cred_id_t	cred;		/* cred handle */
- 	u_int		req_flags;	/* req flags for init_sec_context */
--	int		major_status;
--	int		minor_status;
- };
- 
- /* Private data required for kernel implementation */
 -- 
 2.39.1
 
