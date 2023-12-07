@@ -1,91 +1,126 @@
-Return-Path: <linux-nfs+bounces-452-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-453-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5966A8094FA
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Dec 2023 22:58:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D1249809537
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Dec 2023 23:22:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F6381F21093
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Dec 2023 21:58:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D58F28148E
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Dec 2023 22:22:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82087840CC;
-	Thu,  7 Dec 2023 21:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A5BE840D1;
+	Thu,  7 Dec 2023 22:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zn4BRdw5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/pkGmJA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11621737
-	for <linux-nfs@vger.kernel.org>; Thu,  7 Dec 2023 13:58:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1701986281;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2gpuqenBf/seLQmhrTte/4HdPOyV33jxxLbSCYkPyeM=;
-	b=Zn4BRdw5e9GjbQlK/IzkyGHo2P2snQ9aVjyzHl7CBGCn0Ug/azInrjBWraSxiqU6lLvDvt
-	Upc4q8kY9wUuP1rRG0Ey4tcGouk/mzkKkmOzf9Vk9Ajf+AF0jerdG9jj6htXGO7Xo+SHhb
-	ssmpxCkT0UKGx21cgU8rmIUBI7T4Gmg=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-494-3pxRZfFcM5CBFUREWELNAA-1; Thu,
- 07 Dec 2023 16:57:57 -0500
-X-MC-Unique: 3pxRZfFcM5CBFUREWELNAA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7B64C1C0BB50;
-	Thu,  7 Dec 2023 21:57:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.161])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E59971C060AF;
-	Thu,  7 Dec 2023 21:57:53 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <ZXI7aGHkxZyiytXg@casper.infradead.org>
-References: <ZXI7aGHkxZyiytXg@casper.infradead.org> <20231207212206.1379128-1-dhowells@redhat.com> <20231207212206.1379128-60-dhowells@redhat.com>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-    Steve French <smfrench@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>,
-    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 59/59] netfs: Eliminate PG_fscache by setting folio->private and marking dirty
+Received: from mail-lj1-x22f.google.com (mail-lj1-x22f.google.com [IPv6:2a00:1450:4864:20::22f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F412F10F1
+	for <linux-nfs@vger.kernel.org>; Thu,  7 Dec 2023 14:22:03 -0800 (PST)
+Received: by mail-lj1-x22f.google.com with SMTP id 38308e7fff4ca-2c9ebd15396so4133851fa.1
+        for <linux-nfs@vger.kernel.org>; Thu, 07 Dec 2023 14:22:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701987722; x=1702592522; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TOuP/x0hSEhtnSfJ5820pzfgGeEk88kWyPwubHF8+0o=;
+        b=J/pkGmJAPYAKLdQUIXVjVV0yrZohdzF7b7N/TVMCl1XX8S1R37f2c+E56i2392HFUT
+         G/BEB1f7E9gSb5qCE0Atqr94xswnJn806D1tZm2bBMQX9B3hmkEkyslzD1IfHDrAQ1Yq
+         JGfTWPF2aGmjwULJBwhWgB4J+rbpTrpQSuUAKKUV+2rLqxzSI6g4pyarQuacXpPXE+Ic
+         VE8szwfEISJ9WLmYaYLBchS7Y72x7W4J0ZHv9KjTNRijbatrT/1iZV7Be3F6EbHTpKvL
+         7b0dBMDGMUGdETQ32cz6uY6S39XQVAaDm1wnX3QcTokWzgvBu/PC3jql+oTHxkHQ77Vm
+         oKDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701987722; x=1702592522;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TOuP/x0hSEhtnSfJ5820pzfgGeEk88kWyPwubHF8+0o=;
+        b=lPLEjxwiDh7dQaJL4nrIdU77GXoDsECNVXt69m/s9Ac2lUTxEp5iTM8zarPWM3cgPx
+         eYZat9ZOY3dZy1qR7XapLBY/i5GGCe0fiitGWBNljZIicSacfaKHErRF8XqvQTxUNPNJ
+         Y6x4GoZEQr5nSbsfMDAd+BhKno7fl5mbcPRxMTeEQCcxf3VUOrMVQcoiXfXuEjxI6tZw
+         5LVarT5cmwGLaUY7gHLmXQkrgkuoCcvbxETTR67okVkdAnKlzhz8ceq8aeyISML1YnyJ
+         rFBBbK/avQsW3QWwmtOsvYJIc662Ft5qcyGf1oUNMJOWyVV+pq/c0wP167my24gfhL74
+         3kjw==
+X-Gm-Message-State: AOJu0Yx5kq3/czN9BFStKpygmScNsPjNIIGn+ngPdBsD8cZ09X0la2g9
+	mJXD4PoGKa4jrcfZcjPIG3p1wH7JFgktcv8csVk=
+X-Google-Smtp-Source: AGHT+IHiyNa+oIywM03smwqmQymPzA3cQvuPkgwCvasHvlXx5MR1LCPqroUl81zohU/3B3dqymNmH7aEo8hw2WCaGq0=
+X-Received: by 2002:a2e:141e:0:b0:2c9:f0f3:937f with SMTP id
+ u30-20020a2e141e000000b002c9f0f3937fmr4074677ljd.5.1701987721943; Thu, 07 Dec
+ 2023 14:22:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1451125.1701986273.1@warthog.procyon.org.uk>
-Date: Thu, 07 Dec 2023 21:57:53 +0000
-Message-ID: <1451127.1701986273@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+References: <20231206213332.55565-1-olga.kornievskaia@gmail.com>
+ <20231206213332.55565-7-olga.kornievskaia@gmail.com> <ZXHaTIvFruYfycsm@tissot.1015granger.net>
+In-Reply-To: <ZXHaTIvFruYfycsm@tissot.1015granger.net>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date: Thu, 7 Dec 2023 17:21:50 -0500
+Message-ID: <CAN-5tyFr7-eRP_wjrv_zOmsVC6ft1f1c+fNovbOXr0CVrtzfRw@mail.gmail.com>
+Subject: Re: [PATCH 6/6] configure: check for rpc_gss_seccreate
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: steved@redhat.com, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Matthew Wilcox <willy@infradead.org> wrote:
+On Thu, Dec 7, 2023 at 9:44=E2=80=AFAM Chuck Lever <chuck.lever@oracle.com>=
+ wrote:
+>
+> On Wed, Dec 06, 2023 at 04:33:32PM -0500, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
+> >
+> > If we have rpc_gss_sccreate in tirpc library define
+> > HAVE_TIRPC_GSS_SECCREATE, which would allow us to handle bad_integrity
+> > errors.
+> >
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> >  aclocal/libtirpc.m4 | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/aclocal/libtirpc.m4 b/aclocal/libtirpc.m4
+> > index bddae022..ef48a2ae 100644
+> > --- a/aclocal/libtirpc.m4
+> > +++ b/aclocal/libtirpc.m4
+> > @@ -26,6 +26,11 @@ AC_DEFUN([AC_LIBTIRPC], [
+> >                                      [Define to 1 if your tirpc library=
+ provides libtirpc_set_debug])],,
+> >                           [${LIBS}])])
+> >
+> > +     AS_IF([test -n "${LIBTIRPC}"],
+> > +           [AC_CHECK_LIB([tirpc], [rpc_gss_seccreate],
+> > +                         [AC_DEFINE([HAVE_TIRPC_GSS_SECCREATE], [1],
+> > +                                    [Define to 1 if your tirpc library=
+ provides rpc_gss_seccreate])],,
+> > +                         [${LIBS}])])
+> >    AC_SUBST([AM_CPPFLAGS])
+> >    AC_SUBST(LIBTIRPC)
+>
+> It would be better for distributors if this checked that the local
+> version of libtirpc has the rpc_gss_seccreate fix that you sent.
+> The PKG_CHECK_MODULES macro should work for that, once you know the
+> version number of libtirpc that will have that fix.
+>
+> Also, this patch should come either before "gssd: switch to using
+> rpc_gss_seccreate()" or this change should be squashed into that
+> patch, IMO.
 
-> On Thu, Dec 07, 2023 at 09:22:06PM +0000, David Howells wrote:
-> > With this, PG_fscache is no longer required.
-> 
-> ... for filesystems that use netfslib, right?  ie we can't delete
-> folio_wait_private_2_killable() and friends because nfs still uses it?
+I can certainly re-arrange the order (if Steve wants me to re-send an
+ordered list).  I attempted to address your comment to  check for
+existence of the function or fallback to the old way. I'm not sure I'm
+capable of producing something that depends on distro versioning (or
+am I supposed to be)? I think this goes back to me hoping that a
+distro would create matching set of libtirpc and nfs-utils rpms...
 
-Yeah.  Though I have my eye on NFS too ;-)
+Thank you for the reviews!
 
-David
-
+>
+>
+> --
+> Chuck Lever
 
