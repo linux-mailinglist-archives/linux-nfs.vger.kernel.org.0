@@ -1,66 +1,66 @@
-Return-Path: <linux-nfs+bounces-465-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-466-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2199080A64E
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Dec 2023 15:54:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EFCA80A669
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Dec 2023 16:01:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 514C71C20AC7
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Dec 2023 14:54:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 455851F210B1
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Dec 2023 15:01:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 756911E538;
-	Fri,  8 Dec 2023 14:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E1A7200C7;
+	Fri,  8 Dec 2023 15:01:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gze1FFPk"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WqD/o0ZE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CC653254
-	for <linux-nfs@vger.kernel.org>; Fri,  8 Dec 2023 06:54:49 -0800 (PST)
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E897198D
+	for <linux-nfs@vger.kernel.org>; Fri,  8 Dec 2023 07:01:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702047288;
+	s=mimecast20190719; t=1702047698;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=S2oBMwUJQEdCSSR7S9p4CWvnPMGIlBzw4q29NX4vHUk=;
-	b=Gze1FFPkbLXheDBa0URbNRLl+7sRStqqeOXoljYJYGh7mE5wANiimxwwTrAeKxHjDIkxGE
-	zLnDWQenu6nMPABIM3I7pbnHa2rqZwCtyfBbR4gN0zVvv8Hy2wQFD6OR7yQurX0tRJ7RHg
-	7TT1OW3H/8AzSvFZu7svWVW5afJV7gI=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=pM3my2w6Rvp7rY0wISDDTE/8h9rmjO9a/06bgwl1vhU=;
+	b=WqD/o0ZEwjiLb37gh5PrmijbeGIifIRtdNGgOQQ/zGMFtv8SRMCHRmB5gmTWOd1leO/7a3
+	1p1p4Rhsgat+ibMaPgiZc82PbmWN0AXLYV2dbj8K56DV1jrfg7eDmCJpZMDOGCQT77weE9
+	likGPgD0loBULJoFM6G+2167tgthIhI=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-8G9Y0yTdMZasYhOy2BjOGA-1; Fri, 08 Dec 2023 09:54:47 -0500
-X-MC-Unique: 8G9Y0yTdMZasYhOy2BjOGA-1
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-77f41c21cdbso17621385a.1
-        for <linux-nfs@vger.kernel.org>; Fri, 08 Dec 2023 06:54:47 -0800 (PST)
+ us-mta-26-XHs63-35PI2xywLmXZpy0g-1; Fri, 08 Dec 2023 10:01:31 -0500
+X-MC-Unique: XHs63-35PI2xywLmXZpy0g-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-77d8df7c8e2so30852985a.1
+        for <linux-nfs@vger.kernel.org>; Fri, 08 Dec 2023 07:01:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702047286; x=1702652086;
+        d=1e100.net; s=20230601; t=1702047691; x=1702652491;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S2oBMwUJQEdCSSR7S9p4CWvnPMGIlBzw4q29NX4vHUk=;
-        b=eDfJMldFCcqXtkAgNvHZnsFpD/9B1/Uj2ZGcEBPGxggmX4amhuPMETCv/R+qEeGc8O
-         YgGPVKGIxH4/k/rm7sSkFq6GdPKqVJOw7dDB63oTbTACnSEMJhR6X+DCTxWxn9MK+W9O
-         BqRDnLEYVB3Xeov7r6GpQN/RC7KpGT1hU+HBe4tlLbPLT7KCWsSZqOUQssH8lk0b+Kj8
-         Z4ytK1MswkZ5Pc/994EPWU9ZRj5Xmt4S3Y9cpu0qd+w52DdG++dFaB8fu8k9QPHzh3Z1
-         9me+y4BWh1P9s/yQeTa3S7+YRQ8EcsUbpzDF1LdfLwqSkxpE8y0SMc0O1pi10viwzTp4
-         MUXQ==
-X-Gm-Message-State: AOJu0YyDCXI8t3CwehDGn21kzNXWKosYZGluUIgqpQV9vR/tMIGmwUyI
-	1NtygTCygwxTQ7iW6hi8FU674iIYDqd7MBKN1TZTI4DtzepXLf/GXbAomiX24E+JeBmcVn2EfPL
-	0UdsvYODv7smi3dQRHG5x
-X-Received: by 2002:a05:620a:4628:b0:76d:9234:1db4 with SMTP id br40-20020a05620a462800b0076d92341db4mr357116qkb.7.1702047286501;
-        Fri, 08 Dec 2023 06:54:46 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFbZjRRuGfTN4qHdR72O2frh0qDuVY+H+WJWmZpYHiF4tAOpos5vqCPAiemoGiHSQrScN9ETQ==
-X-Received: by 2002:a05:620a:4628:b0:76d:9234:1db4 with SMTP id br40-20020a05620a462800b0076d92341db4mr357104qkb.7.1702047286198;
-        Fri, 08 Dec 2023 06:54:46 -0800 (PST)
+        bh=pM3my2w6Rvp7rY0wISDDTE/8h9rmjO9a/06bgwl1vhU=;
+        b=puOiRj3B6wcmKYqTK6/tPrhjylT0bbCw93Vtremt0i5Upv75XoCStj0f6KlYCJctIs
+         MW9R8jDD4QaIiMrTxXwrZAj1niPVFm9yNW2GzP7PMc6DCG+kbqRKCaF3o6kuRwYOVJ3w
+         7ZxcNTXzEBHk00ulTlLLofsQqQfimEnHeqat3u/xlfUbBdcF50nlaYdJw4a5NVb9xSD1
+         GmMasoV3uqyT0hz+aEYQK4xglh8k7fw5V2vuAobM1bqpgZTHE7bSkbvc6BLqL9YS74ry
+         bQ3piFTm5eGNwbzqJPOhmCWEchg5N+q6azidUIx7pgyV1+yoHnvPlZB9USYTr0qVBozW
+         jRiQ==
+X-Gm-Message-State: AOJu0Yzbz+esYgUXlmpERQKVSwdlPMuiHid9l5zzGkQ62ydyd2ugIwgO
+	kad+lUJwk3WXjViIHDJDz9KhGD1Q6GwoBsYfgiColb4T6KpnYk0bOukZgMVAyiRJqD29fCBlaax
+	ZqUi+l8S9O7vTqZEUl9YpCRQr5c5X
+X-Received: by 2002:a05:620a:2910:b0:77d:9db0:f50 with SMTP id m16-20020a05620a291000b0077d9db00f50mr438509qkp.2.1702047690891;
+        Fri, 08 Dec 2023 07:01:30 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHNsI4tMtOYc7xHWZXOBjYBD1aXToBsFFrAg7VImEsfcmJKM9xVeM36+qmHrWM/jwDygfffpQ==
+X-Received: by 2002:a05:620a:2910:b0:77d:9db0:f50 with SMTP id m16-20020a05620a291000b0077d9db00f50mr438486qkp.2.1702047690610;
+        Fri, 08 Dec 2023 07:01:30 -0800 (PST)
 Received: from [10.19.60.48] (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id w11-20020a05620a094b00b0077f3199a7easm728333qkw.134.2023.12.08.06.54.44
+        by smtp.gmail.com with ESMTPSA id w22-20020a05620a0e9600b0077589913a8bsm731162qkm.132.2023.12.08.07.01.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 08 Dec 2023 06:54:44 -0800 (PST)
-Message-ID: <81543f40-b708-447e-ae37-566706f1f81f@redhat.com>
-Date: Fri, 8 Dec 2023 09:54:43 -0500
+        Fri, 08 Dec 2023 07:01:30 -0800 (PST)
+Message-ID: <687d51fc-fc87-40a1-80c8-9261fcb8dd7a@redhat.com>
+Date: Fri, 8 Dec 2023 10:01:29 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -70,63 +70,115 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 6/6] configure: check for rpc_gss_seccreate
 Content-Language: en-US
-To: Chuck Lever <chuck.lever@oracle.com>,
- Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To: Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+ Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org
 References: <20231206213332.55565-1-olga.kornievskaia@gmail.com>
  <20231206213332.55565-7-olga.kornievskaia@gmail.com>
  <ZXHaTIvFruYfycsm@tissot.1015granger.net>
+ <CAN-5tyFr7-eRP_wjrv_zOmsVC6ft1f1c+fNovbOXr0CVrtzfRw@mail.gmail.com>
+ <ZXJG2xyFUs9pzHlq@tissot.1015granger.net>
+ <CAN-5tyE_jBLJeW_JK0RScEDLF9jAZoi6upsM9aWRhtHPcYxHUQ@mail.gmail.com>
 From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <ZXHaTIvFruYfycsm@tissot.1015granger.net>
+In-Reply-To: <CAN-5tyE_jBLJeW_JK0RScEDLF9jAZoi6upsM9aWRhtHPcYxHUQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 12/7/23 9:44 AM, Chuck Lever wrote:
-> On Wed, Dec 06, 2023 at 04:33:32PM -0500, Olga Kornievskaia wrote:
->> From: Olga Kornievskaia <kolga@netapp.com>
+On 12/8/23 9:26 AM, Olga Kornievskaia wrote:
+> On Thu, Dec 7, 2023 at 5:27 PM Chuck Lever <chuck.lever@oracle.com> wrote:
 >>
->> If we have rpc_gss_sccreate in tirpc library define
->> HAVE_TIRPC_GSS_SECCREATE, which would allow us to handle bad_integrity
->> errors.
+>> On Thu, Dec 07, 2023 at 05:21:50PM -0500, Olga Kornievskaia wrote:
+>>> On Thu, Dec 7, 2023 at 9:44 AM Chuck Lever <chuck.lever@oracle.com> wrote:
+>>>>
+>>>> On Wed, Dec 06, 2023 at 04:33:32PM -0500, Olga Kornievskaia wrote:
+>>>>> From: Olga Kornievskaia <kolga@netapp.com>
+>>>>>
+>>>>> If we have rpc_gss_sccreate in tirpc library define
+>>>>> HAVE_TIRPC_GSS_SECCREATE, which would allow us to handle bad_integrity
+>>>>> errors.
+>>>>>
+>>>>> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+>>>>> ---
+>>>>>   aclocal/libtirpc.m4 | 5 +++++
+>>>>>   1 file changed, 5 insertions(+)
+>>>>>
+>>>>> diff --git a/aclocal/libtirpc.m4 b/aclocal/libtirpc.m4
+>>>>> index bddae022..ef48a2ae 100644
+>>>>> --- a/aclocal/libtirpc.m4
+>>>>> +++ b/aclocal/libtirpc.m4
+>>>>> @@ -26,6 +26,11 @@ AC_DEFUN([AC_LIBTIRPC], [
+>>>>>                                       [Define to 1 if your tirpc library provides libtirpc_set_debug])],,
+>>>>>                            [${LIBS}])])
+>>>>>
+>>>>> +     AS_IF([test -n "${LIBTIRPC}"],
+>>>>> +           [AC_CHECK_LIB([tirpc], [rpc_gss_seccreate],
+>>>>> +                         [AC_DEFINE([HAVE_TIRPC_GSS_SECCREATE], [1],
+>>>>> +                                    [Define to 1 if your tirpc library provides rpc_gss_seccreate])],,
+>>>>> +                         [${LIBS}])])
+>>>>>     AC_SUBST([AM_CPPFLAGS])
+>>>>>     AC_SUBST(LIBTIRPC)
+>>>>
+>>>> It would be better for distributors if this checked that the local
+>>>> version of libtirpc has the rpc_gss_seccreate fix that you sent.
+>>>> The PKG_CHECK_MODULES macro should work for that, once you know the
+>>>> version number of libtirpc that will have that fix.
+>>>>
+>>>> Also, this patch should come either before "gssd: switch to using
+>>>> rpc_gss_seccreate()" or this change should be squashed into that
+>>>> patch, IMO.
+>>>
+>>> I can certainly re-arrange the order (if Steve wants me to re-send an
+>>> ordered list).  I attempted to address your comment to  check for
+>>> existence of the function or fallback to the old way.
 >>
->> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
->> ---
->>   aclocal/libtirpc.m4 | 5 +++++
->>   1 file changed, 5 insertions(+)
+>> A comment that I made when I thought no changes to rpc_gss_seccreate(3t)
+>> would be needed.... But you found and fixed a bug there.
 >>
->> diff --git a/aclocal/libtirpc.m4 b/aclocal/libtirpc.m4
->> index bddae022..ef48a2ae 100644
->> --- a/aclocal/libtirpc.m4
->> +++ b/aclocal/libtirpc.m4
->> @@ -26,6 +26,11 @@ AC_DEFUN([AC_LIBTIRPC], [
->>                                       [Define to 1 if your tirpc library provides libtirpc_set_debug])],,
->>                            [${LIBS}])])
->>   
->> +     AS_IF([test -n "${LIBTIRPC}"],
->> +           [AC_CHECK_LIB([tirpc], [rpc_gss_seccreate],
->> +                         [AC_DEFINE([HAVE_TIRPC_GSS_SECCREATE], [1],
->> +                                    [Define to 1 if your tirpc library provides rpc_gss_seccreate])],,
->> +                         [${LIBS}])])
->>     AC_SUBST([AM_CPPFLAGS])
->>     AC_SUBST(LIBTIRPC)
+>>
+>>> I'm not sure I'm
+>>> capable of producing something that depends on distro versioning (or
+>>> am I supposed to be)?
+>>
+>> I think this series truly needs to check the libtirpc version.
+>> Otherwise the build will complete successfully, gssd will use
+>> rpc_gss_seccreate(), but it will be broken.
+>>
+>> Grep for PKG_CHECK_MODULES in the other files in aclocal/ and you
+>> should find a pattern to use.
 > 
-> It would be better for distributors if this checked that the local
-> version of libtirpc has the rpc_gss_seccreate fix that you sent.
-> The PKG_CHECK_MODULES macro should work for that, once you know the
-> version number of libtirpc that will have that fix.
-This is some the distro need to worried about... Not upstream.
-Yes... do to the recent changes to libtirpc, I did need to
-add a requirement to nfs-utils (in Fedora) so it would compile.
+> Yes but I won't know the version number of libtirpc (version or rpm
+> package) for which to check? It seems like libtirpc changes needs to
+> be checked in (btw I'm assuming a new version would need to be
+> generated), then (if that's it or libtirpc version and package version
+> are different things there might be more) this particular patch could
+> be generated. Isn't that correct?
+> 
+> Steve, I could really use your guidance on steps to be done here.
+Again... The versions "on who is on first and what is on second" :-)
+Is not an upstream problem... It is a distro problem...
+
+Let me take a closer look...
 
 > 
-> Also, this patch should come either before "gssd: switch to using
-> rpc_gss_seccreate()" or this change should be squashed into that
-> patch, IMO.Taking a quick look... The patches seem fine... but I will
-take a closer look over the weekend.
+> Thank you.
+> 
+>>
+>>
+>>> I think this goes back to me hoping that a
+>>> distro would create matching set of libtirpc and nfs-utils rpms...
+We do... upstream creates tar balls... distros create rpm
+that have requirements for certain versions of things.
 
-steved
+steved.
+
+>>
+>> IME distros don't work that way.
+>>
+>>
+>> --
+>> Chuck Lever
 > 
 
 
