@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-455-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-456-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A56F28096F0
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Dec 2023 01:08:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46E248098A8
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Dec 2023 02:40:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0EDA52815B8
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Dec 2023 00:08:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 361F21C20BEF
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Dec 2023 01:40:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DBC5195;
-	Fri,  8 Dec 2023 00:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B1F15CE;
+	Fri,  8 Dec 2023 01:40:39 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2a07:de40:b251:101:10:150:64:1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 424FA170F
-	for <linux-nfs@vger.kernel.org>; Thu,  7 Dec 2023 16:08:46 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 879FC11D;
+	Thu,  7 Dec 2023 17:40:32 -0800 (PST)
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 60B15220D6;
-	Fri,  8 Dec 2023 00:08:44 +0000 (UTC)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EDEB0220D6;
+	Fri,  8 Dec 2023 01:40:30 +0000 (UTC)
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C18E3136F5;
-	Fri,  8 Dec 2023 00:08:42 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 7024413725;
+	Fri,  8 Dec 2023 01:40:26 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id zopGHIpecmWPdwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 08 Dec 2023 00:08:42 +0000
+	id Mp1ECAp0cmXfEwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 08 Dec 2023 01:40:26 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -41,29 +41,41 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
-To: "Olga Kornievskaia" <aglo@umich.edu>
-Cc: Ahelenia =?utf-8?q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>,
- linux-nfs@vger.kernel.org, "Steve Dickson" <steved@redhat.com>
-Subject: Re: [PATCH nfs-utils v2 1/2] fsidd: call anonymous sockets by their
- name only, don't fill with NULs to 108 bytes
-In-reply-to:
- <CAN-5tyGfu9xcFHwD7G5+Hkan=19H1mmWenBm+g75M-uUwzzU7Q@mail.gmail.com>
-References: =?utf-8?q?=3Cb38ecca96762d939d377c381bf34521ee5945129=2E17006011?=
- =?utf-8?q?99=2Egit=2Enabijaczleweli=40nabijaczleweli=2Exyz=3E=2C?=
- <CAN-5tyGfu9xcFHwD7G5+Hkan=19H1mmWenBm+g75M-uUwzzU7Q@mail.gmail.com>
-Date: Fri, 08 Dec 2023 11:08:39 +1100
-Message-id: <170199411925.12910.14964427409507748000@noble.neil.brown.name>
+To: "Christian Brauner" <brauner@kernel.org>
+Cc: "Jens Axboe" <axboe@kernel.dk>, "Al Viro" <viro@zeniv.linux.org.uk>,
+ "Oleg Nesterov" <oleg@redhat.com>, "Chuck Lever" <chuck.lever@oracle.com>,
+ "Jeff Layton" <jlayton@kernel.org>, "Ingo Molnar" <mingo@redhat.com>,
+ "Peter Zijlstra" <peterz@infradead.org>, "Juri Lelli" <juri.lelli@redhat.com>,
+ "Vincent Guittot" <vincent.guittot@linaro.org>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject:
+ Re: [PATCH 1/2] Allow a kthread to declare that it calls task_work_run()
+In-reply-to: <20231206-karawane-kiesgrube-4bbf37bda8e1@brauner>
+References: <e9a1cfed-42e9-4174-bbb3-1a3680cf6a5c@kernel.dk>,
+ <170172377302.7109.11739406555273171485@noble.neil.brown.name>,
+ <a070b6bd-0092-405e-99d2-00002596c0bc@kernel.dk>,
+ <20231205-altbacken-umbesetzen-e5c0c021ab98@brauner>,
+ <170181169515.7109.11121482729257102758@noble.neil.brown.name>,
+ <fb713388-661a-46e0-8925-6d169b46ff9c@kernel.dk>,
+ <3609267c-3fcd-43d6-9b43-9f84bef029a2@kernel.dk>,
+ <170181458198.7109.790647899711986334@noble.neil.brown.name>,
+ <170181861776.7109.6396373836638614121@noble.neil.brown.name>,
+ <c24af958-b933-42dd-9806-9d288463547b@kernel.dk>,
+ <20231206-karawane-kiesgrube-4bbf37bda8e1@brauner>
+Date: Fri, 08 Dec 2023 12:40:23 +1100
+Message-id: <170199962326.12910.10739164577987751755@noble.neil.brown.name>
 X-Spamd-Result: default: False [3.79 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	 FROM_HAS_DN(0.00)[];
-	 RCPT_COUNT_THREE(0.00)[4];
 	 TO_DN_SOME(0.00)[];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
 	 MIME_GOOD(-0.10)[text/plain];
 	 R_SPF_SOFTFAIL(4.60)[~all:c];
 	 RCVD_COUNT_THREE(0.00)[3];
 	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_TWELVE(0.00)[13];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
 	 FROM_EQ_ENVFROM(0.00)[];
 	 R_DKIM_NA(2.20)[];
@@ -77,192 +89,195 @@ Authentication-Results: smtp-out1.suse.de;
 	dmarc=fail reason="No valid SPF, No valid DKIM" header.from=suse.de (policy=none);
 	spf=softfail (smtp-out1.suse.de: 2a07:de40:b281:104:10:150:64:97 is neither permitted nor denied by domain of neilb@suse.de) smtp.mailfrom=neilb@suse.de
 X-Rspamd-Server: rspamd1
-X-Rspamd-Queue-Id: 60B15220D6
+X-Rspamd-Queue-Id: EDEB0220D6
 X-Spam-Score: 3.79
 
-On Thu, 07 Dec 2023, Olga Kornievskaia wrote:
-> On Tue, Nov 21, 2023 at 4:15=E2=80=AFPM Ahelenia Ziemia=C5=84ska
-> <nabijaczleweli@nabijaczleweli.xyz> wrote:
-> >
-> > Since e00ab3c0616fe6d83ab0710d9e7d989c299088f7, ss -l looks like this:
-> >   u_seq               LISTEN                0                     5      =
-                              @/run/fsid.sock@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@=
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 26989379       =
-                                                * 0
-> > with fsidd pushing all the addresses to 108 bytes wide, which is deeply
-> > egregious if you don't filter it out and recolumnate.
-> >
-> > This is because, naturally (unix(7)), "Null bytes in the name have
-> > no special significance": abstract addresses are binary blobs, but
-> > paths automatically terminate at the first NUL byte, since paths
-> > can't contain those.
-> >
-> > So just specify the correct address length when we're using the abstract =
-domain:
-> > unix(7) recommends "offsetof(struct sockaddr_un, sun_path) + strlen(sun_p=
-ath) + 1"
-> > for paths, but we don't want to include the terminating NUL, so it's just
-> > "offsetof(struct sockaddr_un, sun_path) + strlen(sun_path)".
-> > This brings the width back to order:
-> > -- >8 --
-> > $ ss -la | grep @
-> > u_str ESTAB     0      0      @45208536ec96909a/bus/systemd-timesyn/bus-a=
-pi-timesync 18500238                            * 18501249
-> > u_str ESTAB     0      0       @fecc9657d2315eb7/bus/systemd-network/bus-=
-api-network 18495452                            * 18494406
-> > u_seq LISTEN    0      5                                             @/ru=
-n/fsid.sock 27168796                            * 0
-> > u_str ESTAB     0      0                 @ac308f35f50797a2/bus/systemd-lo=
-gind/system 19406                               * 15153
-> > u_str ESTAB     0      0                @b6606e0dfacbae75/bus/systemd/bus=
--api-system 18494353                            * 18495334
-> > u_str ESTAB     0      0                    @5880653d215718a7/bus/systemd=
-/bus-system 26930876                            * 26930003
-> > -- >8 --
-> >
-> > Fixes: e00ab3c0616fe6d83ab0710d9e7d989c299088f7 ("fsidd: provide
-> >  better default socket name.")
-> > Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xy=
-z>
-> > ---
-> > v1: <04f3fe71defa757d518468f04f08334a5d0dfbb9.1693754442.git.nabijaczlewe=
-li@nabijaczleweli.xyz>
-> > v2 NFC, addr_len declared at top of function
-> >
-> >  support/reexport/fsidd.c    | 9 ++++++---
-> >  support/reexport/reexport.c | 8 ++++++--
-> >  2 files changed, 12 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/support/reexport/fsidd.c b/support/reexport/fsidd.c
-> > index 3e62b3fc..8a70b78f 100644
-> > --- a/support/reexport/fsidd.c
-> > +++ b/support/reexport/fsidd.c
-> > @@ -147,6 +147,7 @@ int main(void)
-> >  {
-> >         struct event *srv_ev;
-> >         struct sockaddr_un addr;
-> > +       socklen_t addr_len;
-> >         char *sock_file;
-> >         int srv;
-> >
-> > @@ -161,10 +162,12 @@ int main(void)
-> >         memset(&addr, 0, sizeof(struct sockaddr_un));
-> >         addr.sun_family =3D AF_UNIX;
-> >         strncpy(addr.sun_path, sock_file, sizeof(addr.sun_path) - 1);
-> > -       if (addr.sun_path[0] =3D=3D '@')
-> > +       addr_len =3D sizeof(struct sockaddr_un);
-> > +       if (addr.sun_path[0] =3D=3D '@') {
-> >                 /* "abstract" socket namespace */
-> > +               addr_len =3D offsetof(struct sockaddr_un, sun_path) + str=
-len(addr.sun_path);
-> >                 addr.sun_path[0] =3D 0;
-> > -       else
-> > +       } else
-> >                 unlink(sock_file);
-> >
-> >         srv =3D socket(AF_UNIX, SOCK_SEQPACKET | SOCK_NONBLOCK, 0);
-> > @@ -173,7 +176,7 @@ int main(void)
-> >                 return 1;
-> >         }
-> >
-> > -       if (bind(srv, (const struct sockaddr *)&addr, sizeof(struct socka=
-ddr_un)) =3D=3D -1) {
-> > +       if (bind(srv, (const struct sockaddr *)&addr, addr_len) =3D=3D -1=
-) {
-> >                 xlog(L_WARNING, "Unable to bind %s: %m\n", sock_file);
-> >                 return 1;
-> >         }
-> > diff --git a/support/reexport/reexport.c b/support/reexport/reexport.c
-> > index 78516586..0fb49a46 100644
-> > --- a/support/reexport/reexport.c
-> > +++ b/support/reexport/reexport.c
-> > @@ -21,6 +21,7 @@ static int fsidd_srv =3D -1;
-> >  static bool connect_fsid_service(void)
-> >  {
-> >         struct sockaddr_un addr;
-> > +       socklen_t addr_len;
-> >         char *sock_file;
-> >         int ret;
-> >         int s;
-> > @@ -33,9 +34,12 @@ static bool connect_fsid_service(void)
-> >         memset(&addr, 0, sizeof(struct sockaddr_un));
-> >         addr.sun_family =3D AF_UNIX;
-> >         strncpy(addr.sun_path, sock_file, sizeof(addr.sun_path) - 1);
-> > -       if (addr.sun_path[0] =3D=3D '@')
-> > +       addr_len =3D sizeof(struct sockaddr_un);
-> > +       if (addr.sun_path[0] =3D=3D '@') {
-> >                 /* "abstract" socket namespace */
-> > +               addr_len =3D offsetof(struct sockaddr_un, sun_path) + str=
-len(addr.sun_path);
-> >                 addr.sun_path[0] =3D 0;
-> > +       }
-> >
-> >         s =3D socket(AF_UNIX, SOCK_SEQPACKET, 0);
-> >         if (s =3D=3D -1) {
-> > @@ -43,7 +47,7 @@ static bool connect_fsid_service(void)
-> >                 return false;
-> >         }
-> >
-> > -       ret =3D connect(s, (const struct sockaddr *)&addr, sizeof(struct =
-sockaddr_un));
-> > +       ret =3D connect(s, (const struct sockaddr *)&addr, addr_len);
-> >         if (ret =3D=3D -1) {
-> >                 xlog(L_WARNING, "Unable to connect %s: %m, is fsidd runni=
-ng?\n", sock_file);
-> >                 return false;
-> > --
-> > 2.39.2
-> >
+On Thu, 07 Dec 2023, Christian Brauner wrote:
+> On Tue, Dec 05, 2023 at 04:31:51PM -0700, Jens Axboe wrote:
+> > On 12/5/23 4:23 PM, NeilBrown wrote:
+> > > On Wed, 06 Dec 2023, NeilBrown wrote:
+> > >> On Wed, 06 Dec 2023, Jens Axboe wrote:
+> > >>> On 12/5/23 2:58 PM, Jens Axboe wrote:
+> > >>>> On 12/5/23 2:28 PM, NeilBrown wrote:
+> > >>>>> On Tue, 05 Dec 2023, Christian Brauner wrote:
+> > >>>>>> On Mon, Dec 04, 2023 at 03:09:44PM -0700, Jens Axboe wrote:
+> > >>>>>>> On 12/4/23 2:02 PM, NeilBrown wrote:
+> > >>>>>>>> It isn't clear to me what _GPL is appropriate, but maybe the rul=
+es
+> > >>>>>>>> changed since last I looked..... are there rules?
+> > >>>>>>>>
+> > >>>>>>>> My reasoning was that the call is effectively part of the user-s=
+pace
+> > >>>>>>>> ABI.  A user-space process can call this trivially by invoking a=
+ny
+> > >>>>>>>> system call.  The user-space ABI is explicitly a boundary which =
+the GPL
+> > >>>>>>>> does not cross.  So it doesn't seem appropriate to prevent non-G=
+PL
+> > >>>>>>>> kernel code from doing something that non-GPL user-space code can
+> > >>>>>>>> trivially do.
+> > >>>>>>>
+> > >>>>>>> By that reasoning, basically everything in the kernel should be n=
+on-GPL
+> > >>>>>>> marked. And while task_work can get used by the application, it h=
+appens
+> > >>>>>>> only indirectly or implicitly. So I don't think this reasoning is=
+ sound
+> > >>>>>>> at all, it's not an exported ABI or API by itself.
+> > >>>>>>>
+> > >>>>>>> For me, the more core of an export it is, the stronger the reason=
+ it
+> > >>>>>>> should be GPL. FWIW, I don't think exporting task_work functional=
+ity is
+> > >>>>
+> > >>>>>>
+> > >>>>>> Yeah, I'm not too fond of that part as well. I don't think we want=
+ to
+> > >>>>>> give modules the ability to mess with task work. This is just aski=
+ng for
+> > >>>>>> trouble.
+> > >>>>>>
+> > >>>>>
+> > >>>>> Ok, maybe we need to reframe the problem then.
+> > >>>>>
+> > >>>>> Currently fput(), and hence filp_close(), take control away from ke=
+rnel
+> > >>>>> threads in that they cannot be sure that a "close" has actually
+> > >>>>> completed.
+> > >>>>>
+> > >>>>> This is already a problem for nfsd.  When renaming a file, nfsd nee=
+ds to
+> > >>>>> ensure any cached "open" that it has on the file is closed (else wh=
+en
+> > >>>>> re-exporting an NFS filesystem it can result in a silly-rename).
+> > >>>>>
+> > >>>>> nfsd currently handles this case by calling flush_delayed_fput().  I
+> > >>>>> suspect you are no more happy about exporting that than you are abo=
+ut
+> > >>>>> exporting task_work_run(), but this solution isn't actually 100%
+> > >>>>> reliable.  If some other thread calls flush_delayed_fput() between =
+nfsd
+> > >>>>> calling filp_close() and that same nfsd calling flush_delayed_fput(=
+),
+> > >>>>> then the second flush can return before the first flush (in the oth=
+er
+> > >>>>> thread) completes all the work it took on.
+> > >>>>>
+> > >>>>> What we really need - both for handling renames and for avoiding
+> > >>>>> possible memory exhaustion - is for nfsd to be able to reliably wai=
+t for
+> > >>>>> any fput() that it initiated to complete.
+> > >>>>>
+> > >>>>> How would you like the VFS to provide that service?
+> > >>>>
+> > >>>> Since task_work happens in the context of your task already, why not
+> > >>>> just have a way to get it stashed into a list when final fput is don=
+e?
+> > >>>> This avoids all of this "let's expose task_work" and using the task =
+list
+> > >>>> for that, which seems kind of pointless as you're just going to run =
+it
+> > >>>> later on manually anyway.
+> > >>>>
+> > >>>> In semi pseudo code:
+> > >>>>
+> > >>>> bool fput_put_ref(struct file *file)
+> > >>>> {
+> > >>>> 	return atomic_dec_and_test(&file->f_count);
+> > >>>> }
+> > >>>>
+> > >>>> void fput(struct file *file)
+> > >>>> {
+> > >>>> 	if (fput_put_ref(file)) {
+> > >>>> 		...
+> > >>>> 	}
+> > >>>> }
+> > >>>>
+> > >>>> and then your nfsd_file_free() could do:
+> > >>>>
+> > >>>> ret =3D filp_flush(file, id);
+> > >>>> if (fput_put_ref(file))
+> > >>>> 	llist_add(&file->f_llist, &l->to_free_llist);
+> > >>>>
+> > >>>> or something like that, where l->to_free_llist is where ever you'd
+> > >>>> otherwise punt the actual freeing to.
+> > >>>
+> > >>> Should probably have the put_ref or whatever helper also init the
+> > >>> task_work, and then reuse the list in the callback_head there. Then
+> > >>> whoever flushes it has to call ->func() and avoid exposing ____fput()=
+ to
+> > >>> random users. But you get the idea.
+> > >>
+> > >> Interesting ideas - thanks.
+> > >>
+> > >> So maybe the new API would be
+> > >>
+> > >>  fput_queued(struct file *f, struct llist_head *q)
+> > >> and
+> > >>  flush_fput_queue(struct llist_head *q)
+> > >>
+> > >> with the meaning being that fput_queued() is just like fput() except
+> > >> that any file needing __fput() is added to the 'q'; and that
+> > >> flush_fput_queue() calls __fput() on any files in 'q'.
+> > >>
+> > >> So to close a file nfsd would:
+> > >>
+> > >>   fget(f);
+> > >>   flip_close(f);
+> > >>   fput_queued(f, &my_queue);
+> > >>
+> > >> though possibly we could have a
+> > >>   filp_close_queued(f, q)
+> > >> as well.
+> > >>
+> > >> I'll try that out - but am happy to hear alternate suggestions for nam=
+es :-)
+> > >>
+> > >=20
+> > > Actually ....  I'm beginning to wonder if we should just use
+> > > __fput_sync() in nfsd.
+> > > It has a big warning about not doing that blindly, but the detail in the
+> > > warning doesn't seem to apply to nfsd...
+> >=20
+> > If you can do it from the context where you do the filp_close() right
+> > now, then yeah there's no reason to over-complicate this at all... FWIW,
 >=20
-> Hi folks,
+> As long as nfsd doesn't care that it may get stuck on umount or
+> ->release...
+
+I think we do *care* about getting stuck.  But I don't think we would
+*expect* to get stuck..
+
+I had a look at varous ->release function.  Quite few do fsync or
+similar which isn't a problem.  nfsd often waits for writes to complete.
+Some lock the inode, which again is something that nfsd threads often
+do.
+
+Is there something special that ->release might do but that other
+filesystem operation don't do?
+
+I'd really like to understand why __fput is so special that we often
+queue it to a separate thread.
+
 >=20
-> I'm hitting the following compile error (in RHEL9.2). I believe the
-> code is missing an include for stddef.h. When I add it, things
-> compile. I'll submit a patch.
+> > the reason task_work exists is just to ensure a clean context to perform
+> > these operations from the task itself. The more I think about it, it
+> > doesn't make a lot of sense to utilize it for this purpose, which is
+> > where my alternate suggestion came from. But if you can just call it
+> > directly, then that makes everything much easier.
 >=20
-> gcc -DHAVE_CONFIG_H -I. -I../../support/include  -I/usr/include/tirpc
-> -D_GNU_SOURCE -pipe  -Wall  -Wextra  -Werror=3Dstrict-prototypes
-> -Werror=3Dmissing-prototypes  -Werror=3Dmissing-declarations
-> -Werror=3Dformat=3D2  -Werror=3Dundef  -Werror=3Dmissing-include-dirs
-> -Werror=3Dstrict-aliasing=3D2  -Werror=3Dinit-self
-> -Werror=3Dimplicit-function-declaration  -Werror=3Dreturn-type
-> -Werror=3Dswitch  -Werror=3Doverflow  -Werror=3Dparentheses
-> -Werror=3Daggregate-return  -Werror=3Dunused-result  -fno-strict-aliasing
-> -Werror=3Dformat-overflow=3D2 -Werror=3Dint-conversion
-> -Werror=3Dincompatible-pointer-types -Werror=3Dmisleading-indentation
-> -Wno-cast-function-type -g -O2 -MT reexport.o -MD -MP -MF
-> .deps/reexport.Tpo -c -o reexport.o reexport.c
-> reexport.c: In function =E2=80=98connect_fsid_service=E2=80=99:
-> reexport.c:40:28: error: implicit declaration of function =E2=80=98offsetof=
-=E2=80=99
-> [-Werror=3Dimplicit-function-declaration]
->    40 |                 addr_len =3D offsetof(struct sockaddr_un,
-> sun_path) + strlen(addr.sun_path);
->       |                            ^~~~~~~~
-> reexport.c:18:1: note: =E2=80=98offsetof=E2=80=99 is defined in header =E2=
-=80=98<stddef.h>=E2=80=99;
-> did you forget to =E2=80=98#include <stddef.h>=E2=80=99?
->    17 | #include "xlog.h"
->   +++ |+#include <stddef.h>
->    18 |
-> reexport.c:40:37: error: expected expression before =E2=80=98struct=E2=80=99
->    40 |                 addr_len =3D offsetof(struct sockaddr_un,
-> sun_path) + strlen(addr.sun_path);
->       |                                     ^~~~~~
-> cc1: some warnings being treated as errors
-> make[2]: *** [Makefile:529: reexport.o] Error 1
-> make[2]: Leaving directory '/home/aglo/nfs-utils/support/reexport'
-> make[1]: *** [Makefile:448: all-recursive] Error 1
-> make[1]: Leaving directory '/home/aglo/nfs-utils/support'
+> And for better or worse we already expose __fput_sync(). We've recently
+> switched close(2) over to it as well as it was needlessly punting to
+> task work.
 >=20
 
+exit_files() would be another good candidate for using __fput_sync().
+Oleg Nesterov has reported problems when a process which a large number
+of files exits - this currently puts lots of entries on the task_works
+lists.  If task_work_cancel is then called before those are all dealt
+with, it can have a long list to search while holding a hot lock.  (I
+hope I got that description right).
 
-Interesting - in openSUSE, dlfcn.h includes stddef.h, which is why the
-compile works for me.   Obviously we cannot rely on that.
-
-reexport.c and fsidd.c will both need stddef.
-
-Thanks!
-
+Thanks,
 NeilBrown
 
