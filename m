@@ -1,237 +1,148 @@
-Return-Path: <linux-nfs+bounces-474-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-475-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51FC680B37E
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Dec 2023 10:55:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 431BF80BBDD
+	for <lists+linux-nfs@lfdr.de>; Sun, 10 Dec 2023 15:55:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6C32281028
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Dec 2023 09:55:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D717D1F20F5E
+	for <lists+linux-nfs@lfdr.de>; Sun, 10 Dec 2023 14:55:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E444111BF;
-	Sat,  9 Dec 2023 09:55:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FE2B156DF;
+	Sun, 10 Dec 2023 14:55:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="JMse8cd8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c7JZwigz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2099.outbound.protection.outlook.com [40.107.94.99])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC8510C9
-	for <linux-nfs@vger.kernel.org>; Sat,  9 Dec 2023 01:55:11 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JoKmoHPo/W/meWGWSKtyphtmaLB3Igrx+7v0piaYBG2Ob46WssFVCgkYBxGoLk1dskq7Bzw+iYZ0iDRBQ/S7bqEVomSP2cxrawTJzDg8grCkhQMXGVK+acqqEkqQvm7TujjpT88J2JPpDp7JDmgdt8rQxl8Z44cgMnZSTTPttL3koIV998ZYPFMyQOATWlq9+sOjq7x0gKeOMjLpmG2u1MeF2NFOwZvHyS/rBpK8VyIABfYs1OtKq9ZJGIhGIY6QYw32Rb7iC/ffgXmHrqa5Gov/O0Sl3x0N5hvWlH0PLiNsRedpP+hHlDcJwvb7jV8yKZZOG3JBarr7MTxJQDy9UA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+J2/7GdRdcqngz+9aSYk1GVc2fIs308bOpYw6ihLjEc=;
- b=IGxb2a3V+EE6ilL6wmGdkaNtreGjo3Qvkm8vXXbHKYy9u0w1haFGPKrtbaG3wJu60iaW2mwCMDWEsaoNtgQ1n01X9qLaFtBA3Q7eEMxYVMlT7gJCBZKEElztYpP1zHqU4rbtEXnHGClkNdEH5uXw7J7koyMr0Z8HlRERkJYWr8Wm/pNuo0KsdQT3a8iJLBgH7qOnCv+utCrk8Z4Hoo9UqMWGJVvB/BUfA/h4EpFNc4qCpSgNzorPkkLD7DiZA8hH4Swhs7UGZOLbj/pwX+tOynjfMnfrYv4W1yvMCTKT4dcVROeQugyu5WwgEhjVU+3xH6OSSOFaifmnShRrhupB+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+J2/7GdRdcqngz+9aSYk1GVc2fIs308bOpYw6ihLjEc=;
- b=JMse8cd8KjsF4xoQyuNz4qyWoLHNQcE8jtKsiW0RnIGz8J/v/uESe956PCM4ZKwAlceDj/cRYyw6bk2gHWvKu4kDojjTLapKGnkgpP0D+A0DMrsvIEHvl93HpjP6d0948E6rEA2clUXrmpB88rENUYuQKMqbWreA3fAjkdhrItw=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by SJ0PR13MB5428.namprd13.prod.outlook.com (2603:10b6:a03:421::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.28; Sat, 9 Dec
- 2023 09:55:07 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::390:1b7:55fc:a776]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::390:1b7:55fc:a776%2]) with mapi id 15.20.7068.029; Sat, 9 Dec 2023
- 09:55:07 +0000
-From: Trond Myklebust <trondmy@hammerspace.com>
-To: "anna@kernel.org" <anna@kernel.org>, "bcodding@redhat.com"
-	<bcodding@redhat.com>
-CC: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2] SUNRPC: Fixup v4.1 backchannel request timeouts
-Thread-Topic: [PATCH v2] SUNRPC: Fixup v4.1 backchannel request timeouts
-Thread-Index: AQHaKgtr26jzfBT/OEGuctUIQ6rf6rCgt3qA
-Date: Sat, 9 Dec 2023 09:55:07 +0000
-Message-ID: <089148135f43daaa77e4f83b199883c8b22c7b0f.camel@hammerspace.com>
-References:
- <1bcb93ab5feefca853b95a1759da5b008c204092.1702063105.git.bcodding@redhat.com>
-In-Reply-To:
- <1bcb93ab5feefca853b95a1759da5b008c204092.1702063105.git.bcodding@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|SJ0PR13MB5428:EE_
-x-ms-office365-filtering-correlation-id: 2c35ae4a-e503-42ba-370d-08dbf89ceca4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- dDDZv7P+5TPK+6W3ee72SGUV/Y+0jWomQOqoA0L/bwsTBiMTxMFXUxPqf50A7bIODh7glYUfFhk6zN0SxO6k2O9qdP8LZlpqQjylAqOyPjNM8ceH0yB5v1iTv7OoqGFcKabOFck+EWGEa1fAx+mC2BIVSXcE/pZfHho1vHWh9V6Da9LACriTxdCogVI3EMyhI8Pu6I9B7EpNv01SAPf29tUKW0acVdiFYlAY8c8PCDQFUKeUgN6NmfL9U4zWMIjeZpA6Wcq9WiDhZA5Ip2Ds/9cFnoYMyKAhpJmMPlahTBzAk8VQRNEJ6Hvcq9SZZUlMxPJ7MxL1Ze1QKf/oaMz5LvrvrRuoPoGMdCH4HRiYmI5/PNKK2qAZMWUMX0akHeGcBgreuJeR3pE+ehZhixQQY1Oup70q8NeH2DPzFPN+pNwre59ov3L2dPQO1IjCrkTz4O0+cCPCNz10YlhcgCuBr7n3yDDNEsceETGuls3+vhK3WBMUieuBB1ex97Nfg49+9X1OwkUKR63vfmXcvSjGnbtV91t8/1RvoQhZlSG5KQaWcBNRgIHDtvdC/hePmRY0PK5oRN2N7khiAQlje4Vvow0rqMT5A9Vw4lMCNMP234D9YNT9eLSRiVBoOYJjRvhTYoRpu4hFRZatbA0nKdWqGgSWKIf7fB0BP/EIpsM8Tkg=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39840400004)(376002)(346002)(396003)(366004)(136003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(83380400001)(38070700009)(36756003)(41300700001)(5660300002)(2906002)(71200400001)(6506007)(2616005)(26005)(38100700002)(122000001)(6512007)(478600001)(110136005)(6486002)(66556008)(86362001)(76116006)(66946007)(91956017)(66446008)(64756008)(66476007)(8936002)(4326008)(8676002)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?cEMvbm53RUh2YVpiWHQ0eTdxN0U1MHJrZlRNQ3F6WkhCUDVKR2NSVXJiaG1l?=
- =?utf-8?B?SjJISFFZUEJLbDZsaXg3YWdmdzhFTUgyd0ZaQWM3ckNPbEkxdmtQV09ZQ1E5?=
- =?utf-8?B?T3pYL3VleE0xbWZlNDhmOWRNdG0yOElJeE85QWNWZVNockxDYUY5ZTZndHlG?=
- =?utf-8?B?OEh1cGhFck9NMTlwTzFHYUR5RVdXUktQZU1URDlNUko1bndWbWZnM09KaXY2?=
- =?utf-8?B?R2hLSFRsRU5LeHZtZmEvSWNsaUxGV2dIaWxiRE5SOFY0RGJtTkYrWmpOVXl2?=
- =?utf-8?B?WkJ5a2t5c0hSdTByVzNHeVRudkdPKzJva2xFYWhSUzBYN3hTMllNaUdZTFNm?=
- =?utf-8?B?dXUrS0JBVXZpd0dXYWpVbnl0VWttU3dhQnRXU1phVlczaDRjbC9YK21TNWxF?=
- =?utf-8?B?M3RsQmFLU3BObHlGbUxDdHpINUNtZWE5VWg1UFBhOFYxYnAzZTg5Q3I2WWRU?=
- =?utf-8?B?Q2lFL1V3L2JFNnlsRFVlaHpWUmhjbHRmdzRqbTAydVh5UXFBNUxBanB6SFFz?=
- =?utf-8?B?ZmhQdENuRXliZG9sdmRoSTR3WENpSTZJTlM1M1RueTBNdGpvRnlDM2dSM1Zs?=
- =?utf-8?B?c0NyV1VSVVZ6OG5wRzhNV2lyZHhkSUtFTlErUXRsUm03bnNDZzNpa0RIRytu?=
- =?utf-8?B?dzZseVpFTG9keklKY084d0tXTFhIejIweFRaaTRaZ3Jyc0JTeW9TZFBzQmFp?=
- =?utf-8?B?NitSdFpoek1IWnhld3pQaGlWNWZUTHgzS3BQb1hld1RlNENBT1pvMkxNcjU5?=
- =?utf-8?B?WnF6V3JhUzNIa2tMek1pd05PN3gvS3h2RTdGY0w2V1orRktNWC8reGU5emhh?=
- =?utf-8?B?Qnp3U0NIRnBBV3Fzbjh3UXpGK0tsYWJpcHVQSUpISnZ0dWtXSHZ5MERqbXRw?=
- =?utf-8?B?TXArMTJhenpoM25NaHBydlk5YllXNmRLQ3hpanRNallveFlBeFdsS3p3Umg2?=
- =?utf-8?B?Q0h3dEpOTlVUd2JIVWc3Q3V0TDdNME1ZMXhSRjBjYTg2eHFVQXgxTTNoenQy?=
- =?utf-8?B?L21JcURHbUcrRVByMXNheGxucElrNkt5bVhNYmxWb1V1bUNNUlZOYk51SXVT?=
- =?utf-8?B?c1dKcm9tazdQS3YwYm9jRStMT1I0VlpJM25qSk5sMTVQVm4wc3BYNWNKdUdZ?=
- =?utf-8?B?TTFmZVVHeGQ0ME5iNzhqRjBUK3JKUjJ0ZXpWeCs1V2dOZE9WT0lkLzU2UzZM?=
- =?utf-8?B?RWpYOWp4ZTRJQXhVV3RpbUVNeHBpa3diSHczK3VIZUhHU0VJTUFFdVJHbGhQ?=
- =?utf-8?B?WHE1UWswOElsZWRVLzZDOEJlaDh3M2w2UytOTFVNWEphTVVhZmRmR2o0bC9F?=
- =?utf-8?B?K1ZqaHI2YmI2cVg5SFlzakY0NzlyQUR0SGJwQjBTVWhGRlFNUC9lVTVYZ2lW?=
- =?utf-8?B?K3ExTHJ4SnIrRVcxVGJ5ZWRHcEYwOHZYcjVvTm5ScUpjU0t1SDEyN3lYM3d6?=
- =?utf-8?B?cTU0M1JlVFVGbVR0U2tJRjNBUDVhSVRmdzIvVGR1bDdMQm5TMWs1ZHBuczND?=
- =?utf-8?B?TmZCcFhzV3Q4VURmaFovdGMvbUwwT2NRRDNwdkp2MEcyWHVsR1pZZzI0djhs?=
- =?utf-8?B?MDFDUDJDMitYOFkvYXNVSmV1QVBDZTcvY0psRy9OeU16cVFaaE1EY2YxVHZk?=
- =?utf-8?B?UkJiUTcrM1p6bndLNVRycGQzZGs2aW9vSWllUDlnTjhEem5uTVhYalh1MXJY?=
- =?utf-8?B?U0kyWThxNUVRZWF0Z3BBeHFpVi94V3ZWTFV0TllVUllBcEg4eXhXdEp6Sk5U?=
- =?utf-8?B?UUdmME4vV2MzWDZERkQ1aWRCeFNobzJxNEkwT29ZVmdGS1JjOHpVMTM3TmFn?=
- =?utf-8?B?WGhtOFlFUUFWVGlicVhiaHRnRVBxSjB3dnVQWlZzVFg0SnFuNnc3emhIamNt?=
- =?utf-8?B?WHVtTXFOWDBkN2YxcWtUMlRVa0NnM1hmQkllQW1tWHIrbGsyV3lIUzJpeWtV?=
- =?utf-8?B?T1VrVjU4Lzc0SkxOeTVxVW9ITlRxSGt3ejJXN1N5L1hKRDZJZ2tZdDlMUzJq?=
- =?utf-8?B?UVp1OG1ybklGSGZPeU5qSW13OHR1RVlPZ2JJVTRDd1pwQk4yajFzMldSNnJO?=
- =?utf-8?B?Tm1yd3BqeHZ6UFh3TG9QUTk4VE9Fam1STFRYK1VzdUtTYmdpSXpSNXM0dk04?=
- =?utf-8?B?Z3dMc24vUS81eGROQjFKNE5hWHNEbE54cVJlSE1qaGVSZEtiNzZ2UktONjk4?=
- =?utf-8?B?ZkE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E71C4B7AB732E641BF458E03EF477A29@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50238DB
+	for <linux-nfs@vger.kernel.org>; Sun, 10 Dec 2023 06:55:33 -0800 (PST)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-6ceb27ec331so2264943b3a.1
+        for <linux-nfs@vger.kernel.org>; Sun, 10 Dec 2023 06:55:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702220132; x=1702824932; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=g3Wyb1Xwoi7wirfV8GlH/J6f/ClnX7fq8xd/YFQIrDk=;
+        b=c7JZwigzbw91109d80MPkUNKSwaOYkI03DdLgCXI5obTNxKJ3uCQs66+b6zEYgSoeX
+         XoAALORlMwuXqNe4cb9uap5RbCZtdAjdrrpxUarET2fyvpUz0oBhBSzSD1FXYWHxiD6X
+         HyWXLTl5KeaNiVCBXrkDsYvnYggc+5CLq38UNd6vOXr5nTOj4f4LodKuQeA+xFoLpqcO
+         f1semeVggurNJGHQ15Y3EdpP32sxyyou9nZEPeuhwkqKEu4z8zvKIRE+uXeP8PJ5/LHn
+         XYwPA3OL5UjuwLcYW4lt870wBNuxT/OQ8sKsJE1pzqLjFmLWOw68GcEW1IIe8HXiTVUJ
+         XriQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702220132; x=1702824932;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g3Wyb1Xwoi7wirfV8GlH/J6f/ClnX7fq8xd/YFQIrDk=;
+        b=KMdB9CHjlv2LUIDO2kiSDC6QZcKuw9EdzWl90US90evJwipD/WErEIsGsUsGd8dXS4
+         CDE2U/HG1VxnBBS89hIyUB85ihpEP1HdRzKnXiPRVAom19Zd+i1Y0SwUlQOM+liElSKV
+         FBSUzeC+F4QRNAEaCg0435R4h3EBLwRxp4z4FzauYFUpvTeHMP0feCHTZTYN6cZWhlRH
+         X5jXF/mvJ0i6D3P//O+ACEUpeLaBIxBNjPh++wJWV24agoWHEvbbTFXQpVj2Mxfd8H0l
+         By5GyIUskJ5YqnQpc+6U8PQyCWE4fa6ng/DnIk+16Xuqxj9YDet6lWiEcvY8YS2FrnZb
+         MkpA==
+X-Gm-Message-State: AOJu0Yx5TjkpV/JSZBzK28HSMbMmQhU5gvY/FDNsHd0WU1NuV1Puoqxx
+	CkrI+mRUbTN7OrR/1iPH8obFjk1JWov4m+9XZTtUuUtmRNuBGEsK
+X-Google-Smtp-Source: AGHT+IG75pUbcx2cDrx29uKCSGL8oZcWMSU6d4C0g84HhPqwq/GyPUQRu/8mySUKbTAnMtF3tE3iAjVv3RmkmwWb5zE=
+X-Received: by 2002:a05:6a00:8806:b0:6ce:7d15:9a80 with SMTP id
+ ho6-20020a056a00880600b006ce7d159a80mr999147pfb.61.1702220132477; Sun, 10 Dec
+ 2023 06:55:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2c35ae4a-e503-42ba-370d-08dbf89ceca4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Dec 2023 09:55:07.1800
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6ngWVzDjbo4LwabLmfre9HmRDCvifNWl6Hvz+0tUNWsVw4PsaE3hPLh9YuMq464/gjWqfFVh1w0S/egfAp5Etw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR13MB5428
+From: ditang chen <ditang.c@gmail.com>
+Date: Sun, 10 Dec 2023 22:55:21 +0800
+Message-ID: <CAHnGgyHoyce3Fi5KgCJvHg52R8GumLphPhpzdvZKrwEXy0BnsA@mail.gmail.com>
+Subject: nfsd:Multiple nfs clients with the same hostname cause session exceptions
+To: linux-nfs <linux-nfs@vger.kernel.org>
+Cc: chuck.lever@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-T24gRnJpLCAyMDIzLTEyLTA4IGF0IDE0OjE5IC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBBZnRlciBjb21taXQgNTk0NjRiMjYyZmY1ICgiU1VOUlBDOiBTT0ZUQ09OTiB0YXNr
-cyBzaG91bGQgdGltZSBvdXQNCj4gd2hlbiBvbg0KPiB0aGUgc2VuZGluZyBsaXN0IiksIGFueSA0
-LjEgYmFja2NoYW5uZWwgdGFza3MgcGxhY2VkIG9uIHRoZSBzZW5kaW5nDQo+IHF1ZXVlDQo+IHdv
-dWxkIGltbWVkaWF0ZWx5IHJldHVybiB3aXRoIC1FVElNRURPVVQgc2luY2UgdGhlaXIgcmVxIHRp
-bWVycyBhcmUNCj4gemVyby4NCj4gV2UgY2FuIGZpeCB0aGlzIGJ5IGtlZXBpbmcgYSBjb3B5IG9m
-IHRoZSBycGNfY2xudCdzIHRpbWVvdXQgcGFyYW1zIG9uDQo+IHRoZQ0KPiB0cmFuc3BvcnQgYW5k
-IHVzaW5nIHRoZW0gdG8gcHJvcGVybHkgc2V0dXAgdGhlIHRpbWVvdXRzIG9uIHRoZSB2NC4xDQo+
-IGJhY2tjaGFubmVsIHRhc2tzJyByZXEuDQo+IA0KPiBGaXhlczogNTk0NjRiMjYyZmY1ICgiU1VO
-UlBDOiBTT0ZUQ09OTiB0YXNrcyBzaG91bGQgdGltZSBvdXQgd2hlbiBvbg0KPiB0aGUgc2VuZGlu
-ZyBsaXN0IikNCj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gQ29kZGluZ3RvbiA8YmNvZGRpbmdA
-cmVkaGF0LmNvbT4NCj4gLS0tDQo+IMKgaW5jbHVkZS9saW51eC9zdW5ycGMveHBydC5oIHzCoCAx
-ICsNCj4gwqBuZXQvc3VucnBjL2NsbnQuY8KgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAzICsrKw0K
-PiDCoG5ldC9zdW5ycGMveHBydC5jwqDCoMKgwqDCoMKgwqDCoMKgwqAgfCAyMyArKysrKysrKysr
-KysrKy0tLS0tLS0tLQ0KPiDCoDMgZmlsZXMgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgOSBk
-ZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0
-LmgNCj4gYi9pbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0LmgNCj4gaW5kZXggZjg1ZDNhMGRhY2Ey
-Li43NTY1OTAyMDUzZjMgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvc3VucnBjL3hwcnQu
-aA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3N1bnJwYy94cHJ0LmgNCj4gQEAgLTI4NSw2ICsyODUs
-NyBAQCBzdHJ1Y3QgcnBjX3hwcnQgew0KPiDCoAkJCQkJCSAqIGl0ZW1zICovDQo+IMKgCXN0cnVj
-dCBsaXN0X2hlYWQJYmNfcGFfbGlzdDsJLyogTGlzdCBvZg0KPiBwcmVhbGxvY2F0ZWQNCj4gwqAJ
-CQkJCQkgKiBiYWNrY2hhbm5lbA0KPiBycGNfcnFzdCdzICovDQo+ICsJc3RydWN0IHJwY190aW1l
-b3V0CWJjX3RpbWVvdXQ7CS8qIGJhY2tjaGFubmVsDQo+IHRpbWVvdXQgcGFyYW1zICovDQo+IMKg
-I2VuZGlmIC8qIENPTkZJR19TVU5SUENfQkFDS0NIQU5ORUwgKi8NCj4gwqANCj4gwqAJc3RydWN0
-IHJiX3Jvb3QJCXJlY3ZfcXVldWU7CS8qIFJlY2VpdmUgcXVldWUgKi8NCj4gZGlmZiAtLWdpdCBh
-L25ldC9zdW5ycGMvY2xudC5jIGIvbmV0L3N1bnJwYy9jbG50LmMNCj4gaW5kZXggZDY4MDVjMTI2
-OGE3Li41ODkxNzU3Yzg4YjEgMTAwNjQ0DQo+IC0tLSBhL25ldC9zdW5ycGMvY2xudC5jDQo+ICsr
-KyBiL25ldC9zdW5ycGMvY2xudC5jDQo+IEBAIC0yNzksNiArMjc5LDkgQEAgc3RhdGljIHN0cnVj
-dCBycGNfeHBydA0KPiAqcnBjX2NsbnRfc2V0X3RyYW5zcG9ydChzdHJ1Y3QgcnBjX2NsbnQgKmNs
-bnQsDQo+IMKgCQljbG50LT5jbF9hdXRvYmluZCA9IDE7DQo+IMKgDQo+IMKgCWNsbnQtPmNsX3Rp
-bWVvdXQgPSB0aW1lb3V0Ow0KPiArI2lmIGRlZmluZWQoQ09ORklHX1NVTlJQQ19CQUNLQ0hBTk5F
-TCkNCj4gKwltZW1jcHkoJnhwcnQtPmJjX3RpbWVvdXQsIHRpbWVvdXQsIHNpemVvZihzdHJ1Y3QN
-Cj4gcnBjX3RpbWVvdXQpKTsNCj4gKyNlbmRpZg0KDQpIbW0uLi4gVGhlIHhwcnQgY2FuIGFuZCB3
-aWxsIGJlIHNoYXJlZCBhbW9uZyBhIG51bWJlciBvZiBycGNfY2xudA0KaW5zdGFuY2VzLiBJIHRo
-ZXJlZm9yZSB0aGluayB3ZSdyZSBiZXR0ZXIgb2ZmIGRvaW5nIHRoaXMgd2hlbiB3ZSdyZQ0Kc2V0
-dGluZyB1cCB0aGUgYmFjayBjaGFubmVsLg0KDQppLmUuIHByb2JhYmx5IGRvaW5nIGl0IGluIG5m
-czQxX2luaXRfY2xpZW50aWQoKSBhZnRlciB3ZSBwaWNrZWQgdXAgdGhlDQpsZWFzZSB0aW1lIChi
-dXQgYmVmb3JlIHdlIG1hcmsgdGhlIGNsaWVudCBhcyByZWFkeSksIGFuZCB0aGVuIGRvaW5nIGl0
-DQppbiBuZnM0X3Byb2NfYmluZF9jb25uX3RvX3Nlc3Npb24oKSBpZiBldmVyIHRoYXQgZ2V0cyBj
-YWxsZWQuDQoNCk5vdGUgdGhhdCB3ZSBoYXZlIHRvIHNldCB0aGUgYmNfdGltZW91dCBvbiBhbGwg
-eHBydHMgdGhhdCBjb3VsZCBhY3QgYXMNCmJhY2sgY2hhbm5lbHMsIHNvIHlvdSBtaWdodCB3YW50
-IHRvIHVzZQ0KcnBjX2NsbnRfaXRlcmF0ZV9mb3JfZWFjaF94cHJ0KCkuDQpJdCBtaWdodCBhbHNv
-IGJlIHdvcnRoIHRvIGxvb2sgYXQgT2xnYSdzIHRydW5raW5nIGNvZGUsIHNpbmNlIEkgc3VzcGVj
-dA0Kd2UgbWlnaHQgbmVlZCB0byBkbyBzb21ldGhpbmcgdGhlcmUgd2hlbiBhZGRpbmcgYSBuZXcg
-eHBydCB0byB0aGUNCmV4aXN0aW5nIHNldC4NCg0KPiDCoAlyY3VfYXNzaWduX3BvaW50ZXIoY2xu
-dC0+Y2xfeHBydCwgeHBydCk7DQo+IMKgCXNwaW5fdW5sb2NrKCZjbG50LT5jbF9sb2NrKTsNCj4g
-wqANCj4gZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMveHBydC5jIGIvbmV0L3N1bnJwYy94cHJ0LmMN
-Cj4gaW5kZXggOTIzMDFlMzJjZGE0Li43ZGNlNzgwODY5ZmMgMTAwNjQ0DQo+IC0tLSBhL25ldC9z
-dW5ycGMveHBydC5jDQo+ICsrKyBiL25ldC9zdW5ycGMveHBydC5jDQo+IEBAIC02NTMsOSArNjUz
-LDkgQEAgc3RhdGljIHVuc2lnbmVkIGxvbmcNCj4geHBydF9hYnNfa3RpbWVfdG9famlmZmllcyhr
-dGltZV90IGFic3RpbWUpDQo+IMKgCQlqaWZmaWVzICsgbnNlY3NfdG9famlmZmllcygtZGVsdGEp
-Ow0KPiDCoH0NCj4gwqANCj4gLXN0YXRpYyB1bnNpZ25lZCBsb25nIHhwcnRfY2FsY19tYWpvcnRp
-bWVvKHN0cnVjdCBycGNfcnFzdCAqcmVxKQ0KPiArc3RhdGljIHVuc2lnbmVkIGxvbmcgeHBydF9j
-YWxjX21ham9ydGltZW8oc3RydWN0IHJwY19ycXN0ICpyZXEsDQo+ICsJCWNvbnN0IHN0cnVjdCBy
-cGNfdGltZW91dCAqdG8pDQo+IMKgew0KPiAtCWNvbnN0IHN0cnVjdCBycGNfdGltZW91dCAqdG8g
-PSByZXEtPnJxX3Rhc2stPnRrX2NsaWVudC0NCj4gPmNsX3RpbWVvdXQ7DQo+IMKgCXVuc2lnbmVk
-IGxvbmcgbWFqb3J0aW1lbyA9IHJlcS0+cnFfdGltZW91dDsNCj4gwqANCj4gwqAJaWYgKHRvLT50
-b19leHBvbmVudGlhbCkNCj4gQEAgLTY2Nyw5ICs2NjcsMTAgQEAgc3RhdGljIHVuc2lnbmVkIGxv
-bmcgeHBydF9jYWxjX21ham9ydGltZW8oc3RydWN0DQo+IHJwY19ycXN0ICpyZXEpDQo+IMKgCXJl
-dHVybiBtYWpvcnRpbWVvOw0KPiDCoH0NCj4gwqANCj4gLXN0YXRpYyB2b2lkIHhwcnRfcmVzZXRf
-bWFqb3J0aW1lbyhzdHJ1Y3QgcnBjX3Jxc3QgKnJlcSkNCj4gK3N0YXRpYyB2b2lkIHhwcnRfcmVz
-ZXRfbWFqb3J0aW1lbyhzdHJ1Y3QgcnBjX3Jxc3QgKnJlcSwNCj4gKwkJY29uc3Qgc3RydWN0IHJw
-Y190aW1lb3V0ICp0bykNCj4gwqB7DQo+IC0JcmVxLT5ycV9tYWpvcnRpbWVvICs9IHhwcnRfY2Fs
-Y19tYWpvcnRpbWVvKHJlcSk7DQo+ICsJcmVxLT5ycV9tYWpvcnRpbWVvICs9IHhwcnRfY2FsY19t
-YWpvcnRpbWVvKHJlcSwgdG8pOw0KPiDCoH0NCj4gwqANCj4gwqBzdGF0aWMgdm9pZCB4cHJ0X3Jl
-c2V0X21pbm9ydGltZW8oc3RydWN0IHJwY19ycXN0ICpyZXEpDQo+IEBAIC02NzcsNyArNjc4LDgg
-QEAgc3RhdGljIHZvaWQgeHBydF9yZXNldF9taW5vcnRpbWVvKHN0cnVjdCBycGNfcnFzdA0KPiAq
-cmVxKQ0KPiDCoAlyZXEtPnJxX21pbm9ydGltZW8gKz0gcmVxLT5ycV90aW1lb3V0Ow0KPiDCoH0N
-Cj4gwqANCj4gLXN0YXRpYyB2b2lkIHhwcnRfaW5pdF9tYWpvcnRpbWVvKHN0cnVjdCBycGNfdGFz
-ayAqdGFzaywgc3RydWN0DQo+IHJwY19ycXN0ICpyZXEpDQo+ICtzdGF0aWMgdm9pZCB4cHJ0X2lu
-aXRfbWFqb3J0aW1lbyhzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2ssIHN0cnVjdA0KPiBycGNfcnFzdCAq
-cmVxLA0KPiArCQljb25zdCBzdHJ1Y3QgcnBjX3RpbWVvdXQgKnRvKQ0KPiDCoHsNCj4gwqAJdW5z
-aWduZWQgbG9uZyB0aW1lX2luaXQ7DQo+IMKgCXN0cnVjdCBycGNfeHBydCAqeHBydCA9IHJlcS0+
-cnFfeHBydDsNCj4gQEAgLTY4Niw4ICs2ODgsOSBAQCBzdGF0aWMgdm9pZCB4cHJ0X2luaXRfbWFq
-b3J0aW1lbyhzdHJ1Y3QgcnBjX3Rhc2sNCj4gKnRhc2ssIHN0cnVjdCBycGNfcnFzdCAqcmVxKQ0K
-PiDCoAkJdGltZV9pbml0ID0gamlmZmllczsNCj4gwqAJZWxzZQ0KPiDCoAkJdGltZV9pbml0ID0g
-eHBydF9hYnNfa3RpbWVfdG9famlmZmllcyh0YXNrLQ0KPiA+dGtfc3RhcnQpOw0KPiAtCXJlcS0+
-cnFfdGltZW91dCA9IHRhc2stPnRrX2NsaWVudC0+Y2xfdGltZW91dC0+dG9faW5pdHZhbDsNCj4g
-LQlyZXEtPnJxX21ham9ydGltZW8gPSB0aW1lX2luaXQgKyB4cHJ0X2NhbGNfbWFqb3J0aW1lbyhy
-ZXEpOw0KPiArDQo+ICsJcmVxLT5ycV90aW1lb3V0ID0gdG8tPnRvX2luaXR2YWw7DQo+ICsJcmVx
-LT5ycV9tYWpvcnRpbWVvID0gdGltZV9pbml0ICsgeHBydF9jYWxjX21ham9ydGltZW8ocmVxLA0K
-PiB0byk7DQo+IMKgCXJlcS0+cnFfbWlub3J0aW1lbyA9IHRpbWVfaW5pdCArIHJlcS0+cnFfdGlt
-ZW91dDsNCj4gwqB9DQo+IMKgDQo+IEBAIC03MTUsNyArNzE4LDcgQEAgaW50IHhwcnRfYWRqdXN0
-X3RpbWVvdXQoc3RydWN0IHJwY19ycXN0ICpyZXEpDQo+IMKgCX0gZWxzZSB7DQo+IMKgCQlyZXEt
-PnJxX3RpbWVvdXQgPSB0by0+dG9faW5pdHZhbDsNCj4gwqAJCXJlcS0+cnFfcmV0cmllcyA9IDA7
-DQo+IC0JCXhwcnRfcmVzZXRfbWFqb3J0aW1lbyhyZXEpOw0KPiArCQl4cHJ0X3Jlc2V0X21ham9y
-dGltZW8ocmVxLCB0byk7DQo+IMKgCQkvKiBSZXNldCB0aGUgUlRUIGNvdW50ZXJzID09ICJzbG93
-IHN0YXJ0IiAqLw0KPiDCoAkJc3Bpbl9sb2NrKCZ4cHJ0LT50cmFuc3BvcnRfbG9jayk7DQo+IMKg
-CQlycGNfaW5pdF9ydHQocmVxLT5ycV90YXNrLT50a19jbGllbnQtPmNsX3J0dCwgdG8tDQo+ID50
-b19pbml0dmFsKTsNCj4gQEAgLTE4ODgsNyArMTg5MSw3IEBAIHhwcnRfcmVxdWVzdF9pbml0KHN0
-cnVjdCBycGNfdGFzayAqdGFzaykNCj4gwqAJcmVxLT5ycV9zbmRfYnVmLmJ2ZWMgPSBOVUxMOw0K
-PiDCoAlyZXEtPnJxX3Jjdl9idWYuYnZlYyA9IE5VTEw7DQo+IMKgCXJlcS0+cnFfcmVsZWFzZV9z
-bmRfYnVmID0gTlVMTDsNCj4gLQl4cHJ0X2luaXRfbWFqb3J0aW1lbyh0YXNrLCByZXEpOw0KPiAr
-CXhwcnRfaW5pdF9tYWpvcnRpbWVvKHRhc2ssIHJlcSwgdGFzay0+dGtfY2xpZW50LQ0KPiA+Y2xf
-dGltZW91dCk7DQo+IMKgDQo+IMKgCXRyYWNlX3hwcnRfcmVzZXJ2ZShyZXEpOw0KPiDCoH0NCj4g
-QEAgLTE5OTgsNiArMjAwMSw4IEBAIHhwcnRfaW5pdF9iY19yZXF1ZXN0KHN0cnVjdCBycGNfcnFz
-dCAqcmVxLA0KPiBzdHJ1Y3QgcnBjX3Rhc2sgKnRhc2spDQo+IMKgCSAqLw0KPiDCoAl4YnVmcC0+
-bGVuID0geGJ1ZnAtPmhlYWRbMF0uaW92X2xlbiArIHhidWZwLT5wYWdlX2xlbiArDQo+IMKgCQl4
-YnVmcC0+dGFpbFswXS5pb3ZfbGVuOw0KPiArDQo+ICsJeHBydF9pbml0X21ham9ydGltZW8odGFz
-aywgcmVxLCAmcmVxLT5ycV94cHJ0LT5iY190aW1lb3V0KTsNCj4gwqB9DQo+IMKgI2VuZGlmDQo+
-IMKgDQoNCk90aGVyd2lzZSwgbG9va3MgZ29vZC4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxp
-bnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBo
-YW1tZXJzcGFjZS5jb20NCg0KDQo=
+Multiple nfs clients with the same hostname cause session exceptions,
+the new client find confirmed nfs4_client by name in the
+nfsd4_create_session
+and then will release the se_hash list=EF=BC=9A
+
+old =3D find_confirmed_client_by_name(&unconf->cl_name, nn);
+if (old) {
+    status =3D mark_client_expired_locked(old);
+    if (status) {
+        old =3D NULL;
+        goto out_free_conn;
+    }
+    trace_nfsd_clid_replaced(&old->cl_clientid);
+}
+move_to_confirmed(unconf);
+
+Is there any other option, such as IP instead of host name, which is
+usually unique=EF=BC=9F
+
+Dec  1 22:42:32 dd kernel: nfsd4_exchange_id rqstp=3D000000006668b520
+exid=3D00000000a44d3b72 clname.len=3D35 clname.data=3D000000007b1b5592
+ip_addr=3D192.168.122.130 flags 101, spa_how 0
+Dec  1 22:42:32 dd kernel: nfsd4_exchange_id seqid 0 flags 20001
+Dec  1 22:42:32 dd kernel: check_slot_seqid enter. seqid 1 slot_seqid 0
+Dec  1 22:42:32 dd kernel: alloc_cld_upcall: allocated xid 10
+Dec  1 22:42:32 dd rpc.mountd[25713]: v4.2 client attached:
+0xe21bb8c66569eeaf from "192.168.122.130:894"
+Dec  1 22:42:32 dd rpc.mountd[25713]: v4.2 client detached:
+0xe21bb8c56569eeaf from "192.168.122.93:791"
+Dec  1 22:42:32 dd kernel: __find_in_sessionid_hashtbl:
+1701441199:3793467590:5:0
+Dec  1 22:42:32 dd kernel: nfsd4_sequence: slotid 0
+Dec  1 22:42:32 dd kernel: check_slot_seqid enter. seqid 1 slot_seqid 0
+Dec  1 22:42:32 dd kernel: nfsd: fh_compose(exp 103:08/128 /, ino=3D128)
+Dec  1 22:42:32 dd kernel: --> nfsd4_store_cache_entry slot 000000006ef6f42=
+2
+Dec  1 22:42:32 dd kernel: __find_in_sessionid_hashtbl:
+1701441199:3793467590:5:0
+Dec  1 22:42:32 dd kernel: nfsd4_sequence: slotid 0
+Dec  1 22:42:32 dd kernel: check_slot_seqid enter. seqid 2 slot_seqid 1
+Dec  1 22:42:32 dd kernel: alloc_cld_upcall: allocated xid 11
+Dec  1 22:42:32 dd kernel: --> nfsd4_store_cache_entry slot 000000006ef6f42=
+2
+Dec  1 22:42:36 dd kernel: __find_in_sessionid_hashtbl:
+1701441199:3793467589:4:0
+Dec  1 22:42:36 dd kernel: __find_in_sessionid_hashtbl: session not found
+Dec  1 22:42:36 dd kernel: nfsd4_destroy_session: 1701441199:3793467589:4:0
+Dec  1 22:42:36 dd kernel: __find_in_sessionid_hashtbl:
+1701441199:3793467589:4:0
+Dec  1 22:42:36 dd kernel: __find_in_sessionid_hashtbl: session not found
+Dec  1 22:42:36 dd kernel: nfsd4_exchange_id rqstp=3D000000006668b520
+exid=3D00000000a44d3b72 clname.len=3D35 clname.data=3D000000007b1b5592
+ip_addr=3D192.168.122.93 flags 101, spa_how 0
+Dec  1 22:42:36 dd kernel: nfsd4_exchange_id seqid 0 flags 20001
+Dec  1 22:42:36 dd kernel: check_slot_seqid enter. seqid 1 slot_seqid 0
+Dec  1 22:42:36 dd kernel: alloc_cld_upcall: allocated xid 12
+Dec  1 22:42:36 dd rpc.mountd[25713]: v4.2 client attached:
+0xe21bb8c76569eeaf from "192.168.122.93:791"
+Dec  1 22:42:36 dd rpc.mountd[25713]: v4.2 client detached:
+0xe21bb8c66569eeaf from "192.168.122.130:894"
+Dec  1 22:42:36 dd kernel: __find_in_sessionid_hashtbl:
+1701441199:3793467591:6:0
+Dec  1 22:42:36 dd kernel: nfsd4_sequence: slotid 0
+Dec  1 22:42:36 dd kernel: check_slot_seqid enter. seqid 1 slot_seqid 0
+Dec  1 22:42:36 dd kernel: nfsd: fh_compose(exp 103:08/128 /, ino=3D128)
+Dec  1 22:42:36 dd kernel: --> nfsd4_store_cache_entry slot 00000000e1f66c2=
+4
+Dec  1 22:42:36 dd kernel: __find_in_sessionid_hashtbl:
+1701441199:3793467591:6:0
+Dec  1 22:42:36 dd kernel: nfsd4_sequence: slotid 0
+Dec  1 22:42:36 dd kernel: check_slot_seqid enter. seqid 2 slot_seqid 1
+Dec  1 22:42:36 dd kernel: alloc_cld_upcall: allocated xid 13
+Dec  1 22:42:36 dd kernel: --> nfsd4_store_cache_entry slot 00000000e1f66c2=
+4
+Dec  1 22:43:33 dd kernel: __find_in_sessionid_hashtbl:
+1701441199:3793467590:5:0
+Dec  1 22:43:33 dd kernel: __find_in_sessionid_hashtbl: session not found
+Dec  1 22:43:33 dd kernel: nfsd4_destroy_session: 1701441199:3793467590:5:0
+Dec  1 22:43:33 dd kernel: __find_in_sessionid_hashtbl:
+1701441199:3793467590:5:0
+Dec  1 22:43:33 dd kernel: __find_in_sessionid_hashtbl: session not found
 
