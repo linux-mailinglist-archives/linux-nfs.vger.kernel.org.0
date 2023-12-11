@@ -1,44 +1,44 @@
-Return-Path: <linux-nfs+bounces-485-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-486-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F35D80CF66
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 16:24:27 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1A5080CF69
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 16:24:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 914421C21287
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 15:24:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7119FB212DE
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 15:24:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 252604AF9A;
-	Mon, 11 Dec 2023 15:24:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A8134AF85;
+	Mon, 11 Dec 2023 15:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qOX7TxX8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c1JkOejR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 050593B184;
-	Mon, 11 Dec 2023 15:24:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925E3C433C8;
-	Mon, 11 Dec 2023 15:24:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6988E3B184;
+	Mon, 11 Dec 2023 15:24:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F2EC433C7;
+	Mon, 11 Dec 2023 15:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702308262;
-	bh=w4I9suP34OK/T9wqgSV5LFh9uj8Gkgnu9+/UaxfsYwU=;
+	s=k20201202; t=1702308269;
+	bh=VWGn/gAnNfqZSoTmYXsQnuNZs6xC+143uzhJaMWYAGA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=qOX7TxX8tbbI5Gqvq7zJAKcvkyThMAgKUwwtCSD1c5g61NdbVI10gJvbKK0GQJHIp
-	 dcchV8c21R5aoYEQ7ZnSPtVg1t/ftdkAX6NU1Nau3TElWuuOjmIUEMdm7zdIPkAggL
-	 Ue7JI2L95xLODC4gcFWL5qwzp0W+8M0g91v1IF7M3nLn9pGPvnsTIqnCCfpbM2Hf2k
-	 PCnGomzkkyODz2N7Z06PHrO3eilD9rQ+vU/p06jnIU8fxYxCv+o7j9TYK20cLbU8xE
-	 I8MYtSkm2Reztc+yIbFb5sI2upjatwNFu2nLHPCc0fKTebMQ2RP09Cbk1Qf1+AtvOp
-	 J4PTqXIO6T4vg==
-Subject: [PATCH v1 3/8] svcrdma: Remove pointer addresses shown in dprintk()
+	b=c1JkOejRicweqAXk6EPnGCzKPjG+xYCar4BmcucrEA2399l1Vyz/HfaoZww5YU+C+
+	 ibMo78xVT4eNXmHj4R6cXr1Fp6QzolhQtzJhFG1hnh/iE+0MVrV8nPW+87Ebi7IKUm
+	 a82NRywLfJPFrutkxWRtDQvOdQ+PnoUsbP6G0htnFxjqJOHGGcbtR58oHbpSBjsHWN
+	 BarAq+91Pw5jPA10sC9rjygJGflfZF6VBsZqsk8t4Siz6UCxH21F8pm8ShFZXjAiRi
+	 1qEiZZrMFglc8RTNYNn1n+ZNkA6nfVZf/5eZaFrojG0w7mPgycP4hhoEXFIztrZrXp
+	 SaaP/5yFTereg==
+Subject: [PATCH v1 4/8] svcrdma: Remove queue-shortening warnings
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
 Cc: tom@talpey.com
-Date: Mon, 11 Dec 2023 10:24:21 -0500
+Date: Mon, 11 Dec 2023 10:24:28 -0500
 Message-ID: 
- <170230826159.90242.7084253882158192266.stgit@bazille.1015granger.net>
+ <170230826804.90242.16823273103656314417.stgit@bazille.1015granger.net>
 In-Reply-To: 
  <170230788373.90242.9421368360904462120.stgit@bazille.1015granger.net>
 References: 
@@ -55,38 +55,44 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-There are a couple of dprintk() call sites in svc_rdma_accept()
-that show pointer addresses. These days, displayed pointer addresses
-are hashed and thus have little or no diagnostic value, especially
-for site administrators.
+These won't have much diagnostic value for site administrators.
+Since they can't be disabled, they become noise.
+
+What's more, the subsequent rdma_create_qp() call adjusts the Send
+Queue size (possibly downward) without warning, making the size
+reported by these pr_warns inaccurate.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_transport.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 3826da1c15f3..451814eb12b9 100644
+index 451814eb12b9..040d2ef6400c 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -457,8 +457,6 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	qp_attr.qp_type = IB_QPT_RC;
- 	qp_attr.send_cq = newxprt->sc_sq_cq;
- 	qp_attr.recv_cq = newxprt->sc_rq_cq;
--	dprintk("svcrdma: newxprt->sc_cm_id=%p, newxprt->sc_pd=%p\n",
--		newxprt->sc_cm_id, newxprt->sc_pd);
- 	dprintk("    cap.max_send_wr = %d, cap.max_recv_wr = %d\n",
- 		qp_attr.cap.max_send_wr, qp_attr.cap.max_recv_wr);
- 	dprintk("    cap.max_send_sge = %d, cap.max_recv_sge = %d\n",
-@@ -512,7 +510,7 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	}
+@@ -412,8 +412,6 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 	rq_depth = newxprt->sc_max_requests + newxprt->sc_max_bc_requests +
+ 		   newxprt->sc_recv_batch;
+ 	if (rq_depth > dev->attrs.max_qp_wr) {
+-		pr_warn("svcrdma: reducing receive depth to %d\n",
+-			dev->attrs.max_qp_wr);
+ 		rq_depth = dev->attrs.max_qp_wr;
+ 		newxprt->sc_recv_batch = 1;
+ 		newxprt->sc_max_requests = rq_depth - 2;
+@@ -423,11 +421,8 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
+ 	ctxts = rdma_rw_mr_factor(dev, newxprt->sc_port_num, RPCSVC_MAXPAGES);
+ 	ctxts *= newxprt->sc_max_requests;
+ 	newxprt->sc_sq_depth = rq_depth + ctxts;
+-	if (newxprt->sc_sq_depth > dev->attrs.max_qp_wr) {
+-		pr_warn("svcrdma: reducing send depth to %d\n",
+-			dev->attrs.max_qp_wr);
++	if (newxprt->sc_sq_depth > dev->attrs.max_qp_wr)
+ 		newxprt->sc_sq_depth = dev->attrs.max_qp_wr;
+-	}
+ 	atomic_set(&newxprt->sc_sq_avail, newxprt->sc_sq_depth);
  
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
--	dprintk("svcrdma: new connection %p accepted:\n", newxprt);
-+	dprintk("svcrdma: new connection accepted on device %s:\n", dev->name);
- 	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.src_addr;
- 	dprintk("    local address   : %pIS:%u\n", sap, rpc_get_port(sap));
- 	sap = (struct sockaddr *)&newxprt->sc_cm_id->route.addr.dst_addr;
+ 	newxprt->sc_pd = ib_alloc_pd(dev, 0);
 
 
 
