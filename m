@@ -1,65 +1,143 @@
-Return-Path: <linux-nfs+bounces-478-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-479-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BFEA80C387
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 09:46:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B64D80C911
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 13:10:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD1BC1C20356
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 08:46:22 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36182281F24
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 12:10:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20AD6125DC;
-	Mon, 11 Dec 2023 08:46:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F8143A279;
+	Mon, 11 Dec 2023 12:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=venturelinkage.com header.i=@venturelinkage.com header.b="tR+oZUPf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EyjNcadl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail.venturelinkage.com (mail.venturelinkage.com [80.211.143.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63115DF
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Dec 2023 00:46:16 -0800 (PST)
-Received: by mail.venturelinkage.com (Postfix, from userid 1002)
-	id 1F10782623; Mon, 11 Dec 2023 09:46:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=venturelinkage.com;
-	s=mail; t=1702284375;
-	bh=7iowqdzve/IIiUUjcEwx8j3uMrVqqiE7R9zbOCKRV9Q=;
-	h=Date:From:To:Subject:From;
-	b=tR+oZUPfKIe+TnQmYVmvLywR87PjrCLmCHs9ux4kYhsv0pd0zKfOOGTWBZRYs2QuH
-	 9txW7bfZI2+Aiyuv9LCzEWBRHw0LrOy/wCw+A+mlKKXos6m1nljeaYoNYDi9dLbPTF
-	 Rja2fj7HxSxU8HFBcbee34nFfkHYAHe0NucBIT3OepqxPUVupxnKg4lQXTiAlzhNNE
-	 Qyd269CYdrrJUkak/AxRbhsZGtaJLNkSQ/iUtPtzYbnszyOB56d6cTRFc+xUCfcwnr
-	 9kWdsvcJrCAGj3s1Yfebz6Me9g67HmV+P2PAtbta9E8A0TLwGjcdoMHJf7Dw3UuTWY
-	 kWo2inVQjZWMg==
-Received: by mail.venturelinkage.com for <linux-nfs@vger.kernel.org>; Mon, 11 Dec 2023 08:46:06 GMT
-Message-ID: <20231211084500-0.1.25.5eg1.0.gjzt9xlp3b@venturelinkage.com>
-Date: Mon, 11 Dec 2023 08:46:06 GMT
-From: "Lukas Varga" <lukas.varga@venturelinkage.com>
-To: <linux-nfs@vger.kernel.org>
-Subject: =?UTF-8?Q?Popt=C3=A1vka?=
-X-Mailer: mail.venturelinkage.com
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0A89B
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Dec 2023 04:10:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702296599;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hnYm5KfX8lM8APHl62ZJ0088IHHtCECQow+H9/WQ9iE=;
+	b=EyjNcadltUXyQUSjcZurdxE6QJV7UxkgS99QCD2nrWVkJvwq//4Xy6O/WC03yXz9gXti4D
+	p1koHQ7ptOtnwH4xOv2sqjFcHaOm6yN2n1bDmnF5mXBawzMqWzGOzGE6OSEmQjPvjauI9w
+	hoLVfhFmWV3GjkhrKGPxFf5igkAGKdY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-335-13hXbWqZNOChHpgE9jYzEg-1; Mon, 11 Dec 2023 07:09:56 -0500
+X-MC-Unique: 13hXbWqZNOChHpgE9jYzEg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 72FB6836F20;
+	Mon, 11 Dec 2023 12:09:56 +0000 (UTC)
+Received: from [100.85.132.103] (ovpn-0-7.rdu2.redhat.com [10.22.0.7])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id DDB09492BC6;
+	Mon, 11 Dec 2023 12:09:55 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: anna@kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] SUNRPC: Fixup v4.1 backchannel request timeouts
+Date: Mon, 11 Dec 2023 06:53:14 -0500
+Message-ID: <35D8B8C5-C025-43CA-B06E-60CD44634AD7@redhat.com>
+In-Reply-To: <089148135f43daaa77e4f83b199883c8b22c7b0f.camel@hammerspace.com>
+References: <1bcb93ab5feefca853b95a1759da5b008c204092.1702063105.git.bcodding@redhat.com>
+ <089148135f43daaa77e4f83b199883c8b22c7b0f.camel@hammerspace.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-Dobr=C3=A9 r=C3=A1no,
+On 9 Dec 2023, at 4:55, Trond Myklebust wrote:
 
-Dovolil jsem si V=C3=A1s kontaktovat, proto=C5=BEe m=C3=A1m z=C3=A1jem ov=
-=C4=9B=C5=99it mo=C5=BEnost nav=C3=A1z=C3=A1n=C3=AD spolupr=C3=A1ce.
+> On Fri, 2023-12-08 at 14:19 -0500, Benjamin Coddington wrote:
+>> After commit 59464b262ff5 ("SUNRPC: SOFTCONN tasks should time out
+>> when on
+>> the sending list"), any 4.1 backchannel tasks placed on the sending
+>> queue
+>> would immediately return with -ETIMEDOUT since their req timers are
+>> zero.
+>> We can fix this by keeping a copy of the rpc_clnt's timeout params on
+>> the
+>> transport and using them to properly setup the timeouts on the v4.1
+>> backchannel tasks' req.
+>>
+>> Fixes: 59464b262ff5 ("SUNRPC: SOFTCONN tasks should time out when on
+>> the sending list")
+>> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+>> ---
+>>  include/linux/sunrpc/xprt.h |  1 +
+>>  net/sunrpc/clnt.c           |  3 +++
+>>  net/sunrpc/xprt.c           | 23 ++++++++++++++---------
+>>  3 files changed, 18 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/include/linux/sunrpc/xprt.h
+>> b/include/linux/sunrpc/xprt.h
+>> index f85d3a0daca2..7565902053f3 100644
+>> --- a/include/linux/sunrpc/xprt.h
+>> +++ b/include/linux/sunrpc/xprt.h
+>> @@ -285,6 +285,7 @@ struct rpc_xprt {
+>>  						 * items */
+>>  	struct list_head	bc_pa_list;	/* List of
+>> preallocated
+>>  						 * backchannel
+>> rpc_rqst's */
+>> +	struct rpc_timeout	bc_timeout;	/* backchannel
+>> timeout params */
+>>  #endif /* CONFIG_SUNRPC_BACKCHANNEL */
+>>  
+>>  	struct rb_root		recv_queue;	/* Receive queue */
+>> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+>> index d6805c1268a7..5891757c88b1 100644
+>> --- a/net/sunrpc/clnt.c
+>> +++ b/net/sunrpc/clnt.c
+>> @@ -279,6 +279,9 @@ static struct rpc_xprt
+>> *rpc_clnt_set_transport(struct rpc_clnt *clnt,
+>>  		clnt->cl_autobind = 1;
+>>  
+>>  	clnt->cl_timeout = timeout;
+>> +#if defined(CONFIG_SUNRPC_BACKCHANNEL)
+>> +	memcpy(&xprt->bc_timeout, timeout, sizeof(struct
+>> rpc_timeout));
+>> +#endif
+>
+> Hmm... The xprt can and will be shared among a number of rpc_clnt
+> instances. I therefore think we're better off doing this when we're
+> setting up the back channel.
 
-Podporujeme firmy p=C5=99i z=C3=ADsk=C3=A1v=C3=A1n=C3=AD nov=C3=BDch obch=
-odn=C3=ADch z=C3=A1kazn=C3=ADk=C5=AF.
+.. and it seems the timeouts could be different for each, so now I think
+keeping a copy of the last rpc_clnt's timeouts on the xprt is wrong.
 
-M=C5=AF=C5=BEeme si promluvit a poskytnout podrobnosti?
+We could use the current timeouts from the nfs_client side after we
+figure out which nfs_client that would be in nfs4_callback_compound().
+Trouble is if we have to make a reply before getting that far there's
+still no timeout set, but that's probably a rare case and could use the xprt
+type defaults.
 
-V p=C5=99=C3=ADpad=C4=9B z=C3=A1jmu V=C3=A1s bude kontaktovat n=C3=A1=C5=A1=
- anglicky mluv=C3=ADc=C3=AD z=C3=A1stupce.
+> i.e. probably doing it in nfs41_init_clientid() after we picked up the
+> lease time (but before we mark the client as ready), and then doing it
+> in nfs4_proc_bind_conn_to_session() if ever that gets called.
+>
+> Note that we have to set the bc_timeout on all xprts that could act as
+> back channels, so you might want to use
+> rpc_clnt_iterate_for_each_xprt().
+> It might also be worth to look at Olga's trunking code, since I suspect
+> we might need to do something there when adding a new xprt to the
+> existing set.
 
+Ben
 
-Pozdravy
-Lukas Varga
 
