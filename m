@@ -1,45 +1,44 @@
-Return-Path: <linux-nfs+bounces-483-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-484-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7148380CF61
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 16:24:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 359C380CF63
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 16:24:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A28571C21204
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 15:24:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64CF21C21290
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 15:24:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 487F34B5A6;
-	Mon, 11 Dec 2023 15:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08E594AF7B;
+	Mon, 11 Dec 2023 15:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cEJQ9dTf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSiLGxrK"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 234EE4AF81;
-	Mon, 11 Dec 2023 15:24:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC311C433B9;
-	Mon, 11 Dec 2023 15:24:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF2A33B184;
+	Mon, 11 Dec 2023 15:24:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22501C433C7;
+	Mon, 11 Dec 2023 15:24:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702308250;
-	bh=Cn2aLrgLn9F4WwngZDunocI5s85Y6YoRuq/jxaaPDr4=;
+	s=k20201202; t=1702308256;
+	bh=Azc8E1z0nSScQA4Ka3Ad03FQroG23ikvDXFi+W7NPPc=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=cEJQ9dTfj1hiXCcLW1NkRUFavOioJ3tD9NITXYTr03W9MnD3MDHByAGCJT+W1ZMZq
-	 mFANGT1OyshB8b7QU2PIEr2NE1ewhmb+VDEL5xkvSfCx8EGPRTKfACyhbWpgEMWtnY
-	 x72GaqAXd06CMatfYfBpA1xyepzFBP+gcdyAaYEday8Ce2Zo2Ci5zAba4qM5riPftL
-	 6rYydb9oAb98qqx6eANB+oLPm51zW7wKE4P3xSIencVMd5VUMSMjT8RDSxujMqD4Nh
-	 5cgUTzPWzaoGEvVMCA6CLQ8ooluO6Mg/PIU0yodPeSe/PPhBQOsT3iQduV4WzSCvHg
-	 w0KTWL8FpuypQ==
-Subject: [PATCH v1 1/8] svcrdma: De-duplicate completion ID initialization
- helpers
+	b=FSiLGxrK8TSlNmNwfeivh5gcZ+ZS811VsnkjTRL5vhKn1q/I8aCJDD3f/H+jkqPSc
+	 HgMngoR0EwdeeHe6A54iHF+rX6UkwQ0/TmhJwWtaK9EhwoA5hEP9/r3/y0Eq5O2Dcq
+	 KCIeiEFjXkYrZ1qKlSM0uSMiJVlEQ+pA1WXpLsIHUnf4q8p0WPszTmKNz5CnN7J9Iu
+	 7jCIfgqZcnzHZUXZx5hcgLUtr+qsnHKP60WbuZM1JovIfLCl2i86W5pcoLxR7s9V5a
+	 aWN2g/RfXRnLvzNFN2HaBFnqy0LKpDPioqj+PGvpj/PunfhbjhBPzSYifvaQPVWqnZ
+	 wlKpCKUvGc5Vw==
+Subject: [PATCH v1 2/8] svcrdma: Optimize svc_rdma_cc_init()
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
 Cc: tom@talpey.com
-Date: Mon, 11 Dec 2023 10:24:08 -0500
+Date: Mon, 11 Dec 2023 10:24:15 -0500
 Message-ID: 
- <170230824865.90242.7760213084666437745.stgit@bazille.1015granger.net>
+ <170230825516.90242.7046834370878992757.stgit@bazille.1015granger.net>
 In-Reply-To: 
  <170230788373.90242.9421368360904462120.stgit@bazille.1015granger.net>
 References: 
@@ -56,112 +55,78 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
+The atomic_inc_return() in svc_rdma_send_cid_init() is expensive.
+
+Some svc_rdma_chunk_ctxt's now reside in long-lived container
+structures. They don't need a fresh completion ID for every I/O
+operation.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc_rdma.h         |   24 ++++++++++++++++++++++++
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |    7 -------
- net/sunrpc/xprtrdma/svc_rdma_rw.c       |    9 +--------
- net/sunrpc/xprtrdma/svc_rdma_sendto.c   |    7 -------
- 4 files changed, 25 insertions(+), 22 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |    2 +-
+ net/sunrpc/xprtrdma/svc_rdma_rw.c       |    9 +++++----
+ net/sunrpc/xprtrdma/svc_rdma_sendto.c   |    2 +-
+ 3 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index 051fefde8d51..46f2ce9f810b 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -134,6 +134,30 @@ enum {
- 
- #define RPCSVC_MAXPAYLOAD_RDMA	RPCSVC_MAXPAYLOAD
- 
-+/**
-+ * svc_rdma_send_cid_init - Initialize a Receive Queue completion ID
-+ * @rdma: controlling transport
-+ * @cid: completion ID to initialize
-+ */
-+static inline void svc_rdma_recv_cid_init(struct svcxprt_rdma *rdma,
-+					  struct rpc_rdma_cid *cid)
-+{
-+	cid->ci_queue_id = rdma->sc_rq_cq->res.id;
-+	cid->ci_completion_id = atomic_inc_return(&rdma->sc_completion_ids);
-+}
-+
-+/**
-+ * svc_rdma_send_cid_init - Initialize a Send Queue completion ID
-+ * @rdma: controlling transport
-+ * @cid: completion ID to initialize
-+ */
-+static inline void svc_rdma_send_cid_init(struct svcxprt_rdma *rdma,
-+					  struct rpc_rdma_cid *cid)
-+{
-+	cid->ci_queue_id = rdma->sc_sq_cq->res.id;
-+	cid->ci_completion_id = atomic_inc_return(&rdma->sc_completion_ids);
-+}
-+
- /*
-  * A chunk context tracks all I/O for moving one Read or Write
-  * chunk. This is a set of rdma_rw's that handle data movement
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index 392a91dc8a99..ac6351e292c5 100644
+index ac6351e292c5..38f01652dc6d 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -115,13 +115,6 @@ svc_rdma_next_recv_ctxt(struct list_head *list)
- 					rc_list);
- }
+@@ -123,7 +123,7 @@ svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
+ 	dma_addr_t addr;
+ 	void *buffer;
  
--static void svc_rdma_recv_cid_init(struct svcxprt_rdma *rdma,
--				   struct rpc_rdma_cid *cid)
--{
--	cid->ci_queue_id = rdma->sc_rq_cq->res.id;
--	cid->ci_completion_id = atomic_inc_return(&rdma->sc_completion_ids);
--}
--
- static struct svc_rdma_recv_ctxt *
- svc_rdma_recv_ctxt_alloc(struct svcxprt_rdma *rdma)
- {
+-	ctxt = kmalloc_node(sizeof(*ctxt), GFP_KERNEL, node);
++	ctxt = kzalloc_node(sizeof(*ctxt), GFP_KERNEL, node);
+ 	if (!ctxt)
+ 		goto fail0;
+ 	buffer = kmalloc_node(rdma->sc_max_req_size, GFP_KERNEL, node);
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 4d2db06ccfd2..eab71f3867fa 100644
+index eab71f3867fa..ff54bb268b7d 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -146,13 +146,6 @@ static int svc_rdma_rw_ctx_init(struct svcxprt_rdma *rdma,
- 	return ret;
- }
- 
--static void svc_rdma_cc_cid_init(struct svcxprt_rdma *rdma,
--				 struct rpc_rdma_cid *cid)
--{
--	cid->ci_queue_id = rdma->sc_sq_cq->res.id;
--	cid->ci_completion_id = atomic_inc_return(&rdma->sc_completion_ids);
--}
--
- /**
-  * svc_rdma_cc_init - Initialize an svc_rdma_chunk_ctxt
-  * @rdma: controlling transport instance
-@@ -161,7 +154,7 @@ static void svc_rdma_cc_cid_init(struct svcxprt_rdma *rdma,
+@@ -154,7 +154,10 @@ static int svc_rdma_rw_ctx_init(struct svcxprt_rdma *rdma,
  void svc_rdma_cc_init(struct svcxprt_rdma *rdma,
  		      struct svc_rdma_chunk_ctxt *cc)
  {
--	svc_rdma_cc_cid_init(rdma, &cc->cc_cid);
-+	svc_rdma_send_cid_init(rdma, &cc->cc_cid);
+-	svc_rdma_send_cid_init(rdma, &cc->cc_cid);
++	struct rpc_rdma_cid *cid = &cc->cc_cid;
++
++	if (unlikely(!cid->ci_completion_id))
++		svc_rdma_send_cid_init(rdma, cid);
  
  	INIT_LIST_HEAD(&cc->cc_rwctxts);
  	cc->cc_sqecount = 0;
+@@ -221,15 +224,13 @@ svc_rdma_write_info_alloc(struct svcxprt_rdma *rdma,
+ {
+ 	struct svc_rdma_write_info *info;
+ 
+-	info = kmalloc_node(sizeof(*info), GFP_KERNEL,
++	info = kzalloc_node(sizeof(*info), GFP_KERNEL,
+ 			    ibdev_to_node(rdma->sc_cm_id->device));
+ 	if (!info)
+ 		return info;
+ 
+ 	info->wi_rdma = rdma;
+ 	info->wi_chunk = chunk;
+-	info->wi_seg_off = 0;
+-	info->wi_seg_no = 0;
+ 	svc_rdma_cc_init(rdma, &info->wi_cc);
+ 	info->wi_cc.cc_cqe.done = svc_rdma_write_done;
+ 	return info;
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index 9571ed4a74d4..c9585e469ca8 100644
+index c9585e469ca8..1a49b7f02041 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -113,13 +113,6 @@
+@@ -122,7 +122,7 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
+ 	void *buffer;
+ 	int i;
  
- static void svc_rdma_wc_send(struct ib_cq *cq, struct ib_wc *wc);
- 
--static void svc_rdma_send_cid_init(struct svcxprt_rdma *rdma,
--				   struct rpc_rdma_cid *cid)
--{
--	cid->ci_queue_id = rdma->sc_sq_cq->res.id;
--	cid->ci_completion_id = atomic_inc_return(&rdma->sc_completion_ids);
--}
--
- static struct svc_rdma_send_ctxt *
- svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
- {
+-	ctxt = kmalloc_node(struct_size(ctxt, sc_sges, rdma->sc_max_send_sges),
++	ctxt = kzalloc_node(struct_size(ctxt, sc_sges, rdma->sc_max_send_sges),
+ 			    GFP_KERNEL, node);
+ 	if (!ctxt)
+ 		goto fail0;
 
 
 
