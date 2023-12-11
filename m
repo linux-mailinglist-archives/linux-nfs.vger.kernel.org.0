@@ -1,419 +1,311 @@
-Return-Path: <linux-nfs+bounces-492-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-493-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B671B80D9B3
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 19:56:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 764CE80DA4A
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 20:03:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 386B91F2193C
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 18:56:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CF7ECB213AA
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 19:03:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16A3651C59;
-	Mon, 11 Dec 2023 18:56:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D056524AB;
+	Mon, 11 Dec 2023 19:03:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="teP89eo+"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="S4VLVjPM";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WSgXQEDG"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90ED321B8;
-	Mon, 11 Dec 2023 18:56:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AE5AC433C8;
-	Mon, 11 Dec 2023 18:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702320970;
-	bh=AhEJzLRNnF//o4btxFf0wfbAQQHwZk8WnH6CwtL7800=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=teP89eo+VeXm53rwGkHXfMmtwmasOUG3QbsYR4NBrG4Rq84F+KjyBxOJWn3Nn0AAE
-	 mNBd2W+g7Tuzstztn7467Kn5vDUgR9t0CVtn/0Pp/77KlRsiQae48Fwh+19ojTrvvZ
-	 s/yRv6dKeGlfx6WwFVyFm4chsBKUg1tL+rHq9V19bV03YR42EUCcwnHbWKor6Zi3wr
-	 84H5H8BqHwESkSoAfvLPQqvZ6SGWGj0HNqz3xbU5ju5LMDVX2h550voQ5vZhJPKyQh
-	 SMg++pbz8nrnBwL+yZ6d3QcIcv8z93DQuJs/i/tBS58rC8Rdkl8FiQ1HjSqZvU/vYQ
-	 IABVkR4x8XRiw==
-Message-ID: <a30b00df8b40ca94d0ff243c0305f36c7cbafc43.camel@kernel.org>
-Subject: Re: [PATCH v8 3/3] NFSD: add rpc_status netlink support
-From: Jeff Layton <jlayton@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>, linux-nfs@vger.kernel.org
-Cc: lorenzo.bianconi@redhat.com, chuck.lever@oracle.com, neilb@suse.de, 
-	netdev@vger.kernel.org
-Date: Mon, 11 Dec 2023 13:56:08 -0500
-In-Reply-To: <ac18892ea3f718c63f0a12e39aeaac812c081515.1694436263.git.lorenzo@kernel.org>
-References: <cover.1694436263.git.lorenzo@kernel.org>
-	 <ac18892ea3f718c63f0a12e39aeaac812c081515.1694436263.git.lorenzo@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9846BB8;
+	Mon, 11 Dec 2023 11:02:59 -0800 (PST)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BBGtdDd025529;
+	Mon, 11 Dec 2023 19:01:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2023-11-20;
+ bh=pOEp8qPCHDYXVBQzPCPvPXnDP5TGfnByWmqPOJprwtI=;
+ b=S4VLVjPMAoZMM9U1JU+d2Op0BHLQbqoGIpB9Ewb/w15IQo9vgv9bLL5R4ZOKJO3V/zFe
+ fIDOq3Du0j3019A/KfW3Cqz9gRINLfQswRyzT0qCpiYg6r4yMkZzaiLSpkg4LM8CQ99p
+ hQ5r5TwMO55C2iFdZJUF51mUH4Cd4+8rh1J0VDW0E6TnvxkEy9AOiOJRBrMxuWKv2IjN
+ 7Oa5A/l2N1F8MVRCwNaMkg0+ceEshoK+2CdGWqQ4lM4AOczSfgnj2M094g7xtBM1dmjQ
+ IoAYw0OJjzCVlhK0QKTANqg2b7LfVuRiKZRv5dwp1xGxNv+JeTEjb4LIFee27Ph+if7e aA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ux5df0fp5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Dec 2023 19:01:47 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BBIu8W5009894;
+	Mon, 11 Dec 2023 19:01:45 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2101.outbound.protection.outlook.com [104.47.58.101])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3uvep5d9sb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 11 Dec 2023 19:01:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BA/5UTAtHzfJbY+ZMyNlu+88lE7djCXEJYkMnNVvmnFlbLF4O9cc8yrfjqpH8XXzYpxy1fFupQGSz2xhMaJ09pg2ggfJQLRmUREZU+IUZdfCqWa85E7WY6nV66dZ+qQJWbYBY1nd+Z36ltzHJaHzv1Mxll8ZFNki563shKCXEa9LRv/iwcU+VjpOnRlM7LLFRaPk8m+sH1l0nOs5R4aKoCgBrD+Uc0PRwd+CCUVcO6/1rAaWFYej8UqO5reWpQ67s/dfNh3hA9hTinHhM9d9L5AJyOzDU1lr3XAOOm40klN+RZ3+xsIBqMTN2jTEB57cJqFri8HUP1wuWn1OcNDGSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pOEp8qPCHDYXVBQzPCPvPXnDP5TGfnByWmqPOJprwtI=;
+ b=H8yA0xddzB+QMLVxJBLYtVcRZjV/W/QesjBZDPJ40FYsIwJStMFmiCSpLyyi4EkL0xL0Yv2AsEOhRhUCFG6dJoGVyYLnyGsF0Qbiuq2+926jMUgTcK+P5UR3XTb/lcMWrNdkp4+k25Eq6n6mWDv9CmTenSx7Vjglee6VAzVLzKImn5F2NevV/aW/ZekWIdjzwQ5XU8S6iiMLYixGKw86v0eU8GhSPThlQFMGlKyLrULvBVd+RU6dWoM5oHsO1Gh0Twy4hIvxdy+RM8Ns8s1ySTRxKrUkP7qWJPyUTuzeLR3lZlL8lkQE3hv4xf94mSnHmIpcfV8AWKOLNuOTkjVMkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pOEp8qPCHDYXVBQzPCPvPXnDP5TGfnByWmqPOJprwtI=;
+ b=WSgXQEDGvOGw96LIsIAI18EJwPDL8mU0ymp+CcWq5n+4UiGeGyKqS6qFMKMjq9B3Lt9ALhIb4br6CI9JMKAlxT0x6bXhwa/FxqnJgjOT6ekhzjC2D+YEk79n2UzMzGBE0Q+E7/kfFW6uG3zTjOKjbyLjMYdBpFAI1HZJ0+K7/KU=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH0PR10MB4985.namprd10.prod.outlook.com (2603:10b6:610:de::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.32; Mon, 11 Dec
+ 2023 19:01:43 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::360b:b3c0:c5a9:3b3c]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::360b:b3c0:c5a9:3b3c%4]) with mapi id 15.20.7068.031; Mon, 11 Dec 2023
+ 19:01:43 +0000
+Date: Mon, 11 Dec 2023 14:01:39 -0500
+From: Chuck Lever <chuck.lever@oracle.com>
+To: NeilBrown <neilb@suse.de>
+Cc: Al Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Oleg Nesterov <oleg@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] nfsd: use __fput_sync() to avoid delayed closing of
+ files.
+Message-ID: <ZXdck2thv7tz1ee3@tissot.1015granger.net>
+References: <20231208033006.5546-1-neilb@suse.de>
+ <20231208033006.5546-2-neilb@suse.de>
+ <ZXMv4psmTWw4mlCd@tissot.1015granger.net>
+ <170224845504.12910.16483736613606611138@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170224845504.12910.16483736613606611138@noble.neil.brown.name>
+X-ClientProxiedBy: CH0PR13CA0024.namprd13.prod.outlook.com
+ (2603:10b6:610:b1::29) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|CH0PR10MB4985:EE_
+X-MS-Office365-Filtering-Correlation-Id: 835e61a3-45c4-4445-7cb0-08dbfa7b9d58
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	gctjAaExz5B+uSO8jflRQjKNx72MOiKUQVLH/wTiMybwo149HNG2r5FGtKU9GxoQyHwB9ziiAx5JlVdLY+ofuV+5r/BjTTJWIofB2CituPOInEqL9oGRS3FRJWAJOaMInAYZKyyO4hHuSf2d2asWRBcUeEoMr646FQVSZ3PQ7230TpcMnRWP0w+9FkqzGHEUU8ad5kkrp93w+GvY9ePJEKj/Dxkz7o4NJJ3wOz1KMomTvyJ/XXsQGfaXltdwnnP/VfpTR7sgOGba8U2Fvc2xpXx7sMuBIyr7JOgDTEFZbSjg1zGALggotdTRjSJFTo9m0ZVMHoX8UQ2HV/XrXBcKqmU+tkzFfPMFjGeSHwNpiI33uihfIuyJJTRFfhJx3RBJ1Vpiwy2MGFq5n+X4TpmYy1YqR2LOdvBXs09uZrFkizkE29UZRQHOBAYYAK0y4tmGHJAhJIOaqMh28MMyGtp6ME8AHbJi9gS/fbU0eRqn2s7xfVpIkKCiVtSMj6UdD3AizH6T7iQF0u/xjJpVKlzO9Hbet4U+xsqbEtXoE1AyzfbjPmyuvtnpM7mAwFAOMh/j
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(136003)(346002)(39860400002)(396003)(376002)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(41300700001)(38100700002)(2906002)(5660300002)(44832011)(316002)(4326008)(8936002)(8676002)(6916009)(54906003)(66946007)(66476007)(66556008)(9686003)(86362001)(6512007)(6666004)(478600001)(26005)(83380400001)(6506007)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?QMPMN7xaByzpzb4GSHnoPctFzVKGsmmwadj0wqj2RP7vO6tZAcrcaU3f/Nqt?=
+ =?us-ascii?Q?caP9dY/BgQpxLt5qmM+YFwlPw+G2Q8Dfr+OTwJtXcEOVCxJDI4pQrRSH4i+J?=
+ =?us-ascii?Q?Emw7uCPc+sZIL69er3Y/V+fXvbd56p7rhjgqIwMjA991AwPGWfvSgeYAo4Ff?=
+ =?us-ascii?Q?6IWjYS3TvDyaCEwGQWdm88DXSuvX2ci/XClLNIh5ryLIeI8kBFt+Ly1gC5hb?=
+ =?us-ascii?Q?RE/wwsUp3wJTHlUTM5iUnSz/lM6IIbIH2bARDYFe98VVWgrQF5v41X7S1GJO?=
+ =?us-ascii?Q?mWwSyebISCYx/QQMMzPhD0y0BZP4WBpsLeeaZVCakkSjrsXkyWrBicrPPNfG?=
+ =?us-ascii?Q?Yib4kXV+G9IsfaKIhfNKlvPzRjJHGm/58tZ9PGqccQlgAFxcU7qBnyvfLYwC?=
+ =?us-ascii?Q?LoQDUnRE50T0vZo5iTKGBNhqLGNFv3QKzKUWkPxQaZuQWWSHwlFR166Plwsi?=
+ =?us-ascii?Q?eZQe9vaI5szZuo3sdjLkWMCPU0uW8E0/Y/dzUEugmJs/cx+FESe4O2g6Prbu?=
+ =?us-ascii?Q?3aueOh5VU/mQPukZ//+Imkxj4Ust7Pl8jHt1fDp3M+sPgLkmfH4IfHXNMSrP?=
+ =?us-ascii?Q?KateAyPIR4pKOi9MeTs/hzOdAb05DfIu/VEO54xel1Vwg8VNcmqtEW+XOEwl?=
+ =?us-ascii?Q?hG2V7IYt0COPCEcPDf76lKf8COedok8hBTUCrUZup+Uk/+slFMilVoScsjNI?=
+ =?us-ascii?Q?hgSysQOqYeSLFJs1phY+N2zQyw5TSxO6S4nYmxC2EKgyrGk/kmYMw9uAVuhr?=
+ =?us-ascii?Q?k3eSl07NezVtkiT0J0B9idf+LJRN+6B1z7OmiR/jN5/kahO19dCCgbUv/1LD?=
+ =?us-ascii?Q?IjmsYRJmR+XnARXlKZKvAFPRLv2sl7tsndx6gP6oSlf+KkgOwcfPf2XpqK9U?=
+ =?us-ascii?Q?zI7BnTnYbN7hr6+wQsNO1lKmSxjqWdumWH1RHIc0EOHqb356fjodK0GIq3zm?=
+ =?us-ascii?Q?ozfuBBwnYLL9JpCIjlUtd9A0OXPWwcFskJzJhkdLkJjqPIM0kI3S0Aam2aY8?=
+ =?us-ascii?Q?3L9QlVwYkKFWasNTjKERcQL1FrzZiSMeRscfQX6ZqTdPWNIVMFFsqSVwmHqJ?=
+ =?us-ascii?Q?krDdtSoAi7Zq/bL1i0US35B7BeWM+OQQCBN0m+iAHqSxXWaaLld/PTSTsdaN?=
+ =?us-ascii?Q?zA1EJMysN1YJpR/0krFGXpd1ssf8XwPd+TM9aBkhQdOPXME2j1IW6Je5cZk/?=
+ =?us-ascii?Q?FUzIg/ZkEl9WFmeovqXq4JaL6wO3F9x7rGFBUjMEUKjyn4V7bjii6gfB34GW?=
+ =?us-ascii?Q?nlkRmaXIyjKutBfgCxvQ/Wyr9chm3rIIoAXbVRsHZt/A2plhMFjtguGKyfDZ?=
+ =?us-ascii?Q?tdjfvZruqkJDrEM+eeXka6E+y+eEt+vAcCVzTU05l6aZH6wQPXSrw5YfCoHk?=
+ =?us-ascii?Q?775aFPTXLUog62I+E+9gEzUGuWzxePolQBgZ8titws8/2IbqYl90JXfMvP4y?=
+ =?us-ascii?Q?YEnwfx9dCGfxU2S5Ln/9HMvSFvI1Le173eg7K9nvoeL5PyOSMPNbd6pvOIhH?=
+ =?us-ascii?Q?D4w2FfHqIG/VfDnknTSyvw42lWfyPlPxPHKxOiayrcsFE3GktfaH6Ac1Hn76?=
+ =?us-ascii?Q?jWKCD2qNOoro3a+ZJpjVeUs3bSLRFkr+7wDZlM42qcUKRwQTu8wFa6NQcL00?=
+ =?us-ascii?Q?RQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	2KlWMgot61FSu4i5FA1m65nopedxE68be95r4YVMXLbqic4Wq9/5epDFH8HamE2t3gRY92b3MXJGS/Npk8PEt8BFNXiLjiF5Eh54c4id9PjhSY92fcQMXzDJcShbJF8rWbtQV+J91nWxmyMaGQ3UcyM1f1KyvedR6C7nK6lCaZWDDgZp46dTnx0nwS4TBEwcaZw2f1wwa4ELKJbowuymfgZsc1jPkeOXm89qKRclIAY4kg5aNavjPESfj7nChlzFpy6bc77xTO+yhizYgOb1FmL+aUMxUodoOA+xyTwp/JDcaq1k1OdVDt7EvwAZjCSmR5/RiGSkhvm8QCTplvTEVBk1n5MFVL3EvpEpQnu5is+kRXreJnuV6aL0KhgHP2NN7D9/MNxQOdeLw16sSA/xw9hhRBBNSqDKPxRg3Wfyz58SIzTL8XAhSM47m280RcpLLtHLmbNGtkHr5sCarQLyEScUQXYponO3sOc5FgoEmJ0K/TX8+8hu7iYroM1lf0t0WZDSYd6GWWPYzz/UeQd9RgC5kbnD6URu8kLCDTXxe0mdxDcKkqNIUJ4sZFLHZTSONlrnBIoeR64+n60j4b/Yq2l1upmSEEi4uLVAHe0TnC1Ztocglmn9TafWa6DtBSk6t1bEutg/MlzcyIl0BaDXbZqVBBIrTzC0KS9OC43hHOOoqH+erBZx+d5Zl51y5EOZBRwoLT2E/OKenZsbkFZbePh/CXFL9aHBphy5Z8hrdMY02Yh18kkwj5LfOkddmYxF9eiOt5/4i3QXPDx+ROJXheQKTiSyUHneMn6RI4MOHXPT/qmi6frPu64eBO3vQNXgZ31fIMAxtTREW7R3yUX/XRXpi76Cze9cQqvoVcVwMOLKWEqkI677DSH8ymwSE5BHD4H+WsfaMGWpi3gEcjcxR7ywfYggfiWw2EDIfaxAPwQ=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 835e61a3-45c4-4445-7cb0-08dbfa7b9d58
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2023 19:01:43.1997
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: EYcYEYB/yt/U9dNFu5gsP12u0KjJbbSWuBbzI60ei0iZfPojytwyvsPd1APMBZ+iajredL0waHRGTvQVGxIQTg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4985
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-11_09,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
+ phishscore=0 malwarescore=0 spamscore=0 mlxlogscore=915 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312110157
+X-Proofpoint-GUID: gt9jlqvPrFa191a54LsY-tAxlmrGRyMY
+X-Proofpoint-ORIG-GUID: gt9jlqvPrFa191a54LsY-tAxlmrGRyMY
 
-On Mon, 2023-09-11 at 14:49 +0200, Lorenzo Bianconi wrote:
-> Introduce rpc_status netlink support for NFSD in order to dump pending
-> RPC requests debugging information from userspace.
->=20
-> Tested-by: Jeff Layton <jlayton@kernel.org>
-> Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> ---
->  fs/nfsd/nfsctl.c           | 192 ++++++++++++++++++++++++++++++++++++-
->  fs/nfsd/nfsd.h             |  16 ++++
->  fs/nfsd/nfssvc.c           |  15 +++
->  fs/nfsd/state.h            |   2 -
->  include/linux/sunrpc/svc.h |   1 +
->  5 files changed, 222 insertions(+), 4 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 1be66088849c..b862a759ea15 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -26,6 +26,7 @@
->  #include "pnfs.h"
->  #include "filecache.h"
->  #include "trace.h"
-> +#include "nfs_netlink_gen.h"
-> =20
->  /*
->   *	We have a single directory with several nodes in it.
-> @@ -1497,17 +1498,199 @@ unsigned int nfsd_net_id;
-> =20
->  int nfsd_server_nl_rpc_status_get_start(struct netlink_callback *cb)
->  {
-> -	return 0;
-> +	struct nfsd_net *nn =3D net_generic(sock_net(cb->skb->sk), nfsd_net_id)=
-;
-> +	int ret =3D -ENODEV;
-> +
-> +	mutex_lock(&nfsd_mutex);
-> +	if (nn->nfsd_serv) {
-> +		svc_get(nn->nfsd_serv);
-> +		ret =3D 0;
-> +	}
-> +	mutex_unlock(&nfsd_mutex);
-> +
-> +	return ret;
->  }
+On Mon, Dec 11, 2023 at 09:47:35AM +1100, NeilBrown wrote:
+> On Sat, 09 Dec 2023, Chuck Lever wrote:
+> > On Fri, Dec 08, 2023 at 02:27:26PM +1100, NeilBrown wrote:
+> > > Calling fput() directly or though filp_close() from a kernel thread like
+> > > nfsd causes the final __fput() (if necessary) to be called from a
+> > > workqueue.  This means that nfsd is not forced to wait for any work to
+> > > complete.  If the ->release of ->destroy_inode function is slow for any
+> > > reason, this can result in nfsd closing files more quickly than the
+> > > workqueue can complete the close and the queue of pending closes can
+> > > grow without bounces (30 million has been seen at one customer site,
+> > > though this was in part due to a slowness in xfs which has since been
+> > > fixed).
+> > > 
+> > > nfsd does not need this.
+> > 
+> > That is technically true, but IIUC, there is only one case where a
+> > synchronous close matters for the backlog problem, and that's when
+> > nfsd_file_free() is called from nfsd_file_put(). AFAICT all other
+> > call sites (except rename) are error paths, so there aren't negative
+> > consequences for the lack of synchronous wait there...
+> 
+> What you say is technically true but it isn't the way I see it.
+> 
+> Firstly I should clarify that __fput_sync() is *not* a flushing close as
+> you describe it below.
+> All it does, apart for some trivial book-keeping, is to call ->release
+> and possibly ->destroy_inode immediately rather than shunting them off
+> to another thread.
+> Apparently ->release sometimes does something that can deadlock with
+> some kernel threads or if some awkward locks are held, so the whole
+> final __fput is delay by default.  But this does not apply to nfsd.
+> Standard fput() is really the wrong interface for nfsd to use.  
+> It should use __fput_sync() (which shouldn't have such a scary name).
+> 
+> The comment above flush_delayed_fput() seems to suggest that unmounting
+> is a core issue.  Maybe the fact that __fput() can call
+> dissolve_on_fput() is a reason why it is sometimes safer to leave the
+> work to later.  But I don't see that applying to nfsd.
+> 
+> Of course a ->release function *could* do synchronous writes just like
+> the XFS ->destroy_inode function used to do synchronous reads.
 
-I think there is a potential race above. Once you've dropped the
-nfsd_mutex, there is no guarantee that the nn->nfsd_serv will still be
-set when you come back to put the serv. That means that we could oops
-when we hit the _done method below.
-
-Is it possible to stash a pointer to the serv while we hold the
-reference?
-
-> =20
-> -int nfsd_server_nl_rpc_status_get_done(struct netlink_callback *cb)
-> +static int nfsd_genl_rpc_status_compose_msg(struct sk_buff *skb,
-> +					    struct netlink_callback *cb,
-> +					    struct nfsd_genl_rqstp *rqstp)
->  {
-> +	void *hdr;
-> +	int i;
-> +
-> +	hdr =3D genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq=
-,
-> +			  &nfsd_server_nl_family, NLM_F_MULTI,
-> +			  NFSD_CMD_RPC_STATUS_GET);
-> +	if (!hdr)
-> +		return -ENOBUFS;
-> +
-> +	if (nla_put_be32(skb, NFSD_ATTR_RPC_STATUS_XID, rqstp->rq_xid) ||
-> +	    nla_put_u32(skb, NFSD_ATTR_RPC_STATUS_FLAGS, rqstp->rq_flags) ||
-> +	    nla_put_u32(skb, NFSD_ATTR_RPC_STATUS_PROG, rqstp->rq_prog) ||
-> +	    nla_put_u32(skb, NFSD_ATTR_RPC_STATUS_PROC, rqstp->rq_proc) ||
-> +	    nla_put_u8(skb, NFSD_ATTR_RPC_STATUS_VERSION, rqstp->rq_vers) ||
-> +	    nla_put_s64(skb, NFSD_ATTR_RPC_STATUS_SERVICE_TIME,
-> +			ktime_to_us(rqstp->rq_stime),
-> +			NFSD_ATTR_RPC_STATUS_PAD))
-> +		return -ENOBUFS;
-> +
-> +	switch (rqstp->saddr.sa_family) {
-> +	case AF_INET: {
-> +		const struct sockaddr_in *s_in, *d_in;
-> +
-> +		s_in =3D (const struct sockaddr_in *)&rqstp->saddr;
-> +		d_in =3D (const struct sockaddr_in *)&rqstp->daddr;
-> +		if (nla_put_in_addr(skb, NFSD_ATTR_RPC_STATUS_SADDR4,
-> +				    s_in->sin_addr.s_addr) ||
-> +		    nla_put_in_addr(skb, NFSD_ATTR_RPC_STATUS_DADDR4,
-> +				    d_in->sin_addr.s_addr) ||
-> +		    nla_put_be16(skb, NFSD_ATTR_RPC_STATUS_SPORT,
-> +				 s_in->sin_port) ||
-> +		    nla_put_be16(skb, NFSD_ATTR_RPC_STATUS_DPORT,
-> +				 d_in->sin_port))
-> +			return -ENOBUFS;
-> +		break;
-> +	}
-> +	case AF_INET6: {
-> +		const struct sockaddr_in6 *s_in, *d_in;
-> +
-> +		s_in =3D (const struct sockaddr_in6 *)&rqstp->saddr;
-> +		d_in =3D (const struct sockaddr_in6 *)&rqstp->daddr;
-> +		if (nla_put_in6_addr(skb, NFSD_ATTR_RPC_STATUS_SADDR6,
-> +				     &s_in->sin6_addr) ||
-> +		    nla_put_in6_addr(skb, NFSD_ATTR_RPC_STATUS_DADDR6,
-> +				     &d_in->sin6_addr) ||
-> +		    nla_put_be16(skb, NFSD_ATTR_RPC_STATUS_SPORT,
-> +				 s_in->sin6_port) ||
-> +		    nla_put_be16(skb, NFSD_ATTR_RPC_STATUS_DPORT,
-> +				 d_in->sin6_port))
-> +			return -ENOBUFS;
-> +		break;
-> +	}
-> +	default:
-> +		break;
-> +	}
-> +
-> +	if (rqstp->opcnt) {
-> +		struct nlattr *attr;
-> +
-> +		attr =3D nla_nest_start(skb, NFSD_ATTR_RPC_STATUS_COMPOND_OP);
-> +		if (!attr)
-> +			return -ENOBUFS;
-> +
-> +		for (i =3D 0; i < rqstp->opcnt; i++) {
-> +			struct nlattr *op_attr;
-> +
-> +			op_attr =3D nla_nest_start(skb, i);
-> +			if (!op_attr)
-> +				return -ENOBUFS;
-> +
-> +			if (nla_put_u32(skb, NFSD_ATTR_RPC_STATUS_COMP_OP,
-> +					rqstp->opnum[i]))
-> +				return -ENOBUFS;
-> +
-> +			nla_nest_end(skb, op_attr);
-> +		}
-> +
-> +		nla_nest_end(skb, attr);
-> +	}
-> +
-> +	genlmsg_end(skb, hdr);
-> +
->  	return 0;
->  }
-> =20
->  int nfsd_server_nl_rpc_status_get_dumpit(struct sk_buff *skb,
->  					 struct netlink_callback *cb)
->  {
-> +	struct nfsd_net *nn =3D net_generic(sock_net(skb->sk), nfsd_net_id);
-> +	int i, ret, rqstp_index;
-> +
-> +	rcu_read_lock();
-> +
-> +	for (i =3D 0; i < nn->nfsd_serv->sv_nrpools; i++) {
-> +		struct svc_rqst *rqstp;
-> +
-> +		if (i < cb->args[0]) /* already consumed */
-> +			continue;
-> +
-> +		rqstp_index =3D 0;
-> +		list_for_each_entry_rcu(rqstp,
-> +				&nn->nfsd_serv->sv_pools[i].sp_all_threads,
-> +				rq_all) {
-> +			struct nfsd_genl_rqstp genl_rqstp;
-> +			unsigned int status_counter;
-> +
-> +			if (rqstp_index++ < cb->args[1]) /* already consumed */
-> +				continue;
-> +			/*
-> +			 * Acquire rq_status_counter before parsing the rqst
-> +			 * fields. rq_status_counter is set to an odd value in
-> +			 * order to notify the consumers the rqstp fields are
-> +			 * meaningful.
-> +			 */
-> +			status_counter =3D
-> +				smp_load_acquire(&rqstp->rq_status_counter);
-> +			if (!(status_counter & 1))
-> +				continue;
-> +
-> +			genl_rqstp.rq_xid =3D rqstp->rq_xid;
-> +			genl_rqstp.rq_flags =3D rqstp->rq_flags;
-> +			genl_rqstp.rq_vers =3D rqstp->rq_vers;
-> +			genl_rqstp.rq_prog =3D rqstp->rq_prog;
-> +			genl_rqstp.rq_proc =3D rqstp->rq_proc;
-> +			genl_rqstp.rq_stime =3D rqstp->rq_stime;
-> +			genl_rqstp.opcnt =3D 0;
-> +			memcpy(&genl_rqstp.daddr, svc_daddr(rqstp),
-> +			       sizeof(struct sockaddr));
-> +			memcpy(&genl_rqstp.saddr, svc_addr(rqstp),
-> +			       sizeof(struct sockaddr));
-> +
-> +#ifdef CONFIG_NFSD_V4
-> +			if (rqstp->rq_vers =3D=3D NFS4_VERSION &&
-> +			    rqstp->rq_proc =3D=3D NFSPROC4_COMPOUND) {
-> +				/* NFSv4 compund */
-> +				struct nfsd4_compoundargs *args;
-> +				int j;
-> +
-> +				args =3D rqstp->rq_argp;
-> +				genl_rqstp.opcnt =3D args->opcnt;
-> +				for (j =3D 0; j < genl_rqstp.opcnt; j++)
-> +					genl_rqstp.opnum[j] =3D
-> +						args->ops[j].opnum;
-> +			}
-> +#endif /* CONFIG_NFSD_V4 */
-> +
-> +			/*
-> +			 * Acquire rq_status_counter before reporting the rqst
-> +			 * fields to the user.
-> +			 */
-> +			if (smp_load_acquire(&rqstp->rq_status_counter) !=3D
-> +			    status_counter)
-> +				continue;
-> +
-> +			ret =3D nfsd_genl_rpc_status_compose_msg(skb, cb,
-> +							       &genl_rqstp);
-> +			if (ret)
-> +				goto out;
-> +		}
-> +	}
-> +
-> +	cb->args[0] =3D i;
-> +	cb->args[1] =3D rqstp_index;
-> +	ret =3D skb->len;
-> +out:
-> +	rcu_read_unlock();
-> +
-> +	return ret;
-> +}
-> +
-> +int nfsd_server_nl_rpc_status_get_done(struct netlink_callback *cb)
-> +{
-> +	mutex_lock(&nfsd_mutex);
-> +	nfsd_put(sock_net(cb->skb->sk));
-> +	mutex_unlock(&nfsd_mutex);
-> +
->  	return 0;
->  }
-> =20
-
-I think there is a potential race above. Once you've=20
+I had assumed ->release for NFS re-export would flush due to close-
+to-open semantics. There seem to be numerous corner cases that
+might result in pile-ups which would change the situation in your
+problem statement but might not result in an overall improvement.
 
 
-> @@ -1605,6 +1788,10 @@ static int __init init_nfsd(void)
->  	retval =3D register_filesystem(&nfsd_fs_type);
->  	if (retval)
->  		goto out_free_all;
-> +	retval =3D genl_register_family(&nfsd_server_nl_family);
-> +	if (retval)
-> +		goto out_free_all;
-> +
->  	return 0;
->  out_free_all:
->  	nfsd4_destroy_laundry_wq();
-> @@ -1629,6 +1816,7 @@ static int __init init_nfsd(void)
-> =20
->  static void __exit exit_nfsd(void)
->  {
-> +	genl_unregister_family(&nfsd_server_nl_family);
->  	unregister_filesystem(&nfsd_fs_type);
->  	nfsd4_destroy_laundry_wq();
->  	unregister_cld_notifier();
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 11c14faa6c67..d787bd38c053 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -62,6 +62,22 @@ struct readdir_cd {
->  	__be32			err;	/* 0, nfserr, or nfserr_eof */
->  };
-> =20
-> +/* Maximum number of operations per session compound */
-> +#define NFSD_MAX_OPS_PER_COMPOUND	50
-> +
-> +struct nfsd_genl_rqstp {
-> +	struct sockaddr daddr;
-> +	struct sockaddr saddr;
-> +	unsigned long rq_flags;
-> +	ktime_t rq_stime;
-> +	__be32 rq_xid;
-> +	u32 rq_vers;
-> +	u32 rq_prog;
-> +	u32 rq_proc;
-> +	/* NFSv4 compund */
-> +	u32 opnum[NFSD_MAX_OPS_PER_COMPOUND];
-> +	u16 opcnt;
-> +};
-> =20
->  extern struct svc_program	nfsd_program;
->  extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_versi=
-on4;
-> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 1582af33e204..fad34a7325b3 100644
-> --- a/fs/nfsd/nfssvc.c
-> +++ b/fs/nfsd/nfssvc.c
-> @@ -998,6 +998,15 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
->  	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
->  		goto out_decode_err;
-> =20
-> +	/*
-> +	 * Release rq_status_counter setting it to an odd value after the rpc
-> +	 * request has been properly parsed. rq_status_counter is used to
-> +	 * notify the consumers if the rqstp fields are stable
-> +	 * (rq_status_counter is odd) or not meaningful (rq_status_counter
-> +	 * is even).
-> +	 */
-> +	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter |=
- 1);
-> +
->  	rp =3D NULL;
->  	switch (nfsd_cache_lookup(rqstp, &rp)) {
->  	case RC_DOIT:
-> @@ -1015,6 +1024,12 @@ int nfsd_dispatch(struct svc_rqst *rqstp)
->  	if (!proc->pc_encode(rqstp, &rqstp->rq_res_stream))
->  		goto out_encode_err;
-> =20
-> +	/*
-> +	 * Release rq_status_counter setting it to an even value after the rpc
-> +	 * request has been properly processed.
-> +	 */
-> +	smp_store_release(&rqstp->rq_status_counter, rqstp->rq_status_counter +=
- 1);
-> +
->  	nfsd_cache_update(rqstp, rp, rqstp->rq_cachetype, statp + 1);
->  out_cached_reply:
->  	return 1;
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index cbddcf484dba..41bdc913fa71 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -174,8 +174,6 @@ static inline struct nfs4_delegation *delegstateid(st=
-ruct nfs4_stid *s)
-> =20
->  /* Maximum number of slots per session. 160 is useful for long haul TCP =
-*/
->  #define NFSD_MAX_SLOTS_PER_SESSION     160
-> -/* Maximum number of operations per session compound */
-> -#define NFSD_MAX_OPS_PER_COMPOUND	50
->  /* Maximum  session per slot cache size */
->  #define NFSD_SLOT_CACHE_SIZE		2048
->  /* Maximum number of NFSD_SLOT_CACHE_SIZE slots per session */
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index dbf5b21feafe..caa20defd255 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -251,6 +251,7 @@ struct svc_rqst {
->  						 * net namespace
->  						 */
->  	void **			rq_lease_breaker; /* The v4 client breaking a lease */
-> +	unsigned int		rq_status_counter; /* RPC processing counter */
->  };
-> =20
->  /* bits for rq_flags */
+> I don't think we should ever try to hide that by putting it in
+> a workqueue.  It's probably a bug and it is best if bugs are visible.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+
+I'm not objecting, per se, to this change. I would simply like to
+see a little more due diligence before moving forward until it is
+clear how frequently ->release or ->destroy_inode will do I/O (or
+"is slow for any reason" as you say above).
+
+
+> Note that the XFS ->release function does call filemap_flush() in some
+> cases, but that is an async flush, so __fput_sync doesn't wait for the
+> flush to complete.
+
+When Jeff was working on the file cache a year ago, I did some
+performance analysis that shows even an async flush is costly when
+there is a lot of dirty data in the file being closed. The VFS walks
+through the whole file and starts I/O on every dirty page. This is
+quite CPU intensive, and can take on the order of a millisecond
+before the async flush request returns to its caller.
+
+IME async flushes are not free.
+
+
+> The way I see this patch is that fput() is the wrong interface for nfsd
+> to use, __fput_sync is the right interface.  So we should change.  1
+> patch.
+
+The practical matter is I see this as a change with a greater than
+zero risk, and we need to mitigate that risk. Or rather, as a
+maintainer of NFSD, /I/ need to see that the risk is as minimal as
+is practical.
+
+
+> The details about exhausting memory explain a particular symptom that
+> motivated the examination which revealed that nfsd was using the wrong
+> interface.
+> 
+> If we have nfsd sometimes using fput() and sometimes __fput_sync, then
+> we need to have clear rules for when to use which.  It is much easier to
+> have a simple rule: always use __fput_sync().
+
+I don't agree that we should just flop all these over and hope for
+the best. In particular:
+
+ - the changes in fs/nfsd/filecache.c appear to revert a bug
+   fix, so I need to see data that shows that change doesn't
+   cause a re-regression
+
+ - the changes in fs/lockd/ can result in long waits while a
+   global mutex is held (global as in all namespaces and all
+   locked files on the server), so I need to see data that
+   demonstrates there won't be a regression
+
+ - the other changes don't appear to have motivation in terms
+   of performance or behavior, and carry similar (if lesser)
+   risks as the other two changes. My preferred solution to
+   potential auditor confusion about the use of __fput_sync()
+   in some places and fput() in others is to document, and
+   leave call sites alone if there's no technical reason to
+   change them at this time.
+
+There is enough of a risk of regression that I need to see a clear
+rationale for each hunk /and/ I need to see data that there is
+no regression. I know that won't be perfect coverage, but it's
+better than not having any data at all.
+
+
+> I'm certainly happy to revise function documentation and provide
+> wrapper functions if needed.
+> 
+> It might be good to have
+> 
+>   void filp_close_sync(struct file *f)
+>   {
+>        get_file(f);
+>        filp_close(f);
+>        __fput_sync(f);
+>   }
+> 
+> but as that would only be called once, it was hard to motivate.
+> Having it in linux/fs.h would be nice.
+> 
+> Similarly we could wrap __fput_sync() in a more friendly name, but
+> that would be better if we actually renamed the function.
+> 
+>   void fput_now(struct file *f)
+>   {
+>       __fput_sync(f);
+>   }
+> 
+> ??
+
+Since this is an issue strictly for nfsd, the place for this
+utility function is in fs/nfsd/vfs.c, IMO, along with a documenting
+comment that provides a rationale for why nfsd does not want plain
+fput() in specific cases.
+
+When other subsystems need a similar capability, then let's
+consider a common helper.
+
+
+-- 
+Chuck Lever
 
