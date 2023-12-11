@@ -1,222 +1,343 @@
-Return-Path: <linux-nfs+bounces-495-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-496-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08D3280DBAF
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 21:35:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D909980DD2C
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 22:33:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B321C281EA6
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 20:35:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0822D1C2166B
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Dec 2023 21:33:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC802F55;
-	Mon, 11 Dec 2023 20:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E16854F8D;
+	Mon, 11 Dec 2023 21:32:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrhX+MXp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YNk4oeYI"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D91CDD5
+	for <linux-nfs@vger.kernel.org>; Mon, 11 Dec 2023 13:32:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702330368;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vLk+s36CrmcN/jHutHg878NqXnxvoZdKdAeSrt1NZXM=;
+	b=YNk4oeYIgOYTZI0tm6PRW1ulqhN0UTA3V+UTR9/2JiTTyD4XTUg20NmeTQfmXF6JcmSsl8
+	H0NCJnIO6NexrPBwIbmoDh5wQq0QC/Fdms40mYLCpOQfIjO44R+S9UdPX9s2MTB+JTx6AG
+	GeHrxt+OyZsM/409Ca7erDyEg850dyc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-494-nqGgQDaJMCWom6Mz8Zu_Pg-1; Mon, 11 Dec 2023 16:32:44 -0500
+X-MC-Unique: nqGgQDaJMCWom6Mz8Zu_Pg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E88B2F46
-	for <linux-nfs@vger.kernel.org>; Mon, 11 Dec 2023 20:35:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C4ACC433C7;
-	Mon, 11 Dec 2023 20:35:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702326937;
-	bh=eDm/y62JAKrz0cnaMduV/pGoRHEvmpfUfoMirIKzVEU=;
-	h=From:Date:Subject:To:Cc:From;
-	b=JrhX+MXpTRpYaOST9R/yuZSXwDl9tuf7nKtHTz6AWVeIJXRzPb3ARe124YvzZA/oz
-	 bYGxsG97qEHKnmn2fBkV5AM1x2F7WDL7cVb5jimhcOVjjANWwdYTa+y45V1PsxX8Zd
-	 axKSM2jb740MVyGJF+zv8Tj+fAFiGwWpMIxk5XbMUkMmqv1iD4ERAA1337EevYzKEk
-	 kP8p5MY/otvgBhTUAjaFY5DElNmBgqeN+xJeiau4XSGB7F/33naBidr9i3z9ufRZtP
-	 QOayeDJrbs4YtarEJ4u4/C4T8YKulmEU46YKtNNoJz4zRMIbH7NYK/JiA1KZ5W6Woy
-	 sluuHLeREl9cA==
-From: Jeff Layton <jlayton@kernel.org>
-Date: Mon, 11 Dec 2023 15:35:30 -0500
-Subject: [PATCH] nfsd: properly tear down server when write_ports fails
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6174A85A589;
+	Mon, 11 Dec 2023 21:32:43 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.2])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0614740C6EB9;
+	Mon, 11 Dec 2023 21:32:40 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Markus Suvanto <markus.suvanto@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>
+Cc: David Howells <dhowells@redhat.com>,
+	linux-afs@lists.infradead.org,
+	keyrings@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wang Lei <wang840925@gmail.com>,
+	Jeff Layton <jlayton@redhat.com>,
+	Steve French <sfrench@us.ibm.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org,
+	netdev@vger.kernel.org
+Subject: [PATCH v2 3/3] keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry
+Date: Mon, 11 Dec 2023 21:32:33 +0000
+Message-ID: <20231211213233.2793525-4-dhowells@redhat.com>
+In-Reply-To: <20231211213233.2793525-1-dhowells@redhat.com>
+References: <20231211213233.2793525-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231211-nfsd-fixes-v1-1-c87a802f4977@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAJFyd2UC/x2LQQqAMAzAvjJ6dmArIvoV8SBrp71MWUGEsb87P
- IYkBUyyisHiCmR51PRKDbBzEM49HeKVGwP1NCAh+hSNfdRXzPMcCXkMSDxBG+4sv2j9utX6ASG
- aVHdcAAAA
-To: Chuck Lever <chuck.lever@oracle.com>, Neil Brown <neilb@suse.de>, 
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
- Tom Talpey <tom@talpey.com>
-Cc: linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Zhi Li <yieli@redhat.com>, Jeff Layton <jlayton@kernel.org>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4975; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=eDm/y62JAKrz0cnaMduV/pGoRHEvmpfUfoMirIKzVEU=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBld3KX1EvNgC2UdnMV+0GXDrCsdCTFcKk0KZjZ2
- n5aR5HkPUaJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZXdylwAKCRAADmhBGVaC
- FaEMEACVsXytDzQkJ9NWp8Rd2G/uyS7dDh7u0ji+RXjDx1TZULc+bQUvcSU3xqAH2mIUhGl1kTZ
- EeDWQJ6XkJH45j5/C8eHSWe9NZoh5K0Z7gJIrJl23YQMBv3y1o/JEg5BIlg4ZvfA01rN1i6ufrh
- gN468CpPBkkuJ4gU2b5G6tQ1qG+nL1ne5Tclo91lfhaN9CWnK8whwNfACCpouOJAYESVkfJIoJz
- CsgnrVeFkwpLU5RRvv4NNKkgjoPgtV+w7VjpXTZbFIfb27sa72MKsoeYtcH+6+xK4hiJLkuc+rB
- iVImMZyX9K58U9PfXX/FFXo/k79AY4kof9T/BF7SIHftLiMjRc/T4782YH+hYbWZ3RSza8x1Z1Z
- zTOJjWxVXcibxApnfrYCiJgwAQODxtTmBooA2nwQvtOytUqBxg2TQ/0z93iAo7SyfRd/9Fn37D/
- 8R0z4N59v3blIDsOhDFwRUfJ9QQaeMMNEHJ9wYTPf1zMxnSUREbePIeKr8IMtU1RIUsDHCLIJsB
- miZfdyB14yei75jNvBGAzNw/iLSII5LdgSesMPMvsVV0wb8y+5YSpYDdEIlsePC69g2OjlS+R/3
- 8pxRfwm4ty/v69Zj8IMdOj9ERzpvWm8CKigHc++qJUeLfDDAjFzg18NtefQHXQQU+NNtJlOkV+A
- k5rUPocfc5lL59g==
-X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
- fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-When the initial write to the "portlist" file fails, we'll currently put
-the reference to the nn->nfsd_serv, but leave the pointer intact. This
-leads to a UAF if someone tries to write to "portlist" again.
+If a key has an expiration time, then when that time passes, the key is
+left around for a certain amount of time before being collected (5 mins by
+default) so that EKEYEXPIRED can be returned instead of ENOKEY.  This is a
+problem for DNS keys because we want to redo the DNS lookup immediately at
+that point.
 
-Simple reproducer, from a host with nfsd shut down:
+Fix this by allowing key types to be marked such that keys of that type
+don't have this extra period, but are reclaimed as soon as they expire and
+turn this on for dns_resolver-type keys.  To make this easier to handle,
+key->expiry is changed to be permanent if TIME64_MAX rather than 0.
 
-    # echo "foo 2049" > /proc/fs/nfsd/portlist
-    # echo "foo 2049" > /proc/fs/nfsd/portlist
+Furthermore, give such new-style negative DNS results a 10s default expiry
+if no other expiry time is set rather than allowing it to stick around
+indefinitely.  This shouldn't be zero as ls will follow a failing stat call
+immediately with a second with AT_SYMLINK_NOFOLLOW added.
 
-The kernel will oops on the second one when it trips over the dangling
-nn->nfsd_serv pointer. There is a similar bug in __write_ports_addfd.
-
-This patch fixes it by adding some extra logic to nfsd_put to ensure
-that nfsd_last_thread is called prior to putting the reference when the
-conditions are right.
-
-Fixes: 9f28a971ee9f ("nfsd: separate nfsd_last_thread() from nfsd_put()")
-Closes: https://issues.redhat.com/browse/RHEL-19081
-Reported-by: Zhi Li <yieli@redhat.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Fixes: 1a4240f4764a ("DNS: Separate out CIFS DNS Resolver code")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Wang Lei <wang840925@gmail.com>
+cc: Jeff Layton <jlayton@redhat.com>
+cc: Steve French <sfrench@us.ibm.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Jarkko Sakkinen <jarkko@kernel.org>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
+cc: linux-nfs@vger.kernel.org
+cc: ceph-devel@vger.kernel.org
+cc: keyrings@vger.kernel.org
+cc: netdev@vger.kernel.org
 ---
-This should probably go to stable, but we'll need to backport for v6.6
-since older kernels don't have nfsd_nl_rpc_status_get_done. We should
-just be able to drop that hunk though.
----
- fs/nfsd/nfsctl.c | 32 ++++++++++++++++++++++++++++----
- fs/nfsd/nfsd.h   |  8 +-------
- fs/nfsd/nfssvc.c |  2 +-
- 3 files changed, 30 insertions(+), 12 deletions(-)
+ include/linux/key-type.h   |  1 +
+ net/dns_resolver/dns_key.c | 10 +++++++++-
+ security/keys/gc.c         | 31 +++++++++++++++++++++----------
+ security/keys/internal.h   |  8 +++++++-
+ security/keys/key.c        | 15 +++++----------
+ security/keys/proc.c       |  2 +-
+ 6 files changed, 44 insertions(+), 23 deletions(-)
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 3e15b72f421d..1ceccf804e44 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -61,6 +61,30 @@ enum {
- 	NFSD_MaxReserved
- };
+diff --git a/include/linux/key-type.h b/include/linux/key-type.h
+index 7d985a1dfe4a..5caf3ce82373 100644
+--- a/include/linux/key-type.h
++++ b/include/linux/key-type.h
+@@ -73,6 +73,7 @@ struct key_type {
  
-+/**
-+ * nfsd_put - put the reference to the nfsd_serv for given net
-+ * @net: the net namespace for the serv
-+ * @err: current error for the op
-+ *
-+ * When putting a reference to the nfsd_serv from a control operation
-+ * we must first call nfsd_last_thread if all of these are true:
-+ *
-+ * - the configuration operation is going fail
-+ * - there are no running threads
-+ * - there are no successfully configured ports
-+ *
-+ * Otherwise, just put the serv reference.
-+ */
-+static inline void nfsd_put(struct net *net, int err)
-+{
-+	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv = nn->nfsd_serv;
+ 	unsigned int flags;
+ #define KEY_TYPE_NET_DOMAIN	0x00000001 /* Keys of this type have a net namespace domain */
++#define KEY_TYPE_INSTANT_REAP	0x00000002 /* Keys of this type don't have a delay after expiring */
+ 
+ 	/* vet a description */
+ 	int (*vet_description)(const char *description);
+diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+index 01e54b46ae0b..3233f4f25fed 100644
+--- a/net/dns_resolver/dns_key.c
++++ b/net/dns_resolver/dns_key.c
+@@ -91,6 +91,7 @@ const struct cred *dns_resolver_cache;
+ static int
+ dns_resolver_preparse(struct key_preparsed_payload *prep)
+ {
++	const struct dns_server_list_v1_header *v1;
+ 	const struct dns_payload_header *bin;
+ 	struct user_key_payload *upayload;
+ 	unsigned long derrno;
+@@ -122,6 +123,13 @@ dns_resolver_preparse(struct key_preparsed_payload *prep)
+ 			return -EINVAL;
+ 		}
+ 
++		v1 = (const struct dns_server_list_v1_header *)bin;
++		if ((v1->status != DNS_LOOKUP_GOOD &&
++		     v1->status != DNS_LOOKUP_GOOD_WITH_BAD)) {
++			if (prep->expiry == TIME64_MAX)
++				prep->expiry = ktime_get_real_seconds() + 10;
++		}
 +
-+	if (err < 0 && !nn->nfsd_serv->sv_nrthreads && !nn->keep_active)
-+		nfsd_last_thread(net);
-+	svc_put(serv);
+ 		result_len = datalen;
+ 		goto store_result;
+ 	}
+@@ -314,7 +322,7 @@ static long dns_resolver_read(const struct key *key,
+ 
+ struct key_type key_type_dns_resolver = {
+ 	.name		= "dns_resolver",
+-	.flags		= KEY_TYPE_NET_DOMAIN,
++	.flags		= KEY_TYPE_NET_DOMAIN | KEY_TYPE_INSTANT_REAP,
+ 	.preparse	= dns_resolver_preparse,
+ 	.free_preparse	= dns_resolver_free_preparse,
+ 	.instantiate	= generic_key_instantiate,
+diff --git a/security/keys/gc.c b/security/keys/gc.c
+index 3c90807476eb..eaddaceda14e 100644
+--- a/security/keys/gc.c
++++ b/security/keys/gc.c
+@@ -66,6 +66,19 @@ void key_schedule_gc(time64_t gc_at)
+ 	}
+ }
+ 
++/*
++ * Set the expiration time on a key.
++ */
++void key_set_expiry(struct key *key, time64_t expiry)
++{
++	key->expiry = expiry;
++	if (expiry != TIME64_MAX) {
++		if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
++			expiry += key_gc_delay;
++		key_schedule_gc(expiry);
++	}
 +}
 +
  /*
-  * write() for these nodes.
+  * Schedule a dead links collection run.
   */
-@@ -709,7 +733,7 @@ static ssize_t __write_ports_addfd(char *buf, struct net *net, const struct cred
- 	    !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
- 		svc_get(nn->nfsd_serv);
+@@ -176,7 +189,6 @@ static void key_garbage_collector(struct work_struct *work)
+ 	static u8 gc_state;		/* Internal persistent state */
+ #define KEY_GC_REAP_AGAIN	0x01	/* - Need another cycle */
+ #define KEY_GC_REAPING_LINKS	0x02	/* - We need to reap links */
+-#define KEY_GC_SET_TIMER	0x04	/* - We need to restart the timer */
+ #define KEY_GC_REAPING_DEAD_1	0x10	/* - We need to mark dead keys */
+ #define KEY_GC_REAPING_DEAD_2	0x20	/* - We need to reap dead key links */
+ #define KEY_GC_REAPING_DEAD_3	0x40	/* - We need to reap dead keys */
+@@ -184,21 +196,17 @@ static void key_garbage_collector(struct work_struct *work)
  
--	nfsd_put(net);
-+	nfsd_put(net, err);
- 	return err;
- }
+ 	struct rb_node *cursor;
+ 	struct key *key;
+-	time64_t new_timer, limit;
++	time64_t new_timer, limit, expiry;
  
-@@ -748,7 +772,7 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
- 	if (!nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
- 		svc_get(nn->nfsd_serv);
+ 	kenter("[%lx,%x]", key_gc_flags, gc_state);
  
--	nfsd_put(net);
-+	nfsd_put(net, 0);
- 	return 0;
- out_close:
- 	xprt = svc_find_xprt(nn->nfsd_serv, transport, net, PF_INET, port);
-@@ -757,7 +781,7 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
- 		svc_xprt_put(xprt);
+ 	limit = ktime_get_real_seconds();
+-	if (limit > key_gc_delay)
+-		limit -= key_gc_delay;
+-	else
+-		limit = key_gc_delay;
+ 
+ 	/* Work out what we're going to be doing in this pass */
+ 	gc_state &= KEY_GC_REAPING_DEAD_1 | KEY_GC_REAPING_DEAD_2;
+ 	gc_state <<= 1;
+ 	if (test_and_clear_bit(KEY_GC_KEY_EXPIRED, &key_gc_flags))
+-		gc_state |= KEY_GC_REAPING_LINKS | KEY_GC_SET_TIMER;
++		gc_state |= KEY_GC_REAPING_LINKS;
+ 
+ 	if (test_and_clear_bit(KEY_GC_REAP_KEYTYPE, &key_gc_flags))
+ 		gc_state |= KEY_GC_REAPING_DEAD_1;
+@@ -233,8 +241,11 @@ static void key_garbage_collector(struct work_struct *work)
+ 			}
+ 		}
+ 
+-		if (gc_state & KEY_GC_SET_TIMER) {
+-			if (key->expiry > limit && key->expiry < new_timer) {
++		expiry = key->expiry;
++		if (expiry != TIME64_MAX) {
++			if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
++				expiry += key_gc_delay;
++			if (expiry > limit && expiry < new_timer) {
+ 				kdebug("will expire %x in %lld",
+ 				       key_serial(key), key->expiry - limit);
+ 				new_timer = key->expiry;
+@@ -276,7 +287,7 @@ static void key_garbage_collector(struct work_struct *work)
+ 	 */
+ 	kdebug("pass complete");
+ 
+-	if (gc_state & KEY_GC_SET_TIMER && new_timer != (time64_t)TIME64_MAX) {
++	if (new_timer != TIME64_MAX) {
+ 		new_timer += key_gc_delay;
+ 		key_schedule_gc(new_timer);
  	}
- out_err:
--	nfsd_put(net);
-+	nfsd_put(net, err);
- 	return err;
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index 471cf36dedc0..b63a8c41635a 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -167,6 +167,7 @@ extern unsigned key_gc_delay;
+ extern void keyring_gc(struct key *keyring, time64_t limit);
+ extern void keyring_restriction_gc(struct key *keyring,
+ 				   struct key_type *dead_type);
++void key_set_expiry(struct key *key, time64_t expiry);
+ extern void key_schedule_gc(time64_t gc_at);
+ extern void key_schedule_gc_links(void);
+ extern void key_gc_keytype(struct key_type *ktype);
+@@ -215,10 +216,15 @@ extern struct key *key_get_instantiation_authkey(key_serial_t target_id);
+  */
+ static inline bool key_is_dead(const struct key *key, time64_t limit)
+ {
++	time64_t expiry = key->expiry;
++
++	if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
++		expiry += key_gc_delay;
++
+ 	return
+ 		key->flags & ((1 << KEY_FLAG_DEAD) |
+ 			      (1 << KEY_FLAG_INVALIDATED)) ||
+-		(key->expiry > 0 && key->expiry <= limit) ||
++		expiry <= limit ||
+ 		key->domain_tag->removed;
  }
  
-@@ -1687,7 +1711,7 @@ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
- int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb)
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 0260a1902922..5b10641debd5 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -294,6 +294,7 @@ struct key *key_alloc(struct key_type *type, const char *desc,
+ 	key->uid = uid;
+ 	key->gid = gid;
+ 	key->perm = perm;
++	key->expiry = TIME64_MAX;
+ 	key->restrict_link = restrict_link;
+ 	key->last_used_at = ktime_get_real_seconds();
+ 
+@@ -463,10 +464,7 @@ static int __key_instantiate_and_link(struct key *key,
+ 			if (authkey)
+ 				key_invalidate(authkey);
+ 
+-			if (prep->expiry != TIME64_MAX) {
+-				key->expiry = prep->expiry;
+-				key_schedule_gc(prep->expiry + key_gc_delay);
+-			}
++			key_set_expiry(key, prep->expiry);
+ 		}
+ 	}
+ 
+@@ -606,8 +604,7 @@ int key_reject_and_link(struct key *key,
+ 		atomic_inc(&key->user->nikeys);
+ 		mark_key_instantiated(key, -error);
+ 		notify_key(key, NOTIFY_KEY_INSTANTIATED, -error);
+-		key->expiry = ktime_get_real_seconds() + timeout;
+-		key_schedule_gc(key->expiry + key_gc_delay);
++		key_set_expiry(key, ktime_get_real_seconds() + timeout);
+ 
+ 		if (test_and_clear_bit(KEY_FLAG_USER_CONSTRUCT, &key->flags))
+ 			awaken = 1;
+@@ -723,16 +720,14 @@ struct key_type *key_type_lookup(const char *type)
+ 
+ void key_set_timeout(struct key *key, unsigned timeout)
  {
- 	mutex_lock(&nfsd_mutex);
--	nfsd_put(sock_net(cb->skb->sk));
-+	nfsd_put(sock_net(cb->skb->sk), 0);
- 	mutex_unlock(&nfsd_mutex);
+-	time64_t expiry = 0;
++	time64_t expiry = TIME64_MAX;
  
- 	return 0;
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index f5ff42f41ee7..3aa8cd2c19ac 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -113,13 +113,6 @@ int		nfsd_pool_stats_open(struct inode *, struct file *);
- int		nfsd_pool_stats_release(struct inode *, struct file *);
- void		nfsd_shutdown_threads(struct net *net);
+ 	/* make the changes with the locks held to prevent races */
+ 	down_write(&key->sem);
  
--static inline void nfsd_put(struct net *net)
--{
--	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	if (timeout > 0)
+ 		expiry = ktime_get_real_seconds() + timeout;
 -
--	svc_put(nn->nfsd_serv);
--}
--
- bool		i_am_nfsd(void);
+-	key->expiry = expiry;
+-	key_schedule_gc(key->expiry + key_gc_delay);
++	key_set_expiry(key, expiry);
  
- struct nfsdfs_client {
-@@ -153,6 +146,7 @@ struct nfsd_net;
- enum vers_op {NFSD_SET, NFSD_CLEAR, NFSD_TEST, NFSD_AVAIL };
- int nfsd_vers(struct nfsd_net *nn, int vers, enum vers_op change);
- int nfsd_minorversion(struct nfsd_net *nn, u32 minorversion, enum vers_op change);
-+void nfsd_last_thread(struct net *net);
- void nfsd_reset_versions(struct nfsd_net *nn);
- int nfsd_create_serv(struct net *net);
+ 	up_write(&key->sem);
+ }
+diff --git a/security/keys/proc.c b/security/keys/proc.c
+index d0cde6685627..4f4e2c1824f1 100644
+--- a/security/keys/proc.c
++++ b/security/keys/proc.c
+@@ -198,7 +198,7 @@ static int proc_keys_show(struct seq_file *m, void *v)
  
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index fe61d9bbcc1f..d6939e23ffcf 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -542,7 +542,7 @@ static struct notifier_block nfsd_inet6addr_notifier = {
- /* Only used under nfsd_mutex, so this atomic may be overkill: */
- static atomic_t nfsd_notifier_refcount = ATOMIC_INIT(0);
- 
--static void nfsd_last_thread(struct net *net)
-+void nfsd_last_thread(struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	struct svc_serv *serv = nn->nfsd_serv;
-
----
-base-commit: a39b6ac3781d46ba18193c9dbb2110f31e9bffe9
-change-id: 20231211-nfsd-fixes-d9f21d5c12d7
-
-Best regards,
--- 
-Jeff Layton <jlayton@kernel.org>
+ 	/* come up with a suitable timeout value */
+ 	expiry = READ_ONCE(key->expiry);
+-	if (expiry == 0) {
++	if (expiry == TIME64_MAX) {
+ 		memcpy(xbuf, "perm", 5);
+ 	} else if (now >= expiry) {
+ 		memcpy(xbuf, "expd", 5);
 
 
