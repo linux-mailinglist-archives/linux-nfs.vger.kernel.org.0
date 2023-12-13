@@ -1,38 +1,38 @@
-Return-Path: <linux-nfs+bounces-572-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-573-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F4518118B8
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 17:08:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 93661811973
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 17:30:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4383D281E25
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 16:08:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6161E28185E
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 16:30:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B7A0315A2;
-	Wed, 13 Dec 2023 16:08:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D2F935F1E;
+	Wed, 13 Dec 2023 16:30:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hluffg79"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bP0RNu5I"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B282D602;
-	Wed, 13 Dec 2023 16:08:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE1DC433C7;
-	Wed, 13 Dec 2023 16:08:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F6935EFC;
+	Wed, 13 Dec 2023 16:30:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98CFDC433C9;
+	Wed, 13 Dec 2023 16:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702483706;
-	bh=ZgKgrMyUDTKnLgSuVk7ImB5iN6ZDHT1xsphFEbZaGGM=;
+	s=k20201202; t=1702485007;
+	bh=X8OOgZDjeOXU95UncpvRXiTzDYvcN5LnrfGoAdJAl1o=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Hluffg798xq5HjCEKfIZ5RxRYBJ50KicgBk7cImKVUVDSGXgrpHuDaYemXP5xFKSc
-	 PImB6uuK8l+FinssSt3GAcC+5yjt5LK8lcIfIyrtyHYdswIOqGfeGkdkeS9k+y1Rfw
-	 j9XNRKtrjkojTDZ0sn0QUVzmZ8Gh7hRVP2sgzlCBMAS6KnilvKm1jwhYxIwRP8deMQ
-	 OHsWIIzUF4Gh7eHxtIjswKd4f6DcKby3YBXar2PoUeUPZIFqMb7xPLTxLamChS060I
-	 mdEHlepsaTuIUfirZWq3+E1X5gr4G+rntAaTZZ7BZNua0PGb3aeoqlbMCanXoVaDpZ
-	 GhH1MbgdrmENg==
-Message-ID: <debede02dbf2701043c2a2b8b9fc05665bc59030.camel@kernel.org>
+	b=bP0RNu5I0ch/J39jTJ43VHURDv5zgF1pVuOQnmem2drMGGumwzHGv3hz8PQyfn0Lr
+	 2xGESlS0V07FJyV/7je25syQp44sliQKUoxOkri888HzSmZiKmoTlpsoN1+RGnCuwo
+	 DIKCBkj4S/tKd9Sa9pEU+sVlBAZ6UqFzmhd9Q5OEU/QJhHQQ7uu/HLvgDHirHXeuSb
+	 G5wQKurgK2IlLWQ9URd2Zs/6rzM6WdSGQsJ7NjXmq26QpIk3i0kfyAj0/bSaG/2xJW
+	 slOjluWrcQ+kik7U9SCggpxm5cLgaWoyJ/es2PdsWHJrG8VGJQong3McLqpd6P0BAE
+	 ia8uru7moLlcQ==
+Message-ID: <45e7775a7ea76d4da603e99f9ab7d3cbbe5a6871.camel@kernel.org>
 Subject: Re: [PATCH v4 11/39] netfs: Implement unbuffered/DIO vs buffered
  I/O locking
 From: Jeff Layton <jlayton@kernel.org>
@@ -47,10 +47,11 @@ Cc: Matthew Wilcox <willy@infradead.org>, Marc Dionne
  linux-nfs@vger.kernel.org,  ceph-devel@vger.kernel.org,
  v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,  linux-mm@kvack.org,
  netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Wed, 13 Dec 2023 11:08:23 -0500
-In-Reply-To: <20231213152350.431591-12-dhowells@redhat.com>
+Date: Wed, 13 Dec 2023 11:30:04 -0500
+In-Reply-To: <debede02dbf2701043c2a2b8b9fc05665bc59030.camel@kernel.org>
 References: <20231213152350.431591-1-dhowells@redhat.com>
 	 <20231213152350.431591-12-dhowells@redhat.com>
+	 <debede02dbf2701043c2a2b8b9fc05665bc59030.camel@kernel.org>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -70,312 +71,29 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Wed, 2023-12-13 at 15:23 +0000, David Howells wrote:
-> Borrow NFS's direct-vs-buffered I/O locking into netfslib.  Similar code =
-is
-> also used in ceph.
+On Wed, 2023-12-13 at 11:08 -0500, Jeff Layton wrote:
+> On Wed, 2023-12-13 at 15:23 +0000, David Howells wrote:
+> > Borrow NFS's direct-vs-buffered I/O locking into netfslib.  Similar cod=
+e is
+> > also used in ceph.
+> >=20
+> > Modify it to have the correct checker annotations for i_rwsem lock
+> > acquisition/release and to return -ERESTARTSYS if waits are interrupted=
+.
+> >=20
 >=20
-> Modify it to have the correct checker annotations for i_rwsem lock
-> acquisition/release and to return -ERESTARTSYS if waits are interrupted.
+> This is just adding new infrastructure. It'd be nice to go ahead and
+> convert a filesystem to use this at the same time. Ceph would be a good
+> candidate. Otherwise, I'm not sure how this shakes out as far as
+> cleanliness in the callers.
 >=20
 
-This is just adding new infrastructure. It'd be nice to go ahead and
-convert a filesystem to use this at the same time. Ceph would be a good
-candidate. Otherwise, I'm not sure how this shakes out as far as
-cleanliness in the callers.
+Nevermind...I misunderstood what you were trying to do here. You're not
+subsuming this into common code that filesystems will use directly, this
+is just using the same scheme when doing I/O using netfs helpers.
 
-
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: linux-cachefs@redhat.com
-> cc: linux-fsdevel@vger.kernel.org
-> cc: linux-mm@kvack.org
-> ---
->  fs/netfs/Makefile     |   1 +
->  fs/netfs/locking.c    | 215 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/netfs.h |  10 ++
->  3 files changed, 226 insertions(+)
->  create mode 100644 fs/netfs/locking.c
->=20
-> diff --git a/fs/netfs/Makefile b/fs/netfs/Makefile
-> index a84fe9bbd3c4..cf3fc847b8ac 100644
-> --- a/fs/netfs/Makefile
-> +++ b/fs/netfs/Makefile
-> @@ -4,6 +4,7 @@ netfs-y :=3D \
->  	buffered_read.o \
->  	io.o \
->  	iterator.o \
-> +	locking.o \
->  	main.o \
->  	misc.o \
->  	objects.o
-> diff --git a/fs/netfs/locking.c b/fs/netfs/locking.c
-> new file mode 100644
-> index 000000000000..58e0f48394c5
-> --- /dev/null
-> +++ b/fs/netfs/locking.c
-> @@ -0,0 +1,215 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * I/O and data path helper functionality.
-> + *
-> + * Borrowed from NFS Copyright (c) 2016 Trond Myklebust
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/netfs.h>
-> +
-> +/*
-> + * inode_dio_wait_interruptible - wait for outstanding DIO requests to f=
-inish
-> + * @inode: inode to wait for
-> + *
-> + * Waits for all pending direct I/O requests to finish so that we can
-> + * proceed with a truncate or equivalent operation.
-> + *
-> + * Must be called under a lock that serializes taking new references
-> + * to i_dio_count, usually by inode->i_mutex.
-> + */
-> +static int inode_dio_wait_interruptible(struct inode *inode)
-> +{
-> +	if (!atomic_read(&inode->i_dio_count))
-> +		return 0;
-> +
-> +	wait_queue_head_t *wq =3D bit_waitqueue(&inode->i_state, __I_DIO_WAKEUP=
-);
-> +	DEFINE_WAIT_BIT(q, &inode->i_state, __I_DIO_WAKEUP);
-> +
-> +	for (;;) {
-> +		prepare_to_wait(wq, &q.wq_entry, TASK_INTERRUPTIBLE);
-> +		if (!atomic_read(&inode->i_dio_count))
-> +			break;
-> +		if (signal_pending(current))
-> +			break;
-> +		schedule();
-> +	}
-> +	finish_wait(wq, &q.wq_entry);
-> +
-> +	return atomic_read(&inode->i_dio_count) ? -ERESTARTSYS : 0;
-> +}
-> +
-> +/* Call with exclusively locked inode->i_rwsem */
-> +static int netfs_block_o_direct(struct netfs_inode *ictx)
-> +{
-> +	if (!test_bit(NETFS_ICTX_ODIRECT, &ictx->flags))
-> +		return 0;
-> +	clear_bit(NETFS_ICTX_ODIRECT, &ictx->flags);
-> +	return inode_dio_wait_interruptible(&ictx->inode);
-> +}
-> +
-> +/**
-> + * netfs_start_io_read - declare the file is being used for buffered rea=
-ds
-> + * @inode: file inode
-> + *
-> + * Declare that a buffered read operation is about to start, and ensure
-> + * that we block all direct I/O.
-> + * On exit, the function ensures that the NETFS_ICTX_ODIRECT flag is uns=
-et,
-> + * and holds a shared lock on inode->i_rwsem to ensure that the flag
-> + * cannot be changed.
-> + * In practice, this means that buffered read operations are allowed to
-> + * execute in parallel, thanks to the shared lock, whereas direct I/O
-> + * operations need to wait to grab an exclusive lock in order to set
-> + * NETFS_ICTX_ODIRECT.
-> + * Note that buffered writes and truncates both take a write lock on
-> + * inode->i_rwsem, meaning that those are serialised w.r.t. the reads.
-> + */
-> +int netfs_start_io_read(struct inode *inode)
-> +	__acquires(inode->i_rwsem)
-> +{
-> +	struct netfs_inode *ictx =3D netfs_inode(inode);
-> +
-> +	/* Be an optimist! */
-> +	if (down_read_interruptible(&inode->i_rwsem) < 0)
-> +		return -ERESTARTSYS;
-> +	if (test_bit(NETFS_ICTX_ODIRECT, &ictx->flags) =3D=3D 0)
-> +		return 0;
-> +	up_read(&inode->i_rwsem);
-> +
-> +	/* Slow path.... */
-> +	if (down_write_killable(&inode->i_rwsem) < 0)
-> +		return -ERESTARTSYS;
-> +	if (netfs_block_o_direct(ictx) < 0) {
-> +		up_write(&inode->i_rwsem);
-> +		return -ERESTARTSYS;
-> +	}
-> +	downgrade_write(&inode->i_rwsem);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(netfs_start_io_read);
-> +
-> +/**
-> + * netfs_end_io_read - declare that the buffered read operation is done
-> + * @inode: file inode
-> + *
-> + * Declare that a buffered read operation is done, and release the share=
-d
-> + * lock on inode->i_rwsem.
-> + */
-> +void netfs_end_io_read(struct inode *inode)
-> +	__releases(inode->i_rwsem)
-> +{
-> +	up_read(&inode->i_rwsem);
-> +}
-> +EXPORT_SYMBOL(netfs_end_io_read);
-> +
-> +/**
-> + * netfs_start_io_write - declare the file is being used for buffered wr=
-ites
-> + * @inode: file inode
-> + *
-> + * Declare that a buffered read operation is about to start, and ensure
-> + * that we block all direct I/O.
-> + */
-> +int netfs_start_io_write(struct inode *inode)
-> +	__acquires(inode->i_rwsem)
-> +{
-> +	struct netfs_inode *ictx =3D netfs_inode(inode);
-> +
-> +	if (down_write_killable(&inode->i_rwsem) < 0)
-> +		return -ERESTARTSYS;
-> +	if (netfs_block_o_direct(ictx) < 0) {
-> +		up_write(&inode->i_rwsem);
-> +		return -ERESTARTSYS;
-> +	}
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(netfs_start_io_write);
-> +
-> +/**
-> + * netfs_end_io_write - declare that the buffered write operation is don=
-e
-> + * @inode: file inode
-> + *
-> + * Declare that a buffered write operation is done, and release the
-> + * lock on inode->i_rwsem.
-> + */
-> +void netfs_end_io_write(struct inode *inode)
-> +	__releases(inode->i_rwsem)
-> +{
-> +	up_write(&inode->i_rwsem);
-> +}
-> +EXPORT_SYMBOL(netfs_end_io_write);
-> +
-> +/* Call with exclusively locked inode->i_rwsem */
-> +static int netfs_block_buffered(struct inode *inode)
-> +{
-> +	struct netfs_inode *ictx =3D netfs_inode(inode);
-> +	int ret;
-> +
-> +	if (!test_bit(NETFS_ICTX_ODIRECT, &ictx->flags)) {
-> +		set_bit(NETFS_ICTX_ODIRECT, &ictx->flags);
-> +		if (inode->i_mapping->nrpages !=3D 0) {
-> +			unmap_mapping_range(inode->i_mapping, 0, 0, 0);
-> +			ret =3D filemap_fdatawait(inode->i_mapping);
-> +			if (ret < 0) {
-> +				clear_bit(NETFS_ICTX_ODIRECT, &ictx->flags);
-> +				return ret;
-> +			}
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
-> +/**
-> + * netfs_start_io_direct - declare the file is being used for direct i/o
-> + * @inode: file inode
-> + *
-> + * Declare that a direct I/O operation is about to start, and ensure
-> + * that we block all buffered I/O.
-> + * On exit, the function ensures that the NETFS_ICTX_ODIRECT flag is set=
-,
-> + * and holds a shared lock on inode->i_rwsem to ensure that the flag
-> + * cannot be changed.
-> + * In practice, this means that direct I/O operations are allowed to
-> + * execute in parallel, thanks to the shared lock, whereas buffered I/O
-> + * operations need to wait to grab an exclusive lock in order to clear
-> + * NETFS_ICTX_ODIRECT.
-> + * Note that buffered writes and truncates both take a write lock on
-> + * inode->i_rwsem, meaning that those are serialised w.r.t. O_DIRECT.
-> + */
-> +int netfs_start_io_direct(struct inode *inode)
-> +	__acquires(inode->i_rwsem)
-> +{
-> +	struct netfs_inode *ictx =3D netfs_inode(inode);
-> +	int ret;
-> +
-> +	/* Be an optimist! */
-> +	if (down_read_interruptible(&inode->i_rwsem) < 0)
-> +		return -ERESTARTSYS;
-> +	if (test_bit(NETFS_ICTX_ODIRECT, &ictx->flags) !=3D 0)
-> +		return 0;
-> +	up_read(&inode->i_rwsem);
-> +
-> +	/* Slow path.... */
-> +	if (down_write_killable(&inode->i_rwsem) < 0)
-> +		return -ERESTARTSYS;
-> +	ret =3D netfs_block_buffered(inode);
-> +	if (ret < 0) {
-> +		up_write(&inode->i_rwsem);
-> +		return ret;
-> +	}
-> +	downgrade_write(&inode->i_rwsem);
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(netfs_start_io_direct);
-> +
-> +/**
-> + * netfs_end_io_direct - declare that the direct i/o operation is done
-> + * @inode: file inode
-> + *
-> + * Declare that a direct I/O operation is done, and release the shared
-> + * lock on inode->i_rwsem.
-> + */
-> +void netfs_end_io_direct(struct inode *inode)
-> +	__releases(inode->i_rwsem)
-> +{
-> +	up_read(&inode->i_rwsem);
-> +}
-> +EXPORT_SYMBOL(netfs_end_io_direct);
-> diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-> index 8efbfd3b2820..fc6d9756a029 100644
-> --- a/include/linux/netfs.h
-> +++ b/include/linux/netfs.h
-> @@ -129,6 +129,8 @@ struct netfs_inode {
->  	struct fscache_cookie	*cache;
->  #endif
->  	loff_t			remote_i_size;	/* Size of the remote file */
-> +	unsigned long		flags;
-> +#define NETFS_ICTX_ODIRECT	0		/* The file has DIO in progress */
->  };
-> =20
->  /*
-> @@ -310,6 +312,13 @@ ssize_t netfs_extract_user_iter(struct iov_iter *ori=
-g, size_t orig_len,
->  				struct iov_iter *new,
->  				iov_iter_extraction_t extraction_flags);
-> =20
-> +int netfs_start_io_read(struct inode *inode);
-> +void netfs_end_io_read(struct inode *inode);
-> +int netfs_start_io_write(struct inode *inode);
-> +void netfs_end_io_write(struct inode *inode);
-> +int netfs_start_io_direct(struct inode *inode);
-> +void netfs_end_io_direct(struct inode *inode);
-> +
->  /**
->   * netfs_inode - Get the netfs inode context from the inode
->   * @inode: The inode to query
-> @@ -335,6 +344,7 @@ static inline void netfs_inode_init(struct netfs_inod=
-e *ctx,
->  {
->  	ctx->ops =3D ops;
->  	ctx->remote_i_size =3D i_size_read(&ctx->inode);
-> +	ctx->flags =3D 0;
->  #if IS_ENABLED(CONFIG_FSCACHE)
->  	ctx->cache =3D NULL;
->  #endif
->=20
+Ceph and other filesystems will get converted to this when they are
+converted to do all of their I/O via netfs.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
