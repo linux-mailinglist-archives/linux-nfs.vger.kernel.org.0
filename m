@@ -1,167 +1,154 @@
-Return-Path: <linux-nfs+bounces-576-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-578-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CC41811BF7
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 19:09:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 47C75811F53
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 20:49:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 186C2B2108D
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 18:09:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B145FB2118E
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 19:49:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6852722063;
-	Wed, 13 Dec 2023 18:08:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E986C68296;
+	Wed, 13 Dec 2023 19:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Q2GcCXjA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gq5mQZ6q"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from sonic316-26.consmr.mail.ne1.yahoo.com (sonic316-26.consmr.mail.ne1.yahoo.com [66.163.187.152])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EFB2106
-	for <linux-nfs@vger.kernel.org>; Wed, 13 Dec 2023 10:08:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1702490930; bh=Nwz1uIbomBE991r6kFnI9Xx0i9y6GbKeBjvJtumt8iE=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=Q2GcCXjATEzjSTSYXHKbXeurOv5yespsSz0ml7JCsSLZqxVHAfvFb/s9tzIt1evnQhz4XLu9bqJKAIA0uPqHtwBjEm4XnLk+vTgaltgUQOZV9b1W/MFTK19WwGySEVVSWxIinyGwjgcfn6rt6N1Prk04cDhYw59eTJ+j6WHqWYBW89gv9guNPRowISjp1KdTZK0yQQSOaN/ST6QuKOTUrS+dNe9wV9evHwRGEg8E3f/cnG21gzKQW1iFofjp2sNHQcon30MXNzf0cSDA0rRHmMleNNc8aVqghAMr5Wu1H7beuwg8EOVCRgGJTca1PQes/0qpj5l4+dRgEZVJr8Dd4w==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1702490930; bh=+/TJOZ6srOEMVvhuufXWRh0/msMyFtSymbS2RoNkwdQ=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=jb4TkrgIre+9ji4ewfMOvSl6OLiXVlIvDGCY4riHNE4MLKe9WNidkohEECUqi1Rj+Qb7ja4JfB+hQ40ROlFPoA8fvGkDMunhCHbDlqECIZqe8GSDuIRk7aiiUJr2lt24Ildhu6cfPmlG0xQaFKoBMU3d1eMhl4YbkeyYMarx51p/X154GQeYIUS0UYFGJ+itQukr9ZuIj9wSZwquwUhkkX57Z9zxapwJlT+CIq8zumYoL2AVtUI3C1OzYhHb+LO0BJUpi3iWPmjDvOtpwb+3RD3MejxooCgKRi5LKD51T+cIJGSdIazwoWLEXkSYTvyEk50NXe1ZWWeUO/rQULHZCg==
-X-YMail-OSG: ZY4uPfkVM1nL9XI0hibln_9cRAXR4K6ZlsvOdVR.ZIvGnWPklpsBsrntt6L3vuB
- 8VdYwHE9wV80Ll.nAtMpE0Dt8RTxtsJz3u1gWV4nsZUCwDRbJ8VkqeK9UWIeymWBXAu21aTTGAJG
- HT9hrQzNG4o0l0UTVb.HTb0EwxJ4ZoiWPfp.f9sXgrqtH_HPR.gPo8EQhfUG.moEDU299IyzYYt7
- H2VJ4gba07t4nhBg0hwMpeCMVVdYbSiF.b5JQtZ341VBE3Z_RClBvv03hzVGL5RPVg28ocD1tWZW
- qV8QkvM_DGUEgGH_7Ru7FhHBx6iH3dMwRvMjgsT12JGT5Liqqn2OkcxAOYm9eZ3ICnq4iC2WNqBE
- hjX1EwtFmRbH4wjQ7dtex2xphhuRPR8DrwR2167If94s7MNdj7LDf0.H3FXWsVdWHkKf.Gv0vYWu
- xhBt1kDDUTKBzbW0AAU4BylURMOtonvV1VLwhckz7CgtpkZ.7vdoMoCweN2aGa5lXotaRyseo8lC
- EdfNFXhOSOuckRGSrm6L9QixTrvg.48xgMjI1T_csZMPenPYNwuMI_TOZNvDCFzPjQ4vEl76fYuB
- CAgxOAvU80M8uHZQnLrXsGiLBUaANszyXIhM5zAlHQPVG8IBAJkKmqSR5Riy41WNhLHrMx1AxhaX
- c3WAjD.XYT_2sOD6re0MlrPH_3bI01ZyQFUtulQHTy2u7.odLifj3hGDEbJU.5Z._j7_qV9Nz6eF
- ijaFLsqsGe7Kwr0gXj1X20O1o5bkWa7rvy7rd9LFu2L_mrWOzJ.Mf6YQMdN5Tex7wFvZplvRQGTZ
- d7hRb9arVcB.ijSL4IIGKv5UBUmqej2Iz.LmKZFGPDMMcqRRK_Z8a01tIDb0ZHeDR4jTjtin.xqH
- zh_3sjv4rQ.rLL65jKk5YpQyZDSVRedQ8wrpFPuuQuFddHIunKuZoIHNTYHmDDnffbHzMgfzE6p2
- 0csSu.Y_21KcZjcvn9ECmQgvLobMz3Vud_qM_6s0yeOaw4nhTx9oy6UvZyRB.IG8aMuypMWYgVcs
- N13p6zGyc1pQK8XkxkXktpfNMU2.T6pu7bjZAIdFSXRAb3UFmmonKUr2PNf1I76HPdEKP.oRMCwC
- 7_kaH1kaQwi2d.P1uP0hoAAERtrJ_O6XN.85qafgWLRls_CRTlzNKNlzBRIE.GvDvFRe_njUnjAJ
- pof3DD3hOddOtKXQ721C59YmpyIetqf7dtAKPVAXhx6_dMur6n.PdX0AQzxFDlALEpKFdMIuIXsB
- 70lDIeAeUc.FDPFUL3F8tTR6EeYSEkVzhU3O0uBm1JFolTLTa16FiY87G70txBJjXU0HZidBxBht
- fzSugNDamX5gnlKPmb6zJeNBJWStv.j0GMv64EluNPOCWeVcH3cVTHAT1dFrDB7oXblC3Rum8j4v
- s7uHPuWZVY5OIehsAUS1Mrwj1xjXM.uTX8klNWSSxeJn.4pJgNHCrdw2xp5fhN2jrWMTNTxGCVVB
- YSyNVzm4wtWxaPLpUIclAPQ_Hur5.u3GQFVi9p4pKKM.8F12uF_sn166dxANn5LSuyF7LaCBEgPZ
- nuFUb5a0XV5QzqAt29KHaKpzJaHr54l5N2_V_7ZPiXVOnr5BzGOGGi.EwGm4.V.UKEFkC.an4kpS
- EwODjE3lu19jis0IwGrSZpQ_XP_H2oBdKNc1.XyNjfkKPduWiJOSGiixgDWenRKYnamM8kShG6YS
- qJvWikUacPnSTDzcwrUZaapwLMSlSBAXcQ6zXPwO1zrl7fjGsJga3hQMCh9HTvGNRmTuEr6LNeY_
- IO_eMH4VxsDi42uBI1W.33c6A4Kj1ZlwEfTC0V3yQeEKpYI4PNtMI3bI66EgCiawKiIffAXwauNe
- gV8B1JA9dIA6O9aSaWqCP9U9bnNn4JN1bKtAqdxn95NMCSPOeXSOofRUOsISQkz9ad_g3.tBd0V.
- 0JMpxvAN1olw2ZGSJWD4dVLRA2whVdwpIIxRisbaRSPB5bLiD2YtFx68SxJKwh8m8mf8ujQh5Y19
- HW0..VY6s2cZSXBnXqIRLzXcdZHD1vT_gGAG5h9ZadaHnCUMcRhVNjerK_UP7kIDDeruOMTHFNKO
- 17_iZeBREEot_D7mQh9g4RlApRvP6J0._dhqqVyBD4IjGrRsF0RqQe63FOe4dl1cOaME5zwmdNvd
- LF6_A9TI9WOEHe7Tp_96mVtICBAGWoIOCVf3QqJ1qhrL50oadzN.9BMhtjt0WfskACGhiyemIPKc
- 9qYreb0Lox2deMagqPuimHpY.9QOIyLBhw6nh1VyM_8MLPcf2OszolI2.YWdN
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: 0351f85c-4cc1-41cd-b475-55877dfed226
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Wed, 13 Dec 2023 18:08:50 +0000
-Received: by hermes--production-gq1-6949d6d8f9-k52jv (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 83a3aff6f9fe93ecbddc221ed9cc56f5;
-          Wed, 13 Dec 2023 18:08:48 +0000 (UTC)
-Message-ID: <9dc633d8-65a7-4b97-ab98-a21ada1d4ea5@schaufler-ca.com>
-Date: Wed, 13 Dec 2023 10:08:48 -0800
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 469EEB7
+	for <linux-nfs@vger.kernel.org>; Wed, 13 Dec 2023 11:49:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1702496974;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=o3HzT6oh0+evacpeJS+Py+8urFr12rVnLTX2CVihH+I=;
+	b=gq5mQZ6qjcFEr2WyqbsbX+PzbkxB6zqhsZnRNipo/zp3bB1qrH+OJ0KjYgRj8HnBkV3fOi
+	FJLmq+gYEpIr28dCZUwf9pKASCFZ1E9L1ZZkm1bqHZXrJPHHI7YMuxWf8HhpdAhjrvO5WB
+	bQBqZQxklRxE/a7Xc00OSqmS24n+OX4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-625-1D9ul27PP_qQwpGfCYc3UQ-1; Wed, 13 Dec 2023 14:49:31 -0500
+X-MC-Unique: 1D9ul27PP_qQwpGfCYc3UQ-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B4E8D88F2F0;
+	Wed, 13 Dec 2023 19:49:30 +0000 (UTC)
+Received: from bcodding.csb.redhat.com (ovpn-0-5.rdu2.redhat.com [10.22.0.5])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 5949F492BC6;
+	Wed, 13 Dec 2023 19:49:30 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: trond.myklebust@hammerspace.com,
+	anna@kernel.org
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH v3 1/2] SUNRPC: Fixup v4.1 backchannel request timeouts
+Date: Wed, 13 Dec 2023 14:49:28 -0500
+Message-ID: <e28038fba1243f00b0dd66b7c5296a1e181645ea.1702496910.git.bcodding@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 23/23] integrity: Switch from rbtree to LSM-managed
- blob for integrity_iint_cache
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>,
- Paul Moore <paul@paul-moore.com>, viro@zeniv.linux.org.uk,
- brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
- neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
- jmorris@namei.org, serge@hallyn.com, zohar@linux.ibm.com,
- dmitry.kasatkin@gmail.com, dhowells@redhat.com, jarkko@kernel.org,
- stephen.smalley.work@gmail.com, eparis@parisplace.org, mic@digikod.net
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
- selinux@vger.kernel.org, Roberto Sassu <roberto.sassu@huawei.com>,
- Casey Schaufler <casey@schaufler-ca.com>
-References: <20231107134012.682009-24-roberto.sassu@huaweicloud.com>
- <17befa132379d37977fc854a8af25f6d.paul@paul-moore.com>
- <7c226242-2eda-41cd-9be8-c2c010f3fc49@huaweicloud.com>
-Content-Language: en-US
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <7c226242-2eda-41cd-9be8-c2c010f3fc49@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.21952 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On 12/13/2023 2:45 AM, Roberto Sassu wrote:
-> On 17.11.23 21:57, Paul Moore wrote:
->> On Nov  7, 2023 Roberto Sassu <roberto.sassu@huaweicloud.com> wrote:
->>>
->>> ...
->>>
->>> diff --git a/security/integrity/iint.c b/security/integrity/iint.c
->>> index 882fde2a2607..a5edd3c70784 100644
->>> --- a/security/integrity/iint.c
->>> +++ b/security/integrity/iint.c
->>> @@ -231,6 +175,10 @@ static int __init integrity_lsm_init(void)
->>>       return 0;
->>>   }
->>>   +struct lsm_blob_sizes integrity_blob_sizes __ro_after_init = {
->>> +    .lbs_inode = sizeof(struct integrity_iint_cache *),
->>> +};
->>
->> I'll admit that I'm likely missing an important detail, but is there
->> a reason why you couldn't stash the integrity_iint_cache struct
->> directly in the inode's security blob instead of the pointer?  For
->> example:
->>
->>    struct lsm_blob_sizes ... = {
->>      .lbs_inode = sizeof(struct integrity_iint_cache),
->>    };
->>
->>    struct integrity_iint_cache *integrity_inode_get(inode)
->>    {
->>      if (unlikely(!inode->isecurity))
->>        return NULL;
->
-> Ok, this caught my attention...
->
-> I see that selinux_inode() has it, but smack_inode() doesn't.
->
-> Some Smack code assumes that the inode security blob is always non-NULL:
->
-> static void init_inode_smack(struct inode *inode, struct smack_known
-> *skp)
-> {
->     struct inode_smack *isp = smack_inode(inode);
->
->     isp->smk_inode = skp;
->     isp->smk_flags = 0;
-> }
->
->
-> Is that intended? Should I add the check?
+After commit 59464b262ff5 ("SUNRPC: SOFTCONN tasks should time out when on
+the sending list"), any 4.1 backchannel tasks placed on the sending queue
+would immediately return with -ETIMEDOUT since their req timers are zero.
 
-Unless there's a case where inodes are created without calling
-security_inode_alloc() there should never be an inode without a
-security blob by the time you get to the Smack hook. That said,
-people seem inclined to take all sorts of shortcuts and create
-various "inodes" that aren't really inodes. I also see that SELinux
-doesn't check the blob for cred or file structures. And that I
-wrote the code in both cases.
+Initialize the backchannel's rpc_rqst timeout parameters from the xprt's
+default timeout settings.
 
-Based on lack of bug reports for Smack on inodes and SELinux on
-creds or files, It appears that the check is unnecessary. On the
-other hand, it sure looks like good error detection hygiene. I
-would be inclined to include the check in new code, but not get
-in a panic about existing code.
+Fixes: 59464b262ff5 ("SUNRPC: SOFTCONN tasks should time out when on the sending list")
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ net/sunrpc/xprt.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
->
-> Thanks
->
-> Roberto
->
->>      return inode->i_security + integrity_blob_sizes.lbs_inode;
->>    }
->>
->> -- 
->> paul-moore.com
->
->
+diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+index 2364c485540c..6cc9ffac962d 100644
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -651,9 +651,9 @@ static unsigned long xprt_abs_ktime_to_jiffies(ktime_t abstime)
+ 		jiffies + nsecs_to_jiffies(-delta);
+ }
+ 
+-static unsigned long xprt_calc_majortimeo(struct rpc_rqst *req)
++static unsigned long xprt_calc_majortimeo(struct rpc_rqst *req,
++		const struct rpc_timeout *to)
+ {
+-	const struct rpc_timeout *to = req->rq_task->tk_client->cl_timeout;
+ 	unsigned long majortimeo = req->rq_timeout;
+ 
+ 	if (to->to_exponential)
+@@ -665,9 +665,10 @@ static unsigned long xprt_calc_majortimeo(struct rpc_rqst *req)
+ 	return majortimeo;
+ }
+ 
+-static void xprt_reset_majortimeo(struct rpc_rqst *req)
++static void xprt_reset_majortimeo(struct rpc_rqst *req,
++		const struct rpc_timeout *to)
+ {
+-	req->rq_majortimeo += xprt_calc_majortimeo(req);
++	req->rq_majortimeo += xprt_calc_majortimeo(req, to);
+ }
+ 
+ static void xprt_reset_minortimeo(struct rpc_rqst *req)
+@@ -675,7 +676,8 @@ static void xprt_reset_minortimeo(struct rpc_rqst *req)
+ 	req->rq_minortimeo += req->rq_timeout;
+ }
+ 
+-static void xprt_init_majortimeo(struct rpc_task *task, struct rpc_rqst *req)
++static void xprt_init_majortimeo(struct rpc_task *task, struct rpc_rqst *req,
++		const struct rpc_timeout *to)
+ {
+ 	unsigned long time_init;
+ 	struct rpc_xprt *xprt = req->rq_xprt;
+@@ -684,8 +686,9 @@ static void xprt_init_majortimeo(struct rpc_task *task, struct rpc_rqst *req)
+ 		time_init = jiffies;
+ 	else
+ 		time_init = xprt_abs_ktime_to_jiffies(task->tk_start);
+-	req->rq_timeout = task->tk_client->cl_timeout->to_initval;
+-	req->rq_majortimeo = time_init + xprt_calc_majortimeo(req);
++
++	req->rq_timeout = to->to_initval;
++	req->rq_majortimeo = time_init + xprt_calc_majortimeo(req, to);
+ 	req->rq_minortimeo = time_init + req->rq_timeout;
+ }
+ 
+@@ -713,7 +716,7 @@ int xprt_adjust_timeout(struct rpc_rqst *req)
+ 	} else {
+ 		req->rq_timeout = to->to_initval;
+ 		req->rq_retries = 0;
+-		xprt_reset_majortimeo(req);
++		xprt_reset_majortimeo(req, to);
+ 		/* Reset the RTT counters == "slow start" */
+ 		spin_lock(&xprt->transport_lock);
+ 		rpc_init_rtt(req->rq_task->tk_client->cl_rtt, to->to_initval);
+@@ -1886,7 +1889,7 @@ xprt_request_init(struct rpc_task *task)
+ 	req->rq_snd_buf.bvec = NULL;
+ 	req->rq_rcv_buf.bvec = NULL;
+ 	req->rq_release_snd_buf = NULL;
+-	xprt_init_majortimeo(task, req);
++	xprt_init_majortimeo(task, req, task->tk_client->cl_timeout);
+ 
+ 	trace_xprt_reserve(req);
+ }
+@@ -1996,6 +1999,8 @@ xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task)
+ 	 */
+ 	xbufp->len = xbufp->head[0].iov_len + xbufp->page_len +
+ 		xbufp->tail[0].iov_len;
++
++	xprt_init_majortimeo(task, req, req->rq_xprt->timeout);
+ }
+ #endif
+ 
+-- 
+2.43.0
+
 
