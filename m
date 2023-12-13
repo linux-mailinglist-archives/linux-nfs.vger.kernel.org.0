@@ -1,47 +1,47 @@
-Return-Path: <linux-nfs+bounces-534-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-535-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB61A8116EF
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 16:32:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E60DF8116F4
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 16:32:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BAEBF2812B4
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 15:32:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C6991F2173D
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Dec 2023 15:32:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37B0C35EF1;
-	Wed, 13 Dec 2023 15:25:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 889A035EFB;
+	Wed, 13 Dec 2023 15:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DtMiGUQH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T5Iu23sR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8526F1992
-	for <linux-nfs@vger.kernel.org>; Wed, 13 Dec 2023 07:25:29 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E93019B1
+	for <linux-nfs@vger.kernel.org>; Wed, 13 Dec 2023 07:25:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702481128;
+	s=mimecast20190719; t=1702481131;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VpkcpqQGFjGGotXxykSSFj/z2Mj8Id/3cGjDF6fP5aE=;
-	b=DtMiGUQHYcQbOCMIEKBGUFzpsvdnGBowbn8ijTvXBRlgH2cvdGetNQ7xdDO58HBsX1fOcm
-	UhlWkezabBVzX2F/0rP0jTFWmfchK7ke4LjvR591drd/VDaHm/S843d4dz/b45K1Kqvd2I
-	XFZ/sEZYhYk/S60jJh3DxAIbm7jJPdY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-88t-8xhZOheK8Hq2lph6_g-1; Wed, 13 Dec 2023 10:25:22 -0500
-X-MC-Unique: 88t-8xhZOheK8Hq2lph6_g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	bh=i1NCs1wijkp9oudHg0v3ZW2pY0xP/Retx1SxWP1fmpE=;
+	b=T5Iu23sRSw2qw3kT+WEg3WGh8S2q18LNpIO3DRRebp84UlJ7fM9dNK1lAMDTNMkoOxzyou
+	6DXQ3rNltfwV6NuXZhQGTDBaaurMSJl49WuK/RZCJK9agdQQLzK2RPsKuV+jKYUpfOjYql
+	EyjgE9hUdlNIZ19V/1R+phK+miFupfo=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-510-SR5-99_mNgesTFIbAUuluQ-1; Wed,
+ 13 Dec 2023 10:25:28 -0500
+X-MC-Unique: SR5-99_mNgesTFIbAUuluQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 42531182FD4A;
-	Wed, 13 Dec 2023 15:25:21 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CEA853801F6E;
+	Wed, 13 Dec 2023 15:25:25 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.2])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 54C0BC15968;
-	Wed, 13 Dec 2023 15:25:17 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 174293C2F;
+	Wed, 13 Dec 2023 15:25:21 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Jeff Layton <jlayton@kernel.org>,
 	Steve French <smfrench@gmail.com>
@@ -65,9 +65,9 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-mm@kvack.org,
 	netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 20/39] netfs: Add a hook to allow tell the netfs to update its i_size
-Date: Wed, 13 Dec 2023 15:23:30 +0000
-Message-ID: <20231213152350.431591-21-dhowells@redhat.com>
+Subject: [PATCH v4 21/39] netfs: Make netfs_put_request() handle a NULL pointer
+Date: Wed, 13 Dec 2023 15:23:31 +0000
+Message-ID: <20231213152350.431591-22-dhowells@redhat.com>
 In-Reply-To: <20231213152350.431591-1-dhowells@redhat.com>
 References: <20231213152350.431591-1-dhowells@redhat.com>
 Precedence: bulk
@@ -77,10 +77,9 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Add a hook for netfslib's write helpers to call to tell the network
-filesystem that it should update its i_size.
+Make netfs_put_request() just return if given a NULL request pointer.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Jeff Layton <jlayton@kernel.org>
@@ -88,30 +87,45 @@ cc: linux-cachefs@redhat.com
 cc: linux-fsdevel@vger.kernel.org
 cc: linux-mm@kvack.org
 ---
- include/linux/netfs.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/netfs/objects.c | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index fce7a5a86e8e..a14af93efccf 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -245,6 +245,7 @@ struct netfs_request_ops {
- 	void (*free_request)(struct netfs_io_request *rreq);
- 	void (*free_subrequest)(struct netfs_io_subrequest *rreq);
+diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
+index 7ef804e8915c..3ce6313cc5f9 100644
+--- a/fs/netfs/objects.c
++++ b/fs/netfs/objects.c
+@@ -109,19 +109,22 @@ static void netfs_free_request(struct work_struct *work)
+ void netfs_put_request(struct netfs_io_request *rreq, bool was_async,
+ 		       enum netfs_rreq_ref_trace what)
+ {
+-	unsigned int debug_id = rreq->debug_id;
++	unsigned int debug_id;
+ 	bool dead;
+ 	int r;
  
-+	/* Read request handling */
- 	void (*expand_readahead)(struct netfs_io_request *rreq);
- 	bool (*clamp_length)(struct netfs_io_subrequest *subreq);
- 	void (*issue_read)(struct netfs_io_subrequest *subreq);
-@@ -252,6 +253,9 @@ struct netfs_request_ops {
- 	int (*check_write_begin)(struct file *file, loff_t pos, unsigned len,
- 				 struct folio **foliop, void **_fsdata);
- 	void (*done)(struct netfs_io_request *rreq);
-+
-+	/* Modification handling */
-+	void (*update_i_size)(struct inode *inode, loff_t i_size);
- };
- 
- /*
+-	dead = __refcount_dec_and_test(&rreq->ref, &r);
+-	trace_netfs_rreq_ref(debug_id, r - 1, what);
+-	if (dead) {
+-		if (was_async) {
+-			rreq->work.func = netfs_free_request;
+-			if (!queue_work(system_unbound_wq, &rreq->work))
+-				BUG();
+-		} else {
+-			netfs_free_request(&rreq->work);
++	if (rreq) {
++		debug_id = rreq->debug_id;
++		dead = __refcount_dec_and_test(&rreq->ref, &r);
++		trace_netfs_rreq_ref(debug_id, r - 1, what);
++		if (dead) {
++			if (was_async) {
++				rreq->work.func = netfs_free_request;
++				if (!queue_work(system_unbound_wq, &rreq->work))
++					BUG();
++			} else {
++				netfs_free_request(&rreq->work);
++			}
+ 		}
+ 	}
+ }
 
 
