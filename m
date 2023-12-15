@@ -1,156 +1,261 @@
-Return-Path: <linux-nfs+bounces-644-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-645-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5E718150F7
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 21:16:04 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F14C8150FD
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 21:21:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50D4F1F24461
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 20:16:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1553A1F2444E
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 20:21:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1813245976;
-	Fri, 15 Dec 2023 20:16:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1B7A45976;
+	Fri, 15 Dec 2023 20:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sb1x2wxE"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eKMivjvQ";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="uIciGxZo"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F091E4187A
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Dec 2023 20:15:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54EEBC433C7;
-	Fri, 15 Dec 2023 20:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702671359;
-	bh=zpyvGjO8muRvFI/+KBVEHhB5s0p9XwidvNU0GYXAamc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Sb1x2wxELsJnLQ55ZJfEPXqIpeIKj7FXp2POmAZ4GO5w8F5f7fMrH7mjkNg8jSsYQ
-	 BNeNBBCkgNON52gD0al3cx200zC4p9VTomJgX5+KGCz4nGgkeBfgrkm59Uyh6tAtkT
-	 etu/QGoiRZpgKX+SeJ5xxuomyI52ZuN745WrU0mYpR8TIko6xKC5+sJZZ3gNUklaaC
-	 nO22F4vFG6pkJ6LNh32UblD3xootOICDc9OXPbRJeKx9O+jzGhY6pVZhxsbJcp8eA4
-	 MNjiftMOWFmddk9eV+CS8VnJ9/W9Fy+HIZWltQc2Xj/jbU9JxMGPhqYxso3+mx4CRc
-	 8da1Eqtj24uSw==
-Message-ID: <79cb6c0a54738a5ac77e4baa90f296f965f7cad3.camel@kernel.org>
-Subject: Re: [PATCH 2/3] NFSD: restore delegation's sc_count if nfsd4_run_cb
- fails
-From: Jeff Layton <jlayton@kernel.org>
-To: dai.ngo@oracle.com, chuck.lever@oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27D345974
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Dec 2023 20:21:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFK7tkR020309;
+	Fri, 15 Dec 2023 20:19:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=ayoHb1mrjOTXNIxU0IY3H0O4a9CnPv6Ux3E/naY5adI=;
+ b=eKMivjvQOBU7TKsWqglnv76pbNaZTykUieZUDIqEuSs8fSepOZ62yYknKv6d1iRA8VfJ
+ 1ZX/iar6NCWMnYEFdu/7C44Tj9Prh+/LjCqYjZsEGRHhUrj1uZUHHD5kzvw4K66dUV7L
+ eTxsCwuTWuqmgJx9R3eEHISy20RHEE/7zKXhITYhjsSkuWzfgpSzY0hFGcTPTTAiYLgn
+ qdX/K69HNPs7noglcKbmRnwQ4d/t9vvgJPENa7HWJLpvxi2nwADfEN2H/U609vgojlUa
+ mZXcxjSfzUu059Thw1+pk25DT1WFfrw0B3y/FL6H+SWhwSZvQ/BiMB4ZiQTPEgMFbF1L NQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3uveu2e6bt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Dec 2023 20:19:07 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFK57Pe030738;
+	Fri, 15 Dec 2023 20:19:06 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2100.outbound.protection.outlook.com [104.47.55.100])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3uvepce4r4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Dec 2023 20:19:06 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M6XOh+3n0HGn0VPNSwO/l/N1l6jRt89zHumKV3iEll7oX444eLUvNS67LQhtBNVmgRakP5wN6W2rqfZc0HjxAu1GsSjML9sMKYnw7YXX7u8Yf5oz9csarjqCG+JTvnkV7qMt1k3zbC7FTjC1s6EaR2HHnYaWkWDOYLM1ke+YBbVhLTcaPCumAiuTREpexuJ4YUtmtkXfNDK7yiD0z1fBzPuMWitN3TGmBrsXS6SDDIhHGCoJnEG8/9jAAVG836s3NuH3Od9gl921DRAVYPPv15UnITrsWajm/Fi3sU8I6aYMudBWtJxVN1FAWyYIdE+G5hf7gUFJYZrCXD2A6Qingg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ayoHb1mrjOTXNIxU0IY3H0O4a9CnPv6Ux3E/naY5adI=;
+ b=jYlt5mS2jj3Fc6CotVBwrvjqKANzs2vowpaq2WWQJXuDg3vC17Q43N9zEWgpBrSQKAK4lPweC4mPurhsN5Ic5mvEvBtZq2IaZfROnXGoVz18vkoPmpJ97kevPUmPDnMU5aUu58KL9zKLkR9LyXDfU1deK4F5VEIfWu7u4lN8+4UVEDpjT1TNfoTL4cfdHwZjLrksOoWSrck1gXdHLhhM6h3CCjNXjJBdzHlwDNEJkfzkDWPyqEjcgwe56JiMZeVHNXiApNmhfe8M9Jf7+A8yX4RSLqR6mAZpe8NSXBgtIcQEbQGDFeaES1ZgdOkYAUq+VSFbomM0T2w5/5lS6vPyWA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ayoHb1mrjOTXNIxU0IY3H0O4a9CnPv6Ux3E/naY5adI=;
+ b=uIciGxZo0hUgXLUJ5jPEjXC5sY8L+aNRyt27s41MB3nkFuovtQobaCxipGeVwys5KBOvW+ZHFpMZtGqEap0mUef0EBcb4rIS9a9RxbqJUs76xpmaR08OUo2EhGWTRkpSN64bD/op1hx/ROvENvG6M+FaUIfPL2PlI7idP2u2HrA=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by BL3PR10MB6162.namprd10.prod.outlook.com (2603:10b6:208:3bd::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.28; Fri, 15 Dec
+ 2023 20:19:01 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::abad:34ed:7b04:91c5]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::abad:34ed:7b04:91c5%7]) with mapi id 15.20.7091.030; Fri, 15 Dec 2023
+ 20:19:01 +0000
+Message-ID: <eb949f89-6133-4922-9015-0dced4ee5c06@oracle.com>
+Date: Fri, 15 Dec 2023 12:18:59 -0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] NFSD: Fix server reboot hang problem when callback
+ workqueue is stuck
+Content-Language: en-US
+To: Jeff Layton <jlayton@kernel.org>, chuck.lever@oracle.com
 Cc: linux-nfs@vger.kernel.org, linux-nfs@stwm.de
-Date: Fri, 15 Dec 2023 15:15:58 -0500
-In-Reply-To: <dc7a582f-3898-4f92-9fcf-bf76373f657d@oracle.com>
 References: <1702667703-17978-1-git-send-email-dai.ngo@oracle.com>
-	 <1702667703-17978-3-git-send-email-dai.ngo@oracle.com>
-	 <5b07e47d33925128400559f6c5eef694a9984279.camel@kernel.org>
-	 <dc7a582f-3898-4f92-9fcf-bf76373f657d@oracle.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
+ <1702667703-17978-4-git-send-email-dai.ngo@oracle.com>
+ <c9e8608d0cb2562c645d1f31043fcbc90cf53d52.camel@kernel.org>
+From: dai.ngo@oracle.com
+In-Reply-To: <c9e8608d0cb2562c645d1f31043fcbc90cf53d52.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0092.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::7) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|BL3PR10MB6162:EE_
+X-MS-Office365-Filtering-Correlation-Id: db40d2a8-9ada-4c89-3bfc-08dbfdab13bc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	ZjVDmCVYa2LN/Ze2jUU4Vk2UvPj0GcMaiW3N/xlqmqHtyBYtwaybw9Q7iNvpsJBPotOCGqV0ajCY5h0QJJ0Is9KR2wQvyjMuGPfpjB86Q5sySBjmOW/O+rnxKfJX8H8a/SFI6NYGlTPwWTdRGVr5F+IIvW2h67Pvrrqrb9yrrCRY1M+ldIirtFQmIwKLMa2qMUkeEBi4uE3aPOQWAty40Pka+KNGAWJw9TDS6d4UDvG+iXOorPK/Gx4gjZtX4oC+pfrfzywEVOUwUImhd+Hq7NqmQUfh9lCJik+z1yY+t05c6c3pTlUAkzWE94USy9g/6xASn3/eRpr+CE8QM/T8MqeWsDP6dhoF5IRSRVDlDC07e+gtaYXeM77EoMZ0/Z4iTdBZ9XsxP5843/j+qx3PamKVr4qh1k6xpsjHslHciicJ8E1on0Mk1F1roUZ+OdJU+1AmUCbMoEjZ2g7tFkeqVlJc5R3reMjAYS9OzKZDi3yOE/YALJgUgBqsO5k1a0Gihae1zzV6IEwJ9Gjo6PgemA8klD37wKCMXnWMerYkbpo78W0DCn7pWJSzSdmesKx3uHrtvWL7W5g/t5lZN+PdElIpqs5gBK6KAc5mAxp+O3wc93BxlsiKXJb5L8H56RRQ
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(346002)(136003)(376002)(366004)(396003)(230922051799003)(1800799012)(451199024)(64100799003)(186009)(8676002)(4326008)(4001150100001)(5660300002)(2906002)(8936002)(6506007)(6486002)(6512007)(478600001)(9686003)(53546011)(66476007)(66556008)(316002)(66946007)(41300700001)(38100700002)(31686004)(86362001)(36756003)(31696002)(2616005)(83380400001)(26005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?eGZtZzlRVEpuUWdMV1JweG9LeklXVmRWZVUzc2J4UXV2cDlwUmZ3NmU3cVJo?=
+ =?utf-8?B?YnhyWW1QUTZZdUNScVd6bDNNZFZBUnZHWWxkTDZYdlBnUGVKRVhFd0txZWx2?=
+ =?utf-8?B?SVkwdmpEWUVLSWgrYlZBNElmNTVHMEFqTVFhNmpJekliMER3SWpwMWVXTm4y?=
+ =?utf-8?B?cFAxTzJ4NTcrZTBSZ1hDaWVwbU1GNzRNbGpEcEFXL0k4N0Z6dTBQZmtSREV2?=
+ =?utf-8?B?MVNOTVFlSGpoTzd1UU1Ha01DZlFadVQyRXhDQ29FaHpXNnYrVkc0SjA3WnNH?=
+ =?utf-8?B?NURydGllMlVZdENKL3Z3Y0lDQ3FVQmVQWWFYNXhQbm12RzllR2Z3NytucHV4?=
+ =?utf-8?B?RU8zSVIwT050MGFmclNaNFZEdlYxZGJKZXZMUk9yNitobTJPOTZHaHhXK05r?=
+ =?utf-8?B?dXJxbURvejMzNklONVhhWWRxSnkxTVJtU1ViS010OXU3c1FCT3Y4RHV4ZnVG?=
+ =?utf-8?B?NkhkMDQ2Qkg2Qm5Jcyt6ZjV5cXF0bThtMHJVYjUrOGdwM3ppWlE1WlpwWTV5?=
+ =?utf-8?B?MTNCNVQzOVBMMzNEY0pzRUNwWU1Vb09LbXYzZHRub0gzZTZFTU1EN21NK2Nt?=
+ =?utf-8?B?QkFYbzNDR1k2YjQ1dE1sSFpIK1FZYUVaRWxvZEJ4eTI0ZGtsL0l0RG8rQi9m?=
+ =?utf-8?B?Yk9zSjQzaGVHYW5hRFFzVlhhSVlwSndNSDY1aVBWS3BrUG0rL2VFOWF0aXM2?=
+ =?utf-8?B?d2hqWmlSSll4ejFCVHFsUDlYTC95Yk5HOEdTV2liS3dqN2tlT0gvQXM3Ulpz?=
+ =?utf-8?B?b1Qyd1dwMjVsMnVqSUJxYW1RVTJDN1hoaVNPUFYxSzZ0SGIrbEd1REhMcnpE?=
+ =?utf-8?B?dEI4MkRvajFRTFVOV2k2R04vWCs3Y1M3OVh1SThITzc1ektYV3V0NWp2aU1L?=
+ =?utf-8?B?TmMrY2VieXpJMVhiTDlLcFFzaDhRUE01aFFjdzJhbXZKRjkyaXd4SFNsSUlZ?=
+ =?utf-8?B?eE5WU2ZGWnVGbXVBNEJ0d3kvbng5d1NmN2NRdlpMcGc4T1NwZDE4T0FRdExy?=
+ =?utf-8?B?am9mUFJJbitJQUUvMHRhcVMvSDk3MWlzUTlCbG5aZ1hwYlJXbExBUUR0WVNU?=
+ =?utf-8?B?aG9hZGQrTDJmMU5uTW45enY0NUpMWTRKb09ENTluTDEzWmhDSWhjaEVQSlF4?=
+ =?utf-8?B?YW5ZM3lna3Eza2hwMlJRWmR0VXd0SzZvNEtYYVZ3eHNRcWZEdkZxU2NWeDkv?=
+ =?utf-8?B?d3VzempTOWxCdUFNZEpLbTZ4NVBpNWlRVlNLTVowWjhyNFQwN2lhRlFMYVFI?=
+ =?utf-8?B?TnNOc1d1ZUNyK3ZXQmtOdXVhSWJFVDNETVRySjYwUmloNXFuK2VpREwwVW9o?=
+ =?utf-8?B?ZzRxQmVWUjMwM0xBd0E3bnQ3Z2NqTlNFOENSR0hhUFRWZjN5ZGZneDNVZmdS?=
+ =?utf-8?B?WDlWQWs0dFB6Rk5vQ05XU3BYUWZZMTIrM3NkcndPV3BxbW5ZWkt4eGtXUktQ?=
+ =?utf-8?B?MWh3L1pER3doTmVBaG5JNlY4K25lL1pBQWJLRXFWTlhlcjhabGlBampEYVRv?=
+ =?utf-8?B?bmcvRHFPbURDcUF5WG9obExNL3VRUG0xSXJDRUh2ZFd6bldzZkltdFJJN0c2?=
+ =?utf-8?B?MU1XakhnT01kRGlQMzU4K2phREN6T0RnZmJ5cEtWQ0FMajJrbU9zT2x3Skx5?=
+ =?utf-8?B?REdQN1JBQnQzd0JzV0tPSEdKa25QM3ZobUtmbDV3aEQyekt6a0crU256a3Zp?=
+ =?utf-8?B?YURXN21tRVVheTFMbERoYmNiaEVpeXQrTW9Gc3YyZlFYY0RFRzZpUjNGMUM1?=
+ =?utf-8?B?dytlYVp0OG5zWFJDZ2ZEcWt3WjhWWTdwd3IrNEtKRzg0TjRFb2VhVXVRUkNF?=
+ =?utf-8?B?OEZrWHV4SXlyQlRmekdBVUhyRGF1VEx6ZzlWUW9pQVFhVlIyWEs2ZFZOQUhG?=
+ =?utf-8?B?RlIvcFVVaDBrMDNKeWVCNVB0cCtQUDQyU1ViRVZUVFg2aHU5ZWoyR3Z6ZHdt?=
+ =?utf-8?B?R2hNRUl0VkhrdlV5MEdMaDFTN1BjUVBRTUlPUHBoVEV0MTEvMnYvRmZrbFZH?=
+ =?utf-8?B?WlRFU0wrQ3dmaklwa0s5eTZkcURUNTVPR2NUVUtvVUtrZTh3dE9TZ0xNM0N4?=
+ =?utf-8?B?SjVjaUtWYkoyS3dGdDVpMU5oc1pZVko5L3JBaXJNRE1RNkthTHQ0SElIWkFw?=
+ =?utf-8?Q?xPxso8XaXXCcV+XZyXtYh4+f2?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	lB8S0heCYclFQcauedDcAOqeDyFPksLwIvCKTAcIfiQBZiPqQ6Fd+tSVfjDQ9TGSnA1XnbVLwOCm8LzSJwDX5MeqEo3drtSDwWhqKrqEq+gsFlZmYF33RlvDsFUbwiUn1lJ7148sCVfjRtKC0abrdMakYP+YbERdQo2RK15w0mySZnen+Q+mHK/o0U8xSKzVIG1t7weJU1g3gVlw807t3NzYxo+Q7eJV3nq0s33b/zqIz3JM/7uQxWkKXGlMlAuZUdOcYus2jLTy++RBunj8GWKZ5TnNr1ZQX9jeyl4PFSJVe3slFXCVatOT+3VO1rq5+T0X+QSQpp+RT/VfkXbgW4yfgD9IPOB3IoNbFBo8KZW/lg1RPERPyAPWjZIEPFR9zPjfA0pH0go9kjEle9nIjKi5DYoJlAY/0flaEpCRGSo/iEsbkNobdumTk00TUh/ubZgle0kIGx1xIWVKLffI4DehIuCOVAEajZ9pYLqRZFYhKvVdGtie2olJA7rkX0DkR8pXjHdAf/1Um2D9OztcIE3BA1mjIyu2b4uFKzhlLabyJVyE+DxmObpmx9SSd6B4NkXiYu2RkWT8ukrs7YTTgaeIRZv9DFe97oWGpts1dwc=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: db40d2a8-9ada-4c89-3bfc-08dbfdab13bc
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2023 20:19:01.6544
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NJOHfgoPXAQBncOkcS2FzDkP8k0j+w5vdmbU0DZBFXtqTCW3xGo8w+eK3I1FdRVTGtjFN8SgVDWDXAtLy+gdVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR10MB6162
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-15_10,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 spamscore=0
+ suspectscore=0 mlxscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312150142
+X-Proofpoint-ORIG-GUID: I0QydNyofb7LbSzJ2VPCQci-8-VzdcGR
+X-Proofpoint-GUID: I0QydNyofb7LbSzJ2VPCQci-8-VzdcGR
 
-On Fri, 2023-12-15 at 12:00 -0800, dai.ngo@oracle.com wrote:
-> On 12/15/23 11:42 AM, Jeff Layton wrote:
-> > On Fri, 2023-12-15 at 11:15 -0800, Dai Ngo wrote:
-> > > Under some load conditions the callback work request can not be queue=
-d
-> > > and nfsd4_run_cb returns 0 to caller. When this happens, the sc_count
-> > > of the delegation state was left with an extra reference count preven=
-ting
-> > > the state to be freed later.
-> > >=20
-> > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> > > ---
-> > >   fs/nfsd/nfs4state.c | 17 +++++++++++++----
-> > >   1 file changed, 13 insertions(+), 4 deletions(-)
-> > >=20
-> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > index 40415929e2ae..175f3e9f5822 100644
-> > > --- a/fs/nfsd/nfs4state.c
-> > > +++ b/fs/nfsd/nfs4state.c
-> > > @@ -2947,8 +2947,14 @@ void nfs4_cb_getattr(struct nfs4_cb_fattr *ncf=
-)
-> > >  =20
-> > >   	if (test_and_set_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags))
-> > >   		return;
-> > > +
-> > >   	refcount_inc(&dp->dl_stid.sc_count);
-> > > -	nfsd4_run_cb(&ncf->ncf_getattr);
-> > > +	if (!nfsd4_run_cb(&ncf->ncf_getattr)) {
-> > > +		refcount_dec(&dp->dl_stid.sc_count);
-> > > +		clear_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags);
-> > > +		wake_up_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY);
-> > > +		WARN_ON_ONCE(1);
-> > > +	}
-> > >   }
-> > >  =20
-> > >   static struct nfs4_client *create_client(struct xdr_netobj name,
-> > > @@ -4967,7 +4973,10 @@ static void nfsd_break_one_deleg(struct nfs4_d=
-elegation *dp)
-> > >   	 * we know it's safe to take a reference.
-> > >   	 */
-> > >   	refcount_inc(&dp->dl_stid.sc_count);
-> > > -	WARN_ON_ONCE(!nfsd4_run_cb(&dp->dl_recall));
-> > > +	if (!nfsd4_run_cb(&dp->dl_recall)) {
-> > > +		refcount_dec(&dp->dl_stid.sc_count);
-> > > +		WARN_ON_ONCE(1);
-> > > +	}
-> > >   }
-> > >  =20
-> > >   /* Called from break_lease() with flc_lock held. */
-> > > @@ -8543,12 +8552,12 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst =
-*rqstp, struct inode *inode,
-> > >   				return 0;
-> > >   			}
-> > >   break_lease:
-> > > -			spin_unlock(&ctx->flc_lock);
-> > >   			nfsd_stats_wdeleg_getattr_inc();
-> > > -
-> > >   			dp =3D fl->fl_owner;
-> > >   			ncf =3D &dp->dl_cb_fattr;
-> > >   			nfs4_cb_getattr(&dp->dl_cb_fattr);
-> > > +			spin_unlock(&ctx->flc_lock);
-> > > +
-> > The other hunks in this patch make sense, but what's going on here with
-> > moving the lock down? Do we really need to hold the spinlock there? If
-> > so, I would have expected to see an explanation in the changelog.
->=20
-> We need to hold the flc_lock to prevent the lease to be removed which
-> allows the delegation state to be released. We need to do this since
-> we just do the refcount_dec if nfsd4_run_cb fails, instead of doing
-> nfs4_put_stid to free the state if this is the last refcount.
->=20
-> This is done to match the logic in nfsd_break_deleg_cb which has an usefu=
-l
-> comment in nfsd_break_one_deleg.
->=20
-> -Dai
->=20
 
-So is this a race today? I think this deserves a mention in the
-changelog at least, and maybe a Fixes: tag?
+On 12/15/23 11:54 AM, Jeff Layton wrote:
+> On Fri, 2023-12-15 at 11:15 -0800, Dai Ngo wrote:
+>> If the callback workqueue is stuck, nfsd4_deleg_getattr_conflict will
+>> also stuck waiting for the callback request to be executed. This causes
+>> the client to hang waiting for the reply of the GETATTR and also causes
+>> the reboot of the NFS server to hang due to the pending NFS request.
+>>
+>> Fix by replacing wait_on_bit with wait_on_bit_timeout with 20 seconds
+>> time out.
+>>
+>> Reported-by: Wolfgang Walter <linux-nfs@stwm.de>
+>> Fixes: 6c41d9a9bd02 ("NFSD: handle GETATTR conflict with write delegation")
+>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+>> ---
+>>   fs/nfsd/nfs4state.c | 6 +++++-
+>>   fs/nfsd/state.h     | 2 ++
+>>   2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>> index 175f3e9f5822..0cc7d4953807 100644
+>> --- a/fs/nfsd/nfs4state.c
+>> +++ b/fs/nfsd/nfs4state.c
+>> @@ -2948,6 +2948,9 @@ void nfs4_cb_getattr(struct nfs4_cb_fattr *ncf)
+>>   	if (test_and_set_bit(CB_GETATTR_BUSY, &ncf->ncf_cb_flags))
+>>   		return;
+>>   
+>> +	/* set to proper status when nfsd4_cb_getattr_done runs */
+>> +	ncf->ncf_cb_status = NFS4ERR_IO;
+>> +
+>>   	refcount_inc(&dp->dl_stid.sc_count);
+>>   	if (!nfsd4_run_cb(&ncf->ncf_getattr)) {
+>>   		refcount_dec(&dp->dl_stid.sc_count);
+>> @@ -8558,7 +8561,8 @@ nfsd4_deleg_getattr_conflict(struct svc_rqst *rqstp, struct inode *inode,
+>>   			nfs4_cb_getattr(&dp->dl_cb_fattr);
+>>   			spin_unlock(&ctx->flc_lock);
+>>   
+>> -			wait_on_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY, TASK_INTERRUPTIBLE);
+>> +			wait_on_bit_timeout(&ncf->ncf_cb_flags, CB_GETATTR_BUSY,
+>> +				TASK_INTERRUPTIBLE, NFSD_CB_GETATTR_TIMEOUT);
+> The RPC won't necessarily have timed out at this point, and it looks
+> like ncf_cb_status won't have been set to anything (and is probably
+> still 0?).
 
-> >=20
-> > >   			wait_on_bit(&ncf->ncf_cb_flags, CB_GETATTR_BUSY, TASK_INTERRUPTI=
-BLE);
-> > >   			if (ncf->ncf_cb_status) {
-> > >   				status =3D nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ)=
-);
+The timeout was added to handle the case where the callback request
+did not get queued to the workqueue; nfsd4_run_cb fails. In this case
+RPC is not involved and we don't want to hang here. Note that this patch
+sets ncf_cb_status to NFS4ERR_IO before calling nfsd4_run_cb so we can
+detect this error condition.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+>
+> Don't you need to check whether the wait timed out or was successful?
+
+ncf_cb_status is set to tk_status by nfsd4_cb_getattr_done. If the request
+was successful then ncf_cb_status is 0.
+
+> What happens now when this times out?
+
+Then we go through the normal logic of nfsd_open_break_lease which will
+also get timed out but eventually the lease, delegation state, will be
+removed by __break_lease after 45 secs (lease_break_time).
+
+-Dai
+
+>
+>
+>>   			if (ncf->ncf_cb_status) {
+>>   				status = nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
+>>   				if (status != nfserr_jukebox ||
+>> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+>> index f96eaa8e9413..94563a6813a6 100644
+>> --- a/fs/nfsd/state.h
+>> +++ b/fs/nfsd/state.h
+>> @@ -135,6 +135,8 @@ struct nfs4_cb_fattr {
+>>   /* bits for ncf_cb_flags */
+>>   #define	CB_GETATTR_BUSY		0
+>>   
+>> +#define	NFSD_CB_GETATTR_TIMEOUT	msecs_to_jiffies(20000) /* 20 secs */
+>> +
+> Why 20s?
+
+RPC will time out after 9 secs if it does not receive a callback reply.
+This time out value needs to be greater than 9 secs. I just be generous
+here, we can reduce it to any value > 9 secs.
+
+-Dai
+
+>
+>>   /*
+>>    * Represents a delegation stateid. The nfs4_client holds references to these
+>>    * and they are put when it is being destroyed or when the delegation is
+>
 
