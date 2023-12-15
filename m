@@ -1,192 +1,121 @@
-Return-Path: <linux-nfs+bounces-662-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-663-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A2AA8153BF
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 23:36:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BFC7D8154A7
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 00:53:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EF5A1C241B4
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 22:36:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E50C1F25863
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 23:53:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7FE518EC4;
-	Fri, 15 Dec 2023 22:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEF302C699;
+	Fri, 15 Dec 2023 23:53:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pSbRV4Xz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1i2TRR2V";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pSbRV4Xz";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="1i2TRR2V"
+	dkim=pass (2048-bit key) header.d=nabijaczleweli.xyz header.i=@nabijaczleweli.xyz header.b="ALLplDil"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from tarta.nabijaczleweli.xyz (tarta.nabijaczleweli.xyz [139.28.40.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C2B18EBD;
-	Fri, 15 Dec 2023 22:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 6E1D51F88B;
-	Fri, 15 Dec 2023 22:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1702679791; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QDOM5cciuA7gZCkDhQB2rHKAA8F9J8XyMkH9vahcTC0=;
-	b=pSbRV4XzcRQMsQ1TnrTizbWu5fM0Tekn+EzMtyjFCUh/I1YSYB7wjp8qu+NjScH5Xwnckq
-	7lPPwZbit/U5qPiGt/e8ePL1+sDCI1j5y0V8BD4NBgEA2tz8gHeUTp/STWYljUV3VwZHtE
-	F/jIItoV1zqk+T9EcqKD3N87j4rvKcE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1702679791;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QDOM5cciuA7gZCkDhQB2rHKAA8F9J8XyMkH9vahcTC0=;
-	b=1i2TRR2VjuT1ES7TrxrmpS7tUVIZ95ylzOo8HAXssIfqjZVJ67MQCfe7rZ3P7ScjQsuf+6
-	tbcVQh0ZdGnyXLDw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1702679791; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QDOM5cciuA7gZCkDhQB2rHKAA8F9J8XyMkH9vahcTC0=;
-	b=pSbRV4XzcRQMsQ1TnrTizbWu5fM0Tekn+EzMtyjFCUh/I1YSYB7wjp8qu+NjScH5Xwnckq
-	7lPPwZbit/U5qPiGt/e8ePL1+sDCI1j5y0V8BD4NBgEA2tz8gHeUTp/STWYljUV3VwZHtE
-	F/jIItoV1zqk+T9EcqKD3N87j4rvKcE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1702679791;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QDOM5cciuA7gZCkDhQB2rHKAA8F9J8XyMkH9vahcTC0=;
-	b=1i2TRR2VjuT1ES7TrxrmpS7tUVIZ95ylzOo8HAXssIfqjZVJ67MQCfe7rZ3P7ScjQsuf+6
-	tbcVQh0ZdGnyXLDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3EC9E137D4;
-	Fri, 15 Dec 2023 22:36:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1xndOevUfGVrTgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 15 Dec 2023 22:36:27 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF6249F61;
+	Fri, 15 Dec 2023 23:53:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nabijaczleweli.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nabijaczleweli.xyz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nabijaczleweli.xyz;
+	s=202305; t=1702684425;
+	bh=Rp8yaDPkB4QdC5rV4rYLgAqrcv6iNuhHVPicafTNPjA=;
+	h=Date:From:Cc:Subject:From;
+	b=ALLplDilttu5v8rqxLa6CwJtIrwuJP315MxWVHc7kAmGUMtCESeRMxJJKx//uddqP
+	 YcCPENjMBMXJxfHq0jP8o+iUCLyH3eEAFrqTRwXk2l6ce658bdaGBGsnTAwEKA3e35
+	 M1qGj+ioDQOY/FF6TwSy8BACJc46tKJQQGTXETuJYb42Q66j12hIWj/5HbySwik3Rq
+	 1RAE5JsMOXMxZ70/mYf33JVw1C8rek5tApnMlnXPcz0C2nl7G3CHZ+Qay2cHiY4Km2
+	 OuLbW5mgmoXiW+TgjgI2ZnYcCH3NDCgtAc3Tfd8g6AhgSLjdN+S2sEy7gawLVbOJJS
+	 zUIJ1Nc3AdEGA==
+Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
+	by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id E14E3131E6;
+	Sat, 16 Dec 2023 00:53:45 +0100 (CET)
+Date: Sat, 16 Dec 2023 00:53:45 +0100
+From: 
+	Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>, 
+	Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
+	Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, linux-nfs@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net: sunrpc: sizeof('\0') is 4, not 1
+Message-ID: <4zlmy3qwneijnrsbygfr2wbsnvdvcgvjyvudqnuxq5zvwmyaof@tarta.nabijaczleweli.xyz>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "David Laight" <David.Laight@ACULAB.COM>
-Cc: "Al Viro" <viro@zeniv.linux.org.uk>,
- "Chuck Lever" <chuck.lever@oracle.com>,
- "Christian Brauner" <brauner@kernel.org>, "Jens Axboe" <axboe@kernel.dk>,
- "Oleg Nesterov" <oleg@redhat.com>, "Jeff Layton" <jlayton@kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject:
- RE: [PATCH 1/3] nfsd: use __fput_sync() to avoid delayed closing of files.
-In-reply-to: <ac74bdb82e114d71b26864fe51f6433b@AcuMS.aculab.com>
-References: <20231208033006.5546-1-neilb@suse.de>,
- <20231208033006.5546-2-neilb@suse.de>,
- <ZXMv4psmTWw4mlCd@tissot.1015granger.net>,
- <170224845504.12910.16483736613606611138@noble.neil.brown.name>,
- <20231211191117.GD1674809@ZenIV>,
- <170233343177.12910.2316815312951521227@noble.neil.brown.name>,
- <20231211231330.GE1674809@ZenIV>, <20231211232135.GF1674809@ZenIV>,
- <170242728484.12910.12134295135043081177@noble.neil.brown.name>,
- <ac74bdb82e114d71b26864fe51f6433b@AcuMS.aculab.com>
-Date: Sat, 16 Dec 2023 09:36:25 +1100
-Message-id: <170267978502.12910.3767924819236993323@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.10 / 50.00];
-	 ARC_NA(0.00)[];
-	 TO_DN_EQ_ADDR_SOME(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_SEVEN(0.00)[10];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Score: -3.10
-X-Spam-Flag: NO
-
-On Sat, 16 Dec 2023, David Laight wrote:
-> ...
-> > > PS: put it that way - I can buy "nfsd is doing that only to regular
-> > > files and not on an arbitrary filesystem, at that; having the thread
-> > > wait on that sucker is not going to cause too much trouble"; I do *not*
-> > > buy turning it into a thing usable outside of a very narrow set of
-> > > circumstances.
-> > >
-> >=20
-> > Can you say more about "not on an arbitrary filesystem" ?
-> > I guess you means that procfs and/or sysfs might be problematic as may
-> > similar virtual filesystems (nfsd maybe).
->=20
-> Can nfs export an ext4 fs that is on a loopback mount on a file
-> that is remotely nfs (or other) mounted?
-
-Sure.  There is no reason this would cause a problem.
-If the nfs mount were also a loopback mount, that might be interesting.
-i.e.  You have a local filesystem, containing a file with a filesystem
-image.
-You nfs-export that local filesystem, and nfs mount it on the same host.
-Then you loop-mount that file in the nfs-mounted filesystem.  Now you
-are getting into uncharted waters.  I've testing loop-back NFS mounting
-and assure that it works.  I haven't tried the double-loop.
-But if that caused problem, I though it would be fput.  It would be
-fsync or writeback which causes the problem.
-
->=20
-> As soon as you get loops like that you might find that fput() starts
-> being problematic.
-
-When calling fput on a regular file there are, I think, only two problem
-areas.  One is that the fput might lead to a lazy-filesystem unmount
-completing.  That only applies to MNT_INTERNAL filesystems, and they are
-unlikely to be exported (probably it's impossible, but I haven't
-checked).
-The other is synchronous (or even async) IO in the filesystem code,
-maybe completing an unlink or a truncate.  This is no worse than any
-other synchronous IO that nfsd does.
-
-Thanks,
-NeilBrown
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="pluqraly4f3xucjm"
+Content-Disposition: inline
+User-Agent: NeoMutt/20231103-116-3b855e-dirty
 
 
->=20
-> I'm also sure I remember that nfs wasn't supposed to respond to a write
-> until it had issued the actual disk write - but maybe no one do that
-> any more because it really is too slow.
-> (Especially if the 'disk' is a USB stick.)
->=20
-> 	David
->=20
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1=
-PT, UK
-> Registration No: 1397386 (Wales)
->=20
+--pluqraly4f3xucjm
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+To make it self-documenting, the referenced commit added the space
+for the null terminator as sizeof('\0'). The message elaborates on
+why only one byte is needed, so this is clearly a mistake.
+Spell it as 1 /* NUL */ instead.
+
+This is the only result for git grep "sizeof.'" in the tree.
+
+Fixes: commit 1e360a60b24a ("SUNRPC: Address  buffer overrun in
+ rpc_uaddr2sockaddr()")
+Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
+---
+ net/sunrpc/addr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/addr.c b/net/sunrpc/addr.c
+index d435bffc6199..c4ba342f6866 100644
+--- a/net/sunrpc/addr.c
++++ b/net/sunrpc/addr.c
+@@ -311,7 +311,7 @@ size_t rpc_uaddr2sockaddr(struct net *net, const char *=
+uaddr,
+ 			  const size_t uaddr_len, struct sockaddr *sap,
+ 			  const size_t salen)
+ {
+-	char *c, buf[RPCBIND_MAXUADDRLEN + sizeof('\0')];
++	char *c, buf[RPCBIND_MAXUADDRLEN + 1 /* NUL */];
+ 	u8 portlo, porthi;
+ 	unsigned short port;
+=20
+
+base-commit: 26aff849438cebcd05f1a647390c4aa700d5c0f1
+--=20
+2.39.2
+
+--pluqraly4f3xucjm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAmV85wkACgkQvP0LAY0m
+WPE6lQ/+NHjguNV1PqOjyvFWculazWD9CBMypIE2ibK1lYsJl5ekrN1odp5UGdUI
+fmFemQFGcWnzmxKU/P1iBJwn7TRmuoPKiUnq+MFmGVEtBserGOGbwIxJnPlGIMhW
+nSA/7lyUJHR3xYc57YLSmnRPtpfiuNPpyCASKuuRh1TLJ6NMMS0qCg68thTGvQ0+
+K8mT7tRhplYx83TTKJmp0B39sKtEy/tY1nYGGoKEtNEYs0W9AVHBX23qHGcgJ5y+
+UMxsiJjVYtw1IOR1/hZ6JVUKxre/kewUUrdr4/F5J0SAu7j/a+ygjXZKlGDv19Ik
+eEetfCwBEknB3M0WhldRBnqo9LsJSJM55B06L0yCeUByqIp/PUN88IXNDIBK79yO
+k54V72jJAU4E5ylYJ1CADP2KwW6aUQIFHpIX8eEip89VOMMZIw9I5OB5dvICKdDO
+TQ14LcGiJuuB0mnEJmaYIzuo1jdr1rXXqlejxr+K3Rn7ZjlwRNRQXZ6RXQPvTilO
+gtW7MH2XJHEzmZHHALwnX5wk8jukengejSDN2fJodbCnMumR6mqj/VvWyxdmPOg+
+WlAKqq5pH7nIVumoD3NGC0S3qysJ2EnmzzmjoPmtBX9GxwIVzidRaXdbOVrD31tE
+LZhdmnzdXIS6T69P5LNUJq5gc+EIvU5QikLgweAx3SSgbp4MegM=
+=civI
+-----END PGP SIGNATURE-----
+
+--pluqraly4f3xucjm--
 
