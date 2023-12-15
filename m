@@ -1,78 +1,90 @@
-Return-Path: <linux-nfs+bounces-633-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-634-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4A4E814FBB
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 19:30:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94985815012
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 20:17:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 529C11F24883
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 18:30:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ABDCD1C20371
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Dec 2023 19:17:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6082430642;
-	Fri, 15 Dec 2023 18:30:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B3E3011D;
+	Fri, 15 Dec 2023 19:17:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="agRjOQPn"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E727F3C6AC
-	for <linux-nfs@vger.kernel.org>; Fri, 15 Dec 2023 18:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-193-GwFUMuBGO92Tm---NDeWVg-1; Fri, 15 Dec 2023 18:28:53 +0000
-X-MC-Unique: GwFUMuBGO92Tm---NDeWVg-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 15 Dec
- 2023 18:28:37 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 15 Dec 2023 18:28:37 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'NeilBrown' <neilb@suse.de>, Al Viro <viro@zeniv.linux.org.uk>
-CC: Chuck Lever <chuck.lever@oracle.com>, Christian Brauner
-	<brauner@kernel.org>, Jens Axboe <axboe@kernel.dk>, Oleg Nesterov
-	<oleg@redhat.com>, Jeff Layton <jlayton@kernel.org>,
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: RE: [PATCH 1/3] nfsd: use __fput_sync() to avoid delayed closing of
- files.
-Thread-Topic: [PATCH 1/3] nfsd: use __fput_sync() to avoid delayed closing of
- files.
-Thread-Index: AQHaLIC6NFPF78zqekmV13EV7pLlBLCqr+Uw
-Date: Fri, 15 Dec 2023 18:28:37 +0000
-Message-ID: <24cd21e4b0814dae94b9fe0a7957555a@AcuMS.aculab.com>
-References: <20231208033006.5546-1-neilb@suse.de>,
- <20231208033006.5546-2-neilb@suse.de>,
- <ZXMv4psmTWw4mlCd@tissot.1015granger.net>,
- <170224845504.12910.16483736613606611138@noble.neil.brown.name>,
- <20231211191117.GD1674809@ZenIV>
- <170233343177.12910.2316815312951521227@noble.neil.brown.name>
-In-Reply-To: <170233343177.12910.2316815312951521227@noble.neil.brown.name>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E943FB30
+	for <linux-nfs@vger.kernel.org>; Fri, 15 Dec 2023 19:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFI4PgS004793;
+	Fri, 15 Dec 2023 19:15:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-11-20;
+ bh=jHjgCqefirI6ZttFuaMzvKnAqt3QcMkiO3x2cihQBs0=;
+ b=agRjOQPnFWmDVlTbLT6olj3UWj3gylXwN5G7FLZ4A28d4vxupcjvoszjwXYgiRrsdFje
+ d2d1nyQmsyMPDIhK+SmMp3n0VOBheee0cFd5UyOtnVQmUKgxKLbtrkxLkn5aV50wGnqA
+ nBKOmIvhnyiplw5ZM0F+vRgLRb7Hs1GU9MQPiIv+eryUIGg6xewiKiw5NqMe0M3tlXcI
+ UPMOUxgQnv6jDxFvKkx1JHJpzruwSIvU3i4ja8KraWrwZlccW71IH9m9Qrc1t0TYmur+
+ zzXrG6EHwa+1Hu3gezXA4i8L4qFc2WpyN6FhtGys1IFoRYgZEVpPrANU317+0NlU5+fC Cg== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3ux5dfaryd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Dec 2023 19:15:24 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BFIFVbs017052;
+	Fri, 15 Dec 2023 19:15:23 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3uvepcfqn0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Dec 2023 19:15:23 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BFJEAbQ013855;
+	Fri, 15 Dec 2023 19:15:23 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3uvepcfqmh-1;
+	Fri, 15 Dec 2023 19:15:23 +0000
+From: Dai Ngo <dai.ngo@oracle.com>
+To: chuck.lever@oracle.com, jlayton@kernel.org
+Cc: linux-nfs@vger.kernel.org, linux-nfs@stwm.de
+Subject: [PATCH 0/3] Bug fixes for NFSD callback
+Date: Fri, 15 Dec 2023 11:15:00 -0800
+Message-Id: <1702667703-17978-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-15_10,2023-12-14_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 spamscore=0
+ mlxscore=0 adultscore=0 phishscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312150135
+X-Proofpoint-GUID: DKISvXwllM3rn2n0Woqlv-XSKShOf4Eq
+X-Proofpoint-ORIG-GUID: DKISvXwllM3rn2n0Woqlv-XSKShOf4Eq
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
 
-Li4NCj4gTXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHRoZSBhZHZlbnQgb2Ygdm1hbGxvYyBhbGxv
-Y2F0ZWQgc3RhY2tzIG1lYW5zDQo+IHRoYXQga2VybmVsIHN0YWNrIHNwYWNlIGlzIG5vdCBhbiBp
-bXBvcnRhbnQgY29uc2lkZXJhdGlvbi4NCg0KVGhleSBhcmUgc3RpbGwgdGhlIHNhbWUgKHNtYWxs
-KSBzaXplIC0ganVzdCBhbGxvY2F0ZWQgZGlmZmVyZW50bHkuDQoNCglEYXZpZA0KDQotDQpSZWdp
-c3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9u
-IEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+Here are some fixes for NFSD callback including one that addresses
+the problem of server hang on reboot with 6.6.3 reported recently
+by Wolfgang Walter <linux-nfs@stwm.de>:
+
+0001: SUNRPC: remove printk when back channel request not found
+0002: NFSD: restore delegation's sc_count if nfsd4_run_cb fails
+0003: NFSD: Fix server reboot hang problem when callback workqueue
+
+---
+
+ fs/nfsd/nfs4state.c  | 23 ++++++++++++++++++-----
+ fs/nfsd/state.h      |  2 ++
+ net/sunrpc/svcsock.c |  8 +-------
+ 3 files changed, 21 insertions(+), 12 deletions(-)
 
 
