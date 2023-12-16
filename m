@@ -1,161 +1,150 @@
-Return-Path: <linux-nfs+bounces-670-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-671-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 720768157E1
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 06:53:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B1E6815892
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 10:53:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1CDEE1F25EAC
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 05:53:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8DB26B2341C
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 09:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D237125A4;
-	Sat, 16 Dec 2023 05:53:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C789914291;
+	Sat, 16 Dec 2023 09:53:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oKB1G3G8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R1vD17Wr";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="oKB1G3G8";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R1vD17Wr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DZVZTbeA"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F22217731;
-	Sat, 16 Dec 2023 05:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 8BF9E21E77;
-	Sat, 16 Dec 2023 05:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1702706011; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YSGP6I8Ny4OeE7XmI3QQ1QBFHyKnDzH7eeoRkwZqFOM=;
-	b=oKB1G3G8HeLTqaN9tm0hfaNUGJJN0KYA7gnHixOBz3qtXADal9sw93FB8i2xeAs7slkME1
-	Hsw010R9pZd5gmvbGTH4RhflIeiHf3ep2/ogz+EDmf2RLlMWQCiYrj0vcy7EUkehsyqqm0
-	//vPbf4rIErOAOZw8c1MTrro0rGEJYE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1702706011;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YSGP6I8Ny4OeE7XmI3QQ1QBFHyKnDzH7eeoRkwZqFOM=;
-	b=R1vD17Wr3gMiuQ3jYZCh8zNkFimr9RaTJlrA2ZcgHdb/OfhERUfbTgRAG0QMyAkp28emIp
-	UfQXMseGb0F1r3Ag==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1702706011; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YSGP6I8Ny4OeE7XmI3QQ1QBFHyKnDzH7eeoRkwZqFOM=;
-	b=oKB1G3G8HeLTqaN9tm0hfaNUGJJN0KYA7gnHixOBz3qtXADal9sw93FB8i2xeAs7slkME1
-	Hsw010R9pZd5gmvbGTH4RhflIeiHf3ep2/ogz+EDmf2RLlMWQCiYrj0vcy7EUkehsyqqm0
-	//vPbf4rIErOAOZw8c1MTrro0rGEJYE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1702706011;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YSGP6I8Ny4OeE7XmI3QQ1QBFHyKnDzH7eeoRkwZqFOM=;
-	b=R1vD17Wr3gMiuQ3jYZCh8zNkFimr9RaTJlrA2ZcgHdb/OfhERUfbTgRAG0QMyAkp28emIp
-	UfQXMseGb0F1r3Ag==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CFD491373E;
-	Sat, 16 Dec 2023 05:53:26 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id LYMDIVY7fWWXOQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Sat, 16 Dec 2023 05:53:26 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C782614A85
+	for <linux-nfs@vger.kernel.org>; Sat, 16 Dec 2023 09:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702720403; x=1734256403;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zl3Sjolw5+creF+cgklEPgJxLU1GwmW1JYWicSEeNdY=;
+  b=DZVZTbeAehlQXVbrIa5niFxfMt76IMzu7y/ilgWv72ivAR0pumjUZgO8
+   SF3KKW67dck4nGSlbpKhZJb1HpCW0wmATMvToXd940g8panrpoZsSLd+f
+   ZNWVyiDGjPv5Gx6ZfrQNeylvF55qgl9KBj8MuNAahJ2mLygsQ4vOPUS5f
+   i6893BE8mddNj/jI5JWgwM23NtEdRMd/SCAqCM+FvZQbdjuSmP/f2HqRP
+   d6xtsWGhPlFYV26YEXI5BgJugczxeHM2FfJCUf0po65nSDSNB3EYsMiO/
+   4t1Iro4kYJbs7TSUys6VQlst2z0PuzH5ZrUUL/1GhhMNc0Wb/Y35AmFUZ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="2207244"
+X-IronPort-AV: E=Sophos;i="6.04,281,1695711600"; 
+   d="scan'208";a="2207244"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2023 01:53:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="809248402"
+X-IronPort-AV: E=Sophos;i="6.04,281,1695711600"; 
+   d="scan'208";a="809248402"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga001.jf.intel.com with ESMTP; 16 Dec 2023 01:53:20 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rERMD-0001QU-0p;
+	Sat, 16 Dec 2023 09:53:17 +0000
+Date: Sat, 16 Dec 2023 17:52:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
+	jlayton@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-nfs@vger.kernel.org,
+	linux-nfs@stwm.de
+Subject: Re: [PATCH 1/3 v2] SUNRPC: remove printk when back channel request
+ not found
+Message-ID: <202312161749.eBpmnAuH-lkp@intel.com>
+References: <1702676837-31320-2-git-send-email-dai.ngo@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: Ahelenia =?utf-8?q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-Cc: "Trond Myklebust" <trond.myklebust@hammerspace.com>,
- "Anna Schumaker" <anna@kernel.org>, "Chuck Lever" <chuck.lever@oracle.com>,
- "Jeff Layton" <jlayton@kernel.org>, "Olga Kornievskaia" <kolga@netapp.com>,
- "Dai Ngo" <Dai.Ngo@oracle.com>, "Tom Talpey" <tom@talpey.com>,
- "David S. Miller" <davem@davemloft.net>, "Eric Dumazet" <edumazet@google.com>,
- "Jakub Kicinski" <kuba@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>,
- linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: sunrpc: sizeof('\0') is 4, not 1
-In-reply-to:
- <ikgsiev777wvypqueii5mcshrdeftme22stfvztonxbvcrf35l@tarta.nabijaczleweli.xyz>
-References: =?utf-8?q?=3C4zlmy3qwneijnrsbygfr2wbsnvdvcgvjyvudqnuxq5zvwmyaof?=
- =?utf-8?q?=40tarta=2Enabijaczleweli=2Exyz=3E=2C?=
- <170270083607.12910.2219100479356858889@noble.neil.brown.name>,
- <ikgsiev777wvypqueii5mcshrdeftme22stfvztonxbvcrf35l@tarta.nabijaczleweli.xyz>
-Date: Sat, 16 Dec 2023 16:53:23 +1100
-Message-id: <170270600360.12910.7954602598238459243@noble.neil.brown.name>
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.30
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 NEURAL_HAM_SHORT(-0.20)[-0.999];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 BAYES_HAM(-0.00)[40.71%];
-	 ARC_NA(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCPT_COUNT_TWELVE(0.00)[15];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 RCVD_TLS_ALL(0.00)[]
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1702676837-31320-2-git-send-email-dai.ngo@oracle.com>
 
-On Sat, 16 Dec 2023, Ahelenia Ziemia=C5=84ska wrote:
-> On Sat, Dec 16, 2023 at 03:27:16PM +1100, NeilBrown wrote:
-> > On Sat, 16 Dec 2023, Ahelenia Ziemia=C5=84ska wrote:
-> > > To make it self-documenting, the referenced commit added the space
-> > > for the null terminator as sizeof('\0'). The message elaborates on
-> > > why only one byte is needed, so this is clearly a mistake.
-> > > Spell it as 1 /* NUL */ instead.
-> > >=20
-> > > Fixes: commit 1e360a60b24a ("SUNRPC: Address  buffer overrun in
-> > >  rpc_uaddr2sockaddr()")
-> > It isn't clear to me that "Fixes" is appropriate as that patch isn't
-> > harmful, just confused and sub-optimal.
-> I definitely agree, I don't like Fixes here at all,
-> but I don't really see another trailer in the documentation
-> or in the log that could be used for this.
->=20
+Hi Dai,
 
-Make up a new Trailer?=20
+kernel test robot noticed the following build warnings:
 
-I would probably just write
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.7-rc5 next-20231215]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
- To make it self-documenting,
-   commit 1e360a60b24a ("SUNRPC: Address  buffer overrun in rpc_uaddr2sockadd=
-r()")
- added the space for the null terminator as sizeof('\0') which is 4.  The com=
-mit
- elaborates on  why only one byte is needed, so this is clearly a mistake.
- Spell it as 1 /* NUL */ instead.
-=20
-NeilBrown
+url:    https://github.com/intel-lab-lkp/linux/commits/Dai-Ngo/SUNRPC-remove-printk-when-back-channel-request-not-found/20231216-055046
+base:   linus/master
+patch link:    https://lore.kernel.org/r/1702676837-31320-2-git-send-email-dai.ngo%40oracle.com
+patch subject: [PATCH 1/3 v2] SUNRPC: remove printk when back channel request not found
+config: arc-defconfig (https://download.01.org/0day-ci/archive/20231216/202312161749.eBpmnAuH-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231216/202312161749.eBpmnAuH-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312161749.eBpmnAuH-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   net/sunrpc/svcsock.c: In function 'receive_cb_reply':
+>> net/sunrpc/svcsock.c:1053:16: warning: variable 'calldir' set but not used [-Wunused-but-set-variable]
+    1053 |         __be32 calldir;
+         |                ^~~~~~~
+
+
+vim +/calldir +1053 net/sunrpc/svcsock.c
+
+8f55f3c0a013c4 Alexandros Batsakis 2009-08-20  1045  
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1046  static int receive_cb_reply(struct svc_sock *svsk, struct svc_rqst *rqstp)
+4cfc7e6019caa3 Rahul Iyer          2009-09-10  1047  {
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1048  	struct rpc_xprt *bc_xprt = svsk->sk_xprt.xpt_bc_xprt;
+4cfc7e6019caa3 Rahul Iyer          2009-09-10  1049  	struct rpc_rqst *req = NULL;
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1050  	struct kvec *src, *dst;
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1051  	__be32 *p = (__be32 *)rqstp->rq_arg.head[0].iov_base;
+48e6555c7b3bf0 J. Bruce Fields     2011-02-14  1052  	__be32 xid;
+48e6555c7b3bf0 J. Bruce Fields     2011-02-14 @1053  	__be32 calldir;
+4cfc7e6019caa3 Rahul Iyer          2009-09-10  1054  
+4cfc7e6019caa3 Rahul Iyer          2009-09-10  1055  	xid = *p++;
+4cfc7e6019caa3 Rahul Iyer          2009-09-10  1056  	calldir = *p;
+4cfc7e6019caa3 Rahul Iyer          2009-09-10  1057  
+093a1468b6edb0 Trond Myklebust     2014-11-12  1058  	if (!bc_xprt)
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1059  		return -EAGAIN;
+75c84151a9dc7a Trond Myklebust     2018-08-31  1060  	spin_lock(&bc_xprt->queue_lock);
+093a1468b6edb0 Trond Myklebust     2014-11-12  1061  	req = xprt_lookup_rqst(bc_xprt, xid);
+093a1468b6edb0 Trond Myklebust     2014-11-12  1062  	if (!req)
+75b63ccc0be260 Dai Ngo             2023-12-15  1063  		goto unlock_eagain;
+4cfc7e6019caa3 Rahul Iyer          2009-09-10  1064  
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1065  	memcpy(&req->rq_private_buf, &req->rq_rcv_buf, sizeof(struct xdr_buf));
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1066  	/*
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1067  	 * XXX!: cheating for now!  Only copying HEAD.
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1068  	 * But we know this is good enough for now (in fact, for any
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1069  	 * callback reply in the forseeable future).
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1070  	 */
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1071  	dst = &req->rq_private_buf.head[0];
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1072  	src = &rqstp->rq_arg.head[0];
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1073  	if (dst->iov_len < src->iov_len)
+093a1468b6edb0 Trond Myklebust     2014-11-12  1074  		goto unlock_eagain; /* whatever; just giving up. */
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1075  	memcpy(dst->iov_base, src->iov_base, src->iov_len);
+cc248d4b1ddf05 J. Bruce Fields     2012-12-03  1076  	xprt_complete_rqst(req->rq_task, rqstp->rq_arg.len);
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1077  	rqstp->rq_arg.len = 0;
+75c84151a9dc7a Trond Myklebust     2018-08-31  1078  	spin_unlock(&bc_xprt->queue_lock);
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1079  	return 0;
+093a1468b6edb0 Trond Myklebust     2014-11-12  1080  unlock_eagain:
+75c84151a9dc7a Trond Myklebust     2018-08-31  1081  	spin_unlock(&bc_xprt->queue_lock);
+093a1468b6edb0 Trond Myklebust     2014-11-12  1082  	return -EAGAIN;
+4cfc7e6019caa3 Rahul Iyer          2009-09-10  1083  }
+586c52cc61b5b8 Trond Myklebust     2009-05-18  1084  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
