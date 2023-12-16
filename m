@@ -1,97 +1,106 @@
-Return-Path: <linux-nfs+bounces-672-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-673-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 778B68158C6
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 12:12:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 051828159DA
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 15:18:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F2061B23D24
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 11:12:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3794F1C217E3
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Dec 2023 14:18:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CCC518EA4;
-	Sat, 16 Dec 2023 11:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF0392DF92;
+	Sat, 16 Dec 2023 14:18:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dlYDjst1"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="eJ6XuSLe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic321-19.consmr.mail.gq1.yahoo.com (sonic321-19.consmr.mail.gq1.yahoo.com [98.137.66.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C90918EA0
-	for <linux-nfs@vger.kernel.org>; Sat, 16 Dec 2023 11:12:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1702725164;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kbUn63ehNXbNRm7IvgtOu+OqSRZWaisPevjV5/xPinM=;
-	b=dlYDjst1HkEvGE5p6gecTtSfd5xbxLvMDC/ndj4FtQa7AzzTzkxao8yNg2fEQAF2/6gwZ5
-	LbE0af6Q28uUxd6Il64yJ+BDeHRaUZIG7xFA0vVnAA23Sosor5W7Vbks8u7ay566GHs7tq
-	kYftdwJGUGdTgZJojjr0+hdfG94XYkQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-467-5gde3lhiNe-FGwnTQsSwTw-1; Sat, 16 Dec 2023 06:12:42 -0500
-X-MC-Unique: 5gde3lhiNe-FGwnTQsSwTw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CE03C185A780;
-	Sat, 16 Dec 2023 11:12:41 +0000 (UTC)
-Received: from [100.85.132.103] (ovpn-0-5.rdu2.redhat.com [10.22.0.5])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id CF1B61C060B1;
-	Sat, 16 Dec 2023 11:12:40 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Dai Ngo <dai.ngo@oracle.com>
-Cc: chuck.lever@oracle.com, jlayton@kernel.org, linux-nfs@vger.kernel.org,
- linux-nfs@stwm.de
-Subject: Re: [PATCH 1/3 v2] SUNRPC: remove printk when back channel request
- not found
-Date: Sat, 16 Dec 2023 06:12:39 -0500
-Message-ID: <66BB600A-2C0D-457A-9A13-0F1D7F5E44B7@redhat.com>
-In-Reply-To: <1702676837-31320-2-git-send-email-dai.ngo@oracle.com>
-References: <1702676837-31320-1-git-send-email-dai.ngo@oracle.com>
- <1702676837-31320-2-git-send-email-dai.ngo@oracle.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A676C2D797
+	for <linux-nfs@vger.kernel.org>; Sat, 16 Dec 2023 14:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1702736333; bh=c9Q/G8q7C7ZJqKauA6OpQdBE0Zs7XsAVs9LzN52MOKI=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=eJ6XuSLeXDcal5rlHHn4Q2vE2A7CDfUQw4O6ooED2Eci8j9Zg3UXLhY99EoalKlcW7TIwI1I6jd9QQYNAg0OmnlhVkDH0xvaleEA+s2gEkzHXvMTrA4FxL4GkYO1PCoTBcEF6xispglw64ECxqROSaqrLIjdjcHWptz8DY5rfJaIHHjJWK05g3av34uJQncbgZTa7omHkA+R5ixpZa5FcsBm8jMYuWHWDlWD/z/Jt6OrPE8b6MgYznjFsz4j6/7ifN+bO90JsMWMP3x+WG01veUixOeek6IlNFFzL4F05JmYnjwxEH/Zhp8z+m48DK5mS4Bp//Ud6Z6GaguxAbMYhA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1702736333; bh=ZQZcyLosgWogrvyY0hMVJrwXAkmzP4bsitvbQRkzg1f=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=Yv7Vd/swhBePvq6J30781WSAUjQEFdknvBH5dvH4oTe2t9NlL4xD1dGbqWF6CMaE3ZzDf1fTaW3T+9YGqhnhb1hTwfZ6/6bo+72RsxRbrGqJwaRuLiHwf0ARd7+PQ9voYE7sBcINmAg2iSukOIcHfHS/vBvhtCneBv5cZk97MWQ718T714KJI7Hn9EQXg5bmiRL7Z9tsA+F2I2i19U20n1EKiB6UlYNPgfkU4Yl6EcvCNz9ZHxkif6baWxp184/QnMu3Z4rshOdXHFERxfGTLCZDPc/Db0EnvC7Gs83XGngqVyz03wyUUCnMYJYV9kO992J/14b6q7v4AKm38d0I2Q==
+X-YMail-OSG: zf5PvwwVM1lgzi8w_2Sg2c9AVWQ_gJXn8RmjoZZyWpKqWMCHrur.I2BYn.cEYWI
+ wDJNGP_l4XN9ZLleLTy4Edci0ztjYImtxTWu_L.yuFsQH_DMvdGof2mGKRY9SPxhhAdVmArC.KP2
+ aXR9zyd5eEipCEeMpQxBHrx153wjPjkhSG944uGAJJ5VOdO47OVYlMOCyfF1i0UYh5NWbYwJba8s
+ CG58IBRwu.h6FEfGfnO3zkWeFRWH46LYDszNc14zqflJEkA0UZNfIz2RWrJEqYQtMzWWLhq4RE9B
+ LbzSpXktHxzXlWxZ0oEA06YI6QVZTNC2i9SdnjkMEnxBUG0fDZH.H2fG_BzQiQRxFMaW8sX5OP0A
+ QhhGDnHZ80g54olRfLZSl_i5_9uAramI00gRr0DpiliMyCDkdNjRJv.zcjq9jt5U6MpiO3.xk9NQ
+ SnzC0P5OnWYHCka_5OxiEY4bfNo4epk2vhTCBE3BDV_WHBKc7DPHqBzSY_y8KauUXqrfajJwwI0G
+ kAe9T.8_bE3iaDeI_LouMlMDsJDvHLlYnZBb.X6aNWS0MSJvIQ1bV7ULGZQ2tS6NX2acIpJs_.a9
+ Xvx_hhLCoQjudZiPDEamVVhgnuHeIdqyHHdAKO_EeFxEvI1qQjv9blBCmzDbAk5Rq6kHZUaq5EeJ
+ .252jBuAAbFGeQz4BYgOx37W_ee03dI9n21WRzk6FPSZogNRrme9kyQMhIzBA7.cGfkw0FLbzTcJ
+ hmL0oLxu3sH4pGl0bir7VwNPDZ040HNggX4zKeay1vnuV7QZRs5v.JdIdJi_hlBRAQlQsAKb4MgF
+ 6HINv051RugBE8if3EIFyi0ju3ecQLmUookScERpitnKEVJtD7PMCbafCaYjfLhKEYZH6gitehYN
+ KSCY8rA2q26P_Zd4xktXmjdSxgiq4SR5RBvhKMcMvdsK1J4k8yvCDueoOkBQanFIMQ2V5sZMCoXy
+ wye9Cj1ymtlObQwV4CDCPKuyZRx3VUnuqMNG6qcvAUeH1o.DfSV6zvSuKBd6DrBo_eR.7177A5R6
+ K4pI2VliQsI9mZ3i9VqUbz_afgCaVZbH6U341GOLusXARLcFvE19BnAsZ0guG6DxnYW79i4wPgV1
+ _whQwJ02S.rTdK21lmZkNNympE7NzVLb_piINOQSwQROStPMQRFRxttA3lI41BlAvWpsiu02OPhP
+ sCoyTmru3kLuuDoZYrzC87ArXbbHvBegpteK8piUMC5KHImrnjavoobFvCRVypoJjyn0Hgpv9EHu
+ RcYIszQOB0qY5RCfj4Ulx0TQ4vIujrUmRRDQVaVg9jDtgqOALWnnzeD5dSn19YetI1YY8vZQf8wW
+ XDx0WNBlNC5PbSR7c10ahmr3EXYq0.I1Ebj025TrEUvI85OHlreYmLHUGq9UtO7Ht4avWmgUEpw5
+ U4at6zqkCbZ0ulthLN6hAVu3MD9eAC.T_uYewHLKdeo6ecbgsqHbtfmdfcQE7Mst9oJDGyNQU8E1
+ W3fXYm69YfO.SEqwZ7v.Fiwh8sx1FhAL_pF_82Ww.rAPBggqrBVgSX3By0JA8BWDmOMOSRzcvcin
+ xKR3Pr731nXLfw9hCsXfd3QWJGHCoC3QD8kdVeeq8_pp3owfuB_SuiCvmlsLbjakEIxOWYr4GR4C
+ gqojBsSGxA9bf15d3pb_kwedCQ0UWx9Sqbo.vnH0ICl7H23baoMydYX2r0P2rEisi35uk.FaPPEb
+ 90YKLpflu2Mu8YXHVq0GfZWYp8pkY1VCQWUvnykl3F9vGY2IrBDoQkHfx0qQ5g8qd7CowwiVHZRa
+ .Od7ZqFLI_vrl87_sj9NFBhDBWuHxLHlbaQYnc47A2I54JBrvbIq0ZYCT8GdYOwP8OSIXF1hZ3IA
+ NorFynQJmTbnxkvWZ6MHjcWsxnANoh0S1.2HeDtnh94aqSaQhNHxYgnWmhHS4YGa7e9U6qyS3yXU
+ ovEO8me0ddVejBxfAZlyGcKdazHcP.cb4hwqt4iQmiSTiF9qndQ5reou3.bDPRl2qJrI6p0IaZ4Y
+ BSq0C.SxxqkUjQQmiC8JNQJbK7aIC090MolZEM2JdtMFWHb200ALwaRE7Qy7ygEJ3jsVflTpLVS1
+ UZ0lSa8S63ArEYuRz1saNb4hGnv3BULmT62ma7VsXfkUoiAJDz2uZyKwLDxYk5udBQuv1gKcy3vH
+ L3Oxt.irrSN8mmVx0FmJc8GKRaEja.tL..U1UXIgTysVypOqIOHpOCECCCKtbl1qoNlmPEJvb46g
+ GW0S3
+X-Sonic-MF: <chaosesqueteam@yahoo.com>
+X-Sonic-ID: 8a05b375-9c08-478a-93f5-59b199466fb4
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic321.consmr.mail.gq1.yahoo.com with HTTP; Sat, 16 Dec 2023 14:18:53 +0000
+Date: Sat, 16 Dec 2023 14:18:48 +0000 (UTC)
+From: "chaosesqueteam@yahoo.com" <chaosesqueteam@yahoo.com>
+To: Bruce Perens <bruce@perens.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>, Richard Stallman <rms@gnu.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Networking <netdev@vger.kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Julia Lawall <julia.lawall@inria.fr>, 
+	Paolo Abeni <pabeni@redhat.com>, Aditya Pakki <pakki001@umn.edu>, 
+	Anna Schumaker <anna.schumaker@netapp.com>, 
+	"ansgar@debian.org" <ansgar@debian.org>, 
+	"blukashev@sempervictus.com" <blukashev@sempervictus.com>, 
+	Chuck Lever <chuck.lever@oracle.com>, 
+	Dave Wysochanski <dwysocha@redhat.com>, 
+	"editor@lwn.net" <editor@lwn.net>, 
+	"esr@thyrsus.com" <esr@thyrsus.com>, 
+	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
+	"J. Bruce Fields" <bfields@fieldses.org>, 
+	Leon Romanovsky <leon@kernel.org>, 
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
+	"moglen@columbia.edu" <moglen@columbia.edu>, 
+	"skraw.ml@ithnet.com" <skraw.ml@ithnet.com>, 
+	"tcallawa@redhat.com" <tcallawa@redhat.com>, 
+	"torvalds@linuxfoundation.org" <torvalds@linuxfoundation.org>, 
+	"torvalds@osdl.org" <torvalds@osdl.org>, 
+	Trond Myklebust <trond.myklebust@hammerspace.com>, 
+	"misc@openbsd.org" <misc@openbsd.org>, 
+	"tech@openbsd.org" <tech@openbsd.org>
+Message-ID: <1587993142.1777988.1702736328778@mail.yahoo.com>
+In-Reply-To: <1891850654.636910.1701859570489@mail.yahoo.com>
+References: <875007189.3298572.1696619900247.ref@mail.yahoo.com> <875007189.3298572.1696619900247@mail.yahoo.com> <ZSEdS8a5imvsAE8F@debian.me> <457035954.3503192.1696688953071@mail.yahoo.com> <CAK2MWOsK=pTKADr1kUuj=fvmRB=X2Z0+SkWQ9PTSxCqOVCq39A@mail.gmail.com> <641990627.3964368.1696950113530@mail.yahoo.com> <CAK2MWOurH4AHGd3ntgVvg-+Z6rNZriO2xQm9_RNqpUMwWWQCkg@mail.gmail.com> <1891850654.636910.1701859570489@mail.yahoo.com>
+Subject: Re: I can't get contributors for my C project. Can you help?
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.21952 YMailNorrin
 
-On 15 Dec 2023, at 16:47, Dai Ngo wrote:
-
-> If the client interface is down, or there is a network partition between
-> the client and server, that prevents the callback request to reach the
-> client TCP on the server will keep re-transmitting the callback for about
-> ~9 minutes before giving up and closes the connection.
->
-> If the connection between the client and the server is re-established
-> before the connection is closed and after the callback timed out (9 secs)
-> then the re-transmitted callback request will arrive at the client. When
-> the server receives the reply of the callback, receive_cb_reply prints the
-> "Got unrecognized reply..." message in the system log since the callback
-> request was already removed from the server xprt's recv_queue.
->
-> Even though this scenario has no effect on the server operation, a
-> malicious client can take advantage of this behavior and send thousand
-> of callback replies with random XIDs to fill up the server's system log.
-
-I don't think this is a serious risk.  There's plenty of things a malicious
-client can do besides try to fill up a system log.
-
-This particular printk has been an excellent indicator of transport or
-client issues over the years.  Seeing it in the log on a customer systems
-shaves a lot of time off an initial triage of an issue.  Seeing it in my
-testing environment immediately notifies me of what might be an otherwise
-hard-to-notice problem.
-
-Ben
-
+Why won't anyone help my free software project?
+I simply want help with the unreal map format. https://sourceforge.net/p/chaosesqueanthology/tickets/2/
 
