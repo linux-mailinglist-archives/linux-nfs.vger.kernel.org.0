@@ -1,76 +1,85 @@
-Return-Path: <linux-nfs+bounces-686-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-687-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB7F0816BD8
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Dec 2023 12:06:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 393AD816D27
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Dec 2023 12:58:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 68EF928424C
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Dec 2023 11:06:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 601D41C23312
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Dec 2023 11:58:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 222E818EA5;
-	Mon, 18 Dec 2023 11:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F14358AF;
+	Mon, 18 Dec 2023 11:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KkL3jKDV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WM5aN+21"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88595199A5;
-	Mon, 18 Dec 2023 11:05:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46498C433C7;
-	Mon, 18 Dec 2023 11:05:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702897558;
-	bh=WTNLubnfyisNRdtZDWlLkSm9Rz36/vqI/xP24+xTDcM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KkL3jKDVwOB5N0/qhs/9JjBN+vonQpMsSa26ZBjSeCRCaulbO8roJteQgbMujfTXZ
-	 3Pk24oNiYkl7kaOJH4+l0B3vvYwfgHe+iQlHgl15JWbDlqDuqUGQCkNX74IYjTVe8/
-	 WAi00oyNO8Glx7CMmqcF7w8ioqLSdeBZVo+RVjflOBISKeZQ9jhqo6YoYcd635YauS
-	 Nsvk9hyOKA3yRH7fpSLt2AJb6VqO2taL90lrMsyF44GZGUESZwPaw3Y5N/W7g2DNrx
-	 nBHyVnuPNVNNsyf1euBS6V7GssBV7vDeg58lO1OxEBSBMWuW+9Gg4JBPJiuck8Y32G
-	 /lwgRnx87ZYWw==
-Date: Mon, 18 Dec 2023 12:05:50 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: Dominique Martinet <asmadeus@codewreck.org>
-Cc: Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
-	David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/39] netfs, afs, 9p: Delegate high-level I/O to
- netfslib
-Message-ID: <20231218-gegen-unumstritten-fb0aeb7519af@brauner>
-References: <20231213152350.431591-1-dhowells@redhat.com>
- <20231215-einziehen-landen-94a63dd17637@brauner>
- <ZXxUx_nh4HNTaDJx@codewreck.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4091D3527D
+	for <linux-nfs@vger.kernel.org>; Mon, 18 Dec 2023 11:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55359dc0290so1059443a12.1
+        for <linux-nfs@vger.kernel.org>; Mon, 18 Dec 2023 03:49:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702900175; x=1703504975; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=sNU2OQ66q7I7Mwdi15MGvsuJJWJeBtMHWU/b2je3XxY=;
+        b=WM5aN+21OqQscMww0lXjqQHcI3i18u1n8EH2keSP9ZdFWQEirqqeNGn/0qs5Ke1VEG
+         Eh0FO4onaeFNHOpCjkGIN6vaHkLGZaIJ8mqkc8HhTqDNd1N7VL2g+eYwQvgWZDCn7Vkc
+         H6VFsSxmFZ/5DPpUvw+y1qcfeZs3iS45zzL8zD/sGWvC8J73uJpQ4IO2fOptw0KtOZep
+         qAa9FdOSbUbU0UiTtZMnSOdDGyLp4H1yTITENJAo0GUPyngZNeA7muePytDls3pNTXC8
+         YZZ4j5Mmrn6LIj5eM2+Of/W5vGk8pu7N8+ogHlxyL/Oq5Dk9zSfA2AcmQE59zU8mJmEE
+         MwTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702900175; x=1703504975;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sNU2OQ66q7I7Mwdi15MGvsuJJWJeBtMHWU/b2je3XxY=;
+        b=Sw1F0wsfV+Kbq3y+ehyfl1EaK5VRYwk01D/4gLvrZqpqjWrNoAMmjr1xD/MaKV+toX
+         ru+OTAWIwUHnTQYzMGZDrq1WeR9QmNqRaDTz+QfNfc5sJL6Zn3iMPIgg8Y7rz9rlDlz0
+         d4YYLSzQATySskRzxNk0fKksMaxB9LeRYnNVgR3XuIANJYnufScxmhTrSq/6RnCHjaHP
+         8G+5jMeH/sz48XNDN3GkJZB3ZZ0OrWT3h9x7XVNItj26fzyhy7nFVt6fOcUsM78+S6mT
+         LRdrNx/qvjppjh9J0afPVyu9z7WR6IoD7DMUR5dm4zU8A9+4OCuIqg/cMpLg0QSnd1AU
+         EEYA==
+X-Gm-Message-State: AOJu0YwRuAYl+kbLn8q1aiImvXpg6oAhjhaHOjKC5mzsc+5xeiKi0FOU
+	4gqyxCPiHoypHpS3pBzR3up4LnVMRB5NT3laCmZD+J7pRoY=
+X-Google-Smtp-Source: AGHT+IErebe91pJ0mydLNDlFoD8Tyert1C0v+Br+Vr7x2/mmrOP5QPY/3cxR2z8z1nz1ElQsQ8cmKY6u2FAiWcPFiAA=
+X-Received: by 2002:a50:c355:0:b0:553:7a61:3f02 with SMTP id
+ q21-20020a50c355000000b005537a613f02mr148548edb.13.1702900175032; Mon, 18 Dec
+ 2023 03:49:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZXxUx_nh4HNTaDJx@codewreck.org>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Mon, 18 Dec 2023 12:48:00 +0100
+Message-ID: <CALXu0UfJhNzETL_xFhrXYkxVSfkre836ed9nGyqyo5WxCvQ4aQ@mail.gmail.com>
+Subject: Realtime NFSv4?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, Dec 15, 2023 at 10:29:43PM +0900, Dominique Martinet wrote:
-> Christian Brauner wrote on Fri, Dec 15, 2023 at 01:03:14PM +0100:
-> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-> > branch: vfs.netfs
-> 
-> This doesn't seem to build:
+Good morning!
 
-Yeah, I'm aware. That's why I didn't push it out. I couldn't finish the
-rebase completely on Friday.
+How feasible would be a realtime NFSv4, which can guarantee NFSv4
+operations in a constant time manner suitable for realtime
+applications (similar to XFS realtime support)?
+
+Yes, I know NFSv4 uses TCP, which is a bit allergic to realtime, but
+aside from that (there is always RTP), can the NFSv4 protocol and
+Linux implementation be modified for constant time?
+
+Ced
+
+PS Credits go to Roland Mainz for pitching the idea
+-- 
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
