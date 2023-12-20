@@ -1,48 +1,114 @@
-Return-Path: <linux-nfs+bounces-714-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-715-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id F398F819820
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Dec 2023 06:30:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13FC5819935
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Dec 2023 08:15:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 85BFFB21211
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Dec 2023 05:30:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C083128723E
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Dec 2023 07:15:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87251156E2;
-	Wed, 20 Dec 2023 05:30:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7D8D156E6;
+	Wed, 20 Dec 2023 07:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="MduyeqHD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmUBG276"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7BC156DD;
-	Wed, 20 Dec 2023 05:30:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=8+pSMi90iMJbp8SNVldNRXoVmhwt4bobR2N1xwtpgos=; b=MduyeqHDXdk4CAFlDgc+yfIntB
-	nYG6P715r5ZP0SI04laBhd1qm8IjbJvwsMAnbkgEcl60cobnMDMkjWDXKfST2hgXBAAWijYZYQ0Zg
-	VAvuf880456lb5qkXBSlKItfQIW+h7MhkzZdjSKcau2LqrxOt+PBZG4zQVG+ruFdKMmo5R/vpscwN
-	RXm95elbaDgnLQHFaXl7OnX5wQGUFTpJ3mhsgJgaAysU1/MYjX10JWxHuSU0rn/4zh/OK5L1Wr3lg
-	kr9nJ/RZDC8/biOPNQThFQL6c5A7VceVIaSC1YKSTLUvQhvyarxHY0GPWsKpJSoNTXyHdq1IJHBfg
-	wQvXVlPA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-	id 1rFp9p-00HJWS-14;
-	Wed, 20 Dec 2023 05:30:13 +0000
-Date: Wed, 20 Dec 2023 05:30:13 +0000
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: linux-fsdevel@vger.kernel.org
-Cc: linux-nfs@vger.kernel.org
-Subject: [PATCH 18/22] nfsd: kill stale comment about simple_fill_super()
- requirements
-Message-ID: <20231220053013.GQ1674809@ZenIV>
-References: <20231220051348.GY1674809@ZenIV>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F42168B3;
+	Wed, 20 Dec 2023 07:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6d87eadc43fso1766766b3a.1;
+        Tue, 19 Dec 2023 23:15:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703056501; x=1703661301; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eJqWdKRl0UBq0Wj+r8chL9QmhrnrulM60eoe1tH98KY=;
+        b=mmUBG2766MCmU+ZcjSOo09fxvnBdIO3MIOuTtci1nkkT8LxOHncXez4Ddt2Ybxdp9F
+         VOXnc0QO6lfJmFZy+lgxY8IkIpUzz85V3vyXBkqRb2rM4+S9jJ/1XsfluIW4Kuxl3vxV
+         LO4C8p/Qxwh4+u6ndBgXS8Ub6lT0oRe/B2494ZKcr1Vmnhu4KlhLYI8y7SSt2i8G4jwb
+         zji1dsJpTurejRGJBE0mIMPkjE+yS3pl+4FhmzbVZgYE+JZyHf7lfF2MI+HpqZpkvSBP
+         sDP3BJ88wpFLryfburFd9Kt+BDgmIDIM8L7ARISnHT64cdWMI0wM8Fztno3PesligHF1
+         iYxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703056501; x=1703661301;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eJqWdKRl0UBq0Wj+r8chL9QmhrnrulM60eoe1tH98KY=;
+        b=Y0VfGsBaSUb6OF3CR5nOWmwhOSq9UWl17XjBwJdB3DSvBsIZSiWvQMzWV5Elnno4RO
+         Qr1Y98+M/gYrn/zUSyDx2cvXJP1fihLrkjfT7AYXx85kmEutHs2J3E0tgcOukTCl+Ih/
+         oC+u/69z3tHtOPqWJEWwoU9k8vGWX2C2PNmWfWZPus1/vOb0VbhDogFQrh1H5zXk++pa
+         /SPqJ8c7Q/L5Bl+/aIQvQ4x32eCBlsnMElqfrjgkC2+lNRX3o733/rbkV9emRp+uSire
+         0KRly20DLDMMmIZ4Ekm98hJKLXIPtdfuuEVCF3geq+oMP/b64SvU/rxToOmkGu6gz68q
+         Rxow==
+X-Gm-Message-State: AOJu0YylOLcE94PYjz62ebvXs089LFxlxJv/Fzc8T1MxgZkGIGWAn9Uv
+	1JKfVH7W08hO7BJdfznKuXc=
+X-Google-Smtp-Source: AGHT+IH2/KQGWsEEIk+CfQb//I/X1FN9i9PYn0R8hU2YQDfX0MobECujamcRsnvnV4o1L8WIa9T7SQ==
+X-Received: by 2002:a17:903:947:b0:1d3:be34:7862 with SMTP id ma7-20020a170903094700b001d3be347862mr3583611plb.9.1703056501427;
+        Tue, 19 Dec 2023 23:15:01 -0800 (PST)
+Received: from localhost (dhcp-72-253-202-210.hawaiiantel.net. [72.253.202.210])
+        by smtp.gmail.com with ESMTPSA id m2-20020a170902bb8200b001cfd2cb1907sm22210314pls.206.2023.12.19.23.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Dec 2023 23:15:00 -0800 (PST)
+Sender: Tejun Heo <htejun@gmail.com>
+Date: Tue, 19 Dec 2023 21:14:59 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Naohiro Aota <Naohiro.Aota@wdc.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+	"ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+	"coreteam@netfilter.org" <coreteam@netfilter.org>,
+	"dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"gfs2@lists.linux.dev" <gfs2@lists.linux.dev>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
+	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
+	"linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>,
+	"linux-fscrypt@vger.kernel.org" <linux-fscrypt@vger.kernel.org>,
+	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+	"linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
+	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+	"nbd@other.debian.org" <nbd@other.debian.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"ntb@lists.linux.dev" <ntb@lists.linux.dev>,
+	"open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
+	"oss-drivers@corigine.com" <oss-drivers@corigine.com>,
+	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
+	"samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
+	"target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
+	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
+	"wireguard@lists.zx2c4.com" <wireguard@lists.zx2c4.com>
+Subject: Re: Performance drop due to alloc_workqueue() misuse and recent
+ change
+Message-ID: <ZYKUc7MUGvre2lGQ@slm.duckdns.org>
+References: <dbu6wiwu3sdhmhikb2w6lns7b27gbobfavhjj57kwi2quafgwl@htjcc5oikcr3>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -51,39 +117,23 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231220051348.GY1674809@ZenIV>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <dbu6wiwu3sdhmhikb2w6lns7b27gbobfavhjj57kwi2quafgwl@htjcc5oikcr3>
 
-That went into the tree back in 2005; the comment used to be true for
-predecessor of simple_fill_super() that happened to live in nfsd; that one
-didn't take care to skip the array entries with NULL ->name, so it could
-not tolerate any gaps.  That had been fixed in 2003 when nfsd_fill_super()
-had been abstracted into simple_fill_super(); if Neil's patch lived out
-of tree during that time, he probably replaced the name of function when
-rebasing it and didn't notice that restriction in question was no longer
-there.
+Hello, again.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/nfsd/nfsctl.c | 4 ----
- 1 file changed, 4 deletions(-)
+On Mon, Dec 04, 2023 at 04:03:47PM +0000, Naohiro Aota wrote:
+...
+> In summary, we misuse max_active, considering it is a global limit. And,
+> the recent commit introduced a huge performance drop in some cases.  We
+> need to review alloc_workqueue() usage to check if its max_active setting
+> is proper or not.
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 3e15b72f421d..26a25e40c451 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -48,10 +48,6 @@ enum {
- 	NFSD_MaxBlkSize,
- 	NFSD_MaxConnections,
- 	NFSD_Filecache,
--	/*
--	 * The below MUST come last.  Otherwise we leave a hole in nfsd_files[]
--	 * with !CONFIG_NFSD_V4 and simple_fill_super() goes oops
--	 */
- #ifdef CONFIG_NFSD_V4
- 	NFSD_Leasetime,
- 	NFSD_Gracetime,
+Can you please test the following branch?
+
+ https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git unbound-system-wide-max_active
+
+Thanks.
+
 -- 
-2.39.2
-
+tejun
 
