@@ -1,139 +1,148 @@
-Return-Path: <linux-nfs+bounces-715-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-716-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 13FC5819935
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Dec 2023 08:15:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 076DC819C2A
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Dec 2023 11:09:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C083128723E
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Dec 2023 07:15:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2AA791C2593E
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Dec 2023 10:09:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7D8D156E6;
-	Wed, 20 Dec 2023 07:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5FAA374F0;
+	Wed, 20 Dec 2023 10:04:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmUBG276"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AU4OHWD7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F42168B3;
-	Wed, 20 Dec 2023 07:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6d87eadc43fso1766766b3a.1;
-        Tue, 19 Dec 2023 23:15:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703056501; x=1703661301; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eJqWdKRl0UBq0Wj+r8chL9QmhrnrulM60eoe1tH98KY=;
-        b=mmUBG2766MCmU+ZcjSOo09fxvnBdIO3MIOuTtci1nkkT8LxOHncXez4Ddt2Ybxdp9F
-         VOXnc0QO6lfJmFZy+lgxY8IkIpUzz85V3vyXBkqRb2rM4+S9jJ/1XsfluIW4Kuxl3vxV
-         LO4C8p/Qxwh4+u6ndBgXS8Ub6lT0oRe/B2494ZKcr1Vmnhu4KlhLYI8y7SSt2i8G4jwb
-         zji1dsJpTurejRGJBE0mIMPkjE+yS3pl+4FhmzbVZgYE+JZyHf7lfF2MI+HpqZpkvSBP
-         sDP3BJ88wpFLryfburFd9Kt+BDgmIDIM8L7ARISnHT64cdWMI0wM8Fztno3PesligHF1
-         iYxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703056501; x=1703661301;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eJqWdKRl0UBq0Wj+r8chL9QmhrnrulM60eoe1tH98KY=;
-        b=Y0VfGsBaSUb6OF3CR5nOWmwhOSq9UWl17XjBwJdB3DSvBsIZSiWvQMzWV5Elnno4RO
-         Qr1Y98+M/gYrn/zUSyDx2cvXJP1fihLrkjfT7AYXx85kmEutHs2J3E0tgcOukTCl+Ih/
-         oC+u/69z3tHtOPqWJEWwoU9k8vGWX2C2PNmWfWZPus1/vOb0VbhDogFQrh1H5zXk++pa
-         /SPqJ8c7Q/L5Bl+/aIQvQ4x32eCBlsnMElqfrjgkC2+lNRX3o733/rbkV9emRp+uSire
-         0KRly20DLDMMmIZ4Ekm98hJKLXIPtdfuuEVCF3geq+oMP/b64SvU/rxToOmkGu6gz68q
-         Rxow==
-X-Gm-Message-State: AOJu0YylOLcE94PYjz62ebvXs089LFxlxJv/Fzc8T1MxgZkGIGWAn9Uv
-	1JKfVH7W08hO7BJdfznKuXc=
-X-Google-Smtp-Source: AGHT+IH2/KQGWsEEIk+CfQb//I/X1FN9i9PYn0R8hU2YQDfX0MobECujamcRsnvnV4o1L8WIa9T7SQ==
-X-Received: by 2002:a17:903:947:b0:1d3:be34:7862 with SMTP id ma7-20020a170903094700b001d3be347862mr3583611plb.9.1703056501427;
-        Tue, 19 Dec 2023 23:15:01 -0800 (PST)
-Received: from localhost (dhcp-72-253-202-210.hawaiiantel.net. [72.253.202.210])
-        by smtp.gmail.com with ESMTPSA id m2-20020a170902bb8200b001cfd2cb1907sm22210314pls.206.2023.12.19.23.15.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 23:15:00 -0800 (PST)
-Sender: Tejun Heo <htejun@gmail.com>
-Date: Tue, 19 Dec 2023 21:14:59 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Naohiro Aota <Naohiro.Aota@wdc.com>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-	"ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-	"cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-	"coreteam@netfilter.org" <coreteam@netfilter.org>,
-	"dm-devel@lists.linux.dev" <dm-devel@lists.linux.dev>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"gfs2@lists.linux.dev" <gfs2@lists.linux.dev>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-bcachefs@vger.kernel.org" <linux-bcachefs@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
-	"linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-	"linux-erofs@lists.ozlabs.org" <linux-erofs@lists.ozlabs.org>,
-	"linux-f2fs-devel@lists.sourceforge.net" <linux-f2fs-devel@lists.sourceforge.net>,
-	"linux-fscrypt@vger.kernel.org" <linux-fscrypt@vger.kernel.org>,
-	"linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-	"linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-	"linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-	"linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-	"linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-	"linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-	"linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-	"linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-	"linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-	"nbd@other.debian.org" <nbd@other.debian.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"ntb@lists.linux.dev" <ntb@lists.linux.dev>,
-	"open-iscsi@googlegroups.com" <open-iscsi@googlegroups.com>,
-	"oss-drivers@corigine.com" <oss-drivers@corigine.com>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"samba-technical@lists.samba.org" <samba-technical@lists.samba.org>,
-	"target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-	"virtualization@lists.linux.dev" <virtualization@lists.linux.dev>,
-	"wireguard@lists.zx2c4.com" <wireguard@lists.zx2c4.com>
-Subject: Re: Performance drop due to alloc_workqueue() misuse and recent
- change
-Message-ID: <ZYKUc7MUGvre2lGQ@slm.duckdns.org>
-References: <dbu6wiwu3sdhmhikb2w6lns7b27gbobfavhjj57kwi2quafgwl@htjcc5oikcr3>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1DD36AFC
+	for <linux-nfs@vger.kernel.org>; Wed, 20 Dec 2023 10:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703066675;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fIGeUN2dP3Kfk2DN6cUDjpJQQIxLf4/llr+ahmqgJ9o=;
+	b=AU4OHWD7R/sp36AIAV17b9y9f+FcESgvDhnCeyb0q9WldF1YGOSDRX6qU0K2zrOKtgDOKv
+	J0dDxG+EyUKagF6hvB8v+C3P1rzoDje5BIeSp5l+q59QIKeXp8W7JVhDPnCkHG3dr28e9g
+	uHZXq91m6RPLGUedbVtRx8thgMRpDjI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-371-MZjr-7LVPD-4eoRcMCQdwA-1; Wed, 20 Dec 2023 05:04:31 -0500
+X-MC-Unique: MZjr-7LVPD-4eoRcMCQdwA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 86329101A52A;
+	Wed, 20 Dec 2023 10:04:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.39.195.169])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 8BFAB51D5;
+	Wed, 20 Dec 2023 10:04:27 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ZXxUx_nh4HNTaDJx@codewreck.org>
+References: <ZXxUx_nh4HNTaDJx@codewreck.org> <20231213152350.431591-1-dhowells@redhat.com> <20231215-einziehen-landen-94a63dd17637@brauner>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
+    Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+    linux-mm@kvack.org, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 00/39] netfs, afs, 9p: Delegate high-level I/O to netfslib
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dbu6wiwu3sdhmhikb2w6lns7b27gbobfavhjj57kwi2quafgwl@htjcc5oikcr3>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1384978.1703066666.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 20 Dec 2023 10:04:26 +0000
+Message-ID: <1384979.1703066666@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Hello, again.
+Dominique Martinet <asmadeus@codewreck.org> wrote:
 
-On Mon, Dec 04, 2023 at 04:03:47PM +0000, Naohiro Aota wrote:
-...
-> In summary, we misuse max_active, considering it is a global limit. And,
-> the recent commit introduced a huge performance drop in some cases.  We
-> need to review alloc_workqueue() usage to check if its max_active setting
-> is proper or not.
+> I'll go back to dhowell's tree to finally test 9p a bit,
+> sorry for lack of involvement just low on time all around.
 
-Can you please test the following branch?
+I've rebased my tree on -rc6 rather than linux-next for Christian to pull.
 
- https://git.kernel.org/pub/scm/linux/kernel/git/tj/wq.git unbound-system-wide-max_active
+Ganesha keeps falling over:
 
-Thanks.
+[root@carina build]# valgrind ./ganesha.nfsd -L /var/log/ganesha/ganesha.l=
+og -f /etc/ganesha/ganesha.conf -N NIV_EVENT -F
+=3D=3D38960=3D=3D Memcheck, a memory error detector
+=3D=3D38960=3D=3D Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward=
+ et al.
+=3D=3D38960=3D=3D Using Valgrind-3.22.0 and LibVEX; rerun with -h for copy=
+right info
+=3D=3D38960=3D=3D Command: ./ganesha.nfsd -L /var/log/ganesha/ganesha.log =
+-f /etc/ganesha/ganesha.conf -N NIV_EVENT -F
+=3D=3D38960=3D=3D =
 
--- 
-tejun
+=3D=3D38960=3D=3D Thread 138:
+=3D=3D38960=3D=3D Invalid read of size 4
+=3D=3D38960=3D=3D    at 0x4DC32D6: pthread_cond_signal@@GLIBC_2.3.2 (pthre=
+ad_cond_signal.c:41)
+=3D=3D38960=3D=3D    by 0x489700C: sync_cb (fsal_helper.c:1837)
+=3D=3D38960=3D=3D    by 0x49D79DF: mdc_read_super_cb (mdcache_file.c:559)
+=3D=3D38960=3D=3D    by 0x49D7AC5: mdc_read_cb (mdcache_file.c:582)
+=3D=3D38960=3D=3D    by 0x7B4B81F: vfs_read2 (file.c:1317)
+=3D=3D38960=3D=3D    by 0x49D7BCF: mdcache_read2 (mdcache_file.c:617)
+=3D=3D38960=3D=3D    by 0x4897173: fsal_read (fsal_helper.c:1849)
+=3D=3D38960=3D=3D    by 0x4A10FD4: _9p_read (9p_read.c:134)
+=3D=3D38960=3D=3D    by 0x4A0A024: _9p_process_buffer (9p_interpreter.c:18=
+1)
+=3D=3D38960=3D=3D    by 0x4A09DCB: _9p_tcp_process_request (9p_interpreter=
+.c:133)
+=3D=3D38960=3D=3D    by 0x48CE182: _9p_execute (9p_dispatcher.c:315)
+=3D=3D38960=3D=3D    by 0x48CE508: _9p_worker_run (9p_dispatcher.c:412)
+=3D=3D38960=3D=3D  Address 0x24 is not stack'd, malloc'd or (recently) fre=
+e'd
+=3D=3D38960=3D=3D =
+
+=3D=3D38960=3D=3D =
+
+=3D=3D38960=3D=3D Process terminating with default action of signal 11 (SI=
+GSEGV): dumping core
+=3D=3D38960=3D=3D  Access not within mapped region at address 0x24
+=3D=3D38960=3D=3D    at 0x4DC32D6: pthread_cond_signal@@GLIBC_2.3.2 (pthre=
+ad_cond_signal.c:41)
+=3D=3D38960=3D=3D    by 0x489700C: sync_cb (fsal_helper.c:1837)
+=3D=3D38960=3D=3D    by 0x49D79DF: mdc_read_super_cb (mdcache_file.c:559)
+=3D=3D38960=3D=3D    by 0x49D7AC5: mdc_read_cb (mdcache_file.c:582)
+=3D=3D38960=3D=3D    by 0x7B4B81F: vfs_read2 (file.c:1317)
+=3D=3D38960=3D=3D    by 0x49D7BCF: mdcache_read2 (mdcache_file.c:617)
+=3D=3D38960=3D=3D    by 0x4897173: fsal_read (fsal_helper.c:1849)
+=3D=3D38960=3D=3D    by 0x4A10FD4: _9p_read (9p_read.c:134)
+=3D=3D38960=3D=3D    by 0x4A0A024: _9p_process_buffer (9p_interpreter.c:18=
+1)
+=3D=3D38960=3D=3D    by 0x4A09DCB: _9p_tcp_process_request (9p_interpreter=
+.c:133)
+=3D=3D38960=3D=3D    by 0x48CE182: _9p_execute (9p_dispatcher.c:315)
+=3D=3D38960=3D=3D    by 0x48CE508: _9p_worker_run (9p_dispatcher.c:412)
+
+David
+
 
