@@ -1,361 +1,289 @@
-Return-Path: <linux-nfs+bounces-767-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-768-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08BE981B8F2
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Dec 2023 14:56:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AA2EC81B9A1
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Dec 2023 15:34:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8624E1F212A4
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Dec 2023 13:56:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 343CA1F21AEC
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Dec 2023 14:34:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4910459912;
-	Thu, 21 Dec 2023 13:46:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9A3A1D69C;
+	Thu, 21 Dec 2023 14:33:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZqEfa2V"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OFznI+7r";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aeG3nkwl"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980B258239
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Dec 2023 13:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703166372;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ItkjwwDsVZ/xObdgjN/x4hTsPTz5qF6sCues37aotyE=;
-	b=GZqEfa2Vgifa7u//BRhsFRQFQ9iV6Zr0WXcBMpUbfNHJiHjR1Si5TtcuOP87Obf7BdiJaR
-	mzogN0m9hLDzph0YGQFO4plUonkRR3JJbzSlUL+i+dX3ea/Ppshtwr+vVSLxtnWOtvxru9
-	CIPencZaI0TdJcDb82R1Hc7YltlsPdM=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-249-IfkceYV4N4O4lWcsvNwL0Q-1; Thu, 21 Dec 2023 08:46:09 -0500
-X-MC-Unique: IfkceYV4N4O4lWcsvNwL0Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D181185A781;
-	Thu, 21 Dec 2023 13:46:08 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.39.195.169])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id F30DF3C25;
-	Thu, 21 Dec 2023 13:46:05 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Markus Suvanto <markus.suvanto@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>
-Cc: David Howells <dhowells@redhat.com>,
-	linux-afs@lists.infradead.org,
-	keyrings@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Wang Lei <wang840925@gmail.com>,
-	Jeff Layton <jlayton@redhat.com>,
-	Steve French <sfrench@us.ibm.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	netdev@vger.kernel.org
-Subject: [PATCH v4 3/3] keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry
-Date: Thu, 21 Dec 2023 13:45:30 +0000
-Message-ID: <20231221134558.1659214-4-dhowells@redhat.com>
-In-Reply-To: <20231221134558.1659214-1-dhowells@redhat.com>
-References: <20231221134558.1659214-1-dhowells@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30797816
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Dec 2023 14:33:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BLDOkLo028555;
+	Thu, 21 Dec 2023 14:33:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=corp-2023-11-20;
+ bh=/74Dbz2CdL4aaZWe0NE+i4ia1tjFZinUC2aP4mKQ3N4=;
+ b=OFznI+7rsB9kgW87amPGqEERzVE9TJG/YmGxFr6HUk6U3GsR7zyy4inpJwiX2igvRevd
+ JZAoG8iEqs5aF8itYceIuuv5BrrPPwkKvgnjviytrV5jZPp73d/Zs7tVGigbXGafdNhG
+ p87K4x4mWx66xBIsGFsFgW2e8KX8EO5O08BqLF8qu4FaKdoyF24ho8YBuzmiArrMfRk9
+ 5faH4MD1G1AFEqHCzq2BgQ5MLP+hs7/NfrCqiHh1g0PlVdD/xzmcS+Kxvpx04OBoa3CI
+ QiW2af0fuRR4ErYpORZ5uvoi1WN99jCE6ZV5mTcrHpbJLNE9T+7spiZdjcJ861uXwMFb EA== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3v4atx1axc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Dec 2023 14:33:50 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BLDYjwP024087;
+	Thu, 21 Dec 2023 14:33:49 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2041.outbound.protection.outlook.com [104.47.56.41])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3v12bb7rx4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 21 Dec 2023 14:33:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DYnqHkQ3SC7tdp/IKtbxLceVw59H6dl21Mlr4x9wwYtTtfr3SjEtrzuNqXPRZlUCOuGgfhjJTgE7WPR8U+BzBcnfCxHuRH1RWl0KqvloJJ+Sv17bQ14ZWLC5mKwVvcrS1Yxw8gP/KAvzq37Z3q3S7L+ZOT1dosmXBtUoKPxW28HYAdf+0hQxqRpD0PY1HO5rpp75rwIXoTHYRqpPiNxhhRhXZjPwJ2lLaIlzNXlNtOu9IfTN7bVXjLrQLWnPJu30uGVA4MRu6zV/nl6aSsc3po4N0jV1qIwPfZP62LW2VODQ6lsnRnJm9XT9wgI5nse/KXLtVNqFn7F8piDe4P20lA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/74Dbz2CdL4aaZWe0NE+i4ia1tjFZinUC2aP4mKQ3N4=;
+ b=hFTlOC5QgVk4l7T1aEWoj2qyg+2qTapEKx3f0oHLdRW/38+5VdFybWBJ5CZkUmcH4ZnYRT2IBQ/6Hzf6rXArcce9yO8a7s+1rB4DPD5pl8P9kvTw0cH8xoXwT6wElxm/eYDL1Mfq+9DHGAFwqDgGeIjzGJ9sLhBEDj2s1LQOK244nPvNaqyCMYSDSO2G/OAFfqHRceGbl3ywnM6+57Iy9QyVi41S9h1JxCeLoZPhlifolkFG1/YMdDDFzNVPV80JAS9yRb0YSPynZdLYo0jc7C41vR+Rtdow2WnJx4VzFIWnEAxZw+8OV+xWnSRVlJvNhSGVfsTNzFVZj752ke8m+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/74Dbz2CdL4aaZWe0NE+i4ia1tjFZinUC2aP4mKQ3N4=;
+ b=aeG3nkwllRTWti9v/a3k9JYcx1TfbGLC+JYzMEXxTZ3vtGOmEt6rlxX+cxmshnw0GZ2NUhYL5v/H6TjLIO4Og9umZAgZz9U8PMWRPjhgyV6eA01DrFYOWoe7WPKgVlQZTKAoTYJDP2QmS9FYdx2dWlasCoV1sdD86ZY0u1MNwzs=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SA2PR10MB4730.namprd10.prod.outlook.com (2603:10b6:806:117::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.18; Thu, 21 Dec
+ 2023 14:33:44 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::360b:b3c0:c5a9:3b3c]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::360b:b3c0:c5a9:3b3c%4]) with mapi id 15.20.7113.019; Thu, 21 Dec 2023
+ 14:33:44 +0000
+Date: Thu, 21 Dec 2023 09:33:41 -0500
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Martin Wege <martin.l.wege@gmail.com>
+Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: NFSv4 alternate data streams?
+Message-ID: <ZYRMxTWAdtXbe6in@tissot.1015granger.net>
+References: <CANH4o6PeiV+ba0uLVzAnbrA3WtG8VSkvjA1_epfLCVyH-r-pJw@mail.gmail.com>
+ <DBD9B468-6FF2-4806-8706-EE679BF69838@oracle.com>
+ <CANH4o6MGLTCYuDBZfyrDn7OpD=HcUG9KcY8Qhhv5mzHj4Jr03Q@mail.gmail.com>
+ <3DF544D4-EFBD-4C0B-9856-91A3092A26B0@oracle.com>
+ <CANH4o6OQgAVVs8chSxgw9mWsn9SC9_B8tZzTNDPNvGnT4naeFQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANH4o6OQgAVVs8chSxgw9mWsn9SC9_B8tZzTNDPNvGnT4naeFQ@mail.gmail.com>
+X-ClientProxiedBy: CH2PR14CA0048.namprd14.prod.outlook.com
+ (2603:10b6:610:56::28) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|SA2PR10MB4730:EE_
+X-MS-Office365-Filtering-Correlation-Id: adeb1675-39dc-4cb7-42bc-08dc0231d583
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	5+5BOdFVHj5exSqXKKrp/HFUbRf24aV3oxsZykyZfF7oErFxQ6NK01Rz6ecG/MVWAo/nfO6/6VmRqa3t7EI6GX+ra/1wcZ5OuQhRiSvEvkntQdCPQUX5V6G7OYk78Xbr5gUn+h7BPrZ+JaRo+FsmECTqCI3eV5mVJOG0I8KjvPZXI05/4pBkah/6r8RDKf+Kki2rjSZ+RAuc48Y+4pl3ROlXYhZ+V3GW1GsiuyP0yaBsSTsizzW7+G2YQp5JlMNmaSAl2NoaJb7+sGvwxdhpjTVe9XAWRhOYrwA/7amLRIcv5rhBqUJ8y8pL/oiY77L0vpK+Nr9hh5APi0vu070Q0MN8ZIZhULYU8+5Hk4QzMCtusGXVvLkx8m6dA+F3LH1esfGJAagg+439CgSyVLQpZiFwd2WHPDA9/79IHHL/9SN9kzNtlWg2K5QZwQGiYCnuQtVx8EEdA3lwCK+iOlrnvTpkBRnPbqWEDf9uHpguFSAneThs8kSrfvEvBCFC4iZgpnvv/pfH1syHgjRDvcGlYKj4TyXaH0KZcdmtM9ZuXS8=
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(39860400002)(376002)(346002)(396003)(366004)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(6512007)(41300700001)(38100700002)(6666004)(2906002)(86362001)(9686003)(966005)(66476007)(6916009)(8676002)(66946007)(66556008)(8936002)(26005)(5660300002)(6506007)(6486002)(4326008)(83380400001)(53546011)(316002)(478600001)(44832011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?YzY3alNQTzBITFpXL3A0ajl2VUIvYXQ3cGk1blg3UTAyODVwMnlvelBTcENr?=
+ =?utf-8?B?WlRFeDFHWTMxa3FrZHJyd242WDUrdEYyY1JOSmV1ZEN0aVYxaWgxUlhNdmU0?=
+ =?utf-8?B?NnFOVFBvdURtbk9UUkxGZ0tSWExmS0t6ZEJjNm5nRzRGbDhRNnMrdjY4WUM2?=
+ =?utf-8?B?RmFTYko4Ymw3V3ZzM0tjeUk3dXdWR2Y2d3pmdW8rWEp6ZGp1QWF2YThpSWw3?=
+ =?utf-8?B?UEN6ZEZ4ekpUdVUweE9IMTdabFpOczd0d2dacUZNM25CeGhyN25vaXY2SW9U?=
+ =?utf-8?B?NXdpc3oxU0dONHlwdWdzNE5nT24vUUFmOXdrb05IUUdVM3Z3Q1B6bjAyNWF2?=
+ =?utf-8?B?VUtaK3BUaS9yUWdJVDZacTlvQmVsTE8zeWYrSkRHS05tNzRBekVmeDJDb0ph?=
+ =?utf-8?B?VCt0dUgzL3NPaEhadlVDVTZPYU9yQ2JVbjlrWndCVDVsYUNQeG9UcDBLNk1n?=
+ =?utf-8?B?ZGhBdStyeFFaMFNkeWJMdjRhWUhNL2Rvem1sQVEyaUsyOTVjVXVnNjFsdTVS?=
+ =?utf-8?B?TDZaL1ovaUdIVzA5Y2VBcndOYmg5RTVvcDZnb2M5NGwzU2NXYzZTUWpzLzlR?=
+ =?utf-8?B?V1E4OVNRM1dFU2p4YXYwSkxWWCtXYkplZkpIUXFoZVJuWHlYamJiYTFFVk80?=
+ =?utf-8?B?NVhUSTBiMzRaTC93ZkxoYXRDdVpXZldNb0RMS3VIc3B0d252dzZXbnNST3J0?=
+ =?utf-8?B?azNCYjNuR0t6MzlNS0Q0ODFqYVEwd2xCdDdCRkJCQnJGTGF0c1Z0dUhiVW1D?=
+ =?utf-8?B?MC93cWUzZE1GWFVKb09rVm00M0hhT0NoVWRGenRCN3lNQWpqbmU3ZWdZcGxo?=
+ =?utf-8?B?bXdtV2tlb1o5NEMzWFVYWVdhZmpwM1dhNEpUQlRQZzZVd0lwa1d1MnNxN2Rv?=
+ =?utf-8?B?OTI5K1VNaWltYm1xRWN1SWlwNm9qNy9OcHRkOURMV1RUd2VVcHpNdmg0RGg2?=
+ =?utf-8?B?Ny9tbEJ6ZjRaMk9tYkZwTDFBMVY0MkhwR3hkRm5GY1RIb0k4Y2Ixc0V1M1dW?=
+ =?utf-8?B?QTAxSk1Ba2diOGphSE9UblZiRWhSRTRNdG9JOXF5R1U4c1ltNk1taXRBUWIz?=
+ =?utf-8?B?TElNMDBJZVczNlBIN2FScm9sZlM0OXV4cTU3Y2N6YUJYOHhPNFZFRTdFTkZO?=
+ =?utf-8?B?MU01cU42TVlsb2dyMWwvNHB4V1p1KzZzWUwxK0QzcGhpeVBXenV6MGhwN3BM?=
+ =?utf-8?B?Rkd5Zkk3WTV4SFVQcWtYUmhtTWNwWFlnaUJTVG9zZzRuck5GdEVXZ2lPYk9S?=
+ =?utf-8?B?emFqYVBMWjh6elUydjIxL3lXZFZWb090dHZxczFEM1N1ZzdPbGh6eEp5YTlZ?=
+ =?utf-8?B?aVJpamVVdE8yVmJSam1aTWZMMGRER1FSNEJnbjhuU21JV3YwYlB3RjNqelo1?=
+ =?utf-8?B?aHFlUFRQNWpMWW94VXJnb3ZmS0lwZlUvQ3RLbVIzVFJXWmxYbzc0R3NpZmUy?=
+ =?utf-8?B?Zno3NWFWNnRTUkg1MDAyUHovWWFha2hqSkdjb0twcVdLMllYWUFCeUdMZnpW?=
+ =?utf-8?B?d2F0dFJvaXZHRWE0WXhXbzdsSmNkRU5pNmRWSkROeUhjWk9vQlhaMzU1UEhG?=
+ =?utf-8?B?WXRnamtnNlArSnZxaVJvYkZBWVhpUDE1U2l3UXZZUWsrY2lqTEgzK01rU2lt?=
+ =?utf-8?B?M25VQzM2NXRIMmhyMGRXbDFQbDdrRzZGNU56Z29Qb3VpYWlGSmZKNk15azdq?=
+ =?utf-8?B?ajhBYXN6amRsTHJVSytRSmNuMCtTMXgwN3dkRkRMWGVMSVhXYUlUeW9jNjFY?=
+ =?utf-8?B?a3Q3QWR5QkFpK0syckpNU00yZUFsS0hJVDNiTW8rVWhBOEpqeklOV29SVVV4?=
+ =?utf-8?B?aDRsK2hwSTVqVWlSb2VzQ2dXTzdoTGJkdDFqdStoTDJPUkFWdjZKd3JuUW9z?=
+ =?utf-8?B?bXRFVlV2bGdFdmpOVzMwMGw5VWNneFdaVVBYR2ljbnNVOEcrL052c1JnNG1C?=
+ =?utf-8?B?RlNYTWRpOG1nTExWTHJvbUdycmhseHhCUWdoSS9OQWhIMzZLZG1UYm9SNU1X?=
+ =?utf-8?B?L3BkNmJCMjhsb0tKNHZDQ1lyQUEyTTZOWVJwV1Z1MFpreHhVRVJDcmg1eHly?=
+ =?utf-8?B?Nnh5YmZiSFNycGMzQUJRUmpEM3lUcUN6L0tqSFZ4cjRlY3FZazFpTmV0U216?=
+ =?utf-8?B?akIvc3BpT2V0aDVTTFRTb1BKMkR0WWxMMzNSeHhkTmVnanNSMVFuTlZVVmla?=
+ =?utf-8?B?OFE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	vnhKjub8qw0nB1FOnCaGXUF9KOcMuxkwhw2M0RH/5cS+5lUDl598Ajow/qvXT8mMSNCfju+24C+YG6vdtSoJmnKRTFN/KJ/4PYbmz8PzO8CIVhNJ/oFKVJS0C3pTOsSV7eoMhwtvp+Cy7qz9KHppcc2jsXOPEb+tQk/Y4Gu0ivnjQWq1TShgFFHHoEAYzePs9oJibkqv08bvbDwK3e7PcLO1JsO4f1T5fSfSJQoGva/HQa4OvW7LqyVP6P+ZSvc/4WWY4MD7wluJRLAoECLCufwAipLf4jgAZMj0CHZtqLoFliqQymb0HloJWjwT1EZO3/h710/wTRmuYr3TOl7peJlW7fJXUa3153KmzQIJx81UTLJubXkLTIDMVM3c6YUUY8GW377kxdvKdVFeH4L+7RgDWVxl0mkkTDk9tJUpeR+hwtr7RSQFxOV08dqTWEQZ5Xp76LpP7NwAhVSBi7YDc5Op9Ct0o2pLvwixEj4LflIhlYCf2tolj5eg6b/y/zl88s8x+dG5CYMEHlBOs+U41mjQfCO1FDj8oh8xyUh6plBuVjbOBvbaK76v/iJNRn7vsYv1JKcdS4uIKT1VUG7/AlgGhZl2G2Vd3CBKMxbBKbI=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: adeb1675-39dc-4cb7-42bc-08dc0231d583
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Dec 2023 14:33:44.0071
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KkUohjv5qS6gEldY8JWXT5VkU2rpsRH2jupls1jbExrUYiY36FCGOXk1uMSLtweP5c1Q0PqLZXcGXQLiTsWxAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4730
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-21_07,2023-12-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
+ mlxlogscore=922 adultscore=0 suspectscore=0 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312210110
+X-Proofpoint-ORIG-GUID: aJt5B3m8ZAsBasVrQEckMcS_9ziVr93s
+X-Proofpoint-GUID: aJt5B3m8ZAsBasVrQEckMcS_9ziVr93s
 
-If a key has an expiration time, then when that time passes, the key is
-left around for a certain amount of time before being collected (5 mins by
-default) so that EKEYEXPIRED can be returned instead of ENOKEY.  This is a
-problem for DNS keys because we want to redo the DNS lookup immediately at
-that point.
+On Thu, Dec 21, 2023 at 01:26:31PM +0100, Martin Wege wrote:
+> On Mon, Dec 18, 2023 at 3:49 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+> >
+> >
+> > > On Dec 18, 2023, at 3:33 AM, Martin Wege <martin.l.wege@gmail.com> wrote:
+> > >
+> > > On Thu, Nov 30, 2023 at 3:03 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+> > >>
+> > >>> On Nov 29, 2023, at 10:59 PM, Martin Wege <martin.l.wege@gmail.com> wrote:
+> > >>>
+> > >>> Hello,
+> > >>>
+> > >>> does the Linux NFSv4 server has support for alternate data streams?
+> > >>> Solaris surely has, but we want to replace it. As our Windows
+> > >>> applications (DB) rely on alternate data streams the question is
+> > >>> whether the Linux NFSv4 server can fully replace the Solaris NFSv4
+> > >>> server in that respect.
+> > >>
+> > >> Hi Martin -
+> > >>
+> > >> Linux NFSD does not support alternate data streams because none of
+> > >> the underlying file systems on Linux implement them. Very much like
+> > >> the HIDDEN and ARCHIVE attributes.
+> > >>
+> > >> I believe Solaris and their storage appliance are the only
+> > >> implementations of NFS that do support them, since they have
+> > >> implemented streams in ZFS.
+> > >>
+> > >> Instead, Linux NFSD implements extended attributes (that's what
+> > >> our native file systems and user space support). I realize that
+> > >> the semantics of those are not the same as stream support.
+> > >
+> > > SMB server on Linux supports Alternate Data Streams -
+> >
+> > I was not aware of that support. I need more information about
+> > how that is done.
+> >
+> >
+> > > why can't the same be done for NFSv4?
+> >
+> > I mean, yes the standard NFSv4 protocol provides a way to access
+> > these, and NFSD can be made to support that. But where would it
+> > store that content?
+> >
+> > NFSD can support what is readily available from the VFS API. If
+> > alternate streams were to become a premier part of the Linux
+> > file system stack, it would be straightforward for NFSD to
+> > support them.
+> >
+> > IOW first NFSD needs the communities responsible for the VFS and
+> > file systems to implement them. Everyone has to agree on how
+> > these are stored, we can't just make something up. Otherwise
+> > there is no hope for interoperation between local applications
+> > and applications that access these via SMB or NFS.
+> 
+> Yeah, that's a good one(TM). Seriously? You try to pull on a 'John
+> Reiser' on me?
+> for those who do not remember, or are too young. Once upon a time
+> there was ReiserFS-NG, which had support for that, and the VFS people
+> dragged him and his project through the mud for religious reasons.
+> 
+> The 'religion' here being that Alternate Data Streams are from
+> WIndows, and therefore this is BAD(TM), EVIL(TM), and SATAN(TM).Even
+> if someone would come up with a serious, technical sound patch they
+> would just bicker at the patches so long and so often that they just
+> rot. Death by a thousand cuts (or nasty review comments). Remember,
+> for faith people will do anything, just look up the "dark ages" in
+> Europe.
+> And just the tip of the iceberg, I bet someone will deliver the
+> argument that John Reiser murdered his wife, children and family dog,
+> and that's why Alternate Data Streams will never be part of VFS.
+> 
+> So back to the topic: SAMBA people just support ADS by sticking a :
+> between filename and stream name on the SAMBA server side
+> ("filename:adsname"), and are happy with that.
+> Why can't NFSv4 do the same?
 
-Fix this by allowing key types to be marked such that keys of that type
-don't have this extra period, but are reclaimed as soon as they expire and
-turn this on for dns_resolver-type keys.  To make this easier to handle,
-key->expiry is changed to be permanent if TIME64_MAX rather than 0.
+IIRC ":" is the SMB filename separator.
 
-Furthermore, give such new-style negative DNS results a 1s default expiry
-if no other expiry time is set rather than allowing it to stick around
-indefinitely.  This shouldn't be zero as ls will follow a failing stat call
-immediately with a second with AT_SYMLINK_NOFOLLOW added.
+NFS can't use ":" to denote an alternate stream because ":" is a
+character that is legal and valid to use in POSIX (and NFS)
+filenames. Therefore...
 
-Fixes: 1a4240f4764a ("DNS: Separate out CIFS DNS Resolver code")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Markus Suvanto <markus.suvanto@gmail.com>
-cc: Wang Lei <wang840925@gmail.com>
-cc: Jeff Layton <jlayton@redhat.com>
-cc: Steve French <sfrench@us.ibm.com>
-cc: Marc Dionne <marc.dionne@auristor.com>
-cc: Jarkko Sakkinen <jarkko@kernel.org>
-cc: "David S. Miller" <davem@davemloft.net>
-cc: Eric Dumazet <edumazet@google.com>
-cc: Jakub Kicinski <kuba@kernel.org>
-cc: Paolo Abeni <pabeni@redhat.com>
-cc: linux-afs@lists.infradead.org
-cc: linux-cifs@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: ceph-devel@vger.kernel.org
-cc: keyrings@vger.kernel.org
-cc: netdev@vger.kernel.org
----
+... the NFSv4 protocol /does/ support alternate data streams as
+a separate protocol element. They are referred to in the standard
+as "named attributes". See:
 
-Notes:
-    Changes
-    =======
-    ver #4)
-     - Reduce the negative timeout from 10s to 1s.
-    
-    ver #3)
-     - Don't add to TIME64_MAX (ie. permanent) when checking expiry time.
+https://www.rfc-editor.org/rfc/rfc8881#name-named-attributes
 
- include/linux/key-type.h   |  1 +
- net/dns_resolver/dns_key.c | 10 +++++++++-
- security/keys/gc.c         | 31 +++++++++++++++++++++----------
- security/keys/internal.h   | 11 ++++++++++-
- security/keys/key.c        | 15 +++++----------
- security/keys/proc.c       |  2 +-
- 6 files changed, 47 insertions(+), 23 deletions(-)
 
-diff --git a/include/linux/key-type.h b/include/linux/key-type.h
-index 7d985a1dfe4a..5caf3ce82373 100644
---- a/include/linux/key-type.h
-+++ b/include/linux/key-type.h
-@@ -73,6 +73,7 @@ struct key_type {
- 
- 	unsigned int flags;
- #define KEY_TYPE_NET_DOMAIN	0x00000001 /* Keys of this type have a net namespace domain */
-+#define KEY_TYPE_INSTANT_REAP	0x00000002 /* Keys of this type don't have a delay after expiring */
- 
- 	/* vet a description */
- 	int (*vet_description)(const char *description);
-diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
-index 01e54b46ae0b..2a6d363763a2 100644
---- a/net/dns_resolver/dns_key.c
-+++ b/net/dns_resolver/dns_key.c
-@@ -91,6 +91,7 @@ const struct cred *dns_resolver_cache;
- static int
- dns_resolver_preparse(struct key_preparsed_payload *prep)
- {
-+	const struct dns_server_list_v1_header *v1;
- 	const struct dns_payload_header *bin;
- 	struct user_key_payload *upayload;
- 	unsigned long derrno;
-@@ -122,6 +123,13 @@ dns_resolver_preparse(struct key_preparsed_payload *prep)
- 			return -EINVAL;
- 		}
- 
-+		v1 = (const struct dns_server_list_v1_header *)bin;
-+		if ((v1->status != DNS_LOOKUP_GOOD &&
-+		     v1->status != DNS_LOOKUP_GOOD_WITH_BAD)) {
-+			if (prep->expiry == TIME64_MAX)
-+				prep->expiry = ktime_get_real_seconds() + 1;
-+		}
-+
- 		result_len = datalen;
- 		goto store_result;
- 	}
-@@ -314,7 +322,7 @@ static long dns_resolver_read(const struct key *key,
- 
- struct key_type key_type_dns_resolver = {
- 	.name		= "dns_resolver",
--	.flags		= KEY_TYPE_NET_DOMAIN,
-+	.flags		= KEY_TYPE_NET_DOMAIN | KEY_TYPE_INSTANT_REAP,
- 	.preparse	= dns_resolver_preparse,
- 	.free_preparse	= dns_resolver_free_preparse,
- 	.instantiate	= generic_key_instantiate,
-diff --git a/security/keys/gc.c b/security/keys/gc.c
-index 3c90807476eb..eaddaceda14e 100644
---- a/security/keys/gc.c
-+++ b/security/keys/gc.c
-@@ -66,6 +66,19 @@ void key_schedule_gc(time64_t gc_at)
- 	}
- }
- 
-+/*
-+ * Set the expiration time on a key.
-+ */
-+void key_set_expiry(struct key *key, time64_t expiry)
-+{
-+	key->expiry = expiry;
-+	if (expiry != TIME64_MAX) {
-+		if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
-+			expiry += key_gc_delay;
-+		key_schedule_gc(expiry);
-+	}
-+}
-+
- /*
-  * Schedule a dead links collection run.
-  */
-@@ -176,7 +189,6 @@ static void key_garbage_collector(struct work_struct *work)
- 	static u8 gc_state;		/* Internal persistent state */
- #define KEY_GC_REAP_AGAIN	0x01	/* - Need another cycle */
- #define KEY_GC_REAPING_LINKS	0x02	/* - We need to reap links */
--#define KEY_GC_SET_TIMER	0x04	/* - We need to restart the timer */
- #define KEY_GC_REAPING_DEAD_1	0x10	/* - We need to mark dead keys */
- #define KEY_GC_REAPING_DEAD_2	0x20	/* - We need to reap dead key links */
- #define KEY_GC_REAPING_DEAD_3	0x40	/* - We need to reap dead keys */
-@@ -184,21 +196,17 @@ static void key_garbage_collector(struct work_struct *work)
- 
- 	struct rb_node *cursor;
- 	struct key *key;
--	time64_t new_timer, limit;
-+	time64_t new_timer, limit, expiry;
- 
- 	kenter("[%lx,%x]", key_gc_flags, gc_state);
- 
- 	limit = ktime_get_real_seconds();
--	if (limit > key_gc_delay)
--		limit -= key_gc_delay;
--	else
--		limit = key_gc_delay;
- 
- 	/* Work out what we're going to be doing in this pass */
- 	gc_state &= KEY_GC_REAPING_DEAD_1 | KEY_GC_REAPING_DEAD_2;
- 	gc_state <<= 1;
- 	if (test_and_clear_bit(KEY_GC_KEY_EXPIRED, &key_gc_flags))
--		gc_state |= KEY_GC_REAPING_LINKS | KEY_GC_SET_TIMER;
-+		gc_state |= KEY_GC_REAPING_LINKS;
- 
- 	if (test_and_clear_bit(KEY_GC_REAP_KEYTYPE, &key_gc_flags))
- 		gc_state |= KEY_GC_REAPING_DEAD_1;
-@@ -233,8 +241,11 @@ static void key_garbage_collector(struct work_struct *work)
- 			}
- 		}
- 
--		if (gc_state & KEY_GC_SET_TIMER) {
--			if (key->expiry > limit && key->expiry < new_timer) {
-+		expiry = key->expiry;
-+		if (expiry != TIME64_MAX) {
-+			if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
-+				expiry += key_gc_delay;
-+			if (expiry > limit && expiry < new_timer) {
- 				kdebug("will expire %x in %lld",
- 				       key_serial(key), key->expiry - limit);
- 				new_timer = key->expiry;
-@@ -276,7 +287,7 @@ static void key_garbage_collector(struct work_struct *work)
- 	 */
- 	kdebug("pass complete");
- 
--	if (gc_state & KEY_GC_SET_TIMER && new_timer != (time64_t)TIME64_MAX) {
-+	if (new_timer != TIME64_MAX) {
- 		new_timer += key_gc_delay;
- 		key_schedule_gc(new_timer);
- 	}
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 471cf36dedc0..2cffa6dc8255 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -167,6 +167,7 @@ extern unsigned key_gc_delay;
- extern void keyring_gc(struct key *keyring, time64_t limit);
- extern void keyring_restriction_gc(struct key *keyring,
- 				   struct key_type *dead_type);
-+void key_set_expiry(struct key *key, time64_t expiry);
- extern void key_schedule_gc(time64_t gc_at);
- extern void key_schedule_gc_links(void);
- extern void key_gc_keytype(struct key_type *ktype);
-@@ -215,10 +216,18 @@ extern struct key *key_get_instantiation_authkey(key_serial_t target_id);
-  */
- static inline bool key_is_dead(const struct key *key, time64_t limit)
- {
-+	time64_t expiry = key->expiry;
-+
-+	if (expiry != TIME64_MAX) {
-+		if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
-+			expiry += key_gc_delay;
-+		if (expiry <= limit)
-+			return true;
-+	}
-+
- 	return
- 		key->flags & ((1 << KEY_FLAG_DEAD) |
- 			      (1 << KEY_FLAG_INVALIDATED)) ||
--		(key->expiry > 0 && key->expiry <= limit) ||
- 		key->domain_tag->removed;
- }
- 
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 0260a1902922..5b10641debd5 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -294,6 +294,7 @@ struct key *key_alloc(struct key_type *type, const char *desc,
- 	key->uid = uid;
- 	key->gid = gid;
- 	key->perm = perm;
-+	key->expiry = TIME64_MAX;
- 	key->restrict_link = restrict_link;
- 	key->last_used_at = ktime_get_real_seconds();
- 
-@@ -463,10 +464,7 @@ static int __key_instantiate_and_link(struct key *key,
- 			if (authkey)
- 				key_invalidate(authkey);
- 
--			if (prep->expiry != TIME64_MAX) {
--				key->expiry = prep->expiry;
--				key_schedule_gc(prep->expiry + key_gc_delay);
--			}
-+			key_set_expiry(key, prep->expiry);
- 		}
- 	}
- 
-@@ -606,8 +604,7 @@ int key_reject_and_link(struct key *key,
- 		atomic_inc(&key->user->nikeys);
- 		mark_key_instantiated(key, -error);
- 		notify_key(key, NOTIFY_KEY_INSTANTIATED, -error);
--		key->expiry = ktime_get_real_seconds() + timeout;
--		key_schedule_gc(key->expiry + key_gc_delay);
-+		key_set_expiry(key, ktime_get_real_seconds() + timeout);
- 
- 		if (test_and_clear_bit(KEY_FLAG_USER_CONSTRUCT, &key->flags))
- 			awaken = 1;
-@@ -723,16 +720,14 @@ struct key_type *key_type_lookup(const char *type)
- 
- void key_set_timeout(struct key *key, unsigned timeout)
- {
--	time64_t expiry = 0;
-+	time64_t expiry = TIME64_MAX;
- 
- 	/* make the changes with the locks held to prevent races */
- 	down_write(&key->sem);
- 
- 	if (timeout > 0)
- 		expiry = ktime_get_real_seconds() + timeout;
--
--	key->expiry = expiry;
--	key_schedule_gc(key->expiry + key_gc_delay);
-+	key_set_expiry(key, expiry);
- 
- 	up_write(&key->sem);
- }
-diff --git a/security/keys/proc.c b/security/keys/proc.c
-index d0cde6685627..4f4e2c1824f1 100644
---- a/security/keys/proc.c
-+++ b/security/keys/proc.c
-@@ -198,7 +198,7 @@ static int proc_keys_show(struct seq_file *m, void *v)
- 
- 	/* come up with a suitable timeout value */
- 	expiry = READ_ONCE(key->expiry);
--	if (expiry == 0) {
-+	if (expiry == TIME64_MAX) {
- 		memcpy(xbuf, "perm", 5);
- 	} else if (now >= expiry) {
- 		memcpy(xbuf, "expd", 5);
+Named attributes are an optional feature of the protocol. That means
+that a standards-compliant NFS server implementation is not required
+to implement them, and there are mechanisms in the protocol for NFS
+clients to detect when that support is present or absent on a
+server.
 
+Linux file systems do not implement named attributes. Rather, they
+implement extended attributes, which are different enough that they
+cannot substitute. For instance, you can use read(2), write(2), and
+lseek(2) on a named attribute. Extended attributes have to be read
+or written in a single operation, and are thus limited in total
+size, and xattr I/O always starts at byte position zero.
+
+There's also no VFS plumbing for named attributes in Linux, and
+no user space API (for applications to use with the NFS client).
+
+There are two file system implementations on Linux that can store
+named attributes: NTFS and ZFS (which is out of tree). But the
+practical matter is that the Linux NFS implementation cannot support
+NFSv4 named attributes until the Linux VFS does.
+
+I'm personally agnostic about named versus extended attributes.
+There's no good-vs-evil here. If the VFS were to grow support, I
+don't have a problem with implementing NFSv4 named attributes in
+NFSD.
+
+
+-- 
+Chuck Lever
 
