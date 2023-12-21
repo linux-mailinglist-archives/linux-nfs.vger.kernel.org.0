@@ -1,81 +1,76 @@
-Return-Path: <linux-nfs+bounces-766-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-767-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D7B681B882
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Dec 2023 14:48:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 08BE981B8F2
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Dec 2023 14:56:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 287A61F23EA3
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Dec 2023 13:48:01 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8624E1F212A4
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Dec 2023 13:56:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF56A651AD;
-	Thu, 21 Dec 2023 13:26:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4910459912;
+	Thu, 21 Dec 2023 13:46:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZFrj173y"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZqEfa2V"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E075765192
-	for <linux-nfs@vger.kernel.org>; Thu, 21 Dec 2023 13:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 980B258239
+	for <linux-nfs@vger.kernel.org>; Thu, 21 Dec 2023 13:46:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703165210;
+	s=mimecast20190719; t=1703166372;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=VsVDmWf3bHekjbj+Ntt1kyKt3F5oWDO+qfCCvuK/nws=;
-	b=ZFrj173ydIQfE/QhTWLbRhmCraIAeK141DCeLMLN59wg0BOmDQPPORifN/hZb03wwxDgeA
-	LYDYVSb/VQkmOII+jbVi/wDgcC/2pQn3AKDgvRw4CsCq/9QQF1MSUDk7noLgSVJ6iKNt8f
-	yHmzc+tDLtF35HmRZeX/T8gs3NXSwuo=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-604-NchH3KuUP5-AF27EmcraTQ-1; Thu,
- 21 Dec 2023 08:26:42 -0500
-X-MC-Unique: NchH3KuUP5-AF27EmcraTQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+	bh=ItkjwwDsVZ/xObdgjN/x4hTsPTz5qF6sCues37aotyE=;
+	b=GZqEfa2Vgifa7u//BRhsFRQFQ9iV6Zr0WXcBMpUbfNHJiHjR1Si5TtcuOP87Obf7BdiJaR
+	mzogN0m9hLDzph0YGQFO4plUonkRR3JJbzSlUL+i+dX3ea/Ppshtwr+vVSLxtnWOtvxru9
+	CIPencZaI0TdJcDb82R1Hc7YltlsPdM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-249-IfkceYV4N4O4lWcsvNwL0Q-1; Thu, 21 Dec 2023 08:46:09 -0500
+X-MC-Unique: IfkceYV4N4O4lWcsvNwL0Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 85A79280D46A;
-	Thu, 21 Dec 2023 13:26:41 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D181185A781;
+	Thu, 21 Dec 2023 13:46:08 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.39.195.169])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0ABB11121313;
-	Thu, 21 Dec 2023 13:26:37 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id F30DF3C25;
+	Thu, 21 Dec 2023 13:46:05 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>,
-	Steve French <smfrench@gmail.com>
+To: Markus Suvanto <markus.suvanto@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>
 Cc: David Howells <dhowells@redhat.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Christian Brauner <christian@brauner.io>,
-	linux-cachefs@redhat.com,
 	linux-afs@lists.infradead.org,
+	keyrings@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wang Lei <wang840925@gmail.com>,
+	Jeff Layton <jlayton@redhat.com>,
+	Steve French <sfrench@us.ibm.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	linux-cifs@vger.kernel.org,
 	linux-nfs@vger.kernel.org,
 	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: [PATCH v5 40/40] 9p: Use netfslib read/write_iter
-Date: Thu, 21 Dec 2023 13:23:35 +0000
-Message-ID: <20231221132400.1601991-41-dhowells@redhat.com>
-In-Reply-To: <20231221132400.1601991-1-dhowells@redhat.com>
-References: <20231221132400.1601991-1-dhowells@redhat.com>
+	netdev@vger.kernel.org
+Subject: [PATCH v4 3/3] keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry
+Date: Thu, 21 Dec 2023 13:45:30 +0000
+Message-ID: <20231221134558.1659214-4-dhowells@redhat.com>
+In-Reply-To: <20231221134558.1659214-1-dhowells@redhat.com>
+References: <20231221134558.1659214-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -83,574 +78,284 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Use netfslib's read and write iteration helpers, allowing netfslib to take
-over the management of the page cache for 9p files and to manage local disk
-caching.  In particular, this eliminates write_begin, write_end, writepage
-and all mentions of struct page and struct folio from 9p.
+If a key has an expiration time, then when that time passes, the key is
+left around for a certain amount of time before being collected (5 mins by
+default) so that EKEYEXPIRED can be returned instead of ENOKEY.  This is a
+problem for DNS keys because we want to redo the DNS lookup immediately at
+that point.
 
-Note that netfslib now offers the possibility of write-through caching if
-that is desirable for 9p: just set the NETFS_ICTX_WRITETHROUGH flag in
-v9inode->netfs.flags in v9fs_set_netfs_context().
+Fix this by allowing key types to be marked such that keys of that type
+don't have this extra period, but are reclaimed as soon as they expire and
+turn this on for dns_resolver-type keys.  To make this easier to handle,
+key->expiry is changed to be permanent if TIME64_MAX rather than 0.
 
-Note also this is untested as I can't get ganesha.nfsd to correctly parse
-the config to turn on 9p support.
+Furthermore, give such new-style negative DNS results a 1s default expiry
+if no other expiry time is set rather than allowing it to stick around
+indefinitely.  This shouldn't be zero as ls will follow a failing stat call
+immediately with a second with AT_SYMLINK_NOFOLLOW added.
 
+Fixes: 1a4240f4764a ("DNS: Separate out CIFS DNS Resolver code")
 Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: v9fs@lists.linux.dev
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
+Tested-by: Markus Suvanto <markus.suvanto@gmail.com>
+cc: Wang Lei <wang840925@gmail.com>
+cc: Jeff Layton <jlayton@redhat.com>
+cc: Steve French <sfrench@us.ibm.com>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Jarkko Sakkinen <jarkko@kernel.org>
+cc: "David S. Miller" <davem@davemloft.net>
+cc: Eric Dumazet <edumazet@google.com>
+cc: Jakub Kicinski <kuba@kernel.org>
+cc: Paolo Abeni <pabeni@redhat.com>
+cc: linux-afs@lists.infradead.org
+cc: linux-cifs@vger.kernel.org
+cc: linux-nfs@vger.kernel.org
+cc: ceph-devel@vger.kernel.org
+cc: keyrings@vger.kernel.org
+cc: netdev@vger.kernel.org
 ---
 
 Notes:
     Changes
     =======
-    ver #5)
-     - Added some missing remote_i_size setting.
-     - Added missing writepages (else mmap write never written back).
+    ver #4)
+     - Reduce the negative timeout from 10s to 1s.
+    
+    ver #3)
+     - Don't add to TIME64_MAX (ie. permanent) when checking expiry time.
 
- fs/9p/vfs_addr.c       | 293 ++++++++++-------------------------------
- fs/9p/vfs_file.c       |  89 ++-----------
- fs/9p/vfs_inode.c      |   5 +-
- fs/9p/vfs_inode_dotl.c |   7 +-
- 4 files changed, 85 insertions(+), 309 deletions(-)
+ include/linux/key-type.h   |  1 +
+ net/dns_resolver/dns_key.c | 10 +++++++++-
+ security/keys/gc.c         | 31 +++++++++++++++++++++----------
+ security/keys/internal.h   | 11 ++++++++++-
+ security/keys/key.c        | 15 +++++----------
+ security/keys/proc.c       |  2 +-
+ 6 files changed, 47 insertions(+), 23 deletions(-)
 
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index 055b672a247d..20f072c18ce9 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -19,12 +19,48 @@
- #include <linux/netfs.h>
- #include <net/9p/9p.h>
- #include <net/9p/client.h>
-+#include <trace/events/netfs.h>
+diff --git a/include/linux/key-type.h b/include/linux/key-type.h
+index 7d985a1dfe4a..5caf3ce82373 100644
+--- a/include/linux/key-type.h
++++ b/include/linux/key-type.h
+@@ -73,6 +73,7 @@ struct key_type {
  
- #include "v9fs.h"
- #include "v9fs_vfs.h"
- #include "cache.h"
- #include "fid.h"
+ 	unsigned int flags;
+ #define KEY_TYPE_NET_DOMAIN	0x00000001 /* Keys of this type have a net namespace domain */
++#define KEY_TYPE_INSTANT_REAP	0x00000002 /* Keys of this type don't have a delay after expiring */
  
-+static void v9fs_upload_to_server(struct netfs_io_subrequest *subreq)
-+{
-+	struct inode *inode = subreq->rreq->inode;
-+	struct v9fs_inode __maybe_unused *v9inode = V9FS_I(inode);
-+	struct p9_fid *fid = subreq->rreq->netfs_priv;
-+	int err;
-+
-+	trace_netfs_sreq(subreq, netfs_sreq_trace_submit);
-+	p9_client_write(fid, subreq->start, &subreq->io_iter, &err);
-+	netfs_write_subrequest_terminated(subreq, err < 0 ? err : subreq->len,
-+					  false);
-+}
-+
-+static void v9fs_upload_to_server_worker(struct work_struct *work)
-+{
-+	struct netfs_io_subrequest *subreq =
-+		container_of(work, struct netfs_io_subrequest, work);
-+
-+	v9fs_upload_to_server(subreq);
-+}
-+
-+/*
-+ * Set up write requests for a writeback slice.  We need to add a write request
-+ * for each write we want to make.
-+ */
-+static void v9fs_create_write_requests(struct netfs_io_request *wreq, loff_t start, size_t len)
-+{
-+	struct netfs_io_subrequest *subreq;
-+
-+	subreq = netfs_create_write_request(wreq, NETFS_UPLOAD_TO_SERVER,
-+					    start, len, v9fs_upload_to_server_worker);
-+	if (subreq)
-+		netfs_queue_write_request(subreq);
-+}
-+
- /**
-  * v9fs_issue_read - Issue a read from 9P
-  * @subreq: The read to make
-@@ -33,14 +69,10 @@ static void v9fs_issue_read(struct netfs_io_subrequest *subreq)
+ 	/* vet a description */
+ 	int (*vet_description)(const char *description);
+diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+index 01e54b46ae0b..2a6d363763a2 100644
+--- a/net/dns_resolver/dns_key.c
++++ b/net/dns_resolver/dns_key.c
+@@ -91,6 +91,7 @@ const struct cred *dns_resolver_cache;
+ static int
+ dns_resolver_preparse(struct key_preparsed_payload *prep)
  {
- 	struct netfs_io_request *rreq = subreq->rreq;
- 	struct p9_fid *fid = rreq->netfs_priv;
--	struct iov_iter to;
--	loff_t pos = subreq->start + subreq->transferred;
--	size_t len = subreq->len   - subreq->transferred;
- 	int total, err;
- 
--	iov_iter_xarray(&to, ITER_DEST, &rreq->mapping->i_pages, pos, len);
--
--	total = p9_client_read(fid, pos, &to, &err);
-+	total = p9_client_read(fid, subreq->start + subreq->transferred,
-+			       &subreq->io_iter, &err);
- 
- 	/* if we just extended the file size, any portion not in
- 	 * cache won't be on server and is zeroes */
-@@ -50,23 +82,37 @@ static void v9fs_issue_read(struct netfs_io_subrequest *subreq)
- }
- 
- /**
-- * v9fs_init_request - Initialise a read request
-+ * v9fs_init_request - Initialise a request
-  * @rreq: The read request
-  * @file: The file being read from
-  */
- static int v9fs_init_request(struct netfs_io_request *rreq, struct file *file)
- {
--	struct p9_fid *fid = file->private_data;
--
--	BUG_ON(!fid);
-+	struct p9_fid *fid;
-+	bool writing = (rreq->origin == NETFS_READ_FOR_WRITE ||
-+			rreq->origin == NETFS_WRITEBACK ||
-+			rreq->origin == NETFS_WRITETHROUGH ||
-+			rreq->origin == NETFS_LAUNDER_WRITE ||
-+			rreq->origin == NETFS_UNBUFFERED_WRITE ||
-+			rreq->origin == NETFS_DIO_WRITE);
-+
-+	if (file) {
-+		fid = file->private_data;
-+		BUG_ON(!fid);
-+		p9_fid_get(fid);
-+	} else {
-+		fid = v9fs_fid_find_inode(rreq->inode, writing, INVALID_UID, true);
-+		if (!fid) {
-+			WARN_ONCE(1, "folio expected an open fid inode->i_private=%p\n",
-+				  rreq->inode->i_private);
-+			return -EINVAL;
-+		}
-+	}
- 
- 	/* we might need to read from a fid that was opened write-only
- 	 * for read-modify-write of page cache, use the writeback fid
- 	 * for that */
--	WARN_ON(rreq->origin == NETFS_READ_FOR_WRITE &&
--			!(fid->mode & P9_ORDWR));
--
--	p9_fid_get(fid);
-+	WARN_ON(writing && !(fid->mode & P9_ORDWR));
- 	rreq->netfs_priv = fid;
- 	return 0;
- }
-@@ -86,217 +132,16 @@ const struct netfs_request_ops v9fs_req_ops = {
- 	.init_request		= v9fs_init_request,
- 	.free_request		= v9fs_free_request,
- 	.issue_read		= v9fs_issue_read,
-+	.create_write_requests	= v9fs_create_write_requests,
- };
- 
--#ifdef CONFIG_9P_FSCACHE
--static void v9fs_write_to_cache_done(void *priv, ssize_t transferred_or_error,
--				     bool was_async)
--{
--	struct v9fs_inode *v9inode = priv;
--	__le32 version;
--
--	if (IS_ERR_VALUE(transferred_or_error) &&
--	    transferred_or_error != -ENOBUFS) {
--		version = cpu_to_le32(v9inode->qid.version);
--		fscache_invalidate(v9fs_inode_cookie(v9inode), &version,
--				   i_size_read(&v9inode->netfs.inode), 0);
--	}
--}
--#endif
--
--static int v9fs_vfs_write_folio_locked(struct folio *folio)
--{
--	struct inode *inode = folio_inode(folio);
--	loff_t start = folio_pos(folio);
--	loff_t i_size = i_size_read(inode);
--	struct iov_iter from;
--	size_t len = folio_size(folio);
--	struct p9_fid *writeback_fid;
--	int err;
--	struct v9fs_inode __maybe_unused *v9inode = V9FS_I(inode);
--	struct fscache_cookie __maybe_unused *cookie = v9fs_inode_cookie(v9inode);
--
--	if (start >= i_size)
--		return 0; /* Simultaneous truncation occurred */
--
--	len = min_t(loff_t, i_size - start, len);
--
--	iov_iter_xarray(&from, ITER_SOURCE, &folio_mapping(folio)->i_pages, start, len);
--
--	writeback_fid = v9fs_fid_find_inode(inode, true, INVALID_UID, true);
--	if (!writeback_fid) {
--		WARN_ONCE(1, "folio expected an open fid inode->i_private=%p\n",
--			inode->i_private);
--		return -EINVAL;
--	}
--
--	folio_wait_fscache(folio);
--	folio_start_writeback(folio);
--
--	p9_client_write(writeback_fid, start, &from, &err);
--
--#ifdef CONFIG_9P_FSCACHE
--	if (err == 0 &&
--		fscache_cookie_enabled(cookie) &&
--		test_bit(FSCACHE_COOKIE_IS_CACHING, &cookie->flags)) {
--		folio_start_fscache(folio);
--		fscache_write_to_cache(v9fs_inode_cookie(v9inode),
--					folio_mapping(folio), start, len, i_size,
--					v9fs_write_to_cache_done, v9inode,
--					true);
--	}
--#endif
--
--	folio_end_writeback(folio);
--	p9_fid_put(writeback_fid);
--
--	return err;
--}
--
--static int v9fs_vfs_writepage(struct page *page, struct writeback_control *wbc)
--{
--	struct folio *folio = page_folio(page);
--	int retval;
--
--	p9_debug(P9_DEBUG_VFS, "folio %p\n", folio);
--
--	retval = v9fs_vfs_write_folio_locked(folio);
--	if (retval < 0) {
--		if (retval == -EAGAIN) {
--			folio_redirty_for_writepage(wbc, folio);
--			retval = 0;
--		} else {
--			mapping_set_error(folio_mapping(folio), retval);
--		}
--	} else
--		retval = 0;
--
--	folio_unlock(folio);
--	return retval;
--}
--
--static int v9fs_launder_folio(struct folio *folio)
--{
--	int retval;
--
--	if (folio_clear_dirty_for_io(folio)) {
--		retval = v9fs_vfs_write_folio_locked(folio);
--		if (retval)
--			return retval;
--	}
--	folio_wait_fscache(folio);
--	return 0;
--}
--
--/**
-- * v9fs_direct_IO - 9P address space operation for direct I/O
-- * @iocb: target I/O control block
-- * @iter: The data/buffer to use
-- *
-- * The presence of v9fs_direct_IO() in the address space ops vector
-- * allowes open() O_DIRECT flags which would have failed otherwise.
-- *
-- * In the non-cached mode, we shunt off direct read and write requests before
-- * the VFS gets them, so this method should never be called.
-- *
-- * Direct IO is not 'yet' supported in the cached mode. Hence when
-- * this routine is called through generic_file_aio_read(), the read/write fails
-- * with an error.
-- *
-- */
--static ssize_t
--v9fs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
--{
--	struct file *file = iocb->ki_filp;
--	loff_t pos = iocb->ki_pos;
--	ssize_t n;
--	int err = 0;
--
--	if (iov_iter_rw(iter) == WRITE) {
--		n = p9_client_write(file->private_data, pos, iter, &err);
--		if (n) {
--			struct inode *inode = file_inode(file);
--			loff_t i_size = i_size_read(inode);
--
--			if (pos + n > i_size)
--				inode_add_bytes(inode, pos + n - i_size);
--		}
--	} else {
--		n = p9_client_read(file->private_data, pos, iter, &err);
--	}
--	return n ? n : err;
--}
--
--static int v9fs_write_begin(struct file *filp, struct address_space *mapping,
--			    loff_t pos, unsigned int len,
--			    struct page **subpagep, void **fsdata)
--{
--	int retval;
--	struct folio *folio;
--	struct v9fs_inode *v9inode = V9FS_I(mapping->host);
--
--	p9_debug(P9_DEBUG_VFS, "filp %p, mapping %p\n", filp, mapping);
--
--	/* Prefetch area to be written into the cache if we're caching this
--	 * file.  We need to do this before we get a lock on the page in case
--	 * there's more than one writer competing for the same cache block.
--	 */
--	retval = netfs_write_begin(&v9inode->netfs, filp, mapping, pos, len, &folio, fsdata);
--	if (retval < 0)
--		return retval;
--
--	*subpagep = &folio->page;
--	return retval;
--}
--
--static int v9fs_write_end(struct file *filp, struct address_space *mapping,
--			  loff_t pos, unsigned int len, unsigned int copied,
--			  struct page *subpage, void *fsdata)
--{
--	loff_t last_pos = pos + copied;
--	struct folio *folio = page_folio(subpage);
--	struct inode *inode = mapping->host;
--
--	p9_debug(P9_DEBUG_VFS, "filp %p, mapping %p\n", filp, mapping);
--
--	if (!folio_test_uptodate(folio)) {
--		if (unlikely(copied < len)) {
--			copied = 0;
--			goto out;
--		}
--
--		folio_mark_uptodate(folio);
--	}
--
--	/*
--	 * No need to use i_size_read() here, the i_size
--	 * cannot change under us because we hold the i_mutex.
--	 */
--	if (last_pos > inode->i_size) {
--		inode_add_bytes(inode, last_pos - inode->i_size);
--		i_size_write(inode, last_pos);
--#ifdef CONFIG_9P_FSCACHE
--		fscache_update_cookie(v9fs_inode_cookie(V9FS_I(inode)), NULL,
--			&last_pos);
--#endif
--	}
--	folio_mark_dirty(folio);
--out:
--	folio_unlock(folio);
--	folio_put(folio);
--
--	return copied;
--}
--
- const struct address_space_operations v9fs_addr_operations = {
--	.read_folio	= netfs_read_folio,
--	.readahead	= netfs_readahead,
--	.dirty_folio	= netfs_dirty_folio,
--	.writepage	= v9fs_vfs_writepage,
--	.write_begin	= v9fs_write_begin,
--	.write_end	= v9fs_write_end,
--	.release_folio	= netfs_release_folio,
--	.invalidate_folio = netfs_invalidate_folio,
--	.launder_folio	= v9fs_launder_folio,
--	.direct_IO	= v9fs_direct_IO,
-+	.read_folio		= netfs_read_folio,
-+	.readahead		= netfs_readahead,
-+	.dirty_folio		= netfs_dirty_folio,
-+	.release_folio		= netfs_release_folio,
-+	.invalidate_folio	= netfs_invalidate_folio,
-+	.launder_folio		= netfs_launder_folio,
-+	.direct_IO		= noop_direct_IO,
-+	.writepages		= netfs_writepages,
- };
-diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
-index 11cd8d23f6f2..bae330c2f0cf 100644
---- a/fs/9p/vfs_file.c
-+++ b/fs/9p/vfs_file.c
-@@ -353,25 +353,15 @@ static ssize_t
- v9fs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
- {
- 	struct p9_fid *fid = iocb->ki_filp->private_data;
--	int ret, err = 0;
- 
- 	p9_debug(P9_DEBUG_VFS, "fid %d count %zu offset %lld\n",
- 		 fid->fid, iov_iter_count(to), iocb->ki_pos);
- 
--	if (!(fid->mode & P9L_DIRECT)) {
--		p9_debug(P9_DEBUG_VFS, "(cached)\n");
--		return generic_file_read_iter(iocb, to);
--	}
--
--	if (iocb->ki_filp->f_flags & O_NONBLOCK)
--		ret = p9_client_read_once(fid, iocb->ki_pos, to, &err);
--	else
--		ret = p9_client_read(fid, iocb->ki_pos, to, &err);
--	if (!ret)
--		return err;
-+	if (fid->mode & P9L_DIRECT)
-+		return netfs_unbuffered_read_iter(iocb, to);
- 
--	iocb->ki_pos += ret;
--	return ret;
-+	p9_debug(P9_DEBUG_VFS, "(cached)\n");
-+	return netfs_file_read_iter(iocb, to);
- }
- 
- /*
-@@ -407,46 +397,14 @@ v9fs_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
- {
- 	struct file *file = iocb->ki_filp;
- 	struct p9_fid *fid = file->private_data;
--	ssize_t retval;
--	loff_t origin;
--	int err = 0;
- 
- 	p9_debug(P9_DEBUG_VFS, "fid %d\n", fid->fid);
- 
--	if (!(fid->mode & (P9L_DIRECT | P9L_NOWRITECACHE))) {
--		p9_debug(P9_DEBUG_CACHE, "(cached)\n");
--		return generic_file_write_iter(iocb, from);
--	}
-+	if (fid->mode & (P9L_DIRECT | P9L_NOWRITECACHE))
-+		return netfs_unbuffered_write_iter(iocb, from);
- 
--	retval = generic_write_checks(iocb, from);
--	if (retval <= 0)
--		return retval;
--
--	origin = iocb->ki_pos;
--	retval = p9_client_write(file->private_data, iocb->ki_pos, from, &err);
--	if (retval > 0) {
--		struct inode *inode = file_inode(file);
--		loff_t i_size;
--		unsigned long pg_start, pg_end;
--
--		pg_start = origin >> PAGE_SHIFT;
--		pg_end = (origin + retval - 1) >> PAGE_SHIFT;
--		if (inode->i_mapping && inode->i_mapping->nrpages)
--			invalidate_inode_pages2_range(inode->i_mapping,
--						      pg_start, pg_end);
--		iocb->ki_pos += retval;
--		i_size = i_size_read(inode);
--		if (iocb->ki_pos > i_size) {
--			inode_add_bytes(inode, iocb->ki_pos - i_size);
--			/*
--			 * Need to serialize against i_size_write() in
--			 * v9fs_stat2inode()
--			 */
--			v9fs_i_size_write(inode, iocb->ki_pos);
--		}
--		return retval;
--	}
--	return err;
-+	p9_debug(P9_DEBUG_CACHE, "(cached)\n");
-+	return netfs_file_write_iter(iocb, from);
- }
- 
- static int v9fs_file_fsync(struct file *filp, loff_t start, loff_t end,
-@@ -519,36 +477,7 @@ v9fs_file_mmap(struct file *filp, struct vm_area_struct *vma)
- static vm_fault_t
- v9fs_vm_page_mkwrite(struct vm_fault *vmf)
- {
--	struct folio *folio = page_folio(vmf->page);
--	struct file *filp = vmf->vma->vm_file;
--	struct inode *inode = file_inode(filp);
--
--
--	p9_debug(P9_DEBUG_VFS, "folio %p fid %lx\n",
--		 folio, (unsigned long)filp->private_data);
--
--	/* Wait for the page to be written to the cache before we allow it to
--	 * be modified.  We then assume the entire page will need writing back.
--	 */
--#ifdef CONFIG_9P_FSCACHE
--	if (folio_test_fscache(folio) &&
--	    folio_wait_fscache_killable(folio) < 0)
--		return VM_FAULT_NOPAGE;
--#endif
--
--	/* Update file times before taking page lock */
--	file_update_time(filp);
--
--	if (folio_lock_killable(folio) < 0)
--		return VM_FAULT_RETRY;
--	if (folio_mapping(folio) != inode->i_mapping)
--		goto out_unlock;
--	folio_wait_stable(folio);
--
--	return VM_FAULT_LOCKED;
--out_unlock:
--	folio_unlock(folio);
--	return VM_FAULT_NOPAGE;
-+	return netfs_page_mkwrite(vmf, NULL);
- }
- 
- static void v9fs_mmap_vm_close(struct vm_area_struct *vma)
-diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
-index 74122540e00f..55345753ae8d 100644
---- a/fs/9p/vfs_inode.c
-+++ b/fs/9p/vfs_inode.c
-@@ -374,10 +374,8 @@ void v9fs_evict_inode(struct inode *inode)
- 
- 	truncate_inode_pages_final(&inode->i_data);
- 
--#ifdef CONFIG_9P_FSCACHE
- 	version = cpu_to_le32(v9inode->qid.version);
- 	netfs_clear_inode_writeback(inode, &version);
--#endif
- 
- 	clear_inode(inode);
- 	filemap_fdatawrite(&inode->i_data);
-@@ -1112,7 +1110,7 @@ static int v9fs_vfs_setattr(struct mnt_idmap *idmap,
- 	if ((iattr->ia_valid & ATTR_SIZE) &&
- 		 iattr->ia_size != i_size_read(inode)) {
- 		truncate_setsize(inode, iattr->ia_size);
--		truncate_pagecache(inode, iattr->ia_size);
-+		netfs_resize_file(netfs_inode(inode), iattr->ia_size, true);
- 
- #ifdef CONFIG_9P_FSCACHE
- 		if (v9ses->cache & CACHE_FSCACHE) {
-@@ -1180,6 +1178,7 @@ v9fs_stat2inode(struct p9_wstat *stat, struct inode *inode,
- 	mode |= inode->i_mode & ~S_IALLUGO;
- 	inode->i_mode = mode;
- 
-+	v9inode->netfs.remote_i_size = stat->length;
- 	if (!(flags & V9FS_STAT2INODE_KEEP_ISIZE))
- 		v9fs_i_size_write(inode, stat->length);
- 	/* not real number of blocks, but 512 byte ones ... */
-diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
-index c7319af2f471..e25fbc988f09 100644
---- a/fs/9p/vfs_inode_dotl.c
-+++ b/fs/9p/vfs_inode_dotl.c
-@@ -598,7 +598,7 @@ int v9fs_vfs_setattr_dotl(struct mnt_idmap *idmap,
- 	if ((iattr->ia_valid & ATTR_SIZE) && iattr->ia_size !=
- 		 i_size_read(inode)) {
- 		truncate_setsize(inode, iattr->ia_size);
--		truncate_pagecache(inode, iattr->ia_size);
-+		netfs_resize_file(netfs_inode(inode), iattr->ia_size, true);
- 
- #ifdef CONFIG_9P_FSCACHE
- 		if (v9ses->cache & CACHE_FSCACHE)
-@@ -655,6 +655,7 @@ v9fs_stat2inode_dotl(struct p9_stat_dotl *stat, struct inode *inode,
- 		mode |= inode->i_mode & ~S_IALLUGO;
- 		inode->i_mode = mode;
- 
-+		v9inode->netfs.remote_i_size = stat->st_size;
- 		if (!(flags & V9FS_STAT2INODE_KEEP_ISIZE))
- 			v9fs_i_size_write(inode, stat->st_size);
- 		inode->i_blocks = stat->st_blocks;
-@@ -683,8 +684,10 @@ v9fs_stat2inode_dotl(struct p9_stat_dotl *stat, struct inode *inode,
- 			inode->i_mode = mode;
++	const struct dns_server_list_v1_header *v1;
+ 	const struct dns_payload_header *bin;
+ 	struct user_key_payload *upayload;
+ 	unsigned long derrno;
+@@ -122,6 +123,13 @@ dns_resolver_preparse(struct key_preparsed_payload *prep)
+ 			return -EINVAL;
  		}
- 		if (!(flags & V9FS_STAT2INODE_KEEP_ISIZE) &&
--		    stat->st_result_mask & P9_STATS_SIZE)
-+		    stat->st_result_mask & P9_STATS_SIZE) {
-+			v9inode->netfs.remote_i_size = stat->st_size;
- 			v9fs_i_size_write(inode, stat->st_size);
+ 
++		v1 = (const struct dns_server_list_v1_header *)bin;
++		if ((v1->status != DNS_LOOKUP_GOOD &&
++		     v1->status != DNS_LOOKUP_GOOD_WITH_BAD)) {
++			if (prep->expiry == TIME64_MAX)
++				prep->expiry = ktime_get_real_seconds() + 1;
 +		}
- 		if (stat->st_result_mask & P9_STATS_BLOCKS)
- 			inode->i_blocks = stat->st_blocks;
++
+ 		result_len = datalen;
+ 		goto store_result;
  	}
+@@ -314,7 +322,7 @@ static long dns_resolver_read(const struct key *key,
+ 
+ struct key_type key_type_dns_resolver = {
+ 	.name		= "dns_resolver",
+-	.flags		= KEY_TYPE_NET_DOMAIN,
++	.flags		= KEY_TYPE_NET_DOMAIN | KEY_TYPE_INSTANT_REAP,
+ 	.preparse	= dns_resolver_preparse,
+ 	.free_preparse	= dns_resolver_free_preparse,
+ 	.instantiate	= generic_key_instantiate,
+diff --git a/security/keys/gc.c b/security/keys/gc.c
+index 3c90807476eb..eaddaceda14e 100644
+--- a/security/keys/gc.c
++++ b/security/keys/gc.c
+@@ -66,6 +66,19 @@ void key_schedule_gc(time64_t gc_at)
+ 	}
+ }
+ 
++/*
++ * Set the expiration time on a key.
++ */
++void key_set_expiry(struct key *key, time64_t expiry)
++{
++	key->expiry = expiry;
++	if (expiry != TIME64_MAX) {
++		if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
++			expiry += key_gc_delay;
++		key_schedule_gc(expiry);
++	}
++}
++
+ /*
+  * Schedule a dead links collection run.
+  */
+@@ -176,7 +189,6 @@ static void key_garbage_collector(struct work_struct *work)
+ 	static u8 gc_state;		/* Internal persistent state */
+ #define KEY_GC_REAP_AGAIN	0x01	/* - Need another cycle */
+ #define KEY_GC_REAPING_LINKS	0x02	/* - We need to reap links */
+-#define KEY_GC_SET_TIMER	0x04	/* - We need to restart the timer */
+ #define KEY_GC_REAPING_DEAD_1	0x10	/* - We need to mark dead keys */
+ #define KEY_GC_REAPING_DEAD_2	0x20	/* - We need to reap dead key links */
+ #define KEY_GC_REAPING_DEAD_3	0x40	/* - We need to reap dead keys */
+@@ -184,21 +196,17 @@ static void key_garbage_collector(struct work_struct *work)
+ 
+ 	struct rb_node *cursor;
+ 	struct key *key;
+-	time64_t new_timer, limit;
++	time64_t new_timer, limit, expiry;
+ 
+ 	kenter("[%lx,%x]", key_gc_flags, gc_state);
+ 
+ 	limit = ktime_get_real_seconds();
+-	if (limit > key_gc_delay)
+-		limit -= key_gc_delay;
+-	else
+-		limit = key_gc_delay;
+ 
+ 	/* Work out what we're going to be doing in this pass */
+ 	gc_state &= KEY_GC_REAPING_DEAD_1 | KEY_GC_REAPING_DEAD_2;
+ 	gc_state <<= 1;
+ 	if (test_and_clear_bit(KEY_GC_KEY_EXPIRED, &key_gc_flags))
+-		gc_state |= KEY_GC_REAPING_LINKS | KEY_GC_SET_TIMER;
++		gc_state |= KEY_GC_REAPING_LINKS;
+ 
+ 	if (test_and_clear_bit(KEY_GC_REAP_KEYTYPE, &key_gc_flags))
+ 		gc_state |= KEY_GC_REAPING_DEAD_1;
+@@ -233,8 +241,11 @@ static void key_garbage_collector(struct work_struct *work)
+ 			}
+ 		}
+ 
+-		if (gc_state & KEY_GC_SET_TIMER) {
+-			if (key->expiry > limit && key->expiry < new_timer) {
++		expiry = key->expiry;
++		if (expiry != TIME64_MAX) {
++			if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
++				expiry += key_gc_delay;
++			if (expiry > limit && expiry < new_timer) {
+ 				kdebug("will expire %x in %lld",
+ 				       key_serial(key), key->expiry - limit);
+ 				new_timer = key->expiry;
+@@ -276,7 +287,7 @@ static void key_garbage_collector(struct work_struct *work)
+ 	 */
+ 	kdebug("pass complete");
+ 
+-	if (gc_state & KEY_GC_SET_TIMER && new_timer != (time64_t)TIME64_MAX) {
++	if (new_timer != TIME64_MAX) {
+ 		new_timer += key_gc_delay;
+ 		key_schedule_gc(new_timer);
+ 	}
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index 471cf36dedc0..2cffa6dc8255 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -167,6 +167,7 @@ extern unsigned key_gc_delay;
+ extern void keyring_gc(struct key *keyring, time64_t limit);
+ extern void keyring_restriction_gc(struct key *keyring,
+ 				   struct key_type *dead_type);
++void key_set_expiry(struct key *key, time64_t expiry);
+ extern void key_schedule_gc(time64_t gc_at);
+ extern void key_schedule_gc_links(void);
+ extern void key_gc_keytype(struct key_type *ktype);
+@@ -215,10 +216,18 @@ extern struct key *key_get_instantiation_authkey(key_serial_t target_id);
+  */
+ static inline bool key_is_dead(const struct key *key, time64_t limit)
+ {
++	time64_t expiry = key->expiry;
++
++	if (expiry != TIME64_MAX) {
++		if (!(key->type->flags & KEY_TYPE_INSTANT_REAP))
++			expiry += key_gc_delay;
++		if (expiry <= limit)
++			return true;
++	}
++
+ 	return
+ 		key->flags & ((1 << KEY_FLAG_DEAD) |
+ 			      (1 << KEY_FLAG_INVALIDATED)) ||
+-		(key->expiry > 0 && key->expiry <= limit) ||
+ 		key->domain_tag->removed;
+ }
+ 
+diff --git a/security/keys/key.c b/security/keys/key.c
+index 0260a1902922..5b10641debd5 100644
+--- a/security/keys/key.c
++++ b/security/keys/key.c
+@@ -294,6 +294,7 @@ struct key *key_alloc(struct key_type *type, const char *desc,
+ 	key->uid = uid;
+ 	key->gid = gid;
+ 	key->perm = perm;
++	key->expiry = TIME64_MAX;
+ 	key->restrict_link = restrict_link;
+ 	key->last_used_at = ktime_get_real_seconds();
+ 
+@@ -463,10 +464,7 @@ static int __key_instantiate_and_link(struct key *key,
+ 			if (authkey)
+ 				key_invalidate(authkey);
+ 
+-			if (prep->expiry != TIME64_MAX) {
+-				key->expiry = prep->expiry;
+-				key_schedule_gc(prep->expiry + key_gc_delay);
+-			}
++			key_set_expiry(key, prep->expiry);
+ 		}
+ 	}
+ 
+@@ -606,8 +604,7 @@ int key_reject_and_link(struct key *key,
+ 		atomic_inc(&key->user->nikeys);
+ 		mark_key_instantiated(key, -error);
+ 		notify_key(key, NOTIFY_KEY_INSTANTIATED, -error);
+-		key->expiry = ktime_get_real_seconds() + timeout;
+-		key_schedule_gc(key->expiry + key_gc_delay);
++		key_set_expiry(key, ktime_get_real_seconds() + timeout);
+ 
+ 		if (test_and_clear_bit(KEY_FLAG_USER_CONSTRUCT, &key->flags))
+ 			awaken = 1;
+@@ -723,16 +720,14 @@ struct key_type *key_type_lookup(const char *type)
+ 
+ void key_set_timeout(struct key *key, unsigned timeout)
+ {
+-	time64_t expiry = 0;
++	time64_t expiry = TIME64_MAX;
+ 
+ 	/* make the changes with the locks held to prevent races */
+ 	down_write(&key->sem);
+ 
+ 	if (timeout > 0)
+ 		expiry = ktime_get_real_seconds() + timeout;
+-
+-	key->expiry = expiry;
+-	key_schedule_gc(key->expiry + key_gc_delay);
++	key_set_expiry(key, expiry);
+ 
+ 	up_write(&key->sem);
+ }
+diff --git a/security/keys/proc.c b/security/keys/proc.c
+index d0cde6685627..4f4e2c1824f1 100644
+--- a/security/keys/proc.c
++++ b/security/keys/proc.c
+@@ -198,7 +198,7 @@ static int proc_keys_show(struct seq_file *m, void *v)
+ 
+ 	/* come up with a suitable timeout value */
+ 	expiry = READ_ONCE(key->expiry);
+-	if (expiry == 0) {
++	if (expiry == TIME64_MAX) {
+ 		memcpy(xbuf, "perm", 5);
+ 	} else if (now >= expiry) {
+ 		memcpy(xbuf, "expd", 5);
 
 
