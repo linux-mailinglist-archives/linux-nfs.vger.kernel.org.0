@@ -1,217 +1,115 @@
-Return-Path: <linux-nfs+bounces-773-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-774-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EE7C81C307
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Dec 2023 03:12:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F15DD81C95E
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Dec 2023 12:50:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 781D01F23D44
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Dec 2023 02:12:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DACEA1C21433
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Dec 2023 11:50:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9908423AD;
-	Fri, 22 Dec 2023 02:12:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B1C317992;
+	Fri, 22 Dec 2023 11:50:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BwNFiSzn";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="fY6hGQM+";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="w1kE8wyf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="AcutvKkr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dUXfjEMP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA92823B1
-	for <linux-nfs@vger.kernel.org>; Fri, 22 Dec 2023 02:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA49017983
+	for <linux-nfs@vger.kernel.org>; Fri, 22 Dec 2023 11:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1703245799;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b2Kc5SDyR2sa98m7GGfG0OJjTCYVmXAF9D404GjbeCw=;
+	b=dUXfjEMPR1tkFnblxEMBDU5zHzcD8E0XYnC3YauqTp0VIiKssNTz9Z28Uc9BKCNmAcVGqZ
+	JwtXVIIS22dUNRuKy6m3LX47RpfRdHX458TaD5+2htbrPBSeom2CTjlkjxDdyD2pXAu2sK
+	CfXvL1TzveNPApf/jS/yqOimK47BYu8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-399-gMeN3nQqMpKa8ASINIbPcw-1; Fri, 22 Dec 2023 06:49:57 -0500
+X-MC-Unique: gMeN3nQqMpKa8ASINIbPcw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id B643C21FB2;
-	Fri, 22 Dec 2023 02:12:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703211138; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W9mc2dPJKI1kyGStbcNwgFSMb1f/wa15AMc82RT1pVk=;
-	b=BwNFiSznfxUB/6T85ZUrKQycsVm2xDTHt9h5oWwaQG6lQ7FAWYrnVbPGZenKLFDpuwWjzZ
-	QuhIdgeFuR1xnA7NqbU3bwYD8p/If3x11QHI0Z4w3I46lDsZsIf4+1/YSroh4UJaHQ71Ii
-	oonomZKMb5lqWdLxf7kCYJE269+/p6Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703211138;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W9mc2dPJKI1kyGStbcNwgFSMb1f/wa15AMc82RT1pVk=;
-	b=fY6hGQM+WuDMLX/il9F2r+MHZoNxh4ZzCq42NPiZ76z0tXn4gohRtYiMqDC7Z0F75pDHzm
-	TQVe+cvDadFzeICQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1703211135; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W9mc2dPJKI1kyGStbcNwgFSMb1f/wa15AMc82RT1pVk=;
-	b=w1kE8wyflUPmPM4EgaFXxoev4ff++pPS0aGwb0m6CPBNCpTM6rwy8UBa5+MdIf9V+VB1zT
-	2QYr0L9i8Nmj392mxeXLmEDlF2cd8GtpQWoM9U+X028aMYbAuTWmpn8V2E/C1Co0b4IOVM
-	sYfEgaXxX/OT9MSYkI17DRUNZ4k24Ow=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1703211135;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=W9mc2dPJKI1kyGStbcNwgFSMb1f/wa15AMc82RT1pVk=;
-	b=AcutvKkr/4lPzdc+gM9dNJjpGl8zL6hXHahYRPGAMbeNtX2t6ogT6GlQ4nihVnN0E8lAV2
-	ADiz81zvvS9RzVCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 600BA13AB5;
-	Fri, 22 Dec 2023 02:12:13 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id UXqmBX3whGUlSgAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 22 Dec 2023 02:12:13 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F2C45868A20;
+	Fri, 22 Dec 2023 11:49:55 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.39.195.169])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 71FCC2026D66;
+	Fri, 22 Dec 2023 11:49:52 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20231221230153.GA1607352@dev-arch.thelio-3990X>
+References: <20231221230153.GA1607352@dev-arch.thelio-3990X> <20231221132400.1601991-1-dhowells@redhat.com> <20231221132400.1601991-38-dhowells@redhat.com>
+To: Nathan Chancellor <nathan@kernel.org>,
+    Anna Schumaker <Anna.Schumaker@Netapp.com>,
+    Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
+    Steve French <smfrench@gmail.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Dominique Martinet <asmadeus@codewreck.org>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Ilya Dryomov <idryomov@gmail.com>,
+    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+    linux-mm@kvack.org, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 37/40] netfs: Optimise away reads above the point at which there can be no data
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>, "Jeff Layton" <jlayton@kernel.org>,
- "J. Bruce Fields" <bfields@fieldses.org>
-Cc: "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v2] nfsd: drop st_mutex and rp_mutex before calling
- move_to_close_lru()
-In-reply-to: <170320926037.11005.9834662167645370066@noble.neil.brown.name>
-References: <170320926037.11005.9834662167645370066@noble.neil.brown.name>
-Date: Fri, 22 Dec 2023 13:12:10 +1100
-Message-id: <170321113026.11005.17173312563294650530@noble.neil.brown.name>
-X-Spam-Level: 
-X-Spam-Level: 
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=w1kE8wyf;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=AcutvKkr
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Spamd-Result: default: False [-1.50 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 NEURAL_HAM_SHORT(-0.19)[-0.952];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[11.01%]
-X-Spam-Score: -1.50
-X-Rspamd-Queue-Id: B643C21FB2
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2202547.1703245791.1@warthog.procyon.org.uk>
+Date: Fri, 22 Dec 2023 11:49:51 +0000
+Message-ID: <2202548.1703245791@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
+Nathan Chancellor <nathan@kernel.org> wrote:
 
-move_to_close_lru() is currently called with ->st_mutex and .rp_mutex held.
-This can lead to a deadlock as move_to_close_lru() waits for sc_count to
-drop to 2, and some threads holding a reference might be waiting for either
-mutex.  These references will never be dropped so sc_count will never
-reach 2.
+> It appears that ctx->inode.i_mapping is NULL in netfs_inode_init(). This
+> patch appears to cure the problem for me but I am not sure if it is
+> proper or not.
 
-There can be no harm in dropping ->st_mutex to before
-move_to_close_lru() because the only place that takes the mutex is
-nfsd4_lock_ol_stateid(), and it quickly aborts if sc_type is
-NFS4_CLOSED_STID, which it will be before move_to_close_lru() is called.
+I'm not sure that's the best way.  It kind of indicates that
+nfs_netfs_inode_init() is not being called in the right place - it should
+really be called after alloc_inode() has called inode_init_always().
 
-Similarly dropping .rp_mutex is safe after the state is closed and so
-no longer usable.  Another way to look at this is that nothing
-significant happens between when nfsd4_close() now calls
-nfsd4_cstate_clear_replay(), and where nfsd4_proc_compound calls
-nfsd4_cstate_clear_replay() a little later.
+However, mapping_set_release_always() makes ->release_folio() and
+->invalidate_folio() always called for an inode's folios, even if PG_private
+is not set - the idea being that this allows netfslib to update the
+"zero_point" when a page we've written to the server gets invalidated here,
+thereby requiring us to go fetch it again.
 
-See also
- https://lore.kernel.org/lkml/4dd1fe21e11344e5969bb112e954affb@jd.com/T/
-where this problem was raised but not successfully resolved.
+Now, NFS doesn't make use of this feature and fscache and cachefiles don't use
+it directly, so we might not want to call mapping_set_release_always() for
+NFS.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
+I'm not sure NFS can even reliably make use of it unless it's using a lease
+unless it gets change notifications from the server.
 
-Sorry - I posted v1 a little hastily.  I need to drop rp_mutex as well
-to avoid the deadlock.  This also is safe.
+So I'm thinking of applying your patch but add a comment to say why we're
+doing it.  A better way, though, is to move the call to nfs_netfs_inode_init()
+and give it a flag to say whether or not we want the facility.
 
- fs/nfsd/nfs4state.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 40415929e2ae..453714fbcd66 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7055,7 +7055,7 @@ nfsd4_open_downgrade(struct svc_rqst *rqstp,
- 	return status;
- }
-=20
--static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
-+static bool nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
- {
- 	struct nfs4_client *clp =3D s->st_stid.sc_client;
- 	bool unhashed;
-@@ -7072,11 +7072,11 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_s=
-tateid *s)
- 		list_for_each_entry(stp, &reaplist, st_locks)
- 			nfs4_free_cpntf_statelist(clp->net, &stp->st_stid);
- 		free_ol_stateid_reaplist(&reaplist);
-+		return false;
- 	} else {
- 		spin_unlock(&clp->cl_lock);
- 		free_ol_stateid_reaplist(&reaplist);
--		if (unhashed)
--			move_to_close_lru(s, clp->net);
-+		return unhashed;
- 	}
- }
-=20
-@@ -7092,6 +7092,7 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compou=
-nd_state *cstate,
- 	struct nfs4_ol_stateid *stp;
- 	struct net *net =3D SVC_NET(rqstp);
- 	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-+	bool need_move_to_close_list;
-=20
- 	dprintk("NFSD: nfsd4_close on file %pd\n",=20
- 			cstate->current_fh.fh_dentry);
-@@ -7114,8 +7115,11 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compo=
-und_state *cstate,
- 	 */
- 	nfs4_inc_and_copy_stateid(&close->cl_stateid, &stp->st_stid);
-=20
--	nfsd4_close_open_stateid(stp);
-+	need_move_to_close_list =3D nfsd4_close_open_stateid(stp);
- 	mutex_unlock(&stp->st_mutex);
-+	nfsd4_cstate_clear_replay(cstate);
-+	if (need_move_to_close_list)
-+		move_to_close_lru(stp, net);
-=20
- 	/* v4.1+ suggests that we send a special stateid in here, since the
- 	 * clients should just ignore this anyway. Since this is not useful
---=20
-2.43.0
+David
 
 
