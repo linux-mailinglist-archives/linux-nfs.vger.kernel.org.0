@@ -1,62 +1,63 @@
-Return-Path: <linux-nfs+bounces-775-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-776-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91E6481C997
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Dec 2023 13:01:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C3EC81CA73
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Dec 2023 14:02:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C61DAB22F9C
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Dec 2023 12:01:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E3803B22213
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Dec 2023 13:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE9561803C;
-	Fri, 22 Dec 2023 12:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 892C818B0C;
+	Fri, 22 Dec 2023 13:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PVV3ulNs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NQMNahIL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5343817993
-	for <linux-nfs@vger.kernel.org>; Fri, 22 Dec 2023 12:01:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D275D199A4
+	for <linux-nfs@vger.kernel.org>; Fri, 22 Dec 2023 13:02:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1703246461;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
+	s=mimecast20190719; t=1703250135;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BJQmrSBfBKkF1FEAH3EILbfyiDOBLbXiZySEe1rSlv0=;
-	b=PVV3ulNs8WXTgAHZSENULp4kD00duOqe/rKzO0f6sHqUZATiS/FR2DKxIH9uxuISFywqvS
-	4HaoEXf8oPhYQQMWOyaXJ+CAXU6+0dY3G5LiUotg4TAAtx8PqajyP/6wIhqP/tZaKGFdYX
-	kbl5oCyUjDu7OT82niKcWLM6+DkOtas=
+	bh=2kygMq0mAMv991cW3YZ7Hd3ppnOgYBjhmi7vw/LesYI=;
+	b=NQMNahILgu3aQbYD3RwVLqx49Kb0QJEdivz2twAyGjHa6qSDNBTLYUKgF8/XeHtVYBwG23
+	13LoOIPgSk1/yThVctxuhb3ZW+Fg65A0lHF3Z4fJV/jGMRyPAz09wA/66Jb0kIqAvSP3Ug
+	LyVx0B4CVrW72jzYFnomvW9RH6rZUpc=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-433-6IC2kF7KOuGC0hQW2X7v9g-1; Fri,
- 22 Dec 2023 07:00:56 -0500
-X-MC-Unique: 6IC2kF7KOuGC0hQW2X7v9g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-15--QeBZETQMO6dAe6PTzC6cQ-1; Fri,
+ 22 Dec 2023 08:02:12 -0500
+X-MC-Unique: -QeBZETQMO6dAe6PTzC6cQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CD5373C2A1D2;
-	Fri, 22 Dec 2023 12:00:55 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5329D386914F;
+	Fri, 22 Dec 2023 13:02:11 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.39.195.169])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 776331C060AF;
-	Fri, 22 Dec 2023 12:00:52 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 82A9251E3;
+	Fri, 22 Dec 2023 13:02:07 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
 	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
 	Kingdom.
 	Registered in England and Wales under Company Registration No. 3798903
 From: David Howells <dhowells@redhat.com>
-In-Reply-To: <2202548.1703245791@warthog.procyon.org.uk>
-References: <2202548.1703245791@warthog.procyon.org.uk> <20231221230153.GA1607352@dev-arch.thelio-3990X> <20231221132400.1601991-1-dhowells@redhat.com> <20231221132400.1601991-38-dhowells@redhat.com>
-Cc: dhowells@redhat.com, Nathan Chancellor <nathan@kernel.org>,
-    Anna Schumaker <Anna.Schumaker@Netapp.com>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
+In-Reply-To: <20231221132400.1601991-5-dhowells@redhat.com>
+References: <20231221132400.1601991-5-dhowells@redhat.com> <20231221132400.1601991-1-dhowells@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: dhowells@redhat.com, Gao Xiang <xiang@kernel.org>,
+    Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+    Jeffle Xu <jefflexu@linux.alibaba.com>,
+    Steve French <smfrench@gmail.com>,
     Matthew Wilcox <willy@infradead.org>,
     Marc Dionne <marc.dionne@auristor.com>,
     Paulo Alcantara <pc@manguebit.com>,
@@ -69,8 +70,8 @@ Cc: dhowells@redhat.com, Nathan Chancellor <nathan@kernel.org>,
     linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
     v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
     linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: [PATCH] Fix oops in NFS
+    linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Subject: [PATCH] Fix EROFS Kconfig
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -78,132 +79,29 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2229135.1703246451.1@warthog.procyon.org.uk>
+Content-ID: <2265064.1703250126.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 22 Dec 2023 12:00:51 +0000
-Message-ID: <2229136.1703246451@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Date: Fri, 22 Dec 2023 13:02:06 +0000
+Message-ID: <2265065.1703250126@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-David Howells <dhowells@redhat.com> wrote:
+This needs an additional change (see attached).
 
-> A better way, though, is to move the call to nfs_netfs_inode_init()
-> and give it a flag to say whether or not we want the facility.
-
-Okay, I think I'll fold in the attached change.
-
-David
----
-diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
-index 55345753ae8d..b66466e97459 100644
---- a/fs/9p/vfs_inode.c
-+++ b/fs/9p/vfs_inode.c
-@@ -249,7 +249,7 @@ void v9fs_free_inode(struct inode *inode)
- static void v9fs_set_netfs_context(struct inode *inode)
- {
- 	struct v9fs_inode *v9inode =3D V9FS_I(inode);
--	netfs_inode_init(&v9inode->netfs, &v9fs_req_ops);
-+	netfs_inode_init(&v9inode->netfs, &v9fs_req_ops, true);
- }
+diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
+index 1d318f85232d..1949763e66aa 100644
+--- a/fs/erofs/Kconfig
++++ b/fs/erofs/Kconfig
+@@ -114,7 +114,8 @@ config EROFS_FS_ZIP_DEFLATE
  =
 
- int v9fs_init_inode(struct v9fs_session_info *v9ses,
-diff --git a/fs/afs/dynroot.c b/fs/afs/dynroot.c
-index 1f656005018e..9c517269ff95 100644
---- a/fs/afs/dynroot.c
-+++ b/fs/afs/dynroot.c
-@@ -76,7 +76,7 @@ struct inode *afs_iget_pseudo_dir(struct super_block *sb=
-, bool root)
- 	/* there shouldn't be an existing inode */
- 	BUG_ON(!(inode->i_state & I_NEW));
- =
-
--	netfs_inode_init(&vnode->netfs, NULL);
-+	netfs_inode_init(&vnode->netfs, NULL, false);
- 	inode->i_size		=3D 0;
- 	inode->i_mode		=3D S_IFDIR | S_IRUGO | S_IXUGO;
- 	if (root) {
-diff --git a/fs/afs/inode.c b/fs/afs/inode.c
-index 2b44a342b4a1..381521e9e118 100644
---- a/fs/afs/inode.c
-+++ b/fs/afs/inode.c
-@@ -58,7 +58,7 @@ static noinline void dump_vnode(struct afs_vnode *vnode,=
- struct afs_vnode *paren
-  */
- static void afs_set_netfs_context(struct afs_vnode *vnode)
- {
--	netfs_inode_init(&vnode->netfs, &afs_req_ops);
-+	netfs_inode_init(&vnode->netfs, &afs_req_ops, true);
- }
- =
-
- /*
-diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
-index 3149d79a9dbe..0c25d326afc4 100644
---- a/fs/ceph/inode.c
-+++ b/fs/ceph/inode.c
-@@ -574,7 +574,7 @@ struct inode *ceph_alloc_inode(struct super_block *sb)
- 	doutc(fsc->client, "%p\n", &ci->netfs.inode);
- =
-
- 	/* Set parameters for the netfs library */
--	netfs_inode_init(&ci->netfs, &ceph_netfs_ops);
-+	netfs_inode_init(&ci->netfs, &ceph_netfs_ops, false);
- =
-
- 	spin_lock_init(&ci->i_ceph_lock);
- =
-
-diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-index 5407ab8c8783..e3cb4923316b 100644
---- a/fs/nfs/fscache.h
-+++ b/fs/nfs/fscache.h
-@@ -80,7 +80,7 @@ static inline void nfs_netfs_put(struct nfs_netfs_io_dat=
-a *netfs)
- }
- static inline void nfs_netfs_inode_init(struct nfs_inode *nfsi)
- {
--	netfs_inode_init(&nfsi->netfs, &nfs_netfs_ops);
-+	netfs_inode_init(&nfsi->netfs, &nfs_netfs_ops, false);
- }
- extern void nfs_netfs_initiate_read(struct nfs_pgio_header *hdr);
- extern void nfs_netfs_read_completion(struct nfs_pgio_header *hdr);
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index a5374218efe4..06a03dd1aff1 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -456,22 +456,27 @@ static inline struct netfs_inode *netfs_inode(struct=
- inode *inode)
-  * netfs_inode_init - Initialise a netfslib inode context
-  * @ctx: The netfs inode to initialise
-  * @ops: The netfs's operations list
-+ * @use_zero_point: True to use the zero_point read optimisation
-  *
-  * Initialise the netfs library context struct.  This is expected to foll=
-ow on
-  * directly from the VFS inode struct.
-  */
- static inline void netfs_inode_init(struct netfs_inode *ctx,
--				    const struct netfs_request_ops *ops)
-+				    const struct netfs_request_ops *ops,
-+				    bool use_zero_point)
- {
- 	ctx->ops =3D ops;
- 	ctx->remote_i_size =3D i_size_read(&ctx->inode);
--	ctx->zero_point =3D ctx->remote_i_size;
-+	ctx->zero_point =3D LLONG_MAX;
- 	ctx->flags =3D 0;
- #if IS_ENABLED(CONFIG_FSCACHE)
- 	ctx->cache =3D NULL;
- #endif
- 	/* ->releasepage() drives zero_point */
--	mapping_set_release_always(ctx->inode.i_mapping);
-+	if (use_zero_point) {
-+		ctx->zero_point =3D ctx->remote_i_size;
-+		mapping_set_release_always(ctx->inode.i_mapping);
-+	}
- }
- =
-
- /**
+ config EROFS_FS_ONDEMAND
+ 	bool "EROFS fscache-based on-demand read support"
+-	depends on CACHEFILES_ONDEMAND && (EROFS_FS=3Dm && FSCACHE || EROFS_FS=3D=
+y && FSCACHE=3Dy)
++	depends on CACHEFILES_ONDEMAND && FSCACHE && \
++		(EROFS_FS=3Dm && NETFS_SUPPORT || EROFS_FS=3Dy && NETFS_SUPPORT=3Dy)
+ 	default n
+ 	help
+ 	  This permits EROFS to use fscache-backed data blobs with on-demand
 
 
