@@ -1,178 +1,132 @@
-Return-Path: <linux-nfs+bounces-783-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-784-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAF5B81D42C
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Dec 2023 14:32:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E49081D51A
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Dec 2023 17:36:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F40A11C21202
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Dec 2023 13:32:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1C3CDB21937
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Dec 2023 16:36:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBF33D300;
-	Sat, 23 Dec 2023 13:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE07FBFD;
+	Sat, 23 Dec 2023 16:36:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qj3Y/LrZ"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 858E4D505;
-	Sat, 23 Dec 2023 13:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=27;SR=0;TI=SMTPD_---0Vz1O0tF_1703338328;
-Received: from 30.25.242.252(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0Vz1O0tF_1703338328)
-          by smtp.aliyun-inc.com;
-          Sat, 23 Dec 2023 21:32:11 +0800
-Message-ID: <fac01751-73dc-4d93-b9c0-b637fece8334@linux.alibaba.com>
-Date: Sat, 23 Dec 2023 21:32:07 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F20CA7E;
+	Sat, 23 Dec 2023 16:36:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB976C433C8;
+	Sat, 23 Dec 2023 16:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703349378;
+	bh=N9AzMOu4koi0frJdk8bVKllnwJ5h9l24nJ4K62YY+pI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qj3Y/LrZ2lOQTBRnK85le0wCLszMYvalS1tEsiA2oDhp7qpSDDdWUvTaMpGXz9dhH
+	 4ykHNYOdo8VERL63YuAP4CjO7id17Ib8H6NWh/sBrdWlq+wS7ll95qpMlhdjgHcdnu
+	 8JtgzESsnTo6Lf8rD4QWsFDvri8BBMcUcAmlGZNGux6X5DTVPZyfo04LtfBCt+2WJy
+	 GyAIEspIRqQcufLhNhVK901yYC4p12YjlNF9t1bG4qBLD3rqEKTEJCs4lNVZJdc5Ng
+	 zjjAeI5g3LafLZMaXy6Kg5nFDlh43NDOP71OPd4Z3S89V59zbDhPZNPHi4R8ctqG06
+	 8j2jAc6SxjjNw==
+Date: Sat, 23 Dec 2023 16:36:12 +0000
+From: Simon Horman <horms@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Markus Suvanto <markus.suvanto@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	linux-afs@lists.infradead.org, keyrings@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Wang Lei <wang840925@gmail.com>, Jeff Layton <jlayton@redhat.com>,
+	Steve French <sfrench@us.ibm.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+	ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
+	Edward Adam Davis <eadavis@qq.com>
+Subject: Re: [PATCH v4 3/3] keys, dns: Allow key types (eg. DNS) to be
+ reclaimed immediately on expiry
+Message-ID: <20231223163612.GG201037@kernel.org>
+References: <20231221134558.1659214-1-dhowells@redhat.com>
+ <20231221134558.1659214-4-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Fix EROFS Kconfig
-To: Jingbo Xu <jefflexu@linux.alibaba.com>,
- David Howells <dhowells@redhat.com>, Gao Xiang <xiang@kernel.org>
-Cc: Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
- Steve French <smfrench@gmail.com>, Matthew Wilcox <willy@infradead.org>,
- Marc Dionne <marc.dionne@auristor.com>, Paulo Alcantara <pc@manguebit.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov <idryomov@gmail.com>,
- Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
- linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
- linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- Jeff Layton <jlayton@kernel.org>
-References: <20231221132400.1601991-5-dhowells@redhat.com>
- <20231221132400.1601991-1-dhowells@redhat.com>
- <2265065.1703250126@warthog.procyon.org.uk>
- <d50555e9-3b8e-41d4-bec6-317aaaec5ff0@linux.alibaba.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <d50555e9-3b8e-41d4-bec6-317aaaec5ff0@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231221134558.1659214-4-dhowells@redhat.com>
 
-Hi David and Jingbo,
++ Edward Adam Davis
 
-On 2023/12/23 11:55, Jingbo Xu wrote:
-> Hi,
+On Thu, Dec 21, 2023 at 01:45:30PM +0000, David Howells wrote:
+> If a key has an expiration time, then when that time passes, the key is
+> left around for a certain amount of time before being collected (5 mins by
+> default) so that EKEYEXPIRED can be returned instead of ENOKEY.  This is a
+> problem for DNS keys because we want to redo the DNS lookup immediately at
+> that point.
 > 
-> On 12/22/23 9:02 PM, David Howells wrote:
->> This needs an additional change (see attached).
->>
->> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
->> index 1d318f85232d..1949763e66aa 100644
->> --- a/fs/erofs/Kconfig
->> +++ b/fs/erofs/Kconfig
->> @@ -114,7 +114,8 @@ config EROFS_FS_ZIP_DEFLATE
->>   
->>   config EROFS_FS_ONDEMAND
->>   	bool "EROFS fscache-based on-demand read support"
->> -	depends on CACHEFILES_ONDEMAND && (EROFS_FS=m && FSCACHE || EROFS_FS=y && FSCACHE=y)
->> +	depends on CACHEFILES_ONDEMAND && FSCACHE && \
->> +		(EROFS_FS=m && NETFS_SUPPORT || EROFS_FS=y && NETFS_SUPPORT=y)
->>   	default n
->>   	help
->>   	  This permits EROFS to use fscache-backed data blobs with on-demand
->>
+> Fix this by allowing key types to be marked such that keys of that type
+> don't have this extra period, but are reclaimed as soon as they expire and
+> turn this on for dns_resolver-type keys.  To make this easier to handle,
+> key->expiry is changed to be permanent if TIME64_MAX rather than 0.
 > 
-> Thanks for the special reminder.  I noticed that it has been included in
-> this commit[*] in the dev tree.
+> Furthermore, give such new-style negative DNS results a 1s default expiry
+> if no other expiry time is set rather than allowing it to stick around
+> indefinitely.  This shouldn't be zero as ls will follow a failing stat call
+> immediately with a second with AT_SYMLINK_NOFOLLOW added.
 > 
-> [*]
-> https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/commit/?h=netfs-lib&id=7472173cc3baf4a0bd8c803e56c37efdb8388f1c
-> 
-> 
-> Besides I noticed an issue when trying to configure EROFS_FS_ONDEMAND.
-> The above kconfig indicates that EROFS_FS_ONDEMAND depends on
-> NETFS_SUPPORT, while NETFS_SUPPORT has no prompt in menuconfig and can
-> only be selected by, e.g. fs/ceph/Kconfig:
-> 
-> 	config CEPH_FS
->          select NETFS_SUPPORT
-> 
-> IOW EROFS_FS_ONDEMAND will not be prompted and has no way being
-> configured if NETFS_SUPPORT itself is not selected by any other filesystem.
-> 
-> 
-> I tried to fix this in following way:
-> 
-> diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-> index 1949763e66aa..5b7b71e537f1 100644
-> --- a/fs/erofs/Kconfig
-> +++ b/fs/erofs/Kconfig
-> @@ -5,6 +5,7 @@ config EROFS_FS
->          depends on BLOCK
->          select FS_IOMAP
->          select LIBCRC32C
-> +       select NETFS_SUPPORT if EROFS_FS_ONDEMAND
->          help
->            EROFS (Enhanced Read-Only File System) is a lightweight read-only
->            file system with modern designs (e.g. no buffer heads, inline
-> @@ -114,8 +115,10 @@ config EROFS_FS_ZIP_DEFLATE
-> 
->   config EROFS_FS_ONDEMAND
->          bool "EROFS fscache-based on-demand read support"
-> -       depends on CACHEFILES_ONDEMAND && FSCACHE && \
-> -               (EROFS_FS=m && NETFS_SUPPORT || EROFS_FS=y &&
-> NETFS_SUPPORT=y)
-> +       depends on EROFS_FS
-> +       select FSCACHE
->          default n
->          help
->            This permits EROFS to use fscache-backed data blobs with on-demand
-> 
-> 
-> But still the dependency for CACHEFILES_ONDEMAND and CACHEFILES can not
-> be resolved.  Though CACHEFILES is not a must during the linking stage
-> as EROFS only calls fscache APIs directly, CACHEFILES is indeed needed
-> to ensure that the EROFS on-demand functionality works at runtime.
-> 
-> If we let EROFS_FS_ONDEMAND select CACHEFILES_ONDEMAND, then only
-> CACHEFILES_ONDEMAND will be selected while CACHEFILES can be still N.
-> Maybe EROFS_FS_ONDEMAND needs to selct both CACHEFILES_ONDEMAND and
-> CACHEFILES?
+> Fixes: 1a4240f4764a ("DNS: Separate out CIFS DNS Resolver code")
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Tested-by: Markus Suvanto <markus.suvanto@gmail.com>
 
-I think the main point here is that we don't have an explicit
-menuconfig item for either netfs or fscache directly.
+...
 
-In principle, EROFS ondemand feature only needs fscache "volume
-and cookie" management framework as well as cachefiles since
-they're all needed to manage EROFS cached blobs, but I'm fine
-if that needs NETFS_SUPPORT is also enabled.
+> diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+> index 01e54b46ae0b..2a6d363763a2 100644
+> --- a/net/dns_resolver/dns_key.c
+> +++ b/net/dns_resolver/dns_key.c
+> @@ -91,6 +91,7 @@ const struct cred *dns_resolver_cache;
+>  static int
+>  dns_resolver_preparse(struct key_preparsed_payload *prep)
+>  {
+> +	const struct dns_server_list_v1_header *v1;
+>  	const struct dns_payload_header *bin;
+>  	struct user_key_payload *upayload;
+>  	unsigned long derrno;
+> @@ -122,6 +123,13 @@ dns_resolver_preparse(struct key_preparsed_payload *prep)
+>  			return -EINVAL;
+>  		}
+>  
+> +		v1 = (const struct dns_server_list_v1_header *)bin;
+> +		if ((v1->status != DNS_LOOKUP_GOOD &&
+> +		     v1->status != DNS_LOOKUP_GOOD_WITH_BAD)) {
+> +			if (prep->expiry == TIME64_MAX)
+> +				prep->expiry = ktime_get_real_seconds() + 1;
+> +		}
+> +
+>  		result_len = datalen;
+>  		goto store_result;
+>  	}
 
-If netfs doesn't have a plan for a new explicit menuconfig
-item for users to use, I think we have to enable as below:
+Hi David,
 
-diff --git a/fs/erofs/Kconfig b/fs/erofs/Kconfig
-index 1d318f85232d..fffd3919343e 100644
---- a/fs/erofs/Kconfig
-+++ b/fs/erofs/Kconfig
-@@ -114,8 +114,11 @@ config EROFS_FS_ZIP_DEFLATE
+As has been pointed out by Edward Adam Davis, this may result
+in a buffer overrun. Just above this hunk the following length
+check occurs:
 
-  config EROFS_FS_ONDEMAND
-  	bool "EROFS fscache-based on-demand read support"
--	depends on CACHEFILES_ONDEMAND && (EROFS_FS=m && FSCACHE || EROFS_FS=y && FSCACHE=y)
--	default n
-+	depends on EROFS_FS
-+	select NETFS_SUPPORT
-+	select FSCACHE
-+	select CACHEFILES
-+	select CACHEFILES_ONDEMAND
-  	help
-  	  This permits EROFS to use fscache-backed data blobs with on-demand
-  	  read support.
---
-2.39.3
+		if (datalen <= sizeof(*bin))
+			return -EINVAL;
 
-But cachefiles won't be complied as modules anymore. Does it
-sounds good?
+But the new code above reads beyond the end of sizeof(*bin).
 
-Thanks,
-Gao Xiang
+Link: https://lore.kernel.org/netdev/tencent_7D663C8936BA96F837124A4474AF76ED6709@qq.com/
+
+...
 
