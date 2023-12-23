@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-784-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-785-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E49081D51A
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Dec 2023 17:36:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F2FB81D549
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Dec 2023 18:29:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1C3CDB21937
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Dec 2023 16:36:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B66FB21DF9
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Dec 2023 17:29:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE07FBFD;
-	Sat, 23 Dec 2023 16:36:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10DAF12E7C;
+	Sat, 23 Dec 2023 17:29:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qj3Y/LrZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SGjc16AT"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F20CA7E;
-	Sat, 23 Dec 2023 16:36:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB976C433C8;
-	Sat, 23 Dec 2023 16:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE2BE12E71;
+	Sat, 23 Dec 2023 17:29:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5621DC433C8;
+	Sat, 23 Dec 2023 17:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703349378;
-	bh=N9AzMOu4koi0frJdk8bVKllnwJ5h9l24nJ4K62YY+pI=;
+	s=k20201202; t=1703352545;
+	bh=7xG6o54wRSyxhLE5knTREAIYMUB47waY0f2uTnrJ8Y0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qj3Y/LrZ2lOQTBRnK85le0wCLszMYvalS1tEsiA2oDhp7qpSDDdWUvTaMpGXz9dhH
-	 4ykHNYOdo8VERL63YuAP4CjO7id17Ib8H6NWh/sBrdWlq+wS7ll95qpMlhdjgHcdnu
-	 8JtgzESsnTo6Lf8rD4QWsFDvri8BBMcUcAmlGZNGux6X5DTVPZyfo04LtfBCt+2WJy
-	 GyAIEspIRqQcufLhNhVK901yYC4p12YjlNF9t1bG4qBLD3rqEKTEJCs4lNVZJdc5Ng
-	 zjjAeI5g3LafLZMaXy6Kg5nFDlh43NDOP71OPd4Z3S89V59zbDhPZNPHi4R8ctqG06
-	 8j2jAc6SxjjNw==
-Date: Sat, 23 Dec 2023 16:36:12 +0000
+	b=SGjc16ATLDegO3xcDc4uo3f6yfiQzSUA2ip8Lfmg7uIgVBm84VUfpA7fdKtjtQQX2
+	 mCEStsb6okKJO0jI6XNhhImL2WgbTaQ6cOT5uvz9kfPlpCC3Cy3fmy7PksUfrKJjmu
+	 SQj2gEx3c3zy6WoFu1sJV5+bmA0dl0AyvtOJpCaigrxgv4DBqj4j4xo9ugO6hV2z6d
+	 sKOmklTMiLes054XPs2Uka7IMCJXmS6e3dYQBa/EYbGoNSdffgLRDFKjqDwzqpY3Br
+	 HEskgr05zQdv+o11jRs1yqfLNLSJzefrqZCLOc3q4zboFQbZ+DfuRa1UJSBK5omam4
+	 d4OOg7/WaXLNw==
+Date: Sat, 23 Dec 2023 17:28:58 +0000
 From: Simon Horman <horms@kernel.org>
 To: David Howells <dhowells@redhat.com>
-Cc: Markus Suvanto <markus.suvanto@gmail.com>,
+Cc: torvalds@linux-foundation.org,
+	Markus Suvanto <markus.suvanto@gmail.com>,
 	Marc Dionne <marc.dionne@auristor.com>,
-	linux-afs@lists.infradead.org, keyrings@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Wang Lei <wang840925@gmail.com>, Jeff Layton <jlayton@redhat.com>,
-	Steve French <sfrench@us.ibm.com>,
+	Steve French <smfrench@gmail.com>,
 	Jarkko Sakkinen <jarkko@kernel.org>,
 	"David S. Miller" <davem@davemloft.net>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-afs@lists.infradead.org, keyrings@vger.kernel.org,
 	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
 	ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
 	Edward Adam Davis <eadavis@qq.com>
-Subject: Re: [PATCH v4 3/3] keys, dns: Allow key types (eg. DNS) to be
- reclaimed immediately on expiry
-Message-ID: <20231223163612.GG201037@kernel.org>
-References: <20231221134558.1659214-1-dhowells@redhat.com>
- <20231221134558.1659214-4-dhowells@redhat.com>
+Subject: Re: [GIT PULL] afs, dns: Fix dynamic root interaction with negative
+ DNS
+Message-ID: <20231223172858.GI201037@kernel.org>
+References: <1843374.1703172614@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,72 +61,113 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231221134558.1659214-4-dhowells@redhat.com>
+In-Reply-To: <1843374.1703172614@warthog.procyon.org.uk>
 
-+ Edward Adam Davis
++ Edward Adam Davis <eadavis@qq.com>
 
-On Thu, Dec 21, 2023 at 01:45:30PM +0000, David Howells wrote:
-> If a key has an expiration time, then when that time passes, the key is
-> left around for a certain amount of time before being collected (5 mins by
-> default) so that EKEYEXPIRED can be returned instead of ENOKEY.  This is a
-> problem for DNS keys because we want to redo the DNS lookup immediately at
-> that point.
+On Thu, Dec 21, 2023 at 03:30:14PM +0000, David Howells wrote:
+> Hi Linus,
 > 
-> Fix this by allowing key types to be marked such that keys of that type
-> don't have this extra period, but are reclaimed as soon as they expire and
-> turn this on for dns_resolver-type keys.  To make this easier to handle,
-> key->expiry is changed to be permanent if TIME64_MAX rather than 0.
+> Could you apply this, please?  It's intended to improve the interaction of
+> arbitrary lookups in the AFS dynamic root that hit DNS lookup failures[1]
+> where kafs behaves differently from openafs and causes some applications to
+> fail that aren't expecting that.  Further, negative DNS results aren't
+> getting removed and are causing failures to persist.
 > 
-> Furthermore, give such new-style negative DNS results a 1s default expiry
-> if no other expiry time is set rather than allowing it to stick around
-> indefinitely.  This shouldn't be zero as ls will follow a failing stat call
-> immediately with a second with AT_SYMLINK_NOFOLLOW added.
+>  (1) Always delete unused (particularly negative) dentries as soon as
+>      possible so that they don't prevent future lookups from retrying.
 > 
-> Fixes: 1a4240f4764a ("DNS: Separate out CIFS DNS Resolver code")
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Tested-by: Markus Suvanto <markus.suvanto@gmail.com>
+>  (2) Fix the handling of new-style negative DNS lookups in ->lookup() to
+>      make them return ENOENT so that userspace doesn't get confused when
+>      stat succeeds but the following open on the looked up file then fails.
+> 
+>  (3) Fix key handling so that DNS lookup results are reclaimed almost as
+>      soon as they expire rather than sitting round either forever or for an
+>      additional 5 mins beyond a set expiry time returning EKEYEXPIRED.
+>      They persist for 1s as /bin/ls will do a second stat call if the first
+>      fails.
+> 
+> Reviewed-by: Jeffrey Altman <jaltman@auristor.com>
+> 
+> Thanks,
+> David
+> 
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216637 [1]
+> Link: https://lore.kernel.org/r/20231211163412.2766147-1-dhowells@redhat.com/ # v1
+> Link: https://lore.kernel.org/r/20231211213233.2793525-1-dhowells@redhat.com/ # v2
+> Link: https://lore.kernel.org/r/20231212144611.3100234-1-dhowells@redhat.com/ # v3
+> Link: https://lore.kernel.org/r/20231221134558.1659214-1-dhowells@redhat.com/ # v4
+> ---
+> The following changes since commit ceb6a6f023fd3e8b07761ed900352ef574010bcb:
+> 
+>   Linux 6.7-rc6 (2023-12-17 15:19:28 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/afs-fixes-20231221
+> 
+> for you to fetch changes up to 39299bdd2546688d92ed9db4948f6219ca1b9542:
+> 
+>   keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry (2023-12-21 13:47:38 +0000)
+> 
+> ----------------------------------------------------------------
+> AFS fixes
+> 
+> ----------------------------------------------------------------
+> David Howells (3):
+>       afs: Fix the dynamic root's d_delete to always delete unused dentries
+>       afs: Fix dynamic root lookup DNS check
+>       keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry
 
-...
+Hi Linus, David, Edward, Networking maintainers, all,
 
-> diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
-> index 01e54b46ae0b..2a6d363763a2 100644
-> --- a/net/dns_resolver/dns_key.c
-> +++ b/net/dns_resolver/dns_key.c
-> @@ -91,6 +91,7 @@ const struct cred *dns_resolver_cache;
->  static int
->  dns_resolver_preparse(struct key_preparsed_payload *prep)
->  {
-> +	const struct dns_server_list_v1_header *v1;
->  	const struct dns_payload_header *bin;
->  	struct user_key_payload *upayload;
->  	unsigned long derrno;
-> @@ -122,6 +123,13 @@ dns_resolver_preparse(struct key_preparsed_payload *prep)
->  			return -EINVAL;
->  		}
->  
-> +		v1 = (const struct dns_server_list_v1_header *)bin;
-> +		if ((v1->status != DNS_LOOKUP_GOOD &&
-> +		     v1->status != DNS_LOOKUP_GOOD_WITH_BAD)) {
-> +			if (prep->expiry == TIME64_MAX)
-> +				prep->expiry = ktime_get_real_seconds() + 1;
-> +		}
-> +
->  		result_len = datalen;
->  		goto store_result;
->  	}
+This is a heads up that my understanding is that the last patch introduces
+a buffer overrun for which a patch has been posted. Ordinarily I would
+think that the fix should go through net. But the above patches aren't in
+net yet.
 
-Hi David,
-
-As has been pointed out by Edward Adam Davis, this may result
-in a buffer overrun. Just above this hunk the following length
-check occurs:
-
-		if (datalen <= sizeof(*bin))
-			return -EINVAL;
-
-But the new code above reads beyond the end of sizeof(*bin).
+Given a) we're now in a holiday season and b) the severity of this
+problem is unclear (to me), perhaps it is best to wait a bit then
+post the fix to net?
 
 Link: https://lore.kernel.org/netdev/tencent_7D663C8936BA96F837124A4474AF76ED6709@qq.com/
 
-...
+N.B. The hash in the fixes tag for the fix patch is now incorrect.
+
+For reference the fix, from the link above, is below.
+I've fixed the hash for the fixes tag and added the posted review tag.
+And added my own SoB, because the patch is in this email.
+
+From: Edward Adam Davis <eadavis@qq.com>
+
+bin will be forcibly converted to "struct dns_server_list_v1_header *", so it 
+is necessary to compare datalen with sizeof(*v1).
+
+Fixes: 39299bdd2546 ("keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry")
+Reported-and-tested-by: syzbot+94bbb75204a05da3d89f@syzkaller.appspotmail.com
+Signed-off-by: Edward Adam Davis <eadavis@qq.com>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Simon Horman <horms@kernel.org>
+
+---
+ net/dns_resolver/dns_key.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+index 3233f4f25fed..15f19521021c 100644
+--- a/net/dns_resolver/dns_key.c
++++ b/net/dns_resolver/dns_key.c
+@@ -104,7 +104,7 @@ dns_resolver_preparse(struct key_preparsed_payload *prep)
+ 
+ 	if (data[0] == 0) {
+ 		/* It may be a server list. */
+-		if (datalen <= sizeof(*bin))
++		if (datalen <= sizeof(*v1))
+ 			return -EINVAL;
+ 
+ 		bin = (const struct dns_payload_header *)data;
+-- 
+2.43.0
+
+
 
