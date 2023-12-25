@@ -1,102 +1,105 @@
-Return-Path: <linux-nfs+bounces-803-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-804-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52A7481E179
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Dec 2023 17:00:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12AB781E180
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Dec 2023 17:05:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E31B61F217E8
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Dec 2023 16:00:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE091281EF6
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Dec 2023 16:05:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E58C52F65;
-	Mon, 25 Dec 2023 16:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1E1F52F61;
+	Mon, 25 Dec 2023 16:05:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="U/x/7bfK"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Pc1ptCn6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from sonic306-20.consmr.mail.gq1.yahoo.com (sonic306-20.consmr.mail.gq1.yahoo.com [98.137.68.83])
+Received: from sonic322-19.consmr.mail.gq1.yahoo.com (sonic322-19.consmr.mail.gq1.yahoo.com [98.137.70.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C465052F64
-	for <linux-nfs@vger.kernel.org>; Mon, 25 Dec 2023 16:00:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F16631A66
+	for <linux-nfs@vger.kernel.org>; Mon, 25 Dec 2023 16:05:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1703520011; bh=E6GDVW0jgxUqwBx/1yTNwZnDLEaTO4y8BRCT0lPT2TA=; h=Date:From:To:Cc:Subject:References:From:Subject:Reply-To; b=U/x/7bfKHs8VoKWtMGsUkZ5dMKghghJP7X85FAdqmnRvRwQg6UklzInJwIh2dY0B0nIHBgUkWy07mkuViEElwagSdeTnrYFdeUFEZrU1p0tVRec28UZPmwTkps/NhqW5/PgG5jCxs8fe0wxXR7uieU041Q5XO9xruw3FhDPVh0TpT/KRUZk0/116itrKT9jnZSkpMAmwno/sTJDw4F1SHZRq6fGMUk0TrigEJQEtzHS6gdlr2Shp4p+zy2zI0nD3Na9j2xhIfEKFE4PQwqvgvWaYJW1UnGo9OhMKSK8cNU3aAk6r6DEgtgNlSPKb9pw7VHn5jYqBJW/yt0kpu6KqEg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1703520011; bh=Q2F++ZdkGcxd/IKw6swcIXSaocUZZEJTsmI8n8LQRC+=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=nvee9OugUzohi4UX+O2iSyHpCnNAn4Y9nsn6iJq/Ea2POOEHiBPc7n+hZ8NLAIV/g7CJrpByVqwBMZBwocae/jtkPaBi5pSYwQBZ7eNvgQB5b/nJ+q4hmMAzIaJUecw20IzjQ0aCv2z9kDlmjU6VTZ+ZSzHvDZX78GYc+Ls55hkg/xgfaLuvp/6R7ipWRZiVkiw+VhdQwp1SYg04sq/6KEU7sPXnwskpsC1qNBLjTkJ+DLyLqCXgSPFkQ9nFCHbU98YJVH57c9cFh6DwBvxDaQNUvK/qfLtuK6ZtX+FAIsMK4TiAgCsgoEIj4DFy8fnffABcbZbEElhvnhXgWLnVJA==
-X-YMail-OSG: JUccaEMVM1kDIWzKmqk.WRcwhQLd_sWI3QmcSo7CkeyR8w1SuKMctW3__Cy4XCa
- 82yn_Kcj8rApUCfO0LKcrr8vJPyxfHQReae7jEgXhZy0RNUvz3pfTnfnyA.sOr8Ltm7Kd2t3BGgl
- zpDbSp3sJD4aLzRotcYeBXpy4gMY6ca_V6DqRNYC2tiY9xCVJyZ602wXoo3WJvmNBjXGEbJ.cCMt
- MiX1RE63r0ReUbTMfYiHAA0yst9rF7zlng.AUgqVz4epbWqtUi9VuF4Wg2Do116hZv9dE6tR8hfe
- DMXewXQva0iAv6FRsomiSIVXdnx0GFs2iMlRoP5oxY8cS0KgCpEZtlonSbfkhZOr1PTR9TLjApLZ
- rGo3N.s2oLWiHuFZIjDtetHN_.kXzz9Wtw6A_VWGSmosRqDEHec0W9gVnK8wRKwONri5R7YRt5Lr
- ._2CEIYZ0fXiJ1ylCE79KEXzbXeaCId1avWZldqVNlLNvKhcPYi6z_fLXk7V9JlvH8S15wbA7yRT
- 2dbKbcC2iQlcZSHcd6EIXblJMY2s_PEnN6XmoAg08S09IQAgJ1UAxAJiyjfP1jLV0zfNFcg3KXj0
- .MgWjYUkxvtAEnzLt.4Q4a3QKDKaLyjSFm.9IiCXAuGMNA_v65KPRYJpE__i.yo_GBbl8Hh4k_zX
- pYfTP_N6Qd7f_iiCNyfA5IDzbrcf3mb0RLCCe_y9vK0rVXk85TdD2m.mZjbh_qrz5KDdIqB2QOY6
- XHkwvrOIQOooztxngygaXF0q6iXdcHlNz4VKZ4xgOUE_z.kFMt2U7AKxi77YgHa95jw3rjz3uQUQ
- tih9F0BFwrkmb0QuoAYgm9TKLHFLDhEBqTpYlBFk_0OQwC_IVnkIHNfWXswuQMM.8UQ2y2YKE8sy
- .LqKDIVDj.7FUqKAVPYk_6DR2I3d9WJ3XmtQeezprThvopr6nB9VKUvGC0FZjn2vvMOQVqM2eQGJ
- NthzKh4z6Am33yZp19aP6MdKnSVGjVht8TzzMZhEJtZzMBVTm7UAXQxugVjAzOdnqu7U9Cl8f6Wr
- ReCp6p4rRy08_IitReQEtDHlhMwLNw0T2dkf5ajrTjZFcZfKehaDBVuJtEWkPPNAJRE0fNYbLqK8
- FIoqKNwQXV39rTp2w_tNA6VQY3Yyae5TpFpb5DYIaDaGi7X48yNtHB8muS6SG5ogf3GMAJ.EdZ3J
- hxXfx_WO6SV51h7hRU1FKhoESOMJZ53lrGpzZeiA.2cnRIGQQpoNDGOkVDBfIGa9iVp9Xxj4F1pb
- QJKNXM23w0E8lmo2KPCw9GuSlR9BajlNMS3fym2nRaY8Tknmbf4ZQwR_3Ok3TYE7Vd7MX7_3rlgI
- 5bJRlgV1JhsNLloRw_3_wlP9VNZX2pKUjvOLhTKCEhgdC7ndI0oed8RPf2kdFml3vsE7..MK4gwD
- F.RUfMCXwMWHFTLVmdmesYJ7bD6dFVRHab58UDE64e1RUnJRU7eKRlVYcbEcbaLdWlXa7dO7ijrP
- GaXzxd4msbCTZZ.PTWyqVe0obj_RW8RQ7RpkdnS8NiRMnu0YdJmHM5qa_ovh7SvgSDBu0Ttkaqi2
- 1_emPL3ae5PiRZczDJ.Ds.4L88Fxmhasj5EAPEh1A0qITsSSHxpo1wVz8p5obEFnyWDY9Qm9.Y2C
- dRWTRgc9.qybLuX6VZzacSupi6uiJE8mEAav10K73jIpeOUOBsjDWMcXuF8XMd7FYxYuwmJTdPPy
- KUMUGPgBi4LtKRa8yHy_BToP6fCuH0zNDmKmo1sVR.lO6qOqGgR.iHUZKcsQT2ofz2odCiA006Jh
- CSAqzZPHwnb4gTfVGDQkY2Vb3._5Qimja_ubqq70QzP157si4aArw.sNly_lD_xAnkVpNBe7R0pO
- yUW3in.ndVQV.vEGpJ0zHQ9Eju6L9lHIbdNkWnWPqBAubgG7PrkQXkNSbLhcm7tuY3dQc_fX1Iyr
- VwVOThOhFNsjRkKv_6bQjubOK00TgvHZMbp92r74WXmL2eoschVtM7mEzMtGVHcGN6oJjTCL8P7q
- MG3DxESpvG4qYk7sZguTqv6t2SShXO2o6_iQknrKr02J.orXwwllxbEKOzeE9VxiDLBI0in4DiKs
- MFOEclDi.tA.IdKumSTazjSpBwjjAX2XHbL.fguG4EYSJr1ilsGk2Q5wzSrt3_IUD2PtziNzH4aG
- QxEo0kzQ9lECwhUtsPjd.Rcz8Dm5q2XUoLFZIIcH8Ogz0tDqhyv9BiSOWnAFGZbP1d4n5UtTDR0j
- zxtJXAnz4j.9Lel1wOVxGecfaYExCyH.h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1703520335; bh=utkBGe9g/rXX1ee3dzx4d2PU7zoNuIal2sZjMURSdn8=; h=Date:From:To:Cc:In-Reply-To:References:Subject:From:Subject:Reply-To; b=Pc1ptCn6lB6sUPvtXwUa40cpm9Cc1FJ16CP40RBmsWiL5hncAOhVzb18BgjmBUF4WMF3uCV+gKDcMUBxzdbgsZcw+rc2VLdX+CUIiU3blfPUxaPD10e18RYClP1gOauE8HFSFGLBYrucuiDYkJAYjcGXSkFVM0p1R3Dv2YwKX3KLWGlL0grqtzdQz1LqVJYuNS+K95CbgRIFQdEEkQh3G5796k/WssxAHYDfWVy4/bJAnqxlM0R/MVI+OJBz6KUYVZzfrPNcN1vIe/iiRLN1WmczkVyWybblwNvertM0wopdU7B3uiDiucK0FKNH5yczdg2zADU808B+BwUTiFoiKw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1703520335; bh=zVXwExR0fO8/nvgS8FcHpB/IeFgyvH8jsxYy3cB++LG=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=D3dnGcuK2S8NePc2TToj1CTSr+SHLIT0Q8yY4VgqNgKF738z06XbBymWac7qIdsiwz8WSsegHU0SCwWRhRqPqtXb1FBkKel+z4D94h8ps+aYiWY/3WaZtHeWpaqsN9sS/Ih1Q+AKpoJmMxh1J8H5UGP8+JmmdTlOEjsgVf437GMxe/Wz5rq0ra5rqn6QH/AVg8WkzJwo2SZcuI24J9BDsw5cFEd1GZxHsnGEJfITvHNe0RcRHrYuRq/3+loh9KOPqtctRzkqx+VN2Ab80FgD0zGEUsZQL1PqtGkk9tfB9PpYmyJL4f4l9o7qik3qd0ap6kyOYm8HBekDWtgeN2jc1A==
+X-YMail-OSG: 9RHHXYMVM1kr3VIz1_jN0AanDhY816EV1VcSLx2NtsRCDcqHcBFzCK7qfeSV_nD
+ RIqzrBWgTBMCPNh9Cvw0LTcrS_YxghL9gHWs3AsIhYYNgXN57ZHLmSgAZTGpbS.mfVLWr7puFPPZ
+ Df2OF91oT2TEtcQOekIpfDpXfeoBWhOtHzoQYVutJ6hN6Y0R7sponwXAQ52dpHCC.QTZGQ651p1d
+ OZUt9iHv_3SSJwCw1QAm0ZSO5EKWhWGHLLaCRuTIGvxzyf5wNEs3XgX2i4VByKuL0l4aUBRAT9cT
+ c8yLtRNpzYUdSkpqwTb01cval9Hsld9LdcANzDdrq8ADOPP9.a34DA.n3QRGJWxzU0eQKeGVP65m
+ 9mncYzcQ8nsDhNRVmwLWeDZTCuCi0V92L8J4fDouVPjSRr2ODXV3YxuU26gAYnOmJuIht8w81sLa
+ 6qAtCmh0XvVEs.Kot0nTxZBq0W2wHo1WZFtqTmTkMa5EC8ZyLvSb55kK8mNJVjauZoz790.HAN4B
+ 2O4Djn78H.ORGTm1RJZiHRMCO9.e8X.FqTt4oJOfRuiz1FMee0lHft2O_j0aUnxeBhr1pujFfYIt
+ 8dTWZhGDNdSXfIS7jCTen8Kd3QokiQQMJIJgg43RPkqqNnWZ.g4kC8nfaRVq5BjhrQRZ2xMWEZwC
+ DJ68UmQZqT.Wf2VCRTIk_IhJJ3_Up3To78ZrYSJrvSj49lCmxaxt.mtwl7bsZTrl850q3MqahDuK
+ 9jHL_.ImNarPTfmlZs6toDVHc96UDI7A0QMTgw3BKXXrRNEKZtl5JK46q5JVK2PYNRa6ptUN8nul
+ 7RMBokmaJ3Jsne.XpLXBlrIDzp3eQ_jfhf_emxpjS8b0z8i2gvxyLmzEz0gWug7awCi7HRgd4aXy
+ eaSEjPIuW069hhodpg5ZZTnVvm.Fli_AiGTMNEvIA57JI96cH85L7096C5X.8u1HDTacaqXGAPow
+ iRgg5Z0aJJh6ucJV0Pir63xiJL6QWTtpkahd4gmXxVZFhS5KGaVZWR4F4TnALU_tSDERmLdAsv6b
+ .ERHfAey_cfOMSGrcuShO7dv6M4_yAgVOqVNhmUe3ZHjWJ2zMoq3kMeCGFMbbgpCaYdqz7bgc4N.
+ 7jRnOj6HZ4EF02MSdAQkUD7P46QeEifufJQKeDor_jBr4PVCs3LE7NTqE.1ChmuJu4i55Wj1w0wj
+ BaG6aVHI2ckMcphn0c7BmWQT63grpZDGefcLYn5aZpy6XGHuvqyFuEdcYUzoxezXudUXKKTzjpZk
+ WeIWkXF_jWvbHzTgl8F.X5YwV6WeB5H9yE1eD.R2QnEWHWsZg3oBacbWdpF96kOWWqOvyd.4far.
+ 2F0iICh3.EHD0cyjc6P9cPnVGpO9mU7FVRbHAOmKDNBgREpssmT16fH4q.3tqmz4a61lXFw4pBGR
+ xoyaNBcqynvGmkWQlFw882S4A3lGFw7Mjq2IC5aKogjJQfMgAsoIgjLATRHqj620LTbAJ8yW3mcs
+ RS9wBZKIfkUP8.MnTpE4lrXMOm4zbqohzaAGA1YrOYfVvOH3MGbNmPLzHJQyl0rWhGlRKZ.oO8cS
+ VKtknedoCinznpBSc531bpH92e.N5.qzcIGOKLxvGpWAWH1vgxRYvZKiGhuPQSbQGdpS0LCk_b4g
+ 9zEjw9uO9OHptUNYAjK8PzDPf3Qe80z8VfG5WWOMX.VJboBY.onlh9XJWQTfvYHVb8Ys43xa.hOz
+ .ZLSYZZOPdppyNpdTL9HxXQycJXv_owZjK_vflMeSguGTO545t7lcUyaFG1ZmKcFl4nBBOVrFZjq
+ n4MAowmbXHZjau4VPfwapWPbJ2ekc.i_ca5UEuO6lrC8Tnm_WpwYsVhUrMjeQGXpVPgFgSgOD0.Y
+ cMcdpQcwSdiw8tOLGBOCfPpe_gtfTHUGfq3Og8wV21y6MU93kH5jzYdghnqDqqRhS7GmnKe0JzLY
+ 8zgK01e68A.m3aH0qj2g5bFDJD_5EUIzLEKbogBBLJsffnErXj1jE6bcEj_mHwmQ4UDEWCt2PbnJ
+ httsIEohaLFL3_qdKPWz2yl3EGbhw6P7zV4IRib.OoHA6bdqg0Gt_CFMljHL3uchHLMOY6JdDlmY
+ MfncYkeJA11j401rXzFcTtpbeW0aacpI8mnrTkKT6pgMvWUbV57Xmuv5xXCVVHnus7AHRRHr7JYy
+ mS0Oo782_BpUuc.W4gJwQFerLpkh7TGWQkoOAkY0a4PGOv7seKhYb2xAHazhoqmFC69EHfC0D5LB
+ SVN38SLxaPX9UjD3ArnK27RAdVrA-
 X-Sonic-MF: <chaosesqueteam@yahoo.com>
-X-Sonic-ID: aacf46a0-fd74-41c4-9d3f-00bc9a43c314
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.gq1.yahoo.com with HTTP; Mon, 25 Dec 2023 16:00:11 +0000
-Date: Mon, 25 Dec 2023 15:59:59 +0000 (UTC)
+X-Sonic-ID: f11ea5e4-fc69-4465-bc3b-c3066c3cc785
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic322.consmr.mail.gq1.yahoo.com with HTTP; Mon, 25 Dec 2023 16:05:35 +0000
+Date: Mon, 25 Dec 2023 16:05:29 +0000 (UTC)
 From: "chaosesqueteam@yahoo.com" <chaosesqueteam@yahoo.com>
-To: "misc@openbsd.org" <misc@openbsd.org>, 
-	"tech@openbsd.org" <tech@openbsd.org>
-Cc: Aditya Pakki <pakki001@umn.edu>, 
+To: Jan Stary <hans@stare.cz>, "misc@openbsd.org" <misc@openbsd.org>, 
+	"tech@openbsd.org" <tech@openbsd.org>, 
+	"theo@openbsd.org" <theo@openbsd.org>
+Cc: "esr@thyrsus.com" <esr@thyrsus.com>, Richard Stallman <rms@gnu.org>, 
+	"misc@openbsd.org" <misc@openbsd.org>, 
+	"tech@openbsd.org" <tech@openbsd.org>, 
+	Aditya Pakki <pakki001@umn.edu>, 
 	Anna Schumaker <anna.schumaker@netapp.com>, 
 	"ansgar@debian.org" <ansgar@debian.org>, 
-	Bagas Sanjaya <bagasdotme@gmail.com>, 
 	"blukashev@sempervictus.com" <blukashev@sempervictus.com>, 
 	Chuck Lever <chuck.lever@oracle.com>, 
 	Dave Wysochanski <dwysocha@redhat.com>, 
 	"David S. Miller" <davem@davemloft.net>, 
 	"editor@lwn.net" <editor@lwn.net>, 
-	Eric Dumazet <edumazet@google.com>, 
-	"esr@thyrsus.com" <esr@thyrsus.com>, 
 	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, 
 	"J. Bruce Fields" <bfields@fieldses.org>, 
-	Jakub Kicinski <kuba@kernel.org>, 
-	Julia Lawall <julia.lawall@inria.fr>, 
-	Leon Romanovsky <leon@kernel.org>, 
+	Jakub Kicinski <kuba@kernel.org>, Leon Romanovsky <leon@kernel.org>, 
 	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
 	Linux Networking <netdev@vger.kernel.org>, 
 	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
 	"moglen@columbia.edu" <moglen@columbia.edu>, 
-	Paolo Abeni <pabeni@redhat.com>, 
 	"skraw.ml@ithnet.com" <skraw.ml@ithnet.com>, 
 	"tcallawa@redhat.com" <tcallawa@redhat.com>, 
 	"torvalds@linuxfoundation.org" <torvalds@linuxfoundation.org>, 
 	"torvalds@osdl.org" <torvalds@osdl.org>, 
 	Trond Myklebust <trond.myklebust@hammerspace.com>, 
-	Richard Stallman <rms@gnu.org>, Bruce Perens <bruce@perens.com>, 
-	Jan Stary <hans@stare.cz>, 
+	Bagas Sanjaya <bagasdotme@gmail.com>, 
+	Eric Dumazet <edumazet@google.com>, 
+	Julia Lawall <julia.lawall@inria.fr>, 
+	Paolo Abeni <pabeni@redhat.com>, Bruce Perens <bruce@perens.com>, 
 	"jon@elytron.openbsd.amsterdam" <jon@elytron.openbsd.amsterdam>, 
 	"netbsd-current-users@netbsd.org" <netbsd-current-users@netbsd.org>, 
 	"netbsd-users@netbsd.org" <netbsd-users@netbsd.org>, 
-	Rudy Zijlstra <rudy@grumpydevil.homelinux.org>, 
-	Polarian <polarian@polarian.dev>
-Message-ID: <1149516167.4244601.1703519999726@mail.yahoo.com>
-Subject: Re: Why the mail filter?
+	Polarian <polarian@polarian.dev>, 
+	Rudy Zijlstra <rudy@grumpydevil.homelinux.org>
+Message-ID: <688030322.4237856.1703520329380@mail.yahoo.com>
+In-Reply-To: <ZYln2W2kI2O_rpGv@www.stare.cz>
+References: <1392628657.4223133.1703501833006.ref@mail.yahoo.com> <1392628657.4223133.1703501833006@mail.yahoo.com> <ZYln2W2kI2O_rpGv@www.stare.cz>
+Subject: Re: Clarification: Project is Old. Project is fully opensource. Yes
+ we code ourselves, want more contributors, not neophytes.
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -105,39 +108,66 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-References: <1149516167.4244601.1703519999726.ref@mail.yahoo.com>
 X-Mailer: WebService/1.1.21952 YMailNorrin
 
->On 2023-12-25 06:32, Jan Stary wrote:
-> There's nothing to "confront". Go away.
-The classic white belief:
-"You're not a real man if you're not an obedient worker drone for muh society (aka women)"
+No.
+Counter offer: Use your supposed brain, Jan, (a woman) and code Unreal binary map format loading into this opensource project:
+sf.net/p/chaosesqueanthology/tickets/2/
 
-Fuck you cunt.
-I'm glad the taliban and Iran have been slaughtering your kind.
-Guess they're "nothing to """confront""" " either.
 
-Bet you'd say the same thing to someone like Hans Reiser (kernel programmer (linux)).
-And then when he shows you he IS someone to """"""""confront"""""""";
-then he gets criticized from the other direction.
 
-There's no winning with you fucking faggots.
-You're simply a woman's society.
 
-Glad you lost in afghanistan :)
 
-Men are _FUCKING_ their young girl brides there.
-White CUNT.
+On Monday, December 25, 2023 at 06:30:36 AM EST, Jan Stary <hans@stare.cz> wrote: 
 
-Oh: and please some help with Unreal Map format loading: sf.net/p/chaosesqueanthology/tickets/2/
 
-On 2023-12-25 06:32, Jan Stary wrote:
-> There's nothing to "confront". Go away.
->
-> On Dec 25 05:31:13, mikeeusa@firemail.cc wrote:
->> Got a problem with my emails? Can't confront me man to man? Like fucking
->> faggot scum?
->>
->>
 
+
+
+Take your irelevant ramblings out of misc@
+
+On Dec 25 10:57:13, chaosesqueteam@yahoo.com wrote:
+> A posting by Polaris to this list put our Project (ChaosEsque Anthology) (note: NOT on g*th*b) in a False Light (maybe we'll sue him for the tort)
+> Suggesting, with malicious aforethought, knowingly false premises:
+> 1) that we weren't programmers
+> 2) that our Project hasn't even started and that we were "fishing" for opensource programmers.
+> 3) that we are 13
+> 4) that we materially support terrorists
+> 5) that we seek funding for our project
+> 6) that we don't know how to make a game.
+> 
+> We've been programming for decades. Recently we programmed in support into the 3d engine for other map formats.
+> THIS is what lead us to /ASK/ on lists we know OTHER opensource _C_ programmers congregate for help with even MORE map formats.
+> 
+> So see 1) we did some work on extra map formats. Then we did some more work on more map formats
+> And then we thought "hey, we'd like Unreal map format too, and hey look at all these project NOT IN C that sorta all work with abit of that format. WOULDN'T it be great if we could expand from our very small opensource programming TEAM to and actual T E A M...
+> 
+> So we asked.
+> 
+> Now, our project has been around for over a decade or so, and has lots of features; Polaris makes it seem that we're a brand new project; or even non existent; or some commercial concern just trying to get free work to make a buck. We've never made a buck. Never sought out monetary contributions. We want code.
+> 
+> But what do you people want now? Compliance with your /religion/ (women's rights).
+> Wasn't the case when I started in programming. But you people chased out any non-faggot-woman-worshiping man.
+> And we won't forget that.
+> "DURRR IF U DONT WORSHIP CUNTS YOU WILL __NEVER__ FIND CONTRIBUTORS" --t. white faggot.
+> 
+> Hey: If you ALL are enemies: then we will treat you as such.
+> Do you get that?
+> You are making an equivalence between OpenSourceProgrammer and WomanWorshipingFaggotWhiteMMAAALLLEEEE
+> If they are the same thing: as Polaris suggests, and the rest of you with your silent bans suggest: then they WILL be treated as such.
+> 
+> 3) We're not 13. Would be good to be; would have more energy to code new things.
+> 4) Afghans have the right to brutally torture and kill any white faggot that seeks to change their woman oppressing culture. (I see it more as a little girl appreciating culture and a woman ignoring culture: but I guess that would be the same to women)
+> And I mean _BRUTALLY_ TORTURE: so you fucking understand in your head that your FAGGOT white ways do not need to be in every culture of the globe. Killing you white scum is NOT terrorism. It's resistance to occupation by your garbage religion.
+> 
+> And we don't materially support anyone.
+> I prayed to YHWH years ago that Afghans would be free; that they would be able to marry cute little girls again without the courts you faggot scumbag white pieces of shit installed to persecute them
+> Prez came through and freed them as his first act.
+> 
+> 5) We've never sought funding
+> 
+> 6) We don't know how to parse Unreal binary map format. Game is allready made. Rifle is fine.
+> 
+> sf.net/p/chaosesqueanthology/tickets/2/
+> 
 
