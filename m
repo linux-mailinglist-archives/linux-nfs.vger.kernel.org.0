@@ -1,116 +1,171 @@
-Return-Path: <linux-nfs+bounces-813-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-814-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF5E281EA28
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Dec 2023 22:24:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7143881EA43
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Dec 2023 23:14:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 618B51F218EF
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Dec 2023 21:24:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8EED11C21F06
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Dec 2023 22:14:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86B314C8B;
-	Tue, 26 Dec 2023 21:24:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 501825234;
+	Tue, 26 Dec 2023 22:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m1Z1zK91"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hbhQNFEk"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45ECB4C87
-	for <linux-nfs@vger.kernel.org>; Tue, 26 Dec 2023 21:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-5c6bd30ee89so4885689a12.0
-        for <linux-nfs@vger.kernel.org>; Tue, 26 Dec 2023 13:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1703625842; x=1704230642; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=gXj6atQGa3CCXZ7MV893XWtrEK6g8JaSv1wnUBmQOBc=;
-        b=m1Z1zK911GMeGcVJbd9zKvLLb24EK2oiOyY5NCbLZL1wjlbXVp76Z1KeQO89ujLkI4
-         aGxfEWEZVci4QYjDmaxL91N2gTOJx5zrvTgheIlDnyY46EP3c76oEqG6b5uMVEwM2+ZR
-         hdTtrnBxp4p38sVy97EjsmWLycav21pnbKwfUqxOR7G7JiUrXBtXSKPyMiq3iv3IOTSH
-         odP0P3NukARfj7XAh/fFsEPaGJUHOLxPTFd+H7FgRq3KpYrLeFYDSe2nip98YjuuhKf2
-         9ZjdXVPFzAiTU0EPKd7tHCV0D5ifQe2hd+s3+S9MbOlJR5lNQ5xKO9LtsGWWN28k1xyK
-         PREg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703625842; x=1704230642;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gXj6atQGa3CCXZ7MV893XWtrEK6g8JaSv1wnUBmQOBc=;
-        b=O5eODOuMwFyeQFVOSIDi7ujNSYqXYqzK2z+dZoDiltNu83X/Q7YxuPmCYSjzyDmvqr
-         Zov9zBy8xAKJtti/dkGYDtituKAWom1KeFaig+JJviDpkBdy3Hd5g0Laf2551bdnqIgz
-         fZRSJVoLUa1IzOLWOcXxjHCUfhtxyjJkE28vAXYpCpq7f8RA4KtX05QjBkmTfr63P0A/
-         kWS/7EVukmtc3UMjK/rHDdNt+JSgoRCfL8yztR/SY9giywnV1llH4rctSq0zW/v0z4Ig
-         kRf8iFBvjvSdr4qOuQZRH3sNQouVBn8gY0Vncb7BP4EbSkEA5+24Ptggm0mkijxAsEmn
-         xiYA==
-X-Gm-Message-State: AOJu0YzMyIewXVlR4RQiBBIV1HSzLkn8xB8+3Sw+/V9nHkDxcbFARvy6
-	F+wq0gDt0vnvZ+3oh5glpbdkPjVkPLoJWjQ7mlA=
-X-Google-Smtp-Source: AGHT+IGBCxn5ae9LfInMHUxvtWkVHyvBSOr4MiUqi0DzSWtBhk/a3C6l4mIoBZGNBdE4zEhBW+c1kg9Z/F7o
-X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
- (user=tanzirh job=sendgmr) by 2002:a65:64c4:0:b0:5ca:44c0:4a5 with SMTP id
- t4-20020a6564c4000000b005ca44c004a5mr66269pgv.4.1703625842439; Tue, 26 Dec
- 2023 13:24:02 -0800 (PST)
-Date: Tue, 26 Dec 2023 21:23:55 +0000
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6E8F4E1;
+	Tue, 26 Dec 2023 22:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BQISBUn013302;
+	Tue, 26 Dec 2023 22:14:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=QX/8r/eTbSQz/ANcD9xTm2MVORmshTWyQxvjDWlicFM=;
+ b=hbhQNFEkfk+55HKnmoGkcLFb7Oof+wS0+gouORZJQ3G3396k+lPC96gfqG+n3CVJqG3w
+ DN6a9JGrbr+zWJt3myfzsqkajuobMYQZShUAP/tViflGn0GLIWnqjD1vrTVE2P9wXCXw
+ LhhWQrsL6JuDKPk8ZEsEVfc89/UenyCpvlZxYrVZNy+hR6iZeoBZs8WUKR5yfgY/KNnm
+ mS0H4wwwNsLNp+XZdWrDnsa8jly4q29J2BJbceha3kg7/r1EWUM5U6MvDOOi7HgKHgVI
+ ZcYQGBYnH6y+tRfmYu1zQcHlMnqEWAOHp3B1Qq2oh0ny1T109fe/ZWzlarKN528kslsQ Jg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v6xpswehq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Dec 2023 22:14:04 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BQLpSWW007268;
+	Tue, 26 Dec 2023 22:14:04 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v6xpsweh4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Dec 2023 22:14:03 +0000
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BQKORSH017369;
+	Tue, 26 Dec 2023 22:14:02 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3v6c3jxhk6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Dec 2023 22:14:02 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BQME1eC40829640
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 26 Dec 2023 22:14:02 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9DB5858056;
+	Tue, 26 Dec 2023 22:14:01 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 324CB5803F;
+	Tue, 26 Dec 2023 22:14:00 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.184.58])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 26 Dec 2023 22:14:00 +0000 (GMT)
+Message-ID: <b03e68e9fa1803d6b2cc7a2c0260f78a05a4d88e.camel@linux.ibm.com>
+Subject: Re: [PATCH v8 21/24] evm: Move to LSM infrastructure
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        dmitry.kasatkin@gmail.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Roberto Sassu
+	 <roberto.sassu@huawei.com>
+Date: Tue, 26 Dec 2023 17:13:59 -0500
+In-Reply-To: <20231214170834.3324559-22-roberto.sassu@huaweicloud.com>
+References: <20231214170834.3324559-1-roberto.sassu@huaweicloud.com>
+	 <20231214170834.3324559-22-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-B4-Tracking: v=1; b=H4sIAGpEi2UC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI2NDIyMz3bLUoqRiXWMDCwMDM2PDFOM0QyWg2oKi1LTMCrA50bG1tQCUXI6 LVwAAAA==
-X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1703625841; l=853;
- i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
- bh=It8Le0eVbcjK1msrpkzQZ4fWEk4P7H+dOJKoReyil1U=; b=SrIMkp54bIj88ln2kxZ9sU0wHEdOeIrfTs84FnqQgcoNG7jkAr/RkSjv/ARlLBNI5DPufPm7p
- hhXOMa9NKajCQ81gFqLAfzg88hnE9eagm7lyq+nshD0ropGP7QNIoXC
-X-Mailer: b4 0.12.4
-Message-ID: <20231226-verbs-v1-1-3a2cecf11afd@google.com>
-Subject: [PATCH] xprtrdma: removed unnecessary headers from verbs.c
-From: Tanzir Hasan <tanzirh@google.com>
-To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
-	Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
-	Tom Talpey <tom@talpey.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
-	Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nick Desaulniers <nnn@google.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, Tanzir Hasan <tanzirh@google.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: is44P4jhmEorQ4L0DyOBUfQrrA9kamfJ
+X-Proofpoint-GUID: cKHafkCFON1COfur3YkblPEwakOYjEWH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-26_12,2023-12-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ malwarescore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ mlxlogscore=999 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311290000 definitions=main-2312260170
 
-asm-generic/barrier.h and asm/bitops.h are already brought into the
-header and the file can still be built with their removal.
+On Thu, 2023-12-14 at 18:08 +0100, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> As for IMA, move hardcoded EVM function calls from various places in the
+> kernel to the LSM infrastructure, by introducing a new LSM named 'evm'
+> (last and always enabled like 'ima'). The order in the Makefile ensures
+> that 'evm' hooks are executed after 'ima' ones.
+> 
+> Make EVM functions as static (except for evm_inode_init_security(), which
+> is exported), and register them as hook implementations in init_evm_lsm().
+> 
+> Unlike before (see commit to move IMA to the LSM infrastructure),
+> evm_inode_post_setattr(), evm_inode_post_set_acl(),
+> evm_inode_post_remove_acl(), and evm_inode_post_removexattr() are not
+> executed for private inodes.
+> 
 
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Tanzir Hasan <tanzirh@google.com>
----
- net/sunrpc/xprtrdma/verbs.c | 3 ---
- 1 file changed, 3 deletions(-)
+Missing is a comment on moving the inline function definitions -
+evm_inode_remove_acl(), evm_inode_post_remove_acl(), and
+evm_inode_post_set_acl() - to evm_main.c.
 
-diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-index 28c0771c4e8c..5436560dda85 100644
---- a/net/sunrpc/xprtrdma/verbs.c
-+++ b/net/sunrpc/xprtrdma/verbs.c
-@@ -55,9 +55,6 @@
- #include <linux/sunrpc/svc_rdma.h>
- #include <linux/log2.h>
- 
--#include <asm-generic/barrier.h>
--#include <asm/bitops.h>
--
- #include <rdma/ib_cm.h>
- 
- #include "xprt_rdma.h"
+> Finally, add the LSM_ID_EVM case in lsm_list_modules_test.c
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> ---
 
----
-base-commit: fbafc3e621c3f4ded43720fdb1d6ce1728ec664e
-change-id: 20231226-verbs-30800631d3f1
+[...] 
+> @@ -2307,9 +2299,7 @@ int security_inode_setxattr(struct mnt_idmap *idmap,
+>  
+>  	if (ret == 1)
+>  		ret = cap_inode_setxattr(dentry, name, value, size, flags);
+> -	if (ret)
+> -		return ret;
+> -	return evm_inode_setxattr(idmap, dentry, name, value, size, flags);
+> +	return ret;
+>  }
 
-Best regards,
+Even though capability will be called after EVM, it doesn't make a
+difference in this instance.
+
+[...]
+
+>  /**
+> @@ -2493,9 +2472,7 @@ int security_inode_removexattr(struct mnt_idmap *idmap,
+>  	ret = call_int_hook(inode_removexattr, 1, idmap, dentry, name);
+>  	if (ret == 1)
+>  		ret = cap_inode_removexattr(idmap, dentry, name);
+> -	if (ret)
+> -		return ret;
+> -	return evm_inode_removexattr(idmap, dentry, name);
+> +	return ret;
+>  }
+
+'security.capability' is one of the EVM protected xattrs.  As
+capability isn't an LSM, it will now be called after EVM, which is a
+problem.
+
 -- 
-Tanzir Hasan <tanzirh@google.com>
+thanks,
+
+Mimi
 
 
