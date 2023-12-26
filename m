@@ -1,106 +1,112 @@
-Return-Path: <linux-nfs+bounces-816-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-817-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 405E481EABD
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Dec 2023 00:21:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC2CD81EAC6
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Dec 2023 00:35:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EFB31C21247
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Dec 2023 23:21:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE6EE1C21171
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Dec 2023 23:35:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BD935394;
-	Tue, 26 Dec 2023 23:21:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9114B568A;
+	Tue, 26 Dec 2023 23:35:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vtgjSBSr"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pig/ZVLX"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236055662;
-	Tue, 26 Dec 2023 23:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=3H/1RRd1XOIP8CyxnN2rk2DU6zvL5/M+2Ri29BKwNJ0=; b=vtgjSBSrCl8feTLHRbFNkyT1EF
-	Puh3gh/rf4win03QkjnardFOxjGgamazIIFpBK3NJzkq50duh99JBIajgECht70ldjotE+uEJbRNE
-	eQlnTF87dqgqolSc3gyrZsLFKY1s90LPz+oCt2Qah/7shB+21KRGfZw+IaqR1FN+CxIDVA1VOY4wl
-	v+uVvivSWA2B7DtumJUX5BPzjInOjW7/mJwYCf6VN3in3nGj4rN05gdHf2GBVmnHmTVVbuaKD8uox
-	shyvuGLV7iE5STpT0WHZOfOzxSH87AysV9EVkcOPXAUSzXxjGs/uP8M6qjs36fNyRmzZ0KP2Mestz
-	X5wE9nZA==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rIGjD-00DesX-1H;
-	Tue, 26 Dec 2023 23:20:51 +0000
-Message-ID: <fadeaa0b-e9d2-4467-97ad-63ba8f7d8646@infradead.org>
-Date: Tue, 26 Dec 2023 15:20:48 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34B2E5662
+	for <linux-nfs@vger.kernel.org>; Tue, 26 Dec 2023 23:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-425928c24easo1089261cf.0
+        for <linux-nfs@vger.kernel.org>; Tue, 26 Dec 2023 15:35:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1703633724; x=1704238524; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eZ+VyiPmwTPUzp7gonixlKN6VYglweSWOvX0B9fYuA0=;
+        b=Pig/ZVLXD93Dxf0FQZVmWS4c3zfEJHp22y6aq3hJK6TJPCZpE3s5DIjYp1KMwVQWNA
+         mzJ1x8DSPQ0e3fh+Yqr26fOlFTA0L0zOrJRz+aTvyybKMtOf2hMbn6foBaeN2BgRvl+n
+         daQgvBS9hydoSM9+jxcY5SoKtMhQx5ShHkbVxKKQeKVUNKUKe2eH08G/RsdfWUDZos1u
+         98BZ9tiwy6fUEE20czQ/J1PCbQAv8Ebm0VlJ8aOTqe4O5EnpUry6Di5EsTty1wkaPVOx
+         Ar1hX961iQlPaGEmPUQCeIKCLRJ7v/ZPOkxBptOOl3nMNiP0xiJTurmsgf1/dT2fJgrn
+         7rLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703633724; x=1704238524;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eZ+VyiPmwTPUzp7gonixlKN6VYglweSWOvX0B9fYuA0=;
+        b=U1y6O1eGBEjj+L2akZgDTUWRvo9dq08bMb5xMeRVMrRxVn0Ca5Zpw1i/54rTHTibAw
+         ENIc50PP3lMJa4ZOj3uGqBwoI2vY3QfhVm5GTkG/rhjecN/n+96M2AERFiXklsOOnSWv
+         ob+M7++OvgO52ZhtgFtB5auUhuSmY8HNnacNMVZP0KTBiHUFtrpybozy1DwXUEA64xH1
+         pdapr20VRWU92Y9t19EmhQC7S6h9ET0E2wxvJkWAMILef2H7UMeRDq7ZClDwZtGC9teJ
+         +IOLQsnnQy10sFstLByI10DDnc7iOJ6rGc0vrh0d+5oBDSgMRkGlDBKaJujGAgTv9xM7
+         xP8A==
+X-Gm-Message-State: AOJu0YwgycYpOORHeRfJ9QTqjad/+FKdbFnUTc9WxNwKJm5Q9iqmC4XX
+	O6PzEiTViqV6/QRsAN30BCMCsGiOEPODW/XQ0duMz1/Lrm+D
+X-Google-Smtp-Source: AGHT+IHp0BTJOrpLyzI3EpLd2wSYU26gECySIQJni1tDfXxziq3Dk+T6Cq/RADc9KqlY9GR3mzqHTegHxmUUC9HsKO4=
+X-Received: by 2002:ac8:590b:0:b0:427:e836:2549 with SMTP id
+ 11-20020ac8590b000000b00427e8362549mr101794qty.29.1703633723983; Tue, 26 Dec
+ 2023 15:35:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20231226-verbs-v1-1-3a2cecf11afd@google.com> <fadeaa0b-e9d2-4467-97ad-63ba8f7d8646@infradead.org>
+In-Reply-To: <fadeaa0b-e9d2-4467-97ad-63ba8f7d8646@infradead.org>
+From: Tanzir Hasan <tanzirh@google.com>
+Date: Tue, 26 Dec 2023 15:35:11 -0800
+Message-ID: <CAE-cH4rc6gWNcsgm243i=dXQhaAQsC4gEz15GEWZO4HB7Vki3A@mail.gmail.com>
 Subject: Re: [PATCH] xprtrdma: removed unnecessary headers from verbs.c
-Content-Language: en-US
-To: Tanzir Hasan <tanzirh@google.com>, Chuck Lever <chuck.lever@oracle.com>,
- Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
- Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
- Tom Talpey <tom@talpey.com>,
- Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Nick Desaulniers <nnn@google.com>,
- Al Viro <viro@zeniv.linux.org.uk>
-References: <20231226-verbs-v1-1-3a2cecf11afd@google.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20231226-verbs-v1-1-3a2cecf11afd@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	Tom Talpey <tom@talpey.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
+	Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nick Desaulniers <nnn@google.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Dec 26, 2023 at 3:20=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org=
+> wrote:
+>
+> Hi,
+>
+> On 12/26/23 13:23, Tanzir Hasan wrote:
+> > asm-generic/barrier.h and asm/bitops.h are already brought into the
+> > header and the file can still be built with their removal.
+>
+> Brought into which header?
+Hi Randy,
 
-On 12/26/23 13:23, Tanzir Hasan wrote:
-> asm-generic/barrier.h and asm/bitops.h are already brought into the
-> header and the file can still be built with their removal.
+Sorry for the poor explanation. I see that I left out the specific header.
+The inclusion of linux/sunrpc/svc_rdma.h brings in linux/sunrpc/rpc_rdma.h
+This brings in linux/bitops.h which is preferred over asm/bitops.h
 
-Brought into which header?
+> Does this conflict with Rule #1 in Documentation/process/submit-checklist=
+.rst ?
 
-Does this conflict with Rule #1 in Documentation/process/submit-checklist.rst ?
+Yes, this conflicts with Rule #1. A better version of this patch would be t=
+o add
+linux/bitops.h to this file directly. The main reason this patch
+exists is to clear
+out the asm-generic file since those are not preferred. I can do this by ei=
+ther
+including just linux/bitops.h or including both linux/bitops.h and
+asm/barrier.h.
+Would the second approach conform better with Rule #1?
 
-> Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-> Signed-off-by: Tanzir Hasan <tanzirh@google.com>
-> ---
->  net/sunrpc/xprtrdma/verbs.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index 28c0771c4e8c..5436560dda85 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -55,9 +55,6 @@
->  #include <linux/sunrpc/svc_rdma.h>
->  #include <linux/log2.h>
->  
-> -#include <asm-generic/barrier.h>
-> -#include <asm/bitops.h>
-> -
->  #include <rdma/ib_cm.h>
->  
->  #include "xprt_rdma.h"
-> 
-> ---
-> base-commit: fbafc3e621c3f4ded43720fdb1d6ce1728ec664e
-> change-id: 20231226-verbs-30800631d3f1
-> 
-> Best regards,
-
--- 
-#Randy
+Thanks,
+Tanzir
 
