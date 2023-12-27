@@ -1,104 +1,179 @@
-Return-Path: <linux-nfs+bounces-820-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-821-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 966F581EAE2
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Dec 2023 01:11:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4DF881EBCD
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Dec 2023 04:13:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45E581F21A1E
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Dec 2023 00:11:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BDEE2835C4
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Dec 2023 03:12:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B7C3373;
-	Wed, 27 Dec 2023 00:11:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9408923D7;
+	Wed, 27 Dec 2023 03:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VXCs6DIS"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="e5hXre4F"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420E4372;
-	Wed, 27 Dec 2023 00:11:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=eX8auJVlERlozjZVYX5dpmwc3qTmcNtRrInT7qoSsrg=; b=VXCs6DISUA8NtWJnYG3xkdlo9u
-	3wfR33BC5I2SKGFTNTE2MaJZwz5SDZNyVP4uQEenPG8MFPDjpRKUL3YHebujE15oejiGZL9NNlrWj
-	Wgft2zvb9IFpcDY0wtL/sE32Imv86cr7aQEbDvELhc3eBCfn9rTChkuymLFJ2QT6BImbz5sxASnzQ
-	vP8TnFKrFeBRIVxmOBP6F5P3cVOQ35qhJgyG4rEWBpTiQNw7amm/zK5yKhALU3BoZ/eufUBeghwxU
-	iZFCjVZUoABx28P4sBS4eEfcjBNv37KK+zELPGcpmtAZrESyXANaJ/jZ5JVIkLSUNRV6SPyQq4P1X
-	1OStSr0Q==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rIHVa-00Dh9T-0m;
-	Wed, 27 Dec 2023 00:10:50 +0000
-Message-ID: <9b5502ec-eee0-4ae7-bdc5-2bcaa3cd323b@infradead.org>
-Date: Tue, 26 Dec 2023 16:10:49 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C55A4405;
+	Wed, 27 Dec 2023 03:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BR2gYuA019407;
+	Wed, 27 Dec 2023 03:12:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=c9fQ+vhSJGXd98MvYdn4qO5cywrGCtI0rrUForI+urQ=;
+ b=e5hXre4FR/bmvbP1EdTAZndf7m6VWSY10rIEx1GrE30k59YPO7QgrHMLEZw6ETd+9AtT
+ rBi4aQGakAKzc279B18qlt7my1l3zKIjV3sd1s3eK4qbQ4bvFNC9dwSA2eF/Sxm8rtYh
+ 8ToAvnVeqns5nwbSRxLsMyFG46vXjDFSyisvin1D6mt61ez2LooZWmCdppoTYFYnXAzl
+ qy5V5CIbgSFupGjOlvZIPpqwXhSQJo18Q7Yu3+UvUiyl1mlQjxZX6iWdjKcyv4mcEWjr
+ 5kefXO4DDcGVGtbTsPDoLxKLoSUelsk4p6X3RJjKwfUsoQX0VvkoRKhQY+t4ZzpXZ4PB 9A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v8bcjrdrq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Dec 2023 03:12:19 +0000
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3BR2tLx8018208;
+	Wed, 27 Dec 2023 03:12:18 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3v8bcjrdrb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Dec 2023 03:12:18 +0000
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3BR2Canx029924;
+	Wed, 27 Dec 2023 03:12:17 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3v6avng0sk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 27 Dec 2023 03:12:17 +0000
+Received: from smtpav03.dal12v.mail.ibm.com (smtpav03.dal12v.mail.ibm.com [10.241.53.102])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 3BR3CHNq57278768
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 27 Dec 2023 03:12:17 GMT
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 161CD58060;
+	Wed, 27 Dec 2023 03:12:17 +0000 (GMT)
+Received: from smtpav03.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9EB975803F;
+	Wed, 27 Dec 2023 03:12:15 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.61.184.58])
+	by smtpav03.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 27 Dec 2023 03:12:15 +0000 (GMT)
+Message-ID: <3cfd131856909f8a36f502498987dece7a294a3e.camel@linux.ibm.com>
+Subject: Re: [PATCH v8 22/24] evm: Make it independent from 'integrity' LSM
+From: Mimi Zohar <zohar@linux.ibm.com>
+To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
+        brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
+        neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        dmitry.kasatkin@gmail.com, dhowells@redhat.com, jarkko@kernel.org,
+        stephen.smalley.work@gmail.com, eparis@parisplace.org,
+        casey@schaufler-ca.com, shuah@kernel.org, mic@digikod.net
+Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        Roberto Sassu
+	 <roberto.sassu@huawei.com>
+Date: Tue, 26 Dec 2023 22:12:15 -0500
+In-Reply-To: <20231214170834.3324559-23-roberto.sassu@huaweicloud.com>
+References: <20231214170834.3324559-1-roberto.sassu@huaweicloud.com>
+	 <20231214170834.3324559-23-roberto.sassu@huaweicloud.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-22.el8) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] xprtrdma: removed unnecessary headers from verbs.c
-Content-Language: en-US
-To: Tanzir Hasan <tanzirh@google.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>,
- Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>,
- Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>,
- Trond Myklebust <trond.myklebust@hammerspace.com>,
- Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, linux-nfs@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Nick Desaulniers <nnn@google.com>, Al Viro <viro@zeniv.linux.org.uk>
-References: <20231226-verbs-v1-1-3a2cecf11afd@google.com>
- <fadeaa0b-e9d2-4467-97ad-63ba8f7d8646@infradead.org>
- <CAE-cH4rc6gWNcsgm243i=dXQhaAQsC4gEz15GEWZO4HB7Vki3A@mail.gmail.com>
- <12958640-e6c0-43d3-a710-48ba7873c8f5@infradead.org>
- <CAE-cH4q2L4C6SHikUD5Le6K7T7Y39S9K1yvSFWvxCWq2crEZ3A@mail.gmail.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <CAE-cH4q2L4C6SHikUD5Le6K7T7Y39S9K1yvSFWvxCWq2crEZ3A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: SLw6GlFKe5t0xvSpBXoE3IkAIYHg9flH
+X-Proofpoint-ORIG-GUID: 50U8yRTnMXTyIllrq2rguBKkUj3Y8ROV
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-26_14,2023-12-26_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 phishscore=0 mlxlogscore=999 priorityscore=1501 malwarescore=0
+ impostorscore=0 adultscore=0 spamscore=0 clxscore=1015 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2312270024
 
+On Thu, 2023-12-14 at 18:08 +0100, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> Define a new structure for EVM-specific metadata, called evm_iint_cache,
+> and embed it in the inode security blob. Introduce evm_iint_inode() to
+> retrieve metadata, and register evm_inode_alloc_security() for the
+> inode_alloc_security LSM hook, to initialize the structure (before
+> splitting metadata, this task was done by iint_init_always()).
+> 
+> Keep the non-NULL checks after calling evm_iint_inode() except in
+> evm_inode_alloc_security(), to take into account inodes for which
+> security_inode_alloc() was not called. When using shared metadata,
+> obtaining a NULL pointer from integrity_iint_find() meant that the file
+> wasn't processed by IMA.
 
+^wasn't in policy.
 
-On 12/26/23 16:04, Tanzir Hasan wrote:
-> Hi Randy,
-> 
->> Where can I find your current working list of what/how to #include?
->  Here is my current working list of what to #include.
-> 
-> #include <linux/bitops.h>
-> #include <linux/interrupt.h>
-> #include <linux/slab.h>
-> #include <linux/sunrpc/addr.h>
-> #include <linux/sunrpc/svc_rdma.h>
-> #include <linux/log2.h>
-> 
-> #include <asm/barrier.h>
-> 
-> #include <rdma/ib_cm.h>
-> 
-> #include "xprt_rdma.h"
-> #include <trace/events/rpcrdma.h>
-> 
-> There was a discussion here about when to include asm/asm-generics:
-> https://lore.kernel.org/llvm/20231215210344.GA3096493@ZenIV/
-> 
-> If I misunderstood your question please let me know.
+Ok.  So now regardless of the IMA policy, EVM always allocates and
+stores the EVM status.  Depending on the IMA policy, the EVM status
+could be saved for a lot more inodes.
 
-Yes, more the latter link for general info rather than the specific
-info for this one source file.
+> 
+> Given that from now on EVM relies on its own metadata, remove the iint
+> parameter from evm_verifyxattr(). Also, directly retrieve the iint in
+> evm_verify_hmac(), called by both evm_verifyxattr() and
+> evm_verify_current_integrity(), since now there is no performance penalty
+> in retrieving EVM metadata (constant time).
 
-Thanks.
+Ok.  So the change only negatively impacts memory usage, not
+performance.
+
+> 
+> Replicate the management of the IMA_NEW_FILE flag (now EVM_NEW_FILE), by
+> introducing evm_post_path_mknod() and evm_file_free() to respectively set
+> and clear the new flag at the same time IMA does.
+
+nit:  Instead of "(now EVM_NEW_FILE)", add an additional sentence,
+saying "Define EVM_NEW_FILE".
+
+> A noteworthy difference
+> is that evm_post_path_mknod() cannot check if a file must be appraised.
+
+This is the result of making EVM independent of IMA's policy.  
+Somewhere, here or above, this needs to be stated.
+
+> Also, since IMA_NEW_FILE is always cleared in ima_check_last_writer() if it
+> is set, it is not necessary to maintain an inode version in EVM to
+> replicate the IMA logic (the inode version check is in OR).
+
+IMA checking the i_version is to prevent unnecessarily having to re-
+calculate the file data hash, which depending on the file size could
+take a while.   This is unnecessary for EVM, as re-calculating the EVM
+hmac is triggered anytime a trusted xattr is updated.  So only the EVM
+new file flag needs to cleared on file free.
+
+> Also, move the EVM-specific flag EVM_IMMUTABLE_DIGSIG to
+> security/integrity/evm/evm.h, since that definition is now unnecessary in
+> the common integrity layer.
+> 
+> Finally, switch to the LSM reservation mechanism for the EVM xattr, and
+> consequently decrement by one the number of xattrs to allocate in
+> security_inode_init_security().
+> 
+> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 
 -- 
-#Randy
+thanks,
+
+Mimi
+
 
