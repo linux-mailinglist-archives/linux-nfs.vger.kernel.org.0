@@ -1,147 +1,111 @@
-Return-Path: <linux-nfs+bounces-831-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-832-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA40C81FD21
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Dec 2023 06:47:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D824481FF76
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Dec 2023 13:45:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 90B80B22893
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Dec 2023 05:47:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 154061C20E78
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Dec 2023 12:45:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90672612D;
-	Fri, 29 Dec 2023 05:47:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42E11111A2;
+	Fri, 29 Dec 2023 12:45:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SV4s2Vtd"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="cI0HlUwP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [217.72.192.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 166325CB9;
-	Fri, 29 Dec 2023 05:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-67fe0264dd2so33825916d6.0;
-        Thu, 28 Dec 2023 21:47:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703828826; x=1704433626; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7WSWnpWy6E40n+7yW9kRJZUQO4PwNI/k8Lg4U5aQ1Mw=;
-        b=SV4s2Vtd1AFjgPf597yxM991oivvzWe+UyvFu3O3DL3Jn8Vcmnpu/UYAefB8jXeW3M
-         NO/s9zMXDQHmUFOaKVDMPOdx/HKwV41HJ3irjFHFRMroHCCOsO6LgGkyWVXI0MW57hnK
-         7ofRgR40FHGxwdiJhEjNGNiOuPXIK+iGWwFAbKAL+49ck5f8CM6qkxP0JJYWmzs6Tl1e
-         jMcgaLe3s3EwynoxloDgG21G2VzyXQnBKsD2VvQF4BqinGUA65s2YGE7dOr9nEf3HOea
-         orFed7bEXYAj4KDJ+ZvNDhbqdazHsNwxfWbm+mkmF3EPILw4d95FgGugDoNQ0b8Js2ZP
-         9MsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703828826; x=1704433626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7WSWnpWy6E40n+7yW9kRJZUQO4PwNI/k8Lg4U5aQ1Mw=;
-        b=BKEsPTroyReGSN1b6dlvHsQRrVsdUA9avXNyQOjWW1e1IHUTa4V+0ElDoHwyO9r5Ex
-         9vECLCRlugqO99fJDndsY2B9zx8jckvE1dc1xENvaSLWRxJv10ze01fkdn0aSGlQiMOE
-         4+91K6WSwMC4F+G531OR8ZBGMc2PhQDQTKVCUkWQuJ/SfhJYq0bvz3ph6CUszQX1Hn2h
-         41853J7/8zKmwQI2/94xC092mG7MNgmfE/jUmrskImftclrbA1WbqtxxvBdwKoq9JXNz
-         GMOg9ifWazUFfbfIGIHNP7NQcHt4gBkbSeMSoUSsFIjt4uYOKRj9CK+XndsSZh7G+T6O
-         0/VA==
-X-Gm-Message-State: AOJu0YxVfN3Iu0bZgb1MLLFVIGnCxutipAmc+xeNI768hCSp1fFG3F06
-	UwqC12WE5aWqEylZASX5YiHARj+c6YrOuY8arQ0=
-X-Google-Smtp-Source: AGHT+IH5AdnV2iCk8gv97cgKNFXJsPgyR5oazZVw57Cd5WbS100UUIa/ifDHHILUZNEpcn374Qm7+h2Cc79IeHloZ8U=
-X-Received: by 2002:a05:6214:d0a:b0:67a:be9a:e9df with SMTP id
- 10-20020a0562140d0a00b0067abe9ae9dfmr18972871qvh.17.1703828825828; Thu, 28
- Dec 2023 21:47:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E438910A24;
+	Fri, 29 Dec 2023 12:45:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1703853909; x=1704458709; i=markus.elfring@web.de;
+	bh=2doc9tGjsfe7edwhPQC4ZU47xXYbFltN+jMs52TiMR8=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=cI0HlUwPQrZ4tA+iBLetN47oW3FeYGHfoEFunTLCwjxn424cn8PudYBzWvjmn0lm
+	 77rMZLtgod9cAoRyO7nR/8B8ln+YXaye7LN04bI0vBpm1z2hj+05wRfv1czQwhZ6x
+	 KpsXPTGi9dOaaoeZSjV1yhUu7ApCkClfzzRZK+MuCy2XWRbPWCrSQrMMTNCIFKUwS
+	 jHIID4ohLGA0LR4TWv/v9GpsElevTVmjTTW4d8mmXyhW4yG50eBYbt1xxWYMYmMLz
+	 uv1I+pH4r03+k3r0Nn/gTPuFCWesBojqgLaEFsolsGFWclPXUZAt0/uFb7jG2bhsF
+	 nyQBntz+MRgoCi6qVA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.85.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1N45xz-1rAZHg1H2f-00zcWB; Fri, 29
+ Dec 2023 13:45:09 +0100
+Message-ID: <bbf26021-798a-41a7-840e-62c8d383bb93@web.de>
+Date: Fri, 29 Dec 2023 13:45:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231228201510.985235-1-trondmy@kernel.org>
-In-Reply-To: <20231228201510.985235-1-trondmy@kernel.org>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Fri, 29 Dec 2023 07:46:54 +0200
-Message-ID: <CAOQ4uxiCf=FWtZWw2uLRmfPvgSxsnmqZC6A+FQgQs=MBQwA30w@mail.gmail.com>
-Subject: Re: [PATCH] knfsd: fix the fallback implementation of the get_name
- export operation
-To: trondmy@kernel.org
-Cc: Chuck Lever <chuck.lever@oracle.com>, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, 
-	Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: linux-nfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Anna Schumaker <anna@kernel.org>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] rpc_pipefs: Replace one label in bl_resolve_deviceid()
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:mzRfjuPlxk5vnDVMY1zbfyGBw2FMtZ8FjuEciWqcOhd2mAzhsR3
+ 32CPXaA32iHm7eADhE55jAoL8I9LZn/zgiWIom9+T/i7xy6rZg68GVJkg9MCIJ9gUIiaTaV
+ 9JNvGUHiiDbBhjNnsubnKOCxOFFuAZrb50D3IYBCLWctSAZojveQfL6KcXsZ9dFzSVLUYYS
+ yf6EBJHqp2/QdtqzVsgeA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Qk1wAC/EVyA=;QgxENkvTw9f67KNy9dBqhxqTxae
+ InW4/60sWTufBIVY95K8s+hZyRHwyH+CWQWq+HZz+DtZuvtT8gQZ5B/4o+G2D5oBh6es8LJR0
+ PzByYQ0oRiDHjz88YbwOJ8aq5xsQNtJ4BP/WhDmNOe14lbLsL0JgyHGNs+PJqAcvATiwyA6qO
+ kSqYH+cYTzwVnzJgKtb2OoXOHVvIbR8MI8nCL9j3jTJKvecNqFICGdUwGW1AXG+m3wcwBsfI8
+ aCTXDopKSS4armUoyJRfrEcSr2CLYXMT7SiO1TyErgS6pmrYCHljh4b9B6k3/cIkPqKnV+6pJ
+ DzG56g3il8tSmx/n5EbE6cwt0YnyeXP5qpogvSKwdM3KiN+ixGZRprTLXj3jm4vk8w7ZnLi3G
+ ewPhfKqlq/lsdbhknG1JV6NVCbzDXPstZnIF0gVB8slkXwfCGw1NOXP4ktSKpp5SenDMY0Vwe
+ 8V0GYluJDQzNSMp9eZ6j9fHBwNxAxInKIKc459IG1hZV2CYGMnMw1rgipTF8pA/F9pTZQ8TPQ
+ g7PFmuHOqouWZAnhXN1ryrjhbcsgLFwOf0Z8Gc1OEBHcBk9LGuFspjJpO+h4nE7UKGxEWPD5W
+ DPeWnnLOpDIDuRRbmTwoVKVO18yXQjXoUKTh/B9/8ajzeZluLpkSPz0MO2Z4citqgI4mab/Wi
+ 2n1+W4Dm6YiN89qpOdCMQ4pOoqwDrKxyGATPxvu3IbQbN2yzVhiS11zQdYrwYBZnbbVmnoCCc
+ OAhxrSJkg45QP/eK+EHkZQdWaOsYxK4pfiOCVHSoyjJQW2f/VK6tYupoUYNfx4qFvDmAUorcz
+ b8oSt7e+nuGUB9HlvFu+ngZiNxSedmUFK2uhcbDiDnb9j9Ywll6JO4eevAQoQ4ExqeK3Id68J
+ rkg4SHhFcNWtAggKBfkMrZKDMWIxJHVF6iDL5xPUWhqGCer9zTVO1NYo+Dw/9fHZpozA/wdgr
+ XPLEJw==
 
-[CC: fsdevel, viro]
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Fri, 29 Dec 2023 13:18:56 +0100
 
-On Thu, Dec 28, 2023 at 10:22=E2=80=AFPM <trondmy@kernel.org> wrote:
->
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> The fallback implementation for the get_name export operation uses
-> readdir() to try to match the inode number to a filename. That filename
-> is then used together with lookup_one() to produce a dentry.
-> A problem arises when we match the '.' or '..' entries, since that
-> causes lookup_one() to fail. This has sometimes been seen to occur for
-> filesystems that violate POSIX requirements around uniqueness of inode
-> numbers, something that is common for snapshot directories.
+The kfree() function was called in one case by
+the bl_resolve_deviceid() function during error handling
+even if the passed data structure member contained a null pointer.
+This issue was detected by using the Coccinelle software.
 
-Ouch. Nasty.
+Thus use an other label.
 
-Looks to me like the root cause is "filesystems that violate POSIX
-requirements around uniqueness of inode numbers".
-This violation can cause any of the parent's children to wrongly match
-get_name() not only '.' and '..' and fail the d_inode sanity check after
-lookup_one().
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ fs/nfs/blocklayout/rpc_pipefs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I understand why this would be common with parent of snapshot dir,
-but the only fs that support snapshots that I know of (btrfs, bcachefs)
-do implement ->get_name(), so which filesystem did you encounter
-this behavior with? can it be fixed by implementing a snapshot
-aware ->get_name()?
+diff --git a/fs/nfs/blocklayout/rpc_pipefs.c b/fs/nfs/blocklayout/rpc_pipe=
+fs.c
+index 6c977288cc28..d8d50a88de04 100644
+=2D-- a/fs/nfs/blocklayout/rpc_pipefs.c
++++ b/fs/nfs/blocklayout/rpc_pipefs.c
+@@ -75,7 +75,7 @@ bl_resolve_deviceid(struct nfs_server *server, struct pn=
+fs_block_volume *b,
+ 	msg->len =3D sizeof(*bl_msg) + b->simple.len;
+ 	msg->data =3D kzalloc(msg->len, gfp_mask);
+ 	if (!msg->data)
+-		goto out_free_data;
++		goto out_unlock;
 
->
-> This patch just ensures that we skip '.' and '..' rather than allowing a
-> match.
+ 	bl_msg =3D msg->data;
+ 	bl_msg->type =3D BL_DEVICE_MOUNT;
+=2D-
+2.43.0
 
-I agree that skipping '.' and '..' makes sense, but...
-
->
-> Fixes: 21d8a15ac333 ("lookup_one_len: don't accept . and ..")
-
-...This Fixes is a bit odd to me.
-Does the problem go away if the Fixes patch is reverted?
-I don't think so, I think you would just hit the d_inode sanity check
-after lookup_one() succeeds.
-Maybe I did not understand the problem then.
-
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/exportfs/expfs.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-> index 3ae0154c5680..84af58eaf2ca 100644
-> --- a/fs/exportfs/expfs.c
-> +++ b/fs/exportfs/expfs.c
-> @@ -255,7 +255,9 @@ static bool filldir_one(struct dir_context *ctx, cons=
-t char *name, int len,
->                 container_of(ctx, struct getdents_callback, ctx);
->
->         buf->sequence++;
-> -       if (buf->ino =3D=3D ino && len <=3D NAME_MAX) {
-> +       /* Ignore the '.' and '..' entries */
-> +       if ((len > 2 || name[0] !=3D '.' || (len =3D=3D 2 && name[1] !=3D=
- '.')) &&
-
-I wish I did not have to review that this condition is correct.
-I wish there was a common helper is_dot_or_dotdot() that would be
-used here as !is_dot_dotdot(name, len).
-I found 3 copies of is_dot_dotdot().
-I didn't even try to find how many places have open coded this.
-
-Thanks,
-Amir.
 
