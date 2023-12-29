@@ -1,102 +1,257 @@
-Return-Path: <linux-nfs+bounces-833-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-834-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82ABA81FFDE
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Dec 2023 14:59:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96E2D81FFFD
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Dec 2023 15:36:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 312071F22053
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Dec 2023 13:59:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A2F531C223C5
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Dec 2023 14:36:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A28811715;
-	Fri, 29 Dec 2023 13:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C275511C88;
+	Fri, 29 Dec 2023 14:36:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HROQsidY"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iaGFGJtc";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="R0gnkD0Q"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F97F11711
-	for <linux-nfs@vger.kernel.org>; Fri, 29 Dec 2023 13:59:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3895C433C7;
-	Fri, 29 Dec 2023 13:59:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703858365;
-	bh=aM3udYkitI71mdrIaVBRSOqxGpncVHD/8qup665eaZk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HROQsidYLNRYo/VwdYGQBnircl80mIkC/cFfAHj6woRx0x9wVWi2+PWnGqLnGtTI0
-	 qpazYt9Sa7igOESpCcwJSlH5py37UWtccQggZcpjA7aiyPjIW6s555HFPcHSz8ritH
-	 8rqN/XRXwqNks8w44ysfGuAFq1DlcB4EOkumUko44qkGEYZe9jNWrObxkFUhodRxq4
-	 I+96AB2ZZodtwhJlg9WhJenTJ9Eo3+zp4GdzZ+F3ZWIFVYHMn0FD+7fryR9+RPJADe
-	 w3aDledE6/xOE//T9FqYmwOnCexZMUJkQ30JXmU9/arxZMTwMpRs/bMJuCA1urUY4V
-	 M2ZoaryxmHUnQ==
-Message-ID: <736a7b564c4f2755d577b0d5f0d0ac441a9e528e.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67CE111C84;
+	Fri, 29 Dec 2023 14:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3BT8O27q030064;
+	Fri, 29 Dec 2023 14:35:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type :
+ content-transfer-encoding : in-reply-to : mime-version; s=corp-2023-11-20;
+ bh=03k/bpvdtFLMH9dhNgOcvjN+QL2fpGJos1lHowUI30c=;
+ b=iaGFGJtc1nqlmgmKx+xUoRtIwiw3SZddFiAe/D3UMeLDHurNgJoGaaVIl0us/QIBn1lG
+ NgFY+0mKtsb5hm7ki/ZY/9Wn2gWE4uvDq/kPPvcxyGmQ9rX9z4bdpKtN3PMN6B9VZcdo
+ ziMRqasl7y5aK+yjOyYtq4qriccXot5PR+D4ycjnGfC9esOKfmO+qRV8TgR4sza1qa+I
+ LhukCMgDPXKHH2ZpsmIh5GKCvPCaiI76oK44dBPEMY3yvu6LNsXG8jzQIlfXPnuFC3Z6
+ VpMujkRUbYwC4xUZUX6U0fZUOm4EnDrUBmPW3wpaAzumPYAZhXLrczPhgilE8dQhshP4 Ig== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3v5qkd7qbt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 29 Dec 2023 14:35:58 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3BTDCnHR014948;
+	Fri, 29 Dec 2023 14:35:57 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3v5p0dc1rh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 29 Dec 2023 14:35:57 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QH0manMD4nthQyxl/vf5fK0rqJSbc2zO8GhnBp9zs/Pst5egTWPB7Sr70dIbg/IusYjoPpm3P3zuIpdyHY3ZpcbwlpLvcpWNF9WvplFV9Tsoqnb2BaXQG9tS8XB82F2RNDJ3jOgIW61BJo7Q2RVXOPt3EQHDSJIf39wjQ+y8mNnMALPs++7DohCzV5nT5mVBjcMMAZY+HpEUnJ/jeV+qfUlygTMPuzGq+kpzc7Wu45cGyiri+2Vznuupyi8ppWmb8kXy3IM0V0YBA61auOkIJgqjyflsrj5T1YUZOEABhp0FfEz3ggnNesYvLb/M/FqneImyl1D2paAS28iAQbjPPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=03k/bpvdtFLMH9dhNgOcvjN+QL2fpGJos1lHowUI30c=;
+ b=HTPiu8TkTQlmvLbZNOKkjlLJ6DeVnEWf1LmHB8IlQBReP9qE8Gs6dp8/goCrWKSuKrJ1N+GQMzrNUCpvCvV48vkGRDF/zMyT0dm/vuoy/bR76M+MO6lqI4ymRM3NmfzNvkNnSHqtnEzuLRK4OV4gLZ8wUUrvjX2oI4YHWxoQS7UoeQ6Ptfbxu56neVx8Jxuo3HiZLj+qqHvFzzpkJvNS0/o0kiT0nE5Yh1gnAoH4HUOJQW2VQI2HXfWLjWwYniSkM0HkQzDJNI5Ct/1hZJyAIWXhKP1N8XpmxlzgL5rGYV8S6Zlxj02dVMRY4hiBhoE0JPozQRrxdgCBaQoEQyYp7w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=03k/bpvdtFLMH9dhNgOcvjN+QL2fpGJos1lHowUI30c=;
+ b=R0gnkD0Q1Mj6/s/pNoeL4Jn40Uh8u3sLtGtTX8VT5waiomTUPxDv1P8MDy7PWqYfWp0UAW9Orm4Npwr4iMqZOrGRsyqXmlLuTfmwphkJ8bJqlQ+SQJXcDK4qUrc/AOhgjZy3HG2hfzMjPtBjrNfg3YwSLDFSsqSJ0NH/QSiIMy4=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by MN2PR10MB4287.namprd10.prod.outlook.com (2603:10b6:208:1da::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.21; Fri, 29 Dec
+ 2023 14:34:54 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::360b:b3c0:c5a9:3b3c]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::360b:b3c0:c5a9:3b3c%4]) with mapi id 15.20.7135.022; Fri, 29 Dec 2023
+ 14:34:54 +0000
+Date: Fri, 29 Dec 2023 09:34:51 -0500
+From: Chuck Lever <chuck.lever@oracle.com>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: trondmy@kernel.org, Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
 Subject: Re: [PATCH] knfsd: fix the fallback implementation of the get_name
  export operation
-From: Jeff Layton <jlayton@kernel.org>
-To: trondmy@kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org
-Date: Fri, 29 Dec 2023 08:59:23 -0500
-In-Reply-To: <20231228201510.985235-1-trondmy@kernel.org>
+Message-ID: <ZY7ZC9q8dGtoC2U/@tissot.1015granger.net>
 References: <20231228201510.985235-1-trondmy@kernel.org>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
-	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
-	3bri75n1TkBYGmqAXy9usCkHIsG5CBHmphv9MHmqMZQVsxvCzfnI5IO1+7MoloeeW/lxuyd0pU88dZsV/riHw87i2GJUJtVlMl5IGBNFpqoNUoqmvRfEMeXhy/kUX4Xc03I1coZIgmwLmCSXwx9MaCPFzV/dOOrju2xjO+2sYyB5BNtxRqUEyXglpujFZqJxxau7E0eXoYgoY9gtFGsspzFkVNntamVXEWVVgzJJr/EWW0y+jNd54MfPRqH+eCGuqlnNLktSAVz1MvVRY1dxUltSlDZT7P2bUoMorIPu8p7ZCg9dyX1+9T6Muc5dHxf/BBP/ir+3e8JTFQBFOiLNdFtB9KZWZmIExheXRvbiA8amxheXRvbkBzYW1iYS5vcmc+iQI4BBMBAgAiBQJOldK9AhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRAADmhBGVaCFWgWD/0ZRi4hN9FK2BdQs9RwNnFZUr7JidAWfCrs37XrA/56olQl3ojn0fQtrP4DbTmCuh0SfMijB24psy1GnkPepnaQ6VRf7Dxg/Y8muZELSOtsv2CKt3/02J1BBitrkkqmHyni5fLLYYg6fub0T/8Kwo1qGPdu1hx2BQRERYtQ/S5d/T0cACdlzi6w8rs5f09hU9Tu4qV1JLKmBTgUWKN969HPRkxiojLQziHVyM/weR5Reu6FZVNuVBGqBD+sfk/c98VJHjsQhYJijcsmgMb1NohAzwrBKcSGKOWJToGEO/1RkIN8tqGnYNp2G+aR685D0chgTl1WzPRM6mFG1+n2b2RR95DxumKVpwBwdLPoCkI24JkeDJ7lXSe3uFWISstFGt0HL8EewP8RuGC8s5h7Ct91HMNQTbjgA+Vi1foWUVXpEintAKgoywaIDlJfTZIl6Ew8ETN/7DLy8bXYgq0XzhaKg3CnOUuGQV5/nl4OAX/3jocT5Cz/OtAiNYj5mLPeL5z2ZszjoCAH6caqsF2oLyA
-	nLqRgDgR+wTQT6gMhr2IRsl+cp8gPHBwQ4uZMb+X00c/Amm9VfviT+BI7B66cnC7Zv6Gvmtu2rEjWDGWPqUgccB7hdMKnKDthkA227/82tYoFiFMb/NwtgGrn5n2vwJyKN6SEoygGrNt0SI84y6hEVbQlSmVmZiBMYXl0b24gPGpsYXl0b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmKQIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIV1H0P/j4OUTwFd7BBbpoSp695qb6HqCzWMuExsp8nZjruymMaeZbGr3OWMNEXRI1FWNHMtcMHWLP/RaDqCJil28proO+PQ/yPhsr2QqJcW4nr91tBrv/MqItuAXLYlsgXqp4BxLP67bzRJ1Bd2x0bWXurpEXY//VBOLnODqThGEcL7jouwjmnRh9FTKZfBDpFRaEfDFOXIfAkMKBa/c9TQwRpx2DPsl3eFWVCNuNGKeGsirLqCxUg5kWTxEorROppz9oU4HPicL6rRH22Ce6nOAON2vHvhkUuO3GbffhrcsPD4DaYup4ic+DxWm+DaSSRJ+e1yJvwi6NmQ9P9UAuLG93S2MdNNbosZ9P8k2mTOVKMc+GooI9Ve/vH8unwitwo7ORMVXhJeU6Q0X7zf3SjwDq2lBhn1DSuTsn2DbsNTiDvqrAaCvbsTsw+SZRwF85eG67eAwouYk+dnKmp1q57LDKMyzysij2oDKbcBlwB/TeX16p8+LxECv51asjS9TInnipssssUDrHIvoTTXWcz7Y5wIngxDFwT8rPY3EggzLGfK5Zx2Q5S/N0FfmADmKknG/D8qGIcJE574D956tiUDKN4I+/g125ORR1v7bP+OIaayAvq17RP+qcAqkxc0x8iCYVCYDouDyNvWPGRhbLUO7mlBpjW9jK9e2fvZY9iw3QzIPGKtClKZWZmIExheXRvbiA8amVmZi5sYXl0
-	b25AcHJpbWFyeWRhdGEuY29tPokCOQQTAQIAIwUCU4xmUAIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIVzJoQALFCS6n/FHQS+hIzHIb56JbokhK0AFqoLVzLKzrnaeXhE5isWcVg0eoV2oTScIwUSUapy94if69tnUo4Q7YNt8/6yFM6hwZAxFjOXR0ciGE3Q+Z1zi49Ox51yjGMQGxlakV9ep4sV/d5a50M+LFTmYSAFp6HY23JN9PkjVJC4PUv5DYRbOZ6Y1+TfXKBAewMVqtwT1Y+LPlfmI8dbbbuUX/kKZ5ddhV2736fgyfpslvJKYl0YifUOVy4D1G/oSycyHkJG78OvX4JKcf2kKzVvg7/Rnv+AueCfFQ6nGwPn0P91I7TEOC4XfZ6a1K3uTp4fPPs1Wn75X7K8lzJP/p8lme40uqwAyBjk+IA5VGd+CVRiyJTpGZwA0jwSYLyXboX+Dqm9pSYzmC9+/AE7lIgpWj+3iNisp1SWtHc4pdtQ5EU2SEz8yKvDbD0lNDbv4ljI7eflPsvN6vOrxz24mCliEco5DwhpaaSnzWnbAPXhQDWb/lUgs/JNk8dtwmvWnqCwRqElMLVisAbJmC0BhZ/Ab4sph3EaiZfdXKhiQqSGdK4La3OTJOJYZphPdGgnkvDV9Pl1QZ0ijXQrVIy3zd6VCNaKYq7BAKidn5g/2Q8oio9Tf4XfdZ9dtwcB+bwDJFgvvDYaZ5bI3ln4V3EyW5i2NfXazz/GA/I/ZtbsigCFc8ftCBKZWZmIExheXRvbiA8amxheXRvbkBrZXJuZWwub3JnPokCOAQTAQIAIgUCWe8u6AIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AACgkQAA5oQRlWghUuCg/+Lb/xGxZD2Q1oJVAE37uW308UpVSD2tAMJUvFTdDbfe3zKlPDTuVsyNsALBGclPLagJ5ZTP+Vp2irAN9uwBuac
-	BOTtmOdz4ZN2tdvNgozzuxp4CHBDVzAslUi2idy+xpsp47DWPxYFIRP3M8QG/aNW052LaPc0cedYxp8+9eiVUNpxF4SiU4i9JDfX/sn9XcfoVZIxMpCRE750zvJvcCUz9HojsrMQ1NFc7MFT1z3MOW2/RlzPcog7xvR5ENPH19ojRDCHqumUHRry+RF0lH00clzX/W8OrQJZtoBPXv9ahka/Vp7kEulcBJr1cH5Wz/WprhsIM7U9pse1f1gYy9YbXtWctUz8uvDR7shsQxAhX3qO7DilMtuGo1v97I/Kx4gXQ52syh/w6EBny71CZrOgD6kJwPVVAaM1LRC28muq91WCFhs/nzHozpbzcheyGtMUI2Ao4K6mnY+3zIuXPygZMFr9KXE6fF7HzKxKuZMJOaEZCiDOq0anx6FmOzs5E6Jqdpo/mtI8beK+BE7Va6ni7YrQlnT0i3vaTVMTiCThbqsB20VrbMjlhpf8lfK1XVNbRq/R7GZ9zHESlsa35ha60yd/j3pu5hT2xyy8krV8vGhHvnJ1XRMJBAB/UYb6FyC7S+mQZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65ke5Ag0ETpXRPAEQAJkVmzCmF+IEenf9a2nZRXMluJohnfl2wCMmw5qNzyk0f+mYuTwTCpw7BE2H0yXk4ZfAuA+xdj14K0A1Dj52j/fKRuDqoNAhQe0b6ipo85Sz98G+XnmQOMeFVp5G1Z7r/QP/nus3mXvtFsu9lLSjMA0cam2NLDt7vx3l9kUYlQBhyIE7/DkKg+3fdqRg7qJoMHNcODtQY+n3hMyaVpplJ/l0DdQDbRSZi5AzDM3DWZEShhuP6/E2LN4O3xWnZukEiz688d1ppl7vBZO9wBql6Ft9Og74diZrTN6lXGGjEWRvO55h6ijMsLCLNDRAVehPhZvSlPldtUuvhZLAjdWpwmzbRIwgoQcO51aWeKthpcpj8feDdKdlVjvJO9fgFD5kqZ
-	QiErRVPpB7VzA/pYV5Mdy7GMbPjmO0IpoL0tVZ8JvUzUZXB3ErS/dJflvboAAQeLpLCkQjqZiQ/DCmgJCrBJst9Xc7YsKKS379Tc3GU33HNSpaOxs2NwfzoesyjKU+P35czvXWTtj7KVVSj3SgzzFk+gLx8y2Nvt9iESdZ1Ustv8tipDsGcvIZ43MQwqU9YbLg8k4V9ch+Mo8SE+C0jyZYDCE2ZGf3OztvtSYMsTnF6/luzVyej1AFVYjKHORzNoTwdHUeC+9/07GO0bMYTPXYvJ/vxBFm3oniXyhgb5FtABEBAAGJAh8EGAECAAkFAk6V0TwCGwwACgkQAA5oQRlWghXhZRAAyycZ2DDyXh2bMYvI8uHgCbeXfL3QCvcw2XoZTH2l2umPiTzrCsDJhgwZfG9BDyOHaYhPasd5qgrUBtjjUiNKjVM+Cx1DnieR0dZWafnqGv682avPblfi70XXr2juRE/fSZoZkyZhm+nsLuIcXTnzY4D572JGrpRMTpNpGmitBdh1l/9O7Fb64uLOtA5Qj5jcHHOjL0DZpjmFWYKlSAHmURHrE8M0qRryQXvlhoQxlJR4nvQrjOPMsqWD5F9mcRyowOzr8amasLv43w92rD2nHoBK6rbFE/qC7AAjABEsZq8+TQmueN0maIXUQu7TBzejsEbV0i29z+kkrjU2NmK5pcxgAtehVxpZJ14LqmN6E0suTtzjNT1eMoqOPrMSx+6vOCIuvJ/MVYnQgHhjtPPnU86mebTY5Loy9YfJAC2EVpxtcCbx2KiwErTndEyWL+GL53LuScUD7tW8vYbGIp4RlnUgPLbqpgssq2gwYO9m75FGuKuB2+2bCGajqalid5nzeq9v7cYLLRgArJfOIBWZrHy2m0C+pFu9DSuV6SNr2dvMQUv1V58h0FaSOxHVQnJdnoHn13g/CKKvyg2EMrMt/EfcXgvDwQbnG9we4xJiWOIOcsvrWcB6C6lWBDA+In7w7SXnnok
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
+ <CAOQ4uxiCf=FWtZWw2uLRmfPvgSxsnmqZC6A+FQgQs=MBQwA30w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOQ4uxiCf=FWtZWw2uLRmfPvgSxsnmqZC6A+FQgQs=MBQwA30w@mail.gmail.com>
+X-ClientProxiedBy: CH2PR18CA0022.namprd18.prod.outlook.com
+ (2603:10b6:610:4f::32) To BN0PR10MB5128.namprd10.prod.outlook.com
+ (2603:10b6:408:117::24)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MN2PR10MB4287:EE_
+X-MS-Office365-Filtering-Correlation-Id: 546a82a0-eefd-4f45-899b-08dc087b529d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	96M/EHe0FIypNUVfW4Y7Xq69b0MCehUJbwaL1pq8ABLg87NQHym7QkJ96fOnRDE15hNR6HpwzhLuxoiNcVALxtnM/FINqm81+LixDzBguKguyZmC1TqzAmncUXjKMMerbD+nHVrDjoLTsNo5RxxEUU9opq9PGIA34PG5yunvV1xVuMAHCVr3bcJMxfH+WZuuiuz4qHjvpO15TcnugWrhK/SdYiHGPNIIVMRxIWLHWawhatzDTHS5AEj3rN7zhYyyz6zSpUXE4/GAWLWoPKhFluqgX8suMui4SYkB5UxxZ9y7jS2r9l1lY17Q+v41RvpM5QNUIYz41GSP6sViUwyhmkxAoSpfv11wa57BzZOihBYETBu/vVHThkUJJigHMG3/hVzvCTWCmtCBB7IT72+KxK+qVKuMRMe6qbPFHpNKTY6F8M2oV7se8AwBS6EPKqmhRUFsJESetv/RfrpyTa0K26w50u7RxaX/qGqZzhdzkI/mvDvrvnvoTtqEArEuHZEVnaJjwIgVriX3dGn2olkcSSa8JZ6tsaBUe11BhGqc1Q8n1q2OO5y2oojIGsP90TK+
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(396003)(366004)(346002)(39860400002)(136003)(230922051799003)(186009)(451199024)(64100799003)(1800799012)(66476007)(6486002)(66556008)(6916009)(66946007)(44832011)(4326008)(316002)(8936002)(54906003)(26005)(83380400001)(478600001)(6512007)(9686003)(6506007)(53546011)(6666004)(8676002)(2906002)(5660300002)(41300700001)(38100700002)(86362001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?utf-8?B?WWExSWhFV0QvalNDTCtIMzdPaHNPay9YN1ZIRXVRZ2ZaUkJ0Mkg3dFB5dzJw?=
+ =?utf-8?B?S3JlaFlMK3BuTEU5eVNXZ1p5RWZvaGYxME1jOFpaOVNuOHhkQTRYd2pIWWNK?=
+ =?utf-8?B?U3VJcTRRTDdmODQ3R0NGMG4zSFlvUm1OQjBZbVlQT2dFY1J0NkxyM2dZWnRw?=
+ =?utf-8?B?S2VtRGFTZ2ZSbStTdDQvRXZTT3kxbWFrbkwvN2VWOXF6eHdERDhCeVF4ZHlN?=
+ =?utf-8?B?dEdWcEhDdzNadVV0V0FoQnJhd2laQXlkaXdpYzkzVll1Z0pBMkR3czNIZDhi?=
+ =?utf-8?B?Q3hCZll3eHVEMjBQemhjMWdzOHErOFVhTjFqdWJaRTJ2M1E3OGloRXBMVVA2?=
+ =?utf-8?B?dFl0QnVSR1ZXVHZKM2Y1cXpzTlArWHdSTmx6cXZNQnBMZFZ4Q0FaSWJJU2tU?=
+ =?utf-8?B?dE52clN4UGUzanRDdFAwNG13OExEN0VBNEVkZ2tVQ3llUEU5SU5paEw0Q0p0?=
+ =?utf-8?B?YkoxdzJJakQrYTJ6aVZHWXpIOTlwK0c5cUlXa1kwUmtBL1pydzN0OFoxZWow?=
+ =?utf-8?B?YTVaU3dxNG9ZbERBNUR5TWFxTmw2akl1YUd4aDVIcFpKb2dBOUIrVUhwY2pl?=
+ =?utf-8?B?SFI0a1F0eHF6ZTI5dmdBKytKZHRXckhVMUE3UnZKZ25UaWxlVGg4c3dXSXdz?=
+ =?utf-8?B?eFZxVzNTTWJoQXkyeXFZdXR1bklUN0VyUHcrOUZsNGJkMVhJdG5yNzJoTE51?=
+ =?utf-8?B?b1FuMTdIMExVSXZIWG1ubmhhOHMzOG15THRFdTNEUmF3NEVGdGNxOUxUNWpa?=
+ =?utf-8?B?WU9GcDhqZld1YWJ1WlR6V21PUUpmYWFvelhvbE5TVDVhclVESmJXNjlxenI0?=
+ =?utf-8?B?YVVkOHlIZ1BtR2dFNnVTcytjNCttYitVdVBMbG04UkJieU5mYit4SU5MdTF2?=
+ =?utf-8?B?MEliSSt2YU93dHdXRE44WUdQaFl3cGREVTFwa29pekxZNjltdW9MTVI0VjFP?=
+ =?utf-8?B?R3grWXpZa2l3NUsyeVZwTjR5dk5BNWNPREw1aExCNnNhbjFMcllTbC9YR2hX?=
+ =?utf-8?B?RXF5d3F5dkVXMmNzYzV5U2pwQWZsMDQyZkhuMXVFWStUdXVQN2UxaXk4UHV5?=
+ =?utf-8?B?MWZRQmpqdDJlUm51eDVwOGFBdWV5TTArNVg5Snl6b0tscnp1Q1FiYms1TDZo?=
+ =?utf-8?B?c1dFWEdESVBUM2JhTWY5VjljV3ludmZIYzc2bzVNM1hCVmNZT29qK0ZzVmp6?=
+ =?utf-8?B?M2xLaHZtTFpQeURURHUvajF5QjFTT0xxTzgxVXFsbGsxVU1sanJNQ003VzY4?=
+ =?utf-8?B?OW5SVkxybHhzZlllVnE0OUx2K1R0WHVIYnU5TVpyM0NSRUtTSTNsTkJ0R0JC?=
+ =?utf-8?B?RVR0SHYyV3d4S0tTdUlDRTB1N1dpUmtHbXVTbDdOMjR0RWx6eDlVUmZOSmF5?=
+ =?utf-8?B?TVdmQ0V0eUhEQkh0V0tGcFppY1dqZTdHdEY1bVd5dzEyOWp0R2hmZGJxNlVF?=
+ =?utf-8?B?K01QbUpvcWhwQXZFWXkrQ0NnR25QWktLcEw1R3NtS3gxVUVzejNPL3FnWmtu?=
+ =?utf-8?B?TVE5amVyK3dpMEZRME02cFB1UC9Fd3p3akFaUGc2bXg3QWYyUzg3RXlNNkFn?=
+ =?utf-8?B?ZkdqS3Q0Z3hNSi9BVktkNHg2ckR4a01CWEM2bDFnVm9taSsrNnpzNFhpc2sy?=
+ =?utf-8?B?eWQ3aXNhNitqU0VCSDBKR0EwTWtKWFJHVFhZMXl5QWF5b3o3Sml2TlFvOWk3?=
+ =?utf-8?B?aEIxWk1leTI0dWNQQXFmY2ZuaFlCSzdURW56WEVwbW9ZcWlCQmJRa0pLRksv?=
+ =?utf-8?B?SlFSV0FRNU95cjhpZGx0THplKy8rZjhWQVM0cklCRXJTYnBZTGVnRVgzMGls?=
+ =?utf-8?B?TCtydURkQmtvdDFnYnFMYTBxdnQ0U3hYckluYlFGYU00UXora1g5R1Z4RkU3?=
+ =?utf-8?B?M3o3cUJxU3BQY3BpNklBdC9UVVQvZU1UeUhSVFlQZ1R6dHJvdFFDMzRWREg1?=
+ =?utf-8?B?OFJFUEJ6T1VGL1ZOMU4ycHRvT2MvYVVUellDZDZjeWVpWVRvbzRGdG5OSWox?=
+ =?utf-8?B?SkJiZEovNWh0RXRueXc5bnJqT00yVkV5cVdVVzZNNEVrSFNlaXRFMEFrK0dk?=
+ =?utf-8?B?VG5VRkllcUl0Y1d1ZG1xNDk5WDRQZ1l3MWtIVmpETnJUSkxpYWFQTDlrNGla?=
+ =?utf-8?B?K1lmSXh5TmdIQVgyS0o0cEcwWnYxdEFaVkhOUnJCZDhoUU5xa3N6N1dtRkI1?=
+ =?utf-8?B?UlE9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	c56WFXPRn4j4iIuFSQixtCRtYKZ6dNSF9U3e95Sinb0ZPR7fwyGOgXo9iGgC2H4pVd5PrLJ/AScwouyuSGUtQX++eB6FCmtNtkvyIrcQdxzpi/bq40qu/JdZrIJLtEce3PwE5/sjb6kE3842Tio4THWxffnWRbqwvNcekUc+k1fA26IVXVG2T8XbXptaYtYvWjr419lpADXjHZmDQ2Khr5GV0jaUNdU72fj0uLvbtddds6PcX8tvpG07LVsCMBY5drA2qbwk8EvNpA+4f2XTYHCFH8B75xWCkzG43Zx07D5vY9BDTIDkpQsq5hIQ6I1aMWvTlu0VyWC+7gUd/zs8FSKTRAyRldDF5u258KviB8kITJpY3reDIVBS47kqwKFfyaz0+PZ4Cv1bio4RNb6jToA96SSEUqUTFNRmZkeIKHr0tetbphyFc3XJ+UKvd0UV4Ksgg6YlRTQvEbaq+rjYxoy5EZYix8oQ3ZewmdGvvWYcVkbtpMM33D50FMKLVYebE3kM7YJfPqf65I3v2XILZjIN8ks0QP1kMpI7WPwCO2owL4cQkStKkHCM5SuDo7cj6fQjmE17+C+M4ikB/m0qw7rMXl0j5bP6aFziOVdLP2Q=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 546a82a0-eefd-4f45-899b-08dc087b529d
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Dec 2023 14:34:54.1820
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: r6u16eiMhfXJNcFF3yw1YC4GkgvrYPrX1X/egLW5s5USM5Ad5/OweJ5ajkr8HrfM+VuQn4PvPap29Kga0xI0yQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4287
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-29_05,2023-12-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ bulkscore=0 adultscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2312290116
+X-Proofpoint-GUID: Pk4LUq-F2PjGAsVX_r4YTbbwyEQThopT
+X-Proofpoint-ORIG-GUID: Pk4LUq-F2PjGAsVX_r4YTbbwyEQThopT
 
-On Thu, 2023-12-28 at 15:15 -0500, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->=20
-> The fallback implementation for the get_name export operation uses
-> readdir() to try to match the inode number to a filename. That filename
-> is then used together with lookup_one() to produce a dentry.
-> A problem arises when we match the '.' or '..' entries, since that
-> causes lookup_one() to fail. This has sometimes been seen to occur for
-> filesystems that violate POSIX requirements around uniqueness of inode
-> numbers, something that is common for snapshot directories.
->=20
-> This patch just ensures that we skip '.' and '..' rather than allowing a
-> match.
->=20
-> Fixes: 21d8a15ac333 ("lookup_one_len: don't accept . and ..")
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/exportfs/expfs.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-> index 3ae0154c5680..84af58eaf2ca 100644
-> --- a/fs/exportfs/expfs.c
-> +++ b/fs/exportfs/expfs.c
-> @@ -255,7 +255,9 @@ static bool filldir_one(struct dir_context *ctx, cons=
-t char *name, int len,
->  		container_of(ctx, struct getdents_callback, ctx);
-> =20
->  	buf->sequence++;
-> -	if (buf->ino =3D=3D ino && len <=3D NAME_MAX) {
-> +	/* Ignore the '.' and '..' entries */
-> +	if ((len > 2 || name[0] !=3D '.' || (len =3D=3D 2 && name[1] !=3D '.'))=
- &&
-> +	    buf->ino =3D=3D ino && len <=3D NAME_MAX) {
->  		memcpy(buf->name, name, len);
->  		buf->name[len] =3D '\0';
->  		buf->found =3D 1;
+On Fri, Dec 29, 2023 at 07:46:54AM +0200, Amir Goldstein wrote:
+> [CC: fsdevel, viro]
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Thanks for picking this up, Amir, and for copying viro/fsdevel. I
+was planning to repost this next week when more folks are back, but
+this works too.
+
+Trond, if you'd like, I can handle review changes if you don't have
+time to follow up.
+
+
+> On Thu, Dec 28, 2023 at 10:22 PM <trondmy@kernel.org> wrote:
+> >
+> > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> >
+> > The fallback implementation for the get_name export operation uses
+> > readdir() to try to match the inode number to a filename. That filename
+> > is then used together with lookup_one() to produce a dentry.
+> > A problem arises when we match the '.' or '..' entries, since that
+> > causes lookup_one() to fail. This has sometimes been seen to occur for
+> > filesystems that violate POSIX requirements around uniqueness of inode
+> > numbers, something that is common for snapshot directories.
+> 
+> Ouch. Nasty.
+> 
+> Looks to me like the root cause is "filesystems that violate POSIX
+> requirements around uniqueness of inode numbers".
+> This violation can cause any of the parent's children to wrongly match
+> get_name() not only '.' and '..' and fail the d_inode sanity check after
+> lookup_one().
+> 
+> I understand why this would be common with parent of snapshot dir,
+> but the only fs that support snapshots that I know of (btrfs, bcachefs)
+> do implement ->get_name(), so which filesystem did you encounter
+> this behavior with? can it be fixed by implementing a snapshot
+> aware ->get_name()?
+> 
+> > This patch just ensures that we skip '.' and '..' rather than allowing a
+> > match.
+> 
+> I agree that skipping '.' and '..' makes sense, but...
+
+Does skipping '.' and '..' make sense for file systems that do
+indeed guarantee inode number uniqueness? Given your explanation
+here, I'm wondering whether the generic get_name() function is the
+right place to address the issue.
+
+
+> > Fixes: 21d8a15ac333 ("lookup_one_len: don't accept . and ..")
+> 
+> ...This Fixes is a bit odd to me.
+
+Me too, but I didn't see a more obvious choice. Maybe drop the
+specific Fixes: tag in favor of just Cc: stable.
+
+
+> Does the problem go away if the Fixes patch is reverted?
+> I don't think so, I think you would just hit the d_inode sanity check
+> after lookup_one() succeeds.
+> Maybe I did not understand the problem then.
+> 
+> > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > ---
+> >  fs/exportfs/expfs.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+> > index 3ae0154c5680..84af58eaf2ca 100644
+> > --- a/fs/exportfs/expfs.c
+> > +++ b/fs/exportfs/expfs.c
+> > @@ -255,7 +255,9 @@ static bool filldir_one(struct dir_context *ctx, const char *name, int len,
+> >                 container_of(ctx, struct getdents_callback, ctx);
+> >
+> >         buf->sequence++;
+> > -       if (buf->ino == ino && len <= NAME_MAX) {
+> > +       /* Ignore the '.' and '..' entries */
+> > +       if ((len > 2 || name[0] != '.' || (len == 2 && name[1] != '.')) &&
+> 
+> I wish I did not have to review that this condition is correct.
+> I wish there was a common helper is_dot_or_dotdot() that would be
+> used here as !is_dot_dotdot(name, len).
+> I found 3 copies of is_dot_dotdot().
+> I didn't even try to find how many places have open coded this.
+
+
+-- 
+Chuck Lever
 
