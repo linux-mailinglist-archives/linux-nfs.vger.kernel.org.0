@@ -1,34 +1,34 @@
-Return-Path: <linux-nfs+bounces-841-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-842-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 927708204F0
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 Dec 2023 13:03:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 98AAE82057C
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 Dec 2023 13:08:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B17271C20E7B
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 Dec 2023 12:03:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23B5B1F2229B
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 Dec 2023 12:08:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 743D179DD;
-	Sat, 30 Dec 2023 12:03:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EBFD849C;
+	Sat, 30 Dec 2023 12:08:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ggH+ZJQj"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZySBG/yN"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4374B8BE3;
-	Sat, 30 Dec 2023 12:03:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97619C433C7;
-	Sat, 30 Dec 2023 12:03:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1304579C2;
+	Sat, 30 Dec 2023 12:08:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66DA2C433C7;
+	Sat, 30 Dec 2023 12:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1703937798;
-	bh=SX+LuJuh/8Ye7DXWWcx5Y+E1Gqt20VL5GVWCpCtFsHQ=;
+	s=korg; t=1703938128;
+	bh=rkJOmZjJJf0T/dmOBYuyLz90ogreUtoOL9TVOY6aCe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ggH+ZJQjgeGgSWqCntjnNQY5hTgDYqnRGqV1lApvHHSufNyIPggNErbg/0ijDurjG
-	 QRupwHtitzRYKwSTdIPO0ZhX2yPVEkYzB4Ppz1mPlPWnpIcISxthBEuBhjJgu9Wvtv
-	 DRWXds47EwJi2jTneeKaIih+EaMaK2/Ru9Hlw0OE=
+	b=ZySBG/yN5oorEUtY9ssgrXlbQ1dz1WnqQI5e8AUSayKPbw5d749CYSgW3WSaa0FR0
+	 SRdfG2qiXc7AI6Cat7jIhH/E/iK451Y6g5MQbVpEiGcy9lcxRKHkbNYcUM7SMCyjlC
+	 Krn7A8VaRnRXBsT1oJtlVAMmkxkOTzVvNIBBwXA4=
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: stable@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -51,12 +51,12 @@ Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	keyrings@vger.kernel.org,
 	netdev@vger.kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 6.6 067/156] keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry
-Date: Sat, 30 Dec 2023 11:58:41 +0000
-Message-ID: <20231230115814.539935693@linuxfoundation.org>
+Subject: [PATCH 6.1 038/112] keys, dns: Allow key types (eg. DNS) to be reclaimed immediately on expiry
+Date: Sat, 30 Dec 2023 11:59:11 +0000
+Message-ID: <20231230115807.964629741@linuxfoundation.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231230115812.333117904@linuxfoundation.org>
-References: <20231230115812.333117904@linuxfoundation.org>
+In-Reply-To: <20231230115806.714618407@linuxfoundation.org>
+References: <20231230115806.714618407@linuxfoundation.org>
 User-Agent: quilt/0.67
 X-stable: review
 X-Patchwork-Hint: ignore
@@ -68,7 +68,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-6.6-stable review patch.  If anyone has any objections, please let me know.
+6.1-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
@@ -133,7 +133,7 @@ index 7d985a1dfe4af..5caf3ce823733 100644
  	/* vet a description */
  	int (*vet_description)(const char *description);
 diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
-index 01e54b46ae0b9..2a6d363763a2b 100644
+index 3aced951d5ab8..03f8f33dc134c 100644
 --- a/net/dns_resolver/dns_key.c
 +++ b/net/dns_resolver/dns_key.c
 @@ -91,6 +91,7 @@ const struct cred *dns_resolver_cache;
@@ -279,7 +279,7 @@ index 3c1e7122076b9..ec2ec335b6133 100644
  }
  
 diff --git a/security/keys/key.c b/security/keys/key.c
-index 5c0c7df833f8a..5f103b2713c64 100644
+index c45afdd1dfbb4..e65240641ca57 100644
 --- a/security/keys/key.c
 +++ b/security/keys/key.c
 @@ -294,6 +294,7 @@ struct key *key_alloc(struct key_type *type, const char *desc,
