@@ -1,143 +1,252 @@
-Return-Path: <linux-nfs+bounces-846-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-847-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A164C8209E5
-	for <lists+linux-nfs@lfdr.de>; Sun, 31 Dec 2023 07:19:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC3AF820B18
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 Dec 2023 11:45:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53EB8283117
-	for <lists+linux-nfs@lfdr.de>; Sun, 31 Dec 2023 06:19:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E47C81C20DAA
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 Dec 2023 10:45:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C52E17D3;
-	Sun, 31 Dec 2023 06:19:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C02133D3;
+	Sun, 31 Dec 2023 10:45:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjvvNyl9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ve3Pfsvz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E39217C2
-	for <linux-nfs@vger.kernel.org>; Sun, 31 Dec 2023 06:19:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B386833D1;
+	Sun, 31 Dec 2023 10:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55569b59f81so3585166a12.1
-        for <linux-nfs@vger.kernel.org>; Sat, 30 Dec 2023 22:19:23 -0800 (PST)
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-67f911e9ac4so65798606d6.3;
+        Sun, 31 Dec 2023 02:45:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704003562; x=1704608362; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lq2pVnlTxnM/IgvpzJ/1i31ZNPIbv/YUPJ1RTGVoYaw=;
-        b=RjvvNyl9uYzyPD9fvBC7FEN0V6sfqQXLNNhu5iVXHl+h8cXImiOyODTqYkuBOT9ZHn
-         qss7ctKzBfdYqN2sLSy+AfTLV2N9ltKAw9aYeYb9VeR4+oUg0KH0p+J3q2geiVfA1COB
-         2Cc+XX26g3D+I9MJ3FvmrysZxEWq7T3JygOV0oNJFSy75Llwup00Zv4Flqt54c+k+tJs
-         QBD3bFtR4tR5uUHzitLSpuLHeOfJn3/0QgmwldzsUh6ascE/KYfX8HqAuXS/wzcH+62Z
-         tDQeZLZDrutHN3eHRE6U76H6Z6knfGSinKQLlGit7PAQokZ1EoL/TwNTYTDB9Q4fCAtF
-         yoyQ==
+        d=gmail.com; s=20230601; t=1704019508; x=1704624308; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ym5PQGYqMktC4T1S3eQaZFoa+im01ZODGDdyF9/BuxA=;
+        b=Ve3PfsvzUsTHJI3c/x2xgvro9H7NU8ZzEwnvzDMrhspbTRmdna/5Hcslk/XxrFB5WK
+         yLvt9W4LYd0vKfc3ktpy3QITtjEj1RGlpR3H4Vl+VMQHJXvb/Dx2yWe8nqxlxdLkgsy8
+         PNmd7I6IuXKFxzGDYgIKNJiJrWrIj1Nka3ATUWr//j6up2mbS4smMTN06M9BCrIq1jnR
+         aFE+Mns0/xcK97sA1GTHYIp/+bvJWw26tcwWiT6gUI33lU3iyTZBAQMAAlkMayFHhKFV
+         HNcshbq4IXlarHPyWJk1Vr3ZrT/j7So/aY4rXhkZh7g24yEeut5MWcUZRC7PzCcJTEq8
+         wi/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704003562; x=1704608362;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lq2pVnlTxnM/IgvpzJ/1i31ZNPIbv/YUPJ1RTGVoYaw=;
-        b=YWXQMMj4h1HBKBNIGS9k3qy3S/1JCPci1OziUITEeW6wf0jfSmTwZdXcAyHdqVwo6X
-         RvKthCZnOK/vsRKRf1GXUw+t4nAyRQj0SK0nLz8PEay5X4aJpLVE+TTr/nyw9ayyqz3H
-         qiwhRyl7fAKdPiCIaB7tLiksgOwmUM8iRJAk0x9VFvgjxcP4R+8iYvRf2xU4O20JEHwY
-         q+/sUhgn01UdY34QswvFF/zmDe3VTlh4WjbRfXfAXBXNk/Z1/k+n7QQqmpx4UodavoH8
-         JSO9tdc6ZuQlDYMZ+ZvOxUoCgL8fEoChxLh9HNnFPG0TJCq0knZlHCFew0uIdLI94MR+
-         cr/g==
-X-Gm-Message-State: AOJu0YySjNXg5/IpSzMuD5v2iKbhbYLkcUGti3H93D78EfA73i0LFHHz
-	PNq9Hp9ZzITk6E4cSkS4lHv+jlWTV7rHDrq/A80usI7eXLc=
-X-Google-Smtp-Source: AGHT+IEtOb4C00jQfdr8lTgEjVXuxR/rtf2tX4+tZNUH4HMI91W7+jJZbKscAGPjgYPxPUBhoPy/WBLq/3fZUZJTC3Q=
-X-Received: by 2002:a05:6402:3083:b0:556:346a:16e6 with SMTP id
- de3-20020a056402308300b00556346a16e6mr154990edb.66.1704003562208; Sat, 30 Dec
- 2023 22:19:22 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704019508; x=1704624308;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ym5PQGYqMktC4T1S3eQaZFoa+im01ZODGDdyF9/BuxA=;
+        b=nCjr5oISNVSc7ERBwVwZWxjG5jIo3XuXb2QomKnP8bB2USo4c1fxr/rsxhRKmVJDio
+         hy8/B96OYna6XWPwzV8kuw0IlFQJwn4nok8hcxf2xOPaZEZGiYIzFk0N6N68dZi8dmgE
+         h6+UwG+5MW9shaL+iU1KOnpstHjR/2caMDxkbHMKoAOgwtTPuoP1+YHIfYAQELjd685r
+         zVok71YyO6ti8lMp+jPxHaCz/sOfAlVk+i/VXrRcj4ZMbow0n5I5H/UvvNpir5q9fq8T
+         u2QRVVDISqE1CU/ocKPbiaZ8jA0IMhXDgB+v/WjOJJrGHKEAWamlJtD7rFen02DJVfWW
+         uRgQ==
+X-Gm-Message-State: AOJu0YxbmkjvK+NWyGrbq79h8jww5/mPtaHDOA+Z2zr8scLbRZBv17/J
+	eQwBPWIfzHAIGIQzsv+BvtPnR2MsQnoKWkSSd0aqlEy/3U8=
+X-Google-Smtp-Source: AGHT+IG1k+h6CNfcg/k9X5WAbncAu3fIfr5JKgb1+xmA3YcQLOI3yoAqnSW2Z2fjCB1pob6WqC+lhhNxbyA+nYCWGqo=
+X-Received: by 2002:a05:6214:2128:b0:67f:c76:e9e8 with SMTP id
+ r8-20020a056214212800b0067f0c76e9e8mr28339330qvc.16.1704019508461; Sun, 31
+ Dec 2023 02:45:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKAoaQkVgYiSYhJDhRm5KY5TA6Q8chtwh5PpP=tt-o-TZoRF8w@mail.gmail.com>
- <CANH4o6N2kBSa7sb72O93N0_twAgXZWqXW659e21YxqLyxQn_aw@mail.gmail.com> <CAAvCNcA9WK2xdGMdUgVFC588F67it-1HHCN+yYzNjOfXE85RNg@mail.gmail.com>
-In-Reply-To: <CAAvCNcA9WK2xdGMdUgVFC588F67it-1HHCN+yYzNjOfXE85RNg@mail.gmail.com>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Sun, 31 Dec 2023 07:19:00 +0100
-Message-ID: <CALXu0UcDVz5reM1XnZ0pFPU9sKer7E2g=kFY-FBH-UTW5frVGA@mail.gmail.com>
-Subject: Re: [Ms-nfs41-client-devel] ANN: NFSv4.1 Windows driver binaries for
- Windows 10 for testing, 2023-12-30 ...
-To: ms-nfs41-client-devel@lists.sourceforge.net, 
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20231228201510.985235-1-trondmy@kernel.org> <CAOQ4uxiCf=FWtZWw2uLRmfPvgSxsnmqZC6A+FQgQs=MBQwA30w@mail.gmail.com>
+ <ZY7ZC9q8dGtoC2U/@tissot.1015granger.net> <CAOQ4uxh1VDPVq7a82HECtKuVwhMRLGe3pvL6TY6Xoobp=vaTTw@mail.gmail.com>
+ <ZY9WPKwO2M6FXKpT@tissot.1015granger.net> <a14bca2bb50eb0a305efc829262081b9b262d888.camel@hammerspace.com>
+ <CAOQ4uxgcCajCD_bNKSLJp2AG1Q=N0CW9P-h+JMiun48mY0ZyDQ@mail.gmail.com> <9c4867cf1f94a8e46c2271bfd5a91d30d49ada70.camel@hammerspace.com>
+In-Reply-To: <9c4867cf1f94a8e46c2271bfd5a91d30d49ada70.camel@hammerspace.com>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Sun, 31 Dec 2023 12:44:57 +0200
+Message-ID: <CAOQ4uxh5xpJSvmYxWRKe_i=h1PRPy+nEA=vAcCD0rCJQKnm1Ww@mail.gmail.com>
+Subject: Re: [PATCH] knfsd: fix the fallback implementation of the get_name
+ export operation
+To: Trond Myklebust <trondmy@hammerspace.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
+	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, 31 Dec 2023 at 01:05, Dan Shelton <dan.f.shelton@gmail.com> wrote:
+On Sat, Dec 30, 2023 at 9:36=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
+e.com> wrote:
 >
-> On Sat, 30 Dec 2023 at 22:25, Martin Wege <martin.l.wege@gmail.com> wrote:
-[[CUT--CUT--CUT]]
-> > I've created a set of test binaries for the NFSv4.1 filesystem driver
-> > for Windows, based on https://github.com/kofemann/ms-nfs41-client
-> > (commit id #43852f547ce80b3b33bb05c2e993e322d2264dfa), for testing and
-> > feedback (download URL below).
-> > Please send comments, bugs, test reports, complaints etc. to
-> > https://sourceforge.net/projects/ms-nfs41-client/lists/ms-nfs41-client-devel
-[[CUT--CUT--CUT]]
-> > # 2. Installation (as "Administrator"):
-> > $ mkdir -p ~/download
-> > $ cd ~/download
-> > $ wget 'http://www.nrubsig.org/people/gisburn/work/msnfs41client/releases/testing/msnfs41client_cygwin_binaries_20231230_14h12m_git43852f5.tar.bz2'
-> > $ (cd / && tar -xf
-> > ~/download/msnfs41client_cygwin_binaries_20231230_14h12m_git43852f5.tar.bz2
-> > )
-> > $ /sbin/msnfs41client install
+> On Sat, 2023-12-30 at 08:23 +0200, Amir Goldstein wrote:
+> > On Sat, Dec 30, 2023 at 1:50=E2=80=AFAM Trond Myklebust
+> > <trondmy@hammerspace.com> wrote:
+> > >
+> > > On Fri, 2023-12-29 at 18:29 -0500, Chuck Lever wrote:
+> > > > On Fri, Dec 29, 2023 at 07:44:20PM +0200, Amir Goldstein wrote:
+> > > > > On Fri, Dec 29, 2023 at 4:35=E2=80=AFPM Chuck Lever
+> > > > > <chuck.lever@oracle.com> wrote:
+> > > > > >
+> > > > > > On Fri, Dec 29, 2023 at 07:46:54AM +0200, Amir Goldstein
+> > > > > > wrote:
+> > > > > > > [CC: fsdevel, viro]
+> > > > > >
+> > > > > > Thanks for picking this up, Amir, and for copying
+> > > > > > viro/fsdevel. I
+> > > > > > was planning to repost this next week when more folks are
+> > > > > > back,
+> > > > > > but
+> > > > > > this works too.
+> > > > > >
+> > > > > > Trond, if you'd like, I can handle review changes if you
+> > > > > > don't
+> > > > > > have
+> > > > > > time to follow up.
+> > > > > >
+> > > > > >
+> > > > > > > On Thu, Dec 28, 2023 at 10:22=E2=80=AFPM <trondmy@kernel.org>
+> > > > > > > wrote:
+> > > > > > > >
+> > > > > > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > > > > > >
+> > > > > > > > The fallback implementation for the get_name export
+> > > > > > > > operation
+> > > > > > > > uses
+> > > > > > > > readdir() to try to match the inode number to a filename.
+> > > > > > > > That filename
+> > > > > > > > is then used together with lookup_one() to produce a
+> > > > > > > > dentry.
+> > > > > > > > A problem arises when we match the '.' or '..' entries,
+> > > > > > > > since
+> > > > > > > > that
+> > > > > > > > causes lookup_one() to fail. This has sometimes been seen
+> > > > > > > > to
+> > > > > > > > occur for
+> > > > > > > > filesystems that violate POSIX requirements around
+> > > > > > > > uniqueness
+> > > > > > > > of inode
+> > > > > > > > numbers, something that is common for snapshot
+> > > > > > > > directories.
+> > > > > > >
+> > > > > > > Ouch. Nasty.
+> > > > > > >
+> > > > > > > Looks to me like the root cause is "filesystems that
+> > > > > > > violate
+> > > > > > > POSIX
+> > > > > > > requirements around uniqueness of inode numbers".
+> > > > > > > This violation can cause any of the parent's children to
+> > > > > > > wrongly match
+> > > > > > > get_name() not only '.' and '..' and fail the d_inode
+> > > > > > > sanity
+> > > > > > > check after
+> > > > > > > lookup_one().
+> > > > > > >
+> > > > > > > I understand why this would be common with parent of
+> > > > > > > snapshot
+> > > > > > > dir,
+> > > > > > > but the only fs that support snapshots that I know of
+> > > > > > > (btrfs,
+> > > > > > > bcachefs)
+> > > > > > > do implement ->get_name(), so which filesystem did you
+> > > > > > > encounter
+> > > > > > > this behavior with? can it be fixed by implementing a
+> > > > > > > snapshot
+> > > > > > > aware ->get_name()?
+> > > > > > >
+> > > > > > > > This patch just ensures that we skip '.' and '..' rather
+> > > > > > > > than
+> > > > > > > > allowing a
+> > > > > > > > match.
+> > > > > > >
+> > > > > > > I agree that skipping '.' and '..' makes sense, but...
+> > > > > >
+> > > > > > Does skipping '.' and '..' make sense for file systems that
+> > > > > > do
+> > > > >
+> > > > > It makes sense because if the child's name in its parent would
+> > > > > have been "." or ".." it would have been its own parent or its
+> > > > > own
+> > > > > grandparent (ELOOP situation).
+> > > > > IOW, we can safely skip "." and "..", regardless of anything
+> > > > > else.
+> > > >
+> > > > This new comment:
+> > > >
+> > > > +     /* Ignore the '.' and '..' entries */
+> > > >
+> > > > then seems inadequate to explain why dot and dot-dot are now
+> > > > never
+> > > > matched. Perhaps the function's documenting comment could expand
+> > > > on
+> > > > this a little. I'll give it some thought.
+> > >
+> > > The point of this code is to attempt to create a valid path that
+> > > connects the inode found by the filehandle to the export point. The
+> > > readdir() must determine a valid name for a dentry that is a
+> > > component
+> > > of that path, which is why '.' and '..' can never be acceptable.
+> > >
+> > > This is why I think we should keep the 'Fixes:' line. The commit it
+> > > points to explains quite concisely why this patch is needed.
+> > >
+> >
+> > By all means, mention this commit, just not with a fixed tag please.
+> > IIUC, commit 21d8a15ac333 did not introduce a regression that this
+> > patch fixes. Right?
+> > So why insist on abusing Fixes: tag instead of a mention?
 >
-> This fails on Windows 11, because two DLLs are missing:
-> VCRUNTIME140D.dll
-> ucrtbased.dll
+> I don't see it as being that straightforward.
 >
-> Could you please package these DLLs too?
-
-Or just link them statically.
-
-[[CUT--CUT--CUT]]
-> > # Mount a filesystem and use it
-> > $ /sbin/nfs_mount -o rw N 10.49.20.110:/net_tmpfs2
-> > Successfully mounted '10.49.20.110@2049' to drive 'N:'
-> > $ cd /cygdrive/n/
+> Prior to commit 21d8a15ac333, the call to lookup_one_len() could return
+> a dentry (albeit one with an invalid name) depending on whether or not
+> the filesystem lookup succeeds. Note that knfsd does support a lookup
+> of "." and "..", as do several other NFS servers.
 >
-> This fails too, until I figured out that the Linux nfs server needs
-> the export line "insecure". Could you please fix this?
-
-Not sure whether this can be fixed at all. The nfsd server requires
-that nfs clients connect from a TCP port < 1024, and Windows just
-doesn't allow a bind() to a port < 1024. I had that debate with
-Roland, and for now its "under investigation" what could be done.
-
+> With commit 21d8a15ac333 applied, however, lookup_one_len()
+> automatically returns an EACCES error.
 >
-> So after fixing all this, nfs_mount succeeded. HURRAY!!
+> So while I agree that there are good reasons for introducing commit
+> 21d8a15ac333, it does change the behaviour in this code path.
 >
-> So, permissions/ownership seems to be an issue, so I created a tmp/
-> dir, and did a chmod a=u tmp, so everyone can r/w to that dir. And
-> then Windows can even WRITE there.
->
-> Quick test, Word and Excel can read and write files.
-> Moving big and small files works.
-> Watching videos from NFS filesystem work
-> Overwriting/replacing files created on Linux fails with a permission
-> error, which is correct.
-> clang can compile on the NFS filesystem a hello world application
-> wget on NFS filesystem works
 
-BUG: Windows 11 Explorer shows  the NFS mount as "disconnected"
+I feel that we are miscommunicating.
+Let me explain how I understand the code and please tell me where I am wron=
+g.
 
-> So far it looks VERY good :)
+The way I see it, before 21d8a15ac333, exportfs_decode_fh_raw() would
+call lookup_one() and may get a dentry (with invalid name), but then the
+sanity check following lookup_one() would surely fail, because no fs should
+allow a directory to be its own parent/grandparent:
 
-Agreed.
+                        if (unlikely(nresult->d_inode !=3D result->d_inode)=
+) {
+                                dput(nresult);
+                                nresult =3D ERR_PTR(-ESTALE);
+                        }
 
-Many thanks go to Roland Mainz and Tigran Mkrtchyan for working on this
+The way I see it, the only thing that commit 21d8a15ac333 changed in
+this code is the return value of exportfs_decode_fh_raw() from -ESTALE
+to -EACCES.
 
-Ced
--- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+exportfs_decode_fh() converts both these errors to -ESTALE and
+so does nfsd_set_fh_dentry().
+
+Bottom line, if I am reading the code correctly, commit 21d8a15ac333 did
+not change the behaviour for knfsd nor any user visible behavior for
+open_by_handle_at() for userspace nfsd.
+
+Your fix is good because:
+1. It saves an unneeded call to lookup_one()
+2. skipping "." and ".." increases the chance of finding the correct child
+    name in the case of non-unique ino
+
+So I have no objection to your fix in generic code, but I do not see
+it being a regression fix.
+
+Where are we miscommunicating? What am I missing?
+
+Thanks,
+Amir.
 
