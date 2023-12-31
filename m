@@ -1,252 +1,127 @@
-Return-Path: <linux-nfs+bounces-847-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-848-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC3AF820B18
-	for <lists+linux-nfs@lfdr.de>; Sun, 31 Dec 2023 11:45:15 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF2BD820B75
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 Dec 2023 14:56:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E47C81C20DAA
-	for <lists+linux-nfs@lfdr.de>; Sun, 31 Dec 2023 10:45:14 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72240B2112B
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 Dec 2023 13:56:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C02133D3;
-	Sun, 31 Dec 2023 10:45:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 139ED443D;
+	Sun, 31 Dec 2023 13:56:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ve3Pfsvz"
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="ZGSSycWL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B386833D1;
-	Sun, 31 Dec 2023 10:45:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-67f911e9ac4so65798606d6.3;
-        Sun, 31 Dec 2023 02:45:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704019508; x=1704624308; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ym5PQGYqMktC4T1S3eQaZFoa+im01ZODGDdyF9/BuxA=;
-        b=Ve3PfsvzUsTHJI3c/x2xgvro9H7NU8ZzEwnvzDMrhspbTRmdna/5Hcslk/XxrFB5WK
-         yLvt9W4LYd0vKfc3ktpy3QITtjEj1RGlpR3H4Vl+VMQHJXvb/Dx2yWe8nqxlxdLkgsy8
-         PNmd7I6IuXKFxzGDYgIKNJiJrWrIj1Nka3ATUWr//j6up2mbS4smMTN06M9BCrIq1jnR
-         aFE+Mns0/xcK97sA1GTHYIp/+bvJWw26tcwWiT6gUI33lU3iyTZBAQMAAlkMayFHhKFV
-         HNcshbq4IXlarHPyWJk1Vr3ZrT/j7So/aY4rXhkZh7g24yEeut5MWcUZRC7PzCcJTEq8
-         wi/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704019508; x=1704624308;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ym5PQGYqMktC4T1S3eQaZFoa+im01ZODGDdyF9/BuxA=;
-        b=nCjr5oISNVSc7ERBwVwZWxjG5jIo3XuXb2QomKnP8bB2USo4c1fxr/rsxhRKmVJDio
-         hy8/B96OYna6XWPwzV8kuw0IlFQJwn4nok8hcxf2xOPaZEZGiYIzFk0N6N68dZi8dmgE
-         h6+UwG+5MW9shaL+iU1KOnpstHjR/2caMDxkbHMKoAOgwtTPuoP1+YHIfYAQELjd685r
-         zVok71YyO6ti8lMp+jPxHaCz/sOfAlVk+i/VXrRcj4ZMbow0n5I5H/UvvNpir5q9fq8T
-         u2QRVVDISqE1CU/ocKPbiaZ8jA0IMhXDgB+v/WjOJJrGHKEAWamlJtD7rFen02DJVfWW
-         uRgQ==
-X-Gm-Message-State: AOJu0YxbmkjvK+NWyGrbq79h8jww5/mPtaHDOA+Z2zr8scLbRZBv17/J
-	eQwBPWIfzHAIGIQzsv+BvtPnR2MsQnoKWkSSd0aqlEy/3U8=
-X-Google-Smtp-Source: AGHT+IG1k+h6CNfcg/k9X5WAbncAu3fIfr5JKgb1+xmA3YcQLOI3yoAqnSW2Z2fjCB1pob6WqC+lhhNxbyA+nYCWGqo=
-X-Received: by 2002:a05:6214:2128:b0:67f:c76:e9e8 with SMTP id
- r8-20020a056214212800b0067f0c76e9e8mr28339330qvc.16.1704019508461; Sun, 31
- Dec 2023 02:45:08 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5124763A4;
+	Sun, 31 Dec 2023 13:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1704030977; x=1704635777; i=markus.elfring@web.de;
+	bh=nEsttUe5CEeUqngGIn4dzPSKvNy9/cvmNlkaVhhQ/RI=;
+	h=X-UI-Sender-Class:Date:To:Cc:From:Subject;
+	b=ZGSSycWLpylunPskg+Jfpa5BqMEB6fl2Fmr86fzW43GthcPpO+0bGH2uuOd8E5V0
+	 o7NHzJjTIoGxkimBoFgLVhQw7sSaG4dfn9/5kXZyFXw9QTupEK0+ta7e7u8qWSmrD
+	 b8PqqjRzFFfDNUinGbokp7s9Orqr6Pn5hkWxqjfJsoLBsvXfQlPW3IlEKfliYnuZ/
+	 omg2wgpUfwmVXOnINBJSEPY2CoS4Sqsq+hVtvX6OcKlbhjw99GzALOV7b1uZPb2bT
+	 AkThayunimX4O0HvN9PcJlQDHzAhMdtWn9VaizZgFj1uEULUyl4q9bY6l+lyfKzbw
+	 +Tir+rZTsvhlvGAjfg==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.90.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1Mv3US-1r2PTt1ebo-00rCuf; Sun, 31
+ Dec 2023 14:56:17 +0100
+Message-ID: <9561c78e-49a2-430c-a611-52806c0cdf25@web.de>
+Date: Sun, 31 Dec 2023 14:56:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231228201510.985235-1-trondmy@kernel.org> <CAOQ4uxiCf=FWtZWw2uLRmfPvgSxsnmqZC6A+FQgQs=MBQwA30w@mail.gmail.com>
- <ZY7ZC9q8dGtoC2U/@tissot.1015granger.net> <CAOQ4uxh1VDPVq7a82HECtKuVwhMRLGe3pvL6TY6Xoobp=vaTTw@mail.gmail.com>
- <ZY9WPKwO2M6FXKpT@tissot.1015granger.net> <a14bca2bb50eb0a305efc829262081b9b262d888.camel@hammerspace.com>
- <CAOQ4uxgcCajCD_bNKSLJp2AG1Q=N0CW9P-h+JMiun48mY0ZyDQ@mail.gmail.com> <9c4867cf1f94a8e46c2271bfd5a91d30d49ada70.camel@hammerspace.com>
-In-Reply-To: <9c4867cf1f94a8e46c2271bfd5a91d30d49ada70.camel@hammerspace.com>
-From: Amir Goldstein <amir73il@gmail.com>
-Date: Sun, 31 Dec 2023 12:44:57 +0200
-Message-ID: <CAOQ4uxh5xpJSvmYxWRKe_i=h1PRPy+nEA=vAcCD0rCJQKnm1Ww@mail.gmail.com>
-Subject: Re: [PATCH] knfsd: fix the fallback implementation of the get_name
- export operation
-To: Trond Myklebust <trondmy@hammerspace.com>
-Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, 
-	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>, "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+To: linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Anna Schumaker <anna@kernel.org>,
+ Ard Biesheuvel <ardb@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
+ Dai Ngo <Dai.Ngo@oracle.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Jakub Kicinski <kuba@kernel.org>,
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <kolga@netapp.com>, Paolo Abeni <pabeni@redhat.com>,
+ Simo Sorce <simo@redhat.com>, Tom Talpey <tom@talpey.com>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>
+Content-Language: en-GB
+Cc: LKML <linux-kernel@vger.kernel.org>
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] sunrpc: Improve exception handling in krb5_etm_checksum()
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:o+3oZXM5aXP/oMmDGvXATTeotOUUcg2HhBC82RxxTCVtwusv7eB
+ eshDx6Ds/r1WrT4BxuV7iTY4+ztBXSrVSWl/npez0TvP14HaKWEYqJfsCNC9+l55IIk7SQo
+ mohd9UUyH+SiSKlfDAG4iCNw37UT9/bL+xedA9g5wC5XYMN4ZobjN0qJW4iW7U3xbQK0b6/
+ F4wmIoQJZl1rzSElX2uRg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:JhErPCm2gD8=;niu1kNu3Lld8W+IjwHnupI/88oo
+ TljVn9uu+ZniZOxStJvZucN2ftjtVSru+w19o9A1jkY6reneqHYApyyBZE84AhsRZ3WaJQPuv
+ z9UNN70vfNwKk4J6gxpDiMr/nRUoQqghPeM8QL25Wpi31Nk/ARkKzl7Ds9EpgDeJDYoFvpi+K
+ dXpWrmqja/Y2VQTqeM1tC1NRTlBlrdH7O+m60xkSZCJDOeq0Er3G9fbV5QVg+H7zVuAMLMaTI
+ lgnFuheBryWGXQDpQU8bA7SYbhoWR4dswhg7ln1I0wF2mGu5RAi6sHX6M9BX68M1XiRxZ0F4h
+ tu0nqJJolvEYG2JALwp7z6oM6AX63gpWnNVMLxRmNDQk8kETV3Gw6hEF2JHFY9OFTzpuMtMIn
+ uLOBipgLMJmfZcc7mKJHHerYk4c6e44RTKTu6OVgfn1oYO+xBhbzHDdt9rASuvlT6ohtcinVf
+ QsYdcKTcJ3U0bDw88hnAsUS6xOzfcajdnjvYm+pxfITL63zrSwAC8VrrFq+F/CKHndmTGknxV
+ b17NSyq6efTIKcCEYF9vbqBUEMb+xWSfsjs5evUwcjRu7kn/OsAO848sxbU+Xf21myLOpOCQ2
+ a7Pbqqyg8Aq6g1BplUrLLvhu2KVBvjOPCz6y5il921tUl02+iCaNIQ8K+GLPFQaonTyuhwfNf
+ 1ImIOa2d40U59iYTqB+3GxwIG4Y6x2lIFhGb+qJNWBJsTZo+hdxg3+vl6tfdKvmtFEK76qqNL
+ QoWag+rYgDUKOUri45VnrZ6na0wDH0uAQeT9GLDYNO8lyYWSXoodcRkU1+nngZeCR2B/uPw5m
+ SLwjXY1mwsLjOxJ9l87fTLKc5vsswWbBHSUk7tmxe0IJGFAhSYnDxkYOxGFnjjDysPa+7oHWw
+ 9FmBlj3SFAZNrsFZO01Hht+GbAkr5Bx1T7rY2MkAXz3dQ8Eydv9ihHDy5YEVBlW9Ks8YIOBcW
+ o4RNEQ==
 
-On Sat, Dec 30, 2023 at 9:36=E2=80=AFPM Trond Myklebust <trondmy@hammerspac=
-e.com> wrote:
->
-> On Sat, 2023-12-30 at 08:23 +0200, Amir Goldstein wrote:
-> > On Sat, Dec 30, 2023 at 1:50=E2=80=AFAM Trond Myklebust
-> > <trondmy@hammerspace.com> wrote:
-> > >
-> > > On Fri, 2023-12-29 at 18:29 -0500, Chuck Lever wrote:
-> > > > On Fri, Dec 29, 2023 at 07:44:20PM +0200, Amir Goldstein wrote:
-> > > > > On Fri, Dec 29, 2023 at 4:35=E2=80=AFPM Chuck Lever
-> > > > > <chuck.lever@oracle.com> wrote:
-> > > > > >
-> > > > > > On Fri, Dec 29, 2023 at 07:46:54AM +0200, Amir Goldstein
-> > > > > > wrote:
-> > > > > > > [CC: fsdevel, viro]
-> > > > > >
-> > > > > > Thanks for picking this up, Amir, and for copying
-> > > > > > viro/fsdevel. I
-> > > > > > was planning to repost this next week when more folks are
-> > > > > > back,
-> > > > > > but
-> > > > > > this works too.
-> > > > > >
-> > > > > > Trond, if you'd like, I can handle review changes if you
-> > > > > > don't
-> > > > > > have
-> > > > > > time to follow up.
-> > > > > >
-> > > > > >
-> > > > > > > On Thu, Dec 28, 2023 at 10:22=E2=80=AFPM <trondmy@kernel.org>
-> > > > > > > wrote:
-> > > > > > > >
-> > > > > > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > > > > > > >
-> > > > > > > > The fallback implementation for the get_name export
-> > > > > > > > operation
-> > > > > > > > uses
-> > > > > > > > readdir() to try to match the inode number to a filename.
-> > > > > > > > That filename
-> > > > > > > > is then used together with lookup_one() to produce a
-> > > > > > > > dentry.
-> > > > > > > > A problem arises when we match the '.' or '..' entries,
-> > > > > > > > since
-> > > > > > > > that
-> > > > > > > > causes lookup_one() to fail. This has sometimes been seen
-> > > > > > > > to
-> > > > > > > > occur for
-> > > > > > > > filesystems that violate POSIX requirements around
-> > > > > > > > uniqueness
-> > > > > > > > of inode
-> > > > > > > > numbers, something that is common for snapshot
-> > > > > > > > directories.
-> > > > > > >
-> > > > > > > Ouch. Nasty.
-> > > > > > >
-> > > > > > > Looks to me like the root cause is "filesystems that
-> > > > > > > violate
-> > > > > > > POSIX
-> > > > > > > requirements around uniqueness of inode numbers".
-> > > > > > > This violation can cause any of the parent's children to
-> > > > > > > wrongly match
-> > > > > > > get_name() not only '.' and '..' and fail the d_inode
-> > > > > > > sanity
-> > > > > > > check after
-> > > > > > > lookup_one().
-> > > > > > >
-> > > > > > > I understand why this would be common with parent of
-> > > > > > > snapshot
-> > > > > > > dir,
-> > > > > > > but the only fs that support snapshots that I know of
-> > > > > > > (btrfs,
-> > > > > > > bcachefs)
-> > > > > > > do implement ->get_name(), so which filesystem did you
-> > > > > > > encounter
-> > > > > > > this behavior with? can it be fixed by implementing a
-> > > > > > > snapshot
-> > > > > > > aware ->get_name()?
-> > > > > > >
-> > > > > > > > This patch just ensures that we skip '.' and '..' rather
-> > > > > > > > than
-> > > > > > > > allowing a
-> > > > > > > > match.
-> > > > > > >
-> > > > > > > I agree that skipping '.' and '..' makes sense, but...
-> > > > > >
-> > > > > > Does skipping '.' and '..' make sense for file systems that
-> > > > > > do
-> > > > >
-> > > > > It makes sense because if the child's name in its parent would
-> > > > > have been "." or ".." it would have been its own parent or its
-> > > > > own
-> > > > > grandparent (ELOOP situation).
-> > > > > IOW, we can safely skip "." and "..", regardless of anything
-> > > > > else.
-> > > >
-> > > > This new comment:
-> > > >
-> > > > +     /* Ignore the '.' and '..' entries */
-> > > >
-> > > > then seems inadequate to explain why dot and dot-dot are now
-> > > > never
-> > > > matched. Perhaps the function's documenting comment could expand
-> > > > on
-> > > > this a little. I'll give it some thought.
-> > >
-> > > The point of this code is to attempt to create a valid path that
-> > > connects the inode found by the filehandle to the export point. The
-> > > readdir() must determine a valid name for a dentry that is a
-> > > component
-> > > of that path, which is why '.' and '..' can never be acceptable.
-> > >
-> > > This is why I think we should keep the 'Fixes:' line. The commit it
-> > > points to explains quite concisely why this patch is needed.
-> > >
-> >
-> > By all means, mention this commit, just not with a fixed tag please.
-> > IIUC, commit 21d8a15ac333 did not introduce a regression that this
-> > patch fixes. Right?
-> > So why insist on abusing Fixes: tag instead of a mention?
->
-> I don't see it as being that straightforward.
->
-> Prior to commit 21d8a15ac333, the call to lookup_one_len() could return
-> a dentry (albeit one with an invalid name) depending on whether or not
-> the filesystem lookup succeeds. Note that knfsd does support a lookup
-> of "." and "..", as do several other NFS servers.
->
-> With commit 21d8a15ac333 applied, however, lookup_one_len()
-> automatically returns an EACCES error.
->
-> So while I agree that there are good reasons for introducing commit
-> 21d8a15ac333, it does change the behaviour in this code path.
->
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Sun, 31 Dec 2023 14:43:05 +0100
 
-I feel that we are miscommunicating.
-Let me explain how I understand the code and please tell me where I am wron=
-g.
+The kfree() function was called in one case by
+the krb5_etm_checksum() function during error handling
+even if the passed variable contained a null pointer.
+This issue was detected by using the Coccinelle software.
 
-The way I see it, before 21d8a15ac333, exportfs_decode_fh_raw() would
-call lookup_one() and may get a dentry (with invalid name), but then the
-sanity check following lookup_one() would surely fail, because no fs should
-allow a directory to be its own parent/grandparent:
+Thus use another label.
 
-                        if (unlikely(nresult->d_inode !=3D result->d_inode)=
-) {
-                                dput(nresult);
-                                nresult =3D ERR_PTR(-ESTALE);
-                        }
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ net/sunrpc/auth_gss/gss_krb5_crypto.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The way I see it, the only thing that commit 21d8a15ac333 changed in
-this code is the return value of exportfs_decode_fh_raw() from -ESTALE
-to -EACCES.
+diff --git a/net/sunrpc/auth_gss/gss_krb5_crypto.c b/net/sunrpc/auth_gss/g=
+ss_krb5_crypto.c
+index d2b02710ab07..5e2dc3eb8545 100644
+=2D-- a/net/sunrpc/auth_gss/gss_krb5_crypto.c
++++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
+@@ -942,7 +942,7 @@ u32 krb5_etm_checksum(struct crypto_sync_skcipher *cip=
+her,
+ 	/* For RPCSEC, the "initial cipher state" is always all zeroes. */
+ 	iv =3D kzalloc(ivsize, GFP_KERNEL);
+ 	if (!iv)
+-		goto out_free_mem;
++		goto out_free_checksum;
 
-exportfs_decode_fh() converts both these errors to -ESTALE and
-so does nfsd_set_fh_dentry().
+ 	req =3D ahash_request_alloc(tfm, GFP_KERNEL);
+ 	if (!req)
+@@ -972,6 +972,7 @@ u32 krb5_etm_checksum(struct crypto_sync_skcipher *cip=
+her,
+ 	ahash_request_free(req);
+ out_free_mem:
+ 	kfree(iv);
++out_free_checksum:
+ 	kfree_sensitive(checksumdata);
+ 	return err ? GSS_S_FAILURE : GSS_S_COMPLETE;
+ }
+=2D-
+2.43.0
 
-Bottom line, if I am reading the code correctly, commit 21d8a15ac333 did
-not change the behaviour for knfsd nor any user visible behavior for
-open_by_handle_at() for userspace nfsd.
-
-Your fix is good because:
-1. It saves an unneeded call to lookup_one()
-2. skipping "." and ".." increases the chance of finding the correct child
-    name in the case of non-unique ino
-
-So I have no objection to your fix in generic code, but I do not see
-it being a regression fix.
-
-Where are we miscommunicating? What am I missing?
-
-Thanks,
-Amir.
 
