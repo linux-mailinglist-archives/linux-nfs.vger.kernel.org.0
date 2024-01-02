@@ -1,175 +1,187 @@
-Return-Path: <linux-nfs+bounces-865-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-866-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 873798222A9
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 21:37:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99E5A822459
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 23:02:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96E6F1C22AC7
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 20:37:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 366961F237A3
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 22:02:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5539C1641B;
-	Tue,  2 Jan 2024 20:37:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E88DF1774E;
+	Tue,  2 Jan 2024 21:49:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="coETfVYP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out30-113.freemail.mail.aliyun.com (out30-113.freemail.mail.aliyun.com [115.124.30.113])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0FC516402;
-	Tue,  2 Jan 2024 20:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R951e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046049;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=26;SR=0;TI=SMTPD_---0VzrTmRn_1704227842;
-Received: from 30.25.242.23(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VzrTmRn_1704227842)
-          by smtp.aliyun-inc.com;
-          Wed, 03 Jan 2024 04:37:25 +0800
-Message-ID: <ae2502e0-af39-469b-9036-0fd9771904a8@linux.alibaba.com>
-Date: Wed, 3 Jan 2024 04:37:22 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E5017721
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Jan 2024 21:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704232190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NfIqhioGhHP/wJG1PyBueewTz4bWCmx/gOhAGW5jQdE=;
+	b=coETfVYP5OhU06f7674r/dzU/frY8PgAKwVoZATMdutYmOSy9ti9H3S5EETIND6ffXF04e
+	9DWAMXrJole1SA490anpkjePTblRrtGS3JD4JFf308vFjGfn+ZcbI6lloxeNleSiAEDIHj
+	ctLwtRm31wcQapCczOk6FcAcR/g+eH8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-53-fjvlDl11PWuF-0vej4x9hg-1; Tue, 02 Jan 2024 16:49:43 -0500
+X-MC-Unique: fjvlDl11PWuF-0vej4x9hg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C03CB86D4D5;
+	Tue,  2 Jan 2024 21:49:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.68])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9617D492BE6;
+	Tue,  2 Jan 2024 21:49:39 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20231221132400.1601991-41-dhowells@redhat.com>
+References: <20231221132400.1601991-41-dhowells@redhat.com> <20231221132400.1601991-1-dhowells@redhat.com>
+To: Dominique Martinet <asmadeus@codewreck.org>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Latchesar Ionkov <lucho@ionkov.net>
+Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
+    Steve French <smfrench@gmail.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Ilya Dryomov <idryomov@gmail.com>,
+    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+    linux-mm@kvack.org, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org,
+    Christian Schoenebeck <linux_oss@crudebyte.com>
+Subject: [PATCH] 9p: Fix initialisation of netfs_inode for 9p
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 33/40] netfs, cachefiles: Pass upper bound length to
- allow expansion
-To: David Howells <dhowells@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Marc Dionne <marc.dionne@auristor.com>, Paulo Alcantara <pc@manguebit.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov <idryomov@gmail.com>,
- Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
- linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
- linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
- Steve French <smfrench@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Jia Zhu <zhujia.zj@bytedance.com>, Xin Yin <yinxin.x@bytedance.com>,
- Yiqun Leng <yqleng@linux.alibaba.com>
-References: <750e8251-ba30-4f53-a17b-73c79e3739ce@linux.alibaba.com>
- <20231221132400.1601991-1-dhowells@redhat.com>
- <20231221132400.1601991-34-dhowells@redhat.com>
- <198744.1704215477@warthog.procyon.org.uk>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <198744.1704215477@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <292836.1704232179.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 02 Jan 2024 21:49:39 +0000
+Message-ID: <292837.1704232179@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
+This needs a fix that I would fold in.  Somehow it gets through xfstests
+without it, but it seems problems can be caused with executables.
 
+David
+---
+9p: Fix initialisation of netfs_inode for 9p
 
-On 2024/1/3 01:11, David Howells wrote:
-> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> 
->>>    	down = start - round_down(start, PAGE_SIZE);
->>>    	*_start = start - down;
->>>    	*_len = round_up(down + len, PAGE_SIZE);
->>> +	if (down < start || *_len > upper_len)
->>> +		return -ENOBUFS;
->>
->> Sorry for bothering. We just found some strange when testing
->> today-next EROFS over fscache.
->>
->> I'm not sure the meaning of
->>      if (down < start
->>
->> For example, if start is page-aligned, down == 0.
->>
->> so as long as start > 0 and page-aligned, it will return
->> -ENOBUFS.  Does it an intended behavior?
-> 
-> Yeah, I think that's wrong.
-> 
-> Does the attached help?
+The 9p filesystem is calling netfs_inode_init() in v9fs_init_inode() -
+before the struct inode fields have been initialised from the obtained fil=
+e
+stats (ie. after v9fs_stat2inode*() has been called), but netfslib wants t=
+o
+set a couple of its fields from i_size.
 
-(+cc more people for testing)
+Reported-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Marc Dionne <marc.dionne@auristor.com>
+cc: Eric Van Hensbergen <ericvh@kernel.org>
+cc: Latchesar Ionkov <lucho@ionkov.net>
+cc: Dominique Martinet <asmadeus@codewreck.org>
+cc: Christian Schoenebeck <linux_oss@crudebyte.com>
+cc: v9fs@lists.linux.dev
+cc: linux-cachefs@redhat.com
+cc: linux-fsdevel@vger.kernel.org
+---
+ fs/9p/v9fs_vfs.h       |    1 +
+ fs/9p/vfs_inode.c      |    6 +++---
+ fs/9p/vfs_inode_dotl.c |    1 +
+ 3 files changed, 5 insertions(+), 3 deletions(-)
 
-Will test and feedback later.
+diff --git a/fs/9p/v9fs_vfs.h b/fs/9p/v9fs_vfs.h
+index 731e3d14b67d..0e8418066a48 100644
+--- a/fs/9p/v9fs_vfs.h
++++ b/fs/9p/v9fs_vfs.h
+@@ -42,6 +42,7 @@ struct inode *v9fs_alloc_inode(struct super_block *sb);
+ void v9fs_free_inode(struct inode *inode);
+ struct inode *v9fs_get_inode(struct super_block *sb, umode_t mode,
+ 			     dev_t rdev);
++void v9fs_set_netfs_context(struct inode *inode);
+ int v9fs_init_inode(struct v9fs_session_info *v9ses,
+ 		    struct inode *inode, umode_t mode, dev_t rdev);
+ void v9fs_evict_inode(struct inode *inode);
+diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
+index b66466e97459..32572982f72e 100644
+--- a/fs/9p/vfs_inode.c
++++ b/fs/9p/vfs_inode.c
+@@ -246,7 +246,7 @@ void v9fs_free_inode(struct inode *inode)
+ /*
+  * Set parameters for the netfs library
+  */
+-static void v9fs_set_netfs_context(struct inode *inode)
++void v9fs_set_netfs_context(struct inode *inode)
+ {
+ 	struct v9fs_inode *v9inode =3D V9FS_I(inode);
+ 	netfs_inode_init(&v9inode->netfs, &v9fs_req_ops, true);
+@@ -326,8 +326,6 @@ int v9fs_init_inode(struct v9fs_session_info *v9ses,
+ 		err =3D -EINVAL;
+ 		goto error;
+ 	}
+-
+-	v9fs_set_netfs_context(inode);
+ error:
+ 	return err;
+ =
 
-Thanks,
-Gao Xiang
+@@ -359,6 +357,7 @@ struct inode *v9fs_get_inode(struct super_block *sb, u=
+mode_t mode, dev_t rdev)
+ 		iput(inode);
+ 		return ERR_PTR(err);
+ 	}
++	v9fs_set_netfs_context(inode);
+ 	return inode;
+ }
+ =
 
-> 
-> David
-> ---
-> 
-> diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-> index bffffedce4a9..7529b40bc95a 100644
-> --- a/fs/cachefiles/io.c
-> +++ b/fs/cachefiles/io.c
-> @@ -522,16 +522,22 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   			       bool no_space_allocated_yet)
->   {
->   	struct cachefiles_cache *cache = object->volume->cache;
-> -	loff_t start = *_start, pos;
-> -	size_t len = *_len, down;
-> +	unsigned long long start = *_start, pos;
-> +	size_t len = *_len;
->   	int ret;
->   
->   	/* Round to DIO size */
-> -	down = start - round_down(start, PAGE_SIZE);
-> -	*_start = start - down;
-> -	*_len = round_up(down + len, PAGE_SIZE);
-> -	if (down < start || *_len > upper_len)
-> +	start = round_down(*_start, PAGE_SIZE);
-> +	if (start != *_start) {
-> +		kleave(" = -ENOBUFS [down]");
-> +		return -ENOBUFS;
-> +	}
-> +	if (*_len > upper_len) {
-> +		kleave(" = -ENOBUFS [up]");
->   		return -ENOBUFS;
-> +	}
-> +
-> +	*_len = round_up(len, PAGE_SIZE);
->   
->   	/* We need to work out whether there's sufficient disk space to perform
->   	 * the write - but we can skip that check if we have space already
-> @@ -542,7 +548,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   
->   	pos = cachefiles_inject_read_error();
->   	if (pos == 0)
-> -		pos = vfs_llseek(file, *_start, SEEK_DATA);
-> +		pos = vfs_llseek(file, start, SEEK_DATA);
->   	if (pos < 0 && pos >= (loff_t)-MAX_ERRNO) {
->   		if (pos == -ENXIO)
->   			goto check_space; /* Unallocated tail */
-> @@ -550,7 +556,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   					  cachefiles_trace_seek_error);
->   		return pos;
->   	}
-> -	if ((u64)pos >= (u64)*_start + *_len)
-> +	if (pos >= start + *_len)
->   		goto check_space; /* Unallocated region */
->   
->   	/* We have a block that's at least partially filled - if we're low on
-> @@ -563,13 +569,13 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   
->   	pos = cachefiles_inject_read_error();
->   	if (pos == 0)
-> -		pos = vfs_llseek(file, *_start, SEEK_HOLE);
-> +		pos = vfs_llseek(file, start, SEEK_HOLE);
->   	if (pos < 0 && pos >= (loff_t)-MAX_ERRNO) {
->   		trace_cachefiles_io_error(object, file_inode(file), pos,
->   					  cachefiles_trace_seek_error);
->   		return pos;
->   	}
-> -	if ((u64)pos >= (u64)*_start + *_len)
-> +	if (pos >= start + *_len)
->   		return 0; /* Fully allocated */
->   
->   	/* Partially allocated, but insufficient space: cull. */
-> @@ -577,7 +583,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   	ret = cachefiles_inject_remove_error();
->   	if (ret == 0)
->   		ret = vfs_fallocate(file, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-> -				    *_start, *_len);
-> +				    start, *_len);
->   	if (ret < 0) {
->   		trace_cachefiles_io_error(object, file_inode(file), ret,
->   					  cachefiles_trace_fallocate_error);
-> 
+@@ -461,6 +460,7 @@ static struct inode *v9fs_qid_iget(struct super_block =
+*sb,
+ 		goto error;
+ =
+
+ 	v9fs_stat2inode(st, inode, sb, 0);
++	v9fs_set_netfs_context(inode);
+ 	v9fs_cache_inode_get_cookie(inode);
+ 	unlock_new_inode(inode);
+ 	return inode;
+diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
+index e25fbc988f09..3505227e1704 100644
+--- a/fs/9p/vfs_inode_dotl.c
++++ b/fs/9p/vfs_inode_dotl.c
+@@ -128,6 +128,7 @@ static struct inode *v9fs_qid_iget_dotl(struct super_b=
+lock *sb,
+ 		goto error;
+ =
+
+ 	v9fs_stat2inode_dotl(st, inode, 0);
++	v9fs_set_netfs_context(inode);
+ 	v9fs_cache_inode_get_cookie(inode);
+ 	retval =3D v9fs_get_acl(inode, fid);
+ 	if (retval)
+
 
