@@ -1,129 +1,89 @@
-Return-Path: <linux-nfs+bounces-860-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-861-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82059821D50
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 15:06:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CAB2B821EF1
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 16:39:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 814961C222F8
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 14:06:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE8EF1C2253F
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 15:39:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C16A61095C;
-	Tue,  2 Jan 2024 14:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B927414F77;
+	Tue,  2 Jan 2024 15:39:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UNdt1ypb"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43699101FA;
-	Tue,  2 Jan 2024 14:04:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=22;SR=0;TI=SMTPD_---0VzqtEDH_1704204253;
-Received: from 192.168.33.9(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0VzqtEDH_1704204253)
-          by smtp.aliyun-inc.com;
-          Tue, 02 Jan 2024 22:04:14 +0800
-Message-ID: <750e8251-ba30-4f53-a17b-73c79e3739ce@linux.alibaba.com>
-Date: Tue, 2 Jan 2024 22:04:12 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B04C14F6D
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Jan 2024 15:39:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704209961;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LM7qdgWQDUzW1VNi9ViBduWaO+jG+K6dylQmR5RcPU8=;
+	b=UNdt1ypbaMhRz7Hg/qIeNolOvcMPBeFx0PvjaTAmpdR0vuYrCdqfsaWYElCuTckgEqVTun
+	U6Lam5ra2qGGNpIzbOkxjsBg26XpewrQjFHU+0q67sOgPsc6sD9vkWuFVUJAz8KJa8qxUO
+	TYt3qsSECMr+HFprgGPWxH31sbixFrc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-483-bCb491KTO7inX5qiY8xZDw-1; Tue, 02 Jan 2024 10:39:19 -0500
+X-MC-Unique: bCb491KTO7inX5qiY8xZDw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 095318A0103;
+	Tue,  2 Jan 2024 15:39:18 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.68])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 7BB9C2166B31;
+	Tue,  2 Jan 2024 15:39:15 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20231221132400.1601991-41-dhowells@redhat.com>
+References: <20231221132400.1601991-41-dhowells@redhat.com> <20231221132400.1601991-1-dhowells@redhat.com>
+To: Eric Van Hensbergen <ericvh@kernel.org>,
+    Latchesar Ionkov <lucho@ionkov.net>,
+    Dominique Martinet <asmadeus@codewreck.org>
+Cc: dhowells@redhat.com, Christian Schoenebeck <linux_oss@crudebyte.com>,
+    Jeff Layton <jlayton@kernel.org>,
+    Matthew Wilcox <willy@infradead.org>,
+    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+    linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 40/40] 9p: Use netfslib read/write_iter
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 33/40] netfs, cachefiles: Pass upper bound length to
- allow expansion
-To: David Howells <dhowells@redhat.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Marc Dionne <marc.dionne@auristor.com>, Paulo Alcantara <pc@manguebit.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov <idryomov@gmail.com>,
- Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
- linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
- linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
- Steve French <smfrench@gmail.com>
-References: <20231221132400.1601991-1-dhowells@redhat.com>
- <20231221132400.1601991-34-dhowells@redhat.com>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <20231221132400.1601991-34-dhowells@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <141744.1704209954.1@warthog.procyon.org.uk>
+Date: Tue, 02 Jan 2024 15:39:14 +0000
+Message-ID: <141745.1704209954@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.6
 
-Hi David,
+Hi Eric, Latchesar, Dominique,
 
-On 2023/12/21 21:23, David Howells wrote:
-> Make netfslib pass the maximum length to the ->prepare_write() op to tell
-> the cache how much it can expand the length of a write to.  This allows a
-> write to the server at the end of a file to be limited to a few bytes
-> whilst writing an entire block to the cache (something required by direct
-> I/O).
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> cc: linux-cachefs@redhat.com
-> cc: linux-fsdevel@vger.kernel.org
-> cc: linux-mm@kvack.org
-> ---
->   fs/cachefiles/internal.h |  2 +-
->   fs/cachefiles/io.c       | 10 ++++++----
->   fs/cachefiles/ondemand.c |  2 +-
->   fs/netfs/fscache_io.c    |  2 +-
->   fs/netfs/io.c            |  2 +-
->   fs/netfs/objects.c       |  1 +
->   fs/netfs/output.c        | 25 ++++++++++---------------
->   fs/smb/client/fscache.c  |  2 +-
->   include/linux/netfs.h    |  5 +++--
->   9 files changed, 25 insertions(+), 26 deletions(-)
-> 
-> diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-> index 2ad58c465208..1af48d576a34 100644
-> --- a/fs/cachefiles/internal.h
-> +++ b/fs/cachefiles/internal.h
-> @@ -233,7 +233,7 @@ extern bool cachefiles_begin_operation(struct netfs_cache_resources *cres,
->   				       enum fscache_want_state want_state);
->   extern int __cachefiles_prepare_write(struct cachefiles_object *object,
->   				      struct file *file,
-> -				      loff_t *_start, size_t *_len,
-> +				      loff_t *_start, size_t *_len, size_t upper_len,
->   				      bool no_space_allocated_yet);
->   extern int __cachefiles_write(struct cachefiles_object *object,
->   			      struct file *file,
-> diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-> index 009d23cd435b..bffffedce4a9 100644
-> --- a/fs/cachefiles/io.c
-> +++ b/fs/cachefiles/io.c
-> @@ -518,7 +518,7 @@ cachefiles_prepare_ondemand_read(struct netfs_cache_resources *cres,
->    */
->   int __cachefiles_prepare_write(struct cachefiles_object *object,
->   			       struct file *file,
-> -			       loff_t *_start, size_t *_len,
-> +			       loff_t *_start, size_t *_len, size_t upper_len,
->   			       bool no_space_allocated_yet)
->   {
->   	struct cachefiles_cache *cache = object->volume->cache;
-> @@ -530,6 +530,8 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   	down = start - round_down(start, PAGE_SIZE);
->   	*_start = start - down;
->   	*_len = round_up(down + len, PAGE_SIZE);
-> +	if (down < start || *_len > upper_len)
-> +		return -ENOBUFS;
-
-Sorry for bothering. We just found some strange when testing
-today-next EROFS over fscache.
-
-I'm not sure the meaning of
-     if (down < start
-
-For example, if start is page-aligned, down == 0.
-
-so as long as start > 0 and page-aligned, it will return
--ENOBUFS.  Does it an intended behavior?
+Would you have any chance to look at the 9p patch before the merge window
+opens?  If not, what should I do with the patch?  Should I keep it, or should
+I drop it for now and give it to you to take through the 9p tree if Linus
+accepts the rest of the patchset?
 
 Thanks,
-Gao Xiang
+David
+
 
