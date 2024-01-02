@@ -1,153 +1,112 @@
-Return-Path: <linux-nfs+bounces-855-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-856-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D2A2821779
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 06:44:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F27498218E1
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 10:26:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 623211C211BA
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 05:44:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 918501F22080
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 09:26:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5111C2585;
-	Tue,  2 Jan 2024 05:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8F9B63B2;
+	Tue,  2 Jan 2024 09:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="VgRSL4Cz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.237.72.81])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A7532583;
-	Tue,  2 Jan 2024 05:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=zju.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zju.edu.cn
-Received: from luzhipeng.223.5.5.5 (unknown [115.200.224.203])
-	by mail-app4 (Coremail) with SMTP id cS_KCgCXn58bopNlTqUlAA--.40716S2;
-	Tue, 02 Jan 2024 13:41:48 +0800 (CST)
-From: Zhipeng Lu <alexious@zju.edu.cn>
-To: alexious@zju.edu.cn
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>,
-	Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>,
-	Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	"J. Bruce Fields" <bfields@fieldses.org>,
-	Simo Sorce <simo@redhat.com>,
-	linux-nfs@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] [v3] SUNRPC: fix some memleaks in gssx_dec_option_array
-Date: Tue,  2 Jan 2024 13:38:13 +0800
-Message-Id: <20240102053815.3611872-1-alexious@zju.edu.cn>
-X-Mailer: git-send-email 2.34.1
+Received: from mout.web.de (mout.web.de [212.227.15.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A422EDF5D;
+	Tue,  2 Jan 2024 09:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de; s=s29768273;
+	t=1704187576; x=1704792376; i=markus.elfring@web.de;
+	bh=hm9XvsB8Hc+GdCwiF3RHaf2+W9Sx9+rzWWOPBtlg8U0=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=VgRSL4Czpr9uuX6BZvWm6E0gbIKeKF81KU2N7arwbRFR5No28HHwxGXvX3eL0/xX
+	 ADPm6qFgZ+PJjFjBABOeiQq/yOmmzoq1UjKm44h7B86l+W5O/BJrpgAXE9Bp7tOzk
+	 xkmSrYbwevpo0ANCoT5mOcvTi6xDfDAn/fwDvE+3qtKiFiQjJDPbD6mwVQBuiEPi7
+	 fCrjUwMhDHmUKSDAJEtzdmjHevc8Y3Xm3tWr2JLFBF0dSZ4NbpAl1s0DCJhosWR4L
+	 QdoWKZ2iRFuS2nozEF2jHLBumDA+/BPsb29VkO/d7FRJu++S3khtFR8kzBqlAWvO5
+	 8eukZlFUxjOAWTODNA==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.91.95]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1N0Zns-1qzTBD0WHs-00wanB; Tue, 02
+ Jan 2024 10:26:15 +0100
+Message-ID: <f96d8343-e7b3-491d-b191-f2ddb4ba5269@web.de>
+Date: Tue, 2 Jan 2024 10:26:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cS_KCgCXn58bopNlTqUlAA--.40716S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Ar48AFWkWw48uw43Aw15CFg_yoW8ZF13pF
-	Z3Kr9xAF10qr1xXF1ayw4Fvw1YyFs5trW7Wry2ka13Zw1fJr1F9w40kryj9Fy2yrZ3Ww1U
-	ZF1j9ry8u3Z0y3JanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4U
-	JVW0owA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwCY02Avz4vE14v_GrWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfUYDGYDUUUU
-X-CM-SenderInfo: qrsrjiarszq6lmxovvfxof0/
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] sunrpc: Improve exception handling in krb5_etm_checksum()
+Content-Language: en-GB
+To: Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+ netdev@vger.kernel.org, kernel-janitors@vger.kernel.org
+Cc: Anna Schumaker <anna@kernel.org>, Ard Biesheuvel <ardb@kernel.org>,
+ Dai Ngo <Dai.Ngo@oracle.com>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Jakub Kicinski <kuba@kernel.org>,
+ Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
+ Olga Kornievskaia <kolga@netapp.com>, Paolo Abeni <pabeni@redhat.com>,
+ Simo Sorce <simo@redhat.com>, Tom Talpey <tom@talpey.com>,
+ Trond Myklebust <trond.myklebust@hammerspace.com>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <9561c78e-49a2-430c-a611-52806c0cdf25@web.de>
+ <ZZIhEJK68Sapos2t@tissot.1015granger.net>
+ <4307bce9-ccbd-4bc5-aa8e-b618a1664cbe@web.de>
+ <ZZLuaRwSZI16EKdP@tissot.1015granger.net>
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <ZZLuaRwSZI16EKdP@tissot.1015granger.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fHraEXCZs9bFHLtOOPd8xSkwRa+bWUmDA46Cp6Cx+X+wgYf5Du9
+ kWjIIkrOvlTarY4rBGy9eMpWqFRSmflO8KGY2pJiVlfFYYnbRCXVMXZR4G79TElPx1ek8yi
+ 0ZPOUb32uwUl3TE2JjWkw99MUtTGbQtMol7sDX7byJhEsqJE+3Y8UPaerVS1DdeV2c/N8Xb
+ G7kAL10sJ7zGV86fLOdSQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:fOO4Nl2obn4=;zj++G77n+wQ4X6DGe67n4Af16x/
+ BnxbsJbuio2eixsTb/MVEc0LnPGtsEU0hDvLoOhNCfqMd7Dd13yjijAJ8kxPmLJNwKLmbU+9g
+ GTolCHXPMbY/Fb1mF5CbvSORa/KRBEaHJWhfb/4WMwRJuQwOoOWYeXR1TpZSbbzKzk7LewqFN
+ 7kteIP6AgATwYi17wcLWY1vD5T9gPjz3X+iAXtRdZ0yDP64EzpYXzm6LXVsz92xpbVcKqLzzv
+ Hvtn/gxVx39NSfMEIp6r3L2V3ZWwSwkl+4OEj5VAiHBbZ+yH53hqwyOCkfmSKcgEz8RviyJ1V
+ 5jQN984jOSpSA2gGVZS9cj6t04UvaG0wyD56HlFkzqtMMr6MVPTj66Rd7mb1fD20vsZVixyVR
+ 8fgs5YqgdPyan4BxcLC6QJ4WRNMYoPq9rd76GF5kkaKZ7Ku+KQusyxUCoD+8wfObSpAERXFbY
+ AGQaJPGz4xsdieT3b7tU0hlZlRLfUelGl/lXlpo7ByhI9sBpXS2RTaP7nfU45mREQjoLeNUt9
+ 8m39WxYJ/yqV3TZe5ya/sIAX7zJYXOaHJe0y7u/6webrFvce621s/Wts162oEq6jPgTwx0lgU
+ hds8POQUd39R+xuQqijLrIX9uV1L3peqvWQ0ewkULKfYaAGzn5ICa+JOp46cuBKeFggicAB7C
+ maQcifEoTsdkGlPVgMN+MQoedwh2aq3FjAL4TuvpXXPRFtJHKuwzVnuoAoFWUkL4CJEf6EO2Q
+ CVda/bE9wfp3N1S68w8ZirbZhP0DZM1oCJjI7sd3oV6aH3kbagluVHtvRnIjm5uwKMEeM6KQ/
+ qUOSCegDKHcIqxgQnkbePreeh4ehreXnLvBRHjgrdnTae7B7m/5p6mZLqPpcI7M/xzD5NQpOq
+ JF+JiTG4++QKzdjT/h7YW1G1qrD6hndR32dUK4msLr/io/C8guszxK/7TMZ+0BodcrdZC7N59
+ 7Y3h44frkfzqJfKJrthHeA8l8BM=
 
-The creds and oa->data need to be freed in the error-handling paths after
-there allocation. So this patch add these deallocations in the
-corresponding paths.
+=E2=80=A6
+> +++ b/net/sunrpc/auth_gss/gss_krb5_crypto.c
+=E2=80=A6
+> @@ -970,8 +969,7 @@ u32 krb5_etm_checksum(struct crypto_sync_skcipher *c=
+ipher,
+>
+>  out_free_ahash:
+>  	ahash_request_free(req);
+> -out_free_mem:
+> -	kfree(iv);
+> +out_free_cksumdata:
+>  	kfree_sensitive(checksumdata);
+>  	return err ? GSS_S_FAILURE : GSS_S_COMPLETE;
+>  }
+=E2=80=A6
 
-Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
-Signed-off-by: Zhipeng Lu <alexious@zju.edu.cn>
----
-Changelog:
+How do you think about to use the identifier =E2=80=9Cout_free_checksumdat=
+a=E2=80=9D?
 
-v2: correct some syntactic problems.
-v3: delete unused label err.
----
- net/sunrpc/auth_gss/gss_rpc_xdr.c | 27 +++++++++++++++++++--------
- 1 file changed, 19 insertions(+), 8 deletions(-)
-
-diff --git a/net/sunrpc/auth_gss/gss_rpc_xdr.c b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-index d79f12c2550a..cb32ab9a8395 100644
---- a/net/sunrpc/auth_gss/gss_rpc_xdr.c
-+++ b/net/sunrpc/auth_gss/gss_rpc_xdr.c
-@@ -250,8 +250,8 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
- 
- 	creds = kzalloc(sizeof(struct svc_cred), GFP_KERNEL);
- 	if (!creds) {
--		kfree(oa->data);
--		return -ENOMEM;
-+		err = -ENOMEM;
-+		goto free_oa;
- 	}
- 
- 	oa->data[0].option.data = CREDS_VALUE;
-@@ -265,29 +265,40 @@ static int gssx_dec_option_array(struct xdr_stream *xdr,
- 
- 		/* option buffer */
- 		p = xdr_inline_decode(xdr, 4);
--		if (unlikely(p == NULL))
--			return -ENOSPC;
-+		if (unlikely(p == NULL)) {
-+			err = -ENOSPC;
-+			goto free_creds;
-+		}
- 
- 		length = be32_to_cpup(p);
- 		p = xdr_inline_decode(xdr, length);
--		if (unlikely(p == NULL))
--			return -ENOSPC;
-+		if (unlikely(p == NULL)) {
-+			err = -ENOSPC;
-+			goto free_creds;
-+		}
- 
- 		if (length == sizeof(CREDS_VALUE) &&
- 		    memcmp(p, CREDS_VALUE, sizeof(CREDS_VALUE)) == 0) {
- 			/* We have creds here. parse them */
- 			err = gssx_dec_linux_creds(xdr, creds);
- 			if (err)
--				return err;
-+				goto free_creds;
- 			oa->data[0].value.len = 1; /* presence */
- 		} else {
- 			/* consume uninteresting buffer */
- 			err = gssx_dec_buffer(xdr, &dummy);
- 			if (err)
--				return err;
-+				goto free_creds;
- 		}
- 	}
- 	return 0;
-+
-+free_creds:
-+	kfree(creds);
-+free_oa:
-+	kfree(oa->data);
-+	oa->data = NULL;
-+	return err;
- }
- 
- static int gssx_dec_status(struct xdr_stream *xdr,
--- 
-2.34.1
-
+Regards,
+Markus
 
