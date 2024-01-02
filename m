@@ -1,187 +1,131 @@
-Return-Path: <linux-nfs+bounces-866-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-867-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99E5A822459
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 23:02:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01FD38224AB
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 23:22:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 366961F237A3
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 22:02:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F9C81C22C90
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Jan 2024 22:22:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E88DF1774E;
-	Tue,  2 Jan 2024 21:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37026171BB;
+	Tue,  2 Jan 2024 22:22:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="coETfVYP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S+um1whB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E5017721
-	for <linux-nfs@vger.kernel.org>; Tue,  2 Jan 2024 21:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704232190;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NfIqhioGhHP/wJG1PyBueewTz4bWCmx/gOhAGW5jQdE=;
-	b=coETfVYP5OhU06f7674r/dzU/frY8PgAKwVoZATMdutYmOSy9ti9H3S5EETIND6ffXF04e
-	9DWAMXrJole1SA490anpkjePTblRrtGS3JD4JFf308vFjGfn+ZcbI6lloxeNleSiAEDIHj
-	ctLwtRm31wcQapCczOk6FcAcR/g+eH8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-53-fjvlDl11PWuF-0vej4x9hg-1; Tue, 02 Jan 2024 16:49:43 -0500
-X-MC-Unique: fjvlDl11PWuF-0vej4x9hg-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C03CB86D4D5;
-	Tue,  2 Jan 2024 21:49:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.68])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 9617D492BE6;
-	Tue,  2 Jan 2024 21:49:39 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20231221132400.1601991-41-dhowells@redhat.com>
-References: <20231221132400.1601991-41-dhowells@redhat.com> <20231221132400.1601991-1-dhowells@redhat.com>
-To: Dominique Martinet <asmadeus@codewreck.org>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Latchesar Ionkov <lucho@ionkov.net>
-Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-    Steve French <smfrench@gmail.com>,
-    Matthew Wilcox <willy@infradead.org>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Ilya Dryomov <idryomov@gmail.com>,
-    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org,
-    Christian Schoenebeck <linux_oss@crudebyte.com>
-Subject: [PATCH] 9p: Fix initialisation of netfs_inode for 9p
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7A717987
+	for <linux-nfs@vger.kernel.org>; Tue,  2 Jan 2024 22:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--tanzirh.bounces.google.com
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-1d3fa1ff824so39446545ad.3
+        for <linux-nfs@vger.kernel.org>; Tue, 02 Jan 2024 14:22:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1704234141; x=1704838941; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=VoYBcyeMcOUsOKM5LbFmoG1rNiNhP0xj5K+Ym6ZJNQw=;
+        b=S+um1whBxsvYBaRtrLrkkjesCTD6femhXZ7TnwNeyZXKB1jfxu0Dqa2J+TcMNsBNix
+         SWkzea6fbYrmKR50AkZ7OlLdxIi4RdAGPT51h6GNjjjrIOLZb6vANqeluB9IGhPvVcBU
+         8Vwv3/5KI8m4Fai2r0SXe3L6xR3Gv4isG6R9WvJKUa6fgybiDyY+iePo6CIvcRy8IvbL
+         Pap+VBdukbO69AGl6ERtgjn+US/80wc4M9AOUoOdyEB2wwIngPayf3+uCIf5USGtorNC
+         AB39NRKV/gYrpGjprcxBmpSuaxEuQ73cX8J01eSNprwDHqdBZWX1JL+TGVFhG1AVmBSj
+         0iqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704234141; x=1704838941;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VoYBcyeMcOUsOKM5LbFmoG1rNiNhP0xj5K+Ym6ZJNQw=;
+        b=sLsPVjT22znFaGDB0vWfb10pzgQiyO835QiqHOYSeWlUFh5MRarfHs/xVpJzJ+N0wo
+         DPU5rqJIagWNALvaXHWhZ5ANm06KzesBN3VyppPgkvnJuNBOkbrAOFVjIxAF+FtS47dC
+         YN49KzOODmIF+LDSq8taORfpWeZBLTz6qplJnFpz8dPrjrZpNLEvu2jc+IVojXGk6qY/
+         4j6YWTd3S6lOJr4GXBA068DSnSqAhYcwwi1f8JeRgDXGQnxyq0oaXoLG45DOfPSax9C2
+         6GZUM5lerL/2S66m1dhUiRkYMqiqmISWC1C8YmsH2Y6qiyYrCLzUY0T/Auc+245j9V4X
+         Mccw==
+X-Gm-Message-State: AOJu0YzPLiIB7vKuuP9hMTRrDd8JOQNtTkhq0/L307BtWxI3KMAo2Wwc
+	MyyliXOeisFI0Q7znghC+8Nwgymgx6Xr2qsEa7s=
+X-Google-Smtp-Source: AGHT+IGibMrtSNs0B7J5A+QWM85xhUBg0GKDxizl0OkdWX1k1ttpJocQ5P4XooSKRH4vL9aHfM71x73t1FOt
+X-Received: from tanz.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:c4a])
+ (user=tanzirh job=sendgmr) by 2002:a17:903:120f:b0:1d3:f056:bd5e with SMTP id
+ l15-20020a170903120f00b001d3f056bd5emr622882plh.8.1704234141148; Tue, 02 Jan
+ 2024 14:22:21 -0800 (PST)
+Date: Tue, 02 Jan 2024 22:22:18 +0000
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <292836.1704232179.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 02 Jan 2024 21:49:39 +0000
-Message-ID: <292837.1704232179@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Mime-Version: 1.0
+X-B4-Tracking: v=1; b=H4sIAJqMlGUC/13MQQrCMBCF4auUWRvJTKCIK+8hXcRkkg5oI4kEp
+ eTuTbt0+T8e3wqFs3CB67BC5ipF0tKDTgO42S6RlfjeQJoMEo2qcn4UZfRF69GgNwGhf9+Zg3w P5z71nqV8Uv4dbMV9/RcqKlTGkmMXEG3wt5hSfPLZpRdMrbUNIDPSdJsAAAA=
+X-Developer-Key: i=tanzirh@google.com; a=ed25519; pk=UeRjcUcv5W9AeLGEbAe2+0LptQpcY+o1Zg0LHHo7VN4=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1704234139; l=1390;
+ i=tanzirh@google.com; s=20231204; h=from:subject:message-id;
+ bh=DUB/ZV2zVOe/Hx7a/jPXLV+v75gZ6+Z01V5aE00rj50=; b=qe5pL7e035Zo4B16XWqHVxTumHn9sOyTDK/Y5RdiNEozypVYZV9EWUD5PpPY5hk9hItu8K1yE
+ Xte40bFcZT6CVwbEGb5iSw5YFR6ub90ZUa+g5JlAcdt91FJWgTgeqh8
+X-Mailer: b4 0.12.4
+Message-ID: <20240102-verbs-v2-1-710de1867c77@google.com>
+Subject: [PATCH v2] xprtrdma: removed asm-generic headers from verbs.c
+From: Tanzir Hasan <tanzirh@google.com>
+To: Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
+	Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, 
+	Tom Talpey <tom@talpey.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, 
+	Anna Schumaker <anna@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: linux-nfs@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nick Desaulniers <nnn@google.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, Tanzir Hasan <tanzirh@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-This needs a fix that I would fold in.  Somehow it gets through xfstests
-without it, but it seems problems can be caused with executables.
+asm-generic/barrier.h and asm/bitops.h are already brought into the
+file through the header linux/sunrpc/svc_rdma.h and the file can
+still be built with their removal. They have been replaced with the
+preferred linux/bitops.h and asm/barrier.h to remove the need for the
+asm-generic header.
 
-David
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Tanzir Hasan <tanzirh@google.com>
 ---
-9p: Fix initialisation of netfs_inode for 9p
-
-The 9p filesystem is calling netfs_inode_init() in v9fs_init_inode() -
-before the struct inode fields have been initialised from the obtained fil=
-e
-stats (ie. after v9fs_stat2inode*() has been called), but netfslib wants t=
-o
-set a couple of its fields from i_size.
-
-Reported-by: Marc Dionne <marc.dionne@auristor.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Marc Dionne <marc.dionne@auristor.com>
-cc: Eric Van Hensbergen <ericvh@kernel.org>
-cc: Latchesar Ionkov <lucho@ionkov.net>
-cc: Dominique Martinet <asmadeus@codewreck.org>
-cc: Christian Schoenebeck <linux_oss@crudebyte.com>
-cc: v9fs@lists.linux.dev
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
+Changes in v2:
+- Added asm/barrier.h and linux/bitops.h to not conflict with rule 1 of
+  submit-checklist
+- Link to v1: https://lore.kernel.org/r/20231226-verbs-v1-1-3a2cecf11afd@google.com
 ---
- fs/9p/v9fs_vfs.h       |    1 +
- fs/9p/vfs_inode.c      |    6 +++---
- fs/9p/vfs_inode_dotl.c |    1 +
- 3 files changed, 5 insertions(+), 3 deletions(-)
+ net/sunrpc/xprtrdma/verbs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/9p/v9fs_vfs.h b/fs/9p/v9fs_vfs.h
-index 731e3d14b67d..0e8418066a48 100644
---- a/fs/9p/v9fs_vfs.h
-+++ b/fs/9p/v9fs_vfs.h
-@@ -42,6 +42,7 @@ struct inode *v9fs_alloc_inode(struct super_block *sb);
- void v9fs_free_inode(struct inode *inode);
- struct inode *v9fs_get_inode(struct super_block *sb, umode_t mode,
- 			     dev_t rdev);
-+void v9fs_set_netfs_context(struct inode *inode);
- int v9fs_init_inode(struct v9fs_session_info *v9ses,
- 		    struct inode *inode, umode_t mode, dev_t rdev);
- void v9fs_evict_inode(struct inode *inode);
-diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
-index b66466e97459..32572982f72e 100644
---- a/fs/9p/vfs_inode.c
-+++ b/fs/9p/vfs_inode.c
-@@ -246,7 +246,7 @@ void v9fs_free_inode(struct inode *inode)
- /*
-  * Set parameters for the netfs library
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 28c0771c4e8c..b4c1d874fc7e 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -49,14 +49,14 @@
+  *  o buffer memory
   */
--static void v9fs_set_netfs_context(struct inode *inode)
-+void v9fs_set_netfs_context(struct inode *inode)
- {
- 	struct v9fs_inode *v9inode =3D V9FS_I(inode);
- 	netfs_inode_init(&v9inode->netfs, &v9fs_req_ops, true);
-@@ -326,8 +326,6 @@ int v9fs_init_inode(struct v9fs_session_info *v9ses,
- 		err =3D -EINVAL;
- 		goto error;
- 	}
--
--	v9fs_set_netfs_context(inode);
- error:
- 	return err;
- =
+ 
++#include <linux/bitops.h>
+ #include <linux/interrupt.h>
+ #include <linux/slab.h>
+ #include <linux/sunrpc/addr.h>
+ #include <linux/sunrpc/svc_rdma.h>
+ #include <linux/log2.h>
+ 
+-#include <asm-generic/barrier.h>
+-#include <asm/bitops.h>
++#include <asm/barrier.h>
+ 
+ #include <rdma/ib_cm.h>
+ 
 
-@@ -359,6 +357,7 @@ struct inode *v9fs_get_inode(struct super_block *sb, u=
-mode_t mode, dev_t rdev)
- 		iput(inode);
- 		return ERR_PTR(err);
- 	}
-+	v9fs_set_netfs_context(inode);
- 	return inode;
- }
- =
+---
+base-commit: fbafc3e621c3f4ded43720fdb1d6ce1728ec664e
+change-id: 20231226-verbs-30800631d3f1
 
-@@ -461,6 +460,7 @@ static struct inode *v9fs_qid_iget(struct super_block =
-*sb,
- 		goto error;
- =
-
- 	v9fs_stat2inode(st, inode, sb, 0);
-+	v9fs_set_netfs_context(inode);
- 	v9fs_cache_inode_get_cookie(inode);
- 	unlock_new_inode(inode);
- 	return inode;
-diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
-index e25fbc988f09..3505227e1704 100644
---- a/fs/9p/vfs_inode_dotl.c
-+++ b/fs/9p/vfs_inode_dotl.c
-@@ -128,6 +128,7 @@ static struct inode *v9fs_qid_iget_dotl(struct super_b=
-lock *sb,
- 		goto error;
- =
-
- 	v9fs_stat2inode_dotl(st, inode, 0);
-+	v9fs_set_netfs_context(inode);
- 	v9fs_cache_inode_get_cookie(inode);
- 	retval =3D v9fs_get_acl(inode, fid);
- 	if (retval)
+Best regards,
+-- 
+Tanzir Hasan <tanzirh@google.com>
 
 
