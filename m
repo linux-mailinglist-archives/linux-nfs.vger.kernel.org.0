@@ -1,109 +1,110 @@
-Return-Path: <linux-nfs+bounces-903-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-904-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0785823669
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 21:19:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DB8A823702
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 22:16:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F1141F25D15
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 20:19:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8D4E287427
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 21:16:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F02A1D530;
-	Wed,  3 Jan 2024 20:16:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78B761DA28;
+	Wed,  3 Jan 2024 21:15:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ALvSUmtd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YzVsi2/O"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBADA1D529
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jan 2024 20:16:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B0DE1D69B
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jan 2024 21:15:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704312992;
+	s=mimecast20190719; t=1704316553;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=47Fyyv/nkZfxAQAmcwzBTqt1nlPJHojM0fkLXTOXZko=;
-	b=ALvSUmtdM1M7xpxVZREODQt1SyB8bThWK9Oj4QR/OezZ1bqwkK68Pewca/MXyAtw3wkGZo
-	OkkNGUQyFqVyAIbOlM57jMHfE1RqHvfnEQFOppjp6tggWk5Rl9g4A5Ji78IqjZVoWJYJNC
-	wzWNoQVq01j5W881ufBOcXbd3OvF9L8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-437-istUxocgPB66pf9NhJp_Bg-1; Wed, 03 Jan 2024 15:16:31 -0500
-X-MC-Unique: istUxocgPB66pf9NhJp_Bg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	bh=Lz9BpuJT9ZqjBzLEQFTtycxe4tbIVPZFPrNygtaFHDI=;
+	b=YzVsi2/OCPt4KFZ0ChhTky1OQwQjDxXK0Cx6V4k4+/nsJrW+ENzAcbcNPgwAs9eXvvPW5b
+	pynPVwmt+6fn+0Piot1lwP8aEZwqolIl8+hCXdMuGTC4+j3tfzoElaPnD77OZ2sOvirT2z
+	bfstm+SnAGscdKleCQ51WXj3zHFlrzk=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-640-1v-GWHbRM9e1RxN52-Av-w-1; Wed,
+ 03 Jan 2024 16:15:48 -0500
+X-MC-Unique: 1v-GWHbRM9e1RxN52-Av-w-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B502A83DE2E;
-	Wed,  3 Jan 2024 20:16:30 +0000 (UTC)
-Received: from [100.85.132.103] (ovpn-0-5.rdu2.redhat.com [10.22.0.5])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 1FB2A2026D66;
-	Wed,  3 Jan 2024 20:16:29 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Jeff Layton <jlayton@kernel.org>,
- Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: hangs during fstests testing with TLS
-Date: Wed, 03 Jan 2024 15:16:28 -0500
-Message-ID: <AB421B16-F1FD-414C-A9BE-652D868F03A9@redhat.com>
-In-Reply-To: <D1091C94-9F23-47E9-A9CF-31CCEFE5EF8A@oracle.com>
-References: <117352d5dc94d8f31bc6770e4bbb93a357982a93.camel@kernel.org>
- <ABBA5E37-2E13-4603-A79C-F9B9B8488AE3@redhat.com>
- <D1091C94-9F23-47E9-A9CF-31CCEFE5EF8A@oracle.com>
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5354F3806710;
+	Wed,  3 Jan 2024 21:15:47 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.68])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 576BF492BC6;
+	Wed,  3 Jan 2024 21:15:44 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <20240103145935.384404-1-dhowells@redhat.com>
+References: <20240103145935.384404-1-dhowells@redhat.com>
+To: Christian Brauner <christian@brauner.io>,
+    Jeff Layton <jlayton@kernel.org>,
+    Marc Dionne <marc.dionne@auristor.com>
+Cc: dhowells@redhat.com, Gao Xiang <hsiangkao@linux.alibaba.com>,
+    Dominique Martinet <asmadeus@codewreck.org>,
+    Steve French <smfrench@gmail.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
+    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+    netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 7/5] netfs: Fix proc/fs/fscache symlink to point to "netfs" not "../netfs"
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <900276.1704316543.1@warthog.procyon.org.uk>
+Date: Wed, 03 Jan 2024 21:15:43 +0000
+Message-ID: <900277.1704316543@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On 3 Jan 2024, at 14:12, Chuck Lever III wrote:
+Fix the proc/fs/fscache symlink to point to "netfs" not "../netfs".
 
->> On Jan 3, 2024, at 1:47=E2=80=AFPM, Benjamin Coddington <bcodding@redh=
-at.com> wrote:
->>
->> This looks like it started out as the problem I've been sending patche=
-s to
->> fix on 6.7, latest here:
->> https://lore.kernel.org/linux-nfs/e28038fba1243f00b0dd66b7c5296a1e1816=
-45ea.1702496910.git.bcodding@redhat.com/
->>
->> .. however whenever I encounter the issue, the client reconnects the
->> transport again - so I think there might be an additional problem here=
-=2E
->
-> I'm looking at the same problem as you, Ben. It doesn't seem to be
-> similar to what Jeff reports.
->
-> But I'm wondering if gerry-rigging the timeouts is the right answer
-> for backchannel replies. The problem, fundamentally, is that when a
-> forechannel RPC task holds the transport lock, the backchannel's reply
-> transmit path thinks that means the transport connection is down and
-> triggers a transport disconnect.
+Reported-by: Marc Dionne <marc.dionne@auristor.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Christian Brauner <christian@brauner.io>
+cc: linux-fsdevel@vger.kernel.org
+cc: linux-cachefs@redhat.com
+---
+ fs/netfs/fscache_proc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why shouldn't backchannel replies have normal timeout values?
-
-> The use of ETIMEDOUT in call_bc_transmit_status() is... not especially
-> clear.
-
-Seems like it should mean that the reply couldn't be sent within (what
-should be) the timeout values for the client's state management transport=
-=2E
-
-I'm glad you're seeing this problem too.  I was worried that something wa=
-s
-seriously different about my test setup.
-
-Ben
+diff --git a/fs/netfs/fscache_proc.c b/fs/netfs/fscache_proc.c
+index ecd0d1edafaa..874d951bc390 100644
+--- a/fs/netfs/fscache_proc.c
++++ b/fs/netfs/fscache_proc.c
+@@ -16,7 +16,7 @@
+  */
+ int __init fscache_proc_init(void)
+ {
+-	if (!proc_symlink("fs/fscache", NULL, "../netfs"))
++	if (!proc_symlink("fs/fscache", NULL, "netfs"))
+ 		goto error_sym;
+ 
+ 	if (!proc_create_seq("fs/netfs/caches", S_IFREG | 0444, NULL,
 
 
