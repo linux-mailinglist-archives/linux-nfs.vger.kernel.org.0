@@ -1,50 +1,51 @@
-Return-Path: <linux-nfs+bounces-880-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-881-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CBF4822FF8
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 15:59:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E8DC782300B
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 16:00:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36F2E1C235BD
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 14:59:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EDCF01C21F0D
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 15:00:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8621A717;
-	Wed,  3 Jan 2024 14:59:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F6C81B29E;
+	Wed,  3 Jan 2024 15:00:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AV+D26VQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NzBP1IFG"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6FB1A70C
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jan 2024 14:59:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9241B295
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jan 2024 14:59:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704293987;
+	s=mimecast20190719; t=1704293997;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=s3o3MrTd6nm5lawOB5Ax6jA2uuGzy36Eef5IBUe+5HY=;
-	b=AV+D26VQILz2cOKMwox8g/2mhcRPhHN01nFPa87LciragtVm7beV/Cb+82LXtZIJUo+mWR
-	Ti/UTs06ne1ObFBUECvgj4yAZnHFrHQipXq/CZc7ug1rKT9XXGNUKbD+p5NbRXwYGT/TP9
-	YsV63Pj61e2sdL6D7/GQHPGm9nKgznY=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SdFCD8YJUNnwtU5qwz/M+xF7ih7tS/QW8qR9RpiR7QY=;
+	b=NzBP1IFG5kRUehdC9xp0+JWMT8f/3WKEbQ1ao4h8MOMV5w/W7qKprmGHtIUEMmh8seQ98S
+	fRKg0PH1zhR3CgVGVGpIVmogmPVBp1uo44lH9EZZy8X7pnGNG+Ervsgs6f5Nk5zVe5NMZV
+	mCvnYO1Vs+jvGmcCV/cAdxdMp/eEJd0=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-298-3VxcmtpCOkq8GL6PiBMlJQ-1; Wed, 03 Jan 2024 09:59:43 -0500
-X-MC-Unique: 3VxcmtpCOkq8GL6PiBMlJQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+ us-mta-369-l-ZawQD_NwSxVHuoSJh8mg-1; Wed, 03 Jan 2024 09:59:54 -0500
+X-MC-Unique: l-ZawQD_NwSxVHuoSJh8mg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4F93C83B821;
-	Wed,  3 Jan 2024 14:59:42 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 450EB83B826;
+	Wed,  3 Jan 2024 14:59:53 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.68])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 24175C15A0C;
-	Wed,  3 Jan 2024 14:59:37 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 45F673C27;
+	Wed,  3 Jan 2024 14:59:49 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>,
 	Jeff Layton <jlayton@kernel.org>,
@@ -69,10 +70,14 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] netfs, cachefiles, 9p: Additional patches
-Date: Wed,  3 Jan 2024 14:59:24 +0000
-Message-ID: <20240103145935.384404-1-dhowells@redhat.com>
+	linux-kernel@vger.kernel.org,
+	Yiqun Leng <yqleng@linux.alibaba.com>,
+	Jia Zhu <zhujia.zj@bytedance.com>
+Subject: [PATCH 1/5] cachefiles: Fix __cachefiles_prepare_write()
+Date: Wed,  3 Jan 2024 14:59:25 +0000
+Message-ID: <20240103145935.384404-2-dhowells@redhat.com>
+In-Reply-To: <20240103145935.384404-1-dhowells@redhat.com>
+References: <20240103145935.384404-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -80,48 +85,99 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-Hi Christian, Jeff, Gao, Dominique,
+Fix __cachefiles_prepare_write() to correctly determine whether the
+requested write will fit correctly with the DIO alignment.
 
-Here are some additional patches for my netfs-lib tree:
+Reported-by: Gao Xiang <hsiangkao@linux.alibaba.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Yiqun Leng <yqleng@linux.alibaba.com>
+Tested-by: Jia Zhu <zhujia.zj@bytedance.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: linux-cachefs@redhat.com
+cc: linux-erofs@lists.ozlabs.org
+cc: linux-fsdevel@vger.kernel.org
+cc: linux-mm@kvack.org
+---
+ fs/cachefiles/io.c | 28 +++++++++++++++++-----------
+ 1 file changed, 17 insertions(+), 11 deletions(-)
 
- (1) Fix __cachefiles_prepare_write() to correctly validate against the DIO
-     alignment.
-
- (2) 9p: Fix initialisation of the netfs_inode so that i_size is set before
-     netfs_inode_init() is called.
-
- (3) 9p: Do a couple of cleanups (remove a couple of unused vars and turn a
-     BUG_ON() into a warning).
-
- (4) 9p: Always update remote_i_size, even if we're asked not to update
-     i_size in stat2inode.
-
- (5) 9p: Return the amount written in preference to an error if we wrote
-     something.
-
-David
-
-The netfslib postings:
-Link: https://lore.kernel.org/r/20231013160423.2218093-1-dhowells@redhat.com/ # v1
-Link: https://lore.kernel.org/r/20231117211544.1740466-1-dhowells@redhat.com/ # v2
-Link: https://lore.kernel.org/r/20231207212206.1379128-1-dhowells@redhat.com/ # v3
-Link: https://lore.kernel.org/r/20231213152350.431591-1-dhowells@redhat.com/ # v4
-Link: https://lore.kernel.org/r/20231221132400.1601991-1-dhowells@redhat.com/ # v5
-
-David Howells (5):
-  cachefiles: Fix __cachefiles_prepare_write()
-  9p: Fix initialisation of netfs_inode for 9p
-  9p: Do a couple of cleanups
-  9p: Always update remote_i_size in stat2inode
-  9p: Use length of data written to the server in preference to error
-
- fs/9p/v9fs_vfs.h       |  1 +
- fs/9p/vfs_addr.c       | 24 ++++++++++++------------
- fs/9p/vfs_inode.c      |  6 +++---
- fs/9p/vfs_inode_dotl.c |  7 ++++---
- fs/cachefiles/io.c     | 28 +++++++++++++++++-----------
- 5 files changed, 37 insertions(+), 29 deletions(-)
+diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
+index bffffedce4a9..7529b40bc95a 100644
+--- a/fs/cachefiles/io.c
++++ b/fs/cachefiles/io.c
+@@ -522,16 +522,22 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
+ 			       bool no_space_allocated_yet)
+ {
+ 	struct cachefiles_cache *cache = object->volume->cache;
+-	loff_t start = *_start, pos;
+-	size_t len = *_len, down;
++	unsigned long long start = *_start, pos;
++	size_t len = *_len;
+ 	int ret;
+ 
+ 	/* Round to DIO size */
+-	down = start - round_down(start, PAGE_SIZE);
+-	*_start = start - down;
+-	*_len = round_up(down + len, PAGE_SIZE);
+-	if (down < start || *_len > upper_len)
++	start = round_down(*_start, PAGE_SIZE);
++	if (start != *_start) {
++		kleave(" = -ENOBUFS [down]");
++		return -ENOBUFS;
++	}
++	if (*_len > upper_len) {
++		kleave(" = -ENOBUFS [up]");
+ 		return -ENOBUFS;
++	}
++
++	*_len = round_up(len, PAGE_SIZE);
+ 
+ 	/* We need to work out whether there's sufficient disk space to perform
+ 	 * the write - but we can skip that check if we have space already
+@@ -542,7 +548,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
+ 
+ 	pos = cachefiles_inject_read_error();
+ 	if (pos == 0)
+-		pos = vfs_llseek(file, *_start, SEEK_DATA);
++		pos = vfs_llseek(file, start, SEEK_DATA);
+ 	if (pos < 0 && pos >= (loff_t)-MAX_ERRNO) {
+ 		if (pos == -ENXIO)
+ 			goto check_space; /* Unallocated tail */
+@@ -550,7 +556,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
+ 					  cachefiles_trace_seek_error);
+ 		return pos;
+ 	}
+-	if ((u64)pos >= (u64)*_start + *_len)
++	if (pos >= start + *_len)
+ 		goto check_space; /* Unallocated region */
+ 
+ 	/* We have a block that's at least partially filled - if we're low on
+@@ -563,13 +569,13 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
+ 
+ 	pos = cachefiles_inject_read_error();
+ 	if (pos == 0)
+-		pos = vfs_llseek(file, *_start, SEEK_HOLE);
++		pos = vfs_llseek(file, start, SEEK_HOLE);
+ 	if (pos < 0 && pos >= (loff_t)-MAX_ERRNO) {
+ 		trace_cachefiles_io_error(object, file_inode(file), pos,
+ 					  cachefiles_trace_seek_error);
+ 		return pos;
+ 	}
+-	if ((u64)pos >= (u64)*_start + *_len)
++	if (pos >= start + *_len)
+ 		return 0; /* Fully allocated */
+ 
+ 	/* Partially allocated, but insufficient space: cull. */
+@@ -577,7 +583,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
+ 	ret = cachefiles_inject_remove_error();
+ 	if (ret == 0)
+ 		ret = vfs_fallocate(file, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+-				    *_start, *_len);
++				    start, *_len);
+ 	if (ret < 0) {
+ 		trace_cachefiles_io_error(object, file_inode(file), ret,
+ 					  cachefiles_trace_fallocate_error);
 
 
