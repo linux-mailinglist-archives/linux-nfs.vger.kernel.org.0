@@ -1,202 +1,114 @@
-Return-Path: <linux-nfs+bounces-870-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-871-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1FC15822B27
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 11:15:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46532822CAF
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 13:09:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81219284ECD
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 10:15:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A69F6B20F99
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Jan 2024 12:08:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5703D18650;
-	Wed,  3 Jan 2024 10:15:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B974719459;
+	Wed,  3 Jan 2024 12:08:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="b/IH5pIU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VBRFYsjz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E43818657
-	for <linux-nfs@vger.kernel.org>; Wed,  3 Jan 2024 10:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d3f29fea66so41504355ad.3
-        for <linux-nfs@vger.kernel.org>; Wed, 03 Jan 2024 02:15:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1704276918; x=1704881718; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r9kSoFv/7+pD3aWATl3d1Zz/zNpbqJdAmBC+qKH73H4=;
-        b=b/IH5pIUzffcArbA4NKho9QxpN6XCff2kves6QqQSkA+28J9lX4QXxmeZxJpBndmnL
-         29JvwxXvfzLBgn7eKfRPs3i0ckbK9rpmRYsYjXY64GrWZjEuOyGA4fPfHs4Por0Ku8jU
-         XNhco8bevs5HIpq2Zz99k3Y407lIkgH8ZOzSMNf9rgEJXp6pZefCO+Zmw5OrrhxaALQ8
-         EVW7cy0zdZ2+WbpN84B4m0R2HS8mLSd1/khQy/9xmPDooHFwjK2zJzA16FbKEi46xC2a
-         L/fAMdVi4A82kd/IdsdGf7iCkt6nic0irxA8creFtCzfBaGXTlqrB9mKOyMImsBW38Gw
-         MmYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704276918; x=1704881718;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
-         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=r9kSoFv/7+pD3aWATl3d1Zz/zNpbqJdAmBC+qKH73H4=;
-        b=atc5Jjj0CSho8JvcuOVZ7qPtc4U49K5HGtP3yHI1JrO02Hi7nD3/WZsUUORDNYB9nW
-         7KUIQK7bRnyDYtrVRQXmnrRX5L346QDY+t4RHxRAOvFONrPDc+DLVsfVH+fDNiPeYeDY
-         kxpRq2spX+9F7HaOBQKVEDtwuw8pN3NWqwphsxOw5a42ddoqA6syiUyCA63/SNAEUIsS
-         0kj9gk2aDZLNfK5sTpYZvONUl0vYOrYz4LNdw37j6r8s9uJP4nCVgImIRmmS0rLDAwvt
-         6GSDzhR7dJor/5YkBbo7mx0eMvrTiPteM4c2ELSjx0cbU4NxIkLxPuKg2azxp8deVVZg
-         w9Lw==
-X-Gm-Message-State: AOJu0YweyQwhX0xIjGp6AG1GAFXtYzTaWuJBF431iCZP/Amb70psReS3
-	NjoUrYEPnf//Sk89nFCYJ+b5BdqoJPNvzw==
-X-Google-Smtp-Source: AGHT+IFb5s1kRhg4lbBcAXzAad/ZQWUpaLKwi6GbYgUI52nqs1wg58jl3FEdVQCfwyB+lzN5OaJ2qw==
-X-Received: by 2002:a17:903:11c3:b0:1d4:75c6:9560 with SMTP id q3-20020a17090311c300b001d475c69560mr6941145plh.59.1704276917712;
-        Wed, 03 Jan 2024 02:15:17 -0800 (PST)
-Received: from [10.3.158.72] ([61.213.176.6])
-        by smtp.gmail.com with ESMTPSA id bh10-20020a170902a98a00b001d4160c4f97sm21615997plb.188.2024.01.03.02.15.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 02:15:17 -0800 (PST)
-Message-ID: <42dd77c4-8842-4f96-958a-0d9407362b9d@bytedance.com>
-Date: Wed, 3 Jan 2024 18:15:09 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DE721945B
+	for <linux-nfs@vger.kernel.org>; Wed,  3 Jan 2024 12:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704283709;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Xn3hPmKlXFLs1haHAodNqDYoLKo2JnMk0c6eSg9WYzE=;
+	b=VBRFYsjzpP8Z7vFlKm2AW1dySJLo6yp/o6yF/8T+20D8ID0fu9Tntm2LDu1ALQdERGcGjo
+	guW/5APAfqGMdQpJW6YXQEMfFB1OVX2jFXU6nHA/Gjz+x7TAsJKOTKEqYeGO/eu4f7QhH8
+	LtyPOVJ/vuAXf3tKQEBjOk1oYLQ7Kb0=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-464-ipNzNXHGPhaBuxD3VhW4ZQ-1; Wed,
+ 03 Jan 2024 07:08:23 -0500
+X-MC-Unique: ipNzNXHGPhaBuxD3VhW4ZQ-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0F9663C025B4;
+	Wed,  3 Jan 2024 12:08:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.68])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C516D492BE6;
+	Wed,  3 Jan 2024 12:08:18 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ZZULNQAZ0n0WQv7p@codewreck.org>
+References: <ZZULNQAZ0n0WQv7p@codewreck.org> <20231221132400.1601991-1-dhowells@redhat.com> <20231221132400.1601991-41-dhowells@redhat.com>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
+    Steve French <smfrench@gmail.com>,
+    Matthew Wilcox <willy@infradead.org>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    Paulo Alcantara <pc@manguebit.com>,
+    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+    Eric Van Hensbergen <ericvh@kernel.org>,
+    Ilya Dryomov <idryomov@gmail.com>,
+    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+    linux-mm@kvack.org, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
+    Christian Schoenebeck <linux_oss@crudebyte.com>
+Subject: Re: [PATCH v5 40/40] 9p: Use netfslib read/write_iter
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Re: [PATCH v5 33/40] netfs, cachefiles: Pass upper bound length
- to allow expansion
-To: David Howells <dhowells@redhat.com>,
- Gao Xiang <hsiangkao@linux.alibaba.com>
-Cc: Matthew Wilcox <willy@infradead.org>,
- Marc Dionne <marc.dionne@auristor.com>, Paulo Alcantara <pc@manguebit.com>,
- Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov <idryomov@gmail.com>,
- Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
- linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
- linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
- Steve French <smfrench@gmail.com>
-References: <750e8251-ba30-4f53-a17b-73c79e3739ce@linux.alibaba.com>
- <20231221132400.1601991-1-dhowells@redhat.com>
- <20231221132400.1601991-34-dhowells@redhat.com>
- <198744.1704215477@warthog.procyon.org.uk>
-From: Jia Zhu <zhujia.zj@bytedance.com>
-In-Reply-To: <198744.1704215477@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <354049.1704283697.1@warthog.procyon.org.uk>
+Date: Wed, 03 Jan 2024 12:08:18 +0000
+Message-ID: <354050.1704283698@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
 
+Dominique Martinet <asmadeus@codewreck.org> wrote:
 
+> I've also manually confirmed one of the big improvements I'd been asking
+> for (that writes in cached modes, which used to be chunked to 4k, and
+> are now properly aggregated, so e.g 'dd bs=1M count=1' will properly
+> issue a minimal number of TWRITE calls capped by msize) -- this is
+> great!
 
-在 2024/1/3 01:11, David Howells 写道:
-> Gao Xiang <hsiangkao@linux.alibaba.com> wrote:
-> 
->>>    	down = start - round_down(start, PAGE_SIZE);
->>>    	*_start = start - down;
->>>    	*_len = round_up(down + len, PAGE_SIZE);
->>> +	if (down < start || *_len > upper_len)
->>> +		return -ENOBUFS;
->>
->> Sorry for bothering. We just found some strange when testing
->> today-next EROFS over fscache.
->>
->> I'm not sure the meaning of
->>      if (down < start
->>
->> For example, if start is page-aligned, down == 0.
->>
->> so as long as start > 0 and page-aligned, it will return
->> -ENOBUFS.  Does it an intended behavior?
-> 
-> Yeah, I think that's wrong.
-> 
-> Does the attached help?
-> 
-> David
-> ---
+After the merge window, we can look at enabling multipage folios for 9p.
 
-Tested-by: Jia Zhu <zhujia.zj@bytedance.com>
+> I've noticed we don't cache xattrs are all,
 
-> 
-> diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-> index bffffedce4a9..7529b40bc95a 100644
-> --- a/fs/cachefiles/io.c
-> +++ b/fs/cachefiles/io.c
-> @@ -522,16 +522,22 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   			       bool no_space_allocated_yet)
->   {
->   	struct cachefiles_cache *cache = object->volume->cache;
-> -	loff_t start = *_start, pos;
-> -	size_t len = *_len, down;
-> +	unsigned long long start = *_start, pos;
-> +	size_t len = *_len;
->   	int ret;
->   
->   	/* Round to DIO size */
-> -	down = start - round_down(start, PAGE_SIZE);
-> -	*_start = start - down;
-> -	*_len = round_up(down + len, PAGE_SIZE);
-> -	if (down < start || *_len > upper_len)
-> +	start = round_down(*_start, PAGE_SIZE);
-> +	if (start != *_start) {
-> +		kleave(" = -ENOBUFS [down]");
-> +		return -ENOBUFS;
-> +	}
-> +	if (*_len > upper_len) {
-> +		kleave(" = -ENOBUFS [up]");
->   		return -ENOBUFS;
-> +	}
-> +
-> +	*_len = round_up(len, PAGE_SIZE);
->   
->   	/* We need to work out whether there's sufficient disk space to perform
->   	 * the write - but we can skip that check if we have space already
-> @@ -542,7 +548,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   
->   	pos = cachefiles_inject_read_error();
->   	if (pos == 0)
-> -		pos = vfs_llseek(file, *_start, SEEK_DATA);
-> +		pos = vfs_llseek(file, start, SEEK_DATA);
->   	if (pos < 0 && pos >= (loff_t)-MAX_ERRNO) {
->   		if (pos == -ENXIO)
->   			goto check_space; /* Unallocated tail */
-> @@ -550,7 +556,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   					  cachefiles_trace_seek_error);
->   		return pos;
->   	}
-> -	if ((u64)pos >= (u64)*_start + *_len)
-> +	if (pos >= start + *_len)
->   		goto check_space; /* Unallocated region */
->   
->   	/* We have a block that's at least partially filled - if we're low on
-> @@ -563,13 +569,13 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   
->   	pos = cachefiles_inject_read_error();
->   	if (pos == 0)
-> -		pos = vfs_llseek(file, *_start, SEEK_HOLE);
-> +		pos = vfs_llseek(file, start, SEEK_HOLE);
->   	if (pos < 0 && pos >= (loff_t)-MAX_ERRNO) {
->   		trace_cachefiles_io_error(object, file_inode(file), pos,
->   					  cachefiles_trace_seek_error);
->   		return pos;
->   	}
-> -	if ((u64)pos >= (u64)*_start + *_len)
-> +	if (pos >= start + *_len)
->   		return 0; /* Fully allocated */
->   
->   	/* Partially allocated, but insufficient space: cull. */
-> @@ -577,7 +583,7 @@ int __cachefiles_prepare_write(struct cachefiles_object *object,
->   	ret = cachefiles_inject_remove_error();
->   	if (ret == 0)
->   		ret = vfs_fallocate(file, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-> -				    *_start, *_len);
-> +				    start, *_len);
->   	if (ret < 0) {
->   		trace_cachefiles_io_error(object, file_inode(file), ret,
->   					  cachefiles_trace_fallocate_error);
-> 
+I haven't given this any particular thought.  We could attach them to the
+cachefile object as xattrs, but it means you have to do two xattr lookups in
+the event of a cache miss.
+
+At this point, I'm going to ask Christian to stack the extra patch on his
+branch rather than folding it down and retagging.
+
+> I've got a couple of questions below, but:
+
+I'll address those separately.
+
+> Tested-by: Dominique Martinet <asmadeus@codewreck.org>
+> Acked-by: Dominique Martinet <asmadeus@codewreck.org>
+
+Thanks!
+
+David
+
 
