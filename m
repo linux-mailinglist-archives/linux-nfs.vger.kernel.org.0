@@ -1,133 +1,104 @@
-Return-Path: <linux-nfs+bounces-913-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-914-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E08148239EC
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 01:57:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 313A3823B1A
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 04:26:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 654AE287D5F
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 00:57:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A2F801F2602F
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 03:26:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80CB829B2;
-	Thu,  4 Jan 2024 00:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42A025257;
+	Thu,  4 Jan 2024 03:26:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KamHLNKK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TORlpXbg"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7E92586
-	for <linux-nfs@vger.kernel.org>; Thu,  4 Jan 2024 00:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704329859;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/R3b3pbb8HNDlsjuZ5FavV7KpYSD08MEU0lwcW8jcwA=;
-	b=KamHLNKKJLRK1zwrfn8E+VjFjm5JefMPw7+vhVAUytjXIcw1Y6eprl4KmTwkTn7sL3uzcJ
-	dvcx1jVymKkCbdCwdW4vrP8sFWIFjl4oJ9irew8kBC5Uurrq4MV+bmA4B+wygRObs2SpwV
-	+drB4jyihFi4y/wS4cklMnQzIWax4IY=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-156-DlZMIdtfNG-jwjZw908xrA-1; Wed, 03 Jan 2024 19:57:38 -0500
-X-MC-Unique: DlZMIdtfNG-jwjZw908xrA-1
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-680b74cba78so12106d6.1
-        for <linux-nfs@vger.kernel.org>; Wed, 03 Jan 2024 16:57:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704329857; x=1704934657;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/R3b3pbb8HNDlsjuZ5FavV7KpYSD08MEU0lwcW8jcwA=;
-        b=DQvRs8ihTV0aLJysv23E9QSymGu3YqyDZPDdOcAuWnuohrRuAlukCZOb4PiXz1vs/w
-         9FQlKsFy5OLdXLSaAoc9s9VPmddnuUGHkBin+Af1HKixh8V/HJLioggUhvlsF1m+nnrb
-         FCDPPK9SGRigRtPbxVQtHl2KdDs+EnSWNoRgpeuo9A79pjEc/smMH6npRtRv+7WOl7EV
-         Fda6fYTKD0d+ztn+f0eD1eSZxK1p+yBm02jq0PIKBspkRaA5TuPswlMhuoXXTW/LWc9H
-         ulWqCoJrz1aQN6XOKn1ZWd8shX366f+JMLvRAT65vzDfhL7ntQoqY+LLblyLqLivcG5X
-         wtCA==
-X-Gm-Message-State: AOJu0Yyyk3xIPWDdRIaNns17EK3azVe4rq0FZOYI5BCHc0gX21c+i7Q4
-	czXDLvoaYs0u3+Sjx9Lb2RzSFFdriMLyCJ6+Q7okZMC9fsdbtI1BBL8P9mg6vjEwG/EvrAMGoJu
-	DzlBSvKkq/V5osz87TGzoMnLSpFe6muKw5khm
-X-Received: by 2002:a05:6214:5182:b0:67f:458f:bd5e with SMTP id kl2-20020a056214518200b0067f458fbd5emr40082203qvb.1.1704329857430;
-        Wed, 03 Jan 2024 16:57:37 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IF3jmRRWKyowjLcEbuuVAzF9WwMFgaHbND0DktLcUWf/1q7qeuj41wG6YxbFity/pByXX1obw==
-X-Received: by 2002:a05:6214:5182:b0:67f:458f:bd5e with SMTP id kl2-20020a056214518200b0067f458fbd5emr40082193qvb.1.1704329856964;
-        Wed, 03 Jan 2024 16:57:36 -0800 (PST)
-Received: from [172.31.1.12] ([70.109.152.76])
-        by smtp.gmail.com with ESMTPSA id dp15-20020a05621409cf00b00680d2247031sm571253qvb.81.2024.01.03.16.57.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 03 Jan 2024 16:57:36 -0800 (PST)
-Message-ID: <309b84e2-4144-4ba4-abf4-f377da5c9ad2@redhat.com>
-Date: Wed, 3 Jan 2024 19:57:35 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F00B05227;
+	Thu,  4 Jan 2024 03:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1704338773;
+	bh=0/37jBO1P9a8O4nUJr8EgmsTgUeLZ1xiDU4LCCXbelQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TORlpXbgyvs8USbSCfQxUlJr9xe7iu0HhomnIQyUJUV4mwZdZv6Z7/7pcELi9b1TE
+	 pgAeCVzcAS6k4dMb5Vy3izR2q8JRCPT2div5heG+l8alt9hiYgeHovpO4VDvbhaq7w
+	 J5sJ1SGk4wweSszGDR6ijGsjx4oO16aZHFnjyhq8NqLbZXHBkuhJx/ZuJ9dbtw2ZzO
+	 lCFk7CwuA5GgZv2S+vae2n8xHyNG5GxlG78GNIOq7Ag8Brf8jGLQQdsonYZixE9QNF
+	 /HsuiLntIlUr1JvrEj4224/HH+ZMOSpQX7hd3kOB8IDFCljmWhbontnRrIXUZVwXdo
+	 pjWrYKkRZSXDQ==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4T5Bnd1W6Mz4wch;
+	Thu,  4 Jan 2024 14:26:13 +1100 (AEDT)
+Date: Thu, 4 Jan 2024 14:26:12 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Kees Cook <keescook@chromium.org>, Anna Schumaker <anna@kernel.org>,
+ Trond Myklebust <trondmy@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, NFS Mailing List
+ <linux-nfs@vger.kernel.org>
+Subject: Re: linux-next: duplicate patch in the kspp tree
+Message-ID: <20240104142612.715f10f6@canb.auug.org.au>
+In-Reply-To: <20240104142350.34d38d09@canb.auug.org.au>
+References: <20240104142350.34d38d09@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] Typos and documentation fixes
-Content-Language: en-US
-To: Gioele Barabucci <gioele@svario.it>, linux-nfs@vger.kernel.org
-References: <20231217145539.1380837-1-gioele@svario.it>
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <20231217145539.1380837-1-gioele@svario.it>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/E+dWFudbY8N8LSX.6SQ8fQT";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hello,
+--Sig_/E+dWFudbY8N8LSX.6SQ8fQT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 12/17/23 9:55 AM, Gioele Barabucci wrote:
-> Hi,
-> 
-> the following three patches fix a few typos detected by Debian's QA tool
-> lintian. The last patch also adds Documentation= options to various
-> service files.
-> 
-> Regards,
-First of all thank you for doing this work... But
-the first patch does not apply and there are no
-Signed-off-by: Your name <email@address> on any
-of the patches.
+Hi all,
 
-Which is the reason I didn't include them in
-latest RC release. I'll be more that will to
-take them but I need them to apply and have
-the Signed-off-by line.
+[Just cc'ing the nfs-anna tree contacts]
 
-Thank you again... Looking forward to V2
+On Thu, 4 Jan 2024 14:23:50 +1100 Stephen Rothwell <sfr@canb.auug.org.au> w=
+rote:
+>=20
+> The following commit is also in the nfs-anna tree as a different commit
+> (but the same patch):
+>=20
+>   cb6d2fd30ddd ("SUNRPC: Replace strlcpy() with strscpy()")
+>=20
+> This is commit
+>=20
+>   d8056629633c ("SUNRPC: Replace strlcpy() with strscpy()")
+>=20
+> in the nfs-anna tree.
 
-steved.
-> 
-> Gioele Barabucci (3):
->    Fix typos in error messages
->    Fix typos in manpages
->    systemd: Add Documentation= option to service units
-> 
->   support/export/export.c           | 2 +-
->   support/export/v4root.c           | 2 +-
->   systemd/nfs-blkmap.service        | 1 +
->   systemd/nfs-idmapd.service        | 1 +
->   systemd/nfs-mountd.service        | 1 +
->   systemd/nfs-server.service        | 1 +
->   systemd/nfsdcld.service           | 1 +
->   systemd/rpc-gssd.service.in       | 1 +
->   systemd/rpc-statd-notify.service  | 1 +
->   systemd/rpc-statd.service         | 1 +
->   systemd/rpc-svcgssd.service       | 1 +
->   utils/exportfs/exports.man        | 2 +-
->   utils/mount/mount_libmount.c      | 2 +-
->   utils/mount/nfs.man               | 4 ++--
->   utils/mount/nfsmount.conf.man     | 2 +-
->   utils/nfsdcld/nfsdcld.man         | 2 +-
->   utils/nfsdcltrack/nfsdcltrack.man | 2 +-
->   17 files changed, 18 insertions(+), 9 deletions(-)
-> 
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/E+dWFudbY8N8LSX.6SQ8fQT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmWWJVQACgkQAVBC80lX
+0GwWeAgAjZq9JqZb3T554QeXAMJhv14hQGltV5//u6wABo/4M8lauqpBQolT+pHe
+6w+NSkuMex4qP4ksHOCyZeBpp8qsOR0mTXGaWwjSm8ZTkbeOK2ZsVX3YbSDgl/4U
+PgdvFxlZ6R8YVAmyeYENcJtpWDLryruW0vx2yxnrTp1Jgqs5rapdME/qBi9HyRg0
+/YvwOJkeFl+PhT57zgyzX0XXknJcRdj5NRLASCej94nlrveE6mXfcqnERuafzpFW
+J/gC8rnoX7KgKKYd4iJviZDEGCP577bOlpkH4K+J5qF0UjBuv17MTkEtBWNgwJHP
+RKliXdwvJF2eav/7SbZeFhWoqMesjw==
+=kmcH
+-----END PGP SIGNATURE-----
+
+--Sig_/E+dWFudbY8N8LSX.6SQ8fQT--
 
