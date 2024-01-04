@@ -1,46 +1,46 @@
-Return-Path: <linux-nfs+bounces-918-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-919-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2EE2823D63
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 09:26:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8869E823D64
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 09:26:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 619271F24A27
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9CEB11C2134C
 	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 08:26:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 023912030C;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 301A62030F;
 	Thu,  4 Jan 2024 08:26:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=svario.it header.i=@svario.it header.b="fPOGSsa5"
+	dkim=pass (2048-bit key) header.d=svario.it header.i=@svario.it header.b="cFhtyhEP"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from mail.svario.it (mail.svario.it [84.22.98.252])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5987020300
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8704920307
 	for <linux-nfs@vger.kernel.org>; Thu,  4 Jan 2024 08:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=svario.it
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=svario.it
 Received: from localhost.localdomain (dynamic-093-132-037-253.93.132.pool.telefonica.de [93.132.37.253])
-	by mail.svario.it (Postfix) with ESMTPSA id 8F369DF79C;
+	by mail.svario.it (Postfix) with ESMTPSA id CA130DF79D;
 	Thu,  4 Jan 2024 09:26:20 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svario.it; s=201710;
-	t=1704356780; bh=u6d+d7z6/zrbtKhSlLdejqmTx7v0f5stcp0hkHx7eI4=;
+	t=1704356780; bh=/4A0Dj/AV52qRaGWaHmUbmU/eDH7+ulhDnwShXDAY9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fPOGSsa5R5SzSLA2+sqE1eCfxcS8iYJbJ3zF7QBUEkvg+U13qAYsgvyHVSnKKajTT
-	 tQ4Dl83ay3vlsf40ZKuvNxOUCbEVxqqDDyJg8xlwZ99657yhvvKhfT/jzKSgfkhNur
-	 FlpOpJ+m/vmTNgQuFYC0nIyrdPU1CYAJk5HAs1G7lioKIu0H9h0MMZ+7GLqLuIeBw9
-	 1yqYDWuzfuKNVvXqcyph/8jO7aZo6yq3Lj28fFRNxKBWo3dZAnob53nfwCuOhBrgkR
-	 fHp/N4jtKMpWfssEviS3l2qpX2ASFVMMZS3bMcIv9vKTZRxYSRj+ptnerNTVdXvelG
-	 OYJy72PwUphxg==
+	b=cFhtyhEPrSAA2gSMFTWDoMzDbi809UADFVleQjY5QkKm/tg1gb6bkYZ3Fu7LIfwR8
+	 tkHNiXQ6KuX7NPTmKIED7ztirAjJTopqvAvhDnilNSZ4h0daQjDz3IrgbU4hMy85Hn
+	 Qn7A7EaKdLBggYzBBQe32dH7okAFqbXsM45CB7a8ynY0Utw4MacCb7qitfV7gfZBe8
+	 c2GC4FyLZBZVqd1wIZdBWJFf2xj7SJQGjkINQ9VT2V+Ldl9Ik0lK9rJtFtXydZZZ34
+	 WD4iUE0gXwtVRZ/eS0ZJn9BYXnkkN+gjOtdt8hjqYmahJruQKhneX+I6uFgw5ZBHMG
+	 xuhOKrJcesiGg==
 From: Gioele Barabucci <gioele@svario.it>
 To: linux-nfs@vger.kernel.org
 Cc: Steve Dickson <steved@redhat.com>,
 	Gioele Barabucci <gioele@svario.it>
-Subject: [PATCH v2 1/3] Fix typos in error messages
-Date: Thu,  4 Jan 2024 09:25:26 +0100
-Message-ID: <20240104082528.1425699-2-gioele@svario.it>
+Subject: [PATCH v2 2/3] Fix typos in manpages
+Date: Thu,  4 Jan 2024 09:25:27 +0100
+Message-ID: <20240104082528.1425699-3-gioele@svario.it>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240104082528.1425699-1-gioele@svario.it>
 References: <20240104082528.1425699-1-gioele@svario.it>
@@ -54,50 +54,87 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Gioele Barabucci <gioele@svario.it>
 ---
- support/export/export.c      | 2 +-
- support/export/v4root.c      | 2 +-
- utils/mount/mount_libmount.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ utils/exportfs/exports.man        | 2 +-
+ utils/mount/nfs.man               | 4 ++--
+ utils/mount/nfsmount.conf.man     | 2 +-
+ utils/nfsdcld/nfsdcld.man         | 2 +-
+ utils/nfsdcltrack/nfsdcltrack.man | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/support/export/export.c b/support/export/export.c
-index 100912cb..2c8c3335 100644
---- a/support/export/export.c
-+++ b/support/export/export.c
-@@ -140,7 +140,7 @@ export_read(char *fname, int ignore_hosts)
- 					continue;
+diff --git a/utils/exportfs/exports.man b/utils/exportfs/exports.man
+index b7582776..58537a22 100644
+--- a/utils/exportfs/exports.man
++++ b/utils/exportfs/exports.man
+@@ -298,7 +298,7 @@ set.
  
- 				if (exp->m_export.e_flags & NFSEXP_FSID) {
--					xlog(L_ERROR, "When a reexport= option is present no manully assigned numerical fsid= options are allowed");
-+					xlog(L_ERROR, "When a reexport= option is present no manually assigned numerical fsid= options are allowed");
- 					return -1;
- 				}
- 			}
-diff --git a/support/export/v4root.c b/support/export/v4root.c
-index 03805dcb..c3b17a55 100644
---- a/support/export/v4root.c
-+++ b/support/export/v4root.c
-@@ -137,7 +137,7 @@ v4root_support(void)
- 	if (!warned) {
- 		xlog(L_WARNING, "Kernel does not have pseudo root support.");
- 		xlog(L_WARNING, "NFS v4 mounts will be disabled unless fsid=0");
--		xlog(L_WARNING, "is specfied in /etc/exports file.");
-+		xlog(L_WARNING, "is specified in /etc/exports file.");
- 		warned++;
- 	}
- 	return 0;
-diff --git a/utils/mount/mount_libmount.c b/utils/mount/mount_libmount.c
-index aa4ac5c3..fd6cb2cb 100644
---- a/utils/mount/mount_libmount.c
-+++ b/utils/mount/mount_libmount.c
-@@ -442,7 +442,7 @@ int main(int argc, char *argv[])
- 	mnt_init_debug(0);
- 	cxt = mnt_new_context();
- 	if (!cxt) {
--		nfs_error(_("Can't initilize libmount: %s"),
-+		nfs_error(_("Can't initialize libmount: %s"),
- 					strerror(errno));
- 		rc = EX_FAIL;
- 		goto done;
+ The
+ .I nocrossmnt
+-option can explictly disable
++option can explicitly disable
+ .I crossmnt
+ if it was previously set.  This is rarely useful.
+ .TP
+diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+index c0ba4d08..7103d28e 100644
+--- a/utils/mount/nfs.man
++++ b/utils/mount/nfs.man
+@@ -964,7 +964,7 @@ Some server features misbehave in the face of a migration-compatible
+ identification string.
+ The
+ .B nomigration
+-option retains the use of a traditional client indentification string
++option retains the use of a traditional client identification string
+ which is compatible with legacy NFS servers.
+ This is also the behavior if neither option is specified.
+ A client's open and lock state cannot be migrated transparently
+@@ -1832,7 +1832,7 @@ auxiliary services such as the NLM service can choose
+ any unused port number at random.
+ .P
+ Common firewall configurations block the well-known rpcbind port.
+-In the absense of an rpcbind service,
++In the absence of an rpcbind service,
+ the server administrator fixes the port number
+ of NFS-related services so that the firewall
+ can allow access to specific NFS service ports.
+diff --git a/utils/mount/nfsmount.conf.man b/utils/mount/nfsmount.conf.man
+index 10287cdf..6419190c 100644
+--- a/utils/mount/nfsmount.conf.man
++++ b/utils/mount/nfsmount.conf.man
+@@ -43,7 +43,7 @@ and will be shifted to lower case before being passed to the filesystem.
+ .PP
+ Boolean mount options which do not need an equals sign must be given as
+ .RI \[dq] option =True".
+-Instead of preceeding such an option with
++Instead of preceding such an option with
+ .RB \[dq] no \[dq]
+ its negation must be given as
+ .RI \[dq] option =False".
+diff --git a/utils/nfsdcld/nfsdcld.man b/utils/nfsdcld/nfsdcld.man
+index 861f1c49..ee6e9dcf 100644
+--- a/utils/nfsdcld/nfsdcld.man
++++ b/utils/nfsdcld/nfsdcld.man
+@@ -198,7 +198,7 @@ initialize client tracking in the following order:  First, the \fBnfsdcld\fR upc
+ the \fBnfsdcltrack\fR usermodehelper upcall.  Finally, the legacy client tracking.
+ .PP
+ This daemon should be run as root, as the pipe that it uses to communicate
+-with the kernel is only accessable by root. The daemon however does drop all
++with the kernel is only accessible by root. The daemon however does drop all
+ superuser capabilities after starting. Because of this, the \fIstoragedir\fR
+ should be owned by root, and be readable and writable by owner.
+ .PP
+diff --git a/utils/nfsdcltrack/nfsdcltrack.man b/utils/nfsdcltrack/nfsdcltrack.man
+index cc24b7a2..3905ba46 100644
+--- a/utils/nfsdcltrack/nfsdcltrack.man
++++ b/utils/nfsdcltrack/nfsdcltrack.man
+@@ -80,7 +80,7 @@ section.  For example:
+ .br
+   storagedir = /shared/nfs/nfsdcltrack
+ .in -5
+-Debuging to syslog can also be enabled by setting "debug = 1" in this file.
++Debugging to syslog can also be enabled by setting "debug = 1" in this file.
+ .SH "LEGACY TRANSITION MECHANISM"
+ .IX Header "LEGACY TRANSITION MECHANISM"
+ The Linux kernel NFSv4 server has historically tracked this information
 -- 
 2.43.0
 
