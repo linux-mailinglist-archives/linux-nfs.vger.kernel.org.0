@@ -1,59 +1,59 @@
-Return-Path: <linux-nfs+bounces-915-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-916-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCFFB823CD5
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 08:39:26 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EF69823CE8
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 08:46:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB000B20E29
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 07:39:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D73D11F26174
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 07:46:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38A571F60B;
-	Thu,  4 Jan 2024 07:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291721F94D;
+	Thu,  4 Jan 2024 07:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTXn2NJx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbEef6mt"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E7E1EB3E;
-	Thu,  4 Jan 2024 07:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A234D1F951;
+	Thu,  4 Jan 2024 07:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-680d2ec3459so1649616d6.0;
-        Wed, 03 Jan 2024 23:39:16 -0800 (PST)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-67fa018c116so1204856d6.3;
+        Wed, 03 Jan 2024 23:46:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704353955; x=1704958755; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1704354378; x=1704959178; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7EWAPVYEGfDEzXBhsfGIhO6tsIxVY+kI+CEFXaRouqM=;
-        b=MTXn2NJxw396Ai21f4hr9ZwBjcf1XRDubNZxiZJQ9JWck9FaWOKzbOkI9vpKE50UZr
-         GiQh0M8Sl4Jpji2hEnmYw6gwA7hDLjP5iSQgu7Ebi9qOC+QfLfnXx3uKu2Ok59QC0TPi
-         4edRxCwMTO1PGn1M9qWP1PuOGfJv7J4n6/EqZTPjZHLfoMIjQO5OZtYw2Zo2scyM8nCV
-         y51pfTde4m+Xf2MLlWo1xZ6W296x2tEaeO8mJDc0LIoQogcovntF5TUgpMrSBpAvupM6
-         9AhGlzTrfCyXcfvqyxDJO9WJtgd+cPmxhrqD4MLf7a6WAPq80aHYoxx3FtpQb/A5tSUq
-         0R3A==
+        bh=Z8JWWAcW5U6HoZv2tvwhmzksu600dRorErCbol8G1zE=;
+        b=AbEef6mtA7KVNzB4ChdJGxpc2d/Fh4KkMFEFxssJPaxkpVlQMZg11j4u5313SvAgFD
+         Ark8CDW099l/H65/PN0vvi6E1YQu2xtC0t86Q/M0jab6HAxuyE6pLtTB8GcXgwY0LO/D
+         PPyIvqboMtu8PH4A4+3fRwlLQD2y2JiPGmqYH8ZBWKdyKXZ7m2xqrbrNUjaUReOWhUND
+         woqn8tITH0SYK0ZcuYvE0BwobehrTQxexnfTxFV1NgcQCHBUrcvSSISVb+SzrO1PJ6do
+         9bf4BvAmkAwHjeBdf1EMVjPopiWN/14yFgGWrlO14shbms7ZSCsyaWrdZ5RLSwPZdz+R
+         /I1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704353955; x=1704958755;
+        d=1e100.net; s=20230601; t=1704354378; x=1704959178;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7EWAPVYEGfDEzXBhsfGIhO6tsIxVY+kI+CEFXaRouqM=;
-        b=skZVGwGy90urFxzmacRUQAyHyU4DTqRHNTVXiOKcNQk/Ug9ZBe9wQzyEwBIKG/g9b1
-         SiSKhUQiPI/Vms5ArOJUDCO6SAtmgAC3B8dnugDw/6me3sLqbeGM4hAOu12wzdYySE6j
-         qIefk38Iy4MAjRd1nAgk19bE0puLKx9ySHE6LRo6s4Zc7JichdCzeWnDCn2nwmUo00s6
-         RkCWnulPjtot5XmpgNRQASAlyFFFGXdNQ8Yd0FLuMWXTjpAg38o2zPuUk/g9e35e06FJ
-         ikNXSlHgFbgIrdYGC5bPgt60W6jWJ6Th6YNTeunA2LtYFlh+x0t+x0CHHONTslWaT8LG
-         Ylsg==
-X-Gm-Message-State: AOJu0YycGxZ62cgEKr1iFmlwSEthVftBX8FB/5fhK5ov4nfR9RKMOt4Z
-	ekZ6MvCGlycXX8eaFUiYYdSJlPm1v/gp8bDgLBM=
-X-Google-Smtp-Source: AGHT+IGFZjazJHMfufpHyl8QXOSzlmzdwzixVmsjeIgtg4Ypd2CFE8sQ+ADaiimNisML1L3EwhPh7m9AixRehamtrSw=
-X-Received: by 2002:a05:6214:21eb:b0:680:d0b5:4b8f with SMTP id
- p11-20020a05621421eb00b00680d0b54b8fmr191890qvj.6.1704353955531; Wed, 03 Jan
- 2024 23:39:15 -0800 (PST)
+        bh=Z8JWWAcW5U6HoZv2tvwhmzksu600dRorErCbol8G1zE=;
+        b=SeWlQQW1WvmONQa/XWP05XOKYvhGo9jnK7Gb8sYO80SIgnOOAtGs30RCsoJmerg+jJ
+         rTkgYETXQpSWaLjQY4BFNEBSReY+jgLkMY0rjxJVKv3evykcnRM5egtV8Bq+a5faqLZx
+         27UiG9YxLYAka/P/Fffv71cw690Ae0n8e6ZkSItHOwickIOMtO6NwyCrr+GmX6yAG12t
+         SgvXt8OFvzXN3nBGXCtprLX7fJbz9gHa7mvkmM5cArOx0C8A41GT30GxhlwYEk2upPth
+         2QSRAggR9w7U2P/JefmpPI7mEtjdJZXnifCUnD7P7+JI8462nvYnAxR1/O/mezzWoE/E
+         s0nA==
+X-Gm-Message-State: AOJu0YyYIatfC1nenZcg6sj/mNDZoBhIzlf0Pi0MIllpKeSMXHJCy4Mh
+	y0UwSOw+samaa2InfjLyI0Yy4cbusqVa2G547rY=
+X-Google-Smtp-Source: AGHT+IHnOSLvO5jpQ5cp++B0F0q5nQavs+ClEJ6yaOyBITA3vDzkdwt8QOPHM03MOVWA4J9aOSj2dk6ijzrICPgEy+A=
+X-Received: by 2002:ad4:5b85:0:b0:680:d27c:a416 with SMTP id
+ 5-20020ad45b85000000b00680d27ca416mr252921qvp.107.1704354378515; Wed, 03 Jan
+ 2024 23:46:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,67 +61,160 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <170429478711.50646.12675561629884992953.stgit@bazille.1015granger.net>
- <170429517779.50646.9656897459585544068.stgit@bazille.1015granger.net>
-In-Reply-To: <170429517779.50646.9656897459585544068.stgit@bazille.1015granger.net>
+ <170429518465.50646.9482690519449281531.stgit@bazille.1015granger.net> <276a17ed09cf6d53d17292b5182a8e08695251a4.camel@kernel.org>
+In-Reply-To: <276a17ed09cf6d53d17292b5182a8e08695251a4.camel@kernel.org>
 From: Amir Goldstein <amir73il@gmail.com>
-Date: Thu, 4 Jan 2024 09:39:04 +0200
-Message-ID: <CAOQ4uxgMLWGqqoSNvSgB=Qfmw6Brk2eO6yB7FZqX6p-DcTiUtw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] exportfs: fix the fallback implementation of the
- get_name export operation
-To: Chuck Lever <cel@kernel.org>
-Cc: jlayton@redhat.com, Trond Myklebust <trond.myklebust@hammerspace.com>, 
-	Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+Date: Thu, 4 Jan 2024 09:46:07 +0200
+Message-ID: <CAOQ4uxhKVaL3gvwrURSWFSBf2HH6vg0qwM1LVPkmQLfnvTPrdw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] fs: Create a generic is_dot_dotdot() utility
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Chuck Lever <cel@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
 	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
 	trondmy@hammerspace.com, viro@zeniv.linux.org.uk, brauner@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 3, 2024 at 5:19=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
+On Wed, Jan 3, 2024 at 9:08=E2=80=AFPM Jeff Layton <jlayton@kernel.org> wro=
+te:
 >
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> The fallback implementation for the get_name export operation uses
-> readdir() to try to match the inode number to a filename. That filename
-> is then used together with lookup_one() to produce a dentry.
-> A problem arises when we match the '.' or '..' entries, since that
-> causes lookup_one() to fail. This has sometimes been seen to occur for
-> filesystems that violate POSIX requirements around uniqueness of inode
-> numbers, something that is common for snapshot directories.
->
-> This patch just ensures that we skip '.' and '..' rather than allowing a
-> match.
->
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> Acked-by: Amir Goldstein <amir73il@gmail.com>
-> Link: https://lore.kernel.org/linux-nfs/CAOQ4uxiOZobN76OKB-VBNXWeFKVwLW_e=
-K5QtthGyYzWU9mjb7Q@mail.gmail.com/
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  fs/exportfs/expfs.c |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-> index 3ae0154c5680..84af58eaf2ca 100644
-> --- a/fs/exportfs/expfs.c
-> +++ b/fs/exportfs/expfs.c
-> @@ -255,7 +255,9 @@ static bool filldir_one(struct dir_context *ctx, cons=
-t char *name, int len,
->                 container_of(ctx, struct getdents_callback, ctx);
->
->         buf->sequence++;
-> -       if (buf->ino =3D=3D ino && len <=3D NAME_MAX) {
-> +       /* Ignore the '.' and '..' entries */
-> +       if ((len > 2 || name[0] !=3D '.' || (len =3D=3D 2 && name[1] !=3D=
+> On Wed, 2024-01-03 at 10:19 -0500, Chuck Lever wrote:
+> > From: Chuck Lever <chuck.lever@oracle.com>
+> >
+> > De-duplicate the same functionality in several places by hoisting
+> > the is_dot_dotdot() function into linux/fs.h.
+> >
+> > Suggested-by: Amir Goldstein <amir73il@gmail.com>
+> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > ---
+> >  fs/crypto/fname.c    |    8 +-------
+> >  fs/ecryptfs/crypto.c |   10 ----------
+> >  fs/exportfs/expfs.c  |    4 +---
+> >  fs/f2fs/f2fs.h       |   11 -----------
+> >  include/linux/fs.h   |    9 +++++++++
+> >  5 files changed, 11 insertions(+), 31 deletions(-)
+> >
+> > diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+> > index 7b3fc189593a..0ad52fbe51c9 100644
+> > --- a/fs/crypto/fname.c
+> > +++ b/fs/crypto/fname.c
+> > @@ -74,13 +74,7 @@ struct fscrypt_nokey_name {
+> >
+> >  static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+> >  {
+> > -     if (str->len =3D=3D 1 && str->name[0] =3D=3D '.')
+> > -             return true;
+> > -
+> > -     if (str->len =3D=3D 2 && str->name[0] =3D=3D '.' && str->name[1] =
+=3D=3D '.')
+> > -             return true;
+> > -
+> > -     return false;
+> > +     return is_dot_dotdot(str->name, str->len);
+> >  }
+> >
+> >  /**
+> > diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+> > index 03bd55069d86..2fe0f3af1a08 100644
+> > --- a/fs/ecryptfs/crypto.c
+> > +++ b/fs/ecryptfs/crypto.c
+> > @@ -1949,16 +1949,6 @@ int ecryptfs_encrypt_and_encode_filename(
+> >       return rc;
+> >  }
+> >
+> > -static bool is_dot_dotdot(const char *name, size_t name_size)
+> > -{
+> > -     if (name_size =3D=3D 1 && name[0] =3D=3D '.')
+> > -             return true;
+> > -     else if (name_size =3D=3D 2 && name[0] =3D=3D '.' && name[1] =3D=
+=3D '.')
+> > -             return true;
+> > -
+> > -     return false;
+> > -}
+> > -
+> >  /**
+> >   * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher =
+text name to decoded plaintext
+> >   * @plaintext_name: The plaintext name
+> > diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+> > index 84af58eaf2ca..07ea3d62b298 100644
+> > --- a/fs/exportfs/expfs.c
+> > +++ b/fs/exportfs/expfs.c
+> > @@ -255,9 +255,7 @@ static bool filldir_one(struct dir_context *ctx, co=
+nst char *name, int len,
+> >               container_of(ctx, struct getdents_callback, ctx);
+> >
+> >       buf->sequence++;
+> > -     /* Ignore the '.' and '..' entries */
+> > -     if ((len > 2 || name[0] !=3D '.' || (len =3D=3D 2 && name[1] !=3D=
  '.')) &&
-> +           buf->ino =3D=3D ino && len <=3D NAME_MAX) {
+> > -         buf->ino =3D=3D ino && len <=3D NAME_MAX) {
+> > +     if (buf->ino =3D=3D ino && len <=3D NAME_MAX && !is_dot_dotdot(na=
+me, len)) {
+> >               memcpy(buf->name, name, len);
+> >               buf->name[len] =3D '\0';
+> >               buf->found =3D 1;
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index 9043cedfa12b..322a3b8a3533 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -3368,17 +3368,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_=
+info *sbi)
+> >       return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
+> >  }
+> >
+> > -static inline bool is_dot_dotdot(const u8 *name, size_t len)
+> > -{
+> > -     if (len =3D=3D 1 && name[0] =3D=3D '.')
+> > -             return true;
+> > -
+> > -     if (len =3D=3D 2 && name[0] =3D=3D '.' && name[1] =3D=3D '.')
+> > -             return true;
+> > -
+> > -     return false;
+> > -}
+> > -
+> >  static inline void *f2fs_kmalloc(struct f2fs_sb_info *sbi,
+> >                                       size_t size, gfp_t flags)
+> >  {
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index 98b7a7a8c42e..179eea797c22 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -2846,6 +2846,15 @@ extern bool path_is_under(const struct path *, c=
+onst struct path *);
+> >
+> >  extern char *file_path(struct file *, char *, int);
+> >
+> > +static inline bool is_dot_dotdot(const char *name, size_t len)
+> > +{
+> > +     if (len =3D=3D 1 && name[0] =3D=3D '.')
+> > +             return true;
+> > +     if (len =3D=3D 2 && name[0] =3D=3D '.' && name[1] =3D=3D '.')
+> > +             return true;
+> > +     return false;
+> > +}
+> > +
+> >  #include <linux/err.h>
+> >
+> >  /* needed for stackable file system support */
+> >
+> >
+>
+> Looks good to me. I took a quick look to see if there were other open-
+> coded versions, but I didn't see any.
+>
 
+The outstanding open-coded version that wasn't deduped is in
+lookup_one_common(), which is the version that Trond used and
+mentioned in his patch.
 
-Thank you for creating the helper, but if you already went to this trouble,
-I think it is better to introduce is_dot_dotdot() as a local helper already
-in this backportable patch, so that stable kernel code is same as upstream
-code (good for future fixes) and then dedupe the local helper with the rest
-of the local helpers in patch 2?
+It is also a slightly more "efficient" version, but I have no idea if
+that really matters.
+
+In any case, having lookup_one_common() and get_name() use
+the same helper is clearly prefered, because the check in lookup_one()
+is the declared reason for the get_name() patch.
 
 Thanks,
 Amir.
