@@ -1,296 +1,159 @@
-Return-Path: <linux-nfs+bounces-942-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-943-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12ECC82460B
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 17:23:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE6C08247A2
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 18:43:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 76F031F22DF1
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 16:23:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 61C9F1F269CA
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 17:43:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9243E24B25;
-	Thu,  4 Jan 2024 16:23:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6017C28DC0;
+	Thu,  4 Jan 2024 17:43:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QlXJ3hWL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LZBpTMlz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D7D24B21
-	for <linux-nfs@vger.kernel.org>; Thu,  4 Jan 2024 16:23:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E359AC433D9
-	for <linux-nfs@vger.kernel.org>; Thu,  4 Jan 2024 16:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704385426;
-	bh=lJv+O/ZOX72Ri2J4XLHmsa0n6cFcQpKttkxDsffUO20=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QlXJ3hWLLs8SWpgmQ5mm9ar499xHtvo1u3f/6A/Jm+7qa9gdR7GI8N1RqXSPghYaa
-	 2o8ofAPSCNow80QGbjYT2HIlfhV8+r5opLdPxCkzcJn3g6ywgHMOesmBbYEbSxvGJd
-	 S9YLxhLWeX9HiLdOrj1rKLuoMLnd5AXeytNqnPKQcBqpEubHNSnQWwdsEwuCuu7iAO
-	 EoPdOdMRhhPRa5uWpKd5FzPqd2VrspjCIySc0xP7FHZLvl4L5usZrVTukga0qzqzKK
-	 b2/d5EljfJ5AqUSSZqF7asEliEI8iaSbqAi/6Cn9i8Q3l8InNAqv/vdTt2MGXvvshS
-	 swEB9WutjPvmA==
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7815aad83acso119389685a.0
-        for <linux-nfs@vger.kernel.org>; Thu, 04 Jan 2024 08:23:46 -0800 (PST)
-X-Gm-Message-State: AOJu0Ywa2ocBKNMJu5zTdjGo01FhUxH2dghuBKGUWB5k7O5Q4NAb0yFJ
-	TON8evAoY0tOeAy5/J5zVuP4oMzndp2Hvcvrh7s=
-X-Google-Smtp-Source: AGHT+IE7f4RIUtnQVdMk2ggPc/h/4DojOt561GUqUElSJMC3n2JzEoDBDk5zuGhBMcOdWJCT0dqTmbqSL0AlZOqXS5U=
-X-Received: by 2002:a05:6214:20e3:b0:680:d242:67e4 with SMTP id
- 3-20020a05621420e300b00680d24267e4mr950927qvk.22.1704385426058; Thu, 04 Jan
- 2024 08:23:46 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29A728DB0;
+	Thu,  4 Jan 2024 17:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-67f85d29d14so3442796d6.1;
+        Thu, 04 Jan 2024 09:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704390202; x=1704995002; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZFIIryb7mYBnbq82yqxhExlh548l2vMivKOd0SRme00=;
+        b=LZBpTMlzlvSFhndchxh6GGDnaVyfsaGGPElGi+Aji3acjLRKgkNUQOtw7yfTgpdsBG
+         nikT1jhKiPxLuikCaVbYII5yZGzaXVXCcDKcmVWgBKHeC1yWwurE6tPyI3OxZ+jQcMYa
+         jlObwR82c3Ogtgny5JSRIFwY5cT6tgvssqen/KgDoND6OLsJgO59ld5E9VwfNDugjrJF
+         2BEK6TPsesdNlK3Nid+ckbOspXJ0xO0FJ4cdR9mUH0bpccJRkzbG8SFV2lvur8luxX/z
+         97WD+sUbYRz9sS8OBiy6ycKUpaEJP9p2qeBFF+zacgzOSkUM2862NfzgrCEsw7ARXZRL
+         gujA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704390202; x=1704995002;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZFIIryb7mYBnbq82yqxhExlh548l2vMivKOd0SRme00=;
+        b=gYMvLdJLqAEsAj+cLttgCLRo769n92PK64V/e29d+mCKczWJoVecXFznMoUmZcfJ17
+         qzhB2YZ7KP+N6Ii1GaWC+0wxj/YguFQS6RBcJQMxTnj63IzfScE5atuUlKD78iCRm18N
+         6BjReQLQAitVslvSLOWYq7FOtZTsbDmGPp2RxSGcPTPqdNd4YE2wpS/m7K8LVic11J+P
+         FSLVkzAhRJ36LwrpfBuPPux/yixBLt1EUwvd9s41Hhx/xRN4BZz6oxh6M937PMWk5Umu
+         CayzCcG6xzpojJwPGwSE0oI5xbBNEj1LU8NdkDnRIqyZVAVfIl+Eb0RyWg4q7XtP8hCn
+         qiDA==
+X-Gm-Message-State: AOJu0Yz1DEJfef5TkFH8Adkd6tLKViVTTsn1CRCHoBdzkD6t301qWKlG
+	6SHWePewUIVNp22FXFkeAzyrIjvNuPbqsGDAFKo=
+X-Google-Smtp-Source: AGHT+IEHl1VuMRuCwI1C5vMpY4u0MXtJn5SASZHzotUrJ++6zFJluian9dLYoVysDl6Rvad8aB/SpU7cNEl04nmj9hs=
+X-Received: by 2002:a05:6214:e6d:b0:67e:e37c:6f73 with SMTP id
+ jz13-20020a0562140e6d00b0067ee37c6f73mr1101446qvb.54.1704390201715; Thu, 04
+ Jan 2024 09:43:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <e28038fba1243f00b0dd66b7c5296a1e181645ea.1704379780.git.bcodding@redhat.com>
- <8a862f8ad3cb9f65decffb2956fb8674451af25c.1704379780.git.bcodding@redhat.com>
-In-Reply-To: <8a862f8ad3cb9f65decffb2956fb8674451af25c.1704379780.git.bcodding@redhat.com>
-From: Anna Schumaker <anna@kernel.org>
-Date: Thu, 4 Jan 2024 11:23:29 -0500
-X-Gmail-Original-Message-ID: <CAFX2JfnhF6JDhB22ke8AHT-4TjMBhHz8Lx-TRHrgz-vGeigr=g@mail.gmail.com>
-Message-ID: <CAFX2JfnhF6JDhB22ke8AHT-4TjMBhHz8Lx-TRHrgz-vGeigr=g@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] NFSv4.1: Use the nfs_client's rpc timeouts for backchannel
-To: Benjamin Coddington <bcodding@redhat.com>
-Cc: Trond Myklebust <trond.myklebust@hammerspace.com>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+References: <170429478711.50646.12675561629884992953.stgit@bazille.1015granger.net>
+ <170429517779.50646.9656897459585544068.stgit@bazille.1015granger.net>
+ <CAOQ4uxgMLWGqqoSNvSgB=Qfmw6Brk2eO6yB7FZqX6p-DcTiUtw@mail.gmail.com> <ZZbAQEgqbV72RJn8@tissot.1015granger.net>
+In-Reply-To: <ZZbAQEgqbV72RJn8@tissot.1015granger.net>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Thu, 4 Jan 2024 19:43:10 +0200
+Message-ID: <CAOQ4uxhB506ZunNzmnyk=FKCRHEPOupV34vcfjVMJ9o9SDVJow@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] exportfs: fix the fallback implementation of the
+ get_name export operation
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: Chuck Lever <cel@kernel.org>, jlayton@redhat.com, 
+	Trond Myklebust <trond.myklebust@hammerspace.com>, Jeff Layton <jlayton@kernel.org>, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	trondmy@hammerspace.com, viro@zeniv.linux.org.uk, brauner@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Ben,
+On Thu, Jan 4, 2024 at 4:27=E2=80=AFPM Chuck Lever <chuck.lever@oracle.com>=
+ wrote:
+>
+> On Thu, Jan 04, 2024 at 09:39:04AM +0200, Amir Goldstein wrote:
+> > On Wed, Jan 3, 2024 at 5:19=E2=80=AFPM Chuck Lever <cel@kernel.org> wro=
+te:
+> > >
+> > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > >
+> > > The fallback implementation for the get_name export operation uses
+> > > readdir() to try to match the inode number to a filename. That filena=
+me
+> > > is then used together with lookup_one() to produce a dentry.
+> > > A problem arises when we match the '.' or '..' entries, since that
+> > > causes lookup_one() to fail. This has sometimes been seen to occur fo=
+r
+> > > filesystems that violate POSIX requirements around uniqueness of inod=
+e
+> > > numbers, something that is common for snapshot directories.
+> > >
+> > > This patch just ensures that we skip '.' and '..' rather than allowin=
+g a
+> > > match.
+> > >
+> > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > > Acked-by: Amir Goldstein <amir73il@gmail.com>
+> > > Link: https://lore.kernel.org/linux-nfs/CAOQ4uxiOZobN76OKB-VBNXWeFKVw=
+LW_eK5QtthGyYzWU9mjb7Q@mail.gmail.com/
+> > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > > ---
+> > >  fs/exportfs/expfs.c |    4 +++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+> > > index 3ae0154c5680..84af58eaf2ca 100644
+> > > --- a/fs/exportfs/expfs.c
+> > > +++ b/fs/exportfs/expfs.c
+> > > @@ -255,7 +255,9 @@ static bool filldir_one(struct dir_context *ctx, =
+const char *name, int len,
+> > >                 container_of(ctx, struct getdents_callback, ctx);
+> > >
+> > >         buf->sequence++;
+> > > -       if (buf->ino =3D=3D ino && len <=3D NAME_MAX) {
+> > > +       /* Ignore the '.' and '..' entries */
+> > > +       if ((len > 2 || name[0] !=3D '.' || (len =3D=3D 2 && name[1] =
+!=3D '.')) &&
+> > > +           buf->ino =3D=3D ino && len <=3D NAME_MAX) {
+> >
+> >
+> > Thank you for creating the helper, but if you already went to this trou=
+ble,
+> > I think it is better to introduce is_dot_dotdot() as a local helper alr=
+eady
+> > in this backportable patch, so that stable kernel code is same as upstr=
+eam
+> > code (good for future fixes) and then dedupe the local helper with the =
+rest
+> > of the local helpers in patch 2?
+>
+> There's now no Fixes: nor a Cc: stable on 1/2. You convinced me that
+> 1/2 will not result in any external behavior change.
+>
+> The upshot is I do not expect 1/2 will be backported, unless I have
+> grossly misread your emails.
+>
 
-On Thu, Jan 4, 2024 at 9:58=E2=80=AFAM Benjamin Coddington <bcodding@redhat=
-.com> wrote:
->
-> For backchannel requests that lookup the appropriate nfs_client, use the
-> state-management rpc_clnt's rpc_timeout parameters for the backchannel's
-> response.  When the nfs_client cannot be found, fall back to using the
-> xprt's default timeout parameters.
+It's not what I meant, but I don't want to bother you about this.
 
-Thanks for sending the v4, it fixes the problem I was seeing yesterday!
+I meant patch 1 is backportable:
+- adds static is_dot_dotdot() in expfs.c and uses it
+- patch 2 the same as you posted, but also removes is_dot_dotdot() from exp=
+fs.c
 
-Anna
+No big deal.
+Patch 1, as far as I am concerned, patch 1 can stay as it is
 
->
-> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
-> ---
->  fs/nfs/callback_xdr.c          |  5 +++++
->  include/linux/sunrpc/bc_xprt.h |  3 ++-
->  include/linux/sunrpc/sched.h   | 14 +++++++++++++-
->  include/linux/sunrpc/svc.h     |  2 ++
->  include/linux/sunrpc/xprt.h    | 11 -----------
->  net/sunrpc/clnt.c              |  6 ++++--
->  net/sunrpc/svc.c               | 11 ++++++++++-
->  net/sunrpc/xprt.c              | 12 +++++++++---
->  8 files changed, 45 insertions(+), 19 deletions(-)
->
-> diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
-> index 321af81c456e..9369488f2ed4 100644
-> --- a/fs/nfs/callback_xdr.c
-> +++ b/fs/nfs/callback_xdr.c
-> @@ -967,6 +967,11 @@ static __be32 nfs4_callback_compound(struct svc_rqst=
- *rqstp)
->                 nops--;
->         }
->
-> +       if (svc_is_backchannel(rqstp) && cps.clp) {
-> +               rqstp->bc_to_initval =3D cps.clp->cl_rpcclient->cl_timeou=
-t->to_initval;
-> +               rqstp->bc_to_retries =3D cps.clp->cl_rpcclient->cl_timeou=
-t->to_retries;
-> +       }
-> +
->         *hdr_res.status =3D status;
->         *hdr_res.nops =3D htonl(nops);
->         nfs4_cb_free_slot(&cps);
-> diff --git a/include/linux/sunrpc/bc_xprt.h b/include/linux/sunrpc/bc_xpr=
-t.h
-> index db30a159f9d5..f22bf915dcf6 100644
-> --- a/include/linux/sunrpc/bc_xprt.h
-> +++ b/include/linux/sunrpc/bc_xprt.h
-> @@ -20,7 +20,8 @@
->  #ifdef CONFIG_SUNRPC_BACKCHANNEL
->  struct rpc_rqst *xprt_lookup_bc_request(struct rpc_xprt *xprt, __be32 xi=
-d);
->  void xprt_complete_bc_request(struct rpc_rqst *req, uint32_t copied);
-> -void xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task);
-> +void xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task,
-> +               const struct rpc_timeout *to);
->  void xprt_free_bc_request(struct rpc_rqst *req);
->  int xprt_setup_backchannel(struct rpc_xprt *, unsigned int min_reqs);
->  void xprt_destroy_backchannel(struct rpc_xprt *, unsigned int max_reqs);
-> diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
-> index 8ada7dc802d3..2d61987b3545 100644
-> --- a/include/linux/sunrpc/sched.h
-> +++ b/include/linux/sunrpc/sched.h
-> @@ -37,6 +37,17 @@ struct rpc_wait {
->         struct list_head        timer_list;     /* Timer list */
->  };
->
-> +/*
-> + * This describes a timeout strategy
-> + */
-> +struct rpc_timeout {
-> +       unsigned long           to_initval,             /* initial timeou=
-t */
-> +                               to_maxval,              /* max timeout */
-> +                               to_increment;           /* if !exponentia=
-l */
-> +       unsigned int            to_retries;             /* max # of retri=
-es */
-> +       unsigned char           to_exponential;
-> +};
-> +
->  /*
->   * This is the RPC task struct
->   */
-> @@ -205,7 +216,8 @@ struct rpc_wait_queue {
->   */
->  struct rpc_task *rpc_new_task(const struct rpc_task_setup *);
->  struct rpc_task *rpc_run_task(const struct rpc_task_setup *);
-> -struct rpc_task *rpc_run_bc_task(struct rpc_rqst *req);
-> +struct rpc_task *rpc_run_bc_task(struct rpc_rqst *req,
-> +               struct rpc_timeout *timeout);
->  void           rpc_put_task(struct rpc_task *);
->  void           rpc_put_task_async(struct rpc_task *);
->  bool           rpc_task_set_rpc_status(struct rpc_task *task, int rpc_st=
-atus);
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index b10f987509cc..3331a1c2b47e 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -250,6 +250,8 @@ struct svc_rqst {
->         struct net              *rq_bc_net;     /* pointer to backchannel=
-'s
->                                                  * net namespace
->                                                  */
-> +       unsigned long   bc_to_initval;
-> +       unsigned int    bc_to_retries;
->         void **                 rq_lease_breaker; /* The v4 client breaki=
-ng a lease */
->         unsigned int            rq_status_counter; /* RPC processing coun=
-ter */
->  };
-> diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
-> index f85d3a0daca2..464f6a9492ab 100644
-> --- a/include/linux/sunrpc/xprt.h
-> +++ b/include/linux/sunrpc/xprt.h
-> @@ -30,17 +30,6 @@
->  #define RPC_MAXCWND(xprt)      ((xprt)->max_reqs << RPC_CWNDSHIFT)
->  #define RPCXPRT_CONGESTED(xprt) ((xprt)->cong >=3D (xprt)->cwnd)
->
-> -/*
-> - * This describes a timeout strategy
-> - */
-> -struct rpc_timeout {
-> -       unsigned long           to_initval,             /* initial timeou=
-t */
-> -                               to_maxval,              /* max timeout */
-> -                               to_increment;           /* if !exponentia=
-l */
-> -       unsigned int            to_retries;             /* max # of retri=
-es */
-> -       unsigned char           to_exponential;
-> -};
-> -
->  enum rpc_display_format_t {
->         RPC_DISPLAY_ADDR =3D 0,
->         RPC_DISPLAY_PORT,
-> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> index daa9582ec861..886fc4c76558 100644
-> --- a/net/sunrpc/clnt.c
-> +++ b/net/sunrpc/clnt.c
-> @@ -1302,8 +1302,10 @@ static void call_bc_encode(struct rpc_task *task);
->   * rpc_run_bc_task - Allocate a new RPC task for backchannel use, then r=
-un
->   * rpc_execute against it
->   * @req: RPC request
-> + * @timeout: timeout values to use for this task
->   */
-> -struct rpc_task *rpc_run_bc_task(struct rpc_rqst *req)
-> +struct rpc_task *rpc_run_bc_task(struct rpc_rqst *req,
-> +               struct rpc_timeout *timeout)
->  {
->         struct rpc_task *task;
->         struct rpc_task_setup task_setup_data =3D {
-> @@ -1322,7 +1324,7 @@ struct rpc_task *rpc_run_bc_task(struct rpc_rqst *r=
-eq)
->                 return task;
->         }
->
-> -       xprt_init_bc_request(req, task);
-> +       xprt_init_bc_request(req, task, timeout);
->
->         task->tk_action =3D call_bc_encode;
->         atomic_inc(&task->tk_count);
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 3f2ea7a0496f..3f714d33624b 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -1557,6 +1557,7 @@ void svc_process_bc(struct rpc_rqst *req, struct sv=
-c_rqst *rqstp)
->  {
->         struct rpc_task *task;
->         int proc_error;
-> +       struct rpc_timeout timeout;
->
->         /* Build the svc_rqst used by the common processing routine */
->         rqstp->rq_xid =3D req->rq_xid;
-> @@ -1602,8 +1603,16 @@ void svc_process_bc(struct rpc_rqst *req, struct s=
-vc_rqst *rqstp)
->                 return;
->         }
->         /* Finally, send the reply synchronously */
-> +       if (rqstp->bc_to_initval > 0) {
-> +               timeout.to_initval =3D rqstp->bc_to_initval;
-> +               timeout.to_retries =3D rqstp->bc_to_initval;
-> +       } else {
-> +               timeout.to_initval =3D req->rq_xprt->timeout->to_initval;
-> +               timeout.to_initval =3D req->rq_xprt->timeout->to_retries;
-> +       }
->         memcpy(&req->rq_snd_buf, &rqstp->rq_res, sizeof(req->rq_snd_buf))=
-;
-> -       task =3D rpc_run_bc_task(req);
-> +       task =3D rpc_run_bc_task(req, &timeout);
-> +
->         if (IS_ERR(task))
->                 return;
->
-> diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-> index 6cc9ffac962d..af13fdfa6672 100644
-> --- a/net/sunrpc/xprt.c
-> +++ b/net/sunrpc/xprt.c
-> @@ -1986,7 +1986,8 @@ void xprt_release(struct rpc_task *task)
->
->  #ifdef CONFIG_SUNRPC_BACKCHANNEL
->  void
-> -xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task)
-> +xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task,
-> +               const struct rpc_timeout *to)
->  {
->         struct xdr_buf *xbufp =3D &req->rq_snd_buf;
->
-> @@ -1999,8 +2000,13 @@ xprt_init_bc_request(struct rpc_rqst *req, struct =
-rpc_task *task)
->          */
->         xbufp->len =3D xbufp->head[0].iov_len + xbufp->page_len +
->                 xbufp->tail[0].iov_len;
-> -
-> -       xprt_init_majortimeo(task, req, req->rq_xprt->timeout);
-> +       /*
-> +        * Backchannel Replies are sent with !RPC_TASK_SOFT and
-> +        * RPC_TASK_NO_RETRANS_TIMEOUT. The major timeout setting
-> +        * affects only how long each Reply waits to be sent when
-> +        * a transport connection cannot be established.
-> +        */
-> +       xprt_init_majortimeo(task, req, to);
->  }
->  #endif
->
-> --
-> 2.43.0
->
+Thanks,
+Amir.
 
