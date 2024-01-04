@@ -1,197 +1,296 @@
-Return-Path: <linux-nfs+bounces-941-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-942-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8595A824604
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 17:19:07 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12ECC82460B
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 17:23:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 349A4286E21
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 16:19:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 76F031F22DF1
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Jan 2024 16:23:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD85124B27;
-	Thu,  4 Jan 2024 16:19:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9243E24B25;
+	Thu,  4 Jan 2024 16:23:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aTEY3bMT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QlXJ3hWL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9058F24B25;
-	Thu,  4 Jan 2024 16:19:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C145C433C7;
-	Thu,  4 Jan 2024 16:19:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78D7D24B21
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Jan 2024 16:23:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E359AC433D9
+	for <linux-nfs@vger.kernel.org>; Thu,  4 Jan 2024 16:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704385144;
-	bh=r/dCDyVPVjRJZWtpmAX8vVDttoXSpUaXT0VdMiN7efg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=aTEY3bMTt5wNp+f9msfrACtI8eZpsyc8H9CtN5wrvAtH9zcw38/UgAwLBkFrOjTAj
-	 7J0HCDLSN4Ub6axzX/eAlWKSIQIjr/ROTLQ+OqFgX9KfEenKxs9+gzhXovi2sXi4qA
-	 je9NyrQvIICgQX+yejYY5OjK5sknp41LKRarJadKmdPVmbKyy8sW9q1BUXuTvDE10P
-	 Ifa4u2x7nvbmOsBkGP2B2ZQwNuS2xpTDt6NNrieT43M6lj78g+pRXgs2vPjzOzUqtM
-	 TnVklAyuDwNf4GevJygByeZRGjn0wB4z+qGKfmBsfOoDF0osPf2sebH+9fPLch7rGh
-	 68/5pLKJZ/Dlg==
-Subject: [PATCH v3 2/2] fs: Create a generic is_dot_dotdot() utility
-From: Chuck Lever <cel@kernel.org>
-To: jlayton@redhat.com, amir73il@gmail.com
-Cc: Jeff Layton <jlayton@kernel.org>, Chuck Lever <chuck.lever@oracle.com>,
- linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
- trondmy@hammerspace.com, viro@zeniv.linux.org.uk, brauner@kernel.org
-Date: Thu, 04 Jan 2024 11:19:02 -0500
-Message-ID: 
- <170438514228.129184.8854845947814287856.stgit@bazille.1015granger.net>
-In-Reply-To: 
- <170438430288.129184.6116374966267668617.stgit@bazille.1015granger.net>
-References: 
- <170438430288.129184.6116374966267668617.stgit@bazille.1015granger.net>
-User-Agent: StGit/1.5
+	s=k20201202; t=1704385426;
+	bh=lJv+O/ZOX72Ri2J4XLHmsa0n6cFcQpKttkxDsffUO20=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QlXJ3hWLLs8SWpgmQ5mm9ar499xHtvo1u3f/6A/Jm+7qa9gdR7GI8N1RqXSPghYaa
+	 2o8ofAPSCNow80QGbjYT2HIlfhV8+r5opLdPxCkzcJn3g6ywgHMOesmBbYEbSxvGJd
+	 S9YLxhLWeX9HiLdOrj1rKLuoMLnd5AXeytNqnPKQcBqpEubHNSnQWwdsEwuCuu7iAO
+	 EoPdOdMRhhPRa5uWpKd5FzPqd2VrspjCIySc0xP7FHZLvl4L5usZrVTukga0qzqzKK
+	 b2/d5EljfJ5AqUSSZqF7asEliEI8iaSbqAi/6Cn9i8Q3l8InNAqv/vdTt2MGXvvshS
+	 swEB9WutjPvmA==
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7815aad83acso119389685a.0
+        for <linux-nfs@vger.kernel.org>; Thu, 04 Jan 2024 08:23:46 -0800 (PST)
+X-Gm-Message-State: AOJu0Ywa2ocBKNMJu5zTdjGo01FhUxH2dghuBKGUWB5k7O5Q4NAb0yFJ
+	TON8evAoY0tOeAy5/J5zVuP4oMzndp2Hvcvrh7s=
+X-Google-Smtp-Source: AGHT+IE7f4RIUtnQVdMk2ggPc/h/4DojOt561GUqUElSJMC3n2JzEoDBDk5zuGhBMcOdWJCT0dqTmbqSL0AlZOqXS5U=
+X-Received: by 2002:a05:6214:20e3:b0:680:d242:67e4 with SMTP id
+ 3-20020a05621420e300b00680d24267e4mr950927qvk.22.1704385426058; Thu, 04 Jan
+ 2024 08:23:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <e28038fba1243f00b0dd66b7c5296a1e181645ea.1704379780.git.bcodding@redhat.com>
+ <8a862f8ad3cb9f65decffb2956fb8674451af25c.1704379780.git.bcodding@redhat.com>
+In-Reply-To: <8a862f8ad3cb9f65decffb2956fb8674451af25c.1704379780.git.bcodding@redhat.com>
+From: Anna Schumaker <anna@kernel.org>
+Date: Thu, 4 Jan 2024 11:23:29 -0500
+X-Gmail-Original-Message-ID: <CAFX2JfnhF6JDhB22ke8AHT-4TjMBhHz8Lx-TRHrgz-vGeigr=g@mail.gmail.com>
+Message-ID: <CAFX2JfnhF6JDhB22ke8AHT-4TjMBhHz8Lx-TRHrgz-vGeigr=g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] NFSv4.1: Use the nfs_client's rpc timeouts for backchannel
+To: Benjamin Coddington <bcodding@redhat.com>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi Ben,
 
-De-duplicate the same functionality in several places by hoisting
-the is_dot_dotdot() utility function into linux/fs.h.
+On Thu, Jan 4, 2024 at 9:58=E2=80=AFAM Benjamin Coddington <bcodding@redhat=
+.com> wrote:
+>
+> For backchannel requests that lookup the appropriate nfs_client, use the
+> state-management rpc_clnt's rpc_timeout parameters for the backchannel's
+> response.  When the nfs_client cannot be found, fall back to using the
+> xprt's default timeout parameters.
 
-Suggested-by: Amir Goldstein <amir73il@gmail.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/crypto/fname.c    |    8 +-------
- fs/ecryptfs/crypto.c |   10 ----------
- fs/exportfs/expfs.c  |    4 +---
- fs/f2fs/f2fs.h       |   11 -----------
- fs/namei.c           |    6 ++----
- include/linux/fs.h   |   15 +++++++++++++++
- 6 files changed, 19 insertions(+), 35 deletions(-)
+Thanks for sending the v4, it fixes the problem I was seeing yesterday!
 
-diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
-index 7b3fc189593a..0ad52fbe51c9 100644
---- a/fs/crypto/fname.c
-+++ b/fs/crypto/fname.c
-@@ -74,13 +74,7 @@ struct fscrypt_nokey_name {
- 
- static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
- {
--	if (str->len == 1 && str->name[0] == '.')
--		return true;
--
--	if (str->len == 2 && str->name[0] == '.' && str->name[1] == '.')
--		return true;
--
--	return false;
-+	return is_dot_dotdot(str->name, str->len);
- }
- 
- /**
-diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
-index 03bd55069d86..2fe0f3af1a08 100644
---- a/fs/ecryptfs/crypto.c
-+++ b/fs/ecryptfs/crypto.c
-@@ -1949,16 +1949,6 @@ int ecryptfs_encrypt_and_encode_filename(
- 	return rc;
- }
- 
--static bool is_dot_dotdot(const char *name, size_t name_size)
--{
--	if (name_size == 1 && name[0] == '.')
--		return true;
--	else if (name_size == 2 && name[0] == '.' && name[1] == '.')
--		return true;
--
--	return false;
--}
--
- /**
-  * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher text name to decoded plaintext
-  * @plaintext_name: The plaintext name
-diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-index 84af58eaf2ca..07ea3d62b298 100644
---- a/fs/exportfs/expfs.c
-+++ b/fs/exportfs/expfs.c
-@@ -255,9 +255,7 @@ static bool filldir_one(struct dir_context *ctx, const char *name, int len,
- 		container_of(ctx, struct getdents_callback, ctx);
- 
- 	buf->sequence++;
--	/* Ignore the '.' and '..' entries */
--	if ((len > 2 || name[0] != '.' || (len == 2 && name[1] != '.')) &&
--	    buf->ino == ino && len <= NAME_MAX) {
-+	if (buf->ino == ino && len <= NAME_MAX && !is_dot_dotdot(name, len)) {
- 		memcpy(buf->name, name, len);
- 		buf->name[len] = '\0';
- 		buf->found = 1;
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 9043cedfa12b..322a3b8a3533 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3368,17 +3368,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_info *sbi)
- 	return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
- }
- 
--static inline bool is_dot_dotdot(const u8 *name, size_t len)
--{
--	if (len == 1 && name[0] == '.')
--		return true;
--
--	if (len == 2 && name[0] == '.' && name[1] == '.')
--		return true;
--
--	return false;
--}
--
- static inline void *f2fs_kmalloc(struct f2fs_sb_info *sbi,
- 					size_t size, gfp_t flags)
- {
-diff --git a/fs/namei.c b/fs/namei.c
-index 71c13b2990b4..2386a70667fa 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -2667,10 +2667,8 @@ static int lookup_one_common(struct mnt_idmap *idmap,
- 	if (!len)
- 		return -EACCES;
- 
--	if (unlikely(name[0] == '.')) {
--		if (len < 2 || (len == 2 && name[1] == '.'))
--			return -EACCES;
--	}
-+	if (is_dot_dotdot(name, len))
-+		return -EACCES;
- 
- 	while (len--) {
- 		unsigned int c = *(const unsigned char *)name++;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 98b7a7a8c42e..750c95a2b572 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2846,6 +2846,21 @@ extern bool path_is_under(const struct path *, const struct path *);
- 
- extern char *file_path(struct file *, char *, int);
- 
-+/**
-+ * is_dot_dotdot - returns true only if @name is "." or ".."
-+ * @name: file name to check
-+ * @len: length of file name, in bytes
-+ *
-+ * Coded for efficiency.
-+ */
-+static inline bool is_dot_dotdot(const char *name, size_t len)
-+{
-+	if (unlikely(name[0] == '.'))
-+		if (len < 2 || (len == 2 && name[1] == '.'))
-+			return true;
-+	return false;
-+}
-+
- #include <linux/err.h>
- 
- /* needed for stackable file system support */
+Anna
 
-
+>
+> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> ---
+>  fs/nfs/callback_xdr.c          |  5 +++++
+>  include/linux/sunrpc/bc_xprt.h |  3 ++-
+>  include/linux/sunrpc/sched.h   | 14 +++++++++++++-
+>  include/linux/sunrpc/svc.h     |  2 ++
+>  include/linux/sunrpc/xprt.h    | 11 -----------
+>  net/sunrpc/clnt.c              |  6 ++++--
+>  net/sunrpc/svc.c               | 11 ++++++++++-
+>  net/sunrpc/xprt.c              | 12 +++++++++---
+>  8 files changed, 45 insertions(+), 19 deletions(-)
+>
+> diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
+> index 321af81c456e..9369488f2ed4 100644
+> --- a/fs/nfs/callback_xdr.c
+> +++ b/fs/nfs/callback_xdr.c
+> @@ -967,6 +967,11 @@ static __be32 nfs4_callback_compound(struct svc_rqst=
+ *rqstp)
+>                 nops--;
+>         }
+>
+> +       if (svc_is_backchannel(rqstp) && cps.clp) {
+> +               rqstp->bc_to_initval =3D cps.clp->cl_rpcclient->cl_timeou=
+t->to_initval;
+> +               rqstp->bc_to_retries =3D cps.clp->cl_rpcclient->cl_timeou=
+t->to_retries;
+> +       }
+> +
+>         *hdr_res.status =3D status;
+>         *hdr_res.nops =3D htonl(nops);
+>         nfs4_cb_free_slot(&cps);
+> diff --git a/include/linux/sunrpc/bc_xprt.h b/include/linux/sunrpc/bc_xpr=
+t.h
+> index db30a159f9d5..f22bf915dcf6 100644
+> --- a/include/linux/sunrpc/bc_xprt.h
+> +++ b/include/linux/sunrpc/bc_xprt.h
+> @@ -20,7 +20,8 @@
+>  #ifdef CONFIG_SUNRPC_BACKCHANNEL
+>  struct rpc_rqst *xprt_lookup_bc_request(struct rpc_xprt *xprt, __be32 xi=
+d);
+>  void xprt_complete_bc_request(struct rpc_rqst *req, uint32_t copied);
+> -void xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task);
+> +void xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task,
+> +               const struct rpc_timeout *to);
+>  void xprt_free_bc_request(struct rpc_rqst *req);
+>  int xprt_setup_backchannel(struct rpc_xprt *, unsigned int min_reqs);
+>  void xprt_destroy_backchannel(struct rpc_xprt *, unsigned int max_reqs);
+> diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
+> index 8ada7dc802d3..2d61987b3545 100644
+> --- a/include/linux/sunrpc/sched.h
+> +++ b/include/linux/sunrpc/sched.h
+> @@ -37,6 +37,17 @@ struct rpc_wait {
+>         struct list_head        timer_list;     /* Timer list */
+>  };
+>
+> +/*
+> + * This describes a timeout strategy
+> + */
+> +struct rpc_timeout {
+> +       unsigned long           to_initval,             /* initial timeou=
+t */
+> +                               to_maxval,              /* max timeout */
+> +                               to_increment;           /* if !exponentia=
+l */
+> +       unsigned int            to_retries;             /* max # of retri=
+es */
+> +       unsigned char           to_exponential;
+> +};
+> +
+>  /*
+>   * This is the RPC task struct
+>   */
+> @@ -205,7 +216,8 @@ struct rpc_wait_queue {
+>   */
+>  struct rpc_task *rpc_new_task(const struct rpc_task_setup *);
+>  struct rpc_task *rpc_run_task(const struct rpc_task_setup *);
+> -struct rpc_task *rpc_run_bc_task(struct rpc_rqst *req);
+> +struct rpc_task *rpc_run_bc_task(struct rpc_rqst *req,
+> +               struct rpc_timeout *timeout);
+>  void           rpc_put_task(struct rpc_task *);
+>  void           rpc_put_task_async(struct rpc_task *);
+>  bool           rpc_task_set_rpc_status(struct rpc_task *task, int rpc_st=
+atus);
+> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+> index b10f987509cc..3331a1c2b47e 100644
+> --- a/include/linux/sunrpc/svc.h
+> +++ b/include/linux/sunrpc/svc.h
+> @@ -250,6 +250,8 @@ struct svc_rqst {
+>         struct net              *rq_bc_net;     /* pointer to backchannel=
+'s
+>                                                  * net namespace
+>                                                  */
+> +       unsigned long   bc_to_initval;
+> +       unsigned int    bc_to_retries;
+>         void **                 rq_lease_breaker; /* The v4 client breaki=
+ng a lease */
+>         unsigned int            rq_status_counter; /* RPC processing coun=
+ter */
+>  };
+> diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
+> index f85d3a0daca2..464f6a9492ab 100644
+> --- a/include/linux/sunrpc/xprt.h
+> +++ b/include/linux/sunrpc/xprt.h
+> @@ -30,17 +30,6 @@
+>  #define RPC_MAXCWND(xprt)      ((xprt)->max_reqs << RPC_CWNDSHIFT)
+>  #define RPCXPRT_CONGESTED(xprt) ((xprt)->cong >=3D (xprt)->cwnd)
+>
+> -/*
+> - * This describes a timeout strategy
+> - */
+> -struct rpc_timeout {
+> -       unsigned long           to_initval,             /* initial timeou=
+t */
+> -                               to_maxval,              /* max timeout */
+> -                               to_increment;           /* if !exponentia=
+l */
+> -       unsigned int            to_retries;             /* max # of retri=
+es */
+> -       unsigned char           to_exponential;
+> -};
+> -
+>  enum rpc_display_format_t {
+>         RPC_DISPLAY_ADDR =3D 0,
+>         RPC_DISPLAY_PORT,
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index daa9582ec861..886fc4c76558 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -1302,8 +1302,10 @@ static void call_bc_encode(struct rpc_task *task);
+>   * rpc_run_bc_task - Allocate a new RPC task for backchannel use, then r=
+un
+>   * rpc_execute against it
+>   * @req: RPC request
+> + * @timeout: timeout values to use for this task
+>   */
+> -struct rpc_task *rpc_run_bc_task(struct rpc_rqst *req)
+> +struct rpc_task *rpc_run_bc_task(struct rpc_rqst *req,
+> +               struct rpc_timeout *timeout)
+>  {
+>         struct rpc_task *task;
+>         struct rpc_task_setup task_setup_data =3D {
+> @@ -1322,7 +1324,7 @@ struct rpc_task *rpc_run_bc_task(struct rpc_rqst *r=
+eq)
+>                 return task;
+>         }
+>
+> -       xprt_init_bc_request(req, task);
+> +       xprt_init_bc_request(req, task, timeout);
+>
+>         task->tk_action =3D call_bc_encode;
+>         atomic_inc(&task->tk_count);
+> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+> index 3f2ea7a0496f..3f714d33624b 100644
+> --- a/net/sunrpc/svc.c
+> +++ b/net/sunrpc/svc.c
+> @@ -1557,6 +1557,7 @@ void svc_process_bc(struct rpc_rqst *req, struct sv=
+c_rqst *rqstp)
+>  {
+>         struct rpc_task *task;
+>         int proc_error;
+> +       struct rpc_timeout timeout;
+>
+>         /* Build the svc_rqst used by the common processing routine */
+>         rqstp->rq_xid =3D req->rq_xid;
+> @@ -1602,8 +1603,16 @@ void svc_process_bc(struct rpc_rqst *req, struct s=
+vc_rqst *rqstp)
+>                 return;
+>         }
+>         /* Finally, send the reply synchronously */
+> +       if (rqstp->bc_to_initval > 0) {
+> +               timeout.to_initval =3D rqstp->bc_to_initval;
+> +               timeout.to_retries =3D rqstp->bc_to_initval;
+> +       } else {
+> +               timeout.to_initval =3D req->rq_xprt->timeout->to_initval;
+> +               timeout.to_initval =3D req->rq_xprt->timeout->to_retries;
+> +       }
+>         memcpy(&req->rq_snd_buf, &rqstp->rq_res, sizeof(req->rq_snd_buf))=
+;
+> -       task =3D rpc_run_bc_task(req);
+> +       task =3D rpc_run_bc_task(req, &timeout);
+> +
+>         if (IS_ERR(task))
+>                 return;
+>
+> diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+> index 6cc9ffac962d..af13fdfa6672 100644
+> --- a/net/sunrpc/xprt.c
+> +++ b/net/sunrpc/xprt.c
+> @@ -1986,7 +1986,8 @@ void xprt_release(struct rpc_task *task)
+>
+>  #ifdef CONFIG_SUNRPC_BACKCHANNEL
+>  void
+> -xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task)
+> +xprt_init_bc_request(struct rpc_rqst *req, struct rpc_task *task,
+> +               const struct rpc_timeout *to)
+>  {
+>         struct xdr_buf *xbufp =3D &req->rq_snd_buf;
+>
+> @@ -1999,8 +2000,13 @@ xprt_init_bc_request(struct rpc_rqst *req, struct =
+rpc_task *task)
+>          */
+>         xbufp->len =3D xbufp->head[0].iov_len + xbufp->page_len +
+>                 xbufp->tail[0].iov_len;
+> -
+> -       xprt_init_majortimeo(task, req, req->rq_xprt->timeout);
+> +       /*
+> +        * Backchannel Replies are sent with !RPC_TASK_SOFT and
+> +        * RPC_TASK_NO_RETRANS_TIMEOUT. The major timeout setting
+> +        * affects only how long each Reply waits to be sent when
+> +        * a transport connection cannot be established.
+> +        */
+> +       xprt_init_majortimeo(task, req, to);
+>  }
+>  #endif
+>
+> --
+> 2.43.0
+>
 
