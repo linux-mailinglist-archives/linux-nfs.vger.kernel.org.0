@@ -1,89 +1,121 @@
-Return-Path: <linux-nfs+bounces-957-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-958-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F034825317
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 12:48:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3CB7482545F
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 14:18:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 01638B20F46
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 11:48:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D3E94B21C71
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 13:18:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DDA332C691;
-	Fri,  5 Jan 2024 11:48:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87BE2D61B;
+	Fri,  5 Jan 2024 13:18:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aim8s55m"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ldi8gPtP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C682C865
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Jan 2024 11:48:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704455321;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UdkuJrloY5z20GFvK63EYCIWOROt9myvl6AMcuZWPfc=;
-	b=aim8s55mddHFAGvUDLwbewSE+v8CytFamXbOVBgMnG93QbZkNKdfMuQtIgD36EHRJ99xJ4
-	2GJeC6FiHzqbY6EmRIG8G2WmBgOUZIqJyyhmwcleiX+uv/+2hDdtxZK4i/bRbxPWRgUgwt
-	FDXgs5xek4z6NOlLEKVCEmNfxg7iUhY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-6-n4FoMSSDMomKBOZPE4F-pg-1; Fri, 05 Jan 2024 06:48:40 -0500
-X-MC-Unique: n4FoMSSDMomKBOZPE4F-pg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 38878185A780;
-	Fri,  5 Jan 2024 11:48:39 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.14])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 153B51C060AF;
-	Fri,  5 Jan 2024 11:48:35 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <ZZeLAAf6qiieA5fy@casper.infradead.org>
-References: <ZZeLAAf6qiieA5fy@casper.infradead.org> <2202548.1703245791@warthog.procyon.org.uk> <20231221230153.GA1607352@dev-arch.thelio-3990X> <20231221132400.1601991-1-dhowells@redhat.com> <20231221132400.1601991-38-dhowells@redhat.com> <2229136.1703246451@warthog.procyon.org.uk>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: dhowells@redhat.com, Nathan Chancellor <nathan@kernel.org>,
-    Anna Schumaker <Anna.Schumaker@netapp.com>,
-    Trond Myklebust <trond.myklebust@hammerspace.com>,
-    Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>,
-    Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-    linux-mm@kvack.org, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6082E3F1;
+	Fri,  5 Jan 2024 13:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=lXZ6dhmE/ICvc6we7INUfg+/UsVr/HBiAoyEO42qbxw=; b=ldi8gPtPJVmH9PdcSI9hE76OmP
+	bSn24xnqUB/dIB3NWE1ZGvL1k9CyH/2/b5W1F/xMfNwPeQQB8PA61QIxM+nIJ5tkN5BPmEIKRdLf5
+	AGGnnFACaQ/HDlLDCE1LCLhlSIWVcflkgdChZ+jbY5EcHxk2EqRdKTdDhSsU9gOj+PHEb8nLqdxhd
+	nyO7BW9T/tc2hbvgNfhJN9et9ro64C9it0YlSwWohR/nGEl+9x4Tr/CneDxq+NYe75aC0dykUGEkD
+	/kVD9g/WG/FB8exdmfKBXOKQA2+e97wKF1RCOKeizvhWR5ypDLW4jACYvZs77dCxU5RIdEuHKMR/1
+	q/l2Rjyg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1rLk4u-000FpH-Mk; Fri, 05 Jan 2024 13:17:36 +0000
+Date: Fri, 5 Jan 2024 13:17:36 +0000
+From: Matthew Wilcox <willy@infradead.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Anna Schumaker <Anna.Schumaker@netapp.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] Fix oops in NFS
+Message-ID: <ZZgBcJ7OAS7Ui6gi@casper.infradead.org>
+References: <ZZeLAAf6qiieA5fy@casper.infradead.org>
+ <2202548.1703245791@warthog.procyon.org.uk>
+ <20231221230153.GA1607352@dev-arch.thelio-3990X>
+ <20231221132400.1601991-1-dhowells@redhat.com>
+ <20231221132400.1601991-38-dhowells@redhat.com>
+ <2229136.1703246451@warthog.procyon.org.uk>
+ <1094259.1704449575@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1098678.1704455315.1@warthog.procyon.org.uk>
-Date: Fri, 05 Jan 2024 11:48:35 +0000
-Message-ID: <1098679.1704455315@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1094259.1704449575@warthog.procyon.org.uk>
 
-Do you have CONFIG_NFS_FSCACHE set?  Are you using a cache?
+On Fri, Jan 05, 2024 at 10:12:55AM +0000, David Howells wrote:
+> Matthew Wilcox <willy@infradead.org> wrote:
+> 
+> > This commit (100ccd18bb41 in linux-next 20240104) is bad for me.  After
+> > it, running xfstests gives me first a bunch of errors along these lines:
+> > 
+> > 00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-00037-g100ccd18bb41/kernel/fs/gfs2/gfs2.ko: Exec format error
+> > 00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-00037-g100ccd18bb41/kernel/fs/zonefs/zonefs.ko: Exec format error
+> > 00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-00037-g100ccd18bb41/kernel/security/keys/encrypted-keys/encrypted-keys.ko: Exec format error
+> > 
+> > and then later:
+> > 
+> > 00016 generic/001       run fstests generic/001 at 2024-01-05 04:50:46
+> > 00017 [not run] this test requires a valid $TEST_DEV
+> > 00017 generic/002       run fstests generic/002 at 2024-01-05 04:50:46
+> > 00017 [not run] this test requires a valid $TEST_DEV
+> > 00017 generic/003       run fstests generic/003 at 2024-01-05 04:50:47
+> > 00018 [not run] this test requires a valid $SCRATCH_DEV
+> > ...
+> > 
+> > so I think that's page cache corruption of some kind.
+> 
+> Is that being run on NFS?  Is /lib on NFS?
 
-David
+No NFS involvement; this is supposed to be an XFS test ...
+
+/dev/sda on / type ext4 (rw,relatime)
+host on /host type 9p (rw,relatime,access=client,trans=virtio)
+/dev/sdb on /mnt/test type xfs (rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota)
+
+CONFIG_NETFS_SUPPORT=y
+# CONFIG_NETFS_STATS is not set
+# CONFIG_FSCACHE is not set
+CONFIG_NETWORK_FILESYSTEMS=y
+# CONFIG_NFS_FS is not set
+# CONFIG_NFSD is not set
+# CONFIG_CEPH_FS is not set
+# CONFIG_CIFS is not set
+# CONFIG_SMB_SERVER is not set
+# CONFIG_CODA_FS is not set
+# CONFIG_AFS_FS is not set
+CONFIG_9P_FS=y
+# CONFIG_9P_FS_POSIX_ACL is not set
+# CONFIG_9P_FS_SECURITY is not set
+CONFIG_NLS=y
 
 
