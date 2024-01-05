@@ -1,99 +1,232 @@
-Return-Path: <linux-nfs+bounces-951-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-952-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AB9B4824DC5
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 05:53:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C752824F3C
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 08:37:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 49282286553
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 04:53:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 149021C224AE
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 07:37:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B95D5250;
-	Fri,  5 Jan 2024 04:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA09A20333;
+	Fri,  5 Jan 2024 07:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VTLZVg7n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GW5SQIgq"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 477DD5242;
-	Fri,  5 Jan 2024 04:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=mJPEL62eVi84Xk7Scl6XWRFXGzmJNpF/Y9oGJQjtN1Y=; b=VTLZVg7nKMZm2KMb7lg5o9PvD5
-	EuqpAOQdauiVq2ESgt9amfX38XAf1Eqi30RKATfAQwiC/S26DRQe7Xg551K/uydbVKqSrYBHhgzkQ
-	HZGLojzYHxm4D70Yt265+wjirR1nF8dkpWKbkjDzu7U75qpfE0vlUkN07fYxHbtZEcVQ/SNlbqES4
-	/MN3Pbux3ZFtP4r+fR6Y2T67jx1rtDwl0HLQy38FmRaUjcNxCm0kup5Lqq9a7ASB4vAHdaJN08D6G
-	7RUGVMngFqMssgEZomd1Shj2d37M6lrh7x3H+GYVkuVoLkd8u/f15GD5BFjMiqwewHWlMm3/pAaZ/
-	DtD0tYiw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1rLcBs-00GuHr-UY; Fri, 05 Jan 2024 04:52:17 +0000
-Date: Fri, 5 Jan 2024 04:52:16 +0000
-From: Matthew Wilcox <willy@infradead.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Nathan Chancellor <nathan@kernel.org>,
-	Anna Schumaker <Anna.Schumaker@netapp.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Fix oops in NFS
-Message-ID: <ZZeLAAf6qiieA5fy@casper.infradead.org>
-References: <2202548.1703245791@warthog.procyon.org.uk>
- <20231221230153.GA1607352@dev-arch.thelio-3990X>
- <20231221132400.1601991-1-dhowells@redhat.com>
- <20231221132400.1601991-38-dhowells@redhat.com>
- <2229136.1703246451@warthog.procyon.org.uk>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E4E2032A;
+	Fri,  5 Jan 2024 07:37:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7815aad83acso25259185a.0;
+        Thu, 04 Jan 2024 23:37:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704440223; x=1705045023; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5/w5eJtCLO9gyzG6a3HPEPuxuRzY98TrfAvqmGNhpoA=;
+        b=GW5SQIgqS+qt8Ug/S+tlqTmqhq8dH72q7YgTQ0AC3gb56kaOe/ezw/ioR0BNKYKUAq
+         QJAK2qf4HYUPvyA2me+wnEHzBhg627xKAc9OKJrQaixC9mq2zeop+hQxgUoe2iDF0yIj
+         JlHvocU3qN5LvuJDJkP9xGi0tN5lEf4MSb6fnUNsLZ5+HEOnhp/ZzbNb6eKCGT/ghn/g
+         2SoqAfcm0ILPFnu67SsTqqSFynCFZD2ENGRrmLb17SYmV00I+H7lWxjhoIK/EpUbnQOP
+         btwAnrAzFAeRx5yyZl4+WDbjOqDbo7+MedwacDs62h9+0F0MooRgaKbYEWTa79GIkoEV
+         /vVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704440223; x=1705045023;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5/w5eJtCLO9gyzG6a3HPEPuxuRzY98TrfAvqmGNhpoA=;
+        b=Q/JDcUgvpOfGiYM2K+iqczEBnNo1SHmIsrPK7g9m9neVf/44XmQ0ZQ3eTEjpoU/nfV
+         efXaX8qpzNTUipQqTzoYHRXBouot3bfD+zuSupNZllN3WnsJPomnU7RAGtR4eNLnggHC
+         R3Kl7Du3ejjrVdIRvq9UtvZU2QKZ8hmS275sqP66+cIr/bweY/mvcqbmVkixJ86a6LX9
+         6lX4TGvWDg2tDipef4B+SlCSBrVHWyORFZ+EK2i3BgvoBubaSeezcXbz/najaHTV15JL
+         FHftahvJIV1brjRpNqERArG5xWR0mpNzF27IpXIyCceI3pvVYh5z8aNbxIYWF7G5pJUH
+         3BGA==
+X-Gm-Message-State: AOJu0YyXZ2fi4CPXEV+GamVyjdDBtt6Qf7PYTJdFeuysEtfxnixn9gP9
+	EYdMHw/43CpZhAoP2hDAvoeG+NA+Spu5ToB0SLk=
+X-Google-Smtp-Source: AGHT+IHBCcbuLeRImH2jx+ovSBg0hgv5cSxZyu/VnUbjeW8foQ8V0JXs3m0L07ACEU2Elum/hTORiOYAYnRg3pAhPfg=
+X-Received: by 2002:ad4:5def:0:b0:680:d159:ca5b with SMTP id
+ jn15-20020ad45def000000b00680d159ca5bmr2804839qvb.50.1704440222871; Thu, 04
+ Jan 2024 23:37:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2229136.1703246451@warthog.procyon.org.uk>
+References: <170440153940.204613.6839922871340228115.stgit@bazille.1015granger.net>
+ <170440173389.204613.14502976575665083984.stgit@bazille.1015granger.net>
+In-Reply-To: <170440173389.204613.14502976575665083984.stgit@bazille.1015granger.net>
+From: Amir Goldstein <amir73il@gmail.com>
+Date: Fri, 5 Jan 2024 09:36:51 +0200
+Message-ID: <CAOQ4uxhCQ2UrMJZCCTdn5=HtEDPV=ibP4XvGgbwVroepFbLk4g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] fs: Create a generic is_dot_dotdot() utility
+To: Chuck Lever <cel@kernel.org>, viro@zeniv.linux.org.uk
+Cc: jlayton@redhat.com, Jeff Layton <jlayton@kernel.org>, 
+	Chuck Lever <chuck.lever@oracle.com>, linux-fsdevel@vger.kernel.org, 
+	linux-nfs@vger.kernel.org, trondmy@hammerspace.com, brauner@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 22, 2023 at 12:00:51PM +0000, David Howells wrote:
-> David Howells <dhowells@redhat.com> wrote:
-> 
-> > A better way, though, is to move the call to nfs_netfs_inode_init()
-> > and give it a flag to say whether or not we want the facility.
-> 
-> Okay, I think I'll fold in the attached change.
+On Thu, Jan 4, 2024 at 10:55=E2=80=AFPM Chuck Lever <cel@kernel.org> wrote:
+>
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> De-duplicate the same functionality in several places by hoisting
+> the is_dot_dotdot() utility function into linux/fs.h.
+>
+> Suggested-by: Amir Goldstein <amir73il@gmail.com>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-This commit (100ccd18bb41 in linux-next 20240104) is bad for me.  After
-it, running xfstests gives me first a bunch of errors along these lines:
+Reviewed-by: Amir Goldstein <amir73il@gmail.com>
 
-00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-00037-g100ccd18bb41/kernel/fs/gfs2/gfs2.ko: Exec format error
-00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-00037-g100ccd18bb41/kernel/fs/zonefs/zonefs.ko: Exec format error
-00004 depmod: ERROR: failed to load symbols from /lib/modules/6.7.0-rc7-00037-g100ccd18bb41/kernel/security/keys/encrypted-keys/encrypted-keys.ko: Exec format error
+> ---
+>  fs/crypto/fname.c    |    8 +-------
+>  fs/ecryptfs/crypto.c |   10 ----------
+>  fs/exportfs/expfs.c  |    4 +---
+>  fs/f2fs/f2fs.h       |   11 -----------
+>  fs/namei.c           |    6 ++----
+>  include/linux/fs.h   |   13 +++++++++++++
+>  6 files changed, 17 insertions(+), 35 deletions(-)
+>
+> diff --git a/fs/crypto/fname.c b/fs/crypto/fname.c
+> index 7b3fc189593a..0ad52fbe51c9 100644
+> --- a/fs/crypto/fname.c
+> +++ b/fs/crypto/fname.c
+> @@ -74,13 +74,7 @@ struct fscrypt_nokey_name {
+>
+>  static inline bool fscrypt_is_dot_dotdot(const struct qstr *str)
+>  {
+> -       if (str->len =3D=3D 1 && str->name[0] =3D=3D '.')
+> -               return true;
+> -
+> -       if (str->len =3D=3D 2 && str->name[0] =3D=3D '.' && str->name[1] =
+=3D=3D '.')
+> -               return true;
+> -
+> -       return false;
+> +       return is_dot_dotdot(str->name, str->len);
+>  }
+>
+>  /**
+> diff --git a/fs/ecryptfs/crypto.c b/fs/ecryptfs/crypto.c
+> index 03bd55069d86..2fe0f3af1a08 100644
+> --- a/fs/ecryptfs/crypto.c
+> +++ b/fs/ecryptfs/crypto.c
+> @@ -1949,16 +1949,6 @@ int ecryptfs_encrypt_and_encode_filename(
+>         return rc;
+>  }
+>
+> -static bool is_dot_dotdot(const char *name, size_t name_size)
+> -{
+> -       if (name_size =3D=3D 1 && name[0] =3D=3D '.')
+> -               return true;
+> -       else if (name_size =3D=3D 2 && name[0] =3D=3D '.' && name[1] =3D=
+=3D '.')
+> -               return true;
+> -
+> -       return false;
+> -}
+> -
+>  /**
+>   * ecryptfs_decode_and_decrypt_filename - converts the encoded cipher te=
+xt name to decoded plaintext
+>   * @plaintext_name: The plaintext name
+> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
+> index 84af58eaf2ca..07ea3d62b298 100644
+> --- a/fs/exportfs/expfs.c
+> +++ b/fs/exportfs/expfs.c
+> @@ -255,9 +255,7 @@ static bool filldir_one(struct dir_context *ctx, cons=
+t char *name, int len,
+>                 container_of(ctx, struct getdents_callback, ctx);
+>
+>         buf->sequence++;
+> -       /* Ignore the '.' and '..' entries */
+> -       if ((len > 2 || name[0] !=3D '.' || (len =3D=3D 2 && name[1] !=3D=
+ '.')) &&
+> -           buf->ino =3D=3D ino && len <=3D NAME_MAX) {
+> +       if (buf->ino =3D=3D ino && len <=3D NAME_MAX && !is_dot_dotdot(na=
+me, len)) {
+>                 memcpy(buf->name, name, len);
+>                 buf->name[len] =3D '\0';
+>                 buf->found =3D 1;
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 9043cedfa12b..322a3b8a3533 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3368,17 +3368,6 @@ static inline bool f2fs_cp_error(struct f2fs_sb_in=
+fo *sbi)
+>         return is_set_ckpt_flags(sbi, CP_ERROR_FLAG);
+>  }
+>
+> -static inline bool is_dot_dotdot(const u8 *name, size_t len)
+> -{
+> -       if (len =3D=3D 1 && name[0] =3D=3D '.')
+> -               return true;
+> -
+> -       if (len =3D=3D 2 && name[0] =3D=3D '.' && name[1] =3D=3D '.')
+> -               return true;
+> -
+> -       return false;
+> -}
+> -
+>  static inline void *f2fs_kmalloc(struct f2fs_sb_info *sbi,
+>                                         size_t size, gfp_t flags)
+>  {
+> diff --git a/fs/namei.c b/fs/namei.c
+> index 71c13b2990b4..2386a70667fa 100644
+> --- a/fs/namei.c
+> +++ b/fs/namei.c
+> @@ -2667,10 +2667,8 @@ static int lookup_one_common(struct mnt_idmap *idm=
+ap,
+>         if (!len)
+>                 return -EACCES;
+>
+> -       if (unlikely(name[0] =3D=3D '.')) {
+> -               if (len < 2 || (len =3D=3D 2 && name[1] =3D=3D '.'))
+> -                       return -EACCES;
+> -       }
+> +       if (is_dot_dotdot(name, len))
+> +               return -EACCES;
+>
+>         while (len--) {
+>                 unsigned int c =3D *(const unsigned char *)name++;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 98b7a7a8c42e..53dd58a907e0 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2846,6 +2846,19 @@ extern bool path_is_under(const struct path *, con=
+st struct path *);
+>
+>  extern char *file_path(struct file *, char *, int);
+>
+> +/**
+> + * is_dot_dotdot - returns true only if @name is "." or ".."
+> + * @name: file name to check
+> + * @len: length of file name, in bytes
+> + *
+> + * Coded for efficiency.
+> + */
+> +static inline bool is_dot_dotdot(const char *name, size_t len)
+> +{
+> +       return len && unlikely(name[0] =3D=3D '.') &&
+> +               (len < 2 || (len =3D=3D 2 && name[1] =3D=3D '.'));
+> +}
+> +
 
-and then later:
+Looking back at the version that I suggested, (len < 2
+here is silly and should be (len =3D=3D 1 || ...
 
-00016 generic/001       run fstests generic/001 at 2024-01-05 04:50:46
-00017 [not run] this test requires a valid $TEST_DEV
-00017 generic/002       run fstests generic/002 at 2024-01-05 04:50:46
-00017 [not run] this test requires a valid $TEST_DEV
-00017 generic/003       run fstests generic/003 at 2024-01-05 04:50:47
-00018 [not run] this test requires a valid $SCRATCH_DEV
-...
+But let's wait for inputs from other developers on this helper,
+especially Al.
 
-so I think that's page cache corruption of some kind.
+Thanks,
+Amir.
 
