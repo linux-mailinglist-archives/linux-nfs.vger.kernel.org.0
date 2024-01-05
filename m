@@ -1,130 +1,108 @@
-Return-Path: <linux-nfs+bounces-962-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-963-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 195468258AF
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 17:54:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D5A68258F1
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 18:21:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC23028165D
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 16:54:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 036461C2336D
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Jan 2024 17:21:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 607E831735;
-	Fri,  5 Jan 2024 16:54:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4ECB532196;
+	Fri,  5 Jan 2024 17:21:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VrgPLz/Q"
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="tn6PqWq+";
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="CvojuvDV"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from nautica.notk.org (nautica.notk.org [91.121.71.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE0931725
-	for <linux-nfs@vger.kernel.org>; Fri,  5 Jan 2024 16:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704473651;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PhzA2YY8yOp82ONvXJmB9SyKiI5wrzdHbwkhehOuS70=;
-	b=VrgPLz/Q7EZTP2CqOOFk55gckOCr6euHVYgJBTwuIiyFpyGHGupINZsz93hACtKNdaql0N
-	wcomvjsn+H1EP0qdXZrfOER2kpm30R1yWlNOZSTtcJCWmJ/CAcKfKHHbZXmu4efuRlV2qD
-	3kMl3CyOJ6kicvsJA9xEToAtwudWAzk=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-338-uo3KQyjMM9yidJRi9aD99w-1; Fri, 05 Jan 2024 11:54:09 -0500
-X-MC-Unique: uo3KQyjMM9yidJRi9aD99w-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7815b7f7a78so43750885a.0
-        for <linux-nfs@vger.kernel.org>; Fri, 05 Jan 2024 08:54:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704473648; x=1705078448;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PhzA2YY8yOp82ONvXJmB9SyKiI5wrzdHbwkhehOuS70=;
-        b=SU2RZZjMbLaeWFtXpqs1asQhoaiP4le0f3NJytE9t1CTf28A7Jb1jX2ALdZlGJPVNz
-         z3CpstzhB6VIwTvqMWidzgBS9C1UPGzD7Ku8UZrsNQPQVL2rZX6NMsgswm9+ESvOgOz8
-         9FaaKeCrfwlbXPH+ww6qWoL+xWXwHss1OseGii/vFfeCxQkT2ayh7DHW0pgB3OOWyC3X
-         ESe3/NKQdfX8JKy7eE/DxJ5SkGE5jettF14U/AWB1aH2IhZzuLjIuHMvYFRzVHKJhRq0
-         Gegz0XNdHi8yBwkMcXrvPhE36vpCyqovBovClzQOd/UYFbRkIZNGSD/VlotYCrY16py3
-         FeDw==
-X-Gm-Message-State: AOJu0YxgPXJs8cRaflFbW3ME0FE0QQdpaIP48/v2lTjFeApxRA11ipnj
-	YH/+LJzUF+bynuDrMFo1kdjqWMIuoiTjkqLuihL93IGGHcwtYsXcqSRJZtgRLqoIRLEQfuDRCTH
-	LV2UaJ7uXJrHRls/4up+oLmdrQWzV
-X-Received: by 2002:a05:6214:c86:b0:67a:a601:ce4 with SMTP id r6-20020a0562140c8600b0067aa6010ce4mr4677087qvr.6.1704473648532;
-        Fri, 05 Jan 2024 08:54:08 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFb+/cCylMUlTT0pX/pCOcbBcRQlZUxmPuL15QpUn3yx/x6Yy7TUUP4614JkolvsBSHXjyVJQ==
-X-Received: by 2002:a05:6214:c86:b0:67a:a601:ce4 with SMTP id r6-20020a0562140c8600b0067aa6010ce4mr4677073qvr.6.1704473648284;
-        Fri, 05 Jan 2024 08:54:08 -0800 (PST)
-Received: from [10.19.60.48] (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id b2-20020a0cfb42000000b0067f0d8cf418sm728002qvq.70.2024.01.05.08.54.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 05 Jan 2024 08:54:07 -0800 (PST)
-Message-ID: <24d87eae-97e3-4839-aaa7-e058a3f66af5@redhat.com>
-Date: Fri, 5 Jan 2024 11:54:07 -0500
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51F9C32186;
+	Fri,  5 Jan 2024 17:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+Received: by nautica.notk.org (Postfix, from userid 108)
+	id 47DCEC026; Fri,  5 Jan 2024 18:20:55 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1704475255; bh=G5QLtqgPgUPlhX16D8cxgZSrhZwA8FdHTj67GHw0qi8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=tn6PqWq+0UHN3QxCRZid+V+fJBenvC3IrIIcqOsdUbUgqD8BvhWt2WB90oSw7XpPg
+	 QlUFE2ue/FCeJ/DLCFsWomlZCxMLnpaB0lM3wvwMCs4jctG4fvUBqrc03/wmY/sc0S
+	 8N2iRbE0aTsPVsWcNX4DCgvZISkj+1s2RpUktuXRQ7liHWaMGGelG/otThKmTb5+o9
+	 rqsKWauiSE5eYZH82ZaqL1LP0H6bbwJzQQG77J3sBIpVhHOvH02KIeT/rFE6grRJ9i
+	 cHB85E+b1u50A//1wjlYgDkzEh8xzHxoPl97Y55v0xmCQmwlSI3+S7yRacHEVsWfLm
+	 H0mNlD3NjjkYw==
+X-Spam-Level: 
+Received: from gaia (localhost [127.0.0.1])
+	by nautica.notk.org (Postfix) with ESMTPS id 448ADC009;
+	Fri,  5 Jan 2024 18:20:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+	t=1704475254; bh=G5QLtqgPgUPlhX16D8cxgZSrhZwA8FdHTj67GHw0qi8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=CvojuvDVolRZkDDlIyj4uY5hFwD/G9sunkTM46WaLCaS3QIrYNL/Um2wFEN1Efbub
+	 AMgqrgm0WuuDyTu9RFhh8PxIVWprskRaMfCAUwhNw8adtnNMYHs5Bky4OntLrV86/Q
+	 XmU2feeoZdQm8hdpDIY+BLbeIyzFOjK2HbobG5a9E+yEpXx9TfaYR70WhcumYdlH5T
+	 HkCWSMxrchak5K5WPOkEkbPG2H9CmhaW1116sshIwrG/ZnK1AyARzAH5rYoKYuS2Jk
+	 AqxoyHMYpNvvuolbdXa2aaLMFmQjd42lAcZqTp8w5LAgtmHV3I+9GZc8lkKE5jXWtd
+	 swfGIM6q8sjVg==
+Received: from localhost (gaia [local])
+	by gaia (OpenSMTPD) with ESMTPA id 39ce6c8b;
+	Fri, 5 Jan 2024 17:20:44 +0000 (UTC)
+Date: Sat, 6 Jan 2024 02:20:29 +0900
+From: Dominique Martinet <asmadeus@codewreck.org>
+To: Matthew Wilcox <willy@infradead.org>,
+	David Howells <dhowells@redhat.com>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+	Anna Schumaker <Anna.Schumaker@netapp.com>,
+	Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Jeff Layton <jlayton@kernel.org>, Steve French <smfrench@gmail.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Paulo Alcantara <pc@manguebit.com>,
+	Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	Christian Brauner <christian@brauner.io>, linux-cachefs@redhat.com,
+	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+	linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+	v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Fix oops in NFS
+Message-ID: <ZZg6XQOjlOA0CL17@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 0/2] _rpc_dtablesize: decrease to fix excessive memory
- usage
-Content-Language: en-US
-To: Zhuohao Bai <wcwfta@gmail.com>
-Cc: libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
- tanyuan@tinylab.org, forrestniu@foxmail.com, falcon@tinylab.org,
- zhuohao_bai@foxmail.com
-References: <cover.1698751763.git.zhuohao_bai@foxmail.com>
-From: Steve Dickson <steved@redhat.com>
-In-Reply-To: <cover.1698751763.git.zhuohao_bai@foxmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1197168.1704465212@warthog.procyon.org.uk>
+ <ZZgBcJ7OAS7Ui6gi@casper.infradead.org>
 
+Matthew Wilcox wrote on Fri, Jan 05, 2024 at 01:17:36PM +0000:
+> host on /host type 9p (rw,relatime,access=client,trans=virtio)
 
+David Howells wrote on Fri, Jan 05, 2024 at 02:33:32PM +0000:
+> > This commit (100ccd18bb41 in linux-next 20240104) is bad for me.  After
+> > it, running xfstests gives me first a bunch of errors along these lines:
+> 
+> This may be related to a patch that is in linux-next 20240105, but not
+> 20240104 ("9p: Fix initialisation of netfs_inode for 9p").
 
-On 10/31/23 9:13 AM, Zhuohao Bai wrote:
-> In the client code, the function _rpc_dtablesize() is used to determine the
-> memory allocation for the __svc_xports array.
-> 
-> However, some operating systems (including the recent Manjaro OS) can have
-> _SC_OPEN_MAX values as high as 1073741816, which can cause the __svc_xports
-> array to become too large. This results in the process being killed.
-> 
-> There is a limit to the maximum number of files. To avoid this problem, a
-> possible solution is to set the size to the lesser of 1024 and this value to
-> ensure that the array space for open files is not too large, thus preventing
-> the process from terminating.
-> 
-> Also discovered that some users have taken action on the issue. It is necessary
-> to address this for all users. Ultimately, we determined that adjusting the
-> size value of _rpc_dtablesize() and streamlining the existing user code would
-> be the most effective solution.
-> 
-> 
-> ---
-> Changes in v1:
-> Clean up the existing code in user
-> 
-> ---
-> Links:
-> RFC:https://lore.kernel.org/linux-nfs/tencent_E6816C9AF53E61BA5E0A313BBE5E1D19B00A@qq.com/T/#u
-> 
-> 
-> Zhuohao Bai (2):
->    _rpc_dtablesize: Decrease the value of size.
->    _rpc_dtablesize: Cleaning up the existing code
-> 
->   src/rpc_dtablesize.c | 2 ++
->   src/svc.c            | 2 --
->   2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-Both Committed... (tag: libtirpc-1-3-5-rc2)
+Yes, you'd be reading zeroes without that patch because the netfs code
+thinks the file has 0 size and doesn't bother reading, that'd explain
+the exec format error loading other modules...
 
-steved.
+One thing that surprised me is that this also affects cache=none, I
+thought we had different file ops going straight to p9_client_read in
+this case?
+But turning my brain on this would be the read-only mmap case that we
+need to support for execs, which module loading also uses, so this came
+biting there alright.
 
+-- 
+Dominique Martinet | Asmadeus
 
