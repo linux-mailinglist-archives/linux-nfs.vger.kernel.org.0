@@ -1,71 +1,83 @@
-Return-Path: <linux-nfs+bounces-965-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-966-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0604D825E44
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jan 2024 06:04:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D182E8264AF
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jan 2024 16:25:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 992FC1F2413D
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Jan 2024 05:04:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 55F13B21290
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Jan 2024 15:25:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 433E03C3B;
-	Sat,  6 Jan 2024 05:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FD7A13AC0;
+	Sun,  7 Jan 2024 15:24:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jd+T9r7r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ftbWgSH6"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FBE3C0E;
-	Sat,  6 Jan 2024 05:04:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id EB56AC433C7;
-	Sat,  6 Jan 2024 05:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704517468;
-	bh=LkTgjlO7FgY/E4bOtrsx77xfOLsvx35I66fzwA+SWIw=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=jd+T9r7rvvPvKmncNPz66ONlQi1E8cMSxSaAWVGveUOvgQ6HqdWLWmdcz42RHzwcb
-	 rrgiIT4suNeg0dQSjjzHEDyS5GI1czq4ERl4eEo0pA+LPKS9ivSBpAxdxPYhSBhy6U
-	 Vj1raRHCKd0lc2O3xNXgUxeQUM5sX03FNzyK747su1glzuuzjKkHY9RwJKw8MQpZeI
-	 vkBcShAs4VyQGCdYFM5h/AY1mxSp8O99Z87GVMYrdjOOAOW9V0+momZG1xsVEYijO3
-	 a/+JZ6bhIt5j6X8wPiM9SWmUXvEuwnYU/gl+3OVZ4V12v/647jxb6IgX0MZY3W6XnM
-	 bklpdwfyYJZNQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CFF54C4166F;
-	Sat,  6 Jan 2024 05:04:27 +0000 (UTC)
-Subject: Re: [GIT PULL] one final NFSD fix for 6.7-rc
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <E16FA05B-5516-4138-915F-C6338F2939BB@oracle.com>
-References: <E16FA05B-5516-4138-915F-C6338F2939BB@oracle.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <E16FA05B-5516-4138-915F-C6338F2939BB@oracle.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.7-3
-X-PR-Tracked-Commit-Id: 64e6304169f1e1f078e7f0798033f80a7fb0ea46
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0d3ac66ed81cb7c0aa78fceec9fb0dbe384992ed
-Message-Id: <170451746784.9519.1306778512949214303.pr-tracker-bot@kernel.org>
-Date: Sat, 06 Jan 2024 05:04:27 +0000
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Jeff Layton <jlayton@kernel.org>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84BC613AC3
+	for <linux-nfs@vger.kernel.org>; Sun,  7 Jan 2024 15:24:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-50e766937ddso1044981e87.3
+        for <linux-nfs@vger.kernel.org>; Sun, 07 Jan 2024 07:24:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704641092; x=1705245892; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/f7ZGcTeGJHQfg1P6evPzWs3pF5MtkfEJBuCM5v9SbU=;
+        b=ftbWgSH6+4b6tFD5fOlvQEw4qUyGpdCJjQfG77sC6DIc8AglM3slF8J54e5Nc9nrkH
+         LFw41cN/QF+ox5syn+4WlCeRXGcRtkhNLXAT8TF+8bOwxWli6/Rqe7koF1zYS0UA3Gtj
+         LSQJO74/IfMrqRjxkRGn801sKhAxD6BP81X8T7uIYSUH5Cnpb3Stj+81Ao+edv3jC6yz
+         ZxjM4dd4yAluUncCigCooIUQAaJQ8tuIvWu3BgazElijDGbwfcBPYVuWL6c+ss3bfOXL
+         Az8Ojf/9MbemrKSfWmZx0m5y0uCnxLH0Kw2vwlMgg69knbf8MKmxNBfPLucv66azqsoO
+         ixmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704641092; x=1705245892;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/f7ZGcTeGJHQfg1P6evPzWs3pF5MtkfEJBuCM5v9SbU=;
+        b=llzCGVWHgwDnw+ezQ28F/G4MlFnFBE5iB1hiIBb/kiTzCbcEntweNYqjxeFnKI0c2e
+         mDe32gfX1vUGar1Cf4Z7qU36z7LX6OA3PgJYnpxliHzFNyFiAFTMbl77rQfZ9VHV77ZJ
+         xnzWVDzTXbzxur6AuGx/ZcgcuvIN1xRzKNhPD6ha55OFGZcD6Rgc2AcwqN6b6nc3SxsO
+         ZxPMaXwNTzPzvAyLbkcaZvVvYz243K8jzVCanJcKs5Cj+tB9zX+iII50rLAVOD/zAyXm
+         v9omaEVlUhqFYsl3e/+2IxLKzJkt9HzyD1WKyCLNUbTF1twpt9h+AN0aEWLMcBoISxhp
+         XgWQ==
+X-Gm-Message-State: AOJu0YzDf8KjiFB865nlMtWEwr2pSKuu+bHxMZs3VUuNbrrm87TXR7pJ
+	WAuUSp2yhlA3/eRjZe+7Il+m3bdPGYqndMimL45bRNKftNMTNA==
+X-Google-Smtp-Source: AGHT+IGqOZxVuEiKGkbs/xhBjzDJQtiFbxjW8yDlzjj8L7z30IHB1f4GkP4ZHA2M1wId/4N6fjgU+chzDrNDNPC0h8E=
+X-Received: by 2002:a05:6512:4cc:b0:50e:3e65:5f30 with SMTP id
+ w12-20020a05651204cc00b0050e3e655f30mr823948lfq.125.1704641091990; Sun, 07
+ Jan 2024 07:24:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+From: Dan Shelton <dan.f.shelton@gmail.com>
+Date: Sun, 7 Jan 2024 16:24:25 +0100
+Message-ID: <CAAvCNcAAE0x4wJ0mVJ0b-7keSv3g=cFQf5o0yEd6-pMq35AzGg@mail.gmail.com>
+Subject: What are nfs persistent sessions, and how to enable them in the server?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, ms-nfs41-client-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Fri, 5 Jan 2024 19:40:12 +0000:
+Hello!
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.7-3
+The ms-nfs41-client brings up a message about "persistent session" -
+what is that?
+2388: WARNING: requested session flags 3 received 2
+2388: WARNING: we asked for persistent session but server refused
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0d3ac66ed81cb7c0aa78fceec9fb0dbe384992ed
+nfsd server is Debian Linux buster, nfs client is ms-nfs41-client
+2024-01-01 from
+https://sourceforge.net/p/ms-nfs41-client/mailman/message/58718627/ on
+Windows 11.
 
-Thank you!
-
+Dan
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
