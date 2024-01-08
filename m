@@ -1,168 +1,164 @@
-Return-Path: <linux-nfs+bounces-980-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-981-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3412C827AA2
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jan 2024 23:31:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9FE0827B56
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jan 2024 00:16:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 405621C22194
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jan 2024 22:31:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF1AD1C22911
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jan 2024 23:16:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B45553E1F;
-	Mon,  8 Jan 2024 22:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F96D1DDDC;
+	Mon,  8 Jan 2024 23:16:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZ2kbWTE"
+	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="PSz250jy";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="gi3M9wRd"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBBD9BE4E
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Jan 2024 22:31:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704753100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=g3fhJdYhF0Jh8djZ9CbUM5+BZiYxRI9hKlm7wmHneNE=;
-	b=OZ2kbWTEKRjY7eLh/D6Pl/LNC4wp20P+DlQGzXqRRcV3H6fXLsrgkoa/RUhyHLVcdRDt8L
-	Z7d/Kaf2lPh4bRlWiVBboEFPQfIJGUkuWdDSNa1akYM0q2wQ6+DVbrEk/rqFw+y4PgSAMu
-	3qIkfa5i8zavapoiHZ7MfjUnQ2G5J2U=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-124-mFt6nnssNiyKD7dLtjUHgg-1; Mon,
- 08 Jan 2024 17:31:35 -0500
-X-MC-Unique: mFt6nnssNiyKD7dLtjUHgg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4CFBE1C29EAA;
-	Mon,  8 Jan 2024 22:31:34 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.27])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id BECCF1121306;
-	Mon,  8 Jan 2024 22:31:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <20240107160916.GA129355@kernel.org>
-References: <20240107160916.GA129355@kernel.org> <20240103145935.384404-1-dhowells@redhat.com> <20240103145935.384404-2-dhowells@redhat.com>
-To: Simon Horman <horms@kernel.org>
-Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
-    Jeff Layton <jlayton@kernel.org>,
-    Gao Xiang <hsiangkao@linux.alibaba.com>,
-    Dominique Martinet <asmadeus@codewreck.org>,
-    Steve French <smfrench@gmail.com>,
-    Matthew Wilcox <willy@infradead.org>,
-    Marc Dionne <marc.dionne@auristor.com>,
-    Paulo Alcantara <pc@manguebit.com>,
-    Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Eric Van Hensbergen <ericvh@kernel.org>,
-    Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-    Yiqun Leng <yqleng@linux.alibaba.com>,
-    Jia Zhu <zhujia.zj@bytedance.com>
-Subject: Re: [PATCH 1/5] cachefiles: Fix __cachefiles_prepare_write()
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 499BBB672
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Jan 2024 23:16:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=themaw.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=themaw.net
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+	by mailout.west.internal (Postfix) with ESMTP id 30BB23200A12;
+	Mon,  8 Jan 2024 18:16:15 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Mon, 08 Jan 2024 18:16:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
+	:content-transfer-encoding:content-type:content-type:date:date
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1704755774;
+	 x=1704842174; bh=l3JYqJtsA83RY3G0BsbNOzDiYA+azkGjlbXxI8M8Thg=; b=
+	PSz250jy2rErdoKjv3wa0vSslWUHob/Ce3Tbq0rVPPTRV/+0fBUpiqHBFpeebCzq
+	0c2U36uTxjSBnYoXmRw/6+z4wtiAN6iGuzky/Y83ddQQN8xJfThm7A2fCTBQF3+t
+	fLiBjC0Vs5ICjsbfIsBJMKIXEtYGVD5HDZH7pwR6JWnE45JldzUNBetFiVqcFlLo
+	MSlFfKGxCUc+gfwPSObVkt7YgixLuv/cMZ37y7Xaq+jGAYYlbSHIipjgXo0oQa8M
+	oW0aYnJsmQMUPJcXyD7X4tMH0xzYO6LI9365MkEotyEtocgZEzWbjpv3rdeLE/7c
+	To/hnWP7kISNsX4vOz3tLQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:date:feedback-id:feedback-id:from:from
+	:in-reply-to:in-reply-to:message-id:mime-version:references
+	:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1704755774; x=
+	1704842174; bh=l3JYqJtsA83RY3G0BsbNOzDiYA+azkGjlbXxI8M8Thg=; b=g
+	i3M9wRdoC+9GKK1zsZmize+TD0P3SRhgPdW2kFyhqbGAiRKKEVRmNpj4c1jDtKUC
+	BOXEg2xWPBQQemhTOR8ThWm+pOO11IoxacphkMrvRcbIHHTMIzMNhdbevO5CiFkZ
+	dJOkWrC21QHliknLYEV72C4ozTDo1so2Ikh9v8+kq1ikxBZydrA8XuvYJOblmY5h
+	EnRpnoo2YEuAb2ik8m35QB4nqgBxJ1r7LnrAyCSp3msFT5ubXzzX/mIhAwzNP6XS
+	2HXvD/KHqyj7UQOg9RF2pBRYKFH+yfAdBuepcH960ckJsoM6CQjfbXQ9lldRBZ33
+	ddzjqjjQQ6jGNOiY8aaDQ==
+X-ME-Sender: <xms:PoKcZS00BTWqPnphL-kZbcdYNvY4BtTlJbnzlaZHveIdXl-fb6KxMQ>
+    <xme:PoKcZVHBiacRGrXiwY9gXz_RHNs__SvS7NazCjDrgU3arivFhNS4ncFRwQxLoybvc
+    s028UQszoZX>
+X-ME-Received: <xmr:PoKcZa5tYoUskTbqV9gPrw0EnmlfkwSbTlWha0fjBI9Ha4vN1ao0XG18LP0JE8_BmSrbnPRCLTN9iNjUlzrwMeM1YX9aMZHtN5-tqZZ9QYfvIIdR-N6nK2K4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdehkedgtdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepkfffgggfuffvfhfhjggtgfesthejredttdefjeenucfhrhhomhepkfgrnhcu
+    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
+    fggeektddvtdegieelhfetffffueekgeeghedvudelgedvieeiiefhteduheejleenucev
+    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnse
+    hthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:PoKcZT1zvn6PddLC4m5X_DZYM5uZ1Z_oTKaaXTcoZn9rt1b7GL2VFQ>
+    <xmx:PoKcZVGjH3FBCkIP_9llc0jnl2wLjrEWmwfj2agr-w1gp4AIy-MNcw>
+    <xmx:PoKcZc_rxeTWYTJxjNvgCX7Xm7eiDziuL-zMQ-FxiNMG5SJoszwCkg>
+    <xmx:PoKcZYNSQmjlB5snBpJnRHSrjpT03W5OJEWNHglkk4MNn3V86meAYA>
+Feedback-ID: i31e841b0:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
+ 8 Jan 2024 18:16:12 -0500 (EST)
+Message-ID: <b89c26b5-6b9b-0a83-f0ff-dce4dadd5528@themaw.net>
+Date: Tue, 9 Jan 2024 07:16:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1544729.1704753090.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 08 Jan 2024 22:31:30 +0000
-Message-ID: <1544730.1704753090@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: nfs-utils&nfsd&autofs not supporting non-2049 TCP port numbers -
+ Fwd: showmount -e with custom port number?
+To: Jeff Layton <jlayton@kernel.org>,
+ Cedric Blancher <cedric.blancher@gmail.com>,
+ Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <CALXu0UdFR7Xn51eKFUUi6a68wvDKc-RXz7F4LKyQgDptqfYbgw@mail.gmail.com>
+ <CALXu0UfSJ0Qc3HOecf4pQ=VnEVqxRw6OGzNwhh9BUVYaHV7_oQ@mail.gmail.com>
+ <61666d84cd8d6849a9e9c5147603b10bb49e0519.camel@kernel.org>
+Content-Language: en-US
+From: Ian Kent <raven@themaw.net>
+In-Reply-To: <61666d84cd8d6849a9e9c5147603b10bb49e0519.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Simon Horman <horms@kernel.org> wrote:
 
-> I realise these patches have been accepted, but I have a minor nit:
-> pos is now unsigned, and so cannot be less than zero.
+On 8/1/24 22:52, Jeff Layton wrote:
+> On Sun, 2024-01-07 at 23:33 +0100, Cedric Blancher wrote:
+>> Good evening!
+>>
+>> Generic issue in all of nfs-utils: None of the utils properly support
+>> NFSv4 with non.standard (TCP/2049) port numbers.
+>>
+>> mount supports it for mounting, but does not show it for listing mounts
+>> /proc/mounts does not show the port number either
+> mount just gets the mount info from /proc/mounts, which absolutely does
+> show a port= option when you use a different port than 2049.
+>
+>> showmount -e does not support a port number
+> showmount talks directly to mountd so you wouldn't usually point it at
+> the same port nfs is listening on.  As with most sunrpc based tools, it
+> queries rpcbind in order to determine what port to talk to. If you're
+> going to use stuff like showmount, then you need to ensure that rpcbind
+> is reachable and that the daemons register with it properly.
+>
+>> autofs does not support non-2049 port numbers
+>> nfsd referrals do not support setting non-2049 port numbers
+> The same goes for autofs. It just calls /bin/mount. I think (but am not
+> sure) that even with NFSv4, when the client can't contact the server on
+> port 2049, it'll try to use rpcbind to determine the port.
 
-Good point.  How about the attached patch.  Whilst I would prefer to use
-unsigned long long to avoid the casts, it might =
+That is exactly what autofs does, and always has done.
 
 
-David
----
-cachefiles: Fix signed/unsigned mixup
+The other thing to be aware of is if you want NFSv4 only you need to tell
 
-In __cachefiles_prepare_write(), the start and pos variables were made
-unsigned 64-bit so that the casts in the checking could be got rid of -
-which should be fine since absolute file offsets can't be negative, except
-that an error code may be obtained from vfs_llseek(), which *would* be
-negative.  This breaks the error check.
+autofs that by using the option fstype=nfs4 so that it doesn't try to fall
 
-Fix this for now by reverting pos and start to be signed and putting back
-the casts.  Unfortunately, the error value checks cannot be replaced with
-IS_ERR_VALUE() as long might be 32-bits.
+back to earlier NFS versions and also tries to avoid contacting rpcbind.
 
-Fixes: 7097c96411d2 ("cachefiles: Fix __cachefiles_prepare_write()")
-Reported-by: Simon Horman <horms@kernel.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202401071152.DbKqMQMu-lkp@in=
-tel.com/
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Gao Xiang <hsiangkao@linux.alibaba.com>
-cc: Yiqun Leng <yqleng@linux.alibaba.com>
-cc: Jia Zhu <zhujia.zj@bytedance.com>
-cc: Jeff Layton <jlayton@kernel.org>
-cc: linux-cachefs@redhat.com
-cc: linux-erofs@lists.ozlabs.org
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
----
- fs/cachefiles/io.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/fs/cachefiles/io.c b/fs/cachefiles/io.c
-index 3eec26967437..9a2cb2868e90 100644
---- a/fs/cachefiles/io.c
-+++ b/fs/cachefiles/io.c
-@@ -522,7 +522,7 @@ int __cachefiles_prepare_write(struct cachefiles_objec=
-t *object,
- 			       bool no_space_allocated_yet)
- {
- 	struct cachefiles_cache *cache =3D object->volume->cache;
--	unsigned long long start =3D *_start, pos;
-+	loff_t start =3D *_start, pos;
- 	size_t len =3D *_len;
- 	int ret;
- =
+Ian
 
-@@ -556,7 +556,7 @@ int __cachefiles_prepare_write(struct cachefiles_objec=
-t *object,
- 					  cachefiles_trace_seek_error);
- 		return pos;
- 	}
--	if (pos >=3D start + *_len)
-+	if ((u64)pos >=3D (u64)start + *_len)
- 		goto check_space; /* Unallocated region */
- =
-
- 	/* We have a block that's at least partially filled - if we're low on
-@@ -575,7 +575,7 @@ int __cachefiles_prepare_write(struct cachefiles_objec=
-t *object,
- 					  cachefiles_trace_seek_error);
- 		return pos;
- 	}
--	if (pos >=3D start + *_len)
-+	if ((u64)pos >=3D (u64)start + *_len)
- 		return 0; /* Fully allocated */
- =
-
- 	/* Partially allocated, but insufficient space: cull. */
-
+>
+> Alternately, if you don't want to deal with rpcbind for mounting, you
+> could also specify a hardcoded "port=" mount option in your autofs maps.
+>
+>
+>> ...
+>>
+>> Could you please make a concentrated effort and allow non-2049 port
+>> numbers for NFSv4 mounts, in all of the lifecycle of a NFSv4 mount?
+>>  From nfsd, nfsd referrals, client mount/umount, autofs
+>> mount/umount+LDAP spec
+>>
+>> Ced
+>>
+>> ---------- Forwarded message ---------
+>> From: Cedric Blancher <cedric.blancher@gmail.com>
+>> Date: Sun, 7 Jan 2024 at 22:32
+>> Subject: showmount -e with custom port number?
+>> To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+>>
+>>
+>> Good evening!
+>>
+>> How can I get showmount -e to use a non-2049 TCP port number to show
+>> mounts on a NFSv4 server?
+>>
+>> /sbin/showmount -e localhost@30000
+>> clnt_create: RPC: Unknown host
 
