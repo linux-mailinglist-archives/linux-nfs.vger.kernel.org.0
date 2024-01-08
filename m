@@ -1,92 +1,102 @@
-Return-Path: <linux-nfs+bounces-977-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-978-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32E1D82782B
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jan 2024 20:10:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D79A182786F
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jan 2024 20:21:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 418D61C21B64
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jan 2024 19:10:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 748DE1F23479
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Jan 2024 19:21:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5DBC54F85;
-	Mon,  8 Jan 2024 19:10:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3231955C21;
+	Mon,  8 Jan 2024 19:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="baYpd0pY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HmBNon97"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 709FA54F86
-	for <linux-nfs@vger.kernel.org>; Mon,  8 Jan 2024 19:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704741037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5WpaiAXgIJcHSCV8HxyPjHGj793oUaJH1KJASvJo+js=;
-	b=baYpd0pYjYaJB8C2UhFTinauTz6y5HjqputL55ZPkx+G9tW8GMUjxQCcGynsbuuGWa6FBW
-	kYLGcIBxK8Peq4SDZAuocjDRYXKUIxCOYlmBFJory5hAhqXXuX82Ln12jzKa6tauSu/yzf
-	QtFilhT1Q/NEfPY/cJH/x3YiuDnLmUc=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-thEPganHN7WonZIIW2kbLQ-1; Mon, 08 Jan 2024 14:10:29 -0500
-X-MC-Unique: thEPganHN7WonZIIW2kbLQ-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AB0E3185A783;
-	Mon,  8 Jan 2024 19:10:28 +0000 (UTC)
-Received: from [100.85.132.103] (ovpn-0-5.rdu2.redhat.com [10.22.0.5])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 17A5E492BE6;
-	Mon,  8 Jan 2024 19:10:27 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Dan Shelton <dan.f.shelton@gmail.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
- ms-nfs41-client-devel@lists.sourceforge.net
-Subject: Re: What are nfs persistent sessions, and how to enable them in the
- server?
-Date: Mon, 08 Jan 2024 14:10:26 -0500
-Message-ID: <317A2531-BA7D-45C7-8C18-DBC9E533BF91@redhat.com>
-In-Reply-To: <CAAvCNcCqXr_U+WG2NK3uVvQMS7bYc4=n4emKs1ZLAtKy1XYEWQ@mail.gmail.com>
-References: <CAAvCNcAAE0x4wJ0mVJ0b-7keSv3g=cFQf5o0yEd6-pMq35AzGg@mail.gmail.com>
- <466B1C7F-A994-4108-8154-4BA392B99647@redhat.com>
- <CAAvCNcCqXr_U+WG2NK3uVvQMS7bYc4=n4emKs1ZLAtKy1XYEWQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0DB55C37
+	for <linux-nfs@vger.kernel.org>; Mon,  8 Jan 2024 19:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-50eabfac2b7so2241134e87.0
+        for <linux-nfs@vger.kernel.org>; Mon, 08 Jan 2024 11:19:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704741596; x=1705346396; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=7hEU4GqkAauyy1vXU+CcuCqs+wfYQUfOI/iPMWkfy7A=;
+        b=HmBNon976+xB2fvQRAr9bMK+6FI+kNUMuvMxKRvJpgxOBL13PZkSG02jy1CpLokGGA
+         THEVyhCEBOoPiMntkZxieVHDRGYpTFhqltffQaRz6aEgDvYikGIbnkOev05smlaYnJsk
+         9oKAgWEL2IE1EpEaT0xhc4lfytfWmfKHx2bu78k8Pn1eNOMTrLMv0Blq3RC9XAWe8x5U
+         zGHMBSqbejR6SLhM0aTWgqRU7MxTp9LWMwikZxCPs9tfA884Pi258tZAD0859HUEkGU8
+         jDu18XVhVKj1zCXHj4A4tPeKOn/MaCT8bKGKD39AdQvteMGfKS+Stvc8SuKue2ZKJRIK
+         QOig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704741596; x=1705346396;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7hEU4GqkAauyy1vXU+CcuCqs+wfYQUfOI/iPMWkfy7A=;
+        b=CXCGYEUmeDa1mVkN2neqX5vyn/rCcNPDqJUtKlyGRzpX+atMyxpHsDkDq4vvs5dSFd
+         DpSKA1w1eZp65ZgO1EoYZeBLR/uW/5VeLy7HWY2C3QbEAqSDXFBOUc1Qr9UyAwncvBqQ
+         mz3jO/4iLgxJG1tYUWZnn2UNX5AqlsDVVkRTqsaLJAnYfWNQFNFv3NiE2QfqQhB/AJ4y
+         LGYO7DZwvAwQFzrW1UiePicJZ+PqcqTzpBw5Gp37S077MHSCHggq+fjSZIhNvPIIKTcK
+         GKY+flY9F2USQoP3IYIPy92bu66weEk6eic2RNg8NNMUB+deUFEYLi5Gf2iIGft7HyLm
+         JVLA==
+X-Gm-Message-State: AOJu0YwZgGfH4eIOD9UxmHKERQjfRQth7JTL/YatOy6i/TUW4XXZJZ2f
+	cjG/06VtSPIr1sOl1jvWnayGm6owf68DBv4aXbBkcBBx3aubHg==
+X-Google-Smtp-Source: AGHT+IFllPwq6OJ8Xd0I+qaIjGFQM4RouOyYI1ca4ErttUDnNjEl1Xtae7POWHRKYrjiJaT1MHzoS7PGc69em1z1+cg=
+X-Received: by 2002:a05:6512:400a:b0:50e:ad63:1650 with SMTP id
+ br10-20020a056512400a00b0050ead631650mr1793927lfb.97.1704741596317; Mon, 08
+ Jan 2024 11:19:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+From: Dan Shelton <dan.f.shelton@gmail.com>
+Date: Mon, 8 Jan 2024 20:19:30 +0100
+Message-ID: <CAAvCNcBiCxdC+zyr1JRRrzBff9eBGpT5Zmfe2nU3dr_8Vgf8JA@mail.gmail.com>
+Subject: Mailing list for nfs4j, simple-nfs, and simple-nfs crash as plain user?
+To: kofemann@gmail.com, Linux NFS Mailing List <linux-nfs@vger.kernel.org>, 
+	ms-nfs41-client-devel@lists.sourceforge.net
+Content-Type: text/plain; charset="UTF-8"
 
-On 8 Jan 2024, at 13:55, Dan Shelton wrote:
+Hello, is there a nfs4j/simple-nfs mailing list, where I can ask questions?
 
-> On Mon, 8 Jan 2024 at 16:56, Benjamin Coddington <bcodding@redhat.com> wrote:
->>
->> On 7 Jan 2024, at 10:24, Dan Shelton wrote:
->>
->>> Hello!
->>>
->>> The ms-nfs41-client brings up a message about "persistent session" -
->>> what is that?
->>
->> Hi Dan,
->>
->> See: https://www.rfc-editor.org/rfc/rfc8881.html#section-2.10.6.5
->>
->
-> Do the Linux or Solaris nfsd implement this? How can I turn this on or off?
+I cannot get the simple-nfs server to run as a plain user (not root).
+I tried this, but I get a java exception:
 
-The linux server does not, and I'm not sure about the Solaris server (but I
-don't think that it does..)
+$ cat exports
+/ *(rw,insecure,all_squash)
+$ java -jar ./target/simple-nfs-1.0-SNAPSHOT-jar-with-dependencies.jar
+-root / -port 30000 -exports $PWD/exports
+Exception in thread "main" java.io.UncheckedIOException:
+java.nio.file.AccessDeniedException: /lost+found
+       at org.dcache.simplenfs.SimpleNfsServer.<init>(SimpleNfsServer.java:77)
+       at org.dcache.simplenfs.App.run(App.java:55)
+       at org.dcache.simplenfs.App.main(App.java:27)
+Caused by: java.nio.file.AccessDeniedException: /lost+found
+       at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:90)
+       at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106)
+       at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111)
+       at java.base/sun.nio.fs.UnixFileSystemProvider.newDirectoryStream(UnixFileSystemProvider.java:440)
+       at java.base/java.nio.file.Files.newDirectoryStream(Files.java:482)
+       at java.base/java.nio.file.FileTreeWalker.visit(FileTreeWalker.java:301)
+       at java.base/java.nio.file.FileTreeWalker.next(FileTreeWalker.java:374)
+       at java.base/java.nio.file.Files.walkFileTree(Files.java:2845)
+       at java.base/java.nio.file.Files.walkFileTree(Files.java:2882)
+       at org.dcache.simplenfs.LocalFileSystem.<init>(LocalFileSystem.java:149)
+       at org.dcache.simplenfs.SimpleNfsServer.<init>(SimpleNfsServer.java:52)
+       ... 2 more
 
-Ben
+Please help
 
+Dan
+-- 
+Dan Shelton - Cluster Specialist Win/Lin/Bsd
 
