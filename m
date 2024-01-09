@@ -1,121 +1,91 @@
-Return-Path: <linux-nfs+bounces-988-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-990-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8AEF8284DB
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jan 2024 12:23:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 67FE68286D9
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jan 2024 14:09:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF42A1C23F8B
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jan 2024 11:23:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E1CA1C23FD2
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Jan 2024 13:09:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3363D3716D;
-	Tue,  9 Jan 2024 11:21:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YvZbyNVG"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0759E38F84;
+	Tue,  9 Jan 2024 13:09:20 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B677539AFF
-	for <linux-nfs@vger.kernel.org>; Tue,  9 Jan 2024 11:21:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1704799267;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lTmcWwAowP4sGHH2dBxkB2CC/aMCkpFsy2ZSyWuDsbM=;
-	b=YvZbyNVGKCzBwREJ/gGaI1jtmaquzUVmRYzEyfvy6M0NW2uLfXJY/JhqVe4s8AkIX9TDAC
-	DtHkRl20h9AXGky/w6HJU2qKs69wwAwdY06ATKYuC90jROOH0gKBm6kOMmShBajZeYsvx3
-	GUyo1al2ABOC6h4VFQjuGlwROtXQgco=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-625-9U04wNMdOJy50uoFoYMuDQ-1; Tue, 09 Jan 2024 06:21:03 -0500
-X-MC-Unique: 9U04wNMdOJy50uoFoYMuDQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DD86385A588;
-	Tue,  9 Jan 2024 11:21:00 +0000 (UTC)
-Received: from warthog.procyon.org.com (unknown [10.42.28.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id E0990C15E6C;
-	Tue,  9 Jan 2024 11:20:57 +0000 (UTC)
-From: David Howells <dhowells@redhat.com>
-To: Christian Brauner <christian@brauner.io>,
-	Jeff Layton <jlayton@kernel.org>,
-	Gao Xiang <hsiangkao@linux.alibaba.com>,
-	Dominique Martinet <asmadeus@codewreck.org>
-Cc: David Howells <dhowells@redhat.com>,
-	Steve French <smfrench@gmail.com>,
-	Matthew Wilcox <willy@infradead.org>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Paulo Alcantara <pc@manguebit.com>,
-	Shyam Prasad N <sprasad@microsoft.com>,
-	Tom Talpey <tom@talpey.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Ilya Dryomov <idryomov@gmail.com>,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH 6/6] netfs: Fix wrong #ifdef hiding wait
-Date: Tue,  9 Jan 2024 11:20:23 +0000
-Message-ID: <20240109112029.1572463-7-dhowells@redhat.com>
-In-Reply-To: <20240109112029.1572463-1-dhowells@redhat.com>
-References: <20240109112029.1572463-1-dhowells@redhat.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDB238DE9;
+	Tue,  9 Jan 2024 13:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=27;SR=0;TI=SMTPD_---0W-IeJTb_1704805422;
+Received: from 192.168.33.9(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W-IeJTb_1704805422)
+          by smtp.aliyun-inc.com;
+          Tue, 09 Jan 2024 21:03:44 +0800
+Message-ID: <cab7415b-3c5b-49ea-86c2-bdd0aee3c4b9@linux.alibaba.com>
+Date: Tue, 9 Jan 2024 21:03:39 +0800
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] cachefiles: Fix signed/unsigned mixup
+To: David Howells <dhowells@redhat.com>,
+ Christian Brauner <christian@brauner.io>, Jeff Layton <jlayton@kernel.org>,
+ Dominique Martinet <asmadeus@codewreck.org>
+Cc: Steve French <smfrench@gmail.com>, Matthew Wilcox <willy@infradead.org>,
+ Marc Dionne <marc.dionne@auristor.com>, Paulo Alcantara <pc@manguebit.com>,
+ Shyam Prasad N <sprasad@microsoft.com>, Tom Talpey <tom@talpey.com>,
+ Eric Van Hensbergen <ericvh@kernel.org>, Ilya Dryomov <idryomov@gmail.com>,
+ linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Simon Horman <horms@kernel.org>, kernel test robot <lkp@intel.com>,
+ Yiqun Leng <yqleng@linux.alibaba.com>, Jia Zhu <zhujia.zj@bytedance.com>
+References: <20240109112029.1572463-1-dhowells@redhat.com>
+ <20240109112029.1572463-6-dhowells@redhat.com>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <20240109112029.1572463-6-dhowells@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-netfs_writepages_begin() has the wait on the fscache folio conditional on
-CONFIG_NETFS_FSCACHE - which doesn't exist.
 
-Fix it to be conditional on CONFIG_FSCACHE instead.
 
-Fixes: 62c3b7481b9a ("netfs: Provide a writepages implementation")
-Reported-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: linux-afs@lists.infradead.org
-cc: linux-cachefs@redhat.com
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
-Link: https://lore.kernel.org/r/20240109083257.GK132648@kernel.org/
----
- fs/netfs/buffered_write.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2024/1/9 19:20, David Howells wrote:
+> In __cachefiles_prepare_write(), the start and pos variables were made
+> unsigned 64-bit so that the casts in the checking could be got rid of -
+> which should be fine since absolute file offsets can't be negative, except
+> that an error code may be obtained from vfs_llseek(), which *would* be
+> negative.  This breaks the error check.
+> 
+> Fix this for now by reverting pos and start to be signed and putting back
+> the casts.  Unfortunately, the error value checks cannot be replaced with
+> IS_ERR_VALUE() as long might be 32-bits.
+> 
+> Fixes: 7097c96411d2 ("cachefiles: Fix __cachefiles_prepare_write()")
+> Reported-by: Simon Horman <horms@kernel.org>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202401071152.DbKqMQMu-lkp@intel.com/
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> Reviewed-by: Simon Horman <horms@kernel.org>
+> cc: Gao Xiang <hsiangkao@linux.alibaba.com>
+> cc: Yiqun Leng <yqleng@linux.alibaba.com>
+> cc: Jia Zhu <zhujia.zj@bytedance.com>
+> cc: Jeff Layton <jlayton@kernel.org>
+> cc: linux-cachefs@redhat.com
+> cc: linux-erofs@lists.ozlabs.org
+> cc: linux-fsdevel@vger.kernel.org
+> cc: linux-mm@kvack.org
 
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index 0b2b7a60dabc..de517ca70d91 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -1076,7 +1076,7 @@ static ssize_t netfs_writepages_begin(struct address_space *mapping,
- 		folio_unlock(folio);
- 		if (wbc->sync_mode != WB_SYNC_NONE) {
- 			folio_wait_writeback(folio);
--#ifdef CONFIG_NETFS_FSCACHE
-+#ifdef CONFIG_FSCACHE
- 			folio_wait_fscache(folio);
- #endif
- 			goto lock_again;
+It looks good to me,
+Reviewed-by: Gao Xiang <hsiangkao@linux.alibaba.com>
 
+Thanks,
+Gao Xiang
 
