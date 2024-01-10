@@ -1,159 +1,208 @@
-Return-Path: <linux-nfs+bounces-1015-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1016-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8F46829F22
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 18:27:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23E62829F3A
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 18:31:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 78AB5B269BA
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 17:27:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABC8A280478
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 17:31:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BEE44CE12;
-	Wed, 10 Jan 2024 17:26:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E9924CDF5;
+	Wed, 10 Jan 2024 17:31:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tjpB/g51"
+	dkim=pass (1024-bit key) header.d=hammerspace.com header.i=@hammerspace.com header.b="CKl6DBCf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2117.outbound.protection.outlook.com [40.107.92.117])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570664878C;
-	Wed, 10 Jan 2024 17:26:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69ED4C433C7;
-	Wed, 10 Jan 2024 17:26:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704907596;
-	bh=QMGJZMrRVxICP+uKYUPtT4P1yoHENZL0s+rGCiJmW3Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tjpB/g51rbsbs9nZz9c0Ggj02IvXh01O5jbawQH/+8tlARdLBOmFjDShZ/dkcV9HR
-	 dMOdFkkUXjHZ4v1z49AZOly6WMxuTlU1EV83bamu/qo5hyMc2ggDhlz8td0LkcVcUB
-	 Q0AbJUk63MQ3sAow8ZTTDc413HTMfWM5nKoCbNb0aC86WE717Q6uQGF2Jew+L1T5PR
-	 1xyNIBjb9ZLGP4tKpFiPqEcx7QlCz7tX/Cv3v2YbKCmYfH9RZIUkuqUq4iMhzbD54+
-	 HmTvQmttPfPssuIAvyd13xc/WXTGcuBYnw/a5mryWEx5+7UhyDsBRaTyitr1TxqbWs
-	 mc37wvvhPoQYw==
-Message-ID: <6aec4d8511ab6b89101a757d56c73598b917a41b.camel@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B67F4CDEA;
+	Wed, 10 Jan 2024 17:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hammerspace.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hammerspace.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BS4dg9qU+sZnIKatK1iKl8hb0bgN5vSkkYeYdKYeud/hgYQ1/3pMSUtGqKP79rAGxX2L9a5I/7zLy/Z+oqa1l6weOQc/Be4wW8qcc3NwXT+UPLaHoEKAIJQivqsNxNnh818Fyw97i0j9CXfZaqtlckA1TBWUcQoVkialeFloEq6uEcav/XJKJ6+COUUcqZE1ok1f2zll8vqf7oK2mJf7xSejohC2qcJ4z5RULVEYgb7KgxhkJtAJC58S47jbP2d8i0aip/GFEFlPApJqpA6jOllepNDCoSQTEmHaZ7NYnxFNpXBBSdQzMWjunAm6/wb4orl6/jyL407ymCxI249GjQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3MBjwcBWtoyvutr3YHK7waCPxRmTVxh3VKvz1ElAalE=;
+ b=Q66sVED3/Sw65CabshMS+vK7hYLW2hU0bkRzrPvcwkb4hmu82Ez+mKeGeMPUEn05IxZQn8B8/WtfMFZTS8ZS1MqM5veY9EKi5cpGOYqncpv2zZ1NcRQd7le1aRX7hgxDOTObN5gAukd7REB0qT5NhlmwVdjZ2GaOpO9Cd4uJjJPdz2niNTq+6NK4QfXNaCwHVNScwepzJJlRSd7n/JK5inMMJoZJYK4n0OhSY3u7I7d17S8g4NJdcZwiWzA8QVyVencT9xUs/OZ9D8xIQ1hGozhKbGTihFIb5hQ2Cf83+BqsettRBhQjcunf9ALCkKkZ0oEIyoYl6O/CGExNJFFU/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3MBjwcBWtoyvutr3YHK7waCPxRmTVxh3VKvz1ElAalE=;
+ b=CKl6DBCfxoo1oRJ0ZpQVjnL1Kua21zT0XTnOfl3sJiX2xr7GtjQfzCukqO4ApOaZS8xWrpZrpOajs2jXXSTM0QF+xnwQnd02XovFRCOrpyQPDeScTHwEHhrq2wP/CM2Z2LpXVpH/3hrFDhV9lo6rl9Nsumac7PNeXB+z4uRu6mU=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by SN7PR13MB6158.namprd13.prod.outlook.com (2603:10b6:806:323::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7159.24; Wed, 10 Jan
+ 2024 17:31:33 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::5003:a508:6b4:4e8a]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::5003:a508:6b4:4e8a%5]) with mapi id 15.20.7181.018; Wed, 10 Jan 2024
+ 17:31:32 +0000
+From: Trond Myklebust <trondmy@hammerspace.com>
+To: "fstests@vger.kernel.org" <fstests@vger.kernel.org>,
+	"linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>, "jlayton@kernel.org"
+	<jlayton@kernel.org>
+CC: "anna@kernel.org" <anna@kernel.org>, "chuck.lever@oracle.com"
+	<chuck.lever@oracle.com>
 Subject: Re: fstests generic/465 failures on NFS
-From: Jeff Layton <jlayton@kernel.org>
-To: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>, fstests
- <fstests@vger.kernel.org>,  Trond Myklebust <trondmy@hammerspace.com>,
- Chuck Lever <chuck.lever@oracle.com>
-Date: Wed, 10 Jan 2024 12:26:35 -0500
-In-Reply-To: <CAFX2Jfk=NtaRo1jO03AxUF+WxVU-vpQ5LiQ2z+LYHbmB36y3=A@mail.gmail.com>
+Thread-Topic: fstests generic/465 failures on NFS
+Thread-Index: AQHaQ9GhxhdGkFgHfEyIq9WQCpgbtLDTTg+A
+Date: Wed, 10 Jan 2024 17:31:32 +0000
+Message-ID: <f5f673da8b03413a9087f7a71ae73a66065ef384.camel@hammerspace.com>
 References: <2f7f6d4490ac08013ef78481ff5c7840f41b1bb4.camel@kernel.org>
-	 <CAFX2Jfk=NtaRo1jO03AxUF+WxVU-vpQ5LiQ2z+LYHbmB36y3=A@mail.gmail.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.2 (3.50.2-1.fc39) 
+In-Reply-To: <2f7f6d4490ac08013ef78481ff5c7840f41b1bb4.camel@kernel.org>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|SN7PR13MB6158:EE_
+x-ms-office365-filtering-correlation-id: bf4c8e4d-2e39-4cb6-97bc-08dc1201fce9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ /s9D0/hy1BpQbZ5Bx3TND06JziuCKEe8xNZhDRi91EbcT7h1tVLJ24Xj0WsEJfAljoRtWdQdcxJuheXw3tQ6gIV1TQvUhKg6zAvdmxZY5wdfHKHp47ZkqifM6IQdAjKydfG190HuD0s5gq8J8CIealPasnM456OnO6nQ35dWwLi/QhD+/dVLwvQ42GDF7VQ8MM++PP9FtEbQ7NMPKoQXls7e6cV0NF0j8KKyGwhyjJ4bn/8fzfMEzYNxfleQN4bewIkUpGULxtpui6ccIjBh90U4zNUOBTF5eUvRc23cVBQXfTRbJbTkWtJLNYwJXYi09bxPy7rLh6i7YBsQ+soAlE7iLro5s2Gv+L/U2NkWiDONbZJ1cthexAdoI8P/gL56/iMIrSXtXVGvLRnHjnEo6Q43wFN3F+0jX+yqd8Vf1Ju9AzAibn6XJkWUQPeVQk0LBYrI5v3kmpyINXjOvtDcMC8VXvswEgZlPnEpSLyGa02EVi1RjJmi7cB4nc9CrrCzVXdWPspe1avmiP9CIEtPVK1lLz1Pcb1TqdCaEQMP0qfXAfE9ZKxtc8mP1FFH/7361DutLMfwh6wC0Q581NOYWek2LxPId1s6Yguar+od68telMCqSIroB4ygYqsGt7hLZFK6UT81WgAMpg5isGWTUjeNPEB+cBF26d2dXgp0rUHdweXzN5fwa9RYIiEVsU1J
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(346002)(376002)(39840400004)(136003)(230922051799003)(186009)(1800799012)(64100799003)(451199024)(83380400001)(66946007)(76116006)(41300700001)(86362001)(36756003)(38070700009)(38100700002)(122000001)(5660300002)(6506007)(2616005)(6512007)(6486002)(2906002)(64756008)(110136005)(66556008)(66476007)(66446008)(316002)(54906003)(478600001)(71200400001)(8936002)(4326008)(8676002)(41533002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?THdXNTcwM2wxU0FXV1Y1M0ZHSkQyWHZ2MnVEbS9mVllGZ09FRU1EQkhwWllD?=
+ =?utf-8?B?Q3gyMjVPeDE0RTNSSlprRFk3MlZPa1hZWEVpTmQ5cVpCbVJNNlZadjE1cHZX?=
+ =?utf-8?B?em85VTh4ajhhOENEZnkvTjVTLzRrSHFCYTBKa25zbTZxcjZIanlyMHdsUEVq?=
+ =?utf-8?B?Y29uRXJZYTJzNWtOTmNQZmlmMDFzOS85N2ZjZ1AyeDN3N25meTFYVjRPQU1Q?=
+ =?utf-8?B?R2dLQU9seHNwWVFJWGFWQmp6VStzc2ZuaWhEM010VlVLbGhTbWQrTW4zWUky?=
+ =?utf-8?B?eEZuYWxTN0lsbU1EdEtOMG1zUk92OXNVdGdpOFhjYzZ5Ty9DMHZmdTd0MExV?=
+ =?utf-8?B?d2YzTGh5MGZYZTA2ZmkyMXFQUkplZ3ZYQWRkbTRXbDNlSDJNUHNFR3o1Nlhl?=
+ =?utf-8?B?amRHTmkwTHgxdDRQcHVXUG00OFhVOGVvNVBpNklrNi96YXZzL1dNVmhHUXBM?=
+ =?utf-8?B?K1VuRE52MjJtanJrRlFZWDF5YlYxWHl6QTU4dmFIRk9VYXVqSUhnWmJkcnpp?=
+ =?utf-8?B?UFFPSFYzSlNQVmhuY0VzblpyNHZ6RHU5T2VWQkRzU3hTZ29BN3RJSnBxTjFi?=
+ =?utf-8?B?Sy9JY25jWDVCTFVDaENNaEkwZHpVMGZmYmMzb1ozb1ZKZzNxNnJWQ3k2cjh3?=
+ =?utf-8?B?TjhXaUJzM3lKN0c5eU0wUFBQcjlMWjRYSXMvL1RNUmljZkRnckorKzFmOXVy?=
+ =?utf-8?B?bXRXajJTTUtjRkQ0TEdGYjZ3WWNiMU8yR0E5T0xDUktTWWhWY0dvYTJVTTRl?=
+ =?utf-8?B?MU13TGtwL2p2S2NpOTk3ZVB6dE1LdWNVTnRlWFIvekpja2dHeXN2NHhjNVRi?=
+ =?utf-8?B?aFRDZE5WKzhiZnlHOTgyOEJVRW9GbVFMTmxxaENnNmdiVUwvSzA3OUE4V1Zi?=
+ =?utf-8?B?eWhxMWswRTBnbkZ2dU0vamYxdDRIN041cHlZRm0wa3hFcENwZ3FDV3M2aTBQ?=
+ =?utf-8?B?NDlJRDBnQlFyODREQ2JmUVFEeHFsR2VBaFpJTmhzREhkQ2wvQmRqVDB0cE53?=
+ =?utf-8?B?SUE0aWRZNDRxSEV6M3JJZjBNQlQrdHRBNjVvZTRJNlJIWVhYTjB2NTZIeG1L?=
+ =?utf-8?B?SlpveXVXTFV6U3N2aHhtRUFKYVJESW8ySkdpTFQ3NXRwZ3VlMjZaeTJlNlBU?=
+ =?utf-8?B?djZaS09SSHJTcS9GV21vdCtDZXkrenV2RGc2czczbmV1S1Mwa0tBbkxrSnNB?=
+ =?utf-8?B?dXNQMldjK2RteUZ0dmZwVlV3Z292dTZFREl0VmdYdmhOMVBTL2xOZ2RqR2RH?=
+ =?utf-8?B?Z21ZM2crNk5oVlNEZTRaV2U5WW9WS3BndHJHajZ5TzgxMk9uM0F6RnNsUEly?=
+ =?utf-8?B?OGFoS3plU1BMNDdVbUhUMmhNMExMWDZqQzJQWkNOMElmaFFsS21RZHhodVor?=
+ =?utf-8?B?eVVXR0ZBdDloZEhISHRhZURrZVJNUDhaUURobVYyUE1LMXV3Q2ZuWXZCU1RI?=
+ =?utf-8?B?LzhmblVMdWYvenR2c1ZtYkZ6TkNhQlZMZ0tuS3hwbU5tT3Jpc1ZoelhMR1VT?=
+ =?utf-8?B?QkN0NllzUnFQeWI1ZlV5RXNPZzUxckJKZ1BKWWVpMkd6UWlnWS9BbVNuQUk0?=
+ =?utf-8?B?MjVWaW52V1dyNk9EVStBYjVjM0dma3pnQ092QTlaeUtCdjZIRUZINTg2VFpo?=
+ =?utf-8?B?NHRXamV1RXhqdlJKNUd2NlpodkdBUnphZ0xsUFpmOCtpK1RscCszc0pEYXlu?=
+ =?utf-8?B?L0FKNEVRdHBoL0VPaE1oSkE0Z1ZEdks2WkhKMDhITThHTkJjWlM4YjZRRjhI?=
+ =?utf-8?B?WElBUnFhYWpUemc5WmliUXJ6RDR3Y0JuZ1IranJsdXNrTzQxLzYycWUrVGNa?=
+ =?utf-8?B?YlFybUhSekExUjlKR0J4SXRFSXJJaEJ6Umk3RGFabmgrWmNlcy9jSGh1YzJk?=
+ =?utf-8?B?WFVEUmVBODBGS2ZVNjQ4V1N6OUJOQkFMY3RkMEhUSjVjZmxPVm5uYzZwYkVL?=
+ =?utf-8?B?cGRNSU9FcnhFUUtYVFZiTTdONnZxcFloMVFqV05UVFhsV0QxemhkYzFvcnNj?=
+ =?utf-8?B?Q0lmSVp1bW1ZWlN0QUtYdENXQ0l5SjQ3bzFmRnc0UjJiWU9OYUQ5SXk3OUhH?=
+ =?utf-8?B?a2hVUktyWWl0QlAzbGV1eHVTZzdPQlRTV29FTGQycDF6bWZjRUZWV0pYaVNy?=
+ =?utf-8?B?Z0VTNlBDQ2I4QkhpUjl1MHdreDh0TXdqcExWU0RtRkhpbWtDbEZzdi9rRHc1?=
+ =?utf-8?B?Q05GQm9vZmw1SUx1OTkvMXZwdVlRTTdzTm5xNVUrbStpaWVLUEpPSUdHWjBo?=
+ =?utf-8?B?YTVXZjQvOFQrazVJYWdhRHIzUUZRPT0=?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <2F94044E55D8664E8E6A53ACD1D2F1DC@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf4c8e4d-2e39-4cb6-97bc-08dc1201fce9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jan 2024 17:31:32.6917
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: EsNN2oAmB27m+rvkrp8DHBcozSBXPeq79hiZ6Ht5K5Kf6ulT9BGIM6BVdAtYMONoUR2wnOhDBPtnf0i1/D2XqQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR13MB6158
 
-On Wed, 2024-01-10 at 11:03 -0500, Anna Schumaker wrote:
-> Hi Jeff,
->=20
-> On Wed, Jan 10, 2024 at 9:30=E2=80=AFAM Jeff Layton <jlayton@kernel.org> =
-wrote:
-> >=20
-> > I've been seeing some failures of generic/465 across all NFS versions
-> > for a long time. I finally had some time to track down the cause, but
-> > I'm not quite sure whether it's fixable.
-> >=20
-> > The test failures usually look like this (though often at a random
-> > offset):
-> >=20
-> > SECTION       -- default
-> > FSTYP         -- nfs
-> > PLATFORM      -- Linux/x86_64 kdevops-nfs-default 6.7.0-g2f76af849100 #=
-80 SMP PREEMPT_DYNAMIC Wed Jan 10 06:33:59 EST 2024
-> > MKFS_OPTIONS  -- kdevops-nfsd:/export/kdevops-nfs-default-fstests-s
-> > MOUNT_OPTIONS -- -o context=3Dsystem_u:object_r:root_t:s0 kdevops-nfsd:=
-/export/kdevops-nfs-default-fstests-s /media/scratch
-> >=20
-> > generic/465 8s ... - output mismatch (see /data/fstests-install/xfstest=
-s/results/kdevops-nfs-default/6.7.0-g2f76af849100/default/generic/465.out.b=
-ad)
-> >     --- tests/generic/465.out   2024-01-10 06:39:53.500389434 -0500
-> >     +++ /data/fstests-install/xfstests/results/kdevops-nfs-default/6.7.=
-0-g2f76af849100/default/generic/465.out.bad      2024-01-10 08:57:00.536146=
-701 -0500
-> >     @@ -1,3 +1,4 @@
-> >      QA output created by 465
-> >      non-aio dio test
-> >     +encounter an error: block 117 offset 0, content 0
->=20
-> Looking through my test history, I have this one mostly passing but
-> with the occasional failure that looks like this.
->=20
-> >      aio-dio test
-> >     ...
-> >     (Run 'diff -u /data/fstests-install/xfstests/tests/generic/465.out =
-/data/fstests-install/xfstests/results/kdevops-nfs-default/6.7.0-g2f76af849=
-100/default/generic/465.out.bad'  to see the entire diff)
-> > Ran: generic/465
-> > Failures: generic/465
-> > Failed 1 of 1 tests
-> >=20
-> > The test kicks off a thread that tries to read the file using DIO while
-> > the parent task writes 1M blocks of 'a' to it sequentially using DIO. I=
-t
-> > expects that the reader will always see 'a' in the read result, or a
-> > short read. In the above case, it got back a read with '\0' in it.
-> >=20
-> > The blocks in this test are 1M, so this block starts at offset
-> > 122683392. Looking at a capture, I caught this:
-> >=20
-> > 65161  40.392338 192.168.122.173 =E2=86=92 192.168.122.227 NFS 3702 V4 =
-Call WRITE StateID: 0x9e68 Offset: 123207680 Len: 524288 ; V4 Call READ_PLU=
-S StateID: 0x9e68 Offset: 122683392 Len: 524288  ; V4 Call READ_PLUS StateI=
-D: 0x9e68 Offset: 123207680 Len: 524288
-> > 65171  40.393230 192.168.122.173 =E2=86=92 192.168.122.227 NFS 3286 V4 =
-Call WRITE StateID: 0x9e68 Offset: 122683392 Len: 524288
-> > 65172  40.393401 192.168.122.227 =E2=86=92 192.168.122.173 NFS 182 V4 R=
-eply (Call In 65161) WRITE
-> > 65181  40.394844 192.168.122.227 =E2=86=92 192.168.122.173 NFS 6794 V4 =
-Reply (Call In 65161) READ_PLUS
-> > 65195  40.395506 192.168.122.227 =E2=86=92 192.168.122.173 NFS 6794 V4 =
-Reply (Call In 65161) READ_PLUS
-> >=20
-> > It looks like the DIO writes got reordered here so the size of the file
-> > probably increased briefly before the second write got processed, and
-> > the read_plus got processed in between the two.
-> >=20
-> > While we might be able to force the client to send the WRITEs in order
-> > of increasing offset in this situation, the server is under no
-> > obligation to process concurrent RPCs in any particular order. I don't
-> > think this is fundamentally fixable due to that.
-> >=20
-> > Am I wrong? If not, then I'll plan to send an fstests patch to skip thi=
-s
-> > test on NFS.
->=20
-> I'm cool with this one being skipped. I'm assuming it passing in my
-> setup is mostly accidental, which means it's not a very useful test.
->=20
-
-That's my thinking too. It mostly passes, but occasionally the DIO reads
-and writes race and things fail. We probably could fix this if we were
-willing to serialize DIO reads vs. writes, but I think that would be too
-costly.
-
-I'll spin up a patch for xfstests sometime soon.
-
-Thanks!
---=20
-Jeff Layton <jlayton@kernel.org>
+T24gV2VkLCAyMDI0LTAxLTEwIGF0IDA5OjMwIC0wNTAwLCBKZWZmIExheXRvbiB3cm90ZToNCj4g
+SSd2ZSBiZWVuIHNlZWluZyBzb21lIGZhaWx1cmVzIG9mIGdlbmVyaWMvNDY1IGFjcm9zcyBhbGwg
+TkZTIHZlcnNpb25zDQo+IGZvciBhIGxvbmcgdGltZS4gSSBmaW5hbGx5IGhhZCBzb21lIHRpbWUg
+dG8gdHJhY2sgZG93biB0aGUgY2F1c2UsIGJ1dA0KPiBJJ20gbm90IHF1aXRlIHN1cmUgd2hldGhl
+ciBpdCdzIGZpeGFibGUuDQo+IA0KPiBUaGUgdGVzdCBmYWlsdXJlcyB1c3VhbGx5IGxvb2sgbGlr
+ZSB0aGlzICh0aG91Z2ggb2Z0ZW4gYXQgYSByYW5kb20NCj4gb2Zmc2V0KToNCj4gDQo+IFNFQ1RJ
+T07CoMKgwqDCoMKgwqAgLS0gZGVmYXVsdA0KPiBGU1RZUMKgwqDCoMKgwqDCoMKgwqAgLS0gbmZz
+DQo+IFBMQVRGT1JNwqDCoMKgwqDCoCAtLSBMaW51eC94ODZfNjQga2Rldm9wcy1uZnMtZGVmYXVs
+dCA2LjcuMC1nMmY3NmFmODQ5MTAwDQo+ICM4MCBTTVAgUFJFRU1QVF9EWU5BTUlDIFdlZCBKYW4g
+MTAgMDY6MzM6NTkgRVNUIDIwMjQNCj4gTUtGU19PUFRJT05TwqAgLS0ga2Rldm9wcy1uZnNkOi9l
+eHBvcnQva2Rldm9wcy1uZnMtZGVmYXVsdC1mc3Rlc3RzLXMNCj4gTU9VTlRfT1BUSU9OUyAtLSAt
+byBjb250ZXh0PXN5c3RlbV91Om9iamVjdF9yOnJvb3RfdDpzMCBrZGV2b3BzLQ0KPiBuZnNkOi9l
+eHBvcnQva2Rldm9wcy1uZnMtZGVmYXVsdC1mc3Rlc3RzLXMgL21lZGlhL3NjcmF0Y2gNCj4gDQo+
+IGdlbmVyaWMvNDY1IDhzIC4uLiAtIG91dHB1dCBtaXNtYXRjaCAoc2VlIC9kYXRhL2ZzdGVzdHMt
+DQo+IGluc3RhbGwveGZzdGVzdHMvcmVzdWx0cy9rZGV2b3BzLW5mcy1kZWZhdWx0LzYuNy4wLQ0K
+PiBnMmY3NmFmODQ5MTAwL2RlZmF1bHQvZ2VuZXJpYy80NjUub3V0LmJhZCkNCj4gwqDCoMKgIC0t
+LSB0ZXN0cy9nZW5lcmljLzQ2NS5vdXQJMjAyNC0wMS0xMCAwNjozOTo1My41MDAzODk0MzQgLTA1
+MDANCj4gwqDCoMKgICsrKyAvZGF0YS9mc3Rlc3RzLWluc3RhbGwveGZzdGVzdHMvcmVzdWx0cy9r
+ZGV2b3BzLW5mcy0NCj4gZGVmYXVsdC82LjcuMC1nMmY3NmFmODQ5MTAwL2RlZmF1bHQvZ2VuZXJp
+Yy80NjUub3V0LmJhZAkyMDI0LTAxLTEwDQo+IDA4OjU3OjAwLjUzNjE0NjcwMSAtMDUwMA0KPiDC
+oMKgwqAgQEAgLTEsMyArMSw0IEBADQo+IMKgwqDCoMKgIFFBIG91dHB1dCBjcmVhdGVkIGJ5IDQ2
+NQ0KPiDCoMKgwqDCoCBub24tYWlvIGRpbyB0ZXN0DQo+IMKgwqDCoCArZW5jb3VudGVyIGFuIGVy
+cm9yOiBibG9jayAxMTcgb2Zmc2V0IDAsIGNvbnRlbnQgMA0KPiDCoMKgwqDCoCBhaW8tZGlvIHRl
+c3QNCj4gwqDCoMKgIC4uLg0KPiDCoMKgwqAgKFJ1biAnZGlmZiAtdSAvZGF0YS9mc3Rlc3RzLQ0K
+PiBpbnN0YWxsL3hmc3Rlc3RzL3Rlc3RzL2dlbmVyaWMvNDY1Lm91dCAvZGF0YS9mc3Rlc3RzLQ0K
+PiBpbnN0YWxsL3hmc3Rlc3RzL3Jlc3VsdHMva2Rldm9wcy1uZnMtZGVmYXVsdC82LjcuMC0NCj4g
+ZzJmNzZhZjg0OTEwMC9kZWZhdWx0L2dlbmVyaWMvNDY1Lm91dC5iYWQnwqAgdG8gc2VlIHRoZSBl
+bnRpcmUgZGlmZikNCj4gUmFuOiBnZW5lcmljLzQ2NQ0KPiBGYWlsdXJlczogZ2VuZXJpYy80NjUN
+Cj4gRmFpbGVkIDEgb2YgMSB0ZXN0cw0KPiANCj4gVGhlIHRlc3Qga2lja3Mgb2ZmIGEgdGhyZWFk
+IHRoYXQgdHJpZXMgdG8gcmVhZCB0aGUgZmlsZSB1c2luZyBESU8NCj4gd2hpbGUNCj4gdGhlIHBh
+cmVudCB0YXNrIHdyaXRlcyAxTSBibG9ja3Mgb2YgJ2EnIHRvIGl0IHNlcXVlbnRpYWxseSB1c2lu
+ZyBESU8uDQo+IEl0DQo+IGV4cGVjdHMgdGhhdCB0aGUgcmVhZGVyIHdpbGwgYWx3YXlzIHNlZSAn
+YScgaW4gdGhlIHJlYWQgcmVzdWx0LCBvciBhDQo+IHNob3J0IHJlYWQuIEluIHRoZSBhYm92ZSBj
+YXNlLCBpdCBnb3QgYmFjayBhIHJlYWQgd2l0aCAnXDAnIGluIGl0Lg0KPiANCj4gVGhlIGJsb2Nr
+cyBpbiB0aGlzIHRlc3QgYXJlIDFNLCBzbyB0aGlzIGJsb2NrIHN0YXJ0cyBhdCBvZmZzZXQNCj4g
+MTIyNjgzMzkyLiBMb29raW5nIGF0IGEgY2FwdHVyZSwgSSBjYXVnaHQgdGhpczoNCj4gDQo+IDY1
+MTYxwqAgNDAuMzkyMzM4IDE5Mi4xNjguMTIyLjE3MyDihpIgMTkyLjE2OC4xMjIuMjI3IE5GUyAz
+NzAyIFY0IENhbGwNCj4gV1JJVEUgU3RhdGVJRDogMHg5ZTY4IE9mZnNldDogMTIzMjA3NjgwIExl
+bjogNTI0Mjg4IDsgVjQgQ2FsbA0KPiBSRUFEX1BMVVMgU3RhdGVJRDogMHg5ZTY4IE9mZnNldDog
+MTIyNjgzMzkyIExlbjogNTI0Mjg4wqAgOyBWNCBDYWxsDQo+IFJFQURfUExVUyBTdGF0ZUlEOiAw
+eDllNjggT2Zmc2V0OiAxMjMyMDc2ODAgTGVuOiA1MjQyODgNCj4gNjUxNzHCoCA0MC4zOTMyMzAg
+MTkyLjE2OC4xMjIuMTczIOKGkiAxOTIuMTY4LjEyMi4yMjcgTkZTIDMyODYgVjQgQ2FsbA0KPiBX
+UklURSBTdGF0ZUlEOiAweDllNjggT2Zmc2V0OiAxMjI2ODMzOTIgTGVuOiA1MjQyODgNCj4gNjUx
+NzLCoCA0MC4zOTM0MDEgMTkyLjE2OC4xMjIuMjI3IOKGkiAxOTIuMTY4LjEyMi4xNzMgTkZTIDE4
+MiBWNCBSZXBseQ0KPiAoQ2FsbCBJbiA2NTE2MSkgV1JJVEUNCj4gNjUxODHCoCA0MC4zOTQ4NDQg
+MTkyLjE2OC4xMjIuMjI3IOKGkiAxOTIuMTY4LjEyMi4xNzMgTkZTIDY3OTQgVjQgUmVwbHkNCj4g
+KENhbGwgSW4gNjUxNjEpIFJFQURfUExVUw0KPiA2NTE5NcKgIDQwLjM5NTUwNiAxOTIuMTY4LjEy
+Mi4yMjcg4oaSIDE5Mi4xNjguMTIyLjE3MyBORlMgNjc5NCBWNCBSZXBseQ0KPiAoQ2FsbCBJbiA2
+NTE2MSkgUkVBRF9QTFVTDQo+IA0KPiBJdCBsb29rcyBsaWtlIHRoZSBESU8gd3JpdGVzIGdvdCBy
+ZW9yZGVyZWQgaGVyZSBzbyB0aGUgc2l6ZSBvZiB0aGUNCj4gZmlsZQ0KPiBwcm9iYWJseSBpbmNy
+ZWFzZWQgYnJpZWZseSBiZWZvcmUgdGhlIHNlY29uZCB3cml0ZSBnb3QgcHJvY2Vzc2VkLCBhbmQN
+Cj4gdGhlIHJlYWRfcGx1cyBnb3QgcHJvY2Vzc2VkIGluIGJldHdlZW4gdGhlIHR3by4NCj4gDQo+
+IFdoaWxlIHdlIG1pZ2h0IGJlIGFibGUgdG8gZm9yY2UgdGhlIGNsaWVudCB0byBzZW5kIHRoZSBX
+UklURXMgaW4NCj4gb3JkZXINCj4gb2YgaW5jcmVhc2luZyBvZmZzZXQgaW4gdGhpcyBzaXR1YXRp
+b24sIHRoZSBzZXJ2ZXIgaXMgdW5kZXIgbm8NCj4gb2JsaWdhdGlvbiB0byBwcm9jZXNzIGNvbmN1
+cnJlbnQgUlBDcyBpbiBhbnkgcGFydGljdWxhciBvcmRlci4gSQ0KPiBkb24ndA0KPiB0aGluayB0
+aGlzIGlzIGZ1bmRhbWVudGFsbHkgZml4YWJsZSBkdWUgdG8gdGhhdC4NCj4gDQo+IEFtIEkgd3Jv
+bmc/IElmIG5vdCwgdGhlbiBJJ2xsIHBsYW4gdG8gc2VuZCBhbiBmc3Rlc3RzIHBhdGNoIHRvIHNr
+aXANCj4gdGhpcw0KPiB0ZXN0IG9uIE5GUy4NCg0KVGhpcyBpcyBhbiBpc3N1ZSB0aGF0IHdlJ3Zl
+IGtub3duIGFib3V0IGZvciBhIHdoaWxlIG5vdy4gSSByZWd1bGFybHkNCnNlZSB0aGlzIHRlc3Qg
+ZmFpbGluZywgYW5kIGl0IGlzIGluZGVlZCBiZWNhdXNlIHdlIGRvIG5vdCBzZXJpYWxpc2UNCnJl
+YWRzIHZzIHdyaXRlcyBpbiBPX0RJUkVDVC4gVW50aWwgc29tZW9uZSBkZXNjcmliZXMgYW4gYXBw
+bGljYXRpb24NCnRoYXQgcmVsaWVzIG9uIHRoYXQgYmVoYXZpb3VyIHRvLCBJJ2QgcHJlZmVyIHRv
+IGF2b2lkIGhhdmluZyB0byBjYWxsDQppbm9kZV9kaW9fd2FpdChpbm9kZSkgb24gdGhlIG9mZiBj
+aGFuY2UgdGhhdCBzb21lb25lIGlzIGRvaW5nIGFuDQpPX0RJUkVDVCByZWFkIGZyb20gdGhlIHNh
+bWUgc2V0IG9mIGRhdGEgdGhhdCB0aGV5IGFyZSBkb2luZyBhbiBPX0RJUkVDVA0Kd3JpdGUgdG8u
+DQoNCklPVzogSSdkIGJlIGhhcHB5IHRvIHNlZSB1cyBqdXN0IHNraXAgdGhhdCB0ZXN0Lg0KDQot
+LSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJz
+cGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
 
