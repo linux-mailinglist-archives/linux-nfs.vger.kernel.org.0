@@ -1,40 +1,40 @@
-Return-Path: <linux-nfs+bounces-1018-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1019-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 237AE82A03A
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 19:27:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E45282A03B
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 19:27:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C65521F24280
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 18:27:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1FB361F23D8B
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 18:27:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02D0C4D58A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E5874D596;
 	Wed, 10 Jan 2024 18:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bv2uk/5I"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vpdhwpkg"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D94154D580;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 712394D594;
+	Wed, 10 Jan 2024 18:27:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A76A6C433B2;
 	Wed, 10 Jan 2024 18:27:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2B2C43390;
-	Wed, 10 Jan 2024 18:27:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704911258;
-	bh=+SelCmVb8KGUBbLTDiox9JoF5IguEGEVwjz0JhZCWv4=;
+	s=k20201202; t=1704911259;
+	bh=yjPNURAdFYMXbAkFhL7jhpuqM8L0DD+heQFaL9IIg0w=;
 	h=From:Date:Subject:References:In-Reply-To:To:From;
-	b=Bv2uk/5I6WjKA1yBu2Lq9ck0Azh6NtsxYIYO8cmDnLg4WSRr9r/CV2wx4QaEV12mk
-	 KNERQRsAoq6/6jgvqub1nwYvwAJ37u4Ayhufsa4pp3ODFpY/tZnKyITg2wO35PoeUV
-	 PEEusjt1kg/EZ24uJutr1/JWwxo8QGmEEUo0ewbIE7weP5dytBYVKE2FRMyIs75rvq
-	 V6onwOKLaNwtTCb1dFAWCbq29qU+KufY6XqhYhjp5yu/kMXlCWuWLUuIFTSZaht977
-	 JOaewqa0bjDwlsoE8T8+nckLzOPi45mHk+hMmlea3iuemH1SFmv1D80FXqs5cHd7IU
-	 Bklj4kHpOzM7A==
+	b=VpdhwpkgQjweHO4Lid9eDPwYAoJIbXg4J4Yoiruj8HLGHleH+eves7Up4lHIHC2TX
+	 6BwOlbNhcp4UAVCVG5V9FrGI0ka0liuc1zHOYQT2nsRkGwlerC7r9RGNQ/xZBLGu0q
+	 ibqUmtzx+bAbldgWuX6+qPz6/uANPT4KfGqLGiCYXSPmZBmzV+Zzz4EKTK1ttZEdij
+	 H4Yya1s3IESroyGcZaxe61UdwonlaQcrfx7HXHSMmyJkZpH6qP1S6CwkSjbxF4ruo+
+	 4DQAhq9zSg/lNh9O5NDINzrqcwEb3cmim4K5kl0LDP36Eg1tDuVeJ2xC78LKNU1oqM
+	 j0aKvYhrEgaVg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 10 Jan 2024 13:27:27 -0500
-Subject: [PATCH fstests 1/2] generic/465: don't run it on NFS
+Date: Wed, 10 Jan 2024 13:27:28 -0500
+Subject: [PATCH fstests 2/2] generic/732: don't run it on NFS
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -43,7 +43,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240110-fixes-v1-1-69f5ddd95656@kernel.org>
+Message-Id: <20240110-fixes-v1-2-69f5ddd95656@kernel.org>
 References: <20240110-fixes-v1-0-69f5ddd95656@kernel.org>
 In-Reply-To: <20240110-fixes-v1-0-69f5ddd95656@kernel.org>
 To: Anna Schumaker <anna@kernel.org>, 
@@ -52,56 +52,61 @@ To: Anna Schumaker <anna@kernel.org>,
  linux-nfs@vger.kernel.org, fstests@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1169; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=+SelCmVb8KGUBbLTDiox9JoF5IguEGEVwjz0JhZCWv4=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlnuGYCLikuHkgBnkLJRlXkTny9neRBxpM6c2gF
- fT+iEQGq8+JAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZZ7hmAAKCRAADmhBGVaC
- FRqtD/0Ueu8hyqAusMYHOqGN+Ac9GZadZJRaWealXF9uanZZK3bN/5u+6rUZ/uJ/4SlVYCAjNFD
- EMqFFKpPscyMHt9MzF5IfssSpypq7BVK9ZYgLvkf1Wm3HbQtvGZwlq0MsAuvr2VyDpbAJiQ6mhU
- 968kd5waJl/f9SGy9B5mhIb8tAJ55A+vCYPaSgxNFUeWOKjzFA5Nj0Tr6Oe43j6ZWxD6nDYwBrW
- V2nFJlK+nvjAmWS+jOqEA3EPdd79uN3uPrNu9bG4emBeJO6g1Yw6FBh4Orfq18wkPaU9Hx4I1Kh
- tJDsAn2mqikZJgBOTfI1jOHALZjwu0FJ+TLFH8TewgBhsMkmaWCxQTGa7I+cB8+kooWOZTcp8xk
- dzfxe3RpkIbVVOsQz1dnCfb9tTWlXcTLD84/2unEHmuWdscc0A1wwpM/ht3BpuephJ03JIoZJ5h
- IklfDYqwCEGc69UQvXA9IMQODoc/ejE2WyCvsjAbYjv/DOit/KHaoLSHg7hS355xcMA+yOpTzNg
- xnhBxdJdItiMFFr9KUE4lUToEdcKm2QMlv4kSk5vnxql53tn2c91TJs+y0OMhI7K6TJnCe/IaG6
- bz3cYOynbN9RkhHXWhefXtufHR4+NOftIYcRxqC8lTYtqieSAfqemsnvmVoSRLQG57zq5XTp+2Y
- OVFoNFGAHZSL9KA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1483; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=yjPNURAdFYMXbAkFhL7jhpuqM8L0DD+heQFaL9IIg0w=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlnuGYbSfhG3D4B3ZsEKM6HLWTrv4p4pT4ASgrZ
+ WtXzpWIxeiJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZZ7hmAAKCRAADmhBGVaC
+ FcqND/0VXnUWHl8lta/KG7enlULPjoUhLq37ar62Dh82t+DWsi5UPw8HFqUA6O/ZKNX1ttZTyya
+ Tl7AzyPQsaRcDHYUtmrdvwPmKeeqj8KmaO+JwOQoVv4BT5W5SGDfsQoMxCxH440UXvbqlMU9yNQ
+ /MYNOHso80h43QDevBOGsKhYJoasHmYwQ7Ms/xmnaAQ44LD11S9JwCenY2VbqFkYifq4ej/8+bk
+ KPF0HLVZa7/cQKgILjZqYXTfHi0clm5SxHdcIoqkR+cq+CKg+o6SuvxXdMQ9bCqTl3z924YzqL7
+ R8XiYK4jDcEDvVxkXoBbhteD2FitrlsFzdStLDzehy47Ttre+/fGVxZNa1w+M4Kh0wqre541H5O
+ BZ4gecV+6xH92Fw5mDydQWmWq/mAahgz4lkvRORbIjiWqXwRzuF2OA3/Ur5L9cSAHXDk2Yk0ZMy
+ nom0XyBjyOOzqOzTTrioZpdpimQEEAuEpqYZmM/na6e/Bs+hfO3HHFumUQmFX++yEof/TXZZ9sM
+ icUlE/bXroLnx+VEJ0m8nUVKH8fLxwU0ynQ07nBtdQJ2OPKNipzjo5f0GrdhDCWdoaeEkWMJDpI
+ 1XEE0ijnIeun0IyjSmA5u7BJmYDgZM6i4BIC8UQ5hjsSaPuhhiJ5TWUQ1I8ZgJU15TnAKlhJL5l
+ /cS5mc8yCgRMYXA==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-This test kicks off a thread that issues a read against a file, while
-writing to the file in 1M chunks. It expects that the reader will see
-either the written data or a short read.
+This test sets up two independent superblocks with the same backend
+server, and then does RENAMES of the same files in the two servers. This
+is basically trying to simulate the case where two clients are competing
+to rename files in the same directory on the same server.
 
-NFS allows DIO reads and writes to run in parallel. That means that it's
-possible for them to race and the reader to see NULLs in the file if
-things get reordered.
+This test would usually pass vs. an NFSv4 server that doesn't have
+dfdd2630a7398 ("nfsd: fix change_info in NFSv4 RENAME replies"), because
+the client would end up improperly invalidating the dcache for the whole
+dir after most RENAMEs.
 
-Just skip this test on NFS, since we can't guarantee that it will
-reliably pass.
+However, this test doesn't (and shouldn't) pass on NFS, because the
+client has no idea that a rename has happened on the second mount. The
+expected behavior for the NFS client is for it to use the cache timeouts
+in this case, which is what it now does with the above server bug fixed.
 
-Cc: Anna Schumaker <anna@kernel.org>
-Cc: Trond Myklebust <trondmy@hammerspace.com>
-Cc: Chuck Lever <chuck.lever@oracle.com>
-Link: https://lore.kernel.org/linux-nfs/2f7f6d4490ac08013ef78481ff5c7840f41b1bb4.camel@kernel.org/
+Exempt NFS from running this test, since we don't expect it to pass.
+
+Cc: Yongcheng Yang <yoyang@redhat.com>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- tests/generic/465 | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tests/generic/732 | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tests/generic/465 b/tests/generic/465
-index 73fdfb5548af..0745d6a1dd3a 100755
---- a/tests/generic/465
-+++ b/tests/generic/465
-@@ -21,7 +21,7 @@ _cleanup()
- . ./common/filter
+diff --git a/tests/generic/732 b/tests/generic/732
+index 785aac58f361..5b5087d5accd 100755
+--- a/tests/generic/732
++++ b/tests/generic/732
+@@ -22,9 +22,7 @@ _cleanup()
+ }
  
  # real QA test starts here
 -_supported_fs generic
+-[ "$FSTYP" = "nfs" ] && _fixed_by_kernel_commit fdd2630a739819 \
+-	"nfsd: fix change_info in NFSv4 RENAME replies"
 +_supported_fs ^nfs
  
- _require_aiodio aio-dio-append-write-read-race
- _require_test_program "feature"
+ _require_test
+ _require_scratch
 
 -- 
 2.43.0
