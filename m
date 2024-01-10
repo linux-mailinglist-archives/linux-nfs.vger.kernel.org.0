@@ -1,146 +1,104 @@
-Return-Path: <linux-nfs+bounces-1012-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1013-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7C8B829E2C
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 17:03:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 333A2829F0B
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 18:25:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 622D0283CA2
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 16:03:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EAD7C1C22232
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 17:25:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED1744CB24;
-	Wed, 10 Jan 2024 16:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00FE14CE12;
+	Wed, 10 Jan 2024 17:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLfGljyB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZMPgzC1y"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF41E4CB21;
-	Wed, 10 Jan 2024 16:03:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FBC2C43394;
-	Wed, 10 Jan 2024 16:03:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704902628;
-	bh=XjZmS98jemUfSMvfl6MkC5FkeGQg7w5vQFY4Rpydk1Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=fLfGljyBtQZYFpyHBIuZhaSGiSPpIciWk4sNw4l1T8gnH7Rmx0zphATq6vo5O3cwc
-	 kIEXQx8qCq9fdS54e7+u5l3fXvjbHeQRVVj8rALDzgi0yzaxjmuuvJLpXZwCUo5T9e
-	 4K+wgJQvEw44Jqm+HEnsv8TAiKdHbZFnw1sT1QiIsJTgE4YTPc0pwlEVcwLUXxpdUY
-	 LNxy0Zhz/svUff4rrOyfxUNwX1fJmFVcnGW0twRtvB6V46s+xPIvsymdlc6X3imrMQ
-	 O2Y9JyQTeiClUEZ0/co/CSsXNQAgr5woFwv+JTrQ8r2jjbYU8k59vWxKeOYjG4UqDy
-	 vUlkJ+CnuJ2zg==
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-429994e51fdso14914261cf.1;
-        Wed, 10 Jan 2024 08:03:48 -0800 (PST)
-X-Gm-Message-State: AOJu0Yxo602OiKbEzWVeDN9BbpQyPgvHi/CH5Qe9OaCTWbBPkFDotnvu
-	bPrYr8bNtSVm15H/E3i1NFZowI+k0Et+sWdvnVE=
-X-Google-Smtp-Source: AGHT+IHp3rYjErxZB206UIBrQSWufVdxDVAIZBP3yErJAG90R/tEdvjEjmDDOAa3Yb1hVsXO8lcm7OEKhPrTOhlYN/Y=
-X-Received: by 2002:ac8:5aca:0:b0:429:9987:3ac8 with SMTP id
- d10-20020ac85aca000000b0042999873ac8mr1407197qtd.47.1704902627500; Wed, 10
- Jan 2024 08:03:47 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFAA4EB4B
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Jan 2024 17:23:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704907421;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jocqRgtMadaCQwvnSiqn2EsI9KXVShv2lHTrjFxLh1M=;
+	b=ZMPgzC1yoWQKf4MH7RO2J0gvt/Zy+L63UJoALDp6+UdzHBD1jSGTkKovCnFQVVUS7LmHWq
+	0VcmGgC3nJzZ9z3uhL9UQNezl3Kw+XV0wJe7KlcOlzzChmZegofYkgMrLGKBvktj5dnz4a
+	1AW5Xbt7KZus0EQA1JlDWLaRgjNUmew=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-460-cbBMg0BXOm21eCxa6xC7xg-1; Wed, 10 Jan 2024 12:23:38 -0500
+X-MC-Unique: cbBMg0BXOm21eCxa6xC7xg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C547688CC43;
+	Wed, 10 Jan 2024 17:23:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 914741C060AF;
+	Wed, 10 Jan 2024 17:23:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ZZ56MMinZLrmF9Z+@xpf.sh.intel.com>
+References: <ZZ56MMinZLrmF9Z+@xpf.sh.intel.com> <ZZ4fyY4r3rqgZL+4@xpf.sh.intel.com> <CAHk-=wgJz36ZE66_8gXjP_TofkkugXBZEpTr_Dtc_JANsH1SEw@mail.gmail.com> <1843374.1703172614@warthog.procyon.org.uk> <20231223172858.GI201037@kernel.org> <2592945.1703376169@warthog.procyon.org.uk> <1694631.1704881668@warthog.procyon.org.uk>
+To: Pengfei Xu <pengfei.xu@intel.com>
+Cc: dhowells@redhat.com, eadavis@qq.com,
+    Linus Torvalds <torvalds@linux-foundation.org>,
+    "Simon
+ Horman" <horms@kernel.org>,
+    Markus Suvanto <markus.suvanto@gmail.com>,
+    "Jeffrey E Altman" <jaltman@auristor.com>,
+    Marc Dionne <marc.dionne@auristor.com>,
+    "Wang Lei" <wang840925@gmail.com>, Jeff Layton <jlayton@redhat.com>,
+    Steve French <smfrench@gmail.com>,
+    Jarkko Sakkinen <jarkko@kernel.org>,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>, linux-afs@lists.infradead.org,
+    keyrings@vger.kernel.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    netdev@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+    linux-kernel@vger.kernel.org, heng.su@intel.com
+Subject: Re: [PATCH] keys, dns: Fix missing size check of V1 server-list header
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2f7f6d4490ac08013ef78481ff5c7840f41b1bb4.camel@kernel.org>
-In-Reply-To: <2f7f6d4490ac08013ef78481ff5c7840f41b1bb4.camel@kernel.org>
-From: Anna Schumaker <anna@kernel.org>
-Date: Wed, 10 Jan 2024 11:03:31 -0500
-X-Gmail-Original-Message-ID: <CAFX2Jfk=NtaRo1jO03AxUF+WxVU-vpQ5LiQ2z+LYHbmB36y3=A@mail.gmail.com>
-Message-ID: <CAFX2Jfk=NtaRo1jO03AxUF+WxVU-vpQ5LiQ2z+LYHbmB36y3=A@mail.gmail.com>
-Subject: Re: fstests generic/465 failures on NFS
-To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs <linux-nfs@vger.kernel.org>, fstests <fstests@vger.kernel.org>, 
-	Trond Myklebust <trondmy@hammerspace.com>, Chuck Lever <chuck.lever@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1784440.1704907412.1@warthog.procyon.org.uk>
+Date: Wed, 10 Jan 2024 17:23:32 +0000
+Message-ID: <1784441.1704907412@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
 
-Hi Jeff,
+Meh.  Does the attached fix it for you?
 
-On Wed, Jan 10, 2024 at 9:30=E2=80=AFAM Jeff Layton <jlayton@kernel.org> wr=
-ote:
->
-> I've been seeing some failures of generic/465 across all NFS versions
-> for a long time. I finally had some time to track down the cause, but
-> I'm not quite sure whether it's fixable.
->
-> The test failures usually look like this (though often at a random
-> offset):
->
-> SECTION       -- default
-> FSTYP         -- nfs
-> PLATFORM      -- Linux/x86_64 kdevops-nfs-default 6.7.0-g2f76af849100 #80=
- SMP PREEMPT_DYNAMIC Wed Jan 10 06:33:59 EST 2024
-> MKFS_OPTIONS  -- kdevops-nfsd:/export/kdevops-nfs-default-fstests-s
-> MOUNT_OPTIONS -- -o context=3Dsystem_u:object_r:root_t:s0 kdevops-nfsd:/e=
-xport/kdevops-nfs-default-fstests-s /media/scratch
->
-> generic/465 8s ... - output mismatch (see /data/fstests-install/xfstests/=
-results/kdevops-nfs-default/6.7.0-g2f76af849100/default/generic/465.out.bad=
-)
->     --- tests/generic/465.out   2024-01-10 06:39:53.500389434 -0500
->     +++ /data/fstests-install/xfstests/results/kdevops-nfs-default/6.7.0-=
-g2f76af849100/default/generic/465.out.bad      2024-01-10 08:57:00.53614670=
-1 -0500
->     @@ -1,3 +1,4 @@
->      QA output created by 465
->      non-aio dio test
->     +encounter an error: block 117 offset 0, content 0
+David
+---
+diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+index f18ca02aa95a..c42ddd85ff1f 100644
+--- a/net/dns_resolver/dns_key.c
++++ b/net/dns_resolver/dns_key.c
+@@ -104,7 +104,7 @@ dns_resolver_preparse(struct key_preparsed_payload *prep)
+ 		const struct dns_server_list_v1_header *v1;
+ 
+ 		/* It may be a server list. */
+-		if (datalen <= sizeof(*v1))
++		if (datalen < sizeof(*v1))
+ 			return -EINVAL;
+ 
+ 		v1 = (const struct dns_server_list_v1_header *)data;
 
-Looking through my test history, I have this one mostly passing but
-with the occasional failure that looks like this.
-
->      aio-dio test
->     ...
->     (Run 'diff -u /data/fstests-install/xfstests/tests/generic/465.out /d=
-ata/fstests-install/xfstests/results/kdevops-nfs-default/6.7.0-g2f76af84910=
-0/default/generic/465.out.bad'  to see the entire diff)
-> Ran: generic/465
-> Failures: generic/465
-> Failed 1 of 1 tests
->
-> The test kicks off a thread that tries to read the file using DIO while
-> the parent task writes 1M blocks of 'a' to it sequentially using DIO. It
-> expects that the reader will always see 'a' in the read result, or a
-> short read. In the above case, it got back a read with '\0' in it.
->
-> The blocks in this test are 1M, so this block starts at offset
-> 122683392. Looking at a capture, I caught this:
->
-> 65161  40.392338 192.168.122.173 =E2=86=92 192.168.122.227 NFS 3702 V4 Ca=
-ll WRITE StateID: 0x9e68 Offset: 123207680 Len: 524288 ; V4 Call READ_PLUS =
-StateID: 0x9e68 Offset: 122683392 Len: 524288  ; V4 Call READ_PLUS StateID:=
- 0x9e68 Offset: 123207680 Len: 524288
-> 65171  40.393230 192.168.122.173 =E2=86=92 192.168.122.227 NFS 3286 V4 Ca=
-ll WRITE StateID: 0x9e68 Offset: 122683392 Len: 524288
-> 65172  40.393401 192.168.122.227 =E2=86=92 192.168.122.173 NFS 182 V4 Rep=
-ly (Call In 65161) WRITE
-> 65181  40.394844 192.168.122.227 =E2=86=92 192.168.122.173 NFS 6794 V4 Re=
-ply (Call In 65161) READ_PLUS
-> 65195  40.395506 192.168.122.227 =E2=86=92 192.168.122.173 NFS 6794 V4 Re=
-ply (Call In 65161) READ_PLUS
->
-> It looks like the DIO writes got reordered here so the size of the file
-> probably increased briefly before the second write got processed, and
-> the read_plus got processed in between the two.
->
-> While we might be able to force the client to send the WRITEs in order
-> of increasing offset in this situation, the server is under no
-> obligation to process concurrent RPCs in any particular order. I don't
-> think this is fundamentally fixable due to that.
->
-> Am I wrong? If not, then I'll plan to send an fstests patch to skip this
-> test on NFS.
-
-I'm cool with this one being skipped. I'm assuming it passing in my
-setup is mostly accidental, which means it's not a very useful test.
-
-Anna
-
-> --
-> Jeff Layton <jlayton@kernel.org>
 
