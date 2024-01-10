@@ -1,150 +1,123 @@
-Return-Path: <linux-nfs+bounces-1006-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1007-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DA8982938F
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 07:07:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBECA829710
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 11:14:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A04228882C
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 06:07:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 78715281F77
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Jan 2024 10:14:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 789FB360AD;
-	Wed, 10 Jan 2024 06:07:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CFBF3F8EE;
+	Wed, 10 Jan 2024 10:14:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lx7eCAPU"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OTy7jI+f"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8AC536090
-	for <linux-nfs@vger.kernel.org>; Wed, 10 Jan 2024 06:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-557e76e1bd6so2393682a12.1
-        for <linux-nfs@vger.kernel.org>; Tue, 09 Jan 2024 22:07:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704866845; x=1705471645; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=P5FGfhbdVomeF7O3caWiuug3L2YzSEAcwU9+aiNs9e8=;
-        b=lx7eCAPUS5lDGMuPF14l+zp9iZKVyv4ZdCXKfFbtOxVK+PE1kT/RsxgJhCiJoPrm90
-         vxLX2IeSZI3voNvaZ4l9yOzaRao0e1uF+gUAvvVXZELZ/k+8SibW9uu4J9YqAwyLmuMM
-         WNsqRflafaFItKUfsdzwY1yxn1O7H5LzpDygJzG2VMq/dB7dZt9Ygw1NW6emeId/lr9D
-         xJc9tCuwAHA0R+1F9ET0wxKi57SBqo1caD/mmfoMxU7WY8Hgfj6SO53dk2GlpDTLkXtS
-         7tfkMUBKp++VilpN3HG1OH3/0j38IPrw163Rw0YYVp78EPjHI1L35o0zjP68O3CVYEcO
-         3O8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704866845; x=1705471645;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=P5FGfhbdVomeF7O3caWiuug3L2YzSEAcwU9+aiNs9e8=;
-        b=JDGVbwSP28e259FGahErQmJpv9EqD3SqwkVF2qO+q5TlyL+HozNyipoIY0esH1yU3k
-         4wTADop7QQaz3ACfwi0qzznSQSdapPXtH1REPgzPYAEyDouV1kZwYaJF3uX8l0quZxhE
-         NwZ0+JYwwFP+eaUDep2Yh6YFSpwvmEJq7l6r6Fhf0HE6f0JpxRj4gpwIrsAVWV0+9Bur
-         7Ec9cvwne4D2GdVprl/gn9mmzQoZJDZ2c3PwYOYHOjKsaNuqLAw/W11yhz9UfqKxSiUq
-         /EypZSBe01Nvv1p6Vysq+rSTINtrDKoyp57B3laq3tGv0UFD76BNYZudsY/aq9CoLoM/
-         2XcA==
-X-Gm-Message-State: AOJu0YxF2mzmDxzr4Tv0mGvGObigQHn2cH0nspd3uksKTaiZG4D6W9hg
-	lmoK8iCztw8zYC/3b7/FFh7HfTyet9aNA2XPtP1rwK+/
-X-Google-Smtp-Source: AGHT+IGWcm2q+OGi2RNqwZTFwdxy9e8NStZQLHgLTwGoLBPHuX6A7nuaZ/kyPMHQ3chpyKRQYRiBufMZO+w8x2NB80Q=
-X-Received: by 2002:a50:ef0c:0:b0:553:98b5:6816 with SMTP id
- m12-20020a50ef0c000000b0055398b56816mr105429eds.65.1704866844705; Tue, 09 Jan
- 2024 22:07:24 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFCC23FB02
+	for <linux-nfs@vger.kernel.org>; Wed, 10 Jan 2024 10:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1704881676;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=N8fyAvLcym3lieO4wYcel0i1AGhFIX/f3clpYmcSXdA=;
+	b=OTy7jI+fT21Kflc95+KsvJuRs+oiOZpGQBh0F3HZaV5OpzdXKotEqB72cUfKvb/lyd/462
+	FaCGFQcjucr4Vsb8vMz+MFIQRCe8jf3b7BZ1hafUFrpuXmrSf7JhBcj7hprdQ3y3aFqxFj
+	ogPwGwJ+XRmaRzroC0x7r8opyP9aEjM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-546-OvzGbcwzPAGBkz83m5jLww-1; Wed, 10 Jan 2024 05:14:33 -0500
+X-MC-Unique: OvzGbcwzPAGBkz83m5jLww-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 63AC78945A7;
+	Wed, 10 Jan 2024 10:14:32 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 3D79E2026D6F;
+	Wed, 10 Jan 2024 10:14:29 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <ZZ4fyY4r3rqgZL+4@xpf.sh.intel.com>
+References: <ZZ4fyY4r3rqgZL+4@xpf.sh.intel.com> <CAHk-=wgJz36ZE66_8gXjP_TofkkugXBZEpTr_Dtc_JANsH1SEw@mail.gmail.com> <1843374.1703172614@warthog.procyon.org.uk> <20231223172858.GI201037@kernel.org> <2592945.1703376169@warthog.procyon.org.uk>
+To: Pengfei Xu <pengfei.xu@intel.com>
+Cc: dhowells@redhat.com, eadavis@qq.com,
+    Linus Torvalds <torvalds@linux-foundation.org>,
+    Simon Horman <horms@kernel.org>,
+    Markus Suvanto <markus.suvanto@gmail.com>,
+    Jeffrey E Altman <jaltman@auristor.com>,
+    "Marc
+ Dionne" <marc.dionne@auristor.com>,
+    Wang Lei <wang840925@gmail.com>, "Jeff
+ Layton" <jlayton@redhat.com>,
+    Steve French <smfrench@gmail.com>,
+    "Jarkko
+ Sakkinen" <jarkko@kernel.org>,
+    "David S. Miller" <davem@davemloft.net>,
+    "Eric
+ Dumazet" <edumazet@google.com>,
+    Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+    linux-afs@lists.infradead.org, keyrings@vger.kernel.org,
+    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+    ceph-devel@vger.kernel.org, netdev@vger.kernel.org,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+    heng.su@intel.com
+Subject: Re: [PATCH] keys, dns: Fix missing size check of V1 server-list header
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CALXu0UdFR7Xn51eKFUUi6a68wvDKc-RXz7F4LKyQgDptqfYbgw@mail.gmail.com>
- <CALXu0UfSJ0Qc3HOecf4pQ=VnEVqxRw6OGzNwhh9BUVYaHV7_oQ@mail.gmail.com> <ZZwJLb7j65QXR1+K@tissot.1015granger.net>
-In-Reply-To: <ZZwJLb7j65QXR1+K@tissot.1015granger.net>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Wed, 10 Jan 2024 07:06:00 +0100
-Message-ID: <CALXu0UdJanF-_=3TzgzUskwh1RGPjw+LeZ0Cht+yP1aQgr8v+w@mail.gmail.com>
-Subject: Re: nfs-utils&nfsd&autofs not supporting non-2049 TCP port numbers -
- Fwd: showmount -e with custom port number?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1694630.1704881668.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 10 Jan 2024 10:14:28 +0000
+Message-ID: <1694631.1704881668@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Mon, 8 Jan 2024 at 15:39, Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> On Sun, Jan 07, 2024 at 11:33:31PM +0100, Cedric Blancher wrote:
-> > Could you please make a concentrated effort and allow non-2049 port
-> > numbers for NFSv4 mounts, in all of the lifecycle of a NFSv4 mount?
-> > From nfsd, nfsd referrals, client mount/umount, autofs
-> > mount/umount+LDAP spec
->
-> One reason we have not pursued stack-wide NFSv4 support for
-> alternate ports is that they are not firewall-friendly. A major
-> design point of NFSv4 (and NFSv4.1, with its backchannel) is that
-> it is supposed to be more firewall-friendly than NFSv3, its
-> auxiliary protocols, and its requirement to deploy rpcbind.
+Pengfei Xu <pengfei.xu@intel.com> wrote:
 
-Who came up with THAT argument?!
+>   Bisected info between v6.7-rc7(keyctl05 passed) and v6.7-rc8(keyctl05 =
+failed)
+> is in attached.
+> =
 
-NFSv4 was designed around the concept of ONE TCP port for everything
-(fs, mount, lock daemons, ...), so multiple servers per IPv4 address
-can become a reality, but not specifically 2049 - with the clear
-assumption that using port 2049 might not be feasible for all
-organisations.
-If you look at Solaris BUGSTER (remember, we were a big SUN customer
-in the 1990/2000, so we had lots of bugs open for this mess), you'll
-find lots of reasons why one single port for NFS is not feasible in
-all scenarios.
+> keyctl05 failed in add_key with type "dns_resolver" syscall step tracked
+> by strace:
+> "
+> [pid 863107] add_key("dns_resolver", "desc", "\0\0\1\377\0", 5, KEY_SPEC=
+_SESSION_KEYRING <unfinished ...>
+> [pid 863106] <... alarm resumed>)       =3D 30
+> [pid 863107] <... add_key resumed>)     =3D -1 EINVAL (Invalid argument)
+> "
 
-Just some examples, but certainly not limited to:
-- Fine-grained HSM, all on one host
-- Fine-grained project/resource management, i.e. one nfs server per
-project, all on one host
-- Competing teams
-- Hostile IT department (e.g. port 2049 blocked out of FEAR - not
-reason, no further discussion/negotiation possible)
-- NFSv4 tunneled via ssh
-- NAT, e.g. private IPv4 address range inside, only one IPv4 address outside
-- IPv4 address shortage
-- Software test deployments in parallel to the production systems, on
-the same machine
-- ...
+It should fail as the payload is actually invalid.  The payload specifies =
+a
+version 1 format - and that requires a 6-byte header.  The bug the patched
+fixes is that whilst there is a length check for the basic 3-byte header,
+there was no length check for the extended v1 header.
 
-In any of these scenarios you'll end up with NFSv4 certainly not using
-TCP port 2049.
+> After increased the dns_res_payload to 7 bytes(6 bytes was still failed)=
+,
 
->
-> Also, these days it is relatively easy in Linux to deploy multiple
-> NFS services on a single physical host by using containers (or just
-> separate network namespaces).
+The following doesn't work for you?
 
-That would assume people want to waste resources on the container
-madness. OK, I better stop here, before I start counting how many MB
-are wasted on the container/VM cr*p.
+	echo -n -e '\0\0\01\xff\0\0' | keyctl padd dns_resolver desc @p
 
-> So instead of alternate ports, each
-> NFS service is on port 2049, but it has its own IP address.
+David
 
-Not feasible with NAT, or IPv4 address shortage.
-
-> That
-> kind of deployment is supposed to be fully supported with NFSD today.
->
-> Commercial NFS server implementations also typically make it easy
-> to add distinct NFSv4 services at unique IP addresses but all on
-> port 2049.
-
-Unfortunately this is just wishful thinking. Please check how NIH or
-CERN do their setups - you'll get a nasty surprise in terms of NFSv4
-port==2049.
-
-Just the reality, from our side:
-Active, per-project nfs servers: 14030. Only 1717 (less than 10%!!)
-use TCP port 2049, all others do their duty in the port range of
-10000-16999.
-
-Ced
--- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
 
