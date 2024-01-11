@@ -1,90 +1,133 @@
-Return-Path: <linux-nfs+bounces-1043-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1044-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3889A82B411
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 18:28:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B34D82B632
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 21:47:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E06C31F24281
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 17:28:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2916A1C23DEB
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 20:47:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4210E52F73;
-	Thu, 11 Jan 2024 17:28:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 888685810E;
+	Thu, 11 Jan 2024 20:47:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="Rh1BTKJQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XajBpphL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9D5710A20
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Jan 2024 17:28:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ccbc328744so67356621fa.3
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Jan 2024 09:28:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1704994110; x=1705598910; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=0OhxMTSx9Uaoz+vGjcZhMglIMRAQzH5/86pj3D0j3dE=;
-        b=Rh1BTKJQRQXBly9E52sffgsi8W19WgiYLqHRcHoPUk5MqgJIMMagIkg4ddURQdl/c6
-         Yq3HE417wmBseOm5+LYOjS7AxRTlFtPWINams5Hp1sT7I8qnKMT1e7x1kHXZQ80dXP+e
-         Rjm3LbdB2aXOWMFYR23ZgpctdNfIkiCduLK4U=
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FB8A5810A
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jan 2024 20:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705006061;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZRCVkNCw4vLMHpwPxx+mvEYN8dpRQQC8+r9hAfbuEyc=;
+	b=XajBpphLZOKvojMSnoRlbX3qh7xGDKTPbOXifLeUKjnDx2z1ckqh4XETXHVVohA59VA3zr
+	9bYqxxDYH/JX0OvYh3JtMXsrz+V8G9hZLi/fhy3hCwmDc7BxRpfnDndzq4Oc0nQCmLHpvN
+	+Bp+aM4YDmYAB5Tq5x446kjIWuoyH0U=
+Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
+ [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-74-W85Fbe-qO2SD1REcsvVccg-1; Thu, 11 Jan 2024 15:47:39 -0500
+X-MC-Unique: W85Fbe-qO2SD1REcsvVccg-1
+Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-6d9b09d1afaso6674440b3a.3
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Jan 2024 12:47:39 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704994110; x=1705598910;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0OhxMTSx9Uaoz+vGjcZhMglIMRAQzH5/86pj3D0j3dE=;
-        b=MQStEcvgqQNB+1S0NwAUYbdUAoBHdWclvX1iBmWA5NUhdMNL7pKROL33i6qI+Hx9PF
-         n8e6BDlRNOJRtav1Zxgiog6mG3zj4TfJnuSoyTaP3mvi31UVOoE7rgyLqqNxp3iZAJwi
-         jiBXpHXNkrxOsVc/XkutjPQVkhPAmsr64/opsCRG/vrlkvcISBR++Yt2qxjZTvjsZP5n
-         nst/MU2kc5lr08QNVeWRCnCPJA7L86JPykXrWxCUE7SPkLzVv6v79IJZRncMQDasSNBD
-         w5XUahcC9pnYhc041tX/F/3YCA/oHN4EM5a8YMYVWCc2/FPtBJVJCQazXBVTDXOgvDix
-         KM4g==
-X-Gm-Message-State: AOJu0YzjXeWffnTp1rf65phsQOrkbx9gHzmOY389iZeVLEXFo122OZOD
-	GOKVp39embHqCVrO8mH3gV4dViy83kRXsWSMmAtgqOwIrfPTF5cu
-X-Google-Smtp-Source: AGHT+IGXtUn89Eb9TQMWuEzDCsx0WEcfbmvMNKBaRtwkJxVK7kpOZLvm0HkMVR+fR14o95rglqoNLg==
-X-Received: by 2002:a2e:7819:0:b0:2cc:e379:88bb with SMTP id t25-20020a2e7819000000b002cce37988bbmr45006ljc.19.1704994110434;
-        Thu, 11 Jan 2024 09:28:30 -0800 (PST)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id 7-20020a0564021f4700b00557de30e1f1sm811602edz.74.2024.01.11.09.28.29
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 Jan 2024 09:28:29 -0800 (PST)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a26f73732c5so660361666b.3
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Jan 2024 09:28:29 -0800 (PST)
-X-Received: by 2002:a17:907:908c:b0:a28:e2d7:b41d with SMTP id
- ge12-20020a170907908c00b00a28e2d7b41dmr19346ejb.0.1704994109438; Thu, 11 Jan
- 2024 09:28:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705006058; x=1705610858;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZRCVkNCw4vLMHpwPxx+mvEYN8dpRQQC8+r9hAfbuEyc=;
+        b=IZV+UPyITwnM6Xoq5Mgi8l7o9+4UNCcszeA4qn9XifCs5aSYBH0/243oZDbROBiA9E
+         aEFYklqip9b3hgignpznsetWBL3p5uUbr9ZTnOCH6TsDqGnf5EtXRHiCDZ5jocvu6hT0
+         yhVDMohP2CwoVqXZTG3ZHiWCVlzGO0LmvJFTt1JebySnDPgZSssPZTWuUbjASoIntlI4
+         uM4D6M4FD5qsWtgJq619ohTik63FlGmnAscmRwjsMZbP2h2iluvS1QHs2KWTwHgqdB8R
+         EAjN1UMt0pTN0jYRU0OOWD1rvasEHQmBiQpbOWzGM36CpSR3vGXDLMUSzIEPjFy+ygHe
+         AD6Q==
+X-Gm-Message-State: AOJu0YymP618Vg1h71k0iS3PNJ2ITbdhKXcB0vFxf7CGUwFfZeLW+0ct
+	RJvLTlTnc7ha5UhQYv4GfASX1JhCMAT8RwTzBaR9glc3t8YX7lv3JE3nN99dtxXLW6eiq9PZhq6
+	uhxJobuyf+AqZQjUOAUVDcrbQ81FC
+X-Received: by 2002:a05:6a00:1414:b0:6d9:8d46:814b with SMTP id l20-20020a056a00141400b006d98d46814bmr420340pfu.20.1705006058732;
+        Thu, 11 Jan 2024 12:47:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGycFcdvIejYNz25UNDT8/rM49uzIyE+kDD9brlIdh9eIg5fXxduMRRM2I7wEZxsJ0bDhuXpw==
+X-Received: by 2002:a05:6a00:1414:b0:6d9:8d46:814b with SMTP id l20-20020a056a00141400b006d98d46814bmr420330pfu.20.1705006058430;
+        Thu, 11 Jan 2024 12:47:38 -0800 (PST)
+Received: from dell-per750-06-vm-08.rhts.eng.pek2.redhat.com ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id fn21-20020a056a002fd500b006d9ce7d3258sm1614497pfb.204.2024.01.11.12.47.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 12:47:38 -0800 (PST)
+Date: Fri, 12 Jan 2024 04:47:34 +0800
+From: Zorro Lang <zlang@redhat.com>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Anna Schumaker <anna@kernel.org>,
+	Trond Myklebust <trondmy@hammerspace.com>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Yongcheng Yang <yoyang@redhat.com>, linux-nfs@vger.kernel.org,
+	fstests@vger.kernel.org
+Subject: Re: [PATCH fstests 1/2] generic/465: don't run it on NFS
+Message-ID: <20240111204734.kvsuqvxlzntnyrc4@dell-per750-06-vm-08.rhts.eng.pek2.redhat.com>
+References: <20240110-fixes-v1-0-69f5ddd95656@kernel.org>
+ <20240110-fixes-v1-1-69f5ddd95656@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240110214314.36822-1-anna@kernel.org> <CAHk-=whbDyOVyNKKhq44PZx0fDA61mHuk=QMc0-mRD2XHp1Zaw@mail.gmail.com>
- <CAFX2Jfmk=9LhNaCZqsXaBTqsS866q_zCzozjsdDPmhg_xxzUgw@mail.gmail.com>
-In-Reply-To: <CAFX2Jfmk=9LhNaCZqsXaBTqsS866q_zCzozjsdDPmhg_xxzUgw@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 11 Jan 2024 09:28:12 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wh6XZOOi2O1yPPHp1YdUdr7PacF=ibHQK7nvzmE-xoeKA@mail.gmail.com>
-Message-ID: <CAHk-=wh6XZOOi2O1yPPHp1YdUdr7PacF=ibHQK7nvzmE-xoeKA@mail.gmail.com>
-Subject: Re: [GIT PULL] Please Pull NFS Client Updates for Linux 6.8
-To: Anna Schumaker <anna@kernel.org>
-Cc: linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240110-fixes-v1-1-69f5ddd95656@kernel.org>
 
-On Thu, 11 Jan 2024 at 07:40, Anna Schumaker <anna@kernel.org> wrote:
->
-> Thanks for the heads up about this! Looks like I updated the key
-> locally in November, but I guess the MIT keyserver choked on it. I've
-> emailed the updated key to Konstantin like you requested, so that
-> should be updated now too.
+On Wed, Jan 10, 2024 at 01:27:27PM -0500, Jeff Layton wrote:
+> This test kicks off a thread that issues a read against a file, while
+> writing to the file in 1M chunks. It expects that the reader will see
+> either the written data or a short read.
+> 
+> NFS allows DIO reads and writes to run in parallel. That means that it's
+> possible for them to race and the reader to see NULLs in the file if
+> things get reordered.
+> 
+> Just skip this test on NFS, since we can't guarantee that it will
+> reliably pass.
+> 
+> Cc: Anna Schumaker <anna@kernel.org>
+> Cc: Trond Myklebust <trondmy@hammerspace.com>
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Link: https://lore.kernel.org/linux-nfs/2f7f6d4490ac08013ef78481ff5c7840f41b1bb4.camel@kernel.org/
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
 
-Thanks, looks good on my end now.
+I've seen several nfs folks agree to skip it on nfs, and no any objection,
+so I'll merge this change.
 
-             Linus
+Reviewed-by: Zorro Lang <zlang@redhat.com>
+
+>  tests/generic/465 | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tests/generic/465 b/tests/generic/465
+> index 73fdfb5548af..0745d6a1dd3a 100755
+> --- a/tests/generic/465
+> +++ b/tests/generic/465
+> @@ -21,7 +21,7 @@ _cleanup()
+>  . ./common/filter
+>  
+>  # real QA test starts here
+> -_supported_fs generic
+> +_supported_fs ^nfs
+>  
+>  _require_aiodio aio-dio-append-write-read-race
+>  _require_test_program "feature"
+> 
+> -- 
+> 2.43.0
+> 
+> 
+
 
