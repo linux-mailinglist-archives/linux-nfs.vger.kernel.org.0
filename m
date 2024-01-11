@@ -1,158 +1,189 @@
-Return-Path: <linux-nfs+bounces-1028-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1029-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD9C182A759
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 06:59:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73F0582A8F9
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 09:21:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E370B1C22EC1
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 05:59:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D2378B27EB0
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 08:21:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3D74211A;
-	Thu, 11 Jan 2024 05:59:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DFEBE56E;
+	Thu, 11 Jan 2024 08:20:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CzqZMzEZ"
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="TUVNsday"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from sonic313-15.consmr.mail.bf2.yahoo.com (sonic313-15.consmr.mail.bf2.yahoo.com [74.6.133.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC5DE5382;
-	Thu, 11 Jan 2024 05:59:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50eaa8b447bso5330201e87.1;
-        Wed, 10 Jan 2024 21:59:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704952764; x=1705557564; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=FJ87IotFFb22oBVL3yLTlm/KMv2+8lgNVJRq/vObCyk=;
-        b=CzqZMzEZtvDdKV5J1zvfpPjPR0wILxDKt26BQKl6dgvHwvuCdUpx9zofNRErh3RHcX
-         4RuSBM6WZWJ1QKGW+9aiqdcuZ62e09X44gxoTRBDE+voHnFnRDsr+edQ5ck1zC7LsJhN
-         EMK1qwLK1bRNnbMuChx86E3Azw77svFukz6fqTpXK3bsM2rTrEDn7RijQtfJzRULk5fh
-         03jquwf/rzboIOEKrCR16L4yr1+Xatxw99hk68jjfEH+31e9vDr7ITE8LCsNPBfAQQpH
-         P6UrE+PD1kzUZiHQ0KvBiTXXqrktw2yk9LaQhbiPyPJxRxnNuSars1Af7vD/wPL9xNN4
-         4M3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704952764; x=1705557564;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=FJ87IotFFb22oBVL3yLTlm/KMv2+8lgNVJRq/vObCyk=;
-        b=PZikC1qFb00UIl7giDpbUhRi+PwG7WMGC2I2TAEF1QH5b8owBpy+p/8rvT3vq+CCsV
-         V461beb9lR8JKSyJ8vearvFNjmrLIwdr8iJQp047Rwx+y81rtRcoq5yQ/yYSOHA76ehV
-         lG2l3qp7uLV1MfLdNTGrt1s2zyKLXu7rjfQwT4PmnAXsQMnVUVqx3nnKa0jZFzbUvrOX
-         s/zCJhOF6LAB2tHaRWCdKxPTPkGzCPKp2F8Xet1nwZI0SRPETfv9nGa3Y0Ltqxv7XDHQ
-         MJ8M7lvivuv4Xh6kXxoODM4mc+k54GZl5vBHmg5W8oItq7JtStAu94AtWAezRC/u+uR9
-         5KZQ==
-X-Gm-Message-State: AOJu0YyVqvzD5u0f/yOoNxYT7dq5ZdTTUXgj+AXRBVyKnTXhwC7XN5aF
-	/LgPOEbucY8bFWak009t9Uj9eZlnQaX9WuTMcro=
-X-Google-Smtp-Source: AGHT+IGQ5ZV/gXo7v/rJ2auVyXpmqs0QYfi3tBSjxW2wUQzS96ysR1EG48kjTCbHRzoOg/0bxoYvPzkVO6R5r9tJSuk=
-X-Received: by 2002:a05:6512:3990:b0:50e:2e5d:10a8 with SMTP id
- j16-20020a056512399000b0050e2e5d10a8mr136706lfu.133.1704952763509; Wed, 10
- Jan 2024 21:59:23 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C3DE10A2F
+	for <linux-nfs@vger.kernel.org>; Thu, 11 Jan 2024 08:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1704961212; bh=Ufx5rIOzslZrIE1fgKAMS0hK+TCR3JnfrICcjOFNjVk=; h=Date:From:To:Cc:Subject:References:From:Subject:Reply-To; b=TUVNsdayAuoDhEgqvg7os5sC0z0cph1Y475NQPK9Oz8ygkH7ACE5JDBIzjYItuIn27B5lbxuuBpeG2/HeNhRpwD5Ua/uD7Ey16EkbE98+7SKKlpM39XW6a+CUHeGPjISmTqj4YK1vEJqopoC6z4LZYkbsLFCjxhCeChEEpMk9jrEa2zJ1RbTzawiC/dkcowBH8WSuq2IMhrcV1HpfmTheqcilk+gHJ97kc/8GKQzekC1jZVcm0yTZOjS8v9n1sQbxWevc3siZOnECwgP9Vu72Fdx8AwpY4YVNBSObu1Ig036In8a33lzBVt7DilHwAVMuzH86l5T2chylDMB/XFCUg==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1704961212; bh=6Y5m5V7txkMjX0dEsVYtbLYVgEOdGt5unrlXuYnF67a=; h=X-Sonic-MF:Date:From:To:Subject:From:Subject; b=YKHME696I7HFHbfaiLgm+SFzu8PuTGKixgmId8zm1tnJcqubbr9K1mvmSqIPgc0vyp3YKsHa3SM3tNpaQydj7w0PlkHUB4o9icM79pRPwjK3gfo3NOECGb2Guo+uqerm0v8/P3XmTrd4qyeqQchynbQZ5ryJm9eCeiAfohoG1XAF2lJnRSVTj7dHhP+LEkrM9YAKJIag45l6AmgZPF1IFeLZPO+bCIuxqwdsOIyMemVMmatVIvS4Xfq6BqUx7SdVOShmXrcCOcnR7UR65Kw3hM99wLXUPHsoytYG61E+fgmfDHtk5SFbYtuOTR3jMp5jesOTumgjiRpvDuXBrIVycw==
+X-YMail-OSG: iekjkz8VM1nx2vHQ2wd_XfQkRf1RvfEN6jswCBVV0XIOzqu51m09vCkhI_kJdkX
+ CNijaJ0VvyxyUB3rKrFuBoXyotw7Crw1MN9at9yUmxFBWFdTknPWaD_GjPVymXMvWFjTYw9z5lgX
+ JlMaNvze4e1JLkgJsWTBp3_ezVqa9VqWhEJNrgtoBQfJM0Upi8EshkmCeC7MbE01PNqHpTs.IgX_
+ M.d8R72UiXhxLn_JcqAmTT2fL__ucT85K2XGHsJ1ws8PGy5tPdGt50MonKOxRfRCcyekjWSS.JrO
+ iQ03ebKBc3CxpGGIoSUn4kYXEqbIjdwQyWjF7RDcJLmi3aIs_h1VslNhDzO50As6q2cYdhdAmrmD
+ p8PJ2C9yK.8ITTNC9Nm66ALtnki0IFmgOu.BZzcbKzC6s0zeylMG8yUeEaf1uEg4vl6nHYdudGEQ
+ 8peveM5zwWZwTA7R7X3zxAzEo.lerJZ_TNq28oxYgoVO_q4ZmhkOCS.QHvMHA.9B72mBih1n.pZ.
+ ijwOVKi2nUQbPc4LWKGrTYak3Nzu0CbM7A4YPKyEGR4mNldwI66dVUGNvmM1oyNSG0pgPMHcVfRD
+ mMjmIOoC060ljF9yRr2ZMKqdn505GDmLC0m11kni0FUKbEcZxwRLvVXNhVaZjMU7_.81_nlq26K1
+ kqOQR_OLBPTCeL.8SbqryWrnuyy4iCSyPBNV9wU60bYnI5Sq5B1J1Cj2bEltZovLZE6BGl5hwfqf
+ EcxZBoUOIADdIE09LC43GRGOQtUAgrb4LbtRwDjTtmc5LluUFEsnFZPkD.7k1rAbUagGqsMdOYU9
+ vFtHp7VgRypZ_ISZ0OFgVeLycWfQUJi4LpP4FAl.xWb_Fn93RyvsjmaxcA8HjDR5q6ycMkHx96ro
+ xumUHs7e0pJCulj3bfRmpt5JRl.c41y6FVggDWNcU0AN4Q3TVZ1TwWQ5yGAMsowP07DGJ2.0yKLt
+ 1Ai2K_e0KRVPQJMxisZ0CoFG92zvsdPx5pEqcDpuRMOHx3knwix0klYTMqoa91beVJ00YTP97MGm
+ rFFCOKIeJCugPWDhHe7d5rLlQEA4XeUzwO5wpOdG9dotwGn1C187WyVpFb34fvhkER0tFB4Iba51
+ 0Aeo5iEZ0Pvna8MPk8lS1S4q91DkndgoRx4cS0Kz_Rj3zhzT7LaHAcOUXBVQ.dKVg80nCBOtn2ve
+ cQePaXAcA5nVtjzcwjFgohgu45fge10A2XVuJmmjRFfZfzs.oeljJVwAqMCDE5g1SCeB6tmKQnGd
+ XiVs4ddM4OINRs.JgYEiIHEnybOyB70eWmbxAjlxgiwtyuJOLtFH5qNWY0gE8DhfdhF2Ce72ax73
+ .fHjliWUw.grlvGnifRW02MahI1UI6WBvQru_y1waVMWIjV4ftNQzJ.mLELCUj03rQs9dvOU5GVC
+ XQ_t5ZagR.rY5Hh6snUNpKo0tw1f2dwyQjT4lQ7e8rAzo_LwLULBIn9A20tRwEpHuFh6nPXHWF_X
+ QJngtykdkZdV6fvoX2w0eRSp4luzcM499LWcJ.sjhzT_KijMZl8kBVC05v_96alT1UaXWeFzSfu4
+ weNh.emKuAYVJ6.83y.teGB3tDbmXEaKL2sxny05Mn5HZ.jP14XbImjHx6OHJ7sn2.3GmyXA_XQ6
+ mBEMoxGsySbuS80rVMoCjt7ZA8pwG05SJ.35E9ssx6CSOfCglME7iyd_fnL7PPM9ipcyY.Z57jrd
+ 3puCfAjUO40_cHVKBHmB0oh2CrYDa8AYPgvhLuLjf8V4EoC_xid_bnEQEJcKcK6EEp_CdIH_OVIw
+ tSeNVoJDKKVori.GHUGOBa.EAtWGayLK.e6YcDCB04YPjPaq3QDiEZR2YFWKzOQ_cgAaw_iRsH8h
+ D3VE16V4mbcjJoRheoO6r4ELVFw0XBkrbkly7ENx2oMhzAnQfneiDsPCyLoBuqaNRbxDUxcMCOP4
+ w6enPGKQnnQ_o9xiFcIdvwiqXeveiCuCjZHh.l96Gx47sLO9QPDy0tF_gYK5yZmT.8CcX.25B8nX
+ jMBY.bgwJZ9b.X1o6ES3Mux6NYeRHo_ui.0po7Y9YNLlNkiL1iHYYA5f0cZSC0RbuYyE63rVBKl5
+ crFumxRBq_JU9O7IV_CAb_IyzItFo4nd9cJplyFJH7aUAJSO3wNBnOvbtUDjC9Hsin0jfo470Brf
+ DPseilnWA2sPYEsXVeLf4F0MLAR8JPdBTFDjiIvUVMmgjp4bftUOwjpo3czYlOeWlZLjg0g2e8hO
+ 1FwezlK.cICJ0mfYspHJmYJxJ7Z467Ulcx_U3pufVxOcG2wNX_Bc-
+X-Sonic-MF: <email200202@yahoo.com>
+X-Sonic-ID: 4450a33c-aef9-49e1-b3fc-345f56f6adb5
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.bf2.yahoo.com with HTTP; Thu, 11 Jan 2024 08:20:12 +0000
+Received: by hermes--production-gq1-78d49cd6df-t49qq (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 97d1b92ffe0fdce95aeca671c72f318c;
+          Thu, 11 Jan 2024 08:20:06 +0000 (UTC)
+Message-ID: <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
+Date: Thu, 11 Jan 2024 19:20:02 +1100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1850031.1704921100@warthog.procyon.org.uk>
-In-Reply-To: <1850031.1704921100@warthog.procyon.org.uk>
-Reply-To: sedat.dilek@gmail.com
-From: Sedat Dilek <sedat.dilek@gmail.com>
-Date: Thu, 11 Jan 2024 06:58:46 +0100
-Message-ID: <CA+icZUUc_0M_6JU3dZzVqrUUrWJceY1uD8dO2yFMCwtHtkaa_Q@mail.gmail.com>
-Subject: Re: [PATCH] keys, dns: Fix size check of V1 server-list header
-To: David Howells <dhowells@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Edward Adam Davis <eadavis@qq.com>, 
-	Pengfei Xu <pengfei.xu@intel.com>, Simon Horman <horms@kernel.org>, 
-	Markus Suvanto <markus.suvanto@gmail.com>, Jeffrey E Altman <jaltman@auristor.com>, 
-	Marc Dionne <marc.dionne@auristor.com>, Wang Lei <wang840925@gmail.com>, 
-	Jeff Layton <jlayton@redhat.com>, Steve French <smfrench@gmail.com>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	linux-afs@lists.infradead.org, keyrings@vger.kernel.org, 
-	linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: email200202 <email200202@yahoo.com>
+Content-Language: en-US
+To: regressions@lists.linux.dev
+Cc: kernel@gentoo.org, stable@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
+ hangs during shutdown
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+References: <58ac38ae-4d64-4a53-81e0-35785961c41c.ref@yahoo.com>
+X-Mailer: WebService/1.1.22010 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Wed, Jan 10, 2024 at 10:12=E2=80=AFPM David Howells <dhowells@redhat.com=
-> wrote:
->
->
-> Fix the size check added to dns_resolver_preparse() for the V1 server-lis=
-t
-> header so that it doesn't give EINVAL if the size supplied is the same as
-> the size of the header struct (which should be valid).
->
-> This can be tested with:
->
->         echo -n -e '\0\0\01\xff\0\0' | keyctl padd dns_resolver desc @p
->
-> which will give "add_key: Invalid argument" without this fix.
->
-> Fixes: 1997b3cb4217 ("keys, dns: Fix missing size check of V1 server-list=
- header")
 
-[ CC stable@vger.kernel.org ]
+#regzbot introduced: v6.1.70..v6.1.71
 
-Your (follow-up) patch is now upstream.
 
-https://git.kernel.org/linus/acc657692aed438e9931438f8c923b2b107aebf9
+After kernel upgrade 6.1.70 to 6.1.71, the computer hangs during shutdown.
 
-This misses CC: Stable Tag as suggested by Linus.
+The problem is related to NFS service. Stopping NFS service hangs:
 
-Looks like linux-6.1.y and linux-6.6.y needs it, too.
+# /etc/init.d/nfs  stop
+  * Caching service dependencies ... [ ok ]
+  * Stopping NFS mountd ... [ ok ]
+  * Stopping NFS daemon ... [ ok ]
 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
-=3Dv6.6.11&id=3Dda89365158f6f656b28bcdbcbbe9eaf97c63c474
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
-=3Dv6.1.72&id=3D079eefaecfd7bbb8fcc30eccb0dfdf50c91f1805
+then it hangs
 
-BG,
--Sedat-
 
-> Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-> Link: https://lore.kernel.org/r/ZZ4fyY4r3rqgZL+4@xpf.sh.intel.com/
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Edward Adam Davis <eadavis@qq.com>
-> cc: Linus Torvalds <torvalds@linux-foundation.org>
-> cc: Simon Horman <horms@kernel.org>
-> Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> Cc: Jeffrey E Altman <jaltman@auristor.com>
-> Cc: Wang Lei <wang840925@gmail.com>
-> Cc: Jeff Layton <jlayton@redhat.com>
-> Cc: Steve French <sfrench@us.ibm.com>
-> Cc: Marc Dionne <marc.dionne@auristor.com>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> ---
->  net/dns_resolver/dns_key.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
-> index f18ca02aa95a..c42ddd85ff1f 100644
-> --- a/net/dns_resolver/dns_key.c
-> +++ b/net/dns_resolver/dns_key.c
-> @@ -104,7 +104,7 @@ dns_resolver_preparse(struct key_preparsed_payload *p=
-rep)
->                 const struct dns_server_list_v1_header *v1;
->
->                 /* It may be a server list. */
-> -               if (datalen <=3D sizeof(*v1))
-> +               if (datalen < sizeof(*v1))
->                         return -EINVAL;
->
->                 v1 =3D (const struct dns_server_list_v1_header *)data;
->
->
+Shutdown does not hang when NFS service is removed.
+
+# rc-update  del  nfs
+
+I had this kernel error in the log:
+
+Jan 10 17:32:25 [rpc.mountd] Caught signal 15, un-registering and exiting.
+Jan 10 17:32:25 [kernel] [ 2005.560991] ------------[ cut here ]------------
+Jan 10 17:32:25 [kernel] [ 2005.560996] kernel BUG at net/sunrpc/svc.c:576!
+Jan 10 17:32:25 [kernel] [ 2005.561004] invalid opcode: 0000 [#1] 
+PREEMPT SMP PTI
+Jan 10 17:32:25 [kernel] [ 2005.561012] CPU: 0 PID: 8079 Comm: nfsd 
+Tainted: P           O       6.1.71-gentoo #1
+Jan 10 17:32:25 [kernel] [ 2005.561017] Hardware name: Gigabyte 
+Technology Co., Ltd. X58A-UD3R/X58A-UD3R, BIOS FB 08/24/2010
+Jan 10 17:32:25 [kernel] [ 2005.561020] RIP: 0010:svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561033] Code: 5b 5d 41 5c 41 5d c3 cc cc 
+cc cc 55 48 8d 6f ec 53 48 89 fb 48 83 c7 44 e8 b6 6c 5f ff 48 8b 53 1c 
+48 8d 43 1c 48 39 c2 74 02 <0f> 0b 48 8b 53 2c 48 8d 43 2c 48 39 c2 74 
+02 0f 0b 48 89 ef e8 6b
+Jan 10 17:32:25 [kernel] [ 2005.561038] RSP: 0018:ffffc90001edbee8 
+EFLAGS: 00010287
+Jan 10 17:32:25 [kernel] [ 2005.561043] RAX: ffff88816c1a1c30 RBX: 
+ffff88816c1a1c14 RCX: 0000000000000000
+Jan 10 17:32:25 [kernel] [ 2005.561047] RDX: ffff88813dfcc018 RSI: 
+0000000000000286 RDI: ffff88890bc9b9c0
+Jan 10 17:32:25 [kernel] [ 2005.561051] RBP: ffff88816c1a1c00 R08: 
+ffff88810310b600 R09: 0000000000000000
+Jan 10 17:32:25 [kernel] [ 2005.561055] R10: ffff8881bc3b4000 R11: 
+ffff8881bc3b4000 R12: ffffffff82e061c0
+Jan 10 17:32:25 [kernel] [ 2005.561058] R13: ffff8881bc0e8000 R14: 
+ffff88810310b600 R15: ffffc90002323c80
+Jan 10 17:32:25 [kernel] [ 2005.561062] FS:  0000000000000000(0000) 
+GS:ffff88890bc00000(0000) knlGS:0000000000000000
+Jan 10 17:32:25 [kernel] [ 2005.561067] CS:  0010 DS: 0000 ES: 0000 CR0: 
+0000000080050033
+Jan 10 17:32:25 [kernel] [ 2005.561071] CR2: 000055e971e376f8 CR3: 
+000000000260a000 CR4: 00000000000006f0
+Jan 10 17:32:25 [kernel] [ 2005.561075] Call Trace:
+Jan 10 17:32:25 [kernel] [ 2005.561079]  <TASK>
+Jan 10 17:32:25 [kernel] [ 2005.561082]  ? __die_body+0x15/0x57
+Jan 10 17:32:25 [kernel] [ 2005.561091]  ? die+0x2b/0x44
+Jan 10 17:32:25 [kernel] [ 2005.561097]  ? do_trap+0x76/0xf9
+Jan 10 17:32:25 [kernel] [ 2005.561102]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561108]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561114]  ? do_error_trap+0x69/0x93
+Jan 10 17:32:25 [kernel] [ 2005.561119]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561126]  ? exc_invalid_op+0x49/0x5d
+Jan 10 17:32:25 [kernel] [ 2005.561133]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561139]  ? asm_exc_invalid_op+0x16/0x20
+Jan 10 17:32:25 [kernel] [ 2005.561148]  ? svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561155]  ? svc_destroy+0x12/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561161]  nfsd+0x13d/0x162
+Jan 10 17:32:25 [kernel] [ 2005.561170]  ? svc_put+0x2f/0x2f
+Jan 10 17:32:25 [kernel] [ 2005.561176]  kthread+0xd0/0xd8
+Jan 10 17:32:25 [kernel] [ 2005.561183]  ? 
+kthread_complete_and_exit+0x16/0x16
+Jan 10 17:32:25 [kernel] [ 2005.561189]  ret_from_fork+0x22/0x30
+Jan 10 17:32:25 [kernel] [ 2005.561196]  </TASK>
+Jan 10 17:32:25 [kernel] [ 2005.561198] Modules linked in: snd_seq_dummy 
+snd_seq snd_seq_device nvidia_uvm(PO) bluetooth ecdh_generic ecc bridge 
+stp llc ipv6 crc_ccitt ch341 usbserial nvidia_drm(PO) nvidia_modeset(PO) 
+nvidia(PO) tda10048 tda8290 iTCO_wdt iTCO_vendor_support tda18271 it87 
+hwmon_vid dm_crypt coretemp dm_multipath dm_mod kvm_intel dax video 
+snd_hda_codec_realtek snd_hda_codec_generic kvm drm_kms_helper irqbypass 
+ledtrig_audio i2c_i801 pcspkr serio_raw drm i2c_smbus snd_hda_intel 
+i2c_core snd_intel_dspcfg fb_sys_fops syscopyarea snd_hda_codec 
+sysfillrect lpc_ich snd_hda_core sysimgblt mfd_core snd_hwdep uhci_hcd 
+rtc_cmos wmi
+Jan 10 17:32:25 [kernel] [ 2005.561274] ---[ end trace 0000000000000000 ]---
+Jan 10 17:32:25 [kernel] [ 2005.561277] RIP: 0010:svc_destroy+0x1f/0x56
+Jan 10 17:32:25 [kernel] [ 2005.561284] Code: 5b 5d 41 5c 41 5d c3 cc cc 
+cc cc 55 48 8d 6f ec 53 48 89 fb 48 83 c7 44 e8 b6 6c 5f ff 48 8b 53 1c 
+48 8d 43 1c 48 39 c2 74 02 <0f> 0b 48 8b 53 2c 48 8d 43 2c 48 39 c2 74 
+02 0f 0b 48 89 ef e8 6b
+
+The problem is always reproducible. Steps to reproduce:
+1. Update to kernel 6.1.71
+2. Start nfs service
+3. Try to shutdown
+4. The computer hangs
+
+Reverting the following 3 commits fixed the problem in kernel 6.1.71:
+
+f9a01938e07910224d4a2fd00583725d686c3f38
+bb4f791cb2de1140d0fbcedfe9e791ff364021d7
+03d68ffc48b94cc1e15bbf3b4f16f1e1e4fa286a
+
+
+
 
