@@ -1,137 +1,213 @@
-Return-Path: <linux-nfs+bounces-1034-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1035-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BD8682B018
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 14:59:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F307E82B05D
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 15:14:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 103091F228D6
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 13:59:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11BE81C21DC1
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Jan 2024 14:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93AE03C487;
-	Thu, 11 Jan 2024 13:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291E43C47D;
+	Thu, 11 Jan 2024 14:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="GsfvUzwN"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IZ1LHLmC";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="i+i2cmWE"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from sonic317-26.consmr.mail.bf2.yahoo.com (sonic317-26.consmr.mail.bf2.yahoo.com [74.6.129.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EDA23B18E
-	for <linux-nfs@vger.kernel.org>; Thu, 11 Jan 2024 13:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yahoo.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yahoo.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1704981549; bh=N5C78wTmGtKzFfg9bjpzKH65dW1Z2OeHHp4d7rYGgKc=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=GsfvUzwN0DwdKPK9jfmuU1PytXJyFlUBNGVMMux2YYTs5ktip7PO+iP3FaMK6Ar/ErE/Qiu2dUsV34KGJRmzPNJIbIVeSrKkUbE1CJaEL60pkOV379jteSAI0sw7m/371o1fk0GmpGeWyMjBK3Sbi7llFDvabVJLkggtQ/KxvqGJBQ9TY1283BGON/VMIX1PY5vfketVkiNJGR2W0ErIuY4Nq6N2D/WKgGgvQ9UqYPcS8+lP/tAGIHXMKAT2E2T/V69VNtzAr1peCxDIcyvYAmtnvaw6e7I48yEsNjVwF2JemvAS7Kx9jbr/7K7Lt8yH1Vart2YHyPztcpb2ZKBg0w==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1704981549; bh=SVDSQhIdLhGgE7+MnCR8tio+IyunA+shp8eVxFds9zc=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=gQneLFz3qcjjqN4Pwdiq46I5c5vzg8W3VAu1ZuZELmF9TwReZotoW1yJZDyMdzgcZYKwjz2y/saIbu6dsIf2DI9JjQbhA4XYq9R40EQdbeR431OWdmXWNUxB48nTt1tHIVLiCFoMDeV6BcCjyyYtL9DUzX6A11y1ZfWg+uoAQGTD1SQ5KlE47uPavBban8j4xWjJilSIYyeM/WpgQbdfCJPDARF85QCbcV6PVjracr39J7DiSs1cs7ucTe0vLo71mgKJMBQS6fKpV10htQtgFeHmnonQ3v7hwwuF2/fjyvO6hFr1VfSf35piWG93DWS/zkz+cIYnCu9Sd2jXIj7JNA==
-X-YMail-OSG: VqZ6pIAVM1lsPmuOtHg_bb5o7NPz5U8OGIgKHuwB.ViUF6Qb8KG8b4XlWtttk9D
- VbcmsbH26FN7pV0iR6JnzakFhhNC5Qgutrnt3ihTyG8aaM3x5NDWZVumgP6FzsH_YYJT3NuTlNuG
- 6etuusRv6GVGFAF3at6DpXCZO2X47gEwmDkVxNQq0Sq2o1_ca.VxCn.W0rbEb_V2z.7SWIXyIm7_
- 61F5q2z5hvzRSXk0o3Fwq5Wm9w0H.Mx.DikjHf_2twEWx9K6Bkn6hgOfKZJkxn.D0Hl7nn3anOQD
- n2lQF_Gs3raYJ2LUSDvqS32ndnQeAHm3YgJXYdq53pHD8UIRhI_tnq6gQJXDAuOnMYw.A1Kk6PCw
- 2k54ks71dVYOd7NsO48Tzdrz0bYK3dhMtQgfxEqLjLUef31OgHyJF8SP8E6f5QgLc5sJ42njsLY6
- 61eAt8AHXJ0WpHBsmXEXYBcqWnx5AGIX3AWsR1etM_AowrJUR1_9HKP_m9XCD4YSo7cxPAr_JdGH
- xmKG56Cmtm7zeak5VqCEGxQ5fXHueygA0tQuzxmXLoXhyfShwjkcbK8d5GrHrISySa6s_gyq0OVw
- ryy_Mpvz9ZbJa90AanHc8yJJv.SXNTinSyu2xXyl32b1Fcew1eDWXJPKbgf6u9_iwF1oJeROkYm2
- o1HJQaMTF2An84qxG5T0HE4b9YqESNVv7i9s85xHsFdIouWA3lD4fAqdIuyaXTymzeU0Se_PxpJP
- tLh_sNICuWR62AGMlErtIlzw1aUuWZi64RBXALz7pz_NiQFecqR46h0PyFHfZ6fdzNG4Ylgnoftr
- ZX6RzL_OBOjsJzvb3HgL5_ZikfwF.f.PXQ_JmyayWLApyD6ybY5NLPk7p3jffbuW_KoDVfqcHhqJ
- xGSneVP8EmK6xlZBusX2B3OFFNhcOI_KIcYs9PqSunh1KQ.M0.tb4cLo8E6FENr2zwsj4MenTzAj
- OhQ_3nj8F1HRF_XPneWFm.Hi5mThFHKIyzmYAVJfGz3Mk5czM74EjLQSxHtNqV_8IF0qknImZTV7
- X9xbMRQCJHgV_A_8gnWN2mcCGimcCYyeAXzXmke5WZRxHGPenRn3CeUf9wqPbw7yey1IDan7TAMB
- kVQ5.WkWAiZ02w_7dcNqw.ScjNqe7njvDjC.ZO.RH098lCxn5rRJATuNb0i8KEX.a.7.C6NjSD_q
- UEQVL0MYET9VP11b4KHlM0vU4phRkVavNlMMKJ7hCntnwtWKxHWmiQYnMdmYOQ5uud9watARSn2L
- Z57l0npWP_vcUiYHCxmfUJkB6NyFgVdKLMP4tv0QfJZ8j8yIZ9CKVKDYXLhrlWGO3wFDzyY_y7sr
- eXavc5WT1_adzLsKdN5opXRv.ezwdjMb3j9.GhpgrUvQZArl6ZHLzWCO8kqnqSdIQwOKM1YF4JcL
- Ji9RtCeaGtvviXvNmllNw4vm9OOA8EngHBTj0uHvkWwBdy6dXBBvG35FsBFK4fRDmZng1YnTEaoa
- WNF7Vtn_pjV3KCztTo9XqS_p96Aw94dOQowImIIceQeAKgBZoYBN.dVdK30hM4g1WiBq8U7nCvlJ
- p_ZzvYlxaaVO9Zc8JWxM1DdRIlof7sdKg7k8GJWSH8RFuX05pC2eg9h0phSH68LAQTvsNzjVBkTD
- sdO3Ty0WXFKmRdOavHlYF3Yvp1Flufaq8AwDtoJ1nq1z6EQdp0vUWIPMon0QUy3dcRa3L4BBvP.G
- Isyh_qRDe.gtnTL5K2AjfWBGCEAXVssfdU3kPd4TaIeca4uj5CQu.rivHm.QrRqDK758Gi0JCBCn
- zWMBn6Tc0c9tmT_PT1HjwiiTFEpv17V5Gw39vTh2VMs3tggdqyDfwtpOBAgt9qUErDV6XRl4HPkQ
- kW.hLbKhqtxkhGgvLJgBsUm_UcMDzwNmKYYS29Eir8SQ.Acg0HYNoGTwQVhO06I3EZ3rJRdDo5JI
- EZ8sY5vFWJW.nsEx9_sd4TUEGZIEmPYRrpPn96nX68LxxAAcHj6QrnTpCSWY_dReOkZnZkzI31Xz
- IKuYPiHZFrM5gOnbJWDGfIXJNgFJ7jVYGbfgBM.q0uXd_Lrj3WdoXIhhSflIt0gx9mBG0U6rDG4L
- PKIz2uo4JMw5R0d7Z5M8GFJD2M8vC45KATvzFwKNHsZsWZb2cZQGyGhY8xE.qLf.MiqlWIST2yd7
- kP6ZoYwJQotJuNIdl6zT.xzzImJ.R5c4VoHPCOpORT1P8bcMUvKq2Xo6FyEzL__b6rN8Vo7ltM90
- yt0SzRI10JkYeEYcp__sFiQcwcyW6MC622nZRYg5HZj0iyXpHYkc8FA--
-X-Sonic-MF: <email200202@yahoo.com>
-X-Sonic-ID: d96dba1f-f098-4ede-8a35-cd92d86e2513
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.bf2.yahoo.com with HTTP; Thu, 11 Jan 2024 13:59:09 +0000
-Received: by hermes--production-gq1-78d49cd6df-k96gh (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID be72881b0d821ee080898b675639d3c6;
-          Thu, 11 Jan 2024 13:59:03 +0000 (UTC)
-Message-ID: <bbfe6944-a7f0-46f5-8a30-79eccf84664d@yahoo.com>
-Date: Fri, 12 Jan 2024 00:58:59 +1100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167C13C092;
+	Thu, 11 Jan 2024 14:13:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40BB6X6P000525;
+	Thu, 11 Jan 2024 14:13:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=Vz2aqQeSNqewnd07QmeJfxeLtFu3oi9CdoBaoFgJAZw=;
+ b=IZ1LHLmCLEFqX3F9fISshAPrNQ/UWhVo1GrWJkRwHmcaHGoNDdmwcMRQnmZbIGSW26tV
+ H7fQRQOpBfW4nFFBVnt7u8uX19NCdYwB5DIU9O6G7P7f1eBfKXGsR+vVkRTa7abcNDTW
+ Y2f2mnvRWjAun8preOmLCadChw0iOAuUTp1FF+7q5CQoX68eR3T0sj8zbaVIXvA1gpa8
+ kPFJjNTn5mSEM6OiMYpS1x5UZq+IbswIRQDdGqAQwryFW22EomWm6KFdcmhjyR1Xldfo
+ 01f6ZNKvGexwlbhzump8AYn9ziYd1kLithzFIp6vkFU/xNmqLl2+IerfC8SZeHF7Y0Ql dA== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vj4wwh828-3
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jan 2024 14:13:30 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40BDGl3Z006706;
+	Thu, 11 Jan 2024 14:05:56 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2169.outbound.protection.outlook.com [104.47.57.169])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vfur6yb4y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 11 Jan 2024 14:05:56 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ABBeJptSn/roJIeklJgUG1kojUZZBxlsYMVYnD9nKnwj80bUChaHTMxqLAKDyevE//QmOz6gIRlh+8ffyN42BXij7J5IJvK/SZMlfht+kujoMA+2rNpUvzlCjAwQ5yxMMAai+UVrwVsDPVkHv/QFZwevXcAeMMOkhxFG0MOC07koIp7eUWaktg5UCktuGn6oh1qu3wX+lRKxpzbC2KHpnYHkIxxEbV3yhTlFahcQoCn5BFCUHrdvNfuApzesFRzpN3WH27fYZyu8sUlvnyU8JHkrZv8YrAnUaFigWLcCY7a5CQg6YxShun7CPLix1reOKsWjQnY1ab4ZCHGUUa43BQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Vz2aqQeSNqewnd07QmeJfxeLtFu3oi9CdoBaoFgJAZw=;
+ b=Mrwn447K9aBJagAwdUJfwXiMcn27UoyNcLScwDLUTBYz2okAOkCIV4PWz7473NM+n3zDJ+erpxDS1us7H0Lh2X/0uiBvzZj/TnKuGQf5s/nT8Wjld0yVr+z0ReL7ryL0E/VoGJ5owAN4+sK8bKeXUqzylM43VXr+0rHqYu7lIqSjupRDiSEn3xApyHIjaTjpEiKPi6/dPS9QhbAX6K67wtE07l34afygcVUAhKgkaKbRx6CbNdhZTbtzkfd+tl/FErSTQoUgA9yKDFEVZOcAwwdhRDSmrr7Bm+JkjXCAcmJXoRwzc3X4dGBc0l7R/douOhqTGeie+6HnMxnz99p4xQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vz2aqQeSNqewnd07QmeJfxeLtFu3oi9CdoBaoFgJAZw=;
+ b=i+i2cmWEqygRo/Hlr6/7CALeeNp/QARAgYb/JVVS44IJOffhbGkZDenrYyBtuK+6lT0K9hBU743yHDS01GT/dIUzmkghaE504bGSYX+xriR3z+ykt9VgJzmKSFsykOQt7oxa3DeTkp7S6GIJmvTPpTmUHcGcEbiIDZ4vF9355lA=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH0PR10MB5257.namprd10.prod.outlook.com (2603:10b6:610:df::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.17; Thu, 11 Jan
+ 2024 14:05:53 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::4027:2de1:2be4:d12e]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::4027:2de1:2be4:d12e%3]) with mapi id 15.20.7181.020; Thu, 11 Jan 2024
+ 14:05:53 +0000
+From: Chuck Lever III <chuck.lever@oracle.com>
+To: email200202 <email200202@yahoo.com>
+CC: Greg KH <gregkh@linuxfoundation.org>,
+        Linux regressions mailing list
+	<regressions@lists.linux.dev>,
+        "kernel@gentoo.org" <kernel@gentoo.org>,
+        linux-stable <stable@vger.kernel.org>,
+        Linux NFS Mailing List
+	<linux-nfs@vger.kernel.org>
+Subject: Re: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
+ hangs during shutdown
+Thread-Topic: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
+ hangs during shutdown
+Thread-Index: AQHaRGdDPVVRS6J16EqNLtqy1gmHDLDUWOsAgAALIICAAAMCgIAAPMqAgAAB4AA=
+Date: Thu, 11 Jan 2024 14:05:52 +0000
+Message-ID: <1FAB3DFD-1CEA-4E7E-BF2F-12755F511A98@oracle.com>
+References: <58ac38ae-4d64-4a53-81e0-35785961c41c.ref@yahoo.com>
+ <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
+ <2024011127-excluding-bodacious-1950@gregkh>
+ <3b8250ac-79e4-46d1-a508-5773e6330fb4@yahoo.com>
+ <2024011114-attribute-semisweet-788c@gregkh>
+ <bbfe6944-a7f0-46f5-8a30-79eccf84664d@yahoo.com>
+In-Reply-To: <bbfe6944-a7f0-46f5-8a30-79eccf84664d@yahoo.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3774.200.91.1.1)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CH0PR10MB5257:EE_
+x-ms-office365-filtering-correlation-id: 85976010-ceb9-4182-61c7-08dc12ae6c44
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ G9RpungpNCHmzUnbPJ1++eUBbtkX6510Hkv3Mte7W7QaksjfVxiSHA7KtzBJ5jiXy1PgIPRX7ieOOGAsCo0wg78+B5j0BRsGZ22+ff3iYS1Z4qQbDX/OtZUXhsYwz4ZhiZ4kApKqtm9Cvu2lcxqaOU22JBY2JA7CtVn7z307lNW2XT+euIPD20lVRXPKRIEDoF9xDq7GJ7CFPJ7I/fyF1zw4tybUcMkYS4hOKPZKpNEn41fQGl69ZjNoTWPyxfLBZaepNX8cpb7Q6O9Ep4eYuZb9yB+aA1UVopnU20mVCLztcESZeGAiltFoJvwssIk6SdcZ4PrmXPbzlH/h7SlIbvMAcsr2NadMe+qwvtcfroAxr9K3HUKPcweK+RMdKA8Qtvveo/GAYeidJ8SvkR0t+ZmOmhQEsfgmAyLgGCYI83yDq8pUoFRP+S23TfK/7orS4efXxKACjax5F/+24MdyE8Us/vuzpey7XkAp++pATmfa3jcT/cSeJaOzCkFqIuXjwNi3nkl/Hx56xy6XN2GFERPefsoyC5i8Nvkr/ozETc/MuFySh4nzUNGCEqJ0yBwKfRwWoYMdSM4txg11k/25A4foJJ9WRK3hqXAtWZgqQwh/nHxaM4+JIV35GgV40r8OCzGgzquLej0N97Lzi/GPf2UF1DrjRGC7VyFYPqD8X7BnMJeLyeQQAq2eTD6dWJKH
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(346002)(396003)(39860400002)(366004)(136003)(230173577357003)(230273577357003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(83380400001)(33656002)(26005)(2616005)(71200400001)(6506007)(6512007)(478600001)(53546011)(6486002)(8676002)(66446008)(8936002)(38100700002)(91956017)(36756003)(6916009)(316002)(64756008)(66476007)(54906003)(76116006)(66946007)(66556008)(4326008)(86362001)(122000001)(5660300002)(2906002)(41300700001)(38070700009)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?dFc4VGYyK3VvS0tYNmlpZ21OVGxYVnBIYWl2eHN2d08xZWZQZ01mbldNOUpS?=
+ =?utf-8?B?UXBGL3FHUkxQT3dSMGhodm1jaEhrVE5PaU04YWk1c25FTnBhZjRZNExLNlo0?=
+ =?utf-8?B?K0Y3bzVrNHQ5dFBNeUVlU2ZmTGdQLzNkMFZPbGxVRXAzNkxSS3owSjNWQWhD?=
+ =?utf-8?B?d2pmYUZqTnV1Ui84YWFhK25XcHgrNmdkRTcwd21NM1lmeWErek9EQ1ZwazZB?=
+ =?utf-8?B?WWFyLzBJWnB0UUM1MzdHZmN6U0dPSTZ1b2dFUDdhdEZSL1Zsak5XSkdrUkR4?=
+ =?utf-8?B?K0xReSsyRlhZRnU0RERSSXhCZUp1dU1yUHd0UDN2YStXSTByOEhvQ3djRVIz?=
+ =?utf-8?B?SDY3Vmk0VUsvdE02NGs5Z0FUMmlmejlKaytTU285VERWeTJValpKQ3kzZ282?=
+ =?utf-8?B?QWhjOWZkU1IydDFBQVg1TGhWN1JHTXZxR0hTaWcxYkxXSjdONXdiem1nOVQ2?=
+ =?utf-8?B?NDhiUEtSK2EwMTA4QUJjZ0MvWEF0NzlBUmt4VXNTaDBkTEJPNlI2ZHpaUThF?=
+ =?utf-8?B?R1dyeng3ZEhvRzI2ZXlhOWNKRkQwWkpwaldrNW5mV2oyWGR0K3BVNUZVYklG?=
+ =?utf-8?B?MFIvWkJuS1haUk5iYXNoNndXb0s5N3pCS2NwZXMra1h2NFJIdmFNOE9sUTcx?=
+ =?utf-8?B?cWV0aWt2cGVqTU8xOENLbFNrSG43MzVnUUM4Z2lEdGFrT28rYVBYQTBJQjZS?=
+ =?utf-8?B?bkpXaDdrMWJTc0NIOXRFdlJIUjdQbkpHZDJ2YWlCSGpubDh4U2ZhWi8vZGRK?=
+ =?utf-8?B?SEV3czl6R0tQKzMvbVlMYy94TFhLd09SWFJqS0swUVJJQ2ZEN2d1Nkw5MmN1?=
+ =?utf-8?B?REkwVGZjcnZBSy9Td2VIYmUzVkJCUCtneHd0ZEdaeEVwVE5YcDY5UWo1OTRS?=
+ =?utf-8?B?K3NHeEhhOCtXVEV2S0JUeGdTdjhNYVN2bjM0Z24yV2dRelZVQnpSdzEzWlNL?=
+ =?utf-8?B?Ym85WERpSzVoaWNTMjhMWW1aa0hPQVdJMEJLQzA4d0dDNERUUFBQeml1TlhG?=
+ =?utf-8?B?R3B5R2RNcEplSHVJYWVjcWo0cDdDY0pSM0ZJZlRqZkQzV3UvS2xFQ2ZDMTRF?=
+ =?utf-8?B?a09jY3VyRVk4dWM2c3BDVjg3SjdkQTdFc1BQTzdLMXZQWnl0M1Ereis2R2JR?=
+ =?utf-8?B?b3NPV3Z5dHp0b0tYZTUwNmpmeE5jQWhNS3ZEN0ZlMm5Rd2tXNzJYbUpPczFM?=
+ =?utf-8?B?bUxOTmlpMld1L3dSQ3krdDlpRXp2eGpWN1N3NTUvUysvV1E0dmswR0JxYWdk?=
+ =?utf-8?B?elQzcXI1SWxtdTlEcDl6RjI1S2NpOVNKb0xGMmVsQklkQjJJL2Y2L043WDJs?=
+ =?utf-8?B?eUx2bFY5bkplblN2Qk1yaXNqb1JscVRkWjJuaVNjZXVEM1Z1SmNWZHJrZjVa?=
+ =?utf-8?B?M05VMUgrZFJ6YlVxYjdaNTNseXZrRmMrdERFZkVzK29GZUcrSnEvM3NIOThX?=
+ =?utf-8?B?L0FrYTJkQTdxRzhnT01RK00ycDBKbEg1T2FzYVhldlVZY3N2VU9lWUppOEFj?=
+ =?utf-8?B?QXdmS2Y5Umt5WXBkVGx1Mzd4VW5kbWQvc0h1b2ovQ3d1aW5wM2xwSEFmMktW?=
+ =?utf-8?B?NGViNmc5VlArRzkvN3RUYU1LNVNpOXN4cmVoUG1ySVhsM3IwcTlKWElsT3F3?=
+ =?utf-8?B?WXZFcm10SXFLRWRqUzRORXFwRW5wRFZMZmY2TW03MWdtM3Y1aHhQMmpwUHpp?=
+ =?utf-8?B?NnVzM3paUlA0Wlk2djE1SVk5SndWVERZR3FGM29rWG9nWXAreUlZRk5DamtT?=
+ =?utf-8?B?YlJFR09vN05CVmRWRzhhRzZlZEFhR1orZytlTFVmTjVvenE0cS9jYW9PSS84?=
+ =?utf-8?B?RDR5Nk9KWEd4WlY4UFpLeTZTZTNnV1FUblpJcTVQMG93eE1jYkw2c3hhWFZI?=
+ =?utf-8?B?aFA3UFZsTDk4Q0hYMzFCbFR5YW8rS0RpazRLWll0Vk1mV0ZGaElkenArOWRn?=
+ =?utf-8?B?NzNXQ2VqVXlmV3FQQzEzeWpCeWNJTmdpK1g1RDJtQXJlbE8xcW05TFFRdC90?=
+ =?utf-8?B?ZE5qUHF3WGQ1SUlZOEVqbXVPdDErSGZWTERCQU5NSUYwNXJaMlRxOFlCUENY?=
+ =?utf-8?B?SHRYUXVGZHlBUzJ4aTYrVjRBQ2t3alAwV2x1VTJQd3BZaU9wUDZHR29CZ09T?=
+ =?utf-8?B?TUNIWnp2NGxxOGtQdFlWNlRsaU1pK2lhRXI5VVdaUTJ1YTQ2eUxnODZZTXAv?=
+ =?utf-8?B?cVE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5335EC94C40E2F4A9B3CB1B7B54439C9@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
- hangs during shutdown
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: regressions@lists.linux.dev, kernel@gentoo.org, stable@vger.kernel.org,
- linux-nfs@vger.kernel.org
-References: <58ac38ae-4d64-4a53-81e0-35785961c41c.ref@yahoo.com>
- <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
- <2024011127-excluding-bodacious-1950@gregkh>
- <3b8250ac-79e4-46d1-a508-5773e6330fb4@yahoo.com>
- <2024011114-attribute-semisweet-788c@gregkh>
-Content-Language: en-US
-From: email200202 <email200202@yahoo.com>
-In-Reply-To: <2024011114-attribute-semisweet-788c@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Mailer: WebService/1.1.22010 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
+	6vBWfcu7M3/UQEBXoQeSO9aWMaF304I2WFMrNzHONsaYRAV7S9AuN+VWrvrs1CqrAL8byb2YOcPK1xUUx+Zr7qRzkjieRCbuDYlpkKPJ1hgMcff+V7pfzRakNsP8yCApwoPTL/JoEVXe5tZBZS0spYzAffKNUKah+BMtW7GQliQROWYJSLCUiXGpuMQi4HAv29We1B/hjDs8WdGvTY31ZhzzJLzd124iIJ2fUqyY/YU5SmCRMN8Vyfup5Mkn/QDS953poRPetx/543l1GkUcGJJNIQ9ixHPRfo0VahRsR+mvhPAlNUBtC4xnevn4Q0LBnFkPl7UpabUlyDZZOCqZwM21iwIIZ5wR6XvRVbjIU51xBmaFvl/0Yi72HPlnRtGx5UlRXkShpsBCFuDiA7taxCiDKUD04H94ZbNQ47swUuf2vOu/FrynHfuXO8eNBEYPoZyfzHY3qEL9Iy+bv0bOn9ClTkB7RAzsJuW1G4VHkx37sKyoqIIqr+BvgQt3X8r7oshynQ+wEMoHncqj3B6xfuKkJ9KAWLvPVepKM+L0EuKtFtsdrEHj6JiPW7er7yPPCIO04X8t5d69tdCdXz8Buo3sHhzlbfeBEibKDAhjn1M=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 85976010-ceb9-4182-61c7-08dc12ae6c44
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jan 2024 14:05:52.9501
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qFGhCuhQJp14oNFEvZdefSXWPb7oSUKGajlYurfw3z3iByLKimSAJtXBybIw+R7wsqc/Gu08xkwXLl1hsEvtPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5257
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-11_07,2024-01-11_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
+ adultscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
+ definitions=main-2401110111
+X-Proofpoint-GUID: lNIFv7DJCc5znbYCU8PWGdeEkXWrxCRd
+X-Proofpoint-ORIG-GUID: lNIFv7DJCc5znbYCU8PWGdeEkXWrxCRd
 
-Hi Greg
-
-Here is the test results for the latest versions of 6.6.x and 6.7.x 
-available in Gentoo portage
-
-1- Stopping NFS service failed but, unlike 6.1.x, it did NOT hang.
-
-# uname -r
-6.6.11-gentoo
-# /etc/init.d/nfs stop
-  * Stopping NFS mountd ... [ ok ]
-  * Stopping NFS daemon ...
-  * start-stop-daemon: 8 process(es) refused to stop [ !! ]
-  * Unexporting NFS directories ... [ ok ]
-  * ERROR: nfs failed to stop
-# /etc/init.d/nfs start
-  * WARNING: nfs has already been started
-
-
-# uname -r
-6.7.0-gentoo
-# /etc/init.d/nfs stop
-  * Stopping NFS mountd ... [ ok ]
-  * Stopping NFS daemon ...
-  * start-stop-daemon: 8 process(es) refused to stop [ !! ]
-  * Unexporting NFS directories ... [ ok ]
-  * ERROR: nfs failed to stop
-# /etc/init.d/nfs start
-  * WARNING: nfs has already been started
-
-2- Shutdown didn't hang in both of them
-
-Best regards
-John G
-
-On 11/1/24 21:21, Greg KH wrote:
-> On Thu, Jan 11, 2024 at 09:10:39PM +1100, email200202 wrote:
->> Hi Greg
->>
->> I'm sorry. This my first kernel report.
->>
->> I didn't test 6.6.x and 6.7.x.  I use only 6.1.x.
-> Can you do so?
->
-> thanks,
->
-> greg k-h
-
+DQoNCj4gT24gSmFuIDExLCAyMDI0LCBhdCA4OjU44oCvQU0sIGVtYWlsMjAwMjAyIDxlbWFpbDIw
+MDIwMkB5YWhvby5jb20+IHdyb3RlOg0KPiANCj4gSGkgR3JlZw0KPiANCj4gSGVyZSBpcyB0aGUg
+dGVzdCByZXN1bHRzIGZvciB0aGUgbGF0ZXN0IHZlcnNpb25zIG9mIDYuNi54IGFuZCA2LjcueCBh
+dmFpbGFibGUgaW4gR2VudG9vIHBvcnRhZ2UNCj4gDQo+IDEtIFN0b3BwaW5nIE5GUyBzZXJ2aWNl
+IGZhaWxlZCBidXQsIHVubGlrZSA2LjEueCwgaXQgZGlkIE5PVCBoYW5nLg0KPiANCj4gIyB1bmFt
+ZSAtcg0KPiA2LjYuMTEtZ2VudG9vDQo+ICMgL2V0Yy9pbml0LmQvbmZzIHN0b3ANCj4gICogU3Rv
+cHBpbmcgTkZTIG1vdW50ZCAuLi4gWyBvayBdDQo+ICAqIFN0b3BwaW5nIE5GUyBkYWVtb24gLi4u
+DQo+ICAqIHN0YXJ0LXN0b3AtZGFlbW9uOiA4IHByb2Nlc3MoZXMpIHJlZnVzZWQgdG8gc3RvcCBb
+ICEhIF0NCj4gICogVW5leHBvcnRpbmcgTkZTIGRpcmVjdG9yaWVzIC4uLiBbIG9rIF0NCj4gICog
+RVJST1I6IG5mcyBmYWlsZWQgdG8gc3RvcA0KPiAjIC9ldGMvaW5pdC5kL25mcyBzdGFydA0KPiAg
+KiBXQVJOSU5HOiBuZnMgaGFzIGFscmVhZHkgYmVlbiBzdGFydGVkDQo+IA0KPiANCj4gIyB1bmFt
+ZSAtcg0KPiA2LjcuMC1nZW50b28NCj4gIyAvZXRjL2luaXQuZC9uZnMgc3RvcA0KPiAgKiBTdG9w
+cGluZyBORlMgbW91bnRkIC4uLiBbIG9rIF0NCj4gICogU3RvcHBpbmcgTkZTIGRhZW1vbiAuLi4N
+Cj4gICogc3RhcnQtc3RvcC1kYWVtb246IDggcHJvY2VzcyhlcykgcmVmdXNlZCB0byBzdG9wIFsg
+ISEgXQ0KPiAgKiBVbmV4cG9ydGluZyBORlMgZGlyZWN0b3JpZXMgLi4uIFsgb2sgXQ0KPiAgKiBF
+UlJPUjogbmZzIGZhaWxlZCB0byBzdG9wDQo+ICMgL2V0Yy9pbml0LmQvbmZzIHN0YXJ0DQo+ICAq
+IFdBUk5JTkc6IG5mcyBoYXMgYWxyZWFkeSBiZWVuIHN0YXJ0ZWQNCj4gDQo+IDItIFNodXRkb3du
+IGRpZG4ndCBoYW5nIGluIGJvdGggb2YgdGhlbQ0KPiANCj4gQmVzdCByZWdhcmRzDQo+IEpvaG4g
+Rw0KPiANCj4gT24gMTEvMS8yNCAyMToyMSwgR3JlZyBLSCB3cm90ZToNCj4+IE9uIFRodSwgSmFu
+IDExLCAyMDI0IGF0IDA5OjEwOjM5UE0gKzExMDAsIGVtYWlsMjAwMjAyIHdyb3RlOg0KPj4+IEhp
+IEdyZWcNCj4+PiANCj4+PiBJJ20gc29ycnkuIFRoaXMgbXkgZmlyc3Qga2VybmVsIHJlcG9ydC4N
+Cj4+PiANCj4+PiBJIGRpZG4ndCB0ZXN0IDYuNi54IGFuZCA2LjcueC4gIEkgdXNlIG9ubHkgNi4x
+LnguDQo+PiBDYW4geW91IGRvIHNvPw0KPj4gDQo+PiB0aGFua3MsDQo+PiANCj4+IGdyZWcgay1o
+DQoNCkkgaGF2ZW4ndCBzZWVuIGVtYWlscyBiZWZvcmUgdGhpcyBvbmUuIEJ1dCBoZXJlIGFyZSB0
+aGUgb25seQ0KdGhyZWUgbmV3IE5GU0QgY29tbWl0cyBpbiB2Ni4xLjcxOg0KDQpmOWEwMTkzOGUw
+NzkgTkZTRDogZml4IHBvc3NpYmxlIG9vcHMgd2hlbiBuZnNkL3Bvb2xfc3RhdHMgaXMgY2xvc2Vk
+Lg0KYmI0Zjc5MWNiMmRlIG5mc2Q6IGNhbGwgbmZzZF9sYXN0X3RocmVhZCgpIGJlZm9yZSBmaW5h
+bCBuZnNkX3B1dCgpDQowM2Q2OGZmYzQ4YjkgbmZzZDogc2VwYXJhdGUgbmZzZF9sYXN0X3RocmVh
+ZCgpIGZyb20gbmZzZF9wdXQoKQ0KDQpBbmQgdGhlIGxhdHRlciB0d28gYXJlIGRpcmVjdGx5IHJl
+bGF0ZWQgdG8gTkZTRCBzaHV0IGRvd24uDQoNCi0tDQpDaHVjayBMZXZlcg0KDQoNCg==
 
