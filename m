@@ -1,146 +1,134 @@
-Return-Path: <linux-nfs+bounces-1080-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1081-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3628282D03C
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Jan 2024 11:14:25 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C503482D1CF
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Jan 2024 18:51:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D2AE81F21A45
-	for <lists+linux-nfs@lfdr.de>; Sun, 14 Jan 2024 10:14:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6D31B21175
+	for <lists+linux-nfs@lfdr.de>; Sun, 14 Jan 2024 17:51:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF0841FD1;
-	Sun, 14 Jan 2024 10:14:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3176F4E0;
+	Sun, 14 Jan 2024 17:51:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZafKOWf"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48CBB1FB4
-	for <linux-nfs@vger.kernel.org>; Sun, 14 Jan 2024 10:14:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-35ff5a2fb06so75060125ab.3
-        for <linux-nfs@vger.kernel.org>; Sun, 14 Jan 2024 02:14:17 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14812EAF4
+	for <linux-nfs@vger.kernel.org>; Sun, 14 Jan 2024 17:51:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-556c3f0d6c5so9649608a12.2
+        for <linux-nfs@vger.kernel.org>; Sun, 14 Jan 2024 09:51:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705254668; x=1705859468; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BU3jvUTHr8EpjEsepz5PKwFD5mSb7BoWjcIIqtdRz+g=;
+        b=aZafKOWfDXHfVGFial43dWRXfViYdiRhfF5419/6SmOdKHEAD+Uf989CLc195XK5Pe
+         ewGGSYmvTbvpRQKQEWHG26tvIbBKUKM9m4zYBQCzO/k7ZkABh529IumkowxR5ynCw4l3
+         D8vs4AdGaO1MqG95u0MHIGdDoogJVXX/T6qSizG8rkcBd9caz9F1SsRbUkCizwOPCqH4
+         vDwjw8m1Eje7ZLXgEP/lDNJAqBtrs2Gpeccp5C5NxOVJ9WiYmz4hIFMMZNz0h6vths85
+         2/Q2SNIiXGKc+t5bj/KAA81zPjRZIhXqQ0wW2aT5zDJvqzB76qh8hL7Czn9OWduLtFhi
+         JG3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705227256; x=1705832056;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QrvREBUnMEJS2CzujDbDhJ4E9qQTed9wyaoazMHtiC0=;
-        b=kCtMubEvx+Ospa81JNOx7VpAChYVbVE7sPP7pMJbz6kXc5B5oWfRlPKFPeqgBvBAfk
-         932R3l8QZTyEYylyBEDq5rPJ9HErgqsE71BxIycpVGinORuV3m10msZNdBpbctuILkNN
-         mcMRJq0WZgj46gQDitWFTrvat2sDmZmO6HvfGoH/3DBketzcljYwU229F2lsu8klQYys
-         Zuy92idMQAqw3gGDqLwGdfamCNTLur9JYKFs9jwdH8NaOuagy4KoobDA5Db3R7sBSYnz
-         Lm5NA9vnjwDRueD4d3FAml9XCTIqo3fxrwq4TbpznNeB5uypDt/53wxz3nK6TwDnP1uR
-         D8JA==
-X-Gm-Message-State: AOJu0Yw89aKmpmdiihHtHM8hbn2OAWXOfUAcvtTDTuccluDjQngAmMhD
-	QvBBfHEv1R1jftj7vBxoGS6kIDKhWOLNXuQfp1wV+My0CoBv
-X-Google-Smtp-Source: AGHT+IEgqMBYvqGrYA24w+LW96Eta29eUzTxngRiauLZkHYbupaUjAMNNmp2DbmjfBY+orf8/b96du/cdCjl19nOaL2LA2roXyq5
+        d=1e100.net; s=20230601; t=1705254668; x=1705859468;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BU3jvUTHr8EpjEsepz5PKwFD5mSb7BoWjcIIqtdRz+g=;
+        b=Klz/zlTJdXBpFJY+zxf3gdIklrMsBwd1Oz7lXP+Gh2OYFrE2UHGO0xbKzlP0qOAW00
+         NvSe11eQCCmI1WGIG7pTzS7Khx0Mn9489TWr/Sx7PwiSXUp/Fln48fXqYc8mg+xOSR2Q
+         LDoQPvxb13B+9cQpKsrDzmtboTR1NQ1d30Jr1M6PQdAsu/Nqc3KgGfYBl8UKJfiXDrA8
+         V4cXjWJ3HoZck9VPPWcxryQgMAhx97HtTCrlgIp+yNxQHHut0kx5OaNqba45sjrXBDsx
+         pjIHqzi+Z3Dmv6L+nmNwM/gfofHc32ZivtocIGIJAS9N5JAF3rqnhYwCT7wMueb6dsK+
+         TUcA==
+X-Gm-Message-State: AOJu0YzNtsGLxMD/EFIP2lQ0wKnRCCg7OMLvSrLEM44TFh3CTdmRgvQc
+	+Kg5nANN9ou/j/d6zKRFrn6Oo5VbT+kjIsQWglk=
+X-Google-Smtp-Source: AGHT+IHhL+ZDJW5vOjJoX+nAhpvcgtoy71+BJyAP8M1bIgwVY5C2Foq/3k1jOcJJ3d0J5J6g2vRJypMdkfUnlPey50c=
+X-Received: by 2002:aa7:d994:0:b0:557:c205:a38e with SMTP id
+ u20-20020aa7d994000000b00557c205a38emr1426005eds.103.1705254668101; Sun, 14
+ Jan 2024 09:51:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:180d:b0:35f:9ada:73a8 with SMTP id
- a13-20020a056e02180d00b0035f9ada73a8mr551115ilv.2.1705227256582; Sun, 14 Jan
- 2024 02:14:16 -0800 (PST)
-Date: Sun, 14 Jan 2024 02:14:16 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e3d83a060ee5285a@google.com>
-Subject: [syzbot] [nfs?] KMSAN: kernel-infoleak in sys_name_to_handle_at (4)
-From: syzbot <syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com>
-To: amir73il@gmail.com, brauner@kernel.org, chuck.lever@oracle.com, 
-	jlayton@kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+References: <CAAvCNcDtTNDRvUVjUy4BE7eBCgmkb6hfkq3P0jaGDC=OXg0=6g@mail.gmail.com>
+ <CAKAoaQmmEv+HRjmBMrSMGZn9RQr8C=2W4yeX4vNnohXFJPCV5A@mail.gmail.com>
+ <65a29ca8.6b0a0220.ad415.d6d8.GMR@mx.google.com> <CAKAoaQkZ+b7NfrVi=gu1vCJBvv10=k85bG_kZV9G3jE45OOquw@mail.gmail.com>
+ <0cd8fbfc707f86784dc7d88653b05cd355f89aad.camel@kernel.org> <24ACA376-5239-4941-BE53-70BF5E5E4683@oracle.com>
+In-Reply-To: <24ACA376-5239-4941-BE53-70BF5E5E4683@oracle.com>
+From: Cedric Blancher <cedric.blancher@gmail.com>
+Date: Sun, 14 Jan 2024 18:50:31 +0100
+Message-ID: <CALXu0UeyKvDNx7uM5RDynT=V8YXa27AZ1YNH_A9bBCvBsjrXxw@mail.gmail.com>
+Subject: Re: kernel.org list issues... / was: Fwd: Turn NFSD_MAX_* into
+ tuneables ? / was: Re: Increasing NFSD_MAX_OPS_PER_COMPOUND to 96
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>, Roland Mainz <roland.mainz@nrubsig.org>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sat, 13 Jan 2024 at 17:11, Chuck Lever III <chuck.lever@oracle.com> wrot=
+e:
+>
+>
+>
+> > On Jan 13, 2024, at 10:09=E2=80=AFAM, Jeff Layton <jlayton@kernel.org> =
+wrote:
+> >
+> > On Sat, 2024-01-13 at 15:47 +0100, Roland Mainz wrote:
+> >>
+> >> On Sat, Jan 13, 2024 at 1:19=E2=80=AFAM Dan Shelton <dan.f.shelton@gma=
+il.com> wrote:
+> > Is there a problem with that (assuming NFSv4.1 session limits are honor=
+ed) ?
+>
+> Yes: very clearly the client will hit a rather artificial
+> path length limit. And the limit isn't based on the character
+> length of the path: the limit is hit much sooner with a path
+> that is constructed from a series of very short component
+> names, for instance.
+>
+> Good client implementations keep the number of operations per
+> COMPOUND limited to a small number, and break up operations
+> like path walks to ensure that the protocol and server
+> implementation do not impose any kind of application-visible
+> constraint.
 
-syzbot found the following issue on:
+This is not "good client implementation", this is bad design to force
+single operations into smaller pieces.
 
-HEAD commit:    861deac3b092 Linux 6.7-rc7
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=155d9131e80000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e0c7078a6b901aa3
-dashboard link: https://syzkaller.appspot.com/bug?extid=09b349b3066c2e0b1e96
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16cefdc9e80000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=164fe7e9e80000
+This has drastic implications, and all are BAD:
+- increased latency, by adding more round trips to complete a single
+vfs operation. Right now the NFSv4 Linux server implementation already
+has enough issues with bad latency
+- increased volume of network traffic
+- decreased throughput
+- worker threads have less to do per compound, but the number of
+compounds goes up. But neither are there more server threads, and the
+per compound overhead is static, and just multiples with the
+additional requests
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/0ea60ee8ed32/disk-861deac3.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/6d69fdc33021/vmlinux-861deac3.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/f0158750d452/bzImage-861deac3.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/bb450f076a10/mount_0.gz
+This is basically what ruined X11 in the long run. The protocol split
+everything into little requests, but over 20 years the networks did
+not scale with the increment in CPU power, making X11 less and less
+capable over the network. No one added more complex and powerful X11
+requests, dooming the X11 performance over network.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+09b349b3066c2e0b1e96@syzkaller.appspotmail.com
+So the Linux NFSv4 implementation is now doing the same, but at least
+the protocol has knobs to scale it better.
 
-         option from the mount to silence this warning.
-=======================================================
-=====================================================
-BUG: KMSAN: kernel-infoleak in instrument_copy_to_user include/linux/instrumented.h:114 [inline]
-BUG: KMSAN: kernel-infoleak in _copy_to_user+0xbc/0x100 lib/usercopy.c:40
- instrument_copy_to_user include/linux/instrumented.h:114 [inline]
- _copy_to_user+0xbc/0x100 lib/usercopy.c:40
- copy_to_user include/linux/uaccess.h:191 [inline]
- do_sys_name_to_handle fs/fhandle.c:73 [inline]
- __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
- __se_sys_name_to_handle_at+0x949/0xb10 fs/fhandle.c:94
- __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Uninit was created at:
- slab_post_alloc_hook+0x129/0xa70 mm/slab.h:768
- slab_alloc_node mm/slub.c:3478 [inline]
- __kmem_cache_alloc_node+0x5c9/0x970 mm/slub.c:3517
- __do_kmalloc_node mm/slab_common.c:1006 [inline]
- __kmalloc+0x121/0x3c0 mm/slab_common.c:1020
- kmalloc include/linux/slab.h:604 [inline]
- do_sys_name_to_handle fs/fhandle.c:39 [inline]
- __do_sys_name_to_handle_at fs/fhandle.c:112 [inline]
- __se_sys_name_to_handle_at+0x441/0xb10 fs/fhandle.c:94
- __x64_sys_name_to_handle_at+0xe4/0x140 fs/fhandle.c:94
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0x44/0x110 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x63/0x6b
-
-Bytes 18-19 of 20 are uninitialized
-Memory access of size 20 starts at ffff888128a46380
-Data copied to user address 0000000020000240
-
-CPU: 0 PID: 5006 Comm: syz-executor975 Not tainted 6.7.0-rc7-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/17/2023
-=====================================================
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Ced
+--=20
+Cedric Blancher <cedric.blancher@gmail.com>
+[https://plus.google.com/u/0/+CedricBlancher/]
+Institute Pasteur
 
