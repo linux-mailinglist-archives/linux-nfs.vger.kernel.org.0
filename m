@@ -1,426 +1,226 @@
-Return-Path: <linux-nfs+bounces-1142-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1143-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 900D582F5A0
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 20:41:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3805882F700
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 21:13:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A0162870B8
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 19:41:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B000C1F23B17
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 20:13:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDA981D54A;
-	Tue, 16 Jan 2024 19:41:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 990AA65195;
+	Tue, 16 Jan 2024 19:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="RkTKvsn0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OE0PHYDR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from sonic316-26.consmr.mail.ne1.yahoo.com (sonic316-26.consmr.mail.ne1.yahoo.com [66.163.187.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E001D533
-	for <linux-nfs@vger.kernel.org>; Tue, 16 Jan 2024 19:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.187.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 553DA64CF8;
+	Tue, 16 Jan 2024 19:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705434082; cv=none; b=XvmxdLkVoYgvhhp5fkEmOB0NIkYt4vwWRX+Avyt0xHwWErpbT/FSGXgaOT8JF3uYmHK2Z2Kx/ZD1eGAt6xgmDnXUAmdosnMQpMqvN9Dj+gZohmGcTDoFNpyMxxTcww55ZBfzeL4nabLD+ZHPBYWwYbdrG39KHu4UO9MYHVegjYo=
+	t=1705434407; cv=none; b=MijsS1sfewAe8pwJUtPdfU1g3bcek+nmm7vRRfQk2/jpZeDcEHGldhgxDBgfK4Cu3mIT7zYklMzntLOrSsoEM2MSSewzoX8Lm4pl8AfHI4g4+pcby210Dic1jj3BQ/cH8AWdst98IxxQ91dwFjXNlst31Fq9shMWRsWXdA/2OHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705434082; c=relaxed/simple;
-	bh=1V09i445Vft8fre+PNOEpNMe6lQZDDd4eZkjeZxOl8E=;
-	h=DKIM-Signature:X-SONIC-DKIM-SIGN:X-YMail-OSG:X-Sonic-MF:
-	 X-Sonic-ID:Received:Received:Message-ID:Date:MIME-Version:
-	 User-Agent:Subject:Content-Language:To:Cc:References:From:
-	 In-Reply-To:Content-Type:Content-Transfer-Encoding:X-Mailer; b=MzWQDF+Jl20/31i7AnSCJwZtlZeldfQEVwBGg7P4k4I3D5oauDT1PfDwB7CQ7kDxPqiFJNsOvTS7mWOk6bgAtEGayETArZsogXae+iJ9RdYxQLqjL6Z8IeFMWcrSWXRswpOZUaiRads3B7qjXj5OwMkWVA8mz/T6hk2DR2/2/Ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=RkTKvsn0; arc=none smtp.client-ip=66.163.187.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1705434080; bh=Pums67AQtIibuvWDgI/gKeaSxifYBmsbSPY3e2wEph8=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=RkTKvsn01hE9Vm4cWJ7c29sJDmLUNeipmuAxyJGttMDeAay+vD+zgmeNsmLMGv3GO+5GFsEKoV4JEYpOfUD8dY8enqzBotpzMgK9Hv0BbKxrZg7GPE5fRj6cycFIloF2T60A7tRZZ0l5N45yn3e6HC4EhyIjFhuP4kyo/rOJj1Y0FtmmsKqQWA5fbnqug/6s/thG9rpTYcyilLp89zeC4oBDE0oiJG0+8H1sFkE3HGn9iNuhsWmWOShYHee6g3LWfkd560VnbFYcMV/bXnyXuE5zrVIJ3OeGz5abjm7nBnaMKBa391PSttcrpLaPy3zHokLqe8ZMzXgMp/k3X19rGg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1705434080; bh=vtA9+wfAowU44kTIgSvJJkN6PAk9XwFib66hLHM40Uc=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=SefrzH5hJ/hqET9t7Mcq+kfNqjXokAK57K94thDSHK2Ai2eNuVg8/U02D24ks3026BFU/9dDXPdTymuWL0xiLG/VlRlZb+cxWM6Mnce8UqfnjGESCGoS7sBN3zn/1wic/S3lWUSLZstFhsQSwatw9K2hJydH+PSYDO+bYVRohLMZl6yNWmnEifpiCF7gUgiSv7t9P9lBMGj6Bfe3NDW35MFmkZY0VVnCIPkZc8q5lmA8UflZJ7lLiFwVB+posQeBVEeUDPBjvNtBrpfNexdIep55vdxxdnyyil4rTQ+rRrXltqt0ujIZU1Rf45MI9BBSDy/3cRwd2ESj2uAPNwNymw==
-X-YMail-OSG: REIZpNoVM1mUCR2YGnBrQMAi5V1umO3SzKm1_Fi30VKpNgGGj0k4m.8W0rtKJcB
- BpF9pIJOV7DTwsjuJ.UnUTF2i1NwmjwT78vnFQYYXpQa69wfr4cyMyDnU6DqKSlGyQNycukN7L46
- d_0kehWkOtCvRAdtOPpFFVBVfXbWu.fV1ZP6Wz4S1GQUsrXqWsFKVoY4yeqAI1eWGIA1LbWGnYJu
- m6r9w1W_K3yKdfKhIpLfZT5sJ_7x6n5_FtuSWSJJBa_TCTAFwFKZCUinGI8Xzn6_2TTkhFbnfgCb
- 52kiXjM5CsaZ5eE79otPC4uv_d0grQ.AGNj.XhW0I71jT8Deo8vTZkpdX3mS1L0RaRyk5YJpjPWJ
- Wz1tli8MVMYzM9yrxR3HdyUCEYHoq2C1yrtqda_9FqoWqAZ1ua2KyKrBAfLOvoTV6vLqysjpGABX
- lotne9gTU15yYiPL1m0ZKLCqLoxE1y0huk6IEvYHx84MdX7f7sffHYpBbg3tt.ZzABWR_XdpFI7y
- trFof51BWG9DNkj1unDeuZwFNH7sTWYge0WlWVRnDh00sZO4H8nzd9INOxDVN0FzlEjlwpmc.I3P
- yBtQMSK0jUifebyPs4rMNkpyDVcGSWQ.Z9cF.2b38uCyliaryDs5Gg3_E.zU7FXLlaDBWmFnr1Nx
- 6RwcxMd3vpKK0xDS8wbw5SnhidporqDuYvHkAoXRqaxaotj0yrnqhJvKX5idKIfjAsOZsXZHR7hb
- WWPRg3ofZsuuQ4tFq_eqq2uaVcZzH67wwOs528rOUapIdemlO3O_pRPh3SCShlFHBhPnw.AuZZkF
- XPVwVUd0oIlKUi_p5lQMceUx83Agti4ukk953fXFD7Lh_Y8PAKQkFYpxo_7HUAGLYbZb8TgKBcg5
- UGsnI.Cb5Oxj8lWevnoZopfBKi6rJwUdGM37TxkOInMx7s_xggjPkFa5i6mNpDtIzIdwqto4SLh.
- jrk1tukaafN1D0xrr.FXiNWxtD_P2OnuS0oqnOXf8h1w6PyutrOUgzNhAp_VWSOvYMCS2OpB_P51
- _zVbI9q404JeYik9gyIxuVGk_pFq21FkljmOoEeOBRwOIrVr0jc9y_ICJxQu3F2vSWs5K59ZusqA
- ztQ8NOFwPaqA2R._6UD_HlbXL4KHVV39TS1SUFAcdc60V1.NRMJ6co25iVJwqgLX7j4XU.5ZrTBu
- mvfwXQZVABjJ0saGG2lB2y4lHePUZbiQRYep2nFWIBQ_IHS_nGqOQjRuuBfGo8P354tC3Q7TM298
- m48nCUp02OuCBc9d3ltcsu84XbwPPK6khCgeSX_4D1QjcEdx6N.r7c9UWpKsXfuvkS4HFwYhm7.0
- 7WC6gPSLrxS39lNBo13LUXg62dsSjjilCOBfoD4k9sUi_8Upqx0ftxAwTlkwCPlB8XWz5BTlworQ
- qY7DPWeMfsHf_5s97bvNWKp4TPgApHMLkfjJc5N.BKDiLTQTR2vNzIlv0B9hVNoN5y.n1zYNOx4O
- M82fUltje.lURnjnHN9w8RamxM8Q.MMBJJSec1lJb0PzwNzHEsX8caWCFJkKZHvYRlB15KSYokhF
- woPMXxOuWEyifHtWOw1XaVB7jIBZAnJJQT6edfNMiy9lp6zjgq6BrMKJP.JtaXiKcH0mhN4hd3wU
- qXEgxhrbuiS0vD5wYBvoZg_YIOmw5uOcQbvZsyP9D77u.vL1q5oJuo7H43V.N5cx..WauYlLOOgA
- 1SeA9rEV3_CJ89zyeLC9vAAqHKKxWGnQhUjTcB3JYbwm1Pb5a.Wv_xbKiFzzRv6VXdwVuqwqVanP
- iUmClUlRKRrLT_L9KxX9BvAhoLMNhtgFz5.B_gc59gi7VyeCrtCQjC0.1thJ_siHQV2nQg895EhA
- yk5N52lSSJGfhdPff_oduVMatKKG989pSjUkPA1OMuDng.nvSxPqvUzLF7sgygBFj8DtVZgchmNq
- _GCeO4PdeZhtIvV22_d4oEX9K8Oq2Tz3m05aoq3bSXHGx_4VuHN84zmfLqSGVuukrNOWickeMs7F
- .pN2fN.ufwV5t1S08yZnfFAnhtuQ9bheXwnql2zyon7S57dI539XUebZu4dYrAUfpk1Lnm60_luW
- DzU3ZQ6KIWm6sWgqW5utBY1qABTxQrIOhfmaRZ9DEpXbypJNi0PQGpFoma1zpEBAv9BwRM6h9MEB
- HwMLMoiCDndhXBxXsFnnv2UhUAL5vZ0tSAwSFOHxSHXP5Oo9jDmdyqbKPXb0ZySRW0zBYFJTIhYA
- UvrP2czaqIVhxPXK8.r4bWWTLDKkBKHnhUjTNCCbVWNPJqNTLxv2_gw1qX2tFzAVr378QH8NK
-X-Sonic-MF: <casey@schaufler-ca.com>
-X-Sonic-ID: c99b1a5b-187c-4209-a07c-8495901ac7fa
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic316.consmr.mail.ne1.yahoo.com with HTTP; Tue, 16 Jan 2024 19:41:20 +0000
-Received: by hermes--production-gq1-78d49cd6df-mnx8f (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 1214647a3ffbd90e25e7bcd21096381a;
-          Tue, 16 Jan 2024 19:41:15 +0000 (UTC)
-Message-ID: <3e2d5c73-0c77-4b46-a879-c92116eb5ad9@schaufler-ca.com>
-Date: Tue, 16 Jan 2024 11:41:12 -0800
+	s=arc-20240116; t=1705434407; c=relaxed/simple;
+	bh=+jfAumQNnkzv9I79/OPpoM4LCmBymLZ6ObiQOrhxH0w=;
+	h=Received:DKIM-Signature:From:Subject:Date:Message-Id:MIME-Version:
+	 Content-Type:Content-Transfer-Encoding:X-B4-Tracking:To:Cc:
+	 X-Mailer:X-Developer-Signature:X-Developer-Key; b=jwyESINJp2XXgW4X8n2dOZ1+QqMjD84rLBTHv+1DFvXBwTDp1yj6nd/vEGI+mdcLtQcGYdNPW0TMcDY2TVqLiSaTkxVtJLXbx0dfmgYN7y6ig/rvSuFLwTIe69dwiOEHVOzixkV9mcPZtsKc0fLA77B+e0+kNWJvtxI2lj+bZhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OE0PHYDR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21F6CC433B1;
+	Tue, 16 Jan 2024 19:46:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705434406;
+	bh=+jfAumQNnkzv9I79/OPpoM4LCmBymLZ6ObiQOrhxH0w=;
+	h=From:Subject:Date:To:Cc:From;
+	b=OE0PHYDRr27Lj0JVd5OY7CULI9axTc05pbGbQNnslL4ulzD4U5h75uneDW18itYj3
+	 Wvzbmg/5qqyEwOY7sasMaFTyarhnzUGK4d//nOpec98nvoBa0a4DPBSu0O2DCkUROj
+	 qX6rzGWm/Qqk3ev1qM0VK7ueXT8O8P5TOcu9ryS2Hain83qn9pjuuxlfvIBNX3HiwG
+	 jm6uHWO3Ju/36EtoCuO0kG6318kVEaCEBVOFRCzqEkKdRk4NrpT6/vN+SlOQLFCmXR
+	 Mc8pdjTTs8F5A9Ylew8DRxnna6RYtiQtR9eDUD3cC+Q7wzBHAonbevYGeFmd/AQV99
+	 MEW2LPM4uQriQ==
+From: Jeff Layton <jlayton@kernel.org>
+Subject: [PATCH 00/20] filelock: split struct file_lock into file_lock and
+ file_lease structs
+Date: Tue, 16 Jan 2024 14:45:56 -0500
+Message-Id: <20240116-flsplit-v1-0-c9d0f4370a5d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 25/25] integrity: Remove LSM
-Content-Language: en-US
-To: Roberto Sassu <roberto.sassu@huaweicloud.com>, viro@zeniv.linux.org.uk,
- brauner@kernel.org, chuck.lever@oracle.com, jlayton@kernel.org,
- neilb@suse.de, kolga@netapp.com, Dai.Ngo@oracle.com, tom@talpey.com,
- paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
- zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, eric.snowberg@oracle.com,
- dhowells@redhat.com, jarkko@kernel.org, stephen.smalley.work@gmail.com,
- eparis@parisplace.org, shuah@kernel.org, mic@digikod.net
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-nfs@vger.kernel.org, linux-security-module@vger.kernel.org,
- linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
- selinux@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Roberto Sassu <roberto.sassu@huawei.com>,
- Casey Schaufler <casey@schaufler-ca.com>
-References: <20240115181809.885385-1-roberto.sassu@huaweicloud.com>
- <20240115181809.885385-26-roberto.sassu@huaweicloud.com>
-From: Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <20240115181809.885385-26-roberto.sassu@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.22010 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-B4-Tracking: v=1; b=H4sIAPXcpmUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDQ0Mz3bSc4oKczBLdpJQkEzMLI5OUJDMLJaDqgqLUtMwKsEnRsbW1AEa
+ nPdxZAAAA
+To: Christian Brauner <brauner@kernel.org>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, 
+ Dominique Martinet <asmadeus@codewreck.org>, 
+ Christian Schoenebeck <linux_oss@crudebyte.com>, 
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>, 
+ Xiubo Li <xiubli@redhat.com>, Ilya Dryomov <idryomov@gmail.com>, 
+ Alexander Aring <aahringo@redhat.com>, David Teigland <teigland@redhat.com>, 
+ Miklos Szeredi <miklos@szeredi.hu>, 
+ Andreas Gruenbacher <agruenba@redhat.com>, 
+ Trond Myklebust <trond.myklebust@hammerspace.com>, 
+ Anna Schumaker <anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, 
+ Neil Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, 
+ Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, 
+ Jan Kara <jack@suse.cz>, Mark Fasheh <mark@fasheh.com>, 
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+ Ronnie Sahlberg <lsahlber@redhat.com>, 
+ Shyam Prasad N <sprasad@microsoft.com>, Namjae Jeon <linkinjeon@kernel.org>, 
+ Sergey Senozhatsky <senozhatsky@chromium.org>, 
+ Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev, 
+ linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org, 
+ gfs2@lists.linux.dev, linux-fsdevel@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, ocfs2-devel@lists.linux.dev, 
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org, 
+ linux-trace-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5588; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=+jfAumQNnkzv9I79/OPpoM4LCmBymLZ6ObiQOrhxH0w=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlpt0ftqJwQuqAD38FN6MoC29Q0W1W9QXxgUAdV
+ kpvyO+OpfKJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZabdHwAKCRAADmhBGVaC
+ FYuoD/0citvA0J2DhINaMqSXWn5Xpj24lo64MwYEBG1Y97QveOHDi5+KKxVVKG1xoO1rDxMptqR
+ qaT6JEi5qs613mZ7A1s2AInOfU/SJAiI0DoPNzmbqOVmZte+wk06nmV3oXbsQtCDRWAhY7mXzWc
+ 0QKrxLHPFSb7m6/nmjSxWBUWzhripWiyDd8PPqxpuE2rQGPUwI8o+pop815DhSUsVwBYnnXphGo
+ 60IV3K/e19/H/BbYJflkf838lI41U1Igkjw7d7IY8uskoTqGqWW4pe/CO97hyftI0tFwOY5OHnh
+ PhwI4dinEh14pi/50opiudRbL7Vc3zgVEEqmWShzVI5sGz3SUsBngOFRS5qLqiZ9OMgaod7E/gM
+ Vwf3a5NlILJjAleixtNLywe7xW6V4vchaP2pCUdM5bQ2ks2+fMmHQKmsCQVVVmrzZG9xjbQQ6vA
+ R6gUeeGfidpaZJadjA8Hw0lCiOPKNKcHiycgu9W2niTpt0MZjzu5DnWv9k2R4t9EELlKyICvXcf
+ uOxhKR/fgNQnTJu7zK9Uku3vCCj4gG/mKG01YhWLIeAB/f3feeyHJiKWsRxYzjZfTuScN4Wepn2
+ dx+/QflCrACPDo/n+qTrubHdnI11DdXEgLwRD5DkoeC7f5Prjw8lWn3j33kWbjp5kTPW5EF0ZV1
+ Mw9Mtry0LNNhQ/A==
+X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
+ fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-On 1/15/2024 10:18 AM, Roberto Sassu wrote:
-> From: Roberto Sassu <roberto.sassu@huawei.com>
->
-> Since now IMA and EVM use their own integrity metadata, it is safe to
-> remove the 'integrity' LSM, with its management of integrity metadata.
->
-> Keep the iint.c file only for loading IMA and EVM keys at boot, and for
-> creating the integrity directory in securityfs (we need to keep it for
-> retrocompatibility reasons).
->
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+Long ago, file locks used to hang off of a singly-linked list in struct
+inode. Because of this, when leases were added, they were added to the
+same list and so they had to be tracked using the same sort of
+structure.
 
-Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+Several years ago, we added struct file_lock_context, which allowed us
+to use separate lists to track different types of file locks. Given
+that, leases no longer need to be tracked using struct file_lock.
 
-> ---
->  include/linux/integrity.h      |  14 ---
->  security/integrity/iint.c      | 197 +--------------------------------
->  security/integrity/integrity.h |  25 -----
->  security/security.c            |   2 -
->  4 files changed, 2 insertions(+), 236 deletions(-)
->
-> diff --git a/include/linux/integrity.h b/include/linux/integrity.h
-> index ef0f63ef5ebc..459b79683783 100644
-> --- a/include/linux/integrity.h
-> +++ b/include/linux/integrity.h
-> @@ -19,24 +19,10 @@ enum integrity_status {
->  	INTEGRITY_UNKNOWN,
->  };
->  
-> -/* List of EVM protected security xattrs */
->  #ifdef CONFIG_INTEGRITY
-> -extern struct integrity_iint_cache *integrity_inode_get(struct inode *inode);
-> -extern void integrity_inode_free(struct inode *inode);
->  extern void __init integrity_load_keys(void);
->  
->  #else
-> -static inline struct integrity_iint_cache *
-> -				integrity_inode_get(struct inode *inode)
-> -{
-> -	return NULL;
-> -}
-> -
-> -static inline void integrity_inode_free(struct inode *inode)
-> -{
-> -	return;
-> -}
-> -
->  static inline void integrity_load_keys(void)
->  {
->  }
-> diff --git a/security/integrity/iint.c b/security/integrity/iint.c
-> index d4419a2a1e24..068ac6c2ae1e 100644
-> --- a/security/integrity/iint.c
-> +++ b/security/integrity/iint.c
-> @@ -6,207 +6,14 @@
->   * Mimi Zohar <zohar@us.ibm.com>
->   *
->   * File: integrity_iint.c
-> - *	- implements the integrity hooks: integrity_inode_alloc,
-> - *	  integrity_inode_free
-> - *	- cache integrity information associated with an inode
-> - *	  using a rbtree tree.
-> + *	- initialize the integrity directory in securityfs
-> + *	- load IMA and EVM keys
->   */
-> -#include <linux/slab.h>
-> -#include <linux/init.h>
-> -#include <linux/spinlock.h>
-> -#include <linux/rbtree.h>
-> -#include <linux/file.h>
-> -#include <linux/uaccess.h>
->  #include <linux/security.h>
-> -#include <linux/lsm_hooks.h>
->  #include "integrity.h"
->  
-> -static struct rb_root integrity_iint_tree = RB_ROOT;
-> -static DEFINE_RWLOCK(integrity_iint_lock);
-> -static struct kmem_cache *iint_cache __ro_after_init;
-> -
->  struct dentry *integrity_dir;
->  
-> -/*
-> - * __integrity_iint_find - return the iint associated with an inode
-> - */
-> -static struct integrity_iint_cache *__integrity_iint_find(struct inode *inode)
-> -{
-> -	struct integrity_iint_cache *iint;
-> -	struct rb_node *n = integrity_iint_tree.rb_node;
-> -
-> -	while (n) {
-> -		iint = rb_entry(n, struct integrity_iint_cache, rb_node);
-> -
-> -		if (inode < iint->inode)
-> -			n = n->rb_left;
-> -		else if (inode > iint->inode)
-> -			n = n->rb_right;
-> -		else
-> -			return iint;
-> -	}
-> -
-> -	return NULL;
-> -}
-> -
-> -/*
-> - * integrity_iint_find - return the iint associated with an inode
-> - */
-> -struct integrity_iint_cache *integrity_iint_find(struct inode *inode)
-> -{
-> -	struct integrity_iint_cache *iint;
-> -
-> -	if (!IS_IMA(inode))
-> -		return NULL;
-> -
-> -	read_lock(&integrity_iint_lock);
-> -	iint = __integrity_iint_find(inode);
-> -	read_unlock(&integrity_iint_lock);
-> -
-> -	return iint;
-> -}
-> -
-> -#define IMA_MAX_NESTING (FILESYSTEM_MAX_STACK_DEPTH+1)
-> -
-> -/*
-> - * It is not clear that IMA should be nested at all, but as long is it measures
-> - * files both on overlayfs and on underlying fs, we need to annotate the iint
-> - * mutex to avoid lockdep false positives related to IMA + overlayfs.
-> - * See ovl_lockdep_annotate_inode_mutex_key() for more details.
-> - */
-> -static inline void iint_lockdep_annotate(struct integrity_iint_cache *iint,
-> -					 struct inode *inode)
-> -{
-> -#ifdef CONFIG_LOCKDEP
-> -	static struct lock_class_key iint_mutex_key[IMA_MAX_NESTING];
-> -
-> -	int depth = inode->i_sb->s_stack_depth;
-> -
-> -	if (WARN_ON_ONCE(depth < 0 || depth >= IMA_MAX_NESTING))
-> -		depth = 0;
-> -
-> -	lockdep_set_class(&iint->mutex, &iint_mutex_key[depth]);
-> -#endif
-> -}
-> -
-> -static void iint_init_always(struct integrity_iint_cache *iint,
-> -			     struct inode *inode)
-> -{
-> -	iint->ima_hash = NULL;
-> -	iint->version = 0;
-> -	iint->flags = 0UL;
-> -	iint->atomic_flags = 0UL;
-> -	iint->ima_file_status = INTEGRITY_UNKNOWN;
-> -	iint->ima_mmap_status = INTEGRITY_UNKNOWN;
-> -	iint->ima_bprm_status = INTEGRITY_UNKNOWN;
-> -	iint->ima_read_status = INTEGRITY_UNKNOWN;
-> -	iint->ima_creds_status = INTEGRITY_UNKNOWN;
-> -	iint->evm_status = INTEGRITY_UNKNOWN;
-> -	iint->measured_pcrs = 0;
-> -	mutex_init(&iint->mutex);
-> -	iint_lockdep_annotate(iint, inode);
-> -}
-> -
-> -static void iint_free(struct integrity_iint_cache *iint)
-> -{
-> -	kfree(iint->ima_hash);
-> -	mutex_destroy(&iint->mutex);
-> -	kmem_cache_free(iint_cache, iint);
-> -}
-> -
-> -/**
-> - * integrity_inode_get - find or allocate an iint associated with an inode
-> - * @inode: pointer to the inode
-> - * @return: allocated iint
-> - *
-> - * Caller must lock i_mutex
-> - */
-> -struct integrity_iint_cache *integrity_inode_get(struct inode *inode)
-> -{
-> -	struct rb_node **p;
-> -	struct rb_node *node, *parent = NULL;
-> -	struct integrity_iint_cache *iint, *test_iint;
-> -
-> -	iint = integrity_iint_find(inode);
-> -	if (iint)
-> -		return iint;
-> -
-> -	iint = kmem_cache_alloc(iint_cache, GFP_NOFS);
-> -	if (!iint)
-> -		return NULL;
-> -
-> -	iint_init_always(iint, inode);
-> -
-> -	write_lock(&integrity_iint_lock);
-> -
-> -	p = &integrity_iint_tree.rb_node;
-> -	while (*p) {
-> -		parent = *p;
-> -		test_iint = rb_entry(parent, struct integrity_iint_cache,
-> -				     rb_node);
-> -		if (inode < test_iint->inode) {
-> -			p = &(*p)->rb_left;
-> -		} else if (inode > test_iint->inode) {
-> -			p = &(*p)->rb_right;
-> -		} else {
-> -			write_unlock(&integrity_iint_lock);
-> -			kmem_cache_free(iint_cache, iint);
-> -			return test_iint;
-> -		}
-> -	}
-> -
-> -	iint->inode = inode;
-> -	node = &iint->rb_node;
-> -	inode->i_flags |= S_IMA;
-> -	rb_link_node(node, parent, p);
-> -	rb_insert_color(node, &integrity_iint_tree);
-> -
-> -	write_unlock(&integrity_iint_lock);
-> -	return iint;
-> -}
-> -
-> -/**
-> - * integrity_inode_free - called on security_inode_free
-> - * @inode: pointer to the inode
-> - *
-> - * Free the integrity information(iint) associated with an inode.
-> - */
-> -void integrity_inode_free(struct inode *inode)
-> -{
-> -	struct integrity_iint_cache *iint;
-> -
-> -	if (!IS_IMA(inode))
-> -		return;
-> -
-> -	write_lock(&integrity_iint_lock);
-> -	iint = __integrity_iint_find(inode);
-> -	rb_erase(&iint->rb_node, &integrity_iint_tree);
-> -	write_unlock(&integrity_iint_lock);
-> -
-> -	iint_free(iint);
-> -}
-> -
-> -static void iint_init_once(void *foo)
-> -{
-> -	struct integrity_iint_cache *iint = (struct integrity_iint_cache *) foo;
-> -
-> -	memset(iint, 0, sizeof(*iint));
-> -}
-> -
-> -static int __init integrity_iintcache_init(void)
-> -{
-> -	iint_cache =
-> -	    kmem_cache_create("iint_cache", sizeof(struct integrity_iint_cache),
-> -			      0, SLAB_PANIC, iint_init_once);
-> -	return 0;
-> -}
-> -DEFINE_LSM(integrity) = {
-> -	.name = "integrity",
-> -	.init = integrity_iintcache_init,
-> -	.order = LSM_ORDER_LAST,
-> -};
-> -
-> -
->  /*
->   * integrity_kernel_read - read data from the file
->   *
-> diff --git a/security/integrity/integrity.h b/security/integrity/integrity.h
-> index 671fc50255f9..50d6f798e613 100644
-> --- a/security/integrity/integrity.h
-> +++ b/security/integrity/integrity.h
-> @@ -102,31 +102,6 @@ struct ima_file_id {
->  	__u8 hash[HASH_MAX_DIGESTSIZE];
->  } __packed;
->  
-> -/* integrity data associated with an inode */
-> -struct integrity_iint_cache {
-> -	struct rb_node rb_node;	/* rooted in integrity_iint_tree */
-> -	struct mutex mutex;	/* protects: version, flags, digest */
-> -	struct inode *inode;	/* back pointer to inode in question */
-> -	u64 version;		/* track inode changes */
-> -	unsigned long flags;
-> -	unsigned long measured_pcrs;
-> -	unsigned long atomic_flags;
-> -	unsigned long real_ino;
-> -	dev_t real_dev;
-> -	enum integrity_status ima_file_status:4;
-> -	enum integrity_status ima_mmap_status:4;
-> -	enum integrity_status ima_bprm_status:4;
-> -	enum integrity_status ima_read_status:4;
-> -	enum integrity_status ima_creds_status:4;
-> -	enum integrity_status evm_status:4;
-> -	struct ima_digest_data *ima_hash;
-> -};
-> -
-> -/* rbtree tree calls to lookup, insert, delete
-> - * integrity data associated with an inode.
-> - */
-> -struct integrity_iint_cache *integrity_iint_find(struct inode *inode);
-> -
->  int integrity_kernel_read(struct file *file, loff_t offset,
->  			  void *addr, unsigned long count);
->  
-> diff --git a/security/security.c b/security/security.c
-> index f811cc376a7a..df87c0a7eaac 100644
-> --- a/security/security.c
-> +++ b/security/security.c
-> @@ -19,7 +19,6 @@
->  #include <linux/kernel.h>
->  #include <linux/kernel_read_file.h>
->  #include <linux/lsm_hooks.h>
-> -#include <linux/integrity.h>
->  #include <linux/fsnotify.h>
->  #include <linux/mman.h>
->  #include <linux/mount.h>
-> @@ -1597,7 +1596,6 @@ static void inode_free_by_rcu(struct rcu_head *head)
->   */
->  void security_inode_free(struct inode *inode)
->  {
-> -	integrity_inode_free(inode);
->  	call_void_hook(inode_free_security, inode);
->  	/*
->  	 * The inode may still be referenced in a path walk and
+That said, a lot of the underlying infrastructure _is_ the same between
+file leases and locks, so we can't completely separate everything.
+
+This patchset first splits a group of fields used by both file locks and
+leases into a new struct file_lock_core, that is then embedded in struct
+file_lock. Coccinelle was then used to convert a lot of the callers to
+deal with the move, with the remaining 25% or so converted by hand.
+
+It then converts several internal functions in fs/locks.c to work
+with struct file_lock_core. Lastly, struct file_lock is split into
+struct file_lock and file_lease, and the lease-related APIs converted to
+take struct file_lease.
+
+After the first few patches (which I left split up for easier review),
+the set should be bisectable. I'll plan to squash the first few
+together to make sure the resulting set is bisectable before merge.
+
+Finally, I left the coccinelle scripts I used in tree. I had heard it
+was preferable to merge those along with the patches that they
+generate, but I wasn't sure where they go. I can either move those to a
+more appropriate location or we can just drop that commit if it's not
+needed.
+
+I'd like to have this considered for inclusion in v6.9. Christian, would
+you be amenable to shepherding this into mainline (assuming there are no
+major objections, of course)?
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+Jeff Layton (20):
+      filelock: split common fields into struct file_lock_core
+      filelock: add coccinelle scripts to move fields to struct file_lock_core
+      filelock: the results of the coccinelle conversion
+      filelock: fixups after the coccinelle changes
+      filelock: convert some internal functions to use file_lock_core instead
+      filelock: convert more internal functions to use file_lock_core
+      filelock: make posix_same_owner take file_lock_core pointers
+      filelock: convert posix_owner_key to take file_lock_core arg
+      filelock: make locks_{insert,delete}_global_locks take file_lock_core arg
+      filelock: convert locks_{insert,delete}_global_blocked
+      filelock: convert the IS_* macros to take file_lock_core
+      filelock: make __locks_delete_block and __locks_wake_up_blocks take file_lock_core
+      filelock: convert __locks_insert_block, conflict and deadlock checks to use file_lock_core
+      filelock: convert fl_blocker to file_lock_core
+      filelock: clean up locks_delete_block internals
+      filelock: reorganize locks_delete_block and __locks_insert_block
+      filelock: make assign_type helper take a file_lock_core pointer
+      filelock: convert locks_wake_up_blocks to take a file_lock_core pointer
+      filelock: convert locks_insert_lock_ctx and locks_delete_lock_ctx
+      filelock: split leases out of struct file_lock
+
+ cocci/filelock.cocci            |  81 +++++
+ cocci/filelock2.cocci           |   6 +
+ cocci/nlm.cocci                 |  81 +++++
+ fs/9p/vfs_file.c                |  38 +-
+ fs/afs/flock.c                  |  55 +--
+ fs/ceph/locks.c                 |  74 ++--
+ fs/dlm/plock.c                  |  44 +--
+ fs/fuse/file.c                  |  14 +-
+ fs/gfs2/file.c                  |  16 +-
+ fs/libfs.c                      |   2 +-
+ fs/lockd/clnt4xdr.c             |  14 +-
+ fs/lockd/clntlock.c             |   2 +-
+ fs/lockd/clntproc.c             |  60 +--
+ fs/lockd/clntxdr.c              |  14 +-
+ fs/lockd/svc4proc.c             |  10 +-
+ fs/lockd/svclock.c              |  64 ++--
+ fs/lockd/svcproc.c              |  10 +-
+ fs/lockd/svcsubs.c              |  24 +-
+ fs/lockd/xdr.c                  |  14 +-
+ fs/lockd/xdr4.c                 |  14 +-
+ fs/locks.c                      | 785 ++++++++++++++++++++++------------------
+ fs/nfs/delegation.c             |   4 +-
+ fs/nfs/file.c                   |  22 +-
+ fs/nfs/nfs3proc.c               |   2 +-
+ fs/nfs/nfs4_fs.h                |   2 +-
+ fs/nfs/nfs4file.c               |   2 +-
+ fs/nfs/nfs4proc.c               |  39 +-
+ fs/nfs/nfs4state.c              |   6 +-
+ fs/nfs/nfs4trace.h              |   4 +-
+ fs/nfs/nfs4xdr.c                |   8 +-
+ fs/nfs/write.c                  |   8 +-
+ fs/nfsd/filecache.c             |   4 +-
+ fs/nfsd/nfs4callback.c          |   2 +-
+ fs/nfsd/nfs4layouts.c           |  34 +-
+ fs/nfsd/nfs4state.c             |  98 ++---
+ fs/ocfs2/locks.c                |  12 +-
+ fs/ocfs2/stack_user.c           |   2 +-
+ fs/smb/client/cifsfs.c          |   2 +-
+ fs/smb/client/cifssmb.c         |   8 +-
+ fs/smb/client/file.c            |  74 ++--
+ fs/smb/client/smb2file.c        |   2 +-
+ fs/smb/server/smb2pdu.c         |  44 +--
+ fs/smb/server/vfs.c             |  14 +-
+ include/linux/filelock.h        |  58 ++-
+ include/linux/fs.h              |   5 +-
+ include/linux/lockd/lockd.h     |   8 +-
+ include/trace/events/afs.h      |   4 +-
+ include/trace/events/filelock.h |  54 +--
+ 48 files changed, 1119 insertions(+), 825 deletions(-)
+---
+base-commit: 052d534373b7ed33712a63d5e17b2b6cdbce84fd
+change-id: 20240116-flsplit-bdb46824db68
+
+Best regards,
+-- 
+Jeff Layton <jlayton@kernel.org>
+
 
