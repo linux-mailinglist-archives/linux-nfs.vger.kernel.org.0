@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-1122-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1123-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6383282E729
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 02:38:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3903E82E74A
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 02:42:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 085872832B4
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 01:38:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8500D1F23766
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 01:42:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C765E2BAED;
-	Tue, 16 Jan 2024 01:07:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C106F2E3E4;
+	Tue, 16 Jan 2024 01:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b6y1sh2N"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRGK0Kon"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58D52B9BD;
-	Tue, 16 Jan 2024 01:07:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9029C433B2;
-	Tue, 16 Jan 2024 01:07:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE8E2E624;
+	Tue, 16 Jan 2024 01:08:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98898C433B1;
+	Tue, 16 Jan 2024 01:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705367264;
-	bh=D6dNquvs+D2QAvNvSJaTDvvUZROnBjfpaWDsshclFDI=;
+	s=k20201202; t=1705367286;
+	bh=1JnoFOGH/NXCEXkT8KbuxlrGfiowIX/4UfEWsuL/1Ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b6y1sh2NCC3J+dxedG2u9ViQabOsqtaLUQSZyHhWZ0uEn1ZpsVvTNdqQUBYLZzE0o
-	 9091Q7Rk+OTFbGeHURKI+C/zDcmCLEj7LK5WCRzQfuGpYGSD6oDGluN/iJPgHQIiYW
-	 hVJaFWDf5sxSA3wuv60xbjMdBb79SeBXvfhXvgOkeQ4AmuPvPf8j4Ni2oQoN/VgOLs
-	 PD8DaMAP1cfDyL+CXxeEboLlYD53UGkMtTmgF1+oorPbk6l4ydxvSKapBWnleU8YwI
-	 cF7TzV17tackMkrZ9Rr0YVdLAEKbiPAFyOP+GY5aJ1LeKtlF8YHqErha/fEi2omOeS
-	 DnuMIOKLXixig==
+	b=HRGK0KonyKJzilbLkorizD0ZcQw9YI2PmnFE9mDJdRmDYq/yapxbBFJ6DahMzbNxs
+	 X8EIS35LfDHCjVJUBBNz7YtmoZqgAk01Z/ssWVfI+wKxYoOg8w27uWwFnLu5A8UHN6
+	 WB5Z4tMaltuUtVamjkSEJH7jxUDpalld5sqOrf8nXXC0pS7IzkC8i6nNS/7pmCQVpI
+	 lkJj5Jj6vKT2B5i9w9J93hLixjhjOK6fjf3VUOVPuyKW9SdJaBt+zO63kb4kmkeHai
+	 GUk953iC+goDUaaD9t63Qz4g6smfnEzm0+/wcsKUNG0bM2FMdishYe/6IDJk3Q2d3X
+	 8ANc9+Z/cJXXA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
 Cc: Anna Schumaker <Anna.Schumaker@Netapp.com>,
 	Jeff Layton <jlayton@kernel.org>,
 	Sasha Levin <sashal@kernel.org>,
+	chuck.lever@oracle.com,
 	trond.myklebust@hammerspace.com,
 	anna@kernel.org,
-	chuck.lever@oracle.com,
 	davem@davemloft.net,
 	edumazet@google.com,
 	kuba@kernel.org,
 	pabeni@redhat.com,
 	linux-nfs@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 06/11] SUNRPC: Fix a suspicious RCU usage warning
-Date: Mon, 15 Jan 2024 20:07:06 -0500
-Message-ID: <20240116010729.219219-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 4/9] SUNRPC: Fix a suspicious RCU usage warning
+Date: Mon, 15 Jan 2024 20:07:48 -0500
+Message-ID: <20240116010757.219495-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116010729.219219-1-sashal@kernel.org>
-References: <20240116010729.219219-1-sashal@kernel.org>
+In-Reply-To: <20240116010757.219495-1-sashal@kernel.org>
+References: <20240116010757.219495-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,7 +61,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.147
+X-stable-base: Linux 5.10.208
 Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
@@ -143,10 +143,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index 1693f81aae37..e5c67506334e 100644
+index 78c075a68c04..a11e80d17830 100644
 --- a/net/sunrpc/xprtmultipath.c
 +++ b/net/sunrpc/xprtmultipath.c
-@@ -288,8 +288,9 @@ struct rpc_xprt *xprt_iter_current_entry(struct rpc_xprt_iter *xpi)
+@@ -253,8 +253,9 @@ struct rpc_xprt *xprt_iter_current_entry(struct rpc_xprt_iter *xpi)
  	return xprt_switch_find_current_entry(head, xpi->xpi_cursor);
  }
  
@@ -158,7 +158,7 @@ index 1693f81aae37..e5c67506334e 100644
  {
  	struct list_head *head;
  	struct rpc_xprt *pos;
-@@ -308,6 +309,18 @@ bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
+@@ -273,6 +274,18 @@ bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
  	return false;
  }
  
