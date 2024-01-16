@@ -1,37 +1,37 @@
-Return-Path: <linux-nfs+bounces-1123-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1124-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3903E82E74A
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 02:42:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E6AD82E767
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 02:45:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8500D1F23766
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 01:42:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27168282B2F
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Jan 2024 01:45:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C106F2E3E4;
-	Tue, 16 Jan 2024 01:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53BA63D3B3;
+	Tue, 16 Jan 2024 01:08:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HRGK0Kon"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UC43XnTd"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CE8E2E624;
-	Tue, 16 Jan 2024 01:08:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98898C433B1;
-	Tue, 16 Jan 2024 01:08:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343C53D3A6;
+	Tue, 16 Jan 2024 01:08:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 247C4C433F1;
+	Tue, 16 Jan 2024 01:08:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705367286;
+	s=k20201202; t=1705367309;
 	bh=1JnoFOGH/NXCEXkT8KbuxlrGfiowIX/4UfEWsuL/1Ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HRGK0KonyKJzilbLkorizD0ZcQw9YI2PmnFE9mDJdRmDYq/yapxbBFJ6DahMzbNxs
-	 X8EIS35LfDHCjVJUBBNz7YtmoZqgAk01Z/ssWVfI+wKxYoOg8w27uWwFnLu5A8UHN6
-	 WB5Z4tMaltuUtVamjkSEJH7jxUDpalld5sqOrf8nXXC0pS7IzkC8i6nNS/7pmCQVpI
-	 lkJj5Jj6vKT2B5i9w9J93hLixjhjOK6fjf3VUOVPuyKW9SdJaBt+zO63kb4kmkeHai
-	 GUk953iC+goDUaaD9t63Qz4g6smfnEzm0+/wcsKUNG0bM2FMdishYe/6IDJk3Q2d3X
-	 8ANc9+Z/cJXXA==
+	b=UC43XnTdJQn0trXvyBwMhPqeAMwxcWPTiYjAlxBXVHZVFWvgpgbxOOAr7sZMDzLHG
+	 5WMTFgEFf5trTIiORsAxrs82pYN8LMzoBzS4XUpeFqm5ZTth7VMAIXhVVA8KL+6L7/
+	 a4tXRZhV1WRlykPNuSbQaTXMdGZ0BeMEXe4fgizeQUCc3aUc5LfTXmfUlIfVDCgpgv
+	 4d2nYkjuUlAE6ZKQo5VqK0qxAWTP2OGgfN643d5rfob1hEJrsvC5J5d8X0EASG5+gG
+	 xlRLdXCho7PFMIkuFpIzDHKn6KDnJr3j81FMhy+LttT225ly1HiPm1IEXbcQWDON96
+	 GZHiNq6i2ChIQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -47,12 +47,12 @@ Cc: Anna Schumaker <Anna.Schumaker@Netapp.com>,
 	pabeni@redhat.com,
 	linux-nfs@vger.kernel.org,
 	netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 4/9] SUNRPC: Fix a suspicious RCU usage warning
-Date: Mon, 15 Jan 2024 20:07:48 -0500
-Message-ID: <20240116010757.219495-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 4/9] SUNRPC: Fix a suspicious RCU usage warning
+Date: Mon, 15 Jan 2024 20:08:10 -0500
+Message-ID: <20240116010819.219701-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240116010757.219495-1-sashal@kernel.org>
-References: <20240116010757.219495-1-sashal@kernel.org>
+In-Reply-To: <20240116010819.219701-1-sashal@kernel.org>
+References: <20240116010819.219701-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -61,7 +61,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.208
+X-stable-base: Linux 5.4.267
 Content-Transfer-Encoding: 8bit
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
