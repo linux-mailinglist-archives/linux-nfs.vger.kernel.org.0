@@ -1,160 +1,83 @@
-Return-Path: <linux-nfs+bounces-1204-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1205-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF9AA832312
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jan 2024 02:44:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6300683277F
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jan 2024 11:13:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A9681F22794
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jan 2024 01:44:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95D2D1C2252F
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Jan 2024 10:13:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5B743C28;
-	Fri, 19 Jan 2024 01:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QZx52EeU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4JHj4o9N";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="QZx52EeU";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="4JHj4o9N"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FF433C463;
+	Fri, 19 Jan 2024 10:13:46 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F97F3C0A
-	for <linux-nfs@vger.kernel.org>; Fri, 19 Jan 2024 01:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6313CF4B;
+	Fri, 19 Jan 2024 10:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705628636; cv=none; b=Tdid/sEKjIisMKgyHEhFDgqI/dkzPwCRSAXA/SHV/qObqM9sGx6iuCUSttPL2iGwt17KOz9fW4HdghvJ0rLc7p0Fp4LdZDlps5cj7v2kUkWdNn5uH48Hc49P5oFjKNohwjN/KLKmCFkqQbVDvCi6BR8mpp9kp1NOihMbbNFihzo=
+	t=1705659226; cv=none; b=OQpsBmZrMHr983c9ZhyqxdAPm+RQuVF42Ppg4yJHVCwv6Y6QncOrk98giowHE2aezxOnFso1JF8jFiF9bZ1sqF3fSkRl5k1bWNHKFy43Q2uLgDqUjeYBOdBBlDk29ivQuIW6ELS/Hn4uSrvuTqOWrGFRW180ScY/b5jBPTUqxEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705628636; c=relaxed/simple;
-	bh=vFA94ZkARncC92IsI0gJKCCAOQfKaZcCiTrHUAzivWo=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=AQgoEiiTqrq4v51vC2TW4V6rsb08oQrg7SNOSm0d4KNs+DxGciLXRDuGVjIIco5/Ar0YbrjwrZSk3X8YANWAVDZ0gJsp7f2+U1W+MNpqwmV/DYiet5rogbtnVmX2iB6d/EQbTp1A1ak0pIgdGzFjpgzEdaRPmyj5ogBANZeOTOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QZx52EeU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4JHj4o9N; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=QZx52EeU; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=4JHj4o9N; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 6B31F21FBF;
-	Fri, 19 Jan 2024 01:43:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705628633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RTpY+lhlCgXFvedNpNFzFiuSb5SeoI30lkEuaTDtJcg=;
-	b=QZx52EeUyANE6yPxwVxPuSHB27vkNCMPE5jPRvXnkkEIegULkua8F0R31KW7gp8W8IK+uQ
-	VoOGZGajFJs2xLPui5O/6uvGRyZCn+Hth/HlypM31EWDudQsqANrNIbAq8+02f3fPvM/NX
-	2T6ryEi2qWAzD0QTc14UEAIQgRreUjs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705628633;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RTpY+lhlCgXFvedNpNFzFiuSb5SeoI30lkEuaTDtJcg=;
-	b=4JHj4o9NVZavE51iygo6QkNXq7zqIrnMJ8F9Ld2fyES638K+ZEUu72ijsFVX3Ki9fFLxY6
-	OP2h8NrdrlkOBnCA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705628633; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RTpY+lhlCgXFvedNpNFzFiuSb5SeoI30lkEuaTDtJcg=;
-	b=QZx52EeUyANE6yPxwVxPuSHB27vkNCMPE5jPRvXnkkEIegULkua8F0R31KW7gp8W8IK+uQ
-	VoOGZGajFJs2xLPui5O/6uvGRyZCn+Hth/HlypM31EWDudQsqANrNIbAq8+02f3fPvM/NX
-	2T6ryEi2qWAzD0QTc14UEAIQgRreUjs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705628633;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RTpY+lhlCgXFvedNpNFzFiuSb5SeoI30lkEuaTDtJcg=;
-	b=4JHj4o9NVZavE51iygo6QkNXq7zqIrnMJ8F9Ld2fyES638K+ZEUu72ijsFVX3Ki9fFLxY6
-	OP2h8NrdrlkOBnCA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 4AF9613777;
-	Fri, 19 Jan 2024 01:43:51 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id TkQjANfTqWWcWwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 19 Jan 2024 01:43:50 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	s=arc-20240116; t=1705659226; c=relaxed/simple;
+	bh=fyaI7QjyqAD2QONVkKww5YnWgFmNlPSIUVF2RxNi8Ho=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pt5O4CDxOp0F2i4ygPJZXI/84z/+DCdgOBUgrWSQKPtMnB5Y9sDMefRJFiMBwK+oNe6kIYfGIvMkPFPkiRl/ObGbCQQ2PwO5hsD+xf7ed9L/Pc6rX4dWZsdxu4v/NAzklxT1/n8bIIVqP1ZzuhqlRZK2EFbEQTPYauKIJHyNIV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1rQlsc-0003OF-BQ; Fri, 19 Jan 2024 11:13:42 +0100
+Message-ID: <7b8841eb-eb5e-4518-b5a8-d94e163fd203@leemhuis.info>
+Date: Fri, 19 Jan 2024 11:13:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
- "Olga Kornievskaia" <kolga@netapp.com>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Tom Talpey" <tom@talpey.com>
-Subject:
- Re: [PATCH 07/11] nfsd: allow admin-revoked NFSv4.0 state to be freed.
-In-reply-to: <ZWOJdVwsOI/IKZVp@tissot.1015granger.net>
-References: <20231124002925.1816-1-neilb@suse.de>,
- <20231124002925.1816-8-neilb@suse.de>,
- <ZWOJdVwsOI/IKZVp@tissot.1015granger.net>
-Date: Fri, 19 Jan 2024 12:43:48 +1100
-Message-id: <170562862834.23031.8326629221834970585@noble.neil.brown.name>
-Authentication-Results: smtp-out1.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: -1.30
-X-Spamd-Result: default: False [-1.30 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 NEURAL_HAM_SHORT(-0.20)[-0.991];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[42.51%]
-X-Spam-Flag: NO
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] After kernel upgrade 6.1.70 to 6.1.71, the computer
+ hangs during shutdown
+Content-Language: en-US, de-DE
+To: regressions@lists.linux.dev
+Cc: stable@vger.kernel.org, linux-nfs@vger.kernel.org
+References: <58ac38ae-4d64-4a53-81e0-35785961c41c.ref@yahoo.com>
+ <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
+From: "Linux regression tracking #update (Thorsten Leemhuis)"
+ <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <58ac38ae-4d64-4a53-81e0-35785961c41c@yahoo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1705659224;35e35129;
+X-HE-SMSGID: 1rQlsc-0003OF-BQ
 
-On Mon, 27 Nov 2023, Chuck Lever wrote:
-
-> > +static void nfsd_drop_revoked_stid(struct nfs4_stid *s)
-> > +{
-> > +	struct nfs4_client *cl = s->sc_client;
-> > +
-> > +	switch (s->sc_type) {
-> > +	default:
-> > +		spin_unlock(&cl->cl_lock);
-> > +	}
-> > +}
+On 11.01.24 09:20, email200202 wrote:
 > 
-> I'm not in love with unlocking cl_lock inside nfsd_drop_revoked_stid,
-> but I understand why it's necessary. How about:
+> #regzbot introduced: v6.1.70..v6.1.71
 > 
-> static void nfsd4_drop_revoked_stid_unlock(struct nfs4_client *cl,
-> 					   struct nfs4_stid *s)
-> 	__releases(&cl->cl_lock)
-> {
-> 	....
 > 
+> After kernel upgrade 6.1.70 to 6.1.71, the computer hangs during shutdown.
+> 
+> The problem is related to NFS service. Stopping NFS service hangs:
+> 
+> # /etc/init.d/nfs  stop
+>  * Caching service dependencies ... [ ok ]
+>  * Stopping NFS mountd ... [ ok ]
+>  * Stopping NFS daemon ... [ ok ]
+> [...]
 
-I made it
-	__releases(&s->sc_client->cl_lock)
+#regzbot fix: b2c545c39877408a2fe2
+#regzbot ignore-activity
 
-thanks.
-NeilBrown
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
 
