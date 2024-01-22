@@ -1,60 +1,60 @@
-Return-Path: <linux-nfs+bounces-1228-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1230-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0F1583637A
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 13:41:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B85A836384
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 13:42:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E19FB1C23434
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 12:41:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 439D8294F5E
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 12:42:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F10E3D572;
-	Mon, 22 Jan 2024 12:39:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99C6D3DBA4;
+	Mon, 22 Jan 2024 12:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IkY7xIzb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PRicYh0+"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C1D3D55A
-	for <linux-nfs@vger.kernel.org>; Mon, 22 Jan 2024 12:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1146F3D559
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jan 2024 12:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705927149; cv=none; b=kU+o8u7/kK1GTf5L3G3/HDhYVoTIFhQfaOKLO5CzD7besDnZlplhHAFXTKyhyq+WNgKQp42Qjd+/GwDOktZaAN4rCKFd0dGe4TzySSb0ytEynXQrefwtFJx6CMGgO5MM6obAK93daSR+8+Ipi3sCyFOvhS+otsz+Wb82O65ADLY=
+	t=1705927156; cv=none; b=SPZ8U4DwrfYl1alFCLO1+UK7nObHJjU3rfGO1nHcrAlRk/4VjRcrJ4sljllgtT0odvTSQFH992Evwnz/ethwk7wxHzBkf4r9jRQrcN04HLbS4a26JNF30IycytH+nuyRKBR3CkZP/W9klP5GxdrILk+SbkZj491qRdM5iz6Yq7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705927149; c=relaxed/simple;
-	bh=Qn7dd9HK9v0F1KFFIftRsyM5xQPDc6YGUH7hJwsGprs=;
+	s=arc-20240116; t=1705927156; c=relaxed/simple;
+	bh=8G3yBj9g+dso7iEfMFsKAhuhaGEPop9JL1MTx/cr1WY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GiP5CBeqyIeWb48QbY7zCmI/zfPpImHEVdumn12Bzc1KfAm3GXe3VO5nyymA9lJgbBWfBotIYWTmJOFQYoAyqhPEfvRgXN4WOmswtBJcv+fwpHlavyHwRN0hqVBoz+3G9CdZSJS6WzYx+4efs45OYrsyFIjSgjq6UEVvi6PuxaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IkY7xIzb; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version; b=nVsnXtSVYJ7vY+oN8vZJQOFNkw1Jf7mZaN4bL4Bj6Rw9jAGNrFn62h+uF+D0aeib6M7UogVp8+LkC3BjhrYSCAavlcjy94ovSRfS06Fcvr5A2R+VbiYEZZmR17tIjsTY588vl+dXbMaEq6kLGWicB3WN0QU3ErdcQNomdEY9Bmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PRicYh0+; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705927147;
+	s=mimecast20190719; t=1705927154;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=dTDK7i2Q4hPQnzfb2SdByLYJyeMyokMSiVdAUDeKcK0=;
-	b=IkY7xIzbHcC5i/U4tZ9wxiCivtWB6IaTKdv4GD4MvpAnPz8Z33luO7A8ozZOg3Vvue5TXA
-	xOvKrXzTKYajDVFFbKXMjyOtgDG8eqyDjQh+0dRzX/3BH78WLwG5GpMuc8wt8yr20dA0jV
-	K+BKH2/bxwk507LwJZVhUeYONdq3r6k=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-413-_plndR-FP8mhZbkTFUOBNw-1; Mon, 22 Jan 2024 07:39:05 -0500
-X-MC-Unique: _plndR-FP8mhZbkTFUOBNw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	bh=iici4CcialH0lyfTdSLWnoYWTya5IEpmfmLuwHkca5Y=;
+	b=PRicYh0+50QF1RLrVYruh1rfj7UfOCrh3emwtFgwytmwQ9p3XAS0Ub4Q0fMFwFJvbsIPeF
+	BO4ms2gY6JzVfeb0cCGezOm8RLaJaQkxlUEFxzh2+afXWFl9W85MFMu1dPBZjmzvCadhCi
+	xOJP9ogXHf/JUA+eLco9bhfhEImTIV8=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-304-nqfuXrHZNCS78rn85yiyNQ-1; Mon,
+ 22 Jan 2024 07:39:09 -0500
+X-MC-Unique: nqfuXrHZNCS78rn85yiyNQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DC08E1064DA3;
-	Mon, 22 Jan 2024 12:39:04 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0A9D51C05ABA;
+	Mon, 22 Jan 2024 12:39:08 +0000 (UTC)
 Received: from warthog.procyon.org.com (unknown [10.42.28.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id 0D2471C060B1;
-	Mon, 22 Jan 2024 12:39:02 +0000 (UTC)
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 9CA3E2026D66;
+	Mon, 22 Jan 2024 12:39:05 +0000 (UTC)
 From: David Howells <dhowells@redhat.com>
 To: Christian Brauner <christian@brauner.io>
 Cc: David Howells <dhowells@redhat.com>,
@@ -70,10 +70,14 @@ Cc: David Howells <dhowells@redhat.com>,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: [PATCH 05/10] netfs: Fix a NULL vs IS_ERR() check in netfs_perform_write()
-Date: Mon, 22 Jan 2024 12:38:38 +0000
-Message-ID: <20240122123845.3822570-6-dhowells@redhat.com>
+	Marc Dionne <marc.dionne@auristor.com>,
+	Gao Xiang <xiang@kernel.org>,
+	Chao Yu <chao@kernel.org>,
+	Yue Hu <huyue2@coolpad.com>,
+	Jeffle Xu <jefflexu@linux.alibaba.com>
+Subject: [PATCH 06/10] cachefiles, erofs: Fix NULL deref in when cachefiles is not doing ondemand-mode
+Date: Mon, 22 Jan 2024 12:38:39 +0000
+Message-ID: <20240122123845.3822570-7-dhowells@redhat.com>
 In-Reply-To: <20240122123845.3822570-1-dhowells@redhat.com>
 References: <20240122123845.3822570-1-dhowells@redhat.com>
 Precedence: bulk
@@ -83,38 +87,76 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-From: Dan Carpenter <dan.carpenter@linaro.org>
+cachefiles_ondemand_init_object() as called from cachefiles_open_file() and
+cachefiles_create_tmpfile() does not check if object->ondemand is set
+before dereferencing it, leading to an oops something like:
 
-The netfs_grab_folio_for_write() function doesn't return NULL, it returns
-error pointers.  Update the check accordingly.
+	RIP: 0010:cachefiles_ondemand_init_object+0x9/0x41
+	...
+	Call Trace:
+	 <TASK>
+	 cachefiles_open_file+0xc9/0x187
+	 cachefiles_lookup_cookie+0x122/0x2be
+	 fscache_cookie_state_machine+0xbe/0x32b
+	 fscache_cookie_worker+0x1f/0x2d
+	 process_one_work+0x136/0x208
+	 process_scheduled_works+0x3a/0x41
+	 worker_thread+0x1a2/0x1f6
+	 kthread+0xca/0xd2
+	 ret_from_fork+0x21/0x33
 
-Fixes: c38f4e96e605 ("netfs: Provide func to copy data to pagecache for buffered write")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Fix this by making the calls to cachefiles_ondemand_init_object()
+conditional.
+
+Fixes: 3c5ecfe16e76 ("cachefiles: extract ondemand info field from cachefiles_object")
+Reported-by: Marc Dionne <marc.dionne@auristor.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
-Link: https://lore.kernel.org/r/29fb1310-8e2d-47ba-b68d-40354eb7b896@moroto.mountain/
+cc: Gao Xiang <xiang@kernel.org>
+cc: Chao Yu <chao@kernel.org>
+cc: Yue Hu <huyue2@coolpad.com>
+cc: Jeffle Xu <jefflexu@linux.alibaba.com>
+cc: linux-erofs@lists.ozlabs.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
 ---
- fs/netfs/buffered_write.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/cachefiles/namei.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/fs/netfs/buffered_write.c b/fs/netfs/buffered_write.c
-index e7f9ba6fb16b..a3059b3168fd 100644
---- a/fs/netfs/buffered_write.c
-+++ b/fs/netfs/buffered_write.c
-@@ -221,10 +221,11 @@ ssize_t netfs_perform_write(struct kiocb *iocb, struct iov_iter *iter,
- 		if (unlikely(fault_in_iov_iter_readable(iter, part) == part))
- 			break;
+diff --git a/fs/cachefiles/namei.c b/fs/cachefiles/namei.c
+index 7ade836beb58..180594d24c44 100644
+--- a/fs/cachefiles/namei.c
++++ b/fs/cachefiles/namei.c
+@@ -473,9 +473,11 @@ struct file *cachefiles_create_tmpfile(struct cachefiles_object *object)
+ 	if (!cachefiles_mark_inode_in_use(object, file_inode(file)))
+ 		WARN_ON(1);
  
--		ret = -ENOMEM;
- 		folio = netfs_grab_folio_for_write(mapping, pos, part);
--		if (!folio)
-+		if (IS_ERR(folio)) {
-+			ret = PTR_ERR(folio);
- 			break;
-+		}
+-	ret = cachefiles_ondemand_init_object(object);
+-	if (ret < 0)
+-		goto err_unuse;
++	if (object->ondemand) {
++		ret = cachefiles_ondemand_init_object(object);
++		if (ret < 0)
++			goto err_unuse;
++	}
  
- 		flen = folio_size(folio);
- 		offset = pos & (flen - 1);
+ 	ni_size = object->cookie->object_size;
+ 	ni_size = round_up(ni_size, CACHEFILES_DIO_BLOCK_SIZE);
+@@ -579,9 +581,11 @@ static bool cachefiles_open_file(struct cachefiles_object *object,
+ 	}
+ 	_debug("file -> %pd positive", dentry);
+ 
+-	ret = cachefiles_ondemand_init_object(object);
+-	if (ret < 0)
+-		goto error_fput;
++	if (object->ondemand) {
++		ret = cachefiles_ondemand_init_object(object);
++		if (ret < 0)
++			goto error_fput;
++	}
+ 
+ 	ret = cachefiles_check_auxdata(object, file);
+ 	if (ret < 0)
 
 
