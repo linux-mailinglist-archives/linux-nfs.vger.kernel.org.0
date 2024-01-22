@@ -1,110 +1,104 @@
-Return-Path: <linux-nfs+bounces-1241-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1242-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CB518365B4
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 15:44:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9AB6D83683E
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 16:31:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7018F1C223A3
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 14:44:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50A521F2111E
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 15:31:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E26163D55B;
-	Mon, 22 Jan 2024 14:43:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F6FF46551;
+	Mon, 22 Jan 2024 15:02:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rbCYmBLt"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PtQvFDUJ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A850F3D556;
-	Mon, 22 Jan 2024 14:43:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33835FF0C;
+	Mon, 22 Jan 2024 15:02:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705934638; cv=none; b=HjFuI3XVSb7fzrIBupbQYLulL8HZnIhBGLXGc9g6ctggHyWyJCEfx11ADVGt57ljabZTU4mr/zd9rbrf5DQfEOeT+QBqp6eRbQHz418Z7Ta5/FzJPgANmDEMvt8Snoxa5w7Rdv2vJmLCwuVDbjdfy39V0LkZ22WZgPQrdX0gdR4=
+	t=1705935754; cv=none; b=QL7aqc3jzU8gNLvwPaZ1yLcdzjsWC7vMiZJ6evKV+ezp7HzohipULnkYBJvrSTWVE+qqKzF5mi8qAWZezdcmI0kOpKFZJ6QPOu4PkhqkeB0eyr7Fn8P60JBv/9WCN40ZjaTTeSq2/QDqgYPs4yN0guMUKseg++Wbcshgt/2XixQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705934638; c=relaxed/simple;
-	bh=okSe00Plf0urDpy7xMnzOmvyVyrPmVJSvxNEVIQ9gyo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=szIccTCUXesdUSpEeTsfNv+EYaju/radVDsya1GsFP1NkLu+rBxDlt0bJIAbo8XeVo3YV9E7+57VVWp7JyqZM5fQIoU3OUqGMSgPmf73ArcAykdlRMFvannfcAkrpm90E0x3BkraXKMxOma18S/x0MC0px4E5+chiD0GMt+GgMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rbCYmBLt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DB0C433C7;
-	Mon, 22 Jan 2024 14:43:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705934638;
-	bh=okSe00Plf0urDpy7xMnzOmvyVyrPmVJSvxNEVIQ9gyo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rbCYmBLtGU7jcVEHLqY8mJViCCeFdbnSkSezt6XhBxQd/01t73Mz7+YDNj/JVZ90U
-	 h8yfCER0idrxElrXoY754rURY4Cwj8gCFWocsxQRhd4JnNzkPGjN5UhivZz3fLCfpJ
-	 J25Y7IgJI7fZ23D71v7P0htUUIrDZcEXSp7ujveSupdBO3l73RWrifGBJJX/wVtetI
-	 4c5cdYWRJI5qMfMHrFBX7hbxtTaEpEZS30sFegdRHddze+871iZ4hcQ0DNVJM2LP3X
-	 HbsCVa26Db2yy48nWIhZHASl8uU/Y3niK/h5wZR+n2iUqW9KKDbxuGMH1r+1Bmzg/9
-	 dZ5ltFqAFHpyQ==
-From: Christian Brauner <brauner@kernel.org>
-To: netfs@lists.linux.dev,
-	David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <brauner@kernel.org>,
-	Jeff Layton <jlayton@kernel.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	linux-cachefs@redhat.com,
-	linux-afs@lists.infradead.org,
-	linux-cifs@vger.kernel.org,
-	linux-nfs@vger.kernel.org,
-	ceph-devel@vger.kernel.org,
-	v9fs@lists.linux.dev,
-	linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] netfs, cachefiles: Update MAINTAINERS records
-Date: Mon, 22 Jan 2024 15:43:17 +0100
-Message-ID: <20240122-benennen-lastzug-8560ff9a85aa@brauner>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240122115007.3820330-1-dhowells@redhat.com>
-References: <20240122115007.3820330-1-dhowells@redhat.com>
+	s=arc-20240116; t=1705935754; c=relaxed/simple;
+	bh=kyWsi1lflAk62F6EHmBXI3C2GexH6zr3BdO3AakAaSg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C0VT3xQqPn+IEOz4o/WBoRvrUqUUmZTiXE9CqzUYnhWf/4p7ey3nqeEzRhZVvSKx1vU1A16qp2IVNh54e3hcRm6STcNflgKqvLW/vQ2DZXYLtQ8PESL1NqmjPPs0B2FEyKZ6sIyPTsX5P7YhEJccGOmz+yBhqulNZfHqmkNR0og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PtQvFDUJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7FB7C433B1;
+	Mon, 22 Jan 2024 15:02:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1705935753;
+	bh=kyWsi1lflAk62F6EHmBXI3C2GexH6zr3BdO3AakAaSg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PtQvFDUJAtrOcjflFRQ0iI04ZPcVZ541fBxhg8XqTxh6yY2C+z6QU7W5ScDPb9nk0
+	 bmfPyQqnEFrrhI86mtQz6gY3jag4IJGcXFTw2q442B4O+YY5nrV20ay69AUTfXSgST
+	 jbQEosMvABiE2as/ZBbnGG7cII6G3ltI46of09ik=
+Date: Mon, 22 Jan 2024 07:02:32 -0800
+From: Greg KH <gregkh@linuxfoundation.org>
+To: sedat.dilek@gmail.com
+Cc: David Howells <dhowells@redhat.com>, ceph-devel@vger.kernel.org,
+	davem@davemloft.net, eadavis@qq.com, edumazet@google.com,
+	horms@kernel.org, jaltman@auristor.com, jarkko@kernel.org,
+	jlayton@redhat.com, keyrings@vger.kernel.org, kuba@kernel.org,
+	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-nfs@vger.kernel.org, marc.dionne@auristor.com,
+	markus.suvanto@gmail.com, netdev@vger.kernel.org, pabeni@redhat.com,
+	pengfei.xu@intel.com, smfrench@gmail.com, stable@vger.kernel.org,
+	torvalds@linux-foundation.org, wang840925@gmail.com,
+	sashal@kernel.org, pvorel@suse.cz
+Subject: Re: [PATCH] keys, dns: Fix size check of V1 server-list header
+Message-ID: <2024012218-unlocking-pushy-c7e6@gregkh>
+References: <1850031.1704921100@warthog.procyon.org.uk>
+ <CA+icZUUc_0M_6JU3dZzVqrUUrWJceY1uD8dO2yFMCwtHtkaa_Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1180; i=brauner@kernel.org; h=from:subject:message-id; bh=5wiNsvaXup0M7lS0bpBvZ1QaDid4vN5t5fSW7E6j0v4=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaSuqxd8sTntwGK1+pv1Wqdvf1h0sHr63/XfiqbHZSbUn Z7nFxbk0VHKwiDGxSArpsji0G4SLrecp2KzUaYGzBxWJpAhDFycAjCRVA1Ghm6bneUf3F9MUHl+ VXbbTrG/+TlnZa7w9O47pZzuLXU3dTXD/4Dva27OE3jinqMqVpaoZeks2rBD87Cfq0CYx7lNwat X8wIA
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+icZUUc_0M_6JU3dZzVqrUUrWJceY1uD8dO2yFMCwtHtkaa_Q@mail.gmail.com>
 
-On Mon, 22 Jan 2024 11:49:59 +0000, David Howells wrote:
-> Update the MAINTAINERS records for netfs and cachefiles to reflect a change of
-> mailing list for both as Red Hat no longer archives the mailing list in a
-> publicly accessible place.
+On Mon, Jan 22, 2024 at 08:32:20AM +0100, Petr Vorel wrote:
+> From: Sedat Dilek <sedat.dilek@gmail.com>
 > 
-> Also add Jeff Layton as a reviewer.
-
-Yay!
-
+> On Wed, Jan 10, 2024 at 10:12 PM David Howells <dhowells@redhat.com> wrote:
+> >
+> >
+> > Fix the size check added to dns_resolver_preparse() for the V1 server-list
+> > header so that it doesn't give EINVAL if the size supplied is the same as
+> > the size of the header struct (which should be valid).
+> >
+> > This can be tested with:
+> >
+> >         echo -n -e '\0\0\01\xff\0\0' | keyctl padd dns_resolver desc @p
+> >
+> > which will give "add_key: Invalid argument" without this fix.
+> >
+> > Fixes: 1997b3cb4217 ("keys, dns: Fix missing size check of V1 server-list header")
 > 
-> The patches are here:
+> [ CC stable@vger.kernel.org ]
 > 
-> [...]
+> Your (follow-up) patch is now upstream.
+> 
+> https://git.kernel.org/linus/acc657692aed438e9931438f8c923b2b107aebf9
+> 
+> This misses CC: Stable Tag as suggested by Linus.
+> 
+> Looks like linux-6.1.y and linux-6.6.y needs it, too.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.6.11&id=da89365158f6f656b28bcdbcbbe9eaf97c63c474
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.72&id=079eefaecfd7bbb8fcc30eccb0dfdf50c91f1805
 
-Applied to the vfs.netfs branch of the vfs/vfs.git tree.
-Patches in the vfs.netfs branch should appear in linux-next soon.
+And 5.10.y and 5.15.y.  Now queued up, thanks.
 
-Please report any outstanding bugs that were missed during review in a
-new review to the original patch series allowing us to drop it.
-
-It's encouraged to provide Acked-bys and Reviewed-bys even though the
-patch has now been applied. If possible patch trailers will be updated.
-
-Note that commit hashes shown below are subject to change due to rebase,
-trailer updates or similar. If in doubt, please check the listed branch.
-
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.netfs
-
-[1/2] netfs, cachefiles: Change mailing list
-      https://git.kernel.org/vfs/vfs/c/3c18703079b6
-[2/2] netfs: Add Jeff Layton as reviewer
-      https://git.kernel.org/vfs/vfs/c/d59da02d1ab6
+greg k-h
 
