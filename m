@@ -1,114 +1,254 @@
-Return-Path: <linux-nfs+bounces-1281-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1282-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EC2D8377BD
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 00:31:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC2AE8377BF
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 00:31:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 086B2B23E62
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 23:31:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9BD03284ACB
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 23:31:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA6E34D59A;
-	Mon, 22 Jan 2024 23:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FF274BAA4;
+	Mon, 22 Jan 2024 23:31:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="yhj/qgfD";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kh2EAe8i"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OpyqnxQG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dzW8dzeB";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OpyqnxQG";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dzW8dzeB"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D79304B5A6;
-	Mon, 22 Jan 2024 23:31:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.111.4.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A79E4B5A6
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jan 2024 23:31:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705966276; cv=none; b=gc0grkz9ZBBaLeic/TzbG4YwXpjt8M0y4UN0ouVm/Fy9dg8RdAcIiQSHjg+x0yWWAcgLkO9cR5V/D3jNWaUaMuTBrspv9NWvuUnyOl+Oo26lpLqKqXeir2RC6cfnUOcYxtAH4C+Ghwws/jbeP4wwMeYzIj2sTFh9cZsXyQx5MZI=
+	t=1705966312; cv=none; b=Zvk1zhFIENrZaeEkNMbjKMumKiw2lMqiT4nAJSJlDiDBCcNyLb/NOoFlmuycaFBzYrdkBx95qFARfP9dJhr/cZ2EDYVlyavHTUreUODsYyJJwV9E1nwk6zsTe8/+HRuRDkWz2A+rQrO5QUjVOqR0ZaJlD5s8U2An7eLGuMOF7FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705966276; c=relaxed/simple;
-	bh=UVgaqNAleCMh4pz11mvPeKLmeEBJunt0x9jqrycOGGc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tdv/no7tMATm6WBzib+eyJ32tgVJGiLjtVFii3tJOJTVNe2uDMmVT0e9OrFdkSmeLehTs6arKva3XWzSaIDfh0Ggli4DyEA/ZHSpnoKfGJSdhc5JtCFKPpB69Gbq9g6vMYf1YS0gXD59id2VbNcNv6NzdeQhUh6ZCqbsGR2J1Ek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=yhj/qgfD; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kh2EAe8i; arc=none smtp.client-ip=66.111.4.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
-Received: from compute2.internal (compute2.nyi.internal [10.202.2.46])
-	by mailout.nyi.internal (Postfix) with ESMTP id 6EB285C010D;
-	Mon, 22 Jan 2024 18:31:13 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute2.internal (MEProxy); Mon, 22 Jan 2024 18:31:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1705966273; x=1706052673; bh=QY+0kxBa45
-	0WcfgRMk0z0mHgovAmPelM5cmZQpZZdoM=; b=yhj/qgfDKjwua4lLodqTiL+9RJ
-	dmpUMxFKOwedzDLdybSoMQhjhw/ZQjJzXVivyIT8TTYWnWgyFM4iUVlt96X6SCHB
-	NkVq7TNpQVz3My5tCe+h72bpbb/kg1vj4F3e4VFfdPbtbAHfNh8qcIswvJcapAX8
-	ZvcDvn5cS84FcR61MtKLETlzbss/wJzJXustyZGVoQAKFTQhkT+Va1CJSvAlxAaO
-	I+T44cWvTDXaqXsKW99+W0dWe7dn9cwygwMfURFJXsMjVDHxpVsVE4REt7ZKAkbz
-	I+uCLCcN7Km1drPZwZI0Vhx9Gq8VNHVHo2up5lmHxjetXBWlNAKpJdC9+wAQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-	fm3; t=1705966273; x=1706052673; bh=QY+0kxBa450WcfgRMk0z0mHgovAm
-	PelM5cmZQpZZdoM=; b=kh2EAe8iO6r0ms/eEDDg4jVRA2E4IWcT9v3hTu4dfAL3
-	68I9vDJy41YxUYzh/fjMkKSYhD9+tg6IUCSGbuvawqk94EkapDeRFVWqzZOiNiVd
-	QHb7o9U6ooED3BwcTSTiyno81WhjqlnD97N8lHhyJbfASeG7nz0P2o97H+WCg96f
-	0r0EHBYeq2ZKz3k55RzU9LrhBBxM/3pW6sgllrnmBdsV2d6OLuGXC8BDISnL8wgN
-	pWbNwQbrsQev+yNgnFiNogpQZ85RPskf2lv6IP6N+dtIOWm2VcJqhCSpk4JFEhAR
-	qjG0m/T/O69dRNpDgebCR/AwC4V8w851mJ6BKYM/UA==
-X-ME-Sender: <xms:wfquZR8OpuDEKXbcHeAtw9tuabXa3ftslwSGABeQ4vjSjRnM5P72hA>
-    <xme:wfquZVv57QXdNIiTNj3fl0PAk8KCvK2JNyu9hEJhMYgVDoyoIc54sycsGWTSLBbRo
-    EihlXV390U0Mw>
-X-ME-Received: <xmr:wfquZfBFnxVslWVqVRt7PrPEroAJyf34G486tfjLJOGz3JpLqVOmJd_HP61LPcjlCtgpVfEGpJYtQ6Y>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdekjedguddtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvfevuffkfhggtggujgesthdtredttddtvdenucfhrhhomhepifhrvghg
-    ucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecuggftrfgrthhtvghrnhepgeehue
-    ehgfdtledutdelkeefgeejteegieekheefudeiffdvudeffeelvedttddvnecuffhomhgr
-    ihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
-    epmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:wfquZVfTySuXfCTH-Qt6kIuR98SfRSVShied1sgN5pT8V5yVWm00yg>
-    <xmx:wfquZWPqRntEQ4YNoNrYKWOjZnvMWyDbQ3xiBrYsCBDl4jq8A9wWSw>
-    <xmx:wfquZXla8aGxjuGHYr5_DtJZBrjJe4wtEULVppSkg1gGTxlBDss4NA>
-    <xmx:wfquZXiKa6RHPBwdgc17H9np0vIODZLC9o-QlNWVwgarvtpxUYVPOg>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Mon,
- 22 Jan 2024 18:31:12 -0500 (EST)
-Date: Mon, 22 Jan 2024 15:31:05 -0800
-From: Greg KH <greg@kroah.com>
-To: Chuck Lever III <chuck.lever@oracle.com>
-Cc: linux-stable <stable@vger.kernel.org>,
-	Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-	Neil Brown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>
-Subject: Re: Revert ef481b262bba
-Message-ID: <2024012200-stratus-curdle-fa92@gregkh>
-References: <6EE7E263-F099-4E6E-99B6-C531D33C26CF@oracle.com>
+	s=arc-20240116; t=1705966312; c=relaxed/simple;
+	bh=1oZjXAywPdPdFjpTK/+AXN3jGDYFsYHFGgZLjjekYo0=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=uHJlvKzC+r/gWRUFzaMRa8KEHSb54zVCmrkPID6VVvTJHPkJwZgEMHlRWX/Ec22iQM3m++++fe2OBoGLEqALpJ/D0W9hkDjJr45HFzqd48DBnYpl2gcbQTmYv9y7kr1SDDzi7THayTobFEVltbsmpLmpDOh9ak7xVFR7RAzOGVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OpyqnxQG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=dzW8dzeB; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OpyqnxQG; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=dzW8dzeB; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 8A9C42204B;
+	Mon, 22 Jan 2024 23:31:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1705966308; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GbCHbO7v1MQSFieK8tBUTdWOlpv1HhRqjkEL1xWGiDw=;
+	b=OpyqnxQGvC9xsf6g8oy6sizpN2brqEkX3b4KilL4Uhw1hxplgwRLBGZz3llWIXWVA7iVNg
+	Cp5J5eD6cWjHbPHSXfGeXvCLQgSQCCQrTV3scB8sjDchsU19yntENVF5e0rMhSqKrU2mI+
+	WK05ylSGmwShxcRvsP7NJU+tOJM3Hc0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1705966308;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GbCHbO7v1MQSFieK8tBUTdWOlpv1HhRqjkEL1xWGiDw=;
+	b=dzW8dzeBQR5Am3C0+RSkmZxEjC416KRkNmfWdRxuUORzZqOzaaFQZ9kLykXy7dLJE+M+Sy
+	yi1ZChD42WLxCKDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1705966308; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GbCHbO7v1MQSFieK8tBUTdWOlpv1HhRqjkEL1xWGiDw=;
+	b=OpyqnxQGvC9xsf6g8oy6sizpN2brqEkX3b4KilL4Uhw1hxplgwRLBGZz3llWIXWVA7iVNg
+	Cp5J5eD6cWjHbPHSXfGeXvCLQgSQCCQrTV3scB8sjDchsU19yntENVF5e0rMhSqKrU2mI+
+	WK05ylSGmwShxcRvsP7NJU+tOJM3Hc0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1705966308;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GbCHbO7v1MQSFieK8tBUTdWOlpv1HhRqjkEL1xWGiDw=;
+	b=dzW8dzeBQR5Am3C0+RSkmZxEjC416KRkNmfWdRxuUORzZqOzaaFQZ9kLykXy7dLJE+M+Sy
+	yi1ZChD42WLxCKDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8326B136A4;
+	Mon, 22 Jan 2024 23:31:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gIn4DuL6rmVsbwAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 22 Jan 2024 23:31:46 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6EE7E263-F099-4E6E-99B6-C531D33C26CF@oracle.com>
+From: "NeilBrown" <neilb@suse.de>
+To: "Chuck Lever III" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>, "Dai Ngo" <dai.ngo@oracle.com>,
+ "Olga Kornievskaia" <kolga@netapp.com>, "Tom Talpey" <tom@talpey.com>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] nfsd: fix RELEASE_LOCKOWNER
+In-reply-to: <3162C5BC-8E7C-4A9A-815C-09297B56FA17@oracle.com>
+References: <170589589641.23031.16356786177193106749@noble.neil.brown.name>,
+ <Za57adpDbKJavMRO@tissot.1015granger.net>,
+ <170596063560.23031.1725209290511630080@noble.neil.brown.name>,
+ <3162C5BC-8E7C-4A9A-815C-09297B56FA17@oracle.com>
+Date: Tue, 23 Jan 2024 10:31:43 +1100
+Message-id: <170596630337.23031.332959396445243083@noble.neil.brown.name>
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spam-Level: 
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
+	 MIME_GOOD(-0.10)[text/plain];
+	 RCPT_COUNT_FIVE(0.00)[6];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 TO_DN_ALL(0.00)[];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Flag: NO
 
-On Mon, Jan 22, 2024 at 11:20:46PM +0000, Chuck Lever III wrote:
-> Hello -
+On Tue, 23 Jan 2024, Chuck Lever III wrote:
 > 
-> Neil Brown has asked that
 > 
-> ef481b262bba ("NFSD: Fix possible sleep during nfsd4_release_lockowner()")
+> > On Jan 22, 2024, at 4:57 PM, NeilBrown <neilb@suse.de> wrote:
+> > 
+> > On Tue, 23 Jan 2024, Chuck Lever wrote:
+> >> On Mon, Jan 22, 2024 at 02:58:16PM +1100, NeilBrown wrote:
+> >>> 
+> >>> The test on so_count in nfsd4_release_lockowner() is nonsense and
+> >>> harmful.  Revert to using check_for_locks(), changing that to not sleep.
+> >>> 
+> >>> First: harmful.
+> >>> As is documented in the kdoc comment for nfsd4_release_lockowner(), the
+> >>> test on so_count can transiently return a false positive resulting in a
+> >>> return of NFS4ERR_LOCKS_HELD when in fact no locks are held.  This is
+> >>> clearly a protocol violation and with the Linux NFS client it can cause
+> >>> incorrect behaviour.
+> >>> 
+> >>> If NFS4_RELEASE_LOCKOWNER is sent while some other thread is still
+> >>> processing a LOCK request which failed because, at the time that request
+> >>> was received, the given owner held a conflicting lock, then the nfsd
+> >>> thread processing that LOCK request can hold a reference (conflock) to
+> >>> the lock owner that causes nfsd4_release_lockowner() to return an
+> >>> incorrect error.
+> >>> 
+> >>> The Linux NFS client ignores that NFS4ERR_LOCKS_HELD error because it
+> >>> never sends NFS4_RELEASE_LOCKOWNER without first releasing any locks, so
+> >>> it knows that the error is impossible.  It assumes the lock owner was in
+> >>> fact released so it feels free to use the same lock owner identifier in
+> >>> some later locking request.
+> >>> 
+> >>> When it does reuse a lock owner identifier for which a previous RELEASE
+> >>> failed, it will naturally use a lock_seqid of zero.  However the server,
+> >>> which didn't release the lock owner, will expect a larger lock_seqid and
+> >>> so will respond with NFS4ERR_BAD_SEQID.
+> >>> 
+> >>> So clearly it is harmful to allow a false positive, which testing
+> >>> so_count allows.
+> >>> 
+> >>> The test is nonsense because ... well... it doesn't mean anything.
+> >>> 
+> >>> so_count is the sum of three different counts.
+> >>> 1/ the set of states listed on so_stateids
+> >>> 2/ the set of active vfs locks owned by any of those states
+> >>> 3/ various transient counts such as for conflicting locks.
+> >>> 
+> >>> When it is tested against '2' it is clear that one of these is the
+> >>> transient reference obtained by find_lockowner_str_locked().  It is not
+> >>> clear what the other one is expected to be.
+> >>> 
+> >>> In practice, the count is often 2 because there is precisely one state
+> >>> on so_stateids.  If there were more, this would fail.
+> >>> 
+> >>> It my testing I see two circumstances when RELEASE_LOCKOWNER is called.
+> >>> In one case, CLOSE is called before RELEASE_LOCKOWNER.  That results in
+> >>> all the lock states being removed, and so the lockowner being discarded
+> >>> (it is removed when there are no more references which usually happens
+> >>> when the lock state is discarded).  When nfsd4_release_lockowner() finds
+> >>> that the lock owner doesn't exist, it returns success.
+> >>> 
+> >>> The other case shows an so_count of '2' and precisely one state listed
+> >>> in so_stateid.  It appears that the Linux client uses a separate lock
+> >>> owner for each file resulting in one lock state per lock owner, so this
+> >>> test on '2' is safe.  For another client it might not be safe.
+> >>> 
+> >>> So this patch changes check_for_locks() to use the (newish)
+> >>> find_any_file_locked() so that it doesn't take a reference on the
+> >>> nfs4_file and so never calls nfsd_file_put(), and so never sleeps.
+> >> 
+> >> More to the point, find_any_file_locked() was added by commit
+> >> e0aa651068bf ("nfsd: don't call nfsd_file_put from client states
+> >> seqfile display"), which was merged several months /after/ commit
+> >> ce3c4ad7f4ce ("NFSD: Fix possible sleep during
+> >> nfsd4_release_lockowner()").
+> > 
+> > Yes.  To flesh out the history:
+> > nfsd_file_put() was added in v5.4.  In earlier kernels check_for_locks()
+> > would never sleep.  However the problem patch was backported 4.9, 4.14,
+> > and 4.19 and should be reverted.
 > 
-> be reverted from origin/linux-4.19.y
-> 
-> See: https://lore.kernel.org/linux-nfs/3162C5BC-8E7C-4A9A-815C-09297B56FA17@oracle.com/T/#t
+> I don't see "NFSD: Fix possible sleep during nfsd4_release_lockowner()"
+> in any of those kernels. All but 4.19 are now EOL.
 
-Now reverted, thanks.
+I hadn't checked which were EOL.  Thanks for finding the 4.19 patch and
+requesting a revert.
 
-greg k-h
+> 
+> 
+> > find_any_file_locked() was added in v6.2 so when this patch is
+> > backported to 5.4, 5.10, 5.15, 5.17 - 6.1 it needs to include
+> > find_and_file_locked()
+> 
+> I think I'd rather leave those unperturbed until someone hits a real
+> problem. Unless you have a distribution kernel that needs to see
+> this fix in one of the LTS kernels? The supported stable/LTS kernels
+> are 5.4, 5.10, 5.15, and 6.1.
+
+Why not fix the bug?  It's a real bug that a real customer really hit.
+I've fixed it in all SLE kernels - we don't depend on LTS though we do
+make use of the stable trees in various ways.
+
+But it's your call.
+
+Thanks,
+NeilBrown
+
+
+> 
+> 
+> > The patch should apply unchanged to stable kernels 6.2 and later.
+> 
+> I can add a Cc: stable #v6.2+
+> 
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
+
 
