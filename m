@@ -1,61 +1,58 @@
-Return-Path: <linux-nfs+bounces-1242-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1243-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9AB6D83683E
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 16:31:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2C05F836BB8
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 17:50:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 50A521F2111E
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 15:31:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BF17EB26126
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 16:39:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F6FF46551;
-	Mon, 22 Jan 2024 15:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E81AA14DB67;
+	Mon, 22 Jan 2024 15:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="PtQvFDUJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eF9eAoxR"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33835FF0C;
-	Mon, 22 Jan 2024 15:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B241B14DB5D;
+	Mon, 22 Jan 2024 15:18:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705935754; cv=none; b=QL7aqc3jzU8gNLvwPaZ1yLcdzjsWC7vMiZJ6evKV+ezp7HzohipULnkYBJvrSTWVE+qqKzF5mi8qAWZezdcmI0kOpKFZJ6QPOu4PkhqkeB0eyr7Fn8P60JBv/9WCN40ZjaTTeSq2/QDqgYPs4yN0guMUKseg++Wbcshgt/2XixQ=
+	t=1705936687; cv=none; b=qY2+g5yX+8NF0R0IdBb3I5Ern+35h6I+aEaWtdLT23t8Ti1MB8L1e4NPokDLHOUHRH5Y/8Xo7o9Wu/ywzAOBYnzdtkDn+vdizkJ1PXIrHb2XS+zzD5oXJp/7PFZaIs1gk4BJEZvY377T3YV+xYQx7My1RpKDB+QVUEBeV4tRf7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705935754; c=relaxed/simple;
-	bh=kyWsi1lflAk62F6EHmBXI3C2GexH6zr3BdO3AakAaSg=;
+	s=arc-20240116; t=1705936687; c=relaxed/simple;
+	bh=UQJgDJ1jQGsA5dFTTO+ji4AWSQKmt22PQx0vxvlz2bA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C0VT3xQqPn+IEOz4o/WBoRvrUqUUmZTiXE9CqzUYnhWf/4p7ey3nqeEzRhZVvSKx1vU1A16qp2IVNh54e3hcRm6STcNflgKqvLW/vQ2DZXYLtQ8PESL1NqmjPPs0B2FEyKZ6sIyPTsX5P7YhEJccGOmz+yBhqulNZfHqmkNR0og=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=PtQvFDUJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7FB7C433B1;
-	Mon, 22 Jan 2024 15:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1705935753;
-	bh=kyWsi1lflAk62F6EHmBXI3C2GexH6zr3BdO3AakAaSg=;
+	 Content-Type:Content-Disposition:In-Reply-To; b=fU2ejLPfI0tVEx918kYMmwCXOlb/3rBsOYIsQFf1DKz1oMprpf3aszk47gWw2Ni/uNMByg6m2x7mGLxz2W243kqjOgOQenuyGEhld5XrZLFcEX4MakTAwsNuhDCm+1V0JoIycKsc1ARIAeQ2BfKt5qO7c9A2ArARepteN4Gmh1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eF9eAoxR; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 816C1C4166A;
+	Mon, 22 Jan 2024 15:18:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705936687;
+	bh=UQJgDJ1jQGsA5dFTTO+ji4AWSQKmt22PQx0vxvlz2bA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PtQvFDUJAtrOcjflFRQ0iI04ZPcVZ541fBxhg8XqTxh6yY2C+z6QU7W5ScDPb9nk0
-	 bmfPyQqnEFrrhI86mtQz6gY3jag4IJGcXFTw2q442B4O+YY5nrV20ay69AUTfXSgST
-	 jbQEosMvABiE2as/ZBbnGG7cII6G3ltI46of09ik=
-Date: Mon, 22 Jan 2024 07:02:32 -0800
-From: Greg KH <gregkh@linuxfoundation.org>
-To: sedat.dilek@gmail.com
-Cc: David Howells <dhowells@redhat.com>, ceph-devel@vger.kernel.org,
-	davem@davemloft.net, eadavis@qq.com, edumazet@google.com,
-	horms@kernel.org, jaltman@auristor.com, jarkko@kernel.org,
-	jlayton@redhat.com, keyrings@vger.kernel.org, kuba@kernel.org,
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-nfs@vger.kernel.org, marc.dionne@auristor.com,
-	markus.suvanto@gmail.com, netdev@vger.kernel.org, pabeni@redhat.com,
-	pengfei.xu@intel.com, smfrench@gmail.com, stable@vger.kernel.org,
-	torvalds@linux-foundation.org, wang840925@gmail.com,
-	sashal@kernel.org, pvorel@suse.cz
-Subject: Re: [PATCH] keys, dns: Fix size check of V1 server-list header
-Message-ID: <2024012218-unlocking-pushy-c7e6@gregkh>
-References: <1850031.1704921100@warthog.procyon.org.uk>
- <CA+icZUUc_0M_6JU3dZzVqrUUrWJceY1uD8dO2yFMCwtHtkaa_Q@mail.gmail.com>
+	b=eF9eAoxRJf/brDqvElgArHmgdPeNAo8ieOCn2xi4ufFMxorFWtZ69VUCmexzh/sTP
+	 +BUe+qq0YinH8u65eRct5dmhzAWFFKqlNJaJq3gORFxSLqWHaK8bmTm7uGQKDIW2iI
+	 BieFkdBIEZ3SEyP0Q+8D/ZiNvX3lytbJYySqYooKSLLOUvw4G1RmIOTPeoEcZGNtiJ
+	 A97D5pgdGQt06pSe+FpwzwaOzXbKSAnn7bA+4Rf6cYXtmesshM9PUMKkTZOUiNwyI8
+	 ApQJ9IXiznE6UZvl7XLRgjAysbckvDqpYHK+EfVEDTPw5+WgadpXzK1+9wg+AQRyM9
+	 wZsFayL+0k0lw==
+Date: Mon, 22 Jan 2024 16:18:00 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <christian@brauner.io>, 
+	Jeff Layton <jlayton@kernel.org>, Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev, 
+	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] netfs, afs, cifs, cachefiles, erofs: Miscellaneous
+ fixes
+Message-ID: <20240122-bezwingen-kanister-b56f5bc1bc84@brauner>
+References: <20240122123845.3822570-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -64,41 +61,35 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+icZUUc_0M_6JU3dZzVqrUUrWJceY1uD8dO2yFMCwtHtkaa_Q@mail.gmail.com>
+In-Reply-To: <20240122123845.3822570-1-dhowells@redhat.com>
 
-On Mon, Jan 22, 2024 at 08:32:20AM +0100, Petr Vorel wrote:
-> From: Sedat Dilek <sedat.dilek@gmail.com>
+On Mon, Jan 22, 2024 at 12:38:33PM +0000, David Howells wrote:
+> Hi Christian,
 > 
-> On Wed, Jan 10, 2024 at 10:12 PM David Howells <dhowells@redhat.com> wrote:
-> >
-> >
-> > Fix the size check added to dns_resolver_preparse() for the V1 server-list
-> > header so that it doesn't give EINVAL if the size supplied is the same as
-> > the size of the header struct (which should be valid).
-> >
-> > This can be tested with:
-> >
-> >         echo -n -e '\0\0\01\xff\0\0' | keyctl padd dns_resolver desc @p
-> >
-> > which will give "add_key: Invalid argument" without this fix.
-> >
-> > Fixes: 1997b3cb4217 ("keys, dns: Fix missing size check of V1 server-list header")
+> Here are some miscellaneous fixes for netfslib and a number of filesystems:
 > 
-> [ CC stable@vger.kernel.org ]
+>  (1) Replace folio_index() with folio->index in netfs, afs and cifs.
 > 
-> Your (follow-up) patch is now upstream.
+>  (2) Fix an oops in fscache_put_cache().
 > 
-> https://git.kernel.org/linus/acc657692aed438e9931438f8c923b2b107aebf9
+>  (3) Fix error handling in netfs_perform_write().
 > 
-> This misses CC: Stable Tag as suggested by Linus.
+>  (4) Fix an oops in cachefiles when not using erofs ondemand mode.
 > 
-> Looks like linux-6.1.y and linux-6.6.y needs it, too.
+>  (5) In afs, hide silly-rename files from getdents() to avoid problems with
+>      tar and suchlike.
 > 
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.6.11&id=da89365158f6f656b28bcdbcbbe9eaf97c63c474
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v6.1.72&id=079eefaecfd7bbb8fcc30eccb0dfdf50c91f1805
+>  (6) In afs, fix error handling in lookup with a bulk status fetch.
+> 
+>  (7) In afs, afs_dynroot_d_revalidate() is redundant, so remove it.
+> 
+>  (8) In afs, fix the RCU unlocking in afs_proc_addr_prefs_show().
+> 
+> The patches can also be found here:
+> 
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
 
-And 5.10.y and 5.15.y.  Now queued up, thanks.
-
-greg k-h
+Thank you! I can pull this in right and will send a pr together with the
+other changes around Wednesday/Thursday for -rc2. So reviews before that
+would be nice.
 
