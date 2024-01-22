@@ -1,239 +1,112 @@
-Return-Path: <linux-nfs+bounces-1258-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1259-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E86E08375B1
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 22:57:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E90908375C1
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 23:01:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 708BF28A738
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 21:57:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 80A10B244F6
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 22:01:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66EB048CC3;
-	Mon, 22 Jan 2024 21:57:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA1A48CC6;
+	Mon, 22 Jan 2024 22:01:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nBt8AWRN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8ZGTiwhV";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nBt8AWRN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8ZGTiwhV"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RJjT56Ii"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A4448CC0
-	for <linux-nfs@vger.kernel.org>; Mon, 22 Jan 2024 21:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A528C48CCE
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jan 2024 22:01:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705960644; cv=none; b=aQrmJuwdEOaul1xffOno6/3nlQDVHiYnUY8XV26ofxriYlw+w/6LSYkwSFan8Eu0Uz0oLBR1uC2x0Ud6o2Z+q/v5V8QnsBm32L3/gcAsasZjtV9aobeZMDahNFCXHWCpqVNrKoCOiOJlcHl1vXa03i4U3uk2l2rc9eo6f70LGhI=
+	t=1705960890; cv=none; b=NLD44xylSeWx+v7RgIQBovZMWWKRLNOTl2VSw5KDdoN8+91qkhpYeemec949V7xVGYoDq8ybR3RYF0TLlvZqSqqKQODRpIPSXeuB8qfZgB7flJzg8wagJBN6tpIHtRORyIe3zO22ZzARJUD8jSaSI1TlNutD5HhJ92Om5XUxHcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705960644; c=relaxed/simple;
-	bh=VS6DU918DOD/dafhPhGMDADFtcuqDsluj2ZjKoTdRw4=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=tG4V2ZTq3JN6zPvuYcauLqXt7DDbBuijZ2LMbP8QteK218wYnE++xN29jaIRq3YUDQlheVq79c/Mr5YU4rjtKJAtuDDX9kVAIbE+XLfn6ohnHKu4Tyg6ud2WUA7BOkdAQQrs31j6fe93vsMHJMfcN1O5VqJ5hC7PJFLwmn76agE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nBt8AWRN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8ZGTiwhV; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nBt8AWRN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8ZGTiwhV; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1705960890; c=relaxed/simple;
+	bh=V1yJVFjM67labChbznd10CJnK+mwAgP7GMH9rMtUC+s=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=U7/avl5MPpJlId089wNduHYcRTY+E+dXUl0fSKEYXsJWNS3aHQFaZuCOciL466Xa7yKL0ethB5V6kQ/yVZfqMuaSP6KuiqJVGwSXEcEO3dUm4B2gvjNTuaXYK8lb3QoF+38dmvtrDD1BFykupL+O16rBSTbYAznla/iBbQFyh38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RJjT56Ii; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705960887;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YgorZ9y1ABigf+8AfYUUWexSMaoGg5QlyfBL6eKu5CY=;
+	b=RJjT56IiUiW5b9TpNIT0/HVi3FAPwuSwEv3AvB3nsUngLqALCnVEA/uqOA8ADEmUJNqAXJ
+	UP+YTHj6buCM6BCX4vsnljfXgTN7WZ2Tl+63I41ONlFoAZiqTAdKeIIIYXm5gopmLDOZ7f
+	K0GbZPGvxYuSs/Kwtg3lJ3CuNLEVMgA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-653-FVBxaMfkOUaLwqIkj88Zsg-1; Mon, 22 Jan 2024 17:01:24 -0500
+X-MC-Unique: FVBxaMfkOUaLwqIkj88Zsg-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 9647F1FCE0;
-	Mon, 22 Jan 2024 21:57:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705960640; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zsvvz9HyY7tJ+7CK93VqnbxoISIOOSa0iUx4JyYJPw=;
-	b=nBt8AWRNRDjAerjnKIiNU0pxN3PrXJG38r3BjOwUHIWf/ebv/aRovfZcNLnK0JfW8UdjEv
-	03QRm2p+nYh7ikeEen7BIaSP+LLhIJqGpzZpVAIz3FXirXKj6iJO73XNmRi9i265ZaZa18
-	rLZWarjAbtpJBVsjoNlmLuEaHFE1NJs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705960640;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zsvvz9HyY7tJ+7CK93VqnbxoISIOOSa0iUx4JyYJPw=;
-	b=8ZGTiwhVvB4bGd6Xe42WUvFu19QubgLVzg35h21fF/3c3l+yILnKUfK/2RSN3Y9OgG6Aqy
-	QxiMFK8mEDX/OhDQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1705960640; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zsvvz9HyY7tJ+7CK93VqnbxoISIOOSa0iUx4JyYJPw=;
-	b=nBt8AWRNRDjAerjnKIiNU0pxN3PrXJG38r3BjOwUHIWf/ebv/aRovfZcNLnK0JfW8UdjEv
-	03QRm2p+nYh7ikeEen7BIaSP+LLhIJqGpzZpVAIz3FXirXKj6iJO73XNmRi9i265ZaZa18
-	rLZWarjAbtpJBVsjoNlmLuEaHFE1NJs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1705960640;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5zsvvz9HyY7tJ+7CK93VqnbxoISIOOSa0iUx4JyYJPw=;
-	b=8ZGTiwhVvB4bGd6Xe42WUvFu19QubgLVzg35h21fF/3c3l+yILnKUfK/2RSN3Y9OgG6Aqy
-	QxiMFK8mEDX/OhDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 853B413995;
-	Mon, 22 Jan 2024 21:57:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id axoED77krmWfVwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Mon, 22 Jan 2024 21:57:18 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D9621845E60;
+	Mon, 22 Jan 2024 22:01:22 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 77F78492BC6;
+	Mon, 22 Jan 2024 22:01:20 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <7790423f-665e-44cc-b4ae-d3f3d2996af5@linux.alibaba.com>
+References: <7790423f-665e-44cc-b4ae-d3f3d2996af5@linux.alibaba.com> <20240122123845.3822570-1-dhowells@redhat.com> <20240122123845.3822570-7-dhowells@redhat.com>
+To: Jingbo Xu <jefflexu@linux.alibaba.com>
+Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
+    Jeff Layton <jlayton@kernel.org>,
+    Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
+    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+    linux-kernel@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
+    Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+    Yue Hu <huyue2@coolpad.com>
+Subject: Re: [PATCH 06/10] cachefiles, erofs: Fix NULL deref in when cachefiles is not doing ondemand-mode
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Chuck Lever" <chuck.lever@oracle.com>
-Cc: "Jeff Layton" <jlayton@kernel.org>, "Dai Ngo" <Dai.Ngo@oracle.com>,
- "Olga Kornievskaia" <kolga@netapp.com>, "Tom Talpey" <tom@talpey.com>,
- linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsd: fix RELEASE_LOCKOWNER
-In-reply-to: <Za57adpDbKJavMRO@tissot.1015granger.net>
-References: <170589589641.23031.16356786177193106749@noble.neil.brown.name>,
- <Za57adpDbKJavMRO@tissot.1015granger.net>
-Date: Tue, 23 Jan 2024 08:57:15 +1100
-Message-id: <170596063560.23031.1725209290511630080@noble.neil.brown.name>
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=nBt8AWRN;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=8ZGTiwhV
-X-Spamd-Result: default: False [-3.31 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 FROM_HAS_DN(0.00)[];
-	 TO_DN_SOME(0.00)[];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 RCPT_COUNT_FIVE(0.00)[6];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 9647F1FCE0
-X-Spam-Level: 
-X-Spam-Score: -3.31
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3980815.1705960879.1@warthog.procyon.org.uk>
+Date: Mon, 22 Jan 2024 22:01:19 +0000
+Message-ID: <3980816.1705960879@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On Tue, 23 Jan 2024, Chuck Lever wrote:
-> On Mon, Jan 22, 2024 at 02:58:16PM +1100, NeilBrown wrote:
-> > 
-> > The test on so_count in nfsd4_release_lockowner() is nonsense and
-> > harmful.  Revert to using check_for_locks(), changing that to not sleep.
-> > 
-> > First: harmful.
-> > As is documented in the kdoc comment for nfsd4_release_lockowner(), the
-> > test on so_count can transiently return a false positive resulting in a
-> > return of NFS4ERR_LOCKS_HELD when in fact no locks are held.  This is
-> > clearly a protocol violation and with the Linux NFS client it can cause
-> > incorrect behaviour.
-> > 
-> > If NFS4_RELEASE_LOCKOWNER is sent while some other thread is still
-> > processing a LOCK request which failed because, at the time that request
-> > was received, the given owner held a conflicting lock, then the nfsd
-> > thread processing that LOCK request can hold a reference (conflock) to
-> > the lock owner that causes nfsd4_release_lockowner() to return an
-> > incorrect error.
-> > 
-> > The Linux NFS client ignores that NFS4ERR_LOCKS_HELD error because it
-> > never sends NFS4_RELEASE_LOCKOWNER without first releasing any locks, so
-> > it knows that the error is impossible.  It assumes the lock owner was in
-> > fact released so it feels free to use the same lock owner identifier in
-> > some later locking request.
-> > 
-> > When it does reuse a lock owner identifier for which a previous RELEASE
-> > failed, it will naturally use a lock_seqid of zero.  However the server,
-> > which didn't release the lock owner, will expect a larger lock_seqid and
-> > so will respond with NFS4ERR_BAD_SEQID.
-> > 
-> > So clearly it is harmful to allow a false positive, which testing
-> > so_count allows.
-> > 
-> > The test is nonsense because ... well... it doesn't mean anything.
-> > 
-> > so_count is the sum of three different counts.
-> > 1/ the set of states listed on so_stateids
-> > 2/ the set of active vfs locks owned by any of those states
-> > 3/ various transient counts such as for conflicting locks.
-> > 
-> > When it is tested against '2' it is clear that one of these is the
-> > transient reference obtained by find_lockowner_str_locked().  It is not
-> > clear what the other one is expected to be.
-> > 
-> > In practice, the count is often 2 because there is precisely one state
-> > on so_stateids.  If there were more, this would fail.
-> > 
-> > It my testing I see two circumstances when RELEASE_LOCKOWNER is called.
-> > In one case, CLOSE is called before RELEASE_LOCKOWNER.  That results in
-> > all the lock states being removed, and so the lockowner being discarded
-> > (it is removed when there are no more references which usually happens
-> > when the lock state is discarded).  When nfsd4_release_lockowner() finds
-> > that the lock owner doesn't exist, it returns success.
-> > 
-> > The other case shows an so_count of '2' and precisely one state listed
-> > in so_stateid.  It appears that the Linux client uses a separate lock
-> > owner for each file resulting in one lock state per lock owner, so this
-> > test on '2' is safe.  For another client it might not be safe.
-> > 
-> > So this patch changes check_for_locks() to use the (newish)
-> > find_any_file_locked() so that it doesn't take a reference on the
-> > nfs4_file and so never calls nfsd_file_put(), and so never sleeps.
+Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
+
+> > -	ret = cachefiles_ondemand_init_object(object);
+> > -	if (ret < 0)
+> > -		goto err_unuse;
+> > +	if (object->ondemand) {
+> > +		ret = cachefiles_ondemand_init_object(object);
+> > +		if (ret < 0)
+> > +			goto err_unuse;
+> > +	}
 > 
-> More to the point, find_any_file_locked() was added by commit
-> e0aa651068bf ("nfsd: don't call nfsd_file_put from client states
-> seqfile display"), which was merged several months /after/ commit
-> ce3c4ad7f4ce ("NFSD: Fix possible sleep during
-> nfsd4_release_lockowner()").
+> I'm not sure if object->ondemand shall be checked by the caller or
+> inside cachefiles_ondemand_init_object(), as
+> cachefiles_ondemand_clean_object() is also called without checking
+> object->ondemand. cachefiles_ondemand_clean_object() won't trigger the
+> NULL oops as the called cachefiles_ondemand_send_req() will actually
+> checks that.
 
-Yes.  To flesh out the history:
-nfsd_file_put() was added in v5.4.  In earlier kernels check_for_locks()
-would never sleep.  However the problem patch was backported 4.9, 4.14,
-and 4.19 and should be reverted.
+Meh.  The above doesn't actually build if CONFIG_CACHEFILES_ONDEMAND=N.  I
+think I have to push the check down into cachefiles_ondemand_init_object()
+instead.
 
-find_any_file_locked() was added in v6.2 so when this patch is
-backported to 5.4, 5.10, 5.15, 5.17 - 6.1 it needs to include
-find_and_file_locked()
+David
 
-The patch should apply unchanged to stable kernels 6.2 and later.
-
-
-> 
-> Not having to deal with nfsd_file_put() in check_for_locks is a Good
-> Thing.
-
-:-)
-Makes me wonder if there is anywhere is were we don't want
-nfsd_file_put() ... but I cannot find any obvious candidates for change.
-
-> 
-> Am I correct in observing that the new check_for_locks() is the only
-> place where flc_lock and fi_lock are held concurrently?
-
-That is what I see - yes.
-fi_lock is taken inside cl_lock elsewhere, and we preserve the ordering
-in this patch.
-I cannot see that any nfsd locks are taken when flc_lock is held, so it
-is safe to take it while fi_lock and cl_lock are held.
-
-Thanks,
-NeilBrown
 
