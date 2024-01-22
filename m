@@ -1,59 +1,61 @@
-Return-Path: <linux-nfs+bounces-1247-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1248-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08FFD836C71
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 18:05:47 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 377D5836C89
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 18:09:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2C95B1C268AF
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 17:05:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F2B61F267E8
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 17:09:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70985495CD;
-	Mon, 22 Jan 2024 15:50:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8B963E466;
+	Mon, 22 Jan 2024 15:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCLpAqb5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcqDq41i"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49903495CA;
-	Mon, 22 Jan 2024 15:50:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8BC3D574;
+	Mon, 22 Jan 2024 15:57:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705938612; cv=none; b=PmKe7vibooPlz71ac0jEIfix0RtfQac9QOlDOY9VUdrRPaxGRMqVarTkP3Xt149VPbB0iiJJPuTXUDJtlaCnDVQSWf8afm/Mfx3g/Z9cEl6bbRjks+A8dN1xXLk0+Mav1Md0YT3QWOyeLNJzFvfbt1urZIY4dYyf1I9P73Z0Sgk=
+	t=1705939061; cv=none; b=CLdirXED/mOhPg8wN0xfFnnP9MASL5rppc9Nr8WPsYXBrqukh27cL4x4hFikTFqxcayyOn5YK3c34G61nnhfnG5Nmsy92ND36cebb8fMG34veFB3y+/pG3kfs5afKptSrdUOLjSR3fjWECuya4+cXliVxULvP60yHs0w2MuZAGw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705938612; c=relaxed/simple;
-	bh=p+TlGwVMmsU570L0oRcCtptBuGnNSCPIjEoFP+qEjcg=;
+	s=arc-20240116; t=1705939061; c=relaxed/simple;
+	bh=QtOBOG9ddLW7vk+CzY4v5le4fgOK/IuccvQJbq+SKBM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=J0nITjzh9Bw9ZL7o6EyZ2AdAOrWvhjwxIBBM1TgHNieezT16dFht6L0XKIZMbRB5P7T+nAxHZgkjd4SsD4v/rf2iBJzXDTqP+rzeSg2I6re+W1PLWX1fdexnM7QmBjEM4zOkmg0BhWtl7dzANz0dTIiuuZ+FGhcKwAN35IB4Jng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCLpAqb5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F22F1C43390;
-	Mon, 22 Jan 2024 15:50:10 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ineQm0qZayJO6LSYlN7yweIbLB4AiezNJphdckXoAda/ePYj7g1qBHYiALzd07yx/R+k3uLB1lWgwWj3L7To10+PqynM0gxmurumTBP+ZTbz+4ckSevvu74Mi0iwvgbHgcFrJW/Q6WpXMZixYr9PVx/sc7GLD5AYpRJlue1Mb6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcqDq41i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4E04C43390;
+	Mon, 22 Jan 2024 15:57:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705938611;
-	bh=p+TlGwVMmsU570L0oRcCtptBuGnNSCPIjEoFP+qEjcg=;
+	s=k20201202; t=1705939061;
+	bh=QtOBOG9ddLW7vk+CzY4v5le4fgOK/IuccvQJbq+SKBM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=DCLpAqb5qcg1+gMqsHcdpDrrXwpMn+7zDK7EH++8sWdTnt2juCVtqoZuNazimXclV
-	 lBDMgFOsHwNklF64dzMo+2x7GSSuDXV1FnsWGZbY6dtKmtNh1RV1JJvKbgwvHsL/4O
-	 erqOz657Ux8wdGO9Dk51vedL8yVg8cpz46ZaN5kC4RKtSF2xVSmCvwE74s6npJLKdz
-	 IRmjQLXx2/9VNBGeujsacQLPSJvVYr7o0TW0vEiw9OyObBEwVauEIoXROKzowjLoyv
-	 o5FVDmvKMIQAUGLRnaNVBNFwJtOG09Hr077JjqnabjZIsraT83HgAeFdAiavYjKH9e
-	 476uqTxcm+8Ig==
-Message-ID: <307cd36ead20741667418fae6bf921ce44f891ea.camel@kernel.org>
-Subject: Re: [PATCH v6 3/3] NFSD: add write_ports to netlink command
+	b=qcqDq41i8EOQYec5D1/Jb1xVpsVSATFpNsYaqGBknB+krW09GSjcta90IepmGjEBo
+	 eOkcsuNcbbQLwj7IYkcqPXhc2rImDEdBZVdddOojYdZOktkiX95J/3Izp7Zota25Hp
+	 wV9wj4FWTjuZupsuNklEOFf7pv3pTVFGDmf7EflklN4Vvge9wRRRWgavwOFVWucEWR
+	 L3X9yHVLok3ONHvzXONnVPSHtQHS2JEmDCHiAO629rc00HvatvcN3IrZ/2vaIBqoH8
+	 EEBiNSpElveXRJBYZcgJ9EeHV4pMXFEqxmjHmDEnF+3w0rFq3/RyhObbf+FGFCB5Aq
+	 n/NiUq1dnBuvA==
+Message-ID: <1a12f1a03c323fc92b2e9a46a6d960470b19d733.camel@kernel.org>
+Subject: Re: [PATCH 00/10] netfs, afs, cifs, cachefiles, erofs:
+ Miscellaneous fixes
 From: Jeff Layton <jlayton@kernel.org>
-To: Lorenzo Bianconi <lorenzo@kernel.org>
-Cc: linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com, neilb@suse.de, 
- kuba@kernel.org, chuck.lever@oracle.com, horms@kernel.org,
- netdev@vger.kernel.org
-Date: Mon, 22 Jan 2024 10:50:09 -0500
-In-Reply-To: <Za6LQ8tdSwFil-eO@lore-desk>
-References: <cover.1705771400.git.lorenzo@kernel.org>
-	 <f7c42dae2b232b3b06e54ceb3f00725893973e02.1705771400.git.lorenzo@kernel.org>
-	 <9e3ae337dcf168c60c4cfd51aa0b2fc7b24bcbfb.camel@kernel.org>
-	 <Za6LQ8tdSwFil-eO@lore-desk>
+To: David Howells <dhowells@redhat.com>, Christian Brauner
+	 <christian@brauner.io>
+Cc: Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev, 
+ linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, 
+ linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+ v9fs@lists.linux.dev,  linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org
+Date: Mon, 22 Jan 2024 10:57:38 -0500
+In-Reply-To: <20240122123845.3822570-1-dhowells@redhat.com>
+References: <20240122123845.3822570-1-dhowells@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -73,828 +75,68 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-01-22 at 16:35 +0100, Lorenzo Bianconi wrote:
-> > On Sat, 2024-01-20 at 18:33 +0100, Lorenzo Bianconi wrote:
-> > > Introduce write_ports netlink command. For listener-set, userspace is
-> > > expected to provide a NFS listeners list it wants to enable (all the
-> > > other ports will be closed).
-> > >=20
-> >=20
-> > Ditto here. This is a change to a declarative interface, which I think
-> > is a better way to handle this, but we should be aware of the change.
-> >=20
-> > > Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-> > > ---
-> > > =A0Documentation/netlink/specs/nfsd.yaml |  37 +++++
-> > > =A0fs/nfsd/netlink.c                     |  23 +++
-> > > =A0fs/nfsd/netlink.h                     |   3 +
-> > > =A0fs/nfsd/nfsctl.c                      | 196 ++++++++++++++++++++++=
-++++
-> > > =A0include/uapi/linux/nfsd_netlink.h     |  18 +++
-> > > =A0tools/net/ynl/generated/nfsd-user.c   | 191 ++++++++++++++++++++++=
-+++
-> > > =A0tools/net/ynl/generated/nfsd-user.h   |  55 ++++++++
-> > > =A07 files changed, 523 insertions(+)
-> > >=20
-> > > diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/ne=
-tlink/specs/nfsd.yaml
-> > > index 30f18798e84e..296ff24b23ac 100644
-> > > --- a/Documentation/netlink/specs/nfsd.yaml
-> > > +++ b/Documentation/netlink/specs/nfsd.yaml
-> > > @@ -85,6 +85,26 @@ attribute-sets:
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0type: nest
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0nested-attributes: nfs-version
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0multi-attr: true
-> > > +  -
-> > > +    name: server-instance
-> > > +    attributes:
-> > > +      -
-> > > +        name: transport-name
-> > > +        type: string
-> > > +      -
-> > > +        name: port
-> > > +        type: u32
-> > > +      -
-> > > +        name: inet-proto
-> > > +        type: u16
-> > > +  -
-> > > +    name: server-listener
-> > > +    attributes:
-> > > +      -
-> > > +        name: instance
-> > > +        type: nest
-> > > +        nested-attributes: server-instance
-> > > +        multi-attr: true
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > =A0operations:
-> > > =A0=A0=A0list:
-> > > @@ -144,3 +164,20 @@ operations:
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0reply:
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0attributes:
-> > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0- version
-> > > +    -
-> > > +      name: listener-set
-> > > +      doc: set nfs running listeners
-> > > +      attribute-set: server-listener
-> > > +      flags: [ admin-perm ]
-> > > +      do:
-> > > +        request:
-> > > +          attributes:
-> > > +            - instance
-> > > +    -
-> > > +      name: listener-get
-> > > +      doc: get nfs running listeners
-> > > +      attribute-set: server-listener
-> > > +      do:
-> > > +        reply:
-> > > +          attributes:
-> > > +            - instance
-> > > diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
-> > > index 5cbbd3295543..c772f9e14761 100644
-> > > --- a/fs/nfsd/netlink.c
-> > > +++ b/fs/nfsd/netlink.c
-> > > @@ -16,6 +16,12 @@ const struct nla_policy nfsd_nfs_version_nl_policy=
-[NFSD_A_NFS_VERSION_MINOR + 1]
-> > > =A0	[NFSD_A_NFS_VERSION_MINOR] =3D { .type =3D NLA_U32, },
-> > > =A0};
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > +const struct nla_policy nfsd_server_instance_nl_policy[NFSD_A_SERVER=
-_INSTANCE_INET_PROTO + 1] =3D {
-> > > +	[NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME] =3D { .type =3D NLA_NUL_STR=
-ING, },
-> > > +	[NFSD_A_SERVER_INSTANCE_PORT] =3D { .type =3D NLA_U32, },
-> > > +	[NFSD_A_SERVER_INSTANCE_INET_PROTO] =3D { .type =3D NLA_U16, },
-> > > +};
-> > > +
-> > > =A0/* NFSD_CMD_THREADS_SET - do */
-> > > =A0static const struct nla_policy nfsd_threads_set_nl_policy[NFSD_A_S=
-ERVER_WORKER_THREADS + 1] =3D {
-> > > =A0	[NFSD_A_SERVER_WORKER_THREADS] =3D { .type =3D NLA_U32, },
-> > > @@ -26,6 +32,11 @@ static const struct nla_policy nfsd_version_set_nl=
-_policy[NFSD_A_SERVER_PROTO_VE
-> > > =A0	[NFSD_A_SERVER_PROTO_VERSION] =3D NLA_POLICY_NESTED(nfsd_nfs_vers=
-ion_nl_policy),
-> > > =A0};
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > +/* NFSD_CMD_LISTENER_SET - do */
-> > > +static const struct nla_policy nfsd_listener_set_nl_policy[NFSD_A_SE=
-RVER_LISTENER_INSTANCE + 1] =3D {
-> > > +	[NFSD_A_SERVER_LISTENER_INSTANCE] =3D NLA_POLICY_NESTED(nfsd_server=
-_instance_nl_policy),
-> > > +};
-> > > +
-> > > =A0/* Ops table for nfsd */
-> > > =A0static const struct genl_split_ops nfsd_nl_ops[] =3D {
-> > > =A0	{
-> > > @@ -59,6 +70,18 @@ static const struct genl_split_ops nfsd_nl_ops[] =
-=3D {
-> > > =A0		.doit	=3D nfsd_nl_version_get_doit,
-> > > =A0		.flags	=3D GENL_CMD_CAP_DO,
-> > > =A0	},
-> > > +	{
-> > > +		.cmd		=3D NFSD_CMD_LISTENER_SET,
-> > > +		.doit		=3D nfsd_nl_listener_set_doit,
-> > > +		.policy		=3D nfsd_listener_set_nl_policy,
-> > > +		.maxattr	=3D NFSD_A_SERVER_LISTENER_INSTANCE,
-> > > +		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
-> > > +	},
-> > > +	{
-> > > +		.cmd	=3D NFSD_CMD_LISTENER_GET,
-> > > +		.doit	=3D nfsd_nl_listener_get_doit,
-> > > +		.flags	=3D GENL_CMD_CAP_DO,
-> > > +	},
-> > > =A0};
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > =A0struct genl_family nfsd_nl_family __ro_after_init =3D {
-> > > diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
-> > > index c9a1be693fef..10a26ad32cd0 100644
-> > > --- a/fs/nfsd/netlink.h
-> > > +++ b/fs/nfsd/netlink.h
-> > > @@ -13,6 +13,7 @@
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > =A0/* Common nested types */
-> > > =A0extern const struct nla_policy nfsd_nfs_version_nl_policy[NFSD_A_N=
-FS_VERSION_MINOR + 1];
-> > > +extern const struct nla_policy nfsd_server_instance_nl_policy[NFSD_A=
-_SERVER_INSTANCE_INET_PROTO + 1];
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > =A0int nfsd_nl_rpc_status_get_start(struct netlink_callback *cb);
-> > > =A0int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb);
-> > > @@ -23,6 +24,8 @@ int nfsd_nl_threads_set_doit(struct sk_buff *skb, s=
-truct genl_info *info);
-> > > =A0int nfsd_nl_threads_get_doit(struct sk_buff *skb, struct genl_info=
- *info);
-> > > =A0int nfsd_nl_version_set_doit(struct sk_buff *skb, struct genl_info=
- *info);
-> > > =A0int nfsd_nl_version_get_doit(struct sk_buff *skb, struct genl_info=
- *info);
-> > > +int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info =
-*info);
-> > > +int nfsd_nl_listener_get_doit(struct sk_buff *skb, struct genl_info =
-*info);
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > =A0extern struct genl_family nfsd_nl_family;
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> > > index 53af82303f93..562b209f2921 100644
-> > > --- a/fs/nfsd/nfsctl.c
-> > > +++ b/fs/nfsd/nfsctl.c
-> > > @@ -1896,6 +1896,202 @@ int nfsd_nl_version_get_doit(struct sk_buff *=
-skb, struct genl_info *info)
-> > > =A0	return err;
-> > > =A0}
-> > > =A0
-> > >=20
-> > >=20
-> > >=20
-> > > +/**
-> > > + * nfsd_nl_listener_set_doit - set the nfs running listeners
-> > > + * @skb: reply buffer
-> > > + * @info: netlink metadata and command arguments
-> > > + *
-> > > + * Return 0 on success or a negative errno.
-> > > + */
-> > > +int nfsd_nl_listener_set_doit(struct sk_buff *skb, struct genl_info =
-*info)
-> > > +{
-> > > +	struct nlattr *tb[ARRAY_SIZE(nfsd_server_instance_nl_policy)];
-> > > +	struct net *net =3D genl_info_net(info);
-> > > +	struct svc_xprt *xprt, *tmp_xprt;
-> > > +	const struct nlattr *attr;
-> > > +	struct svc_serv *serv;
-> > > +	const char *xcl_name;
-> > > +	struct nfsd_net *nn;
-> > > +	int port, err, rem;
-> > > +	sa_family_t af;
-> > > +
-> > > +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SERVER_LISTENER_INSTANCE))
-> > > +		return -EINVAL;
-> > > +
-> > > +	mutex_lock(&nfsd_mutex);
-> > > +
-> > > +	err =3D nfsd_create_serv(net);
-> > > +	if (err) {
-> > > +		mutex_unlock(&nfsd_mutex);
-> > > +		return err;
-> > > +	}
-> > > +
-> > > +	nn =3D net_generic(net, nfsd_net_id);
-> > > +	serv =3D nn->nfsd_serv;
-> > > +
-> > > +	/* 1- create brand new listeners */
-> > > +	nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
-> > > +		if (nla_type(attr) !=3D NFSD_A_SERVER_LISTENER_INSTANCE)
-> > > +			continue;
-> > > +
-> > > +		if (nla_parse_nested(tb, ARRAY_SIZE(tb), attr,
-> > > +				     nfsd_server_instance_nl_policy,
-> > > +				     info->extack) < 0)
-> > > +			continue;
-> > > +
-> > > +		if (!tb[NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME] ||
-> > > +		    !tb[NFSD_A_SERVER_INSTANCE_PORT])
-> > > +			continue;
-> > > +
-> > > +		xcl_name =3D nla_data(tb[NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME]);
-> > > +		port =3D nla_get_u32(tb[NFSD_A_SERVER_INSTANCE_PORT]);
-> > > +		if (port < 1 || port > USHRT_MAX)
-> > > +			continue;
-> > > +
-> > > +		af =3D nla_get_u32(tb[NFSD_A_SERVER_INSTANCE_INET_PROTO]);
-> > > +		if (af !=3D PF_INET && af !=3D PF_INET6)
-> > > +			continue;
-> > > +
-> > > +		xprt =3D svc_find_xprt(serv, xcl_name, net, PF_INET, port);
-> > > +		if (xprt) {
-> > > +			svc_xprt_put(xprt);
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		/* create new listerner */
-> > > +		if (svc_xprt_create(serv, xcl_name, net, af, port,
-> > > +				    SVC_SOCK_ANONYMOUS, get_current_cred()))
-> > > +			continue;
-> > > +	}
-> > > +
-> > > +	/* 2- remove stale listeners */
-> >=20
-> >=20
-> > The old portlist interface was weird, in that it was only additive. You
-> > couldn't use it to close a listening socket (AFAICT). We may be able to
-> > support that now with this interface, but we'll need to test that case
-> > carefully.
-> >=20
-> >=20
-> >=20
-> > > +	spin_lock_bh(&serv->sv_lock);
-> > > +	list_for_each_entry_safe(xprt, tmp_xprt, &serv->sv_permsocks,
-> > > +				 xpt_list) {
-> > > +		struct svc_xprt *rqt_xprt =3D NULL;
-> > > +
-> > > +		nlmsg_for_each_attr(attr, info->nlhdr, GENL_HDRLEN, rem) {
-> > > +			if (nla_type(attr) !=3D NFSD_A_SERVER_LISTENER_INSTANCE)
-> > > +				continue;
-> > > +
-> > > +			if (nla_parse_nested(tb, ARRAY_SIZE(tb), attr,
-> > > +					     nfsd_server_instance_nl_policy,
-> > > +					     info->extack) < 0)
-> > > +				continue;
-> > > +
-> > > +			if (!tb[NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME] ||
-> > > +			    !tb[NFSD_A_SERVER_INSTANCE_PORT])
-> > > +				continue;
-> > > +
-> > > +			xcl_name =3D nla_data(
-> > > +				tb[NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME]);
-> > > +			port =3D nla_get_u32(tb[NFSD_A_SERVER_INSTANCE_PORT]);
-> > > +			if (port < 1 || port > USHRT_MAX)
-> > > +				continue;
-> > > +
-> > > +			af =3D nla_get_u32(tb[NFSD_A_SERVER_INSTANCE_INET_PROTO]);
-> > > +			if (af !=3D PF_INET && af !=3D PF_INET6)
-> > > +				continue;
-> > > +
-> > > +			if (!strcmp(xprt->xpt_class->xcl_name, xcl_name) &&
-> > > +			    port =3D=3D svc_xprt_local_port(xprt) &&
-> > > +			    af =3D=3D xprt->xpt_local.ss_family &&
-> > > +			    xprt->xpt_net =3D=3D net) {
-> > > +				rqt_xprt =3D xprt;
-> > > +				break;
-> > > +			}
-> > > +		}
-> > > +
-> > > +		/* remove stale listener */
-> > > +		if (!rqt_xprt) {
-> > > +			spin_unlock_bh(&serv->sv_lock);
-> > > +			svc_xprt_close(xprt);
-> > >=20
-> >=20
-> > I'm not sure this is safe. Can anything else modify sv_permsocks while
-> > you're not holding the lock? Maybe not since you're holding the
-> > nfsd_mutex, but it's still probably best to restart the list walk if yo=
-u
-> > have to drop the lock here.
-> >=20
-> > You're typically only going to have a few sockets here anyway -- usuall=
-y
-> > just one each for TCP, UDP and maybe RDMA.
+On Mon, 2024-01-22 at 12:38 +0000, David Howells wrote:
+> Hi Christian,
 >=20
-> what about beeing a bit proactive and set XPT_CLOSE bit before releasing =
-the
-> spinlock (as we already do in svc_xprt_close)?
+> Here are some miscellaneous fixes for netfslib and a number of filesystem=
+s:
+>=20
+>  (1) Replace folio_index() with folio->index in netfs, afs and cifs.
+>=20
+>  (2) Fix an oops in fscache_put_cache().
+>=20
+>  (3) Fix error handling in netfs_perform_write().
+>=20
+>  (4) Fix an oops in cachefiles when not using erofs ondemand mode.
+>=20
+>  (5) In afs, hide silly-rename files from getdents() to avoid problems wi=
+th
+>      tar and suchlike.
+>=20
+>  (6) In afs, fix error handling in lookup with a bulk status fetch.
+>=20
+>  (7) In afs, afs_dynroot_d_revalidate() is redundant, so remove it.
+>=20
+>  (8) In afs, fix the RCU unlocking in afs_proc_addr_prefs_show().
+>=20
+> The patches can also be found here:
+>=20
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/lo=
+g/?h=3Dnetfs-fixes
+>=20
+> Thanks,
+> David
+>=20
+> Dan Carpenter (2):
+>   netfs, fscache: Prevent Oops in fscache_put_cache()
+>   netfs: Fix a NULL vs IS_ERR() check in netfs_perform_write()
+>=20
+> David Howells (8):
+>   netfs: Don't use certain internal folio_*() functions
+>   afs: Don't use certain internal folio_*() functions
+>   cifs: Don't use certain internal folio_*() functions
+>   cachefiles, erofs: Fix NULL deref in when cachefiles is not doing
+>     ondemand-mode
+>   afs: Hide silly-rename files from userspace
+>   afs: Fix error handling with lookup via FS.InlineBulkStatus
+>   afs: Remove afs_dynroot_d_revalidate() as it is redundant
+>   afs: Fix missing/incorrect unlocking of RCU read lock
+>=20
+>  fs/afs/dir.c               | 30 ++++++++++++++++++++++--------
+>  fs/afs/dynroot.c           |  9 ---------
+>  fs/afs/proc.c              |  5 +++--
+>  fs/cachefiles/namei.c      | 16 ++++++++++------
+>  fs/netfs/buffered_read.c   | 12 ++++++------
+>  fs/netfs/buffered_write.c  | 15 ++++++++-------
+>  fs/netfs/fscache_cache.c   |  3 ++-
+>  fs/netfs/io.c              |  2 +-
+>  fs/netfs/misc.c            |  2 +-
+>  fs/smb/client/file.c       | 10 +++++-----
+>  include/trace/events/afs.h | 25 +++++++++++++++++++++++++
+>  11 files changed, 83 insertions(+), 46 deletions(-)
 >=20
 
-That does sound better, actually. You might have to open-code parts of
-svc_xprt_close, but it's not that big anyway.
+These all look fine to me. You can add this to the set:
 
-
-> >=20
-> >=20
-> > > +			spin_lock_bh(&serv->sv_lock);
-> > > +		}
-> > > +	}
-> > > +	spin_unlock_bh(&serv->sv_lock);
-> > > +
-> > > +	if (!serv->sv_nrthreads && list_empty(&nn->nfsd_serv->sv_permsocks)=
-)
-> > > +		nfsd_destroy_serv(net);
-> > > +
-> > > +	mutex_unlock(&nfsd_mutex);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +/**
-> > > + * nfsd_nl_listener_get_doit - get the nfs running listeners
-> > > + * @skb: reply buffer
-> > > + * @info: netlink metadata and command arguments
-> > > + *
-> > > + * Return 0 on success or a negative errno.
-> > > + */
-> > > +int nfsd_nl_listener_get_doit(struct sk_buff *skb, struct genl_info =
-*info)
-> > > +{
-> > > +	struct svc_xprt *xprt;
-> > > +	struct svc_serv *serv;
-> > > +	struct nfsd_net *nn;
-> > > +	void *hdr;
-> > > +	int err;
-> > > +
-> > > +	skb =3D genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-> > > +	if (!skb)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	hdr =3D genlmsg_iput(skb, info);
-> > > +	if (!hdr) {
-> > > +		err =3D -EMSGSIZE;
-> > > +		goto err_free_msg;
-> > > +	}
-> > > +
-> > > +	mutex_lock(&nfsd_mutex);
-> > > +	nn =3D net_generic(genl_info_net(info), nfsd_net_id);
-> > > +	if (!nn->nfsd_serv) {
-> > > +		err =3D -EINVAL;
-> > > +		goto err_nfsd_unlock;
-> > > +	}
-> > > +
-> > > +	serv =3D nn->nfsd_serv;
-> > > +	spin_lock_bh(&serv->sv_lock);
-> > > +	list_for_each_entry(xprt, &serv->sv_permsocks, xpt_list) {
-> > > +		struct nlattr *attr;
-> > > +
-> > > +		attr =3D nla_nest_start_noflag(skb,
-> > > +					     NFSD_A_SERVER_LISTENER_INSTANCE);
-> > > +		if (!attr) {
-> > > +			err =3D -EINVAL;
-> > > +			goto err_serv_unlock;
-> > > +		}
-> > > +
-> > > +		if (nla_put_string(skb, NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME,
-> > > +				   xprt->xpt_class->xcl_name) ||
-> > > +		    nla_put_u32(skb, NFSD_A_SERVER_INSTANCE_PORT,
-> > > +				svc_xprt_local_port(xprt)) ||
-> > > +		    nla_put_u16(skb, NFSD_A_SERVER_INSTANCE_INET_PROTO,
-> > > +				xprt->xpt_local.ss_family)) {
-> > > +			err =3D -EINVAL;
-> > > +			goto err_serv_unlock;
-> > > +		}
-> > > +
-> > > +		nla_nest_end(skb, attr);
-> > > +	}
-> > > +	spin_unlock_bh(&serv->sv_lock);
-> > > +	mutex_unlock(&nfsd_mutex);
-> > > +
-> > > +	genlmsg_end(skb, hdr);
-> > > +
-> > > +	return genlmsg_reply(skb, info);
-> > > +
-> > > +err_serv_unlock:
-> > > +	spin_unlock_bh(&serv->sv_lock);
-> > > +err_nfsd_unlock:
-> > > +	mutex_unlock(&nfsd_mutex);
-> > > +err_free_msg:
-> > > +	nlmsg_free(skb);
-> > > +
-> > > +	return err;
-> > > +}
-> > > +
-> > > =A0/**
-> > > =A0=A0* nfsd_net_init - Prepare the nfsd_net portion of a new net nam=
-espace
-> > > =A0=A0* @net: a freshly-created network namespace
-> > > diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/n=
-fsd_netlink.h
-> > > index 2a06f9fe6fe9..659ab76b8840 100644
-> > > --- a/include/uapi/linux/nfsd_netlink.h
-> > > +++ b/include/uapi/linux/nfsd_netlink.h
-> > > @@ -51,12 +51,30 @@ enum {
-> > > =A0	NFSD_A_SERVER_PROTO_MAX =3D (__NFSD_A_SERVER_PROTO_MAX - 1)
-> > > =A0};
-> > > =A0
-> > >=20
-> > > +enum {
-> > > +	NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME =3D 1,
-> > > +	NFSD_A_SERVER_INSTANCE_PORT,
-> > > +	NFSD_A_SERVER_INSTANCE_INET_PROTO,
-> > > +
-> > > +	__NFSD_A_SERVER_INSTANCE_MAX,
-> > > +	NFSD_A_SERVER_INSTANCE_MAX =3D (__NFSD_A_SERVER_INSTANCE_MAX - 1)
-> > > +};
-> > > +
-> > > +enum {
-> > > +	NFSD_A_SERVER_LISTENER_INSTANCE =3D 1,
-> > > +
-> > > +	__NFSD_A_SERVER_LISTENER_MAX,
-> > > +	NFSD_A_SERVER_LISTENER_MAX =3D (__NFSD_A_SERVER_LISTENER_MAX - 1)
-> > > +};
-> > > +
-> > > =A0enum {
-> > > =A0	NFSD_CMD_RPC_STATUS_GET =3D 1,
-> > > =A0	NFSD_CMD_THREADS_SET,
-> > > =A0	NFSD_CMD_THREADS_GET,
-> > > =A0	NFSD_CMD_VERSION_SET,
-> > > =A0	NFSD_CMD_VERSION_GET,
-> > > +	NFSD_CMD_LISTENER_SET,
-> > > +	NFSD_CMD_LISTENER_GET,
-> > > =A0
-> > >=20
-> > > =A0	__NFSD_CMD_MAX,
-> > > =A0	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
-> > > diff --git a/tools/net/ynl/generated/nfsd-user.c b/tools/net/ynl/gene=
-rated/nfsd-user.c
-> > > index ad498543f464..d52f392c7f59 100644
-> > > --- a/tools/net/ynl/generated/nfsd-user.c
-> > > +++ b/tools/net/ynl/generated/nfsd-user.c
-> > > @@ -19,6 +19,8 @@ static const char * const nfsd_op_strmap[] =3D {
-> > > =A0	[NFSD_CMD_THREADS_GET] =3D "threads-get",
-> > > =A0	[NFSD_CMD_VERSION_SET] =3D "version-set",
-> > > =A0	[NFSD_CMD_VERSION_GET] =3D "version-get",
-> > > +	[NFSD_CMD_LISTENER_SET] =3D "listener-set",
-> > > +	[NFSD_CMD_LISTENER_GET] =3D "listener-get",
-> > > =A0};
-> > > =A0
-> > >=20
-> > > =A0const char *nfsd_op_str(int op)
-> > > @@ -39,6 +41,17 @@ struct ynl_policy_nest nfsd_nfs_version_nest =3D {
-> > > =A0	.table =3D nfsd_nfs_version_policy,
-> > > =A0};
-> > > =A0
-> > >=20
-> > > +struct ynl_policy_attr nfsd_server_instance_policy[NFSD_A_SERVER_INS=
-TANCE_MAX + 1] =3D {
-> > > +	[NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME] =3D { .name =3D "transport-=
-name", .type =3D YNL_PT_NUL_STR, },
-> > > +	[NFSD_A_SERVER_INSTANCE_PORT] =3D { .name =3D "port", .type =3D YNL=
-_PT_U32, },
-> > > +	[NFSD_A_SERVER_INSTANCE_INET_PROTO] =3D { .name =3D "inet-proto", .=
-type =3D YNL_PT_U16, },
-> > > +};
-> > > +
-> > > +struct ynl_policy_nest nfsd_server_instance_nest =3D {
-> > > +	.max_attr =3D NFSD_A_SERVER_INSTANCE_MAX,
-> > > +	.table =3D nfsd_server_instance_policy,
-> > > +};
-> > > +
-> > > =A0struct ynl_policy_attr nfsd_rpc_status_policy[NFSD_A_RPC_STATUS_MA=
-X + 1] =3D {
-> > > =A0	[NFSD_A_RPC_STATUS_XID] =3D { .name =3D "xid", .type =3D YNL_PT_U=
-32, },
-> > > =A0	[NFSD_A_RPC_STATUS_FLAGS] =3D { .name =3D "flags", .type =3D YNL_=
-PT_U32, },
-> > > @@ -79,6 +92,15 @@ struct ynl_policy_nest nfsd_server_proto_nest =3D =
-{
-> > > =A0	.table =3D nfsd_server_proto_policy,
-> > > =A0};
-> > > =A0
-> > >=20
-> > > +struct ynl_policy_attr nfsd_server_listener_policy[NFSD_A_SERVER_LIS=
-TENER_MAX + 1] =3D {
-> > > +	[NFSD_A_SERVER_LISTENER_INSTANCE] =3D { .name =3D "instance", .type=
- =3D YNL_PT_NEST, .nest =3D &nfsd_server_instance_nest, },
-> > > +};
-> > > +
-> > > +struct ynl_policy_nest nfsd_server_listener_nest =3D {
-> > > +	.max_attr =3D NFSD_A_SERVER_LISTENER_MAX,
-> > > +	.table =3D nfsd_server_listener_policy,
-> > > +};
-> > > +
-> > > =A0/* Common nested types */
-> > > =A0void nfsd_nfs_version_free(struct nfsd_nfs_version *obj)
-> > > =A0{
-> > > @@ -124,6 +146,64 @@ int nfsd_nfs_version_parse(struct ynl_parse_arg =
-*yarg,
-> > > =A0	return 0;
-> > > =A0}
-> > > =A0
-> > >=20
-> > > +void nfsd_server_instance_free(struct nfsd_server_instance *obj)
-> > > +{
-> > > +	free(obj->transport_name);
-> > > +}
-> > > +
-> > > +int nfsd_server_instance_put(struct nlmsghdr *nlh, unsigned int attr=
-_type,
-> > > +			     struct nfsd_server_instance *obj)
-> > > +{
-> > > +	struct nlattr *nest;
-> > > +
-> > > +	nest =3D mnl_attr_nest_start(nlh, attr_type);
-> > > +	if (obj->_present.transport_name_len)
-> > > +		mnl_attr_put_strz(nlh, NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME, obj-=
->transport_name);
-> > > +	if (obj->_present.port)
-> > > +		mnl_attr_put_u32(nlh, NFSD_A_SERVER_INSTANCE_PORT, obj->port);
-> > > +	if (obj->_present.inet_proto)
-> > > +		mnl_attr_put_u16(nlh, NFSD_A_SERVER_INSTANCE_INET_PROTO, obj->inet=
-_proto);
-> > > +	mnl_attr_nest_end(nlh, nest);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +int nfsd_server_instance_parse(struct ynl_parse_arg *yarg,
-> > > +			       const struct nlattr *nested)
-> > > +{
-> > > +	struct nfsd_server_instance *dst =3D yarg->data;
-> > > +	const struct nlattr *attr;
-> > > +
-> > > +	mnl_attr_for_each_nested(attr, nested) {
-> > > +		unsigned int type =3D mnl_attr_get_type(attr);
-> > > +
-> > > +		if (type =3D=3D NFSD_A_SERVER_INSTANCE_TRANSPORT_NAME) {
-> > > +			unsigned int len;
-> > > +
-> > > +			if (ynl_attr_validate(yarg, attr))
-> > > +				return MNL_CB_ERROR;
-> > > +
-> > > +			len =3D strnlen(mnl_attr_get_str(attr), mnl_attr_get_payload_len(=
-attr));
-> > > +			dst->_present.transport_name_len =3D len;
-> > > +			dst->transport_name =3D malloc(len + 1);
-> > > +			memcpy(dst->transport_name, mnl_attr_get_str(attr), len);
-> > > +			dst->transport_name[len] =3D 0;
-> > > +		} else if (type =3D=3D NFSD_A_SERVER_INSTANCE_PORT) {
-> > > +			if (ynl_attr_validate(yarg, attr))
-> > > +				return MNL_CB_ERROR;
-> > > +			dst->_present.port =3D 1;
-> > > +			dst->port =3D mnl_attr_get_u32(attr);
-> > > +		} else if (type =3D=3D NFSD_A_SERVER_INSTANCE_INET_PROTO) {
-> > > +			if (ynl_attr_validate(yarg, attr))
-> > > +				return MNL_CB_ERROR;
-> > > +			dst->_present.inet_proto =3D 1;
-> > > +			dst->inet_proto =3D mnl_attr_get_u16(attr);
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > =A0/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_RPC_STATUS_=
-GET =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > =A0/* NFSD_CMD_RPC_STATUS_GET - dump */
-> > > =A0int nfsd_rpc_status_get_rsp_dump_parse(const struct nlmsghdr *nlh,=
- void *data)
-> > > @@ -467,6 +547,117 @@ struct nfsd_version_get_rsp *nfsd_version_get(s=
-truct ynl_sock *ys)
-> > > =A0	return NULL;
-> > > =A0}
-> > > =A0
-> > >=20
-> > > +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_LISTENER_SET =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > +/* NFSD_CMD_LISTENER_SET - do */
-> > > +void nfsd_listener_set_req_free(struct nfsd_listener_set_req *req)
-> > > +{
-> > > +	unsigned int i;
-> > > +
-> > > +	for (i =3D 0; i < req->n_instance; i++)
-> > > +		nfsd_server_instance_free(&req->instance[i]);
-> > > +	free(req->instance);
-> > > +	free(req);
-> > > +}
-> > > +
-> > > +int nfsd_listener_set(struct ynl_sock *ys, struct nfsd_listener_set_=
-req *req)
-> > > +{
-> > > +	struct ynl_req_state yrs =3D { .yarg =3D { .ys =3D ys, }, };
-> > > +	struct nlmsghdr *nlh;
-> > > +	int err;
-> > > +
-> > > +	nlh =3D ynl_gemsg_start_req(ys, ys->family_id, NFSD_CMD_LISTENER_SE=
-T, 1);
-> > > +	ys->req_policy =3D &nfsd_server_listener_nest;
-> > > +
-> > > +	for (unsigned int i =3D 0; i < req->n_instance; i++)
-> > > +		nfsd_server_instance_put(nlh, NFSD_A_SERVER_LISTENER_INSTANCE, &re=
-q->instance[i]);
-> > > +
-> > > +	err =3D ynl_exec(ys, nlh, &yrs);
-> > > +	if (err < 0)
-> > > +		return -1;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_LISTENER_GET =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > +/* NFSD_CMD_LISTENER_GET - do */
-> > > +void nfsd_listener_get_rsp_free(struct nfsd_listener_get_rsp *rsp)
-> > > +{
-> > > +	unsigned int i;
-> > > +
-> > > +	for (i =3D 0; i < rsp->n_instance; i++)
-> > > +		nfsd_server_instance_free(&rsp->instance[i]);
-> > > +	free(rsp->instance);
-> > > +	free(rsp);
-> > > +}
-> > > +
-> > > +int nfsd_listener_get_rsp_parse(const struct nlmsghdr *nlh, void *da=
-ta)
-> > > +{
-> > > +	struct nfsd_listener_get_rsp *dst;
-> > > +	struct ynl_parse_arg *yarg =3D data;
-> > > +	unsigned int n_instance =3D 0;
-> > > +	const struct nlattr *attr;
-> > > +	struct ynl_parse_arg parg;
-> > > +	int i;
-> > > +
-> > > +	dst =3D yarg->data;
-> > > +	parg.ys =3D yarg->ys;
-> > > +
-> > > +	if (dst->instance)
-> > > +		return ynl_error_parse(yarg, "attribute already present (server-li=
-stener.instance)");
-> > > +
-> > > +	mnl_attr_for_each(attr, nlh, sizeof(struct genlmsghdr)) {
-> > > +		unsigned int type =3D mnl_attr_get_type(attr);
-> > > +
-> > > +		if (type =3D=3D NFSD_A_SERVER_LISTENER_INSTANCE) {
-> > > +			n_instance++;
-> > > +		}
-> > > +	}
-> > > +
-> > > +	if (n_instance) {
-> > > +		dst->instance =3D calloc(n_instance, sizeof(*dst->instance));
-> > > +		dst->n_instance =3D n_instance;
-> > > +		i =3D 0;
-> > > +		parg.rsp_policy =3D &nfsd_server_instance_nest;
-> > > +		mnl_attr_for_each(attr, nlh, sizeof(struct genlmsghdr)) {
-> > > +			if (mnl_attr_get_type(attr) =3D=3D NFSD_A_SERVER_LISTENER_INSTANC=
-E) {
-> > > +				parg.data =3D &dst->instance[i];
-> > > +				if (nfsd_server_instance_parse(&parg, attr))
-> > > +					return MNL_CB_ERROR;
-> > > +				i++;
-> > > +			}
-> > > +		}
-> > > +	}
-> > > +
-> > > +	return MNL_CB_OK;
-> > > +}
-> > > +
-> > > +struct nfsd_listener_get_rsp *nfsd_listener_get(struct ynl_sock *ys)
-> > > +{
-> > > +	struct ynl_req_state yrs =3D { .yarg =3D { .ys =3D ys, }, };
-> > > +	struct nfsd_listener_get_rsp *rsp;
-> > > +	struct nlmsghdr *nlh;
-> > > +	int err;
-> > > +
-> > > +	nlh =3D ynl_gemsg_start_req(ys, ys->family_id, NFSD_CMD_LISTENER_GE=
-T, 1);
-> > > +	ys->req_policy =3D &nfsd_server_listener_nest;
-> > > +	yrs.yarg.rsp_policy =3D &nfsd_server_listener_nest;
-> > > +
-> > > +	rsp =3D calloc(1, sizeof(*rsp));
-> > > +	yrs.yarg.data =3D rsp;
-> > > +	yrs.cb =3D nfsd_listener_get_rsp_parse;
-> > > +	yrs.rsp_cmd =3D NFSD_CMD_LISTENER_GET;
-> > > +
-> > > +	err =3D ynl_exec(ys, nlh, &yrs);
-> > > +	if (err < 0)
-> > > +		goto err_free;
-> > > +
-> > > +	return rsp;
-> > > +
-> > > +err_free:
-> > > +	nfsd_listener_get_rsp_free(rsp);
-> > > +	return NULL;
-> > > +}
-> > > +
-> > > =A0const struct ynl_family ynl_nfsd_family =3D  {
-> > > =A0	.name		=3D "nfsd",
-> > > =A0};
-> > > diff --git a/tools/net/ynl/generated/nfsd-user.h b/tools/net/ynl/gene=
-rated/nfsd-user.h
-> > > index d062ee8fa8b6..5765fb6f2ef5 100644
-> > > --- a/tools/net/ynl/generated/nfsd-user.h
-> > > +++ b/tools/net/ynl/generated/nfsd-user.h
-> > > @@ -29,6 +29,18 @@ struct nfsd_nfs_version {
-> > > =A0	__u32 minor;
-> > > =A0};
-> > > =A0
-> > >=20
-> > > +struct nfsd_server_instance {
-> > > +	struct {
-> > > +		__u32 transport_name_len;
-> > > +		__u32 port:1;
-> > > +		__u32 inet_proto:1;
-> > > +	} _present;
-> > > +
-> > > +	char *transport_name;
-> > > +	__u32 port;
-> > > +	__u16 inet_proto;
-> > > +};
-> > > +
-> > > =A0/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_RPC_STATUS_=
-GET =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > =A0/* NFSD_CMD_RPC_STATUS_GET - dump */
-> > > =A0struct nfsd_rpc_status_get_rsp_dump {
-> > > @@ -164,4 +176,47 @@ void nfsd_version_get_rsp_free(struct nfsd_versi=
-on_get_rsp *rsp);
-> > > =A0=A0*/
-> > > =A0struct nfsd_version_get_rsp *nfsd_version_get(struct ynl_sock *ys)=
-;
-> > > =A0
-> > >=20
-> > > +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_LISTENER_SET =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > +/* NFSD_CMD_LISTENER_SET - do */
-> > > +struct nfsd_listener_set_req {
-> > > +	unsigned int n_instance;
-> > > +	struct nfsd_server_instance *instance;
-> > > +};
-> > > +
-> > > +static inline struct nfsd_listener_set_req *nfsd_listener_set_req_al=
-loc(void)
-> > > +{
-> > > +	return calloc(1, sizeof(struct nfsd_listener_set_req));
-> > > +}
-> > > +void nfsd_listener_set_req_free(struct nfsd_listener_set_req *req);
-> > > +
-> > > +static inline void
-> > > +__nfsd_listener_set_req_set_instance(struct nfsd_listener_set_req *r=
-eq,
-> > > +				     struct nfsd_server_instance *instance,
-> > > +				     unsigned int n_instance)
-> > > +{
-> > > +	free(req->instance);
-> > > +	req->instance =3D instance;
-> > > +	req->n_instance =3D n_instance;
-> > > +}
-> > > +
-> > > +/*
-> > > + * set nfs running listeners
-> > > + */
-> > > +int nfsd_listener_set(struct ynl_sock *ys, struct nfsd_listener_set_=
-req *req);
-> > > +
-> > > +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_LISTENER_GET =
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
-> > > +/* NFSD_CMD_LISTENER_GET - do */
-> > > +
-> > > +struct nfsd_listener_get_rsp {
-> > > +	unsigned int n_instance;
-> > > +	struct nfsd_server_instance *instance;
-> > > +};
-> > > +
-> > > +void nfsd_listener_get_rsp_free(struct nfsd_listener_get_rsp *rsp);
-> > > +
-> > > +/*
-> > > + * get nfs running listeners
-> > > + */
-> > > +struct nfsd_listener_get_rsp *nfsd_listener_get(struct ynl_sock *ys)=
-;
-> > > +
-> > > =A0#endif /* _LINUX_NFSD_GEN_H */
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
-> >=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
