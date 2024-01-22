@@ -1,186 +1,95 @@
-Return-Path: <linux-nfs+bounces-1252-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1253-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27F7E836DFC
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 18:42:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E73C7836EAA
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 19:00:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3DB128CA45
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 17:42:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 206901C28B38
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 18:00:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6148B47F54;
-	Mon, 22 Jan 2024 17:02:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 897BD3FB11;
+	Mon, 22 Jan 2024 17:22:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9yNLUia"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y8AjW0bj"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37FED41767;
-	Mon, 22 Jan 2024 17:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E32751036
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jan 2024 17:22:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705942924; cv=none; b=fcnyugLF1tOap98qjg+1uLMj1Pf2iqXmEpKAA6zE8BteI8Gr+c0SywBqkY403u6Fel4+zSdFmThqJpowhSYWiYj244vnok4/OSHdJZcHTR3xBLHzT9FAt8QELL7nxOKykQ1yDFEehz09D4kSaGncDKS29TUjsbWttGQ62y7ZhfI=
+	t=1705944164; cv=none; b=WTSK6teAzNe4BFE1DGkYWr6NX8TnvT55qa194w/kyEfJItbLSWtMVvcTbwfaNlTUg7DgDHO1fH3dE8ZoS/Z0Vu02UB1tOM71ibBsMt2jO9wCkmYpHYUTwTq7mTRsU8XgjhfTJXTKuydzP8K/3itrI6H8vO2Vt8uAPQO0U6GyFYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705942924; c=relaxed/simple;
-	bh=cNXx+pNcOPu9bakjCohGYpnVqT6iQFH/OsKqW9Y6OhA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZAld0YBOPZcs2LLN5/uWyFuxcxrd30BDuRmknSLDITgjHFoBkrP/KosOSYvMp1M3llSAyI6ehMQ8xshDLUNWKmrTo7JU5dK/TJUrSzqYNMOfT9zVo5iEIA+/1famXOereeLs9VzbsPrwOpLaDILWbOAUSVA3n+jF4p3ToDob/co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9yNLUia; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FB6BC43390;
-	Mon, 22 Jan 2024 17:02:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705942923;
-	bh=cNXx+pNcOPu9bakjCohGYpnVqT6iQFH/OsKqW9Y6OhA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=I9yNLUiaB8t4hTTpf4JRkwgvXD5ROAswt7yDCsQgs/9lpY4Us9b0g97oznNQ9H+Ai
-	 cKN2IO7yH+a1yTQ5Rqxp28n3glie0mgTMZXqKmpFNyB9qtL+L+8SKVE0GDcdEkppWS
-	 +NMbTSZNTExviZ+x/rsuYhdlBs5Li99iO49MGebBls0epm0QaBt2tz+th76cKl57/L
-	 7ujgq0x7Mk7/oB26M2nGkBo+7WIniJx65/sRiv7GLVv5pLeccoADjh26K6gpORMyjd
-	 JG0wAXxCw6uK6WVTcAdE80dW28uKZM5RaE53zMVoMsRFZKjud1pNHP2+YZfKRlY4LN
-	 UuIhXDxaP4NIQ==
-Date: Mon, 22 Jan 2024 18:01:59 +0100
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+	s=arc-20240116; t=1705944164; c=relaxed/simple;
+	bh=BK4/OCHtn9ZOarkwg23KKNRxOtPDGGPmaFy8ysvVxZ8=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=KF2Xdd/K4GIy5EG/8QJwHKVzhrlT/U7vnNYdTaX2N4ZHTrHAC7brP4FY5Hwf2ETaW0oKPSGTkEY+OgOLLAGnqo7HL7ootS/oZbGJ9JiepVoub9hsXTkRPeWzNmawvbOtb/Z+CXD1EqshYRfLMMRUCNJkmNVr3ZO6f0h92RKytFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y8AjW0bj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1705944162;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dyL8HkrfuDx15VmmUYeIG1cK/wCgWeV9TZeHPttzNv8=;
+	b=Y8AjW0bjKzSyHDl22UwAH4NUILapVKrsgzyxZFWR6t1XrQ/Zr24jLJX5DnZjJoCqw/XOtd
+	GErEetLPZSN8kZU5ARlQyzX0P607f/0vfN2wBqOMinoasrLWA9CE9oeehCQAevl1zt3FnV
+	/E0+5CxD2AJDNWN13XMGgf4aXcQHMxI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-692-HhQdjMHnNSCeJf9HAxnqqg-1; Mon, 22 Jan 2024 12:22:35 -0500
+X-MC-Unique: HhQdjMHnNSCeJf9HAxnqqg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A236285A597;
+	Mon, 22 Jan 2024 17:22:34 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id B2C10C0FDCA;
+	Mon, 22 Jan 2024 17:22:32 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <c9091df8de30a2c79364698b72e67834d0ac87c7.camel@kernel.org>
+References: <c9091df8de30a2c79364698b72e67834d0ac87c7.camel@kernel.org> <20240122123845.3822570-1-dhowells@redhat.com> <20240122123845.3822570-2-dhowells@redhat.com>
 To: Jeff Layton <jlayton@kernel.org>
-Cc: linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com, neilb@suse.de,
-	kuba@kernel.org, chuck.lever@oracle.com, horms@kernel.org,
-	netdev@vger.kernel.org, Steve Dickson <steved@redhat.com>
-Subject: Re: [PATCH v6 0/3] convert write_threads, write_version and
- write_ports to netlink commands
-Message-ID: <Za6fh2cd7ljGj8k4@lore-desk>
-References: <cover.1705771400.git.lorenzo@kernel.org>
- <8b2054af2aa6b74e79aa898b5412b5cc44946f81.camel@kernel.org>
+Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
+    Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev,
+    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
+    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+    linux-kernel@vger.kernel.org, linux-cachefs@redhat.com
+Subject: Re: [PATCH 01/10] netfs: Don't use certain internal folio_*() functions
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KB9lUJ+ko+IeDdy5"
-Content-Disposition: inline
-In-Reply-To: <8b2054af2aa6b74e79aa898b5412b5cc44946f81.camel@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3931925.1705944151.1@warthog.procyon.org.uk>
+Date: Mon, 22 Jan 2024 17:22:32 +0000
+Message-ID: <3931926.1705944152@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
+Jeff Layton <jlayton@kernel.org> wrote:
 
---KB9lUJ+ko+IeDdy5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> > Filesystems should not be using folio->index not folio_index(folio) and
+> 
+> I think you mean "should be" here.
 
-> On Sat, 2024-01-20 at 18:33 +0100, Lorenzo Bianconi wrote:
-> > Introduce write_threads, write_version and write_ports netlink
-> > commands similar to the ones available through the procfs.
-> >=20
-> > Changes since v5:
-> > - for write_ports and write_version commands, userspace is expected to =
-provide
-> >   a NFS listeners/supported versions list it want to enable (all the ot=
-her
-> >   ports/versions will be disabled).
-> > - fix comments
-> > - rebase on top of nfsd-next
-> > Changes since v4:
-> > - rebase on top of nfsd-next tree
-> > Changes since v3:
-> > - drop write_maxconn and write_maxblksize for the moment
-> > - add write_version and write_ports commands
-> > Changes since v2:
-> > - use u32 to store nthreads in nfsd_nl_threads_set_doit
-> > - rename server-attr in control-plane in nfsd.yaml specs
-> > Changes since v1:
-> > - remove write_v4_end_grace command
-> > - add write_maxblksize and write_maxconn netlink commands
-> >=20
-> > This patch can be tested with user-space tool reported below:
-> > https://github.com/LorenzoBianconi/nfsd-netlink.git
-> >=20
-> > Lorenzo Bianconi (3):
-> >   NFSD: convert write_threads to netlink command
-> >   NFSD: add write_version to netlink command
-> >   NFSD: add write_ports to netlink command
-> >=20
-> >  Documentation/netlink/specs/nfsd.yaml |  94 ++++++
-> >  fs/nfsd/netlink.c                     |  63 ++++
-> >  fs/nfsd/netlink.h                     |  10 +
-> >  fs/nfsd/nfsctl.c                      | 396 ++++++++++++++++++++++
-> >  include/uapi/linux/nfsd_netlink.h     |  44 +++
-> >  tools/net/ynl/generated/nfsd-user.c   | 460 ++++++++++++++++++++++++++
-> >  tools/net/ynl/generated/nfsd-user.h   | 155 +++++++++
-> >  7 files changed, 1222 insertions(+)
-> >=20
->=20
->=20
-> I think this is really close and coming together! Before we merge this
-> though, I'd _really_ like to see some patches for rpc.nfsd in nfs-utils.
-> Until we try to implement the userland bits, we won't know if we've
-> gotten this interface right.
->=20
-> ...and before that, we really need to have some sort of userland program
-> packaged and available for querying the new netlink RPC stats from nfsd.
-> You have the simple userland one on github, but I think we need omething
-> packaged, ideally as part of nfs-utils.
+Ach.  I forgot to update the patch descriptions!
 
-Hi Jeff,
+David
 
-I guess we can experiment on the new APIs very easily with ynl cli.py.
-Something like:
-
-$ ./tools/net/ynl/cli.py --spec Documentation/netlink/specs/nfsd.yaml --dum=
-p rpc-status-get
-[{'compound-ops': [53, 22, 9],
- 'daddr4': 3232266828,
- 'dport': 2049,
- 'flags': 5,
- 'proc': 1,
- 'prog': 100003,
- 'saddr4': 3232266753,
- 'service_time': 81705129,
- 'sport': 908,
- 'version': 4,
- 'xid': 0},
-{'compound-ops': [53, 22, 9],
- 'daddr4': 3232266828,
- 'dport': 2049,
- 'flags': 5,
- 'proc': 1,
- 'prog': 100003,
- 'saddr4': 3232266753,
- 'service_time': 81700496,
- 'sport': 908,
- 'version': 4,
- 'xid': 0}]
-
-or=20
-
-=2E/tools/net/ynl/cli.py --spec Documentation/netlink/specs/nfsd.yaml --do =
-threads-get
-{'threads': 8}
-
-(the only required package is jsonschema iirc).
-
-Regards,
-Lorenzo
-
->=20
-> Doing that first would allow you to add the necessary autoconf/libtool
-> stuff to pull in the netlink libraries, which will be a prerequisite for
-> doing the userland rpc.nfsd work, and will probably be a bit simpler
-> than modifying rpc.nfsd.
-> --=20
-> Jeff Layton <jlayton@kernel.org>
-
---KB9lUJ+ko+IeDdy5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZa6fhwAKCRA6cBh0uS2t
-rFSbAP9R1RTHvGmsRCaO4ma3HM8G2wC16u4sHfTfgVUn63DsKgD/exXFF5MxO4XG
-XfjyB87e5u/fjm31dqXxjKbgOxNGWAw=
-=ysUZ
------END PGP SIGNATURE-----
-
---KB9lUJ+ko+IeDdy5--
 
