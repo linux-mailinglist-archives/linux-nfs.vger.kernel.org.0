@@ -1,95 +1,122 @@
-Return-Path: <linux-nfs+bounces-1253-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1254-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E73C7836EAA
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 19:00:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30044836FFC
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 19:31:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 206901C28B38
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 18:00:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5FEE3B2FEF6
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Jan 2024 18:00:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 897BD3FB11;
-	Mon, 22 Jan 2024 17:22:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18D11537EB;
+	Mon, 22 Jan 2024 17:24:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y8AjW0bj"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BQ11oMDa"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E32751036
-	for <linux-nfs@vger.kernel.org>; Mon, 22 Jan 2024 17:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4093D55C
+	for <linux-nfs@vger.kernel.org>; Mon, 22 Jan 2024 17:23:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705944164; cv=none; b=WTSK6teAzNe4BFE1DGkYWr6NX8TnvT55qa194w/kyEfJItbLSWtMVvcTbwfaNlTUg7DgDHO1fH3dE8ZoS/Z0Vu02UB1tOM71ibBsMt2jO9wCkmYpHYUTwTq7mTRsU8XgjhfTJXTKuydzP8K/3itrI6H8vO2Vt8uAPQO0U6GyFYM=
+	t=1705944240; cv=none; b=dBLgFo3QD99DYXmPHVo+BpFi8yl6jN8OYJyI0c8jc1j0okNtEwEIywM089P3YlJHqZGFDZy9S5DsR2OEAt7G2USEvw7MhU7DHa0rFznPf0fmnH7GTDZY+VHRXufxZ3YBb+2daeQ7gldGw/5Bcw3YqXTPpUmdZklHsV33HZDbWno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705944164; c=relaxed/simple;
-	bh=BK4/OCHtn9ZOarkwg23KKNRxOtPDGGPmaFy8ysvVxZ8=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=KF2Xdd/K4GIy5EG/8QJwHKVzhrlT/U7vnNYdTaX2N4ZHTrHAC7brP4FY5Hwf2ETaW0oKPSGTkEY+OgOLLAGnqo7HL7ootS/oZbGJ9JiepVoub9hsXTkRPeWzNmawvbOtb/Z+CXD1EqshYRfLMMRUCNJkmNVr3ZO6f0h92RKytFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Y8AjW0bj; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1705944162;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dyL8HkrfuDx15VmmUYeIG1cK/wCgWeV9TZeHPttzNv8=;
-	b=Y8AjW0bjKzSyHDl22UwAH4NUILapVKrsgzyxZFWR6t1XrQ/Zr24jLJX5DnZjJoCqw/XOtd
-	GErEetLPZSN8kZU5ARlQyzX0P607f/0vfN2wBqOMinoasrLWA9CE9oeehCQAevl1zt3FnV
-	/E0+5CxD2AJDNWN13XMGgf4aXcQHMxI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-692-HhQdjMHnNSCeJf9HAxnqqg-1; Mon, 22 Jan 2024 12:22:35 -0500
-X-MC-Unique: HhQdjMHnNSCeJf9HAxnqqg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A236285A597;
-	Mon, 22 Jan 2024 17:22:34 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.67])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id B2C10C0FDCA;
-	Mon, 22 Jan 2024 17:22:32 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <c9091df8de30a2c79364698b72e67834d0ac87c7.camel@kernel.org>
-References: <c9091df8de30a2c79364698b72e67834d0ac87c7.camel@kernel.org> <20240122123845.3822570-1-dhowells@redhat.com> <20240122123845.3822570-2-dhowells@redhat.com>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
-    Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev,
-    linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-    linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-    v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org,
-    linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-    linux-kernel@vger.kernel.org, linux-cachefs@redhat.com
-Subject: Re: [PATCH 01/10] netfs: Don't use certain internal folio_*() functions
+	s=arc-20240116; t=1705944240; c=relaxed/simple;
+	bh=ZwObFOSQp/rsE4GnT0zWBH1G3Q3nQSVLy0Efxxkb87M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BE55DftiS3vGMXtjG0cTCqVaI3zCLX9ZacfwoMw9uYUKnu74ojii1DGAtW1VAbNnaU97ISOgc2NgeUQzDcIjbq2lHs4mxUlIs8o5g5NgJY6FZWyUC5Gj8haNJjyG2jhP7qQMqu2fwX2szhMLlzy0uxw8odlWAo0x2aONuuGlm5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=BQ11oMDa; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40MGJoHW008675;
+	Mon, 22 Jan 2024 17:23:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=corp-2023-11-20;
+ bh=+gKdnOMBxLtTy+mhjx4V6R3YBkY/N+Q1iya9dwGeWQg=;
+ b=BQ11oMDawNbFepThmAHaEwxy02+hgTnFBPMpw1QZbLypyaEe1fcgYq1vbwF4NieHtmNu
+ 3EKGIZ2oA2fTvhdJQiVDQgtk33tJWolL/+PLLckhDAMUgt1yFnDadhJiEFOPX+wUwkwo
+ cVU7cGmpjE56cf5qi9aCWS3MEmEPYRYPL80qAWyA1p+vS4bBlc8bl//kuj7n5JfW/KuV
+ M1nVrIggMZmmcAaE+A8QGJJVUEJkb3+XxudrdzFWEgub4cGRJZvJLzYCYtsoN6vL4rei
+ wa2giXXeyx+KVx3QeuxGHD8JjM3oEiJGdU4jDx+4f9b9Ty5Dr2cszwQwggGKrwgOWmYI +w== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7anm5qg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 22 Jan 2024 17:23:55 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40MGVUli018698;
+	Mon, 22 Jan 2024 17:23:54 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3vs31401gy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 22 Jan 2024 17:23:54 +0000
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40MHNsHK038399;
+	Mon, 22 Jan 2024 17:23:54 GMT
+Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
+	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3vs31401gm-1;
+	Mon, 22 Jan 2024 17:23:54 +0000
+From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+To: bcodding@redhat.com
+Cc: samasth.norway.ananda@oracle.com, chuck.lever@oracle.com,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH  1/1] NFSv4.1: Assign retries to timeout.to_retries instead of timeout.to_initval
+Date: Mon, 22 Jan 2024 09:23:53 -0800
+Message-ID: <20240122172353.2859254-1-samasth.norway.ananda@oracle.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3931925.1705944151.1@warthog.procyon.org.uk>
-Date: Mon, 22 Jan 2024 17:22:32 +0000
-Message-ID: <3931926.1705944152@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-22_07,2024-01-22_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401220121
+X-Proofpoint-GUID: RclOhd78irapBsQpUr-KPBSKIbF4jd7n
+X-Proofpoint-ORIG-GUID: RclOhd78irapBsQpUr-KPBSKIbF4jd7n
 
-Jeff Layton <jlayton@kernel.org> wrote:
+In the else block we are assigning the req->rq_xprt->timeout->to_retries
+value to timeout.to_initval, whereas it should have been assigned to
+timeout.to_retries instead.
 
-> > Filesystems should not be using folio->index not folio_index(folio) and
-> 
-> I think you mean "should be" here.
+Fixes: 57331a59ac0d (“NFSv4.1: Use the nfs_client's rpc timeouts for backchannel")
+Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
+---
+Hi,
 
-Ach.  I forgot to update the patch descriptions!
+I came across the patch 57331a59ac0d (“NFSv4.1: Use the nfs_client's rpc 
+timeouts for backchannel") which assigns value to same variable in the
+else block.  Can I please get your input on the patch?
 
-David
+Thank you.
+---
+ net/sunrpc/svc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index f60c93e5a25d..295266a50244 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -1601,7 +1601,7 @@ void svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp)
+ 		timeout.to_retries = rqstp->bc_to_initval;
+ 	} else {
+ 		timeout.to_initval = req->rq_xprt->timeout->to_initval;
+-		timeout.to_initval = req->rq_xprt->timeout->to_retries;
++		timeout.to_retries = req->rq_xprt->timeout->to_retries;
+ 	}
+ 	memcpy(&req->rq_snd_buf, &rqstp->rq_res, sizeof(req->rq_snd_buf));
+ 	task = rpc_run_bc_task(req, &timeout);
+-- 
+2.42.0
 
 
