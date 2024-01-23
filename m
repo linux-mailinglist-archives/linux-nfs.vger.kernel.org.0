@@ -1,104 +1,133 @@
-Return-Path: <linux-nfs+bounces-1294-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1295-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A3B28391FE
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 16:04:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93C4183926B
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 16:16:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4A99B1C259FA
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 15:04:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C72051C21C75
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 15:16:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF8D85D8F5;
-	Tue, 23 Jan 2024 15:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF5866024D;
+	Tue, 23 Jan 2024 15:16:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NT+M63By"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EVnGREhT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C14604B4;
-	Tue, 23 Jan 2024 15:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22A516024C
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jan 2024 15:16:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706022207; cv=none; b=smo7uUoxnfhU9ZOeEu/1k5zZW2V2UGGVRdiB/tP6oQ1Swg/9Hk2J3HK0C8fEt5ABo5Po89UXzzQFNqcmQy021PQc3b8+Oo2pwYfHKn/lOFvpOi2Po1YtQbVYUpmxn58EVErL/yflXQBxCAn7Z7yO2EyVxEyixlwPYcAhW/YQN4w=
+	t=1706023001; cv=none; b=ZWbExfh3bbF0aXEkzEyHD3bCh0/aJc+7Feuktr/JC6GoZhjTMv5oCQcUJCUTYRwOih3mH1mI6PyHRvL6rfhx7r2zXfIE8NTJIKPQU7uAHUYhOC5VSRS9V+oaVF0RlYoZyLSX1NgQQXViFs3u5jUudgDAc+iWsoy1ligh7JaEIxg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706022207; c=relaxed/simple;
-	bh=q1ehO0VlSRjlEkZix2Yv8UwXgVbsdNerufMonTt1Rvk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Tclm3PQBJ+ZrKMw+OQGz/I6oZ7NE/05hp0Lc4mix8MNGJES2hU9ov0AjbAaMKOMmtS33ubcS7ozWeEWQFjQASJ21amqPEKGEza6DfvF3zoxeRlLNP3b+ugUvdprzlBhePslWHbOk3UlYmj0llqFTP7UJLDWfzR24PeOdipjTY1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NT+M63By; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6AA8EC433F1;
-	Tue, 23 Jan 2024 15:03:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706022207;
-	bh=q1ehO0VlSRjlEkZix2Yv8UwXgVbsdNerufMonTt1Rvk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NT+M63By3JOLNSB6AfRX73VOAsajcGYOLYmUwI6BJW9eea/qDVp8ui4HATBCbLqta
-	 aJQRALleSXScyEPXdbsBTanNjgZhs5cuisIvevP5qQSUpcJMMvxkf5B1QIdLZrx7sn
-	 dhwfse1OScXIKVs1lftoY+0nBQuSgIuJX/0pusRP9AfbsTwOWd8h9S2PB0/FYX4yLu
-	 qPqYiuCqQSUwKWgbhwu7L+RW3btUfwvRYmIwNtTw1dnRXIrCsaTFVOeCpzVxZE665K
-	 xPr1coTGmxKiax9/xI02gl6qO/vbiH9Z8bjog6KaunCNC0RlXaVp87Q9mb8c3l0amc
-	 5MpTdGsFq5EjQ==
-Date: Tue, 23 Jan 2024 16:03:20 +0100
-From: Christian Brauner <brauner@kernel.org>
-To: David Howells <dhowells@redhat.com>
-Cc: Christian Brauner <christian@brauner.io>, 
-	Jeff Layton <jlayton@kernel.org>, Matthew Wilcox <willy@infradead.org>, netfs@lists.linux.dev, 
-	linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org, 
-	ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, linux-erofs@lists.ozlabs.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/10] netfs, afs, cifs, cachefiles, erofs: Miscellaneous
- fixes
-Message-ID: <20240123-malheur-fahrrad-9d7c2ce2e757@brauner>
-References: <20240122123845.3822570-1-dhowells@redhat.com>
- <20240122-bezwingen-kanister-b56f5bc1bc84@brauner>
+	s=arc-20240116; t=1706023001; c=relaxed/simple;
+	bh=Whvptsm2zU6qezmFAsEVwnHkespnMPH/LhDqlKH0aiM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=i/nbdrAPEZ/ahojdbyMtfE3mIyfERfwQYYAYJ3NKuAeQ7Zz+YacCnPazdpx2gwtoFGAi/sQaDWfph2ivrDdp+uYKEfMRbupCNMpWWHEiUEhbiIFNmwuYGdp47O4Axipa3kF7KolDw85xPT9F8K4PNqrVXTJB14Lgeux5Jd10Dl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EVnGREhT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706022999;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IQRggNCjtx4DoslmpRLr2OHwBJdbw9djWZOxfvU5mPk=;
+	b=EVnGREhTFoJCKDk4tZNomVof9ydqNwudod466HfqdOa6x7tcAdV87gKe6F7HBQd2jNjRFV
+	70eGABfdwn3CsQnbzw/grIWcx8WOfwmV0Ypl3pmdTdmcqNk8YHKznYIT5J0erp0BkEXA2u
+	ox4HE2CRnhsDqii4cYZwyXODoKXiLxc=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-85-E3jN9FuqPw6TOOVvUfh43g-1; Tue, 23 Jan 2024 10:16:31 -0500
+X-MC-Unique: E3jN9FuqPw6TOOVvUfh43g-1
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7831a20711dso105911385a.0
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Jan 2024 07:16:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706022978; x=1706627778;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IQRggNCjtx4DoslmpRLr2OHwBJdbw9djWZOxfvU5mPk=;
+        b=iG4puwbqu3wpXCuzv/ij8F7E9MUFv9jHic4a5m1y9KXB3q3w5Ulhx83dLBWL437NpO
+         37d92BIfJJbW3lGSRhFfirk2t7nPvnoi+AexpmYQIu3VlYZvtvMIIaYHGzV+WlIYyMw7
+         yt02HT/9xsrnoWQ7e/BxIH1OtyGAtZwHGkKAA10aWV2z2pz7UDVECQ6une0vTHgGhDM5
+         +55/N1alCa7MEwbEhk6hU/JIlA6K4xNLwYp1IRhb3MtsCjmXZvsPFC1+wCvGF2TrAxVM
+         8d4eTvk2EpP3qbJg1wHoXa2n2285ez5flSHZisIBAkynDSiPrIryPg7WvSGqg98dvwCC
+         Bmzw==
+X-Gm-Message-State: AOJu0YzzaS10jbzgWhw1oycfSfnhMrLOk3fjzP+ruISaknawf+E2fxaH
+	PcnKYU7oRohNvXGNGQJqsRfVt6JtpnKMmRb716I/+6SZ/H4bgkZ6vfvtdgU2aOliVzfh76W4CP2
+	+rxElpOjDgk2gzsrBJVgJmW0yPKOpyKAqDy2X2tkOo/KBKLjsKRB9xXFyR0kEqH3G7Rtht5KJhr
+	HnRY9Qn9bp9wT+cFhuXYgT2mlh/5xmF1G2ya0wQqI=
+X-Received: by 2002:a05:620a:1982:b0:783:8d11:acd1 with SMTP id bm2-20020a05620a198200b007838d11acd1mr11974208qkb.5.1706022978145;
+        Tue, 23 Jan 2024 07:16:18 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFUoKLRhFmDsyqLKUTsxHd1f9wjdV1lxYnsdqchXri8ytGc196xoM8mETQjLMLD++2yjDwYzw==
+X-Received: by 2002:a05:620a:1982:b0:783:8d11:acd1 with SMTP id bm2-20020a05620a198200b007838d11acd1mr11974184qkb.5.1706022977819;
+        Tue, 23 Jan 2024 07:16:17 -0800 (PST)
+Received: from [172.31.1.12] ([70.105.251.221])
+        by smtp.gmail.com with ESMTPSA id u15-20020a05620a120f00b007836647671fsm3193442qkj.89.2024.01.23.07.16.17
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 07:16:17 -0800 (PST)
+Message-ID: <6206ba66-5bee-4a4f-9af6-cf10f93163d3@redhat.com>
+Date: Tue, 23 Jan 2024 10:16:16 -0500
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240122-bezwingen-kanister-b56f5bc1bc84@brauner>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] reexport.c: Some Distros need the following include to
+ avoid the following error
+Content-Language: en-US
+From: Steve Dickson <steved@redhat.com>
+To: Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20240122182909.97503-1-steved@redhat.com>
+In-Reply-To: <20240122182909.97503-1-steved@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 22, 2024 at 04:18:08PM +0100, Christian Brauner wrote:
-> On Mon, Jan 22, 2024 at 12:38:33PM +0000, David Howells wrote:
-> > Hi Christian,
-> > 
-> > Here are some miscellaneous fixes for netfslib and a number of filesystems:
-> > 
-> >  (1) Replace folio_index() with folio->index in netfs, afs and cifs.
-> > 
-> >  (2) Fix an oops in fscache_put_cache().
-> > 
-> >  (3) Fix error handling in netfs_perform_write().
-> > 
-> >  (4) Fix an oops in cachefiles when not using erofs ondemand mode.
-> > 
-> >  (5) In afs, hide silly-rename files from getdents() to avoid problems with
-> >      tar and suchlike.
-> > 
-> >  (6) In afs, fix error handling in lookup with a bulk status fetch.
-> > 
-> >  (7) In afs, afs_dynroot_d_revalidate() is redundant, so remove it.
-> > 
-> >  (8) In afs, fix the RCU unlocking in afs_proc_addr_prefs_show().
-> > 
-> > The patches can also be found here:
-> > 
-> > 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=netfs-fixes
+
+
+On 1/22/24 1:29 PM, Steve Dickson wrote:
+> reexport.c: In function ‘connect_fsid_service’:
+> reexport.c:41:28: error: implicit declaration of function ‘offsetof’ [-Werror=implicit-function-declaration]
+>     41 |                 addr_len = offsetof(struct sockaddr_un, sun_path) + strlen(addr.sun_path);
+>        |                            ^~~~~~~~
+> reexport.c:19:1: note: ‘offsetof’ is defined in header ‘<stddef.h>’; did you forget to ‘#include <stddef.h>’?
+>     18 | #include "xlog.h"
+>    +++ |+#include <stddef.h>
+>     19 |
+> reexport.c:41:37: error: expected expression before ‘struct’
+>     41 |                 addr_len = offsetof(struct sockaddr_un, sun_path) + strlen(addr.sun_path);
+>        |                                     ^~~~~~
+> cc1: some warnings being treated as errors
 > 
-> Thank you! I can pull this in right and will send a pr together with the
-> other changes around Wednesday/Thursday for -rc2. So reviews before that
-> would be nice.
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+Committed... (tag: nfs-utils-2-7-1-rc4)
 
-Pulled and pushed:
+steved.
+> ---
+>   support/reexport/reexport.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/support/reexport/reexport.c b/support/reexport/reexport.c
+> index c7bff6a..1febf59 100644
+> --- a/support/reexport/reexport.c
+> +++ b/support/reexport/reexport.c
+> @@ -9,6 +9,7 @@
+>   #include <sys/vfs.h>
+>   #include <unistd.h>
+>   #include <errno.h>
+> +#include <stddef.h>
+>   
+>   #include "nfsd_path.h"
+>   #include "conffile.h"
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
-branch: vfs.netfs
-
-Timeline still the same.
 
