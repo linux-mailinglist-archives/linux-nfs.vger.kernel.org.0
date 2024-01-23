@@ -1,208 +1,429 @@
-Return-Path: <linux-nfs+bounces-1298-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1299-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA8AB839418
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 17:04:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6229F839465
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 17:13:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7CA01C25F53
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 16:04:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 102E128BCB1
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 16:13:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B34961667;
-	Tue, 23 Jan 2024 16:04:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17FEC664C0;
+	Tue, 23 Jan 2024 16:12:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mP5KDOU9";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="WXqL0e+F"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0nUmzYv"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AD0561664;
-	Tue, 23 Jan 2024 16:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706025850; cv=fail; b=Dt/OykEpzCPKRJXUYbPbUTCOlw61VBUfulL0J2gVj5qGykHpS64dxMkepbxfuCnEtPCPgXtndk/8ZFPPF4gboDF/Sfi5I+DGgEemwf1i784xyMwsJ0B2C7zJPE7HNlu/C39518zfaIRCGyxYz7zximuyGb8K7aTOm9cnwnDG+TY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706025850; c=relaxed/simple;
-	bh=1yBhcdgrtUsB+19NKkFNjZ9BpVUgdYLDzfnmYroW3mg=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=KqSvsdaBLBESbZVn9Rabth0c55c4GwPI70gmI+HP2KAEE7aoB5ZkGDv6VAHcf2KbVN0l7wS609oHMEaTw8XiWzMfVg2e7N3HSiSnedPyditKnAXlMWLhF5wFQ0RIY0A7XLEzd1PHS6ytHaQklIVjN9gnlq61bnh2Ae03NC66aEk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=mP5KDOU9; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=WXqL0e+F; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40NE42V3019504;
-	Tue, 23 Jan 2024 16:03:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=corp-2023-11-20;
- bh=510FZMmYQg7qTfaXLh+5+G39z2FyYWhG+K4gBTrQUk8=;
- b=mP5KDOU90014j6Cf9o7u5HPa0YkgcczuldTVBl43OE3cuZcPPGQu1lryiRIGm5gOcFmA
- mLgXfWJ15kS78qgZZfd5hm1XXXeCSFYBa0JsHUlUtPDcZFBiPu7965sB/qFU45AlQGEA
- E2kkq4SFOHfIrPlWdOttIJ9bc+MdqCR7l3c7Phu37icIhyKmrWjJI8ipNx2Ho2xYhwGY
- 3E6ql7gj0zuTGWUL9Vgn4v/6xmV3HRt40cVseflJawCC8dimSYOqVEv/JAYwhBQFOeiz
- xhGPhB/nmJlSfyY6RhbCxzDFqixQg9DdsaNv9782TtHEYkcJ+7yr61ttuCMTjCvI21bs 9A== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7cwepp2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jan 2024 16:03:56 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40NF8wg9001427;
-	Tue, 23 Jan 2024 16:03:56 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vs322h948-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jan 2024 16:03:55 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YgA2NbwXlFAzQOkKcOOqMWQLZPQSird0tYgg++CH277VbPJ1TZU2auDYVLoprq1lTmibqwjDCeyq2CYy371iLr2aLlAPxdw+CpQHQPobw6fJDzuFUptBPj0hY2lEu0w41sssnleGHvbHPwU2ran6dLUjT34WZLMw7NhCtMO3ZB1Sj2cvZdCi/tCN3MVtNE8p98LDeAaRCrus1i77bUCMOYXDWGKrvhYOPl4o47hm21LszdS9cAx1e8duFNBk4/zqq/ghQvI6X61fu8lYGJ4Pkr0Psp9kQZoR/ldFWt7DqP0dLPI/byQnQo8/4J/E4UNdufwn9imSZMsYpfll7poIVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=510FZMmYQg7qTfaXLh+5+G39z2FyYWhG+K4gBTrQUk8=;
- b=jwC1nxHfeaRoEHsbCTcvEG2CMPEJdQMQdX4zWlVt00a2njcMwAhhWwSN4NXBjyUnMZdSfugUBIt7V6XypR+L/vs5Lwc60t0U3t/fbdBOrcE1lYe42B4ceViT8cfFGWJCt6od1SdEi5jcJ9Bjl1LwQD2zQOfmdFIGBQbxCWZ2Latrg6pE8HeZtjCwo3s6cbkRmgbbwfYtjdSOUzX1WMkCxqkqxF1SeV/VLKiMfnDv3Po22nXztHRhhRIvCV2GCiNH/wS6iAe8i5/q2lCXa0Owne/ZtxjehNYQFOS4PTEsT/qJDLbElH/nL688EpJ7jQtlykZk+dr3IaXgqYOlNIF7Yg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=510FZMmYQg7qTfaXLh+5+G39z2FyYWhG+K4gBTrQUk8=;
- b=WXqL0e+FHkU/m0e6XMpJAyAX3ktzjM3eH0Nl4UvWW9yenT2lkxsm4qOIyW+fxp4uj9oP5rxC7s7DnpXqTX1SaDwByH3IermRimAPaqpCwxCRH55wGrhTpEwcQT5kDPb91Z4PFLjk6qP4ydPIZTxSiwUT8lX3dD7wdbEVajw77mQ=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BN0PR10MB5190.namprd10.prod.outlook.com (2603:10b6:408:12b::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.37; Tue, 23 Jan
- 2024 16:03:53 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5475:bf96:8fdf:8ff9]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5475:bf96:8fdf:8ff9%6]) with mapi id 15.20.7202.035; Tue, 23 Jan 2024
- 16:03:53 +0000
-From: Chuck Lever III <chuck.lever@oracle.com>
-To: Christian Brauner <brauner@kernel.org>
-CC: linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux NFS Mailing List
-	<linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>, Amir Goldstein
-	<amir73il@gmail.com>
-Subject: [GIT PULL] fixes for exportfs
-Thread-Topic: [GIT PULL] fixes for exportfs
-Thread-Index: AQHaThXCiMkLE2MLeEuyv1xZu280ZQ==
-Date: Tue, 23 Jan 2024 16:03:53 +0000
-Message-ID: <BDC2AEB4-7085-4A7C-8DE8-A659FE1DBA6A@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3774.300.61.1.2)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|BN0PR10MB5190:EE_
-x-ms-office365-filtering-correlation-id: 2a029fe1-1e7a-4de3-d51a-08dc1c2ce555
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 
- usMSHSjwB2ibB/5I6OOJBp1tsPL7hZzarHYBiXjEq0vTPUof2w/gtVWtyGiQluYygJIM6T4seHn+7pThS2VvLDQirbuq2GS7IuFXa9hqOUuxwQBV9sDiPl6cTx9PIwmsl0+JSE3YHFhCJ8w4HQhf+UY/kVp8l9cKMyDWMU3y0bgVtZOMwnT5REiHVw8pnntC4iU4cdtUcxI6W/39OfyGEOtWFR6wcJbr0UUg92N7GW+U9GhEl6IKUHD0W8/bPCYDaPYfl18hqwX4x/fzLeu+BZQWglVddZGmMAapjozatQUosS9QUpmTaBl8VU0OAaPywdi/eLHgdRu+FDrFiw9uCwoi7UT9QJXmV8K1ciNIrJHc57NWDGbYLaweNRcn1S7RS5xmlMuhfZ8viZg9zbHaiQvKRVQPfMhjorz6rMSGHpXvFN6GsCOJq+GOz8V0xig/okX9ogF6mPx5gJZpSITvWtt8Js3OvRyqwyhqIPKc802jTPszKucFw7uCc728S4nzdgHN5ywTAdRoQtFL6JDkJkYSqB5KpRpwTZD6pDpivXuMgRqI3L5AuluFPko+xkCH3Iun2aBub4OzKnPISD4rq62tin+ryON5bGw8xF4WjRgJMKhwA6kyKMV4i4vuFOMv
-x-forefront-antispam-report: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(376002)(136003)(396003)(39860400002)(366004)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(5660300002)(4744005)(2906002)(83380400001)(6506007)(71200400001)(26005)(6512007)(2616005)(478600001)(41300700001)(4326008)(38070700009)(6486002)(91956017)(966005)(36756003)(33656002)(38100700002)(86362001)(8676002)(8936002)(122000001)(64756008)(66946007)(54906003)(66446008)(66476007)(76116006)(66556008)(6916009)(316002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: 
- =?us-ascii?Q?IV5j7BTFv/kbY7GKhhyM5f+8B3epVbpLF0hooKjXe94OhxKfoeDYH88HKeOO?=
- =?us-ascii?Q?omLMD1yq0MoMoDpP6Ngj7lL6edrlYcJ/whEZviPWkFIqdq3ShWOpJ2jIz+PI?=
- =?us-ascii?Q?XsElRrtojO9gt1V094cNlIlXB0GimM/usI9WkIGeVrEgEcVUP1L4YeKwFP6o?=
- =?us-ascii?Q?wIAIUbVDri41i76HGkuhp4rYj+bG3xDuzdGFS+3LpkLgOwUP5CpKK7RKTTB7?=
- =?us-ascii?Q?w/NtFr5GNsKJOkZ9rRElWxdNxWDjsKhBQbAbjwBZ+H6v8ezMgg/esthID6Cq?=
- =?us-ascii?Q?vnZIGOx7VUbg9sE/HN8LVuXC3iPsMmkvyTDDbH/TO8C3odjs7/MzXGK7KlP/?=
- =?us-ascii?Q?7KjVrxjVZOqR+99R1NcVqKSUluj5nXappaCheKsPoMKPA+XfuMv5U8snQtTc?=
- =?us-ascii?Q?uqPSFail410h2XdDSdtafn2ICD6RJIwJQfGYpothBiJDwm/Z20rfAAcmVK2H?=
- =?us-ascii?Q?PNxyxzg8mhW9kyGNULiRcHUfZy4GrB4dTvFMq6tRv+6eDrJyUgbDmvqq4UFx?=
- =?us-ascii?Q?gTE/VPbSMl8l9sIxOmYv7Gni/j/KX+yhWDXzoVhQaDSVOrYrvFlQh8p/WFxL?=
- =?us-ascii?Q?rO2nBpdoCHJptv8aDvqNo+HEsb5PNTIZVK3vVAOh8rAirJIJewWdG5In2jVG?=
- =?us-ascii?Q?Dgrcy8I/HuTMygyIct5HNq48ICOZkmZtmLXdopheVBpuR1SHA+k7saB5CKsm?=
- =?us-ascii?Q?W3qR5/q8t3bt+17vTqELtw4NUqKjaOTPl08tIyXeqVQkk8tD7xfDQcNBc93V?=
- =?us-ascii?Q?vJVjrOdsI4W66cfO3XcI0AUIDAGNhrh7+YD8cwpIoMkbYuTOfw6bX+bbZv2O?=
- =?us-ascii?Q?z2IeQI6J45Hzo0n9hws+OTx/SVxKJzciwMRKy6QifUd9tsIcWXf2ARiUoqVk?=
- =?us-ascii?Q?9Erq6Bpab4LJxvaLFxTrAlLR8iJX5Xv+pmmGPhbMvAaNPKOZkfm9iM7076KZ?=
- =?us-ascii?Q?829MDEothR4sjTUlD5sAvpuD9U82uaBCLHgSKT1QqckSveWkaBX2TDxLLhDJ?=
- =?us-ascii?Q?ksZg8XHY0IlvcgQ5MUaheXGG4GVQXnPyYRgn0N4ordGSUBZuuwJTdOqeWWTn?=
- =?us-ascii?Q?lwpFBgIsISDe3jPqmyDHhLQ2zEr/sEYICD+ZHNShul86Ytwi7lx3CbYH6cuI?=
- =?us-ascii?Q?J2Se2/ffu5AK9SLE78WHbtucpSsxzpgYRjmFkYhnvQMvvyW2ksRqsQ92hmAF?=
- =?us-ascii?Q?TB48VmyZ35Wo81mGDkrNuCTjexmC/T59oATlTPG6YAdIQLIKxHTha+pRgBHM?=
- =?us-ascii?Q?CcXcLOngGHdvE1KbIoBeG7gIoVil59WObXIPpa9Til27xT1uxZu7cqXUdBts?=
- =?us-ascii?Q?p/nmNfkH35dDKnro49XlyRKJ9jDF+zNniI9Z5/0lZzWv0xpTJuKVyjD2YNdB?=
- =?us-ascii?Q?o5Fb448+hgbVyHRwEL+4qB26HpVbK2h7ipVam9gzcSdehpHcTG1jwlXnG0ZD?=
- =?us-ascii?Q?FvMmAjfJ93bGtSMDIodjDbGZ2Qg9VUpbgyw7Af1be2meaLhzDgJ/BkwTw8mp?=
- =?us-ascii?Q?VBmdQLXsC5c3ZIcEmfK0quz+MUnJ45+IX6IF3EkpCOgODzkjsItn6HGWZssL?=
- =?us-ascii?Q?/FFZ6jCNAB4QrVSugLC5t1c8svPOsz1VLLVz0YqljVfqFWy4HKMp/mHRBqkh?=
- =?us-ascii?Q?9Q=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <62D0A320D2F29E4BAA12C4B33D45505C@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94A3664BE
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jan 2024 16:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706026328; cv=none; b=c2lAhY/2DiaLO2cEphvtgqZubFeBvOlaSJuj9CgCauEvU3ALNFKOH3uUEyGP2oXUPPRLgbKf/bc0loeDD1NZS+04ZyVsn2zEYYVGzSJ0dPEHW51gA5rHzJWA2zZj/GRK7Uk5KgPAiPh1QEjDiG+L6A2H53YlHNvArzQaGdN10sE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706026328; c=relaxed/simple;
+	bh=IStJxbdbescuyly+kae/Jox5teKRW4Wj1y6PyBVG6gM=;
+	h=Subject:From:To:Date:Message-ID:MIME-Version:Content-Type; b=GnriypqX4WP/S4kFtME7BSsT32X8lL7cTMHNOkmc9C6XZG05m3Co7gvPgKHjSfJXAGt8gAi7DdFU3NZQBw+r2iybdYOyDzLpf6XybdFsHfAHoiFLYiIZri/jIDc3Ynet0FuhP3AIsQpcuF3gKzhBlPbI9ovjGcfaYMb/dZbKEs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0nUmzYv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E76CC433C7
+	for <linux-nfs@vger.kernel.org>; Tue, 23 Jan 2024 16:12:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706026327;
+	bh=IStJxbdbescuyly+kae/Jox5teKRW4Wj1y6PyBVG6gM=;
+	h=Subject:From:To:Date:From;
+	b=O0nUmzYvoNmLtQsC3VqM8atdPjfp13by7SVNCQjRwGihfD7SCH6bMmwzyn3Wh3HIO
+	 LDFNS+qc5jg7yVvc/71CEb9NsnYVP1vhFLu71FNWequQdpppz+gvr8DJHLDnwyst+B
+	 HfXu9SINOWdXl+i3THBNX/GZfCD9/vcdwPtDpF1gpe4U5+NgAIZ6x3DF4ArmD3L8l/
+	 WYwu9R+WxCqcVGIIV5IKOl4/CmE3xLpwzLJuLhhq7IEmNE6W/mGcUv7sECbniwj5oB
+	 KJScLURvT140S7JwXMnNhtAKBJlU3vJvBbvTZVqKWh22F/IXGbBvnXbgBCPBS0BR8y
+	 aF3MvTjuH+VnA==
+Subject: [PATCH v1] NFSD: Add a switch to disable nfsd_splice_read()
+From: Chuck Lever <cel@kernel.org>
+To: linux-nfs@vger.kernel.org
+Date: Tue, 23 Jan 2024 11:12:06 -0500
+Message-ID: 
+ <170602632623.217131.13021600519850917517.stgit@manet.1015granger.net>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	CyLQk5gipgt599RBUEmky71vND7p0dsjk98xu+EB49yRw/ZcfJSzECrUl/jP13o03nx5+BzHCgEdi/pjPjGuDdHsrPE5Ix/TwsLAOnrszTLpxETDkR61aOqscYXhVv8X70fgHIThCjO1IGxr+zVfFM+nKyEaO5nIthAUqkW8DjRltf1PkhBSWVwupZCE5L2lL2MXDL/Lmm3ISLtaqnvaSjcLZ+AnuXtQ4kTChdInz+WH332dyQ2nyL00IB7PvCwmJbCfRS0yBtXSiDl5r5DaSBKYYdVJMUMdRXb8Lo9/bBxqjLCMU2DzOg537vVEfsl1C6EHGLUCZbwXHtK7XAvhwDRlWIlEm97aHHGUQctzVDDI/ZKgWh7As06BPgFRKG6kutuXj1/4xlMUJuMcW8+Psk7BrrAvQze5BE9lF/pOcgOWsp+eI+yXebZzM3L9BOKMbvnIzlRvXpu1XClND/s+ZKfhilpDjGNdeG/n7dm/f1Thhwg4lfzOxHiF6rEmbjRyWGFX4Hnpz1ld+TQ4ms5ih6z1H780xIL2FSwJDJQVWtZsBfyXnohEjQoovXRqrTXZfwYbH9nYKkQynDr2pLQa7k/s+U/YCqhfdAzxhey7oe8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a029fe1-1e7a-4de3-d51a-08dc1c2ce555
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Jan 2024 16:03:53.1353
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FrIjG0F83JrhZIzP4a/x+G139iLu6aX/Bc/JAu3pkdyeaLQC9dCkc7RZwqID8j0+YwO+6LMrIMI9wCQvUFpX1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5190
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-23_09,2024-01-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=926 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401230118
-X-Proofpoint-ORIG-GUID: gDgIroS9Cm85Wtpw9PKCi51dtC1j2xns
-X-Proofpoint-GUID: gDgIroS9Cm85Wtpw9PKCi51dtC1j2xns
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-The following changes since commit 0dd3ee31125508cd67f7e7172247f05b7fd1753a=
-:
+From: Chuck Lever <chuck.lever@oracle.com>
 
-  Linux 6.7 (2024-01-07 12:18:38 -0800)
+This enables us to ensure that testing properly covers the readv
+paths as well as the spliced read paths, which are more commonly
+used. Also this makes it easier to do benchmark comparisons between
+splice and vectored reads.
 
-are available in the Git repository at:
+Suggested-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ Documentation/netlink/specs/nfsd.yaml |   19 +++++++
+ fs/nfsd/netlink.c                     |   17 ++++++
+ fs/nfsd/netlink.h                     |    3 +
+ fs/nfsd/netns.h                       |    1 
+ fs/nfsd/nfsctl.c                      |   45 ++++++++++++++++
+ include/uapi/linux/nfsd_netlink.h     |    8 +++
+ tools/net/ynl/generated/nfsd-user.c   |   95 +++++++++++++++++++++++++++++++++
+ tools/net/ynl/generated/nfsd-user.h   |   47 ++++++++++++++++
+ 8 files changed, 235 insertions(+)
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/export=
-fs-6.9
-
-for you to fetch changes up to 42c3732fa8073717dd7d924472f1c0bc5b452fdc:
-
-  fs: Create a generic is_dot_dotdot() utility (2024-01-23 10:58:56 -0500)
-
-----------------------------------------------------------------
-exportfs fixes for v6.9
-
-----------------------------------------------------------------
-Chuck Lever (1):
-      fs: Create a generic is_dot_dotdot() utility
-
-Trond Myklebust (1):
-      exportfs: fix the fallback implementation of the get_name export oper=
-ation
-
- fs/crypto/fname.c    |  8 +-------
- fs/ecryptfs/crypto.c | 10 ----------
- fs/exportfs/expfs.c  |  2 +-
- fs/f2fs/f2fs.h       | 11 -----------
- fs/namei.c           |  6 ++----
- include/linux/fs.h   | 11 +++++++++++
- 6 files changed, 15 insertions(+), 33 deletions(-)
-
---
-Chuck Lever
+diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlink/specs/nfsd.yaml
+index 05acc73e2e33..1a3c5e78b388 100644
+--- a/Documentation/netlink/specs/nfsd.yaml
++++ b/Documentation/netlink/specs/nfsd.yaml
+@@ -62,6 +62,12 @@ attribute-sets:
+         name: compound-ops
+         type: u32
+         multi-attr: true
++  -
++    name: splice-read
++    attributes:
++      -
++        name: enabled
++        type: u32
+ 
+ operations:
+   list:
+@@ -87,3 +93,16 @@ operations:
+             - sport
+             - dport
+             - compound-ops
++    -
++      name: splice-read
++      doc: Disable the use of splice for NFS READ operations
++      attribute-set: splice-read
++      flags: [ admin-perm ]
++      do:
++        request:
++          attributes:
++            - enabled
++      dump:
++        reply:
++          attributes:
++            - enabled
+diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+index 0e1d635ec5f9..c47f3527d30b 100644
+--- a/fs/nfsd/netlink.c
++++ b/fs/nfsd/netlink.c
+@@ -10,6 +10,11 @@
+ 
+ #include <uapi/linux/nfsd_netlink.h>
+ 
++/* NFSD_CMD_SPLICE_READ - do */
++static const struct nla_policy nfsd_splice_read_nl_policy[NFSD_A_SPLICE_READ_ENABLED + 1] = {
++	[NFSD_A_SPLICE_READ_ENABLED] = { .type = NLA_U32, },
++};
++
+ /* Ops table for nfsd */
+ static const struct genl_split_ops nfsd_nl_ops[] = {
+ 	{
+@@ -19,6 +24,18 @@ static const struct genl_split_ops nfsd_nl_ops[] = {
+ 		.done	= nfsd_nl_rpc_status_get_done,
+ 		.flags	= GENL_CMD_CAP_DUMP,
+ 	},
++	{
++		.cmd		= NFSD_CMD_SPLICE_READ,
++		.doit		= nfsd_nl_splice_read_doit,
++		.policy		= nfsd_splice_read_nl_policy,
++		.maxattr	= NFSD_A_SPLICE_READ_ENABLED,
++		.flags		= GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
++	},
++	{
++		.cmd	= NFSD_CMD_SPLICE_READ,
++		.dumpit	= nfsd_nl_splice_read_dumpit,
++		.flags	= GENL_ADMIN_PERM | GENL_CMD_CAP_DUMP,
++	},
+ };
+ 
+ struct genl_family nfsd_nl_family __ro_after_init = {
+diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+index d83dd6bdee92..2d96d0f093bb 100644
+--- a/fs/nfsd/netlink.h
++++ b/fs/nfsd/netlink.h
+@@ -16,6 +16,9 @@ int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb);
+ 
+ int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+ 				  struct netlink_callback *cb);
++int nfsd_nl_splice_read_doit(struct sk_buff *skb, struct genl_info *info);
++int nfsd_nl_splice_read_dumpit(struct sk_buff *skb,
++			       struct netlink_callback *cb);
+ 
+ extern struct genl_family nfsd_nl_family;
+ 
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index 74b4360779a1..3b9e09fecbfc 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -109,6 +109,7 @@ struct nfsd_net {
+ 
+ 	bool nfsd_net_up;
+ 	bool lockd_up;
++	bool spliced_reads;
+ 
+ 	seqlock_t writeverf_lock;
+ 	unsigned char writeverf[8];
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 8e6dbe9e0b65..86f466dbc784 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1696,6 +1696,51 @@ int nfsd_nl_rpc_status_get_done(struct netlink_callback *cb)
+ 	return 0;
+ }
+ 
++/**
++ * nfsd_nl_splice_read_doit - Set the value of splice_read
++ * @skb: call buffer
++ * @info: netlink metadata and command arguments
++ *
++ * Returns zero on success, or a negative errno.
++ */
++int nfsd_nl_splice_read_doit(struct sk_buff *skb, struct genl_info *info)
++{
++	struct nfsd_net *nn = net_generic(sock_net(skb->sk), nfsd_net_id);
++	u32 newval;
++
++	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SPLICE_READ_ENABLED))
++		return -EINVAL;
++
++	newval = nla_get_u32(info->attrs[NFSD_A_SPLICE_READ_ENABLED]);
++	nn->spliced_reads = newval ? true : false;
++	return 0;
++}
++
++/**
++ * nfsd_nl_splice_read_dumpit - Return the value of splice_read
++ * @skb: reply buffer
++ * @cb: netlink metadata and command arguments
++ *
++ * Returns the size of the reply or a negative errno.
++ */
++int nfsd_nl_splice_read_dumpit(struct sk_buff *skb, struct netlink_callback *cb)
++{
++	struct nfsd_net *nn = net_generic(sock_net(skb->sk), nfsd_net_id);
++	void *hdr;
++
++	hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
++			  &nfsd_nl_family, 0, NFSD_CMD_SPLICE_READ);
++	if (!hdr)
++		return -ENOBUFS;
++
++	if (nla_put_s32(skb, NFSD_A_SPLICE_READ_ENABLED,
++			(nn->spliced_reads ? 1 : 0)))
++		return -ENOBUFS;
++
++	genlmsg_end(skb, hdr);
++	return 0;
++}
++
+ /**
+  * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+  * @net: a freshly-created network namespace
+diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_netlink.h
+index 3cd044edee5d..c2542ed18b50 100644
+--- a/include/uapi/linux/nfsd_netlink.h
++++ b/include/uapi/linux/nfsd_netlink.h
+@@ -29,8 +29,16 @@ enum {
+ 	NFSD_A_RPC_STATUS_MAX = (__NFSD_A_RPC_STATUS_MAX - 1)
+ };
+ 
++enum {
++	NFSD_A_SPLICE_READ_ENABLED = 1,
++
++	__NFSD_A_SPLICE_READ_MAX,
++	NFSD_A_SPLICE_READ_MAX = (__NFSD_A_SPLICE_READ_MAX - 1)
++};
++
+ enum {
+ 	NFSD_CMD_RPC_STATUS_GET = 1,
++	NFSD_CMD_SPLICE_READ,
+ 
+ 	__NFSD_CMD_MAX,
+ 	NFSD_CMD_MAX = (__NFSD_CMD_MAX - 1)
+diff --git a/tools/net/ynl/generated/nfsd-user.c b/tools/net/ynl/generated/nfsd-user.c
+index 360b6448c6e9..14957bdfbe9c 100644
+--- a/tools/net/ynl/generated/nfsd-user.c
++++ b/tools/net/ynl/generated/nfsd-user.c
+@@ -15,6 +15,7 @@
+ /* Enums */
+ static const char * const nfsd_op_strmap[] = {
+ 	[NFSD_CMD_RPC_STATUS_GET] = "rpc-status-get",
++	[NFSD_CMD_SPLICE_READ] = "splice-read",
+ };
+ 
+ const char *nfsd_op_str(int op)
+@@ -47,6 +48,15 @@ struct ynl_policy_nest nfsd_rpc_status_nest = {
+ 	.table = nfsd_rpc_status_policy,
+ };
+ 
++struct ynl_policy_attr nfsd_splice_read_policy[NFSD_A_SPLICE_READ_MAX + 1] = {
++	[NFSD_A_SPLICE_READ_ENABLED] = { .name = "enabled", .type = YNL_PT_U32, },
++};
++
++struct ynl_policy_nest nfsd_splice_read_nest = {
++	.max_attr = NFSD_A_SPLICE_READ_MAX,
++	.table = nfsd_splice_read_policy,
++};
++
+ /* Common nested types */
+ /* ============== NFSD_CMD_RPC_STATUS_GET ============== */
+ /* NFSD_CMD_RPC_STATUS_GET - dump */
+@@ -198,6 +208,91 @@ nfsd_rpc_status_get_dump(struct ynl_sock *ys)
+ 	return NULL;
+ }
+ 
++/* ============== NFSD_CMD_SPLICE_READ ============== */
++/* NFSD_CMD_SPLICE_READ - do */
++void nfsd_splice_read_req_free(struct nfsd_splice_read_req *req)
++{
++	free(req);
++}
++
++int nfsd_splice_read(struct ynl_sock *ys, struct nfsd_splice_read_req *req)
++{
++	struct nlmsghdr *nlh;
++	int err;
++
++	nlh = ynl_gemsg_start_req(ys, ys->family_id, NFSD_CMD_SPLICE_READ, 1);
++	ys->req_policy = &nfsd_splice_read_nest;
++
++	if (req->_present.enabled)
++		mnl_attr_put_u32(nlh, NFSD_A_SPLICE_READ_ENABLED, req->enabled);
++
++	err = ynl_exec(ys, nlh, NULL);
++	if (err < 0)
++		return -1;
++
++	return 0;
++}
++
++/* NFSD_CMD_SPLICE_READ - dump */
++int nfsd_splice_read_rsp_dump_parse(const struct nlmsghdr *nlh, void *data)
++{
++	struct nfsd_splice_read_rsp_dump *dst;
++	struct ynl_parse_arg *yarg = data;
++	const struct nlattr *attr;
++
++	dst = yarg->data;
++
++	mnl_attr_for_each(attr, nlh, sizeof(struct genlmsghdr)) {
++		unsigned int type = mnl_attr_get_type(attr);
++
++		if (type == NFSD_A_SPLICE_READ_ENABLED) {
++			if (ynl_attr_validate(yarg, attr))
++				return MNL_CB_ERROR;
++			dst->_present.enabled = 1;
++			dst->enabled = mnl_attr_get_u32(attr);
++		}
++	}
++
++	return MNL_CB_OK;
++}
++
++void nfsd_splice_read_rsp_list_free(struct nfsd_splice_read_rsp_list *rsp)
++{
++	struct nfsd_splice_read_rsp_list *next = rsp;
++
++	while ((void *)next != YNL_LIST_END) {
++		rsp = next;
++		next = rsp->next;
++
++		free(rsp);
++	}
++}
++
++struct nfsd_splice_read_rsp_list *nfsd_splice_read_dump(struct ynl_sock *ys)
++{
++	struct ynl_dump_state yds = {};
++	struct nlmsghdr *nlh;
++	int err;
++
++	yds.ys = ys;
++	yds.alloc_sz = sizeof(struct nfsd_splice_read_rsp_list);
++	yds.cb = nfsd_splice_read_rsp_dump_parse;
++	yds.rsp_cmd = NFSD_CMD_SPLICE_READ;
++	yds.rsp_policy = &nfsd_splice_read_nest;
++
++	nlh = ynl_gemsg_start_dump(ys, ys->family_id, NFSD_CMD_SPLICE_READ, 1);
++
++	err = ynl_exec_dump(ys, nlh, &yds);
++	if (err < 0)
++		goto free_list;
++
++	return yds.first;
++
++free_list:
++	nfsd_splice_read_rsp_list_free(yds.first);
++	return NULL;
++}
++
+ const struct ynl_family ynl_nfsd_family =  {
+ 	.name		= "nfsd",
+ };
+diff --git a/tools/net/ynl/generated/nfsd-user.h b/tools/net/ynl/generated/nfsd-user.h
+index 989c6e209ced..5732c5a665e7 100644
+--- a/tools/net/ynl/generated/nfsd-user.h
++++ b/tools/net/ynl/generated/nfsd-user.h
+@@ -64,4 +64,51 @@ nfsd_rpc_status_get_rsp_list_free(struct nfsd_rpc_status_get_rsp_list *rsp);
+ struct nfsd_rpc_status_get_rsp_list *
+ nfsd_rpc_status_get_dump(struct ynl_sock *ys);
+ 
++/* ============== NFSD_CMD_SPLICE_READ ============== */
++/* NFSD_CMD_SPLICE_READ - do */
++struct nfsd_splice_read_req {
++	struct {
++		__u32 enabled:1;
++	} _present;
++
++	__u32 enabled;
++};
++
++static inline struct nfsd_splice_read_req *nfsd_splice_read_req_alloc(void)
++{
++	return calloc(1, sizeof(struct nfsd_splice_read_req));
++}
++void nfsd_splice_read_req_free(struct nfsd_splice_read_req *req);
++
++static inline void
++nfsd_splice_read_req_set_enabled(struct nfsd_splice_read_req *req,
++				 __u32 enabled)
++{
++	req->_present.enabled = 1;
++	req->enabled = enabled;
++}
++
++/*
++ * Disable the use of splice for NFS READ operations
++ */
++int nfsd_splice_read(struct ynl_sock *ys, struct nfsd_splice_read_req *req);
++
++/* NFSD_CMD_SPLICE_READ - dump */
++struct nfsd_splice_read_rsp_dump {
++	struct {
++		__u32 enabled:1;
++	} _present;
++
++	__u32 enabled;
++};
++
++struct nfsd_splice_read_rsp_list {
++	struct nfsd_splice_read_rsp_list *next;
++	struct nfsd_splice_read_rsp_dump obj __attribute__ ((aligned (8)));
++};
++
++void nfsd_splice_read_rsp_list_free(struct nfsd_splice_read_rsp_list *rsp);
++
++struct nfsd_splice_read_rsp_list *nfsd_splice_read_dump(struct ynl_sock *ys);
++
+ #endif /* _LINUX_NFSD_GEN_H */
 
 
 
