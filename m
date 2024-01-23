@@ -1,116 +1,153 @@
-Return-Path: <linux-nfs+bounces-1288-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1289-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1098A8386C7
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 06:35:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D814838B36
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 10:59:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96B67B230C0
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 05:35:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A067B1C2469E
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Jan 2024 09:59:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 366EA525A;
-	Tue, 23 Jan 2024 05:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E7E05A0F2;
+	Tue, 23 Jan 2024 09:59:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SV2mf9EY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJrAOaZK"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091DA5225
-	for <linux-nfs@vger.kernel.org>; Tue, 23 Jan 2024 05:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.177.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EC65A0EB;
+	Tue, 23 Jan 2024 09:59:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705988121; cv=none; b=phizXc6shKOH+QXsus9if85Vb2r8xooE+Z+7PXzFY8yOaS04wiUH33UtPk8TgU98PiJc3O//uHpuxjS1gQLdBplR/ZTAnnbqfto6mg252PF1qbLvC6naYthQaiqU+QNKUPhays5NIvdngug4D/1TqzP9qd/t6rG8P7vkOtBTcDc=
+	t=1706003948; cv=none; b=EvVLXGzoI0nNr9Kz1PQzueDJUsyCsCvagLhkNBAEuEaWB5rYoNa8zK20aVJRLZzY5OrkJNojViZdc0AGLFZaqZAXa+hz734yZdAsKdK++tcrO8etVM4BZxY0gh0/4bILcHEr9OYT0L0OImixbwOMprokMdQbpgNVA0AKDWHOFu4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705988121; c=relaxed/simple;
-	bh=5Aa+dyKO4s1UDk3GLepSSHg4GcaiPgPbHnivEhg9hpA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WGUJfC1AUgDH5IWKZNytSfy4cQLUCA7ukxJmtExLCamcCmDxFXNHU1QfnHasTnJg3yf9TrGyVMfVb5VlLOTqjOSohzkSxdHHPt8sqhfNKL9U8aTOADCBpdVFC+dQdm4HWibCrRRWIFSF1aIGF6VFD+Mmxr6XKLB9v5qtaIGqFvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SV2mf9EY; arc=none smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40N2TEcg001493;
-	Tue, 23 Jan 2024 05:35:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-transfer-encoding;
- s=corp-2023-11-20; bh=CdYrD1p+aqfk1fKfRLccQ7eSB1rGK5zkEy7baRGBlbQ=;
- b=SV2mf9EYAlXiipB2AcUkAOH7zMriLIlSJh+6XQzAuEMyIZVTHRJgwqiCD7by6JQl8YB+
- WgP6y/bDe6rZV53SL83QcKhSwFtEuny4/svZAIG6vBsveYLI9lWsz9feJdrDyVvfICxg
- iWQIAcjEwZal4lUW5XGAI/eferLnFrElsd2+BYaG3E4C+kXLQHT6He87eNUauRebtDem
- gtTuKpEyoUM+iQWJbT5E6o5Jczthnoro4KuBvEO01fGKdi6nAQH4ee9Pb9LgYKi3g3ax
- fXsHuEkcZqNLpVoc906f6zIUP2+JOvMnQuG9yi7Ve5W7w+ghwL5mb+N0RXxz+2a52KYa xw== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7n7wbv4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jan 2024 05:35:12 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40N43krw013218;
-	Tue, 23 Jan 2024 05:35:11 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vs3708knf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jan 2024 05:35:11 +0000
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 40N5ZBbi011717;
-	Tue, 23 Jan 2024 05:35:11 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3vs3708kmr-1;
-	Tue, 23 Jan 2024 05:35:10 +0000
-From: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
-To: trond.myklebust@hammerspace.com, anna@kernel.org
-Cc: samasth.norway.ananda@oracle.com, bcodding@redhat.com,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH  1/1] NFSv4.1: Assign the right value for initval and retries for rpc timeout
-Date: Mon, 22 Jan 2024 21:35:09 -0800
-Message-ID: <20240123053509.3592653-1-samasth.norway.ananda@oracle.com>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1706003948; c=relaxed/simple;
+	bh=6G61OmcBZ5RdbQbm3/5N5uu8dybpynbG4cXV2VBDaJc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KLQDhHddxJd+M3pN2Eb9lTefdNvaAgAsGNCrYHQQAMvhS5pJbtSJH4jjXpVJHzxmdk8t0XFbKTsHIjd5Vlhbtvm3bnIS7+fkzKfVM5C5GYU1jwNE4v4yUYJoCXIkiRQ/Vz2jNBZiBZ1mwNs80xGDo3+t+DAg0DKAEqdOhk1XpPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJrAOaZK; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D06EC433F1;
+	Tue, 23 Jan 2024 09:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706003947;
+	bh=6G61OmcBZ5RdbQbm3/5N5uu8dybpynbG4cXV2VBDaJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EJrAOaZKkakyMCMzbzR58I9Y7+23R48xPKwR7p+OgYcKeNYYZvC5Nt2CRjon0Enhf
+	 WZuq9Df6fy+ffkUjg84DXqo48yV5OMeWjmUU6Vbit0R/+BwgvCiJowfW1alf80AXwx
+	 UkilPbXCmGdAOOayWQQFa7fc05EIK00uFgUbpvqI1CyzR9DE2IoomnbqZDFkWI8JyI
+	 bu5wg/NBJQXfFTNqnHT5pAk7j/LpAMvE96HMzq2NCmop+xf01/zWlpIGSYMgXoVvj9
+	 Dyz722bszKX4C0//cOJ/1VR8mKVnsAjr+EbxmNu7OGjUEZUGmd/YP1EJtC3Ef4z1OF
+	 PdUP4iejo1TYg==
+Date: Tue, 23 Jan 2024 10:59:04 +0100
+From: Lorenzo Bianconi <lorenzo@kernel.org>
+To: Chuck Lever <chuck.lever@oracle.com>
+Cc: NeilBrown <neilb@suse.de>, Jeff Layton <jlayton@kernel.org>,
+	linux-nfs@vger.kernel.org, lorenzo.bianconi@redhat.com,
+	kuba@kernel.org, horms@kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v6 3/3] NFSD: add write_ports to netlink command
+Message-ID: <Za-N6BxOMXTGyxmW@lore-desk>
+References: <cover.1705771400.git.lorenzo@kernel.org>
+ <f7c42dae2b232b3b06e54ceb3f00725893973e02.1705771400.git.lorenzo@kernel.org>
+ <9e3ae337dcf168c60c4cfd51aa0b2fc7b24bcbfb.camel@kernel.org>
+ <170595930799.23031.17998490973211605470@noble.neil.brown.name>
+ <Za7zHvPJdei/vWm4@tissot.1015granger.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-23_02,2024-01-22_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401230038
-X-Proofpoint-GUID: MCVLZdTRlYRWErReouKAGOeinLFowgs9
-X-Proofpoint-ORIG-GUID: MCVLZdTRlYRWErReouKAGOeinLFowgs9
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="GyC0Sk66xPHsCCpt"
+Content-Disposition: inline
+In-Reply-To: <Za7zHvPJdei/vWm4@tissot.1015granger.net>
 
-Make sure the rpc timeout was assigned with the correct value for
-initial timeout and max number of retries.
 
-Fixes: 57331a59ac0d ("NFSv4.1: Use the nfs_client's rpc timeouts for backchannel")
-Signed-off-by: Samasth Norway Ananda <samasth.norway.ananda@oracle.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
----
- net/sunrpc/svc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--GyC0Sk66xPHsCCpt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index f60c93e5a25d..b969e505c7b7 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1598,10 +1598,10 @@ void svc_process_bc(struct rpc_rqst *req, struct svc_rqst *rqstp)
- 	/* Finally, send the reply synchronously */
- 	if (rqstp->bc_to_initval > 0) {
- 		timeout.to_initval = rqstp->bc_to_initval;
--		timeout.to_retries = rqstp->bc_to_initval;
-+		timeout.to_retries = rqstp->bc_to_retries;
- 	} else {
- 		timeout.to_initval = req->rq_xprt->timeout->to_initval;
--		timeout.to_initval = req->rq_xprt->timeout->to_retries;
-+		timeout.to_retries = req->rq_xprt->timeout->to_retries;
- 	}
- 	memcpy(&req->rq_snd_buf, &rqstp->rq_res, sizeof(req->rq_snd_buf));
- 	task = rpc_run_bc_task(req, &timeout);
--- 
-2.42.0
+> On Tue, Jan 23, 2024 at 08:35:07AM +1100, NeilBrown wrote:
+> > On Tue, 23 Jan 2024, Jeff Layton wrote:
+> > > On Sat, 2024-01-20 at 18:33 +0100, Lorenzo Bianconi wrote:
+> > > > Introduce write_ports netlink command. For listener-set, userspace =
+is
+> > > > expected to provide a NFS listeners list it wants to enable (all the
+> > > > other ports will be closed).
+> > > >=20
+> > >=20
+> > > Ditto here. This is a change to a declarative interface, which I think
+> > > is a better way to handle this, but we should be aware of the change.
+> >=20
+> > I agree it is better, and thanks for highlighting the change.
+> >=20
+> > > > +	/* 2- remove stale listeners */
+> > >=20
+> > >=20
+> > > The old portlist interface was weird, in that it was only additive. Y=
+ou
+> > > couldn't use it to close a listening socket (AFAICT). We may be able =
+to
+> > > support that now with this interface, but we'll need to test that case
+> > > carefully.
+> >=20
+> > Do we ever want/need to remove listening sockets?
+>=20
+> I think that might be an interesting use case. Disabling RDMA, for
+> example, should kill the RDMA listening endpoints but leave
+> listening sockets in place.
+>=20
+> But for now, our socket listeners are "any". Wondering how net
+> namespaces play into this.
+>=20
+>=20
+> > Normal practice when making any changes is to stop and restart where
+> > "stop" removes all sockets, unexports all filesystems, disables all
+> > versions.
+> > I don't exactly object to supporting fine-grained changes, but I suspect
+> > anything that is not used by normal service start will hardly ever be
+> > used in practice, so will not be tested.
+>=20
+> Well, there is that. I guess until we have test coverage for NFSD
+> administrative interfaces, we should leave well enough alone.
 
+So to summarize it:
+- we will allow to remove enabled versions (as it is in patch v6 2/3)
+- we will allow to add new listening sockets but we will not allow to remove
+  them (the user/admin will need to stop/start the server).
+
+Agree? If so I will work on it and post v7.
+
+Regards,
+Lorenzo
+
+>=20
+>=20
+> > So if it is easiest to support reverting previous configuration (as it
+> > probably is for version setting), then do so.  But if there is any
+> > complexity (as maybe there is with listening sockets), then don't
+> > add complexity that won't be used.
+> >=20
+> > Thanks,
+> > NeilBrown
+>=20
+> --=20
+> Chuck Lever
+
+--GyC0Sk66xPHsCCpt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTquNwa3Txd3rGGn7Y6cBh0uS2trAUCZa+N6AAKCRA6cBh0uS2t
+rEN0AP9CEZYRtw1HCZkVIlYZMNwhz/H6OyqLVzwuj3PnVvPvsQEA3tSDCr3d/R/8
+VUhT41xnz7h80ztViAXIKgNavp04TgI=
+=6b+o
+-----END PGP SIGNATURE-----
+
+--GyC0Sk66xPHsCCpt--
 
