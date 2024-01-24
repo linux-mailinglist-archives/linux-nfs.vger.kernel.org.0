@@ -1,69 +1,69 @@
-Return-Path: <linux-nfs+bounces-1307-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1308-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C298883AB56
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jan 2024 15:05:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4F7483AB58
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jan 2024 15:06:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E33B61C21074
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jan 2024 14:05:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 53BD51F21E6D
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jan 2024 14:06:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FB7677F14;
-	Wed, 24 Jan 2024 14:05:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 52BE47A707;
+	Wed, 24 Jan 2024 14:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lMcMXb5a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BV0sPz0E"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCC6163103
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Jan 2024 14:05:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5D277F3A
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Jan 2024 14:06:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706105128; cv=none; b=AZ5jt71PYiDbTtRVjGZrG6UZLyB+2Gb8KXnd5fdxqUeHDvEwaDwD4C7V/wkSrfskpawkPw2EzIpEmwWHDMQKLE6KmtaD3azAkh230NjBUfH2Otu3MQIElmLBr4Nj9ofsynzUtP+OkptuRptDgab0wugIraAqJ31bkgDv/RQQz0M=
+	t=1706105166; cv=none; b=Eb/hji7KMXcI5fx4eTsSSTZJCjy5ylCyuO+TkdSfDZKJBsAP2+vF5S4VOZGvF3U7dk4b4hC7PF++3pix7ndAFzOHSCA+gO6LLPRCoQJ4bQ2KgxCnteWafd5qOM8brpRzZb5zmnmrhSYW1raMwiq/W+PYpPQYBczxNLdXFcOalnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706105128; c=relaxed/simple;
-	bh=rKT/SovjmMKybGM+TsighIhEsthz6eW5SOAgfqxWmW8=;
+	s=arc-20240116; t=1706105166; c=relaxed/simple;
+	bh=JhJajn1dlRnhQIzzLtUNOavOaD/8QtUQ8+ibIesZnws=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H13utaRH1KPaXhfxoNMHzjCHh0uZCDnDF9T1Oz0y1o6OBIjHvwgaR0ViWRvT37cNxNgS80C0n4erDe9+URiiE5QoiYK4f91eXHeOHQwoZKPxjxoMX5SYz27Oar3wvwaRYMxK0x6QcHM/Pd+exacdZta8KTxlZpCwsgRoqYIEicc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lMcMXb5a; arc=none smtp.client-ip=209.85.208.42
+	 To:Cc:Content-Type; b=QZR+jpXfWGHW73LCQ0rdxAbchO6FApLuFV+mFWim7uJVylkAtFTWwNKHO8w62Q/wYwwVEJiVd0a6nq7jyBIkoVumF+flLu+WV85HBqMYsw+tePF4kjbw95T5OAsEPozu9DbSuqNTr8jle0KeAHYdN8+vOZITrj8ok6jU8eXO3Vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BV0sPz0E; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-55a349cf29cso6483853a12.0
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Jan 2024 06:05:26 -0800 (PST)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-559f92bf7b6so9958260a12.0
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Jan 2024 06:06:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706105125; x=1706709925; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706105162; x=1706709962; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rKT/SovjmMKybGM+TsighIhEsthz6eW5SOAgfqxWmW8=;
-        b=lMcMXb5aNgNUtmj8JKvWT3PynkrdW0EuBTywtSukiuzhOHbkFoxGXbTJPUtyybg36Q
-         QxQkSyckSHyEjyVsYMghMv4de3sk50EGmTikcGYLKyn1Y1DwsxcTvplkn6ebBFY54aaF
-         iObbF+DU4y0tN09jX/UvMxJxOrXwhtn85CQyECkFc4GExxHjecJa40VZBSMG8VBl3rGu
-         OAgjkCLDTNN7JkfWJzMbFXZG2+B0PGIAQ2XCa3OSWS+A7DeUDPv3sOJI3ONU9WZEeZEF
-         C3b0X1oIMg6SET3mOy7YubeTlugkDMdbfRDBknrYBjiWIHtB4zRDA/4x3LraZzmQFGMc
-         w/qg==
+        bh=JhJajn1dlRnhQIzzLtUNOavOaD/8QtUQ8+ibIesZnws=;
+        b=BV0sPz0ERpTD77RV9F8u1+p9jXRjcT/qj28bIoWIfdJcd25OIqOuTmKKnDDulUOkMh
+         pxXwwPebQZ7pmA84IquRyeXQrrKNr+5bKF6tLFnx+Jngbg9xxoQ/ToQzr30sYLjw1/F/
+         S040i6c2LjEtjAOd0w6RfkGHumwilS1cwMQBwSzqjII4emRsS/Y1L9EPDi/5jTzp1+FN
+         Rm1v2BSj5c4OwppLM4w7TGcC+KNbQJwvSQat1ghgJs45jVMl3PwCsvig6CuCz+HwOD/q
+         E8Bzdz5mcsZQqa4AE4YnAqzrHJXWaxWCRheYpqjE5q+T3ms82h9HoSzeJfUaq1jfH5+v
+         JmCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706105125; x=1706709925;
+        d=1e100.net; s=20230601; t=1706105162; x=1706709962;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rKT/SovjmMKybGM+TsighIhEsthz6eW5SOAgfqxWmW8=;
-        b=NJWjYF/vWVe7N72UUT3w84LBmwxHswCNtNYHqRWy4KoUzxQcA0Q47KU6SKUnwygp2S
-         LBNl8ReHXux/H39I5vBpNTfmCy1sxGZfe4R/yuoqKhH5xU1CxuQzKcOl30Aox6PqxLGb
-         B6Vk5QEzWmpd92E/9q9Q4q40ey4ZxtVQCpsJcQeIm2abrAiiodjaVN2rNQJ+pdAwE9ju
-         cNi6dLsmiqKrJFIuDPSjXgrWUhreDVm1VDa9BjgHTnFEJ+XkhMQ9Bl8/tZ/4lTZMMckM
-         mm8CIUmsNWrpioXQ5EQT1lqZ5HpCLln15MQ+fYQhjVFcq6OBfLZFAVNK0IdQ9/4rACMj
-         xGeQ==
-X-Gm-Message-State: AOJu0YyCvqa1aBx7UlUIAXygKgTO1fo7vkamEut439GUerWK3bDRHSmY
-	Ye9sH7RRLGXILAZjFCm8fV5rPcdLKIn76VvxgjqrsRJI5dQqGzVNHe/NDKthV2tSOBtY8+VCsJO
-	lDXM3+JfiBUXoAgq4kXYY2ReYdR8=
-X-Google-Smtp-Source: AGHT+IHiS6Y1aNjvrdXQ2o2Y/Zml8pOm9KPLusAP0wFIn484RmL2qBhO9OghbJQngeEf0+GSJE1zp7oom3EwF+rCc14=
-X-Received: by 2002:a05:6402:4310:b0:55c:bffb:1308 with SMTP id
- m16-20020a056402431000b0055cbffb1308mr721192edc.15.1706105124683; Wed, 24 Jan
- 2024 06:05:24 -0800 (PST)
+        bh=JhJajn1dlRnhQIzzLtUNOavOaD/8QtUQ8+ibIesZnws=;
+        b=ieGjDf2ZqeuoYVE0eyBAmwtYVs1Xjp4SzfKFHaUkky6n1WqOzHtdWVbUKSFMwSIpAv
+         LqD+chDoM3yMNBfuIPHjkjxNcu+c3sIYy+sFXoKYoooinZTBJAbGQQuO7CRkC2kFIieV
+         /JAPHkEvbI8NWm0HYtBgkMZIFvMf+jDzahLqEv5Rvl/9Kd5hWtkxkxUeNiBUlNFG9UTL
+         BnSmJO163gHNGWI67qK8wmbO6dd96ZBB+5yOzofZ/ReknNxgm5MzjaWrrp9cWIxwonfW
+         zFdIOP1p0s7TBSGU5NUoi2W7XkQDAoTSgLUQxmnns0Mn/JzFTtMiPNN8wqAqi0mOxTbx
+         A2/A==
+X-Gm-Message-State: AOJu0Yx6yGh/xFSbf8UtLhMbGz4G4ihABQCg9FK1YhNOSGIO5IdBebcO
+	o+bemH/komiXx1utjO7mauFy9KOYZKPkpEhYhO/gpV+cqOulZvDTDW7m29Lbob/+VKhUkwbm5Lb
+	WsBTeBhmrrGm/ljLwbI+NuK5HE29CdVCF
+X-Google-Smtp-Source: AGHT+IERe4gorQFDJ7x6nq5gum9w2jgKgWlPMKKMFJ2fXRNk0f12S2O1DOVdt2xqDyyR1cvmwN/o0lUQGKg/fXYz6pI=
+X-Received: by 2002:a05:6402:350e:b0:55c:a84b:ca58 with SMTP id
+ b14-20020a056402350e00b0055ca84bca58mr1827955edd.18.1706105162260; Wed, 24
+ Jan 2024 06:06:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -75,141 +75,119 @@ References: <CALXu0UeGr80OzF7abqxwR5KFJFhpCuomy2_tdFESAKSiW70jfA@mail.gmail.com>
  <4F5C3573-2962-4072-ACB1-1CB8236866D5@oracle.com> <CALXu0Uf2z3um+kh=tgnqskr-ZdY2gU=185K3Amr=F_GJpb2_UQ@mail.gmail.com>
  <FD981B2C-5C24-4349-A279-C70F640C0A01@oracle.com> <CANH4o6O=ihW7ENc-BTBXR4d4JL0QJjZa5YdYaKAdoHdq9vwGcA@mail.gmail.com>
  <5DA015E1-50C6-4F56-B4E7-62A4BE90DBA4@oracle.com> <CALXu0UcLV-KZ4GNY8UgWCwiUOO_HsH=KLWOKuWJ2uEDP+a9sqw@mail.gmail.com>
- <d864c378-3b4d-41f2-bb21-d3403db55cbc@redhat.com> <CALXu0UcUUmVSih6LfCTHWKZA_Czfv5f=MM_cQE_HsGXtuq2y1Q@mail.gmail.com>
-In-Reply-To: <CALXu0UcUUmVSih6LfCTHWKZA_Czfv5f=MM_cQE_HsGXtuq2y1Q@mail.gmail.com>
+In-Reply-To: <CALXu0UcLV-KZ4GNY8UgWCwiUOO_HsH=KLWOKuWJ2uEDP+a9sqw@mail.gmail.com>
 From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Wed, 24 Jan 2024 15:04:44 +0100
-Message-ID: <CALXu0UfQzHA7MZ76ETRbMksSqBsP8zc+cf9EBLi80BgqNh1o6g@mail.gmail.com>
+Date: Wed, 24 Jan 2024 15:05:26 +0100
+Message-ID: <CALXu0UcoxTNM7DnevRmPR7iKynp9RCLQvoe4uS=NVkpRiHAUTQ@mail.gmail.com>
 Subject: Re: Change "hostname" to "hostport" in text-based mountd downcall Re:
  BUG in exports(5), no example for refer= Re: Examples for refer= in /etc/exports?
-To: Steve Dickson <steved@redhat.com>
-Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Martin Wege <martin.l.wege@gmail.com>, 
-	Chuck Lever III <chuck.lever@oracle.com>, Roland Mainz <roland.mainz@nrubsig.org>
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc: Martin Wege <martin.l.wege@gmail.com>, Chuck Lever III <chuck.lever@oracle.com>, 
+	Roland Mainz <roland.mainz@nrubsig.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-?
-
-On Sun, 19 Nov 2023 at 18:17, Cedric Blancher <cedric.blancher@gmail.com> w=
+On Mon, 13 Nov 2023 at 02:01, Cedric Blancher <cedric.blancher@gmail.com> w=
 rote:
 >
-> On Mon, 13 Nov 2023 at 16:48, Steve Dickson <steved@redhat.com> wrote:
+> On Fri, 10 Nov 2023 at 20:17, Chuck Lever III <chuck.lever@oracle.com> wr=
+ote:
 > >
-> > Hello Ced,
 > >
-> > On 11/12/23 8:01 PM, Cedric Blancher wrote:
-> > > On Fri, 10 Nov 2023 at 20:17, Chuck Lever III <chuck.lever@oracle.com=
-> wrote:
+> >
+> > > On Nov 10, 2023, at 3:30 AM, Martin Wege <martin.l.wege@gmail.com> wr=
+ote:
+> > >
+> > > On Fri, Nov 10, 2023 at 3:20=E2=80=AFAM Chuck Lever III <chuck.lever@=
+oracle.com> wrote:
 > > >>
-> > >>
-> > >>
-> > >>> On Nov 10, 2023, at 3:30 AM, Martin Wege <martin.l.wege@gmail.com> =
-wrote:
+> > >>> On Nov 9, 2023, at 7:47 PM, Cedric Blancher <cedric.blancher@gmail.=
+com> wrote:
 > > >>>
-> > >>> On Fri, Nov 10, 2023 at 3:20=E2=80=AFAM Chuck Lever III <chuck.leve=
-r@oracle.com> wrote:
+> > >>> On Fri, 10 Nov 2023 at 01:37, Chuck Lever III <chuck.lever@oracle.c=
+om> wrote:
 > > >>>>
-> > >>>>> On Nov 9, 2023, at 7:47 PM, Cedric Blancher <cedric.blancher@gmai=
+> > >>>>> On Nov 9, 2023, at 7:05 PM, Cedric Blancher <cedric.blancher@gmai=
 l.com> wrote:
 > > >>>>>
-> > >>>>> On Fri, 10 Nov 2023 at 01:37, Chuck Lever III <chuck.lever@oracle=
-.com> wrote:
+> > >>>>> On Thu, 2 Nov 2023 at 10:51, Cedric Blancher <cedric.blancher@gma=
+il.com> wrote:
 > > >>>>>>
-> > >>>>>>> On Nov 9, 2023, at 7:05 PM, Cedric Blancher <cedric.blancher@gm=
-ail.com> wrote:
-> > >>>>>>>
-> > >>>>>>> On Thu, 2 Nov 2023 at 10:51, Cedric Blancher <cedric.blancher@g=
-mail.com> wrote:
-> > >>>>>>>>
-> > >>>>>>>> Good morning!
-> > >>>>>>>>
-> > >>>>>>>> Does anyone have examples of how to use the refer=3D option in=
- /etc/exports?
-> > >>>>>>>
-> > >>>>>>> Short answer:
-> > >>>>>>> To redirect an NFS mount from local machine /ref/baguette to
-> > >>>>>>> /export/home/baguette on host 134.49.22.111 add this to Linux
-> > >>>>>>> /etc/exports:
-> > >>>>>>>
-> > >>>>>>> /ref *(no_root_squash,refer=3D/export/home@134.49.22.111)
-> > >>>>>>>
-> > >>>>>>> This is basically an exports(5) manpage bug, which does not pro=
-vide
-> > >>>>>>> ANY examples.
+> > >>>>>> Good morning!
 > > >>>>>>
-> > >>>>>> That's because setting up a referral this way is deprecated.
+> > >>>>>> Does anyone have examples of how to use the refer=3D option in /=
+etc/exports?
 > > >>>>>
-> > >>>>> Why did you do that?
+> > >>>>> Short answer:
+> > >>>>> To redirect an NFS mount from local machine /ref/baguette to
+> > >>>>> /export/home/baguette on host 134.49.22.111 add this to Linux
+> > >>>>> /etc/exports:
+> > >>>>>
+> > >>>>> /ref *(no_root_squash,refer=3D/export/home@134.49.22.111)
+> > >>>>>
+> > >>>>> This is basically an exports(5) manpage bug, which does not provi=
+de
+> > >>>>> ANY examples.
 > > >>>>
-> > >>>> The nfsref command on Linux matches the same command on Solaris.
-> > >>>>
-> > >>>> nfsref was added years ago to manage junctions, as part of FedFS.
-> > >>>> The "refer=3D" export option can't do that...
+> > >>>> That's because setting up a referral this way is deprecated.
 > > >>>
-> > >>> Where in the kernel is the code for the refer=3D option? I'd like t=
-o get
-> > >>> some of my students to contribute support for custom NFS ports.
+> > >>> Why did you do that?
 > > >>
-> > >> IIRC supporting ports is one thing we can't do right now because
-> > >> the mountd downcall interface is text-based, and its parser can
-> > >> barely handle "refer=3D", let alone specifying a port.
+> > >> The nfsref command on Linux matches the same command on Solaris.
+> > >>
+> > >> nfsref was added years ago to manage junctions, as part of FedFS.
+> > >> The "refer=3D" export option can't do that...
 > > >
-> > > I had a chat this weekend with Roland Mainz (who works on the NFSv4
-> > > driver for Windows these days):
-> > > ...
-> > > That is the old mistake to think that "hostname" and "port" are
-> > > separate entities. We had this kind of debate at SUN/MPK17 several
-> > > times. Host and TCP port are the "location of the server", and they
-> > > are inseparable.
-> > > ...
-> > > The RFCs even help out with that one, for example RFC1738 (URL RFC)
-> > > defines a "hostport" in Page 18.
-> > > And that's what I actually did for ms-nfs41-client: NIH&Institute
-> > > Pasteur needed custom TCP server ports, and I implemented this by
-> > > changing the communication of nfs41_driver.sys (kernel) to userland
-> > > NFSv4 client daemon (nfsd_debug.exe) from "hostname" to "hostport",
-> > > and added the port number in the UNC, so Windows always uses (and
-> > > remembers!) the port number together with the hostname.
-> > > Or easier: I changed "hostname" to "hostport" to embed the port numbe=
-r
-> > > in the up-/downcalls for mount requests - and that is what the Linux
-> > > people can use too.
-> > > ...
-> > >
-> > >> Our plan is to replace the mountd downcall with a netlink protocol
-> > >> that Lorenzo is working on, and then it would be very straightforwar=
-d
-> > >> to add a port to each target location. But getting to a mature
-> > >> netlink implementation will take a while.
-> > >
-> > > Yeah, instead of waiting for NetLink you could implement Roland's
-> > > suggestion, and change "hostname" to "hostport" in your test-based
-> > > mount protocol, and technically everywhere else, like /proc/mounts an=
-d
-> > > the /sbin/mount output.
-> > > So instead of:
-> > > mount -t nfs -o port=3D4444 10.10.0.10:/backups /var/backups
-> > > you could use
-> > > mount -t nfs 10.10.0.10@4444:/backups /var/backups
-> > >
-> > > The same applies to refer=3D - just change from "hostname" to
-> > > "hostport", and the text-based mountd downcall can stay the same (e.g=
-.
-> > > so "foobarhost" changes to "foobarhost@444" in the mountd download.)
-> > My suggestion is you and Roland attend the next Bakeathon, this
-> > spring, which will have remote access for testing and
-> > talk about this on one of @2pm talks.
+> > > Where in the kernel is the code for the refer=3D option? I'd like to =
+get
+> > > some of my students to contribute support for custom NFS ports.
+> >
+> > IIRC supporting ports is one thing we can't do right now because
+> > the mountd downcall interface is text-based, and its parser can
+> > barely handle "refer=3D", let alone specifying a port.
 >
-> Where is the bakeathon hosted? San Francisco?
+> I had a chat this weekend with Roland Mainz (who works on the NFSv4
+> driver for Windows these days):
+> ...
+> That is the old mistake to think that "hostname" and "port" are
+> separate entities. We had this kind of debate at SUN/MPK17 several
+> times. Host and TCP port are the "location of the server", and they
+> are inseparable.
+> ...
+> The RFCs even help out with that one, for example RFC1738 (URL RFC)
+> defines a "hostport" in Page 18.
+> And that's what I actually did for ms-nfs41-client: NIH&Institute
+> Pasteur needed custom TCP server ports, and I implemented this by
+> changing the communication of nfs41_driver.sys (kernel) to userland
+> NFSv4 client daemon (nfsd_debug.exe) from "hostname" to "hostport",
+> and added the port number in the UNC, so Windows always uses (and
+> remembers!) the port number together with the hostname.
+> Or easier: I changed "hostname" to "hostport" to embed the port number
+> in the up-/downcalls for mount requests - and that is what the Linux
+> people can use too.
+> ...
 >
-> Ced
-> --
-> Cedric Blancher <cedric.blancher@gmail.com>
-> [https://plus.google.com/u/0/+CedricBlancher/]
-> Institute Pasteur
+> > Our plan is to replace the mountd downcall with a netlink protocol
+> > that Lorenzo is working on, and then it would be very straightforward
+> > to add a port to each target location. But getting to a mature
+> > netlink implementation will take a while.
+>
+> Yeah, instead of waiting for NetLink you could implement Roland's
+> suggestion, and change "hostname" to "hostport" in your test-based
+> mount protocol, and technically everywhere else, like /proc/mounts and
+> the /sbin/mount output.
+> So instead of:
+> mount -t nfs -o port=3D4444 10.10.0.10:/backups /var/backups
+> you could use
+> mount -t nfs 10.10.0.10@4444:/backups /var/backups
+>
+> The same applies to refer=3D - just change from "hostname" to
+> "hostport", and the text-based mountd downcall can stay the same (e.g.
+> so "foobarhost" changes to "foobarhost@444" in the mountd download.)
 
+This issue is still open, and BURNING!
 
-
+Ced
 --=20
 Cedric Blancher <cedric.blancher@gmail.com>
 [https://plus.google.com/u/0/+CedricBlancher/]
