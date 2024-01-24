@@ -1,304 +1,480 @@
-Return-Path: <linux-nfs+bounces-1314-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1315-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E14283B319
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jan 2024 21:32:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3620783B31A
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jan 2024 21:34:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0730288E9C
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jan 2024 20:32:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 87240B26306
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Jan 2024 20:34:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA0F7134733;
-	Wed, 24 Jan 2024 20:32:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA71E64CFE;
+	Wed, 24 Jan 2024 20:34:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jzAvWNIM";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="eu9Mq9Qs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhbUaltW"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E235132C31
-	for <linux-nfs@vger.kernel.org>; Wed, 24 Jan 2024 20:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706128340; cv=fail; b=jPmcCSoDdzaHOTzDgCzUqBgCzYl1+cCQsGRfjpEsaP8SAqR+hudpXd6x9c2XOTWyA6eM8Meq2gibOY0ymzA8APNCTkf6PNt+rD7NOu0tl5WSxhKHulRI/g+D2slhT779igdKf5YboDrDjGRQUAMnxE8Tg8ybhv6GG4d60XTp5M8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706128340; c=relaxed/simple;
-	bh=40OWmH8aQ0g0v2FfpthiJv1KaH+SPwRtioccjWNOFWU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=VA1lab6OB2fMQtbUpPl4m6zusPKxIG6NU1CFni4J+FsrpVuiSNFaRV89YRYfeEB9iykcMVQ03v96+aMm0S42VsN3O6x9I+Z7LkHx27y2yRXGIOQER9c7FFQ7bpbTmfzTwx0yZyH8ad72V99OBEDyPcm2tPAwbqakwdwqA4/4mvU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=jzAvWNIM; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=eu9Mq9Qs; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40OHE4w4029761;
-	Wed, 24 Jan 2024 20:32:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=Y1/Q0qxqS7HfiHhZPRGWSp+SQObkDwb8fgFv3DY1aYM=;
- b=jzAvWNIM3omhUAPxMQ06P/qkCxuL3yzRLnBkj2mP+3HGE4WOPyR9Zwl+/CpC6Qen92iK
- RuM8UXQbMGcQxPd5BR3dSV+ewc5KXGdkNiZXD8+cBlfeoXsSwdG3PWz/DnWiK59dTY6D
- KEG7kRAto+RSARwlxHzHLNjyDFzQzTVnkuOmBvlcsxfrg5znyEiFgix58D4g8+4nXNt8
- VFX4rzTGJ9tMPiyGYjZ9DR/yiM1mHr7+L5qDWbYJMfNLTjDE2bOiyBCPOV0th65WUQL6
- Qy5DZ0bL+LnV1Xl7xMsG8prLK5i6lPJOQJLVBKJ1dzyTpjWcYAYuwOB2kMh5do+Otrm0 /A== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vr7cy4k5d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Jan 2024 20:32:14 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40OJxd9F026065;
-	Wed, 24 Jan 2024 20:32:12 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3vs317seu8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Jan 2024 20:32:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CEcIdbNgfYeRdPGnnUvk0rximoZCEPrwrvjauev9LZj85oZqNnTUh1t6qGEM1cinVu2NmN1vXEPkHIQu3kbI9iK6FvYgxRG3OK78Kh19n8n48M6oAODjziSRCXBUliLRmfmmwNPMITfSLCfDVOm1D95QJRnJLdksWhq33MKjYXk4U77GmL7t7REaNfYm/VmWuuDi3hWjajUAZ3nU2+ll9bTyDU4Vw4owo5gkIbNndBfYD7DKj7jQpXeE/HQbkgN88MlVEkWaNtzL20ZNzS2BVA8tF2mYbhPG11lOCXXWxzY+8bUxM53+VD9b8b03i13YB6wD7n7Zl47DKDHMqjsI3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Y1/Q0qxqS7HfiHhZPRGWSp+SQObkDwb8fgFv3DY1aYM=;
- b=TgjvE0Dgocj2tm1pk7zvQHXe+5JmpDwQc9n8jg424q+fKaUxScNCRv4wXBT1lb8IcCxmyoEkZRAi+M1PYlSxhVS6gLpJGat44H60eCida9ZoD4J3CLrz3HQ0ABYTUjYjtaWvoGqCoQtztUns7d3x1+yMBZXhRaPPF+/wMLoNQzEjBwWh1HABUyAenLBAd8SJgsFgagAsk2oK8nxZWxajEj04L6s6RVmKBwRNKlyOwtpBAvPdCbQlSw3fYY/o1mI3c14JBPvPpr1i7WYaGEl2eSDTCAeGdUcISZiuYkt/KR73VMtc0YLwAbiTFVlzcXOxM2C5rHfJgKc239PYVsFU/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y1/Q0qxqS7HfiHhZPRGWSp+SQObkDwb8fgFv3DY1aYM=;
- b=eu9Mq9QsVqid+4kfcVuyRA9UqQ8UhrITBOFJgw5jBeEvVLT6+19jpvGzicn9YS+jhZ3aF6DrbP+/tWC2Bv2b9veCH+KkHJVjVZC5VBOHmy1qCs0x6/O+lN2XaUnRoTzaPVuy85+wBksIozU7IMMnhcryAoYOkD+jYfwNgROt5f8=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MN0PR10MB6005.namprd10.prod.outlook.com (2603:10b6:208:3cb::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22; Wed, 24 Jan
- 2024 20:32:10 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5475:bf96:8fdf:8ff9]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5475:bf96:8fdf:8ff9%7]) with mapi id 15.20.7228.022; Wed, 24 Jan 2024
- 20:32:10 +0000
-Date: Wed, 24 Jan 2024 15:32:06 -0500
-From: Chuck Lever <chuck.lever@oracle.com>
-To: Josef Bacik <josef@toxicpanda.com>
-Cc: linux-nfs@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH 2/2] nfsd: expose /proc/net/sunrpc/nfsd in net namespaces
-Message-ID: <ZbFzxmV6zgi/TACb@tissot.1015granger.net>
-References: <cover.1706124811.git.josef@toxicpanda.com>
- <71058c29683d44644aba8ab295fa028ee41365a8.1706124811.git.josef@toxicpanda.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <71058c29683d44644aba8ab295fa028ee41365a8.1706124811.git.josef@toxicpanda.com>
-X-ClientProxiedBy: SJ0PR13CA0219.namprd13.prod.outlook.com
- (2603:10b6:a03:2c1::14) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B225B1E3
+	for <linux-nfs@vger.kernel.org>; Wed, 24 Jan 2024 20:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706128444; cv=none; b=jLwuWR4ppm7lNBc1sPkctAAdcs/b2+AtRiCEdodLK2bHa1LpIaGIu+XOpk0aGpz4yQvBXDW9kq6RBxrMXYrrDaqfra0/rfVjColyJzlEF8i2EYeNbGhfx6RCURc1vpgySb5gqq8O2+8MZiYuCAef7LSS8fq5MfqKXsdNSNAkpQ4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706128444; c=relaxed/simple;
+	bh=xyNdisD6O/9CFkrgsioL6gNUII/Js8LWOi0JvjHdHzA=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ku0zQcDhlypIiSJRK/MdBkOJZeOkMG704WlV00WlWSx5+peo+yeLD6D7XbMC9OoMn20h0UA27riTlpTneUz57TQH5o1DmCgfc9fD4synlOlfu+O6tQPKIFu0VqXmEb0oU+f9DaygIYHwuLHDAFo9mFNjpWri2ejpbSIl7YGE9/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhbUaltW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C18A4C433F1;
+	Wed, 24 Jan 2024 20:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706128444;
+	bh=xyNdisD6O/9CFkrgsioL6gNUII/Js8LWOi0JvjHdHzA=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=lhbUaltWUJ/fCih9pkdBNUsL3mfRIUpq+Chvwoh1xOPbL8Q+kpyqRDfrzlQJtK0E/
+	 tdh+vOhQEz0hvTJ7mXsIHwqThkLxowBYtG/stywsvPfMnpDR4LbVpAmWjjuG/g1dLj
+	 HJKzCM6BxDApiShXiSwBFwACQ3JJwNr0NGwu07OdPjdryXI+TzIxus7ONHgxuKBw90
+	 ZiBXYhjKzTbpdpQg9+LbWRakqJr7ou3gb60fwV/k4Ht/AqHLPCXpz8NvGhptzDRC/v
+	 6A+EEIvJhvfQLDNgxTRgxfPWS6bAiRobNjLzHpMkVay8F/mx5t1fK9a7gDJjXHvlAC
+	 20+Llsvy7NENw==
+Message-ID: <81fb5fddeb51b96595444be0ba36718e5ffeea54.camel@kernel.org>
+Subject: Re: [PATCH v1] NFSD: Add a switch to disable nfsd_splice_read()
+From: Jeff Layton <jlayton@kernel.org>
+To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
+Date: Wed, 24 Jan 2024 15:34:02 -0500
+In-Reply-To: <170602632623.217131.13021600519850917517.stgit@manet.1015granger.net>
+References: 
+	<170602632623.217131.13021600519850917517.stgit@manet.1015granger.net>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|MN0PR10MB6005:EE_
-X-MS-Office365-Filtering-Correlation-Id: b8d96fbd-0c59-4219-4559-08dc1d1b8a6a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	gAgJgBGOiLhG4UMTjZ5cjdRLDgzISFlJvsNpE9aG2xR+fc/gdR6eKZASJhRq02Dx+t5IY5S32/gVpd/qZFX8mPITQNpOF+aYzzLltl7Aui/32wwpZX3mTR+f2IAq/NcmkmAHqTVVZG7iHqw0ZpvQY9cWiQzavwGcJwSscAG6KZ0ykUzerQL7x+0XN1ZvI9rmK3d82TQNt7PGU06qyqyo4EYIoTpAP09cE6m+axvaUICWOvLgki5VJR+rlOYNJZBMjce6BMfjyNlVyvZjwB0yyak2xCJtbZNMMkcKEpSMTQ58f8gC1qjqq0gfNm5M5f+sMlqvqdaOyPlYe2cIm/EUBCL3A62l1e6xxlm/7BdADGfihYXM3OxOFC6YuKmbyAxC0MMOy+P+r8fex+Zk3OCRKxDjYzrTinSeg9yeg8kPuxD7GG62QN6+GQywnDMH9RTBroXif2XWCYUHFq+I0MSyhTj1jxyxeeWngR7EPelpvnhPFiiReW/vM3ghmdTKpqpfVhlOylx8GAUWos7TiWbF7XNgLL3fbxDaRkxEqiJgg2t3OkTo2ebYLUfqokQZIA3G
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(376002)(346002)(39860400002)(136003)(396003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(8676002)(26005)(9686003)(6512007)(478600001)(38100700002)(66556008)(6916009)(316002)(66476007)(66946007)(8936002)(83380400001)(44832011)(4326008)(6506007)(6666004)(6486002)(5660300002)(2906002)(86362001)(41300700001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?MBWzm7FNjxluJZJJYENyETe78GTXG483C7t0RYzvYLWA8VpZisae2ruPVQ/q?=
- =?us-ascii?Q?iwDRpDc06CTD5tXlU17KZa/PRknAaV8vLA2Td7pDnrrsK3L9W8MVD+2A3F6/?=
- =?us-ascii?Q?Zh/EkoRAqyo3nn7uGJ3SywL/sCuGlgt2CJB/7ikOMhhPBE40s976L9y2xIKH?=
- =?us-ascii?Q?+wNijW6B8/KT9XwDoiUROgc5GaMT8X8T2ooIS/3yxqgZSqEkdvLlbEvUemCH?=
- =?us-ascii?Q?qdwFdDdLmZE601c5L89dNBCFx6Zgd4QD0Vb97i5Oahv7PxHFDlUNm7Pk/S1U?=
- =?us-ascii?Q?7dNaRSynX5deEnbNMeY9lj3TABBVkyRkE/YsY0dQl/ZbdiT/R9lMV1IrMd20?=
- =?us-ascii?Q?yf/A++fV060wMC4JJDqvS+ckVQV5aoXNCb+bpliY14ne5ohw6+jMPDkNKZqC?=
- =?us-ascii?Q?8EVG3T1STBF+X7LeIEOHbKireoy/OvS03Xafu6sggUjG+gJnCcccte4Kov1n?=
- =?us-ascii?Q?dFKXvrG4MmU9WUYVAz1j0mORJloiIm5VqNxkg1Bs+80bFOVnkxFy14o+NYih?=
- =?us-ascii?Q?E1MQZ9hpFpEVJJNJpR2RYszQ9//S7+vywL6rIrdS+3M7vzLDGyHE92S9gnX0?=
- =?us-ascii?Q?PVXX4eqaPQVWML9d6p64BRcJyBRuWG30uqWMElkPg0c/AdPdYqsYZqg92Z9P?=
- =?us-ascii?Q?6b3h1OYpZ9ZQv3faUwFLvxE0vhogDtzaLEEuYWLtsIsHNM8SIfEQmN85X3G1?=
- =?us-ascii?Q?2yQSGZ02Tq9GUnvZMNwIkcQfCnu6XFZiuxuGTzdSV6xIqeh2y+p69COCRCpJ?=
- =?us-ascii?Q?hzQj5dnrZm/w3rEdMEayay34wED+PYZcpneBXgm4Zlle/r+acb9Hl5V0h7tV?=
- =?us-ascii?Q?6Uw/1OClKqyw0nAY4w5TrKcw7A6CCblw/69FM2Td5H/GHxSM6e4pjITBXTdl?=
- =?us-ascii?Q?cIbtC2aRU1Abdh97gY8AOyaCHY/Q32Jw3x51O3q8k1MW4myWgzzYSIYAqbAP?=
- =?us-ascii?Q?6gZN2NLQIDMtf/nKPW3ahXBiZx1qQGFpIF5uT8fw8WkWTbMhsvXFhoEiBhWM?=
- =?us-ascii?Q?RlTQBHWT5+JuUTrIE5Z374AhYjd6AxCTw/KV298eck6A2Emg4TVE1kMJnX7t?=
- =?us-ascii?Q?7SXzPFCFUL1RFY1WQrdcKdCJy9GF1XXrFI5Irgv2eq8hYPApP9c6QR3baJZe?=
- =?us-ascii?Q?d42xmjMYmO2563Su+O7kBKFKZ7hJZnCdla6Q8ebXDsyQ67OGxh6em5LyLr/p?=
- =?us-ascii?Q?oykzbcwkmEb4xhS6TNMhaZ2pTzGs/YqFuEz89XbogRXRxdb5dS3ufuoRhSS1?=
- =?us-ascii?Q?Y3AON8Yy+JB26QB4494oLQ0cFd0R3F7phLD5chG+onpKlMIPLBOw84umGRib?=
- =?us-ascii?Q?xBmmPj4gEQq53vey0PBDtm9G+rb8KMyFvlcw8QDbh6u2ht5SDGbTu3allDtO?=
- =?us-ascii?Q?BpCNjtPz7noLBoJoXDPzJrDRf5bRYHTGNAyreHpQtotxZ+FBC2ro3NO//OwJ?=
- =?us-ascii?Q?6Y1cbGk0mWGA0QL1mV979D/emPnyk7j520GgFohyYsB3wy0CcmYqxZ/M6Qtc?=
- =?us-ascii?Q?qVgt3du+Gifj05p8SWaiwE4Rd0LhEezOwl6MfHN6RE9qnfKNjnUwfuiPd/vP?=
- =?us-ascii?Q?TiLChTzc22FfMhCM+kB2wVi9zqMGJgSvDLJ0dLXY?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	x0vqrFdCHLQnIqTQu9HadVRyaanBWKhSb+j7gxmq8Zx5v1GLJuw4hH9IsJ7K9HfVGbJEEu2oesjmONG8Gb4CPGp7eaDEyf9zTquc/M53de1yZVSDSB3wquKtbrfd6AVSEYWvp/iE0DF9vsZdieKJQ/8PbzahDdkCI9BOtVVKLfqk87ZlW/bBUM5EnJr/2OzyIXIjVhDgQJSNQ4Gf79bsTtovMQ32f8x5IPll7J6XFwC1umQaxEtDW4z6lOS3hzDL3YwyYJbuxdXeOJzLkKP4br9HGE4/uojSInCMoBTw4zsFZvw3xmj3FsrNzL6Xha+pSX6LXLZbBW93/DGfQPc8KVjtCfhnN0N7dRzxlxCJmPu1KG89G0u95OX2RX6G0mpiQPhPUN3W520B34c20Lw4iUQeBmRq5JQEU1PxlmIUl3hGwxNEYSlCrXn8oRWMZNtgDrLUdtzaLO+oYpPPZuqge4tQAeZvCLiOp3SH2LsBCzFpLVvdfzxJYvxBOEIjMTx52TcOOwWPHMVDdafCSWY1SVkgQ/l7XwgDduVfsooHCpcRItA5BnCTdJZdBnWCIFeLPxntBdSmlPcSClm7bAVHM8ML6Z2I6y4NE7sHAvFxqeU=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b8d96fbd-0c59-4219-4559-08dc1d1b8a6a
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2024 20:32:10.6021
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5qH4GQqXUElnJ8oU0Y5JXXtEPDsuH5KEaYgGHUustTMb8O/H3zklsCOARZoCTdqC8yWIwNOGSIr79jfaPCtu5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR10MB6005
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-24_09,2024-01-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 suspectscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311290000 definitions=main-2401240148
-X-Proofpoint-ORIG-GUID: 4WZ9h0ClakJE4hImF71lNCqSNZlO8NnV
-X-Proofpoint-GUID: 4WZ9h0ClakJE4hImF71lNCqSNZlO8NnV
 
-On Wed, Jan 24, 2024 at 02:37:00PM -0500, Josef Bacik wrote:
-> We are running nfsd servers inside of containers with their own network
-> namespace, and we want to monitor these services using the stats found
-> in /proc.  However these are not exposed in the proc inside of the
-> container, so we have to bind mount the host /proc into our containers
-> to get at this information.
-> 
-> Separate out the stat counters init and the proc registration, and move
-> the proc registration into the pernet operations entry and exit points
-> so that these stats can be exposed inside of network namespaces.
-
-Maybe I missed something, but this looks like it exposes the global
-stat counters to all net namespaces...? Is that an information leak?
-As an administrator I might be surprised by that behavior.
-
-Seems like this patch needs to make nfsdstats and nfsd_svcstats into
-per-namespace objects as well.
-
-
-> Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+On Tue, 2024-01-23 at 11:12 -0500, Chuck Lever wrote:
+> From: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> This enables us to ensure that testing properly covers the readv
+> paths as well as the spliced read paths, which are more commonly
+> used. Also this makes it easier to do benchmark comparisons between
+> splice and vectored reads.
+>=20
+> Suggested-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfsctl.c |  8 +++++---
->  fs/nfsd/stats.c  | 21 ++++++---------------
->  fs/nfsd/stats.h  |  6 ++++--
->  3 files changed, 15 insertions(+), 20 deletions(-)
-> 
+>  Documentation/netlink/specs/nfsd.yaml |   19 +++++++
+>  fs/nfsd/netlink.c                     |   17 ++++++
+>  fs/nfsd/netlink.h                     |    3 +
+>  fs/nfsd/netns.h                       |    1=20
+>  fs/nfsd/nfsctl.c                      |   45 ++++++++++++++++
+>  include/uapi/linux/nfsd_netlink.h     |    8 +++
+>  tools/net/ynl/generated/nfsd-user.c   |   95 +++++++++++++++++++++++++++=
+++++++
+>  tools/net/ynl/generated/nfsd-user.h   |   47 ++++++++++++++++
+>  8 files changed, 235 insertions(+)
+>=20
+
+I think this makes sense. How are you testing it, and how do you forsee
+us using this interface? Will we need a new program in nfs-utils or will
+you extend an existing one?
+
+
+> diff --git a/Documentation/netlink/specs/nfsd.yaml b/Documentation/netlin=
+k/specs/nfsd.yaml
+> index 05acc73e2e33..1a3c5e78b388 100644
+> --- a/Documentation/netlink/specs/nfsd.yaml
+> +++ b/Documentation/netlink/specs/nfsd.yaml
+> @@ -62,6 +62,12 @@ attribute-sets:
+>          name: compound-ops
+>          type: u32
+>          multi-attr: true
+> +  -
+> +    name: splice-read
+> +    attributes:
+> +      -
+> +        name: enabled
+> +        type: u32
+> =20
+>  operations:
+>    list:
+> @@ -87,3 +93,16 @@ operations:
+>              - sport
+>              - dport
+>              - compound-ops
+> +    -
+> +      name: splice-read
+> +      doc: Disable the use of splice for NFS READ operations
+> +      attribute-set: splice-read
+> +      flags: [ admin-perm ]
+> +      do:
+> +        request:
+> +          attributes:
+> +            - enabled
+> +      dump:
+> +        reply:
+> +          attributes:
+> +            - enabled
+> diff --git a/fs/nfsd/netlink.c b/fs/nfsd/netlink.c
+> index 0e1d635ec5f9..c47f3527d30b 100644
+> --- a/fs/nfsd/netlink.c
+> +++ b/fs/nfsd/netlink.c
+> @@ -10,6 +10,11 @@
+> =20
+>  #include <uapi/linux/nfsd_netlink.h>
+> =20
+> +/* NFSD_CMD_SPLICE_READ - do */
+> +static const struct nla_policy nfsd_splice_read_nl_policy[NFSD_A_SPLICE_=
+READ_ENABLED + 1] =3D {
+> +	[NFSD_A_SPLICE_READ_ENABLED] =3D { .type =3D NLA_U32, },
+> +};
+> +
+>  /* Ops table for nfsd */
+>  static const struct genl_split_ops nfsd_nl_ops[] =3D {
+>  	{
+> @@ -19,6 +24,18 @@ static const struct genl_split_ops nfsd_nl_ops[] =3D {
+>  		.done	=3D nfsd_nl_rpc_status_get_done,
+>  		.flags	=3D GENL_CMD_CAP_DUMP,
+>  	},
+> +	{
+> +		.cmd		=3D NFSD_CMD_SPLICE_READ,
+> +		.doit		=3D nfsd_nl_splice_read_doit,
+> +		.policy		=3D nfsd_splice_read_nl_policy,
+> +		.maxattr	=3D NFSD_A_SPLICE_READ_ENABLED,
+> +		.flags		=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+> +	},
+> +	{
+> +		.cmd	=3D NFSD_CMD_SPLICE_READ,
+> +		.dumpit	=3D nfsd_nl_splice_read_dumpit,
+> +		.flags	=3D GENL_ADMIN_PERM | GENL_CMD_CAP_DUMP,
+> +	},
+>  };
+> =20
+>  struct genl_family nfsd_nl_family __ro_after_init =3D {
+> diff --git a/fs/nfsd/netlink.h b/fs/nfsd/netlink.h
+> index d83dd6bdee92..2d96d0f093bb 100644
+> --- a/fs/nfsd/netlink.h
+> +++ b/fs/nfsd/netlink.h
+> @@ -16,6 +16,9 @@ int nfsd_nl_rpc_status_get_done(struct netlink_callback=
+ *cb);
+> =20
+>  int nfsd_nl_rpc_status_get_dumpit(struct sk_buff *skb,
+>  				  struct netlink_callback *cb);
+> +int nfsd_nl_splice_read_doit(struct sk_buff *skb, struct genl_info *info=
+);
+> +int nfsd_nl_splice_read_dumpit(struct sk_buff *skb,
+> +			       struct netlink_callback *cb);
+> =20
+>  extern struct genl_family nfsd_nl_family;
+> =20
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 74b4360779a1..3b9e09fecbfc 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -109,6 +109,7 @@ struct nfsd_net {
+> =20
+>  	bool nfsd_net_up;
+>  	bool lockd_up;
+> +	bool spliced_reads;
+> =20
+>  	seqlock_t writeverf_lock;
+>  	unsigned char writeverf[8];
 > diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index f206ca32e7f5..b57480b50e35 100644
+> index 8e6dbe9e0b65..86f466dbc784 100644
 > --- a/fs/nfsd/nfsctl.c
 > +++ b/fs/nfsd/nfsctl.c
-> @@ -1679,6 +1679,7 @@ static __net_init int nfsd_net_init(struct net *net)
->  	nfsd4_init_leases_net(nn);
->  	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
->  	seqlock_init(&nn->writeverf_lock);
-> +	nfsd_proc_stat_init(net);
->  
+> @@ -1696,6 +1696,51 @@ int nfsd_nl_rpc_status_get_done(struct netlink_cal=
+lback *cb)
 >  	return 0;
->  
-> @@ -1699,6 +1700,7 @@ static __net_exit void nfsd_net_exit(struct net *net)
->  {
->  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
->  
-> +	nfsd_proc_stat_shutdown(net);
->  	nfsd_net_reply_cache_destroy(nn);
->  	nfsd_idmap_shutdown(net);
->  	nfsd_export_shutdown(net);
-> @@ -1722,7 +1724,7 @@ static int __init init_nfsd(void)
->  	retval = nfsd4_init_pnfs();
->  	if (retval)
->  		goto out_free_slabs;
-> -	retval = nfsd_stat_init();	/* Statistics */
-> +	retval = nfsd_stat_counters_init();	/* Statistics */
->  	if (retval)
->  		goto out_free_pnfs;
->  	retval = nfsd_drc_slab_create();
-> @@ -1762,7 +1764,7 @@ static int __init init_nfsd(void)
->  	nfsd_lockd_shutdown();
->  	nfsd_drc_slab_free();
->  out_free_stat:
-> -	nfsd_stat_shutdown();
-> +	nfsd_stat_counters_destroy();
->  out_free_pnfs:
->  	nfsd4_exit_pnfs();
->  out_free_slabs:
-> @@ -1780,7 +1782,7 @@ static void __exit exit_nfsd(void)
->  	nfsd_drc_slab_free();
->  	remove_proc_entry("fs/nfs/exports", NULL);
->  	remove_proc_entry("fs/nfs", NULL);
-> -	nfsd_stat_shutdown();
-> +	nfsd_stat_counters_destroy();
->  	nfsd_lockd_shutdown();
->  	nfsd4_free_slabs();
->  	nfsd4_exit_pnfs();
-> diff --git a/fs/nfsd/stats.c b/fs/nfsd/stats.c
-> index 12d79f5d4eb1..394a65a33942 100644
-> --- a/fs/nfsd/stats.c
-> +++ b/fs/nfsd/stats.c
-> @@ -108,31 +108,22 @@ void nfsd_percpu_counters_destroy(struct percpu_counter counters[], int num)
->  		percpu_counter_destroy(&counters[i]);
 >  }
->  
-> -static int nfsd_stat_counters_init(void)
-> +int nfsd_stat_counters_init(void)
->  {
->  	return nfsd_percpu_counters_init(nfsdstats.counter, NFSD_STATS_COUNTERS_NUM);
+> =20
+> +/**
+> + * nfsd_nl_splice_read_doit - Set the value of splice_read
+> + * @skb: call buffer
+> + * @info: netlink metadata and command arguments
+> + *
+> + * Returns zero on success, or a negative errno.
+> + */
+> +int nfsd_nl_splice_read_doit(struct sk_buff *skb, struct genl_info *info=
+)
+> +{
+> +	struct nfsd_net *nn =3D net_generic(sock_net(skb->sk), nfsd_net_id);
+> +	u32 newval;
+> +
+> +	if (GENL_REQ_ATTR_CHECK(info, NFSD_A_SPLICE_READ_ENABLED))
+> +		return -EINVAL;
+> +
+> +	newval =3D nla_get_u32(info->attrs[NFSD_A_SPLICE_READ_ENABLED]);
+> +	nn->spliced_reads =3D newval ? true : false;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * nfsd_nl_splice_read_dumpit - Return the value of splice_read
+> + * @skb: reply buffer
+> + * @cb: netlink metadata and command arguments
+> + *
+> + * Returns the size of the reply or a negative errno.
+> + */
+> +int nfsd_nl_splice_read_dumpit(struct sk_buff *skb, struct netlink_callb=
+ack *cb)
+> +{
+> +	struct nfsd_net *nn =3D net_generic(sock_net(skb->sk), nfsd_net_id);
+> +	void *hdr;
+> +
+> +	hdr =3D genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq=
+,
+> +			  &nfsd_nl_family, 0, NFSD_CMD_SPLICE_READ);
+> +	if (!hdr)
+> +		return -ENOBUFS;
+> +
+> +	if (nla_put_s32(skb, NFSD_A_SPLICE_READ_ENABLED,
+> +			(nn->spliced_reads ? 1 : 0)))
+> +		return -ENOBUFS;
+> +
+> +	genlmsg_end(skb, hdr);
+> +	return 0;
+> +}
+> +
+>  /**
+>   * nfsd_net_init - Prepare the nfsd_net portion of a new net namespace
+>   * @net: a freshly-created network namespace
+> diff --git a/include/uapi/linux/nfsd_netlink.h b/include/uapi/linux/nfsd_=
+netlink.h
+> index 3cd044edee5d..c2542ed18b50 100644
+> --- a/include/uapi/linux/nfsd_netlink.h
+> +++ b/include/uapi/linux/nfsd_netlink.h
+> @@ -29,8 +29,16 @@ enum {
+>  	NFSD_A_RPC_STATUS_MAX =3D (__NFSD_A_RPC_STATUS_MAX - 1)
+>  };
+> =20
+> +enum {
+> +	NFSD_A_SPLICE_READ_ENABLED =3D 1,
+> +
+> +	__NFSD_A_SPLICE_READ_MAX,
+> +	NFSD_A_SPLICE_READ_MAX =3D (__NFSD_A_SPLICE_READ_MAX - 1)
+> +};
+> +
+>  enum {
+>  	NFSD_CMD_RPC_STATUS_GET =3D 1,
+> +	NFSD_CMD_SPLICE_READ,
+> =20
+>  	__NFSD_CMD_MAX,
+>  	NFSD_CMD_MAX =3D (__NFSD_CMD_MAX - 1)
+> diff --git a/tools/net/ynl/generated/nfsd-user.c b/tools/net/ynl/generate=
+d/nfsd-user.c
+> index 360b6448c6e9..14957bdfbe9c 100644
+> --- a/tools/net/ynl/generated/nfsd-user.c
+> +++ b/tools/net/ynl/generated/nfsd-user.c
+> @@ -15,6 +15,7 @@
+>  /* Enums */
+>  static const char * const nfsd_op_strmap[] =3D {
+>  	[NFSD_CMD_RPC_STATUS_GET] =3D "rpc-status-get",
+> +	[NFSD_CMD_SPLICE_READ] =3D "splice-read",
+>  };
+> =20
+>  const char *nfsd_op_str(int op)
+> @@ -47,6 +48,15 @@ struct ynl_policy_nest nfsd_rpc_status_nest =3D {
+>  	.table =3D nfsd_rpc_status_policy,
+>  };
+> =20
+> +struct ynl_policy_attr nfsd_splice_read_policy[NFSD_A_SPLICE_READ_MAX + =
+1] =3D {
+> +	[NFSD_A_SPLICE_READ_ENABLED] =3D { .name =3D "enabled", .type =3D YNL_P=
+T_U32, },
+> +};
+> +
+> +struct ynl_policy_nest nfsd_splice_read_nest =3D {
+> +	.max_attr =3D NFSD_A_SPLICE_READ_MAX,
+> +	.table =3D nfsd_splice_read_policy,
+> +};
+> +
+>  /* Common nested types */
+>  /* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_RPC_STATUS_GET =
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+>  /* NFSD_CMD_RPC_STATUS_GET - dump */
+> @@ -198,6 +208,91 @@ nfsd_rpc_status_get_dump(struct ynl_sock *ys)
+>  	return NULL;
 >  }
->  
-> -static void nfsd_stat_counters_destroy(void)
-> +void nfsd_stat_counters_destroy(void)
->  {
->  	nfsd_percpu_counters_destroy(nfsdstats.counter, NFSD_STATS_COUNTERS_NUM);
->  }
->  
-> -int nfsd_stat_init(void)
-> +void nfsd_proc_stat_init(struct net *net)
->  {
-> -	int err;
-> -
-> -	err = nfsd_stat_counters_init();
-> -	if (err)
-> -		return err;
-> -
-> -	svc_proc_register(&init_net, &nfsd_svcstats, &nfsd_proc_ops);
-> -
-> -	return 0;
-> +	svc_proc_register(net, &nfsd_svcstats, &nfsd_proc_ops);
->  }
->  
-> -void nfsd_stat_shutdown(void)
-> +void nfsd_proc_stat_shutdown(struct net *net)
->  {
-> -	nfsd_stat_counters_destroy();
-> -	svc_proc_unregister(&init_net, "nfsd");
-> +	svc_proc_unregister(net, "nfsd");
->  }
-> diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
-> index 14f50c660b61..5cd6517b52a9 100644
-> --- a/fs/nfsd/stats.h
-> +++ b/fs/nfsd/stats.h
-> @@ -40,8 +40,10 @@ extern struct svc_stat		nfsd_svcstats;
->  int nfsd_percpu_counters_init(struct percpu_counter *counters, int num);
->  void nfsd_percpu_counters_reset(struct percpu_counter *counters, int num);
->  void nfsd_percpu_counters_destroy(struct percpu_counter *counters, int num);
-> -int nfsd_stat_init(void);
-> -void nfsd_stat_shutdown(void);
-> +int nfsd_stat_counters_init(void);
-> +void nfsd_stat_counters_destroy(void);
-> +void nfsd_proc_stat_init(struct net *net);
-> +void nfsd_proc_stat_shutdown(struct net *net);
->  
->  static inline void nfsd_stats_rc_hits_inc(void)
->  {
-> -- 
-> 2.43.0
-> 
-> 
+> =20
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_SPLICE_READ =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> +/* NFSD_CMD_SPLICE_READ - do */
+> +void nfsd_splice_read_req_free(struct nfsd_splice_read_req *req)
+> +{
+> +	free(req);
+> +}
+> +
+> +int nfsd_splice_read(struct ynl_sock *ys, struct nfsd_splice_read_req *r=
+eq)
+> +{
+> +	struct nlmsghdr *nlh;
+> +	int err;
+> +
+> +	nlh =3D ynl_gemsg_start_req(ys, ys->family_id, NFSD_CMD_SPLICE_READ, 1)=
+;
+> +	ys->req_policy =3D &nfsd_splice_read_nest;
+> +
+> +	if (req->_present.enabled)
+> +		mnl_attr_put_u32(nlh, NFSD_A_SPLICE_READ_ENABLED, req->enabled);
+> +
+> +	err =3D ynl_exec(ys, nlh, NULL);
+> +	if (err < 0)
+> +		return -1;
+> +
+> +	return 0;
+> +}
+> +
+> +/* NFSD_CMD_SPLICE_READ - dump */
+> +int nfsd_splice_read_rsp_dump_parse(const struct nlmsghdr *nlh, void *da=
+ta)
+> +{
+> +	struct nfsd_splice_read_rsp_dump *dst;
+> +	struct ynl_parse_arg *yarg =3D data;
+> +	const struct nlattr *attr;
+> +
+> +	dst =3D yarg->data;
+> +
+> +	mnl_attr_for_each(attr, nlh, sizeof(struct genlmsghdr)) {
+> +		unsigned int type =3D mnl_attr_get_type(attr);
+> +
+> +		if (type =3D=3D NFSD_A_SPLICE_READ_ENABLED) {
+> +			if (ynl_attr_validate(yarg, attr))
+> +				return MNL_CB_ERROR;
+> +			dst->_present.enabled =3D 1;
+> +			dst->enabled =3D mnl_attr_get_u32(attr);
+> +		}
+> +	}
+> +
+> +	return MNL_CB_OK;
+> +}
+> +
+> +void nfsd_splice_read_rsp_list_free(struct nfsd_splice_read_rsp_list *rs=
+p)
+> +{
+> +	struct nfsd_splice_read_rsp_list *next =3D rsp;
+> +
+> +	while ((void *)next !=3D YNL_LIST_END) {
+> +		rsp =3D next;
+> +		next =3D rsp->next;
+> +
+> +		free(rsp);
+> +	}
+> +}
+> +
+> +struct nfsd_splice_read_rsp_list *nfsd_splice_read_dump(struct ynl_sock =
+*ys)
+> +{
+> +	struct ynl_dump_state yds =3D {};
+> +	struct nlmsghdr *nlh;
+> +	int err;
+> +
+> +	yds.ys =3D ys;
+> +	yds.alloc_sz =3D sizeof(struct nfsd_splice_read_rsp_list);
+> +	yds.cb =3D nfsd_splice_read_rsp_dump_parse;
+> +	yds.rsp_cmd =3D NFSD_CMD_SPLICE_READ;
+> +	yds.rsp_policy =3D &nfsd_splice_read_nest;
+> +
+> +	nlh =3D ynl_gemsg_start_dump(ys, ys->family_id, NFSD_CMD_SPLICE_READ, 1=
+);
+> +
+> +	err =3D ynl_exec_dump(ys, nlh, &yds);
+> +	if (err < 0)
+> +		goto free_list;
+> +
+> +	return yds.first;
+> +
+> +free_list:
+> +	nfsd_splice_read_rsp_list_free(yds.first);
+> +	return NULL;
+> +}
+> +
+>  const struct ynl_family ynl_nfsd_family =3D  {
+>  	.name		=3D "nfsd",
+>  };
+> diff --git a/tools/net/ynl/generated/nfsd-user.h b/tools/net/ynl/generate=
+d/nfsd-user.h
+> index 989c6e209ced..5732c5a665e7 100644
+> --- a/tools/net/ynl/generated/nfsd-user.h
+> +++ b/tools/net/ynl/generated/nfsd-user.h
+> @@ -64,4 +64,51 @@ nfsd_rpc_status_get_rsp_list_free(struct nfsd_rpc_stat=
+us_get_rsp_list *rsp);
+>  struct nfsd_rpc_status_get_rsp_list *
+>  nfsd_rpc_status_get_dump(struct ynl_sock *ys);
+> =20
+> +/* =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D NFSD_CMD_SPLICE_READ =3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D */
+> +/* NFSD_CMD_SPLICE_READ - do */
+> +struct nfsd_splice_read_req {
+> +	struct {
+> +		__u32 enabled:1;
+> +	} _present;
+> +
+> +	__u32 enabled;
+> +};
+> +
+> +static inline struct nfsd_splice_read_req *nfsd_splice_read_req_alloc(vo=
+id)
+> +{
+> +	return calloc(1, sizeof(struct nfsd_splice_read_req));
+> +}
+> +void nfsd_splice_read_req_free(struct nfsd_splice_read_req *req);
+> +
+> +static inline void
+> +nfsd_splice_read_req_set_enabled(struct nfsd_splice_read_req *req,
+> +				 __u32 enabled)
+> +{
+> +	req->_present.enabled =3D 1;
+> +	req->enabled =3D enabled;
+> +}
+> +
+> +/*
+> + * Disable the use of splice for NFS READ operations
+> + */
+> +int nfsd_splice_read(struct ynl_sock *ys, struct nfsd_splice_read_req *r=
+eq);
+> +
+> +/* NFSD_CMD_SPLICE_READ - dump */
+> +struct nfsd_splice_read_rsp_dump {
+> +	struct {
+> +		__u32 enabled:1;
+> +	} _present;
+> +
+> +	__u32 enabled;
+> +};
+> +
+> +struct nfsd_splice_read_rsp_list {
+> +	struct nfsd_splice_read_rsp_list *next;
+> +	struct nfsd_splice_read_rsp_dump obj __attribute__ ((aligned (8)));
+> +};
+> +
+> +void nfsd_splice_read_rsp_list_free(struct nfsd_splice_read_rsp_list *rs=
+p);
+> +
+> +struct nfsd_splice_read_rsp_list *nfsd_splice_read_dump(struct ynl_sock =
+*ys);
+> +
+>  #endif /* _LINUX_NFSD_GEN_H */
+>=20
+>=20
+>=20
 
--- 
-Chuck Lever
+--=20
+Jeff Layton <jlayton@kernel.org>
 
