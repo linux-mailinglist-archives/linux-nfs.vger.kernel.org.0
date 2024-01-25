@@ -1,115 +1,79 @@
-Return-Path: <linux-nfs+bounces-1424-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1425-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 455C983CCF5
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 20:55:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A9A583CD00
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 21:00:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE6DB290392
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 19:55:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C6D1AB233C1
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 20:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02DDE1353F3;
-	Thu, 25 Jan 2024 19:55:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEC3D136640;
+	Thu, 25 Jan 2024 20:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M60BYX4t"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTfDeHgP"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B4A1339B2
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 19:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B9273175;
+	Thu, 25 Jan 2024 20:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706212520; cv=none; b=Mb84wakEdr6Td7sGP289w3TZLPQQKtnL9AsMztLcJyTVkyn2UJBkO9MXuFmCihcJgrvnKs6w7TT1jbIaLxhv3f0piXySlN/2x11WSTQNX/h5J0A5UPd15mpmFbzPdpg+AgwPrjcbbspEwu3GRwJYkQxoulEd1fvwjlJ0yDgo/dc=
+	t=1706212804; cv=none; b=DSnX23qF50z94uyIaeQXQlKHtpzIo+faMhhwhv9CziDlBoc8FuJjewCahSjazaTaWwprGkSDvCL+clyWfd65Wsaygsx+j81eo5iSzt+bdsaiB9Oeyf6j2MszoeYEc1FiYs9WfvFLfO5wlfbqtkHINkhDEcB064YoVdfYErzuLLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706212520; c=relaxed/simple;
-	bh=bRa75KwbHS6qiZpEoScP7Yzb0gmejqoP6tcYNhSh3j4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j8N+kdO2RBGqq94ENHWWX2S4opxVtgBIYBT+kDQk6BoQES90avvqOc5Cu4NeHXN/kBY4ML4YDBZ/qmWs2toAemOE0h2c12KLpn22S+ODUDZm3xreR/giw0qNeRJmcQlergYgoT3NVfPPRxGtSO0MVKQqi/xVouAi0bhcbSzusFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M60BYX4t; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-55a684acf92so33725a12.0
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 11:55:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706212517; x=1706817317; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CvSmyvOGjQzVgcXm0iQljOM121JoZFxckI/ebXRykGU=;
-        b=M60BYX4tTf13qoWjETFkuu+KMyPVTYrtu776WDxO+Rh2fOUDYChPr53aw0N4nxYg/l
-         fXaDzhSXP2BRYRgVgH5Cza3FsVYf/m+a+y1Tqo52CXpj4MkazB5El5+nL76kE0Bj8C9L
-         9eK58KMiLhW/xr3UC+zCDCKg+CQGpkI2RtnxWtIb7/xkDZNiTdBaSvdDcepfqkgx5hPl
-         ajrpzX1A350bIUuOfTP1Aiuv0sZUFIKEe4ePJNa/CMCTEY6onuOWRLEw2eLKR/G3IYf7
-         yEw+fMUYVFjqMHLtF/Jk16/A5r1hNtca2P9jnTwyp+223C/yAah2FsZNIue6yZP0JR+T
-         Lvxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706212517; x=1706817317;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CvSmyvOGjQzVgcXm0iQljOM121JoZFxckI/ebXRykGU=;
-        b=HxhlklsjgdHMwVcJNqFTmfdlKPfJMV1VEWO1nhIhCJIrjjlZWmewr552oaBMyroylR
-         Ux6HAWOC2Cerotafg3BRTpUJrfsHTu+m1kVuAsaO0g4MR309o+p31zjZk6sBVrL1YZpF
-         c/BSAZyiXxyTZTY8ACQI29HY+WPJaQvWOnyG7DuNa9a1ByIAPA1vpympUs0pOMhSCkl7
-         25l9GFCBvw0S7UNY69jgr7I+EovdLh7jZ9SJ5Ecc00yz9faUUXURPL9xS1qupSmAIIrn
-         VUHm9DUyhd0Rs+SozZEc0ufSxZbnfq1wSgmkTu7FH2SJc0eJQaLClsESs7h0IP+pj23F
-         sUCw==
-X-Gm-Message-State: AOJu0YwYWFh9so5jdnVAcKNaPE5xKV+R0cUSuWAWkNKgyzExWsTzES4U
-	Z9GY+mTN5ElXxJJOZX1wbq9sCj0H/kCAW+zlxS+ObTnKCFe9QMJjpP2qo+SceKeYqBXTsPUs79W
-	juTR3pn6Gv1m7zWEbELtn0jY8luo=
-X-Google-Smtp-Source: AGHT+IHeqsh4/hCjiKzK8QRwFlhhsQVONBu7hefrsp0Jm4Dfy4ghDI0n43JDDCOHb1kyL2jimJSfXE/UNT7v+shPbBY=
-X-Received: by 2002:a05:6402:51d4:b0:558:252c:2776 with SMTP id
- r20-20020a05640251d400b00558252c2776mr77733edd.16.1706212517256; Thu, 25 Jan
- 2024 11:55:17 -0800 (PST)
+	s=arc-20240116; t=1706212804; c=relaxed/simple;
+	bh=ZFnMI0/SXfSTdJN4Hi4k39XnZenpetS+ne6kdmaF6jo=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=j7JeLJ8eU/1SDX08FqHXhabrKHuNQwSWaWxfAXg+E0e32O+CGKgY8YxUXlD9CDnGmotVDVmUcavhKeuPLKtIbwslBJ6dDcXKQI1iDC92HJigxqtWGUQ5DGAHUR2R4ibvnxOxTy09aHXGLCFBL/NNhFGxJFuye/puRMhJIb1ztE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTfDeHgP; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 06B51C43390;
+	Thu, 25 Jan 2024 20:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706212804;
+	bh=ZFnMI0/SXfSTdJN4Hi4k39XnZenpetS+ne6kdmaF6jo=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=CTfDeHgPUIfBUu+fshKLFjf8cGiKOKyHv+zQ39xUjptsJiFFlmcYfdEHQdCvNDyGn
+	 yqMtKtdPEyHtSQBRGi76s0/G9qp39F9hyT3uNJtKmpZewsvkLiH78aJo/LGCZMCxjk
+	 t8AdnhxvK/FoSXmGfZy8X9Tu/037ZEihCRxOe9rLjtTjZl+gUK6fq2bQQ3PXNhB5j6
+	 ZkN4q2t85wfOdMLEzxeKpk5Q2TrUQ9tKLN//PeGJkWUVZ0ViJK+cg46IAjD72ufkQ1
+	 Rzg+GRJpxfcIkmlCi7yGicebSgJ2AAUQNz94RpDzmv2Yd3EIZUy4svr3nvvUWxN14q
+	 fPLwb02waBhPg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D4114DC99E0;
+	Thu, 25 Jan 2024 20:00:03 +0000 (UTC)
+Subject: Re: [GIT PULL] first round of 6.8 fixes for NFSD
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <A3915BC8-E134-4094-A88F-3C75CA908B10@oracle.com>
+References: <A3915BC8-E134-4094-A88F-3C75CA908B10@oracle.com>
+X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
+X-PR-Tracked-Message-Id: <A3915BC8-E134-4094-A88F-3C75CA908B10@oracle.com>
+X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.8-1
+X-PR-Tracked-Commit-Id: edcf9725150e42beeca42d085149f4c88fa97afd
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b9fa4cbd8415c57d514a45c5eb6272d40961d6c7
+Message-Id: <170621280383.19358.1142771434552068942.pr-tracker-bot@kernel.org>
+Date: Thu, 25 Jan 2024 20:00:03 +0000
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Jeff Layton <jlayton@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>
-In-Reply-To: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>
-From: Cedric Blancher <cedric.blancher@gmail.com>
-Date: Thu, 25 Jan 2024 20:54:40 +0100
-Message-ID: <CALXu0UcV0b8OvH7_05tD7+GRgoXRcp9fd1aXuHjtF2OBDPmSJw@mail.gmail.com>
-Subject: Re: Should we establish a new nfsdctl userland program?
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Lorenzo Bianconi <lorenzo.bianconi@redhat.com>, 
-	NeilBrown <neilb@suse.com>, Dai Ngo <dai.ngo@oracle.com>, 
-	"olga.kornievskaia" <olga.kornievskaia@gmail.com>, Tom Talpey <tom@talpey.com>, 
-	linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 25 Jan 2024 at 20:41, Jeff Layton <jlayton@kernel.org> wrote:
->
-> The existing rpc.nfsd program was designed during a different time, when
-> we just didn't require that much control over how it behaved. It's
-> klunky to work with.
->
-> In a response to Chuck's recent RFC patch to add knob to disable
-> READ_PLUS calls, I mentioned that it might be a good time to make a
-> clean break from the past and start a new program for controlling nfsd.
->
-> Here's what I'm thinking:
->
-> Let's build a swiss-army-knife kind of interface like git or virsh:
->
-> # nfsdctl stats                 <--- fetch the new stats that got merged
-> # nfsdctl add_listener          <--- add a new listen socket, by address or hostname
+The pull request you sent on Thu, 25 Jan 2024 01:43:49 +0000:
 
-Absolutely NOT "hostname". Please do not repeat the mistake AGAIN of
-separating "host name" and "TCP port", as they are both required to
-find the server. Every 10 or 15 years the same mistake is made by the
-next generation of software engineers.
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.8-1
 
-https://datatracker.ietf.org/doc/html/rfc1738 clearly defined
-"hostport", and that is what should be used here.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b9fa4cbd8415c57d514a45c5eb6272d40961d6c7
 
-Ced
+Thank you!
+
 -- 
-Cedric Blancher <cedric.blancher@gmail.com>
-[https://plus.google.com/u/0/+CedricBlancher/]
-Institute Pasteur
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
