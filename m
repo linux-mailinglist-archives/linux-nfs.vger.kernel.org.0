@@ -1,89 +1,112 @@
-Return-Path: <linux-nfs+bounces-1376-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1377-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79F2983C469
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 15:12:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F60A83C501
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 15:42:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2996E28D8FF
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 14:12:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 974F9291822
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 14:42:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6352A633ED;
-	Thu, 25 Jan 2024 14:12:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0C5C5DF32;
+	Thu, 25 Jan 2024 14:42:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCbDN4lD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bR57XIZS"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com [209.85.167.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE1C5EE63
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 604243A1B6
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706191927; cv=none; b=tkVS/9UhdcNRZERywa/CYKGpDYL3rocEYKsoQwWDbN9Gt02z+QQ8Fq0txsHFyU5OX/sQiRLW5Q/Lnbo6JpHvRs674mggcvsVKfMTfdLod3JpWZqug4RWe1LaHcPVnIo4bYkErjJ4xN/e2pJPI8R/ChTfQlkZ5a4ZgKhQ5YGOwO8=
+	t=1706193751; cv=none; b=UwU0PVcLwuIpiIimRC4bWquDRLZlecNTn3V6twH8VdMagvo+I7D59oT3EkS+BZS8GPZWKdU/3BJ4IvXYa9iwgCe1B6Js5RrP9FDCmkipuEPDbFxaG/h6TrygmBgT/J5ICtARpa+KAl41eQEzeT/D5V1v7n4BnWI8Tnc8xGjC6FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706191927; c=relaxed/simple;
-	bh=E87yYMUmIZQHj4uCon05JeVlBr+VAITmiBQh7svNdRQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FTDf3nLzx8+ydmKA/Nq/ffBWTfrfqYNvI8augxdNDrO8HYSqvEJ9siomV30Bmz1j9H2rpLP/NMgj7AIFOkyJX4ShStTWa/G5/JAr7nrZN170mpkwtdQ5V4e9g2NO2ksPD9JGaQxdB0g8Um84yAcAw1B7U0i2MQ9J1XbVxyCeHfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NCbDN4lD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706191924;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ACqcEjg537hZBJWAT4QAy+L6J3AJYKEx3L1s6N7xY70=;
-	b=NCbDN4lDV0ZDO/cgCL2K/2cuFB8HDaFZSJPUbbw3Puw13+OS9Vh4KaO2+vyGqf3jGDZrCR
-	jd57z6ERhww9gZpXomtp5zshpVk4TYEpUsj79M1bO8qknxTtCxxvRRBmFy3N48L01iQZoi
-	dZOoALShpPvuhkACKOGsHTEXY1kl0vQ=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-684-Ton7HokXPSWRswBc5p_IDw-1; Thu,
- 25 Jan 2024 09:11:59 -0500
-X-MC-Unique: Ton7HokXPSWRswBc5p_IDw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6A4A21C0BA46;
-	Thu, 25 Jan 2024 14:11:58 +0000 (UTC)
-Received: from [192.168.37.1] (ovpn-0-9.rdu2.redhat.com [10.22.0.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 060CB51D5;
-	Thu, 25 Jan 2024 14:11:55 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: David Howells <dhowells@redhat.com>
-Cc: Gao Xiang <xiang@kernel.org>, Jeff Layton <jlayton@kernel.org>,
- Christian Brauner <brauner@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Eric Sandeen <esandeen@redhat.com>, v9fs@lists.linux.dev,
- linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
- linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
- linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: Roadmap for netfslib and local caching (cachefiles)
-Date: Thu, 25 Jan 2024 09:11:54 -0500
-Message-ID: <B01D6639-6F09-4542-A1CE-5023D059B84F@redhat.com>
-In-Reply-To: <520668.1706191347@warthog.procyon.org.uk>
-References: <520668.1706191347@warthog.procyon.org.uk>
+	s=arc-20240116; t=1706193751; c=relaxed/simple;
+	bh=Yyn1upzVl+jCGwtUEeorA2BIiB+2bFz1kA2+yWZgpYY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ffpMU7UNjtz7nuJmnbkCKhz/9wEvBzNIJ2MaEr8cLOsp+Yf2UUGABsGIVR8ukGPo1R0FKpitARBoyKBKyTKsPuGG9IAwoxYfFx92+yAiJIuiog9MEfArrQnYdGjWJjPuDFyrxy1CDsHOxzNHQQkvIM+X11Wzy/TVS+1ElZnfgDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bR57XIZS; arc=none smtp.client-ip=209.85.167.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f181.google.com with SMTP id 5614622812f47-3bd6581bca0so4219634b6e.0
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 06:42:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706193749; x=1706798549; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qDhs9PwqsYS/M9WcdCMn+Z/OGHF+U4V7Ld9jmis6SJA=;
+        b=bR57XIZSmeg7qsmTNvWdOlWsQcJu4k+HxFJJstAeSG1xmCHsgiJwJhfBZome0r0Jkl
+         dysMkDFqNK55CLrDQM99xg8EVx8o8LhMpUP5BdRBW1qiF4s2jF6SeYvdAYK7R2MH3m7B
+         xJ7dCCD8q02ZMbBXsOfQU8CGaP5qdY4ZNcEHFzgaesKY9UpX7uLnXuHtdQUPBILmB8Om
+         TQKq5jgq/iBSf8K0oxSBFy1xvqReQdmZc60IvkDRDhLjlRuqMiw7svaUiJutvtQaDgFH
+         9ohVlQ6BjN2qYIV8wvh4/H95UGc9vZs78WGYP2ECG3ViFxSldPSz67CyUwWoB4tVvCpQ
+         r5YQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706193749; x=1706798549;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qDhs9PwqsYS/M9WcdCMn+Z/OGHF+U4V7Ld9jmis6SJA=;
+        b=lr/N7jf2XRt2a65P7WbgwahCwdFAmtwFszJJTbAOBWNSrbuzGlDsAUF8wBU7WRPcbg
+         6UDdeheBKjbt4Q35SiO6f3PuMCfCZyWnK/vJz49mWCmOIV8wRP21mZ8zFb0CbJM+OihT
+         1MTUXdpF5LiUI8KG2/Aj3YbNPoyKa0b5dCQBfMk7jkeJL/It2wkqntCgNd0SOa2uL3m5
+         gy0Zaa8SAl/pWeg9Hqm1/kcgMS1bwBwIA6Dmpe7fb9b4A1BNV+3eyqAetMJpOS6uC8ZP
+         C7RjM5G03lQwKL90kLYfFlCWh1jKvvhtHZbYQ8sRKHAbQuFfWoE9q10yw/07Otg1sKi/
+         m3yg==
+X-Gm-Message-State: AOJu0YwxtbF+LNPchiZsF7RZA5Ww0MtFZ5q/Of3z3G3UUJTEFwA11nNG
+	N0hHmufOdfxu9aJ//4yquxSxVbHtHSbtfeiMOk6iRC5rtyrNZH6dpcJdXmjq
+X-Google-Smtp-Source: AGHT+IF6MhJ/ed5oQoszrtVQacYdl0po/fKwnPRcfgFcjJrNFhQOwB+nQvbRZmo4qyZJIcSHZNZV2Q==
+X-Received: by 2002:a54:4493:0:b0:3bd:a5f1:31f6 with SMTP id v19-20020a544493000000b003bda5f131f6mr812462oiv.50.1706193748973;
+        Thu, 25 Jan 2024 06:42:28 -0800 (PST)
+Received: from netapp-31.linux.fake (024-028-172-218.inf.spectrum.com. [24.28.172.218])
+        by smtp.gmail.com with ESMTPSA id fa5-20020a0568082a4500b003bdae50adb5sm2150768oib.52.2024.01.25.06.42.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 06:42:28 -0800 (PST)
+From: Jorge Mora <jmora1300@gmail.com>
+X-Google-Original-From: Jorge Mora <mora@netapp.com>
+To: linux-nfs@vger.kernel.org
+Cc: chuck.lever@oracle.com,
+	jlayton@kernel.org
+Subject: [PATCH] NFSD: fix LISTXATTRS returning more bytes than maxcount
+Date: Thu, 25 Jan 2024 07:42:23 -0700
+Message-ID: <20240125144223.12725-1-mora@netapp.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+Content-Transfer-Encoding: 8bit
 
-On 25 Jan 2024, at 9:02, David Howells wrote:
-...
-> NFS.  NFS at the very least needs to be altered to give up the use of
-> PG_private_2.
+The maxcount is the maximum number of bytes for the LISTXATTRS4resok
+result. This includes the cookie and the count for the name array,
+thus subtract 12 bytes from the maxcount: 8 (cookie) + 4 (array count)
+when filling up the name array.
 
-Forgive what may be a naive question, but where is NFS using PG_private_2?
+Fixes: 23e50fe3a5e6 ("nfsd: implement the xattr functions and en/decode logic")
+Signed-off-by: Jorge Mora <mora@netapp.com>
+---
+ fs/nfsd/nfs4xdr.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Ben
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 92c7dde148a4..17e6404f4296 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -5168,7 +5168,8 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	sp = listxattrs->lsxa_buf;
+ 	nuser = 0;
+ 
+-	xdrleft = listxattrs->lsxa_maxcount;
++	/* Bytes left is maxcount - 8 (cookie) - 4 (array count) */
++	xdrleft = listxattrs->lsxa_maxcount - 12;
+ 
+ 	while (left > 0 && xdrleft > 0) {
+ 		slen = strlen(sp);
+-- 
+2.43.0
 
 
