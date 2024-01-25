@@ -1,56 +1,54 @@
-Return-Path: <linux-nfs+bounces-1431-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1432-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3829483CD9E
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 21:40:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21F9A83CDAD
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 21:41:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FB2CB23D8E
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 20:40:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C6818291871
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 20:41:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CF1911386B7;
-	Thu, 25 Jan 2024 20:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 452621350ED;
+	Thu, 25 Jan 2024 20:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHPLynff"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8xq0QdN"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72211386B6
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 20:37:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6B51339AF
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 20:41:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706215067; cv=none; b=gxCKOA2keAxW2I5ttgJdOQxcih2l2UcCtG/KJeJO/f24RtbV8L4XYShiVu7dHPP3ydvI3Dntrg23kKp+P1Fg4qfwVtKIg5AZPUbb0RgtGtwGI5jA+Cv+1IoPUyU2zAToZH3gRzy4yCw8sNAaXGHQGv+/cajiSa/mrTfC/JQofl0=
+	t=1706215303; cv=none; b=dbuc49oQd+PlYJtATRqpSQjAC/WK9WUAsKs9o5UAtO5GAMDJyLZMOHDnGhZZdRjomTYl7hJn20kjM0rXsc+qSpUZZMYbk+BnrMSr9u7ABErZvQwDIAree7FLGJnplVys6k8Beu7nJyofxz7mhA0jV7d1B/0YCVm6VR6hyDclOWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706215067; c=relaxed/simple;
-	bh=acACGnJvIgFBbcIrpNKZ4D6WlwDgzE9Tp2uyt+1HKSo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZRycgi/IJKkoxrlfMzPYVjtLvq4g8homJIXAIxeENFL4ksCwhKQTidPu0hUiFii4QvnmtbtX2IGQeEqlXeRCozUi1lUCMDMirFhzg7H/Dq9Pq6UaVsuydFPXsQSDuHqsMHUHhbrXP9uW70E0LpG+o4FP+V682G1OjTxBWESr5Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHPLynff; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1991C433F1;
-	Thu, 25 Jan 2024 20:37:46 +0000 (UTC)
+	s=arc-20240116; t=1706215303; c=relaxed/simple;
+	bh=DuyCV6SACKhuHRlN4cm8NOg5GKWZZeOlaQee4xjUf78=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Ji0DLWKpqh2SZRIfP9OKsA/OWO1ewQaZir8Uc0s/ZQNrqcwS0K8Ayo+LPeRbsA6EVIPxKU+wZYOcC3JFO8YcPYy/+inWbb31bGYgoYds/iZgNlfcaq/x9Mz2sR5PLk1QSdwB0rG2ARB/VMvGa4Sc22vsjpmjpvg6UGFeMcgAimc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8xq0QdN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AECFC433C7;
+	Thu, 25 Jan 2024 20:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706215067;
-	bh=acACGnJvIgFBbcIrpNKZ4D6WlwDgzE9Tp2uyt+1HKSo=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SHPLynfftiB4GpehbqpGEqIpqzkWWyhqpLl5gELJ7eFATZhMwx3NbO5uEZu7S/+wS
-	 YF04hEU+EeqdSDVvmG6S3zcSLSJxfWJxY74dDTGep+RtKAnLiq/y644oaGg8tOqO8C
-	 6K4V0jrq8yh+IpuZyJhovyftDpkrZKZz/LCgFbsyHXvOEZzF2cUw9sn8OGK48NBGUP
-	 ckJ5CrRcfx6u17S+p0+u8zXgcJIrZA2F42sBVhswlmjABsNoutQVxqUPb9GVLzcMEZ
-	 JvyUOdF5yWO1I7ITOQYQ9Vo7+lOy+C/x1YssQ+Dy6w87xmCiCjA2xjPBMOMaziSmgf
-	 FRatff0pmAzOw==
-Message-ID: <b25436fa457256f0f409fbc33f60c13e8ab6af12.camel@kernel.org>
-Subject: Re: Implement NFSv4 TLS support with /usr/bin/openssl s_client?
+	s=k20201202; t=1706215302;
+	bh=DuyCV6SACKhuHRlN4cm8NOg5GKWZZeOlaQee4xjUf78=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=P8xq0QdN8+a4i08dgmNUL+sQAgERGzUf+HrwcBz2VAs5Z59Ex7bDPtdXFmmBcHyEu
+	 VSVAPHyT/zqdJxAzEz04+oR3MZT3slAa4nD7VZPMT3moyDwOfRGZRuK7grbxMawA1r
+	 56gI3IFqUwjhJnBswN15Xag+03+seipHHmkQkjLaLxxhUL2vyi1Yi9434GW1jhe3b8
+	 hugbIveUW9gqriQeU69SpkDF51xhg6cD4rGk9EwMkmELR9t0DX9sUYwV/339hTVXr7
+	 1MnNvsVrIdcmBzRDrNAZi/LdJH+JW3YpXSBcm5z6U058MXuHc4GX2Oq2HrkgK8C1LN
+	 keusFuO6PThgg==
+Message-ID: <a1e15ee0c841ffed09215cb4b17519d15c3638eb.camel@kernel.org>
+Subject: Re: [PATCH RFC 00/13] NFSD backchannel fixes
 From: Jeff Layton <jlayton@kernel.org>
-To: Dan Shelton <dan.f.shelton@gmail.com>, Linux NFS Mailing List
-	 <linux-nfs@vger.kernel.org>
-Cc: Benjamin Coddington <bcodding@redhat.com>
-Date: Thu, 25 Jan 2024 15:37:45 -0500
-In-Reply-To: <CAAvCNcBMY1mrgEgy4APSiFXDP5u=64YXNjiHHjh8RscPsB3row@mail.gmail.com>
+To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
+Date: Thu, 25 Jan 2024 15:41:40 -0500
+In-Reply-To: <170619984210.2833.7173004255003914651.stgit@manet.1015granger.net>
 References: 
-	<CAAvCNcBMY1mrgEgy4APSiFXDP5u=64YXNjiHHjh8RscPsB3row@mail.gmail.com>
+	<170619984210.2833.7173004255003914651.stgit@manet.1015granger.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -70,25 +68,55 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, 2024-01-25 at 03:21 +0100, Dan Shelton wrote:
-> Hello!
+On Thu, 2024-01-25 at 11:28 -0500, Chuck Lever wrote:
+> The first three patches fix bugs that prevent NFSD's backchannel
+> from reliably retransmitting after a client reconnects. These fixes
+> might be appropriate for 6.8-rc.
 >=20
-> Is it possible for a NFSv4 client to implement TLS support via
-> /usr/bin/openssl s_client?
+> Following that are some new trace points that might be helpful for
+> field troubleshooting.
 >=20
-> /usr/bin/openssl s_client would do the connection, and a normal
-> libtirpc client would connect to the other side of s_client.
+> Then there are some minor clean-ups.
 >=20
-> Does that work?
+> I am still testing this series, and there is one msleep() call that
+> needs some thought. Thoughts, comments, opinions, rotten fruit? You
+> know the drill.
 >=20
-> Dan
+> ---
+>=20
+> Chuck Lever (13):
+>       NFSD: Reset cb_seq_status after NFS4ERR_DELAY
+>       NFSD: Reschedule CB operations when backchannel rpc_clnt is shut do=
+wn
+>       NFSD: Retransmit callbacks after client reconnects
+>       NFSD: Add nfsd_seq4_status trace event
+>       NFSD: Replace dprintks in nfsd4_cb_sequence_done()
+>       NFSD: Rename nfsd_cb_state trace point
+>       NFSD: Add callback operation lifetime trace points
+>       SUNRPC: Remove EXPORT_SYMBOL_GPL for svc_process_bc()
+>       NFSD: Remove unused @reason argument
+>       NFSD: Replace comment with lockdep assertion
+>       NFSD: Remove BUG_ON in nfsd4_process_cb_update()
+>       SUNRPC: Remove stale comments
+>       NFSD: Remove redundant cb_seq_status initialization
+>=20
+>=20
+>  fs/nfsd/nfs4callback.c   |  81 +++++++++++++-------
+>  fs/nfsd/nfs4state.c      |   1 +
+>  fs/nfsd/trace.h          | 162 ++++++++++++++++++++++++++++++++++++++-
+>  include/trace/misc/nfs.h |  34 ++++++++
+>  net/sunrpc/svc.c         |   1 -
+>  net/sunrpc/xprtsock.c    |   9 ---
+>  6 files changed, 250 insertions(+), 38 deletions(-)
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
 
-Doubtful. RPC over TLS requires some cleartext setup before TLS is
-negotiated. At one time Ben Coddington had a proxy based on nginx that
-could handle the TLS negotiation, but I think that might have been based
-on an earlier draft of the spec. It would probably need some work to be
-brought up to the state of the RFC.
+Love some of the new backchannel tracepoints. That should be helpful.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+You can add this to 4-13:
+
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
