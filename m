@@ -1,230 +1,89 @@
-Return-Path: <linux-nfs+bounces-1375-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1376-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62D9083C444
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 15:03:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79F2983C469
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 15:12:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CFEF11F24013
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 14:03:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2996E28D8FF
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 14:12:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 201D5627F4;
-	Thu, 25 Jan 2024 14:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6352A633ED;
+	Thu, 25 Jan 2024 14:12:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DyklOWNG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NCbDN4lD"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5BE627E4
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:03:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE1C5EE63
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:12:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706191391; cv=none; b=eqIPCUDEPmQDWDrolIP+mT5tnKJxNvmsricqk11lOYHZYuZ2fU/+234/mXvz4EPtJ8NHlstp6W0DKlJO4N/NM0TJwBwlWJEv5O1Zow7SsnsweceU2Wc91pVOCEnVL3v0NduQMuztbJha4S1z0rnEaWs3u+j5lZ5uufnZn5/wHIg=
+	t=1706191927; cv=none; b=tkVS/9UhdcNRZERywa/CYKGpDYL3rocEYKsoQwWDbN9Gt02z+QQ8Fq0txsHFyU5OX/sQiRLW5Q/Lnbo6JpHvRs674mggcvsVKfMTfdLod3JpWZqug4RWe1LaHcPVnIo4bYkErjJ4xN/e2pJPI8R/ChTfQlkZ5a4ZgKhQ5YGOwO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706191391; c=relaxed/simple;
-	bh=j2gtjhl3d1XNksVxYRJqASiqF1b665xOwflpYSXVsyQ=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=rDk/N2ARUO13vm6ZW+qpmcVhB6llZdquCm7AmF/952T+tJFNWKqBNFLVf0IpuxPraHkNE9qnJQQtiDCgXVIN9tJG+TLWHV2YDdmYIrHj/GYz2Ak/dp1SRiI/um5TeSc8A4FUs5nPgZs+S3rIKHruIZpOvNzwF/pBRkZaH4FDD10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DyklOWNG; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1706191927; c=relaxed/simple;
+	bh=E87yYMUmIZQHj4uCon05JeVlBr+VAITmiBQh7svNdRQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FTDf3nLzx8+ydmKA/Nq/ffBWTfrfqYNvI8augxdNDrO8HYSqvEJ9siomV30Bmz1j9H2rpLP/NMgj7AIFOkyJX4ShStTWa/G5/JAr7nrZN170mpkwtdQ5V4e9g2NO2ksPD9JGaQxdB0g8Um84yAcAw1B7U0i2MQ9J1XbVxyCeHfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NCbDN4lD; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706191388;
+	s=mimecast20190719; t=1706191924;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=e12SznbgNVYlJuZvyyzaU+LAE5U/U9H1zetulJ+CfWs=;
-	b=DyklOWNGw/IDSN5Acp/N1Hz1zHwEXEfS9bOcPRFJGKQO6KHkrRBL5O3SqYS/nnvZYYiA4E
-	6k7AMUxtz3XsPiWlffpY6eKDwZof398X3ySsDd+WBRaq4ia/QgqYGlq7Ymho6TE2V5tpDS
-	0HZPmbxCWKTT/8Wz5L6wIbHhAbhaMUs=
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ACqcEjg537hZBJWAT4QAy+L6J3AJYKEx3L1s6N7xY70=;
+	b=NCbDN4lDV0ZDO/cgCL2K/2cuFB8HDaFZSJPUbbw3Puw13+OS9Vh4KaO2+vyGqf3jGDZrCR
+	jd57z6ERhww9gZpXomtp5zshpVk4TYEpUsj79M1bO8qknxTtCxxvRRBmFy3N48L01iQZoi
+	dZOoALShpPvuhkACKOGsHTEXY1kl0vQ=
 Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-640-ak9liix9McKY6rZIJ6D-Rw-1; Thu,
- 25 Jan 2024 09:03:00 -0500
-X-MC-Unique: ak9liix9McKY6rZIJ6D-Rw-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-684-Ton7HokXPSWRswBc5p_IDw-1; Thu,
+ 25 Jan 2024 09:11:59 -0500
+X-MC-Unique: Ton7HokXPSWRswBc5p_IDw-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 831452837815;
-	Thu, 25 Jan 2024 14:02:29 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.245])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id CC13951D5;
-	Thu, 25 Jan 2024 14:02:27 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Gao Xiang <xiang@kernel.org>
-cc: dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-    Christian Brauner <brauner@kernel.org>,
-    Matthew Wilcox <willy@infradead.org>,
-    Eric Sandeen <esandeen@redhat.com>, v9fs@lists.linux.dev,
-    linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-    linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-    linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-    linux-kernel@vger.kernel.org
-Subject: Roadmap for netfslib and local caching (cachefiles)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6A4A21C0BA46;
+	Thu, 25 Jan 2024 14:11:58 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-9.rdu2.redhat.com [10.22.0.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 060CB51D5;
+	Thu, 25 Jan 2024 14:11:55 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: David Howells <dhowells@redhat.com>
+Cc: Gao Xiang <xiang@kernel.org>, Jeff Layton <jlayton@kernel.org>,
+ Christian Brauner <brauner@kernel.org>, Matthew Wilcox <willy@infradead.org>,
+ Eric Sandeen <esandeen@redhat.com>, v9fs@lists.linux.dev,
+ linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+ linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+ linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: Roadmap for netfslib and local caching (cachefiles)
+Date: Thu, 25 Jan 2024 09:11:54 -0500
+Message-ID: <B01D6639-6F09-4542-A1CE-5023D059B84F@redhat.com>
+In-Reply-To: <520668.1706191347@warthog.procyon.org.uk>
+References: <520668.1706191347@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <520667.1706191347.1@warthog.procyon.org.uk>
-Date: Thu, 25 Jan 2024 14:02:27 +0000
-Message-ID: <520668.1706191347@warthog.procyon.org.uk>
+Content-Type: text/plain
 X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-Here's a roadmap for the future development of netfslib and local caching
-(e.g. cachefiles).
+On 25 Jan 2024, at 9:02, David Howells wrote:
+...
+> NFS.  NFS at the very least needs to be altered to give up the use of
+> PG_private_2.
 
-Netfslib
-========
+Forgive what may be a naive question, but where is NFS using PG_private_2?
 
-[>] Current state:
-
-The netfslib write helpers have gone upstream now and are in v6.8-rc1, with
-both the 9p and afs filesystems using them.  This provides larger I/O size
-support to 9p and write-streaming and DIO support to afs.
-
-The helpers provide their own version of generic_perform_write() that:
-
- (1) doesn't use ->write_begin() and ->write_end() at all, completely taking
-     over all of of the buffered I/O operations, including writeback.
-
- (2) can perform write-through caching, setting up one or more write
-     operations and adding folios to them as we copy data into the pagecache
-     and then starting them as we finish.  This is then used for O_SYNC and
-     O_DSYNC and can be used with immediate-write caching modes in, say, cifs.
-
-Filesystems using this then deal with iov_iters and ideally would not deal
-pages or folios at all - except incidentally where a wrapper is necessary.
-
-
-[>] Aims for the next merge window:
-
-Convert cifs to use netfslib.  This is now in Steve French's for-next branch.
-
-Implement content crypto and bounce buffering.  I have patches to do this, but
-it would only be used by ceph (see below).
-
-Make libceph and rbd use iov_iters rather than referring to pages and folios
-as much as possible.  This is mostly done and rbd works - but there's one bit
-in rbd that still needs doing.
-
-Convert ceph to use netfslib.  This is about half done, but there are some
-wibbly bits in the ceph RPCs that I'm not sure I fully grasp.  I'm not sure
-I'll quite manage this and it might get bumped.
-
-Finally, change netfslib so that it uses ->writepages() to write data to the
-cache, even data on clean pages just read from the server.  I have a patch to
-do this, but I need to move cifs and ceph over first.  This means that
-netfslib, 9p, afs, cifs and ceph will no longer use PG_private_2 (aka
-PG_fscache) and Willy can have it back - he just then has to wrest control
-from NFS and btrfs.
-
-
-[>] Aims for future merge windows:
-
-Using a larger chunk size than PAGE_SIZE - for instance 256KiB - but that
-might require fiddling with the VM readahead code to avoid read/read races.
-
-Cache AFS directories - there are just files and currently are downloaded and
-parsed locally for readdir and lookup.
-
-Cache directories from other filesystems.
-
-Cache inode metadata, xattrs.
-
-Add support for fallocate().
-
-Implement content crypto in other filesystems, such as cifs which has its own
-non-fscrypt way of doing this.
-
-Support for data transport compression.
-
-Disconnected operation.
-
-NFS.  NFS at the very least needs to be altered to give up the use of
-PG_private_2.
-
-
-Local Caching
-=============
-
-There are a number of things I want to look at with local caching:
-
-[>] Although cachefiles has switched from using bmap to using SEEK_HOLE and
-SEEK_DATA, this isn't sufficient as we cannot rely on the backing filesystem
-optimising things and introducing both false positives and false negatives.
-Cachefiles needs to track the presence/absence of data for itself.
-
-I had a partially-implemented solution that stores a block bitmap in an xattr,
-but that only worked up to files of 1G in size (with bits representing 256K
-blocks in a 512-byte bitmap).
-
-[>] An alternative cache format might prove more fruitful.  Various AFS
-implementations use a 'tagged cache' format with an index file and a bunch of
-small files each of which contains a single block (typically 256K in OpenAFS).
-
-This would offer some advantages over the current approach:
-
- - it can handle entry reuse within the index
- - doesn't require an external culling process
- - doesn't need to truncate/reallocate when invalidating
-
-There are some downsides, including:
-
- - each block is in a separate file
- - metadata coherency is more tricky - a powercut may require a cache wipe
- - the index key is highly variable in size if used for multiple filesystems
-
-But OpenAFS has been using this for something like 30 years, so it's probably
-worth a try.
-
-[>] Need to work out some way to store xattrs, directory entries and inode
-metadata efficiently.
-
-[>] Using NVRAM as the cache rather than spinning rust.
-
-[>] Support for disconnected operation to pin desirable data and keep
-track of changes.
-
-[>] A user API by which the cache for specific files or volumes can be
-flushed.
-
-
-Disconnected Operation
-======================
-
-I'm working towards providing support for disconnected operation, so that,
-provided you've got your working set pinned in the cache, you can continue to
-work on your network-provided files when the network goes away and resync the
-changes later.
-
-This is going to require a number of things:
-
- (1) A user API by which files can be preloaded into the cache and pinned.
-
- (2) The ability to track changes in the cache.
-
- (3) A way to synchronise changes on reconnection.
-
- (4) A way to communicate to the user when there's a conflict with a third
-     party change on reconnect.  This might involve communicating via systemd
-     to the desktop environment to ask the user to indicate how they'd like
-     conflicts recolved.
-
- (5) A way to prompt the user to re-enter their authentication/crypto keys.
-
- (6) A way to ask the user how to handle a process that wants to access data
-     we don't have (error/wait) - and how to handle the DE getting stuck in
-     this fashion.
-
-David
+Ben
 
 
