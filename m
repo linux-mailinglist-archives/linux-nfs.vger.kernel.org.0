@@ -1,177 +1,101 @@
-Return-Path: <linux-nfs+bounces-1385-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1386-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6796783C670
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 16:22:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A6EE83C7EF
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 17:28:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ECA8728E561
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 15:22:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F09E31F27A7D
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 16:28:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A53D6EB67;
-	Thu, 25 Jan 2024 15:22:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC977762A;
+	Thu, 25 Jan 2024 16:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ne5uFbaZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l0h7ZcX2"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC39481CB;
-	Thu, 25 Jan 2024 15:22:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D7B73177
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 16:28:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706196168; cv=none; b=ccUyqRjtR8s4fUvODocN+3Cqiig38xrbdOkBPCKB9p/YJ5CdzGimoxS7tZSleDYxWskY4u30hkQpXKcZddtRTQrpTmC4+OoM8+hBow5Kzd73m4/rxBnpeHKyinjvKRaOT3LxIvqj7HYf75vBsH491rbWWX07hwJg+ZmeHN+yBko=
+	t=1706200121; cv=none; b=N6IaAsl/dxemoUqVDtDDh20hRtQoVXHLF4ebcpdFddGsfdY0a6AAV8wo5a2OnYOHdlcqjOhVK1ZuB9M3caG05ALZwMITmTd1zvj3n/zjiTuKCViJDy1Al9U04wMSdqvjTsyKUPfJYNgme1m/reiyw8JZDVVNlu8yhoVojrmCn+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706196168; c=relaxed/simple;
-	bh=QyKrKPi2OmBilyWipKm6g9LwaREY3/z/OwABiSANKQ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mUqNa2gobMVN+678qo6lF170wbM/fFoR9+mmuKW7myUZn6v6TKzEuoXc3oP3XvtBsNfmFndP6iyuKH7/4p0p+U7x+RJS4w5OFEVGJlM7VYP7LQgQxdrYdaYloqup7PmFTf79lWFwb67an1yV0vwUuD+d7RJsKc+YhwpMX91CKzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ne5uFbaZ; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1706196154; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=p3tSUpOimDMRg8zqfNouUpnGd0mSimHS2NTV/3U3wfY=;
-	b=ne5uFbaZ1l/WWvKBFAZRT8H197IFwj7/+RpECvDMhtmra6FNh/PBwIlt/q12REBu+wrmo5QpO3ZK0v0dX6QKhsuAK97ImrH85bdJSRiRHFk6B3PWjeMjd6oGdabsFAvTn0mVeDwtFMCUXu5ofUeSsGnJ9nK0iIi+X3g2nOApzcU=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R751e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=hsiangkao@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0W.Kkdiy_1706196152;
-Received: from 192.168.71.114(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0W.Kkdiy_1706196152)
-          by smtp.aliyun-inc.com;
-          Thu, 25 Jan 2024 23:22:33 +0800
-Message-ID: <8ac3a2fd-1c41-493a-b6a0-a5f53afb49e1@linux.alibaba.com>
-Date: Thu, 25 Jan 2024 23:22:31 +0800
+	s=arc-20240116; t=1706200121; c=relaxed/simple;
+	bh=i2Y6yXDRLAHbGZr1OVFW3UAwZILAyKrA1+Zl4amBkWs=;
+	h=Subject:From:To:Date:Message-ID:MIME-Version:Content-Type; b=a7KzLOtgiuFZsaxsCdkWI0SkpaVCOamg4n1Dkrt2wTcyFPKAnUuTFaWQnkpU0Avyb2t7FuYsqip8fIGS4mX+PlH6s5TgIPDTd6HTmTW8OH9nRyMGlM4fz76BHeNqJtlfeUPlx4l5NdmU8fi9xV/+gKXLXWldlHpP+dLccGoJb6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l0h7ZcX2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACBB8C433C7
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 16:28:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706200120;
+	bh=i2Y6yXDRLAHbGZr1OVFW3UAwZILAyKrA1+Zl4amBkWs=;
+	h=Subject:From:To:Date:From;
+	b=l0h7ZcX2p1dW34+TCIT5WsyY5kPtUxYGRji36VO8r60NW+jWHVpWxmLq77D4A43N8
+	 aTDybLA4pxSoE4UeAOdmcznP17Vl6tATqPVAmd4k1J8Aqsdn8YtQImJzM+fWJ+oipK
+	 BnqhXWFpK1NwmTBx4wtqcrl/d4ahLdWpr37GxZ7G6BIdcfbrpGz/0YZO6uQ6tDgk5O
+	 a482TnZwkI3uuJEaB7LMrql0PrMdFaAjinPe9+YV2vAPlss6WpJmIVnf5A7N13L+Bm
+	 n4wTCTGxU3ovVGYqeDe8uBLhh8MJ7eKEOxHVS1tiqu99tC+DhJYuqSmMHW/d2fhyA8
+	 efTxoAiFdhFYA==
+Subject: [PATCH RFC 00/13] NFSD backchannel fixes
+From: Chuck Lever <cel@kernel.org>
+To: linux-nfs@vger.kernel.org
+Date: Thu, 25 Jan 2024 11:28:39 -0500
+Message-ID: 
+ <170619984210.2833.7173004255003914651.stgit@manet.1015granger.net>
+User-Agent: StGit/1.5
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Roadmap for netfslib and local caching (cachefiles)
-To: David Howells <dhowells@redhat.com>
-Cc: Jeff Layton <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>,
- Matthew Wilcox <willy@infradead.org>, Eric Sandeen <esandeen@redhat.com>,
- v9fs@lists.linux.dev, linux-afs@lists.infradead.org,
- ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
- samba-technical@lists.samba.org, linux-nfs@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <520668.1706191347@warthog.procyon.org.uk>
-From: Gao Xiang <hsiangkao@linux.alibaba.com>
-In-Reply-To: <520668.1706191347@warthog.procyon.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-Hi David,
+The first three patches fix bugs that prevent NFSD's backchannel
+from reliably retransmitting after a client reconnects. These fixes
+might be appropriate for 6.8-rc.
 
-On 2024/1/25 22:02, David Howells wrote:
-> Here's a roadmap for the future development of netfslib and local caching
-> (e.g. cachefiles).
+Following that are some new trace points that might be helpful for
+field troubleshooting.
 
-Thanks for writing this detailed email.  And congrats to you work.
-I only comment the parts directly related to myself.
+Then there are some minor clean-ups.
 
-> 
+I am still testing this series, and there is one msleep() call that
+needs some thought. Thoughts, comments, opinions, rotten fruit? You
+know the drill.
 
-...
+---
 
-> 
-> 
-> Local Caching
-> =============
-> 
-> There are a number of things I want to look at with local caching:
-> 
-> [>] Although cachefiles has switched from using bmap to using SEEK_HOLE and
-> SEEK_DATA, this isn't sufficient as we cannot rely on the backing filesystem
-> optimising things and introducing both false positives and false negatives.
-> Cachefiles needs to track the presence/absence of data for itself.
+Chuck Lever (13):
+      NFSD: Reset cb_seq_status after NFS4ERR_DELAY
+      NFSD: Reschedule CB operations when backchannel rpc_clnt is shut down
+      NFSD: Retransmit callbacks after client reconnects
+      NFSD: Add nfsd_seq4_status trace event
+      NFSD: Replace dprintks in nfsd4_cb_sequence_done()
+      NFSD: Rename nfsd_cb_state trace point
+      NFSD: Add callback operation lifetime trace points
+      SUNRPC: Remove EXPORT_SYMBOL_GPL for svc_process_bc()
+      NFSD: Remove unused @reason argument
+      NFSD: Replace comment with lockdep assertion
+      NFSD: Remove BUG_ON in nfsd4_process_cb_update()
+      SUNRPC: Remove stale comments
+      NFSD: Remove redundant cb_seq_status initialization
 
-Yes, that is indeed an issue that needs to resolve and already discussed
-before.
 
-> 
-> I had a partially-implemented solution that stores a block bitmap in an xattr,
-> but that only worked up to files of 1G in size (with bits representing 256K
-> blocks in a 512-byte bitmap).
+ fs/nfsd/nfs4callback.c   |  81 +++++++++++++-------
+ fs/nfsd/nfs4state.c      |   1 +
+ fs/nfsd/trace.h          | 162 ++++++++++++++++++++++++++++++++++++++-
+ include/trace/misc/nfs.h |  34 ++++++++
+ net/sunrpc/svc.c         |   1 -
+ net/sunrpc/xprtsock.c    |   9 ---
+ 6 files changed, 250 insertions(+), 38 deletions(-)
 
-Jingbo once had an approach to use external bitmap files and
-extended-attribute pointers inside the cache files:
-https://listman.redhat.com/archives/linux-cachefs/2022-August/007050.html
+--
+Chuck Lever
 
-I'm not quite sure the performance was but if it's worth trying or comparing,
-that might be useful though.
-
-> 
-> [>] An alternative cache format might prove more fruitful.  Various AFS
-> implementations use a 'tagged cache' format with an index file and a bunch of
-> small files each of which contains a single block (typically 256K in OpenAFS).
-> 
-> This would offer some advantages over the current approach:
-> 
->   - it can handle entry reuse within the index
->   - doesn't require an external culling process
->   - doesn't need to truncate/reallocate when invalidating
-> 
-> There are some downsides, including:
-> 
->   - each block is in a separate file
-
-Not quite sure, yet accessing too many small files might be another issue
-which is currently happening with AI training workloads.. but as you said,
-it's worth trying.
-
->   - metadata coherency is more tricky - a powercut may require a cache wipe
->   - the index key is highly variable in size if used for multiple filesystems
-> 
-> But OpenAFS has been using this for something like 30 years, so it's probably
-> worth a try.
-
-Yes, also configurable chunk sizes per blob are much helpful.
-
-Thanks,
-Gao Xiang
-
-> 
-> [>] Need to work out some way to store xattrs, directory entries and inode
-> metadata efficiently.
-> 
-> [>] Using NVRAM as the cache rather than spinning rust.
-> 
-> [>] Support for disconnected operation to pin desirable data and keep
-> track of changes.
-> 
-> [>] A user API by which the cache for specific files or volumes can be
-> flushed.
-> 
-> 
-> Disconnected Operation
-> ======================
-> 
-> I'm working towards providing support for disconnected operation, so that,
-> provided you've got your working set pinned in the cache, you can continue to
-> work on your network-provided files when the network goes away and resync the
-> changes later.
-> 
-> This is going to require a number of things:
-> 
->   (1) A user API by which files can be preloaded into the cache and pinned.
-> 
->   (2) The ability to track changes in the cache.
-> 
->   (3) A way to synchronise changes on reconnection.
-> 
->   (4) A way to communicate to the user when there's a conflict with a third
->       party change on reconnect.  This might involve communicating via systemd
->       to the desktop environment to ask the user to indicate how they'd like
->       conflicts recolved.
-> 
->   (5) A way to prompt the user to re-enter their authentication/crypto keys.
-> 
->   (6) A way to ask the user how to handle a process that wants to access data
->       we don't have (error/wait) - and how to handle the DE getting stuck in
->       this fashion.
-> 
-> David
 
