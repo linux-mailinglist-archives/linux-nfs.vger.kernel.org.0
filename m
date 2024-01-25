@@ -1,52 +1,53 @@
-Return-Path: <linux-nfs+bounces-1387-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1388-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A69583C7F2
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 17:28:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AB35283C7F3
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 17:28:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 06347B2333D
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 16:28:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DE59E1C21B4B
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 16:28:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01D4C129A70;
-	Thu, 25 Jan 2024 16:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 546C57762A;
+	Thu, 25 Jan 2024 16:28:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ev8uzAiG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JAPt+91f"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B2477F02
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 16:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30D9673177
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 16:28:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706200127; cv=none; b=qzNHzdOJBgx+Y61KIU4NUU2K0kGQPLxiR9bEPh8vwqxXMDup0f8QZQo7TrzSR5L2yJMo99Bm/Ox2kGW/GWMWQZdNbzh3tVoIkmgp6aArBM0qkQVn6TupLvY4tXG9diJNuz89ujyLF/4TJSiBgTrF4ZJU8uqEqX4y+k/0c4A4RXg=
+	t=1706200134; cv=none; b=mnO9I7gnL1AYMAYZt4+5yYYbU62cRJureddVefo44CzhXE4bspFAlwSjY5HJRwX4joI38EMqguw7MTPuS83iHAndTEcOZBGC9DKYOCFBbwE0U4g26XcrIwHlH2F5aqI2PrxrFe5csJZ/luay1n/VlRNB3MoxZmZEre8vKmIqqLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706200127; c=relaxed/simple;
-	bh=hdVGBrnBnC+42GuL+lMf5yaVyqNY2G8EPs25AdfRFjc=;
+	s=arc-20240116; t=1706200134; c=relaxed/simple;
+	bh=ZirEQrrH2B9FdI5tnbQePr1bsGZg3ZHsZpBpGBgGRbA=;
 	h=Subject:From:To:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AtRm7i5NuV1gVvdTsSLTFdXHzA03r3lYQnx7Us0dOqyotZcW2vdRrSFDIo81E1FURrA8a0Mqm9VNmVQnTvF6m1ekT24CRG5B/GLPjQkLlKMP3jbxoLZgSppKLTdwrkGZGKY8nE+KWEoJc6mDUQvEfzKan8fbasT6cG+TVwbBTR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ev8uzAiG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EBF8C433F1
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 16:28:47 +0000 (UTC)
+	 MIME-Version:Content-Type; b=XstthNJ89aS6vXfn7pdWMemgtAhznasvVWofSwxJY2R4Uo+7y1pyhYcqpxIATJRS1Y6rEw1tT+88i2EBqIR6sERrgI9Mg5jAOTLINrayJTHGiHLrSDJ3wjQf8Y+EeeW2K20+SDiBPMX9Dv3jCDwShFXu3PUbrvUR318H29hUuDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JAPt+91f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86370C433C7
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 16:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706200127;
-	bh=hdVGBrnBnC+42GuL+lMf5yaVyqNY2G8EPs25AdfRFjc=;
+	s=k20201202; t=1706200133;
+	bh=ZirEQrrH2B9FdI5tnbQePr1bsGZg3ZHsZpBpGBgGRbA=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=Ev8uzAiGOW8uBZbE8oAc+UF+bGGphf4svIlUFDzedwoNKKbBXV5ncKVQY81g591nN
-	 aWcBwO9jnyhInfiGlCDHlzD2ZGtIc4dB5NYvBwU0R8eXr3lkP38OAd85WwluHwtVO7
-	 /he18oxvOVBy+fWuPhV0ONAw/yJXRjufluYBU34iA+JmCQaMXAH1N+pXZBO+PeAUaT
-	 uQB2u2zLHa4wewmy4CLE11KjAtH3Vm6oWajC5RnIMTITXESFohNQRRn3/EX0VE8Zgg
-	 7jVhMRY8owIVG2vyACUf1OQQ24A/wdO3BAvoATUIt0/4ChfhTFF2Wv9jO9fvxCXdW4
-	 NWfbTid0MZO9g==
-Subject: [PATCH RFC 01/13] NFSD: Reset cb_seq_status after NFS4ERR_DELAY
+	b=JAPt+91fi4pBOPlg9sM30YIdzdHn1D6m1HuOssoxG6sYFPZyCe7pw8UKq6nUSWj1/
+	 mqqyYpky6G2mtDMYnYA5C/qZA/ZXXBaUYS+BbAWNcL66K2DaTI7rrIwZvjX0/584uy
+	 eW7DcYGVG34zXLLfAilMGngacNk9dSiEmTXnx7xS8fgOj/HQlFFJw7LEyYujAeApS6
+	 JLZWyTENagGW7dw/UhmikKDI+Y3HXFPirxxaI6diZsqVIZblGw8fpz4MZmg+BssaId
+	 tBLyl01VK/n5U3BuIeF4VI4Tww7rFve/1z52G9wrT7x6bFq90TUUbBLBUjksZRgr/P
+	 Le0qur6WE26dA==
+Subject: [PATCH RFC 02/13] NFSD: Reschedule CB operations when backchannel
+ rpc_clnt is shut down
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org
-Date: Thu, 25 Jan 2024 11:28:46 -0500
+Date: Thu, 25 Jan 2024 11:28:52 -0500
 Message-ID: 
- <170620012605.2833.4823193318339130630.stgit@manet.1015granger.net>
+ <170620013252.2833.10156142379669175540.stgit@manet.1015granger.net>
 In-Reply-To: 
  <170619984210.2833.7173004255003914651.stgit@manet.1015granger.net>
 References: 
@@ -63,37 +64,80 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-I noticed that once an NFSv4.1 callback operation gets a
-NFS4ERR_DELAY status on CB_SEQUENCE and then the connection is lost,
-the callback client loops, resending it indefinitely.
+As part of managing a client disconnect, NFSD closes down and
+replaces the backchannel rpc_clnt.
 
-The switch arm in nfsd4_cb_sequence_done() that handles
-NFS4ERR_DELAY uses rpc_restart_call() to rearm the RPC state machine
-for the retransmit, but that path does not call the rpc_prepare_call
-callback again. Thus cb_seq_status is set to -10008 by the first
-NFS4ERR_DELAY result, but is never set back to 1 for the retransmits.
+If a callback operation is pending when the backchannel rpc_clnt is
+shut down, currently nfsd4_run_cb_work() just discards that
+callback. But there are multiple cases to deal with here:
 
-nfsd4_cb_sequence_done() thinks it's getting nothing but a
-long series of CB_SEQUENCE NFS4ERR_DELAY replies.
+ o The client's lease is getting destroyed. Throw the CB away.
 
-Fixes: 7ba6cad6c88f ("nfsd: New helper nfsd4_cb_sequence_done() for processing more cb errors")
+ o The client disconnected. It might be forcing a retransmit of
+   CB operations, or it could have disconnected for other reasons.
+   Reschedule the CB so it is retransmitted when the client
+   reconnects.
+
+Since callback operations can now be rescheduled, ensure that
+cb_ops->prepare can be called only once by moving the
+cb_ops->prepare paragraph down to just before the rpc_call_async()
+call.
+
+Fixes: 2bbfed98a4d8 ("nfsd: Fix races between nfsd4_cb_release() and nfsd4_shutdown_callback()")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4callback.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/nfsd/nfs4callback.c |   26 +++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
 
 diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 926c29879c6a..43b0a34a5d5b 100644
+index 43b0a34a5d5b..b2844abcb51f 100644
 --- a/fs/nfsd/nfs4callback.c
 +++ b/fs/nfsd/nfs4callback.c
-@@ -1178,6 +1178,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
- 		ret = false;
- 		break;
- 	case -NFS4ERR_DELAY:
-+		cb->cb_seq_status = 1;
- 		if (!rpc_restart_call(task))
- 			goto out;
+@@ -1375,20 +1375,22 @@ nfsd4_run_cb_work(struct work_struct *work)
+ 	struct rpc_clnt *clnt;
+ 	int flags;
  
+-	if (cb->cb_need_restart) {
+-		cb->cb_need_restart = false;
+-	} else {
+-		if (cb->cb_ops && cb->cb_ops->prepare)
+-			cb->cb_ops->prepare(cb);
+-	}
+-
+ 	if (clp->cl_flags & NFSD4_CLIENT_CB_FLAG_MASK)
+ 		nfsd4_process_cb_update(cb);
+ 
+ 	clnt = clp->cl_cb_client;
+ 	if (!clnt) {
+-		/* Callback channel broken, or client killed; give up: */
+-		nfsd41_destroy_cb(cb);
++		if (test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags))
++			nfsd41_destroy_cb(cb);
++		else {
++			/*
++			 * XXX: Ideally, we would wait for the client to
++			 *	reconnect, but I haven't figured out how
++			 *	to do that yet.
++			 */
++			msleep(30);
++			nfsd4_queue_cb(cb);
++		}
+ 		return;
+ 	}
+ 
+@@ -1401,6 +1403,12 @@ nfsd4_run_cb_work(struct work_struct *work)
+ 		return;
+ 	}
+ 
++	if (cb->cb_need_restart) {
++		cb->cb_need_restart = false;
++	} else {
++		if (cb->cb_ops && cb->cb_ops->prepare)
++			cb->cb_ops->prepare(cb);
++	}
+ 	cb->cb_msg.rpc_cred = clp->cl_cb_cred;
+ 	flags = clp->cl_minorversion ? RPC_TASK_NOCONNECT : RPC_TASK_SOFTCONN;
+ 	rpc_call_async(clnt, &cb->cb_msg, RPC_TASK_SOFT | flags,
 
 
 
