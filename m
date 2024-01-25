@@ -1,216 +1,122 @@
-Return-Path: <linux-nfs+bounces-1441-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1442-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A85D83CF02
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 22:58:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2033483CF2B
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 23:09:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BD57E297EF0
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 21:58:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D9AAB2184E
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 22:09:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41981131E4F;
-	Thu, 25 Jan 2024 21:56:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABE9C13AA22;
+	Thu, 25 Jan 2024 22:09:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="bldgZtKh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d6flL4lT"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673AD13AA3C
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 21:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F564131E4F
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 22:09:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706219811; cv=none; b=Q704Hwlp4OcVmXoWjq3OZRHrkeWBDv+5YyijPaNrv90dtxgmNO2BawdbRI2m2bQnZXBP30yLd28KAkcnuQLca415VRBaOK4aKGDnZpmpORLhos7ko8jDU9ze27GmZKwNZJlPEmbs0BRTkMEtHPiYze30L79Ghq4Sa2/SUGpmwqo=
+	t=1706220575; cv=none; b=jrqxss3MmegSu1XlfbcKSYvg1nky1Y5OiVDrdyg/ISDPraP1J46l+YHi3S5GcLi7SGNbfvQBon8j7NnHroKavrgT87AMBADXUFA5m6cq3Nd1SqreZihZd6w44vUIKdzc+UZQPFQPndXA0cSedW3Z/XKcW9sjMKLaoSiHm+lkg6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706219811; c=relaxed/simple;
-	bh=fhYKtUGHMh5Ngr2NOyFOQ/6gRTBgW9pNz3s180zvSMc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TExG965pA6r2N6kbAHHvTD+qh8v7Jw22iGwoFr+N9TrG0qeDxvzsVEXJ9mczCCq1wm/MDrbQkLUnEfPaWd/19+zreRCaFr3LVzPAj8Jbq2r9Dfq3VBAmWjxdd2ZAD5WdpvNPMAqr3YanQQOg2f6h7VGg+iimX2d8gheTeqacIog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=bldgZtKh; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5ff847429d4so1584487b3.1
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 13:56:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1706219808; x=1706824608; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EonWoVMmZzUe8cUTbeAT1QeaLZcRszW4DwuYLm8AuR8=;
-        b=bldgZtKhHnrWACP/bBLxaCNlDTgnjI6FYaJxR4Xn2+ydYIyusRuJcEjSqYYb0zL/lI
-         5gPWixDItxFvvdxlWAQ7/l3nGMdisUPEm4jDBV3kr+t5ubNjqc1ptdpos4SMwkMeeu9W
-         mWcZMrSUSlmrYuRdckSkvsygOTWCzBsAljmkTGNhZhzib2WyT5e2aVhqrvcINrczeq8w
-         KnZV1g80uQPvR/X08OkCzPrUJJgm07iAMoZQKChSMJonIWUqPXk2J2A6775hGEYBBDSm
-         zLL0MI6V6iUWzfCuWWf3Fk8xi+qpGqnXAlodevwAMwIIDkIMgmvIT+fDo1jkZAdJaw4Y
-         1JSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706219808; x=1706824608;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EonWoVMmZzUe8cUTbeAT1QeaLZcRszW4DwuYLm8AuR8=;
-        b=XSf8BIDqJVz5NlWe9wWvQMfm7eGYz4ltuMzPyoEyHf0kDp5KepS06pSsQETaxJGDyK
-         /rxy+KWzzJlDoS/d3Rt+1jcpcvLV2NokTsAjIUKw4gokafMdEW6LBzn62lZN8kcD07T5
-         lnLuJBaGUILruuYmwdkU9cE5bGhEWgcFsIX9FxRGGPY3EE2XxEHQJhmdmUhHIJXTwyKy
-         eN0EsSgzyRqUkHgb7Z45KWQ4mm/zqtOM6IhZq9aL7Nc4LPZz/BZZqINUyp5uBXFM1IzU
-         /dEwyqPWkqt07lj2sI0I3CPiQs43kWILomUOZLKgxxHaYtnoijvvm8KcUucRIorZ+hNO
-         JacA==
-X-Gm-Message-State: AOJu0Yype+tJQXA4W7JJkmYlSN+4IpC5/HlP60XmmJM8Geha9UdSrVtx
-	514uX7A59V/ZyD7gZcjf5XblGei3m8csbVpIQuQR2Cy/5bpOGj2mMIBgtTu7dew=
-X-Google-Smtp-Source: AGHT+IHfZTLUPlAswe3Vbq9J4VJaSF+ZHm3lQX5LPLDmp1dkDX58YL/613VRIeIa4fPHqae70Bwgbg==
-X-Received: by 2002:a81:834f:0:b0:5d7:1941:3567 with SMTP id t76-20020a81834f000000b005d719413567mr645901ywf.78.1706219808261;
-        Thu, 25 Jan 2024 13:56:48 -0800 (PST)
-Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id dt2-20020a05690c250200b005ffde38415dsm929255ywb.15.2024.01.25.13.56.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 13:56:48 -0800 (PST)
-Date: Thu, 25 Jan 2024 16:56:47 -0500
-From: Josef Bacik <josef@toxicpanda.com>
-To: Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, kernel-team@fb.com
-Subject: Re: [PATCH v2 03/13] sunrpc: pass in the sv_stats struct through
- svc_create*
-Message-ID: <20240125215647.GC1602047@perftesting>
-References: <cover.1706212207.git.josef@toxicpanda.com>
- <ff6afd3ab9a70bf5ab90872497068719f2c1ec03.1706212208.git.josef@toxicpanda.com>
- <ZbLK4BsvReiFpCUo@tissot.1015granger.net>
+	s=arc-20240116; t=1706220575; c=relaxed/simple;
+	bh=lNFnRJOt+0ADuqEskL/6OB4nWsMNxc9YQkfLCsfWV3Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=u6inicqPUtUIGXJAr0VhJ6lLbtWyFsEarrzeIxeW5X0GujOLXnluQideIuh45rFY3oK+78CQlOlH0bnA5Dmq0EvlEigpQO3xLk2uSOcfkm/Y63E7W38/5Is0lGmAfsiG02Ox/ZrIuJ51J16MyDv6BBH1BC3SZhQDrH+Ax9xTRWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d6flL4lT; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706220573;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bGIdeiRena7NFn+xlwN7108DTM5j8uMoSIKS3E3IcvE=;
+	b=d6flL4lT/MrIjiY1Osi93Gm8MUKQAVPzmivfc90Bxv9yWblHxFslEcMl9nzKXCxcDN7u5D
+	LtHfgGWfmIxZ5TeGEw15avF5PZyUdkkP2H0RTzotv+Fh7YSscGXQcNHySb6Xzfam0iP4zt
+	wrcwfaEeN30pYyEMsimm1j2pCdaoBYs=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-637-PbvUFyIuOZ-pQz1GkI7gnw-1; Thu, 25 Jan 2024 17:09:29 -0500
+X-MC-Unique: PbvUFyIuOZ-pQz1GkI7gnw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8286F85A588;
+	Thu, 25 Jan 2024 22:09:29 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-9.rdu2.redhat.com [10.22.0.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 17CC32A79;
+	Thu, 25 Jan 2024 22:09:28 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Chuck Lever <cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 00/13] NFSD backchannel fixes
+Date: Thu, 25 Jan 2024 17:09:27 -0500
+Message-ID: <0DCE1190-19FA-46BD-822D-6984F0B5B296@redhat.com>
+In-Reply-To: <170619984210.2833.7173004255003914651.stgit@manet.1015granger.net>
+References: <170619984210.2833.7173004255003914651.stgit@manet.1015granger.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZbLK4BsvReiFpCUo@tissot.1015granger.net>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
 
-On Thu, Jan 25, 2024 at 03:56:00PM -0500, Chuck Lever wrote:
-> On Thu, Jan 25, 2024 at 02:53:13PM -0500, Josef Bacik wrote:
-> > Since only one service actually reports the rpc stats there's not much
-> > of a reason to have a pointer to it in the svc_program struct.  Adjust
-> > the svc_create* functions to take the sv_stats as an argument and pass
-> > the struct through there as desired instead of getting it from the
-> > svc_program->pg_stats.
-> > 
-> > Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-> > ---
-> >  fs/lockd/svc.c             |  2 +-
-> >  fs/nfs/callback.c          |  2 +-
-> >  fs/nfsd/nfssvc.c           |  3 ++-
-> >  include/linux/sunrpc/svc.h |  8 ++++----
-> >  net/sunrpc/svc.c           | 17 ++++++++++-------
-> >  5 files changed, 18 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-> > index ab8042a5b895..8fbbfc9aad69 100644
-> > --- a/fs/lockd/svc.c
-> > +++ b/fs/lockd/svc.c
-> > @@ -337,7 +337,7 @@ static int lockd_get(void)
-> >  		nlm_timeout = LOCKD_DFLT_TIMEO;
-> >  	nlmsvc_timeout = nlm_timeout * HZ;
-> >  
-> > -	serv = svc_create(&nlmsvc_program, LOCKD_BUFSIZE, lockd);
-> > +	serv = svc_create(&nlmsvc_program, NULL, LOCKD_BUFSIZE, lockd);
-> >  	if (!serv) {
-> >  		printk(KERN_WARNING "lockd_up: create service failed\n");
-> >  		return -ENOMEM;
-> > diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-> > index 8adfcd4c8c1a..4d56b4e73525 100644
-> > --- a/fs/nfs/callback.c
-> > +++ b/fs/nfs/callback.c
-> > @@ -202,7 +202,7 @@ static struct svc_serv *nfs_callback_create_svc(int minorversion)
-> >  	if (minorversion)
-> >  		return ERR_PTR(-ENOTSUPP);
-> >  #endif
-> > -	serv = svc_create(&nfs4_callback_program, NFS4_CALLBACK_BUFSIZE,
-> > +	serv = svc_create(&nfs4_callback_program, NULL, NFS4_CALLBACK_BUFSIZE,
-> >  			  threadfn);
-> >  	if (!serv) {
-> >  		printk(KERN_ERR "nfs_callback_create_svc: create service failed\n");
-> > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> > index a0b117107e86..d640f893021a 100644
-> > --- a/fs/nfsd/nfssvc.c
-> > +++ b/fs/nfsd/nfssvc.c
-> > @@ -661,7 +661,8 @@ int nfsd_create_serv(struct net *net)
-> >  	if (nfsd_max_blksize == 0)
-> >  		nfsd_max_blksize = nfsd_get_default_max_blksize();
-> >  	nfsd_reset_versions(nn);
-> > -	serv = svc_create_pooled(&nfsd_program, nfsd_max_blksize, nfsd);
-> > +	serv = svc_create_pooled(&nfsd_program, &nfsd_svcstats,
-> > +				 nfsd_max_blksize, nfsd);
-> >  	if (serv == NULL)
-> >  		return -ENOMEM;
-> >  
-> > diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> > index 67cf1c9efd80..2a1447fa5ef2 100644
-> > --- a/include/linux/sunrpc/svc.h
-> > +++ b/include/linux/sunrpc/svc.h
-> > @@ -402,8 +402,8 @@ struct svc_procedure {
-> >  int svc_rpcb_setup(struct svc_serv *serv, struct net *net);
-> >  void svc_rpcb_cleanup(struct svc_serv *serv, struct net *net);
-> >  int svc_bind(struct svc_serv *serv, struct net *net);
-> > -struct svc_serv *svc_create(struct svc_program *, unsigned int,
-> > -			    int (*threadfn)(void *data));
-> > +struct svc_serv *svc_create(struct svc_program *, struct svc_stat *,
-> > +			    unsigned int, int (*threadfn)(void *data));
-> >  struct svc_rqst *svc_rqst_alloc(struct svc_serv *serv,
-> >  					struct svc_pool *pool, int node);
-> >  bool		   svc_rqst_replace_page(struct svc_rqst *rqstp,
-> > @@ -411,8 +411,8 @@ bool		   svc_rqst_replace_page(struct svc_rqst *rqstp,
-> >  void		   svc_rqst_release_pages(struct svc_rqst *rqstp);
-> >  void		   svc_rqst_free(struct svc_rqst *);
-> >  void		   svc_exit_thread(struct svc_rqst *);
-> > -struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned int,
-> > -				     int (*threadfn)(void *data));
-> > +struct svc_serv *  svc_create_pooled(struct svc_program *, struct svc_stat *,
-> > +				     unsigned int, int (*threadfn)(void *data));
-> >  int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int);
-> >  int		   svc_pool_stats_open(struct svc_info *si, struct file *file);
-> >  void		   svc_process(struct svc_rqst *rqstp);
-> > diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> > index d2e6f3d59218..f76ef8a3dd43 100644
-> > --- a/net/sunrpc/svc.c
-> > +++ b/net/sunrpc/svc.c
-> > @@ -451,8 +451,8 @@ __svc_init_bc(struct svc_serv *serv)
-> >   * Create an RPC service
-> >   */
-> >  static struct svc_serv *
-> > -__svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
-> > -	     int (*threadfn)(void *data))
-> > +__svc_create(struct svc_program *prog, struct svc_stat *stats,
-> > +	     unsigned int bufsize, int npools, int (*threadfn)(void *data))
-> >  {
-> >  	struct svc_serv	*serv;
-> >  	unsigned int vers;
-> > @@ -463,7 +463,7 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
-> >  		return NULL;
-> >  	serv->sv_name      = prog->pg_name;
-> >  	serv->sv_program   = prog;
-> > -	serv->sv_stats     = prog->pg_stats;
-> > +	serv->sv_stats     = stats;
-> >  	if (bufsize > RPCSVC_MAXPAYLOAD)
-> >  		bufsize = RPCSVC_MAXPAYLOAD;
-> >  	serv->sv_max_payload = bufsize? bufsize : 4096;
-> > @@ -521,34 +521,37 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
-> >  /**
-> >   * svc_create - Create an RPC service
-> >   * @prog: the RPC program the new service will handle
-> > + * @stats: the stats struct if desired
-> >   * @bufsize: maximum message size for @prog
-> >   * @threadfn: a function to service RPC requests for @prog
-> >   *
-> >   * Returns an instantiated struct svc_serv object or NULL.
-> >   */
-> 
-> Here's the only minor quibble I have so far:
-> 
-> svc_create's callers don't use stats, so maybe you don't need
-> to add an @stats argument for this API.
-> 
-> Fwiw, I haven't gotten all the way to the end of the series yet.
+On 25 Jan 2024, at 11:28, Chuck Lever wrote:
 
-Yup you're right, I can drop this bit.  Thanks,
+> The first three patches fix bugs that prevent NFSD's backchannel
+> from reliably retransmitting after a client reconnects. These fixes
+> might be appropriate for 6.8-rc.
+>
+> Following that are some new trace points that might be helpful for
+> field troubleshooting.
+>
+> Then there are some minor clean-ups.
+>
+> I am still testing this series, and there is one msleep() call that
+> needs some thought. Thoughts, comments, opinions, rotten fruit? You
+> know the drill.
+>
+> ---
+>
+> Chuck Lever (13):
+>       NFSD: Reset cb_seq_status after NFS4ERR_DELAY
+>       NFSD: Reschedule CB operations when backchannel rpc_clnt is shut down
+>       NFSD: Retransmit callbacks after client reconnects
+>       NFSD: Add nfsd_seq4_status trace event
+>       NFSD: Replace dprintks in nfsd4_cb_sequence_done()
+>       NFSD: Rename nfsd_cb_state trace point
+>       NFSD: Add callback operation lifetime trace points
+>       SUNRPC: Remove EXPORT_SYMBOL_GPL for svc_process_bc()
+>       NFSD: Remove unused @reason argument
+>       NFSD: Replace comment with lockdep assertion
+>       NFSD: Remove BUG_ON in nfsd4_process_cb_update()
+>       SUNRPC: Remove stale comments
+>       NFSD: Remove redundant cb_seq_status initialization
+>
+>
+>  fs/nfsd/nfs4callback.c   |  81 +++++++++++++-------
+>  fs/nfsd/nfs4state.c      |   1 +
+>  fs/nfsd/trace.h          | 162 ++++++++++++++++++++++++++++++++++++++-
+>  include/trace/misc/nfs.h |  34 ++++++++
+>  net/sunrpc/svc.c         |   1 -
+>  net/sunrpc/xprtsock.c    |   9 ---
+>  6 files changed, 250 insertions(+), 38 deletions(-)
 
-Josef
+
+These are great, looking forward to see how 02/13 waits for reconnection.
+Seems like a wait_on_bit or wait_on_var triggered from nfsd4_init_conn()
+would do, but that's just my wild speculation.
+
+Ben
+
 
