@@ -1,78 +1,78 @@
-Return-Path: <linux-nfs+bounces-1417-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1418-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5856583CCE6
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 20:53:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD17283CCE8
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 20:54:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DD9A81F22E70
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 19:53:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CABA6B23831
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 19:54:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 17B4C135A7C;
-	Thu, 25 Jan 2024 19:53:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D0211350D7;
+	Thu, 25 Jan 2024 19:53:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="UwqG0ciW"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="UbIpu84M"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78FC7136643
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 19:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCD7136651
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 19:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706212426; cv=none; b=hfaChSavjmjafwqulrNw+rFM+kmPw2FFRH2T+rH5irPbZEtPgBQklEAXP35+AqUIYd6W0aCUkNHTY3dpf/SUTLX/nfgHnkL3b43XiiCiovJPhcrote5zDECFvzLqT2bn27oiMOvymACFwJQz9kR8Jb/4RvzoFyAaReM2zwD1nhI=
+	t=1706212426; cv=none; b=Lg/qIq2RZ2QG8Q0z/Ignod7zzDj0STh/NdT6mC5Q3mOmDXN9Hxo2V68iQM2xFukdn5/ahU7Ty7aiMddPlTMs4NQ2IGnI8kLoUtVsxSPaDxHKAjJcMBZtBGnBoMSQ5BuBcVdWNrdzZyrlYs8bVEedjNaYSCUOlJ1MBRt7qJDLKYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1706212426; c=relaxed/simple;
-	bh=HYw7RJrKrn30ygP9WEHGLl9B1l9lIWNNnnl8a6T35kE=;
+	bh=oIVFoPMvY5SGkisb2sELX+f9WkOpaBpUfRMWGj42rI0=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oaZHp4J7g6je/OgElM/6L6+PWXUFgHA7cxTNA71q6aVZP38Gswg74dwNtROHWFm22TeityfuVvH/spqL0SYA+p21KsWgvIpSql759vL6+5L2M4nt+Bt5IyzbLtlt+X5l6x4+O7qmz3BwJBk5q834DeHtZuuPq3n2XVq0Y/WfLf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=UwqG0ciW; arc=none smtp.client-ip=209.85.128.177
+	 MIME-Version; b=jNhbIwoY3lH0TZ6C82YaO4qi1CIcaQIKTQSLcVfQmIEdcwl1sW+PpXFRNRw+RyQXuR8fA2jn5ALHBIlvbbABbmXnP/n28kblj+Wgd3M+C6s1gK+Vu0uQtWfcgFchnIrjaA7FJGvt/mM2SEqvu76F3UnMFHAmUTKaYRYOMKEAW+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=UbIpu84M; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-602a0a45dd6so20432357b3.1
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 11:53:44 -0800 (PST)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-600094c5703so45162837b3.3
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 11:53:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1706212423; x=1706817223; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1706212424; x=1706817224; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qhcT4LxscUNgYkzme87+B08aKhu2LGoP/3IfHmoLGzc=;
-        b=UwqG0ciW8/AqiNzH7UMG/BO+wBzoDFiyeAGhg1NwJ7IzCLf9ujjc3t6Qp2SMFhRHkJ
-         cPX6vGuHQkzLEZ1fPI102/qROO4fcQNBdRxv7W+RWiej32EYUEencPPM6RWqiAPInVJf
-         JBTlPpy0BAjA+H03lXbMm0e8onh0/cNs8OKnGsMSYfMHdUD5H+NIbZOkkZa6Qw59/ouV
-         7napX/Lbvcsp+3x02L2oKOsaYpeo6/FXpLMChZVJ0+8s35nnjLrjpqVnyeJPxtPqpWnB
-         +MOSzn2ygBc6aPJAp4Fd7Zu06hR5O7PtL26Ekx0Pk3TztGG7H2Zx1zbKqZBTED6R9soD
-         qM6g==
+        bh=Lbwexu1bLugmUgDGM5YUyVtPA9AXcJlbApt7mNBJh0E=;
+        b=UbIpu84MVIo7ZpJBVs5zRJS4kD5evjCaPSajZ6z19y7zXjFkNqi9IEV0QkdonM889S
+         kiplLMrwm//busfOgdmWVpk6ADExDG48x3Hsqn7bFgyM63wyrZKEvqLekrW+IVCjX0wv
+         nUZP51oM4k+VN84JVWYzt0y8D3/Fhj5tB/WSi9F8A7kyDxv2kl3m1VGe9UNgn4t6e8cE
+         kGc87xMJv2FgSvMt4w/50J3SKk4roHFahi85XvauLZ1TMFC5e14pW5wATWsCko9o0dB9
+         do4XbnuU7tTC2wEE6cVwdXvsjCnq6ATjb5epa1UzDuWeJggxuj+iVVgNcxBKFLq2BGVI
+         bAuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706212423; x=1706817223;
+        d=1e100.net; s=20230601; t=1706212424; x=1706817224;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qhcT4LxscUNgYkzme87+B08aKhu2LGoP/3IfHmoLGzc=;
-        b=ATG0jCOaRjQ/2obfCNiZCYFF7hy/+f4AbzceAH9tQ/mAcftdgkMhcWxBkj8q9QQtKx
-         DrwfqFTTP4zyxyDJMr5HoNm8QQA6WRIcnTjk5HKg/cJvmF1nmIgmToeElshkzkJXbE5w
-         7Bvl6B1fazhnnCxybEMFnPiAPfkcQCoLFUTi4ryWa2WN1kMFAfU66+hakU9nS0dRDA4Q
-         EEi0WwHpyE4rCyoAVX5EbCU78W5Ut3aKb7oNti0VDb3EgzgSaLtHmniTRje4COZK74NQ
-         ZKLOME9o/lbOzmgTpxCRyUmELAGWB7VEJHJu93giaVAr2ZScRSdcJ83X9fJDAWPdb2Yf
-         Gblw==
-X-Gm-Message-State: AOJu0YzrQ1sxsPSBstSJlCKkJof9qzk5HkamSDJlucEJU9Zd3gaL4cYQ
-	PbgFg43r2nuQmNk2EemXoamGjcSRBlOvH3gQlRQR3y+zqhL/077aT0HVUBrGwp0iEGnsWdaBIEd
-	7
-X-Google-Smtp-Source: AGHT+IEcVV5FZWaZpudtF4nG/BHtMqm2Ng/XQIsRu6owITdjzD+GgBIiEqJE13QrGZJ21iHtS7ZnEg==
-X-Received: by 2002:a81:ae21:0:b0:5ff:9903:8347 with SMTP id m33-20020a81ae21000000b005ff99038347mr327933ywh.64.1706212423291;
-        Thu, 25 Jan 2024 11:53:43 -0800 (PST)
+        bh=Lbwexu1bLugmUgDGM5YUyVtPA9AXcJlbApt7mNBJh0E=;
+        b=lOVna9AFYtQ8YMWDPjlSnzZBSqoeXfsKeOH31+DCJnNk3QbXSruvO1JeeoWs0GyoJD
+         xRCISN7preSAe7qVmudxoSHB+wQb7UdYUAOdMuMWd7I9njGl1Cgnd8klkOBRRJZP78kQ
+         XCJXurZc04jXlfxtRg06ln1aCPNLH4Fup0O4LqpH/s1k2DVzO/JbA3oLrSaA9M7lwbvI
+         bO1xwvoz6vUlBKcrcZuHGdrZYp92vUNXa9t4WFX/4gPfDNobsZsIVIjlJTbslrsVQzY2
+         l5fh1EtXyjjg59O4prz6YXXnj6TV2CRPkTNj5yQpsj5kyDQ5DGDbQFQAafH5oP0QN0Do
+         uQTw==
+X-Gm-Message-State: AOJu0Yw6YskdOrOhJnKnvS5rbfywAng3+xfkueDmAQtiyvSb6PxEUgPi
+	sxmMDoi1D/zs7hyk5P7myO6zfW1+PuxH1+TzAW53aw9qXiH8oFuav4bpD+xObYilIGNUrj8Mu4X
+	Q
+X-Google-Smtp-Source: AGHT+IHiIaa4wPOAMB1jg4O7nLL39bDUaJUlY10BVxK/XODKB4QFmv7Mm6WTwbYk+jhhZL9GK2KNYw==
+X-Received: by 2002:a81:b654:0:b0:5ff:a9ae:4a81 with SMTP id h20-20020a81b654000000b005ffa9ae4a81mr304584ywk.77.1706212424204;
+        Thu, 25 Jan 2024 11:53:44 -0800 (PST)
 Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id d134-20020a0ddb8c000000b005ffd1bf706fsm866119ywe.96.2024.01.25.11.53.42
+        by smtp.gmail.com with ESMTPSA id i13-20020a81d50d000000b0060022aff36dsm844514ywj.107.2024.01.25.11.53.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 25 Jan 2024 11:53:43 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: linux-nfs@vger.kernel.org,
 	kernel-team@fb.com
-Subject: [PATCH v2 07/13] nfsd: rename NFSD_NET_* to NFSD_STATS_*
-Date: Thu, 25 Jan 2024 14:53:17 -0500
-Message-ID: <3d99f0ca12126464c3cf6afa6d8cdff84bd3c5ea.1706212208.git.josef@toxicpanda.com>
+Subject: [PATCH v2 08/13] nfsd: expose /proc/net/sunrpc/nfsd in net namespaces
+Date: Thu, 25 Jan 2024 14:53:18 -0500
+Message-ID: <eb4f7d4574c9490c7c14fdd1fe0a5587d6753887.1706212208.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706212207.git.josef@toxicpanda.com>
 References: <cover.1706212207.git.josef@toxicpanda.com>
@@ -84,80 +84,133 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We're going to merge the stats all into per network namespace in
-subsequent patches, rename these nn counters to be consistent with the
-rest of the stats.
+We are running nfsd servers inside of containers with their own network
+namespace, and we want to monitor these services using the stats found
+in /proc.  However these are not exposed in the proc inside of the
+container, so we have to bind mount the host /proc into our containers
+to get at this information.
+
+Separate out the stat counters init and the proc registration, and move
+the proc registration into the pernet operations entry and exit points
+so that these stats can be exposed inside of network namespaces.
+
+This is an intermediate step, this just exposes the global counters in
+the network namespace.  Subsequent patches will move these counters into
+the per-network namespace container.
 
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- fs/nfsd/netns.h    | 4 ++--
- fs/nfsd/nfscache.c | 4 ++--
- fs/nfsd/stats.h    | 6 +++---
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ fs/nfsd/nfsctl.c |  8 +++++---
+ fs/nfsd/stats.c  | 21 ++++++---------------
+ fs/nfsd/stats.h  |  6 ++++--
+ 3 files changed, 15 insertions(+), 20 deletions(-)
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 74b4360779a1..e3605cb5f044 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -26,9 +26,9 @@ struct nfsd4_client_tracking_ops;
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index f206ca32e7f5..b57480b50e35 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -1679,6 +1679,7 @@ static __net_init int nfsd_net_init(struct net *net)
+ 	nfsd4_init_leases_net(nn);
+ 	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
+ 	seqlock_init(&nn->writeverf_lock);
++	nfsd_proc_stat_init(net);
  
- enum {
- 	/* cache misses due only to checksum comparison failures */
--	NFSD_NET_PAYLOAD_MISSES,
-+	NFSD_STATS_PAYLOAD_MISSES,
- 	/* amount of memory (in bytes) currently consumed by the DRC */
--	NFSD_NET_DRC_MEM_USAGE,
-+	NFSD_STATS_DRC_MEM_USAGE,
- 	NFSD_NET_COUNTERS_NUM
- };
- 
-diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
-index 5c1a4a0aa605..3d4a9d181c43 100644
---- a/fs/nfsd/nfscache.c
-+++ b/fs/nfsd/nfscache.c
-@@ -687,7 +687,7 @@ int nfsd_reply_cache_stats_show(struct seq_file *m, void *v)
- 		   atomic_read(&nn->num_drc_entries));
- 	seq_printf(m, "hash buckets:          %u\n", 1 << nn->maskbits);
- 	seq_printf(m, "mem usage:             %lld\n",
--		   percpu_counter_sum_positive(&nn->counter[NFSD_NET_DRC_MEM_USAGE]));
-+		   percpu_counter_sum_positive(&nn->counter[NFSD_STATS_DRC_MEM_USAGE]));
- 	seq_printf(m, "cache hits:            %lld\n",
- 		   percpu_counter_sum_positive(&nfsdstats.counter[NFSD_STATS_RC_HITS]));
- 	seq_printf(m, "cache misses:          %lld\n",
-@@ -695,7 +695,7 @@ int nfsd_reply_cache_stats_show(struct seq_file *m, void *v)
- 	seq_printf(m, "not cached:            %lld\n",
- 		   percpu_counter_sum_positive(&nfsdstats.counter[NFSD_STATS_RC_NOCACHE]));
- 	seq_printf(m, "payload misses:        %lld\n",
--		   percpu_counter_sum_positive(&nn->counter[NFSD_NET_PAYLOAD_MISSES]));
-+		   percpu_counter_sum_positive(&nn->counter[NFSD_STATS_PAYLOAD_MISSES]));
- 	seq_printf(m, "longest chain len:     %u\n", nn->longest_chain);
- 	seq_printf(m, "cachesize at longest:  %u\n", nn->longest_chain_cachesize);
  	return 0;
+ 
+@@ -1699,6 +1700,7 @@ static __net_exit void nfsd_net_exit(struct net *net)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
++	nfsd_proc_stat_shutdown(net);
+ 	nfsd_net_reply_cache_destroy(nn);
+ 	nfsd_idmap_shutdown(net);
+ 	nfsd_export_shutdown(net);
+@@ -1722,7 +1724,7 @@ static int __init init_nfsd(void)
+ 	retval = nfsd4_init_pnfs();
+ 	if (retval)
+ 		goto out_free_slabs;
+-	retval = nfsd_stat_init();	/* Statistics */
++	retval = nfsd_stat_counters_init();	/* Statistics */
+ 	if (retval)
+ 		goto out_free_pnfs;
+ 	retval = nfsd_drc_slab_create();
+@@ -1762,7 +1764,7 @@ static int __init init_nfsd(void)
+ 	nfsd_lockd_shutdown();
+ 	nfsd_drc_slab_free();
+ out_free_stat:
+-	nfsd_stat_shutdown();
++	nfsd_stat_counters_destroy();
+ out_free_pnfs:
+ 	nfsd4_exit_pnfs();
+ out_free_slabs:
+@@ -1780,7 +1782,7 @@ static void __exit exit_nfsd(void)
+ 	nfsd_drc_slab_free();
+ 	remove_proc_entry("fs/nfs/exports", NULL);
+ 	remove_proc_entry("fs/nfs", NULL);
+-	nfsd_stat_shutdown();
++	nfsd_stat_counters_destroy();
+ 	nfsd_lockd_shutdown();
+ 	nfsd4_free_slabs();
+ 	nfsd4_exit_pnfs();
+diff --git a/fs/nfsd/stats.c b/fs/nfsd/stats.c
+index 12d79f5d4eb1..394a65a33942 100644
+--- a/fs/nfsd/stats.c
++++ b/fs/nfsd/stats.c
+@@ -108,31 +108,22 @@ void nfsd_percpu_counters_destroy(struct percpu_counter counters[], int num)
+ 		percpu_counter_destroy(&counters[i]);
+ }
+ 
+-static int nfsd_stat_counters_init(void)
++int nfsd_stat_counters_init(void)
+ {
+ 	return nfsd_percpu_counters_init(nfsdstats.counter, NFSD_STATS_COUNTERS_NUM);
+ }
+ 
+-static void nfsd_stat_counters_destroy(void)
++void nfsd_stat_counters_destroy(void)
+ {
+ 	nfsd_percpu_counters_destroy(nfsdstats.counter, NFSD_STATS_COUNTERS_NUM);
+ }
+ 
+-int nfsd_stat_init(void)
++void nfsd_proc_stat_init(struct net *net)
+ {
+-	int err;
+-
+-	err = nfsd_stat_counters_init();
+-	if (err)
+-		return err;
+-
+-	svc_proc_register(&init_net, &nfsd_svcstats, &nfsd_proc_ops);
+-
+-	return 0;
++	svc_proc_register(net, &nfsd_svcstats, &nfsd_proc_ops);
+ }
+ 
+-void nfsd_stat_shutdown(void)
++void nfsd_proc_stat_shutdown(struct net *net)
+ {
+-	nfsd_stat_counters_destroy();
+-	svc_proc_unregister(&init_net, "nfsd");
++	svc_proc_unregister(net, "nfsd");
+ }
 diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
-index 14f50c660b61..7ed4325ac691 100644
+index 7ed4325ac691..38811aa7d13e 100644
 --- a/fs/nfsd/stats.h
 +++ b/fs/nfsd/stats.h
-@@ -81,17 +81,17 @@ static inline void nfsd_stats_io_write_add(struct svc_export *exp, s64 amount)
+@@ -40,8 +40,10 @@ extern struct svc_stat		nfsd_svcstats;
+ int nfsd_percpu_counters_init(struct percpu_counter *counters, int num);
+ void nfsd_percpu_counters_reset(struct percpu_counter *counters, int num);
+ void nfsd_percpu_counters_destroy(struct percpu_counter *counters, int num);
+-int nfsd_stat_init(void);
+-void nfsd_stat_shutdown(void);
++int nfsd_stat_counters_init(void);
++void nfsd_stat_counters_destroy(void);
++void nfsd_proc_stat_init(struct net *net);
++void nfsd_proc_stat_shutdown(struct net *net);
  
- static inline void nfsd_stats_payload_misses_inc(struct nfsd_net *nn)
+ static inline void nfsd_stats_rc_hits_inc(void)
  {
--	percpu_counter_inc(&nn->counter[NFSD_NET_PAYLOAD_MISSES]);
-+	percpu_counter_inc(&nn->counter[NFSD_STATS_PAYLOAD_MISSES]);
- }
- 
- static inline void nfsd_stats_drc_mem_usage_add(struct nfsd_net *nn, s64 amount)
- {
--	percpu_counter_add(&nn->counter[NFSD_NET_DRC_MEM_USAGE], amount);
-+	percpu_counter_add(&nn->counter[NFSD_STATS_DRC_MEM_USAGE], amount);
- }
- 
- static inline void nfsd_stats_drc_mem_usage_sub(struct nfsd_net *nn, s64 amount)
- {
--	percpu_counter_sub(&nn->counter[NFSD_NET_DRC_MEM_USAGE], amount);
-+	percpu_counter_sub(&nn->counter[NFSD_STATS_DRC_MEM_USAGE], amount);
- }
- 
- #ifdef CONFIG_NFSD_V4
 -- 
 2.43.0
 
