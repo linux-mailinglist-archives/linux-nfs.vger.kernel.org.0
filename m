@@ -1,77 +1,77 @@
-Return-Path: <linux-nfs+bounces-1381-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1382-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D71AE83C5DA
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 15:59:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FB7F83C5F2
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 16:01:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 15BC81C213F6
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 14:59:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C474D28805A
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 15:01:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 059E56EB5C;
-	Thu, 25 Jan 2024 14:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF5B6EB61;
+	Thu, 25 Jan 2024 14:56:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LRDpdT4x"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EcuHMPJ5"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 848AB6E2C0
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:51:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 080D76E2DD
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706194295; cv=none; b=p14Izbj+JTMAW+t9kq0eLS8kCHrZN7TItwTWj9F4G1/LtrVL2te9iOTNldzCORFbUXJhICm6MpcS8KtFEe7sqCusB0GJIX0dnjCveuw7KgCnKn9w66KJpJ2esr+r2X20Mfqn7fw55ZP72c3aoFbFSOHFlUpfH6hGU56IQyib9g4=
+	t=1706194585; cv=none; b=jclhFG/yeabsetoWj/zccVXCVKIbIl5M/cqR6PKpjTZD/MYrHbI/+Y+cdJ6Inj9UKpv3lSPhcfLZihYLV9gQewGtWFWqlwSsy22xk/4SJWLDy41Wfs5Z3slG+3CqLlNCFraq+dQUJKA+bkI01Zaei+NdhVH+2FQ0j+0r/7Yx+dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706194295; c=relaxed/simple;
-	bh=6hD4mBU+VXDWboXSOnxVYGSm5c1UpXc1FGR23FXUUMU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sKCDglXxvlo/Z3OoGhjhPaDmCvym0XjYbk0WTBRNwsR2NitDEczGsEzxuqWvI1x5vm4CJtk1nXJfraFcTKgV5aePJEe7r8NnFBMUV13+AGSJr5QxA5KRrgWAnWo7outUKC9PwHVV01FyrBc4bTVkM0OJ3EZTISKkwmyvbTSL1BU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LRDpdT4x; arc=none smtp.client-ip=209.85.210.48
+	s=arc-20240116; t=1706194585; c=relaxed/simple;
+	bh=AENq0fPakHDiI8hwjSWAFG7ZMC5X2Z4Q/oGV9qdzrG0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iebgxn+AZPgTHfiUi8/4Qz5jNMPZ0ZXTwytXTu/xGSzUgviqjxBEjWPq7dGRmrkKF3fTUYb5IhBQVFWrpFDv5a2SeM9K/GMH0Fu3DpkyroQqQxy9piynUXMCziDJSakYx2EZvH8Zur4D3+LOuSKxMl5qFyG+OWbR+Nr3kTTToBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EcuHMPJ5; arc=none smtp.client-ip=209.85.210.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6ddf388ca74so3772648a34.0
-        for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 06:51:34 -0800 (PST)
+Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-6e0a64d94d1so4072264a34.3
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 06:56:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706194293; x=1706799093; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1706194582; x=1706799382; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C+HlZwykM2JXulPjDp5OrXj057mKh1WqUYo+g6qoFNM=;
-        b=LRDpdT4xSshjicUe1HkEq1TjC1wX1r/TgjRR/vMNfwdJ7GEwNjq6hSje9VugkE9Isr
-         eNNW2R8V3RpMQotfXOgPmSccdDyk4VzXQgqjFibJ2AVrtHb/c0cwxd/VEb+e/Bru7XU/
-         OX8ufXyfCKSEYHygyZKbuX/6UYuahrniSiXXSaqIcHpZe8ev2SJbx1cw9WS+6yOcNeLG
-         o6GdO+v/mTKgqE4vo6vuo4E0N3O0VU4+IoqXaN5dVvJkBls2VkVqeWWQykrw/DuBPK3x
-         hCaZ1E7RrEZLo5VfgrqdikgRnyyNWNZGE9fMDPH4V1AHmI3cFUAhTxlSLYvX8eew1PsZ
-         bgnA==
+        bh=iE9DXTHUEz5zuH3dINdN1yjRDPi4aINb/9J5vwW/zK0=;
+        b=EcuHMPJ5wgdxUkRGOpyRhdxM9QptB2+BhMvL3XDuj4SeicxyEMoJSq8PgCqmu2D43X
+         WBDazHWoCY2P2SCjI4+KzDqHjRKTz8sm7iIKdtaYnNb7HxoereCjWHojYjQSQpqxGYRt
+         ndLa8Guz0jZLVdv1+UKuOVimYuPeO4bifUffJqi4iMvjXx3CRLU7hy/2zeHOKrH5CBAz
+         mBgs9vkBw3aC9b3O+ncKhnGdz1JRJqW2MyHMMWGzHne2R03oGQP0BJSuXXkYJegBli/g
+         w2J5tXXTjccVGZtpfaxFB6haxF0quUGHEOrdJP65ZnwpRUVg8aV19ULd260LuJ0UiNxQ
+         iEGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706194293; x=1706799093;
+        d=1e100.net; s=20230601; t=1706194582; x=1706799382;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=C+HlZwykM2JXulPjDp5OrXj057mKh1WqUYo+g6qoFNM=;
-        b=YHt2FyaviQcmyBlprdq3pd3s809ZLVe7qX+hWnAYiwbQpHbI4/REm3fbRnDguf7r3J
-         1g3N17K3TjTvxjl+Ut5t8VyZFf7x9XmuNdz+tU8oB0vhEGqcetiU0d/MiTFIaVimM5cF
-         qVB6n9uPvkKV8mbpYY1O3janwh74zPx+XE5TLKCrENsXBoijvuv4l3sjoZOnOlKSIXRM
-         OR8WKMtqgG+Grzijgux/JljLerwLI6fTJJikiesAQSI6Kj2vlWMrdaL2znul9YGafSJl
-         uVmlwPmGuopx9khCmTUA0aaYr0x7olBO9sC0W39DqAVuuTelnPQGKuHQRbt8d/A8jju8
-         rJSg==
-X-Gm-Message-State: AOJu0Ywn/9fvzHUtl2xO9cmo63SaWns+/jjdNtdrFdEED+7t5GMVF6Ec
-	G2tXsa5tmE8j1zF8x+jdDMfmgn/j+bqsE12d/62YaOMmrLUcnhxo301NQH+t
-X-Google-Smtp-Source: AGHT+IEHVH9RGrqNk7iAGDpOy8bxqMb7MWYYdcrWW9/oJgdhBOCD45UX+Jto6FdImaW4EBzcErsBrA==
-X-Received: by 2002:a9d:7b4f:0:b0:6e0:cce9:833f with SMTP id f15-20020a9d7b4f000000b006e0cce9833fmr1049409oto.53.1706194293017;
-        Thu, 25 Jan 2024 06:51:33 -0800 (PST)
+        bh=iE9DXTHUEz5zuH3dINdN1yjRDPi4aINb/9J5vwW/zK0=;
+        b=XDMW+hG64fWAOu+BSeiYOwVFIoId4q+kdh+3IUvOZWGlwMt+eTxWwDwXco2BIB2Onn
+         3Y/KtBWaneRylIza7qVfZ4Stakmobznsx/t9+4RYT2RYSHv2e+tF+RQTSyWQI15ge8C6
+         Zowv3x0ynN5HShQRYaP8Qv1KMiLmjsna3khO/FomtUtdcE8jGBUaZIIG1iU3EU+hlvM6
+         7tdtcDNXeCws8zpHPRBcGgA8sT6/qe1Nk/YFIaQc6V0pZqbcwjRsex8Zwawv9KndLDjA
+         UerU1nB09Wq8RqyTtNR10EYVHTsVkWVLDo0sC6aR0oYl1EBCiXnvjzs/nAJwem5GESAF
+         eX6w==
+X-Gm-Message-State: AOJu0YxtZhRq4iKGoMULsHeD/uqDNP2d+GZRfQABBfNjOzXU1Y02KN8t
+	EerlIWQzZHl1H1CmR8+ttyDwSI80NV0dYMzN1vGJhSF6I6CZyIxsW9zWfT6f
+X-Google-Smtp-Source: AGHT+IECYO2+PdA0aEB8SWgFXI1ZpkRTNmz8ZrjSwULwUHl8ILeaVlLt/HTLp8izXWFanIDNEcUWqw==
+X-Received: by 2002:a05:6830:1282:b0:6e0:cc47:e695 with SMTP id z2-20020a056830128200b006e0cc47e695mr950666otp.14.1706194582128;
+        Thu, 25 Jan 2024 06:56:22 -0800 (PST)
 Received: from netapp-31.linux.fake (024-028-172-218.inf.spectrum.com. [24.28.172.218])
-        by smtp.gmail.com with ESMTPSA id b1-20020a9d5d01000000b006e0f30de288sm1419659oti.65.2024.01.25.06.51.32
+        by smtp.gmail.com with ESMTPSA id k12-20020a9d7dcc000000b006dc93918dd9sm3081571otn.26.2024.01.25.06.56.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 Jan 2024 06:51:32 -0800 (PST)
+        Thu, 25 Jan 2024 06:56:21 -0800 (PST)
 From: Jorge Mora <jmora1300@gmail.com>
 X-Google-Original-From: Jorge Mora <mora@netapp.com>
 To: linux-nfs@vger.kernel.org
 Cc: trond.myklebust@hammerspace.com,
 	anna@kernel.org
-Subject: [PATCH] NFSv4.2: fix listxattr maximum XDR buffer size
-Date: Thu, 25 Jan 2024 07:51:28 -0700
-Message-ID: <20240125145128.12945-1-mora@netapp.com>
+Subject: [PATCH] NFSv4.2: fix nfs4_listxattr kernel BUG at mm/usercopy.c:102
+Date: Thu, 25 Jan 2024 07:56:12 -0700
+Message-ID: <20240125145613.12995-1-mora@netapp.com>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
@@ -81,51 +81,90 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Switch order of operations to avoid creating a short XDR buffer:
-e.g., buflen = 12, old xdrlen = 12, new xdrlen = 20.
+A call to listxattr() with a buffer size = 0 returns the actual
+size of the buffer needed for a subsequent call. When size > 0,
+nfs4_listxattr() does not return an error because either
+generic_listxattr() or nfs4_listxattr_nfs4_label() consumes
+exactly all the bytes then size is 0 when calling
+nfs4_listxattr_nfs4_user() which then triggers the following
+kernel BUG:
 
-Having a short XDR buffer leads to lxa_maxcount be a few bytes
-less than what is needed to retrieve the whole list when using
-a buflen as returned by a call with size = 0:
-    buflen = listxattr(path, NULL, 0);
-    buf = malloc(buflen);
-    buflen = listxattr(path, buf, buflen);
+  [   99.403778] kernel BUG at mm/usercopy.c:102!
+  [   99.404063] Internal error: Oops - BUG: 00000000f2000800 [#1] SMP
+  [   99.408463] CPU: 0 PID: 3310 Comm: python3 Not tainted 6.6.0-61.fc40.aarch64 #1
+  [   99.415827] Call trace:
+  [   99.415985]  usercopy_abort+0x70/0xa0
+  [   99.416227]  __check_heap_object+0x134/0x158
+  [   99.416505]  check_heap_object+0x150/0x188
+  [   99.416696]  __check_object_size.part.0+0x78/0x168
+  [   99.416886]  __check_object_size+0x28/0x40
+  [   99.417078]  listxattr+0x8c/0x120
+  [   99.417252]  path_listxattr+0x78/0xe0
+  [   99.417476]  __arm64_sys_listxattr+0x28/0x40
+  [   99.417723]  invoke_syscall+0x78/0x100
+  [   99.417929]  el0_svc_common.constprop.0+0x48/0xf0
+  [   99.418186]  do_el0_svc+0x24/0x38
+  [   99.418376]  el0_svc+0x3c/0x110
+  [   99.418554]  el0t_64_sync_handler+0x120/0x130
+  [   99.418788]  el0t_64_sync+0x194/0x198
+  [   99.418994] Code: aa0003e3 d000a3e0 91310000 97f49bdb (d4210000)
 
-For a file with one attribute (name = '123456'), the first call
-with size = 0 will return buflen = 12 ('user.123456\x00').
-The second call with size = 12, sends LISTXATTRS with
-lxa_maxcount = 12 + 8 (cookie) + 4 (array count) = 24. The
-XDR buffer needs 8 (cookie) + 4 (array count) + 4 (name count)
-+ 6 (name len) + 2 (padding) + 4 (eof) = 28 which is 4 bytes
-shorter than the lxa_maxcount provided in the call.
+Issue is reproduced when generic_listxattr() returns 'system.nfs4_acl',
+thus calling lisxattr() with size = 16 will trigger the bug.
 
-Fixes: 04a5da690e8f ("NFSv4.2: define limits and sizes for user xattr handling")
+Add check on nfs4_listxattr() to return ERANGE error when it is
+called with size > 0 and the return value is greater than size.
+
+Fixes: 012a211abd5d ("NFSv4.2: hook in the user extended attribute handlers")
 Signed-off-by: Jorge Mora <mora@netapp.com>
 ---
- fs/nfs/nfs42.h | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/nfs/nfs4proc.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/nfs42.h b/fs/nfs/nfs42.h
-index b59876b01a1e..32ee9ad6a560 100644
---- a/fs/nfs/nfs42.h
-+++ b/fs/nfs/nfs42.h
-@@ -55,11 +55,14 @@ int nfs42_proc_removexattr(struct inode *inode, const char *name);
-  * They would be 7 bytes long in the eventual buffer ("user.x\0"), and
-  * 8 bytes long XDR-encoded.
-  *
-- * Include the trailing eof word as well.
-+ * Include the trailing eof word as well and make the result a multiple
-+ * of 4 bytes.
-  */
- static inline u32 nfs42_listxattr_xdrsize(u32 buflen)
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 7e3053339d6a..a4704bed5aec 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -10615,29 +10615,33 @@ const struct nfs4_minor_version_ops *nfs_v4_minor_ops[] = {
+ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
  {
--	return ((buflen / (XATTR_USER_PREFIX_LEN + 2)) * 8) + 4;
-+	u32 size = 8 * buflen / (XATTR_USER_PREFIX_LEN + 2) + 4;
-+
-+	return (size + 3) & ~3;
+ 	ssize_t error, error2, error3;
++	size_t left = size;
+ 
+-	error = generic_listxattr(dentry, list, size);
++	error = generic_listxattr(dentry, list, left);
+ 	if (error < 0)
+ 		return error;
+ 	if (list) {
+ 		list += error;
+-		size -= error;
++		left -= error;
+ 	}
+ 
+-	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, size);
++	error2 = nfs4_listxattr_nfs4_label(d_inode(dentry), list, left);
+ 	if (error2 < 0)
+ 		return error2;
+ 
+ 	if (list) {
+ 		list += error2;
+-		size -= error2;
++		left -= error2;
+ 	}
+ 
+-	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, size);
++	error3 = nfs4_listxattr_nfs4_user(d_inode(dentry), list, left);
+ 	if (error3 < 0)
+ 		return error3;
+ 
+-	return error + error2 + error3;
++	error += error2 + error3;
++	if (size && error > size)
++		return -ERANGE;
++	return error;
  }
- #endif /* CONFIG_NFS_V4_2 */
- #endif /* __LINUX_FS_NFS_NFS4_2_H */
+ 
+ static void nfs4_enable_swap(struct inode *inode)
 -- 
 2.43.0
 
