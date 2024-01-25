@@ -1,90 +1,127 @@
-Return-Path: <linux-nfs+bounces-1330-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1331-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73D1D83B714
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 03:21:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0829583B93F
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 06:54:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1360DB24027
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 02:21:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B07E21F24DC8
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 05:54:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18DD51877;
-	Thu, 25 Jan 2024 02:21:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B78F7489;
+	Thu, 25 Jan 2024 05:54:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHSaUEsr"
+	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="GeW1EcPe"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa11.hc1455-7.c3s2.iphmx.com (esa11.hc1455-7.c3s2.iphmx.com [207.54.90.137])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AC2517EF
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 02:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE4410A09
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 05:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.54.90.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706149310; cv=none; b=V5adeDj26cx/Gt6SE8nhpqc1zqzyxag3sevg3QPi9zhPMW9DubFlrlv4UaEC80LlARtIXhSQhGwIKhiZs7S36maH/gkNQv8RbP+i3JU7XEJ4eNXNqgMwKG30OkuFsAYfdUA3fnhUfH7veKiNETLQOwoKrojXOyHxvTxjQTEpek8=
+	t=1706162058; cv=none; b=aag+E06DMVBVtmBNE7Lg3vo5uH8ld2f7eOECFPsziNo8kCETAkgnlP24BhFOghK+kWou33ku9jGuKy4xVwWdEDTvpJkqkWFOxtSi7C92H0CL6obezWYUUyAdMqo3dqKqy49OkDPXbTPPqTq99FWHqfgLgd1NqwHCfnOU9/TsXgA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706149310; c=relaxed/simple;
-	bh=ityfanWNPcO70rmr4H5LfrOhGL0HxO5PL2LsrZlSSY0=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=MZfYmPe6mlTQO21vPe6HUmDFxmO9gUPcpIcS7FYyuBtF//ZQ1hvfoT7xMgDuQbhdVysjZLyV2gkHkJ3ysgfngt7rEBNMzCsOwoGJsL+gfHRtOLbRP3U/FTxLDazfBHNjqySP6grG7pmYoqYSNjKVusqXeK1Ame0G9TnYKtD7u7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHSaUEsr; arc=none smtp.client-ip=209.85.167.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-5100fd7f71dso1900751e87.1
-        for <linux-nfs@vger.kernel.org>; Wed, 24 Jan 2024 18:21:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706149306; x=1706754106; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hyOo6G+HTumzuejB+qI0HWbc7lU6RzV9sI/oYQZnhcE=;
-        b=EHSaUEsrIqMlqcDy6zoSqlZ9Xc8C+tP1VvJ8yhgJ1nwXVB4p9h2/zpoeEMJpnFJN34
-         uro4dtrSaMlwisy+CWMQMDJg2Z5BcRmznwS5cVoshYfEcVfyHoFbpN9tWgsx0+vQ8l40
-         +2nqoDv90cECiSFKnJwOisKSvlG0FLMXb/00hAV4WvkzjDV9dd4VSbfvLeoLUrhS/B/+
-         fiA4olR4KInTiqBvRSpDa4V9ngjMtjHXEcPj3iAS84RgrJk4IOGmsL2DGt26uq4ulL3D
-         LneJtq5v5AZ5hnPygyrh/4y+2mpQGdH52RhWFkeqFpYIttWIRjoAvKmR2GhYoKrDoBA9
-         N88g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706149306; x=1706754106;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hyOo6G+HTumzuejB+qI0HWbc7lU6RzV9sI/oYQZnhcE=;
-        b=hh1rvoMefw6V56Zrydo5FeXIYny2+DNU8ybIDgRhwjhdbSv0ELyAlh/O1sh5Xp+yS7
-         T1h9dutfois4FL4foA98Ta78ggggCLggfNTp1TKWU3wjYPSo/oTGc/UGvxn1dXVBqSn2
-         cOQZFE61+XOCjmS+RYrgdpT264koinFCOKB8BQb2Zf7NiTOWgB90zQ1/bcKTCjYsLMqt
-         IvPsYLaoi4mKSgdVi6xfHecaeRoWKATlBvDsLPpHZwdYI45XefbbZlI8V4VxrPQHRq10
-         r+724BdxvVKPF0Ms5FPkSibKe5cUy8O1MwenatMHIZM1yJz4soAdjr/+p35grwB645nI
-         /pxA==
-X-Gm-Message-State: AOJu0YysAIBzIfnNZIHp374zjYn/WaVqKODEoEUAclLaH3TAnGEvsSc/
-	NY/am3vf6hClTns0rslk8vtXjipj5NT8hGuAjAPFEFTOqHHgUGAno18jGddwVf88SJzRtCqm/ei
-	JFzzXmgZkj4CyiVN9j9O+kDtm5ebUlKHspZc=
-X-Google-Smtp-Source: AGHT+IFD0+BXDkRjQIs/yk/FYkirTFoVfYjlFv9R69EHa05Yso4BWa9FKYeAsl39DezC07UkgbHAhf30ZcrZHu6ki5w=
-X-Received: by 2002:ac2:4a69:0:b0:510:141b:4f96 with SMTP id
- q9-20020ac24a69000000b00510141b4f96mr67386lfp.86.1706149305877; Wed, 24 Jan
- 2024 18:21:45 -0800 (PST)
+	s=arc-20240116; t=1706162058; c=relaxed/simple;
+	bh=e70DRkG8/1kKVFHks7oN8zjkvEr/0a9tCRNy0qwtjIA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pDKXaaAp3qKTJsWao8WJ1kZ0nIaDgOBLAyhhGT10Tt5C92AZJMlewsQAIkLJqSeB99TBhH7evfCCOLgAcSLYxL1LUnB0ZjHSimF+D48WbNYUc2jT1nhVhIfiuQLof5cqGQnzWVKwHky5XagasU4UpRbEZwKOmdwRAEMTw9b8Tgg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=GeW1EcPe; arc=none smtp.client-ip=207.54.90.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fujitsu.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
+  t=1706162055; x=1737698055;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=e70DRkG8/1kKVFHks7oN8zjkvEr/0a9tCRNy0qwtjIA=;
+  b=GeW1EcPeqnCG2krp4gdwWpxXE163xpq99tl56AQsRsDph4eTfQ4hyd6/
+   YaCVs3fOzGwh2JhyTHiRAlvGDKvSgClXMaFnpy+RjSf+z/4LC1w2Ht6RB
+   Q5MCgbUTcO4YAHlO9Eevtex/AB1EoJhsCQNxJFWoUjQHgzn8uTFkweIjk
+   dmnrHoawvXnROx9Jol5Or5EbQKW4xxIaPLc/sqpJbdECQXOiwTOp8tKuW
+   US/rXPmqwDnOjCK2X0ODpOiY9NH6+n+XzwQQToINr+DGhGWIrxeRQJKh5
+   t3vUbOQL4k/UBuJA/TAXWD6nW7al4oRcfMrweZV1EPvSxtq7jy/eWpj7F
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="126615742"
+X-IronPort-AV: E=Sophos;i="6.05,216,1701097200"; 
+   d="scan'208";a="126615742"
+Received: from unknown (HELO oym-r2.gw.nic.fujitsu.com) ([210.162.30.90])
+  by esa11.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2024 14:53:03 +0900
+Received: from oym-m4.gw.nic.fujitsu.com (oym-nat-oym-m4.gw.nic.fujitsu.com [192.168.87.61])
+	by oym-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id A096EDC146
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:53:01 +0900 (JST)
+Received: from kws-ab4.gw.nic.fujitsu.com (kws-ab4.gw.nic.fujitsu.com [192.51.206.22])
+	by oym-m4.gw.nic.fujitsu.com (Postfix) with ESMTP id D5FC9D5D6D
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:53:00 +0900 (JST)
+Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
+	by kws-ab4.gw.nic.fujitsu.com (Postfix) with ESMTP id 63BB1E5E65
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 14:53:00 +0900 (JST)
+Received: from G08FNSTD200033.g08.fujitsu.local (unknown [10.167.225.189])
+	by edo.cn.fujitsu.com (Postfix) with ESMTP id AC9C91A006A;
+	Thu, 25 Jan 2024 13:52:59 +0800 (CST)
+From: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+To: Trond Myklebust <trond.myklebust@hammerspace.com>,
+	Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Display the "fsc=" mount option if it is set
+Date: Thu, 25 Jan 2024 13:52:42 +0800
+Message-Id: <20240125055242.691-1-chenhx.fnst@fujitsu.com>
+X-Mailer: git-send-email 2.37.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dan Shelton <dan.f.shelton@gmail.com>
-Date: Thu, 25 Jan 2024 03:21:19 +0100
-Message-ID: <CAAvCNcBMY1mrgEgy4APSiFXDP5u=64YXNjiHHjh8RscPsB3row@mail.gmail.com>
-Subject: Implement NFSv4 TLS support with /usr/bin/openssl s_client?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-TM-AS-Product-Ver: IMSS-9.1.0.1417-9.0.0.1002-28140.005
+X-TM-AS-User-Approved-Sender: Yes
+X-TMASE-Version: IMSS-9.1.0.1417-9.0.1002-28140.005
+X-TMASE-Result: 10--0.447700-10.000000
+X-TMASE-MatchedRID: Ja7Gtx6NRnyHfxuc8sSk8fCCu8kVj0TRwTlc9CcHMZerwqxtE531VNnf
+	JrUSEbFDEdVo3LYPj3WAMuqetGVetk6N1CbkSyKE3QfwsVk0UbvqwGfCk7KUszS+MhrWpApFrwN
+	WVJP/b0PESXnMROiZ8gQbatn8g2Fejc+ZRokDJrYXOyMiobl16V8UsGCr+l4f/EDVMNax8XmS67
+	2T/cgWUiHJp2UYVccqxOB8J0pRLhyJxKSZiwBX6QtRTXOqKmFVftwZ3X11IV0=
+X-TMASE-SNAP-Result: 1.821001.0001-0-1-22:0,33:0,34:0-0
 
-Hello!
+With this patch, mount command will show fsc=xxx if set:
 
-Is it possible for a NFSv4 client to implement TLS support via
-/usr/bin/openssl s_client?
+If -o fsc=6666
+clientaddr=192.168.122.208,fsc=6666,local_lock=none
 
-/usr/bin/openssl s_client would do the connection, and a normal
-libtirpc client would connect to the other side of s_client.
+If only -o fsc
+clientaddr=192.168.122.208,fsc,local_lock=none
 
-Does that work?
+Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
+---
+ fs/nfs/super.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Dan
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 075b31c93f87..dc03f98f7616 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -516,8 +516,16 @@ static void nfs_show_mount_options(struct seq_file *m, struct nfs_server *nfss,
+ 	else
+ 		nfs_show_nfsv4_options(m, nfss, showdefaults);
+ 
+-	if (nfss->options & NFS_OPTION_FSCACHE)
++	if (nfss->options & NFS_OPTION_FSCACHE) {
++#ifdef CONFIG_NFS_FSCACHE
++		if (nfss->fscache_uniq)
++			seq_printf(m, ",fsc=%s", nfss->fscache_uniq);
++		else
++			seq_puts(m, ",fsc");
++#else
+ 		seq_puts(m, ",fsc");
++#endif
++	}
+ 
+ 	if (nfss->options & NFS_OPTION_MIGRATION)
+ 		seq_puts(m, ",migration");
 -- 
-Dan Shelton - Cluster Specialist Win/Lin/Bsd
+2.39.1
+
 
