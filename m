@@ -1,274 +1,156 @@
-Return-Path: <linux-nfs+bounces-1437-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1438-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD51583CE31
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 22:12:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F38083CEDE
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 22:49:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2DCC1C23049
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 21:12:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3768E1F29371
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 21:49:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F0E8129A9E;
-	Thu, 25 Jan 2024 21:12:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 871F413A26E;
+	Thu, 25 Jan 2024 21:49:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dlMOSpC7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bfFi7BDh";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dlMOSpC7";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bfFi7BDh"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WRVGi6HL"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18EB05B210
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 21:12:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0DB94A1D
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 21:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706217127; cv=none; b=SVh3FHuwRKZ9I2UfdfqlBm+iHGJvny7pxAAcekI+acXZwJEb5cACkjJNJSIeu0KjT4N/tfPKwbFt7Wm6ZKnQkuZ+obf53H0/wNUtGfi4BJl6tGGvJwxFt2ZkQgrJYjW29aQIMUdCWVZO4ElSD0hGvYSimZayjU9qwLYMxIfTfPk=
+	t=1706219364; cv=none; b=XdFZq5NJNwzYcNIVG/eTOe1AZx2xP4THzG4kSfX1ggqTXqyKvGRpw+zQU69dxHU6g7CNfMBEd2BRsMGvLrDPaQbf45g0UsszVQWcZ3OrfqtfTiG+1Znd2jGtD0Q1TPsSz/EvaptBW6ESDWkF+hyOTjEEe79FEWZt3o5/oCcE+Kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706217127; c=relaxed/simple;
-	bh=1oaq3ENAD4kjuIgS5g8DRWLEDJGNMw13FJkd0Ty4x7s=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=tnbfSDvHEQfysa2YdoZSUUqy8vu59NzEcAf63xjH7SRc36V6Hmha3/rWpN89XH773LHJ3AOlvKSLd/HUsa/aAOMvHU5unG8bwDf78vU7BuHjAxMcq4rAIekRfNAdQ0GmjrLmnAKiUykkPd35cE718u9hlxRBze09Nmq+kj1hBZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dlMOSpC7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bfFi7BDh; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dlMOSpC7; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bfFi7BDh; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
+	s=arc-20240116; t=1706219364; c=relaxed/simple;
+	bh=yb1efWTZSkKgXiF3nObnBbnY7OVpP5beNK+ePUDMNu8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=l6IGwYrjS1z9XWxYeBLhihOeCpziPx/CNAxjNTPOgy+ULzLcqWIfOSPdmEstXG4LLBsrDjGZ+nAStzqG5Y7mb3TIU4RomyZ5aRLvOLHmIwQQtySLUphv2iu7BkwRpm/qMSWi/dFMEQwkwF+BL07zcPOD1F/OICjZpSVnb7EW59g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WRVGi6HL; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706219361;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=C3DUgTcRmzpr0Uq5Ghc3n882LJ7/Kd41FL//RIjWHsQ=;
+	b=WRVGi6HLquwTQkbHYqqjhb1Ij5hiS+k2mWmbH5OkGPAws4yBCSIRnOHBy/2QdsrmXIw1Xo
+	Q7uBt+8CFVL64mi/8/TqGmEYnVDlQ1D3iSs/GJxdtjYfBINHw6fDtRS9PQK3u3yZqOBylB
+	mya6dNk08yLhW7CTyidSpq9lCul4J/U=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-157-tGyKSP_xMp2ik62aklSs4g-1; Thu, 25 Jan 2024 16:49:19 -0500
+X-MC-Unique: tGyKSP_xMp2ik62aklSs4g-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 283BA1FB3C;
-	Thu, 25 Jan 2024 21:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706217123; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ev2gS+opCR8przuk4xW0mS9quwNEgVF7Eat5JxPL9OA=;
-	b=dlMOSpC79gYdWM+2Y33320tcg3x0PKO7iXJYlVfgQya62f/Odi9CyHdM6kiDiFdjQRj6tr
-	ywlHPF5uR8/J8VL2VeF7DPy5/5u5ztauRFYM+8wVSUjPnNgq4tyllfMuIZ8us+Kg5KbTH6
-	wx+bUKC0eOgS4kdYZu6kAymTth/by4w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706217123;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ev2gS+opCR8przuk4xW0mS9quwNEgVF7Eat5JxPL9OA=;
-	b=bfFi7BDhTYxEN7ZQiz3VFcIsZMUCaVT0Uq0KkTXcFRFfCXnUnTUVQl+KfzX/MW5YoJkSil
-	9D5KEiIs66CWRnBQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706217123; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ev2gS+opCR8przuk4xW0mS9quwNEgVF7Eat5JxPL9OA=;
-	b=dlMOSpC79gYdWM+2Y33320tcg3x0PKO7iXJYlVfgQya62f/Odi9CyHdM6kiDiFdjQRj6tr
-	ywlHPF5uR8/J8VL2VeF7DPy5/5u5ztauRFYM+8wVSUjPnNgq4tyllfMuIZ8us+Kg5KbTH6
-	wx+bUKC0eOgS4kdYZu6kAymTth/by4w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706217123;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ev2gS+opCR8przuk4xW0mS9quwNEgVF7Eat5JxPL9OA=;
-	b=bfFi7BDhTYxEN7ZQiz3VFcIsZMUCaVT0Uq0KkTXcFRFfCXnUnTUVQl+KfzX/MW5YoJkSil
-	9D5KEiIs66CWRnBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C09AA134C3;
-	Thu, 25 Jan 2024 21:12:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([10.150.64.162])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id K6oGHaDOsmUaSwAAD6G6ig
-	(envelope-from <neilb@suse.de>); Thu, 25 Jan 2024 21:12:00 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1C4B51064FAB;
+	Thu, 25 Jan 2024 21:49:19 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-9.rdu2.redhat.com [10.22.0.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A0499200A08E;
+	Thu, 25 Jan 2024 21:49:18 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Chuck Lever <cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [PATCH RFC 07/13] NFSD: Add callback operation lifetime trace
+ points
+Date: Thu, 25 Jan 2024 16:49:17 -0500
+Message-ID: <86789B68-0271-4AEB-9941-CFDB956E84EE@redhat.com>
+In-Reply-To: <170620016455.2833.5426224225062159088.stgit@manet.1015granger.net>
+References: <170619984210.2833.7173004255003914651.stgit@manet.1015granger.net>
+ <170620016455.2833.5426224225062159088.stgit@manet.1015granger.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neilb@suse.de>
-To: "Jeff Layton" <jlayton@kernel.org>
-Cc: "Chuck Lever" <chuck.lever@oracle.com>,
- "Lorenzo Bianconi" <lorenzo.bianconi@redhat.com>,
- "Dai Ngo" <dai.ngo@oracle.com>,
- "olga.kornievskaia" <olga.kornievskaia@gmail.com>,
- "Tom Talpey" <tom@talpey.com>, "linux-nfs" <linux-nfs@vger.kernel.org>
-Subject: Re: Should we establish a new nfsdctl userland program?
-In-reply-to: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>
-References: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>
-Date: Fri, 26 Jan 2024 08:11:57 +1100
-Message-id: <170621711779.21664.12957469850987797917@noble.neil.brown.name>
-Authentication-Results: smtp-out2.suse.de;
-	none
-X-Spam-Level: 
-X-Spam-Score: 0.58
-X-Spamd-Result: default: False [0.58 / 50.00];
-	 ARC_NA(0.00)[];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 BAYES_HAM(-3.00)[100.00%];
-	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
-	 MIME_GOOD(-0.10)[text/plain];
-	 NEURAL_HAM_LONG(-1.00)[-1.000];
-	 NEURAL_SPAM_SHORT(2.18)[0.727];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 TO_DN_ALL(0.00)[];
-	 RCPT_COUNT_SEVEN(0.00)[7];
-	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 SUBJECT_ENDS_QUESTION(1.00)[];
-	 FREEMAIL_CC(0.00)[oracle.com,redhat.com,gmail.com,talpey.com,vger.kernel.org];
-	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[]
-X-Spam-Flag: NO
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.4
 
-On Fri, 26 Jan 2024, Jeff Layton wrote:
-> The existing rpc.nfsd program was designed during a different time, when
-> we just didn't require that much control over how it behaved. It's
-> klunky to work with.
+On 25 Jan 2024, at 11:29, Chuck Lever wrote:
 
-How is it clunky?
+> From: Chuck Lever <chuck.lever@oracle.com>
+>
+> Help observe the flow of callback operations.
+>
+> bc_shutdown() records exactly when the backchannel RPC client is
+> destroyed and cl_cb_client is replaced with NULL.
+>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfs4callback.c   |    7 +++++++
+>  fs/nfsd/trace.h          |   42 ++++++++++++++++++++++++++++++++++++++=
+++++
+>  include/trace/misc/nfs.h |   34 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 83 insertions(+)
+>
+> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> index 1c85426830b1..4d5a6370b92c 100644
+> --- a/fs/nfsd/nfs4callback.c
+> +++ b/fs/nfsd/nfs4callback.c
+> @@ -887,6 +887,7 @@ static struct workqueue_struct *callback_wq;
+>
+>  static bool nfsd4_queue_cb(struct nfsd4_callback *cb)
+>  {
+> +	trace_nfsd_cb_queue(cb->cb_clp, cb);
+>  	return queue_work(callback_wq, &cb->cb_work);
+>  }
+>
+> @@ -1106,6 +1107,7 @@ static void nfsd41_destroy_cb(struct nfsd4_callba=
+ck *cb)
+>  {
+>  	struct nfs4_client *clp =3D cb->cb_clp;
+>
+> +	trace_nfsd_cb_destroy(clp, cb);
+>  	nfsd41_cb_release_slot(cb);
+>  	if (cb->cb_ops && cb->cb_ops->release)
+>  		cb->cb_ops->release(cb);
+> @@ -1220,6 +1222,7 @@ static bool nfsd4_cb_sequence_done(struct rpc_tas=
+k *task, struct nfsd4_callback
+>  	goto out;
+>  need_restart:
+>  	if (!test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags)) {
+> +		trace_nfsd_cb_restart(clp, cb);
+>  		task->tk_status =3D 0;
+>  		cb->cb_need_restart =3D true;
 
-  rpc.nfsd
+I think you want to call the tracepoint /after/ setting cb_need_restart h=
+ere..
 
-that starts the service.
+>  	}
+> @@ -1333,11 +1336,14 @@ static void nfsd4_process_cb_update(struct nfsd=
+4_callback *cb)
+>  	struct nfsd4_conn *c;
+>  	int err;
+>
+> +	trace_nfsd_cb_bc_update(clp, cb);
+> +
+>  	/*
+>  	 * This is either an update, or the client dying; in either case,
+>  	 * kill the old client:
+>  	 */
+>  	if (clp->cl_cb_client) {
+> +		trace_nfsd_cb_bc_shutdown(clp, cb);
+>  		rpc_shutdown_client(clp->cl_cb_client);
+>  		clp->cl_cb_client =3D NULL;
+>  		put_cred(clp->cl_cb_cred);
+> @@ -1349,6 +1355,7 @@ static void nfsd4_process_cb_update(struct nfsd4_=
+callback *cb)
+>  	}
+>  	if (test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags))
+>  		return;
+> +
 
-  rpc.nfsd 0
+I'm in favor of this whitespace change, but did you mean to include it?
 
-that stops the service.
+Ben
 
-Ok, not completely elegant.  Maybe
-
-  nfsdctl start
-  nfsdctl stop
-
-would be better.
-
->=20
-> In a response to Chuck's recent RFC patch to add knob to disable
-> READ_PLUS calls, I mentioned that it might be a good time to make a
-> clean break from the past and start a new program for controlling nfsd.
->=20
-> Here's what I'm thinking:
->=20
-> Let's build a swiss-army-knife kind of interface like git or virsh:
->=20
-> # nfsdctl=C2=A0stats			<--- fetch the new stats that got merged
-> # nfsdctl add_listener		<--- add a new listen socket, by address or hostname
-> # nfsdctl set v3 on		<--- enable NFSv3
-> # nfsdctl set splice_read off	<--- disable splice reads (per Chuck's recent=
- patch)
-> # nfsdctl set threads 128	<--- spin up the threads
-
-Sure the "git" style would use
-
-   nfsdctl version 3 on
-   nfsdctl threads 128
-
-Apart from "stats", "start", "stop", I suspect that we developers would
-be the only people to actually use this functionality.  Until now,=20
-  echo > /proc/sys/nfsd/foo
-has been enough for most tweeking.  Having a proper tool would likely
-lower the barrier to entry, which can only be a good thing.
-
->=20
-> We could start with just the bare minimum for now (the stats interface),
-> and then expand on it. Once we're at feature parity with rpc.nfsd, we'd
-> want to have systemd preferentially use nfsdctl instead of rpc.nfsd to
-> start and stop the server. systemd will also need to fall back to using
-> rpc.nfsd if nfsdctl or the netlink program isn't present.
-
-systemd doesn't need a fallback.  Systemd always activates
-nfs-server.service.  We just need to make sure the installed
-nfs-server.service matches the installed tools, and as they are
-distributed as parts of the same package, that should be trivial.
-
->=20
-> Note that I think this program will have to be a compiled binary vs. a
-> python script or the like, given that it'll be involved in system
-> startup.
-
-Agreed.
-
->=20
-> It turns out that Lorenzo already has a C program that has a lot of the
-> plumbing we'd need:
->=20
->     https://github.com/LorenzoBianconi/nfsd-netlink
->=20
-> I think it might be good to clean up the interface a bit, build a
-> manpage and merge that into nfs-utils.
->=20
-> Questions:
->=20
-> 1/ one big binary, or smaller nfsdctl-* programs (like git uses)?
-
-/usr/lib/git-core (on my laptop) has 168 entries.  Only 29 of them are
-NOT symlinks to 'git'.
-
-While I do like the "tool command args" interface, and I like the option
-of adding commands by simply creating drop-in tools, I think that core
-functionality should go in the core tool.
-So: "one big binary" please - with call-out functionality if anyone can
-be bothered implementing it.
-
->=20
-> 2/ should it automagically read in nfs.conf? (I tend to think it should,
-> but we might want an option to disable that)
-
-Absolutely definitely.  I'm not convinced we need an option to disable
-config, but allowing options to over-ride specific configs is sensible.
-
-Most uses of this tool would come from nfs-server.service which would
-presumably call
-   nfsdctl start
-which would set everything based on the nfs.conf and thus start the
-server.  And
-   nfsdctl stop
-which would set the number of threads to zero.
-
->=20
-> 3/ should "set threads" activate the server, or just set a count, and
-> then we do a separate activation step to start it? If we want that, then
-> we may want to twiddle the proposed netlink interface a bit.
-
-It might be sensible to have "set max-threads" which doesn't actually
-start the service.
-I would really REALLY like a dynamic thread pool.  It would start at 1
-(or maybe 2) and grow on demand up to the max, and idle threads
-(inactive for 30 seconds?) would exit.  We could then default the max to
-some function of memory size and people could mostly ignore the
-num-threads setting.
-
-I don't have patches today, but if we are re-doing the interfaces I
-would like us to plan the interfaces to support a pool rather than a
-fixed number.
-
->=20
-> I'm sure other questions will arise as we embark on this too.
->=20
-> Thoughts? Anyone have objections to this idea?
-
-I think this is an excellent question to ask.  As you say it is a long
-time since rpc.nfsd was created, and it has grown incrementally rather
-then being clearly designed.
-
-> --=20
-> Jeff Layton <jlayton@kernel.org>
->=20
-
-Thanks,
-NeilBrown
 
