@@ -1,54 +1,54 @@
-Return-Path: <linux-nfs+bounces-1404-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1405-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D42BB83C99A
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 18:15:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B93683C9B5
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 18:17:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 22F95B2348F
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 17:15:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9369297B0F
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 17:17:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E33F130E53;
-	Thu, 25 Jan 2024 17:08:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38405132C04;
+	Thu, 25 Jan 2024 17:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggDvZbHB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkhhE8Hh"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7941D134732
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 17:08:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122B8131E49
+	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 17:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706202498; cv=none; b=BkpZmLzWkvjMJVBsJiYzftLbC7naCXaIqLHjJujM3tDEOV1plSoRoZlSc3eNFkjvSZLNRr2gMniIhpffVbJfn7L2+kqXK5SOzEzkXMfUyxOiGa4XIlk/eRCtH9TqXXdJbS0aTKj28KoqsxxS3ETCDh83oH7ZYakRbEarB87ytXA=
+	t=1706202908; cv=none; b=X9wL/3A5fzOjKA2nLU8bhisKctamJq78YdPf7YPKoaZjJEgT6HXnqOz5MZLcC311t0AcZSxqYI1xT5JSMZGQxAdeNTc0u+DpCJ7PUUYlCmaaPcpQUv5rDW2Pd6qv443neffr6g3JThulSszjJ+qguE3fb4JXkk30chBg2p7IdaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706202498; c=relaxed/simple;
-	bh=2xkobHpHt3i2lmO7XxXIOD60DKpgFVw3rJD1zhKBgZY=;
+	s=arc-20240116; t=1706202908; c=relaxed/simple;
+	bh=XxTATLQn4QlUN4O4oTlbmOQSOg1tIgtJryRYe++hWAI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=GmlNa4jxBvzfUf8gkEEBi4+Xw9B6uUgPGd75nqlQ1+Dske37cflWXOc+UgEgp+mRsekhPgQRNsdDz0CvlNTBcr9qKCnO0jkPsp125hxAI9ivSMpB1Siv6gzfM0tY7yOCORl3PmMkYk0W1G8g56uzXxKD5zagRGJ2cGlv6HCb6gQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggDvZbHB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D128C433F1;
-	Thu, 25 Jan 2024 17:08:17 +0000 (UTC)
+	 Content-Type:MIME-Version; b=OkHQbo4XN9i4xmgTZH4pTT/iFs+Rf6EgPujcvmU5zi54+vljpRXFQI4yBkUD6WFvT2bhRHQekmH1CYQVp44km2UJVcb+D3qLXRlvXGKw1cAminVP8/4Ado910V2hgdxtoAS2iZ62Xk+2CaIJjxY/9gB7jvaRflB0aaKGcSVM6GI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkhhE8Hh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DAC7C433F1;
+	Thu, 25 Jan 2024 17:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706202498;
-	bh=2xkobHpHt3i2lmO7XxXIOD60DKpgFVw3rJD1zhKBgZY=;
+	s=k20201202; t=1706202907;
+	bh=XxTATLQn4QlUN4O4oTlbmOQSOg1tIgtJryRYe++hWAI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=ggDvZbHBHjSQgZ1+rPOFK9+dTSgRA2xgnKK8SLS8pmUX2MXiECIZ7i8L8cEtMcyd3
-	 YQWDDyYH1Ne49LBxCYp4QenycDeZ7bY7N2a4p66ZJyIf+mkchJCu8QXQtreXAxGrdA
-	 O+MBWJIDp/S6Jo7gPfnXWD1BNnfS1gmlwDsWdx2H0ODS2xbAVseQVn5CQRyx19Aq6C
-	 ysn62rNH1qNsIj/W1QNBs8hvZnYnQrRgGsxfBUL/U+8YCkW26Mv4KwdEOpT9pQz4xa
-	 EsxNUl/N9EbSdMGPrLlIgKGu6v7svnQ56meyJqjHOjHuSVVZa+oFQRjv33O5YiH8MV
-	 N4mtxuOx8j5zw==
-Message-ID: <0789a389a803efe921cb1f02556cfd6f48cc09a5.camel@kernel.org>
-Subject: Re: [PATCH] NFSD: change LISTXATTRS cookie encoding to big-endian
+	b=BkhhE8HhTwLX2QW+9XzqpUveY3ve7oqayIzrEBau8Sf4gRmBRpkDpPQ5b1B1nIeVX
+	 CbOhvU2eIC54APmD8TagH2AgtGqYScqY8sVxjkhAsr6NJ13ENExgLreMxevYPuGc5G
+	 m4EguCjBxovmkd/DNqqefLhWr+XoturcDldMFhz3yF3RX8d5sZiPBFOM+mJrIrP3qd
+	 +kjkhnUZq7c6coM4g8xxvPZ6iM3aIcb3GcSX0X3xA/gHLEqAUjzdBFOT10WBZEPpP0
+	 OmVkHX3WwCOu8gdAno3f+COhbHNTGE9nFUpqqeePg56ldt3+Tq9nfQmMww9GYEiIYm
+	 6JV9W9ByCil7A==
+Message-ID: <64e07ed57d3b53e35fa6baae57bfec18808c2fae.camel@kernel.org>
+Subject: Re: [PATCH] NFSD: fix nfsd4_listxattr_validate_cookie
 From: Jeff Layton <jlayton@kernel.org>
 To: Jorge Mora <jmora1300@gmail.com>, linux-nfs@vger.kernel.org
 Cc: chuck.lever@oracle.com
-Date: Thu, 25 Jan 2024 12:08:16 -0500
-In-Reply-To: <20240125144612.12778-1-mora@netapp.com>
-References: <20240125144612.12778-1-mora@netapp.com>
+Date: Thu, 25 Jan 2024 12:15:06 -0500
+In-Reply-To: <20240125144654.12794-1-mora@netapp.com>
+References: <20240125144654.12794-1-mora@netapp.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -69,40 +69,51 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Thu, 2024-01-25 at 07:46 -0700, Jorge Mora wrote:
-> Function nfsd4_listxattr_validate_cookie() expects the cookie
-> as an offset to the list thus it needs to be encoded in big-endian.
+> If LISTXATTRS is sent with a correct cookie but a small maxcount,
+> this could lead function nfsd4_listxattr_validate_cookie to
+> return NFS4ERR_BAD_COOKIE. If maxcount =3D 20, then second check
+> on function gives RHS =3D 3 thus any cookie larger than 3 returns
+> NFS4ERR_BAD_COOKIE.
+>=20
+> There is no need to validate the cookie on the return XDR buffer
+> since attribute referenced by cookie will be the first in the
+> return buffer.
 >=20
 > Fixes: 23e50fe3a5e6 ("nfsd: implement the xattr functions and en/decode l=
 ogic")
 > Signed-off-by: Jorge Mora <mora@netapp.com>
 > ---
->  fs/nfsd/nfs4xdr.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  fs/nfsd/nfs4xdr.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 >=20
 > diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 26993bf368fc..913d566519bf 100644
+> index 913d566519bf..7f957061c4d5 100644
 > --- a/fs/nfsd/nfs4xdr.c
 > +++ b/fs/nfsd/nfs4xdr.c
-> @@ -5142,6 +5142,7 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *r=
-esp, __be32 nfserr,
->  	u64 cookie;
->  	char *sp;
->  	__be32 status, tmp;
-> +	__be64 wire_cookie;
->  	__be32 *p;
->  	u32 nuser;
+> @@ -5116,16 +5116,11 @@ nfsd4_listxattr_validate_cookie(struct nfsd4_list=
+xattrs *listxattrs,
 > =20
-> @@ -5235,7 +5236,8 @@ nfsd4_encode_listxattrs(struct nfsd4_compoundres *r=
-esp, __be32 nfserr,
+>  	/*
+>  	 * If the cookie is larger than the maximum number we can fit
+> -	 * in either the buffer we just got back from vfs_listxattr, or,
+> -	 * XDR-encoded, in the return buffer, it's invalid.
+> +	 * in the buffer we just got back from vfs_listxattr, it's invalid.
+>  	 */
+>  	if (cookie > (listxattrs->lsxa_len) / (XATTR_USER_PREFIX_LEN + 2))
+>  		return nfserr_badcookie;
 > =20
->  	cookie =3D offset + count;
-> =20
-> -	write_bytes_to_xdr_buf(xdr->buf, cookie_offset, &cookie, 8);
-> +	wire_cookie =3D cpu_to_be64(cookie);
-> +	write_bytes_to_xdr_buf(xdr->buf, cookie_offset, &wire_cookie, 8);
->  	tmp =3D cpu_to_be32(count);
->  	write_bytes_to_xdr_buf(xdr->buf, count_offset, &tmp, 4);
->  out:
+> -	if (cookie > (listxattrs->lsxa_maxcount /
+> -		      (XDR_QUADLEN(XATTR_USER_PREFIX_LEN + 2) + 4)))
+> -		return nfserr_badcookie;
+> -
+>  	*offsetp =3D (u32)cookie;
+>  	return 0;
+>  }
+
+
+The cookie is generated by the server, and the client generates the
+maxcount value. They don't really have anything to do with one another,
+so yeah, I agree that this check is nonsensical.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
