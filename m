@@ -1,50 +1,49 @@
-Return-Path: <linux-nfs+bounces-1359-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1364-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC67883C075
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 12:13:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2675A83C0BC
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 12:24:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4DEBCB34477
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 10:58:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A913DB213AE
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 11:00:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22AB062A03;
-	Thu, 25 Jan 2024 10:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B3D84439A;
+	Thu, 25 Jan 2024 10:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RxBLpMui"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVJsmdYI"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF73F225A9;
-	Thu, 25 Jan 2024 10:44:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F7E1657CC;
+	Thu, 25 Jan 2024 10:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706179495; cv=none; b=YO9rA1BHVvvzMxWJi05FyY/htwfPg5AAdhGYR4NuH7B2uuw6ijDskk0LOwR3QeMBtxGO+8btITiFndbEH0Q/57NvnqxmmVEmfQmv3mVt6Vw04ar4LDMlfTy1EpCOm8CJq4PJrnYeOXN+9OyhcwDJwmnemv0uVQaR6hkisR3JrXI=
+	t=1706179514; cv=none; b=NkCSIvHxfKiYv8mAthQ7TvSLtGgWKpLq9BMiZ+kKsLBGTEY57em0iNaHPWO0O3L+j2ujsiN7JRSAyPCBNInSyVbLsKp9QEaR5Kh70Xc+Bm4KTvKzchSj8UwI0K5m+AmztBef1Q80qA/XVqpuqeghVaDUEgILBGmSPRqfwEQyDrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706179495; c=relaxed/simple;
-	bh=lUZh0KMHY+fHzKXHuqwOR7byHtaors/wicH3O0CwYoM=;
+	s=arc-20240116; t=1706179514; c=relaxed/simple;
+	bh=FO7gE+5QMwnUCamAXnZMUTb5iz1pqnz+4op5wc4NFF8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M+nYaAjV4kCZfvHa5CVEuuE/3dMSp7FlJN4oVupilZXFbbYo5ldRw9wgMh8fdfdQvNL8G6ymt0O4WTMNy65jtPkhImvS4KUzUB9gx7NLnmgJPJZTTSi7Z5330Utln1m51mRkKHZqVTF43FIHHpo+2W3hvv0OPG8BZRVPion3e8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RxBLpMui; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25EA9C43142;
-	Thu, 25 Jan 2024 10:44:51 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=ZPslef6QhxHTxNFqIdqHyzXiS4F4/VFsBRVBpP5fNZayRMqJXBR29DcaA6Lkfpxja29TA/mcwummlFyIrcl+i+ehjVpeSoZ8PpzgGIi9MkZRSgfNauraWOcsCUmBQoLLQny1zdh05HzT5wWh+GloJH8vSFqozwpCbPYqvZ0d/Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVJsmdYI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB95C43609;
+	Thu, 25 Jan 2024 10:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706179494;
-	bh=lUZh0KMHY+fHzKXHuqwOR7byHtaors/wicH3O0CwYoM=;
+	s=k20201202; t=1706179514;
+	bh=FO7gE+5QMwnUCamAXnZMUTb5iz1pqnz+4op5wc4NFF8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RxBLpMuic/04TENW+E72hOyOtJQKeNHaGot7eHo5Az5qoO/upneS/jtAvDq5qvQCU
-	 O028PuPaX+EK/n3QR6mj5iR/ac4C571bzwlbH1rgkRgnwQnzXF0uv3Ul7TefkPnJXi
-	 LDzFctvwdBFR6QF3WWQoUh6kJeYLEja3BWlbL1PiuiEs6wNp2CRgmi0Kkr9FNu2l3c
-	 s8Z7zQ3L+JjPH7bAl3V7opBxg2eAoGINy/ZH0VRx86gONhkMho7i4tB1/b9WMBmLH5
-	 Qxp7toME6Y/Gia+EtBfyy7PVBH4mRb1nbRZEpwi0MnD2mfA0PdPDIson32z9obpWUx
-	 nn25RmHYkipEw==
+	b=FVJsmdYIPsfQ7LSmV1SNjqtq4EOuZOXF0UqCpt+Oc6u1QZz5+lHX6nr1tO6rLJITD
+	 51ebWrUF/hKHg1qgkpkUKv62UEZtpMs6zd4g/bmsGhGHM1ALJUk5wu/iT33TSQnAjK
+	 N5xKywayBAgZKtjMRC3mRQJxvX4jp9OjhbuWJY9Se2ndRTFbYzvjRl49ZDnh4C1iq3
+	 GTfVOYc+rO25pSHs8jHwKg3qd3RMp48/CQ7zxRJEXcGaUDDb7Nsbx1WSnObs9+XMxF
+	 FwcUDZ/aWdNpJnMNWXHkBjxkdSTdoSE111dTg8dkLl59NK5707oaVpuTnnWvYMmRwb
+	 A26SrtLkL8kzg==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 25 Jan 2024 05:43:07 -0500
-Subject: [PATCH v2 26/41] filelock: convert locks_insert_lock_ctx and
- locks_delete_lock_ctx
+Date: Thu, 25 Jan 2024 05:43:12 -0500
+Subject: [PATCH v2 31/41] ceph: adapt to breakup of struct file_lock
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240125-flsplit-v2-26-7485322b62c7@kernel.org>
+Message-Id: <20240125-flsplit-v2-31-7485322b62c7@kernel.org>
 References: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
 In-Reply-To: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
 To: Christian Brauner <brauner@kernel.org>, 
@@ -87,176 +86,274 @@ Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev,
  linux-cifs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5378; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=lUZh0KMHY+fHzKXHuqwOR7byHtaors/wicH3O0CwYoM=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlsjs9Ex+LnXYe70JgA2IA47aBQXFR7sUgMKh0D
- cFyJ+HlPjWJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZbI7PQAKCRAADmhBGVaC
- FbR2EACd7xtk6EJXp8fFP+D8YDEpgoLrIsD4JKNmOkHIhZI5nYnyePbQ4zH0XB2eiEsmu2Qameb
- 36Zl2oZztStsJfMWU8qDJqrPXsfN4rEIB6+YQIw9TXYbG1M5FDbiMAVsTI1n+sjwXXgsDydZ6Pb
- yr+Op3dqS98Cga6xc0ALzuWW93Y2jD1tSzLmRFLMjdxTvl9/ajVQFuLu+p0g7PXQQa78QmflJGB
- 9Py84YRsHB/9QKbcu1E86WAPH/rrRpKS9Y90l57z/Wa2Qb/6fdXorPDPWU0ujtNlARFMh6EniN/
- oX+M8HZ9V9jxejRx9T89iJd6n0Azl8BQ4ZtAs+JAhHY2RNUrWbXpJdtcZkSY+0L1tD1Nw87mmy1
- w90pFWIovmLrX8qKOP2dzaZA0aZTLh3ZadlwddnzufwpWo7ziNihLxQWT/CArcWAdaJsgZT9X0N
- najS5usCzZNYyajhGvm9QQipa6zK+Z/aP+Aj77zfGfy7ks0GFdOxbz8HAm1V8wVltmTsTqCBG/Y
- /opWJ155ExAbkCQya+BTw/3blbKAv6kR4WUc3mOqBAkuwxnQl1T+8yt9c1CzBX6vu0ZP93Yt+xd
- +Unp5dt7N/nYFXJbw6qmwqFREw2Z0cHIRkHmmvYAWOcamhOk+0csmcD/GKcgY3NF9Ygsoiaq+Tg
- yVH6TGO+fri9EKA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9470; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=FO7gE+5QMwnUCamAXnZMUTb5iz1pqnz+4op5wc4NFF8=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlsjs9jysf1jctmd8lFDksHUDpQqYbZAkrSKBof
+ X48jlLhTUGJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZbI7PQAKCRAADmhBGVaC
+ FdcNEACEPxyhY7I+3tbEyAuhjI9Z0PE7BmUVfDTD+J8yCUlD4Fg+3+HjO2PoLMyAfDS130FSodS
+ CMTq9MiPHWr9d4REcdv6kUdhmm/o3W0DuTh/92EXGsOkd59RbIkgtlDkk6jz543uRtSvKPqMevk
+ rTcmyjpler+gI/PYZY5Z95+87hHVY7bRjO0lKXD07fcrQIi1wPGO2dq0wdRkK2m8afcdOvjc4S4
+ SbfVODwALCkJRrySVpNGwGmXh2mJgyYD6IXuJAMBYBJlVsKGV42GBf1Qq0DJAtT64mGOEq9+IWX
+ osvdddQcuk5H5NN62RJiE1OlpK6XBEsPlC27YMih8S67UvcRdHMDfNkKhq79ff+EjpwuKBCFom0
+ J3+hwDY1QcTIP6P3QNmqoEb/4pApiX1sOEUygqC40dqSuDLFzBu6C65ThhxzT7RH3nGBxdI/nIq
+ 0+BBR0qvgnNCB5KpUclMe8M636X93hLUHawCKEB3GeZe+EgH33m3dKoauBUj3GCMA9in6c1xlqV
+ ACFqkvH6KkTtU8ZE0gGMgbn80V8MsdcExSDCuOc4h5PBHlRNqPhCbnYo/zfu67rzwot6IlYtymQ
+ zrKiNSktZxFmNdtA508XYGP4jVkgTO0J/bjUXMqaReVBm8Scu0tuFe5I1OavckhEMD7R/QSN4xh
+ ocTrVFX+3Aplt4g==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Have these functions take a file_lock_core pointer instead of a
-file_lock.
+Most of the existing APIs have remained the same, but subsystems that
+access file_lock fields directly need to reach into struct
+file_lock_core now.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/locks.c | 44 ++++++++++++++++++++++----------------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ fs/ceph/locks.c | 75 +++++++++++++++++++++++++++++----------------------------
+ 1 file changed, 38 insertions(+), 37 deletions(-)
 
-diff --git a/fs/locks.c b/fs/locks.c
-index 03985cfb7eff..0491d621417d 100644
---- a/fs/locks.c
-+++ b/fs/locks.c
-@@ -824,28 +824,28 @@ static void locks_wake_up_blocks(struct file_lock_core *blocker)
- }
+diff --git a/fs/ceph/locks.c b/fs/ceph/locks.c
+index ccb358c398ca..89e44e7543eb 100644
+--- a/fs/ceph/locks.c
++++ b/fs/ceph/locks.c
+@@ -7,7 +7,6 @@
  
- static void
--locks_insert_lock_ctx(struct file_lock *fl, struct list_head *before)
-+locks_insert_lock_ctx(struct file_lock_core *fl, struct list_head *before)
- {
--	list_add_tail(&fl->fl_core.flc_list, before);
--	locks_insert_global_locks(&fl->fl_core);
-+	list_add_tail(&fl->flc_list, before);
-+	locks_insert_global_locks(fl);
- }
+ #include "super.h"
+ #include "mds_client.h"
+-#define _NEED_FILE_LOCK_FIELD_MACROS
+ #include <linux/filelock.h>
+ #include <linux/ceph/pagelist.h>
  
- static void
--locks_unlink_lock_ctx(struct file_lock *fl)
-+locks_unlink_lock_ctx(struct file_lock_core *fl)
- {
--	locks_delete_global_locks(&fl->fl_core);
--	list_del_init(&fl->fl_core.flc_list);
--	locks_wake_up_blocks(&fl->fl_core);
-+	locks_delete_global_locks(fl);
-+	list_del_init(&fl->flc_list);
-+	locks_wake_up_blocks(fl);
- }
+@@ -34,7 +33,7 @@ void __init ceph_flock_init(void)
  
- static void
--locks_delete_lock_ctx(struct file_lock *fl, struct list_head *dispose)
-+locks_delete_lock_ctx(struct file_lock_core *fl, struct list_head *dispose)
+ static void ceph_fl_copy_lock(struct file_lock *dst, struct file_lock *src)
  {
- 	locks_unlink_lock_ctx(fl);
- 	if (dispose)
--		list_add(&fl->fl_core.flc_list, dispose);
-+		list_add(&fl->flc_list, dispose);
+-	struct inode *inode = file_inode(dst->fl_file);
++	struct inode *inode = file_inode(dst->fl_core.flc_file);
+ 	atomic_inc(&ceph_inode(inode)->i_filelock_ref);
+ 	dst->fl_u.ceph.inode = igrab(inode);
+ }
+@@ -111,17 +110,18 @@ static int ceph_lock_message(u8 lock_type, u16 operation, struct inode *inode,
  	else
--		locks_free_lock(fl);
-+		locks_free_lock(file_lock(fl));
+ 		length = fl->fl_end - fl->fl_start + 1;
+ 
+-	owner = secure_addr(fl->fl_owner);
++	owner = secure_addr(fl->fl_core.flc_owner);
+ 
+ 	doutc(cl, "rule: %d, op: %d, owner: %llx, pid: %llu, "
+ 		    "start: %llu, length: %llu, wait: %d, type: %d\n",
+-		    (int)lock_type, (int)operation, owner, (u64)fl->fl_pid,
+-		    fl->fl_start, length, wait, fl->fl_type);
++		    (int)lock_type, (int)operation, owner,
++		    (u64) fl->fl_core.flc_pid,
++		    fl->fl_start, length, wait, fl->fl_core.flc_type);
+ 
+ 	req->r_args.filelock_change.rule = lock_type;
+ 	req->r_args.filelock_change.type = cmd;
+ 	req->r_args.filelock_change.owner = cpu_to_le64(owner);
+-	req->r_args.filelock_change.pid = cpu_to_le64((u64)fl->fl_pid);
++	req->r_args.filelock_change.pid = cpu_to_le64((u64) fl->fl_core.flc_pid);
+ 	req->r_args.filelock_change.start = cpu_to_le64(fl->fl_start);
+ 	req->r_args.filelock_change.length = cpu_to_le64(length);
+ 	req->r_args.filelock_change.wait = wait;
+@@ -131,13 +131,13 @@ static int ceph_lock_message(u8 lock_type, u16 operation, struct inode *inode,
+ 		err = ceph_mdsc_wait_request(mdsc, req, wait ?
+ 					ceph_lock_wait_for_completion : NULL);
+ 	if (!err && operation == CEPH_MDS_OP_GETFILELOCK) {
+-		fl->fl_pid = -le64_to_cpu(req->r_reply_info.filelock_reply->pid);
++		fl->fl_core.flc_pid = -le64_to_cpu(req->r_reply_info.filelock_reply->pid);
+ 		if (CEPH_LOCK_SHARED == req->r_reply_info.filelock_reply->type)
+-			fl->fl_type = F_RDLCK;
++			fl->fl_core.flc_type = F_RDLCK;
+ 		else if (CEPH_LOCK_EXCL == req->r_reply_info.filelock_reply->type)
+-			fl->fl_type = F_WRLCK;
++			fl->fl_core.flc_type = F_WRLCK;
+ 		else
+-			fl->fl_type = F_UNLCK;
++			fl->fl_core.flc_type = F_UNLCK;
+ 
+ 		fl->fl_start = le64_to_cpu(req->r_reply_info.filelock_reply->start);
+ 		length = le64_to_cpu(req->r_reply_info.filelock_reply->start) +
+@@ -151,8 +151,8 @@ static int ceph_lock_message(u8 lock_type, u16 operation, struct inode *inode,
+ 	ceph_mdsc_put_request(req);
+ 	doutc(cl, "rule: %d, op: %d, pid: %llu, start: %llu, "
+ 	      "length: %llu, wait: %d, type: %d, err code %d\n",
+-	      (int)lock_type, (int)operation, (u64)fl->fl_pid,
+-	      fl->fl_start, length, wait, fl->fl_type, err);
++	      (int)lock_type, (int)operation, (u64) fl->fl_core.flc_pid,
++	      fl->fl_start, length, wait, fl->fl_core.flc_type, err);
+ 	return err;
  }
  
- /* Determine if lock sys_fl blocks lock caller_fl. Common functionality
-@@ -1072,7 +1072,7 @@ static int flock_lock_inode(struct inode *inode, struct file_lock *request)
- 		if (request->fl_core.flc_type == fl->fl_core.flc_type)
- 			goto out;
- 		found = true;
--		locks_delete_lock_ctx(fl, &dispose);
-+		locks_delete_lock_ctx(&fl->fl_core, &dispose);
+@@ -228,10 +228,10 @@ static int ceph_lock_wait_for_completion(struct ceph_mds_client *mdsc,
+ static int try_unlock_file(struct file *file, struct file_lock *fl)
+ {
+ 	int err;
+-	unsigned int orig_flags = fl->fl_flags;
+-	fl->fl_flags |= FL_EXISTS;
++	unsigned int orig_flags = fl->fl_core.flc_flags;
++	fl->fl_core.flc_flags |= FL_EXISTS;
+ 	err = locks_lock_file_wait(file, fl);
+-	fl->fl_flags = orig_flags;
++	fl->fl_core.flc_flags = orig_flags;
+ 	if (err == -ENOENT) {
+ 		if (!(orig_flags & FL_EXISTS))
+ 			err = 0;
+@@ -254,13 +254,13 @@ int ceph_lock(struct file *file, int cmd, struct file_lock *fl)
+ 	u8 wait = 0;
+ 	u8 lock_cmd;
+ 
+-	if (!(fl->fl_flags & FL_POSIX))
++	if (!(fl->fl_core.flc_flags & FL_POSIX))
+ 		return -ENOLCK;
+ 
+ 	if (ceph_inode_is_shutdown(inode))
+ 		return -ESTALE;
+ 
+-	doutc(cl, "fl_owner: %p\n", fl->fl_owner);
++	doutc(cl, "fl_owner: %p\n", fl->fl_core.flc_owner);
+ 
+ 	/* set wait bit as appropriate, then make command as Ceph expects it*/
+ 	if (IS_GETLK(cmd))
+@@ -274,19 +274,19 @@ int ceph_lock(struct file *file, int cmd, struct file_lock *fl)
+ 	}
+ 	spin_unlock(&ci->i_ceph_lock);
+ 	if (err < 0) {
+-		if (op == CEPH_MDS_OP_SETFILELOCK && F_UNLCK == fl->fl_type)
++		if (op == CEPH_MDS_OP_SETFILELOCK && F_UNLCK == fl->fl_core.flc_type)
+ 			posix_lock_file(file, fl, NULL);
+ 		return err;
+ 	}
+ 
+-	if (F_RDLCK == fl->fl_type)
++	if (F_RDLCK == fl->fl_core.flc_type)
+ 		lock_cmd = CEPH_LOCK_SHARED;
+-	else if (F_WRLCK == fl->fl_type)
++	else if (F_WRLCK == fl->fl_core.flc_type)
+ 		lock_cmd = CEPH_LOCK_EXCL;
+ 	else
+ 		lock_cmd = CEPH_LOCK_UNLOCK;
+ 
+-	if (op == CEPH_MDS_OP_SETFILELOCK && F_UNLCK == fl->fl_type) {
++	if (op == CEPH_MDS_OP_SETFILELOCK && F_UNLCK == fl->fl_core.flc_type) {
+ 		err = try_unlock_file(file, fl);
+ 		if (err <= 0)
+ 			return err;
+@@ -294,7 +294,7 @@ int ceph_lock(struct file *file, int cmd, struct file_lock *fl)
+ 
+ 	err = ceph_lock_message(CEPH_LOCK_FCNTL, op, inode, lock_cmd, wait, fl);
+ 	if (!err) {
+-		if (op == CEPH_MDS_OP_SETFILELOCK && F_UNLCK != fl->fl_type) {
++		if (op == CEPH_MDS_OP_SETFILELOCK && F_UNLCK != fl->fl_core.flc_type) {
+ 			doutc(cl, "locking locally\n");
+ 			err = posix_lock_file(file, fl, NULL);
+ 			if (err) {
+@@ -320,13 +320,13 @@ int ceph_flock(struct file *file, int cmd, struct file_lock *fl)
+ 	u8 wait = 0;
+ 	u8 lock_cmd;
+ 
+-	if (!(fl->fl_flags & FL_FLOCK))
++	if (!(fl->fl_core.flc_flags & FL_FLOCK))
+ 		return -ENOLCK;
+ 
+ 	if (ceph_inode_is_shutdown(inode))
+ 		return -ESTALE;
+ 
+-	doutc(cl, "fl_file: %p\n", fl->fl_file);
++	doutc(cl, "fl_file: %p\n", fl->fl_core.flc_file);
+ 
+ 	spin_lock(&ci->i_ceph_lock);
+ 	if (ci->i_ceph_flags & CEPH_I_ERROR_FILELOCK) {
+@@ -334,7 +334,7 @@ int ceph_flock(struct file *file, int cmd, struct file_lock *fl)
+ 	}
+ 	spin_unlock(&ci->i_ceph_lock);
+ 	if (err < 0) {
+-		if (F_UNLCK == fl->fl_type)
++		if (F_UNLCK == fl->fl_core.flc_type)
+ 			locks_lock_file_wait(file, fl);
+ 		return err;
+ 	}
+@@ -342,14 +342,14 @@ int ceph_flock(struct file *file, int cmd, struct file_lock *fl)
+ 	if (IS_SETLKW(cmd))
+ 		wait = 1;
+ 
+-	if (F_RDLCK == fl->fl_type)
++	if (F_RDLCK == fl->fl_core.flc_type)
+ 		lock_cmd = CEPH_LOCK_SHARED;
+-	else if (F_WRLCK == fl->fl_type)
++	else if (F_WRLCK == fl->fl_core.flc_type)
+ 		lock_cmd = CEPH_LOCK_EXCL;
+ 	else
+ 		lock_cmd = CEPH_LOCK_UNLOCK;
+ 
+-	if (F_UNLCK == fl->fl_type) {
++	if (F_UNLCK == fl->fl_core.flc_type) {
+ 		err = try_unlock_file(file, fl);
+ 		if (err <= 0)
+ 			return err;
+@@ -357,7 +357,7 @@ int ceph_flock(struct file *file, int cmd, struct file_lock *fl)
+ 
+ 	err = ceph_lock_message(CEPH_LOCK_FLOCK, CEPH_MDS_OP_SETFILELOCK,
+ 				inode, lock_cmd, wait, fl);
+-	if (!err && F_UNLCK != fl->fl_type) {
++	if (!err && F_UNLCK != fl->fl_core.flc_type) {
+ 		err = locks_lock_file_wait(file, fl);
+ 		if (err) {
+ 			ceph_lock_message(CEPH_LOCK_FLOCK,
+@@ -386,9 +386,9 @@ void ceph_count_locks(struct inode *inode, int *fcntl_count, int *flock_count)
+ 	ctx = locks_inode_context(inode);
+ 	if (ctx) {
+ 		spin_lock(&ctx->flc_lock);
+-		list_for_each_entry(lock, &ctx->flc_posix, fl_list)
++		list_for_each_entry(lock, &ctx->flc_posix, fl_core.flc_list)
+ 			++(*fcntl_count);
+-		list_for_each_entry(lock, &ctx->flc_flock, fl_list)
++		list_for_each_entry(lock, &ctx->flc_flock, fl_core.flc_list)
+ 			++(*flock_count);
+ 		spin_unlock(&ctx->flc_lock);
+ 	}
+@@ -409,10 +409,10 @@ static int lock_to_ceph_filelock(struct inode *inode,
+ 	cephlock->start = cpu_to_le64(lock->fl_start);
+ 	cephlock->length = cpu_to_le64(lock->fl_end - lock->fl_start + 1);
+ 	cephlock->client = cpu_to_le64(0);
+-	cephlock->pid = cpu_to_le64((u64)lock->fl_pid);
+-	cephlock->owner = cpu_to_le64(secure_addr(lock->fl_owner));
++	cephlock->pid = cpu_to_le64((u64) lock->fl_core.flc_pid);
++	cephlock->owner = cpu_to_le64(secure_addr(lock->fl_core.flc_owner));
+ 
+-	switch (lock->fl_type) {
++	switch (lock->fl_core.flc_type) {
+ 	case F_RDLCK:
+ 		cephlock->type = CEPH_LOCK_SHARED;
  		break;
+@@ -423,7 +423,8 @@ static int lock_to_ceph_filelock(struct inode *inode,
+ 		cephlock->type = CEPH_LOCK_UNLOCK;
+ 		break;
+ 	default:
+-		doutc(cl, "Have unknown lock type %d\n", lock->fl_type);
++		doutc(cl, "Have unknown lock type %d\n",
++		      lock->fl_core.flc_type);
+ 		err = -EINVAL;
  	}
  
-@@ -1097,7 +1097,7 @@ static int flock_lock_inode(struct inode *inode, struct file_lock *request)
- 		goto out;
- 	locks_copy_lock(new_fl, request);
- 	locks_move_blocks(new_fl, request);
--	locks_insert_lock_ctx(new_fl, &ctx->flc_flock);
-+	locks_insert_lock_ctx(&new_fl->fl_core, &ctx->flc_flock);
- 	new_fl = NULL;
- 	error = 0;
+@@ -454,7 +455,7 @@ int ceph_encode_locks_to_buffer(struct inode *inode,
+ 		return 0;
  
-@@ -1236,7 +1236,7 @@ static int posix_lock_inode(struct inode *inode, struct file_lock *request,
- 			else
- 				request->fl_end = fl->fl_end;
- 			if (added) {
--				locks_delete_lock_ctx(fl, &dispose);
-+				locks_delete_lock_ctx(&fl->fl_core, &dispose);
- 				continue;
- 			}
- 			request = fl;
-@@ -1265,7 +1265,7 @@ static int posix_lock_inode(struct inode *inode, struct file_lock *request,
- 				 * one (This may happen several times).
- 				 */
- 				if (added) {
--					locks_delete_lock_ctx(fl, &dispose);
-+					locks_delete_lock_ctx(&fl->fl_core, &dispose);
- 					continue;
- 				}
- 				/*
-@@ -1282,9 +1282,9 @@ static int posix_lock_inode(struct inode *inode, struct file_lock *request,
- 				locks_move_blocks(new_fl, request);
- 				request = new_fl;
- 				new_fl = NULL;
--				locks_insert_lock_ctx(request,
-+				locks_insert_lock_ctx(&request->fl_core,
- 						      &fl->fl_core.flc_list);
--				locks_delete_lock_ctx(fl, &dispose);
-+				locks_delete_lock_ctx(&fl->fl_core, &dispose);
- 				added = true;
- 			}
- 		}
-@@ -1313,7 +1313,7 @@ static int posix_lock_inode(struct inode *inode, struct file_lock *request,
- 		}
- 		locks_copy_lock(new_fl, request);
- 		locks_move_blocks(new_fl, request);
--		locks_insert_lock_ctx(new_fl, &fl->fl_core.flc_list);
-+		locks_insert_lock_ctx(&new_fl->fl_core, &fl->fl_core.flc_list);
- 		fl = new_fl;
- 		new_fl = NULL;
+ 	spin_lock(&ctx->flc_lock);
+-	list_for_each_entry(lock, &ctx->flc_posix, fl_list) {
++	list_for_each_entry(lock, &ctx->flc_posix, fl_core.flc_list) {
+ 		++seen_fcntl;
+ 		if (seen_fcntl > num_fcntl_locks) {
+ 			err = -ENOSPC;
+@@ -465,7 +466,7 @@ int ceph_encode_locks_to_buffer(struct inode *inode,
+ 			goto fail;
+ 		++l;
  	}
-@@ -1325,7 +1325,7 @@ static int posix_lock_inode(struct inode *inode, struct file_lock *request,
- 			left = new_fl2;
- 			new_fl2 = NULL;
- 			locks_copy_lock(left, right);
--			locks_insert_lock_ctx(left, &fl->fl_core.flc_list);
-+			locks_insert_lock_ctx(&left->fl_core, &fl->fl_core.flc_list);
- 		}
- 		right->fl_start = request->fl_end + 1;
- 		locks_wake_up_blocks(&right->fl_core);
-@@ -1425,7 +1425,7 @@ int lease_modify(struct file_lock *fl, int arg, struct list_head *dispose)
- 			printk(KERN_ERR "locks_delete_lock: fasync == %p\n", fl->fl_fasync);
- 			fl->fl_fasync = NULL;
- 		}
--		locks_delete_lock_ctx(fl, dispose);
-+		locks_delete_lock_ctx(&fl->fl_core, dispose);
- 	}
- 	return 0;
- }
-@@ -1558,7 +1558,7 @@ int __break_lease(struct inode *inode, unsigned int mode, unsigned int type)
- 			fl->fl_downgrade_time = break_time;
- 		}
- 		if (fl->fl_lmops->lm_break(fl))
--			locks_delete_lock_ctx(fl, &dispose);
-+			locks_delete_lock_ctx(&fl->fl_core, &dispose);
- 	}
- 
- 	if (list_empty(&ctx->flc_lease))
-@@ -1816,7 +1816,7 @@ generic_add_lease(struct file *filp, int arg, struct file_lock **flp, void **pri
- 	if (!leases_enable)
- 		goto out;
- 
--	locks_insert_lock_ctx(lease, &ctx->flc_lease);
-+	locks_insert_lock_ctx(&lease->fl_core, &ctx->flc_lease);
- 	/*
- 	 * The check in break_lease() is lockless. It's possible for another
- 	 * open to race in after we did the earlier check for a conflicting
-@@ -1829,7 +1829,7 @@ generic_add_lease(struct file *filp, int arg, struct file_lock **flp, void **pri
- 	smp_mb();
- 	error = check_conflicting_open(filp, arg, lease->fl_core.flc_flags);
- 	if (error) {
--		locks_unlink_lock_ctx(lease);
-+		locks_unlink_lock_ctx(&lease->fl_core);
- 		goto out;
- 	}
- 
+-	list_for_each_entry(lock, &ctx->flc_flock, fl_list) {
++	list_for_each_entry(lock, &ctx->flc_flock, fl_core.flc_list) {
+ 		++seen_flock;
+ 		if (seen_flock > num_flock_locks) {
+ 			err = -ENOSPC;
 
 -- 
 2.43.0
