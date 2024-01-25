@@ -1,58 +1,80 @@
-Return-Path: <linux-nfs+bounces-1446-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1447-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FC5183D045
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 00:04:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C1E7783D12D
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 01:03:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DB3E428D045
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 23:04:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 29E73B227FD
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 00:02:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE4D7125C2;
-	Thu, 25 Jan 2024 23:04:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE1951B599;
+	Thu, 25 Jan 2024 23:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gnz3eqcj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9bk/xiq"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94A0125BD
-	for <linux-nfs@vger.kernel.org>; Thu, 25 Jan 2024 23:04:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EEBC1AAAE;
+	Thu, 25 Jan 2024 23:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706223866; cv=none; b=WqnEUCWyEZEv7VDhdR2gUXB6cHm5Z5rJ0CJl6rB1dWHjrmB6viOOP1S4J7wyzgyrjmosOPdBK1Jh7PNdU6cGv3qPApR8SjMPgSqe9YvQzx/UL9Ifq7qSeBrvhXAQ1BmkjapmH0DRhXwPgWJweQ9bzUljQIYwn/7HC7vQuGYDFQA=
+	t=1706227131; cv=none; b=et/ZCkHUfjvmfwXwMrhMe5XNgLgfd+raf26gEZDUQhP67KV8McK/OqwYHVCeHFDGmbJo58QBfZxPE4hKMWs6FkpypzMamy11h2WZO7H6oRnDYUo4w/TRKNcM9fbIDp8hgqoKJfDq+pQ53qzp5RqmILQP7/4qwq4HaR3lEmETtwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706223866; c=relaxed/simple;
-	bh=Z57SyhUJ4wU5pyyb8zu3tz56azmoY+7XhtLa4g1s5Tw=;
+	s=arc-20240116; t=1706227131; c=relaxed/simple;
+	bh=w8Z2v8eWoiJq1KFQQoVyrYEjjqrH587hUb7OHEk3JzE=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OEQEWwwYftPz819ozIcnOnT4IuVrKVHO/uue7bjLt78rtKxYQUk0OPOOUkQInPPeZhnc8o8XMig+sCCYDQYBye2sVwr45WvKax85VLFIvYLmkKVzd0IDio+fEI2GDNau/E5EoazN9TJozi8IMuilAcLKQL54Z4+RXakWSqEuScs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gnz3eqcj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D43FCC433C7;
-	Thu, 25 Jan 2024 23:04:24 +0000 (UTC)
+	 Content-Type:MIME-Version; b=as7ZF//oWWOHk4lhy8Uowf5cVBM436y1X47oBjdRJYcKQIWq3sgFzaJIXiRSSaKpUSMwhkJ4GtTyjsHzi4lWcegS8tijNmGaU3yeNNW6lhbnDvnRUrkkTb4ucFB1UTdm+eV6wSPWrqiVIFDO+IeZKYp1WeEWl8+vcK7+6e2/EYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9bk/xiq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CB8DC433F1;
+	Thu, 25 Jan 2024 23:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706223866;
-	bh=Z57SyhUJ4wU5pyyb8zu3tz56azmoY+7XhtLa4g1s5Tw=;
+	s=k20201202; t=1706227130;
+	bh=w8Z2v8eWoiJq1KFQQoVyrYEjjqrH587hUb7OHEk3JzE=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gnz3eqcj0j5X2vB0ruLRf/1BDraRi9SzVhjCLr+rwwxm/xixFOLHAHV4wpkw2+79G
-	 2151+LSQQ/cznC7DyfdsW1TPo5YJPVQIHApHA/orznpNS/oekpw9pYhFv8ZVYiVU3/
-	 CbAneD3lXh5wEOYpiaQ86jyL8OTk9gJGYJK94FBRCTPR9K/r2acZPT+UyQiky4TvZd
-	 GtKvsB2+54kOrmvaD3Uj2+EQcepBr5BlJdIruEthjunWogB5Ti2HIRqaMSx94PiVrL
-	 NNfcbFc87NfBSnIyam3rlDCwki3C8I6pUzRtKA22fTgbwuEry9xpnmcWeZeLtYUJHs
-	 TKpx6YZnnjpcg==
-Message-ID: <c3f4b19aeb16b1072b3ab907e1ab543f16830840.camel@kernel.org>
-Subject: Re: Should we establish a new nfsdctl userland program?
+	b=R9bk/xiqu9MU45vfFwXI2QGlTSHXdVAez2C/YS831sj+G4W1ZbQJQwBqiYggnPkGE
+	 3ANq4+eudHEK1a9BOT+J0eyPmhaWicZ7G19OMnghg595eUwmOFEV+dEyd3wLnKKxen
+	 uBUWXWzjobhCrDKjD7taM4NOtWN5UElfsyATilByPAQ9voFN7EUxCHoW5y3Zu42dbx
+	 gLYJHmrfyWwqOp2KFV0GRsczxwUygBS2cLlPPIKaxJi3eqepWT2qFGnejKppQGDSnA
+	 008+rAFQBh3UAUzkAsm5Cm3Y+Ks38mdSQwZj2EsFCJmIxTGATnod2MeV4zDIya+iG8
+	 I8/8jPHXHyeIg==
+Message-ID: <0d95c18c9142b5e9e542280806afbb47734f0f95.camel@kernel.org>
+Subject: Re: [PATCH v2 00/41] filelock: split struct file_lock into
+ file_lock and file_lease structs
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>
-Cc: Chuck Lever <chuck.lever@oracle.com>, Lorenzo Bianconi
- <lorenzo.bianconi@redhat.com>, Dai Ngo <dai.ngo@oracle.com>, 
- "olga.kornievskaia" <olga.kornievskaia@gmail.com>, Tom Talpey
- <tom@talpey.com>, linux-nfs <linux-nfs@vger.kernel.org>
-Date: Thu, 25 Jan 2024 18:04:21 -0500
-In-Reply-To: <170621711779.21664.12957469850987797917@noble.neil.brown.name>
-References: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>
-	 <170621711779.21664.12957469850987797917@noble.neil.brown.name>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc: Christian Brauner <brauner@kernel.org>, Alexander Viro
+ <viro@zeniv.linux.org.uk>, Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet
+ <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne
+ <marc.dionne@auristor.com>, Xiubo Li <xiubli@redhat.com>, Ilya Dryomov
+ <idryomov@gmail.com>, Alexander Aring <aahringo@redhat.com>, David Teigland
+ <teigland@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, Andreas
+ Gruenbacher <agruenba@redhat.com>, Trond Myklebust
+ <trond.myklebust@hammerspace.com>,  Anna Schumaker <anna@kernel.org>, Olga
+ Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
+ <tom@talpey.com>, Jan Kara <jack@suse.cz>,  Mark Fasheh <mark@fasheh.com>,
+ Joel Becker <jlbec@evilplan.org>, Joseph Qi <joseph.qi@linux.alibaba.com>, 
+ Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, Shyam
+ Prasad N <sprasad@microsoft.com>,  Namjae Jeon <linkinjeon@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt
+ <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, Ronnie Sahlberg
+ <ronniesahlberg@gmail.com>,  linux-kernel@vger.kernel.org,
+ v9fs@lists.linux.dev,  linux-afs@lists.infradead.org,
+ ceph-devel@vger.kernel.org, gfs2@lists.linux.dev, 
+ linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+ ocfs2-devel@lists.linux.dev, linux-cifs@vger.kernel.org, 
+ linux-trace-kernel@vger.kernel.org
+Date: Thu, 25 Jan 2024 18:58:46 -0500
+In-Reply-To: <170622208395.21664.2510213291504081000@noble.neil.brown.name>
+References: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
+	, <ZbJ2zc3I3uBwF/RE@tissot.1015granger.net>
+	 <170622208395.21664.2510213291504081000@noble.neil.brown.name>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -72,204 +94,163 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-01-26 at 08:11 +1100, NeilBrown wrote:
-> On Fri, 26 Jan 2024, Jeff Layton wrote:
-> > The existing rpc.nfsd program was designed during a different time, whe=
-n
-> > we just didn't require that much control over how it behaved. It's
-> > klunky to work with.
->=20
-> How is it clunky?
->=20
->   rpc.nfsd
->=20
-> that starts the service.
->=20
->   rpc.nfsd 0
->=20
-> that stops the service.
->=20
-> Ok, not completely elegant.  Maybe
->=20
->   nfsdctl start
->   nfsdctl stop
->=20
-> would be better.
->=20
-
-It's clunky if you have to script around it. Mostly it's an issue for
-people doing clustering and that sort of thing.
-
-> >=20
-> > In a response to Chuck's recent RFC patch to add knob to disable
-> > READ_PLUS calls, I mentioned that it might be a good time to make a
-
-Sorry, not READ_PLUS calls here, I meant splice_reads...
-
-> > clean break from the past and start a new program for controlling nfsd.
-> >=20
-> > Here's what I'm thinking:
-> >=20
-> > Let's build a swiss-army-knife kind of interface like git or virsh:
-> >=20
-> > # nfsdctl=A0stats			<--- fetch the new stats that got merged
-> > # nfsdctl add_listener		<--- add a new listen socket, by address or hos=
-tname
-> > # nfsdctl set v3 on		<--- enable NFSv3
-> > # nfsdctl set splice_read off	<--- disable splice reads (per Chuck's re=
-cent patch)
-> > # nfsdctl set threads 128	<--- spin up the threads
->=20
-> Sure the "git" style would use
->=20
->    nfsdctl version 3 on
->    nfsdctl threads 128
->=20
-
-I like following git's example syntactically.
-
-> Apart from "stats", "start", "stop", I suspect that we developers would
-> be the only people to actually use this functionality.=A0
->=20
-
-Agreed, maybe alongside higher orchestration like containerization or
-clustering tech.
-
->  Until now,=20
->   echo > /proc/sys/nfsd/foo
-> has been enough for most tweeking.  Having a proper tool would likely
-> lower the barrier to entry, which can only be a good thing.
->=20
-
-I think so too. Also, we don't really have that option with netlink. We
-need some sort of tool to drive the new interfaces.
-
-> >=20
-> > We could start with just the bare minimum for now (the stats interface)=
+On Fri, 2024-01-26 at 09:34 +1100, NeilBrown wrote:
+> On Fri, 26 Jan 2024, Chuck Lever wrote:
+> > On Thu, Jan 25, 2024 at 05:42:41AM -0500, Jeff Layton wrote:
+> > > Long ago, file locks used to hang off of a singly-linked list in stru=
+ct
+> > > inode. Because of this, when leases were added, they were added to th=
+e
+> > > same list and so they had to be tracked using the same sort of
+> > > structure.
+> > >=20
+> > > Several years ago, we added struct file_lock_context, which allowed u=
+s
+> > > to use separate lists to track different types of file locks. Given
+> > > that, leases no longer need to be tracked using struct file_lock.
+> > >=20
+> > > That said, a lot of the underlying infrastructure _is_ the same betwe=
+en
+> > > file leases and locks, so we can't completely separate everything.
+> > >=20
+> > > This patchset first splits a group of fields used by both file locks =
+and
+> > > leases into a new struct file_lock_core, that is then embedded in str=
+uct
+> > > file_lock. Coccinelle was then used to convert a lot of the callers t=
+o
+> > > deal with the move, with the remaining 25% or so converted by hand.
+> > >=20
+> > > It then converts several internal functions in fs/locks.c to work
+> > > with struct file_lock_core. Lastly, struct file_lock is split into
+> > > struct file_lock and file_lease, and the lease-related APIs converted=
+ to
+> > > take struct file_lease.
+> > >=20
+> > > After the first few patches (which I left split up for easier review)=
 ,
-> > and then expand on it. Once we're at feature parity with rpc.nfsd, we'd
-> > want to have systemd preferentially use nfsdctl instead of rpc.nfsd to
-> > start and stop the server. systemd will also need to fall back to using
-> > rpc.nfsd if nfsdctl or the netlink program isn't present.
->=20
-> systemd doesn't need a fallback.  Systemd always activates
-> nfs-server.service.  We just need to make sure the installed
-> nfs-server.service matches the installed tools, and as they are
-> distributed as parts of the same package, that should be trivial.
->=20
-
-The problem is the transition period. There will come a time where
-people will have kernels that don't support the new netlink interface,
-but newer userland.
-
-We could teach nfsdctl to work with nfsdfs, but I'd rather it just bail
-out and say "Sorry, you have to use rpc.nfsd on this old kernel".
-
-Maybe we don't need to worry about plumbing that logic into the systemd
-service though, and just having distros do a hard cutover at some point
-makes more sense.
-
+> > > the set should be bisectable. I'll plan to squash the first few
+> > > together to make sure the resulting set is bisectable before merge.
+> > >=20
+> > > Finally, I left the coccinelle scripts I used in tree. I had heard it
+> > > was preferable to merge those along with the patches that they
+> > > generate, but I wasn't sure where they go. I can either move those to=
+ a
+> > > more appropriate location or we can just drop that commit if it's not
+> > > needed.
+> > >=20
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > >=20
-> > Note that I think this program will have to be a compiled binary vs. a
-> > python script or the like, given that it'll be involved in system
-> > startup.
->=20
-> Agreed.
->=20
+> > v2 looks nicer.
 > >=20
-> > It turns out that Lorenzo already has a C program that has a lot of the
-> > plumbing we'd need:
+> > I would add a few list handling primitives, as I see enough
+> > instances of list_for_each_entry, list_for_each_entry_safe,
+> > list_first_entry, and list_first_entry_or_null on fl_core.flc_list
+> > to make it worth having those.
 > >=20
-> >     https://github.com/LorenzoBianconi/nfsd-netlink
-> >=20
-> > I think it might be good to clean up the interface a bit, build a
-> > manpage and merge that into nfs-utils.
-> >=20
-> > Questions:
-> >=20
-> > 1/ one big binary, or smaller nfsdctl-* programs (like git uses)?
+> > Also, there doesn't seem to be benefit for API consumers to have to
+> > understand the internal structure of struct file_lock/lease to reach
+> > into fl_core. Having accessor functions for common fields like
+> > fl_type and fl_flags could be cleaner.
 >=20
-> /usr/lib/git-core (on my laptop) has 168 entries.  Only 29 of them are
-> NOT symlinks to 'git'.
->=20
-> While I do like the "tool command args" interface, and I like the option
-> of adding commands by simply creating drop-in tools, I think that core
-> functionality should go in the core tool.
-> So: "one big binary" please - with call-out functionality if anyone can
-> be bothered implementing it.
->=20
+> I'm not a big fan of accessor functions.  They don't *look* like normal
+> field access, so a casual reader has to go find out what the function
+> does, just to find the it doesn't really do anything.
 
-Ok, sounds good to me.
+I might have been a bit too hasty with the idea. I took a look earlier
+today and it gets pretty ugly trying to handle these fields with
+accessors. flc_flags, for instance will need both a get and a set
+method, which gets wordy after a while.
 
-> >=20
-> > 2/ should it automagically read in nfs.conf? (I tend to think it should=
-,
-> > but we might want an option to disable that)
->=20
-> Absolutely definitely.  I'm not convinced we need an option to disable
-> config, but allowing options to over-ride specific configs is sensible.
->=20
-> Most uses of this tool would come from nfs-server.service which would
-> presumably call
->    nfsdctl start
-> which would set everything based on the nfs.conf and thus start the
-> server.  And
->    nfsdctl stop
-> which would set the number of threads to zero.
+Some of the flc_list accesses don't involve list walks either so I don't
+think we'll ever be able to make this "neat" without a ton of one-off
+accessors.
+
+> But neither am I a fan have requiring filesystems to use
+> "fl_core.flc_foo".  As you say, reaching into fl_core isn't ideal.
 >=20
 
-Sensible.
+I too think it's ugly.
 
-> >=20
-> > 3/ should "set threads" activate the server, or just set a count, and
-> > then we do a separate activation step to start it? If we want that, the=
-n
-> > we may want to twiddle the proposed netlink interface a bit.
+> It would be nice if we could make fl_core and anonymous structure, but
+> that really requires -fplan9-extensions which Linus is on-record as not
+> liking.
+> Unless...
 >=20
-> It might be sensible to have "set max-threads" which doesn't actually
-> start the service.
-> I would really REALLY like a dynamic thread pool.  It would start at 1
-> (or maybe 2) and grow on demand up to the max, and idle threads
-> (inactive for 30 seconds?) would exit.  We could then default the max to
-> some function of memory size and people could mostly ignore the
-> num-threads setting.
+> How horrible would it be to use
 >=20
-> I don't have patches today, but if we are re-doing the interfaces I
-> would like us to plan the interfaces to support a pool rather than a
-> fixed number.
+>    union {
+>        struct file_lock_core flc_core;
+>        struct file_lock_core;
+>    };
+>=20
+> I think that only requires -fms-extensions, which Linus was less
+> negative towards.  That would allow access to the members of
+> file_lock_core without the "flc_core." prefix, but would still allow
+> getting the address of 'flc_core'.
+> Maybe it's too ugly.
 >=20
 
-I like that idea too. A dynamic threadpool would be very nice to have.
-Since we're dreaming:
+I'd rather not rely on special compiler flags.
 
-Maybe we can set "threads" to a specific value (-1?) that makes it start
-the pool at "min_threads" and dynamically size the pool up to
-"max_threads" with the load.
-
-> >=20
-> > I'm sure other questions will arise as we embark on this too.
-> >=20
-> > Thoughts? Anyone have objections to this idea?
+> While fl_type and fl_flags are most common, fl_pid, fl_owner, fl_file
+> and even fl_wait are also used.  Having accessor functions for all of tho=
+se
+> would be too much I think.
 >=20
-> I think this is an excellent question to ask.  As you say it is a long
-> time since rpc.nfsd was created, and it has grown incrementally rather
-> then being clearly designed.
 
+Some of them need setters too, and some like fl_flags like to be able to
+do this:
 
-Thanks. I think this is something that has the potential to really make
-server administration simpler.
+    fl->fl_flags |=3D FL_SLEEP;
 
-I also wouldn't mind a readline-style shell interface if you just run
-nfsdctl without arguments. Like:
+That's hard to deal with in an accessor unless you want to do it with
+macros or something.
 
-# nfsdctl
-nfsdctl> threads 128
-nfsdctl> version 3 off
-nfsdctl> start
-nfsdctl> ^d
+> Maybe higher-level functions which meet the real need of the filesystem
+> might be a useful approach:
+>=20
+>  locks_wakeup(lock)
+>  locks_wait_interruptible(lock, condition)
+>  locks_posix_init(lock, type, pid, ...) ??
+>  locks_is_unlock() - fl_type is compared with F_UNLCK 22 times.
+>=20
+> While those are probably a good idea, through don't really help much
+> with reducing the need for accessor functions.
+>=20
 
-...but that could be added later too.
+I can take a look at some of those. Reducing the number of instances can
+only help.
 
+> I don't suppose we could just leave the #defines in place?  Probably not
+> a good idea.
+>=20
+> Maybe spell "fl_core" as "c"?  lk->c.flc_flags ???
+>=20
+
+It's at least a little shorter. I can make that change if it's
+preferred.
+
+>=20
+> And I wonder if we could have a new fl_flag for 'FOREIGN' locks rather
+> than encoding that flag in the sign of the pid.  That seems a bit ...
+> clunky?
+>=20
+
+The kernel just treats the fl_pid as an opaque value that gets reported
+to various consumers. Having it encoded in the sign is actually more
+convenient, since reporting "foreign" lock holders as negative pid
+values has some precedent in Unix.
+
+flock and posix locks conflict on BSD, and the POSIX lock API reports
+fl_pid as '-1' when there is a conflicting flock lock. I think solaris
+may also report remote NFS locks as negative numbers too? (not certain
+there).
+
+So it works in our favor in this case, but it is a hack.
+
+Now that I look too, I'm not sure why fl_pid is unsigned given that
+pid_t is signed. I'll have to look into that as well.
 --=20
 Jeff Layton <jlayton@kernel.org>
 
