@@ -1,50 +1,50 @@
-Return-Path: <linux-nfs+bounces-1358-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1360-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04DB183BFC3
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 11:57:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58F9883BFCC
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 11:59:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B12D828ABCA
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 10:57:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7BCE01C23110
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Jan 2024 10:59:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 535B863105;
-	Thu, 25 Jan 2024 10:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E808F629E9;
+	Thu, 25 Jan 2024 10:44:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkFCWPDa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zny8bRHQ"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DF8175BC;
-	Thu, 25 Jan 2024 10:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31F2634ED;
+	Thu, 25 Jan 2024 10:44:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706179491; cv=none; b=k7Gri8APIDFH4W7Qrw/H7ESVENXVRdmpMMFjDwhXOUtaaH9PUtlPeWe91SdvOIz2W9KlG3Tw0is03gpkPElpnqG/oreWVRldGFtOpIPv4lizbocbEykPnH4NSfY3spKsad7xKHKz52HWzAHSf+gXJ98pkIpgYWWvkBWKUsM1F+Y=
+	t=1706179498; cv=none; b=foX/2lVtkQQ5G92ywDC21uMo3GCmZdUdM3nTmk1HzuUpi62cd1Jv8XMGfRLXbYFnDeMXF8emnyQ3uRsLAx3zXMR6wdwwLmuXPUp9i3KPmdpjaHBuEsPaBG95j6k7VByGWEfOsP+ojw6+rymjmO4HS3iFNI7kCKbNFjfMwa1jGsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706179491; c=relaxed/simple;
-	bh=BE6D7fVdZjq/WVYIXNVhQrYy7EzO38NGIYIfMpI0THc=;
+	s=arc-20240116; t=1706179498; c=relaxed/simple;
+	bh=nD9BEv1CjR2OEjVeGMUNguKQLxTTM6NPvUbffSU/wSk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VC7fw/4/y9znSbu/HMA7Zsw5o3uRvleSD4uxmUeMCCsRaTXIgAevCFH7aH2+MDdaZrKBB+ht/qd63LWGd3KU0hO5Jteb+QmzZfixNxZm393W6LHDvCpRdu/kBYRceSzu09UQxYmpajJC0lIqUioggsqULiiIV0m3wRmpWg6rLFY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IkFCWPDa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EB54C43330;
-	Thu, 25 Jan 2024 10:44:47 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=M/tXyXrQCajMs1HnsOmnOxrM0vLh5GwjOG7uIep0NCkJXv/EPG7Vo08ewGcShy53QCrWYDGn8rBr0JZgBY7eCfdrVH5Y9LVCdm4//pNTJLIt12cQPV6DJxiIfyCK81vZ8LFLykJilT0okhAZeF5MzWpQ1El7+mhmemHq90SMIik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zny8bRHQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F15B9C43390;
+	Thu, 25 Jan 2024 10:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706179490;
-	bh=BE6D7fVdZjq/WVYIXNVhQrYy7EzO38NGIYIfMpI0THc=;
+	s=k20201202; t=1706179498;
+	bh=nD9BEv1CjR2OEjVeGMUNguKQLxTTM6NPvUbffSU/wSk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IkFCWPDawygwa7FN8A+X2hEJMiv2FuqP8qMkbc+BPuUyRJ7w/2uN/d6+bNht1mapa
-	 uNtUNwb9n3nt30r7kmPu4C+/F9PJ5JWV/qNjjhvqxyENdazdxdrKdq/3SHgbMpk3eV
-	 amgUlZ+N08TQsk8DwZBARr2Srt0oBLKBevcTylXD7GXxVMyn9tTtlGSSDCgwsSmbtE
-	 +Y6O0FXBs8Q56wUA3atVIIk65ZPmTdxI3jO+ekQkXAbI9J0ZaffjN48OozAWTWKVxc
-	 eN/SRSotvev2f4KZAFKyKmStig9hZ1kVWuRHTBrA6kPh8JrxpiWLlEW0gO3Yzu0YAh
-	 3n0Iqe7SvIszw==
+	b=Zny8bRHQmNv4M03mIxXaXtc0dCpUSLo1Se3qED43JoJs2I8LBsReArD6qamVjqiH+
+	 hR7ap85HlxCSXtnGVBsGHxxETKBi6thUDStd9Z2TAO+t3K/RRk2EZgXI7ANY3mNYyL
+	 rGxPXFCO9lwl2FgaFDo7FwvojU96rn5chhT1Y4Iy8CzSchD3qmgeGyaGYQEIa1t/Az
+	 fkYMxVvd0otc3kmiEVUqGRtF7/rdVySNFmGmAT2IChRc35/2SsLKDTga9Ifl4Ipx/W
+	 C82VcLFX0r4I5kjMVzAxwW5M161EtBjeQE0bT6xHwq/xhdcVvWijNXC/gMAzID17XL
+	 VK/mcwYHCZpCw==
 From: Jeff Layton <jlayton@kernel.org>
-Date: Thu, 25 Jan 2024 05:43:06 -0500
-Subject: [PATCH v2 25/41] filelock: convert locks_wake_up_blocks to take a
- file_lock_core pointer
+Date: Thu, 25 Jan 2024 05:43:08 -0500
+Subject: [PATCH v2 27/41] filelock: convert locks_translate_pid to take
+ file_lock_core
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240125-flsplit-v2-25-7485322b62c7@kernel.org>
+Message-Id: <20240125-flsplit-v2-27-7485322b62c7@kernel.org>
 References: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
 In-Reply-To: <20240125-flsplit-v2-0-7485322b62c7@kernel.org>
 To: Christian Brauner <brauner@kernel.org>, 
@@ -87,90 +87,103 @@ Cc: linux-kernel@vger.kernel.org, v9fs@lists.linux.dev,
  linux-cifs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
  Jeff Layton <jlayton@kernel.org>
 X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2251; i=jlayton@kernel.org;
- h=from:subject:message-id; bh=BE6D7fVdZjq/WVYIXNVhQrYy7EzO38NGIYIfMpI0THc=;
- b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlsjs96R45LralQk0vXAi/sncoWqvG8sGckQ+V5
- SbBb+K41ASJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZbI7PQAKCRAADmhBGVaC
- Fa06D/9xYM5ismcjCqj3pKFHU4iTx84d+XrQGP7iJaqdOWlkIvD+TqphzZa1RdctYx5uyTLt8DJ
- DuiV/RyOtHeOM9IsytyzaPzesXLNmQawkhg3IRHDZKxK3yr16h3dlSqfah/KK3IFI57d9a4aaaN
- bkXo9lRkcfp8ErDM7pf3jS45Vhu01wdNq2aiVtBNyRVKzrHaLsDA+TqnZdJLaylbeNarNBbULhM
- vIzu09a530rKfC6Uw1AittxzUj8QDv5v9FfVKgz1BJqb/Z51q+qiy0nRjhK38tGUYg5WaMuk+3R
- HdoeG2YvTFlBhkpk8DUQ0iSp+Euod5IiFFSPAcRXngS6yrDavM+gXiFFHZKrqOm2Pb8Ev0Fq9pj
- 0XHccxlAdR3e8S6tAgKdeWzY+GidOm8QeyUbSlfoU1Mo7I3khez2ZSzhna8vFbP/5ifB5TxASZ4
- dwfr1Y+C9IbojRXKJQQyzCq6QLpDJgeC6OfdNQ5/dDu5Qe8jEAH0v3STKOsrqLpX/pyET9wIJqV
- z4kapupGuI1p/poMjRG/2lGqqvMF2J8wpYiufzSZtphkDcv8uUjsyh4ge2hvuNscGPkFo+2MSNg
- U2IGE4K31T5ddrY8FZlYwYkep/QBVEJZ9EI+94s25QoLUAol3o6jkDwB7GgmkfN9kzlEryX5I/a
- ovW/Xy6H1Q2DhhA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3137; i=jlayton@kernel.org;
+ h=from:subject:message-id; bh=nD9BEv1CjR2OEjVeGMUNguKQLxTTM6NPvUbffSU/wSk=;
+ b=owEBbQKS/ZANAwAIAQAOaEEZVoIVAcsmYgBlsjs9y/o7I1K7nhN5OVz7m4BnLP++BiaKwndRm
+ iQSPatwv8iJAjMEAAEIAB0WIQRLwNeyRHGyoYTq9dMADmhBGVaCFQUCZbI7PQAKCRAADmhBGVaC
+ Fa+EEAChdI4fiS8GaZOJEUHs4gt7453mUL0TceiKxymqOqdC1MkeSsPi7KSeMaCfKGZDe5XUYxX
+ jIS7vgHQmQoeEvJIuke5wfJU26K1YlXcSomHhUpAI+KUIel1EkV7Bwhr1DSYinF9aRA0XWaTLGl
+ X2gcDZIdPeiA1yM3MXSOCDCpxjS7PW2fktGxR48kNDnq0Q8cRuVWeB3u/rUkC4o/vEHmTmyX+ho
+ j4i9MEslLYEAuQ1eXGwf1903oRh9831rIUszxkXpYt05TPDnVU3emG/kbX7FoxeQr1i0XI99r8o
+ ByPaFwjUv/MfpWtr+LnjSIRXWO7QokFkHQcRUrvdDPX1j8flHM/QuJ4I5LZQQVGXZE1IhEfiBzH
+ Lq0I0sJissOACy7C+s6EIyGClcQy1U5+1zCPsSVYGpxUDASptnnsZgKRyhov4Xn+IGtKCle6/RB
+ dcXAvQo68oCLUKw/KJpuVMo20Nj47knGoejWzc6OTJLsXojAQWn4DmsojyadRcG59mjt3UbdOfq
+ n7mmjncdQnOdsobfNHXZaJCiMArPKIKQssxI95UnucqvAcHEalb5jNmN+iV1G02Fg6LHtrMl/ON
+ /172GK5Eqas4o0+B9qTS8GBc0XvlXNj5tgHQadDAU/wfnECvA/gLEyQGmpheWvu//Vgnv/xi4An
+ 3RK1bGttIkX+hag==
 X-Developer-Key: i=jlayton@kernel.org; a=openpgp;
  fpr=4BC0D7B24471B2A184EAF5D3000E684119568215
 
-Have locks_wake_up_blocks take a file_lock_core pointer, and fix up the
-callers to pass one in.
-
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/locks.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ fs/locks.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
 diff --git a/fs/locks.c b/fs/locks.c
-index 6182f5c5e7b4..03985cfb7eff 100644
+index 0491d621417d..e8afdd084245 100644
 --- a/fs/locks.c
 +++ b/fs/locks.c
-@@ -806,7 +806,7 @@ static void locks_insert_block(struct file_lock_core *blocker,
+@@ -2169,17 +2169,17 @@ EXPORT_SYMBOL_GPL(vfs_test_lock);
   *
-  * Must be called with the inode->flc_lock held!
+  * Used to translate a fl_pid into a namespace virtual pid number
   */
--static void locks_wake_up_blocks(struct file_lock *blocker)
-+static void locks_wake_up_blocks(struct file_lock_core *blocker)
+-static pid_t locks_translate_pid(struct file_lock *fl, struct pid_namespace *ns)
++static pid_t locks_translate_pid(struct file_lock_core *fl, struct pid_namespace *ns)
  {
+ 	pid_t vnr;
+ 	struct pid *pid;
+ 
+-	if (fl->fl_core.flc_flags & FL_OFDLCK)
++	if (fl->flc_flags & FL_OFDLCK)
+ 		return -1;
+ 
+ 	/* Remote locks report a negative pid value */
+-	if (fl->fl_core.flc_pid <= 0)
+-		return fl->fl_core.flc_pid;
++	if (fl->flc_pid <= 0)
++		return fl->flc_pid;
+ 
  	/*
- 	 * Avoid taking global lock if list is empty. This is safe since new
-@@ -815,11 +815,11 @@ static void locks_wake_up_blocks(struct file_lock *blocker)
- 	 * fl_blocked_requests list does not require the flc_lock, so we must
- 	 * recheck list_empty() after acquiring the blocked_lock_lock.
+ 	 * If the flock owner process is dead and its pid has been already
+@@ -2187,10 +2187,10 @@ static pid_t locks_translate_pid(struct file_lock *fl, struct pid_namespace *ns)
+ 	 * flock owner pid number in init pidns.
  	 */
--	if (list_empty(&blocker->fl_core.flc_blocked_requests))
-+	if (list_empty(&blocker->flc_blocked_requests))
- 		return;
+ 	if (ns == &init_pid_ns)
+-		return (pid_t) fl->fl_core.flc_pid;
++		return (pid_t) fl->flc_pid;
  
- 	spin_lock(&blocked_lock_lock);
--	__locks_wake_up_blocks(&blocker->fl_core);
-+	__locks_wake_up_blocks(blocker);
- 	spin_unlock(&blocked_lock_lock);
- }
+ 	rcu_read_lock();
+-	pid = find_pid_ns(fl->fl_core.flc_pid, &init_pid_ns);
++	pid = find_pid_ns(fl->flc_pid, &init_pid_ns);
+ 	vnr = pid_nr_ns(pid, ns);
+ 	rcu_read_unlock();
+ 	return vnr;
+@@ -2198,7 +2198,7 @@ static pid_t locks_translate_pid(struct file_lock *fl, struct pid_namespace *ns)
  
-@@ -835,7 +835,7 @@ locks_unlink_lock_ctx(struct file_lock *fl)
+ static int posix_lock_to_flock(struct flock *flock, struct file_lock *fl)
  {
- 	locks_delete_global_locks(&fl->fl_core);
- 	list_del_init(&fl->fl_core.flc_list);
--	locks_wake_up_blocks(fl);
-+	locks_wake_up_blocks(&fl->fl_core);
- }
+-	flock->l_pid = locks_translate_pid(fl, task_active_pid_ns(current));
++	flock->l_pid = locks_translate_pid(&fl->fl_core, task_active_pid_ns(current));
+ #if BITS_PER_LONG == 32
+ 	/*
+ 	 * Make sure we can represent the posix lock via
+@@ -2220,7 +2220,7 @@ static int posix_lock_to_flock(struct flock *flock, struct file_lock *fl)
+ #if BITS_PER_LONG == 32
+ static void posix_lock_to_flock64(struct flock64 *flock, struct file_lock *fl)
+ {
+-	flock->l_pid = locks_translate_pid(fl, task_active_pid_ns(current));
++	flock->l_pid = locks_translate_pid(&fl->fl_core, task_active_pid_ns(current));
+ 	flock->l_start = fl->fl_start;
+ 	flock->l_len = fl->fl_end == OFFSET_MAX ? 0 :
+ 		fl->fl_end - fl->fl_start + 1;
+@@ -2726,7 +2726,7 @@ static void lock_get_status(struct seq_file *f, struct file_lock *fl,
+ 	struct pid_namespace *proc_pidns = proc_pid_ns(file_inode(f->file)->i_sb);
+ 	int type = fl->fl_core.flc_type;
  
- static void
-@@ -1328,11 +1328,11 @@ static int posix_lock_inode(struct inode *inode, struct file_lock *request,
- 			locks_insert_lock_ctx(left, &fl->fl_core.flc_list);
- 		}
- 		right->fl_start = request->fl_end + 1;
--		locks_wake_up_blocks(right);
-+		locks_wake_up_blocks(&right->fl_core);
- 	}
- 	if (left) {
- 		left->fl_end = request->fl_start - 1;
--		locks_wake_up_blocks(left);
-+		locks_wake_up_blocks(&left->fl_core);
- 	}
-  out:
- 	spin_unlock(&ctx->flc_lock);
-@@ -1414,7 +1414,7 @@ int lease_modify(struct file_lock *fl, int arg, struct list_head *dispose)
- 	if (error)
- 		return error;
- 	lease_clear_pending(fl, arg);
--	locks_wake_up_blocks(fl);
-+	locks_wake_up_blocks(&fl->fl_core);
- 	if (arg == F_UNLCK) {
- 		struct file *filp = fl->fl_core.flc_file;
+-	pid = locks_translate_pid(fl, proc_pidns);
++	pid = locks_translate_pid(&fl->fl_core, proc_pidns);
+ 	/*
+ 	 * If lock owner is dead (and pid is freed) or not visible in current
+ 	 * pidns, zero is shown as a pid value. Check lock info from
+@@ -2819,7 +2819,7 @@ static int locks_show(struct seq_file *f, void *v)
  
+ 	cur = hlist_entry(v, struct file_lock, fl_core.flc_link);
+ 
+-	if (locks_translate_pid(cur, proc_pidns) == 0)
++	if (locks_translate_pid(&cur->fl_core, proc_pidns) == 0)
+ 		return 0;
+ 
+ 	/* View this crossed linked list as a binary tree, the first member of fl_blocked_requests
 
 -- 
 2.43.0
