@@ -1,79 +1,79 @@
-Return-Path: <linux-nfs+bounces-1477-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1478-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFA5683DDB2
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 16:40:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A1BC83DDB3
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 16:40:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 75448B2235C
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 15:40:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A9D21F23820
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 15:40:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC6BC1CFB9;
-	Fri, 26 Jan 2024 15:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3E9B1CFAD;
+	Fri, 26 Jan 2024 15:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="BMf3FeF8"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="LdsqhbBR"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B9E1CFB6
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 15:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800EA1CFAB
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 15:40:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706283644; cv=none; b=ATBmHkcnt3j+ZQe9DRpcy2Q1PMWs0nhv6YE/7OqBczXzNqfQ+HIll1aeh0LenpN2Auf4ADS/7XxiLEDOulLF/QBd5sxWCLvwRpkkcF12uXUMCX/825xhO5kBCHFeQ0bXIE7Xk5WtVv2qC8hzx6pJedYQrNiFzFGFa2iKHnuYfYo=
+	t=1706283647; cv=none; b=HG96Qt8NJcrho0zTKMcTI7Yd+EJL+jx5EG46/sjJU2bh8oxa1e9xajY19uEWLCsamIlFnrTZG99N90DwQad9nJvjr2/KldPoa0C9Ih3UFqUQ84r4TSbMNan92SeZGiYEKarQBU50tU/GYKrvlY1VkU4iM5wjXZuZ9l5aSWNqSt0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706283644; c=relaxed/simple;
-	bh=oPo2HSHbqQg92hg+sIJI4A54+JArwH/DlZtupCaGy64=;
+	s=arc-20240116; t=1706283647; c=relaxed/simple;
+	bh=HYw7RJrKrn30ygP9WEHGLl9B1l9lIWNNnnl8a6T35kE=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZCAeZqmc52rr+YjvIKuYQl2jYjaBcVUWIsEV1SzijyzCXaeqJ0CidjWZOsVUjTnO4Ttu0WSxf9bNp6SH5YFRSEJrugk2hvsRRJ0I78/Mkd8a9PemOWwAKelzWsh8iUFWe4/cwVKzo35LXYOnnFdhPogpNW3VZZ3gR4k5GsFx+90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=BMf3FeF8; arc=none smtp.client-ip=209.85.219.181
+	 MIME-Version; b=enLxWVPI/D5AVLimB5igYw4/qb6Zm7YeHnVWlIfFaerFU//FkhsQyoNK34OlHFG+qblKIWxkSZ57Vhx/SZdTHGlilcc3iIejjHIlfMrAl7siz98QaV/wGC92colGDko5h3uh2/uFXzKADIyIiFLtAtQohIfF27qb/oamAZsFu1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=LdsqhbBR; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dbe344a6cf4so873043276.0
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 07:40:43 -0800 (PST)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6000bbdbeceso5227827b3.2
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 07:40:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1706283642; x=1706888442; darn=vger.kernel.org;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1706283645; x=1706888445; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3IiehwB2G+Nt2uBxPih15JoYIXyWwYzVUYGRXkPDnck=;
-        b=BMf3FeF8BIRTF8cC9Xi/RKcJMH0Ccr3borivlUMdk7slHVMqsA9MRom/t7chJkSBMn
-         UqsPzuFGTlm+HeLc/veSLGdo4JOvIDaXaawQQ9nV1twwl79yjJdfH1O7+xyse5rbMZb+
-         tdam0a5lU1Ruc8GAqm8emLhEGbBzjvVo6gvspKZmxYuIkQbuCensNguV+oMEzzcJ9bl5
-         i8rmlGH8CIheBpz+sYXw8SyK6pr+y9zncWMhH+ncvRG5mjr2PhfxvD5wcGeG+8QD5JB1
-         boEuI7vj5b1WxOBGB1Hl0kLeKeYxQYY0uTUt41v/knxbEHrb2sXiihBEEsUFQEJwTa6N
-         /4bg==
+        bh=qhcT4LxscUNgYkzme87+B08aKhu2LGoP/3IfHmoLGzc=;
+        b=LdsqhbBRNn1oom0KX5v/C/cdj83xBAkZT2z+d6vbiEq/03/twH95UyX/VrGlxDpejq
+         ut1eln4qLrTDTeUOjE2l4Xzv+FirihGtoNcB2nsXjU8BNjT00lxVtFlqFxDnT7Zi0I0Y
+         Foe5KDMylDOGNjmm8mqj5uFXCSedNSWMq3z8fICvAy/kcQOgahCqWVS2PySYmN3Knw27
+         iXllUSYSeVlr3niiNIsvmTvVoTfCMlR8naFsg661N69mSZJw2ypCoiCauLcoP52h4r1z
+         iejgGflSGEOu/d1fxLnAtSJAwMNTiXrjyFbnYMfw4cugC766m+0GsuzqwYp5ipGUl7+A
+         1GnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706283642; x=1706888442;
+        d=1e100.net; s=20230601; t=1706283645; x=1706888445;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3IiehwB2G+Nt2uBxPih15JoYIXyWwYzVUYGRXkPDnck=;
-        b=qMZJdQX9GF+hAMjJbU71NQsjJY1ZCYp2dxi1uFIcdWmRL7nBbajmqjqDK9z+rqa+RN
-         CdLyDsO7dMl2fKSAmiIoFrn8X5Y0mhZpec8E7BY/hZ4ikIc29uP4gSAogLc2yDobf1mz
-         X2v+uZZuD9TEbe2Y/XoBc8OqiY6lyu3VhZs4EmKC3kqV8Izjnmki1IjfSjrAAu1O2opr
-         PZO1HC/bEJFFOJ5d3/Wv96sRMxq+1Chd3Ch4KWnVZjmhgd5tv0mbPO851Z/g3nItsCUC
-         BNZSBEzUjbIrMPpVLo47srcOXK2H+ImIS0xFHHOb3ZjpINylV/ZY7EWv/Vp4vpjBFaVJ
-         yeHA==
-X-Gm-Message-State: AOJu0Ywwj7HxeD30dnVPIgBHH5UPpFICbnA1UyKCsCzU0aoPB9ARS3Z9
-	DfX6ohsoW0WVtGE9CBdmMAkUq99ZJCGdg/ru/eOH9Nw3/nE0evROiJpATsLlcFH2TafqTjUNIeU
-	N
-X-Google-Smtp-Source: AGHT+IFarNr7Fk2rEromuik2neFZrPKx8pkWY4h9O5dOduaJ4P+k8LGNH0k8iu/cZOigYf7I98aehA==
-X-Received: by 2002:a25:ae8f:0:b0:dc2:4771:1521 with SMTP id b15-20020a25ae8f000000b00dc247711521mr18358ybj.111.1706283642538;
-        Fri, 26 Jan 2024 07:40:42 -0800 (PST)
+        bh=qhcT4LxscUNgYkzme87+B08aKhu2LGoP/3IfHmoLGzc=;
+        b=AMiCLzaVpVhZJ+u5TELDyumNeSq6NPf1qM7U0zbYZzigGJv4izumt+8B0LaoB4feJY
+         59hBRcnIxvPK8EAybnJ45j2FsX7oIreoHUB72ryP0d8SW9hgavCQ3PQmQqrKXtBAmvm6
+         LuNTHyD8P2QHKwFn+gWz3hSR2DneJ5ns0HDcnkFG5V2geACLc692jkPBpG0oAuScPxvn
+         8oVTTEMddZnUcZ8uRX5pFgLYYI1BcGVCEj1qGBHsPimd+W7rwVTkp7lMLO4SKIxD/eXY
+         Wk1Hpvrpx45qKxaqhK0YwbcyLMDMcBOwUUmAHn9haAgtZuZMij7Kny46ahEWEAHl8Lgo
+         DEyw==
+X-Gm-Message-State: AOJu0Yztfgqx2VzW3r3A8JR+diJdrsARIxaqMKNWQNLdukJpYDcsB4+s
+	JsqF68LyIbMWNETghXnPdn0KT4wB5gs91gCC/rGqDLY4lcSJq4hQyAVtD24iS4dnL8za3QF2wHA
+	f
+X-Google-Smtp-Source: AGHT+IEOHWIu2u87Dod7bFY23DJfaz6Mw/6CqrJObtIP3GjL/qigOUdIX7UmUKCDDRaZrcvvvU9sMg==
+X-Received: by 2002:a81:af21:0:b0:5ff:73d8:216f with SMTP id n33-20020a81af21000000b005ff73d8216fmr1421887ywh.17.1706283645541;
+        Fri, 26 Jan 2024 07:40:45 -0800 (PST)
 Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id t4-20020a25c304000000b00dc24f777255sm461252ybf.0.2024.01.26.07.40.40
+        by smtp.gmail.com with ESMTPSA id t16-20020a818310000000b005ff9b0ab578sm451630ywf.117.2024.01.26.07.40.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 07:40:40 -0800 (PST)
+        Fri, 26 Jan 2024 07:40:43 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: chuck.lever@oracle.com,
 	jlayton@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v3 05/10] sunrpc: use the struct net as the svc proc private
-Date: Fri, 26 Jan 2024 10:39:44 -0500
-Message-ID: <85b93734ad64521b5543c4d0bf55d03f1983e6a9.1706283433.git.josef@toxicpanda.com>
+Subject: [PATCH v3 06/10] nfsd: rename NFSD_NET_* to NFSD_STATS_*
+Date: Fri, 26 Jan 2024 10:39:45 -0500
+Message-ID: <abaeacbbdf2dc86eb5e6fd119304b3fa1a265c04.1706283433.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1706283433.git.josef@toxicpanda.com>
 References: <cover.1706283433.git.josef@toxicpanda.com>
@@ -85,29 +85,80 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-nfsd is the only thing using this helper, and it doesn't use the private
-currently.  When we switch to per-network namespace stats we will need
-the struct net * in order to get to the nfsd_net.  Use the net as the
-proc private so we can utilize this when we make the switch over.
+We're going to merge the stats all into per network namespace in
+subsequent patches, rename these nn counters to be consistent with the
+rest of the stats.
 
 Signed-off-by: Josef Bacik <josef@toxicpanda.com>
 ---
- net/sunrpc/stats.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/netns.h    | 4 ++--
+ fs/nfsd/nfscache.c | 4 ++--
+ fs/nfsd/stats.h    | 6 +++---
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
-index 65fc1297c6df..383860cb1d5b 100644
---- a/net/sunrpc/stats.c
-+++ b/net/sunrpc/stats.c
-@@ -314,7 +314,7 @@ EXPORT_SYMBOL_GPL(rpc_proc_unregister);
- struct proc_dir_entry *
- svc_proc_register(struct net *net, struct svc_stat *statp, const struct proc_ops *proc_ops)
- {
--	return do_register(net, statp->program->pg_name, statp, proc_ops);
-+	return do_register(net, statp->program->pg_name, net, proc_ops);
- }
- EXPORT_SYMBOL_GPL(svc_proc_register);
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index 74b4360779a1..e3605cb5f044 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -26,9 +26,9 @@ struct nfsd4_client_tracking_ops;
  
+ enum {
+ 	/* cache misses due only to checksum comparison failures */
+-	NFSD_NET_PAYLOAD_MISSES,
++	NFSD_STATS_PAYLOAD_MISSES,
+ 	/* amount of memory (in bytes) currently consumed by the DRC */
+-	NFSD_NET_DRC_MEM_USAGE,
++	NFSD_STATS_DRC_MEM_USAGE,
+ 	NFSD_NET_COUNTERS_NUM
+ };
+ 
+diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+index 5c1a4a0aa605..3d4a9d181c43 100644
+--- a/fs/nfsd/nfscache.c
++++ b/fs/nfsd/nfscache.c
+@@ -687,7 +687,7 @@ int nfsd_reply_cache_stats_show(struct seq_file *m, void *v)
+ 		   atomic_read(&nn->num_drc_entries));
+ 	seq_printf(m, "hash buckets:          %u\n", 1 << nn->maskbits);
+ 	seq_printf(m, "mem usage:             %lld\n",
+-		   percpu_counter_sum_positive(&nn->counter[NFSD_NET_DRC_MEM_USAGE]));
++		   percpu_counter_sum_positive(&nn->counter[NFSD_STATS_DRC_MEM_USAGE]));
+ 	seq_printf(m, "cache hits:            %lld\n",
+ 		   percpu_counter_sum_positive(&nfsdstats.counter[NFSD_STATS_RC_HITS]));
+ 	seq_printf(m, "cache misses:          %lld\n",
+@@ -695,7 +695,7 @@ int nfsd_reply_cache_stats_show(struct seq_file *m, void *v)
+ 	seq_printf(m, "not cached:            %lld\n",
+ 		   percpu_counter_sum_positive(&nfsdstats.counter[NFSD_STATS_RC_NOCACHE]));
+ 	seq_printf(m, "payload misses:        %lld\n",
+-		   percpu_counter_sum_positive(&nn->counter[NFSD_NET_PAYLOAD_MISSES]));
++		   percpu_counter_sum_positive(&nn->counter[NFSD_STATS_PAYLOAD_MISSES]));
+ 	seq_printf(m, "longest chain len:     %u\n", nn->longest_chain);
+ 	seq_printf(m, "cachesize at longest:  %u\n", nn->longest_chain_cachesize);
+ 	return 0;
+diff --git a/fs/nfsd/stats.h b/fs/nfsd/stats.h
+index 14f50c660b61..7ed4325ac691 100644
+--- a/fs/nfsd/stats.h
++++ b/fs/nfsd/stats.h
+@@ -81,17 +81,17 @@ static inline void nfsd_stats_io_write_add(struct svc_export *exp, s64 amount)
+ 
+ static inline void nfsd_stats_payload_misses_inc(struct nfsd_net *nn)
+ {
+-	percpu_counter_inc(&nn->counter[NFSD_NET_PAYLOAD_MISSES]);
++	percpu_counter_inc(&nn->counter[NFSD_STATS_PAYLOAD_MISSES]);
+ }
+ 
+ static inline void nfsd_stats_drc_mem_usage_add(struct nfsd_net *nn, s64 amount)
+ {
+-	percpu_counter_add(&nn->counter[NFSD_NET_DRC_MEM_USAGE], amount);
++	percpu_counter_add(&nn->counter[NFSD_STATS_DRC_MEM_USAGE], amount);
+ }
+ 
+ static inline void nfsd_stats_drc_mem_usage_sub(struct nfsd_net *nn, s64 amount)
+ {
+-	percpu_counter_sub(&nn->counter[NFSD_NET_DRC_MEM_USAGE], amount);
++	percpu_counter_sub(&nn->counter[NFSD_STATS_DRC_MEM_USAGE], amount);
+ }
+ 
+ #ifdef CONFIG_NFSD_V4
 -- 
 2.43.0
 
