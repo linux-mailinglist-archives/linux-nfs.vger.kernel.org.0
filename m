@@ -1,171 +1,125 @@
-Return-Path: <linux-nfs+bounces-1507-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1508-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91F8183E23A
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 20:10:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 841F183E31D
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 21:10:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B67041C23223
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 19:10:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B76EF1C20ADD
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 20:10:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C27B17572;
-	Fri, 26 Jan 2024 19:10:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F35E02260B;
+	Fri, 26 Jan 2024 20:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMPQnOGN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BlonL15R"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DEF2232D
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 19:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33FD0224CF
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 20:10:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706296228; cv=none; b=dhOJLxXt9ZIvvUJ5RmFbSsxvgNtYEfkd2cbhfpCqjvqAb44z5CTezu6rmluvCFNilld0xi0nhlcwbSe5LqoxwnPAjTztieDsgN2yOIFIfZsnrWQb0Lj0rzXNLqkxMueSehsZoz/r/cFWwxEyeYbyf36pDzxh0yaexmAM67G559I=
+	t=1706299839; cv=none; b=ELtdIaLTAzdp5jTA3cisyr8baFTjstldgiHNWDymWGeyK7fitQOdv1Ko1OtGrcgIwW9UMh0sdpZcVqXwETWuUzdqoU3GmIkqqkoO69OIjnVpWbDuKWGaUbw0ldqDqtjTUiCHuxtr5j6f+U4aws3V7QaixOWPOJ3e4gQZuAAvAVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706296228; c=relaxed/simple;
-	bh=P3c+zlM42bjNjOZYHUqXr7ra6x5eXyW2TtOM4I2ECzs=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ADzuo6MdaAKLmU4PTsIpAX7ogNsY/ovUE5lETMJDJhy/b/RgLiCJk1uqu6YA4brw10rvM740pfblZx9p+sVo64ZVjf5nnQHWJUGzh/j0q237MY/Xzy/J6UWTeHCzDAl0fCeHLlaF/hIzpEVtFCdEIja4N+e3B2MI5COj0y+35Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMPQnOGN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD85C433C7;
-	Fri, 26 Jan 2024 19:10:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706296227;
-	bh=P3c+zlM42bjNjOZYHUqXr7ra6x5eXyW2TtOM4I2ECzs=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=nMPQnOGNRfzrzmSa5brdeCfGOf3tdmzhB5r53p3Yge8nXfpSNha1bpxt+0qoD/DKh
-	 AZum+0LzTl0UfoK7DHTf/6NE6gyRMLgHJpCcFZcOw898f1rhmID+/7wm22tsouiSpc
-	 +VzujmSkNFrfBitGlYvbTGaYM1J6d1YSEaYHf6BhaBAS15X1EBfPTyA1ID4DdR+SHA
-	 SRJ+EOc/ehJtO9VYEAAA1fY7hpAvQcOQGYjEj2bG2/ECXfH61MCAg/2DqirY7ayZKE
-	 p0sk8NvyOPRnTHM1o80O0c/nNowrEWxGMsBLZQ+sip1IZu31y0bXc77a484N4NkJdE
-	 4k3dF3EXI8+RQ==
-Message-ID: <69d2f87b79a31d322316b421fa24f98ab547041f.camel@kernel.org>
-Subject: Re: [PATCH 2 03/14] NFSD: Reschedule CB operations when backchannel
- rpc_clnt is shut down
-From: Jeff Layton <jlayton@kernel.org>
-To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
-Date: Fri, 26 Jan 2024 14:10:25 -0500
-In-Reply-To: <170629112969.20612.8526400738389878628.stgit@manet.1015granger.net>
-References: 
-	<170629091560.20612.563908774748586696.stgit@manet.1015granger.net>
-	 <170629112969.20612.8526400738389878628.stgit@manet.1015granger.net>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	s=arc-20240116; t=1706299839; c=relaxed/simple;
+	bh=d3VXE4acxFSA0cI48sTSdL7XV+h1CFhc7ZTfA/tPLWk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LNHmbJOdR6go7xlseriPmwmsTLCf1dNIeQvyRUaIgXfmbYM3gg30yUwboWRHxjOzOlHvoO7LuhYunBwGYBA9axlLxNvOJ4UlPDmyzVzG+ViCEPE/TILS92wBnjwahkruIih1jd+ZplODgrWZWvfc2w46C1PUPtIuKUCm2p6X/rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BlonL15R; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706299837;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1LPFG6aKjzjxpUdEv6klXk2UNMJAUY116NxMyg8UUQA=;
+	b=BlonL15RFJ+yrXxulVcyzMgX5fm9CLZDc1GxeoH1V4K4NPg0auN1Rs0ccpbSmmvGGo6g99
+	CqmeuSgcUOUt355bdJXJmx9q4xricr4VLJhlYcv65d2drBAGPfZiWbPyBStjwziZbW8TV9
+	2pxX5dsRNY6U7fqFrO+lvxP5UBtWXSY=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-611-WIG8p9JaOEilA9iiSkDcZw-1; Fri,
+ 26 Jan 2024 15:10:35 -0500
+X-MC-Unique: WIG8p9JaOEilA9iiSkDcZw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D446A3C0F379;
+	Fri, 26 Jan 2024 20:10:34 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-9.rdu2.redhat.com [10.22.0.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 64765400D288;
+	Fri, 26 Jan 2024 20:10:34 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Chuck Lever <cel@kernel.org>
+Cc: linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 2 00/14] NFSD backchannel fixes
+Date: Fri, 26 Jan 2024 15:10:33 -0500
+Message-ID: <CC794516-7A7B-4768-99CB-AA8F47B43625@redhat.com>
+In-Reply-To: <170629091560.20612.563908774748586696.stgit@manet.1015granger.net>
+References: <170629091560.20612.563908774748586696.stgit@manet.1015granger.net>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.2
 
-On Fri, 2024-01-26 at 12:45 -0500, Chuck Lever wrote:
-> From: Chuck Lever <chuck.lever@oracle.com>
->=20
-> As part of managing a client disconnect, NFSD closes down and
-> replaces the backchannel rpc_clnt.
->=20
-> If a callback operation is pending when the backchannel rpc_clnt is
-> shut down, currently nfsd4_run_cb_work() just discards that
-> callback. But there are multiple cases to deal with here:
->=20
->  o The client's lease is getting destroyed. Throw the CB away.
->=20
->  o The client disconnected. It might be forcing a retransmit of
->    CB operations, or it could have disconnected for other reasons.
->    Reschedule the CB so it is retransmitted when the client
->    reconnects.
->=20
-> Since callback operations can now be rescheduled, ensure that
-> cb_ops->prepare can be called only once by moving the
-> cb_ops->prepare paragraph down to just before the rpc_call_async()
-> call.
->=20
-> Fixes: 2bbfed98a4d8 ("nfsd: Fix races between nfsd4_cb_release() and nfsd=
-4_shutdown_callback()")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+On 26 Jan 2024, at 12:45, Chuck Lever wrote:
+
+> The first four patches fix bugs that prevent NFSD's backchannel
+> from reliably retransmitting after a client reconnects.
+>
+> Following that are some new trace points that might be helpful for
+> field troubleshooting.
+>
+> Then there are some minor clean-ups.
+>
+> Changes since RFC:
+> - Replace the msleep with queue_delayed_work
+> - Refinements to patch descriptions
+>
 > ---
->  fs/nfsd/nfs4callback.c |   32 +++++++++++++++++++++++---------
->  1 file changed, 23 insertions(+), 9 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 1ed2512b3648..389d05985c52 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -890,6 +890,13 @@ static bool nfsd4_queue_cb(struct nfsd4_callback *cb=
-)
->  	return queue_delayed_work(callback_wq, &cb->cb_work, 0);
->  }
-> =20
-> +static void nfsd4_queue_cb_delayed(struct nfsd4_callback *cb,
-> +				   unsigned long msecs)
-> +{
-> +	queue_delayed_work(callback_wq, &cb->cb_work,
-> +			   msecs_to_jiffies(msecs));
-> +}
-> +
->  static void nfsd41_cb_inflight_begin(struct nfs4_client *clp)
->  {
->  	atomic_inc(&clp->cl_cb_inflight);
-> @@ -1375,20 +1382,21 @@ nfsd4_run_cb_work(struct work_struct *work)
->  	struct rpc_clnt *clnt;
->  	int flags;
-> =20
-> -	if (cb->cb_need_restart) {
-> -		cb->cb_need_restart =3D false;
-> -	} else {
-> -		if (cb->cb_ops && cb->cb_ops->prepare)
-> -			cb->cb_ops->prepare(cb);
-> -	}
-> -
->  	if (clp->cl_flags & NFSD4_CLIENT_CB_FLAG_MASK)
->  		nfsd4_process_cb_update(cb);
-> =20
->  	clnt =3D clp->cl_cb_client;
->  	if (!clnt) {
-> -		/* Callback channel broken, or client killed; give up: */
-> -		nfsd41_destroy_cb(cb);
-> +		if (test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags))
-> +			nfsd41_destroy_cb(cb);
-> +		else {
-> +			/*
-> +			 * XXX: Ideally, we could wait for the client to
-> +			 *	reconnect, but I haven't figured out how
-> +			 *	to do that yet.
-> +			 */
-> +			nfsd4_queue_cb_delayed(cb, 25);
-> +		}
->  		return;
->  	}
-> =20
-> @@ -1401,6 +1409,12 @@ nfsd4_run_cb_work(struct work_struct *work)
->  		return;
->  	}
-> =20
-> +	if (cb->cb_need_restart) {
-> +		cb->cb_need_restart =3D false;
-> +	} else {
-> +		if (cb->cb_ops && cb->cb_ops->prepare)
-> +			cb->cb_ops->prepare(cb);
-> +	}
->  	cb->cb_msg.rpc_cred =3D clp->cl_cb_cred;
->  	flags =3D clp->cl_minorversion ? RPC_TASK_NOCONNECT : RPC_TASK_SOFTCONN=
-;
->  	rpc_call_async(clnt, &cb->cb_msg, RPC_TASK_SOFT | flags,
->=20
->=20
->=20
+>
+> Chuck Lever (14):
+>       NFSD: Reset cb_seq_status after NFS4ERR_DELAY
+>       NFSD: Convert the callback workqueue to use delayed_work
+>       NFSD: Reschedule CB operations when backchannel rpc_clnt is shut down
+>       NFSD: Retransmit callbacks after client reconnects
+>       NFSD: Add nfsd_seq4_status trace event
+>       NFSD: Replace dprintks in nfsd4_cb_sequence_done()
+>       NFSD: Rename nfsd_cb_state trace point
+>       NFSD: Add callback operation lifetime trace points
+>       SUNRPC: Remove EXPORT_SYMBOL_GPL for svc_process_bc()
+>       NFSD: Remove unused @reason argument
+>       NFSD: Replace comment with lockdep assertion
+>       NFSD: Remove BUG_ON in nfsd4_process_cb_update()
+>       SUNRPC: Remove stale comments
+>       NFSD: Remove redundant cb_seq_status initialization
+>
+>
+>  fs/nfsd/nfs4callback.c   |  94 +++++++++++++++--------
+>  fs/nfsd/nfs4state.c      |   1 +
+>  fs/nfsd/state.h          |   2 +-
+>  fs/nfsd/trace.h          | 162 ++++++++++++++++++++++++++++++++++++++-
+>  include/trace/misc/nfs.h |  34 ++++++++
+>  net/sunrpc/svc.c         |   1 -
+>  net/sunrpc/xprtsock.c    |   9 ---
+>  7 files changed, 261 insertions(+), 42 deletions(-)
+>
+> --
+> Chuck Lever
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+These all make sense, even to me.  For the series:
+
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+
+Ben
+
 
