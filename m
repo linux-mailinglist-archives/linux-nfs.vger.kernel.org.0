@@ -1,93 +1,93 @@
-Return-Path: <linux-nfs+bounces-1454-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1455-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F2BB083D47E
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 08:47:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 718A483D517
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 09:58:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 43087282165
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 07:47:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96DB61C250ED
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 08:58:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3339744C82;
-	Fri, 26 Jan 2024 07:26:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82C7F45963;
+	Fri, 26 Jan 2024 07:27:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h2uQ0i/I";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="30ZhKQU0";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="h2uQ0i/I";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="30ZhKQU0"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Fw4e8BGc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8mBylZ2M";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Fw4e8BGc";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="8mBylZ2M"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B3E44C83
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 07:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68A52A1B0;
+	Fri, 26 Jan 2024 07:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706253991; cv=none; b=sQu4SRkOBsbZ+4OSJ34ZXNTJ7FOftIoIE3knH7a1DStvezwGbzTstCeNCxauXLaDviKhhsk3Z//ukniJ2ngRJFiqotmuqrJ+N7keblqVaxGduaCvHhjaOO0nAUgeNlds7C0xp6s/dp9B//Vn4UXuDt5R3Srw25LyhVsGcH482Og=
+	t=1706254061; cv=none; b=iqsO1XLANmnIjmewAeQaaKvAYKiTSUq2TkTrgeRHkagFnQ9DkuTIK+HnwVD2sFeTLuHdyfpIslgamJwLxCVU9zy5L+Eiv0zHRDWv1H8f8+TRtiKU1mlfseYAy0se5GUYhnT+A8cJWpnltqwOCW1dHqSBeGSvGaijfFDLZzImNtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706253991; c=relaxed/simple;
-	bh=lIon5KMgkUKZ+eFh0JizRQhxh/QgZG0/YLaWDZxxBtA=;
+	s=arc-20240116; t=1706254061; c=relaxed/simple;
+	bh=GINjbe2szq535SXFdiGwXNCMoePT2lkGqtDutSceO/Y=;
 	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=jCcDOhCAl1IVG8owXP4zyltER19BwMda5I6JGCvZiX7G2W+I+ynfC5tB7MdSkJiaAcDgaN8p5dxmWohUDPdO1Fdz9G1HS+4JNJpt9co328PYoEeIREstP5jiGc2Ss8OU+QgNGt1NPf6aOEgrPOTzSrVSIg9Q68U9KWYh0Hu2goQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h2uQ0i/I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=30ZhKQU0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=h2uQ0i/I; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=30ZhKQU0; arc=none smtp.client-ip=195.135.223.131
+	 References:Date:Message-id; b=pyAG+aK5TjFmYrgj+OwGVOrks4IoT0oSDFsKe53MVv1ZPrf5hw39YgDHRjygPv2h5vYGNViw4aw6xVajFsPnxt1FkuNrlBzpnmB55Pz0a6P4zdSxRhkePS18idZ98NFa6NP9z20niof1q9LvgBokaJRw1pLgSfMwINlFK0dFdqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Fw4e8BGc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8mBylZ2M; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Fw4e8BGc; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=8mBylZ2M; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 16C031FB65;
-	Fri, 26 Jan 2024 07:26:27 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 7A66B1FB65;
+	Fri, 26 Jan 2024 07:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706253987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1706254056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SNUlaWFtC+RyeukO+R6ztZ+9Wlxf46OpmVWJfSTpu1w=;
-	b=h2uQ0i/IzdM/YUOsFXKocEIOYuOeWboANuSFnxb6sNi+qkg59jjHqHhtod24uTuwlaNle+
-	BnAorS4M9yECIgvKcI+ISaPWD1rtrtQZdxTA19GQwnklzwbqzSmX0Hpd1rcyNH9IN0BTSm
-	vPpq+oRpG4w4S5eUD64+tVWUfLo5mCM=
+	bh=z/2ZWD0aX6DVLsqYxQrCHNgwHrQVXAkUwctAhMPow9I=;
+	b=Fw4e8BGcWSZd8D6WB8hvPrizDOjApux9P1uDEkD/VwBar6DeCCwzCglGbRQARq4c9LcmIk
+	Kk/1zdRnaW54DRqWRIaabLby0kepHsmWBV9UyPJhDVtPq/bbE4RGCKaN0iK68iToh2R+EH
+	ATDnHTTOJ12Bw+EMmMvEDx1fiIjM4ro=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706253987;
+	s=susede2_ed25519; t=1706254056;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SNUlaWFtC+RyeukO+R6ztZ+9Wlxf46OpmVWJfSTpu1w=;
-	b=30ZhKQU0HlaoLRWxU6kXH/CdfNB/CscuZrq8IpYGKxFHpeSOAESKRcoNC1KvH9DBf+89Xo
-	Rtbjnq9xF6yLo3Cg==
+	bh=z/2ZWD0aX6DVLsqYxQrCHNgwHrQVXAkUwctAhMPow9I=;
+	b=8mBylZ2M2Ew22jXrdXxN10nZuuPNQwJhEncNYQyJgv2cGpo3XwdREcYw5Nej+9AK+LqVQx
+	flC0mL2LKNPkZICA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706253987; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1706254056; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SNUlaWFtC+RyeukO+R6ztZ+9Wlxf46OpmVWJfSTpu1w=;
-	b=h2uQ0i/IzdM/YUOsFXKocEIOYuOeWboANuSFnxb6sNi+qkg59jjHqHhtod24uTuwlaNle+
-	BnAorS4M9yECIgvKcI+ISaPWD1rtrtQZdxTA19GQwnklzwbqzSmX0Hpd1rcyNH9IN0BTSm
-	vPpq+oRpG4w4S5eUD64+tVWUfLo5mCM=
+	bh=z/2ZWD0aX6DVLsqYxQrCHNgwHrQVXAkUwctAhMPow9I=;
+	b=Fw4e8BGcWSZd8D6WB8hvPrizDOjApux9P1uDEkD/VwBar6DeCCwzCglGbRQARq4c9LcmIk
+	Kk/1zdRnaW54DRqWRIaabLby0kepHsmWBV9UyPJhDVtPq/bbE4RGCKaN0iK68iToh2R+EH
+	ATDnHTTOJ12Bw+EMmMvEDx1fiIjM4ro=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706253987;
+	s=susede2_ed25519; t=1706254056;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=SNUlaWFtC+RyeukO+R6ztZ+9Wlxf46OpmVWJfSTpu1w=;
-	b=30ZhKQU0HlaoLRWxU6kXH/CdfNB/CscuZrq8IpYGKxFHpeSOAESKRcoNC1KvH9DBf+89Xo
-	Rtbjnq9xF6yLo3Cg==
+	bh=z/2ZWD0aX6DVLsqYxQrCHNgwHrQVXAkUwctAhMPow9I=;
+	b=8mBylZ2M2Ew22jXrdXxN10nZuuPNQwJhEncNYQyJgv2cGpo3XwdREcYw5Nej+9AK+LqVQx
+	flC0mL2LKNPkZICA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 33DF6134C3;
-	Fri, 26 Jan 2024 07:26:23 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E3B6A134C3;
+	Fri, 26 Jan 2024 07:27:33 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id aG1HN59es2ViZQAAD6G6ig
-	(envelope-from <neilb@suse.de>); Fri, 26 Jan 2024 07:26:23 +0000
+	id NQi8JuVes2WrZQAAD6G6ig
+	(envelope-from <neilb@suse.de>); Fri, 26 Jan 2024 07:27:33 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -95,80 +95,121 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "NeilBrown" <neilb@suse.de>
-To: "Dan Shelton" <dan.f.shelton@gmail.com>
-Cc: "Chuck Lever III" <chuck.lever@oracle.com>,
- "Cedric Blancher" <cedric.blancher@gmail.com>,
- "Jeff Layton" <jlayton@kernel.org>,
+To: "Chuck Lever III" <chuck.lever@oracle.com>
+Cc: "Jeff Layton" <jlayton@kernel.org>,
+ "Lorenzo Bianconi" <lorenzo@kernel.org>,
+ "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
  "Lorenzo Bianconi" <lorenzo.bianconi@redhat.com>,
- "Dai Ngo" <dai.ngo@oracle.com>,
- "Olga Kornievskaia" <olga.kornievskaia@gmail.com>,
- "Tom Talpey" <tom@talpey.com>,
- "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: Should we establish a new nfsdctl userland program?
-In-reply-to:
- <CAAvCNcA4x1vR2Bh0vTy+kc7tK0t7sdM0JPJa5-XfLhD+-mLQTg@mail.gmail.com>
-References: <8a7bbc05b6515109692cb88ad68374d14fc01eca.camel@kernel.org>,
- <CALXu0UcV0b8OvH7_05tD7+GRgoXRcp9fd1aXuHjtF2OBDPmSJw@mail.gmail.com>,
- <66892D4F-4721-48E5-A088-BD75500275AD@oracle.com>,
- <CAAvCNcA4x1vR2Bh0vTy+kc7tK0t7sdM0JPJa5-XfLhD+-mLQTg@mail.gmail.com>
-Date: Fri, 26 Jan 2024 18:26:17 +1100
-Message-id: <170625397708.21664.9569848474622251060@noble.neil.brown.name>
+ "Jakub Kicinski" <kuba@kernel.org>, "Simon Horman" <horms@kernel.org>,
+ "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v6 3/3] NFSD: add write_ports to netlink command
+In-reply-to: <DAB30AAE-41F5-4FC5-AA14-E7E06BB389B5@oracle.com>
+References: <cover.1705771400.git.lorenzo@kernel.org>,
+ <f7c42dae2b232b3b06e54ceb3f00725893973e02.1705771400.git.lorenzo@kernel.org>,
+ <9e3ae337dcf168c60c4cfd51aa0b2fc7b24bcbfb.camel@kernel.org>,
+ <170595930799.23031.17998490973211605470@noble.neil.brown.name>,
+ <Za7zHvPJdei/vWm4@tissot.1015granger.net>, <Za-N6BxOMXTGyxmW@lore-desk>,
+ <85b02061798a1b750a87b0302681b86651d0c7a3.camel@kernel.org>,
+ <Za-9P0NjlIsc1PcE@lore-desk>,
+ <3f035d3bc494ec03b83ae237e407c42f2ddc4c53.camel@kernel.org>,
+ <ZbDdzwvP6-O2zosC@lore-desk>,
+ <8fabd83caa0d44369853a4040a89c069f9b0f935.camel@kernel.org>,
+ <917EC07C-C9D9-4CF2-9ACB-DCA2676DFF67@oracle.com>,
+ <170622264103.21664.16941742935452333478@noble.neil.brown.name>,
+ <DAB30AAE-41F5-4FC5-AA14-E7E06BB389B5@oracle.com>
+Date: Fri, 26 Jan 2024 18:27:27 +1100
+Message-id: <170625404709.21664.1810481700674698939@noble.neil.brown.name>
+X-Spam-Level: 
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="h2uQ0i/I";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=30ZhKQU0
-X-Spamd-Result: default: False [-3.26 / 50.00];
-	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	 RCVD_COUNT_THREE(0.00)[3];
-	 TO_DN_ALL(0.00)[];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
-	 RCPT_COUNT_SEVEN(0.00)[9];
-	 FREEMAIL_TO(0.00)[gmail.com];
-	 FROM_EQ_ENVFROM(0.00)[];
-	 MIME_TRACE(0.00)[0:+];
-	 SUBJECT_ENDS_QUESTION(1.00)[];
-	 BAYES_HAM(-0.45)[78.95%];
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=Fw4e8BGc;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=8mBylZ2M
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Spamd-Result: default: False [-9.51 / 50.00];
 	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
 	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
+	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	 FROM_HAS_DN(0.00)[];
-	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
-	 TAGGED_RCPT(0.00)[];
+	 NEURAL_HAM_LONG(-1.00)[-1.000];
 	 MIME_GOOD(-0.10)[text/plain];
 	 DWL_DNSWL_HI(-3.50)[suse.de:dkim];
+	 RCVD_DKIM_ARC_DNSWL_HI(-1.00)[];
+	 RCVD_COUNT_THREE(0.00)[3];
 	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim];
+	 DKIM_TRACE(0.00)[suse.de:+];
+	 MX_GOOD(-0.01)[];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email];
+	 TO_DN_ALL(0.00)[];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
-	 FREEMAIL_CC(0.00)[oracle.com,gmail.com,kernel.org,redhat.com,talpey.com,vger.kernel.org];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 NEURAL_HAM_SHORT(-0.20)[-1.000];
+	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:97:from];
 	 RCVD_TLS_ALL(0.00)[];
-	 SUSPICIOUS_RECIPS(1.50)[];
-	 RCVD_IN_DNSWL_HI(-0.50)[2a07:de40:b281:104:10:150:64:97:from]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 16C031FB65
-X-Spam-Level: 
-X-Spam-Score: -3.26
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Score: -9.51
+X-Rspamd-Queue-Id: 7A66B1FB65
 X-Spam-Flag: NO
 
-On Fri, 26 Jan 2024, Dan Shelton wrote:
-> 
-> Also, it might be good for hosters to allow more than one nfsd
-> instance with seperate exports file, each running on its own
-> address/port combination. And not force them to use a VM to bloat
-> resources.
+On Fri, 26 Jan 2024, Chuck Lever III wrote:
+>=20
+>=20
+> > On Jan 25, 2024, at 5:44=E2=80=AFPM, NeilBrown <neilb@suse.de> wrote:
+> >=20
+> > On Thu, 25 Jan 2024, Chuck Lever III wrote:
+> >>=20
+> >>=20
+> >>> On Jan 24, 2024, at 6:24=E2=80=AFAM, Jeff Layton <jlayton@kernel.org> w=
+rote:
+> >>>=20
+> >>> On Wed, 2024-01-24 at 10:52 +0100, Lorenzo Bianconi wrote:
+> >>>> [...]
+> >>>>>=20
+> >>>>> That's a great question. We do need to properly support the -H option=
+ to
+> >>>>> rpc.nfsd. What we do today is look up the hostname or address using
+> >>>>> getaddrinfo, and then open a listening socket for that address and th=
+en
+> >>>>> pass that fd down to the kernel, which I think then takes the socket =
+and
+> >>>>> sticks it on sv_permsocks.
+> >>>>>=20
+> >>>>> All of that seems a bit klunky. Ideally, I'd say the best thing would=
+ be
+> >>>>> to allow userland to pass the sockaddr we look up directly via netlin=
+k,
+> >>>>> and then let the kernel open the socket. That will probably mean
+> >>>>> refactoring some of the svc_xprt_create machinery to take a sockaddr,
+> >>>>> but I don't think it looks too hard to do.
+> >>>>=20
+> >>>> Do we already have a specific use case for it? I think we can even add=
+ it
+> >>>> later when we have a defined use case for it on top of the current ser=
+ies.
+> >>>>=20
+> >>>=20
+> >>> Yes:
+> >>>=20
+> >>> rpc.nfsd -H makes nfsd listen on a particular address and port. By
+> >>> passing down the sockaddr instead of an already-opened socket
+> >>> descriptor, we can achieve the goal without having to open sockets in
+> >>> userland.
+> >>=20
+> >> Tearing down a listener that was created that way would be a
+> >> use case for:
+> >=20
+> > Only if it was actually useful.
+> > Have you *ever* wanted to do that?  Or heard from anyone else who did?
+>=20
+> Container shutdown will want to clear out any listener
+> that might have been created during the container's
+> lifetime. How is that done today? Is that simply handled
+> by net namespace tear-down?
 
-This is possible with containers.  If you try to start nfsd in a new
-network namespace, it will be a new instance independent of nfsd running
-in any other namespace.
-You would need a filesystem namespace of the various tools to see the
-/etc/exports that you want it to.
-
-I would like it to be easier to configure this, but I'm certain that
-namespaces are the right way to create a new instance.
-(It might be nice to allow separate NFSD namespaces in the same network
-namespace but we'd need clear evidence that using network namespaces
-causes genuine problems.)
+Yes.  When the last thread in a netns exits, nfsd_last_thread() is
+called which closes all sockets.
 
 NeilBrown
 
