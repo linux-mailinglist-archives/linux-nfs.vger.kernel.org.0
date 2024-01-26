@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-1494-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1495-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B57683E0CF
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 18:47:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C3A5283E0D0
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 18:47:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D544F1F23940
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 17:47:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01E4B1C21205
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 17:47:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08C29208AF;
-	Fri, 26 Jan 2024 17:45:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57B2C208DA;
+	Fri, 26 Jan 2024 17:45:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJwpLSad"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FaaRCeiL"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82CF208A7
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 17:45:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324EB208A7
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 17:45:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706291143; cv=none; b=sGJ7WSgnLw3tw+6fSw27ZIGksOOjHymSQuBGd7dtX2tlPtWbcn7mjbHB5MPWdog5we1p7RsJClqJSRFqQ8/CK95z37Mssgx0SCEiZCnvyYUyaoaGfWlrgmUQOc2sI9dNMV0QnlGGGFFkJgRK05WwFUtWem2XwDIpHUtdQtDRom0=
+	t=1706291150; cv=none; b=PzzNQqrY6Ov3V55cJzRF+yQviwBWx6PIucvvp4bAJ7ctpjoKcSAV3lJaRkGQwKncnw8jAI2pN/UPJFomv3jwxuag2J0CSVmcO8E9/TzUNVEdBrsoRheW1+h77ygYv8Jg0gnADdeWdZysqp1FmaY8LH8HPrOCz0H6tAMGQIz4aPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706291143; c=relaxed/simple;
-	bh=cr/g7ElMEoUZAmCdl0hrZBH1qX2uPnDEWweEB9gQNfk=;
+	s=arc-20240116; t=1706291150; c=relaxed/simple;
+	bh=p6AHnFHKX18WddjVdsVpNt9qXCxw0HaBX+zRFxXcUZU=;
 	h=Subject:From:To:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Bv6+u38S8vjT3Ue7klKS+fxkq4GIGepGzNG7uVUGLkj31bzXXnn9+BL0uc5bKCLz6RG3eHyINmnpPO1Ls6Ag/5bCXOvy7mzZi4nqJocq55Og7hxPHY7jU3m98jUY+sUvlURrad6H9PeYA0rwu5WX4ClifI52T0MRhlbRXP6hKXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJwpLSad; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AAABC433F1
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 17:45:43 +0000 (UTC)
+	 MIME-Version:Content-Type; b=aCjrjPjv924iuzAOpovtaHcRWsPJmgHCINFA3ApSpjoWJCX7p82wPSLL2w+M/P6lexLBM72Yk/wBhZGU1gcENSUKHVA4cZWJnBrsRThYPTWCKZFU3HMRfcl6QSiZnYL7meXB4E5TaLNyLeEKV4cn0iDIrpORXLgFhymXFmEb1K0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FaaRCeiL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF29C43143
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 17:45:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706291143;
-	bh=cr/g7ElMEoUZAmCdl0hrZBH1qX2uPnDEWweEB9gQNfk=;
+	s=k20201202; t=1706291149;
+	bh=p6AHnFHKX18WddjVdsVpNt9qXCxw0HaBX+zRFxXcUZU=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=EJwpLSadWI1G1mDww/iRlujv4plpo3ai/m2hG6K7kiHj4fU/61UVikSiYDYeKDOwm
-	 dehm0muH/OqBLej0NL0ypbjU7TCJdln3mUXdcbxzzeZc8QDsFzajyABOwxTBMt00JQ
-	 vVYEfQADhx+vnEhgabYsMiOetVjjLiICV1dkd4CT30YCUyKOX8/7ZaqgSVbwWqOfRK
-	 wGc64Gk41B2LIhpYVn779Ih0yB2bMEnUpHeos4sZRsudq/wYCGaIMGDAVJRdxS+KVQ
-	 zcH6qfTSGKMueC0GmITzG5VSG4Hb0Egnni3+nePRuKJPmPKFzUXMRDMxRMDWs24mcL
-	 IotX1rl2ghH9g==
-Subject: [PATCH 2 05/14] NFSD: Add nfsd_seq4_status trace event
+	b=FaaRCeiLkK0fHj8Re92ribO/2HSgWzDjIRg1esa94XyH2Zjbc57a3UPQEzEA+DAAh
+	 w43XD3ait6tq39kw7sbZaXKpDBzZERTSb7JotPkiUNRKLJ+bXw+STrw4iZtUiBZZ2K
+	 XtL6CvaL5UdmaPvzLhtIOlSa1LB43K/kkN/JspnPgzem/cCEnCjeLWaJIgeSdzFJTo
+	 KufcZmYdHEUTOOYRZgF8oJ2zMNgwBxHaBgsKE+yyDk8EICrhQTVhaByYmn7q2NHJ7b
+	 26hxP6/9yRahCSCNT70Is1tIaIt4jmvjU/rRz/CbBTXbjBANm1db8rGf49p8Aiakk/
+	 7hsHHEBRZD1rA==
+Subject: [PATCH 2 06/14] NFSD: Replace dprintks in nfsd4_cb_sequence_done()
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org
-Date: Fri, 26 Jan 2024 12:45:42 -0500
+Date: Fri, 26 Jan 2024 12:45:48 -0500
 Message-ID: 
- <170629114243.20612.6785316387431284189.stgit@manet.1015granger.net>
+ <170629114861.20612.12626133349616644679.stgit@manet.1015granger.net>
 In-Reply-To: 
  <170629091560.20612.563908774748586696.stgit@manet.1015granger.net>
 References: 
@@ -63,88 +63,146 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-Add a trace point that records SEQ4_STATUS flags returned in an
-NFSv4.1 SEQUENCE response. SEQ4_STATUS flags report backchannel
-issues and changes to lease state to clients. Knowing what the
-server is reporting to clients is useful for debugging both
-configuration and operational issues in real time.
-
-For example, upcoming patches will enable server administrators to
-revoke parts of a client's lease; that revocation is indicated to
-the client when a subsequent SEQUENCE operation has one or more
-SEQ4_STATUS flags that are set.
-
-Sample trace records:
-
-nfsd-927   [006]   615.581821: nfsd_seq4_status:     xid=0x095ded07 sessionid=65a032c3:b7845faf:00000001:00000000 status_flags=BACKCHANNEL_FAULT
-nfsd-927   [006]   615.588043: nfsd_seq4_status:     xid=0x0a5ded07 sessionid=65a032c3:b7845faf:00000001:00000000 status_flags=BACKCHANNEL_FAULT
-nfsd-928   [003]   615.588448: nfsd_seq4_status:     xid=0x0b5ded07 sessionid=65a032c3:b7845faf:00000001:00000000 status_flags=BACKCHANNEL_FAULT
+Improve observability of backchannel session operation.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4state.c |    1 +
- fs/nfsd/trace.h     |   35 +++++++++++++++++++++++++++++++++++
- 2 files changed, 36 insertions(+)
+ fs/nfsd/nfs4callback.c |    9 ++---
+ fs/nfsd/trace.h        |   82 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 86 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index d7d561b29fb0..3d6e3dcfdee1 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4058,6 +4058,7 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index 3bff14241b3c..78d9939cf4b0 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -1165,6 +1165,8 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 	if (!cb->cb_holds_slot)
+ 		goto need_restart;
+ 
++	/* This is the operation status code for CB_SEQUENCE */
++	trace_nfsd_cb_seq_status(task, cb);
+ 	switch (cb->cb_seq_status) {
+ 	case 0:
+ 		/*
+@@ -1210,13 +1212,10 @@ static bool nfsd4_cb_sequence_done(struct rpc_task *task, struct nfsd4_callback
+ 		break;
+ 	default:
+ 		nfsd4_mark_cb_fault(cb->cb_clp, cb->cb_seq_status);
+-		dprintk("%s: unprocessed error %d\n", __func__,
+-			cb->cb_seq_status);
  	}
- 	if (!list_empty(&clp->cl_revoked))
- 		seq->status_flags |= SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
-+	trace_nfsd_seq4_status(rqstp, seq);
- out_no_session:
- 	if (conn)
- 		free_conn(conn);
+-
+ 	nfsd41_cb_release_slot(cb);
+-	dprintk("%s: freed slot, new seqid=%d\n", __func__,
+-		clp->cl_cb_session->se_cb_seq_nr);
++
++	trace_nfsd_cb_free_slot(task, cb);
+ 
+ 	if (RPC_SIGNALLED(task))
+ 		goto need_restart;
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index d1e8cf079b0f..38d11b43779c 100644
+index 38d11b43779c..c134c755ae5d 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -696,6 +696,41 @@ DEFINE_EVENT(nfsd_stid_class, nfsd_stid_##name,			\
+@@ -9,8 +9,10 @@
+ #define _NFSD_TRACE_H
  
- DEFINE_STID_EVENT(revoke);
+ #include <linux/tracepoint.h>
++#include <linux/sunrpc/clnt.h>
+ #include <linux/sunrpc/xprt.h>
+ #include <trace/misc/nfs.h>
++#include <trace/misc/sunrpc.h>
  
-+TRACE_EVENT_CONDITION(nfsd_seq4_status,
+ #include "export.h"
+ #include "nfsfh.h"
+@@ -1440,6 +1442,86 @@ TRACE_EVENT(nfsd_cb_setup_err,
+ 		__entry->error)
+ );
+ 
++TRACE_EVENT(nfsd_cb_seq_status,
 +	TP_PROTO(
-+		const struct svc_rqst *rqstp,
-+		const struct nfsd4_sequence *sequence
++		const struct rpc_task *task,
++		const struct nfsd4_callback *cb
 +	),
-+	TP_ARGS(rqstp, sequence),
-+	TP_CONDITION(sequence->status_flags),
++	TP_ARGS(task, cb),
 +	TP_STRUCT__entry(
-+		__field(unsigned int, netns_ino)
-+		__field(u32, xid)
++		__field(unsigned int, task_id)
++		__field(unsigned int, client_id)
 +		__field(u32, cl_boot)
 +		__field(u32, cl_id)
 +		__field(u32, seqno)
 +		__field(u32, reserved)
-+		__field(unsigned long, status_flags)
++		__field(int, tk_status)
++		__field(int, seq_status)
 +	),
 +	TP_fast_assign(
++		const struct nfs4_client *clp = cb->cb_clp;
++		const struct nfsd4_session *session = clp->cl_cb_session;
 +		const struct nfsd4_sessionid *sid =
-+			(struct nfsd4_sessionid *)&sequence->sessionid;
++			(struct nfsd4_sessionid *)&session->se_sessionid;
 +
-+		__entry->netns_ino = SVC_NET(rqstp)->ns.inum;
-+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
++		__entry->task_id = task->tk_pid;
++		__entry->client_id = task->tk_client ?
++				     task->tk_client->cl_clid : -1;
 +		__entry->cl_boot = sid->clientid.cl_boot;
 +		__entry->cl_id = sid->clientid.cl_id;
 +		__entry->seqno = sid->sequence;
 +		__entry->reserved = sid->reserved;
-+		__entry->status_flags = sequence->status_flags;
++		__entry->tk_status = task->tk_status;
++		__entry->seq_status = cb->cb_seq_status;
 +	),
-+	TP_printk("xid=0x%08x sessionid=%08x:%08x:%08x:%08x status_flags=%s",
-+		__entry->xid, __entry->cl_boot, __entry->cl_id,
++	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
++		" sessionid=%08x:%08x:%08x:%08x tk_status=%d seq_status=%d\n",
++		__entry->task_id, __entry->client_id,
++		__entry->cl_boot, __entry->cl_id,
 +		__entry->seqno, __entry->reserved,
-+		show_nfs4_seq4_status(__entry->status_flags)
++		__entry->tk_status, __entry->seq_status
 +	)
 +);
 +
- DECLARE_EVENT_CLASS(nfsd_clientid_class,
- 	TP_PROTO(const clientid_t *clid),
- 	TP_ARGS(clid),
++TRACE_EVENT(nfsd_cb_free_slot,
++	TP_PROTO(
++		const struct rpc_task *task,
++		const struct nfsd4_callback *cb
++	),
++	TP_ARGS(task, cb),
++	TP_STRUCT__entry(
++		__field(unsigned int, task_id)
++		__field(unsigned int, client_id)
++		__field(u32, cl_boot)
++		__field(u32, cl_id)
++		__field(u32, seqno)
++		__field(u32, reserved)
++		__field(u32, slot_seqno)
++	),
++	TP_fast_assign(
++		const struct nfs4_client *clp = cb->cb_clp;
++		const struct nfsd4_session *session = clp->cl_cb_session;
++		const struct nfsd4_sessionid *sid =
++			(struct nfsd4_sessionid *)&session->se_sessionid;
++
++		__entry->task_id = task->tk_pid;
++		__entry->client_id = task->tk_client ?
++				     task->tk_client->cl_clid : -1;
++		__entry->cl_boot = sid->clientid.cl_boot;
++		__entry->cl_id = sid->clientid.cl_id;
++		__entry->seqno = sid->sequence;
++		__entry->reserved = sid->reserved;
++		__entry->slot_seqno = session->se_cb_seq_nr;
++	),
++	TP_printk(SUNRPC_TRACE_TASK_SPECIFIER
++		" sessionid=%08x:%08x:%08x:%08x new slot seqno=%u\n",
++		__entry->task_id, __entry->client_id,
++		__entry->cl_boot, __entry->cl_id,
++		__entry->seqno, __entry->reserved,
++		__entry->slot_seqno
++	)
++);
++
+ TRACE_EVENT_CONDITION(nfsd_cb_recall,
+ 	TP_PROTO(
+ 		const struct nfs4_stid *stid
 
 
 
