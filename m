@@ -1,76 +1,81 @@
-Return-Path: <linux-nfs+bounces-1472-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1473-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 825FE83DDAC
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 16:40:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37E8E83DDAD
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 16:40:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0E6FB1F238F9
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0A232854CA
 	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 15:40:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C4991CF83;
-	Fri, 26 Jan 2024 15:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B571CFBE;
+	Fri, 26 Jan 2024 15:40:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="oChAOhNi"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="DQUt5ix7"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F781CFA9
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 15:40:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D31D1CFA9
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 15:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706283630; cv=none; b=u/WFpqBezuOXDrV27PVlF4cpJ4Eba0PkUsojFDH2x8LObqY3v85NbKkRINpZWOSTVV81sz29kt+Ilt2b42meQ/fT8oa7axNjOPqB+9Fg5OkoRAPVfKdKrC9OpeaU1gSsyXRv3ttklM7LF8Pa0ifVPAkEWekWSVv2Iz2q4KlSDgg=
+	t=1706283634; cv=none; b=irsuJft5D13wAUgKBtP/FKlDvAmEi8v9hSevrnvRCkw6b5GpO6T7pfg7YALn7UOazHmwBnDesyqJbMgYmQs4XM+ehy99A4uSBlZxPQf0Vn3r8nvPC1CtjdCpjQghLQJRvRHSQQ2qOxrNcqWjv4T+Zot23vSjv3553ptfx7n/i4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706283630; c=relaxed/simple;
-	bh=3a6v9OmqwgF07AvQBqsvMoAuQ4G9nFb104zBF13advs=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=ir6iorF1SEkRUGmfT/4QwY3y/QCwCHqbJYK0Rb6AvQKFZ+VDYMnPi4tOnEw0IJc3xMaWOQgIOskB2Gq9g3u1SMBnYNwwayA7NJ1FiDsohR4s9vd01DYqg5BoS+ikdqvJRomCyiZouj3AvrAEwwnckaxfB3BIiPgt/KCO5RhNYWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=oChAOhNi; arc=none smtp.client-ip=209.85.219.174
+	s=arc-20240116; t=1706283634; c=relaxed/simple;
+	bh=gj6BN5Ryi90FiGCGRLD4HyYT25snhN7XpbObeUR/VfU=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=asxaqwCP6CkPP00cCp7IPuv7fWzjcByFwYa+RvXzYg6w9/N5J4rJs4bJUmkE57KMMeq7iHf5zngJpT41Ox5KZRmM210Zw263M6kFlT14Rz+6UJ1FrnT2hiz75sP8UMi42To6vg6dW4z9zWtUoEdQeZeU4Ik1Oc2ttVwxhidov00=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=DQUt5ix7; arc=none smtp.client-ip=209.85.128.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dc256e97e0aso362771276.2
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 07:40:27 -0800 (PST)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5ff7dc53ce0so3891367b3.1
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 07:40:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1706283627; x=1706888427; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zZ3ez6t5PnMSuNaWcSovI+99AQHhcdQwE3a4hRRZDJY=;
-        b=oChAOhNiJ8FYCzO0/YMtdpI5NtzmcQkzlmhEp8q0UzlVZHQ1aMcbqXAweJnZfOZWD/
-         JVNICdCHtOEd4BTmYfpPM2GdZ8mKcK6WNMPPPBkKAnYRL/b7X7RDAXkoF/e0A+Qc1rMk
-         dMdgiVbYM85p1QKeyE2g5PFIppHaQ6CvlxameyfLAiPkjwXVI9Rz/Ao+YAFyLk/10fLb
-         9sw7fb/G5KEgk2m3cjIqz+lwFyTj5ceJB/kExvQsVDdpW4B4H9QYSrDNCSZhnb052p/V
-         Us7TpnMo9w5nkmaAcWVsKG16qgJFZZDm3YuIMCb8YPD32HJgPM3ymdQ8Ijbdn13CzJaY
-         5dmg==
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1706283630; x=1706888430; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hDFJ4ofz5JnRdgl61rMW+8vTooiJNkqwX2WXWFw/o7A=;
+        b=DQUt5ix7WCx07vMPsRGrGBAu1fe+RZb6X5T4FS2AJXRiYnyASob1ykax1hekCEEZXx
+         eZnlgaVL+ep8LKVqv2L8wKilqKJaO0DCb+CClloOqvWiHLbofQlTR0AkS3ZStq6xVUpe
+         q88W+6HvZH8IAsI0eAiDlWki5k74opMH55YYfbwrC8WejHEsWhACSwlGlIySbkAzOniI
+         MkB0CYoyxZPA2Ab9jrb6i5JhPNcwVv0mqyo6ITjbSKR/EZS5pSO2YU8Q4uqFsYkaH+EF
+         yIx+YmcXHfaCsb4+8QJH9RfWP7lUhVackzwrx8SQ4QNbS+z6jje2jPAdt+JHpI4FchMa
+         FGzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706283627; x=1706888427;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zZ3ez6t5PnMSuNaWcSovI+99AQHhcdQwE3a4hRRZDJY=;
-        b=GJw26DP6v9viN8+aNZ+rzQM4SaW5FGxt6vQUFFGu9akyGxalDjzNt88DEdhrGvSaL0
-         m+zjV96BzmMx1vWPb3b/v4Ya5ZJWTJ72CPWJbPjH21EPQr2thSpcfcmWIvCCQu0UbD9O
-         AbXxiP6YqGInZXJuCkEmkAzMpi5xWsteDkLy7enupafLOz5haHzHPjBWYlWh9X+yj1u8
-         uq++d5R9e0SPMLXe6CvT5fabw6xRl//yr1Od7ZcsrdxDGJZubzUVLnuQyQN38hqNS7nM
-         Edr69okmqSozNnguV0Z5he453pOEDIrHvuuTql9L+uQNowv5dJ/6R5+qnYtHNX6rQXTI
-         MbTg==
-X-Gm-Message-State: AOJu0Yxul67ibQG8Awt6kZUz3RZowZ1A1BFrxLoM/JD55LQNgbh0SZI7
-	SLu7Vkwxay8D7ANmJ2PGZkpUB30Qq8ZhL6E2uYGnjHBmu7tzbWxh6CZP9aJeeI0=
-X-Google-Smtp-Source: AGHT+IH0qJ3osuca8/JakUmwRWL2X7D/DMNTa9eAfAoEULsAE/R69JqO2ijuBKT9Q0nwrI8l1YYszg==
-X-Received: by 2002:a25:902:0:b0:dbd:5db5:475a with SMTP id 2-20020a250902000000b00dbd5db5475amr22953ybj.34.1706283626920;
-        Fri, 26 Jan 2024 07:40:26 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706283630; x=1706888430;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hDFJ4ofz5JnRdgl61rMW+8vTooiJNkqwX2WXWFw/o7A=;
+        b=sHpuzy5Gu4h1Hc9FKyCexHMoCMoa3k4ai8PbS7T9qOzbj5S7PfvbiHtJVZl6IKA/RY
+         VUAgd9j/QbqmH5R4cCQNt3AWZ5QPy3DO7SD6+2TwJaoOtTiX9Bl46VF6Z0ovUVvCWxzp
+         W1Gjodknx0ljdyVEpjdUcQn8jZGcNZNABwht1LYVy4DEca/58m20jtqPV03Hp+a9qyo7
+         /b+U0KV5HL+s5DgRT+tBjMGWU8K2rek6Js0n43HFYgDZAVMKgVWpstU4KiWx9Qry9MyG
+         U2+OQAtD+UAICJ8n1IHiAAGz8EUW0ScDvBgffwx8MGPdO/A2SFB/diDGbRLQ+geV8Wx2
+         MEAQ==
+X-Gm-Message-State: AOJu0YwaZsH3IX/94OSiEjo21k40Y/zUXDProfHSBeg5qFkO+iewC3Gy
+	iEzJExaPSRzOKW7Vxoltk61Un9kX8upUAaeS7BPlmMk9QoZvtNDSQu4e9plYOAM=
+X-Google-Smtp-Source: AGHT+IFRYjtMG6YZIDONmyRsiSQ1ncogzoR7jMfPkHa2xC9dBqUIwkr5vUhihjqSgTHzZT8TZr02kA==
+X-Received: by 2002:a0d:d40c:0:b0:600:228e:15cf with SMTP id w12-20020a0dd40c000000b00600228e15cfmr1168936ywd.92.1706283629946;
+        Fri, 26 Jan 2024 07:40:29 -0800 (PST)
 Received: from localhost (076-182-020-124.res.spectrum.com. [76.182.20.124])
-        by smtp.gmail.com with ESMTPSA id w10-20020a056902100a00b00dc237c2d43csm438824ybt.49.2024.01.26.07.40.24
+        by smtp.gmail.com with ESMTPSA id q206-20020a815cd7000000b005ff846d1f1dsm450775ywb.134.2024.01.26.07.40.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 07:40:24 -0800 (PST)
+        Fri, 26 Jan 2024 07:40:27 -0800 (PST)
 From: Josef Bacik <josef@toxicpanda.com>
 To: chuck.lever@oracle.com,
 	jlayton@kernel.org,
 	linux-nfs@vger.kernel.org
-Subject: [PATCH v3 00/10] Make nfsd stats visible in network ns
-Date: Fri, 26 Jan 2024 10:39:39 -0500
-Message-ID: <cover.1706283433.git.josef@toxicpanda.com>
+Subject: [PATCH v3 01/10] sunrpc: don't change ->sv_stats if it doesn't exist
+Date: Fri, 26 Jan 2024 10:39:40 -0500
+Message-ID: <eebbdad4c1f6b6bd22ef58f578a605a84f98729e.1706283433.git.josef@toxicpanda.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1706283433.git.josef@toxicpanda.com>
+References: <cover.1706283433.git.josef@toxicpanda.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
@@ -79,56 +84,108 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-v1: https://lore.kernel.org/linux-nfs/cover.1706124811.git.josef@toxicpanda.com/
-v2: https://lore.kernel.org/linux-nfs/cover.1706212207.git.josef@toxicpanda.com/
+We check for the existence of ->sv_stats elsewhere except in the core
+processing code.  It appears that only nfsd actual exports these values
+anywhere, everybody else just has a write only copy of sv_stats in their
+svc_program.  Add a check for ->sv_stats before every adjustment to
+allow us to eliminate the stats struct from all the users who don't
+report the stats.
 
-NOTE: there's still one nfs change in here and it's where I dropped pg_stats, I
-assume that's ok for this series, but I can break it out and then follow up with
-a removal later if necessary.
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+---
+ net/sunrpc/svc.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-v2->v3:
-- Split out the nfs and nfsd related changes into their own patches.
-- Dropped the change adding sv_stats throuch svc_create()
-- Changed the th_cnt to be global, re-arranged it's location.
-
-v1->v2:
-- rework the sunprc service creation to take a pointer to the sv_stats.
-- dropped ->pg_stats from the svc_program.
-- converted all of the nfsd global stats to per-network namespace.
-- added the ability to point at a specific rpc_stat for rpc program creation.
-- converted the rpc stats for nfs to per-network namespace.
-
-Josef Bacik (10):
-  sunrpc: don't change ->sv_stats if it doesn't exist
-  nfs: stop setting ->pg_stats for unused stats
-  sunrpc: pass in the sv_stats struct through svc_create_pooled
-  sunrpc: remove ->pg_stats from svc_program
-  sunrpc: use the struct net as the svc proc private
-  nfsd: rename NFSD_NET_* to NFSD_STATS_*
-  nfsd: expose /proc/net/sunrpc/nfsd in net namespaces
-  nfsd: make all of the nfsd stats per-network namespace
-  nfsd: remove nfsd_stats, make th_cnt a global counter
-  nfsd: make svc_stat per-network namespace instead of global
-
- fs/lockd/svc.c             |  3 --
- fs/nfs/callback.c          |  3 --
- fs/nfsd/cache.h            |  2 --
- fs/nfsd/netns.h            | 25 +++++++++++---
- fs/nfsd/nfs4proc.c         |  6 ++--
- fs/nfsd/nfs4state.c        |  3 +-
- fs/nfsd/nfscache.c         | 40 +++++-----------------
- fs/nfsd/nfsctl.c           | 16 ++++-----
- fs/nfsd/nfsd.h             |  1 +
- fs/nfsd/nfsfh.c            |  3 +-
- fs/nfsd/nfssvc.c           | 14 +++-----
- fs/nfsd/stats.c            | 52 ++++++++++++----------------
- fs/nfsd/stats.h            | 70 +++++++++++++-------------------------
- fs/nfsd/vfs.c              |  5 +--
- include/linux/sunrpc/svc.h |  5 ++-
- net/sunrpc/stats.c         |  2 +-
- net/sunrpc/svc.c           | 39 +++++++++++++--------
- 17 files changed, 126 insertions(+), 163 deletions(-)
-
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index f60c93e5a25d..d2e6f3d59218 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -1375,7 +1375,8 @@ svc_process_common(struct svc_rqst *rqstp)
+ 		goto err_bad_proc;
+ 
+ 	/* Syntactic check complete */
+-	serv->sv_stats->rpccnt++;
++	if (serv->sv_stats)
++		serv->sv_stats->rpccnt++;
+ 	trace_svc_process(rqstp, progp->pg_name);
+ 
+ 	aoffset = xdr_stream_pos(xdr);
+@@ -1427,7 +1428,8 @@ svc_process_common(struct svc_rqst *rqstp)
+ 	goto close_xprt;
+ 
+ err_bad_rpc:
+-	serv->sv_stats->rpcbadfmt++;
++	if (serv->sv_stats)
++		serv->sv_stats->rpcbadfmt++;
+ 	xdr_stream_encode_u32(xdr, RPC_MSG_DENIED);
+ 	xdr_stream_encode_u32(xdr, RPC_MISMATCH);
+ 	/* Only RPCv2 supported */
+@@ -1438,7 +1440,8 @@ svc_process_common(struct svc_rqst *rqstp)
+ err_bad_auth:
+ 	dprintk("svc: authentication failed (%d)\n",
+ 		be32_to_cpu(rqstp->rq_auth_stat));
+-	serv->sv_stats->rpcbadauth++;
++	if (serv->sv_stats)
++		serv->sv_stats->rpcbadauth++;
+ 	/* Restore write pointer to location of reply status: */
+ 	xdr_truncate_encode(xdr, XDR_UNIT * 2);
+ 	xdr_stream_encode_u32(xdr, RPC_MSG_DENIED);
+@@ -1448,7 +1451,8 @@ svc_process_common(struct svc_rqst *rqstp)
+ 
+ err_bad_prog:
+ 	dprintk("svc: unknown program %d\n", rqstp->rq_prog);
+-	serv->sv_stats->rpcbadfmt++;
++	if (serv->sv_stats)
++		serv->sv_stats->rpcbadfmt++;
+ 	*rqstp->rq_accept_statp = rpc_prog_unavail;
+ 	goto sendit;
+ 
+@@ -1456,7 +1460,8 @@ svc_process_common(struct svc_rqst *rqstp)
+ 	svc_printk(rqstp, "unknown version (%d for prog %d, %s)\n",
+ 		       rqstp->rq_vers, rqstp->rq_prog, progp->pg_name);
+ 
+-	serv->sv_stats->rpcbadfmt++;
++	if (serv->sv_stats)
++		serv->sv_stats->rpcbadfmt++;
+ 	*rqstp->rq_accept_statp = rpc_prog_mismatch;
+ 
+ 	/*
+@@ -1470,19 +1475,22 @@ svc_process_common(struct svc_rqst *rqstp)
+ err_bad_proc:
+ 	svc_printk(rqstp, "unknown procedure (%d)\n", rqstp->rq_proc);
+ 
+-	serv->sv_stats->rpcbadfmt++;
++	if (serv->sv_stats)
++		serv->sv_stats->rpcbadfmt++;
+ 	*rqstp->rq_accept_statp = rpc_proc_unavail;
+ 	goto sendit;
+ 
+ err_garbage_args:
+ 	svc_printk(rqstp, "failed to decode RPC header\n");
+ 
+-	serv->sv_stats->rpcbadfmt++;
++	if (serv->sv_stats)
++		serv->sv_stats->rpcbadfmt++;
+ 	*rqstp->rq_accept_statp = rpc_garbage_args;
+ 	goto sendit;
+ 
+ err_system_err:
+-	serv->sv_stats->rpcbadfmt++;
++	if (serv->sv_stats)
++		serv->sv_stats->rpcbadfmt++;
+ 	*rqstp->rq_accept_statp = rpc_system_err;
+ 	goto sendit;
+ }
+@@ -1534,7 +1542,8 @@ void svc_process(struct svc_rqst *rqstp)
+ out_baddir:
+ 	svc_printk(rqstp, "bad direction 0x%08x, dropping request\n",
+ 		   be32_to_cpu(*p));
+-	rqstp->rq_server->sv_stats->rpcbadfmt++;
++	if (rqstp->rq_server->sv_stats)
++		rqstp->rq_server->sv_stats->rpcbadfmt++;
+ out_drop:
+ 	svc_drop(rqstp);
+ }
 -- 
 2.43.0
 
