@@ -1,56 +1,56 @@
-Return-Path: <linux-nfs+bounces-1506-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1507-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E13D983E238
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 20:10:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 91F8183E23A
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 20:10:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11D7E1C22B48
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 19:10:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B67041C23223
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 19:10:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E90F1224C9;
-	Fri, 26 Jan 2024 19:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C27B17572;
+	Fri, 26 Jan 2024 19:10:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WEdotiil"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nMPQnOGN"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4104224C2
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 19:09:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9DEF2232D
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 19:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706296199; cv=none; b=DIpbDut04s5tO4ZeZ84LjuDsqJqmpBy303Go6rIy42U5MT7hJ+PNylYe8s+j65VAyM1dOYNzGncfTfp4QV8/KmX29dLrTxCaOqnH/W7yMewrIN2kKBldLxRXIte+FsBC/3Q/Vcl8Fimak/MZfD4wUVmQJoyNP7FwWnFsDtiW4jM=
+	t=1706296228; cv=none; b=dhOJLxXt9ZIvvUJ5RmFbSsxvgNtYEfkd2cbhfpCqjvqAb44z5CTezu6rmluvCFNilld0xi0nhlcwbSe5LqoxwnPAjTztieDsgN2yOIFIfZsnrWQb0Lj0rzXNLqkxMueSehsZoz/r/cFWwxEyeYbyf36pDzxh0yaexmAM67G559I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706296199; c=relaxed/simple;
-	bh=GeUwAiFzlUHhrmna4JUvDaweXxahxv5SAxU95DUkPwI=;
+	s=arc-20240116; t=1706296228; c=relaxed/simple;
+	bh=P3c+zlM42bjNjOZYHUqXr7ra6x5eXyW2TtOM4I2ECzs=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kT1+QFZbGKZgEnG9t6mu9UvO7ZQAuueecn2nKe0Y4VSyzLv/N14CZa8oP9Ag+Jgr7YaUHQ9dksf964uLovEVMZiXh//xgepiRUG5VJJZ2lgBXdwbYFmPqlJYrVe9XV0G8b2F7/YKk3zlapxQfS535wCllT7jXEuL5c8wzJo+OlI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WEdotiil; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5324BC433C7;
-	Fri, 26 Jan 2024 19:09:59 +0000 (UTC)
+	 Content-Type:MIME-Version; b=ADzuo6MdaAKLmU4PTsIpAX7ogNsY/ovUE5lETMJDJhy/b/RgLiCJk1uqu6YA4brw10rvM740pfblZx9p+sVo64ZVjf5nnQHWJUGzh/j0q237MY/Xzy/J6UWTeHCzDAl0fCeHLlaF/hIzpEVtFCdEIja4N+e3B2MI5COj0y+35Q0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nMPQnOGN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AD85C433C7;
+	Fri, 26 Jan 2024 19:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706296199;
-	bh=GeUwAiFzlUHhrmna4JUvDaweXxahxv5SAxU95DUkPwI=;
+	s=k20201202; t=1706296227;
+	bh=P3c+zlM42bjNjOZYHUqXr7ra6x5eXyW2TtOM4I2ECzs=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=WEdotiilSw3fFG+0+9D3kFcxGq3mZ0z3tfAyidF5MHgpMknXaTZiVgC7qsGZQQgEu
-	 BmcblBRxN5CbN+q3ie3AvXL5q4lJgaNUxkIq3ND+PypJ3MOWSju3rYRybHk08ynKI/
-	 0CEc8tIJK9S6z28lubc3DBiLZ62jEPG0cvdAaZeISsEcp+RfuljUvsFI0ub8JkG6Fb
-	 kzJtcm8/7sqdypi3B7ZwYoH50V/M9vHpM5yCZniIt6lgv4Un6bJCEwAEsfww5ZE4YA
-	 t5GNWpffHN2lAroZLTO7c7+cWaPF68GcXL4aYgrmIPIxjIT/8TS3F0riNwlOja1Mq2
-	 c4w8TYtE8SjTQ==
-Message-ID: <f53a3516ed477e9c74aee20eddd99411a9a0a264.camel@kernel.org>
-Subject: Re: [PATCH 2 02/14] NFSD: Convert the callback workqueue to use
- delayed_work
+	b=nMPQnOGNRfzrzmSa5brdeCfGOf3tdmzhB5r53p3Yge8nXfpSNha1bpxt+0qoD/DKh
+	 AZum+0LzTl0UfoK7DHTf/6NE6gyRMLgHJpCcFZcOw898f1rhmID+/7wm22tsouiSpc
+	 +VzujmSkNFrfBitGlYvbTGaYM1J6d1YSEaYHf6BhaBAS15X1EBfPTyA1ID4DdR+SHA
+	 SRJ+EOc/ehJtO9VYEAAA1fY7hpAvQcOQGYjEj2bG2/ECXfH61MCAg/2DqirY7ayZKE
+	 p0sk8NvyOPRnTHM1o80O0c/nNowrEWxGMsBLZQ+sip1IZu31y0bXc77a484N4NkJdE
+	 4k3dF3EXI8+RQ==
+Message-ID: <69d2f87b79a31d322316b421fa24f98ab547041f.camel@kernel.org>
+Subject: Re: [PATCH 2 03/14] NFSD: Reschedule CB operations when backchannel
+ rpc_clnt is shut down
 From: Jeff Layton <jlayton@kernel.org>
 To: Chuck Lever <cel@kernel.org>, linux-nfs@vger.kernel.org
-Date: Fri, 26 Jan 2024 14:09:57 -0500
-In-Reply-To: <170629112325.20612.15691160218281370004.stgit@manet.1015granger.net>
+Date: Fri, 26 Jan 2024 14:10:25 -0500
+In-Reply-To: <170629112969.20612.8526400738389878628.stgit@manet.1015granger.net>
 References: 
 	<170629091560.20612.563908774748586696.stgit@manet.1015granger.net>
-	 <170629112325.20612.15691160218281370004.stgit@manet.1015granger.net>
+	 <170629112969.20612.8526400738389878628.stgit@manet.1015granger.net>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -73,69 +73,96 @@ MIME-Version: 1.0
 On Fri, 2024-01-26 at 12:45 -0500, Chuck Lever wrote:
 > From: Chuck Lever <chuck.lever@oracle.com>
 >=20
-> Normally, NFSv4 callback operations are supposed to be sent to the
-> client as soon as they are queued up.
+> As part of managing a client disconnect, NFSD closes down and
+> replaces the backchannel rpc_clnt.
 >=20
-> In a moment, I will introduce a recovery path where the server has
-> to wait for the client to reconnect. We don't want a hard busy wait
-> here -- the callback should be requeued to try again in several
-> milliseconds.
+> If a callback operation is pending when the backchannel rpc_clnt is
+> shut down, currently nfsd4_run_cb_work() just discards that
+> callback. But there are multiple cases to deal with here:
 >=20
-> For now, convert nfsd4_callback from struct work_struct to struct
-> delayed_work, and queue with a zero delay argument. This should
-> avoid behavior changes for current operation.
+>  o The client's lease is getting destroyed. Throw the CB away.
 >=20
+>  o The client disconnected. It might be forcing a retransmit of
+>    CB operations, or it could have disconnected for other reasons.
+>    Reschedule the CB so it is retransmitted when the client
+>    reconnects.
+>=20
+> Since callback operations can now be rescheduled, ensure that
+> cb_ops->prepare can be called only once by moving the
+> cb_ops->prepare paragraph down to just before the rpc_call_async()
+> call.
+>=20
+> Fixes: 2bbfed98a4d8 ("nfsd: Fix races between nfsd4_cb_release() and nfsd=
+4_shutdown_callback()")
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfs4callback.c |    6 +++---
->  fs/nfsd/state.h        |    2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  fs/nfsd/nfs4callback.c |   32 +++++++++++++++++++++++---------
+>  1 file changed, 23 insertions(+), 9 deletions(-)
 >=20
 > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index 43b0a34a5d5b..1ed2512b3648 100644
+> index 1ed2512b3648..389d05985c52 100644
 > --- a/fs/nfsd/nfs4callback.c
 > +++ b/fs/nfsd/nfs4callback.c
-> @@ -887,7 +887,7 @@ static struct workqueue_struct *callback_wq;
-> =20
->  static bool nfsd4_queue_cb(struct nfsd4_callback *cb)
->  {
-> -	return queue_work(callback_wq, &cb->cb_work);
-> +	return queue_delayed_work(callback_wq, &cb->cb_work, 0);
+> @@ -890,6 +890,13 @@ static bool nfsd4_queue_cb(struct nfsd4_callback *cb=
+)
+>  	return queue_delayed_work(callback_wq, &cb->cb_work, 0);
 >  }
 > =20
+> +static void nfsd4_queue_cb_delayed(struct nfsd4_callback *cb,
+> +				   unsigned long msecs)
+> +{
+> +	queue_delayed_work(callback_wq, &cb->cb_work,
+> +			   msecs_to_jiffies(msecs));
+> +}
+> +
 >  static void nfsd41_cb_inflight_begin(struct nfs4_client *clp)
-> @@ -1370,7 +1370,7 @@ static void
->  nfsd4_run_cb_work(struct work_struct *work)
 >  {
->  	struct nfsd4_callback *cb =3D
-> -		container_of(work, struct nfsd4_callback, cb_work);
-> +		container_of(work, struct nfsd4_callback, cb_work.work);
->  	struct nfs4_client *clp =3D cb->cb_clp;
+>  	atomic_inc(&clp->cl_cb_inflight);
+> @@ -1375,20 +1382,21 @@ nfsd4_run_cb_work(struct work_struct *work)
 >  	struct rpc_clnt *clnt;
 >  	int flags;
-> @@ -1415,7 +1415,7 @@ void nfsd4_init_cb(struct nfsd4_callback *cb, struc=
-t nfs4_client *clp,
->  	cb->cb_msg.rpc_argp =3D cb;
->  	cb->cb_msg.rpc_resp =3D cb;
->  	cb->cb_ops =3D ops;
-> -	INIT_WORK(&cb->cb_work, nfsd4_run_cb_work);
-> +	INIT_DELAYED_WORK(&cb->cb_work, nfsd4_run_cb_work);
->  	cb->cb_seq_status =3D 1;
->  	cb->cb_status =3D 0;
->  	cb->cb_need_restart =3D false;
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 41bdc913fa71..87c4372ba36a 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -68,7 +68,7 @@ struct nfsd4_callback {
->  	struct nfs4_client *cb_clp;
->  	struct rpc_message cb_msg;
->  	const struct nfsd4_callback_ops *cb_ops;
-> -	struct work_struct cb_work;
-> +	struct delayed_work cb_work;
->  	int cb_seq_status;
->  	int cb_status;
->  	bool cb_need_restart;
+> =20
+> -	if (cb->cb_need_restart) {
+> -		cb->cb_need_restart =3D false;
+> -	} else {
+> -		if (cb->cb_ops && cb->cb_ops->prepare)
+> -			cb->cb_ops->prepare(cb);
+> -	}
+> -
+>  	if (clp->cl_flags & NFSD4_CLIENT_CB_FLAG_MASK)
+>  		nfsd4_process_cb_update(cb);
+> =20
+>  	clnt =3D clp->cl_cb_client;
+>  	if (!clnt) {
+> -		/* Callback channel broken, or client killed; give up: */
+> -		nfsd41_destroy_cb(cb);
+> +		if (test_bit(NFSD4_CLIENT_CB_KILL, &clp->cl_flags))
+> +			nfsd41_destroy_cb(cb);
+> +		else {
+> +			/*
+> +			 * XXX: Ideally, we could wait for the client to
+> +			 *	reconnect, but I haven't figured out how
+> +			 *	to do that yet.
+> +			 */
+> +			nfsd4_queue_cb_delayed(cb, 25);
+> +		}
+>  		return;
+>  	}
+> =20
+> @@ -1401,6 +1409,12 @@ nfsd4_run_cb_work(struct work_struct *work)
+>  		return;
+>  	}
+> =20
+> +	if (cb->cb_need_restart) {
+> +		cb->cb_need_restart =3D false;
+> +	} else {
+> +		if (cb->cb_ops && cb->cb_ops->prepare)
+> +			cb->cb_ops->prepare(cb);
+> +	}
+>  	cb->cb_msg.rpc_cred =3D clp->cl_cb_cred;
+>  	flags =3D clp->cl_minorversion ? RPC_TASK_NOCONNECT : RPC_TASK_SOFTCONN=
+;
+>  	rpc_call_async(clnt, &cb->cb_msg, RPC_TASK_SOFT | flags,
 >=20
 >=20
 >=20
