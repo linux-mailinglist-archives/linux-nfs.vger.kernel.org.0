@@ -1,155 +1,126 @@
-Return-Path: <linux-nfs+bounces-1458-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1459-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC0A983DA90
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 14:12:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D53583DB27
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 14:48:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C54CB24AD0
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 13:12:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2F4E11F24D89
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Jan 2024 13:48:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC7F91B7FC;
-	Fri, 26 Jan 2024 13:12:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF4C1B81D;
+	Fri, 26 Jan 2024 13:48:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gx1R8imG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b2VHabwz"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A0A1B7F9
-	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 13:12:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22E81B940
+	for <linux-nfs@vger.kernel.org>; Fri, 26 Jan 2024 13:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706274740; cv=none; b=s6pYzz+yXc8VeFIvrSAdqMe4fBwOJQx0Y8xNCRMaMciO2phRMeuiaH6WgQQbW5kUSrKv0AIl2k2cOUdT35U+E1oypSpK4nvgfKw8VPwhuBBpBZZ49WYQyVZyIBK1TukZtSvz7ufRfA8q/rIMY5cUJ+NEmUkWSzVW8ul427Cg/dM=
+	t=1706276899; cv=none; b=lq01gwkvGrjY0Bk0H2LPfcuRYt0TxQIvD+z202qeiUV2ziSiMvHowQU/KAfdphwksXR2vYYDMq8a6CvkRUUchdDH7FCpmjlTzmYC2/PM7T0X5CfOXgmBQsEnRnrAZBkHuADzi+YPiXfrBIxkYn4/Ntc1lngqQYuPgRBABt7Nv/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706274740; c=relaxed/simple;
-	bh=hJAuzx3YfBpUnC+wvHBJF9qT5hy5pxku1GP5ZQJOe2I=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jBAeEMtku7FDQz29mIGAVl2ektWW6i2mRPJMPIE4/604rYFi3JMuUJpuA01X3AXFjpPZKdOoen+uBSmDjVnmPRrRYEsisJCrWIqjzgAs66JuF6bXg55z3Do4YIYz9i0N8FwQLNz+qoWeZVyamedcCPLriR1KtIpH6ZeeZouOhRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gx1R8imG; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0990C43390;
-	Fri, 26 Jan 2024 13:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706274740;
-	bh=hJAuzx3YfBpUnC+wvHBJF9qT5hy5pxku1GP5ZQJOe2I=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=gx1R8imGqK5JS0wCmxRGAgtGEeu+piNFvCPq7rUomdHYWEauzcJSgPHwN22xa4AjO
-	 NLUDwHrBgB83+8i8emXnN9XXew6H0QOXQSnv/HJH90n6avM//w4vCm35y2h+of7Vt7
-	 shX/WQNhXgUYF0SJCoiKy4zpTK2uCxjq8AsxyphOihSv9yZDYN80HY6x4XzywuYN7a
-	 KEL7r2yAYL/a3QPXdN6Zc44IZ6HivPt71sZTB7Uevr1+tO5txRUGNhsuZ5ow3xk5bM
-	 bY+HxY9DZr1RL+zv5lI/IpeAOXY440v7O94Uh4WV6brujdKoGVe9YF/1KAR6j7YYs/
-	 Mmobeh63kMaLg==
-Message-ID: <942eec9d7fa91c52ed99d1202c660f7b3182b707.camel@kernel.org>
-Subject: Re: [PATCH v2 00/13] Make nfs and nfsd stats visible in network ns
-From: Jeff Layton <jlayton@kernel.org>
-To: Josef Bacik <josef@toxicpanda.com>, linux-nfs@vger.kernel.org, 
-	kernel-team@fb.com
-Date: Fri, 26 Jan 2024 08:12:18 -0500
-In-Reply-To: <cover.1706212207.git.josef@toxicpanda.com>
-References: <cover.1706212207.git.josef@toxicpanda.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
-	kZWuOsJdJQdmwlWC5L5ln9xgfr/4mOY38B0U=
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
+	s=arc-20240116; t=1706276899; c=relaxed/simple;
+	bh=4H+svnX6SCBUiMljn1namd99+r6dQeWPM0wWmcCFzFA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L53tM+YIMmRJIjZ7AuEDjB+BB0Qn85sva1BWN+DMXvTGGUTKQrTOlc6ar2ympoArNoLsqwF0bbJq3sg42WLyG6UitVaPf9mwxGBo0/SmRNHK+pKV7XVuK+ZCaXmoXLWzfz0UIVP56tfZJwYPnDBpCdlOVBEPki/mjZuCnDrRAYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b2VHabwz; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1706276896;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/YqsJhNk4UB5zgevm7MliQES8TZ6hp9lZZ899EYuV7U=;
+	b=b2VHabwz2tGQ56NgoB9NdwgjkWyhCuJkj0my1eV3nhex4yXieUEE444msiRmaouVceHU3R
+	c06VuRmWni9UhPdAcmcLEXDBnK2l5xGZszDUNNz+3F53eoHNy7CqlRVA677JMZlc86wPFj
+	65BYnVXP/J5vERULgh5RrHXdAFPybMU=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-543-RvLksoXtPHGSiSTfhCJQ6w-1; Fri, 26 Jan 2024 08:48:13 -0500
+X-MC-Unique: RvLksoXtPHGSiSTfhCJQ6w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2479D101A526;
+	Fri, 26 Jan 2024 13:48:13 +0000 (UTC)
+Received: from [192.168.37.1] (ovpn-0-9.rdu2.redhat.com [10.22.0.9])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F438AD1;
+	Fri, 26 Jan 2024 13:48:12 +0000 (UTC)
+From: Benjamin Coddington <bcodding@redhat.com>
+To: Jorge Mora <jmora1300@gmail.com>
+Cc: linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com,
+ anna@kernel.org
+Subject: Re: [PATCH] NFSv4.2: fix listxattr maximum XDR buffer size
+Date: Fri, 26 Jan 2024 08:48:11 -0500
+Message-ID: <FE38CC90-A3BE-40CF-9365-557CA706376E@redhat.com>
+In-Reply-To: <20240125145128.12945-1-mora@netapp.com>
+References: <20240125145128.12945-1-mora@netapp.com>
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.1
 
-On Thu, 2024-01-25 at 14:53 -0500, Josef Bacik wrote:
-> v1: https://lore.kernel.org/linux-nfs/cover.1706124811.git.josef@toxicpan=
-da.com/
->=20
-> v1->v2:
-> - rework the sunprc service creation to take a pointer to the sv_stats.
-> - dropped ->pg_stats from the svc_program.
-> - converted all of the nfsd global stats to per-network namespace.
-> - added the ability to point at a specific rpc_stat for rpc program creat=
-ion.
-> - converted the rpc stats for nfs to per-network namespace.
+On 25 Jan 2024, at 9:51, Jorge Mora wrote:
+
+> Switch order of operations to avoid creating a short XDR buffer:
+> e.g., buflen = 12, old xdrlen = 12, new xdrlen = 20.
 >
-> -- Original email --
-> Hello,
->=20
-> We're currently deploying NFS internally and have run into some oddities =
-with
-> our usage of containers.  All of the services that mount and export NFS v=
-olumes
-> run inside of containers, specifically all the namespaces including netwo=
-rk
-> namespaces.  Our monitoring is done on a per-container basis, so we need =
-access
-> to the nfs and nfsd stats that are under /proc/net/sunrpc.  However these=
- are
-> only tied to the init_net, which makes them invisible to containers in a
-> different network namespace.
->=20
-> Fix this so that these files are tied to the network namespace.  This all=
-ows us
-> to avoid the hack of bind mounting the hosts /proc into the container in =
-order
-> to do proper monitoring.  Thanks,
->=20
-> Josef
->=20
-> Josef Bacik (13):
->   sunrpc: don't change ->sv_stats if it doesn't exist
->   nfs: stop setting ->pg_stats for unused stats
->   sunrpc: pass in the sv_stats struct through svc_create*
->   sunrpc: remove ->pg_stats from svc_program
->   sunrpc: add a struct rpc_stats arg to rpc_create_args
->   sunrpc: use the struct net as the svc proc private
->   nfsd: rename NFSD_NET_* to NFSD_STATS_*
->   nfsd: expose /proc/net/sunrpc/nfsd in net namespaces
->   nfsd: make all of the nfsd stats per-network namespace
->   nfsd: move th_cnt into nfsd_net
->   nfsd: make svc_stat per-network namespace instead of global
->   nfs: expose /proc/net/sunrpc/nfs in net namespaces
->   nfs: make the rpc_stat per net namespace
->=20
->  fs/lockd/svc.c              |  5 +--
->  fs/nfs/callback.c           |  5 +--
->  fs/nfs/client.c             |  5 ++-
->  fs/nfs/inode.c              |  8 ++---
->  fs/nfs/internal.h           |  2 --
->  fs/nfs/netns.h              |  2 ++
->  fs/nfsd/cache.h             |  2 --
->  fs/nfsd/netns.h             | 28 ++++++++++++---
->  fs/nfsd/nfs4proc.c          |  6 ++--
->  fs/nfsd/nfs4state.c         |  3 +-
->  fs/nfsd/nfscache.c          | 40 +++++----------------
->  fs/nfsd/nfsctl.c            | 16 ++++-----
->  fs/nfsd/nfsfh.c             |  3 +-
->  fs/nfsd/nfssvc.c            | 13 +++----
->  fs/nfsd/stats.c             | 53 ++++++++++++----------------
->  fs/nfsd/stats.h             | 70 +++++++++++++------------------------
->  fs/nfsd/vfs.c               |  5 +--
->  include/linux/sunrpc/clnt.h |  1 +
->  include/linux/sunrpc/svc.h  |  9 +++--
->  net/sunrpc/clnt.c           |  2 +-
->  net/sunrpc/stats.c          |  2 +-
->  net/sunrpc/svc.c            | 44 ++++++++++++++---------
->  22 files changed, 147 insertions(+), 177 deletions(-)
->=20
+> Having a short XDR buffer leads to lxa_maxcount be a few bytes
+> less than what is needed to retrieve the whole list when using
+> a buflen as returned by a call with size = 0:
+>     buflen = listxattr(path, NULL, 0);
+>     buf = malloc(buflen);
+>     buflen = listxattr(path, buf, buflen);
+>
+> For a file with one attribute (name = '123456'), the first call
+> with size = 0 will return buflen = 12 ('user.123456\x00').
+> The second call with size = 12, sends LISTXATTRS with
+> lxa_maxcount = 12 + 8 (cookie) + 4 (array count) = 24. The
+> XDR buffer needs 8 (cookie) + 4 (array count) + 4 (name count)
+> + 6 (name len) + 2 (padding) + 4 (eof) = 28 which is 4 bytes
+> shorter than the lxa_maxcount provided in the call.
+>
+> Fixes: 04a5da690e8f ("NFSv4.2: define limits and sizes for user xattr handling")
+> Signed-off-by: Jorge Mora <mora@netapp.com>
+> ---
+>  fs/nfs/nfs42.h | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/nfs/nfs42.h b/fs/nfs/nfs42.h
+> index b59876b01a1e..32ee9ad6a560 100644
+> --- a/fs/nfs/nfs42.h
+> +++ b/fs/nfs/nfs42.h
+> @@ -55,11 +55,14 @@ int nfs42_proc_removexattr(struct inode *inode, const char *name);
+>   * They would be 7 bytes long in the eventual buffer ("user.x\0"), and
+>   * 8 bytes long XDR-encoded.
+>   *
+> - * Include the trailing eof word as well.
+> + * Include the trailing eof word as well and make the result a multiple
+> + * of 4 bytes.
+>   */
+>  static inline u32 nfs42_listxattr_xdrsize(u32 buflen)
+>  {
+> -	return ((buflen / (XATTR_USER_PREFIX_LEN + 2)) * 8) + 4;
+> +	u32 size = 8 * buflen / (XATTR_USER_PREFIX_LEN + 2) + 4;
+> +
+> +	return (size + 3) & ~3;
 
-Nice work!
+Maybe XDR_QUADLEN(size) here?  Otherwise, looks correct.
 
-I took a look and this all looks good to me, modulo the nits that Chuck
-pointed out yesterday.=A0I'd also plan to split this into client and
-server sets since they'll probably go in separately. Otherwise though,
-this looks good to me and you can add:
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Ben
+
 
