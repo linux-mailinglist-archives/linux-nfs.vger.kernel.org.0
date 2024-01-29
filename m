@@ -1,95 +1,182 @@
-Return-Path: <linux-nfs+bounces-1514-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1515-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48D5D83ED21
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jan 2024 14:02:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2071883FCD2
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 04:37:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A18F7282AF2
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Jan 2024 13:02:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7D2B9B220FE
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 03:36:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5185219FD;
-	Sat, 27 Jan 2024 13:02:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3C5610949;
+	Mon, 29 Jan 2024 03:36:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cl1nsFTa"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yEpReidT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0ZoNLniw";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yEpReidT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="0ZoNLniw"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 138E78831
-	for <linux-nfs@vger.kernel.org>; Sat, 27 Jan 2024 13:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543901078D
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 03:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706360525; cv=none; b=uoI8zSXGm9mfTHPYVPFcVYH8u1bt6QXZa9HB3yx9BQvHEAqtfo09lk6mYdsaRoIeBxJ28g3rrm7Hhj7WYVGtppWpNHjB6gEXj5w5stoJru7Z2juU2cHOoLiJv1+MO3erc+leZzoQPT2P7ec57sbnIHCcMfEZtIfbFBOgBsfZclc=
+	t=1706499414; cv=none; b=k2dQHaeZEztli8JsdoEKLKIdVxtI/GpqP3JF29vT8kfN3biC93lZLLkhUyx5WkmXmDQBYy94oWE9mT6RD825Yb4i7CBPaCB+Sh5zEXa43azUF/Q0UPVZsHBvgBswYRHK7IlCa/nrStwYdIkV/x/4e78cY6nK4+OLRlCo6DJzAdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706360525; c=relaxed/simple;
-	bh=wgQo6asVQI2KQE2CnoDM96QiPcHzE1ciD47Q4xrh8lk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZugHHdrwKWa6f4ufOtzKuMph72bCTIjMSaEYqIr2xp67okIEVVoq97HxtpUhhvmh2Rndxlq3Q8BU+myBFl3Wukyd9bfvDgxrYrmTB/JT85a9dbhwBhRPAN1OnV5BFJNDOhv0MpNl1+3YgL/cp5U3PH18MWriNEIeDlkTuvf0wB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cl1nsFTa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1706360523;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9gATf9xPopVZLoNxw5u/a3GxAMBOLJc2RYWZVMpCujY=;
-	b=cl1nsFTa8iawXcJwPvL3O3W/3SB49MDePM4i25W6DmFo3hjRqGwqPikWUr346n85a5nIXc
-	uZ59SdbXNPPZDba++X93lcmChseRCLEme1JuciSUCL67Q4WrIGldzav8cnZrjH27nIupTO
-	T1FZIs3fzU7jncJQiGf/YBMqT6Cupfw=
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-381-SYuYHxvjOOeeZAFOH3UmSw-1; Sat,
- 27 Jan 2024 08:01:58 -0500
-X-MC-Unique: SYuYHxvjOOeeZAFOH3UmSw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	s=arc-20240116; t=1706499414; c=relaxed/simple;
+	bh=yIaadzfsTvxvRqafA/9hueaDlEdal5VJT8Y4PvjylbU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rbV4vk2tF/W5oUDu8cdFFWj00MSgpisoMAwdv0BUqBFdqvYEmcXspURnCDMxEpwu/GzhAAAlZlP6pJqDyzLpenCOc7y1y7+sgUtpu5y4Yz9h+EQfNZZ2qH4mRFTcN3rH25eRCs2AHRGS+tznqv8D5g2sG6qt/GhaoolV9FwZ8FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yEpReidT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0ZoNLniw; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yEpReidT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=0ZoNLniw; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 71785299E748;
-	Sat, 27 Jan 2024 13:01:58 +0000 (UTC)
-Received: from [192.168.37.1] (ovpn-0-9.rdu2.redhat.com [10.22.0.9])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E665492BE3;
-	Sat, 27 Jan 2024 13:01:57 +0000 (UTC)
-From: Benjamin Coddington <bcodding@redhat.com>
-To: Jorge Mora <jmora1300@gmail.com>
-Cc: linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com,
- anna@kernel.org
-Subject: Re: [PATCH] NFSv4.2: fix listxattr maximum XDR buffer size
-Date: Sat, 27 Jan 2024 08:01:56 -0500
-Message-ID: <2D2732BC-19AD-4010-9CB9-DA4C3BBBC31C@redhat.com>
-In-Reply-To: <CAG7w-ioC8VkBFWqcaCw1S7YM-riNQKNUeu2-oUB4CpaimzB=7g@mail.gmail.com>
-References: <20240125145128.12945-1-mora@netapp.com>
- <FE38CC90-A3BE-40CF-9365-557CA706376E@redhat.com>
- <CAG7w-ioC8VkBFWqcaCw1S7YM-riNQKNUeu2-oUB4CpaimzB=7g@mail.gmail.com>
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3BD5E2229D;
+	Mon, 29 Jan 2024 03:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706499410; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=bshgP5jtsTYtg49iRJO39X4XZTO3XKpaSs5GbR7p1nI=;
+	b=yEpReidT+VnqA+SWxzDAz444APm8+iru111RCFG6S4256gM4G5XjqAPDgBfhr8nVm0z4Lh
+	foTtmTs0lUwrc6c8IjYP88OG+t/OuzAxQvL5+lpXAZLG8rd1wtDUjRRBQ4/txnU0808omF
+	lEI+xr9YJ3L59cScTxTLQa9PwlprQ3A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706499410;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=bshgP5jtsTYtg49iRJO39X4XZTO3XKpaSs5GbR7p1nI=;
+	b=0ZoNLniw3kcJJyT4esbL3DTSoyHCwEwiTM8N6rvg75evk3VDNuwrFQbv2XlGxrwrI5GrDm
+	Om5/Da12yjtPb5Dg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1706499410; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=bshgP5jtsTYtg49iRJO39X4XZTO3XKpaSs5GbR7p1nI=;
+	b=yEpReidT+VnqA+SWxzDAz444APm8+iru111RCFG6S4256gM4G5XjqAPDgBfhr8nVm0z4Lh
+	foTtmTs0lUwrc6c8IjYP88OG+t/OuzAxQvL5+lpXAZLG8rd1wtDUjRRBQ4/txnU0808omF
+	lEI+xr9YJ3L59cScTxTLQa9PwlprQ3A=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1706499410;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+	bh=bshgP5jtsTYtg49iRJO39X4XZTO3XKpaSs5GbR7p1nI=;
+	b=0ZoNLniw3kcJJyT4esbL3DTSoyHCwEwiTM8N6rvg75evk3VDNuwrFQbv2XlGxrwrI5GrDm
+	Om5/Da12yjtPb5Dg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9A2EC13867;
+	Mon, 29 Jan 2024 03:36:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([10.150.64.162])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id ICmHFE8dt2UHKgAAD6G6ig
+	(envelope-from <neilb@suse.de>); Mon, 29 Jan 2024 03:36:47 +0000
+From: NeilBrown <neilb@suse.de>
+To: Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>
+Cc: linux-nfs@vger.kernel.org,
+	Olga Kornievskaia <kolga@netapp.com>,
+	Dai Ngo <Dai.Ngo@oracle.com>,
+	Tom Talpey <tom@talpey.com>,
+	Christoph Hellwig <hch@lst.de>,
+	Tom Haynes <loghyr@gmail.com>
+Subject: [PATCH 00/13 v4] nfsd: support admin-revocation of v4 state
+Date: Mon, 29 Jan 2024 14:29:22 +1100
+Message-ID: <20240129033637.2133-1-neilb@suse.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp-out1.suse.de;
+	none
+X-Spamd-Result: default: False [1.90 / 50.00];
+	 ARC_NA(0.00)[];
+	 RCVD_VIA_SMTP_AUTH(0.00)[];
+	 FROM_HAS_DN(0.00)[];
+	 TO_DN_SOME(0.00)[];
+	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	 R_MISSING_CHARSET(2.50)[];
+	 MIME_GOOD(-0.10)[text/plain];
+	 TO_MATCH_ENVRCPT_ALL(0.00)[];
+	 BROKEN_CONTENT_TYPE(1.50)[];
+	 RCVD_COUNT_THREE(0.00)[3];
+	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	 RCPT_COUNT_SEVEN(0.00)[8];
+	 MID_CONTAINS_FROM(1.00)[];
+	 FUZZY_BLOCKED(0.00)[rspamd.com];
+	 FROM_EQ_ENVFROM(0.00)[];
+	 MIME_TRACE(0.00)[0:+];
+	 FREEMAIL_CC(0.00)[vger.kernel.org,netapp.com,oracle.com,talpey.com,lst.de,gmail.com];
+	 RCVD_TLS_ALL(0.00)[];
+	 BAYES_HAM(-3.00)[100.00%]
+X-Spam-Level: *
+X-Spam-Score: 1.90
+X-Spam-Flag: NO
 
-On 26 Jan 2024, at 15:37, Jorge Mora wrote:
+Changes compared with v3:
+ - fixed a bug (tested a status flag in sc_type) that kernel test robot reported
+ - Changed all NFS4.*STID.* #defines to SC_TYPE_foo or ST_STATUS_foo to match field names
+ - fixed problems with accessing ->ls_file correctly in final patch
+ - assorted speeling fixes and cosmetic changes
+ - added Christoph and Tom to Cc as requested by Chuck
 
-> Thanks Ben,
->
-> Do you want me to resubmit the patch using XDR_QUALEN? Something like this?
->
->  static inline u32 nfs42_listxattr_xdrsize(u32 buflen)
->  {
-> -       return ((buflen / (XATTR_USER_PREFIX_LEN + 2)) * 8) + 4;
-> +       u32 size = 8 * buflen / (XATTR_USER_PREFIX_LEN + 2) + 4;
-> +
-> +       return XDR_QUADLEN(size) << 2;
 
-I just thought I'd mention it since it's used all over.  I think your
-version is just fine.
+Patchset introduction:
 
-Ben
+There are cirsumstances where an admin might need to unmount a
+filesystem that is NFS-exported and in active use, but does not want to
+stop the NFS server completely.  These are certainly unusual
+circumstance and doing this might negatively impact any clients acting
+on the filesystem, but the admin should be able to do this.
 
+Currently this is quite possible for NFSv3.  Unexporting the filesystem
+will ensure no new opens happen, and writing the path name to
+/proc/fs/nfsd/unlock_filesystem will ensure anly NLM locks held in the
+filesystem are released so that NFSD no longer prevents the filesystem
+from being unlocked.
+
+It is not currently possible for NFSv4.  Writing to unlock_filesystem
+does not affect NFSv4, which is arguably a bug.  This series fixes the bug.
+
+For NFSv4.1 and later code is straight forward.  We add new state flags
+for admin-revoked state (open, lock, deleg, layout) and set the flag
+of any state on a filesystem - invalidating any access and closing files
+as we go.  While there are any revoked states we report this to the
+client in the response to SEQUENCE requests, and it will check and free
+any states that need to be freed.
+
+For NFSv4.0 it isn't quite so easy as there is no mechanism for the
+client to explicitly acknowledged admin-revoked states.  The approach
+this patchset takes is to discard NFSv4.0 admin-revoked states one
+lease-time after they were revoked, or immediately for a state that the
+client tries to use and gets an "ADMIN_REVOKED" error for.  If the
+filestystem has been unmounted (as expected), the client will see STATE
+errors before it has a chance to see ADMIN_REVOKED errors, so most often
+the timeout will be how states are discarded.
+
+NeilBrown
+
+ [PATCH 01/13] nfsd: remove stale comment in nfs4_show_deleg()
+ [PATCH 02/13] nfsd: hold ->cl_lock for hash_delegation_locked()
+ [PATCH 03/13] nfsd: don't call functions with side-effecting inside
+ [PATCH 04/13] nfsd: avoid race after unhash_delegation_locked()
+ [PATCH 05/13] nfsd: split sc_status out of sc_type
+ [PATCH 06/13] nfsd: prepare for supporting admin-revocation of state
+ [PATCH 07/13] nfsd: allow state with no file to appear in
+ [PATCH 08/13] nfsd: report in /proc/fs/nfsd/clients/*/states when
+ [PATCH 09/13] nfsd: allow admin-revoked NFSv4.0 state to be freed.
+ [PATCH 10/13] nfsd: allow lock state ids to be revoked and then freed
+ [PATCH 11/13] nfsd: allow open state ids to be revoked and then freed
+ [PATCH 12/13] nfsd: allow delegation state ids to be revoked and then
+ [PATCH 13/13] nfsd: allow layout state to be admin-revoked.
 
