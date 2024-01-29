@@ -1,973 +1,228 @@
-Return-Path: <linux-nfs+bounces-1549-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1550-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99D588407CE
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 15:05:14 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C97818407F0
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 15:15:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CA522813F9
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 14:05:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 392E81F21260
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 14:15:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D2C657C2;
-	Mon, 29 Jan 2024 14:05:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D85DA65BA2;
+	Mon, 29 Jan 2024 14:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ThpW1vyn";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="aL1aNPzf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="lxw/jkBn";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="0DXKfJsm"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BC5657D4
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 14:05:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A876865BA3
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 14:15:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706537110; cv=fail; b=Os1aMZws4r2KdhDHNi7t34P9Yec1jv5m5Q/wHkSLfrwoDAzEDaJfztovm0NbzRfnYa2V3+f5M5ZJ3mnOYgqIBFvsUzcxGxTXUQ+EVS6haa4ZyR+n5Xj+dzLrLGUPRNOO3xFjoKCYx3ilO2MBHmRZrHt58CwzQwNYuRUh/3eY9AY=
+	t=1706537705; cv=fail; b=qhnvMy5Gx7LLgGvbcFSgX1/5dkXqXqhPu6kBUokdhM2RINY2hbXXMID6nJtTALB7Ul+E9+QvrvdULiLOUgyFq/MPjTcqlti4+7inBRLsZXguHsljlZLlEPrx5r84eWEo34ey6lcARb0UVu4F5exaqiYuume1js088nh97Qq1tTQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706537110; c=relaxed/simple;
-	bh=R6hJRJdVd/PwFgEC0tzNBEopyWIqKBOljUCnHWw4pEA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rHvOkxfmzV50mdOTdae1V/n5fRqzRyo6qpVbHEO/prFWj/Kp/CHSxZt9VSU/BeMK/RexM6joijthN9wmrCk8hHC3RfdWdpqxR04RCq3zn1cAO8UtrcJxISN5Xp5f15rMMomCvyxROH7UTQcLbThMgetnE0Lc5OenGWWw98uWImY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=ThpW1vyn; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=aL1aNPzf; arc=fail smtp.client-ip=205.220.165.32
+	s=arc-20240116; t=1706537705; c=relaxed/simple;
+	bh=51tsK8MxV2nvGMnhY4JwGSs9H+aaEf7QLvcco48Jraw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=dnJuyHBajsEqaR1FGPiGvDVzO/cz9IRBhrhGEI3LPy/Mg4PmY9ln3rzopqbebpTlWjV8Di3CvQoGcTFiZ7n21K9bA9uwoJLqGd14ip1wB8VhSadLTwxPoQdMBScHgbQpHGeUeH71G2WQtGXUr51TVUGJ/RQ/LitYTdu4cU5Cbbg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=lxw/jkBn; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=0DXKfJsm; arc=fail smtp.client-ip=205.220.177.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oracle.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40T9iYZ4021936;
-	Mon, 29 Jan 2024 14:04:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : content-type : in-reply-to :
- mime-version; s=corp-2023-11-20;
- bh=ZMtHOvkNf8fMcI0j4p1UNjKHyGj+ADmBujG9xiMo/IQ=;
- b=ThpW1vyneQYJNk8lKkkLqBuFwNDynsQUEeJudtynICgQK+H2WDBciwSFiHnkMN4pYzB0
- K/jVxmrd4LXVrefk1CxhUNoz7hng/JXBS27/DxobH+zMnBB+PZSeQljS3gYa791VXytx
- eKGHPf4t9e9Ns6Y/Ud79+3NseQk3cMcX7ELh9B7gNaV32WR9Btw9CEyNdV7ZHSD3u28W
- Gkyy57tZm3V+xY6CQklDG2/pzEbDwRzaHnl4wAbLp4a4ACBhH3rdJ+fdEn//38CnNU4u
- wTNVIQhLF/Aj01FIdK/A487fDfKAuSyLjxuC0sVzPYh9GuPO8oj8kyBoEP+R6bE62XX/ yw== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vvrrcbyvy-1
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 40T9hxNu010634;
+	Mon, 29 Jan 2024 14:15:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2023-11-20;
+ bh=51tsK8MxV2nvGMnhY4JwGSs9H+aaEf7QLvcco48Jraw=;
+ b=lxw/jkBnJS1zIjyU0jl9e+GFHgorer454AIM3sT5cqw3rQYsWUYd1XKqWfmw7SH0EsKN
+ rVnG0LZTEMgEkr28dOYD7XR5aHyEB5Z/7hHsKoJtmKGtMdvDXU3+SEbJBMCKoNrR3gLY
+ PR1jRPiUQsphj7cm0TqlLI9ezxsy3sAxwCVXXKKE8iVQmfIv+Kkq5SIMEs7aYd2z9nH1
+ OZS/UujIWi2UMqHhPDMHxndDVxN+hjrjv/wBg2Mw32E/BO1NeMtBs7fpJXO+XP3THqsj
+ xIAcNAtXFJZ6A17VfQBYoDoG5hhI0z4zB7GU5hNu29aGT5vwehC6k2y6rQn/V5/Ufliz Hg== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3vvrm3v09d-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jan 2024 14:04:48 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40TDNHXe031388;
-	Mon, 29 Jan 2024 14:04:47 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2169.outbound.protection.outlook.com [104.47.59.169])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3vvr95wmju-1
+	Mon, 29 Jan 2024 14:15:00 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 40TDvAx3014767;
+	Mon, 29 Jan 2024 14:14:59 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2168.outbound.protection.outlook.com [104.47.59.168])
+	by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3vvr9bxjbm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 29 Jan 2024 14:04:47 +0000
+	Mon, 29 Jan 2024 14:14:59 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l0gqQk1bWNwUpy8tlqPPHzENWOyE9QnUB4IarkUvcOEYIkQVVNFxAbf/LhJUOn7HFoNBtZqZOdTAN3VUfOWs7v7j48mTPCFH5HieKGCeEskUGv8MeP28WFZeYEekyjQZImiuaaR/whl4xVjGCLNLM35Fd/79viQrBrPayTdIXAMGDlz4BXpA56df7cX0fFYCGSOW28k4RBDg6rfB7920tHOK0+nE9dhfT64bQKvO81wO0ykFrkZdo4GvVlTjjyeqCvssoufFVYR2T//r8yc3+583JQJLi739g1xc+2tY9BO7W8UVay+CcvMyfFRfhKH4f01aLW82mkFdcflaD7yLWg==
+ b=jCL4XXqxdui0S4fwt7zmF+whksteGMJ+bvBpaH/iyPpTfWAexaYCcS8Gsmw+t5hbZRqDReLe5w8HlamKiRaw0JbAzvCLgzuhBN0m7BlCHmKfCJF2Ri9SYjWq9iSJjO3gKMQzyil3iOut7+47FHQCBXQYD9I4tECg3N5/DkTv0UFRT0hujiGgqgsoanAR9xPh1iFAWR4nRHF8Yu51wX6SU9nxAwBUAnJjHYy8fUDa0zSk4ncPXTT02w6v+8MTTVKr/16RVX+V1OTsx4Nky3kRWXbauy3Mia8wnDMZF2K0A5lh8QuD5l9ZeDFystfq8a/MwCEmLatmOicKJiTfehCqyQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZMtHOvkNf8fMcI0j4p1UNjKHyGj+ADmBujG9xiMo/IQ=;
- b=GLmB4+tXUfdp40+2NBMzJh/fTMtgrg4AKhx53t/oKOlk+30729YQ3x3ojRkjLSgRFJ3KGt+CWHFX1a0Gl0QhUqOHgqLWgRMJfDdIx2RU+/C00VNH3kUV2GCQ0633gcJhoqQdaa1Fl3x4/3JIRMJOfcDSkcNPHko1IpPgbqAmR5d8b3a6xELfZOLBFeRF5X97xYAgAQnIFMKG39NaqHr48yOQALCxNeqAG0xJPokChYafVld9cair8wIjnsMFS5wqeoTfsbEzb9/uBfIvBKz9V/lSQVJT1QcBssZYdiYXNX+x1AAsM89H+PyrkbSGi1oi/mtX2QjOSJ8KBRyhBnWT7w==
+ bh=51tsK8MxV2nvGMnhY4JwGSs9H+aaEf7QLvcco48Jraw=;
+ b=hCtMLCjsnFK3/jhRYed+OqObOqkwYTtw5EAzn2znX1OYeBZ7exAZ11slFc4zv9dIy4QrPMLBPqcztiRqjHUkaL6qrM7m0IDp2eLqhH+Lh4jDy6Wo36GVOBjiF1kBebmGpp94fLdoPNgc8EcQa+YIA08fmsEsBQwYbM1l9RPp5tmzRBM5eAdq8TH5AFBtmmImXyDG1F9ZQNrl+ks48i9l+Jf6fQxTcY/Dl+wzTU6Swj8+DNEKSV1LwyIwCa1n1lMWN7+CiuIos9Yp8Su5vy9B9VpioBp78r5LKt/dvg+pzvm58YXTQvIXogAZG3SaVY3Cvh52xnOtcTofxGDcD0i+0g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZMtHOvkNf8fMcI0j4p1UNjKHyGj+ADmBujG9xiMo/IQ=;
- b=aL1aNPzf+9k3L12VbUyIN4ojjHrAYMNxJ1/8eXYJbzzrYU0q1Nc8PBd7C+iI10+0Js4J3OAfTXu1i4olOIZ1hfv1tB8AadVQH1uTIQCKe/C6alsJCh1Fzt86pGra62iSTXvouKSZyW9Ioju8WQ+tZ6VP/6+f1v/rQqob3qC9GO8=
+ bh=51tsK8MxV2nvGMnhY4JwGSs9H+aaEf7QLvcco48Jraw=;
+ b=0DXKfJsm+Sak0InuBPU5+ReLl3nT3GOfYMVjdEPfaTRdD4+HZ4bpW5LpsBbnDw0NpT12xvYEpYkfv7gg2WsUiLEMXbfmevV2k1o0YqIJNQr3JkKaposFaRbPftRtFivTqJZ+diVDBm8bACRcSTmdB6xgRM0wk0UehtBaM3N+PM8=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB4926.namprd10.prod.outlook.com (2603:10b6:5:3ac::20) with
+ by CO1PR10MB4563.namprd10.prod.outlook.com (2603:10b6:303:92::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.34; Mon, 29 Jan
- 2024 14:04:44 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.24; Mon, 29 Jan
+ 2024 14:14:57 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::ed:9f6b:7944:a2fa]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::ed:9f6b:7944:a2fa%6]) with mapi id 15.20.7228.029; Mon, 29 Jan 2024
- 14:04:44 +0000
-Date: Mon, 29 Jan 2024 09:04:41 -0500
-From: Chuck Lever <chuck.lever@oracle.com>
-To: NeilBrown <neilb@suse.de>
-Cc: Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-        Tom Talpey <tom@talpey.com>, Christoph Hellwig <hch@lst.de>,
-        Tom Haynes <loghyr@gmail.com>
-Subject: Re: [PATCH 05/13] nfsd: split sc_status out of sc_type
-Message-ID: <ZbeweYmp/HeGr5tN@tissot.1015granger.net>
-References: <20240129033637.2133-1-neilb@suse.de>
- <20240129033637.2133-6-neilb@suse.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240129033637.2133-6-neilb@suse.de>
-X-ClientProxiedBy: CH2PR07CA0009.namprd07.prod.outlook.com
- (2603:10b6:610:20::22) To BN0PR10MB5128.namprd10.prod.outlook.com
- (2603:10b6:408:117::24)
+ 14:14:57 +0000
+From: Chuck Lever III <chuck.lever@oracle.com>
+To: Roland Mainz <roland.mainz@nrubsig.org>
+CC: Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Martin Wege
+	<martin.l.wege@gmail.com>,
+        Cedric Blancher <cedric.blancher@gmail.com>
+Subject: Re: refer= syntax in /etc/exports for custom non-2049 TCP ports ? /
+ was: Re: Change "hostname" to "hostport" in text-based mountd downcall Re:
+ BUG in exports(5), no example for refer= Re: Examples for refer= in
+ /etc/exports?
+Thread-Topic: refer= syntax in /etc/exports for custom non-2049 TCP ports ? /
+ was: Re: Change "hostname" to "hostport" in text-based mountd downcall Re:
+ BUG in exports(5), no example for refer= Re: Examples for refer= in
+ /etc/exports?
+Thread-Index: 
+ AQHaDXJPkaKnFSGKLkeVN9xiH7a/Z7ByuFQAgAAI+gCAAALcAIAAGasAgABndgCAAK6dAIADivKAgHm3SACAACn/AA==
+Date: Mon, 29 Jan 2024 14:14:57 +0000
+Message-ID: <610FDE39-3094-40EB-B671-F2CA876CA145@oracle.com>
+References: 
+ <CALXu0UeGr80OzF7abqxwR5KFJFhpCuomy2_tdFESAKSiW70jfA@mail.gmail.com>
+ <CALXu0UcT4gG8xEVOvK1mshMDa_hKYu7rJK2biq8==ySOXdA3+w@mail.gmail.com>
+ <4F5C3573-2962-4072-ACB1-1CB8236866D5@oracle.com>
+ <CALXu0Uf2z3um+kh=tgnqskr-ZdY2gU=185K3Amr=F_GJpb2_UQ@mail.gmail.com>
+ <FD981B2C-5C24-4349-A279-C70F640C0A01@oracle.com>
+ <CANH4o6O=ihW7ENc-BTBXR4d4JL0QJjZa5YdYaKAdoHdq9vwGcA@mail.gmail.com>
+ <5DA015E1-50C6-4F56-B4E7-62A4BE90DBA4@oracle.com>
+ <CALXu0UcLV-KZ4GNY8UgWCwiUOO_HsH=KLWOKuWJ2uEDP+a9sqw@mail.gmail.com>
+ <CAKAoaQ=FDdkTW2Vh=_Y08DEWZYaJa6tDSYKnFiZCfQ6+PW_5iQ@mail.gmail.com>
+In-Reply-To: 
+ <CAKAoaQ=FDdkTW2Vh=_Y08DEWZYaJa6tDSYKnFiZCfQ6+PW_5iQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3774.400.31)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CO1PR10MB4563:EE_
+x-ms-office365-filtering-correlation-id: 1d7bfe57-12f9-480b-3214-08dc20d4ac26
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 
+ 5S1VvBRsns8boeYR86J8mfn0lrc/KftkiN+Mu7FG/td68rdU3EgYF/nYKziY3PEvE9xYIkapOXATHsl5/OOage8CC5eBBMDDTB+035QiM1xqbbaCzx+xDsh8Ts2jzP6F9urgLMSMcOSzXdaKZot2xhtm3sg0DP4DtVtYyJgUD7HcsJy3DXituvLmVzFUIBujbk8vh6lRC93kQf49Ysj3xM4Oq+YyJCKS76q/YAfE9OyyaV4WfRAv/Pekm9d1D2S7WyINw5GkuvCnZHpmAeeW5XuXH29xIiznhdX62ZbH2moRZFwDfdMU6aXUuiSG+ee2OWPiU/1FnlJsLag+8YUInUn7luNi5Wx8+PUw4w5yJeGnzXsJO4/q8yuCFS3hym+BDnuXrK2A9JpcOAAqqs+QZ3B0XAKCebV3q+1wX9ccI0AjNMp14euJ7xe6yvV5gvXpt8lleDez6uQGfZ8VeYK/A91d90IYYurobHRZuLLjwwLbRkWXHXp5E2cU6cnLVzmbt/x3uCdrWXfTmnJ/+QKx2ZLbVyKS545wRyiTt01+AccwWLYJwhbBNWKBggZn3EKwLr7X7o8R+mo/Ukfz/4rviGwrlQ++UFFyORf95SKJ67nBEgD11ogmAG4J39Wax285Oir5hYxOLhwxOml1LW9zbODJ5IBSoZzPfaY4Y6ZOpti8glKIRtDBnuVFI7EVWath60PXfC9OHw5W+eO6ZN04Wg==
+x-forefront-antispam-report: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(366004)(39860400002)(396003)(376002)(230922051799003)(64100799003)(186009)(451199024)(1800799012)(41300700001)(38100700002)(122000001)(66446008)(66556008)(76116006)(6506007)(86362001)(54906003)(53546011)(316002)(6916009)(66946007)(66476007)(6486002)(8676002)(8936002)(64756008)(2616005)(5660300002)(6512007)(33656002)(26005)(478600001)(2906002)(71200400001)(4326008)(83380400001)(36756003)(38070700009)(148773002)(45980500001)(47845010);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: 
+ =?utf-8?B?MVJhVVlZOXpGaDA5eElZcEw0TE1jOGlWTVZUTUNZYUs3eU1HQlVGZjh6ZXFk?=
+ =?utf-8?B?ckRKbHpZTTVCQzhoRE1Na2hsOUhBSFJUeGN0Y0Nlc1FjT1RmVFBPbUNNRm1C?=
+ =?utf-8?B?aWRpbXFhZ1dYTndySjhhTmh3dktIM1U3UVplU1FTMG1PUU5KWExRMXJLVVJH?=
+ =?utf-8?B?ZHRyakFSS0xERllpTnV0NHp6VWh0U0cvTXpHcmtUV1d0Q1JXQXNCbjVNS293?=
+ =?utf-8?B?OTMwK0dmbWZoSXprcy95WXVSaDgxS1QwUERjdHhjVEUvQVlkSmlMQXpycGMr?=
+ =?utf-8?B?SWI0UGQ5U2t0d24vcmxNZ1l4a0ZsR2dBeTZLZ2xud3pUS2NGbU9md3JNU0tF?=
+ =?utf-8?B?T2MvWFFzclZQaG9INkV0NmIrcXFuTUowT3pSUzZuL1VQdDdBM2xKTkhNL1JU?=
+ =?utf-8?B?Nmt3ZWErQ1JFTlU5Vk93bmxWTFhoQUd3Zi83YURCMk0yV09TS0VoSmhIekl5?=
+ =?utf-8?B?WlRlQTlqSUVWWi95SS9iYTJVMVVyaDdmYlZYMDFEeFRCeEw3aFV5Z0JkYUdD?=
+ =?utf-8?B?QjlNampCNDRGdm5iZzV1ekRhaUc2NWlKcVdMb0I0M0d1YTJBU3VRbFB3aXVt?=
+ =?utf-8?B?b3Z4T2FZcUw5OEhxbzZBMzlQNXRsdmxOQkcxWlEvSUllaW5uMFN4OEZnbVJ5?=
+ =?utf-8?B?aStaTHdjelhaVTBnUGVFODFJY2JtcDE2V04yS2FyU1NUUU1JMENsaHlxNzgz?=
+ =?utf-8?B?cVlML3JsR3BvUXczb29uSFd0UVpaeTJpS1RRZS9qSHJkM0hNT0JOckxibkhN?=
+ =?utf-8?B?cENiTUN0WUxLdDhSbmlNTmJ4REE0QkFpWjE5WVNiWWlSMEpiTUg3TVZNZUtK?=
+ =?utf-8?B?cm9ZenFPVmV2TnU5cUFKcG1hMTJpK1BqRGpJR3E0S215cWU1aU5ZM2hmOWt0?=
+ =?utf-8?B?clRGUGN5TGhRd3lJc1RxaWk2cjgxQ3dMeGR3MHFFcDhQUWUyYnN4b3ZjZ0ty?=
+ =?utf-8?B?eGQrKy96em9xS0l1Wm9CWlliYnVWVWJxREdJSnVBTnlIaE1PcHZyVXR3Ui94?=
+ =?utf-8?B?a1RDRk0ybURndFRRVlNLZ3BuSmQ5ajVBc01XWW1WUkFCay9oSUIyTzhZSnBa?=
+ =?utf-8?B?TXJHRGNNTTdmdm1KU2h4RlBjdlNSS1Mrb0ZyMlBncXRjeklhWkplc2MwL0dQ?=
+ =?utf-8?B?a2lrTXMyZkpVUHpzaC9JOVAvYmc5d3QzS1lpYUtDVVlmcmVWeVBOaDh3V1hY?=
+ =?utf-8?B?cXNzT2lZbjdIUHlQNS9YSzlZNUp6ek9SOXlkazVsNktsSHI1U2tHR3VlZWZu?=
+ =?utf-8?B?UUtZcERmWnc0V3ZiOWtsdFZCWUF0aHpJK3ZkMWdrcU9BUGtJdFlTUjN4bXdG?=
+ =?utf-8?B?S1V1SENDUk9MdmpKdGppRkFwV01FMTMvQS91NXREUU9ydUZtem9SQnMyVTlR?=
+ =?utf-8?B?a3IrZHdoc0JEK3lwUGFKWHZQOE1KaW9DTTF0MTc5dHFMRmJmd3g0ekpPT0tE?=
+ =?utf-8?B?T1JXV21hd0lZU0NMS0RycE1pdU5WejRId1RMdXV5ZWRGRHJCdUZyNWJtTk8z?=
+ =?utf-8?B?TmpsWUJHbjdKV0U4Ym9SZ2lqMDd6bzUwVkFTWXpleWl6TTNrTDRwNm9EMTJE?=
+ =?utf-8?B?alhZTlI4YW9TOHp0eGRnaGFORno0anFCMjduSXhtSkFnU0hNRkg4bnhYQTVX?=
+ =?utf-8?B?elVNaEVtdFdCUzE3aFpiUDdtVUpQUDJWWnh1bTNPdU55Y3FYUzBFaGxnQU5s?=
+ =?utf-8?B?SC80SVFCNEVZc2U5Vmh3ZUZkWFh2WUtkTGpCMk5neGdRaDhEc25tZHEzc1FD?=
+ =?utf-8?B?RmRlcXZ3WStVaDIxQmQ1eXk3ZENVdWhhNHpwRXAzd1V2aklDWVByM1V1clky?=
+ =?utf-8?B?RVJCdDZ4d2ErTHpwZGVuS3ZRdm5NYVlKRlZ4Y3dFb1E1cjJNMjg3K3BPSzU3?=
+ =?utf-8?B?aEdEODZWNlpJQ2VrWkJLYkExRHBkY3dGNEovL3Y1R01DclBNdmJWb3A4UVc3?=
+ =?utf-8?B?UHhpTFZuUzhwb29SdXhPeG93bjdlTWJHSVd4Sm9QU1N6MGFFSFpHMFhIZHph?=
+ =?utf-8?B?UjhqanFDUlhmSTZtWi8xbGNBQ00rYTlaTWg0T2hPdk5Zeng4RGQwaXloMk5L?=
+ =?utf-8?B?dlBCTmQ4dm9FOG5UVGdseXZhWnd4VDRQSkROYXVFb1ZsSGk0ZTNWS2g3NTB4?=
+ =?utf-8?B?RkpCeUtjS2tjTDZGTEhSRjlQZmtnMllxMXhsOEZXc1lUMUlNdzdtcVJDdG42?=
+ =?utf-8?B?aWc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <766867E21930B04C8A8FB1C497800989@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN0PR10MB5128:EE_|DS7PR10MB4926:EE_
-X-MS-Office365-Filtering-Correlation-Id: ed99d2b6-dcfd-472c-bd22-08dc20d33eb5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	n+UhSSii0qiH6Q6nsLWldj0Et7UxIGYkX6L7L5+/gkNKV1MmvJkleS6qk0/lbWy1oYfUmUKN6MQezsqWpAkEzlyFxx0LHf+fakqITETacxUYzY+hY9cTGQTLtc+4aX4I4/AFIK4Ns53Fh8YGtn/mGpm7eBauDm3NXfIlF0e5HHTU7b4HiaBr6xDLuDOtUXHhm5bGlGeZMjwPU/NGGRDHYaZrY8m/wrZTUuZuo40ltIXUmb0waq5tivy+UGigBySYE6ILQzBLmT5KjA/f3zI8v4DT4LOZ4+k/lqBbUN/H5n4LhIt2QMfR9F6WTVxnezIPSYQX2Cx/gbSbcCnpIj2io0/uFsfwF73QWKGjKFz55DCpDn86WZEGQ0bQgpXs3R5XDYx40s3VDEZ6+CdeYWdHPGyRD7qyZOa8lDV2MaF0UlA/mRQENaBequFjqXNCt+2L8fuoJeSx3Lu6E2+A4mY4U5v3ENI7QQVEgkpHOiG92DTku9ioA7gBTh75P5aNIrHn2qB/DXHz4eVtuvTF4owjPiNWWZeDdIAlfAcdhg17GaafFD6tBdUIw+VM34jXvpUGAWMDVUQtQT3tZ40ka1/04Xw8BumkY2GLOLvacll59Lg=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(136003)(396003)(366004)(346002)(376002)(230922051799003)(64100799003)(1800799012)(186009)(451199024)(83380400001)(86362001)(66556008)(9686003)(6512007)(38100700002)(26005)(6916009)(6486002)(6506007)(2906002)(5660300002)(478600001)(30864003)(41300700001)(6666004)(316002)(66476007)(54906003)(66946007)(4326008)(44832011)(8676002)(8936002)(21314003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?2SjliT0jdbA6kp/VUwCdktTDnDSHYA45VQupkdhGzqh07c46GEZZ/wHyZhoU?=
- =?us-ascii?Q?RfvtpqpHohsWzBkFuvT8xRRtCOuG2CJg0JjrjOKFNkRdiDJztQlYIuqNIBXu?=
- =?us-ascii?Q?U9vT8ZyZFcq6lIOMJxLBlEPL7I87RP54pQPIPKuve8JRodAnbYi29CBkZT39?=
- =?us-ascii?Q?eyNXshApkd5rmf5Z5uvTr3eraelbC5nXXYPaQCe0FSupDhIswIGXS5OrRnUw?=
- =?us-ascii?Q?6UU2+WwmhNBYaIdq78RPruZab9nVZNPjOcnhqKn+v+5ZirZ4TdE48USa7jyJ?=
- =?us-ascii?Q?/dVKiP9UGGwaGKZejVs8kjkqpDJA+Lke3DsxKVt24NV0Sj5fBkU+EBNxw42H?=
- =?us-ascii?Q?BHVRTk7je9KOXvYTPTnlL3/zubDf5Rq4aH2fEEahv3ZcSRjj5BmRka6SBQ9K?=
- =?us-ascii?Q?CVxHaIgOuEzT9ioPEUclRiqGKydOB9xtOsQ+evZlrXUiq4qDhx5wVdgz2kPN?=
- =?us-ascii?Q?wkrZk4rw3D2PtqqLW0g1oRe15mv4VA7tGHNV3/HAbREpbOLVEBzlmGmGCMsV?=
- =?us-ascii?Q?GR6F7YZU/lcht276c6EvYtZd3I9cihdK4wyS2jmSvAGtVQFCA0OF+YDpA17P?=
- =?us-ascii?Q?ESM6ibYxCQo1U2zH0WFCwbgSkrujl2llY45UtmLLS7JNbM4YmSQ07emvqkvt?=
- =?us-ascii?Q?roZA013vDctQBssVS9RAlcNa1nvOS67xtBmo8cxwS0iDeKnSMYYcksSXA5uD?=
- =?us-ascii?Q?3lG926CtBEPGZdbwCud0qQrFqL4X1JkqYiAxxGep9XCjBl1ZxGljy0pdzmHQ?=
- =?us-ascii?Q?on+Y7RDqBQZfyP8geWaFsNJdqx1ylAJjrpmxld078gVlKV93w90e/qNk0rTt?=
- =?us-ascii?Q?x8Hm9mANuDnynWbuMXce4WJWcRuj+EaL0t+rpwsp2rhfnrNyV5SkB7DDQLtv?=
- =?us-ascii?Q?b7pVYMZn3vxhDEeexvlwO4i6E4COPLW7mxeKq8+rcsnXmoeYr19JwrTIcd64?=
- =?us-ascii?Q?ApyTOzkC7AMATf9jTiANilCTb4/pi0pgRWEEWiv0Hp0iZQhGwQvatnKN+VAp?=
- =?us-ascii?Q?rhkh017Wg34pH1mq/mZLwSZh+AtBnofVIF6y7dtN9Oe3ONKdOjkPzNelymTz?=
- =?us-ascii?Q?6XXwRPTfRLA6c3tXZtJ9GVv51w18Jy+i+pLx1rTodbsvE81bGW/0oY7O8h8d?=
- =?us-ascii?Q?+Nn6V9M55buh9ePLq/R4MOcpcu1F9gGtura76Ly6zXu4L6KmFPaLhwJWSDMC?=
- =?us-ascii?Q?bJ5VNovwTU5qDwlNAx7TDpTcFWimQ+O8ewsGFxHLbkj5MpGojObRsOXYIlDC?=
- =?us-ascii?Q?CoQ8SoD0f7Cql1VDytgneL453S0rqnuvAAVRhXXEmQ/QF7Ll4Syc4U1pGNmf?=
- =?us-ascii?Q?tBRqJb0LLtxk4fFwLnURCRmJiWNyjfnT4AyoNbeTCZqmb2614jncI97u6aks?=
- =?us-ascii?Q?2RMvLc+7jcQyeCTwzWUAVetfk2bjCU5CzIGC8ak+JnxdKw/4z7822VFdLv5d?=
- =?us-ascii?Q?8RFqUxwiCKBijNE1UYQeVI1Uix2H5q3uTJH8RFzF0a/TeyT7OTYkatfhl4WE?=
- =?us-ascii?Q?6JuT0yrBdwVvu8MEietbiYijk2m7FWniDngpCcyAx7b5CWMvQeKwhPXX10hr?=
- =?us-ascii?Q?OoEtL87Q4NQro/SCUG4AIzSNl9N04M63VN0NssE6zIjZDIl4PsUbo5KyiKK3?=
- =?us-ascii?Q?6Q=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	7FLGTTkhasjoQhGhaU1qbYuP/yeMoAnXhrXFgcQ+DpDxBccNIhiz1QcBj7JQw+L/Qb0sADo4BZ1xPd2Y0tF+FWIuRXI/GncQv7uCFgdP/pA3HwGvdZ+q7TBUzsVCtPSYL6FqgtWkLDrAi5kVuJe5diJJ8r8XgZ/iOZLXnjGfUoBxQiVeq472en4TVObNv3uEPBzFHFRYGBJA0xr/A0pE1jOwUY85hddru+j+43ty0DG85xOayuH99SRBGE83k7ilfQa3qIOFY4nMuag0B6pQYpK3kBLxBYeoZIltmAoUHlg6kqW9e4qlouqsrHn0YUo04dV3Gg0pSVpVR6kIhszBFS/LRMkkaPWk4vV1EA3Q9XUKObvZXnFIY7qPOEwNhvs10xbZLmN6BFLlQWtDCkyKHVuFeUHKDHAblPsfx2ZZOvGbjbJr4OBZ1joCRrenE7MFNwgShn4qB1cYJLIohjeVQaVymKK99GzuOtnUKA6wO3/6rMjBQ26WPcxoVzAA/SyJEMq1MCui2vLVummt4qAgzLzDWbs8fWb++oN/fjzw0CX68HY52G9fnNbSfZ44dJ51SHq4xiv1uuNw46TGW67e6P23JDCFpB74n0eY2gz3NFw=
+	DAx6UVerNIlAd86klQ5PcEWGqQpc1+wRLSwNqFhLQYoAidnxRM9DK2bgw9r/Ik6JhGo0bcr3qU2dJMu9uun/NsxkWHPiLgiDcoZpoj9H5WzIUXFdV4aUYle8WT2y2OWUxoBrg8XeZoyon8ivl6oN05AOoUVYxJFjqSA6ytcY5IMsi3oJLmAA/GdQ9c5/dglSXCbjcssRK1ucs2zbxKnZeHBRVL24I7CdFF4+urwki/Vq8r0/4rPY5Wex4YehPA8+epc27wgomIN/DVmkVA3Vqcj1QXr3iEWcHNy43PqxaDcSW3+wXG7eQx6JNzZzY8d+IRTmVDfTcrR+5ihDj+7nxeL2HLUgZX9Mowvu6JKCp8Uqu95/YQnU1SZSizc95oUKtIyBxsTiBikwBzI776DuuKiiH3aom8o6cMqgEVNJ88QaJsnUxd3Cfd61Hk58aZT9YWJnsDK5DGOb7QdqT02rV3CnaOE5uDrP187KhL1m4W2z8XmSPfEYRTQi240GMNiTSqT13vcdZWGll2iapjCvJEiH7Q/Dh4tf2A56QopTpVCR9CCfQBrHnNgWxXolY4Jp5t/eSMOSiLGYxhLuGg9kzGwbHNtqVW49JoSpOMpLPKI=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed99d2b6-dcfd-472c-bd22-08dc20d33eb5
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jan 2024 14:04:44.3380
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d7bfe57-12f9-480b-3214-08dc20d4ac26
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jan 2024 14:14:57.3068
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nNc60UgzWewwwg/e0eBjV3P7Tg76Tja3YIST2WHW7jIYpD0XlfRkNEuu8iW2ErjTY/tLlrq3FArs/66lE9dlLQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4926
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HGZdfaswk/Erg1XlhzVSRxEVqgX1ZWzipPCLvrUST51PcX9tS3SHCg/1Wog57cqxb1Zd4FwNN5uUUqzodlNIsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4563
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-29_07,2024-01-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 malwarescore=0
- mlxscore=0 mlxlogscore=999 spamscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311290000
- definitions=main-2401290103
-X-Proofpoint-ORIG-GUID: 1bUdLElAvFdsLi5Bjj1VY0-BoQ6FDzMT
-X-Proofpoint-GUID: 1bUdLElAvFdsLi5Bjj1VY0-BoQ6FDzMT
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ bulkscore=0 malwarescore=0 suspectscore=0 phishscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311290000 definitions=main-2401290104
+X-Proofpoint-GUID: XMR_TpliuaugdeUmmoIQ7_Z6_DvWB5qH
+X-Proofpoint-ORIG-GUID: XMR_TpliuaugdeUmmoIQ7_Z6_DvWB5qH
 
-On Mon, Jan 29, 2024 at 02:29:27PM +1100, NeilBrown wrote:
-> sc_type identifies the type of a state - open, lock, deleg, layout - and
-> also the status of a state - closed or revoked.
-> 
-> This is a bit untidy and could get worse when "admin-revoked" states are
-> added.  So clean it up.
-> 
-> With this patch, the type is now all that is stored in sc_type.  This is
-> zero when the state is first added to ->cl_stateids (causing it to be
-> ignored), and is then set appropriately once it is fully initialised.
-> It is set under ->cl_lock to ensure atomicity w.r.t lookup.  It is now
-> never cleared.
-> 
-> sc_type is still a bit-set even though at most one bit is set.  This allows
-> lookup functions to be given a bitmap of acceptable types.
-> 
-> sc_type is now an unsigned short rather than char.  There is no value in
-> restricting to just 8 bits.
-> 
-> All the constants now start SC_TYPE_ matching the field in which they
-> are stored.  Keeping the existing names and ensuring clear separation
-> from non-type flags would have required something like
-> NFS4_STID_TYPE_CLOSED which is cumbersome.  The "NFS4" prefix is
-> redundant was they only appear in NFS4 code, so remove that and change
-> STID to SC to match the field.
-> 
-> The status is stored in a separate unsigned short named "sc_status".  It
-> has two flags: SC_STATUS_CLOSED and SC_STATUS_REVOKED.
-> CLOSED combines NFS4_CLOSED_STID, NFS4_CLOSED_DELEG_STID, and is used
-> for SC_TYPE_LOCK and SC_TYPE_LAYOUT instead of setting the sc_type to zero.
-> These flags are only ever set, never cleared.
-> For deleg stateids they are set under the global state_lock.
-> For open and lock stateids they are set under ->cl_lock.
-> For layout stateids they are set under ->ls_lock
-> 
-> nfs4_unhash_stid() has been removed, and we never set sc_type = 0.  This
-> was only used for LOCK and LAYOUT stids and they now use
-> SC_STATUS_CLOSED.
-> 
-> Also TRACE_DEFINE_NUM() calls for the various STID #define have been
-> removed because these things are not enums, and so that call is
-> incorrect.
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/nfs4layouts.c |  14 +--
->  fs/nfsd/nfs4state.c   | 207 +++++++++++++++++++++---------------------
->  fs/nfsd/state.h       |  40 +++++---
->  fs/nfsd/trace.h       |  31 +++----
->  4 files changed, 151 insertions(+), 141 deletions(-)
-
-This one doesn't apply cleanly to nfsd-next. Can you do a quick
-rebase onto nfsd-next and send a fresh version of the series?
-
-
-> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-> index 5e8096bc5eaa..857b822450b4 100644
-> --- a/fs/nfsd/nfs4layouts.c
-> +++ b/fs/nfsd/nfs4layouts.c
-> @@ -236,7 +236,7 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
->  	nfsd4_init_cb(&ls->ls_recall, clp, &nfsd4_cb_layout_ops,
->  			NFSPROC4_CLNT_CB_LAYOUT);
->  
-> -	if (parent->sc_type == NFS4_DELEG_STID)
-> +	if (parent->sc_type == SC_TYPE_DELEG)
->  		ls->ls_file = nfsd_file_get(fp->fi_deleg_file);
->  	else
->  		ls->ls_file = find_any_file(fp);
-> @@ -250,7 +250,7 @@ nfsd4_alloc_layout_stateid(struct nfsd4_compound_state *cstate,
->  	}
->  
->  	spin_lock(&clp->cl_lock);
-> -	stp->sc_type = NFS4_LAYOUT_STID;
-> +	stp->sc_type = SC_TYPE_LAYOUT;
->  	list_add(&ls->ls_perclnt, &clp->cl_lo_states);
->  	spin_unlock(&clp->cl_lock);
->  
-> @@ -269,13 +269,13 @@ nfsd4_preprocess_layout_stateid(struct svc_rqst *rqstp,
->  {
->  	struct nfs4_layout_stateid *ls;
->  	struct nfs4_stid *stid;
-> -	unsigned char typemask = NFS4_LAYOUT_STID;
-> +	unsigned short typemask = SC_TYPE_LAYOUT;
->  	__be32 status;
->  
->  	if (create)
-> -		typemask |= (NFS4_OPEN_STID | NFS4_LOCK_STID | NFS4_DELEG_STID);
-> +		typemask |= (SC_TYPE_OPEN | SC_TYPE_LOCK | SC_TYPE_DELEG);
->  
-> -	status = nfsd4_lookup_stateid(cstate, stateid, typemask, &stid,
-> +	status = nfsd4_lookup_stateid(cstate, stateid, typemask, 0, &stid,
->  			net_generic(SVC_NET(rqstp), nfsd_net_id));
->  	if (status)
->  		goto out;
-> @@ -286,7 +286,7 @@ nfsd4_preprocess_layout_stateid(struct svc_rqst *rqstp,
->  		goto out_put_stid;
->  	}
->  
-> -	if (stid->sc_type != NFS4_LAYOUT_STID) {
-> +	if (stid->sc_type != SC_TYPE_LAYOUT) {
->  		ls = nfsd4_alloc_layout_stateid(cstate, stid, layout_type);
->  		nfs4_put_stid(stid);
->  
-> @@ -518,7 +518,7 @@ nfsd4_return_file_layouts(struct svc_rqst *rqstp,
->  		lrp->lrs_present = true;
->  	} else {
->  		trace_nfsd_layoutstate_unhash(&ls->ls_stid.sc_stateid);
-> -		nfs4_unhash_stid(&ls->ls_stid);
-> +		ls->ls_stid.sc_status |= SC_STATUS_CLOSED;
->  		lrp->lrs_present = false;
->  	}
->  	spin_unlock(&ls->ls_lock);
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index dbf9ed84610e..6bccdd0af814 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1260,11 +1260,6 @@ static void destroy_unhashed_deleg(struct nfs4_delegation *dp)
->  	nfs4_put_stid(&dp->dl_stid);
->  }
->  
-> -void nfs4_unhash_stid(struct nfs4_stid *s)
-> -{
-> -	s->sc_type = 0;
-> -}
-> -
->  /**
->   * nfs4_delegation_exists - Discover if this delegation already exists
->   * @clp:     a pointer to the nfs4_client we're granting a delegation to
-> @@ -1317,7 +1312,7 @@ hash_delegation_locked(struct nfs4_delegation *dp, struct nfs4_file *fp)
->  	if (nfs4_delegation_exists(clp, fp))
->  		return -EAGAIN;
->  	refcount_inc(&dp->dl_stid.sc_count);
-> -	dp->dl_stid.sc_type = NFS4_DELEG_STID;
-> +	dp->dl_stid.sc_type = SC_TYPE_DELEG;
->  	list_add(&dp->dl_perfile, &fp->fi_delegations);
->  	list_add(&dp->dl_perclnt, &clp->cl_delegations);
->  	return 0;
-> @@ -1329,7 +1324,7 @@ static bool delegation_hashed(struct nfs4_delegation *dp)
->  }
->  
->  static bool
-> -unhash_delegation_locked(struct nfs4_delegation *dp, unsigned char type)
-> +unhash_delegation_locked(struct nfs4_delegation *dp, unsigned short statusmask)
->  {
->  	struct nfs4_file *fp = dp->dl_stid.sc_file;
->  
-> @@ -1339,8 +1334,9 @@ unhash_delegation_locked(struct nfs4_delegation *dp, unsigned char type)
->  		return false;
->  
->  	if (dp->dl_stid.sc_client->cl_minorversion == 0)
-> -		type = NFS4_CLOSED_DELEG_STID;
-> -	dp->dl_stid.sc_type = type;
-> +		statusmask = SC_STATUS_CLOSED;
-> +	dp->dl_stid.sc_status |= statusmask;
-> +
->  	/* Ensure that deleg break won't try to requeue it */
->  	++dp->dl_time;
->  	spin_lock(&fp->fi_lock);
-> @@ -1356,7 +1352,7 @@ static void destroy_delegation(struct nfs4_delegation *dp)
->  	bool unhashed;
->  
->  	spin_lock(&state_lock);
-> -	unhashed = unhash_delegation_locked(dp, NFS4_CLOSED_DELEG_STID);
-> +	unhashed = unhash_delegation_locked(dp, SC_STATUS_CLOSED);
->  	spin_unlock(&state_lock);
->  	if (unhashed)
->  		destroy_unhashed_deleg(dp);
-> @@ -1370,7 +1366,7 @@ static void revoke_delegation(struct nfs4_delegation *dp)
->  
->  	trace_nfsd_stid_revoke(&dp->dl_stid);
->  
-> -	if (dp->dl_stid.sc_type == NFS4_REVOKED_DELEG_STID) {
-> +	if (dp->dl_stid.sc_status & SC_STATUS_REVOKED) {
->  		spin_lock(&clp->cl_lock);
->  		refcount_inc(&dp->dl_stid.sc_count);
->  		list_add(&dp->dl_recall_lru, &clp->cl_revoked);
-> @@ -1379,8 +1375,8 @@ static void revoke_delegation(struct nfs4_delegation *dp)
->  	destroy_unhashed_deleg(dp);
->  }
->  
-> -/* 
-> - * SETCLIENTID state 
-> +/*
-> + * SETCLIENTID state
->   */
->  
->  static unsigned int clientid_hashval(u32 id)
-> @@ -1543,7 +1539,7 @@ static bool unhash_lock_stateid(struct nfs4_ol_stateid *stp)
->  	if (!unhash_ol_stateid(stp))
->  		return false;
->  	list_del_init(&stp->st_locks);
-> -	nfs4_unhash_stid(&stp->st_stid);
-> +	stp->st_stid.sc_status |= SC_STATUS_CLOSED;
->  	return true;
->  }
->  
-> @@ -1622,6 +1618,7 @@ static void release_open_stateid(struct nfs4_ol_stateid *stp)
->  	LIST_HEAD(reaplist);
->  
->  	spin_lock(&stp->st_stid.sc_client->cl_lock);
-> +	stp->st_stid.sc_status |= SC_STATUS_CLOSED;
->  	if (unhash_open_stateid(stp, &reaplist))
->  		put_ol_stateid_locked(stp, &reaplist);
->  	spin_unlock(&stp->st_stid.sc_client->cl_lock);
-> @@ -2230,7 +2227,7 @@ __destroy_client(struct nfs4_client *clp)
->  	spin_lock(&state_lock);
->  	while (!list_empty(&clp->cl_delegations)) {
->  		dp = list_entry(clp->cl_delegations.next, struct nfs4_delegation, dl_perclnt);
-> -		unhash_delegation_locked(dp, NFS4_CLOSED_DELEG_STID);
-> +		unhash_delegation_locked(dp, SC_STATUS_CLOSED);
->  		list_add(&dp->dl_recall_lru, &reaplist);
->  	}
->  	spin_unlock(&state_lock);
-> @@ -2462,14 +2459,16 @@ find_stateid_locked(struct nfs4_client *cl, stateid_t *t)
->  }
->  
->  static struct nfs4_stid *
-> -find_stateid_by_type(struct nfs4_client *cl, stateid_t *t, char typemask)
-> +find_stateid_by_type(struct nfs4_client *cl, stateid_t *t,
-> +		     unsigned short typemask, unsigned short ok_states)
->  {
->  	struct nfs4_stid *s;
->  
->  	spin_lock(&cl->cl_lock);
->  	s = find_stateid_locked(cl, t);
->  	if (s != NULL) {
-> -		if (typemask & s->sc_type)
-> +		if ((s->sc_status & ~ok_states) == 0 &&
-> +		    (typemask & s->sc_type))
->  			refcount_inc(&s->sc_count);
->  		else
->  			s = NULL;
-> @@ -2622,7 +2621,7 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
->  	struct nfs4_stateowner *oo;
->  	unsigned int access, deny;
->  
-> -	if (st->sc_type != NFS4_OPEN_STID && st->sc_type != NFS4_LOCK_STID)
-> +	if (st->sc_type != SC_TYPE_OPEN && st->sc_type != SC_TYPE_LOCK)
->  		return 0; /* XXX: or SEQ_SKIP? */
->  	ols = openlockstateid(st);
->  	oo = ols->st_stateowner;
-> @@ -2754,13 +2753,13 @@ static int states_show(struct seq_file *s, void *v)
->  	struct nfs4_stid *st = v;
->  
->  	switch (st->sc_type) {
-> -	case NFS4_OPEN_STID:
-> +	case SC_TYPE_OPEN:
->  		return nfs4_show_open(s, st);
-> -	case NFS4_LOCK_STID:
-> +	case SC_TYPE_LOCK:
->  		return nfs4_show_lock(s, st);
-> -	case NFS4_DELEG_STID:
-> +	case SC_TYPE_DELEG:
->  		return nfs4_show_deleg(s, st);
-> -	case NFS4_LAYOUT_STID:
-> +	case SC_TYPE_LAYOUT:
->  		return nfs4_show_layout(s, st);
->  	default:
->  		return 0; /* XXX: or SEQ_SKIP? */
-> @@ -4532,7 +4531,8 @@ nfsd4_find_existing_open(struct nfs4_file *fp, struct nfsd4_open *open)
->  			continue;
->  		if (local->st_stateowner != &oo->oo_owner)
->  			continue;
-> -		if (local->st_stid.sc_type == NFS4_OPEN_STID) {
-> +		if (local->st_stid.sc_type == SC_TYPE_OPEN &&
-> +		    !local->st_stid.sc_status) {
->  			ret = local;
->  			refcount_inc(&ret->st_stid.sc_count);
->  			break;
-> @@ -4546,17 +4546,10 @@ nfsd4_verify_open_stid(struct nfs4_stid *s)
->  {
->  	__be32 ret = nfs_ok;
->  
-> -	switch (s->sc_type) {
-> -	default:
-> -		break;
-> -	case 0:
-> -	case NFS4_CLOSED_STID:
-> -	case NFS4_CLOSED_DELEG_STID:
-> -		ret = nfserr_bad_stateid;
-> -		break;
-> -	case NFS4_REVOKED_DELEG_STID:
-> +	if (s->sc_status & SC_STATUS_REVOKED)
->  		ret = nfserr_deleg_revoked;
-> -	}
-> +	else if (s->sc_status & SC_STATUS_CLOSED)
-> +		ret = nfserr_bad_stateid;
->  	return ret;
->  }
->  
-> @@ -4642,7 +4635,7 @@ init_open_stateid(struct nfs4_file *fp, struct nfsd4_open *open)
->  
->  	open->op_stp = NULL;
->  	refcount_inc(&stp->st_stid.sc_count);
-> -	stp->st_stid.sc_type = NFS4_OPEN_STID;
-> +	stp->st_stid.sc_type = SC_TYPE_OPEN;
->  	INIT_LIST_HEAD(&stp->st_locks);
->  	stp->st_stateowner = nfs4_get_stateowner(&oo->oo_owner);
->  	get_nfs4_file(fp);
-> @@ -4869,9 +4862,9 @@ static int nfsd4_cb_recall_done(struct nfsd4_callback *cb,
->  
->  	trace_nfsd_cb_recall_done(&dp->dl_stid.sc_stateid, task);
->  
-> -	if (dp->dl_stid.sc_type == NFS4_CLOSED_DELEG_STID ||
-> -	    dp->dl_stid.sc_type == NFS4_REVOKED_DELEG_STID)
-> -	        return 1;
-> +	if (dp->dl_stid.sc_status)
-> +		/* CLOSED or REVOKED */
-> +		return 1;
->  
->  	switch (task->tk_status) {
->  	case 0:
-> @@ -5116,12 +5109,12 @@ static int share_access_to_flags(u32 share_access)
->  	return share_access == NFS4_SHARE_ACCESS_READ ? RD_STATE : WR_STATE;
->  }
->  
-> -static struct nfs4_delegation *find_deleg_stateid(struct nfs4_client *cl, stateid_t *s)
-> +static struct nfs4_delegation *find_deleg_stateid(struct nfs4_client *cl,
-> +						  stateid_t *s)
->  {
->  	struct nfs4_stid *ret;
->  
-> -	ret = find_stateid_by_type(cl, s,
-> -				NFS4_DELEG_STID|NFS4_REVOKED_DELEG_STID);
-> +	ret = find_stateid_by_type(cl, s, SC_TYPE_DELEG, SC_STATUS_REVOKED);
->  	if (!ret)
->  		return NULL;
->  	return delegstateid(ret);
-> @@ -5144,7 +5137,7 @@ nfs4_check_deleg(struct nfs4_client *cl, struct nfsd4_open *open,
->  	deleg = find_deleg_stateid(cl, &open->op_delegate_stateid);
->  	if (deleg == NULL)
->  		goto out;
-> -	if (deleg->dl_stid.sc_type == NFS4_REVOKED_DELEG_STID) {
-> +	if (deleg->dl_stid.sc_status & SC_STATUS_REVOKED) {
->  		nfs4_put_stid(&deleg->dl_stid);
->  		status = nfserr_deleg_revoked;
->  		goto out;
-> @@ -5777,7 +5770,6 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
->  	} else {
->  		status = nfs4_get_vfs_file(rqstp, fp, current_fh, stp, open, true);
->  		if (status) {
-> -			stp->st_stid.sc_type = NFS4_CLOSED_STID;
->  			release_open_stateid(stp);
->  			mutex_unlock(&stp->st_mutex);
->  			goto out;
-> @@ -6169,7 +6161,7 @@ nfs4_laundromat(struct nfsd_net *nn)
->  		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
->  		if (!state_expired(&lt, dp->dl_time))
->  			break;
-> -		unhash_delegation_locked(dp, NFS4_REVOKED_DELEG_STID);
-> +		unhash_delegation_locked(dp, SC_STATUS_REVOKED);
->  		list_add(&dp->dl_recall_lru, &reaplist);
->  	}
->  	spin_unlock(&state_lock);
-> @@ -6408,22 +6400,20 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
->  	status = nfsd4_stid_check_stateid_generation(stateid, s, 1);
->  	if (status)
->  		goto out_unlock;
-> +	status = nfsd4_verify_open_stid(s);
-> +	if (status)
-> +		goto out_unlock;
-> +
->  	switch (s->sc_type) {
-> -	case NFS4_DELEG_STID:
-> +	case SC_TYPE_DELEG:
->  		status = nfs_ok;
->  		break;
-> -	case NFS4_REVOKED_DELEG_STID:
-> -		status = nfserr_deleg_revoked;
-> -		break;
-> -	case NFS4_OPEN_STID:
-> -	case NFS4_LOCK_STID:
-> +	case SC_TYPE_OPEN:
-> +	case SC_TYPE_LOCK:
->  		status = nfsd4_check_openowner_confirmed(openlockstateid(s));
->  		break;
->  	default:
->  		printk("unknown stateid type %x\n", s->sc_type);
-> -		fallthrough;
-> -	case NFS4_CLOSED_STID:
-> -	case NFS4_CLOSED_DELEG_STID:
->  		status = nfserr_bad_stateid;
->  	}
->  out_unlock:
-> @@ -6433,7 +6423,8 @@ static __be32 nfsd4_validate_stateid(struct nfs4_client *cl, stateid_t *stateid)
->  
->  __be32
->  nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
-> -		     stateid_t *stateid, unsigned char typemask,
-> +		     stateid_t *stateid,
-> +		     unsigned short typemask, unsigned short statusmask,
->  		     struct nfs4_stid **s, struct nfsd_net *nn)
->  {
->  	__be32 status;
-> @@ -6444,10 +6435,13 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
->  	 *  only return revoked delegations if explicitly asked.
->  	 *  otherwise we report revoked or bad_stateid status.
->  	 */
-> -	if (typemask & NFS4_REVOKED_DELEG_STID)
-> +	if (statusmask & SC_STATUS_REVOKED)
->  		return_revoked = true;
-> -	else if (typemask & NFS4_DELEG_STID)
-> -		typemask |= NFS4_REVOKED_DELEG_STID;
-> +	if (typemask & SC_TYPE_DELEG)
-> +		/* Always allow REVOKED for DELEG so we can
-> +		 * retturn the appropriate error.
-> +		 */
-> +		statusmask |= SC_STATUS_REVOKED;
->  
->  	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
->  		CLOSE_STATEID(stateid))
-> @@ -6460,14 +6454,12 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
->  	}
->  	if (status)
->  		return status;
-> -	stid = find_stateid_by_type(cstate->clp, stateid, typemask);
-> +	stid = find_stateid_by_type(cstate->clp, stateid, typemask, statusmask);
->  	if (!stid)
->  		return nfserr_bad_stateid;
-> -	if ((stid->sc_type == NFS4_REVOKED_DELEG_STID) && !return_revoked) {
-> +	if ((stid->sc_status & SC_STATUS_REVOKED) && !return_revoked) {
->  		nfs4_put_stid(stid);
-> -		if (cstate->minorversion)
-> -			return nfserr_deleg_revoked;
-> -		return nfserr_bad_stateid;
-> +		return nfserr_deleg_revoked;
->  	}
->  	*s = stid;
->  	return nfs_ok;
-> @@ -6478,17 +6470,17 @@ nfs4_find_file(struct nfs4_stid *s, int flags)
->  {
->  	struct nfsd_file *ret = NULL;
->  
-> -	if (!s)
-> +	if (!s || s->sc_status)
->  		return NULL;
->  
->  	switch (s->sc_type) {
-> -	case NFS4_DELEG_STID:
-> +	case SC_TYPE_DELEG:
->  		spin_lock(&s->sc_file->fi_lock);
->  		ret = nfsd_file_get(s->sc_file->fi_deleg_file);
->  		spin_unlock(&s->sc_file->fi_lock);
->  		break;
-> -	case NFS4_OPEN_STID:
-> -	case NFS4_LOCK_STID:
-> +	case SC_TYPE_OPEN:
-> +	case SC_TYPE_LOCK:
->  		if (flags & RD_STATE)
->  			ret = find_readable_file(s->sc_file);
->  		else
-> @@ -6601,7 +6593,8 @@ static __be32 find_cpntf_state(struct nfsd_net *nn, stateid_t *st,
->  		goto out;
->  
->  	*stid = find_stateid_by_type(found, &cps->cp_p_stateid,
-> -			NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID);
-> +				     SC_TYPE_DELEG|SC_TYPE_OPEN|SC_TYPE_LOCK,
-> +				     0);
->  	if (*stid)
->  		status = nfs_ok;
->  	else
-> @@ -6658,8 +6651,8 @@ nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
->  	}
->  
->  	status = nfsd4_lookup_stateid(cstate, stateid,
-> -				NFS4_DELEG_STID|NFS4_OPEN_STID|NFS4_LOCK_STID,
-> -				&s, nn);
-> +				SC_TYPE_DELEG|SC_TYPE_OPEN|SC_TYPE_LOCK,
-> +				0, &s, nn);
->  	if (status == nfserr_bad_stateid)
->  		status = find_cpntf_state(nn, stateid, &s);
->  	if (status)
-> @@ -6670,16 +6663,13 @@ nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
->  		goto out;
->  
->  	switch (s->sc_type) {
-> -	case NFS4_DELEG_STID:
-> +	case SC_TYPE_DELEG:
->  		status = nfs4_check_delegmode(delegstateid(s), flags);
->  		break;
-> -	case NFS4_OPEN_STID:
-> -	case NFS4_LOCK_STID:
-> +	case SC_TYPE_OPEN:
-> +	case SC_TYPE_LOCK:
->  		status = nfs4_check_olstateid(openlockstateid(s), flags);
->  		break;
-> -	default:
-> -		status = nfserr_bad_stateid;
-> -		break;
->  	}
->  	if (status)
->  		goto out;
-> @@ -6758,33 +6748,34 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  
->  	spin_lock(&cl->cl_lock);
->  	s = find_stateid_locked(cl, stateid);
-> -	if (!s)
-> +	if (!s || s->sc_status & SC_STATUS_CLOSED)
->  		goto out_unlock;
->  	spin_lock(&s->sc_lock);
->  	switch (s->sc_type) {
-> -	case NFS4_DELEG_STID:
-> +	case SC_TYPE_DELEG:
-> +		if (s->sc_status & SC_STATUS_REVOKED) {
-> +			spin_unlock(&s->sc_lock);
-> +			dp = delegstateid(s);
-> +			list_del_init(&dp->dl_recall_lru);
-> +			spin_unlock(&cl->cl_lock);
-> +			nfs4_put_stid(s);
-> +			ret = nfs_ok;
-> +			goto out;
-> +		}
->  		ret = nfserr_locks_held;
->  		break;
-> -	case NFS4_OPEN_STID:
-> +	case SC_TYPE_OPEN:
->  		ret = check_stateid_generation(stateid, &s->sc_stateid, 1);
->  		if (ret)
->  			break;
->  		ret = nfserr_locks_held;
->  		break;
-> -	case NFS4_LOCK_STID:
-> +	case SC_TYPE_LOCK:
->  		spin_unlock(&s->sc_lock);
->  		refcount_inc(&s->sc_count);
->  		spin_unlock(&cl->cl_lock);
->  		ret = nfsd4_free_lock_stateid(stateid, s);
->  		goto out;
-> -	case NFS4_REVOKED_DELEG_STID:
-> -		spin_unlock(&s->sc_lock);
-> -		dp = delegstateid(s);
-> -		list_del_init(&dp->dl_recall_lru);
-> -		spin_unlock(&cl->cl_lock);
-> -		nfs4_put_stid(s);
-> -		ret = nfs_ok;
-> -		goto out;
->  	/* Default falls through and returns nfserr_bad_stateid */
->  	}
->  	spin_unlock(&s->sc_lock);
-> @@ -6827,6 +6818,7 @@ static __be32 nfs4_seqid_op_checks(struct nfsd4_compound_state *cstate, stateid_
->   * @seqid: seqid (provided by client)
->   * @stateid: stateid (provided by client)
->   * @typemask: mask of allowable types for this operation
-> + * @statusmask: mask of allowed states: 0 or STID_CLOSED
->   * @stpp: return pointer for the stateid found
->   * @nn: net namespace for request
->   *
-> @@ -6836,7 +6828,8 @@ static __be32 nfs4_seqid_op_checks(struct nfsd4_compound_state *cstate, stateid_
->   */
->  static __be32
->  nfs4_preprocess_seqid_op(struct nfsd4_compound_state *cstate, u32 seqid,
-> -			 stateid_t *stateid, char typemask,
-> +			 stateid_t *stateid,
-> +			 unsigned short typemask, unsigned short statusmask,
->  			 struct nfs4_ol_stateid **stpp,
->  			 struct nfsd_net *nn)
->  {
-> @@ -6847,7 +6840,8 @@ nfs4_preprocess_seqid_op(struct nfsd4_compound_state *cstate, u32 seqid,
->  	trace_nfsd_preprocess(seqid, stateid);
->  
->  	*stpp = NULL;
-> -	status = nfsd4_lookup_stateid(cstate, stateid, typemask, &s, nn);
-> +	status = nfsd4_lookup_stateid(cstate, stateid,
-> +				      typemask, statusmask, &s, nn);
->  	if (status)
->  		return status;
->  	stp = openlockstateid(s);
-> @@ -6869,7 +6863,7 @@ static __be32 nfs4_preprocess_confirmed_seqid_op(struct nfsd4_compound_state *cs
->  	struct nfs4_ol_stateid *stp;
->  
->  	status = nfs4_preprocess_seqid_op(cstate, seqid, stateid,
-> -						NFS4_OPEN_STID, &stp, nn);
-> +					  SC_TYPE_OPEN, 0, &stp, nn);
->  	if (status)
->  		return status;
->  	oo = openowner(stp->st_stateowner);
-> @@ -6900,8 +6894,8 @@ nfsd4_open_confirm(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  		return status;
->  
->  	status = nfs4_preprocess_seqid_op(cstate,
-> -					oc->oc_seqid, &oc->oc_req_stateid,
-> -					NFS4_OPEN_STID, &stp, nn);
-> +					  oc->oc_seqid, &oc->oc_req_stateid,
-> +					  SC_TYPE_OPEN, 0, &stp, nn);
->  	if (status)
->  		goto out;
->  	oo = openowner(stp->st_stateowner);
-> @@ -7031,18 +7025,20 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	struct net *net = SVC_NET(rqstp);
->  	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
->  
-> -	dprintk("NFSD: nfsd4_close on file %pd\n", 
-> +	dprintk("NFSD: nfsd4_close on file %pd\n",
->  			cstate->current_fh.fh_dentry);
->  
->  	status = nfs4_preprocess_seqid_op(cstate, close->cl_seqid,
-> -					&close->cl_stateid,
-> -					NFS4_OPEN_STID|NFS4_CLOSED_STID,
-> -					&stp, nn);
-> +					  &close->cl_stateid,
-> +					  SC_TYPE_OPEN, SC_STATUS_CLOSED,
-> +					  &stp, nn);
->  	nfsd4_bump_seqid(cstate, status);
->  	if (status)
-> -		goto out; 
-> +		goto out;
->  
-> -	stp->st_stid.sc_type = NFS4_CLOSED_STID;
-> +	spin_lock(&stp->st_stid.sc_client->cl_lock);
-> +	stp->st_stid.sc_status |= SC_STATUS_CLOSED;
-> +	spin_unlock(&stp->st_stid.sc_client->cl_lock);
->  
->  	/*
->  	 * Technically we don't _really_ have to increment or copy it, since
-> @@ -7084,7 +7080,7 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  	if ((status = fh_verify(rqstp, &cstate->current_fh, S_IFREG, 0)))
->  		return status;
->  
-> -	status = nfsd4_lookup_stateid(cstate, stateid, NFS4_DELEG_STID, &s, nn);
-> +	status = nfsd4_lookup_stateid(cstate, stateid, SC_TYPE_DELEG, 0, &s, nn);
->  	if (status)
->  		goto out;
->  	dp = delegstateid(s);
-> @@ -7351,7 +7347,7 @@ init_lock_stateid(struct nfs4_ol_stateid *stp, struct nfs4_lockowner *lo,
->  	if (retstp)
->  		goto out_found;
->  	refcount_inc(&stp->st_stid.sc_count);
-> -	stp->st_stid.sc_type = NFS4_LOCK_STID;
-> +	stp->st_stid.sc_type = SC_TYPE_LOCK;
->  	stp->st_stateowner = nfs4_get_stateowner(&lo->lo_owner);
->  	get_nfs4_file(fp);
->  	stp->st_stid.sc_file = fp;
-> @@ -7538,9 +7534,10 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  							&lock_stp, &new);
->  	} else {
->  		status = nfs4_preprocess_seqid_op(cstate,
-> -				       lock->lk_old_lock_seqid,
-> -				       &lock->lk_old_lock_stateid,
-> -				       NFS4_LOCK_STID, &lock_stp, nn);
-> +						  lock->lk_old_lock_seqid,
-> +						  &lock->lk_old_lock_stateid,
-> +						  SC_TYPE_LOCK, 0, &lock_stp,
-> +						  nn);
->  	}
->  	if (status)
->  		goto out;
-> @@ -7853,8 +7850,8 @@ nfsd4_locku(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
->  		 return nfserr_inval;
->  
->  	status = nfs4_preprocess_seqid_op(cstate, locku->lu_seqid,
-> -					&locku->lu_stateid, NFS4_LOCK_STID,
-> -					&stp, nn);
-> +					  &locku->lu_stateid, SC_TYPE_LOCK, 0,
-> +					  &stp, nn);
->  	if (status)
->  		goto out;
->  	nf = find_any_file(stp->st_stid.sc_file);
-> @@ -8292,7 +8289,7 @@ nfs4_state_shutdown_net(struct net *net)
->  	spin_lock(&state_lock);
->  	list_for_each_safe(pos, next, &nn->del_recall_lru) {
->  		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-> -		unhash_delegation_locked(dp, NFS4_CLOSED_DELEG_STID);
-> +		unhash_delegation_locked(dp, SC_STATUS_CLOSED);
->  		list_add(&dp->dl_recall_lru, &reaplist);
->  	}
->  	spin_unlock(&state_lock);
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index 41bdc913fa71..ffc8920d0558 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -88,17 +88,33 @@ struct nfsd4_callback_ops {
->   */
->  struct nfs4_stid {
->  	refcount_t		sc_count;
-> -#define NFS4_OPEN_STID 1
-> -#define NFS4_LOCK_STID 2
-> -#define NFS4_DELEG_STID 4
-> -/* For an open stateid kept around *only* to process close replays: */
-> -#define NFS4_CLOSED_STID 8
-> +
-> +	/* A new stateid is added to the cl_stateids idr early before it
-> +	 * is fully initialised.  Its sc_type is then zero.  After
-> +	 * initialisation the sc_type it set under cl_lock, and then
-> +	 * never changes.
-> +	 */
-> +#define SC_TYPE_OPEN		BIT(0)
-> +#define SC_TYPE_LOCK		BIT(1)
-> +#define SC_TYPE_DELEG		BIT(2)
-> +#define SC_TYPE_LAYOUT		BIT(3)
-> +	unsigned short		sc_type;
-> +
-> +/* state_lock protects sc_status for delegation stateids.
-> + * ->cl_lock protects sc_status for open and lock stateids.
-> + * ->st_mutex also protect sc_status for open stateids.
-> + * ->ls_lock protects sc_status for layout stateids.
-> + */
-> +/*
-> + * For an open stateid kept around *only* to process close replays.
-> + * For deleg stateid, kept in idr until last reference is dropped.
-> + */
-> +#define SC_STATUS_CLOSED	BIT(0)
->  /* For a deleg stateid kept around only to process free_stateid's: */
-> -#define NFS4_REVOKED_DELEG_STID 16
-> -#define NFS4_CLOSED_DELEG_STID 32
-> -#define NFS4_LAYOUT_STID 64
-> +#define SC_STATUS_REVOKED	BIT(1)
-> +	unsigned short		sc_status;
-> +
->  	struct list_head	sc_cp_list;
-> -	unsigned char		sc_type;
->  	stateid_t		sc_stateid;
->  	spinlock_t		sc_lock;
->  	struct nfs4_client	*sc_client;
-> @@ -672,15 +688,15 @@ extern __be32 nfs4_preprocess_stateid_op(struct svc_rqst *rqstp,
->  		stateid_t *stateid, int flags, struct nfsd_file **filp,
->  		struct nfs4_stid **cstid);
->  __be32 nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
-> -		     stateid_t *stateid, unsigned char typemask,
-> -		     struct nfs4_stid **s, struct nfsd_net *nn);
-> +			    stateid_t *stateid, unsigned short typemask,
-> +			    unsigned short statusmask,
-> +			    struct nfs4_stid **s, struct nfsd_net *nn);
->  struct nfs4_stid *nfs4_alloc_stid(struct nfs4_client *cl, struct kmem_cache *slab,
->  				  void (*sc_free)(struct nfs4_stid *));
->  int nfs4_init_copy_state(struct nfsd_net *nn, struct nfsd4_copy *copy);
->  void nfs4_free_copy_state(struct nfsd4_copy *copy);
->  struct nfs4_cpntf_state *nfs4_alloc_init_cpntf_state(struct nfsd_net *nn,
->  			struct nfs4_stid *p_stid);
-> -void nfs4_unhash_stid(struct nfs4_stid *s);
->  void nfs4_put_stid(struct nfs4_stid *s);
->  void nfs4_inc_and_copy_stateid(stateid_t *dst, struct nfs4_stid *stid);
->  void nfs4_remove_reclaim_record(struct nfs4_client_reclaim *, struct nfsd_net *);
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index d1e8cf079b0f..fe08ca18b647 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -641,23 +641,17 @@ DEFINE_EVENT(nfsd_stateseqid_class, nfsd_##name, \
->  DEFINE_STATESEQID_EVENT(preprocess);
->  DEFINE_STATESEQID_EVENT(open_confirm);
->  
-> -TRACE_DEFINE_ENUM(NFS4_OPEN_STID);
-> -TRACE_DEFINE_ENUM(NFS4_LOCK_STID);
-> -TRACE_DEFINE_ENUM(NFS4_DELEG_STID);
-> -TRACE_DEFINE_ENUM(NFS4_CLOSED_STID);
-> -TRACE_DEFINE_ENUM(NFS4_REVOKED_DELEG_STID);
-> -TRACE_DEFINE_ENUM(NFS4_CLOSED_DELEG_STID);
-> -TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
-> -
->  #define show_stid_type(x)						\
->  	__print_flags(x, "|",						\
-> -		{ NFS4_OPEN_STID,		"OPEN" },		\
-> -		{ NFS4_LOCK_STID,		"LOCK" },		\
-> -		{ NFS4_DELEG_STID,		"DELEG" },		\
-> -		{ NFS4_CLOSED_STID,		"CLOSED" },		\
-> -		{ NFS4_REVOKED_DELEG_STID,	"REVOKED" },		\
-> -		{ NFS4_CLOSED_DELEG_STID,	"CLOSED_DELEG" },	\
-> -		{ NFS4_LAYOUT_STID,		"LAYOUT" })
-> +		{ SC_TYPE_OPEN,		"OPEN" },		\
-> +		{ SC_TYPE_LOCK,		"LOCK" },		\
-> +		{ SC_TYPE_DELEG,		"DELEG" },		\
-> +		{ SC_TYPE_LAYOUT,		"LAYOUT" })
-> +
-> +#define show_stid_status(x)						\
-> +	__print_flags(x, "|",						\
-> +		{ SC_STATUS_CLOSED,		"CLOSED" },		\
-> +		{ SC_STATUS_REVOKED,		"REVOKED" })		\
->  
->  DECLARE_EVENT_CLASS(nfsd_stid_class,
->  	TP_PROTO(
-> @@ -666,6 +660,7 @@ DECLARE_EVENT_CLASS(nfsd_stid_class,
->  	TP_ARGS(stid),
->  	TP_STRUCT__entry(
->  		__field(unsigned long, sc_type)
-> +		__field(unsigned long, sc_status)
->  		__field(int, sc_count)
->  		__field(u32, cl_boot)
->  		__field(u32, cl_id)
-> @@ -676,16 +671,18 @@ DECLARE_EVENT_CLASS(nfsd_stid_class,
->  		const stateid_t *stp = &stid->sc_stateid;
->  
->  		__entry->sc_type = stid->sc_type;
-> +		__entry->sc_status = stid->sc_status;
->  		__entry->sc_count = refcount_read(&stid->sc_count);
->  		__entry->cl_boot = stp->si_opaque.so_clid.cl_boot;
->  		__entry->cl_id = stp->si_opaque.so_clid.cl_id;
->  		__entry->si_id = stp->si_opaque.so_id;
->  		__entry->si_generation = stp->si_generation;
->  	),
-> -	TP_printk("client %08x:%08x stateid %08x:%08x ref=%d type=%s",
-> +	TP_printk("client %08x:%08x stateid %08x:%08x ref=%d type=%s state=%s",
->  		__entry->cl_boot, __entry->cl_id,
->  		__entry->si_id, __entry->si_generation,
-> -		__entry->sc_count, show_stid_type(__entry->sc_type)
-> +		__entry->sc_count, show_stid_type(__entry->sc_type),
-> +		show_stid_status(__entry->sc_status)
->  	)
->  );
->  
-> -- 
-> 2.43.0
-> 
-
--- 
-Chuck Lever
+DQoNCj4gT24gSmFuIDI5LCAyMDI0LCBhdCA2OjQ04oCvQU0sIFJvbGFuZCBNYWlueiA8cm9sYW5k
+Lm1haW56QG5ydWJzaWcub3JnPiB3cm90ZToNCj4gDQo+IE9uIE1vbiwgTm92IDEzLCAyMDIzIGF0
+IDI6MDHigK9BTSBDZWRyaWMgQmxhbmNoZXINCj4gPGNlZHJpYy5ibGFuY2hlckBnbWFpbC5jb20+
+IHdyb3RlOg0KPj4gT24gRnJpLCAxMCBOb3YgMjAyMyBhdCAyMDoxNywgQ2h1Y2sgTGV2ZXIgSUlJ
+IDxjaHVjay5sZXZlckBvcmFjbGUuY29tPiB3cm90ZToNCj4+Pj4gT24gTm92IDEwLCAyMDIzLCBh
+dCAzOjMwIEFNLCBNYXJ0aW4gV2VnZSA8bWFydGluLmwud2VnZUBnbWFpbC5jb20+IHdyb3RlOg0K
+Pj4+PiBPbiBGcmksIE5vdiAxMCwgMjAyMyBhdCAzOjIw4oCvQU0gQ2h1Y2sgTGV2ZXIgSUlJIDxj
+aHVjay5sZXZlckBvcmFjbGUuY29tPiB3cm90ZToNCj4+Pj4+PiBPbiBOb3YgOSwgMjAyMywgYXQg
+Nzo0NyBQTSwgQ2VkcmljIEJsYW5jaGVyIDxjZWRyaWMuYmxhbmNoZXJAZ21haWwuY29tPiB3cm90
+ZToNCj4gW3NuaXBdDQo+PiBZZWFoLCBpbnN0ZWFkIG9mIHdhaXRpbmcgZm9yIE5ldExpbmsgeW91
+IGNvdWxkIGltcGxlbWVudCBSb2xhbmQncw0KPj4gc3VnZ2VzdGlvbiwgYW5kIGNoYW5nZSAiaG9z
+dG5hbWUiIHRvICJob3N0cG9ydCIgaW4geW91ciB0ZXN0LWJhc2VkDQo+PiBtb3VudCBwcm90b2Nv
+bCwgYW5kIHRlY2huaWNhbGx5IGV2ZXJ5d2hlcmUgZWxzZSwgbGlrZSAvcHJvYy9tb3VudHMgYW5k
+DQo+PiB0aGUgL3NiaW4vbW91bnQgb3V0cHV0Lg0KPj4gU28gaW5zdGVhZCBvZjoNCj4+IG1vdW50
+IC10IG5mcyAtbyBwb3J0PTQ0NDQgMTAuMTAuMC4xMDovYmFja3VwcyAvdmFyL2JhY2t1cHMNCj4+
+IHlvdSBjb3VsZCB1c2UNCj4+IG1vdW50IC10IG5mcyAxMC4xMC4wLjEwQDQ0NDQ6L2JhY2t1cHMg
+L3Zhci9iYWNrdXBzDQo+PiANCj4+IFRoZSBzYW1lIGFwcGxpZXMgdG8gcmVmZXI9IC0ganVzdCBj
+aGFuZ2UgZnJvbSAiaG9zdG5hbWUiIHRvDQo+PiAiaG9zdHBvcnQiLCBhbmQgdGhlIHRleHQtYmFz
+ZWQgbW91bnRkIGRvd25jYWxsIGNhbiBzdGF5IHRoZSBzYW1lIChlLmcuDQo+PiBzbyAiZm9vYmFy
+aG9zdCIgY2hhbmdlcyB0byAiZm9vYmFyaG9zdEA0NDQiIGluIHRoZSBtb3VudGQgZG93bmxvYWQu
+KQ0KPiBbc25pcF0NCj4gDQo+IFdoYXQgd291bGQgYmUgdGhlIGNvcnJlY3Qgc3ludGF4IHRvIHNw
+ZWNpZnkgYSBjdXN0b20gKG5vbi0yMDQ5KSBUQ1ANCj4gcG9ydCBmb3IgcmVmZXI9IGluIC9ldGMv
+ZXhwb3J0cyA/DQo+IA0KPiBXb3VsZCB0aGlzIHdvcms6DQo+IC0tLS0gc25pcCAtLS0tDQo+IGAv
+cmVmICoobm9fcm9vdF9zcXVhc2gscmVmZXI9L2V4cG9ydC9ob21lQDEzNC40OS4yMi4xMTE6MzIw
+NDkpDQo+IC0tLS0gc25pcCAtLS0tDQoNCkhlbGxvIFJvbGFuZCAtDQoNCkFsdGhvdWdoIGdlbmVy
+aWMgTkZTdjQgcmVmZXJyYWwgc3VwcG9ydCBoYXMgYmVlbiBpbiBORlNEIGZvcg0KbWFueSB5ZWFy
+cywgTkZTRCBjdXJyZW50bHkgZG9lcyBub3QgaW1wbGVtZW50IGFsdGVybmF0ZSBwb3J0cw0KaW4g
+cmVmZXJyYWxzLiBJdCBpcyBvbiBvdXIgZW5oYW5jZW1lbnQgcmVxdWVzdCBsaXN0Lg0KDQoNCi0t
+DQpDaHVjayBMZXZlcg0KDQoNCg==
 
