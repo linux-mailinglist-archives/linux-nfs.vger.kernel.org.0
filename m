@@ -1,57 +1,63 @@
-Return-Path: <linux-nfs+bounces-1544-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1545-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C589D84051E
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 13:38:33 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C8871840529
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 13:42:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3F5C31F21D67
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 12:38:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0260C1C22463
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 12:42:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1565B60EE9;
-	Mon, 29 Jan 2024 12:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5936960ED8;
+	Mon, 29 Jan 2024 12:41:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RmjMTz79"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqKzbR3x"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E560A60DE4
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 12:38:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207EF612C1;
+	Mon, 29 Jan 2024 12:41:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706531908; cv=none; b=arVJ2ERmetvGcIdwE72nLqz4N1F3QqgguhBrQB2F1I8MmftCrtwolXXGsHGWTYEbyEPNQBWmvcoKk53vZIozxAVx0HFl4z4u6stUEGXjkWtF2Tfqbe8SJjVVbaW/oFoEZByaPDsH3I9sWwPBQ9A4wGTbK4BDwwFsndDnSej1sWs=
+	t=1706532119; cv=none; b=NiufNdB9BmRbItX+UQlMfilhWUVfxWH7GHczNE4bYMtAg6N/OnM5NwzJ+VET4IQlmhZ99ydWV9aYSi4wIsBrk7Igr/mK5ui/MaV85BSNbPr13GDVFRkUuVRTD59KPF9wbK5wYk0VKXVopOmnwsR3lVolMToAQC1aQv/7qiEk0F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706531908; c=relaxed/simple;
-	bh=C7rxMSHSFzXV6qPvAoS2jk8vZle+wdVs4JczbbueuFA=;
+	s=arc-20240116; t=1706532119; c=relaxed/simple;
+	bh=IzW8F0GJkznmN36EAvwwvImQ6UcKbxt7LXtKAbOkWZw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k6z1FhLPUmGpx+Wv2BDks0EYKgADYsDidL9b8aknKA8ZY0DSeyB8WkYSfS42QfhMX9zo2yIwkTRbRWxbuzf/wWXXhLy2Il1VZ94oj6YJJljICD6N4KLMHjjy2+ZMeRd+OAHkGS1Fcy+6bxsZ7ixWRtyw8mfWFyW+WRLd7Xt7SH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RmjMTz79; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA894C433C7;
-	Mon, 29 Jan 2024 12:38:26 +0000 (UTC)
+	 Content-Type:MIME-Version; b=Gx5asyZEC267mzSkGA36PZym/eJBHdAJSr/fmMVDH6rODLW4VvflZk8suQ9eekp0HH1alnaBLtaxJ4PdrW4Q2fZHLpXd4J8+YykR7MvQ7ZTbjFumyGxJMn6FbGHVkCWpcbiR+AwTetTqdmURQOOEr6tlITQ6DCVwfHZSzfaoaC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqKzbR3x; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44841C433C7;
+	Mon, 29 Jan 2024 12:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706531907;
-	bh=C7rxMSHSFzXV6qPvAoS2jk8vZle+wdVs4JczbbueuFA=;
+	s=k20201202; t=1706532118;
+	bh=IzW8F0GJkznmN36EAvwwvImQ6UcKbxt7LXtKAbOkWZw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RmjMTz79Jw0wg6Y0MtQcI3Gk5G2FvOaoreeykG+XoEmrLalAnF68M01f8PIspIiV5
-	 n52CqU9zGdRY1GR6MJruXaHxb1eiQZYSd3RyVamfAJ1IehCjZs9/nS45/+eMsgLK8X
-	 FmePeLVEVQ/WKRbrjBZzopYkqy3VctvtHKCC/q3cFIrMwf8gF3igCwWj1/H51+I6Dr
-	 6b991MIImkUymLVfbxeQtiT6ZoMV+T2fVDTWe3ALvOmNynWs0uDvh0HmW+J0Qo21fb
-	 vrYPhMuK1D78XG2GwljWJFXpsNeH146uwwVk092G/3zr5Kmpy++FowBX4Rm/T7OnT2
-	 RfB3CkA84oMNA==
-Message-ID: <6dcd1c1395a64832b3e587d74c977f928dd06585.camel@kernel.org>
-Subject: Re: [PATCH 13/13] nfsd: allow layout state to be admin-revoked.
+	b=AqKzbR3xjuozcRlSbdODTAl9fCOwMGTDdHzu4cRrA2hPSlrrmFGocoRjoPgF3wl4V
+	 +oRVNZ2DssHk6z+kVCVjBscTp/jBtFaFenoMG1A6YoZNs/B+WTOhVnbAdt+G5uEgmy
+	 Fht74JKXzhVdQ9MO9uEhMceLNpFCb8ycunPEpbXi1S54FuVg0a8IkZ/1VwGE9YpDmz
+	 Z/JEtIlJ90DkwXIsxJMSMKzCY5LcijHoKDcnK71kZElhTf1hiVpwVsio9NEyZVulK1
+	 VP86JYIwBy/c+/vJP5u6ijQXtTNzIndbIQY0FqRRpfYtspbj7aoBr2FFpUwtv7CV+/
+	 MMhfKJ8aaZw+Q==
+Message-ID: <0f0a4357afaa3cc98f306de555e816146654245f.camel@kernel.org>
+Subject: Re: [PATCH 1/2] netfs: Fix i_dio_count leak on DIO read past i_size
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Christoph Hellwig
- <hch@lst.de>,  Tom Haynes <loghyr@gmail.com>
-Date: Mon, 29 Jan 2024 07:38:25 -0500
-In-Reply-To: <20240129033637.2133-14-neilb@suse.de>
-References: <20240129033637.2133-1-neilb@suse.de>
-	 <20240129033637.2133-14-neilb@suse.de>
+To: David Howells <dhowells@redhat.com>, Christian Brauner
+	 <christian@brauner.io>
+Cc: Eric Van Hensbergen <ericvh@kernel.org>, Dominique Martinet
+ <asmadeus@codewreck.org>, Matthew Wilcox <willy@infradead.org>, 
+ netfs@lists.linux.dev, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org,  linux-nfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, v9fs@lists.linux.dev, 
+ linux-erofs@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org,  linux-kernel@vger.kernel.org, Marc Dionne
+ <marc.dionne@auristor.com>
+Date: Mon, 29 Jan 2024 07:41:56 -0500
+In-Reply-To: <20240129094924.1221977-2-dhowells@redhat.com>
+References: <20240129094924.1221977-1-dhowells@redhat.com>
+	 <20240129094924.1221977-2-dhowells@redhat.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -71,244 +77,45 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Mon, 2024-01-29 at 14:29 +1100, NeilBrown wrote:
-> When there is layout state on a filesystem that is being "unlocked" that
-> is now revoked, which involves closing the nfsd_file and releasing the
-> vfs lease.
+On Mon, 2024-01-29 at 09:49 +0000, David Howells wrote:
+> From: Marc Dionne <marc.dionne@auristor.com>
 >=20
-> To avoid races, ->ls_file can now be accessed either:
->  - under ->fi_lock for the state's sc_file or
->  - under rcu_read_lock() if nfsd_file_get() is used.
-> To support this, ->fence_client and nfsd4_cb_layout_fail() now take a
-> second argument being the nfsd_file.
+> If netfs_begin_read gets a NETFS_DIO_READ request that begins
+> past i_size, it won't perform any i/o and just return 0.  This
+> will leak an increment to i_dio_count that is done at the top
+> of the function.
 >=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> This can cause subsequent buffered read requests to block
+> indefinitely, waiting for a non existing dio operation to complete.
+>=20
+> Add a inode_dio_end() for the NETFS_DIO_READ case, before returning.
+>=20
+> Signed-off-by: Marc Dionne <marc.dionne@auristor.com>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Jeff Layton <jlayton@kernel.org>
+> cc: linux-afs@lists.infradead.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
 > ---
->  fs/nfsd/blocklayout.c |  4 ++--
->  fs/nfsd/nfs4layouts.c | 43 ++++++++++++++++++++++++++++++++-----------
->  fs/nfsd/nfs4state.c   | 11 +++++++++--
->  fs/nfsd/pnfs.h        |  8 +++++++-
->  4 files changed, 50 insertions(+), 16 deletions(-)
+>  fs/netfs/io.c | 2 ++
+>  1 file changed, 2 insertions(+)
 >=20
-> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-> index 46fd74d91ea9..3c040c81c77d 100644
-> --- a/fs/nfsd/blocklayout.c
-> +++ b/fs/nfsd/blocklayout.c
-> @@ -328,10 +328,10 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode,
->  }
+> diff --git a/fs/netfs/io.c b/fs/netfs/io.c
+> index e8ff1e61ce79..4261ad6c55b6 100644
+> --- a/fs/netfs/io.c
+> +++ b/fs/netfs/io.c
+> @@ -748,6 +748,8 @@ int netfs_begin_read(struct netfs_io_request *rreq, b=
+ool sync)
 > =20
->  static void
-> -nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls)
-> +nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file=
- *file)
->  {
->  	struct nfs4_client *clp =3D ls->ls_stid.sc_client;
-> -	struct block_device *bdev =3D ls->ls_file->nf_file->f_path.mnt->mnt_sb-=
->s_bdev;
-> +	struct block_device *bdev =3D file->nf_file->f_path.mnt->mnt_sb->s_bdev=
-;
-> =20
->  	bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
->  			nfsd4_scsi_pr_key(clp), 0, true);
-> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-> index 857b822450b4..1cfd61db2472 100644
-> --- a/fs/nfsd/nfs4layouts.c
-> +++ b/fs/nfsd/nfs4layouts.c
-> @@ -152,6 +152,23 @@ void nfsd4_setup_layout_type(struct svc_export *exp)
->  #endif
->  }
-> =20
-> +void nfsd4_close_layout(struct nfs4_layout_stateid *ls)
-> +{
-> +	struct nfsd_file *fl;
-> +
-> +	spin_lock(&ls->ls_stid.sc_file->fi_lock);
-> +	fl =3D ls->ls_file;
-> +	ls->ls_file =3D NULL;
-> +	spin_unlock(&ls->ls_stid.sc_file->fi_lock);
-> +
-> +	if (fl) {
-> +		if (!nfsd4_layout_ops[ls->ls_layout_type]->disable_recalls)
-> +			vfs_setlease(fl->nf_file, F_UNLCK, NULL,
-> +				     (void **)&ls);
-> +		nfsd_file_put(fl);
-> +	}
-> +}
-> +
->  static void
->  nfsd4_free_layout_stateid(struct nfs4_stid *stid)
->  {
-> @@ -169,9 +186,7 @@ nfsd4_free_layout_stateid(struct nfs4_stid *stid)
->  	list_del_init(&ls->ls_perfile);
->  	spin_unlock(&fp->fi_lock);
-> =20
-> -	if (!nfsd4_layout_ops[ls->ls_layout_type]->disable_recalls)
-> -		vfs_setlease(ls->ls_file->nf_file, F_UNLCK, NULL, (void **)&ls);
-> -	nfsd_file_put(ls->ls_file);
-> +	nfsd4_close_layout(ls);
-> =20
->  	if (ls->ls_recalled)
->  		atomic_dec(&ls->ls_stid.sc_file->fi_lo_recalls);
-> @@ -605,7 +620,7 @@ nfsd4_return_all_file_layouts(struct nfs4_client *clp=
-, struct nfs4_file *fp)
->  }
-> =20
->  static void
-> -nfsd4_cb_layout_fail(struct nfs4_layout_stateid *ls)
-> +nfsd4_cb_layout_fail(struct nfs4_layout_stateid *ls, struct nfsd_file *f=
-ile)
->  {
->  	struct nfs4_client *clp =3D ls->ls_stid.sc_client;
->  	char addr_str[INET6_ADDRSTRLEN];
-> @@ -627,7 +642,7 @@ nfsd4_cb_layout_fail(struct nfs4_layout_stateid *ls)
-> =20
->  	argv[0] =3D (char *)nfsd_recall_failed;
->  	argv[1] =3D addr_str;
-> -	argv[2] =3D ls->ls_file->nf_file->f_path.mnt->mnt_sb->s_id;
-> +	argv[2] =3D file->nf_file->f_path.mnt->mnt_sb->s_id;
->  	argv[3] =3D NULL;
-> =20
->  	error =3D call_usermodehelper(nfsd_recall_failed, argv, envp,
-> @@ -657,6 +672,7 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struc=
-t rpc_task *task)
->  	struct nfsd_net *nn;
->  	ktime_t now, cutoff;
->  	const struct nfsd4_layout_ops *ops;
-> +	struct nfsd_file *fl;
-> =20
->  	trace_nfsd_cb_layout_done(&ls->ls_stid.sc_stateid, task);
->  	switch (task->tk_status) {
-> @@ -688,12 +704,17 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, str=
-uct rpc_task *task)
->  		 * Unknown error or non-responding client, we'll need to fence.
->  		 */
->  		trace_nfsd_layout_recall_fail(&ls->ls_stid.sc_stateid);
-> -
-> -		ops =3D nfsd4_layout_ops[ls->ls_layout_type];
-> -		if (ops->fence_client)
-> -			ops->fence_client(ls);
-> -		else
-> -			nfsd4_cb_layout_fail(ls);
-> +		rcu_read_lock();
-> +		fl =3D nfsd_file_get(ls->ls_file);
-> +		rcu_read_unlock();
-
-What is the rcu_read_lock protecting here? AFAICT, you don't need it
-since you hold a reference to "ls".
-
-> +		if (fl) {
-> +			ops =3D nfsd4_layout_ops[ls->ls_layout_type];
-> +			if (ops->fence_client)
-> +				ops->fence_client(ls, fl);
-> +			else
-> +				nfsd4_cb_layout_fail(ls, fl);
-> +			nfsd_file_put(fl);
-> +		}
->  		return 1;
->  	case -NFS4ERR_NOMATCHING_LAYOUT:
->  		trace_nfsd_layout_recall_done(&ls->ls_stid.sc_stateid);
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index e749d5c0e23a..268b47a6f3b6 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1721,7 +1721,7 @@ void nfsd4_revoke_states(struct net *net, struct su=
-per_block *sb)
->  	unsigned int idhashval;
->  	unsigned int sc_types;
-> =20
-> -	sc_types =3D SC_TYPE_OPEN | SC_TYPE_LOCK | SC_TYPE_DELEG;
-> +	sc_types =3D SC_TYPE_OPEN | SC_TYPE_LOCK | SC_TYPE_DELEG | SC_TYPE_LAYO=
-UT;
-> =20
->  	spin_lock(&nn->client_lock);
->  	for (idhashval =3D 0; idhashval < CLIENT_HASH_MASK; idhashval++) {
-> @@ -1734,6 +1734,7 @@ void nfsd4_revoke_states(struct net *net, struct su=
-per_block *sb)
->  			if (stid) {
->  				struct nfs4_ol_stateid *stp;
->  				struct nfs4_delegation *dp;
-> +				struct nfs4_layout_stateid *ls;
-> =20
->  				spin_unlock(&nn->client_lock);
->  				switch (stid->sc_type) {
-> @@ -1789,6 +1790,10 @@ void nfsd4_revoke_states(struct net *net, struct s=
-uper_block *sb)
->  					if (dp)
->  						revoke_delegation(dp);
->  					break;
-> +				case SC_TYPE_LAYOUT:
-> +					ls =3D layoutstateid(stid);
-> +					nfsd4_close_layout(ls);
-> +					break;
->  				}
->  				nfs4_put_stid(stid);
->  				spin_lock(&nn->client_lock);
-> @@ -2868,7 +2873,6 @@ static int nfs4_show_layout(struct seq_file *s, str=
-uct nfs4_stid *st)
->  	struct nfsd_file *file;
-> =20
->  	ls =3D container_of(st, struct nfs4_layout_stateid, ls_stid);
-> -	file =3D ls->ls_file;
-> =20
->  	seq_puts(s, "- ");
->  	nfs4_show_stateid(s, &st->sc_stateid);
-> @@ -2876,12 +2880,15 @@ static int nfs4_show_layout(struct seq_file *s, s=
-truct nfs4_stid *st)
-> =20
->  	/* XXX: What else would be useful? */
-> =20
-> +	spin_lock(&ls->ls_stid.sc_file->fi_lock);
-> +	file =3D ls->ls_file;
->  	if (file) {
->  		seq_puts(s, ", ");
->  		nfs4_show_superblock(s, file);
->  		seq_puts(s, ", ");
->  		nfs4_show_fname(s, file);
+>  	if (!rreq->submitted) {
+>  		netfs_put_request(rreq, false, netfs_rreq_trace_put_no_submit);
+> +		if (rreq->origin =3D=3D NETFS_DIO_READ)
+> +			inode_dio_end(rreq->inode);
+>  		ret =3D 0;
+>  		goto out;
 >  	}
-> +	spin_unlock(&ls->ls_stid.sc_file->fi_lock);
->  	if (st->sc_status & SC_STATUS_ADMIN_REVOKED)
->  		seq_puts(s, ", admin-revoked");
->  	seq_puts(s, " }\n");
-> diff --git a/fs/nfsd/pnfs.h b/fs/nfsd/pnfs.h
-> index de1e0dfed06a..925817f66917 100644
-> --- a/fs/nfsd/pnfs.h
-> +++ b/fs/nfsd/pnfs.h
-> @@ -37,7 +37,8 @@ struct nfsd4_layout_ops {
->  	__be32 (*proc_layoutcommit)(struct inode *inode,
->  			struct nfsd4_layoutcommit *lcp);
-> =20
-> -	void (*fence_client)(struct nfs4_layout_stateid *ls);
-> +	void (*fence_client)(struct nfs4_layout_stateid *ls,
-> +			     struct nfsd_file *file);
->  };
-> =20
->  extern const struct nfsd4_layout_ops *nfsd4_layout_ops[];
-> @@ -72,11 +73,13 @@ void nfsd4_setup_layout_type(struct svc_export *exp);
->  void nfsd4_return_all_client_layouts(struct nfs4_client *);
->  void nfsd4_return_all_file_layouts(struct nfs4_client *clp,
->  		struct nfs4_file *fp);
-> +void nfsd4_close_layout(struct nfs4_layout_stateid *ls);
->  int nfsd4_init_pnfs(void);
->  void nfsd4_exit_pnfs(void);
->  #else
->  struct nfs4_client;
->  struct nfs4_file;
-> +struct nfs4_layout_stateid;
-> =20
->  static inline void nfsd4_setup_layout_type(struct svc_export *exp)
->  {
-> @@ -89,6 +92,9 @@ static inline void nfsd4_return_all_file_layouts(struct=
- nfs4_client *clp,
->  		struct nfs4_file *fp)
->  {
->  }
-> +static inline void nfsd4_close_layout(struct nfs4_layout_stateid *ls)
-> +{
-> +}
->  static inline void nfsd4_exit_pnfs(void)
->  {
->  }
+>=20
+>=20
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
