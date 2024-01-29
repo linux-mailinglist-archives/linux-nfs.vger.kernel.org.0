@@ -1,54 +1,58 @@
-Return-Path: <linux-nfs+bounces-1533-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1534-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 458FF8403A5
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 12:17:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 20E008403AA
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 12:18:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A8B71C21A3A
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 11:17:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D20CD281579
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 11:18:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2EED5C5E5;
-	Mon, 29 Jan 2024 11:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6154955E7B;
+	Mon, 29 Jan 2024 11:18:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNxF9w5d"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bfjhtyry"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4485C5E4
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 11:17:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AD435B20F
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 11:18:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706527032; cv=none; b=d9EgJIvVYMhLsfn9eW3GeAImWprPKRF1x5s7m4FVdP3OwGW5ZApGYpUHlndsNw7rSjTCe6axMkfh8ufTDbNU+7BOzgaT89MCYnHY3NsgML1ARaNXR5uzqyPEiqNq3A5AD95i0vbFplBg/AOJ1gaSjZiJkEl6IbJ2+PpRGGT/Urw=
+	t=1706527109; cv=none; b=l+9hd8T7TsB8nc8ZlyaGLDDLL403K0M/K4AzwClDm9S0B5eOSGxX00NGGiSbUfxiF3btx//+6evEal+xgjv3P79tJTMlM2MwJoJQ1R81vYoB1NO/K1vnuCIwXjISLDTyRVoWhpFjK638KPbki+ZsH+rjfGu+30qxWs431/Ckzi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706527032; c=relaxed/simple;
-	bh=GhrExP7r9Lqj/EIuisGQgRopBnOcNk7DxGe2rf7dlgo=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tzv59BZbf9ce9got2Lft2WpwnFR5pzatCKctMttbgkpDaNPdy8+zzquV7yHYUFAKBwE72MAJwnb4LwdtrosgSqfCr1nkTyltpeWoNpTCRcAZThT4Sf/ycin1qHKGJNn/8eG1LNLDX0OaT7l8vgj0H5Yu3Be8t3SFMlG8SnM/kfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNxF9w5d; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F059C433F1;
-	Mon, 29 Jan 2024 11:17:11 +0000 (UTC)
+	s=arc-20240116; t=1706527109; c=relaxed/simple;
+	bh=eEVUqyeaC3jEeYKdXNJ1g0sXh4hhSaN5rhg8FlGWT78=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZljH7caP+bc20nOavC0QD3OAOlSO73x4aVR+SbY+WBsTTKCbvfqrpUgpFTDb9cF+zZ3Uw7zdVQC3aZd70OGmODV3ORv8L7R7xp9+kEVAhNqJXqxHbFstPgN9S7GyECALpDEbnRiu99Fg6mkMHj+CHQaK3kXiawwbFtI4bpJUOy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bfjhtyry; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A7DC433F1;
+	Mon, 29 Jan 2024 11:18:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706527032;
-	bh=GhrExP7r9Lqj/EIuisGQgRopBnOcNk7DxGe2rf7dlgo=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=UNxF9w5d9iC0ue/ViUiPwuj0ZCBbA5AvWUwTess7QdFQgXXvvdzPoOVYyPAlDj2aK
-	 qjfugzr748VwUFPLFO7HkbWptPuQn7vQqbsH0cb1cL811AnuVD7csnn/2dXlMnNAjN
-	 wsek41Ywk0uDe4ejvApgcsL0BqVazSnaj4dOBw0ydu+h1IhJia8MdiSOswlpLO5QuC
-	 gmjXRPGRcieUobEgD1V4KTnkt/lUoT3aiM+UUm+jYuQeaxn6ULGoItfiRjyTd5DXRp
-	 A344IUkPUL3Eu/a4mZhFMA8WQRcvJKooXeLANDtW+UqsTqS22ZrziHNxloD9Wu6YWR
-	 kGzeH1HWszFUg==
-Message-ID: <11797f07d5589c3a35e406c5b756915dca99b345.camel@kernel.org>
-Subject: Re: [PATCH v4 0/3] Make nfs stats visible in network NS
+	s=k20201202; t=1706527108;
+	bh=eEVUqyeaC3jEeYKdXNJ1g0sXh4hhSaN5rhg8FlGWT78=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Bfjhtyry+VPrgoGtLo4ghZc+YvDn4aP75MEc0GZgA5JiM743bVA/S36/LJy36/5qd
+	 EORy+tSB8FYFi9HQzC3q+UWZk8LeaB2elxevbCe8F+xzFaFUUUeKNBz/Yw4V2lT8R3
+	 QNX24h0DJfOpHOLA/TvrbZjYSu3TeCKLBcBri5YLK5lJKitdV+5Nk54OqRgIQleWaL
+	 kXLBldmQ5G0CSX/WRwXXrx9rvdtOav6KOmY3d35mAkMsFGhfFt/Zl+4lQtp3E12JML
+	 3W6UooF/aMjb4tu0tfPKPhJ7aSyzXouW0JcAQtFQl57h/L1TDXd6Nz7b7A3nO/mcU7
+	 1wCnGk4hjIa5w==
+Message-ID: <5cd278acaa6ead144f37b1f253c5e26c232394fc.camel@kernel.org>
+Subject: Re: [PATCH 03/13] nfsd: don't call functions with side-effecting
+ inside WARN_ON()
 From: Jeff Layton <jlayton@kernel.org>
-To: Josef Bacik <josef@toxicpanda.com>, trond.myklebust@hammerspace.com, 
-	anna@kernel.org, linux-nfs@vger.kernel.org, kernel-team@fb.com
-Date: Mon, 29 Jan 2024 06:17:10 -0500
-In-Reply-To: <cover.1706305686.git.josef@toxicpanda.com>
-References: <cover.1706305686.git.josef@toxicpanda.com>
+To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
+Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
+ <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Christoph Hellwig
+ <hch@lst.de>,  Tom Haynes <loghyr@gmail.com>
+Date: Mon, 29 Jan 2024 06:18:26 -0500
+In-Reply-To: <20240129033637.2133-4-neilb@suse.de>
+References: <20240129033637.2133-1-neilb@suse.de>
+	 <20240129033637.2133-4-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -68,69 +72,82 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Fri, 2024-01-26 at 16:48 -0500, Josef Bacik wrote:
-> v1: https://lore.kernel.org/linux-nfs/cover.1706124811.git.josef@toxicpan=
-da.com/
-> v2: https://lore.kernel.org/linux-nfs/cover.1706212207.git.josef@toxicpan=
-da.com/
-> v3: https://lore.kernel.org/linux-nfs/cover.1706283674.git.josef@toxicpan=
-da.com/
+On Mon, 2024-01-29 at 14:29 +1100, NeilBrown wrote:
+> Code like:
 >=20
-> v3->v4:
-> - Fix a weird formatting thing that snuck into 1/3.
+>     WARN_ON(foo())
 >=20
-> v2->v3:
-> - Split out the nfs and nfsd related changes into their own patches.
-> - Dropped the change adding sv_stats throuch svc_create()
-> - Changed the th_cnt to be global, re-arranged it's location.
+> looks like an assertion and might not be expected to have any side
+> effects.
+> When testing if a function with side-effects fails a construct like
 >=20
-> v1->v2:
-> - rework the sunprc service creation to take a pointer to the sv_stats.
-> - dropped ->pg_stats from the svc_program.
-> - converted all of the nfsd global stats to per-network namespace.
-> - added the ability to point at a specific rpc_stat for rpc program creat=
-ion.
-> - converted the rpc stats for nfs to per-network namespace.
+>     if (foo())
+>        WARN_ON(1);
 >=20
-> -- Original email --
-> Hello,
+> makes the intent more obvious.
 >=20
-> We're currently deploying NFS internally and have run into some oddities =
-with
-> our usage of containers.  All of the services that mount and export NFS v=
-olumes
-> run inside of containers, specifically all the namespaces including netwo=
-rk
-> namespaces.  Our monitoring is done on a per-container basis, so we need =
-access
-> to the nfs and nfsd stats that are under /proc/net/sunrpc.  However these=
- are
-> only tied to the init_net, which makes them invisible to containers in a
-> different network namespace.
+> nfsd has several WARN_ON calls where the test has side effects, so it
+> would be good to change them.  These cases don't really need the
+> WARN_ON.  They have never failed in 8 years of usage so let's just
+> remove the WARN_ON wrapper.
 >=20
-> Fix this so that these files are tied to the network namespace.  This all=
-ows us
-> to avoid the hack of bind mounting the hosts /proc into the container in =
-order
-> to do proper monitoring.  Thanks,
+> Suggested-by: Chuck Lever <chuck.lever@oracle.com>
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/nfsd/nfs4state.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 >=20
-> Josef
->=20
-> Josef Bacik (3):
->   sunrpc: add a struct rpc_stats arg to rpc_create_args
->   nfs: expose /proc/net/sunrpc/nfs in net namespaces
->   nfs: make the rpc_stat per net namespace
->=20
->  fs/nfs/client.c             | 5 ++++-
->  fs/nfs/inode.c              | 8 ++++----
->  fs/nfs/internal.h           | 2 --
->  fs/nfs/netns.h              | 2 ++
->  include/linux/sunrpc/clnt.h | 1 +
->  net/sunrpc/clnt.c           | 2 +-
->  6 files changed, 12 insertions(+), 8 deletions(-)
->=20
-
-This all looks good to me. You can add:
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 051c3e99fac6..2ddbb7b4a40e 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -1600,7 +1600,7 @@ static void release_open_stateid_locks(struct nfs4_=
+ol_stateid *open_stp,
+>  	while (!list_empty(&open_stp->st_locks)) {
+>  		stp =3D list_entry(open_stp->st_locks.next,
+>  				struct nfs4_ol_stateid, st_locks);
+> -		WARN_ON(!unhash_lock_stateid(stp));
+> +		unhash_lock_stateid(stp);
+>  		put_ol_stateid_locked(stp, reaplist);
+>  	}
+>  }
+> @@ -2229,7 +2229,7 @@ __destroy_client(struct nfs4_client *clp)
+>  	spin_lock(&state_lock);
+>  	while (!list_empty(&clp->cl_delegations)) {
+>  		dp =3D list_entry(clp->cl_delegations.next, struct nfs4_delegation, dl=
+_perclnt);
+> -		WARN_ON(!unhash_delegation_locked(dp));
+> +		unhash_delegation_locked(dp);
+>  		list_add(&dp->dl_recall_lru, &reaplist);
+>  	}
+>  	spin_unlock(&state_lock);
+> @@ -6169,7 +6169,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+>  		if (!state_expired(&lt, dp->dl_time))
+>  			break;
+> -		WARN_ON(!unhash_delegation_locked(dp));
+> +		unhash_delegation_locked(dp);
+>  		list_add(&dp->dl_recall_lru, &reaplist);
+>  	}
+>  	spin_unlock(&state_lock);
+> @@ -7999,7 +7999,7 @@ nfsd4_release_lockowner(struct svc_rqst *rqstp,
+>  		stp =3D list_first_entry(&lo->lo_owner.so_stateids,
+>  				       struct nfs4_ol_stateid,
+>  				       st_perstateowner);
+> -		WARN_ON(!unhash_lock_stateid(stp));
+> +		unhash_lock_stateid(stp);
+>  		put_ol_stateid_locked(stp, &reaplist);
+>  	}
+>  	spin_unlock(&clp->cl_lock);
+> @@ -8292,7 +8292,7 @@ nfs4_state_shutdown_net(struct net *net)
+>  	spin_lock(&state_lock);
+>  	list_for_each_safe(pos, next, &nn->del_recall_lru) {
+>  		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+> -		WARN_ON(!unhash_delegation_locked(dp));
+> +		unhash_delegation_locked(dp);
+>  		list_add(&dp->dl_recall_lru, &reaplist);
+>  	}
+>  	spin_unlock(&state_lock);
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
