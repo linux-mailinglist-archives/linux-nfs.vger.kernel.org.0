@@ -1,109 +1,193 @@
-Return-Path: <linux-nfs+bounces-1578-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1579-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4B7A841718
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 00:44:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 130F384171A
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 00:45:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 242221C22654
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 23:44:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EA891F21B80
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 23:45:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DF142C6B0;
-	Mon, 29 Jan 2024 23:44:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 514732C6B0;
+	Mon, 29 Jan 2024 23:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lCuVv0o6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8GQEtVN"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8481524B1
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 23:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B8251C31
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 23:45:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706571846; cv=none; b=rw6az6geMuj5SC22loAUE0itB4k8USVXWV1XB7JFN3jYC3AtuTMUzgcNyOUmgdFlo60DnCo8m9F9IeyCjxb1aLHaNUEBca8R/IuIi/85glaUMulgAsimq6L3PNXR3eR37uq7YCr+FWRCwrr9lYYh42drMt/3DafULqr1Enx9KX0=
+	t=1706571939; cv=none; b=hoN3dePXIYcK7BWS3hObc5sMO311lCRuo4KC86VygYCjBTKMaBEHnZxhGne83p6NqCjBE7LUVCGX6/8/tOO8vLIxLu4+DOI6QEOfIFUbXd3hLpTT/JO32W+DI2/PXBqaAjsatTWISOpSY2BSNOfxPW9Dl2pinQJnBH81Wiz3N6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706571846; c=relaxed/simple;
-	bh=e/2zq2YgW9d2S1QVFWfVL68QjukxEMdAqXIYvUeyDak=;
+	s=arc-20240116; t=1706571939; c=relaxed/simple;
+	bh=66MNbyaDsdfRCnPtoF8smCkun9ORFjCymN6WisGCgXk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=VkXfsB3fiOPnvaXYbFRrSICJ5TF30wiaBDBh1XT5DN0+/jGPADpFFhjmQTkIk09uArfmJokqc28keI2jrKwXeK08N65nSpFFvRiTfzrCiopeME4bTVcuJ3JKzD0kNRRTMkbellVQ4uUcIXQElT8pGiT5n5ZAAsFyjfyDiF8g+DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lCuVv0o6; arc=none smtp.client-ip=209.85.160.49
+	 To:Cc:Content-Type; b=IXTdKuM6KivVIgf8GV0NWsQb4/+e3DIv6DcdQL44vd1ETr+TdJ1x5tT1JOVlWa+kbRdFt8Zv02wFv2hxQ5Zv9Bv0gmReZZpwvkvOaX8C1D9O0gk7s2pTGbC9h5QCdATCWxjiYWs4miTPbireaU3TWb/CKRjOcvhdR8k14kfPahg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I8GQEtVN; arc=none smtp.client-ip=209.85.160.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-21460195d11so2242441fac.2
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 15:44:04 -0800 (PST)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2144c37f3d3so1198578fac.0
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 15:45:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706571843; x=1707176643; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1706571936; x=1707176736; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e/2zq2YgW9d2S1QVFWfVL68QjukxEMdAqXIYvUeyDak=;
-        b=lCuVv0o6Qz9imKLcf5G4OaVdQzp8fyq+ffKCnnayOXrMnv5JDL2wJo2Z29fIM/sYAy
-         skmvoNY/A9OxFVACdzfsMmAWTwVg+eEtjcmQSdxupA1GIJl3OyMU+xGwDZr+PqjT1Fmu
-         cIk77+Bw48e6EdXYw1HvN55xnvd99ieR3YaBjLe0lbgTdDxTtS6E1hIvisg8Kcw15IzM
-         1Ln1IuvcNXKBbgralexEnSt68TT4lfFTlxRgeCMsvWviqk2zg58d+ruyBHSKEObjoPeR
-         /5BRxPezT3DND3L6OXMDw/AbF3qYH2RRp3Nr2TXaaEaALICbWAlWr9ZviAhUeMjMRp5r
-         13HQ==
+        bh=66MNbyaDsdfRCnPtoF8smCkun9ORFjCymN6WisGCgXk=;
+        b=I8GQEtVNyO60ChL2V2PvrQf5AEtguoxfwmN4CtgNd0nIcGEt4teKBUu1CnM+YNp62P
+         AForeuYub/yJ5yhPUYiTwcJaQl5F5f+kJaAhVNQrdUqg8sTzkruudcdhx1WWL0tbEeBj
+         I4VZtLKOEdQxBXKR628FRnbuxPEnpVm7MGMjrgSPA+vlcf58hmppKDoHDm7a69kbGRv9
+         A38/PbnAQlj3Ugt1sCy619CDctrltvsXUs3g0kvL+Oq4RlOwKiTTbBXpLws9xhe+CyR7
+         bjWfs6op5medHfIIT1jhz1+jXtIc6lrRlujvTaiDMCcDjys4vmNnSrArWudETURJns3p
+         foZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706571843; x=1707176643;
-        h=content-transfer-encoding:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1706571936; x=1707176736;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e/2zq2YgW9d2S1QVFWfVL68QjukxEMdAqXIYvUeyDak=;
-        b=bGUaXhKtpmliovtYNOzvnt3aap3oubXaFujn7XAWHeR7yvL+gE/tcnEZ2kBOh90ihS
-         hOY20/s1DmToAtRWyNdcssfQ/mFwCzOGm4zNHYwnJOveOAPSIPdNThqHtbxs8fo8EiVB
-         jLHUVCqN4Z5FPoV7zDcGxGG8pa+a+VMEPu4n2FQqEF544J7rDPuY+TX5ViBy0hzKOATc
-         L9Xu3x3FA9e7WIWf42iOGloDR13Iv9wMHSMC9SzwKoWaqsQfldinVfaLZ+TDu4Dii4Fj
-         tzOUM31gKiMa5rwYE0wFA1M5rm7JEMHDjoPBLbJcLHGj2yiWdzdoMEZYhj7qwFk4kJWQ
-         kMiw==
-X-Gm-Message-State: AOJu0YxbzhC8zwrS7stZ6Z58Z9oYNHCWPXgOVEt73H6Ie7eZD1uuQdCf
-	7hzcOgct7i/OsPDhcFbH3iJQVvCIHdaH85Vcxy0LgL1rA0Q6s5swc81TV0YCO+kWPd4Udi/LsPF
-	HMaWph7iyxyNVZBQ8bgioQonRJ3JcygKI
-X-Google-Smtp-Source: AGHT+IGNZxlaurySYWTCzdCWupeog8sU569k+NsGYtV5Qmw/yWEXLs3hFnqbKiXh0QWPFHFbv7yDHXJWBSpRaxSf0x0=
-X-Received: by 2002:a05:6870:d8cc:b0:218:550b:d6a with SMTP id
- of12-20020a056870d8cc00b00218550b0d6amr5922985oac.48.1706571843641; Mon, 29
- Jan 2024 15:44:03 -0800 (PST)
+        bh=66MNbyaDsdfRCnPtoF8smCkun9ORFjCymN6WisGCgXk=;
+        b=BegL2javjYu5ykarmYoCQvbs57S0rg+bN19LcQk85TFbn8eAjNr0nPV4HwwqRlNAL/
+         EkMU4HXvKaYurdWfkbpwdlVyT76XXQmdqkHT7W6fH4V1yPIht9RcxtFEACgznr5WvQzt
+         ixg9Va+gGvagURWiuI+FnigwGfAOhZ+cu/+3UMk+lOOIcbM56e/4/NALddvYM1dNOGHR
+         1IsUDB5AqWVYg9rYEJDsAjJc5QtZYJnPb40aFIENtlOrdwZlJslrtJKy87JmdoMPAjx/
+         V2hLIc+06jbwVLr0G56rLhrqTXAuGQWNHbkvfVk7kpiafHhpAubv9nJHIPo35DWdq5v0
+         K8Sg==
+X-Gm-Message-State: AOJu0YxqaLjdQ7Hq6mIwaLNAFVtDPcSbADFAnG41zSk8mNcewzazaov0
+	zIpNta+w9ux2fBTaXvB0kKUJzfQ7MI0bjdIuEYQPs+lNiyk5zNaTq1tylkMduQVOCfXRoJUJ/dS
+	vE3sxqy6PMHHEUQYyAx5afFAkFsE=
+X-Google-Smtp-Source: AGHT+IGpjadiJmkwnOOyspbn7UNYvi/YgNHvKPI4+eEN3dQMeiiOwoaV1wmXrcpabHi1W+NANy/IJ4FG9RDnLl0JfVU=
+X-Received: by 2002:a05:6870:9216:b0:214:40d2:fd28 with SMTP id
+ e22-20020a056870921600b0021440d2fd28mr3020319oaf.48.1706571935712; Mon, 29
+ Jan 2024 15:45:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CANH4o6MqecahkZj3i4YwS1UQjQimFrDcbM8abCbrGiLyk9ZTkg@mail.gmail.com>
- <CANH4o6Na-KPweTmeUAiU9sK4OGt8RkkZU+vK5xpEe-BrP-s_Bg@mail.gmail.com>
- <761568108.788363.1700121338355.JavaMail.zimbra@desy.de> <CANH4o6MbXf1vehqa4VSUc6VhJbb_pVH71M+ovFSWV7kz4j0Pmw@mail.gmail.com>
-In-Reply-To: <CANH4o6MbXf1vehqa4VSUc6VhJbb_pVH71M+ovFSWV7kz4j0Pmw@mail.gmail.com>
+References: <CALXu0UeGr80OzF7abqxwR5KFJFhpCuomy2_tdFESAKSiW70jfA@mail.gmail.com>
+ <CALXu0UcT4gG8xEVOvK1mshMDa_hKYu7rJK2biq8==ySOXdA3+w@mail.gmail.com>
+ <4F5C3573-2962-4072-ACB1-1CB8236866D5@oracle.com> <CALXu0Uf2z3um+kh=tgnqskr-ZdY2gU=185K3Amr=F_GJpb2_UQ@mail.gmail.com>
+ <FD981B2C-5C24-4349-A279-C70F640C0A01@oracle.com> <CANH4o6O=ihW7ENc-BTBXR4d4JL0QJjZa5YdYaKAdoHdq9vwGcA@mail.gmail.com>
+ <5DA015E1-50C6-4F56-B4E7-62A4BE90DBA4@oracle.com> <CALXu0UcLV-KZ4GNY8UgWCwiUOO_HsH=KLWOKuWJ2uEDP+a9sqw@mail.gmail.com>
+ <CAKAoaQ=FDdkTW2Vh=_Y08DEWZYaJa6tDSYKnFiZCfQ6+PW_5iQ@mail.gmail.com>
+ <610FDE39-3094-40EB-B671-F2CA876CA145@oracle.com> <CAKAoaQkdf41emWL-2Uq9_kFjF99Xc7UEK_ur0MmnfFAjJqLM7A@mail.gmail.com>
+ <BCB4C051-B76D-4025-A3FB-78B2F2D069BD@oracle.com>
+In-Reply-To: <BCB4C051-B76D-4025-A3FB-78B2F2D069BD@oracle.com>
 From: Martin Wege <martin.l.wege@gmail.com>
-Date: Tue, 30 Jan 2024 00:43:51 +0100
-Message-ID: <CANH4o6PxoQEk3SFvRDa+BqpKXFUW6cPC9Jcuf886Ntxqmorbmw@mail.gmail.com>
-Subject: Re: Filesystem test suite for NFSv4?
-To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date: Tue, 30 Jan 2024 00:45:24 +0100
+Message-ID: <CANH4o6M9UrqJ_T3dneaJjA-674+rRRLpFS7DMo8L1rMXOoFo7g@mail.gmail.com>
+Subject: Re: refer= syntax in /etc/exports for custom non-2049 TCP ports ? /
+ was: Re: Change "hostname" to "hostport" in text-based mountd downcall Re:
+ BUG in exports(5), no example for refer= Re: Examples for refer= in /etc/exports?
+To: Chuck Lever III <chuck.lever@oracle.com>
+Cc: Roland Mainz <roland.mainz@nrubsig.org>, 
+	Linux NFS Mailing List <linux-nfs@vger.kernel.org>, Cedric Blancher <cedric.blancher@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 16, 2023 at 10:26=E2=80=AFPM Martin Wege <martin.l.wege@gmail.c=
-om> wrote:
+On Mon, Jan 29, 2024 at 4:51=E2=80=AFPM Chuck Lever III <chuck.lever@oracle=
+.com> wrote:
 >
-> On Thu, Nov 16, 2023 at 8:55=E2=80=AFAM Mkrtchyan, Tigran
-> <tigran.mkrtchyan@desy.de> wrote:
+>
+> > On Jan 29, 2024, at 10:07=E2=80=AFAM, Roland Mainz <roland.mainz@nrubsi=
+g.org> wrote:
 > >
+> > On Mon, Jan 29, 2024 at 3:14=E2=80=AFPM Chuck Lever III <chuck.lever@or=
+acle.com> wrote:
+> >>
+> >>> On Jan 29, 2024, at 6:44=E2=80=AFAM, Roland Mainz <roland.mainz@nrubs=
+ig.org> wrote:
+> >>>
+> >>> On Mon, Nov 13, 2023 at 2:01=E2=80=AFAM Cedric Blancher
+> >>> <cedric.blancher@gmail.com> wrote:
+> >>>> On Fri, 10 Nov 2023 at 20:17, Chuck Lever III <chuck.lever@oracle.co=
+m> wrote:
+> >>>>>> On Nov 10, 2023, at 3:30 AM, Martin Wege <martin.l.wege@gmail.com>=
+ wrote:
+> >>>>>> On Fri, Nov 10, 2023 at 3:20=E2=80=AFAM Chuck Lever III <chuck.lev=
+er@oracle.com> wrote:
+> >>>>>>>> On Nov 9, 2023, at 7:47 PM, Cedric Blancher <cedric.blancher@gma=
+il.com> wrote:
+> >>> [snip]
+> >>>> Yeah, instead of waiting for NetLink you could implement Roland's
+> >>>> suggestion, and change "hostname" to "hostport" in your test-based
+> >>>> mount protocol, and technically everywhere else, like /proc/mounts a=
+nd
+> >>>> the /sbin/mount output.
+> >>>> So instead of:
+> >>>> mount -t nfs -o port=3D4444 10.10.0.10:/backups /var/backups
+> >>>> you could use
+> >>>> mount -t nfs 10.10.0.10@4444:/backups /var/backups
+> >>>>
+> >>>> The same applies to refer=3D - just change from "hostname" to
+> >>>> "hostport", and the text-based mountd downcall can stay the same (e.=
+g.
+> >>>> so "foobarhost" changes to "foobarhost@444" in the mountd download.)
+> >>> [snip]
+> >>>
+> >>> What would be the correct syntax to specify a custom (non-2049) TCP
+> >>> port for refer=3D in /etc/exports ?
+> >>>
+> >>> Would this work:
+> >>> ---- snip ----
+> >>> `/ref *(no_root_squash,refer=3D/export/home@134.49.22.111:32049)
+> >>> ---- snip ----
+> >>
+> >> Hello Roland -
+> >>
+> >> Although generic NFSv4 referral support has been in NFSD for
+> >> many years, NFSD currently does not implement alternate ports
+> >> in referrals.
 > >
-> > What do you want to test?
+> > I know, but the question is about the syntax in /etc/exports. The idea
+> > is to use the same syntax for other NFSv4 server implementations (like
+> > nfs4j) ...
 >
-> Filesystem tests, from POSIX layer. open(), close(), mmap(), write(),
-> read(), SEEK_HOLE, SEEK_DATA
->
-> > Protocol-level test can be performed with pynfs:
-> >
-> > https://git.linux-nfs.org/?p=3Dcdmackay/pynfs.git;a=3Dsummary
-> >
-> > IO bandwidth and latency tests can be performed ior or fio.
->
-> Is this a test for the NFS server, or NFS client?
->
-> Thanks,
-> Martin
+> We're planning not to support alternate ports via the refer=3D export
+> option. Instead, we plan to add the ability to specify an alternate
+> port via the "nfsref" command.
 
-?
+But that was NOT Rolands question. The question was which syntax would
+work ('Would this work:'), as this is for other NFSv4 server software
+such as nfs4j, which tries to be compatible with Linux.
+
+>
+> The refer=3D export option (that is, using this UI for setting up NFSv4
+> referrals) has been experimental since it was introduced, and has a
+> number of limitations that we hope to avoid by using "nfsref" instead.
+
+The problem I see is that - if Linux nfsref gets fixed to include
+custom ports - then it will take at least 3-5 years until this version
+is readily available in ALL stable versions of all distributions.
+Any improvements or fixes to refer=3D is available with the next Linux
+kernel patch, and I'd be more than happy to pay $$$$ to customer
+support to have such a patch backported to a stable branch.
+
+>
+> As an alternative, Solaris, for instance, does not use the /etc/export
+> interface mechanism at all, preferring instead the "share" and "nfsref"
+> commands. (though as far as I am aware, Solaris does not implement
+> support for alternate ports in referrals either).
+>
+> Solaris has support for reparse points (as does FreeBSD). "nfsref"
+> is supposed to be a mechanism for editing those, and theoretically
+> reparse points were supposed to handle more than just NFSv4 referrals.
+
+How would a reparse point with a custom NFSv4 port look like?
+
+>
+> Unfortunately I was never able to generate a lot of appetite in the
+> Linux kernel community for implementing reparse points in our file
+> systems. Our "nfsref" command is therefore somewhat limited.
+
+Did you document this somewhere?
+
+Thanks,
+Martin
 
