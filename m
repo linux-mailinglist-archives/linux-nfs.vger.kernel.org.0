@@ -1,52 +1,52 @@
-Return-Path: <linux-nfs+bounces-1553-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1554-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64B908408F2
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 15:50:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DECE38408F4
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 15:50:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 051DD1F279CA
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 14:50:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7CCFC1F279F8
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 14:50:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F15152DF8;
-	Mon, 29 Jan 2024 14:50:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA83C151CF1;
+	Mon, 29 Jan 2024 14:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEk9ZxuM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTxTJDMk"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1941487DA;
-	Mon, 29 Jan 2024 14:50:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9376B5A7B3;
+	Mon, 29 Jan 2024 14:50:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706539845; cv=none; b=JFNmTCnWom1XFXbg+nwaMpjtzM8EK9qXdpriL3UttGyJz/SmvQxezsc6PlHxpqMjfsZi7c2ciVMgIS1paix/ds9z2TGV2MTOdxKtGCuaYkfatfFvl0pypq/QKtDeTN5x0TpYNL8S+v0Gz/WeDk0yDc4hxGT5wADfGzSyRiWY9TI=
+	t=1706539851; cv=none; b=nRj3Xb1tDcYXHTArO/ZFTzIvBsJpFLxjU8P1ekPFknyFI+HjXEG/cJLPjtwpQWmFS+xaDyFnEgqQLfwzXvCEj/AEDXZKXGLm0SW04YwiOO7etv4yj8uWPSGi/5s8dUVNS26pWNP1d4Z9ZYqEC5/sxYUOjZ+GQ56vzE3wdbhoqpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706539845; c=relaxed/simple;
-	bh=L2ZeHEQXAskqSLFktz0METTAHNAUfChhuJZ2tCckukk=;
+	s=arc-20240116; t=1706539851; c=relaxed/simple;
+	bh=gVzsndViawjI3Z7+06pFsOgnjbx9+SjTnMQiUA6UHdg=;
 	h=Subject:From:To:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ngr35JXHs3qrg3lHSw86is+6IcDxzFwlaN6OZKfS5YKt69V/CWMZ+kSeF838o0mvbzi9XssK0BYc2NHvnODFj51UPyC1shvDuQVgRcg/2z3IAXeawBd8GzqU4DPCXwcgVXjPKiePHau2mhXBEbuehfSy5+b1frxcvYAj4CLX4ik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEk9ZxuM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4B3C433F1;
-	Mon, 29 Jan 2024 14:50:44 +0000 (UTC)
+	 MIME-Version:Content-Type; b=TOWm/rqAxobgF12aFAr6dYsMLNLLp17m7lI4bo+TepuPHbOR9eyRQ5qJfkVu0mLYZpi9s4y1N9ZSx0XiOl1MnXKai8F6IdJBy4e44148yOrWRukFqoMCChNEqd+t+0cETs9v3OGWv+RbS0IwqZjCok6o9P+SQiyR9VLFKpAzNT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTxTJDMk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4AF8C43390;
+	Mon, 29 Jan 2024 14:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706539844;
-	bh=L2ZeHEQXAskqSLFktz0METTAHNAUfChhuJZ2tCckukk=;
+	s=k20201202; t=1706539851;
+	bh=gVzsndViawjI3Z7+06pFsOgnjbx9+SjTnMQiUA6UHdg=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=vEk9ZxuMTqnu1at2EkIKgyK4Knan3JIKlpGhcT6XhmlYPvyWjXdcO6FJyQZxNVAMQ
-	 KENvCUd4OafRgIuBpyqQgxYoR+wKObuhJ14otJ4yadU/K9bBv6KdtdF1wvSFMDkJmr
-	 RxypgNxPF3KPt1RXOrYSCkAX/NRkYzNwASumAqxtqu2N1pqnmVVsw4MJocyHVSwdFc
-	 cePTce7GAY/ihuGvE7zjBpGtEOvUD59/8tCzApoQKy0/6AES8L8aYpt6VKmBQdnBZ6
-	 cPRsFJHnNQHku3B+0cmgms5WPs9ajDFOwdKL0uOE9XyxOytuFYFkgKiEv118qT4Z2u
-	 +9JS3na7zQhjg==
-Subject: [PATCH v1 02/11] svcrdma: Use all allocated Send Queue entries
+	b=RTxTJDMk2xPUrx8WNqo+FHG9lqo4CEbXuPxSWJYN9dFHHIdvWNk09CdP1djuJSC8a
+	 VIjNzJRZSk0SPrfGD3iHwvq5eYUpsFU6LxHF/oMe9tc3psBQ3zch4jpTE4fyJdst7h
+	 pZU7I7i6UG6FxRDFKlcQr9ZievsllsADvY4F0zDS2qQFZFAjHn9tqBfahI0MVRzooL
+	 jm57YKdIh7fj+Ebf98but3U97JCRi4tpO4gtSeCctWw1WnQ2vzMLRxcyABlg/3yzG9
+	 ru4baB4XYVpi50mi/+Tz4+3dJAs5U0AicARRKoQJo8G/+kG7eVOl6tx22vCokkw3w5
+	 a+cghO+ZyV6AQ==
+Subject: [PATCH v1 03/11] svcrdma: Increase the per-transport rw_ctx count
 From: Chuck Lever <cel@kernel.org>
 To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date: Mon, 29 Jan 2024 09:50:43 -0500
+Date: Mon, 29 Jan 2024 09:50:50 -0500
 Message-ID: 
- <170653984365.24162.652127313173673494.stgit@manet.1015granger.net>
+ <170653985002.24162.17277374573743602302.stgit@manet.1015granger.net>
 In-Reply-To: 
  <170653967395.24162.4661804176845293777.stgit@manet.1015granger.net>
 References: 
@@ -63,114 +63,64 @@ Content-Transfer-Encoding: 7bit
 
 From: Chuck Lever <chuck.lever@oracle.com>
 
-For upper layer protocols that request rw_ctxs, ib_create_qp()
-adjusts ib_qp_init_attr::max_send_wr to accommodate the WQEs those
-rw_ctxs will consume. See rdma_rw_init_qp() for details.
+rdma_rw_mr_factor() returns the smallest number of MRs needed to
+move a particular number of pages. svcrdma currently asks for the
+number of MRs needed to move RPCSVC_MAXPAGES (a little over one
+megabyte), as that is the number of pages in the largest r/wsize
+the server supports.
 
-To actually use those additional WQEs, svc_rdma_accept() needs to
-retrieve the corrected SQ depth after calling rdma_create_qp() and
-set newxprt->sc_sq_depth and  newxprt->sc_sq_avail so that
-svc_rdma_send() and svc_rdma_post_chunk_ctxt() can utilize those
-WQEs.
+This call assumes that the client's NIC can bundle a full one
+megabyte payload in a single rdma_segment. In fact, most NICs cannot
+handle a full megabyte with a single rkey / rdma_segment. Clients
+will typically split even a single Read chunk into many segments.
 
-The NVMe target driver, for example, already does this properly.
+The server needs one MR to read each rdma_segment in a Read chunk,
+and thus each one needs an rw_ctx.
 
-Fixes: 26fb2254dd33 ("svcrdma: Estimate Send Queue depth properly")
+svcrdma has been vastly underestimating the number of rw_ctxs needed
+to handle 64 RPC requests with large Read chunks using small
+rdma_segments.
+
+Unfortunately there doesn't seem to be a good way to estimate this
+number without knowing the client NIC's capabilities. Even then,
+the client RPC/RDMA implementation is still free to split a chunk
+into smaller segments (for example, it might be using physical
+registration, which needs an rdma_segment per page).
+
+The best we can do for now is choose a number that will guarantee
+forward progress in the worst case (one page per segment).
+
+At some later point, we could add some mechanisms to make this
+much less of a problem:
+- Add a core API to add more rw_ctxs to an already-established QP
+- svcrdma could treat rw_ctx exhaustion as a temporary error and
+  try again
+- Limit the number of Reads in flight
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/xprtrdma/svc_rdma_transport.c |   36 ++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 14 deletions(-)
+ net/sunrpc/xprtrdma/svc_rdma_transport.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/net/sunrpc/xprtrdma/svc_rdma_transport.c b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-index 4a038c7e86f9..75f1481fbca0 100644
+index 75f1481fbca0..57316afe62bf 100644
 --- a/net/sunrpc/xprtrdma/svc_rdma_transport.c
 +++ b/net/sunrpc/xprtrdma/svc_rdma_transport.c
-@@ -370,12 +370,12 @@ static struct svc_xprt *svc_rdma_create(struct svc_serv *serv,
-  */
- static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- {
-+	unsigned int ctxts, rq_depth, sq_depth;
- 	struct svcxprt_rdma *listen_rdma;
- 	struct svcxprt_rdma *newxprt = NULL;
- 	struct rdma_conn_param conn_param;
- 	struct rpcrdma_connect_private pmsg;
- 	struct ib_qp_init_attr qp_attr;
--	unsigned int ctxts, rq_depth;
- 	struct ib_device *dev;
- 	int ret = 0;
- 	RPC_IFDEBUG(struct sockaddr *sap);
-@@ -422,24 +422,29 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 		newxprt->sc_max_requests = rq_depth - 2;
- 		newxprt->sc_max_bc_requests = 2;
+@@ -424,8 +424,12 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
  	}
-+	sq_depth = rq_depth;
-+
- 	ctxts = rdma_rw_mr_factor(dev, newxprt->sc_port_num, RPCSVC_MAXPAGES);
- 	ctxts *= newxprt->sc_max_requests;
--	newxprt->sc_sq_depth = rq_depth + ctxts;
--	if (newxprt->sc_sq_depth > dev->attrs.max_qp_wr)
--		newxprt->sc_sq_depth = dev->attrs.max_qp_wr;
--	atomic_set(&newxprt->sc_sq_avail, newxprt->sc_sq_depth);
+ 	sq_depth = rq_depth;
+ 
+-	ctxts = rdma_rw_mr_factor(dev, newxprt->sc_port_num, RPCSVC_MAXPAGES);
+-	ctxts *= newxprt->sc_max_requests;
++	/* Arbitrarily estimate the number of rw_ctxs needed for
++	 * this transport. This is enough rw_ctxs to make forward
++	 * progress even if the client is using one rkey per page
++	 * in each Read chunk.
++	 */
++	ctxts = 3 * RPCSVC_MAXPAGES;
  
  	newxprt->sc_pd = ib_alloc_pd(dev, 0);
  	if (IS_ERR(newxprt->sc_pd)) {
- 		trace_svcrdma_pd_err(newxprt, PTR_ERR(newxprt->sc_pd));
- 		goto errout;
- 	}
--	newxprt->sc_sq_cq = ib_alloc_cq_any(dev, newxprt, newxprt->sc_sq_depth,
-+
-+	/* The Completion Queue depth is the maximum number of signaled
-+	 * WRs expected to be in flight. Every Send WR is signaled, and
-+	 * each rw_ctx has a chain of WRs, but only one WR in each chain
-+	 * is signaled.
-+	 */
-+	newxprt->sc_sq_cq = ib_alloc_cq_any(dev, newxprt, sq_depth + ctxts,
- 					    IB_POLL_WORKQUEUE);
- 	if (IS_ERR(newxprt->sc_sq_cq))
- 		goto errout;
--	newxprt->sc_rq_cq =
--		ib_alloc_cq_any(dev, newxprt, rq_depth, IB_POLL_WORKQUEUE);
-+	/* Every Receive WR is signaled. */
-+	newxprt->sc_rq_cq = ib_alloc_cq_any(dev, newxprt, rq_depth,
-+					    IB_POLL_WORKQUEUE);
- 	if (IS_ERR(newxprt->sc_rq_cq))
- 		goto errout;
- 
-@@ -448,7 +453,7 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	qp_attr.qp_context = &newxprt->sc_xprt;
- 	qp_attr.port_num = newxprt->sc_port_num;
- 	qp_attr.cap.max_rdma_ctxs = ctxts;
--	qp_attr.cap.max_send_wr = newxprt->sc_sq_depth - ctxts;
-+	qp_attr.cap.max_send_wr = sq_depth;
- 	qp_attr.cap.max_recv_wr = rq_depth;
- 	qp_attr.cap.max_send_sge = newxprt->sc_max_send_sges;
- 	qp_attr.cap.max_recv_sge = 1;
-@@ -456,17 +461,20 @@ static struct svc_xprt *svc_rdma_accept(struct svc_xprt *xprt)
- 	qp_attr.qp_type = IB_QPT_RC;
- 	qp_attr.send_cq = newxprt->sc_sq_cq;
- 	qp_attr.recv_cq = newxprt->sc_rq_cq;
--	dprintk("    cap.max_send_wr = %d, cap.max_recv_wr = %d\n",
--		qp_attr.cap.max_send_wr, qp_attr.cap.max_recv_wr);
--	dprintk("    cap.max_send_sge = %d, cap.max_recv_sge = %d\n",
--		qp_attr.cap.max_send_sge, qp_attr.cap.max_recv_sge);
--
- 	ret = rdma_create_qp(newxprt->sc_cm_id, newxprt->sc_pd, &qp_attr);
- 	if (ret) {
- 		trace_svcrdma_qp_err(newxprt, ret);
- 		goto errout;
- 	}
-+	dprintk("svcrdma: cap.max_send_wr = %d, cap.max_recv_wr = %d\n",
-+		qp_attr.cap.max_send_wr, qp_attr.cap.max_recv_wr);
-+	dprintk("    cap.max_send_sge = %d, cap.max_recv_sge = %d\n",
-+		qp_attr.cap.max_send_sge, qp_attr.cap.max_recv_sge);
-+	dprintk("    send CQ depth = %d, recv CQ depth = %d\n",
-+		sq_depth, rq_depth);
- 	newxprt->sc_qp = newxprt->sc_cm_id->qp;
-+	newxprt->sc_sq_depth = qp_attr.cap.max_send_wr;
-+	atomic_set(&newxprt->sc_sq_avail, newxprt->sc_sq_depth);
- 
- 	if (!(dev->attrs.device_cap_flags & IB_DEVICE_MEM_MGT_EXTENSIONS))
- 		newxprt->sc_snd_w_inv = false;
 
 
 
