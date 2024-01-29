@@ -1,306 +1,146 @@
-Return-Path: <linux-nfs+bounces-1562-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1563-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB75C840906
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 15:51:47 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2ABBF840951
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 16:08:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B7D4B22E45
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 14:51:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D807728C8AA
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 15:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8624A152DFE;
-	Mon, 29 Jan 2024 14:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J05Wwjlc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186141534F4;
+	Mon, 29 Jan 2024 15:08:07 +0000 (UTC)
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E463152DE7;
-	Mon, 29 Jan 2024 14:51:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F07D152E03
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 15:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706539902; cv=none; b=VikAxYD34lEzACYuUFnA54h3oERGnG0mn3b5XUBj37Khju3SqWYd69IpTxvq6p/dXurIE4qvlGowQOnmOKusgs/28ABlblOahZtrdPlxn8hgubZ6xhOga1yO9DWAHr1D/m4cMnVSA7QUIrmF+Sv5KTSiB7NH7eZtXzJ08eFdOYc=
+	t=1706540887; cv=none; b=WOQIEcyhHCg6f08UMDMngjPdi1CDEcjurWoQmHuxes/hOz2tVIc11VZX+nGCzdMUhagVVAnSwEZ3v5XeIDX0IO69xk6OF3uITrBxWwjSkfhS1QFu5gETHGL3xaZ/BtQ+an63yP0+vtOl5PJgBtX69f27/Audgj8c7gPFTSsJR/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706539902; c=relaxed/simple;
-	bh=fp9acj4ZEwK1Xq922shpXg6CpeNaFsC5ZBGJptxgrSI=;
-	h=Subject:From:To:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rhP0aa7K2VVCiCmz1AfTogY+uVkVaDOXMTlv49u0GC4y2ahI0GHc3hg2oFLPcWC73/Gof+LbU5tP+rFT3BRrW8AiuNZJRqx4XkrZDLBM6fYo3vsrwXzmOKj5lqGJYMk6XIssCQN9kMMa0RGyram5/2xo9/OSHSxLFm3JTLc+cXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J05Wwjlc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACFC7C433F1;
-	Mon, 29 Jan 2024 14:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706539901;
-	bh=fp9acj4ZEwK1Xq922shpXg6CpeNaFsC5ZBGJptxgrSI=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=J05WwjlcNF2VcBNtwSxK5f+C5e4kkwb/T6LV+9ISpRXpN+fdokQ9/OM1xKsYTcIfa
-	 CoOsYNqyH+Lz5ciyXZYAsI4zqtfvTaZCHIVme3aUPm6wP0sCns8oae7MhqlKJLQcqA
-	 uj/Wcg/+xKbU586nRs5f0cDKHHmktNJ16OK9wtXIo+I78dmozChgxci3gQ0ePKL5Dy
-	 wuEu0LYYnGFGCNrQp+eouwpJ1R11yFUflOjv9xHQ6fpXHYMlzk022zCdcSI9bIcULO
-	 MU3jBaAz8t8CHhdEE2HX0BaYUpeZLBg2iGIEQaa2mrpEV9Vsn4E5nnfY7NiMiNmL+j
-	 l7TCsg08CNQGQ==
-Subject: [PATCH v1 11/11] svcrdma: Add Write chunk WRs to the RPC's Send WR
- chain
-From: Chuck Lever <cel@kernel.org>
-To: linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org
-Date: Mon, 29 Jan 2024 09:51:40 -0500
-Message-ID: 
- <170653990074.24162.7550506379641649738.stgit@manet.1015granger.net>
-In-Reply-To: 
- <170653967395.24162.4661804176845293777.stgit@manet.1015granger.net>
-References: 
- <170653967395.24162.4661804176845293777.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5
+	s=arc-20240116; t=1706540887; c=relaxed/simple;
+	bh=3BJ3URFhTolIM0Zsws+hdGwYqs3N98sE0het+UYSdUo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sj1iCWLIY1kG38Y3cK4fG2HuSr2bSDBHfzPhi+cPYtY0NbGBv6G8KA8tezPOalE+XlPFfTpDjv1EaDqG8ch4rXnCfkXVJpWYFnbXJ4/2nvC7fK+yYL/IVV0m4NvdEfzXEcsYBYkjGBK3YP5xgq0tDjiak/c6pfeNO8xFK9y77XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.166.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nrubsig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-7bed9c7d33fso106166739f.1
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 07:08:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706540884; x=1707145684;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dcu4w7D5xKzza3auRzOSdYBCP/S0Tof9xVJM8F65eFs=;
+        b=GkcJyobUWm50jcaCgmNv9EVAGa4EkaUEmj2fvpomJJCygp6sI+MOOT46qRIDI/Da2t
+         UrIvxFVkLJtyHMBGPBbP7bRK5J9kvdl4Y8+bdOdPKxtDh1yuNuRa+zktvaNGGfnNfQV+
+         C8RSKBw7HNQR0Av6CEa2l5oHHGIMVGpaBkBotc5cHZ4F25NbOnZMOICknkQZr5k5wjO/
+         my/LOMnuclxIVOyKV+y2z4vMxodPatm6U4fesTKHLAXA7PxL4Rodt01ENlQXWT/xHUZ8
+         smiSEf61W5ikvNd/OQDwF7jczfX/B9VlahZ5PgiK5fa9ds/mG5xI3SylHnS9sTS+t+uB
+         rnNQ==
+X-Gm-Message-State: AOJu0YwEP1iMhojuEKUDMVtcJTkgBAzcJlnpZXjj3oUVetN0q5t6QpWk
+	Xf/8uEUOyBRmBlesADU6sZKiFLLJ0GnGz4gtYVm2l2u1JmEArJb4Wx0L0nDXEMdyMejQTrbj6SS
+	FgKQVFE9u4ROH5/iXILjD/Gj3Zxo+yxsY
+X-Google-Smtp-Source: AGHT+IGWVrUcr7B5wj+T+8hfVr7tBTFiDuiqox4UnnLo07UUz6ckkQqgPuHOFaJ4FApc99hiwCRdc2lwP+5ywMCJUzA=
+X-Received: by 2002:a05:6602:235d:b0:7bf:d163:1ea0 with SMTP id
+ r29-20020a056602235d00b007bfd1631ea0mr5205237iot.16.1706540884044; Mon, 29
+ Jan 2024 07:08:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-nfs@vger.kernel.org
 List-Id: <linux-nfs.vger.kernel.org>
 List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <CALXu0UeGr80OzF7abqxwR5KFJFhpCuomy2_tdFESAKSiW70jfA@mail.gmail.com>
+ <CALXu0UcT4gG8xEVOvK1mshMDa_hKYu7rJK2biq8==ySOXdA3+w@mail.gmail.com>
+ <4F5C3573-2962-4072-ACB1-1CB8236866D5@oracle.com> <CALXu0Uf2z3um+kh=tgnqskr-ZdY2gU=185K3Amr=F_GJpb2_UQ@mail.gmail.com>
+ <FD981B2C-5C24-4349-A279-C70F640C0A01@oracle.com> <CANH4o6O=ihW7ENc-BTBXR4d4JL0QJjZa5YdYaKAdoHdq9vwGcA@mail.gmail.com>
+ <5DA015E1-50C6-4F56-B4E7-62A4BE90DBA4@oracle.com> <CALXu0UcLV-KZ4GNY8UgWCwiUOO_HsH=KLWOKuWJ2uEDP+a9sqw@mail.gmail.com>
+ <CAKAoaQ=FDdkTW2Vh=_Y08DEWZYaJa6tDSYKnFiZCfQ6+PW_5iQ@mail.gmail.com> <610FDE39-3094-40EB-B671-F2CA876CA145@oracle.com>
+In-Reply-To: <610FDE39-3094-40EB-B671-F2CA876CA145@oracle.com>
+From: Roland Mainz <roland.mainz@nrubsig.org>
+Date: Mon, 29 Jan 2024 16:07:38 +0100
+Message-ID: <CAKAoaQkdf41emWL-2Uq9_kFjF99Xc7UEK_ur0MmnfFAjJqLM7A@mail.gmail.com>
+Subject: Re: refer= syntax in /etc/exports for custom non-2049 TCP ports ? /
+ was: Re: Change "hostname" to "hostport" in text-based mountd downcall Re:
+ BUG in exports(5), no example for refer= Re: Examples for refer= in /etc/exports?
+To: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Cc: Martin Wege <martin.l.wege@gmail.com>, Cedric Blancher <cedric.blancher@gmail.com>, 
+	Chuck Lever III <chuck.lever@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Chuck Lever <chuck.lever@oracle.com>
+On Mon, Jan 29, 2024 at 3:14=E2=80=AFPM Chuck Lever III <chuck.lever@oracle=
+.com> wrote:
+>
+>
+>
+> > On Jan 29, 2024, at 6:44=E2=80=AFAM, Roland Mainz <roland.mainz@nrubsig=
+.org> wrote:
+> >
+> > On Mon, Nov 13, 2023 at 2:01=E2=80=AFAM Cedric Blancher
+> > <cedric.blancher@gmail.com> wrote:
+> >> On Fri, 10 Nov 2023 at 20:17, Chuck Lever III <chuck.lever@oracle.com>=
+ wrote:
+> >>>> On Nov 10, 2023, at 3:30 AM, Martin Wege <martin.l.wege@gmail.com> w=
+rote:
+> >>>> On Fri, Nov 10, 2023 at 3:20=E2=80=AFAM Chuck Lever III <chuck.lever=
+@oracle.com> wrote:
+> >>>>>> On Nov 9, 2023, at 7:47 PM, Cedric Blancher <cedric.blancher@gmail=
+.com> wrote:
+> > [snip]
+> >> Yeah, instead of waiting for NetLink you could implement Roland's
+> >> suggestion, and change "hostname" to "hostport" in your test-based
+> >> mount protocol, and technically everywhere else, like /proc/mounts and
+> >> the /sbin/mount output.
+> >> So instead of:
+> >> mount -t nfs -o port=3D4444 10.10.0.10:/backups /var/backups
+> >> you could use
+> >> mount -t nfs 10.10.0.10@4444:/backups /var/backups
+> >>
+> >> The same applies to refer=3D - just change from "hostname" to
+> >> "hostport", and the text-based mountd downcall can stay the same (e.g.
+> >> so "foobarhost" changes to "foobarhost@444" in the mountd download.)
+> > [snip]
+> >
+> > What would be the correct syntax to specify a custom (non-2049) TCP
+> > port for refer=3D in /etc/exports ?
+> >
+> > Would this work:
+> > ---- snip ----
+> > `/ref *(no_root_squash,refer=3D/export/home@134.49.22.111:32049)
+> > ---- snip ----
+>
+> Hello Roland -
+>
+> Although generic NFSv4 referral support has been in NFSD for
+> many years, NFSD currently does not implement alternate ports
+> in referrals.
 
-Chain RDMA Writes that convey Write chunks onto the local Send
-chain. This means all WRs for an RPC Reply are now posted with a
-single ib_post_send() call, and there is a single Send completion
-when all of these are done. That reduces both the per-transport
-doorbell rate and completion rate.
+I know, but the question is about the syntax in /etc/exports. The idea
+is to use the same syntax for other NFSv4 server implementations (like
+nfs4j) ...
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc_rdma.h       |   13 ++++-
- net/sunrpc/xprtrdma/svc_rdma_rw.c     |   86 +++++++++++++++++++++++++--------
- net/sunrpc/xprtrdma/svc_rdma_sendto.c |    5 ++
- 3 files changed, 78 insertions(+), 26 deletions(-)
+For context: I have a ticket open for the ms-nfs41-client to get the
+referral support with custom (non-2049) TCP ports fixed...
 
-diff --git a/include/linux/sunrpc/svc_rdma.h b/include/linux/sunrpc/svc_rdma.h
-index d33bab33099a..24cd199dd6f3 100644
---- a/include/linux/sunrpc/svc_rdma.h
-+++ b/include/linux/sunrpc/svc_rdma.h
-@@ -210,6 +210,7 @@ struct svc_rdma_recv_ctxt {
-  */
- struct svc_rdma_write_info {
- 	struct svcxprt_rdma	*wi_rdma;
-+	struct list_head	wi_list;
- 
- 	const struct svc_rdma_chunk	*wi_chunk;
- 
-@@ -238,7 +239,10 @@ struct svc_rdma_send_ctxt {
- 	struct ib_cqe		sc_cqe;
- 	struct xdr_buf		sc_hdrbuf;
- 	struct xdr_stream	sc_stream;
-+
-+	struct list_head	sc_write_info_list;
- 	struct svc_rdma_write_info sc_reply_info;
-+
- 	void			*sc_xprt_buf;
- 	int			sc_page_count;
- 	int			sc_cur_sge_no;
-@@ -270,11 +274,14 @@ extern void svc_rdma_cc_init(struct svcxprt_rdma *rdma,
- extern void svc_rdma_cc_release(struct svcxprt_rdma *rdma,
- 				struct svc_rdma_chunk_ctxt *cc,
- 				enum dma_data_direction dir);
-+extern void svc_rdma_write_chunk_release(struct svcxprt_rdma *rdma,
-+					 struct svc_rdma_send_ctxt *ctxt);
- extern void svc_rdma_reply_chunk_release(struct svcxprt_rdma *rdma,
- 					 struct svc_rdma_send_ctxt *ctxt);
--extern int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
--				    const struct svc_rdma_recv_ctxt *rctxt,
--				    const struct xdr_buf *xdr);
-+extern int svc_rdma_prepare_write_list(struct svcxprt_rdma *rdma,
-+				       const struct svc_rdma_pcl *write_pcl,
-+				       struct svc_rdma_send_ctxt *sctxt,
-+				       const struct xdr_buf *xdr);
- extern int svc_rdma_prepare_reply_chunk(struct svcxprt_rdma *rdma,
- 					const struct svc_rdma_pcl *write_pcl,
- 					const struct svc_rdma_pcl *reply_pcl,
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_rw.c b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-index 40797114d50a..f2a100c4c81f 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_rw.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_rw.c
-@@ -230,6 +230,28 @@ static void svc_rdma_write_info_free(struct svc_rdma_write_info *info)
- 	queue_work(svcrdma_wq, &info->wi_work);
- }
- 
-+/**
-+ * svc_rdma_write_chunk_release - Release Write chunk I/O resources
-+ * @rdma: controlling transport
-+ * @ctxt: Send context that is being released
-+ */
-+void svc_rdma_write_chunk_release(struct svcxprt_rdma *rdma,
-+				  struct svc_rdma_send_ctxt *ctxt)
-+{
-+	struct svc_rdma_write_info *info;
-+	struct svc_rdma_chunk_ctxt *cc;
-+
-+	while (!list_empty(&ctxt->sc_write_info_list)) {
-+		info = list_first_entry(&ctxt->sc_write_info_list,
-+					struct svc_rdma_write_info, wi_list);
-+		list_del(&info->wi_list);
-+
-+		cc = &info->wi_cc;
-+		svc_rdma_wake_send_waiters(rdma, cc->cc_sqecount);
-+		svc_rdma_write_info_free(info);
-+	}
-+}
-+
- /**
-  * svc_rdma_reply_chunk_release - Release Reply chunk I/O resources
-  * @rdma: controlling transport
-@@ -286,13 +308,11 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
- 	struct ib_cqe *cqe = wc->wr_cqe;
- 	struct svc_rdma_chunk_ctxt *cc =
- 			container_of(cqe, struct svc_rdma_chunk_ctxt, cc_cqe);
--	struct svc_rdma_write_info *info =
--			container_of(cc, struct svc_rdma_write_info, wi_cc);
- 
- 	switch (wc->status) {
- 	case IB_WC_SUCCESS:
- 		trace_svcrdma_wc_write(&cc->cc_cid);
--		break;
-+		return;
- 	case IB_WC_WR_FLUSH_ERR:
- 		trace_svcrdma_wc_write_flush(wc, &cc->cc_cid);
- 		break;
-@@ -300,12 +320,11 @@ static void svc_rdma_write_done(struct ib_cq *cq, struct ib_wc *wc)
- 		trace_svcrdma_wc_write_err(wc, &cc->cc_cid);
- 	}
- 
--	svc_rdma_wake_send_waiters(rdma, cc->cc_sqecount);
--
--	if (unlikely(wc->status != IB_WC_SUCCESS))
--		svc_xprt_deferred_close(&rdma->sc_xprt);
--
--	svc_rdma_write_info_free(info);
-+	/* The RDMA Write has flushed, so the client won't get
-+	 * some of the outgoing RPC message. Signal the loss
-+	 * to the client by closing the connection.
-+	 */
-+	svc_xprt_deferred_close(&rdma->sc_xprt);
- }
- 
- /**
-@@ -601,13 +620,19 @@ static int svc_rdma_xb_write(const struct xdr_buf *xdr, void *data)
- 	return xdr->len;
- }
- 
--static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
--				     const struct svc_rdma_chunk *chunk,
--				     const struct xdr_buf *xdr)
-+/* Link Write WRs for @chunk onto @sctxt's WR chain.
-+ */
-+static int svc_rdma_prepare_write_chunk(struct svcxprt_rdma *rdma,
-+					struct svc_rdma_send_ctxt *sctxt,
-+					const struct svc_rdma_chunk *chunk,
-+					const struct xdr_buf *xdr)
- {
- 	struct svc_rdma_write_info *info;
- 	struct svc_rdma_chunk_ctxt *cc;
-+	struct ib_send_wr *first_wr;
- 	struct xdr_buf payload;
-+	struct list_head *pos;
-+	struct ib_cqe *cqe;
- 	int ret;
- 
- 	if (xdr_buf_subsegment(xdr, &payload, chunk->ch_position,
-@@ -623,10 +648,25 @@ static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
- 	if (ret != payload.len)
- 		goto out_err;
- 
--	trace_svcrdma_post_write_chunk(&cc->cc_cid, cc->cc_sqecount);
--	ret = svc_rdma_post_chunk_ctxt(rdma, cc);
--	if (ret < 0)
-+	ret = -EINVAL;
-+	if (unlikely(cc->cc_sqecount > rdma->sc_sq_depth))
- 		goto out_err;
-+
-+	first_wr = sctxt->sc_wr_chain;
-+	cqe = &cc->cc_cqe;
-+	list_for_each(pos, &cc->cc_rwctxts) {
-+		struct svc_rdma_rw_ctxt *rwc;
-+
-+		rwc = list_entry(pos, struct svc_rdma_rw_ctxt, rw_list);
-+		first_wr = rdma_rw_ctx_wrs(&rwc->rw_ctx, rdma->sc_qp,
-+					   rdma->sc_port_num, cqe, first_wr);
-+		cqe = NULL;
-+	}
-+	sctxt->sc_wr_chain = first_wr;
-+	sctxt->sc_sqecount += cc->cc_sqecount;
-+	list_add(&info->wi_list, &sctxt->sc_write_info_list);
-+
-+	trace_svcrdma_post_write_chunk(&cc->cc_cid, cc->cc_sqecount);
- 	return 0;
- 
- out_err:
-@@ -635,25 +675,27 @@ static int svc_rdma_send_write_chunk(struct svcxprt_rdma *rdma,
- }
- 
- /**
-- * svc_rdma_send_write_list - Send all chunks on the Write list
-+ * svc_rdma_prepare_write_list - Construct WR chain for sending Write list
-  * @rdma: controlling RDMA transport
-- * @rctxt: Write list provisioned by the client
-+ * @write_pcl: Write list provisioned by the client
-+ * @sctxt: Send WR resources
-  * @xdr: xdr_buf containing an RPC Reply message
-  *
-  * Returns zero on success, or a negative errno if one or more
-  * Write chunks could not be sent.
-  */
--int svc_rdma_send_write_list(struct svcxprt_rdma *rdma,
--			     const struct svc_rdma_recv_ctxt *rctxt,
--			     const struct xdr_buf *xdr)
-+int svc_rdma_prepare_write_list(struct svcxprt_rdma *rdma,
-+				const struct svc_rdma_pcl *write_pcl,
-+				struct svc_rdma_send_ctxt *sctxt,
-+				const struct xdr_buf *xdr)
- {
- 	struct svc_rdma_chunk *chunk;
- 	int ret;
- 
--	pcl_for_each_chunk(chunk, &rctxt->rc_write_pcl) {
-+	pcl_for_each_chunk(chunk, write_pcl) {
- 		if (!chunk->ch_payload_length)
- 			break;
--		ret = svc_rdma_send_write_chunk(rdma, chunk, xdr);
-+		ret = svc_rdma_prepare_write_chunk(rdma, sctxt, chunk, xdr);
- 		if (ret < 0)
- 			return ret;
- 	}
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_sendto.c b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-index bb5436b719e0..dfca39abd16c 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_sendto.c
-@@ -142,6 +142,7 @@ svc_rdma_send_ctxt_alloc(struct svcxprt_rdma *rdma)
- 	ctxt->sc_send_wr.sg_list = ctxt->sc_sges;
- 	ctxt->sc_send_wr.send_flags = IB_SEND_SIGNALED;
- 	ctxt->sc_cqe.done = svc_rdma_wc_send;
-+	INIT_LIST_HEAD(&ctxt->sc_write_info_list);
- 	ctxt->sc_xprt_buf = buffer;
- 	xdr_buf_init(&ctxt->sc_hdrbuf, ctxt->sc_xprt_buf,
- 		     rdma->sc_max_req_size);
-@@ -227,6 +228,7 @@ static void svc_rdma_send_ctxt_release(struct svcxprt_rdma *rdma,
- 	struct ib_device *device = rdma->sc_cm_id->device;
- 	unsigned int i;
- 
-+	svc_rdma_write_chunk_release(rdma, ctxt);
- 	svc_rdma_reply_chunk_release(rdma, ctxt);
- 
- 	if (ctxt->sc_page_count)
-@@ -1013,7 +1015,8 @@ int svc_rdma_sendto(struct svc_rqst *rqstp)
- 	if (!p)
- 		goto put_ctxt;
- 
--	ret = svc_rdma_send_write_list(rdma, rctxt, &rqstp->rq_res);
-+	ret = svc_rdma_prepare_write_list(rdma, &rctxt->rc_write_pcl, sctxt,
-+					  &rqstp->rq_res);
- 	if (ret < 0)
- 		goto put_ctxt;
- 
+> It is on our enhancement request list.
 
+Thanks... :-)
 
+----
+
+Bye,
+Roland
+--=20
+  __ .  . __
+ (o.\ \/ /.o) roland.mainz@nrubsig.org
+  \__\/\/__/  MPEG specialist, C&&JAVA&&Sun&&Unix programmer
+  /O /=3D=3D\ O\  TEL +49 641 3992797
+ (;O/ \/ \O;)
 
