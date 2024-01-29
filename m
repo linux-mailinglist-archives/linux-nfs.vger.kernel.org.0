@@ -1,58 +1,58 @@
-Return-Path: <linux-nfs+bounces-1537-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1538-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BB018404DC
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 13:22:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D7B78404E9
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 13:23:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 411931C20CB8
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 12:22:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CA9E71F2202B
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Jan 2024 12:23:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C791D604BB;
-	Mon, 29 Jan 2024 12:22:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A77605AB;
+	Mon, 29 Jan 2024 12:23:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RjvKYqWP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hf05P8V0"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A303F604AA
-	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 12:22:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C668605A8
+	for <linux-nfs@vger.kernel.org>; Mon, 29 Jan 2024 12:23:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706530957; cv=none; b=tqbImkHLarDWs4gT5GGoqexIb38wG2h4a0zlecCNuk4UI4kN7zMkiSTDU1zZrq5kz2E3zpWe2ugcIHQjfqMuqrDhkekNghHQopQG5HHo7vAvej8hSTMf1kweIncNlaB6QU+gVpWEFqmjEuMMBFVLd2qcHx/IJxKERGvxLR2+uxQ=
+	t=1706531028; cv=none; b=eShyKJMTWgeaHm3vpOmxemIRSD4BG9K5XcvwjTN4lVlb774gKRI99L48ro7kYylM4wW4MSM8Wf8eHUgE7N6mN4hpFFUJZQAwMj5znopyCXxZkPrwGv2BDh7TCxp8RS5bP4AFfJslIgYRWpGLggNMIP3LkfnIS0u/Tn/mbDD1ogE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706530957; c=relaxed/simple;
-	bh=+ZlH8FyhRd8ktSsLGB5sxsDFUjm30iB9xmfmJi5+cSg=;
+	s=arc-20240116; t=1706531028; c=relaxed/simple;
+	bh=kGRzpVRbYsLRFGCI4IX8TfRciV6RMlNoGgcRCHy/8dg=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZWGEKQtgwoo9VB43UvWmqEGcShSZ2Ea7gRUG5PC1jyx9hYF+o8Ojm+CthynJCxupBMKNp0g0GWB4QfJKxJxCUazoRYKhOTpVllWe1C3k+z4b7Idp1d8QIQ6Mb1Icx+JSGrBaej1A8ge+8GkB35HkNbCzwAEI0rbsP5g8h6+pSCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RjvKYqWP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 641E7C433F1;
-	Mon, 29 Jan 2024 12:22:36 +0000 (UTC)
+	 Content-Type:MIME-Version; b=AUAP9+1BpbDA4rYyFTi4YuiK8Ky9sFaQo/CTYcIP4eKyL81yQzJEHpKMT1+3l/vcVy2P7CyolB1coG9GgoJprPyCI1s18bE5WXVeX/g1tgMu4/KA5StbrVrA8QDYa9FYJb7lzYE0ndAgmvIEY/MkvVckx9Tl6ckvqDXQsCkvt2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hf05P8V0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE633C433C7;
+	Mon, 29 Jan 2024 12:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706530957;
-	bh=+ZlH8FyhRd8ktSsLGB5sxsDFUjm30iB9xmfmJi5+cSg=;
+	s=k20201202; t=1706531027;
+	bh=kGRzpVRbYsLRFGCI4IX8TfRciV6RMlNoGgcRCHy/8dg=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=RjvKYqWPXtCVZ4S6UXMz9szp/4ZuxOcaXdcT+re0TTl8ZTKfIm4felXm44hKZ9pT9
-	 PqOa9u+zrJcI207yQRxhR6isOpPaT6qIQS+hOZ5YdxMJHWU8tOjPk4Nxq3cpTg+JX1
-	 Irq8DzjSbbVRIKvLYm7dEWdMjY+0+J37vm52wyqBGFV+sS5NbMlWpl/Q8aUNmWemNa
-	 hc2DvRcQA8xC1NSISxmN1o0h5bTTr9i0oG7l60ZPcy9rFy7S+2moGYH9ma2U404d/S
-	 0VMOM6XAJNNXd3DbuT65xomyBioQRT7l/oXrbLA6RICkj9z4XGhc4a7nwh+r9WZZJ+
-	 GPYZ2bVXRq3qw==
-Message-ID: <22191c08a554d7570bd389e66a356dfe0e58b528.camel@kernel.org>
-Subject: Re: [PATCH 06/13] nfsd: prepare for supporting admin-revocation of
- state
+	b=Hf05P8V0Joav8DEunziXtC2ZjZkaT78iGdshnVmQ9FUYV+kmAe1oYfeNkPKShhnpc
+	 oivMirX8Fs9gvmJG4vX1GCd3j1VJXhTL1lSkWXz1eYO1eAddhkYleo+i1YmNPoI5mL
+	 Ywwmto1MjSYgg6K6TdOHP9I56aEpWNywY7I+u+jkTNfj4b+eKgKrhCTh0Se130UrqB
+	 ZO1hd28x0EcapyWbYMsEwuQetDhS6P0rcq3MUDl31gBQANJpGImv3CntRhNLgQuQ5U
+	 gFiCHFlUg0iHiMIAoJOmSHemeWjaC6+tD9GJIRBX45BmXBL0psDHfHCtyAAWzGsp3O
+	 l7WuToGbync5A==
+Message-ID: <982f25b417da838e0c098f96d67f1e4519215aaa.camel@kernel.org>
+Subject: Re: [PATCH 07/13] nfsd: allow state with no file to appear in
+ /proc/fs/nfsd/clients/*/states
 From: Jeff Layton <jlayton@kernel.org>
 To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
  <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Christoph Hellwig
  <hch@lst.de>,  Tom Haynes <loghyr@gmail.com>
-Date: Mon, 29 Jan 2024 07:22:35 -0500
-In-Reply-To: <20240129033637.2133-7-neilb@suse.de>
+Date: Mon, 29 Jan 2024 07:23:45 -0500
+In-Reply-To: <20240129033637.2133-8-neilb@suse.de>
 References: <20240129033637.2133-1-neilb@suse.de>
-	 <20240129033637.2133-7-neilb@suse.de>
+	 <20240129033637.2133-8-neilb@suse.de>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -73,272 +73,234 @@ List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
 On Mon, 2024-01-29 at 14:29 +1100, NeilBrown wrote:
-> The NFSv4 protocol allows state to be revoked by the admin and has error
-> codes which allow this to be communicated to the client.
+> Change the "show" functions to show some content even if a file cannot
+> be found.  This is the case for admin-revoked state.
+> This is primarily useful for debugging - to ensure states are being
+> removed eventually.
 >=20
-> This patch
->  - introduces a new state-id status SC_STATUS_ADMIN_REVOKED
->    which can be set on open, lock, or delegation state.
->  - reports NFS4ERR_ADMIN_REVOKED when these are accessed
->  - introduces a per-client counter of these states and returns
->    SEQ4_STATUS_ADMIN_STATE_REVOKED when the counter is not zero.
->    Decrements this when freeing any admin-revoked state.
->  - introduces stub code to find all interesting states for a given
->    superblock so they can be revoked via the 'unlock_filesystem'
->    file in /proc/fs/nfsd/
->    No actual states are handled yet.
+> So change several seq_printf() to seq_puts().  Some of these are needed
+> to keep checkpatch happy.  Others were done for consistency.
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/nfs4state.c | 85 ++++++++++++++++++++++++++++++++++++++++++++-
->  fs/nfsd/nfsctl.c    |  1 +
->  fs/nfsd/nfsd.h      |  1 +
->  fs/nfsd/state.h     | 10 ++++++
->  fs/nfsd/trace.h     |  3 +-
->  5 files changed, 98 insertions(+), 2 deletions(-)
+>  fs/nfsd/nfs4state.c | 118 ++++++++++++++++++++++----------------------
+>  1 file changed, 58 insertions(+), 60 deletions(-)
 >=20
 > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 6bccdd0af814..8db224906864 100644
+> index 8db224906864..ef4ec23f7c0d 100644
 > --- a/fs/nfsd/nfs4state.c
 > +++ b/fs/nfsd/nfs4state.c
-> @@ -1210,6 +1210,8 @@ nfs4_put_stid(struct nfs4_stid *s)
->  		return;
->  	}
->  	idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> +	if (s->sc_status & SC_STATUS_ADMIN_REVOKED)
-> +		atomic_dec(&s->sc_client->cl_admin_revoked);
->  	nfs4_free_cpntf_statelist(clp->net, s);
->  	spin_unlock(&clp->cl_lock);
->  	s->sc_free(s);
-> @@ -1529,6 +1531,8 @@ static void put_ol_stateid_locked(struct nfs4_ol_st=
-ateid *stp,
->  	}
+> @@ -2554,9 +2554,9 @@ static struct nfs4_client *get_nfsdfs_clp(struct in=
+ode *inode)
 > =20
->  	idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> +	if (s->sc_status & SC_STATUS_ADMIN_REVOKED)
-> +		atomic_dec(&s->sc_client->cl_admin_revoked);
->  	list_add(&stp->st_locks, reaplist);
->  }
-> =20
-> @@ -1674,6 +1678,68 @@ static void release_openowner(struct nfs4_openowne=
-r *oo)
->  	nfs4_put_stateowner(&oo->oo_owner);
->  }
-> =20
-> +static struct nfs4_stid *find_one_sb_stid(struct nfs4_client *clp,
-> +					  struct super_block *sb,
-> +					  unsigned int sc_types)
-> +{
-> +	unsigned long id, tmp;
-> +	struct nfs4_stid *stid;
-> +
-> +	spin_lock(&clp->cl_lock);
-> +	idr_for_each_entry_ul(&clp->cl_stateids, stid, tmp, id)
-> +		if ((stid->sc_type & sc_types) &&
-> +		    stid->sc_status =3D=3D 0 &&
-> +		    stid->sc_file->fi_inode->i_sb =3D=3D sb) {
-> +			refcount_inc(&stid->sc_count);
-> +			break;
-> +		}
-> +	spin_unlock(&clp->cl_lock);
-> +	return stid;
-> +}
-> +
-> +/**
-> + * nfsd4_revoke_states - revoke all nfsv4 states associated with given f=
-ilesystem
-> + * @net - used to identify instance of nfsd (there is one per net namesp=
-ace)
-> + * @sb - super_block used to identify target filesystem
-> + *
-> + * All nfs4 states (open, lock, delegation, layout) held by the server i=
-nstance
-> + * and associated with a file on the given filesystem will be revoked re=
-sulting
-> + * in any files being closed and so all references from nfsd to the file=
-system
-> + * being released.  Thus nfsd will no longer prevent the filesystem from=
- being
-> + * unmounted.
-> + *
-> + * The clients which own the states will subsequently being notified tha=
-t the
-> + * states have been "admin-revoked".
-> + */
-> +void nfsd4_revoke_states(struct net *net, struct super_block *sb)
-> +{
-> +	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> +	unsigned int idhashval;
-> +	unsigned int sc_types;
-> +
-> +	sc_types =3D 0;
-> +
-> +	spin_lock(&nn->client_lock);
-> +	for (idhashval =3D 0; idhashval < CLIENT_HASH_MASK; idhashval++) {
-> +		struct list_head *head =3D &nn->conf_id_hashtbl[idhashval];
-> +		struct nfs4_client *clp;
-> +	retry:
-> +		list_for_each_entry(clp, head, cl_idhash) {
-> +			struct nfs4_stid *stid =3D find_one_sb_stid(clp, sb,
-> +								  sc_types);
-> +			if (stid) {
-> +				spin_unlock(&nn->client_lock);
-> +				switch (stid->sc_type) {
-> +				}
-> +				nfs4_put_stid(stid);
-> +				spin_lock(&nn->client_lock);
-> +				goto retry;
-> +			}
-> +		}
-> +	}
-> +	spin_unlock(&nn->client_lock);
-> +}
-> +
->  static inline int
->  hash_sessionid(struct nfs4_sessionid *sessionid)
+>  static void seq_quote_mem(struct seq_file *m, char *data, int len)
 >  {
-> @@ -2545,6 +2611,8 @@ static int client_info_show(struct seq_file *m, voi=
-d *v)
->  	}
->  	seq_printf(m, "callback state: %s\n", cb_state2str(clp->cl_cb_state));
->  	seq_printf(m, "callback address: %pISpc\n", &clp->cl_cb_conn.cb_addr);
-> +	seq_printf(m, "admin-revoked states: %d\n",
-> +		   atomic_read(&clp->cl_admin_revoked));
->  	drop_client(clp);
+> -	seq_printf(m, "\"");
+> +	seq_puts(m, "\"");
+>  	seq_escape_mem(m, data, len, ESCAPE_HEX | ESCAPE_NAP | ESCAPE_APPEND, "=
+\"\\");
+> -	seq_printf(m, "\"");
+> +	seq_puts(m, "\"");
+>  }
+> =20
+>  static const char *cb_state2str(int state)
+> @@ -2597,14 +2597,14 @@ static int client_info_show(struct seq_file *m, v=
+oid *v)
+>  		seq_puts(m, "status: unconfirmed\n");
+>  	seq_printf(m, "seconds from last renew: %lld\n",
+>  		ktime_get_boottime_seconds() - clp->cl_time);
+> -	seq_printf(m, "name: ");
+> +	seq_puts(m, "name: ");
+>  	seq_quote_mem(m, clp->cl_name.data, clp->cl_name.len);
+>  	seq_printf(m, "\nminor version: %d\n", clp->cl_minorversion);
+>  	if (clp->cl_nii_domain.data) {
+> -		seq_printf(m, "Implementation domain: ");
+> +		seq_puts(m, "Implementation domain: ");
+>  		seq_quote_mem(m, clp->cl_nii_domain.data,
+>  					clp->cl_nii_domain.len);
+> -		seq_printf(m, "\nImplementation name: ");
+> +		seq_puts(m, "\nImplementation name: ");
+>  		seq_quote_mem(m, clp->cl_nii_name.data, clp->cl_nii_name.len);
+>  		seq_printf(m, "\nImplementation time: [%lld, %ld]\n",
+>  			clp->cl_nii_time.tv_sec, clp->cl_nii_time.tv_nsec);
+> @@ -2671,7 +2671,7 @@ static void nfs4_show_superblock(struct seq_file *s=
+, struct nfsd_file *f)
+> =20
+>  static void nfs4_show_owner(struct seq_file *s, struct nfs4_stateowner *=
+oo)
+>  {
+> -	seq_printf(s, "owner: ");
+> +	seq_puts(s, "owner: ");
+>  	seq_quote_mem(s, oo->so_owner.data, oo->so_owner.len);
+>  }
+> =20
+> @@ -2689,20 +2689,13 @@ static int nfs4_show_open(struct seq_file *s, str=
+uct nfs4_stid *st)
+>  	struct nfs4_stateowner *oo;
+>  	unsigned int access, deny;
+> =20
+> -	if (st->sc_type !=3D SC_TYPE_OPEN && st->sc_type !=3D SC_TYPE_LOCK)
+> -		return 0; /* XXX: or SEQ_SKIP? */
+>  	ols =3D openlockstateid(st);
+>  	oo =3D ols->st_stateowner;
+>  	nf =3D st->sc_file;
+> =20
+> -	spin_lock(&nf->fi_lock);
+> -	file =3D find_any_file_locked(nf);
+> -	if (!file)
+> -		goto out;
+> -
+> -	seq_printf(s, "- ");
+> +	seq_puts(s, "- ");
+>  	nfs4_show_stateid(s, &st->sc_stateid);
+> -	seq_printf(s, ": { type: open, ");
+> +	seq_puts(s, ": { type: open, ");
+> =20
+>  	access =3D bmap_to_share_mode(ols->st_access_bmap);
+>  	deny   =3D bmap_to_share_mode(ols->st_deny_bmap);
+> @@ -2714,14 +2707,17 @@ static int nfs4_show_open(struct seq_file *s, str=
+uct nfs4_stid *st)
+>  		deny & NFS4_SHARE_ACCESS_READ ? "r" : "-",
+>  		deny & NFS4_SHARE_ACCESS_WRITE ? "w" : "-");
+> =20
+> -	nfs4_show_superblock(s, file);
+> -	seq_printf(s, ", ");
+> -	nfs4_show_fname(s, file);
+> -	seq_printf(s, ", ");
+> -	nfs4_show_owner(s, oo);
+> -	seq_printf(s, " }\n");
+> -out:
+> +	spin_lock(&nf->fi_lock);
+> +	file =3D find_any_file_locked(nf);
+> +	if (file) {
+> +		nfs4_show_superblock(s, file);
+> +		seq_puts(s, ", ");
+> +		nfs4_show_fname(s, file);
+> +		seq_puts(s, ", ");
+> +	}
+>  	spin_unlock(&nf->fi_lock);
+> +	nfs4_show_owner(s, oo);
+> +	seq_puts(s, " }\n");
+>  	return 0;
+>  }
+> =20
+> @@ -2735,30 +2731,29 @@ static int nfs4_show_lock(struct seq_file *s, str=
+uct nfs4_stid *st)
+>  	ols =3D openlockstateid(st);
+>  	oo =3D ols->st_stateowner;
+>  	nf =3D st->sc_file;
+> -	spin_lock(&nf->fi_lock);
+> -	file =3D find_any_file_locked(nf);
+> -	if (!file)
+> -		goto out;
+> =20
+> -	seq_printf(s, "- ");
+> +	seq_puts(s, "- ");
+>  	nfs4_show_stateid(s, &st->sc_stateid);
+> -	seq_printf(s, ": { type: lock, ");
+> +	seq_puts(s, ": { type: lock, ");
+> =20
+> -	/*
+> -	 * Note: a lock stateid isn't really the same thing as a lock,
+> -	 * it's the locking state held by one owner on a file, and there
+> -	 * may be multiple (or no) lock ranges associated with it.
+> -	 * (Same for the matter is true of open stateids.)
+> -	 */
+> +	spin_lock(&nf->fi_lock);
+> +	file =3D find_any_file_locked(nf);
+> +	if (file) {
+> +		/*
+> +		 * Note: a lock stateid isn't really the same thing as a lock,
+> +		 * it's the locking state held by one owner on a file, and there
+> +		 * may be multiple (or no) lock ranges associated with it.
+> +		 * (Same for the matter is true of open stateids.)
+> +		 */
+> =20
+> -	nfs4_show_superblock(s, file);
+> -	/* XXX: open stateid? */
+> -	seq_printf(s, ", ");
+> -	nfs4_show_fname(s, file);
+> -	seq_printf(s, ", ");
+> +		nfs4_show_superblock(s, file);
+> +		/* XXX: open stateid? */
+> +		seq_puts(s, ", ");
+> +		nfs4_show_fname(s, file);
+> +		seq_puts(s, ", ");
+> +	}
+>  	nfs4_show_owner(s, oo);
+> -	seq_printf(s, " }\n");
+> -out:
+> +	seq_puts(s, " }\n");
+>  	spin_unlock(&nf->fi_lock);
+>  	return 0;
+>  }
+> @@ -2771,25 +2766,25 @@ static int nfs4_show_deleg(struct seq_file *s, st=
+ruct nfs4_stid *st)
+> =20
+>  	ds =3D delegstateid(st);
+>  	nf =3D st->sc_file;
+> -	spin_lock(&nf->fi_lock);
+> -	file =3D nf->fi_deleg_file;
+> -	if (!file)
+> -		goto out;
+> =20
+> -	seq_printf(s, "- ");
+> +	seq_puts(s, "- ");
+>  	nfs4_show_stateid(s, &st->sc_stateid);
+> -	seq_printf(s, ": { type: deleg, ");
+> +	seq_puts(s, ": { type: deleg, ");
+> =20
+> -	seq_printf(s, "access: %s, ",
+> -		ds->dl_type =3D=3D NFS4_OPEN_DELEGATE_READ ? "r" : "w");
+> +	seq_printf(s, "access: %s",
+> +		   ds->dl_type =3D=3D NFS4_OPEN_DELEGATE_READ ? "r" : "w");
+> =20
+>  	/* XXX: lease time, whether it's being recalled. */
+> =20
+> -	nfs4_show_superblock(s, file);
+> -	seq_printf(s, ", ");
+> -	nfs4_show_fname(s, file);
+> -	seq_printf(s, " }\n");
+> -out:
+> +	spin_lock(&nf->fi_lock);
+> +	file =3D nf->fi_deleg_file;
+> +	if (file) {
+> +		seq_puts(s, ", ");
+> +		nfs4_show_superblock(s, file);
+> +		seq_puts(s, ", ");
+> +		nfs4_show_fname(s, file);
+> +	}
+> +	seq_puts(s, " }\n");
+>  	spin_unlock(&nf->fi_lock);
+>  	return 0;
+>  }
+> @@ -2802,16 +2797,19 @@ static int nfs4_show_layout(struct seq_file *s, s=
+truct nfs4_stid *st)
+>  	ls =3D container_of(st, struct nfs4_layout_stateid, ls_stid);
+>  	file =3D ls->ls_file;
+> =20
+> -	seq_printf(s, "- ");
+> +	seq_puts(s, "- ");
+>  	nfs4_show_stateid(s, &st->sc_stateid);
+> -	seq_printf(s, ": { type: layout, ");
+> +	seq_puts(s, ": { type: layout");
+> =20
+>  	/* XXX: What else would be useful? */
+> =20
+> -	nfs4_show_superblock(s, file);
+> -	seq_printf(s, ", ");
+> -	nfs4_show_fname(s, file);
+> -	seq_printf(s, " }\n");
+> +	if (file) {
+> +		seq_puts(s, ", ");
+> +		nfs4_show_superblock(s, file);
+> +		seq_puts(s, ", ");
+> +		nfs4_show_fname(s, file);
+> +	}
+> +	seq_puts(s, " }\n");
 > =20
 >  	return 0;
-> @@ -4058,6 +4126,8 @@ nfsd4_sequence(struct svc_rqst *rqstp, struct nfsd4=
-_compound_state *cstate,
->  	}
->  	if (!list_empty(&clp->cl_revoked))
->  		seq->status_flags |=3D SEQ4_STATUS_RECALLABLE_STATE_REVOKED;
-> +	if (atomic_read(&clp->cl_admin_revoked))
-> +		seq->status_flags |=3D SEQ4_STATUS_ADMIN_STATE_REVOKED;
->  out_no_session:
->  	if (conn)
->  		free_conn(conn);
-> @@ -4546,7 +4616,9 @@ nfsd4_verify_open_stid(struct nfs4_stid *s)
->  {
->  	__be32 ret =3D nfs_ok;
-> =20
-> -	if (s->sc_status & SC_STATUS_REVOKED)
-> +	if (s->sc_status & SC_STATUS_ADMIN_REVOKED)
-> +		ret =3D nfserr_admin_revoked;
-> +	else if (s->sc_status & SC_STATUS_REVOKED)
->  		ret =3D nfserr_deleg_revoked;
->  	else if (s->sc_status & SC_STATUS_CLOSED)
->  		ret =3D nfserr_bad_stateid;
-> @@ -5137,6 +5209,11 @@ nfs4_check_deleg(struct nfs4_client *cl, struct nf=
-sd4_open *open,
->  	deleg =3D find_deleg_stateid(cl, &open->op_delegate_stateid);
->  	if (deleg =3D=3D NULL)
->  		goto out;
-> +	if (deleg->dl_stid.sc_status & SC_STATUS_ADMIN_REVOKED) {
-> +		nfs4_put_stid(&deleg->dl_stid);
-> +		status =3D nfserr_admin_revoked;
-> +		goto out;
-> +	}
->  	if (deleg->dl_stid.sc_status & SC_STATUS_REVOKED) {
->  		nfs4_put_stid(&deleg->dl_stid);
->  		status =3D nfserr_deleg_revoked;
-> @@ -6443,6 +6520,8 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *c=
-state,
->  		 */
->  		statusmask |=3D SC_STATUS_REVOKED;
-> =20
-> +	statusmask |=3D SC_STATUS_ADMIN_REVOKED;
-> +
->  	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
->  		CLOSE_STATEID(stateid))
->  		return nfserr_bad_stateid;
-> @@ -6461,6 +6540,10 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *=
-cstate,
->  		nfs4_put_stid(stid);
->  		return nfserr_deleg_revoked;
->  	}
-> +	if (stid->sc_status & SC_STATUS_ADMIN_REVOKED) {
-> +		nfs4_put_stid(stid);
-> +		return nfserr_admin_revoked;
-> +	}
->  	*s =3D stid;
->  	return nfs_ok;
 >  }
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index f206ca32e7f5..4bae65e8d28a 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -281,6 +281,7 @@ static ssize_t write_unlock_fs(struct file *file, cha=
-r *buf, size_t size)
->  	 * 3.  Is that directory the root of an exported file system?
->  	 */
->  	error =3D nlmsvc_unlock_all_by_sb(path.dentry->d_sb);
-> +	nfsd4_revoke_states(netns(file), path.dentry->d_sb);
-> =20
->  	path_put(&path);
->  	return error;
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 304e9728b929..9a86fe8a39ef 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -274,6 +274,7 @@ void		nfsd_lockd_shutdown(void);
->  #define	nfserr_no_grace		cpu_to_be32(NFSERR_NO_GRACE)
->  #define	nfserr_reclaim_bad	cpu_to_be32(NFSERR_RECLAIM_BAD)
->  #define	nfserr_badname		cpu_to_be32(NFSERR_BADNAME)
-> +#define	nfserr_admin_revoked	cpu_to_be32(NFS4ERR_ADMIN_REVOKED)
->  #define	nfserr_cb_path_down	cpu_to_be32(NFSERR_CB_PATH_DOWN)
->  #define	nfserr_locked		cpu_to_be32(NFSERR_LOCKED)
->  #define	nfserr_wrongsec		cpu_to_be32(NFSERR_WRONGSEC)
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index ffc8920d0558..7fa83265ad9a 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -112,6 +112,7 @@ struct nfs4_stid {
->  #define SC_STATUS_CLOSED	BIT(0)
->  /* For a deleg stateid kept around only to process free_stateid's: */
->  #define SC_STATUS_REVOKED	BIT(1)
-> +#define SC_STATUS_ADMIN_REVOKED	BIT(2)
->  	unsigned short		sc_status;
-> =20
->  	struct list_head	sc_cp_list;
-> @@ -367,6 +368,7 @@ struct nfs4_client {
->  	clientid_t		cl_clientid;	/* generated by server */
->  	nfs4_verifier		cl_confirm;	/* generated by server */
->  	u32			cl_minorversion;
-> +	atomic_t		cl_admin_revoked; /* count of admin-revoked states */
->  	/* NFSv4.1 client implementation id: */
->  	struct xdr_netobj	cl_nii_domain;
->  	struct xdr_netobj	cl_nii_name;
-> @@ -730,6 +732,14 @@ static inline void get_nfs4_file(struct nfs4_file *f=
-i)
->  }
->  struct nfsd_file *find_any_file(struct nfs4_file *f);
-> =20
-> +#ifdef CONFIG_NFSD_V4
-> +void nfsd4_revoke_states(struct net *net, struct super_block *sb);
-> +#else
-> +static inline void nfsd4_revoke_states(struct net *net, struct super_blo=
-ck *sb)
-> +{
-> +}
-> +#endif
-> +
->  /* grace period management */
->  void nfsd4_end_grace(struct nfsd_net *nn);
-> =20
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index fe08ca18b647..5c58da9f86b7 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -651,7 +651,8 @@ DEFINE_STATESEQID_EVENT(open_confirm);
->  #define show_stid_status(x)						\
->  	__print_flags(x, "|",						\
->  		{ SC_STATUS_CLOSED,		"CLOSED" },		\
-> -		{ SC_STATUS_REVOKED,		"REVOKED" })		\
-> +		{ SC_STATUS_REVOKED,		"REVOKED" },		\
-> +		{ SC_STATUS_ADMIN_REVOKED,	"ADMIN_REVOKED" })
-> =20
->  DECLARE_EVENT_CLASS(nfsd_stid_class,
->  	TP_PROTO(
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 
