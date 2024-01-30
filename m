@@ -1,91 +1,91 @@
-Return-Path: <linux-nfs+bounces-1584-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1585-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD3AF841823
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 02:11:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF593841824
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 02:11:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D58831C2236F
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 01:11:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3AF96B229FB
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 01:11:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F1DAD266;
-	Tue, 30 Jan 2024 01:11:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4649022083;
+	Tue, 30 Jan 2024 01:11:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dHpQzwb5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BMo94KIp";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="dHpQzwb5";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BMo94KIp"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Olc/yvaT";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Jak0cjU7";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MkYu4/98";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="W3YjmN2f"
 X-Original-To: linux-nfs@vger.kernel.org
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE1FA2C868
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Jan 2024 01:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AD4D266
+	for <linux-nfs@vger.kernel.org>; Tue, 30 Jan 2024 01:11:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706577086; cv=none; b=Ep4JwDpeE9GjHx/cGymCJuLLHYQiA91mic/7KF1a+5E1s2o+TzrEPaKkiuTmC0xDj//3Ivf2Z3/uSEaktiqM8LsMb74Am8n8taenV/vH0eftDNKyjrFgoYAvcA1lqIEHWYfXkZMH1nrU8HSOJ4ptu99gQjG+EChkn9qBD9Lc8wc=
+	t=1706577094; cv=none; b=fesz7TdInETlI0axsqRlvPFrihIEbyK+q6gndYitqT/Kv1azr2Mms6xfe+Qv05NHO+Jke7Lr73Aw957f7wL22HTIGiT1+uhLQqzUxB7c654YBq2Z2g4KV/OlafMs0t7e8cL43/8CAKwogmc0E+hygbZlb+iCFeBQjZ32bOvPBZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706577086; c=relaxed/simple;
-	bh=fnwpiq5oRli/JJD6/quVTfaym3GxEeBIkgmyfba8pG8=;
+	s=arc-20240116; t=1706577094; c=relaxed/simple;
+	bh=kStnCaeYh9I3gsYRjXIvZhMiy4LkymQxlojuk0qtUko=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oGm1de6GKDegk71ugKc1aP3Dulx4pQSUMTKeUTxiFFp9+3PANIO66Fy+BYVHrqFWXNIW3ILITNOegpAPnVNGqlQ1cag5sBsZo3YuQ2js0gk9c4DS0h4a01Qi7R03yGj5ZczZLfa09bEqbax/ZhwcNfELdZ8/hJB6l6Q+OWDS8GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dHpQzwb5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BMo94KIp; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=dHpQzwb5; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BMo94KIp; arc=none smtp.client-ip=195.135.223.130
+	 MIME-Version; b=VIdugXP65tfwurmdcIIRRKm1swzSohWkzwydsTkZQviZLfNwEuvOmmetD6Wk9IgHBIe2cq2i80lQULQwNj8TXKW0exF0TqgJwvikakSgr0gh85/puEgPNba9WEZradZrP3wbP2yy8vliNlO0uJHYZXaMNRGtAY8V6890IqugRfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Olc/yvaT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Jak0cjU7; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MkYu4/98; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=W3YjmN2f; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 11AA8220D6;
-	Tue, 30 Jan 2024 01:11:23 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id EA2C01F7ED;
+	Tue, 30 Jan 2024 01:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706577083; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1706577090; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pCpc8SH1qg4Eq1cmloG4WGzhBbHWqgT8QyYtq8cCYxc=;
-	b=dHpQzwb5KkJa/i4mlc1bCiE2pyFVK3qlZfXIVBYw90gn2KAFmTHF4AjAS1h2rjNlabb0tQ
-	Y6Xd0CpuHCC+UDAv3Fp0Xl3BerZcrmEf8KYRYBCRwO9gWDmo07TEsm3Q5wAvYqejdP/w3Y
-	ePOnX2oMGo5Skgc8ZKqrkOcV4fWZIJc=
+	bh=bZs+ONYOZpKeX4h+oQ+9vW74ciSIq6qS9ax6DvIFoRY=;
+	b=Olc/yvaT06q0S7Z5KbOtLfGJJtsQciLzmKpfzB9q+vv31pEvCsqem7+v3G71uFkLqlH88n
+	PYtPRQotqwhoChljNh5OlLnWgFkODGuZJklzE+xC6mgq+uqQ6QnpbxBzWPsER8hq/AYb4k
+	sw7BrqgZjbOa0KormDwgH6M0ctLo3/A=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706577083;
+	s=susede2_ed25519; t=1706577090;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pCpc8SH1qg4Eq1cmloG4WGzhBbHWqgT8QyYtq8cCYxc=;
-	b=BMo94KIpF+JdkqDrWLFuNgoL+nWz16AeiDrbOEPk71PUKMvjYE6nv75S4IxyktoTmUlKpa
-	kK5HOabUCW1C1jCg==
+	bh=bZs+ONYOZpKeX4h+oQ+9vW74ciSIq6qS9ax6DvIFoRY=;
+	b=Jak0cjU7fcivpwZobJVTrmQg1V71NnqVC5TzhUPJcBr9ebq4ilb5nRPRdAWAtctOEfMU+x
+	CgSB0nTmGDrc5+DA==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1706577083; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1706577088; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pCpc8SH1qg4Eq1cmloG4WGzhBbHWqgT8QyYtq8cCYxc=;
-	b=dHpQzwb5KkJa/i4mlc1bCiE2pyFVK3qlZfXIVBYw90gn2KAFmTHF4AjAS1h2rjNlabb0tQ
-	Y6Xd0CpuHCC+UDAv3Fp0Xl3BerZcrmEf8KYRYBCRwO9gWDmo07TEsm3Q5wAvYqejdP/w3Y
-	ePOnX2oMGo5Skgc8ZKqrkOcV4fWZIJc=
+	bh=bZs+ONYOZpKeX4h+oQ+9vW74ciSIq6qS9ax6DvIFoRY=;
+	b=MkYu4/98Fsl33ktaGf0n9+oQ61wNoXhG95/fIXdFopekkTk5LdDTPva7rwM3BQw4apgV4A
+	DkEAn3Cg/LyLVfXdcLZDgcnnx7/FZbO0yF53c1KDXiQFv4Sk5MTHT4bk1ZUmqBRN2t54of
+	JiDrSdd1Pi+6hZO3p7h/ZvK0zQcSIWk=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1706577083;
+	s=susede2_ed25519; t=1706577088;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pCpc8SH1qg4Eq1cmloG4WGzhBbHWqgT8QyYtq8cCYxc=;
-	b=BMo94KIpF+JdkqDrWLFuNgoL+nWz16AeiDrbOEPk71PUKMvjYE6nv75S4IxyktoTmUlKpa
-	kK5HOabUCW1C1jCg==
+	bh=bZs+ONYOZpKeX4h+oQ+9vW74ciSIq6qS9ax6DvIFoRY=;
+	b=W3YjmN2f29OE+0CBjC+2w3EQTD38FwfUv72lGNKJV/yjWPARJ+8YO3d0Ye/rT+ko7NCGXk
+	Yfy1KNK19cg0N9AA==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 735A412FF7;
-	Tue, 30 Jan 2024 01:11:20 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 5763412FF7;
+	Tue, 30 Jan 2024 01:11:26 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([10.150.64.162])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id XTUeC7hMuGWcQAAAD6G6ig
-	(envelope-from <neilb@suse.de>); Tue, 30 Jan 2024 01:11:20 +0000
+	id KRs6BL5MuGWhQAAAD6G6ig
+	(envelope-from <neilb@suse.de>); Tue, 30 Jan 2024 01:11:26 +0000
 From: NeilBrown <neilb@suse.de>
 To: Chuck Lever <chuck.lever@oracle.com>,
 	Jeff Layton <jlayton@kernel.org>
@@ -95,9 +95,9 @@ Cc: linux-nfs@vger.kernel.org,
 	Tom Talpey <tom@talpey.com>,
 	Christoph Hellwig <hch@lst.de>,
 	Tom Haynes <loghyr@gmail.com>
-Subject: [PATCH 02/13] nfsd: hold ->cl_lock for hash_delegation_locked()
-Date: Tue, 30 Jan 2024 12:08:22 +1100
-Message-ID: <20240130011102.8623-3-neilb@suse.de>
+Subject: [PATCH 03/13] nfsd: don't call functions with side-effecting inside WARN_ON()
+Date: Tue, 30 Jan 2024 12:08:23 +1100
+Message-ID: <20240130011102.8623-4-neilb@suse.de>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240130011102.8623-1-neilb@suse.de>
 References: <20240130011102.8623-1-neilb@suse.de>
@@ -108,14 +108,11 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=dHpQzwb5;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=BMo94KIp
-X-Spamd-Result: default: False [3.69 / 50.00];
+Authentication-Results: smtp-out2.suse.de;
+	none
+X-Spamd-Result: default: False [4.87 / 50.00];
 	 ARC_NA(0.00)[];
 	 RCVD_VIA_SMTP_AUTH(0.00)[];
-	 R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
 	 FROM_HAS_DN(0.00)[];
 	 TO_DN_SOME(0.00)[];
 	 FREEMAIL_ENVRCPT(0.00)[gmail.com];
@@ -123,11 +120,8 @@ X-Spamd-Result: default: False [3.69 / 50.00];
 	 MIME_GOOD(-0.10)[text/plain];
 	 TO_MATCH_ENVRCPT_ALL(0.00)[];
 	 BROKEN_CONTENT_TYPE(1.50)[];
-	 DWL_DNSWL_LOW(-1.00)[suse.de:dkim];
 	 RCVD_COUNT_THREE(0.00)[3];
 	 DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	 DKIM_TRACE(0.00)[suse.de:+];
-	 MX_GOOD(-0.01)[];
 	 RCPT_COUNT_SEVEN(0.00)[8];
 	 MID_CONTAINS_FROM(1.00)[];
 	 FUZZY_BLOCKED(0.00)[rspamd.com];
@@ -135,71 +129,85 @@ X-Spamd-Result: default: False [3.69 / 50.00];
 	 MIME_TRACE(0.00)[0:+];
 	 FREEMAIL_CC(0.00)[vger.kernel.org,netapp.com,oracle.com,talpey.com,lst.de,gmail.com];
 	 RCVD_TLS_ALL(0.00)[];
-	 BAYES_HAM(-0.00)[21.69%]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: 3.69
-X-Rspamd-Queue-Id: 11AA8220D6
-X-Spam-Level: ***
+	 BAYES_HAM(-0.03)[55.92%]
+X-Spam-Level: ****
+X-Spam-Score: 4.87
 X-Spam-Flag: NO
-X-Spamd-Bar: +++
 
-The protocol for creating a new state in nfsd is to allocate the state
-leaving it largely uninitialised, add that state to the ->cl_stateids
-idr so as to reserve a state-id, then complete initialisation of the
-state and only set ->sc_type to non-zero once the state is fully
-initialised.
+Code like:
 
-If a state is found in the idr with ->sc_type == 0, it is ignored.
-The ->cl_lock lock is used to avoid races - it is held while checking
-sc_type during lookup, and held when a non-zero value is stored in
-->sc_type.
+    WARN_ON(foo())
 
-... except... hash_delegation_locked() finalises the initialisation of a
-delegation state, but does NOT hold ->cl_lock.
+looks like an assertion and might not be expected to have any side
+effects.
+When testing if a function with side-effects fails a construct like
 
-So this patch takes ->cl_lock at the appropriate time w.r.t other locks,
-and so ensures there are no races (which are extremely unlikely in any
-case).
-As ->fi_lock is often taken when ->cl_lock is held, we need to take
-->cl_lock first of those two.
-Currently ->cl_lock and state_lock are never both taken at the same time.
-We need both for this patch so an arbitrary choice is needed concerning
-which to take first.  As state_lock is more global, it might be more
-contended, so take it first.
+    if (foo())
+       WARN_ON(1);
 
+makes the intent more obvious.
+
+nfsd has several WARN_ON calls where the test has side effects, so it
+would be good to change them.  These cases don't really need the
+WARN_ON.  They have never failed in 8 years of usage so let's just
+remove the WARN_ON wrapper.
+
+Suggested-by: Chuck Lever <chuck.lever@oracle.com>
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4state.c | 3 +++
- 1 file changed, 3 insertions(+)
+ fs/nfsd/nfs4state.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 5e640e9945cd..ae00f9327245 100644
+index ae00f9327245..59982fa5d4fa 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -1312,6 +1312,7 @@ hash_delegation_locked(struct nfs4_delegation *dp, struct nfs4_file *fp)
- 
- 	lockdep_assert_held(&state_lock);
- 	lockdep_assert_held(&fp->fi_lock);
-+	lockdep_assert_held(&clp->cl_lock);
- 
- 	if (nfs4_delegation_exists(clp, fp))
- 		return -EAGAIN;
-@@ -5558,12 +5559,14 @@ nfs4_set_delegation(struct nfsd4_open *open, struct nfs4_ol_stateid *stp,
- 		goto out_unlock;
- 
+@@ -1600,7 +1600,7 @@ static void release_open_stateid_locks(struct nfs4_ol_stateid *open_stp,
+ 	while (!list_empty(&open_stp->st_locks)) {
+ 		stp = list_entry(open_stp->st_locks.next,
+ 				struct nfs4_ol_stateid, st_locks);
+-		WARN_ON(!unhash_lock_stateid(stp));
++		unhash_lock_stateid(stp);
+ 		put_ol_stateid_locked(stp, reaplist);
+ 	}
+ }
+@@ -2229,7 +2229,7 @@ __destroy_client(struct nfs4_client *clp)
  	spin_lock(&state_lock);
-+	spin_lock(&clp->cl_lock);
- 	spin_lock(&fp->fi_lock);
- 	if (fp->fi_had_conflict)
- 		status = -EAGAIN;
- 	else
- 		status = hash_delegation_locked(dp, fp);
- 	spin_unlock(&fp->fi_lock);
-+	spin_unlock(&clp->cl_lock);
+ 	while (!list_empty(&clp->cl_delegations)) {
+ 		dp = list_entry(clp->cl_delegations.next, struct nfs4_delegation, dl_perclnt);
+-		WARN_ON(!unhash_delegation_locked(dp));
++		unhash_delegation_locked(dp);
+ 		list_add(&dp->dl_recall_lru, &reaplist);
+ 	}
  	spin_unlock(&state_lock);
- 
- 	if (status)
+@@ -6170,7 +6170,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+ 		if (!state_expired(&lt, dp->dl_time))
+ 			break;
+-		WARN_ON(!unhash_delegation_locked(dp));
++		unhash_delegation_locked(dp);
+ 		list_add(&dp->dl_recall_lru, &reaplist);
+ 	}
+ 	spin_unlock(&state_lock);
+@@ -8010,7 +8010,7 @@ nfsd4_release_lockowner(struct svc_rqst *rqstp,
+ 		stp = list_first_entry(&lo->lo_owner.so_stateids,
+ 				       struct nfs4_ol_stateid,
+ 				       st_perstateowner);
+-		WARN_ON(!unhash_lock_stateid(stp));
++		unhash_lock_stateid(stp);
+ 		put_ol_stateid_locked(stp, &reaplist);
+ 	}
+ 	spin_unlock(&clp->cl_lock);
+@@ -8303,7 +8303,7 @@ nfs4_state_shutdown_net(struct net *net)
+ 	spin_lock(&state_lock);
+ 	list_for_each_safe(pos, next, &nn->del_recall_lru) {
+ 		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+-		WARN_ON(!unhash_delegation_locked(dp));
++		unhash_delegation_locked(dp);
+ 		list_add(&dp->dl_recall_lru, &reaplist);
+ 	}
+ 	spin_unlock(&state_lock);
 -- 
 2.43.0
 
