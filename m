@@ -1,57 +1,56 @@
-Return-Path: <linux-nfs+bounces-1599-lists+linux-nfs=lfdr.de@vger.kernel.org>
+Return-Path: <linux-nfs+bounces-1600-lists+linux-nfs=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94DF98424BB
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 13:21:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53EA08426D7
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 15:24:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22D4B1F2735F
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 12:21:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0B5EB28239A
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Jan 2024 14:24:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C018D6A017;
-	Tue, 30 Jan 2024 12:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D35C46DCF4;
+	Tue, 30 Jan 2024 14:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S2fkQyTo"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHJKZfSj"
 X-Original-To: linux-nfs@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE956A015
-	for <linux-nfs@vger.kernel.org>; Tue, 30 Jan 2024 12:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6846D1C3
+	for <linux-nfs@vger.kernel.org>; Tue, 30 Jan 2024 14:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706617311; cv=none; b=eCxGyxg3eARlk+H2DbceoXjOBwXfDuS/f3HdIGJcy/s+23omA0931rCZhFFtUYSDO4r6XTp8LwmGxHnBaTtCWaPz3CaQQO0QM7XcvCrCc1HyxFEUSaSanZ78202dQVJAxHALV6IUHWkSGgg5ECJKeeRJ5L9zBlTjNPqSPRAhRG4=
+	t=1706624652; cv=none; b=OdpDVlDwC23nLDhjxSD6DuK4p6+zQ34/Vvrbr8B0QGMZXfLK/LHj2lhrOIbFD+qPxbUIF0SU137FsBuYmXbiGUWQPWlT3UiPU4FYfaNRliFXRyjfKvL9grYLo6D2U3/tiz86tRx1mQZUj2zlGfAIxWtUh8wzGlnDvbIeSYAlx/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706617311; c=relaxed/simple;
-	bh=omFjbbMTznY2YOLy0YOINIHuR7M9DZQAtChRaMp5pr4=;
+	s=arc-20240116; t=1706624652; c=relaxed/simple;
+	bh=jA2TZnpBj/8fZ1J5x1RB26gZPYCdD66eL8j9gyIHJQI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Ondi+vmEilMyQES+BJKZtkSHzOclOAUTWLPd5hUU+ZF03nNt38PVaEhCoMe/h48zYfywlP5YQRxfn3xWdmX/Y905cCNg4unYfLmbmTJjvO7gqaCUVEgvBmPuI14ojZM2+e3ZFmRagVS9OdszmyCAzd52bE8UEAUFDdsm7fq9gIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S2fkQyTo; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C65BC433C7;
-	Tue, 30 Jan 2024 12:21:50 +0000 (UTC)
+	 Content-Type:MIME-Version; b=sv5g4k1jMGTVbmHnbb+ww72GtJ9dX6cyZ3jTW0LGa5A2aCWxN6oZ7NFmKWkJAR53CwLY67pZ6oic2uCkz+1i/oa73HnlM9Oe4y82MO9mP6+nowUAGx2CsfM+NfsAnjopboRLYduFWLIz+aYywfY5PRB03zYiUzDKkI0LKlB/8tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHJKZfSj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BDD5C433F1;
+	Tue, 30 Jan 2024 14:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706617311;
-	bh=omFjbbMTznY2YOLy0YOINIHuR7M9DZQAtChRaMp5pr4=;
+	s=k20201202; t=1706624652;
+	bh=jA2TZnpBj/8fZ1J5x1RB26gZPYCdD66eL8j9gyIHJQI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=S2fkQyToey5b8wAvZKg+xPoiB1i0C3AiK0SfpQ7sDBRzN1QPo2mPI6YKCn56/NF0e
-	 Riwu5bpkhOWxMEtGPpFogYH7ptkv2mBmHeur/QTFCrKWOG4XJL8sJtVDG3DYBleVi7
-	 yDf/sj78y6lFeZpZHwIpdX34HYesCrd20FmQorpLOJyV/6c6QZXcx73oaeGeeJJsDl
-	 VuezylUon9MAOXvOc/N5CcbSAEMrxXen3dmh3EJnBnZ3k8cGz9b1VkszYULkrDrklU
-	 KyFDZpE+m10Z02uXrygAlh0dserrc1GuW9FDVXXiOOXg6FQlet24t6LobZFT62hwIl
-	 kl4A0h9HLRukA==
-Message-ID: <a9f76a1fa6362ad92e37c22d28940896d378890a.camel@kernel.org>
-Subject: Re: [PATCH 13/13] nfsd: allow layout state to be admin-revoked.
+	b=LHJKZfSjBsttSLPPZ8ca9aqBCnEpgt1lE0k8GF+O36PquTCTecIkBRUSEymEFPDv3
+	 guho00YxELjZf8UOce5YC+vpSc69TiYzqMtSkWBmFn9bvB0klJTnw+JFyIjr++TMIK
+	 caAd7P21MyEfzHBOdueTxFoZGyFkn1nO09TJGUcttLcdb0elqv+O9v919Ca5asJaoG
+	 WU6EcZRD3PTG3g+5CbCDNTF6/cSjdnFYgXqrFVA6avWUGxY6rB7XvanF/QVYabF/sw
+	 rG3vilVMMg55kqz2t8/Xmz0BxgtB5UNUDbiSpga2nUqJeSnESKu3wKLOjvJik3knlp
+	 rKeKJMnTd0XVQ==
+Message-ID: <3c10192ac3d70834b6c721dc756ddab0a28b87b9.camel@kernel.org>
+Subject: Re: [PATCH] nfs: fix regression in handling of fsc= option in NFSv4
 From: Jeff Layton <jlayton@kernel.org>
-To: NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc: linux-nfs@vger.kernel.org, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Christoph Hellwig
- <hch@lst.de>,  Tom Haynes <loghyr@gmail.com>
-Date: Tue, 30 Jan 2024 07:21:49 -0500
-In-Reply-To: <20240130011102.8623-14-neilb@suse.de>
-References: <20240130011102.8623-1-neilb@suse.de>
-	 <20240130011102.8623-14-neilb@suse.de>
+To: Chen Hanxiao <chenhx.fnst@fujitsu.com>, Trond Myklebust
+	 <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>
+Cc: linux-nfs@vger.kernel.org, Dave Wysochanski <dwysocha@redhat.com>, David
+	Howells <dhowells@redhat.com>
+Date: Tue, 30 Jan 2024 09:24:10 -0500
+In-Reply-To: <20240124143755.2184-1-chenhx.fnst@fujitsu.com>
+References: <20240124143755.2184-1-chenhx.fnst@fujitsu.com>
 Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBE6V0TwBEADXhJg7s8wFDwBMEvn0qyhAnzFLTOCHooMZyx7XO7dAiIhDSi7G1NPxwn8jdFUQMCR/GlpozMFlSFiZXiObE7sef9rTtM68ukUyZM4pJ9l0KjQNgDJ6Fr342Htkjxu/kFV1WvegyjnSsFt7EGoDjdKqr1TS9syJYFjagYtvWk/UfHlW09X+jOh4vYtfX7iYSx/NfqV3W1D7EDi0PqVT2h6v8i8YqsATFPwO4nuiTmL6I40ZofxVd+9wdRI4Db8yUNA4ZSP2nqLcLtFjClYRBoJvRWvsv4lm0OX6MYPtv76hka8lW4mnRmZqqx3UtfHX/hF/zH24Gj7A6sYKYLCU3YrI2Ogiu7/ksKcl7goQjpvtVYrOOI5VGLHge0awt7bhMCTM9KAfPc+xL/ZxAMVWd3NCk5SamL2cE99UWgtvNOIYU8m6EjTLhsj8snVluJH0/RcxEeFbnSaswVChNSGa7mXJrTR22lRL6ZPjdMgS2Km90haWPRc8Wolcz07Y2se0xpGVLEQcDEsvv5IMmeMe1/qLZ6NaVkNuL3WOXvxaVT9USW1+/SGipO2IpKJjeDZfehlB/kpfF24+RrK+seQfCBYyUE8QJpvTZyfUHNYldXlrjO6n5MdOempLqWpfOmcGkwnyNRBR46g/jf8KnPRwXs509yAqDB6sELZH+yWr9LQZEwARAQABtCVKZWZmIExheXRvbiA8amxheXRvbkBwb29jaGllcmVkcy5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAUCTpXWPAIZAQAKCRAADmhBGVaCFc65D/4gBLNMHopQYgG/9RIM3kgFCCQV0pLv0hcg1cjr+bPI5f1PzJoOVi9s0wBDHwp8+vtHgYhM54yt43uI7Htij0RHFL5eFqoVT4TSfAg2qlvNemJEOY0e4daljjmZM7UtmpGs9NN0r9r50W82eb5Kw5bc/
 	r0kmR/arUS2st+ecRsCnwAOj6HiURwIgfDMHGPtSkoPpu3DDp/cjcYUg3HaOJuTjtGHFH963B+f+hyQ2BrQZBBE76ErgTDJ2Db9Ey0kw7VEZ4I2nnVUY9B5dE2pJFVO5HJBMp30fUGKvwaKqYCU2iAKxdmJXRIONb7dSde8LqZahuunPDMZyMA5+mkQl7kpIpR6kVDIiqmxzRuPeiMP7O2FCUlS2DnJnRVrHmCljLkZWf7ZUA22wJpepBligemtSRSbqCyZ3B48zJ8g5B8xLEntPo/NknSJaYRvfEQqGxgk5kkNWMIMDkfQOlDSXZvoxqU9wFH/9jTv1/6p8dHeGM0BsbBLMqQaqnWiVt5mG92E1zkOW69LnoozE6Le+12DsNW7RjiR5K+27MObjXEYIW7FIvNN/TQ6U1EOsdxwB8o//Yfc3p2QqPr5uS93SDDan5ehH59BnHpguTc27XiQQZ9EGiieCUx6Zh2ze3X2UW9YNzE15uKwkkuEIj60NvQRmEDfweYfOfPVOueC+iFifbQgSmVmZiBMYXl0b24gPGpsYXl0b25AcmVkaGF0LmNvbT6JAjgEEwECACIFAk6V0q0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEAAOaEEZVoIViKUQALpvsacTMWWOd7SlPFzIYy2/fjvKlfB/Xs4YdNcf9qLqF+lk2RBUHdR/dGwZpvw/OLmnZ8TryDo2zXVJNWEEUFNc7wQpl3i78r6UU/GUY/RQmOgPhs3epQC3PMJj4xFx+VuVcf/MXgDDdBUHaCTT793hyBeDbQuciARDJAW24Q1RCmjcwWIV/pgrlFa4lAXsmhoac8UPc82Ijrs6ivlTweFf16VBc4nSLX5FB3ls7S5noRhm5/Zsd4PGPgIHgCZcPgkAnU1S/A/rSqf3FLpU+CbVBDvlVAnOq9gfNF+QiTlOHdZVIe4gEYAU3CUjbleywQqV02BKxPVM0C5/oVjMVx
@@ -71,244 +70,76 @@ List-Subscribe: <mailto:linux-nfs+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-nfs+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Tue, 2024-01-30 at 12:08 +1100, NeilBrown wrote:
-> When there is layout state on a filesystem that is being "unlocked" that
-> is now revoked, which involves closing the nfsd_file and releasing the
-> vfs lease.
+On Wed, 2024-01-24 at 22:37 +0800, Chen Hanxiao wrote:
+> Setting the uniquifier for fscache via the fsc=3D mount
+> option is currently broken in NFSv4.
 >=20
-> To avoid races, ->ls_file can now be accessed either:
->  - under ->fi_lock for the state's sc_file or
->  - under rcu_read_lock() if nfsd_file_get() is used.
-> To support this, ->fence_client and nfsd4_cb_layout_fail() now take a
-> second argument being the nfsd_file.
+> Fix this by passing fscache_uniq to root_fc if possible.
 >=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: Chen Hanxiao <chenhx.fnst@fujitsu.com>
 > ---
->  fs/nfsd/blocklayout.c |  4 ++--
->  fs/nfsd/nfs4layouts.c | 43 ++++++++++++++++++++++++++++++++-----------
->  fs/nfsd/nfs4state.c   | 11 +++++++++--
->  fs/nfsd/pnfs.h        |  8 +++++++-
->  4 files changed, 50 insertions(+), 16 deletions(-)
+>  fs/nfs/nfs4super.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 >=20
-> diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-> index 46fd74d91ea9..3c040c81c77d 100644
-> --- a/fs/nfsd/blocklayout.c
-> +++ b/fs/nfsd/blocklayout.c
-> @@ -328,10 +328,10 @@ nfsd4_scsi_proc_layoutcommit(struct inode *inode,
->  }
-> =20
->  static void
-> -nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls)
-> +nfsd4_scsi_fence_client(struct nfs4_layout_stateid *ls, struct nfsd_file=
- *file)
+> diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+> index d09bcfd7db89..669d7f65ef9c 100644
+> --- a/fs/nfs/nfs4super.c
+> +++ b/fs/nfs/nfs4super.c
+> @@ -145,6 +145,7 @@ static int do_nfs4_mount(struct nfs_server *server,
+>  			 const char *export_path)
 >  {
->  	struct nfs4_client *clp =3D ls->ls_stid.sc_client;
-> -	struct block_device *bdev =3D ls->ls_file->nf_file->f_path.mnt->mnt_sb-=
->s_bdev;
-> +	struct block_device *bdev =3D file->nf_file->f_path.mnt->mnt_sb->s_bdev=
-;
+>  	struct nfs_fs_context *root_ctx;
+> +	struct nfs_fs_context *ctx;
+>  	struct fs_context *root_fc;
+>  	struct vfsmount *root_mnt;
+>  	struct dentry *dentry;
+> @@ -157,6 +158,12 @@ static int do_nfs4_mount(struct nfs_server *server,
+>  		.dirfd	=3D -1,
+>  	};
 > =20
->  	bdev->bd_disk->fops->pr_ops->pr_preempt(bdev, NFSD_MDS_PR_KEY,
->  			nfsd4_scsi_pr_key(clp), 0, true);
-> diff --git a/fs/nfsd/nfs4layouts.c b/fs/nfsd/nfs4layouts.c
-> index 857b822450b4..1cfd61db2472 100644
-> --- a/fs/nfsd/nfs4layouts.c
-> +++ b/fs/nfsd/nfs4layouts.c
-> @@ -152,6 +152,23 @@ void nfsd4_setup_layout_type(struct svc_export *exp)
->  #endif
->  }
-> =20
-> +void nfsd4_close_layout(struct nfs4_layout_stateid *ls)
-> +{
-> +	struct nfsd_file *fl;
+> +	struct fs_parameter param_fsc =3D {
+> +		.key	=3D "fsc",
+> +		.type	=3D fs_value_is_string,
+> +		.dirfd	=3D -1,
+> +	};
 > +
-> +	spin_lock(&ls->ls_stid.sc_file->fi_lock);
-> +	fl =3D ls->ls_file;
-> +	ls->ls_file =3D NULL;
-> +	spin_unlock(&ls->ls_stid.sc_file->fi_lock);
+>  	if (IS_ERR(server))
+>  		return PTR_ERR(server);
+> =20
+> @@ -168,9 +175,26 @@ static int do_nfs4_mount(struct nfs_server *server,
+>  	kfree(root_fc->source);
+>  	root_fc->source =3D NULL;
+> =20
+> +	ctx =3D nfs_fc2context(fc);
+>  	root_ctx =3D nfs_fc2context(root_fc);
+>  	root_ctx->internal =3D true;
+>  	root_ctx->server =3D server;
 > +
-> +	if (fl) {
-> +		if (!nfsd4_layout_ops[ls->ls_layout_type]->disable_recalls)
-> +			vfs_setlease(fl->nf_file, F_UNLCK, NULL,
-> +				     (void **)&ls);
-> +		nfsd_file_put(fl);
-> +	}
-> +}
-> +
->  static void
->  nfsd4_free_layout_stateid(struct nfs4_stid *stid)
->  {
-> @@ -169,9 +186,7 @@ nfsd4_free_layout_stateid(struct nfs4_stid *stid)
->  	list_del_init(&ls->ls_perfile);
->  	spin_unlock(&fp->fi_lock);
-> =20
-> -	if (!nfsd4_layout_ops[ls->ls_layout_type]->disable_recalls)
-> -		vfs_setlease(ls->ls_file->nf_file, F_UNLCK, NULL, (void **)&ls);
-> -	nfsd_file_put(ls->ls_file);
-> +	nfsd4_close_layout(ls);
-> =20
->  	if (ls->ls_recalled)
->  		atomic_dec(&ls->ls_stid.sc_file->fi_lo_recalls);
-> @@ -605,7 +620,7 @@ nfsd4_return_all_file_layouts(struct nfs4_client *clp=
-, struct nfs4_file *fp)
->  }
-> =20
->  static void
-> -nfsd4_cb_layout_fail(struct nfs4_layout_stateid *ls)
-> +nfsd4_cb_layout_fail(struct nfs4_layout_stateid *ls, struct nfsd_file *f=
-ile)
->  {
->  	struct nfs4_client *clp =3D ls->ls_stid.sc_client;
->  	char addr_str[INET6_ADDRSTRLEN];
-> @@ -627,7 +642,7 @@ nfsd4_cb_layout_fail(struct nfs4_layout_stateid *ls)
-> =20
->  	argv[0] =3D (char *)nfsd_recall_failed;
->  	argv[1] =3D addr_str;
-> -	argv[2] =3D ls->ls_file->nf_file->f_path.mnt->mnt_sb->s_id;
-> +	argv[2] =3D file->nf_file->f_path.mnt->mnt_sb->s_id;
->  	argv[3] =3D NULL;
-> =20
->  	error =3D call_usermodehelper(nfsd_recall_failed, argv, envp,
-> @@ -657,6 +672,7 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, struc=
-t rpc_task *task)
->  	struct nfsd_net *nn;
->  	ktime_t now, cutoff;
->  	const struct nfsd4_layout_ops *ops;
-> +	struct nfsd_file *fl;
-> =20
->  	trace_nfsd_cb_layout_done(&ls->ls_stid.sc_stateid, task);
->  	switch (task->tk_status) {
-> @@ -688,12 +704,17 @@ nfsd4_cb_layout_done(struct nfsd4_callback *cb, str=
-uct rpc_task *task)
->  		 * Unknown error or non-responding client, we'll need to fence.
->  		 */
->  		trace_nfsd_layout_recall_fail(&ls->ls_stid.sc_stateid);
-> -
-> -		ops =3D nfsd4_layout_ops[ls->ls_layout_type];
-> -		if (ops->fence_client)
-> -			ops->fence_client(ls);
-> -		else
-> -			nfsd4_cb_layout_fail(ls);
-> +		rcu_read_lock();
-> +		fl =3D nfsd_file_get(ls->ls_file);
-> +		rcu_read_unlock();
-
-I'm still wondering about the rcu_read_lock above. It's probably
-harmless, but it seems unnecessary since you already hold a reference to
-"ls". Is there a reason for it?
-
-> +		if (fl) {
-> +			ops =3D nfsd4_layout_ops[ls->ls_layout_type];
-> +			if (ops->fence_client)
-> +				ops->fence_client(ls, fl);
-> +			else
-> +				nfsd4_cb_layout_fail(ls, fl);
-> +			nfsd_file_put(fl);
+> +	if (ctx->fscache_uniq) {
+> +		len =3D strlen(ctx->fscache_uniq) + 1;
+> +		param_fsc.string =3D kmalloc(len, GFP_KERNEL);
+> +		if (param_fsc.string =3D=3D NULL) {
+> +			put_fs_context(root_fc);
+> +			return -ENOMEM;
 > +		}
->  		return 1;
->  	case -NFS4ERR_NOMATCHING_LAYOUT:
->  		trace_nfsd_layout_recall_done(&ls->ls_stid.sc_stateid);
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index fe21af8dfc68..a66d66b9f769 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1721,7 +1721,7 @@ void nfsd4_revoke_states(struct net *net, struct su=
-per_block *sb)
->  	unsigned int idhashval;
->  	unsigned int sc_types;
+> +		param_fsc.size =3D snprintf(param_fsc.string, len, "%s", ctx->fscache_=
+uniq);
+
+After getting the size, you can just call kmemdup_nul instead of doing
+this manually.
+
+> +		ret =3D vfs_parse_fs_param(root_fc, &param_fsc);
+> +		kfree(param_fsc.string);
+> +		if (ret < 0) {
+> +			put_fs_context(root_fc);
+> +			return ret;
+> +		}
+> +	}
+>  	/* We leave export_path unset as it's not used to find the root. */
 > =20
-> -	sc_types =3D SC_TYPE_OPEN | SC_TYPE_LOCK | SC_TYPE_DELEG;
-> +	sc_types =3D SC_TYPE_OPEN | SC_TYPE_LOCK | SC_TYPE_DELEG | SC_TYPE_LAYO=
-UT;
-> =20
->  	spin_lock(&nn->client_lock);
->  	for (idhashval =3D 0; idhashval < CLIENT_HASH_MASK; idhashval++) {
-> @@ -1734,6 +1734,7 @@ void nfsd4_revoke_states(struct net *net, struct su=
-per_block *sb)
->  			if (stid) {
->  				struct nfs4_ol_stateid *stp;
->  				struct nfs4_delegation *dp;
-> +				struct nfs4_layout_stateid *ls;
-> =20
->  				spin_unlock(&nn->client_lock);
->  				switch (stid->sc_type) {
-> @@ -1789,6 +1790,10 @@ void nfsd4_revoke_states(struct net *net, struct s=
-uper_block *sb)
->  					if (dp)
->  						revoke_delegation(dp);
->  					break;
-> +				case SC_TYPE_LAYOUT:
-> +					ls =3D layoutstateid(stid);
-> +					nfsd4_close_layout(ls);
-> +					break;
->  				}
->  				nfs4_put_stid(stid);
->  				spin_lock(&nn->client_lock);
-> @@ -2868,7 +2873,6 @@ static int nfs4_show_layout(struct seq_file *s, str=
-uct nfs4_stid *st)
->  	struct nfsd_file *file;
-> =20
->  	ls =3D container_of(st, struct nfs4_layout_stateid, ls_stid);
-> -	file =3D ls->ls_file;
-> =20
->  	seq_puts(s, "- ");
->  	nfs4_show_stateid(s, &st->sc_stateid);
-> @@ -2876,12 +2880,15 @@ static int nfs4_show_layout(struct seq_file *s, s=
-truct nfs4_stid *st)
-> =20
->  	/* XXX: What else would be useful? */
-> =20
-> +	spin_lock(&ls->ls_stid.sc_file->fi_lock);
-> +	file =3D ls->ls_file;
->  	if (file) {
->  		seq_puts(s, ", ");
->  		nfs4_show_superblock(s, file);
->  		seq_puts(s, ", ");
->  		nfs4_show_fname(s, file);
->  	}
-> +	spin_unlock(&ls->ls_stid.sc_file->fi_lock);
->  	if (st->sc_status & SC_STATUS_ADMIN_REVOKED)
->  		seq_puts(s, ", admin-revoked");
->  	seq_puts(s, " }\n");
-> diff --git a/fs/nfsd/pnfs.h b/fs/nfsd/pnfs.h
-> index de1e0dfed06a..925817f66917 100644
-> --- a/fs/nfsd/pnfs.h
-> +++ b/fs/nfsd/pnfs.h
-> @@ -37,7 +37,8 @@ struct nfsd4_layout_ops {
->  	__be32 (*proc_layoutcommit)(struct inode *inode,
->  			struct nfsd4_layoutcommit *lcp);
-> =20
-> -	void (*fence_client)(struct nfs4_layout_stateid *ls);
-> +	void (*fence_client)(struct nfs4_layout_stateid *ls,
-> +			     struct nfsd_file *file);
->  };
-> =20
->  extern const struct nfsd4_layout_ops *nfsd4_layout_ops[];
-> @@ -72,11 +73,13 @@ void nfsd4_setup_layout_type(struct svc_export *exp);
->  void nfsd4_return_all_client_layouts(struct nfs4_client *);
->  void nfsd4_return_all_file_layouts(struct nfs4_client *clp,
->  		struct nfs4_file *fp);
-> +void nfsd4_close_layout(struct nfs4_layout_stateid *ls);
->  int nfsd4_init_pnfs(void);
->  void nfsd4_exit_pnfs(void);
->  #else
->  struct nfs4_client;
->  struct nfs4_file;
-> +struct nfs4_layout_stateid;
-> =20
->  static inline void nfsd4_setup_layout_type(struct svc_export *exp)
->  {
-> @@ -89,6 +92,9 @@ static inline void nfsd4_return_all_file_layouts(struct=
- nfs4_client *clp,
->  		struct nfs4_file *fp)
->  {
->  }
-> +static inline void nfsd4_close_layout(struct nfs4_layout_stateid *ls)
-> +{
-> +}
->  static inline void nfsd4_exit_pnfs(void)
->  {
->  }
+>  	len =3D strlen(hostname) + 5;
+
+The problem and fix looks about right though.
 
 --=20
 Jeff Layton <jlayton@kernel.org>
